@@ -1,1453 +1,306 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94289303C9D;
-	Wed, 13 Aug 2025 17:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755104574; cv=none; b=fnxgFbIkvsqhoXfzkMoFbk5LiHVHnyKXsJ3fBbhkuzF5smpL1/zyOPB/k+dv65bc94xz+BhmucyMliUixZvmc4BRuEPkwYXDFhW3CKkuvJiv8U2TrcBIr/CV6dWPHfGSIOizaUGRwc/Qmi+6/LQh5RXs6JjZs71i6+dhbmlZRj4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755104574; c=relaxed/simple;
-	bh=eolTxcTGSebbGJ/EgeYd+eo1ZnYvvcqd+diWOaEwadE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HYWA5mqKhTXEB5S8khFQCOpaHBQjHJDs23kJjrN2GWWP+yqulXJenkMuoywT7UTKre+BXKAJ79Uy9oAR8AAPl5k2Kpcya//6eJ7CwMK0Z7G+VA8WFW4TPw7hE6RojRz38XninB5S2ZPRvRXEPMFzKneEHyFsLTLbAC+QgtUF38w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECC861E7D;
-	Wed, 13 Aug 2025 10:02:42 -0700 (PDT)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.50])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CF6873F738;
-	Wed, 13 Aug 2025 10:02:46 -0700 (PDT)
-From: Robin Murphy <robin.murphy@arm.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-csky@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	dmaengine@vger.kernel.org,
-	linux-fpga@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	coresight@lists.linaro.org,
-	iommu@lists.linux.dev,
-	linux-amlogic@lists.infradead.org,
-	linux-cxl@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH 19/19] perf: Garbage-collect event_init checks
-Date: Wed, 13 Aug 2025 18:01:11 +0100
-Message-Id: <ace3532a8a438a96338bf349a27636d8294c7111.1755096883.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
-In-Reply-To: <cover.1755096883.git.robin.murphy@arm.com>
-References: <cover.1755096883.git.robin.murphy@arm.com>
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B79F305E21;
+	Wed, 13 Aug 2025 18:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755111471; cv=fail; b=D4bI4fumZTXE7bs2du71h6c2TXtIWEH+MrKloLqOWmsw3GY8bJhRhn0hoA2CVBAg9d2zpz865LuJwPsmY1+DuuLbozN/lRnZxoNzxgz6ZC881bbSE/v7Xz5LcUDKWMgWzGKRdVfHMx6ZLlRMWT70f4s8N+D1PmUHgll6GMCRhb0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755111471; c=relaxed/simple;
+	bh=c/gfpdN8bE18sVtzPViowJlKO8XRxWuj0r5midIZv6o=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=sVXcjuafJ85P1fbD/+hnwS3FkkTXpRmvHA51eGAlCxNWoYLdgvWdlK4tkqf7k1QvEh6MpDHd9Cz0IpHv0piAtRfkO5tWlLabWS0YMC0aivEkVdMqzwlH0cVW+TU7JeG40HkQWplDc2GWiPRWQqjPOm8tufJzjyQY6ZlQLTagIhE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bHK5AL2V; arc=fail smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bHK5AL2V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755111470; x=1786647470;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=c/gfpdN8bE18sVtzPViowJlKO8XRxWuj0r5midIZv6o=;
+  b=bHK5AL2VnT3gQ9Poig4XyWXNXUZpr3HwHK9NJhHq2sdVsGgNsD1D68bO
+   Cluoj9GaLdDUnKmWffns6aSaSRJB4hvLnW5XPGFzND68Ald3JKDZc7Mcm
+   kabvvvK+nsGzEwSBCPAt6Tt2yWzjkwPvjh9HoxKN2fqs15S/KbPXDH7nt
+   hxn+/7Za6mRbOTLu6L47Xl3Dff1j1NOmNly/F4JFSkX88jKk2dMfpen86
+   FxO6qIDkrsYblpYND435ull0pMOH5nw6X5vDrNhsl7DmB6DEF67uDXbEq
+   HtJaBRgEdOJSLKOLAmlfzo2/o4y4qPWbBYT6fH6e9RmNPicAmu7AkC8kb
+   w==;
+X-CSE-ConnectionGUID: /Bm6R9HlTL+5oV36wFNQdw==
+X-CSE-MsgGUID: 5KnRy/1oT5Kbyuq4Mpz2Xw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="61263744"
+X-IronPort-AV: E=Sophos;i="6.17,287,1747724400"; 
+   d="scan'208";a="61263744"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2025 11:57:49 -0700
+X-CSE-ConnectionGUID: COtGtR3tSuOYSHSBgwiO5Q==
+X-CSE-MsgGUID: +w/a5A8WTla3UjVdTa9NzQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,287,1747724400"; 
+   d="scan'208";a="171786815"
+Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2025 11:57:49 -0700
+Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Wed, 13 Aug 2025 11:57:48 -0700
+Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
+ FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17 via Frontend Transport; Wed, 13 Aug 2025 11:57:48 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.79)
+ by edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Wed, 13 Aug 2025 11:57:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wMkWDgAK/duDP/uYQ7knht7pb37ed5ATG/uyorRR2zwwfDStFFLLzTAV5nDrbzLCcvFg3ZdX9OrA5hGHR6ByDCcXQ7svLHuGDfIJa5Fkd3Whpwu9o3tApG4z5Cfjuelhg63uWVvkugf+AXlZ/AlV5V/Q8hVRJcJuawbmZ8z9+zqk2ZUm9YJCFJO+3+PdR4DMSb41h6sgjnAw+9A6T7RzOjoOkvA44tE/35hzpNX2fi2P6Dw0WgDXMw6yndVUAJdgLFAsdAjTmlFFYYQx0Rw35S+7/my+qoeCh06dL8i8nB6pPPChyLUZ9oRoF4aO3GvF1okZ2j4ccMpcddUsvL4loA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YSFKRDlQfIsiy5YE9WiyWnkTGQfVOptponYIvF9aTnk=;
+ b=mHVEFPtDPiqpTQEiAL0rZs/USozXIN3llhyJU87g5QstG4X9jTRGZ2aJJTVT0omAFUZ6KdPjsnxJYFUuAN1DYyA4dNgcOXTGXKP9ik9RTryOLpZ7KYTl6cH427tfJkbHDD7l6/0XyGj2tGbWQBjCsJw4UEy1pbQRC20f9+6VN/XFb9nz7MP9JVpOUG5Z1LyFoqseFxDjQyv8PguGw8GmQmyk57Hfgz4bGBTu9mqyfH5KuY5cl7b1tqYvYRCH8YgsTY6WV/R4QgZkCBbqSD9hoBF9TWOvScWcnabsiQfJrzyPELH5JTdsmORZBu8f4A026h+6vedC8q1DJiPhsT37DA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH3PPF383C22AA3.namprd11.prod.outlook.com (2603:10b6:518:1::d17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.15; Wed, 13 Aug
+ 2025 18:57:40 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%2]) with mapi id 15.20.9031.014; Wed, 13 Aug 2025
+ 18:57:40 +0000
+From: <dan.j.williams@intel.com>
+Date: Wed, 13 Aug 2025 11:57:38 -0700
+To: Peter Zijlstra <peterz@infradead.org>, Dan Williams
+	<dan.j.williams@intel.com>
+CC: <dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Nathan Chancellor <nathan@kernel.org>, "Linus
+ Torvalds" <torvalds@linux-foundation.org>, David Lechner
+	<dlechner@baylibre.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	"Andy Shevchenko" <andriy.shevchenko@intel.com>
+Message-ID: <689ce0227a044_50ce100d7@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <20250813141346.GM4067720@noisy.programming.kicks-ass.net>
+References: <20250804220955.1453135-1-dan.j.williams@intel.com>
+ <20250813141346.GM4067720@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH] cleanup: Fix unused guard error function with
+ DEFINE_CLASS_IS_COND_GUARD
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR05CA0125.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d::10) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH3PPF383C22AA3:EE_
+X-MS-Office365-Filtering-Correlation-Id: b64bed61-8a73-4034-8a18-08ddda9b46db
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?WEltZDdOd2xOZE1XaUJhSnZFMVd0QVFqNkdrenAxOXdBUFFVcXhNbGM5dXo5?=
+ =?utf-8?B?aXhkdnZET2FsZVRVMzRGY1dDZTFlTVcrSUhDb2x1YjlQOVBMMVgrMXEycWR4?=
+ =?utf-8?B?YWFacEI0cGNyRXRaSXF2blMrNlRiTXQrbEE4ZHN1YUNhbGFETjU5Zk5CdkIr?=
+ =?utf-8?B?Nyt0RTlPMkFmVVJHL20rejBxOExselhBTlBnWE1pRmQ5Y1dLOHFrTUQvcm1N?=
+ =?utf-8?B?T09ZcEkvcFM1bThPc2Z1ckR0SzdpbzVFM1hrblhNZWpXaXVKWUE0b1Q2K2NZ?=
+ =?utf-8?B?RDNHSlJlNGIwUmJpTTVsZTlsSGt0L05oUU55Q2hxYjVkUXpxSzFDQml2UGE5?=
+ =?utf-8?B?elRKWFFtUXUyVVFuem9FM2xpc24xcitxbTNXbW9LNWNRZWJXbjJQVjhFbkZB?=
+ =?utf-8?B?WGtUVTJxL1ZPVW9jZjhTYkY4bnVUZEhoMnVURFNvcmZkcTl0QlVxUDFjVTNK?=
+ =?utf-8?B?VjhCOHpKbFNVZmtoT1FpSXNJZlE2Rmk4MWkweWFxeDRzWGZ0WkNRM2c0SHFT?=
+ =?utf-8?B?cDBabVpQVlQxeHZZYlNSME5nZjZ3KzNZTUFUT1puSmxoa1FBME9GSUhGMGZU?=
+ =?utf-8?B?bFlNSUhvaEVVUEx4Z241aUZKSFc2L2VNc2VrK21nOXF5YjZndUpoa2VqYlVm?=
+ =?utf-8?B?WnlTbGxxT25XU3Rkd3BhMjV6L1NndG5lK04zUzQrQ1RQVUJJTFVQaDJQaFR1?=
+ =?utf-8?B?Y3BJWHRIOEt0d2JKWklKM0RSZVV5TXFISFlqdDVGSGtpVFdrcVNmWVNQT00z?=
+ =?utf-8?B?aHBtR21iWHUxb3pDYnhFSjExN3FONlN3WUFoVVBOcFROSUxXQkd6QzZPRGpr?=
+ =?utf-8?B?TyttayttZyt2OG1STFZLK2lGUHFIcXRyNlRhNGFmTHVPU1pCeHRkVmFGUStv?=
+ =?utf-8?B?LzlyOTlRendSWW1xVURGQVdTK2V5VVNmU1RRY0VCL1pWaGwrSE5YeEQrTCtX?=
+ =?utf-8?B?RXltUnp4UHozN1dDT3g1eEtTa0NJNy96dHVpSldzcC9PQUt3MjE5OUE1Skcz?=
+ =?utf-8?B?eHNBRS9YRDVSTGYwY2IrcjMrdERQdjg5eW1mSEFSQllMeFl0b0hCUzJBaHdK?=
+ =?utf-8?B?WUlLMHM2Uy9TcU1JdkIxamV1QXMvWWlsWDVvZi9LZjlhNGRVT0JPR1hKZUdS?=
+ =?utf-8?B?NERNUURZV1lrbUZZaXgvTmZxUkZWTkNFa2pPM2RyS1l4aGowd1JqNkRIZDdj?=
+ =?utf-8?B?TXYxbDF3dFJCbjU1VTUvZWZ0NDdQN1ZUYktLV21iU1NlcCtNa21Bd1ZCQXcv?=
+ =?utf-8?B?Rlh5RHpIUjh2Uk5OS2R0dHJaeUdxTEhWcU1aM3UzN0ZNeUtrVGVxTkpLbmZQ?=
+ =?utf-8?B?MWdPYXJ2UlJxalVRUmUwaGZaNEpXQnhUcnpHVjhUZm41bEVJQ2toT0k2d3cv?=
+ =?utf-8?B?WEpTMS9PUnUwL0xrOW8vbGlscWovWlh5UmNnMUV2RzYydDVYUWNNSVFudm80?=
+ =?utf-8?B?amQ4RVRjNHBvbTVGenozU3E4V1REWHo3NzF1aDdEek9IZldMSFhuZUJweFVS?=
+ =?utf-8?B?NDZhaUJEV2hpUm83bXJFZ0UxekJ6UkEzdmluaEw5OXFwbVIzZFpoKzVOVWNE?=
+ =?utf-8?B?eHc0QTBZVS95UzZrN3c5M09VTGZwdkE3eFRXcEpXSk1obXlPV3FHZXZqbHd0?=
+ =?utf-8?B?a29oald3MW9uTXhwRWR1N0g4QUdaZ2dtbGJvYzJNOEM0czBid25pSnBpaHZX?=
+ =?utf-8?B?U3pJdlFCKzEzZkQrN2gvMjhUN01EMGs2REhSckRCNElqQXZHWTVkVjBEbUdr?=
+ =?utf-8?B?UGk4dEovWmNXaDg0dlVrZ3BhWGtBU2VKb29UOWJ5NkZuRzJCdCtIZ1ptY1I4?=
+ =?utf-8?Q?s8wXF6aeuYIDfeDWeDBLrVdedBg7BiI/eKpXk=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cktGUXZLa09nMVZqZVdjYmRZdFdjOCtsUDE3OUdxS3FidHd6TVN5Y0xDeVhk?=
+ =?utf-8?B?aDBjVjBwR2FZNUZ1SjJJNVlRYnoxWVdpTkxSOU9iYk1tbWVkT21XUFpNWjE2?=
+ =?utf-8?B?N2Zqek03SUh6KzdlNllSZy9wWEptZE10NHhGN3FVcmE5U09QZDZFcVp5b3Vi?=
+ =?utf-8?B?L3VMQXNEdGtkZHNnQlZFcmpIcTRjeG81QVFaVUpTN3loZGZjL0d2aStkUXpH?=
+ =?utf-8?B?WTNUYURCcnhEQ3hGQ2lmc0NMM2hpSjRsSmpjdkFWQzJUL0ZyTlBmY2ZEOGFl?=
+ =?utf-8?B?TUdxZTY3OHlqZVNhRWhybm9KWThGcnNWYnFLYkFNcTlSbzRmN2NtdlRqdE1y?=
+ =?utf-8?B?RHh5akdBdnlqRlJTcUkwb3I0K3hsUEc5Tmp3dDlHYnZpSHkxeWJWL25yelRx?=
+ =?utf-8?B?WUtwMEdBTEJqNis3YXFaWkdPWUd1K3dDWXZ2eFRxalFuanEwankyQzduSnRk?=
+ =?utf-8?B?WUdmNEJtaVNZYTMrQXNjdDgwMmhGcHR3SlQrRGVnakRsZ08zVkpaNTRPQUlV?=
+ =?utf-8?B?c1BVc2xCRjI4Ylo2MHRtbDY5Zmk3TE1oVWpRVEtnN25oZVdqdURPMW5XVURL?=
+ =?utf-8?B?Q3RweVpEdGJYY05TZ1VsbXl1eW4veXpmY09mTkdEMHNGL0VWYUlyUTFPbGdu?=
+ =?utf-8?B?MUw1VFI0ODVhVDdTZ3EwMlJGTGQzVWZjRjhic05Vb0VaM1NnOGF3MFFZaWpP?=
+ =?utf-8?B?Vk1MRndkdk1FOXFIL29XdkZlNkI5QWE3WVV1Q1VZNGlMRm9HbXBsZEFmU2hn?=
+ =?utf-8?B?Yk94WlhCVWdBaXdxV0FsTmhRYVVsaVZad3Q5VnUySUcrODJTZDdJRmttSmMw?=
+ =?utf-8?B?K1k4dHQ2aUdGVGliR3N0RW5Zd1hudzUyWkF6NlhmUlV3VzNOWHoxeDhWTHly?=
+ =?utf-8?B?VVk1b2FmbmNxTVF4bmhrTUlueVZHd0ljbFp0aXNXTGtVWXRoY3BReE1MOUV2?=
+ =?utf-8?B?QTJTSjhFSzN0SVZDL08rMzJYM3krU3FqZ3RtTEtrbS9rWHlGY3F3OFNhVk5V?=
+ =?utf-8?B?YllFNnlyUTVFUkpsV0JqNUFncXhJNlRBUkwxdUNocCthN2hWaWZMQ1drTnhr?=
+ =?utf-8?B?N0NIMlBPVE9BeEwyaUNLTE9tOW5YenVhYzdaSHFWOFV5YkRGNlg3eHRMTmdW?=
+ =?utf-8?B?MGhpMVdWQ25Yb2N5ellLVTBiQjRtSndxcEFjeUhNNFVZK3dmQ2EvTWhscThx?=
+ =?utf-8?B?S1VjZ0V2V3ZWamtUMnlSbHlCdHFCUVM5czVTV2pPbW5lNnE3VmtMQXF4K2wx?=
+ =?utf-8?B?eUNwMTFzZlp5b2JGRVhUWDAvblJTQk9SYVNIbVJ2d1NGZVIwVTI2QzVCUWFw?=
+ =?utf-8?B?V0FWME13ZWpWMmhncDFxbkdGSGpuM0NBYVBQVjFDNmE2QlBPZUZrazVYNXc3?=
+ =?utf-8?B?NHB0ZjZMLzl4Qmd2WTl3NVlnL0VYbW5FSjdEVmdtcXRJUDV0ZXJwalFGWXo4?=
+ =?utf-8?B?RlFocUJ3Z2RyanIxbUlUZGkveDJObHFNNTlDT1RYcFhncmExMVNENTIxKzBr?=
+ =?utf-8?B?cXZRMEJDY0pJbEQwTUNKR3FXKzBlQ21yRWk1Mkk1NFViaitrbTdBZ1BBZFVN?=
+ =?utf-8?B?amJKRjFPWUE0ZmJHdmFBRzRUZkgrRHI1bXNRcHpJQ0FiZ25FdEhhMGxkV1k0?=
+ =?utf-8?B?OUo3M0ZUcGdnUWIyNy9zWXdtRjF0RjVzcUNtRTVJVHdRWVd3ekNkMk43TUNv?=
+ =?utf-8?B?TkprTHZTaDhDQ2xiN3dHTDh6THNsYkh0Q1FLOUROeFI4MElWV0VwWUp2bGF6?=
+ =?utf-8?B?MFZPRVhtcjU0U2VXUkVHbE5kbTRTN2w5TmJ5Y0tkMjY5YzZhc1A3RXZGbkhS?=
+ =?utf-8?B?V0U2TTQvbWhlam5EN3FTNlM3M3JKUVUrZ2habUg0VU5ON2FxdXFyZWNXR3RR?=
+ =?utf-8?B?U2dJelNVcXZoem5xVThHSEN6WWlSeTVsNW9ZUEk2VktVUmlUL0dPN3JvVUVI?=
+ =?utf-8?B?Y3loM3RhQWNKR2hmMnc2UHpaUHJNMlJaalFhQWUyN3Z0RHhkdklKYXV2eUw1?=
+ =?utf-8?B?VHkrVU1sSXZRUVFyc3NRTXNuV01SNDBzMGtOd0R3M2FnekVqTHVLc3dlY3FG?=
+ =?utf-8?B?VlJnZTFTYVEwTlBoNEE5bkhucXpFbVpNV2ZYdnBPQzdyQmdRZWhVcm1CSVR4?=
+ =?utf-8?B?SExzVnNWOFQ3MnBieHdMWkFVT00zMUE2dGNPVWc0YUN3V01jbzNtVCtaNUc3?=
+ =?utf-8?B?d0E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b64bed61-8a73-4034-8a18-08ddda9b46db
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Aug 2025 18:57:40.3578
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7dr0v9Ff70PwLMgsUMTAbIiGHmU8Kmv/Fb5K/6uKSg7UPBYzTfnVY/turEuS7dRqX6ylqDE0a+72UXXyVradNxlAsgOa4rL7e1RIPCwbDas=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPF383C22AA3
+X-OriginatorOrg: intel.com
 
-All these boilerplate event_init checks are now redundant. Of course
-many of them were already redundant, or done in the wrong order so as to
-be pointless, and what we don't see here is all the ones which were
-missing, but have now been implicitly gained thanks to some of these new
-core code behaviours. In summary:
+Peter Zijlstra wrote:
+> On Mon, Aug 04, 2025 at 03:09:54PM -0700, Dan Williams wrote:
+> > Andy reports that the "lock_timer" scheme in kernel/time/posix-timers.c,
+> > with its custom usage of DEFINE_CLASS_IS_COND_GUARD(), results in:
+> > 
+> > kernel/time/posix-timers.c:89:1: error: unused function 'class_lock_timer_lock_err' [-Werror,-Wunused-function]
+> >    89 | DEFINE_CLASS_IS_COND_GUARD(lock_timer);
+> > 
+> > ...with a clang W=1 build. Per Nathan, clang catches unused "static inline"
+> > functions in C files since commit 6863f5643dd7 ("kbuild: allow Clang to
+> > find unused static inline functions for W=1 build").
+> 
+> I so loathe that warning :/
 
-- event->attr.type
-	Now only relevant to PERF_TYPE_RAW PMUs or those advertising
-	PERF_PMU_CAP_RAW_EVENTS.
+The only case I can think of where it might have some value, if you
+squint, is in catching cases where someone defines a conditional guard,
+but then somehow fails to use either scoped_cond_guard() or ACQUIRE().
 
-- event->cpu < 0
-	Already rejected by perf_event_alloc() unless a task is passed,
-	wherein that will also set PERF_ATTACH_TASK prior to reaching
-	perf_init_event(), so is always redundant with...
+I.e. guard(lock_timer)(timer_id), does not generate a compile time
+warning.
 
-- PERF_ATTACH_TASK
-	Since at least commit bd2756811766 ("perf: Rewrite core context
-	handling"), only relevant to PMUs using perf_hw_context or
-	perf_sw_context; for uncore PMUs this is covered by
-	perf_event_alloc() again, right after perf_init_event() returns,
-	by virtue of the same non-NULL task which caused attach_state to
-	be set in the first place.
+However, if someone accidentally mixes guard() and ACQUIRE() in the same
+C file, then the warning will not fire.
 
-- is_sampling_event() (and variations)
-	Now only relevant to PMUs advertising PERF_PMU_CAP_SAMPLING.
+> 
+> > There are 2 ways to solve this, either mark the class_##_lock_err()
+> > function as __maybe_unused, or make sure class_##_lock_err() *is* used /
+> > gets called to disposition the lock status.
+> > 
+> > At present __lock_timer() only indicates failure with a NULL __guard_ptr().
+> > However, one could imagine that __lock_timer(), or some other custom
+> > conditional locking primitive, wants to pass an ERR_PTR() to indicate the
+> > reason for the lock acquisition failure.
+> > 
+> > Update __scoped_cond_guard() to check for ERR_PTR() in addition to NULL
+> > @scope values. This allows __lock_timer(), or another open coded
+> > DEFINE_CLASS_IS_COND_GUARD() user, to switch to passing an ERR_PTR() in the
+> > future. In the meantime, this just silences the warning.
+> > 
+> > Cc: Nathan Chancellor <nathan@kernel.org>
+> > Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > Cc: Dave Jiang <dave.jiang@intel.com>
+> > Cc: David Lechner <dlechner@baylibre.com>
+> > Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+> > Reported-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> > Closes: http://lore.kernel.org/aIo18KZpmKuR4hVZ@black.igk.intel.com
+> > Fixes: 857d18f23ab1 ("cleanup: Introduce ACQUIRE() and ACQUIRE_ERR() for conditional locks")
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> > Dave, I am sending this to you to take upstream since the warning came
+> > in through the CXL tree. If anyone else wants to take it just holler.
+> > 
+> >  include/linux/cleanup.h | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+> > index 4eb83dd71cfe..d8e7d1e5561b 100644
+> > --- a/include/linux/cleanup.h
+> > +++ b/include/linux/cleanup.h
+> > @@ -423,7 +423,8 @@ _label:									\
+> >  
+> >  #define __scoped_cond_guard(_name, _fail, _label, args...)		\
+> >  	for (CLASS(_name, scope)(args); true; ({ goto _label; }))	\
+> > -		if (!__guard_ptr(_name)(&scope)) {			\
+> > +		if (!__guard_ptr(_name)(&scope) ||			\
+> > +		     __guard_err(_name)(&scope)) {			\
+> >  			BUILD_BUG_ON(!__is_cond_ptr(_name));		\
+> >  			_fail;						\
+> >  _label:									\
+> 
+> What does this do for code generation ?
 
-- has_branch_stack()
-	Now doubly-illogical for PMUs which never supported sampling
-	anyway.
+size(1) identical:
 
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- arch/arm/mach-imx/mmdc.c                      | 14 ---------
- arch/arm/mm/cache-l2x0-pmu.c                  | 10 -------
- arch/powerpc/perf/hv-24x7.c                   |  8 -----
- arch/powerpc/perf/hv-gpci.c                   |  8 -----
- arch/powerpc/perf/imc-pmu.c                   | 30 -------------------
- arch/powerpc/perf/kvm-hv-pmu.c                |  3 --
- arch/powerpc/perf/vpa-pmu.c                   |  7 -----
- arch/powerpc/platforms/pseries/papr_scm.c     | 11 -------
- arch/s390/kernel/perf_cpum_cf.c               |  3 +-
- arch/x86/events/amd/iommu.c                   | 15 ----------
- arch/x86/events/amd/power.c                   |  7 -----
- arch/x86/events/amd/uncore.c                  |  6 ----
- arch/x86/events/intel/bts.c                   |  3 --
- arch/x86/events/intel/cstate.c                |  7 -----
- arch/x86/events/intel/pt.c                    |  3 --
- arch/x86/events/intel/uncore.c                | 13 --------
- arch/x86/events/intel/uncore_snb.c            | 18 -----------
- arch/x86/events/msr.c                         |  3 --
- arch/x86/events/rapl.c                        | 11 -------
- drivers/devfreq/event/rockchip-dfi.c          | 12 --------
- drivers/dma/idxd/perfmon.c                    | 14 ---------
- drivers/fpga/dfl-fme-perf.c                   | 14 ---------
- drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c       |  4 ---
- drivers/gpu/drm/i915/i915_pmu.c               | 13 --------
- drivers/gpu/drm/xe/xe_pmu.c                   | 13 --------
- .../hwtracing/coresight/coresight-etm-perf.c  |  5 ----
- drivers/hwtracing/ptt/hisi_ptt.c              |  8 -----
- drivers/iommu/intel/perfmon.c                 | 10 -------
- drivers/perf/alibaba_uncore_drw_pmu.c         | 17 -----------
- drivers/perf/amlogic/meson_ddr_pmu_core.c     |  9 ------
- drivers/perf/arm-cci.c                        |  9 ------
- drivers/perf/arm-ccn.c                        | 18 -----------
- drivers/perf/arm-cmn.c                        | 10 -------
- drivers/perf/arm-ni.c                         |  6 ----
- drivers/perf/arm_cspmu/arm_cspmu.c            | 13 --------
- drivers/perf/arm_dmc620_pmu.c                 | 16 ----------
- drivers/perf/arm_dsu_pmu.c                    | 20 -------------
- drivers/perf/arm_smmuv3_pmu.c                 | 13 --------
- drivers/perf/arm_spe_pmu.c                    |  4 ---
- drivers/perf/cxl_pmu.c                        |  6 ----
- drivers/perf/dwc_pcie_pmu.c                   | 11 -------
- drivers/perf/fsl_imx8_ddr_perf.c              | 11 -------
- drivers/perf/fsl_imx9_ddr_perf.c              | 11 -------
- drivers/perf/hisilicon/hisi_pcie_pmu.c        |  8 -----
- drivers/perf/hisilicon/hisi_uncore_pmu.c      | 18 -----------
- drivers/perf/hisilicon/hns3_pmu.c             |  7 -----
- drivers/perf/marvell_cn10k_ddr_pmu.c          | 13 --------
- drivers/perf/marvell_cn10k_tad_pmu.c          |  3 --
- drivers/perf/marvell_pem_pmu.c                | 11 -------
- drivers/perf/qcom_l2_pmu.c                    | 15 ----------
- drivers/perf/qcom_l3_pmu.c                    | 19 ------------
- drivers/perf/starfive_starlink_pmu.c          | 14 ---------
- drivers/perf/thunderx2_pmu.c                  | 15 ----------
- drivers/perf/xgene_pmu.c                      | 14 ---------
- drivers/powercap/intel_rapl_common.c          |  7 -----
- 55 files changed, 1 insertion(+), 590 deletions(-)
+   text	   data	    bss	    dec	    hex	filename
+  54648	  20439	     64	  75151	  1258f	kernel/time/posix-timers.o
 
-diff --git a/arch/arm/mach-imx/mmdc.c b/arch/arm/mach-imx/mmdc.c
-index f9d432b385a2..9e3734e249a2 100644
---- a/arch/arm/mach-imx/mmdc.c
-+++ b/arch/arm/mach-imx/mmdc.c
-@@ -277,20 +277,6 @@ static int mmdc_pmu_event_init(struct perf_event *event)
- 	struct mmdc_pmu *pmu_mmdc = to_mmdc_pmu(event->pmu);
- 	int cfg = event->attr.config;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
--	if (event->cpu < 0) {
--		dev_warn(pmu_mmdc->dev, "Can't provide per-task data!\n");
--		return -EOPNOTSUPP;
--	}
--
--	if (event->attr.sample_period)
--		return -EINVAL;
--
- 	if (cfg < 0 || cfg >= MMDC_NUM_COUNTERS)
- 		return -EINVAL;
- 
-diff --git a/arch/arm/mm/cache-l2x0-pmu.c b/arch/arm/mm/cache-l2x0-pmu.c
-index 6fc1171031a8..b8753463c1c4 100644
---- a/arch/arm/mm/cache-l2x0-pmu.c
-+++ b/arch/arm/mm/cache-l2x0-pmu.c
-@@ -294,16 +294,6 @@ static int l2x0_pmu_event_init(struct perf_event *event)
- {
- 	struct hw_perf_event *hw = &event->hw;
- 
--	if (event->attr.type != l2x0_pmu->type)
--		return -ENOENT;
--
--	if (is_sampling_event(event) ||
--	    event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
--
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	if (event->attr.config & ~L2X0_EVENT_CNT_CFG_SRC_MASK)
- 		return -EINVAL;
- 
-diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
-index ab906616e570..5b03d6b34999 100644
---- a/arch/powerpc/perf/hv-24x7.c
-+++ b/arch/powerpc/perf/hv-24x7.c
-@@ -1379,10 +1379,6 @@ static int h_24x7_event_init(struct perf_event *event)
- 	unsigned long hret;
- 	u64 ct;
- 
--	/* Not our event */
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
- 	/* Unused areas must be 0 */
- 	if (event_get_reserved1(event) ||
- 	    event_get_reserved2(event) ||
-@@ -1397,10 +1393,6 @@ static int h_24x7_event_init(struct perf_event *event)
- 		return -EINVAL;
- 	}
- 
--	/* no branch sampling */
--	if (has_branch_stack(event))
--		return -EOPNOTSUPP;
--
- 	/* offset must be 8 byte aligned */
- 	if (event_get_offset(event) % 8) {
- 		pr_devel("bad alignment\n");
-diff --git a/arch/powerpc/perf/hv-gpci.c b/arch/powerpc/perf/hv-gpci.c
-index 1726690396ec..9663aa18bc45 100644
---- a/arch/powerpc/perf/hv-gpci.c
-+++ b/arch/powerpc/perf/hv-gpci.c
-@@ -775,20 +775,12 @@ static int h_gpci_event_init(struct perf_event *event)
- 	u8 length;
- 	unsigned long ret;
- 
--	/* Not our event */
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
- 	/* config2 is unused */
- 	if (event->attr.config2) {
- 		pr_devel("config2 set when reserved\n");
- 		return -EINVAL;
- 	}
- 
--	/* no branch sampling */
--	if (has_branch_stack(event))
--		return -EOPNOTSUPP;
--
- 	length = event_get_length(event);
- 	if (length < 1 || length > 8) {
- 		pr_devel("length invalid\n");
-diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
-index f352dda3baf9..cee6390986dc 100644
---- a/arch/powerpc/perf/imc-pmu.c
-+++ b/arch/powerpc/perf/imc-pmu.c
-@@ -517,16 +517,6 @@ static int nest_imc_event_init(struct perf_event *event)
- 	struct imc_pmu_ref *ref;
- 	bool flag = false;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/* Sampling not supported */
--	if (event->hw.sample_period)
--		return -EINVAL;
--
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	pmu = imc_event_to_pmu(event);
- 
- 	/* Sanity check for config (event offset) */
-@@ -819,16 +809,6 @@ static int core_imc_event_init(struct perf_event *event)
- 	struct imc_pmu *pmu;
- 	struct imc_pmu_ref *ref;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/* Sampling not supported */
--	if (event->hw.sample_period)
--		return -EINVAL;
--
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	event->hw.idx = -1;
- 	pmu = imc_event_to_pmu(event);
- 
-@@ -983,16 +963,9 @@ static int thread_imc_event_init(struct perf_event *event)
- 	struct task_struct *target;
- 	struct imc_pmu *pmu;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
- 	if (!perfmon_capable())
- 		return -EACCES;
- 
--	/* Sampling not supported */
--	if (event->hw.sample_period)
--		return -EINVAL;
--
- 	event->hw.idx = -1;
- 	pmu = imc_event_to_pmu(event);
- 
-@@ -1436,9 +1409,6 @@ static void trace_imc_event_del(struct perf_event *event, int flags)
- 
- static int trace_imc_event_init(struct perf_event *event)
- {
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
- 	if (!perfmon_capable())
- 		return -EACCES;
- 
-diff --git a/arch/powerpc/perf/kvm-hv-pmu.c b/arch/powerpc/perf/kvm-hv-pmu.c
-index 1c6bc65c986c..513f5b172ba6 100644
---- a/arch/powerpc/perf/kvm-hv-pmu.c
-+++ b/arch/powerpc/perf/kvm-hv-pmu.c
-@@ -180,9 +180,6 @@ static int kvmppc_pmu_event_init(struct perf_event *event)
- 		 __func__, event, event->id, event->cpu,
- 		 event->oncpu, config);
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
- 	if (config >= KVMPPC_EVENT_MAX)
- 		return -EINVAL;
- 
-diff --git a/arch/powerpc/perf/vpa-pmu.c b/arch/powerpc/perf/vpa-pmu.c
-index 1d360b5bf67c..35883a071360 100644
---- a/arch/powerpc/perf/vpa-pmu.c
-+++ b/arch/powerpc/perf/vpa-pmu.c
-@@ -72,13 +72,6 @@ static const struct attribute_group *vpa_pmu_attr_groups[] = {
- 
- static int vpa_pmu_event_init(struct perf_event *event)
- {
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/* no branch sampling */
--	if (has_branch_stack(event))
--		return -EOPNOTSUPP;
--
- 	/* Invalid event code */
- 	if ((event->attr.config <= 0) || (event->attr.config > 3))
- 		return -EINVAL;
-diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
-index d752cdaf8422..e6474ee0c140 100644
---- a/arch/powerpc/platforms/pseries/papr_scm.c
-+++ b/arch/powerpc/platforms/pseries/papr_scm.c
-@@ -372,17 +372,6 @@ static int papr_scm_pmu_event_init(struct perf_event *event)
- 	struct nvdimm_pmu *nd_pmu = to_nvdimm_pmu(event->pmu);
- 	struct papr_scm_priv *p;
- 
--	if (!nd_pmu)
--		return -EINVAL;
--
--	/* test the event attr type for PMU enumeration */
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/* no branch sampling */
--	if (has_branch_stack(event))
--		return -EOPNOTSUPP;
--
- 	p = (struct papr_scm_priv *)nd_pmu->dev->driver_data;
- 	if (!p)
- 		return -EINVAL;
-diff --git a/arch/s390/kernel/perf_cpum_cf.c b/arch/s390/kernel/perf_cpum_cf.c
-index 782ab755ddd4..fa732e94f6e4 100644
---- a/arch/s390/kernel/perf_cpum_cf.c
-+++ b/arch/s390/kernel/perf_cpum_cf.c
-@@ -1788,8 +1788,7 @@ static int cfdiag_event_init(struct perf_event *event)
- 	struct perf_event_attr *attr = &event->attr;
- 	int err = -ENOENT;
- 
--	if (event->attr.config != PERF_EVENT_CPUM_CF_DIAG ||
--	    event->attr.type != event->pmu->type)
-+	if (event->attr.config != PERF_EVENT_CPUM_CF_DIAG)
- 		goto out;
- 
- 	/* Raw events are used to access counters directly,
-diff --git a/arch/x86/events/amd/iommu.c b/arch/x86/events/amd/iommu.c
-index a721da9987dd..8053bec14dec 100644
---- a/arch/x86/events/amd/iommu.c
-+++ b/arch/x86/events/amd/iommu.c
-@@ -209,21 +209,6 @@ static int perf_iommu_event_init(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	/* test the event attr type check for PMU enumeration */
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/*
--	 * IOMMU counters are shared across all cores.
--	 * Therefore, it does not support per-process mode.
--	 * Also, it does not support event sampling mode.
--	 */
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
--
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	/* update the hw_perf_event struct with the iommu config data */
- 	hwc->conf  = event->attr.config;
- 	hwc->conf1 = event->attr.config1;
-diff --git a/arch/x86/events/amd/power.c b/arch/x86/events/amd/power.c
-index dad42790cf7d..a5e42ee2464a 100644
---- a/arch/x86/events/amd/power.c
-+++ b/arch/x86/events/amd/power.c
-@@ -125,14 +125,7 @@ static int pmu_event_init(struct perf_event *event)
- {
- 	u64 cfg = event->attr.config & AMD_POWER_EVENT_MASK;
- 
--	/* Only look at AMD power events. */
--	if (event->attr.type != pmu_class.type)
--		return -ENOENT;
--
- 	/* Unsupported modes and filters. */
--	if (event->attr.sample_period)
--		return -EINVAL;
--
- 	if (cfg != AMD_POWER_EVENTSEL_PKG)
- 		return -EINVAL;
- 
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index 050a5567291a..76f58c7b4c19 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -270,12 +270,6 @@ static int amd_uncore_event_init(struct perf_event *event)
- 	struct amd_uncore_ctx *ctx;
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	pmu = event_to_amd_uncore_pmu(event);
- 	ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
- 	if (!ctx)
-diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-index 61da6b8a3d51..27e23153ba6f 100644
---- a/arch/x86/events/intel/bts.c
-+++ b/arch/x86/events/intel/bts.c
-@@ -565,9 +565,6 @@ static int bts_event_init(struct perf_event *event)
- {
- 	int ret;
- 
--	if (event->attr.type != bts_pmu.type)
--		return -ENOENT;
--
- 	/*
- 	 * BTS leaks kernel addresses even when CPL0 tracing is
- 	 * disabled, so disallow intel_bts driver for unprivileged
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index 2a79717b898f..90a884d77864 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -277,13 +277,6 @@ static int cstate_pmu_event_init(struct perf_event *event)
- {
- 	u64 cfg = event->attr.config;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/* unsupported modes and filters */
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	if (event->pmu == &cstate_core_pmu) {
- 		if (cfg >= PERF_CSTATE_CORE_EVENT_MAX)
- 			return -EINVAL;
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index e8cf29d2b10c..a5004dd7632b 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -1795,9 +1795,6 @@ static void pt_event_destroy(struct perf_event *event)
- 
- static int pt_event_init(struct perf_event *event)
- {
--	if (event->attr.type != pt_pmu.pmu.type)
--		return -ENOENT;
--
- 	if (!pt_event_valid(event))
- 		return -EINVAL;
- 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 297ff5adb667..98ffab403bb4 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -731,24 +731,11 @@ static int uncore_pmu_event_init(struct perf_event *event)
- 	struct hw_perf_event *hwc = &event->hw;
- 	int ret;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
- 	pmu = uncore_event_to_pmu(event);
- 	/* no device found for this pmu */
- 	if (!pmu->registered)
- 		return -ENOENT;
- 
--	/* Sampling not supported yet */
--	if (hwc->sample_period)
--		return -EINVAL;
--
--	/*
--	 * Place all uncore events for a particular physical package
--	 * onto a single cpu
--	 */
--	if (event->cpu < 0)
--		return -EINVAL;
- 	box = uncore_pmu_to_box(pmu, event->cpu);
- 	if (!box || box->cpu < 0)
- 		return -EINVAL;
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index 807e582b8f17..8537f61bb093 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -906,29 +906,11 @@ static int snb_uncore_imc_event_init(struct perf_event *event)
- 	u64 cfg = event->attr.config & SNB_UNCORE_PCI_IMC_EVENT_MASK;
- 	int idx, base;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
- 	pmu = uncore_event_to_pmu(event);
- 	/* no device found for this pmu */
- 	if (!pmu->registered)
- 		return -ENOENT;
- 
--	/* Sampling not supported yet */
--	if (hwc->sample_period)
--		return -EINVAL;
--
--	/* unsupported modes and filters */
--	if (event->attr.sample_period) /* no sampling */
--		return -EINVAL;
--
--	/*
--	 * Place all uncore events for a particular physical package
--	 * onto a single cpu
--	 */
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	/* check only supported bits are set */
- 	if (event->attr.config & ~SNB_UNCORE_PCI_IMC_EVENT_MASK)
- 		return -EINVAL;
-diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
-index 3285c1f3bb90..cf6214849a25 100644
---- a/arch/x86/events/msr.c
-+++ b/arch/x86/events/msr.c
-@@ -206,9 +206,6 @@ static int msr_event_init(struct perf_event *event)
- {
- 	u64 cfg = event->attr.config;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
- 	/* unsupported modes and filters */
- 	if (cfg >= PERF_MSR_EVENT_MAX)
- 		return -EINVAL;
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index defd86137f12..5d298e371b28 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -370,21 +370,10 @@ static int rapl_pmu_event_init(struct perf_event *event)
- 	unsigned int rapl_pmu_idx;
- 	struct rapl_pmus *rapl_pmus;
- 
--	/* only look at RAPL events */
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/* unsupported modes and filters */
--	if (event->attr.sample_period) /* no sampling */
--		return -EINVAL;
--
- 	/* check only supported bits are set */
- 	if (event->attr.config & ~RAPL_EVENT_MASK)
- 		return -EINVAL;
- 
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	rapl_pmus = container_of(event->pmu, struct rapl_pmus, pmu);
- 	if (!rapl_pmus)
- 		return -EINVAL;
-diff --git a/drivers/devfreq/event/rockchip-dfi.c b/drivers/devfreq/event/rockchip-dfi.c
-index 88a9ecbe96ce..87ec7bc965bd 100644
---- a/drivers/devfreq/event/rockchip-dfi.c
-+++ b/drivers/devfreq/event/rockchip-dfi.c
-@@ -401,18 +401,6 @@ static const struct attribute_group *attr_groups[] = {
- 
- static int rockchip_ddr_perf_event_init(struct perf_event *event)
- {
--	struct rockchip_dfi *dfi = container_of(event->pmu, struct rockchip_dfi, pmu);
--
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	if (event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
--
--	if (event->cpu < 0) {
--		dev_warn(dfi->dev, "Can't provide per-task data!\n");
--		return -EINVAL;
--	}
- 	/* Disallow groups since we can't start/stop/read multiple counters at once */
- 	if (in_hardware_group(event))
- 		return -EINVAL;
-diff --git a/drivers/dma/idxd/perfmon.c b/drivers/dma/idxd/perfmon.c
-index 8c539e1f11da..4d6f1fc47685 100644
---- a/drivers/dma/idxd/perfmon.c
-+++ b/drivers/dma/idxd/perfmon.c
-@@ -171,20 +171,6 @@ static int perfmon_pmu_event_init(struct perf_event *event)
- 
- 	idxd = event_to_idxd(event);
- 	event->hw.idx = -1;
--
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/* sampling not supported */
--	if (event->attr.sample_period)
--		return -EINVAL;
--
--	if (event->cpu < 0)
--		return -EINVAL;
--
--	if (event->pmu != &idxd->idxd_pmu->pmu)
--		return -EINVAL;
--
- 	event->hw.event_base = ioread64(PERFMON_TABLE_OFFSET(idxd));
- 	event->hw.config = event->attr.config;
- 
-diff --git a/drivers/fpga/dfl-fme-perf.c b/drivers/fpga/dfl-fme-perf.c
-index a1e2e7f28a3a..0cc9538e0898 100644
---- a/drivers/fpga/dfl-fme-perf.c
-+++ b/drivers/fpga/dfl-fme-perf.c
-@@ -799,20 +799,6 @@ static int fme_perf_event_init(struct perf_event *event)
- 	struct fme_perf_event_ops *ops;
- 	u32 eventid, evtype, portid;
- 
--	/* test the event attr type check for PMU enumeration */
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/*
--	 * fme counters are shared across all cores.
--	 * Therefore, it does not support per-process mode.
--	 */
--	if (event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
--
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	if (event->cpu != priv->cpu)
- 		return -EINVAL;
- 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
-index 6e91ea1de5aa..294a7aea9aaa 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
-@@ -210,10 +210,6 @@ static int amdgpu_perf_event_init(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	/* test the event attr type check for PMU enumeration */
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
- 	/* update the hw_perf_event struct with config data */
- 	hwc->config = event->attr.config;
- 	hwc->config_base = AMDGPU_PMU_PERF_TYPE_NONE;
-diff --git a/drivers/gpu/drm/i915/i915_pmu.c b/drivers/gpu/drm/i915/i915_pmu.c
-index 5bc696bfbb0f..193e96976782 100644
---- a/drivers/gpu/drm/i915/i915_pmu.c
-+++ b/drivers/gpu/drm/i915/i915_pmu.c
-@@ -626,19 +626,6 @@ static int i915_pmu_event_init(struct perf_event *event)
- 	if (!pmu->registered)
- 		return -ENODEV;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/* unsupported modes and filters */
--	if (event->attr.sample_period) /* no sampling */
--		return -EINVAL;
--
--	if (has_branch_stack(event))
--		return -EOPNOTSUPP;
--
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	if (is_engine_event(event))
- 		ret = engine_event_init(event);
- 	else
-diff --git a/drivers/gpu/drm/xe/xe_pmu.c b/drivers/gpu/drm/xe/xe_pmu.c
-index cab51d826345..084e26728c35 100644
---- a/drivers/gpu/drm/xe/xe_pmu.c
-+++ b/drivers/gpu/drm/xe/xe_pmu.c
-@@ -238,24 +238,11 @@ static int xe_pmu_event_init(struct perf_event *event)
- 	if (!pmu->registered)
- 		return -ENODEV;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/* unsupported modes and filters */
--	if (event->attr.sample_period) /* no sampling */
--		return -EINVAL;
--
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	gt = config_to_gt_id(event->attr.config);
- 	id = config_to_event_id(event->attr.config);
- 	if (!event_supported(pmu, gt, id))
- 		return -ENOENT;
- 
--	if (has_branch_stack(event))
--		return -EOPNOTSUPP;
--
- 	if (!event_param_valid(event))
- 		return -ENOENT;
- 
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index f1551c08ecb2..fd98eb6a1942 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -178,11 +178,6 @@ static int etm_event_init(struct perf_event *event)
- {
- 	int ret = 0;
- 
--	if (event->attr.type != etm_pmu.type) {
--		ret = -ENOENT;
--		goto out;
--	}
--
- 	ret = etm_addr_filters_alloc(event);
- 	if (ret)
- 		goto out;
-diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
-index 3090479a2979..470226defa14 100644
---- a/drivers/hwtracing/ptt/hisi_ptt.c
-+++ b/drivers/hwtracing/ptt/hisi_ptt.c
-@@ -998,14 +998,6 @@ static int hisi_ptt_pmu_event_init(struct perf_event *event)
- 	int ret;
- 	u32 val;
- 
--	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
--		return -ENOENT;
--
--	if (event->cpu < 0) {
--		dev_dbg(event->pmu->dev, "Per-task mode not supported\n");
--		return -EOPNOTSUPP;
--	}
--
- 	if (event->attach_state & PERF_ATTACH_TASK)
- 		return -EOPNOTSUPP;
- 
-diff --git a/drivers/iommu/intel/perfmon.c b/drivers/iommu/intel/perfmon.c
-index c3a1ac14cb2b..2b9bb89e1fd3 100644
---- a/drivers/iommu/intel/perfmon.c
-+++ b/drivers/iommu/intel/perfmon.c
-@@ -284,16 +284,6 @@ static int iommu_pmu_event_init(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/* sampling not supported */
--	if (event->attr.sample_period)
--		return -EINVAL;
--
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	if (iommu_pmu_validate_event(event))
- 		return -EINVAL;
- 
-diff --git a/drivers/perf/alibaba_uncore_drw_pmu.c b/drivers/perf/alibaba_uncore_drw_pmu.c
-index 0081618741c3..2404333ff902 100644
---- a/drivers/perf/alibaba_uncore_drw_pmu.c
-+++ b/drivers/perf/alibaba_uncore_drw_pmu.c
-@@ -528,24 +528,7 @@ static int ali_drw_pmu_event_init(struct perf_event *event)
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct device *dev = drw_pmu->pmu.dev;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	if (is_sampling_event(event)) {
--		dev_err(dev, "Sampling not supported!\n");
--		return -EOPNOTSUPP;
--	}
--
--	if (event->attach_state & PERF_ATTACH_TASK) {
--		dev_err(dev, "Per-task counter cannot allocate!\n");
--		return -EOPNOTSUPP;
--	}
--
- 	event->cpu = drw_pmu->cpu;
--	if (event->cpu < 0) {
--		dev_err(dev, "Per-task mode not supported!\n");
--		return -EOPNOTSUPP;
--	}
- 
- 	if (in_hardware_group(event)) {
- 		dev_err(dev, "driveway only allow one event!\n");
-diff --git a/drivers/perf/amlogic/meson_ddr_pmu_core.c b/drivers/perf/amlogic/meson_ddr_pmu_core.c
-index c1e755c356a3..8f46cf835fb5 100644
---- a/drivers/perf/amlogic/meson_ddr_pmu_core.c
-+++ b/drivers/perf/amlogic/meson_ddr_pmu_core.c
-@@ -121,15 +121,6 @@ static int meson_ddr_perf_event_init(struct perf_event *event)
- 	u64 config1 = event->attr.config1;
- 	u64 config2 = event->attr.config2;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
--	if (event->cpu < 0)
--		return -EOPNOTSUPP;
--
- 	/* check if the number of parameters is too much */
- 	if (event->attr.config != ALL_CHAN_COUNTER_ID &&
- 	    hweight64(config1) + hweight64(config2) > MAX_AXI_PORTS_OF_CHANNEL)
-diff --git a/drivers/perf/arm-cci.c b/drivers/perf/arm-cci.c
-index 086d4363fcc8..84ba97389c65 100644
---- a/drivers/perf/arm-cci.c
-+++ b/drivers/perf/arm-cci.c
-@@ -1283,13 +1283,6 @@ static int cci_pmu_event_init(struct perf_event *event)
- 	atomic_t *active_events = &cci_pmu->active_events;
- 	int err = 0;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/* Shared by all CPUs, no meaningful state to sample */
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
- 	/*
- 	 * Following the example set by other "uncore" PMUs, we accept any CPU
- 	 * and rewrite its affinity dynamically rather than having perf core
-@@ -1299,8 +1292,6 @@ static int cci_pmu_event_init(struct perf_event *event)
- 	 * the event being installed into its context, so the PMU's CPU can't
- 	 * change under our feet.
- 	 */
--	if (event->cpu < 0)
--		return -EINVAL;
- 	event->cpu = cci_pmu->cpu;
- 
- 	event->destroy = hw_perf_event_destroy;
-diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
-index 63549aad3b99..6ec4cb9417e7 100644
---- a/drivers/perf/arm-ccn.c
-+++ b/drivers/perf/arm-ccn.c
-@@ -704,30 +704,12 @@ static void arm_ccn_pmu_event_release(struct perf_event *event)
- static int arm_ccn_pmu_event_init(struct perf_event *event)
- {
- 	struct arm_ccn *ccn;
--	struct hw_perf_event *hw = &event->hw;
- 	u32 node_xp, type, event_id;
- 	int valid;
- 	int i;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
- 	ccn = pmu_to_arm_ccn(event->pmu);
- 
--	if (hw->sample_period) {
--		dev_dbg(ccn->dev, "Sampling not supported!\n");
--		return -EOPNOTSUPP;
--	}
--
--	if (has_branch_stack(event)) {
--		dev_dbg(ccn->dev, "Can't exclude execution levels!\n");
--		return -EINVAL;
--	}
--
--	if (event->cpu < 0) {
--		dev_dbg(ccn->dev, "Can't provide per-task data!\n");
--		return -EOPNOTSUPP;
--	}
- 	/*
- 	 * Many perf core operations (eg. events rotation) operate on a
- 	 * single CPU context. This is obvious for CPU PMUs, where one
-diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index f8c9be9fa6c0..0f65d28c1b7a 100644
---- a/drivers/perf/arm-cmn.c
-+++ b/drivers/perf/arm-cmn.c
-@@ -1765,16 +1765,6 @@ static int arm_cmn_event_init(struct perf_event *event)
- 	bool bynodeid;
- 	u16 nodeid, eventid;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
--
--	event->cpu = cmn->cpu;
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	type = CMN_EVENT_TYPE(event);
- 	/* DTC events (i.e. cycles) already have everything they need */
- 	if (type == CMN_TYPE_DTC)
-diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
-index d6b683a0264e..c48c82097412 100644
---- a/drivers/perf/arm-ni.c
-+++ b/drivers/perf/arm-ni.c
-@@ -309,12 +309,6 @@ static int arm_ni_event_init(struct perf_event *event)
- {
- 	struct arm_ni_cd *cd = pmu_to_cd(event->pmu);
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	if (is_sampling_event(event))
--		return -EINVAL;
--
- 	event->cpu = cd_to_ni(cd)->cpu;
- 	if (NI_EVENT_TYPE(event) == NI_PMU)
- 		return arm_ni_validate_group(event);
-diff --git a/drivers/perf/arm_cspmu/arm_cspmu.c b/drivers/perf/arm_cspmu/arm_cspmu.c
-index 761b438db231..47d207a97bfc 100644
---- a/drivers/perf/arm_cspmu/arm_cspmu.c
-+++ b/drivers/perf/arm_cspmu/arm_cspmu.c
-@@ -601,19 +601,6 @@ static int arm_cspmu_event_init(struct perf_event *event)
- 
- 	cspmu = to_arm_cspmu(event->pmu);
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/*
--	 * Following other "uncore" PMUs, we do not support sampling mode or
--	 * attach to a task (per-process mode).
--	 */
--	if (event->cpu < 0 || event->attach_state & PERF_ATTACH_TASK) {
--		dev_dbg(cspmu->pmu.dev,
--			"Can't support per-task counters\n");
--		return -EINVAL;
--	}
--
- 	/*
- 	 * Make sure the CPU assignment is on one of the CPUs associated with
- 	 * this PMU.
-diff --git a/drivers/perf/arm_dmc620_pmu.c b/drivers/perf/arm_dmc620_pmu.c
-index 24308de80246..751a06ba5319 100644
---- a/drivers/perf/arm_dmc620_pmu.c
-+++ b/drivers/perf/arm_dmc620_pmu.c
-@@ -514,20 +514,6 @@ static int dmc620_pmu_event_init(struct perf_event *event)
- 	struct dmc620_pmu *dmc620_pmu = to_dmc620_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/*
--	 * DMC 620 PMUs are shared across all cpus and cannot
--	 * support task bound and sampling events.
--	 */
--	if (is_sampling_event(event) ||
--		event->attach_state & PERF_ATTACH_TASK) {
--		dev_dbg(dmc620_pmu->pmu.dev,
--			"Can't support per-task counters\n");
--		return -EOPNOTSUPP;
--	}
--
- 	/*
- 	 * Many perf core operations (eg. events rotation) operate on a
- 	 * single CPU context. This is obvious for CPU PMUs, where one
-@@ -538,8 +524,6 @@ static int dmc620_pmu_event_init(struct perf_event *event)
- 	 * processor.
- 	 */
- 	event->cpu = dmc620_pmu->irq->cpu;
--	if (event->cpu < 0)
--		return -EINVAL;
- 
- 	hwc->idx = -1;
- 
-diff --git a/drivers/perf/arm_dsu_pmu.c b/drivers/perf/arm_dsu_pmu.c
-index 7480fd6fe377..eacbe1864794 100644
---- a/drivers/perf/arm_dsu_pmu.c
-+++ b/drivers/perf/arm_dsu_pmu.c
-@@ -524,26 +524,6 @@ static int dsu_pmu_event_init(struct perf_event *event)
- {
- 	struct dsu_pmu *dsu_pmu = to_dsu_pmu(event->pmu);
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/* We don't support sampling */
--	if (is_sampling_event(event)) {
--		dev_dbg(dsu_pmu->pmu.dev, "Can't support sampling events\n");
--		return -EOPNOTSUPP;
--	}
--
--	/* We cannot support task bound events */
--	if (event->cpu < 0 || event->attach_state & PERF_ATTACH_TASK) {
--		dev_dbg(dsu_pmu->pmu.dev, "Can't support per-task counters\n");
--		return -EINVAL;
--	}
--
--	if (has_branch_stack(event)) {
--		dev_dbg(dsu_pmu->pmu.dev, "Can't support filtering\n");
--		return -EINVAL;
--	}
--
- 	if (!cpumask_test_cpu(event->cpu, &dsu_pmu->associated_cpus)) {
- 		dev_dbg(dsu_pmu->pmu.dev,
- 			 "Requested cpu is not associated with the DSU\n");
-diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-index 7cac380a3528..d534a4eb457a 100644
---- a/drivers/perf/arm_smmuv3_pmu.c
-+++ b/drivers/perf/arm_smmuv3_pmu.c
-@@ -398,19 +398,6 @@ static int smmu_pmu_event_init(struct perf_event *event)
- 	int group_num_events = 1;
- 	u16 event_id;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	if (hwc->sample_period) {
--		dev_dbg(dev, "Sampling not supported\n");
--		return -EOPNOTSUPP;
--	}
--
--	if (event->cpu < 0) {
--		dev_dbg(dev, "Per-task mode not supported\n");
--		return -EOPNOTSUPP;
--	}
--
- 	/* Verify specified event is supported on this PMU */
- 	event_id = get_event(event);
- 	if (event_id < SMMU_PMCG_ARCH_MAX_EVENTS &&
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index dbd52851f5c6..89001d2ceabf 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -718,10 +718,6 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
- 	struct perf_event_attr *attr = &event->attr;
- 	struct arm_spe_pmu *spe_pmu = to_spe_pmu(event->pmu);
- 
--	/* This is, of course, deeply driver-specific */
--	if (attr->type != event->pmu->type)
--		return -ENOENT;
--
- 	if (event->cpu >= 0 &&
- 	    !cpumask_test_cpu(event->cpu, &spe_pmu->supported_cpus))
- 		return -ENOENT;
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index d094030220bf..c4f8d5ae45a1 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -563,12 +563,6 @@ static int cxl_pmu_event_init(struct perf_event *event)
- 	struct cxl_pmu_info *info = pmu_to_cxl_pmu_info(event->pmu);
- 	int rc;
- 
--	/* Top level type sanity check - is this a Hardware Event being requested */
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
- 	/* TODO: Validation of any filter */
- 
- 	/*
-diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
-index 78c522658d84..a0eb72c38fdb 100644
---- a/drivers/perf/dwc_pcie_pmu.c
-+++ b/drivers/perf/dwc_pcie_pmu.c
-@@ -355,17 +355,6 @@ static int dwc_pcie_pmu_event_init(struct perf_event *event)
- 	enum dwc_pcie_event_type type = DWC_PCIE_EVENT_TYPE(event);
- 	u32 lane;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/* We don't support sampling */
--	if (is_sampling_event(event))
--		return -EINVAL;
--
--	/* We cannot support task bound events */
--	if (event->cpu < 0 || event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
--
- 	/* Disallow groups since we can't start/stop/read multiple counters at once */
- 	if (in_hardware_group(event))
- 		return -EINVAL;
-diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
-index 56fe281974d2..d63d5d4d9084 100644
---- a/drivers/perf/fsl_imx8_ddr_perf.c
-+++ b/drivers/perf/fsl_imx8_ddr_perf.c
-@@ -401,17 +401,6 @@ static int ddr_perf_event_init(struct perf_event *event)
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct perf_event *sibling;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
--	if (event->cpu < 0) {
--		dev_warn(pmu->dev, "Can't provide per-task data!\n");
--		return -EOPNOTSUPP;
--	}
--
- 	if (event != event->group_leader &&
- 	    pmu->devtype_data->quirks & DDR_CAP_AXI_ID_FILTER) {
- 		if (!ddr_perf_filters_compatible(event, event->group_leader))
-diff --git a/drivers/perf/fsl_imx9_ddr_perf.c b/drivers/perf/fsl_imx9_ddr_perf.c
-index 85874ec5ecd0..9e0b2a969481 100644
---- a/drivers/perf/fsl_imx9_ddr_perf.c
-+++ b/drivers/perf/fsl_imx9_ddr_perf.c
-@@ -553,17 +553,6 @@ static int ddr_perf_event_init(struct perf_event *event)
- 	struct ddr_pmu *pmu = to_ddr_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
--	if (event->cpu < 0) {
--		dev_warn(pmu->dev, "Can't provide per-task data!\n");
--		return -EOPNOTSUPP;
--	}
--
- 	event->cpu = pmu->cpu;
- 	hwc->idx = -1;
- 
-diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-index 3b0b2f7197d0..b0b736af82e3 100644
---- a/drivers/perf/hisilicon/hisi_pcie_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-@@ -378,19 +378,11 @@ static int hisi_pcie_pmu_event_init(struct perf_event *event)
- 	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	/* Check the type first before going on, otherwise it's not our event */
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
- 	if (EXT_COUNTER_IS_USED(hisi_pcie_get_event(event)))
- 		hwc->event_base = HISI_PCIE_EXT_CNT;
- 	else
- 		hwc->event_base = HISI_PCIE_CNT;
- 
--	/* Sampling is not supported. */
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
- 	if (!hisi_pcie_pmu_valid_filter(event, pcie_pmu))
- 		return -EINVAL;
- 
-diff --git a/drivers/perf/hisilicon/hisi_uncore_pmu.c b/drivers/perf/hisilicon/hisi_uncore_pmu.c
-index 3c531b36cf25..67d64d664b4f 100644
---- a/drivers/perf/hisilicon/hisi_uncore_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_pmu.c
-@@ -199,24 +199,6 @@ int hisi_uncore_pmu_event_init(struct perf_event *event)
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct hisi_pmu *hisi_pmu;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/*
--	 * We do not support sampling as the counters are all
--	 * shared by all CPU cores in a CPU die(SCCL). Also we
--	 * do not support attach to a task(per-process mode)
--	 */
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
--	/*
--	 *  The uncore counters not specific to any CPU, so cannot
--	 *  support per-task
--	 */
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	/*
- 	 * Validate if the events in group does not exceed the
- 	 * available counters in hardware.
-diff --git a/drivers/perf/hisilicon/hns3_pmu.c b/drivers/perf/hisilicon/hns3_pmu.c
-index 382e469257f9..f6996eafea5a 100644
---- a/drivers/perf/hisilicon/hns3_pmu.c
-+++ b/drivers/perf/hisilicon/hns3_pmu.c
-@@ -1233,13 +1233,6 @@ static int hns3_pmu_event_init(struct perf_event *event)
- 	int idx;
- 	int ret;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/* Sampling is not supported */
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
- 	event->cpu = hns3_pmu->on_cpu;
- 
- 	idx = hns3_pmu_get_event_idx(hns3_pmu);
-diff --git a/drivers/perf/marvell_cn10k_ddr_pmu.c b/drivers/perf/marvell_cn10k_ddr_pmu.c
-index 54e3fd206d39..26ad83cdb735 100644
---- a/drivers/perf/marvell_cn10k_ddr_pmu.c
-+++ b/drivers/perf/marvell_cn10k_ddr_pmu.c
-@@ -474,19 +474,6 @@ static int cn10k_ddr_perf_event_init(struct perf_event *event)
- 	struct cn10k_ddr_pmu *pmu = to_cn10k_ddr_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	if (is_sampling_event(event)) {
--		dev_info(pmu->dev, "Sampling not supported!\n");
--		return -EOPNOTSUPP;
--	}
--
--	if (event->cpu < 0) {
--		dev_warn(pmu->dev, "Can't provide per-task data!\n");
--		return -EOPNOTSUPP;
--	}
--
- 	/* Set ownership of event to one CPU, same event can not be observed
- 	 * on multiple cpus at same time.
- 	 */
-diff --git a/drivers/perf/marvell_cn10k_tad_pmu.c b/drivers/perf/marvell_cn10k_tad_pmu.c
-index a162e707a639..6ed30a649ed3 100644
---- a/drivers/perf/marvell_cn10k_tad_pmu.c
-+++ b/drivers/perf/marvell_cn10k_tad_pmu.c
-@@ -149,9 +149,6 @@ static int tad_pmu_event_init(struct perf_event *event)
- {
- 	struct tad_pmu *tad_pmu = to_tad_pmu(event->pmu);
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
- 	/* Disallow groups since we can't start/stop/read multiple counters at once */
- 	if (in_hardware_group(event))
- 		return -EINVAL;
-diff --git a/drivers/perf/marvell_pem_pmu.c b/drivers/perf/marvell_pem_pmu.c
-index 53a35a5de7f8..5c7abae77c12 100644
---- a/drivers/perf/marvell_pem_pmu.c
-+++ b/drivers/perf/marvell_pem_pmu.c
-@@ -191,20 +191,9 @@ static int pem_perf_event_init(struct perf_event *event)
- 	struct pem_pmu *pmu = to_pem_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
- 	if (event->attr.config >= PEM_EVENTIDS_MAX)
- 		return -EINVAL;
- 
--	if (is_sampling_event(event) ||
--	    event->attach_state & PERF_ATTACH_TASK) {
--		return -EOPNOTSUPP;
--	}
--
--	if (event->cpu < 0)
--		return -EOPNOTSUPP;
--
- 	/* Disallow groups since we can't start/stop/read multiple counters at once */
- 	if (in_hardware_group(event))
- 		return -EINVAL;
-diff --git a/drivers/perf/qcom_l2_pmu.c b/drivers/perf/qcom_l2_pmu.c
-index 9c4e1d89718d..eba9a7e40293 100644
---- a/drivers/perf/qcom_l2_pmu.c
-+++ b/drivers/perf/qcom_l2_pmu.c
-@@ -442,23 +442,8 @@ static int l2_cache_event_init(struct perf_event *event)
- 	struct perf_event *sibling;
- 	struct l2cache_pmu *l2cache_pmu;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
- 	l2cache_pmu = to_l2cache_pmu(event->pmu);
- 
--	if (hwc->sample_period) {
--		dev_dbg_ratelimited(&l2cache_pmu->pdev->dev,
--				    "Sampling not supported\n");
--		return -EOPNOTSUPP;
--	}
--
--	if (event->cpu < 0) {
--		dev_dbg_ratelimited(&l2cache_pmu->pdev->dev,
--				    "Per-task mode not supported\n");
--		return -EOPNOTSUPP;
--	}
--
- 	if (((L2_EVT_GROUP(event->attr.config) > L2_EVT_GROUP_MAX) ||
- 	     ((event->attr.config & ~L2_EVT_MASK) != 0)) &&
- 	    (event->attr.config != L2CYCLE_CTR_RAW_CODE)) {
-diff --git a/drivers/perf/qcom_l3_pmu.c b/drivers/perf/qcom_l3_pmu.c
-index f0cf6c33418d..af0ced386fb1 100644
---- a/drivers/perf/qcom_l3_pmu.c
-+++ b/drivers/perf/qcom_l3_pmu.c
-@@ -478,25 +478,6 @@ static int qcom_l3_cache__event_init(struct perf_event *event)
- 	struct l3cache_pmu *l3pmu = to_l3cache_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	/*
--	 * Is the event for this PMU?
--	 */
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/*
--	 * Sampling not supported since these events are not core-attributable.
--	 */
--	if (hwc->sample_period)
--		return -EINVAL;
--
--	/*
--	 * Task mode not available, we run the counters as socket counters,
--	 * not attributable to any CPU and therefore cannot attribute per-task.
--	 */
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	/* Validate the group */
- 	if (!qcom_l3_cache__validate_event_group(event))
- 		return -EINVAL;
-diff --git a/drivers/perf/starfive_starlink_pmu.c b/drivers/perf/starfive_starlink_pmu.c
-index e185f307e639..ee5216403417 100644
---- a/drivers/perf/starfive_starlink_pmu.c
-+++ b/drivers/perf/starfive_starlink_pmu.c
-@@ -366,20 +366,6 @@ static int starlink_pmu_event_init(struct perf_event *event)
- 	struct starlink_pmu *starlink_pmu = to_starlink_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	/*
--	 * Sampling is not supported, as counters are shared
--	 * by all CPU.
--	 */
--	if (hwc->sample_period)
--		return -EOPNOTSUPP;
--
--	/*
--	 * Per-task and attach to a task are not supported,
--	 * as uncore events are not specific to any CPU.
--	 */
--	if (event->cpu < 0 || event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
- 	if (!starlink_pmu_validate_event_group(event))
- 		return -EINVAL;
- 
-diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
-index 472eb4494fd1..0ef85cb72289 100644
---- a/drivers/perf/thunderx2_pmu.c
-+++ b/drivers/perf/thunderx2_pmu.c
-@@ -553,21 +553,6 @@ static int tx2_uncore_event_init(struct perf_event *event)
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct tx2_uncore_pmu *tx2_pmu;
- 
--	/* Test the event attr type check for PMU enumeration */
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/*
--	 * SOC PMU counters are shared across all cores.
--	 * Therefore, it does not support per-process mode.
--	 * Also, it does not support event sampling mode.
--	 */
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
--
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	tx2_pmu = pmu_to_tx2_pmu(event->pmu);
- 	if (tx2_pmu->cpu >= nr_cpu_ids)
- 		return -EINVAL;
-diff --git a/drivers/perf/xgene_pmu.c b/drivers/perf/xgene_pmu.c
-index 5e80ae0e692d..408e69533e7a 100644
---- a/drivers/perf/xgene_pmu.c
-+++ b/drivers/perf/xgene_pmu.c
-@@ -878,20 +878,6 @@ static int xgene_perf_event_init(struct perf_event *event)
- 	struct xgene_pmu_dev *pmu_dev = to_pmu_dev(event->pmu);
- 	struct hw_perf_event *hw = &event->hw;
- 
--	/* Test the event attr type check for PMU enumeration */
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	/*
--	 * SOC PMU counters are shared across all cores.
--	 * Therefore, it does not support per-process mode.
--	 * Also, it does not support event sampling mode.
--	 */
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
--
--	if (event->cpu < 0)
--		return -EINVAL;
- 	/*
- 	 * Many perf core operations (eg. events rotation) operate on a
- 	 * single CPU context. This is obvious for CPU PMUs, where one
-diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
-index 38470351217b..eff369b02773 100644
---- a/drivers/powercap/intel_rapl_common.c
-+++ b/drivers/powercap/intel_rapl_common.c
-@@ -1791,17 +1791,10 @@ static int rapl_pmu_event_init(struct perf_event *event)
- 	u64 cfg = event->attr.config & RAPL_EVENT_MASK;
- 	int domain, idx;
- 
--	/* Only look at RAPL events */
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
- 	/* Check for supported events only */
- 	if (!cfg || cfg >= PERF_RAPL_MAX)
- 		return -EINVAL;
- 
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	/* Find out which Package the event belongs to */
- 	list_for_each_entry(pos, &rapl_packages, plist) {
- 		if (is_rp_pmu_cpu(pos, event->cpu)) {
--- 
-2.39.2.101.g768bb238c484.dirty
+Within that same size it flips the test to a negative branch and reorders the code.
 
+Before:
+        scoped_timer_get_or_fail(timer_id)
+    1246:       44 89 ff                mov    %r15d,%edi
+    1249:       e8 d2 5a 00 00          call   6d20 <class_lock_timer_constructor>
+    124e:       49 89 c7                mov    %rax,%r15
+    1251:       48 3d 01 f0 ff ff       cmp    $0xfffffffffffff001,%rax
+    1257:       0f 92 c0                setb   %al
+    125a:       4d 85 ff                test   %r15,%r15
+    125d:       0f 95 c1                setne  %cl
+    1260:       84 c8                   test   %cl,%al
+    1262:       0f 84 85 00 00 00       je     12ed <__ia32_sys_timer_gettime+0x15d>
+    ...
+    12ed:       48 c7 c3 ea ff ff ff    mov    $0xffffffffffffffea,%rbx
+        if (likely((timr)))
+    12f4:       4d 85 ff                test   %r15,%r15
+    12f7:       74 0c                   je     1305 <__ia32_sys_timer_gettime+0x175>
+
+
+After:
+        scoped_timer_get_or_fail(timer_id)
+    1246:       44 89 ff                mov    %r15d,%edi
+    1249:       e8 d2 5a 00 00          call   6d20 <class_lock_timer_constructor>
+    124e:       49 89 c7                mov    %rax,%r15
+    1251:       48 3d 01 f0 ff ff       cmp    $0xfffffffffffff001,%rax
+    1257:       0f 92 c0                setb   %al
+    125a:       4d 85 ff                test   %r15,%r15
+    125d:       0f 95 c1                setne  %cl
+    1260:       84 c8                   test   %cl,%al
+    1262:       75 21                   jne    1285 <__ia32_sys_timer_gettime+0xf5>
+    1264:       48 c7 c3 ea ff ff ff    mov    $0xffffffffffffffea,%rbx
+    126b:       4d 85 ff                test   %r15,%r15
+        if (likely((timr)))
+    126e:       0f 84 94 00 00 00       je     1308 <__ia32_sys_timer_gettime+0x178>
