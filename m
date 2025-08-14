@@ -1,91 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F9928751A;
-	Thu, 14 Aug 2025 23:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3CB61F582E;
+	Thu, 14 Aug 2025 23:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755212980; cv=none; b=UzkAGCwTHLlm+vJXvVhGvSt8umjrUyVp9tZzIVBsfhF8FKtalcdn8Z1fbmFtjjC2jLd6StnksyQwThtAqtPdH4pdusodqM/PTRESxrFXb0Bd8mJzWyhC2VDOWccgAppCyREjCGZ1ncKOYqFo+56xjA05/wmSrDlqFhwgjDRXhPk=
+	t=1755215537; cv=none; b=rig3th2PfXZucpiDSfcpz21fqTExGCj3sEYKwafTpO589kbfPXrKVvWQs27B4TZjCFCXRTGRbtvmD8dxJOFDoPnP6M5nXbpf54FBnyRDr+EL4DgMfOIn41GPTB0eP0FJjdQqmWBuBh6O1+y0ezHPr40JoJwq2h/LSfDpi/8+dmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755212980; c=relaxed/simple;
-	bh=aokRSJi83wn6MuP5avdXHnJYDdO8hONUlIGhy+Jz2lk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KBg7SyhIGgOIZNfT5PjClnXG2efRpgomJQJEFWLOnRNh8fS7VqkMmSUIZD9g5NvzMf6iSazr+dBcqagwvQjm2r2Cf6zi98OtX2x3iEYI2+KYxFs0kzFC2e8gd/G9b0qFXWfAkulAZXLE6IhFO2zT9bO6Rqg8ctW4yhbG4ux8n6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aW1MsRk4; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1755215537; c=relaxed/simple;
+	bh=FIwBp8wJXikAg8T0jVOLfvQmcs/O9AstztJ/HuCCqRw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pESoY7egbKxRN6qHiVfgx4zx1vNQ/Ngyi22RM5z83OWqvrLQaTpRQby1Tj3dU8TWKaFoS5TjUzFguveFlM5zA54p1000KVmvQentcX/R7XwXlkf3MtMBeUsWIGZuTWLKaEtaRht7JUhhXZ5PYJimoEs35Qbt6hl4lN0uPo/rk6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AnnwPPH6; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aW1MsRk4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755212979; x=1786748979;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=aokRSJi83wn6MuP5avdXHnJYDdO8hONUlIGhy+Jz2lk=;
-  b=aW1MsRk4pZeDd3wKWGmHJi9Z3wpPY0FH7uUvJYydyxyUwQCrw11t4sVf
-   oK14fTr0rYrA4mJ/iPGFXBpDSHXbLvvOd51JvTWUtPIiZNAvip8lX/hOA
-   QHYtQPmCd+cXwocalm5B/FYX4As2YY7kWub/boIEOgDn2llnvjQU6OfC2
-   xx5uu4MSDBcN9PtRV6rK2R7hMcGHjkIARaDuy3oEgReAbpPD2N3vyogWW
-   rzhcVP4tzJ2+ykJqfv8YuRD3sw2xgKQKeDOJTgddNdf91obijwTfZi+6Y
-   fgZK2XJi1gH2s8fkDkPyu5oga7v2mRP5rIraEI3N9PtqFJEUlP8AANh7v
-   Q==;
-X-CSE-ConnectionGUID: XIU1dhJFSYaaKwhmB/Q56A==
-X-CSE-MsgGUID: ODAebk55Q5mxX/hPMKAxEw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11522"; a="56564066"
-X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
-   d="scan'208";a="56564066"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 16:09:38 -0700
-X-CSE-ConnectionGUID: 9pYHM7jBSvm2T8aKsJe9fA==
-X-CSE-MsgGUID: zRPrrsF/S/yTZaTPfcsl8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
-   d="scan'208";a="197870279"
-Received: from c02x38vbjhd2mac.jf.intel.com (HELO [10.54.75.17]) ([10.54.75.17])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 16:09:38 -0700
-Message-ID: <3d0945ca-eb6b-430d-a6d2-a4396596170c@linux.intel.com>
-Date: Thu, 14 Aug 2025 16:09:29 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnnwPPH6"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-61bd4eaa7adso164378eaf.3;
+        Thu, 14 Aug 2025 16:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755215535; x=1755820335; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/Cp39JSJVQFqGca1UhwI175ws5wjvkkGsiO7+sL61aw=;
+        b=AnnwPPH6xRsC5d70u6Qs3+gE8DG0xAN7+kyVCIHz0/EZ+uYNxj9YmuJE0IDXZ9B+fp
+         BfdPDZkqzpDYm9jihH8GNnlg9i9tE6u6iGSpGY7aUPR931VhfX8bRzZ49rauBAxS0ybO
+         H1tuJKTrMVHiNS/9WYtbDiilkrZC9RnHg2dP4QSobzmEvVilVRrXJP3+LL+UOtL2ivRk
+         BIGEyL0JOM44MPRNaNw7ZGtL7xWBYQF06EshiW4QwAsj1zBePswXZ7vkdoZ/TXdrtSEL
+         5OtG7P7xtrXg3fJf/EYHf0IakH6r/M75KMB8aYIux3a/cLMSMmlckWyjXmt2GtEf07un
+         CaDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755215535; x=1755820335;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/Cp39JSJVQFqGca1UhwI175ws5wjvkkGsiO7+sL61aw=;
+        b=xQ0imKb5UF4XPvMhQttfus6cAG1zuxhnaYdk0kPCC0OoFMIcAfMHqmdjGUajna5miF
+         hk6IhsFD9EzaefRyU953G/fRv3DYM6P2TgbqApq2gxvcMD8Q+WZdK3/dN5qd777+EBB2
+         YhLqmphJqy/KJrZrsBXsF1Ztxuz53mzD6mpdn+qisBiXD/F8ZvwRqc1ZMMzBCit/dkQX
+         ehxkb7MBgNWTN394rsG4epzPqBNVgS/C765I7+vxQQg+tp1aUzbnBgPsQGHsKJxIyz/h
+         3UlfodQDbdHfnyRPU4OJ1lLuavcCxlzMwyzc6TN10tfb/wrljfT9aZExzspuCy3e/Tvo
+         3rkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV3PGaAeAGp3XWR6RzAzfP+IhlAuzjrM8AqZo1iIN8L9/eQM0aKXf8q+WWsLEwKzmBhy3qnSktIFyY=@vger.kernel.org, AJvYcCWJmZsn880EXsZBW5X7N9UEFlfFnB2ZarFOi+SOgJCJa57PxHmfV8cN2czsPXYnA2Z4xvgC75ZxLicqEjwIPQ==@vger.kernel.org, AJvYcCWO7slPeR0OCaRqNgAPSFTII8rCaDOkUC+E1jvWJkeJJHx4U8g46qHyeEnfC3Eq+CriCkLs8a6nT1X+@vger.kernel.org, AJvYcCWxSWz8WE3K1btp5orXGoiiVfEp0rzrG51KbzmDAAWX6NI2RccI74q2aBGq76/gvkkcYyFwjPJy2HmyfKZN@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbLeIkK456AlAj7qoygOwPrV99SKqrTruGUzYnvUF2+g9V14lz
+	wNq+sRS00pCwze2a+IQa4CG5OmhkCidS4ceJzeI56gU+57/wi187xV5l
+X-Gm-Gg: ASbGncvHpYwaB8/2TFm5B198zlsmZDuSrSoJPfvUrNyHh7DBrfx5rckQd4knCPgEZTQ
+	zCo+hPatohqtXn+O+ryYtiJJRGqEVGTcMF9yZiq7sBIR91QuIemHyQYXowokXW0TkHiepwDDJZQ
+	n2Uk2MfI7UlgVhvoVdSK9+evYDDeFoxh/uuBueIuB02LJJgbnUoZe1bKLkBxNr5WEL43V2x7TEj
+	O+KrRmlQYALwyoy2s1haLaYFnmXTKhyM7DiLRoAC73j8iQoHo91YCpfCp3FjFxkBp2UIWYSxuaT
+	3PLwcl2fcHxbWzooaXkrF16CT2WDGB1e4uctgsmmoegY7EsIeDKN4EpdQx1q7T4QrjEaJHoH20p
+	XwM86lpmGsT+EgNwlAsN80H2CKUmdB0gLYKBusVbNyYedqQA=
+X-Google-Smtp-Source: AGHT+IGaHBl9xPsB9OO1cSHxNM9bAShZhkcOLGtZLcFtgk6aKTkPevpMjng+tcrzZPheSVo/c93Euw==
+X-Received: by 2002:a05:6820:1b88:b0:61b:d55e:6d19 with SMTP id 006d021491bc7-61beabc936emr162698eaf.6.1755215534772;
+        Thu, 14 Aug 2025 16:52:14 -0700 (PDT)
+Received: from groves.net ([2603:8080:1500:3d89:c95b:3a76:bbcf:777c])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-61b7caa0a42sm1980047eaf.24.2025.08.14.16.52.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Aug 2025 16:52:14 -0700 (PDT)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Thu, 14 Aug 2025 18:52:12 -0500
+From: John Groves <John@groves.net>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, 
+	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
+	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
+	Ajay Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC V2 11/18] famfs_fuse: Basic famfs mount opts
+Message-ID: <kuarf6hiwmit3jwwe4r27dj46v64k7x52eitsaw27zfw7c62cc@nrzyjrs5kztk>
+References: <20250703185032.46568-1-john@groves.net>
+ <20250703185032.46568-12-john@groves.net>
+ <20250709035911.GE2672029@frogsfrogsfrogs>
+ <ttjh3gqk3fmykwrb7dg6xaqhkpxk7g773fkvuzvbdlefimpseg@l5ermgxixeen>
+ <20250712055405.GK2672029@frogsfrogsfrogs>
+ <CAJfpegspQYVbWVztU5_XFwbGaTQKe2NCm2mcui6J3qv1VDxdSQ@mail.gmail.com>
+ <z56yzi6y4hbbvcwpqzysbmztdhgsuqavjbnhsjxp3iumzvvywv@ymudodg3mb5x>
+ <CAJfpegsQxSv+x5=u1-ikR_Pk7L+h_AqNBW1XxM-b1G2TLPP4LA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] cxl, acpi/hmat: Update CXL access coordinates
- directly instead of through HMAT
-Content-Language: en-GB
-To: dan.j.williams@intel.com, Dave Jiang <dave.jiang@intel.com>,
- linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
- dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, akpm@linux-foundation.org,
- david@redhat.com
-References: <20250814171650.3002930-1-dave.jiang@intel.com>
- <20250814171650.3002930-4-dave.jiang@intel.com>
- <689e64229859f_50ce10082@dwillia2-xfh.jf.intel.com.notmuch>
-From: Marc Herbert <marc.herbert@linux.intel.com>
-In-Reply-To: <689e64229859f_50ce10082@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegsQxSv+x5=u1-ikR_Pk7L+h_AqNBW1XxM-b1G2TLPP4LA@mail.gmail.com>
 
-
-
-On 2025-08-14 15:33, dan.j.williams@intel.com wrote:
-
->> Fixes: debdce20c4f2 ("cxl/region: Deal with numa nodes not enumerated by SRAT")
+On 25/08/14 05:19PM, Miklos Szeredi wrote:
+> On Thu, 14 Aug 2025 at 16:39, John Groves <John@groves.net> wrote:
 > 
-> Why that one and not?
+> > Having a generic approach rather than a '-o' option would be fine with me.
+> > Also happy to entertain other ideas...
 > 
-> 067353a46d8c cxl/region: Add memory hotplug notifier for cxl region
+> We could just allow arbitrary options to be set by the server.  It
+> might break cases where the server just passes unknown options down
+> into the kernel, which currently are rejected.  I don't think this is
+> common practice, but still it sounds a bit risky.
 > 
-> It is the ext_updated machinery that is the main problem that messes up
-> sysfs, right?
+> Alternatively allow INIT_REPLY to set up misc options, which can only
+> be done explicitly, so no risk there.
 > 
+> Thanks,
+> Miklos
 
-For sure 067353a46d8c is where my git bisect unambiguously landed.
+I'll take a look at INIT_REPLY; if I can make sense of it, I'll try something
+based on that in V3. Or I may have questions...
 
-Tested-by: Marc Herbert <marc.herbert@linux.intel.com>
-(the series as a whole)
+Thanks,
+John
 
