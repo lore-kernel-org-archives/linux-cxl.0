@@ -1,68 +1,69 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C311C311C16
-	for <linux-cxl@vger.kernel.org>; Thu, 14 Aug 2025 13:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9071B1DEFE8
+	for <linux-cxl@vger.kernel.org>; Thu, 14 Aug 2025 14:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755179953; cv=none; b=PRmi2HfW/jZbmB3XxfolEQ1RlPX79F2hMbWzwsk77ZUVZgjl7R5sPkQ8zQMOo+6gJf9gTtUVn80MU+AK3yo9zrDyTthXMlPKKfmdqY36XgfcinCHwfS4TrIpm5GFvn07Nc5rSqh4nQBLLZfrc3dqJOREqvx+xuYGVZcqba4XgQM=
+	t=1755182233; cv=none; b=Gx/ZQGL1rzIEqJ6/Nka+nXrD9ukufAFP34HYmhbaDi6D8ZpHdadBitGyXOE0LourM5AeRhgsSrIITXUvCXU1of//yAk/Nl26+27IDrzMv29jVWptM61ZyT0skQ7lON7Ss/PW95h0Jc2jDNUqTNS8fWkOAtjB5+aaWmr1Cux3AT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755179953; c=relaxed/simple;
-	bh=4ExxKGDx0fgiOXw8CTywAcBsJ8ogwJcpwNnL1i5YNn4=;
+	s=arc-20240116; t=1755182233; c=relaxed/simple;
+	bh=NOpPaMEGwARq4CHAFNBf771d9jPnS5ZeE6rfKhlvASU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lEqAgw+4xUjiZeaBr6KontaHut9DCriuGZUwiZL+IvrcXlunBfpLaz9q2EIsuyI1P/62at6bpCap2V0hBQgZ+HgBJq1ctFv0ijHoOoB3G+U6gwaAdiZyWFMaih2q/5Yb4IYwtSBbp0HGcZHxuPD3T8+PvbWdiOAWEqnOY5kGuvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=N9PzrbPR; arc=none smtp.client-ip=209.85.222.176
+	 To:Cc:Content-Type; b=h2Ykeo10mNwrmh/+gQIPLI0pDWgpj6o7QNQwBunwnae1QCfR5KGZZKYGCIa7mx3eSeovkg2HHjcIRn3HNZBChKXBW7azlmp4mcBqInbWzd9rCSk2aCfS4ijyS+M/gmZy8+zeo8Xt1pCsehT8hX9R5695kjfax4tfrjsOR2LHnIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=KQNJjeAf; arc=none smtp.client-ip=209.85.160.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="N9PzrbPR"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7e8706ac44eso136906285a.3
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Aug 2025 06:59:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="KQNJjeAf"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4b109919a09so13204251cf.0
+        for <linux-cxl@vger.kernel.org>; Thu, 14 Aug 2025 07:37:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1755179950; x=1755784750; darn=vger.kernel.org;
+        d=szeredi.hu; s=google; t=1755182230; x=1755787030; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4ZZu0s3S5A8+/SIi2GUbQjh84N2xIaZ27oBHRZEOGZ0=;
-        b=N9PzrbPROtxWyZbVaEBxCJ+BwqqrykRK9dMm5PlCwrgj52BJTh0yaIKl6U+TBukioz
-         BPxbfO2yXzEC2/eypvErSF9CJUW2sfKkMpg9uPwPErqosswfRFh3t0BTbhDI54npUagA
-         lilmlNGdIvGBEGMnLDjZnPV+IPwZ9Rp6Swc0c=
+        bh=thFJCyGfhvQRRqY0DjMQa3Qo17IKtZ1G40gUR9k6ews=;
+        b=KQNJjeAfSoSwUDRw80154oLg3NjJYeTUwz6KXDBkYfQTu8vynYQjQRzggbRtxTurRv
+         L1oI7K7IHGucMXWSh43/r5zPlnon/WpknKv47HhPAwiY1H/gITEGb+I8a/WvoKgR8SpP
+         qeUdiB/FilITBvEDt1dY4jA5A58cLYBl/doa0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755179950; x=1755784750;
+        d=1e100.net; s=20230601; t=1755182230; x=1755787030;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4ZZu0s3S5A8+/SIi2GUbQjh84N2xIaZ27oBHRZEOGZ0=;
-        b=s5hksVoYiFN/1/9t3d+p8Bkq3EQnietveNNECdTH7+kMxb+cgE4N0N64f/GclFrA6j
-         4VIUf10A/etaduoxSrzfvds4gcOVPJUyghFQKTc92nwZhZ+Cjd9JfCC+DjUTlXgll0tI
-         BYJHyduu9girV8tyQ9fcLRp4eOtt95dyvO3q3vxiC9IwJDp0Bb+IgbRzAbkYkeq9m9oU
-         lhL1kxqq0SGRMgpjEUy5kB2NRUuy7PbQK2DINpwjuKT+oFkX0CE3Fb5nvWFEptTioYdG
-         Vd0MYHE/EktEAGQg5KmCoF0tfAjoDhvQHJZqPCXrExssfANc/rs1OnxXAV0KI0Goaypa
-         qE5A==
-X-Forwarded-Encrypted: i=1; AJvYcCV0mqSq4MmZr8Z32GkKbK4/TWJjNLrG8YdMBy7xxbcHDq2W8F7Em7f0hz0y/ODKtwOjZg0EU48NkDc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2QcKWAM5pY8V1BWb6cslc2D67VjOLE2mVSyel5rqGtWAuNaX2
-	nWMYAqaehRKtcyw+fKO7nfezm/zgrXvuZ2TKIc96SKNv0wLNbxS+J09YpR7mZ4B8OnXTOxX8fiI
-	ceCz7TKPG50vc5Ex7HFw2yzxMr24ZzvAJMBwwTg2MRA==
-X-Gm-Gg: ASbGnctDoxG/3T8d7DFgveuthaVKxORYgRTNwtCNNXbznuKCWNxfFG2Qh/c1Vezb+EU
-	0zLl4EhovANs9bQOvYHMa0+qYKLZ4tTzJe0bfLy889daIBNoNWVlhyrP9ObPbYpePO1AxKQUB4h
-	piOkmKee70RKhijtthvN6cLtMruiPrFnng7y41I3ggK5oWF2HS0b2YGqF4Nxpqs7Yu3deYpfoSl
-	X6p
-X-Google-Smtp-Source: AGHT+IHDCZisldsHFROueT1mDv+N2w5BriAS/91vOctNmeG6Etw7NNZmRk8u6yHZ87xrdPA7iktx621LgwaHh85teV4=
-X-Received: by 2002:a05:620a:e0a:b0:7e6:8545:5505 with SMTP id
- af79cd13be357-7e8705a2a88mr419769985a.55.1755179950579; Thu, 14 Aug 2025
- 06:59:10 -0700 (PDT)
+        bh=thFJCyGfhvQRRqY0DjMQa3Qo17IKtZ1G40gUR9k6ews=;
+        b=ktMoHO70kWs94SgcsaEU61B3cBkW7AfdZBtCmSvoNRMSKyKV2RwPO7HSYGOPgy1iZu
+         W+R9HXQq0unmgTMJ7cdpk0LL1Q+d3LcfJYld64F7mdPI/He2RPmGf8MsuD/lqyWH4lLr
+         6mxrUNWkoeGXCTGk53NR8Ag2HjTX/ebujokD4jPeopLcSOBPsBXMdfYHO3xUSAVRjV1s
+         TJ9oinZXw+uBfmheArFMWm3oLr0mYvVyzEquwenK4omb+UAuJlFww/PjQu90J6vQfKRw
+         2aRAFp+lafQP/8DlNeXKIsST9HmZJwPHQC+XJgSO5hXzscWyr8Mslb1W7Wq1VX0Baxnh
+         8LYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9I1oe+tPcIWWgOd1mh9VROgL7EeT4d6e72YRUY81z+7G7seIPMmVUJ+C5SQ9d5DKj0DFzcUgDvrk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4BfYKitizN2Vh4OWAh5vFGkBfLpvyX1W8uSwkWcVnHnYXEy7m
+	soSTIfnua2ftCBMjmrQX0dTkCQ7ZNC+VUE92LgU/Sb0WM6pClqLPyCslMbChMSdcU5NaoIIP2w0
+	X3U7kbvhuno9JLP2Eg20iidtpZdC/bPKmSr3b4wp+kg==
+X-Gm-Gg: ASbGncsXQO0CNM4YuHy1XhJnj1AtzXQruSz48hczKJScFv79XJxlLOdbYKwOWG4oRSZ
+	tsNxT+OuqgYcQj01Vpbb3koWJ2k3+wtlabZkGaZ/MJJE8H6/clWkWndWzDXsrCZmNyOPrpGyjFM
+	fSfzCaBWZ9+Pufu/IMLzQXGl1qe60KToQUnLgzRDRWcDWZGoDbXsqJUO8euHFsm9Zziv3lY3o1+
+	IZz
+X-Google-Smtp-Source: AGHT+IHnfRI5xHzwEiwbnlj4w/zFMDDNEEaatcq1mpqAAB2GV7mMF1beVsw/Q/x3FPL39V74ikfbsx8wh3qug5aBccg=
+X-Received: by 2002:a05:622a:1926:b0:4af:15e5:e84 with SMTP id
+ d75a77b69052e-4b10aae7b12mr50528031cf.42.1755182230192; Thu, 14 Aug 2025
+ 07:37:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703185032.46568-1-john@groves.net> <20250703185032.46568-15-john@groves.net>
-In-Reply-To: <20250703185032.46568-15-john@groves.net>
+References: <20250703185032.46568-1-john@groves.net> <20250703185032.46568-13-john@groves.net>
+ <CAJfpegv6wHOniQE6dgGymq4h1430oc2EyV3OQ2S9DqA20nZZUQ@mail.gmail.com>
+In-Reply-To: <CAJfpegv6wHOniQE6dgGymq4h1430oc2EyV3OQ2S9DqA20nZZUQ@mail.gmail.com>
 From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Thu, 14 Aug 2025 15:58:58 +0200
-X-Gm-Features: Ac12FXxPrNeYbLt2gO4V6U2nB86--yn65EeQtUloUgMUUdsnzFSb_AaNjXQhYqI
-Message-ID: <CAJfpegv19wFrT0QFkwFrKbc6KXmktt0Ba2Lq9fZoihA=eb8muA@mail.gmail.com>
-Subject: Re: [RFC V2 14/18] famfs_fuse: GET_DAXDEV message and daxdev_table
+Date: Thu, 14 Aug 2025 16:36:57 +0200
+X-Gm-Features: Ac12FXxrfsSu-05pCnMumsCzYXADqTJ2OFTZfF8uQPidyp6kmWUcoLNSx-lr5VI
+Message-ID: <CAJfpegv=ACZchaG-xt0k481W1ZUKb3hWmLi-Js-aKg92d=yObw@mail.gmail.com>
+Subject: Re: [RFC V2 12/18] famfs_fuse: Plumb the GET_FMAP message/response
 To: John Groves <John@groves.net>
 Cc: Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
 	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
@@ -79,19 +80,31 @@ Cc: Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>,
 	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 3 Jul 2025 at 20:54, John Groves <John@groves.net> wrote:
->
-> * The new GET_DAXDEV message/response is enabled
-> * The command it triggered by the update_daxdev_table() call, if there
->   are any daxdevs in the subject fmap that are not represented in the
->   daxdev_dable yet.
+On Thu, 14 Aug 2025 at 15:36, Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-This is rather convoluted, the server *should know* which dax devices
-it has registered, hence it shouldn't need to be explicitly asked.
+> I'm still hoping some common ground would benefit both interfaces.
+> Just not sure what it should be.
 
-And there's already an API for registering file descriptors:
-FUSE_DEV_IOC_BACKING_OPEN.  Is there a reason that interface couldn't
-be used by famfs?
+Something very high level:
+
+ - allow several map formats: say a plain one with a list of extents
+and a famfs one
+ - allow several types of backing files: say regular and dax dev
+ - querying maps has a common protocol, format of maps is opaque to this
+ - maps are cached by a common facility
+ - each type of mapping has a decoder module
+ - each type of backing file has a module for handling I/O
+
+Does this make sense?
+
+This doesn't have to be implemented in one go, but for example
+GET_FMAP could be renamed to GET_READ_MAP with an added offset and
+size parameter.  For famfs the offset/size would be set to zero/inf.
+I'd be content with that for now.
 
 Thanks,
 Miklos
+
+>
+> Thanks,
+> Miklos
