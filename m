@@ -1,37 +1,50 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F5F2FB996;
-	Thu, 14 Aug 2025 15:56:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269EE2D6407;
+	Thu, 14 Aug 2025 16:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755186998; cv=none; b=q7QHUWSkuyhsmhzE1TImF5Jjyvc/2x+z+SBavjz6i44z7Y+kpVQj9I/R+SYOxwHCPIS8z/O3xHnZa4Kn/F1dwn4oFzY8fpdQwgxFG6jv7tQMXTw55GM0feJ5Zx4ob0WcBLhG49o4/vlrd+6IO/mPoNjGI+MubHX2Xh5YGrqHyuM=
+	t=1755187633; cv=none; b=i0hLcLNFDuMHsAjlg6+23yATei+KNIf0yyaG8aE56VQGwPZsoU4AMjn9RqPA5qAcFZOvv82BSXCi6mh92TuoCfjLd6wUlXGhDPH1nSp46zdXcAig7CKIQOdidvlh6/pdMDrSJlelke4DGS4CNS1Tyr9n3Y8OUg020Y1eYRKtwHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755186998; c=relaxed/simple;
-	bh=3h2uES2VslNzNOlhdk3e0ZzlqdhIcg1czAl4A5mleuE=;
+	s=arc-20240116; t=1755187633; c=relaxed/simple;
+	bh=vG/qEKEpCZUZKsXkxVaanRomBpekziB+YRxHWgLrWI0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DfzGNKvuFffL1dgvruaJUuv8fT0yV87DSqOC/lMMefwQT05iBL2BFRqjtRKOlaTRq7QrDmz4rpNcEQNeGufFDdQOpU6o/8LBXoIxHs84jBPzAa6vCySkuekgd+4R6gbu9P2X6UmRsLIPQeG8BkBP2XqKqEvF4Oix64mWqPSv85s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DWjsmerM; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=fZy+4jJTtegXtJLGFvp9NhaYc5LNmnhFTyNi2DORuk+tteCedQsi08YV8JZxyNAHZKjI0ybCgFXSb67DXilMwk59nELw/H5CDz3B6a7ICp+2mO+cH+ds3nlSylToJWBAvdniZuo+cUUNjODk59e81zRPIfQ9aJda6WGv1/DjNZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L3a4ERY5; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DWjsmerM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=RxZJR6SmruU9qKmz3YFoByNqdMbdKVlOdMVKI5gChGw=; b=DWjsmerMtgZVEQf1yV8diFOgum
-	bJMBcGQzoxKtqF8UXL3rU1XZ3GhSyR6MbV6HWS1Oe9y5W0A7+HQeoL4nrvSKtaSjQcU8nt9j4pTQA
-	1Ab4TIdmydfaf3pa/OAatpok66Vlkw3897N+owgWXbUR1yKxhwr/a6LGFxlqdSuLUni6e0Y1iA3E+
-	a0EL6dfVj9wJ0eW7w0wcuLW0bfuuvnHq1c2XcW3mR0xfrJ7AourX9vUm/gAJmuPFtKdtHc3qXLis8
-	LmfZyPjGjMd4y+mM1TU1SsxpMk12GeuLRkVaeshWALgk7drZmoe1IognxpRK/Xo4btZQRbhQZmgcM
-	2DvYHeTw==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1umaJe-0000000HYBq-36lq;
-	Thu, 14 Aug 2025 15:56:34 +0000
-Message-ID: <95b81414-52d4-4e13-a894-9d59cd0e175c@infradead.org>
-Date: Thu, 14 Aug 2025 08:56:34 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L3a4ERY5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755187632; x=1786723632;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vG/qEKEpCZUZKsXkxVaanRomBpekziB+YRxHWgLrWI0=;
+  b=L3a4ERY5x62n9oPfRUcL4jDXmr5vxWN+Wtym0eYSHNNxOLGn4H0hjmWP
+   bRwFn0pec5UKhEUHHX3sAU2bMa86zMEbysxBVxuq9H4WlJTVc5WQD6Fa/
+   suMnat5iMBR0oQaIKo+tU+M9moBz8LVH2O2Hg3on6tHTLddmIasno9GFq
+   SQrHrGJaS2bT2r6VTbcL6Kx7+WZRVM0M01oyYqv80rdRbysD8eVKqtgd3
+   KyC1SguLiIH6L9wlQXMpN+dv6YkxbU1fIRZeuAr+01NOHlFM51lkoVDvb
+   20TBQ+HNSC374xY6XjCcmVEbG1SI8aRva1MxbScwSK3vaK/Y3gpWij9Au
+   A==;
+X-CSE-ConnectionGUID: +eRZjzjVRqKRCWWdradtKQ==
+X-CSE-MsgGUID: eKI51XkrS4yG/q0aOzFDRg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11522"; a="68208578"
+X-IronPort-AV: E=Sophos;i="6.17,287,1747724400"; 
+   d="scan'208";a="68208578"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 09:07:11 -0700
+X-CSE-ConnectionGUID: XKwl5ZwpR/eOvQm+LOwh9w==
+X-CSE-MsgGUID: i2DLUQVrTfCuoOh9/S7xkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,287,1747724400"; 
+   d="scan'208";a="166767403"
+Received: from anmitta2-mobl4.gar.corp.intel.com (HELO [10.247.119.169]) ([10.247.119.169])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 09:07:04 -0700
+Message-ID: <18b2a030-f607-4a6c-bd55-b704a06c6948@intel.com>
+Date: Thu, 14 Aug 2025 09:06:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -48,7 +61,7 @@ Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
  skhan@linuxfoundation.org, vishal.l.verma@intel.com
 References: <20250814114245.16399-1-vnranganath.20@gmail.com>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Dave Jiang <dave.jiang@intel.com>
 In-Reply-To: <20250814114245.16399-1-vnranganath.20@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
@@ -69,9 +82,7 @@ On 8/14/25 4:42 AM, Ranganath V N wrote:
 > 
 > Signed-off-by: Ranganath V N <vnranganath.20@gmail.com>
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-Thanks.
-
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > ---
 >  Documentation/driver-api/cxl/devices/device-types.rst           | 2 +-
 >  .../cxl/platform/example-configurations/one-dev-per-hb.rst      | 2 +-
@@ -118,5 +129,3 @@ Thanks.
 >  termerpature only. Just one interface makes it more simply to use.
 >  
 
--- 
-~Randy
