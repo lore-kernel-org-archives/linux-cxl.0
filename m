@@ -1,504 +1,241 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F3A2741A0
-	for <linux-cxl@vger.kernel.org>; Thu, 14 Aug 2025 22:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755210211; cv=none; b=Welwj+PR1NOx9WbwaAec03Uw6zP58QaTcfSdLTo2jQLYDr0iKop3hlKnW2UqHUSjxGKz3pRC69U1CJ4laq96WbrzaVWpF567tqE04MGQ0VzdtOJ9/9e7RaLLXlQThznsjvXyRlFOFsnQI1bONxsj+VA4TvVvDPmijsfzQvu0t7s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755210211; c=relaxed/simple;
-	bh=U/h8g8kyOjsFoSK6KGEL5phDI+MGe3ST2bxL167QkhE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fzx31PX/BiD8i8TlqQTYhaT24z5PIgxWUkz/8GGmUWIRwSG54hkv4chzI50BeKqPjBAO4tjIcyBa8czBCTVGDjMxhrUknmUO1ygQwF+9SILo/yLxKFQiRqHbr0rf1qa7q2SsGNwz6VKzN9dQgD7E1lu5JvmiPKYZlF1aSzMvt+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C819CC4CEED;
-	Thu, 14 Aug 2025 22:23:29 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	rrichter@amd.com
-Subject: [PATCH v8 11/11] tools/testing/cxl: Add decoder save/restore support
-Date: Thu, 14 Aug 2025 15:21:51 -0700
-Message-ID: <20250814222151.3520500-12-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250814222151.3520500-1-dave.jiang@intel.com>
-References: <20250814222151.3520500-1-dave.jiang@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA2E1C9DE5;
+	Thu, 14 Aug 2025 22:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755210796; cv=fail; b=KKjABvmjKsu3ZJr4BAQQGcrnahJ7j97tfWKU3ltRR94b/Gbm5s2fpy1F0gxya0ajhR6vBSa+AHpQMgo3ui8bLXa9UPYspPbCV9x/JCYKXvJrzQT6WMzv/tk26jfMzrRThA914UxERzzKJAvQzDrkiEU7OgL3T+FVTZ4mK4kojZ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755210796; c=relaxed/simple;
+	bh=IlBPgeBEdr1OrgziVQScnCNGUA6wsgKQNIV8zjPZrmU=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=nCDUp0niozQh2zBAfVLAyZfjKt2AzuYCUxKKBFpcUKZFo645frEWWCJm8ZDW5+Bd1vNzOp0VhrQ+MOLoIahSSuRy8fDcXyO41gyixeAgd2ElYMWK4O84dVb98n2hWaW7fYCJcRydRmWpNgzUt3pJqAgY/s7OosSiAKYDeY6f6FY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bBAhZfbR; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bBAhZfbR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755210795; x=1786746795;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=IlBPgeBEdr1OrgziVQScnCNGUA6wsgKQNIV8zjPZrmU=;
+  b=bBAhZfbRtZ6i5+HGli3R/5doAj+4GnEvwGIcEX8lubeVCnnMlE8cxFC/
+   VXln5oFw1k2pKefSU95+ZHga6OfQJnmOu/X3Q2bH3xaH4ODOcYKwF2vUD
+   Ytio06rFGaDXS0RLOPu57Q//EQ78Axs1/4FUasaGyOgIEq39p9dS+Qe1Q
+   MLJXeBNZrUFDWVYY7uWH4Fh62+igD9i887JI3nSKbTn2zGU269xr49QCv
+   9B4FLKW11iL+LPJLEVf2U3LYfpdsGb6rBduHGHkjQArEJjRf6cVIQ41kq
+   otTngblI2irOmHlIGGx37t6HIct1tdn5TyqjGdkuwvsQVDLVKY+lWXUrX
+   Q==;
+X-CSE-ConnectionGUID: F5kwJMPwRHyadTXCY1PMbg==
+X-CSE-MsgGUID: mp2VzqBlRbasFG7EWW7Kig==
+X-IronPort-AV: E=McAfee;i="6800,10657,11522"; a="57610892"
+X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
+   d="scan'208";a="57610892"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 15:33:11 -0700
+X-CSE-ConnectionGUID: O+aZlP7JQ5uEyH2Y6tFDCA==
+X-CSE-MsgGUID: beVmXELTQz+/MVa0yYPKlA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
+   d="scan'208";a="167239885"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 15:33:11 -0700
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Thu, 14 Aug 2025 15:33:10 -0700
+Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17 via Frontend Transport; Thu, 14 Aug 2025 15:33:10 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (40.107.102.80)
+ by edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Thu, 14 Aug 2025 15:33:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wFl3Uz0OeSsmHQhPmK1getaNB8FKDDAXNI3e2jeKkVzPig66Iht3jW6+aVX6DslsEVbPc9F/L4XQMFNob6JvBzljnQ/S4XGvsV+oLNrNyITVA9UAlVRlMq0HHCZVPv9eMH5qQAf1tL1iUQlifHmjBP9k/sGtXFq9YyB8JHOMbL8lAn67/Nvt7P6SfdIFBoowgA0gMZ/DayVomvENWEpMOHyXpXMCnlu1j+/U6J1a0MNrPYLk/cTCO4VqqUc3Y1hpF3JVeaVPpZPXIqazMPVNhdp9TQDzxZEd8n9bg+9c7KrHTVYcg2g2vbjsMMVqjYp8G8hvH/dea1vhKCTqGgw7uw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bvIdrP4DI/I4RMXMB31A8chH4vZvVDpNbTqIzrqBACI=;
+ b=hLGSG/+ygEHdwNEv7/sofVdYsUl0NMEdhis9K1SgmYavmjx48NNaYyZEYIFCyLyO6UPPcfyr0VrY4pCCiz7Ycr12fDtRXL+NFRH4LR+ncDzPhw516kmPWVEiVuKIXjX8X0aFX+DtrHW/9VxQIX3XUOC0s++BqPhdxO6BKSlHmArKz5JvFVXcaaOd1APT8NSNXlW5e3iWFrhMX9orjsz4cVGLenUmQViE4c+Qy830XWAE7OR1Fq5afJMbbSLUvI9R+YtZkrne/V4OMhc0QX8M01TFK19D7DrVe+4hgc8/VvkBlrZ1Mn1jq53/3tMvlhkS9eor8OPvBtnnGECSQ41+3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by DM4PR11MB6429.namprd11.prod.outlook.com (2603:10b6:8:b5::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.15; Thu, 14 Aug
+ 2025 22:33:08 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%2]) with mapi id 15.20.9031.014; Thu, 14 Aug 2025
+ 22:33:08 +0000
+From: <dan.j.williams@intel.com>
+Date: Thu, 14 Aug 2025 15:33:06 -0700
+To: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <dakr@kernel.org>,
+	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>,
+	<marc.herbert@linux.intel.com>, <akpm@linux-foundation.org>,
+	<david@redhat.com>
+Message-ID: <689e64229859f_50ce10082@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <20250814171650.3002930-4-dave.jiang@intel.com>
+References: <20250814171650.3002930-1-dave.jiang@intel.com>
+ <20250814171650.3002930-4-dave.jiang@intel.com>
+Subject: Re: [PATCH 3/4] cxl, acpi/hmat: Update CXL access coordinates
+ directly instead of through HMAT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR13CA0065.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c4::10) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB6429:EE_
+X-MS-Office365-Filtering-Correlation-Id: 27eb618d-6847-43ce-01e5-08dddb828b1d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?OEo0eFZ6cXdmMmhYNlE2Ri9tKzBUYUEwRGJhWGVTblZHaHdrM1RSZnpyNWdD?=
+ =?utf-8?B?K0ZoZm5BUkVBOXdLU3FiSlFvTFJReUhCdm5iRmNzbkd2UU9OekdwSHhNZXNG?=
+ =?utf-8?B?aGQ5a0ZyU3F5ZUUvWjVGQi83eThkd2ZYNWRPYXFWZXhOR2srYnRLNWt1U25K?=
+ =?utf-8?B?MTZCb1FlTWVka1ZTZUgzU1hvRlc4bG1MTWIrR0MvRDFpTXFVbVdzU2xIQ210?=
+ =?utf-8?B?VkJpTldXVHdyLzR4dmtjaHQyL1lTT2h6YlhaY2pzbGdUS09NZ2hxRURnbHly?=
+ =?utf-8?B?M2pMVDc0Tk15a1d3TFcxTTBzNjA3aW5rRnAvaEVDRHhsQjFmTXhkdkxxOU1t?=
+ =?utf-8?B?czUrTmVMY0E2WFJKRThBUjJYYmNGdzFCM2pqaVFycTFpUEI0UkdXUVV4aXBM?=
+ =?utf-8?B?VEVwd0t3SDZzUkg5N1E4TDVzaXZkSUtTVnFEV3RJRFVoUmJCT1k0VmFRRFkw?=
+ =?utf-8?B?cWhMMG9raG5GNnFGajRFK3VXRjlZbUl6SzhWcGhzNWtwQi8wSDBtWnVDSll6?=
+ =?utf-8?B?NVI5eWw3dkZKeWMrQ2FMd1BlSWdFSVZVUjZKaGpTeFFpM2tlYWdvZW9WSmo2?=
+ =?utf-8?B?MENEUFcwTWtpeW81a2dpQVhlR3ZqaHg4azhoc3BzVHZCTnpBWFAyZGhlRGZV?=
+ =?utf-8?B?Z2N2N2dOaVVSdlg2eEsrWWxiSWt4bktDQ3pDSHJoYkVNQ2lJLzdiUTRQTVVE?=
+ =?utf-8?B?V2RlL0lBQkhjajJtSmdKQkRFZXIyZ1ZwNVFtT2I1eVNUTjByMkNpRFJEdDhT?=
+ =?utf-8?B?UU5HUnZsNHRKK1pDZHlwRXBZZkpqSlg1UDBiZ1FzTjJOdFJ5eUVsZ293ZFZE?=
+ =?utf-8?B?Qms0YXYxL1Y2aGR1NnRtZTJNT2h3UXE2NVZITThrS1ZlenZyQTNVV1cyOFhN?=
+ =?utf-8?B?U1NsYk0ybnYzVEE3MVRvcm9XRkUrYzZQdGpsd2RVS25mN1h1aXFwY0V6RXdJ?=
+ =?utf-8?B?NzVKMWVRM1E2dUE2ZlhuQ1Z6TGNsN1hQSFpZRXpzR2pwTzUrME45M0Y4NFpp?=
+ =?utf-8?B?ZkNqWXN3alVoU3M2SFk2WW1xd1hwcll3dUVLTzU0eUZOcDFsTTZNdjBNbGVK?=
+ =?utf-8?B?RE1TaVN6VXo2UFc1UEZ5SXkwQW9OUlI1dXZ0THJHNVZYN1ZhQ1VoQWY5VUds?=
+ =?utf-8?B?S0pBNWY5MENINWtIamppSWRDeTdEb3NwakVVYnowQ2tpZXRtb2E4MUg0Ly94?=
+ =?utf-8?B?WkNEUVVYOVo4WGxDbHo1YUJrbUlQWG9DaTRSd2k2WW5kVnE5K2N3REljN0dp?=
+ =?utf-8?B?WjFLTGNjbFBuZ3VHRllFaTh3V0o3NytzYklFQk9tTGhQcVZTdnFsRUxiSzRI?=
+ =?utf-8?B?RnBYOUNYeFZKL1BBcUx5SmU3NW8rMTlYbkxQdmJML0F3UHhPc09KS0tPMUxI?=
+ =?utf-8?B?elJKRjFxUVlzOHp4QWdweHJEdG02SWdobmlvbWRCQk8zZUYzUkFuWTRJRmh5?=
+ =?utf-8?B?OXdOTURHanZOTWM0MjFMVjdESFZvd1JHY090S25CYUFqakZDZDZvWWd1UFpO?=
+ =?utf-8?B?RzFGOVpsTitmR2F5bVZKMlg1WFF1L3ZCY0lsNzdOV085NHpzdFhlM1o3RXAr?=
+ =?utf-8?B?d3RTNitVYzVKdER4UHdIVDE3K0NrRVBrb0lQbmNvVjArKzNLVUkrSEtpNDIr?=
+ =?utf-8?B?bTNIcUVpYUROLzM1ZmtrNXdhVmExQllFVHhGY1dMUWxyaDJNNmZZYnFCdEYr?=
+ =?utf-8?B?Qi9kSGlEendpbDhsTVZZR3Vtbm0zUEx4a01lb0p6cVk1bHY1SVNwZy92dHl2?=
+ =?utf-8?B?cFNrckdBYzRqQ1V3cWR2YlhMOVRaQ3d5WnZRS3FXejdJUUtYcmNWRkNLNXhP?=
+ =?utf-8?B?KzdxcHNhQWZvelRCOXhmYXlaMkE3STRyWm05eHdJblRHb1hOUnFES1A0d1h4?=
+ =?utf-8?B?ejd2UTcvdUVuZ2pobi9KVEZUWTh0Rnk2dWZheGorR1dKV1E9PQ==?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bktqUUo2cTBKbnYvY2VTNXdMd3cvUy9RTWJZOHJ5ME4yN28xb1MxWHF3eDRS?=
+ =?utf-8?B?MkV6NVc4NmdoYzV2TU5oRkZLS3NkdU1NQjZzdzB0alVNTnBsS0haTjdCUGZX?=
+ =?utf-8?B?Mk9VZXptQ1ZJb2REUkVRMkxzZ3ZwQjJkYmU0ci9vS0pNSEM0Mm5HZ0ZmOHB2?=
+ =?utf-8?B?VTZZSUc3Qzk3K2xUQzlwblF6dmFoMGEwL3VCelJYc3N2bWRaNFpscWlKcm1s?=
+ =?utf-8?B?UWh0cjJiSDlTclRDK2c3citSaFlrWTVMNng3ZVMwRjBkRVl6ajhPNzhmRDJs?=
+ =?utf-8?B?MXlPbmhuQWxhcDMrNkJaUll4S2VqTm9EZjE2N3VVOUNrQWY5eXBwYlgyL0xn?=
+ =?utf-8?B?eTBtT0x5T0FGYithRFZNM3QxdDhWYWFRbHJ0SjJ6WHh2TE9XNlNwTDFMa2xn?=
+ =?utf-8?B?ZElyamY0ZnJ0N3lMUXN5RVNCRGF5MzhGTitGcUNPOXpzU0JWOHR2SUd5UzZW?=
+ =?utf-8?B?VnVEWlhPeitGbVRoN1dJamJZUkUzbTZ3NGQzOGtFVHd3VWExVTRoZXpnN2s2?=
+ =?utf-8?B?NmtnMXRFN2tTcm9sR0laQTVSdlQzNHp5ZmdGaXZWTlZnbzdwNFdDN0N1RHJu?=
+ =?utf-8?B?OGJ5RW9OSXhjNHNQbHJLQ2FFYzNFTHovVklRek82VXo2NVpiNnUva2FISGNJ?=
+ =?utf-8?B?dDdMOThjcWxWQU1lWVZsWkZNWGtNM0tEK1pycitVS1JoZXBENWZaY0ZObDM1?=
+ =?utf-8?B?c2d1TEZSdFBCSll0UVhCRWxFMTl2UEN3RjFBaWtTTG5tQTNXc3NCajFSOUNj?=
+ =?utf-8?B?WmVUcW4zTjdoYUVmNHRRTi82dVlUR3RiT2dTMnk5N3ZWL0E3R0JyQ3g2U0Jw?=
+ =?utf-8?B?MjFsYmZkQlJmN01TNGNqL2VtR3RlVUFaWXB3Q0dkbHhnckcxbnZpdmhKVXZR?=
+ =?utf-8?B?ckR5ZmJTU3pDZVdTRXMvY1NBTDFMaXRpeS85TVNrZkFKeUtKS2RHT2RJajkw?=
+ =?utf-8?B?ZStzemFBaFNrbFprVXZXZk1vT1hPdXk3b1dtTWFaZXBzMDMrcGk5YitVQVJt?=
+ =?utf-8?B?b0pzeWV1eitCM3Qwd29heUYxbnZmeWhuRXkyNS9yQmpjRW5YbTN0NFFPM203?=
+ =?utf-8?B?STBSekRPOC8xRTNXZjhsRVZ5YlpXOGZOR0s0dHVFamRvT2JqK3RFcjBORml5?=
+ =?utf-8?B?MWlNaExrcUtEelQ5WWsxd2R4V2NzQmM2MjltRVYvdHVXMjZXU1hvRjZvc3hz?=
+ =?utf-8?B?U1dyYzlpVGcrWGJKR1lSa04xcElGdHJpSlNqbkQ4ZXJCNnNkVkRsUmplYmM1?=
+ =?utf-8?B?M1pIdDZRcVlaa2hRRzZVNno5UXA0NjdIb0NtWXZxdEprbmxlQlZsWk5uY3JY?=
+ =?utf-8?B?a0M0VWtlalFETGFtMGxrQ1RKdmpEdjVLaGxmOVE3M3VWc2hWMUlSZ25zNG8y?=
+ =?utf-8?B?OFJROGZFZFZUMk1pdWtSVjNSSXJHSSt2SFBhLy9jdlV6L2tDY2xZNytLM3ox?=
+ =?utf-8?B?UlpJbHNnMDFQSmJOWTI4K1AzYnVVdC82dHVuNDZYOXRBdUdHRE1ORktPejJn?=
+ =?utf-8?B?QkMwaFRUTDVXa1c2U0xTYWR3RGpEN3lKWWlZYXlPNmpSbFBrS2VKOUtnYnF4?=
+ =?utf-8?B?ZGJ4RldzazgyaEN0Y1FPSkRmQnJvWnRYaEI1djVmSTdlU2ZBZTlzQVJrM1Bt?=
+ =?utf-8?B?cUwwTGdwbFJJRmJRTEMrT1pLejRvcjJXeVBIZWM5UnhCR0tpMDhTVzdDVHVB?=
+ =?utf-8?B?QlVicnpaNWtmYW1obm5WT3lFMkw5N3BRL0RQell4WHdVZ3dsYXFzaE5vcTVq?=
+ =?utf-8?B?RW55ekRKWFE2aitLc1NkRUcwWHZMcHFYaFlkRHJaajV2bzNXWWs5WDFRVXdP?=
+ =?utf-8?B?M29zeVpxNHRmckpabkN6SFBoQ01COXcrMEJZNkFHVlpxVGVSOTB2Y0JlaFZH?=
+ =?utf-8?B?NFBvdVhYZ09EOXRUQ0JnMEtGaFVncEZPVUNjVHUxUlpkbmZiRW1CcmIzZEln?=
+ =?utf-8?B?c0Rua3N2a3I3Q3k5d1BIcytRTi9nNGp5NDd3dWJoVXlDZ0VpQkZaREllVno4?=
+ =?utf-8?B?ZWNxUkxwVk1CSTl1bDJiTjBOd2Z1QmhtMlUzK3pmclhLTGN6alMwYzdLeWxC?=
+ =?utf-8?B?T2tCaWtxYkUxQ243K2xSSU5zbjdqZzNyWDltMGNuaS9JVXdnM0c0UVVxbW9N?=
+ =?utf-8?B?UXljRDcrYUg5L2lPdjZCUVNFUGpPWEZZb1pmbWlQdUZRUTJhYWlZZ0V1dWpt?=
+ =?utf-8?B?aFE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27eb618d-6847-43ce-01e5-08dddb828b1d
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2025 22:33:08.3872
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YMHyhs4dJaYSZrySUPSx8W4c3rJ6T770CaTopwRcnTbt2/rhyOjSP5NcD65XhNTl3+fVoNM3fzzYnZ3ZeORpjUqZDwARssPDAC7bs8Otbxg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6429
+X-OriginatorOrg: intel.com
 
-Record decoder values at init and mock_decoder_commit() time, and
-restore them at the next invocation of mock_init_hdm_decoder(). Add 2
-attributes to the cxl_test "cxl_acpi" device to optionally flush the
-cache of topology decoder values, or disable updating the decoder at
-mock_decoder_reset() time.
+Dave Jiang wrote:
+> The current implementation of CXL memory hotplug notifier gets called
+> before the HMAT memory hotplug notifier. The CXL driver calculates the
+> access coordinates (bandwidth and latency values) for the CXL end to
+> end path (i.e. CPU to endpoint). When the CXL region is onlined, the CXL
+> memory hotplug notifier writes the access coordinates to the HMAT target
+> structs. Then the HMAT memory hotplug notifier is called and it creates
+> the access coordinates for the node sysfs attributes.
 
-This enables replaying a saved decoder configuration when re-triggering
-a topology scan by re-binding the cxl_acpi driver to "cxl_acpi.0" (the
-cxl_test emulation of an ACPI0017 instance).
+Perhaps summarize quickly here the before and after of sysfs, so people
+know if they are impacted by this bug, and backporters can verify they
+fixed it?
 
-    # modprobe cxl_test
-    # cxl list -RB -b cxl_test -u
-    {
-      "bus":"root3",
-      "provider":"cxl_test",
-      "regions:root3":[
-        {
-          "region":"region5",
-          "resource":"0xf010000000",
-          "size":"512.00 MiB (536.87 MB)",
-          "type":"ram",
-          "interleave_ways":2,
-          "interleave_granularity":4096,
-          "decode_state":"commit"
-        }
-      ]
-    }
-    # echo 1 > /sys/bus/platform/devices/cxl_acpi.0/decoder_registry_reset_disable
-    # echo cxl_acpi.0 > /sys/bus/platform/drivers/cxl_acpi/unbind
-    # cxl list -RB -b cxl_test -u
-    # echo cxl_acpi.0 > /sys/bus/platform/drivers/cxl_acpi/bind
-    # cxl list -RB -b cxl_test -u
-    {
-      "bus":"root3",
-      "provider":"cxl_test",
-      "regions:root3":[
-        {
-          "region":"region5",
-          "resource":"0xf010000000",
-          "size":"512.00 MiB (536.87 MB)",
-          "type":"ram",
-          "interleave_ways":2,
-          "interleave_granularity":4096,
-          "decode_state":"commit"
-        }
-      ]
-    }
+> The original intent of the 'ext_updated' flag in HMAT handling code was to
+> stop HMAT memory hotplug callback from clobbering the access coordinates
+> after CXL has injected its calculated coordinates and replaced the generic
+> target access coordinates provided by the HMAT table in the HMAT target
+> structs. However the flag is hacky at best and blocks the updates from
+> other CXL regions that are onlined in the same node later on. Remove the
+> 'ext_updated' flag usage and just update the access coordinates for the
+> nodes directly without touching HMAT target data.
+> 
+> The hotplug memory callback ordering is changed. Instead of changing CXL,
+> move HMAT back so there's room for the levels rather than have CXL share
+> the same level as SLAB_CALLBACK_PRI. The change will resulting in the CXL
+> callback to be executed after the HMAT callback.
+> 
+> With the change, the CXL hotplug memory notifier runs after the HMAT
+> callback. The HMAT callback will create the node sysfs attributes for
+> access coordinates. The CXL callback will write the access coordinates to
+> the now created node sysfs attributes directly and will not pollute the
+> HMAT target values.
+> 
+> Fixes: debdce20c4f2 ("cxl/region: Deal with numa nodes not enumerated by SRAT")
 
-[dj: Added support for delayed dport initialization ]
+Why that one and not?
 
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-- Will have a cxl-replay test script in CXL CLI package
-- This allowed me to test assembly and replay for manually created CXL regions
----
- tools/testing/cxl/test/cxl.c | 300 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 298 insertions(+), 2 deletions(-)
+067353a46d8c cxl/region: Add memory hotplug notifier for cxl region
 
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 2d50193d10fe..e0da2a48d2a8 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -47,6 +47,9 @@ struct platform_device *cxl_mem_single[NR_MEM_SINGLE];
- static struct platform_device *cxl_rch[NR_CXL_RCH];
- static struct platform_device *cxl_rcd[NR_CXL_RCH];
- 
-+static DEFINE_XARRAY(decoder_registry);
-+static bool decoder_registry_reset_disable;
-+
- static inline bool is_multi_bridge(struct device *dev)
- {
- 	int i;
-@@ -671,6 +674,164 @@ static int map_targets(struct device *dev, void *data)
- 	return 0;
- }
- 
-+static unsigned long cxld_registry_index(struct cxl_decoder *cxld)
-+{
-+	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-+
-+	/*
-+	 * Upper nibble of a kernel pointer is 0xff, chop that to make
-+	 * space for a cxl_decoder id which should be less than 128
-+	 * given decoder count is a 4-bit field.
-+	 *
-+	 * While @port is reallocated each enumeration, @port->uport_dev
-+	 * is stable.
-+	 */
-+	dev_WARN_ONCE(&port->dev, cxld->id >= 128,
-+		      "decoder id:%d out of range\n", cxld->id);
-+	return (((unsigned long) port->uport_dev) << 4) | cxld->id;
-+}
-+
-+struct cxl_test_decoder {
-+	union {
-+		struct cxl_switch_decoder cxlsd;
-+		struct cxl_endpoint_decoder cxled;
-+	};
-+	union {
-+		struct cxl_dport *targets[CXL_DECODER_MAX_INTERLEAVE];
-+		struct range dpa_range;
-+	};
-+};
-+
-+static struct cxl_test_decoder *cxld_registry_find(struct cxl_decoder *cxld)
-+{
-+	return xa_load(&decoder_registry, cxld_registry_index(cxld));
-+}
-+
-+#define dbg_cxld(port, msg, cxld)                                                       \
-+	do {                                                                            \
-+		struct cxl_decoder *___d = (cxld);                                      \
-+		dev_dbg((port)->uport_dev,                                              \
-+			"decoder%d: %s range: %#llx-%#llx iw: %d ig: %d flags: %#lx\n", \
-+			___d->id, msg, ___d->hpa_range.start,                           \
-+			___d->hpa_range.end + 1, ___d->interleave_ways,                 \
-+			___d->interleave_granularity, ___d->flags);                     \
-+	} while (0)
-+
-+static int mock_decoder_commit(struct cxl_decoder *cxld);
-+static void mock_decoder_reset(struct cxl_decoder *cxld);
-+
-+static void cxld_copy(struct cxl_decoder *a, struct cxl_decoder *b)
-+{
-+	a->id = b->id;
-+	a->hpa_range = b->hpa_range;
-+	a->interleave_ways = b->interleave_ways;
-+	a->interleave_granularity = b->interleave_granularity;
-+	a->target_type = b->target_type;
-+	a->flags = b->flags;
-+	a->commit = mock_decoder_commit;
-+	a->reset = mock_decoder_reset;
-+}
-+
-+static void cxld_registry_restore(struct cxl_decoder *cxld, struct cxl_test_decoder *td)
-+{
-+	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-+
-+	if (is_switch_decoder(&cxld->dev)) {
-+		struct cxl_switch_decoder *cxlsd = to_cxl_switch_decoder(&cxld->dev);
-+
-+		dbg_cxld(port, "restore", &td->cxlsd.cxld);
-+		cxld_copy(cxld, &td->cxlsd.cxld);
-+		WARN_ON(cxlsd->nr_targets != td->cxlsd.nr_targets);
-+
-+		/* convert saved dport devs to dports */
-+		for (int i = 0; i < cxlsd->nr_targets; i++) {
-+			struct cxl_dport *dport;
-+			struct device *dev;
-+
-+			if (!td->cxlsd.target[i])
-+				continue;
-+			/* Recall this dport ptr is overloaded with a 'struct device' at save */
-+			dev = (struct device *)td->cxlsd.target[i];
-+			dport = cxl_find_dport_by_dev(port, dev);
-+			if (!dport) {
-+				cxld->target_map[i] = td->cxlsd.cxld.target_map[i];
-+				continue;
-+			}
-+			cxlsd->target[i] = dport;
-+			cxld->target_map[i] = dport->port_id;
-+		}
-+	} else {
-+		struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(&cxld->dev);
-+
-+		dbg_cxld(port, "restore", &td->cxled.cxld);
-+		cxld_copy(cxld, &td->cxled.cxld);
-+		cxled->state = td->cxled.state;
-+		cxled->skip = td->cxled.skip;
-+		if (range_len(&td->dpa_range))
-+			devm_cxl_dpa_reserve(cxled, td->dpa_range.start,
-+					     range_len(&td->dpa_range),
-+					     td->cxled.skip);
-+		if (cxld->flags & CXL_DECODER_F_ENABLE)
-+			port->commit_end = cxld->id;
-+	}
-+}
-+
-+static void __cxld_registry_save(struct cxl_test_decoder *td,
-+				 struct cxl_decoder *cxld)
-+{
-+	if (is_switch_decoder(&cxld->dev)) {
-+		struct cxl_switch_decoder *cxlsd = to_cxl_switch_decoder(&cxld->dev);
-+
-+		cxld_copy(&td->cxlsd.cxld, cxld);
-+		td->cxlsd.nr_targets = cxlsd->nr_targets;
-+
-+		/* save dport devs as a stable placeholder for dports */
-+		for (int i = 0; i < cxlsd->nr_targets; i++) {
-+			struct cxl_dport *dport;
-+
-+			if (!cxlsd->target[i])
-+				continue;
-+
-+			dport = cxlsd->target[i];
-+			/* Overloading target[] with a 'struct device' */
-+			td->cxlsd.target[i] = (struct cxl_dport *)dport->dport_dev;
-+			td->cxlsd.cxld.target_map[i] = dport->port_id;
-+		}
-+	} else {
-+		struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(&cxld->dev);
-+
-+		cxld_copy(&td->cxled.cxld, cxld);
-+		td->cxled.state = cxled->state;
-+		td->cxled.skip = cxled->skip;
-+		if (cxled->dpa_res) {
-+			td->dpa_range.start = cxled->dpa_res->start;
-+			td->dpa_range.end = cxled->dpa_res->end;
-+		} else {
-+			td->dpa_range.start = 0;
-+			td->dpa_range.end = -1;
-+		}
-+	}
-+}
-+
-+static void cxld_registry_save(struct cxl_test_decoder *td, struct cxl_decoder *cxld)
-+{
-+	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-+
-+	dbg_cxld(port, "save", cxld);
-+	__cxld_registry_save(td, cxld);
-+}
-+
-+static void cxld_registry_update(struct cxl_decoder *cxld)
-+{
-+	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-+	struct cxl_test_decoder *td = cxld_registry_find(cxld);
-+
-+	dev_WARN_ONCE(port->uport_dev, !td, "%s failed\n", __func__);
-+
-+	dbg_cxld(port, "update", cxld);
-+	__cxld_registry_save(td, cxld);
-+}
-+
- static int mock_decoder_commit(struct cxl_decoder *cxld)
- {
- 	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-@@ -690,6 +851,13 @@ static int mock_decoder_commit(struct cxl_decoder *cxld)
- 
- 	port->commit_end++;
- 	cxld->flags |= CXL_DECODER_F_ENABLE;
-+	if (is_endpoint_decoder(&cxld->dev)) {
-+		struct cxl_endpoint_decoder *cxled =
-+			to_cxl_endpoint_decoder(&cxld->dev);
-+
-+		cxled->state = CXL_DECODER_STATE_AUTO;
-+	}
-+	cxld_registry_update(cxld);
- 
- 	return 0;
- }
-@@ -700,7 +868,7 @@ static void mock_decoder_reset(struct cxl_decoder *cxld)
- 	int id = cxld->id;
- 
- 	if ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)
--		return;
-+		goto registry_update_out;
- 
- 	dev_dbg(&port->dev, "%s reset\n", dev_name(&cxld->dev));
- 	if (port->commit_end == id)
-@@ -709,7 +877,51 @@ static void mock_decoder_reset(struct cxl_decoder *cxld)
- 		dev_dbg(&port->dev,
- 			"%s: out of order reset, expected decoder%d.%d\n",
- 			dev_name(&cxld->dev), port->id, port->commit_end);
-+
-+registry_update_out:
- 	cxld->flags &= ~CXL_DECODER_F_ENABLE;
-+
-+	if (is_endpoint_decoder(&cxld->dev)) {
-+		struct cxl_endpoint_decoder *cxled =
-+			to_cxl_endpoint_decoder(&cxld->dev);
-+
-+		cxled->state = CXL_DECODER_STATE_MANUAL;
-+	}
-+	if (decoder_registry_reset_disable)
-+		dev_dbg(port->uport_dev, "decoder%d: skip registry update\n",
-+			cxld->id);
-+	else
-+		cxld_registry_update(cxld);
-+
-+	return;
-+}
-+
-+static void cxld_registry_invalidate(void)
-+{
-+	unsigned long index;
-+	void *entry;
-+
-+	xa_for_each(&decoder_registry, index, entry) {
-+		xa_erase(&decoder_registry, index);
-+		kfree(entry);
-+	}
-+}
-+
-+static struct cxl_test_decoder *cxld_registry_new(struct cxl_decoder *cxld)
-+{
-+	struct cxl_test_decoder *td __free(kfree) = kzalloc(sizeof(*td), GFP_KERNEL);
-+
-+	if (!td)
-+		return NULL;
-+
-+	if (xa_insert(&decoder_registry, cxld_registry_index(cxld), td,
-+		      GFP_KERNEL)) {
-+		WARN_ON(1);
-+		return NULL;
-+	}
-+
-+	cxld_registry_save(td, cxld);
-+	return no_free_ptr(td);
- }
- 
- static void default_mock_decoder(struct cxl_decoder *cxld)
-@@ -724,6 +936,9 @@ static void default_mock_decoder(struct cxl_decoder *cxld)
- 	cxld->target_type = CXL_DECODER_HOSTONLYMEM;
- 	cxld->commit = mock_decoder_commit;
- 	cxld->reset = mock_decoder_reset;
-+
-+	if (!cxld_registry_new(cxld))
-+		dev_dbg(&cxld->dev, "failed to add to registry\n");
- }
- 
- static int first_decoder(struct device *dev, const void *data)
-@@ -745,6 +960,7 @@ static void mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 	struct cxl_endpoint_decoder *cxled;
- 	struct cxl_switch_decoder *cxlsd;
- 	struct cxl_port *port, *iter;
-+	struct cxl_test_decoder *td;
- 	const int size = SZ_512M;
- 	struct cxl_memdev *cxlmd;
- 	struct cxl_dport *dport;
-@@ -774,6 +990,12 @@ static void mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 		port = cxled_to_port(cxled);
- 	}
- 
-+	td = cxld_registry_find(cxld);
-+	if (td) {
-+		cxld_registry_restore(cxld, td);
-+		return;
-+	}
-+
- 	/*
- 	 * The first decoder on the first 2 devices on the first switch
- 	 * attached to host-bridge0 mock a fake / static RAM region. All
-@@ -802,6 +1024,8 @@ static void mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 	devm_cxl_dpa_reserve(cxled, 0, size / cxld->interleave_ways, 0);
- 	cxld->commit = mock_decoder_commit;
- 	cxld->reset = mock_decoder_reset;
-+	if (!cxld_registry_new(cxld))
-+		dev_dbg(&cxld->dev, "failed to add to registry\n");
- 
- 	/*
- 	 * Now that endpoint decoder is set up, walk up the hierarchy
-@@ -850,6 +1074,7 @@ static void mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 			.start = base,
- 			.end = base + size - 1,
- 		};
-+		cxld_registry_update(cxld);
- 		put_device(dev);
- 	}
- }
-@@ -902,7 +1127,7 @@ static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
- 
- 		mock_init_hdm_decoder(cxld);
- 
--		if (target_count) {
-+		if (target_count && !decoder_registry_reset_disable) {
- 			rc = device_for_each_child(port->uport_dev, &ctx,
- 						   map_targets);
- 			if (rc) {
-@@ -1407,6 +1632,73 @@ static int cxl_mem_init(void)
- 	return rc;
- }
- 
-+static ssize_t decoder_registry_invalidate_show(struct device *dev,
-+						struct device_attribute *attr,
-+						char *buf)
-+{
-+	unsigned long index;
-+	bool empty = true;
-+	void *entry;
-+
-+	xa_for_each(&decoder_registry, index, entry) {
-+		empty = false;
-+		break;
-+	}
-+
-+	return sysfs_emit(buf, "%d\n", !empty);
-+}
-+
-+static ssize_t decoder_registry_invalidate_store(struct device *dev,
-+						 struct device_attribute *attr,
-+						 const char *buf, size_t count)
-+{
-+	bool invalidate;
-+	int rc;
-+
-+	rc = kstrtobool(buf, &invalidate);
-+	if (rc)
-+		return rc;
-+
-+	guard(device)(dev);
-+
-+	if (dev->driver)
-+		return -EBUSY;
-+
-+	cxld_registry_invalidate();
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(decoder_registry_invalidate);
-+
-+static ssize_t
-+decoder_registry_reset_disable_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "%d\n", decoder_registry_reset_disable);
-+}
-+
-+static ssize_t
-+decoder_registry_reset_disable_store(struct device *dev,
-+				     struct device_attribute *attr,
-+				     const char *buf, size_t count)
-+{
-+	int rc;
-+
-+	rc = kstrtobool(buf, &decoder_registry_reset_disable);
-+	if (rc)
-+		return rc;
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(decoder_registry_reset_disable);
-+
-+static struct attribute *cxl_acpi_attrs[] = {
-+	&dev_attr_decoder_registry_invalidate.attr,
-+	&dev_attr_decoder_registry_reset_disable.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(cxl_acpi);
-+
- static __init int cxl_test_init(void)
- {
- 	int rc, i;
-@@ -1537,6 +1829,7 @@ static __init int cxl_test_init(void)
- 
- 	mock_companion(&acpi0017_mock, &cxl_acpi->dev);
- 	acpi0017_mock.dev.bus = &platform_bus_type;
-+	cxl_acpi->dev.groups = cxl_acpi_groups;
- 
- 	rc = platform_device_add(cxl_acpi);
- 	if (rc)
-@@ -1606,6 +1899,9 @@ static __exit void cxl_test_exit(void)
- 	depopulate_all_mock_resources();
- 	gen_pool_destroy(cxl_mock_pool);
- 	unregister_cxl_mock_ops(&cxl_mock_ops);
-+
-+	cxld_registry_invalidate();
-+	xa_destroy(&decoder_registry);
- }
- 
- module_param(interleave_arithmetic, int, 0444);
--- 
-2.50.1
+It is the ext_updated machinery that is the main problem that messes up
+sysfs, right?
 
+...and per the backport concern this should be cc: stable as well.
+
+Other than that you can add:
+
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
