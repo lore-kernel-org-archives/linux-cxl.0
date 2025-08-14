@@ -1,94 +1,70 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369A8230270
-	for <linux-cxl@vger.kernel.org>; Thu, 14 Aug 2025 19:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C00319860;
+	Thu, 14 Aug 2025 19:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755199169; cv=none; b=HRoLZrGECJ+9hDiqlnSOr+hhCtfFeHd/U75bImpwPQriF2M05qNk5nCn2/ZuCHz4jzJcKBU9BlB1UbL3LpbsvVj+J4/HT5YiKSh82Ovt7fHiBqVS5R23e7Pdt5Cr821LjD4EZzFYdnX9S0rBmiqBmipk9+7zAapfO1dy50JUlvk=
+	t=1755201461; cv=none; b=E7nSpM9n6t2ri9DFwj3uEwl3ninRY3k8DEBiDqSgX7zImLazMlf26vwYoh/6+uNs5I3A4e1pfr4l51Ly38lvOst1kYnnkxunGLOY/VFyV2dndbCI5pgtoan1BzL8UeSqGDRsZNz8ayPgwhF1okuS99EQcsz2IGN8bMEvrlaFrYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755199169; c=relaxed/simple;
-	bh=GZrMOqecm9CAXjRBdYJgjbJgjQE37LwuoMcleOFOzN0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cD8LGi/C8mZxZEVaMBjvuIzXj04MkWyn1d1zTcJXTUprcR1GcMsnKO12uA/2oSa+qNLfsIqIvIQ/XzWLDU7saxMfurjUfCa9hhfvX/vNqrqDPAY9UxcNDV7zziXgHqPsFg2QH7IMUHDL3N4P8KSQZAVtNk55iNpTUEfZcPnuobM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=Sk+EMZw3; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1755201461; c=relaxed/simple;
+	bh=jwr1D/M/D6J8UXOLpfzxnHBTHqKQx+aPFWGFdoCo7Fo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dTJSGGAKP6y3A2Ht1spch8by6Haj7WHWCwtvDluDTRkS++EdVbFtgyb7iSL5Oz34FSFQWbF6GB6c2JmwZpOY6S6QU6/vBTZVV0QUGrLULc01/BYuHFrkAMsAAEZP0R82VZs4IVMjcwpFyi4NBNYn46pXC1hj4iAvEmvVqlnPhgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=FKOxemmD; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Sk+EMZw3"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4b109c482c8so23200781cf.3
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Aug 2025 12:19:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1755199167; x=1755803967; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GZrMOqecm9CAXjRBdYJgjbJgjQE37LwuoMcleOFOzN0=;
-        b=Sk+EMZw3gtt1Kc+KQUk0IjMhmiwSweTjX3U0sQuDlp01ImsScESjG7DfPaSp7gQ0xB
-         jnSDNwCcV+5rVjAkep/QGQNNXtX619jD9ntUjcq3Vgq3o/gwXuciuUtwSTUJ+yCGU+d+
-         650qXU+NziDKW25fY+3FsI4l3NEXHsD6y8rtY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755199167; x=1755803967;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GZrMOqecm9CAXjRBdYJgjbJgjQE37LwuoMcleOFOzN0=;
-        b=cVEvs9/dx15v0iyxLnqiW1VZFpjArdb1+U2B5gV0touvISB8tQQTy0b8ow3Jr35FBB
-         CYfqz2BH8wrMBrT/55Jzy4K5QebCetUUBIae7AMCf5m9X2a9wzC+rWCiFzUBhlPiyosI
-         o7zUwvLU3tSSt8WBxBHuokcHL58tykvpCYGtG+VDJFL6RTVo+iqBkJ8N3GjPW7yd1C0q
-         m1AyOqDqIesmqL2rbZVeNrwzxDFkhunbVAj5kSzKWm4/0jIFim6feAo0uKi3shY4oCTH
-         PPipBmMFa/65GdpgpqqvzxeHy0PufgpKzAZtY4kpEyDhize8FVBh6sqFDQ92l9beyyOI
-         w2VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXuHkmr/4bmlm4x9N/5YLJNIQBm1Y6yWSVDWOPRQPd/eLKvrixuBbl7b2Bp2D0GmIP6fQFEAR8A9Lo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbWX6VzAGDgCDLliO0pSu5qcyr2Byw6oEbKOmzbT117zladNoz
-	yNvavatsSdoBX7hyPYEzE3awnmoE3IPwU9RwMDnN/4dnRRFzf+w7fpPbdTwtZk40OJ6xopffdyR
-	gyCzxppIcrASJrI4Pro1sZhqQq/p8eS15bLxOC9CiLA==
-X-Gm-Gg: ASbGncva8ELkzf6r71d0q8NS0jJ2jdbZ7pH7qe2DXR14dc+gNLvF2Ir+tR+VCbimT6n
-	gUZNDTUEmfiEJQyz8B4cBTdyyih0JvFyo3zS4SzfCabdZEs0Dn6o8+kkOqT0haheQCuHVuV4FOX
-	Pw8aspuVYppT4FaU+CulI03MjTiz0SLwyxtpqFbr6+jriYo/kdqXDDdcC+m2PLufG5ce+sMgLK9
-	tYCnOPrrj01N1w=
-X-Google-Smtp-Source: AGHT+IFYsASkbgj8LKOURL/sQT2BfijqH2fGAl8jogtfvvYUVEiGcWyswxRpTwKUf9rW7ApmSBhJ6Ltm7fsi8IzNXrY=
-X-Received: by 2002:ac8:7d43:0:b0:4af:157e:3823 with SMTP id
- d75a77b69052e-4b10ab61354mr68262251cf.42.1755199166768; Thu, 14 Aug 2025
- 12:19:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="FKOxemmD"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 29D1E40AD8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1755201459; bh=1gbvYz4GsU0PNtrxGdC8PGv96PBc4YyIP2GPO/NWKI8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=FKOxemmD5CAy8tadlQ6sNqF708V3koVuyEThfv5Ekr86q+wCll0KEaEy2uOrMArXN
+	 gXrJibg6o+iVyQpZzy0rO+iwI8mXBepq1hQIwXwhdsc3Y9/iPrRcrz0giYzM4jPwEu
+	 6DIVZ147pP5etHteMDoJ/Zc2df6ZAWwpRUABPRTtBrx8AkQDQoPPRRfHwVHi6nvf11
+	 Z13Iryqoo1w4NMHj3xbFlavQs9R6HNe5fXo+M6pIbhDdRGc4P/BG2+w2HMUOSmy9DI
+	 PfC5zyXc5e2mPOeAI+0jkbqZUlN9iijK8CP7yD3DYo9+402PmOiRKIkfZa+bOvQJdA
+	 tmnqHbnm73icg==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 29D1E40AD8;
+	Thu, 14 Aug 2025 19:57:39 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Ranganath V N <vnranganath.20@gmail.com>, alison.schofield@intel.com
+Cc: alim.akhtar@samsung.com, dave@stgolabs.net, linux-cxl@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel-mentees@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ rafael@kernel.org, skhan@linuxfoundation.org, vishal.l.verma@intel.com,
+ vnranganath.20@gmail.com, linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v2] Documentation: Fix driver-api typos
+In-Reply-To: <20250814184304.20448-1-vnranganath.20@gmail.com>
+References: <aJ4KEKHn351vQXe_@aschofie-mobl2.lan>
+ <20250814184304.20448-1-vnranganath.20@gmail.com>
+Date: Thu, 14 Aug 2025 13:57:38 -0600
+Message-ID: <87wm75ekwd.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703185032.46568-1-john@groves.net> <20250703185032.46568-15-john@groves.net>
- <CAJfpegv19wFrT0QFkwFrKbc6KXmktt0Ba2Lq9fZoihA=eb8muA@mail.gmail.com>
- <20250814171941.GU7942@frogsfrogsfrogs> <CAJfpegv8Ta+w4CTb7gvYUTx3kka1-pxcWX_ik=17wteU9XBT1g@mail.gmail.com>
- <20250814185503.GZ7942@frogsfrogsfrogs>
-In-Reply-To: <20250814185503.GZ7942@frogsfrogsfrogs>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Thu, 14 Aug 2025 21:19:15 +0200
-X-Gm-Features: Ac12FXwFvJoOQXfTVyVQkORoWxApgAqsvX9WIX8VNMR4nJ4kVqHzj7yLc5euRJ4
-Message-ID: <CAJfpeguxZVVddGQsMtM35tVo0dD118hKBf9KJcuhSBznzqUzSg@mail.gmail.com>
-Subject: Re: [RFC V2 14/18] famfs_fuse: GET_DAXDEV message and daxdev_table
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>, 
-	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-On Thu, 14 Aug 2025 at 20:55, Darrick J. Wong <djwong@kernel.org> wrote:
+Ranganath V N <vnranganath.20@gmail.com> writes:
 
-> Or do we move the backing_files_map out of CONFIG_FUSE_PASSTHROUGH and
-> then let fuse-iomap/famfs extract the block/dax device from that?
-> Then the backing_id/device cookie would be the same across a fuse mount.
+> Corrected a few spelling mistakes
+>
+> v2:
+> * corrected as per suggestions.
+> * improved the phrasing.
 
-Yes.
+For future reference, this information should go below the "---" line so
+that the person applying the patch does not have to edit it out.  I can
+take care of it this time, no need to resend.
 
 Thanks,
-Miklos
+
+jon
