@@ -1,131 +1,161 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB0E301030
-	for <linux-cxl@vger.kernel.org>; Thu, 14 Aug 2025 13:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84373002AB
+	for <linux-cxl@vger.kernel.org>; Thu, 14 Aug 2025 13:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755178066; cv=none; b=pqKazO/CeFixXygwGUYF9UrTxnazY4dDK83tKfDu/lBg8yd98eGVUwmtRQQla0n/ms7a3PBer/xKJMyIhiLeXlal75BUpnLJ2lkXonHYwdQfm02AdokgD2Pg1E7BR/wpq9QYOoB+7YXuuiAlP1tBECt2sVteXNrqcXLjIwIt10I=
+	t=1755178601; cv=none; b=GRbEkLf/DXQlaQSzRIwunmWnum0N4Q8DwPLjth0VhmpcMQDd0jH6FahRhrcZlZXnR0MRpnSrS9RJzQpHNoyHHHEPn8iCd48t0SDzdTw2+6aHAKdXJcSvLWM+HvgJLZG6uEi1fw5hj7fz5TMauvVziAOrETBwQw52PGgDPjNPzyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755178066; c=relaxed/simple;
-	bh=rKjVUqpwl17P+KMTSKwInqH48WkuPopBFLrzR8IYqTc=;
+	s=arc-20240116; t=1755178601; c=relaxed/simple;
+	bh=5pu5CCcwVsrYR5S/WgA6wkxRR40hQbEFvk1WFQLNauI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TpFdjo5J7pJTSKMKT8dU+KlT+GBe16HKwmqfJXWX3R3RzfdaNv4kwPd/CCuxX+n0WJnOjtRTkvIfNiqDsMGCDRGOj7fildpbe9zgG4VBXFZZbLCTe9AJrz7aqnx1QETEdIW4nQhzFe1B54o50eUUvUR0l7B52525TFpFnCk6iTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h4HHrKOk; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=A4HpgLQtDuGlqcUZ8gr3xYOA7PoTXNHR+4AkCLaU8j2Gscm5A54CkzdjqERlKM7hIm0CzL656sp3tl+RPddZZvxxxzBUOXXIPgAgLgAA+/dwseSWiAH7hgz00T/Mfg44lyBlRYNmfn4jLtRtz8hXIAKjiInV5UcTmG377utIMd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=SBjsbhDy; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h4HHrKOk"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-617ff2c8e5dso10258a12.0
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Aug 2025 06:27:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="SBjsbhDy"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4b109914034so9464181cf.0
+        for <linux-cxl@vger.kernel.org>; Thu, 14 Aug 2025 06:36:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755178063; x=1755782863; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rKjVUqpwl17P+KMTSKwInqH48WkuPopBFLrzR8IYqTc=;
-        b=h4HHrKOk/liyRwlTPPppmlh/WxNqlJ/rjsHI4+m3QH59nseStSsmr4nijJwvVHPfPU
-         wyIvvdX8POmOuzsWKIU2BxrieIaQlpKvn80cum50pjMucvXMrN2sHgTQONKZK/1G3A0e
-         tFlOEurLpRNT59mNMzBfP262ZAvNCNsq5erG9oYPlBxwBjUPsc5ymUnP/TpK7ppwtnPS
-         mcN+X9Szuqk8y2djPQVURUUwbZzswKYpj7ME2X5DNR69xw6UY/xjAX85yqxuBr14XEs4
-         v5/npTkrryYL39bKpnHg8kofRE1EVJIJFQkuok9KqkS9Y6Udqb+0p8Ua2FnHGousuPko
-         MoFw==
+        d=szeredi.hu; s=google; t=1755178599; x=1755783399; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xiJ+voUm58mOt9ANl6l8BPcmKr+2Gr+D+s+NWbUh7rs=;
+        b=SBjsbhDy5LLiWWwzXacdGJQ4Hp/Zf7tp9IRatLTbuO9IWQRQ0hpsacd64hUsDJ/pRx
+         m329H7MHaTDl8QgecfN0tW1BXuAtJaL1kgj77NNERPrd5uIwqAFp3DNhVmFir3WDPnGy
+         81q1DeQwetE3l+O+0dGR5KayoTZjdCCnzE6m8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755178063; x=1755782863;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rKjVUqpwl17P+KMTSKwInqH48WkuPopBFLrzR8IYqTc=;
-        b=oKh1CZHuPCXgGvgLg4Ek85R9Ck6rg2usuzj2cAMAm6CY8qLwfuwp7jSyjAlcQktr2e
-         c2wD3qnG02EPlFEq2tMmqSQeNXsXLvHAFLd+CI5SitzXh/vppeQZLV9DwR3v2roCG8Tk
-         1WkvLhpHa9EYGppc/Vqm9E3YlfxtdUvBzNgpCo/cKgEHAZpr7cuETHAH2L2gYYD+SsOg
-         SdUrJU+w+vzlNPMKDaw1jCPN2CpNyGIGku9iIMuYyCMWyEVqxCDVDUs275JGLjSJlFzQ
-         8LN/UaJwVXO7cA58V81eG51utAEspvqWBp7u5puD+ZLAc4p39rU0NdqCWK/hW7UizoDw
-         wPxg==
-X-Forwarded-Encrypted: i=1; AJvYcCU4i1aPe/S7/YqbiObKBpR8r2DyeNdPxfwjyDGMu9qw51g7a5nCJFQoPa23wyrq3aGKoabNXSZ3Xro=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgQydgAFrGkK3wUaU9BlA8TxcKUV/fk5Kh3aZqbOCZWff//nTo
-	yvi3RWny2+BdwqIZrhrjrvB7n6oGyekE05Qm9UVrsE5cX6UMS/Hz2oXBgseJds5ACwPmyUP4Oxx
-	8ZC0C+fSUOwDS8xZ6XcCR7ILWHSx2UKz8UZvgA5b/
-X-Gm-Gg: ASbGncs7A50bKQtGcTzFkVtUqMJQj8rjhDJVjAB+CnS3U4tOh1g0ANZFJJY02mbExCE
-	2e+rSYdsSoLuIMAR2tb5J580Ty5jOwHR8fo8NjI8GTSERlvfnN7KNH4XTZ6h/txCMdfL294KWJ+
-	F0EdLmF3DykdKDbM5ULd818mFmTe88LFu6QGMLCpNJ+G77be0nel70s2D/QxakjZT9o38DGLk+U
-	caxJupy5LuI/UDbpTG0xTXyJO5dTL5Hz+rmqgC3haC/JAc0EnM6
-X-Google-Smtp-Source: AGHT+IEu9U0pbzMYFCpXzMGkMdfavpp0q0i1lIx9CK73KOosqb3zwB/n5//3FMTW4AWTjYRn2/rUlEjYnuedieOKxqk=
-X-Received: by 2002:a05:6402:c1a:b0:617:b4c9:4f90 with SMTP id
- 4fb4d7f45d1cf-618928d1bcemr49916a12.5.1755178062489; Thu, 14 Aug 2025
- 06:27:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755178599; x=1755783399;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xiJ+voUm58mOt9ANl6l8BPcmKr+2Gr+D+s+NWbUh7rs=;
+        b=bW3KMbNFUOFQzDzd+axSULmS8KGSlsGpasBFr8IxmqI3c2YLoW0KpARN/GyfXRhjH3
+         k0qpkOhnI2T5II+JOzkIa7GegnmZyMCNiQZ/k2vC1ZMXxoa0LH7V3YsreRM4Jbma/emP
+         0vtsxFhT7RY7et1MbbcEjgZNJNaMurGwePIQSgvt0t1/ukifzMzNOkvMCzRocFcAWjB3
+         D9UOCUaEGLzEAC7V0bCAxp2M3BBeah3PD4MMgRIOY/QXT8MXDYSybe+8IXTCdF7onEet
+         rLQQ8LuglpJXfS6G/bXCC4v3l059VxrTwdv6StD/5clM1U7kjSoZGJocvGj9SEL9a8I5
+         9pTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUAXx5jh3Gku89Vd2obJzgQLDHKQizPFKd0/1TJsYtFqm8oAxOiMB7+fLdJWvCUvtZhy2q3dW6g5kM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAAUh1S+U1N3VieRgE+IE2a1O2d1RTIl8x7ixCR18GLXyt39RC
+	84ntjQ4+Ui5UcI6zCoMbqHQOcu8nIrYrHDniWbkTGejEx06Q4/pFLzZXKNPhx4OezoJyIU0bOo8
+	RkZpia/s5Gg+bBoL7d5hGUYW/xWuTbtKQeuM7iQwAfQ==
+X-Gm-Gg: ASbGncvCg3Y9UHmXNbUStDFlS55v5j9MhksAsahfrgn6kI/Y1zv4rYDAYqnUA9FTpIj
+	KzxZ6nv7ZK0u80vRg+/yb+lwi0faNn+NlDv27bp0wEljB72fru4CI8wxInepz11mbogNr5lQ3YX
+	lwGsQTavcp+wYimALEB5gC4Xl6eREgaRT48zvEm+1935iG8gpzA2kKqVJnUe2/HYTdpPyUHBw9p
+	K90
+X-Google-Smtp-Source: AGHT+IGRLUNSdSZic/AfvkGEhcJ0i0UexRhcMwBfu+hTgWYJPH7NmUnalP/saR/GroY1O9C7uFRCx1HrQwBXZpKp4dE=
+X-Received: by 2002:ac8:590b:0:b0:4b0:7e22:36bd with SMTP id
+ d75a77b69052e-4b10a97a743mr43862441cf.23.1755178598536; Thu, 14 Aug 2025
+ 06:36:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612114210.2786075-1-mclapinski@google.com>
- <685c67525ba79_2c35442945@iweiny-mobl.notmuch> <CAAi7L5cq9OqRGdyZ07rHhsA8GRh2xVXYGh7n20UoTCRfQK03WA@mail.gmail.com>
-In-Reply-To: <CAAi7L5cq9OqRGdyZ07rHhsA8GRh2xVXYGh7n20UoTCRfQK03WA@mail.gmail.com>
-From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
-Date: Thu, 14 Aug 2025 15:27:31 +0200
-X-Gm-Features: Ac12FXyHou1fyJhNDgAZDR7CRUt48o6SkCf0niifqm0hDvHBUXmlc4ifrrlM40Q
-Message-ID: <CAAi7L5djEJCVzWWjDMO7WKbXgx6Geba6bku=Gjj2DnBtysQC4A@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] libnvdimm/e820: Add a new parameter to configure
- many regions per e820 entry
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Dan Williams <dan.j.williams@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, nvdimm@lists.linux.dev, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Thomas Huth <thuth@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	"Borislav Petkov (AMD)" <bp@alien8.de>, Ard Biesheuvel <ardb@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Mike Rapoport <rppt@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-cxl@vger.kernel.org
+References: <20250703185032.46568-1-john@groves.net> <20250703185032.46568-13-john@groves.net>
+In-Reply-To: <20250703185032.46568-13-john@groves.net>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Thu, 14 Aug 2025 15:36:26 +0200
+X-Gm-Features: Ac12FXz5KYhharzGRoAiyFuPvtQSxT3MxOHi7MhrKR_P4gCMelGIrgjr1IHTKO4
+Message-ID: <CAJfpegv6wHOniQE6dgGymq4h1430oc2EyV3OQ2S9DqA20nZZUQ@mail.gmail.com>
+Subject: Re: [RFC V2 12/18] famfs_fuse: Plumb the GET_FMAP message/response
+To: John Groves <John@groves.net>
+Cc: Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi <miklos@szeredb.hu>, 
+	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	"Darrick J . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 1, 2025 at 2:05=E2=80=AFPM Micha=C5=82 C=C5=82api=C5=84ski <mcl=
-apinski@google.com> wrote:
+On Thu, 3 Jul 2025 at 20:54, John Groves <John@groves.net> wrote:
 >
-> On Wed, Jun 25, 2025 at 11:16=E2=80=AFPM Ira Weiny <ira.weiny@intel.com> =
-wrote:
-> >
-> > Michal Clapinski wrote:
-> > > This includes:
-> > > 1. Splitting one e820 entry into many regions.
-> > > 2. Conversion to devdax during boot.
-> > >
-> > > This change is needed for the hypervisor live update. VMs' memory wil=
-l
-> > > be backed by those emulated pmem devices. To support various VM shape=
-s
-> > > I want to create devdax devices at 1GB granularity similar to hugetlb=
-.
-> > > Also detecting those devices as devdax during boot speeds up the whol=
-e
-> > > process. Conversion in userspace would be much slower which is
-> > > unacceptable while trying to minimize
-> >
-> > Did you explore the NFIT injection strategy which Dan suggested?[1]
-> >
-> > [1] https://lore.kernel.org/all/6807f0bfbe589_71fe2944d@dwillia2-xfh.jf=
-.intel.com.notmuch/
-> >
-> > If so why did it not work?
->
-> I'm new to all this so I might be off on some/all of the things.
->
-> My issues with NFIT:
-> 1. I can either go with custom bios or acpi nfit injection. Custom
-> bios sounds rather aggressive to me and I'd prefer to avoid this. The
-> NFIT injection is done via initramfs, right? If a system doesn't use
-> initramfs at the moment, that would introduce another step in the boot
-> process. One of the requirements of the hypervisor live update project
-> is that the boot process has to be blazing fast and I'm worried
-> introducing initramfs would go against this requirement.
-> 2. If I were to create an NFIT, it would have to contain thousands of
-> entries. That would have to be parsed on every boot. Again, I'm
-> worried about the performance.
->
-> Do you think an NFIT solution could be as fast as the simple command
-> line solution?
+> Upon completion of an OPEN, if we're in famfs-mode we do a GET_FMAP to
+> retrieve and cache up the file-to-dax map in the kernel. If this
+> succeeds, read/write/mmap are resolved direct-to-dax with no upcalls.
 
-Hello,
-just a follow up email. I'd like to receive some feedback on this.
+Nothing to do at this time unless you want a side project:  doing this
+with compound requests would save a roundtrip (OPEN + GET_FMAP in one
+go).
+
+> GET_FMAP has a variable-size response payload, and the allocated size
+> is sent in the in_args[0].size field. If the fmap would overflow the
+> message, the fuse server sends a reply of size 'sizeof(uint32_t)' which
+> specifies the size of the fmap message. Then the kernel can realloc a
+> large enough buffer and try again.
+
+There is a better way to do this: the allocation can happen when we
+get the response.  Just need to add infrastructure to dev.c.
+
+> diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+> index 6c384640c79b..dff5aa62543e 100644
+> --- a/include/uapi/linux/fuse.h
+> +++ b/include/uapi/linux/fuse.h
+> @@ -654,6 +654,10 @@ enum fuse_opcode {
+>         FUSE_TMPFILE            = 51,
+>         FUSE_STATX              = 52,
+>
+> +       /* Famfs / devdax opcodes */
+> +       FUSE_GET_FMAP           = 53,
+> +       FUSE_GET_DAXDEV         = 54,
+
+Introduced too early.
+
+> +
+>         /* CUSE specific operations */
+>         CUSE_INIT               = 4096,
+>
+> @@ -888,6 +892,16 @@ struct fuse_access_in {
+>         uint32_t        padding;
+>  };
+>
+> +struct fuse_get_fmap_in {
+> +       uint32_t        size;
+> +       uint32_t        padding;
+> +};
+
+As noted, passing size to server really makes no sense.  I'd just omit
+fuse_get_fmap_in completely.
+
+> +
+> +struct fuse_get_fmap_out {
+> +       uint32_t        size;
+> +       uint32_t        padding;
+> +};
+> +
+>  struct fuse_init_in {
+>         uint32_t        major;
+>         uint32_t        minor;
+> @@ -1284,4 +1298,8 @@ struct fuse_uring_cmd_req {
+>         uint8_t padding[6];
+>  };
+>
+> +/* Famfs fmap message components */
+> +
+> +#define FAMFS_FMAP_MAX 32768 /* Largest supported fmap message */
+> +
+
+Hmm, Darrick's interface gets one extents at a time.   This one tries
+to get the whole map in one go.
+
+The single extent thing can be inefficient even for plain block fs, so
+it would be nice to get multiple extents.  The whole map has an
+artificial limit that currently may seem sufficient but down the line
+could cause pain.
+
+I'm still hoping some common ground would benefit both interfaces.
+Just not sure what it should be.
+
+Thanks,
+Miklos
