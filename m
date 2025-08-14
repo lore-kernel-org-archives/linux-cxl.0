@@ -1,148 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4DB1FDA89;
-	Thu, 14 Aug 2025 17:17:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7DC20298D;
+	Thu, 14 Aug 2025 17:19:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755191869; cv=none; b=Mn1a5Qd1U3ZB4RYQZVg0r9i7v7HyXr983Pge0adD602i+aJwMHumQRHWStF+NWk06ZwdXfLuA90SCNspdxpL33xTrvuFXZ771z8ZeSLS4ToJU+ljOTQSeLobg9dSm63/H8iNsM4A0sFfRYrsHi6+94l0V5bu5kWtJo+WWzyfQhY=
+	t=1755191983; cv=none; b=upNQ1K216ohOiaLHDeqQ9vKnM84qTaKjMLNNrAiVcVO5GCXXHwodN9i8Vef4h2p+OWYw0+nBPWD5E7LcLlQRtydhGkct1Fj0f6l9T4xIvQw1ERUliM2mmE/gPkrwE5zmmT0ZgJhIafgAwg+FLHUezWrPVPkGWDI1SDw57PEp8pI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755191869; c=relaxed/simple;
-	bh=15XAYO+sq/kHK8xcSoxAlV9cVyAFymsUoB4bUTPGo4I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eGBg9aGbN2t4DfrY08lYufFhkou0ZqFS10eHNPm83A8u8UMyJo+E3GlnHIbjeFyk+7n1HTbnHc9juHr9RB8xOxX23OKluDmrCluh1OUDFmf3amYsMIv2rjpL/bNm6zXKmChazHctXZoC6FNMQbK+b+t+TNdBjzeF5o8NM7/VhFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 896C0C4CEED;
-	Thu, 14 Aug 2025 17:17:48 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	dakr@kernel.org,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	marc.herbert@linux.intel.com,
-	akpm@linux-foundation.org,
-	david@redhat.com
-Subject: [PATCH 4/4] acpi/hmat: Remove now unused hmat_update_target_coordinates()
-Date: Thu, 14 Aug 2025 10:16:50 -0700
-Message-ID: <20250814171650.3002930-5-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250814171650.3002930-1-dave.jiang@intel.com>
-References: <20250814171650.3002930-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1755191983; c=relaxed/simple;
+	bh=IFafzpayfaPkdGpJ1GtHgExVV5V7zc9Jcmdm1ZW+Jck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jUo8cmiUM0hO7qcB6kID3mG10bpNn+kRV46MRHjsrWLi2x+ATtZwGLmlg3oQfvS++zNpNukkTtkZKcbOjU8NNeIYAmmutsR31p4Ifj7VD4R/aLZGVh1GyBxtyOAL4dgaRuuRFETJVU2D0msnM3KqzgIFPBj4qUKhqC9eTv26kig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dAIl1XhD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dAIl1XhD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B809C4CEED;
+	Thu, 14 Aug 2025 17:19:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755191982;
+	bh=IFafzpayfaPkdGpJ1GtHgExVV5V7zc9Jcmdm1ZW+Jck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dAIl1XhD/dwGVguLT7QUA0xT3pHiwW6jTWLwC4UaCStiMSMO2wqT+QkJkc1EAy/jf
+	 VF3ifXD1d10MIhzPQMUFRxh7iC3rTbfqzctyd6ggUbYJNQ/mnJ7mXpyrxX1CKwMpU5
+	 mXlilT2kfIFLwwfTCOwElE2xGOA7yuFyHWngfuwkELMy9K4ldkXm5bWRQZcIoAxza8
+	 6TKjyNyQBqDMNW5fPrY8ab6mbFAl8HSsFxT54GDT39x+9B+tA0RnLessSz6OBfuhug
+	 //2QlgFN4GpBRVwpxAVAfLdejs2WPQRCsynfUANFq/k+EV67krLc8hbr3GnZ9d7tpg
+	 rRWMzT/4uJCjw==
+Date: Thu, 14 Aug 2025 10:19:41 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>,
+	Bernd Schubert <bschubert@ddn.com>,
+	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Stefan Hajnoczi <shajnocz@redhat.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC V2 14/18] famfs_fuse: GET_DAXDEV message and daxdev_table
+Message-ID: <20250814171941.GU7942@frogsfrogsfrogs>
+References: <20250703185032.46568-1-john@groves.net>
+ <20250703185032.46568-15-john@groves.net>
+ <CAJfpegv19wFrT0QFkwFrKbc6KXmktt0Ba2Lq9fZoihA=eb8muA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegv19wFrT0QFkwFrKbc6KXmktt0Ba2Lq9fZoihA=eb8muA@mail.gmail.com>
 
-Remove deadcode since CXL no longer calls hmat_update_target_coordinates().
+On Thu, Aug 14, 2025 at 03:58:58PM +0200, Miklos Szeredi wrote:
+> On Thu, 3 Jul 2025 at 20:54, John Groves <John@groves.net> wrote:
+> >
+> > * The new GET_DAXDEV message/response is enabled
+> > * The command it triggered by the update_daxdev_table() call, if there
+> >   are any daxdevs in the subject fmap that are not represented in the
+> >   daxdev_dable yet.
+> 
+> This is rather convoluted, the server *should know* which dax devices
+> it has registered, hence it shouldn't need to be explicitly asked.
+> 
+> And there's already an API for registering file descriptors:
+> FUSE_DEV_IOC_BACKING_OPEN.  Is there a reason that interface couldn't
+> be used by famfs?
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/acpi/numa/hmat.c | 28 ----------------------------
- drivers/cxl/core/cdat.c  |  6 ------
- drivers/cxl/core/core.h  |  2 --
- include/linux/acpi.h     | 12 ------------
- 4 files changed, 48 deletions(-)
+What happens if you want to have a fuse server that hosts both famfs
+files /and/ backing files?  That'd be pretty crazy to mix both paths in
+one filesystem, but it's in theory possible, particularly if the famfs
+server wanted to export a pseudofile where everyone could find that
+shadow file?
 
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 5d32490dc4ab..5a36d57289b4 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -367,34 +367,6 @@ static void hmat_update_target_access(struct memory_target *target,
- 	}
- }
- 
--int hmat_update_target_coordinates(int nid, struct access_coordinate *coord,
--				   enum access_coordinate_class access)
--{
--	struct memory_target *target;
--	int pxm;
--
--	if (nid == NUMA_NO_NODE)
--		return -EINVAL;
--
--	pxm = node_to_pxm(nid);
--	guard(mutex)(&target_lock);
--	target = find_mem_target(pxm);
--	if (!target)
--		return -ENODEV;
--
--	hmat_update_target_access(target, ACPI_HMAT_READ_LATENCY,
--				  coord->read_latency, access);
--	hmat_update_target_access(target, ACPI_HMAT_WRITE_LATENCY,
--				  coord->write_latency, access);
--	hmat_update_target_access(target, ACPI_HMAT_READ_BANDWIDTH,
--				  coord->read_bandwidth, access);
--	hmat_update_target_access(target, ACPI_HMAT_WRITE_BANDWIDTH,
--				  coord->write_bandwidth, access);
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(hmat_update_target_coordinates);
--
- static __init void hmat_add_locality(struct acpi_hmat_locality *hmat_loc)
- {
- 	struct memory_locality *loc;
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index c891fd618cfd..bca1ec279651 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -1075,9 +1075,3 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
- 		cxlr->coord[i].write_bandwidth += perf->coord[i].write_bandwidth;
- 	}
- }
--
--int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
--				       enum access_coordinate_class access)
--{
--	return hmat_update_target_coordinates(nid, &cxlr->coord[access], access);
--}
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index a253d308f3c9..0476c3b648de 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -137,8 +137,6 @@ enum cxl_poison_trace_type {
- 
- long cxl_pci_get_latency(struct pci_dev *pdev);
- int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c);
--int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
--				       enum access_coordinate_class access);
- int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
- 					struct access_coordinate *c);
- 
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 1c5bb1e887cd..5ff5d99f6ead 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1595,18 +1595,6 @@ static inline void acpi_use_parent_companion(struct device *dev)
- 	ACPI_COMPANION_SET(dev, ACPI_COMPANION(dev->parent));
- }
- 
--#ifdef CONFIG_ACPI_HMAT
--int hmat_update_target_coordinates(int nid, struct access_coordinate *coord,
--				   enum access_coordinate_class access);
--#else
--static inline int hmat_update_target_coordinates(int nid,
--						 struct access_coordinate *coord,
--						 enum access_coordinate_class access)
--{
--	return -EOPNOTSUPP;
--}
--#endif
--
- #ifdef CONFIG_ACPI_NUMA
- bool acpi_node_backed_by_real_pxm(int nid);
- #else
--- 
-2.50.1
+--D
 
+> Thanks,
+> Miklos
+> 
