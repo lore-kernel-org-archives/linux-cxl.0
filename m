@@ -1,143 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD2C31814A
-	for <linux-cxl@vger.kernel.org>; Thu, 14 Aug 2025 10:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3149A2F8BC3;
+	Thu, 14 Aug 2025 11:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755167882; cv=none; b=Jv6nc30dg7LVawVoy0SSy0hTN4ve35l9ZkSrJFjUNkYb5Ip1mlDMnt5+A0gb/mPLh+528lgzzlGYje5Ckzmj0Fpiv1+ceZCWRFCPyGxd+7iNWwUVMzOHMimgRHlcnlbDKMV7l4ppQIm9c6zWA52h9+fWBgnEXSn6pa8FP3ZHMq4=
+	t=1755171798; cv=none; b=N7VmHPpgegCP1PMwMorBJtFnDxSROmo8luXNTx5iYgK1FArtSk6ATKC6tHDf6JcrCIqhKo4ntMb2Pj/6hnviI6Fh7wDa/tX9WNYB+wuaxOoGD7WDoetU4OurIDz/ZC/fYto229NgMJYYGtRWBkY0QDdAGYwGo8oIQqrm+VbEzNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755167882; c=relaxed/simple;
-	bh=XmRNPUT+R3mB+8K5Wxjbt3OHg0HJY834eV5whN3hKlw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cImli2dheIxuT25jrCW8MH/7L+pTZxPyX96wKv7hmN0itcbZL8vZ5FlrC79I1sFd1USY+vgD3VTcXVDkeSkKKpjs9l5El9j5QBI7TlQv0eP6V17g+tAF3WcafinarCLfsvcYbBiz+uE7cUuV6/bqjtKG+83KkfvK4OGq04cnsj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SocHT5T3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1755171798; c=relaxed/simple;
+	bh=Zdy7dLbFkZGtII3NQmazxOkB03u71Z+SQYve42TvTVI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UYJNkU0fkVioW/z5bPYlEnSh1sZXiqmsowJC/1ESXEFq7tR7SJEZZic99S/tGx+AaAvmSKT6DCwWqYvOGCS8JsrxPkBTDgwleIPxYa9sMS1nRUzuimI1jmKHxmsoDw+iuq4CHb1TR8TGu0L9HMOvFXEQevUUqXXi39+wd7coh5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NnG4Um3r; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SocHT5T3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755167880;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ox9VSg794T86GyyHHZvdI0EJOqaz4rB8EprvWh10zrw=;
-	b=SocHT5T3jUuIAIFayJ64cruqsPP9S9QmJ7kUSy7J/DEnCeA2bmW+jtEShHVddiEDj16vXl
-	TKtwcCCUoVDs981FsuPicuVj8TtLNMXwZUg83RY1xgF3m6EYYx48Ce9FFJX+yeeqaPvzkX
-	/Z5YDlPUQFzlRGDQI56Yk138dEzljLU=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-34-N-25pRvLNCimJaDTEMQF8w-1; Thu, 14 Aug 2025 06:37:59 -0400
-X-MC-Unique: N-25pRvLNCimJaDTEMQF8w-1
-X-Mimecast-MFC-AGG-ID: N-25pRvLNCimJaDTEMQF8w_1755167877
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-55ce520e01eso373071e87.1
-        for <linux-cxl@vger.kernel.org>; Thu, 14 Aug 2025 03:37:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NnG4Um3r"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b4716f9a467so129123a12.0;
+        Thu, 14 Aug 2025 04:43:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755171794; x=1755776594; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SCmrgWC//nzUB+KMWvV1r1xovE6hyF4d5hN6Lt7hoXI=;
+        b=NnG4Um3rLqvb/JV9fj9axMvAe7G/lfxsVLeAyiNLD9Idtxs9PM/foXkAUyV8brWT4v
+         5vnTC9hSX0fgKZrDc5ZR+QQXN+Mo9hBORolsYx6QwneBNmQHe2SYRR4BAxYwv9IdU0ri
+         sWPN2g2rNKHFqbvzdR5yIHXCbihIWcWoO8xu5R1brv+K2IkhlSGfSsIYjiXknZG6yy8+
+         YXKPJxJQmeTdzj2GfhzOqOV/SLZAzwo9ZDxzC8sjSZv/65LcGRMHfd6k8cQIFmPT0HBE
+         tmomlMumDCWc4P5Cfw7HdSobNLjeCSgq+Zi4WFfUhEjOzWZigfpB2dlqx2J7iJMtQmmc
+         aIHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755167877; x=1755772677;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ox9VSg794T86GyyHHZvdI0EJOqaz4rB8EprvWh10zrw=;
-        b=Io0wVCzVH0TTa+vWI0MBF3yfsFsGGI0KEj4MOkN1XIF5yXateefzKDJYNXA0Shmi2Y
-         oO5L7uToAum0avNTWr9l+6nILU+rc1ga8NRQcRd/KKVjNTpW77m6atlDJGQyESvsx4DZ
-         Xd2cg2Siuq6u3b8WqtZVfJro4zazHJ4I/wgUV8CXGrHk0QgyoJWXkwKKkAP0zjcCdLM+
-         uh5/JRv7qc+HBLEv0hmGOByRUMFai2z8ZhAmudHIJuymdynOeuT35PecebyOd2cmcsXC
-         BrQjvKgN8OnYfBypg1baP6j4mvhv4Knm/cnw+e+kciiytd+SWLhhJb7RwhLtrruhZoih
-         e0HA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqgeFNZLOXAVuJwBbS9DT/kX4gtCqAnCqr8l7mtLtHW2ymxDOTIcLflIfDKrIQnFWwwjcuh5/aD40=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1MuHl461sDiIlxsPk/Uve3E3BJGwrJESu3zhsfkHG40GAu1Mp
-	rInX1c5Yl4iHWcD8lxd1qh851Bl0nA4VA4B3gk1f0kMvaPk71sT24LBaNZIytz5I9+RGFXZxass
-	W+2bQeVZrZo6GCJaYqdlQNbNeJdlla1VZpj3+GHVMlDzABMfKMdKxalBGzsmRMJVn4mAL0Z0c/F
-	Whpvukv5gqfrgUuzRoSk/AlxmzbzNsYwZSIq60
-X-Gm-Gg: ASbGncv4wmKZLNDtxP3WmR/bbzntl0sbpXxucCLbcmMEpJpmR9EMd5B42RHF3MJnz8D
-	1MbbUmexUVDHZTPyBBLV24rUaY3HzWB411vstBUJHCfYDEjeGTCGrvvyGKhEFsm0oSZs7VGSqg1
-	QjEGsB0wp22NGzv5n8leZ2YQ==
-X-Received: by 2002:a05:6512:2c96:b0:55a:5122:91ea with SMTP id 2adb3069b0e04-55ce5032d30mr816016e87.34.1755167877327;
-        Thu, 14 Aug 2025 03:37:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFWp3q2pY3smOI1UfTvHXbMgpIXg9RBy/l6M/x7NEe1yHnUkqPcfbaze+XqWVraUXQrOZS9W3x/SukErs51Ovc=
-X-Received: by 2002:a05:6512:2c96:b0:55a:5122:91ea with SMTP id
- 2adb3069b0e04-55ce5032d30mr816013e87.34.1755167876897; Thu, 14 Aug 2025
- 03:37:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755171794; x=1755776594;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SCmrgWC//nzUB+KMWvV1r1xovE6hyF4d5hN6Lt7hoXI=;
+        b=adxQQPdhr/1xBoliHvUfSfhEDVDcI1kdFrD7HJnBPXHnyWz/C79f0EEHqHNorZN4Gb
+         teuX9VRV5bTJNjJXN10aRUKHiN4u9lic7xNoBDACkjKi0Wa9w0RhHJs/XS6f/cBu3ZzV
+         lCzjSQ5hSE1JX7l4qfvyZY6k5e04RfJ1GeIZk9iwu8hK4eJwsbGFWku+b3BlC2Es6QzG
+         8AQuo6ukHnKsroOCbm1QnOAdXSQq3NTKqLgfckz4m2Y6VkIFv6quf0+fnQWcmrwn0LAk
+         euGGTyC1V9vKLJNtV4goH5LPbA/SPd+n/DwGrAqu9FTxVnSFmMkFLHjl2+z5UughYyBv
+         fGqw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUFaE7KZrJU5SuEgdXfrHIURXwtSLFoux0UKJHgEpz/F+bE4EHjWA85VUQDfTrM9sDi8Q3UlwDzEWcOuRuHPc9padS9jk=@vger.kernel.org, AJvYcCV5zilt2kkotn5bab3TTAzs06ZVUgPDpxOPVybAbHtolJ95oACLfIWTFNDKvJ6Ni/12a6TAvbvYPr4FyXNM7NnzZLs=@vger.kernel.org, AJvYcCVzdGvCRioMKMoenEceN8lCraMec+S/Owf15sa+TX5ysbwRCc2R7jkpwKsVU2/ri3IDWwKrR+bshgr3@vger.kernel.org, AJvYcCW9wTS7TUxe+boB25ydMM5sXCg4uB/KZr3iUGBDwiRO7id6YKBwg9KbX2oSleVhcFbpOWf1pqzo5IQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9BSPZMilMGlLyLvsLnlt817KNtnc+gdvt0RR87GzlWl9HMjJo
+	DQW76cDigL12xXjP1W6srdM4+i3WY7wwp9mmjwt2M6bl3jOiSRtXPh7P
+X-Gm-Gg: ASbGncvPXtfMqohgQ44bs8U646vZL2kbYOsw8kUOEe5O/T3LpS1U87B/zjmnhGwIz1/
+	kerbFHki5Ku8uudKCid1RRyOGVR/t5G31oO5BW1OjLsZ0ebRBzvaFoF/9iW81fm3dFOXChhPvZQ
+	zsjpGLWjL5zl0I9YP2okJ2xbtvchXe2RAZP1icTDCDHWv55DPa//WsabnJCOrm6Wtont+jbksyU
+	mQHtCD2lE2jxcGkK8YbYokxtmTIAq5Jvyihh2Fdf1QZHNhpOUi22FeAgWfqf0wmeZzILqDTAVHe
+	QxWhhke5ulaPuElp7VfxGx1t8zis5fSJ9nH83d84quJXMMbCAgZPdNbf69QhEUjPjo+SMSrdgxC
+	2guLi/ZroI9aa0JE9KmfydZTjdnlM+Q==
+X-Google-Smtp-Source: AGHT+IGj538MNFw8lnLpKQJxZofnRLU078qxv/1o5OvFcfhFzVvepwV4a2SHH8CKzazBMkPgBT0qiQ==
+X-Received: by 2002:a05:6a00:1255:b0:736:4d90:f9c0 with SMTP id d2e1a72fcca58-76e2f8bfd42mr1938894b3a.1.1755171794275;
+        Thu, 14 Aug 2025 04:43:14 -0700 (PDT)
+Received: from ranganath.. ([2406:7400:98:6831:7d1d:f0f4:7398:409e])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76c34d23f01sm19285741b3a.23.2025.08.14.04.43.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Aug 2025 04:43:13 -0700 (PDT)
+From: Ranganath V N <vnranganath.20@gmail.com>
+To: corbet@lwn.net,
+	linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	alim.akhtar@samsung.com,
+	dave@stgolabs.net,
+	rafael@kernel.org,
+	linux-kernel-mentees@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	vishal.l.verma@intel.com,
+	Ranganath V N <vnranganath.20@gmail.com>
+Subject: [PATCH] Documentation: Fix driver-api typos
+Date: Thu, 14 Aug 2025 17:12:44 +0530
+Message-ID: <20250814114245.16399-1-vnranganath.20@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702041837.2677896-1-yi.zhang@redhat.com> <aGViCzgmAQLaGnLR@aschofie-mobl2.lan>
-In-Reply-To: <aGViCzgmAQLaGnLR@aschofie-mobl2.lan>
-From: Yi Zhang <yi.zhang@redhat.com>
-Date: Thu, 14 Aug 2025 18:37:42 +0800
-X-Gm-Features: Ac12FXwpXHYZ9tTQyCC3j0_OJc5okGmY98zi0aJK-ikaB082d86ZMuvD5rNTmEM
-Message-ID: <CAHj4cs_GQG2PNOY5Y3dyTfWbKP6CKcJ5GW+jdS-ZCjt_kryJVQ@mail.gmail.com>
-Subject: Re: [ndctl PATCH V2] Various typos fix in Documention/, cxl/, ndctl/,
- test/, util/ and meson.build
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	Dave Jiang <dave.jiang@intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 50z8xQHIsaUI4rBG2Qw-VGPmTOGx4qkhRxIPkKHvZ5Q_1755167877
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Alison
-Sorry for the late response, I just found this mail sent to Spam.
-I've sent V3 based on your comments, thanks.
+Corrected a few spelling mistakes
 
-On Thu, Jul 3, 2025 at 12:45=E2=80=AFAM Alison Schofield
-<alison.schofield@intel.com> wrote:
->
-> On Wed, Jul 02, 2025 at 12:18:37AM -0400, Yi Zhang wrote:
-> > Most of them caught by https://github.com/codespell-project/codespell
-> >
-> > s/divdes/divides
-> > s/hiearchy/hierarchy
-> > s/convereted/converted
-> > s/namepace namespace/namespace
-> > s/namepsaces/namespaces
-> > s/oher/other
-> > s/identifer/identifier
-> > s/happend/happened
-> > s/paritition/partition
-> > s/thats/that's
-> > s/santize/sanitize
-> > s/sucessfully/successfully
-> > s/suports/supports
-> > s/namepace/namespace
-> > s/aare/are
-> > s/wont/won't
-> > s/werent/weren't
-> > s/cant/can't
-> > s/defintion/definition
-> > s/secounds/seconds
-> > s/Sucessfully/Successfully
-> > s/succeded/succeeded
-> > s/inital/initial
-> > s/mangement/management
-> > s/optionnal/optional
-> > s/argments/arguments
-> > s/incremantal/incremental
-> > s/detachs/detaches
-> >
-> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > Signed-off-by: Yi Zhang <yi.zhang@redhat.com>
-> > ---
-> > changes from v1:
-> > - Add reviewed-by tag
-> > - Add more details about the typos and how they were caught
->
-> Hi Yi Zhang - This update does not address my feedback on v1.
-> Please check that and ask about what isn't clear.
-> -- Alison
->
-> snip
->
+- functionalty ==> functionality
+in Documentation/driver-api/cxl/devices/device-types.rst
 
+- adjascent ==> adjacent
+in Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
 
---=20
-Best Regards,
-  Yi Zhang
+- succeessful ==> successful
+in Documentation/driver-api/thermal/exynos_thermal_emulation.rst
+
+Signed-off-by: Ranganath V N <vnranganath.20@gmail.com>
+---
+ Documentation/driver-api/cxl/devices/device-types.rst           | 2 +-
+ .../cxl/platform/example-configurations/one-dev-per-hb.rst      | 2 +-
+ Documentation/driver-api/thermal/exynos_thermal_emulation.rst   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/driver-api/cxl/devices/device-types.rst b/Documentation/driver-api/cxl/devices/device-types.rst
+index 923f5d89bc04..7f69dfa4509b 100644
+--- a/Documentation/driver-api/cxl/devices/device-types.rst
++++ b/Documentation/driver-api/cxl/devices/device-types.rst
+@@ -22,7 +22,7 @@ The basic interaction protocol, similar to PCIe configuration mechanisms.
+ Typically used for initialization, configuration, and I/O access for anything
+ other than memory (CXL.mem) or cache (CXL.cache) operations.
+ 
+-The Linux CXL driver exposes access to .io functionalty via the various sysfs
++The Linux CXL driver exposes access to .io functionality via the various sysfs
+ interfaces and /dev/cxl/ devices (which exposes direct access to device
+ mailboxes).
+ 
+diff --git a/Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst b/Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
+index aebda0eb3e17..a4c3fb51ea7d 100644
+--- a/Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
++++ b/Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
+@@ -10,7 +10,7 @@ has a single CXL memory expander with a 4GB of memory.
+ Things to note:
+ 
+ * Cross-Bridge interleave is not being used.
+-* The expanders are in two separate but adjascent memory regions.
++* The expanders are in two separate but adjacent memory regions.
+ * This CEDT/SRAT describes one node per device
+ * The expanders have the same performance and will be in the same memory tier.
+ 
+diff --git a/Documentation/driver-api/thermal/exynos_thermal_emulation.rst b/Documentation/driver-api/thermal/exynos_thermal_emulation.rst
+index c21d10838bc5..f77d27c25ce2 100644
+--- a/Documentation/driver-api/thermal/exynos_thermal_emulation.rst
++++ b/Documentation/driver-api/thermal/exynos_thermal_emulation.rst
+@@ -32,7 +32,7 @@ Exynos emulation mode requires synchronous of value changing and
+ enabling. It means when you want to update the any value of delay or
+ next temperature, then you have to enable emulation mode at the same
+ time. (Or you have to keep the mode enabling.) If you don't, it fails to
+-change the value to updated one and just use last succeessful value
++change the value to updated one and just use last successful value
+ repeatedly. That's why this node gives users the right to change
+ termerpature only. Just one interface makes it more simply to use.
+ 
+-- 
+2.43.0
 
