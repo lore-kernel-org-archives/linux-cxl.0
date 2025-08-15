@@ -1,223 +1,140 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DB0308F23;
-	Fri, 15 Aug 2025 15:56:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263A93093A2;
+	Fri, 15 Aug 2025 16:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755273407; cv=none; b=ln1FMJaE1O1DdZmlN9C2jUHHHjkIBqIryC1/0EbWM1pYkn2yl3iAEUOyysGCzO17AuYSec/LfLywoD6iSyzGmQFeEBPyylIS1FRb4rpZ5zZwqvEl4gEE4nVhjxZDHFALc22DczjFUbq2NUjbiLNEsrlSkCSRembwNJig1N3ZMac=
+	t=1755275887; cv=none; b=W7kwQ6Jd+HDeosBcCuuZJ+DZROfJ/BfcauQMeBB0J37GIQAG7jfB0D00sma5JdMdBxNoKanJGf6XPGD65pLff5/OHyCMOv/sPOwRGxaozduodJV2r+G5EA8jkUSfs/Q+K+/QKNv5jDFFwPM/550jyWGBiHri52/bqUplYmyo1uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755273407; c=relaxed/simple;
-	bh=/s+I42joGHjOoMWBW7NGxThAdVg3XgwcYYGyK4Q+cVY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RXXVSYpscvTwsIBUZp6VZvF1jcvj8S+twnR5mD4Mot+w+PNu7Vcm9T7dYuRIIyV+K2S5iRlRlnmhz1W5J+ihPqPVO1bkugId5MvF9UTJFkgqOoqejSU8K5Ca5biAizxlA8nve/8eoQu+jJKJhFSOF5VfdG5IeuC4Icijo4Wwdh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4c3RVV4Yr7z6L5LL;
-	Fri, 15 Aug 2025 23:53:54 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 371701400F4;
-	Fri, 15 Aug 2025 23:56:42 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 15 Aug
- 2025 17:56:41 +0200
-Date: Fri, 15 Aug 2025 16:56:39 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>,
-	<rafael@kernel.org>, <dakr@kernel.org>, <dave@stgolabs.net>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>,
-	<marc.herbert@linux.intel.com>, <akpm@linux-foundation.org>,
-	<david@redhat.com>
-Subject: Re: [PATCH 3/4] cxl, acpi/hmat: Update CXL access coordinates
- directly instead of through HMAT
-Message-ID: <20250815165639.00007354@huawei.com>
-In-Reply-To: <01108362-8273-4291-bebe-379006e7908d@intel.com>
-References: <20250814171650.3002930-1-dave.jiang@intel.com>
-	<20250814171650.3002930-4-dave.jiang@intel.com>
-	<20250815143125.000074d5@huawei.com>
-	<01108362-8273-4291-bebe-379006e7908d@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1755275887; c=relaxed/simple;
+	bh=wvKG9q6ho4RgZrrJIdGv5TeB043vsJ7FH5BLK3VX8eA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SN7PFrd+hV+N58DH5PHX3QtsVD/7ziim93aHLRTRfIszyMZyZhZKUrqnzhexqxSgwYOMsulChwvLwqK+Y7zSvwyj6fmUgat2CFVqjDSO3iot/tdbHXOVSxp+a1rCOZlDcE3a+msK4SQM3iRVKUfDTBFyJZjAFrsFCE5jsVNhUcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kSpBGVFO; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSpBGVFO"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-61bd4d1778cso600227eaf.1;
+        Fri, 15 Aug 2025 09:38:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755275885; x=1755880685; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dsMGeBFSMhVbn3vuzD+PKSwFX2QkoR6dSZaKAtY6lT0=;
+        b=kSpBGVFOFhbBffCpynPXoLNRUUBuMHv2OjRajjbGltzT2hGqf1sfxv6gREcjICtu9l
+         SEDXyZbP5BzUrZ6MTaI7uXeuTcZAz7l4LqSTF5gy10lz7mjtBC/j6L1uuy7QGe2rAb3m
+         SAweNVWoZJCAU8X/yejJQFYlH/hnffx45jn/nti6AFefv60oyxkxPJyuerrdPbck6aDT
+         s0xV69ETlD4gX1USW9W5V4SgnBJLf8uLCM24nTaMtVjRSGkie+8TKxBnLT3S7ycyvdkB
+         baG+IK9ExZ1kkysEkxME5MQ4mOxGdR9/XqO2AqtdDQl9KmgIVsPhmO6j3YGKNVpEogfv
+         jIbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755275885; x=1755880685;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dsMGeBFSMhVbn3vuzD+PKSwFX2QkoR6dSZaKAtY6lT0=;
+        b=doQq25lgieVwCBbs7bN0oEUVV0GlGcS52jMF+nPc7cRhrk6XrX46dafPUfzcr4nj57
+         C1FdxObovJwfcyWKYQlk7E0h5qQtwomFOIgYS5G1beJE8hsJLAKdBAwV7KDBwxNlYXNb
+         BGkkT7i/jcrfoNMPTJIPGSVow+jpzr9R0qaHZK2VPqIQdH0IyIYk66LWeLixO1+CA8gl
+         OZm9/KrZpnefbdWOP6N3sBXSY7r14cJN51xJPfsmIhaPQWs8kYYFufZrqmpaBGTbwufM
+         Q9xw3uGdya7vqeqGJgbuYa1s7YTk4Vq+ME1jcZAk29DADHKCV/U6Flzu3L7rsbApEsNs
+         oiTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbN+sWi4Yj1sBJ5OBK2X+ZgxtFUVUHNahmpJXuQMy5IpxJ43iibJu0mSSFsBNIS6iFF64dHzbIRGk=@vger.kernel.org, AJvYcCX4GbaSoNzoZOlwT+efKi6EXZJlw6uOL+rayRe6Fp5y3yyqzC+m22/XUVdRxiRdgltSYzNFcEe53nyize6zfg==@vger.kernel.org, AJvYcCX69GPaAeOL+RBoohPlLjAcR3OlbOQ6sFNoiMh9cukd28W6loLnRULgNunkwW1FWcCXI0HsZehvRQofmgIi@vger.kernel.org, AJvYcCXgMCkyGuCfZi4Y8rh80lzICgs/Dv3qpf57Qvkx4OBy5x76P8kyrEoYVKAGDguvnoK4yIEV8dJ7p/ho@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywq8HoezIJguy4KtE7tbAf5PS7Z35/e7QR7SKpm4G2tzU8/1NWN
+	YdAJib1VkTQHSCvH6Y98kWZKFQFnoMIhCt1TcoeZKMfy/caaYfJsT/cZ
+X-Gm-Gg: ASbGncsnff1da0Zw09nqncSljDtW1M0GGkn3BZXzgog0YBmFPLMEETpAm1AjnDeWBcT
+	Cnc7b12TEGrJBhZMnFxFgASiSsSym3dJNtIJvT76TJ920bjDjNL8ut0VYTlVoCKRCAENzUl13Y1
+	WFDj2HjbpC9SrJSZmMna0trVGYY/3WUrPawzOCX5KYucvRsKfC/gsMwncx7z314xvf2gbU+mVV4
+	jnBkbrTqDxkn0Hdr7Zxdbi2uhXUWhGYjJhS3q/mSIw9thecK45ioXZ9z1UKVvXFN7fh+12oI9yn
+	HdZfU2lSnAKhWiu6RvRxY75hUY+sT2C1eo2vSJ/uD2lzwnG53CrN/P4rGLR1ovLq1kq8Kwv262k
+	lBHhmI+A2cLpelhQMdvpCpxkayL+ii7loTO5E
+X-Google-Smtp-Source: AGHT+IFcdjxfw9AaYkhVjHgYkiqDkUXLAcvGkFoOPrg34Eo+AprZt6K9wZhsOSbhz56+5rnDzpwgzw==
+X-Received: by 2002:a05:6871:61c5:b0:2f4:da72:5689 with SMTP id 586e51a60fabf-310aab51ff6mr1625953fac.15.1755275885079;
+        Fri, 15 Aug 2025 09:38:05 -0700 (PDT)
+Received: from groves.net ([2603:8080:1500:3d89:c95b:3a76:bbcf:777c])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-310ab87a7c7sm518355fac.4.2025.08.15.09.38.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Aug 2025 09:38:04 -0700 (PDT)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Fri, 15 Aug 2025 11:38:02 -0500
+From: John Groves <John@groves.net>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	"Darrick J . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
+	Ajay Joshi <ajayjoshi@micron.com>, john@groves.net
+Subject: Re: [RFC V2 14/18] famfs_fuse: GET_DAXDEV message and daxdev_table
+Message-ID: <oolcpxrjdzrkqnmj4xvcymnyb6ovdt7np7trxlgndniqe35l3s@ru5adqnjxexh>
+References: <20250703185032.46568-1-john@groves.net>
+ <20250703185032.46568-15-john@groves.net>
+ <CAJfpegv19wFrT0QFkwFrKbc6KXmktt0Ba2Lq9fZoihA=eb8muA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegv19wFrT0QFkwFrKbc6KXmktt0Ba2Lq9fZoihA=eb8muA@mail.gmail.com>
 
-On Fri, 15 Aug 2025 08:35:31 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
-
-> On 8/15/25 6:31 AM, Jonathan Cameron wrote:
-> > On Thu, 14 Aug 2025 10:16:49 -0700
-> > Dave Jiang <dave.jiang@intel.com> wrote:
-> >   
-> >> The current implementation of CXL memory hotplug notifier gets called
-> >> before the HMAT memory hotplug notifier. The CXL driver calculates the
-> >> access coordinates (bandwidth and latency values) for the CXL end to
-> >> end path (i.e. CPU to endpoint). When the CXL region is onlined, the CXL
-> >> memory hotplug notifier writes the access coordinates to the HMAT target
-> >> structs. Then the HMAT memory hotplug notifier is called and it creates
-> >> the access coordinates for the node sysfs attributes.
-> >>
-> >> The original intent of the 'ext_updated' flag in HMAT handling code was to
-> >> stop HMAT memory hotplug callback from clobbering the access coordinates
-> >> after CXL has injected its calculated coordinates and replaced the generic
-> >> target access coordinates provided by the HMAT table in the HMAT target
-> >> structs. However the flag is hacky at best and blocks the updates from
-> >> other CXL regions that are onlined in the same node later on.   
-> > 
-> > After all removed, or when a second region onlined in that node whilst the
-> > first is still online?  In that second case I think we should not update
-> > the access properties as that would surprise anything already using the
-> > earlier one.  
+On 25/08/14 03:58PM, Miklos Szeredi wrote:
+> On Thu, 3 Jul 2025 at 20:54, John Groves <John@groves.net> wrote:
+> >
+> > * The new GET_DAXDEV message/response is enabled
+> > * The command it triggered by the update_daxdev_table() call, if there
+> >   are any daxdevs in the subject fmap that are not represented in the
+> >   daxdev_dable yet.
 > 
-> Are you thinking we'll need some sort of ref counting on the node?
+> This is rather convoluted, the server *should know* which dax devices
+> it has registered, hence it shouldn't need to be explicitly asked.
 
-Was more a question on the intent, but indeed some sort of refcount would be
-needed to tear down cleanly. Might get messy though as what do we do if
-two regions are added with different characteristics then the first one
-is removed. Do we update?
-
-Meh. This is a corner case and if we get different properties in one CFMWS
-as a common thing then we need to figure out how to spin more NUMA nodes.
-So I'm not sure this isn't a 'won't fix until the case turns out to matter'
-thing.
-
-Jonathan
+That's not impossible, but it's also a bit harder than the current
+approach for the famfs user space - which I think would need to become
+stateful as to which daxdevs had been pushed into the kernel. The
+famfs user space is as unstateful as possible ;)
 
 > 
-> DJ
-> > 
-> > Jonathan
-> >   
-> >> Remove the
-> >> 'ext_updated' flag usage and just update the access coordinates for the
-> >> nodes directly without touching HMAT target data.
-> >>
-> >> The hotplug memory callback ordering is changed. Instead of changing CXL,
-> >> move HMAT back so there's room for the levels rather than have CXL share
-> >> the same level as SLAB_CALLBACK_PRI. The change will resulting in the CXL
-> >> callback to be executed after the HMAT callback.
-> >>
-> >> With the change, the CXL hotplug memory notifier runs after the HMAT
-> >> callback. The HMAT callback will create the node sysfs attributes for
-> >> access coordinates. The CXL callback will write the access coordinates to
-> >> the now created node sysfs attributes directly and will not pollute the
-> >> HMAT target values.
-> >>
-> >> Fixes: debdce20c4f2 ("cxl/region: Deal with numa nodes not enumerated by SRAT")
-> >> Tested-by: Marc Herbert <marc.herbert@linux.intel.com>
-> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> >> ---
-> >>  drivers/acpi/numa/hmat.c  |  6 ------
-> >>  drivers/cxl/core/cdat.c   |  5 -----
-> >>  drivers/cxl/core/core.h   |  1 -
-> >>  drivers/cxl/core/region.c | 10 ++--------
-> >>  include/linux/memory.h    |  2 +-
-> >>  5 files changed, 3 insertions(+), 21 deletions(-)
-> >>
-> >> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> >> index 4958301f5417..5d32490dc4ab 100644
-> >> --- a/drivers/acpi/numa/hmat.c
-> >> +++ b/drivers/acpi/numa/hmat.c
-> >> @@ -74,7 +74,6 @@ struct memory_target {
-> >>  	struct node_cache_attrs cache_attrs;
-> >>  	u8 gen_port_device_handle[ACPI_SRAT_DEVICE_HANDLE_SIZE];
-> >>  	bool registered;
-> >> -	bool ext_updated;	/* externally updated */
-> >>  };
-> >>  
-> >>  struct memory_initiator {
-> >> @@ -391,7 +390,6 @@ int hmat_update_target_coordinates(int nid, struct access_coordinate *coord,
-> >>  				  coord->read_bandwidth, access);
-> >>  	hmat_update_target_access(target, ACPI_HMAT_WRITE_BANDWIDTH,
-> >>  				  coord->write_bandwidth, access);
-> >> -	target->ext_updated = true;
-> >>  
-> >>  	return 0;
-> >>  }
-> >> @@ -773,10 +771,6 @@ static void hmat_update_target_attrs(struct memory_target *target,
-> >>  	u32 best = 0;
-> >>  	int i;
-> >>  
-> >> -	/* Don't update if an external agent has changed the data.  */
-> >> -	if (target->ext_updated)
-> >> -		return;
-> >> -
-> >>  	/* Don't update for generic port if there's no device handle */
-> >>  	if ((access == NODE_ACCESS_CLASS_GENPORT_SINK_LOCAL ||
-> >>  	     access == NODE_ACCESS_CLASS_GENPORT_SINK_CPU) &&
-> >> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> >> index c0af645425f4..c891fd618cfd 100644
-> >> --- a/drivers/cxl/core/cdat.c
-> >> +++ b/drivers/cxl/core/cdat.c
-> >> @@ -1081,8 +1081,3 @@ int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
-> >>  {
-> >>  	return hmat_update_target_coordinates(nid, &cxlr->coord[access], access);
-> >>  }
-> >> -
-> >> -bool cxl_need_node_perf_attrs_update(int nid)
-> >> -{
-> >> -	return !acpi_node_backed_by_real_pxm(nid);
-> >> -}
-> >> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> >> index 2669f251d677..a253d308f3c9 100644
-> >> --- a/drivers/cxl/core/core.h
-> >> +++ b/drivers/cxl/core/core.h
-> >> @@ -139,7 +139,6 @@ long cxl_pci_get_latency(struct pci_dev *pdev);
-> >>  int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c);
-> >>  int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
-> >>  				       enum access_coordinate_class access);
-> >> -bool cxl_need_node_perf_attrs_update(int nid);
-> >>  int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
-> >>  					struct access_coordinate *c);
-> >>  
-> >> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> >> index 71cc42d05248..1580e19f13a5 100644
-> >> --- a/drivers/cxl/core/region.c
-> >> +++ b/drivers/cxl/core/region.c
-> >> @@ -2442,14 +2442,8 @@ static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
-> >>  
-> >>  	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
-> >>  		if (cxlr->coord[i].read_bandwidth) {
-> >> -			rc = 0;
-> >> -			if (cxl_need_node_perf_attrs_update(nid))
-> >> -				node_set_perf_attrs(nid, &cxlr->coord[i], i);
-> >> -			else
-> >> -				rc = cxl_update_hmat_access_coordinates(nid, cxlr, i);
-> >> -
-> >> -			if (rc == 0)
-> >> -				cset++;
-> >> +			node_update_perf_attrs(nid, &cxlr->coord[i], i);
-> >> +			cset++;
-> >>  		}
-> >>  	}
-> >>  
-> >> diff --git a/include/linux/memory.h b/include/linux/memory.h
-> >> index 02314723e5bd..b41872c478e3 100644
-> >> --- a/include/linux/memory.h
-> >> +++ b/include/linux/memory.h
-> >> @@ -120,8 +120,8 @@ struct mem_section;
-> >>   */
-> >>  #define DEFAULT_CALLBACK_PRI	0
-> >>  #define SLAB_CALLBACK_PRI	1
-> >> -#define HMAT_CALLBACK_PRI	2
-> >>  #define CXL_CALLBACK_PRI	5
-> >> +#define HMAT_CALLBACK_PRI	6
-> >>  #define MM_COMPUTE_BATCH_PRI	10
-> >>  #define CPUSET_CALLBACK_PRI	10
-> >>  #define MEMTIER_HOTPLUG_PRI	100  
-> >   
-> 
-> 
+> And there's already an API for registering file descriptors:
+> FUSE_DEV_IOC_BACKING_OPEN.  Is there a reason that interface couldn't
+> be used by famfs?
+
+FUSE_DEV_IOC_BACKING_OPEN looks pretty specific to passthrough. The
+procedure for opening a daxdev is stolen from the way xfs does it in 
+fs-dax mode. It calls fs_dax_get() rather then open(), and passes in 
+'famfs_fuse_dax_holder_ops' to 1) effect exclusivity, and 2) receive
+callbacks in the event of memory errors. See famfs_fuse_get_daxdev()...
+
+A *similar* ioctl could be added to push in a daxdev, but that would
+still add statefulness that isn't required in the current implementation.
+I didn't go there because there are so few IOCTLs currently (the overall 
+model is more 'pull' than 'push').
+
+Keep in mind that the baseline case with famfs will be files that are 
+interleaved across strips from many daxdevs. We commonly create files 
+that are striped across 16 daxdevs, selected at random from a
+significantly larger pool. Because interleaving is essential to memory 
+performance...
+
+There is no "device mapper" analog for memory, so famfs really does 
+have to span daxdevs. As Darrick commented somewhere, famfs fmaps do 
+repeating patterns well (i.e. striping)...
+
+I think there is a certain elegance to the current approach, but
+if you feel strongly I will change it.
+
+Thanks!
+John
 
