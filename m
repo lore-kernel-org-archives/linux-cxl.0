@@ -1,65 +1,65 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263A93093A2;
-	Fri, 15 Aug 2025 16:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE302E5D2A;
+	Fri, 15 Aug 2025 16:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755275887; cv=none; b=W7kwQ6Jd+HDeosBcCuuZJ+DZROfJ/BfcauQMeBB0J37GIQAG7jfB0D00sma5JdMdBxNoKanJGf6XPGD65pLff5/OHyCMOv/sPOwRGxaozduodJV2r+G5EA8jkUSfs/Q+K+/QKNv5jDFFwPM/550jyWGBiHri52/bqUplYmyo1uY=
+	t=1755276801; cv=none; b=BfbNqUW8DBKWeH1IIoOuiuT7kJx25CoGpMTvMKMDsunKFFFxf7tyQr5MsQ9/dP9IcwBo5TXUyPB0RKADBE5vY+qUmyymAPUDtzTYoBSCGOZTILbqitgGV8oIYKmhc6cY9g8v+uINQ3Bd9C/RcS/iQ7TrebmEdUH8085b9AWzC4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755275887; c=relaxed/simple;
-	bh=wvKG9q6ho4RgZrrJIdGv5TeB043vsJ7FH5BLK3VX8eA=;
+	s=arc-20240116; t=1755276801; c=relaxed/simple;
+	bh=ncsZMcaEaRyKrG7bCrmhKqxgcGm35QtHCgV+5Alx7ik=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SN7PFrd+hV+N58DH5PHX3QtsVD/7ziim93aHLRTRfIszyMZyZhZKUrqnzhexqxSgwYOMsulChwvLwqK+Y7zSvwyj6fmUgat2CFVqjDSO3iot/tdbHXOVSxp+a1rCOZlDcE3a+msK4SQM3iRVKUfDTBFyJZjAFrsFCE5jsVNhUcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kSpBGVFO; arc=none smtp.client-ip=209.85.161.53
+	 Content-Type:Content-Disposition:In-Reply-To; b=V6UQHgHIg9HayVJkIk9tw/8EVG6zKFw1Fcl1iY1MhQmPAtNqUoA/vph/oR8708FamWVPsiHQS1lnAe1An9bdoD9MhfmaemL0pCpY3FX9UJEhizNxHUQLvzSXcsfDUSc5uZOGq98+idZZOfwIbBSavaZAHG7WV6hdRpRvSecujB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dAClpBLc; arc=none smtp.client-ip=209.85.210.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSpBGVFO"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-61bd4d1778cso600227eaf.1;
-        Fri, 15 Aug 2025 09:38:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dAClpBLc"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-74381e0a227so1536369a34.0;
+        Fri, 15 Aug 2025 09:53:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755275885; x=1755880685; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1755276799; x=1755881599; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dsMGeBFSMhVbn3vuzD+PKSwFX2QkoR6dSZaKAtY6lT0=;
-        b=kSpBGVFOFhbBffCpynPXoLNRUUBuMHv2OjRajjbGltzT2hGqf1sfxv6gREcjICtu9l
-         SEDXyZbP5BzUrZ6MTaI7uXeuTcZAz7l4LqSTF5gy10lz7mjtBC/j6L1uuy7QGe2rAb3m
-         SAweNVWoZJCAU8X/yejJQFYlH/hnffx45jn/nti6AFefv60oyxkxPJyuerrdPbck6aDT
-         s0xV69ETlD4gX1USW9W5V4SgnBJLf8uLCM24nTaMtVjRSGkie+8TKxBnLT3S7ycyvdkB
-         baG+IK9ExZ1kkysEkxME5MQ4mOxGdR9/XqO2AqtdDQl9KmgIVsPhmO6j3YGKNVpEogfv
-         jIbg==
+        bh=M1YfSXIbwb8SN2s4kprGpkOdh2b7v2KrGx+xJwdVO5E=;
+        b=dAClpBLcYa4tzwsNFpw/fEJgFQBIzcnTEpibvytbj1c4YO4hpLHebu0duiBT2c9b70
+         23d31tl7t0vdU6dE3MoKe4SsRgOPKVrxGVOE7Ln9hqdspHec7cKcN0d/kYOxCI9K+PlZ
+         q1MP292YOBL0GOGykAjcJNYdTiWLoUob+clzY+Pyd2ZDRVjGbplZ44aRoJHWSogOeHk5
+         YzaCRvOQfNUmKjtLsEfsGWtRJBjfv+I4SojMvfywZIESaIFhvRVBBbjfgQIMRutStYzI
+         ACohHlasjTAETE1CfB+syoQWoTiLQe1wLUIooT5qId8qlsLjrZ9MCOQYt8lU5zYD7gNl
+         wSMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755275885; x=1755880685;
+        d=1e100.net; s=20230601; t=1755276799; x=1755881599;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dsMGeBFSMhVbn3vuzD+PKSwFX2QkoR6dSZaKAtY6lT0=;
-        b=doQq25lgieVwCBbs7bN0oEUVV0GlGcS52jMF+nPc7cRhrk6XrX46dafPUfzcr4nj57
-         C1FdxObovJwfcyWKYQlk7E0h5qQtwomFOIgYS5G1beJE8hsJLAKdBAwV7KDBwxNlYXNb
-         BGkkT7i/jcrfoNMPTJIPGSVow+jpzr9R0qaHZK2VPqIQdH0IyIYk66LWeLixO1+CA8gl
-         OZm9/KrZpnefbdWOP6N3sBXSY7r14cJN51xJPfsmIhaPQWs8kYYFufZrqmpaBGTbwufM
-         Q9xw3uGdya7vqeqGJgbuYa1s7YTk4Vq+ME1jcZAk29DADHKCV/U6Flzu3L7rsbApEsNs
-         oiTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbN+sWi4Yj1sBJ5OBK2X+ZgxtFUVUHNahmpJXuQMy5IpxJ43iibJu0mSSFsBNIS6iFF64dHzbIRGk=@vger.kernel.org, AJvYcCX4GbaSoNzoZOlwT+efKi6EXZJlw6uOL+rayRe6Fp5y3yyqzC+m22/XUVdRxiRdgltSYzNFcEe53nyize6zfg==@vger.kernel.org, AJvYcCX69GPaAeOL+RBoohPlLjAcR3OlbOQ6sFNoiMh9cukd28W6loLnRULgNunkwW1FWcCXI0HsZehvRQofmgIi@vger.kernel.org, AJvYcCXgMCkyGuCfZi4Y8rh80lzICgs/Dv3qpf57Qvkx4OBy5x76P8kyrEoYVKAGDguvnoK4yIEV8dJ7p/ho@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywq8HoezIJguy4KtE7tbAf5PS7Z35/e7QR7SKpm4G2tzU8/1NWN
-	YdAJib1VkTQHSCvH6Y98kWZKFQFnoMIhCt1TcoeZKMfy/caaYfJsT/cZ
-X-Gm-Gg: ASbGncsnff1da0Zw09nqncSljDtW1M0GGkn3BZXzgog0YBmFPLMEETpAm1AjnDeWBcT
-	Cnc7b12TEGrJBhZMnFxFgASiSsSym3dJNtIJvT76TJ920bjDjNL8ut0VYTlVoCKRCAENzUl13Y1
-	WFDj2HjbpC9SrJSZmMna0trVGYY/3WUrPawzOCX5KYucvRsKfC/gsMwncx7z314xvf2gbU+mVV4
-	jnBkbrTqDxkn0Hdr7Zxdbi2uhXUWhGYjJhS3q/mSIw9thecK45ioXZ9z1UKVvXFN7fh+12oI9yn
-	HdZfU2lSnAKhWiu6RvRxY75hUY+sT2C1eo2vSJ/uD2lzwnG53CrN/P4rGLR1ovLq1kq8Kwv262k
-	lBHhmI+A2cLpelhQMdvpCpxkayL+ii7loTO5E
-X-Google-Smtp-Source: AGHT+IFcdjxfw9AaYkhVjHgYkiqDkUXLAcvGkFoOPrg34Eo+AprZt6K9wZhsOSbhz56+5rnDzpwgzw==
-X-Received: by 2002:a05:6871:61c5:b0:2f4:da72:5689 with SMTP id 586e51a60fabf-310aab51ff6mr1625953fac.15.1755275885079;
-        Fri, 15 Aug 2025 09:38:05 -0700 (PDT)
+        bh=M1YfSXIbwb8SN2s4kprGpkOdh2b7v2KrGx+xJwdVO5E=;
+        b=plfVWbp0XZ5IKi7wOMEpF2FJXE1YP74ry3+p6alvAaUQNic2YFIm4mJHU/DhrHVAJi
+         SNr/7MFJqUEk8WEwrc7KH5XHvBT6C0Uhh9Lji/XI9vVvlA8jmWdQ5Y/IaGQ0jFue/LPx
+         9Tb2r0MrQfHnd46ZG/OiRw8hvAMITRsypPSi2HvjNuyDDiP33yYrfDFqngiKW6kqRvs0
+         gVneNZFfmq71nqnpOI+rXBbZt45UyL2gyZNzBdw6ZGp9S2BaJvlzBW0+Hg7+28y66vaP
+         MIxHauDo/u73gFFvF89ZMU8/w50D2Qsprny7hCKEWB9r832JXCuR6xwW+NNJNWbK0UDk
+         tmZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZc9pqHdF7q0SQziWHlf3UHplusRXUyAGjEpMtfUq4bhjl+zeNUI0xABAy3Yi7NYnUKVbk1vOVrWw1FRfpUA==@vger.kernel.org, AJvYcCV/7/MY2XWqasYHVixVi+4Y+hH7Fq2lI7VQ4riSFTmZX2ltVM29RNhzUMHv4O1VRW0E0AUG1dZzuXA=@vger.kernel.org, AJvYcCX39WZA3z00B5eaD0nRYyzqMB0UCsM5rfhqDcrnoDbAjlGd+oOPIzWjYs3zy7w+Cuao0HbGLKKc+JsvSPTN@vger.kernel.org, AJvYcCXuMMnkDMgBRO8ZbKxIy5uKQ/12Q1zM0/HwKA/9O2nxdMBWrBeTo4cEWlL3/EaWk5K/hW3BkbiAk1PR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2xxw1tdxO0abbYAh1KjQejC8DCPdYocbZGgEWAfmdfHJqaVHJ
+	p9i8Ai/2eYt3FZLzkvGEuZqEfS+T8KFii3R6u6dquKO0MBIS1ZxzWpGQ
+X-Gm-Gg: ASbGncu1z7sKIV4oHIOl2Mu0L+a5ghSTqYE9n0qB2jgNsU6lLA8SkH8rXftJIGovWQz
+	pE0Z58D6zjFPNhUUTfCJbMua1jWK2p0sTqc8ZjV6eYdsjtEKwKsQIflRri9M8ldQaSp8xmvoKH0
+	EYSXeoCpc+xw09xjjSReEz0/B5BipIwb7RAcpE0fpcehKEkYgxzc9Sjrf4d9CeMbtLU8qYz7FPu
+	gnT52//Of9WIwLxNzlOCG6KlYFErRXFNVG57oKwVeZe2fSq44Ov1JoxtcJ2hBAh1SPC02dw0yzx
+	us40SCmRgw6ITZgOIeZgiGARRYORRz47JpXh/u++66nkYLYmkjDuKSUYQeq/vrC75SjTBJOB+ZA
+	4uLFtQpBx5yg9BbxkwI1xymbP9nhunUYN2yJe
+X-Google-Smtp-Source: AGHT+IHh7gvLqat09ID5S5eotjMgSZM/1+QH28GoD8XLJ484jicmNbL1KHnEftKM0DAmNzUxwWibZg==
+X-Received: by 2002:a9d:7c8a:0:b0:73e:5cb9:e576 with SMTP id 46e09a7af769-743924963b0mr1268395a34.27.1755276798837;
+        Fri, 15 Aug 2025 09:53:18 -0700 (PDT)
 Received: from groves.net ([2603:8080:1500:3d89:c95b:3a76:bbcf:777c])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-310ab87a7c7sm518355fac.4.2025.08.15.09.38.03
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-74392073461sm377891a34.49.2025.08.15.09.53.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Aug 2025 09:38:04 -0700 (PDT)
+        Fri, 15 Aug 2025 09:53:18 -0700 (PDT)
 Sender: John Groves <grovesaustin@gmail.com>
-Date: Fri, 15 Aug 2025 11:38:02 -0500
+Date: Fri, 15 Aug 2025 11:53:16 -0500
 From: John Groves <John@groves.net>
 To: Miklos Szeredi <miklos@szeredi.hu>
 Cc: Dan Williams <dan.j.williams@intel.com>, 
@@ -75,11 +75,12 @@ Cc: Dan Williams <dan.j.williams@intel.com>,
 	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
 	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
 	Ajay Joshi <ajayjoshi@micron.com>, john@groves.net
-Subject: Re: [RFC V2 14/18] famfs_fuse: GET_DAXDEV message and daxdev_table
-Message-ID: <oolcpxrjdzrkqnmj4xvcymnyb6ovdt7np7trxlgndniqe35l3s@ru5adqnjxexh>
+Subject: Re: [RFC V2 12/18] famfs_fuse: Plumb the GET_FMAP message/response
+Message-ID: <mwnzafopjjpcgf3mznua3nphgmhdpiaato5pvojz7uz3bdw57n@zl7x2uz2hkfj>
 References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-15-john@groves.net>
- <CAJfpegv19wFrT0QFkwFrKbc6KXmktt0Ba2Lq9fZoihA=eb8muA@mail.gmail.com>
+ <20250703185032.46568-13-john@groves.net>
+ <CAJfpegv6wHOniQE6dgGymq4h1430oc2EyV3OQ2S9DqA20nZZUQ@mail.gmail.com>
+ <CAJfpegv=ACZchaG-xt0k481W1ZUKb3hWmLi-Js-aKg92d=yObw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -88,53 +89,36 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJfpegv19wFrT0QFkwFrKbc6KXmktt0Ba2Lq9fZoihA=eb8muA@mail.gmail.com>
+In-Reply-To: <CAJfpegv=ACZchaG-xt0k481W1ZUKb3hWmLi-Js-aKg92d=yObw@mail.gmail.com>
 
-On 25/08/14 03:58PM, Miklos Szeredi wrote:
-> On Thu, 3 Jul 2025 at 20:54, John Groves <John@groves.net> wrote:
-> >
-> > * The new GET_DAXDEV message/response is enabled
-> > * The command it triggered by the update_daxdev_table() call, if there
-> >   are any daxdevs in the subject fmap that are not represented in the
-> >   daxdev_dable yet.
+On 25/08/14 04:36PM, Miklos Szeredi wrote:
+> On Thu, 14 Aug 2025 at 15:36, Miklos Szeredi <miklos@szeredi.hu> wrote:
 > 
-> This is rather convoluted, the server *should know* which dax devices
-> it has registered, hence it shouldn't need to be explicitly asked.
-
-That's not impossible, but it's also a bit harder than the current
-approach for the famfs user space - which I think would need to become
-stateful as to which daxdevs had been pushed into the kernel. The
-famfs user space is as unstateful as possible ;)
-
+> > I'm still hoping some common ground would benefit both interfaces.
+> > Just not sure what it should be.
 > 
-> And there's already an API for registering file descriptors:
-> FUSE_DEV_IOC_BACKING_OPEN.  Is there a reason that interface couldn't
-> be used by famfs?
+> Something very high level:
+> 
+>  - allow several map formats: say a plain one with a list of extents
+> and a famfs one
+>  - allow several types of backing files: say regular and dax dev
+>  - querying maps has a common protocol, format of maps is opaque to this
+>  - maps are cached by a common facility
+>  - each type of mapping has a decoder module
+>  - each type of backing file has a module for handling I/O
+> 
+> Does this make sense?
+> 
+> This doesn't have to be implemented in one go, but for example
+> GET_FMAP could be renamed to GET_READ_MAP with an added offset and
+> size parameter.  For famfs the offset/size would be set to zero/inf.
+> I'd be content with that for now.
 
-FUSE_DEV_IOC_BACKING_OPEN looks pretty specific to passthrough. The
-procedure for opening a daxdev is stolen from the way xfs does it in 
-fs-dax mode. It calls fs_dax_get() rather then open(), and passes in 
-'famfs_fuse_dax_holder_ops' to 1) effect exclusivity, and 2) receive
-callbacks in the event of memory errors. See famfs_fuse_get_daxdev()...
+Maybe GET_FILE_MAP or GET_FILE_IOMAP if we want to keep overloading 
+the term iomap. Maps are to backing-dev for regular file systems,
+and to device memory (devdax) for famfs - in all cases both read
+and write (when write is allowed).
 
-A *similar* ioctl could be added to push in a daxdev, but that would
-still add statefulness that isn't required in the current implementation.
-I didn't go there because there are so few IOCTLs currently (the overall 
-model is more 'pull' than 'push').
-
-Keep in mind that the baseline case with famfs will be files that are 
-interleaved across strips from many daxdevs. We commonly create files 
-that are striped across 16 daxdevs, selected at random from a
-significantly larger pool. Because interleaving is essential to memory 
-performance...
-
-There is no "device mapper" analog for memory, so famfs really does 
-have to span daxdevs. As Darrick commented somewhere, famfs fmaps do 
-repeating patterns well (i.e. striping)...
-
-I think there is a certain elegance to the current approach, but
-if you feel strongly I will change it.
-
-Thanks!
+Thanks,
 John
 
