@@ -1,72 +1,72 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9F62E8888;
-	Sat, 16 Aug 2025 15:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DEF33086;
+	Sat, 16 Aug 2025 16:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755356428; cv=none; b=LdoqxFmnhdKjyTo0Guzlm09gZfJV5UkiRKKFp6B2m9ybdghT9+rGn9rPUp/WEz1xzvFkm6angdgdSDSNe7kWqEOKMm5YeHLINRO9qiMDWYvtM2EjS7MPwurzagKznFgbr0Q/tUSedNDBcTjrJMvX5DlXEOV3uR2xx9+setWkKrM=
+	t=1755361376; cv=none; b=RafKloZcuH5Pyw7x4zi3Nq8c3I0Q6ViV/EA5A9oaqErbwaC9Yw6G6ogTpW0Ar/SZ1epsBvs6kND4ZttnsBCRSi9J9dRf4NWbyhUpNxAGdgJ4Az7zGYQr8z1766uquXTxSkyiCx5jdIDX49rOVS3oi8monigkH7pI+qGtyAXY3vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755356428; c=relaxed/simple;
-	bh=VigReBL8M6MI529Z8Xk8Ix7rUQBlX7NkF4iKwyADbaA=;
+	s=arc-20240116; t=1755361376; c=relaxed/simple;
+	bh=NZM13o2Exswd9U+U96wypdU8sDgj2Ia3oSNRi53SxnI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W5ijLIhlLMVGJSGaKp2pLMzjJljEsU5Ukty7swrVFvGRZpCNieycy5gz4grA6MhsjjCZ3YU89kll7Sr96B0zeOMbDvvXveunNdJaolTZhCSTKfyMwohEY+nHoE3nfgiLIGtw7rigQV8fOFusOXbtrPLC021sk+YvEwG2IUXvEXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UkL77OLk; arc=none smtp.client-ip=209.85.210.42
+	 Content-Type:Content-Disposition:In-Reply-To; b=BcAQGIc17fwD04XrY9EbPCu6wfhGtgcwXH3G6Xoe9aDRQnbGeC0zBjNw7eORut6+i5hq2rQQeK1/SLjJhfzOdZUey/uPS5ropXRSpog5exCZNUPXqYv2fp9ruT34KabVfdeOoDXo24mVm99oz4gi/l1fkUyVMexYmnbbSZsl6sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cIGyBKU4; arc=none smtp.client-ip=209.85.160.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UkL77OLk"
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-74381f0664fso726846a34.1;
-        Sat, 16 Aug 2025 08:00:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cIGyBKU4"
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-30cce58bb89so2599749fac.0;
+        Sat, 16 Aug 2025 09:22:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755356426; x=1755961226; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1755361372; x=1755966172; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gwjPbg8KA3rFGnPGiayWOqsstlBug/9B8GI8n0PblXs=;
-        b=UkL77OLkX7p6VannEj3vOtKP97PuW9J4n3Zu7493Dhko2jD9zwElp+uOMs8TKqexwp
-         WLXQyvtHiHV9wGaehxDVSBvPgXIVVXc0uRw9Ne6vF/bPYibJSW8STbUpwvm+BZm8JirG
-         b7eziMbpCzv9yNv3aWikd6UxdMiYvNs8VLUpoevV7haf1LVwbtLX/5pSAsts6Ms2Cnec
-         ZiarLkZ4al0KPa88wAO9mYNkhzRX0rn+LTkXJsfhFCkLDqBNbET+p69SF8rsrhAWfPHC
-         Yw8psL5p0NZ7LGRHoSBTEzySQYHZNy/dmqWo3yPGr22pJQ5dJKb7tbbQXf6BzK7AryJ6
-         54EA==
+        bh=+Rtpc5s7M7/+q1cABKsKTJfzX3/F+/4NGbX+n4VhZH8=;
+        b=cIGyBKU4ukL+l+lzIL85FrzttJMEoqq2eHc7WbB1iAr/K1zYthOV6jwEI1T/rCeB8T
+         MFkGcSSnGY3+E5KRdaMUsi/Dlu+bpqCiRh2+Z6BImuWvZwrbx4cUVruorh/HPY6uqs8f
+         Cq/ZpMJMLh06K7CTPoOUOaWft8iZvBm+F2CcNTi4g4IgeHUc97qO5NNd5R4Wyl7Kf1Ma
+         a55qTJIK63NIBd71jBm3pq/cXPlK/hjwaGBNPb0fOGFv93t5fZ2kasjrfkoqG8Oq+39z
+         AueKoyuQGYOsF5WnREomdlFXvbMVCnw2u/Odw6RiE/izFlmjCEA6BBLCJjyTGNN/gND6
+         7vsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755356426; x=1755961226;
+        d=1e100.net; s=20230601; t=1755361372; x=1755966172;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gwjPbg8KA3rFGnPGiayWOqsstlBug/9B8GI8n0PblXs=;
-        b=grMWlTnfJcSpp7q+qKC6mjQ9ediT5hWQVE8pXmTOZUuhGtxCTLhBw2mr+XedtD/Ca7
-         Ynvy9LhWWMC2wTZSYiupI5eSYChYWaMKpQUVryNC+Ywe8XvR6Q9+LMKJsbNu7XD/x91l
-         GvLDd/Sl6fG6BUofQsFUta63ETZnuNAdoZDu1z0+F4aDSe3sD/uml2gzCwFsFlbmiMlb
-         qWDNGRiozZXtDj40EoJmyQu0m6ATHFs6Q4OQJcKLg5st3IpREOgSBNQuXgRwDMsWEjjy
-         cVG0/b5TcJQfuSvzlTGwY0L7hHYTzESlipN0PDw+mnLn26QssV12N/AtWBSqQQY7INRR
-         l6/A==
-X-Forwarded-Encrypted: i=1; AJvYcCU2iMlm4+lBuSR5g+m5oxfNIWF9E4dNrOs1cVMaWs41nx5/pPX5QlpZznWoB3rhxai2xQF2qy6XnW0=@vger.kernel.org, AJvYcCU33Rl/eYYalb0aB0sLnEhyKO4cKZgOq295cD5YT3yjkV3KmvGe7EZq35MZO/5G6sJC6Kl1j5M7mHJGD6EVGQ==@vger.kernel.org, AJvYcCU6j2tRC/QtR+qODQ/SQH+l3wHcyUaEnkuIuKvFxrUV+I9ThtZ+0tvGUBh0mLiOHRrj7wHk6HLIrxME@vger.kernel.org, AJvYcCVWrt4BDTGIy/SuFzLC3NyykpXiomaAxVSyC16AOKi3D3yjVmpUxtsj3xsj2ElEz5xe2ue33mEwfCQ+WoOX@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqV5L9ULYO+g54J/QN0Hot/OKvxtYPYC2w+8aC4OM/SxEn+QIN
-	NkuzzIVUjc/bGxL9GMfay/pqiTAnO4noyRMfDT1vFzVrxcmuuFcPxaexV4amR1af
-X-Gm-Gg: ASbGncsKmmcHMB8RWk8DHqqNwhYl6sZP9QAEpCj3OoFQSvr8UR1/NBveLnLPy1HlpqZ
-	UfUkTXY2p8tlsO+IjXbOm1gzLgu9LtwvvHvhMNg66N6iV9JkUBizPyAPN5ptq+z8QLsl4RbDfC0
-	B5h0kbvuG83hd9D0XUxTF0x0VT4d3FIyQb8zS+fXsZ7teBOlWp+p9U4FwyTu5mMI/GlRMeUBRXC
-	mkh+9KKBFl08Czia9zN72Y+82ZYqc/XgodRbLSWZB/bLvyJVU+1XXmVKCe9EBB7PVmtfojzEwEU
-	qYU/l0IEORzq9qmFG3Ub8p7NTwSE4kPlqJasEoNtJnmucHEbZgZfCJUU8cu6kmDX9f2srMWxCXu
-	D2n9kjDGlq0YWYEVpK2irY1L8mz17/viiZ1DN
-X-Google-Smtp-Source: AGHT+IFFQO6oO7eKhRJoor1ccKngWoereGVcBCKxuKO/JrshNXE7oZADMU90CYmE2ChdFmofXtpRPQ==
-X-Received: by 2002:a05:6830:912:b0:731:e808:be5f with SMTP id 46e09a7af769-743924f57b2mr4023050a34.28.1755356426238;
-        Sat, 16 Aug 2025 08:00:26 -0700 (PDT)
+        bh=+Rtpc5s7M7/+q1cABKsKTJfzX3/F+/4NGbX+n4VhZH8=;
+        b=XtjHNmD0TMBTN0kPAtjSHtjL5vsYC7LeY+okFJzlFu5i1b8GYkUpghKXeDH0dNiuen
+         OLVuSAhd1oNpV6Ji9Q4n1bzd5q2XMxGMnj63Z+t+sKrwMBfBqyP43g2LOKhW39XYi30g
+         mNIIP0l28mzeY9HyXKBk44nK4OwJC2kmJz3PE1onid3jwDGROFMUDLNqsB/pPTDrGMTC
+         sdduoDNjH+puLBRfiTVvPnzgR00oIjC0KzCquf6gN3w4JvPGiIJlos+EuULQrWKuSq5K
+         N1AP/kAkPiUQXv1IHY+B/5DvY0hzEUpSbP7f9lvUeEndx5tAQvn3xyuN26/qestUzM5/
+         +mrw==
+X-Forwarded-Encrypted: i=1; AJvYcCVWn0yvHl8Gz0jtF5htXRuzzv99SmIrMvm72qPgdbCVL8z4jHp2QTflaYqTufdzsRwjJF5nucDMEfk=@vger.kernel.org, AJvYcCVbuLxnCBl2WgUzwZXLFY5r+vlX4dTa+UJy5CtEuNtBWOfF9f5BPA0F4FCy9/bj5ylbsZuoKEjF4ReoDL+e@vger.kernel.org, AJvYcCWYCulUJlN+9MYSD2LWpIMxxG7+EmchaKgmP03wDZsr8fPlvsoI5cNMsMQGKuOxg+jCseh3P4zsGtAP@vger.kernel.org, AJvYcCXpM4Re49A4EEqwH+LznVVm8UNsaoNMzHVSJEDHzhXe9G6pEI3deG7Sl8ow8DJ88aoCCYC/hIIfMTqwGI1XNA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0ewsyApcKvOdEeVh8XoxdT4KdW1/xd/8sVVa/pLQJHcMfdp2J
+	FGTMPzN/xw5QfD35YO7bTw5dM8UxR9qayoJUF9Fk3o2OS3ykjJGDOaQ5
+X-Gm-Gg: ASbGncus3hshJJMG7lsK0lcHXePF4F1vdlTht6vZH0EaNjuLqLolRGnBrxnJBGVp0qt
+	yDUvRBF6ZIpncURZbfvbH/udZfcEddomfzt0EYMTiMKzLTWNtZfK/gKZoySYvzFZQCAiiF7qnp/
+	1O8H/jqJki/pY7brZg58XVP798G/zyrAsLdReN9anQH2XvRtehJq2FmpAvqkWsg85rSksokKC9D
+	S9LvdOvMF+sNdfHPyoXaa4KxQ1EEvyUYUGKzPBadh8wdBcYuNbhGYVGb6si5rtzcQ7o2qY6FZ4S
+	tH/Gid2AdmJCiY0c42yI6afWP2uDrNy38ppLcqkT8u4PEu7I6MB1Q8OpB5K3smqRyKkC0f87LYp
+	cjTE249zGjr7lnGQtUaaIgs6DNcbsSqMrWxAo
+X-Google-Smtp-Source: AGHT+IHCxUIkdlGxbKhRgkda2hbannURDDEsuMBjaUCvPESePWFZyXXJu5EUcQ/LJ4zZvF6BnvAeCQ==
+X-Received: by 2002:a05:6870:15c8:b0:30c:5189:5707 with SMTP id 586e51a60fabf-310aae9750cmr3295321fac.28.1755361372333;
+        Sat, 16 Aug 2025 09:22:52 -0700 (PDT)
 Received: from groves.net ([2603:8080:1500:3d89:1d43:22e9:7ffa:494a])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-74391bd220fsm881978a34.13.2025.08.16.08.00.24
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-74391bd20a3sm911591a34.21.2025.08.16.09.22.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Aug 2025 08:00:25 -0700 (PDT)
+        Sat, 16 Aug 2025 09:22:51 -0700 (PDT)
 Sender: John Groves <grovesaustin@gmail.com>
-Date: Sat, 16 Aug 2025 10:00:23 -0500
+Date: Sat, 16 Aug 2025 11:22:49 -0500
 From: John Groves <John@groves.net>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, 
-	Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi <miklos@szeredb.hu>, 
-	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, 
+	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
+	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
 	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
 	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
 	Kent Overstreet <kent.overstreet@linux.dev>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -75,12 +75,13 @@ Cc: Miklos Szeredi <miklos@szeredi.hu>,
 	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
 	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
 	Ajay Joshi <ajayjoshi@micron.com>, john@groves.net
-Subject: Re: [RFC V2 12/18] famfs_fuse: Plumb the GET_FMAP message/response
-Message-ID: <a6smxrjvz5zifw2wattd7abmxhsizkh7vmwrkruqe3l4k6tg7e@gjwj44tqgpnq>
+Subject: Re: [RFC V2 14/18] famfs_fuse: GET_DAXDEV message and daxdev_table
+Message-ID: <vfg7t7dzqjf6g6374wavesakk332n4dqabgokw4xobsar5jnxm@m7xfan6vhyty>
 References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-13-john@groves.net>
- <CAJfpegv6wHOniQE6dgGymq4h1430oc2EyV3OQ2S9DqA20nZZUQ@mail.gmail.com>
- <20250814180512.GV7942@frogsfrogsfrogs>
+ <20250703185032.46568-15-john@groves.net>
+ <CAJfpegv19wFrT0QFkwFrKbc6KXmktt0Ba2Lq9fZoihA=eb8muA@mail.gmail.com>
+ <20250814171941.GU7942@frogsfrogsfrogs>
+ <CAJfpegv8Ta+w4CTb7gvYUTx3kka1-pxcWX_ik=17wteU9XBT1g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -89,28 +90,63 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250814180512.GV7942@frogsfrogsfrogs>
+In-Reply-To: <CAJfpegv8Ta+w4CTb7gvYUTx3kka1-pxcWX_ik=17wteU9XBT1g@mail.gmail.com>
 
-On 25/08/14 11:05AM, Darrick J. Wong wrote:
-<snip>
-> It's possible that famfs could use the mapping upsertion notification to
-> upload mappings into the kernel.  As far as I can tell, fuse servers can
-> send notifications even when they're in the middle of handling a fuse
-> request, so the famfs daemon's ->open function could upload mappings
-> before completing the open operation.
+On 25/08/14 08:25PM, Miklos Szeredi wrote:
+> On Thu, 14 Aug 2025 at 19:19, Darrick J. Wong <djwong@kernel.org> wrote:
+> > What happens if you want to have a fuse server that hosts both famfs
+> > files /and/ backing files?  That'd be pretty crazy to mix both paths in
+> > one filesystem, but it's in theory possible, particularly if the famfs
+> > server wanted to export a pseudofile where everyone could find that
+> > shadow file?
 > 
+> Either FUSE_DEV_IOC_BACKING_OPEN detects what kind of object it has
+> been handed, or we add a flag that explicitly says this is a dax dev
+> or a block dev or a regular file.  I'd prefer the latter.
+> 
+> Thanks,
+> Miklos
 
-Famfs dax mappings don't change (and might or might not ever change).
-Plus, famfs is exposing memory, so it must run at memory speed - which
-is why it needs to cache the entire fmap for any active file. That way
-mapping faults happen at lookup-in-fmap speed (which is order 1 for
-interleaved fmaps, and order-small-n for non-interleaved.
+I have future ideas of famfs supporting non-dax-memory files in a mixed
+namespace with normal famfs dax files. This seems like the simplest way 
+to relax the "files are strictly pre-allocated" rule. But I think this 
+is orthogonal to how fmaps and backing devs are passed into the kernel. 
 
-I wouldn't rule out ever using upsert, but probably not before we
-integrate famfs with PNFS, or some other major generalizing event.
+The way I'm thinking about it, the difference would be handled in
+read/write/mmap. Taking fuse_file_read_iter as the example, the code 
+currently looks like this:
 
-Thanks,
+	if (FUSE_IS_VIRTIO_DAX(fi))
+		return fuse_dax_read_iter(iocb, to);
+	if (fuse_file_famfs(fi))
+		return famfs_fuse_read_iter(iocb, to);
+
+	/* FOPEN_DIRECT_IO overrides FOPEN_PASSTHROUGH */
+	if (ff->open_flags & FOPEN_DIRECT_IO)
+		return fuse_direct_read_iter(iocb, to);
+	else if (fuse_file_passthrough(ff))
+		return fuse_passthrough_read_iter(iocb, to);
+	else
+		return fuse_cache_read_iter(iocb, to);
+
+If the famfs fuse servert wants a particular file handled via another 
+mechanism -- e.g. READ message to server or passthrough -- the famfs 
+fuse server can just provide an fmap that indicates such.  Then 
+fuse_file_famfs(fi) would return false for that file, and it would be 
+handled through other existing mechanisms (which the famfs fuse 
+server would have to handle correctly).
+
+Famfs could, for example, allow files to be created as generic or
+passthrough, and then have a "commit" step that allocated dax memory, 
+moved the data from a non-dax into dax, and appended the file to the 
+famfs metadata log - flipping the file to full-monty-famfs (tm). 
+Prior to the "commit", performance is less but all manner of mutations 
+could be allowed.
+
+So I don't think this looks very be hard, and it's independent of the 
+mechanism by which fmaps get into the kernel.
+
+Regards,
 John
 
-<snip>
 
