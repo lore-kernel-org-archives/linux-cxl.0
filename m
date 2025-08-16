@@ -1,152 +1,128 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DEF33086;
-	Sat, 16 Aug 2025 16:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740B13176F9;
+	Sat, 16 Aug 2025 18:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755361376; cv=none; b=RafKloZcuH5Pyw7x4zi3Nq8c3I0Q6ViV/EA5A9oaqErbwaC9Yw6G6ogTpW0Ar/SZ1epsBvs6kND4ZttnsBCRSi9J9dRf4NWbyhUpNxAGdgJ4Az7zGYQr8z1766uquXTxSkyiCx5jdIDX49rOVS3oi8monigkH7pI+qGtyAXY3vw=
+	t=1755369053; cv=none; b=Ez/ECmUWhKVN495/qGdjTL6OhLNa3997WII2GT0uvYKZRZQkDQOPdLZD0sEf1nD7QU3SGeB/1jdPddnfLzzFQzJgQw5Ol2AM07dFEaEufxo64dA5mE+ZhUQzuxwQ5v7ybaaLhZ2ccx3JDpw1RHOgUDIwtFI4PIE7o1uHght1TZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755361376; c=relaxed/simple;
-	bh=NZM13o2Exswd9U+U96wypdU8sDgj2Ia3oSNRi53SxnI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BcAQGIc17fwD04XrY9EbPCu6wfhGtgcwXH3G6Xoe9aDRQnbGeC0zBjNw7eORut6+i5hq2rQQeK1/SLjJhfzOdZUey/uPS5ropXRSpog5exCZNUPXqYv2fp9ruT34KabVfdeOoDXo24mVm99oz4gi/l1fkUyVMexYmnbbSZsl6sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cIGyBKU4; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+	s=arc-20240116; t=1755369053; c=relaxed/simple;
+	bh=Ca9Tn1UJzfTzHyDL78FjDFTXk6DN5IoHNYT47ja8cTU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s6vg+WqC4kDT5ljIEHuwyv2cacCwIC03j5aqVO9l3Jg/oia7baY+o9Ehu/VfqtK80tNVC2bIsgq0LO7j/soKgRjYbCOMQJ+rLvV/JSTrfmphqX7knxuuNbfsGWhEhXkovuDSjO8sq/LuX6RqAuGg19d6HKU5Kl9zxFBzf4mi1Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oj2zt9DY; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cIGyBKU4"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-30cce58bb89so2599749fac.0;
-        Sat, 16 Aug 2025 09:22:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oj2zt9DY"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-76e39ec6f30so2072616b3a.2;
+        Sat, 16 Aug 2025 11:30:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755361372; x=1755966172; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+Rtpc5s7M7/+q1cABKsKTJfzX3/F+/4NGbX+n4VhZH8=;
-        b=cIGyBKU4ukL+l+lzIL85FrzttJMEoqq2eHc7WbB1iAr/K1zYthOV6jwEI1T/rCeB8T
-         MFkGcSSnGY3+E5KRdaMUsi/Dlu+bpqCiRh2+Z6BImuWvZwrbx4cUVruorh/HPY6uqs8f
-         Cq/ZpMJMLh06K7CTPoOUOaWft8iZvBm+F2CcNTi4g4IgeHUc97qO5NNd5R4Wyl7Kf1Ma
-         a55qTJIK63NIBd71jBm3pq/cXPlK/hjwaGBNPb0fOGFv93t5fZ2kasjrfkoqG8Oq+39z
-         AueKoyuQGYOsF5WnREomdlFXvbMVCnw2u/Odw6RiE/izFlmjCEA6BBLCJjyTGNN/gND6
-         7vsA==
+        d=gmail.com; s=20230601; t=1755369051; x=1755973851; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fhn2t1l0lC8TOAJKE/KsB3bglQE6ARXTKvnpQpTHz8U=;
+        b=Oj2zt9DYlP0WjXREMBuHuPZe2WlMjM8T7IMrRoJw3NlyYaa2NIA18z7zdFXj9zEMVZ
+         yt5DNuG9x4rDRooZ+7CpY2ceWhn8861t/pBsNR2vpAuXCOowbcAJfIfxJUdrqz/cXBW9
+         0ABu+Sx3qsBGdViw+qMg8cZR/oKj8vCecuTUOArMpBCjSHmUeVhRKL3GvBBTA6MtAeNI
+         bzqxLdJ/uYLu71aAIhDpN4/qyP5vCqonb3eloYvLlpirrNnRjM1FPZfyDFXHFTs5OSps
+         BfkL1f006ke4ydNTffpLA1/99D2lpzWcYafNDTt4yXV8YrHKJ0QQ8aM91OJsM56bBQwT
+         oc6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755361372; x=1755966172;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+Rtpc5s7M7/+q1cABKsKTJfzX3/F+/4NGbX+n4VhZH8=;
-        b=XtjHNmD0TMBTN0kPAtjSHtjL5vsYC7LeY+okFJzlFu5i1b8GYkUpghKXeDH0dNiuen
-         OLVuSAhd1oNpV6Ji9Q4n1bzd5q2XMxGMnj63Z+t+sKrwMBfBqyP43g2LOKhW39XYi30g
-         mNIIP0l28mzeY9HyXKBk44nK4OwJC2kmJz3PE1onid3jwDGROFMUDLNqsB/pPTDrGMTC
-         sdduoDNjH+puLBRfiTVvPnzgR00oIjC0KzCquf6gN3w4JvPGiIJlos+EuULQrWKuSq5K
-         N1AP/kAkPiUQXv1IHY+B/5DvY0hzEUpSbP7f9lvUeEndx5tAQvn3xyuN26/qestUzM5/
-         +mrw==
-X-Forwarded-Encrypted: i=1; AJvYcCVWn0yvHl8Gz0jtF5htXRuzzv99SmIrMvm72qPgdbCVL8z4jHp2QTflaYqTufdzsRwjJF5nucDMEfk=@vger.kernel.org, AJvYcCVbuLxnCBl2WgUzwZXLFY5r+vlX4dTa+UJy5CtEuNtBWOfF9f5BPA0F4FCy9/bj5ylbsZuoKEjF4ReoDL+e@vger.kernel.org, AJvYcCWYCulUJlN+9MYSD2LWpIMxxG7+EmchaKgmP03wDZsr8fPlvsoI5cNMsMQGKuOxg+jCseh3P4zsGtAP@vger.kernel.org, AJvYcCXpM4Re49A4EEqwH+LznVVm8UNsaoNMzHVSJEDHzhXe9G6pEI3deG7Sl8ow8DJ88aoCCYC/hIIfMTqwGI1XNA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0ewsyApcKvOdEeVh8XoxdT4KdW1/xd/8sVVa/pLQJHcMfdp2J
-	FGTMPzN/xw5QfD35YO7bTw5dM8UxR9qayoJUF9Fk3o2OS3ykjJGDOaQ5
-X-Gm-Gg: ASbGncus3hshJJMG7lsK0lcHXePF4F1vdlTht6vZH0EaNjuLqLolRGnBrxnJBGVp0qt
-	yDUvRBF6ZIpncURZbfvbH/udZfcEddomfzt0EYMTiMKzLTWNtZfK/gKZoySYvzFZQCAiiF7qnp/
-	1O8H/jqJki/pY7brZg58XVP798G/zyrAsLdReN9anQH2XvRtehJq2FmpAvqkWsg85rSksokKC9D
-	S9LvdOvMF+sNdfHPyoXaa4KxQ1EEvyUYUGKzPBadh8wdBcYuNbhGYVGb6si5rtzcQ7o2qY6FZ4S
-	tH/Gid2AdmJCiY0c42yI6afWP2uDrNy38ppLcqkT8u4PEu7I6MB1Q8OpB5K3smqRyKkC0f87LYp
-	cjTE249zGjr7lnGQtUaaIgs6DNcbsSqMrWxAo
-X-Google-Smtp-Source: AGHT+IHCxUIkdlGxbKhRgkda2hbannURDDEsuMBjaUCvPESePWFZyXXJu5EUcQ/LJ4zZvF6BnvAeCQ==
-X-Received: by 2002:a05:6870:15c8:b0:30c:5189:5707 with SMTP id 586e51a60fabf-310aae9750cmr3295321fac.28.1755361372333;
-        Sat, 16 Aug 2025 09:22:52 -0700 (PDT)
-Received: from groves.net ([2603:8080:1500:3d89:1d43:22e9:7ffa:494a])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-74391bd20a3sm911591a34.21.2025.08.16.09.22.50
+        d=1e100.net; s=20230601; t=1755369051; x=1755973851;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Fhn2t1l0lC8TOAJKE/KsB3bglQE6ARXTKvnpQpTHz8U=;
+        b=BcXpkRQuS7mMaMX9zbzTDvtiLyaFGLX8j0h5YZEfAXiIe4OpYBOPNnTemZJEKrK3Xs
+         IaT2n4/vJcopCRk0v2eltQHx0QqLytcCWGYsRdY/QeOF8EWID9agp9GOPU9uO7gISOjl
+         u3WXvlM7p2Rgv2nuGoTUm+xFguHa8ZDANs4uSww+E1oeG8+62YQ2OS3dd5ROHLVKJH9A
+         Z36SjgWwafO8q4hCILTtaAK2fincnmZoZM9B1R+h9FtkYz9fpIkQwDdqzpwQHLaaocpt
+         WphwdzFqu9oJcC2T2Oi2NimshEK3GNfR4v7gOeuYpMEsPevW1sxhrFDw6JpDb8x313ZE
+         aA8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUFsngnsS7AKtZslwfDhvysMmTQ7lO1Zt6HS+iLmBJjoo1cbk2QSB0S6Ip9+j7bOx1oYKw7f8m47I0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGBTJxApu2D4+t54nxNdobzvI7LguyaC5053PJlzLNARL0rLRv
+	rLLbbpNjJWykurT36iNEp87I3EHUOXjTbLoFkNLsWv5sQwYUNu0yDiQTZ9aM1HGks0o=
+X-Gm-Gg: ASbGnctpMxS5PZm1stAPVZXNBhiNb7FmsRmDCSDmjyQmxoAbyH1K0x35WnOzmdzyJ3J
+	KtC2aiXgZinNcGf+mAo4RsKPBo3ogvf0K5d5U520fzNUIvq3Lo5vauQYs9GvQybTGrS9M4QKQNj
+	X4D736W80U29qgFyRCronRwqm1b8M1OAICLBN8mZWVXyhuTAcCdl4sMJIGKGxNsf5Rs1ak8g6N/
+	uyO+lUsu907ZejftlkMkseQ/ZSGN146EiEWMtTm/nU3P66RxzVR7h9ZDDOkwpb728kQSTTlr2XG
+	lB97RkTZdAENndtUvos/lwFu7YNXvYmFbzY4SCQIWHrdHacbCbPJRpqh2lACF6oT04AZt5gVTfq
+	/W0qMnSpv/gLHKfCGv3yIvG5jV/bUc+n8NxmCbxnj7w==
+X-Google-Smtp-Source: AGHT+IFjz0rJDhGfparMNY6VC/JIueZmZiEB6VolaLHi06NigLtt9WJc9wH1l8gFuRX+8nKyr9njyg==
+X-Received: by 2002:a05:6a21:3391:b0:240:198:7790 with SMTP id adf61e73a8af0-240e619e927mr4884569637.10.1755369051185;
+        Sat, 16 Aug 2025 11:30:51 -0700 (PDT)
+Received: from lkmp.. ([157.51.100.44])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b472d73a418sm4251175a12.38.2025.08.16.11.30.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Aug 2025 09:22:51 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Sat, 16 Aug 2025 11:22:49 -0500
-From: John Groves <John@groves.net>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>, john@groves.net
-Subject: Re: [RFC V2 14/18] famfs_fuse: GET_DAXDEV message and daxdev_table
-Message-ID: <vfg7t7dzqjf6g6374wavesakk332n4dqabgokw4xobsar5jnxm@m7xfan6vhyty>
-References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-15-john@groves.net>
- <CAJfpegv19wFrT0QFkwFrKbc6KXmktt0Ba2Lq9fZoihA=eb8muA@mail.gmail.com>
- <20250814171941.GU7942@frogsfrogsfrogs>
- <CAJfpegv8Ta+w4CTb7gvYUTx3kka1-pxcWX_ik=17wteU9XBT1g@mail.gmail.com>
+        Sat, 16 Aug 2025 11:30:50 -0700 (PDT)
+From: rakuram <rakuram.e96@gmail.com>
+To: linux-doc@vger.kernel.org
+Cc: dan.j.williams@intel.com,
+	dave@stgolabs.net,
+	dave.jiang@intel.com,
+	jonathan.cameron@huawei.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	linux-cxl@vger.kernel.org,
+	alison.schofield@intel.com,
+	gourry@gourry.net,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linuxfoundation.org,
+	corbet@lwn.net,
+	rakuram.e96@gmail.com
+Subject: [PATCH] Documentation/driver-api: Fix typo error in cxl
+Date: Sun, 17 Aug 2025 00:00:33 +0530
+Message-ID: <20250816183034.7970-1-rakuram.e96@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegv8Ta+w4CTb7gvYUTx3kka1-pxcWX_ik=17wteU9XBT1g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On 25/08/14 08:25PM, Miklos Szeredi wrote:
-> On Thu, 14 Aug 2025 at 19:19, Darrick J. Wong <djwong@kernel.org> wrote:
-> > What happens if you want to have a fuse server that hosts both famfs
-> > files /and/ backing files?  That'd be pretty crazy to mix both paths in
-> > one filesystem, but it's in theory possible, particularly if the famfs
-> > server wanted to export a pseudofile where everyone could find that
-> > shadow file?
-> 
-> Either FUSE_DEV_IOC_BACKING_OPEN detects what kind of object it has
-> been handed, or we add a flag that explicitly says this is a dax dev
-> or a block dev or a regular file.  I'd prefer the latter.
-> 
-> Thanks,
-> Miklos
+Fixed the following typo errors
 
-I have future ideas of famfs supporting non-dax-memory files in a mixed
-namespace with normal famfs dax files. This seems like the simplest way 
-to relax the "files are strictly pre-allocated" rule. But I think this 
-is orthogonal to how fmaps and backing devs are passed into the kernel. 
+intersparsed ==> interspersed
+in Documentation/driver-api/cxl/platform/bios-and-efi.rst
 
-The way I'm thinking about it, the difference would be handled in
-read/write/mmap. Taking fuse_file_read_iter as the example, the code 
-currently looks like this:
+ndoe ==> node
+in Documentation/driver-api/cxl/allocation/page-allocator.rst
 
-	if (FUSE_IS_VIRTIO_DAX(fi))
-		return fuse_dax_read_iter(iocb, to);
-	if (fuse_file_famfs(fi))
-		return famfs_fuse_read_iter(iocb, to);
+Signed-off-by: rakuram <rakuram.e96@gmail.com>
+---
+ Documentation/driver-api/cxl/allocation/page-allocator.rst | 2 +-
+ Documentation/driver-api/cxl/platform/bios-and-efi.rst     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-	/* FOPEN_DIRECT_IO overrides FOPEN_PASSTHROUGH */
-	if (ff->open_flags & FOPEN_DIRECT_IO)
-		return fuse_direct_read_iter(iocb, to);
-	else if (fuse_file_passthrough(ff))
-		return fuse_passthrough_read_iter(iocb, to);
-	else
-		return fuse_cache_read_iter(iocb, to);
-
-If the famfs fuse servert wants a particular file handled via another 
-mechanism -- e.g. READ message to server or passthrough -- the famfs 
-fuse server can just provide an fmap that indicates such.  Then 
-fuse_file_famfs(fi) would return false for that file, and it would be 
-handled through other existing mechanisms (which the famfs fuse 
-server would have to handle correctly).
-
-Famfs could, for example, allow files to be created as generic or
-passthrough, and then have a "commit" step that allocated dax memory, 
-moved the data from a non-dax into dax, and appended the file to the 
-famfs metadata log - flipping the file to full-monty-famfs (tm). 
-Prior to the "commit", performance is less but all manner of mutations 
-could be allowed.
-
-So I don't think this looks very be hard, and it's independent of the 
-mechanism by which fmaps get into the kernel.
-
-Regards,
-John
-
+diff --git a/Documentation/driver-api/cxl/allocation/page-allocator.rst b/Documentation/driver-api/cxl/allocation/page-allocator.rst
+index 7b8fe1b8d5bb..4ac3368c3947 100644
+--- a/Documentation/driver-api/cxl/allocation/page-allocator.rst
++++ b/Documentation/driver-api/cxl/allocation/page-allocator.rst
+@@ -62,7 +62,7 @@ Because the local node does not have :code:`ZONE_MOVABLE`, the CXL node is
+ functionally unreachable for direct allocation.  As a result, the only way
+ for CXL capacity to be used is via `demotion` in the reclaim path.
+ 
+-This configuration also means that if the DRAM ndoe has :code:`ZONE_MOVABLE`
++This configuration also means that if the DRAM node has :code:`ZONE_MOVABLE`
+ capacity - when that capacity is depleted, the page allocator will actually
+ prefer CXL :code:`ZONE_MOVABLE` pages over DRAM :code:`ZONE_NORMAL` pages.
+ 
+diff --git a/Documentation/driver-api/cxl/platform/bios-and-efi.rst b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
+index 645322632cc9..a9aa0ccd92af 100644
+--- a/Documentation/driver-api/cxl/platform/bios-and-efi.rst
++++ b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
+@@ -202,7 +202,7 @@ future and such a configuration should be avoided.
+ 
+ Memory Holes
+ ------------
+-If your platform includes memory holes intersparsed between your CXL memory, it
++If your platform includes memory holes interspersed between your CXL memory, it
+ is recommended to utilize multiple decoders to cover these regions of memory,
+ rather than try to program the decoders to accept the entire range and expect
+ Linux to manage the overlap.
+-- 
+2.43.0
 
