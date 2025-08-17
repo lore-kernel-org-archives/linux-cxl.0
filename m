@@ -1,84 +1,80 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E5C1FE44D;
-	Sun, 17 Aug 2025 17:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7182142056;
+	Sun, 17 Aug 2025 17:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755453049; cv=none; b=alIkYkO9Wqe2j5fxfhhFSIWs/7XlotQkzt9QHhCe6VJgsgy9CUsOvmInbjbyykVPjpNufC+bhywdV9Mat/goON+xySH/nJMbzPpGw1rs6/psmCkZOo9ocYT6hhbq7p85F7LN0PQyBN4eX3hLC6fZDve5teUw4+Rn/apaC7DJgss=
+	t=1755453116; cv=none; b=GKfIsKusfe/fNQAHHdJl8l4leLz6fpSq7c8pAFbi29cwtxpPVad1Z5clwNEuW8Zo3qxKarFA1sht+GL5jliQaxtyZxYEYQUfqo2H9ZpXm5bmtYgRUz5AkLS84+4Wfq03YCCshwhk1TcF1R4Vue1FiwcJeLWhniipWgzhpmI9c8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755453049; c=relaxed/simple;
-	bh=kxPQgkJiRwpdamMhQNsqSB3KW+32Rbalfx4xy59hTTc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FjpIkODqo5ucDfhUVBYq/UvFYlzx2vW22DVKTSUfb47cnNayarWwtxV+oWcxKLT1/ick0gprERIr6xVRP2X7O2KoH3JswkmLTZ441N7Jh1rfNS6jAGgO/5/TYUcBtNVVJ+9UlGPHXfbm+QX5EURNJ8EfbKkIJpYeX60Q4rTV/VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LRFgyqPi; arc=none smtp.client-ip=209.85.216.53
+	s=arc-20240116; t=1755453116; c=relaxed/simple;
+	bh=cURaJ+5cVQSqJU9KslDGDbYDBdJAmFLl/jJs6cOvljU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d0l0mAgJstgAoHl5tM8X16qt0eXI2PEpHx/uNk7XMdJaRVgMcoRbXPir8VJq4ECfEtLGZN/fToqaXf4OslYK4hBp39qN4fNUGteoVBqVqe0bumRP50Z8+IrNukeEiLYrpsz/BLn4RhFi+AibVJ87nqv2mJlgwG2muGOObKGjYe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ghcplkpn; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LRFgyqPi"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-323266b2368so2184898a91.0;
-        Sun, 17 Aug 2025 10:50:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ghcplkpn"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2430c5b1b32so27013205ad.1;
+        Sun, 17 Aug 2025 10:51:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755453047; x=1756057847; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YWZaVseHO/HpQONflG4VKxSa+b3LTJhK7Ltl+j+pOUg=;
-        b=LRFgyqPij+rQARj8moQjXOQeEH/0eA2Npv0zlBi3/4Qg6xow6esfYautBdGWkWiShj
-         YRRIdki6rDWDE9pSF70lZ+iLvx8uxN1Szg8PBugcyr0iyNU4dRU0S/Xns9cR55RFK4Wf
-         xuLYo0P1YTlz3sVvkPVBt5vaClPB04wPzwsHb6ajD5VtXPim1YNLNvL4ypj/sHZf7hOA
-         zAi1J5rKQZNTtHiD1UfyX6AqELSG/Yn/iD9aHFYb1/o5ovTy7jp0tS4u4+oYlv2p+VsN
-         jo7dwffMicfFOVzNSg90xZ81ScSfL0sFQEB6rB2g1rV/TyDBWnK3D2Q8DyR8v/GGZ3CM
-         VIwA==
+        d=gmail.com; s=20230601; t=1755453114; x=1756057914; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3QG507El1mmJsiZaCHgTNCBhi5aSvoL795gwkq7Ka5E=;
+        b=GhcplkpnH8UJyeVC2nzLOeI8tVpU6gRllfbsRVhCakyG1gsN7Y52Qa2ctDTtWvcPTd
+         eKmzcBp6HRGzOQ8Bo6b3YsjhI/svbyMKN68V6/97n5WDjIPpAOYcg4ORWvTSLQS0gFcY
+         XwGwrFEvhvDcUmgWYg2iawInK/XgWzljQeSkTTbqFp5bFuKCtbaVmrktU0Jr4ey3s4Dt
+         L+TLfL6YkcVdoy0OMhBN9xk9vo4+GRivAIxWfYkpvK30l162FK5U158wF89F7ow331NY
+         HHf4T1v/fxr05fSg38U3VsInAzrznHlZwvFhhKFZDBi4jSu8BjJhDH9X34z3b7oaQB4H
+         ZZ3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755453047; x=1756057847;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YWZaVseHO/HpQONflG4VKxSa+b3LTJhK7Ltl+j+pOUg=;
-        b=ai/U9FIotgOz4h1gn1WrJy6gKBqC7tNIGwNCg6IKgg8pZTaNlR6m9hFc/IGJm6kAfz
-         yFWNno+qBg4Wf0lNnfLi+eEHvd16Tz3ZNISWKhiRDn1+dotSZU25recUKqEqmCcEr2Oy
-         UdN2Snh/G0jAx2bzF8gobgAoai8rsCkNGW7tw+DJveX3I1/D5ygIp7xZxFUvaMx3IaVA
-         M1tkEVFMpC1MsST3y0vsqeZhf5OuC+8NMQeek1T4oWQu+ArnMMxQ33FmIfPt/WcyEtwR
-         qMVr8AjuNDULKbNa+tStTA8RnBkeOb/YkNRMQrqvFn2DVg5ZrnY/4eJrvxz+R2lSKoq3
-         D9xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGGZQ8DnF3BY6d+x6L5y5jhOgC5TIOWNBWu0DJrRx24kVRq8WQxjLtuiF9xGvl6u4yNRKZ4PjvhNA=@vger.kernel.org, AJvYcCXfjZQqoKB1tr33XFw/JG9JR4fxNpaxzlNvmYt9G1fTKVHDXHXOUz4pIzUw1AV4+bCJ/Cjh7/1rwd/U@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzkx4nMwFy/qc3dUDFsESRcAFNLVQC1aUYY+9z76SgVXUiUBE95
-	ixeqD25hV1myUqzq5cVaEuXkHPxgUSpA6Uq6JXKARrhSrAmQlO0/i9IW
-X-Gm-Gg: ASbGncvSlFEgYGXaMBBcENALu6HM9ice+NG2MvqVHjsSqXy5anj04eZO2rzjWSRzgQz
-	vOlxicVg7M1p//Azw8TOPePdras4a3yGQhsBJR/+N5UD7soN+BJ/kOuFZiuXsl+d6JuSDpxVeoz
-	njRB8lgArdCrarN9YG97zZJ55SuRlZItwk8pT7hxavNhNJbf6kGq6Dwf5o6nzf/6f4KVGra6BoU
-	2cIGc0FBH1INy9X/B8i4DXWFWsru99Wb8qLq3jFOOoCp+5UfVzECMSib2E6YvQ270Y9w2smPpZu
-	xShu0f1NnOiIlFn7cmbch3Q3sRG6JNw+H0rW4LpylxRxgDFXMV4xTOpgdulQC68QFmT8mWNRb9r
-	qdaMraUUA+CAiVMtnxxO3A9agk8kmEL0tO4AkTXK0
-X-Google-Smtp-Source: AGHT+IGZ24e0gHA+JVsQY6YX2jt/f72OrzDBs2UDcSTBqyD5prVbXpazBufiCCm5Zs5j+Xpo9qIt6Q==
-X-Received: by 2002:a17:90b:3c42:b0:312:e76f:5213 with SMTP id 98e67ed59e1d1-3234215b3eamr13428682a91.28.1755453046625;
-        Sun, 17 Aug 2025 10:50:46 -0700 (PDT)
-Received: from lkmp.. ([157.51.85.44])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b472d799c8csm6243856a12.55.2025.08.17.10.50.40
+        d=1e100.net; s=20230601; t=1755453114; x=1756057914;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3QG507El1mmJsiZaCHgTNCBhi5aSvoL795gwkq7Ka5E=;
+        b=uO2HQcK7Ri5cXRhJzKrdAWitXntXhlxmmLx/Cwb3gG2RKOVjvzcvsZH2+LZinmSsaV
+         8tcb1z3Fe9lGVEHTAaO6ZmdftYlcYXxtCXbTJ3+x+D2u8YB/FCo9WBIsAq//DnULZawz
+         YcC/mKRVDQcLmyE79salmz9wWF7s/hSZfaEufXZCWXTn65XIWFqVGSlimpjVtGbNNcq0
+         qSlbrEWcvHdw8dcqXUWeHzf+Qze0NLSlXMXCQ58ez+//EYf5RtJnCkFApbvL7DYjeBhz
+         aWGcDbMrH3OM2Rwj5dO+gRwnaZpK5O8N8pngsgEGWb3NYdr0m5xfatDrCqKwL6YUH6jP
+         LAYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXq0JqGDZyLGla4DDNb1Og7FhA9w9/TnhJAu4UTvxYwbAM1BjF8+MuFBfm0J7YWV7jFeTLkJOLNzD4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd0Krxr8hMW6pzFSMnWKNmFZ1Pqr1EwNru5QPfDUC8A5+fkZW2
+	xgE2tPiSMTaCXz18sxGGozRxJG/srg/gmZsq44BSNCGTnI2y5MC1Bq7qwWwaJXBqnIc=
+X-Gm-Gg: ASbGncumqKqWo3Ls/BVViL1TF2mKCJ+rtbzbLigb9BmoWvWG6UBzWy3vjCtiLgDNH+5
+	kw8DTZTuat4BRprMfUILMHyhCze6R/7iChsnSiG6LLRlcpiqIx8+xZtko24V8K7M7rA8mKEWjB8
+	RrbjB9eIG5TcnyZjyu4RbY0kggmb+JwB4Tmd1E+4BhaVJ6JSYlxtqtuk3C04BjHxBScyg6TPOLx
+	ATstNXij/zJur/soVLh2jQwroR2UibYmyIt7UXw3wipH/C0EtTfRzBcyRp6/imCa9cj7TKFftrG
+	5kn4x5cE9qyd8HWrv2Ptio27k+HmgEFAuxjLC07IOZF1KUga8j+E6UfAkWjk6NfRoMBTmSw10LV
+	NI0bHWZ5bWNVpBKR3yyQ0HMMoWu3VKQ==
+X-Google-Smtp-Source: AGHT+IGWskQPRNPAgR8Rze5fL7J5s4uZcyQT3GWuhl8vgwShbcJQ7Fou5ZqjMHZQ9ifBAuMxmQVxYw==
+X-Received: by 2002:a17:902:e88b:b0:240:5c75:4d48 with SMTP id d9443c01a7336-2446bdfd789mr134078535ad.25.1755453114191;
+        Sun, 17 Aug 2025 10:51:54 -0700 (PDT)
+Received: from lkmp.. ([157.51.82.55])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2446cb0635csm58931965ad.53.2025.08.17.10.51.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Aug 2025 10:50:45 -0700 (PDT)
+        Sun, 17 Aug 2025 10:51:53 -0700 (PDT)
 From: rakuram <rakuram.e96@gmail.com>
-To: gourry@gourry.net
-Cc: alison.schofield@intel.com,
-	corbet@lwn.net,
-	dan.j.williams@intel.com,
-	dave.jiang@intel.com,
+To: linux-doc@vger.kernel.org
+Cc: dan.j.williams@intel.com,
 	dave@stgolabs.net,
-	ira.weiny@intel.com,
+	dave.jiang@intel.com,
 	jonathan.cameron@huawei.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
 	linux-cxl@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	rakuram.e96@gmail.com,
+	alison.schofield@intel.com,
+	gourry@gourry.net,
 	skhan@linuxfoundation.org,
-	vishal.l.verma@intel.com
-Subject: Re: [PATCH] Documentation/driver-api: Fix typo error in cxl
-Date: Sun, 17 Aug 2025 23:20:35 +0530
-Message-ID: <20250817175036.6906-1-rakuram.e96@gmail.com>
+	linux-kernel-mentees@lists.linuxfoundation.org,
+	corbet@lwn.net,
+	rakuram.e96@gmail.com
+Subject: [PATCH v2] Documentation/driver-api: Fix typo error in cxl
+Date: Sun, 17 Aug 2025 23:03:56 +0530
+Message-ID: <20250817173355.6615-2-rakuram.e96@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <aKILiuYaijqAZvPR@fedora>
-References: <aKILiuYaijqAZvPR@fedora>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -87,6 +83,36 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Ok, Gregory. 
+Fixed the following typo errors
 
-I will send v2 without page-allocator changes as suggested. 
+intersparsed ==> interspersed
+in Documentation/driver-api/cxl/platform/bios-and-efi.rst
+
+---
+Changelog:
+
+Changes since v1:
+Dropped fix for page-allocator.rst as requested by Gregory
+
+Suggested-by: Gregory Price <gourry@gourry.net> 
+Signed-off-by: rakuram <rakuram.e96@gmail.com>
+---
+ Documentation/driver-api/cxl/platform/bios-and-efi.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/driver-api/cxl/platform/bios-and-efi.rst b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
+index 645322632cc9..a9aa0ccd92af 100644
+--- a/Documentation/driver-api/cxl/platform/bios-and-efi.rst
++++ b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
+@@ -202,7 +202,7 @@ future and such a configuration should be avoided.
+ 
+ Memory Holes
+ ------------
+-If your platform includes memory holes intersparsed between your CXL memory, it
++If your platform includes memory holes interspersed between your CXL memory, it
+ is recommended to utilize multiple decoders to cover these regions of memory,
+ rather than try to program the decoders to accept the entire range and expect
+ Linux to manage the overlap.
+-- 
+2.43.0
+
