@@ -1,118 +1,450 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D659B18B0F
-	for <linux-cxl@vger.kernel.org>; Sun, 17 Aug 2025 17:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D24A26E711
+	for <linux-cxl@vger.kernel.org>; Mon, 18 Aug 2025 06:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755453336; cv=none; b=dVoA1V2YBhseaNXgNnf49lj8JypV9NLCRfIHMgGL4J8F/RuZgCL9McgfPPfHULJGjt9znZRLOhevTuuFR4YUitiRHj3o9HGC1KQWSCaXaRIC1LzrZj2kJFW/pnCoVxff5kQSJAGiityDcfj6+NRWKZ+A6U1xKDMEi6pBZp+3atw=
+	t=1755499314; cv=none; b=lf3bWrxpt20r9hhgmdnBVkTQOWCaqi4PsHZM2PggRpYqvHWvX1Ihmr8kdxA/UTgnVfp7hY1QFFLoJzW+wblPMVs2D6nsWWpSpK368wE/7Wbw3Nhzj94PUuwabmga4Nir4FvsyM2CVyOmRzJCxKG1VOeMUheCXG9Xogg0hgBJVNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755453336; c=relaxed/simple;
-	bh=ZX65Osj3KZd+3VMcWnHgTciqbWcOdnJj8eq+6yip750=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UsJDXXNKtAoxU3ciznS34/mKztfXwEauycZXE1BeqtcfuppFCjbKxS+6hIWBZ2oaAyAQkQVlvRR3U4HDix9NVSfAJEiEBWbXZEoy5XUb+2crw+tlRvYq6TNYEA0jMxv4dYBD6VtLk4EkCMJ0xyWdwnVUkCc+qyW7wz9kXlbD3Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=o1LThcsY; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1755499314; c=relaxed/simple;
+	bh=4EBVhoBFeF7pNGClKVleaoGFSm/cPIuw0WEv7H0jc9Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=C0ML5GgggyiONE8BWj/WGGfgQrQ2ljtl0mZf5jt13CzcjrF9bp8d5NWsthjPsvThdqIiBu2NWHNNk4mw8ZDVYNfXb6NP67ml1Sx2UCMyCTxuG1lma3CYrkospsANqFiw7n5/dhQkEaYuKZ0VrcMacKytcjj+ypAw+Rwuo28IGUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=S1ofeuAZ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="o1LThcsY"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4b109912545so37662141cf.0
-        for <linux-cxl@vger.kernel.org>; Sun, 17 Aug 2025 10:55:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1755453334; x=1756058134; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7ef15y+hBWoFQAF/OeWDYMRMusZ2qkkd9+CBv2gOjP8=;
-        b=o1LThcsYcTqdLu7JXhyJ0Wj95rKJBG2xc5LaXMBkhScqIVGPGztqh561yyVz015fBm
-         F+BToe2KaXtglUms/VEsiRXp6jyeXWzWrN42+NKWFHO80Mevgb4zu5SYWkJGyFsewI+K
-         Fg71ITR2PGREaP+apBlPz1Bco1dfK5SZeb7a1GLlQYaXfoME5cXfBVOqRKRXRk+sfWdE
-         k7x/qG77acYCCjTF4oYPiA8pQOXiUqSG9hn6lXdRwAemMVSma86TqhXcT/JOVZM3xY8G
-         HhmS/jEF5W8Thr9m/ka4miTp7iWBO5YatYgCLyKvOLDWxDi0JEUTNe6dsLz9IqxtYty8
-         JJbQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="S1ofeuAZ"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57HLEYt3002874
+	for <linux-cxl@vger.kernel.org>; Mon, 18 Aug 2025 06:41:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=l8N9ttvKyCBAcyEDvuaLoM
+	1BSXehm0oCXcCPSraNLCM=; b=S1ofeuAZEvausPNcfPdvnKZWbPTOWDSn/I7BEC
+	fEzcKChFEREcdnUgDUZ0liwYbWKPM8rZPt1QO6jTgcF7psCTS7i5PGkOE6QI5JZ+
+	KHyXq3fCcqVTX2TNJW8aE6hSDVQ07wo13XXPL6m308u3dn1gS4TZLJGYH+UVZxaP
+	N5c049QcgEAx92YW7CGLG4srnZufUn6OZjs+cmknhQDuglZbtyx7y+zif+BWwBD5
+	rLKoMV37K5sMLFRlSxJZfA3l9dBzOODYODOqjuY6k3pCnQT61mXkUULbWa5h5/21
+	Fb+5mmW8neh+DKoOx0rQ8WtgQ3aJv0kjv4N5E7mgkhK3nJmQ==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48jk5mbf12-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-cxl@vger.kernel.org>; Mon, 18 Aug 2025 06:41:51 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-24457f59889so38641335ad.0
+        for <linux-cxl@vger.kernel.org>; Sun, 17 Aug 2025 23:41:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755453334; x=1756058134;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7ef15y+hBWoFQAF/OeWDYMRMusZ2qkkd9+CBv2gOjP8=;
-        b=GRqnbCYCr7D4QvwWMRg3PpcIjsZeK1P9JkLB4ENtWyuti6n2nOTQKU7uIe2rAl/jFR
-         x2KpJ8sCbMO3RHXj1fdLu7pkG3b5q2enV6apJpVr0SY+8g17XYSzhnS1z89qibqI8j1V
-         SAWuYwMlA7C5OYzn6rz+AZZXa0gAFYmCTsuJV5im95uTlCcxHkEUp6FQKjTBxdpy5+DC
-         PLrWEvJFe0prAouqE/sVOGjGvX9d1LVU8olM96jWcrlYt+ZPArMBPOdHawljCEKqvKVN
-         9xYXSfSAyf6eymz8RrVPSspSEX0PqiL9qNufOmlB67DC3xX3y/eEhumOW45rs9W3CwmC
-         vXnA==
-X-Forwarded-Encrypted: i=1; AJvYcCXYRiKA6MTAiLrS2m/TW/W1WQ+Ge4hbM37psddaCnCBRs3uksb/qa/MJGrZitePcxNwAMkTSoYNDBw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYjZt6cSDteLf2jhJdAjZEn5Hu8223e6M5Q9MjMxoS2DKho019
-	7cNPvizg90WHpX/A8qadMvQ0hERWayhOuLvhv1jwWYSJk/OU4ls38758Mn17DVfQr5w=
-X-Gm-Gg: ASbGncsQAU5MLEb5XfkUF1ufnhycCWkEHkdt3c6uMsTMnvv4kEL39/TSBJG5HLpS1tZ
-	urLCncbqcBFIIss0dpi2XwxnsmIiANIZQU3OI5wSAW97pNNZr0/znllpZErGSD9K3MuU7ifZ6uu
-	BDxgPO+PG9661MuRJULqE/tQ4PW8YmC4qgD648Mfyhm5STTtPsi9FXlkKxqGVfkSqeLszingoZ6
-	eOlOPrKrZ2l/mneWhKON3149BkWYxtTTaDUEMJiQqYf2tTptVFvaqrRYYFZ1wGGiApMCUUn+7OX
-	eoCMtN+U3Q34HMmPzAp00BftTCxYxlrsJMNk/42lwECx8GbP18c39P9/UTWRopNyOGinApZv+yv
-	RvK/oGsr+pTU0KJ3a6Ztj83fg5ai+YfxwAp6JhqSI9rLwXRaMOlZWSFFe
-X-Google-Smtp-Source: AGHT+IGGPniltbwWGADuC89Da2QodO4Z1fNUe08TbR56jJKviW2gzde0TZQ0UAs5hoxjQJhD9PIKdw==
-X-Received: by 2002:a05:622a:1f0b:b0:4b0:b36e:b151 with SMTP id d75a77b69052e-4b11e0bb988mr130888341cf.16.1755453333798;
-        Sun, 17 Aug 2025 10:55:33 -0700 (PDT)
-Received: from fedora (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b11dc1aa56sm39748811cf.7.2025.08.17.10.55.33
+        d=1e100.net; s=20230601; t=1755499310; x=1756104110;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l8N9ttvKyCBAcyEDvuaLoM1BSXehm0oCXcCPSraNLCM=;
+        b=EWXgS5itgl4vZi7Tio6G1pEwkZOQneZqCPNpva2ln9QurD9UhRpjvWDQuCGI8hGSyT
+         5+5fLqsSaJ9LHuaprkKEWPMUPCJpboIONrxptNvLxn/2RPQX6rcq3rs517oeERpZ3LFF
+         nn6aDkZ2ZWD+fZ3c88G+z6cMxafy26ZbRUpH2SG0ts6JGTYghzXVe+P+MqMZ2vRya6Kt
+         Kt//ssbHXQ4DMRf7F/98athr6sVpbncG68g1UVA3xFiTl94xIQIT3WvFcCh0qk37CfMG
+         14osKm/DCyntySwLh9PeF35DvqlsWmbkfzmunlc9kTw+5f8IO6HEEItUMhZYXdu4yU4y
+         I+3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVRxeGr9E1MoFc9r6a6eUsxBJu6XZL68222c2qZp2oaCfYkj2sYEnxwy/osB8Lf+6cq6bMSHwmdKyA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbKVawY7UYzjLZ2H+ZG2xKvlYPDN/m2YVPBgba7clefT9KSGRl
+	8/IdtpnTyjjnwgdH4EuH7SsTQejXdx4dmf4CVVZLSuqUqU+oXdmikA8DGIVK6Vzd3OjaXXLx56K
+	utKzUr1sNt4kbiLEuqfvhYUidmiADBOTplWmZusqqpWGkz63oPiSjxfJT0baqfEY=
+X-Gm-Gg: ASbGncsI2Y70x2FtFU+xQ5BgvCUKkUI1LKZouA6jU6W3IHK6IDh7QLLlWC9m6oedx6d
+	sO1NPvh3GaQJn0ivCa2vMEhMaknsXOfUFeglY/rhbiejE0lnWNUUMY+oyJtdVD4DZ8OZa8KaX6t
+	OcsvvBRLy8czxgeXN8LKqVYLlmiOmGak7NaHn93vs5KnWIrwXNPUCvPgOBI1ftdDdNnzu7hJGkP
+	ycR1qspEEBEFdBY8nlw8MpS1ycQgOPwLKrb6O4GeQY2d8vrifkJcV4bzyrNwrq/4GSmi9EfI5yV
+	5jQTDofbRmD08G5MPOGIekvFj3Ra/BVDiezz76t3ukA=
+X-Received: by 2002:a17:902:c951:b0:240:22af:91c7 with SMTP id d9443c01a7336-2446d71db3fmr134372945ad.14.1755499310182;
+        Sun, 17 Aug 2025 23:41:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGmF5KBA9eIDDl75sJwjMQCpOEjZ8TR6DA+JYR6yCjrU7iJmsnLTLQaYA9/NFl8UsVIfaN9mw==
+X-Received: by 2002:a17:902:c951:b0:240:22af:91c7 with SMTP id d9443c01a7336-2446d71db3fmr134372375ad.14.1755499309632;
+        Sun, 17 Aug 2025 23:41:49 -0700 (PDT)
+Received: from hu-pbrahma-hyd.qualcomm.com ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2446d53bf5dsm70069295ad.114.2025.08.17.23.41.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Aug 2025 10:55:33 -0700 (PDT)
-Date: Sun, 17 Aug 2025 13:55:31 -0400
-From: Gregory Price <gourry@gourry.net>
-To: rakuram <rakuram.e96@gmail.com>
-Cc: linux-doc@vger.kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
-	dave.jiang@intel.com, jonathan.cameron@huawei.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	linux-cxl@vger.kernel.org, alison.schofield@intel.com,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linuxfoundation.org, corbet@lwn.net
-Subject: Re: [PATCH v2] Documentation/driver-api: Fix typo error in cxl
-Message-ID: <aKIXk8SKIMKSuGDv@fedora>
-References: <20250817173355.6615-2-rakuram.e96@gmail.com>
+        Sun, 17 Aug 2025 23:41:48 -0700 (PDT)
+From: pratyush.brahma@oss.qualcomm.com
+X-Google-Original-From: Pratyush
+Date: Mon, 18 Aug 2025 12:11:15 +0530
+Subject: [PATCH] mm/numa: Rename memory_add_physaddr_to_nid to
+ memory_get_phys_to_nid
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250817173355.6615-2-rakuram.e96@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250818-numa_memblks-v1-1-9eb29ade560a@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAArLomgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDC0MT3bzS3MT43NTcpJzsYt0kU5NEC3MLCyODlFQloJaCotS0zAqwcdG
+ xQH5GZnFJflElyPTa2loAgXpdgW0AAAA=
+X-Change-ID: 20250814-numa_memblks-b54a878820de
+To: Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Danilo Krummrich <dakr@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-acpi@vger.kernel.org,
+        nvdimm@lists.linux.dev, linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+        xen-devel@lists.xenproject.org,
+        Pratyush Brahma <pratyush.brahma@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1755499297; l=12122;
+ i=pratyush.brahma@oss.qualcomm.com; s=20250808; h=from:subject:message-id;
+ bh=//n/Cd8/21p2TwuLHbKJjrZr/VX2C3LDE0HHjeHcn3A=;
+ b=YhwC5Lk4afAnAuPN/u4jW8oYab0ctCO2cz+geSxr4bRuihGdwIV2yM1kuCXBVrnF+tdcuoDdH
+ v7S65fFa5CkAcFfEgaPVnJ6mv1qtlUNsSBr4p0Efj25v9textGh8WHy
+X-Developer-Key: i=pratyush.brahma@oss.qualcomm.com; a=ed25519;
+ pk=ZeXF1N8hxU6j3G/ajMI+du/TVXMZQaXDwnJyznB69ms=
+X-Authority-Analysis: v=2.4 cv=Sdn3duRu c=1 sm=1 tr=0 ts=68a2cb2f cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=EUspDBNiAAAA:8 a=qb4DzySmTAYQGscL8MYA:9
+ a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-ORIG-GUID: cPI-oqhd9zlNUB5WKbrjUygbjZUH6Y1L
+X-Proofpoint-GUID: cPI-oqhd9zlNUB5WKbrjUygbjZUH6Y1L
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODE2MDA0MiBTYWx0ZWRfX3Rj+uR0l/old
+ W3yXvTqziT0v+7mKajA+FaM1xXYO9pquD4BU2KLjY1/aQx8L/jRE5MOgCxbrjvI4Gzz9lmv7Uww
+ f+F7ThiAmZVLq0lqhfFLJ9P3uSkbRimp5mqElzARKNjN4aOBjRu6RK+MgF2wR3HHaygKiGWpEEd
+ 0sl05AxoxVkqBakYZfyqcAflZ/5ePVBTYSffX2aGmr5/9NhxjfFstM0v2v55zLKaiUVmlkUhR2p
+ sTxL0DepdDyZxUryhJOgs5L+NtacSmCHILp294KIeFyz21g1Gwc0rlc6roKMoPOV6FyeoyYnnr5
+ s63RhfpZQcKNJRn6LWJh1/G1vBzc0KjCKVnppJQkLtJqTn5+CQmjF/MTCCLhSm6i/4BMcCxFN7Z
+ uLpd5/Z/
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-18_03,2025-08-14_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 clxscore=1011 suspectscore=0 priorityscore=1501 spamscore=0
+ adultscore=0 malwarescore=0 bulkscore=0 phishscore=0 classifier=typeunknown
+ authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2507300000 definitions=main-2508160042
 
-On Sun, Aug 17, 2025 at 11:03:56PM +0530, rakuram wrote:
-> Fixed the following typo errors
-> 
-> intersparsed ==> interspersed
-> in Documentation/driver-api/cxl/platform/bios-and-efi.rst
-> 
-> ---
-> Changelog:
-> 
-> Changes since v1:
-> Dropped fix for page-allocator.rst as requested by Gregory
-> 
-> Suggested-by: Gregory Price <gourry@gourry.net> 
-> Signed-off-by: rakuram <rakuram.e96@gmail.com>
+From: Pratyush Brahma <pratyush.brahma@oss.qualcomm.com>
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+The function `memory_add_physaddr_to_nid` seems a misnomer.
+It does not to "add" a physical address to a NID mapping,
+but rather it gets the NID associated with a given physical address.
 
-> ---
->  Documentation/driver-api/cxl/platform/bios-and-efi.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/driver-api/cxl/platform/bios-and-efi.rst b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
-> index 645322632cc9..a9aa0ccd92af 100644
-> --- a/Documentation/driver-api/cxl/platform/bios-and-efi.rst
-> +++ b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
-> @@ -202,7 +202,7 @@ future and such a configuration should be avoided.
->  
->  Memory Holes
->  ------------
-> -If your platform includes memory holes intersparsed between your CXL memory, it
-> +If your platform includes memory holes interspersed between your CXL memory, it
->  is recommended to utilize multiple decoders to cover these regions of memory,
->  rather than try to program the decoders to accept the entire range and expect
->  Linux to manage the overlap.
-> -- 
-> 2.43.0
-> 
+Improve the semantic clarity of the API by renaming to a more
+descriptive name.
+
+Signed-off-by: Pratyush Brahma <pratyush.brahma@oss.qualcomm.com>
+---
+ arch/powerpc/include/asm/sparsemem.h | 4 ++--
+ arch/powerpc/mm/mem.c                | 4 ++--
+ arch/s390/include/asm/sparsemem.h    | 4 ++--
+ drivers/acpi/acpi_memhotplug.c       | 2 +-
+ drivers/acpi/nfit/core.c             | 2 +-
+ drivers/base/memory.c                | 2 +-
+ drivers/cxl/pmem.c                   | 2 +-
+ drivers/dax/cxl.c                    | 2 +-
+ drivers/hv/hv_balloon.c              | 6 +++---
+ drivers/nvdimm/virtio_pmem.c         | 2 +-
+ drivers/virtio/virtio_mem.c          | 2 +-
+ drivers/xen/balloon.c                | 2 +-
+ include/linux/numa.h                 | 6 +++---
+ include/linux/numa_memblks.h         | 4 ++--
+ mm/numa.c                            | 6 +++---
+ mm/numa_memblks.c                    | 4 ++--
+ 16 files changed, 27 insertions(+), 27 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/sparsemem.h b/arch/powerpc/include/asm/sparsemem.h
+index d072866842e4229159fcb6635745fd19a2788413..cdb5594616c8e32ab8ae3d209d0b2df20f3564f6 100644
+--- a/arch/powerpc/include/asm/sparsemem.h
++++ b/arch/powerpc/include/asm/sparsemem.h
+@@ -14,8 +14,8 @@
+ 
+ #ifdef CONFIG_MEMORY_HOTPLUG
+ extern int remove_section_mapping(unsigned long start, unsigned long end);
+-extern int memory_add_physaddr_to_nid(u64 start);
+-#define memory_add_physaddr_to_nid memory_add_physaddr_to_nid
++extern int memory_get_phys_to_nid(u64 start);
++#define memory_get_phys_to_nid memory_get_phys_to_nid
+ 
+ #ifdef CONFIG_NUMA
+ extern int hot_add_scn_to_nid(unsigned long scn_addr);
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index 3ddbfdbfa9413a17d8321885724ce432d967005a..5665b2e2fc68df8634613c11706e1a9158a3a616 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -54,11 +54,11 @@ EXPORT_SYMBOL(__phys_mem_access_prot);
+ static DEFINE_MUTEX(linear_mapping_mutex);
+ 
+ #ifdef CONFIG_NUMA
+-int memory_add_physaddr_to_nid(u64 start)
++int memory_get_phys_to_nid(u64 start)
+ {
+ 	return hot_add_scn_to_nid(start);
+ }
+-EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
++EXPORT_SYMBOL_GPL(memory_get_phys_to_nid);
+ #endif
+ 
+ int __weak create_section_mapping(unsigned long start, unsigned long end,
+diff --git a/arch/s390/include/asm/sparsemem.h b/arch/s390/include/asm/sparsemem.h
+index 668dfc5de538742269af1b25151372506105fd4d..744c67dce4c106d063cb5436b37412045da0fd2a 100644
+--- a/arch/s390/include/asm/sparsemem.h
++++ b/arch/s390/include/asm/sparsemem.h
+@@ -7,11 +7,11 @@
+ 
+ #ifdef CONFIG_NUMA
+ 
+-static inline int memory_add_physaddr_to_nid(u64 addr)
++static inline int memory_get_phys_to_nid(u64 addr)
+ {
+ 	return 0;
+ }
+-#define memory_add_physaddr_to_nid memory_add_physaddr_to_nid
++#define memory_get_phys_to_nid memory_get_phys_to_nid
+ 
+ static inline int phys_to_target_node(u64 start)
+ {
+diff --git a/drivers/acpi/acpi_memhotplug.c b/drivers/acpi/acpi_memhotplug.c
+index d0c1a71007d0a3054608bec8fddc8e86bdffb78b..6f968243ffc3cc5864e73b914d1bf67748e30e66 100644
+--- a/drivers/acpi/acpi_memhotplug.c
++++ b/drivers/acpi/acpi_memhotplug.c
+@@ -183,7 +183,7 @@ static int acpi_memory_enable_device(struct acpi_memory_device *mem_device)
+ 			continue;
+ 		/* We want a single node for the whole memory group */
+ 		if (node < 0)
+-			node = memory_add_physaddr_to_nid(info->start_addr);
++			node = memory_get_phys_to_nid(info->start_addr);
+ 		total_length += info->length;
+ 	}
+ 
+diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+index ae035b93da087812dee6ec47d9ef4aa97dc8e7bc..04c3ab311e4d5923aef50252efabd193c5fb7850 100644
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -2630,7 +2630,7 @@ static int acpi_nfit_register_region(struct acpi_nfit_desc *acpi_desc,
+ 
+ 	/* Fallback to address based numa information if node lookup failed */
+ 	if (ndr_desc->numa_node == NUMA_NO_NODE) {
+-		ndr_desc->numa_node = memory_add_physaddr_to_nid(spa->address);
++		ndr_desc->numa_node = memory_get_phys_to_nid(spa->address);
+ 		dev_info(acpi_desc->dev, "changing numa node from %d to %d for nfit region [%pa-%pa]",
+ 			NUMA_NO_NODE, ndr_desc->numa_node, &res.start, &res.end);
+ 	}
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 5c6c1d6bb59f1241a5f42a3396be1a8e2058c965..f657520855408804761afec379e3c0b2a238b239 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -599,7 +599,7 @@ static ssize_t probe_store(struct device *dev, struct device_attribute *attr,
+ 	if (ret)
+ 		return ret;
+ 
+-	nid = memory_add_physaddr_to_nid(phys_addr);
++	nid = memory_get_phys_to_nid(phys_addr);
+ 	ret = __add_memory(nid, phys_addr,
+ 			   MIN_MEMORY_BLOCK_SIZE * sections_per_block,
+ 			   MHP_NONE);
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index e197883690efc11f60c31bd56aeb5695665d422b..471aed4e11241948e994d0b9d53600c147e38fb0 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -410,7 +410,7 @@ static int cxl_pmem_region_probe(struct device *dev)
+ 	ndr_desc.res = res;
+ 	ndr_desc.provider_data = cxlr_pmem;
+ 
+-	ndr_desc.numa_node = memory_add_physaddr_to_nid(res->start);
++	ndr_desc.numa_node = memory_get_phys_to_nid(res->start);
+ 	ndr_desc.target_node = phys_to_target_node(res->start);
+ 	if (ndr_desc.target_node == NUMA_NO_NODE) {
+ 		ndr_desc.target_node = ndr_desc.numa_node;
+diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
+index 13cd94d32ff7a1d70af7821c1aecd7490302149d..35843791872ba466f571c022e1484816368a1198 100644
+--- a/drivers/dax/cxl.c
++++ b/drivers/dax/cxl.c
+@@ -15,7 +15,7 @@ static int cxl_dax_region_probe(struct device *dev)
+ 	struct dev_dax_data data;
+ 
+ 	if (nid == NUMA_NO_NODE)
+-		nid = memory_add_physaddr_to_nid(cxlr_dax->hpa_range.start);
++		nid = memory_get_phys_to_nid(cxlr_dax->hpa_range.start);
+ 
+ 	dax_region = alloc_dax_region(dev, cxlr->id, &cxlr_dax->hpa_range, nid,
+ 				      PMD_SIZE, IORESOURCE_DAX_KMEM);
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index 2b4080e51f97c30e7adb06faa56b1403bc08b53c..8878aac6da9cd3bd6f499eae2588e989b7219af3 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -725,7 +725,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+ 
+ 		reinit_completion(&dm_device.ol_waitevent);
+ 
+-		nid = memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
++		nid = memory_get_phys_to_nid(PFN_PHYS(start_pfn));
+ 		ret = add_memory(nid, PFN_PHYS((start_pfn)),
+ 				 HA_BYTES_IN_CHUNK, MHP_MERGE_RESOURCE);
+ 
+@@ -1701,8 +1701,8 @@ static int hot_add_enabled(void)
+ {
+ 	/*
+ 	 * Disable hot add on ARM64, because we currently rely on
+-	 * memory_add_physaddr_to_nid() to get a node id of a hot add range,
+-	 * however ARM64's memory_add_physaddr_to_nid() always return 0 and
++	 * memory_get_phys_to_nid() to get a node id of a hot add range,
++	 * however ARM64's memory_get_phys_to_nid() always return 0 and
+ 	 * DM_MEM_HOT_ADD_REQUEST doesn't have the NUMA node information for
+ 	 * add_memory().
+ 	 */
+diff --git a/drivers/nvdimm/virtio_pmem.c b/drivers/nvdimm/virtio_pmem.c
+index 2396d19ce5496974f8b93b54cc8c95e48dda103d..df6a3fd552d11a577d85708f80e7558ea83839d2 100644
+--- a/drivers/nvdimm/virtio_pmem.c
++++ b/drivers/nvdimm/virtio_pmem.c
+@@ -100,7 +100,7 @@ static int virtio_pmem_probe(struct virtio_device *vdev)
+ 
+ 	ndr_desc.res = &res;
+ 
+-	ndr_desc.numa_node = memory_add_physaddr_to_nid(res.start);
++	ndr_desc.numa_node = memory_get_phys_to_nid(res.start);
+ 	ndr_desc.target_node = phys_to_target_node(res.start);
+ 	if (ndr_desc.target_node == NUMA_NO_NODE) {
+ 		ndr_desc.target_node = ndr_desc.numa_node;
+diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+index 1688ecd69a0445d5c21d108a9a1d60577f96d7ac..6154f03a12c3efa65728f626e43b6270245d439c 100644
+--- a/drivers/virtio/virtio_mem.c
++++ b/drivers/virtio/virtio_mem.c
+@@ -2858,7 +2858,7 @@ static int virtio_mem_init(struct virtio_mem *vm)
+ 
+ 	/* Determine the nid for the device based on the lowest address. */
+ 	if (vm->nid == NUMA_NO_NODE)
+-		vm->nid = memory_add_physaddr_to_nid(vm->addr);
++		vm->nid = memory_get_phys_to_nid(vm->addr);
+ 
+ 	dev_info(&vm->vdev->dev, "start address: 0x%llx", vm->addr);
+ 	dev_info(&vm->vdev->dev, "region size: 0x%llx", vm->region_size);
+diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+index 2de37dcd75566fc1a03b75232cbe17fc0f53909d..93ca270ddd516ec11bc3f096eb518b9789d92664 100644
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -284,7 +284,7 @@ static enum bp_state reserve_additional_memory(void)
+ 	if (!resource)
+ 		goto err;
+ 
+-	nid = memory_add_physaddr_to_nid(resource->start);
++	nid = memory_get_phys_to_nid(resource->start);
+ 
+ #ifdef CONFIG_XEN_HAVE_PVMMU
+ 	/*
+diff --git a/include/linux/numa.h b/include/linux/numa.h
+index e6baaf6051bcff6c23308d3b67f790053fbd29dc..ed65a20f39718a5a3157f6f9db60561f4418b000 100644
+--- a/include/linux/numa.h
++++ b/include/linux/numa.h
+@@ -33,8 +33,8 @@ int numa_nearest_node(int node, unsigned int state);
+ 
+ int nearest_node_nodemask(int node, nodemask_t *mask);
+ 
+-#ifndef memory_add_physaddr_to_nid
+-int memory_add_physaddr_to_nid(u64 start);
++#ifndef memory_get_phys_to_nid
++int memory_get_phys_to_nid(u64 start);
+ #endif
+ 
+ #ifndef phys_to_target_node
+@@ -54,7 +54,7 @@ static inline int nearest_node_nodemask(int node, nodemask_t *mask)
+ 	return NUMA_NO_NODE;
+ }
+ 
+-static inline int memory_add_physaddr_to_nid(u64 start)
++static inline int memory_get_phys_to_nid(u64 start)
+ {
+ 	return 0;
+ }
+diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
+index 991076cba7c5016d845eb40a2f9887f73fa83862..37cc0987e738f8aa2eb5c8f1ca2c94394def4780 100644
+--- a/include/linux/numa_memblks.h
++++ b/include/linux/numa_memblks.h
+@@ -53,8 +53,8 @@ static inline int numa_emu_cmdline(char *str)
+ #ifdef CONFIG_NUMA_KEEP_MEMINFO
+ extern int phys_to_target_node(u64 start);
+ #define phys_to_target_node phys_to_target_node
+-extern int memory_add_physaddr_to_nid(u64 start);
+-#define memory_add_physaddr_to_nid memory_add_physaddr_to_nid
++extern int memory_get_phys_to_nid(u64 start);
++#define memory_get_phys_to_nid memory_get_phys_to_nid
+ #endif /* CONFIG_NUMA_KEEP_MEMINFO */
+ 
+ #endif /* CONFIG_NUMA_MEMBLKS */
+diff --git a/mm/numa.c b/mm/numa.c
+index 7d5e06fe5bd4a2790b83dd7dbe646617f6476d8c..f7b5ac8aea608368b75c606970187eb147ddf427 100644
+--- a/mm/numa.c
++++ b/mm/numa.c
+@@ -40,14 +40,14 @@ void __init alloc_offline_node_data(int nid)
+ 
+ /* Stub functions: */
+ 
+-#ifndef memory_add_physaddr_to_nid
+-int memory_add_physaddr_to_nid(u64 start)
++#ifndef memory_get_phys_to_nid
++int memory_get_phys_to_nid(u64 start)
+ {
+ 	pr_info_once("Unknown online node for memory at 0x%llx, assuming node 0\n",
+ 			start);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
++EXPORT_SYMBOL_GPL(memory_get_phys_to_nid);
+ #endif
+ 
+ #ifndef phys_to_target_node
+diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
+index 541a99c4071a67e5b0ef66f4136dee268a880003..346039bd933390fb014931fc61ccd2f96a773c37 100644
+--- a/mm/numa_memblks.c
++++ b/mm/numa_memblks.c
+@@ -580,7 +580,7 @@ int phys_to_target_node(u64 start)
+ }
+ EXPORT_SYMBOL_GPL(phys_to_target_node);
+ 
+-int memory_add_physaddr_to_nid(u64 start)
++int memory_get_phys_to_nid(u64 start)
+ {
+ 	int nid = meminfo_to_nid(&numa_meminfo, start);
+ 
+@@ -588,6 +588,6 @@ int memory_add_physaddr_to_nid(u64 start)
+ 		nid = numa_meminfo.blk[0].nid;
+ 	return nid;
+ }
+-EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
++EXPORT_SYMBOL_GPL(memory_get_phys_to_nid);
+ 
+ #endif /* CONFIG_NUMA_KEEP_MEMINFO */
+
+---
+base-commit: 479058002c32b77acac43e883b92174e22c4be2d
+change-id: 20250814-numa_memblks-b54a878820de
+
+Best regards,
+-- 
+Pratyush Brahma <pratyush.brahma@oss.qualcomm.com>
+
