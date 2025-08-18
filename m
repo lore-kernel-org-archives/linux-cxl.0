@@ -1,116 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0329C238C33
-	for <linux-cxl@vger.kernel.org>; Mon, 18 Aug 2025 17:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184912D248E;
+	Mon, 18 Aug 2025 17:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755537081; cv=none; b=lAhuKw6+q+z8bstVrRgqxvOSwYNusyZiDNuJQRZAIqa6V7DRlEVa8RY9E4I8MWwNHAkhLqA70CnBcmUKmRE+w0c7rHqvH7m8XYJctv18m0J3aW2Yiu6jgw0oTNnCsGVRtlLWvCssuSU/ZoY0zUC15qe+ieSq4j/6KW6WzLtrDkQ=
+	t=1755539631; cv=none; b=DSUybroIHctrhALwpGhHLuYccl/nHbykwB5SKYRAOKOTrGW8fGfYmlogQe5ulm2TVc+BOmBAA7vIawMG/rDy2JYkhUosy53E3drDR/z3HFBHHFdpbeNjEQIvIFeZNmc3DVIxJ/UZ8ctNjnogCDyDDvXXpQD5iCwvJd5e1ETAJGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755537081; c=relaxed/simple;
-	bh=VkU+wZQkPmEp16WbCV0zpMUNGiwkcI+/aWmT/kyU20w=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Hv6b6vKiO+sSAEEoB3AYbv1YcGb4B8XBWDTgGgVtnTDO89RmcMRlQmnyy27IWyQT9n76mFiGIiFZ5hR1Od0cdv/S6tflSJQoycKNbL3oXCeUzIaCIrB6SLiJOwRXO09omCLVE6UObytnSpfm0JgAAcLy1pyd902w0pT7WtjHUL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f0eIsdLO; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1755539631; c=relaxed/simple;
+	bh=HJIUb4G5YI+Rixd/D2ApFQOK4mZ88TMso8AJjwTrMlY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KOfZNzxCFZ7Nxa+JLm4PB24WdZdGg7/gq9+wOdsSXDsrd4C+75JodtWCenedjG1qNHYj64BGvQzWCwPVEStla26wVcL0DOpfqnkdnIQD8jkazmEEXU8fZC7GGL/XuSPMqgvAoHsdoP4h5QWApxr8DZgaZYLzsIi1PI3s/2xuzKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lmFbRHpV; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f0eIsdLO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755537080; x=1787073080;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=VkU+wZQkPmEp16WbCV0zpMUNGiwkcI+/aWmT/kyU20w=;
-  b=f0eIsdLO5lbcRZ0m2xoI3xUr4k3lPOIQr8sQZFrTwa0wDNGmnR1bXBRn
-   oBpVSmUY16fv3/6K1N7Pc2wr9SXoj6jeBQHmFr66XUyAMWHMkoCFiURqj
-   vi6MA3UnA4ilcA0uJNmM5ZYa6n4CILDNbw5A5MzbjIRbu1HzZs6BDclch
-   JrousK1FjCme9lUEBopCcs68QkNWIWcLG+4a3Gjbpgn7eYNQxn/M9vdB9
-   l3tTLsSsi69TcewYeYbCzuCXFMrTy5wJpJn+KfYLXKJctGL/7TpeopVXy
-   qmV25fNqOmuhdY9BVCALbQmf0t06S2mfaC0KJ97JWDoMMAW+HELJjn/4O
-   g==;
-X-CSE-ConnectionGUID: OWaqREDaQh+LvoN7SdJ1Hw==
-X-CSE-MsgGUID: Ge9NPL9/Q2e/46KVPnx/Zg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11526"; a="57696515"
-X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
-   d="scan'208";a="57696515"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2025 10:11:19 -0700
-X-CSE-ConnectionGUID: G7vtLgb6TqquzZXJWpfCcg==
-X-CSE-MsgGUID: 2VCBDpOAQqS94rHyLrUzqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
-   d="scan'208";a="172834006"
-Received: from bvivekan-mobl2.gar.corp.intel.com (HELO [10.247.119.196]) ([10.247.119.196])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2025 10:11:13 -0700
-Message-ID: <4463409f-bad4-4435-81de-aeda4da24190@intel.com>
-Date: Mon, 18 Aug 2025 10:11:08 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lmFbRHpV"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-76e2e8e2d2dso2705808b3a.1;
+        Mon, 18 Aug 2025 10:53:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755539629; x=1756144429; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9c4GNojMcxWdoHKIoocPUw00TeAK1QWc4rtBiWWbTGg=;
+        b=lmFbRHpVqKgUJylJZhFvAW6g3gT8WC3s7KxhB2uWLBatw0OxBIdmR3k7myEHRtk6i/
+         oEvPUYklfHk5YF+/ySukUajJDuUt4bItb+16ef6ku2l+Va54ooFOT2r80hw1SZeEVJVd
+         ySUiGlbrk306YFFmnMpxRRsbSESfhMeSd1z1mF4mg7P26HArkQfK5t2puHAKIps5JOJ9
+         lTCh0vNx/nqF/8aJHstdl8bBbXpObQ4y30IymOaLydAsgrEXNNlvPhhAbNu26PWMXSnH
+         FOBhZCYVRH7yyWRJmgFmyrTe75q9tUs93kJB/5AyfdsX9787yQQlyTsvoskMyEd9qZuV
+         ZiKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755539629; x=1756144429;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9c4GNojMcxWdoHKIoocPUw00TeAK1QWc4rtBiWWbTGg=;
+        b=H9SJS1GTab/pXzZMZ+TyurTfX+Y+7lIazVSECi5jNlHQw6vhhFHr+z0XXAXhIZU91D
+         lyA2Vkb9QagTSn8PQg68KkC6JAQWBlq0hCFuc72kLvmVkgo8gPUxW/fEnBBgplLCIbZH
+         D37ucIVUuzxxrd1wtNWmRtq6vBlBxyRy+KHrAhIZVgPjYPQppWFXb6e/CtvrmHD8wXLi
+         2bKWcM86RvZIxu9Sv3JColruNAB/Ov72OxTHyzEAxdJgLBBJNBwbNDlss1xHlOEz+YjU
+         6XvNn+YRB9JSOsvkR9V+XRg2sgBIkGx18DjJuElcTDSYVhZmpTCxZq+KzNXD5p8qGtZg
+         Zg+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWU1Us3trrAe08oBhxx8H6M+hc0GghikvR3xH0/Nox1y7/iy2eC6VX6dyraYd33T0aTGL74trAiiCc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkwZf8hp5h8KR9ixkNjPNqKONwoUc7U5oKc7hatxP5iAiQP0ei
+	It0yVdvnxTL9qmoeBbiCuW8/c7DWnwQLmcEden7JeZYwg4xg2sZQPgNFQwEVtlKE90o=
+X-Gm-Gg: ASbGncvXU7hl4Y1qR8XcZoi6c5xU4D2SzL8omYNgV+brhogTKSatHXGX/8ZlOO6eFph
+	IFK+5JlNsnaH/SCqPO8cMiuwmHGLsRYd636v9q/UjvjPz3B/lmFQGuAwHPLO1vQMSvNlQjD9cLy
+	0wmvo6Ekja/9OF+8gEiZ2Bz2T0hcehZ739ijg9XfOyuTqmITD+M/zHzTLsEm41etxaxYN6zRcSI
+	6yIHB9jIc1Sdfg4dhzsdKIPZIStPR26IOSGGYB1Gr/lZ5GWroUWwX6KAiIqKMPmpwCszhHItbow
+	NaKe4QWHlcckpFcjg5dLAcip/tinSlwBP+jRp89W0Vwsi2uNsrR/CiZTx1rryXF4FTQz2zMLYal
+	6XgMjCNC11VlqWy0BEWyahQqhUU9z
+X-Google-Smtp-Source: AGHT+IGimQ0BQxI4HtYUvNmSf65iLZ6R75oRZQfjucpMXUHBcrTZ+pSB/uB+jU0Oaqu0OvBWl6QukA==
+X-Received: by 2002:a05:6a00:1806:b0:76e:3a11:d24f with SMTP id d2e1a72fcca58-76e516de72dmr10789522b3a.15.1755539628773;
+        Mon, 18 Aug 2025 10:53:48 -0700 (PDT)
+Received: from lkmp.. ([223.237.184.72])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76e7d0d22e9sm248437b3a.8.2025.08.18.10.53.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Aug 2025 10:53:48 -0700 (PDT)
+From: Rakuram Eswaran <rakuram.e96@gmail.com>
+To: linux-doc@vger.kernel.org
+Cc: dan.j.williams@intel.com,
+	dave@stgolabs.net,
+	dave.jiang@intel.com,
+	jonathan.cameron@huawei.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	linux-cxl@vger.kernel.org,
+	alison.schofield@intel.com,
+	gourry@gourry.net,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linuxfoundation.org,
+	corbet@lwn.net,
+	rakuram.e96@gmail.com
+Subject: [PATCH v3] Documentation/driver-api: Fix typo error in cxl
+Date: Mon, 18 Aug 2025 23:23:34 +0530
+Message-ID: <20250818175335.5312-1-rakuram.e96@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl: Fix emit of type resource_size_t argument for
- validate_region_offset()
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, kernel test robot <lkp@intel.com>
-References: <20250818153953.3658952-1-dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250818153953.3658952-1-dave.jiang@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Fixed the following typo errors
 
+intersparsed ==> interspersed
+in Documentation/driver-api/cxl/platform/bios-and-efi.rst
 
-On 8/18/25 8:39 AM, Dave Jiang wrote:
-> 0day reported warnings of:
-> drivers/cxl/core/region.c:3664:25: warning: format '%llx' expects argument of type 'long long unsigned int', but argument 4 has type 'resource_size_t' {aka 'unsigned int'} [-Wformat=]
-> 
-> drivers/cxl/core/region.c:3671:37: warning: format '%llx' expects argument of type 'long long unsigned int', but argument 4 has type 'resource_size_t' {aka 'unsigned int'} [-Wformat=]
-> 
-> Replace %#llx with %pr to emit resource_size_t arguments.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202508160513.NAZ9i9rQ-lkp@intel.com/
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+Changelog:
 
-Applied to next
-e6a9530b3ee7407b70b60e4df70688db0d239e1a
+Changes since v2:
+- Fixed Signed-off-by line to include fullname
+  (feedback from Jonathan Corbet)
 
-> ---
->  drivers/cxl/core/region.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 3c39e2c9942b..29d3809ab2bb 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3660,15 +3660,15 @@ static int validate_region_offset(struct cxl_region *cxlr, u64 offset)
->  
->  	if (offset < p->cache_size) {
->  		dev_err(&cxlr->dev,
-> -			"Offset %#llx is within extended linear cache %#llx\n",
-> -			offset, p->cache_size);
-> +			"Offset %#llx is within extended linear cache %pr\n",
-> +			offset, &p->cache_size);
->  		return -EINVAL;
->  	}
->  
->  	region_size = resource_size(p->res);
->  	if (offset >= region_size) {
-> -		dev_err(&cxlr->dev, "Offset %#llx exceeds region size %#llx\n",
-> -			offset, region_size);
-> +		dev_err(&cxlr->dev, "Offset %#llx exceeds region size %pr\n",
-> +			offset, &region_size);
->  		return -EINVAL;
->  	}
->  
-> 
-> base-commit: d9412f08e25a5b66f9021739c090cc9b8f1089b1
+Changes since v1:
+- Dropped fix for page-allocator.rst as requested by Gregory
+
+Suggested-by: Gregory Price <gourry@gourry.net> 
+Signed-off-by: Rakuram Eswaran <rakuram.e96@gmail.com>
+---
+ Documentation/driver-api/cxl/platform/bios-and-efi.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/driver-api/cxl/platform/bios-and-efi.rst b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
+index 645322632cc9..a9aa0ccd92af 100644
+--- a/Documentation/driver-api/cxl/platform/bios-and-efi.rst
++++ b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
+@@ -202,7 +202,7 @@ future and such a configuration should be avoided.
+ 
+ Memory Holes
+ ------------
+-If your platform includes memory holes intersparsed between your CXL memory, it
++If your platform includes memory holes interspersed between your CXL memory, it
+ is recommended to utilize multiple decoders to cover these regions of memory,
+ rather than try to program the decoders to accept the entire range and expect
+ Linux to manage the overlap.
+-- 
+2.43.0
 
