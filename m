@@ -1,97 +1,250 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 623332EB84F;
-	Tue, 19 Aug 2025 13:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439482571DC
+	for <linux-cxl@vger.kernel.org>; Tue, 19 Aug 2025 13:44:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755609953; cv=none; b=IqEgOARZDfpqNF4kbf8yjrKtWxPQJV08J1ByvXllAV9H/BWlXJlt4Fe4PnbXsqvY0KpLOicVW974pgA762rekzVN8mMieUbOdaUdYK4j5meP6QuCpZbyGBcOHwm/rrWeHvoGHz+JuIP7lUvOTPKXkzIaKF03vfgWc48jqkBbTBk=
+	t=1755611098; cv=none; b=rS7l3/fKAD4+pJ09SQGiimAaEgRQC52JKtVe+yFgkBXuw83QI4eZ4pp9Nb/LgDx9OotBqp34UtvLt+uma8G+P+OjjvCv1RT/XUpAZap72wVglIGwm+BOiam6/o3mNlqxgPdl5hMK+XvsGpgvLodeaZCtfKnRaOtF/kLrn4dFgxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755609953; c=relaxed/simple;
-	bh=pBeIj/4Npl8WnOICq3KNLkIDe0MOER85JIhoxlatFuI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=RAuGWBCjLs34psniSdZYhebq3KbR5GKIlZslf4dRw/nqp9IvzI/A8niX+ZA2jWYk+W3hXbst8vqIOO0YNbaSs0cneEhR/uKktnuH5IPEsgBahGZR++waE8oYTWpSt5vgUoQh7fouoF66cwXdLtQcC9jRgjU4D4V3Lbgtw7yVyNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CEF116A3;
-	Tue, 19 Aug 2025 06:25:42 -0700 (PDT)
-Received: from [10.1.196.50] (e121345-lin.cambridge.arm.com [10.1.196.50])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 884583F738;
-	Tue, 19 Aug 2025 06:25:46 -0700 (PDT)
-Message-ID: <271daf71-3c57-49a5-a65f-c58ac670864f@arm.com>
-Date: Tue, 19 Aug 2025 14:25:45 +0100
+	s=arc-20240116; t=1755611098; c=relaxed/simple;
+	bh=Yca2WkzBJBbl9qdBBuWXU8H9Pz7WzdEqyfv8/5Hq2vw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Gxah/UQA9mqBJl4GlGYUs6B7W9lZy5Ez9RDW4Nd1JnSyIRWgRRCFha2LvAESUAjeq+aFw+p4Cbj4LgQ58Cvbm20IXdfEocP+4lz7XswECZ2eDhx3ilHTeuKh3AaKGacCzrpE3U1nsAFj9aNcWIKoi65OFpkMubWpaT1RkjIGbyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4c5rPK49k1z6GFvs;
+	Tue, 19 Aug 2025 21:42:45 +0800 (CST)
+Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
+	by mail.maildlp.com (Postfix) with ESMTPS id AC97D140427;
+	Tue, 19 Aug 2025 21:44:51 +0800 (CST)
+Received: from localhost (10.126.171.177) by frapeml500003.china.huawei.com
+ (7.182.85.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 19 Aug
+ 2025 15:44:51 +0200
+Date: Tue, 19 Aug 2025 14:44:45 +0100
+From: Alireza Sanaee <alireza.sanaee@huawei.com>
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>
+CC: <linux-cxl@vger.kernel.org>
+Subject: Re: [RFC PATCH 15/18] cxl/cache: Implement Cache ID Decoder
+ programming
+Message-ID: <20250819144445.00000b1b.alireza.sanaee@huawei.com>
+In-Reply-To: <20250812212921.9548-16-Benjamin.Cheatham@amd.com>
+References: <20250812212921.9548-1-Benjamin.Cheatham@amd.com>
+	<20250812212921.9548-16-Benjamin.Cheatham@amd.com>
+Organization: Huawei
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 19/19] perf: Garbage-collect event_init checks
-From: Robin Murphy <robin.murphy@arm.com>
-To: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
- mark.rutland@arm.com, acme@kernel.org, namhyung@kernel.org,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
- linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
- linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
- iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
- linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-riscv@lists.infradead.org
-References: <cover.1755096883.git.robin.murphy@arm.com>
- <ace3532a8a438a96338bf349a27636d8294c7111.1755096883.git.robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <ace3532a8a438a96338bf349a27636d8294c7111.1755096883.git.robin.murphy@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ frapeml500003.china.huawei.com (7.182.85.28)
 
-On 13/08/2025 6:01 pm, Robin Murphy wrote:
-[...]
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-> index 297ff5adb667..98ffab403bb4 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
-> @@ -731,24 +731,11 @@ static int uncore_pmu_event_init(struct perf_event *event)
->   	struct hw_perf_event *hwc = &event->hw;
->   	int ret;
->   
-> -	if (event->attr.type != event->pmu->type)
-> -		return -ENOENT;
-> -
->   	pmu = uncore_event_to_pmu(event);
->   	/* no device found for this pmu */
->   	if (!pmu->registered)
->   		return -ENOENT;
->   
-> -	/* Sampling not supported yet */
-> -	if (hwc->sample_period)
-> -		return -EINVAL;
-> -
-> -	/*
-> -	 * Place all uncore events for a particular physical package
-> -	 * onto a single cpu
-> -	 */
-> -	if (event->cpu < 0)
-> -		return -EINVAL;
+On Tue, 12 Aug 2025 16:29:18 -0500
+Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
 
-Oopsie, I missed that this isn't just the usual boilerplate as the 
-comment kind of implies, but is also necessary to prevent the 
-uncore_pmu_to_box() lookup going wrong (since the core code won't reject 
-a task-bound event until later). I'll put this back with an updated 
-comment for v2 (and double-check everything else again...), thanks LKP!
+> The CXL Cache ID Decoder capability is an optional capability present
+> on CXL downstream switch and CXL-enabled PCIe Root ports. This
+> capability is required for having multiple CXL.cache enabled devices
+> under the same port (CXL 3.2 8.2.4.29).
+> 
+> Implement cache id decoder programming. Validate the configuration in
+> the case BIOS already programmed the id(s).
+> 
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+> ---
+>  drivers/cxl/cache.c     |   4 ++
+>  drivers/cxl/core/port.c | 109
+> ++++++++++++++++++++++++++++++++++++++++ drivers/cxl/cxl.h       |
+> 14 ++++++ drivers/cxl/cxlcache.h  |   3 ++
+>  4 files changed, 130 insertions(+)
+> 
+> diff --git a/drivers/cxl/cache.c b/drivers/cxl/cache.c
+> index f123d596187d..fa3223165a18 100644
+> --- a/drivers/cxl/cache.c
+> +++ b/drivers/cxl/cache.c
+> @@ -163,6 +163,10 @@ static int
+> devm_cxl_cachedev_allocate_cache_id(struct cxl_cachedev *cxlcd) rc =
+> map_cache_idd_cap(dport); if (rc)
+>  			return rc;
+> +
+> +		rc = cxl_dport_program_cache_idd(dport, cxlcd);
+> +		if (rc)
+> +			return rc;
+>  	}
+>  
+>  	return 0;
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index f491796f6e60..3606ad557bfb 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1080,6 +1080,115 @@ int devm_cxl_port_program_cache_idrt(struct
+> cxl_port *port, }
+>  EXPORT_SYMBOL_NS_GPL(devm_cxl_port_program_cache_idrt, "CXL");
+>  
+> +static int cxl_dport_commit_idd(struct cxl_dport *dport)
+> +{
+> +	unsigned long timeout, start, end;
+> +	u32 cap, ctrl, status;
+> +	int i;
+> +
+> +	cap = readl(dport->regs.cidd + CXL_CACHE_IDD_CAP_OFFSET);
+> +	if (!(cap & CXL_CACHE_IDD_CAP_COMMIT))
+> +		return 0;
+> +
+> +	ctrl = readl(dport->regs.cidd + CXL_CACHE_IDD_CTRL_OFFSET);
+> +	if (ctrl & CXL_CACHE_IDD_CTRL_COMMIT) {
+> +		ctrl &= ~CXL_CACHE_IDD_CTRL_COMMIT;
+> +		writel(ctrl, dport->regs.cidd +
+> CXL_CACHE_IDD_CTRL_OFFSET);
+> +	}
+> +
+> +	ctrl |= CXL_CACHE_IDD_CTRL_COMMIT;
+> +	writel(ctrl, dport->regs.cidd + CXL_CACHE_IDD_CTRL_OFFSET);
+> +
+> +	status = readl(dport->regs.cidd + CXL_CACHE_IDD_STAT_OFFSET);
+> +
+> +	i = FIELD_GET(CXL_CACHE_IDD_STAT_TIMEOUT_SCALE_MASK, status);
+> +	timeout = 1 * HZ;
+> +	while (i-- > 3)
+> +		timeout *= 10;
+> +
+> +	timeout *= FIELD_GET(CXL_CACHE_IDD_STAT_TIMEOUT_BASE_MASK,
+> status);
+> +	start = jiffies;
+> +	do {
+> +		status = readl(dport->regs.cidd +
+> CXL_CACHE_IDD_STAT_OFFSET);
+> +		if (status & CXL_CACHE_IDD_STAT_ERR_COMMIT)
+> +			return -EBUSY;
+> +
+> +		if (status & CXL_CACHE_IDD_STAT_COMMITTED)
+> +			return 0;
+> +
+> +		end = jiffies;
+> +	} while (time_before(end, start + timeout));
+> +
+> +	return -ETIMEDOUT;
+> +}
+> +
+> +static int cxl_cache_idd_alread_programmed(struct cxl_dport *dport,
+> +					   struct cxl_cachedev
+> *cxlcd) +{
+> +	struct cxl_cache_state *cstate = &cxlcd->cxlds->cstate;
+> +	u32 ctrl, status, cache_id;
+> +
+> +	status = readl(dport->regs.cidd + CXL_CACHE_IDD_STAT_OFFSET);
+> +	if (!(status & CXL_CACHE_IDD_STAT_COMMITTED))
+> +		return 0;
+> +
+> +	/*
+> +	 * The decoder is probably already committed by BIOS,
+> validate
+> +	 * the configuration
+> +	 */
+> +	ctrl = readl(dport->regs.cidd + CXL_CACHE_IDD_CTRL_OFFSET);
+> +	/* TODO: Check for 68B flit mode */
+> +	if (dport == cxlcd->endpoint->parent_dport &&
+> +	    !(ctrl & CXL_CACHE_IDD_CTRL_ASGN_ID))
+> +		return -EINVAL;
+> +
+> +	if (dport != cxlcd->endpoint->parent_dport &&
+> +	    !(ctrl & CXL_CACHE_IDD_CTRL_FWD_ID))
+> +		return -EINVAL;
+> +
+> +	cache_id = FIELD_GET(CXL_CACHE_IDD_CTRL_LOCAL_ID_MASK, ctrl);
+> +	if (cache_id != cstate->cache_id)
+> +		return -EINVAL;
+> +
+> +	if (!!(ctrl & CXL_CACHE_IDD_CTRL_TYPE2) != cstate->hdmd)
+> +		return -EINVAL;
+> +
+> +	return 1;
+> +}
+> +
+> +int cxl_dport_program_cache_idd(struct cxl_dport *dport,
+> +				struct cxl_cachedev *cxlcd)
+> +{
+> +	u32 ctrl;
+> +	int rc;
+> +
+> +	rc = cxl_cache_idd_alread_programmed(dport, cxlcd);
+> +	if (rc)
+> +		return rc < 0 ? rc : 0;
+> +
+> +	ctrl = readl(dport->regs.cidd + CXL_CACHE_IDD_CTRL_OFFSET);
+> +
+> +	if (cxlcd->cxlds->cstate.hdmd) {
+> +		ctrl |= CXL_CACHE_IDD_CTRL_TYPE2;
+> +		ctrl &= ~CXL_CACHE_IDD_CTRL_TYPE2_ID_MASK;
+> +		ctrl |= FIELD_PREP(CXL_CACHE_IDD_CTRL_TYPE2_ID_MASK,
+> cxlcd->id);
+> +	}
+> +
+> +	/* TODO: Check for 68B flit mode */
+> +	if (dport == cxlcd->endpoint->parent_dport)
+> +		ctrl |= CXL_CACHE_IDD_CTRL_ASGN_ID;
+> +	else
+> +		ctrl |= CXL_CACHE_IDD_CTRL_FWD_ID;
+> +
+> +	ctrl &= ~CXL_CACHE_IDD_CTRL_LOCAL_ID_MASK;
+> +	ctrl |= FIELD_PREP(CXL_CACHE_IDD_CTRL_LOCAL_ID_MASK,
+> +			   cxlcd->cxlds->cstate.cache_id);
+> +
+> +	writel(ctrl, dport->regs.cidd + CXL_CACHE_IDD_CTRL_OFFSET);
+> +	return cxl_dport_commit_idd(dport);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_dport_program_cache_idd, "CXL");
+> +
+>  DEFINE_SHOW_ATTRIBUTE(einj_cxl_available_error_type);
+>  
+>  static int cxl_einj_inject(void *data, u64 type)
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 04fde1a994d0..9c475d8c1573 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -178,6 +178,20 @@ static inline int ways_to_eiw(unsigned int ways,
+> u8 *eiw) #define   CXL_CACHE_IDRT_TARGETN_PORT_MASK GENMASK(15, 8)
+>  
+>  /* CXL 3.2 8.2.4.29 CXL Cache ID Decoder Capability Structure */
+> +#define CXL_CACHE_IDD_CAP_OFFSET 0x0
+> +#define   CXL_CACHE_IDD_CAP_COMMIT BIT(0)
+> +#define CXL_CACHE_IDD_CTRL_OFFSET 0x4
+> +#define   CXL_CACHE_IDD_CTRL_FWD_ID BIT(0)
+> +#define   CXL_CACHE_IDD_CTRL_ASGN_ID BIT(1)
+> +#define   CXL_CACHE_IDD_CTRL_TYPE2 BIT(2)
+> +#define   CXL_CACHE_IDD_CTRL_COMMIT BIT(3)
+> +#define   CXL_CACHE_IDD_CTRL_TYPE2_ID_MASK GENMASK(11, 8)
+> +#define   CXL_CACHE_IDD_CTRL_LOCAL_ID_MASK GENMASK(19, 16)
+> +#define CXL_CACHE_IDD_STAT_OFFSET 0x8
+> +#define   CXL_CACHE_IDD_STAT_COMMITTED BIT(0)
+> +#define   CXL_CACHE_IDD_STAT_ERR_COMMIT BIT(1)
+> +#define   CXL_CACHE_IDD_STAT_TIMEOUT_SCALE_MASK GENMASK(11, 8)
+> +#define   CXL_CACHE_IDD_STAT_TIMEOUT_BASE_MASK GENMASK(15, 12)
+>  #define CXL_CACHE_IDD_CAPABILITY_LENGTH 0xC
 
-Robin.
+Hi Ben,
 
+This looks like some styling issues.
+>  
+>  /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
+> diff --git a/drivers/cxl/cxlcache.h b/drivers/cxl/cxlcache.h
+> index d28222123102..60563b391844 100644
+> --- a/drivers/cxl/cxlcache.h
+> +++ b/drivers/cxl/cxlcache.h
+> @@ -32,4 +32,7 @@ int devm_cxl_snoop_filter_alloc(u32 gid, struct
+> cxl_dev_state *cxlds); int devm_cxl_port_program_cache_idrt(struct
+> cxl_port *port, struct cxl_dport *dport,
+>  				     struct cxl_cachedev *cxlcd);
+> +int cxl_dport_program_cache_idd(struct cxl_dport *dport,
+> +				struct cxl_cachedev *cxlcd);
+> +
+>  #endif
 
->   	box = uncore_pmu_to_box(pmu, event->cpu);
->   	if (!box || box->cpu < 0)
->   		return -EINVAL;
