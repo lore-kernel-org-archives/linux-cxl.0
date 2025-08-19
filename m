@@ -1,81 +1,194 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E06E4A23
-	for <linux-cxl@vger.kernel.org>; Tue, 19 Aug 2025 12:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFD3A2C11EC;
+	Tue, 19 Aug 2025 13:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755605490; cv=none; b=LSNQ05O7AsNnBJXm9LaqwjO5nq6k7ckjwl7yfrb/lij0IKmalgPUHPWuwN91uT7OnodNkzwInFqmAxk5KUA/VnWjv34ehKSCnFg4M7Qc+65OuZKnxUWFAcDJaHUOCRE3yo0xKwagPtLWWeDbvc/S+83WJAJkAvNtlarbqdenRTk=
+	t=1755609359; cv=none; b=mTbA7A4lvZXsFQVGRW5MLZreoRnaJtnQg+nXx//GA6IhyCnevxcYJL3bwj0sZ1DyoAlw7aPGqhD4BoNrijxyIqtgSUuPzBOkORlHWdzaksI1sQBlT3lo33fMT4cJkG5sPv0gLhGi/DjG/z49hkfUQlRr7WKmMu2mwtwY3OutH1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755605490; c=relaxed/simple;
-	bh=RslSh2XgNkAf5WzmyzBjoSXygCSNSarApMb//8oMve8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WzoHLyvUDVCUmsorr4Hclg6TmPFbnk2frN78rf2LolLuqG0hapBR+iB9ERBxbQ6tA5HyXQHI9U0CmrJICe41qnMVaOOZ80vng2Kc+fzrTsr/vDw9OsGqd2dtWSWpnGzzDrfRzRm4eiqoAcIviKY2YFG/tG2iUF5Ly0z1eLlzjrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4c5pMd0Ypdz6D8v4;
-	Tue, 19 Aug 2025 20:11:09 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6A8FF1400DC;
-	Tue, 19 Aug 2025 20:11:19 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 19 Aug
- 2025 14:11:18 +0200
-Date: Tue, 19 Aug 2025 13:11:17 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Ben Cheatham <Benjamin.Cheatham@amd.com>
-CC: <linux-cxl@vger.kernel.org>
-Subject: Re: [RFC PATCH 10/18] cxl/cache: Add cxl_cache driver
-Message-ID: <20250819131117.00001e84@huawei.com>
-In-Reply-To: <20250812212921.9548-11-Benjamin.Cheatham@amd.com>
-References: <20250812212921.9548-1-Benjamin.Cheatham@amd.com>
-	<20250812212921.9548-11-Benjamin.Cheatham@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1755609359; c=relaxed/simple;
+	bh=TZO/KLYTk3liX98Qqbq7mizNVHvRrDmh1OUM8O5QVDg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Vzhilxi40RdHl/if59Z3tD68btiKi8WcLsyIO85rhK8rRKxCPHZ8EpCoVK6e/DZk1Tgx2sEjAB02wfFhCWSfleC3khXdPT/ppeLXkQ3sXQSfCt0BUTJtNqhAurWF5pgRbNPXo3gMc/YgI2zDUm0ozoUC6Y7iHR7ntcoQ5M1vsBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0830C16A3;
+	Tue, 19 Aug 2025 06:15:48 -0700 (PDT)
+Received: from [10.1.196.50] (e121345-lin.cambridge.arm.com [10.1.196.50])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 078263F58B;
+	Tue, 19 Aug 2025 06:15:51 -0700 (PDT)
+Message-ID: <67a0d778-6e2c-4955-a7ce-56a10043ae8d@arm.com>
+Date: Tue, 19 Aug 2025 14:15:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 18/19] perf: Introduce positive capability for raw events
+From: Robin Murphy <robin.murphy@arm.com>
+To: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+ mark.rutland@arm.com, acme@kernel.org, namhyung@kernel.org,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+ linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
+ linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
+ iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
+ linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <cover.1755096883.git.robin.murphy@arm.com>
+ <542787fd188ea15ef41c53d557989c962ed44771.1755096883.git.robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <542787fd188ea15ef41c53d557989c962ed44771.1755096883.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 12 Aug 2025 16:29:13 -0500
-Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
-
-> Add the cxl_cache driver which will manage struct cxl_cachdev devices.
-> This driver will provide common management functions for some of a cache
-> capable endpoint. This driver will also be responsible for validating
-> the system's CXL.cache configuration.
+On 13/08/2025 6:01 pm, Robin Murphy wrote:
+> Only a handful of CPU PMUs accept PERF_TYPE_{RAW,HARDWARE,HW_CACHE}
+> events without registering themselves as PERF_TYPE_RAW in the first
+> place. Add an explicit opt-in for these special cases, so that we can
+> make life easier for every other driver (and probably also speed up the
+> slow-path search) by having perf_try_init_event() do the basic type
+> checking to cover the majority of cases.
 > 
-> The driver expects the device's cache capabilities to be prefetched by
-> the endpoint-specific driver. The required capabilities can be gotten by
-> calling cxl_accel_get_cache_info().
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
 > 
-> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
-
-
-> +static struct cxl_driver cxl_cache_driver = {
-> +	.name = "cxl_cache",
-> +	.probe = cxl_cache_probe,
-> +	.drv = {
-> +		.probe_type = PROBE_FORCE_SYNCHRONOUS,
-
-Why?  I'd add a comment.
-
-> +	},
-> +	.id = CXL_DEVICE_ACCELERATOR,
-> +};
+> A further possibility is to automatically add the cap to PERF_TYPE_RAW
+> PMUs in perf_pmu_register() to have a single point-of-use condition; I'm
+> undecided...
+> ---
+>   arch/s390/kernel/perf_cpum_cf.c    |  1 +
+>   arch/s390/kernel/perf_pai_crypto.c |  2 +-
+>   arch/s390/kernel/perf_pai_ext.c    |  2 +-
+>   arch/x86/events/core.c             |  2 +-
+>   drivers/perf/arm_pmu.c             |  1 +
+>   include/linux/perf_event.h         |  1 +
+>   kernel/events/core.c               | 15 +++++++++++++++
+>   7 files changed, 21 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/s390/kernel/perf_cpum_cf.c b/arch/s390/kernel/perf_cpum_cf.c
+> index 1a94e0944bc5..782ab755ddd4 100644
+> --- a/arch/s390/kernel/perf_cpum_cf.c
+> +++ b/arch/s390/kernel/perf_cpum_cf.c
+> @@ -1054,6 +1054,7 @@ static void cpumf_pmu_del(struct perf_event *event, int flags)
+>   /* Performance monitoring unit for s390x */
+>   static struct pmu cpumf_pmu = {
+>   	.task_ctx_nr  = perf_sw_context,
+> +	.capabilities = PERF_PMU_CAP_RAW_EVENTS,
+>   	.pmu_enable   = cpumf_pmu_enable,
+>   	.pmu_disable  = cpumf_pmu_disable,
+>   	.event_init   = cpumf_pmu_event_init,
+> diff --git a/arch/s390/kernel/perf_pai_crypto.c b/arch/s390/kernel/perf_pai_crypto.c
+> index a64b6b056a21..b5b6d8b5d943 100644
+> --- a/arch/s390/kernel/perf_pai_crypto.c
+> +++ b/arch/s390/kernel/perf_pai_crypto.c
+> @@ -569,7 +569,7 @@ static const struct attribute_group *paicrypt_attr_groups[] = {
+>   /* Performance monitoring unit for mapped counters */
+>   static struct pmu paicrypt = {
+>   	.task_ctx_nr  = perf_hw_context,
+> -	.capabilities = PERF_PMU_CAP_SAMPLING,
+> +	.capabilities = PERF_PMU_CAP_SAMPLING | PERF_PMU_CAP_RAW_EVENTS,
+>   	.event_init   = paicrypt_event_init,
+>   	.add	      = paicrypt_add,
+>   	.del	      = paicrypt_del,
+> diff --git a/arch/s390/kernel/perf_pai_ext.c b/arch/s390/kernel/perf_pai_ext.c
+> index 1261f80c6d52..bcd28c38da70 100644
+> --- a/arch/s390/kernel/perf_pai_ext.c
+> +++ b/arch/s390/kernel/perf_pai_ext.c
+> @@ -595,7 +595,7 @@ static const struct attribute_group *paiext_attr_groups[] = {
+>   /* Performance monitoring unit for mapped counters */
+>   static struct pmu paiext = {
+>   	.task_ctx_nr  = perf_hw_context,
+> -	.capabilities = PERF_PMU_CAP_SAMPLING,
+> +	.capabilities = PERF_PMU_CAP_SAMPLING | PERF_PMU_CAP_RAW_EVENTS,
+>   	.event_init   = paiext_event_init,
+>   	.add	      = paiext_add,
+>   	.del	      = paiext_del,
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 789dfca2fa67..764728bb80ae 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -2697,7 +2697,7 @@ static bool x86_pmu_filter(struct pmu *pmu, int cpu)
+>   }
+>   
+>   static struct pmu pmu = {
+> -	.capabilities		= PERF_PMU_CAP_SAMPLING,
+> +	.capabilities		= PERF_PMU_CAP_SAMPLING | PERF_PMU_CAP_RAW_EVENTS,
+>   
+>   	.pmu_enable		= x86_pmu_enable,
+>   	.pmu_disable		= x86_pmu_disable,
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index 72d8f38d0aa5..bc772a3bf411 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -877,6 +877,7 @@ struct arm_pmu *armpmu_alloc(void)
+>   		 * specific PMU.
+>   		 */
+>   		.capabilities	= PERF_PMU_CAP_SAMPLING |
+> +				  PERF_PMU_CAP_RAW_EVENTS |
+>   				  PERF_PMU_CAP_EXTENDED_REGS |
+>   				  PERF_PMU_CAP_EXTENDED_HW_TYPE,
+>   	};
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 183b7c48b329..c6ad036c0037 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -305,6 +305,7 @@ struct perf_event_pmu_context;
+>   #define PERF_PMU_CAP_EXTENDED_HW_TYPE	0x0100
+>   #define PERF_PMU_CAP_AUX_PAUSE		0x0200
+>   #define PERF_PMU_CAP_AUX_PREFER_LARGE	0x0400
+> +#define PERF_PMU_CAP_RAW_EVENTS		0x0800
+>   
+>   /**
+>    * pmu::scope
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 71b2a6730705..2ecee76d2ae2 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -12556,11 +12556,26 @@ static inline bool has_extended_regs(struct perf_event *event)
+>   	       (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK);
+>   }
+>   
+> +static bool is_raw_pmu(const struct pmu *pmu)
+> +{
+> +	return pmu->type == PERF_TYPE_RAW ||
+> +	       pmu->capabilities & PERF_PMU_CAP_RAW_EVENTS;
+> +}
 > +
-> +module_cxl_driver(cxl_cache_driver);
+>   static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
+>   {
+>   	struct perf_event_context *ctx = NULL;
+>   	int ret;
+>   
+> +	/*
+> +	 * Before touching anything, we can safely skip:
+> +	 * - any event for a specific PMU which is not this one
+> +	 * - any common event if this PMU doesn't support them
+> +	 */
+> +	if (event->attr.type != pmu->type &&
+> +	    (event->attr.type >= PERF_TYPE_MAX || is_raw_pmu(pmu)))
+
+Ah, that should be "!is_raw_pmu(pmu)" there (although it's not entirely 
+the cause of the LKP report on the final patch.)
+
+Thanks,
+Robin.
+
+> +		return -ENOENT;
 > +
-> +MODULE_DESCRIPTION("CXL: Cache Management");
-> +MODULE_LICENSE("GPL");
-> +MODULE_IMPORT_NS("CXL");
-> +MODULE_ALIAS_CXL(CXL_DEVICE_ACCELERATOR);
+>   	if (!try_module_get(pmu->module))
+>   		return -ENODEV;
+>   
 
