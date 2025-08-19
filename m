@@ -1,137 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE4224502C
-	for <linux-cxl@vger.kernel.org>; Tue, 19 Aug 2025 15:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6A11798F
+	for <linux-cxl@vger.kernel.org>; Tue, 19 Aug 2025 15:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755618072; cv=none; b=SxPJCKqKrOaaKRos8V1bDLhQlZ9lNP8cHIrRsxhDtlB+DSPBshDpg3VreP6D/oP2jXc5L6UX2a8Hn1XzETZNWA8DdRx1YIfQf2G+dCkE7NWj7Esf4WpXymJpyd/OyL0dXyiZZ+iEZ1mvuVd6536GXgQVcc0yDlWKLK2BCRGn7YQ=
+	t=1755618821; cv=none; b=MTP3G0D/pJk5kZnSHmkHbIfP0dZh8R/9wAxhyRxZIZEWg+1PkgetgSPaqBeYAnfP5mxojMV/1J1+HOPuV7RYwHpRlXWO8jLQAP1W1YpFvBn5/bAf9u477xeJ5FDD0hYeJLXcc+vTIvGgVfe7IVASq5MsMywYU00f/E/zPVeAlZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755618072; c=relaxed/simple;
-	bh=DC3eNvp2rKZWTVF1ewOnHK68s4y+4FSN84eNj0vIHsw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s1K5D8dw22lXv7eQqtqQ50CPIzlH9+TTS0LUH7DsZ68Lc01RbaGjrkqSSpMMimyFj7H7tJeMm/6LFY1lVsTiM4BEFu3lrZV0ByGpBwxyGME1w0jYsDtDISAb0A90eGLyJOx9cR1Q7bZ0IRRtqpvP1Zc9nl6pXWcoC9mzycjb5gA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RhmzGFky; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RhmzGFky"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755618071; x=1787154071;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=DC3eNvp2rKZWTVF1ewOnHK68s4y+4FSN84eNj0vIHsw=;
-  b=RhmzGFkyCyPdSneoIYO1Z033C+poEUPX3iB9FyrGkHElk/k9r4F01QHl
-   Rog7Szawalgg9TnzDx8KV4dSYuxSZghLBzlXn7AW6vMDAc13I6JED9v8y
-   2u/2wK1bXZ5PoCTq4TeqoMD3FS138RVLf2TWz0d/kOkktK1R/Ly/bY8EI
-   u3wJyKOK2YXRr9ltZEcUdSQO1fehfQ4USKjuvg9bP25y0+VFaMAcbW4U1
-   crTSR5dFvo8pDZ/AyCyhyLiiI/63jmiv8oEnjx5FtRMqX8CrmSW7YGj7G
-   7FLbktaQXT/K60LMyrHNDmjnVsuaeH+kPuFwF+5CbNZcEXDkycW9M3iqa
-   Q==;
-X-CSE-ConnectionGUID: 426NdlNJQ6mHXKhP0zHILA==
-X-CSE-MsgGUID: QUoEKBMzTN+ouMJTHTG9mg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="68964523"
-X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
-   d="scan'208";a="68964523"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 08:41:10 -0700
-X-CSE-ConnectionGUID: cgp3+647Tk+piTMzYMFQSg==
-X-CSE-MsgGUID: Cdzbn1XiQWy+Hp7pgSeR8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
-   d="scan'208";a="173122186"
-Received: from unknown (HELO [10.247.119.200]) ([10.247.119.200])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 08:41:05 -0700
-Message-ID: <5d47fec5-3ffa-484b-9820-43f392d84580@intel.com>
-Date: Tue, 19 Aug 2025 08:41:00 -0700
+	s=arc-20240116; t=1755618821; c=relaxed/simple;
+	bh=RrQSx0qtutjIDXEdamxbcVCu0JuUByZUqmQiZQnXOAI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TgatakVFq8v1++3hmhhj8tZKIDLQiKf8pEUMgTPAeMS06auko2ezMIZJdMJQZSWl4Gu8DMsfbRoHbUiQ+EVkwXtxDTzKS/ZgTQZqGYUYR7GTLOVGdktb94Pud1Qsw6aSkDdFab05zJtu7HtMqUFylkTDaE+rdOgBul1ZhsguPSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4c5vDl0tk7z6GCDf;
+	Tue, 19 Aug 2025 23:50:31 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9056B14020C;
+	Tue, 19 Aug 2025 23:53:31 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 19 Aug
+ 2025 17:53:31 +0200
+Date: Tue, 19 Aug 2025 16:53:29 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>
+CC: <linux-cxl@vger.kernel.org>
+Subject: Re: [RFC PATCH 18/18] cxl/core: Add cache device cache management
+ attributes
+Message-ID: <20250819165329.000022f7@huawei.com>
+In-Reply-To: <20250812212921.9548-19-Benjamin.Cheatham@amd.com>
+References: <20250812212921.9548-1-Benjamin.Cheatham@amd.com>
+	<20250812212921.9548-19-Benjamin.Cheatham@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 00/11] cxl: Delay HB port and switch dport probing
- until endpoint dev probe
-To: Robert Richter <rrichter@amd.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- Gregory Price <gourry@gourry.net>, Li Ming <ming.li@zohomail.com>
-References: <20250814222151.3520500-1-dave.jiang@intel.com>
- <aKRGZixtY5AxDUU6@rric.localdomain>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <aKRGZixtY5AxDUU6@rric.localdomain>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
+ frapeml500008.china.huawei.com (7.182.85.71)
+
+On Tue, 12 Aug 2025 16:29:21 -0500
+Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
+
+> Add functions to cxl/core/pci.c to manage the cache of a CXL.cache
+> enabled endpoint. Add these new functions to sysfs attributes for
+> userspace accessibility.
+> 
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+
+Documentation/ABI needs something on this.
+
+> ---
+>  drivers/cxl/core/cachedev.c | 99 +++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/pci.c      | 89 +++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxlcache.h      |  4 ++
+>  drivers/cxl/cxlpci.h        |  6 +++
+>  4 files changed, 198 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/cachedev.c b/drivers/cxl/core/cachedev.c
+> index 1cdd94520ceb..85989cdd1eb8 100644
+> --- a/drivers/cxl/core/cachedev.c
+> +++ b/drivers/cxl/core/cachedev.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/pci.h>
+>  
+>  #include "../cxlcache.h"
+> +#include "../cxlpci.h"
+>  #include "private.h"
+>  
+>  static DEFINE_IDA(cxl_cachedev_ida);
+> @@ -125,9 +126,107 @@ static struct attribute_group cxl_cachedev_cache_attribute_group = {
+>  	.is_visible = cxl_cachedev_cache_visible,
+>  };
+>  
+> +static ssize_t cache_disable_store(struct device *dev,
+> +				   struct device_attribute *attr,
+> +				   const char *buf, size_t n)
+> +{
+> +	struct cxl_cachedev *cxlcd = to_cxl_cachedev(dev);
+> +	struct cxl_dev_state *cxlds = cxlcd->cxlds;
+> +	bool disable;
+> +	int rc;
+> +
+> +	rc = kstrtobool(buf, &disable);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = cxl_accel_set_cache_disable(cxlds, disable);
+> +	if (rc)
+> +		return rc;
+
+Can return 1 which is unlikely to be what want.
+
+> +
+> +	return n;
+> +}
+
+> +
+> +static struct attribute *cxl_cachedev_mgmt_attributes[] = {
+> +	&dev_attr_cache_disable.attr,
+> +	&dev_attr_cache_invalid.attr,
+> +	&dev_attr_init_wbinvd.attr,
+> +	NULL,
+
+No comma.
+
+> +};
 
 
+> +static struct attribute_group cxl_cachedev_mgmt_attribute_group = {
+> +	.attrs = cxl_cachedev_mgmt_attributes,
+> +	.is_visible = cxl_cachedev_mgmt_visible,
+> +};
+> +
+>  static const struct attribute_group *cxl_cachedev_attribute_groups[] = {
+>  	&cxl_cachedev_attribute_group,
+>  	&cxl_cachedev_cache_attribute_group,
+> +	&cxl_cachedev_mgmt_attribute_group,
+>  	NULL,
+No comma
 
-On 8/19/25 2:39 AM, Robert Richter wrote:
-> Dave,
-> 
-> On 14.08.25 15:21:40, Dave Jiang wrote:
->> v8:
->> - A bit of changes from Dan and Robert's comments. Main change is moving the port MMIO
->>   register probing to after the first dport shows up. This resulted with decoder allocation
->>   happens after the register probe.
->> - See specific commits for more detailed changes.
-> 
-> thank you for your rework.
-> 
->> Dave Jiang (11):
->>   cxl: Add helper to detect top of CXL device topology
->>   cxl: Add helper to reap dport
->>   cxl: Add a cached copy of target_map to cxl_decoder
->>   cxl: Move port register setup to first dport appear
->>   cxl: Defer dport allocation for switch ports
->>   cxl/test: Add cxl_test support for cxl_port_get_possible_dports()
->>   cxl/test: Add mock version of devm_cxl_add_dport_by_dev()
->>   cxl/test: Add support to cxl_test for decoder enumeration mock
->>     functions
->>   cxl/test: Setup target_map for cxl_test decoder initialization
->>   cxl: Change sslbis handler to only handle single dport
->>   tools/testing/cxl: Add decoder save/restore support
-> 
-> I have tested the whole series and it also solves the non-unique port
-> id errors for offline dports we see like:
-> 
->  cxl_port port2: unable to add dport247-0000:00:01.3 non-unique port id (0000:00:01.1)
-> 
-> For the whole series you can add:
-> 
-> Tested-by: Robert Richter <rrichter@amd.com>
+>  };
+>  
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 2279c2690c59..667f75043f9e 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -1232,3 +1232,92 @@ int cxl_accel_get_cache_info(struct cxl_dev_state *cxlds)
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_accel_get_cache_info, "CXL");
+> +
+> +int cxl_accel_caching_disabled(struct cxl_dev_state *cxlds)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+> +	int dvsec, rc;
+> +	u16 ctrl2;
+> +
+> +	device_lock_assert(cxlds->dev);
+What took this and why do we need to check?
+> +
+> +	if (!dev_is_pci(cxlds->dev))
+> +		return -EINVAL;
+> +	pdev = to_pci_dev(cxlds->dev);
+> +
+> +	dvsec = cxlds->cxl_dvsec;
+> +	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_CTRL2_OFFSET, &ctrl2);
+> +	if (rc)
+> +		return rc;
+> +
+> +	return !!(ctrl2 & CXL_DVSEC_DISABLE_CACHING);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_accel_caching_disabled, "CXL");
+> +
+> +int cxl_accel_set_cache_disable(struct cxl_dev_state *cxlds, bool disable)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+> +	int dvsec, rc;
+> +	u16 ctrl2;
+> +
+> +	if (!dev_is_pci(cxlds->dev))
+> +		return -EINVAL;
+> +
+> +	guard(device)(cxlds->dev);
+> +	dvsec = cxlds->cxl_dvsec;
+> +	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_CTRL2_OFFSET, &ctrl2);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (!!(ctrl2 & CXL_DVSEC_DISABLE_CACHING) == disable)
 
-Thank you for testing Robert!
-> 
-> Thanks,
-> 
-> -Robert
-> 
->>
->>  drivers/cxl/acpi.c                   |   7 +-
->>  drivers/cxl/core/cdat.c              |  25 +-
->>  drivers/cxl/core/core.h              |   2 +
->>  drivers/cxl/core/hdm.c               |  51 ++--
->>  drivers/cxl/core/pci.c               |  82 ++++++
->>  drivers/cxl/core/port.c              | 358 ++++++++++++++++++------
->>  drivers/cxl/core/region.c            |   4 +-
->>  drivers/cxl/cxl.h                    |  44 ++-
->>  drivers/cxl/port.c                   |  29 +-
->>  tools/testing/cxl/Kbuild             |   5 +-
->>  tools/testing/cxl/cxl_core_exports.c |  42 +++
->>  tools/testing/cxl/exports.h          |  21 ++
->>  tools/testing/cxl/test/cxl.c         | 399 ++++++++++++++++++++++++++-
->>  tools/testing/cxl/test/mock.c        |  70 ++++-
->>  tools/testing/cxl/test/mock.h        |   3 +
->>  15 files changed, 963 insertions(+), 179 deletions(-)
->>  create mode 100644 tools/testing/cxl/exports.h
->>
->>
->> base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
->> -- 
->> 2.50.1
->>
+Maybe FIELD_GET() is cleaner than the !!
+
+> +		return 1;
+> +
+> +	ctrl2 &= ~CXL_DVSEC_DISABLE_CACHING;
+> +	ctrl2 |= FIELD_PREP(CXL_DVSEC_DISABLE_CACHING, disable);
+> +	return pci_write_config_word(pdev, dvsec + CXL_DVSEC_DISABLE_CACHING,
+> +				     ctrl2);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_accel_set_cache_disable, "CXL");
 
