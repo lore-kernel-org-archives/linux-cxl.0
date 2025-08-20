@@ -1,149 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51205285CAE;
-	Wed, 20 Aug 2025 19:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A7326F476
+	for <linux-cxl@vger.kernel.org>; Wed, 20 Aug 2025 20:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755719274; cv=none; b=X5L7gpFjwSDZUoZItRxYYjAiUq1RCTTV7/KrRzd3d1yQWZZgwHF+XSv1fi456pwio8+jYHufWootGGQMSnmBfVxhAjlBEOAN6BLGGB3jxVKuqNlCfMHB0a+5udyKdxXTPOI8vi3gCh5ghrFB52NQcxozIvM+fFEunY5P0JpXTWk=
+	t=1755723258; cv=none; b=AGIwlVOZTTp3eWZKpkfjvzmiARG8MlnG6SH9soX0sY+6w3rh3fPxgFpkPHW6KDAqbENWaa11gJ0DlWAxpRbiebRwp5HRPwvkQoKjNDBcSVliA4OhcVmc2en/uQJYmBU3AcDZOP8zzX9oOc3f4P8P8BLaOwTrpEMPJIGrDDQ3A14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755719274; c=relaxed/simple;
-	bh=/DQq03KGSTjhQvFJPs2txX2xLrZURgkekgphV6n/h6o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nhz2IpRPkNbAjDi4N/QDuG6Lzxe5uPG1TLRKFektQJNqsjg+mP5bvm7ZdBVEaaDA6w666S04iZuD8x2vMTm3jiq0nmMBK7jC/UujRlfHhnfU2M5oGHiMQO+auuutBSVmdDXWKJdZDXXDGo42/6Q3E0y4rpZ4Ur5r7skEpYyj1fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A7DC4CEE7;
-	Wed, 20 Aug 2025 19:47:52 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	dakr@kernel.org,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	marc.herbert@linux.intel.com,
-	akpm@linux-foundation.org,
-	david@redhat.com
-Subject: [PATCH v2 4/4] acpi/hmat: Remove now unused hmat_update_target_coordinates()
-Date: Wed, 20 Aug 2025 12:47:04 -0700
-Message-ID: <20250820194704.4130565-5-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250820194704.4130565-1-dave.jiang@intel.com>
-References: <20250820194704.4130565-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1755723258; c=relaxed/simple;
+	bh=69Qy2Vy/gnSbKZ67TA5HBoOThXspEJBPToUpJexfIL4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CstBOdoN7rargVAWz0wuIjc6Y6k7kjGVPjL5JN0Hq36WYh14e96j7jOUJIsxFXZKlvXs5HN6TKogz9Mfsa2wYvUuhf8z3e5g0KDv4S02erOcCAtZWm8Hb3DPigZIEigD2qX+4YuwwUE+/CUSoPZf0bsdORSeoZ0uiCRIQ2zNpNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PLsVnSSp; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PLsVnSSp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755723257; x=1787259257;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=69Qy2Vy/gnSbKZ67TA5HBoOThXspEJBPToUpJexfIL4=;
+  b=PLsVnSSp6IJ6mEmf92IEKyWUJa54I2QE18pYkC4of0AduGNMscAtZcCv
+   yiKWC1mUxrr8lnzIXGU5PHBkiDtnuhrFKBbTgfwveE/c+N/2fDsN9rc/J
+   yAWsV5dANZjhCj3tSAx9Ci/MX7QbClQ1QQATj1PZM5ttasZ4FeeMD9GwE
+   pWbd4xCzhInHgxtysWH+KYC+45jCJA0WpIpBBN0f5Hak5EKb7EI+1ZDH5
+   NLSyxQX78yQtNrv09r+lyMbwsnGFnWt/Z3k2GJ4f/nrdRDOid12VUUw6j
+   5L3NIhjW57gOgXHljdbCIfYwd3RmEG85oXrQ6e4lEilO3eTsT7fTdFyEh
+   g==;
+X-CSE-ConnectionGUID: xhmPp1wFS8CU7pktRjoLPQ==
+X-CSE-MsgGUID: FJgMIdu+QpKIqc9Sfy04Vg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="58099066"
+X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
+   d="scan'208";a="58099066"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 13:54:16 -0700
+X-CSE-ConnectionGUID: YaS9cZelRBOXZGSkWCQ6ZA==
+X-CSE-MsgGUID: koCsAlaUS0WbvxlPVTZtfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
+   d="scan'208";a="191912084"
+Received: from bvivekan-mobl2.gar.corp.intel.com (HELO [10.247.119.205]) ([10.247.119.205])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 13:54:10 -0700
+Message-ID: <256917f1-42e1-48c0-976d-2c4cb2841561@intel.com>
+Date: Wed, 20 Aug 2025 13:54:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 02/11] cxl: Add helper to reap dport
+To: Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ Li Ming <ming.li@zohomail.com>
+References: <20250814222151.3520500-1-dave.jiang@intel.com>
+ <20250814222151.3520500-3-dave.jiang@intel.com>
+ <aKXXYjyePuyj5Dmz@rric.localdomain>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <aKXXYjyePuyj5Dmz@rric.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Remove deadcode since CXL no longer calls hmat_update_target_coordinates().
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/acpi/numa/hmat.c | 28 ----------------------------
- drivers/cxl/core/cdat.c  |  6 ------
- drivers/cxl/core/core.h  |  2 --
- include/linux/acpi.h     | 12 ------------
- 4 files changed, 48 deletions(-)
 
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 5d32490dc4ab..5a36d57289b4 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -367,34 +367,6 @@ static void hmat_update_target_access(struct memory_target *target,
- 	}
- }
- 
--int hmat_update_target_coordinates(int nid, struct access_coordinate *coord,
--				   enum access_coordinate_class access)
--{
--	struct memory_target *target;
--	int pxm;
--
--	if (nid == NUMA_NO_NODE)
--		return -EINVAL;
--
--	pxm = node_to_pxm(nid);
--	guard(mutex)(&target_lock);
--	target = find_mem_target(pxm);
--	if (!target)
--		return -ENODEV;
--
--	hmat_update_target_access(target, ACPI_HMAT_READ_LATENCY,
--				  coord->read_latency, access);
--	hmat_update_target_access(target, ACPI_HMAT_WRITE_LATENCY,
--				  coord->write_latency, access);
--	hmat_update_target_access(target, ACPI_HMAT_READ_BANDWIDTH,
--				  coord->read_bandwidth, access);
--	hmat_update_target_access(target, ACPI_HMAT_WRITE_BANDWIDTH,
--				  coord->write_bandwidth, access);
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(hmat_update_target_coordinates);
--
- static __init void hmat_add_locality(struct acpi_hmat_locality *hmat_loc)
- {
- 	struct memory_locality *loc;
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index c891fd618cfd..bca1ec279651 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -1075,9 +1075,3 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
- 		cxlr->coord[i].write_bandwidth += perf->coord[i].write_bandwidth;
- 	}
- }
--
--int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
--				       enum access_coordinate_class access)
--{
--	return hmat_update_target_coordinates(nid, &cxlr->coord[access], access);
--}
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index a253d308f3c9..0476c3b648de 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -137,8 +137,6 @@ enum cxl_poison_trace_type {
- 
- long cxl_pci_get_latency(struct pci_dev *pdev);
- int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c);
--int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
--				       enum access_coordinate_class access);
- int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
- 					struct access_coordinate *c);
- 
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 1c5bb1e887cd..5ff5d99f6ead 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1595,18 +1595,6 @@ static inline void acpi_use_parent_companion(struct device *dev)
- 	ACPI_COMPANION_SET(dev, ACPI_COMPANION(dev->parent));
- }
- 
--#ifdef CONFIG_ACPI_HMAT
--int hmat_update_target_coordinates(int nid, struct access_coordinate *coord,
--				   enum access_coordinate_class access);
--#else
--static inline int hmat_update_target_coordinates(int nid,
--						 struct access_coordinate *coord,
--						 enum access_coordinate_class access)
--{
--	return -EOPNOTSUPP;
--}
--#endif
--
- #ifdef CONFIG_ACPI_NUMA
- bool acpi_node_backed_by_real_pxm(int nid);
- #else
--- 
-2.50.1
+On 8/20/25 7:10 AM, Robert Richter wrote:
+> On 14.08.25 15:21:42, Dave Jiang wrote:
+>> Refactor the code in reap_dports() out to provide a helper function that
+>> reaps a single dport. This will be used later in the cleanup path for
+>> allocating a dport.
+>>
+>> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+>> Reviewed-by: Li Ming <ming.li@zohomail.com>
+>> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+>> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>  drivers/cxl/core/port.c | 16 +++++++++++-----
+>>  1 file changed, 11 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+>> index 855623cebd7d..fd316e9bd59d 100644
+>> --- a/drivers/cxl/core/port.c
+>> +++ b/drivers/cxl/core/port.c
+>> @@ -1441,6 +1441,15 @@ static void delete_switch_port(struct cxl_port *port)
+>>  	devm_release_action(port->dev.parent, unregister_port, port);
+>>  }
+>>  
+>> +static void reap_dport(struct cxl_dport *dport)
+> 
+> Could you name that cxl_del_dport() as a counterpart to
+> devm_cxl_add_dport? The cleanup helper should be named to
+> cxl_del_dport to, put_cxl_dport is incorrect here (it is not the
+> refcount decremented, kfree is used).
+
+Will rename to del_dport(). No need to add cxl_ since it's a local function.
+
+DJ
+
+> 
+>> +{
+>> +	struct cxl_port *port = dport->port;
+>> +
+>> +	devm_release_action(&port->dev, cxl_dport_unlink, dport);
+>> +	devm_release_action(&port->dev, cxl_dport_remove, dport);
+>> +	devm_kfree(&port->dev, dport);
+>> +}
+>> +
+>>  static void reap_dports(struct cxl_port *port)
+> 
+> cxl_del_dports()?
+> 
+>>  {
+>>  	struct cxl_dport *dport;
+>> @@ -1448,11 +1457,8 @@ static void reap_dports(struct cxl_port *port)
+>>  
+>>  	device_lock_assert(&port->dev);
+>>  
+>> -	xa_for_each(&port->dports, index, dport) {
+>> -		devm_release_action(&port->dev, cxl_dport_unlink, dport);
+>> -		devm_release_action(&port->dev, cxl_dport_remove, dport);
+>> -		devm_kfree(&port->dev, dport);
+>> -	}
+>> +	xa_for_each(&port->dports, index, dport)
+>> +		reap_dport(dport);
+>>  }
+>>  
+>>  struct detach_ctx {
+>> -- 
+>> 2.50.1
+>>
+> 
 
