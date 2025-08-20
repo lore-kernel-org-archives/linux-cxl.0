@@ -1,50 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218193BB48;
-	Wed, 20 Aug 2025 00:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7AD1286D55;
+	Wed, 20 Aug 2025 08:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755649871; cv=none; b=sUY/yZVRltJSDDGtMubKKX2ot0r9Ou61Tm9/OjuQkWtd2Alup2+lQQi3bXQEc4916+RO32H8ypGDeB/6wPtromkw376N8er3rbvfrlDGQVcSW1/cQp1Gs5EJyhmLgj8kmajZ7qHwMrhOta5Yet58i1/StYC0F1VdbqV05j/v+ww=
+	t=1755677383; cv=none; b=MDWIBRcBnKvMIaeyxCeCrQJLo1Z5///qwXekUjwNDvmmy6ELie0/6mtUGeZPvhlk3JSJpWPaPyCUGFZNFQ0kyel19nDPdr3wfg4LQWseC29k/3UctYYxywZeVIFCjx8rbQ/9Z3x0Zz5awskbjkiEc6D0JIdWECC6ioKz621xt2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755649871; c=relaxed/simple;
-	bh=orKiwU+NW3c2Yfxd9xwUkBFgqvDuDKlS4t1PSjWD4G8=;
+	s=arc-20240116; t=1755677383; c=relaxed/simple;
+	bh=QtPa4Xm8uTmy+B5vWLRgRCy9n5XjZIkEIBssgZ3jQWw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y4yJgkJ4aIoKhXGWu6FWPvIEvXfJb1qUEzyGwxoTyAaV5zbiArhRQJhPwpYPIp4BR/eCn8hJI1wZqNX9hc0c/5mxkxEA9sYEPIl1I/gmq1WukiMDAlD+/gvWh25+YIwQiXnw/z1Vn+FLgV6nFFZonkx15DmfEdMWpF3+4U2uJkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WcJLfcaO; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=Ti1LuwTdLcGeG08oYP+3KhP6+E7oOPQEclQAfeFb7lqtuV/zGVXIgZgYsPt883eJ2b7N5VgZerJ+WOVMIwx5P8uU2Eya2VCrYwLFWEEBrTTMAu9xmp9n1WWeZLtl1LPalwXRjnNYZmSHYhG8bIVWtX+LzLs074wtY+8/sn8RcZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Xixm2oi8; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WcJLfcaO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755649870; x=1787185870;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=orKiwU+NW3c2Yfxd9xwUkBFgqvDuDKlS4t1PSjWD4G8=;
-  b=WcJLfcaOZnjOQrNllTQWk4FE/uW2np0YFu19q8rkGU5kDIYNz5kbrrfO
-   wJ87HH7/5QgValXSTzkx57Kby6NOkHljkzdp1QEAlWs502T5LPsYS9s32
-   OAVeXuO2raFGTFWmOgQ9cAlFt6+QjeyZBzmzlI7MlIkx5D9f0z9S/DKDT
-   /4dUYamd4KoSXe3CH1tbIaurlWzq/yJXnIQZvjRf4vhx6/xlae653ISaK
-   5I/Mg42qJykpBS106la/XsQfUTVB1zoyUk6Oe101mSRnpNSuKPf80bbrq
-   5s2qEAMx6/Zv1md0nsMYESlHhMjy3Rf+V8lrY5CO2IzaKLYgT/UouaEf/
-   A==;
-X-CSE-ConnectionGUID: 0Vl6KEQmSyiyElkteGqtNw==
-X-CSE-MsgGUID: qU2OK6ALTpuZf7C6Hg4Idg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="57975327"
-X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
-   d="scan'208";a="57975327"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 17:31:09 -0700
-X-CSE-ConnectionGUID: LGekBot5Sk++xRkh4qoVcQ==
-X-CSE-MsgGUID: rl8RMa59T0GUxu7QGdBrGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
-   d="scan'208";a="173224396"
-Received: from unknown (HELO [10.247.119.200]) ([10.247.119.200])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 17:31:04 -0700
-Message-ID: <54012143-0925-4e76-a1e9-0092e10b8c84@intel.com>
-Date: Tue, 19 Aug 2025 17:30:58 -0700
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Xixm2oi8"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57JNmmLo017631;
+	Wed, 20 Aug 2025 08:09:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=XyEp7P
+	B6Crc5O/n3hDpRBdclhiXWepi7f2DlP7ISOnE=; b=Xixm2oi8D/e/+wAITPeDp3
+	TALHrRG4EBVti1e3wM1Z6LnCfvINBVfhRGmgOPkipNfgbFhBD0MWSeZRRuGZ/NN+
+	NKDq98HPciL4Zozeql4srzji2nvV3CzcZ3UlmCS5mUo4axD1CO9niYr/utY3r3nU
+	R/k9YIllh44h9uoNOFLeppTj5ZpJGLc7EDb+zLBQQ5R2NO8ZqfzYF65N+NeIflzl
+	gTcYt/B8t87ieiFU691ZjDHQqARPeaX+Fy6nA8Cm30nsgWe9R3Iis8b6CyGL5Xlw
+	ovWuvSCaaobgeWwxqiRAGHpZnDDJ13JX7jkAK7240Uso3SZWpw/1sppbNb+XqHPQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48n38vhrww-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Aug 2025 08:09:13 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57K89CuX005377;
+	Wed, 20 Aug 2025 08:09:12 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48n38vhrwp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Aug 2025 08:09:12 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57K4xm2t015619;
+	Wed, 20 Aug 2025 08:09:11 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 48my422cjr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Aug 2025 08:09:11 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57K899B961342160
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 20 Aug 2025 08:09:09 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A734720043;
+	Wed, 20 Aug 2025 08:09:09 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 407A620040;
+	Wed, 20 Aug 2025 08:09:08 +0000 (GMT)
+Received: from [9.111.5.117] (unknown [9.111.5.117])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 20 Aug 2025 08:09:08 +0000 (GMT)
+Message-ID: <295ae4dd-4734-42a0-be63-2d322f00c799@linux.ibm.com>
+Date: Wed, 20 Aug 2025 10:09:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,348 +69,208 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 14/20] cxl/region: Add devm_cxl_pmem_add_region() for
- pmem region creation
-To: Neeraj Kumar <s.neeraj@samsung.com>, linux-cxl@vger.kernel.org,
- nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org, gost.dev@samsung.com
-Cc: a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com
-References: <20250730121209.303202-1-s.neeraj@samsung.com>
- <CGME20250730121241epcas5p3e5708a89d764d1de9322fd759f921de0@epcas5p3.samsung.com>
- <20250730121209.303202-15-s.neeraj@samsung.com>
+Subject: Re: [PATCH 18/19] perf: Introduce positive capability for raw events
+To: Robin Murphy <robin.murphy@arm.com>, peterz@infradead.org,
+        mingo@redhat.com, will@kernel.org, mark.rutland@arm.com,
+        acme@kernel.org, namhyung@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+        linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
+        iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
+        linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+References: <cover.1755096883.git.robin.murphy@arm.com>
+ <542787fd188ea15ef41c53d557989c962ed44771.1755096883.git.robin.murphy@arm.com>
+ <67a0d778-6e2c-4955-a7ce-56a10043ae8d@arm.com>
 Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250730121209.303202-15-s.neeraj@samsung.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <67a0d778-6e2c-4955-a7ce-56a10043ae8d@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: rc1CmpHVUr4PjN6HeVNNaTAKVoWbVX32
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODE5MDIyMiBTYWx0ZWRfX4xTzLYCTQsxG
+ AGD1we0J4ezItB0ejTfm7DJNuDAARyH4VivdukTDV+G2c134zt0WbxSJSEE76uDxTym3DRzLeZX
+ mOf6bUkLRc8HI2z83HLeSrLnCDaUzt6ctsGigqq+Yny6dHl56O82/ysxGcmIZx9UyZO+hyMZvb/
+ ecuWa/hbBYOZ6yeacF65qy/00k1eAjO++Mj45cxXjqV85T1khiwKHAStutPkN05LIcWmzIOI2N6
+ JcZUW/XH3ZbwPgzY20enHnuM+rxpiC2AXWamVYRgBgnxytZoHYJTbh5BurqPVICmyND/IQHxcAh
+ w3J7un0oPnbnMNdQ3B2TA6VUHKYY82ln4UWEvFzI/Jn0XaQRTQr//JuEseTSCgQIqbo5FGoTW85
+ ypKOH5UDXA9ip20lItNjpe1wLNO1nQ==
+X-Proofpoint-GUID: GZ2wu60A03msHy_JXXsuf0f5WSTi9QT-
+X-Authority-Analysis: v=2.4 cv=KPwDzFFo c=1 sm=1 tr=0 ts=68a582a9 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=7CQSdrXTAAAA:8 a=gUTjnckvcJroK4elFEgA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=a-qgeE7W1pNrGK8U0ZQC:22
+ a=DXsff8QfwkrTrK3sU8N1:22 a=Z5ABNNGmrOfJ6cZ5bIyy:22 a=bWyr8ysk75zN3GCy5bjg:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-20_03,2025-08-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 spamscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
+ bulkscore=0 priorityscore=1501 suspectscore=0 phishscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2508110000 definitions=main-2508190222
 
-
-
-On 7/30/25 5:12 AM, Neeraj Kumar wrote:
-> devm_cxl_pmem_add_region() is used to create cxl region based on region
-> information scanned from LSA.
+On 8/19/25 15:15, Robin Murphy wrote:
+> On 13/08/2025 6:01 pm, Robin Murphy wrote:
+>> Only a handful of CPU PMUs accept PERF_TYPE_{RAW,HARDWARE,HW_CACHE}
+>> events without registering themselves as PERF_TYPE_RAW in the first
+>> place. Add an explicit opt-in for these special cases, so that we can
+>> make life easier for every other driver (and probably also speed up the
+>> slow-path search) by having perf_try_init_event() do the basic type
+>> checking to cover the majority of cases.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>> ---
+>>
+>> A further possibility is to automatically add the cap to PERF_TYPE_RAW
+>> PMUs in perf_pmu_register() to have a single point-of-use condition; I'm
+>> undecided...
+>> ---
+>>   arch/s390/kernel/perf_cpum_cf.c    |  1 +
+>>   arch/s390/kernel/perf_pai_crypto.c |  2 +-
+>>   arch/s390/kernel/perf_pai_ext.c    |  2 +-
+>>   arch/x86/events/core.c             |  2 +-
+>>   drivers/perf/arm_pmu.c             |  1 +
+>>   include/linux/perf_event.h         |  1 +
+>>   kernel/events/core.c               | 15 +++++++++++++++
+>>   7 files changed, 21 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/s390/kernel/perf_cpum_cf.c b/arch/s390/kernel/perf_cpum_cf.c
+>> index 1a94e0944bc5..782ab755ddd4 100644
+>> --- a/arch/s390/kernel/perf_cpum_cf.c
+>> +++ b/arch/s390/kernel/perf_cpum_cf.c
+>> @@ -1054,6 +1054,7 @@ static void cpumf_pmu_del(struct perf_event *event, int flags)
+>>   /* Performance monitoring unit for s390x */
+>>   static struct pmu cpumf_pmu = {
+>>       .task_ctx_nr  = perf_sw_context,
+>> +    .capabilities = PERF_PMU_CAP_RAW_EVENTS,
+>>       .pmu_enable   = cpumf_pmu_enable,
+>>       .pmu_disable  = cpumf_pmu_disable,
+>>       .event_init   = cpumf_pmu_event_init,
+>> diff --git a/arch/s390/kernel/perf_pai_crypto.c b/arch/s390/kernel/perf_pai_crypto.c
+>> index a64b6b056a21..b5b6d8b5d943 100644
+>> --- a/arch/s390/kernel/perf_pai_crypto.c
+>> +++ b/arch/s390/kernel/perf_pai_crypto.c
+>> @@ -569,7 +569,7 @@ static const struct attribute_group *paicrypt_attr_groups[] = {
+>>   /* Performance monitoring unit for mapped counters */
+>>   static struct pmu paicrypt = {
+>>       .task_ctx_nr  = perf_hw_context,
+>> -    .capabilities = PERF_PMU_CAP_SAMPLING,
+>> +    .capabilities = PERF_PMU_CAP_SAMPLING | PERF_PMU_CAP_RAW_EVENTS,
+>>       .event_init   = paicrypt_event_init,
+>>       .add          = paicrypt_add,
+>>       .del          = paicrypt_del,
+>> diff --git a/arch/s390/kernel/perf_pai_ext.c b/arch/s390/kernel/perf_pai_ext.c
+>> index 1261f80c6d52..bcd28c38da70 100644
+>> --- a/arch/s390/kernel/perf_pai_ext.c
+>> +++ b/arch/s390/kernel/perf_pai_ext.c
+>> @@ -595,7 +595,7 @@ static const struct attribute_group *paiext_attr_groups[] = {
+>>   /* Performance monitoring unit for mapped counters */
+>>   static struct pmu paiext = {
+>>       .task_ctx_nr  = perf_hw_context,
+>> -    .capabilities = PERF_PMU_CAP_SAMPLING,
+>> +    .capabilities = PERF_PMU_CAP_SAMPLING | PERF_PMU_CAP_RAW_EVENTS,
+>>       .event_init   = paiext_event_init,
+>>       .add          = paiext_add,
+>>       .del          = paiext_del,
+>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+>> index 789dfca2fa67..764728bb80ae 100644
+>> --- a/arch/x86/events/core.c
+>> +++ b/arch/x86/events/core.c
+>> @@ -2697,7 +2697,7 @@ static bool x86_pmu_filter(struct pmu *pmu, int cpu)
+>>   }
+>>     static struct pmu pmu = {
+>> -    .capabilities        = PERF_PMU_CAP_SAMPLING,
+>> +    .capabilities        = PERF_PMU_CAP_SAMPLING | PERF_PMU_CAP_RAW_EVENTS,
+>>         .pmu_enable        = x86_pmu_enable,
+>>       .pmu_disable        = x86_pmu_disable,
+>> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+>> index 72d8f38d0aa5..bc772a3bf411 100644
+>> --- a/drivers/perf/arm_pmu.c
+>> +++ b/drivers/perf/arm_pmu.c
+>> @@ -877,6 +877,7 @@ struct arm_pmu *armpmu_alloc(void)
+>>            * specific PMU.
+>>            */
+>>           .capabilities    = PERF_PMU_CAP_SAMPLING |
+>> +                  PERF_PMU_CAP_RAW_EVENTS |
+>>                     PERF_PMU_CAP_EXTENDED_REGS |
+>>                     PERF_PMU_CAP_EXTENDED_HW_TYPE,
+>>       };
+>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>> index 183b7c48b329..c6ad036c0037 100644
+>> --- a/include/linux/perf_event.h
+>> +++ b/include/linux/perf_event.h
+>> @@ -305,6 +305,7 @@ struct perf_event_pmu_context;
+>>   #define PERF_PMU_CAP_EXTENDED_HW_TYPE    0x0100
+>>   #define PERF_PMU_CAP_AUX_PAUSE        0x0200
+>>   #define PERF_PMU_CAP_AUX_PREFER_LARGE    0x0400
+>> +#define PERF_PMU_CAP_RAW_EVENTS        0x0800
+>>     /**
+>>    * pmu::scope
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 71b2a6730705..2ecee76d2ae2 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -12556,11 +12556,26 @@ static inline bool has_extended_regs(struct perf_event *event)
+>>              (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK);
+>>   }
+>>   +static bool is_raw_pmu(const struct pmu *pmu)
+>> +{
+>> +    return pmu->type == PERF_TYPE_RAW ||
+>> +           pmu->capabilities & PERF_PMU_CAP_RAW_EVENTS;
+>> +}
+>> +
+>>   static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
+>>   {
+>>       struct perf_event_context *ctx = NULL;
+>>       int ret;
+>>   +    /*
+>> +     * Before touching anything, we can safely skip:
+>> +     * - any event for a specific PMU which is not this one
+>> +     * - any common event if this PMU doesn't support them
+>> +     */
+>> +    if (event->attr.type != pmu->type &&
+>> +        (event->attr.type >= PERF_TYPE_MAX || is_raw_pmu(pmu)))
 > 
-> devm_cxl_add_region() is used to just allocate cxlr and its fields are
-> filled later by userspace tool using device attributes (*_store()).
+> Ah, that should be "!is_raw_pmu(pmu)" there (although it's not entirely the cause of the LKP report on the final patch.)
 > 
-> Inspiration for devm_cxl_pmem_add_region() is taken from these device
-> attributes (_store*) calls. It allocates cxlr and fills information
-> parsed from LSA and calls device_add(&cxlr->dev) to initiate further
-> region creation porbes
+> Thanks,
+> Robin.
 > 
-> Renamed __create_region() to cxl_create_region() and make it an exported
-> routine. This will be used in later patch to create cxl region after
-> fetching region information from LSA.
+>> +        return -ENOENT;
+>> +
+>>       if (!try_module_get(pmu->module))
+>>           return -ENODEV;
+>>   
 > 
-> Also created some helper routines and refactored dpa_size_store(),
-> commit_store() to avoid duplicate code usage in devm_cxl_pmem_add_region()
-
-"Some helper routines are created to...."
-
-I would drop the "Also"
-
-
 > 
-> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
-> ---
->  drivers/cxl/core/core.h   |   1 +
->  drivers/cxl/core/port.c   |  29 ++++++----
->  drivers/cxl/core/region.c | 118 +++++++++++++++++++++++++++++++++-----
->  drivers/cxl/cxl.h         |  12 ++++
->  4 files changed, 134 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 2669f251d677..80c83e0117c6 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -94,6 +94,7 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
->  resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled);
->  resource_size_t cxl_dpa_resource_start(struct cxl_endpoint_decoder *cxled);
->  bool cxl_resource_contains_addr(const struct resource *res, const resource_size_t addr);
-> +ssize_t resize_or_free_dpa(struct cxl_endpoint_decoder *cxled, u64 size);
->  
->  enum cxl_rcrb {
->  	CXL_RCRB_DOWNSTREAM,
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 29197376b18e..ba743e31f721 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -243,16 +243,9 @@ static ssize_t dpa_size_show(struct device *dev, struct device_attribute *attr,
->  	return sysfs_emit(buf, "%pa\n", &size);
->  }
->  
-> -static ssize_t dpa_size_store(struct device *dev, struct device_attribute *attr,
-> -			      const char *buf, size_t len)
-> +ssize_t resize_or_free_dpa(struct cxl_endpoint_decoder *cxled, u64 size)
 
-Maybe it should be called cxl_realloc_dpa()? More comments later on...
- 
->  {
-> -	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
-> -	unsigned long long size;
-> -	ssize_t rc;
-> -
-> -	rc = kstrtoull(buf, 0, &size);
-> -	if (rc)
-> -		return rc;
-> +	int rc;
->  
->  	if (!IS_ALIGNED(size, SZ_256M))
->  		return -EINVAL;
-> @@ -262,9 +255,23 @@ static ssize_t dpa_size_store(struct device *dev, struct device_attribute *attr,
->  		return rc;
->  
->  	if (size == 0)
-> -		return len;
-> +		return 0;
-> +
-> +	return cxl_dpa_alloc(cxled, size);
-> +}
-> +
-> +static ssize_t dpa_size_store(struct device *dev, struct device_attribute *attr,
-> +			      const char *buf, size_t len)
-> +{
-> +	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
-> +	unsigned long long size;
-> +	ssize_t rc;
-> +
-> +	rc = kstrtoull(buf, 0, &size);
-> +	if (rc)
-> +		return rc;
->  
-> -	rc = cxl_dpa_alloc(cxled, size);
-> +	rc = resize_or_free_dpa(cxled, size);
->  	if (rc)
->  		return rc;
->  
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index eef501f3384c..8578e046aa78 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -703,6 +703,23 @@ static int free_hpa(struct cxl_region *cxlr)
->  	return 0;
->  }
->  
-> +static ssize_t resize_or_free_region_hpa(struct cxl_region *cxlr, u64 size)
-> +{
-> +	int rc;
-> +
-> +	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-> +	rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (size)
-> +		rc = alloc_hpa(cxlr, size);
-> +	else
-> +		rc = free_hpa(cxlr);
-> +
-> +	return rc;
-> +}
+Hi Robin,
 
-I think it's better to have 2 helper functions rather a single ambiguous one here. alloc_region_hpa() and free_region_hpa(). More on why later.
+what is the intention of that patch?
+Can you explain that a bit more.
 
-> +
->  static ssize_t size_store(struct device *dev, struct device_attribute *attr,
->  			  const char *buf, size_t len)
->  {
-> @@ -714,15 +731,7 @@ static ssize_t size_store(struct device *dev, struct device_attribute *attr,
->  	if (rc)
->  		return rc;
->  
-> -	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-> -	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
-> -		return rc;
-> -
-> -	if (val)
-> -		rc = alloc_hpa(cxlr, val);
-> -	else
-> -		rc = free_hpa(cxlr);
-> -
-> +	rc = resize_or_free_region_hpa(cxlr, val);
->  	if (rc)
->  		return rc;
->  
-> @@ -2569,6 +2578,76 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
->  	return ERR_PTR(rc);
->  }
->  
-> +static struct cxl_region *
-> +devm_cxl_pmem_add_region(struct cxl_root_decoder *cxlrd,
-> +			 int id,
-> +			 enum cxl_partition_mode mode,
-> +			 enum cxl_decoder_type type,
-> +			 struct cxl_pmem_region_params *params,
-> +			 struct cxl_decoder *cxld)
-> +{
-> +	struct cxl_port *root_port;
-> +	struct cxl_region *cxlr;
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct cxl_region_params *p;
-> +	struct device *dev;
-> +	int rc;
-> +
-> +	cxlr = cxl_region_alloc(cxlrd, id);
-I think you can use __free() here to drop all the gotos.
+Thanks.
 
-struct cxl_region *cxlr __free(put_cxl_region) = cxl_region_alloc(cxlrd, id);
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
 
-Just make sure to 'return no_free_ptr(cxlr)' at the successful end.
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
 
+Geschäftsführung: David Faller
 
-> +	if (IS_ERR(cxlr))
-> +		return cxlr;
-> +	cxlr->mode = mode;
-> +	cxlr->type = type;
-> +
-> +	dev = &cxlr->dev;
-> +	rc = dev_set_name(dev, "region%d", id);
-> +	if (rc)
-> +		goto err;
-> +
-> +	p = &cxlr->params;
-> +	p->uuid = params->uuid;
-> +	p->interleave_ways = params->nlabel;
-> +	p->interleave_granularity = params->ig;
-> +
-> +	if (resize_or_free_region_hpa(cxlr, params->rawsize))
-> +		goto err;
-
-Given this is _add_region(), it really should only be calling alloc_region_hpa() and not have to deal with free. Maybe a check before this and make sure params->rawsize is not 0 is needed.
-
-> +
-> +	cxled = to_cxl_endpoint_decoder(&cxld->dev);
-> +	if (resize_or_free_dpa(cxled, 0))
-Given that resize_or_free_dpa() always frees, is this call necessary here? 
-
-> +		goto err;
-> +
-> +	if (cxl_dpa_set_part(cxled, CXL_PARTMODE_PMEM))
-> +		goto err;
-> +
-> +	if (resize_or_free_dpa(cxled, params->rawsize))
-
-Seems like it can be called once here instead and it'll just free and then re-allocate whatever size in params->rawsize.
-
-> +		goto err;
-> +
-> +	/* Attaching only one target due to interleave_way == 1 */
-Is it missing a check of interleave_ways here? Also maybe additional comments on why support iw==1 only?
-
-> +	if (attach_target(cxlr, cxled, params->position, TASK_INTERRUPTIBLE))
-> +		goto err;
-> +
-> +	if (__commit(cxlr))
-> +		goto err;
-> +
-> +	rc = device_add(dev);
-> +	if (rc)
-> +		goto err;
-> +
-> +	root_port = to_cxl_port(cxlrd->cxlsd.cxld.dev.parent);
-> +	rc = devm_add_action_or_reset(root_port->uport_dev,
-> +			unregister_region, cxlr);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	dev_dbg(root_port->uport_dev, "%s: created %s\n",
-> +		dev_name(&cxlrd->cxlsd.cxld.dev), dev_name(dev));
-> +	return cxlr;
-> +
-> +err:
-> +	put_device(dev);
-> +	return ERR_PTR(rc);
-> +}
-> +
->  static ssize_t __create_region_show(struct cxl_root_decoder *cxlrd, char *buf)
->  {
->  	return sysfs_emit(buf, "region%u\n", atomic_read(&cxlrd->region_id));
-> @@ -2586,8 +2665,10 @@ static ssize_t create_ram_region_show(struct device *dev,
->  	return __create_region_show(to_cxl_root_decoder(dev), buf);
->  }
->  
-> -static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
-> -					  enum cxl_partition_mode mode, int id)
-> +struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
-> +				     enum cxl_partition_mode mode, int id,
-> +				     struct cxl_pmem_region_params *params,
-
-Maybe name it pmem_params to avoid confusion with cxl region params.
-
-> +				     struct cxl_decoder *cxld)
->  {
->  	int rc;
->  
-> @@ -2609,8 +2690,14 @@ static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
->  		return ERR_PTR(-EBUSY);
->  	}
->  
-> -	return devm_cxl_add_region(cxlrd, id, mode, CXL_DECODER_HOSTONLYMEM);
-> +	if (params)
-> +		return devm_cxl_pmem_add_region(cxlrd, id, mode,
-> +				CXL_DECODER_HOSTONLYMEM, params, cxld);
-> +	else
-
-'else' not needed here. Just directly return.
-
-> +		return devm_cxl_add_region(cxlrd, id, mode,
-> +				CXL_DECODER_HOSTONLYMEM);
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_create_region, "CXL");
->  
->  static ssize_t create_region_store(struct device *dev, const char *buf,
->  				   size_t len, enum cxl_partition_mode mode)
-> @@ -2623,7 +2710,7 @@ static ssize_t create_region_store(struct device *dev, const char *buf,
->  	if (rc != 1)
->  		return -EINVAL;
->  
-> -	cxlr = __create_region(cxlrd, mode, id);
-> +	cxlr = cxl_create_region(cxlrd, mode, id, NULL, NULL);
->  	if (IS_ERR(cxlr))
->  		return PTR_ERR(cxlr);
->  
-> @@ -3414,8 +3501,9 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  	struct cxl_region *cxlr;
->  
->  	do {
-> -		cxlr = __create_region(cxlrd, cxlds->part[part].mode,
-> -				       atomic_read(&cxlrd->region_id));
-> +		cxlr = cxl_create_region(cxlrd, cxlds->part[part].mode,
-> +					 atomic_read(&cxlrd->region_id),
-> +					 NULL, NULL);
->  	} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
->  
->  	if (IS_ERR(cxlr)) {
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 6edcec95e9ba..129db2e49aa7 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -865,6 +865,10 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled);
->  struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
->  u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa);
->  void cxl_region_discovery(struct cxl_port *port);
-> +struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
-> +				     enum cxl_partition_mode mode, int id,
-> +				     struct cxl_pmem_region_params *params,
-> +				     struct cxl_decoder *cxld);
->  #else
->  static inline bool is_cxl_pmem_region(struct device *dev)
->  {
-> @@ -890,6 +894,14 @@ static inline u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint,
->  static inline void cxl_region_discovery(struct cxl_port *port)
->  {
->  }
-> +static inline struct cxl_region *
-> +cxl_create_region(struct cxl_root_decoder *cxlrd,
-> +		  enum cxl_partition_mode mode, int id,
-> +		  struct cxl_pmem_region_params *params,
-> +		  struct cxl_decoder *cxld)
-> +{
-> +	return NULL;
-
-return ERR_PTR(-EOPNOTSUPP);
-
-> +}
->  #endif
->  
->  void cxl_endpoint_parse_cdat(struct cxl_port *port);
-
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
