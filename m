@@ -1,262 +1,179 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6772797AF
-	for <linux-cxl@vger.kernel.org>; Wed, 20 Aug 2025 08:55:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FDD3264624;
+	Wed, 20 Aug 2025 10:29:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755680145; cv=none; b=UZFOJi8Q231QWPwS70tee3dZ7MP17eLqTDIFMK1xvWjNl4V8LY59HA4qI6vg2lTFPsrYU0fbxqdGA2dyRnhwT6dmGXIMY/SRLQ/c4NB4ynel+JN9G0JZ7sol0OqZXph0Mdr659RRWw4IS7lFmNzk5tR/FaEifhcIUrrW6aSZg3E=
+	t=1755685796; cv=none; b=nANr/sY/k76aYKPYwTIp03ioDYWmlCswzt8PJQe8dALzYHA2Ge9KadCwUbEvhuLXneCSHDfTbmMXd89/VKYeQ3EcUestv+o+HMqh+8pI7WS8qz/6Tle43xgvkKRmEUh5cjRjAtBtONa6mDNYd0dFZRM84odGvObHeMiSuKTXS3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755680145; c=relaxed/simple;
-	bh=c82gNOJJ/2r5pJVQAh3Akhg1A67xs/yZJKNChzLcsrs=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cTF830AqYXIgi23fQq4er9DJhhraF7LY0kwGE/80IlbW4YETyzPcqJ8YD/UixPUyA2urKg7qKG8WRBPwxz9wcEihLOFoEHntjOo/1tUVPpk+riOExJcyWqZHOSxriPLykHZeeuFFA5cqZIXG46sfg03y0Wu1IN6LUwIz+ZQuVwk=
+	s=arc-20240116; t=1755685796; c=relaxed/simple;
+	bh=qH4IBUz0cBSRbL6T2wLAPPu5nrICSVB34pQP+fsrzUU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=noDwYr2NDM2DWiVQEMxjHgYxXdySo6D5eEERwGWNZlHyKOhdwkC98ZA4LwYyukftHROiqNBEMp2ZpdScd2+5BEUdHrxWI5YyImR8TwLK6xIGXqp6u85R4dt9EqhnkSaXQp1agvuIJWojBBE1UW7DoQ7UmYAF5AnjMi2z1v3knQo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4c6KzL5v0Xz6GD5p;
-	Wed, 20 Aug 2025 16:55:26 +0800 (CST)
-Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
-	by mail.maildlp.com (Postfix) with ESMTPS id 89AA51402FF;
-	Wed, 20 Aug 2025 16:55:39 +0800 (CST)
-Received: from localhost (10.203.177.99) by frapeml500003.china.huawei.com
- (7.182.85.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 20 Aug
- 2025 10:55:37 +0200
-Date: Wed, 20 Aug 2025 09:55:34 +0100
-From: Alireza Sanaee <alireza.sanaee@huawei.com>
-To: Ben Cheatham <Benjamin.Cheatham@amd.com>
-CC: <linux-cxl@vger.kernel.org>
-Subject: Re: [RFC PATCH 15/18] cxl/cache: Implement Cache ID Decoder
- programming
-Message-ID: <20250820095534.00001f2f.alireza.sanaee@huawei.com>
-In-Reply-To: <20250819144445.00000b1b.alireza.sanaee@huawei.com>
-References: <20250812212921.9548-1-Benjamin.Cheatham@amd.com>
-	<20250812212921.9548-16-Benjamin.Cheatham@amd.com>
-	<20250819144445.00000b1b.alireza.sanaee@huawei.com>
-Organization: Huawei
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4c6N0n0mSFz6L5l4;
+	Wed, 20 Aug 2025 18:26:49 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 05FE5140119;
+	Wed, 20 Aug 2025 18:29:52 +0800 (CST)
+Received: from SecurePC-101-06.huawei.com (10.122.19.247) by
+ frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 20 Aug 2025 12:29:51 +0200
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Catalin Marinas <catalin.marinas@arm.com>, <james.morse@arm.com>,
+	<linux-cxl@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-mm@kvack.org>, Will Deacon <will@kernel.org>, Dan Williams
+	<dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, "H . Peter
+ Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
+CC: Yicong Yang <yangyicong@huawei.com>, <linuxarm@huawei.com>, Yushan Wang
+	<wangyushan12@huawei.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, <x86@kernel.org>, Andy Lutomirski
+	<luto@kernel.org>
+Subject: [PATCH v3 0/8] Cache coherency management subsystem
+Date: Wed, 20 Aug 2025 11:29:42 +0100
+Message-ID: <20250820102950.175065-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- frapeml500003.china.huawei.com (7.182.85.28)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 19 Aug 2025 14:44:45 +0100
-Alireza Sanaee <alireza.sanaee@huawei.com> wrote:
+Support system level interfaces for cache maintenance as found on some
+ARM64 systems. This is needed for correct functionality during various
+forms of memory hotplug (e.g. CXL). Typical hardware has MMIO interface
+found via ACPI DSDT.
 
-> On Tue, 12 Aug 2025 16:29:18 -0500
-> Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
-> 
-> > The CXL Cache ID Decoder capability is an optional capability
-> > present on CXL downstream switch and CXL-enabled PCIe Root ports.
-> > This capability is required for having multiple CXL.cache enabled
-> > devices under the same port (CXL 3.2 8.2.4.29).
-> > 
-> > Implement cache id decoder programming. Validate the configuration
-> > in the case BIOS already programmed the id(s).
-> > 
-> > Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
-> > ---
-> >  drivers/cxl/cache.c     |   4 ++
-> >  drivers/cxl/core/port.c | 109
-> > ++++++++++++++++++++++++++++++++++++++++ drivers/cxl/cxl.h       |
-> > 14 ++++++ drivers/cxl/cxlcache.h  |   3 ++
-> >  4 files changed, 130 insertions(+)
-> > 
-> > diff --git a/drivers/cxl/cache.c b/drivers/cxl/cache.c
-> > index f123d596187d..fa3223165a18 100644
-> > --- a/drivers/cxl/cache.c
-> > +++ b/drivers/cxl/cache.c
-> > @@ -163,6 +163,10 @@ static int
-> > devm_cxl_cachedev_allocate_cache_id(struct cxl_cachedev *cxlcd) rc =
-> > map_cache_idd_cap(dport); if (rc)
-> >  			return rc;
-> > +
-> > +		rc = cxl_dport_program_cache_idd(dport, cxlcd);
-> > +		if (rc)
-> > +			return rc;
-> >  	}
-> >  
-> >  	return 0;
-> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> > index f491796f6e60..3606ad557bfb 100644
-> > --- a/drivers/cxl/core/port.c
-> > +++ b/drivers/cxl/core/port.c
-> > @@ -1080,6 +1080,115 @@ int devm_cxl_port_program_cache_idrt(struct
-> > cxl_port *port, }
-> >  EXPORT_SYMBOL_NS_GPL(devm_cxl_port_program_cache_idrt, "CXL");
-> >  
-> > +static int cxl_dport_commit_idd(struct cxl_dport *dport)
-> > +{
-> > +	unsigned long timeout, start, end;
-> > +	u32 cap, ctrl, status;
-> > +	int i;
-> > +
-> > +	cap = readl(dport->regs.cidd + CXL_CACHE_IDD_CAP_OFFSET);
-> > +	if (!(cap & CXL_CACHE_IDD_CAP_COMMIT))
-> > +		return 0;
-> > +
-> > +	ctrl = readl(dport->regs.cidd + CXL_CACHE_IDD_CTRL_OFFSET);
-> > +	if (ctrl & CXL_CACHE_IDD_CTRL_COMMIT) {
-> > +		ctrl &= ~CXL_CACHE_IDD_CTRL_COMMIT;
-> > +		writel(ctrl, dport->regs.cidd +
-> > CXL_CACHE_IDD_CTRL_OFFSET);
-> > +	}
-> > +
-> > +	ctrl |= CXL_CACHE_IDD_CTRL_COMMIT;
-> > +	writel(ctrl, dport->regs.cidd + CXL_CACHE_IDD_CTRL_OFFSET);
-> > +
-> > +	status = readl(dport->regs.cidd +
-> > CXL_CACHE_IDD_STAT_OFFSET); +
-> > +	i = FIELD_GET(CXL_CACHE_IDD_STAT_TIMEOUT_SCALE_MASK,
-> > status);
-> > +	timeout = 1 * HZ;
-> > +	while (i-- > 3)
-> > +		timeout *= 10;
-> > +
-> > +	timeout *= FIELD_GET(CXL_CACHE_IDD_STAT_TIMEOUT_BASE_MASK,
-> > status);
-> > +	start = jiffies;
-> > +	do {
-> > +		status = readl(dport->regs.cidd +
-> > CXL_CACHE_IDD_STAT_OFFSET);
-> > +		if (status & CXL_CACHE_IDD_STAT_ERR_COMMIT)
-> > +			return -EBUSY;
-> > +
-> > +		if (status & CXL_CACHE_IDD_STAT_COMMITTED)
-> > +			return 0;
-> > +
-> > +		end = jiffies;
-> > +	} while (time_before(end, start + timeout));
-> > +
-> > +	return -ETIMEDOUT;
-> > +}
-> > +
-> > +static int cxl_cache_idd_alread_programmed(struct cxl_dport *dport,
-> > +					   struct cxl_cachedev
-> > *cxlcd) +{
-> > +	struct cxl_cache_state *cstate = &cxlcd->cxlds->cstate;
-> > +	u32 ctrl, status, cache_id;
-> > +
-> > +	status = readl(dport->regs.cidd +
-> > CXL_CACHE_IDD_STAT_OFFSET);
-> > +	if (!(status & CXL_CACHE_IDD_STAT_COMMITTED))
-> > +		return 0;
-> > +
-> > +	/*
-> > +	 * The decoder is probably already committed by BIOS,
-> > validate
-> > +	 * the configuration
-> > +	 */
-> > +	ctrl = readl(dport->regs.cidd + CXL_CACHE_IDD_CTRL_OFFSET);
-> > +	/* TODO: Check for 68B flit mode */
-> > +	if (dport == cxlcd->endpoint->parent_dport &&
-> > +	    !(ctrl & CXL_CACHE_IDD_CTRL_ASGN_ID))
-> > +		return -EINVAL;
-> > +
-> > +	if (dport != cxlcd->endpoint->parent_dport &&
-> > +	    !(ctrl & CXL_CACHE_IDD_CTRL_FWD_ID))
-> > +		return -EINVAL;
-> > +
-> > +	cache_id = FIELD_GET(CXL_CACHE_IDD_CTRL_LOCAL_ID_MASK,
-> > ctrl);
-> > +	if (cache_id != cstate->cache_id)
-> > +		return -EINVAL;
-> > +
-> > +	if (!!(ctrl & CXL_CACHE_IDD_CTRL_TYPE2) != cstate->hdmd)
-> > +		return -EINVAL;
-> > +
-> > +	return 1;
-> > +}
-> > +
-> > +int cxl_dport_program_cache_idd(struct cxl_dport *dport,
-> > +				struct cxl_cachedev *cxlcd)
-> > +{
-> > +	u32 ctrl;
-> > +	int rc;
-> > +
-> > +	rc = cxl_cache_idd_alread_programmed(dport, cxlcd);
-> > +	if (rc)
-> > +		return rc < 0 ? rc : 0;
-> > +
-> > +	ctrl = readl(dport->regs.cidd + CXL_CACHE_IDD_CTRL_OFFSET);
-> > +
-> > +	if (cxlcd->cxlds->cstate.hdmd) {
-> > +		ctrl |= CXL_CACHE_IDD_CTRL_TYPE2;
-> > +		ctrl &= ~CXL_CACHE_IDD_CTRL_TYPE2_ID_MASK;
-> > +		ctrl |=
-> > FIELD_PREP(CXL_CACHE_IDD_CTRL_TYPE2_ID_MASK, cxlcd->id);
-> > +	}
-> > +
-> > +	/* TODO: Check for 68B flit mode */
-> > +	if (dport == cxlcd->endpoint->parent_dport)
-> > +		ctrl |= CXL_CACHE_IDD_CTRL_ASGN_ID;
-> > +	else
-> > +		ctrl |= CXL_CACHE_IDD_CTRL_FWD_ID;
-> > +
-> > +	ctrl &= ~CXL_CACHE_IDD_CTRL_LOCAL_ID_MASK;
-> > +	ctrl |= FIELD_PREP(CXL_CACHE_IDD_CTRL_LOCAL_ID_MASK,
-> > +			   cxlcd->cxlds->cstate.cache_id);
-> > +
-> > +	writel(ctrl, dport->regs.cidd + CXL_CACHE_IDD_CTRL_OFFSET);
-> > +	return cxl_dport_commit_idd(dport);
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(cxl_dport_program_cache_idd, "CXL");
-> > +
-> >  DEFINE_SHOW_ATTRIBUTE(einj_cxl_available_error_type);
-> >  
-> >  static int cxl_einj_inject(void *data, u64 type)
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index 04fde1a994d0..9c475d8c1573 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -178,6 +178,20 @@ static inline int ways_to_eiw(unsigned int
-> > ways, u8 *eiw) #define   CXL_CACHE_IDRT_TARGETN_PORT_MASK
-> > GENMASK(15, 8) 
-> >  /* CXL 3.2 8.2.4.29 CXL Cache ID Decoder Capability Structure */
-> > +#define CXL_CACHE_IDD_CAP_OFFSET 0x0
-> > +#define   CXL_CACHE_IDD_CAP_COMMIT BIT(0)
-> > +#define CXL_CACHE_IDD_CTRL_OFFSET 0x4
-> > +#define   CXL_CACHE_IDD_CTRL_FWD_ID BIT(0)
-> > +#define   CXL_CACHE_IDD_CTRL_ASGN_ID BIT(1)
-> > +#define   CXL_CACHE_IDD_CTRL_TYPE2 BIT(2)
-> > +#define   CXL_CACHE_IDD_CTRL_COMMIT BIT(3)
-> > +#define   CXL_CACHE_IDD_CTRL_TYPE2_ID_MASK GENMASK(11, 8)
-> > +#define   CXL_CACHE_IDD_CTRL_LOCAL_ID_MASK GENMASK(19, 16)
-> > +#define CXL_CACHE_IDD_STAT_OFFSET 0x8
-> > +#define   CXL_CACHE_IDD_STAT_COMMITTED BIT(0)
-> > +#define   CXL_CACHE_IDD_STAT_ERR_COMMIT BIT(1)
-> > +#define   CXL_CACHE_IDD_STAT_TIMEOUT_SCALE_MASK GENMASK(11, 8)
-> > +#define   CXL_CACHE_IDD_STAT_TIMEOUT_BASE_MASK GENMASK(15, 12)
-> >  #define CXL_CACHE_IDD_CAPABILITY_LENGTH 0xC  
-> 
-> Hi Ben,
-> 
-> This looks like some styling issues.
+Includes parameter changes to cpu_cache_invalidate_memregion() but no
+functional changes for architectures that already support this call.
 
-Hi Ben,
+v3:
+  - Squash the layers by moving all the management code into
+    lib/cache_maint.c that architectures can opt into via
+    GENERIC_CPU_CACHE_MAINTENANCE (Dan).  I added entries to Conor's
+    drivers/cache MAINTAINERS entry to include this lib/ code but if
+    preferred I can add a separate entry for it.
+  - Add a new patch 1 that drops the old IODESC_RES_ parameter as it never
+    did anything other than document intent.  With the addition of a
+    flushing range, we would have to check the range and resource type
+    matched. Simpler to just drop the parameter. (Dan)
+  - Minor fixes and renames as per reviews.
+  - Even if all else looks good, I fully expect some discussion of the
+    naming as I'm not particularly happy with it.
+  - Open question on whether is acceptable for the answer to whether
+    cpu_cache_invalidate_memregion() is supported to change as drivers
+    register (potentially after initial boot).  Could design a firmware
+    table solution to this, but will take a while - not sure if it is
+    necessary.
+  - Switch to a fwctl style allocation function that makes the container
+    nature of the allocation explicit.
 
-Sorry I misread this.
-> >  
-> >  /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
-> > diff --git a/drivers/cxl/cxlcache.h b/drivers/cxl/cxlcache.h
-> > index d28222123102..60563b391844 100644
-> > --- a/drivers/cxl/cxlcache.h
-> > +++ b/drivers/cxl/cxlcache.h
-> > @@ -32,4 +32,7 @@ int devm_cxl_snoop_filter_alloc(u32 gid, struct
-> > cxl_dev_state *cxlds); int devm_cxl_port_program_cache_idrt(struct
-> > cxl_port *port, struct cxl_dport *dport,
-> >  				     struct cxl_cachedev *cxlcd);
-> > +int cxl_dport_program_cache_idd(struct cxl_dport *dport,
-> > +				struct cxl_cachedev *cxlcd);
-> > +
-> >  #endif  
-> 
+On current ARM64 systems (and likely other architectures) the
+implementation of cache flushing need for actions such as CXL memory
+hotplug e.g. cpu_cache_invalidate_memregion(), is performed by system
+components outside of the CPU, controlled via either firmware or MMIO
+interfaces.
+
+These control units run the necessary coherency protocol operations to
+cause the write backs and cache flushes to occur asynchronously. The allow
+filtering by PA range to reduce disruption to the system. Systems
+supporting this interface must be designed to ensure that, when complete,
+all cache lines in the range are in invalid state or clean state
+(prefetches may have raced with the invalidation). This must include
+memory-side caches and other non architectural caches beyond the Point
+of Coherence (ARM terminology) such that writes will reach memory even
+after OS programmable address decoders are modified (for CXL this is
+any HDM decoders that aren't locked). Software will guarantee that no
+writes to these memory ranges race with this operation. Whilst this is
+subtly different from write backs must reach the physical memory that
+difference probably doesn't matter to those reading this series.
+
+The possible distributed nature of the relevant coherency management
+units (e.g. due to interleaving) requires the appropriate commands to be
+issued to multiple (potentially heterogeneous) units. To enable this a
+registration framework is provided to which drivers may register a set
+of callbacks. Upon a request for a cache maintenance operation the
+framework iterates over all registered callback sets, calling first a
+command to write back and invalidate, and then optionally a command to wait
+for completion. Filtering on relevance is left to the individual drivers.
+
+Two drivers are included. This HiSilicon Hydra Home Agent driver which
+controls hardware found on some of our relevant server SoCs and,
+mostly to show that the approach is general, a driver based on a firmware
+interface that was in a public PSCI specification alpha version
+(now dropped - don't merge that!)
+
+QEMU emulation code at
+http://gitlab.com/jic23/qemu cxl-2025-03-20 
+
+Remaining opens:
+- Naming.  All suggestions welcome!
+- I don't particularly like defining 'generic' infrastructure with so few
+  implementations. If anyone can point me at docs for another one or two,
+  or confirm that they think this is fine that would be great!
+- I made up the ACPI spec - it's not documented, non official and honestly
+  needs work. I would however like to get feedback on whether it is
+  something we want to try and get through the ACPI Working group as a much
+  improved code first proposal?  The potential justification being to avoid
+  the need for lots trivial drivers where maybe a bit of DSDT interpreted
+  code does the job better. (Currently I'm not hearing much demand for this
+  so will probably drop in a future version).
+
+Thanks to all who engaged in the discussion so far.
+
+Jonathan
+
+Jonathan Cameron (5):
+  memregion: Drop unused IORES_DESC_* parameter from
+    cpu_cache_invalidate_memregion()
+  MAINTAINERS: Add Jonathan Cameron to drivers/cache
+  arm64: Select GENERIC_CPU_CACHE_MAINTENANCE and
+    ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+  acpi: PoC of Cache control via ACPI0019 and _DSM
+  Hack: Pretend we have PSCI 1.2
+
+Yicong Yang (2):
+  memregion: Support fine grained invalidate by
+    cpu_cache_invalidate_memregion()
+  lib: Support ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+
+Yushan Wang (1):
+  cache: Support cache maintenance for HiSilicon SoC Hydra Home Agent
+
+ MAINTAINERS                        |   3 +
+ arch/arm64/Kconfig                 |   2 +
+ arch/x86/mm/pat/set_memory.c       |   2 +-
+ drivers/cache/Kconfig              |  22 ++++
+ drivers/cache/Makefile             |   3 +
+ drivers/cache/acpi_cache_control.c | 153 +++++++++++++++++++++++
+ drivers/cache/hisi_soc_hha.c       | 187 +++++++++++++++++++++++++++++
+ drivers/cxl/core/region.c          |   5 +-
+ drivers/firmware/psci/psci.c       |   2 +
+ drivers/nvdimm/region.c            |   2 +-
+ drivers/nvdimm/region_devs.c       |   2 +-
+ include/linux/cache_coherency.h    |  57 +++++++++
+ include/linux/memregion.h          |  10 +-
+ lib/Kconfig                        |   3 +
+ lib/Makefile                       |   2 +
+ lib/cache_maint.c                  | 128 ++++++++++++++++++++
+ 16 files changed, 575 insertions(+), 8 deletions(-)
+ create mode 100644 drivers/cache/acpi_cache_control.c
+ create mode 100644 drivers/cache/hisi_soc_hha.c
+ create mode 100644 include/linux/cache_coherency.h
+ create mode 100644 lib/cache_maint.c
+
+-- 
+2.48.1
 
