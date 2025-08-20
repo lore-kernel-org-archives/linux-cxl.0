@@ -1,167 +1,218 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2067.outbound.protection.outlook.com [40.107.92.67])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2C418C031
-	for <linux-cxl@vger.kernel.org>; Wed, 20 Aug 2025 14:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755699486; cv=fail; b=Z8MiNeXZLcz6qt3h5rlQBWhZZeqsM1yvbQxtVtAUbi9VE9sjJgCjCu99OAmrktIAiJ1fZ31tk7o0DmwQB9nf7T6Grswaq2aMKus5ps/a/HDkfbPYLszpTuJ5XtgX7F1H+Er+UGQSW9NZtFdtzm+bssCLeTbQcTtyKg9KVOOK+NE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755699486; c=relaxed/simple;
-	bh=IIP5aAKURKQw9jou11utdHQbbodO8o956sk9X66D9d4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mcXcNcNubokIEExfiVp/1wjGCpZKt0YxS1JmZykZcVj0qdkDJS8QkzXKz5/q+AIIKQjRpwovBaAJowVjp2HdcF9pna6R4SZDBqfRtI2akuIoO0XT2Ui8uTeBdx+ML8iY+Qr/mxHgEpp1kr+WSjr5ZTFVoMhtZ5Vjg1CuuJ+XwmU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fpt+Z7z8; arc=fail smtp.client-ip=40.107.92.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7AD73218B3;
+	Wed, 20 Aug 2025 15:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755702439; cv=none; b=E4vhPHJGMKeAtu1RDTyOry99kuBhbDyhk7nLUCH7WLHs2qLkYiEPOw1frU6EmxC+wrXejzD16tyvHsUjojVZDP0/TWfu6v+HaSIk82gyRXQJNue1Cb34F0RjSY3hTwpg1PYE0wmGLB1Ykt+tq3CrWxCz4QWRDVTuRbmgyxhNhSQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755702439; c=relaxed/simple;
+	bh=bsvWlLsiwAXSsALmAJFw7fx/DntpOaz1JMs8wm09NR8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OvI5603jA2EeLajX751JF3/zNzM8YgBeqyQp8zUP46ob0NtgziccYKwxUnLoMN2OBaiBmVq2BBxKPEsXq9jV/rFuFBc88Um+HnrAThnTqwNA16UUy6w9M+B5L3vkG8YUaVliS2nfQfLPyNZSxlqkmXdTulKJZrndKnjSLwir+t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mwq5EPkA; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fpt+Z7z8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=B2Nq1aRE1bpOGgJXmnG+mN61PQoIABxga2p4CtwHfXYND6JlX+phfVZSnoYwOpg0QZUqJWXuUx0okwsFCYu1nDykZ2N+wZX8H0WRVrJYwqVqklNrjAA3XOCz0isePEO7GzsPn18VoO7eJ4jS0GtYrcEv25LyQX9YFzPIbw9MFphCmPCLdZUb2T6droA5LrjP0wHsiVO3GK8yoddMAhfbW5pwKwUT3qE/4vG/8LQb1PcIKT0BwybozM9G3i/zzjNwymHkzuuDq53LyFmCHvSGQPu16AyDuQL2bbiN89jBHoCtkVhXmU77kki0FMTTTj6uqnZimh3GR9YGgZ/PTMoG2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dtb2gkkvSm3Nsdf7fyNUHJnVxmdRGsWr5QghOQYqEdc=;
- b=nbK1ufiiB1+WEz+Bll9h6OA/QM7n7H0NBmVdf9hwzQ6MKIiWicCxyg2vGn7QZo0m/a888zgJNS8Aj1fqxdcqh+3pGOOPtbRuy5QaNZ1nI/q+lDkZ79+GEJdRNOi+60ibjwiNvR2uy5LX6r+i9VCJO/tzQFPuSRv6S8NNHVgBM2mvQ46MGyKYA8y9fQEofGyYZFX+rdKMalmZQ6tmGZAtrms3/hkJwePBUVD85RQEDF8VL/V7DqEGsmggNFsRS+zuw9osw3wKyILOZFu71k9OPv1iIaPPep3hcXphhuPokCKBjTFsqqDRtVnmvuB2u4T+XSnbLACLW3PuAiaz+JTZDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dtb2gkkvSm3Nsdf7fyNUHJnVxmdRGsWr5QghOQYqEdc=;
- b=fpt+Z7z8kb0nwRu/PUKN27opLQ3qkfN37YEO5kjEjzhADdIgRzIenq37Ye7JnMrdWLQjoglEH5g2WxvWnQB3MfxJt+TPU95lUYojv0p7my6lFqFaRqkC57l6bHdUibaT6UGyL4bhQgFEp+1KDeh5oFLhwkQXqVYZlL6Bojbx4wk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by CH3PR12MB8911.namprd12.prod.outlook.com (2603:10b6:610:169::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.25; Wed, 20 Aug
- 2025 14:18:02 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a%5]) with mapi id 15.20.9009.017; Wed, 20 Aug 2025
- 14:18:01 +0000
-Date: Wed, 20 Aug 2025 16:17:55 +0200
-From: Robert Richter <rrichter@amd.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Subject: Re: [PATCH v8 03/11] cxl: Add a cached copy of target_map to
- cxl_decoder
-Message-ID: <aKXZEyG1PpPQ25dC@rric.localdomain>
-References: <20250814222151.3520500-1-dave.jiang@intel.com>
- <20250814222151.3520500-4-dave.jiang@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250814222151.3520500-4-dave.jiang@intel.com>
-X-ClientProxiedBy: FR4P281CA0095.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:cb::6) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mwq5EPkA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755702438; x=1787238438;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=bsvWlLsiwAXSsALmAJFw7fx/DntpOaz1JMs8wm09NR8=;
+  b=Mwq5EPkAVM5gkI3yzMWtxZbSpjw1Kp0QGMT1t7OTB11RkbRwUEi01Uiy
+   p3ivJtCGr60W8UyiH3MyoImp86PFYsKcFo02JpygDCUdiRZRXJYwqqWLb
+   u+Q5vpCaFhlMlYiy7iNPU3ZW0bVaHMObZH4IpYoa3eT++HGFD4fM0eEe3
+   01vNEc7Nql0ByKAqthCDFhEv6iT8Fkbg0CcmnWaQldRhcSOkd787vYno9
+   nmzoS79y16c/kURUvyqtCUAt4fKK+rWC9EknfLYO0L+2SuMmU4Uo62Qz/
+   3ZpHhxLuwzXJhAqPb7GeQKWu7euaF93fk62sxX/HYClTOGO6+RuCY8ej/
+   g==;
+X-CSE-ConnectionGUID: 39PJyWMKRaGOLdRJ0s/RCA==
+X-CSE-MsgGUID: 6DlBORC1SHqxHnnWsePsrw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="57831205"
+X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
+   d="scan'208";a="57831205"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 08:07:08 -0700
+X-CSE-ConnectionGUID: M6f+Za+pSPO2uduUbHWWGQ==
+X-CSE-MsgGUID: vdLWVx1LQuWjfxWugvrf/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
+   d="scan'208";a="172378774"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.85])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 08:07:02 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ALOK TIWARI <alok.a.tiwari@oracle.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Gregory Price <gourry@gourry.net>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: [PATCH v4] cxl: docs/driver-api/conventions resolve conflicts between CFMWS, LMH, Decoders
+Date: Wed, 20 Aug 2025 17:06:39 +0200
+Message-ID: <20250820150655.1170975-1-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|CH3PR12MB8911:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2fda32da-6baa-4bc7-c05e-08dddff45eb4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?AWHEOXeAY5gKDvmFLTByZc/0VZwncME+D4ngTtyi1SCP95vJf4lsrDoGeR+e?=
- =?us-ascii?Q?DydvLut1I4IiNOeo/MEJlQXmbn/6TdPAo9AILphjRt5XhglmgXT/eEFaM/pm?=
- =?us-ascii?Q?sFGHlsIeJs9k4moqHGjwUXGsPvpeyzdtiCslN0xfhSV9Gjva8xEf6uM2jdGZ?=
- =?us-ascii?Q?VAjn/yjS4grcDy1n/1SK8sPRRiTdHqpVsTQakdYUfGtYGr0AfQPvloOcaN+D?=
- =?us-ascii?Q?/ABo4oF5M14uZja/DJezbrDNFhiCtUpKIZvfIKOmQZGgHvcalF6RYsDV9DXi?=
- =?us-ascii?Q?cEsyV3lP7TctejTWu7Bqbq6uz5n0wQGxjxleb/0nlefyywlqFDjK4MSMY6W4?=
- =?us-ascii?Q?X/l87A3cH5qFkv5+SvayhHRVE5ZpShBXKvTB1ACKN3aMTfwWuvH2asuy+7td?=
- =?us-ascii?Q?qT7UGm/w0BXaW3mtVqqyn/v6rIqa/PgRoh3cJkSqjh8fUAgqwMaYbgyTTeAw?=
- =?us-ascii?Q?KvUsVmblijYNvb7Prj0eFwhqaNSDlfTVyfrteYov33ct1G6m0I31WMjCxd+m?=
- =?us-ascii?Q?OzVpr6DK6eDTHg/Mqfs9FQt5CJP583nMOAWvCsUhQa/jZdkAb5kNz4+SVoY0?=
- =?us-ascii?Q?H14JUlSnOr984YJbdHDxnXmcExgeW8ya9zoNdg73gY7qhK3BxrTssgEVX9C1?=
- =?us-ascii?Q?VAfg+Wq8Vt/a/wp6guipc/uDRlGDg9rGR/tIOspWhJOHKlvRanMiutDIUBqZ?=
- =?us-ascii?Q?O3k263hNimnR3EPRjBhpJlrMMVJ6foPSQWKQ1mezSHaGAGTeav7krXaHSae/?=
- =?us-ascii?Q?27SBOBhi7AXJLAWel6Ye9aPtw7Ore0GhMs5vOJrHtOBNMJWNJxdfDa9oCi/z?=
- =?us-ascii?Q?bnGp4UWox71DLP2VMHgTUkwrjslvmYg3V9UM3HZH0/Ud7Y9iXk8byIP0K8cl?=
- =?us-ascii?Q?VsuLnlY1qSUJIKZPSYHqq/evWQeseL7uy/I4X7bgestoYKztJFWFmgG2YDDf?=
- =?us-ascii?Q?zVO1QfmZKWUrY4Cg08qScI+SizZeBDdX5A9n8dqr8hN/ecYSnNC7jYJHadiu?=
- =?us-ascii?Q?5wAwh3hqwuo0FO2g5L0mBAlo4O6PAtx3QxDl6m/AziR8VWNEyy3f09HuChEC?=
- =?us-ascii?Q?ZNftyG8+7/8yMmwuhqVyHIER5qKGD9NIGmHomPNh25nnq+0GgvEKgFqrygCY?=
- =?us-ascii?Q?IvyZvYteN9gi3w1GQN4GNCrVwvdOj0uJzVRe7bm/Xu/YyS/ATcgFElN5Gsfb?=
- =?us-ascii?Q?vaZDzWELNFw0FJSi8x9UkFzVv7pdGk58K4vnDp5u/6QzRyxUYPwvQdQ3TEtL?=
- =?us-ascii?Q?duzkUxZqMOiCa7l418aHdchL8q0QMiRFMKbuhnonT+3WJRH0Q3z4I2XdY6Dm?=
- =?us-ascii?Q?IvKeqjwTVXNtnRLc3ijZ8UlYDTo9pIv/OAzvkHoVstJHorumVUdh/IM1xyBa?=
- =?us-ascii?Q?6qCt7tZThlLHdWoQmc+Y0ksX5GTdj5jEIvUMwzF73qo5NJcUeoYKecum8D+t?=
- =?us-ascii?Q?SobunYTqKxQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?r1sRUA7Fe+5ttdAB+Lw7687unLalDrz9fnp5TPgnnn2q7d+hCqnrWAi+m4Rn?=
- =?us-ascii?Q?4lYRI0f5gqeM+ML8mtW1pptSUVB3vFCWREePdg8zuBA1O5Tyf4WbxHJacgep?=
- =?us-ascii?Q?/gC2GAJhmKeVHvp1hc1WSQXdWTke1H7lw2NkFrbPa2+f/TOQt4EIt9AlFodv?=
- =?us-ascii?Q?UdHVnIKMbSAUtuYs+QOF6ozT4cXIogrP/XWI1agCW1sr7z4eKVSSTqRPlZOS?=
- =?us-ascii?Q?x6iLh234AuQm+foc3Sa5vD6IwSIFx2oycr8GE0oYwpfys0L63USXuYPksjcZ?=
- =?us-ascii?Q?lOk9OQqO0nDfVgtwA99ANjV4CCNuNvFdJC4swtzh7PAXHz97RoT8xBuKkowt?=
- =?us-ascii?Q?85OU4I392X7GYxc0vX4Pi1gow6GmZZHi2HlmGKugB9WAD630WmdCGZACB3md?=
- =?us-ascii?Q?FF1PB0syAW/FNQWALUMfFjlMYLjeCFlX8vH8zfQhF+QRgI4rxsLqsbVqlFLl?=
- =?us-ascii?Q?tDk+zAB0Mav/bUu5wz63QtlUWN2/RscEE7Y+iv8UyuMLOvZZF/Co0y5ZWLaY?=
- =?us-ascii?Q?QkvVcXy5TdW7633R4jFm8/Sf2xq1DquuXUJ/EDerCTlVQ/KXdrQO5v9VLenz?=
- =?us-ascii?Q?sywncaJvungsFnEgw31OqE/ZVCnzA7aT/t4kINtxiCNkUb6r2+7vUKezW+vM?=
- =?us-ascii?Q?bCtKEnc0IKtjUR8HShrXleYhMVYI9Qeg7qUy+hkOMJyS+89vGp5y/oWAnvL7?=
- =?us-ascii?Q?B01Sso19oiJnX5SeiXCG8sn0lJI3xjkph5UKtN0nXC5Kcz0qzIonT3dsqkhb?=
- =?us-ascii?Q?qM9Ev+M8l0xl5APbaxmvok1WZgrwq4Jfny17rUaIWINJd+Z5HTvI48VeJ+OX?=
- =?us-ascii?Q?ajU/Cj8vy/q38FO+pHGIepFxLD4DQEUfdjSrvGwij4xwSXiy5YTynbnSqWPO?=
- =?us-ascii?Q?HzEMN94rwJMDX7AiEgjWVEfT3vukv11DjaZDs/kaMWLpvbUUO5ZZrsXLrEb8?=
- =?us-ascii?Q?4cnrvhwZYwwlZwm21zcPYGl+xMBLhNyeNCepgyE/YO6JWeu9RVRNl2rvnfN1?=
- =?us-ascii?Q?CMHOc5SAZymZFlHWgDUmVmebvxMja2CmP0jASIrPV6d+PY1qbH4bYf4LGopH?=
- =?us-ascii?Q?452RFm3Vo4w2c70h09JHMR+hpB66PTY46O5qpRGfB8iNrld9hLtxDny/7PCe?=
- =?us-ascii?Q?/OgoHE/JWI27aN24w5bAlNVR2mTMs+GcJpXLUlXp5WCCdJRaq2C31JqEsvtk?=
- =?us-ascii?Q?JZjnKvCbLO5P2lvPvUdVH58LrtbocaNXdExCxkZy8sz47h0WECvqN/l76HTK?=
- =?us-ascii?Q?znGfkj62ibF8/ob3rlsyQw2cpMyoVEjaP9qEv8GCZsQ5Iv/umFSjZFQKiODi?=
- =?us-ascii?Q?ohfp3znCowLkokdZo1CG7bMul/qoYkUoe7MpbBQi6hTEe1qaD0Zspq/vGYqB?=
- =?us-ascii?Q?Uyacm/WreqlcDZVmU9546l0T+agsub0nbpvl0cpFYqnfpn2OjndI1VTiM7P0?=
- =?us-ascii?Q?1+UVYAfRSxX0A8UrCfddQWKf5LyPrNYEbYdRm34N76fAKu04xN2LNQOloR8l?=
- =?us-ascii?Q?14nTqhM7PIi7NSGVJmMWGKrwLBTOUta4AAAqV6PeSZhfyzUDZUUNEaO99sSA?=
- =?us-ascii?Q?XnjEXfKkZpzoIsvY3aaUb9zMbd89fKjwGR+frWdu?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2fda32da-6baa-4bc7-c05e-08dddff45eb4
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2025 14:18:01.3162
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KWHvFa/GhF9kI+jFjeE5BgrhjuHWyxfR2hz75mM6MgUBnzHfnLD5Ede9LKC62U713L/i26tK47WzGhjR1As4JQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8911
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 14.08.25 15:21:43, Dave Jiang wrote:
-> Add a cached copy of the hardware port-id list that is available at init
-> before all @dport objects have been instantiated. Change is in preparation
-> of delayed dport instantiation.
-> 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Add documentation on how to resolve conflicts between CXL Fixed Memory
+Windows, Platform Low Memory Holes, intermediate Switch and Endpoint
+Decoders.
 
-Reviewed-by: Robert Richter <rrichter@amd.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+---
 
-Nice rework, thanks. A nitpick below.
+v3 -> v4: Show and explain how CFMWS, Root Decoders, Intermediate
+	  Switch and Endpoint Decoders match and attach Regions in
+	  x86 platforms with Low Memory Holes (Dave, Gregory, Ira)
+	  Remove a wrong argument about large interleaves (Jonathan)
 
--Robert
+v2 -> v3: Rework a few phrases for better clarity.
+	  Fix grammar and syntactic errors (Randy, Alok).
+	  Fix semantic errors ("size does not comply", Alok).
+	  Fix technical errors ("decoder's total memory?", Alok).
+	  
+v1 -> v2: Rewrite "Summary of the Change" section, 3r paragraph.
 
-> @@ -984,7 +982,7 @@ static int cxl_setup_hdm_decoder_from_dvsec(
->  }
->  
->  static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
-> -			    int *target_map, void __iomem *hdm, int which,
-> +			    void __iomem *hdm, int which,
->  			    u64 *dpa_base, struct cxl_endpoint_dvsec_info *info)
+ Documentation/driver-api/cxl/conventions.rst | 111 +++++++++++++++++++
+ 1 file changed, 111 insertions(+)
 
-Split line to fill the 80 char limit.
+diff --git a/Documentation/driver-api/cxl/conventions.rst b/Documentation/driver-api/cxl/conventions.rst
+index da347a81a237..714240ed2e04 100644
+--- a/Documentation/driver-api/cxl/conventions.rst
++++ b/Documentation/driver-api/cxl/conventions.rst
+@@ -45,3 +45,114 @@ Detailed Description of the Change
+ ----------------------------------
+ 
+ <Propose spec language that corrects the conflict.>
++
++
++Resolve conflict between CFMWS, Platform Memory Holes, and Endpoint Decoders
++============================================================================
++
++Document
++--------
++
++CXL Revision 3.2, Version 1.0
++
++License
++-------
++
++SPDX-License Identifier: CC-BY-4.0
++
++Creator/Contributors
++--------------------
++
++Fabio M. De Francesco, Intel
++Dan J. Williams, Intel
++Mahesh Natu, Intel
++
++Summary of the Change
++---------------------
++
++According to the current CXL Specifications (Revision 3.2, Version 1.0),
++the CXL Fixed Memory Window Structure (CFMWS) describes zero or more Host
++Physical Address (HPA) windows associated with each CXL Host Bridge. Each
++window represents a contiguous HPA range that may be interleaved across
++one or more targets, including CXL Host Bridges. Each window has a set of
++restrictions that govern its usage. It is the OSPM’s responsibility to
++utilize each window for the specified use.
++
++Table 9-22 states the Window Size field contains the total number of
++consecutive bytes of HPA this window represents. This value must be a
++multiple of the Number of Interleave Ways * 256 MB.
++
++Platform Firmware (BIOS) might reserve physical addresses below 4 GB,
++such as the Low Memory Hole for PCIe MMIO. In such cases, the CFMWS Range
++Size may not adhere to the NIW * 256 MB rule.
++
++On these systems, BIOS publishes CFMWS to communicate the active System
++Physical Address (SPA) ranges that map to a subset of the Host Physical
++Address (HPA) ranges. The SPA range trims out the hole, resulting in lost
++capacity in the endpoint with no SPA to map to the CXL HPA range that
++exceeds the matching CFMWS range.
++
++E.g, a real x86 platform with two CFMWS, 384 GB total memory, and LMH
++starting at 2 GB:
++
++Window | CFMWS Base | CFMWS Size | HDM Decoder Base | HDM Decoder Size | Ways | Granularity
++  0    |   0 GB     |     2 GB   |      0 GB        |       3 GB       |  12  |    256
++  1    |   4 GB     |   380 GB   |      0 GB        |     380 GB       |  12  |    256
++
++HDM decoder base and HDM decoder size represent all the 12 Endpoint
++Decoders of a 12 way region and all the intermediate Switch Decoders.
++They are configured by the BIOS according to the NIW * 256MB rule,
++resulting in a HPA range size of 3GB.
++
++The CFMWS Base and CFMWS Size are used to configure the Root Decoder HPA
++range base and size. CFMWS cannot intersect Memory Holes, then the CFMWS[0]
++size is smaller (2GB) than that of the Switch and Endpoint Decoders that
++make the hierarchy (3GB).
++
++On that platform, only the first 2GB will be potentially usable but,
++because of the current specs, Linux fails to make them available to the
++users. The driver expects that Root Decoder HPA size, which is equal to
++the CFMWS from which it is configured, to be greater or equal to the
++matching Switch and Endpoint HDM Decoders.
++
++The CXL driver fails to construct Regions and to attach Endpoint and
++intermediate Switch Decoders to those Regions after their construction.
++
++In order to succeed with Region construction and Decoders attachment,
++Linux must construct Regions with Root Decoders size, and then attach to
++them all the intermediate Switch and Endpoint Decoders that are part of the
++hierarchy, even though the Decoders HPA range sizes may be larger than
++those Regions whose sizes are trimmed by Low Memory Holes.
++
++Benefits of the Change
++----------------------
++
++Without this change, the OSPM wouldn't match Intermediate and Endpoint
++Decoders with Root Decoders configured with CFMWS HPA sizes that don't
++align with the NIW * 256MB constraint, leading to lost memdev capacity.
++This change allows the OSPM to construct Regions and attach Intermediate
++Switch and Endpoint Decoders to them, so that the addressable part of the
++memory devices total capacity is not lost.
++
++References
++----------
++
++Compute Express Link Specification Revision 3.2, Version 1.0
++<https://www.computeexpresslink.org/>
++
++Detailed Description of the Change
++----------------------------------
++
++The description of the Window Size field in table 9-22 needs to account
++for platforms with Low Memory Holes, where SPA ranges might be subsets of
++the endpoints' HPA. Therefore, it has to be changed to the following:
++
++"The total number of consecutive bytes of HPA this window represents.
++This value shall be a multiple of NIW * 256 MB. On platforms that reserve
++physical addresses below 4 GB, such as the Low Memory Hole for PCIe MMIO
++on x86 or a requirement for greater than 8-way interleave CXL Regions
++starting at address 0, an instance of CFMWS whose Base HPA is 0 might have
++a window size that doesn't align with the NIW * 256 MB constraint. Note
++that the matching intermediate Switch and Endpoint Decoders' HPA range
++sizes must still align to the above-mentioned rule, but the memory capacity
++that exceeds the CFMWS window size will not be accessible."
+-- 
+2.50.1
 
->  {
->  	struct cxl_endpoint_decoder *cxled = NULL;
