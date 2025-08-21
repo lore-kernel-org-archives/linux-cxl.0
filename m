@@ -1,123 +1,109 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F792E718D
-	for <linux-cxl@vger.kernel.org>; Thu, 21 Aug 2025 16:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816CD2D46AB;
+	Thu, 21 Aug 2025 17:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755795536; cv=none; b=MEDnjs+wAKwK2/AYRTZuVCFY2q3YzznyczrR5qbjYPaQpTF5C/EEXJlB0V1Vv33Q4gKRnv44T1dkbXwJyrid3yvszF2/VgoqeIASE+rca1gTjF4D14keHMIEDXIL1wkp4nuw+2OiHhoRyNGXw91P/BjxMypt8pf/q1LMbZPruDw=
+	t=1755797953; cv=none; b=IW2kb1og2nui4Ac0jImnw8Tfted3+0A4sCL7Xd7Y2NiawpxNZDZhL8+4u7MdUYgYStg79ppH7c4cTM61hH6FQQ4azpzVvj+uLmIKSHoIzKhobciIxr2Cl5y1yCUt0FKfoYuMaiDJMH/acyEWSQ9Y1uQ8S0FFHaQJvGCWKfGBQR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755795536; c=relaxed/simple;
-	bh=3A4U0mFlnkILhub4vGFum/rHOWkZrlTYW603OLEkJVY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mqSq9snyLaZBgrRSMttqwqWYgAIFB0EQ/tOK3psAd0QfUhj93MFZHcGzgYNv5IuKXMZn+IZLKblF+e0qHSh8N9AAXogZ5Kov+Q7V/j7BQJR7k9+ftACk8MyLqIBO24+0S/bs13LI54rKer2gVXX3nufCOIdOzvRqq5hhc/SBD3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=AKYJcttA; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1755797953; c=relaxed/simple;
+	bh=QkUqQ3zvMKz0kwF5LuYb7dPTc8lI1Aq+1yTo+jAi8q4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f8KC331K+O7p1/I01oA2BInWG4h5tNitWOmHSKCValyetoEYifJXYbKY0WHI7dAlox+bJ2YUBeG/IFEcsC3bge6Psqkn4c05yomtf2CRujWxG7pVtU7ITC9M+jxjHZl6qSNpuoMZ689VE9H/c78RioZ+Y7TJ5+4KmHtNTuLI0Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IpNSHfY1; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="AKYJcttA"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6188b7532f3so1999909a12.2
-        for <linux-cxl@vger.kernel.org>; Thu, 21 Aug 2025 09:58:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1755795533; x=1756400333; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3A4U0mFlnkILhub4vGFum/rHOWkZrlTYW603OLEkJVY=;
-        b=AKYJcttA/ghZKZYC7tZBkFM0Mb2/EgCjLiCsho3sVE1N0zQlOUuY23ZAdao0V3gQN+
-         9bsm8X7d/L0hK6WIDN6Q7JT4qGdMAlNSbC4PrBkk2o//JNflnpbNE6uLpwPORZZJ2WkY
-         sZfonTzb7tqKst2ugQrihXHJpDuRGh4bCcGSQ5OvKyLOP0Puz+TmiUU+SESdROqDEE74
-         4skQxgs8BJJ/VyO/18R4Hk/Kzc3XXQHtbY6g2AZQmSihSYNMOv6iUPm2j4vWbD29Fh2z
-         5bVC0iFxZZYfQAUlio6uwk99op7mmkdITWEJGzXYeLAHqYLk3dY0emEHOQaL3xzXyAXM
-         FcTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755795533; x=1756400333;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3A4U0mFlnkILhub4vGFum/rHOWkZrlTYW603OLEkJVY=;
-        b=vewlwhfReG0EYvuG6QIZYgGaCW2+4uSggHH5+KFY+Ic06PZBmfTGbyd/+1RCzcBkNT
-         Sb77lD7uVqS1iMZNdGKjWwdJzk7HrgJI2pVIvHhOVx5Uvm74Fp/cKynP/EI+wBGOWXq3
-         J42ZsHgN2s3Yp2SHrgBicPB2IqS9C77bFOfbKtFvE3p3D/0qZAkOJrZ9++K6IOw0DHWy
-         hkE5xchrZacC6DFv23I0mujHKdq5TzdY03CdJK1SB7hT/P6e9rCOzSU/HlBLhYm22OUB
-         0SGJR7vf2UOIml2GPoAojq2yAM58cEeQJaLyIxWtBPdIiMp2Jpegs9Ql7Q0S6kzp6fHa
-         nC1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUzw/b67OPovgQPBLXUeLh9+hkxK4igrOwYJvW+PV2+GbGvpi9xBvcimXBW9FqK2Ra9s5Pc4/Gr890=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmfE14ZofiKap7A2qnk2y++vS3FkcjK3lxqAJg5bpFwrWfz+u8
-	PFSHHEaXCIpFAHkcq7unCqSQK2RualjwtwwsrtQLWWRW0pykO3vUmuAE4JZQK61KYzk=
-X-Gm-Gg: ASbGncvEquV3HsQTiQquxJbOx+rxpUl+A1JIVyfSEWCzk6vOyv7tV7rQXboa0Z+8fNa
-	NvGETXTgSqQECToMCdf6zVa2ZgsH/XlCm0tXA6Ui9oSDRoa3UBSuWbaWyzVvMafh5qA608//E6Q
-	AX8k2yRvKHVKP/y9qBkVM4xWOL+X5v93jxn0UnnbBHP+Q3EUR3xlb/jWfLib+UL+wUv2/P0gvjk
-	SOGwQYwd6f1j9lOU6F1cf14Y99xmB/lW1FwTJWpPaRC7DvBB8/6jqJxQZZMoFofrHFUmMpSRm5z
-	vIZsOZX0UgCK6diTarsqjUCES6YA1ip63e62hQ3Ll1495XZzrnzt6rHRLWVvxUudpQGvcqy3H5c
-	fcmICjyN2Q/RV2gP1HO/n0Q4lkESp9cUuefMgW6LTaL+ZAkDL
-X-Google-Smtp-Source: AGHT+IHbD3hrlfzfuV9dgz0//kT04PlITNsV9cNrzMXodwD/dQM9X/pgqOr/RoZqgWohk3JzCKOHjg==
-X-Received: by 2002:a05:6402:5057:b0:618:6fef:83e9 with SMTP id 4fb4d7f45d1cf-61bf8743d4cmr3099366a12.34.1755795533295;
-        Thu, 21 Aug 2025 09:58:53 -0700 (PDT)
-Received: from dev-mattc2.dev.purestorage.com ([208.88.159.128])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-61a758ba909sm5450122a12.54.2025.08.21.09.58.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Aug 2025 09:58:51 -0700 (PDT)
-From: Matthew W Carlis <mattc@purestorage.com>
-To: zhenzhong.duan@intel.com
-Cc: Smita.KoralahalliChannabasappa@amd.com,
-	adam.c.preble@intel.com,
-	alison.schofield@intel.com,
-	bhelgaas@google.com,
-	bp@alien8.de,
-	chao.p.peng@intel.com,
-	dan.j.williams@intel.com,
-	dave.jiang@intel.com,
-	dave@stgolabs.net,
-	erwin.tsaur@intel.com,
-	feiting.wanyan@intel.com,
-	helgaas@kernel.org,
-	ira.weiny@intel.com,
-	james.morse@arm.com,
-	lenb@kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	lukas@wunner.de,
-	mahesh@linux.ibm.com,
-	oohall@gmail.com,
-	qingshun.wang@linux.intel.com,
-	rafael@kernel.org,
-	rrichter@amd.com,
-	sathyanarayanan.kuppuswamy@intel.com,
-	tony.luck@intel.com,
-	vishal.l.verma@intel.com,
-	yudong.wang@intel.com,
-	msaggi@purestorage.com,
-	sconnor@purestorage.com,
-	ashishk@purestorage.com,
-	rhan@purestorage.com,
-	jrangi@purestorage.com,
-	agovindjee@purestorage.com,
-	bamstadt@purestorage.com
-Subject: [PATCH v5 0/2] PCI/AER: Handle Advisory Non-Fatal error
-Date: Thu, 21 Aug 2025 10:58:29 -0600
-Message-ID: <20250821165829.3471-1-mattc@purestorage.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <SJ0PR11MB67441DAC71325558C8881EEF92A62@SJ0PR11MB6744.namprd11.prod.outlook.com>
-References: <SJ0PR11MB67441DAC71325558C8881EEF92A62@SJ0PR11MB6744.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IpNSHfY1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755797951; x=1787333951;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=QkUqQ3zvMKz0kwF5LuYb7dPTc8lI1Aq+1yTo+jAi8q4=;
+  b=IpNSHfY1Ci6rw58Dc5Z49i11uWK3JQ99kHYprKSdwgOm82YZRo66GXPt
+   iVE5jqKE62woBwiUfXzY1pULRPP0OMG60N+ARpkzqhkZpLkMM+nu9bO1k
+   ZxmtVRZcn8/+p/vc952PLnJ+wirpCd5syMdndC8KyfgOXOnK8MP6ia7jZ
+   PYA8ngNu7wBF5aRYKsDdpgnnSReVx/PKoRksVDLadGWGGpiOwtwrqXm2k
+   Qk4N8F8eHnIwSLU2psWmt8+/1epof86xEYYOoe+TlGndthSRV7ZjrplDL
+   kVQO15ed/8DClDfCNjWjrAV7D5lEPe2JTF6CezouVZDE2wTJtZMOS99MQ
+   w==;
+X-CSE-ConnectionGUID: o2EgGGkTT5mRTycqavb8Aw==
+X-CSE-MsgGUID: Kt4EigyDQHC7d1r/VAq4nA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="58166496"
+X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
+   d="scan'208";a="58166496"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2025 10:39:10 -0700
+X-CSE-ConnectionGUID: 0g9v6kcyRjG2mrRUEjPaaQ==
+X-CSE-MsgGUID: 7vEKTR1VRdqY9c/BKGa2mQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
+   d="scan'208";a="199346532"
+Received: from anmitta2-mobl4.gar.corp.intel.com (HELO [10.247.119.210]) ([10.247.119.210])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2025 10:39:04 -0700
+Message-ID: <690d68e2-1efd-4de4-8b78-3a75c71d944e@intel.com>
+Date: Thu, 21 Aug 2025 10:38:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] Documentation/driver-api: Fix typo error in cxl
+To: Rakuram Eswaran <rakuram.e96@gmail.com>, linux-doc@vger.kernel.org
+Cc: dan.j.williams@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, linux-cxl@vger.kernel.org,
+ alison.schofield@intel.com, gourry@gourry.net, skhan@linuxfoundation.org,
+ linux-kernel-mentees@lists.linuxfoundation.org, corbet@lwn.net
+References: <20250818175335.5312-1-rakuram.e96@gmail.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250818175335.5312-1-rakuram.e96@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello. My team had independently started to make a change similar to this
-before realizing that someone had already taken a stab at it. It is highly
-desirable in my mind to have an improved handling of Advisory Errors in
-the upstream kernel. Is there anything we can do to help move this effort
-along? Perhaps testing? We have a decent variety of system configurations &
-are able to inject various kinds of errors via special devices/commands etc.
 
-Thanks,
--Matt
+
+On 8/18/25 10:53 AM, Rakuram Eswaran wrote:
+> Fixed the following typo errors
+> 
+> intersparsed ==> interspersed
+> in Documentation/driver-api/cxl/platform/bios-and-efi.rst
+> 
+> ---
+> Changelog:
+> 
+> Changes since v2:
+> - Fixed Signed-off-by line to include fullname
+>   (feedback from Jonathan Corbet)
+> 
+> Changes since v1:
+> - Dropped fix for page-allocator.rst as requested by Gregory
+> 
+> Suggested-by: Gregory Price <gourry@gourry.net> 
+> Signed-off-by: Rakuram Eswaran <rakuram.e96@gmail.com>
+
+applied to cxl/next
+561c4e30bff93b3c33e694a459f8580f8a6b3c8c
+
+> ---
+>  Documentation/driver-api/cxl/platform/bios-and-efi.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/driver-api/cxl/platform/bios-and-efi.rst b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
+> index 645322632cc9..a9aa0ccd92af 100644
+> --- a/Documentation/driver-api/cxl/platform/bios-and-efi.rst
+> +++ b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
+> @@ -202,7 +202,7 @@ future and such a configuration should be avoided.
+>  
+>  Memory Holes
+>  ------------
+> -If your platform includes memory holes intersparsed between your CXL memory, it
+> +If your platform includes memory holes interspersed between your CXL memory, it
+>  is recommended to utilize multiple decoders to cover these regions of memory,
+>  rather than try to program the decoders to accept the entire range and expect
+>  Linux to manage the overlap.
+
