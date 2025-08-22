@@ -1,95 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9730E22D9F7
-	for <linux-cxl@vger.kernel.org>; Fri, 22 Aug 2025 15:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA5A307ACD;
+	Fri, 22 Aug 2025 16:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755878251; cv=none; b=Rh6DQuFuCcf7sFiorYUlbc0ORjtCUJLXq3bT2CyIavHsPm7/NIy5cP6iETNyKYIKWLdrLZHwd83unbaQjECpB4/hEoRLy6uLud7+TR3efKrLK4gJ6/bdMFxIS7CC6F9KgN7Ufld4RL4wxrwgAYISspS4wGFbFVno7FidnTd47qw=
+	t=1755881475; cv=none; b=gRlRg+MjupceW/WT+z8guFZxGUinttJXNpSQ3Xx8nGCbGMRcnVr7hM+/qvRcR71iU7hZLUAcW8JRG+7MMbvCGcF+BXbulmxap/c7f04N2Vve95Sm4GPJZg3p34nT47AZ8ptvnORadiuSgkkdE/Of8URx+p1f/rxXrrwWzr08LWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755878251; c=relaxed/simple;
-	bh=VTvWYONoPQlidR1PcWGtJ3rkoTBIL+7MaLtuPcQXVQY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=YSBVsW3FiR6dmMBpYoJuOazs7LqoSTYY/kCtDFQswKT+/o5xHnAVetTqsfYsewGODPW90IH51M9yq4J1N7LjmcrmdslsihNab+Ej7x5NbPA5PHt47LhC6/GSPObeVPDbOwpJC3spy8Zq0W3IuPbhulfSZbzEe0WvBNDKgOZqeME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pv4OIA7b; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1755881475; c=relaxed/simple;
+	bh=ZN1/GSSsUnr11TA2ChLgQXw36yoz98xor8JyYYUMooQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Jtl/J3BnYQir1ajBt0Nf5+LzYprrQnu2tD6Qm1zuVz4wMUdvJEJj0CgPMoHAVK6tljGMMhTnClcv8zPTKYFBSgYeckcqcDmvKP8Gamfo9bjuU315FTvG3N9wCG4gJmJROrlqSfwLoU4kmJHTqsZaYBtFSovOuFIy4jFsvVooQus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TOldZ6P4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pv4OIA7b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755878249; x=1787414249;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=VTvWYONoPQlidR1PcWGtJ3rkoTBIL+7MaLtuPcQXVQY=;
-  b=Pv4OIA7b7QyDaxdMpFxo5qKqovWLTnbocxMXtLV/pvoGg4e43Vu2idva
-   IF8ArbZLjVH1tWRH3cno7evP2zUulTE0mcb/oe5ig+GetSfb3PKc0a+IM
-   dLnxs5dSxLI42Le34w/uYvF4xQ8Yq01YivUMEL5wZwzt9da5QVEefocNw
-   LdX0I5Mr2PuiAtkiTnFlkAtVNuGH/cINredos06LB0vybx8jFV2Khkbt5
-   DYdZAK8MVaGHLp6Z1UbipctbWPmbRABOqLqHUyglcg8AGoDvWbM+Le7Bh
-   aAZaF7MEtt5GvDSQVjBQm6Qejkv4i6B7EAq+KIGEinAHqnVwRbyivjw9F
-   w==;
-X-CSE-ConnectionGUID: SrJDmu1wR0uIQM5PDF5J8Q==
-X-CSE-MsgGUID: wHV9lHa1Qh2IT6BIMs8FoA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="75773135"
-X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="75773135"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 08:57:29 -0700
-X-CSE-ConnectionGUID: 9ao948mvQ0enjwx7gAyhww==
-X-CSE-MsgGUID: NrI1+PMcRY+jgQlV/37Nxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="174054327"
-Received: from dustinle-mobl1.gar.corp.intel.com (HELO [10.247.119.220]) ([10.247.119.220])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 08:57:27 -0700
-Message-ID: <c3b27607-6878-4dd6-875d-532850577527@intel.com>
-Date: Fri, 22 Aug 2025 08:57:21 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TOldZ6P4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E68FDC4CEED;
+	Fri, 22 Aug 2025 16:51:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755881475;
+	bh=ZN1/GSSsUnr11TA2ChLgQXw36yoz98xor8JyYYUMooQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=TOldZ6P4XjDi8geWUHI4dDlTT6CJl79l8sxl1DywRr/cP9kB878+0JkMA/VKU4RXH
+	 0/0bkecaXvUt55YZXuEbcOHw0QQEAL1sp9aA5eSUXoQNTKa+vwliCqVYL132XwqGYX
+	 jOyAVQR7WyYfW21GVtx8cGUCtlMYTOf2rrGtTRMmP3JH/EUTBqXjGU16IcKqKz7gzU
+	 ii4KkNruWP1ZjXjkv4hjXC3g1ALdUqATnnaexhDPwrJkflTfRAVA//GsLljIjaCxjq
+	 C5TibyaJM2cpWRRjFBbRv2JHLBft3EPEvwjfn3TexdNBE3CTT4r1jCt/Xf9RETQSvX
+	 CWUdvouXz1saw==
+Date: Fri, 22 Aug 2025 11:51:12 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Duan, Zhenzhong" <zhenzhong.duan@intel.com>
+Cc: "Carlis, Matthew" <mattc@purestorage.com>,
+	"Smita.KoralahalliChannabasappa@amd.com" <Smita.KoralahalliChannabasappa@amd.com>,
+	"Preble, Adam C" <adam.c.preble@intel.com>,
+	"Schofield, Alison" <alison.schofield@intel.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"Peng, Chao P" <chao.p.peng@intel.com>,
+	"Williams, Dan J" <dan.j.williams@intel.com>,
+	"Jiang, Dave" <dave.jiang@intel.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>,
+	"erwin.tsaur@intel.com" <erwin.tsaur@intel.com>,
+	"Wanyan, Feiting" <feiting.wanyan@intel.com>,
+	"Weiny, Ira" <ira.weiny@intel.com>,
+	"james.morse@arm.com" <james.morse@arm.com>,
+	"lenb@kernel.org" <lenb@kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"lukas@wunner.de" <lukas@wunner.de>,
+	"mahesh@linux.ibm.com" <mahesh@linux.ibm.com>,
+	"oohall@gmail.com" <oohall@gmail.com>,
+	"qingshun.wang@linux.intel.com" <qingshun.wang@linux.intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"rrichter@amd.com" <rrichter@amd.com>,
+	"Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
+	"Luck, Tony" <tony.luck@intel.com>,
+	"Verma, Vishal L" <vishal.l.verma@intel.com>,
+	"Wang, Yudong" <yudong.wang@intel.com>,
+	"Saggi, Meeta" <msaggi@purestorage.com>,
+	"sconnor@purestorage.com" <sconnor@purestorage.com>,
+	"Karkare, Ashish" <ashishk@purestorage.com>,
+	"rhan@purestorage.com" <rhan@purestorage.com>,
+	"Rangi, Jasjeet" <jrangi@purestorage.com>,
+	"Govindjee, Arjun" <agovindjee@purestorage.com>,
+	"Amstadt, Bob" <bamstadt@purestorage.com>
+Subject: Re: [PATCH v5 0/2] PCI/AER: Handle Advisory Non-Fatal error
+Message-ID: <20250822165112.GA688464@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ndctl PATCH] test/common: document magic number
- CXL_TEST_QOS_CLASS=42
-To: marc.herbert@linux.intel.com, linux-cxl@vger.kernel.org,
- nvdimm@lists.linux.dev, alison.schofield@intel.com
-References: <20250822025533.1159539-2-marc.herbert@linux.intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250822025533.1159539-2-marc.herbert@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <IA3PR11MB9136FCB8C778B0AE08BF8DB5923DA@IA3PR11MB9136.namprd11.prod.outlook.com>
 
-
-
-On 8/21/25 7:55 PM, marc.herbert@linux.intel.com wrote:
-> From: Marc Herbert <marc.herbert@linux.intel.com>
+On Fri, Aug 22, 2025 at 01:45:30AM +0000, Duan, Zhenzhong wrote:
+> Hi Matthew,
 > 
-> This magic number must match kernel code. Make that corresponding kernel
-> code much less time-consuming to find.
-> 
-> Additionally, that same one-line reference indirectly documents the
-> minimum kernel version required by the test(s) using this value (only
-> cxl-qos-class.sh at this time)
-> 
-> Signed-off-by: Marc Herbert <marc.herbert@linux.intel.com>
+> Feel free to take it over if you are interested. Maintainer didn't
+> respond to this series, perhaps he expects some improvement in the
+> series.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  test/common | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/test/common b/test/common
-> index 2d076402ef7c..1ab62be6994f 100644
-> --- a/test/common
-> +++ b/test/common
-> @@ -155,4 +155,5 @@ check_dmesg()
->  }
->  
->  # CXL COMMON
-> +# Test constant defined in kernel commit v6.8-rc2-9-g117132edc690
->  CXL_TEST_QOS_CLASS=42
+I'm terribly sorry, this is my fault.  It just fell off my list for no
+good reason.  Matthew, if you are able to test and/or provide a
+Reviewed-by, that would be the best thing you can do to move this
+forward (although neither is actually necessary).
 
+Bjorn
+
+> >-----Original Message-----
+> >From: Matthew W Carlis <mattc@purestorage.com>
+> >Subject: [PATCH v5 0/2] PCI/AER: Handle Advisory Non-Fatal error
+> >
+> >Hello. My team had independently started to make a change similar to this
+> >before realizing that someone had already taken a stab at it. It is highly
+> >desirable in my mind to have an improved handling of Advisory Errors in
+> >the upstream kernel. Is there anything we can do to help move this effort
+> >along? Perhaps testing? We have a decent variety of system configurations &
+> >are able to inject various kinds of errors via special devices/commands etc.
+> >
+> >Thanks,
+> >-Matt
