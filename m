@@ -1,46 +1,46 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2072.outbound.protection.outlook.com [40.107.236.72])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2078.outbound.protection.outlook.com [40.107.101.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9126120EB
-	for <linux-cxl@vger.kernel.org>; Fri, 22 Aug 2025 18:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9254F295DBD
+	for <linux-cxl@vger.kernel.org>; Fri, 22 Aug 2025 18:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.78
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755885742; cv=fail; b=CMvnvv74qhfjGYqrGCuANtO/V5D0f7JB2ZqyJZSqvdFcxnCfVd+gg3JUSOxRw5vUABQYW26lIR6AGxY4XUVkO/4N7GB8AD/m0QzgXYechVaTU4XJutujr77q+uiRqo25ubuxdrEOkKDu1/OPvdKxCX3BxkJWAQypB7KWs+L+QGs=
+	t=1755885743; cv=fail; b=Mte7hl9njwgAeXN9AbSP3LPOf9zkYh3ZafP+gS0CumFN42f+uPsZFNIFt+SNbUuVNP08GrLC8++NESvKi4H1DqLOqrudN6qxVsOAfXsT/vVB9UMuA1UqQEGY950SR0z/cJXl72iLozbFZVmbFZ43gwqaj/Xj/cvW3JXyudr4KIk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755885742; c=relaxed/simple;
-	bh=Kcx+7nMzNNCb8tONiPZWS8kZN3OlLM0nww1GiL+wmf4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bF62CTmnWrShOHUsrt1mroconWrxnUa7vn5wphsfUZnT8BQ35y59IFgvJrfPozXRYtYxLyZ3iv/2If6BJq9ywA39WHOIsHgxelZqQNxsaayR8RLR+FtP3UXxYnI/2BYjVuVLa/mYGQ6tQgdITRJK1AW5u3f4jlvE71ijow9CkCk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yLff84RY; arc=fail smtp.client-ip=40.107.236.72
+	s=arc-20240116; t=1755885743; c=relaxed/simple;
+	bh=jxCnco27Cg03knqAmMQI9A/T7tGwJnEUmLjGgPuubks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=jxtuABCJ0PsCbyWf+3e7ROeBxmtU1zdP57p9v9feh3GcgenjcZ6WVq6NiPYsOyhb8JxtYbtRKLwCOKfqfhfNXkFAho4wZEI33TFcrXduTeJkoix0GBLouhxdMlg21CYmIX39ABypizNxLaH+FruTPKnuERsGD9WX/EefdL2HA6o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zw8Tmbjg; arc=fail smtp.client-ip=40.107.101.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yLff84RY"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zw8Tmbjg"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Sf1Z8N7g+9sK5x2+xAmIsJ1u+Nr8tt0qwYd3+BYseyCDySeDFIlnGevRodtPaTF4ifHFqESvjRkPTHSZFH/RImFS8rwXw2DGrWilADETe2/7SJEXq6UkuJf6jF5lCgkLXuELju4Rc/APdkKLJPDKZr2CwLpSrTVZWYCFdpxz+cYS4aVirglg1s0rI1f8K+XQIJ7sVg3u38lP6fCQ5+2Zt2xwpWxudCuumi+GvC3oyl2TvHHu6cryPsvsi87opVMVYUudBcOGRwALVq5uDuKexZtlebyW7pWK/+Y/lCK6KsNCWkiZ5ofi1tllOEPoHi3LlUuj9OQApxb0ZpmmgHyHXw==
+ b=Pko9lyXwZ0ODAgzeYyAH9BEWD/AndE+JZR1VJUI0fPMQQxKbPcbG/On6qLEoKbPUGZuik4vZVBU8u+dmPoKlW6k6p3BHnNHPHDoKl/3J65asvzW+TDcX6ha3vANpAaULl7oky9TXvpJhggBKzUkTw9hcATxyOWoaM68ojzhtub37pxmYCKwBT3ZpW7leXmwvzBLo8fZbhdEFINF1RZUkYe+hTMYOyatZl+KKGOTzNBNLmYc0Glbd6qWe6jV2Qapog2IHHGyRlSV+8N3EEBuuWeiVW8M5FjaLWoQ/dpQO1QDILB73z4zimQ15kvvk7AonCsDcSEFjh+2lNsWpqWIwgg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZQcYaIWM/uY92HRkyuIJXStBuQL7SZeZdRsG8nLvdGQ=;
- b=KYn4Dw3sa0DqqjwU/yXjG2FQpelKbXY7ZtEB3zB23jCGfPlz795U3CjsVK9L3nXCfYoh7fpZ9rByKHHkyb8U4bVCIwahBtOFda/4Cc1bDSQcXDHIBVEN8Ecyo8FNVJzRgQbnIA5t03fZ8SDxCMqRxzPxwluk47rufQ0QhSqPWh4m3p8vakAon3ftWtlprupJPfMcAoDtQL9HhmC4YHPnQ/XeWfg38QOON3FNwTxfZOud4d9aR/e7qx8HgqzGQGn7sRw90EqCciC+W2BBiigpM4+vS+v5bAx+SObAxuXDgOpb88RqNN0G0Y6+ZiKc7acVYBuR+PDzLXh+dxQAi5Ndwg==
+ bh=3xS2O86r4wrndB2O7TAFRsX7H/uQRnSjn/CHe+wjGvo=;
+ b=vwtJ1gmC58tPWslZrNJQoQlKyNJxcyNtdZkwBYoIgfD2+O+o+0YRLg97xYgP8qJkJYo9Iw6y9BsPYV+8phvhrmx9nDZqPjX7U+6nlg9YxCpyDJMNijaTQOftjQ/yS9NiAWUqXQxvVjmrJC4igyaq6VynROHSp2szJvlQtaqqW/YTgZeoE8cs/GzuZtehn+qev3503idhzVXxI1iDH9jjtSSDowY4JvEeQSthHbvxUYTXiFtyk4POC1/WigoDGNYMQJHmwGaP/egjteXOIGA7rK0ZirPB+AZ1dFZ/2uO0paMbh/EKw9oLgW+hSKoAab5fNs0xsXlwlL+lZE725V+yXQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZQcYaIWM/uY92HRkyuIJXStBuQL7SZeZdRsG8nLvdGQ=;
- b=yLff84RYwVGMWM9/xy+QytCBvtbxG5GRz543SPNmgln+Tzhi/HVxD96YcAsjNPLG8ne1ZxBbTFHRSy8i8uaCB+cSShXAAVG9eQTl+6xSrUMnc+vrFN/PKxJuz6npkyRpwZV49rzdFB2GJnM4UdlP0h/AAriA/sSmjGhPLLbXCN4=
-Received: from BL0PR02CA0131.namprd02.prod.outlook.com (2603:10b6:208:35::36)
- by DM4PR12MB7600.namprd12.prod.outlook.com (2603:10b6:8:108::5) with
+ bh=3xS2O86r4wrndB2O7TAFRsX7H/uQRnSjn/CHe+wjGvo=;
+ b=zw8TmbjgBfcyLli1VEqNxTngPugdWr+MX4SMUKtd158WhXh1PspG02mdeAiprUqqAITGLRKaKmBOvhlVARfkZYmlu13yjekFPoMvzozEVkC0cDJI3HfFmPxmy9FJeEM3VDPBdg+osjogKxqlwraoCKq2v2WU0ki9XDrnJHyElTs=
+Received: from BN9P221CA0030.NAMP221.PROD.OUTLOOK.COM (2603:10b6:408:10a::29)
+ by SA1PR12MB9469.namprd12.prod.outlook.com (2603:10b6:806:45a::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.18; Fri, 22 Aug
- 2025 18:02:16 +0000
-Received: from BN2PEPF000044A9.namprd04.prod.outlook.com
- (2603:10b6:208:35:cafe::a3) by BL0PR02CA0131.outlook.office365.com
- (2603:10b6:208:35::36) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.15; Fri, 22 Aug
+ 2025 18:02:19 +0000
+Received: from BN2PEPF000044A5.namprd04.prod.outlook.com
+ (2603:10b6:408:10a:cafe::1c) by BN9P221CA0030.outlook.office365.com
+ (2603:10b6:408:10a::29) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9052.19 via Frontend Transport; Fri,
- 22 Aug 2025 18:02:10 +0000
+ 22 Aug 2025 18:02:19 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,15 +48,15 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF000044A9.mail.protection.outlook.com (10.167.243.103) with Microsoft
+ BN2PEPF000044A5.mail.protection.outlook.com (10.167.243.104) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.9052.8 via Frontend Transport; Fri, 22 Aug 2025 18:02:09 +0000
+ 15.20.9052.8 via Frontend Transport; Fri, 22 Aug 2025 18:02:19 +0000
 Received: from [10.236.176.149] (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 22 Aug
- 2025 13:02:08 -0500
-Message-ID: <45da6670-d6e7-4301-ba93-68b63b1c6361@amd.com>
-Date: Fri, 22 Aug 2025 13:02:07 -0500
+ 2025 13:02:19 -0500
+Message-ID: <c8995205-2b5e-440d-a2d9-98240a8aa89d@amd.com>
+Date: Fri, 22 Aug 2025 13:02:18 -0500
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -64,191 +64,198 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 17/18] cxl/core: Add cache device attributes
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC: <linux-cxl@vger.kernel.org>
+Subject: Re: [RFC PATCH 00/18] Initial CXL.cache device support
+To: Alejandro Lucero Palau <alucerop@amd.com>, <linux-cxl@vger.kernel.org>
 References: <20250812212921.9548-1-Benjamin.Cheatham@amd.com>
- <20250812212921.9548-18-Benjamin.Cheatham@amd.com>
- <20250819163858.000063a7@huawei.com>
+ <f3ac894b-7c8d-4f9d-9bfb-d05c7d7c5650@amd.com>
 Content-Language: en-US
 From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-In-Reply-To: <20250819163858.000063a7@huawei.com>
+In-Reply-To: <f3ac894b-7c8d-4f9d-9bfb-d05c7d7c5650@amd.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044A9:EE_|DM4PR12MB7600:EE_
-X-MS-Office365-Filtering-Correlation-Id: e63b62f8-a105-40d2-0e70-08dde1a6032f
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A5:EE_|SA1PR12MB9469:EE_
+X-MS-Office365-Filtering-Correlation-Id: dc65f70b-78c6-42b7-66c0-08dde1a6096a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?b0l2TWloKzBMU0xYTUVGYUxhK2R4Z2FSbUg0RzlIN0RCUGxUV2MvUkxsWkpt?=
- =?utf-8?B?aURTNU9zVmlGaU0xV3dsQ2FqVW1abkdYdy9kV2FJL2crVEsrcXA0VnpsTC9p?=
- =?utf-8?B?bVR3UUc0VGREa2VqdldobUdDOHl5QXVWLzgrUGtZSHNXeTNZTTlzbFBtSHR1?=
- =?utf-8?B?RTJnVEtOTy9nTUZ2WmpISDc5UjE3QWF6eERqWC9qNmhKdjArL1dEUTFMOGY5?=
- =?utf-8?B?dXZXSGFVWUdKZUtNTlJEZ1RnV1B3TGlXU2g1RVZUeXFVa2d4cC8vWHY1OTNk?=
- =?utf-8?B?bUpicDVOUjNWajc5dzM0UUZTWjIwK0VCcGpHYzN3VjFPSnAyajQ2V1h3UjZr?=
- =?utf-8?B?TUJoTE9sYmRXTXhzRHJZS2tzb1I4RFJOa1BlZ1Nkb2pObkhkRVJCSm5vU0tE?=
- =?utf-8?B?Wkc3Z2h5aHExeWF1ODNHZzc1aDR5WmtHK0hpZzc0eDNveUN3MjcrdEVNRGpH?=
- =?utf-8?B?aE04dmM4UXM3ejRmV3JVMjJzSC9HREVwZXl2N0Jwak9zVWpUVzBmM1hzTmxI?=
- =?utf-8?B?N1VOeVZjS0c1NTdMeDh6ZkpYcUNOVHJwdWRZeXl5Z2tIdDMrT2NMc2wyZ21Y?=
- =?utf-8?B?dXlPUldKUTJKUjBsb1VNYmRhbkU2TlhLalFwSFJWeHJxbDFUeU14VEdWTlM3?=
- =?utf-8?B?bkdscE5zWWdNbmEyMEYyV3grZE9jQlkrR2tlWUE3UWcvRlZkYzhpSEozMTRm?=
- =?utf-8?B?aG0wbjEwNVFJN0lINGM2SGExNXFHNmw2K1dKSXhoSHRjRWx3b09IR1YweFFz?=
- =?utf-8?B?TTVnT25ObVg4ellSaTJFU2Izc1kybzBVOUo1Z2czMk0zUmt0RHlMZTVrbjRv?=
- =?utf-8?B?QnowaUI1cHc4dlBKdzl5bjduVEtkRHdNOE9Pb1hJeFh2N09mTktzK2tUc2VH?=
- =?utf-8?B?WjB1Q242Si9COERKVGlBQ2puQnVoa015TWlqV2h2SGZmQURrYmYyT2VhNVB1?=
- =?utf-8?B?YWxTYzhJdHRFVEcySCtFalZENDE1RkxVcytaUS9CL1R2L29XUk42Qkl2YlN2?=
- =?utf-8?B?SkRpOS9TWFNWcldFdXlKbW0vWUUrOVlUWFV1S1ZyTVJ4bXRROG1jTHdib3Nw?=
- =?utf-8?B?K1dkYXMxMmdTbUwwTnkwbVJOU2paeXlOQzNGTkR2SjdkUGt5TzRGM2k4Q3dq?=
- =?utf-8?B?K2V5cm9UQ2lHM0lMZk80NlA4NlphSmw5Y2p6TjN2ZXc5MlprUFFRMWRzZjJa?=
- =?utf-8?B?ZUZZc3FwTWQ2RWlZRmQ0Q2tNMnFwTHZ1NURZMXdWamh0NVdYdGJpMGxVWE53?=
- =?utf-8?B?bWtqNlJmOERzSm44TU5KR0J5VXRNWnVBa1dGSXhFd01vY05rZHNJQ0ZSUFBu?=
- =?utf-8?B?WExjVkxGYUJPMVJTOFh5UzBUU2M0c1NjS3BHRk1mVU9aQytEZ2E3MHM1RFZB?=
- =?utf-8?B?Rkt4ZU8xdG5CcHVDN1ZlZnRFam5idU91UHpMMXlFazl3d2I3Y2hESHRlV0hu?=
- =?utf-8?B?U3B0WVRMdjRvRUVST09GT0tXS2Rod1hZU3E1VEZ3SEE4UjJ0R04xM0JqVVZ6?=
- =?utf-8?B?bzRQb0RLVUNWalZnOHBJS0hteUZvdjAwYXd0RjVveFVUSFhqSTBlWGNSUWYv?=
- =?utf-8?B?OHVOVlFhU0NRaVNWNlNiVXNPUDQ5UnhZVG9TUG5mWkFtWVFCVHFMTzI3cVd3?=
- =?utf-8?B?M0grR21hSllTdGRpdkJ0WGZWOWNrTUZHNVRnSzlJaXczVURYdTNpTU1teHNX?=
- =?utf-8?B?MUJvNzdSSGpiemRVaFFDV293bmRIUUNlcUcvNm11TUU2SVRGaHo1NXl5d3VM?=
- =?utf-8?B?M3ozYlJOTWo3d1RyZDFXWi9HcTRjNktVZk0rZ09MckFsYi9PNWo4YTNINWR4?=
- =?utf-8?B?TVVPekUrRFVGTmpCYldGTGxmMjI3Yk5Td3M3SkNNU2xjQ1U1RmhKWnZ4bzUr?=
- =?utf-8?B?bzUzRXJHVVNMRXRTMzVTOEtReHpNRFBoSnp5ek12MHdEZENvaGE2N1kxa1Iz?=
- =?utf-8?B?a2tLN09rRGpiUm5KTVVxbHd1a3RFd0NoVGJNK1Q1Z1ZTOFgyY2MwWlVrNVNm?=
- =?utf-8?B?L0hpekhHM3J2MkJXN0VZRlhzb3Z0a0psdmhoYkhJYVFNTTU0VWF0SFJXRnBL?=
- =?utf-8?B?UEJvQWl3YkIyN0VhbTh4a3FqK3lUWnRBMm44Zz09?=
+	=?utf-8?B?WFZKLzZoUmVOVmUxRngrSnNpS3Q1dFhyYXNwbVE2OE90RmVsUVhMZm5HbHNv?=
+ =?utf-8?B?c3FvV2hzMlI2U2NtMXVQTDloWEtneDhuU0l6OXBabkFndVVyT29ncStJWGZy?=
+ =?utf-8?B?UVVwbGsvNVd3WGRhUUZRL1lmN3pmUnVId2FzUjRsWUdrdjdGaG9kaDE4c2dN?=
+ =?utf-8?B?QjJHQUtDUDJFVkxPd3FlbnIxQlFua1FubzV5NkNsZ3J0eWYvdlVjNUtGUXFR?=
+ =?utf-8?B?VDlWcjdHWXZFa0g4ZWVYTnB4bHVPMjFBeS94aTdsd3VpK0NiZk1tdXUvdVJ4?=
+ =?utf-8?B?VjZpejdYcEl1cGZ2d0VUVWlYMXBOQThXVjlkakJEM3FLTGc1bC9pNkZwV2Uy?=
+ =?utf-8?B?ZU1nbnNYZWZPQkJDK2x4a3h2cWxkVkErSTM5OU9zODRJdFdDOGRva05UMXlH?=
+ =?utf-8?B?ZnM4OHFYVVd4SG9CM0lLWmRCOXhlT1FLLzlqV1YvQTROVkFMd3NIQWNuKzVi?=
+ =?utf-8?B?MU1zK25YUlNjdnZDMCtnekFTL1FvQUtVdjV2RHVhTVhwTmNXamp3eXJRbEFW?=
+ =?utf-8?B?eHdtYTZFRnNlaWNkeHE1aGhkZVR4OW1Kak94cyt0d2Nva3FCQ1JZbTlMNkRQ?=
+ =?utf-8?B?cS82TWFCdUFSeXZUNk1QMTFYM3RRUmpTNWlPc2p1d3BFbDNuZzQ0VmlCNktF?=
+ =?utf-8?B?bWpvSW4xMy9BT2VTaWk1endNRzBEVXVWTHBoczZiczI4TzZvVXoxOEdJMW9l?=
+ =?utf-8?B?Nlk2b09VdW82QkFSVnpmTzJQTi83b0NrN2ZDRHB6RmluM2E2Z0dFeUxCbkk1?=
+ =?utf-8?B?UHlHMXl4RmsvNGh4VFVIc1Nvb1BHdWJXOVNzUWNuU1VPOEtaZFRidThkK1k4?=
+ =?utf-8?B?b0RxWEtoNko5cldGSy81Uk5OcmJULzQ1OGdlRzBVbXhwYkJhaGJZRHRiT2M2?=
+ =?utf-8?B?SkxtUFZtcEhDQkdWNWY5RjNYVXJZNGQ5L0dXME8vZUtBZlFhZGMxY1h0KzZi?=
+ =?utf-8?B?ZnJlQVhYcWJ1cGhSdXg2dVFQK0pacFNjb3IvVGZMR0JnaHBITWwxcFhpNys1?=
+ =?utf-8?B?cWJRYUJvVnhOTGltWDNpL0JJTUpFczRoMzFIVVFsMnBJbkRQNEhSTTdMcEtz?=
+ =?utf-8?B?cldUT0F3R3Zzc1pCZ0t3cC8vV1lIMHE5T0ZWdGJnTG1WZVJqVHRuQzB6UVJ1?=
+ =?utf-8?B?VlI1MG9LQ1hWeVd4YjNCS21FVEpTNUNYekpNYXF2bFdBSWV2SU1BRk9pNXdl?=
+ =?utf-8?B?ZzdRQWYva1VwM2ZIaUxwaFpmTzkwZnNFbkprZ1lCbDMyeXJaRmQrYlh5c3V0?=
+ =?utf-8?B?MnN6ZmRrV0xEanJBZ2Jpa09kVEZYa3I2NEtxYm1GK1JTM3RodFBtN09IRmNQ?=
+ =?utf-8?B?N3dzblo2OCtway9YMlU2SEl2OWRMUC9tN1RCazFpOS93aDBmb0xPWDhOZkVN?=
+ =?utf-8?B?NXZ6bzVHODVCTzN3Uk5pMDNDYWM3cWxNenZwVVltWU1MWkpnNnoyWHJuTUUw?=
+ =?utf-8?B?ZThnN1g0clJwY0ZKNXlvalgwa1dIbFZKS2FhaGt1Nlh4Ym5lU2xWZHhKSk1I?=
+ =?utf-8?B?SStuVmI5K1RIK3FWdVUzY1BuZEViblIxOHdQWm9yMHc0MGlwUi9GVHI0R2tz?=
+ =?utf-8?B?dE0xQ0hjUEptL2lEU1d2eGpoN2pGWklIdGtVdG5qcjU4NEE4RjIyc0tLRlJJ?=
+ =?utf-8?B?Y0J4bU9EYlc0MXFFa0NkYW9hUU53S3VNVTd1ZFFCS29lTVY3azIwa3pQQ3Zh?=
+ =?utf-8?B?SlhiZWZ1eTc5YU4xTnk0SGVNU2NsYkhKaC9KWCtaTDBNSStVeTQ2bDBqSzdC?=
+ =?utf-8?B?dy9uazJiaW5RYk5RazNOZDRHc3ZKRTltV01Ib1VYQVRCazI4a2d5cXh3clVF?=
+ =?utf-8?B?ZXE5aUVjMnlpSU8wNTlBZVdLa1ZXVUNtZ1dyZDlxeC9tYTZ6MVdXY2x4VlNJ?=
+ =?utf-8?B?OEZOQjlQQjNYeXdaeHRjRG9nQVlWU3JSRThTZGlBL2N3Tlg1N2ZSemZyM1VJ?=
+ =?utf-8?B?ZHo5Q1JpZEVwWU9KSEZLSHBONHdncHRzQnJYNjkrSDEyOU8raE8rdlNSbFVJ?=
+ =?utf-8?B?L29MUzZRdlpidEtoUnpaNytra3dXaHNpMTdma0pPbUxXeDFTaDRTZmZ1NlFE?=
+ =?utf-8?B?NEpFaEhNeWxyL2dueVliVkRYc3F4ekdMRTdLdz09?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2025 18:02:09.0299
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2025 18:02:19.4836
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e63b62f8-a105-40d2-0e70-08dde1a6032f
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc65f70b-78c6-42b7-66c0-08dde1a6096a
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044A9.namprd04.prod.outlook.com
+	BN2PEPF000044A5.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7600
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB9469
 
 
 
-On 8/19/2025 10:38 AM, Jonathan Cameron wrote:
-> On Tue, 12 Aug 2025 16:29:20 -0500
-> Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
-> 
->> Add sysfs attributes for getting the serial number, numa node, CXL cache
->> unit, and CXL cache size to struct cxl_cachedev.
+On 8/13/2025 6:25 AM, Alejandro Lucero Palau wrote:
+> On 8/12/25 22:29, Ben Cheatham wrote:
+>> This patch series adds initial CXL.cache support. What I have here only
+>> allows for adding a cache device to the system, programming/validating
+>> the system configuration with respect to cache devices, and some basic
+>> cache reporting/management.
 >>
->> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
-> A few minor comments inline.
-> 
->> ---
->>  drivers/cxl/core/cachedev.c | 102 ++++++++++++++++++++++++++++++++++++
->>  1 file changed, 102 insertions(+)
+>> The general philosophy is to have an endpoint/vendor-specific driver
+>> that runs through the same steps of adding a cxl_memdev, but for the
+>> cache portion of the device (both type 1 & 2). Getting cache support for
+>> a CXL device should be as simple as: get cache information, set up the
+>> memory region (see below), and then calling devm_cxl_add_cachedev().
 >>
->> diff --git a/drivers/cxl/core/cachedev.c b/drivers/cxl/core/cachedev.c
->> index aaf4a1b94178..1cdd94520ceb 100644
->> --- a/drivers/cxl/core/cachedev.c
->> +++ b/drivers/cxl/core/cachedev.c
->> @@ -1,5 +1,6 @@
->>  // SPDX-License-Identifier: GPL-2.0-only
->>  /* Copyright (C) 2025 Advanced Micro Devices, Inc. */
->> +#include <linux/string_helpers.h>
->>  #include <linux/device.h>
->>  #include <linux/pci.h>
->>  
->> @@ -30,10 +31,111 @@ static char *cxl_cachedev_devnode(const struct device *dev, umode_t *mode,
->>  	return kasprintf(GFP_KERNEL, "cxl/%s", dev_name(dev));
->>  }
->>  
->> +static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
->> +			   char *buf)
->> +{
->> +	struct cxl_cachedev *cxlcd = to_cxl_cachedev(dev);
->> +	struct cxl_dev_state *cxlds = cxlcd->cxlds;
->> +
->> +	return sysfs_emit(buf, "%#llx\n", cxlds->serial);
-> Just as an FYI there is a discussion about putting similar in place for the pci device.
+>> There's a couple of things missing from this set:
+>>
+>> 1) Missing an endpoint driver
+>>
+>>     I plan on submitting a reference driver (type 1 or 2) with v1, I
+>>     figured I'd send out what I have before going much further.
+>>
+>> 2) Mapping/Reserving host memory used for CXL cache(s)
+>>
+>>     I'm thinking this will be handled by the endpoint driver, but I'm
+>>     not sure what mechanism would be used and whether to integrate it
+>>     with the cxl_cache/core. Any thoughts/ideas here are appreciated!
 > 
-> https://lore.kernel.org/linux-pci/20250811173931.8068-2-thepacketgeek@gmail.com/
+> 
+> Hi Ben,
+> 
+> 
+> Good to see you working on this. I'll go through the series these next days.
+> 
+> 
+> FWIW, I did send a RFC last November about my concerns for properly/safely supporting CXL.cache.
 
-Wasn't aware of that, I'll probably remove this one then.
+Yeah, I saw Jonathan linked it in his reply as well. I've read it but didn't really have anything to say about safety/iommu schemes.
+
+This set is really just for the first part of the summary at the end of that email ("CXL core handling per device CXL.cache enabling...").
 
 > 
->> +}
->> +static DEVICE_ATTR_RO(serial);
->> +
->> +static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
->> +			      char *buf)
->> +{
->> +	return sysfs_emit(buf, "%d\n", dev_to_node(dev));
 > 
-> I grumped about this when it was added for the memdev (duplication) but lost
-> then so I'll give in this time without a fight :)
-> 
+> I had no time to keep thinking about it. Also, I sent a copy to the kernel iommu mailing list, but it did not get traction then. Anyways, as a summary, I think mapping for CXL.cache requires not just the endpoint driver doing it freely but through the cxl core for ensuring it is done properly and safely. But I have to admit this could be a misunderstanding about how the hardware is going to allow CXL.cache.
 
-I don't mind removing it honestly, it's just there for parity with cxl_memdev. It really
-confuses people who are debugging CXL memory in the terminal but don't know much about the
-driver in my experience.
+I agree! I just wasn't sure of the approach to take here so I opted to leave it out until we came to a consensus.
 
->> +}
->> +static DEVICE_ATTR_RO(numa_node);
->> +
->> +static struct attribute *cxl_cachedev_attributes[] = {
->> +	&dev_attr_serial.attr,
->> +	&dev_attr_numa_node.attr,
-> 
-> Missing NULL?
-> 
+Thanks,
+Ben
 
-Yeah, will add it.
-
->> +};
->> +
->> +static umode_t cxl_cachedev_visible(struct kobject *kobj, struct attribute *a,
->> +				    int n)
->> +{
->> +	if (!IS_ENABLED(CONFIG_NUMA) && a == &dev_attr_numa_node.attr)
->> +		return 0;
->> +	return a->mode;
->> +}
 > 
->> +static DEVICE_ATTR_RO(cache_unit);
->> +
->> +static struct attribute *cxl_cachedev_cache_attributes[] = {
->> +	&dev_attr_cache_size.attr,
->> +	&dev_attr_cache_unit.attr,
->> +	NULL,
 > 
-> No comma.
+> Thanks
 > 
->> +};
 > 
->> +
->> +static const struct attribute_group *cxl_cachedev_attribute_groups[] = {
->> +	&cxl_cachedev_attribute_group,
->> +	&cxl_cachedev_cache_attribute_group,
->> +	NULL,
-> 
-> No trailing comma needed given it's a terminator.
-> 
-
-Will fix (with above as well).
-
->> +};
->> +
->>  static const struct device_type cxl_cachedev_type = {
->>  	.name = "cxl_cachedev",
->>  	.release = cxl_cachedev_release,
->>  	.devnode = cxl_cachedev_devnode,
->> +	.groups = cxl_cachedev_attribute_groups,
->>  };
->>  
->>  bool is_cxl_cachedev(const struct device *dev)
-> 
+>> 3) RAS Support
+>>
+>>     Same situation as 1) above.
+>>
+>> Some quick notes: The actual cache parts of this set are untested due
+>> to problems with my set up, but I did make sure nothing here breaks type
+>> 3 support. I'll have this fixed before sending out a v1. This series is
+>> based on the for-6.18/cxl-probe-order (commit 5e29cbd1077b) branch in
+>> the CXL repo, with v7 of Dave's deferred dport probe set on top [1]. I
+>> added Dave's set to help with getting around constraints with HDM
+>> decoders in CXL.cache device only configurations (see 08/18 for more).
+>>
+>> Patch Breakdown:
+>>     - 1 & 2: Preliminary changes for struct cxl_cachedev
+>>     - 3: Add struct cxl_cachedev
+>>     - 4-8: Preliminary changes for adding cache devices to port
+>>       hierarchy
+>>     - 9: Function for getting CXL cache info
+>>     - 10: cxl_cache driver (mirrors cxl_mem)
+>>     - 11-16: Checking CXL.cache capabilities for system configuration
+>>       validity
+>>     - 17-18: Cache device attributes
+>>
+>> [1]:
+>> Link: https://lore.kernel.org/linux-cxl/20250714223527.461147-1-dave.jiang@intel.com/
+>>
+>> Ben Cheatham (18):
+>>    cxl/mem: Change cxl_memdev_ops to cxl_dev_ops
+>>    cxl: Move struct cxl_dev_state definition
+>>    cxl/core: Add CXL.cache device struct
+>>    cxl: Replace cxl_mem_find_port() with cxl_dev_find_port()
+>>    cxl: Change cxl_ep_load() to use struct device * parameter
+>>    cxl/port, mem: Make adding an endpoint device type agnostic
+>>    cxl/port: Split endpoint port probe on device type
+>>    cxl/port: Update switch_port_probe() for CXL cache devices
+>>    cxl/core: Add function for getting CXL cache info
+>>    cxl/cache: Add cxl_cache driver
+>>    cxl/core: Add CXL snoop filter setup and checking
+>>    cxl/cache: Add CXL Cache ID Route Table mapping
+>>    cxl/cache: Implement Cache ID Route Table programming
+>>    cxl/cache: Add Cache ID Decoder capability mapping
+>>    cxl/cache: Implement Cache ID Decoder programming
+>>    cxl/cache: Add cache device counting for CXL ports
+>>    cxl/core: Add cache device attributes
+>>    cxl/core: Add cache device cache management attributes
+>>
+>>   drivers/cxl/Kconfig         |  14 +
+>>   drivers/cxl/Makefile        |   2 +
+>>   drivers/cxl/cache.c         | 276 +++++++++++++++++++
+>>   drivers/cxl/core/Makefile   |   1 +
+>>   drivers/cxl/core/cachedev.c | 292 ++++++++++++++++++++
+>>   drivers/cxl/core/hdm.c      |  31 +++
+>>   drivers/cxl/core/memdev.c   |   2 +-
+>>   drivers/cxl/core/pci.c      | 134 ++++++++++
+>>   drivers/cxl/core/port.c     | 518 +++++++++++++++++++++++++++++++++---
+>>   drivers/cxl/core/region.c   |  25 +-
+>>   drivers/cxl/core/regs.c     |  28 ++
+>>   drivers/cxl/cxl.h           | 193 +++++++++++++-
+>>   drivers/cxl/cxlcache.h      |  42 +++
+>>   drivers/cxl/cxlmem.h        | 121 +--------
+>>   drivers/cxl/cxlpci.h        |  10 +
+>>   drivers/cxl/mem.c           |  14 +-
+>>   drivers/cxl/pci.c           |   2 +-
+>>   drivers/cxl/port.c          |  54 ++--
+>>   drivers/cxl/private.h       |   8 +-
+>>   19 files changed, 1569 insertions(+), 198 deletions(-)
+>>   create mode 100644 drivers/cxl/cache.c
+>>   create mode 100644 drivers/cxl/core/cachedev.c
+>>   create mode 100644 drivers/cxl/cxlcache.h
+>>
 
