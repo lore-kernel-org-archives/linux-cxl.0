@@ -1,46 +1,46 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2065.outbound.protection.outlook.com [40.107.92.65])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2074.outbound.protection.outlook.com [40.107.94.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365FD20EB
-	for <linux-cxl@vger.kernel.org>; Fri, 22 Aug 2025 18:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797FA20EB
+	for <linux-cxl@vger.kernel.org>; Fri, 22 Aug 2025 18:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.74
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755885689; cv=fail; b=tPki4fjhEtGXwdkAextnN0XpPNuUFnLpDe1DQuSYFT+KF+zNatME37z6gMNQ/rT1B1NnjZoXQpVtC9kFrkFkSaodlLxQVHclBjwmmweOHVC0Htd4efObk++B7aj7mevOb6XY//6U6sck1KDU6e0lJFLdEKX6Ezi3X+q4i5gCmqQ=
+	t=1755885694; cv=fail; b=cz8ZKLUBq1LKqpZPaD5ADHMexrk0PvnAwzjXc7XZOH3nU19nP2L+2AN3ervrPuKkmSK5MRDtuGyCF1jRNv1GQiDp1yENb4ULc2YRdUf3cjjTWjZaFC/zW6HvvbiJ6XHrFZm+/iI7fDN0Q1afRaCQKfXFI05LSgZONInCBxvJFFU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755885689; c=relaxed/simple;
-	bh=C7C6K99KRR9/CPT9EqpegkIyhsf67Y3bEPLKkGWt5/E=;
+	s=arc-20240116; t=1755885694; c=relaxed/simple;
+	bh=qoJOSjml1FqLPnkFAu5fRslsnAZgfcko2CGi0mykssA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UpOnrMX5AzTIO+Ats/4PhESDkUs/xhIOaUXUHWLB+IsLW/oXFGZLCvIzp7U5zMk+iLeH6qXh9YadPpzSLxHZIO3sUNs3cQ+47G0kOrTQE5zX1CuD/ZZucURvyJwhkSJpQWNHKBEr3DmOB/mVrIu26kU15DTBo2I7PFQ7A5+Khqs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TLtXEy4M; arc=fail smtp.client-ip=40.107.92.65
+	 In-Reply-To:Content-Type; b=Zhu/AnLjN3Y8RUDNj/dOFItd3z3fZ7Gq87CH5MMXIDloHIpE4kybLKHkrAZ6qX5JbOcnLWN08qRYzilKn/FBumQ7BCr93zPPCT/eYdAf5U8SHcs06AaHc+fOq3DRl/Nw6TOjJqhjiXjCwdcIUuqMcAWms27tEqRPf3qKhkJiVQk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=I48JpnC/; arc=fail smtp.client-ip=40.107.94.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TLtXEy4M"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="I48JpnC/"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mYMiXq+tq3IDv0mgrYEcL5Kb6sJh+iwfvf5gma+oSMpGca+D49Sn15RG96aPBkCIkVTraaijMSsRK8e7FRNXA1Slx63zQuROayXxwLCxQNIaP3+Zlua4cg0r5ahOVhxaP9ZB26MRwfltoItzQFlF3svx/HdOPs2Z9rx2LlOOqeKB86WxtBuxhfbd4sEvMmThrJ6si/zsv30jnERSUaAlSgCYoIY5SB7Y+A+xl4Ol5iZd+dYwTTy+aVp1VexKDJ4N0V1lzkrlNV20vtniR480aJucU+XU3Kb7Cq18eLs6RiqzEhasYqC1EHEyrPZsZ5Gh8iXMj36FUDnAXtr4xLNTsw==
+ b=xQ8wz9Uj2lT8R9GSDA1YOG4XkedDTpNASsh7qYoNqqu5smk2dQDuiGYFGszBrPHVU8MijKKwWYnFDksdG5X+KMRuM3/76cnrrmKfZGv+yNK09KCzc8px+tZcBsvJuvnKLSEq3I8lEvjRgNvl4+5ZBW44kHKy76XbEhHJWy8A5ovrsxAIIu2WLrbtEbW7vsIeP05oYNg6LzwC/PaRKbF8lw7Zh+9/he+Kn5I2xAA9SjPI14F5n0wqVVgMfRyUuQBkcyu/ajeWXobseW+xyPh5HQy3HshylE4ocVZkl/NfkEvuzrfrDcqsWgKwozgZm0RYxe3ZMA0V7HzdJE+Z8k7ASA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=52x4+eq/3yFcMl+6cNgCSavOBw4Y5kDDLGM6/UTl+Fo=;
- b=oXETosNJK4Xn7M5W5XS8REIZ9O9RQ6udN/e8mdCr7zJ4s2BKPsc9fP23clYcbXSEhjKyNxnOdB9iwmyLuObKfUeLh+spU5sTJ0XixLn73cNZQGmpeE/olCf8rknp76eH4sU6A2qqT7ii0hZYJuI34VXF2ho1NoyocAk71v+39N6y5+LwtubZZgR5al4xoObeTw/SB3iSYPiGuZ6Uw5fI8Ex01XQ7mAIth7VOHP/OQa+jjBvpeJttPy+y6isUnpMBFwlucE3B3GjNGwK9J/a+e1rcTz+LM3lENzXF8/oyK4KwKieZ7wvZUfvKJPnV9mzNHq1hu+zVn3PdRqK67CUwpg==
+ bh=wIj9Qw06KBJ2/7wiRQ/6qVG4ozXhx7OOIDJo6GtBx0E=;
+ b=TcSo1IA654VwfQZSWV4GLOB1dGEK6hCpNycFqRs5u8k2YdluCIPOQ6rcCxWOV0wjrLkJ0aAUySkWWjRioNolKKNVmXqfzoFNO2aADMobqBsTsMqxH2UG01x2lPTSdPstg7K7dK5Pyeqxn1ReKzIJB3vEpnygyIlyKa58FTRSuPfDSPs6bJd54n0cTfOUej23VO8I8aRTVlC3o0QSfMcrVlToQHPFvM9G4Laa6wLdOuXD62+FIhm/TWnPlTo7aPglDqOW+ssP8Ft0IANml7PEik4E9baRDZKBTpZCDF0HkxsMafPfnaC0qvzZ+ZdwAUC6C1XrGByw9MvbLp66829tSA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=52x4+eq/3yFcMl+6cNgCSavOBw4Y5kDDLGM6/UTl+Fo=;
- b=TLtXEy4MI01nb9g4uAp2uYBZaYHCKaLJYZLGXn4OJUwdEEfzCFeGsdBWi14qtACeIQsJeyMf7xECMAoEz/dgWfga/tKirHVLSIfc4Lky8YKReavOmgp4NiSvZLqJoMoBJb1jKL20i7uv9SB+wzB1EgP0paU0rT3SvoIx6fT3owc=
-Received: from BLAPR03CA0143.namprd03.prod.outlook.com (2603:10b6:208:32e::28)
- by DS4PR12MB9681.namprd12.prod.outlook.com (2603:10b6:8:281::12) with
+ bh=wIj9Qw06KBJ2/7wiRQ/6qVG4ozXhx7OOIDJo6GtBx0E=;
+ b=I48JpnC/KiFp97KhzmKGP6TbjFZ5p+ljaRk+J6z7VqNUlsh1X01lFqqNfgHURQFqxy/D1B4fmR/qc0eO1Ai/19TlrxV10hFobx14V4Wv+YEe/RX5Lky9X/YV3V6Zh+7KDcu89+wtSSoj/voQL9yPNjoanUTbclaA+hGdNqauCbQ=
+Received: from BN7PR06CA0054.namprd06.prod.outlook.com (2603:10b6:408:34::31)
+ by LV2PR12MB5896.namprd12.prod.outlook.com (2603:10b6:408:172::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.14; Fri, 22 Aug
- 2025 18:01:24 +0000
-Received: from BN2PEPF000044AC.namprd04.prod.outlook.com
- (2603:10b6:208:32e:cafe::d2) by BLAPR03CA0143.outlook.office365.com
- (2603:10b6:208:32e::28) with Microsoft SMTP Server (version=TLS1_3,
+ 2025 18:01:31 +0000
+Received: from BN2PEPF000044A6.namprd04.prod.outlook.com
+ (2603:10b6:408:34:cafe::8) by BN7PR06CA0054.outlook.office365.com
+ (2603:10b6:408:34::31) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9052.19 via Frontend Transport; Fri,
- 22 Aug 2025 18:01:24 +0000
+ 22 Aug 2025 18:01:31 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,15 +48,15 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF000044AC.mail.protection.outlook.com (10.167.243.107) with Microsoft
+ BN2PEPF000044A6.mail.protection.outlook.com (10.167.243.100) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.9052.8 via Frontend Transport; Fri, 22 Aug 2025 18:01:24 +0000
+ 15.20.9052.8 via Frontend Transport; Fri, 22 Aug 2025 18:01:31 +0000
 Received: from [10.236.176.149] (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 22 Aug
- 2025 13:01:23 -0500
-Message-ID: <a792b5ce-fcf6-45b1-b994-55f99d09c18f@amd.com>
-Date: Fri, 22 Aug 2025 13:01:23 -0500
+ 2025 13:01:30 -0500
+Message-ID: <c01e3f6d-bc0a-4372-8808-535698a28411@amd.com>
+Date: Fri, 22 Aug 2025 13:01:30 -0500
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -64,367 +64,118 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 11/18] cxl/core: Add CXL snoop filter setup and
- checking
+Subject: Re: [RFC PATCH 10/18] cxl/cache: Add cxl_cache driver
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 CC: <linux-cxl@vger.kernel.org>
 References: <20250812212921.9548-1-Benjamin.Cheatham@amd.com>
- <20250812212921.9548-12-Benjamin.Cheatham@amd.com>
- <20250819151826.00000aab@huawei.com>
+ <20250812212921.9548-11-Benjamin.Cheatham@amd.com>
+ <20250819131117.00001e84@huawei.com>
 Content-Language: en-US
 From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-In-Reply-To: <20250819151826.00000aab@huawei.com>
+In-Reply-To: <20250819131117.00001e84@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044AC:EE_|DS4PR12MB9681:EE_
-X-MS-Office365-Filtering-Correlation-Id: ff675bd1-0c46-4951-42a1-08dde1a5e88b
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A6:EE_|LV2PR12MB5896:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7098c07b-d85f-4df8-d903-08dde1a5ecd6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WWJLQStsR0xXVnJ5Z3JKb3hRS0pWYVdoVnhDcXFxOXhaeDdFUDhUUVZsSjFv?=
- =?utf-8?B?YlgybFJWL2xRZTRuWW1PcHlYR295eElUZWJsbDJ4ejRSKzEwdWRxUEg2eERB?=
- =?utf-8?B?ckdaNm5VVlNHRWhvTVh0cXRab1hBWlBJcGZtUmprenVjclczTjA1eTNtMHFU?=
- =?utf-8?B?MytqbG9sMkd2V1lDMmxzL3QwaGVVVlhhMlZjWFY3b3djcmRXK2lzM01WOWhK?=
- =?utf-8?B?YkNMRWVMcXZTRU41b0hwZFkxWm9uWDEyTGZFRXhsQWcxckk3OUNLUFpXM2NC?=
- =?utf-8?B?d2E1S2cyRG9aUncvUnBFY3JETG5pMHhHNHl6Z3RCdmN0ZlZvV29kdzRXdHJO?=
- =?utf-8?B?UEl1LzUxSlQyZ1ZBbWM5Qm9oRXVXUUk3OE5YUTNDTm5iVyt6VkFSc2FFeTFQ?=
- =?utf-8?B?Y1YzY21QN2FidFkvSmdoV2xnbkxtcE5JSXVmZEtRYUY0RW5nQzFmTmovRXNx?=
- =?utf-8?B?OElFd1Y2VGpuSkhBZDFVSGRyS0srRlJhWURDR2V5Y2xCNFBwb3RaUTd1UFpt?=
- =?utf-8?B?eWRNUFNyV01WUy9PdXNFajUxemI5TjBYK1dkakhlb1pjRGJ2U0dMLzFWbUox?=
- =?utf-8?B?Y2ExVStqMG13V01wVnVqMmhvTjdlRHRreHEwQXRVbWpVRTZqZzMrL1RDWWMz?=
- =?utf-8?B?Mncrb01tVUZkTUdHSHJyc1FDOHozOHVqQTNLdU9YdmFjQjUvOE55Sm1wbVhY?=
- =?utf-8?B?U0U5SEEyT1Ivc1Y2R3M3bE5DUmJ1R0hrY1BMd1pwd3piNE9QRzdWWTgzK20z?=
- =?utf-8?B?S214elNhYTdvUnBFb1hRLzBPR0lDYStYNlBVRXdKU0F1ZHcrUGdiajRFNDIv?=
- =?utf-8?B?UWVGTk1iUWkxTVZicTFRSGxTeU1HR2pWRVFIM3FtTW5JOThRYU50RHhoQlZx?=
- =?utf-8?B?NFR6NXRDYWs5QXpNTGlmaFAyY1FOWUtkZXM3S1JSeXZWSm1SUndvTEVWenQy?=
- =?utf-8?B?REFPM2ZRUFB5TEdFdDZITUR6YjFRVHZmUkhSTGZNSFNtak5OYW5EWUhNUWpq?=
- =?utf-8?B?Yzg1blRGV1lRaEpoM29Pa2lHaCtCRUZCQnlOMCtsaUJoeWJENjhlUlZ3alRz?=
- =?utf-8?B?aUNVL0t1cDNZRC80WEVrSkxYN3BNZWRnRFVjaC9aOEROckpYNzFBRTZXWWEy?=
- =?utf-8?B?Tm9mQTBTbjVHMEtrbUI1KzdIK1JBTGlHa0p1NmZqcFpVeGlnZVNDNkpaVktj?=
- =?utf-8?B?RHptdkNqclRSZUVjenFFSWJJWEJ6SWV2eDZmWEZPQTArS3dhelU4VjBoZlFC?=
- =?utf-8?B?VlVub001eExqcjd0TzhlejJuQldFVVZQeEU4SXhOU1I2eE8rSWE2MUp2cUZG?=
- =?utf-8?B?M1NGUkFvUDRqNXVvQllnbXVTcTZzTnpoMGx5eTRnTW42a2I4TCszdDdzaHRR?=
- =?utf-8?B?WkpMN3dSVmhacFEybUQvdUFLeGNQQXM0NmJlbndLUWk4dWlwMTlhZ2NIMzFm?=
- =?utf-8?B?NnJpYlRzRnZWMWcrdmtrVFBucUVGUFAyQ2tKV3cwOGhMeU1GY2hjK3ZoVlVW?=
- =?utf-8?B?czJXTHhJdVJuYlkwVCt0MjQxS2NGazRyWWlVeHZ3WUdmaEpIa0Nvdm41SU42?=
- =?utf-8?B?N2tOTjNaR0lGYUZLSktOVHpwUTkzbEVvM3d6RnJCUWtrNFNVdmpKOGpXNUZa?=
- =?utf-8?B?VFRrZXVKemRRQUNhWktlMFd6TWJCOWJ4R1RVZXFRTkp1UlUraWhhcFZHZmFX?=
- =?utf-8?B?QWRweE9iNjhjbkxZNHJCem1CcHUzemFzUklUTWZmbys0aXU3WWVBL3Fhak5m?=
- =?utf-8?B?SjJKaTZUSnB6TWpzbGx2dFR4cldoRzhQSTJPOXdUUWNpK2x5MGhWb29DOUVU?=
- =?utf-8?B?T1RvS3FGZzJ1bXNhWS9KeVFVWjAyakhmbWk2SytNcFh1VGtzREpqbit1ZGxV?=
- =?utf-8?B?dmxTNVFHbEZtZEd4eE9RUHlQQjZScWNEZUdpYVRpaFVIUS9KeWJ3djJ2R2RL?=
- =?utf-8?B?aGM2M1hIeG5EbGE2M0UyYUVyTnE4K2EzTmdSZlA0SFJRUlVDOUtkRVBvMDhC?=
- =?utf-8?B?M1lNbmlUdXVqcU9wZitYa2NJS3c3YVhUZUswWi81U0c1R05CRXlHMHpuaDA5?=
- =?utf-8?Q?MMinjt?=
+	=?utf-8?B?Z0xQSzFoYWZ3dVRQUHZPdkw3aWVscHRtUnBjTkl0dHFydldrTUVhM1hhUDlL?=
+ =?utf-8?B?d0hJU1BIVWZXWVZxdExTM0JIQ0hSOFh1a2hNWWE3U1JQaVd0MktJVVE0UHR4?=
+ =?utf-8?B?TzFhaEp5U09McHVvemFBb0FFV3l3cFhuYTB2L1VZZnZMWDErRlNIci8zbXFy?=
+ =?utf-8?B?ZzlXei92MDA4Z2FVYi9pTkhZK0Z6dGZLN1EyWE03Wmprd2o0S05kRzN6ajVX?=
+ =?utf-8?B?OTRSaFRiRmEwTnpReHV3YndnQlI0RlhBdTZaa2ZURDQ4KytqQmg4VHN3N3ZX?=
+ =?utf-8?B?WnV1QTFRZURhQW9kK2lsYURJalJta2lINHAxWlkyUTRUWXZqMlZUYVExd1RQ?=
+ =?utf-8?B?TFJGRDIvU0hteHdRSGwxK0FYdncyZXE2TFNIdzVFNFhoeldlbnpJcmpLaDB0?=
+ =?utf-8?B?ZGRjL1FoOTJDR1M4MzcyOXVXb1lDZ2d1SjNQb0ZjQUtuVitVQm4ydGpBMlE2?=
+ =?utf-8?B?aFhMQTFEaHlBWHJSamJUYS9uSm1ybFpVSDhLL1kvM2ViZ1d5Q0w3S0QwUnFn?=
+ =?utf-8?B?eWJCakFDU3kvQ0d1d1dQWkRQNms5Umh3Rm51UUpZTHpGdzRZSDAxMkIrQzI3?=
+ =?utf-8?B?cGJsaWVsRlhzU1QzNlhUSFhoQlQyak9YRnd1UE1pOFFrZXNhQmMwRFhrb2dw?=
+ =?utf-8?B?eUs1UUkvMWlEaFJ1RVRpbXE1UnFJeXIxQ01LQjBod1NsRXM3TlAxSUF1Q2wr?=
+ =?utf-8?B?NGYxRWh4Y3lsZ0Q4Y3piUlVHbGliNTgwZmt0U09IaExYU2lwTjZmdWhnUGtp?=
+ =?utf-8?B?c0RYV1BXaFNSWmpieXRSSTdoMDl0eTN3L1M0aWlqM2lzSHE4TDloVDJqbDNw?=
+ =?utf-8?B?aVdra3JPQkVHYzRNVzMwWDl4N21zQ0VjcHE2Qi9FUmhqNEQ5V1lFWGxMR2lG?=
+ =?utf-8?B?aHkyQ2xHdzNDb0NjK015dHdSUks2NURCK0k4aHlDcS9EMTdBZDQrbUVwcDBu?=
+ =?utf-8?B?UEdlNXNiUmlGQ3h2NUlUZzREd0RxZjFxR1NMWi9oTk92a0pERmxHbFNBRUs0?=
+ =?utf-8?B?bHUzVm85ZmRKMnVFNlFDeXRaaERDQ2ZOSjJiQ2J3dmtubHZFZDVLM2lNVzlP?=
+ =?utf-8?B?eGtxSVpndUdOQ2NaZjY3ZU5hSVA2U2wwYTVZWDF4WmdZenVzczhXeS83anRJ?=
+ =?utf-8?B?d09LMmViZ2YxeEo2RnZzYitIUGFsTUp1emphOVk5cUloYTNnMFBzUjRnTXk1?=
+ =?utf-8?B?QS9hREI4VURyZFhCK0NDOWFuQVdFbFFIaXFCaHpCYSsvNEsxWnRpMjZab2Qr?=
+ =?utf-8?B?T0V3d25hdlZER1YwWWtMRHdxeUtTZDJpYkJPUUJZMllDYVZFS2lDekxzQUNk?=
+ =?utf-8?B?Ti9UdDQzMWt3WU5LMmhjMTFiLzF3RWVSbXhjN1ZrTkpneFkxaEc5eVZxU01Z?=
+ =?utf-8?B?OTZxZC9JSUVURmR1Yk8rb0NLL01tOU5hOVY1WGYxa2dmSE1QVUFoZ1JIdThU?=
+ =?utf-8?B?K1A1dFZNekE4NnJoUlF3b3E0Z3lXd1Fud0J1YlJDanJISDVjVENyZDlvcmp5?=
+ =?utf-8?B?N2VpMHNLdmJiOWxuMzVuQU0xRDQrZnA1UHE3dUlXTVJ0N2NzZUllZjJJbHZM?=
+ =?utf-8?B?a01ZRjI5cDJNRmFEUW5rZUVXVVhURGVhSUtibWN5RmMxVVFlK3hHUkZzbGlk?=
+ =?utf-8?B?T1pvY3J6aGxiWFdPbGJHcGlrRW1CcU1lRjVtenk3WUZjL3AydGtub1c4MVgv?=
+ =?utf-8?B?L1VDUjhMU0s4d2YvVy9kM1JsUzNrcEFHUGNzNzFocDRLVzhqV0dCTHpFVC9a?=
+ =?utf-8?B?R0xrSUhwcEhKK25RY25XSFQvam9jRWQwbzN1bmxpZXFmbWlZaC9xdkFjU25J?=
+ =?utf-8?B?cVhsVmw4dTI4T1RtWXZDUmJkOTJUMGoxUVhTMGx0YUxWWitqdEpzRnkxVDE1?=
+ =?utf-8?B?eWJYVjkzWlVKeFpEVFBtazdVVkxsQXR5LzRKbWtMdU42QXdTZnZ2bHFJZjc0?=
+ =?utf-8?B?TEZtSVgvRmFxR0lva0Q2VFQvUThCSCtpVmJzbUJyM0NTMmVSSDJueGhGT0xu?=
+ =?utf-8?B?RXdublZXbG9wTW9tdW9tOHEydTEvZHY5YmM1NEF3dDJJN21LUEJqTUFONHVn?=
+ =?utf-8?Q?PUk3ME?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2025 18:01:24.3349
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2025 18:01:31.5420
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff675bd1-0c46-4951-42a1-08dde1a5e88b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7098c07b-d85f-4df8-d903-08dde1a5ecd6
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044AC.namprd04.prod.outlook.com
+	BN2PEPF000044A6.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PR12MB9681
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5896
 
 
 
-On 8/19/2025 9:18 AM, Jonathan Cameron wrote:
-> On Tue, 12 Aug 2025 16:29:14 -0500
+On 8/19/2025 7:11 AM, Jonathan Cameron wrote:
+> On Tue, 12 Aug 2025 16:29:13 -0500
 > Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
 > 
->> Add functions to set up and validate the snoop filter configuration of a
->> CXL-capable PCIe Root Port (struct cxl_dport). Allocate space in the
->> snoop filter as part of cxl_cachedev probe.
+>> Add the cxl_cache driver which will manage struct cxl_cachdev devices.
+>> This driver will provide common management functions for some of a cache
+>> capable endpoint. This driver will also be responsible for validating
+>> the system's CXL.cache configuration.
 >>
-> 
-> Any thoughts on how to handle allocation policy, when combined with Cache_SF_Coverage
-> hints or indeed just overcommiting the snoop filter and relying on snoops
-> to clear space.
-> 
-
-I'm not sure. The coverage fields are described as performance hints which makes me think
-that devices may not pay attention to the fields to begin with. If it's common for devices
-to ignore those field, it seems rejecting devices based on snoop capacity is the way to go.
-If it's expected for devices to pay attention then I could try to come up with an allocation
-scheme, but I would rather be conservative to start.
-
-> The spec is rather ambiguous on when these can be used as opposed to
-> just rejecting devices if we are out of space.
-
-The spec is ambiguous on most things relating to CXL.cache in my experience :/.
-
-> 
-> 
+>> The driver expects the device's cache capabilities to be prefetched by
+>> the endpoint-specific driver. The required capabilities can be gotten by
+>> calling cxl_accel_get_cache_info().
+>>
 >> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
 > 
-> A few comments inline.
 > 
-> Thanks,
+>> +static struct cxl_driver cxl_cache_driver = {
+>> +	.name = "cxl_cache",
+>> +	.probe = cxl_cache_probe,
+>> +	.drv = {
+>> +		.probe_type = PROBE_FORCE_SYNCHRONOUS,
 > 
-> Jonathan
-> 
->>  
->> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->> index 5144ddac7145..26ea22a2638c 100644
->> --- a/drivers/cxl/core/port.c
->> +++ b/drivers/cxl/core/port.c
->> @@ -35,6 +35,9 @@ static DEFINE_IDA(cxl_port_ida);
->>  static DEFINE_XARRAY(cxl_root_buses);
->>  static DEFINE_XARRAY(cxl_root_ports);
->>  
->> +DECLARE_RWSEM(cxl_snoop_rwsem);
-> 
-> static?
+> Why?  I'd add a comment.
 > 
 
-Yep.
+To match cxl_mem probe. This series is based on the probe changes Dan did
+on the for-6.18/cxl-probe-order branch. I could add a comment, but it looks
+like I should probably just do a better job highlighting the base for this
+series in the cover letter.
 
->> +static DEFINE_XARRAY(cxl_snoop_filters);
->> +
->>  /*
->>   * The terminal device in PCI is NULL and @platform_bus
->>   * for platform devices (for cxl_test)
->> @@ -809,6 +812,139 @@ static int cxl_dport_setup_regs(struct device *host, struct cxl_dport *dport,
->>  	return rc;
->>  }
->>  
->> +struct cxl_snoop_filter {
->> +	u64 size;
->> +	struct xarray dports;
->> +	struct xarray devs;
->> +	struct mutex lock; /* Used for filter allocations */
+>> +	},
+>> +	.id = CXL_DEVICE_ACCELERATOR,
 >> +};
 >> +
->> +static struct cxl_snoop_filter *cxl_create_snoop_filter(struct cxl_dport *dport,
->> +							u32 gid, u32 size)
->> +{
->> +	struct cxl_snoop_filter *sf;
->> +	int rc;
+>> +module_cxl_driver(cxl_cache_driver);
 >> +
->> +	sf = xa_load(&cxl_snoop_filters, gid);
->> +	if (sf)
->> +		return sf;
->> +
->> +	guard(rwsem_write)(&cxl_snoop_rwsem);
->> +	sf = kzalloc(sizeof(*sf), GFP_KERNEL);
->> +	if (!sf)
->> +		return ERR_PTR(-ENOMEM);
->> +
->> +	sf->size = size;
->> +	xa_init(&sf->dports);
->> +	xa_init(&sf->devs);
->> +	mutex_init(&sf->lock);
->> +
->> +	rc = xa_insert(&sf->dports, (unsigned long)dport->dport_dev, dport,
-> 
-> So the aim here is include all dports with this GID in sf->dports?
-> If so why isn't one added if the xa_load() above finds sf?
-> 
-
-It should be, I just missed it :/.
-
->> +		       GFP_KERNEL);
->> +	if (rc)
->> +		goto err;
->> +
->> +	rc = xa_insert(&cxl_snoop_filters, gid, sf, GFP_KERNEL);
->> +	if (rc)
->> +		goto err;
->> +
->> +	return 0;
->> +
->> +err:
->> +	xa_destroy(&sf->dports);
->> +	xa_destroy(&sf->devs);
->> +	mutex_destroy(&sf->lock);
->> +	kfree(sf);
->> +	return ERR_PTR(rc);
->> +}
->> +
->> +static void cxl_destroy_snoop_filters(void)
->> +{
->> +	struct cxl_snoop_filter *sf;
->> +	unsigned long gid;
->> +
->> +	guard(rwsem_write)(&cxl_snoop_rwsem);
->> +	xa_for_each(&cxl_snoop_filters, gid, sf) {
->> +		xa_destroy(&sf->dports);
->> +		xa_destroy(&sf->devs);
->> +		mutex_destroy(&sf->lock);
-> 
-> Not freeing sf?
-> 
-
-Missed it, will add.
-
->> +	}
->> +
->> +	xa_destroy(&cxl_snoop_filters);
->> +}
->> +
->> +static void cxl_snoop_filter_free(void *data)
->> +{
->> +	struct cxl_cache_state *cstate = data;
->> +	struct cxl_snoop_filter *sf;
->> +
->> +	sf = xa_load(&cxl_snoop_filters, cstate->snoop_id);
->> +	if (!sf)
-> 
-> I'd put a debug print here at least and possibly scream as fairly
-> sure this means we are trying to free something we never had.
-> 
-
-Sure.
-
->> +		return;
->> +
->> +	guard(mutex)(&sf->lock);
->> +	sf->size += cstate->size;
->> +}
->> +
->> +int devm_cxl_snoop_filter_alloc(u32 gid, struct cxl_dev_state *cxlds)
-> 
-> I'd rename this as it is allocating part of the capacity rather
-> than allocating the snoop filter representation.
-> _alloc_for_device maybe?
-> 
-
-Yeah, that sounds good to me.
-
-> 
->> +{
->> +	struct cxl_cache_state *cstate = &cxlds->cstate;
->> +	struct cxl_snoop_filter *sf;
->> +
->> +	sf = xa_load(&cxl_snoop_filters, gid);
->> +	if (!sf)
->> +		return -ENODEV;
->> +
->> +	guard(mutex)(&sf->lock);
->> +	if (cstate->size > sf->size)
->> +		return -EBUSY;
->> +
->> +	sf->size -= cstate->size;
->> +	cstate->snoop_id = gid;
->> +	return devm_add_action_or_reset(cxlds->dev, cxl_snoop_filter_free,
->> +					cstate);
->> +}
->> +EXPORT_SYMBOL_NS_GPL(devm_cxl_snoop_filter_alloc, "CXL");
->> +
->> +int cxl_dport_setup_snoop_filter(struct cxl_dport *dport)
->> +{
->> +	struct cxl_port *port = dport->port, *parent_port;
->> +	struct cxl_snoop_filter *sf;
->> +	u32 snoop, gid, size;
->> +	int rc;
->> +
->> +	/* Only supported by CXL-enabled PCIe root ports */
-> 
-> I'd go with the CXL spec term which is simply "CXL root port".
-> 
-
-Yeah I can do that. I wanted to be clear here since "root port" is an overloaded
-term in the driver.
-
->> +	parent_port = parent_port_of(port);
->> +	if (!parent_port || !is_cxl_root(parent_port))
->> +		return 0;
->> +
->> +	if (!dport->reg_map.component_map.snoop.valid) {
->> +		dev_dbg(dport->dport_dev, "missing snoop filter capability\n");
->> +		return -ENXIO;
->> +	}
->> +
->> +	rc = cxl_map_component_regs(&dport->reg_map, &dport->regs.component,
->> +				    BIT(CXL_CM_CAP_CAP_ID_SNOOP));
->> +	if (rc)
->> +		return rc;
->> +
->> +	snoop = readl(dport->regs.snoop + CXL_SNOOP_GROUP_ID_OFFSET);
->> +	gid = FIELD_GET(CXL_SNOOP_GROUP_ID_MASK, snoop);
->> +
->> +	snoop = readl(dport->regs.snoop + CXL_SNOOP_FILTER_SIZE_OFFSET);
->> +	size = FIELD_GET(CXL_SNOOP_FILTER_SIZE_MASK, snoop);
-> 
-> I'm not sure I'd bother with masking when it is the whole register with
-> no reserved bits.
-> 
-
-Ok, I'll remove it.
-
->> +	if (!size)
->> +		return -ENXIO;
->> +
->> +	sf = cxl_create_snoop_filter(dport, gid, size);
->> +	if (IS_ERR(sf))
->> +		return PTR_ERR(sf);
->> +
->> +	dport->snoop_id = gid;
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_dport_setup_snoop_filter, "CXL");
-> 
-> Export seems unnecessary given it's used later in this file.
-> Maybe that changes in later patches.
-> 
->> +
-> 
-> 
->> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->> index 1771c42a1e3b..2881e0826829 100644
->> --- a/drivers/cxl/cxl.h
->> +++ b/drivers/cxl/cxl.h
->> @@ -40,6 +40,7 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
->>  
->>  #define   CXL_CM_CAP_CAP_ID_RAS 0x2
->>  #define   CXL_CM_CAP_CAP_ID_HDM 0x5
->> +#define   CXL_CM_CAP_CAP_ID_SNOOP 0x9
-> 
-> Snoop filter capability is 0x8 I think.
-> 0x9 is the timeout and isolation capability.
-> 
-
-That's what I get for working on both of them at the same time. I'll
-fix it.
-
-> 
->>  #define   CXL_CM_CAP_CAP_HDM_VERSION 1
-> 
-> 
->>  
->>  struct cxl_device_reg_map {
->> @@ -658,6 +668,8 @@ struct cxl_rcrb_info {
->>  	u16 aer_cap;
->>  };
->>  
->> +#define CXL_SNOOP_ID_NO_ID (-1)
->> +
->>  /**
->>   * struct cxl_dport - CXL downstream port
->>   * @dport_dev: PCI bridge or firmware device representing the downstream link
->> @@ -682,6 +694,7 @@ struct cxl_dport {
->>  	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
->>  	long link_latency;
->>  	int gpf_dvsec;
->> +	int snoop_id;
->>  };
->>  
->>  /**
->> @@ -756,6 +769,7 @@ struct cxl_dev_ops {
->>  struct cxl_cache_state {
->>  	u64 size;
->>  	u32 unit;
->> +	u16 snoop_id;
->>  };
+>> +MODULE_DESCRIPTION("CXL: Cache Management");
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_IMPORT_NS("CXL");
+>> +MODULE_ALIAS_CXL(CXL_DEVICE_ACCELERATOR);
 > 
 
