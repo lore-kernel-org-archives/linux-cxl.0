@@ -1,245 +1,241 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE08C352FF3
-	for <linux-cxl@vger.kernel.org>; Tue, 26 Aug 2025 13:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3759341AD4;
+	Tue, 26 Aug 2025 14:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756216739; cv=none; b=BXPzFkXCX+D++Ygej/yCKQ0nq1t59Y703k31BH0z3iJgLxzx5AA42XAq3L/5MCIlanPgVjqOAdsXujt9O+hxGhf/69t8FXpfMu6h5CYNleFeaOfW83PDcDlsafdMaXjpBpVJj2szFgTWjWjXelKhM3PiEVVN69YGXfbRC2ZRbig=
+	t=1756218962; cv=none; b=g6OByuay35VUQtTjf4/9hSbWOjk8GuOcdzT8irzQRh2MXtDM6p4hVDnFRJFDzY6FR6QuNaGa45LFHoujfA4zenHMILubm9gbuwiT9bkgLEftoxngL+JPWYOerlEXMUcPjKaIk2sGxTEb7QnBor+fevaz9HblU4eRtQwRg04FiLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756216739; c=relaxed/simple;
-	bh=M8EHVrFCv7al3ZPsc5Z5WWYn3hXBTwoDyNLcMGt439U=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PlW/qTlgEAADBlONLOfc0rcb0U/RwIQr8+36KmhYqi3nRf/VPkg+c9IfQnG8jAENJ+ultVbdCVbZ+3d1iWUKjmstbNvJwGA5maFFwyPJHgwlgvlmjID+wwty4Jk8j9EkTObKjV5W0kQqZ59hOf/WR3KdogNIvnMAyuQnhPoadxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cB8N351w7z6LDDK;
-	Tue, 26 Aug 2025 21:56:35 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id B5E861402EB;
-	Tue, 26 Aug 2025 21:58:51 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 26 Aug
- 2025 15:58:51 +0200
-Date: Tue, 26 Aug 2025 14:58:49 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Olivi, Matteo" <molivi3@gatech.edu>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: How to programmatically discover online and offline memory and
- its latency and bandwidth from user space?
-Message-ID: <20250826145849.000022d7@huawei.com>
-In-Reply-To: <DM5PR07MB3548AFCDDA3DC39F50EECBE0973DA@DM5PR07MB3548.namprd07.prod.outlook.com>
-References: <DM5PR07MB354837188B085472F4EE3B5397122@DM5PR07MB3548.namprd07.prod.outlook.com>
-	<20250110170150.00005446@huawei.com>
-	<DM5PR07MB3548AFCDDA3DC39F50EECBE0973DA@DM5PR07MB3548.namprd07.prod.outlook.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1756218962; c=relaxed/simple;
+	bh=t6JNfnPxFUx/NjoupvZ1RlQEj1Zq+C4DgHkgiTtqzX4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JW5+cILD49k/9ssvG+R9Zwi106xSXHp4cRgIyvILpasmeh+WQWXHMaPuFOGGkxSt17FT+VZViGqPXLEaTQtsf9YttKLaMHihVeR9XoVW08gBbsBtTW6GOfydqXqJc8yQywmfdfj8L6hEWN/KgH3UyMuwdGZXiQsUVVBvoJaBSx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CB231A25;
+	Tue, 26 Aug 2025 07:35:50 -0700 (PDT)
+Received: from [10.57.4.86] (unknown [10.57.4.86])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E899E3F694;
+	Tue, 26 Aug 2025 07:35:51 -0700 (PDT)
+Message-ID: <ab80cb84-42b2-4ce8-aa6c-4ce6be7a12b7@arm.com>
+Date: Tue, 26 Aug 2025 15:35:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
- frapeml500008.china.huawei.com (7.182.85.71)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/19] perf/hisilicon: Fix group validation
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org, acme@kernel.org,
+ namhyung@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+ linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
+ linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
+ iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
+ linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <cover.1755096883.git.robin.murphy@arm.com>
+ <c7b877e66ba0d34d8558c5af8bbb620e8c0e47d9.1755096883.git.robin.murphy@arm.com>
+ <aK2XS_GhLw1EQ2ml@J2N7QTR9R3>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <aK2XS_GhLw1EQ2ml@J2N7QTR9R3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 22 Aug 2025 02:38:34 +0000
-"Olivi, Matteo" <molivi3@gatech.edu> wrote:
+On 2025-08-26 12:15 pm, Mark Rutland wrote:
+> On Wed, Aug 13, 2025 at 06:00:54PM +0100, Robin Murphy wrote:
+>> The group validation logic shared by the HiSilicon HNS3/PCIe drivers is
+>> a bit off, in that given a software group leader, it will consider that
+>> event *in place of* the actual new event being opened. At worst this
+>> could theoretically allow an unschedulable group if the software event
+>> config happens to look like one of the hardware siblings.
+>>
+>> The uncore framework avoids that particular issue,
+> 
+> What is "the uncore framework"? I'm not sure exactly what you're
+> referring to, nor how that composes with the problem described above.
 
-> Thanks for the thorough answer.
->=20
-> Given this part of the answer:
->=20
-> > The BIOS may have configured the CXL memory and done the work for SRAT =
-and HMAT
-> > to include that memory. =A0Or it may present HMAT to a generic port ent=
-ry in SRAT and
-> > leave the discovery of performance to the OS when it is setting up the =
-memory
-> > mappings etc. For now we present the data for the nearest initiator (cp=
-u / cpu or other)
-> > to the CXL memory. =20
->=20
-> I have three follow-up questions:
->=20
-> 1. Assume the OS, and not the BIOS, does the discovery. Then, the
-> HMAT would not list the latency and bandwidth to the memory (only to
-> the generic ports).
+Literally that hisi_uncore_pmu.c is actually a framework for half a 
+dozen individual sub-drivers rather than a "driver" itself per se, but I 
+suppose that detail doesn't strictly matter at this level.
 
-Correct.
+>> but all 3 also share the common issue of not preventing racy access to
+>> the sibling list,
+> 
+> Can you please elaborate on this racy access to the silbing list? I'm
+> not sure exactly what you're referring to.
 
-> But the sysfs files with the latency for local
-> target-initiators pairs would still have the "complete" latency to
-> the memory (as discovered by the OS), right?
+Hmm, yes, I guess an actual race is probably impossible since if we're 
+still in the middle of opening the group leader event then we haven't 
+yet allocated the fd that userspace would need to start adding siblings, 
+even if it tried to guess. I leaned on "racy" as a concise way to infer 
+"when it isn't locked (even though the reasons for that are more 
+subtle)" repeatedly over several patches - after all, the overall theme 
+of this series is that I dislike repetitive boilerplate :)
 
-Exactly.
+I'll dedicate some time for polishing commit messages for v2, especially 
+the common context for these "part 1" patches per your feedback on patch #1.
 
->=20
-> 2. If it's the OS which does the discovery, what information does it
-> use?=20
+>> and some redundant checks which can be cleaned up.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>> ---
+>>   drivers/perf/hisilicon/hisi_pcie_pmu.c   | 17 ++++++-----------
+>>   drivers/perf/hisilicon/hisi_uncore_pmu.c | 23 +++++++----------------
+>>   drivers/perf/hisilicon/hns3_pmu.c        | 17 ++++++-----------
+>>   3 files changed, 19 insertions(+), 38 deletions(-)
+>>
+>> diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
+>> index c5394d007b61..3b0b2f7197d0 100644
+>> --- a/drivers/perf/hisilicon/hisi_pcie_pmu.c
+>> +++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
+>> @@ -338,21 +338,16 @@ static bool hisi_pcie_pmu_validate_event_group(struct perf_event *event)
+>>   	int counters = 1;
+>>   	int num;
+>>   
+>> -	event_group[0] = leader;
+>> -	if (!is_software_event(leader)) {
+>> -		if (leader->pmu != event->pmu)
+>> -			return false;
+>> +	if (leader == event)
+>> +		return true;
+>>   
+>> -		if (leader != event && !hisi_pcie_pmu_cmp_event(leader, event))
+>> -			event_group[counters++] = event;
+>> -	}
+>> +	event_group[0] = event;
+>> +	if (leader->pmu == event->pmu && !hisi_pcie_pmu_cmp_event(leader, event))
+>> +		event_group[counters++] = leader;
+> 
+> Looking at this, the existing logic to share counters (which
+> hisi_pcie_pmu_cmp_event() is trying to permit) looks to be bogus, given
+> that the start/stop callbacks will reprogram the HW counters (and hence
+> can fight with one another).
 
-Several sources are combined with the firmware description to the port.
-1 - Estimates of link latencies and bandwidths based on PCI information.
-    That is, how many lanes, frequency, and the encoding over the wire.
-2 - CDAT table access via DOE (mailbox in the PCI config space).  These
-    provide latency and bandwidth from port to port on a switch and
-    port to memory on a type 3 device.
+Yeah, this had a dodgy smell when I first came across it, but after 
+doing all the digging I think it does actually work out - the trick 
+seems to be the group_leader check in hisi_pcie_pmu_get_event_idx(), 
+with the implication the PMU is going to be stopped while scheduling 
+in/out the whole group, so assuming hisi_pcie_pmu_del() doesn't clear 
+the counter value in hardware (even though the first call nukes the rest 
+of the event configuration), then the events should stay in sync.
 
+It does seem somewhat nonsensical to have multiple copies of the same 
+event in the same group, but I imagine it could happen with some sort of 
+scripted combination of metrics, and supporting it at this level saves 
+needing explicit deduplication further up. So even though my initial 
+instinct was to rip it out too, in the end I concluded that that doesn't 
+seem justified.
 
-> Does it rely on some firmware hardcoded values like the BIOS, or
-> does it run some measurements (e.g. perform some memory requests and
-> time them)?=20
+Thanks,
+Robin.
 
-Upstream Linux just uses the values that are discoverable from
-firmware + device provided info (which is probably coming from device
-firmware).=20
-
-> In case it does measurements, how does that work for
-> pooled memory that is physically, but not logically, plugged to the
-> host (there's no way to issue memory requests to it)?
->=20
-
-I gather other OSes sometimes do it by measurement in early
-boot but you are correct in thinking that's tricky if no memory there
-yet.
-
-> 3. Regardless of whether the OS or the BIOS does the discovery,
-> assume the memory is from a CXL pool that is external to the host. A
-> portion of the latency will depend on the PCIe link that will have
-> variable length (and thus latency).
-Unless it is a very long link that doesn't make a significant difference
-in practice, the serializing on and off a link with a fixed maximum
-frequency is more important.
-
-> There's no way the motherboard
-> firmware can know that latency at boot time. Is the latency for the
-> link accounted for in the HMAT (and the derived sysfs files)?
-
-Assumes a zero latency wrt to the actual wire time, but the width
-and speed of the link is incorporated.
-
-Jonathan
-
->=20
-> Thanks,
-> Matteo Olivi.
-> ________________________________________
-> From:=A0Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Sent:=A0Friday, January 10, 2025 12:01 PM
-> To:=A0Olivi, Matteo <molivi3@gatech.edu>
-> Cc:=A0linux-cxl@vger.kernel.org <linux-cxl@vger.kernel.org>
-> Subject:=A0Re: How to programmatically discover online and offline
-> memory and its latency and bandwidth from user space?=20
-> On Wed, 8 Jan 2025 17:55:41 +0000
-> "Olivi, Matteo" <molivi3@gatech.edu> wrote:
->=20
-> > Hello,
-> > I'm a PhD student working on orchestrator support for memory
-> > disaggregation.
-> >
-> > I have some questions about how Linux presents CXL memory and its
-> > performance characteristics to user space.
-> >
-> > 1. What is the simplest way for a user space program (with root
-> > privileges) to learn the latency and bandwidth between each pair of
-> > NUMA nodes (even non-CXL ones)? Are reading the HMAT and shelling
-> > out to the cxl cli the only two options? I've
-> > read https://docs.kernel.org/admin-guide/mm/numaperf.html=A0but AFAIU g=
-iven a memory target those sysfs files only report the performance from the=
- local initiators. I care about each pair,
-> > not just local ones. =20
->=20
-> Unfortunately the interface indeed only presents a tiny part of the
-> data in a full HMAT table. The original discussion on this a few
-> years back concluded that was all that made sense until there was a
-> clear use case for more complete data.
->=20
-> HMAT doesn't have to be complete but I'd assume it normally is.
->=20
-> >
-> > 2. Is there a way to get the information question 1 asks for for
-> > memory that is physically connected to the host, but logically
-> > isn't? The ACPI
-> > spec https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/17_NUMA_Architecture=
-_Platforms/NUMA_Architecture_Platforms.html#system-resource-affinity-table-=
-definition states that
-> > "The SRAT describes the system locality that all processors and
-> > memory present in a system belong to at system boot. This includes
-> > memory that can be hot-added (that is memory that can be added to
-> > the system while it is running, without requiring a reboot)." I
-> > interpret that to mean that if (CXL) memory is physically, but not
-> > logically, connected to the host, the SRAT will still describe the
-> > corresponding NUMA node. But what about the HMAT? The ACPI
-> > spec https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/17_NUMA_Architecture=
-_Platforms/NUMA_Architecture_Platforms.html#heterogeneous-memory-attributes=
--information states that=A0 "
-> > The static HMAT table provides the boot time description of the
-> > memory latency and bandwidth among all memory access Initiator and
-> > memory Target System Localities. For hot-added devices and dynamic
-> > reconfiguration of the system localities, the _HMA object must be
-> > used for runtime update." but it's unclear to me if that applies
-> > only to physically hot-plugged memory or to logically hot-plugged
-> > memory as well. =20
->=20
-> The BIOS may have configured the CXL memory and done the work for
-> SRAT and HMAT to include that memory.=A0 Or it may present HMAT to a
-> generic port entry in SRAT and leave the discovery of performance to
-> the OS when it is setting up the memory mappings etc. For now we
-> present the data for the nearest initiator (cpu / cpu or other) to
-> the CXL memory.
->=20
-> >
-> > 3. Is there a recommended way for a user space program to tell CXL
-> > NUMA nodes from local NUMA nodes (both online and offline ones)?
-> > One hack would be to check whether the NUMA node has CPUs or not.
-> > Another option would be shelling out to the cxl-cli. =20
->=20
-> In general not really. It's just memory, you should never care that
-> it is CXL beyond that it's performance characteristics are different
-> and maybe for error handling reasons. You can indeed use cxl-cli or
-> reads of the sysfs entries that tool is using to figure it out.
->=20
-> >
-> > 4. Is there a way for a user space program (with root privileges)
-> > to learn IDs of CXL NUMA nodes (both online and offline ones) that
-> > are globally unique? What I want is: a. if two hosts are both
-> > connected to the same CXL memory, they should see that memory with
-> > the same ID. =20
->=20
-> Look at serial numbers of the devices.=A0 That's not connected to NUMA
-> node IDs that are local to a given host.=A0 Those can be obtained with
-> lspci and are unique (assuming manufacturer set them - which
-> sometimes doesn't happen in prototype parts).
->=20
-> > b. two different CXL memory pools will never be seen with the same
-> > ID by different hosts. =20
-> ID here can't be NUMA node as those are used to index non sparse
-> structures so it wouldn't scale.
->=20
-> Once we get upstream support for DCD (only sensible way to do pools
-> and remain compliant for the spec) and tagging of what that provides,
-> then the globally unique ID will be associated with particular bit of
-> shared memory on the device rather than the whole device. My guess is
-> that will take a few kernel cycles though.
->=20
-> >
-> > All my questions talk about NUMA nodes. I understand that Linux has
-> > multiple layers of abstractions to represent memory, and NUMA nodes
-> > are one of the highest ones. If any of the questions above can be
-> > answered but at a lower level of abstraction than NUMA nodes,
-> > that's fine as long as there's a way to map the entity in the lower
-> > level of abstraction to the corresponding NUMA node. =20
->=20
-> Hope that helps a little!
->=20
-> Jonathan
->=20
-> >
-> > Thanks,
-> > Matteo Olivi.
-> > =20
-
+> I suspect that can be removed *entirely*, and this can be simplified
+> down to allocating N counters, without a quadratic event comparison.  We
+> don't try to share counters in other PMU drivers, and there was no
+> rationale for trying to do this when this wa introduced in commit:
+> 
+>    8404b0fbc7fbd42e ("drivers/perf: hisi: Add driver for HiSilicon PCIe PMU")
+> 
+> The 'link' tag in that comment goes to v13, which doesn't link to prior
+> postings, so I'm not going to dig further.
+> 
+> Mark.
+> 
+>>   
+>>   	for_each_sibling_event(sibling, event->group_leader) {
+>> -		if (is_software_event(sibling))
+>> -			continue;
+>> -
+>>   		if (sibling->pmu != event->pmu)
+>> -			return false;
+>> +			continue;
+>>   
+>>   		for (num = 0; num < counters; num++) {
+>>   			/*
+>> diff --git a/drivers/perf/hisilicon/hisi_uncore_pmu.c b/drivers/perf/hisilicon/hisi_uncore_pmu.c
+>> index a449651f79c9..3c531b36cf25 100644
+>> --- a/drivers/perf/hisilicon/hisi_uncore_pmu.c
+>> +++ b/drivers/perf/hisilicon/hisi_uncore_pmu.c
+>> @@ -101,26 +101,17 @@ static bool hisi_validate_event_group(struct perf_event *event)
+>>   	/* Include count for the event */
+>>   	int counters = 1;
+>>   
+>> -	if (!is_software_event(leader)) {
+>> -		/*
+>> -		 * We must NOT create groups containing mixed PMUs, although
+>> -		 * software events are acceptable
+>> -		 */
+>> -		if (leader->pmu != event->pmu)
+>> -			return false;
+>> +	if (leader == event)
+>> +		return true;
+>>   
+>> -		/* Increment counter for the leader */
+>> -		if (leader != event)
+>> -			counters++;
+>> -	}
+>> +	/* Increment counter for the leader */
+>> +	if (leader->pmu == event->pmu)
+>> +		counters++;
+>>   
+>>   	for_each_sibling_event(sibling, event->group_leader) {
+>> -		if (is_software_event(sibling))
+>> -			continue;
+>> -		if (sibling->pmu != event->pmu)
+>> -			return false;
+>>   		/* Increment counter for each sibling */
+>> -		counters++;
+>> +		if (sibling->pmu == event->pmu)
+>> +			counters++;
+>>   	}
+>>   
+>>   	/* The group can not count events more than the counters in the HW */
+>> diff --git a/drivers/perf/hisilicon/hns3_pmu.c b/drivers/perf/hisilicon/hns3_pmu.c
+>> index c157f3572cae..382e469257f9 100644
+>> --- a/drivers/perf/hisilicon/hns3_pmu.c
+>> +++ b/drivers/perf/hisilicon/hns3_pmu.c
+>> @@ -1058,21 +1058,16 @@ static bool hns3_pmu_validate_event_group(struct perf_event *event)
+>>   	int counters = 1;
+>>   	int num;
+>>   
+>> -	event_group[0] = leader;
+>> -	if (!is_software_event(leader)) {
+>> -		if (leader->pmu != event->pmu)
+>> -			return false;
+>> +	if (leader == event)
+>> +		return true;
+>>   
+>> -		if (leader != event && !hns3_pmu_cmp_event(leader, event))
+>> -			event_group[counters++] = event;
+>> -	}
+>> +	event_group[0] = event;
+>> +	if (leader->pmu == event->pmu && !hns3_pmu_cmp_event(leader, event))
+>> +		event_group[counters++] = leader;
+>>   
+>>   	for_each_sibling_event(sibling, event->group_leader) {
+>> -		if (is_software_event(sibling))
+>> -			continue;
+>> -
+>>   		if (sibling->pmu != event->pmu)
+>> -			return false;
+>> +			continue;
+>>   
+>>   		for (num = 0; num < counters; num++) {
+>>   			/*
+>> -- 
+>> 2.39.2.101.g768bb238c484.dirty
+>>
