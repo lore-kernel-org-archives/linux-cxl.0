@@ -1,17 +1,17 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E47319843;
-	Wed, 27 Aug 2025 07:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0505B2ECD2D;
+	Wed, 27 Aug 2025 07:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756280289; cv=none; b=lqVrMtfRTBlSFGJlWh81MSHLcIoxsxfB/WdicpYJU88WJFzXtQDcBqR9FKWH2OY5Pe4tn0mM+jPXTY1ASKvYdCojeMsj979ZlDhoDhdkTzbmK4ZxXWCki1D4dd3M3VxSWwwubMPN4g1yhlEDDKOuiwTGNEJzNYGEARbcrIspXPI=
+	t=1756281260; cv=none; b=L0qsHS0Xuz4g5mT6nZjAgCYAQOFcwmOfKpm0tDHWLEUGbXHUCWw6FN0yHbMK/OTGEFdz7o3/3uLfxlNoAoJ+ne+rSoJSy48BzTTf1czBPqh5Yh4EwNo1gzAJqPaNgWOpmXSAPYAv6QSKWqOpTLDzK1SOCbm8xRkiVfBakKjA/bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756280289; c=relaxed/simple;
-	bh=ap0C57PbChuMn0G/knf5MeLYtL70gkjNi81KbQ2s+Q8=;
+	s=arc-20240116; t=1756281260; c=relaxed/simple;
+	bh=U/6nLJjBIaEbkQsC76qhbdVg7wW/2D5bpJawSb98KZA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q4z3h8u5Nd76Kd+0E2U/jgEzuQuI+98dg5CusUsDOCl8fND7J/aiKG4LwZ2+srE7z2vhjXhvxCTSgdpNWPyVKYUSsdVrgFvQ3OP2EVQatYNBDOoLi8/yU5nAQ4R/nYWIyWkJnQbcLtiDxrOPXq4//JZtroiQRmJnknD+DfFxB7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+	 Content-Type:Content-Disposition:In-Reply-To; b=FiNUZOAFqO6wq2pLROdpSin4xPEbUpck7qs+whDpx2PvbtrPzK1kVxw1e8/+/V2KV1yM80RcDiRfbRJnVqxfJIZdFm0YAIejYMSEbvQyhnQNHTsL1xRpnCeIg1WHmXhdO705W+n2ddv4N34/2E7C0idWwZY4ua/NFm+n7aX6XPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
 Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
@@ -19,11 +19,11 @@ Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
 	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
 	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id B9B062C06669;
-	Wed, 27 Aug 2025 09:37:55 +0200 (CEST)
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 0252A200B1CD;
+	Wed, 27 Aug 2025 09:48:02 +0200 (CEST)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id B24E2244BB2; Wed, 27 Aug 2025 09:37:55 +0200 (CEST)
-Date: Wed, 27 Aug 2025 09:37:55 +0200
+	id ED7124E06E7; Wed, 27 Aug 2025 09:48:01 +0200 (CEST)
+Date: Wed, 27 Aug 2025 09:48:01 +0200
 From: Lukas Wunner <lukas@wunner.de>
 To: Terry Bowman <terry.bowman@amd.com>
 Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
@@ -35,11 +35,11 @@ Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
 	sathyanarayanan.kuppuswamy@linux.intel.com,
 	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v11 09/23] PCI/AER: Report CXL or PCIe bus error type in
- trace logging
-Message-ID: <aK6101l5vMZA3MUs@wunner.de>
+Subject: Re: [PATCH v11 16/23] cxl/pci: Introduce CXL Endpoint protocol error
+ handlers
+Message-ID: <aK64MYnLrTDYHTnm@wunner.de>
 References: <20250827013539.903682-1-terry.bowman@amd.com>
- <20250827013539.903682-10-terry.bowman@amd.com>
+ <20250827013539.903682-17-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -48,29 +48,21 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250827013539.903682-10-terry.bowman@amd.com>
+In-Reply-To: <20250827013539.903682-17-terry.bowman@amd.com>
 
-On Tue, Aug 26, 2025 at 08:35:24PM -0500, Terry Bowman wrote:
-> The AER service driver and aer_event tracing currently log 'PCIe Bus Type'
-> for all errors. Update the driver and aer_event tracing to log 'CXL Bus
-> Type' for CXL device errors.
-> 
-> This requires the AER can identify and distinguish between PCIe errors and
-> CXL errors.
-> 
-> Introduce boolean 'is_cxl' to 'struct aer_err_info'. Add assignment in
-> aer_get_device_error_info() and pci_print_aer().
-> 
-> Update the aer_event trace routine to accept a bus type string parameter.
+On Tue, Aug 26, 2025 at 08:35:31PM -0500, Terry Bowman wrote:
+> +++ b/include/linux/pci.h
+> @@ -868,6 +868,9 @@ enum pci_ers_result {
+>  
+>  	/* No AER capabilities registered for the driver */
+>  	PCI_ERS_RESULT_NO_AER_DRIVER = (__force pci_ers_result_t) 6,
+> +
+> +	/* System is unstable, panic. Is CXL specific */
+> +	PCI_ERS_RESULT_PANIC = (__force pci_ers_result_t) 7,
+>  };
 
-aer_print_error() has a pointer to the struct pci_dev and you've added
-an is_cxl bit to that struct in the preceding patch.
-
-Is there a reason why you can't just use that dev->is_cxl bit, in lieu of
-adding another is_cxl bit to struct aer_err_info?
-
-If so, please document it in a code comment or at least in the commit
-message.  If there isn't, please use dev->is_cxl.
+Please update Documentation/PCI/pci-error-recovery.rst as well with
+this new return value.
 
 Thanks,
 
