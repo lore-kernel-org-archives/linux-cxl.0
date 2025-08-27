@@ -1,52 +1,45 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D1E02777FD;
-	Wed, 27 Aug 2025 14:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5F0481B1;
+	Wed, 27 Aug 2025 14:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756303427; cv=none; b=YuIkowAHhNFN8sAC3wHQJoukNZ/UvCk9JQwpihFHJnnImCRJnipAeY/729UmcBShrr8/GlEBGSJI/8Ejy3naxzZTuwLJ5t2i1Z2bBAR/ira5nFLVwSCrISxd6k00mZARtuBfwXG5H34AK0B4dH0TXmHfoURWvhlj2ICAqnVA90c=
+	t=1756306282; cv=none; b=RGpj2rgGH1KsA0NSyMuo2nyywspFo2U+XFbwkce+C4ST0Sw5PLguDegdDz2+fNy8nNmxvlRouzhGNcGirVnOXi+Egsogtvo7y4tDtjWXSoNYIa4pT8G23O385drCX4fenGu/GX5iG9rTHnvEijua4rS1Ly5YdueaiQGeALjt5AU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756303427; c=relaxed/simple;
-	bh=Raut/Y3QhFz4pCtCI4WlrGPrxYFCg/MxG6p0mRrxWl4=;
+	s=arc-20240116; t=1756306282; c=relaxed/simple;
+	bh=E3bUXW81Tmt3vOjZf9lQJxwtMcwR1OWFVi6k+I+lI3o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZjIuRSZZnm3YZ2e9Gbe7ZVrcI76yluX0INvboYOL3liQ1R9BQQ29B8d365OgBOlHnmNlr1Jw5FnQ38jfYW8lETTN53A1V4VhVpxncfv+MZfq5wJLegXclL7CFB1klFQz3cwlKERM/ZhM7GpSRlCQGTa4knjabGPIbqRPVRLnCDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 417AD2720;
-	Wed, 27 Aug 2025 07:03:36 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 662DB3F738;
-	Wed, 27 Aug 2025 07:03:37 -0700 (PDT)
-Date: Wed, 27 Aug 2025 15:03:22 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
-	acme@kernel.org, namhyung@kernel.org,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
-	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
-	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
-	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 02/19] perf/hisilicon: Fix group validation
-Message-ID: <aK8QKlGsjB4WWg2e@J2N7QTR9R3>
-References: <cover.1755096883.git.robin.murphy@arm.com>
- <c7b877e66ba0d34d8558c5af8bbb620e8c0e47d9.1755096883.git.robin.murphy@arm.com>
- <aK2XS_GhLw1EQ2ml@J2N7QTR9R3>
- <ab80cb84-42b2-4ce8-aa6c-4ce6be7a12b7@arm.com>
- <aK3TS3s5_Pczx1nu@J2N7QTR9R3>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pfymd494WGAVzes1tNviloVvh1PSctPUcbLIjhqa45wwETZtC7DbwW7szFdqxqNfcEO7cA2OUSQOv1er068WGsAolTo2z9WUWD1OKDIjw35zYjQTLupyJGauUhGHjbUzBaFaKXxOTs/T9kvN3JTG9PeoC37+1pQTatw9VMg9US4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id C3D7D2C06F49;
+	Wed, 27 Aug 2025 16:51:15 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id A3EDF4E5525; Wed, 27 Aug 2025 16:51:15 +0200 (CEST)
+Date: Wed, 27 Aug 2025 16:51:15 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, dan.j.williams@intel.com,
+	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
+	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+	Benjamin.Cheatham@amd.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v11 07/23] CXL/PCI: Move CXL DVSEC definitions into
+ uapi/linux/pci_regs.h
+Message-ID: <aK8bY0epS6OStdfr@wunner.de>
+References: <20250827013539.903682-1-terry.bowman@amd.com>
+ <20250827013539.903682-8-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -55,62 +48,68 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aK3TS3s5_Pczx1nu@J2N7QTR9R3>
+In-Reply-To: <20250827013539.903682-8-terry.bowman@amd.com>
 
-On Tue, Aug 26, 2025 at 04:31:23PM +0100, Mark Rutland wrote:
-> On Tue, Aug 26, 2025 at 03:35:48PM +0100, Robin Murphy wrote:
-> > On 2025-08-26 12:15 pm, Mark Rutland wrote:
-> > > On Wed, Aug 13, 2025 at 06:00:54PM +0100, Robin Murphy wrote:
-
-> > > > diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-> > > > index c5394d007b61..3b0b2f7197d0 100644
-> > > > --- a/drivers/perf/hisilicon/hisi_pcie_pmu.c
-> > > > +++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-> > > > @@ -338,21 +338,16 @@ static bool hisi_pcie_pmu_validate_event_group(struct perf_event *event)
-> > > >   	int counters = 1;
-> > > >   	int num;
-> > > > -	event_group[0] = leader;
-> > > > -	if (!is_software_event(leader)) {
-> > > > -		if (leader->pmu != event->pmu)
-> > > > -			return false;
-> > > > +	if (leader == event)
-> > > > +		return true;
-> > > > -		if (leader != event && !hisi_pcie_pmu_cmp_event(leader, event))
-> > > > -			event_group[counters++] = event;
-> > > > -	}
-> > > > +	event_group[0] = event;
-> > > > +	if (leader->pmu == event->pmu && !hisi_pcie_pmu_cmp_event(leader, event))
-> > > > +		event_group[counters++] = leader;
-> > > 
-> > > Looking at this, the existing logic to share counters (which
-> > > hisi_pcie_pmu_cmp_event() is trying to permit) looks to be bogus, given
-> > > that the start/stop callbacks will reprogram the HW counters (and hence
-> > > can fight with one another).
-
-> > It does seem somewhat nonsensical to have multiple copies of the same event
-> > in the same group, but I imagine it could happen with some sort of scripted
-> > combination of metrics, and supporting it at this level saves needing
-> > explicit deduplication further up. So even though my initial instinct was to
-> > rip it out too, in the end I concluded that that doesn't seem justified.
+On Tue, Aug 26, 2025 at 08:35:22PM -0500, Terry Bowman wrote:
+> The CXL DVSECs are currently defined in cxl/core/cxlpci.h. These are not
+> accessible to other subsystems.
 > 
-> As above, I think it's clearly bogus. I don't think we should have
-> merged it as-is and it's not something I'd like to see others copy.
-> Other PMUs don't do this sort of event deduplication, and in general it
-> should be up to the user or userspace software to do that rather than
-> doing that badly in the kernel.
-> 
-> Given it was implemented with no rationale I think we should rip it out.
-> If that breaks someone's scripting, then we can consider implementing
-> something that actually works.
+> Change DVSEC name formatting to follow the existing PCI format in
+> pci_regs.h. The current format uses CXL_DVSEC_XYZ. Change to be PCI_DVSEC_CXL_XYZ.
+[...]
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1225,9 +1225,61 @@
+>  /* Deprecated old name, replaced with PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE */
+>  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE
+>  
+> -/* Compute Express Link (CXL r3.1, sec 8.1.5) */
+> -#define PCI_DVSEC_CXL_PORT				3
+> -#define PCI_DVSEC_CXL_PORT_CTL				0x0c
+> -#define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
+> +/* Compute Express Link (CXL r3.2, sec 8.1)
+> + *
+> + * Note that CXL DVSEC id 3 and 7 to be ignored when the CXL link state
+> + * is "disconnected" (CXL r3.2, sec 9.12.3). Re-enumerate these
+> + * registers on downstream link-up events.
+> + */
+> +
+> +#define PCI_DVSEC_HEADER1_LENGTH_MASK  GENMASK(31, 20)
+> +
+> +/* CXL 3.2 8.1.3: PCIe DVSEC for CXL Device */
+> +#define PCI_DVSEC_CXL_DEVICE					0
+> +#define	  PCI_DVSEC_CXL_CAP_OFFSET	       0xA
+> +#define	    PCI_DVSEC_CXL_MEM_CAPABLE	       BIT(2)
+> +#define	    PCI_DVSEC_CXL_HDM_COUNT_MASK       GENMASK(5, 4)
+> +#define	  PCI_DVSEC_CXL_CTRL_OFFSET	       0xC
+> +#define	    PCI_DVSEC_CXL_MEM_ENABLE	       BIT(2)
+> +#define	  PCI_DVSEC_CXL_RANGE_SIZE_HIGH(i)     (0x18 + (i * 0x10))
+> +#define	  PCI_DVSEC_CXL_RANGE_SIZE_LOW(i)      (0x1C + (i * 0x10))
+> +#define	    PCI_DVSEC_CXL_MEM_INFO_VALID       BIT(0)
+> +#define	    PCI_DVSEC_CXL_MEM_ACTIVE	       BIT(1)
+> +#define	    PCI_DVSEC_CXL_MEM_SIZE_LOW_MASK    GENMASK(31, 28)
+> +#define	  PCI_DVSEC_CXL_RANGE_BASE_HIGH(i)     (0x20 + (i * 0x10))
+> +#define	  PCI_DVSEC_CXL_RANGE_BASE_LOW(i)      (0x24 + (i * 0x10))
+> +#define	    PCI_DVSEC_CXL_MEM_BASE_LOW_MASK    GENMASK(31, 28)
 
-Having dug some more, I see that this was intended to handle the way
-the hardware shares a single config register between pairs of counter
-and counter_ext registers, with the idea being that two related events
-could be allocated into the same counter pair (but would only occupy a
-single counter each).
+Is it legal to use BIT() in a uapi header?
 
-I still think the code is wrong, but it is more complex than I made it
-out to be, and you're right that we should leave it as-is for now. I can
-follow up after we've got this series in.
+We've only allowed use of GENMASK() in uapi headers since 2023 with
+commit 3c7a8e190bc5 ("uapi: introduce uapi-friendly macros for GENMASK").
 
-Mark.
+But there is no uapi header in the kernel tree defining BIT().
+
+I note that include/uapi/cxl/features.h has plenty of occurrences of BIT()
+since commit 9b8e73cdb141 ("cxl: Move cxl feature command structs to user
+header"), which went into v6.15.
+
+ndctl contains a bitmap.h header defining BIT(), I guess that's why this
+wasn't perceived as a problem so far:
+https://github.com/pmem/ndctl/raw/main/util/bitmap.h
+
+However existing user space applications including <linux/pci_regs.h>
+may not have a BIT() definition and I suspect your change above will
+break the build of those applications.
+
+Thanks,
+
+Lukas
