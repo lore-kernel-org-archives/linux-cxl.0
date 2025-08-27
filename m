@@ -1,115 +1,209 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5F0481B1;
-	Wed, 27 Aug 2025 14:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877FA2765CD
+	for <linux-cxl@vger.kernel.org>; Wed, 27 Aug 2025 15:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756306282; cv=none; b=RGpj2rgGH1KsA0NSyMuo2nyywspFo2U+XFbwkce+C4ST0Sw5PLguDegdDz2+fNy8nNmxvlRouzhGNcGirVnOXi+Egsogtvo7y4tDtjWXSoNYIa4pT8G23O385drCX4fenGu/GX5iG9rTHnvEijua4rS1Ly5YdueaiQGeALjt5AU=
+	t=1756307748; cv=none; b=kwLkdbk+jyc2hvNYwwARkKRFD/4LODiedlPh0O3o9a05rYkGlMbufK9U5j8nTNVsiCpgXy96yK1pRbYC8uRRGKD2xLmrSbQgIfq32ZoMU1THzDDeJ2e80QmJ0RRnB2PrCshXKbtPLPG4S+pVJntMyAawxPPFVSX6xgwK2bBnLpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756306282; c=relaxed/simple;
-	bh=E3bUXW81Tmt3vOjZf9lQJxwtMcwR1OWFVi6k+I+lI3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pfymd494WGAVzes1tNviloVvh1PSctPUcbLIjhqa45wwETZtC7DbwW7szFdqxqNfcEO7cA2OUSQOv1er068WGsAolTo2z9WUWD1OKDIjw35zYjQTLupyJGauUhGHjbUzBaFaKXxOTs/T9kvN3JTG9PeoC37+1pQTatw9VMg9US4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id C3D7D2C06F49;
-	Wed, 27 Aug 2025 16:51:15 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id A3EDF4E5525; Wed, 27 Aug 2025 16:51:15 +0200 (CEST)
-Date: Wed, 27 Aug 2025 16:51:15 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
-	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
-	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
-	Benjamin.Cheatham@amd.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v11 07/23] CXL/PCI: Move CXL DVSEC definitions into
- uapi/linux/pci_regs.h
-Message-ID: <aK8bY0epS6OStdfr@wunner.de>
-References: <20250827013539.903682-1-terry.bowman@amd.com>
- <20250827013539.903682-8-terry.bowman@amd.com>
+	s=arc-20240116; t=1756307748; c=relaxed/simple;
+	bh=PgEPxKHnOwEJrisDshuEuJU9SWQbfG1NSTYMYsAtWZE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JlFvxRviVMtBxzpRZrkLqKV6nTx/2i20gCAvkol1Uh/wShKShB0H8dDgegyF5PsxGxx/eitKFWpLUd47It/kvN1NyJyxqfWtoMkUzo5VCJSDWvRif3eellJ1mrqVZiiiAzVzaRIbG+OZSu3jTVg4NAZ1FQn/91tljuJbkD0ySBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SSFbhUaY; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SSFbhUaY"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-248681b5892so229285ad.0
+        for <linux-cxl@vger.kernel.org>; Wed, 27 Aug 2025 08:15:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1756307744; x=1756912544; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aGPhYDWt388RttmicU0o24RVsxY/twdNMb4O/vzImCs=;
+        b=SSFbhUaYSdGFBbG5CfGErl8PBJrdJ0XQ6Ofi8i4VHffvxMFqpxvd+tBC70A4/nMPRf
+         ybU1ppZn3tbfrOKYfvpliGhWaHEjfd5gmSxVQ/LbuKHpjRkSVK/4QDjzT58X9EiCYNwA
+         VD20oxfdWFrKFhsWdsiCSaeb4dGSHE6WYM7wX1tKv/9tXSTFRPgl7S0bV6soxF8q1uLR
+         qxqz6E2uiRoLyV2iMsgCO9EDPozzvbWTmTIFD9Mqi0RfocbBhhawnxcyQPOk098SvjNw
+         4KYeQe65GchDlKYvnMaty9HoninLLGNTawIlgfvoFCkk4VwTfWXkTNirqjX14LEt8qKn
+         OHIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756307744; x=1756912544;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aGPhYDWt388RttmicU0o24RVsxY/twdNMb4O/vzImCs=;
+        b=rhLGIHo7wzAKEvH7nQBBRGS2F/eNISGd7iXFzrRXHrGtfVe6c66X7cqUkZaHkzbLLW
+         fIfuNMPV21RMr1cGWvBj9fgnjb034UcEkrEUTbyA3x5MjiYg9F1tiJJmiJ5gYv6Rg2oj
+         FVEznsYlkGqj5Jpu7y/WKZH1VClnuh26rYi+1G/bAm6tm3rfr8H71P/aDed+M+GpJfri
+         Cz82qjtdA8OYHLyJMboJiYeqhR3HigxRsdwzFKRpfd2r6hL4cvHD/GMXXI74GuwohWGx
+         r+nLwT20Ia0jf0IzMbMKfd07ICqrdie4Opkv0WSazR3k7yYRFicXqkCryGfJPjCxloS5
+         fIzw==
+X-Forwarded-Encrypted: i=1; AJvYcCXEJD9XGi9wa3zbc6+OllOTmOEZaa2OHf2ie54GeEsD3QPGrJ6dU5CjbJbUm25FCAaq+ntkq71wkU8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLyUTbzvA8ci9mnQthuUB8n4NRNFZ6jFO/GWSOZqv+P50Wp1fK
+	x1Ms6MbBqIW911H+6h6pIHQ4jm9zNEF2bx7YLR1aLEkdqH1qK/a96MoWwcDlwaZ9l2LivTZICQY
+	oR3rz+vyfth7g+ogCeqRL178XkomOL+Qi8dMJ/iPJ
+X-Gm-Gg: ASbGncsKO7SWp0JlwKI+1i3qgC/InV4Y4FOQQwsqGiiJCDlU1YMDDwjA5Lt8EJjC2BY
+	yjkC6QBduKjzAcHPcHAyYxPPZtTwz6McR11sOWSa7ev6O+V1bcEFIqTPCt/+ek5GNc5gPcpB4w5
+	1cvRlphCkRoZwJEVdtg0nWNQk1LmpZDGQus5f4vr9/PzVVxdukLRPcVYAL3IlDN2cpwQjg3Bkyi
+	hRXDYQzI2eazAcsbhCo+71UK4p8cr/CnkgaRK6+QqE=
+X-Google-Smtp-Source: AGHT+IExi0QgPJP/5AblrVahQdACSVklatzIIhzDoM8PROF9H/mRXxhxpv9GhjknP28Wz6ljzGsei6gbP7f3oTXJLVM=
+X-Received: by 2002:a17:902:ec87:b0:246:a8ac:1a36 with SMTP id
+ d9443c01a7336-2485ba5311amr9397575ad.2.1756307741849; Wed, 27 Aug 2025
+ 08:15:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250827013539.903682-8-terry.bowman@amd.com>
+References: <cover.1755096883.git.robin.murphy@arm.com> <d6cda4e2999aba5794c8178f043c91068fa8080c.1755096883.git.robin.murphy@arm.com>
+ <20250826130329.GX4067720@noisy.programming.kicks-ass.net>
+ <6080e45d-032e-48c2-8efc-3d7e5734d705@arm.com> <CAP-5=fXF2x3hW4Sk+A362T-50cBbw6HVd7KY+QEUjFwT+JL37Q@mail.gmail.com>
+ <aK6_XrA_OaLnoFkr@J2N7QTR9R3>
+In-Reply-To: <aK6_XrA_OaLnoFkr@J2N7QTR9R3>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 27 Aug 2025 08:15:29 -0700
+X-Gm-Features: Ac12FXwUZ4TrRSXyzgr8XTQRkesJ87wwMtoKHvx086ZRlV4GbvgOq2WSyedNfZ4
+Message-ID: <CAP-5=fU0-QDMP-VG3O1qBvJ8uzHHYCQ8j1Vrzy9a0YUk=UMvHw@mail.gmail.com>
+Subject: Re: [PATCH 12/19] perf: Ignore event state for group validation
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Robin Murphy <robin.murphy@arm.com>, Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, 
+	will@kernel.org, acme@kernel.org, namhyung@kernel.org, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	imx@lists.linux.dev, linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org, 
+	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
+	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org, 
+	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org, 
+	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 26, 2025 at 08:35:22PM -0500, Terry Bowman wrote:
-> The CXL DVSECs are currently defined in cxl/core/cxlpci.h. These are not
-> accessible to other subsystems.
-> 
-> Change DVSEC name formatting to follow the existing PCI format in
-> pci_regs.h. The current format uses CXL_DVSEC_XYZ. Change to be PCI_DVSEC_CXL_XYZ.
-[...]
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1225,9 +1225,61 @@
->  /* Deprecated old name, replaced with PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE */
->  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE
->  
-> -/* Compute Express Link (CXL r3.1, sec 8.1.5) */
-> -#define PCI_DVSEC_CXL_PORT				3
-> -#define PCI_DVSEC_CXL_PORT_CTL				0x0c
-> -#define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
-> +/* Compute Express Link (CXL r3.2, sec 8.1)
-> + *
-> + * Note that CXL DVSEC id 3 and 7 to be ignored when the CXL link state
-> + * is "disconnected" (CXL r3.2, sec 9.12.3). Re-enumerate these
-> + * registers on downstream link-up events.
-> + */
-> +
-> +#define PCI_DVSEC_HEADER1_LENGTH_MASK  GENMASK(31, 20)
-> +
-> +/* CXL 3.2 8.1.3: PCIe DVSEC for CXL Device */
-> +#define PCI_DVSEC_CXL_DEVICE					0
-> +#define	  PCI_DVSEC_CXL_CAP_OFFSET	       0xA
-> +#define	    PCI_DVSEC_CXL_MEM_CAPABLE	       BIT(2)
-> +#define	    PCI_DVSEC_CXL_HDM_COUNT_MASK       GENMASK(5, 4)
-> +#define	  PCI_DVSEC_CXL_CTRL_OFFSET	       0xC
-> +#define	    PCI_DVSEC_CXL_MEM_ENABLE	       BIT(2)
-> +#define	  PCI_DVSEC_CXL_RANGE_SIZE_HIGH(i)     (0x18 + (i * 0x10))
-> +#define	  PCI_DVSEC_CXL_RANGE_SIZE_LOW(i)      (0x1C + (i * 0x10))
-> +#define	    PCI_DVSEC_CXL_MEM_INFO_VALID       BIT(0)
-> +#define	    PCI_DVSEC_CXL_MEM_ACTIVE	       BIT(1)
-> +#define	    PCI_DVSEC_CXL_MEM_SIZE_LOW_MASK    GENMASK(31, 28)
-> +#define	  PCI_DVSEC_CXL_RANGE_BASE_HIGH(i)     (0x20 + (i * 0x10))
-> +#define	  PCI_DVSEC_CXL_RANGE_BASE_LOW(i)      (0x24 + (i * 0x10))
-> +#define	    PCI_DVSEC_CXL_MEM_BASE_LOW_MASK    GENMASK(31, 28)
+On Wed, Aug 27, 2025 at 1:18=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
+ wrote:
+>
+> On Tue, Aug 26, 2025 at 11:48:48AM -0700, Ian Rogers wrote:
+> > On Tue, Aug 26, 2025 at 8:32=E2=80=AFAM Robin Murphy <robin.murphy@arm.=
+com> wrote:
+> > >
+> > > On 2025-08-26 2:03 pm, Peter Zijlstra wrote:
+> > > > On Wed, Aug 13, 2025 at 06:01:04PM +0100, Robin Murphy wrote:
+> > > >> It may have been different long ago, but today it seems wrong for =
+these
+> > > >> drivers to skip counting disabled sibling events in group validati=
+on,
+> > > >> given that perf_event_enable() could make them schedulable again, =
+and
+> > > >> thus increase the effective size of the group later. Conversely, i=
+f a
+> > > >> sibling event is truly dead then it stands to reason that the whol=
+e
+> > > >> group is dead, so it's not worth going to any special effort to tr=
+y to
+> > > >> squeeze in a new event that's never going to run anyway. Thus, we =
+can
+> > > >> simply remove all these checks.
+> > > >
+> > > > So currently you can do sort of a manual event rotation inside an
+> > > > over-sized group and have it work.
+> > > >
+> > > > I'm not sure if anybody actually does this, but its possible.
+> > > >
+> > > > Eg. on a PMU that supports only 4 counters, create a group of 5 and
+> > > > periodically cycle which of the 5 events is off.
+> >
+> > I'm not sure this is true, I thought this would fail in the
+> > perf_event_open when adding the 5th event and there being insufficient
+> > counters for the group.
+>
+> We're talking specifically about cases where the logic in a pmu's
+> pmu::event_init() callback doesn't count events in specific states, and
+> hence the 5th even doesn't get rejected when it is initialised.
+>
+> For example, in arch/x86/events/core.c, validate_group() uses
+> collect_events(), which has:
+>
+>         for_each_sibling_event(event, leader) {
+>                 if (!is_x86_event(event) || event->state <=3D PERF_EVENT_=
+STATE_OFF)
+>                         continue;
+>
+>                 if (collect_event(cpuc, event, max_count, n))
+>                         return -EINVAL;
+>
+>                 n++;
+>         }
+>
+> ... and so where an event's state is <=3D PERF_EVENT_STATE_OFF at init
+> time, that event is not counted to see if it fits into HW counters.
 
-Is it legal to use BIT() in a uapi header?
-
-We've only allowed use of GENMASK() in uapi headers since 2023 with
-commit 3c7a8e190bc5 ("uapi: introduce uapi-friendly macros for GENMASK").
-
-But there is no uapi header in the kernel tree defining BIT().
-
-I note that include/uapi/cxl/features.h has plenty of occurrences of BIT()
-since commit 9b8e73cdb141 ("cxl: Move cxl feature command structs to user
-header"), which went into v6.15.
-
-ndctl contains a bitmap.h header defining BIT(), I guess that's why this
-wasn't perceived as a problem so far:
-https://github.com/pmem/ndctl/raw/main/util/bitmap.h
-
-However existing user space applications including <linux/pci_regs.h>
-may not have a BIT() definition and I suspect your change above will
-break the build of those applications.
+Hmm.. Thinking out loud. So it looked like perf with weak groups could
+be broken then:
+```
+$ sudo perf stat -vv -e '{instructions,cycles}:W' true
+...
+perf_event_attr:
+ type                             0 (PERF_TYPE_HARDWARE)
+ size                             136
+ config                           0x400000001
+(cpu_core/PERF_COUNT_HW_INSTRUCTIONS/)
+ sample_type                      IDENTIFIER
+ read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|=
+GROUP
+ disabled                         1
+ inherit                          1
+ enable_on_exec                   1
+------------------------------------------------------------
+sys_perf_event_open: pid 3337764  cpu -1  group_fd -1  flags 0x8 =3D 5
+------------------------------------------------------------
+perf_event_attr:
+ type                             0 (PERF_TYPE_HARDWARE)
+ size                             136
+ config                           0x400000000
+(cpu_core/PERF_COUNT_HW_CPU_CYCLES/)
+ sample_type                      IDENTIFIER
+ read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|=
+GROUP
+ inherit                          1
+------------------------------------------------------------
+sys_perf_event_open: pid 3337764  cpu -1  group_fd 5  flags 0x8 =3D 7
+...
+```
+Note, the group leader (instructions) is disabled because of:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/stat.c?h=3Dperf-tools-next#n761
+```
+/*
+* Disabling all counters initially, they will be enabled
+* either manually by us or by kernel via enable_on_exec
+* set later.
+*/
+if (evsel__is_group_leader(evsel)) {
+        attr->disabled =3D 1;
+```
+but the checking of being disabled (PERF_EVENT_STATE_OFF) is only done
+on siblings in the code you show above. So yes, you can disable the
+group events to allow the perf_event_open to succeed but not on the
+leader which is always checked (no PERF_EVENT_STATE_OFF check):
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/arch/x86/events/core.c?h=3Dperf-tools-next#n1204
+```
+if (is_x86_event(leader)) {
+        if (collect_event(cpuc, leader, max_count, n))
+                return -EINVAL;
+```
 
 Thanks,
-
-Lukas
+Ian
