@@ -1,105 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E064B22FF37
-	for <linux-cxl@vger.kernel.org>; Wed, 27 Aug 2025 21:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CD8137C2A
+	for <linux-cxl@vger.kernel.org>; Thu, 28 Aug 2025 01:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756330690; cv=none; b=eow1RMDQESfBSufykbyrx6qOfZequOlDcPn3X8A8CJT+vXXXfWisLSU7ljsQXypmb65dT3HbqxD55SdTNmWqdvKGVvl1AFZ7neeY1rs7ORc+lmxigppvk1guIJw5GUAH8ANwLmI/PIY4Qu55hqUu6H3NASwg6r29KU2IylcssnA=
+	t=1756342836; cv=none; b=t4TdQxoRVDa0n12+Z2paOFTFtF2SAqXs12c4cTEBHV276ZoY+SJBqXXTxTYa7YsJm/QLQ8c3dA4r8joKYGCZl7MGIrXFA6lBssJlEwnplfZS5SHw7+Gific+NmZX8To5Y734v91+lYAnbwuzM4Q15XbbEx8PnnP7Qv+H7ceE3Y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756330690; c=relaxed/simple;
-	bh=wlyqOMcjpt2ERCtv1Gf0lgDZdIipMUQOlhUwECV15RQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NRFjrzg885U3jR04naHoc62lFyGQQdEULT+5qavGpDQzIH7SguQnH94O/KzNljMHs1Wbg5t5ud0y6qk0yc3Oaw4mYO9t8iTu04E/LQPnBJd+cXNR6Hz6kpvemt2V/phDT3Zwx5Xou3tP3FFZRAWnC2n7bFSRctgWTDfWC50x71Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R4Pp5HFF; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1756342836; c=relaxed/simple;
+	bh=KHnu9hnbjEiqlT7kqClbNDC1ZJkTRA3DpS0ShEeR3pU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KnHl17ZW1cwbaC5EKFq1hADjpzlld3uJWLV4J1l8sABKbqyI2Y4onC9Op4G+SUu0kD17ZP65ulvmMpPAVkCnAUhzs0ZzqXNw96LfXdRzfursAoLI5+/hPJbM4YvGogkS84PWGY6OsT0LVJOAN5NGI9pKSH2x/+D7lNnyfp2oVeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=bDXguO39; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R4Pp5HFF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756330689; x=1787866689;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wlyqOMcjpt2ERCtv1Gf0lgDZdIipMUQOlhUwECV15RQ=;
-  b=R4Pp5HFFe286nZFA5V1sp0RdafBhq9RqgDmk2FLnzYalFuvN8BCFqKqN
-   RfMoScQBvkP6tBHvKeMlfvMeirrtei49HCSfctmsXvPxkY2QocT+IeKFb
-   /3U2OzlyqTCCyXYEg13yTzoaGo603t9MZ4mNutSjj7WSK1kj88/PdhFN7
-   HHCHTpO+eQ7KN6i/A9xeXHQUZW0Mr6KyH0aWZ+TxT2hb3vgVwI/lmoRBO
-   DmAgS6/yMv5OcGHamcClH+rHA3Kz4aG5s6EECQDwIMtIeFyaQ1A2S+Qr9
-   9RMKlVlXpEVqf5/c2YJFVHIhJ916FmSPPLkEGRrwA6mh8UId6CNDXoJW6
-   g==;
-X-CSE-ConnectionGUID: /4p/Ay5bRJqmLZ9W3Kp/rA==
-X-CSE-MsgGUID: pxr+xu1AS46h3mhAoJ2NuA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11535"; a="69185490"
-X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
-   d="scan'208";a="69185490"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2025 14:38:08 -0700
-X-CSE-ConnectionGUID: hil0m27sRp6l5BJl8OIXCg==
-X-CSE-MsgGUID: 9e9iqc5ATquShv0Psddr7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
-   d="scan'208";a="193592414"
-Received: from anmitta2-mobl4.gar.corp.intel.com (HELO [10.247.118.29]) ([10.247.118.29])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2025 14:38:04 -0700
-Message-ID: <995a8f10-f576-4cd8-8d82-b9a575b45789@intel.com>
-Date: Wed, 27 Aug 2025 14:37:58 -0700
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="bDXguO39"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-61c51f57224so603237a12.2
+        for <linux-cxl@vger.kernel.org>; Wed, 27 Aug 2025 18:00:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1756342833; x=1756947633; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qkZV2r2s3Ve2mSW+cNV6K6LiCKiSQdIZC2Q3aoo2TPc=;
+        b=bDXguO39kwmE8d8UBDfFCMQgXhLpMoPLw558wv5P1qcuv0Ye2AxgoPOpK81tqrf12J
+         BwgfmIyjLhhQyRJvDsLARFcsEpaQiW6CuTGVZSUWJZJr4nMRT+GNWXFyPseRpSFgmp5k
+         7C66SlxPjSSAr8eLwsopV+rlmLiDWRi2LjrwoVd7Hh369svazChS4eQVIjX0oT08lmr2
+         +wlGd5ShDgtOSRaHj6qK/qo0wQS2jf0xbOrI+mT5l1cYLUbnMn8RlLC1sKjJ06k0WcvG
+         CPZtR2WxqWBwnqdFg8BlYBDXWYdZqYDTLdDf4lx0QdpdHwwzSvh4fWIxaYucA1//G+Pc
+         0VCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756342833; x=1756947633;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qkZV2r2s3Ve2mSW+cNV6K6LiCKiSQdIZC2Q3aoo2TPc=;
+        b=ft/iXLuhAvdUrrDPEi0atkmIff38VRWVRbs1oUBgJYcFe+iG/dPYm2E7QvPnxURWHY
+         ncXFzSA1H95zHx65vGLOeRZRimsHeL57CnoZtrKSl0JXKrLqnUISUz1AYQaG6NAgjMdv
+         Hub/Jt7zGFn9j3VE4d0A8gQzx+svYRYApOp9ylS3v2wAd5boFxBVPaNpkwL+PzTfJQ3j
+         5PT/zRTvGd+8hBn27FlB9F+zOoAH4o/CiSkeDRniLlxkRbhN8RovhsJtFa4N6Bv7JWym
+         gAhQOzrGJoicp/9tEffqAX8yhGJQls6XTbS2oDJ6LZ++HDGtQWIUpO5fH7sL8Xbp2xc+
+         77OA==
+X-Forwarded-Encrypted: i=1; AJvYcCU9s9d8iICajJldO4lTqUzmMr+gqiYMcxUrKLL4z4dU2Q0FG9x3/QB9irLGKnkzYQTMy9RqIw6dECY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNy5iFBkrurqvx3CLh2W1nQlXbtw956QEFKWUqBe27hDMkHgf3
+	0kCZ1gmrPuRfwM1207H5V/gVgMgIlmOTEHxSzXoA+ThUVucCUmPvcYPtwNz7eo+O+GU=
+X-Gm-Gg: ASbGncsMmMes1qy4r8uKuAW5d1S9r5V8MC6bxbvkNhI1F1alMpCAOLKzvPORiwhKA2s
+	O6yHlW9N/g1M49zW9MEDUSsoaUu326NXoGTSR1i+QAodovyhiBMx4gAZUMd7D8V78nw76142i/r
+	OnJMS8jZha/jn3GTcwS3GWl+dFfAl0+YRvySgp/6gI3SOKjPCyWa0C2MMKG1qF8Pw4iuXttomli
+	C7scqi+oEiZD1t8NRKMonk4Uratkqd433W4uKtMUf+aom1Hr/MjcUfC3DLOYdqxqK66zwaa98BE
+	CgiygE4ZIhoGF0O1PrPZvNLnVp6C6YMra241zUmNrzcq0qG40zc8YTnlgYCg2j2Kq5jGADdLj00
+	lK0/mm2UPld+G/pu0LC2X3pqwAGxrvIfD6HRThw/Cyzd32qZei9D2NjrqviZwiRA=
+X-Google-Smtp-Source: AGHT+IFowfbzDXzfKj1tbin1CbADg6SQUppIoHgdL2LBKWx0TCuFZuLUREbfAZ6iz35NlZp/Mlr9+A==
+X-Received: by 2002:a05:6402:a0c1:b0:61c:30cf:885c with SMTP id 4fb4d7f45d1cf-61c30cf8ca9mr15283114a12.32.1756342833263;
+        Wed, 27 Aug 2025 18:00:33 -0700 (PDT)
+Received: from dev-mattc2.dev.purestorage.com ([208.88.159.129])
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-61caeb5e786sm2651785a12.32.2025.08.27.18.00.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Aug 2025 18:00:32 -0700 (PDT)
+From: Matthew W Carlis <mattc@purestorage.com>
+To: helgaas@kernel.org
+Cc: Smita.KoralahalliChannabasappa@amd.com,
+	adam.c.preble@intel.com,
+	agovindjee@purestorage.com,
+	alison.schofield@intel.com,
+	ashishk@purestorage.com,
+	bamstadt@purestorage.com,
+	bhelgaas@google.com,
+	bp@alien8.de,
+	chao.p.peng@intel.com,
+	dan.j.williams@intel.com,
+	dave.jiang@intel.com,
+	dave@stgolabs.net,
+	erwin.tsaur@intel.com,
+	feiting.wanyan@intel.com,
+	ira.weiny@intel.com,
+	james.morse@arm.com,
+	jrangi@purestorage.com,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	lukas@wunner.de,
+	mahesh@linux.ibm.com,
+	mattc@purestorage.com,
+	msaggi@purestorage.com,
+	oohall@gmail.com,
+	qingshun.wang@linux.intel.com,
+	rafael@kernel.org,
+	rhan@purestorage.com,
+	rrichter@amd.com,
+	sathyanarayanan.kuppuswamy@intel.com,
+	sconnor@purestorage.com,
+	tony.luck@intel.com,
+	vishal.l.verma@intel.com,
+	yudong.wang@intel.com,
+	zhenzhong.duan@intel.com
+Subject: [PATCH v5 0/2] PCI/AER: Handle Advisory Non-Fatal error
+Date: Wed, 27 Aug 2025 19:00:16 -0600
+Message-ID: <20250828010016.5824-1-mattc@purestorage.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250822165112.GA688464@bhelgaas>
+References: <20250822165112.GA688464@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 05/11] cxl: Defer dport allocation for switch ports
-To: Robert Richter <rrichter@amd.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
-References: <20250814222151.3520500-1-dave.jiang@intel.com>
- <20250814222151.3520500-6-dave.jiang@intel.com>
- <aKXCid-m65ou2WVV@rric.localdomain>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <aKXCid-m65ou2WVV@rric.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+On Fri, 22 Aug 2025 11:51:12 -0500, Bjorn Helgaas wrote 
+> Matthew, if you are able to test and/or provide a Reviewed-by, that would
+> be the best thing you can do to move this forward ...
 
+I spent some time looking at the patch thinking about it a little
+more carefully. The only thing I don't really like in this revision
+of the patch is the logging for "may cause Advisory". Example below
+from "[PATCH v5 2/2] PCI/AER: Print UNCOR_STATUS bits that might be ANFE".
 
-On 8/20/25 5:41 AM, Robert Richter wrote:
-> Hi Dave,
-> 
-> see my comments below.
-> 
-> On 14.08.25 15:21:45, Dave Jiang wrote:
+AER: Correctable error message received from 0000:b7:02.0
+PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+  device [8086:0db0] error status/mask=00002000/00000000
+   [13] NonFatalErr
+  Uncorrectable errors that may cause Advisory Non-Fatal:
+   [12] TLP
 
-<--snip-->
+I don't think we really need to log the UE caused by ANF any differently
+than any other UE & in fact I would prefer not to. In my mind we should log all
+the UE status bits via the same format as before. Taking from example above,
+in my mind it would be nice if the logging looked like this.
 
->> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
->> index cee68bbc7ff6..5263e9eba7d0 100644
->> --- a/drivers/cxl/core/hdm.c
->> +++ b/drivers/cxl/core/hdm.c
->> @@ -52,8 +52,6 @@ static int add_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld)
->>  int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
->>  {
->>  	struct cxl_switch_decoder *cxlsd;
->> -	struct cxl_dport *dport = NULL;
->> -	unsigned long index;
->>  	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
->>  
->>  	/*
->> @@ -69,10 +67,6 @@ int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
->>  
->>  	device_lock_assert(&port->dev);
->>  
->> -	xa_for_each(&port->dports, index, dport)
->> -		break;
->> -	cxlsd->cxld.target_map[0] = dport->port_id;
->> -
-> 
-> The change of initialization of cxlsd->cxld.target_map[] could have
-> been a separate patch to reduce size of this patch.
+AER: Correctable error message received from 0000:b7:02.0
+PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+  device [8086:0db0] error status/mask=00002000/00000000
+   [13] NonFatalErr
+PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer
+   [12] TLP
 
-It doesn't look like it because the dport init changes need to happen first. So the target_map changes can only happen after the dport changes. But they also need to be part of the dport changes to not break things when git bisect is done. 
+If there was only one error (that triggered ANF handling) then we would
+know that the Non-Fatal UE was what triggered the NonFatalErr. If some other
+Non-Fatal errors are happening at the same time then it doesn't really matter
+which was sent via ERR_COR vs ERR_NONFATAL since we would also know from Root
+Error Status that we had received at least one of each message type. The
+objective in my mind being to free up header-logs & log status details without
+making error the recovery worse.
+
+Does this sound reasonable or unreasonable? I can update the patch-set &
+re-submit if 'reasonable'.
+
+Cheers!
+-Matt
