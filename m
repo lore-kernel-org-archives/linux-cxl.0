@@ -1,149 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA67829E10B;
-	Fri, 29 Aug 2025 22:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6271D61BB;
+	Fri, 29 Aug 2025 22:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756506599; cv=none; b=Nu3HNLntJTNrtxCVfDIYv2yxGiUZ4TNLxzpV373BMvtviExL74TAXDwmqkqiMXqEmfcP0iDUwGbwWjCjxblS+WcxeMs+or/s6gTK1xPQMKjy2uAQMHEvPKYBWhBz/cBJCdQs/yRSj1FqndjeG0I0NxO+449l7LD7rWoqVgHHMf8=
+	t=1756506907; cv=none; b=Ns67yRwBhSAw6zhL++mwdg8moA6DE5Ixmxq2qWDW21a5sp4pH/NBBJ5Uvbw1tX+hlej4C/N2gMTtzcOujeHDADyObvuH4FaRTRmaN7n6l7BeWPXQCMHLZq4Qcvi8cv2QZm7vXwI1zWfy46t4pOUXVypDk+Dj877DfngOCIpoHSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756506599; c=relaxed/simple;
-	bh=/DQq03KGSTjhQvFJPs2txX2xLrZURgkekgphV6n/h6o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cgec42FWQJSZQCk8C/LrseW26GRqSKW3GMamQZEExRhyoMYGy1OBLSCpCZzpzXi9w5PD3DXyWvQIRC9jQUlWND3zWRzG5u4GdFLgS0BLm2hHnpdHc2qXfVbxEdvVQ3KTohnIZA05gpbRi9q0fxKBRSxxpqBzVAnVG83RB/zu9b8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F61CC4CEF0;
-	Fri, 29 Aug 2025 22:29:58 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	dakr@kernel.org,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	marc.herbert@linux.intel.com,
-	akpm@linux-foundation.org,
-	david@redhat.com
-Subject: [PATCH v3 4/4] acpi/hmat: Remove now unused hmat_update_target_coordinates()
-Date: Fri, 29 Aug 2025 15:29:07 -0700
-Message-ID: <20250829222907.1290912-5-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250829222907.1290912-1-dave.jiang@intel.com>
-References: <20250829222907.1290912-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1756506907; c=relaxed/simple;
+	bh=psyHVBHH52umKGRyqGiz9/R/Wx8nDG3Lb6AieVV9h70=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PSrbC0G73onUoRVY+He4zmZZQcTG7lHhyY9nIGbNRBATnREpklnJhlAOKxtbXqShRzH2vjCB1Fnjv0m5O1tkT/IagopE4tFFgb2Mb0Xok4Gau0MsxIJbFYGB7uV2fNBJNd6YjMhoQ1ws02qitnjeJAiJPpFytpIqjosXdJuIWq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Yrlg3tWg; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Yrlg3tWg"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net D761140AF5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1756506905; bh=j9pdz4fvOvXD/nnfTD03LeIxAJWY+Bl75kULpm1YGrw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Yrlg3tWgGl+KR0gvLKPpwxh/ccK70xseariZ3utKekozcfBwJyhS3rBOMTxJP23ir
+	 EMxROTR6jAetE6gtkCsaYhqyrB/fzoj5GgUxE8XtdLRMjz/Flaw5kO1GwyGR80pmkL
+	 p6yVSUxyBTwDqV9qFOPZPEoAotmDso1RsFWlLiTx5js7McFuKWHfW+kds4t+5bQR2b
+	 p0og0yI6Zy73JQ0sbsgW5+XVacq3x6R+tpmfpo5o7uR+Mt33qSImbGkV7VM+M0grkd
+	 BH561WzYV19gFCpjoidA/Elib3ZaveH0HOyUV2hJ3CVoTe8Y4Zx6bLMfqbDl+FZBLv
+	 dU5mFv0bZeLZA==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id D761140AF5;
+	Fri, 29 Aug 2025 22:35:04 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Moktar SELLAMI <smokthar925@gmail.com>, linux-kernel@vger.kernel.org
+Cc: linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org, Dave Jiang
+ <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Gregory Price
+ <gourry@gourry.net>, Moktar SELLAMI <smokthar925@gmail.com>, Alok Tiwari
+ <alok.a.tiwari@oracle.com>,
+ linux-kernel-mentees@lists.linuxfoundation.org, skhan@linuxfoundation.org
+Subject: Re: [PATCH] Documentation/driver-api: Fix typo error in cxl
+In-Reply-To: <20250819084116.13108-1-smokthar925@gmail.com>
+References: <20250819084116.13108-1-smokthar925@gmail.com>
+Date: Fri, 29 Aug 2025 16:35:04 -0600
+Message-ID: <87iki53gfb.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Remove deadcode since CXL no longer calls hmat_update_target_coordinates().
+Moktar SELLAMI <smokthar925@gmail.com> writes:
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/acpi/numa/hmat.c | 28 ----------------------------
- drivers/cxl/core/cdat.c  |  6 ------
- drivers/cxl/core/core.h  |  2 --
- include/linux/acpi.h     | 12 ------------
- 4 files changed, 48 deletions(-)
+> Fixed Typo in the driver-api/cxl/devices/devices.rst
+>
+> functionalty -> functionality
+>
+> Signed-off-by: Moktar SELLAMI <smokthar925@gmail.com>
+> ---
+>  Documentation/driver-api/cxl/devices/device-types.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/driver-api/cxl/devices/device-types.rst b/Documentation/driver-api/cxl/devices/device-types.rst
+> index 923f5d89bc04..7f69dfa4509b 100644
+> --- a/Documentation/driver-api/cxl/devices/device-types.rst
+> +++ b/Documentation/driver-api/cxl/devices/device-types.rst
+> @@ -22,7 +22,7 @@ The basic interaction protocol, similar to PCIe configuration mechanisms.
+>  Typically used for initialization, configuration, and I/O access for anything
+>  other than memory (CXL.mem) or cache (CXL.cache) operations.
+>  
+> -The Linux CXL driver exposes access to .io functionalty via the various sysfs
+> +The Linux CXL driver exposes access to .io functionality via the various sysfs
+>  interfaces and /dev/cxl/ devices (which exposes direct access to device
+>  mailboxes).
 
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 5d32490dc4ab..5a36d57289b4 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -367,34 +367,6 @@ static void hmat_update_target_access(struct memory_target *target,
- 	}
- }
- 
--int hmat_update_target_coordinates(int nid, struct access_coordinate *coord,
--				   enum access_coordinate_class access)
--{
--	struct memory_target *target;
--	int pxm;
--
--	if (nid == NUMA_NO_NODE)
--		return -EINVAL;
--
--	pxm = node_to_pxm(nid);
--	guard(mutex)(&target_lock);
--	target = find_mem_target(pxm);
--	if (!target)
--		return -ENODEV;
--
--	hmat_update_target_access(target, ACPI_HMAT_READ_LATENCY,
--				  coord->read_latency, access);
--	hmat_update_target_access(target, ACPI_HMAT_WRITE_LATENCY,
--				  coord->write_latency, access);
--	hmat_update_target_access(target, ACPI_HMAT_READ_BANDWIDTH,
--				  coord->read_bandwidth, access);
--	hmat_update_target_access(target, ACPI_HMAT_WRITE_BANDWIDTH,
--				  coord->write_bandwidth, access);
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(hmat_update_target_coordinates);
--
- static __init void hmat_add_locality(struct acpi_hmat_locality *hmat_loc)
- {
- 	struct memory_locality *loc;
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index c891fd618cfd..bca1ec279651 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -1075,9 +1075,3 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
- 		cxlr->coord[i].write_bandwidth += perf->coord[i].write_bandwidth;
- 	}
- }
--
--int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
--				       enum access_coordinate_class access)
--{
--	return hmat_update_target_coordinates(nid, &cxlr->coord[access], access);
--}
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index a253d308f3c9..0476c3b648de 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -137,8 +137,6 @@ enum cxl_poison_trace_type {
- 
- long cxl_pci_get_latency(struct pci_dev *pdev);
- int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c);
--int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
--				       enum access_coordinate_class access);
- int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
- 					struct access_coordinate *c);
- 
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 1c5bb1e887cd..5ff5d99f6ead 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1595,18 +1595,6 @@ static inline void acpi_use_parent_companion(struct device *dev)
- 	ACPI_COMPANION_SET(dev, ACPI_COMPANION(dev->parent));
- }
- 
--#ifdef CONFIG_ACPI_HMAT
--int hmat_update_target_coordinates(int nid, struct access_coordinate *coord,
--				   enum access_coordinate_class access);
--#else
--static inline int hmat_update_target_coordinates(int nid,
--						 struct access_coordinate *coord,
--						 enum access_coordinate_class access)
--{
--	return -EOPNOTSUPP;
--}
--#endif
--
- #ifdef CONFIG_ACPI_NUMA
- bool acpi_node_backed_by_real_pxm(int nid);
- #else
--- 
-2.50.1
+This one was fixed a while back, so this patch is not needed.  It is
+always a good idea to check linux-next when considering changes of this
+type.
 
+Thanks,
+
+jon
