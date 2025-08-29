@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B357342C9E
-	for <linux-cxl@vger.kernel.org>; Fri, 29 Aug 2025 18:10:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB31342CB6
+	for <linux-cxl@vger.kernel.org>; Fri, 29 Aug 2025 18:10:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756491031; cv=none; b=KBfjXzA4HitcnovzPkeJt/9twNji5Gy33ObsCGpIB1TvePCxH3s9oxPNquhzYi8l6J54E2vdJgNcqc58rOqTeK89QBoj6HUeTqLeS8iAc7m7gj61Zs0pIzjaFH5hmltb6uLKBg0NqTPjufTvHoq34B4xS2qbTYV8wgN0Gi5aJmo=
+	t=1756491037; cv=none; b=PiEXy+Wndt7ubpBCF1NRuVlbgLZ/QEyaYt2KT2Hjq7XId7Ckb041f5NucIsjNn/oys2YWQUAhbVFWyCB/JWPzsMmhxfLlefduh3szA14d9ANnOsR7efprBxCGI9WRAJ/2cEEJF9c71S5LLsvCIuHLpKzZqdGBIcYt6YFIIXtfSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756491031; c=relaxed/simple;
-	bh=4CgEHT06R7xuHCh4fGFCcC334roiez7QUrfK5bUjquU=;
+	s=arc-20240116; t=1756491037; c=relaxed/simple;
+	bh=VReDBoxeVkBACNCxOOEbaUk8pGmSxyFitxskr+XHqFU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pQXEMYLO59M0MICf6NMzEI0FkgYTxdhSoA/RAKAeDtK7Fg2vs9jCs3B3kmhBkjYMfEmGNBzO5JIt83hff5Tkxl7Oi2BDE0WPtfhGx8f7lCMs12lJu8Y7TXfIJqUOET+f/DBIp06vifjtgplbf0WZr0QbMbb9KwxxmGu/s0f4V5w=
+	 MIME-Version; b=P5sjTnq+kqXI16movQw/OD8kglakvMCTP+TOCJ3RuzH5Ppb3GJmskmlIZXgyST/NCaxA2ML0Njl8PnJrr/qLi3+EO0SZakV/9Wb+wysA39pGsDIMspqDKLf2pcnMjeBtVtJsZR7XBoznp94BYgoE8iCTINLji/VmGNUApbH5vJk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37360C4CEF0;
-	Fri, 29 Aug 2025 18:10:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E35FFC4CEF0;
+	Fri, 29 Aug 2025 18:10:36 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dave@stgolabs.net,
@@ -22,11 +22,10 @@ Cc: dave@stgolabs.net,
 	vishal.l.verma@intel.com,
 	ira.weiny@intel.com,
 	dan.j.williams@intel.com,
-	rrichter@amd.com,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v9 07/10] cxl/test: Add mock version of devm_cxl_add_dport_by_dev()
-Date: Fri, 29 Aug 2025 11:09:25 -0700
-Message-ID: <20250829180928.842707-8-dave.jiang@intel.com>
+	rrichter@amd.com
+Subject: [PATCH v9 08/10] cxl/test: Adjust the mock version of devm_cxl_switch_port_decoders_setup()
+Date: Fri, 29 Aug 2025 11:09:26 -0700
+Message-ID: <20250829180928.842707-9-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250829180928.842707-1-dave.jiang@intel.com>
 References: <20250829180928.842707-1-dave.jiang@intel.com>
@@ -38,325 +37,162 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-devm_cxl_add_dport_by_dev() outside of cxl_test is done through PCI
-hierarchy. However with cxl_test, it needs to be done through the
-platform device hierarchy. Add the mock function for
-devm_cxl_add_dport_by_dev().
+With devm_cxl_switch_port_decoders_setup() being called within cxl_core
+instead of by the port driver probe, adjustments are needed to deal with
+circular symbol dependency when this function is being mock'd. Add the
+appropriate changes to get around the circular dependency.
 
-When cxl_core calls a cxl_core exported function and that function is
-mocked by cxl_test, the call chain causes a circular dependency issue. Dan
-provided a workaround to avoid this issue. Apply the method to changes from
-the late dport allocation changes in order to enable cxl-test.
-
-In cxl_core they are defined with "__" added in front of the function. A
-macro is used to define the original function names for when non-test
-version of the kernel is built. A bit of macros and typedefs are used to
-allow mocking of those functions in cxl_test.
-
-Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
-Tested-by: Alison Schofield <alison.schofield@intel.com>
-Tested-by: Robert Richter <rrichter@amd.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/core/core.h              |  2 --
- drivers/cxl/core/pci.c               |  7 ++--
- drivers/cxl/cxl.h                    | 20 +++++++++++
- tools/testing/cxl/Kbuild             |  1 +
- tools/testing/cxl/cxl_core_exports.c | 12 +++++++
- tools/testing/cxl/exports.h          | 10 ++++++
- tools/testing/cxl/test/cxl.c         | 53 ++++++++++++++++++++++++++--
- tools/testing/cxl/test/mock.c        | 23 ++++++++++++
- tools/testing/cxl/test/mock.h        |  2 ++
- 9 files changed, 123 insertions(+), 7 deletions(-)
- create mode 100644 tools/testing/cxl/exports.h
+ drivers/cxl/core/hdm.c               |  6 +++---
+ drivers/cxl/cxl.h                    |  2 ++
+ tools/testing/cxl/Kbuild             |  1 -
+ tools/testing/cxl/cxl_core_exports.c | 10 ++++++++++
+ tools/testing/cxl/exports.h          |  3 +++
+ tools/testing/cxl/test/mock.c        | 10 +++++++---
+ 6 files changed, 25 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index e18425f119bd..b07490aa93c7 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -146,8 +146,6 @@ int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
- int cxl_ras_init(void);
- void cxl_ras_exit(void);
- int cxl_gpf_port_setup(struct cxl_dport *dport);
--struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
--					    struct device *dport_dev);
- 
- struct cxl_hdm;
- int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 9ec288ed39ae..18825e1505d6 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -41,14 +41,14 @@ static int pci_get_port_num(struct pci_dev *pdev)
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 72594f84d2a1..5fa7635c9b75 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -1216,12 +1216,12 @@ static int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
  }
  
  /**
-- * devm_cxl_add_dport_by_dev - allocate a dport by the dport device
-+ * __devm_cxl_add_dport_by_dev - allocate a dport by dport device
-  * @port: cxl_port that hosts the dport
-  * @dport_dev: 'struct device' of the dport
+- * devm_cxl_switch_port_decoders_setup - allocate and setup switch decoders
++ * __devm_cxl_switch_port_decoders_setup - allocate and setup switch decoders
+  * @port: CXL port context
   *
-  * Returns the allocated dport on success or ERR_PTR() of -errno on error
+  * Return 0 or -errno on error
   */
--struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
--					    struct device *dport_dev)
-+struct cxl_dport *__devm_cxl_add_dport_by_dev(struct cxl_port *port,
-+					      struct device *dport_dev)
+-int devm_cxl_switch_port_decoders_setup(struct cxl_port *port)
++int __devm_cxl_switch_port_decoders_setup(struct cxl_port *port)
  {
- 	struct cxl_register_map map;
- 	struct pci_dev *pdev;
-@@ -69,6 +69,7 @@ struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
- 	device_lock_assert(&port->dev);
- 	return devm_cxl_add_dport(port, dport_dev, port_num, map.resource);
- }
-+EXPORT_SYMBOL_NS_GPL(__devm_cxl_add_dport_by_dev, "CXL");
+ 	struct cxl_hdm *cxlhdm;
  
- struct cxl_walk_context {
- 	struct pci_bus *bus;
+@@ -1245,7 +1245,7 @@ int devm_cxl_switch_port_decoders_setup(struct cxl_port *port)
+ 	dev_err(&port->dev, "HDM decoder capability not found\n");
+ 	return -ENXIO;
+ }
+-EXPORT_SYMBOL_NS_GPL(devm_cxl_switch_port_decoders_setup, "CXL");
++EXPORT_SYMBOL_NS_GPL(__devm_cxl_switch_port_decoders_setup, "CXL");
+ 
+ /**
+  * devm_cxl_endpoint_decoders_setup - allocate and setup endpoint decoders
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 2139b0935500..aa916f0d186b 100644
+index aa916f0d186b..8bdc74121736 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -909,6 +909,10 @@ void cxl_coordinates_combine(struct access_coordinate *out,
- 			     struct access_coordinate *c2);
+@@ -814,6 +814,7 @@ struct cxl_endpoint_dvsec_info {
  
- bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
-+struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
-+					    struct device *dport_dev);
-+struct cxl_dport *__devm_cxl_add_dport_by_dev(struct cxl_port *port,
-+					      struct device *dport_dev);
+ struct cxl_port;
+ int devm_cxl_switch_port_decoders_setup(struct cxl_port *port);
++int __devm_cxl_switch_port_decoders_setup(struct cxl_port *port);
+ int devm_cxl_endpoint_decoders_setup(struct cxl_port *port);
  
- /*
-  * Unit test builds overrides this to __weak, find the 'strong' version
-@@ -919,4 +923,20 @@ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
+ struct cxl_dev_state;
+@@ -937,6 +938,7 @@ u16 cxl_gpf_get_dvsec(struct device *dev);
+ #ifndef CXL_TEST_ENABLE
+ #define DECLARE_TESTABLE(x) __##x
+ #define devm_cxl_add_dport_by_dev DECLARE_TESTABLE(devm_cxl_add_dport_by_dev)
++#define devm_cxl_switch_port_decoders_setup DECLARE_TESTABLE(devm_cxl_switch_port_decoders_setup)
  #endif
  
- u16 cxl_gpf_get_dvsec(struct device *dev);
-+
-+/*
-+ * Declaration for functions that are mocked by cxl_test that are called by
-+ * cxl_core. The respective functions are defined as __foo() and called by
-+ * cxl_core as foo(). The macros below ensures that those functions would
-+ * exist as foo(). See tools/testing/cxl/cxl_core_exports.c and
-+ * tools/testing/cxl/exports.h for setting up the mock functions. The dance
-+ * is done to avoid a circular dependency where cxl_core calls a function that
-+ * ends up being a mock function and goes to * cxl_test where it calls a
-+ * cxl_core function.
-+ */
-+#ifndef CXL_TEST_ENABLE
-+#define DECLARE_TESTABLE(x) __##x
-+#define devm_cxl_add_dport_by_dev DECLARE_TESTABLE(devm_cxl_add_dport_by_dev)
-+#endif
-+
  #endif /* __CXL_H__ */
 diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 51b8ab289eae..81e3795673c5 100644
+index 81e3795673c5..0d5ce4b74b9f 100644
 --- a/tools/testing/cxl/Kbuild
 +++ b/tools/testing/cxl/Kbuild
-@@ -18,6 +18,7 @@ CXL_SRC := $(DRIVERS)/cxl
- CXL_CORE_SRC := $(DRIVERS)/cxl/core
- ccflags-y := -I$(srctree)/drivers/cxl/
- ccflags-y += -D__mock=__weak
-+ccflags-y += -DCXL_TEST_ENABLE=1
- ccflags-y += -DTRACE_INCLUDE_PATH=$(CXL_CORE_SRC) -I$(srctree)/drivers/cxl/core/
+@@ -10,7 +10,6 @@ ldflags-y += --wrap=devm_cxl_add_rch_dport
+ ldflags-y += --wrap=cxl_rcd_component_reg_phys
+ ldflags-y += --wrap=cxl_endpoint_parse_cdat
+ ldflags-y += --wrap=cxl_dport_init_ras_reporting
+-ldflags-y += --wrap=devm_cxl_switch_port_decoders_setup
+ ldflags-y += --wrap=devm_cxl_endpoint_decoders_setup
  
- obj-m += cxl_acpi.o
+ DRIVERS := ../../../drivers
 diff --git a/tools/testing/cxl/cxl_core_exports.c b/tools/testing/cxl/cxl_core_exports.c
-index f088792a8925..0d18abc1f5a3 100644
+index 0d18abc1f5a3..6754de35598d 100644
 --- a/tools/testing/cxl/cxl_core_exports.c
 +++ b/tools/testing/cxl/cxl_core_exports.c
-@@ -2,6 +2,18 @@
- /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
- 
- #include "cxl.h"
-+#include "exports.h"
- 
- /* Exporting of cxl_core symbols that are only used by cxl_test */
- EXPORT_SYMBOL_NS_GPL(cxl_num_decoders_committed, "CXL");
+@@ -17,3 +17,13 @@ struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
+ 	return _devm_cxl_add_dport_by_dev(port, dport_dev);
+ }
+ EXPORT_SYMBOL_NS_GPL(devm_cxl_add_dport_by_dev, "CXL");
 +
-+cxl_add_dport_by_dev_fn _devm_cxl_add_dport_by_dev =
-+	__devm_cxl_add_dport_by_dev;
-+EXPORT_SYMBOL_NS_GPL(_devm_cxl_add_dport_by_dev, "CXL");
++cxl_switch_decoders_setup_fn _devm_cxl_switch_port_decoders_setup =
++	__devm_cxl_switch_port_decoders_setup;
++EXPORT_SYMBOL_NS_GPL(_devm_cxl_switch_port_decoders_setup, "CXL");
 +
-+struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
-+					    struct device *dport_dev)
++int devm_cxl_switch_port_decoders_setup(struct cxl_port *port)
 +{
-+	return _devm_cxl_add_dport_by_dev(port, dport_dev);
++	return _devm_cxl_switch_port_decoders_setup(port);
 +}
-+EXPORT_SYMBOL_NS_GPL(devm_cxl_add_dport_by_dev, "CXL");
++EXPORT_SYMBOL_NS_GPL(devm_cxl_switch_port_decoders_setup, "CXL");
 diff --git a/tools/testing/cxl/exports.h b/tools/testing/cxl/exports.h
-new file mode 100644
-index 000000000000..9261ce6f1197
---- /dev/null
+index 9261ce6f1197..7ebee7c0bd67 100644
+--- a/tools/testing/cxl/exports.h
 +++ b/tools/testing/cxl/exports.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright(c) 2025 Intel Corporation */
-+#ifndef __MOCK_CXL_EXPORTS_H_
-+#define __MOCK_CXL_EXPORTS_H_
-+
-+typedef struct cxl_dport *(*cxl_add_dport_by_dev_fn)(struct cxl_port *port,
-+							  struct device *dport_dev);
-+extern cxl_add_dport_by_dev_fn _devm_cxl_add_dport_by_dev;
-+
-+#endif
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 8b5c559a4a8c..e3b4dc265a3b 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -944,10 +944,12 @@ static int mock_cxl_endpoint_decoders_setup(struct cxl_port *port)
- 	return __mock_cxl_decoders_setup(port);
- }
+@@ -7,4 +7,7 @@ typedef struct cxl_dport *(*cxl_add_dport_by_dev_fn)(struct cxl_port *port,
+ 							  struct device *dport_dev);
+ extern cxl_add_dport_by_dev_fn _devm_cxl_add_dport_by_dev;
  
--static int mock_cxl_port_enumerate_dports(struct cxl_port *port)
-+static int get_port_array(struct cxl_port *port,
-+			  struct platform_device ***port_array,
-+			  int *port_array_size)
- {
- 	struct platform_device **array;
--	int i, array_size;
-+	int array_size;
- 
- 	if (port->depth == 1) {
- 		if (is_multi_bridge(port->uport_dev)) {
-@@ -981,6 +983,22 @@ static int mock_cxl_port_enumerate_dports(struct cxl_port *port)
- 		return -ENXIO;
- 	}
- 
-+	*port_array = array;
-+	*port_array_size = array_size;
++typedef int(*cxl_switch_decoders_setup_fn)(struct cxl_port *port);
++extern cxl_switch_decoders_setup_fn _devm_cxl_switch_port_decoders_setup;
 +
-+	return 0;
-+}
-+
-+static int mock_cxl_port_enumerate_dports(struct cxl_port *port)
-+{
-+	struct platform_device **array;
-+	int i, array_size;
-+	int rc;
-+
-+	rc = get_port_array(port, &array, &array_size);
-+	if (rc)
-+		return rc;
-+
- 	for (i = 0; i < array_size; i++) {
- 		struct platform_device *pdev = array[i];
- 		struct cxl_dport *dport;
-@@ -1002,6 +1020,36 @@ static int mock_cxl_port_enumerate_dports(struct cxl_port *port)
- 	return 0;
- }
- 
-+static struct cxl_dport *mock_cxl_add_dport_by_dev(struct cxl_port *port,
-+						   struct device *dport_dev)
-+{
-+	struct platform_device **array;
-+	int rc, i, array_size;
-+
-+	rc = get_port_array(port, &array, &array_size);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	for (i = 0; i < array_size; i++) {
-+		struct platform_device *pdev = array[i];
-+
-+		if (pdev->dev.parent != port->uport_dev) {
-+			dev_dbg(&port->dev, "%s: mismatch parent %s\n",
-+				dev_name(port->uport_dev),
-+				dev_name(pdev->dev.parent));
-+			continue;
-+		}
-+
-+		if (&pdev->dev != dport_dev)
-+			continue;
-+
-+		return devm_cxl_add_dport(port, &pdev->dev, pdev->id,
-+					  CXL_RESOURCE_NONE);
-+	}
-+
-+	return ERR_PTR(-ENODEV);
-+}
-+
- /*
-  * Faking the cxl_dpa_perf for the memdev when appropriate.
-  */
-@@ -1062,6 +1110,7 @@ static struct cxl_mock_ops cxl_mock_ops = {
- 	.devm_cxl_endpoint_decoders_setup = mock_cxl_endpoint_decoders_setup,
- 	.devm_cxl_port_enumerate_dports = mock_cxl_port_enumerate_dports,
- 	.cxl_endpoint_parse_cdat = mock_cxl_endpoint_parse_cdat,
-+	.devm_cxl_add_dport_by_dev = mock_cxl_add_dport_by_dev,
- 	.list = LIST_HEAD_INIT(cxl_mock_ops.list),
- };
- 
+ #endif
 diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
-index f335889b7756..e98101f083cd 100644
+index e98101f083cd..995269a75cbd 100644
 --- a/tools/testing/cxl/test/mock.c
 +++ b/tools/testing/cxl/test/mock.c
-@@ -10,12 +10,18 @@
- #include <cxlmem.h>
- #include <cxlpci.h>
- #include "mock.h"
-+#include "../exports.h"
+@@ -17,11 +17,14 @@ static LIST_HEAD(mock);
+ static struct cxl_dport *
+ redirect_devm_cxl_add_dport_by_dev(struct cxl_port *port,
+ 				   struct device *dport_dev);
++static int redirect_devm_cxl_switch_port_decoders_setup(struct cxl_port *port);
  
- static LIST_HEAD(mock);
- 
-+static struct cxl_dport *
-+redirect_devm_cxl_add_dport_by_dev(struct cxl_port *port,
-+				   struct device *dport_dev);
-+
  void register_cxl_mock_ops(struct cxl_mock_ops *ops)
  {
  	list_add_rcu(&ops->list, &mock);
-+	_devm_cxl_add_dport_by_dev = redirect_devm_cxl_add_dport_by_dev;
+ 	_devm_cxl_add_dport_by_dev = redirect_devm_cxl_add_dport_by_dev;
++	_devm_cxl_switch_port_decoders_setup =
++		redirect_devm_cxl_switch_port_decoders_setup;
  }
  EXPORT_SYMBOL_GPL(register_cxl_mock_ops);
  
-@@ -23,6 +29,7 @@ DEFINE_STATIC_SRCU(cxl_mock_srcu);
+@@ -29,6 +32,8 @@ DEFINE_STATIC_SRCU(cxl_mock_srcu);
  
  void unregister_cxl_mock_ops(struct cxl_mock_ops *ops)
  {
-+	_devm_cxl_add_dport_by_dev = __devm_cxl_add_dport_by_dev;
++	_devm_cxl_switch_port_decoders_setup =
++		__devm_cxl_switch_port_decoders_setup;
+ 	_devm_cxl_add_dport_by_dev = __devm_cxl_add_dport_by_dev;
  	list_del_rcu(&ops->list);
  	synchronize_srcu(&cxl_mock_srcu);
+@@ -138,7 +143,7 @@ __wrap_nvdimm_bus_register(struct device *dev,
  }
-@@ -258,6 +265,22 @@ void __wrap_cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device
+ EXPORT_SYMBOL_GPL(__wrap_nvdimm_bus_register);
+ 
+-int __wrap_devm_cxl_switch_port_decoders_setup(struct cxl_port *port)
++int redirect_devm_cxl_switch_port_decoders_setup(struct cxl_port *port)
+ {
+ 	int rc, index;
+ 	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
+@@ -146,12 +151,11 @@ int __wrap_devm_cxl_switch_port_decoders_setup(struct cxl_port *port)
+ 	if (ops && ops->is_mock_port(port->uport_dev))
+ 		rc = ops->devm_cxl_switch_port_decoders_setup(port);
+ 	else
+-		rc = devm_cxl_switch_port_decoders_setup(port);
++		rc = __devm_cxl_switch_port_decoders_setup(port);
+ 	put_cxl_mock_ops(index);
+ 
+ 	return rc;
  }
- EXPORT_SYMBOL_NS_GPL(__wrap_cxl_dport_init_ras_reporting, "CXL");
+-EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_switch_port_decoders_setup, "CXL");
  
-+struct cxl_dport *redirect_devm_cxl_add_dport_by_dev(struct cxl_port *port,
-+						     struct device *dport_dev)
-+{
-+	int index;
-+	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
-+	struct cxl_dport *dport;
-+
-+	if (ops && ops->is_mock_port(port->uport_dev))
-+		dport = ops->devm_cxl_add_dport_by_dev(port, dport_dev);
-+	else
-+		dport = __devm_cxl_add_dport_by_dev(port, dport_dev);
-+	put_cxl_mock_ops(index);
-+
-+	return dport;
-+}
-+
- MODULE_LICENSE("GPL v2");
- MODULE_DESCRIPTION("cxl_test: emulation module");
- MODULE_IMPORT_NS("ACPI");
-diff --git a/tools/testing/cxl/test/mock.h b/tools/testing/cxl/test/mock.h
-index 9d5ad3fd55ec..4ed932e76aae 100644
---- a/tools/testing/cxl/test/mock.h
-+++ b/tools/testing/cxl/test/mock.h
-@@ -23,6 +23,8 @@ struct cxl_mock_ops {
- 	int (*devm_cxl_switch_port_decoders_setup)(struct cxl_port *port);
- 	int (*devm_cxl_endpoint_decoders_setup)(struct cxl_port *port);
- 	void (*cxl_endpoint_parse_cdat)(struct cxl_port *port);
-+	struct cxl_dport *(*devm_cxl_add_dport_by_dev)(struct cxl_port *port,
-+						       struct device *dport_dev);
- };
- 
- void register_cxl_mock_ops(struct cxl_mock_ops *ops);
+ int __wrap_devm_cxl_endpoint_decoders_setup(struct cxl_port *port)
+ {
 -- 
 2.50.1
 
