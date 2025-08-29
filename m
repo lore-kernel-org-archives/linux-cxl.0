@@ -1,107 +1,190 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138C73148D0;
-	Fri, 29 Aug 2025 16:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6663090DB
+	for <linux-cxl@vger.kernel.org>; Fri, 29 Aug 2025 17:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756483569; cv=none; b=P8giKVHlScWD0lW8LhkaZf6esnihHZ7mM4jwexpfUtG9FgfOLIdCJRx3yj0mnNFs4jLODuuiq1MKVBB+LCkg+oxoDQZqQDrm9jzOfunzfMxh6kMnM+TW6E9Dz+HV5H79sHwYEaWDRSTyGSwbVAUZfElBaH/3Riq8iKimKaTnUDI=
+	t=1756488230; cv=none; b=iawxynXwVU8sp8h3jDYIt4KmpzgUhIwM9L+5NoDVCIo6Wi4IFFgqM0G2Gov0cpPtCIWmAKx4VRrz+KpTv6uZ31LB2nrQzx0W0aiHVSgeWjNAplRMzR/DR9t58fCi7QPZEIROpMyDQdjzv0ciCLAEuxr1D/+wM0qYjbzYKDrtPuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756483569; c=relaxed/simple;
-	bh=Vy4+tTa6FjN5VJ/0BEiyKpvZalzUlx+v4EgsIIdGaAU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=InS2OThsZ5JzrOnxgokEe+nnqoAzqEeAwRnFqupjJlu9y9VA8PsDV+W7l0gv/+AYl4O1TJLo1lzdEg0837+rM73JM1+p2AHWC6kEzYjJQpAa1JgrNUXIv3EhxxetehUV4to7dAzNfSThyogkeZac9GMDx1MfvWoh1Jgj9jbvlwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cD35K5yRcz6K9M7;
-	Sat, 30 Aug 2025 00:05:25 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id AFBD81402F6;
-	Sat, 30 Aug 2025 00:06:04 +0800 (CST)
-Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 29 Aug
- 2025 18:06:03 +0200
-Date: Fri, 29 Aug 2025 17:06:02 +0100
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Shiju Jose <shiju.jose@huawei.com>
-CC: Terry Bowman <terry.bowman@amd.com>, "dave@stgolabs.net"
-	<dave@stgolabs.net>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "ming.li@zohomail.com" <ming.li@zohomail.com>,
-	"Smita.KoralahalliChannabasappa@amd.com"
-	<Smita.KoralahalliChannabasappa@amd.com>, "rrichter@amd.com"
-	<rrichter@amd.com>, "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
-	"PradeepVineshReddy.Kodamati@amd.com" <PradeepVineshReddy.Kodamati@amd.com>,
-	"lukas@wunner.de" <lukas@wunner.de>, "Benjamin.Cheatham@amd.com"
-	<Benjamin.Cheatham@amd.com>, "sathyanarayanan.kuppuswamy@linux.intel.com"
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "alucerop@amd.com" <alucerop@amd.com>,
-	"ira.weiny@intel.com" <ira.weiny@intel.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v11 13/23] cxl/pci: Unify CXL trace logging for CXL
- Endpoints and CXL Ports
-Message-ID: <20250829170602.000029fd@huawei.com>
-In-Reply-To: <159c6313b9da45d58d83ca9af8dc9a17@huawei.com>
-References: <20250827013539.903682-1-terry.bowman@amd.com>
-	<20250827013539.903682-14-terry.bowman@amd.com>
-	<159c6313b9da45d58d83ca9af8dc9a17@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1756488230; c=relaxed/simple;
+	bh=PMmbhayhM/No99xTJ2tNUabf2MDu6olcj+8yT1RYeu0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LCxmvqwQwJS1KxMj4ign4HjvJGFu9+2B6OO9O6hfwcNrd+HZYVhmy9xvaXL/USxpSzj7B3Cpk5MYX4X8+/jqwlfCHvSlCbkK8IOWM++niNOTRnKk5WjuKSeCrMcaUDJN2YjOMZ5tu+RV+i+PS5DQCSJv+CDjZbbyWVHQ91NcQdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DQlLVfqL; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DQlLVfqL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756488229; x=1788024229;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=PMmbhayhM/No99xTJ2tNUabf2MDu6olcj+8yT1RYeu0=;
+  b=DQlLVfqLbDoXHSpvuSm986dP/5xc06htk598/HpPAtGxuQEB2yd/DWTf
+   V+QQxGNbR1Tdi8bOWoGVAwO4W7obnb3Yu0bG1AGXmfYBR5rueV+/mBaxE
+   714YUSVi8VINjO6Bzjy8o6nXWi0ojR+aG3Rrzq/5KXjxMfuAS0eP7mNbg
+   VnphOB6/4IH1aOMh6JHKnt/4X5CE4XmtZfxIzaPMUljTNzjwxB6PFxuao
+   jiaAVmnwLWZe9COsx0OY+jLsASY+9n/Gw5oFB3NiDZU6fXMvXEeKWTvgD
+   wkY9Psvvfw/5p45HnwMidPItgSR2MudpUH49AxsS8BfSz+WPX0a7f+suZ
+   Q==;
+X-CSE-ConnectionGUID: 3E7/Qd/VSFqK8dVZcAlDbA==
+X-CSE-MsgGUID: 0k6Ic7gMTSe2S/FGxNf94w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11537"; a="57805271"
+X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
+   d="scan'208";a="57805271"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 10:23:48 -0700
+X-CSE-ConnectionGUID: +Tr6XYAzSimnh13MAuJ7hg==
+X-CSE-MsgGUID: u3o877xZTuGUvnGpqmMnGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
+   d="scan'208";a="175726711"
+Received: from anmitta2-mobl4.gar.corp.intel.com (HELO [10.247.118.59]) ([10.247.118.59])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 10:23:43 -0700
+Message-ID: <2f52ad40-7e85-4466-8d42-190c846fd37c@intel.com>
+Date: Fri, 29 Aug 2025 10:23:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 05/11] cxl: Defer dport allocation for switch ports
+To: Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+References: <20250814222151.3520500-1-dave.jiang@intel.com>
+ <20250814222151.3520500-6-dave.jiang@intel.com>
+ <aKXCid-m65ou2WVV@rric.localdomain>
+ <a5eeaa15-9ef7-4b9a-88dc-10de9f1cb551@intel.com>
+ <aKg_gBw1Q29BaXdp@rric.localdomain>
+ <0d4c1766-d966-43bd-abec-b1a8a4592a1b@intel.com>
+ <aK1niOntTRwwZhhv@rric.localdomain>
+ <780adfd8-7d3d-4acd-a34b-0e88abb40041@intel.com>
+ <aLHBG5j8rVYhi9cg@rric.localdomain>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <aLHBG5j8rVYhi9cg@rric.localdomain>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
 
-> >Subject: [PATCH v11 13/23] cxl/pci: Unify CXL trace logging for CXL Endpoints
-> >and CXL Ports
-> >
-> >CXL currently has separate trace routines for CXL Port errors and CXL Endpoint
-> >errors. This is inconvenient for the user because they must enable
-> >2 sets of trace routines. Make updates to the trace logging such that a single
-> >trace routine logs both CXL Endpoint and CXL Port protocol errors.
-> >
-> >Keep the trace log fields 'memdev' and 'host'. While these are not accurate for
-> >non-Endpoints the fields will remain as-is to prevent breaking userspace RAS
-> >trace consumers.
-> >
-> >Add serial number parameter to the trace logging. This is used for EPs and 0 is
-> >provided for CXL port devices without a serial number.
-> >
-> >Leave the correctable and uncorrectable trace routines' TP_STRUCT__entry()
-> >unchanged with respect to member data types and order.
-> >
-> >Below is output of correctable and uncorrectable protocol error logging.
-> >CXL Root Port and CXL Endpoint examples are included below.
-> >
-> >Root Port:
-> >cxl_aer_correctable_error: memdev=0000:0c:00.0 host=pci0000:0c serial: 0
-> >status='CRC Threshold Hit'
-> >cxl_aer_uncorrectable_error: memdev=0000:0c:00.0 host=pci0000:0c serial: 0
-> >status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity
-> >Error'
-> >
-> >Endpoint:
-> >cxl_aer_correctable_error: memdev=mem3 host=0000:0f:00.0 serial=0
-> >status='CRC Threshold Hit'
-> >cxl_aer_uncorrectable_error: memdev=mem3 host=0000:0f:00.0 serial: 0 status:
-> >'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-> >
-> >Signed-off-by: Terry Bowman <terry.bowman@amd.com>  
+
+On 8/29/25 8:02 AM, Robert Richter wrote:
+> On 27.08.25 10:05:05, Dave Jiang wrote:
+>>
+>>
+>> On 8/26/25 12:51 AM, Robert Richter wrote:
+>>> On 22.08.25 08:52:39, Dave Jiang wrote:
+>>>>
+>>>>
+>>>> On 8/22/25 2:59 AM, Robert Richter wrote:
+>>>>> On 20.08.25 08:20:04, Dave Jiang wrote:
+>>>>>> On 8/20/25 5:41 AM, Robert Richter wrote:
+>>>>>>> Hi Dave,
+>>>>>>>
+>>>>>>> see my comments below.
+>>>>>>>
+>>>>>>> On 14.08.25 15:21:45, Dave Jiang wrote:
+>>>>>>
+>>>>>> <--snip-->
+>>>>>>  
+>>>>>>>> +	if (IS_ERR(new_dport))
+>>>>>>>> +		return new_dport;
+>>>>>>>> +
+>>>>>>>> +	cxl_switch_parse_cdat(port);
+>>>>>>>> +
+>>>>>>>> +	/*
+>>>>>>>> +	 * First instance of dport appearing, need to setup the port, including
+>>>>>>>> +	 * allocating decoders.
+>>>>>>>> +	 */
+>>>>>>>> +	if (port->nr_dports == 1) {
+>>>>>>>> +		rc = cxl_switch_port_setup(port);
+>>>>>>>
+>>>>>>> Can't this be done with port creation? I don't see a reason doing this
+>>>>>>> late at this point.
+>>>>>>
+>>>>>
+>>>>>> The main reason we are doing this is to move the port register
+>>>>>> probing until we know the CXL link is established. Otherwise when
+>>>>>> cxl_acpi does probe and calls add_host_bridge_uport(), that
+>>>>>> devm_cxl_add_port() can trigger errors if the platform BIOS enables
+>>>>>> PCI hotplug support on Intel platforms. The error messages "cxl
+>>>>>> portN: Couldn't locate the CXL.cache and CXL.mem capability array
+>>>>>> header" is observed. Essentially we can be trying to map registers
+>>>>>> while DVSEC ID 3 and/or 7 has not appeared yet. And in turn because
+>>>>>> that got pushed out, so did the decoder enumeration.
+>>>>>
+>>>>> The code suggests the Component Registers of the CXL Host Bridge are
+>>>>> not yet ready. Is this delayed after the first Root Port is connected
+>>>>> to a CXL Endpoint/Switch? PCIe DVSEC ID 3 and 7
+>>>>> (CXL_DVSEC_PORT_EXTENSIONS, CXL_DVSEC_PCIE_FLEXBUS_PORT) are part of
+>>>>> the pcie config space, which is enumerated not before a CXL endpoint
+>>>>> becomes active. I haven't found a spec refs here. Please explain.
+>>>>
+>>>
+>>>> So the behavior is observed when PCIe hotplug support is turned on
+>>>> in BIOS for the Intel platform. A CXL device is plugged in to a RP
+>>>> without CXL switches. The thinking is that the CXL link is not fully
+>>>> established at the time when cxl_acpi_probe() is running and the
+>>>> ports are being added. And the only way to 100% be sure the link is
+>>>> established is when we are enumerating the memdev just like the
+>>>> dports. Not sure what spec ref are you looking for. Table 8-2
+>>>> indicates that those 2 DVSECs are mandatory for CXL root ports. Lack
+>>>> of presence means either the RP isn't CXL or the CXL link isn't
+>>>> established yet. I would assume this would also be true if a CXL
+>>>> memdev is hot-plugged into a slot post boot.
+>>>
+>>> But add_host_bridge_uport() only creates ports for the host bridge
+>>> (ACPI0016) devices and enumerates their component registers (CHBCR).
+>>
+>> And I think that's where the issue is. The component registers via CHBCR isn't there. When I removed this change, this is the signature I get:
+>>
+>> [ 37.423882] cxl_acpi:cxl_get_chbs:589: acpi ACPI0016:03: UID found: 35  
+>> [ 37.424180] cxl_acpi:add_host_bridge_uport:726: acpi ACPI0016:03: CHBCR found for UID 35: 0x00000  
+>> 000aabf0000  
+>> [ 37.424186] cxl_core:cxl_port_alloc:741: pci0000:3a: host-bridge: pci0000:3a  
+>> [ 37.424210] cxl_core:cxl_map_regblock:426: cxl port2: Mapped CXL Memory Device resource 0x0000000  
+>> 0aabf0000  
+>> [ 37.424213] cxl_core:cxl_probe_component_regs:55: cxl port2: Couldn't locate the CXL.cache and CXL.mem capability array header.
 > 
-> Reviewed-by: Shiju Jose <shiju.jose@huawei.com>,
-> apart from one error below.
+> Hmm, hot-added Host Bridges (and I would count this case to those)
+> should use the ACPI _CBR method. That is, else the host bridge should
+> be enumerated during boot.
+
+host bridges are there, just not the component registers in the CHBCR it appears.
+
 > 
-Good spot.
-With that fixed up,
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Is it just a delay, or does the CHBCR come up not earlier than the
+> root port link is up?
+
+Let me get that clarification from the BIOS people.
+
+> 
+> Can -EAGAIN be used to reload the driver later if CHBCR init fails?
+> IMO, the Component Registers cannot be initialized later as that would
+> delay the enablement of the root decoders too. At least only bridges
+> that fail to init the CHBCR should be delayed.
+
+I don't follow why this is an issue. Auto region assembly doesn't start until the port hierarchy is established via the first endpoint. So by the time the region code pokes at the decoder registers during region assembly, the component register for CHBCR should have been probed. It seems reasonable to setup the component registers when we find the first dport and thus indicate that everything should be there. Are you observing an issue on a platform?
+
+> 
+> The issue and the changes for this are not obvious, please make a
+> separate patch for that separate change.
+
+It was in this [1] patch.
+
+https://lore.kernel.org/linux-cxl/20250814222151.3520500-5-dave.jiang@intel.com/
+
+I think the name of the function being discussed confused things. It is now renamed to setup decoders instead of just setup.
+
+DJ
+
+> 
+> Thanks,
+> 
+> -Robert
