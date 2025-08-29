@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872DE341ADC
-	for <linux-cxl@vger.kernel.org>; Fri, 29 Aug 2025 18:09:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5242834164C
+	for <linux-cxl@vger.kernel.org>; Fri, 29 Aug 2025 18:10:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756490997; cv=none; b=RV+5Y1KDJRNOtaVOjeLP6/29xMbeTSxlgoYuXny2Tf8wYQA6KN03NpzWB+0kgM3uz6ARqZPm44sQWc81BxuHb9U3dAuxD4OZrZ5sEwBM7ngnHcxUla73qx8DDvUl4pwgU2G98L0txFHS2ty51M7Izjugq0cOioSCtM6evgvryPY=
+	t=1756491004; cv=none; b=RGb+t1v1l5418S3CKPcjf4XQNPm68AwtkciqLOsEudnHEEBc+EffTKBgGFozOV6lB+YA8WIz46raDVcufpejIHerktF8XqC3PjsreplfglruELnwijQjONce/DpDPvUlRC8ElCxkq82Zb86segXN3Z9tP7vkGZ3LmeYWAVm32d8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756490997; c=relaxed/simple;
-	bh=9LsvV3HdGeh8nVxaXVmpOSdDiAQ6aWB+/Cc2kod8lrk=;
+	s=arc-20240116; t=1756491004; c=relaxed/simple;
+	bh=VX5BYhSkTsot07ZMIYbtCZFiNzF/pi1oKQjONPJAzrM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r8baqWa3w4R+ouuzMRA+Xfb7E+Q8F5tiOnxuk7Y8hLFUJmi23LHJHaUYfq7gqvUtYQHmLM3OvBL+UZhJmuMvemSgUuMCDcpIAECjH7ttgi8OsnlRjYI5NBUoAJZXB5pmkTRrkBcoilCTJHcKSecXA9h/rL0x4IqP9okP6uJ9w20=
+	 MIME-Version; b=D+KVV1OLxcCcvhn2aBfuFkJvkdxZoU23A/S6H0lCUA+335aEsWrxOzd6vZ0J3zoQ/2EuWFUrNP9TWKRpqXYU8sDbYenerJNG9hnEAZy37hFjFuhXCN6JoMmBmEc8/5pHl1KAAxNDx4TBOYKtpr6ZMcLI8dF8Caf2B+8rw+J9ik8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E642C4CEF0;
-	Fri, 29 Aug 2025 18:09:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41CA8C4CEF0;
+	Fri, 29 Aug 2025 18:10:02 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dave@stgolabs.net,
@@ -22,11 +22,10 @@ Cc: dave@stgolabs.net,
 	vishal.l.verma@intel.com,
 	ira.weiny@intel.com,
 	dan.j.williams@intel.com,
-	rrichter@amd.com,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v9 02/10] cxl: Add helper to reap dport
-Date: Fri, 29 Aug 2025 11:09:20 -0700
-Message-ID: <20250829180928.842707-3-dave.jiang@intel.com>
+	rrichter@amd.com
+Subject: [PATCH v9 03/10] cxl: Add a cached copy of target_map to cxl_decoder
+Date: Fri, 29 Aug 2025 11:09:21 -0700
+Message-ID: <20250829180928.842707-4-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250829180928.842707-1-dave.jiang@intel.com>
 References: <20250829180928.842707-1-dave.jiang@intel.com>
@@ -38,74 +37,325 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Refactor the code in reap_dports() out to provide a helper function that
-reaps a single dport. This will be used later in the cleanup path for
-allocating a dport. Renaming to del_port() and del_dports() to mirror
-devm_cxl_add_dport().
+Add a cached copy of the hardware port-id list that is available at init
+before all @dport objects have been instantiated. Change is in preparation
+of delayed dport instantiation.
 
+Reviewed-by: Robert Richter <rrichter@amd.com>
 Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Tested-by: Robert Richter <rrichter@amd.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/core/port.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+v9:
+- Add region target_map update for manual assemble
+---
+ drivers/cxl/acpi.c           |  7 +++----
+ drivers/cxl/core/hdm.c       | 20 ++++++++------------
+ drivers/cxl/core/port.c      | 22 +++++++---------------
+ drivers/cxl/core/region.c    |  4 +++-
+ drivers/cxl/cxl.h            |  8 ++++++--
+ tools/testing/cxl/test/cxl.c |  8 ++++----
+ 6 files changed, 31 insertions(+), 38 deletions(-)
 
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 712624cba2b6..bb0871d92620 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -398,7 +398,6 @@ DEFINE_FREE(del_cxl_resource, struct resource *, if (_T) del_cxl_resource(_T))
+ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+ 			     struct cxl_cfmws_context *ctx)
+ {
+-	int target_map[CXL_DECODER_MAX_INTERLEAVE];
+ 	struct cxl_port *root_port = ctx->root_port;
+ 	struct cxl_cxims_context cxims_ctx;
+ 	struct device *dev = ctx->dev;
+@@ -416,8 +415,6 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+ 	rc = eig_to_granularity(cfmws->granularity, &ig);
+ 	if (rc)
+ 		return rc;
+-	for (i = 0; i < ways; i++)
+-		target_map[i] = cfmws->interleave_targets[i];
+ 
+ 	struct resource *res __free(del_cxl_resource) = alloc_cxl_resource(
+ 		cfmws->base_hpa, cfmws->window_size, ctx->id++);
+@@ -443,6 +440,8 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+ 		.end = cfmws->base_hpa + cfmws->window_size - 1,
+ 	};
+ 	cxld->interleave_ways = ways;
++	for (i = 0; i < ways; i++)
++		cxld->target_map[i] = cfmws->interleave_targets[i];
+ 	/*
+ 	 * Minimize the x1 granularity to advertise support for any
+ 	 * valid region granularity
+@@ -475,7 +474,7 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+ 	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_XOR)
+ 		cxlrd->hpa_to_spa = cxl_xor_hpa_to_spa;
+ 
+-	rc = cxl_decoder_add(cxld, target_map);
++	rc = cxl_decoder_add(cxld);
+ 	if (rc)
+ 		return rc;
+ 
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index e9e1d555cec6..cee68bbc7ff6 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -21,12 +21,11 @@ struct cxl_rwsem cxl_rwsem = {
+ 	.dpa = __RWSEM_INITIALIZER(cxl_rwsem.dpa),
+ };
+ 
+-static int add_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+-			   int *target_map)
++static int add_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld)
+ {
+ 	int rc;
+ 
+-	rc = cxl_decoder_add_locked(cxld, target_map);
++	rc = cxl_decoder_add_locked(cxld);
+ 	if (rc) {
+ 		put_device(&cxld->dev);
+ 		dev_err(&port->dev, "Failed to add decoder\n");
+@@ -54,7 +53,6 @@ int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
+ {
+ 	struct cxl_switch_decoder *cxlsd;
+ 	struct cxl_dport *dport = NULL;
+-	int single_port_map[1];
+ 	unsigned long index;
+ 	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
+ 
+@@ -73,9 +71,9 @@ int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
+ 
+ 	xa_for_each(&port->dports, index, dport)
+ 		break;
+-	single_port_map[0] = dport->port_id;
++	cxlsd->cxld.target_map[0] = dport->port_id;
+ 
+-	return add_hdm_decoder(port, &cxlsd->cxld, single_port_map);
++	return add_hdm_decoder(port, &cxlsd->cxld);
+ }
+ EXPORT_SYMBOL_NS_GPL(devm_cxl_add_passthrough_decoder, "CXL");
+ 
+@@ -984,7 +982,7 @@ static int cxl_setup_hdm_decoder_from_dvsec(
+ }
+ 
+ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+-			    int *target_map, void __iomem *hdm, int which,
++			    void __iomem *hdm, int which,
+ 			    u64 *dpa_base, struct cxl_endpoint_dvsec_info *info)
+ {
+ 	struct cxl_endpoint_decoder *cxled = NULL;
+@@ -1103,7 +1101,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+ 		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
+ 		target_list.value = (hi << 32) + lo;
+ 		for (i = 0; i < cxld->interleave_ways; i++)
+-			target_map[i] = target_list.target_id[i];
++			cxld->target_map[i] = target_list.target_id[i];
+ 
+ 		return 0;
+ 	}
+@@ -1179,7 +1177,6 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+ 	cxl_settle_decoders(cxlhdm);
+ 
+ 	for (i = 0; i < cxlhdm->decoder_count; i++) {
+-		int target_map[CXL_DECODER_MAX_INTERLEAVE] = { 0 };
+ 		int rc, target_count = cxlhdm->target_count;
+ 		struct cxl_decoder *cxld;
+ 
+@@ -1207,8 +1204,7 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+ 			cxld = &cxlsd->cxld;
+ 		}
+ 
+-		rc = init_hdm_decoder(port, cxld, target_map, hdm, i,
+-				      &dpa_base, info);
++		rc = init_hdm_decoder(port, cxld, hdm, i, &dpa_base, info);
+ 		if (rc) {
+ 			dev_warn(&port->dev,
+ 				 "Failed to initialize decoder%d.%d\n",
+@@ -1216,7 +1212,7 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+ 			put_device(&cxld->dev);
+ 			return rc;
+ 		}
+-		rc = add_hdm_decoder(port, cxld, target_map);
++		rc = add_hdm_decoder(port, cxld);
+ 		if (rc) {
+ 			dev_warn(&port->dev,
+ 				 "Failed to add decoder%d.%d\n", port->id, i);
 diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 855623cebd7d..88f19abf3327 100644
+index 88f19abf3327..7344048f678e 100644
 --- a/drivers/cxl/core/port.c
 +++ b/drivers/cxl/core/port.c
-@@ -1432,7 +1432,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_endpoint_autoremove, "CXL");
-  * through ->remove(). This "bottom-up" removal selectively removes individual
-  * child ports manually. This depends on devm_cxl_add_port() to not change is
-  * devm action registration order, and for dports to have already been
-- * destroyed by reap_dports().
-+ * destroyed by del_dports().
-  */
- static void delete_switch_port(struct cxl_port *port)
- {
-@@ -1441,18 +1441,24 @@ static void delete_switch_port(struct cxl_port *port)
- 	devm_release_action(port->dev.parent, unregister_port, port);
- }
+@@ -1715,13 +1715,11 @@ struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd,
+ EXPORT_SYMBOL_NS_GPL(cxl_mem_find_port, "CXL");
  
--static void reap_dports(struct cxl_port *port)
-+static void del_dport(struct cxl_dport *dport)
-+{
-+	struct cxl_port *port = dport->port;
-+
-+	devm_release_action(&port->dev, cxl_dport_unlink, dport);
-+	devm_release_action(&port->dev, cxl_dport_remove, dport);
-+	devm_kfree(&port->dev, dport);
-+}
-+
-+static void del_dports(struct cxl_port *port)
+ static int decoder_populate_targets(struct cxl_switch_decoder *cxlsd,
+-				    struct cxl_port *port, int *target_map)
++				    struct cxl_port *port)
  {
- 	struct cxl_dport *dport;
- 	unsigned long index;
++	struct cxl_decoder *cxld = &cxlsd->cxld;
+ 	int i;
  
+-	if (!target_map)
+-		return 0;
+-
  	device_lock_assert(&port->dev);
  
--	xa_for_each(&port->dports, index, dport) {
--		devm_release_action(&port->dev, cxl_dport_unlink, dport);
--		devm_release_action(&port->dev, cxl_dport_remove, dport);
--		devm_kfree(&port->dev, dport);
--	}
-+	xa_for_each(&port->dports, index, dport)
-+		del_dport(dport);
+ 	if (xa_empty(&port->dports))
+@@ -1729,7 +1727,7 @@ static int decoder_populate_targets(struct cxl_switch_decoder *cxlsd,
+ 
+ 	guard(rwsem_write)(&cxl_rwsem.region);
+ 	for (i = 0; i < cxlsd->cxld.interleave_ways; i++) {
+-		struct cxl_dport *dport = find_dport(port, target_map[i]);
++		struct cxl_dport *dport = find_dport(port, cxld->target_map[i]);
+ 
+ 		if (!dport)
+ 			return -ENXIO;
+@@ -1921,9 +1919,6 @@ EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_alloc, "CXL");
+ /**
+  * cxl_decoder_add_locked - Add a decoder with targets
+  * @cxld: The cxl decoder allocated by cxl_<type>_decoder_alloc()
+- * @target_map: A list of downstream ports that this decoder can direct memory
+- *              traffic to. These numbers should correspond with the port number
+- *              in the PCIe Link Capabilities structure.
+  *
+  * Certain types of decoders may not have any targets. The main example of this
+  * is an endpoint device. A more awkward example is a hostbridge whose root
+@@ -1937,7 +1932,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_alloc, "CXL");
+  * Return: Negative error code if the decoder wasn't properly configured; else
+  *	   returns 0.
+  */
+-int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map)
++int cxl_decoder_add_locked(struct cxl_decoder *cxld)
+ {
+ 	struct cxl_port *port;
+ 	struct device *dev;
+@@ -1958,7 +1953,7 @@ int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map)
+ 	if (!is_endpoint_decoder(dev)) {
+ 		struct cxl_switch_decoder *cxlsd = to_cxl_switch_decoder(dev);
+ 
+-		rc = decoder_populate_targets(cxlsd, port, target_map);
++		rc = decoder_populate_targets(cxlsd, port);
+ 		if (rc && (cxld->flags & CXL_DECODER_F_ENABLE)) {
+ 			dev_err(&port->dev,
+ 				"Failed to populate active decoder targets\n");
+@@ -1977,9 +1972,6 @@ EXPORT_SYMBOL_NS_GPL(cxl_decoder_add_locked, "CXL");
+ /**
+  * cxl_decoder_add - Add a decoder with targets
+  * @cxld: The cxl decoder allocated by cxl_<type>_decoder_alloc()
+- * @target_map: A list of downstream ports that this decoder can direct memory
+- *              traffic to. These numbers should correspond with the port number
+- *              in the PCIe Link Capabilities structure.
+  *
+  * This is the unlocked variant of cxl_decoder_add_locked().
+  * See cxl_decoder_add_locked().
+@@ -1987,7 +1979,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_decoder_add_locked, "CXL");
+  * Context: Process context. Takes and releases the device lock of the port that
+  *	    owns the @cxld.
+  */
+-int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
++int cxl_decoder_add(struct cxl_decoder *cxld)
+ {
+ 	struct cxl_port *port;
+ 
+@@ -2000,7 +1992,7 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+ 	port = to_cxl_port(cxld->dev.parent);
+ 
+ 	guard(device)(&port->dev);
+-	return cxl_decoder_add_locked(cxld, target_map);
++	return cxl_decoder_add_locked(cxld);
  }
+ EXPORT_SYMBOL_NS_GPL(cxl_decoder_add, "CXL");
  
- struct detach_ctx {
-@@ -1510,7 +1516,7 @@ static void cxl_detach_ep(void *data)
- 			 */
- 			died = true;
- 			port->dead = true;
--			reap_dports(port);
-+			del_dports(port);
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 71cc42d05248..bba62867df90 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -1510,8 +1510,10 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+ 				cxl_rr->nr_targets_set);
+ 			return -ENXIO;
  		}
- 		device_unlock(&port->dev);
+-	} else
++	} else {
+ 		cxlsd->target[cxl_rr->nr_targets_set] = ep->dport;
++		cxlsd->cxld.target_map[cxl_rr->nr_targets_set] = ep->dport->port_id;
++	}
+ 	inc = 1;
+ out_target_set:
+ 	cxl_rr->nr_targets_set += inc;
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 847e37be42c4..4b858f3d44c6 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -357,6 +357,9 @@ enum cxl_decoder_type {
+  * @target_type: accelerator vs expander (type2 vs type3) selector
+  * @region: currently assigned region for this decoder
+  * @flags: memory type capabilities and locking
++ * @target_map: cached copy of hardware port-id list, available at init
++ *              before all @dport objects have been instantiated. While
++ *              dport id is 8bit, CFMWS interleave targets are 32bits.
+  * @commit: device/decoder-type specific callback to commit settings to hw
+  * @reset: device/decoder-type specific callback to reset hw settings
+ */
+@@ -369,6 +372,7 @@ struct cxl_decoder {
+ 	enum cxl_decoder_type target_type;
+ 	struct cxl_region *region;
+ 	unsigned long flags;
++	u32 target_map[CXL_DECODER_MAX_INTERLEAVE];
+ 	int (*commit)(struct cxl_decoder *cxld);
+ 	void (*reset)(struct cxl_decoder *cxld);
+ };
+@@ -781,9 +785,9 @@ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+ 						unsigned int nr_targets);
+ struct cxl_switch_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
+ 						    unsigned int nr_targets);
+-int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
++int cxl_decoder_add(struct cxl_decoder *cxld);
+ struct cxl_endpoint_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port);
+-int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map);
++int cxl_decoder_add_locked(struct cxl_decoder *cxld);
+ int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
+ static inline int cxl_root_decoder_autoremove(struct device *host,
+ 					      struct cxl_root_decoder *cxlrd)
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index 6a25cca5636f..8faf4143d04e 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -651,7 +651,7 @@ static int mock_cxl_add_passthrough_decoder(struct cxl_port *port)
  
+ 
+ struct target_map_ctx {
+-	int *target_map;
++	u32 *target_map;
+ 	int index;
+ 	int target_count;
+ };
+@@ -863,9 +863,7 @@ static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+ 		target_count = NR_CXL_SWITCH_PORTS;
+ 
+ 	for (i = 0; i < NR_CXL_PORT_DECODERS; i++) {
+-		int target_map[CXL_DECODER_MAX_INTERLEAVE] = { 0 };
+ 		struct target_map_ctx ctx = {
+-			.target_map = target_map,
+ 			.target_count = target_count,
+ 		};
+ 		struct cxl_decoder *cxld;
+@@ -894,6 +892,8 @@ static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+ 			cxld = &cxled->cxld;
+ 		}
+ 
++		ctx.target_map = cxld->target_map;
++
+ 		mock_init_hdm_decoder(cxld);
+ 
+ 		if (target_count) {
+@@ -905,7 +905,7 @@ static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+ 			}
+ 		}
+ 
+-		rc = cxl_decoder_add_locked(cxld, target_map);
++		rc = cxl_decoder_add_locked(cxld);
+ 		if (rc) {
+ 			put_device(&cxld->dev);
+ 			dev_err(&port->dev, "Failed to add decoder\n");
 -- 
 2.50.1
 
