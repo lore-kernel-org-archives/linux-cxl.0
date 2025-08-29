@@ -1,151 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400A721019E
-	for <linux-cxl@vger.kernel.org>; Fri, 29 Aug 2025 18:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABFA314A62;
+	Fri, 29 Aug 2025 18:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756491051; cv=none; b=eklQU6PS7jTx7QwupfKthm90ovXv+jGVipL7LL2pkCBnqfSsbM8bOqCuniOqmErJqUUgx/IwVZb2DHnhDH+ptIBwLqIqYtl0EESyBaHtihYPqLtviHxLS5tbEcFEFwGl3a1drGlXVlgiQ+IJkDBtHm7owmtgWBAGxfCbVenLwUU=
+	t=1756491468; cv=none; b=eSFBELc1/UtibwX0nqL5vl24lAaZ/GVZduVa5zc6cW/7RrNHNufQGkryEWwv+KMCZ6rTgwg39FfC1IX1IOeAnSJ5Q6IQT5giVuA5u13ttRo89ttAB2UJQqcsQMduC2jU0XLLmW+oK1xhilFo23YcgMCZkelk4YzOB44VmevGwLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756491051; c=relaxed/simple;
-	bh=YXbuLxCWUXZQZDu1qHbXuCzlnkOQNq58GkVpoYQ0ofI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tU7mJZ/TDJgP6a0oX2nF72eodgTMg8YH0aqG8GUBIq6f43yonvQ+tyVlz2serfl4Ob7hMXkEo/QqcoutvByO6g1i/xYgfPHhkHogaKopC7JGhePo64c0tVbnodnIC4scC0kxAVig9iu8tZhiLPQKwhiPkeyepm/3tw1LwvxvP+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 431DFC4CEF0;
-	Fri, 29 Aug 2025 18:10:49 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	rrichter@amd.com,
-	Gregory Price <gourry@gourry.net>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v9 10/10] cxl: Change sslbis handler to only handle single dport
-Date: Fri, 29 Aug 2025 11:09:28 -0700
-Message-ID: <20250829180928.842707-11-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250829180928.842707-1-dave.jiang@intel.com>
-References: <20250829180928.842707-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1756491468; c=relaxed/simple;
+	bh=lw8ak57rMHfT4/pQJq5aSB79Lcnt8tR7XtTQ0VDcSDg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KdWIuTmt/u5JFhPq9IH64cFYS5hM6kz+6SXMjMUTABSowZMIt8GeeUiVxqaFD/6YcSOSS2H47O1nHadryp9dmsvW9gGKS5QmZOyJCBQXh4Bq6RLBfwnZeYYHjdXNwnEcJhWGf81vOmaGRiDjXD3my99Naz6QK8G9ddnGN5syVEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A5wnYkmv; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A5wnYkmv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756491467; x=1788027467;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lw8ak57rMHfT4/pQJq5aSB79Lcnt8tR7XtTQ0VDcSDg=;
+  b=A5wnYkmvMzhzIvhvX9ujgFRy70PDTURzVJWn6w/JctogCmftGEThs4jU
+   klBHyofNVQFoMMdnD9X1QmIi2vOYFmmKgUtjUFDd1Kc1rApPHxygDbDJs
+   ifSOQ5OYnOQo99ivue5Mz4XPYpVrRg2SuV7T+Obwbb8uy4OaGd0Wrz5KN
+   5KZcx2sYD5HhotOH9PeNZvm/P/YpozugcAif15Rd+byjaMmDPPZ80Zfr3
+   KWIB0G1hiS4/pOT06C8jf+8S9tPM7+9ExmKZk7HtlIvhFxwvjvRsuD/+O
+   EmzzRf6+RtUn8bykaH4wicSU5OtNWITE2V8GGTcWSO/T7ZjeLLiwpHERw
+   Q==;
+X-CSE-ConnectionGUID: 3DelBLT3QhOsPq28pe7XeA==
+X-CSE-MsgGUID: EYdSlRzoTf+zLqPaYbGTtA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11537"; a="69378230"
+X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
+   d="scan'208";a="69378230"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 11:17:46 -0700
+X-CSE-ConnectionGUID: TDGBfdz7QCu4X0hPGUFr6A==
+X-CSE-MsgGUID: ObJDOCk9RSmkjviqZdkirQ==
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 11:17:45 -0700
+Received: from [10.124.220.231] (unknown [10.124.220.231])
+	by linux.intel.com (Postfix) with ESMTP id 2A58B20B571C;
+	Fri, 29 Aug 2025 11:17:43 -0700 (PDT)
+Message-ID: <129284a1-1fc7-4d25-baba-53d5de32ebd6@linux.intel.com>
+Date: Fri, 29 Aug 2025 11:16:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 02/23] CXL/AER: Remove CONFIG_PCIEAER_CXL and replace
+ with CONFIG_CXL_RAS
+To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
+ shiju.jose@huawei.com, ming.li@zohomail.com,
+ Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+ dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+ lukas@wunner.de, Benjamin.Cheatham@amd.com, linux-cxl@vger.kernel.org,
+ alucerop@amd.com, ira.weiny@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250827013539.903682-1-terry.bowman@amd.com>
+ <20250827013539.903682-3-terry.bowman@amd.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250827013539.903682-3-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-While cxl_switch_parse_cdat() is harmless to be run multiple times, it is
-not efficient in the current scheme where one dport is being updated at
-a time by the memdev probe path. Change the input parameter to the
-specific dport being updated to pick up the SSLBIS information for just
-that dport.
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Tested-by: Robert Richter <rrichter@amd.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/cxl/core/cdat.c | 23 ++++++++++-------------
- drivers/cxl/core/port.c |  2 +-
- drivers/cxl/cxl.h       |  2 +-
- 3 files changed, 12 insertions(+), 15 deletions(-)
+On 8/26/25 6:35 PM, Terry Bowman wrote:
+> CXL RAS compilation is enabled using CONFIG_CXL_RAS while the AER CXL logic
+> uses CONFIG_PCIEAER_CXL. The 2 share the same dependencies and can be
+> combined. The 2 kernel configs are unnecessary and are problematic for the
+> user because of the duplication. Replace occurrences of CONFIG_PCIEAER_CXL
+> to be CONFIG_CXL_RAS.
+>
+> Update the CONFIG_CXL_RAS Kconfig definition to include dependencies 'PCIEAER
+> && CXL_PCI' taken from the CONFIG_PCIEAER_CXL definition.
+>
+> Remove the Kconfig CONFIG_PCIEAER_CXL definition.
+>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>
+> ---
 
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index b156b81a9b20..84c50e7e8d0a 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -440,8 +440,8 @@ static int cdat_sslbis_handler(union acpi_subtable_headers *header, void *arg,
- 	} *tbl = (struct acpi_cdat_sslbis_table *)header;
- 	int size = sizeof(header->cdat) + sizeof(tbl->sslbis_header);
- 	struct acpi_cdat_sslbis *sslbis;
--	struct cxl_port *port = arg;
--	struct device *dev = &port->dev;
-+	struct cxl_dport *dport = arg;
-+	struct device *dev = &dport->port->dev;
- 	int remain, entries, i;
- 	u16 len;
- 
-@@ -467,8 +467,6 @@ static int cdat_sslbis_handler(union acpi_subtable_headers *header, void *arg,
- 		u16 y = le16_to_cpu((__force __le16)tbl->entries[i].porty_id);
- 		__le64 le_base;
- 		__le16 le_val;
--		struct cxl_dport *dport;
--		unsigned long index;
- 		u16 dsp_id;
- 		u64 val;
- 
-@@ -499,28 +497,27 @@ static int cdat_sslbis_handler(union acpi_subtable_headers *header, void *arg,
- 		val = cdat_normalize(le16_to_cpu(le_val), le64_to_cpu(le_base),
- 				     sslbis->data_type);
- 
--		xa_for_each(&port->dports, index, dport) {
--			if (dsp_id == ACPI_CDAT_SSLBIS_ANY_PORT ||
--			    dsp_id == dport->port_id) {
--				cxl_access_coordinate_set(dport->coord,
--							  sslbis->data_type,
--							  val);
--			}
-+		if (dsp_id == ACPI_CDAT_SSLBIS_ANY_PORT ||
-+		    dsp_id == dport->port_id) {
-+			cxl_access_coordinate_set(dport->coord,
-+						  sslbis->data_type, val);
-+			return 0;
- 		}
- 	}
- 
- 	return 0;
- }
- 
--void cxl_switch_parse_cdat(struct cxl_port *port)
-+void cxl_switch_parse_cdat(struct cxl_dport *dport)
- {
-+	struct cxl_port *port = dport->port;
- 	int rc;
- 
- 	if (!port->cdat.table)
- 		return;
- 
- 	rc = cdat_table_parse(ACPI_CDAT_TYPE_SSLBIS, cdat_sslbis_handler,
--			      port, port->cdat.table, port->cdat.length);
-+			      dport, port->cdat.table, port->cdat.length);
- 	rc = cdat_table_parse_output(rc);
- 	if (rc)
- 		dev_dbg(&port->dev, "Failed to parse SSLBIS: %d\n", rc);
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index fa7ed5d50064..416d45516d82 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1617,7 +1617,7 @@ static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
- 	if (IS_ERR(new_dport))
- 		return new_dport;
- 
--	cxl_switch_parse_cdat(port);
-+	cxl_switch_parse_cdat(new_dport);
- 
- 	if (ida_is_empty(&port->decoder_ida)) {
- 		rc = devm_cxl_switch_port_decoders_setup(port);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 8bdc74121736..bdc682a7d60b 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -895,7 +895,7 @@ static inline u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint,
- #endif
- 
- void cxl_endpoint_parse_cdat(struct cxl_port *port);
--void cxl_switch_parse_cdat(struct cxl_port *port);
-+void cxl_switch_parse_cdat(struct cxl_dport *dport);
- 
- int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
- 				      struct access_coordinate *coord);
+Looks good to me.
+
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+> Changes in v10 -> v11:
+> - New patch
+> ---
+>   drivers/pci/pcie/Kconfig | 9 ---------
+>   drivers/pci/pcie/aer.c   | 2 +-
+>   2 files changed, 1 insertion(+), 10 deletions(-)
+>
+> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+> index 17919b99fa66..207c2deae35f 100644
+> --- a/drivers/pci/pcie/Kconfig
+> +++ b/drivers/pci/pcie/Kconfig
+> @@ -49,15 +49,6 @@ config PCIEAER_INJECT
+>   	  gotten from:
+>   	     https://github.com/intel/aer-inject.git
+>   
+> -config PCIEAER_CXL
+> -	bool "PCI Express CXL RAS support"
+> -	default y
+> -	depends on PCIEAER && CXL_PCI
+> -	help
+> -	  Enables CXL error handling.
+> -
+> -	  If unsure, say Y.
+> -
+>   #
+>   # PCI Express ECRC
+>   #
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 70ac66188367..7fe9f883f5c5 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1086,7 +1086,7 @@ static bool find_source_device(struct pci_dev *parent,
+>   	return true;
+>   }
+>   
+> -#ifdef CONFIG_PCIEAER_CXL
+> +#ifdef CONFIG_CXL_RAS
+>   
+>   /**
+>    * pci_aer_unmask_internal_errors - unmask internal errors
+
 -- 
-2.50.1
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
