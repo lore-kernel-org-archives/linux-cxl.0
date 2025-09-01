@@ -1,70 +1,73 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2059.outbound.protection.outlook.com [40.107.94.59])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2084.outbound.protection.outlook.com [40.107.236.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769521DB15F
-	for <linux-cxl@vger.kernel.org>; Mon,  1 Sep 2025 14:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE692DF125;
+	Mon,  1 Sep 2025 15:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.84
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756738094; cv=fail; b=jaAjXzNgqbE79C6Ql90eVnF3lP1NY5zbzzsDwycFV/2mWYpvjcWa21iA/nuoeQ+9Ux4nAh+sNkTU151Bc3HPvTQZxnjjRmMjmbnCDkwMIvQUVdN8v7BB5GJ2rVXz3IcDiUsAl4KhtLp8sqGhODYFlChvPZSJWkcTMqPvnYlkGlc=
+	t=1756740231; cv=fail; b=b/DJiAMhiXcf96QEkQLIlMGTj4dUxwMAPMnMU+yKxbDSGL3qbq/z37w2E0rt1czIjBByl1kgPNlY0kfTxpXNH0HyOcfUvJctGm0yKtwPow4BH/g2c0aCv+mfVAl5GotPa767Bg45FheC7M/gthpcF6LohbQXaj40MAjFwKRQd/o=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756738094; c=relaxed/simple;
-	bh=X7tySGLD6gihszmchhTbDbH6c7QZ5Sn6dtLLtFSQ/2Q=;
+	s=arc-20240116; t=1756740231; c=relaxed/simple;
+	bh=61kdytOf0LnfHx0XPJI03MLyuhDwnu6rnKw/hJ9d5Ug=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=t2MNhn2RQzlxUAmtkJjIylT/+0rsj8hs7TdFetX30VG0DDceBiF5IDoUcIV2aL39LU1FQq+Ts4uwDg7OfjSTCiSk2/pLlkcYF4JdXuc9kOdD7k0XtiqXFhIyJ7umhsEFo36WFMd/l0RPUjnV65Yne0uXxrjroEhV4xmUh87E0YE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=i1PsAMWj; arc=fail smtp.client-ip=40.107.94.59
+	 Content-Disposition:In-Reply-To:MIME-Version; b=hP2rY1NgkcCVzHITC8fuuRD5Bo/SpW5tlWlic1M5pNQDpZhWFEyCFT7Ki0Y2wGqOWlKIplaCsolZEwWRvxS7xcJRXAHAYHEZeQSreziqLJXs6JCNl50bMFoj7SQqS1fR8K9WK2pOcSTzg+u8c3lHBshEgqf9GJLxhffwjEvY2cc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2are97St; arc=fail smtp.client-ip=40.107.236.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="i1PsAMWj"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2are97St"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mFzgclTk28f3tIuhXIR2EegyrKmBpAhfBvVYHgFyHiEfiB6Qn7K9Zd51qj177Z26TYvvH4r6aLZGrHcxWCLnUqYVsR6DckLZOhBGCZwSLteRGSfT4g8hR8LwAlR9x8TrQL80eY/2WCFNE/r5f0fwnDH1uXSDTPM8VWC82IV5o27PEES+9BIdAftk270QzHrCOnxuV3gkUtOiqsLFyXf5a0JgzN1t7TMQMDOd5K6FWHF+fkX64EBjux8S5hxZvFhCcFIzBS/B4cqsvnd6D7Ov/CZQwQ/WyigdKs8ibi/e2FUGHAkBMptdUpDYe1SWwBC9sFu/FOAwf3Zze3qWtVgJpA==
+ b=j6gbuFW7bKzHuye5tg545c6YE9lVBMRjPw5KN8uyFO4MHHgwwJWWBnD+KUDsRHP4uOX/iToQhqCnn5wq6nRGlFv/GdYqizqHuSj2cq9Ll2s7yzUw51yFV3KWNRS9IichpGSm7/ItvbTNXzy6yOFpevJu1MUjZNDkfDj9LNODQMIvqJf22pS4sPDBEV5wynbl277a5MmTfK+vgNC3yd2AL0UhbQmrNYdtZYHviFy0zumIWn0hPiu2zoBQXu4ovA+wF76RroruVYOV6r3BOYXP0Kzk6LchzkDA9xlmawgDFSbBfEd7yCO7C65w7mfT9JABzbcf6lWNlrnxOFuQd/zwTw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Lh6dUg+NSEPtfK0Grylti8dLuYzFXhCGPaPyaoYYldM=;
- b=XLveCBc5w3AqjrbWbKSMj9HCXyRCEqZz1Jf2DmAC1K7ij7C3nmnR2hEOF8vjXdrmamD2tqGCX/CGNDxAJewfb5UJSSdi4VqmMomN10ZW9c1S9v1x957CmsA8lMMTOlHodT047s6MJMkTM3KPgR3bmrTxGAw1cskt6nO8OntKnAzvQNQ+4FvXePWQZFCa6LQq0oi2J/vYRzS+SbbeeNbC17IhbCIyg4zCLyI8H+GX4xpU+Q5R6LBm0xnh13Eui51bVd38m/Z72En7obgvNM/YMjzW0JycF5D0n3h2jZ/AS1YqnfIN49iTeFCRD4vWgRuszfmu+6u+t/Eixqh+fYOtqw==
+ bh=UCU9ls1nX69ppn6m09Vtme3WiWBgkcKqkbKjB6s6EmI=;
+ b=wslsGDt/mUJButEHamHyI4Q0gwPgutvtXmLYk4cSjUrPgTvsJtMfdpvxwIaLr6X7ucnWqL6jFVODlqRHenXv7bpodbL4IjtbxRrThNusJE88ByUtuVewiD/xHzY5iWshfrzSApZ9e9wy0gM1v7U2iH6bcEam/Rag/BTMjVhtk8d6QoSnf4xF5LT1M6kvQ7ORRnU4EUgsfi5KwvM9ZxUe1QD+/ODOJVgm5FsKaNp34cdtgabNptXkbhzh6teLx0CjqTAkzogKQIX3giG7tkPvh9Pas+P35xJdiveTWP6VNGr+aeyHgXNdLroq0PdtnmAb/3Nf8CUQjd/dh1a6qxwVIQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Lh6dUg+NSEPtfK0Grylti8dLuYzFXhCGPaPyaoYYldM=;
- b=i1PsAMWjJ3bY1m76ZJ//PfdsHCM8pY3/oOk0hNI9LKPdjijY5yxtKlLSE8HPjtWhXBcN8YWUaioD7IRuDxFR/bGE197PVuaGlgV0lp/0TPGqbYLUzTuayY3duBJsrxbsi1sb6RCFq1OD0XKKPHbhKUfum/UJGvkr/0lO+kvLeRE=
+ bh=UCU9ls1nX69ppn6m09Vtme3WiWBgkcKqkbKjB6s6EmI=;
+ b=2are97Ste7vBIA6619tOYxdg7sTw2XydSeS+Ki0PWzIplF9tnsp6JQXdMY4D3qNdbRqtA/ekJhb4hEE7M3tKQGuhfkfG6/seZgAssewCLnHVFqG3AHuoen3WA4N4x31QkEY813Ar92/OiTXFBztZn1pknlxMy8Ruhb5D/9N8b/4=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by PH7PR12MB5686.namprd12.prod.outlook.com (2603:10b6:510:13d::13) with
+ by DM6PR12MB4204.namprd12.prod.outlook.com (2603:10b6:5:212::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.21; Mon, 1 Sep
- 2025 14:48:09 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.27; Mon, 1 Sep
+ 2025 15:23:45 +0000
 Received: from CYYPR12MB8750.namprd12.prod.outlook.com
  ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
  ([fe80::b965:1501:b970:e60a%5]) with mapi id 15.20.9052.014; Mon, 1 Sep 2025
- 14:48:08 +0000
-Date: Mon, 1 Sep 2025 16:48:03 +0200
+ 15:23:45 +0000
+Date: Mon, 1 Sep 2025 17:23:39 +0200
 From: Robert Richter <rrichter@amd.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Subject: Re: [PATCH v8 05/11] cxl: Defer dport allocation for switch ports
-Message-ID: <aLWyIlyMgZUzO5Oa@rric.localdomain>
-References: <20250814222151.3520500-1-dave.jiang@intel.com>
- <20250814222151.3520500-6-dave.jiang@intel.com>
- <aKXCid-m65ou2WVV@rric.localdomain>
- <a5eeaa15-9ef7-4b9a-88dc-10de9f1cb551@intel.com>
- <aKg_gBw1Q29BaXdp@rric.localdomain>
- <0d4c1766-d966-43bd-abec-b1a8a4592a1b@intel.com>
- <aK1niOntTRwwZhhv@rric.localdomain>
- <780adfd8-7d3d-4acd-a34b-0e88abb40041@intel.com>
- <aLHBG5j8rVYhi9cg@rric.localdomain>
- <2f52ad40-7e85-4466-8d42-190c846fd37c@intel.com>
-Content-Type: text/plain; charset=us-ascii
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Cc: linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ALOK TIWARI <alok.a.tiwari@oracle.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Gregory Price <gourry@gourry.net>
+Subject: Re: [PATCH v4] cxl: docs/driver-api/conventions resolve conflicts
+ between CFMWS, LMH, Decoders
+Message-ID: <aLW6e0tOI4HDSl7u@rric.localdomain>
+References: <20250820150655.1170975-1-fabio.m.de.francesco@linux.intel.com>
+ <aK27hvifBdqZK5-v@rric.localdomain>
+ <4179950.vuYhMxLoTh@fdefranc-mobl3>
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2f52ad40-7e85-4466-8d42-190c846fd37c@intel.com>
-X-ClientProxiedBy: FR4P281CA0006.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:c8::17) To CYYPR12MB8750.namprd12.prod.outlook.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4179950.vuYhMxLoTh@fdefranc-mobl3>
+X-ClientProxiedBy: FR4P281CA0010.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:c8::9) To CYYPR12MB8750.namprd12.prod.outlook.com
  (2603:10b6:930:be::18)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -73,224 +76,224 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|PH7PR12MB5686:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2171fa56-e201-4bad-ab3c-08dde96690f9
+X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|DM6PR12MB4204:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7d953138-c98f-4ddb-db68-08dde96b8a8d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Sz5XDIee8wIn9yWjG5vLK1SX+sF0yZH+UJkPSDn4SY5WSXBwkb0ide2xoEnn?=
- =?us-ascii?Q?6FAR8F/kYbtsMb/fWohQJTUArS1Io/CzmPWu8YQs6Oodn8NYshC0BRAyfD6Y?=
- =?us-ascii?Q?7miL4Vb9P75LZT+VmvvkoPG7PUCGKmh1fWOBGpih/+D1WbR/0eR73H5MnkKA?=
- =?us-ascii?Q?CGb/F6pU6hdWlzvxwnvVT1h1IGLQZYPHh6puzxutO/PDHyWJOfPukQhAWGhT?=
- =?us-ascii?Q?9H6HceYcSmXHFIvmlX83OFfJlnTCtHfYs/2aHev+OxYAlpT7UJ8B4smNpNWK?=
- =?us-ascii?Q?TkvG+ekkMX24tKDO1gTA9OLNQRXY3H05IluZWlLNI1v+eMgY9ZAzQ6sly1Lc?=
- =?us-ascii?Q?OcScaMIdCGpUDu3W2VVJp2G09/SOrvWrh0XRzgU6P60QrwVWUk7Zhy88iiFJ?=
- =?us-ascii?Q?1cJ6/2XoWWx48R8lHaLOkSyzuh4c5J1FY6zbjhLfzVk5BkHy/zOC9yEIHgll?=
- =?us-ascii?Q?Oi4lT/B/lxxJC5JMCl+U65eWJPtIINJ/ke66ptN6vsbNJUgl5c7R17fSLN9J?=
- =?us-ascii?Q?n6oqFhxDp/PE762fbNcq22uOFXryTmws7TbxrWAqlBpu/2bI22ZrVp/5vteM?=
- =?us-ascii?Q?Rt2l/kXrRo8ppTd7PqnYNYeKeMbNaxAVLiOt4cq9URGTZy2/j6kjrMzq6Ogt?=
- =?us-ascii?Q?3VgJriOJM2c0wuDOPqk4h1k6vNeycKjp9+ZduB3HztkkR004qFSPF4ecoP2Y?=
- =?us-ascii?Q?Jp8x/hs5keRS7s791J3xCW7YTJxv7xuciCVoNKeV8g/jSeh3QfMdXz1lKdHc?=
- =?us-ascii?Q?kJP0iUjQONWtv1Uyv45Uir6tUZTDn1qHfjJu4c+xR/K4MHcHmsTw9erYnYWg?=
- =?us-ascii?Q?eSm3HHPtgaS/PRfc8ae/2mjKgqhknVX5KjL1Azuvj4Rp6DAfsw84VQM6l/Y+?=
- =?us-ascii?Q?FWVQk39H1sxpMjaTPsGUMEN2abdrzhUXD77RTonxjbnaOhmo6p0MiCFEvx/r?=
- =?us-ascii?Q?z1o/hVJVGy9uE+jfJ2aRoYNFva0BV9maNC63zHk9n5XijPLnqOI7MZjx9I97?=
- =?us-ascii?Q?oC+ZWwhU6hoNVFscVU8iFq/uNR+TYjgm33UYY3rj7A18pqlSOGwYhVbyrUVc?=
- =?us-ascii?Q?2OIzO/TA0keqL52ccSWz+TTcfUPKr3jQWmU/DOI0zVmuiDp32whHcZGcmJQp?=
- =?us-ascii?Q?oey1N1RD1JPBPMjEbXh0N4J4m1wZA7KEO6FQAXw8ATsO/c+q19trlIVP4lDw?=
- =?us-ascii?Q?/oWilwlrM81Mzz41rp7BBZevahK9f01+rvT0VlNZfJLTu4pVDs+hm/ZSEkqM?=
- =?us-ascii?Q?zPkfJBS2waxBIrx9ARTQhyfAf6WO0yKOyiBheNjEEICSvbPZ4RysVmYT5cv1?=
- =?us-ascii?Q?z9sPf2XMnTqyhDIgqjJATNoRgCZT1x8RF8lrMDXyEhG9JMzur1G+01eP9vCr?=
- =?us-ascii?Q?y80PK7UyE6AgNr62fV74Gk9//izcp4rqAdc5lxY5f1hB2FQpsYFWtWcZypNc?=
- =?us-ascii?Q?InDVUcUGTls=3D?=
+	=?utf-8?B?VU9Wa1c0QVpXazJCZ1V0eFc3TjYzME92V3VSYm1hZ0o1cmkrNkJqT2NBQ1lQ?=
+ =?utf-8?B?TW9yMGNtK0ZLbXRwYVNSWDR0UFIrZThPNHo0Tm9lR0RGVlBhQ09LamRscmxt?=
+ =?utf-8?B?Y3RpaUV1K3N4cENWNmlUK3RPSGhlYVVpd1Vsd0t2NHJGYUNkbXFxbGxJTm80?=
+ =?utf-8?B?NGdnT3VRQ0dkYU8wbWk5VnZOdlVEWHd5Q2RtYnpLaFova0lnTjBuZ1lVYmFG?=
+ =?utf-8?B?MUdoNzRLRVF0YmI0L2NWMEVpRnZGVjNHa1FEMmxsV0JSUWNhbWZKWlZmWmtX?=
+ =?utf-8?B?N0NtajR3MDI1WEdGNHFxdzljVzAva3kxQy9tN2lOd2NQRHZOaUxrbTBYOE12?=
+ =?utf-8?B?Y0JraUlDSHRUb1hQU3ZaZ1NYUWQ5YnBpd3pBVjNBZVMvNkN5TmhwVmJIbGJl?=
+ =?utf-8?B?a3haaUNHUVNHRVpIakIxamNqbGppc2YzQU5zNmFLWGt4ZXNEVEhtYkEyZ2FB?=
+ =?utf-8?B?UC9QOHBnZlVGWXVmZnhISGdkUkYwY0pneUl0Umc2emRUSktSOGlKQ1VVN3BQ?=
+ =?utf-8?B?OWkzd1kxZ1JqY25GbkxVV0VPc3Rxazd3Y2c4ci9YTlBQNFltSWJSQTBseWRq?=
+ =?utf-8?B?Q1A0d3J0bWhoc3ZVVUFjeGZJWmFSRDJ1eW4yVFlDZXc2Z09idjd2UGQ3K0pk?=
+ =?utf-8?B?QVJqaklKa0hiOTNRRDViMkc1aVVVOENNQWp1dWQ1TGtyeUFiYzQzUERSZlFO?=
+ =?utf-8?B?dWNzZENZbmptMGcxVWNmcmtneEUyMmVQbzYyU1QvYndzUFpaK2VFcjJyK091?=
+ =?utf-8?B?Yjh0REI5b0ZremM1Uy9sTzVQcUpnOURZM3NqQVZiejEzZ285TnhOaGxlSG52?=
+ =?utf-8?B?ejlncGVDTG16NEFTVGdxSDJxZTQ5a2xHN1JzODIxcExyQVBBSWRaQWZGdDlx?=
+ =?utf-8?B?ZHJ1aVU2U0xxV2dJVzBjZmNhNHBlOTBJWkV0UnRDWDdtSjJLeHVTTkNRa3lq?=
+ =?utf-8?B?QVFuMnFHV2pJQlN5WFdMWlpGTjhvbDkwNzVkWDFWdWNuYnNuenlZenlVdkFq?=
+ =?utf-8?B?a2RqRGQ3amZyRC9sNlp5Tjc5MjZkaUR4RWJLVFg3N3pPbzNZbGpNcFlodmk4?=
+ =?utf-8?B?MlVqbXoxdHg3YmQ2MzNnMmhvNE0vOVI2QWpSUS9Va0FVa2JxZzBvaUJpMWRx?=
+ =?utf-8?B?RmxVazdUajVjcmd6TmdNOXJzRlA5OExwTzBzYXo5azlLcGxJYzdrbG9zK1lP?=
+ =?utf-8?B?VjIvUHJaa3pIREpBRVdDbHZhNjdhSHJyNm44SGhyZlZId1dkQmxGTyt1SmtH?=
+ =?utf-8?B?djNkbkl6SS9JZ0hwM2cwTDVQcVBSb3d4NDc5RHBtaldiU0F1S0ZUVmJ6WXNl?=
+ =?utf-8?B?WU9oV2dPRkZtTHVHcGJOd2VERDBNNlZhNG5OMGZkcVV1bm94cTFqcTlxaGRt?=
+ =?utf-8?B?NlQ1L3pJL3Z6ZjYwS1FvRTF4a0xFUVFLTjhCa0NKRjZJQWpzd3RxNmYySm5v?=
+ =?utf-8?B?MTgraWlneU1qNzJRVjVuQkRPa3ZWQTdhWXVTNGpWSERiOWh3dEU3VVpadjRu?=
+ =?utf-8?B?SjQrRWU3YlpGVTJGSjVzcExHV3RLblZWZ3FzUVlCTlNWRGlGZlgrc2FwRUZ0?=
+ =?utf-8?B?NERNbEMxUlVJT2NmR0JucG5VbUxPQlZnVmEvdEdrUEdJMkxZSlJ6Z2E3bFNU?=
+ =?utf-8?B?WDN4ckxpT1BINlc5ZGtiRHlYbWVvc3ZkaEpYWm4xUXYrd2FKYTdQK1FVSUl6?=
+ =?utf-8?B?eUdFRUY2SWVLNEoyYnJYSTlSbEN3S2xkMkdxakFCbjVBS2hyUjhHcXphMjlm?=
+ =?utf-8?B?WTE2YXBnRGF3eVlSVVhCY213akVodUh0dnlHQUlZM1FFVHNreTU0V1gvNXZ6?=
+ =?utf-8?B?UDVOaXRqRmE1WDJidWNES2d0Z3o3S1h3RXh2Z0hQa0hFV09sVTd0aFNuaGtQ?=
+ =?utf-8?B?ekRQUFBxS1M0ZU9QL21JVXJYWWNHZC9JWGNJWTJkUCs1MlRQVVF3VFl0UHhs?=
+ =?utf-8?Q?WW1+IIR5+Mc=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9+7bglCYgNKnH3UJlYkItcRoM+SlnDtJ2D+wj0sTDp0Sx6C8eikPIDwkNSfy?=
- =?us-ascii?Q?8UlQHlYcr2QCgHPumwCZIPnbECHlnLmVyM0uLWeqFp3O/Lez2zEGbSeT+FX5?=
- =?us-ascii?Q?Ynn6gZIatGqzKpuQtF6oHT+QWB4by6KZD3Ld9upVZe4ETCYPXUJkC15ssCPh?=
- =?us-ascii?Q?7edIFwaYzdcKMDLxlJYEwTgkJsaP/xTRv6BIbjLlGKs4/9TY7voG6gwHNP/C?=
- =?us-ascii?Q?CenxS5VHgfH0vScUDDY54lpRrlMCmtY9QdPHdWtt8CW3ExDhuVlNyIDf1jjU?=
- =?us-ascii?Q?6Cfxg8mr9o3rfbXrzHAH3mn1UNIOy32ZJD96kOCj7NZEdq4wioB3gNqYiKlx?=
- =?us-ascii?Q?X4wWFjwgsRQzUQG+onkJyJXFICOrmNUuX8ur67ahZjcantoyQLnZMPRCDztm?=
- =?us-ascii?Q?Gkq0/aYEBOUaaSKIaynNUcAYk9J2ELPvZIQdrcHDnyiQsFYlIjNTS6X4qcfX?=
- =?us-ascii?Q?BerrUxKjWxy7/j0PgLTWI0yU/SHarP9hcu9LhjZ2+TQuCzCIHchRgZ6R+YkK?=
- =?us-ascii?Q?1IB5SHQhYQRI1Kr+E06mCAzUSbUdXQhOnMxA84VQT0X+hc9cAMECTLImaC7+?=
- =?us-ascii?Q?u3hTOYFAQ5MJoFF9ZRazVh6L3w4ug3UFa4N5+kJ0kjJyBbQrLtASVo0ki9FV?=
- =?us-ascii?Q?pd2Z4m9c4GeFgmPCJMjBM03MO546pFU3pMx+T2qKiJdXurUFaWUP/dF1C5wV?=
- =?us-ascii?Q?Gm1nsa7W24Aqsx1roGdfFx2KUyaKGglVtsbb3ErG1Pcol+htx7SxasA2I3LT?=
- =?us-ascii?Q?KGG8S1w2pR2woGRluuOEcjVfCOE88DrGeqszhGQnDI6d6gJUbfLX6xAtxi5o?=
- =?us-ascii?Q?QloW9GZt/2XUuJ8oH0rWGcTF9Dl4cqex4/NfHe+qj5jtjQnsPd+o2mOaf9E/?=
- =?us-ascii?Q?/OVjpSY++Eo6dv5zd9P0Tb3b8k59xodV6inANTsr6t729rkztMxzsti1sEG7?=
- =?us-ascii?Q?JZvWl8F5Hu16JUlBO+HdmTU38/mXzynSonuEMki9ScZ1WVB0FDqSgjORF4pS?=
- =?us-ascii?Q?DptC94aZeFKqiiVPV9Mjte2SfqlvP13sy3Pxu0GfCdAhjE/9BFS7ZO+Fq7+Q?=
- =?us-ascii?Q?GTySE0GJBR4qnWHGy2aflLEbgMZk/m6wezXJoW04Bkk3llbprJZhz+7Xzo6D?=
- =?us-ascii?Q?bTQVrzcdiRQIaxDH5s3xHHpMVqof1M2ONcZ7lYfH8ETAiLUBmB7fDfU2nLQJ?=
- =?us-ascii?Q?SKjC6KH1s2GN9+aeMiom/1stZFztO+DVIs8EeENLpQa/73T85ViMmhy4qe4F?=
- =?us-ascii?Q?Jae8dMuX8sngqEw855gOknnwjozbJMudn8Wi/X1Im6K1gKnmuzkhmmOEeF+z?=
- =?us-ascii?Q?pzB0hk/hgpl5GokFel2v22lMJxwkndwcx9OPn4f/IvkO3qzQwcJq/QnNqmQ5?=
- =?us-ascii?Q?d0IXz4CQKYo7agxCRWHX8JMpIxr1l1BeNGTg5OCfOhlybyd6xTbPGRtA7sZi?=
- =?us-ascii?Q?rk7wlOfnNkmUyWBjdnCeFcfxVVgBZ5g0C9wNg3z09sspbgJ/Vz/BKC7QRO33?=
- =?us-ascii?Q?DiFZ0fTD1HkA+RtGazB8OCPitkttgq6FoOLzVuRmDgoNWoB/Xb9Rumh9GOF+?=
- =?us-ascii?Q?N+AziIpuHzH/uv2kIGVUuy7NHzNT9WiYASYo0URB?=
+	=?utf-8?B?K20zd3VDZlJJR3RScVJhYWkyRnZNRFVJMHhra3llZ3VsbXpPUDJaS0FBM2VB?=
+ =?utf-8?B?R0Z3bmFqSENhRHRvenlyL29lMlZKa3J3RlNVOTA4Z0E0ejhvb2VqMEsrYUtE?=
+ =?utf-8?B?Ui81UTVjaitFWjVuK2p0bnBDc1lQZlNhL1IyRytwdXRiRUhlZXBxU3JhcjNx?=
+ =?utf-8?B?R1lTd21DQ1FRTUVWenJ1T29OR21McVlCUk5DMUtQZTBNTGVUZ0c3bDhuNzlO?=
+ =?utf-8?B?T2ZDS0J0VWpmZklCNlFWbE1Cem85Q1F0MS8wZUlYcnMzVHJmUDNXVlVhMk43?=
+ =?utf-8?B?OE9QZkRpRWlLNmREcmpnQzNTZFZQNjA2ZzBiL3lsNFNaSysrbGVhVUU1Nk55?=
+ =?utf-8?B?UFJWTlJPNkVDdUxFOG5PWXlOYkQvVmZiK0NKNkM3UEdVNHVybE5FT0JvWDhB?=
+ =?utf-8?B?YllCSWlmNlBtbG4vcGN0dkJLdmRrbHlqTlNYUlJpSUFaT3JhMm02b003QUQx?=
+ =?utf-8?B?Ny9jS20ybnVpWmR3S2R4T250OHZyb0dmRlRBN3VJMHc5blpNdktSRHJ1bG5I?=
+ =?utf-8?B?STJJNXFtSC9RaE1LSGNFaU4wVzV5WlJKVmFqMXM3aE5KMnF2RHNPbWVuSWlz?=
+ =?utf-8?B?aTk5aEJ5ZVFnNFowTHpnT2tPNHRwSEkybFBNMEN4MEYzbVYwTzYwRERHTkRZ?=
+ =?utf-8?B?UnpMc3RmUjhuR1EwRXR3QnZqY2NLR1Y1Zm9ZTzRRQStSRmJZQTVHQlhCNzhX?=
+ =?utf-8?B?RDZxQzFldVA5TVEyTjB1RUZGSy9NVmt5NFRPbjJwanFGdlRrSUYzakJvVnpB?=
+ =?utf-8?B?OWdWYUVPZ0hlMUZFaU5Xd2tGUGVGc09tWGw5Rkhia0pUMVh1d0p1TzBKbHNQ?=
+ =?utf-8?B?NWtDT0crWUJ5akloTHMvY0IraUVqWjZqZEtiVWZyN3VsdjV0dHc5ZWVXRGwy?=
+ =?utf-8?B?K0M1U3FYYVAzb2ZHcjFabmFVYllCaGhISVFwc2VuT0k0NVpHU1h5NnNldDdi?=
+ =?utf-8?B?eEFNdzJSTTYvM1FOdnpHYlBnR0pVSE5oOThFV3hxNXhQem5Nc0NKNS94V1B6?=
+ =?utf-8?B?V2JlSVRqL21SQmxtQjdZalpxN2JqNnBjYUcvSHd2NFMwTDI0NUJOTFFxQ2g1?=
+ =?utf-8?B?L05jYU00c01FWWYyL0xLMVJ5NHM3aiswWDU3cTdwNitBQjQwQmMxU2ZJcjlB?=
+ =?utf-8?B?bEQyZjdlSm93OVA4amtlNGRXRXF3Z2FaY0xBUGtVUGNRdmhwRjZkRU1Hc0x6?=
+ =?utf-8?B?TXdVeFlHN2hXbTIwYmtRQXBZczYrMU9VYkJWKzh4WTUzOGFZOXlHQVpaZktx?=
+ =?utf-8?B?V2lxOUFjOUtlT2YxOXZySDJOUjB4OGhucjRlcW9VbVZONm11OFBydlVzVW9N?=
+ =?utf-8?B?TGRaaWdOeXlUNDNyR0g4QTRhTWN1Vk9KM08xMitoRjR0c2lRNWZCWXFkSXZY?=
+ =?utf-8?B?SDRFcVhxNUFVWGxBSzJra01FUGZjTnUwM1pxdEg3U2c0U0QvRGxMZWgzeVd4?=
+ =?utf-8?B?d3lXMnFodlVBSlhiL245MHllSkVDaFpJeFF4NUdlVmpIR2Z3NE1kd2g5Ymor?=
+ =?utf-8?B?Ym9DMkVkSmsxaHNsd29GRjhpOVA5V0NLM0Y5WW5mQ3NFUnZBQXNsYWtQNmVo?=
+ =?utf-8?B?NmJrc1FyRTFlU0hTMUxVK3l1QXBIS0tMYWgreXF1Qmd1WVh2bGxUSzcvazkx?=
+ =?utf-8?B?aGJkb1BLelZVdHYyMi9jblRybWU3TyswcEcwUDdmVW95UjZLcEJjM21tMEVH?=
+ =?utf-8?B?NEJuaE52eURTbERhamtmN2QvOGxxV05PZmdPYk1ZWVErTW1MRjJOTzJhMmZr?=
+ =?utf-8?B?UXZlYVFwTVc3di9lN0hDUzFrL3NqK2t2T3d0andvcnZiZHp4bGVtQmZKZ3FS?=
+ =?utf-8?B?dDJZYnVEcjVjMkVLSTVDdVJJQ0tJK0l0dk92RHd3cTIySnoyR2Z6S0QxTkNL?=
+ =?utf-8?B?OHc4MDVwak5xQzZwREZSS0tDcDRtLzN1Q2xUYVZPd0ZNZzhJSldGWklQVTlO?=
+ =?utf-8?B?bHFRYmJ2V2FWSkZsZThYcUVHMCtLc3o0NkxIMzhYVVF4NkYvTzZyd1JXbFYy?=
+ =?utf-8?B?RSt4NlRyZEhsMXhqT21aUCtPR0FncXhoeEYvNnZBMlExaUxxK0pGTFVxVUZJ?=
+ =?utf-8?B?ZmZiK1MzUjFOb3RYUG4zSTVBSUFFUVBMOC9TOEQ2SDY1OFJPZktUa2gxbzNo?=
+ =?utf-8?Q?+ocQ1hIDgaMYrmNgODlYEfTwz?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2171fa56-e201-4bad-ab3c-08dde96690f9
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d953138-c98f-4ddb-db68-08dde96b8a8d
 X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2025 14:48:08.8361
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2025 15:23:45.4357
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6ppWoPMSdvrORkdauQumD9bm4D+sQ/FmD2lAX1j4QUDDUXLI9X8vGcuBl+AxAbTBvBSfyJNyReB8CX7tRLjR9Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5686
+X-MS-Exchange-CrossTenant-UserPrincipalName: BgRyrmzBhPAT/97mlSm1lQgsq514cuhveg0/1+PePerHybgecOiwgNzLm6qXN2ZG+3w/jzHlZLPXi0x2mT9NpA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4204
 
-On 29.08.25 10:23:38, Dave Jiang wrote:
+On 01.09.25 14:22:00, Fabio M. De Francesco wrote:
+> Hi Robert,
 > 
-> 
-> On 8/29/25 8:02 AM, Robert Richter wrote:
-> > On 27.08.25 10:05:05, Dave Jiang wrote:
-> >>
-> >>
-> >> On 8/26/25 12:51 AM, Robert Richter wrote:
-> >>> On 22.08.25 08:52:39, Dave Jiang wrote:
-> >>>>
-> >>>>
-> >>>> On 8/22/25 2:59 AM, Robert Richter wrote:
-> >>>>> On 20.08.25 08:20:04, Dave Jiang wrote:
-> >>>>>> On 8/20/25 5:41 AM, Robert Richter wrote:
-> >>>>>>> Hi Dave,
-> >>>>>>>
-> >>>>>>> see my comments below.
-> >>>>>>>
-> >>>>>>> On 14.08.25 15:21:45, Dave Jiang wrote:
-> >>>>>>
-> >>>>>> <--snip-->
-> >>>>>>  
-> >>>>>>>> +	if (IS_ERR(new_dport))
-> >>>>>>>> +		return new_dport;
-> >>>>>>>> +
-> >>>>>>>> +	cxl_switch_parse_cdat(port);
-> >>>>>>>> +
-> >>>>>>>> +	/*
-> >>>>>>>> +	 * First instance of dport appearing, need to setup the port, including
-> >>>>>>>> +	 * allocating decoders.
-> >>>>>>>> +	 */
-> >>>>>>>> +	if (port->nr_dports == 1) {
-> >>>>>>>> +		rc = cxl_switch_port_setup(port);
-
-I want to come back to my previous comment that port setup should be
-done as part of the port enumeration in devm_cxl_enumerate_ports().
-No need to make this a special case here. The link should be up
-already once the mem dev is visible.
-
-> >>>>>>>
-> >>>>>>> Can't this be done with port creation? I don't see a reason doing this
-> >>>>>>> late at this point.
-> >>>>>>
-> >>>>>
-> >>>>>> The main reason we are doing this is to move the port register
-> >>>>>> probing until we know the CXL link is established. Otherwise when
-> >>>>>> cxl_acpi does probe and calls add_host_bridge_uport(), that
-> >>>>>> devm_cxl_add_port() can trigger errors if the platform BIOS enables
-> >>>>>> PCI hotplug support on Intel platforms. The error messages "cxl
-> >>>>>> portN: Couldn't locate the CXL.cache and CXL.mem capability array
-> >>>>>> header" is observed. Essentially we can be trying to map registers
-> >>>>>> while DVSEC ID 3 and/or 7 has not appeared yet. And in turn because
-> >>>>>> that got pushed out, so did the decoder enumeration.
-> >>>>>
-> >>>>> The code suggests the Component Registers of the CXL Host Bridge are
-> >>>>> not yet ready. Is this delayed after the first Root Port is connected
-> >>>>> to a CXL Endpoint/Switch? PCIe DVSEC ID 3 and 7
-> >>>>> (CXL_DVSEC_PORT_EXTENSIONS, CXL_DVSEC_PCIE_FLEXBUS_PORT) are part of
-> >>>>> the pcie config space, which is enumerated not before a CXL endpoint
-> >>>>> becomes active. I haven't found a spec refs here. Please explain.
-> >>>>
-> >>>
-> >>>> So the behavior is observed when PCIe hotplug support is turned on
-> >>>> in BIOS for the Intel platform. A CXL device is plugged in to a RP
-> >>>> without CXL switches. The thinking is that the CXL link is not fully
-> >>>> established at the time when cxl_acpi_probe() is running and the
-> >>>> ports are being added. And the only way to 100% be sure the link is
-> >>>> established is when we are enumerating the memdev just like the
-> >>>> dports. Not sure what spec ref are you looking for. Table 8-2
-> >>>> indicates that those 2 DVSECs are mandatory for CXL root ports. Lack
-> >>>> of presence means either the RP isn't CXL or the CXL link isn't
-> >>>> established yet. I would assume this would also be true if a CXL
-> >>>> memdev is hot-plugged into a slot post boot.
-> >>>
-> >>> But add_host_bridge_uport() only creates ports for the host bridge
-> >>> (ACPI0016) devices and enumerates their component registers (CHBCR).
-> >>
-> >> And I think that's where the issue is. The component registers via CHBCR isn't there. When I removed this change, this is the signature I get:
-> >>
-> >> [ 37.423882] cxl_acpi:cxl_get_chbs:589: acpi ACPI0016:03: UID found: 35  
-> >> [ 37.424180] cxl_acpi:add_host_bridge_uport:726: acpi ACPI0016:03: CHBCR found for UID 35: 0x00000  
-> >> 000aabf0000  
-> >> [ 37.424186] cxl_core:cxl_port_alloc:741: pci0000:3a: host-bridge: pci0000:3a  
-> >> [ 37.424210] cxl_core:cxl_map_regblock:426: cxl port2: Mapped CXL Memory Device resource 0x0000000  
-> >> 0aabf0000  
-> >> [ 37.424213] cxl_core:cxl_probe_component_regs:55: cxl port2: Couldn't locate the CXL.cache and CXL.mem capability array header.
+> On Tuesday, August 26, 2025 3:49:58 PM Central European Summer Time Robert Richter wrote:
+> > Hi Fabio,
 > > 
-> > Hmm, hot-added Host Bridges (and I would count this case to those)
-> > should use the ACPI _CBR method. That is, else the host bridge should
-> > be enumerated during boot.
-> 
-> host bridges are there, just not the component registers in the CHBCR it appears.
-> 
+> > questions inline.
 > > 
-> > Is it just a delay, or does the CHBCR come up not earlier than the
-> > root port link is up?
-> 
-> Let me get that clarification from the BIOS people.
-> 
+> [snip]
+> >
+> > > +
+> > > +On these systems, BIOS publishes CFMWS to communicate the active System
+> > > +Physical Address (SPA) ranges that map to a subset of the Host Physical
+> > > +Address (HPA) ranges. The SPA range trims out the hole, resulting in lost
+> > > +capacity in the endpoint with no SPA to map to the CXL HPA range that
+> > > +exceeds the matching CFMWS range.
+> > > +
+> > > +E.g, a real x86 platform with two CFMWS, 384 GB total memory, and LMH
+> > > +starting at 2 GB:
+> > > +
+> > > +Window | CFMWS Base | CFMWS Size | HDM Decoder Base | HDM Decoder Size | Ways | Granularity
+> > > +  0    |   0 GB     |     2 GB   |      0 GB        |       3 GB       |  12  |    256
 > > 
-> > Can -EAGAIN be used to reload the driver later if CHBCR init fails?
-> > IMO, the Component Registers cannot be initialized later as that would
-> > delay the enablement of the root decoders too. At least only bridges
-> > that fail to init the CHBCR should be delayed.
+> > Could you explain the zero-base limit and how this is special to LMH
+> >
+> Linux follows the CXL specs and so it allows the construction of CXL Regions
+> and the attachment of HDM Decoders to them only if the Specs are not violated.
 > 
+> This document addresses only one of many possible violations. The proposed 
+> solution is not general to every possible Memory Hole on purpose.[1]
+> 
+> The proposed strategy wants to allow exceptions only if the CFMWS HPA range
+> starts at 0 and ends before 4GB. It only deals with Holes in Low Memory. The
+> many other combination of circumstances that lead to failures are out of the
+> scope of this document.
+> > 
+> > or multiple of 3-way configs?
+> >
+> It applies to all possible NIW configs.
+> >
+> > What if the HPA range is non-cxl already?
+> >
+> This solution applies to all CFMWS HPA range that start at zero and end 
+> before 4GB, regardless of the motivation behind memory reserve.
+> >
+> > E.g. my system shows this:
+> > 
+> > [    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009ffff] usable
+> > [    0.000000] BIOS-e820: [mem 0x00000000000a0000-0x00000000000fffff] reserved
+> > [    0.000000] BIOS-e820: [mem 0x0000000000100000-0x0000000075b5ffff] usable
+> > [    0.000000] BIOS-e820: [mem 0x0000000075b60000-0x0000000075baafff] ACPI NVS
+> > ...
 
-> I don't follow why this is an issue. Auto region assembly doesn't
-> start until the port hierarchy is established via the first
-> endpoint. So by the time the region code pokes at the decoder
-> registers during region assembly, the component register for CHBCR
-> should have been probed. It seems reasonable to setup the component
-> registers when we find the first dport and thus indicate that
-> everything should be there. Are you observing an issue on a
-> platform?
-
-It would be good to see the bridges in the system regardless of the
-link status of the root ports, which I think is possible. Same with
-the chbcr and the hb decoders. Only defer it if not yet available and,
-let's mark it as a quirk or workaround. Btw, this is not a delayed
-dport enablement any longer.
-
-I am also a bit worried about the conditions to run the setup. What if
-there are multiple hotplug ports, why should the CHBCR be ready with
-the first one already? Shouldn't all connected ports come up first?
+See below, it is still unclear you you are handling this.
 
 > > 
-> > The issue and the changes for this are not obvious, please make a
-> > separate patch for that separate change.
-> 
-> It was in this [1] patch.
-> 
-> https://lore.kernel.org/linux-cxl/20250814222151.3520500-5-dave.jiang@intel.com/
-> 
-> I think the name of the function being discussed confused things. It is now renamed to setup decoders instead of just setup.
+> > > +  1    |   4 GB     |   380 GB   |      0 GB        |     380 GB       |  12  |    256
+> > 
+> > The EP's HDM decoder's HPA ranges overlap now as both start at 0.
+> > Isn't that a spec violation: "Decoder m must cover an HPA range that
+> > is below decoder m+1."?
+> > 
+> The HDM Decoder's HPA range in the second line starts at the fourth GB.
+> I made a copy/paste mistake and I'll fix it with the next version of this
+> patch. Thanks for spotting it.
+> > 
+> > For the second decoder, shouldn't the upper limit be cut at 378 GB
+> > (multiple of 3, or 372, multiple of 12)? But since the CFMWS Base is
+> > non-zero that range is not detected to cut it?
+> >
+> Another mistake. Anyway, please notice that all ranges above 4GB are 
+> out of the scope of this document. On purpose. 
 
-Yes, but there is this additional change that calls
-cxl_switch_port_setup() in this patch.
+Let's see your fixes.
+
+> > >
+> [snip]
+> >
+> > > +Detailed Description of the Change
+> > > +----------------------------------
+> > > +
+> > > +The description of the Window Size field in table 9-22 needs to account
+> > > +for platforms with Low Memory Holes, where SPA ranges might be subsets of
+> > > +the endpoints' HPA. Therefore, it has to be changed to the following:
+> > > +
+> > > +"The total number of consecutive bytes of HPA this window represents.
+> > > +This value shall be a multiple of NIW * 256 MB. On platforms that reserve
+
+Add a line break to mark the text as a special case.
+
+> > > +physical addresses below 4 GB, such as the Low Memory Hole for PCIe MMIO
+> > > +on x86 or a requirement for greater than 8-way interleave CXL Regions
+> > > +starting at address 0, an instance of CFMWS whose Base HPA is 0 might have
+> > > +a window size that doesn't align with the NIW * 256 MB constraint. Note
+> > > +that the matching intermediate Switch and Endpoint Decoders' HPA range
+> > > +sizes must still align to the above-mentioned rule, but the memory capacity
+> > > +that exceeds the CFMWS window size will not be accessible."
+> > 
+> > Have you considered to just allow smaller CFMWS ranges that just cut
+> > the boundaries accordingly? That is, just search for a CFMWS range
+> > within the EP's HPA ranges (or even multiple CFMWS ranges) and only
+> > enable that HPA range? That would be more general and removes some
+> > limitations, such as zero-base and below 4 GB only.
+> > 
+> This solution doesn't want to be a general solution for all kinds of Memory 
+> Holes. Dan has been very clear about cutting out solutions to general cases.
+> This solution is limited on purpose.[1]
+
+I still don't get how you set the actual base address if it must be
+zero to trigger the quirk. How does this work with SRAT and what about
+other memory ranges that are in the same range?
+
+It should be clearly marked as a quirk that only under the specific
+conditions. The implemenation should be separate from the main path to
+better isolate the change. That was unclear to me. Still, there are
+the questions above.
+
+Thanks,
 
 -Robert
 
 > 
-> DJ
+> Thanks,
 > 
-> > 
-> > Thanks,
-> > 
-> > -Robert
+> Fabio
+> 
+> [1] https://lore.kernel.org/linux-cxl/67ec4d61c3fd6_288d2947b@dwillia2-xfh.jf.intel.com.notmuch/
+> 
+> 
+> 
