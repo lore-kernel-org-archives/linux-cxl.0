@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA7E33471B
-	for <linux-cxl@vger.kernel.org>; Tue,  2 Sep 2025 15:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A10F23B0;
+	Tue,  2 Sep 2025 23:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756828709; cv=none; b=tlZwn2Is8/w/82ceMpW679M2RgfO3iFR9EvrOcBwPmKGMP2a49EpeYnd0UgH4Xmyb+ePROW8+26AgbYea+EFcASyi7C4KdUmzyASYbP7WuDilZNb18+29PlQZp8sVUZx7oJqsQordSNipBu8iNDdMxq1IhyItSOKRid+EG3eaBg=
+	t=1756854999; cv=none; b=HNz946c2b4r/kS254h5QN127SDri4WSADisVTeI/2a7KSAaEDuEn64IRbt3XMkToXGS/pNMh+haTYJjnfe6i5BvdSu4Yl+hCiCoKPE7/gDfpVZdHqpWRHb+AMGBnbr7DNXyZVABT/aCgp17mrxn05eD2MZ9YZUfFc/hqR7I3x8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756828709; c=relaxed/simple;
-	bh=jIcUtU/A71d19V63mVdv1riSpAql1LsOoIduONrvFe0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rKz7KtLeqwnW0+yOjhQmifxUy3/BjEO+ljELlUpQBBoV+MoZ/eO2AXRk51TRVSdx4a1LSBtLb6HSiMswphndDkKN8JO0+ogBhlLU0QVGUqA8x9Fyb87SHKPMCTsfmaqs4r0w64x/N80wWTagBTYJV+vcNhFmCLXAk5+sXDvlqp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WYU/f3Pv; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1756854999; c=relaxed/simple;
+	bh=rKZ0Nh3RqLt7tI4TxWi0XsS1AUOFKimTgfg+6MXiFRk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rasbgZoRGbDLajD+Y/9n2ZGRqiujN+tbLtDe0iYKsMQES/A3n0ETyP6MyqYs2tB7S2smpsVxqjYrkVsKiQyNuLf5MEfp4hkx2aqyY8Su1682f8jO3o6gT2O5igQ0wRQYtQIebl9CyqfMvDtuuBLw0ngVk1mObfoejjGfiiBdZro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jx5HmeMM; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WYU/f3Pv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jx5HmeMM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756828708; x=1788364708;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jIcUtU/A71d19V63mVdv1riSpAql1LsOoIduONrvFe0=;
-  b=WYU/f3PvyRj/niMRFiiz0nK2NrTxunWLdWwsSeA/v2vbZL+ik2rkDiqT
-   fZOjrBhM8qBo1IYHDvqtYNkxIlcTDfO0d+eo5jx5oT3Ir8iheYVpGTxef
-   5qFeGVCQXcFhK/DyUYmx8r2UY9TNudeI351UAnuoKax/VQvWYxsFOCYOE
-   qNSBu9JsP2No+Js2lfiYZovHre4HyymnuzBL2IfvNjmc/JpW9YHoj+IUL
-   iiYqr1aWeZ+miC0PfdTvbdn+mD877HNGABiYsmvHkUJL19Uc7X7pHvHnv
-   p2Lt10/y/TbB+6fJRgrbSKJo0VbKM+63EJ1UGgMk5SJwZEKPrv5uV1Pev
-   A==;
-X-CSE-ConnectionGUID: GDXUhry8TPm40YspSbtZ8A==
-X-CSE-MsgGUID: J/iuimvMRTiyjFXQ1CKYEQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11541"; a="58316802"
-X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
-   d="scan'208";a="58316802"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 08:58:27 -0700
-X-CSE-ConnectionGUID: 5f7NetxeQDS2wU4CFTrgPw==
-X-CSE-MsgGUID: 8GMPieGGT/qVjo1JitcJ1g==
+  t=1756854997; x=1788390997;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=rKZ0Nh3RqLt7tI4TxWi0XsS1AUOFKimTgfg+6MXiFRk=;
+  b=jx5HmeMMyM4IpPDDHYZ8oGFTbNjw4RIWIA7GAsF/bBn76rqtGOHE35+g
+   6B707NRELTtIGyRT/+KM1mWRbiG5JUFD002XJgoRSqjKAUBPRFdDZjdaB
+   DLEYZhmZjjRWM9RXQeyo4pKJwBvW3pLGNqN9j1Y8bRvuzhVtXzz8fuPJ7
+   GcTv+n1eBhRkrau5Y2SCH8Qa99UH0JPGVMSWRXFWEykSXUHlA4DBTLxfm
+   REIa5NlFsbHY9rdKYr4y2IawFaFMtablUGkLJ7mSEGkabv4mB7GV0PjBt
+   /LHSUyzls1wpo8XCnnlMfn5zWtj8MT70pYDQMr0aJ4gZSKIusGqG7dZqd
+   g==;
+X-CSE-ConnectionGUID: A07RvFEkRISgXVJTBsr1BQ==
+X-CSE-MsgGUID: FMftboe/SvKaJlkpm01EFA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="59069949"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="59069949"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 16:16:36 -0700
+X-CSE-ConnectionGUID: /TDJio1bRD65DbAqOEH9gQ==
+X-CSE-MsgGUID: QFHtOfN1RP26sXgES81hZg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
-   d="scan'208";a="170568947"
-Received: from unknown (HELO [10.247.118.75]) ([10.247.118.75])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 08:58:22 -0700
-Message-ID: <dc95c3b0-14a5-45b4-805b-4006a61e405f@intel.com>
-Date: Tue, 2 Sep 2025 08:58:17 -0700
+X-IronPort-AV: E=Sophos;i="6.18,233,1751266800"; 
+   d="scan'208";a="176712943"
+Received: from anmitta2-mobl4.gar.corp.intel.com (HELO [10.247.118.76]) ([10.247.118.76])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 16:16:28 -0700
+Message-ID: <8212254f-2c2b-4a48-8238-eacabc5645f4@intel.com>
+Date: Tue, 2 Sep 2025 16:16:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,195 +52,76 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 05/11] cxl: Defer dport allocation for switch ports
-To: Robert Richter <rrichter@amd.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
-References: <20250814222151.3520500-1-dave.jiang@intel.com>
- <20250814222151.3520500-6-dave.jiang@intel.com>
- <aKXCid-m65ou2WVV@rric.localdomain>
- <a5eeaa15-9ef7-4b9a-88dc-10de9f1cb551@intel.com>
- <aKg_gBw1Q29BaXdp@rric.localdomain>
- <0d4c1766-d966-43bd-abec-b1a8a4592a1b@intel.com>
- <aK1niOntTRwwZhhv@rric.localdomain>
- <780adfd8-7d3d-4acd-a34b-0e88abb40041@intel.com>
- <aLHBG5j8rVYhi9cg@rric.localdomain>
- <2f52ad40-7e85-4466-8d42-190c846fd37c@intel.com>
- <aLWyIlyMgZUzO5Oa@rric.localdomain>
-Content-Language: en-US
+Subject: Re: [PATCH v3 0/4] cxl, acpi/hmat, node: Update CXL access
+ coordinates to node directly
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <aLWyIlyMgZUzO5Oa@rric.localdomain>
+To: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ marc.herbert@linux.intel.com, akpm@linux-foundation.org, david@redhat.com
+References: <20250829222907.1290912-1-dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20250829222907.1290912-1-dave.jiang@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 9/1/25 7:48 AM, Robert Richter wrote:
-> On 29.08.25 10:23:38, Dave Jiang wrote:
->>
->>
->> On 8/29/25 8:02 AM, Robert Richter wrote:
->>> On 27.08.25 10:05:05, Dave Jiang wrote:
->>>>
->>>>
->>>> On 8/26/25 12:51 AM, Robert Richter wrote:
->>>>> On 22.08.25 08:52:39, Dave Jiang wrote:
->>>>>>
->>>>>>
->>>>>> On 8/22/25 2:59 AM, Robert Richter wrote:
->>>>>>> On 20.08.25 08:20:04, Dave Jiang wrote:
->>>>>>>> On 8/20/25 5:41 AM, Robert Richter wrote:
->>>>>>>>> Hi Dave,
->>>>>>>>>
->>>>>>>>> see my comments below.
->>>>>>>>>
->>>>>>>>> On 14.08.25 15:21:45, Dave Jiang wrote:
->>>>>>>>
->>>>>>>> <--snip-->
->>>>>>>>  
->>>>>>>>>> +	if (IS_ERR(new_dport))
->>>>>>>>>> +		return new_dport;
->>>>>>>>>> +
->>>>>>>>>> +	cxl_switch_parse_cdat(port);
->>>>>>>>>> +
->>>>>>>>>> +	/*
->>>>>>>>>> +	 * First instance of dport appearing, need to setup the port, including
->>>>>>>>>> +	 * allocating decoders.
->>>>>>>>>> +	 */
->>>>>>>>>> +	if (port->nr_dports == 1) {
->>>>>>>>>> +		rc = cxl_switch_port_setup(port);
+On 8/29/25 3:29 PM, Dave Jiang wrote:
+> I plan to take this series through the CXL tree when all the necessary tags
+> are received.
 > 
-> I want to come back to my previous comment that port setup should be
-> done as part of the port enumeration in devm_cxl_enumerate_ports().
-> No need to make this a special case here. The link should be up
-> already once the mem dev is visible.
+> Rafael, please ack patches 3/4 and 4/4 if you are happy with the changes.
+> 
+> Thank you!
 
-IFF the port enumeration is done via devm_cxl_enumerate_ports() and through endpoint bring up. But we also do port enumeration during cxl_acpi probe and thus is the issue. cxl_switch_port_probe() also happens at that time when cxl_acpi_probe() add ports. And the link may not be up at that time. Anyhow, this is what it looks like in v9:
+Rafael said Dan's review tag is sufficient.
 
-	if (ida_is_empty(&port->decoder_ida)) {
-		rc = devm_cxl_switch_port_decoders_setup(port);
-		if (rc)
-			return ERR_PTR(rc);
-		dev_dbg(&port->dev, "first dport%d:%s added with decoders\n",
-			new_dport->port_id, dev_name(dport_dev));
-		return no_free_ptr(new_dport);
-	}
-
+Applied to cxl/next
+02f6c6a3654911e286ae04e5dfd5deb0f39559b1
 
 > 
->>>>>>>>>
->>>>>>>>> Can't this be done with port creation? I don't see a reason doing this
->>>>>>>>> late at this point.
->>>>>>>>
->>>>>>>
->>>>>>>> The main reason we are doing this is to move the port register
->>>>>>>> probing until we know the CXL link is established. Otherwise when
->>>>>>>> cxl_acpi does probe and calls add_host_bridge_uport(), that
->>>>>>>> devm_cxl_add_port() can trigger errors if the platform BIOS enables
->>>>>>>> PCI hotplug support on Intel platforms. The error messages "cxl
->>>>>>>> portN: Couldn't locate the CXL.cache and CXL.mem capability array
->>>>>>>> header" is observed. Essentially we can be trying to map registers
->>>>>>>> while DVSEC ID 3 and/or 7 has not appeared yet. And in turn because
->>>>>>>> that got pushed out, so did the decoder enumeration.
->>>>>>>
->>>>>>> The code suggests the Component Registers of the CXL Host Bridge are
->>>>>>> not yet ready. Is this delayed after the first Root Port is connected
->>>>>>> to a CXL Endpoint/Switch? PCIe DVSEC ID 3 and 7
->>>>>>> (CXL_DVSEC_PORT_EXTENSIONS, CXL_DVSEC_PCIE_FLEXBUS_PORT) are part of
->>>>>>> the pcie config space, which is enumerated not before a CXL endpoint
->>>>>>> becomes active. I haven't found a spec refs here. Please explain.
->>>>>>
->>>>>
->>>>>> So the behavior is observed when PCIe hotplug support is turned on
->>>>>> in BIOS for the Intel platform. A CXL device is plugged in to a RP
->>>>>> without CXL switches. The thinking is that the CXL link is not fully
->>>>>> established at the time when cxl_acpi_probe() is running and the
->>>>>> ports are being added. And the only way to 100% be sure the link is
->>>>>> established is when we are enumerating the memdev just like the
->>>>>> dports. Not sure what spec ref are you looking for. Table 8-2
->>>>>> indicates that those 2 DVSECs are mandatory for CXL root ports. Lack
->>>>>> of presence means either the RP isn't CXL or the CXL link isn't
->>>>>> established yet. I would assume this would also be true if a CXL
->>>>>> memdev is hot-plugged into a slot post boot.
->>>>>
->>>>> But add_host_bridge_uport() only creates ports for the host bridge
->>>>> (ACPI0016) devices and enumerates their component registers (CHBCR).
->>>>
->>>> And I think that's where the issue is. The component registers via CHBCR isn't there. When I removed this change, this is the signature I get:
->>>>
->>>> [ 37.423882] cxl_acpi:cxl_get_chbs:589: acpi ACPI0016:03: UID found: 35  
->>>> [ 37.424180] cxl_acpi:add_host_bridge_uport:726: acpi ACPI0016:03: CHBCR found for UID 35: 0x00000  
->>>> 000aabf0000  
->>>> [ 37.424186] cxl_core:cxl_port_alloc:741: pci0000:3a: host-bridge: pci0000:3a  
->>>> [ 37.424210] cxl_core:cxl_map_regblock:426: cxl port2: Mapped CXL Memory Device resource 0x0000000  
->>>> 0aabf0000  
->>>> [ 37.424213] cxl_core:cxl_probe_component_regs:55: cxl port2: Couldn't locate the CXL.cache and CXL.mem capability array header.
->>>
->>> Hmm, hot-added Host Bridges (and I would count this case to those)
->>> should use the ACPI _CBR method. That is, else the host bridge should
->>> be enumerated during boot.
->>
->> host bridges are there, just not the component registers in the CHBCR it appears.
->>
->>>
->>> Is it just a delay, or does the CHBCR come up not earlier than the
->>> root port link is up?
->>
->> Let me get that clarification from the BIOS people.
->>
->>>
->>> Can -EAGAIN be used to reload the driver later if CHBCR init fails?
->>> IMO, the Component Registers cannot be initialized later as that would
->>> delay the enablement of the root decoders too. At least only bridges
->>> that fail to init the CHBCR should be delayed.
->>
+> v3:
+> - Fix grammar in comment. (DavidH)
+> - Use nodemask instead of xarray. (Jonathan)
 > 
->> I don't follow why this is an issue. Auto region assembly doesn't
->> start until the port hierarchy is established via the first
->> endpoint. So by the time the region code pokes at the decoder
->> registers during region assembly, the component register for CHBCR
->> should have been probed. It seems reasonable to setup the component
->> registers when we find the first dport and thus indicate that
->> everything should be there. Are you observing an issue on a
->> platform?
+> v2:
+> - Use clearer comment from DavidH for 1/4. (DavidH)
+> - Fix comment in 2/4. (DavidH)
+> - Streamline code in 2/4. (DavidH)
+> - Add description to observed issue. (Dan)
+> - Add correct Fixes tag. (Dan)
+> - Add cc to stable for fix patch. (Dan)
+> - Add mechansim to only update on first region for the node. (Jonathan)
 > 
-> It would be good to see the bridges in the system regardless of the
-> link status of the root ports, which I think is possible. Same with
-> the chbcr and the hb decoders. Only defer it if not yet available and,
-> let's mark it as a quirk or workaround. Btw, this is not a delayed
-> dport enablement any longer.
-
-ok. I can take out the delayed register probing patch while we discuss this. No reason to hold up the rest of the series.
-
+> The series aim to clean up the current CXL memory region hotplug notifier by
+> removing the update path through HMAT and updating the node access coordinates
+> directly. With the existing implementation, the CXL memory hotplug notifier
+> gets called first. It updates the HMAT target access coordinates. And then
+> the HMAT notifier gets called and create the node sysfs attribs. The new
+> implemenation flips the callback ordering and directly updates the sysfs
+> attribs already created in the node and leaves HMAT data structures alone.
 > 
-> I am also a bit worried about the conditions to run the setup. What if
-> there are multiple hotplug ports, why should the CHBCR be ready with
-> the first one already? Shouldn't all connected ports come up first?
-
-I see what you are saying. Let me get the exact behavior from the BIOS guys first. 
-
+> Dave Jiang (4):
+>   mm/memory_hotplug: Update comment for hotplug memory callback
+>     priorities
+>   drivers/base/node: Add a helper function node_update_perf_attrs()
+>   cxl, acpi/hmat: Update CXL access coordinates directly instead of
+>     through HMAT
+>   acpi/hmat: Remove now unused hmat_update_target_coordinates()
 > 
->>>
->>> The issue and the changes for this are not obvious, please make a
->>> separate patch for that separate change.
->>
->> It was in this [1] patch.
->>
->> https://lore.kernel.org/linux-cxl/20250814222151.3520500-5-dave.jiang@intel.com/
->>
->> I think the name of the function being discussed confused things. It is now renamed to setup decoders instead of just setup.
+>  drivers/acpi/numa/hmat.c  | 34 ----------------------------------
+>  drivers/base/node.c       | 38 ++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/cdat.c   | 11 -----------
+>  drivers/cxl/core/core.h   |  3 ---
+>  drivers/cxl/core/region.c | 20 ++++++++++++--------
+>  include/linux/acpi.h      | 12 ------------
+>  include/linux/memory.h    |  6 +++---
+>  include/linux/node.h      |  8 ++++++++
+>  8 files changed, 61 insertions(+), 71 deletions(-)
 > 
-> Yes, but there is this additional change that calls
-> cxl_switch_port_setup() in this patch.
 > 
-> -Robert
-> 
->>
->> DJ
->>
->>>
->>> Thanks,
->>>
->>> -Robert
+> base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
 
