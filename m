@@ -1,898 +1,304 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68AEC31CA71
-	for <linux-cxl@vger.kernel.org>; Tue,  2 Sep 2025 15:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756827644; cv=none; b=alWdfpRYorCloEVPSerZ7wEHDO3pZ4OlGhZkC4yci3Xwx8gsREkZhqKRqzgOko32FoJvvAymCEMtylega7jMAKsCcFOxpTLaHHwx5mbJlTIkXDw5Ih498R7HYIvpLtSJisevgARrfap0JHCM/tdZ45YOyVwc9BxkwZE+RrJM91A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756827644; c=relaxed/simple;
-	bh=thcPm9Nu2OfSP4B+t2ocI7hpsAYtBfNL2ur+k817e3c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UQqb20LJBvOO3ZxSTJ9763+fCjCAQl4x16309N0rfnHZRYNzwnA03kYqAfDvXYncKzH9Ya2+Gu9OmV82+pnaBCCmAFSWbYlak6vYH968Y/gCJObkTyHa6mKbJzdrSh8RjdhQ4goocdNXdXUlr5tNXXEXHrlEmBxvWg7YWltZeAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T3p3rQ+s; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BFD32D5C8B
+	for <linux-cxl@vger.kernel.org>; Tue,  2 Sep 2025 15:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756828675; cv=fail; b=ee1NmDnzEMBt1apxfBwCE+osRdfTKcQWStSQtidbzTGdCcSH1vzxGbrIKYoDVuZiHWyDTGWTElhD2cX2Yhj2l2MK5Iw3z6T/p+M7UHQ+1XLnmt8Yif8AjCGQqM/E3C70I6che5u8F9lmdX5FNgTSP7GfYq6u87c5fQ+dLd6xkWs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756828675; c=relaxed/simple;
+	bh=0Dy06LO2mGdAvFlCwBABTGYSbrwjh+iv9b3xA991QlQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=TF+JMcsYR/ChMUpi0lQx/WOUazzJm4gTHSIVx8iNO+f+fZ0tHEVWIeIgKIwEqPOd0f3IlskKVU/Ntleoav+KgnTYH6C3kN5/aNOUv2HRvpOMwMKtrQrudRwSqqyWYL1/fPTUnQlpfVPUk12mOqGD9SolwAP39mxRXEtgJZf/Uv8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AeSZWzcq; arc=fail smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T3p3rQ+s"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AeSZWzcq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756827641; x=1788363641;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=thcPm9Nu2OfSP4B+t2ocI7hpsAYtBfNL2ur+k817e3c=;
-  b=T3p3rQ+s+/trtC66yFOCDOrnMY1BMrGpvMfq79z6TZ3vkU5gCAyUU+0p
-   3enIWOIQDgykIjED3S5+vcwm0DPXOpj0oxiXbMdq9zZJXUSooeVIIIlAc
-   38xHt3wv8qkdyElp0AHKLu7v2sY0wz4P5R5MgAlhMZR4nr40UEFxlHjhx
-   XqgzWnJR/CmtbsvKhwm6+5g0fptY3wBeHIKPslDQ8+Hril+nR8UTPjjDm
-   8DTYp4JcPp3/AvQzfMAENxs0QXv0zkwqzNeCNmeEl/ILfMScy8huh/icf
-   OzMFzZz/iQe5T6jMYvrzzV4F2gmuItFvMGIcfzoHfz/Ks/1h1AzdkZ408
+  t=1756828673; x=1788364673;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=0Dy06LO2mGdAvFlCwBABTGYSbrwjh+iv9b3xA991QlQ=;
+  b=AeSZWzcqDGwY8PpkWa2LuINzIhIB/mASchTGgwpmiT582kq55n92ihMe
+   LfX4F7azgLC2rqr8SRtScAd+9LeijvWTx4+r1bIxtX73LXy6NQjvV0NeB
+   zNylfX02PJZg5whRfdkxPTEmysm4xsYrBsfShVFdyMZi7fLOIt2Xjm+8t
+   beMl3dE1p06TNTzmyGpbuKym8hshPD2WZ0+h43KFwbgrYzlrrxEmsk1j+
+   N2WsoYKvz7TIKRRJObZf/gGlgNrpBH5hu8v+Ukoi40jUAXvylHjV+0OcQ
+   odHQ4kIM6gYsMIfkYVRR9LEOUT235dECJ/gpE7ybDqkQFALJwrHcFgNKv
    A==;
-X-CSE-ConnectionGUID: K8nH0GLNSduDu7fHoML1rQ==
-X-CSE-MsgGUID: HmZzNroNRqONRd6ugjl5sQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11541"; a="59218995"
+X-CSE-ConnectionGUID: TxUS8q6GTLqJJJAYBd6yOQ==
+X-CSE-MsgGUID: 1KxlQjf4RIuigZJxGR97iQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11541"; a="69720744"
 X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
-   d="scan'208";a="59218995"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 08:40:41 -0700
-X-CSE-ConnectionGUID: wsV9edZ2R+6zwB3SzmxGtQ==
-X-CSE-MsgGUID: +WDDyXFGQv+KKf3FuJVqew==
+   d="scan'208";a="69720744"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 08:57:53 -0700
+X-CSE-ConnectionGUID: lPggtp/gRDq4N5UimWWitA==
+X-CSE-MsgGUID: eaQ0mHIgSbmgzlaNlkYNRQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
-   d="scan'208";a="171277413"
-Received: from unknown (HELO [10.247.118.75]) ([10.247.118.75])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 08:40:36 -0700
-Message-ID: <12b3c97a-9463-4c95-8757-e306d4aea14d@intel.com>
-Date: Tue, 2 Sep 2025 08:40:30 -0700
+   d="scan'208";a="170603264"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 08:57:53 -0700
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Tue, 2 Sep 2025 08:57:51 -0700
+Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17 via Frontend Transport; Tue, 2 Sep 2025 08:57:51 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (40.107.243.41)
+ by edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Tue, 2 Sep 2025 08:57:51 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Hz5YZkxVfzR800BekR8z6gkmupnvOy5xUxsNjKrfakq1yFTmkcpR0qJ7lBJypnmqlunPOEdQiV9Pml0jgeVxJsO2wtf9UTSmWblDROIb8+EkXhvAJcSKNi7FqQoyex6jp4LUFJ2U5BkTAmUWF3esOSVXMt290wF+LWXI5BzB2cgib4gBKE8kx40N9dU0FWWAjceQD3PUszHCpns98Tnwnn3/RsW1CQWfhckTp/msxOWMGw/bsNGV3ZDlhw8Hk2i6rlSDYrPbpbodXmoUTbMoGS2Kp2sA3zOH49wUcEM2zu7D6uMNzh49ibLlhZCr3WV6V29WYMUyqKTPbz0uqHT0nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6GUnBrPAPpSgum06hdebN553IFr+ftxnTCcOB2I3nLE=;
+ b=AKQc9+pavraw7n4yiPwa4xxKRf9oEknhWWeQqLxNuJb3u/3CHJhmZTaTIzGzVSdlnDQJ4WBj21V/O8gWCf39w+OBOkcdsyfotN+C1hy6QTnOIELPDPz3QeIOyDhqA84ozKuAzZ6O9VPSpCFknNRuvIrmvSi6hSLBmaU+N1A/Xn2/LU6qiYqt1gKasg9upyyF7t7LiUhAMjHtw+k/J/hQVtrG99b7aZtJuWr/w5OlAzxmcH7REijDPyH6K5KIIoDv1etgezQYtAaicmprzwoYL3iAW+CXrwC222xB3prshW+wSC/M+HAVUb52s1aP4I5S1h8djGYAEXn/CgSqB3kKIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
+ (2603:10b6:518:1::d3c) by SA3PR11MB8047.namprd11.prod.outlook.com
+ (2603:10b6:806:2fc::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.25; Tue, 2 Sep
+ 2025 15:57:48 +0000
+Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
+ ([fe80::bbd5:541c:86ba:3efa]) by PH3PPF9E162731D.namprd11.prod.outlook.com
+ ([fe80::bbd5:541c:86ba:3efa%7]) with mapi id 15.20.9052.019; Tue, 2 Sep 2025
+ 15:57:48 +0000
+Date: Tue, 2 Sep 2025 10:59:35 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: Alireza Sanaee <alireza.sanaee@huawei.com>, <nifan.cxl@gmail.com>
+CC: <qemu-devel@nongnu.org>, <jonathan.cameron@huawei.com>,
+	<linux-cxl@vger.kernel.org>, <gregory.price@memverge.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>,
+	<a.manzanares@samsung.com>, <dave@stgolabs.net>, <nmtadam.samsung@gmail.com>,
+	<jim.harris@samsung.com>, <Jorgen.Hansen@wdc.com>, <wj28.lee@gmail.com>,
+	<armbru@redhat.com>, <mst@redhat.com>, Fan Ni <fan.ni@samsung.com>, "Svetly
+ Todorov" <svetly.todorov@memverge.com>
+Subject: Re: [PATCH v8 11/14] hw/cxl/events: Add qmp interfaces to
+ add/release dynamic capacity extents
+Message-ID: <68b71467b850a_4bae529418@iweiny-mobl.notmuch>
+References: <20240523174651.1089554-1-nifan.cxl@gmail.com>
+ <20240523174651.1089554-12-nifan.cxl@gmail.com>
+ <20250902113915.00001fbd.alireza.sanaee@huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250902113915.00001fbd.alireza.sanaee@huawei.com>
+X-ClientProxiedBy: MW4PR04CA0120.namprd04.prod.outlook.com
+ (2603:10b6:303:83::35) To PH3PPF9E162731D.namprd11.prod.outlook.com
+ (2603:10b6:518:1::d3c)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 05/11] cxl: Defer dport allocation for switch ports
-To: Robert Richter <rrichter@amd.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
-References: <20250814222151.3520500-1-dave.jiang@intel.com>
- <20250814222151.3520500-6-dave.jiang@intel.com>
- <aKXCid-m65ou2WVV@rric.localdomain>
- <b47901d8-1578-41ed-9a89-62f39cd34d5b@intel.com>
- <aLXYBcBJNV-9Lt30@rric.localdomain>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <aLXYBcBJNV-9Lt30@rric.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH3PPF9E162731D:EE_|SA3PR11MB8047:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5c1e27ce-4feb-4dd0-ca0e-08ddea3976be
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?D+q3RkvZ31hA+fNCz4CkC3WzPe7HMHBv8Ty8P6pLFfbOGsYR5wldkV0usVEC?=
+ =?us-ascii?Q?/qPAfmydGvvvvORfAyKf0sw7U+QxKqPiNCogZgFwEuomWMF1S5rYCS1cPMBP?=
+ =?us-ascii?Q?kDq2Wl1Zf2UmpPmXlC3MNHU+kZWdnMMocctCcsLQI+rH+yFxwRDNQtOdELWc?=
+ =?us-ascii?Q?xw5U/LHu5ReckEXxXMKHEAnz3aHpqnAnDBkV/iBWaI713pKunzelQWBnmL+V?=
+ =?us-ascii?Q?knXc3Zl65TbtYjKdk6z437e+fPq6D2b2yq6I6LJkitmz8MFPtTIOgQbtphXd?=
+ =?us-ascii?Q?OySgHf7qmjCVc0KUSgr2xKbMdJLuTAuEdSI0kSBnci8miJq61T8I0T91QLqD?=
+ =?us-ascii?Q?eyNnK3rwI5CVPbJLtGQKmxV2rnZIMa+lXGqULJJP68tC0/BOh0TcbK8x6pfi?=
+ =?us-ascii?Q?3cRLTlmTv3U//HTmIGQJJajrdPnweQ08yOUPG2pcCReMd6n45kU5pJ3tVaiF?=
+ =?us-ascii?Q?yu2LLXLkfGsLrjPnZitgh8KJaiY6uCmbt1ipq9hY7ZYzbgy3Kot/zyfUuTbS?=
+ =?us-ascii?Q?/tscPuzZdLdFL29fSrauroJPu8hTaqMxcIBMEZaxmIROU9aopg7Sch0j9ao+?=
+ =?us-ascii?Q?R4NsUtkyGiIWtX4lKIdkhOaIxdtbjW9WDY1cspBvpr54B0Vg8Bpph5dyxdj8?=
+ =?us-ascii?Q?bTVvEVJw7cxVD7jLSNZbzsvudjHW+JWdi3H+oHgBe++bZgU5cw2V8mSxeyzb?=
+ =?us-ascii?Q?aEgLdhKBRNrV/sI3r5t9vE7B1F+LqNJMyPzW+y/h6E5hYjVMfMtG2HDY68VO?=
+ =?us-ascii?Q?MShxJLdiLFFV0KRHizGU6DNYtacvmj7kD8f1RnkgHkj9Z7a5lJKfY+MY03et?=
+ =?us-ascii?Q?BMF4GZgc2ScUQtEmTaPt1W4DJrdffS74l9ablM+NZReYe/qfybHGmkJk4sG4?=
+ =?us-ascii?Q?XYKMmJ/LEc7rcCxFB8QzR1jg2ssZF447QM1J3vJIBLg9nCShvLtow30nyliq?=
+ =?us-ascii?Q?XXSkLndsVOwADyEajJ+DoFadA5aeZqaPnTPwTWq6KpcIAnYP1ipHPy8943oO?=
+ =?us-ascii?Q?cVgqLdIRVpunAX7y6wVCne1vUpoAWrYxy5Al7j+QmFuh35JgDjqkHJnxqdwG?=
+ =?us-ascii?Q?cBUigThBkCjnYCsaZI2JVdl9nZv3hV0MwIUT9W8024cCFPe/+r0syU0KG0N0?=
+ =?us-ascii?Q?eQEeyELU5HQ5pyQrvgk/rurApmE8UQsLSvjRm9RQH0rE9Xjt8nXTZSHIUw19?=
+ =?us-ascii?Q?z2p+0ERLuinnmA8o+h8qJDBd+QEiLDe0nvtalxdqPnxhcZ2XfstT5hLmp49O?=
+ =?us-ascii?Q?/LumGX2cbw0kS8nx9qV5a2iYGR3Yz1brIPyB0BjiASKixqwgJbCaC/YoQLv5?=
+ =?us-ascii?Q?1nNvYqGxvou8nJVXskdGJ9nWcVtLWOsQ0Qnbo+cnaSkGbwRNhvmFtZ3xVDKd?=
+ =?us-ascii?Q?k7M0ogODj1pYVW+SBG/bcm8a92Vnz9eqS4tQgf/q+gE/DeF8IhFz+27heGbV?=
+ =?us-ascii?Q?dIJs7bjuBYQ=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH3PPF9E162731D.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ghI2z1NwhvW/m9uSfzJjZIsgZ/5eDBxzF6ryVyXWOsa11n2dYwQWrKSeT1Ku?=
+ =?us-ascii?Q?mOT49R73cs2cQnqykTncpuj9amx7Dek9pcGSao1QKacCFm8Ma6KxxdKJMh/A?=
+ =?us-ascii?Q?L0IOHEsWvWA9f0cse2KQlbalFiN0GIsHZec80zXIUu6B+BIVK/2hdfEmBWxx?=
+ =?us-ascii?Q?pdBCduw5h5G2ParbFYhIJHUWYpbsGdwgB9jnCWlTr6RHuRb/mJ3gAG0fF/zj?=
+ =?us-ascii?Q?IiHnoOqNmTYcWmOGvjyDLtvUbq3hffoUPtyS1ZJcEnIVUNoLa4yWDXtRTZw4?=
+ =?us-ascii?Q?0L1nOkjfP4FAL+2UhfMLvAsNVsUtUPch3cQjgjhoef/fCaCs2R4T5/u+XFZ0?=
+ =?us-ascii?Q?B5JmTElNkjWGQ4rh7tSIeMrw7q2Qec35kvsZvcDz2HYjxmbx2hAHO0E8kev+?=
+ =?us-ascii?Q?88OrEiLG/iOFb6ToJWBQ3dFJHABBIfJ9ew9o/qkJ6baCe7uvm7T37uqrdXdU?=
+ =?us-ascii?Q?iRZpPa+CmuMTJR4B7D4dtXR4BZgtIGAag8lWbHJyTaryrUGdjPUsSKeTHlzU?=
+ =?us-ascii?Q?fQBjUShRIcCwq8uRKMjY8YoJ8h1gCSyohRIJDHMATbmyKkipl3qw/mWlUKWN?=
+ =?us-ascii?Q?voErExtm6X49jFeAelJRSZa+8C0WByrqiJ7wj4bVSBRuzKZ8QoSdz6Dy6xyv?=
+ =?us-ascii?Q?yOpJivcMvCVDqkpOpKpCxFpRmw/QyOtM1OoOEbyH1FwupL/dDPTMyq2cnhev?=
+ =?us-ascii?Q?9ywgA0szuh7xiWYr94Um/0mymrp86gyfDhP45+lzopfS6YkbruLZZoDsG9aV?=
+ =?us-ascii?Q?YkucLfn2+qmtgV6D4gPUboOjjVOOq4UhfK21ATbzkR8TVWS4dzpczH9kSLIX?=
+ =?us-ascii?Q?F5FU+6fOdroD56YSrrvvV3WiL6fWEv3JG4BOhaTduwIrUOlUw0ZGuK8yIP+4?=
+ =?us-ascii?Q?SBLccWkzkRtVj0mE/v19hVwRICwmwKaT3Eef+iAlKvCatTl5BBfiVOsuGcaa?=
+ =?us-ascii?Q?kLJp8q3zxXF3Fv7UKMpKpxYa5ewDgkRIijYS8pmDFYFjH2j5XM0jmXDjd06C?=
+ =?us-ascii?Q?eQKq4I7FOgKMvnI1wLpAZWNAQ0pC2tacFVUyNfMjAUXRDFJQen1OFckeR/MO?=
+ =?us-ascii?Q?B+d6B0LdCsN+JsSfXiVlNJv44jfxV3zmPRaC19ZnFL4iOEoakDiWvGySvfz7?=
+ =?us-ascii?Q?AMSgLoq8WZcgKIItI0aahZk9/yw94gTP7I8GlZNEKipb9f72+vTyIuhGzX9b?=
+ =?us-ascii?Q?uYXlCWD9HAfUIXINUHJNUnc0jAfALbMmh+F9SBkvXKlq/QZyu9JkgdVUe8lp?=
+ =?us-ascii?Q?4m/YubZWJqW+JalU5vSLe1KTCPAVqUkI5G2gtgs4ZZDP/qRRDkZZud17SdjC?=
+ =?us-ascii?Q?iEqylG8Wjz80prhMefc0J7LYw/Vbf6hLaIUDyqWIfV0ZcwRD/UYAOgEdFRGs?=
+ =?us-ascii?Q?r5JCqi8CVyHgAnOZ1os+orrz+9cl89Y6gsJsY9/dZJEFuMI+2pej/bxT97wM?=
+ =?us-ascii?Q?t5heiEhsBfgOBGLJjYErVPdr7bBH/H2wkjeKRVtBEiEMIEhyHOBBbDUK7zpt?=
+ =?us-ascii?Q?RLxZ4dPYs3F0KSiX8yAGdQCfa2eKv3LTRNRFdEM0RZMzxf2wv0B0J6096hPj?=
+ =?us-ascii?Q?hEhs0xCxJqPHzHgXBYSOb+kyk4zKe9x8v2POVm09?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c1e27ce-4feb-4dd0-ca0e-08ddea3976be
+X-MS-Exchange-CrossTenant-AuthSource: PH3PPF9E162731D.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2025 15:57:48.4563
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9MtaUTjrsoQcZiv11x77l2bwcEuNnuvZiJ5wNmE6EiDHq/lZWWoJUiauiHdxtqbDg4/OiUiCprvyLmOC7spIDg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB8047
+X-OriginatorOrg: intel.com
 
+Alireza Sanaee wrote:
+> On Thu, 23 May 2024 10:44:51 -0700
+> nifan.cxl@gmail.com wrote:
+> 
+> > From: Fan Ni <fan.ni@samsung.com>
+> > 
+> > To simulate FM functionalities for initiating Dynamic Capacity Add
+> > (Opcode 5604h) and Dynamic Capacity Release (Opcode 5605h) as in CXL
+> > spec r3.1 7.6.7.6.5 and 7.6.7.6.6, we implemented two QMP interfaces
+> > to issue add/release dynamic capacity extents requests.
+> > 
+> > With the change, we allow to release an extent only when its DPA range
+> > is contained by a single accepted extent in the device. That is to
+> > say, extent superset release is not supported yet.
+> > 
+> > 1. Add dynamic capacity extents:
+> > 
+> > For example, the command to add two continuous extents (each 128MiB
+> > long) to region 0 (starting at DPA offset 0) looks like below:
+> > 
+> > { "execute": "qmp_capabilities" }
+> > 
+> > { "execute": "cxl-add-dynamic-capacity",
+> >   "arguments": {
+> >       "path": "/machine/peripheral/cxl-dcd0",
+> >       "host-id": 0,
+> >       "selection-policy": "prescriptive",
+> >       "region": 0,
+> >       "extents": [
+> >       {
+> >           "offset": 0,
+> >           "len": 134217728
+> >       },
+> >       {
+> >           "offset": 134217728,
+> >           "len": 134217728
+> >       }
+> >       ]
+> >   }
+> > }
+> > 
+> > 2. Release dynamic capacity extents:
+> > 
+> > For example, the command to release an extent of size 128MiB from
+> > region 0 (DPA offset 128MiB) looks like below:
+> > 
+> > { "execute": "cxl-release-dynamic-capacity",
+> >   "arguments": {
+> >       "path": "/machine/peripheral/cxl-dcd0",
+> >       "host-id": 0,
+> >       "removal-policy":"prescriptive",
+> >       "region": 0,
+> >       "extents": [
+> >       {
+> >           "offset": 134217728,
+> >           "len": 134217728
+> >       }
+> >       ]
+> >   }
+> > }
+> > 
+> > Tested-by: Svetly Todorov <svetly.todorov@memverge.com>
+> > Reviewed-by: Gregory Price <gregory.price@memverge.com>
+> > Signed-off-by: Fan Ni <fan.ni@samsung.com>
 
+[snip]
 
-On 9/1/25 10:29 AM, Robert Richter wrote:
-> On 27.08.25 14:15:21, Dave Jiang wrote:
->>
->>
->> On 8/20/25 5:41 AM, Robert Richter wrote:
->>> Hi Dave,
->>>
->>> see my comments below.
->>>
->>> On 14.08.25 15:21:45, Dave Jiang wrote:
->>>> The current implementation enumerates the dports during the cxl_port
->>>> driver probe. Without an endpoint connected, the dport may not be
->>>> active during port probe. This scheme may prevent a valid hardware
->>>> dport id to be retrieved and MMIO registers to be read when an endpoint
->>>> is hot-plugged. Move the dport allocation and setup to behind memdev
->>>> probe so the endpoint is guaranteed to be connected.
->>>>
->>>> In the original enumeration behavior, there are 3 phases (or 2 if no CXL
->>>> switches) for port creation. cxl_acpi() creates a Root Port (RP) from the
->>>> ACPI0017.N device. Through that it enumerates downstream ports composed
->>>> of ACPI0016.N devices through add_host_bridge_dport(). Once done, it
->>>> uses add_host_bridge_uport() to create the ports that enumerate the PCI
->>>> RPs as the dports of these ports. Every time a port is created, the port
->>>> driver is attached, cxl_switch_porbe_probe() is called and
->>>> devm_cxl_port_enumerate_dports() is invoked to enumerate and probe
->>>> the dports.
->>>>
->>>> The second phase is if there are any CXL switches. When the pci endpoint
->>>> device driver (cxl_pci) calls probe, it will add a mem device and triggers
->>>> the cxl_mem_probe(). cxl_mem_probe() calls devm_cxl_enumerate_ports()
->>>> and attempts to discovery and create all the ports represent CXL switches.
->>>> During this phase, a port is created per switch and the attached dports
->>>> are also enumerated and probed.
->>>>
->>>> The last phase is creating endpoint port which happens for all endpoint
->>>> devices.
->>>>
->>>> In this commit, the port create and its dport probing in cxl_acpi is not
->>>> changed. That will be handled later. The behavior change is only for CXL
->>>> switch ports. Only the dport that is part of the path for an endpoint
->>>> device to the RP will be probed. This happens naturally by the code
->>>> walking up the device hierarchy and identifying the upstream device and
->>>> the downstream device.
->>>>
->>>> The new sequence is instead of creating all possible dports at initial
->>>> port creation, defer port instantiation until a memdev beneath that
->>>> dport arrives. Introduce devm_cxl_create_or_extend_port() to centralize
->>>> the creation and extension of ports with new dports as memory devices
->>>> arrive. As part of this rework, switch decoder target list is amended
->>>> at runtime as dports show up.
->>>>
->>>> While the decoders are allocated during the port driver probe,
->>>> The decoders must also be updated since previously it's all done when all
->>>> the dports are setup and now every time a dport is setup per endpoint, the
->>>> switch target listing need to be updated with new dport. A
->>>> guard(rwsem_write) is used to update decoder targets. This is similar to
->>>> when decoder_populate_target() is called and the decoder programming
->>>> must be protected.
->>>>
->>>> Link: https://lore.kernel.org/linux-cxl/20250305100123.3077031-1-rrichter@amd.com/
->>>> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
->>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>> ---
->>>> v8:
->>>> - grammar and spelling fixups (Dan)
->>>> - Clarify commit log story. (Dan)
->>>> - Move register mapping and decoder enumeration to when first dport shows up (Dan)
->>>> - Fix kdoc indentation issue with devm_cxl_add_dport_by_dev()
->>>> - cxl_port_update_total_dports() -> cxl_probe_possible_dports(). (Dan)
->>>> - Remove failure path for possible dports == 0. (Dan, Robert)
->>>> - update_switch_decoder() -> update_decoder_targets(). (Dan)
->>>> - Remove lock asserts where not needed. (Dan)
->>>> - Add support for passthrough decoder init. (Dan)
->>>> - Return -ENXIO when no driver attached. (Dan)
->>>> - Move guard() from devm-cxl_add_dport_by_uport. (Dan, Robert)
->>>> - Add devm_cxl_create_or_extend_port() helper. (Dan)
->>>> - Remove shortcut for the port iteration path. Find better way to deal. (Dan, Robert)
->>>> - Remove 'new_dport' local var. (Robert)
->>>> - Use find_cxl_port_by_uport() instead of find_cxl_port(). (Robert)
->>>> - Move port check logic to add_port_attach_ep(). (Robert)
->>>> ---
->>>>  drivers/cxl/core/cdat.c   |   2 +-
->>>>  drivers/cxl/core/core.h   |   2 +
->>>>  drivers/cxl/core/hdm.c    |   6 -
->>>>  drivers/cxl/core/pci.c    |  81 +++++++++++
->>>>  drivers/cxl/core/port.c   | 287 +++++++++++++++++++++++++++++++-------
->>>>  drivers/cxl/core/region.c |   4 +-
->>>>  drivers/cxl/cxl.h         |   3 +
->>>>  drivers/cxl/port.c        |  29 +---
->>>>  8 files changed, 331 insertions(+), 83 deletions(-)
->>>>
->>>> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
->>>> index c0af645425f4..b156b81a9b20 100644
->>>> --- a/drivers/cxl/core/cdat.c
->>>> +++ b/drivers/cxl/core/cdat.c
->>>> @@ -338,7 +338,7 @@ static int match_cxlrd_hb(struct device *dev, void *data)
->>>>  
->>>>  	guard(rwsem_read)(&cxl_rwsem.region);
->>>>  	for (int i = 0; i < cxlsd->nr_targets; i++) {
->>>> -		if (host_bridge == cxlsd->target[i]->dport_dev)
->>>> +		if (cxlsd->target[i] && host_bridge == cxlsd->target[i]->dport_dev)
->>>>  			return 1;
->>>>  	}
->>>>  
->>>> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
->>>> index 2669f251d677..2ac71eb459e6 100644
->>>> --- a/drivers/cxl/core/core.h
->>>> +++ b/drivers/cxl/core/core.h
->>>> @@ -146,6 +146,8 @@ int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
->>>>  int cxl_ras_init(void);
->>>>  void cxl_ras_exit(void);
->>>>  int cxl_gpf_port_setup(struct cxl_dport *dport);
->>>> +struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
->>>> +					    struct device *dport_dev);
->>>>  
->>>>  #ifdef CONFIG_CXL_FEATURES
->>>>  struct cxl_feat_entry *
->>>> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
->>>> index cee68bbc7ff6..5263e9eba7d0 100644
->>>> --- a/drivers/cxl/core/hdm.c
->>>> +++ b/drivers/cxl/core/hdm.c
->>>> @@ -52,8 +52,6 @@ static int add_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld)
->>>>  int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
->>>>  {
->>>>  	struct cxl_switch_decoder *cxlsd;
->>>> -	struct cxl_dport *dport = NULL;
->>>> -	unsigned long index;
->>>>  	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
->>>>  
->>>>  	/*
->>>> @@ -69,10 +67,6 @@ int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
->>>>  
->>>>  	device_lock_assert(&port->dev);
->>>>  
->>>> -	xa_for_each(&port->dports, index, dport)
->>>> -		break;
->>>> -	cxlsd->cxld.target_map[0] = dport->port_id;
->>>> -
->>>
->>> The change of initialization of cxlsd->cxld.target_map[] could have
->>> been a separate patch to reduce size of this patch.
->>>
->>>>  	return add_hdm_decoder(port, &cxlsd->cxld);
->>>>  }
->>>>  EXPORT_SYMBOL_NS_GPL(devm_cxl_add_passthrough_decoder, "CXL");
->>>> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->>>> index b50551601c2e..b9d770f1aa7b 100644
->>>> --- a/drivers/cxl/core/pci.c
->>>> +++ b/drivers/cxl/core/pci.c
->>>> @@ -24,6 +24,44 @@ static unsigned short media_ready_timeout = 60;
->>>>  module_param(media_ready_timeout, ushort, 0644);
->>>>  MODULE_PARM_DESC(media_ready_timeout, "seconds to wait for media ready");
->>>>  
->>>> +/**
->>>> + * devm_cxl_add_dport_by_dev - allocate a dport by dport device
->>>> + * @port: cxl_port that hosts the dport
->>>> + * @dport_dev: 'struct device' of the dport
->>>> + *
->>>> + * Returns the allocate dport on success or ERR_PTR() of -errno on error
->>>> + */
->>>> +struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
->>>
->>> This function only determines the port_num. How about only implement
->>> this in a function cxl_pci_get_port_num() and call devm_cxl_add_dport
->>> directly?
->>
+> > +##
+> > +# @cxl-release-dynamic-capacity:
+> > +#
+> > +# Command to initiate to release dynamic capacity extents from a
+> > +# host.  It simulates operations defined in cxl spec r3.1 7.6.7.6.6.
+> > +#
+> > +# @path: CXL DCD canonical QOM path.
+> > +#
+> > +# @host-id: The "Host ID" field as defined in cxl spec r3.1
+> > +#     Table 7-71.
+> > +#
+> > +# @removal-policy: Bit[3:0] of the "Flags" field as defined in cxl
+> > +#     spec r3.1 Table 7-71.
+> > +#
+> > +# @forced-removal: Bit[4] of the "Flags" field in cxl spec r3.1
+> > +#     Table 7-71.  When set, device does not wait for a Release
+> > +#     Dynamic Capacity command from the host.  Host immediately
+> > +#     loses access to released capacity.
+> > +#
+> > +# @sanitize-on-release: Bit[5] of the "Flags" field in cxl spec r3.1
+> > +#     Table 7-71.  When set, device should sanitize all released
+> > +#     capacity as a result of this request.
+> > +#
+> > +# @region: The "Region Number" field as defined in cxl spec r3.1
+> > +#     Table 7-71.  The dynamic capacity region where the capacity
+> > +#     is being added.  Valid range is from 0-7.
+> > +#
+> > +# @tag: The "Tag" field as defined in cxl spec r3.1 Table 7-71.
+> > +#
+> > +# @extents: The "Extent List" field as defined in cxl spec r3.1
+> > +#     Table 7-71.
+> > +#
+> > +# Since : 9.1
+> > +##
+> > +{ 'command': 'cxl-release-dynamic-capacity',
+> > +  'data': { 'path': 'str',
+> > +            'host-id': 'uint16',
+> > +            'removal-policy': 'CXLExtRemovalPolicy',
+> > +            '*forced-removal': 'bool',
+> > +            '*sanitize-on-release': 'bool',
+> > +            'region': 'uint8',
+> > +            '*tag': 'str',
+> > +            'extents': [ 'CXLDynamicCapacityExtent' ]
+> > +           }
+> > +}
 > 
->> I can split out the code to get the port_num locally, but we can't
->> call devm_cxl_add_dport() directly in core/port.c because we need
->> the map.resource and in order to retrieve that cxl_find_regblock()
->> requires a pci dev.
-> 
-> I mean the following:
-> 
-> In the mock case, there is always a decoder. That is,
-> devm_cxl_add_passthrough_decoder() will only be used for pci devs.
-> 
-> Create cxl_port_has_multiple_dports() which contains:
-> 
->   if (!dev_is_pci(...))
->     return false;
->   /* pci_walk_bus() and inspect dports: */
->   ...
-> 
-> In cxl_switch_port_setup():
-> 
->   rc = devm_cxl_enumerate_decoders(...)
->   if (!rc)
->     return 0;
->   if (cxl_port_has_multiple_dports(...))
->     rc = devm_cxl_add_passthrough_decoder(...);
+> Although tag-based removal is not implemented yet, but still just wanted
+> to leave a comment here that exact extents are not needed for tag-based
+> removal and `extents` should be an optional parameter here; this is my
+> understanding reading the spec, so I still might be wrong, shout if you
+> think it does not make sense.
 
-ok, I can update this part with the function rename. v9 is mostly there with passthrough decoder eliminated in cxl_test.
+It's been a while but I think this allows the removal of non-tagged
+extents as well(?)  If so the tag would be NULL (or empty-string) and one
+can remove a regular extent.
 
-> 
-> You don't need function devm_cxl_add_dport_by_dev() any longer, just
-> use devm_cxl_add_dport() instead.
-
-I'm not seeing how the decoder enumeration is related to devm_cxl_add_dport_by_dev(). devm_cxl_add_dport() needs a port_id and a component_reg_phys. Retrieving those require more help from core/pci.c and can't be done in core/port.c.
-  
-> 
->>>
->>> That would nicely fit into core/pci.c.
->>>
->>>> +					    struct device *dport_dev)
->>>> +{
->>>> +	struct cxl_register_map map;
->>>> +	struct pci_dev *pdev;
->>>> +	u32 lnkcap, port_num;
->>>> +	int type;
->>>> +	int rc;
->>>> +
->>>> +	if (!dev_is_pci(dport_dev))
->>>> +		return ERR_PTR(-EINVAL);
->>>> +
->>>> +	device_lock_assert(&port->dev);
->>>> +
->>>> +	pdev = to_pci_dev(dport_dev);
->>>> +	type = pci_pcie_type(pdev);
->>>> +	if (type != PCI_EXP_TYPE_DOWNSTREAM && type != PCI_EXP_TYPE_ROOT_PORT)
->>>> +		return ERR_PTR(-EINVAL);
->>>> +
->>>> +	if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
->>>> +				  &lnkcap))
->>>> +		return ERR_PTR(-ENXIO);
->>>> +
->>>> +	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
->>>> +	if (rc)
->>>> +		dev_dbg(&port->dev, "failed to find component registers\n");
->>>> +
->>>> +	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
->>>
->>> So, just return port_num instead.
->>>
->>>> +	return devm_cxl_add_dport(port, &pdev->dev, port_num, map.resource);
->>>> +}
->>>> +
->>>>  struct cxl_walk_context {
->>>>  	struct pci_bus *bus;
->>>>  	struct cxl_port *port;
->>>> @@ -1169,3 +1207,46 @@ int cxl_gpf_port_setup(struct cxl_dport *dport)
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +
->>>> +static int count_dports(struct pci_dev *pdev, void *data)
->>>> +{
->>>> +	struct cxl_walk_context *ctx = data;
->>>> +	int type = pci_pcie_type(pdev);
->>>> +
->>>> +	if (pdev->bus != ctx->bus)
->>>> +		return 0;
->>>> +	if (!pci_is_pcie(pdev))
->>>> +		return 0;
->>>> +	if (type != ctx->type)
->>>> +		return 0;
->>>> +
->>>> +	ctx->count++;
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +int cxl_port_get_possible_dports(struct cxl_port *port)
->>>> +{
->>>> +	struct pci_bus *bus = cxl_port_to_pci_bus(port);
->>>> +	struct cxl_walk_context ctx;
->>>> +	int type;
->>>> +
->>>> +	if (!bus) {
->>>> +		dev_err(&port->dev, "No PCI bus found for port %s\n",
->>>> +			dev_name(&port->dev));
->>>> +		return -ENXIO;
->>>> +	}
->>>> +
->>>> +	if (pci_is_root_bus(bus))
->>>> +		type = PCI_EXP_TYPE_ROOT_PORT;
->>>> +	else
->>>> +		type = PCI_EXP_TYPE_DOWNSTREAM;
->>>> +
->>>> +	ctx = (struct cxl_walk_context) {
->>>> +		.bus = bus,
->>>> +		.type = type,
->>>> +	};
->>>> +	pci_walk_bus(bus, count_dports, &ctx);
->>>
->>> Don't walk the whole bus, just check children of port->uport_dev.
->>
-> 
->> cxl_port_to_pci_bus() gets the pdev->subordinate of the
->> port->uport_dev. So I think that's equivalent of checking the
->> children of port->uport_dev and not actually walking the whole pci
->> bus no?
-> 
-> pci_walk_bus() also calls subordinates. So it is equivalent, but
-> count_dports is called for other devices too that are not children.
-> And it is not obvious that only direct children are counted. Use
-> device_for_each_child()?
->
-
-ok I can see about switch to that.
-
- 
->>>
->>>> +
->>>> +	return ctx.count;
->>>> +}
->>>> +EXPORT_SYMBOL_NS_GPL(cxl_port_get_possible_dports, "CXL");
->>>
->>> See below for my comment on possible_dports.
->>>
->>> Since we only check for count > 1 the implemntation could be
->>> simplified and renamed to e.g. cxl_port_has_multiple_dports which
->>> could easily be used to call devm_cxl_add_passthrough_decoder().
->>
-> 
->> This would be possible if the function can return a bool. However,
->> it is possible to encounter errors. And errors should not be
->> equivalent to a false (0) return value and resulting in a
->> passthrough decoder creation. Thus I think we should stay with the
->> current function name.
-> 
-> Ok, but see also above.
-> 
->>>
->>>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->>>> index 25209952f469..877f888ee8f5 100644
->>>> --- a/drivers/cxl/core/port.c
->>>> +++ b/drivers/cxl/core/port.c
->>>> @@ -1367,21 +1367,6 @@ static struct cxl_port *find_cxl_port(struct device *dport_dev,
->>>>  	return port;
->>>>  }
->>>>  
->>>> -static struct cxl_port *find_cxl_port_at(struct cxl_port *parent_port,
->>>> -					 struct device *dport_dev,
->>>> -					 struct cxl_dport **dport)
->>>> -{
->>>> -	struct cxl_find_port_ctx ctx = {
->>>> -		.dport_dev = dport_dev,
->>>> -		.parent_port = parent_port,
->>>> -		.dport = dport,
->>>> -	};
->>>> -	struct cxl_port *port;
->>>> -
->>>> -	port = __find_cxl_port(&ctx);
->>>> -	return port;
->>>> -}
->>>> -
->>>>  /*
->>>>   * All users of grandparent() are using it to walk PCIe-like switch port
->>>>   * hierarchy. A PCIe switch is comprised of a bridge device representing the
->>>> @@ -1557,24 +1542,221 @@ static resource_size_t find_component_registers(struct device *dev)
->>>>  	return map.resource;
->>>>  }
->>>>  
->>>> +static int match_port_by_uport(struct device *dev, const void *data)
->>>> +{
->>>> +	const struct device *uport_dev = data;
->>>> +	struct cxl_port *port;
->>>> +
->>>> +	if (!is_cxl_port(dev))
->>>> +		return 0;
->>>> +
->>>> +	port = to_cxl_port(dev);
->>>> +	return uport_dev == port->uport_dev;
->>>> +}
->>>> +
->>>> +/*
->>>> + * Function takes a device reference on the port device. Caller should do a
->>>> + * put_device() when done.
->>>> + */
->>>> +static struct cxl_port *find_cxl_port_by_uport(struct device *uport_dev)
->>>> +{
->>>> +	struct device *dev;
->>>> +
->>>> +	dev = bus_find_device(&cxl_bus_type, NULL, uport_dev, match_port_by_uport);
->>>> +	if (dev)
->>>> +		return to_cxl_port(dev);
->>>> +	return NULL;
->>>> +}
->>>> +
->>>> +static int update_decoder_targets(struct device *dev, void *data)
->>>> +{
->>>> +	struct cxl_dport *dport = data;
->>>> +	struct cxl_switch_decoder *cxlsd;
->>>> +	struct cxl_decoder *cxld;
->>>> +	int i;
->>>> +
->>>> +	if (!is_switch_decoder(dev))
->>>> +		return 0;
->>>> +
->>>> +	cxlsd = to_cxl_switch_decoder(dev);
->>>> +	cxld = &cxlsd->cxld;
->>>> +	guard(rwsem_write)(&cxl_rwsem.region);
->>>> +
->>>> +	/* Short cut for passthrough decoder */
->>>> +	if (cxlsd->nr_targets == 1) {
->>>
->>> I think we should still check port_id. That is, remove the shortcut.
->>> If nr_targets == 1, then interleave_ways should be one too, so you
->>> gain nothing. Plus, you also see the dev_dbg().
->>
->> ok
->>
->>>
->>>> +		cxlsd->target[0] = dport;
->>>> +		return 0;
->>>> +	}
->>>> +
->>>> +	for (i = 0; i < cxld->interleave_ways; i++) {
->>>> +		if (cxld->target_map[i] == dport->port_id) {
->>>> +			cxlsd->target[i] = dport;
->>>> +			dev_dbg(dev, "dport%d found in target list, index %d\n",
->>>> +				dport->port_id, i);
->>>> +			return 0;
->>>
->>> Only one target exists, right? Stop the iteration by returning a
->>> non-zero here (caller needs to be adjusted then).
->>
->> ok
->>
->>>
->>>> +		}
->>>> +	}
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static int cxl_decoders_dport_update(struct cxl_dport *dport)
->>>> +{
->>>> +	return device_for_each_child(&dport->port->dev, dport,
->>>> +				     update_decoder_targets);
->>>
->>> Might need changes if update_decoder_targets returns 1 to stop the
->>> iterator.
->>
->> ok
->>
->>>
->>>> +}
->>>> +
->>>> +static int cxl_switch_port_setup(struct cxl_port *port)
->>>> +{
->>>
->>> Could you factor out that function in a separate patch?
->>>
->>> The function only sets up decoders. Name it
->>> cxl_switch_port_setup_decoders()?
->>>
->>>> +	struct cxl_hdm *cxlhdm;
->>>> +
->>>> +	cxlhdm = devm_cxl_setup_hdm(port, NULL);
->>>> +	if (!IS_ERR(cxlhdm))
->>>> +		return devm_cxl_enumerate_decoders(cxlhdm, NULL);
->>>> +
->>>> +	if (PTR_ERR(cxlhdm) != -ENODEV) {
->>>> +		dev_err(&port->dev, "Failed to map HDM decoder capability\n");
->>>> +		return PTR_ERR(cxlhdm);
->>>> +	}
->>>> +
->>>> +	if (port->possible_dports == 1) {
->>>> +		dev_dbg(&port->dev, "Fallback to passthrough decoder\n");
->>>> +		return devm_cxl_add_passthrough_decoder(port);
->>>
->>> Imo, the possible_dports handling should be removed as it only
->>> introduces dead code. mock_cxl_setup_hdm() always returns a valid
->>> cxlhdm (unless for -ENOMEM) and the mock case never reaches this code
->>> here.
->>>
->>> So how about moving (the "real") devm_cxl_add_passthrough_decoder()
->>> and cxl_port_get_possible_dports() to devm_cxl_enumerate_decoders()?
->>> devm_cxl_add_passthrough_decoder() would be static then and
->>> cxl_port_get_possible_dports() will be a core.h function only. Then,
->>> mock_cxl_add_passthrough_decoder() could be removed too.
->>>
->>> I really would like to have a clean core module interface that allows
->>> an easy implementation of cxl_test and avoid too much impact to the
->>> driver code.
->>
->> So after looking at this a bit, it looks like we need a bigger refactor than just devm_cxl_enumerate_decoders(). I have an attempt in the next rev you can take a look. It reduces from 3-4 mock functions down to 2. 
->>  
->>>
->>>> +	}
->>>> +
->>>> +	dev_err(&port->dev, "HDM decoder capability not found\n");
->>>> +	return -ENXIO;
->>>> +}
->>>> +
->>>> +DEFINE_FREE(put_cxl_dport, struct cxl_dport *, if (!IS_ERR_OR_NULL(_T)) reap_dport(_T))
->>>> +static struct cxl_dport *cxl_port_get_or_add_dport(struct cxl_port *port,
->>>> +						   struct device *dport_dev)
->>>> +{
->>>> +	struct cxl_dport *dport;
->>>> +	int rc;
->>>> +
->>>> +	guard(device)(&port->dev);
->>>> +
->>>> +	if (!port->dev.driver)
->>>> +		return ERR_PTR(-ENXIO);
->>>> +
->>>> +	dport = cxl_find_dport_by_dev(port, dport_dev);
->>>> +	if (dport)
->>>> +		return dport;
->>>
->>> What is the case if there is already a dport bound to the port? Since
->>> there is a 1:1 mapping downstream, there is only one allocation and I
->>> would expect that dport never exists and an -EBUSY should be returned
->>> otherwise.
->>
->> ok
->>
->>>
->>>> +
->>>> +	struct cxl_dport *new_dport __free(put_cxl_dport) =
->>>> +		devm_cxl_add_dport_by_dev(port, dport_dev);
->>>
->>> See my comment on devm_cxl_add_dport_by_dev() above.
->>>
->>>> +	if (IS_ERR(new_dport))
->>>> +		return new_dport;
->>>> +
->>>> +	cxl_switch_parse_cdat(port);
->>>> +
->>>> +	/*
->>>> +	 * First instance of dport appearing, need to setup the port, including
->>>> +	 * allocating decoders.
->>>> +	 */
->>>> +	if (port->nr_dports == 1) {
->>>> +		rc = cxl_switch_port_setup(port);
->>>
->>> Can't this be done with port creation? I don't see a reason doing this
->>> late at this point.
->>>
->>>> +		if (rc)
->>>> +			return ERR_PTR(rc);
->>>> +		return no_free_ptr(new_dport);
->>>> +	}
->>>> +
->>>> +	rc = cxl_decoders_dport_update(new_dport);
->>>> +	if (rc)
->>>> +		return ERR_PTR(rc);
->>>
->>> Maybe unfold cxl_decoders_dport_update() here?
->>
->> ok
->>
->>>
->>>> +
->>>> +	return no_free_ptr(new_dport);
->>>> +}
->>>> +
->>>> +static struct cxl_dport *devm_cxl_add_dport_by_uport(struct device *uport_dev,
->>>> +						     struct device *dport_dev)
->>>> +{
->>>> +	struct cxl_port *port __free(put_cxl_port) =
->>>> +		find_cxl_port_by_uport(uport_dev);
->>>> +
->>>> +	if (!port)
->>>> +		return ERR_PTR(-ENODEV);
->>>> +
->>>> +	return cxl_port_get_or_add_dport(port, dport_dev);
->>>> +}
->>>
->>> That function can be removed, see below.
->>
->> ok
->>
->>>
->>>> +
->>>> +static struct cxl_dport *
->>>> +devm_cxl_create_or_extend_port(struct device *ep_dev,
->>>> +			       struct cxl_port *parent_port,
->>>> +			       struct cxl_dport *parent_dport,
->>>> +			       struct device *uport_dev,
->>>> +			       struct device *dport_dev)
->>>> +{
->>>> +	resource_size_t component_reg_phys;
->>>> +
->>>> +	guard(device)(&parent_port->dev);
->>>> +
->>>> +	if (!parent_port->dev.driver) {
->>>> +		dev_warn(ep_dev,
->>>> +			 "port %s:%s disabled, failed to enumerate CXL.mem\n",
->>>> +			 dev_name(&parent_port->dev), dev_name(uport_dev));
->>>> +		return ERR_PTR(-ENXIO);
->>>> +	}
->>>> +
->>>> +	struct cxl_port *port __free(put_cxl_port) =
->>>> +		find_cxl_port_by_uport(uport_dev);
->>>> +
->>>> +	if (!port) {
->>>> +		component_reg_phys = find_component_registers(uport_dev);
->>>> +		port = devm_cxl_add_port(&parent_port->dev, uport_dev,
->>>> +					 component_reg_phys, parent_dport);
->>>> +		if (IS_ERR(port))
->>>> +			return (struct cxl_dport *)port;
->>>> +
->>>> +		/*
->>>> +		 * retry to make sure a port is found. a port device
->>>> +		 * reference is taken.
->>>> +		 */
->>>> +		port = find_cxl_port_by_uport(uport_dev);
->>>> +		if (!port)
->>>> +			return ERR_PTR(-ENODEV);
->>>> +
->>>> +		dev_dbg(ep_dev, "created port %s:%s\n",
->>>> +			dev_name(&port->dev), dev_name(port->uport_dev));
->>>> +	}
->>>> +
->>>> +	return cxl_port_get_or_add_dport(port, dport_dev);
->>>> +}
->>>> +
->>>>  static int add_port_attach_ep(struct cxl_memdev *cxlmd,
->>>>  			      struct device *uport_dev,
->>>>  			      struct device *dport_dev)
->>>>  {
->>>>  	struct device *dparent = grandparent(dport_dev);
->>>>  	struct cxl_dport *dport, *parent_dport;
->>>> -	resource_size_t component_reg_phys;
->>>>  	int rc;
->>>>  
->>>>  	if (is_cxl_host_bridge(dparent)) {
->>>> +		struct cxl_port *port __free(put_cxl_port) =
->>>> +			find_cxl_port_by_uport(uport_dev);
->>>>  		/*
->>>>  		 * The iteration reached the topology root without finding the
->>>>  		 * CXL-root 'cxl_port' on a previous iteration, fail for now to
->>>>  		 * be re-probed after platform driver attaches.
->>>>  		 */
->>>> -		dev_dbg(&cxlmd->dev, "%s is a root dport\n",
->>>> -			dev_name(dport_dev));
->>>> -		return -ENXIO;
->>>> +		if (!port) {
->>>> +			dev_dbg(&cxlmd->dev, "%s is a root dport\n",
->>>> +				dev_name(dport_dev));
->>>> +			return -ENXIO;
->>>> +		}
->>>> +
->>>> +		/*
->>>> +		 * While the port is found, there may not be a dport associated
->>>> +		 * yet. Try to associate the dport to the port. On return success,
->>>> +		 * the iteration will restart with the dport now attached.
->>>> +		 */
->>>> +		dport = devm_cxl_add_dport_by_uport(uport_dev,
->>>> +						    dport_dev);
->>>
->>> port is known here, use cxl_port_get_or_add_dport(port, dport_dev)
->>> instead. Remove devm_cxl_add_dport_by_uport().
->>
->> ok
->>
->>>
->>>> +		if (IS_ERR(dport))
->>>> +			return PTR_ERR(dport);
->>>> +
->>>> +		return 0;
->>>>  	}
->>>>  
->>>>  	struct cxl_port *parent_port __free(put_cxl_port) =
->>>> @@ -1584,36 +1766,12 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
->>>>  		return -EAGAIN;
->>>>  	}
->>>>  
->>>> -	/*
->>>> -	 * Definition with __free() here to keep the sequence of
->>>> -	 * dereferencing the device of the port before the parent_port releasing.
->>>> -	 */
->>>> -	struct cxl_port *port __free(put_cxl_port) = NULL;
->>>> -	scoped_guard(device, &parent_port->dev) {
->>>> -		if (!parent_port->dev.driver) {
->>>> -			dev_warn(&cxlmd->dev,
->>>> -				 "port %s:%s disabled, failed to enumerate CXL.mem\n",
->>>> -				 dev_name(&parent_port->dev), dev_name(uport_dev));
->>>> -			return -ENXIO;
->>>> -		}
->>>> +	dport = devm_cxl_create_or_extend_port(&cxlmd->dev, parent_port,
->>>> +					       parent_dport, uport_dev,
->>>> +					       dport_dev);
->>>
->>> You expand add_port_attach_ep() here. This function was originally
->>> called if there is no *port* at all. Now, as the dport_dev is not yet
->>> registered, the port may already exist, but it is not found since the
->>> dport_dev is not yet registered and add_port_attach_ep() is called now
->>> even if the port exists. I think we should move that dport_dev
->>> registration a level higher to devm_cxl_enumerate_ports(). That might
->>> need a cleanup of the iterator and the removal of
->>> add_port_attach_ep().
->>
->> Yes. The new rev will move the dport registration a level up. No need to remove add_port_attach_ep(). devm_cxl_create_or_extend_port() will be devm_cxl_create_port().
->>
->>>
->>>> +	if (IS_ERR(dport))
->>>> +		return PTR_ERR(dport);
->>>>  
->>>> -		port = find_cxl_port_at(parent_port, dport_dev, &dport);
->>>> -		if (!port) {
->>>> -			component_reg_phys = find_component_registers(uport_dev);
->>>> -			port = devm_cxl_add_port(&parent_port->dev, uport_dev,
->>>> -						 component_reg_phys, parent_dport);
->>>> -			if (IS_ERR(port))
->>>> -				return PTR_ERR(port);
->>>> -
->>>> -			/* retry find to pick up the new dport information */
->>>> -			port = find_cxl_port_at(parent_port, dport_dev, &dport);
->>>> -			if (!port)
->>>> -				return -ENXIO;
->>>> -		}
->>>> -	}
->>>> -
->>>> -	dev_dbg(&cxlmd->dev, "add to new port %s:%s\n",
->>>> -		dev_name(&port->dev), dev_name(port->uport_dev));
->>>>  	rc = cxl_add_ep(dport, &cxlmd->dev);
->>>>  	if (rc == -EBUSY) {
->>>>  		/*
->>>> @@ -1630,6 +1788,7 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
->>>>  {
->>>>  	struct device *dev = &cxlmd->dev;
->>>>  	struct device *iter;
->>>> +	int ports_need_create = 0;
->>>>  	int rc;
->>>>  
->>>>  	/*
->>>> @@ -1654,6 +1813,8 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
->>>>  		struct device *uport_dev;
->>>>  		struct cxl_dport *dport;
->>>>  
->>>> +		ports_need_create++;
->>>> +
->>>>  		if (is_cxl_host_bridge(dport_dev))
->>>>  			return 0;
->>>>  
->>>> @@ -1688,10 +1849,28 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
->>>>  
->>>>  			cxl_gpf_port_setup(dport);
->>>>  
->>>> +			ports_need_create--;
->>>>  			/* Any more ports to add between this one and the root? */
->>>>  			if (!dev_is_cxl_root_child(&port->dev))
->>>>  				continue;
->>>>  
->>>> +			/*
->>>> +			 * The 'ports_need_create' variable tracks a port being
->>>> +			 * created as it goes through this iterative loop. It's
->>>> +			 * incremented when it first enters the loop and decremented
->>>> +			 * when the port is found. If at the root of the hierarchy
->>>> +			 * and the variable is not 0, then it's missing a port
->>>> +			 * creation somewhere in the hierarchy and should restart.
->>>> +			 * For example in a setup where there's a PCI root port, a
->>>> +			 * switch, and an endpoint, it is possible to get to the
->>>> +			 * PCI root port and its creation, and the switch port is
->>>> +			 * still missing because the root port didn't exist. This
->>>> +			 * triggers a restart of the loop to create the switch port
->>>> +			 * now with a present root port.
->>>> +			 */
->>>> +			if (ports_need_create)
->>>
->>> Uh, that becomes hard. Isn't the iterator much simpler:
->>>
->>>  * Start the iter = endpoint.
->>>
->>>  * Find first existing parent port up to the root.
->>>
->>>  * If that is the direct parent of the endpoint, attach it to the
->>>    parent (add dport etc.). Exit loop without errors.
->>>
->>>  * Else, create port and attach it to the found parent port (including
->>>    dport handling).
->>>
->>>  * Fail on errors or retry otherwise.
->>>
->>> So, devm_cxl_enumerate_ports() should be reworked better, also address
->>> my other comments regarding add_port_attach_ep() and
->>> devm_cxl_create_or_extend_port().
->>
->> So I reworked this whole path a bit. Maybe not exactly what you are envisioning here but it is a lot cleaner. You can take a look at the next rev.
->>
->>>
->>>> +				goto retry;
->>>> +
->>>>  			return 0;
->>>>  		}
->>>>  
->>>> @@ -1700,8 +1879,10 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
->>>>  		if (rc == -EAGAIN)
->>>>  			continue;
->>>>  		/* failed to add ep or port */
->>>> -		if (rc)
->>>> +		if (rc < 0)
->>>>  			return rc;
->>>> +
->>>> +		ports_need_create = 0;
->>>>  		/* port added, new descendants possible, start over */
->>>>  		goto retry;
->>>>  	}
->>>> @@ -1733,14 +1914,16 @@ static int decoder_populate_targets(struct cxl_switch_decoder *cxlsd,
->>>>  	device_lock_assert(&port->dev);
->>>>  
->>>>  	if (xa_empty(&port->dports))
->>>> -		return -EINVAL;
->>>> +		return 0;
->>>>  
->>>>  	guard(rwsem_write)(&cxl_rwsem.region);
->>>>  	for (i = 0; i < cxlsd->cxld.interleave_ways; i++) {
->>>>  		struct cxl_dport *dport = find_dport(port, cxld->target_map[i]);
->>>>  
->>>> -		if (!dport)
->>>> -			return -ENXIO;
->>>> +		if (!dport) {
->>>> +			/* dport may be activated later */
->>>> +			continue;
->>>> +		}
->>>>  		cxlsd->target[i] = dport;
->>>>  	}
->>>
->>> Should that be dropped entirely as the target setup is done somewhere
->>> else?
->>>
->> No. This is still needed for root ports.
-> 
-> Root ports are dport_devs and don't have a target list, host bridges
-> have. I did not follow the entire code flow, but shouldn't
-> cxl_decoders_dport_update() handle that?
-
-Sorry I see where I mislead you. I should have said cxl_root(s) and not the root ports under the host bridge. __cxl_parse_cfmws() calls cxl_decoder_add() for the root decoder and that's where decoder_populate_targets() needs to populate the targets and cxl_decoders_dport_update() does not hit the root decoder. 
-
-DJ
-
-
+But I could be miss-remembering something,
+Ira
