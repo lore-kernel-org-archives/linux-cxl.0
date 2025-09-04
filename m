@@ -1,73 +1,57 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5052D5C95
-	for <linux-cxl@vger.kernel.org>; Thu,  4 Sep 2025 09:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B46014A09C
+	for <linux-cxl@vger.kernel.org>; Thu,  4 Sep 2025 13:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756976638; cv=none; b=ZURVbet+zHjPAeoFZ6JQgCbvcoYlVB/R3ADForTnc3AQZd0+UEP1bhV9e4zdGJ8Ns3aSFolzRLPrDmmsE4n6MQYSmicJOKA+s1N69GZqSj1x49UCqoaW+QiumAuI+YpRSnAHMHlS8peRPPKVsF+4jR+QhEI3X5Zt6hqTpxst020=
+	t=1756991972; cv=none; b=KqPBq6zSMjUlFWBxHzZCeQoEyAYaDTndR1cDEmBEFtV9CpmbWro9HECf92YsYLPVKpnIHyHZyG4cUPVpWspgkC5VaW1fF1TjqERR7Hw5Xu/h4E+u8xzv4PgjFOyhB2C3w9OjFkuVtJ52U4TgXqL2VnhsRZGBciYZ8gt/fg6j+nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756976638; c=relaxed/simple;
-	bh=lvNFPRwpFkBdQTQroDXyu6PVWfHSextKgYkc2Y4dh7I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BnqWy0yBcj8nM4tEStSgXAfRmaAqgeZWPHzdxgR9YUWhkKBVWiIXfUAhUV5tlnSxTFYLcXCxNjxYVoGux+J/1O87M5EAMxgUTFTFKQmRmUjM+IflOprR4juA01nMVEVuV7gqQwzUtxuJ4XBXkMBxNxJfJ90zn3wv1O8EcXFWlRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=XPucGO2+; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1756991972; c=relaxed/simple;
+	bh=AJvja8IXxwnytvof37xPnzRMPC1zHq8DFSgrGMZleoA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=vEKpi4yy25dmdRttj0h5S3BlfJthpH7WFx1mzk7fB1dKXB355imawuwYH36DDomUUYFQZw8u444+/klZN5B8yL4pp7jK3ySymKB86P9TGMrrxGUw/qf7XQn7Rd42lIN3iceru7zfAnF0Y+eS1Krwj/RfToAUTL54Pgs8ap7p0zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Or46twYY; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="XPucGO2+"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-45b83ae1734so5092135e9.0
-        for <linux-cxl@vger.kernel.org>; Thu, 04 Sep 2025 02:03:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1756976634; x=1757581434; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ket4UsQ6Z/YwRPFuqUWOeMjQ+dAqjpKyTO3B6gKLcrM=;
-        b=XPucGO2+0WE2b3WqCBV9LvYijCx6+8Oy5lkL8jkdwkyL6uCGTyITqDBAbSN+Jc/hH7
-         Ak0Ml6GnnFghXPwkFWdChgVbwELzd/UEW9PNF7RymIl4o7FY19lkeIwXz0ouwgSe1UVc
-         BoYaREx16EuSlqrjKgzoOudq2eSvnSBmPJuM9qxc88T60hmMjKHSbwJVKS2GOrNXqvX+
-         M6M6UoVYsAsat7zy5GQMzSgV458kzJjwrsrcWDz+edUPhIGMHbFnM/UdnrnfzMXTy6UQ
-         A1jVO0vOvqECmU8G0vS507I5bGmn9E6rtALoNHMsE6GpxwWcM7qtaXd6SewS6TUlmV+2
-         HX0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756976634; x=1757581434;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ket4UsQ6Z/YwRPFuqUWOeMjQ+dAqjpKyTO3B6gKLcrM=;
-        b=n4VzekpdYMZsrIJg8i10KG6VTd/U/ia66SjS/TCCYiq0LGchJ+9Yl7hKYAMxazipNt
-         wSCo+tTVwULcJk0NendRvKQpT4VgcWHy4UnZ5XJQUYlsKJnASAEjodtOOt1rBvm8CASb
-         Rj09atqxPS59tOyvyvPkMPXSPadly4jRMVkBVUnqsAw8sDYo+6x6WW31Dhg0gdg031cr
-         vltFj5XjwJWxhxRd4AzXev9slKBaqQ1s+DHHontz8ldjEe+bxB7guYUbvzBJ+EPelhA9
-         oRp7hHAbAtSzJBRZ76/2YKhARGkm4hiAaOz4iF8/237iS3uuZTe9rZ+TwBgETY6vmCay
-         LyhA==
-X-Gm-Message-State: AOJu0YyoyY7nXUB7o2SDeK3JpZuZaoUR1nJk5hdPQI9L3pGEGf3wAO0b
-	ylCsPIKvGKI4VSrYkTcZhI2M0CLiFfpW15D73kiJJ2sQvohazaMBFGufQA6nm6nN
-X-Gm-Gg: ASbGnctHlJx6zmdYlEJDKvOST3bYzXKyJ7pb82tCUWohq0NxlOdhZGpyAxHlRbnrcIZ
-	9yKBCXvfJ6RLYbFxGmE86Np+T9tQPMxRW5Et7fbVa6sSMpQwx4rZt/JXn2OKpAM3dums3R+iyct
-	lduSb7so4xb/iDp2esUHz2dwo78XSsKgdgDJ/8g9DZiOY/TLzcpfZ5NRNigEe7KFqHwR50taXHL
-	ZklcZcmhv/LI4tXe9MsYfYz+5gqUer6RL9THt/y3DSkd5suh44Q1ekIluUIdeRObyvbp8RFmFnr
-	72pMeo3s+I2pm7mNKo3o5Zr1j7IBcZGC+Ue08uazLPMBqcKKBtIRl2eidk5LUnqRwheYrknTUK7
-	HDTMi6rL/0ie36KqvJthp38jU1xK1MWAi4wKi2F4MTbpI3tVjF4K+HkQ7
-X-Google-Smtp-Source: AGHT+IE4eWTSlZgoHyNN9ZVDyCIWCT0x7x7lnPLl+ePB5d6DpdQkrAZssZS81c3u3JKMl1HbwwXjmQ==
-X-Received: by 2002:a05:600c:4f0c:b0:45c:b6d3:a106 with SMTP id 5b1f17b1804b1-45cb6d3a2afmr40779365e9.11.1756976634340;
-        Thu, 04 Sep 2025 02:03:54 -0700 (PDT)
-Received: from node1.manccluster.local ([130.88.198.135])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b6f0c6dc1sm359579605e9.1.2025.09.04.02.03.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Sep 2025 02:03:54 -0700 (PDT)
-From: Joshua Lant <joshualant@googlemail.com>
-X-Google-Original-From: Joshua Lant <joshualant@gmail.com>
-To: linux-cxl@vger.kernel.org
-Cc: Jonathan.Cameron@huawei.com,
-	Joshua Lant <joshualant@gmail.com>
-Subject: [QEMU- PATCH 1/1] cxl_type3: fix segfault in cxl_destroy_dc_regions
-Date: Thu,  4 Sep 2025 10:02:22 +0100
-Message-ID: <20250904090346.884649-2-joshualant@gmail.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20250904090346.884649-1-joshualant@gmail.com>
-References: <20250904090346.884649-1-joshualant@gmail.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Or46twYY"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250904131928epoutp046a9ed48d064d377787a9ff900bf2bc09~iFuLVuWct1284112841epoutp04i
+	for <linux-cxl@vger.kernel.org>; Thu,  4 Sep 2025 13:19:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250904131928epoutp046a9ed48d064d377787a9ff900bf2bc09~iFuLVuWct1284112841epoutp04i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1756991968;
+	bh=zLYpeIhcfT/XxBu0BEuj7ZMrR7WZpGrO3pguyktAwIo=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=Or46twYYQj9Xm1g3UewQR1jC2o7zqqChuaxvSCiJRg/YUvk42lq+YyR8ubL1h2NVa
+	 DH1xgdDGmvszZ8M77Rxr32sSC1uhin4tMr/PkeRHuEkeenUNn8CqGdUq56HRW8hQQ1
+	 +TCVooPJXhB4ERU8oYGMSPRaX5Lr4tymvyoP2FAU=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250904131927epcas5p37ca6bbf5381bae1889aefd2d55afce40~iFuK2btu61316413164epcas5p3p;
+	Thu,  4 Sep 2025 13:19:27 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.38.88]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4cHg724lp1z6B9m5; Thu,  4 Sep
+	2025 13:19:26 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250904131926epcas5p2a363cf0604a4801038d32e7da5397da1~iFuJbY33x1668816688epcas5p2b;
+	Thu,  4 Sep 2025 13:19:26 +0000 (GMT)
+Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
+	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250904131924epsmtip2ea367164ee04a5e4114aadf613edce57~iFuIDcHCu0295402954epsmtip2D;
+	Thu,  4 Sep 2025 13:19:24 +0000 (GMT)
+From: Arpit Kumar <arpit1.kumar@samsung.com>
+To: qemu-devel@nongnu.org
+Cc: gost.dev@samsung.com, linux-cxl@vger.kernel.org, dave@stgolabs.net,
+	Jonathan.Cameron@huawei.com, vishak.g@samsung.com, krish.reddy@samsung.com,
+	a.manzanares@samsung.com, alok.rathore@samsung.com, cpgs@samsung.com, Arpit
+	Kumar <arpit1.kumar@samsung.com>
+Subject: [PATCH v3 0/2] FM-API Physical Switch Command Set Support
+Date: Thu,  4 Sep 2025 18:49:02 +0530
+Message-Id: <20250904131904.725758-1-arpit1.kumar@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -75,30 +59,87 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250904131926epcas5p2a363cf0604a4801038d32e7da5397da1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250904131926epcas5p2a363cf0604a4801038d32e7da5397da1
+References: <CGME20250904131926epcas5p2a363cf0604a4801038d32e7da5397da1@epcas5p2.samsung.com>
 
-CXL_TYPE3_CLASS() should be CXL_TYPE3_GET_CLASS() given object (CXLType3Dev)
-input. Leads to segfault in object_class_dynamic_cast.
+This patch series refactor existing support for Identify Switch Device
+and Get Physical Port State by utilizing physical ports (USP & DSP)
+information stored during enumeration. 
 
-Fixes: ef730035567
+Additionally, it introduces new support for Physical Port Control
+of FM-API based physical switch command set as per CXL spec r3.2 
+Table 8-230:Physical Switch. It primarily constitutes two logic:
+-Assert-Deassert PERST: Assert PERST involves physical port to be in 
+ hold reset phase for minimum 100ms. No other physical port control
+ request are entertained until Deassert PERST command for the given 
+ port is issued.
+-Reset PPB: cold reset of physical port (completing enter->hold->exit phases).
 
-signed-off-by: Joshua Lant <joshualant@gmail.com>
----
- hw/mem/cxl_type3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Tested using libcxl-mi interface[1]:
+All active ports and all opcodes per active port is tested. Also, tested
+against possible edge cases manually since the interface currently dosen't
+support run time input.
 
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index c4658e0955..14cb09d9fe 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -919,7 +919,7 @@ static void cxl_destroy_dc_regions(CXLType3Dev *ct3d)
- {
-     CXLDCExtent *ent, *ent_next;
-     CXLDCExtentGroup *group, *group_next;
--    CXLType3Class *cvc = CXL_TYPE3_CLASS(ct3d);
-+    CXLType3Class *cvc = CXL_TYPE3_GET_CLASS(ct3d);
-     int i;
-     CXLDCRegion *region;
- 
+Example topology (1 USP + 3 DSP's->switch with 2 CXLType3 devices connected
+to 2 DSP's):
+FM="-object memory-backend-file,id=cxl-mem1,mem-path=$TMP_DIR/t3_cxl1.raw,size=256M \
+    -object memory-backend-file,id=cxl-lsa1,mem-path=$TMP_DIR/t3_lsa1.raw,size=1M \
+    -object memory-backend-file,id=cxl-mem2,mem-path=$TMP_DIR/t3_cxl2.raw,size=512M \
+    -object memory-backend-file,id=cxl-lsa2,mem-path=$TMP_DIR/t3_lsa2.raw,size=512M \
+    -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
+    -device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
+    -device cxl-upstream,port=2,sn=1234,bus=cxl_rp_port0,id=us0,addr=0.0,multifunction=on, \
+    -device cxl-switch-mailbox-cci,bus=cxl_rp_port0,addr=0.1,target=us0 \
+    -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
+    -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
+    -device cxl-downstream,port=3,bus=us0,id=swport2,chassis=0,slot=6 \
+    -device cxl-type3,bus=swport0,memdev=cxl-mem1,id=cxl-pmem1,lsa=cxl-lsa1,sn=3 \
+    -device cxl-type3,bus=swport2,memdev=cxl-mem2,id=cxl-pmem2,lsa=cxl-lsa2,sn=4 \
+    -machine cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=1k \
+    -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=4,target=us0 \
+    -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=5,target=cxl-pmem1 \
+    -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=6,target=cxl-pmem2 \
+    -device virtio-rng-pci,bus=swport1"
+
+Multiple Qemu Topologies tested:
+-without any devices connected to downstream ports.
+-with virtio-rng-pci devices connected to downstream ports.
+-with CXLType3 devices connected to downstream ports.
+-with different unique values of ports (both upstream and downstream).
+
+Changes from v2->v3:
+-cxl_set_port_type(): optimized storing of strucutre members.
+-namespace defines instead of enum.
+-Calculating size for active_port_bitmask than hardcoding to 0x20.
+-Defined struct phy_port directly inside struct CXLUpstreamPort as pports.
+-Renamed struct pperst to struct CXLPhyPortPerst.
+-Optimized perst member initializations for ports inside
+ cxl_initialize_usp_mctpcci() using active_port_bitmask.
+
+[1] https://github.com/computexpresslink/libcxlmi/commit/35fe68bd9a31469f832a87694d7b18d2d50be5b8
+
+The patches are generated against the Johnathan's tree
+https://gitlab.com/jic23/qemu.git and branch cxl-2025-07-03.
+
+Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
+
+Arpit Kumar (2):
+  hw/cxl: Refactored Identify Switch Device & Get Physical Port State
+  hw/cxl: Add Physical Port Control (Opcode 5102h)
+
+ hw/cxl/cxl-mailbox-utils.c                | 368 +++++++++++++++-------
+ include/hw/cxl/cxl_device.h               |  76 +++++
+ include/hw/cxl/cxl_mailbox.h              |   1 +
+ include/hw/pci-bridge/cxl_upstream_port.h |   9 +
+ 4 files changed, 347 insertions(+), 107 deletions(-)
+
 -- 
-2.43.7
+2.34.1
 
