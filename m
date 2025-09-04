@@ -1,199 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43F527464F;
-	Wed,  3 Sep 2025 23:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633C663B9
+	for <linux-cxl@vger.kernel.org>; Thu,  4 Sep 2025 08:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756941790; cv=none; b=g7Q8eMRoCE2zRLoqieSS4kmnwmkDdB4/HxV63YpW41zFQqNVeTnXviGXlaCuyto6vTW7tCugB+X6HQbeVBqhJDyztb+eX8A1wngkG4dqB5Wb6oF4TGTIqXKV2cpFBuQs/Pwws7wEBOHFDrBDwH6xJrcoi6LuuGM5HkSgVueRL2Y=
+	t=1756975505; cv=none; b=tpLfb1j+kOVLIKlmGgcDR+kVc1cclsn588DYEqneKw/VoHNpfjfNzVP8yKUOpfL/109wGYCirJzZF9fBk8ggH/by0QT/jKTL7kZwypSTcUjgANVvkVMBDvV0Tg4ALiXJnH7gxMWNaLrppsOD2/I9Cff8fxxND3bYN7ZNrF7dddo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756941790; c=relaxed/simple;
-	bh=E2DDIUm1Asuy7g+z0r5szUHglM8b3qs8abA9+8SByI0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jCY9Vh6+tNu3wkdZCndR44tHrTPNxE8uJXfg8cKtXNujWuCN7D1O7q+k/aVviUbOr8FG/j8ToocuGJdoH8dOHJTen4KKWg5Ye/IP21SCHHDWoA/CFaVOa40VAEtZmLodU7/k51EHKl06xawH8C81hhlmUzHUeG2qrS7NMoP/7os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P1RnlPRZ; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P1RnlPRZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756941789; x=1788477789;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=E2DDIUm1Asuy7g+z0r5szUHglM8b3qs8abA9+8SByI0=;
-  b=P1RnlPRZ5GY7cFZJA1t3I3D6oj7S6zlOHb7wXsrEWduB5Ej2rCw8eEUY
-   y2JkJeeCHmnSADgZYe1eneRADgg7HNB1j9QszaOqypxTKHbI4V8YpnGWt
-   CZLUDUD1bk4xHCZOTGF1Bn2nmDWUD1aawTBjFmkh02QTwfDNI4JqCMluw
-   Rf0xpaPCuFfrHOg8PUbV6IEk6ycyXgjBcugqQxbXE3ztUyywz28v4zVGP
-   fc2HXAD/c2ye4aw8hzwt5o7M0js+P5ToovN32yZ6c57t9HTaULVUskZDD
-   T3NX5DIg4E1iRKJLsYhI4Or3nc80NZd2WtE/CSgL07TDvx6sLBviOsb+/
-   Q==;
-X-CSE-ConnectionGUID: aCfXDoXoRHCmPW1WHluawQ==
-X-CSE-MsgGUID: vuHTShJ8RwWtdyc94tcCEA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="59187377"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="59187377"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2025 16:23:08 -0700
-X-CSE-ConnectionGUID: DsbL7M/nSva5tMJZ76VbIw==
-X-CSE-MsgGUID: gepGdxWgQRuIgo689NopRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,236,1751266800"; 
-   d="scan'208";a="171284106"
-Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.109.251]) ([10.125.109.251])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2025 16:23:05 -0700
-Message-ID: <c175d39d-699e-4e1b-b6c0-089eda74432c@intel.com>
-Date: Wed, 3 Sep 2025 16:23:04 -0700
+	s=arc-20240116; t=1756975505; c=relaxed/simple;
+	bh=I9Vdxv8LTqpV2w31VZasrBF10znKD7rqJbA5riCw0eg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mqWSctHoBivgu60FwQqDwkrjO2//OPlqMTgc6RrwpLoja+IF8dx9hlti6M1l8hK/l8hXa6a8aS97zR/2EWQFbXn+Z0c2+eKXY6R/t45C6wUZKp2f3IoRC/ZWtZ0w8JPwCeQANAqYuqQU9FSDJX8/sDpyFxCYZqAf2ajMl40cRVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cHY1J54Xxz6GDP4;
+	Thu,  4 Sep 2025 16:44:04 +0800 (CST)
+Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
+	by mail.maildlp.com (Postfix) with ESMTPS id 19F0E1402EF;
+	Thu,  4 Sep 2025 16:45:00 +0800 (CST)
+Received: from localhost (10.203.177.99) by frapeml500003.china.huawei.com
+ (7.182.85.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 4 Sep
+ 2025 10:44:59 +0200
+Date: Thu, 4 Sep 2025 09:44:55 +0100
+From: Alireza Sanaee <alireza.sanaee@huawei.com>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: <nifan.cxl@gmail.com>, <qemu-devel@nongnu.org>,
+	<jonathan.cameron@huawei.com>, <linux-cxl@vger.kernel.org>,
+	<gregory.price@memverge.com>, <dan.j.williams@intel.com>,
+	<a.manzanares@samsung.com>, <dave@stgolabs.net>, <nmtadam.samsung@gmail.com>,
+	<jim.harris@samsung.com>, <Jorgen.Hansen@wdc.com>, <wj28.lee@gmail.com>,
+	<armbru@redhat.com>, <mst@redhat.com>, Fan Ni <fan.ni@samsung.com>, Svetly
+ Todorov <svetly.todorov@memverge.com>
+Subject: Re: [PATCH v8 11/14] hw/cxl/events: Add qmp interfaces to
+ add/release dynamic capacity extents
+Message-ID: <20250904094455.0000194b.alireza.sanaee@huawei.com>
+In-Reply-To: <68b71467b850a_4bae529418@iweiny-mobl.notmuch>
+References: <20240523174651.1089554-1-nifan.cxl@gmail.com>
+	<20240523174651.1089554-12-nifan.cxl@gmail.com>
+	<20250902113915.00001fbd.alireza.sanaee@huawei.com>
+	<68b71467b850a_4bae529418@iweiny-mobl.notmuch>
+Organization: Huawei
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 22/23] CXL/PCI: Enable CXL protocol errors during CXL
- Port probe
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
- ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
- rrichter@amd.com, dan.carpenter@linaro.org,
- PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
- Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250827013539.903682-1-terry.bowman@amd.com>
- <20250827013539.903682-23-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250827013539.903682-23-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ frapeml500003.china.huawei.com (7.182.85.28)
 
+On Tue, 2 Sep 2025 10:59:35 -0500
+Ira Weiny <ira.weiny@intel.com> wrote:
 
+> Alireza Sanaee wrote:
+> > On Thu, 23 May 2024 10:44:51 -0700
+> > nifan.cxl@gmail.com wrote:
+> >   
+> > > From: Fan Ni <fan.ni@samsung.com>
+> > > 
+> > > To simulate FM functionalities for initiating Dynamic Capacity Add
+> > > (Opcode 5604h) and Dynamic Capacity Release (Opcode 5605h) as in
+> > > CXL spec r3.1 7.6.7.6.5 and 7.6.7.6.6, we implemented two QMP
+> > > interfaces to issue add/release dynamic capacity extents requests.
+> > > 
+> > > With the change, we allow to release an extent only when its DPA
+> > > range is contained by a single accepted extent in the device.
+> > > That is to say, extent superset release is not supported yet.
+> > > 
+> > > 1. Add dynamic capacity extents:
+> > > 
+> > > For example, the command to add two continuous extents (each
+> > > 128MiB long) to region 0 (starting at DPA offset 0) looks like
+> > > below:
+> > > 
+> > > { "execute": "qmp_capabilities" }
+> > > 
+> > > { "execute": "cxl-add-dynamic-capacity",
+> > >   "arguments": {
+> > >       "path": "/machine/peripheral/cxl-dcd0",
+> > >       "host-id": 0,
+> > >       "selection-policy": "prescriptive",
+> > >       "region": 0,
+> > >       "extents": [
+> > >       {
+> > >           "offset": 0,
+> > >           "len": 134217728
+> > >       },
+> > >       {
+> > >           "offset": 134217728,
+> > >           "len": 134217728
+> > >       }
+> > >       ]
+> > >   }
+> > > }
+> > > 
+> > > 2. Release dynamic capacity extents:
+> > > 
+> > > For example, the command to release an extent of size 128MiB from
+> > > region 0 (DPA offset 128MiB) looks like below:
+> > > 
+> > > { "execute": "cxl-release-dynamic-capacity",
+> > >   "arguments": {
+> > >       "path": "/machine/peripheral/cxl-dcd0",
+> > >       "host-id": 0,
+> > >       "removal-policy":"prescriptive",
+> > >       "region": 0,
+> > >       "extents": [
+> > >       {
+> > >           "offset": 134217728,
+> > >           "len": 134217728
+> > >       }
+> > >       ]
+> > >   }
+> > > }
+> > > 
+> > > Tested-by: Svetly Todorov <svetly.todorov@memverge.com>
+> > > Reviewed-by: Gregory Price <gregory.price@memverge.com>
+> > > Signed-off-by: Fan Ni <fan.ni@samsung.com>  
+> 
+> [snip]
+> 
+> > > +##
+> > > +# @cxl-release-dynamic-capacity:
+> > > +#
+> > > +# Command to initiate to release dynamic capacity extents from a
+> > > +# host.  It simulates operations defined in cxl spec r3.1
+> > > 7.6.7.6.6. +#
+> > > +# @path: CXL DCD canonical QOM path.
+> > > +#
+> > > +# @host-id: The "Host ID" field as defined in cxl spec r3.1
+> > > +#     Table 7-71.
+> > > +#
+> > > +# @removal-policy: Bit[3:0] of the "Flags" field as defined in
+> > > cxl +#     spec r3.1 Table 7-71.
+> > > +#
+> > > +# @forced-removal: Bit[4] of the "Flags" field in cxl spec r3.1
+> > > +#     Table 7-71.  When set, device does not wait for a Release
+> > > +#     Dynamic Capacity command from the host.  Host immediately
+> > > +#     loses access to released capacity.
+> > > +#
+> > > +# @sanitize-on-release: Bit[5] of the "Flags" field in cxl spec
+> > > r3.1 +#     Table 7-71.  When set, device should sanitize all
+> > > released +#     capacity as a result of this request.
+> > > +#
+> > > +# @region: The "Region Number" field as defined in cxl spec r3.1
+> > > +#     Table 7-71.  The dynamic capacity region where the capacity
+> > > +#     is being added.  Valid range is from 0-7.
+> > > +#
+> > > +# @tag: The "Tag" field as defined in cxl spec r3.1 Table 7-71.
+> > > +#
+> > > +# @extents: The "Extent List" field as defined in cxl spec r3.1
+> > > +#     Table 7-71.
+> > > +#
+> > > +# Since : 9.1
+> > > +##
+> > > +{ 'command': 'cxl-release-dynamic-capacity',
+> > > +  'data': { 'path': 'str',
+> > > +            'host-id': 'uint16',
+> > > +            'removal-policy': 'CXLExtRemovalPolicy',
+> > > +            '*forced-removal': 'bool',
+> > > +            '*sanitize-on-release': 'bool',
+> > > +            'region': 'uint8',
+> > > +            '*tag': 'str',
+> > > +            'extents': [ 'CXLDynamicCapacityExtent' ]
+> > > +           }
+> > > +}  
+> > 
+> > Although tag-based removal is not implemented yet, but still just
+> > wanted to leave a comment here that exact extents are not needed
+> > for tag-based removal and `extents` should be an optional parameter
+> > here; this is my understanding reading the spec, so I still might
+> > be wrong, shout if you think it does not make sense.  
+> 
+> It's been a while but I think this allows the removal of non-tagged
+> extents as well(?)  If so the tag would be NULL (or empty-string) and
+> one can remove a regular extent.
+> 
+> But I could be miss-remembering something,
+> Ira
+> 
 
-On 8/26/25 6:35 PM, Terry Bowman wrote:
-> CXL protocol errors are not enabled for all CXL devices after boot. These
-> must be enabled inorder to process CXL protocol errors.
-> 
-> Introduce cxl_unmask_proto_interrupts() to call pci_aer_unmask_internal_errors().
-> pci_aer_unmask_internal_errors() expects the pdev->aer_cap is initialized.
-> But, dev->aer_cap is not initialized for CXL Upstream Switch Ports and CXL
-> Downstream Switch Ports. Initialize the dev->aer_cap if necessary. Enable AER
-> correctable internal errors and uncorrectable internal errors for all CXL
-> devices.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> 
-> ---
-> Changes in v10->v11:
-> - Added check for valid PCI devices in is_cxl_error() (Terry)
-> - Removed check for RCiEP in cxl_handle_proto_err() and
->   cxl_report_error_detected() (Terry)
-> ---
->  drivers/cxl/core/ras.c | 26 +++++++++++++++++++++++++-
->  drivers/pci/pci.h      |  2 --
->  include/linux/aer.h    |  2 ++
->  3 files changed, 27 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index 3da675f72616..90ea0dfb942f 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> @@ -122,6 +122,21 @@ static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
->  static pci_ers_result_t cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base);
->  static void cxl_handle_cor_ras(struct device *dev, u64 serial, void __iomem *ras_base);
->  
-> +static void cxl_unmask_proto_interrupts(struct device *dev)
-> +{
-> +	struct pci_dev *pdev __free(pci_dev_put) =
-> +		pci_dev_get(to_pci_dev(dev));
-> +
-> +	if (!pdev->aer_cap) {
-> +		pdev->aer_cap = pci_find_ext_capability(pdev,
-> +							PCI_EXT_CAP_ID_ERR);
-> +		if (!pdev->aer_cap)
-> +			return;
-> +	}
-> +
-> +	pci_aer_unmask_internal_errors(pdev);
-> +}
-> +
->  #ifdef CONFIG_CXL_RCH_RAS
->  static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
->  {
-> @@ -418,7 +433,10 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
->  
->  		cxl_dport_map_rch_aer(dport);
->  		cxl_disable_rch_root_ints(dport);
-> +		return;
->  	}
-> +
-> +	cxl_unmask_proto_interrupts(dport->dport_dev);
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
->  
-> @@ -429,8 +447,12 @@ static void cxl_uport_init_ras_reporting(struct cxl_port *port,
->  
->  	map->host = host;
->  	if (cxl_map_component_regs(map, &port->uport_regs,
-> -				   BIT(CXL_CM_CAP_CAP_ID_RAS)))
-> +				   BIT(CXL_CM_CAP_CAP_ID_RAS))) {
->  		dev_dbg(&port->dev, "Failed to map RAS capability\n");
-> +		return;
-> +	}
-> +
-> +	cxl_unmask_proto_interrupts(port->uport_dev);
->  }
->  
->  void cxl_switch_port_init_ras(struct cxl_port *port)
-> @@ -466,6 +488,8 @@ void cxl_endpoint_port_init_ras(struct cxl_port *ep)
->  	}
->  
->  	cxl_dport_init_ras_reporting(parent_dport, cxlmd->cxlds->dev);
-> +
-> +	cxl_unmask_proto_interrupts(cxlmd->cxlds->dev);
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_port_init_ras, "CXL");
->  
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 0c4f73dd645f..090b52a26862 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -1169,12 +1169,10 @@ static inline void cxl_rch_enable_rcec(struct pci_dev *rcec) { }
->  #endif
->  
->  #ifdef CONFIG_CXL_RAS
-> -void pci_aer_unmask_internal_errors(struct pci_dev *dev);
->  bool is_internal_error(struct aer_err_info *info);
->  bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info);
->  void cxl_forward_error(struct pci_dev *pdev, struct aer_err_info *info);
->  #else
-> -static inline void pci_aer_unmask_internal_errors(struct pci_dev *dev) { }
->  static inline bool is_internal_error(struct aer_err_info *info) { return false; }
->  static inline bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info) { return false; }
->  static inline void cxl_forward_error(struct pci_dev *pdev, struct aer_err_info *info) { }
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 751a026fea73..4e2fc55f2497 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -82,11 +82,13 @@ int cxl_proto_err_kfifo_get(struct cxl_proto_err_work_data *wd);
->  void cxl_register_proto_err_work(struct work_struct *work);
->  void cxl_unregister_proto_err_work(void);
->  bool cxl_error_is_native(struct pci_dev *dev);
-> +void pci_aer_unmask_internal_errors(struct pci_dev *dev);
->  #else
->  static inline int cxl_proto_err_kfifo_get(struct cxl_proto_err_work_data *wd) { return 0; }
->  static inline void cxl_register_proto_err_work(struct work_struct *work) { }
->  static inline void cxl_unregister_proto_err_work(void) { }
->  static inline bool cxl_error_is_native(struct pci_dev *dev) { return false; }
-> +static inline void pci_aer_unmask_internal_errors(struct pci_dev *dev) { }
->  #endif
->  
->  void pci_print_aer(struct pci_dev *dev, int aer_severity,
+Yes non-tagged is working completely.
 
