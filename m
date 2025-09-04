@@ -1,149 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16A930E0DB;
-	Thu,  4 Sep 2025 17:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2203126DB;
+	Thu,  4 Sep 2025 17:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757007360; cv=none; b=e6PLVVW6iK6LWdPRAMQ6tlV/vViSodS5zsL+FjO80uUa1vcIJrcoyUEdZ0fSMCNCI4+970gBLL5V2l6QuxueeSEI8b7s1NKSbLKW0STdtX+9BCvulFMNcxtopHIiyi4RjWiWZnZ0cBI3tUO/1aWBbSJbHK5rD/YBRv+TxGlI8fY=
+	t=1757008109; cv=none; b=jd1LQKpKRYoSgoVMeLv29xZ6B93omMXFc/zR99VER9cfIIGPMh3CiHau44nzYIJBRcRdKSi7KxjKm8+jVgjI40qQuWiAbeXZldMd8MFjnMQtpsLnnQ9fRXgn3jHtc7zOiat91vrE9zGPFYYhkUGEsB5tZqQX6V0+gS/C7VZLW+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757007360; c=relaxed/simple;
-	bh=CRYMSgrsarXvYi1//yRrN7dpQZoWaaGRrmsLjMroS9s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rDQ2PaixBTROqM8IMD9YU7HtJ9wpauTx7Xn5MCzwLGqCE64nhUU6ou4NRkaj+42DLqZGDLbwCOzQWkN/5udqoXP345JYtxCMchImS1w71n5SKtclHQFTJob5zy7CWUgDRdVqw2zyuJGQASvoq1Mq06k3EsHSgt89Mwhlh563XBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=fail smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XI4K3Fcb; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=intel.com
+	s=arc-20240116; t=1757008109; c=relaxed/simple;
+	bh=GazaQOAjqu3KTGz6/UzSjxl/0+LWmjHWyXJTlu8Pmho=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KEjvBjHk2GKP++ePC1TNbu/VJ1nobMfvpvWLr2RZOnF+1pgDGIYdRFIWXSHgMaU4ptAHX8L8hx1mO8OYKs6bSl8V3jsJdKbNWWcwtSsSqmVBCvH/Z4p3fMcK7GdXQ2YOWs3Z5CC0SfCLSeSsu50naPIXts2uXJ+DaD3KfdWHQ3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KTgH44q6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XI4K3Fcb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757007359; x=1788543359;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=CRYMSgrsarXvYi1//yRrN7dpQZoWaaGRrmsLjMroS9s=;
-  b=XI4K3Fcb5F9w9/rZd+sovXpUBBejuCqBqJIoco2iGw4CNwYWklddMJ0P
-   BupBVJnb6xK02nUukJ36x1w2wr/J+H6IlmVopbEzVVkGTpZ0Lv8p869vc
-   E6ZdtuBwYXGGujYCy1CYK6ariAv+KB3MCCs3KuI7XdJv9gx74Y380CVDl
-   0S6V76uBKzBsoGv2F21Ck3GBhdv9e3l+ElB2xL6KvASHbhPX+aGhrv7fQ
-   CzKSSEam9RnHYNb7yTS1jQRzTVVdkKEbx2Idke1UjYf6K9DZ7oXf3/qbe
-   s2Sj+IAW40b2yG5sVFI8DHQUuWvlact75xVvy3ZBJ8cJ2ckWjYA+/wBhh
-   g==;
-X-CSE-ConnectionGUID: 2mCh0UJwTrWFECSrLJoZFA==
-X-CSE-MsgGUID: cnIIHEYVRGGVW5WPPSe+zg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11543"; a="58569649"
-X-IronPort-AV: E=Sophos;i="6.18,239,1751266800"; 
-   d="scan'208";a="58569649"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2025 10:35:58 -0700
-X-CSE-ConnectionGUID: M1fSyPrMSqKYRsjrqVUZaQ==
-X-CSE-MsgGUID: 5tFWot6LQXCV9U/ClRxpgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,239,1751266800"; 
-   d="scan'208";a="176289057"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.110.24]) ([10.125.110.24])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2025 10:35:56 -0700
-Message-ID: <7c8ff1d6-1c74-4f46-a96d-74336451d81a@intel.com>
-Date: Thu, 4 Sep 2025 10:35:55 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTgH44q6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E3FBC4CEF0;
+	Thu,  4 Sep 2025 17:48:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757008108;
+	bh=GazaQOAjqu3KTGz6/UzSjxl/0+LWmjHWyXJTlu8Pmho=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=KTgH44q6kRssI3eBUq2HNKFNeV6pYISsEr6++lTjAmY7Tqg1LrUgLiwrKfLzvlsz1
+	 dZZrTUejvJsTVwA3S4pZiaoEkg6jPwAtY2OloGqL4oJtWsH64+HTiIYMa/ZpBkrBLf
+	 Sy4UyCYmK/20aFYGTbRN2lUl4RAKkWZYKohCVN2QEe0S/nDn6+q6UXeJ9YSLEkUFpx
+	 eXABNxGe642ucoc9U3XjK70GZiPn+Ywo3eJEJvKtdnPxIOESUgoBU+Yr3GM8oftU8f
+	 Th5Np4x3UZfuA6h9/ibpCPGaPGPBAPGoqaLlAa8P+33v5rjD3HLC/nUJIrg1TBnVIG
+	 RgT+E+AR5YI1A==
+Message-ID: <44898314e457669a80ccb08976813161d8cd9eb1.camel@kernel.org>
+Subject: Re: [PATCH v17 00/22] Type2 device basic support
+From: PJ Waskiewicz <ppwaskie@kernel.org>
+To: Alejandro Lucero Palau <alucerop@amd.com>,
+ alejandro.lucero-palau@amd.com, 	linux-cxl@vger.kernel.org,
+ netdev@vger.kernel.org, dan.j.williams@intel.com, 	edward.cree@amd.com,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
+	edumazet@google.com, dave.jiang@intel.com
+Date: Thu, 04 Sep 2025 10:48:27 -0700
+In-Reply-To: <e74a66db-6067-4f8d-9fb1-fe4f80357899@amd.com>
+References: <20250624141355.269056-1-alejandro.lucero-palau@amd.com>
+	 <5cf568ac801b967365679737774a6c59475fd594.camel@kernel.org>
+	 <e74a66db-6067-4f8d-9fb1-fe4f80357899@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] dax/hmem: Request cxl_acpi and cxl_pci before walking
- Soft Reserved ranges
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-pm@vger.kernel.org
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox
- <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
- Pavel Machek <pavel@kernel.org>, Li Ming <ming.li@zohomail.com>,
- Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Ying Huang <huang.ying.caritas@gmail.com>,
- Yao Xingtao <yaoxt.fnst@fujitsu.com>, Peter Zijlstra <peterz@infradead.org>,
- Greg KH <gregkh@linuxfoundation.org>,
- Nathan Fontenot <nathan.fontenot@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
- Benjamin Cheatham <benjamin.cheatham@amd.com>,
- PradeepVineshReddy Kodamati <PradeepVineshReddy.Kodamati@amd.com>,
- Zhijian Li <lizhijian@fujitsu.com>
-References: <20250822034202.26896-1-Smita.KoralahalliChannabasappa@amd.com>
- <20250822034202.26896-3-Smita.KoralahalliChannabasappa@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250822034202.26896-3-Smita.KoralahalliChannabasappa@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+Hi Alejandro,
 
+Apologies for the late reply.  Totally lost the reply during the US
+holiday...
 
-On 8/21/25 8:41 PM, Smita Koralahalli wrote:
-> Ensure that cxl_acpi has published CXL Window resources before dax_hmem
-> walks Soft Reserved ranges.
-> 
-> Replace MODULE_SOFTDEP("pre: cxl_acpi") with an explicit, synchronous
-> request_module("cxl_acpi"). MODULE_SOFTDEP() only guarantees eventual
-> loading, it does not enforce that the dependency has finished init
-> before the current module runs. This can cause dax_hmem to start before
-> cxl_acpi has populated the resource tree, breaking detection of overlaps
-> between Soft Reserved and CXL Windows.
-> 
-> Also, request cxl_pci before dax_hmem walks Soft Reserved ranges. Unlike
-> cxl_acpi, cxl_pci attach is asynchronous and creates dependent devices
-> that trigger further module loads. Asynchronous probe flushing
-> (wait_for_device_probe()) is added later in the series in a deferred
-> context before dax_hmem makes ownership decisions for Soft Reserved
-> ranges.
-> 
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+On Thu, 2025-08-28 at 09:02 +0100, Alejandro Lucero Palau wrote:
+> Hi PJ,
+>=20
+> On 8/27/25 17:48, PJ Waskiewicz wrote:
+> > On Tue, 2025-06-24 at 15:13 +0100, alejandro.lucero-palau@amd.com
+> > wrote:
+> >=20
+> > Hi Alejandro,
+> >=20
+> > > From: Alejandro Lucero <alucerop@amd.com>
+> > >=20
+> > > v17 changes: (Dan Williams review)
+> > > =C2=A0=C2=A0- use devm for cxl_dev_state allocation
+> > > =C2=A0=C2=A0- using current cxl struct for checking capability regist=
+ers
+> > > found
+> > > by
+> > > =C2=A0=C2=A0=C2=A0 the driver.
+> > > =C2=A0=C2=A0- simplify dpa initialization without a mailbox not suppo=
+rting
+> > > pmem
+> > > =C2=A0=C2=A0- add cxl_acquire_endpoint for protection during initiali=
+zation
+> > > =C2=A0=C2=A0- add callback/action to cxl_create_region for a driver
+> > > notified
+> > > about cxl
+> > > =C2=A0=C2=A0=C2=A0 core kernel modules removal.
+> > > =C2=A0=C2=A0- add sfc function to disable CXL-based PIO buffers if su=
+ch a
+> > > callback
+> > > =C2=A0=C2=A0=C2=A0 is invoked.
+> > > =C2=A0=C2=A0- Always manage a Type2 created region as private not all=
+owing
+> > > DAX.
+> > >=20
+> > I've been following the patches here since your initial RFC.=C2=A0 What
+> > platform are you testing these on out of curiosity?
+>=20
+>=20
+> Most of the work was done with qemu. Nowadays, I have several system=20
+> with CXL support and Type2 BIOS support, so it has been successfully=20
+> tested there as well.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/dax/hmem/hmem.c | 17 ++++++++++-------
->  1 file changed, 10 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/dax/hmem/hmem.c b/drivers/dax/hmem/hmem.c
-> index d5b8f06d531e..9277e5ea0019 100644
-> --- a/drivers/dax/hmem/hmem.c
-> +++ b/drivers/dax/hmem/hmem.c
-> @@ -146,6 +146,16 @@ static __init int dax_hmem_init(void)
->  {
->  	int rc;
->  
-> +	/*
-> +	 * Ensure that cxl_acpi and cxl_pci have a chance to kick off
-> +	 * CXL topology discovery at least once before scanning the
-> +	 * iomem resource tree for IORES_DESC_CXL resources.
-> +	 */
-> +	if (IS_ENABLED(CONFIG_DEV_DAX_CXL)) {
-> +		request_module("cxl_acpi");
-> +		request_module("cxl_pci");
-> +	}
-> +
->  	rc = platform_driver_register(&dax_hmem_platform_driver);
->  	if (rc)
->  		return rc;
-> @@ -166,13 +176,6 @@ static __exit void dax_hmem_exit(void)
->  module_init(dax_hmem_init);
->  module_exit(dax_hmem_exit);
->  
-> -/* Allow for CXL to define its own dax regions */
-> -#if IS_ENABLED(CONFIG_CXL_REGION)
-> -#if IS_MODULE(CONFIG_CXL_ACPI)
-> -MODULE_SOFTDEP("pre: cxl_acpi");
-> -#endif
-> -#endif
-> -
->  MODULE_ALIAS("platform:hmem*");
->  MODULE_ALIAS("platform:hmem_platform*");
->  MODULE_DESCRIPTION("HMEM DAX: direct access to 'specific purpose' memory");
+I also have a number of systems with Type2 support enabled in the BIOS,
+spread between multiple uarch versions of Intel and AMD (EMR/GNR,
+Genoa/Turin).
 
+>=20
+> > I've tried pulling the v16 patches into my test environment, and on
+> > CXL
+> > 2.0 hosts that I have access to, the patches did not work when
+> > trying
+> > to hook up a Type 2 device.=C2=A0 Most of it centered around many of th=
+e
+> > CXL
+> > host registers you try poking not existing.
+>=20
+>=20
+> Can you share the system logs and maybe run it with CXL debugging on?
+
+What system logs are you referring to?  dmesg?  Also what CXL
+debugging?  Just enabling the dev_dbg() paths for the CXL modules?
+
+>=20
+> > I do have CXL-capable BIOS
+> > firmware on these hosts, but I'm questioning that either there's
+> > still
+> > missing firmware, or the patches are trying to touch something that
+> > doesn't exist.
+>=20
+>=20
+> May I ask which system are you using? ARM/Intel/AMD/surpriseme? lspci
+> -vvv output would also be useful. I did find some issues with how the
+> BIOS we got is doing things, something I will share and work on if
+> that=20
+> turns out to be a valid case and not a BIOS problem.
+
+I've been lately testing on an Intel GNR and an AMD Turin.  Let's just
+say we can focus on the CRB's from both of them, so I have BIOS's
+directly from the CPU vendors (there are other OEM vendors in the mix,
+same results, but we'll leave them out for now).
+
+We have our Type2 device that successfully links/trains CXL protocols
+(all of them), and have been working for some time on previous gen's as
+well (SPR/EMR/Genoa).  I can't share the full output of lspci due to
+this being a proprietary device, but link caps show the .mem and other
+protocols fully linked/trained.  I also have the .mem acceleration
+region mapped currently by our drivers directly.
+
+What I'm running into is very early in the driver bringup when
+migrating to the new API you have presented with the refactors of the
+CXL core.  In my driver's .probe() function (assume this is a pci_dev),
+I have the following beginning flow:
+
+- pci_find_dvsec_capability() (returns the correct field pointer)
+- cxl_dev_state_create(..., CXL_DEVTYPE_DEVMEM, ...) - succeeds
+- cxl_pci_accel_setup_regs() - fails to detect accelerated registers
+- cxl_mem_dpa_init()
+- cxl_dpa_setup() - returns failure
+
+This is where the wheels have already flown off.  Note that this is
+with the V16 patches, so I'm not sure if there was something resolved
+between those and the V17 patches.  I'm working right now on geting the
+V17 patches running on my Purico Turin box.  But if there's a specific
+BIOS I would need to target for the Purico CRB, that would be useful
+information to have as well.  My Purico box is running BIOS Revision
+5.33.
+
+>=20
+> >=20
+> > I'm working on rebasing to the v17 patches to see if this resolves
+> > what
+> > I'm seeing.=C2=A0 But it's a bit of a lift, so I figured I'd ask what
+> > you're
+> > testing on before burning more time.
+> >=20
+> > Eventually I'd like to either give a Tested-by or shoot back some
+> > amended patches based on testing.=C2=A0 But I've not been able to get
+> > that
+> > far yet...
+>=20
+>=20
+> That would be really good. Let's see if we can figure out what is the
+> problem there.
+
+Sounds like a plan to me.  Thanks for doing the heavy lifting here on
+these patches.
+
+Cheers,
+-PJ
