@@ -1,183 +1,103 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF842D372E
-	for <linux-cxl@vger.kernel.org>; Fri,  5 Sep 2025 07:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F31221577
+	for <linux-cxl@vger.kernel.org>; Fri,  5 Sep 2025 07:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757055619; cv=none; b=IdCjhXQMyR5gbSXNYKM1T+DjdQuuT8/ssl66ILU335+r84QU19rBKejJ8T4/0sSQcHTjWxd3lVzzXjWc+rSxMlY31XHHgJMHkcV1x1BhNEZy2JCu380f1UTejK8rLFzKTotZod3p7nvqecVPMhEuuci6Te8TbYUm2QKVdEf9Ers=
+	t=1757055787; cv=none; b=NMZOWepkqQfHi2NFCavmTldOsao8h1qMFo7Ziohfl/QYnI0PuLXX5cavgQce/A7mbsOJASjPoKXjYLjGgUbL/fizKwH0VDhGWZowglsC0pVkQ/Pc6HSu4ny/zaf0cu1e1QTMU0eNQtw6Q8Isth8OeUi2eHYOhhYV+XKHHg1TcI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757055619; c=relaxed/simple;
-	bh=nHVvz5lhl/XbT/mu17TtR0WDza+IuiXy9pkEoOXmrdk=;
+	s=arc-20240116; t=1757055787; c=relaxed/simple;
+	bh=GFB77Kia7nFWeUn6EKHzA83dbk9PLHtJAef6GyQAXJw=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=HWDZ7F+niZv+LHYa9yJMlo2RvHut/kCIBvRD7klCW5znMa8ZEj9uPprIFdtKuVBDmNgH9xzvrKZBCTjkIEzWaiMVE9fVXnnQ4FEpc9p8ICgE2Y1w1/Rs2Fo/FwjDIwXgcHJYuPAW4OK1OmqeOP6X7bBfODMrrapIXS934relWLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=oYOXrIHY; arc=none smtp.client-ip=203.254.224.34
+	 Content-Type:References; b=PloAO3/VBZ8ZTJvLVKp84aaOfbo8WUF1tzbT18qVw60IUBZQo0fmKoyRh34vk6C5+XI5tqsHj4iqt+bDIBf6saOil5MIeGe1rPswuQkKtOsOwbm/DMjxmnNQ//iP5hs1oubIdYIyFLA7Ikrmv8JVrv1Bbcpt8ceK0glodmSO5EE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Xw7j69eR; arc=none smtp.client-ip=203.254.224.24
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oYOXrIHY"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250905070003epoutp046ad8f93ca51408f7228bd6fd09e4d956~iUMMxGGwW1717217172epoutp04f
-	for <linux-cxl@vger.kernel.org>; Fri,  5 Sep 2025 07:00:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250905070003epoutp046ad8f93ca51408f7228bd6fd09e4d956~iUMMxGGwW1717217172epoutp04f
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Xw7j69eR"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250905070303epoutp016c35be17308eb2a592ffb0207b470eea~iUOz9XgsA0732507325epoutp01v
+	for <linux-cxl@vger.kernel.org>; Fri,  5 Sep 2025 07:03:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250905070303epoutp016c35be17308eb2a592ffb0207b470eea~iUOz9XgsA0732507325epoutp01v
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1757055603;
-	bh=Cs1Wwg/pcc9OLfauYBxaMcnQ8auZ8WYaY8tqm6cdbXk=;
+	s=mail20170921; t=1757055783;
+	bh=GFB77Kia7nFWeUn6EKHzA83dbk9PLHtJAef6GyQAXJw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=oYOXrIHY/5dLRAsqkCZhwP3HQGhlrSmK3/Epto2+epb5ev3HRcbPIiwUlYvL2zYzK
-	 9Wg4GHlNCnzJQpKndv2ZP1RnVGSuHeW9JpO0MwtqoLfq6gg0iA7s2sFMFQDEvTegx9
-	 Op/N8vDJSlptNg8GPY6beJ31ixQvT8QObQI9XLdM=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250905070003epcas5p1d0b0001fb09ce8f85b09cc966455ba63~iUMMTAjWQ1344713447epcas5p1J;
-	Fri,  5 Sep 2025 07:00:03 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4cJ6fq2Ysqz6B9mb; Fri,  5 Sep
-	2025 07:00:03 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250904132422epcas5p3253bf8b371a27169899f4ce089d40244~iFydmnS-X1243012430epcas5p3t;
-	Thu,  4 Sep 2025 13:24:22 +0000 (GMT)
+	b=Xw7j69eRswsCDUefMTsmiYSXV3SD3GkiDZYv8rDh+m7epK7xT0XSMsD/9xu/l1AUR
+	 7SWoRIP8Oeo+HJ9fba2wZ8342Hv9bC2PqlL5QbjxQ2wCMX+fR4q9iNP71VzvHmYNcO
+	 UWJrGyRP3HBk2KlkHBfbQoN3MyQEyajM8NYxLdlo=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250905070303epcas5p3ae383c5ed342aa2b5a50aaf9a95e88a4~iUOzpy3un1446414464epcas5p3p;
+	Fri,  5 Sep 2025 07:03:03 +0000 (GMT)
+Received: from epcpadp2new (unknown [182.195.40.142]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4cJ6kH0QkRz2SSKn; Fri,  5 Sep
+	2025 07:03:03 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250904140222epcas5p2cf05c11cfab462d6b7ea44a696615674~iGTopfau41527115271epcas5p24;
+	Thu,  4 Sep 2025 14:02:22 +0000 (GMT)
 Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250904132421epsmtip1610130f243c2a3f9adb650a9d7c6041e~iFycHnEsI2709727097epsmtip1l;
-	Thu,  4 Sep 2025 13:24:20 +0000 (GMT)
-Date: Thu, 4 Sep 2025 18:54:07 +0530
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250904140220epsmtip2833e27c5fb9767d885da67727bf44810~iGTnUDHOk2403024030epsmtip2S;
+	Thu,  4 Sep 2025 14:02:20 +0000 (GMT)
+Date: Thu, 4 Sep 2025 19:32:15 +0530
 From: Neeraj Kumar <s.neeraj@samsung.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
 	linux-kernel@vger.kernel.org, gost.dev@samsung.com,
 	a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
 	cpgs@samsung.com
-Subject: Re: [PATCH V2 01/20] nvdimm/label: Introduce NDD_CXL_LABEL flag to
- set cxl label format
-Message-ID: <1983025922.01757055603347.JavaMail.epsvc@epcpadp1new>
+Subject: Re: [PATCH V2 04/20] nvdimm/label: CXL labels skip the need for
+ 'interleave-set cookie'
+Message-ID: <1931444790.41757055783048.JavaMail.epsvc@epcpadp2new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <7ff8b51b-7263-4d9c-99f8-1b507cf46262@intel.com>
-X-CMS-MailID: 20250904132422epcas5p3253bf8b371a27169899f4ce089d40244
+In-Reply-To: <68a4a09b147ef_27db95294a8@iweiny-mobl.notmuch>
+X-CMS-MailID: 20250904140222epcas5p2cf05c11cfab462d6b7ea44a696615674
 X-Msg-Generator: CA
 Content-Type: multipart/mixed;
-	boundary="----At96h8_oYHqdM-HzD.Qv-z6Hqrsj5DpI3AOnKMLFsbTdazMP=_eab9c_"
+	boundary="----AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_eac9d_"
 CMS-TYPE: 105P
 X-CPGSPASS: Y
 X-Hop-Count: 3
-X-CMS-RootMailID: 20250730121223epcas5p1386bdf99a0af820dd4411fbdbd413cd5
+X-CMS-RootMailID: 20250730121227epcas5p4675fdb3130de49cd99351c5efd09e29e
 References: <20250730121209.303202-1-s.neeraj@samsung.com>
-	<CGME20250730121223epcas5p1386bdf99a0af820dd4411fbdbd413cd5@epcas5p1.samsung.com>
-	<20250730121209.303202-2-s.neeraj@samsung.com>
-	<20250813141218.0000091f@huawei.com>
-	<7ff8b51b-7263-4d9c-99f8-1b507cf46262@intel.com>
+	<CGME20250730121227epcas5p4675fdb3130de49cd99351c5efd09e29e@epcas5p4.samsung.com>
+	<20250730121209.303202-5-s.neeraj@samsung.com>
+	<68a4a09b147ef_27db95294a8@iweiny-mobl.notmuch>
 
-------At96h8_oYHqdM-HzD.Qv-z6Hqrsj5DpI3AOnKMLFsbTdazMP=_eab9c_
+------AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_eac9d_
 Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Disposition: inline
 
-On 15/08/25 11:06AM, Dave Jiang wrote:
+On 19/08/25 11:04AM, Ira Weiny wrote:
+>Neeraj Kumar wrote:
+>> CXL LSA v2.1 utilizes the region labels stored in the LSA for interleave
+>> set configuration instead of interleave-set cookie used in previous LSA
+>> versions. As interleave-set cookie is not required for CXL LSA v2.1 format
+>> so skip its usage for CXL LSA 2.1 format
+>>
+>> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
 >
+>Seems ok:
 >
->On 8/13/25 6:12 AM, Jonathan Cameron wrote:
->> On Wed, 30 Jul 2025 17:41:50 +0530
->> Neeraj Kumar <s.neeraj@samsung.com> wrote:
->>
->>> Prior to LSA 2.1 version, LSA contain only namespace labels. LSA 2.1
->>> introduced in CXL 2.0 Spec, which contain region label along with
->>> namespace label.
->>>
->>> NDD_LABELING flag is used for namespace. Introduced NDD_CXL_LABEL
->>> flag for region label. Based on these flags nvdimm driver performs
->>> operation on namespace label or region label.
->>>
->>> NDD_CXL_LABEL will be utilized by cxl driver to enable LSA2.1 region
->>> label support
->>>
->>> Accordingly updated label index version
->>>
->>> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
->> Hi Neeraj,
->>
->> A few comments inline.
->>
->>> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
->>> index 04f4a049599a..7a011ee02d79 100644
->>> --- a/drivers/nvdimm/label.c
->>> +++ b/drivers/nvdimm/label.c
->>> @@ -688,11 +688,25 @@ static int nd_label_write_index(struct nvdimm_drvdata *ndd, int index, u32 seq,
->>>  		- (unsigned long) to_namespace_index(ndd, 0);
->>>  	nsindex->labeloff = __cpu_to_le64(offset);
->>>  	nsindex->nslot = __cpu_to_le32(nslot);
->>> -	nsindex->major = __cpu_to_le16(1);
->>> -	if (sizeof_namespace_label(ndd) < 256)
->>> +
->>> +	/* Set LSA Label Index Version */
->>> +	if (ndd->cxl) {
->>> +		/* CXL r3.2 Spec: Table 9-9 Label Index Block Layout */
->>> +		nsindex->major = __cpu_to_le16(2);
->>>  		nsindex->minor = __cpu_to_le16(1);
->>> -	else
->>> -		nsindex->minor = __cpu_to_le16(2);
->>> +	} else {
->>> +		nsindex->major = __cpu_to_le16(1);
->>> +		/*
->>> +		 * NVDIMM Namespace Specification
->>> +		 * Table 2: Namespace Label Index Block Fields
->>> +		 */
->>> +		if (sizeof_namespace_label(ndd) < 256)
->>> +			nsindex->minor = __cpu_to_le16(1);
->>> +		else
->>> +		 /* UEFI Specification 2.7: Label Index Block Definitions */
->>
->> Odd comment alignment. Either put it on the else so
->> 		else /* UEFI 2.7: Label Index Block Defintions */
->>
->> or indent it an extra tab
->>
->> 		else
->> 			/* UEFI 2.7: Label Index Block Definitions */
->> 			
->>> +			nsindex->minor = __cpu_to_le16(2);
->>> +	}
->>> +
->>>  	nsindex->checksum = __cpu_to_le64(0);
->>>  	if (flags & ND_NSINDEX_INIT) {
->>>  		unsigned long *free = (unsigned long *) nsindex->free;
->>
->>> diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
->>> index e772aae71843..0a55900842c8 100644
->>> --- a/include/linux/libnvdimm.h
->>> +++ b/include/linux/libnvdimm.h
->>> @@ -44,6 +44,9 @@ enum {
->>>  	/* dimm provider wants synchronous registration by __nvdimm_create() */
->>>  	NDD_REGISTER_SYNC = 8,
->>>
->>> +	/* dimm supports region labels (LSA Format 2.1) */
->>> +	NDD_CXL_LABEL = 9,
->>
->> This enum is 'curious'.  It combined flags from a bunch of different
->> flags fields and some stuff that are nothing to do with flags.
->>
->> Anyhow, putting that aside I'd either rename it to something like
->> NDD_REGION_LABELING (similar to NDD_LABELING that is there for namespace labels
->> or just have it a meaning it is LSA Format 2.1 and drop the fact htat
->> also means region labels are supported.
->
->I agree. I had a conversation with Dan about it where I mentioned calling it CXL to describe LSA 2.1 just doesn't seem quite right. He also offered up something like NDD_REGION_LABELING instead of NDD_CXL_LABEL. So +1 to this comment.
->
->DJ
+>Acked-by: Ira Weiny <ira.weiny@intel.com>
 
-Sure Dave, I will rename it to NDD_REGION_LABELING in next patch-set
+Thanks Ira for review and AB tag.
+
 
 Regards,
 Neeraj
 
-------At96h8_oYHqdM-HzD.Qv-z6Hqrsj5DpI3AOnKMLFsbTdazMP=_eab9c_
+------AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_eac9d_
 Content-Type: text/plain; charset="utf-8"
 
 
-------At96h8_oYHqdM-HzD.Qv-z6Hqrsj5DpI3AOnKMLFsbTdazMP=_eab9c_--
+------AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_eac9d_--
 
