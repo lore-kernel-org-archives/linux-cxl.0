@@ -1,119 +1,326 @@
-Received: from fossa.ash.relay.mailchannels.net (fossa.ash.relay.mailchannels.net [23.83.222.62])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37321D6DA9;
-	Thu,  4 Sep 2025 19:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757013356; cv=pass; b=uPvt09tbmNyKyrrBzcABxlhnLSbDTaeZgZay28Fr49268DDBtQJasYq9YXWWSBXnFaVNc9X1A2gyUXimkr2oJDMGJsvSdVEE9zieexD3ZJSuXELZ2O7UUDJAUWF//c9Y0HLlsoqXgXSu7Qy1auCMTmZDy21OVGbF8+/+vPYi6hc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757013356; c=relaxed/simple;
-	bh=wzEL6NG8otzv6w22FIroHhxlJ82Wd23EcDr+/drdg2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JDgtsq6sfBK4+lTFrBdZntOGOZt4zkhh65j6IHoL9Z/7Vyx+ZYIcg/9a8rrR4iqqsZ1ArmLWkBbYiWBaf+yG1ZXSodxleUdmoTYLRpO3vOcYuEJVdifN6GoIEFjgXsy/W5DqUpE+ouKHovYqAPdap52nXU2CqrbDlvGNye8nMTM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=KiAdctAj; arc=pass smtp.client-ip=23.83.222.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2812D3EC5
+	for <linux-cxl@vger.kernel.org>; Thu,  4 Sep 2025 22:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757023510; cv=none; b=F7agaPKWO2OdwxSjlwqK/sA9IiQvyOnRWTId7/B5JRvRvcvrko2lCTQlOkQJCHmCuFxM7j3Kq/xB+hui4QNaHfay8/rNN3prK6aUph6BYaR2lZD4XNAM+B/02Prel8d/LstPXvQ1riYZCzt6kFE5F6wGgh8YByUNh/Kw3uL93y4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757023510; c=relaxed/simple;
+	bh=vP5W4HC/e8iRv5aBMufBwdH/uCAfziYDh3YEGkbldwQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F+tM6gc2W37RbMrWn2BMQRjN9zoNY9IB9qqR15v+ym3kx2pjmKzNAp1KALSehz+bcv+Tms+WpCGQCaZizSw85ugthddzu9SnS7ki7m3UN682UlE9xEqMJRAy+49tLtrXJtVdrhbhQY3ip7JrQDkdtp0nsypl6rVI+9mBmJGR0Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fCT/JPaw; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="KiAdctAj"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 4044C4E2BFC;
-	Thu,  4 Sep 2025 19:15:44 +0000 (UTC)
-Received: from pdx1-sub0-mail-a216.dreamhost.com (100-103-70-103.trex-nlb.outbound.svc.cluster.local [100.103.70.103])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id C78F54E6CDA;
-	Thu,  4 Sep 2025 19:15:43 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1757013343; a=rsa-sha256;
-	cv=none;
-	b=dC5Ah8QIgHBYCaFkm6ofG0RbEm330ydIucQBKYaTBo8xaGocko7IAgHW6aKKU+vHe/7RC7
-	eYP6Kl0rCAI8Lknq59WZmVhOYV2JSEPzlQGigmVfM+kJPobrfH1osPWIIW5DGfdIH0lG0j
-	ZWOSOPFsEXdEexrn/bVZyaNaPy2a4KtdRtl80hZ1E7wivLYbrx2iDvNuF2bQiZ46REvFjn
-	cZKeOnTa77sCxVsYKsItUOAKCCAn6esd6n4bKYHMTDQFNdnjCqthzLeoYS+2SRwMZzAlOw
-	xJ11aAjkC4WMTAwuyVBQSmhFaLt8bRhP/HN4XZo/loUs6qDYfRs6m3bBFHgvvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1757013343;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=wzEL6NG8otzv6w22FIroHhxlJ82Wd23EcDr+/drdg2s=;
-	b=3xMsy+wI0wXeVgO0FejtOdaonRP6VIZoY3uuehCtqztmLvml4SbPnExQROeEWyWKUBm8mU
-	ekk1F+IxbLaJFa2DnhJh9Co//NryeGKd9lsqon9yR6pDbOYUffN2oY8U3ZeE/QxX42eLXo
-	kkVTKYcxMowwZbrKC4/nDmQe1Vxlwa5uxVtVs/hQRsaQlwYbMn2wZVGygtuE5MPNta0oV2
-	Cuii8kex1Ivaz3xyC8zZkikx3UngEdDllFCeaXdTp14hXN+AuJb+8LAffCV93byvBZZ6qz
-	L3L0wbVB74bbt6KuxZivfVQXPlUDcjYA7NkHqG+vSzKKe+l6cQXhS1lQZGi0wA==
-ARC-Authentication-Results: i=1;
-	rspamd-c79647f57-75mrv;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Tasty-Imminent: 3f45dc202bef1583_1757013344101_1843994034
-X-MC-Loop-Signature: 1757013344101:3850763103
-X-MC-Ingress-Time: 1757013344101
-Received: from pdx1-sub0-mail-a216.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.103.70.103 (trex/7.1.3);
-	Thu, 04 Sep 2025 19:15:44 +0000
-Received: from offworld (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a216.dreamhost.com (Postfix) with ESMTPSA id 4cHq266dV7z6b;
-	Thu,  4 Sep 2025 12:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1757013343;
-	bh=wzEL6NG8otzv6w22FIroHhxlJ82Wd23EcDr+/drdg2s=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=KiAdctAj2riQ+aPH9sJRjoDoEbcvYiTxguFMBBf/zNiuGnvlgTXNarq5Qf5cM+HwY
-	 02utt3nMGsdCQiPuXUcrn8e1AyEqI/4wcRRNOawXvsWpLTPknjFGbz0GaI1XrrcoUL
-	 j5GyFO+4M9NkN8cUrDChDL1w79JTf6yRtzjAGV6KH+D8rJ0fTLl3BR/6oNtwze8TNN
-	 PBKt9HsY5I2pP8Bswz0jLf4qAQyyAjkyOAB6vbMzhUv1xsuOjQZ6Cd85gHl+s3S6Pe
-	 rhaD7LkBK7l3kkiIxLHEqcrnuxK5IoTzN3ADX0Ix09ZAcHqiwK3h0pZRLa+nIxbk/S
-	 4GbZviPUVn3dg==
-Date: Thu, 4 Sep 2025 12:15:40 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: rafael.j.wysocki@intel.com, dave.jiang@intel.com,
-	dan.j.williams@intel.com, jonathan.cameron@huawei.com,
-	alejandro.lucero-palau@amd.com, ira.weiny@intel.com,
-	alison.schofield@intel.com, a.manzanares@samsung.com,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] acpi, tables: Rename coherency CFMW restrictions
-Message-ID: <20250904191540.rb2dn4frng2ruq76@offworld>
-References: <20250904184801.47498-1-dave@stgolabs.net>
- <CAJZ5v0j9r6bKOXuo+o0gdhryR1ne3WY3B0o0DufEHB9y3j0Leg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fCT/JPaw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757023508; x=1788559508;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vP5W4HC/e8iRv5aBMufBwdH/uCAfziYDh3YEGkbldwQ=;
+  b=fCT/JPawaTyP/c5jQQFFEAIzDMJtjaYcynlweRGfhDMgcnisSF+BSwmL
+   g8IFTnIjSkcPiPLsc25JvpNzRGAdlUXyq4dd3UZs7LAZUX2FwCDiiXB7Z
+   VK4tsqQylsgFCe2PlyObB53mpqZQzA4CqdZ+XDPYfHssvE2UAXz6Pe3Es
+   AB7NTlIyLHg5NA6CVvBhEP4xX3bk0pAsR7jExTkFbr10DT9anE2PN5Imw
+   glEt16WoD1pMt2iC/yl1FV7oqKNZwlwmgpXW4AAhHfjXLXfFvPzIbj7Ai
+   CkMEGo/l1/YPEWqcmE9E7Yub4Ohd2UA1b/LJElhKKszAubbySkPxxLIE5
+   g==;
+X-CSE-ConnectionGUID: uvOu9M1TSZ+5B2lXUR+L+g==
+X-CSE-MsgGUID: kpxrq+YzSD6vcgqW3Bcc7A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11543"; a="70805382"
+X-IronPort-AV: E=Sophos;i="6.18,239,1751266800"; 
+   d="scan'208";a="70805382"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2025 15:05:07 -0700
+X-CSE-ConnectionGUID: U1MUoHUjQH+yseVAQ+MEJA==
+X-CSE-MsgGUID: c/65AozrRxWsjAbmWI5blg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,239,1751266800"; 
+   d="scan'208";a="177260907"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.110.24]) ([10.125.110.24])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2025 15:05:07 -0700
+Message-ID: <6deca3ef-2284-433f-ae91-ce1ff9f7a8b7@intel.com>
+Date: Thu, 4 Sep 2025 15:05:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0j9r6bKOXuo+o0gdhryR1ne3WY3B0o0DufEHB9y3j0Leg@mail.gmail.com>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] cxl/region: Refactor address translation funcs for
+ testing
+To: Alison Schofield <alison.schofield@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org
+References: <cover.1756446925.git.alison.schofield@intel.com>
+ <f0c6fa733cea8585f2bfda0851489bd7ca2e2b2c.1756446925.git.alison.schofield@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <f0c6fa733cea8585f2bfda0851489bd7ca2e2b2c.1756446925.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 04 Sep 2025, Rafael J. Wysocki wrote:
 
->On Thu, Sep 4, 2025 at 8:48???PM Davidlohr Bueso <dave@stgolabs.net> wrote:
->>
->> ACPICA commit 710745713ad3a2543dbfb70e84764f31f0e46bdc
->>
->> This has been renamed in more recent CXL specs, as
->> type3 (memory expanders) can also use HDM-DB for
->> device coherent memory.
->>
->> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
->
->A link to the corresponding upstream commit, please?
 
-https://github.com/acpica/acpica/commit/710745713ad3a2543dbfb70e84764f31f0e46bdc
+On 8/29/25 12:21 AM, Alison Schofield wrote:
+> In preparation for adding a test module that exercises the address
+> translation calculations, extract the core calculations into stand-
+> alone functions that operate on base parameters without dependencies
+> on struct cxl_region.
+> 
+> Mark the new functions as static outside of test builds by adding
+> and using a new __mock_export label.
+> 
+> This refactoring enables unit testing of the address translation logic
+> with controlled inputs, while maintaining identical functionality in
+> the existing code paths.
+> 
+> The moved code has only one change. In the new cxl_calculate_position()
+> eiw_to_ways(eiw, &ways) replaces the prior usage of p->interleave_ways,
+> since the new function cannot depend upon struct cxl_region_params.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+>  drivers/cxl/core/region.c | 147 ++++++++++++++++++++++----------------
+>  drivers/cxl/cxl.h         |   5 ++
+>  2 files changed, 92 insertions(+), 60 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 29d3809ab2bb..71c01447b234 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2928,28 +2928,66 @@ static bool has_spa_to_hpa(struct cxl_root_decoder *cxlrd)
+>  	return cxlrd->ops && cxlrd->ops->spa_to_hpa;
+>  }
+>  
+> -u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+> -		   u64 dpa)
+> +__mock_export u64 cxl_calculate_dpa_offset(u64 hpa_offset, u8 eiw, u16 eig)
+>  {
+> -	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+> -	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
+> -	struct cxl_region_params *p = &cxlr->params;
+> -	struct cxl_endpoint_decoder *cxled = NULL;
+> -	u16 eig = 0;
+> -	u8 eiw = 0;
+> +	u64 dpa_offset, bits_lower, bits_upper, temp;
+> +
+> +	/*
+> +	 * DPA offset: CXL Spec 3.2 Section 8.2.4.20.13
+> +	 * Lower bits [IG+7:0] pass through unchanged
+> +	 * (eiw < 8)
+> +	 *	Per spec: DPAOffset[51:IG+8] = (HPAOffset[51:IG+IW+8] >> IW)
+> +	 *	Clear the position bits to isolate upper section, then
+> +	 *	reverse the left shift by eiw that occurred during DPA->HPA
+> +	 * (eiw >= 8)
+> +	 *	Per spec: DPAOffset[51:IG+8] = HPAOffset[51:IG+IW] / 3
+> +	 *	Extract upper bits from the correct bit range and divide by 3
+> +	 *	to recover the original DPA upper bits
+> +	 */
+> +	bits_lower = hpa_offset & GENMASK_ULL(eig + 7, 0);
+> +	if (eiw < 8) {
+> +		temp = hpa_offset &= ~((u64)GENMASK(eig + eiw + 8 - 1, 0));
 
-Thanks,
-Davidlohr
+Should this use GENMASK_ULL() instead of casting to u64?
+
+> +		dpa_offset = temp >> eiw;
+> +	} else {
+> +		bits_upper = div64_u64(hpa_offset >> (eig + eiw), 3);
+> +		dpa_offset = bits_upper << (eig + 8);
+> +	}
+> +	dpa_offset |= bits_lower;
+> +
+> +	return dpa_offset;
+> +}
+> +
+> +__mock_export int cxl_calculate_position(u64 hpa_offset, u8 eiw, u16 eig)
+> +{
+> +	unsigned int ways = 0;
+> +	u64 shifted, rem;
+>  	int pos;
+>  
+> -	for (int i = 0; i < p->nr_targets; i++) {
+> -		cxled = p->targets[i];
+> -		if (cxlmd == cxled_to_memdev(cxled))
+> -			break;
+> +	/*
+> +	 * Interleave position: CXL Spec 3.2 Section 8.2.4.20.13
+> +	 * eiw < 8
+> +	 *	Position is in the IW bits at HPA_OFFSET[IG+8+IW-1:IG+8].
+> +	 *	Per spec "remove IW bits starting with bit position IG+8"
+> +	 * eiw >= 8
+> +	 *	Position is not explicitly stored in HPA_OFFSET bits. It is
+> +	 *	derived from the modulo operation of the upper bits using
+> +	 *	the total number of interleave ways.
+> +	 */
+> +	if (eiw < 8) {
+> +		pos = (hpa_offset >> (eig + 8)) & GENMASK(eiw - 1, 0);
+> +	} else {
+> +		shifted = hpa_offset >> (eig + 8);
+> +		eiw_to_ways(eiw, &ways);
+> +		div64_u64_rem(shifted, ways, &rem);
+> +		pos = rem;
+>  	}
+> -	if (!cxled || cxlmd != cxled_to_memdev(cxled))
+> -		return ULLONG_MAX;
+>  
+> -	pos = cxled->pos;
+> -	ways_to_eiw(p->interleave_ways, &eiw);
+> -	granularity_to_eig(p->interleave_granularity, &eig);
+> +	return pos;
+> +}
+> +
+> +__mock_export u64 cxl_calculate_hpa_offset(u64 dpa_offset, int pos, u8 eiw, u16 eig)
+> +{
+> +	u64 mask_upper, hpa_offset, bits_upper;
+>  
+>  	/*
+>  	 * The device position in the region interleave set was removed
+> @@ -2961,9 +2999,6 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+>  	 * 8.2.4.19.13 Implementation Note: Device Decode Logic
+>  	 */
+>  
+> -	/* Remove the dpa base */
+> -	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
+> -
+>  	mask_upper = GENMASK_ULL(51, eig + 8);
+>  
+>  	if (eiw < 8) {
+> @@ -2978,6 +3013,35 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+>  	/* The lower bits remain unchanged */
+>  	hpa_offset |= dpa_offset & GENMASK_ULL(eig + 7, 0);
+>  
+> +	return hpa_offset;
+> +}
+> +
+> +u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+> +		   u64 dpa)
+> +{
+> +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	struct cxl_endpoint_decoder *cxled = NULL;
+> +	u64 dpa_offset, hpa_offset, hpa;
+> +	u16 eig = 0;
+> +	u8 eiw = 0;
+> +	int pos;
+> +
+> +	for (int i = 0; i < p->nr_targets; i++) {
+> +		cxled = p->targets[i];
+> +		if (cxlmd == cxled_to_memdev(cxled))
+> +			break;
+> +	}
+> +	if (!cxled || cxlmd != cxled_to_memdev(cxled))
+> +		return ULLONG_MAX;
+
+Maybe:
+
+	for (int i = 0; i < p->nr_targets; i++) {
+		if (cxlmd == cxled_to_memdev(p->targets[i])) {
+			cxled = p->targets[i];
+			break;
+		}
+	}
+
+	if (!cxled)
+		return ULLONG_MAX;
+
+DJ
+
+> +
+> +	pos = cxled->pos;
+> +	ways_to_eiw(p->interleave_ways, &eiw);
+> +	granularity_to_eig(p->interleave_granularity, &eig);
+> +
+> +	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
+> +	hpa_offset = cxl_calculate_hpa_offset(dpa_offset, pos, eiw, eig);
+> +
+>  	/* Apply the hpa_offset to the region base address */
+>  	hpa = hpa_offset + p->res->start + p->cache_size;
+>  
+> @@ -3010,8 +3074,6 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+>  	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+>  	struct cxl_endpoint_decoder *cxled;
+>  	u64 hpa, hpa_offset, dpa_offset;
+> -	u64 bits_upper, bits_lower;
+> -	u64 shifted, rem, temp;
+>  	u16 eig = 0;
+>  	u8 eiw = 0;
+>  	int pos;
+> @@ -3033,50 +3095,15 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+>  	} else {
+>  		hpa_offset = offset;
+>  	}
+> -	/*
+> -	 * Interleave position: CXL Spec 3.2 Section 8.2.4.20.13
+> -	 * eiw < 8
+> -	 *	Position is in the IW bits at HPA_OFFSET[IG+8+IW-1:IG+8].
+> -	 *	Per spec "remove IW bits starting with bit position IG+8"
+> -	 * eiw >= 8
+> -	 *	Position is not explicitly stored in HPA_OFFSET bits. It is
+> -	 *	derived from the modulo operation of the upper bits using
+> -	 *	the total number of interleave ways.
+> -	 */
+> -	if (eiw < 8) {
+> -		pos = (hpa_offset >> (eig + 8)) & GENMASK(eiw - 1, 0);
+> -	} else {
+> -		shifted = hpa_offset >> (eig + 8);
+> -		div64_u64_rem(shifted, p->interleave_ways, &rem);
+> -		pos = rem;
+> -	}
+> +
+> +	pos = cxl_calculate_position(hpa_offset, eiw, eig);
+>  	if (pos < 0 || pos >= p->nr_targets) {
+>  		dev_dbg(&cxlr->dev, "Invalid position %d for %d targets\n",
+>  			pos, p->nr_targets);
+>  		return -ENXIO;
+>  	}
+>  
+> -	/*
+> -	 * DPA offset: CXL Spec 3.2 Section 8.2.4.20.13
+> -	 * Lower bits [IG+7:0] pass through unchanged
+> -	 * (eiw < 8)
+> -	 *	Per spec: DPAOffset[51:IG+8] = (HPAOffset[51:IG+IW+8] >> IW)
+> -	 *	Clear the position bits to isolate upper section, then
+> -	 *	reverse the left shift by eiw that occurred during DPA->HPA
+> -	 * (eiw >= 8)
+> -	 *	Per spec: DPAOffset[51:IG+8] = HPAOffset[51:IG+IW] / 3
+> -	 *	Extract upper bits from the correct bit range and divide by 3
+> -	 *	to recover the original DPA upper bits
+> -	 */
+> -	bits_lower = hpa_offset & GENMASK_ULL(eig + 7, 0);
+> -	if (eiw < 8) {
+> -		temp = hpa_offset &= ~((u64)GENMASK(eig + eiw + 8 - 1, 0));
+> -		dpa_offset = temp >> eiw;
+> -	} else {
+> -		bits_upper = div64_u64(hpa_offset >> (eig + eiw), 3);
+> -		dpa_offset = bits_upper << (eig + 8);
+> -	}
+> -	dpa_offset |= bits_lower;
+> +	dpa_offset = cxl_calculate_dpa_offset(hpa_offset, eiw, eig);
+>  
+>  	/* Look-up and return the result: a memdev and a DPA */
+>  	for (int i = 0; i < p->nr_targets; i++) {
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 4fe3df06f57a..57590d131f75 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -922,5 +922,10 @@ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
+>  #define __mock static
+>  #endif
+>  
+> +/* Unit test build overrides this to export, otherwise static */
+> +#ifndef __mock_export
+> +#define __mock_export static
+> +#endif
+> +
+>  u16 cxl_gpf_get_dvsec(struct device *dev);
+>  #endif /* __CXL_H__ */
+
