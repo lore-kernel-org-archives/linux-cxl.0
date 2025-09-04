@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B9E1FBEB0
-	for <linux-cxl@vger.kernel.org>; Thu,  4 Sep 2025 23:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D3E21ADDB
+	for <linux-cxl@vger.kernel.org>; Thu,  4 Sep 2025 23:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757028296; cv=none; b=IhZxCEqqiWA3PfZzC6PNr5vlGlqCJ53aGDKoYuo1wHspqCbuUbXgqiMQW30sqWb4JkRRre3rL6pG3OXgRJzEdehCslsFzdXOQcd7dRNLY60DVpaLz3wppsnP6+QVOCmnNG/kanCMj1dapcgGZz8Seg6WvhdGH8dGBYfvrfBY2H8=
+	t=1757028796; cv=none; b=alJG7M+VBquCwTtTv/KFO5ius4Dw70DL0EUeICqJvm4GrjkTz57XtUe/n5rwiFNlbClTQoP8NRNPErECL+gUzh0SOv+CNZZCvK7dcnUrTgsW9CeUBEcIMsttDYxW5cJf1O1WGCNzDqVye9BhcrdOZY7Uocq8rNfiRite9HqcQ0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757028296; c=relaxed/simple;
-	bh=HcSn2ODuVqM2BfpuTR3dCP6AC+5HOd5kKeEIPWTVJrY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wg7qrOsZSU+jrEMRNs7WuCGDFW8KGmP/iTkHJul55XvE7xzlV9UiLIu/g30dCZSGeo4l16IdvQPQEcsIidFO8JrYLlp43k0tOJaxns44sxopd/IkQ4TzhNZrncxWbPATEhiFbfpWRH58rTZ6ue+3djgoWhFgyKYVnRJ5qpAVG4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cZLZsCl4; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1757028796; c=relaxed/simple;
+	bh=w0CppdaDeLWxKcRXy1oOGnX7nv3KWlhSP98PJQdvYH0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=BQHqzulk5UicQdivyerHoXfVUM/vOgG/mCb7SVr+FCJH2LRGmB1wWq6bk50+Rm/DrUBHRrhS1bnJ04iXRxBKFLOObv+yO+g4f8/m7g+XHe+HTWP2HPf8xlZb/oRPOATRk3BvINcnWj7KIHZitXPbElHhrHtyeFpxieSLH4ApIBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hNPhuaHM; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cZLZsCl4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hNPhuaHM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757028294; x=1788564294;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=HcSn2ODuVqM2BfpuTR3dCP6AC+5HOd5kKeEIPWTVJrY=;
-  b=cZLZsCl4u0RqbrxZcIOLgqCe6iLf/I1AU1gjovHCizVophmdEWFc52Z7
-   pg3zsQpxdqrw2rrql9zL4RkGHb70feZAoMkjrLRIrQe4+kvi3ETAsXtEJ
-   B6w+0yelzBp+1OygwZefuRPQi/6FUeLHFQFYpN8NztGDdkooVkP8KkujP
-   R5btJcXscyVk2igM3cs3/USNHVPvB/MXlkyUjhDKkSJnMxeO64HTDMLen
-   6jkmxL115Do2jmcmj/goXIWqU0iH1DUuAA1QZtai55drvH4HC4MJehecX
-   yk4PfGDWLtAPSgj2SEP9RejfQbElsl3PcgbhqCDhcJk3Nlq75ymb69gIS
-   g==;
-X-CSE-ConnectionGUID: Fi5t7Z2uRtacUkr7/ERY0g==
-X-CSE-MsgGUID: 5FUoq7GDSE2w2C2jTpxJDg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="59450655"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="59450655"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2025 16:24:54 -0700
-X-CSE-ConnectionGUID: YZmvzLigTNGglhrxLO2XsQ==
-X-CSE-MsgGUID: DvdVpIXFQGKcTFxSK93cvQ==
+  t=1757028795; x=1788564795;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=w0CppdaDeLWxKcRXy1oOGnX7nv3KWlhSP98PJQdvYH0=;
+  b=hNPhuaHMsrsZRpKim5EspC8qdxRiZgseRTG8/mCRvLhYEhNcHMdnPVPc
+   Hh8pBgXr94Uamt0aDxBisZiPwI2tBdR5JuH3LPlUwcF+wJ7huloDxYpKr
+   CSKrlS7af7Nd2rr9DKLiMKmLhTk4+01MfNYAehAgaudj0JjgfWCyQdmrs
+   vvJCubq+xMbivlYV8UGpXk28+X/QMovcoaBUszl9rzG3tXMSfMJD9QUGJ
+   jhPAQlyiHg7qUPQnVidSpfoNgBNIEiJLXgmn76BJlSgC9Q2bIS7iZ4kIN
+   3MNsU7Aj6wbbV3Y3+88ZK78/JtOVoSZMky3VIQkspbYr355q0QHXRh6DX
+   w==;
+X-CSE-ConnectionGUID: 24dM83KgSbKmLhDsktY6fA==
+X-CSE-MsgGUID: Le77WbEwQPOgRhrEkLZJRQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11543"; a="59239291"
+X-IronPort-AV: E=Sophos;i="6.18,239,1751266800"; 
+   d="scan'208";a="59239291"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2025 16:33:14 -0700
+X-CSE-ConnectionGUID: qpkQB0OiTTG3iaHEjnOxBQ==
+X-CSE-MsgGUID: Xe/a8mlURoaXoNbIGk3sWQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,239,1751266800"; 
-   d="scan'208";a="171597888"
+   d="scan'208";a="195683811"
 Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.110.24]) ([10.125.110.24])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2025 16:24:52 -0700
-Message-ID: <c1a4b731-9cad-40f5-ba9f-27f876dc1b44@intel.com>
-Date: Thu, 4 Sep 2025 16:24:50 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2025 16:33:13 -0700
+Message-ID: <1c8be475-2599-46e4-8997-7e503e18c876@intel.com>
+Date: Thu, 4 Sep 2025 16:33:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,458 +52,374 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] cxl/test: Add cxl_translate module for address
- translation testing
-To: Alison Schofield <alison.schofield@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-References: <cover.1756446925.git.alison.schofield@intel.com>
- <bb2fcaa2f21a0024c3291c113cc99a867513c845.1756446925.git.alison.schofield@intel.com>
+Subject: Re: [ndctl PATCH v2] cxl: Add cxl-translate.sh unit test
+To: Alison Schofield <alison.schofield@intel.com>, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org
+References: <20250829204018.3486317-1-alison.schofield@intel.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <bb2fcaa2f21a0024c3291c113cc99a867513c845.1756446925.git.alison.schofield@intel.com>
+In-Reply-To: <20250829204018.3486317-1-alison.schofield@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 8/29/25 12:21 AM, Alison Schofield wrote:
-> Add a loadable test module that validates CXL address translation
-> calculations using parameterized test vectors. The module tests both
-> host to device and device to host address translations for Modulo and
-> XOR interleave arithmetic.
+On 8/29/25 1:40 PM, Alison Schofield wrote:
+> The cxl-translate.sh unit test feeds trusted data sets to a kernel
+> test module: cxl_translate. The module accesses the CXL region
+> driver's address translation functions.
 > 
-> Test vectors are provided as module parameters in the format:
-> "dpa pos r_eiw r_eig hb_ways math expected_spa"
+> The trusted samples are either from the CXL Driver Writers Guide[1]
+> or from another source that has been verified. ie a spreadsheet
+> reviewed by CXL developers.
 > 
-> The module performs round-trip validation:
-> 1. Translate a DPA and position to a SPA
-> 2. Verify the result matches expected SPA
-> 3. Translate that SPA back to a DPA and position
-> 4. Verify round-trip consistency
-> 
-> The module accesses the refactored translation functions through the
-> exports made available only to CXL test modules.
+> [1] https://www.intel.com/content/www/us/en/content-details/643805/cxl-memory-device-sw-guide.html
 > 
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+Looks ok to me, not that I'm that proficient with BASH.
+
 > ---
->  tools/testing/cxl/Kbuild               |   2 +
->  tools/testing/cxl/cxl_acpi_exports.c   |   7 +
->  tools/testing/cxl/cxl_core_exports.c   |  12 +
->  tools/testing/cxl/cxl_test.h           |  18 ++
->  tools/testing/cxl/test/Kbuild          |   2 +
->  tools/testing/cxl/test/cxl_translate.c | 303 +++++++++++++++++++++++++
->  6 files changed, 344 insertions(+)
->  create mode 100644 tools/testing/cxl/cxl_acpi_exports.c
->  create mode 100644 tools/testing/cxl/cxl_test.h
->  create mode 100644 tools/testing/cxl/test/cxl_translate.c
 > 
-> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-> index d07f14cb7aa4..95397434fc12 100644
-> --- a/tools/testing/cxl/Kbuild
-> +++ b/tools/testing/cxl/Kbuild
-> @@ -21,6 +21,7 @@ CXL_SRC := $(DRIVERS)/cxl
->  CXL_CORE_SRC := $(DRIVERS)/cxl/core
->  ccflags-y := -I$(srctree)/drivers/cxl/
->  ccflags-y += -D__mock=__weak
-> +ccflags-y += -D__mock_export=
->  ccflags-y += -DTRACE_INCLUDE_PATH=$(CXL_CORE_SRC) -I$(srctree)/drivers/cxl/core/
->  
->  obj-m += cxl_acpi.o
-> @@ -29,6 +30,7 @@ cxl_acpi-y := $(CXL_SRC)/acpi.o
->  cxl_acpi-y += mock_acpi.o
->  cxl_acpi-y += config_check.o
->  cxl_acpi-y += cxl_acpi_test.o
-> +cxl_acpi-y += cxl_acpi_exports.o
->  
->  obj-m += cxl_pmem.o
->  
-> diff --git a/tools/testing/cxl/cxl_acpi_exports.c b/tools/testing/cxl/cxl_acpi_exports.c
-> new file mode 100644
-> index 000000000000..b66fa0696db1
+> Changes in v2:
+> Use shell builtins true|false rather than string compares (Marc)
+> Further explain the disable of SC2034 for nameref's  (Marc)
+> Use long format journalctl options, ie. --reverse (Marc)
+> Correct module name as cxl_translate in commit log
+> 
+>  test/cxl-translate.sh | 302 ++++++++++++++++++++++++++++++++++++++++++
+>  test/meson.build      |   2 +
+>  2 files changed, 304 insertions(+)
+>  create mode 100755 test/cxl-translate.sh
+> 
+> diff --git a/test/cxl-translate.sh b/test/cxl-translate.sh
+> new file mode 100755
+> index 000000000000..af872352d73c
 > --- /dev/null
-> +++ b/tools/testing/cxl/cxl_acpi_exports.c
-> @@ -0,0 +1,7 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+> +++ b/test/cxl-translate.sh
+> @@ -0,0 +1,302 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2025 Intel Corporation. All rights reserved.
 > +
-> +#include "cxl_test.h"
+> +# shellcheck disable=SC2034
+> +#
+> +# Arrays in this script are passed by name into helper functions using Bash's
+> +# nameref feature `declare -n`. This pattern supports writing generic test
+> +# harnesses that can iterate over many different test vector arrays simply by
+> +# passing the array name. ShellCheck doesn't track nameref indirection, so it
+> +# incorrectly reports these arrays as unused (SC2034). At runtime they are
+> +# fully used through the nameref, so these warnings are safe to ignore.
 > +
-> +/* Export of cxl_acpi (acpi.o) symbol used only by cxl_translate */
-> +EXPORT_SYMBOL_NS_GPL(cxl_do_xormap_calc, "CXL");
-> diff --git a/tools/testing/cxl/cxl_core_exports.c b/tools/testing/cxl/cxl_core_exports.c
-> index f088792a8925..4927797dfa31 100644
-> --- a/tools/testing/cxl/cxl_core_exports.c
-> +++ b/tools/testing/cxl/cxl_core_exports.c
-> @@ -2,6 +2,18 @@
->  /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+> +# source common to get the err() only
+> +. "$(dirname "$0")"/common
+> +
+> +trap 'err $LINENO' ERR
+> +set -ex
+> +rc=1
+> +
+> +MODULO=0
+> +XOR=1
+> +
+> +# Test against 'Sample Sets' and 'XOR Tables'
+> +#
+> +# Sample Set's have a pattern and the expected HPAs have been verified
+> +# although maybe not published. They verify Modulo and XOR translations.
+> +#
+> +# XOR Table's are extracted from the CXL Driver Writers Guide [1].
+> +# Although the XOR Tables do not include an explicit check of the Modulo
+> +# translation result, a Modulo calculation is always the first step in
+> +# any XOR calculation. ie. if Modulo fails so does XOR.
+> +#
+> +# [1] https://www.intel.com/content/www/us/en/content-details/643805/cxl-memory-device-sw-guide.html
+> +
+> +# Start time for kernel log checking at millisecond granularity
+> +set_log_start_time() {
+> +        log_start_time=$(date '+%Y-%m-%d %H:%M:%S.%3N')
+> +}
+> +
+> +check_dmesg_results() {
+> +        local nr_entries=$1
+> +        local expect_failures=${2:-false}  # Optional param, builtin true|false
+> +        local log nr_pass nr_fail
+> +
+> +        log=$(journalctl --reverse --dmesg --since "$log_start_time")
+> +
+> +	nr_pass=$(echo "$log" | grep -c "CXL Translate Test.*PASS") || nr_pass=0
+> +        nr_fail=$(echo "$log" | grep -c "CXL Translate Test.*FAIL") || nr_fail=0
+> +
+> +        if ! $expect_failures; then
+> +                # Expect all PASS and no FAIL
+> +                [ "$nr_pass" -eq "$nr_entries" ] || err "$LINENO"
+> +                [ "$nr_fail" -eq 0 ] || err "$LINENO"
+> +        else
+> +                # Expect no PASS and all FAIL
+> +		[ "$nr_pass" -eq 0 ] || err "$LINENO"
+> +                [ "$nr_fail" -eq "$nr_entries" ] || err "$LINENO"
+> +        fi
+> +}
+> +
+> +# Sample Sets
+> +#
+> +# params_#: dpa, region eiw, region eig, host bridge ways
+> +# expect_[modulo|xor]_#: expected spa for each position in the region
+> +# 	interleave set for the modulo|xor math.
+> +#
+> +# Feeds the parameters with an expected SPA for each position in the region
+> +# interleave to the test module. Returns success if the calculation matches
+> +# the expected SPA and the reverse calculation returns the original DPA and
+> +# position.
+> +
+> +# 4 way region interleave using 4 host bridges
+> +# Notation: 1+1+1+1
+> +declare -A Sample_4R_4H=(
+> +	["params_0"]="0 2 0 4"
+> +	["expect_modulo_0"]="0 256 512 768"
+> +	["expect_xor_0"]="0 256 512 768"
+> +	["params_1"]="256 2 0 4"
+> +	["expect_modulo_1"]="1024 1280 1536 1792"
+> +	["expect_xor_1"]="1024 1280 1536 1792"
+> +	["params_2"]="2048 2 0 4"
+> +	["expect_modulo_2"]="8192 8448 8704 8960"
+> +	["expect_xor_2"]="8192 8448 8704 8960"
+> +)
+> +
+> +# 12 way region interleave using 12 host bridges
+> +# Notation: 1+1+1+1+1+1+1+1+1+1+1+1
+> +declare -A Sample_12R_12H=(
+> +	["params_0"]="0 10 0 12"
+> +	["expect_modulo_0"]="0 256 512 768 1024 1280 1536 1792 2048 2304 2560 2816"
+> +	["expect_xor_0"]="0 256 512 768 1024 1280 1536 1792 2304 2048 2816 2560"
+> +	["params_1"]="512 10 0 12"
+> +	["expect_modulo_1"]="6144 6400 6656 6912 7168 7424 7680 7936 8192 8448 8704 8960"
+> +	["expect_xor_1"]="6912 6656 6400 6144 7936 7680 7424 7168 8192 8448 8704 8960"
+> +)
+> +
+> +decode_r_eiw()
+> +{
+> +	case $1 in
+> +		0) echo 1 ;;
+> +		1) echo 2 ;;
+> +		2) echo 4 ;;
+> +		3) echo 8 ;;
+> +		4) echo 16 ;;
+> +		8) echo 3 ;;
+> +		9) echo 6 ;;
+> +		10) echo 12 ;;
+> +		*) echo "Invalid r_eiw value: $1" ; err "$LINENO" ;;
+> +	esac
+> +}
+> +
+> +generate_sample_tests() {
+> +        local -n input_sample_set=$1
+> +        local -n output_array=$2
+> +
+> +        # Find all params_* keys and extract the index
+> +        local indices=()
+> +        for key in "${!input_sample_set[@]}"; do
+> +                if [[ $key =~ ^params_([0-9]+)$ ]]; then
+> +                        indices+=("${BASH_REMATCH[1]}")
+> +                fi
+> +        done
+> +
+> +        # Sort indices to process in order
+> +	mapfile -t indices < <(printf '%s\n' "${indices[@]}" | sort -n)
+> +
+> +        for i in "${indices[@]}"; do
+> +                # Split the parameters and expected spa values
+> +                IFS=' ' read -r dpa r_eiw r_eig hb_ways <<< "${input_sample_set["params_$i"]}"
+> +                IFS=' ' read -r -a expect_modulo_values <<< "${input_sample_set["expect_modulo_$i"]}"
+> +                IFS=' ' read -r -a expect_xor_values <<< "${input_sample_set["expect_xor_$i"]}"
+> +
+> +                ways=$(decode_r_eiw "$r_eiw")
+> +                for ((pos = 0; pos < ways; pos++)); do
+> +                        expect_spa_modulo=${expect_modulo_values[$pos]}
+> +                        expect_spa_xor=${expect_xor_values[$pos]}
+> +
+> +                        # Add the MODULO test case, then the XOR test case
+> +                        output_array+=("$dpa $pos $r_eiw $r_eig $hb_ways $MODULO $expect_spa_modulo")
+> +                        output_array+=("$dpa $pos $r_eiw $r_eig $hb_ways $XOR $expect_spa_xor")
+> +                done
+> +        done
+> +}
+> +
+> +test_sample_sets() {
+> +        local sample_name=$1
+> +        local -n sample_set=$1
+> +        local generated_tests=()
+> +
+> +        generate_sample_tests sample_set generated_tests
+> +
+> +        IFS=','
+> +        table_string="${generated_tests[*]}"
+> +        IFS=' '
+> +
+> +        modprobe -r cxl-translate
+> +        set_log_start_time
+> +        echo "Testing $sample_name with ${#generated_tests[@]} test entries"
+> +        modprobe cxl-translate "table=$table_string"
+> +        check_dmesg_results "${#generated_tests[@]}"
+> +}
+> +
+> +# XOR Tables
+> +#
+> +# The tables that follow are the XOR translation examples in the
+> +# CXL Driver Writers Guide Sections 2.13.24.1 and 25.1
+> +# Note that the Guide uses the device number in its table notation.
+> +# Here the 'position' of that device number is used, not the
+> +# device number itself, which is meaningless in this context.
+> +#
+> +# Format: "dpa pos r_eiw r_eig hb_ways xor_math(0|1) xor_spa:
+> +
+> +# 4 way region interleave using 4 host bridges
+> +# Notation: 1+1+1+1
+> +XOR_Table_4R_4H=(
+> +	"248   0 2 0 4 1 248"
+> +	"16    1 2 0 4 1 272"
+> +	"16    2 2 0 4 1 528"
+> +	"32    3 2 0 4 1 800"
+> +	"288   0 2 0 4 1 1056"
+> +	"288   1 2 0 4 1 1312"
+> +	"288   2 2 0 4 1 1568"
+> +	"288   3 2 0 4 1 1824"
+> +	"544   1 2 0 4 1 2080"
+> +	"544   0 2 0 4 1 2336"
+> +	"544   3 2 0 4 1 2592"
+> +	"1040  2 2 0 4 1 4112"
+> +	"1568  3 2 0 4 1 6176"
+> +	"32784 1 2 0 4 1 131088"
+> +	"65552 2 2 0 4 1 262160"
+> +	"98336 3 2 0 4 1 393248"
+> +	"98328 2 2 0 4 1 393496"
+> +	"98352 2 2 0 4 1 393520"
+> +	"443953523 0 2 0 4 1 1775813747"
+> +)
+> +
+> +XOR_Table_8R_4H=(
+> +	"248       0 3 0 4 1 248"
+> +	"16        1 3 0 4 1 272"
+> +	"16        2 3 0 4 1 528"
+> +	"32        3 3 0 4 1 800"
+> +	"272       1 3 0 4 1 2064"
+> +	"528       2 3 0 4 1 4112"
+> +	"800       3 3 0 4 1 6176"
+> +	"16400     1 3 0 4 1 131088"
+> +	"32784     2 3 0 4 1 262160"
+> +	"49184     3 3 0 4 1 393248"
+> +	"49176     2 3 0 4 1 393496"
+> +	"49200     2 3 0 4 1 393520"
+> +	"116520373 3 3 0 4 1 932162229"
+> +	"244690459 5 3 0 4 1 1957525275"
+> +	"292862215 5 3 0 4 1 2342899463"
+> +	"30721158  4 3 0 4 1 245769350"
+> +	"246386959 4 3 0 4 1 1971096847"
+> +	"72701249  5 3 0 4 1 581610561"
+> +	"529382429 5 3 0 4 1 4235060509"
+> +	"191132300 2 3 0 4 1 1529057420"
+> +	"18589081  1 3 0 4 1 148712089"
+> +	"344295715 7 3 0 4 1 2754367011"
+> +)
+> +
+> +XOR_Table_12R_12H=(
+> +	"224 0 10 0 12 1 224"
+> +	"16  1 10 0 12 1 272"
+> +	"16  2 10 0 12 1 528"
+> +	"32  3 10 0 12 1 800"
+> +	"32  4 10 0 12 1 1056"
+> +	"32  5 10 0 12 1 1312"
+> +	"32  6 10 0 12 1 1568"
+> +	"32  7 10 0 12 1 1824"
+> +	"32  9 10 0 12 1 2080"
+> +	"32  8 10 0 12 1 2336"
+> +	"32 11 10 0 12 1 2592"
+> +	"32 10 10 0 12 1 2848"
+> +	"288 0 10 0 12 1 3360"
+> +	"299017087 7 10 0 12 1 3588205439"
+> +	"329210435 0 10 0 12 1 3950524995"
+> +	"151050637 11 10 0 12 1 1812608653"
+> +	"145169214  2 10 0 12 1 1742030654"
+> +	"328998732 10 10 0 12 1 3947985996"
+> +	"159252439  3 10 0 12 1 1911027415"
+> +	"342098916  5 10 0 12 1 4105186020"
+> +	"97970344   8 10 0 12 1 1175645096"
+> +	"214995572  8 10 0 12 1 2579948404"
+> +	"101289661  7 10 0 12 1 1215475645"
+> +	"40424079   7 10 0 12 1 485088911"
+> +	"231458716  7 10 0 12 1 2777503900"
+> +)
+> +
+> +# A fail table entry is expected to fail the DPA->SPA calculation.
+> +# Intent is to show that the test module can tell good from bad.
+> +# If one of these cases passes, don't trust other pass results.
+> +# This is not a test of module parsing, so don't send garbage.
+> +Expect_Fail_Table=(
+> +	"544   3 2 0 4 1 2080" # Change position
+> +        "544   2 2 0 4 1 2336"
+> +        "544   1 2 0 4 1 2592"
+> +	"272   1 2 0 4 1 2064" # Change r_eiw
+> +	"528   2 1 0 4 1 4112"
+> +	"800   3 10 0 4 1 6176"
+> +	"32  4 10 0 12 1 1156" # Change expected spa
+> +	"32  5 10 0 12 1 1112"
+> +	"32  6 10 0 12 1 1168"
+> +	"32  7 10 0 12 1 1124"
+> +)
+> +
+> +test_tables() {
+> +        local table_name=$1
+> +        local -n table_ref=$1
+> +        local expect_failures=${2:-false}  # Optional param, builtin true|false
+> +        local IFS
+> +
+> +        IFS=','
+> +        table_string="${table_ref[*]}"
+> +        IFS=' '
+> +
+> +        if $expect_failures; then
+> +                echo "Testing $table_name with ${#table_ref[@]} entries (expecting FAIL results)"
+> +        else
+> +                echo "Testing $table_name with ${#table_ref[@]} test entries"
+> +        fi
+> +
+> +        modprobe -r cxl-translate
+> +        set_log_start_time
+> +        modprobe cxl-translate "table=$table_string"
+> +
+> +        check_dmesg_results "${#table_ref[@]}" "$expect_failures"
+> +}
+> +
+> +test_tables Expect_Fail_Table true
+> +test_sample_sets Sample_4R_4H
+> +test_sample_sets Sample_12R_12H
+> +test_tables XOR_Table_4R_4H
+> +test_tables XOR_Table_8R_4H
+> +test_tables XOR_Table_12R_12H
+> +
+> +echo "Translate test complete with no failures"
+> +
+> +modprobe -r cxl-translate
+> +
+> +
+> diff --git a/test/meson.build b/test/meson.build
+> index 91eb6c2b1363..bf4d73eea918 100644
+> --- a/test/meson.build
+> +++ b/test/meson.build
+> @@ -168,6 +168,7 @@ cxl_sanitize = find_program('cxl-sanitize.sh')
+>  cxl_destroy_region = find_program('cxl-destroy-region.sh')
+>  cxl_qos_class = find_program('cxl-qos-class.sh')
+>  cxl_poison = find_program('cxl-poison.sh')
+> +cxl_translate = find_program('cxl-translate.sh')
 >  
->  #include "cxl.h"
-> +#include "cxl_test.h"
+>  tests = [
+>    [ 'libndctl',               libndctl,		  'ndctl' ],
+> @@ -201,6 +202,7 @@ tests = [
+>    [ 'cxl-destroy-region.sh',  cxl_destroy_region, 'cxl'   ],
+>    [ 'cxl-qos-class.sh',       cxl_qos_class,      'cxl'   ],
+>    [ 'cxl-poison.sh',          cxl_poison,         'cxl'   ],
+> +  [ 'cxl-translate.sh',       cxl_translate,      'cxl'   ],
+>  ]
 >  
->  /* Exporting of cxl_core symbols that are only used by cxl_test */
->  EXPORT_SYMBOL_NS_GPL(cxl_num_decoders_committed, "CXL");
-> +
-> +/*
-> + * Exporting of cxl_core symbols used only by the cxl_translate module.
-> + *
-> + * Note: checkpatch warns about EXPORT_SYMBOL placement, but this is
-> + * the established pattern for CXL test exports where functions are
-> + * defined in drivers/cxl/core/.
-> + */
-> +EXPORT_SYMBOL_NS_GPL(cxl_calculate_hpa_offset, "CXL");
-> +EXPORT_SYMBOL_NS_GPL(cxl_calculate_dpa_offset, "CXL");
-> +EXPORT_SYMBOL_NS_GPL(cxl_calculate_position, "CXL");
-> diff --git a/tools/testing/cxl/cxl_test.h b/tools/testing/cxl/cxl_test.h
-> new file mode 100644
-> index 000000000000..94777d999cb3
-> --- /dev/null
-> +++ b/tools/testing/cxl/cxl_test.h
-> @@ -0,0 +1,18 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef __CXL_TEST_H__
-> +#define __CXL_TEST_H__
-> +
-> +#include <linux/acpi.h>
-> +
-> +/* Function declarations only visible to test code */
-> +
-> +/* XOR calculation function from drivers/cxl/acpi.c */
-> +u64 cxl_do_xormap_calc(struct cxl_cxims_data *cximsd, u64 addr, int hbiw);
-> +
-> +/* Address translation functions from drivers/cxl/core/region.c */
-> +u64 cxl_calculate_hpa_offset(u64 dpa_offset, int pos, u8 eiw, u16 eig);
-> +u64 cxl_calculate_dpa_offset(u64 hpa_offset, u8 eiw, u16 eig);
-> +int cxl_calculate_position(u64 hpa_offset, u8 eiw, u16 eig);
-> +
-> +#endif
-> diff --git a/tools/testing/cxl/test/Kbuild b/tools/testing/cxl/test/Kbuild
-> index 6b1927897856..d55973e61fdd 100644
-> --- a/tools/testing/cxl/test/Kbuild
-> +++ b/tools/testing/cxl/test/Kbuild
-> @@ -5,6 +5,8 @@ obj-m += cxl_test.o
->  obj-m += cxl_mock.o
->  obj-m += cxl_mock_mem.o
->  
-> +obj-m += cxl_translate.o
-> +
->  cxl_test-y := cxl.o
->  cxl_mock-y := mock.o
->  cxl_mock_mem-y := mem.o
-> diff --git a/tools/testing/cxl/test/cxl_translate.c b/tools/testing/cxl/test/cxl_translate.c
-> new file mode 100644
-> index 000000000000..f7076f4069d4
-> --- /dev/null
-> +++ b/tools/testing/cxl/test/cxl_translate.c
-> @@ -0,0 +1,303 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// Copyright(c) 2025 Intel Corporation. All rights reserved.
-> +
-> +#include <linux/moduleparam.h>
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/slab.h>
-> +#include <linux/acpi.h>
-> +#include <cxlmem.h>
-> +
-> +#include "../cxl_test.h"
-> +
-> +/* Maximum number of test vectors and entry length */
-> +#define MAX_TABLE_ENTRIES 128
-> +#define MAX_ENTRY_LEN 128
-> +
-> +/* Expected number of parameters in each test vector */
-> +#define EXPECTED_PARAMS 7
-> +
-> +/* Module parameters for test vectors */
-> +static char *table[MAX_TABLE_ENTRIES];
-> +static int table_num;
-> +
-> +/* Interleave Arithmetic */
-> +#define MODULO_MATH 0
-> +#define XOR_MATH 1
-> +
-> +/*
-> + * XOR mapping configuration
-> + * The test data sets all use the same set of xormaps. When additional
-> + * data sets arrive for validation, this static setup will need to
-> + * be changed to accept xormaps as additional parameters.
-> + */
-> +struct cxl_cxims_data *cximsd;
-> +static u64 xormaps[] = {
-> +	0x2020900,
-> +	0x4041200,
-> +	0x1010400,
-> +	0x800,
-> +};
-> +
-> +static int nr_maps = ARRAY_SIZE(xormaps);
-> +
-> +/**
-> + * to_hpa - calculate an HPA offset from a DPA offset and position
-> + *
-> + * dpa_offset: device physical address offset
-> + * pos: devices position in interleave
-> + * r_eiw: region encoded interleave ways
-> + * r_eig: region encoded interleave granularity
-> + * hb_ways: host bridge interleave ways
-> + * math: interleave arithmetic (MODULO_MATH or XOR_MATH)
-> + *
-> + * Returns: host physical address offset
-> + */
-> +static u64 to_hpa(u64 dpa_offset, int pos, u8 r_eiw, u16 r_eig, u8 hb_ways,
-> +		  u8 math)
-> +{
-> +	u64 hpa_offset;
-> +
-> +	/* Calculate base HPA offset from DPA and position */
-> +	hpa_offset = cxl_calculate_hpa_offset(dpa_offset, pos, r_eiw, r_eig);
-> +
-> +	/* Apply XOR mapping if specified */
-> +	if (math == XOR_MATH)
-> +		hpa_offset = cxl_do_xormap_calc(cximsd, hpa_offset, hb_ways);
-> +
-> +	return hpa_offset;
-> +}
-> +
-> +/**
-> + * to_dpa - translate an HPA offset to DPA offset
-> + *
-> + * hpa_offset: host physical address offset
-> + * r_eiw: region encoded interleave ways
-> + * r_eig: region encoded interleave granularity
-> + * hb_ways: host bridge interleave ways
-> + * math: interleave arithmetic (MODULO_MATH or XOR_MATH)
-> + *
-> + * Returns: device physical address offset
-> + */
-> +static u64 to_dpa(u64 hpa_offset, u8 r_eiw, u16 r_eig, u8 hb_ways, u8 math)
-> +{
-> +	u64 offset = hpa_offset;
-> +
-> +	/* Reverse XOR mapping if specified */
-> +	if (math == XOR_MATH)
-> +		offset = cxl_do_xormap_calc(cximsd, hpa_offset, hb_ways);
-> +
-> +	return cxl_calculate_dpa_offset(offset, r_eiw, r_eig);
-> +}
-> +
-> +/**
-> + * to_pos - extract an interleave position from an HPA offset
-> + *
-> + * hpa_offset: host physical address offset
-> + * r_eiw: region encoded interleave ways
-> + * r_eig: region encoded interleave granularity
-> + * hb_ways: host bridge interleave ways
-> + * math: interleave arithmetic (MODULO_MATH or XOR_MATH)
-> + *
-> + * Returns: devices position in region interleave
-> + */
-> +static u64 to_pos(u64 hpa_offset, u8 r_eiw, u16 r_eig, u8 hb_ways, u8 math)
-> +{
-> +	u64 offset = hpa_offset;
-> +
-> +	/* Reverse XOR mapping if specified */
-> +	if (math == XOR_MATH)
-> +		offset = cxl_do_xormap_calc(cximsd, hpa_offset, hb_ways);
-> +
-> +	return cxl_calculate_position(offset, r_eiw, r_eig);
-> +}
-> +
-> +/**
-> + * run_translation_test - execute forward and reverse translations
-> + *
-> + * @dpa: device physical address
-> + * @pos: expected position in region interleave
-> + * @r_eiw: region encoded interleave ways
-> + * @r_eig: region encoded interleave granularity
-> + * @hb_ways: host bridge interleave ways
-> + * @math: interleave arithmetic (MODULO_MATH or XOR_MATH)
-> + * @expect_spa: expected system physical address
-> + *
-> + * Returns: 0 on success, -1 on failure
-> + */
-> +static int run_translation_test(u64 dpa, int pos, u8 r_eiw, u16 r_eig,
-> +				u8 hb_ways, int math, u64 expect_hpa)
-> +{
-> +	u64 translated_spa, reverse_dpa;
-> +	int reverse_pos;
-> +
-> +	/* Test Device to Host translation: DPA + POS -> SPA */
-> +	translated_spa = to_hpa(dpa, pos, r_eiw, r_eig, hb_ways, math);
-> +	if (translated_spa != expect_hpa) {
-> +		pr_err("Device to host failed: expected HPA %llu, got %llu\n",
-> +		       expect_hpa, translated_spa);
-> +		return -1;
-> +	}
-> +
-> +	/* Test Host to Device DPA translation: SPA -> DPA */
-> +	reverse_dpa = to_dpa(translated_spa, r_eiw, r_eig, hb_ways, math);
-> +	if (reverse_dpa != dpa) {
-> +		pr_err("Host to Device DPA failed: expected %llu, got %llu\n",
-> +		       dpa, reverse_dpa);
-> +		return -1;
-> +	}
-> +
-> +	/* Test Host to Device Position translation: SPA -> POS */
-> +	reverse_pos = to_pos(translated_spa, r_eiw, r_eig, hb_ways, math);
-> +	if (reverse_pos != pos) {
-> +		pr_err("Position lookup failed: expected %d, got %d\n", pos,
-> +		       reverse_pos);
-> +		return -1;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * parse_test_vector - parse a single test vector string
-> + *
-> + * entry: test vector string to parse
-> + * dpa: device physical address
-> + * pos: expected position in region interleave
-> + * r_eiw: region encoded interleave ways
-> + * r_eig: region encoded interleave granularity
-> + * hb_ways: host bridge interleave ways
-> + * math: interleave arithmetic (MODULO_MATH or XOR_MATH)
-> + * expect_spa: expected system physical address
-> + *
-> + * Returns: 0 on success, negative error code on failure
-> + */
-> +static int parse_test_vector(const char *entry, u64 *dpa, int *pos, u8 *r_eiw,
-> +			     u16 *r_eig, u8 *hb_ways, int *math,
-> +			     u64 *expect_hpa)
-> +{
-> +	unsigned int tmp_r_eiw, tmp_r_eig, tmp_hb_ways;
-> +	int parsed;
-> +
-> +	parsed = sscanf(entry, "%llu %d %u %u %u %d %llu", dpa, pos, &tmp_r_eiw,
-> +			&tmp_r_eig, &tmp_hb_ways, math, expect_hpa);
-> +
-> +	if (parsed != EXPECTED_PARAMS) {
-> +		pr_err("Parse error: expected %d parameters, got %d in '%s'\n",
-> +		       EXPECTED_PARAMS, parsed, entry);
-> +		return -EINVAL;
-> +	}
-> +	if (tmp_r_eiw > U8_MAX || tmp_r_eig > U16_MAX || tmp_hb_ways > U8_MAX) {
-> +		pr_err("Parameter overflow in entry: '%s'\n", entry);
-> +		return -ERANGE;
-> +	}
-> +	if (*math != MODULO_MATH && *math != XOR_MATH) {
-> +		pr_err("Invalid math type %d in entry: '%s'\n", *math, entry);
-> +		return -EINVAL;
-> +	}
-> +	*r_eiw = tmp_r_eiw;
-> +	*r_eig = tmp_r_eig;
-> +	*hb_ways = tmp_hb_ways;
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * setup_xor_mapping - Initialize XOR mapping data structure
-> + *
-> + * The test data sets all use the same set of xormaps. When additional
-> + * data sets arrive for validation, this static setup will need to
-> + * be changed to accept xormaps as additional parameters.
-> + *
-> + * Returns: 0 on success, negative error code on failure
-> + */
-> +static int setup_xor_mapping(void)
-> +{
-> +	if (nr_maps <= 0)
-> +		return -EINVAL;
-> +
-> +	cximsd = kzalloc(struct_size(cximsd, xormaps, nr_maps), GFP_KERNEL);
-> +	if (!cximsd)
-> +		return -ENOMEM;
-> +
-> +	memcpy(cximsd->xormaps, xormaps, nr_maps * sizeof(*cximsd->xormaps));
-> +	cximsd->nr_maps = nr_maps;
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * cxl_translate_init - parse test vectors and kicks off translation tests
-> + *
-> + * Returns: 0 on success, negative error code on failure
-> + */
-> +static int __init cxl_translate_init(void)
-> +{
-> +	int ret, i;
-> +
-> +	/* Validate module parameters */
-> +	if (table_num == 0) {
-> +		pr_err("No test vectors provided\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	pr_info("CXL translate test module loaded with %d test vectors\n",
-> +		table_num);
-> +
-> +	ret = setup_xor_mapping();
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Process each test vector */
-> +	for (i = 0; i < table_num; i++) {
-> +		u64 dpa, expect_spa;
-> +		int pos, math;
-> +		u8 r_eiw, hb_ways;
-> +		u16 r_eig;
-> +
-> +		pr_debug("Processing test vector %d: '%s'\n", i, table[i]);
-> +
-> +		/* Parse the test vector */
-> +		ret = parse_test_vector(table[i], &dpa, &pos, &r_eiw, &r_eig,
-> +					&hb_ways, &math, &expect_spa);
-> +		if (ret) {
-> +			pr_err("CXL Translate Test %d: FAIL\n"
-> +			       "    Failed to parse test vector '%s'\n",
-> +			       i, table[i]);
-> +			continue;
-> +		}
-> +		/* Run the translation test */
-> +		ret = run_translation_test(dpa, pos, r_eiw, r_eig, hb_ways,
-> +					   math, expect_spa);
-> +		if (ret) {
-> +			pr_err("CXL Translate Test %d: FAIL\n"
-> +			       "    dpa=%llu pos=%d r_eiw=%u r_eig=%u hb_ways=%u math=%s expect_spa=%llu\n",
-> +			       i, dpa, pos, r_eiw, r_eig, hb_ways,
-> +			       (math == XOR_MATH) ? "XOR" : "MODULO",
-> +			       expect_spa);
-> +		} else {
-> +			pr_info("CXL Translate Test %d: PASS\n", i);
-> +		}
-> +	}
-> +
-> +	pr_info("CXL translate test completed\n");
-> +	return 0;
-> +}
-> +
-> +static void __exit cxl_translate_exit(void)
-> +{
-> +	kfree(cximsd);
-> +
-> +	pr_info("CXL translate test module unloaded\n");
-> +}
-> +
-> +module_param_array(table, charp, &table_num, 0444);
-> +MODULE_PARM_DESC(table, "Test vectors as space-separated decimal strings");
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("cxl_test: cxl address translation test module");
-> +MODULE_IMPORT_NS("CXL");
-> +
-> +module_init(cxl_translate_init);
-> +module_exit(cxl_translate_exit);
+>  if get_option('destructive').enabled()
 
