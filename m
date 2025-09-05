@@ -1,110 +1,277 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD837274FEF;
-	Fri,  5 Sep 2025 23:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D2521D3C9
+	for <linux-cxl@vger.kernel.org>; Fri,  5 Sep 2025 23:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757114639; cv=none; b=uKCJoAq50z+GOchmhVgYZusVfPX48Ti7etuNbL657nzT4mN5KkQec0K8qNwqDnAgrQ/B2Xc8yT5mgqKIWMZFijdgDmFwbVljZApHeE4F00go8uPmd4j/X8LGoMzrD6SDTGpWl1Yi5T5XR0jHBINW5Wep2VxbgA8x2cxJI9SPJSQ=
+	t=1757115290; cv=none; b=nc80HGkqeHX/Rr564hURhaN5CYs0IFgymowZ5Lmga7Zgyu82anJWTvXa4nZe4OoljDgGTJDk+9Ouv0RFU8OdG3qGy4YTbGHw9GmFa3Wo0rbVDo7z6IGSQVAvCf6NImWyK3fMK7ztD5O0PHNo3N+nxRoiMe1utfPprKIrn8cR4q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757114639; c=relaxed/simple;
-	bh=Gs+74QQ3pqE8Dw+3XkxxysoR+QZSz4q7BtqI4TR0BjU=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hjqy7FgAhi11QhmBsgHNFRron9bvK/diWAcb5uDWOZ69jy9l8FEJ7PkecpN2kkpct90xqSXeG8gvyfsPDa2rpItPzIVC59B/Zi6WEwet9TUy2nj8g8Gc5iywqH3fSgruminL98fVD0KqE622GawTMFmJNh7BGgqCFHuO2LGdpzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JsJYzVH/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757115290; c=relaxed/simple;
+	bh=DT4cro1N7MYfdf5fNikymey3tQEfgPTcwFcguFiJF9o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=XWI+5qDqGcZohzKPSS5otdzLAemJgMFENU7GnaJzHSgHHKsncQbsRtxXCWf4mgKdHMV1nZWU4R5VAsQs0+luaMFSeua06ym4+jD0jQ6dxEzNDt4+e6l3BBDe66HJnmQntwK56WSTh+fLsiLln8cb5KZNbnfIEWFiqs8Xl/FqNAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PNumpmAf; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JsJYzVH/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA874C4CEF1;
-	Fri,  5 Sep 2025 23:23:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757114638;
-	bh=Gs+74QQ3pqE8Dw+3XkxxysoR+QZSz4q7BtqI4TR0BjU=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=JsJYzVH/xYMRQ7jUll8U+lQ7ZLVhKAhyDl7pmuSH8AmqTE5lkxK6xEyj4QUNckwJx
-	 sU5EZq75rMtNIFwdLXL4+GQXbGaf8ohLXQ1tLDG7TLvFuepN5ORi+eGayw4ySZRCFC
-	 gn3Mzj+ifh0sNQ5x5oBULM7I7mPOoArN1TkjT3idjMdqqn0BMn6o9iAgVlCBoEMhTq
-	 ztE1D+n3w1Y3LZcQQsReboG2+eIk1j+x3ln9z/bOwCrQsJBNgXkgW2fxVBlOdxc3xj
-	 EmRl7a7YzVSl1fs8n2N4tpe3ogRtAo0xgn+mXSmSvdhZWVPhyWeCXwNWpMkdpu5G3w
-	 S9NYAY0wSWntw==
-Message-ID: <1aab20e65ba961d786813bb135f9edfc0cb6db0a.camel@kernel.org>
-Subject: Re: [PATCH v17 00/22] Type2 device basic support
-From: PJ Waskiewicz <ppwaskie@kernel.org>
-To: Alejandro Lucero Palau <alucerop@amd.com>,
- alejandro.lucero-palau@amd.com, 	linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, 	edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
-	edumazet@google.com, dave.jiang@intel.com
-Date: Fri, 05 Sep 2025 16:23:50 -0700
-In-Reply-To: <e74a66db-6067-4f8d-9fb1-fe4f80357899@amd.com>
-References: <20250624141355.269056-1-alejandro.lucero-palau@amd.com>
-	 <5cf568ac801b967365679737774a6c59475fd594.camel@kernel.org>
-	 <e74a66db-6067-4f8d-9fb1-fe4f80357899@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PNumpmAf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757115289; x=1788651289;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=DT4cro1N7MYfdf5fNikymey3tQEfgPTcwFcguFiJF9o=;
+  b=PNumpmAf5kJ0Sx9en7NdFspzySikWCn6xocNHenczP24wef/O9p5rlKs
+   LgecTO9IfmyLDLE+PFlGzXv1qv1EO85qYWlPHTsrOOvDk5r82wZ8MCVsL
+   xkmsQc8/ZsOq3bqwnfm7SpWcSbzBOfpXW2eMkqQMNdL6vOz79uoQtmG9W
+   K2t3LAYPanSgOiEXC9R+bbYiph4wQ9LwDhxC3rVXgXigbcHtReg6jMDYu
+   gWOfM7ACoRWfIDpCQTqTk/vH1AVNa7R2Hn3FpEVoqQWFzH7CuEU5e2/J2
+   gWD5PgmW6pKIqyIFK17GK6U/yQIqQQC+LVewqHwawZ8z9QwT6HLH1xeow
+   w==;
+X-CSE-ConnectionGUID: 9DYQSuocREigqRRd9JWItQ==
+X-CSE-MsgGUID: yGhyOLl3SZekQdJ5dP6K2w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11544"; a="62099600"
+X-IronPort-AV: E=Sophos;i="6.18,242,1751266800"; 
+   d="scan'208";a="62099600"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2025 16:34:47 -0700
+X-CSE-ConnectionGUID: PXXHzkLbSoi8cqyFYCKRoA==
+X-CSE-MsgGUID: Iqix/Ed0TniA5dkOGP7aGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,242,1751266800"; 
+   d="scan'208";a="177482632"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.110.53]) ([10.125.110.53])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2025 16:34:47 -0700
+Message-ID: <1c8b14d9-adfb-4154-8d7b-a1cd28a13048@intel.com>
+Date: Fri, 5 Sep 2025 16:34:46 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ndctl PATCH v3] test/cxl-poison.sh: test inject and clear poison
+ by region offset
+To: alison.schofield@intel.com, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org
+References: <20250823025954.3161194-1-alison.schofield@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250823025954.3161194-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Alejandro,
 
-On Thu, 2025-08-28 at 09:02 +0100, Alejandro Lucero Palau wrote:
-> Hi PJ,
->=20
-> On 8/27/25 17:48, PJ Waskiewicz wrote:
-> > On Tue, 2025-06-24 at 15:13 +0100, alejandro.lucero-palau@amd.com
-> > wrote:
-> >=20
-> > Hi Alejandro,
-> >=20
-> > > From: Alejandro Lucero <alucerop@amd.com>
-> > >=20
-> > > v17 changes: (Dan Williams review)
-> > > =C2=A0=C2=A0- use devm for cxl_dev_state allocation
-> > > =C2=A0=C2=A0- using current cxl struct for checking capability regist=
-ers
-> > > found
-> > > by
-> > > =C2=A0=C2=A0=C2=A0 the driver.
-> > > =C2=A0=C2=A0- simplify dpa initialization without a mailbox not suppo=
-rting
-> > > pmem
-> > > =C2=A0=C2=A0- add cxl_acquire_endpoint for protection during initiali=
-zation
-> > > =C2=A0=C2=A0- add callback/action to cxl_create_region for a driver
-> > > notified
-> > > about cxl
-> > > =C2=A0=C2=A0=C2=A0 core kernel modules removal.
-> > > =C2=A0=C2=A0- add sfc function to disable CXL-based PIO buffers if su=
-ch a
-> > > callback
-> > > =C2=A0=C2=A0=C2=A0 is invoked.
-> > > =C2=A0=C2=A0- Always manage a Type2 created region as private not all=
-owing
-> > > DAX.
-> > >=20
-> > I've been following the patches here since your initial RFC.=C2=A0 What
-> > platform are you testing these on out of curiosity?
 
-A bit more info for the weekend to digest.
+On 8/22/25 7:59 PM, alison.schofield@intel.com wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
+> 
+> The CXL kernel driver recently added support to inject and clear
+> poison in a region by specifying an offset. Add a test case to the
+> existing cxl-poison unit test that demonstrates how to use the new
+> debugfs attributes. Use the kernel trace log to validate the round
+> trip address translations.
+> 
+> SKIP, do not fail, if the new debugfs attributes are not present.
+> 
+> See the kernel ABI documentation for usage:
+> Documentation/ABI/testing/debugfs-cxl
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-On my AMD Purico CRB, it looks like I may be missing pieces of the ACPI
-tables in the BIOS.  I'm going to shift to a GNR that is pretty healthy
-and keep hacking away.  But this is what I'm seeing now that I ported
-everything over to these V17 patches.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-- devm_cxl_dev_state_create() - succeeds
+Not bash expert, but LGTM.
 
-- cxl_pci_set_regs(pdev, CXL_REGLOC_RBI_COMPONENT, &cxl-
->cxlds.reg_map): this is where things go wrong.  I get -ENODEV
-returned.  I'm digging into the BIOS settings, but this is the same
-place I landed on with the V16 patches.  The device is fully trained on
-all protocols.
+> ---
+> 
+> Changes in v3:
+> Replace string compare with boolean value for expect_fail (Marc)
+> Add local declarations in new or modified funcs (Marc)
+> De-duplicate clear & poison funcs (Marc)
+> Remove stderr redirection (Marc)
+> 
+> Changes in v2:
+> Add test_poison_by_region_offset_negative set of test cases
+> 
+> 
+>  test/cxl-poison.sh | 132 +++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 117 insertions(+), 15 deletions(-)
+> 
+> diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
+> index 6ed890bc666c..f941f3cbcffd 100644
+> --- a/test/cxl-poison.sh
+> +++ b/test/cxl-poison.sh
+> @@ -63,20 +63,58 @@ create_x2_region()
+>  # When cxl-cli support for inject and clear arrives, replace
+>  # the writes to /sys/kernel/debug with the new cxl commands.
+>  
+> +_do_poison_sysfs()
+> +{
+> +	local action="$1" dev="$2" addr="$3"
+> +	local expect_fail=${4:-false}
+> +
+> +	if "$expect_fail"; then
+> +		if echo "$addr" > "/sys/kernel/debug/cxl/$dev/${action}_poison"; then
+> +			echo "Expected ${action}_poison to fail for $addr"
+> +			err "$LINENO"
+> +		fi
+> +	else
+> +		echo "$addr" > "/sys/kernel/debug/cxl/$dev/${action}_poison"
+> +	fi
+> +}
+> +
+>  inject_poison_sysfs()
+>  {
+> -	memdev="$1"
+> -	addr="$2"
+> -
+> -	echo "$addr" > /sys/kernel/debug/cxl/"$memdev"/inject_poison
+> +	_do_poison_sysfs 'inject' "$@"
+>  }
+>  
+>  clear_poison_sysfs()
+>  {
+> -	memdev="$1"
+> -	addr="$2"
+> +	_do_poison_sysfs 'clear' "$@"
+> +}
+>  
+> -	echo "$addr" > /sys/kernel/debug/cxl/"$memdev"/clear_poison
+> +check_trace_entry()
+> +{
+> +	local expected_region="$1"
+> +	local expected_hpa="$2"
+> +
+> +	local trace_line
+> +	trace_line=$(grep "cxl_poison" /sys/kernel/tracing/trace | tail -n 1)
+> +	if [[ -z "$trace_line" ]]; then
+> +		echo "No cxl_poison trace event found"
+> +		err "$LINENO"
+> +	fi
+> +
+> +	local trace_region trace_hpa
+> +	trace_region=$(echo "$trace_line" | grep -o 'region=[^ ]*' | cut -d= -f2)
+> +	trace_hpa=$(echo "$trace_line" | grep -o 'hpa=0x[0-9a-fA-F]\+' | cut -d= -f2)
+> +
+> +	if [[ "$trace_region" != "$expected_region" ]]; then
+> +		echo "Expected region $expected_region not found in trace"
+> +		echo "$trace_line"
+> +		err "$LINENO"
+> +	fi
+> +
+> +	if [[ "$trace_hpa" != "$expected_hpa" ]]; then
+> +		echo "Expected HPA $expected_hpa not found in trace"
+> +		echo "$trace_line"
+> +		err "$LINENO"
+> +	fi
+>  }
+>  
+>  validate_poison_found()
+> @@ -97,7 +135,7 @@ validate_poison_found()
+>  	fi
+>  }
+>  
+> -test_poison_by_memdev()
+> +test_poison_by_memdev_by_dpa()
+>  {
+>  	find_memdev
+>  	inject_poison_sysfs "$memdev" "0x40000000"
+> @@ -113,9 +151,8 @@ test_poison_by_memdev()
+>  	validate_poison_found "-m $memdev" 0
+>  }
+>  
+> -test_poison_by_region()
+> +test_poison_by_region_by_dpa()
+>  {
+> -	create_x2_region
+>  	inject_poison_sysfs "$mem0" "0x40000000"
+>  	inject_poison_sysfs "$mem1" "0x40000000"
+>  	validate_poison_found "-r $region" 2
+> @@ -125,13 +162,78 @@ test_poison_by_region()
+>  	validate_poison_found "-r $region" 0
+>  }
+>  
+> -# Turn tracing on. Note that 'cxl list --media-errors' toggles the tracing.
+> -# Turning it on here allows the test user to also view inject and clear
+> -# trace events.
+> +test_poison_by_region_offset()
+> +{
+> +	local base gran hpa1 hpa2
+> +	base=$(cat /sys/bus/cxl/devices/"$region"/resource)
+> +	gran=$(cat /sys/bus/cxl/devices/"$region"/interleave_granularity)
+> +
+> +	# Test two HPA addresses: base and base + granularity
+> +	# This hits the two memdevs in the region interleave.
+> +	hpa1=$(printf "0x%x" $((base)))
+> +	hpa2=$(printf "0x%x" $((base + gran)))
+> +
+> +	# Inject at the offset and check result using the hpa's 
+> +	# ABI takes an offset, but recall the hpa to check trace event
+> +
+> +	inject_poison_sysfs "$region" 0
+> +	check_trace_entry "$region" "$hpa1"
+> +	inject_poison_sysfs "$region" "$gran"
+> +	check_trace_entry "$region" "$hpa2"
+> +	validate_poison_found "-r $region" 2
+> +
+> +	clear_poison_sysfs "$region" 0
+> +	check_trace_entry "$region" "$hpa1"
+> +	clear_poison_sysfs "$region" "$gran"
+> +	check_trace_entry "$region" "$hpa2"
+> +	validate_poison_found "-r $region" 0
+> +}
+> +
+> +test_poison_by_region_offset_negative()
+> +{
+> +	local region_size cache_size cache_offset exceed_offset large_offset
+> +	region_size=$(cat /sys/bus/cxl/devices/"$region"/size)
+> +	cache_size=0
+> +
+> +	# This case is a no-op until cxl-test ELC mocking arrives
+> +	# Try to get cache_size if the attribute exists
+> +	if [ -f "/sys/bus/cxl/devices/$region/cache_size" ]; then
+> +		cache_size=$(cat /sys/bus/cxl/devices/"$region"/cache_size)
+> +	fi
+> +
+> +	# Offset within extended linear cache (if cache_size > 0)
+> +	if [[ $cache_size -gt 0 ]]; then
+> +		cache_offset=$((cache_size - 1))
+> +		echo "Testing offset within cache: $cache_offset (cache_size: $cache_size)"
+> +		inject_poison_sysfs "$region" "$cache_offset" true
+> +		clear_poison_sysfs "$region" "$cache_offset" true
+> +	else
+> +		echo "Skipping cache test - cache_size is 0"
+> +	fi
+> +
+> +	# Offset exceeds region size
+> +	exceed_offset=$((region_size))
+> +	inject_poison_sysfs "$region" "$exceed_offset" true
+> +	clear_poison_sysfs "$region" "$exceed_offset" true
+> +
+> +	# Offset exceeds region size by a lot
+> +	large_offset=$((region_size * 2))
+> +	inject_poison_sysfs "$region" "$large_offset" true
+> +	clear_poison_sysfs "$region" "$large_offset" true
+> +}
+> +
+> +# Clear old trace events, enable cxl_poison, enable global tracing
+> +echo "" > /sys/kernel/tracing/trace
+>  echo 1 > /sys/kernel/tracing/events/cxl/cxl_poison/enable
+> +echo 1 > /sys/kernel/tracing/tracing_on
+>  
+> -test_poison_by_memdev
+> -test_poison_by_region
+> +test_poison_by_memdev_by_dpa
+> +create_x2_region
+> +test_poison_by_region_by_dpa
+> +[ -f "/sys/kernel/debug/cxl/$region/inject_poison" ] ||
+> +       do_skip "test cases requires inject by region kernel support"
+> +test_poison_by_region_offset
+> +test_poison_by_region_offset_negative
+>  
+>  check_dmesg "$LINENO"
+>  
 
-Hope this rings a bell where to look.
-
-Cheers,
--PJ
