@@ -1,97 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBBD350D53;
-	Fri,  5 Sep 2025 14:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7158306B3B
+	for <linux-cxl@vger.kernel.org>; Fri,  5 Sep 2025 14:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757082671; cv=none; b=Yw2jqW8XzCkQptp8ibTyRWLRve+aTcuUce91aatOuX4RbUsiEc/qs6DH0rLS3J/z0HBptGvNdL0NWJjHCLrp0Zch08MaqGLpONT7VKhPUdo6UkN0PkZGVjk221HAwawEPLWVBuMey/J5pBJG4xsIZk0kYM+4A42p9atc2IX516k=
+	t=1757084103; cv=none; b=exiFG/B6OA16OvlGTfIav+R8X+NpkUPcEqFc2y26KavDQvTu3vei9s0o47/L1l97uda/O1+VLa7h2bmHLW5u7dRwFNomhl47ISO0iFi1NRJ9HmV5SQ+3YF8uC5esNHVYlA7Q1fCuzgWe6j75j5R2Ebjv2Msf1lY+iP50MCHm9sI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757082671; c=relaxed/simple;
-	bh=KEXtSGwfsIC7zCVkzHW+kQIA/8TfnPK+OMpue3a6JPw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TPfW3kDKAfk4z20NE3V8N03QYdQqwUVZFUY5E1EENQDVdiaAw/Cb0F1R0Mjqoo8S9slGcOSCyeI8FtC+SQl2uO9Fbyor4KDw7oB2WS1f7EcGcvWJ0PtKEtAtxYawYcJZflavjHX5+xFsl/F89SMSkOllm1wIugFe+wVbdaqjhnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9ObyQS9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9ObyQS9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 742FAC4CEF7;
-	Fri,  5 Sep 2025 14:31:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757082670;
-	bh=KEXtSGwfsIC7zCVkzHW+kQIA/8TfnPK+OMpue3a6JPw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=a9ObyQS9oWK8NAvCBt7tZ7rv1IYerllFhwk3B10rYxR1HkvuQF9uJJHG/J/5v0/lm
-	 xiDKRVqS+kdMi35Pae2g8iZkVDH/96ZY86uTuyI/gg5uloziMztZAMrJ2nmgrKcL5l
-	 PIWkRLys2izx/c1lmZEXt4bYTAvEFDx2PgG17Pezg4jcVJdDqrNkY5hPd4yiX6hxZI
-	 OtdMjRwIa/DRpiREJeAD2Sjqii15EEeyaVDMGIxjdJ8jixN2MZ8xFaXZ4dehs6sNZ/
-	 sEJZtCQiNpMjq/7Ckt8KEf50fQ/bGK63A/kYmN6WAozGThAaYRsYY9+nXW1UGOMooi
-	 5VGkzcmh9sm0g==
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-61e74e59d8fso982133eaf.0;
-        Fri, 05 Sep 2025 07:31:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWXoIEsF8WQzrihQ9oXPiUCRVvKhJHzVb1X62dmmgynMnFq80X2kYBO6XeTAnxsfPZsv0hcsWBq1u2z@vger.kernel.org, AJvYcCXaHE+tYUXim7TFnncVE9CY3rCkgciaxfsr9Nad8VJVvLOGoZ0fcI42M0i5JZh2wnm56crNK/0N8Eun@vger.kernel.org, AJvYcCXgDRdDyYTHjYtcunZ5OguSuMM0nk4QpE2lDIfuPAP4F8lz/WW6+MzJI1N9DClZzlL1z/YFODg2GlObXyfT@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBY/Jtr3E/IyYZDmyCBOX78Odu2RKmi9Ie+ieacvGIeZ7gV+ig
-	DOE8Wg+BV8+kEfxJeLBVWtkg1lhB8r7F2PZgnPrOOfIDYqMmMjXANB12P3j0YIUWH8CrNLnNGqO
-	uX1+/2WZh7+0tATymI8QXx5p1ZgS492A=
-X-Google-Smtp-Source: AGHT+IFzBHpToPbaYhsxUcuEzlY8uNwMrnGiJlCP/fOq+ZAdCYknjgDExF05rFOJh/oF194cwfAHDMurW0hJsjhLImo=
-X-Received: by 2002:a05:6820:82c:b0:61f:f87a:7c7b with SMTP id
- 006d021491bc7-61ff95734c9mr1990938eaf.0.1757082669722; Fri, 05 Sep 2025
- 07:31:09 -0700 (PDT)
+	s=arc-20240116; t=1757084103; c=relaxed/simple;
+	bh=VijRTpSz96DdO9p387BHURhF5zSZx/J5sHg3+uh56VY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JxgUi7dlfXp77qyVa8jqI7p2gxqa/l7Z8KBYnDdJJnDLxEFKVusi2mAuy/FUfCug1G/FC1NOUiGAoJORE1CvdnzXuUORf9Ni3FRRRGtUO9Z5XQ4+4//mWe6GW9DslUKcri7JNgeUitSdhOlTjZRrdSxaV4ves1uJj16xjTBqqxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cJK9f4WPqz6L4vc;
+	Fri,  5 Sep 2025 22:53:58 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id A3245140373;
+	Fri,  5 Sep 2025 22:54:57 +0800 (CST)
+Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 5 Sep
+ 2025 16:54:57 +0200
+Date: Fri, 5 Sep 2025 15:54:56 +0100
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Joshua Lant <joshualant@googlemail.com>
+CC: <linux-cxl@vger.kernel.org>, Joshua Lant <joshualant@gmail.com>
+Subject: Re: [QEMU- PATCH 1/1] cxl_type3: fix segfault in
+ cxl_destroy_dc_regions
+Message-ID: <20250905155456.00005f7f@huawei.com>
+In-Reply-To: <20250904090346.884649-2-joshualant@gmail.com>
+References: <20250904090346.884649-1-joshualant@gmail.com>
+	<20250904090346.884649-2-joshualant@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250904184801.47498-1-dave@stgolabs.net> <CAJZ5v0j9r6bKOXuo+o0gdhryR1ne3WY3B0o0DufEHB9y3j0Leg@mail.gmail.com>
- <20250904191540.rb2dn4frng2ruq76@offworld>
-In-Reply-To: <20250904191540.rb2dn4frng2ruq76@offworld>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 5 Sep 2025 16:30:57 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jPDYnibLWqaEKuQD4jda7kTc1YyM2MNOoNm5Xn4_0S9A@mail.gmail.com>
-X-Gm-Features: Ac12FXzoduTZjkQYGHDQ7BpxzQcF3KgJaG-8n_dpWorq4EpDxtTJFWo6wUX2__g
-Message-ID: <CAJZ5v0jPDYnibLWqaEKuQD4jda7kTc1YyM2MNOoNm5Xn4_0S9A@mail.gmail.com>
-Subject: Re: [PATCH] acpi, tables: Rename coherency CFMW restrictions
-To: Davidlohr Bueso <dave@stgolabs.net>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, rafael.j.wysocki@intel.com, dave.jiang@intel.com, 
-	dan.j.williams@intel.com, jonathan.cameron@huawei.com, 
-	alejandro.lucero-palau@amd.com, ira.weiny@intel.com, 
-	alison.schofield@intel.com, a.manzanares@samsung.com, 
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, Sep 4, 2025 at 9:15=E2=80=AFPM Davidlohr Bueso <dave@stgolabs.net> =
-wrote:
->
-> On Thu, 04 Sep 2025, Rafael J. Wysocki wrote:
->
-> >On Thu, Sep 4, 2025 at 8:48???PM Davidlohr Bueso <dave@stgolabs.net> wro=
-te:
-> >>
-> >> ACPICA commit 710745713ad3a2543dbfb70e84764f31f0e46bdc
-> >>
-> >> This has been renamed in more recent CXL specs, as
-> >> type3 (memory expanders) can also use HDM-DB for
-> >> device coherent memory.
-> >>
-> >> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> >
-> >A link to the corresponding upstream commit, please?
->
-> https://github.com/acpica/acpica/commit/710745713ad3a2543dbfb70e84764f31f=
-0e46bdc
+On Thu,  4 Sep 2025 10:02:22 +0100
+Joshua Lant <joshualant@googlemail.com> wrote:
 
-The only ACPICA change in this patch is the new symbol definitions in
-include/acpi/actbl1.h, so this can go in via CXL as far as I'm
-concerned.
+> CXL_TYPE3_CLASS() should be CXL_TYPE3_GET_CLASS() given object (CXLType3Dev)
+> input. Leads to segfault in object_class_dynamic_cast.
+> 
+> Fixes: ef730035567
+> 
+> signed-off-by: Joshua Lant <joshualant@gmail.com>
 
-Please add a Link: tag with the link above to the patch, change the
-patch prefix to "cxl/acpi:" to follow the existing pattern, and you
-can add
+Good find.
 
-Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+The Fixes tag needs fixing though.
+Should be all part of the tags block and needs to include the patch name.
+I'm not finding the SHA though.
 
-to it.
+I think that tag is probably Svetley's MHD callback patch which isn't upstream
+so I'll squash this in my local tree and it will be fixed in the next tree
+I put up on gitlab.com/jic23/
 
-Thanks!
+Thanks,
+
+Jonathan
+
+
+
+
+> ---
+>  hw/mem/cxl_type3.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index c4658e0955..14cb09d9fe 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -919,7 +919,7 @@ static void cxl_destroy_dc_regions(CXLType3Dev *ct3d)
+>  {
+>      CXLDCExtent *ent, *ent_next;
+>      CXLDCExtentGroup *group, *group_next;
+> -    CXLType3Class *cvc = CXL_TYPE3_CLASS(ct3d);
+> +    CXLType3Class *cvc = CXL_TYPE3_GET_CLASS(ct3d);
+>      int i;
+>      CXLDCRegion *region;
+>  
+
