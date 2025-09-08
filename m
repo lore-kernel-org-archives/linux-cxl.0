@@ -1,111 +1,210 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6BA2940D
-	for <linux-cxl@vger.kernel.org>; Mon,  8 Sep 2025 15:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3778430DD39
+	for <linux-cxl@vger.kernel.org>; Mon,  8 Sep 2025 15:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757346278; cv=none; b=YEygimvHAqGkw4x5rB2RlA+OKzU4/OBPjGk77A87GzoLD/QFcJV7vrMf0usKbtBpoQHxexsVeHb7flb0E8IDe6GRND+FhXOMJbbltJ6/Efp/RC3xpXlDJ/+0wrtS7WyYyarEtLyBpFqRXHCJLuYHlKOfAH6+ZO8bwsMVn4PdZNk=
+	t=1757346369; cv=none; b=qUOqSq1zRiB9AyPZILS/9bL4IB3hNuZ1yZuDWiPblr6k/qS7Flf/GazH9cEy9h/JeuypBdnazymIKMq+jYcX3YOVGZDCLvVYjpfRk7TyDmjChN7ITNxHOm1S891Yxw9K3y1GWH9fWUkCkN3/yXe9iKOWXwz8vphQwmVhvbDQJgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757346278; c=relaxed/simple;
-	bh=w4HOuvFEcsPcAyaMXTXyP+nAjCgqIcSk/F3/S3Jwk4w=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P//pViOTuC2e0WzC6A+9RfWfint4nUFqXt3YZpOkLYqmaKg4NJD+uI/+THuUKQLEezA8A5T1I+MkUj5Com1ZzqFETBmhpGASjBzG2rAYKz6vnag4ko/4NPQb9rOZQT5v0uIc8oeh0LvM5pr72ARJ9d1b+M6C/wwXiarNvXfq8UE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=HqPk5eBL; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1757346369; c=relaxed/simple;
+	bh=zAjyz+sUpkrFQrEGDsHBHrFQafZRofKHU3NxpV0p+aw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LU32f3pTAUZn8ltK8wLiDWxE/Aqxu+xX7AehIx5YcvtMznGI8GV46JXKiVl6p6lryAjTZUn84bBDVp/rtsSVC8TgZB2aqQvJU49Aj5f2MO3jRwTLCEUNyxWHz3mkYJjq5O4/JszQY9KNS4+Tk8luv9J1FCa9McpInOmXlQpGKFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P196fo3a; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="HqPk5eBL"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3e4aeaa57b9so2137773f8f.1
-        for <linux-cxl@vger.kernel.org>; Mon, 08 Sep 2025 08:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1757346275; x=1757951075; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fr8jiUrtkSu1+Ckh4vjVzE9iHDunNFqQkDe296VcZx0=;
-        b=HqPk5eBLU//xuFCOwUzFVtDd8RATVaIpp4xNt+6CzIa51rvteELk83VDO0AyUsSNqf
-         OKVKNCr+S6eQyP2Xt1cELhbOSi+mkzuqc1diEy8Y9dxLy13jmBbYxbN0ukmuACE7z9j3
-         f3t6fys9dnaIDNFfvnEqkBf9Ta5arzwlMxvNuLHX1WNx2kB2SuSNPHp2/QmBF2qeosiU
-         4fovAVQvaWK2ZXHSiUNNEq/RxRLZ4m0sSq0OThxHqRPuCvPL8GJq2T7l4JyNLIhwRszK
-         V41PorJgZ4vIbl+pnar8IIFT9TxxBNNSJlsVtd2bdB88Q+4acf+s7zax7KdrfP6ZVOIk
-         tYTA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P196fo3a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757346367;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ZriZC5ZCFi8VYhXaUXVlHuq1MXLstgNz6E2jeOUAEIM=;
+	b=P196fo3ajbgLiR3YqS4tMxyIEp5ZP8wz1OpyNe66QHo5LkXJec4qKbWGiRiaLMxedrkDob
+	MaknStf/aQk4iETSxpKQ1i8UjGl2H2mB/aReBpyTTDnFD1uvDlc5xD50BhrCYejZb0+NYH
+	Vn04VMphmck2rtkBB6h0UzFo7swicKA=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-206--V1e8kA_MwuL-lXxcSmDyg-1; Mon, 08 Sep 2025 11:46:05 -0400
+X-MC-Unique: -V1e8kA_MwuL-lXxcSmDyg-1
+X-Mimecast-MFC-AGG-ID: -V1e8kA_MwuL-lXxcSmDyg_1757346364
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3e1e7752208so2245743f8f.3
+        for <linux-cxl@vger.kernel.org>; Mon, 08 Sep 2025 08:46:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757346275; x=1757951075;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fr8jiUrtkSu1+Ckh4vjVzE9iHDunNFqQkDe296VcZx0=;
-        b=NaBiw87B+z4z9htxcGEPmXhT7iJpBu52Fbo4GXqZ8YESQQYXnE6REXve/BQWCZg5b+
-         DrpdKOuzukQ3TVZ8nzr/OMkAZyIbZZ76GBxk5Ju9xZS/sWZKLpNsu+TqwhFPgolx6CQQ
-         rfpyDZlQdooqi+43rKPi5q+ydXn42RnaNY4DRXdXTWXN7j9h+wjIZBApk+saio9BsciL
-         PK9bWRYBgrPhS02PIePzhJ8j1nwchGiYKJkmgPNjqPmUVvN2FldLyvHK5t17+Jms2dAV
-         8ZKF6+EpqIm4/Do+Smcuasc2UpQhpqrYEwJcwdghV14Opi8mzmrEJt1ThTMH33AuGsQH
-         XDBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUeXnGH2GYeZ3fDBwYG8/f2sPGJBRK4EtpX2kYc+JceQC4GiTFzIOF5QiEzDOal89+0hHxPQUwACUY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxbkvf5d2nqSVLwyyjyAPgYtaH/6S8leeaNxnMpAclk8A48XVjq
-	oi/5f/mOgXezRROw7BSzUxAF+1M0OIUYsiqcsriRCm6vjiR+8BPTIEC/5iByYEex
-X-Gm-Gg: ASbGncvXcBbhXbFKqNsCd0tK21l2Sscpx+j/hlx4unQbt7Fj3z/cDbspi+hILV3NHkN
-	ofIQAHDyhVJdyWBct/X4yo5UJV1WJfiDZQPug8Q1S9PdOl7mfo4n/sE8J5/+vVAoR0DbRR8R2ry
-	JesGwyLeJATG/ged1bMNPnd5xXxBSs8e1IVeU54yzNByWrCEBxOleimVgbrSW61oypt6PiLqYJn
-	lGX+rOwBWMYaVh/jqszOF9ag5hKEsTTXP1VjSR+60530eS+banjm30rePkTUfwa8YAw+2EFqJac
-	SA5O+suncUpnAMqcVQKG/+Fm0xBfu5FM7BMK0cOEM2GUBX1LlTXIQ5T55wdGvJB6KSjaeL664QU
-	zP4QPXkfFztyaNdMo/ZeQFrkgBr8iQwAtnIvFj+0wJhsEQVCSB+a8wZBHwK3w7ZnwuaLeZYdEvv
-	fOzKzEnDcIdKT3kv0=
-X-Google-Smtp-Source: AGHT+IFF1SFUp6DT7tHdMGMOzTYsYWzRQWAjMSLyRE+42I8n5SbK7mimQBOMIoccqZNkP/EqIC/uaQ==
-X-Received: by 2002:a05:6000:25c1:b0:3ca:4e3:6ea6 with SMTP id ffacd0b85a97d-3e645c9d1f8mr6533012f8f.46.1757346275054;
-        Mon, 08 Sep 2025 08:44:35 -0700 (PDT)
-Received: from thinkpc (shef-16-b2-v4wan-169484-cust5160.vm3.cable.virginm.net. [92.236.212.41])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e06dbde2d2sm18515967f8f.12.2025.09.08.08.44.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Sep 2025 08:44:34 -0700 (PDT)
-From: Joshua Lant <joshualant@googlemail.com>
-X-Google-Original-From: Joshua Lant <joshualant@gmail.com>
-Date: Mon, 8 Sep 2025 16:44:33 +0100
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Joshua Lant <joshualant@googlemail.com>, linux-cxl@vger.kernel.org
-Subject: Re: [QEMU- PATCH 1/1] cxl_type3: fix segfault in
- cxl_destroy_dc_regions
-Message-ID: <aL754ZJlIUCOCotE@thinkpc>
-References: <20250904090346.884649-1-joshualant@gmail.com>
- <20250904090346.884649-2-joshualant@gmail.com>
- <20250905155456.00005f7f@huawei.com>
+        d=1e100.net; s=20230601; t=1757346364; x=1757951164;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZriZC5ZCFi8VYhXaUXVlHuq1MXLstgNz6E2jeOUAEIM=;
+        b=w7kCY1B4gebJ4yQ1Nwe9b4uoY4q9TThHmFq9Ij70xuAIopk2XxPu19VLBewtDj7pJC
+         9ftOTP8VmsLzfGiVbv+YO97qOKxB+OcDl3UH0+1Th88oQfq4urCK37UuI1bzvFIKjVW3
+         GrFQg0m/X7ND9KkloD6Cpq2KzuFIzX+kSvcswMbkZ3pb4RlhqxJu2KacsOBzVfYYPHUB
+         jIzXBGGrr6S80J1zzoF96b+F0eFrImEjn5PohN1nIbAgICbgR5SVRl8qArCt1+jQYzuy
+         YNiXsIIzarq6RjA+FKV7E0NhzidgHmzD1IV9miAB5Xy0rymBjiT3ahqLR1jE+BcWe3o9
+         XX7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWmomJOTNB2jK84t2Q3M0Yw+KtyIGTJp+9l1o74TVTMV6pQ2+GntSWxRB+CQIYca08ZXVw+IKku+CM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlkB39ewYfcNelGGfjayyEtSsjFaJtaPGvVypz/FrJ0XgODVWy
+	IRpLRdMFQtjTOAmWMznAn5Br2Sp+28Hyn+ACNk4V/Iwb2rYSWmL9zT0tCxMCCrOoygg0kY5+2CE
+	wzFjqQMWae5odST4WPMLrbnm8e6px7IXsvlZQNTpqUusHDLwA1Uos/SN1pvVpiw==
+X-Gm-Gg: ASbGnctC7yLi97ZAS7r7h7C6yjdb/EIrS0sjPjBg5LCYNSOMqZkoXR3D1xthkj8uEmM
+	fUYyQzAVPq8dH1sM0vRtJyUv27IyB7RuR2JC2aDRGiMFh4f2EvsX/svciDLRoc1b8vnGt8Q4J5t
+	4QAA8NAcuixVQoh6PatFTGO6qqymK7ewXthKNqLlyc/55lh4WWQ/paNosTiWUMg9fenYN2uViAt
+	wnno4EPoF+EyIHLDTl6OzVKWND9Xugunnq2u0AAEWkZ21UXTGzjLpIQimC6SqkYYKKlXzAvCtNo
+	nZYACS86fuZlShqI7CtvWmrEe+foBDpolH8be1DS3BvHtVzm+BP/8FTgYC+tSH/pfyWb3y9dE+l
+	Dhfg0UhtOWiOb5dJmhD3XpR7NCbCoi7wsV8BCZDJaxskHP0Sj5UM6HhOZkrkAAvxb
+X-Received: by 2002:a05:6000:2601:b0:3e4:64b0:a776 with SMTP id ffacd0b85a97d-3e64c4a5859mr6039915f8f.52.1757346364001;
+        Mon, 08 Sep 2025 08:46:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGH0L9/mCUrbfcy9B9f9kRjFruh5pYVslSI/dkJK5qtzud/rfRXHKTDbMjnJFVOPXLqfNNQtw==
+X-Received: by 2002:a05:6000:2601:b0:3e4:64b0:a776 with SMTP id ffacd0b85a97d-3e64c4a5859mr6039843f8f.52.1757346363314;
+        Mon, 08 Sep 2025 08:46:03 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f25:700:d846:15f3:6ca0:8029? (p200300d82f250700d84615f36ca08029.dip0.t-ipconnect.de. [2003:d8:2f25:700:d846:15f3:6ca0:8029])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e21e4c0e6fsm15532578f8f.17.2025.09.08.08.46.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Sep 2025 08:46:02 -0700 (PDT)
+Message-ID: <365c1ec2-cda6-4d94-895c-b2a795101857@redhat.com>
+Date: Mon, 8 Sep 2025 17:46:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250905155456.00005f7f@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 03/16] mm: add vma_desc_size(), vma_desc_pages() helpers
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
+ Matthew Wilcox <willy@infradead.org>, Guo Ren <guoren@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, "David S . Miller"
+ <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Nicolas Pitre <nico@fluxnic.net>, Muchun Song <muchun.song@linux.dev>,
+ Oscar Salvador <osalvador@suse.de>,
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+ Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+ Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
+ Reinette Chatre <reinette.chatre@intel.com>,
+ Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Hugh Dickins <hughd@google.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Uladzislau Rezki <urezki@gmail.com>,
+ Dmitry Vyukov <dvyukov@google.com>, Andrey Konovalov <andreyknvl@gmail.com>,
+ Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-csky@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
+ sparclinux@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, linux-mm@kvack.org, ntfs3@lists.linux.dev,
+ kexec@lists.infradead.org, kasan-dev@googlegroups.com
+References: <cover.1757329751.git.lorenzo.stoakes@oracle.com>
+ <d8767cda1afd04133e841a819bcedf1e8dda4436.1757329751.git.lorenzo.stoakes@oracle.com>
+ <20250908125101.GX616306@nvidia.com>
+ <e71b7763-4a62-4709-9969-8579bdcff595@lucifer.local>
+ <20250908133224.GE616306@nvidia.com>
+ <090675bd-cb18-4148-967b-52cca452e07b@lucifer.local>
+ <20250908142011.GK616306@nvidia.com>
+ <764d413a-43a3-4be2-99c4-616cd8cd3998@lucifer.local>
+ <20250908151637.GM616306@nvidia.com>
+ <8edb13fc-e58d-4480-8c94-c321da0f4d8e@redhat.com>
+ <20250908153342.GA789684@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20250908153342.GA789684@nvidia.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ow8YsCJJ5tUJ086e9rC3Lg0pBWEHW3z83dB2jraWmQE_1757346364
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> On Thu,  4 Sep 2025 10:02:22 +0100
-> Joshua Lant <joshualant@googlemail.com> wrote:
+On 08.09.25 17:33, Jason Gunthorpe wrote:
+> On Mon, Sep 08, 2025 at 05:24:23PM +0200, David Hildenbrand wrote:
+>>>
+>>>> I think we need to be cautious of scope here :) I don't want to
+>>>> accidentally break things this way.
+>>>
+>>> IMHO it is worth doing when you get into more driver places it is far
+>>> more obvious why the VM_SHARED is being checked.
+>>>
+>>>> OK I think a sensible way forward - How about I add desc_is_cowable() or
+>>>> vma_desc_cowable() and only set this if I'm confident it's correct?
+>>>
+>>> I'm thinking to call it vma_desc_never_cowable() as that is much much
+>>> clear what the purpose is.
+>>
+>> Secretmem wants no private mappings. So we should check exactly that, not
+>> whether we might have a cow mapping.
 > 
-> > CXL_TYPE3_CLASS() should be CXL_TYPE3_GET_CLASS() given object (CXLType3Dev)
-> > input. Leads to segfault in object_class_dynamic_cast.
-> > 
-> > Fixes: ef730035567
-> > 
-> > signed-off-by: Joshua Lant <joshualant@gmail.com>
-> 
-> Good find.
-> 
-> The Fixes tag needs fixing though.
-> Should be all part of the tags block and needs to include the patch name.
-> I'm not finding the SHA though.
-> 
-> I think that tag is probably Svetley's MHD callback patch which isn't upstream
-> so I'll squash this in my local tree and it will be fixed in the next tree
-> I put up on gitlab.com/jic23/
-> 
-> Thanks,
-> 
-> Jonathan
+> secretmem is checking shared for a different reason than many other places..
 
-Yeah sorry, it is that MHD patch. I managed to write a rogue '7' at the end of
-the hash somehow. Have reposted with updated tags block...
+I think many cases just don't want any private mappings.
 
-Cheers,
+After all, you need a R/O file (VM_MAYWRITE cleared) mapped MAP_PRIVATE 
+to make is_cow_mapping() == false.
 
-Josh
+And at that point, you just mostly have a R/O MAP_SHARED mapping IIRC.
+
+-- 
+Cheers
+
+David / dhildenb
+
