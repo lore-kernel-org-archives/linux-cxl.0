@@ -1,407 +1,246 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2054.outbound.protection.outlook.com [40.107.243.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC5A306B35
-	for <linux-cxl@vger.kernel.org>; Mon,  8 Sep 2025 13:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757339349; cv=none; b=RUKpKy5vrw9YqsDtxW4qClu2TO2zIojEyP1UkT5O6TMxnLgqERdYWRJB0OE6p5vOrynSIh2fzM/V394leCfcyKDunRviP6YKht1DQEQYBFcB6LF4Ae9R+VPe7qO1DeluUFynmqpCR6Z/QWAUWP/B2bon/KyM+UORNw5+APscGpg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757339349; c=relaxed/simple;
-	bh=Iu3YYKYN6xheF0L7lHHbisPa5+lqgR05+zsSnmP58fk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=uxQBMw43FAd5gwupCzpkeqapG6sLKTEU0+bNG5oY/2nXyZxd5J6gAeG4QRNQIIkWrUsRfrJ5WCRSE3n/KbO4OxSArHmrswuayguoWd2fIQDvaGeiA9Y3PyKzCG9WHH0T6GDVym+pw8EITTVEdF6YzQ+SxjVjiJjuMPhfRaJWIzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=OIgM9WTl; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B05D30BB95;
+	Mon,  8 Sep 2025 13:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757339568; cv=fail; b=Od051ADkQNkztoWhj4JholXeT//6VOOjjlWhnT0fWNTtJCTQGHUdM0hvE49X8TO3ZPAiyEdIz6hZKfmbjRLwVZI00u6SxeU/sAKJW+M/mWgTmfnOFQSSb+NMpY3VW38E0KHZBRuGv7IhkEr1AP0T9OcdL7p8nyHZxZFFjrFjin4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757339568; c=relaxed/simple;
+	bh=DP+rH+9refGyG9VdHVUXsUY8nMOplneWvfKNZKuFUF4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=YrFfzL9wfcprNua6P6bae6gcg54j3/D6sJj/L1DMe8PGgUQ3ZWdxeJWYYK4prkq60STuCLT2lICiVBAOrXGZKZ+LcxfPbbTHmsHUQhlyyNkkH8fZvg7UxIJAUQbisGKW7p4bHQgwu6kuJyB/nb/ZCoMNBCQzxj6DrKWV5bhqx6s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mVi/3e4b; arc=fail smtp.client-ip=40.107.243.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OIgM9WTl"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250908134904epoutp049be2d7a6c6af1dc0c3d847fc7c217ecc~jUtKxr9hT1671916719epoutp04I
-	for <linux-cxl@vger.kernel.org>; Mon,  8 Sep 2025 13:49:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250908134904epoutp049be2d7a6c6af1dc0c3d847fc7c217ecc~jUtKxr9hT1671916719epoutp04I
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1757339344;
-	bh=sGaPDS2saH3X9SUECYQvX+J9nCjPEyLvWL59wxpiopQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OIgM9WTlCEtgrS/v97uzpOJ5EOGltD6q674uPSpj7cGWYx3nLKRr1HhESiWSuMIEO
-	 c0nRvn5CMaLY1bu0b9by+mMFu9ruSqErYqWLqiBV12fFFCrk9FkntpznqEtOrNWo+U
-	 p9Cn63fVU5ZZz53CqXl8vRa9XcR0cFKzK7oaMx+s=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250908134904epcas5p13c52d6244a611233d93b91563f041e1d~jUtKYMkBD2056020560epcas5p1e;
-	Mon,  8 Sep 2025 13:49:04 +0000 (GMT)
-Received: from epcas5p4.samsung.com (unknown [182.195.38.93]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4cL7bM0x2Vz6B9m4; Mon,  8 Sep
-	2025 13:49:03 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250908134902epcas5p3ec8288410f5944964dacec054d73c4a7~jUtIuwC_y3064530645epcas5p3b;
-	Mon,  8 Sep 2025 13:49:02 +0000 (GMT)
-Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250908134900epsmtip16f7bffee4fccbc987844e1805ef4ca09~jUtHZkDCt0547905479epsmtip1L;
-	Mon,  8 Sep 2025 13:49:00 +0000 (GMT)
-Date: Mon, 8 Sep 2025 19:18:56 +0530
-From: Arpit Kumar <arpit1.kumar@samsung.com>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: qemu-devel@nongnu.org, gost.dev@samsung.com, linux-cxl@vger.kernel.org,
-	dave@stgolabs.net, vishak.g@samsung.com, krish.reddy@samsung.com,
-	a.manzanares@samsung.com, alok.rathore@samsung.com, cpgs@samsung.com
-Subject: Re: [PATCH v3 1/2] hw/cxl: Refactored Identify Switch Device & Get
- Physical Port State
-Message-ID: <20250908134856.2fexpkb2m4ztxwcn@test-PowerEdge-R740xd>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mVi/3e4b"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RsXO2GFgHD2lkb4JGiHzutntPglYlu97kmjE10YwuAfoqVkcb3bFeqaY6kcA3kZCJslOzWGBvUCWFCCrxmftEtASVSbTAbTo9PRD742Srt9qccxGlwPoWmFRV2ZJcDK9iFoPd2MzJUESPzwwev+haHJVk20LKlKm5d6hpaMBTnUmdCB2AWBZjsPGbVz58dXOZjcCeEaHpSOByBI4y2oHXppvnbsSRL6PudyCJIANc+EJ4iZy1HvOCVsjKrfVWZ9xpcNwxNkO/WYmSLTmyqB/OqOAIKpxBUQiQltVzQfoysmRlsFmEkeF17x4tpZgpNNUNTC3DTR++1p3LOV72rE7rQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=df4NlJyJauiFtLXcc8Vk+3gANJIS+U/2yuXaR0+ipX8=;
+ b=x2nCwVW2yucAjdq01uzRkc0kPGpnxKUJJYhm4Kr1n3ho8KYz5aMLMdLv5084n/n4Spf7Pjwj5IrHqgbJEegv+4BX4Id6qg2VFljeoaJuwVM2q/65NmvGiJv2oXH8MsKxZIjDg9wSXkaM9+cyDpmWzZIre8vaZMYqLTms8Nj80p6J5OHXwKzZqfyPFzxTlDjIYE4tI/Ij7EqezlV7E/Tpo70iazr/5skDuWYfCdYYpP9Qvl/HGK9R97mCwCDGJClVrJJJLh2MJdQaZoYbY41x8SSXt2LDNske/iCcRBIXRwHZeXQVVSadXaYWdchTKECjwjWLUH0PYafJj94/guqfzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=df4NlJyJauiFtLXcc8Vk+3gANJIS+U/2yuXaR0+ipX8=;
+ b=mVi/3e4bKURpAkNeaCK1irKHj25ThZSvFwNZl5R43jfVzBI/pQM0C11qMVzVIWqg/Kf/CpvPf0liRp+Rvq2gMs/qw6YrzfVvqjWv3/IhM/OIfvXXt8Qq+9kpX+XZC2YUWefnXypProuVlWpFlCHd77RKJfU7mtf7BVFR1je/Cb0KHLsVBd34aSvNvnQvwMgbO6vsUmJ5H64DQJ9Y/fTfFmYqcXtul6g0KF8WbQrc/QFG7+ZLEbZmlCL61IUzTo8eoBgNN6EKvuZh3dAb6pN9NYykuYRiJJHiJy6U22jUJEoQEzV2AxjyxnU8x9BHvIcXyqj+ZrNKsgErzSNHh7DAAQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
+ by BL3PR12MB6403.namprd12.prod.outlook.com (2603:10b6:208:3b3::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Mon, 8 Sep
+ 2025 13:52:42 +0000
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9094.017; Mon, 8 Sep 2025
+ 13:52:42 +0000
+Date: Mon, 8 Sep 2025 10:52:40 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Matthew Wilcox <willy@infradead.org>, Guo Ren <guoren@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@redhat.com>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	James Morse <james.morse@arm.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-csky@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org, linux-mm@kvack.org,
+	ntfs3@lists.linux.dev, kexec@lists.infradead.org,
+	kasan-dev@googlegroups.com
+Subject: Re: [PATCH 10/16] mm/hugetlb: update hugetlbfs to use mmap_prepare,
+ mmap_complete
+Message-ID: <20250908135240.GI616306@nvidia.com>
+References: <cover.1757329751.git.lorenzo.stoakes@oracle.com>
+ <346e2d1e768a2e5bf344c772cfbb0cd1d6f2fd15.1757329751.git.lorenzo.stoakes@oracle.com>
+ <20250908131121.GA616306@nvidia.com>
+ <f81fe6d4-43d2-461d-81b9-032a590f5b22@lucifer.local>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f81fe6d4-43d2-461d-81b9-032a590f5b22@lucifer.local>
+X-ClientProxiedBy: BL1P223CA0031.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:208:5b6::6) To PH7PR12MB5757.namprd12.prod.outlook.com
+ (2603:10b6:510:1d0::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250905165953.00006c3c@huawei.com>
-X-CMS-MailID: 20250908134902epcas5p3ec8288410f5944964dacec054d73c4a7
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_f82f6_"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250904131933epcas5p2ab29fa060d8a7df32a222aad740fedc6
-References: <20250904131904.725758-1-arpit1.kumar@samsung.com>
-	<CGME20250904131933epcas5p2ab29fa060d8a7df32a222aad740fedc6@epcas5p2.samsung.com>
-	<20250904131904.725758-2-arpit1.kumar@samsung.com>
-	<20250905165953.00006c3c@huawei.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|BL3PR12MB6403:EE_
+X-MS-Office365-Filtering-Correlation-Id: 138b36b5-423c-4e7c-ad4f-08ddeedefb5d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?bjwSF03mWWQGBQV9xcVpderw4SUHy4KrCQQyv4kvXf8zoc1JlerE+znIxeYB?=
+ =?us-ascii?Q?G4gBy3+/nMMHCFvi3b+4N0iGFHxl7Oz7o9/MINhG5BHf0omutbvV8FUhas6g?=
+ =?us-ascii?Q?jnXeo53eEMW/Fggtrpn1lUcuDu/h1D063fghkqO3etroSEZQ8CanStKiEywr?=
+ =?us-ascii?Q?HAlZMZB7La7woILl9rXp748RuFRwvph9cDfJUMkiVBRz5rktBbDNuOkCr1zn?=
+ =?us-ascii?Q?RdYlSlUu3i9xt80fGTfS9uKVzkQv4XBvc8K+pXoJoX9wrnRlZbO73vhhxQDq?=
+ =?us-ascii?Q?SAPIgeoivM9mEBJi5jU6EWw5UstzmUrAXhi+qj3ZsYLDmzmNgU4XGrh2BcJe?=
+ =?us-ascii?Q?SBsHbRidOEeYSIwG+001CevmncfApjVzOq3WCo+jKVjY2q2KhuGpgzFLIiqn?=
+ =?us-ascii?Q?Y+WCkL9xl9ViBy3IMsTNqkJlO+AprmB/yiVRc2Dod6mY7do2PTZlVrzthju1?=
+ =?us-ascii?Q?hWcK45cYniyTBXCi4C8FgTA4/1iCoD9Fj0yR7K8F1TjOKvo3N1EjR78a8O2r?=
+ =?us-ascii?Q?f9wMT2VTd5Defetg6ZR503J8QhrqcpIHBNdKBX44Ommdu5NB7bZcZN3NMfIN?=
+ =?us-ascii?Q?8XjBxWWE3KIaYQC1G3cw/aBwV/nEwy7O16sOCil+NxaVeLZjicL/EUbm+CL/?=
+ =?us-ascii?Q?8/A7RFn6YcHbJ/qjVP6qwTJFcFxIPHmpxcG5h7X5pl46ecuZkRZSn0oDLVkJ?=
+ =?us-ascii?Q?SHI/nuSi38F0061nNSpO9v4o68osXVXhaZlyBiwB5WmmzuxEv/p8iGIb23uP?=
+ =?us-ascii?Q?kzdSBiUnJG1+Dxsmkuk4cAUMHmvwwQONlmXp/CnmbBNht6PMvDoU8r72BmVf?=
+ =?us-ascii?Q?ole95X6RCUOv3atrJeqhU3C8m6ivNPo/DUOOnsA313Um0ksxWB56HqKxrm/c?=
+ =?us-ascii?Q?1cFKI6YCZUOCwwrB+4PF6K/qIewhdQCBmt2d/DwDI7y+e00x6xQRdnhUX6AO?=
+ =?us-ascii?Q?OdFbCySG2C1YERnVgk8lIXMRuDLNF5u9bOD0kAOhuPn6dXBD4t3x5ioQlVCf?=
+ =?us-ascii?Q?wxkNhxXOkGHFAO9scnwRNLQgVjvmgNaTfxKXzvD4jUUtdyI9xSIvaeqZyHek?=
+ =?us-ascii?Q?lTfItD+ZGWVfDdwJnTX10EQQTflk7Xy5RBtsUxIu6ANTPU1cCQ6LIgiFNXs7?=
+ =?us-ascii?Q?uuRooupzA3UJtzIjHQMFG0uZXnJpZF8cX0TGsUCFoBHYlbrlkkOJR5JxvvRI?=
+ =?us-ascii?Q?SWO2QL1if33r+X5SprIhaGov6ZUJJYvze/iUhODba/qee0qCPeZeYwImu2X4?=
+ =?us-ascii?Q?Umuu4PN1785e/2vOsJj7zAp5xG1Aqm5M45sj+2k56FZhJmoBzYYE7LbkN5de?=
+ =?us-ascii?Q?NC9kSDBqi4VedXYw39YrIpM0swxzhWZhqaCGi8TjZqeI4qCN8Qgs+BEYa4F/?=
+ =?us-ascii?Q?dfCWkGK6YrXQIttZh0xxT04KThDtmhQpP0xPRHydaqLH4sLJchQSjR7gngjb?=
+ =?us-ascii?Q?LLgShQy881E=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?aPrRPhrFQjv3SfE4vSQ1NbAV019tcqU1qVXsxZxVNICd1JIWa9Btp6PgGwbY?=
+ =?us-ascii?Q?j36QykEKmw3MbKP3Ir8gVskSI+m2kYL2ZcEXiY2sOU79fkH4EfjJBS3F/mv3?=
+ =?us-ascii?Q?VYUiclUy9JnHBK47oK/0gw9zrYVXRdhh6vIFQiExf72Ih3BjLDiZ3leiEWG4?=
+ =?us-ascii?Q?WkQnIvfWQqB3U7nKO/DlqrVtsRKpBXHEIrtAjlvnk/x5s5hHdh7DBwq20GVX?=
+ =?us-ascii?Q?HwBN15CGALZzJIKD60c35HJsTI+G/XOojXyd3LyL7MtbGLCuQRYkAalMpLcT?=
+ =?us-ascii?Q?Q8ibCYPKspIzXdSxvTahKz0cb4kXWBvGDRxva2ATE4u0lxrdOObNOEAS1vla?=
+ =?us-ascii?Q?GCtqKnKYYFCPd+lJQueYHqsA+iM0RhedisUFnyTyKt/asdNCAQnw/1X321+h?=
+ =?us-ascii?Q?HbY2HvPH7QuIH03RVCIchn96RmmkSCrvLKwoBcLcyJeCE0XPhuEK2ZKSbKW3?=
+ =?us-ascii?Q?UFjNYVjfNo6QeMyU+T+LRS+fMgShvmtiGT/7cY+80MMGEq5D+PPgL7tlTj3z?=
+ =?us-ascii?Q?It/aRP67rKnXJtUkJX0JYy7tbLbnIL2rWjI2ZwRGQS0rZmfoQanypALvjACI?=
+ =?us-ascii?Q?V9Fe3B/0Lsubnrq0QAFfLDPivuxFPCk9jb37pReyWrvg+q+WXtbJT4DXVFoo?=
+ =?us-ascii?Q?qqqnOFA3OhagjBS2f2Ng3wNk2zZfzE7YriqbGyt/svbmnpg+Lc3vRm/uvFB8?=
+ =?us-ascii?Q?LG9Uvum84+nJtwxdIXtePgR9I07/EcqQY1Qd/pk6kghilneAW+H5/WcqjNis?=
+ =?us-ascii?Q?Op0tGlqFGHj0+T35arH/scobiVwNMC0KnzY9S+efQ5LlFKmRz+3WJKohl6Pu?=
+ =?us-ascii?Q?Zi50Yza8T20DTbZ7yG+4KZhG6YFr6U04FG5fc33TJI/0Kw+TQ+LJiXXuKsmm?=
+ =?us-ascii?Q?MIDIK1toAP1q4dT96OytNZdQc0l5uej2WAg7NXZvbyI1sccsb+cFmXeWwtZC?=
+ =?us-ascii?Q?u2KorS9mMIr9I79HriRS1gEfsg8EF8KjgjvqoiyB3tK/lqxa9Jzb5XO4TDtU?=
+ =?us-ascii?Q?4IkMlJquopjhDZmBMM2hvs8+3Nqe7fJ3rBie9hk8fvmtM3qa8fVgfW3yOkuD?=
+ =?us-ascii?Q?ljJWhUY03ETvH9oKM2LiFVWil/Xt3oSd3rl/vDatmpzG1bwN0HlIbM3v6S+U?=
+ =?us-ascii?Q?Ag3VsTM8lcR/6GHNUUQjdpOuKqPNjW/NNTvO0vMAexwaIoF7QCe3a7WNBGxa?=
+ =?us-ascii?Q?w7eabV20HzvHFTBlqKjgxFHExrg2y/MqLHvp6I90bPqSVikQ/khp4XNOM4QN?=
+ =?us-ascii?Q?pO+Meeozw/5+owDbiZceaVM14wxfdGDvxVnxJT8oJj8PMHXDVV62kYxo/hLb?=
+ =?us-ascii?Q?fL/ef68sYwHm1VDIuTT6T+3qN0g4CcMztQYwIWHKRyeSjvzdjFYMJAyxjPaF?=
+ =?us-ascii?Q?XPJ+1ScS7MrwVA9FWzfvqcj07vGKTn4VbNR97NulhumgoZcCQgOQ/Sivun1K?=
+ =?us-ascii?Q?uNAs/vGfivsRe1vgQ+FYXWkDlUjO8oR+LejuUpfUHTRcsA7yaHds9DPIUkh2?=
+ =?us-ascii?Q?juqdzv/maaavn7RycNnVOSZq92hwhZd/qI8esCEfzrPJ6sABNCVK4Rhkt9es?=
+ =?us-ascii?Q?4+KMaf++WgJ/M9H73NI=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 138b36b5-423c-4e7c-ad4f-08ddeedefb5d
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2025 13:52:42.5830
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B9qQ772z8XaykaPtdPYnP0aqwJ4R0lpVij/kI/kg6PbGH1JhimkgakmrVDSi4uWe
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6403
 
-------AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_f82f6_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+On Mon, Sep 08, 2025 at 02:37:44PM +0100, Lorenzo Stoakes wrote:
+> On Mon, Sep 08, 2025 at 10:11:21AM -0300, Jason Gunthorpe wrote:
+> > On Mon, Sep 08, 2025 at 12:10:41PM +0100, Lorenzo Stoakes wrote:
+> > > @@ -151,20 +123,55 @@ static int hugetlbfs_file_mmap(struct file *file, struct vm_area_struct *vma)
+> > >  		vm_flags |= VM_NORESERVE;
+> > >
+> > >  	if (hugetlb_reserve_pages(inode,
+> > > -				vma->vm_pgoff >> huge_page_order(h),
+> > > -				len >> huge_page_shift(h), vma,
+> > > -				vm_flags) < 0)
+> > > +			vma->vm_pgoff >> huge_page_order(h),
+> > > +			len >> huge_page_shift(h), vma,
+> > > +			vm_flags) < 0) {
+> >
+> > It was split like this because vma is passed here right?
+> >
+> > But hugetlb_reserve_pages() doesn't do much with the vma:
+> >
+> > 	hugetlb_vma_lock_alloc(vma);
+> > [..]
+> > 	vma->vm_private_data = vma_lock;
+> >
+> > Manipulates the private which should already exist in prepare:
+> >
+> > Check non-share a few times:
+> >
+> > 	if (!vma || vma->vm_flags & VM_MAYSHARE) {
+> > 	if (vma && !(vma->vm_flags & VM_MAYSHARE) && h_cg) {
+> > 	if (!vma || vma->vm_flags & VM_MAYSHARE) {
+> >
+> > And does this resv_map stuff:
+> >
+> > 		set_vma_resv_map(vma, resv_map);
+> > 		set_vma_resv_flags(vma, HPAGE_RESV_OWNER);
+> > [..]
+> > 	set_vma_private_data(vma, (unsigned long)map);
+> >
+> > Which is also just manipulating the private data.
+> >
+> > So it looks to me like it should be refactored so that
+> > hugetlb_reserve_pages() returns the priv pointer to set in the VMA
+> > instead of accepting vma as an argument. Maybe just pass in the desc
+> > instead?
+> 
+> Well hugetlb_vma_lock_alloc() does:
+> 
+> 	vma_lock->vma = vma;
+> 
+> Which we cannot do in prepare.
 
-On 05/09/25 04:59PM, Jonathan Cameron wrote:
->On Thu,  4 Sep 2025 18:49:03 +0530
->Arpit Kumar <arpit1.kumar@samsung.com> wrote:
->
->> -Storing physical ports info during enumeration.
->> -Refactored changes using physical ports info for
->>  Identify Switch Device (Opcode 5100h) & Get Physical Port State
->>  (Opcode 5101h) physical switch FM-API command set.
->>
->> Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
->Hi Arpit,
->
->A few minor things inline.   Biggest one is making sure
->to namespace the defines which is quite challenging to do
->here without a really long name.
->
->Jonathan
->
-Hi Jonathan,
-Thanks for the review! Will update the changes in next 
-iteration v4 of the patch-set.
->> ---
->>  hw/cxl/cxl-mailbox-utils.c                | 230 ++++++++++++----------
->>  include/hw/cxl/cxl_device.h               |  67 +++++++
->>  include/hw/pci-bridge/cxl_upstream_port.h |   8 +
->>  3 files changed, 198 insertions(+), 107 deletions(-)
->>
->> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
->> index c5177dfd92..cb36880f0b 100644
->> --- a/hw/cxl/cxl-mailbox-utils.c
->> +++ b/hw/cxl/cxl-mailbox-utils.c
->> @@ -435,16 +435,6 @@ static CXLRetCode cmd_set_response_msg_limit(const struct cxl_cmd *cmd,
->>      return CXL_MBOX_SUCCESS;
->>  }
->
->> @@ -555,69 +520,20 @@ static CXLRetCode cmd_get_physical_port_state(const struct cxl_cmd *cmd,
->>          return CXL_MBOX_INVALID_INPUT;
->>      }
->>
->> -    /* For success there should be a match for each requested */
->> -    out->num_ports = in->num_ports;
->> +    if (in->num_ports > pp->pports.num_ports) {
->> +        return CXL_MBOX_INVALID_INPUT;
->> +    }
->>
->> +    out->num_ports = in->num_ports;
->>      for (i = 0; i < in->num_ports; i++) {
->> -        struct cxl_fmapi_port_state_info_block *port;
->> -        /* First try to match on downstream port */
->> -        PCIDevice *port_dev;
->> -        uint16_t lnkcap, lnkcap2, lnksta;
->> +        int pn = in->ports[i];
->>
->> -        port = &out->ports[i];
->> -
->> -        port_dev = pcie_find_port_by_pn(bus, in->ports[i]);
->> -        if (port_dev) { /* DSP */
->> -            PCIDevice *ds_dev = pci_bridge_get_sec_bus(PCI_BRIDGE(port_dev))
->> -                ->devices[0];
->> -            port->config_state = 3;
->> -            if (ds_dev) {
->> -                if (object_dynamic_cast(OBJECT(ds_dev), TYPE_CXL_TYPE3)) {
->> -                    port->connected_device_type = 5; /* Assume MLD for now */
->> -                } else {
->> -                    port->connected_device_type = 1;
->> -                }
->> -            } else {
->> -                port->connected_device_type = 0;
->> -            }
->> -            port->supported_ld_count = 3;
->> -        } else if (usp->port == in->ports[i]) { /* USP */
->> -            port_dev = PCI_DEVICE(usp);
->> -            port->config_state = 4;
->> -            port->connected_device_type = 0;
->> -        } else {
->> +        if (pp->pports.pport_info[pn].port_id != pn) {
->>              return CXL_MBOX_INVALID_INPUT;
->>          }
->> -
->> -        port->port_id = in->ports[i];
->> -        /* Information on status of this port in lnksta, lnkcap */
->> -        if (!port_dev->exp.exp_cap) {
->> -            return CXL_MBOX_INTERNAL_ERROR;
->> -        }
->> -        lnksta = port_dev->config_read(port_dev,
->> -                                       port_dev->exp.exp_cap + PCI_EXP_LNKSTA,
->> -                                       sizeof(lnksta));
->> -        lnkcap = port_dev->config_read(port_dev,
->> -                                       port_dev->exp.exp_cap + PCI_EXP_LNKCAP,
->> -                                       sizeof(lnkcap));
->> -        lnkcap2 = port_dev->config_read(port_dev,
->> -                                        port_dev->exp.exp_cap + PCI_EXP_LNKCAP2,
->> -                                        sizeof(lnkcap2));
->> -
->> -        port->max_link_width = (lnkcap & PCI_EXP_LNKCAP_MLW) >> 4;
->> -        port->negotiated_link_width = (lnksta & PCI_EXP_LNKSTA_NLW) >> 4;
->> -        /* No definition for SLS field in linux/pci_regs.h */
->> -        port->supported_link_speeds_vector = (lnkcap2 & 0xFE) >> 1;
->> -        port->max_link_speed = lnkcap & PCI_EXP_LNKCAP_SLS;
->> -        port->current_link_speed = lnksta & PCI_EXP_LNKSTA_CLS;
->> -        /* TODO: Track down if we can get the rest of the info */
->> -        port->ltssm_state = 0x7;
->> -        port->first_lane_num = 0;
->> -        port->link_state = 0;
->> -        port->port_cxl_version_bitmask = 0x2;
->> -        port->connected_device_cxl_version = 0x2;
->> +        memcpy(&out->ports[i], &(pp->pports.pport_info[pn]),
->> +               sizeof(CXLPhyPortInfo));
->>      }
->> -
->
->That's a stray change that shouldn't be here.
->
-Correct me if I am wrong but the current initializations for the ports are
-moved to cxl_set_port_type(), hence this might appear stray in this case due
-to eliminations but this is with respect to the response payload of
-cmd_get_physical_port_state() so seems apt.
-However, one change required would be to move: out->num_ports = in->num_ports; after
-the below for loop as it validates the port_id's:
-     for (i = 0; i < in->num_ports; i++) {
-         int pn = in->ports[i];
+Okay, just doing that in commit would be appropriate then
+ 
+> This is checked in hugetlb_dup_vma_private(), and obviously desc is not a stable
+> pointer to be used for comparing anything.
+> 
+> I'm also trying to do the minimal changes I can here, I'd rather not majorly
+> refactor things to suit this change if possible.
 
-         if (pp->pports.pport_info[pn].port_id != pn) {
-             return CXL_MBOX_INVALID_INPUT;
-         }
-         memcpy(&out->ports[i], &(pp->pports.pport_info[pn]),
-                sizeof(CXLPhyPortInfo));
-     }
+It doesn't look like a bit refactor, pass vma desc into
+hugetlb_reserve_pages(), lift the vma_lock set out
 
->>      pl_size = sizeof(*out) + sizeof(*out->ports) * in->num_ports;
->>      *len_out = pl_size;
->>
->
->> +static void cxl_set_dsp_port(PCIBus *bus, PCIDevice *dev, void *opaque)
->> +{
->> +    CXLCCI *cci = (CXLCCI *)opaque;
->
->That cast isn't needed.  You can always implicitly cast from a void *
->to another pointer type (and the other way).
->
-okay, thanks!
->> +    CXLUpstreamPort *pp = CXL_USP(cci->d);
->> +
->> +    if (object_dynamic_cast(OBJECT(dev), TYPE_CXL_DSP)) {
->> +        cxl_set_port_type(pp, PCIE_PORT(dev)->port, cci);
->> +    }
->> +}
->> +
->> +static CXLRetCode cxl_set_phy_port_info(CXLCCI *cci)
->> +{
->> +    PCIEPort *usp = PCIE_PORT(cci->d);
->> +    PCIBus *bus = &PCI_BRIDGE(cci->d)->sec_bus;
->> +    CXLUpstreamPort *pp = CXL_USP(cci->d);
->> +    int num_phys_ports = pcie_count_ds_ports(bus) + 1;
->> +    pp->pports.num_ports = num_phys_ports;
->
->Don't mix and match declarations and non declarations.
->
-Sure, I'll keep note of it.
->> +    uint8_t phy_port_num = usp->port;
->> +
->> +    cxl_set_port_type(pp, phy_port_num, cci); /* USP */
->> +    pci_for_each_device_under_bus(bus, cxl_set_dsp_port, cci); /* DSP */
->> +
->> +    return CXL_MBOX_SUCCESS;
->> +}
->
->> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
->> index 068c20d61e..9fc720ec10 100644
->> --- a/include/hw/cxl/cxl_device.h
->> +++ b/include/hw/cxl/cxl_device.h
->> @@ -129,6 +129,73 @@
->>                    CXL_NUM_CPMU_INSTANCES * (1 << 16),                   \
->>                    (1 << 16))
->>
->> +#define CXL_MAX_PHY_PORTS 256
->> +
->> +/* physical port control info - CXL r3.2 table 7-19 */
->Stick to local style. That makes this
->/* CXL r3.2 Table 7-19: Get Physical Port State Port Information Block Format */
->
->
-thanks for pointing out!
->> +#define CXL_PORT_CONFIG_STATE_DISABLED           0x0
->> +#define CXL_PORT_CONFIG_STATE_BIND_IN_PROGRESS   0x1
->> +#define CXL_PORT_CONFIG_STATE_UNBIND_IN_PROGRESS 0x2
->> +#define CXL_PORT_CONFIG_STATE_DSP                0x3
->> +#define CXL_PORT_CONFIG_STATE_USP                0x4
->> +#define CXL_PORT_CONFIG_STATE_FABRIC_PORT        0x5
->> +#define CXL_PORT_CONFIG_STATE_INVALID_PORT_ID    0xF
->> +
->> +#define NOT_CXL_OR_DISCONNECTED              0x00
->These need a clean prefix like the you have for CONFIG_STATE
->Some of these names are tricky to put concisely.
->
->#define CXL_PORT_CONNECTED_DEV_MODE_NOT_CXL_OR_DISCONN 0x0
->#define CXL_PORT_CONNECTED_DEV_MODE_RCD                0x1
->#define CXL_PORT_CONNECTED_DEV_MODE_68B_VH             0x2
->#define CXL_PORT_CONNECTED_DEV_MODE_256B               0x3
->#define CXL_PORT_CONNECTED_DEV_MODE_LO_256B            0x4
->#define CXL_PORT_CONNECTED_DEV_MODE_PBR                0x5
->
->Is about the shortest that covers what these are.
->Kind of need to retain these are about the device down the
->other end of the wires.  Only one bibblee so can use just 1 character.
->
-okay
->> +#define RCD_MODE                             0x01
->> +#define CXL_68B_FLIT_AND_VH_MODE             0x02
->> +#define STANDARD_256B_FLIT_MODE              0x03
->> +#define CXL_LATENCY_OPTIMIZED_256B_FLIT_MODE 0x04
->> +#define PBR_MODE                             0x05
->> +
->> +#define NO_DEVICE_DETECTED              0
->Similar here - also keep to hex to match spec and 2 digits as this one is byte.
->#define CXL_PORT_CONNECTED_DEV_TYPE_NONE       0x00
->#define CXL_PORT_CONNECTED_DEV_TYPE_PCIE       0x01
->etc
->
-got it
->> +#define PCIE_DEVICE                     1
->> +#define CXL_TYPE_1_DEVICE               2
->> +#define CXL_TYPE_2_DEVICE_OR_HBR_SWITCH 3
->> +#define CXL_TYPE_3_SLD                  4
->> +#define CXL_TYPE_3_MLD                  5
->> +#define PBR_COMPONENT                   6
->> +
->> +#define CXL_RCD_MODE                    0x00
->> +#define CXL_68B_FLIT_AND_VH_CAPABLE     0x01
->> +#define CXL_256B_FLIT_CAPABLE           0x02
->> +#define CXL_LATENCY_OPTIMIZED_256B_FLIT 0x03
->> +#define CXL_PBR_CAPABLE                 0x04
->This lot are confusing as they are a bits in a bitmap. I'd express them as
->#define CXL_PORT_SUPPORTS_RCD             BIT(0)
->#define CXL_PORT_SUPPORTS_68B_VH          BIT(1)
->etc, matching names with above suggestion on short forms.
->
-okay
->> +
->> +#define CXL_LTSSM_DETECT        0x00
->I'd call out the PORT bit for these as they aren't generic
->and that this is the current state.
->
->CXL_PORT_LTSSM_STATE_DETECT  etc
->
->
-okay
->> +#define CXL_LTSSM_POLLING       0x01
->> +#define CXL_LTSSM_CONFIGURATION 0x02
->> +#define CXL_LTSSM_RECOVERY      0x03
->> +#define CXL_LTSSM_L0            0x04
->> +#define CXL_LTSSM_L0S           0x05
->> +#define CXL_LTSSM_L1            0x06
->> +#define CXL_LTSSM_L2            0x07
->> +#define CXL_LTSSM_DISABLED      0x08
->> +#define CXL_LTSSM_LOOPBACK      0x09
->> +#define CXL_LTSSM_HOT_RESET     0x0A
->> +
->> +#define LINK_STATE_FLAG_LANE_REVERSED    BIT(0)
->
->Probably stick CXL_PORT_ as prefix for these as well.
->
-okay, will update these namespace defines in v4
->> +#define LINK_STATE_FLAG_PERST_ASSERTED   BIT(1)
->> +#define LINK_STATE_FLAG_PRSNT            BIT(2)
->> +#define LINK_STATE_FLAG_POWER_OFF        BIT(3)
->> +
->> +typedef struct CXLPhyPortInfo {
->> +    uint8_t port_id;
->> +    uint8_t current_port_config_state;
->> +    uint8_t connected_device_mode;
->> +    uint8_t rsv1;
->> +    uint8_t connected_device_type;
->> +    uint8_t supported_cxl_modes;
->> +    uint8_t max_link_width;
->> +    uint8_t negotiated_link_width;
->> +    uint8_t supported_link_speeds_vector;
->> +    uint8_t max_link_speed;
->> +    uint8_t current_link_speed;
->> +    uint8_t ltssm_state;
->> +    uint8_t first_negotiated_lane_num;
->> +    uint16_t link_state_flags;
->> +    uint8_t supported_ld_count;
->> +} QEMU_PACKED CXLPhyPortInfo;
->> +
->>  /* CXL r3.1 Table 8-34: Command Return Codes */
->>  typedef enum {
->>      CXL_MBOX_SUCCESS = 0x0,
->> diff --git a/include/hw/pci-bridge/cxl_upstream_port.h b/include/hw/pci-bridge/cxl_upstream_port.h
->> index db1dfb6afd..3b7e72bfe0 100644
->> --- a/include/hw/pci-bridge/cxl_upstream_port.h
->> +++ b/include/hw/pci-bridge/cxl_upstream_port.h
->> @@ -4,6 +4,7 @@
->>  #include "hw/pci/pcie.h"
->>  #include "hw/pci/pcie_port.h"
->>  #include "hw/cxl/cxl.h"
->> +#include "include/hw/cxl/cxl_device.h"
->>
->>  typedef struct CXLUpstreamPort {
->>      /*< private >*/
->> @@ -23,6 +24,13 @@ typedef struct CXLUpstreamPort {
->>
->>      DOECap doe_cdat;
->>      uint64_t sn;
->> +
->> +    /*< physical ports information >*/
->
->I believe the magic /*< private >*/ syntax with the <> is special for public/private.
->There are a few other comments marked like that in qemu, but very very few.
->So this probably just wants to be
->
->  /* Physical ports information */
->
-got it, thanks for the info!
->> +    struct {
->> +        uint8_t num_ports;
->> +        uint8_t active_port_bitmask[CXL_MAX_PHY_PORTS / BITS_PER_BYTE];
->> +        CXLPhyPortInfo pport_info[CXL_MAX_PHY_PORTS];
->> +    } pports;
->>  } CXLUpstreamPort;
->>
->>  #endif /* CXL_SUP_H */
->
-
-------AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_f82f6_
-Content-Type: text/plain; charset="utf-8"
-
-
-------AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_f82f6_--
+Jason
