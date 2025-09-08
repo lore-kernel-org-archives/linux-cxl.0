@@ -1,176 +1,228 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2075.outbound.protection.outlook.com [40.107.93.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF3B12DDA1
-	for <linux-cxl@vger.kernel.org>; Mon,  8 Sep 2025 13:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757336602; cv=none; b=arGztVZeM4UdoovfWr9tkBQ+8AEzVjckSaRhxetEtYqHuLSGETW9FkciSMLHYUYp+Lai0J/TK+pN18c7cCdd6hL8h5K+q4463Fjc4rF+j+gkxOTq8oXlix/3ZisItR3HuPQEOTsnbNXjB0ZoJ7j+by4DSLYoDjP45JkIXUE3KKE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757336602; c=relaxed/simple;
-	bh=GJ0QHTeajaUyuNVy5ZZLI0vj0YTsLtlz1zBE3aaFHOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=cH65It+4J3MPxpL22siHRktOzr7YOghdGtzCh53yMMVM4comttUSF5+STR9kYCl3cQeCclg2XfCiSn2bF5K1LCx/K8prHrOZiWqeohfA+Vhgt+GBAQaQOVyIXZ/5rKqj6AQcHFZOpAMnB9ujdx3WnpdbxKXTQHpDq1Qr8ggI+Oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=bEK0K04F; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20A7306D4D;
+	Mon,  8 Sep 2025 13:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757337090; cv=fail; b=L3lEIz5vm/UAK7Xp+fzO3Q+3MAPC/dcHJHEbm5tqm4pq1qKRujXwZtNE62OkNJp3qMKg9bvrYUbYZWGrUy/fVjiDbSaF0wrko0ymg+gZPECV6JZx4zpBnwfE2J9p74fstOciWn8jSKDEhLEa0NVoq0qXMYzReYnlVzbj8L/8X6c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757337090; c=relaxed/simple;
+	bh=FeF9zLDeUfQtLhfvQQ4f/AX9BLlAfqbce1bkG6lhU5I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=kRmcCub5nWQLWze+qXqEaqyUNJekstvSTIpaKKKfKPhNCG75O1Zh3SIQJxNJMFHHVP4kLllO2333rvV1QfsUemuIcCr0Z1e7XnGIFZqsIobjg3Wz6XeTQ2RYTELAcTNDFtTGxp/L8VntnGrNfqEQe39uj193qkapezR3oiK/J6A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=e0e3e9+Y; arc=fail smtp.client-ip=40.107.93.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bEK0K04F"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250908130317epoutp01eba0238884ca8a688442a58f9bfcb33d~jUFM4px0H3178431784epoutp01a
-	for <linux-cxl@vger.kernel.org>; Mon,  8 Sep 2025 13:03:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250908130317epoutp01eba0238884ca8a688442a58f9bfcb33d~jUFM4px0H3178431784epoutp01a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1757336598;
-	bh=LN4sH3UwtU8HIQkrEetlva5pwUT35yq63hIpFGzCTV0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bEK0K04F5SJ/9sHJneSvBjCuRA7V7M72gQco0MrRWUDRLigg0DNZp5zSREiJEDH6a
-	 QwR0hg60OdMILmwmWXs9dXQS8j3vFCIWqrIoqLsIT1p8pxJetIZ1x5u+buYakgyOCZ
-	 O2fThdZcvMCyqazooAq1zDt5CEF4IhVEIQGbQv2c=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250908130316epcas5p25fd6caaa932fdd13a4133e376d1bc338~jUFLhYoNP1212412124epcas5p2E;
-	Mon,  8 Sep 2025 13:03:16 +0000 (GMT)
-Received: from epcas5p2.samsung.com (unknown [182.195.38.91]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4cL6ZW3l7lz2SSKY; Mon,  8 Sep
-	2025 13:03:15 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250908130314epcas5p35e0086154cafff6515126e01f7981d3b~jUFJ61k3a2761427614epcas5p3A;
-	Mon,  8 Sep 2025 13:03:14 +0000 (GMT)
-Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250908130313epsmtip1d1c2bbfc880dc95c15605b896d1d6252~jUFIfPFrE1029310293epsmtip13;
-	Mon,  8 Sep 2025 13:03:13 +0000 (GMT)
-Date: Mon, 8 Sep 2025 18:33:03 +0530
-From: Arpit Kumar <arpit1.kumar@samsung.com>
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>
-Cc: qemu-devel@nongnu.org, gost.dev@samsung.com, linux-cxl@vger.kernel.org,
-	dave@stgolabs.net, Jonathan.Cameron@huawei.com, vishak.g@samsung.com,
-	krish.reddy@samsung.com, a.manzanares@samsung.com, alok.rathore@samsung.com,
-	cpgs@samsung.com
-Subject: Re: [PATCH v3 2/2] hw/cxl: Add Physical Port Control (Opcode 5102h)
-Message-ID: <20250908130303.hxqdq5yldwpguojo@test-PowerEdge-R740xd>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="e0e3e9+Y"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wg+tvgGzPKaChDClFNQhQXYA7zY9ie7Ye2wM0NtvzOcNncDF8A7dvHYCZcGplKsMVbaiLnxffLVQVdhNjpXnGBZP5WnM7oRdi3aJfCNkhjKOrVw3heGaJbSgsTMDAf4v+CPDldGbuQFjPbs7Or9jqHey4SbifLW2jArW0kk2fWXulAeWp+aU2IOisM449HH33FFiBKiTSoqbdlRt06Wyz8CO2nHandmWOyZN2HPI++O7cpq/Y2lu6BO2CIw74YQgDG75uF3ui42lJu++2mUgEegGhEzI8Ehb1awCs5CN8jilR70awFmaL7+QwBhVlWo+XMRHR2stZbhvlC0O956l7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Bz15BRQJDJr031E71fvpDtrGADfbwz04cIMxbKpzdQA=;
+ b=Cukrp6Lm5vJ/1bXU0Fylh4CgHSizjfHTlmeQcsKwmqZfwYOatcPv24ja4qKPlfKNEm33ReAjIhE7bTzuDrGTsuEdko29OfI/5NT4VQLlnoH9vZGhEgb+DMEeC76Wkp+lnyJQRuv0Fy+TMrloX1SGosaDAW8nZz9UGDxxBrw/W529Rxk+zKA2BuoLzbYru6szE+VpEfdiEy5Oqs8168yUw+hKGVWG38aLVhtBDVDuaU54DWMVbFSX3K0FrlqrwipYApMHGbTDPKAxzBlaqTRXRQOo3chm6+slaFAAYffWtA13jSmlbT9pKSSKqaEVfkmmk71d/qiT4D0LbkE5wihRTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Bz15BRQJDJr031E71fvpDtrGADfbwz04cIMxbKpzdQA=;
+ b=e0e3e9+YKy6FDF8g2ukoefN1YWsEdITCweXuzaFFnp3sVn1TKpwDQXPzHAjFFnZhqTr65hIdEVttddsjTdxX30AaA/5nNN0dnGIYLb7Q7hUhgZXoToiCLhuqoO5shUHo8ICHi9VkJz5oNNnSWSzg7gKEdS3yKtJVzdZstwjGZV+KZ1zP57d7Q2DXM7xp5pQi4DdR5I2//rQVcN75uEMsSjC17bVeDyRqRzthYABXTn3IanHSNyvyMdZNmQYEByoe0vsJZAF9XpL3ztvTLQBn3W0R9V6Kk5rplqAqwyushrpl5PDNauaYFtmkjMNHLLtuGAdVwl2flKZfW/J7+yGfrw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
+ by IA1PR12MB8335.namprd12.prod.outlook.com (2603:10b6:208:3fa::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.19; Mon, 8 Sep
+ 2025 13:11:23 +0000
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9094.017; Mon, 8 Sep 2025
+ 13:11:23 +0000
+Date: Mon, 8 Sep 2025 10:11:21 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Matthew Wilcox <willy@infradead.org>, Guo Ren <guoren@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@redhat.com>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	James Morse <james.morse@arm.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-csky@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org, linux-mm@kvack.org,
+	ntfs3@lists.linux.dev, kexec@lists.infradead.org,
+	kasan-dev@googlegroups.com
+Subject: Re: [PATCH 10/16] mm/hugetlb: update hugetlbfs to use mmap_prepare,
+ mmap_complete
+Message-ID: <20250908131121.GA616306@nvidia.com>
+References: <cover.1757329751.git.lorenzo.stoakes@oracle.com>
+ <346e2d1e768a2e5bf344c772cfbb0cd1d6f2fd15.1757329751.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <346e2d1e768a2e5bf344c772cfbb0cd1d6f2fd15.1757329751.git.lorenzo.stoakes@oracle.com>
+X-ClientProxiedBy: YT4PR01CA0209.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:ad::6) To PH7PR12MB5757.namprd12.prod.outlook.com
+ (2603:10b6:510:1d0::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <2d731c30-bf0c-49c6-b519-4b558d794b08@oracle.com>
-X-CMS-MailID: 20250908130314epcas5p35e0086154cafff6515126e01f7981d3b
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_f81a4_"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250904131944epcas5p351c0e073a975b1347c4a61aa0dd511f3
-References: <20250904131904.725758-1-arpit1.kumar@samsung.com>
-	<CGME20250904131944epcas5p351c0e073a975b1347c4a61aa0dd511f3@epcas5p3.samsung.com>
-	<20250904131904.725758-3-arpit1.kumar@samsung.com>
-	<2d731c30-bf0c-49c6-b519-4b558d794b08@oracle.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|IA1PR12MB8335:EE_
+X-MS-Office365-Filtering-Correlation-Id: 386a6328-7435-44da-9244-08ddeed93593
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?q8HBHKuQn1jDqfku0SHQMpqHFzJLzy9/1XphfSkkXwawrt3tflPKpRzoa9Bg?=
+ =?us-ascii?Q?lJkwenNqZRJRB544dpvAAHV/f/le4z7YyBySchpJwaslvNCfmKGldeqZNbdh?=
+ =?us-ascii?Q?SmIp0NTBjwzOdOSI9eFqRiKMjf3gbqJqkMTP4EZA4q61V6Lf1NYSvTiY9Trt?=
+ =?us-ascii?Q?s3eldiUElHxCxvOlDVV71VTusd7WZvfPovSzZsGms/psSVD8J6VxpOA6q32q?=
+ =?us-ascii?Q?9o+SlzckeUmbtIxyJ/HNeMbmhYK6+A7vpq9UQG4QDr8Ljv/SOsK0xHvLPNEe?=
+ =?us-ascii?Q?kbvyNpnK7cR/zlYPjEVvmdQvVigrUi+fPzaiZ9yJSyfhXzFTSJS8+Ws3rCUm?=
+ =?us-ascii?Q?VYEcscr4Z16E2Ckue5s0Ap+W1bbpG8EXQps5/aLnkTRTR7lh1Wke2NkZEwzt?=
+ =?us-ascii?Q?xcElJ7fXLVn9BqMJVKzagFfxx/X4h0s44sfvHVW+zMw6HBmVoBIgSg+X91Vi?=
+ =?us-ascii?Q?/FAWftaR79JeJ7B0y5g5m6pQntwqD5qtRfs+XrM5SUV7fZNZGMjBOVvSCJJm?=
+ =?us-ascii?Q?RNiL1xn9jMy1CaHLJQjuqZWh3jMj6yFhTuTsFCuI5STmyn+KKH7GJx2y+g1y?=
+ =?us-ascii?Q?mS3iJlPADC5t8/ULq2iUW/iA/eOPDjyr63eeVGbgXoVhkwZHKFIiU1BIQluc?=
+ =?us-ascii?Q?95eNazxRfN2gBGG+HT5vakCPqgZ9BhQ9VpnDzdTk+3n/AhQh6qPexY9YUoxQ?=
+ =?us-ascii?Q?r1sIBsFlV4XIsmjzAFAoyma4FGHOcaK6QUpkSKXNQAvN5GoJpHr0meh0DPJG?=
+ =?us-ascii?Q?Wx/SqpUVEWZIm/4FeN+stedGIAFkkSLKVSmXm00O5y+SVjGVMk5g5GIDmL83?=
+ =?us-ascii?Q?+IdMRRzE5GKi3J1s8igPZ8er5+41JxGrAHTFxeRObBna6ddXYUL7eSDMwiE+?=
+ =?us-ascii?Q?CouX5Z6+YVVFb0vBalD2T5KsPol9YDuMMPvxZoggPkJ3/i0YhnaJzt3lfiJv?=
+ =?us-ascii?Q?1zVNLIxQVZHKahEHBPyqOdSbPfeh9kvaWH1OaLxRv9wB6+f2928+fvRF2glG?=
+ =?us-ascii?Q?Jg4UnLnffG1y8rmpVPXI6RG9BQzIKtHGgiGOPYdxE3Wxvsyg5fOzvLetIHv1?=
+ =?us-ascii?Q?m/YxQ0e7HjLoFNVIei91ELcyJEZEtM/qh/1vuwahs4bFcu2n4x7m3o2H6YDZ?=
+ =?us-ascii?Q?QNErhdhs+jO2AeqgG5KyMmbOlZN9a9UvGb8Mq2RPKlkzvu7ZaHGlkucdpgpU?=
+ =?us-ascii?Q?HwqpLcuBuD+HXa7iwDNYGMUUvkk8mr/ppQxcOMv6fuMI2LkHGO5QRqg2fmlT?=
+ =?us-ascii?Q?LLk8g6KD38fmYKAUW1VtBIj1K9imIwgjwVSZL6w79AS2LLoHPi9LCYPFnltN?=
+ =?us-ascii?Q?sSdlfJMbbCkoXdz63kG7km9G+i5h8xVHFsUCJ9hDC1RzwKQQ/fhMnhAuH/pP?=
+ =?us-ascii?Q?ch68fHLLEV9+j9ruyLVD7Lil/nFGVIRhTTpBYQshMJhMIuc/aM0uYyqM/kDz?=
+ =?us-ascii?Q?6mihUzcux1g=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?puNHc3Z8GXMGaWZkoxhpuBbaF7Z7UWLHP/jLt/GRYUus7URhLKkcKn04AWxk?=
+ =?us-ascii?Q?seGUJYpIuKkREmgF8akgId2qQQMS5jCVxmHgimKttTXEWgyccbwayIzi2aX6?=
+ =?us-ascii?Q?cUIQha6HPQph72MP9j7c0GWapgYjNKovwHlMzuruWFiuYRVCDNAYd7UNibYL?=
+ =?us-ascii?Q?A+0fNKhrN84gQKmecNX0p/D1Zw61Z0J1Fe1T6lSW5iVK+TVazhTtWfXNPtEa?=
+ =?us-ascii?Q?9aSL3iuuJQnpoDcKb29OdLInJicV8YLGT3c4R/aolGkwa4Gdaj//QCE3TPVm?=
+ =?us-ascii?Q?dkbVvu72BpVPZ7t8yzrrSK6Q94w6cfiP9kClkK5MoCJGpdWJ3DSrXrK4SJUx?=
+ =?us-ascii?Q?VL8nrAH9MzStu0rX9qXoNTEBD99u70sXahdMk7j60bdLRJ5NyRwlLftinbvB?=
+ =?us-ascii?Q?utrCq1nhgqHQfUp+pudwyELoApRretIhGjdgYpeVfG2yvBFKn4qVYgrDq7IC?=
+ =?us-ascii?Q?FsrtkIJwtqDn+lQtBLt8tFMpO/kTtq8MYEGoPzxpYFP5GM8RAfTiTd0KQedC?=
+ =?us-ascii?Q?/yGe5iNShenSCrYe3tKsKQbw3JNAOdfLeKwTY5RGgOSjVluDtCJrkAwuHGPa?=
+ =?us-ascii?Q?80VSaDdd9OoVHD2cr6uCz4DlNiz8mfvVwCrsJZTwT0hL4qRvPeW/4MrrZlEx?=
+ =?us-ascii?Q?2tLI/3BE6CrxrCZuIE8jEgSr6jUe93YYDqwsBgkMMi4H0jcxSOUaYYdXWjKR?=
+ =?us-ascii?Q?RAWwnDhIBtcI/mWB7SJwOr7mfefmJ3tjCwopkKlDdnk1jKUlQQcrLbVYLGNn?=
+ =?us-ascii?Q?AolQyIlkB7tHT700z3BlvWoNk3U1hmhJJMo6CIZvfEhMprff5Fof9/8wBg80?=
+ =?us-ascii?Q?1ffQp409zG28mp7gEbzugiSTWZea4hqdB/YNKll4D+TBxhnWvNyY//ctqyKg?=
+ =?us-ascii?Q?SfX5D6fHmkP4G21JvjkrdGJbtJff75guzY5vCmQ+xU1GjQ7jdj2X4DqvET6k?=
+ =?us-ascii?Q?4lnJRa9nWmgikN9v+AXtT4apDWClOqO9r25krgd/Y7CIrpN/N0XWiuWMUFJ5?=
+ =?us-ascii?Q?j7hmN+pw+Yj8yHawkiD/medxjZzxa4pVSssaCJ9kP0BHIpn0bsHflQ8ZxpqK?=
+ =?us-ascii?Q?slCAGSx9Q9Y91MKxFaeMX+WxpjMrgKGxSukCLjKU/EJ+xambNnYOzw7fFSGd?=
+ =?us-ascii?Q?ywoOG0wxhGUmeQFtxf56F0VYqeAZIxUxkLOt6IFBjX9rmqPaRjdFxHq9SVpH?=
+ =?us-ascii?Q?mCtH5uVb0xG2GkRRLO+Cr/7DxevWFZQuhCk2N/VaMpZEO5Lj72M9ZwZe0x02?=
+ =?us-ascii?Q?EKaIdd0x5JyTuroybGUbBjllSls+JCAWH+4HKSle4hB/FvXgseIBzaw7sp2/?=
+ =?us-ascii?Q?88aYnqVmfdHAh1kbGiuLI3CAziqOFumypgeaF4ikL89c8AcrArZwaXM4Xjc8?=
+ =?us-ascii?Q?Aad7smU8946SzTeEVvNCcyO9U7v8p1lvQsiFiTaCBgiv7K4LAviDOcytOmqd?=
+ =?us-ascii?Q?NbG8UyI20W0xq0uccOrnJYUe3+lfCiLEVw/2CqDOqwgUbXUqCy9Ppfsw1SJb?=
+ =?us-ascii?Q?uNZ4sYHZPlsYdLsxXAkmdbCHzSASMUNqjN7wNpMw1PmwLUlFhJlxF/eiAvEH?=
+ =?us-ascii?Q?vVrdHqy/P75ZzvLMVxc=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 386a6328-7435-44da-9244-08ddeed93593
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2025 13:11:23.3097
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tICOvs9SHVif2QRV8+lHUpobroN8UIyUJxKgWUsntnopVcEqSChA4jmi1I7jBTlH
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8335
 
-------AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_f81a4_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+On Mon, Sep 08, 2025 at 12:10:41PM +0100, Lorenzo Stoakes wrote:
+> @@ -151,20 +123,55 @@ static int hugetlbfs_file_mmap(struct file *file, struct vm_area_struct *vma)
+>  		vm_flags |= VM_NORESERVE;
+>  
+>  	if (hugetlb_reserve_pages(inode,
+> -				vma->vm_pgoff >> huge_page_order(h),
+> -				len >> huge_page_shift(h), vma,
+> -				vm_flags) < 0)
+> +			vma->vm_pgoff >> huge_page_order(h),
+> +			len >> huge_page_shift(h), vma,
+> +			vm_flags) < 0) {
 
-On 05/09/25 02:18PM, ALOK TIWARI wrote:
->
->>@@ -4791,6 +4907,28 @@ void cxl_initialize_usp_mctpcci(CXLCCI *cci, DeviceState *d, DeviceState *intf,
->>      cxl_copy_cci_commands(cci, cxl_cmd_set_usp_mctp);
->>      cci->d = d;
->>      cci->intf = intf;
->>+    CXLUpstreamPort *pp;
->>+    int pn = 0;
->>      cxl_init_cci(cci, payload_max);
->>      cxl_set_phy_port_info(cci);
->>+    /* physical port control */
->>+    pp = CXL_USP(cci->d);
->>+    for (int byte_index = 0; byte_index < (CXL_MAX_PHY_PORTS / BITS_PER_BYTE);
->>+         byte_index++) {
->>+        unsigned char byte = pp->pports.active_port_bitmask[byte_index];
->>+
->>+        for (int bit_index = 0; bit_index < 8; bit_index++, pn++) {
->>+            if (((byte) & (1 << bit_index)) != 0) {
->>+                qemu_mutex_init(&pp->pports.perst[pn].lock);
->>+                pp->pports.perst[pn].issued_assert_perst = false;
->>+                /*
->>+                 * Assert PERST involves physical port to be in
->>+                 * hold reset phase for minimum 100ms. No other
->>+                 * physcial port control requests are entertained
->
->typo physcial -> physical
->
-Thanks for pointing out!
->>+                 * until Deassert PERST command.
->>+                 */
->>+                pp->pports.perst[pn].asrt_time = ASSERT_WAIT_TIME_MS;
->>+            }
->>+        }
->>+    }
->>  }
->>diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
->>index 9fc720ec10..033d9bf11a 100644
->>--- a/include/hw/cxl/cxl_device.h
->>+++ b/include/hw/cxl/cxl_device.h
->>@@ -130,6 +130,7 @@
->>                    (1 << 16))
->>  #define CXL_MAX_PHY_PORTS 256
->>+#define ASSERT_WAIT_TIME_MS 100 /* Assert - Deassert PERST */
->>  /* physical port control info - CXL r3.2 table 7-19 */
->>  #define CXL_PORT_CONFIG_STATE_DISABLED           0x0
->>@@ -196,6 +197,14 @@ typedef struct CXLPhyPortInfo {
->>      uint8_t supported_ld_count;
->>  } QEMU_PACKED CXLPhyPortInfo;
->>+/* Assert - Deassert PERST */
->>+typedef struct CXLPhyPortPerst {
->>+    bool issued_assert_perst;
->>+    QemuMutex lock; /* protecting assert-deassert reset request */
->>+    uint64_t asrt_time;
->>+    QemuThread asrt_thread; /* thread for 100ms delay */
->>+} CXLPhyPortPerst;
->>+
->>  /* CXL r3.1 Table 8-34: Command Return Codes */
->>  typedef enum {
->>      CXL_MBOX_SUCCESS = 0x0,
->>diff --git a/include/hw/cxl/cxl_mailbox.h b/include/hw/cxl/cxl_mailbox.h
->>index 5c918c53a9..5c31023590 100644
->>--- a/include/hw/cxl/cxl_mailbox.h
->>+++ b/include/hw/cxl/cxl_mailbox.h
->>@@ -88,6 +88,7 @@ enum {
->>      PHYSICAL_SWITCH = 0x51,
->>          #define IDENTIFY_SWITCH_DEVICE      0x0
->>          #define GET_PHYSICAL_PORT_STATE     0x1
->>+        #define PHYSICAL_PORT_CONTROL       0X2
->
->use 0X2 -> 0x2
->
-Thanks for pointing out the typo's, will update the same in v4.
->>      TUNNEL = 0x53,
->>          #define MANAGEMENT_COMMAND     0x0
->>      MHD = 0x55,
->>diff --git a/include/hw/pci-bridge/cxl_upstream_port.h b/include/hw/pci-bridge/cxl_upstream_port.h
->>index 3b7e72bfe0..4b9da87d77 100644
->>--- a/include/hw/pci-bridge/cxl_upstream_port.h
->>+++ b/include/hw/pci-bridge/cxl_upstream_port.h
->>@@ -30,6 +30,7 @@ typedef struct CXLUpstreamPort {
->>          uint8_t num_ports;
->>          uint8_t active_port_bitmask[CXL_MAX_PHY_PORTS / BITS_PER_BYTE];
->>          CXLPhyPortInfo pport_info[CXL_MAX_PHY_PORTS];
->>+        CXLPhyPortPerst perst[CXL_MAX_PHY_PORTS];
->>      } pports;
->>  } CXLUpstreamPort;
->>-- 2.34.1
->>
->
->Thanks,
->Alok
->
+It was split like this because vma is passed here right?
 
-------AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_f81a4_
-Content-Type: text/plain; charset="utf-8"
+But hugetlb_reserve_pages() doesn't do much with the vma:
 
+	hugetlb_vma_lock_alloc(vma);
+[..]
+	vma->vm_private_data = vma_lock;
 
-------AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_f81a4_--
+Manipulates the private which should already exist in prepare:
+
+Check non-share a few times:
+
+	if (!vma || vma->vm_flags & VM_MAYSHARE) {
+	if (vma && !(vma->vm_flags & VM_MAYSHARE) && h_cg) {
+	if (!vma || vma->vm_flags & VM_MAYSHARE) {
+
+And does this resv_map stuff:
+
+		set_vma_resv_map(vma, resv_map);
+		set_vma_resv_flags(vma, HPAGE_RESV_OWNER);
+[..]
+	set_vma_private_data(vma, (unsigned long)map);
+
+Which is also just manipulating the private data.
+
+So it looks to me like it should be refactored so that
+hugetlb_reserve_pages() returns the priv pointer to set in the VMA
+instead of accepting vma as an argument. Maybe just pass in the desc
+instead?
+
+Then no need to introduce complete. I think it is probably better to
+try to avoid using complete except for filling PTEs..
+
+Jason
