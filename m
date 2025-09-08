@@ -1,292 +1,201 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CB01A262A;
-	Mon,  8 Sep 2025 15:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757345790; cv=fail; b=CDCPPZ4QJ0UzvtWHUsOK6k+shJtgxjDTLdvNwsqe5kcJVzRzD9nCgq7zE6uIv5faTyhBNHgIoUuklW3DREZwQyNXR6mjjtPfpuwwztZ75TsvWYkefKjpOacj9PIrBtY0uKyzjG8tfNTGH2+J2RZHAwzvHwsVdP5Y6LA6RyC9OvQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757345790; c=relaxed/simple;
-	bh=Ndc4kzhRkcXd26uQSZUPijZIACimQnXGl0ElXf/AspM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=NCms5/xqe6rgWYFzfsjxtQHoWy0aRfItQftN48nZYv987dmhpz0nR7WH/tSluvkKNoZmae6Xw//H9NjFjg4gnbsMJEdw5xMg+5D280APK1MyGsxlTVkHHaEuCxKULfj8NbS3fXqpb3DrBLV6gITx4wK3rF7dsN4UObMEyTQWQDQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=XByJjYp3; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ULoCx6Rz; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87873101D1
+	for <linux-cxl@vger.kernel.org>; Mon,  8 Sep 2025 15:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757346181; cv=none; b=RKfm+sC2jR/5XV7/HoVYSjIvnRg/4Ov/9umuYN+EPUJEgmzybTRhJoZpIS6Z9/zpeZQe69S9GZd6tdvmQ9MdUJ4hAYz+icd0T1vLLCzlgxRHgRA3wNDVFqVhHWdNz3Qump4FvXBwVEOVHLGBmNBBC2Nacx5w4LPuuEbgOoMwF3Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757346181; c=relaxed/simple;
+	bh=nt0uFPMwnk2Z89pwjhvB+hZl/SkIWUIZqNZ+KxixKJE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IVYybfHQnf8x1C/7GOepjmQKs9dNIi2ZGI7yRRr8j+owUHRkf0iKuislFrd/BDsyxvvlThH/n6Nh0XeCC2e+rvQxYj8rS2wkxPIYEnp6k2ONcXsWaXIQu1dsIvKe9sh2UwL/F4PNDsngB0CgJquJmJ4TMV2clcVdDvTQrKPf5QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=eKS8C34Q; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XByJjYp3";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ULoCx6Rz"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 588ExRv3029121;
-	Mon, 8 Sep 2025 15:35:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=ikXNTcHVvEsKk9Nx7i
-	tjKZwYDa5C6eOkm48i0GwcJWg=; b=XByJjYp3zJHje9A/OqSbzBJkQpLqpZQnTo
-	/+kxKFq7bxucCjkio+4cDvo9ESQDIrkEqulknx1q7Scs8+qKDKbZLscRMUh6VF2k
-	JggQo7QlIqQtnwD6nFBUPljlst1wVWKXjWquK+BoaPa0+FbFa3mL9M+CizOAhQp2
-	Q/TVwg7V41zSJGJvUHQGHrkCuT2XFFlAAuXceevlG3OLUh0kblvj+7v1JB0NPI7v
-	lkeR87m8DEOMo5UYdQaEREeCFlzJusTsyB2A0+Ef/d/UkNhAXUkCgIoYgZcAvtyS
-	2WzN00QZCYnVdDFhvywvSLzCR2FsritGbjGTUrEr2BE3vXnrY00A==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4921cyr3wa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 08 Sep 2025 15:35:49 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 588F8k1G031517;
-	Mon, 8 Sep 2025 15:35:48 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12on2058.outbound.protection.outlook.com [40.107.237.58])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 490bd9cgy0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 08 Sep 2025 15:35:48 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SHBbEHWDRXDlIoSqpnteufLSCkwUkAYab6r7Cexxm9kwPw92eE8a7t55dl3gy8gdJtmNbRATTWEwEIm0H4yYOvi+3s2XMRFYX5fjYL+Uyit1R9ah3S09W9U6ymt5ImOacSNSihp/9hvCI50bKkvk5jJyAe0e6nw8bsLHMAHqm1P6zr/74BabVz/gGPnckYE7vrl7u9wmUeHtcCIWM4ggUaz1UDMybKJWEaorI0N5uLT/6/K9M7MefzH14V7xeH82NL9QllPN6CD/IHmT6PpOyLmajcvbdLTBgtsLvZdiOX6nb06LIIvWmcPgk9093RVur7nvnX+0lQiurSaYuQ7B8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ikXNTcHVvEsKk9Nx7itjKZwYDa5C6eOkm48i0GwcJWg=;
- b=dyyCxNwvSXbI1Ibj2BWMHNG30RHcvO4O6qcA6ohw2CZkhreF693Ezp07ou1MYDtmxSs54cOk5vzOeFoxXlWU9mzJrhutdYxwf81VlAwfNqnLtcTzD6H3kEMEVVA+tDKE8F0m2E4dwkroBOMOOoQjsLU6qVDnE7GFS3+v+edHDbCVpwnLgd+ga9o6/Q9qrr43CuM1cuykHp3C7xet8LIaNDxvcOvUzJIV0zf6ZoFEjVCsTakJ3fvhsexQT4jYKTDJG1we8wia1urMejYSOnJqwj6N2oLohea265j5OrSBw56WG2PkOlGzSJ+7L7HhNi1oTCVisFABOiE5zgEBlMCIbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="eKS8C34Q"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-45de287cc11so7695035e9.1
+        for <linux-cxl@vger.kernel.org>; Mon, 08 Sep 2025 08:42:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ikXNTcHVvEsKk9Nx7itjKZwYDa5C6eOkm48i0GwcJWg=;
- b=ULoCx6RzZ3K+EF4fS4irrxBkPaswfFF7pcaGE18qHXs1s1rSoUzOJyYNOUnLUxUdPDCnuoMOo3ABqOV+4d5Q2eMN7XlcaQo1HPyLVxT4C2dKoWHu+01J4BPeq3Ulnf7rdmxyTJhIja0Qq0Rwy2tCC+oA7nPQy4ap1vYsi5IKA/Y=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by DM3PPF6AE862AC6.namprd10.prod.outlook.com (2603:10b6:f:fc00::c2d) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.19; Mon, 8 Sep
- 2025 15:35:43 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.9094.021; Mon, 8 Sep 2025
- 15:35:43 +0000
-Date: Mon, 8 Sep 2025 16:35:39 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
-        Guo Ren <guoren@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>,
-        Muchun Song <muchun.song@linux.dev>,
-        Oscar Salvador <osalvador@suse.de>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-        Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        Hugh Dickins <hughd@google.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
-        ntfs3@lists.linux.dev, kexec@lists.infradead.org,
-        kasan-dev@googlegroups.com
-Subject: Re: [PATCH 03/16] mm: add vma_desc_size(), vma_desc_pages() helpers
-Message-ID: <d47b68a2-9376-425c-86ce-0a3746819f38@lucifer.local>
-References: <cover.1757329751.git.lorenzo.stoakes@oracle.com>
- <d8767cda1afd04133e841a819bcedf1e8dda4436.1757329751.git.lorenzo.stoakes@oracle.com>
- <20250908125101.GX616306@nvidia.com>
- <e71b7763-4a62-4709-9969-8579bdcff595@lucifer.local>
- <20250908133224.GE616306@nvidia.com>
- <090675bd-cb18-4148-967b-52cca452e07b@lucifer.local>
- <20250908142011.GK616306@nvidia.com>
- <764d413a-43a3-4be2-99c4-616cd8cd3998@lucifer.local>
- <af3695c3-836a-4418-b18d-96d8ae122f25@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af3695c3-836a-4418-b18d-96d8ae122f25@redhat.com>
-X-ClientProxiedBy: LO0P123CA0013.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:354::6) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+        d=googlemail.com; s=20230601; t=1757346178; x=1757950978; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HsQNyx2buTgcuAnYXGlibIEqRm5CUhOE47xkEcvNAhE=;
+        b=eKS8C34QbVu/X7whJutdlP6HYxl0vkx/GR3dfkoOrseUthPwBlF4LxV9LcBMxiK3T3
+         KjYSc9AEuA2lvnAnnJQdiJWsi3gx0gCPS5Y2Oh4AKothcoLV/FfrA1A/esFWFz+ezmxR
+         wSZWpvC4+/Yf1xW3ZPyUtFY5zzohlyNfhEPaQvPsguTIb+UZSURlpN43+NCgnAEW6EJi
+         25q8mpdeGK3j1RNyYP7XsVLyQQbGEAx/U2vkaLk0QvqUdH3oOgD0Aajt8pOFLxFcE0JU
+         aHF72p/96nR/z+qdozOzoKhpQVgfU5J3KVYnXY8ePXbItuokGBTR4sJYOGedr/mAqD0L
+         +1IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757346178; x=1757950978;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HsQNyx2buTgcuAnYXGlibIEqRm5CUhOE47xkEcvNAhE=;
+        b=DVi0yMntoJT6l40y3BUzC5KLCdYsi2bVejOWVYu1mi58oP55ghRTyfeDJ2y1rZB5sA
+         TzASRpDGnfbR+h4hEP/w+q0DPiPTZw7gpL0a98vOE2/uKvUSQic16dNsf9gl4tdn8gB+
+         l3d7DPKQEdORdwwgv9eE3g8w1geuO94p1aVpOGkrx4bzn7hTq/CAxMf1xk094/qdscfv
+         GChDbmzRuezRbnFKKhfdEZi599dkVz0SdBcN8lFf9tq0gfOj+MgczfS8cz1FGxMHp3ay
+         PKFpzk4JoXSlRHhfrr5ERWhodniT9QYxb9oL9WEQ+cn9x9UMdd5qWyWBIr4X1c5cl/H8
+         yoBA==
+X-Gm-Message-State: AOJu0YwAXpsh7avV66dPW/dyC5d8epp0YHEM4dEbQdk1SxFw0U7Qs8bB
+	cvWlZa/8O/zwRUmJENxH9IAP6S97YnSSwhte43qyAdBWrdGldUvPG+y1DpLAdg==
+X-Gm-Gg: ASbGnctUbMS93XUmfl1hdbefG3pwOFEGe5owHLHCVqPfPY9/9iwCGFZESBF34q5ePaW
+	MuUL4Q4+w547uBcweZfGeXgX8OiUre58rUMm73mUzimb4J5IZsHCWXkVHp6yY+M1v2B1k454vTM
+	cPsxTbjUUISGLGLTqLXKVWTzm/RT2YkCtaWY0g0kt6BayGlOUKC5j6Ba/0/d55BQhPV+5AzRM5I
+	/rI3RFX6kk6H/fmnM4OYeM6SaztspfLrTDxFjKk4UFmeDISAvXY3xP1uDlVVDyUPYOtsf9K3cNp
+	vUdi56i+eYf/ukKBbOHHK8wExmjRVRW0LfDXYhXp6wcGBijuaTvJG/7aoAAczdrmCAxdF4Lbjru
+	TYllLAK3fur2X0mingS13VlOHQxkNYatF1hw5QO3CDjtOyukNObjXSFrrHvhmTXGzZgPY
+X-Google-Smtp-Source: AGHT+IGd8BTrSmGL8KpjIi7fWs012qn94DdFguRju0hxcgtmZEhIpux0DuTdT98retqsFJvywH/IBg==
+X-Received: by 2002:a05:6000:250c:b0:3e0:b982:ca49 with SMTP id ffacd0b85a97d-3e627a7cc9bmr7443645f8f.2.1757346177455;
+        Mon, 08 Sep 2025 08:42:57 -0700 (PDT)
+Received: from node1.manccluster.local (revolution.cs.man.ac.uk. [130.88.198.135])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3d6cf485eb7sm32151677f8f.3.2025.09.08.08.42.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Sep 2025 08:42:57 -0700 (PDT)
+From: Joshua Lant <joshualant@googlemail.com>
+X-Google-Original-From: Joshua Lant <joshualant@gmail.com>
+To: linux-cxl@vger.kernel.org
+Cc: Jonathan.Cameron@huawei.com,
+	Joshua Lant <joshualant@gmail.com>
+Subject: [QEMU- PATCH v2 0/1] cxl_type3: segfault in cxl_destroy_dc_regions
+Date: Mon,  8 Sep 2025 16:30:19 +0100
+Message-ID: <20250908154251.904229-1-joshualant@gmail.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DM3PPF6AE862AC6:EE_
-X-MS-Office365-Filtering-Correlation-Id: f7514a03-7358-4c7e-07be-08ddeeed5f84
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?yL1ka4/gQuzP8ybRUKqDqbOj1YEhmZ+TIuMIXYUw8dICxc7MsMcQ+PsTR6m2?=
- =?us-ascii?Q?OFslpoNTc5INwqUSzRWvP87osrbZB6wLK90CUr0XW8d2rRffDJo54q9MhiFu?=
- =?us-ascii?Q?zY7PCp+b6TDdP7O/AbuCJcYC+eP8PhGhkPnPJOBjVFEOXiQRyMq1rH3+ZVpw?=
- =?us-ascii?Q?Z+7/ZqJc+rflTFO3dF08HPJfxROvftwrhpRimanegI8JJxJvxHUqBtj6On4L?=
- =?us-ascii?Q?kBJfeFSn60Ja+ZO+BLhW6Vy8vsRg1GvoL+llKNbu7i9FDlhxx1zXNlv/Fr3p?=
- =?us-ascii?Q?GJGVLVgh+Kf0WUV2/zua8wrEt9T6rTWd5HIYWXbDJdioo6dZUE75QsypKfWv?=
- =?us-ascii?Q?xOaPXU/FPwSRZPXucms2nEX+DYlzNpCDCkJ2mWE5x1HXdxkG0Q95DSJfEmtp?=
- =?us-ascii?Q?2J8EwOfD2QgWHEqA2Jh/Ji03VuKGMP4Y14qSqoKzAiq7Bt25V/6qttYpbyNp?=
- =?us-ascii?Q?d12L7SnGdkSMaY77LZ8F8OIv3MvHgWhN4QHNrU0ToWOZ2B+gSOxHCUNA6MG3?=
- =?us-ascii?Q?5dAObCabs/wOe0CDK6/xxkOKvO2CJ9BI+Fnj6HR6us+aIUi16e1sVqvDr3B+?=
- =?us-ascii?Q?3iW+2IgQKRW60bV52J9ufgKyeFeiiihAZv+pLAmJkCbBSp75dpHVkgDanREc?=
- =?us-ascii?Q?enI6MsvmVmg+jAxZInoqvrsNl19Xd6baUG5VGf6Gn0PvuZMRmiocZnz2Y7jT?=
- =?us-ascii?Q?4CwVp9hFILIkKTdz3RWMFnbAJDo6oPtbs8YuFFHIArUZ3JT8fHoi1u4t88iD?=
- =?us-ascii?Q?Loh3ybJLthFviJwg0ToWHWYCKOt8tDlNguxN+Cgid5g4vFdNQCKHcW0D7ZNe?=
- =?us-ascii?Q?B8YC+6b/EdlVCUWxBidq+3nupD5T8QQUt+g6PdGnlgiNLiDhNtEBkWF/Vtkk?=
- =?us-ascii?Q?7tAfuVuZY3g0HCN29IowVxOT8/aizYi52QMkN4IrXjQW+dR4aWp0DCl90uty?=
- =?us-ascii?Q?2TEd3A9eruR+BdAyt2pP/1BRF3RsnFENB3PD7v1kpDMqQSgQLQ/dp5Vc3t5P?=
- =?us-ascii?Q?yECjpI7tpBMEgtvrpryg9YV8i4jxZ5knSZtSPYq86CDBsav8OtJGR3XL6GBR?=
- =?us-ascii?Q?S5kQ/v5TYP+JK3i6wphfZqXEohDCyVWCZHk+n4+KOU5saMni4XpzaHTGHZAG?=
- =?us-ascii?Q?JYptQCE3LCkKFG1tCh1EkqzTwXZcC8J2vzAdd9T5rFU92mosaTfAwZESptTf?=
- =?us-ascii?Q?J80KKuCY9Re2z98dqeRpwTHe399cr3YiDAPYrtfPOxD+7VM3aqvO+0HRwKgQ?=
- =?us-ascii?Q?ygCxTu2yWzCg1Ibr/s7yCDenM9m3f38kkx6xpY9c9gIBQaGpTeNFq5Rbhvp8?=
- =?us-ascii?Q?n+OH+y50oIfVCFGE7NiPmYZU8MZoLWJhcj+UB4DLZjYesmRJE2FAsSG75K85?=
- =?us-ascii?Q?lzdsEThLUcTLMFjU3/m1HE353fVYGrqsrXTuA+3FBVYzlhtzJA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?AYSddy6dVi205aRXrTDNF/WhoAmRWti9HwQSrWWiN7PJ1wc2J2WlHQtZ1sfQ?=
- =?us-ascii?Q?mZcn3ovJSjUPT3lQo7DJ300gbt8JhurIyzTqz2TPQ+tNqBmkGA4uws+LrUEq?=
- =?us-ascii?Q?42kwOnWuFR+aiahf30q59JO3E07wd96YYzpl6bc5rzwb3eIeBcFLDmHUTCxC?=
- =?us-ascii?Q?yWV2yPjZBmBWn3qY4KuHZ/68Qy+3U0hyEhDPlHVdbgd0UCao49YEz7aMrcbN?=
- =?us-ascii?Q?p14jPCsOD6hteBTH7aD/7Mt9B0YVoNae60kAt/J+9gFLEBvfajIc0thq4Ogg?=
- =?us-ascii?Q?rdzlta73SLdOCdnboIkgKLmC6Gg7Vq+0z+89uTtTlHsgPVmeVc5s6f5LLgMP?=
- =?us-ascii?Q?u/Bom+QC1eUDFZPmHauKzU6of/+i9cHivTMMsh35B2LLMWbfXMj+TSx93tjJ?=
- =?us-ascii?Q?/pmiY8fbgstK1j6Yq0OrOtQ9PNBLiVcEdc3fdGdLvc+uqjHkOOO4bOWTQ1ji?=
- =?us-ascii?Q?7qY25U0SmYSn8VHiSgBB/lngyk/JlFdzSf9thxPYcrqIa86OeXK9/nd0sE2S?=
- =?us-ascii?Q?Ia3y8n8z9H/swWC0ajGN+oAQMor1JcFlZ6zeQqICOkoFrQAdMUKpiooGP2h2?=
- =?us-ascii?Q?aZx+Vlw/aenf5peaT2x0ozHhI0s8rWMJH/MdynmG6BDRwKbcuGUHvIy/R0ib?=
- =?us-ascii?Q?3T30kWBgzQbdRm6RVAP+BX1ijgIxa+cRq8O6Jnht1npkqdPC/vOYxtesFgLv?=
- =?us-ascii?Q?FNXI5KSVfusDZpyE6bXCVizD9J2xLwaDCjbCL9KrY+dS9PdVTQ7Lv9VuGcdH?=
- =?us-ascii?Q?7YWNyOp/q7a3qTOBLF6bsyt5m22pLFeUVXNFOuiisjKhHa3xgjkuV9sICMiZ?=
- =?us-ascii?Q?1cqDo1nJplJK/Njt/jjO/MsxQFzvr1y0x5Wo+i9k8NDOFmyKIgiNV6uStMTy?=
- =?us-ascii?Q?siykF8ClM4wEwLKyBTF1XK8QO1MxZoBDv+Bb2yJDE31vZF+9h9Dbbfl+EQlf?=
- =?us-ascii?Q?MXZqAFIEw3q7rYmP3rRlPdnVCs7AY4hKKARZkIIiZNd1XmMwcY2ZtyrYny0I?=
- =?us-ascii?Q?d7xvQ37gIKh7ebY6ECOW/UNK65ifpWqv6axwH88qqe68lxUp5rS+QE6YBdqz?=
- =?us-ascii?Q?N30iBc4mG4+6csrqohOevPYwWqwUsv2FqLW4J7ea6rSOqskecjqdeB3lWIy4?=
- =?us-ascii?Q?La/ctO9ofMaRumrgWIY1oH/NxFGEQ8u0nQFGpOz72EM7vC1W99Suhc3onQh6?=
- =?us-ascii?Q?s49EmiqO/yA0dB4XpfMvixogi3ztnLfFoUU6Bwogh+J/ZpwmFeKqTAxOFuAJ?=
- =?us-ascii?Q?QHCexPkESuy7dtn4RpPf354//ZjiaoBbrbV44oXOOfQEgXb6vnTkztIC96o3?=
- =?us-ascii?Q?ZjnmNgO89Mm3PXk6K8CIOEX9cclEcRM/uvpVpwF3TbmfunSSz2aLRwetzbWu?=
- =?us-ascii?Q?hZatW9U285YMAogFeXRSJStIa4V9s/hSw5V6FIO3Y1nW1qgbYikOhrNlWdWP?=
- =?us-ascii?Q?UoMcFNuIy5GC2SXyz+rYGoZ2fubVsSBhnISIq/AlaQWPiG+U3KHKr9DBX0GE?=
- =?us-ascii?Q?MFXtgpwk+Bnmrxe5XpsRmIhkBtDlOpk3oFYSi09l7WK3ivOzhEBgzfhtEfU5?=
- =?us-ascii?Q?qw//3YVA5WhanpE4VisTMwfol1bGtf8VTDiNy2SdQUMyBKUwOJdL2dX948E/?=
- =?us-ascii?Q?BA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	ntzJ8QECYTW8rHec1TGwc15G9JqLJJtxCV9RQEk4S6tRSJPgWepD3zUsYLpIqx/gxjfxGXNKHFcnN0Q+aoRork7KNqq7+I2Oygtsh41PYhsR6WvO1EPAjz9UQUIheqmc0VY7oy9Wp7BSGatspyS5BBwZzeVb8gmOfUQc0+06NrLXzI6IlF+jbjpdiHM4WeC2D08tD54FueQfWUnxDySOjwHqPiQ351+D9nQb++0K06/XFRJzMDT3r4eAO4rK9V3zLXfnLA12z9h588yp1j1TuwBmCHCsD3bM+dLQxr0TBANr82Tf1R5AlTWUFk3NVBGGScgAzjNfbQb2Ynlz7ReCuxC4POD6jIBbAvlJATqAKwdOx5oENXpSSEfhxaWvxdfql0y+Wupe7EnGf7/RskYCpW3qu8jJw84wLpbFdownBSeK3zq0755SEaRlKncAExZ7c5e+1M9iMnaYAWkBEVJWheM8EF94elRQimC26GP7lzbRYDVNWbbnV/hk7v7xYztLf4XQwxHP2RDZEg/mPYS0RSTykY6Wn941WGkBi9zDzXRTeMHWCXe2aUH70cT8wHZ3JYIouPSsUVQgc7Av9Y2cKIqD3ccsg7pbICkuorYq6Ko=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7514a03-7358-4c7e-07be-08ddeeed5f84
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2025 15:35:43.4298
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +RIKeTEWzlWc3qT/K/qRyt3reHwfcc5QmCAfj19dnp0f8PeeTTMPctw9z5dsmuh0BmNWJowVjsFDhnGqZB6onQXeXUdUyxAZummoYmOcQf4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPF6AE862AC6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-08_05,2025-09-08_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 phishscore=0
- bulkscore=0 mlxlogscore=966 malwarescore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2508110000
- definitions=main-2509080154
-X-Proofpoint-GUID: mQK-2BL7XaXpfIMGXgm31eaojlQfKBlC
-X-Authority-Analysis: v=2.4 cv=BvmdwZX5 c=1 sm=1 tr=0 ts=68bef7d5 cx=c_pps
- a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=yJojWOMRYYMA:10 a=GoEa3M9JfhUA:10 a=D6T3AiggkppvC9Cbe2EA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-ORIG-GUID: mQK-2BL7XaXpfIMGXgm31eaojlQfKBlC
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA4MDE1MCBTYWx0ZWRfXz41BAbc9Rx9g
- KrZkKvCxYGz5HC7mpBChsn6n96igklZpsm6KZtq5pDr/thnlKvdG4LZTLd9vVi827AufqSm3BZ+
- x+EsS3kR2BcbWns+qmg/yDDwXXysQ/Fob55bbaOTDcBEOjLTM5JI5wWPTb9DoPMMtOLINpQX0FS
- ddA5k3CcgtHUCjThzUzRfogcML1V8mnBsTH0CF4WHq97EXYl7ZxIAYV4Q7AovtOFkh+mlXaTJwb
- RB2Ui1DBhYd3wVuTVyoP7IyTvfPelsoOQ0ieAvQ9stbb23xwaOx/UNL9xSaZ+X5L5FAzHxjBdPD
- CViV1FYWPPMOHj1GVpICaOqZrHyi/A2P2SSScFmYWn01/v4YGVc/kNX4rNVeQRpHQs1wHmt6dJh
- a8kr6TYA
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 08, 2025 at 05:07:57PM +0200, David Hildenbrand wrote:
-> On 08.09.25 16:47, Lorenzo Stoakes wrote:
-> > On Mon, Sep 08, 2025 at 11:20:11AM -0300, Jason Gunthorpe wrote:
-> > > On Mon, Sep 08, 2025 at 03:09:43PM +0100, Lorenzo Stoakes wrote:
-> > > > > Perhaps
-> > > > >
-> > > > > !vma_desc_cowable()
-> > > > >
-> > > > > Is what many drivers are really trying to assert.
-> > > >
-> > > > Well no, because:
-> > > >
-> > > > static inline bool is_cow_mapping(vm_flags_t flags)
-> > > > {
-> > > > 	return (flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
-> > > > }
-> > > >
-> > > > Read-only means !CoW.
-> > >
-> > > What drivers want when they check SHARED is to prevent COW. It is COW
-> > > that causes problems for whatever the driver is doing, so calling the
-> > > helper cowable and making the test actually right for is a good thing.
-> > >
-> > > COW of this VMA, and no possibilty to remap/mprotect/fork/etc it into
-> > > something that is COW in future.
-> >
-> > But you can't do that if !VM_MAYWRITE.
-> >
-> > I mean probably the driver's just wrong and should use is_cow_mapping() tbh.
-> >
-> > >
-> > > Drivers have commonly various things with VM_SHARED to establish !COW,
-> > > but if that isn't actually right then lets fix it to be clear and
-> > > correct.
-> >
-> > I think we need to be cautious of scope here :) I don't want to accidentally
-> > break things this way.
-> >
-> > OK I think a sensible way forward - How about I add desc_is_cowable() or
-> > vma_desc_cowable() and only set this if I'm confident it's correct?
->
-> I'll note that the naming is bad.
->
-> Why?
->
-> Because the vma_desc is not cowable. The underlying mapping maybe is.
+Changes for v2: fix tags block and hash in commit message
 
-Right, but the vma_desc desribes a VMA being set up.
+Hi there,
 
-I mean is_cow_mapping(desc->vm_flags) isn't too egregious anyway, so maybe
-just use that for that case?
+A typo[1] in a qemu command[2] of mine is causing a segfault[3] in qemu
+during boot, due to cxl_destroy_dc_regions being called inside what looks like
+a hot-remove event. I realise my command is not correct more generally, as
+it does not achieve what I want. However, the issue appears to be in qemu, due to
+the use of CXL_TYPE3_CLASS() rather than CXL_TYPE3_GET_CLASS(), as the input
+is the device rather than the class (introduced in ef73003556).
 
->
-> --
-> Cheers
->
-> David / dhildenb
->
+Josh
 
-Cheers, Lorenzo
+[1] Issue in my command
+
+Causes segfault:
+-device
+cxl-upstream,port=0,sn=5678,bus=cxl_rp_port1,id=us1,addr=0.1,multifunction=on,
+Boots okay:
+-device
+cxl-upstream,port=0,sn=5678,bus=cxl_rp_port1,id=us1,addr=0.0,multifunction=on,
+
+[2] System Setup
+
+QEMU- https://gitlab.com/jic23/qemu.git origin/cxl-2025-07-03
+
+Kernel- https://github.com/weiny2/linux-kernel.git origin/dcd-v6-2025-04-13
+
+Command-
+
+...
+-device usb-ehci,id=ehci \
+-object memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/t3_cxl1.raw,size=4G \
+-object memory-backend-file,id=cxl-mem2,share=on,mem-path=/tmp/t3_cxl2.raw,size=4G \
+-object memory-backend-file,id=cxl-lsa1,share=on,mem-path=/tmp/t3_lsa1.raw,size=1M \
+-object memory-backend-file,id=cxl-lsa2,share=on,mem-path=/tmp/t3_lsa2.raw,size=1M \
+-device pxb-cxl,bus_nr=11,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
+-device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.2,hdm_for_passthrough=true \
+-device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
+-device cxl-rp,port=1,bus=cxl.2,id=cxl_rp_port1,chassis=1,slot=2 \
+-device cxl-upstream,port=0,sn=1234,bus=cxl_rp_port0,id=us0,addr=0.0,multifunction=on, \
+-device cxl-upstream,port=0,sn=5678,bus=cxl_rp_port1,id=us1,addr=0.1,multifunction=on, \
+-device cxl-switch-mailbox-cci,bus=cxl_rp_port0,addr=0.3,target=us0 \
+-device cxl-switch-mailbox-cci,bus=cxl_rp_port1,addr=0.3,target=us1 \
+-device cxl-downstream,port=0,bus=us0,id=swport0,slot=4 \
+-device cxl-downstream,port=0,bus=us1,id=swport1,slot=5 \
+-device cxl-type3,bus=swport0,volatile-dc-memdev=cxl-mem1,id=cxl-dcd0,lsa=cxl-lsa1,num-dc-regions=2,sn=99 \
+-device cxl-type3,bus=swport1,volatile-dc-memdev=cxl-mem2,id=cxl-dcd1,lsa=cxl-lsa2,num-dc-regions=2,sn=100 \
+-device usb-cxl-mctp,bus=ehci.0,id=usb0,target=us0 \
+-device usb-cxl-mctp,bus=ehci.0,id=usb1,target=us1 \
+-device usb-cxl-mctp,bus=ehci.0,id=usb2,target=cxl-dcd0 \
+-device usb-cxl-mctp,bus=ehci.0,id=usb3,target=cxl-dcd1 \
+-machine cxl-fmw.0.targets.0=cxl.2,cxl-fmw.1.targets.0=cxl.1,cxl-fmw.0.size=2G,cxl-fmw.1.size=2G,cxl-fmw.0.interleave-granularity=1k,cxl-fmw.1.interleave-granularity=1k
+
+[3] Backtrace
+
+#0  object_class_dynamic_cast  at ../qom/object.c:966
+#1  0x0000555555f593c7 in object_class_dynamic_cast_assert (class=0x7ffbcf4f7010, typename=0x5555562385d4 "cxl-type3",
+    file=0x555556238580 "include/hw/cxl/cxl_device.h", line=865, func=0x555556238f60 <__func__.44683> "CXL_TYPE3_CLASS") at ../qom/object.c:1016
+#2  CXL_TYPE3_CLASS  at include/hw/cxl/cxl_device.h:865
+#3  cxl_destroy_dc_regions  at ../hw/mem/cxl_type3.c:922
+#4  ct3_exit  at ../hw/mem/cxl_type3.c:1309
+#5  pci_qdev_unrealize  at ../hw/pci/pci.c:1445
+#6  device_set_realized  at ../hw/core/qdev.c:583
+#7  property_set_bool  at ../qom/object.c:2375
+#8  object_property_set  at ../qom/object.c:1450
+#9  object_property_set_qobject  at ../qom/qom-qobject.c:28
+#10 object_property_set_bool  at ../qom/object.c:1520
+#11 qdev_unrealize  at ../hw/core/qdev.c:290
+#12 bus_set_realized  at ../hw/core/bus.c:205
+#13 property_set_bool  at ../qom/object.c:2375
+#14 object_property_set  at ../qom/object.c:1450
+#15 object_property_set_qobject  at ../qom/qom-qobject.c:28
+#16 object_property_set_bool  at ../qom/object.c:1520
+#17 qbus_unrealize  at ../hw/core/bus.c:179
+#18 device_set_realized  at ../hw/core/qdev.c:577
+#19 property_set_bool  at ../qom/object.c:2375
+#20 object_property_set  at ../qom/object.c:1450
+#21 object_property_set_qobject  at ../qom/qom-qobject.c:28
+#22 object_property_set_bool  at ../qom/object.c:1520
+#23 qdev_unrealize  at ../hw/core/qdev.c:290
+#24 bus_set_realized  at ../hw/core/bus.c:205
+#25 property_set_bool  at ../qom/object.c:2375
+#26 object_property_set  at ../qom/object.c:1450
+#27 object_property_set_qobject  at ../qom/qom-qobject.c:28
+#28 object_property_set_bool  at ../qom/object.c:1520
+#29 qbus_unrealize  at ../hw/core/bus.c:179
+#30 device_set_realized  at ../hw/core/qdev.c:577
+#31 property_set_bool  at ../qom/object.c:2375
+#32 object_property_set  at ../qom/object.c:1450
+#33 object_property_set_qobject  at ../qom/qom-qobject.c:28
+#34 object_property_set_bool  at ../qom/object.c:1520
+#35 qdev_unrealize  at ../hw/core/qdev.c:290
+#36 pcie_cap_slot_unplug_cb  at ../hw/pci/pcie.c:574
+#37 hotplug_handler_unplug  at ../hw/core/hotplug.c:56
+#38 pcie_unplug_device  at ../hw/pci/pcie.c:585
+#39 pci_for_each_device_under_bus  at ../hw/pci/pci.c:2017
+#40 pcie_cap_slot_do_unplug  at ../hw/pci/pcie.c:595
+#41 pcie_cap_slot_write_config  at ../hw/pci/pcie.c:890
+#42 cxl_rp_write_config  at ../hw/pci-bridge/cxl_root_port.c:295
+#43 pci_host_config_write_common  at ../hw/pci/pci_host.c:96
+#44 pci_data_write  at ../hw/pci/pci_host.c:138
+#45 pci_host_data_write  at ../hw/pci/pci_host.c:188
+#46 memory_region_write_accessor  at ../system/memory.c:488
+#47 access_with_adjusted_size  at ../system/memory.c:564
+#48 memory_region_dispatch_write  at ../system/memory.c:1544
+#49 flatview_write_continue_step  at ../system/physmem.c:2977
+#50 flatview_write_continue  at ../system/physmem.c:3007
+#51 flatview_write  at ../system/physmem.c:3038
+#52 address_space_write  at ../system/physmem.c:3158
+#53 address_space_rw  at ../system/physmem.c:3168
+#54 kvm_handle_io  at ../accel/kvm/kvm-all.c:2814
+#55 kvm_cpu_exec  at ../accel/kvm/kvm-all.c:3213
+#56 kvm_vcpu_thread_fn  at ../accel/kvm/kvm-accel-ops.c:51
+#57 qemu_thread_start  at ../util/qemu-thread-posix.c:393
+#58 start_thread  from /lib64/libpthread.so.0
+#59 clone () from /lib64/libc.so.6
+
+Joshua Lant (1):
+  cxl_type3: fix segfault in cxl_destroy_dc_regions
+
+ hw/mem/cxl_type3.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+-- 
+2.43.7
+
