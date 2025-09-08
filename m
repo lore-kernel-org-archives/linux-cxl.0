@@ -1,352 +1,236 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from silver.cherry.relay.mailchannels.net (silver.cherry.relay.mailchannels.net [23.83.223.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC361FDA;
-	Mon,  8 Sep 2025 18:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757355967; cv=none; b=PAriX0+bvqA0qfzaHK4s7vn+MBWbKvnwJS4msk4RFkZ3baBS9Ga+kVS4shCekIaonDZ6LRG+JNiNLKwcLBK/ngxkTuu3S7QLFGznyTX/RZgPGxSJvvKctGIAckmg5cK43rz93K/4U7YhHu9A33FxAOZ8kg71AKfHIz93x/h5TwA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757355967; c=relaxed/simple;
-	bh=BArk+9RUuAenGwgsVWw+f03CYYkNBYoYVP2na384Lxw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=atc8EyH5w1+hbDFY9PwfZhoVsCj8j0Mms9vscsDh7xOqyNXaDD4gioLCuD2k+BeqfNM1cOWK60uLe8MURGM0FfYwdn3DtvM1Ma2/SES7DDqBn55pANCdAajQPFFOJL64hC0uhx/O4ml6aRY2Oq+XuaDmmV7qKd3rMWrb6PNtiQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mQEzlr6o; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B88327EC99;
+	Mon,  8 Sep 2025 19:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.166
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757359701; cv=pass; b=eRXoPoA/2e+RRCcOn5hOfjM/7Qnp5BtFd9rUTA/Jx5kJmCB8NuszKV5YSViduWTXFLw18G4LB8sbCAPTRMslK2gkkleMMpDV/JsA4G2ewNOlkNFjDamHW8bSrCzEybjnmuN62zmjbDjJRQ6UnnXw3jNic6eU9tWuJ1f8Ss0PLqE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757359701; c=relaxed/simple;
+	bh=tnWf8OCqVXBo4JcyurtaqL5pbuuuVwoSJW0rtNu/iU4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ct+pycXp82GBSUTgAuKO+vad8e/olXkRteX25h2sMgrASchG8Oz5aAA9c8DhoqJfdDP8Kfswym59v0jSBKxo/rtk5tjsyi66+0iTgPUwhl04ARPlkGWD7qmFUrslmXyaFXcr0a8gp84OdE4T+rbO/+pW/QxBAbho3JL+Co6Nvpk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=A8A6E8ZP; arc=pass smtp.client-ip=23.83.223.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mQEzlr6o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757355965; x=1788891965;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BArk+9RUuAenGwgsVWw+f03CYYkNBYoYVP2na384Lxw=;
-  b=mQEzlr6ouWd4wlYEX7H1VZrCFQIDTicmV7ph7PM0t1qhWXaD9/Jd6NNK
-   etBP0S+tl8Vlns3BJiBi1ATrBOBu+90B9Bro9jvqJyZraCtYVu+TUckoy
-   /sZ+N6/7Zp1G/bv4pjpmTY2K7loGqzOd2ct6u3VqCh49LBQRWc1szjT5O
-   /2oPSFDahYvRbyqhdGCUE2nq8oNj6Z4lHs0lmDVQtsEzkSDxwYLube53q
-   EviFzlWfoZae/GaoNthVFm7wXAIcDNye4b7u7VhV+kLCY+jyc2OXqTuZ9
-   f+LiJ3OObIUf5aVQ1HsA57r8YlQHMD9ocQbj4qjwyu/ltXNBr36dtwBwF
-   A==;
-X-CSE-ConnectionGUID: jvSFvnHSS8efuTu2dbGbrw==
-X-CSE-MsgGUID: CEup9h6nSPuH6AhOXz9xOA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11547"; a="70997731"
-X-IronPort-AV: E=Sophos;i="6.18,249,1751266800"; 
-   d="scan'208";a="70997731"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2025 11:26:04 -0700
-X-CSE-ConnectionGUID: IJz3tRTJRdmk77lfEoZAlw==
-X-CSE-MsgGUID: tcfX6JFdQZ+X92SlqIt8tA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,249,1751266800"; 
-   d="scan'208";a="172999960"
-Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.110.113]) ([10.125.110.113])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2025 11:26:04 -0700
-Message-ID: <25a2be9a-a702-4db2-9db7-6f76348d89fd@intel.com>
-Date: Mon, 8 Sep 2025 11:26:02 -0700
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="A8A6E8ZP"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 2DF221C5834;
+	Mon,  8 Sep 2025 16:01:05 +0000 (UTC)
+Received: from pdx1-sub0-mail-a205.dreamhost.com (trex-blue-4.trex.outbound.svc.cluster.local [100.107.18.138])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 44FCC1C4A0B;
+	Mon,  8 Sep 2025 16:00:40 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1757347249; a=rsa-sha256;
+	cv=none;
+	b=oOePyCmVB4qfF4gT5vakgdpLOtCcTiYw3t0btYCZ/712p4wEggNpfK2u86Nw6PIwd2jY98
+	9DK7A+Oss6DnKSq2Mxq1MCSubR5SbwaYxAW8vXlmxebM6mABeNyRk77Igg3dkeEgLUGIVw
+	5jrhlZfgCCm7xzGKN3xSqIAb+v39WF7rX/u2c/7L56kzIwiexJAja9SbJ7YhjcaoxmyoYJ
+	eeJyuB0yYrTrR7Xq88oE901aqfX0PPa3JzZHEEfQJwnq0jin+HHcpbpXcB2Aca7JId2Lio
+	7mul3GW2pQWkBsxB9qYekb6nEf9idzeRA0bof5SzsQFWu22TfCy59O0CXcKl5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1757347249;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
+	bh=dHk/0tmtJMYbCOXHOucJ8cznc/d1xX4q5DHhMkM57b8=;
+	b=9biPKlbhF3qaJ9FywvFTG0QZ8Y4iYO32IFPlPKN5qyl8Rd4IGQRCKqzYmi1cISyPWl3c5e
+	a8+8U8qdWE5wBFKI15quGyjVM2NaXddFPB1+Vur5SnQeWx85mRM1Gdk1i3F5zQMUcedby8
+	GKD+toF5gbr51RHv0FWl9dyYb7/NZTGeqmg+5rvktDlWFTm+AjRETgQw1hBrYfVtbPPBJs
+	fZD4o9dF68Ti7UHVrY6wC7d3jAEpmO0VRnxTeljwA8FZDMx92w2VuqKqzJLoinfEcvVnw3
+	fhMh5CZEruDOJ0lNWULdWbpivpJ50E4rvCnaM2BQQt3czvgioEAg8cvSDM/bXA==
+ARC-Authentication-Results: i=1;
+	rspamd-9968f48fc-22hz2;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Fearful-Battle: 2a8f7a9e5c3185be_1757347250172_4040245632
+X-MC-Loop-Signature: 1757347250172:3171356223
+X-MC-Ingress-Time: 1757347250172
+Received: from pdx1-sub0-mail-a205.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.107.18.138 (trex/7.1.3);
+	Mon, 08 Sep 2025 16:00:49 +0000
+Received: from offworld.lan (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a205.dreamhost.com (Postfix) with ESMTPSA id 4cLBWB1v9lzF1;
+	Mon,  8 Sep 2025 09:00:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1757347239;
+	bh=dHk/0tmtJMYbCOXHOucJ8cznc/d1xX4q5DHhMkM57b8=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=A8A6E8ZPXJ5XNH2297PoWdarG2UGJI3EAVmvWNCtV9LssfnPLTHbfA+VGDFF7iWMl
+	 f8M8gfRNkirGOrhd5ZQibsw3Aa1uuM75uQSGxCgojYTtr+mCdjc/e77Qr/Wk1fDjB3
+	 HnOn/YrytGRKz9XlpLg8jTeSGzONvpoMuTHSr3e2fRf4l4UuqNgmXLLPAdYLQbZ2re
+	 kUYyQJjkHI8med60dsBzKFPJsXdIUNQoG3ibwCYWIc6Rl2KBvcgFTAvdLGEL5NOIhn
+	 NKkWRxbMo2Y4jWMP+K38pebQKbemYCdVOqhtsgldlzO4iSVAOOVgZdeCIQnqfhgtR3
+	 aYhSWfQrJ522Q==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: rafael.j.wysocki@intel.com,
+	dave.jiang@intel.com
+Cc: dan.j.williams@intel.com,
+	jonathan.cameron@huawei.com,
+	alejandro.lucero-palau@amd.com,
+	ira.weiny@intel.com,
+	alison.schofield@intel.com,
+	a.manzanares@samsung.com,
+	linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Subject: [PATCH v2] cxl/acpi: Rename CFMW coherency restrictions
+Date: Mon,  8 Sep 2025 09:00:34 -0700
+Message-Id: <20250908160034.86471-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4 v4] cxl/test: Simulate an x86 Low Memory Hole for
- tests
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- linux-cxl@vger.kernel.org
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Robert Richter <rrichter@amd.com>,
- ming.li@zohomail.com, linux-kernel@vger.kernel.org
-References: <20250724142144.776992-1-fabio.m.de.francesco@linux.intel.com>
- <20250724142144.776992-5-fabio.m.de.francesco@linux.intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250724142144.776992-5-fabio.m.de.francesco@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+ACPICA commit 710745713ad3a2543dbfb70e84764f31f0e46bdc
 
+This has been renamed in more recent CXL specs, as
+type3 (memory expanders) can also use HDM-DB for
+device coherent memory.
 
-On 7/24/25 7:20 AM, Fabio M. De Francesco wrote:
-> Simulate an x86 Low Memory Hole for the CXL tests by changing the first
-> mock CFMWS range size to 768MB and the CXL Endpoint Decoder HPA range sizes
-> to 1GB.
-> 
-> The auto-created region of cxl-test uses mock_cfmws[0], therefore the LMH
-> path in the CXL Driver will be exercised every time the cxl-test module is
-> loaded. Executing unit test: cxl-topology.sh, confirms the region created
-> successfully with a LMH.
-> 
-> Since mock_cfmws[0] range base address is typically different from the one
-> published by the BIOS on real hardware, the driver would fail to create and
-> attach CXL Regions when it's run on the mock environment created by
-> cxl-tests.
-> 
-> Therefore, save the mock_cfmsw[0] range base_hpa and reuse it to match CXL
-> Root Decoders and Regions with Endpoint Decoders when the driver is run on
-> mock devices.
-> 
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> ---
->  drivers/cxl/core/platform.c       |   9 +-
->  tools/testing/cxl/Kbuild          |   1 +
->  tools/testing/cxl/mock_platform.c | 137 ++++++++++++++++++++++++++++++
->  tools/testing/cxl/test/cxl.c      |  10 +++
->  tools/testing/cxl/test/mock.h     |   1 +
->  5 files changed, 154 insertions(+), 4 deletions(-)
->  create mode 100644 tools/testing/cxl/mock_platform.c
-> 
-> diff --git a/drivers/cxl/core/platform.c b/drivers/cxl/core/platform.c
-> index 8202750742d0..ba1dafece495 100644
-> --- a/drivers/cxl/core/platform.c
-> +++ b/drivers/cxl/core/platform.c
-> @@ -17,8 +17,9 @@
->   * also larger than that of the matching root decoder. If there are LMH's,
->   * the root decoder range end is always less than SZ_4G.
->   */
-> -bool platform_root_decoder_contains(const struct cxl_root_decoder *cxlrd,
-> -				    const struct cxl_endpoint_decoder *cxled)
-> +__weak bool
-> +platform_root_decoder_contains(const struct cxl_root_decoder *cxlrd,
-> +			       const struct cxl_endpoint_decoder *cxled)
+Link: https://github.com/acpica/acpica/commit/710745713ad3a2543dbfb70e84764f31f0e46bdc
+Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ drivers/cxl/acpi.c           |  4 ++--
+ include/acpi/actbl1.h        |  4 ++--
+ tools/testing/cxl/test/cxl.c | 18 +++++++++---------
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
-Can you take a look at this and see if something similar can be used instead of what you are doing here? Would prefer not introduce a third type of emulation.
-
-https://lore.kernel.org/linux-cxl/20250829180928.842707-8-dave.jiang@intel.com/T/#u
-
->  {
->  	const struct range *r1, *r2;
->  	int niw;
-> @@ -39,8 +40,8 @@ bool platform_root_decoder_contains(const struct cxl_root_decoder *cxlrd,
->   * Similar to platform_root_decoder_contains(), it matches regions and
->   * decoders
->   */
-> -bool platform_region_contains(const struct cxl_region_params *p,
-> -			      const struct cxl_decoder *cxld)
-> +__weak bool platform_region_contains(const struct cxl_region_params *p,
-> +				     const struct cxl_decoder *cxld)
->  {
->  	const struct range *r = &cxld->hpa_range;
->  	const struct resource *res = p->res;
-> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-> index 77e392c4b541..64c5c8c34805 100644
-> --- a/tools/testing/cxl/Kbuild
-> +++ b/tools/testing/cxl/Kbuild
-> @@ -66,6 +66,7 @@ cxl_core-y += $(CXL_CORE_SRC)/acpi.o
->  cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
->  cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
->  cxl_core-$(CONFIG_CXL_PLATFORM_QUIRKS) += $(CXL_CORE_SRC)/platform.o
-> +cxl_core-$(CONFIG_CXL_PLATFORM_QUIRKS) += mock_platform.o
->  cxl_core-$(CONFIG_CXL_MCE) += $(CXL_CORE_SRC)/mce.o
->  cxl_core-$(CONFIG_CXL_FEATURES) += $(CXL_CORE_SRC)/features.o
->  cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += $(CXL_CORE_SRC)/edac.o
-> diff --git a/tools/testing/cxl/mock_platform.c b/tools/testing/cxl/mock_platform.c
-> new file mode 100644
-> index 000000000000..1775c64b3c7c
-> --- /dev/null
-> +++ b/tools/testing/cxl/mock_platform.c
-> @@ -0,0 +1,137 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +#include <linux/completion.h>
-> +#include <linux/module.h>
-> +#include <linux/range.h>
-> +#include <linux/pci.h>
-> +
-> +#include <cxlmem.h>
-> +#include <platform.h>
-> +#include "test/mock.h"
-> +
-> +static u64 mock_cfmws0_range_start;
-> +
-> +void set_mock_cfmws0_range_start(u64 start)
-> +{
-> +	mock_cfmws0_range_start = start;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(set_mock_cfmws0_range_start, "CXL");
-> +
-> +static bool is_mock_port(struct device *dev)
-> +{
-> +	struct cxl_mock_ops *(*get_ops_fn)(int *index);
-> +	struct cxl_mock_ops *ops = NULL;
-> +	void (*put_ops_fn)(int index);
-> +	bool is_mock = false;
-> +	int index;
-> +
-> +	get_ops_fn = symbol_get(get_cxl_mock_ops);
-> +	if (!get_ops_fn)
-> +		return false;
-> +	put_ops_fn = symbol_get(put_cxl_mock_ops);
-> +	if (!put_ops_fn)
-> +		goto out;
-> +
-> +	ops = get_ops_fn(&index);
-> +	if (ops)
-> +		is_mock = ops->is_mock_port(dev);
-> +	put_ops_fn(index);
-> +
-> +out:
-> +	symbol_put(get_cxl_mock_ops);
-> +
-> +	return is_mock;
-> +}
-> +
-> +/* Start of CFMWS range that end before x86 Low Memory Holes */
-> +#define LMH_CFMWS_RANGE_START 0x0ULL
-> +
-> +static bool
-> +real_platform_root_decoder_contains(const struct cxl_root_decoder *cxlrd,
-> +				    const struct cxl_endpoint_decoder *cxled)
-> +{
-> +	const struct range *r1, *r2;
-> +	int niw;
-> +
-> +	r1 = &cxlrd->cxlsd.cxld.hpa_range;
-> +	r2 = &cxled->cxld.hpa_range;
-
-cxlsd_range
-cxled_range
-
-Makes it easier to read vs r1 and r2 and knowing what's being compared.
-
-> +	niw = cxled->cxld.interleave_ways;
-> +
-> +	if (r1->start == LMH_CFMWS_RANGE_START && r1->start == r2->start &&
-> +	    r1->end < (LMH_CFMWS_RANGE_START + SZ_4G) && r1->end < r2->end &&
-> +	    IS_ALIGNED(range_len(r2), niw * SZ_256M))
-
-Can this check be turned into a helper function? Also, maybe line it up with one check per line. Otherwise it looks rather confusing. Comment applies to rest of the patch.
-
-DJ
-
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +static bool
-> +cxl_test_platform_root_decoder_contains(const struct cxl_root_decoder *cxlrd,
-> +					const struct cxl_endpoint_decoder *cxled)
-> +{
-> +	const struct range *r1, *r2;
-> +	int niw;
-> +
-> +	r1 = &cxlrd->cxlsd.cxld.hpa_range;
-> +	r2 = &cxled->cxld.hpa_range;
-> +	niw = cxled->cxld.interleave_ways;
-> +
-> +	if (r1->start == mock_cfmws0_range_start && r1->start == r2->start &&
-> +	    r1->end < (mock_cfmws0_range_start + SZ_4G) && r1->end < r2->end &&
-> +	    IS_ALIGNED(range_len(r2), niw * SZ_256M))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +bool platform_root_decoder_contains(const struct cxl_root_decoder *cxlrd,
-> +				    const struct cxl_endpoint_decoder *cxled)
-> +{
-> +	struct cxl_port *port = to_cxl_port(cxled->cxld.dev.parent);
-> +
-> +	if (is_mock_port(port->uport_dev))
-> +		return cxl_test_platform_root_decoder_contains(cxlrd, cxled);
-> +
-> +	return real_platform_root_decoder_contains(cxlrd, cxled);
-> +}
-> +
-> +static bool real_platform_region_contains(const struct cxl_region_params *p,
-> +					  const struct cxl_decoder *cxld)
-> +{
-> +	const struct range *r = &cxld->hpa_range;
-> +	const struct resource *res = p->res;
-> +	int niw = cxld->interleave_ways;
-> +
-> +	if (res->start == LMH_CFMWS_RANGE_START && res->start == r->start &&
-> +	    res->end < (LMH_CFMWS_RANGE_START + SZ_4G) && res->end < r->end &&
-> +	    IS_ALIGNED(range_len(r), niw * SZ_256M))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +static bool cxl_test_platform_region_contains(const struct cxl_region_params *p,
-> +					      const struct cxl_decoder *cxld)
-> +{
-> +	const struct range *r = &cxld->hpa_range;
-> +	const struct resource *res = p->res;
-> +	int niw = cxld->interleave_ways;
-> +
-> +	if (res->start == mock_cfmws0_range_start && res->start == r->start &&
-> +	    res->end < (mock_cfmws0_range_start + SZ_4G) && res->end < r->end &&
-> +	    IS_ALIGNED(range_len(r), niw * SZ_256M))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +bool platform_region_contains(const struct cxl_region_params *p,
-> +			      const struct cxl_decoder *cxld)
-> +{
-> +	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-> +
-> +	if (is_mock_port(port->uport_dev))
-> +		return cxl_test_platform_region_contains(p, cxld);
-> +
-> +	return real_platform_region_contains(p, cxld);
-> +}
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 8a5815ca870d..a411c055d390 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -212,7 +212,11 @@ static struct {
->  			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
->  					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
->  			.qtg_id = FAKE_QTG_ID,
-> +#if defined(CONFIG_CXL_PLATFORM_QUIRKS)
-> +			.window_size = SZ_256M * 3UL,
-> +#else
->  			.window_size = SZ_256M * 4UL,
-> +#endif
->  		},
->  		.target = { 0 },
->  	},
-> @@ -453,6 +457,8 @@ static int populate_cedt(void)
->  		if (!res)
->  			return -ENOMEM;
->  		window->base_hpa = res->range.start;
-> +		if (i == 0)
-> +			set_mock_cfmws0_range_start(res->range.start);
->  	}
->  
->  	return 0;
-> @@ -744,7 +750,11 @@ static void mock_init_hdm_decoder(struct cxl_decoder *cxld)
->  	struct cxl_endpoint_decoder *cxled;
->  	struct cxl_switch_decoder *cxlsd;
->  	struct cxl_port *port, *iter;
-> +#if defined(CONFIG_CXL_PLATFORM_QUIRKS)
-> +	const int size = SZ_1G;
-> +#else
->  	const int size = SZ_512M;
-> +#endif
->  	struct cxl_memdev *cxlmd;
->  	struct cxl_dport *dport;
->  	struct device *dev;
-> diff --git a/tools/testing/cxl/test/mock.h b/tools/testing/cxl/test/mock.h
-> index d1b0271d2822..792eabbd0f18 100644
-> --- a/tools/testing/cxl/test/mock.h
-> +++ b/tools/testing/cxl/test/mock.h
-> @@ -32,3 +32,4 @@ void register_cxl_mock_ops(struct cxl_mock_ops *ops);
->  void unregister_cxl_mock_ops(struct cxl_mock_ops *ops);
->  struct cxl_mock_ops *get_cxl_mock_ops(int *index);
->  void put_cxl_mock_ops(int index);
-> +void set_mock_cfmws0_range_start(u64 start);
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 26c494704437..2cf75b553f26 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -128,9 +128,9 @@ static unsigned long cfmws_to_decoder_flags(int restrictions)
+ {
+ 	unsigned long flags = CXL_DECODER_F_ENABLE;
+ 
+-	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE2)
++	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_DEVMEM)
+ 		flags |= CXL_DECODER_F_TYPE2;
+-	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE3)
++	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM)
+ 		flags |= CXL_DECODER_F_TYPE3;
+ 	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE)
+ 		flags |= CXL_DECODER_F_RAM;
+diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
+index 99fd1588ff38..eb787dfbd2fa 100644
+--- a/include/acpi/actbl1.h
++++ b/include/acpi/actbl1.h
+@@ -560,8 +560,8 @@ struct acpi_cedt_cfmws_target_element {
+ 
+ /* Values for Restrictions field above */
+ 
+-#define ACPI_CEDT_CFMWS_RESTRICT_TYPE2      (1)
+-#define ACPI_CEDT_CFMWS_RESTRICT_TYPE3      (1<<1)
++#define ACPI_CEDT_CFMWS_RESTRICT_DEVMEM      (1)
++#define ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM (1<<1)
+ #define ACPI_CEDT_CFMWS_RESTRICT_VOLATILE   (1<<2)
+ #define ACPI_CEDT_CFMWS_RESTRICT_PMEM       (1<<3)
+ #define ACPI_CEDT_CFMWS_RESTRICT_FIXED      (1<<4)
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index 6a25cca5636f..ba50338f8ada 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -210,7 +210,7 @@ static struct {
+ 			},
+ 			.interleave_ways = 0,
+ 			.granularity = 4,
+-			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
+ 					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
+ 			.qtg_id = FAKE_QTG_ID,
+ 			.window_size = SZ_256M * 4UL,
+@@ -225,7 +225,7 @@ static struct {
+ 			},
+ 			.interleave_ways = 1,
+ 			.granularity = 4,
+-			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
+ 					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
+ 			.qtg_id = FAKE_QTG_ID,
+ 			.window_size = SZ_256M * 8UL,
+@@ -240,7 +240,7 @@ static struct {
+ 			},
+ 			.interleave_ways = 0,
+ 			.granularity = 4,
+-			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
+ 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+ 			.qtg_id = FAKE_QTG_ID,
+ 			.window_size = SZ_256M * 4UL,
+@@ -255,7 +255,7 @@ static struct {
+ 			},
+ 			.interleave_ways = 1,
+ 			.granularity = 4,
+-			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
+ 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+ 			.qtg_id = FAKE_QTG_ID,
+ 			.window_size = SZ_256M * 8UL,
+@@ -270,7 +270,7 @@ static struct {
+ 			},
+ 			.interleave_ways = 0,
+ 			.granularity = 4,
+-			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
+ 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+ 			.qtg_id = FAKE_QTG_ID,
+ 			.window_size = SZ_256M * 4UL,
+@@ -285,7 +285,7 @@ static struct {
+ 			},
+ 			.interleave_ways = 0,
+ 			.granularity = 4,
+-			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
+ 					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
+ 			.qtg_id = FAKE_QTG_ID,
+ 			.window_size = SZ_256M,
+@@ -302,7 +302,7 @@ static struct {
+ 			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
+ 			.interleave_ways = 0,
+ 			.granularity = 4,
+-			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
+ 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+ 			.qtg_id = FAKE_QTG_ID,
+ 			.window_size = SZ_256M * 8UL,
+@@ -318,7 +318,7 @@ static struct {
+ 			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
+ 			.interleave_ways = 1,
+ 			.granularity = 0,
+-			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
+ 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+ 			.qtg_id = FAKE_QTG_ID,
+ 			.window_size = SZ_256M * 8UL,
+@@ -334,7 +334,7 @@ static struct {
+ 			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
+ 			.interleave_ways = 8,
+ 			.granularity = 1,
+-			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
+ 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+ 			.qtg_id = FAKE_QTG_ID,
+ 			.window_size = SZ_512M * 6UL,
+-- 
+2.39.5
 
