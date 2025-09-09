@@ -1,91 +1,150 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6688343210
-	for <linux-cxl@vger.kernel.org>; Tue,  9 Sep 2025 14:09:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8B62475E3
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Sep 2025 14:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757426945; cv=none; b=sE3Y8VQCGsqickqUdLAz6ar/hyOhEjsq7TsDPV9yFZb1ycCRiUrbHQkc7KVJMpHyBl2yE5B3B4o2xIE51kF9oQYhZ2sgAQFTcuSe8PliRWWBt+oSn+V8+90MHv3ARzMrjM7xN+rL614PaLSaSMoHOEX20p4qkoNNbUShxbsfdhc=
+	t=1757429291; cv=none; b=jDCpstnW2TX3Ofq3ratX5b03a9ilCDdPFhrptS8wXOMuxi/PBaoJyfUJ1b3rIJfPX+ua0nnOtuwHKmr9r1GpJhzTzfTBHLlOuLhNcoZLRbcZqxj+FzY0MmDn4tPgAmOkeUSNlMLC5pReKybo4I/suy4x1Kr9R9TzZMURVrTe0EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757426945; c=relaxed/simple;
-	bh=ScGtWaq88mD5k4FIVwQ1G2KpmbfGz21C+S0dcJqSH4s=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rrjQGnz2L+wUPYYIA75gPiGMPxnPMM0s0p3Z/MQeQAndGT5iPyjHv1GK+ZvFj+EhUZeknYvjPxcYF+n5CcKTBpZxRHT3AvL5ibRGbJRTqtiZ1Rgy0aZaQ7qpyz8tn2VeSlS0w7NpMPW+L0dEc/2PdTLfdRvSboUoNDGv80z/8vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cLlv86hj5z6L50M;
-	Tue,  9 Sep 2025 22:04:52 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5F7EC1401DC;
-	Tue,  9 Sep 2025 22:09:00 +0800 (CST)
-Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 9 Sep
- 2025 16:09:00 +0200
-Date: Tue, 9 Sep 2025 15:08:59 +0100
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Joshua Lant <joshualant@googlemail.com>
-CC: <linux-cxl@vger.kernel.org>
-Subject: Re: [QEMU- PATCH 1/1] cxl_type3: fix segfault in
- cxl_destroy_dc_regions
-Message-ID: <20250909150859.000055f3@huawei.com>
-In-Reply-To: <aL754ZJlIUCOCotE@thinkpc>
-References: <20250904090346.884649-1-joshualant@gmail.com>
-	<20250904090346.884649-2-joshualant@gmail.com>
-	<20250905155456.00005f7f@huawei.com>
-	<aL754ZJlIUCOCotE@thinkpc>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1757429291; c=relaxed/simple;
+	bh=V55MeqyYEByXAvvQ+obB7m2FZlZH/VQKd9plf9c8UEo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=T5YDlNUlXXtAFAmJ4AjaRYxK6gLVJMYFC2RlHwCKkBx38DBhCvyk56zZ1SFAIk5oWtJQT541EjfZSM0faYFMa+wk6Nbz+1QNEFEoFS/u4Ucp+XYBx9XxaAbVlosPhaLJS3i6IPHyJZO2iHHkti4G2nQZ4HHWaNznbkIEQrn5htk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D0NVjwlQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D0NVjwlQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757429288;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S7K2qM1PAiI1ubms+Dwy7V8EYRo11d4cHmDiCJE3V+c=;
+	b=D0NVjwlQFMLlnIGwDirZiNVbU6yupPMJEd8NytovZqgPnNsqrezUsceeB32lwbea2bdnJ8
+	U4YKQV3KUKZSPqqKunG+Tsb6LHqHxvBLLVH9T1Xw2MEiebuaJ25kU+y117H1fUrbpGB0QM
+	zjj8LbRK2d6dr4QorOLfp/RIpdBSMwk=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-201-JVqZ21gJNbeNMAYNW1133w-1; Tue,
+ 09 Sep 2025 10:48:04 -0400
+X-MC-Unique: JVqZ21gJNbeNMAYNW1133w-1
+X-Mimecast-MFC-AGG-ID: JVqZ21gJNbeNMAYNW1133w_1757429282
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E48D41800656;
+	Tue,  9 Sep 2025 14:47:51 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.45.242.18])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 567831956045;
+	Tue,  9 Sep 2025 14:47:51 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id 23D9C21E6A27; Tue, 09 Sep 2025 16:47:48 +0200 (CEST)
+From: Markus Armbruster <armbru@redhat.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,  Davidlohr Bueso
+ <dave@stgolabs.net>,  ira.weiny@intel.com,  alucerop@amd.com,
+  a.manzanares@samsung.com,  linux-cxl@vger.kernel.org,
+  qemu-devel@nongnu.org,  Marcel Apfelbaum <marcel.apfelbaum@gmail.com>
+Subject: Re: [PATCH 1/4] hw/pcie: Support enabling flit mode
+In-Reply-To: <20250811125552-mutt-send-email-mst@kernel.org> (Michael
+	S. Tsirkin's message of "Mon, 11 Aug 2025 12:57:01 -0400")
+References: <20250811033405.332295-1-dave@stgolabs.net>
+	<20250811033405.332295-2-dave@stgolabs.net>
+	<20250811165741.00003aa2@huawei.com>
+	<20250811125552-mutt-send-email-mst@kernel.org>
+Date: Tue, 09 Sep 2025 16:47:48 +0200
+Message-ID: <87qzwfvg17.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Mon, 8 Sep 2025 16:44:33 +0100
-Joshua Lant <joshualant@googlemail.com> wrote:
+"Michael S. Tsirkin" <mst@redhat.com> writes:
 
-> > On Thu,  4 Sep 2025 10:02:22 +0100
-> > Joshua Lant <joshualant@googlemail.com> wrote:
-> >   
-> > > CXL_TYPE3_CLASS() should be CXL_TYPE3_GET_CLASS() given object (CXLType3Dev)
-> > > input. Leads to segfault in object_class_dynamic_cast.
-> > > 
-> > > Fixes: ef730035567
-> > > 
-> > > signed-off-by: Joshua Lant <joshualant@gmail.com>  
-> > 
-> > Good find.
-> > 
-> > The Fixes tag needs fixing though.
-> > Should be all part of the tags block and needs to include the patch name.
-> > I'm not finding the SHA though.
-> > 
-> > I think that tag is probably Svetley's MHD callback patch which isn't upstream
-> > so I'll squash this in my local tree and it will be fixed in the next tree
-> > I put up on gitlab.com/jic23/
-> > 
-> > Thanks,
-> > 
-> > Jonathan  
-> 
-> Yeah sorry, it is that MHD patch. I managed to write a rogue '7' at the end of
-> the hash somehow. Have reposted with updated tags block...
-> 
-I smashed it into the mhd patch locally and it will end up in there when I push
-a new tree, so the fix won't be directly visible as a separate patch.
+> On Mon, Aug 11, 2025 at 04:57:41PM +0100, Jonathan Cameron wrote:
+>> On Sun, 10 Aug 2025 20:34:02 -0700
+>> Davidlohr Bueso <dave@stgolabs.net> wrote:
+>> 
+>> > As with the link speed and width training, have ad-hoc property for
+>> > setting the flit mode and allow CXL components to make use of it.
 
-Thanks anyway for working out what was wrong with the tag.
+I understand this is property "256b-flit".
 
-Jonathan
+> I note we didn't make it a stable API for width, want to
+> prefix this one with "x-", too?
 
-> Cheers,
-> 
-> Josh
+The only use of "256b-flit" is in docs/system/devices/cxl.rst [PATCH
+4/4]:
+
+    diff --git a/docs/system/devices/cxl.rst b/docs/system/devices/cxl.rst
+    index bf7908429af8..4815de0f2dc4 100644
+    --- a/docs/system/devices/cxl.rst
+    +++ b/docs/system/devices/cxl.rst
+    @@ -384,6 +384,29 @@ An example of 4 devices below a switch suitable for 1, 2 or 4 way interleave::
+       -device cxl-type3,bus=swport3,persistent-memdev=cxl-mem3,lsa=cxl-lsa3,id=cxl-pmem3,sn=0x4 \
+       -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
+
+    +An example of 4 type3 devices with volatile memory below a switch. Two of the devices
+    +use HDM-DB for coherence::
+    +
+    +  qemu-system-x86_64 -M q35,cxl=on -m 4G,maxmem=8G,slots=8 -smp 4 \
+    +  ...
+    +  -object memory-backend-file,id=cxl-mem0,share=on,mem-path=/tmp/cxltest.raw,size=256M \
+    +  -object memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/cxltest1.raw,size=256M \
+    +  -object memory-backend-file,id=cxl-mem2,share=on,mem-path=/tmp/cxltest2.raw,size=256M \
+    +  -object memory-backend-file,id=cxl-mem3,share=on,mem-path=/tmp/cxltest3.raw,size=256M \
+    +  -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+    +  -device cxl-rp,port=0,bus=cxl.1,id=root_port0,chassis=0,slot=0 \
+    +  -device cxl-rp,port=1,bus=cxl.1,id=root_port1,chassis=0,slot=1 \
+--> +  -device cxl-upstream,bus=root_port0,id=us0,256b-flit=on \
+    +  -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
+--> +  -device cxl-type3,bus=swport0,volatile-memdev=cxl-mem0,id=cxl-mem0,sn=0x1,256b-flit=on,hdm-db=on \
+    +  -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
+--> +  -device cxl-type3,bus=swport1,volatile-memdev=cxl-mem1,id=cxl-mem1,sn=0x2,256b-flit=on,hdm-db=on \
+    +  -device cxl-downstream,port=2,bus=us0,id=swport2,chassis=0,slot=6 \
+    +  -device cxl-type3,bus=swport2,volatile-memdev=cxl-mem2,id=cxl-mem2,sn=0x3 \
+    +  -device cxl-downstream,port=3,bus=us0,id=swport3,chassis=0,slot=7 \
+    +  -device cxl-type3,bus=swport3,volatile-memdev=cxl-mem3,id=cxl-mem3,sn=0x4 \
+    +  -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
+    +
+
+The purpose of 256b-flit=on is not explained there.  The only hint I can
+find is in the commit message: "Devices require enabling Flit mode."
+Which devices require what and when is less than clear.  Maybe hdm-db=on
+requires 256b-flit=on?
+
+Why does device cxl-upstream use 256b-flit=on without hdm-db=on?
+
+I can't see where property "hdm-db" is defined.  Davidlohr, can you show
+me?
+
+I doubt users can figure out how to use this unless they're intimately
+familiar with... what exactly?
+
+>> > For the CXL root port and dsp cases, always report flit mode but
+>> > the actual value after 'training' will depend on the downstream
+>> > device configuration.
+>> > 
+>> > Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+>> 
+>> Definitely include PCI maintainers on this.
+>> +CC Michael, and Marcel.
+>> 
+>> Also Markus for command line bits.
+>> 
+>> Looks good to me.
+>> 
+>> Jonathan
+
+[...]
 
