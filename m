@@ -1,480 +1,219 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3A834DCFC
-	for <linux-cxl@vger.kernel.org>; Tue,  9 Sep 2025 16:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757436316; cv=none; b=ucWfWCgg8kRtQ667UL1si0nmgGudnc6hu8MCP0ofGYmryFcxK1DaKQVeL+r1qpuSzComHbnKkqYiW0TMGlDnkiOiJa9ypIuvuP+UtNtgSR2d0nOQKfHVmiTu+pvL33P54NfscoXQq2ZyBFpUiaqxAH7Am9SWpYxwaltL6x+RaM4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757436316; c=relaxed/simple;
-	bh=YdqZOJS1XegllADYMp14xOqLRozKDiiQo9nTBZULf1E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iema6eFGAfmvo8Uxvv0j/DT3E/woQoH8gdPsZWptD2+Z/y/DW3wCRMsY/j3F4P/cVGNn21mUW115dDYeR2+LZJtMFaLZr44ROeAPSln4+M/NoUSZiIdwXKfdhoah05AXnPFGWxJeUZryFUvVAQupLuonfuzEPijAKv3sMHSmKUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E11HMBmL; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B332D5C74
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Sep 2025 17:31:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757439121; cv=fail; b=XF8tuR0dcVTaNqQgp4UNRgtdJPoyrBc0Utg8uuQgPocWEdLI03wF8dZ7JB4gOLZvxMWyl32Xqlqz4/k1SVMzfEgaSSbcIc1KUs1aWqA8ze3YD+o5svDePVsmxyfxPwPXzm/EMSOf69N64akeTbLWNTbtxWb6MZ0fyFewYuIcT38=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757439121; c=relaxed/simple;
+	bh=iW8f7whXMjOXqlky+PhuyGYpZAKo0//jtNUuoWJi+7k=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=L7kNj28jbB8IGY1UscW6S5BI+ThgzHPC2ZuFoGzG6jHqDOWV6peW5QRHZaf7fEIg+FiaaB8ZWIMD+pz0D6jG7w+ZOb9g7IuuJiYrYyIgY6pVSmxlgnN4UBqecSSUCZl6nA8SAhSUKUWqaBpQ6hj9mAX92W4Drhqclg77maaMuXY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n8RFFNQ8; arc=fail smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E11HMBmL"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-61cfbb21fd1so267a12.0
-        for <linux-cxl@vger.kernel.org>; Tue, 09 Sep 2025 09:45:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757436312; x=1758041112; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wg66ytqT5gW0pLgpcFNtD+RmpG9kakagwaMvlSmeZ+A=;
-        b=E11HMBmLeymjWvmtiHL/nmg29yKYDj0qR/fgxd/AkKdzjtxM0GUWvRliYNyXuhN/kS
-         wfWqpyNuEJfla+m3VWckONvZYF46FzTcya9aarfdmXliTw7+eh79zmdqic7hTnrzAYaW
-         LDErsXSnXMMh0SSjTVgN2FW850MlGnG7AxvqF6H3Ntb/OxdX02C3CmDvgelNMYV0gJlE
-         huWVE3tuZc2p3BxdYEKBiBfYjDkFgwLL1K29atO3PJksQqd9j18JBpauC1dT2htHUyta
-         Nocxi0Z8KblDnJtaXDsMsgPg8eWNOt5RUOzAUc3j56dkEkMKAdrMT2oM4m8ucyuLR/5K
-         ZfVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757436312; x=1758041112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wg66ytqT5gW0pLgpcFNtD+RmpG9kakagwaMvlSmeZ+A=;
-        b=Rxhc/GVInoOf5gJ8gtEQn/6OezLVTfsJvvIGrphSaUq4OKTv9YP2O2cxnXVwGMc556
-         sshZIb+soryJOmVtjSJnL32Vsq/+1Xk7XK7iADdK4fn+Ldcgax/gz0miGFvcAclbmb8v
-         7Keh8kKW3PyQk2DoNee7kN2g9Z//5N4Vt60ks2r0HCQrMQlTV1P6WHnwprpdYJTYD4XX
-         vYpCkRm/d3CP8beWh4q89aBpnJ7orGnWa5L4EyPyRtFa+mJqO3z0U9vvKKPd3mS2n1Ip
-         gW7iCoyX0KoxxtCZIb9bGc1YMP7JeOQ3YTByCn+RJyvgorWOCKia5eKuOc77KAXIUT2x
-         3+sA==
-X-Forwarded-Encrypted: i=1; AJvYcCUGEqSc0ULQpHu3HKILwjOr2bctsJswy2DcoaUR6AojRryqtNNMzgfRrWmyeFkfP5J1wIaGoBhw6KM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyP2Ut5/DZf9qKvysa7Gqz9ssq4a6N/l+VvfpzZAwFewp0hV15O
-	PCQdfap0Mnbabv1GaRdMKOtoPYL8T2qJBmsaVgwaken4Tc+ChdFNTLZ3QjoGlAE1N8KKXLOQ2IN
-	18Ci+I0i5Y1FpB0o3I5udJvV8C1oFvgXR4lSDDcI2
-X-Gm-Gg: ASbGnctNC2o1+z7l6RDCHJDvXbmm6F0ura05y+NOaqj00yIFkKjpzTm3ET64XEF+l/Y
-	qnIZc+2RWLfYvrJ0MPkvOIheBiDl6ecjbf4Zsv/hZlXmRtlfUPBNe6lRN279GwJReOXuCHVXKgE
-	bJC7ZB+gsqG5/FcLsWQLam+w05MEgCjAVfSOTyyS3liB2SOF0+2fc/D9XE7p3uLKt4uPLyhMbO7
-	NygRQAkDN/FPgQz7dfW7SjSVgq0m5dagjprwk4SurKOqZfuYf1p4EU=
-X-Google-Smtp-Source: AGHT+IGPGk0qf/IiaeJSTR25Y6zNMAmob9Bf6pRZiB8Cz91tPx5tFvdw6FMK8xHuP6h0JHF887G6sd0LUCfFyNW1CIU=
-X-Received: by 2002:a05:6402:d60:b0:61c:d36d:218c with SMTP id
- 4fb4d7f45d1cf-6234d3ee779mr242645a12.0.1757436311257; Tue, 09 Sep 2025
- 09:45:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n8RFFNQ8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757439119; x=1788975119;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=iW8f7whXMjOXqlky+PhuyGYpZAKo0//jtNUuoWJi+7k=;
+  b=n8RFFNQ8NAWpkwQ5FYUjZOPdITK1SiHjInOJrYUhgq+QI6lXPc2fZxUN
+   qlWNd4PjJXO12weCD7URrdui7ryDBqklAQQ5kwnv7hO6x07n+vsaBosTb
+   oFKToXsuSV7HwAHgjn8QYFcvalK/+jCGAu7fEuzpolirG1Ou8eEmW8lvr
+   vPL5xTYBYggDuUzgDvI7PoLDCLL289UPNBNAtw34kCEsV4016OnyJGXYB
+   pdQ3G9vX+/Ar34q8r+JGiqtfAZEyiSm60/ETvFM9nnOWIKWEITx5gQysi
+   u5LNgOxZCH6xfs6we+/CCB1aGfHoFTIhlN40WSau9a7GBgHclXN23yP4x
+   Q==;
+X-CSE-ConnectionGUID: UHLjFRV+QPux3E1hps+LtA==
+X-CSE-MsgGUID: 2fnpI6qdRdi0u3ni+cG8LQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11548"; a="58774027"
+X-IronPort-AV: E=Sophos;i="6.18,251,1751266800"; 
+   d="scan'208";a="58774027"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2025 10:31:59 -0700
+X-CSE-ConnectionGUID: Ju+L1obeRN6eQhdnEPYPIg==
+X-CSE-MsgGUID: v1XilpZpTiav9Wafd3N/fQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,251,1751266800"; 
+   d="scan'208";a="196827376"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2025 10:31:59 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Tue, 9 Sep 2025 10:31:57 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17 via Frontend Transport; Tue, 9 Sep 2025 10:31:57 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.51) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Tue, 9 Sep 2025 10:31:57 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yj7RWA4LiZWo851TsoHl5ry2DTUcH/glNk2hKApR7iwadrVDSK3yHNdz2NJIAFmWFKVjB+L1VuNmlFYQZ9a8RdKOW0jmrKOtFUhBynSJn27clGD+MkNy2J+aqg1vzkqdqawu9h+F9Z6bp7QY+W4tN6RdJjtHsTaUIp9i9ocwRNMQAdoC3rsgOqEa9BojuojdtVzoasUNQr66xtyEerEokvfE5bgUA4hDvalnUHsYfuMLTk2/EbcL7/43R3m45hHFUV1ieTWtebnmyBncb3cLOV8hyw47b/2+QKF4FfQSyzd6mRJfv2Rsi+Pka/n7NxUNhfyjJjzZ4L15mHdszFF8EA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wsDc30WAUQsRUO+LeTAPsHpoaWUm8Piyn+sIc0CkD7U=;
+ b=MzIbkrWAOaLohczfgk8vMR1u9OIqMpT+VHfxhCJ/RNWyWuaETqk37ZRckGtt19pl5cKtOSe86aikn28e1BnDwa3w0nFMaYMST3HUsL7mvkq0C19PhvhncSkcuvvHN2eBruhbFy4cbJCRLlYnvPbhgcybt1HK8dzDyTKOgTGh7CtIGu0a3TgUKUIR8MwcdgnosM5+UJsgEx3QOFOw/RYqcqUHEjgb3GABxhJ02zp0GAKPowUiTkVSHxuR3LZ8jvi/fFaBTGxDBUoFjtryKVA535RmUIaPBd5DKrQ/oq+qqhfmHCfUZRDnRxb+a+bdGtAiI3+ONXkcK5k6eVBYsVN0rQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by PH0PR11MB5064.namprd11.prod.outlook.com (2603:10b6:510:3b::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Tue, 9 Sep
+ 2025 17:31:56 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::5a0a:3196:957e:6695]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::5a0a:3196:957e:6695%6]) with mapi id 15.20.9094.021; Tue, 9 Sep 2025
+ 17:31:55 +0000
+Date: Tue, 9 Sep 2025 10:31:51 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] cxl/region: Refactor address translation funcs
+ for testing
+Message-ID: <aMBkhxzQTZSEkSlM@aschofie-mobl2.lan>
+References: <cover.1756446925.git.alison.schofield@intel.com>
+ <f0c6fa733cea8585f2bfda0851489bd7ca2e2b2c.1756446925.git.alison.schofield@intel.com>
+ <6deca3ef-2284-433f-ae91-ce1ff9f7a8b7@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <6deca3ef-2284-433f-ae91-ce1ff9f7a8b7@intel.com>
+X-ClientProxiedBy: SJ0PR05CA0118.namprd05.prod.outlook.com
+ (2603:10b6:a03:334::33) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1757329751.git.lorenzo.stoakes@oracle.com> <ea1a5ab9fff7330b69f0b97c123ec95308818c98.1757329751.git.lorenzo.stoakes@oracle.com>
-In-Reply-To: <ea1a5ab9fff7330b69f0b97c123ec95308818c98.1757329751.git.lorenzo.stoakes@oracle.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 9 Sep 2025 09:44:58 -0700
-X-Gm-Features: AS18NWD_8AWrPfmI0tsMVHUiuAGzDjgerBQcQZeWasEIUA51d1DPsE14BgjCaGA
-Message-ID: <CAJuCfpFr+vMowHzAs7QDwMmNvS4RMJg0xqXkYAxBLCKh1wdAmQ@mail.gmail.com>
-Subject: Re: [PATCH 06/16] mm: introduce the f_op->mmap_complete, mmap_abort hooks
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Matthew Wilcox <willy@infradead.org>, Guo Ren <guoren@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	"David S . Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dan Williams <dan.j.williams@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Nicolas Pitre <nico@fluxnic.net>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@redhat.com>, 
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Baoquan He <bhe@redhat.com>, 
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>, 
-	Reinette Chatre <reinette.chatre@intel.com>, Dave Martin <Dave.Martin@arm.com>, 
-	James Morse <james.morse@arm.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, Hugh Dickins <hughd@google.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Uladzislau Rezki <urezki@gmail.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, Jann Horn <jannh@google.com>, 
-	Pedro Falcato <pfalcato@suse.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-csky@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, 
-	sparclinux@vger.kernel.org, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	linux-mm@kvack.org, ntfs3@lists.linux.dev, kexec@lists.infradead.org, 
-	kasan-dev@googlegroups.com, Jason Gunthorpe <jgg@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|PH0PR11MB5064:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9b6345d4-9ca0-4f7d-9eaa-08ddefc6c5a4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Gy/t8cUVs6H6/Ps1FFbxNK5WKl0m8i+8E6FxkRkH6MmdpxOWjeJhwhvAvAKt?=
+ =?us-ascii?Q?0W21GwOjCSVCsa5Lmexa7Y+82QGxKKNVf897Zv6l9MX2jdkjpPe6yPLsVygq?=
+ =?us-ascii?Q?LFuZeY4xT9Di5YegQ2P+U27Ul/XG+2eXdmnJGHgUGynovLd6bqm64qpDw4py?=
+ =?us-ascii?Q?nStkmxnIGc1iaBYTEQjj+dinLPvK5IzZ1UHJIAnCwqntKvQ8iMAiMVMa7uxC?=
+ =?us-ascii?Q?FZTcX/peBkH9J+zoRue7nCuSZuBcHiP/sJfurn1/GcM06PhNPCLlVsobtx2e?=
+ =?us-ascii?Q?e32seoMD7RitMXAvBzLjDWqaqYcoG/ZgVvZoqMN3Z09/uI4lquftCLN8SIt6?=
+ =?us-ascii?Q?sAXWIBQaQ/2JEVei+wxMf1jKDG38xsXy/28ByfEOpJbDYLONeUbOgTIO7uIh?=
+ =?us-ascii?Q?MRxJjvH+Gj2etLL197ikzvE22dblvBOSpOptY2cc91fBzyUOnz1P1PHvOFjX?=
+ =?us-ascii?Q?xvNUjU/YTHK6KScazEqTLXwUNhEdSzKZfqGn1tH+uKREHm1XfBHlIAgu2aR+?=
+ =?us-ascii?Q?VFThTGBNNmmLYBzgE7aLAPuWFHttX8++1+x9DbTl4sq6y7nraXWWrGV8ba2u?=
+ =?us-ascii?Q?k4eCoHFUwBCACaVb4SCfTwf5cOtnQRIvYyOEejqcFMjbJm00fa723CZ0qvBB?=
+ =?us-ascii?Q?53aNVDpEuLQm0CC8HBUi4GPDDGAQzLy7cmky07+BdL4J6ZhVEi2c3+9Rp3gq?=
+ =?us-ascii?Q?oH5LNYTj6l8UBGr/76Lr98czb7EQlbi4cS46yw6dcTTi4EPSsEyAHQuKR3PS?=
+ =?us-ascii?Q?piOlQsxUBdJvCHTOWWuuNnj+cjFSam8o0Bd49Rmbu78Ly48p6GjwPKlPOAkM?=
+ =?us-ascii?Q?M7iAs/Ul0ioc+136vi1pNuN5lcqEka2Jj+ZgM+kUyKyYCaQpK4YhSHhUkHNl?=
+ =?us-ascii?Q?rl4adhUcok/LI9qTSdPutOFiYmvdxaax4GiAJr++AP8TeZ+XN8jzoULq6s36?=
+ =?us-ascii?Q?L7aUC8QBvE2+U+FzuypUTCMVXKq5UfbCzwQcghslxNNPWacE6n9kB180aDP6?=
+ =?us-ascii?Q?JbYGULDY/Qx1x7ep//xrpJ7lGAjKE4gy+yZpcNkQXLPLfykP6KyuNP5rmxdW?=
+ =?us-ascii?Q?QfyLEwsLNHhHaUf7jiZ9cYbcZhbTM3HyGNeEigYgHf0/VHM41WfuHqGopeVZ?=
+ =?us-ascii?Q?0VLQn/Y+AD+XWcSNSqQbOF9kfq4Gor3M4FmcENS7QetiSDsjRNMPHNFPmkjw?=
+ =?us-ascii?Q?sLOxFEfL/8JjkFkOf2gmWYb2HDMlHU86mxul/O+lD/HZA/mdp1E2L93mG2ED?=
+ =?us-ascii?Q?4zqfjK89fYPmF+6yTcNCU/st6tOhw56ZSXbBzX2wU3Ej2vcol0F3a/P8Gjmq?=
+ =?us-ascii?Q?2cT9ZP0Dg05Uv/Jism7+hXI/Sy9X/PS7BGSIN8uqclkip+LlnisgA485lGwy?=
+ =?us-ascii?Q?G7F25FaqJOJsDFeBLHKHelZPqQTRfFJwGlT2Ebe0K9cNlsm8VfMSnOJOIJ2+?=
+ =?us-ascii?Q?X7677KC3lM0=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?p3TndWACft9tMlH7K647fXI4hCM+tWDcL5yvno1MNmuBfUjC8og6MZVGO87h?=
+ =?us-ascii?Q?+07ZwCHip4PzDoyyS1QwmlLO0RtvK5o4O32jO8isRKHo3h3Omg31mU5IJbsY?=
+ =?us-ascii?Q?XYPeC0K8zBLWT/1kUt6mHZy9eBw4nGzYRWVbZJhbqnFxXr0fjyWgylrCPVyp?=
+ =?us-ascii?Q?3roSk8g5gc3Gw6AqIFR398JrGlsCYw40a564FZ2ekSqgiu3eGxWS8upVW06R?=
+ =?us-ascii?Q?+1X7KA57geNOZiMzi/LeEAv5lZbjBXUVH9bUbqj5a5/6UhJYn5DP07L9cWj9?=
+ =?us-ascii?Q?BhJsPkh0BRPhamOWhF/5rQ7UNT6kypVP/dMN2gL+z0IX+pp8NCGwxTFZEOSj?=
+ =?us-ascii?Q?C8cjSLrYl9MdZX4J0ermjhv+DhF2cNqL33NOVq4lKQcFBeDi0e9jKF0lHIUv?=
+ =?us-ascii?Q?YFnvzm29rpgKzjoW2sUT/CRWFC4pZl6cs9BPNuFDTm+VNVzYgAUFvV3lvYND?=
+ =?us-ascii?Q?+Oz7MCrAhgXF/6QOkNrpi8T3Ifgb/Urjgky501QkkyFXryrsNMmTlk27AWCy?=
+ =?us-ascii?Q?VVO4C1zFMPLpxQ77Xd/RRArFfGcw5caBhevcNyaQgALTe2fqKqgJs1y8q3Q+?=
+ =?us-ascii?Q?VRFm/4iCVlDQfpu/nTvQv87qHKBwXY2AqF2TpMng3dC84h9QUCe/Q3UyPiRZ?=
+ =?us-ascii?Q?/2kHY0oZahYJhcmKSUWWIpDLYmESd9mQtIiD98f36RosdbBzTnOpo4K3gcVH?=
+ =?us-ascii?Q?ReJKHikIyk4e4zAnAhvmWvMP9EX4hwQC1REIKVX9ETc6Z6wlR6FCzbd94GUj?=
+ =?us-ascii?Q?CcEJlK5urcNGqtVI3VHTa7xp17KYvRLeDy4m57WUhuUhTz3EN1WcaBCilS5u?=
+ =?us-ascii?Q?XP61se9mDMzoEazanhDwOQW39ONJUEPcYmVOtIw3p0+YblY8kfV15xDxU658?=
+ =?us-ascii?Q?U/lo4FZLsIuBTjKJ1hMhGoiZCku7QtVabFDEuDOa9ZmGQdJdREzxV1am7mfR?=
+ =?us-ascii?Q?CASBFubj7SS4GZ31gCCGbxyH2Z+72zPqhqaU9KTtxpa+CZBZ7guVC127gMOz?=
+ =?us-ascii?Q?JEkJcjfHsoJ7MuArFF9NsRCc4BzPNdkGL1t2YCMLDKV8NBsLbxmmMVyJKAH0?=
+ =?us-ascii?Q?+IBlqLkJfuxKmT1Kznz8flawS1mLoLf67NFhBddQGasRVVgf6YyEDN/Xtt65?=
+ =?us-ascii?Q?f28k3rCa2UkDv4G4aOwCXisghPKPKaLaCpDgHXARUskKGew2/GYkLeQEqtZb?=
+ =?us-ascii?Q?AxYZwJFmg0ugjosMleKq1/NUD9RUULMG1pYdFuZMuiX4/47c/E1K2JhKs+MJ?=
+ =?us-ascii?Q?glc/HiRLTFoq2YmlQJ3n6TD6t7ypgCUu04XHhLMF+chY8VC1bNF37MoAMcgR?=
+ =?us-ascii?Q?pIZdV9oIOFmqDWeaHNiZ4nzHctmqRO6/JjKAHOQFLmefynJ/VpFy3sAQhGIE?=
+ =?us-ascii?Q?1dKHzJNrjeLdrAJqn2jwqyySxlU9/JS/voO0S82XTsOYRvztybO+uF2L621E?=
+ =?us-ascii?Q?OPMld+6gSKkpXQE2t7K/Epi3vVwc5lU44UafHI7rdyCuTQcAzdkLRnRtPWlB?=
+ =?us-ascii?Q?VqYHT8xy6A6D/Hu1EChtD6OTy32DJWMjHoCMcyhsqpD4niMk/6YuauK7imw5?=
+ =?us-ascii?Q?BJ53cQBuMS7D6Q1bRjs9G/MzEcWShULlWl2XVMulA/76SfSzTvTOceqihgf+?=
+ =?us-ascii?Q?Lw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b6345d4-9ca0-4f7d-9eaa-08ddefc6c5a4
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2025 17:31:55.7908
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TNXvqrEG967e7h01nHS9YOT45MiUIT/fU5Eq7aipbpK0qqIlzk9lTwWG4VsUY/JlS5+T2IXz5USIFCqrh0Tezpugt82J6xK22s7J9QQl3Ec=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5064
+X-OriginatorOrg: intel.com
 
-On Mon, Sep 8, 2025 at 4:11=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> We have introduced the f_op->mmap_prepare hook to allow for setting up a
-> VMA far earlier in the process of mapping memory, reducing problematic
-> error handling paths, but this does not provide what all
-> drivers/filesystems need.
->
-> In order to supply this, and to be able to move forward with removing
-> f_op->mmap altogether, introduce f_op->mmap_complete.
->
-> This hook is called once the VMA is fully mapped and everything is done,
-> however with the mmap write lock and VMA write locks held.
->
-> The hook is then provided with a fully initialised VMA which it can do wh=
-at
-> it needs with, though the mmap and VMA write locks must remain held
-> throughout.
->
-> It is not intended that the VMA be modified at this point, attempts to do
-> so will end in tears.
->
-> This allows for operations such as pre-population typically via a remap, =
-or
-> really anything that requires access to the VMA once initialised.
->
-> In addition, a caller may need to take a lock in mmap_prepare, when it is
-> possible to modify the VMA, and release it on mmap_complete. In order to
-> handle errors which may arise between the two operations, f_op->mmap_abor=
-t
-> is provided.
->
-> This hook should be used to drop any lock and clean up anything before th=
-e
-> VMA mapping operation is aborted. After this point the VMA will not be
-> added to any mapping and will not exist.
->
-> We also add a new mmap_context field to the vm_area_desc type which can b=
-e
-> used to pass information pertinent to any locks which are held or any sta=
-te
-> which is required for mmap_complete, abort to operate correctly.
->
-> We also update the compatibility layer for nested filesystems which
-> currently still only specify an f_op->mmap() handler so that it correctly
-> invokes f_op->mmap_complete as necessary (note that no error can occur
-> between mmap_prepare and mmap_complete so mmap_abort will never be called
-> in this case).
->
-> Also update the VMA tests to account for the changes.
->
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> ---
->  include/linux/fs.h               |  4 ++
->  include/linux/mm_types.h         |  5 ++
->  mm/util.c                        | 18 +++++--
->  mm/vma.c                         | 82 ++++++++++++++++++++++++++++++--
->  tools/testing/vma/vma_internal.h | 31 ++++++++++--
->  5 files changed, 129 insertions(+), 11 deletions(-)
->
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 594bd4d0521e..bb432924993a 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -2195,6 +2195,10 @@ struct file_operations {
->         int (*uring_cmd_iopoll)(struct io_uring_cmd *, struct io_comp_bat=
-ch *,
->                                 unsigned int poll_flags);
->         int (*mmap_prepare)(struct vm_area_desc *);
-> +       int (*mmap_complete)(struct file *, struct vm_area_struct *,
-> +                            const void *context);
-> +       void (*mmap_abort)(const struct file *, const void *vm_private_da=
-ta,
-> +                          const void *context);
->  } __randomize_layout;
->
->  /* Supports async buffered reads */
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index cf759fe08bb3..052db1f31fb3 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -793,6 +793,11 @@ struct vm_area_desc {
->         /* Write-only fields. */
->         const struct vm_operations_struct *vm_ops;
->         void *private_data;
-> +       /*
-> +        * A user-defined field, value will be passed to mmap_complete,
-> +        * mmap_abort.
-> +        */
-> +       void *mmap_context;
->  };
->
->  /*
-> diff --git a/mm/util.c b/mm/util.c
-> index 248f877f629b..f5bcac140cb9 100644
-> --- a/mm/util.c
-> +++ b/mm/util.c
-> @@ -1161,17 +1161,26 @@ int __compat_vma_mmap_prepare(const struct file_o=
-perations *f_op,
->         err =3D f_op->mmap_prepare(&desc);
->         if (err)
->                 return err;
-> +
->         set_vma_from_desc(vma, &desc);
->
-> -       return 0;
-> +       /*
-> +        * No error can occur between mmap_prepare() and mmap_complete so=
- no
-> +        * need to invoke mmap_abort().
-> +        */
-> +
-> +       if (f_op->mmap_complete)
-> +               err =3D f_op->mmap_complete(file, vma, desc.mmap_context)=
-;
-> +
-> +       return err;
->  }
->  EXPORT_SYMBOL(__compat_vma_mmap_prepare);
->
->  /**
->   * compat_vma_mmap_prepare() - Apply the file's .mmap_prepare() hook to =
-an
-> - * existing VMA.
-> + * existing VMA and invoke .mmap_complete() if provided.
->   * @file: The file which possesss an f_op->mmap_prepare() hook.
+On Thu, Sep 04, 2025 at 03:05:00PM -0700, Dave Jiang wrote:
+> 
 
-nit: possesss seems to be misspelled. Maybe we can fix it here as well?
+snip
 
-> - * @vma: The VMA to apply the .mmap_prepare() hook to.
-> + * @vma: The VMA to apply the hooks to.
->   *
->   * Ordinarily, .mmap_prepare() is invoked directly upon mmap(). However,=
- certain
->   * stacked filesystems invoke a nested mmap hook of an underlying file.
-> @@ -1188,6 +1197,9 @@ EXPORT_SYMBOL(__compat_vma_mmap_prepare);
->   * establishes a struct vm_area_desc descriptor, passes to the underlyin=
-g
->   * .mmap_prepare() hook and applies any changes performed by it.
->   *
-> + * If the relevant hooks are provided, it also invokes .mmap_complete() =
-upon
-> + * successful completion.
-> + *
->   * Once the conversion of filesystems is complete this function will no =
-longer
->   * be required and will be removed.
->   *
-> diff --git a/mm/vma.c b/mm/vma.c
-> index 0efa4288570e..a0b568fe9e8d 100644
-> --- a/mm/vma.c
-> +++ b/mm/vma.c
-> @@ -22,6 +22,7 @@ struct mmap_state {
->         /* User-defined fields, perhaps updated by .mmap_prepare(). */
->         const struct vm_operations_struct *vm_ops;
->         void *vm_private_data;
-> +       void *mmap_context;
->
->         unsigned long charged;
->
-> @@ -2343,6 +2344,23 @@ static int __mmap_prelude(struct mmap_state *map, =
-struct list_head *uf)
->         int error;
->         struct vma_iterator *vmi =3D map->vmi;
->         struct vma_munmap_struct *vms =3D &map->vms;
-> +       struct file *file =3D map->file;
-> +
-> +       if (file) {
-> +               /* f_op->mmap_complete requires f_op->mmap_prepare. */
-> +               if (file->f_op->mmap_complete && !file->f_op->mmap_prepar=
-e)
-> +                       return -EINVAL;
-> +
-> +               /*
-> +                * It's not valid to provide an f_op->mmap_abort hook wit=
-hout also
-> +                * providing the f_op->mmap_prepare and f_op->mmap_comple=
-te hooks it is
-> +                * used with.
-> +                */
-> +               if (file->f_op->mmap_abort &&
-> +                    (!file->f_op->mmap_prepare ||
-> +                     !file->f_op->mmap_complete))
-> +                       return -EINVAL;
-> +       }
->
->         /* Find the first overlapping VMA and initialise unmap state. */
->         vms->vma =3D vma_find(vmi, map->end);
-> @@ -2595,6 +2613,7 @@ static int call_mmap_prepare(struct mmap_state *map=
-)
->         /* User-defined fields. */
->         map->vm_ops =3D desc.vm_ops;
->         map->vm_private_data =3D desc.private_data;
-> +       map->mmap_context =3D desc.mmap_context;
->
->         return 0;
->  }
-> @@ -2636,16 +2655,61 @@ static bool can_set_ksm_flags_early(struct mmap_s=
-tate *map)
->         return false;
->  }
->
-> +/*
-> + * Invoke the f_op->mmap_complete hook, providing it with a fully initia=
-lised
-> + * VMA to operate upon.
-> + *
-> + * The mmap and VMA write locks must be held prior to and after the hook=
- has
-> + * been invoked.
-> + */
-> +static int call_mmap_complete(struct mmap_state *map, struct vm_area_str=
-uct *vma)
-> +{
-> +       struct file *file =3D map->file;
-> +       void *context =3D map->mmap_context;
-> +       int error;
-> +       size_t len;
-> +
-> +       if (!file || !file->f_op->mmap_complete)
-> +               return 0;
-> +
-> +       error =3D file->f_op->mmap_complete(file, vma, context);
-> +       /* The hook must NOT drop the write locks. */
-> +       vma_assert_write_locked(vma);
-> +       mmap_assert_write_locked(current->mm);
-> +       if (!error)
-> +               return 0;
-> +
-> +       /*
-> +        * If an error occurs, unmap the VMA altogether and return an err=
-or. We
-> +        * only clear the newly allocated VMA, since this function is onl=
-y
-> +        * invoked if we do NOT merge, so we only clean up the VMA we cre=
-ated.
-> +        */
-> +       len =3D vma_pages(vma) << PAGE_SHIFT;
-> +       do_munmap(current->mm, vma->vm_start, len, NULL);
-> +       return error;
-> +}
-> +
-> +static void call_mmap_abort(struct mmap_state *map)
-> +{
-> +       struct file *file =3D map->file;
-> +       void *vm_private_data =3D map->vm_private_data;
-> +
-> +       VM_WARN_ON_ONCE(!file || !file->f_op);
-> +       file->f_op->mmap_abort(file, vm_private_data, map->mmap_context);
-> +}
-> +
->  static unsigned long __mmap_region(struct file *file, unsigned long addr=
-,
->                 unsigned long len, vm_flags_t vm_flags, unsigned long pgo=
-ff,
->                 struct list_head *uf)
->  {
-> -       struct mm_struct *mm =3D current->mm;
-> -       struct vm_area_struct *vma =3D NULL;
-> -       int error;
->         bool have_mmap_prepare =3D file && file->f_op->mmap_prepare;
-> +       bool have_mmap_abort =3D file && file->f_op->mmap_abort;
-> +       struct mm_struct *mm =3D current->mm;
->         VMA_ITERATOR(vmi, mm, addr);
->         MMAP_STATE(map, mm, &vmi, addr, len, pgoff, vm_flags, file);
-> +       struct vm_area_struct *vma =3D NULL;
-> +       bool allocated_new =3D false;
-> +       int error;
->
->         map.check_ksm_early =3D can_set_ksm_flags_early(&map);
->
-> @@ -2668,8 +2732,12 @@ static unsigned long __mmap_region(struct file *fi=
-le, unsigned long addr,
->         /* ...but if we can't, allocate a new VMA. */
->         if (!vma) {
->                 error =3D __mmap_new_vma(&map, &vma);
-> -               if (error)
-> +               if (error) {
-> +                       if (have_mmap_abort)
-> +                               call_mmap_abort(&map);
->                         goto unacct_error;
-> +               }
-> +               allocated_new =3D true;
->         }
->
->         if (have_mmap_prepare)
-> @@ -2677,6 +2745,12 @@ static unsigned long __mmap_region(struct file *fi=
-le, unsigned long addr,
->
->         __mmap_epilogue(&map, vma);
->
-> +       if (allocated_new) {
-> +               error =3D call_mmap_complete(&map, vma);
-> +               if (error)
-> +                       return error;
-> +       }
-> +
->         return addr;
->
->         /* Accounting was done by __mmap_prelude(). */
-> diff --git a/tools/testing/vma/vma_internal.h b/tools/testing/vma/vma_int=
-ernal.h
-> index 07167446dcf4..566cef1c0e0b 100644
-> --- a/tools/testing/vma/vma_internal.h
-> +++ b/tools/testing/vma/vma_internal.h
-> @@ -297,11 +297,20 @@ struct vm_area_desc {
->         /* Write-only fields. */
->         const struct vm_operations_struct *vm_ops;
->         void *private_data;
-> +       /*
-> +        * A user-defined field, value will be passed to mmap_complete,
-> +        * mmap_abort.
-> +        */
-> +       void *mmap_context;
->  };
->
->  struct file_operations {
->         int (*mmap)(struct file *, struct vm_area_struct *);
->         int (*mmap_prepare)(struct vm_area_desc *);
-> +       void (*mmap_abort)(const struct file *, const void *vm_private_da=
-ta,
-> +                          const void *context);
-> +       int (*mmap_complete)(struct file *, struct vm_area_struct *,
-> +                            const void *context);
->  };
->
->  struct file {
-> @@ -1471,7 +1480,7 @@ static inline int __compat_vma_mmap_prepare(const s=
-truct file_operations *f_op,
->  {
->         struct vm_area_desc desc =3D {
->                 .mm =3D vma->vm_mm,
-> -               .file =3D vma->vm_file,
-> +               .file =3D file,
->                 .start =3D vma->vm_start,
->                 .end =3D vma->vm_end,
->
-> @@ -1485,13 +1494,21 @@ static inline int __compat_vma_mmap_prepare(const=
- struct file_operations *f_op,
->         err =3D f_op->mmap_prepare(&desc);
->         if (err)
->                 return err;
-> +
->         set_vma_from_desc(vma, &desc);
->
-> -       return 0;
-> +       /*
-> +        * No error can occur between mmap_prepare() and mmap_complete so=
- no
-> +        * need to invoke mmap_abort().
-> +        */
-> +
-> +       if (f_op->mmap_complete)
-> +               err =3D f_op->mmap_complete(file, vma, desc.mmap_context)=
-;
-> +
-> +       return err;
->  }
->
-> -static inline int compat_vma_mmap_prepare(struct file *file,
-> -               struct vm_area_struct *vma)
-> +static inline int compat_vma_mmap_prepare(struct file *file, struct vm_a=
-rea_struct *vma)
->  {
->         return __compat_vma_mmap_prepare(file->f_op, file, vma);
->  }
-> @@ -1548,4 +1565,10 @@ static inline vm_flags_t ksm_vma_flags(const struc=
-t mm_struct *, const struct fi
->         return vm_flags;
->  }
->
-> +static inline int do_munmap(struct mm_struct *mm, unsigned long start, s=
-ize_t len,
-> +             struct list_head *uf)
-> +{
-> +       return 0;
-> +}
-> +
->  #endif /* __MM_VMA_INTERNAL_H */
-> --
-> 2.51.0
->
+> > +	bits_lower = hpa_offset & GENMASK_ULL(eig + 7, 0);
+> > +	if (eiw < 8) {
+> > +		temp = hpa_offset &= ~((u64)GENMASK(eig + eiw + 8 - 1, 0));
+> 
+> Should this use GENMASK_ULL() instead of casting to u64?
+
+Yes. Will do in next rev.
+
+> > +
+snip
+
+> > +	for (int i = 0; i < p->nr_targets; i++) {
+> > +		cxled = p->targets[i];
+> > +		if (cxlmd == cxled_to_memdev(cxled))
+> > +			break;
+> > +	}
+> > +	if (!cxled || cxlmd != cxled_to_memdev(cxled))
+> > +		return ULLONG_MAX;
+> 
+> Maybe:
+> 
+> 	for (int i = 0; i < p->nr_targets; i++) {
+> 		if (cxlmd == cxled_to_memdev(p->targets[i])) {
+> 			cxled = p->targets[i];
+> 			break;
+> 		}
+> 	}
+> 
+> 	if (!cxled)
+> 		return ULLONG_MAX;
+
+Nice - avoids avoids the redundant check by only assigning cxled when a match
+is found.  Will use in next rev.
+
+Thanks for the review!
+
+> 
+> DJ
