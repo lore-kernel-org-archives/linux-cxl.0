@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF18287255
-	for <linux-cxl@vger.kernel.org>; Wed, 10 Sep 2025 23:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0042DC352
+	for <linux-cxl@vger.kernel.org>; Wed, 10 Sep 2025 23:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757545371; cv=none; b=hpnMUw9W36nbTaBQXuzL2F3rn2xmpYZA4GhepAjDEpXiMDZSw88w4282CriGW1K+HAMeib+NQZ5ztYX57xQdcLRxf0Q12W4lr10R6RMZ1/oD8aFfjf7ECte9QleSxRCOpZjE4onHTQf5rvTwCbwTkl5O/R3xqL/37PGmVCVOtKY=
+	t=1757545929; cv=none; b=Y46h1outal/S5DZlGXKI12QQZ/Iehv8s1Pxa6smpyLtNSDfWO3QVkWthioLTskV6nmWVcdG/zvaG9HoGUZHKZPlYFkgrKdPlxkiyrScoxYBbEuqpf2u3JUVslfllui30so8E7AjvdL3W4XfJdQbS0nOk6A+o0mmjlusBqA70w14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757545371; c=relaxed/simple;
-	bh=w4vxswVQoQpp16mAyaQ99G9fkm2bDL9zpORHW6S12pQ=;
+	s=arc-20240116; t=1757545929; c=relaxed/simple;
+	bh=mmBs0GfavNf3aOKZrjKx9GZbJrn/JQFWf9fSvaG9sQI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KbGDSaJDsHO/2mrdZEkhUMAzJYvHu9q3iEckELXwiMd65SlhMrUQADOQFZ+FwOHbAWu5HS72m2GaIXpWi0rScOu/YN3DPm3ybSsqn79DqYvO3XOdWQ93+P94rI/wugEmvAxOlf38cMX6VR7izBrh9pBeizpGevo1BkrUiO4IO/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VJS8Q4HG; arc=none smtp.client-ip=192.198.163.11
+	 In-Reply-To:Content-Type; b=A5MoBKqauh8sueLxoCYSU+T22ZKFvt32KfL+vCp86VHyED5vL5EZBu6tdUwCV10qUQUbdhc5Kensi9uAVT1u+HSRetpbOK7ynVn7vOfRGCYjfIJvS5mwVZfGaEkjGjGp++8DKizaa8/DRS5rwvCBhbQOxaKc1TVEe3LgxE51LJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NjurJldF; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VJS8Q4HG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NjurJldF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757545369; x=1789081369;
+  t=1757545928; x=1789081928;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=w4vxswVQoQpp16mAyaQ99G9fkm2bDL9zpORHW6S12pQ=;
-  b=VJS8Q4HGOemwQKxuBmFLTDVmx4wC6uSrrwRAgB8/lc4j8vkkgXPBohhX
-   KSjaVwSwKOWpSSCdiUDf9JlJfqd+KAEYXkPzW0TChO08ONz1HR0iAhWDU
-   rxbwTeu3fXsXF2yDxtdqb9K+0IijZ/1Btwg83ky5CwHHXinLzCk5CdOsV
-   YpMyBfav0G9XnhfOm8UxgC1lfnj8Py4ob3Zf0dnkFkiH2fk4CvyjDF4Rn
-   dF03zVlbalyFJXmv2Pab6axXAgIivXVE3a8EBNLzBkIRuB1YSuQ8uHclP
-   RYExWzqv9XgR0PJEm0A9XAdKQy0elcEPCBq3n3ZJpFG76vA22M+4apLYG
-   A==;
-X-CSE-ConnectionGUID: BOYWiph7RnS/Nm2OYw6kOw==
-X-CSE-MsgGUID: 99l6MuXpTcSKHRknHAW8LQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11549"; a="70486918"
+  bh=mmBs0GfavNf3aOKZrjKx9GZbJrn/JQFWf9fSvaG9sQI=;
+  b=NjurJldFdkNMOh9qDrMiSgcgxufEb24Yw0WlAxq5/sVXSbvNoBMF8YiE
+   r7ky6qMgk/w1ObvfMIG4GfGms5qKDLGGXp/CmXxMolCvmyM+2tvVL18Sh
+   uO6mvwJU3GbSwYr90uRMymPgrug9dm4MVKfd+OlH3Ixu9sF98KsxTFecO
+   tUXczVsyvBlergdKjW3P/5SksJNe/iPdUuNmVqtck0gDGnQKE6Ztx0XpF
+   XcFYn9xjZ2Dg3U7JKHTsU384hVMgp7QdMPs4fbCH26isjuQWl77S075+c
+   /uuUaL8Ei+hQ53/itcciFtnVfqaG9wQIx+16D2mcF7cIIxU0kSjV9cnmk
+   w==;
+X-CSE-ConnectionGUID: Wl3+cQnFQMuobwuhLL67Rw==
+X-CSE-MsgGUID: aRzoVQ4US6mozVtYz+jgzw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11549"; a="85313516"
 X-IronPort-AV: E=Sophos;i="6.18,255,1751266800"; 
-   d="scan'208";a="70486918"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 16:02:47 -0700
-X-CSE-ConnectionGUID: knWuNQwyQrO1K4/TClXWXQ==
-X-CSE-MsgGUID: H76Z4qf3ROCjaNu7HYSF+w==
+   d="scan'208";a="85313516"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 16:12:07 -0700
+X-CSE-ConnectionGUID: useCyqhWRSehtPXktJMf2w==
+X-CSE-MsgGUID: YDqQ0AcFTH+e9CfBbo3CtA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,255,1751266800"; 
-   d="scan'208";a="173902220"
+   d="scan'208";a="173362957"
 Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.110.219]) ([10.125.110.219])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 16:02:47 -0700
-Message-ID: <29b9953a-8367-4545-a783-dfabbfa488d7@intel.com>
-Date: Wed, 10 Sep 2025 16:02:45 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 16:12:07 -0700
+Message-ID: <2f651b8a-6185-4a68-84f4-1e8dcd9dbcb5@intel.com>
+Date: Wed, 10 Sep 2025 16:12:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,287 +52,117 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 18/18] cxl/core: Add cache device cache management
- attributes
+Subject: Re: [RFC PATCH 00/18] Initial CXL.cache device support
 To: Ben Cheatham <Benjamin.Cheatham@amd.com>, linux-cxl@vger.kernel.org
 References: <20250812212921.9548-1-Benjamin.Cheatham@amd.com>
- <20250812212921.9548-19-Benjamin.Cheatham@amd.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250812212921.9548-19-Benjamin.Cheatham@amd.com>
+In-Reply-To: <20250812212921.9548-1-Benjamin.Cheatham@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 8/12/25 2:29 PM, Ben Cheatham wrote:
-> Add functions to cxl/core/pci.c to manage the cache of a CXL.cache
-> enabled endpoint. Add these new functions to sysfs attributes for
-> userspace accessibility.
+> This patch series adds initial CXL.cache support. What I have here only
+> allows for adding a cache device to the system, programming/validating
+> the system configuration with respect to cache devices, and some basic
+> cache reporting/management.
 > 
-> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
-> ---
->  drivers/cxl/core/cachedev.c | 99 +++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/pci.c      | 89 +++++++++++++++++++++++++++++++++
->  drivers/cxl/cxlcache.h      |  4 ++
->  drivers/cxl/cxlpci.h        |  6 +++
->  4 files changed, 198 insertions(+)
+> The general philosophy is to have an endpoint/vendor-specific driver
+> that runs through the same steps of adding a cxl_memdev, but for the
+> cache portion of the device (both type 1 & 2). Getting cache support for
+> a CXL device should be as simple as: get cache information, set up the
+> memory region (see below), and then calling devm_cxl_add_cachedev().
 > 
-> diff --git a/drivers/cxl/core/cachedev.c b/drivers/cxl/core/cachedev.c
-> index 1cdd94520ceb..85989cdd1eb8 100644
-> --- a/drivers/cxl/core/cachedev.c
-> +++ b/drivers/cxl/core/cachedev.c
-> @@ -5,6 +5,7 @@
->  #include <linux/pci.h>
->  
->  #include "../cxlcache.h"
-> +#include "../cxlpci.h"
->  #include "private.h"
->  
->  static DEFINE_IDA(cxl_cachedev_ida);
-> @@ -125,9 +126,107 @@ static struct attribute_group cxl_cachedev_cache_attribute_group = {
->  	.is_visible = cxl_cachedev_cache_visible,
->  };
->  
-> +static ssize_t cache_disable_store(struct device *dev,
-> +				   struct device_attribute *attr,
-> +				   const char *buf, size_t n)
-> +{
-> +	struct cxl_cachedev *cxlcd = to_cxl_cachedev(dev);
-> +	struct cxl_dev_state *cxlds = cxlcd->cxlds;
-> +	bool disable;
-> +	int rc;
-> +
-> +	rc = kstrtobool(buf, &disable);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = cxl_accel_set_cache_disable(cxlds, disable);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return n;
-> +}
-> +
-> +static ssize_t cache_disable_show(struct device *dev,
-> +				  struct device_attribute *attr, char *buf)
-> +{
-> +	struct cxl_cachedev *cxlcd = to_cxl_cachedev(dev);
-> +	struct cxl_dev_state *cxlds = cxlcd->cxlds;
-> +	int rc;
-> +
-> +	rc = cxl_accel_caching_disabled(cxlds);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	return sysfs_emit(buf, "%d\n", rc);
-> +}
-> +static DEVICE_ATTR_RW(cache_disable);
-> +
-> +static ssize_t cache_invalid_show(struct device *dev,
-> +				  struct device_attribute *attr, char *buf)
-> +{
-> +	struct cxl_cachedev *cxlcd = to_cxl_cachedev(dev);
-> +	struct cxl_dev_state *cxlds = cxlcd->cxlds;
-> +	int rc;
-> +
-> +	rc = cxl_accel_cache_invalid(cxlds);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	return sysfs_emit(buf, "%d\n", rc);
-> +}
-> +static DEVICE_ATTR_RO(cache_invalid);
-> +
-> +static ssize_t init_wbinvd_store(struct device *dev,
-> +				 struct device_attribute *attr, const char *buf,
-> +				 size_t n)
-> +{
-> +	struct cxl_cachedev *cxlcd = to_cxl_cachedev(dev);
-> +	struct cxl_dev_state *cxlds = cxlcd->cxlds;
-> +	int rc;
-> +
-> +	rc = cxl_accel_initiate_wbinvd(cxlds);
-> +	return rc ? rc : n;
-> +}
-> +static DEVICE_ATTR_WO(init_wbinvd);
-> +
-> +static struct attribute *cxl_cachedev_mgmt_attributes[] = {
-> +	&dev_attr_cache_disable.attr,
-> +	&dev_attr_cache_invalid.attr,
-> +	&dev_attr_init_wbinvd.attr,
-> +	NULL,
-> +};
-> +
-> +static umode_t cxl_cachedev_mgmt_visible(struct kobject *kobj,
-> +					 struct attribute *a, int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct cxl_cachedev *cxlcd = to_cxl_cachedev(dev);
-> +	struct cxl_dev_state *cxlds = cxlcd->cxlds;
-> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-> +	u16 cap;
-> +	int rc;
-> +
-> +	rc = pci_read_config_word(pdev, cxlds->cxl_dvsec + CXL_DVSEC_CAP_OFFSET,
-> +				  &cap);
-> +	if (rc)
-> +		return 0;
-> +
-> +	if (!(cap & CXL_DVSEC_WBINVD_CAPABLE) &&
-> +	    a == &dev_attr_init_wbinvd.attr)
-> +		return 0;
-> +
-> +	return a->mode;
-> +}
-> +
-> +static struct attribute_group cxl_cachedev_mgmt_attribute_group = {
-> +	.attrs = cxl_cachedev_mgmt_attributes,
-> +	.is_visible = cxl_cachedev_mgmt_visible,
-> +};
-> +
->  static const struct attribute_group *cxl_cachedev_attribute_groups[] = {
->  	&cxl_cachedev_attribute_group,
->  	&cxl_cachedev_cache_attribute_group,
-> +	&cxl_cachedev_mgmt_attribute_group,
->  	NULL,
->  };
->  
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 2279c2690c59..667f75043f9e 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -1232,3 +1232,92 @@ int cxl_accel_get_cache_info(struct cxl_dev_state *cxlds)
->  	return 0;
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_accel_get_cache_info, "CXL");
-> +
-> +int cxl_accel_caching_disabled(struct cxl_dev_state *cxlds)
+> There's a couple of things missing from this set:
+> 
+> 1) Missing an endpoint driver
+> 
+> 	I plan on submitting a reference driver (type 1 or 2) with v1, I
+> 	figured I'd send out what I have before going much further.
 
-why not just return bool?
+Hi Ben,
 
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-> +	int dvsec, rc;
-> +	u16 ctrl2;
-> +
-> +	device_lock_assert(cxlds->dev);
-> +
-> +	if (!dev_is_pci(cxlds->dev))
-> +		return -EINVAL;
-> +	pdev = to_pci_dev(cxlds->dev);
-> +
-> +	dvsec = cxlds->cxl_dvsec;
-> +	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_CTRL2_OFFSET, &ctrl2);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return !!(ctrl2 & CXL_DVSEC_DISABLE_CACHING);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_accel_caching_disabled, "CXL");
-> +
-> +int cxl_accel_set_cache_disable(struct cxl_dev_state *cxlds, bool disable)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-> +	int dvsec, rc;
-> +	u16 ctrl2;
-> +
-> +	if (!dev_is_pci(cxlds->dev))
-> +		return -EINVAL;
-> +
-> +	guard(device)(cxlds->dev);
-> +	dvsec = cxlds->cxl_dvsec;
-> +	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_CTRL2_OFFSET, &ctrl2);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (!!(ctrl2 & CXL_DVSEC_DISABLE_CACHING) == disable)
-> +		return 1;
-> +
-> +	ctrl2 &= ~CXL_DVSEC_DISABLE_CACHING;
-> +	ctrl2 |= FIELD_PREP(CXL_DVSEC_DISABLE_CACHING, disable);
-> +	return pci_write_config_word(pdev, dvsec + CXL_DVSEC_DISABLE_CACHING,
-> +				     ctrl2);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_accel_set_cache_disable, "CXL");
-> +
-> +int cxl_accel_initiate_wbinvd(struct cxl_dev_state *cxlds)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-> +	int dvsec, rc;
-> +	u16 ctrl2;
-> +
-> +	if (!dev_is_pci(cxlds->dev))
-> +		return -EINVAL;
-> +
-> +	if (cxl_accel_caching_disabled(cxlds) != 1)
-> +		return -EBUSY;
-> +
-> +	guard(device)(cxlds->dev);
-> +	dvsec = cxlds->cxl_dvsec;
-> +	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_CTRL2_OFFSET, &ctrl2);
-> +	if (rc)
-> +		return rc;
-> +
-> +	ctrl2 |= CXL_DVSEC_INIT_WBINVD;
-> +	return pci_write_config_word(pdev, dvsec + CXL_DVSEC_CTRL2_OFFSET,
-> +				     ctrl2);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_accel_initiate_wbinvd, "CXL");
-> +
-> +int cxl_accel_cache_invalid(struct cxl_dev_state *cxlds)
-
-return bool?
+Don't mind getting this all sorted out and discussed. But we will need a real vendor device out there at some point as a user for all the code to be merged.
 
 DJ
 
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-> +	int dvsec, rc;
-> +	u16 stat2;
-> +
-> +	if (!dev_is_pci(cxlds->dev))
-> +		return -EINVAL;
-> +
-> +	guard(device)(cxlds->dev);
-> +	dvsec = cxlds->cxl_dvsec;
-> +	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_STAT2_OFFSET, &stat2);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return !!(stat2 & CXL_DVSEC_CACHE_INVALID);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_accel_cache_invalid, "CXL");
-> diff --git a/drivers/cxl/cxlcache.h b/drivers/cxl/cxlcache.h
-> index 60563b391844..14e6f543ade9 100644
-> --- a/drivers/cxl/cxlcache.h
-> +++ b/drivers/cxl/cxlcache.h
-> @@ -35,4 +35,8 @@ int devm_cxl_port_program_cache_idrt(struct cxl_port *port,
->  int cxl_dport_program_cache_idd(struct cxl_dport *dport,
->  				struct cxl_cachedev *cxlcd);
->  
-> +int cxl_accel_set_cache_disable(struct cxl_dev_state *cxlds, bool disable);
-> +int cxl_accel_caching_disabled(struct cxl_dev_state *cxlds);
-> +int cxl_accel_cache_invalid(struct cxl_dev_state *cxlds);
-> +int cxl_accel_initiate_wbinvd(struct cxl_dev_state *cxlds);
->  #endif
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index e5dd132be7e7..dc0800d79cf6 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -20,8 +20,14 @@
->  #define     CXL_DVSEC_CACHE_CAPABLE	BIT(0)
->  #define     CXL_DVSEC_MEM_CAPABLE	BIT(2)
->  #define     CXL_DVSEC_HDM_COUNT_MASK	GENMASK(5, 4)
-> +#define     CXL_DVSEC_WBINVD_CAPABLE	BIT(6)
->  #define   CXL_DVSEC_CTRL_OFFSET		0xC
->  #define     CXL_DVSEC_MEM_ENABLE	BIT(2)
-> +#define   CXL_DVSEC_CTRL2_OFFSET	0x10
-> +#define     CXL_DVSEC_DISABLE_CACHING	BIT(0)
-> +#define     CXL_DVSEC_INIT_WBINVD	BIT(1)
-> +#define   CXL_DVSEC_STAT2_OFFSET	0x12
-> +#define     CXL_DVSEC_CACHE_INVALID	BIT(0)
->  #define   CXL_DVSEC_CAP2_OFFSET		0x16
->  #define     CXL_DVSEC_CACHE_UNIT_MASK	GENMASK(3, 0)
->  #define     CXL_DVSEC_CACHE_SIZE_MASK	GENMASK(15, 8)
+> 
+> 2) Mapping/Reserving host memory used for CXL cache(s)
+> 
+> 	I'm thinking this will be handled by the endpoint driver, but I'm
+> 	not sure what mechanism would be used and whether to integrate it
+> 	with the cxl_cache/core. Any thoughts/ideas here are appreciated!
+> 
+> 3) RAS Support
+> 
+> 	Same situation as 1) above.
+> 
+> Some quick notes: The actual cache parts of this set are untested due
+> to problems with my set up, but I did make sure nothing here breaks type
+> 3 support. I'll have this fixed before sending out a v1. This series is
+> based on the for-6.18/cxl-probe-order (commit 5e29cbd1077b) branch in
+> the CXL repo, with v7 of Dave's deferred dport probe set on top [1]. I
+> added Dave's set to help with getting around constraints with HDM
+> decoders in CXL.cache device only configurations (see 08/18 for more).
+> 
+> Patch Breakdown:
+> 	- 1 & 2: Preliminary changes for struct cxl_cachedev
+> 	- 3: Add struct cxl_cachedev
+> 	- 4-8: Preliminary changes for adding cache devices to port
+> 	  hierarchy
+> 	- 9: Function for getting CXL cache info
+> 	- 10: cxl_cache driver (mirrors cxl_mem)
+> 	- 11-16: Checking CXL.cache capabilities for system configuration
+> 	  validity
+> 	- 17-18: Cache device attributes
+> 
+> [1]:
+> Link: https://lore.kernel.org/linux-cxl/20250714223527.461147-1-dave.jiang@intel.com/
+> 
+> Ben Cheatham (18):
+>   cxl/mem: Change cxl_memdev_ops to cxl_dev_ops
+>   cxl: Move struct cxl_dev_state definition
+>   cxl/core: Add CXL.cache device struct
+>   cxl: Replace cxl_mem_find_port() with cxl_dev_find_port()
+>   cxl: Change cxl_ep_load() to use struct device * parameter
+>   cxl/port, mem: Make adding an endpoint device type agnostic
+>   cxl/port: Split endpoint port probe on device type
+>   cxl/port: Update switch_port_probe() for CXL cache devices
+>   cxl/core: Add function for getting CXL cache info
+>   cxl/cache: Add cxl_cache driver
+>   cxl/core: Add CXL snoop filter setup and checking
+>   cxl/cache: Add CXL Cache ID Route Table mapping
+>   cxl/cache: Implement Cache ID Route Table programming
+>   cxl/cache: Add Cache ID Decoder capability mapping
+>   cxl/cache: Implement Cache ID Decoder programming
+>   cxl/cache: Add cache device counting for CXL ports
+>   cxl/core: Add cache device attributes
+>   cxl/core: Add cache device cache management attributes
+> 
+>  drivers/cxl/Kconfig         |  14 +
+>  drivers/cxl/Makefile        |   2 +
+>  drivers/cxl/cache.c         | 276 +++++++++++++++++++
+>  drivers/cxl/core/Makefile   |   1 +
+>  drivers/cxl/core/cachedev.c | 292 ++++++++++++++++++++
+>  drivers/cxl/core/hdm.c      |  31 +++
+>  drivers/cxl/core/memdev.c   |   2 +-
+>  drivers/cxl/core/pci.c      | 134 ++++++++++
+>  drivers/cxl/core/port.c     | 518 +++++++++++++++++++++++++++++++++---
+>  drivers/cxl/core/region.c   |  25 +-
+>  drivers/cxl/core/regs.c     |  28 ++
+>  drivers/cxl/cxl.h           | 193 +++++++++++++-
+>  drivers/cxl/cxlcache.h      |  42 +++
+>  drivers/cxl/cxlmem.h        | 121 +--------
+>  drivers/cxl/cxlpci.h        |  10 +
+>  drivers/cxl/mem.c           |  14 +-
+>  drivers/cxl/pci.c           |   2 +-
+>  drivers/cxl/port.c          |  54 ++--
+>  drivers/cxl/private.h       |   8 +-
+>  19 files changed, 1569 insertions(+), 198 deletions(-)
+>  create mode 100644 drivers/cxl/cache.c
+>  create mode 100644 drivers/cxl/core/cachedev.c
+>  create mode 100644 drivers/cxl/cxlcache.h
+> 
 
