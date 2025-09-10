@@ -1,267 +1,440 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7026C2F6196;
-	Wed, 10 Sep 2025 20:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757535864; cv=fail; b=Dng1QKS3a+xbDMqb4cRB16dvb1mUB/KERTlwNPpXomT4XzQTpuMITCx9RIBqM5455yTLEXu3C4paGkpmkKvBgtHodNyoovYfRyDZ2b9fYiywoC89Nc2rvgZlyuopADwTSX9a2l49vtnyN/K8Rf6KZNba/Mykn+gi+/9WK5PSc0Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757535864; c=relaxed/simple;
-	bh=9tnuSNbWqL4u3OhLXhyney3VthVRXizDzb9hdcWC+6I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UT5kneiOjqGodUUjZNmHlxB5ntf/a2Z7e9WPKxGJyBsf0+XA0fMIb3RjsE4527cK5B+4f/yQLQ7/ef6oWw2owO66iwDdicSwnw47hn1RGjQTy3m01Gom21W2dXhz/jlCAf7R0mnxPCpkNiGZonyUzjOqoqepNJr1kCcrfm+Z4eo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ObIV4SC4; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=YK1wF6ke; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0358F23B607
+	for <linux-cxl@vger.kernel.org>; Wed, 10 Sep 2025 20:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757536609; cv=none; b=cL5D4mOC//Aa/P7xa0dSCqMd2ij2FLNjD4nqXNlnHYJ5QH+06Ies1CVdv3bCDmOzDQIJP2ZS0FZ0YuXd0wUb0x6SJoV2mBwtYq1ih3SovXfXPofz7DdR6DF3RMapbmOy0Hsi8TsX1PA074Q92q6mtNEiLhpv3nJ/TRvklQY0edo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757536609; c=relaxed/simple;
+	bh=by9F8zldkNSmrXEgfdtHpp+OwVAlmntqK9tFXdIiHyQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=f92bgczkYHoRGtOMmxN4OB0csZvtfj8SjmWsgEAX4x9pBg1Xpp4fvIns/zr/VjQC0aD/+nv55kzIlNU8igtn4r62FJegrr+XqYHEsPbw8Od0fK05ztulRRIemhR+12ztFFUmq0nsNSa6nINa6LaPzy4Gexsf8POcsawdWbFYZt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YT6a7Wwu; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ObIV4SC4";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="YK1wF6ke"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58AGfigc005172;
-	Wed, 10 Sep 2025 20:23:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=RSLOn2j28R9kM5FsmlPMWXz46guFdqwiFtj1MWQEEAI=; b=
-	ObIV4SC4+g/ItWShZSjOq3YF9LPmlxugAbIzQNN+mmM/tY1coUristVRY5Ryv9YB
-	MoKNpluYMCENTmbU0laVpcNhf22X5n8Vd8U8LqC0DiQUd++7Jep53leZ67sYrDvq
-	rb8QHvfTqYg39h60qgr6tbVF6IzerNXifN1oqTlnaedpKyHAp8xZyvZBr4PZ3dS6
-	WrT3HlW48E7SyVznc/Za60tOOvSxsd7VpJYQ0x+73jh20t3CpfWtECnnkcdEBFNl
-	jFcQ6pBDQbgnRsT13ts61+P5J4fgbvOxVdD1Yq0d6WmIs0+y+HbSSp1B6nRQ758S
-	WWkuaDkezsdgYLzg6Twjyw==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 49226sw002-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 10 Sep 2025 20:23:26 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 58AJfi4L002816;
-	Wed, 10 Sep 2025 20:23:25 GMT
-Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azon11010005.outbound.protection.outlook.com [52.101.56.5])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 490bdj1cg6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 10 Sep 2025 20:23:25 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lKJ3wjJIVkFVp9hxj4ZimMp0eiXlM+KNAtb7xMQxOMV9uqWgQBWitXMGcEobcPM/x3GE1nyTI5rWHifFNrWrnotU24Zny6qr/x9x1M9WWkbcUUfLHD44uRQP2ptM/sDUu54pZDgVIBoe1rVJ9GAHyINWs5b15gRAsyOktw+E1qpdw5V1tUARDbfzm3mKNR/dUHXYgTXysQzGfj2k3NZNKXvngpvZKw4mpKnYxbdUEzx7pEVNJPomrQ6+BNb2ZUMaAqLlsAmcRyRRZpUUtHpyVFRfT0Wl1fEbKe5SzbRaztTzhEILYKW6odjuK9pn7NxXgQrYnzXcv4BJeyxNGYyP+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RSLOn2j28R9kM5FsmlPMWXz46guFdqwiFtj1MWQEEAI=;
- b=XWeQOGeIvq2KkZ6rbt7EiDtOamGXyo39ennV95ZS8p7roFByQDXEuW3kxm1l7i0p4sv9fTqEK7KJbJM7cXA97lCAdW5a2w+nPsqrLny7OxXX3nfSMlmbx05XkN3yr71ERjOlnlDaHw/L3IVJIitfZzpB+pH2e1S0DbVt4SRmNMgfN6sVWSjb0NZ6hs3vuS3biOuHcVZrlvPq5gGfXXOs//3jNUl/J+VXZixTyW3BFnXJmzdCbxpDdgfBGQjoluyoyRDgSs+KaWZFG/O26tjIzhsIWqeUZ1eCrHXpZDAqpT0rNf1rJEJBOlXTa+ip4vTyq2axsGr2ro9JdVdT7pcLIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RSLOn2j28R9kM5FsmlPMWXz46guFdqwiFtj1MWQEEAI=;
- b=YK1wF6kef5qDbXKClxlX1LtdMsoOfF2zfchMEZcf3Gx2YRsMC5R38WIhDZ8zoPWEwTOQeTg21o5vA8G9dn1CqcN+BYHqtAgNrhGi98kXasyWLN66m5uwzEDLvbj2lpyILXYjsDa7fr2phHL5L4Q4/eVV/K8lqeOBZlM01i+bGEQ=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by DM4PR10MB6278.namprd10.prod.outlook.com (2603:10b6:8:b8::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9094.22; Wed, 10 Sep 2025 20:22:53 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.9094.021; Wed, 10 Sep 2025
- 20:22:53 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
-        Guo Ren <guoren@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>,
-        Muchun Song <muchun.song@linux.dev>,
-        Oscar Salvador <osalvador@suse.de>,
-        David Hildenbrand <david@redhat.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-        Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        Hugh Dickins <hughd@google.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
-        ntfs3@lists.linux.dev, kexec@lists.infradead.org,
-        kasan-dev@googlegroups.com, Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH v2 09/16] doc: update porting, vfs documentation for mmap_prepare actions
-Date: Wed, 10 Sep 2025 21:22:04 +0100
-Message-ID: <e50e91a6f6173f81addb838c5049bed2833f7b0d.1757534913.git.lorenzo.stoakes@oracle.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <cover.1757534913.git.lorenzo.stoakes@oracle.com>
-References: <cover.1757534913.git.lorenzo.stoakes@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: GVYP280CA0046.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:150:f9::16) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YT6a7Wwu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757536607; x=1789072607;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=by9F8zldkNSmrXEgfdtHpp+OwVAlmntqK9tFXdIiHyQ=;
+  b=YT6a7WwuH2RYqgsCAvqMgyDnAECUrnPefCqeQv4eYyVwzR4+VP99Ubd+
+   r8+kcgJAj/q88x8tfavWgNsOTI3E/Q/YO23/6SfkXRyZbpdbmHxzH/Zt5
+   PhAma6jeNg7aIwYJ/dL4IRKC3RmtBgkRJtm94+tFywNgMkL5vUBCleSrm
+   HtTGq0QIRrVHvmilb9g7bTkKFDJtIJ5FKDHAzqc+oJj3l2nXQU0M3HWAE
+   OYuA/Aqb0Iz8oE1rbH5UBbx6CniqFZgiECg8+hUJsBJ+8FYmV+Xujmt/6
+   8PYen6HX7IsqeEH605c90lKt6cMGLekWTS1hrxoyGCmunTZMH6G6uEd7x
+   w==;
+X-CSE-ConnectionGUID: kjPNoUgoS/W5E707t5N0Og==
+X-CSE-MsgGUID: Lfho6YAzRfqZjzhsgUX4Ag==
+X-IronPort-AV: E=McAfee;i="6800,10657,11549"; a="59083035"
+X-IronPort-AV: E=Sophos;i="6.18,255,1751266800"; 
+   d="scan'208";a="59083035"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 13:36:46 -0700
+X-CSE-ConnectionGUID: +DoVhvacSdGKVoaLn5IpEw==
+X-CSE-MsgGUID: kCPF9ceeTgyLhXoWjkLQjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,255,1751266800"; 
+   d="scan'208";a="210615718"
+Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.110.219]) ([10.125.110.219])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 13:36:46 -0700
+Message-ID: <6c63dc30-0ec1-4ead-a884-bdc87d07f70f@intel.com>
+Date: Wed, 10 Sep 2025 13:36:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DM4PR10MB6278:EE_
-X-MS-Office365-Filtering-Correlation-Id: 729f4b94-2b2a-4878-72e0-08ddf0a7d24a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?JUrPMECNB6p1lUEk12FxjwDWp/mdx1gtVjU1qKq2AgHKwge/6FkrGxi1ZWoH?=
- =?us-ascii?Q?5y8kzQFp+di3hO6t4hi+1TaD+pGg9T2sr+TEK8CtfE/tq/ipJQU/JkyVppdg?=
- =?us-ascii?Q?U2xnX5IlutTOkJvUoEhy2m1fCMfb36sUKmmgVCn/Mb2exNrV2yRgx1ZiLd4o?=
- =?us-ascii?Q?4kU4KrMPmLj93Xnw+BniHKK8vqAvvsvR1WtCOaq466HaX9/Bo2TtdHJb6IKq?=
- =?us-ascii?Q?WjdH+6fVX+zQTc8TULo2jELyjXPcRCND4RRr7XnAQAph2IRfZKD0Z6j7xsMp?=
- =?us-ascii?Q?b/Syd5i5Z/gXU59YVsI/mKE9Xxx/QKVsozYvYkiOdmOGkZD8icoJXrcDbeUo?=
- =?us-ascii?Q?ZN0uAHpmk4GTjB8vwNTyMZ9ekNtXHbVM55CD72NKZBboMn6Gqxe2PZqGkCtk?=
- =?us-ascii?Q?RTHp6tBGyDqK/RAGptwzm2TPpzoLAjrCht21mMlYjFe66GQ798V5meX5tcV7?=
- =?us-ascii?Q?Y2zWF9RFXnEei76HgGRrUkslnIhlBxzoJW9axCDWn2ufvmCRa0yGPLWbbeZl?=
- =?us-ascii?Q?Cg39CkljUPefb7bPPbkSjOJuAKqdZ94Mn9JSkJY52LkmE0C3z0A6Q2ZEoF0G?=
- =?us-ascii?Q?lV48PiKJO8WDM6UMJ7k7oahIlsKp7quI30oTxxoh4Ie1Qv6h9zyWDPkwvKz6?=
- =?us-ascii?Q?gspBhU4zhFM2OeM6aZN22PHbsTGcNupSyIhaxfNK/feAi3Zc/RCOW8cTontz?=
- =?us-ascii?Q?h3sV7P7UUpNPKVQ3CEPVCmOlj0opClHXQCDM2h0LdEZnL5GUlJgAZbfTB6kv?=
- =?us-ascii?Q?E2pyFO8TVO+DX0fPBhSIUgwnymvJ4bbhAmhUwzM81QL/R55CiMchoJRCnOM2?=
- =?us-ascii?Q?jKk4t2QCUj8YM6xNb4dCHqb9HKQFxskN4GQvZDEnEWBKxyC7A51cLoxVxKNo?=
- =?us-ascii?Q?DwhjZDUr0VvRMdQ1VBzwnesT1tKmd7ZjrGvLlQz2Cg3vvwDflgalnGCjIY7A?=
- =?us-ascii?Q?NGbO0Ex1vHaZ8EB+/NCQ7qGIESOwfdvBfctv4t1oWeNaHCbdO1X8W0GnhepY?=
- =?us-ascii?Q?meq0HxtY8QcgK+bN8CUDL7CDIvvfrQc7gVOZQoGMVtL+G6ReWe3cc7lpk/sT?=
- =?us-ascii?Q?tLmSU8TnKtA3B/2GDqZvK24/MVDKhlRKwgNIpSDv+QnDhms+rvDD0P5CC3SC?=
- =?us-ascii?Q?8LEJsaRnIWKrIz4CNHC29ePUJe4V9Jy9iJdHrrgMHR0f7OcCczm4F744E2yR?=
- =?us-ascii?Q?pitgBgGJl7P2D6fIBUgzkOJqHG8t2JXUcf0s42mi0o5cGHAWUx09rURmdOQ7?=
- =?us-ascii?Q?renEixs09LV4AaovY3Y0sJemQlc8Gw4pTf1dp7eSm2MxGxnV78lOkjuwfNn1?=
- =?us-ascii?Q?JKWLxWThDFMLbOoDdW3xD2N3Oq/V1vhhhWLM+UH1t/HmmMP23N6253Rd5Uj8?=
- =?us-ascii?Q?61IjEZbrHSn+k8mEIrMfcR+53e5X8Ht/4OkRGRK31DbcICTxO/GJM/RFzPqL?=
- =?us-ascii?Q?4BzH1i/sBds=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?euU+P+auMFHXUlcOFmQiansK+q6gF6XpgEpxVlU+NScTJ4niF9ygK11oANTR?=
- =?us-ascii?Q?mAocld++W8Porc22OPvhl0mD8meU2y8QWiNYrTnn4eSx0DTHETDkf1uvMwy9?=
- =?us-ascii?Q?IjY6lnuEns14Oj1IsprEE1fYXTTDasxfWG8/M4mfP8UOSepI+9EkO6lY1j/P?=
- =?us-ascii?Q?goDnnQAcuf6ooAuXE9W1u8R0vbko1Vrugaw2gGZBYDOvHGhpJ5Wke2cGjQwX?=
- =?us-ascii?Q?K2guExt29XCZnJqEE/z5rzsJW0Ap3GISHTUSMA5yZlX3+A5UxZQ2B/pYtHE2?=
- =?us-ascii?Q?R/nOdcbp6C45sybCLGBeeQlx6iguVNvCUoOQOk/HtVu9i6IpE2B1PqeoZ8vA?=
- =?us-ascii?Q?u/Xqf2jffO2ece2dN4Q82IClQ5zSPSfh+LBSEljZarQXk+6buPgrd8DhIiWE?=
- =?us-ascii?Q?loHDA0wLEhaj3JEqZbBjIrprkmC0lwAW8/73S0PekPdVSH05m2BDKfKwefjw?=
- =?us-ascii?Q?P0Sc9gieZ75xr3G9PGsktfzEn6xvlyhuEFueb91RnlQfFhchbCtSS+RFInYY?=
- =?us-ascii?Q?Dt/1/RZQUWFt2/x2sHlxSKoLh6S0hSvLGT31S6B9e1I4dAzjPSEaT4MWmGex?=
- =?us-ascii?Q?MSudFlfHfmmxgZtZ85unhKxJ2L7zW8RYaXsZlAITIVBcd8RkS3rHLhM6usDV?=
- =?us-ascii?Q?kSQHUzNlFKJPjrZ6BTU0HOuMXrse1e95afuPqlFTm0Hhw74T1Xkhl/xhyL9h?=
- =?us-ascii?Q?mE/z+vcbAIJQxzmhKzmiYPg0Bp7pti7vA5VaRPQpB1Hdzt4jHh4vhLSiMeAL?=
- =?us-ascii?Q?ZaMlPj/F18DolaYhLdWOtzLZmVoO80uEXORXOvzzti+OE5UWHMn3U96PPax7?=
- =?us-ascii?Q?BKS9wNtAlDkGMZ8mee+mBqKIO8kM+oB96NchS2PT5iAwbUsK1Ztmhyo4KSs/?=
- =?us-ascii?Q?PFAyklBkcSL4s/Uo0PrdJSnBPrq8voP0MvXmvYwP4HfNY0YyDvZzLJdKuisd?=
- =?us-ascii?Q?RvKdTeSczSL1I4XfuQ0bnvNZLEBuCXXggrDoL6YlINEGoeQXVuBc2VzWMx7D?=
- =?us-ascii?Q?UPUT7dxh98j0+9t4vrYdwsFMwiIAgyhP2X298HGnqG7NqbA6pxeXzZpus7/9?=
- =?us-ascii?Q?U6WLAWMA1cRWUnhEfSrfWUBl17mTtGHjxYXn9dxaZ1OQJg0aH3m7QgECfpIS?=
- =?us-ascii?Q?jFQcOY18yxJRX+eKCZOLD2voaZg8YBZUo6UyyFvEZ3AE1eImNvHZoLOuUbXP?=
- =?us-ascii?Q?SmZ6UEJrhidS7k+V1pfENARDSSw+UVHlXPdst05OfKSk75F+B+Bj33A4IBER?=
- =?us-ascii?Q?7NHyMSiTfNzln4ZCZLAyPDhUbrpM9NzJctFcxNowU9ItaGirnqhNzZUSevm8?=
- =?us-ascii?Q?BaTG/X/85dQThcs5PnH/fBPMLcwlPiiOmzC/QS34WtSKtZY2YwVWVlpdBET1?=
- =?us-ascii?Q?BVfjDo4pE4CZBFo1Pq6olp7+h4eMcVMJ6GiBuNYqFPKjJ1CbpY1I0eKw/3Xl?=
- =?us-ascii?Q?h4pXmXwSPC5qmNhI052fDXlahB2ewMWDlsnl7xxChf3+vGOgYGDs40DxQF2t?=
- =?us-ascii?Q?vYxFsIi9HMiqPiEer8LRFBBjeXN7cmilLH6IvWJoHMR10gYrFX7hiO2okbzo?=
- =?us-ascii?Q?50OccLj6/cur0JYoBXDnixaS0PRey8w2UDx+BSAc/lAvAYymZnY6zo+LL9Ud?=
- =?us-ascii?Q?bw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	2bE5kSjPaD/YhbmEeFdnk8oneH8cm+aOnFfY4BwTamL4PMw5ijVuNe3eMUBCS0UMG0aZvIFzxB7GmMKQP2Zbs9qi7h7QTMwoBNVDtaJcYPJBOEFXkeMdbFWDuWn2cXf13iW4BRk2GbIucwQ+D2HaewY0h6T7UUBKXS2pBVl1/mKhcm+ebuVEp7IuMdHC2InE3OKHYq9IqXeRb/fLeMSvI5cqcHLYqmuae92WzaFC8ucm0AgEFJ3NftJ+mqTCztQQdryuMbNU3x6Ru1cNC/11SxPRpt0IbR0K2y7Hv0lcTeL2q1wz9Jb8E41sM0kz7j6oWhkIo8SOFYAqSbbqmoubroFSI8Ejj2ojDwWTQD02uvFwr4i+q74Il/vBL5XG3A6CPcrgqMkKj05O4pmjjqEpUhoWWtbqyQTmIo86su/tmex+aTh41RKhucb3G+F9bY7LJlKE1npC1SdwRsCuEWiMFmYsZXD171+rkRHvhxahSbXiC8+dqu6lrtxUC8WbqptZloEZVQc91KwkasMaiebk9eEsrfo5xz5NHw3cCmWk8qcO1SfRuKr1hF4LQZ/esbYoL6RaCuh/WyZqpIo9emvINTaYv9YRGbwUWnsJb0KeD/U=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 729f4b94-2b2a-4878-72e0-08ddf0a7d24a
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2025 20:22:53.6568
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O/mOo0Z5HSPrGzRcleQn6gyJHCD6TjKL6YSXfDLwykoYSvdjXcIHZjYPeIVJM2BpQwYIjEZElGup4dZMDIkuZ0DlCqh+tKpnK6faAekCB8U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6278
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-10_04,2025-09-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 suspectscore=0
- bulkscore=0 mlxscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2508110000
- definitions=main-2509100190
-X-Authority-Analysis: v=2.4 cv=QeRmvtbv c=1 sm=1 tr=0 ts=68c1de3e b=1 cx=c_pps
- a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=yJojWOMRYYMA:10
- a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=CxsoVSIMbwK9moDqu60A:9 cc=ntf
- awl=host:12084
-X-Proofpoint-ORIG-GUID: 2jZcJypCMw4ZaAzbXOlG6eVmfZv5itma
-X-Proofpoint-GUID: 2jZcJypCMw4ZaAzbXOlG6eVmfZv5itma
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA4MDE1OCBTYWx0ZWRfX7fVhP82iXqPJ
- 0IoctgL4CGLy7Izt/b1q925tORBuZe0G4m0JAamtpW8tfDr8vyGej7F/+VgIqZL5Xa1mR9U6mII
- GtTMV8fWmsDWXCBAdf5KKCnRWQcwSPWSALoAcy1w6CxtQczcb68bIzrP5mFOuOoJ6Mc8bzIfdWo
- Y0dQGezOyZ0Vc/82aB7pxaSlPp+wHS5ZQ0cYDxl+mJzYjG2grGhsK0V7IBD+iYt8M0Tk+iUIRtG
- XU+kxBodLWYLFEolplYjUs7DO3sUSAZBXh3Z4ht/KHiY1z0+DbqTV7RpjcfedPHoeFEeQmk09Em
- BlGq4tocJxoq/3Cb/43NyiWy1pdU+LhasC/m/J08Uxglajtd5cCH2/mv3Gz79yUxpHtRZvrD3tX
- RBAkjB2+NLV/0l3W3Pim/wzPDNn72Q==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 11/18] cxl/core: Add CXL snoop filter setup and
+ checking
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>, linux-cxl@vger.kernel.org
+References: <20250812212921.9548-1-Benjamin.Cheatham@amd.com>
+ <20250812212921.9548-12-Benjamin.Cheatham@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250812212921.9548-12-Benjamin.Cheatham@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Now we have introduced the ability to specify that actions should be taken
-after a VMA is established via the vm_area_desc->action field as specified
-in mmap_prepare, update both the VFS documentation and the porting guide to
-describe this.
 
-Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
----
- Documentation/filesystems/porting.rst | 5 +++++
- Documentation/filesystems/vfs.rst     | 4 ++++
- 2 files changed, 9 insertions(+)
 
-diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesystems/porting.rst
-index 85f590254f07..6743ed0b9112 100644
---- a/Documentation/filesystems/porting.rst
-+++ b/Documentation/filesystems/porting.rst
-@@ -1285,3 +1285,8 @@ rather than a VMA, as the VMA at this stage is not yet valid.
- The vm_area_desc provides the minimum required information for a filesystem
- to initialise state upon memory mapping of a file-backed region, and output
- parameters for the file system to set this state.
-+
-+In nearly all cases, this is all that is required for a filesystem. However, if
-+a filesystem needs to perform an operation such a pre-population of page tables,
-+then that action can be specified in the vm_area_desc->action field, which can
-+be configured using the mmap_action_*() helpers.
-diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
-index 486a91633474..9e96c46ee10e 100644
---- a/Documentation/filesystems/vfs.rst
-+++ b/Documentation/filesystems/vfs.rst
-@@ -1236,6 +1236,10 @@ otherwise noted.
- 	file-backed memory mapping, most notably establishing relevant
- 	private state and VMA callbacks.
- 
-+	If further action such as pre-population of page tables is required,
-+	this can be specified by the vm_area_desc->action field and related
-+	parameters.
-+
- Note that the file operations are implemented by the specific
- filesystem in which the inode resides.  When opening a device node
- (character or block special) most filesystems will call special
--- 
-2.51.0
+On 8/12/25 2:29 PM, Ben Cheatham wrote:
+> Add functions to set up and validate the snoop filter configuration of a
+> CXL-capable PCIe Root Port (struct cxl_dport). Allocate space in the
+> snoop filter as part of cxl_cachedev probe.
+> 
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+> ---
+>  drivers/cxl/cache.c     |  26 +++++++
+>  drivers/cxl/core/port.c | 145 ++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/regs.c |   7 ++
+>  drivers/cxl/cxl.h       |  14 ++++
+>  drivers/cxl/cxlcache.h  |   3 +
+>  5 files changed, 195 insertions(+)
+> 
+> diff --git a/drivers/cxl/cache.c b/drivers/cxl/cache.c
+> index 6e5161ae3107..7ef36e4bbce8 100644
+> --- a/drivers/cxl/cache.c
+> +++ b/drivers/cxl/cache.c
+> @@ -55,11 +55,29 @@ struct cxl_cachedev *devm_cxl_add_cachedev(struct device *host,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(devm_cxl_add_cachedev, "CXL");
+>  
+> +static int find_snoop_gid(struct cxl_cachedev *cxlcd, u32 *gid)
+> +{
+> +	struct cxl_dport *iter = cxlcd->endpoint->parent_dport;
+> +
+> +	while (iter && !is_cxl_root(iter->port)) {
+> +		if (iter->snoop_id != CXL_SNOOP_ID_NO_ID) {
+> +			*gid = iter->snoop_id;
+> +			return 0;
+> +		}
+> +
+> +		iter = iter->port->parent_dport;
+> +	}
+> +
+> +	*gid = CXL_SNOOP_ID_NO_ID;
+> +	return -ENXIO;
+> +}
+> +
+>  static int cxl_cache_probe(struct device *dev)
+>  {
+>  	struct cxl_cachedev *cxlcd = to_cxl_cachedev(dev);
+>  	struct device *endpoint_parent;
+>  	struct cxl_dport *dport;
+> +	u32 gid;
+>  	int rc;
+>  
+>  	rc = devm_cxl_enumerate_ports(&cxlcd->dev);
+> @@ -96,6 +114,14 @@ static int cxl_cache_probe(struct device *dev)
+>  			return rc;
+>  	}
+>  
+> +	rc = find_snoop_gid(cxlcd, &gid);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = devm_cxl_snoop_filter_alloc(gid, cxlcd->cxlds);
+> +	if (rc)
+> +		return rc;
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 5144ddac7145..26ea22a2638c 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -35,6 +35,9 @@ static DEFINE_IDA(cxl_port_ida);
+>  static DEFINE_XARRAY(cxl_root_buses);
+>  static DEFINE_XARRAY(cxl_root_ports);
+>  
+> +DECLARE_RWSEM(cxl_snoop_rwsem);
+> +static DEFINE_XARRAY(cxl_snoop_filters);
+> +
+>  /*
+>   * The terminal device in PCI is NULL and @platform_bus
+>   * for platform devices (for cxl_test)
+> @@ -809,6 +812,139 @@ static int cxl_dport_setup_regs(struct device *host, struct cxl_dport *dport,
+>  	return rc;
+>  }
+>  
+> +struct cxl_snoop_filter {
+> +	u64 size;
+> +	struct xarray dports;
+> +	struct xarray devs;
+> +	struct mutex lock; /* Used for filter allocations */
+> +};
+> +
+> +static struct cxl_snoop_filter *cxl_create_snoop_filter(struct cxl_dport *dport,
+> +							u32 gid, u32 size)
+> +{
+> +	struct cxl_snoop_filter *sf;
+> +	int rc;
+> +
+> +	sf = xa_load(&cxl_snoop_filters, gid);
+> +	if (sf)
+> +		return sf;
+> +
+> +	guard(rwsem_write)(&cxl_snoop_rwsem);
+
+I would move this right before the xa_insert of cxl_snoop_filters. That's what it's guarding right? Although I don't think xarray needs locking?
+
+> +	sf = kzalloc(sizeof(*sf), GFP_KERNEL);
+
+Maybe you can create an helper alloc function and also a free function so you can utilize __free() and avoid the gotos.
+
+> +	if (!sf)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	sf->size = size;
+> +	xa_init(&sf->dports);
+> +	xa_init(&sf->devs);
+> +	mutex_init(&sf->lock);
+> +
+> +	rc = xa_insert(&sf->dports, (unsigned long)dport->dport_dev, dport,
+> +		       GFP_KERNEL);
+> +	if (rc)
+> +		goto err;
+> +
+> +	rc = xa_insert(&cxl_snoop_filters, gid, sf, GFP_KERNEL);
+> +	if (rc)
+> +		goto err;
+> +
+> +	return 0;
+> +
+> +err:
+> +	xa_destroy(&sf->dports);
+> +	xa_destroy(&sf->devs);
+> +	mutex_destroy(&sf->lock);
+
+Probably not needed since 'sf' gets free right after.
+
+> +	kfree(sf);
+> +	return ERR_PTR(rc);
+> +}
+> +
+> +static void cxl_destroy_snoop_filters(void)
+> +{
+> +	struct cxl_snoop_filter *sf;
+> +	unsigned long gid;
+> +
+> +	guard(rwsem_write)(&cxl_snoop_rwsem);
+> +	xa_for_each(&cxl_snoop_filters, gid, sf) {
+> +		xa_destroy(&sf->dports);
+> +		xa_destroy(&sf->devs);
+> +		mutex_destroy(&sf->lock);
+
+Are we missing a kfree(sf) here?
+
+> +	}
+> +
+> +	xa_destroy(&cxl_snoop_filters);
+> +}
+> +
+> +static void cxl_snoop_filter_free(void *data)
+> +{
+> +	struct cxl_cache_state *cstate = data;
+> +	struct cxl_snoop_filter *sf;
+> +
+> +	sf = xa_load(&cxl_snoop_filters, cstate->snoop_id);
+> +	if (!sf)
+> +		return;
+> +
+> +	guard(mutex)(&sf->lock);
+> +	sf->size += cstate->size;
+
+Not sure I understand why the function is called cxl_snoop_filter_free() when we just increment the sf->size.
+
+DJ
+
+> +}
+> +
+> +int devm_cxl_snoop_filter_alloc(u32 gid, struct cxl_dev_state *cxlds)
+> +{
+> +	struct cxl_cache_state *cstate = &cxlds->cstate;
+> +	struct cxl_snoop_filter *sf;
+> +
+> +	sf = xa_load(&cxl_snoop_filters, gid);
+> +	if (!sf)
+> +		return -ENODEV;
+> +
+> +	guard(mutex)(&sf->lock);
+> +	if (cstate->size > sf->size)
+> +		return -EBUSY;
+> +
+> +	sf->size -= cstate->size;
+> +	cstate->snoop_id = gid;
+> +	return devm_add_action_or_reset(cxlds->dev, cxl_snoop_filter_free,
+> +					cstate);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(devm_cxl_snoop_filter_alloc, "CXL");
+> +
+> +int cxl_dport_setup_snoop_filter(struct cxl_dport *dport)
+> +{
+> +	struct cxl_port *port = dport->port, *parent_port;
+> +	struct cxl_snoop_filter *sf;
+> +	u32 snoop, gid, size;
+> +	int rc;
+> +
+> +	/* Only supported by CXL-enabled PCIe root ports */
+> +	parent_port = parent_port_of(port);
+> +	if (!parent_port || !is_cxl_root(parent_port))
+> +		return 0;
+> +
+> +	if (!dport->reg_map.component_map.snoop.valid) {
+> +		dev_dbg(dport->dport_dev, "missing snoop filter capability\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	rc = cxl_map_component_regs(&dport->reg_map, &dport->regs.component,
+> +				    BIT(CXL_CM_CAP_CAP_ID_SNOOP));
+> +	if (rc)
+> +		return rc;
+> +
+> +	snoop = readl(dport->regs.snoop + CXL_SNOOP_GROUP_ID_OFFSET);
+> +	gid = FIELD_GET(CXL_SNOOP_GROUP_ID_MASK, snoop);
+> +
+> +	snoop = readl(dport->regs.snoop + CXL_SNOOP_FILTER_SIZE_OFFSET);
+> +	size = FIELD_GET(CXL_SNOOP_FILTER_SIZE_MASK, snoop);
+> +	if (!size)
+> +		return -ENXIO;
+> +
+> +	sf = cxl_create_snoop_filter(dport, gid, size);
+> +	if (IS_ERR(sf))
+> +		return PTR_ERR(sf);
+> +
+> +	dport->snoop_id = gid;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_dport_setup_snoop_filter, "CXL");
+> +
+>  DEFINE_SHOW_ATTRIBUTE(einj_cxl_available_error_type);
+>  
+>  static int cxl_einj_inject(void *data, u64 type)
+> @@ -1202,6 +1338,7 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>  	dport->dport_dev = dport_dev;
+>  	dport->port_id = port_id;
+>  	dport->port = port;
+> +	dport->snoop_id = CXL_SNOOP_ID_NO_ID;
+>  
+>  	if (rcrb == CXL_RESOURCE_NONE) {
+>  		rc = cxl_dport_setup_regs(&port->dev, dport,
+> @@ -1686,10 +1823,17 @@ static int update_decoders_with_dport(struct cxl_port *port, struct cxl_dport *d
+>  static int cxl_port_setup_with_dport(struct cxl_port *port,
+>  				     struct cxl_dport *dport)
+>  {
+> +	int rc;
+> +
+>  	device_lock_assert(&port->dev);
+>  
+>  	cxl_switch_parse_cdat(dport);
+>  
+> +	rc = cxl_dport_setup_snoop_filter(dport);
+> +	if (rc)
+> +		dev_dbg(dport->dport_dev,
+> +			"failed to set up snoop filter capability: %d\n", rc);
+> +
+>  	return update_decoders_with_dport(port, dport);
+>  }
+>  
+> @@ -2711,6 +2855,7 @@ static void cxl_core_exit(void)
+>  	bus_unregister(&cxl_bus_type);
+>  	destroy_workqueue(cxl_bus_wq);
+>  	cxl_memdev_exit();
+> +	cxl_destroy_snoop_filters();
+>  	debugfs_remove_recursive(cxl_debugfs);
+>  }
+>  
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 5ca7b0eed568..0c8962fcad9b 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -92,6 +92,12 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+>  			length = CXL_RAS_CAPABILITY_LENGTH;
+>  			rmap = &map->ras;
+>  			break;
+> +		case CXL_CM_CAP_CAP_ID_SNOOP:
+> +			dev_dbg(dev, "found Snoop filter capability (0x%x)\n",
+> +				offset);
+> +			length = CXL_SNOOP_FILTER_CAPABILITY_LENGTH;
+> +			rmap = &map->snoop;
+> +			break;
+>  		default:
+>  			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
+>  				offset);
+> @@ -211,6 +217,7 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
+>  	} mapinfo[] = {
+>  		{ &map->component_map.hdm_decoder, &regs->hdm_decoder },
+>  		{ &map->component_map.ras, &regs->ras },
+> +		{ &map->component_map.snoop, &regs->snoop },
+>  	};
+>  	int i;
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 1771c42a1e3b..2881e0826829 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -40,6 +40,7 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
+>  
+>  #define   CXL_CM_CAP_CAP_ID_RAS 0x2
+>  #define   CXL_CM_CAP_CAP_ID_HDM 0x5
+> +#define   CXL_CM_CAP_CAP_ID_SNOOP 0x9
+>  #define   CXL_CM_CAP_CAP_HDM_VERSION 1
+>  
+>  /* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
+> @@ -151,6 +152,13 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+>  #define CXL_HEADERLOG_SIZE SZ_512
+>  #define CXL_HEADERLOG_SIZE_U32 SZ_512 / sizeof(u32)
+>  
+> +/* CXL 3.2 8.2.4.23 CXL Snoop Filter Capability Structure */
+> +#define CXL_SNOOP_GROUP_ID_OFFSET 0x0
+> +#define   CXL_SNOOP_GROUP_ID_MASK GENMASK(15, 0)
+> +#define CXL_SNOOP_FILTER_SIZE_OFFSET 0x4
+> +#define   CXL_SNOOP_FILTER_SIZE_MASK GENMASK(31, 0)
+> +#define CXL_SNOOP_FILTER_CAPABILITY_LENGTH 0x8
+> +
+>  /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
+>  #define CXLDEV_CAP_ARRAY_OFFSET 0x0
+>  #define   CXLDEV_CAP_ARRAY_CAP_ID 0
+> @@ -214,6 +222,7 @@ struct cxl_regs {
+>  	struct_group_tagged(cxl_component_regs, component,
+>  		void __iomem *hdm_decoder;
+>  		void __iomem *ras;
+> +		void __iomem *snoop;
+>  	);
+>  	/*
+>  	 * Common set of CXL Device register block base pointers
+> @@ -256,6 +265,7 @@ struct cxl_reg_map {
+>  struct cxl_component_reg_map {
+>  	struct cxl_reg_map hdm_decoder;
+>  	struct cxl_reg_map ras;
+> +	struct cxl_reg_map snoop;
+>  };
+>  
+>  struct cxl_device_reg_map {
+> @@ -658,6 +668,8 @@ struct cxl_rcrb_info {
+>  	u16 aer_cap;
+>  };
+>  
+> +#define CXL_SNOOP_ID_NO_ID (-1)
+> +
+>  /**
+>   * struct cxl_dport - CXL downstream port
+>   * @dport_dev: PCI bridge or firmware device representing the downstream link
+> @@ -682,6 +694,7 @@ struct cxl_dport {
+>  	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
+>  	long link_latency;
+>  	int gpf_dvsec;
+> +	int snoop_id;
+>  };
+>  
+>  /**
+> @@ -756,6 +769,7 @@ struct cxl_dev_ops {
+>  struct cxl_cache_state {
+>  	u64 size;
+>  	u32 unit;
+> +	u16 snoop_id;
+>  };
+>  
+>  /**
+> diff --git a/drivers/cxl/cxlcache.h b/drivers/cxl/cxlcache.h
+> index a707e402b000..c4862f7e6edc 100644
+> --- a/drivers/cxl/cxlcache.h
+> +++ b/drivers/cxl/cxlcache.h
+> @@ -25,4 +25,7 @@ int cxl_accel_get_cache_info(struct cxl_dev_state *cxlds);
+>  struct cxl_cachedev *devm_cxl_add_cachedev(struct device *host,
+>  					   struct cxl_dev_state *cxlds,
+>  					   const struct cxl_dev_ops *ops);
+> +
+> +int cxl_dport_setup_snoop_filter(struct cxl_dport *dport);
+> +int devm_cxl_snoop_filter_alloc(u32 gid, struct cxl_dev_state *cxlds);
+>  #endif
 
