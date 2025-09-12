@@ -1,113 +1,176 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12D730103C;
-	Fri, 12 Sep 2025 15:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09C8227BB9;
+	Fri, 12 Sep 2025 17:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757692547; cv=none; b=M3hYFkM2kojAuIlO9PbsFHLqWDf8IMkKBULmqU6trG+Mh6cRqj0gwfU+m9sGTnZzJjiFlpmOqAoCC5EKMMovB3WMjtubF0wIKokNhTe/DCS+pqjsdbnoNWZETpAVMfSsofExXahNBl1lLpEMr+PJbV/YJPNgtsjHqOP6z1lvbig=
+	t=1757697438; cv=none; b=QlszI6XLWQBTzQH69iIIhas5TpR7mM5P0lvmm/SpFdXF+UbGRctnsSnrYv9kHoupmWmcZGF8MhkJ4R345Ego850dC7TWpFNWL+rxvs7oQ9X4uag5bz78pIWhkeXjd1ZaqbFAmgR4+06WxKOB1xNMJqWg4xIJsnYZprEWpNM+NUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757692547; c=relaxed/simple;
-	bh=ip4v+tHAi+eiUNKRXZp2C+ox2YheamuxyFJeTs6f0Jg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b251hg8ogcvA2bChNbO98wQsZjDDkudg+CwS/EL0dQ8BLpaF1S7oDvXWb3NjTKO/i5zEI0Gwjum4NmlTxEO7PkSAUEHgYP6ePHhTeyBGGjh6z/6lPS+iT3OMru72NJAmE4SdZFpzyNLOEdAo1d1ddo6XNn2zYQH1W4yxLVUhkzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cNf8X6bKwz6M57R;
-	Fri, 12 Sep 2025 23:53:00 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7D1561402EA;
-	Fri, 12 Sep 2025 23:55:42 +0800 (CST)
-Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 12 Sep
- 2025 17:55:42 +0200
-Date: Fri, 12 Sep 2025 16:55:41 +0100
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Ben Cheatham <Benjamin.Cheatham@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH 13/16] cxl/core, PCI: PCIe portdrv: Add CXL timeout
- range programming
-Message-ID: <20250912165541.00004594@huawei.com>
-In-Reply-To: <20250730214718.10679-14-Benjamin.Cheatham@amd.com>
-References: <20250730214718.10679-1-Benjamin.Cheatham@amd.com>
-	<20250730214718.10679-14-Benjamin.Cheatham@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1757697438; c=relaxed/simple;
+	bh=u/yVwKnakRNHsmfFIwesBmBc+b/wOH34do+VG5ATfkE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qqNeKa+9OVWHbc5eQaRBjpJXdjDBaPJiWbIHSx/8d0xbe2jGsaSzQ7w7A34rGOk3UXFTrXx0KZNp3K92vGhQTE42x5K2muAv/8nDJAZ6rZSU2BSKTodst6ZzplwnOzAbX4+pECflgpL31BFDeHVLGNuy6ujEKS2yieIl68jSDi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z7Ho9eZW; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z7Ho9eZW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757697437; x=1789233437;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=u/yVwKnakRNHsmfFIwesBmBc+b/wOH34do+VG5ATfkE=;
+  b=Z7Ho9eZWU7PBRcwS3dknhYzbfwMqnIeDvwDR5w2TJOoX0KJ/kchZrLtk
+   RH1SlXyhQT1LYDUxEI9monpKV5iYb/NV2pXn79iY8KabDr8pHhlK8WXcI
+   wAQAf/aKGIJOupWlLuSn6pquv3yfG7chBHSKGBCteIfezxj2cp9S0SqH4
+   OpQpa37Drd1E9N23q4rbTHTTbT2fNM+qJX/j7FYpchgUD2lEmRt/bK1Pv
+   SHVmj7N46hctJZwPJdgKKumygQjhsoWcXcPtJTemLEBneyRAPnor70I85
+   yuNv1GOayZkMubzQDx0BRoqH7WmvuVHNzJp17zAUIQZGD7KaTrXULgJRL
+   Q==;
+X-CSE-ConnectionGUID: cFgoFtJpQBeSp4CrP3vLEw==
+X-CSE-MsgGUID: ZGuxs5q1SPeh5lULYTS/SQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11551"; a="70669549"
+X-IronPort-AV: E=Sophos;i="6.18,259,1751266800"; 
+   d="scan'208";a="70669549"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2025 10:17:16 -0700
+X-CSE-ConnectionGUID: PWELuoxASPCNbcsvnrO5qg==
+X-CSE-MsgGUID: l3Ww9IV7Q0y2JBLSLx85VA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,259,1751266800"; 
+   d="scan'208";a="178332169"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.111.66]) ([10.125.111.66])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2025 10:17:15 -0700
+Message-ID: <fd4fc0f6-03a9-4134-9703-60705ec6898c@intel.com>
+Date: Fri, 12 Sep 2025 10:17:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 02/11] cxl/region: Store HPA range in struct cxl_region
+To: Robert Richter <rrichter@amd.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Davidlohr Bueso <dave@stgolabs.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
+References: <20250912144514.526441-1-rrichter@amd.com>
+ <20250912144514.526441-3-rrichter@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250912144514.526441-3-rrichter@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, 30 Jul 2025 16:47:15 -0500
-Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
 
-> Add functions to enable programming the CXL.mem transaction timeout
-> range, if supported. Add a sysfs attribute to the "cxl_isolation" group
-> to allow programming the timeout from userspace.
+
+On 9/12/25 7:45 AM, Robert Richter wrote:
+> Each region has a known host physical address (HPA) range it is
+> assigned to. Endpoint decoders assigned to a region share the same HPA
+> range. The region's address range is the system's physical address
+> (SPA) range.
 > 
-> The attribute can take either the CXL spec-defined hex value for the
-> associated timeout range (CXL 3.2 8.2.4.24.2 field 3:0) or a
-> string with the range. The range string is formatted as the range letter
-> in uppercase or lowercase, with an optional "2" to specify the second
-> range in the aforementioned spec ref.
+> Endpoint decoders in systems that need address translation use HPAs
+> which are not SPAs. To make the SPA range accessible to the endpoint
+> decoders, store and track the region's SPA range in struct cxl_region.
+> Introduce the @hpa_range member to the struct. Now, the SPA range of
+> an endpoint decoder can be determined based on its assigned region.
 > 
-> For example, to program the port with a timeout of 65ms to 210ms (range B)
-> the following strings could be specified: "b2"/"B2". Picking the first
-> portion of range B (16ms to 55ms) would be: "b"/"B".
+> Patch is a prerequisite to implement address translation which uses
+> struct cxl_region to store all relevant region and interleaving
+> parameters.
 > 
-> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 
-This needs some ABI Docs.
-The spec is exceedingly weird, so working out a sensible way to present
-it to userspace will be a challenge. I vaguely recall the weird timing
-description is from some other spec.  Any idea where and if there is existing 
-ABI for that?
+Just a nit below. Otherwise looks ok
 
-> diff --git a/drivers/pci/pcie/cxl_isolation.c b/drivers/pci/pcie/cxl_isolation.c
-> index 9d2ad14810e8..107201b5843f 100644
-> --- a/drivers/pci/pcie/cxl_isolation.c
-> +++ b/drivers/pci/pcie/cxl_isolation.c
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-> +static ssize_t timeout_range_show(struct device *dev,
-> +				  struct device_attribute *attr, char * buf)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	struct cxl_port *port;
-> +	u32 ctrl, val;
+> ---
+>  drivers/cxl/core/region.c | 17 +++++++++++++++++
+>  drivers/cxl/cxl.h         |  2 ++
+>  2 files changed, 19 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 2c37c060d983..777d04870180 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -664,6 +664,11 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
+>  		return PTR_ERR(res);
+>  	}
+>  
+> +	cxlr->hpa_range = (struct range) {
+> +		.start = res->start,
+> +		.end = res->end,
+> +	};
 > +
-> +	struct cxl_dport **dport __free(kfree) =
-> +		kzalloc(sizeof(*dport), GFP_KERNEL);
-> +	if (!dport)
-> +		return -ENOMEM;
+>  	p->res = res;
+>  	p->state = CXL_CONFIG_INTERLEAVE_ACTIVE;
+>  
+> @@ -700,8 +705,14 @@ static int free_hpa(struct cxl_region *cxlr)
+>  	if (p->state >= CXL_CONFIG_ACTIVE)
+>  		return -EBUSY;
+>  
+> +	cxlr->hpa_range = (struct range) {
+> +		.start = 0,
+> +		.end = -1,
+> +	};
 > +
-> +	port = cxl_find_pcie_rp(pdev, dport);
-> +	if (!port || !(*dport))
-> +		return -ENODEV;
+>  	cxl_region_iomem_release(cxlr);
+>  	p->state = CXL_CONFIG_IDLE;
 > +
-> +	if (!(*dport)->regs.isolation)
 
-Same issue with reference leak as in previous patch.
-
-> +		return -ENXIO;
+stray blank line
+>  	return 0;
+>  }
+>  
+> @@ -2400,6 +2411,11 @@ static void unregister_region(void *_cxlr)
+>  	for (i = 0; i < p->interleave_ways; i++)
+>  		detach_target(cxlr, i);
+>  
+> +	cxlr->hpa_range = (struct range) {
+> +		.start = 0,
+> +		.end = -1,
+> +	};
 > +
-> +	ctrl = readl((*dport)->regs.isolation + CXL_ISOLATION_CTRL_OFFSET);
-> +	put_device(&port->dev);
-> +
-> +	val = FIELD_GET(CXL_ISOLATION_CTRL_MEM_TIME_MASK, ctrl);
-> +	for (int i = 0; i < ARRAY_SIZE(ranges); i++)
-> +		if (ranges[i].val == val)
-> +			return sysfs_emit(buf, "%s\n", ranges[i].str);
-> +
-> +	return -ENXIO;
-> +}
-> +DEVICE_ATTR_RW(timeout_range);
+>  	cxl_region_iomem_release(cxlr);
+>  	put_device(&cxlr->dev);
+>  }
+> @@ -3458,6 +3474,7 @@ static int __construct_region(struct cxl_region *cxlr,
+>  	}
+>  
+>  	set_bit(CXL_REGION_F_AUTO, &cxlr->flags);
+> +	cxlr->hpa_range = *hpa;
+>  
+>  	res = kmalloc(sizeof(*res), GFP_KERNEL);
+>  	if (!res)
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 350ccd6949b3..f182982f1c14 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -518,6 +518,7 @@ enum cxl_partition_mode {
+>   * @dev: This region's device
+>   * @id: This region's id. Id is globally unique across all regions
+>   * @cxlrd: Region's root decoder
+> + * @hpa_range: Address range occupied by the region
+>   * @mode: Operational mode of the mapped capacity
+>   * @type: Endpoint decoder target type
+>   * @cxl_nvb: nvdimm bridge for coordinating @cxlr_pmem setup / shutdown
+> @@ -532,6 +533,7 @@ struct cxl_region {
+>  	struct device dev;
+>  	int id;
+>  	struct cxl_root_decoder *cxlrd;
+> +	struct range hpa_range;
+>  	enum cxl_partition_mode mode;
+>  	enum cxl_decoder_type type;
+>  	struct cxl_nvdimm_bridge *cxl_nvb;
 
