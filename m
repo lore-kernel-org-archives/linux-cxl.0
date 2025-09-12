@@ -1,122 +1,205 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEB03115BE;
-	Fri, 12 Sep 2025 15:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA0E1A9FA7;
+	Fri, 12 Sep 2025 15:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757691235; cv=none; b=bX+l/Qw324G2UGR2ND2BRkLqpcpm2Z1yMo6QMuvx/S2T3uAz/QY9ShANhGFMv/TrI7yzT7TEU5BUei+/vFR7q7jji2AKpezdtUF4qm/hbn3/2WIHF+F2kb/8VZaNbroy1VPIfJVA79fKsIVs89g9toOe3XGJ2r99XmJFkWSr2d4=
+	t=1757691941; cv=none; b=Oumq2pNIpgUNL0oNeXBBz/pKV5xLlu//aZBPQ8RbW1nr7VE57zkBgT/yyCikqMUlDQojSj5iX+9rzzNjcAVg41Wn2u4R/4DEnCSGBb3ZkD/dRaVwSx9TFxieK8Cixaj1CWvEttSrsYZa5xs6LIMuLG52BL4A8qk6uCwanpPKqzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757691235; c=relaxed/simple;
-	bh=Yf6gphKjYSoORScCnkQ+lf2y5m/zepnTYR1+L9G6++M=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CMO1l/KlkAV0M0KHRAJkFd/uhpg+TwD10YTFiLsQ7801OrmvQ3KCKxJh9SCEotyOmHw61LY0eQSNsLtXuPhQaRwqm/EIQRZ9RInjJYlvZTQSRUkUGZI3NE3BkFKbzCxh/C6vT5mLw/mGd+YY4E9TIkSyv+hgQntGTUR1HwxtacE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cNdhv418Cz6D8cf;
-	Fri, 12 Sep 2025 23:32:31 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0A3861402EA;
-	Fri, 12 Sep 2025 23:33:50 +0800 (CST)
-Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 12 Sep
- 2025 17:33:49 +0200
-Date: Fri, 12 Sep 2025 16:33:48 +0100
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Ben Cheatham <Benjamin.Cheatham@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH 12/16] PCI: PCIe portdrv: Add cxl_isolation sysfs
- attributes
-Message-ID: <20250912163348.00004d1b@huawei.com>
-In-Reply-To: <20250730214718.10679-13-Benjamin.Cheatham@amd.com>
-References: <20250730214718.10679-1-Benjamin.Cheatham@amd.com>
-	<20250730214718.10679-13-Benjamin.Cheatham@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1757691941; c=relaxed/simple;
+	bh=dbL50UAywLeOhXUJssuYWQB8CYJsgSGLuYFU5uusmC8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t2w/iXbv9DEc8rCo6AqKoSTpa6Jna+nTDUqw+W9cTSjb4WNgL3pVTVcCLDuz7jlOV8BCKjUMXksvmLFvI6ViTsbxlfaRmyS9Lp3J1EUJPyqr0h1yaWokRZxukmVv+XHrcElpitFAL+ZI5l62buXYFdAMFrNrV6TpSa4d5/2xlXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KI0UVJRB; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KI0UVJRB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757691940; x=1789227940;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dbL50UAywLeOhXUJssuYWQB8CYJsgSGLuYFU5uusmC8=;
+  b=KI0UVJRB+ADMAmLmBGTK+5YYsBwJTtitgxBY9wTP0Ugt1xzpoQ61W9/g
+   x+BmdyU4wgYAjjd3bogKCPdfW1knzi41hAAgIL1ay/RyBHaYS1Jnt5GHv
+   3GhUT34HY09nwcfOEkejq3vdQsL82bbR2teAG6GOEYciPdp1nhDL8yKtA
+   P2UochA0jq1Zlm3INtg9xdBA0x6at0zcH9nZCagG3duAHerEWxSeh4jF5
+   /AX01hdOAUrgBQhulAbIRgO8c4HYgmxOtIH5fpUCkbBZlmFeZL0YaP6r1
+   yeumHx2mUAAiHnSBGjisa3VmYkzxZddZzoCd6mqJ1s//HBQGSx5dPqeKJ
+   Q==;
+X-CSE-ConnectionGUID: MyW274azS4yxdwpmPKKiAQ==
+X-CSE-MsgGUID: 5kLoAQMaSCGhn0Q7moRBEQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11551"; a="60114067"
+X-IronPort-AV: E=Sophos;i="6.18,259,1751266800"; 
+   d="scan'208";a="60114067"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2025 08:45:39 -0700
+X-CSE-ConnectionGUID: LxwyJiQ8QvC5GkEhRGVXDQ==
+X-CSE-MsgGUID: L8+nJ55FTkGLPEnFRJOCvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,259,1751266800"; 
+   d="scan'208";a="197687882"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.111.66]) ([10.125.111.66])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2025 08:45:38 -0700
+Message-ID: <792caf42-ccc7-4ef5-963b-7c0f9ec765d6@intel.com>
+Date: Fri, 12 Sep 2025 08:45:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 00/11] cxl: ACPI PRM Address Translation Support and
+ AMD Zen5 enablement
+To: Robert Richter <rrichter@amd.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Davidlohr Bueso <dave@stgolabs.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
+References: <20250912144514.526441-1-rrichter@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250912144514.526441-1-rrichter@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, 30 Jul 2025 16:47:14 -0500
-Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
 
-> Add sysfs attributes to enable/disable CXL isolation and transaction
-> timeout. The intended use for these attributes is to disable isolation
-> and/or timeout as part of device maintenance or hotplug.
+
+On 9/12/25 7:45 AM, Robert Richter wrote:
+> This patch set adds support for address translation using ACPI PRM and
+> enables this for AMD Zen5 platforms. This is another new appoach in
+> response to earlier attempts to implement CXL address translation:
 > 
-> The attributes are added under a new "cxl_isolation" group on the PCIe
-> Root Port device.
+>  * v1: [1] and the comments on it, esp. Dan's [2],
+>  * v2: [3] and comments on [4], esp. Dave's [5]
 > 
-> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
-Comments below apply in quite a few of these functions, I just
-picked one example to talk about.
+> This version 3 addresses the requests to reduce the number of patches
+> to a minimum and also to remove platform specific implementations
+> allowing the Documentation of CXL Address Translation Support in the
+> Kernel's "Compute Express Link: Linux Conventions" document and an
+> update of the CXL specification in the longterm. This patch submission
+> will be the base for a documention patch that describes CXL Address
+> Translation support accordingly. The documentation patch will be sent
+> in the very next step.
+> 
+> The CXL driver currently does not implement address translation which
+> assumes the host physical addresses (HPA) and system physical
+> addresses (SPA) are equal.
+> 
+> Systems with different HPA and SPA addresses need address translation.
+> If this is the case, the hardware addresses esp. used in the HDM
+> decoder configurations are different to the system's or parent port
+> address ranges. E.g. AMD Zen5 systems may be configured to use
+> 'Normalized addresses'. Then, CXL endpoints have their own physical
+> address base which is not the same as the SPA used by the CXL host
+> bridge. Thus, addresses need to be translated from the endpoint's to
+> its CXL host bridge's address range.
+> 
+> To enable address translation, the endpoint's HPA range must be
+> translated to the CXL host bridge's address range. A callback is
+> introduced to translate a decoder's HPA to the next parent port's
+> address range. This allows the enablement of address translation for
+> individual ports as needed. The callback is then used to determine the
+> region parameters which includes the SPA translated address range of
+> the endpoint decoder and the interleaving configuration. This is
+> stored in struct cxl_region which allows an endpoint decoder to
+> determine that parameters based on its assigned region.
+> 
+> Note that only auto-discovery of decoders is supported. Thus, decoders
+> are locked and cannot be configured manually.
 
-Thanks,
+Hi Robert, thanks for reworking this.
 
-Jonathan
+What happens with the manual configured path if only auto-discovery is supported? Things don't work? It works with no translation needed? Platform will lock all decoders and not allow manual configuration for CXL devices?
 
-> diff --git a/drivers/pci/pcie/cxl_isolation.c b/drivers/pci/pcie/cxl_isolation.c
-> index 5a56a327b599..9d2ad14810e8 100644
-> --- a/drivers/pci/pcie/cxl_isolation.c
-> +++ b/drivers/pci/pcie/cxl_isolation.c
+DJ
 
-
-
-> +static ssize_t timeout_ctrl_show(struct device *dev,
-> +				 struct device_attribute *attr, char *buf)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	struct cxl_port *port;
-> +	u32 ctrl;
-> +
-> +	struct cxl_dport **dport __free(kfree) =
-> +		kzalloc(sizeof(*dport), GFP_KERNEL);
-> +	if (!dport)
-> +		return -ENOMEM;
-> +
-> +	port = cxl_find_pcie_rp(pdev, dport);
-	struct cxl_port *port __free(put_cxl_port) = cxl_find_pcie_rp();
-
-Same for other cases above.
-
-
-> +	if (!port || !(*dport))
-
-leaks device reference if port is set and dport isn't.
-
-> +		return -ENODEV;
-> +
-> +	if (!(*dport)->regs.isolation)
-leaks device reference.
-> +		return -ENXIO;
-> +
-> +	ctrl = readl((*dport)->regs.isolation + CXL_ISOLATION_CTRL_OFFSET);
-> +	put_device(&port->dev);
-
-and no need to do this by hand.
-
-> +
-> +	return sysfs_emit(buf, "%lu\n",
-> +			  FIELD_GET(CXL_ISOLATION_CTRL_MEM_TIME_ENABLE, ctrl));
-> +}
-> +DEVICE_ATTR_RW(timeout_ctrl);
-> +
-> +static struct attribute *isolation_attrs[] = {
-> +	&dev_attr_timeout_ctrl.attr,
-> +	&dev_attr_isolation_ctrl.attr,
-> +	NULL,
-My favorite trivial comment :) No need for that trailing comma.
-> +};
-
-
+> 
+> Finally, Zen5 address translation is enabled using ACPI PRMT.
+> 
+> This series bases on cxl/next.
+> 
+> V3:
+>  * rebased onto cxl/next,
+>  * complete rework to reduce number of required changes/patches and to
+>    remove platform specific code (Dan and Dave),
+>  * changed implementation allowing to add address translation to the
+>    CXL specification (documention patch in preparation),
+>  * simplified and generalized determination of interleaving
+>    parameters using the address translation callback,
+>  * depend only on the existence of the ACPI PRM GUID for CXL Address
+>    Translation enablement, removed platform checks,
+>  * small changes to region code only which does not require a full
+>    rework and refactoring of the code, just separating region
+>    parameter setup and region construction,
+>  * moved code to new core/atl.c file,
+>  * fixed subsys_initcall order dependency of EFI runtime services
+>    (Gregory and Joshua),
+> 
+> V2:
+>  * rebased onto cxl/next,
+>  * split of v1 in two parts:
+>    * removed cleanups and updates from this series to post them as a
+>      separate series (Dave),
+>    * this part 2 applies on top of part 1, v3,
+>  * added tags to SOB chain,
+>  * reworked architecture, vendor and platform setup (Jonathan):
+>    * added patch "cxl/x86: Prepare for architectural platform setup",
+>    * added function arch_cxl_port_platform_setup() plus a __weak
+>      versions for archs other than x86,
+>    * moved code to core/x86,
+>  * added comment to cxl_to_hpa_fn (Ben),
+>  * updated year in copyright statement (Ben),
+>  * cxl_port_calc_hpa(): Removed HPA check for zero (Jonathan), return
+>    1 if modified,
+>  * cxl_port_calc_pos(): Updated description and wording (Ben),
+>  * added sereral patches around interleaving and SPA calculation in
+>    cxl_endpoint_decoder_initialize(),
+>  * reworked iterator in cxl_endpoint_decoder_initialize() (Gregory),
+>  * fixed region interleaving parameters() (Alison),
+>  * fixed check in cxl_region_attach() (Alison),
+>  * Clarified in coverletter that not all ports in a system must
+>    implement the to_hpa() callback (Terry).
+> 
+> [1] https://lore.kernel.org/linux-cxl/20240701174754.967954-1-rrichter@amd.com/
+> [2] https://lore.kernel.org/linux-cxl/669086821f136_5fffa29473@dwillia2-xfh.jf.intel.com.notmuch/
+> [3] https://patchwork.kernel.org/project/cxl/cover/20250218132356.1809075-1-rrichter@amd.com/
+> [4] https://patchwork.kernel.org/project/cxl/cover/20250715191143.1023512-1-rrichter@amd.com/
+> [5] https://lore.kernel.org/all/78284b12-3e0b-4758-af18-397f32136c3f@intel.com/
+> 
+> Robert Richter (11):
+>   cxl/region: Store root decoder in struct cxl_region
+>   cxl/region: Store HPA range in struct cxl_region
+>   cxl/region: Rename misleading variable name @hpa to @range
+>   cxl/region: Add @range argument to function cxl_find_root_decoder()
+>   cxl/region: Add @range argument to function cxl_calc_interleave_pos()
+>   cxl/region: Separate region parameter setup and region construction
+>   cxl: Introduce callback to translate a decoder's HPA to the next
+>     parent port
+>   cxl/region: Implement endpoint decoder address translation
+>   cxl/region: Lock decoders that need address translation
+>   cxl/acpi: Prepare use of EFI runtime services
+>   cxl: Enable AMD Zen5 address translation using ACPI PRMT
+> 
+>  drivers/cxl/Kconfig       |   4 +
+>  drivers/cxl/acpi.c        |   8 +-
+>  drivers/cxl/core/Makefile |   1 +
+>  drivers/cxl/core/atl.c    | 138 ++++++++++++++++++++++
+>  drivers/cxl/core/core.h   |   1 +
+>  drivers/cxl/core/port.c   |   8 ++
+>  drivers/cxl/core/region.c | 239 ++++++++++++++++++++++++++++++--------
+>  drivers/cxl/cxl.h         |  17 +++
+>  8 files changed, 368 insertions(+), 48 deletions(-)
+>  create mode 100644 drivers/cxl/core/atl.c
+> 
+> 
+> base-commit: 561c4e30bff93b3c33e694a459f8580f8a6b3c8c
 
