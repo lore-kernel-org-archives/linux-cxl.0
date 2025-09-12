@@ -1,50 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC13EBA45;
-	Fri, 12 Sep 2025 17:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91102329F28
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Sep 2025 17:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757698414; cv=none; b=WUdN0du7MjEI8uJI0dfy/66J1W/3fqAbw5cx6UtmCDbSO1O34ST7UyMoJpmXbMo7s4xVM4fam/L7oOVvA3DtEWvY4n4lWRbcTXZZv5eYa5fo9SofOPT4xhUBbUgErQle8kjbzebE1IUM3hpdznzvhV6qF/R//3HG9qyVbzeeGSU=
+	t=1757699816; cv=none; b=h7MjJMQSRuZ+giOxU+dMNMNnhOv3E954UI9bu3y2x3xhaiFlNjey9joTNbsq+4Hy7DdXMHiZOkNnIOkRkFlM++lZWtXVz9j8l9lq/rC9kZgIjBORwwHEoqzX0T7Xvanql1HDrw5wud7kf+g3wYsWyCn28ac/YE9CuTscLiudsZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757698414; c=relaxed/simple;
-	bh=ocsrSdPooCPV6LDPxcgNVEXn4wHEWYjxRsblCQoKEVg=;
+	s=arc-20240116; t=1757699816; c=relaxed/simple;
+	bh=t6JYHFn6xtQi0eO3tcMpphFu+Moxe/d2WklRNG+P690=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gDcW/Km2qGKsXqlMpmI0OUSi5clXHckQPKzUyaBvt6CGKd9jyUx1N9Z0f3ws3u87OoPuBQtaDLB4oWnwQ+U+qASOQXoJn5oON0saR+DA80OiAdO6OGH3Ib65z3ACyNDR+eoBmlN6ckWkFkRYwG+bmqqu6+ziCYbgcJuHoys8PNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YLmvk6EP; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=fe+pD9gLrureX0nWjO3ZnGNDXM/fEpD1JfUsk9waF0xU4kMff8Qm7DRYuWxAL1MbOcNAZBA2eTQ5Bs0ufN4zJLzfW0hyqglpeeLOEarb23qwPqPQ4etIL2Tv+jzuT7tlG6jCKHgGrOrAXJ7trBsYj8h34NG3ca74tADL5DJpon0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ePRJ6cJT; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YLmvk6EP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757698413; x=1789234413;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ocsrSdPooCPV6LDPxcgNVEXn4wHEWYjxRsblCQoKEVg=;
-  b=YLmvk6EPzXFQkfMq1q09o3hRpFVnm7/e/UHMbk4HHV64Jze3XbqMHSTi
-   l9tb6uZjkissEl07TcyJzw4Znxdsu0/6d00I2ePnSPEzKeYvTfFj/yydJ
-   ONFNAAtpP+353XpNChseOCbTBWnxFbz9GJUaSAm9F3bNl0u1vrqG8Jgdq
-   ApVwEm8DwP/N09zVtY+mWkxCpxAhHqsR0ya/3GUezFud/3UkULDsxKp7O
-   iFeNuZ+NLL+bAoFSZ+Ylpk9vtFSwOdItM1c1pp72PNgVzue0am4Oy9wh3
-   qp3dZGX9BcHU1CWCeQTjfaSy4vU+9UyaTWw4rM4OyIMEmikD9rOZbTF70
-   g==;
-X-CSE-ConnectionGUID: yOkjUTEWRHeJIgApP/mk3Q==
-X-CSE-MsgGUID: PV8UNO8+RqG0Iogdzyhr8Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11551"; a="63869819"
-X-IronPort-AV: E=Sophos;i="6.18,259,1751266800"; 
-   d="scan'208";a="63869819"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2025 10:33:32 -0700
-X-CSE-ConnectionGUID: cCAmcmmuSVmCZtgs3DOdVg==
-X-CSE-MsgGUID: oBK8cLDsTjiCY0vz8tNdVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,259,1751266800"; 
-   d="scan'208";a="173566516"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.111.66]) ([10.125.111.66])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2025 10:33:31 -0700
-Message-ID: <60f05a02-6a0a-4616-a2f2-d7ae5709d94e@intel.com>
-Date: Fri, 12 Sep 2025 10:33:30 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ePRJ6cJT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757699813;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=1WFUlnErlcGz3KGoSgWtaZOcBftKtTBkFfUxb/98m8k=;
+	b=ePRJ6cJTFH9jJgpERY4Lbs5/2dMORkVOGFlX1RvK8t1D/tDZzzZ8SeBi2/2oY7qbqFIeWi
+	py3wCxDNtuCBLY7SmadOyCLOBOEA9QwWfxm4l8XLFGvbTV0jMyfS/GLXKwtshNXhwY2Ufv
+	XxnQgfguJUZPWWbmHVnSGa9p+ERfHYQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-92-9it9_LPCMPuAy1NSskDJeQ-1; Fri, 12 Sep 2025 13:56:52 -0400
+X-MC-Unique: 9it9_LPCMPuAy1NSskDJeQ-1
+X-Mimecast-MFC-AGG-ID: 9it9_LPCMPuAy1NSskDJeQ_1757699811
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3df19a545c2so1561327f8f.3
+        for <linux-cxl@vger.kernel.org>; Fri, 12 Sep 2025 10:56:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757699811; x=1758304611;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1WFUlnErlcGz3KGoSgWtaZOcBftKtTBkFfUxb/98m8k=;
+        b=SN1GiOKCsytMQoSbKtfXn7kgNB3XUG/C3Jx2S88VMzNvfytMCroJtNATVCt7Y3cJi7
+         oZ7m/883UELoLNsC8N24EwicXo54Cf8B0VViZY9zIJZ1NQPsexTpEkGGIj7ZsB039bpr
+         x/fxLXu8phfJZ13wieEaFtPVw29WXt0RLpfzp4PaWbsggAi4BaHPPMWnTgJTBOrIRlb8
+         Sr28uv3UAW7K3ShI/z36HPd6VIMQDv5oovBnUKkhF5vS35v9Ywt0N7Rr2Z5MbsEYL157
+         WPP5wTC13R+NNqmJ51ZjltJsOlxkPBuaxwGnOvWLcrazynVxb3nKKYM7saCxE6H/GgFa
+         eing==
+X-Forwarded-Encrypted: i=1; AJvYcCXGNNwuyTgIhjs/9L7BczinbK0BM2bYxbNYLRPzsk9pEmHvvGHefqGS/86HO4l/2Wn+xt1v0aMd11s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXa0IV4TXsIMyayr4xFcQqAJAsAmif2hn4EEK8Yojytm2F1/q+
+	RMSCxktfqj7/fDJ1ZjZ3nqVY3pVqsL48NeqlhGOzXhSvKIwGZSA/1TnumpOq0oamureFEItWySe
+	Dr+Fy/cPHBWqRCS9zOx69zyFzPzRr0j30D+cLelKOjVj3zwHERTSwfg5jpH/NDA==
+X-Gm-Gg: ASbGncsN0iw9/kZN1pG9MSXH4YLYzsElvu22v/l5rHWKYw8MeGQm6ceVd8NCg+80/zp
+	JfiTaJoCjw+BGT20kiOwd/GNovaG7RWDqm3fpKuswnUY+k8YVSgUJHGeLYH7Ba4XLiHg7Ra4Z0f
+	btGmI4qqnezHAbPhdZPV2b6tWxLiKhWrjqpSIXGXD20xHEJF0X5ToPCi3LglqMDGn9o6o5UhOaY
+	Z5YbHPA94hWdTtg1J033EfCWjjWU3r19iGwHljg7z3m37e5bWV+oOGa3Xu8e0cw/jWxhX5OZtFI
+	UldOADWkayr8cDyt7ZENvYnxAd+bu5izqdwdq2eVtr2lUTBX1VTYRrDoK+FI1BTwdJPPGeZSu4M
+	wHjqxHOHhZ9TdTMdSefyy2fa/WAJd2YoUdyrIeEAX0btS4wr6WIvy4JVGayHnb/Upbd4=
+X-Received: by 2002:a5d:64e6:0:b0:3cd:6cd:8c2 with SMTP id ffacd0b85a97d-3e765a22c28mr4163062f8f.60.1757699811028;
+        Fri, 12 Sep 2025 10:56:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFbQWWosXseBmiCDWHjZ+i8QCGCkijiPXS7J5DPAO7lPWNkZhPahOhzNwRV6nh+EFTyxM8bbQ==
+X-Received: by 2002:a5d:64e6:0:b0:3cd:6cd:8c2 with SMTP id ffacd0b85a97d-3e765a22c28mr4163028f8f.60.1757699810512;
+        Fri, 12 Sep 2025 10:56:50 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f20:da00:b70a:d502:3b51:1f2d? (p200300d82f20da00b70ad5023b511f2d.dip0.t-ipconnect.de. [2003:d8:2f20:da00:b70a:d502:3b51:1f2d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7c778f764sm1719041f8f.57.2025.09.12.10.56.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Sep 2025 10:56:49 -0700 (PDT)
+Message-ID: <3f11cb3a-7f48-4fb8-a700-228fee3e4627@redhat.com>
+Date: Fri, 12 Sep 2025 19:56:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,136 +75,166 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 03/11] cxl/region: Rename misleading variable name @hpa
- to @range
-To: Robert Richter <rrichter@amd.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+Subject: Re: [PATCH v2 03/16] mm: add vma_desc_size(), vma_desc_pages()
+ helpers
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
+ Guo Ren <guoren@kernel.org>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, "David S . Miller"
+ <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Gregory Price <gourry@gourry.net>,
- "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
-References: <20250912144514.526441-1-rrichter@amd.com>
- <20250912144514.526441-4-rrichter@amd.com>
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Nicolas Pitre <nico@fluxnic.net>, Muchun Song <muchun.song@linux.dev>,
+ Oscar Salvador <osalvador@suse.de>,
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+ Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+ Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
+ Reinette Chatre <reinette.chatre@intel.com>,
+ Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Hugh Dickins <hughd@google.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Uladzislau Rezki <urezki@gmail.com>,
+ Dmitry Vyukov <dvyukov@google.com>, Andrey Konovalov <andreyknvl@gmail.com>,
+ Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-csky@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
+ sparclinux@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, linux-mm@kvack.org, ntfs3@lists.linux.dev,
+ kexec@lists.infradead.org, kasan-dev@googlegroups.com,
+ Jason Gunthorpe <jgg@nvidia.com>
+References: <cover.1757534913.git.lorenzo.stoakes@oracle.com>
+ <5ac75e5ac627c06e62401dfda8c908eadac8dfec.1757534913.git.lorenzo.stoakes@oracle.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <5ac75e5ac627c06e62401dfda8c908eadac8dfec.1757534913.git.lorenzo.stoakes@oracle.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: g3H--dmnlhWvA9shan-UAqVqxenQTXAYna5usw--OsE_1757699811
+X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250912144514.526441-4-rrichter@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 9/12/25 7:45 AM, Robert Richter wrote:
-> @hpa is actually a @range, rename variables accordingly.
-
-it's a range of HPA right? May as well call it 'hpa_range' to distinguish from 'dpa_range' or 'spa_range'
-
+On 10.09.25 22:21, Lorenzo Stoakes wrote:
+> It's useful to be able to determine the size of a VMA descriptor range used
+> on f_op->mmap_prepare, expressed both in bytes and pages, so add helpers
+> for both and update code that could make use of it to do so.
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > ---
->  drivers/cxl/core/region.c | 29 +++++++++++++++--------------
->  1 file changed, 15 insertions(+), 14 deletions(-)
+>   fs/ntfs3/file.c    |  2 +-
+>   include/linux/mm.h | 10 ++++++++++
+>   mm/secretmem.c     |  2 +-
+>   3 files changed, 12 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 777d04870180..13113920aba7 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3367,9 +3367,9 @@ static int match_decoder_by_range(struct device *dev, const void *data)
->  }
->  
->  static struct cxl_decoder *
-> -cxl_port_find_switch_decoder(struct cxl_port *port, struct range *hpa)
-> +cxl_port_find_switch_decoder(struct cxl_port *port, struct range *range)
->  {
-> -	struct device *cxld_dev = device_find_child(&port->dev, hpa,
-> +	struct device *cxld_dev = device_find_child(&port->dev, range,
->  						    match_decoder_by_range);
->  
->  	return cxld_dev ? to_cxl_decoder(cxld_dev) : NULL;
-> @@ -3382,14 +3382,14 @@ cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
->  	struct cxl_port *port = cxled_to_port(cxled);
->  	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
->  	struct cxl_decoder *root, *cxld = &cxled->cxld;
-> -	struct range *hpa = &cxld->hpa_range;
-> +	struct range *range = &cxld->hpa_range;
->  
-> -	root = cxl_port_find_switch_decoder(&cxl_root->port, hpa);
-> +	root = cxl_port_find_switch_decoder(&cxl_root->port, range);
->  	if (!root) {
->  		dev_err(cxlmd->dev.parent,
->  			"%s:%s no CXL window for range %#llx:%#llx\n",
->  			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
-> -			cxld->hpa_range.start, cxld->hpa_range.end);
-> +			range->start, range->end);
->  		return NULL;
->  	}
->  
-> @@ -3458,7 +3458,7 @@ static int __construct_region(struct cxl_region *cxlr,
->  {
->  	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> -	struct range *hpa = &cxled->cxld.hpa_range;
-> +	struct range *range = &cxled->cxld.hpa_range;
->  	struct cxl_region_params *p;
->  	struct resource *res;
->  	int rc;
-> @@ -3474,13 +3474,13 @@ static int __construct_region(struct cxl_region *cxlr,
->  	}
->  
->  	set_bit(CXL_REGION_F_AUTO, &cxlr->flags);
-> -	cxlr->hpa_range = *hpa;
-> +	cxlr->hpa_range = *range;
->  
->  	res = kmalloc(sizeof(*res), GFP_KERNEL);
->  	if (!res)
->  		return -ENOMEM;
->  
-> -	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
-> +	*res = DEFINE_RES_MEM_NAMED(range->start, range_len(range),
->  				    dev_name(&cxlr->dev));
->  
->  	rc = cxl_extended_linear_cache_resize(cxlr, res);
-> @@ -3559,11 +3559,11 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  }
->  
->  static struct cxl_region *
-> -cxl_find_region_by_range(struct cxl_root_decoder *cxlrd, struct range *hpa)
-> +cxl_find_region_by_range(struct cxl_root_decoder *cxlrd, struct range *range)
->  {
->  	struct device *region_dev;
->  
-> -	region_dev = device_find_child(&cxlrd->cxlsd.cxld.dev, hpa,
-> +	region_dev = device_find_child(&cxlrd->cxlsd.cxld.dev, range,
->  				       match_region_by_range);
->  	if (!region_dev)
->  		return NULL;
-> @@ -3573,7 +3573,7 @@ cxl_find_region_by_range(struct cxl_root_decoder *cxlrd, struct range *hpa)
->  
->  int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
->  {
-> -	struct range *hpa = &cxled->cxld.hpa_range;
-> +	struct range *range = &cxled->cxld.hpa_range;
->  	struct cxl_region_params *p;
->  	bool attach = false;
->  	int rc;
-> @@ -3584,12 +3584,13 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
->  		return -ENXIO;
->  
->  	/*
-> -	 * Ensure that if multiple threads race to construct_region() for @hpa
-> -	 * one does the construction and the others add to that.
-> +	 * Ensure that if multiple threads race to construct_region()
-> +	 * for the HPA range one does the construction and the others
-> +	 * add to that.
->  	 */
->  	mutex_lock(&cxlrd->range_lock);
->  	struct cxl_region *cxlr __free(put_cxl_region) =
-> -		cxl_find_region_by_range(cxlrd, hpa);
-> +		cxl_find_region_by_range(cxlrd, range);
->  	if (!cxlr)
->  		cxlr = construct_region(cxlrd, cxled);
->  	mutex_unlock(&cxlrd->range_lock);
+> diff --git a/fs/ntfs3/file.c b/fs/ntfs3/file.c
+> index c1ece707b195..86eb88f62714 100644
+> --- a/fs/ntfs3/file.c
+> +++ b/fs/ntfs3/file.c
+> @@ -304,7 +304,7 @@ static int ntfs_file_mmap_prepare(struct vm_area_desc *desc)
+>   
+>   	if (rw) {
+>   		u64 to = min_t(loff_t, i_size_read(inode),
+> -			       from + desc->end - desc->start);
+> +			       from + vma_desc_size(desc));
+>   
+>   		if (is_sparsed(ni)) {
+>   			/* Allocate clusters for rw map. */
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 892fe5dbf9de..0b97589aec6d 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -3572,6 +3572,16 @@ static inline unsigned long vma_pages(const struct vm_area_struct *vma)
+>   	return (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
+>   }
+>   
+> +static inline unsigned long vma_desc_size(struct vm_area_desc *desc)
+> +{
+> +	return desc->end - desc->start;
+> +}
+> +
+> +static inline unsigned long vma_desc_pages(struct vm_area_desc *desc)
+> +{
+> +	return vma_desc_size(desc) >> PAGE_SHIFT;
+> +}
+
+Should parameters in both functions be const * ?
+
+> +
+>   /* Look up the first VMA which exactly match the interval vm_start ... vm_end */
+>   static inline struct vm_area_struct *find_exact_vma(struct mm_struct *mm,
+>   				unsigned long vm_start, unsigned long vm_end)
+> diff --git a/mm/secretmem.c b/mm/secretmem.c
+> index 60137305bc20..62066ddb1e9c 100644
+> --- a/mm/secretmem.c
+> +++ b/mm/secretmem.c
+> @@ -120,7 +120,7 @@ static int secretmem_release(struct inode *inode, struct file *file)
+>   
+>   static int secretmem_mmap_prepare(struct vm_area_desc *desc)
+>   {
+> -	const unsigned long len = desc->end - desc->start;
+> +	const unsigned long len = vma_desc_size(desc);
+>   
+>   	if ((desc->vm_flags & (VM_SHARED | VM_MAYSHARE)) == 0)
+>   		return -EINVAL;
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Cheers
+
+David / dhildenb
 
