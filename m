@@ -1,173 +1,214 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2088.outbound.protection.outlook.com [40.107.102.88])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D10831A04D;
-	Fri, 12 Sep 2025 14:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757688386; cv=fail; b=rc0AsFbuVuBRFcztM7qOo80PuFaF2J/0G1TAbWnNEzaO9G+MiJUI7bpiifQiBKsZ0opQERRCsD8EZy8I1M/yKtxK0D9fKEigOPeRojDZbSpKInK+83Nx21fPGtlynUIvE74mwIlZ38Yf7JR06pW4i3LeecGwVYaW5z5akhTq7sI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757688386; c=relaxed/simple;
-	bh=66/K40WYKW4wEUGjiq2yQWKqvrd92wQBEeeJj4/Y7pU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eJ+haGJg+qVyD8fXxgW8jCFGimqRDR5lGCfK/46yQTzQllCO76kqguCiXcOVKm4STakTlIsAW0mUOHRN9QROSid3jkrgWXMMPC7Al8COMDY1ZLaJ21Z9gm6KWHGIEC7tmILHeMcehmvM68LGmJC7b+wn3FtOF+EqjnGa2HeQovo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iR5d7Daf; arc=fail smtp.client-ip=40.107.102.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iR5d7Daf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yburrSIM3nnuPGJQImge/bT4Y7w0L6GYcl2qI1+ISs9Yr1Cko+obpzsVVTXbD6OKzsY0TJuJYPmis7q/He/s4fXKDqy2HVg3oGw4U9WFvFeCsEW6CuR5ucaAlQpYghBVQXy+Uv+pjcdDvjSes4jPLJGkGWN8HiZIsW9CN4VxtL+/4mIoovt98UM4F6aNUbRjBVFgv9QCbvxYnoz15CuBD5vRa78OYP45o0ryS+U72iablonribSByKCdT4N12zZgIicHys9fcI7LpETNHwPI7Ro9zyl+T7eSitoP73wcPZINXP99f96sAoBaRvr/AapGuTjasi4WAovVhhmopqUXbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NkN2bMW0w2JOycF7odO+s8GXBNqmieq3I4tfxU8vaqw=;
- b=H88fai1PZfzyiYq7SoYtTnI3zmsRDXeOXqmtclyyt9XetKgtlO5HL8sfRfCmhQ8sxqeh9vRti9QOEA8i+dcl+ym8oCREkzSY9SeMO56HXvVS0zjdv3/QRRSMaBXGoUfVT8xFBO7sEgZtzK78i4QFbq/BbhXFxfXSIr5RqUESF/Iu4Dii3mV8LJvpUu6SuBF9EFV5Dp5aVJWLz5RTN/7dBRNWX8ttfif0eYT/2YD8LF6z3lm+4lBytNYuxaZRu6HIgNoIQcfNb8oNMdqv97P3JNvUQv1pojlVULWUhmXw/ab8C+nWIIiryV5DANhRaShdgKZEfpn6VfQo6I2JBh7Zwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NkN2bMW0w2JOycF7odO+s8GXBNqmieq3I4tfxU8vaqw=;
- b=iR5d7Daf95Y0ln1wDTLApPqvje6Qnyl0rfAlKodnYaoDl2VRCZ311Etgv4nzUpSxA9uFUmyjq+CiujQVlknceJUC3VeX+EbUjGf5WRxKBEk9hiPHykXZLRC9NbzIMGIpyMumEBhC7dgVLSa4b1xKlMMnIACDX/5PkPQiXPoUzzM=
-Received: from DS7PR03CA0048.namprd03.prod.outlook.com (2603:10b6:5:3b5::23)
- by DM4PR12MB6397.namprd12.prod.outlook.com (2603:10b6:8:b4::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Fri, 12 Sep
- 2025 14:46:17 +0000
-Received: from SN1PEPF0002636D.namprd02.prod.outlook.com
- (2603:10b6:5:3b5:cafe::d9) by DS7PR03CA0048.outlook.office365.com
- (2603:10b6:5:3b5::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9115.15 via Frontend Transport; Fri,
- 12 Sep 2025 14:46:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SN1PEPF0002636D.mail.protection.outlook.com (10.167.241.138) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9115.13 via Frontend Transport; Fri, 12 Sep 2025 14:46:17 +0000
-Received: from rric.localdomain (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 12 Sep
- 2025 07:46:09 -0700
-From: Robert Richter <rrichter@amd.com>
-To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
-	<gourry@gourry.net>, "Fabio M. De Francesco"
-	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Robert Richter <rrichter@amd.com>
-Subject: [PATCH v3 10/11] cxl/acpi: Prepare use of EFI runtime services
-Date: Fri, 12 Sep 2025 16:45:12 +0200
-Message-ID: <20250912144514.526441-11-rrichter@amd.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250912144514.526441-1-rrichter@amd.com>
-References: <20250912144514.526441-1-rrichter@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CDC30F929;
+	Fri, 12 Sep 2025 14:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757688398; cv=none; b=LLb2ItO0pBMYTEZrT93Az9G41ucV70ZOM9vCxfpCrc5ZsyHJ/TWSXGy2OeXMkys4FXv7XW9l9YE7COMzTji6t9C4SgvBBnfJjHRQTwMNHHQYiUf6LySEC4Gdsj4AeJKn4v2dA33NU4uD8sfgrswNFH44uHkwYdeNbnHR5AH+Cxc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757688398; c=relaxed/simple;
+	bh=qpos8UYcYHeDsSyXUrLuKLKgAQxmNb6sTZWED5/xCu4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hK0kPa5qYoMgDPb9xwvX6rrOmjZ17xpaKW50TJSgeRsXuEEsCGjbIlFJs2aRxkpom/hgd3Ns48ipcbHUTwI9kkfcWdvuWzpHEvz3SOFyBm2E1+u7l/aKP56uTW+RLe7emuzObb45L60T3chFIVYXoh9pjV1LMZEtNzW6mSVXGbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cNcfK2103z6D8bZ;
+	Fri, 12 Sep 2025 22:45:13 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id A187F1401F4;
+	Fri, 12 Sep 2025 22:46:31 +0800 (CST)
+Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 12 Sep
+ 2025 16:46:31 +0200
+Date: Fri, 12 Sep 2025 15:46:29 +0100
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH 01/16] cxl/regs: Add cxl_unmap_component_regs()
+Message-ID: <20250912154629.00007db4@huawei.com>
+In-Reply-To: <20250730214718.10679-2-Benjamin.Cheatham@amd.com>
+References: <20250730214718.10679-1-Benjamin.Cheatham@amd.com>
+	<20250730214718.10679-2-Benjamin.Cheatham@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002636D:EE_|DM4PR12MB6397:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4deb88da-af72-4479-f085-08ddf20b2133
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|7416014|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?WE1hWZS5rx1b2G/sFjM+8TwJXKxdPChqoi4tN3XB0Z/MMSb7mx45s9r5Kc1O?=
- =?us-ascii?Q?yHd50E7dhWj/tHPs6v663gVFmX8Qw0s1754HQB3R+7Be7al9m784n+ZHtxPt?=
- =?us-ascii?Q?bfk5sdq8yZTJ99gpO6aVG0UTQY57GqFFE7+KpUOVc8fDaX2PgJKpTRx26Pdy?=
- =?us-ascii?Q?snIKGJFsAKNluEUrJ7sq61v4PyIh1AKtUScuv3M0u5w+QL7bV+z5RjB1kgvL?=
- =?us-ascii?Q?Gs7NloeSkxqwzgr431AmzCiDiF7DRyC/v3Jm+AI1cpxs5g1MQsE7kZIyMADP?=
- =?us-ascii?Q?acz7Suh2iOABZ8rpMplDyOyjKMwtz/iLU+vjApeJB/rSDJqC4VM0qTbYvRC6?=
- =?us-ascii?Q?rcr5xfcA2QPRvWeXLtuHBfqtewJdJTnN5RULVltHNw2pNICym6BqQr8OTK/0?=
- =?us-ascii?Q?VUk6AjqlE+SSMar2NyBN45G1caykFb2vQUnzJh4dxfsUpeEb+uoi56dbHjgU?=
- =?us-ascii?Q?j4ctiA3AW7VYXSThL3JEHhvLggqdcWfbrz9EI75WUuT35LBQuCRiBDoYDSE/?=
- =?us-ascii?Q?ChWLqQkt0ULwhNmfYOC/XjIDRx96DHUhKJu6Koe+55ljsFEd0a5V3vpwwPYs?=
- =?us-ascii?Q?PPTwz6MWuB/vg91tmgYFepOujYym6qaUzOUbE29XzkHK1SqksTcGcV36EBBI?=
- =?us-ascii?Q?jGvkA3W9s1mlE3Wnw+/qQLkwf6wlQj18c+4wrQQRa0JNRdJu5fqABCv5KiXB?=
- =?us-ascii?Q?x5FOHr4DWhJd3YWAYXbOAyM9bD9pKt/rYEQ6FO78uHnjlF1Mz6xkiE5Lu3Oc?=
- =?us-ascii?Q?PH1h4qmdqTSk8j13UB8vKJd9C3pOioOkFo1fMA6alqsDkQkYxUSp6wlGo6OZ?=
- =?us-ascii?Q?iARqu1bRf6aJEEWmME/vj64KvLbR3IFrJUB1aVPlxIToMjH9J5hvaJvWDEG4?=
- =?us-ascii?Q?J7ULhz1lar7Sp5akrloDGrr6EQ7f8BACH3CeX8HY7yGJxay6cBtabp6Jkbge?=
- =?us-ascii?Q?2/YFGMIoofOVs64id3iXPwLC0gcR5tpOnSdObH+OMPyIgm1ma1nyEjWocUqU?=
- =?us-ascii?Q?6ENj2Mx3YiaIxXwnSsv/vXFt9NLtX5Y/mgbtkZ3KBa7N8fnMdTwUtZD7+uBq?=
- =?us-ascii?Q?xugOJpPyKWGW9sd9VSNJcma3EOiSE2McXyRlDitF8ZcY/yORqz2iZSweOBNj?=
- =?us-ascii?Q?k9xUzn3c3qxlhSBPkaGFkHAtc50keBKYTP3YdBsv/+g2Hyd8HPyqD6B4N7qr?=
- =?us-ascii?Q?6CmDbx1p8aThjW5wsTAlVqw+JZAtBr0KzzW7FFABpX7oubVw/CBQCOn3yTZz?=
- =?us-ascii?Q?7KBYkqt2oqG5CKRJI129209fE2RaBDBxWnSvhzF+X8xZNpjTrT8rGthph4Tf?=
- =?us-ascii?Q?3p0dkT73lV0ReyvUmnMDx87EC4EQh/rnmDdakAcuj1MVXyyluQhm/KN05pso?=
- =?us-ascii?Q?F+xTImSZpIyxcuaScZXxUtxkd75zktUnD1QA++UycfWdctywCmsP7bnSnQNS?=
- =?us-ascii?Q?wDwrkt/VnbbzCU0baKz/4ppR7tLXFlnpc+BGCpDpNKQdGSFRcOKA1KlLZuOF?=
- =?us-ascii?Q?2RpR80Ce4jMO7Acry5owKx6pMls0AmneqEom?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Sep 2025 14:46:17.1357
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4deb88da-af72-4479-f085-08ddf20b2133
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF0002636D.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6397
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-In order to use EFI runtime services, esp. ACPI PRM which uses the
-efi_rts_wq workqueue, initialize EFI before CXL ACPI.
+On Wed, 30 Jul 2025 16:47:03 -0500
+Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
 
-There is a subsys_initcall order dependency if driver is builtin:
+Hi Ben,
 
- subsys_initcall(cxl_acpi_init);
- subsys_initcall(efisubsys_init);
+Whilst I know there has been some discussion of whether it is appropriate
+to enable this functionality without a full use case and definite confirmation
+someone is going to use it, I'm loath to leave completely unread code
+on list.  (you talk about this in the cover letter).
 
-Prevent the efi_rts_wq workqueue being used by cxl_acpi_init() before
-its allocation. Use subsys_initcall_sync(cxl_acpi_init) to always run
-efisubsys_init() first.
+> In order to allocate the MSI/-X interrupt for CXL error isolation the
+> PCIe portdrv driver needs to map the MMIO-space isolation capability
+> register that contains the interrupt vector. The CXL core already
+> provides a function to map registers in this space:
+> cxl_map_component_regs(). The mappings given this function are managed
 
-Reported-by: Gregory Price <gourry@gourry.net>
-Tested-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-Signed-off-by: Robert Richter <rrichter@amd.com>
----
- drivers/cxl/acpi.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+given to, or returned by?
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 26c494704437..95a5ba395c1a 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -1012,8 +1012,12 @@ static void __exit cxl_acpi_exit(void)
- 	cxl_bus_drain();
- }
- 
--/* load before dax_hmem sees 'Soft Reserved' CXL ranges */
--subsys_initcall(cxl_acpi_init);
-+/*
-+ * Load before dax_hmem sees 'Soft Reserved' CXL ranges. Use
-+ * subsys_initcall_sync() since there is an order dependency with
-+ * subsys_initcall(efisubsys_init), which must run first.
-+ */
-+subsys_initcall_sync(cxl_acpi_init);
- 
- /*
-  * Arrange for host-bridge ports to be active synchronous with
--- 
-2.39.5
+> by devres. If the isolation registers are left mapped by the PCIe
+> portdrv driver, the CXL driver will run into a devres conflict when it
+> goes to map the same registers during probe.
+> 
+> Add cxl_unmap_component_regs() to be called from the PCIe portdrv
+> driver. This function will unwind the devres allocations done by
+> cxl_map_component_regs(), which will allow the PCIe portdrv driver to
+> map the isolation capability register without conflicts.
+> 
+> Factor out the register mapping retrieval code in
+> cxl_map_component_regs() to be reused by cxl_map/unmap_component_regs().
+> 
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+> ---
+>  drivers/cxl/core/regs.c | 77 +++++++++++++++++++++++++++++++----------
+>  drivers/cxl/cxl.h       |  3 ++
+>  2 files changed, 62 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index b8e767a9571c..da8e668a3b70 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -201,40 +201,81 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(devm_cxl_iomap_block, "CXL");
+>  
+> -int cxl_map_component_regs(const struct cxl_register_map *map,
+> +struct mapinfo {
+> +	const struct cxl_reg_map *rmap;
+> +	void __iomem **addr;
+> +};
+> +
+> +static int cxl_get_mapinfo(const struct cxl_register_map *map,
+>  			   struct cxl_component_regs *regs,
+> -			   unsigned long map_mask)
+> +			   unsigned long map_mask, struct mapinfo *info)
+>  {
+> -	struct device *host = map->host;
+> -	struct mapinfo {
+> -		const struct cxl_reg_map *rmap;
+> -		void __iomem **addr;
+> -	} mapinfo[] = {
+> +	struct mapinfo mapinfo[] = {
+>  		{ &map->component_map.hdm_decoder, &regs->hdm_decoder },
+>  		{ &map->component_map.ras, &regs->ras },
+>  	};
+>  	int i;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(mapinfo); i++) {
+> -		struct mapinfo *mi = &mapinfo[i];
+
+Whilst the usefulness of this local variable is reduced I think
+it is still justified and keeping it will reduce the churn
+here somewhat.
+
+> -		resource_size_t addr;
+> -		resource_size_t length;
+> -
+> -		if (!mi->rmap->valid)
+> +		if (!mapinfo[i].rmap->valid)
+>  			continue;
+> -		if (!test_bit(mi->rmap->id, &map_mask))
+> +		if (!test_bit(mapinfo[i].rmap->id, &map_mask))
+>  			continue;
+> -		addr = map->resource + mi->rmap->offset;
+> -		length = mi->rmap->size;
+> -		*(mi->addr) = devm_cxl_iomap_block(host, addr, length);
+> -		if (!*(mi->addr))
+> -			return -ENOMEM;
+> +
+> +		*info = mapinfo[i];
+> +		return 0;
+
+I'm struggling to see how this logic works.  We now only find the first
+entry in mapinfo that is valid? The new cxl_map_component_regs()
+doesn't seem to include a loop either so it's not that we enter here
+multiple times.
+
+
+I think this only works if only one bit is set in map_mask?
+It is always called like that, but the function doesn't check it and
+if we are going to always call it with BIT(X) then pass X in instead
+that making it inherently only deal with a one hot bitmap.
+
+
+>  	}
+>  
+> +	return -ENXIO;
+> +}
+> +
+> +int cxl_map_component_regs(const struct cxl_register_map *map,
+> +			   struct cxl_component_regs *regs,
+> +			   unsigned long map_mask)
+
+Similarly I'd make this the bit position not the bitmap with
+1 bit set.
+
+> +{
+> +	struct device *host = map->host;
+> +	resource_size_t addr, length;
+> +	struct mapinfo mi;
+> +	int rc;
+> +
+> +	rc = cxl_get_mapinfo(map, regs, map_mask, &mi);
+> +	if (rc)
+> +		return rc;
+> +
+> +	addr = map->resource + mi.rmap->offset;
+> +	length = mi.rmap->size;
+> +	*mi.addr = devm_cxl_iomap_block(host, addr, length);
+> +	if (!(*mi.addr))
+> +		return -ENOMEM;
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_map_component_regs, "CXL");
+>  
+> +int cxl_unmap_component_regs(const struct cxl_register_map *map,
+> +			     struct cxl_component_regs *regs,
+> +			     unsigned long map_mask)
+And this one.
+
+> +{
+> +	struct device *host = map->host;
+> +	resource_size_t addr, length;
+> +	struct mapinfo mi;
+> +	int rc;
+> +
+> +	rc = cxl_get_mapinfo(map, regs, map_mask, &mi);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (!(*mi.addr))
+> +		return 0;
+> +
+> +	addr = map->resource + mi.rmap->offset;
+> +	length = mi.rmap->size;
+> +
+> +	devm_iounmap(host, *mi.addr);
+> +	devm_release_mem_region(host, addr, length);
+
+Add a little helper for devm_cxl_iounmap_block()
+So that it clearly pairs with what happens in devm_cxl_iomap_block()
+
+
+> +	return 0;
+> +}
 
