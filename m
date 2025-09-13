@@ -1,345 +1,341 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E3C19258E;
-	Fri, 12 Sep 2025 23:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757720787; cv=none; b=DNNPnWkwvVxzsAYwVgiwRbE32kUDzZW3LazjSRM5PIgTeNgxUK/pt3zJafAmtBpiN0TZ9aUzJGB50OIF2Z36cufzvSWyqokrDScNvwlmsxPmpkzyA3lmT956g2D4HaARtKN7eBdgCwQjp2QC00vHDE3M7RYnYsSLNyn2LIfLgqk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757720787; c=relaxed/simple;
-	bh=wikPThw2nfmYEsbCSrhTyxPQZOqpb06w4Hrw30fbMgg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u5RuIKzb72AEJH3EH59da3nIC5tNL671OcORwKAjVF/pCU5EObxdgKKtkIXnXxB4qj0cGiQlWGU4o1d1ShjtqGt/fI1rcfXiPcXLiJwzPgg3gxq9sM+UF5pJM+ozdPCfo7SBer0oby2VEguaQRLKP99ttKv0deEjSdU0/P5O/xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kb/llxPA; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB07C281358;
+	Sat, 13 Sep 2025 22:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.145.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757804064; cv=fail; b=IzkEfrhk7z0u8a46p56+M7tI9tp68/bDJoBRBH3MZNGXl6n0e7SPlq2h9EvXOx0wbXGcD8XaOHwAWKiRN4u0URdmAVDzuAYEJ/u/M4U9lyINX1vLtZMqcvdZkqABB7UGOEghf8dEoSWQJntypZ5DHp8JJj2Ah4TLF8+2xefPajc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757804064; c=relaxed/simple;
+	bh=YMMJjsyEJGSSIUfJNieWtptCinDcCkY3GCVu9fuGeCU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=QU1Khmh6BTVjf79gJqR9nZWI7OoILXBuKpPD2Dtn1ymjxrLrggeNuDoyps4/D+vzOwFX0hhl+e0r53rC0PNIHWTyGuH+TD9uVedaZNe1QHXT6j8ReubCDEnc7Sh2Zyy/U7RCgpW7OykcIXMJ0LkkaBa6lbE/A5EOc1yTR32OFAA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=Gql53gkd; arc=fail smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kb/llxPA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757720786; x=1789256786;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wikPThw2nfmYEsbCSrhTyxPQZOqpb06w4Hrw30fbMgg=;
-  b=Kb/llxPAtU7WXFOde1er37uXw7dVzbMNHnFAVwVejanMlkgtn2mSFdpd
-   kB3OATk2tc9A6QuvprZzsC1WZU4oGeMb15oziUTTBKkx9gsM5jUqfMdLA
-   1ojDMy0+bHVsAOnJn/L/eUOeB/KyJ9qQ3EPprGp7jipB8UXtzfRdAit7N
-   G0k1EkQVCf5v2zriaFLec7AbG9QKcr38BiwCPcfWgYRD24LwD067pggDU
-   uPcgaJ4rWTtUhPEJc6NZxcpKHNGb5z33+wU4NTFLlByPhwcE0XuA9cmoP
-   cIyp1lo82hNV8Y0VNykyEmO34FCQy1NOR3UKsM1ab/eETtr7+SgN2+1Gg
-   w==;
-X-CSE-ConnectionGUID: ypPb3lseSTuTaxiM2gXKxg==
-X-CSE-MsgGUID: k5dpKgMJTiyFPkwfY2HLFw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11551"; a="63703744"
-X-IronPort-AV: E=Sophos;i="6.18,260,1751266800"; 
-   d="scan'208";a="63703744"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2025 16:46:25 -0700
-X-CSE-ConnectionGUID: a3HiDbVmQpq35G3IG7+TUg==
-X-CSE-MsgGUID: QbohwZbySYea/OsW4z33jg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,260,1751266800"; 
-   d="scan'208";a="174178774"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.111.66]) ([10.125.111.66])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2025 16:46:24 -0700
-Message-ID: <9982ec28-b3d8-44d2-be32-bab4b09a00d7@intel.com>
-Date: Fri, 12 Sep 2025 16:46:23 -0700
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="Gql53gkd"
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 58DBcQh3594061;
+	Sat, 13 Sep 2025 15:54:21 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
+	 bh=WBXh5K7MfqSSFZpHwUDTB7Snp/Nh2sXuERH1P9AOVGQ=; b=Gql53gkd/pJE
+	7y/U/Mn1oB4gNPdQaw/17k+PBbxg1m5kdeWIRiAf6ak7c8jPK2Sdm2SAEsx4tupt
+	gXmbS4X1pEdZONhkauB4O5f0rn7gyFl9dDbfbrEzkYEy5FJME+xm7g9e55jMdAUT
+	X9137MDHZRwGdp07pogXObO1ePbvUcH/Zypd7zWAuN6Mdo9Wk4VbldJYagRO+SeO
+	IRrUDNuYrstIlj0Z0sUICFFW+dfjHxlA6ZPEhp235FtieYZVcj0cd4veFUSPD2a2
+	5mc6i2LWZhV7FAPPQJKwb78mkcr9qETYu0VYf0KjzijXL5XnKTxzArCF122It8mU
+	RaWurjyu9g==
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02on2060.outbound.protection.outlook.com [40.107.96.60])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4957wphx0v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 13 Sep 2025 15:54:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HYkIRdjKmijSl7/J5yhBW+Bsq/lUG7vinKUXqUBPkE61SL7hKKOFf1X0Sp8Ed/B/wSernpGknnSJq4OwhK1ctH/FCqsrU+uRlfZ9I7eO9Y8nzgeLj6S5kYNcXz9lMnI1VvCAt+siXIPgixMtqxx/RcYAVkJ7xxwfpAI1lEV9Jxr4OU6OX19IDc8sLfbUWn+59jnvEBrgMtUgU3w7VTTGJqI/uSjfs3rr0CG/KNq3+m4s9XktUmIOux3+P+fCzcWVkHWq0/N6hXjsDKV6VAuxVpDA+RE10vsQSLsxJw93pa1oMuv18g4SinaOfdq7jOJ3vUEMSVXbQv8tjxb3CmJROw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WBXh5K7MfqSSFZpHwUDTB7Snp/Nh2sXuERH1P9AOVGQ=;
+ b=cAM/MNjEXuJnBgHB3oPIn1bx0PqoCHck8M2L45puUvfcPHA4gKeO7o60lfLejOxQ9U6LANNRyCVJZMfEaOQGD8L9GlQwbhb8VCiOKhk7V/81JzQOvIjUsueK8RfFAKFlsuVjQVAwBUJGd3HeARGu5vTN9hOTHgrRLXBewMJMKriH6RLszyodvpINxLLP9mbNVY6Q4qlTam20ODE8JJCoNsVoOOCFYDVbulLrllVPPpgdjINN85Mrf4vaZ4Lb9j9rK0X4llMAa3L13ylW0oycfnaU0XLhH3PxA0Op3J4IyUkbb2T3J7+11dSn7lqI4Otw73irSY3BjnICseNdOchBOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
+ dkim=pass header.d=meta.com; arc=none
+Received: from LV3PR15MB6455.namprd15.prod.outlook.com (2603:10b6:408:1ad::10)
+ by PH0PR15MB4479.namprd15.prod.outlook.com (2603:10b6:510:85::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Sat, 13 Sep
+ 2025 22:54:19 +0000
+Received: from LV3PR15MB6455.namprd15.prod.outlook.com
+ ([fe80::8102:bfca:2805:316e]) by LV3PR15MB6455.namprd15.prod.outlook.com
+ ([fe80::8102:bfca:2805:316e%5]) with mapi id 15.20.9115.018; Sat, 13 Sep 2025
+ 22:54:18 +0000
+Message-ID: <829e914a-5413-4377-aeda-fe56a56dad0a@meta.com>
+Date: Sat, 13 Sep 2025 18:54:06 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 08/16] mm: add ability to take further action in
+ vm_area_desc
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
+        Guo Ren <guoren@kernel.org>,
+        Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev
+ <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "David S . Miller"
+ <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+        Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Baolin Wang
+ <baolin.wang@linux.alibaba.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
+        ntfs3@lists.linux.dev, kexec@lists.infradead.org,
+        kasan-dev@googlegroups.com, Jason Gunthorpe <jgg@nvidia.com>
+References: <cover.1757534913.git.lorenzo.stoakes@oracle.com>
+ <d85cc08dd7c5f0a4d5a3c5a5a1b75556461392a1.1757534913.git.lorenzo.stoakes@oracle.com>
+From: Chris Mason <clm@meta.com>
+Content-Language: en-US
+In-Reply-To: <d85cc08dd7c5f0a4d5a3c5a5a1b75556461392a1.1757534913.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MN2PR05CA0048.namprd05.prod.outlook.com
+ (2603:10b6:208:236::17) To LV3PR15MB6455.namprd15.prod.outlook.com
+ (2603:10b6:408:1ad::10)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 11/11] cxl: Enable AMD Zen5 address translation using
- ACPI PRMT
-To: Robert Richter <rrichter@amd.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Gregory Price <gourry@gourry.net>,
- "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
-References: <20250912144514.526441-1-rrichter@amd.com>
- <20250912144514.526441-12-rrichter@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250912144514.526441-12-rrichter@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR15MB6455:EE_|PH0PR15MB4479:EE_
+X-MS-Office365-Filtering-Correlation-Id: d608a243-fcd5-49af-814c-08ddf31878ab
+X-FB-Source: Internal
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SE5NR1JjSkt3bmNYMjgxZmpQamZtdjZNRjFoR1FxN0ZHcTNPTlRGb3MzM2Vs?=
+ =?utf-8?B?Y3dBWnc5NXNPcVh5YmlaaUxxT3V4Q0NSU1lyRWxKYXZsemRwOGdrbG5TSEs1?=
+ =?utf-8?B?ZFp5WGp3d2Y4eGVMd2lxY1pPall4YVY1azkwa05qYjRPMy8vRGJUYVJTYmZz?=
+ =?utf-8?B?Q0NTWklyT1V4TG40bWgvOHJJSzVybnlrTWJITXU3VUJ5dC9VVjRtWXFEbmQ0?=
+ =?utf-8?B?TUxsSXJONXFSdnpFUDdNZng1ZFRkOFlyaFl6aXVJUXllRFJqY1B2Q1NlRXlS?=
+ =?utf-8?B?TXU2R2EyQm9jT3VtM1g3YjNhZERMaGgvODREOW9SeXpYc2lkUk9JeTRndmZD?=
+ =?utf-8?B?dm9jcGo2bjBsWVoyeUJwdDFvdGVaSVpwbCt1SkQ5VG11dExKak1ZbjlQU1lG?=
+ =?utf-8?B?TUlxTFJFMXZudStGVW9tUndzM041M0VrOFV5YzYwY0xGclphc002VEgvMGdv?=
+ =?utf-8?B?V3grQU5jZXRpSG5nSk5lTGNTOUxnM2NNRkRJdHRMU0djMmpXUVpPMzlScXdy?=
+ =?utf-8?B?ejhOMytKTnpSbC84YjVhRHBFWTMxZzVKMENUVUVGaHFnd2FHWHJ0ellWUkZp?=
+ =?utf-8?B?ZEErMmorNld5ZnIwb3MyU21Lb2xrTUNqOVlrU2J3dVoxdTZ6RnNYZEdsdUJp?=
+ =?utf-8?B?WjN3Y3A4emtnSlhLejlsNVM3ZE1qSC9tZkdQcysySG5YaHA4WkI4NThueW45?=
+ =?utf-8?B?cjhOTkhza2VNQjRlZi9DazhMdGRaYjR2RndrbGsyenQ5bmVxZVc5alFVVW1Q?=
+ =?utf-8?B?Zlc0a3dZYnhuRGxvcWppMnRnOVpwNGhhSzNvdlhQKzdkbGlVQjF0MlA4OWly?=
+ =?utf-8?B?N2hvYjFoVGVSQUFGM0hibEpKeHFuNnZkM3F3YUpNMENkMit5Y21ORE1PQUNE?=
+ =?utf-8?B?VFY5WnVOUERWbkdLRzBzT0cycFg1Zkhydmg1ZDN4ZHpyYjhwOGJzSlE2RUE3?=
+ =?utf-8?B?ekx6N1ZMZWVkcTJLZEdkdzFRWVNjSW9yMjZhNENGWFlQL1YwODVKaHV3ZVRj?=
+ =?utf-8?B?WVZDL3BvV1VGL0VDdWdSMDgzc2ZTVzY4a2FLOXRNVnUyNlBVZnhCb3BtaDU5?=
+ =?utf-8?B?Y3E0QzhaYkdMT0FIMGo1cis3eFlWOHdSQkFRSldHQzdOT3ZiallhMmJ0UnMy?=
+ =?utf-8?B?L1hBeFVTOU1va0J4UEVNNldGUFg0VC9ZVkhEZjlOamhubjZoelQwQlFzdUVU?=
+ =?utf-8?B?bU02QjNDdTBZR29DR3l4WlA1bThaNTE2QmszY1M2eldHa0tZdXphWEIvK3BE?=
+ =?utf-8?B?NVJJajV3bEVBU1B2MmZLbzZleEZtNlJjVTlVSHZ4M0tPNDJUOVhlTHZXR01N?=
+ =?utf-8?B?aHMxL1BBdkRZVEFEczZya1liYk8xbFRtZ2pSSGlJb05yc0lUN3NzeUkwNU4r?=
+ =?utf-8?B?TU1VNnJxaVNlbnpjWGZVRlFYdzZKMFcwOVYvQThtOWp5d2RaWW11ZXIzZDhF?=
+ =?utf-8?B?WStGQklYSmk4MlF5UHZLZDQ2N1ZTY3hreDZvc3hpWm5EVGw4MmF4dzFxeUtG?=
+ =?utf-8?B?ZlFpeDFyUjFrR2ZwRStoYjBSdzh3azdoejg3RnlCcXptTnlLQ0t3OXVaMFli?=
+ =?utf-8?B?V0h4R3BNTHdDZTF5dENZY2JXTnJ4WWhsTjBVZmt4V1J4dDVTWS9aZllhUlpu?=
+ =?utf-8?B?SWRSK0JiRy91NDBjamY0UHVEUVRRdVQrejdGb2xGS1FZaEM0eTd2WDRRODFF?=
+ =?utf-8?B?ZHFkUG1aeTYrUS9VcUFqSEdYRlVpMENRSDQrMnZhTFArRG9BU1RPRVk0SFBF?=
+ =?utf-8?B?ellYZHVIMWtkdEpRQTRVQW5Dc1N2WWtrQUdWdXpaOUxvYmdjeFZIOWdiSjlm?=
+ =?utf-8?B?TVNvUkR2ZEEweUJLSkxuMGtpZ0ZaRkgvcFN2RHo4Y1BwS1hmY2xFckQwQTlq?=
+ =?utf-8?B?Q0FaSWM1U0R4ZWZQRWNGWDZoajV2YTJOM2pybHZQYUVWUVFsMWtJOStZY3Nr?=
+ =?utf-8?Q?8K0lIKVE1q8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR15MB6455.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QVpiRG11cytKWStLSUVaVm05S3o5TEhNSUhBaHV6bzNRT1Z5SW9uR2Zab05m?=
+ =?utf-8?B?ZlI4TnphMFVPV2tzajlIZjJsTWZVUWN0OS8zSlZYSTVZOUYzcE9vZUZUZVd3?=
+ =?utf-8?B?L0FZeXRaZTc5MmRGYUVNK2NWZEMrbkNwYVFXOUQyVmZlSG9DMk5wMndmbmZK?=
+ =?utf-8?B?bVRHNFpEcnNMTHdETEF1cXY3ZExHTG1qa2hwQ3FqM2dydVdDbmlaYWltY2Zj?=
+ =?utf-8?B?Ky9kbjlFUThOQ2c2amJkenV3UUFJd050YlV2L2EydldjRDF6d0w1SWVWbUFn?=
+ =?utf-8?B?R3NSOWM0R1hYajY3YXpoR3kycU9aS1JOOG94WWZ2TEFybkNyWXRXek13YTBC?=
+ =?utf-8?B?Q3RVZFIwK2NUSnZBVVdKQnZ4ZU12ZDQvLzhwbmhxdStxZ0k5dmdlS2lBMGlk?=
+ =?utf-8?B?UFVWR1EzYXUyZkRZZ0hSVXRkMHVuemJkM00wVzVmcGhQYi9CRzdqbkNocGlh?=
+ =?utf-8?B?REpEU1RXS2NjamM1Y0xkOVJ6M2R2MWdzVWZjSUlEa1N6Z2d0REJkL2FXcVdu?=
+ =?utf-8?B?MmRmU3VFYVNhQUE4Y2taRStMMXdJd3BlbkZLL01xN1ZQOFlyczczNms5ZEg5?=
+ =?utf-8?B?b3kyaTFxMHVNU2wxcjIrTFB4azhhU3F3dUpLMTF2M21vWDJSRU4rL0k5bVBr?=
+ =?utf-8?B?SHhIK29LRCt4eHcvOW1Hd3V3eWFhdnZsam1Cc1daU0U2M2ozTkQzbXdzTjNv?=
+ =?utf-8?B?VjhORHdRRkE5c21DM3Rlc2NYL2dnaTFlNVY3YTBPblBHOXQvVWdFMEZCcjdU?=
+ =?utf-8?B?VHlkRFNEVkI2eEVLcTBDSWc5SUYxS2diTFVMenZMQVd4dnMwYUxvNlcwNnZq?=
+ =?utf-8?B?dm9mN3I3aVBGYzUvTW1jVzh5QTdHUmQyY1NtNnZMZGRhQlI5cEVyem90SmNr?=
+ =?utf-8?B?YWp3QWpJVEI1amh3TTlFZUdEMVpGOE5GRDExY0EvYmZaTlM0ZVJBQ210U1pa?=
+ =?utf-8?B?MHRPNlFrQ2Z4b2tKR29jbHBXZURLUFdRVjQwTkR6ZEUrUUhwTkl1TUE5WHhu?=
+ =?utf-8?B?K0FUcHYyUTJYdEVEek9PRHh5aVBheng5Z0NXL0Zpdk5sZmI5THNNVUFleGpi?=
+ =?utf-8?B?a0pOQzlzaXJqa0FMYVRQMFhXQ0h3b2pWbmk4ZHVFUGtsVFJ1V0ZsbkRzWEd6?=
+ =?utf-8?B?cUdYNmthVmFWNGp0dklJc1FMSUhuWWJIcHRRODhyOFcxYWlIbHpnUGd3SDBq?=
+ =?utf-8?B?QnI1VlU2NVR0dGRVeUowODA1WFRHU0FxcmtaU3U0TE0xQTFINCtFVmhFT0ZV?=
+ =?utf-8?B?Sms0QzM1N0l5c0d4cEo0dERxODE2UmFZd2RPZzM1SVVTcjFXclBLNXdhOHF6?=
+ =?utf-8?B?MU9wT3A3Q2FtRTN5bXY4cmtxNXh4MVVHRFNnNDR2Nzd5dEFKQnpKbHR2enB1?=
+ =?utf-8?B?dGFHWDlwazF0cFFqUFRQZXROSTQzanl3Vkg3M051MmJUV3l4VGt0Z2l1a0Va?=
+ =?utf-8?B?STZrU0VaanFmWDY3YzhjVjA2ZDhBczJtOCtrSnlDUHRkSkFYTEVGZE53Vzha?=
+ =?utf-8?B?Ty9NME1BeXFaazVCSXlEdjJpUmJFTFpwa3J1VnY5MnZwWHMrVy84VnBMYnV3?=
+ =?utf-8?B?dUgrOEY4dUN1LzMrbHI1cTE4cVVQcUQyZDRDdUJoWWVLWlpGajNPUE0rS1Vv?=
+ =?utf-8?B?V0NkdDR4VzBSUk95dy9iQzN6Y2hrYWtVekVKdnAzQkhrSGtKTnJRMWd3eE9Q?=
+ =?utf-8?B?UFJXbW1hSGwxZlJkeWFQSS83clNnZi8yWHlrL2ZMUzZoUW94NjI5N1Zrb1dr?=
+ =?utf-8?B?ZS9aZ2ZiZ0V3Q2NmZGJTOTY3SDhFOVdWdytUTWlRb2V3ajlwSjJRUERpNzlt?=
+ =?utf-8?B?cUpiV1N5Unc1dWdpVWw1RzI1bWtIaDV5ZzJiSmZtVEFEWnp2RTJZM1pTTEVu?=
+ =?utf-8?B?WlZVN0tTUzZ0SUJWcHYrRFpGcWZabHo1ZThYcTN6amljOFVFZWN0OUN6WFZy?=
+ =?utf-8?B?QVJVVUpNajZ5RlppamZiTVA2ZEFlbGcvS0o0czlQMGhMT3ZaUU1NQWpIYklx?=
+ =?utf-8?B?b01jTFdvczJjUVk2OTlMVGFtVmIrUnE1R1BpNHRnb2J3blA0QU1hQ1AydnBw?=
+ =?utf-8?B?dEtlbjZRRGRFbHB1Syt2aDFBMDYrSEFuNm1vdHdjYVoxK3BIc0FMbjlENGtp?=
+ =?utf-8?Q?So2TJy+nKY/D39JwBL7ShELxF?=
+X-OriginatorOrg: meta.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d608a243-fcd5-49af-814c-08ddf31878ab
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR15MB6455.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2025 22:54:18.7384
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JjPn0AodRZ012+o+lVeO09cA9ahccG/ymVPXdzpDrhx0E7lmofdcMBy4LeZqBCIc
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR15MB4479
+X-Proofpoint-ORIG-GUID: h5PrjUulLVyzOGdQptjMNKLObgZan4aG
+X-Authority-Analysis: v=2.4 cv=S9vZwJsP c=1 sm=1 tr=0 ts=68c5f61d cx=c_pps
+ a=o1VJN3YqdCgxIxsX0dn2eg==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
+ a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
+ a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=yPCof4ZbAAAA:8
+ a=O-fpaxy3vYAAr3kZirUA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: h5PrjUulLVyzOGdQptjMNKLObgZan4aG
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTEzMDIyMSBTYWx0ZWRfX+F1Ow+NmoWIv
+ ToafIM2B4OuGykmLlPeGlK0KkLZIbN/Lilx7EtYfhEFJW1rJSXg8I3s+YK+DJrVIFE2YRtagKUm
+ Gi7lVatmd0Zp56fyk0FF6vPwxbBrCpjGehyw93ne0eVFlEa5MQcxIZiF8677LNTeveCGptM5PUF
+ 8/whPYJcMzhQMYyYEuLaZ9UAgrK7UWUxUzvInA5FIxUGNa4KQbL98Sts3+8cTtk3xrq86bMcsgr
+ 0rq4/6FJwTOyuJwadGJ33bwRheo95dco95KnKKA87pkXE7cZNRMTAJf5ajjTgVxKFRBjFSCS3ZT
+ jWgv+u/jwUWj4SNmKHUiwHwPGx+zHbqTOauFY9Djne6IffhyuYy2fqOGQx4G0c=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-13_07,2025-09-12_01,2025-03-28_01
 
+Hi Lorzeno,
 
-
-On 9/12/25 7:45 AM, Robert Richter wrote:
-> Add AMD Zen5 support for address translation.
+On 9/10/25 4:22 PM, Lorenzo Stoakes wrote:
+> Some drivers/filesystems need to perform additional tasks after the VMA is
+> set up. This is typically in the form of pre-population.
 > 
-> Zen5 systems may be configured to use 'Normalized addresses'. Then,
-> CXL endpoints use their own physical address space and are programmed
-> passthrough (DPA == HPA), the number of interleaving ways for the
-> endpoint is set to one. The Host Physical Addresses (HPAs) need to be
-> translated from the endpoint to its CXL host bridge. The HPA of a CXL
-> host bridge is equivalent to the System Physical Address (SPA).
+> The forms of pre-population most likely to be performed are a PFN remap or
+> insertion of a mixed map, so we provide this functionality, ensuring that
+> we perform the appropriate actions at the appropriate time - that is
+> setting flags at the point of .mmap_prepare, and performing the actual
+> remap at the point at which the VMA is fully established.
 > 
-> ACPI Platform Runtime Mechanism (PRM) is used to translate the CXL
-> Device Physical Address (DPA) to its System Physical Address. This is
-> documented in:
+> This prevents the driver from doing anything too crazy with a VMA at any
+> stage, and we retain complete control over how the mm functionality is
+> applied.
 > 
->  AMD Family 1Ah Models 00h–0Fh and Models 10h–1Fh
->  ACPI v6.5 Porting Guide, Publication # 58088
->  https://www.amd.com/en/search/documentation/hub.html
+> Unfortunately callers still do often require some kind of custom action, so
+> we add an optional success/error _hook to allow the caller to do something
+> after the action has succeeded or failed.
 > 
-> To implement AMD Zen5 address translation the following steps are
-> needed:
+> This is done at the point when the VMA has already been established, so the
+> harm that can be done is limited.
 > 
-> AMD Zen5 systems support the ACPI PRM CXL Address Translation firmware
-> call (Address Translation - CXL DPA to System Physical Address, see
-> ACPI v6.5 Porting Guide above) when address translation is enabled.
-> The existence of the callback can be identified using a specific GUID
-> as documented. The initialization code checks firmware and kernel
-> support of ACPI PRM.
+> The error hook can be used to filter errors if necessary.
 > 
-> Introduce a new file core/atl.c to handle ACPI PRM specific address
-> translation code. Naming is loosely related to the kernel's AMD
-> Address Translation Library (CONFIG_AMD_ATL) but implementation does
-> not dependent on it, nor it is vendor specific. Use Kbuild and Kconfig
-> options respectively to enable the code depending on architecture and
-> platform options.
+> We implement actions as abstracted from the vm_area_desc, so we provide the
+> ability for custom hooks to invoke actions distinct from the vma
+> descriptor.
 > 
-> Implement an ACPI PRM firmware call for CXL address translation in the
-> new function cxl_prm_to_hpa(). This includes sanity checks. Enable the
-> callback for applicable CXL host bridges using the new cxl_atl_init()
-> function.
+> If any error arises on these final actions, we simply unmap the VMA
+> altogether.
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-
-I'm still trying to digest the series. Couple things below.
- 
+> Also update the stacked filesystem compatibility layer to utilise the
+> action behaviour, and update the VMA tests accordingly.
+> 
+> For drivers which perform truly custom logic, we provide a custom action
+> hook which is invoked at the point of action execution.
+> 
+> This can then, in turn, update the desc object and perform other actions,
+> such as partially remapping ranges for instance. We export
+> vma_desc_action_prepare() and vma_desc_action_complete() for drivers to do
+> this.
+> 
+> This is performed at a stage where the VMA is already established,
+> immediately prior to mapping completion, so it is considerably less
+> problematic than a general mmap hook.
+> 
+> Note that at the point of the action being taken, the VMA is visible via
+> the rmap, only the VMA write lock is held, so if anything needs to access
+> the VMA, it is able to.
+> 
+> Essentially the action is taken as if it were performed after the mapping,
+> but is kept atomic with VMA state.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > ---
->  drivers/cxl/Kconfig       |   4 ++
->  drivers/cxl/core/Makefile |   1 +
->  drivers/cxl/core/atl.c    | 138 ++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/core.h   |   1 +
->  drivers/cxl/core/port.c   |   8 +++
->  5 files changed, 152 insertions(+)
->  create mode 100644 drivers/cxl/core/atl.c
+>  include/linux/mm.h               |  30 ++++++
+>  include/linux/mm_types.h         |  61 ++++++++++++
+>  mm/util.c                        | 150 +++++++++++++++++++++++++++-
+>  mm/vma.c                         |  70 ++++++++-----
+>  tools/testing/vma/vma_internal.h | 164 ++++++++++++++++++++++++++++++-
+>  5 files changed, 447 insertions(+), 28 deletions(-)
 > 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index 48b7314afdb8..31f9c96ef908 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -233,4 +233,8 @@ config CXL_MCE
->  	def_bool y
->  	depends on X86_MCE && MEMORY_FAILURE
->  
-> +config CXL_ATL
-> +       def_bool y
-> +       depends on ACPI_PRMT
-> +
->  endif
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index 5ad8fef210b5..11fe272a6e29 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -20,3 +20,4 @@ cxl_core-$(CONFIG_CXL_REGION) += region.o
->  cxl_core-$(CONFIG_CXL_MCE) += mce.o
->  cxl_core-$(CONFIG_CXL_FEATURES) += features.o
->  cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
-> +cxl_core-$(CONFIG_CXL_ATL) += atl.o
-> diff --git a/drivers/cxl/core/atl.c b/drivers/cxl/core/atl.c
-> new file mode 100644
-> index 000000000000..5fc21eddaade
-> --- /dev/null
-> +++ b/drivers/cxl/core/atl.c
-> @@ -0,0 +1,138 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2025 Advanced Micro Devices, Inc.
-> + */
-> +
-> +#include <linux/prmt.h>
-> +#include <linux/pci.h>
-> +
-> +#include <cxlmem.h>
-> +#include "core.h"
-> +
-> +static bool check_prm_address_translation(struct cxl_port *port)
-> +{
-> +	/* Applies to CXL host bridges only */
-> +	return !is_cxl_root(port) && port->host_bridge &&
-> +	       is_cxl_root(to_cxl_port(port->dev.parent));
-> +}
-> +
-> +/*
-> + * PRM Address Translation - CXL DPA to System Physical Address
+
+[ ... ]
+
+> +/**
+> + * mmap_action_complete - Execute VMA descriptor action.
+> + * @action: The action to perform.
+> + * @vma: The VMA to perform the action upon.
 > + *
-> + * Reference:
+> + * Similar to mmap_action_prepare(), other than internal mm usage this is
+> + * intended for mmap_prepare users who implement a custom hook - with this
+> + * function being called from the custom hook itself.
 > + *
-> + * AMD Family 1Ah Models 00h–0Fh and Models 10h–1Fh
-> + * ACPI v6.5 Porting Guide, Publication # 58088
+> + * Return: 0 on success, or error, at which point the VMA will be unmapped.
 > + */
-> +
-> +static const guid_t prm_cxl_dpa_spa_guid =
-> +	GUID_INIT(0xee41b397, 0x25d4, 0x452c, 0xad, 0x54, 0x48, 0xc6, 0xe3,
-> +		  0x48, 0x0b, 0x94);
-> +
-> +struct prm_cxl_dpa_spa_data {
-> +	u64 dpa;
-> +	u8 reserved;
-> +	u8 devfn;
-> +	u8 bus;
-> +	u8 segment;
-> +	void *out;
-> +} __packed;
-> +
-> +static u64 prm_cxl_dpa_spa(struct pci_dev *pci_dev, u64 dpa)
+> +int mmap_action_complete(struct mmap_action *action,
+> +			     struct vm_area_struct *vma)
 > +{
-> +	struct prm_cxl_dpa_spa_data data;
-> +	u64 spa;
-> +	int rc;
+> +	int err = 0;
 > +
-> +	data = (struct prm_cxl_dpa_spa_data) {
-> +		.dpa     = dpa,
-> +		.devfn   = pci_dev->devfn,
-> +		.bus     = pci_dev->bus->number,
-> +		.segment = pci_domain_nr(pci_dev->bus),
-> +		.out     = &spa,
-> +	};
+> +	switch (action->type) {
+> +	case MMAP_NOTHING:
+> +		break;
+> +	case MMAP_REMAP_PFN:
+> +		VM_WARN_ON_ONCE((vma->vm_flags & VM_REMAP_FLAGS) !=
+> +				VM_REMAP_FLAGS);
 > +
-> +	rc = acpi_call_prm_handler(prm_cxl_dpa_spa_guid, &data);
-> +	if (rc) {
-> +		pci_dbg(pci_dev, "failed to get SPA for %#llx: %d\n", dpa, rc);
-> +		return ULLONG_MAX;
-> +	}
+> +		err = remap_pfn_range_complete(vma, action->remap.addr,
+> +				action->remap.pfn, action->remap.size,
+> +				action->remap.pgprot);
 > +
-> +	pci_dbg(pci_dev, "PRM address translation: DPA -> SPA: %#llx -> %#llx\n", dpa, spa);
+> +		break;
+> +	case MMAP_INSERT_MIXED:
+> +	{
+> +		unsigned long pgnum = 0;
+> +		unsigned long pfn = action->mixedmap.pfn;
+> +		unsigned long addr = action->mixedmap.addr;
+> +		unsigned long vaddr = vma->vm_start;
 > +
-> +	return spa;
-> +}
+> +		VM_WARN_ON_ONCE(!(vma->vm_flags & VM_MIXEDMAP));
 > +
-> +static u64 cxl_prm_to_hpa(struct cxl_decoder *cxld, u64 hpa)
-> +{
-> +	struct cxl_memdev *cxlmd;
-> +	struct pci_dev *pci_dev;
-> +	struct cxl_port *port;
-> +	struct cxl_endpoint_decoder *cxled;
+> +		for (; pgnum < action->mixedmap.num_pages;
+> +		     pgnum++, pfn++, addr += PAGE_SIZE, vaddr += PAGE_SIZE) {
+> +			vm_fault_t vmf;
 > +
-> +	/* Only translate from endpoint to its parent port. */
-> +	if (!is_endpoint_decoder(&cxld->dev))
-> +		return hpa;
-> +
-> +	cxled = to_cxl_endpoint_decoder(&cxld->dev);
-> +
-> +	/*
-> +	 * Nothing to do if base is non-zero and Normalized Addressing
-> +	 * is disabled.
-> +	 */
+> +			vmf = vmf_insert_mixed(vma, vaddr, addr);
+                                                          ^^^^^
+Should this be pfn instead of addr?
 
-Not sure if this comment matches the code below
-> +	if (cxld->hpa_range.start != cxled->dpa_res->start)
-> +		return hpa;
-> +
-> +	/*
-> +	 * Endpoints are programmed passthrough in Normalized
-> +	 * Addressing mode.
-> +	 */
-Not sure if the comment here matches the conditional check.  
-> +	if (cxld->interleave_ways != 1) {
-> +		dev_dbg(&cxld->dev, "unexpected interleaving config: ways: %d granularity: %d\n",
-> +			cxld->interleave_ways, cxld->interleave_granularity);
-> +		return ULLONG_MAX;
-> +	}
-> +
-> +	if (hpa < cxld->hpa_range.start || hpa > cxld->hpa_range.end) {
-> +		dev_dbg(&cxld->dev, "hpa addr %#llx out of range %#llx-%#llx\n",
-
-Suggest use %pr for range printing to avoid 0-day complaints on 32bit compilers.
-
-> +			hpa, cxld->hpa_range.start, cxld->hpa_range.end);
-> +		return ULLONG_MAX;
-> +	}
-> +
-> +	port = to_cxl_port(cxld->dev.parent);
-> +	cxlmd = port ? to_cxl_memdev(port->uport_dev) : NULL;
-> +	if (!port || !dev_is_pci(cxlmd->dev.parent)) {
-> +		dev_dbg(&cxld->dev, "No endpoint found: %s, range %#llx-%#llx\n",
-> +			dev_name(cxld->dev.parent), cxld->hpa_range.start,
-> +			cxld->hpa_range.end);
-> +		return ULLONG_MAX;
-> +	}
-> +	pci_dev = to_pci_dev(cxlmd->dev.parent);
-> +
-> +	return prm_cxl_dpa_spa(pci_dev, hpa);
-> +}
-> +
-> +static void cxl_prm_init(struct cxl_port *port)
-> +{
-> +	u64 spa;
-> +	struct prm_cxl_dpa_spa_data data = { .out = &spa, };
-> +	int rc;
-> +
-> +	if (!check_prm_address_translation(port))
-> +		return;
-> +
-> +	/* Check kernel (-EOPNOTSUPP) and firmware support (-ENODEV) */
-> +	rc = acpi_call_prm_handler(prm_cxl_dpa_spa_guid, &data);
-> +	if (rc == -EOPNOTSUPP || rc == -ENODEV)
-> +		return;
-> +
-> +	port->to_hpa = cxl_prm_to_hpa;
-> +
-> +	dev_dbg(port->host_bridge, "PRM address translation enabled for %s.\n",
-> +		dev_name(&port->dev));
-> +}
-> +
-> +void cxl_atl_init(struct cxl_port *port)
-> +{
-> +	cxl_prm_init(port);
-> +}
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index eac8cc1bdaa0..624e438d052a 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -150,6 +150,7 @@ int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
->  int cxl_ras_init(void);
->  void cxl_ras_exit(void);
->  int cxl_gpf_port_setup(struct cxl_dport *dport);
-> +void cxl_atl_init(struct cxl_port *port);
->  
->  #ifdef CONFIG_CXL_FEATURES
->  struct cxl_feat_entry *
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 8f36ff413f5d..8007e002888e 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -831,6 +831,12 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
->  			    &cxl_einj_inject_fops);
->  }
->  
-> +static void setup_address_translation(struct cxl_port *port)
-> +{
-> +	if (IS_ENABLED(CONFIG_CXL_ATL))
-> +		cxl_atl_init(port);
-> +}
-> +
->  static int cxl_port_add(struct cxl_port *port,
->  			resource_size_t component_reg_phys,
->  			struct cxl_dport *parent_dport)
-> @@ -868,6 +874,8 @@ static int cxl_port_add(struct cxl_port *port,
->  			return rc;
->  	}
->  
-> +	setup_address_translation(port);
-
-Given that the address translation callback only is needed for the host bridge, should this be called from acpi_probe() when the host bridge is being setup rather than going through every port add and checking if the port is a host bridge?
-
-DJ
-
-> +
->  	rc = device_add(dev);
->  	if (rc)
->  		return rc;
-
+-chris
