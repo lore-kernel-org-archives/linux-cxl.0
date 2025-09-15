@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5522C1F7910;
-	Mon, 15 Sep 2025 16:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6456524DCE9;
+	Mon, 15 Sep 2025 16:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757953456; cv=none; b=OPj5O/HRjyJN0Pt97MDRNBo6qUhuV5lLHaHH/QAhX+oEXkdnFc13OtBDvu2RandOLSlkfIlWWy4n341NxZCQVdl6ZqdOix0HPeNoFf/ypiNAaUiMNKuEnJ7Hx0MR6oNVuzGBk2OlIpUUcnksM3M4N8CpyKu9N3f5PZeWQsGaCx8=
+	t=1757953621; cv=none; b=chMdG8Yc6tvvWTf3r1rp5727C1STHNjD/BerJ8qGHPiO2xOl4+l5IlzlMD0JkncfIR+WlldF7OId7GyphyxmzKcrB7XGwxO1M4MiHxnv+nXstneHyOMjuowJvCvsxRE9pfkGtlVTbdfLIAfz6ouQxDHFTEWtiQosrapc6qGdmac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757953456; c=relaxed/simple;
-	bh=O5SwdmxxLNi13kb62q2OqCYx8wGzejzDqVMTzbO/oLM=;
+	s=arc-20240116; t=1757953621; c=relaxed/simple;
+	bh=JJjoz8iiqJhmNZfKOSMi6Un11Z5v49/PkAlyrOo9J5o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nByLGQIBzniHsU5uYLAGmmWlamKk8gZbRlj5b1w4PyZ66No2X0MOLUJO0TSF8jrLKjlrP4V0M4a31FT11YnfIv9BHzO2mfvUCRkcPSSIbVggy4z7sFKywcA/IvYVYhjEpqkmj3c2cmrpph4ySEdpS6vCXBOtJdMF3pqFXtnoRUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kmvAgdRD; arc=none smtp.client-ip=192.198.163.16
+	 In-Reply-To:Content-Type; b=u79GdbuOqqnTc3yNSe2zmFPPH0kRMOEnN9tOItA9ao1qxuIHaTr4lzFhbzXx+gtdnMvlN9X5EHEq0jJW9/4IP6Mh56yJ+9oMmVzBrRWrAVEYcJX5YySTis1pFUlNpJSigCfbWAXpTP4PPh4nEWHap6f0FMWpLuq5Ebok+tRgo1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CSkOOOHi; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kmvAgdRD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CSkOOOHi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757953455; x=1789489455;
+  t=1757953620; x=1789489620;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=O5SwdmxxLNi13kb62q2OqCYx8wGzejzDqVMTzbO/oLM=;
-  b=kmvAgdRD9Z86wa2auMf/NSqgPtnQtUGHnITPYhEbEMoZ6RdQf2duroXn
-   9IWxzqsYYvVjGiYiIoJx7nSCGN1rBmWYXvE4D5H64gX/IZtk6k+iMCAZg
-   vioxpKK2VUeH0HQ03P93q4gDhWh6NnKb3n/bs1TZ5Fgx5q1Ag5pKkLNtb
-   9rCsdU22y1Bvon0rNH3tbdMD07BW4a981bfTRigVdDuhgEhF8AuZfOkKX
-   PlChBqurG/SOM+xkwqr39gS51lwKxwU1nyGQCcr/yXb73AIMbxIdwakPP
-   wBBDlleoSZG7gB/JpYg37fGxH+3yZtsqdVkTk88Kx+19nORJRUpdYXk0N
-   Q==;
-X-CSE-ConnectionGUID: WeQrXdrlSdO2PAAgccXhaw==
-X-CSE-MsgGUID: uv/xGNjXTdaNyKlWQiPGKg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11554"; a="47782486"
+  bh=JJjoz8iiqJhmNZfKOSMi6Un11Z5v49/PkAlyrOo9J5o=;
+  b=CSkOOOHizgr/RW7nX/uAsBERIP2COB4DThvjs5RGKHRVesrjImw3D4zE
+   1cKIBteliB4yF4iSYQcUaxwHWMknjXZKG4mMPCq8R305opiR9po4B2rH3
+   IycTE92XxfGeGrZzyxmweISP1TKsgtR07ZS9mdYCWz3UupUgZpuEEFinu
+   esgFXS1q6/3sYeANQK1WGk/JTroQED4O7xgfZhRJbxcSWOiJmhVSVog9f
+   FOovVjpLgWtmqxSuhiS497iHlPXC91rrRf5//mjC+CAyuDdNwBp0fksNB
+   2ozI8fQrhBr9bBiIl5bdzk3QReZnYezRMSW0aP7UK7QZwCSbyOfExkHXF
+   A==;
+X-CSE-ConnectionGUID: kM5X7HfBQHSR2IjxI1+3ZA==
+X-CSE-MsgGUID: cJYqNygLTcqGsHKP5VocAw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11554"; a="60288376"
 X-IronPort-AV: E=Sophos;i="6.18,266,1751266800"; 
-   d="scan'208";a="47782486"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 09:24:14 -0700
-X-CSE-ConnectionGUID: 5JB3YnFGS3i1pKU71CnCaw==
-X-CSE-MsgGUID: e2KTI+UiQPe8ebRf8vvPPA==
+   d="scan'208";a="60288376"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 09:26:56 -0700
+X-CSE-ConnectionGUID: EhG1VS+xTLGNAkC8/sm9lA==
+X-CSE-MsgGUID: pPBgcjI3SeWtt6gNtT3wiA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,266,1751266800"; 
-   d="scan'208";a="179053455"
+   d="scan'208";a="205646801"
 Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.111.129]) ([10.125.111.129])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 09:24:10 -0700
-Message-ID: <090fd415-42e4-481f-8c77-0b3f2e9f3f63@intel.com>
-Date: Mon, 15 Sep 2025 09:24:09 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 09:26:54 -0700
+Message-ID: <45b9e636-d611-4e81-9f3d-ce23df2fac0d@intel.com>
+Date: Mon, 15 Sep 2025 09:26:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,7 +52,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/11] cxl/region: Store HPA range in struct cxl_region
+Subject: Re: [PATCH v3 06/11] cxl/region: Separate region parameter setup and
+ region construction
 To: Robert Richter <rrichter@amd.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
@@ -63,94 +64,99 @@ Cc: Alison Schofield <alison.schofield@intel.com>,
  "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
  Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
 References: <20250912144514.526441-1-rrichter@amd.com>
- <20250912144514.526441-3-rrichter@amd.com>
- <fd4fc0f6-03a9-4134-9703-60705ec6898c@intel.com>
- <aMe96yaXueRvTARq@rric.localdomain>
+ <20250912144514.526441-7-rrichter@amd.com>
+ <3d44af04-f7d6-4625-b07d-40173bc95c35@intel.com>
+ <aMfA1hlZWfNdnEy5@rric.localdomain>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <aMe96yaXueRvTARq@rric.localdomain>
+In-Reply-To: <aMfA1hlZWfNdnEy5@rric.localdomain>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 9/15/25 12:19 AM, Robert Richter wrote:
-> On 12.09.25 10:17:14, Dave Jiang wrote:
+On 9/15/25 12:31 AM, Robert Richter wrote:
+> On 12.09.25 14:10:06, Dave Jiang wrote:
 >>
 >>
 >> On 9/12/25 7:45 AM, Robert Richter wrote:
->>> Each region has a known host physical address (HPA) range it is
->>> assigned to. Endpoint decoders assigned to a region share the same HPA
->>> range. The region's address range is the system's physical address
->>> (SPA) range.
+>>> To construct a region, the region parameters such as address range and
+>>> interleaving config need to be determined. This is done while
+>>> constructing the region by inspecting the endpoint decoder
+>>> configuration. The endpoint decoder is passed as a function argument.
 >>>
->>> Endpoint decoders in systems that need address translation use HPAs
->>> which are not SPAs. To make the SPA range accessible to the endpoint
->>> decoders, store and track the region's SPA range in struct cxl_region.
->>> Introduce the @hpa_range member to the struct. Now, the SPA range of
->>> an endpoint decoder can be determined based on its assigned region.
+>>> With address translation the endpoint decoder data is no longer
+>>> sufficient to extract the region parameters as some of the information
+>>> is obtained using other methods such as using firmware calls.
 >>>
->>> Patch is a prerequisite to implement address translation which uses
->>> struct cxl_region to store all relevant region and interleaving
->>> parameters.
+>>> In a first step, separate code to determine and setup the region
+>>> parameters from the region construction. Temporarily store all the
+>>> data to create the region in the new struct cxl_region_context. Add a
+>>> new function setup_region_parameters() to fill that struct and later
+>>> use it to construct the region. This simplifies the extension of the
+>>> function to support other methods needed, esp. to support address
+>>> translation.
+>>>
+>>> Patch is a prerequisite to implement address translation.
 >>>
 >>> Signed-off-by: Robert Richter <rrichter@amd.com>
->>
->> Just a nit below. Otherwise looks ok
->>
->> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->>
 >>> ---
->>>  drivers/cxl/core/region.c | 17 +++++++++++++++++
->>>  drivers/cxl/cxl.h         |  2 ++
->>>  2 files changed, 19 insertions(+)
+>>>  drivers/cxl/core/region.c | 50 +++++++++++++++++++++++++++++----------
+>>>  1 file changed, 38 insertions(+), 12 deletions(-)
 >>>
 >>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>> index 2c37c060d983..777d04870180 100644
+>>> index 106692f1e310..57697504410b 100644
 >>> --- a/drivers/cxl/core/region.c
 >>> +++ b/drivers/cxl/core/region.c
->>> @@ -664,6 +664,11 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
->>>  		return PTR_ERR(res);
->>>  	}
->>>  
->>> +	cxlr->hpa_range = (struct range) {
->>> +		.start = res->start,
->>> +		.end = res->end,
->>> +	};
->>> +
->>>  	p->res = res;
->>>  	p->state = CXL_CONFIG_INTERLEAVE_ACTIVE;
->>>  
->>> @@ -700,8 +705,14 @@ static int free_hpa(struct cxl_region *cxlr)
->>>  	if (p->state >= CXL_CONFIG_ACTIVE)
->>>  		return -EBUSY;
->>>  
->>> +	cxlr->hpa_range = (struct range) {
->>> +		.start = 0,
->>> +		.end = -1,
->>> +	};
->>> +
->>>  	cxl_region_iomem_release(cxlr);
->>>  	p->state = CXL_CONFIG_IDLE;
->>> +
->>
->> stray blank line
+>>> @@ -3414,6 +3414,26 @@ static int match_region_by_range(struct device *dev, const void *data)
 >>>  	return 0;
 >>>  }
+>>>  
+>>> +struct cxl_region_context {
+>>> +	struct cxl_endpoint_decoder *cxled;
+>>> +	struct cxl_memdev *cxlmd;
+>>> +	struct range hpa_range;
+>>> +	int interleave_ways;
+>>> +	int interleave_granularity;
+>>> +};
+>>> +
+>>> +static int setup_region_params(struct cxl_endpoint_decoder *cxled,
+>>> +			       struct cxl_region_context *ctx)
+>>> +{
+>>> +	ctx->cxled = cxled;
+>>> +	ctx->cxlmd = cxled_to_memdev(cxled);
+>>> +	ctx->hpa_range = cxled->cxld.hpa_range;
+>>> +	ctx->interleave_ways = cxled->cxld.interleave_ways;
+>>> +	ctx->interleave_granularity = cxled->cxld.interleave_granularity;
+>>
+>> You can init like this:
+>>
+>> 	*ctx = (struct cxl_region_context) {
+>> 		.cxled = cxled,
+>> 		.cxlmd = cxled_to_memdev(cxled),
+>> 		.hpa_range = cxled->cxld.hpa_range,
+>> 		.interleave_ways = cxled->cxld.interleave_ways,
+>> 		.interleave_granularity = cxled->cxld.interleave_granularity,
+>> 	};
 > 
-> This small cleanup was intended and separates the return from other
-> statements to better group the code in (sort of) blocks. It is not
-> worth separate patch and it is common practice to have small cleanups
-> in the area of code that is changed. That allows small style fixes to
-> the code while reworking it, but avoids separate code cleanups causing
-> extra efforts, conflicts and the risk of changing stable code.
+> Will change that for readability and to zero-init possibly missing
+> members.
 > 
-> Anyway, let me know if you want me remove the change.
+>>
+>>
+>>> +
+>>> +	return 0;
+>>
+>> Can probably make this function void if no expected errors and only assignments.
+> 
+> A later extension to the code may return an error code, so I prepared
+> the function interface already for this.
 
-Yeah please just drop the change. While it's nice to have, it may potentially cause backport issues generally speaking. 
+I realized that when I saw it in the later patch. So please ignore the comment.
 
-> 
-> Thanks,
 > 
 > -Robert
+> 
+>>
+>> DJ
 
