@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D88C1E87B;
-	Mon, 15 Sep 2025 10:46:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E6F2FD7D6;
+	Mon, 15 Sep 2025 10:59:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757933182; cv=none; b=VFI61odWw8K1O8+JbDwFDEppFRovwN2Ky3ptzXmDjKZqcezg3CXjjEOL8njzNAZ2T7js2qtgyf2YZnNkwkSF9eJT+MhwU2i9O8G1c5oct0kCF1BRu1Vx7R29x64Delk1N+DHpREJgvkblsWqYvGJy3mcsyppSBXjtDpa3A1j6Os=
+	t=1757933996; cv=none; b=i9KMfAOY3Fe/+PQ814w8QIeyuUV3+zPNYqQ7tPs0eGSAuELCZ1WL6CI+7EUMEIGbidQ2X+nbU196C3JvJhMSZq/r89KjnzEj/UjgUwMIQZatkFKfiKZf24xvWOA8TZ+tkc1atkdWd2pjW4ldAdwN81F6NIB+iQgU2RjpJ1ar/6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757933182; c=relaxed/simple;
-	bh=FhnEPNIMRkzIGOksggj4Z5MBpCvP5ojagYiNxuMGBfU=;
+	s=arc-20240116; t=1757933996; c=relaxed/simple;
+	bh=lY7RFPV4gPA2gfgumslg2zAPShgFCGhgWaLAHCRIL+s=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S/aE+ZIYdvp7x5yUB59B+d+i/oCM/qo309LxyuPb+8MW5yyRyCIDCKPaLTS5obZ+8a30d7sQnB3TbGlJWS3Ds7bG9dAGKrgxQtDu8iKex8pQq6j3ZIGZdRDLYbAMQSQJ4nyUkx7yDLqdUfwCcE/QoGIofc3tC5VGAYX33IDhBMU=
+	 MIME-Version:Content-Type; b=gbC8T3YTfhjdX9LgHg3q5zv0sLC82L3BftTmC+iXrz3VFlGwcN/DlzDZTR/pEw/m2I+PleaVB1zrXF7bj08KKTeGnCj5z3YEozlKD/4rXJdhPO5BfhQadIcGOBR1mMuv6X8ogJtYk4PWWcMw9KDGMqHicKICUkCJ/HkB7qEy6FI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cQM826nt4z6M5gY;
-	Mon, 15 Sep 2025 18:43:30 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cQMTC59lkz6K9JR;
+	Mon, 15 Sep 2025 18:58:23 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6C1811402FB;
-	Mon, 15 Sep 2025 18:46:16 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B319E140372;
+	Mon, 15 Sep 2025 18:59:50 +0800 (CST)
 Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 15 Sep
- 2025 12:46:15 +0200
-Date: Mon, 15 Sep 2025 11:46:14 +0100
+ 2025 12:59:50 +0200
+Date: Mon, 15 Sep 2025 11:59:48 +0100
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: Robert Richter <rrichter@amd.com>
 CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
@@ -34,12 +34,12 @@ CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
 	<linux-kernel@vger.kernel.org>, Gregory Price <gourry@gourry.net>, "Fabio M.
  De Francesco" <fabio.m.de.francesco@linux.intel.com>, Terry Bowman
 	<terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
-Subject: Re: [PATCH v3 08/11] cxl/region: Implement endpoint decoder address
- translation
-Message-ID: <20250915114614.000053f1@huawei.com>
-In-Reply-To: <20250912144514.526441-9-rrichter@amd.com>
+Subject: Re: [PATCH v3 11/11] cxl: Enable AMD Zen5 address translation using
+ ACPI PRMT
+Message-ID: <20250915115948.0000415a@huawei.com>
+In-Reply-To: <20250912144514.526441-12-rrichter@amd.com>
 References: <20250912144514.526441-1-rrichter@amd.com>
-	<20250912144514.526441-9-rrichter@amd.com>
+	<20250912144514.526441-12-rrichter@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -47,196 +47,178 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 12 Sep 2025 16:45:10 +0200
+On Fri, 12 Sep 2025 16:45:13 +0200
 Robert Richter <rrichter@amd.com> wrote:
 
-> Systems that need address translation have the endpoint decoders
-> programmed for a different address space. Host physical addresses
-> (HPA) are different from their system physical addresses (SPA). The
-> decoder's address range and interleaving configuration of such
-> endpoints cannot be used to determine the region parameters. The
-> region's address range must be SPA which the decoder does not
-> provide. In addition, an endpoint's incoming HPA is already converted
-> to the devices physical address (DPA). Thus it has interleaving
-> disabled.
-> 
-> Address translation may provide different ways to determine an
-> endpoint's SPA, e.g. it may support a firmware call. This allows the
-> determination of the region's parameters without inspecting the
-> endpoint decoders.
-> 
-> Implement the setup of address translation given there is a function
-> to convert an endpoint's HPA (which is identical to its DPA) to an
-> SPA. Use the previously introduced cxl_to_hpa_fn callback for this.
-> Convert the decoder's address range and ensure it is 256MB aligned.
-> 
-> Identify the region's interleaving ways by inspecting the address
-> ranges. Also determine the interleaving granularity using the address
-> translation callback. Note that the position of the chunk from one
-> interleaving block to the next may vary and thus cannot be considered
-> constant. Address offsets larger than the interleaving block size
-> cannot be used to calculate the granularity. Thus, probe the
-> granularity using address translation for various HPAs in the same
-> interleaving block.
-> 
-> Note that this patch does not yet enable address translation as
-> callbacks have not been initialized.
-> 
+> Add AMD Zen5 support for address translation.
+>=20
+> Zen5 systems may be configured to use 'Normalized addresses'. Then,
+> CXL endpoints use their own physical address space and are programmed
+> passthrough (DPA =3D=3D HPA), the number of interleaving ways for the
+> endpoint is set to one. The Host Physical Addresses (HPAs) need to be
+> translated from the endpoint to its CXL host bridge. The HPA of a CXL
+> host bridge is equivalent to the System Physical Address (SPA).
+>=20
+> ACPI Platform Runtime Mechanism (PRM) is used to translate the CXL
+> Device Physical Address (DPA) to its System Physical Address. This is
+> documented in:
+>=20
+>  AMD Family 1Ah Models 00h=E2=80=930Fh and Models 10h=E2=80=931Fh
+>  ACPI v6.5 Porting Guide, Publication # 58088
+>  https://www.amd.com/en/search/documentation/hub.html
+>=20
+> To implement AMD Zen5 address translation the following steps are
+> needed:
+>=20
+> AMD Zen5 systems support the ACPI PRM CXL Address Translation firmware
+> call (Address Translation - CXL DPA to System Physical Address, see
+> ACPI v6.5 Porting Guide above) when address translation is enabled.
+> The existence of the callback can be identified using a specific GUID
+> as documented. The initialization code checks firmware and kernel
+> support of ACPI PRM.
+>=20
+> Introduce a new file core/atl.c to handle ACPI PRM specific address
+> translation code. Naming is loosely related to the kernel's AMD
+> Address Translation Library (CONFIG_AMD_ATL) but implementation does
+> not dependent on it, nor it is vendor specific. Use Kbuild and Kconfig
+> options respectively to enable the code depending on architecture and
+> platform options.
+>=20
+> Implement an ACPI PRM firmware call for CXL address translation in the
+> new function cxl_prm_to_hpa(). This includes sanity checks. Enable the
+> callback for applicable CXL host bridges using the new cxl_atl_init()
+> function.
+>=20
 > Signed-off-by: Robert Richter <rrichter@amd.com>
+A few minor additions inline. =20
+
+J
 > ---
->  drivers/cxl/core/region.c | 95 ++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 94 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 57697504410b..9fb1e9508213 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3422,16 +3422,109 @@ struct cxl_region_context {
->  	int interleave_granularity;
->  };
->  
-> +static int setup_address_translation(struct cxl_endpoint_decoder *cxled,
-> +				     struct cxl_region_context *ctx)
+>  drivers/cxl/Kconfig       |   4 ++
+>  drivers/cxl/core/Makefile |   1 +
+>  drivers/cxl/core/atl.c    | 138 ++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/core.h   |   1 +
+>  drivers/cxl/core/port.c   |   8 +++
+>  5 files changed, 152 insertions(+)
+>  create mode 100644 drivers/cxl/core/atl.c
+>=20
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 48b7314afdb8..31f9c96ef908 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -233,4 +233,8 @@ config CXL_MCE
+>  	def_bool y
+>  	depends on X86_MCE && MEMORY_FAILURE
+> =20
+> +config CXL_ATL
+> +       def_bool y
+
+Given no help we can't turn this off manually and it's down to
+whether ACPI_PRMT is configured or not.
+
+To me this feels like something we should be able to control.
+Not a huge amount of code, but none the less 'so far' it only
+applies to particular AMD platforms yet ACPI_PRMT gets built
+on ARM platforms and other stuff even on AMD (CONFIG_AMD_ATL_PRM)
+
+
+
+> +       depends on ACPI_PRMT
+> +
+>  endif
+
+> diff --git a/drivers/cxl/core/atl.c b/drivers/cxl/core/atl.c
+> new file mode 100644
+> index 000000000000..5fc21eddaade
+> --- /dev/null
+> +++ b/drivers/cxl/core/atl.c
+
+> +struct prm_cxl_dpa_spa_data {
+> +	u64 dpa;
+> +	u8 reserved;
+> +	u8 devfn;
+> +	u8 bus;
+> +	u8 segment;
+> +	void *out;
+
+If reality is out is always a u64 * maybe just give it that type.
+
+> +} __packed;
+> +
+> +static u64 prm_cxl_dpa_spa(struct pci_dev *pci_dev, u64 dpa)
 > +{
-> +	struct cxl_port *port = to_cxl_port(cxled->cxld.dev.parent->parent);
-
-When there is a parent->parent it always makes me nervous that I haven't
-reasoned out what port this actually is. A comment would help or
-a more specific macro where the name lets us know what we are getting.
-
-> +	struct cxl_decoder *cxld = &cxled->cxld;
-> +	struct range range = ctx->hpa_range;
-> +	u64 spa_len, len = range_len(&range);
-> +	u64 addr, base = range.start;
-> +	int ways, gran;
-> +
-> +	if (!len || !port->to_hpa)
-> +		return 0;
-> +
-> +	if (!IS_ALIGNED(range.start, SZ_256M) ||
-> +	    !IS_ALIGNED(range.end + 1, SZ_256M)) {
-> +		dev_warn(&port->dev,
-> +			"CXL address translation: Unaligned decoder HPA range: %#llx-%#llx(%s)\n",
-> +			range.start, range.end, dev_name(&cxld->dev));
-> +		return -ENXIO;
-> +	}
-> +
-> +	/* Translate HPA range to SPA. */
-> +	range.start = port->to_hpa(cxld, range.start);
-
-This is where the generic naming as 'range' gets really confusing.
-hpa_range etc with separate struct range for each would definitely help
-
-For the checks and inputs maybe just use ctx->hpa_range directly.
-
-
-> +	range.end = port->to_hpa(cxld, range.end);
-Perhaps use the DEFINE_RANGE macro or 
-	range = (struct range) {
-		.start = ...
-style as per earlier patches.
-
-> +
-> +	if (range.start == ULLONG_MAX || range.end == ULLONG_MAX) {
-> +		dev_warn(&port->dev,
-> +			"CXL address translation: Failed to translate HPA range: %#llx-%#llx:%#llx-%#llx(%s)\n",
-> +			range.start, range.end, ctx->hpa_range.start,
-> +			ctx->hpa_range.end, dev_name(&cxld->dev));
-> +		return -ENXIO;
-> +	}
-> +
-> +	/*
-> +	 * Since translated addresses include the interleaving
-> +	 * offsets, align the range to 256 MB.
-
-So we pass in an HPA range without interleaving offsets and get back
-one with them?  Is that unavoidable, or can we potentially push
-this bit into the callback?  Probably with separate callbacks to
-get the interleave details.
-
-Overall I'm not really following what is going on here.  Maybe
-some ascii art would help?
-
-> +	 */
-> +	range.start = ALIGN_DOWN(range.start, SZ_256M);
-> +	range.end = ALIGN(range.end, SZ_256M) - 1;
-> +
-> +	spa_len = range_len(&range);
-> +	if (!len || !spa_len || spa_len % len) {
-> +		dev_warn(&port->dev,
-> +			"CXL address translation: HPA range not contiguous: %#llx-%#llx:%#llx-%#llx(%s)\n",
-> +			range.start, range.end, ctx->hpa_range.start,
-> +			ctx->hpa_range.end, dev_name(&cxld->dev));
-> +		return -ENXIO;
-> +	}
-> +
-> +	ways = spa_len / len;
-> +	gran = SZ_256;
-> +
-> +	/*
-> +	 * Determine interleave granularity
-> +	 *
-> +	 * Note: The position of the chunk from one interleaving block
-> +	 * to the next may vary and thus cannot be considered
-> +	 * constant. Address offsets larger than the interleaving
-> +	 * block size cannot be used to calculate the granularity.
-> +	 */
-> +	while (ways > 1 && gran <= SZ_16M) {
-> +		addr = port->to_hpa(cxld, base + gran);
-> +		if (addr != base + gran)
-> +			break;
-> +		gran <<= 1;
-> +	}
-> +
-> +	if (gran > SZ_16M) {
-> +		dev_warn(&port->dev,
-> +			"CXL address translation: Cannot determine granularity: %#llx-%#llx:%#llx-%#llx(%s)\n",
-> +			range.start, range.end, ctx->hpa_range.start,
-> +			ctx->hpa_range.end, dev_name(&cxld->dev));
-> +		return -ENXIO;
-> +	}
-> +
-> +	ctx->hpa_range = range;
-> +	ctx->interleave_ways = ways;
-> +	ctx->interleave_granularity = gran;
-> +
-> +	dev_dbg(&cxld->dev,
-> +		"address mapping found for %s (hpa -> spa): %#llx+%#llx -> %#llx+%#llx ways:%d granularity:%d\n",
-> +		dev_name(ctx->cxlmd->dev.parent), base, len, range.start,
-> +		spa_len, ways, gran);
-> +
-> +	return 0;
-> +}
-> +
->  static int setup_region_params(struct cxl_endpoint_decoder *cxled,
->  			       struct cxl_region_context *ctx)
->  {
+> +	struct prm_cxl_dpa_spa_data data;
+> +	u64 spa;
 > +	int rc;
 > +
->  	ctx->cxled = cxled;
->  	ctx->cxlmd = cxled_to_memdev(cxled);
->  	ctx->hpa_range = cxled->cxld.hpa_range;
->  	ctx->interleave_ways = cxled->cxld.interleave_ways;
->  	ctx->interleave_granularity = cxled->cxld.interleave_granularity;
->  
-> -	return 0;
-> +	rc = setup_address_translation(cxled, ctx);
-
-A quick search suggested nothing new gets added after this. As such
-	return setup_address_translation(...);
-is probably appropriate here.
-
-
-> +	if (rc)
-> +		return rc;
+> +	data =3D (struct prm_cxl_dpa_spa_data) {
+> +		.dpa     =3D dpa,
+> +		.devfn   =3D pci_dev->devfn,
+> +		.bus     =3D pci_dev->bus->number,
+> +		.segment =3D pci_domain_nr(pci_dev->bus),
+> +		.out     =3D &spa,
+> +	};
 > +
-> +	return rc;
->  }
->  
->  static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
+> +	rc =3D acpi_call_prm_handler(prm_cxl_dpa_spa_guid, &data);
+> +	if (rc) {
+> +		pci_dbg(pci_dev, "failed to get SPA for %#llx: %d\n", dpa, rc);
+> +		return ULLONG_MAX;
+> +	}
+> +
+> +	pci_dbg(pci_dev, "PRM address translation: DPA -> SPA: %#llx -> %#llx\n=
+", dpa, spa);
+> +
+> +	return spa;
+> +}
+> +
+> +static u64 cxl_prm_to_hpa(struct cxl_decoder *cxld, u64 hpa)
+> +{
+
+> +	pci_dev =3D to_pci_dev(cxlmd->dev.parent);
+
+
+	return prm_cxl_dpa_spa(to_pci_dev(cxlmd->dev.parent), hpa);
+seem fine to me and shortens things a little.
+
+> +
+> +	return prm_cxl_dpa_spa(pci_dev, hpa);
+> +}
+> +
+> +static void cxl_prm_init(struct cxl_port *port)
+> +{
+> +	u64 spa;
+> +	struct prm_cxl_dpa_spa_data data =3D { .out =3D &spa, };
+> +	int rc;
+> +
+> +	if (!check_prm_address_translation(port))
+> +		return;
+> +
+> +	/* Check kernel (-EOPNOTSUPP) and firmware support (-ENODEV) */
+> +	rc =3D acpi_call_prm_handler(prm_cxl_dpa_spa_guid, &data);
+> +	if (rc =3D=3D -EOPNOTSUPP || rc =3D=3D -ENODEV)
+> +		return;
+
+So other error values are fine?  IF they don't occur no need to be explicit
+just check rc < 0 and return.
+
+> +
+> +	port->to_hpa =3D cxl_prm_to_hpa;
+> +
+> +	dev_dbg(port->host_bridge, "PRM address translation enabled for %s.\n",
+> +		dev_name(&port->dev));
+> +}
+> +
+> +void cxl_atl_init(struct cxl_port *port)
+> +{
+> +	cxl_prm_init(port);
+Why not just rename cxl_prm_init() to cxl_atl_init() and get rid of this wr=
+apper?
+
+> +}
+
 
