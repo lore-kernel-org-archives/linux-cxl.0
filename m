@@ -1,268 +1,259 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011029.outbound.protection.outlook.com [40.93.194.29])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E7B314A8E;
-	Mon, 15 Sep 2025 14:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.29
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757946867; cv=fail; b=ZSgIBlZao6Fsmd10M/TeTkmsyt5F/v1nPYyr0F66G3hNen4NL3OuXB3pBV2Ihsqhu+WFptImUXZbF09JDhQ7vzkMIgENT7QMxMhqBri1kxfz0YTQWosZQOMx9b2yazHLOngopf9IlV5oactKgFgQQg+eID92d12EVxoVci45ICg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757946867; c=relaxed/simple;
-	bh=p/VZON1NvfsTPde7pO7AHEoThUNWOp+t4sTO8PHmT6M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=dnVyTwzTjZeUe1F114hOibDXgVHNtPxMTasBUd5xW/EmQBsEc+0R6dmqcthStH/RE5K79aGLEO369YHRIIhEYsad23LDQAKKf2ArBPeEUWOQUrta366egYdZEt9HEacDsAEZjn0iCx2zvB1bNp9utguAh/Qu2DUplteTpy39Oew=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BgSdNvPI; arc=fail smtp.client-ip=40.93.194.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465F42D7DCE;
+	Mon, 15 Sep 2025 14:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757948304; cv=none; b=RH5kYK93JEIYTNew5LadHtfypCyHJ9zdhUF90aspH8Kkr9Tep4bko7gviyOjDJuGCTjULSFy11XefHgBhcVz/28+qQQ5IP8NllOSaAlMLCybYwgLdjiIcNB5xRILeIuzZYyGyAOOJIlBgcp8XpPXRc2mbt1Aa2V97xoyEY3ThSY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757948304; c=relaxed/simple;
+	bh=RZDbgiuYUemwihGWAOZNTM6teDV+Gwo6rUSUU0EUoVU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q7WSMVbFqxQIxgRxevd95ynjSx3Yr4gjnQT0/W2C2y2DGWn7Tf8oXYpjXBXju9ar5oZ699p9m2S67neHEqA4631k6ZdlRhJ1JQ3IqJ2YABJ4i2et9tB0tHtVvNt49KB30+4pUXQ0k3x4v9NBVa04clRml0UWMGOfxH9qbLDokkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nIH728GC; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BgSdNvPI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w/q1kqg7d7ctFBI/zK9lLnqh8AjDLmCNsuY5LQOet/RvaSn4blhi2b7gt3jNR8telINzeNVD5Q64QY5Hp+3o6QTVfu5K7x2y52jdT+eiqeA/ieRTpPOgFSpxwOjqioztXZGQ9EVRC3SMuRb03fn/d6hPpkABnNQ5ChGJfgu52dsOc5gXc76VcTeT9XQ48sl+cEB1b3CJG0kSOq7FSFLZTjyREvvWJlDnPu5B6BC7xqPGiCDoC6QEogZ0jKsOZ2/jcPoBrwPC3z6w85SvriUtO5FvKoojs8oqjhO4q0CJHGxZR5ycjdN3qBh2ioRJ0tvHPnKb7/GS+tH3WMkFrhc7UA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=w2OLPJGQr7Z+rVWzl8laX+IkMurJZ2I4ncppuXQbRPY=;
- b=KhqKhJ/3Cde1vw4E30jBiU46PfZ02BAj7ciN1A2+XwueIqb4ls4ZsZLqX8XVtUP0EsuCD+1Ztwko3YyWggx3n7sl20hjpXv0c1Y++oLcfwIEQvFuFlDrsuFi6iJr5bMXpaZ1LxflgC4OA8YP8ocuMJ/B70fUZKxSNWU0/vVHx+sc9+5UHxLrDL44oTYWfebT8W83vdisqtqRpImtsmjRFoPXX1TSUSmU92/jALVRNsK2Mi83LB87uTw8qPe5qT5tYeQ9rfyU0pBzaf31KmhoEVtz3PHrPFEsRy1awYfkndoAwL4cOX/ek3kBDFiflOXeEwh7zIoCtK+KTNFtdzMK0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w2OLPJGQr7Z+rVWzl8laX+IkMurJZ2I4ncppuXQbRPY=;
- b=BgSdNvPIN7Dtg7t4BYb6qqLQ2Dz1h7alCFqsxGx2ef8kgSI48cPDlEDn+AFW3SDDGrOMJbQtcjIyPieRsxmbITgisfoTWm7gSsidLNk5hqaASkd0jQ8bJO0iJc+CnXsHQ6cJO2OmqKA0pSulkvPJJKE9IWWjBNCgrkwRkVsjthl4cmwMSx6IW1mn7IwSnKGSPwtieGk2iT53BPNDJB9I2TsYdXGmaj/Mhk5LVoaMhjOcYyAFNK8L+BXEP95Pwb2lYTGSbgQN52Z7jxu2IlLOfowUN6LVoIGQ/xvjWXaqrIYL26b45zaNApGh3o6mHwTenSWSM7Ye67VVWPbcHkGTHw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
- by MW4PR12MB7213.namprd12.prod.outlook.com (2603:10b6:303:22a::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.22; Mon, 15 Sep
- 2025 14:34:18 +0000
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9115.020; Mon, 15 Sep 2025
- 14:34:17 +0000
-Date: Mon, 15 Sep 2025 11:34:14 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Matthew Wilcox <willy@infradead.org>, Guo Ren <guoren@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dan Williams <dan.j.williams@intel.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nIH728GC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757948304; x=1789484304;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=RZDbgiuYUemwihGWAOZNTM6teDV+Gwo6rUSUU0EUoVU=;
+  b=nIH728GCFG3p3joZggigaHXoDmtazosprbYwSkjoRzBixsimsDlFtUYK
+   3oG3R6TSKhks7oJTQllLldFMLrTOJRHopGbd+n2ZBSjobyZcZOTGITIul
+   xKrCbS/Ml8C3zvcp6sgwi80/gTOxyCTQ4/hPxFev9kglfbjnbZWrbz6g6
+   BxnHlB0kPDcdhcmHLtd1gcx3urFE6DQsa28PK+Eh3JxmjqsR8TMv25N2p
+   H6yvrH+EnAVpT6dpT/SyW5HBbWzYC/GD9p6JRKEFyQkzKghP0+oI2op/i
+   dy4Tu7AfBx2hTmmuuLAh3yqUV/rlVhU1YcCeOPALMz/rgEH5NeMBUNOMS
+   w==;
+X-CSE-ConnectionGUID: qluD5bkzSgKYY2rAOH16FA==
+X-CSE-MsgGUID: iZZjJu26QReEbM7BhKCfiQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11554"; a="70455746"
+X-IronPort-AV: E=Sophos;i="6.18,266,1751266800"; 
+   d="scan'208";a="70455746"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 07:58:22 -0700
+X-CSE-ConnectionGUID: ttUN8l+tTe+m0OoBWDrUvA==
+X-CSE-MsgGUID: dUMgHo4DQ7e6HUep6Aggog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,266,1751266800"; 
+   d="scan'208";a="174274000"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.245.103])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 07:58:16 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@redhat.com>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	James Morse <james.morse@arm.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-csky@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org, linux-mm@kvack.org,
-	ntfs3@lists.linux.dev, kexec@lists.infradead.org,
-	kasan-dev@googlegroups.com
-Subject: Re: [PATCH v2 08/16] mm: add ability to take further action in
- vm_area_desc
-Message-ID: <20250915143414.GJ1024672@nvidia.com>
-References: <cover.1757534913.git.lorenzo.stoakes@oracle.com>
- <d85cc08dd7c5f0a4d5a3c5a5a1b75556461392a1.1757534913.git.lorenzo.stoakes@oracle.com>
- <20250915121112.GC1024672@nvidia.com>
- <77bbbfe8-871f-4bb3-ae8d-84dd328a1f7c@lucifer.local>
- <20250915124259.GF1024672@nvidia.com>
- <5be340e8-353a-4cde-8770-136a515f326a@lucifer.local>
- <20250915131142.GI1024672@nvidia.com>
- <c9c576db-a8d6-4a69-a7f6-2de4ab11390b@lucifer.local>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c9c576db-a8d6-4a69-a7f6-2de4ab11390b@lucifer.local>
-X-ClientProxiedBy: BYAPR01CA0022.prod.exchangelabs.com (2603:10b6:a02:80::35)
- To PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ALOK TIWARI <alok.a.tiwari@oracle.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Gregory Price <gourry@gourry.net>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Robert Richter <rrichter@amd.com>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: [PATCH v6] cxl: docs/driver-api/conventions resolve conflicts between CFMWS, Low memory Holes, Decoders
+Date: Mon, 15 Sep 2025 16:57:20 +0200
+Message-ID: <20250915145810.16872-1-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|MW4PR12MB7213:EE_
-X-MS-Office365-Filtering-Correlation-Id: c2eb574c-df41-4d7d-a0bb-08ddf464f360
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?J0fgzA3EZhDGT7KbfP8CmsywsIxKJJVvO2ZE9bGNw3Q/f2nhzl/evKYMDZ0K?=
- =?us-ascii?Q?5oDGq400RO1n/B4DIouUv+J4gk9rvdKMyDNUqnkctgYHpW99au5EiX6svH+Z?=
- =?us-ascii?Q?X6uwd6GedpE8y1sOxbU4hG5Nv/g+p59WJ6Ran3+HbKtLMqVEvwtyHprkup0G?=
- =?us-ascii?Q?L4hH4SsCITv12/C9g4PdZhsmAji95/qjColkRsM2hUZNcKBHMxfkkj89ofJI?=
- =?us-ascii?Q?BAk8wTkiUWz4TF4cm55a5WkPz65eU3JmNfiGqHm7Ie6iODS9oIXhdZZxlG5u?=
- =?us-ascii?Q?aYiIQi5B3oNBG7KqLH3mvUN+6lljkbkRS8+VyFSq6BD96wW/pz2bNEHtEByS?=
- =?us-ascii?Q?2IUJ3Y/0/TImRFH8gikcmCD/y27a4gt0lMV45CdXbEKblstTG/X5LDzCWans?=
- =?us-ascii?Q?/F8uJzs9ufYM78XE5d5boAE7SKf6XNnfhKbecpT2W26Vt3a6alHZa5ICx5E4?=
- =?us-ascii?Q?xzHyQOE2gfDOnsPUxAfWAxNvBC0o7MtC+IYvUH0FyYL9KAJbnHRbstlZB7cr?=
- =?us-ascii?Q?Jjs7YZDDkI/xNfdMJvrmmHt/o86+FQnST283wiqbSfX3dRkDRgTCQ9Xl0M63?=
- =?us-ascii?Q?PRMDFEKDk2tvjR2mz9DGcnazhNvWeKbCM5LKImHz5JlTI5xSZJtFMn5+m4El?=
- =?us-ascii?Q?7sIx5mEr1Bpobz0gG+uLmHdKKcb2JkZu7oiSxb4/n78KO66FM2lPOU8CJtWF?=
- =?us-ascii?Q?wDS7Q8mJcbnjDqK3xQIXrzcYOPD8O7WIuwYqAqgviK6xgvALVHqx75G1Few8?=
- =?us-ascii?Q?rQiqCbGcx2dkLpq/qe3fYjLOpK/6b4NzPiOhY26QfAff45JG6G28UfKYAMcW?=
- =?us-ascii?Q?8l7A13LMzBYtjaDC0YpLPjSz+lsxZTSGl8iewfhhfNhGfBHVdA21zCE5vnhT?=
- =?us-ascii?Q?Ljm9CHsLmRxWdomaXeAdsx6pWOWhDSZyjuKWEF12MF90x4T+P+wtO+OZ7IlR?=
- =?us-ascii?Q?ZaMe7qbwpQRUQwhUMgmd6ErDjx6w03zI1csGM4yprl48xZzNtbBH35bK+yzi?=
- =?us-ascii?Q?MQjh4qyyNFbJEp17TeB7iDsHAGf235EeH7s4Fo5gMA6Xzl9gotrzBmcfeoWI?=
- =?us-ascii?Q?d4BcoqdWbK7T5ni2GcLxr3sRrGgFHwtKDEFlsQcBAKRjxxzgvBKAg0GJYcHY?=
- =?us-ascii?Q?fgseRh15/pzRbUEbkrFuXIskr0rf46kEKCd3Wqum46yrLhS4YDYrxx0vKtKk?=
- =?us-ascii?Q?8D5KLnBbMg5wS509/16GtdXZU3zrajZQSVUyk1yTa88QfhiymthLKulNK6YP?=
- =?us-ascii?Q?nKHC2Rv888t6e9cDLWt1WyeYxvVRV1JS/McPEaM8Lt0yzmmFblaYJdga139e?=
- =?us-ascii?Q?9mHbKduwb3Ro7ZZG5+9eN4XyKZAjYhQTWX6M21UWOe71yCDc6cSfNkZ4qz/4?=
- =?us-ascii?Q?lqmhEBGn49dYQWg66wddSl1nQ2l3Iv5HYESMjyWRUW7dKyNWzL7h2cmM5Vyi?=
- =?us-ascii?Q?KQeg+Aew84U=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/3WCFB0Gi/gwIic4Rv8tIjZqRx6Q/sGGJ5Qm6p67L9OhcuF316JvcdNoB0Zv?=
- =?us-ascii?Q?C4rLP8tZo0Jhy8UwiUyPDPS7BnokeqAXJ/PRnjNP3+hX1qeo6sCD9FC3CpM2?=
- =?us-ascii?Q?lP0SbNpOWvv3F4+X0wGNvsgm9WloWB4XWrgLMV9mtdLZyYcWG+duAsKP8wFI?=
- =?us-ascii?Q?dEc/3gdTdbNS9kqicJkAs3lDbeRg+rg5NIzKbIdCyJgGqHoVoSKMjr8rWx9h?=
- =?us-ascii?Q?savJcpcNanRKORwcB9+U96gwqpPNn7ctMESLs0RRkrwN/ALoV2pKy4XsUb0f?=
- =?us-ascii?Q?T4Xk91N/HsF4dfymJrT4PyRyMCB7IaGvkBJO+x83RAKTcpV+nZSrJSu8y1Xu?=
- =?us-ascii?Q?oA34OR2fZvbJav/qyShK+/wD0wD3Rox6c216DButK3DWll7puwEJQBX2UHBm?=
- =?us-ascii?Q?xy1kulgBJNXrO9w6r5hIh5xbnjN3zmv0g2i3TaIAr0a0RlUawSmHmR6Y4hoN?=
- =?us-ascii?Q?g1enrb0Gd2w8L5ZIP7RXCyQl+yExNJPY3P5/QsiXEsFBx5W7qpCP9y3LJ6CI?=
- =?us-ascii?Q?O2ftPOJfJfEPE6ncAOlz+d9ngPfbjh4+GxkKQr3J7Em4DBnfrJL/c5zY1LPf?=
- =?us-ascii?Q?wstDSaLl6ZK7aD+Qe4obdZqaznmxQ7AQ26BfYny7Z2pCD7eKqJE9V8+1y7jo?=
- =?us-ascii?Q?Cy2X7f7Pe2sm/ZXZpXICyNwkI7bXGFqEUmsLiPL7BWWsyRaL4Bf8pMJh6UDj?=
- =?us-ascii?Q?AU8XvlcclK81GLsEsoZhuA4KeU4cFYOwOg9o9U2Y1IuK+Rfjts1f/c92dE3f?=
- =?us-ascii?Q?d+oUeiwc3iveRXZ4sm9Fl0lZ1KnG+iP2N75Ii6pfm/fA1OIJ4JsLBjdCRdcG?=
- =?us-ascii?Q?tlkz8EweM9xQAeMIKRakoGxS2exPncZ6UU7dwPgOKQoSQ6r6Y7IEBh5tCbsr?=
- =?us-ascii?Q?OVxfiRdOfUpoRjdjF/6SJzNHzixxcULmWxRV8f9xWVaGlazPw1MCSWs+a8tx?=
- =?us-ascii?Q?C8utKH/bDXbwFMPDzOtIASwW8grrNTjCe5ipBnPeZAB6+cY2SG+UHwAVD84b?=
- =?us-ascii?Q?XuGxXURuPgV6GP3wsTBB5USxJWh39uQwlNiaSxpq4nIecECuWz6UoOlfwJ/Y?=
- =?us-ascii?Q?1uCAkNFM4T01plaUWjz5dyVTn6Uj9FlOSOBPfgcAeLOLXQVbiSOAq63qnwsB?=
- =?us-ascii?Q?oN5O2V+T2MRIG7mC1v6i/s0fytTnG1Pn5fhbiHWexGPUvwTbVlmbD36rAH2u?=
- =?us-ascii?Q?wm0dzulxmi5et3HAL8onV1W53DQgx6+ZXQmHL5Edzlu50Co6Jeim89hRgIcz?=
- =?us-ascii?Q?heZwAjVS+ewdGlAPwMNE12Ar1BV3lgNM72AUEdUQpQ3X4aTVgzY7wiDgfbJi?=
- =?us-ascii?Q?L1mUfEZZ7CXQ0NjiB827RFrbkh0cS5LhQoby/BjaqVACOluDAyqqfUrNAUQK?=
- =?us-ascii?Q?xIJpxn5F510cl3gnQlF13EGu1jv8pEf+z6kx5FTo73xPnFax/j/DqCVgwg66?=
- =?us-ascii?Q?IVIRidoFiaTrNbC03o8TnbL8GRQG/z9nG0KBfPLmWSCnnFRsHiH8/G91GYwX?=
- =?us-ascii?Q?TAg71dOv4QB9gZO9cHVntZSZaY110H3x5jEgMhes/qNmJNULMOUuvkh/CFBS?=
- =?us-ascii?Q?yMQ0+MSGOlIIItLUz6RTrAm+k+dvHmwygFweqt2B?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2eb574c-df41-4d7d-a0bb-08ddf464f360
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2025 14:34:17.5723
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nuekJOcIltSv64PXnhJ9nduz2Ux8IGU0sDYcCkCUw4OJvfDQhyOvEIyOeWPaznQR
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7213
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 15, 2025 at 02:51:52PM +0100, Lorenzo Stoakes wrote:
-> > vmcore is a true MIXEDMAP, it isn't doing two actions. These mixedmap
-> > helpers just aren't good for what mixedmap needs.. Mixed map need a
-> > list of physical pfns with a bit indicating if they are "special" or
-> > not. If you do it with a callback or a kmalloc allocation it doesn't
-> > matter.
-> 
-> Well it's a mix of actions to accomodate PFNs and normal pages as
-> implemented via a custom hook that can invoke each.
+Add documentation on how to resolve conflicts between CXL Fixed Memory
+Windows, Platform Low Memory Holes, intermediate Switch and Endpoint
+Decoders.
 
-No it's not a mix of actions. The mixedmap helpers are just
-wrong for actual mixedmap usage:
+Reviewed-by: Gregory Price <gourry@gourry.net>
+Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+---
 
-+static inline void mmap_action_remap(struct mmap_action *action,
-+		unsigned long addr, unsigned long pfn, unsigned long size,
-+		pgprot_t pgprot)
+v5 -> v6: Extend "Summary of The Change" with detailed explanation about
+	  the mismatch between the Root and the other HDM Decoders HPA
+	  range sizes (Gregory)
+	  Clarify that this change is exclusively intended to enable x86
+	  platforms which map CXL memory under 4GB (Gregory)
+
+v4 -> v5: Fix grammar and syntactic errors (Dave)
+	  Spell out CXL, OSPM, on first use (Dave)
+	  Rewrite a few sentences for better clarity (Dave)
+	  Talk about SPA vs HPA and SPA's relationship to CFMWS (Dave)
+	  Adjust a table for htmldocs output (Bagas)
+	  Use bullet list (Bagas)
+	  Correct the CFMWS[1] HPA range to not overlap CFMWS[0] (Robert)
+	  Correct the CFMWS[1] HPA range to the NIW*256MB rule (Robert)
+
+v3 -> v4: Show and explain how CFMWS, Root Decoders, Intermediate
+	  Switch and Endpoint Decoders match and attach Regions in
+	  x86 platforms with Low Memory Holes (Dave, Gregory, Ira)
+	  Remove a wrong argument about large interleaves (Jonathan)
+
+v2 -> v3: Rework a few phrases for better clarity.
+	  Fix grammar and syntactic errors (Randy, Alok).
+	  Fix semantic errors ("size does not comply", Alok).
+	  Fix technical errors ("decoder's total memory?", Alok).
+	  
+v1 -> v2: Rewrite "Summary of the Change" section, 3r paragraph.
+
+ Documentation/driver-api/cxl/conventions.rst | 135 +++++++++++++++++++
+ 1 file changed, 135 insertions(+)
+
+diff --git a/Documentation/driver-api/cxl/conventions.rst b/Documentation/driver-api/cxl/conventions.rst
+index da347a81a237..6bce7c614fff 100644
+--- a/Documentation/driver-api/cxl/conventions.rst
++++ b/Documentation/driver-api/cxl/conventions.rst
+@@ -45,3 +45,138 @@ Detailed Description of the Change
+ ----------------------------------
+ 
+ <Propose spec language that corrects the conflict.>
 +
-+static inline void mmap_action_mixedmap(struct mmap_action *action,
-+		unsigned long addr, unsigned long pfn, unsigned long num_pages)
++
++Resolve conflict between CFMWS, Platform Memory Holes, and Endpoint Decoders
++============================================================================
++
++Document
++--------
++
++CXL Revision 3.2, Version 1.0
++
++License
++-------
++
++SPDX-License Identifier: CC-BY-4.0
++
++Creator/Contributors
++--------------------
++
++- Fabio M. De Francesco, Intel
++- Dan J. Williams, Intel
++- Mahesh Natu, Intel
++
++Summary of the Change
++---------------------
++
++According to the current Compute Express Link (CXL) Specifications (Revision
++3.2, Version 1.0), the CXL Fixed Memory Window Structure (CFMWS) describes zero
++or more Host Physical Address (HPA) windows associated with each CXL Host
++Bridge. Each window represents a contiguous HPA range that may be interleaved
++across one or more targets, including CXL Host Bridges.  Each window has a set
++of restrictions that govern its usage. It is the Operating System-directed
++configuration and Power Management (OSPM) responsibility to utilize each window
++for the specified use.
++
++Table 9-22 of the current CXL Specifications states that the Window Size field
++contains the total number of consecutive bytes of HPA this window describes.
++This value must be a multiple of the Number of Interleave Ways (NIW) * 256 MB.
++
++Platform Firmware (BIOS) might reserve physical addresses below 4 GB where a
++memory gap such as the Low Memory Hole for PCIe MMIO may exist. In such cases,
++the CFMWS Range Size may not adhere to the NIW * 256 MB rule.
++
++The HPA represents the actual physical memory address space that the CXL devices
++can decode and respond to, while the System Physical Address (SPA), a related
++but distinct concept, represents the system-visible address space that users can
++direct transaction to and so it excludes reserved regions.
++
++BIOS publishes CFMWS to communicate the active SPA ranges that, on platforms
++with LMH's, map to a strict subset of the HPA. The SPA range trims out the hole,
++resulting in lost capacity in the Endpoints with no SPA to map to that part of
++the HPA range that intersects the hole.
++
++E.g, an x86 platform with two CFMWS and an LMH starting at 2 GB::
++
++ +--------+------------+-------------------+------------------+-------------------+------+
++ | Window | CFMWS Base |    CFMWS Size     | HDM Decoder Base |  HDM Decoder Size | Ways |
++ +========+============+===================+==================+===================+======+
++ |   0    |   0 GB     |       2 GB        |      0 GB        |       3 GB        |  12  |
++ +--------+------------+-------------------+------------------+-------------------+------+
++ |   1    |   4 GB     | NIW*256MB Aligned |      4 GB        | NIW*256MB Aligned |  12  |
++ +--------+------------+-------------------+------------------+-------------------+------+
++
++HDM decoder base and HDM decoder size represent all the 12 Endpoint Decoders of
++a 12 ways region and all the intermediate Switch Decoders.  They are configured
++by the BIOS according to the NIW * 256MB rule, resulting in a HPA range size of
++3GB. Instead, the CFMWS Base and CFMWS Size are used to configure the Root
++Decoder HPA range that results smaller (2GB) than that of the Switch and
++Endpoint Decoders in the hierarchy (3GB).
++
++This creates 2 issues which lead to a failure to construct a region:
++
++1) A mismatch in region size between root and any HDM decoder. The root decoders
++   will always be smaller due to the trim.
++
++2) The trim causes the root decoder to violate the (NIW * 256MB) rule.
++
++This change allows a region with a base address of 0GB to bypass these checks to
++allow for region creation with the trimmed root decoder address range.
++
++This change does not allow for any other arbitrary region to violate these
++checks - it is intended exclusively to enable x86 platforms which map CXL memory
++under 4GB.
++
++Despite the HDM decoders covering the PCIE hole HPA region, it is expected that
++the platform will never route address accesses to the CXL complex because the
++root decoder only covers the trimmed region (which excludes this).  This is
++outside the ability of Linux to enforce.
++
++On the example platform, only the first 2GB will be potentially usable, but
++Linux, aiming to adhere to the current specifications, fails to construct
++Regions and attach Endpoint and intermediate Switch Decoders to them.
++
++There are several points of failure that due to the expectation that the Root
++Decoder HPA size, that is equal to the CFMWS from which it is configured, has
++to be greater or equal to the matching Switch and Endpoint HDM Decoders.
++
++In order to succeed with construction and attachment, Linux must construct a
++Region with Root Decoder HPA range size, and then attach to that all the
++intermediate Switch Decoders and Endpoint Decoders that belong to the hierarchy
++regardless of their range sizes.
++
++Benefits of the Change
++----------------------
++
++Without the change, the OSPM wouldn't match intermediate Switch and Endpoint
++Decoders with Root Decoders configured with CFMWS HPA sizes that don't align
++with the NIW * 256MB constraint, and so it leads to lost memdev capacity.
++
++This change allows the OSPM to construct Regions and attach intermediate Switch
++and Endpoint Decoders to them, so that the addressable part of the memory
++devices total capacity is made available to the users.
++
++References
++----------
++
++Compute Express Link Specification Revision 3.2, Version 1.0
++<https://www.computeexpresslink.org/>
++
++Detailed Description of the Change
++----------------------------------
++
++The description of the Window Size field in table 9-22 needs to account for
++platforms with Low Memory Holes, where SPA ranges might be subsets of the
++endpoints HPA. Therefore, it has to be changed to the following:
++
++"The total number of consecutive bytes of HPA this window represents. This value
++shall be a multiple of NIW * 256 MB.
++
++On platforms that reserve physical addresses below 4 GB, such as the Low Memory
++Hole for PCIe MMIO on x86, an instance of CFMWS whose Base HPA range is 0 might
++have a size that doesn't align with the NIW * 256 MB constraint.
++
++Note that the matching intermediate Switch Decoders and the Endpoint Decoders
++HPA range sizes must still align to the above-mentioned rule, but the memory
++capacity that exceeds the CFMWS window size won't be accessible.".
+-- 
+2.50.1
 
-Mixed map is a list of PFNs and a flag if the PFN is special or
-not. That's what makes mixed map different from the other mapping
-cases.
-
-One action per VMA, and mixed map is handled by supporting the above
-lis tin some way.
-
-> > I think this series should drop the mixedmem stuff, it is the most
-> > complicated action type. A vmalloc_user action is better for kcov.
-> 
-> Fine, I mean if we could find a way to explicitly just give a list of stuff
-> to map that'd be _great_ vs. having a custom hook.
-
-You already proposed to allocate memory to hold an array, I suggested
-to have a per-range callback. Either could work as an API for
-mixedmap.
-
-> So maybe I should drop the vmalloc_user() bits too and make this a
-> remap-only change...
-
-Sure
- 
-> But I don't want to tackle _all_ remap cases here.
-
-Due 4-5 or something to show the API is working. Things like my remark
-to have a better helper that does whole-vma only should show up more
-clearly with a few more conversions.
-
-It is generally a good idea when doing these reworks to look across
-all the use cases patterns and try to simplify them. This is why a
-series per pattern is a good idea because you are saying you found a
-pattern, and here are N examples of the pattern to prove it.
-
-Eg if a huge number of drivers are just mmaping a linear range of
-memory with a fixed pgoff then a helper to support exactly that
-pattern with minimal driver code should be developed.
-
-Like below, apparently vmalloc_user() is already a pattern and already
-has a simplifying safe helper.
-
-> Anyway maybe if I simplify there's still a shot at this landing in time...
-
-Simplify is always good to help things get merged :)
- 
-> > Eg there are not that many places calling vmalloc_user(), a single
-> > series could convert alot of them.
-> >
-> > If you did it this way we'd discover that there are already
-> > helpers for vmalloc_user():
-> >
-> > 	return remap_vmalloc_range(vma, mdev_state->memblk, 0);
-> >
-> > And kcov looks buggy to not be using it already. The above gets the
-> > VMA type right and doesn't force mixedmap :)
-> 
-> Right, I mean maybe.
-
-Maybe send out a single patch to change kcov to remap_vmalloc_range()
-for this cycle? Answer the maybe?
-
-Jason
