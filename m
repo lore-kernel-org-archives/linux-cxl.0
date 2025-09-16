@@ -1,309 +1,275 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E717C215F5C
-	for <linux-cxl@vger.kernel.org>; Tue, 16 Sep 2025 08:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758010101; cv=none; b=XWHEanHIwR3fdCzkO9vQdwKcopP9dwfj1DY8LL5Oy3IjiQS8XGxt3/K0izLUE+g+JB6KJYq/gf0zIVPZlA1QeygbD8UGWW2jK/CaFiJ1juc/KTl6vEF/vRr71k+W66eFnlD8MwdIOz+zKlYJfmVsxg6x/0P2Y25XrvvyWe01ROE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758010101; c=relaxed/simple;
-	bh=O1ZADgPRltYfXX5Pokcye5DQAJOdoNoMRK77122/yPc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=kpJKGIjbeAwQBBjrRotIrxSHrlE2jhsjeg7/7YBgSQwiLEmkCrg9OSlS2G8/Q7pQlBq+cOB2f9eW6Ul+fFfbwhGKFQuE3GsPwMSePbi1WP7ubOpmIYsn9pmH+aFVWKsak7GeJGXITpgY53PDFE01v9myNXE+BXpP1HkAgWyd5go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=o296Rzvf; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF56034DCCE;
+	Tue, 16 Sep 2025 14:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758032004; cv=fail; b=F2EV3u66Lra+ix0UOAHlanHRjaJ+KX+Pfnsb2mTqamtfrgqWfYZb7lwjFzSXTTeXBOEl8MY3JqMpogAF68YirJuP2jHGmCvhZctY+uGB8GnMaPCee5SZxEkOFy6AMttLNSUOopAKY4ogKdTGYKm8KC8QID1mhsYoim1Wi/SFBfw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758032004; c=relaxed/simple;
+	bh=2FqMSAQYa+pEc96t/HHaHyWQrWO378nIfRETs28eOO4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pd/VnT0oFDU3icGKqBGA7/G8WpDVGFHBaBp3ef9KRTSKrP5Gl3UuvI+BR0iuMuSHmyHTt/mBzsUQ5eT6h/olPQAA0EsldbGOZTe8XyuBacjk3AfOpL7JI/QKPjgdQyFMIC5oTDLRhnJaKzbMXQk1cVtEdQxes+zZnUbEB50DphU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=LBc5rpnY; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=X5kx7Q0B; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o296Rzvf"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250916080811epoutp04de37dd1f25034fdb61e2053ae08cc615~ltN0joWl-0958409584epoutp04a
-	for <linux-cxl@vger.kernel.org>; Tue, 16 Sep 2025 08:08:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250916080811epoutp04de37dd1f25034fdb61e2053ae08cc615~ltN0joWl-0958409584epoutp04a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1758010091;
-	bh=ZO/Nf5qjiJHQPfjfy5r4A/U1+/AjbWOiZyGr4GBOwO0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o296RzvfiZVULrlzC9OU4+3PnyNUcajCcMqVufi9D5akykXogP70z5Tq9blB53Iw/
-	 oKDeoU7Qh/Vk6pxgBQrukq8lp/8gdIuvfGIgIlrUa5kz/RVamtqD1f+F86jlJg+MTe
-	 4IBusOx/xsTR9jRZt7I5Ood/h/nAVwpnWc9mujH0=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250916080810epcas5p4381dfbeead6ff246633705a09954462e~ltN0IZQAu2367123671epcas5p4G;
-	Tue, 16 Sep 2025 08:08:10 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.92]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4cQvfK6zGsz3hhT3; Tue, 16 Sep
-	2025 08:08:09 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250916080808epcas5p23113551a9a0719d68a8c3efff15209cc~ltNyQRoBI0952709527epcas5p2e;
-	Tue, 16 Sep 2025 08:08:08 +0000 (GMT)
-Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
-	by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250916080807epsmtip1020a35ae0f2556d195ec225b0c255939~ltNw3mds41302713027epsmtip1X;
-	Tue, 16 Sep 2025 08:08:07 +0000 (GMT)
-From: Arpit Kumar <arpit1.kumar@samsung.com>
-To: qemu-devel@nongnu.org
-Cc: gost.dev@samsung.com, linux-cxl@vger.kernel.org, dave@stgolabs.net,
-	Jonathan.Cameron@huawei.com, vishak.g@samsung.com, krish.reddy@samsung.com,
-	a.manzanares@samsung.com, alok.rathore@samsung.com, cpgs@samsung.com, Arpit
-	Kumar <arpit1.kumar@samsung.com>
-Subject: [PATCH v4 2/2] hw/cxl: Add Physical Port Control (Opcode 5102h)
-Date: Tue, 16 Sep 2025 13:37:36 +0530
-Message-Id: <20250916080736.1266083-3-arpit1.kumar@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250916080736.1266083-1-arpit1.kumar@samsung.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LBc5rpnY";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="X5kx7Q0B"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58GCvvlq022050;
+	Tue, 16 Sep 2025 14:12:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=7OGL0AwbXVcbjkgF6o8i+Ln7SRugtu8D6R9H082ELCY=; b=
+	LBc5rpnYbYbj1P9txw8xJVz7c9iBQRnYLR8VdnhRSCYYOFF/yIwoaD5oqyqTVGk9
+	6dyhBVonEtMrq5A0P7XacP0tdqKjHAIEYom+Xw5PJ2AiMAsD+lpjkZhNcZW7htJ3
+	QCG1tk3X/NwWO8zKYO6Bz3iGOkw6Fmzp8QAVI/hVSZxvb3sHrQz1PJaLcQ1EQoCR
+	lZg6dojGRSXKyjuV18wD0tyJOLwUhTOpC3Y19hD6LN5yZb5y+ZG1Cc0Klxvko52d
+	q2q3/Dhf1VRrc0turCae7Op14MclAeks3AUoTxFl3f45GbfGzqFartRbqITVb2U+
+	jUej6NNEpCf6k9OJeD8qYg==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 494yd8msmw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 16 Sep 2025 14:12:36 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 58GDR48s001486;
+	Tue, 16 Sep 2025 14:12:35 GMT
+Received: from dm5pr21cu001.outbound.protection.outlook.com (mail-centralusazon11011048.outbound.protection.outlook.com [52.101.62.48])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 494y2cphkx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 16 Sep 2025 14:12:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ev3ZDOSbJvr1dMEUSiGvBnMpQcqPGm6B5MaFMeQJ2byQH/5QwgfAv8jT+ObdIpILiPPTId/Et632+ZBbt4ynNaWKUzT0bR6Mjua8bc/wy1A1mXtelszwFLXjM4mydijXMFmBk2jtrL9c9fcrZ5lYcFxneKUFkr0RAQOV4PPO/oI9KOfzfgb1avUBj1g/YUKvOSQwVi2BPGGTp94gyQJR2eMGfL248B2dbWB87mgFp420cmCHnvsrjprYIIAOom1TZwdGaybxOrYikE1toVwia2E0M19X/AHm8qgXmrbJacUV1/2fhAwzOMguLyDk3b1yC8l/WKOXR3XaaGg3NIOUJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7OGL0AwbXVcbjkgF6o8i+Ln7SRugtu8D6R9H082ELCY=;
+ b=pQFWYmSpKrsXFwNwuBhn2IU4Zg60sM6GMqRrqXkDSVCiahOl7RSrq/q7l4Ij5WjS/erOqghjps8j2d/sY8SiG8Se/yJ2eFY8KUDoPoHL+c2fyQc6k5DbCU2Fx8t8PquZbTg+N5irHzGritM/3sYegnA8mKJo10UlYB+1tDtXiMNyG4k7RFvo4VwQXkm7+IR9Wx3eyjD8PGCyp3eaSZrDy/H4JYa2qbeKemNq1qk12ptqncTH8dlcwCSY+B4rsw7Bd5MvAsSy6wzy0fRfcjZypigHPdabBlwv6n2FfZeuiswNpZuRJzk5kJtwYqdsmIls4au6Zi1b0tC9GRvyJmpUdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7OGL0AwbXVcbjkgF6o8i+Ln7SRugtu8D6R9H082ELCY=;
+ b=X5kx7Q0B6VqJ8XROi96HLwEnavvKaIWY86qhb0f7cU5p9ax49v53UFcg8BxcCxzG9FDcGvk0RiTdvk2cD46wAP6u5JlzhXjLU7ZVqBeUrI7TLudNGDU41eP8hjImi49eD5WC/sjHf+kzQ70m5JXsoiydwFubtFlfxrKeMLQsGIQ=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by LV3PR10MB8108.namprd10.prod.outlook.com (2603:10b6:408:28b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.22; Tue, 16 Sep
+ 2025 14:12:30 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.9115.022; Tue, 16 Sep 2025
+ 14:12:29 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
+        Guo Ren <guoren@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+        Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
+        ntfs3@lists.linux.dev, kexec@lists.infradead.org,
+        kasan-dev@googlegroups.com, Jason Gunthorpe <jgg@nvidia.com>,
+        iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>,
+        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH v3 01/13] mm/shmem: update shmem to use mmap_prepare
+Date: Tue, 16 Sep 2025 15:11:47 +0100
+Message-ID: <cfefa4bad911f09d7accea74a605c49326be16d9.1758031792.git.lorenzo.stoakes@oracle.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <cover.1758031792.git.lorenzo.stoakes@oracle.com>
+References: <cover.1758031792.git.lorenzo.stoakes@oracle.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO4P123CA0546.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:319::17) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250916080808epcas5p23113551a9a0719d68a8c3efff15209cc
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250916080808epcas5p23113551a9a0719d68a8c3efff15209cc
-References: <20250916080736.1266083-1-arpit1.kumar@samsung.com>
-	<CGME20250916080808epcas5p23113551a9a0719d68a8c3efff15209cc@epcas5p2.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|LV3PR10MB8108:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1b25b605-ef53-41d7-8062-08ddf52b1221
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?avSaSNDBm8Sd0YE7sGOSWCFijHppfMlljV3fz+7KG58jjGA5UDqIbw3IHQmU?=
+ =?us-ascii?Q?Ksy17K8u4OfIl2txigZzLd6DXv7EGoC4dkLvbWAIgQUKZNcFwfh1CVOjjIx4?=
+ =?us-ascii?Q?SqmXHwBGD42enqLVGF50czwcweriYcU6iekDcl6gSqruZWxqNg6XgPOl0piB?=
+ =?us-ascii?Q?NoAj4mXjC9NRT7JEW2/IqJGPKAFHlD89LL8quWMEnx1wedrDhTSRi/rPRWkH?=
+ =?us-ascii?Q?VuKdaohKC63baKhS3uTYDNPNNSZXkGjsiot2TjFvNW3dwT8rQd+uEqtR9XEb?=
+ =?us-ascii?Q?OsMV1hDg84bfTk/kueO24WwIDyqvx5v8cQKFX+qMBCArbmOHeuLIUtyd7FrQ?=
+ =?us-ascii?Q?AJgazTfqD1dKkXzrC6bnyFnxAWDWW95OqSJPEFx7HOLUZO3TpHtZQve1Dn1u?=
+ =?us-ascii?Q?ikOrRGj79IFqMAliKorfZwgMFZGhjgvig7Wk+I3RjjaxWqE9Nyhz+bFCKrAH?=
+ =?us-ascii?Q?RXlsyiUFykjLvG2d/gIkQx8h1vmWKTTWIjbcNN7CbSHt6T5xBd0iWUIrxe6F?=
+ =?us-ascii?Q?J5jIHZD1BWR2V092GW9M5o/uWyhiyQDDaoCCkQ1z7CIeVvtJA9+Radhw2xXi?=
+ =?us-ascii?Q?dX2UeJcFNRC3c/VSgaLv/PV3uo5ElIYFoxYUpcZS52bBtX7h+pfsTJ8cozDJ?=
+ =?us-ascii?Q?VTaM6E2I0GLTZZ0uj6kav3aT2Z7vd/tlI2lvdrX5PWhV7BdsQOoysdr48MNz?=
+ =?us-ascii?Q?Bb1wMkdxy95/kAq+UcAWX1fwbY5RHWuoZ2KNgzMEkXpeSA7sUpK/hYDF/lJv?=
+ =?us-ascii?Q?UPnpnY4S1zeGAR3AAjaeXS9c3B5+xjg6Dh4rVfHByA2kZ+RnTddM/fJAT+SO?=
+ =?us-ascii?Q?Mxn3+WZvZ3yFenn0Qx8i3DNZKNdHvKhJIl3a4jU8Ak6XmCLFBtU/VxBoooYW?=
+ =?us-ascii?Q?MEkJAPGLFs+70YEMgXaXvWEztw/kwY2TI/p4anJs7P1NUwlc4qxx7gR3VXYn?=
+ =?us-ascii?Q?dTQP5m5AcocCl/nrTDzLF/PPoWbGeFCbNLoVWUjrvgPbgB8ITh/nEN4E4thB?=
+ =?us-ascii?Q?pXZwfzdpP4D/JzCnwkk48rqkRDfUPHq9k8tH4dyULJA/FBBWIFtDHMMnT/Xi?=
+ =?us-ascii?Q?dgTRv92lWzpNJBifW9+bno1RDmApgeCwC27DksD8jIc+eu+vdx4fppjPxd4H?=
+ =?us-ascii?Q?aT+rQpCfI5WxP68YEMGiVASNnNdQudZ+nAWe2NfPAASur29MfZOBdXdKtjaJ?=
+ =?us-ascii?Q?s1APdUW4kEnQR8LDytP4s8tT30nJU/bbXdtAnqVV++fkW6I4MdM31VapNyvV?=
+ =?us-ascii?Q?JNmQkvOAi02hri2Ai/Eo4iM+oLpPkngkVLWHC7VmjXIqEikV/lPNf+uzasaH?=
+ =?us-ascii?Q?X6AX9nqk0FsrYCKB9V/25e/n6EhGMgKohrlS53DuFgnFEfQyydaSYWjc4fRM?=
+ =?us-ascii?Q?fn3Zn4vyzLNob4Zjka75HRgaOJVaKBUg/QFqG7dxmpxOdXLIssDP/hqi2AUN?=
+ =?us-ascii?Q?iFq+/IEN9ho=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?14XkaNNf2z2sqPcIsB/chfrpxxNA1bwk2h+RiJRs/L62FI2XbYIfrfNQJ2SD?=
+ =?us-ascii?Q?Dr2lDFb3im3IbnSq8jEDqE1gpX4FbiB1lK01ocRLNBUkLZhIHLhCfCoh4/W4?=
+ =?us-ascii?Q?ksekVRL0tsd858ktP0QtN8HI9/dMQ2MS7cMjUYJyEk1gFDUbTvmkrxKa+dut?=
+ =?us-ascii?Q?tfTOJ9CEiL91qKbxjHH9WHg34xhoD1iJRUIptuRnwNTRTxuN09l+GoWXP6e9?=
+ =?us-ascii?Q?qXd0ZCarz82wJwkg6bbBHFi+OEATeMt51IxbHTCZ62XoDdIC/s4ZpIGebdNT?=
+ =?us-ascii?Q?98sb9AtXo6e00r1cpICW9k0noRacuhwxcmrYY/dhBGWVgYySbRjqGNIEfxBC?=
+ =?us-ascii?Q?AYfdrVyCVNXuA8wRzYvhM9Js9ao/bL50D5863lFgcHo8Xwy4AQkbTYZ2nwjq?=
+ =?us-ascii?Q?Jqhp/SOlFiJQ1iY2JraES/xQ8bgeQuIct68Y9noh8Pd5th6G1KwD4NAZE2AF?=
+ =?us-ascii?Q?ZWjAqwH8AtrbH3/OPM/sjvKrB0ujfn8lexiln8BDfnyWBLh4EszmMHDplHDR?=
+ =?us-ascii?Q?aqWhTYc74Idl1QVM+TQS11s2sjVHvXJTSuNflLjuvR19DpsTAm1cUyrWJiRb?=
+ =?us-ascii?Q?b3dk5I99q83Qg1+CD7x2cn9uD53yo33wMsbJVLQShSoihB+RJk5fxa9J3c5o?=
+ =?us-ascii?Q?bsmWHYUFwD9kmIca+pYm+hBb6fnjLA113irUouuQKF3CShVk0Od0bTESf0KO?=
+ =?us-ascii?Q?8s+G64PQW+lg47I/Hs3GSGLTzUrFPRml7C9Ovv3GnFE3GI+eqQfcTXdaeW3g?=
+ =?us-ascii?Q?vMfkofqyBlmsgOxOe3DK+3J6/WiLZUHpTHj2/w3SILBqgODhloKL1egkRgH+?=
+ =?us-ascii?Q?cfGhPSOxHvhd4Yyb5ET/RqTuyW7SA6a/6am5yvSN7PRhOyzGiCO6joRAbsu6?=
+ =?us-ascii?Q?3TcS22bqLhxXGjkuh0fjgBaN4IrZnPMioJ1XOarXUy+DgKyoLllzXFgWHND2?=
+ =?us-ascii?Q?yvE9z6JHCXszF1YZGRxH3HC/KM6auHEJpI70EL99PmlXZLWadyhgN8YvttYE?=
+ =?us-ascii?Q?EW54aTq6pUmA0ovssF30DWMZL5bfHQfEZvaCcUa7AFqZ+ASyFfdrFuQsJjfJ?=
+ =?us-ascii?Q?PXj9CdzlLNU0+okFSIvAiWtuEsyCm9fn+bWtslkLG7Otmf6XkZWANv5VEY/V?=
+ =?us-ascii?Q?sJh7Bdq/9noztLf6ExgV6K7zAglKnDRtod8IPt5j1yIdQ/vytx2UloUct2AX?=
+ =?us-ascii?Q?WQjA1g2Du6eqg575Q5DZgQOH0Fig7hqaLBor8PmX/IlJf6AnkBKFL+3s/psR?=
+ =?us-ascii?Q?0TBOxvsS+fJ0VAEqHL7Dxh3cGK5i6qqTIPgM2XEA7jAGj0soVD1QCnebpdJV?=
+ =?us-ascii?Q?L31sme7jAbiuGVxAptDntHLfV9UwJHDBC2kk0Y1kRXJgMJZqTIST5bfFZWmq?=
+ =?us-ascii?Q?bBQBkM4/ERWoGXD/ExU3wem2je+aRToi0SJ25S/4D6l17FuK/VgDqRGWbzis?=
+ =?us-ascii?Q?MofIwtAKlJKrAw5pzjtIJJHPDeOtbpuGsaHUOxDp+GLlICuPczoWRlk7QBef?=
+ =?us-ascii?Q?GZmJkInWZF3Q8JBI/SvyLEwPZXz9gE6Qz9YsB1wRn/0YyWzCukOQUL2fmf+o?=
+ =?us-ascii?Q?PuB0lqOPn2gBMT+cT7gQiBqPRiBCFlLfrJPPVkVNYQIb5rKhSWCgpFzeFEeD?=
+ =?us-ascii?Q?ow=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	g+EZGZ7BEsE4b1gpbKjNGuZH2dysxX5/hin0biXmnpqDfCAGFP7ZQFxqw4RK2seU/W7SyJsFNx7SMP57K/uCNG6lul2TtNl88vt7COOSH5nWX9qSpN+h7dGlU3i0aBHg7JUULge8wHJsPoyhuKI6j0y4L1/NkhsR/Vb5zEcPSZtuvvTOPYisCMUUy0vbynXeKec4PZ9/7Us6qpwODp0RWwqfT0IGvqvHg0RnL/LitChKxYK1bZnENA5hVIW30DlvsLaX9oJypgcIx1tcSsfhyUapFl+Dvrng73AxkHlHhkLyc7qT5mGTO2nn2zP3KXf/h0H6/STxhTAj+ObwQa/3I5zyrhL+jusHIAycnLLx6zEcOGz/tA/WXzJ2iNDZ7t4hIaRueesPNcGkERMcAat5bMJm38y7UoN/kJsTmucsM60AoeC7Ls4r2k/xl7+BJD4rI+2UfgQM3/q9iPCIPJooJ0avPaHpiqRb6aM7Sbid5WR55+mZy3mMZeo4+ycYTDHj+ADz/ZIXWz0hoInpXgJDeFyM4dTKj5syIzdA28/Epti1/Kd7P5bxCrfUnlhHmue6ZZI+17XwGzTB2S8tAjy5axPtY1JK9qG9clcKsGWUh5s=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b25b605-ef53-41d7-8062-08ddf52b1221
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2025 14:12:29.3686
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FabfGFV2Zx1X3j+auIWyQmJsSpd86TlokYnvCcz41CpHL9PoniiVD9Ryck1bSVvDute9QP7W9zJPrHdTC4OkXS+Pcupw//lFT6UdoGqCcYk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR10MB8108
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-16_02,2025-09-12_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0
+ suspectscore=0 spamscore=0 mlxscore=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2508110000 definitions=main-2509160131
+X-Proofpoint-GUID: zkKzfbl2WbM1aOWiCOijfCAYawBeNRoV
+X-Authority-Analysis: v=2.4 cv=M5RNKzws c=1 sm=1 tr=0 ts=68c97054 cx=c_pps
+ a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=yJojWOMRYYMA:10
+ a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=SRrdq9N9AAAA:8 a=20KFwNOVAAAA:8
+ a=ETZCYEPYCe93jH4IWwcA:9
+X-Proofpoint-ORIG-GUID: zkKzfbl2WbM1aOWiCOijfCAYawBeNRoV
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTEzMDAxNiBTYWx0ZWRfX/m+7kt3JXNP0
+ Jgs0X1fD5BsVs+QndaDei2/1/2HEutg6Ht9piLBD/3zS3Xh4YB97/jiQx/UK0bl0pZx4NEo21xa
+ zgs71R8WLFVMbPRNLmoZ1HYT4orVlhBYtyW52JIU9oNpVFI5fZ/LrsnjXMx+7K+IDZ/4LqhQlEE
+ 7iOpjCIfWm+zC0q1qgb5UIsLpUyq299RJi63bmVQmEYZnwWwUYEekOdApN0/lERowyMtz/dsnbA
+ FEOOLC4+VlyjgM8I/p7YIs4E5WV2aYgjJoOh3HODsP5Zq2Cenrtqi/e+NuQ/GyvQLwhsC+2DX/E
+ /VRXdmlUcxBjgMVikZNg9+KaeBYubMRdvNkKzR6e656wkwhkdqAo9qTlJwmKYq8Z5QZOp7HRST+
+ 1LK6od6z
 
--added assert-deassert PERST implementation
- for physical ports (both USP and DSP's).
--assert PERST involves bg operation for holding 100ms.
--reset PPB implementation for physical ports.
+This simply assigns the vm_ops so is easily updated - do so.
 
-Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
+Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
 ---
- hw/cxl/cxl-mailbox-utils.c                | 139 ++++++++++++++++++++++
- include/hw/cxl/cxl_device.h               |   9 ++
- include/hw/cxl/cxl_mailbox.h              |   1 +
- include/hw/pci-bridge/cxl_upstream_port.h |   1 +
- 4 files changed, 150 insertions(+)
+ mm/shmem.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 2a104dd337..8cccb2c0ed 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -541,6 +541,120 @@ static CXLRetCode cmd_get_physical_port_state(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 87005c086d5a..df02a2e0ebbb 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2938,16 +2938,17 @@ int shmem_lock(struct file *file, int lock, struct ucounts *ucounts)
+ 	return retval;
  }
  
-+static void *bg_assertcb(void *opaque)
-+{
-+    CXLPhyPortPerst *perst = opaque;
-+
-+    /* holding reset phase for 100ms */
-+    while (perst->asrt_time--) {
-+        usleep(1000);
-+    }
-+    perst->issued_assert_perst = true;
-+    return NULL;
-+}
-+
-+static CXLRetCode deassert_perst(Object *obj, uint8_t pn, CXLUpstreamPort *pp)
-+{
-+    if (!pp->pports.perst[pn].issued_assert_perst) {
-+        return CXL_MBOX_INTERNAL_ERROR;
-+    }
-+
-+    QEMU_LOCK_GUARD(&pp->pports.perst[pn].lock);
-+    resettable_release_reset(obj, RESET_TYPE_COLD);
-+    pp->pports.perst[pn].issued_assert_perst = false;
-+    pp->pports.pport_info[pn].link_state_flags &=
-+        ~CXL_PORT_LINK_STATE_FLAG_PERST_ASSERTED;
-+    pp->pports.perst[pn].asrt_time = ASSERT_WAIT_TIME_MS;
-+
-+    return CXL_MBOX_SUCCESS;
-+}
-+
-+static CXLRetCode assert_perst(Object *obj, uint8_t pn, CXLUpstreamPort *pp)
-+{
-+    if (pp->pports.perst[pn].issued_assert_perst ||
-+        pp->pports.perst[pn].asrt_time < ASSERT_WAIT_TIME_MS) {
-+        return CXL_MBOX_INTERNAL_ERROR;
-+    }
-+
-+    QEMU_LOCK_GUARD(&pp->pports.perst[pn].lock);
-+    pp->pports.pport_info[pn].link_state_flags |=
-+        CXL_PORT_LINK_STATE_FLAG_PERST_ASSERTED;
-+    resettable_assert_reset(obj, RESET_TYPE_COLD);
-+    qemu_thread_create(&pp->pports.perst[pn].asrt_thread, "assert_thread",
-+        bg_assertcb, &pp->pports.perst[pn], QEMU_THREAD_DETACHED);
-+
-+    return CXL_MBOX_SUCCESS;
-+}
-+
-+static struct PCIDevice *cxl_find_port_dev(uint8_t pn, CXLCCI *cci)
-+{
-+    CXLUpstreamPort *pp = CXL_USP(cci->d);
-+    PCIBus *bus = &PCI_BRIDGE(cci->d)->sec_bus;
-+
-+    if (pp->pports.pport_info[pn].current_port_config_state ==
-+        CXL_PORT_CONFIG_STATE_USP) {
-+        return pci_bridge_get_device(bus);
-+    }
-+
-+    if (pp->pports.pport_info[pn].current_port_config_state ==
-+        CXL_PORT_CONFIG_STATE_DSP) {
-+        return pcie_find_port_by_pn(bus, pn);
-+    }
-+    return NULL;
-+}
-+
-+/* CXL r3.2 Section 7.6.7.1.3: Get Physical Port Control (Opcode 5102h) */
-+static CXLRetCode cmd_physical_port_control(const struct cxl_cmd *cmd,
-+                                            uint8_t *payload_in,
-+                                            size_t len_in,
-+                                            uint8_t *payload_out,
-+                                            size_t *len_out,
-+                                            CXLCCI *cci)
-+{
-+   CXLUpstreamPort *pp = CXL_USP(cci->d);
-+   PCIDevice *dev;
-+   uint8_t pn;
-+   uint8_t ret = CXL_MBOX_SUCCESS;
-+
-+   struct cxl_fmapi_get_physical_port_control_req_pl {
-+        uint8_t ppb_id;
-+        uint8_t ports_op;
-+    } QEMU_PACKED *in = (void *)payload_in;
-+
-+    if (len_in < sizeof(*in)) {
-+        return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
-+    }
-+
-+    pn = in->ppb_id;
-+    if (pp->pports.pport_info[pn].port_id != pn) {
-+        return CXL_MBOX_INTERNAL_ERROR;
-+    }
-+
-+    dev = cxl_find_port_dev(pn, cci);
-+    if (!dev) {
-+        return CXL_MBOX_INTERNAL_ERROR;
-+    }
-+
-+    switch (in->ports_op) {
-+    case 0:
-+        ret = assert_perst(OBJECT(&dev->qdev), pn, pp);
-+        break;
-+    case 1:
-+        ret = deassert_perst(OBJECT(&dev->qdev), pn, pp);
-+        break;
-+    case 2:
-+        if (pp->pports.perst[pn].issued_assert_perst ||
-+            pp->pports.perst[pn].asrt_time < ASSERT_WAIT_TIME_MS) {
-+            return CXL_MBOX_INTERNAL_ERROR;
-+        }
-+        device_cold_reset(&dev->qdev);
-+        break;
-+    default:
-+        return CXL_MBOX_INVALID_INPUT;
-+    }
-+    return ret;
-+}
-+
- /* CXL r3.1 Section 8.2.9.1.2: Background Operation Status (Opcode 0002h) */
- static CXLRetCode cmd_infostat_bg_op_sts(const struct cxl_cmd *cmd,
-                                          uint8_t *payload_in,
-@@ -4347,6 +4461,8 @@ static const struct cxl_cmd cxl_cmd_set_sw[256][256] = {
-         cmd_identify_switch_device, 0, 0 },
-     [PHYSICAL_SWITCH][GET_PHYSICAL_PORT_STATE] = { "SWITCH_PHYSICAL_PORT_STATS",
-         cmd_get_physical_port_state, ~0, 0 },
-+    [PHYSICAL_SWITCH][PHYSICAL_PORT_CONTROL] = { "SWITCH_PHYSICAL_PORT_CONTROL",
-+        cmd_physical_port_control, 2, 0 },
-     [TUNNEL][MANAGEMENT_COMMAND] = { "TUNNEL_MANAGEMENT_COMMAND",
-                                      cmd_tunnel_management_cmd, ~0, 0 },
- };
-@@ -4702,11 +4818,34 @@ static CXLRetCode cxl_set_phy_port_info(CXLCCI *cci)
- void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
-                                   DeviceState *d, size_t payload_max)
+-static int shmem_mmap(struct file *file, struct vm_area_struct *vma)
++static int shmem_mmap_prepare(struct vm_area_desc *desc)
  {
-+    CXLUpstreamPort *pp;
-+    uint8_t pn = 0;
-+
-     cxl_copy_cci_commands(cci, cxl_cmd_set_sw);
-     cci->d = d;
-     cci->intf = intf;
-     cxl_init_cci(cci, payload_max);
-     cxl_set_phy_port_info(cci);
-+    /* physical port control */
-+    pp = CXL_USP(cci->d);
-+    for (int byte_index = 0; byte_index < (CXL_MAX_PHY_PORTS / BITS_PER_BYTE);
-+         byte_index++) {
-+        unsigned char byte = pp->pports.active_port_bitmask[byte_index];
-+
-+        for (int bit_index = 0; bit_index < 8; bit_index++, pn++) {
-+            if (((byte) & (1 << bit_index)) != 0) {
-+                qemu_mutex_init(&pp->pports.perst[pn].lock);
-+                pp->pports.perst[pn].issued_assert_perst = false;
-+                /*
-+                 * Assert PERST involves physical port to be in
-+                 * hold reset phase for minimum 100ms. No other
-+                 * physical port control requests are entertained
-+                 * until Deassert PERST command.
-+                 */
-+                pp->pports.perst[pn].asrt_time = ASSERT_WAIT_TIME_MS;
-+            }
-+        }
-+    }
++	struct file *file = desc->file;
+ 	struct inode *inode = file_inode(file);
+ 
+ 	file_accessed(file);
+ 	/* This is anonymous shared memory if it is unlinked at the time of mmap */
+ 	if (inode->i_nlink)
+-		vma->vm_ops = &shmem_vm_ops;
++		desc->vm_ops = &shmem_vm_ops;
+ 	else
+-		vma->vm_ops = &shmem_anon_vm_ops;
++		desc->vm_ops = &shmem_anon_vm_ops;
+ 	return 0;
  }
  
- void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max)
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index 536d465f42..4d00e76983 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -130,6 +130,7 @@
-                   (1 << 16))
+@@ -5217,7 +5218,7 @@ static const struct address_space_operations shmem_aops = {
+ };
  
- #define CXL_MAX_PHY_PORTS 256
-+#define ASSERT_WAIT_TIME_MS 100 /* Assert - Deassert PERST */
- 
- /* CXL r3.2 Table 7-19: Get Physical Port State Port Information Block Format */
- #define CXL_PORT_CONFIG_STATE_DISABLED           0x0
-@@ -196,6 +197,14 @@ typedef struct CXLPhyPortInfo {
-     uint8_t supported_ld_count;
- } QEMU_PACKED CXLPhyPortInfo;
- 
-+/* Assert - Deassert PERST */
-+typedef struct CXLPhyPortPerst {
-+    bool issued_assert_perst;
-+    QemuMutex lock; /* protecting assert-deassert reset request */
-+    uint64_t asrt_time;
-+    QemuThread asrt_thread; /* thread for 100ms delay */
-+} CXLPhyPortPerst;
-+
- /* CXL r3.1 Table 8-34: Command Return Codes */
- typedef enum {
-     CXL_MBOX_SUCCESS = 0x0,
-diff --git a/include/hw/cxl/cxl_mailbox.h b/include/hw/cxl/cxl_mailbox.h
-index 5c918c53a9..2c71dab670 100644
---- a/include/hw/cxl/cxl_mailbox.h
-+++ b/include/hw/cxl/cxl_mailbox.h
-@@ -88,6 +88,7 @@ enum {
-     PHYSICAL_SWITCH = 0x51,
-         #define IDENTIFY_SWITCH_DEVICE      0x0
-         #define GET_PHYSICAL_PORT_STATE     0x1
-+        #define PHYSICAL_PORT_CONTROL       0x2
-     TUNNEL = 0x53,
-         #define MANAGEMENT_COMMAND     0x0
-     MHD = 0x55,
-diff --git a/include/hw/pci-bridge/cxl_upstream_port.h b/include/hw/pci-bridge/cxl_upstream_port.h
-index c6218100a2..e8f5e43faf 100644
---- a/include/hw/pci-bridge/cxl_upstream_port.h
-+++ b/include/hw/pci-bridge/cxl_upstream_port.h
-@@ -30,6 +30,7 @@ typedef struct CXLUpstreamPort {
-         uint8_t num_ports;
-         uint8_t active_port_bitmask[CXL_MAX_PHY_PORTS / BITS_PER_BYTE];
-         CXLPhyPortInfo pport_info[CXL_MAX_PHY_PORTS];
-+        CXLPhyPortPerst perst[CXL_MAX_PHY_PORTS];
-     } pports;
- } CXLUpstreamPort;
- 
+ static const struct file_operations shmem_file_operations = {
+-	.mmap		= shmem_mmap,
++	.mmap_prepare	= shmem_mmap_prepare,
+ 	.open		= shmem_file_open,
+ 	.get_unmapped_area = shmem_get_unmapped_area,
+ #ifdef CONFIG_TMPFS
 -- 
-2.34.1
+2.51.0
 
