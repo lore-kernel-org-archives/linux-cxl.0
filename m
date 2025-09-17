@@ -1,64 +1,64 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6781B242D8B
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Sep 2025 19:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BF82BDC33
+	for <linux-cxl@vger.kernel.org>; Wed, 17 Sep 2025 19:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758138987; cv=none; b=TvtApq8St78Z9AJhCBw4pg80cAnPbOalKjNd7biDXGWfDn4nEmuZgY3f+epezG8bswmqcYYs7f7XzR0UmCrfUVsBuELk9IRnlLFPavKrb+8wiFJTSIyKIT+yKkyNZD7MirtH+UILRM7wifZYlT+RzHBFyDwE+virFgP5Ovx2FOs=
+	t=1758139136; cv=none; b=b//2WiQotyN1kIcdBPJuLKTd7laN4JimWBmwYHoBJjfWJMHQx5QTMgTaxA2fwuNnd4j5fSWv0KiaSmU3Re6s7+FGxvh26nd7+Act2U5W0QDuZKjmnOXqB6PZu0w3YbWiRwtXs1B+PPGXIy0jl9rOEhz/iZZ0n/WpIpUzIxZYats=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758138987; c=relaxed/simple;
-	bh=U+xzvg0+p8YRBwVjJW5ad4ZRAtixrH50H3CYwD66PRw=;
+	s=arc-20240116; t=1758139136; c=relaxed/simple;
+	bh=dxkk8tG7hK5JdTJzWjjKydDl+hoVXSV6oyTVGZWUjEk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N7773n7r3Wxgw9CHVhYxX37CvkSid3wG369skahSs/wGeotTsf1Lssnj8jVfnmuTVKdvaANNZ+5sXrtb5JJp7IrdNT0b5FqVVTikIu7i4nGW6bHDw1mhIw84+jfoiDYbHBy3X8FL3D+Q5AHY4kFziVE66xvX11bBiHaJZZ+4voE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=JKSjebNC; arc=none smtp.client-ip=209.85.160.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=t8u8520jc8mahXDY826GtiFfXMlOW7iIMZkoRl0hnDpesz5c/ZexMfyuM6k4fcdmfvsY/k4RiR6TLYd+kUVdYVuo1Ul+0TIki/6KWwG5wSOI3VPJMxtjQ+adGuyea8kXTJ70tMHYoyhnTOXRdab3O9wcR0podW7gW9ICUDu7qMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=eERBNmkg; arc=none smtp.client-ip=209.85.222.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="JKSjebNC"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4b79c8d1e39so2553081cf.2
-        for <linux-cxl@vger.kernel.org>; Wed, 17 Sep 2025 12:56:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="eERBNmkg"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-8127215a4c6so130940185a.0
+        for <linux-cxl@vger.kernel.org>; Wed, 17 Sep 2025 12:58:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1758138984; x=1758743784; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1758139133; x=1758743933; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TWHRbE+2RwfEiSllz0UZDyGmNU78opvT0w9mXRiIjrQ=;
-        b=JKSjebNCeuvZec/sew0HOq5nhdjUYTGNTSBdF7eHxVOGjK7UxiBXf35dEqaUxpdNVm
-         eYlcx6Lq3Svfb/N7RUavziAQkIiFqivDehH657gD355So2wY1enjBpNwE7t9y7BYJfkg
-         ks9xqirKwnPJE7i/lx0rpyBiE9qqz3hN8bcvXfLe8NOmLjAXmefrfgarVLOFx4zEnBbZ
-         3AUs5Qqpyrhc3n41jwCro44X8TaVnQZFZDjtvcOR4iVP7MnHgJ6cs8BH7sl0R9sG+lx9
-         Lhw0pPeBOuXDLssv/qzkJImhtgUl8iFIaW8HaAd3DjL8uzWSxhBP0JPSsGd2DK2a+2ca
-         WYEA==
+        bh=58ejY8lKzPUFnBka1rlupB1Kz/9dcjqxS2QMacOwEpg=;
+        b=eERBNmkgWA3cSVVsKGfw5IaOGFyIH/ym+gmi6zvoehP7+M2Ix647vDLZ2fUR5QLlkA
+         A+gfMsD/Ega05PmHKTt+SrDvykiLtDd7HeN0oS9Q1MAQ2zKO2pKLbgLqU6wFR9yO1DGr
+         wM5HiWk8EuCvX8ncyJ3esO0DFLBxvCSeYALyowpWX8L2FfdYLU1PFAovziSO0NQZUO5n
+         2S13j07ZYT5F11UU4FAO+9hMTSysEqmqprZP+cx1JDEyuUFHi6uvDjnHeMl3+sJs877J
+         O7+j1l9fyxG+VnVTYTXwZCFFUyxiFpd5q6HFw+Y3g9p92vuEPkShA0F7rPAt9k4flq6/
+         p7Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758138984; x=1758743784;
+        d=1e100.net; s=20230601; t=1758139133; x=1758743933;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TWHRbE+2RwfEiSllz0UZDyGmNU78opvT0w9mXRiIjrQ=;
-        b=gpHm+ZsDHrvsd4K/lCqHh25GBHISVJ/Gm8XYAIFYT1BWjnyrHzzL3UUToMskSuF+Pw
-         p44DeMpyYD+Z0cN2uf29v1RCggfPj2ggqnPlbejTiFzdJPwlLpKoBfm4OsZJhS4Awpge
-         xCYK8WYmInfXVDgow51Whc8iMRd6PcjDxq2zEFglLJ9h+9fFIns7xXz+W27N1RgqM1rt
-         t/6eBkkiYR+fEhoOoqwTMGYiHM72D3PTuGPM0JxZYFWK5TUw64FnvJa9cfkvpZdn+LG6
-         K2taJoKtj4hX+Zq2Msz6wphA6MZxJ7C9E0SJ+/ezjZ1i6AKB8I9+3YoZfP4s4qAbBYmY
-         uQSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUIL7XkAhYcjiDrAov7FDPWfZd+syiGSrvdgDA6Oqjdh0reEPrl2tmHbaJo60fi5ddrDEKTxoXu60o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/gV5KsYnby7f3HdQhnLPn2VJWFUSf8lwZ4zAH+Hxz5xHrka0J
-	EiIsflj6z9bAzSssc1Ki00v7ugeZ5x8ty9HnXSxsSV41oDobs+cXNl3CQAgEb40ZkPw=
-X-Gm-Gg: ASbGnctb2DhR3YmMzCL1Pzqw8QGIiOeIVWMsF5Qe5Z5WO/Nwzgwy6RjksHqLjeyzb00
-	Pmo+eK0W83P63i4Jo/jVUPFlMPphONg6hPsYnTytsQW5FdvyePakiweF+8jm8vaKOt9splkAoyS
-	2Ryd5xtmg4vA9vgecp7o/E7vZICqJpkyZlNv2OEwi9lXsAOE7JYmc6Vs6vza4+SrpQutJLfL1Wx
-	F6t5wiaZOAiOiqPQW8MyD4S2mTlIPvevaC7Kle2oMT2c5/fAsq7B5s0WLB06VGbzctTzbRiBA++
-	6iz+/g1iKmZyqWaIfIkaha4CPUKPfUbZqZmjwyuaxudB24gfhweRMz+Dfq13yrHjcwagtdm0fei
-	oNxxi6L0BnbkaoyH5+pk8raNy+vGGKT/TmO3kKOPdjsVKRwLB421TMQJbOIVxxCvIG24YW35Q6n
-	IWf4fLvTs/GGk1XdKyzKiIgQ==
-X-Google-Smtp-Source: AGHT+IGZY5onFfbJ/Ady5+OG7UsSraIKd+u3udvBLrGG06Nf882Q/uxkOvG1zGx4Y0t9b1FKmtIqRA==
-X-Received: by 2002:a05:622a:1cc3:b0:4b7:8235:1eaf with SMTP id d75a77b69052e-4ba6a5d6732mr45153491cf.39.1758138984189;
-        Wed, 17 Sep 2025 12:56:24 -0700 (PDT)
+        bh=58ejY8lKzPUFnBka1rlupB1Kz/9dcjqxS2QMacOwEpg=;
+        b=tDixmdP0mArFIdgrX79cmhPLlAetTJtbcQA6GI5oqygulr5Y7RChOG1MNZEtZPZxWv
+         kogjHum2LEXeaznEy3k/BbewtX9QiQ+/alYrGmP1zX7mhFyoZQG3k1o2u+QJvD2l4Akq
+         6bd6+67wBxAvtbp+e2lD2BZiBOki5vbwwN7gqsQ/gCtdxB/gxYHqnyEgqn6yJh+u+Uyd
+         szhUbA03al0XGFAxQmqAnuIS2h1LNv9axiKAbnDhEbQ0Ia5oeHL/6FYf/78C12HTaB1Y
+         FrQsrmbzELLqAwX8t78KEhEaycU3QRGgG+AblbPpoldqxYGqStm2jjnGknMq0G9D/Rh/
+         3PhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmwIerszdPavPX8flv5+cfUSZejV62ElFg9dRd6wLwHyM9ob+OHkRZsFhD1Wx5drqRA/qNF7lezKg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJTPZOXICrqlABD173e6N7p/6fyegbrefIqI6wKLY3mCnrZtX6
+	w++ZtpcYwD2zycf8tEFRn8MQCUJaws/HuXvWe+It5IM0UOvLKdAPtc3qiYWtC6pO4xE=
+X-Gm-Gg: ASbGncuAt3ryRStfmkgUZVqZOZrBnhJwwD11EnF13vCx9hq9oyPVEZw5+vR+fHUF9+3
+	exSn1vTtp5z7H/dOs1HxQthMa5paF68YMNEZvfOT3+hWoCmLBj/7OsOQdQHWFPuCwES7eAqDr9T
+	rc86FErBCzCnJn3j+oSjyegIlZyU4SbOXiWR041hGfC3O4vMJ+zY3HBizpOCkeuMvd4huZi0mOY
+	04su7oSEWKhhcJGhwKyKWvEX0IYqTchyimQub+bYcTAZWZIwJLlwTT2Wj8qL0rBNcIdkfEL+Su2
+	F1VMUsSjysrUUoE9Y2gJL4UTe4z6ME5OkIqZOJAw7WyhHywFFZ+membmV6qgZH09bIjexzIqrHe
+	Ru0GzsHjtFkUTgSceNunejcqQTSINbiq/M0/EJI7Vqa82OHT/m6HdS+h0xK0LalzHlsD31vwOOb
+	UZ9hs=
+X-Google-Smtp-Source: AGHT+IFo5mUXlgWJqSrwW3Ag53sh8YnNIU8HxG9er19Nkhdl6k6VD/pvyTugHUvkMVjI7UpywYGlJw==
+X-Received: by 2002:a05:620a:414d:b0:808:2794:7c40 with SMTP id af79cd13be357-8363bf2f1e1mr123738985a.37.1758139133063;
+        Wed, 17 Sep 2025 12:58:53 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4bda15f577esm3184571cf.7.2025.09.17.12.56.23
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8363240f538sm34971585a.56.2025.09.17.12.58.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Sep 2025 12:56:23 -0700 (PDT)
-Date: Wed, 17 Sep 2025 15:56:21 -0400
+        Wed, 17 Sep 2025 12:58:52 -0700 (PDT)
+Date: Wed, 17 Sep 2025 15:58:50 -0400
 From: Gregory Price <gourry@gourry.net>
 To: Robert Richter <rrichter@amd.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
@@ -72,11 +72,10 @@ Cc: Alison Schofield <alison.schofield@intel.com>,
 	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
 	Terry Bowman <terry.bowman@amd.com>,
 	Joshua Hahn <joshua.hahnjy@gmail.com>
-Subject: Re: [PATCH v3 01/11] cxl/region: Store root decoder in struct
- cxl_region
-Message-ID: <aMsSZZVNwH3LP_Ur@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH v3 02/11] cxl/region: Store HPA range in struct cxl_region
+Message-ID: <aMsS-lJqZCmcDQDF@gourry-fedora-PF4VCD3F>
 References: <20250912144514.526441-1-rrichter@amd.com>
- <20250912144514.526441-2-rrichter@amd.com>
+ <20250912144514.526441-3-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -85,14 +84,19 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250912144514.526441-2-rrichter@amd.com>
+In-Reply-To: <20250912144514.526441-3-rrichter@amd.com>
 
-On Fri, Sep 12, 2025 at 04:45:03PM +0200, Robert Richter wrote:
-> A region is always bound to a root decoder. The region's associated
-> root decoder is often needed. Add it to struct cxl_region.
+On Fri, Sep 12, 2025 at 04:45:04PM +0200, Robert Richter wrote:
+> Each region has a known host physical address (HPA) range it is
+> assigned to. Endpoint decoders assigned to a region share the same HPA
+> range. The region's address range is the system's physical address
+> (SPA) range.
 > 
-> This simplifies code by removing dynamic lookups and removing the root
-> decoder argument from the function argument list where possible.
+> Endpoint decoders in systems that need address translation use HPAs
+> which are not SPAs. To make the SPA range accessible to the endpoint
+> decoders, store and track the region's SPA range in struct cxl_region.
+> Introduce the @hpa_range member to the struct. Now, the SPA range of
+> an endpoint decoder can be determined based on its assigned region.
 > 
 > Patch is a prerequisite to implement address translation which uses
 > struct cxl_region to store all relevant region and interleaving
@@ -100,7 +104,4 @@ On Fri, Sep 12, 2025 at 04:45:03PM +0200, Robert Richter wrote:
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
 
-Nice
-
 Reviewed-by: Gregory Price <gourry@gourry.net>
-
