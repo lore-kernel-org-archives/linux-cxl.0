@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A8E29DB64
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Sep 2025 16:05:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C3D2DC35A
+	for <linux-cxl@vger.kernel.org>; Wed, 17 Sep 2025 16:29:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758125141; cv=none; b=TJYelgLgDsnJaSxFGaIB2JmvP1bP/3aa/SNpCqZMa7jxV2kdtQ8eE//FCfKHW879DIA+F4DOLBfNwRSKESHyVk+k6FhxmGomipXkx4P7F0YPRmrP9AqAbaQtknsVsHl2ZntMzwGkt3rTYPbmyrmVytphbt9NIF45P32VrSaf8Vo=
+	t=1758126552; cv=none; b=XXvzvnlpMwiRCdJBrOe3Z+L89Fufsmmr+UPpvlxHQB9Ixji60GSOjFm/3VM+cBK30rwPO63oG+73ktm9e+FySkt33K9DmsAFy5YR42tUWReRZPy7GZXZ3K3qc2ViGUUmeThHKBz6J7IstyjiAQNIYHTSpQZ63rGI/rAicGa5uhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758125141; c=relaxed/simple;
-	bh=IuVydWHO0Bc3BQlu+FBWimNDWFnuIWiLdObI1ZnwUSk=;
+	s=arc-20240116; t=1758126552; c=relaxed/simple;
+	bh=QFtwa9syp74SZM+6g2L16cpfMEOWJq532GGai5xWHw8=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TAp5vQCJoV3W4kbbxJAjZqMt7MpUoSq/a1RAoGpn6Sk1+lbEo2IPveRObM60yS35/YMwLbR0ZMhO0rNciKpO72WBCpg4I/e5omMHw54C0riTVS+WdEuEGWYp3SsIYt8aJlT1FQPXYtWB/fVv3yHgY/1IdOBPRhRoUlUdYKCq/jA=
+	 MIME-Version:Content-Type; b=FkuK5ZeIFAHuNVL8TTeQ5sVwWxeQfU4aINfks0LLAj2EhS1cTJ3WSe9of5t4zFvoC355kw9kHjIbIL6ByfpA0LbMvBDFH32GFCIe5ibglGNpTU9wH/M+h03n2czUdu9663lewqIwt5Rj7+3osI0Rv6msIpl/oRshWfYe8K/psn4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cRk8y4YkRz6GDQs;
-	Thu, 18 Sep 2025 00:04:02 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cRkff1b2Mz6M5JB;
+	Thu, 18 Sep 2025 00:26:18 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E042B14033F;
-	Thu, 18 Sep 2025 00:05:35 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1010F14033F;
+	Thu, 18 Sep 2025 00:29:07 +0800 (CST)
 Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 17 Sep
- 2025 18:05:35 +0200
-Date: Wed, 17 Sep 2025 17:05:33 +0100
+ 2025 18:29:06 +0200
+Date: Wed, 17 Sep 2025 17:29:05 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: Arpit Kumar <arpit1.kumar@samsung.com>
 CC: <qemu-devel@nongnu.org>, <gost.dev@samsung.com>,
@@ -32,7 +32,7 @@ CC: <qemu-devel@nongnu.org>, <gost.dev@samsung.com>,
 	<krish.reddy@samsung.com>, <a.manzanares@samsung.com>,
 	<alok.rathore@samsung.com>, <cpgs@samsung.com>
 Subject: Re: [PATCH v4 2/2] hw/cxl: Add Physical Port Control (Opcode 5102h)
-Message-ID: <20250917170533.00003f03@huawei.com>
+Message-ID: <20250917172905.00005fa3@huawei.com>
 In-Reply-To: <20250916080736.1266083-3-arpit1.kumar@samsung.com>
 References: <20250916080736.1266083-1-arpit1.kumar@samsung.com>
 	<CGME20250916080808epcas5p23113551a9a0719d68a8c3efff15209cc@epcas5p2.samsung.com>
@@ -46,7 +46,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
 On Tue, 16 Sep 2025 13:37:36 +0530
@@ -58,223 +58,7 @@ Arpit Kumar <arpit1.kumar@samsung.com> wrote:
 > -reset PPB implementation for physical ports.
 > 
 > Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
-See below for why but I've picked this up with this and a define move that
-was needed to build it where I've queued it up.
 
-Thanks!
-
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 6f7291e6ad..1d16d033c7 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -607,7 +607,7 @@ static void *bg_assertcb(void *opaque)
-     return NULL;
- }
-
--static CXLRetCode deassert_perst(Object *obj, uint8_t pn, CXLUpstreamPort *pp)
-+static CXLRetCode cxl_deassert_perst(Object *obj, uint8_t pn, CXLUpstreamPort *pp)
- {
-     if (!pp->pports.perst[pn].issued_assert_perst) {
-         return CXL_MBOX_INTERNAL_ERROR;
-@@ -623,7 +623,7 @@ static CXLRetCode deassert_perst(Object *obj, uint8_t pn, CXLUpstreamPort *pp)
-     return CXL_MBOX_SUCCESS;
- }
-
--static CXLRetCode assert_perst(Object *obj, uint8_t pn, CXLUpstreamPort *pp)
-+static CXLRetCode cxl_assert_perst(Object *obj, uint8_t pn, CXLUpstreamPort *pp)
- {
-     if (pp->pports.perst[pn].issued_assert_perst ||
-         pp->pports.perst[pn].asrt_time < ASSERT_WAIT_TIME_MS) {
-@@ -668,7 +668,6 @@ static CXLRetCode cmd_physical_port_control(const struct cxl_cmd *cmd,
-    CXLUpstreamPort *pp = CXL_USP(cci->d);
-    PCIDevice *dev;
-    uint8_t pn;
--   uint8_t ret = CXL_MBOX_SUCCESS;
-
-    struct cxl_fmapi_get_physical_port_control_req_pl {
-         uint8_t ppb_id;
-@@ -691,22 +690,19 @@ static CXLRetCode cmd_physical_port_control(const struct cxl_cmd *cmd,
-
-     switch (in->ports_op) {
-     case 0:
--        ret = assert_perst(OBJECT(&dev->qdev), pn, pp);
--        break;
-+        return cxl_assert_perst(OBJECT(&dev->qdev), pn, pp);
-     case 1:
--        ret = deassert_perst(OBJECT(&dev->qdev), pn, pp);
--        break;
-+        return cxl_deassert_perst(OBJECT(&dev->qdev), pn, pp);
-     case 2:
-         if (pp->pports.perst[pn].issued_assert_perst ||
-             pp->pports.perst[pn].asrt_time < ASSERT_WAIT_TIME_MS) {
-             return CXL_MBOX_INTERNAL_ERROR;
-         }
-         device_cold_reset(&dev->qdev);
--        break;
-+        return CXL_MBOX_SUCCESS;
-     default:
-         return CXL_MBOX_INVALID_INPUT;
-     }
--    return ret;
- }
-
-> ---
->  hw/cxl/cxl-mailbox-utils.c                | 139 ++++++++++++++++++++++
->  include/hw/cxl/cxl_device.h               |   9 ++
->  include/hw/cxl/cxl_mailbox.h              |   1 +
-
-Had to move the define for now that went in here because I'm carrying this
-further up my tree than Anisa's patch that moved this as a precursor
-to the MCTP support.
-
-
->  include/hw/pci-bridge/cxl_upstream_port.h |   1 +
->  4 files changed, 150 insertions(+)
-> 
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 2a104dd337..8cccb2c0ed 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -541,6 +541,120 @@ static CXLRetCode cmd_get_physical_port_state(const struct cxl_cmd *cmd,
->      return CXL_MBOX_SUCCESS;
->  }
->  
-> +static void *bg_assertcb(void *opaque)
-> +{
-> +    CXLPhyPortPerst *perst = opaque;
-> +
-> +    /* holding reset phase for 100ms */
-> +    while (perst->asrt_time--) {
-> +        usleep(1000);
-> +    }
-> +    perst->issued_assert_perst = true;
-> +    return NULL;
-> +}
-> +
-> +static CXLRetCode deassert_perst(Object *obj, uint8_t pn, CXLUpstreamPort *pp)
-
-I think we want to namespace these to cxl given these are not
-a PCI standard thing.  So when I pick these up I'll prefix with cxl_
-
-> +{
-> +    if (!pp->pports.perst[pn].issued_assert_perst) {
-> +        return CXL_MBOX_INTERNAL_ERROR;
-> +    }
-> +
-> +    QEMU_LOCK_GUARD(&pp->pports.perst[pn].lock);
-> +    resettable_release_reset(obj, RESET_TYPE_COLD);
-> +    pp->pports.perst[pn].issued_assert_perst = false;
-> +    pp->pports.pport_info[pn].link_state_flags &=
-> +        ~CXL_PORT_LINK_STATE_FLAG_PERST_ASSERTED;
-> +    pp->pports.perst[pn].asrt_time = ASSERT_WAIT_TIME_MS;
-> +
-> +    return CXL_MBOX_SUCCESS;
-> +}
-> +
-> +static CXLRetCode assert_perst(Object *obj, uint8_t pn, CXLUpstreamPort *pp)
-> +{
-> +    if (pp->pports.perst[pn].issued_assert_perst ||
-> +        pp->pports.perst[pn].asrt_time < ASSERT_WAIT_TIME_MS) {
-> +        return CXL_MBOX_INTERNAL_ERROR;
-> +    }
-> +
-> +    QEMU_LOCK_GUARD(&pp->pports.perst[pn].lock);
-> +    pp->pports.pport_info[pn].link_state_flags |=
-> +        CXL_PORT_LINK_STATE_FLAG_PERST_ASSERTED;
-> +    resettable_assert_reset(obj, RESET_TYPE_COLD);
-> +    qemu_thread_create(&pp->pports.perst[pn].asrt_thread, "assert_thread",
-> +        bg_assertcb, &pp->pports.perst[pn], QEMU_THREAD_DETACHED);
-> +
-> +    return CXL_MBOX_SUCCESS;
-> +}
-> +
-> +static struct PCIDevice *cxl_find_port_dev(uint8_t pn, CXLCCI *cci)
-> +{
-> +    CXLUpstreamPort *pp = CXL_USP(cci->d);
-> +    PCIBus *bus = &PCI_BRIDGE(cci->d)->sec_bus;
-> +
-> +    if (pp->pports.pport_info[pn].current_port_config_state ==
-> +        CXL_PORT_CONFIG_STATE_USP) {
-> +        return pci_bridge_get_device(bus);
-> +    }
-> +
-> +    if (pp->pports.pport_info[pn].current_port_config_state ==
-> +        CXL_PORT_CONFIG_STATE_DSP) {
-> +        return pcie_find_port_by_pn(bus, pn);
-> +    }
-> +    return NULL;
-> +}
-> +
-> +/* CXL r3.2 Section 7.6.7.1.3: Get Physical Port Control (Opcode 5102h) */
-> +static CXLRetCode cmd_physical_port_control(const struct cxl_cmd *cmd,
-> +                                            uint8_t *payload_in,
-> +                                            size_t len_in,
-> +                                            uint8_t *payload_out,
-> +                                            size_t *len_out,
-> +                                            CXLCCI *cci)
-> +{
-> +   CXLUpstreamPort *pp = CXL_USP(cci->d);
-> +   PCIDevice *dev;
-> +   uint8_t pn;
-> +   uint8_t ret = CXL_MBOX_SUCCESS;
-> +
-> +   struct cxl_fmapi_get_physical_port_control_req_pl {
-> +        uint8_t ppb_id;
-> +        uint8_t ports_op;
-> +    } QEMU_PACKED *in = (void *)payload_in;
-> +
-> +    if (len_in < sizeof(*in)) {
-> +        return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
-> +    }
-> +
-> +    pn = in->ppb_id;
-> +    if (pp->pports.pport_info[pn].port_id != pn) {
-> +        return CXL_MBOX_INTERNAL_ERROR;
-> +    }
-> +
-> +    dev = cxl_find_port_dev(pn, cci);
-> +    if (!dev) {
-> +        return CXL_MBOX_INTERNAL_ERROR;
-> +    }
-> +
-> +    switch (in->ports_op) {
-> +    case 0:
-> +        ret = assert_perst(OBJECT(&dev->qdev), pn, pp);
-To me, direct returns are clearer here.
-     return cxl_assert_perst();
-
-I tweaked this and the other case statements in here.  That lets
-me drop the local variable ret and the return code hidden up top.
-
-> +        break;
-> +    case 1:
-> +        ret = deassert_perst(OBJECT(&dev->qdev), pn, pp);
-> +        break;
-> +    case 2:
-> +        if (pp->pports.perst[pn].issued_assert_perst ||
-> +            pp->pports.perst[pn].asrt_time < ASSERT_WAIT_TIME_MS) {
-> +            return CXL_MBOX_INTERNAL_ERROR;
-> +        }
-> +        device_cold_reset(&dev->qdev);
-> +        break;
-> +    default:
-> +        return CXL_MBOX_INVALID_INPUT;
-> +    }
-> +    return ret;
-> +}
-> +
->  /* CXL r3.1 Section 8.2.9.1.2: Background Operation Status (Opcode 0002h) */
->  static CXLRetCode cmd_infostat_bg_op_sts(const struct cxl_cmd *cmd,
->                                           uint8_t *payload_in,
-> @@ -4347,6 +4461,8 @@ static const struct cxl_cmd cxl_cmd_set_sw[256][256] = {
->          cmd_identify_switch_device, 0, 0 },
->      [PHYSICAL_SWITCH][GET_PHYSICAL_PORT_STATE] = { "SWITCH_PHYSICAL_PORT_STATS",
->          cmd_get_physical_port_state, ~0, 0 },
-> +    [PHYSICAL_SWITCH][PHYSICAL_PORT_CONTROL] = { "SWITCH_PHYSICAL_PORT_CONTROL",
-> +        cmd_physical_port_control, 2, 0 },
->      [TUNNEL][MANAGEMENT_COMMAND] = { "TUNNEL_MANAGEMENT_COMMAND",
->                                       cmd_tunnel_management_cmd, ~0, 0 },
->  };
 > @@ -4702,11 +4818,34 @@ static CXLRetCode cxl_set_phy_port_info(CXLCCI *cci)
 >  void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
 >                                    DeviceState *d, size_t payload_max)
@@ -289,6 +73,25 @@ me drop the local variable ret and the return code hidden up top.
 >      cxl_set_phy_port_info(cci);
 > +    /* physical port control */
 > +    pp = CXL_USP(cci->d);
+This bit feels like it is wrongly located.  I ran into this whilst
+trying to add back the mctp variant as part of shuffling my cxl staging tree.
+
+Whilst this only gets used for the CCI commands, it is a USP thing not
+a mailbox thing as we only want this called once per USP, not once per CCI on the
+USP.
+
+Could we move this to a call from cxl_usp_realize?
+
+If something like that works would you mind sending me a patch on top of this
+series to do so? I'm not yet set up to test this series so better you do it.
+
+We don't need that upstream until the first MCTP support on USP so this doesn't
+block us on that front.
+
+ 
+Thanks,
+Jonathan
+
 > +    for (int byte_index = 0; byte_index < (CXL_MAX_PHY_PORTS / BITS_PER_BYTE);
 > +         byte_index++) {
 > +        unsigned char byte = pp->pports.active_port_bitmask[byte_index];
@@ -309,4 +112,3 @@ me drop the local variable ret and the return code hidden up top.
 > +    }
 >  }
 >  
->  void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max)
