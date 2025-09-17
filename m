@@ -1,61 +1,50 @@
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010007.outbound.protection.outlook.com [52.101.56.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FDE1EBFE0;
-	Wed, 17 Sep 2025 17:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758130107; cv=fail; b=JNjQQTDieK6PhDQ5vH26c0Pn0XLb9JqBr6IudV1btn3HNKDbLAGNiXpwlu7tmQNQeeIrlU3xMc2Un3GKE4irB/rojPgEPOz1Y3JHxQ4xyEDJ6+vno7TjLMDO2kZOL8ED4bCKl4hbTODymjnbuInKMJJkMVxLyCKeVO1B+o//8Ok=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758130107; c=relaxed/simple;
-	bh=YHFO9/zxiJ9ct4opqlUFszVQ00QNHOqGKA90c6GcTYQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bWA+sEKiniZCQ2Q2wRz08fEpAWLur5ppo3jAkQZOszkIAx8V6geWWJal/ksVKR13VVzLJlEHjhUlnPYw6theN2pEQ7WmWhAv5XtvPI4NqVd2JkGxSvWDNvpWvAhLUrfvj93z+UA3eqkyKm1eswiNW25zOxUr+vCI4wAfmF+i6ak=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iTEeHA8w; arc=fail smtp.client-ip=52.101.56.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D51B2F3C1C
+	for <linux-cxl@vger.kernel.org>; Wed, 17 Sep 2025 17:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758130124; cv=none; b=BGGBU3EyzJzVb6c3xrMdHEOaxPTLUU8dljKA2W+oyt/J6xCxM6JzDr/8OYb/MaPwSzPAOzkVTBium0Z245Lgidb98uRHWuxC+e8vKyhQIbaEhuHBHn1ojF7Tz5NYaNWf57z6MpEz67lPFBTDLPZZ/toBlJmV+S8k0OHUL2owTXY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758130124; c=relaxed/simple;
+	bh=rIjUOCkhvgji49T2bvQVIhQu3hc+yTZqVtW5vqjq0xE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=syq+mbtaWHS9kwdyy/+QVDCXzuNHoI/E6suoZCkqdPvVprUm8sHINuU2OxNSDnrjPApqqaBareR4TfRW9t8NX49SgSkO+eQ7QzqybcuajB5kslGwBSmPrktersmSD2Mw/DQFz6T78jQRKrY9SCTEUjn90InqGRW7f5hDjrw2fbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M5U8OMrr; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iTEeHA8w"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xfuXzwJgsngfZz5bpp1gj5ZmUZMKIHs39sjzChWpFdhCUkEhKGP2MRhCCcuBeVp7f5N7d6OZbfXBnBfkFAPQt0ahK84Cxyg137+HO3uJ48q//bCR53h+e7MIBrgQn/zRjVA/o+8C7GE3uZdedeV7ghaVv77QawD0SIlfTDHoJjxlwOeVouLy6jqtx8UoZdYjeDUdeP85GURZmYslvVzmmdiUsPQms/D6emEB4RHA2lzvtvewKIs8beKb1R+URM6zzam+2puX/szKW3E5dSZFMiFBbCUZuAuhTKut9knKPh2o8YkppPI299WzxI4FYb8oRNNdz5no9A2OhgZ2X865DQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iakf4izHM76/2wqGG/hLxtQyAIrporw8OzsWWmZXLO4=;
- b=S6IojkCJ+LPCClfWHYPPymYG950oFd4OMebYj+3fwe4C9GZ677dCEcbEV5d1z2WgVtfZA7jR73gUQKVA8oMJdOvHrcphmYM2Pb5TdIAg2B6UseoJjGQY2iSYxqjCNCzQNe6JGOfHEiJn1vMJamIkph+N13JC4i6xZd1mqADbj8qYrI/JX9cztGsCgarFbfYlhobgpGSXSNhHrIMv+lQW8g2E3B8HeIJwuPeKLT9LLoRn3LqbSnu1dQducAohI0ZIJI68b2J68GrFKIYUtC/VhC8vcsJs8Y57AJrHigvWQJBINrjCzT2trgZTwAbR3VdyYAw399Y3MN92JIFdX+Vdww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iakf4izHM76/2wqGG/hLxtQyAIrporw8OzsWWmZXLO4=;
- b=iTEeHA8wfzbWUi2AS3X+lfQKbZeWACUInC6VuHMz/FckHcMu12v6RdXKkUZgGBoMh98j5V49ZSTVV1Ncwp3yLDU78UhcShJJ0r6NxzlMA5ZzDcEQs64FxsGvnTteZYfXNzwrhLs9p0CGg5uWzN/3yU/HuerXs2dJdLIs0yDK40M=
-Received: from DM6PR01CA0023.prod.exchangelabs.com (2603:10b6:5:296::28) by
- DM4PR12MB6158.namprd12.prod.outlook.com (2603:10b6:8:a9::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9137.13; Wed, 17 Sep 2025 17:26:59 +0000
-Received: from DS1PEPF00017095.namprd03.prod.outlook.com
- (2603:10b6:5:296:cafe::cc) by DM6PR01CA0023.outlook.office365.com
- (2603:10b6:5:296::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9137.14 via Frontend Transport; Wed,
- 17 Sep 2025 17:27:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- DS1PEPF00017095.mail.protection.outlook.com (10.167.17.138) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9137.12 via Frontend Transport; Wed, 17 Sep 2025 17:26:59 +0000
-Received: from [10.236.181.100] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 17 Sep
- 2025 10:26:58 -0700
-Message-ID: <d41ce9c7-94b2-47c0-8861-811b2c11d557@amd.com>
-Date: Wed, 17 Sep 2025 12:26:57 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M5U8OMrr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758130123; x=1789666123;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=rIjUOCkhvgji49T2bvQVIhQu3hc+yTZqVtW5vqjq0xE=;
+  b=M5U8OMrr3DBydBDysVnd9cU8pp52x6vYp1DhceerIb2KOANzU/4w9Btr
+   CMMvtD7fwg9h8sJcYuzuMq42zL3cvcJxVB7y3W0xsgo/nAg1uXznCX4Lh
+   6MKmdFc+9FzparUteexNljwSrbaivjjAF7qUs/eFwYGjKEDfUx/f4l7x8
+   nkAPgx4unq67CpmDaRa2ijEBG6f0l+1hl59AdwvxmZb0eEbzqV5rvQFWh
+   z2c1oqlmF/bLOzFJgHL2rOPkFXjXM8YFUtfyXjEbJnX0Ih3WKmN/3UAR/
+   ORWv5T19nfqnOIHpjHmdvmpctYKx7b2t5uKLLig7Wp2OlEmSzvfpu04KH
+   w==;
+X-CSE-ConnectionGUID: W+A6ZCGsRJS36Xi98ZJgCw==
+X-CSE-MsgGUID: DCIkAcrYRiy2LvQ9lRRawg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11556"; a="71549701"
+X-IronPort-AV: E=Sophos;i="6.18,272,1751266800"; 
+   d="scan'208";a="71549701"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2025 10:28:42 -0700
+X-CSE-ConnectionGUID: iVe2/hx/QfKY+QKLkouOGg==
+X-CSE-MsgGUID: VWFct4VsT/aEXA70V9V8VQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,272,1751266800"; 
+   d="scan'208";a="212460673"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.111.223]) ([10.125.111.223])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2025 10:28:42 -0700
+Message-ID: <3e891eed-1e6c-407e-9e94-7ab6f76d0b84@intel.com>
+Date: Wed, 17 Sep 2025 10:28:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -63,110 +52,104 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/16] cxl/core: Enable CXL.mem isolation
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<linux-acpi@vger.kernel.org>
-References: <20250730214718.10679-1-Benjamin.Cheatham@amd.com>
- <20250730214718.10679-7-Benjamin.Cheatham@amd.com>
- <20250912162121.0000484c@huawei.com>
+Subject: Re: [PATCH v9 00/10] cxl: Delay HB port and switch dport probing
+ until endpoint dev probe
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, rrichter@amd.com, Gregory Price
+ <gourry@gourry.net>, Li Ming <ming.li@zohomail.com>
+References: <20250829180928.842707-1-dave.jiang@intel.com>
 Content-Language: en-US
-From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-In-Reply-To: <20250912162121.0000484c@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20250829180928.842707-1-dave.jiang@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF00017095:EE_|DM4PR12MB6158:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7b1b0d32-ac70-484f-1979-08ddf60f684f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VnBtODBMMjhhdmdjbWpXY3p6bmpDQTRpcjgramVWMUhwaGtiM28wYUFqY3Ji?=
- =?utf-8?B?eEIrMytkbGVNWmdNeUJmMVU5UEVXa1RVM0l1SmR6UlFpc0RjeGNLNno0K2U1?=
- =?utf-8?B?ejFFZGI0ZGdhV09xTzBaRFVtZHozVXNqdmhYSVo4WFlYRzZ1Q2FBSUJtQS9x?=
- =?utf-8?B?eFlndVJYcU1ISTZ2RDMzNmVxbEVaMWJjUlQwRzJlY0FRYmIwNFEzUnRlRTdI?=
- =?utf-8?B?dTdYbVQ5Y0t2VXVIQ2RhaVV4bWhwWXA2VVAzWURJVTE0ZUlsdVA5WWF4eHNO?=
- =?utf-8?B?YzRhYzFUa3ZIYnZ3dHZXdStoRVpKS0E2KzNwVDNhcTM5R0NmMG9HVysvdkVp?=
- =?utf-8?B?SzVZTXprZkhQaFgyTWtvc0NOcFp3Qkd1MmNEby9QOVNqdktvc212RTlSNnp1?=
- =?utf-8?B?ZXhDR0I4N1pZQjVnSG5TVDRSNEludDYyZjIxSnNJWmE5TU1VMlNFbHorSXRj?=
- =?utf-8?B?SHQwZjA5dGtVcE5KcUEyM3ZRYS9OY3djV2hMcjkvZHhLYmc0SEdYcG1Dd28w?=
- =?utf-8?B?eVk1Q1ppTlczTklydmp5SjdQRjg1clFQOEFsc3ZRQ2V0OG16Y2oveWIra3RI?=
- =?utf-8?B?ZmVJdTljbDFibFV4M25xWFdVTzFuK29zb1VlOXhTOThyaUNGZk1QQTdHUHhz?=
- =?utf-8?B?eWtKQk1Ga0hZRUROelIzWjErUHNIejMxTVJiRmRZM2EydSt0TUdjdUhBUmdD?=
- =?utf-8?B?eGh1VFY5aHJISGwzT1dJbThTOTFFckE0czZiMHBnU3V1WkR5NHJyNFBWaXdD?=
- =?utf-8?B?ZzBmcFZLV3pmVGlpZzJpQ3lIZEwyZHhVaXZnNm5WeUU2MW5LdFg0T1ZUS29B?=
- =?utf-8?B?bUpvRVc2VnRaRStLMWZuRm5uSTdSRGtPcHlTT2dla0JMTkdzMDh3akhPQ2tW?=
- =?utf-8?B?MGF3OUlnR29KM1VoQVJHOVBzZnYyM2ZZeWN2ZmxSNGoySHcwMHFaMDlrRnlU?=
- =?utf-8?B?WGZhTWQyTUxYdnplcVJJc2VzUCtZTThCM1dnM0loS09ZWVFIRHVsLzVsS2Vs?=
- =?utf-8?B?MWFsSUZybTFpNGYrVTJ6ZjFBN0tHeHljNEtSd3B3UUlEMFFRYVlZa2YvWUFS?=
- =?utf-8?B?SzloYWdFdFg1OHhLTGdKT09yVmxmYlQyNFI2RXRzQ25mM1FDUjZKWG0wZW1q?=
- =?utf-8?B?Z1F6NlNCWG4zTDZPT0lJN25rVG9HYk1FeDdOemUwWXVYcHV3ZXZQUFVBZG8r?=
- =?utf-8?B?a3JvVW4vU1ErUjdERkFJaFY5YmJ0cmd6L0E2UXlHNlNHMllyaXlMMzlUMnk3?=
- =?utf-8?B?ZUM1Y056UUYvam5vQnd5R1lNUmNtSlZ2dFMyWXBZSEgyM1d1QzBBdWxOOWh3?=
- =?utf-8?B?SU0zRDFFRDJZT0VGbHpYWDdKbVRkSlhuVWFZVWtkd2w0RjhzV0FpcWJGbUFE?=
- =?utf-8?B?QnBvRkh0NWUxcEhWRXpqOUI2a0NKQXZVNEV0ell0Z05XUmdyeGhpdlJ0enNx?=
- =?utf-8?B?WVErTVRYK3FYc0dLVElpRHY1c0RBdGg1N3A4VWNoZW5kaElDWGxyVVdySlBk?=
- =?utf-8?B?M3F3TmRKdmdlOEo1a2RBVGR5M09vUG12a0FyUy9DTkxSbUtzUlAyYkJJVTQy?=
- =?utf-8?B?TkZmS01yWWxuU1Zob2R6T1FuZ0p1enFPZFk2N0VyUFUxZGUwSWVwVldPL2Ji?=
- =?utf-8?B?VWNXSlYxbEpFcDBkMmtISE15OVhlWFNLSW10RlMxZ0FiazczN1EvZWJKYmMy?=
- =?utf-8?B?UXZlQ2tYb2lqa1hsdWkyY3UvNTZMcldobll2V3oxUVA2akhPUWJ6eDQ4TjBK?=
- =?utf-8?B?ZG9hWCsxTmFYWUkwQkpzQXpTUGpqZEdqWmRKMi9qZ3VVblVZMnJNZWZSY1Zt?=
- =?utf-8?B?ZmpGbFRCVWlVTHY2ZEhhTDNuVThKVStGQWF5eCtwQWlPRGJuZ2x0NWdOblZP?=
- =?utf-8?B?MGc4bUFtR3dOOUx1VnNqR0Y1NEQvekZpYTdsVDhWMVEyYUpMNldSd0FJRkJB?=
- =?utf-8?B?UUZ1eEttMzk1ZEVMWlBpUEhFdm9YdmdmZzkxWUZ1eUw2djlLQUlZMithb28w?=
- =?utf-8?B?dE56WWlDM3JQRDFyMzlCaXRrRXlFNHhxVi9IZ1RNaGlWV0VvT1hJWHNjZkhW?=
- =?utf-8?Q?RBXR3j?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Sep 2025 17:26:59.0631
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b1b0d32-ac70-484f-1979-08ddf60f684f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF00017095.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6158
 
 
 
-On 9/12/2025 10:21 AM, Jonathan Cameron wrote:
-> On Wed, 30 Jul 2025 16:47:08 -0500
-> Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
+On 8/29/25 11:09 AM, Dave Jiang wrote:
+> v9:
+> - Reworked the port enumeration iteration loop. (Robert)
+>   All please re-review "cxl: Defer dport allocation for switch ports"
+> - Created helper functions for dealing with switch and endpoint decoder enumeration.
+>   Main goal is to reduce cxl_test interface burden. (Robert)
+>   - Dropped cxl_test changes for decoder functions
+> - Dropped the cxl_test for region replay. It's not 100% ready and can be submitted later. (Alison)
+> - See specific commits for more detailed changes.
 > 
->> Enable CXL.mem isolation during set up of CXL-capable PCIe Root Ports
->> that have the capability. This capability is optional, so failure to
->> enable isolation is not an error that should fail probe.
->>
->> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+> v8:
+> - A bit of changes from Dan and Robert's comments. Main change is moving the port MMIO
+>   register probing to after the first dport shows up. This resulted with decoder allocation
+>   happens after the register probe.
+> - See specific commits for more detailed changes.
 > 
->> +static int cxl_dport_wait_for_rp_busy(void __iomem *reg)
->> +{
->> +	u32 status;
->> +	int i = 4;
->> +
->> +	do {
+> v7:
+> - Remove -EEXIST to simplify error flow. (Ming)
+> - Set dport to NULL during declare. (Jonathan)
 > 
-> readl_poll_timeout() in iopoll.h should work here.
+> v6:
+> - Return -EEXIST when a dport already exists. (Jonathan)
+> - Fix checking wrong port for NULL. (Ming)
+> - Check host_bridge and call devm_cxl_add_dport_by_uport() directly vs add_port_attach_ep(). (Ming)
+> - Set dport to NULL during declaration. (Jonathan)
 > 
+> v5:
+> - Return dport instead of errno with dport pointer as output param. (Jonathan)
+> - Consolidate common code in cxl_test. (Jonathan)
+> - Rename cxl_port_get_total_dports() to cxl_port_update_total_dports(). (Jonathan)
+> 
+> v4:
+> - Push dport allocation to when they are discovered. (Robert)
+> - Drop linux id for dport with above changes.
+> 
+> v3:
+> - Main changes revolve around improving naming of hostbridge uport and dport (Gregory)
+> - See specific patches for detailed change log
+> 
+> This series attempts to delay the allocation of dports until when the endpoint device
+> (memdev) are being probed. At this point, the CXL link is established and all the
+> devices along the CXL link path up to the Root Port (RP) should be active.
+> 
+> And hopefully this help a bit with Robert's issue raised in the "Inactive
+> downstream port handling" series [1]. Testing would be appreicated. Thank you!
+> 
+> [1]: https://lore.kernel.org/linux-cxl/67c8a0cc23ec_24b64294f6@dwillia2-xfh.jf.intel.com.notmuch/
+> 
+> Dave Jiang (10):
+>   cxl: Add helper to detect top of CXL device topology
+>   cxl: Add helper to reap dport
+>   cxl: Add a cached copy of target_map to cxl_decoder
+>   cxl: Move port register setup to first dport appear
+>   cxl/test: Refactor decoder setup to reduce cxl_test burden
+>   cxl: Defer dport allocation for switch ports
+>   cxl/test: Add mock version of devm_cxl_add_dport_by_dev()
+>   cxl/test: Adjust the mock version of
+>     devm_cxl_switch_port_decoders_setup()
+>   cxl/test: Setup target_map for cxl_test decoder initialization
+>   cxl: Change sslbis handler to only handle single dport
+> 
+>  drivers/cxl/acpi.c                   |   7 +-
+>  drivers/cxl/core/cdat.c              |  25 +--
+>  drivers/cxl/core/core.h              |   5 +
+>  drivers/cxl/core/hdm.c               | 105 ++++++---
+>  drivers/cxl/core/pci.c               |  89 ++++++++
+>  drivers/cxl/core/port.c              | 317 ++++++++++++++++++++-------
+>  drivers/cxl/core/region.c            |   4 +-
+>  drivers/cxl/cxl.h                    |  44 +++-
+>  drivers/cxl/cxlpci.h                 |   2 -
+>  drivers/cxl/port.c                   |  47 +---
+>  tools/testing/cxl/Kbuild             |   7 +-
+>  tools/testing/cxl/cxl_core_exports.c |  22 ++
+>  tools/testing/cxl/exports.h          |  13 ++
+>  tools/testing/cxl/test/cxl.c         | 115 ++++++++--
+>  tools/testing/cxl/test/mock.c        |  96 +++-----
+>  tools/testing/cxl/test/mock.h        |   9 +-
+>  16 files changed, 642 insertions(+), 265 deletions(-)
+>  create mode 100644 tools/testing/cxl/exports.h
+> 
+> 
+> base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
 
-I wasn't aware of that, I'll check it out.
-
-> 
->> +		status = readl(reg + CXL_ISOLATION_STATUS_OFFSET);
->> +		if (!(status & CXL_ISOLATION_STAT_RP_BUSY))
->> +			return 0;
->> +
->> +		msleep(500);
->> +	} while (--i);
->> +
->> +	return -ETIMEDOUT;
->> +}
-
+Applied to cxl/next with minor fixes from comments:
+14868cf9e4b8cefac0fb9eea4993ac3f863a8c0d
