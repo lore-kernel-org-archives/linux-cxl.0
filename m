@@ -1,88 +1,130 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B25AE239581
-	for <linux-cxl@vger.kernel.org>; Thu, 18 Sep 2025 03:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810DF258ED4
+	for <linux-cxl@vger.kernel.org>; Thu, 18 Sep 2025 04:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758165074; cv=none; b=TmON7EqCnthyaM0NSzcQ3YZ/bdd0SX+A+7TfcPMmFmtnrOpJWyeap8LC1woH4w7gAT4ve35OujQtiPI4BwwVinuCotNE/3FATaqAU805hWzF9h6GwWE01U3yLYyX027FNnaa15woYoAqb+PBVo0+MStsXjDdamzG0G+ApNaikkw=
+	t=1758169687; cv=none; b=CeOTSjahzJeBLqMCn4G9CNuDSQZn0aQ1hrCIhbS7aHaGQVADkzao85sguGtVilHjVaSRgZcEH4cWVfnqowTmZ2cBEYH7fzIZkGnla5gdLkHFhnptFBf/L2MlCK5AKbnyPoEkRTezhw8ylKx9fPt1G66WYMl7nnLtIHDxQLUrb3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758165074; c=relaxed/simple;
-	bh=g6XjMivryjsQvDbKREuLJC67xZnaV6+z17E6u3VcMf8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bG8UsLv3FOlsfdEOIYwThrNYryb7zpUK2ZvDm03zLMFVGficGd9TqyDLSwPXR5bgkDh47IzI8WafVZqIWCIkZ2gXR7WAPJCzC070uETbRWq8Y+AFcaeQUOjGlB9Bdq83LlUYihRd4odzhE5Ah2+K9nDMt2oESUgno7J2k8Sy7+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwCXnrZEeMtoD1vgCA--.10S2;
-	Thu, 18 Sep 2025 11:11:00 +0800 (CST)
-Received: from localhost (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwAXeuc_eMtoJjUUAA--.17208S2;
-	Thu, 18 Sep 2025 11:10:56 +0800 (CST)
-Date: Thu, 18 Sep 2025 11:10:38 +0800
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: rad@semihalf.com, peter.maydell@linaro.org,
-	leif.lindholm@oss.qualcomm.com, chenbaozi@phytium.com.cn,
-	qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
-	qemu-arm@nongnu.org, ligen@phytium.com.cn
-Subject: Re: [RFC QEMU PATCH v7] hw/arm/sbsa-ref: Support CXL Host Bridge &
- CFMW
-Message-ID: <aMt4LqSympNcVqnb@phytium.com.cn>
-References: <20250807111037.241118-1-wangyuquan1236@phytium.com.cn>
- <20250917173914.0000331e@huawei.com>
+	s=arc-20240116; t=1758169687; c=relaxed/simple;
+	bh=huzLLkBs3Vk5ryeeSJ5VZUBZGOCp4kS3cFAiVMmu5JQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=n656SRmNECSz72IGrP0XFXsM/NpPIsIiedVv0hAE9Oib2AHtmfU+QFEb2/tKIFTYwktoyNS4Tp5dajPSGvq8lo14FhunPAPTACye8JXbbjNwKNzk8LIvbb/Hh3+Hl3lLIqoePmRRL886d6q00gkPEnqBQHl85K7TNqA8A995fjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=YQbA0kRA; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YQbA0kRA"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250918042803epoutp02d1eb1e7b44733ce5cdd6aa977495e277~mRgMIJ4ZE0515005150epoutp027
+	for <linux-cxl@vger.kernel.org>; Thu, 18 Sep 2025 04:28:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250918042803epoutp02d1eb1e7b44733ce5cdd6aa977495e277~mRgMIJ4ZE0515005150epoutp027
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1758169683;
+	bh=VfTKt+9cya/Xi6xKXtJ2s6w+UyV0o12N66zYmXYF2Bw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YQbA0kRABPa4qazJNmP0w0ncK1iF3Ho0j+8cn/pFxfHuwfpUP5GydFeH4Pnas5fhJ
+	 UOF7IaB6Ry8XYdV49c/d8ZJBqKoyFrEBOPc23bTC2k7BwHK7uziZaMIe7JeMCQe8c8
+	 tyxpNJAf2oVJ/kOLr9nqPivFviuhLYJyi17XXucU=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250918042802epcas5p395734330ce89f122c2e1396d1fbb2f29~mRgLfUQX02834428344epcas5p3J;
+	Thu, 18 Sep 2025 04:28:02 +0000 (GMT)
+Received: from epcpadp2new (unknown [182.195.40.142]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4cS2gQ4dgJz2SSKd; Thu, 18 Sep
+	2025 04:28:02 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250917134132epcas5p192c031691ab4cbb905f2b2313bb79dee~mFaKh1Xvt1744617446epcas5p1D;
+	Wed, 17 Sep 2025 13:41:32 +0000 (GMT)
+Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
+	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250917134131epsmtip2b3ec6fcf599b4b2f199f60c0dc1c8878~mFaI_cDaX0779307793epsmtip2_;
+	Wed, 17 Sep 2025 13:41:30 +0000 (GMT)
+From: Neeraj Kumar <s.neeraj@samsung.com>
+To: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, gost.dev@samsung.com
+Cc: a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
+	cpgs@samsung.com, Neeraj Kumar <s.neeraj@samsung.com>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH V3 02/20] nvdimm/label: CXL labels skip the need for
+ 'interleave-set cookie'
+Date: Wed, 17 Sep 2025 19:10:58 +0530
+Message-Id: <1891546521.01758169682623.JavaMail.epsvc@epcpadp2new>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250917134116.1623730-1-s.neeraj@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250917173914.0000331e@huawei.com>
-X-CM-TRANSID:AQAAfwAXeuc_eMtoJjUUAA--.17208S2
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAQAWjJu34I-gA1s3
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvdXoW7Xr1ktF1fJF4rtw1kGw1ftFb_yoWkWrb_ZF
-	s2yr9avw4vkF9FgFsxt3ZIvrWftryDur47XwnrAas8JF9xtas5uF4DKFna9345Gr42qr42
-	kr1YvrW3tanrZjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrnU
-	Uv73VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRUUUUU
-	UUUU=
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250917134132epcas5p192c031691ab4cbb905f2b2313bb79dee
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250917134132epcas5p192c031691ab4cbb905f2b2313bb79dee
+References: <20250917134116.1623730-1-s.neeraj@samsung.com>
+	<CGME20250917134132epcas5p192c031691ab4cbb905f2b2313bb79dee@epcas5p1.samsung.com>
 
-On Wed, Sep 17, 2025 at 05:39:14PM +0100, Jonathan Cameron wrote:
-> On Thu, 7 Aug 2025 19:10:37 +0800
-> wangyuquan <wangyuquan1236@phytium.com.cn> wrote:
-> 
-> > From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-> > 
-> > This creates a specific CXL host bridge (0001:00) with four cxl
-> > root ports on sbsa-ref. And the memory layout provides separate
-> > space windows for the cxl host bridge in the sbsa-ref memmap:
-> > 
-> > - 64K  CXL Host Bridge Component Registers (CHBCR)
-> > - 64K  CXL_PIO
-> > - 128M CXL_MMIO
-> > - 256M CXL_ECAM
-> > - 4G   CXL_MMIO_HIGH
-> > 
-> > To provide CFMWs on sbsa-ref, this extends 1TB space from the
-> > hole above RAM Memory [SBSA_MEM] for CXL Fixed Memory Window:
-> > 
-> > - 1T   CXL_FIXED_WINDOW
-> > 
-> > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-> This looks pretty standard to me so FWIW as someone who hasn't used
-> the SBSA model.
-> 
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> 
->
+CXL LSA v2.1 utilizes the region labels stored in the LSA for interleave
+set configuration instead of interleave-set cookie used in previous LSA
+versions. As interleave-set cookie is not required for CXL LSA v2.1 format
+so skip its usage for CXL LSA 2.1 format
 
-Hi, Leif and SBSA folks
+Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Acked-by: Ira Weiny <ira.weiny@intel.com>
+---
+ drivers/nvdimm/namespace_devs.c |  8 +++++++-
+ drivers/nvdimm/region_devs.c    | 10 ++++++++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-We hope to hear from everyone regarding other suggestions for using the
-CXL on the sbsa-ref, as well as any areas where this patch might have
-been overlooked.
+diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+index 55cfbf1e0a95..3271b1c8569a 100644
+--- a/drivers/nvdimm/namespace_devs.c
++++ b/drivers/nvdimm/namespace_devs.c
+@@ -1684,7 +1684,13 @@ static struct device *create_namespace_pmem(struct nd_region *nd_region,
+ 	int rc = 0;
+ 	u16 i;
+ 
+-	if (cookie == 0) {
++	/*
++	 * CXL LSA v2.1 utilizes the region label stored in the LSA for
++	 * interleave set configuration. Whereas EFI LSA v1.1 & v1.2
++	 * utilizes interleave-set cookie. i.e, CXL labels skip the
++	 * need for 'interleave-set cookie'
++	 */
++	if (!ndd->cxl && cookie == 0) {
+ 		dev_dbg(&nd_region->dev, "invalid interleave-set-cookie\n");
+ 		return ERR_PTR(-ENXIO);
+ 	}
+diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+index de1ee5ebc851..88275f352240 100644
+--- a/drivers/nvdimm/region_devs.c
++++ b/drivers/nvdimm/region_devs.c
+@@ -858,6 +858,16 @@ u64 nd_region_interleave_set_cookie(struct nd_region *nd_region,
+ 	if (!nd_set)
+ 		return 0;
+ 
++	/*
++	 * CXL LSA v2.1 utilizes the region label stored in the LSA for
++	 * interleave set configuration. Whereas EFI LSA v1.1 & v1.2
++	 * utilizes interleave-set cookie. i.e, CXL labels skip the
++	 * need for 'interleave-set cookie'
++	 */
++	if (nsindex && __le16_to_cpu(nsindex->major) == 2
++			&& __le16_to_cpu(nsindex->minor) == 1)
++		return 0;
++
+ 	if (nsindex && __le16_to_cpu(nsindex->major) == 1
+ 			&& __le16_to_cpu(nsindex->minor) == 1)
+ 		return nd_set->cookie1;
+-- 
+2.34.1
 
-Yuquan
 
