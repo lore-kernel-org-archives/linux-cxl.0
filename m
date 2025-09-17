@@ -1,134 +1,177 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE37274B37
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Sep 2025 20:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A77E2566E9;
+	Wed, 17 Sep 2025 20:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758142449; cv=none; b=oCqebQJLCKFqJtqhnOgJ5tjgYSMoZs6p9LEFvq+Eha3iMjd/bfSUebgZnErbJEQpdGeamNtnTHSMHFzZPziyrnmjXDEJHnnkbmZvF0BTgKliA8hkyuUNNzP9p8w9fbT+X6wAAvkycLQGh+0A+eywzi6C127gDDd2qRnQW5JiaJc=
+	t=1758142685; cv=none; b=GWvcWvZuLIS6z/TlHsndQ31tO34yS1TPzxyqXiUmfhkTHnv6eCBTZlX7EL9R+YURs9wBApjbfvo9DtZZCCsqEuVCd4J6kCjSIbzDrP4hiPXYqAxecrCwxzuKfbpRKYU3kmHm7oAzKkhPIq+Ucebyjq7aLFyBynFXoJ03/ESZiDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758142449; c=relaxed/simple;
-	bh=K+W1WDio6lk+ITDSHWIHjSqoEIPRhq3FXhhJkTR7mH0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SBo0GmhDlOpeiaAp3RPbwgSfZx384a5y5CViX4TMnl/lptwsnupe49PXQxym3T4DK3P1S56Pc20sZ8EY7cmptQmu1FWi00AvzJ4oLq5mKbjf3GHdmbAe6UqVXXCz+uAAO2m9bggu1OL3hADd8R/auj8OpgFFgaFDdTOeJzj7814=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=IqqFv8b3; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1758142685; c=relaxed/simple;
+	bh=moQIl8q101c8cCrSFiRPkaEjaxA18DdYcaYAJTpAXzQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aeyVSx55vOTgZ+Q8ERbXmpbuEj1e2lnW04dvs00/q8yApyKr7YVsZLZJhDX/oPL1IS0U2h65t/qFObgCVaIOp4HCHr3+5GjPkgNEwZb8tcRuonhxLXZJfmHNSzoVht2ECPLmviMmupRdReWlrZeXgUvUf7qub+DitwLjaxR1WXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bfdlqI0z; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="IqqFv8b3"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-778d99112fbso2638946d6.1
-        for <linux-cxl@vger.kernel.org>; Wed, 17 Sep 2025 13:54:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1758142447; x=1758747247; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wcmqKXFeHUqx/Zd3AQldL9H7ZjaJD86SN/59W2f2bAs=;
-        b=IqqFv8b3vcf2fDK44mE57FrYJTu6BxSHwlJTelsRxsGtobZ1Fz1uRI4u+FYpn3/r4i
-         fmgLy/Ul5Astyqprqyu2R5xh/36I4HnFGUgtPhGZWVWigfrmP8iDo3Ao8m+lf5v8njef
-         zQHNgT/EmoTOfkG1tn+jQ2FrkyQVTIDV+fU+9lIto0XtzMpR+FJ1Q4e96N3IP+rJIvIu
-         0vimjBM8q4Pss7QaTiv5XVi6EwNFJ0ZcInD5eOQFAw/bLe+CwNGu4SA6Vkuzp+5J+xqq
-         kFMIcvQDBswk+8cBzhQkj/iJ1LLCDebTwgS/lfjZ/RYqj5+DbuwKUDcS7iORFkoYQlc8
-         xhEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758142447; x=1758747247;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wcmqKXFeHUqx/Zd3AQldL9H7ZjaJD86SN/59W2f2bAs=;
-        b=ZjzzOyhkXy3kwhH0jM8j0bF/ZgYTnil9hRglnpb2cUAzng3O7EGB1xyWjrDj6echBm
-         g6DgfFr4+mPS+H7ZQUhgpOqJdR/LMBIMAD0l4swbjRZX1JCrc+2R2A3LBW+nPpTcVAGR
-         wce0ZdX8am0hd1LuN3Lj1vAe45gnSII9oHwuzVj9ECLcbf9pvPfGf81I1dKuTRlvjvpM
-         UTwfNsWpo2Oixsk17iqCGLowoqni6LeQ1XdIQVwfRaYWQm+pCiXgdEcHNWj/GSTEcdB+
-         2QhAG6KZd+rYNSDnG+wQe7VqTS2NDDQAcPcAlQEUjvNUHe1jCZq3o9RAySaSUkziMYhe
-         h8kg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQEGvydpQ6xBD/FlhnU4izHWWOst+ShXt8faZjI9g19Z4XacVyAaXQ4n7aSNnT1H0J8SmuGN68qyA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP7boB2IcfvvImCg3Sm/Lw4tKs+bpxULC+9phu/i5+F4pIWRgq
-	iWPNQxbsLdYkf2v0hcGrPFi+J0t0UWz81wv8RXtn3sHp7EYA0/rp40Ev10UVbvRMu2k=
-X-Gm-Gg: ASbGncsL8fAOb6sQDkOcvjegLNgLZP038hbGC+U5Pb8uW7tWlVhUWu3lA9jDn1BoDay
-	6CmrdjfyRm2306hx0IdiFrSS3bidVIAe4EZ3Ibdi0nMY1VOpc3QNHWh9W0ueiPIEmwPCXwRFzYb
-	pbobgaPwojWTQpSeAfZ4yWUyBNPOEmQox4lL/H/rccZymeWIbze9bp1TfGGPNRKySRrvc0a6ylq
-	knbqecGX8neF6yQ6ZdtNmN32tRPU1Lj0lpYFis0TBRE/0twXarrKKd+wue1GDSU2qo5WBgES+fG
-	Ra7y8L1UINS3w/QsHUE9XNfMHjfwhKov3Hdzu+34Y0Gv2rssq34idQH2v4Mjb7C/J8ElF7/JUOB
-	1djwHmlxT4zljqFAFbsfbZadahGzNsAg2v7o4mzdrNH2ZVnKOdt0e5cckJbgX6cP/4EirWJRqp5
-	xLY8UxGu9X2+/mBMGqLhonWg==
-X-Google-Smtp-Source: AGHT+IGDXIKr016Rx3/Xv8gq8Sj5/rMui3SP4djoDyXpvBJ2Prp8xro0Uk1OdXAiTR7V4JoBTmiKeA==
-X-Received: by 2002:a05:6214:2622:b0:76f:6972:bb89 with SMTP id 6a1803df08f44-78ecc438e04mr47323676d6.9.1758142446767;
-        Wed, 17 Sep 2025 13:54:06 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-79353c4d4b3sm1804606d6.51.2025.09.17.13.54.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Sep 2025 13:54:06 -0700 (PDT)
-Date: Wed, 17 Sep 2025 16:54:04 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>
-Subject: Re: [PATCH v3 10/11] cxl/acpi: Prepare use of EFI runtime services
-Message-ID: <aMsf7EP8W99QJFTI@gourry-fedora-PF4VCD3F>
-References: <20250912144514.526441-1-rrichter@amd.com>
- <20250912144514.526441-11-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bfdlqI0z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758142683; x=1789678683;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=moQIl8q101c8cCrSFiRPkaEjaxA18DdYcaYAJTpAXzQ=;
+  b=bfdlqI0zK+GTyYwLf7ZmPS8BiR8fCzd9WC15QRE9nfMOU1tU5BuRejcX
+   KYPUnd5qM2J3m/rupOB/YUQZIUW522LPftayBAfDuhDOXt5/Wv5uMVEfQ
+   krEooYm4E1NBLJeBnlvaBZwqigi0bm9SycoEIxhEnEXX8R8Ux5C7PZ/BD
+   iBt1JZWKZRlZoYJLBuRuIjpDPMK84Ts21ZI0/c1yYstwtNbW98vN9c4Vl
+   rl4BschRV9sXtvEg9+XyRi6ajNvWg4EHD4IQY0wNfAR2Yn7NbAanRcFs9
+   jhVoDfRM9N87bm8l07lQehdoURwWWN4tQysA8qjra5H85CuYPOxVcX+rx
+   g==;
+X-CSE-ConnectionGUID: iWgkheDmSsuVA+1/ttQmQw==
+X-CSE-MsgGUID: FkUa9khzSH6KUgWOKRrQoQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11556"; a="60530292"
+X-IronPort-AV: E=Sophos;i="6.18,273,1751266800"; 
+   d="scan'208";a="60530292"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2025 13:58:02 -0700
+X-CSE-ConnectionGUID: CMzS1QJDTvq5S9Dq5pGkyQ==
+X-CSE-MsgGUID: 49J6xT9FSXO1Vxn6kgTwnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,273,1751266800"; 
+   d="scan'208";a="206279723"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.111.223]) ([10.125.111.223])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2025 13:58:00 -0700
+Message-ID: <10d3ed8d-7688-4ced-841a-ce4e6d0b7f31@intel.com>
+Date: Wed, 17 Sep 2025 13:57:59 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250912144514.526441-11-rrichter@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 08/11] cxl/region: Implement endpoint decoder address
+ translation
+To: Gregory Price <gourry@gourry.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: Robert Richter <rrichter@amd.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
+ <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
+References: <20250912144514.526441-1-rrichter@amd.com>
+ <20250912144514.526441-9-rrichter@amd.com>
+ <20250915114614.000053f1@huawei.com>
+ <aMsfWfwMhewTjHD3@gourry-fedora-PF4VCD3F>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <aMsfWfwMhewTjHD3@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 12, 2025 at 04:45:12PM +0200, Robert Richter wrote:
-> In order to use EFI runtime services, esp. ACPI PRM which uses the
-> efi_rts_wq workqueue, initialize EFI before CXL ACPI.
-> 
-> There is a subsys_initcall order dependency if driver is builtin:
-> 
->  subsys_initcall(cxl_acpi_init);
->  subsys_initcall(efisubsys_init);
-> 
-> Prevent the efi_rts_wq workqueue being used by cxl_acpi_init() before
-> its allocation. Use subsys_initcall_sync(cxl_acpi_init) to always run
-> efisubsys_init() first.
-> 
-> Reported-by: Gregory Price <gourry@gourry.net>
-> Tested-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-> Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> ---
->  drivers/cxl/acpi.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+On 9/17/25 1:51 PM, Gregory Price wrote:
+> On Mon, Sep 15, 2025 at 11:46:14AM +0100, Jonathan Cameron wrote:
+>>> +	/*
+>>> +	 * Since translated addresses include the interleaving
+>>> +	 * offsets, align the range to 256 MB.
+>>
+>> So we pass in an HPA range without interleaving offsets and get back
+>> one with them?  Is that unavoidable, or can we potentially push
+>> this bit into the callback?  Probably with separate callbacks to
+>> get the interleave details.
+>>
+>> Overall I'm not really following what is going on here.  Maybe
+>> some ascii art would help?
+>>
 > 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 26c494704437..95a5ba395c1a 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -1012,8 +1012,12 @@ static void __exit cxl_acpi_exit(void)
->  	cxl_bus_drain();
->  }
->  
-> -/* load before dax_hmem sees 'Soft Reserved' CXL ranges */
-> -subsys_initcall(cxl_acpi_init);
-> +/*
-> + * Load before dax_hmem sees 'Soft Reserved' CXL ranges. Use
-> + * subsys_initcall_sync() since there is an order dependency with
-> + * subsys_initcall(efisubsys_init), which must run first.
-> + */
-> +subsys_initcall_sync(cxl_acpi_init);
->  
->  /*
->   * Arrange for host-bridge ports to be active synchronous with
-> -- 
-> 2.39.5
+> The endpoints in this case are encoded with "normalized" (base-0) with
+> a size of only the memory they provide. As a result, the decoder
+> interleave settings will always be passthrough (iw=1, ig=ignored).
 > 
+> This chunk translates the normalized address region to the relevant SPA
+> region, and translates the IW/IG to what it actually is (i.e. what it 
+> *would have* been on a "normal" system).
+> 
+> Took me a while when i originally reviewed and tested this set.
+> 
+> Example - this is how you'd expect a real system supported by this code
+> to be programmed:
+> 
+> region {
+>     .start = 0x20000000
+>     .end   = 0x3fffffff
+>     .iw    = 2
+>     .ig    = 256
+> }
+> 
+> endpoint1_decoder {
+>     .start = 0x0
+>     .end   = 0xfffffff
+>     .iw    = 1
+>     .ig    = 256
+> }
+> 
+> endpoint2_decoder {
+>     .start = 0x0
+>     .end   = 0xfffffff
+>     .iw    = 1
+>     .ig    = 256
+> }
+> 
+> when you do the translation from either decoder's hpa start/end,
+> you want the following output:
+> 
+> range {
+>     .start = 0x20000000
+>     .end   = 0x3fffffff
+>     .iw    = 2
+>     .ig    = 256
+> }
+> 
+> If you assume a "normal" system - this is the settings the decoders
+> would have been programmed with in the first place.
+> 
+> You have to do the alignment because the translation function (may)
+> only work on granularity alignment.
+> 
+> Example:
+> endpoint1->to_hpa(0)         => 0x0
+> endpoint1->to_hpa(0xfffffff) => 0xffffe00
+> endpoint2->to_hpa(0)         => 0x100
+> endpoint2->to_hpa(0xfffffff) => 0xfffff00
+> 
+> So this code applies the appropriate alignment and returns the
+> translated iw/ig for use elsewhere in the stack when validating the rest
+> of the decoders.
+
+Having this explanation added to the Conventions document would be good to have.
+
+> 
+> (haven't gotten to later commits, but iirc it was eventually used)
+> 
+> ~Gregory
+> 
+>>> +	 */
+>>> +	range.start = ALIGN_DOWN(range.start, SZ_256M);
+>>> +	range.end = ALIGN(range.end, SZ_256M) - 1;
+>>> +
+>>> +	spa_len = range_len(&range);
+>>> +	if (!len || !spa_len || spa_len % len) {
+>>> +		dev_warn(&port->dev,
+>>> +			"CXL address translation: HPA range not contiguous: %#llx-%#llx:%#llx-%#llx(%s)\n",
+>>> +			range.start, range.end, ctx->hpa_range.start,
+>>> +			ctx->hpa_range.end, dev_name(&cxld->dev));
+>>> +		return -ENXIO;
+>>> +	}
+>>> +
+>>> +	ways = spa_len / len;
+>>> +	gran = SZ_256;
+>>> +
+
