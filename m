@@ -1,205 +1,246 @@
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011062.outbound.protection.outlook.com [40.107.208.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9888A2D8DD4;
-	Thu, 18 Sep 2025 19:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758224779; cv=none; b=aoblwBnN4tk3UoJiQlvRR8Y6U9EE6rNrTKh4Nu9xZAfbznqtqx/qG8cL+UF+QgNxsaUL3j956WAUeqFcV6LWe5O7T0AUXCc4gfPWkiU7sx8U2gOr07TILIBGnyE861wERiihFN2Mo79ReDdYYJf7TY059k+r5veVWiqckacd0H0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758224779; c=relaxed/simple;
-	bh=JURX/TaKnyaqFdI7pmEWFXVzqASX8RS1pLZIi8kSx/A=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pXouRjP2/s2a/+6vHjkLpNgUCo0gXuO5oapJPM/+VilUw5x+LyB6jsfcIpx88qFyZQ06t6s//MlYXSFhnRyAemeh+2CejfbOoYnv+Ha/QG0LeFzUF79qeoni89PiyHj8Qk1WRznZoRiEEXnD+AZW2TNmGVZRD6G6EGNCRXK1wEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=oUvgxHX4; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F99F31CA5B
+	for <linux-cxl@vger.kernel.org>; Thu, 18 Sep 2025 20:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758226527; cv=fail; b=CI+Hx+kRkHXwrlv9nUjjQK1+Mm12ffroHM0/Yz6KJiy/DQ+3Qh60QuDsCZMh3GqARo5IfuUU5nvuFE0KZ6bm/1l5Yyry8CnHFcpojLsSHuuh26gcUktYeboFliB4S39hMXZMbXONnxWkNB51WhDYv92rMUEHvOmJOdKSAf/moL0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758226527; c=relaxed/simple;
+	bh=PSU3riJTUykzM3wKmy1eNC/kzhWMm3vjYPtTtllEZQU=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=Rze+mN49G4rZV9npr6hChB2jTbPXBOGlUHhN7IXg36TjHLjvHYv9NhQs5ls+MGiVYwPTlmPk2d1MDPcNrBGvFTq0x4iMkwhjXXAil3fu7/X64PXzS/a0cba7paRe0BXhpUEr89PqedtylgxaKH6uIlaNQA6y8SUDF0wcshf+q2E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=U58E0mYo; arc=fail smtp.client-ip=40.107.208.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="oUvgxHX4"
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 58IEpiMR2943542;
-	Thu, 18 Sep 2025 12:46:16 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=BNnQo0sMp5meQ8eMdhpYCpDIuJZVf4B2s9e5frOewII=; b=oUvgxHX4Zvag
-	QvZfvT5qsSg7XUUNcEKSGHGxSpk1x6xVdjCczVBB0sDEs21e34wV0jIolvVbNYkN
-	jTgvyrHUUYwV+lo6u++rCkGbO2ffVmXnU9nQyCKh24yMCSSEvr42Bh75J9IwX/o6
-	ZAMcfYDTc7pK2dypZ8HhlzYDN64uYjUg4u+fxTFlpDoC/odFQWOZTvcKC4A4hp68
-	PF1Pcn5X6fKmq6NSA1PbQHzCAk0OWb7eyHWUkOL09qiC+8w9o8+rBip4NJAIBH08
-	tXqKtlvjXykOV5OBQ6V2VEvoNjk8ciX51kX75Dg+301sFyrxCmy9z2VXMMG5QHsq
-	FEXUxCTt9w==
-Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 498m7fjkq1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 18 Sep 2025 12:46:16 -0700 (PDT)
-Received: from devbig091.ldc1.facebook.com (2620:10d:c0a8:1b::30) by
- mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.20; Thu, 18 Sep 2025 19:46:14 +0000
-From: Chris Mason <clm@meta.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-CC: Chris Mason <clm@meta.com>, Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>, Guo Ren <guoren@kernel.org>,
-        "Thomas
- Bogendoerfer" <tsbogend@alpha.franken.de>,
-        Heiko Carstens
-	<hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev
-	<agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "David S . Miller"
-	<davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann
-	<arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Dan
- Williams" <dan.j.williams@intel.com>,
-        Vishal Verma
-	<vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre
-	<nico@fluxnic.net>,
-        "Muchun Song" <muchun.song@linux.dev>,
-        Oscar Salvador
-	<osalvador@suse.de>,
-        "David Hildenbrand" <david@redhat.com>,
-        Konstantin
- Komarov <almaz.alexandrovich@paragon-software.com>,
-        Baoquan He
-	<bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-        Dave Young
-	<dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
-        Reinette Chatre
-	<reinette.chatre@intel.com>,
-        "Dave Martin" <Dave.Martin@arm.com>,
-        James Morse
-	<james.morse@arm.com>,
-        "Alexander Viro" <viro@zeniv.linux.org.uk>,
-        Christian
- Brauner <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
-        "Liam R . Howlett"
-	<Liam.Howlett@oracle.com>,
-        "Vlastimil Babka" <vbabka@suse.cz>, Mike Rapoport
-	<rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Michal Hocko
-	<mhocko@suse.com>, Hugh Dickins <hughd@google.com>,
-        Baolin Wang
-	<baolin.wang@linux.alibaba.com>,
-        "Uladzislau Rezki" <urezki@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "Andrey Konovalov"
-	<andreyknvl@gmail.com>,
-        Jann Horn <jannh@google.com>, Pedro Falcato
-	<pfalcato@suse.de>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-csky@vger.kernel.org>,
-        <linux-mips@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        <sparclinux@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-        <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
-        <ntfs3@lists.linux.dev>, <kexec@lists.infradead.org>,
-        <kasan-dev@googlegroups.com>, Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v2 16/16] kcov: update kcov to use mmap_prepare
-Date: Thu, 18 Sep 2025 12:45:38 -0700
-Message-ID: <20250918194556.3814405-1-clm@meta.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <5b1ab8ef7065093884fc9af15364b48c0a02599a.1757534913.git.lorenzo.stoakes@oracle.com>
-References:
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="U58E0mYo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ktVPdz4OlCXym4As8TGsZj+Yholghy4Ijvv4Z7u6bkpa7JCQv9mC7T1mHB549wHO5xZJRBXpnWpCG4s4m9BqMIgAVAzRSa/CCVtLjkc61J0lfjRLueZCK7WN/1HwH+pQ7Y3zgO5a9VgW45bss4/2avTAiNS6Pkd9DpjsaLBcAV6nFgCvyHIZfatThOmnBKkRP843bYIDDOFDEr22DRLCa8eN6CUgE7OEvSyhvWJIH6hXs8rsULULiIBz0rvZwweKfvDXD6+KcE4dkqxrhk8H+5IDV4H97dZaAEzlHiaSFyQQRS1txZ92yqP3ib6WTXdPyjHz8AYEtBVtpFvx5dKGNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vhV1H4ci9Y3j4Oi0p0wNi6eHJbN/x1vblRv1c4Xw5Uw=;
+ b=tiZxFFTrlcYqKn2uXEgtIiP/voJ4wMdQluIH4IvINVu7sO01TJqRhnUU0OFWpwhoywUD44zFxulpYxZk/FsJP3eX+Iko2iFthwU52K7nC4GLAN/ac0flj0s+n7Ipd4ohrKJN0qjbwQWuagKIh0+1mys611h0aSCSUla7VtpNrgt5nU0NsUTnYxHagbsBcPZ7i8mbxQmJw+A9SrYcP+rL5DyD1z+ySXxgITsCO/qRhzuILnBjAZZCPx9kJ6ecCWbeVAK4jVcFMkY4SVYd04sNVTCIvmYn8zG04k46/2xcRzFMr4zxTHposeehiGh4CS+OwGwyFMLiekbuOzv9+Widsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vhV1H4ci9Y3j4Oi0p0wNi6eHJbN/x1vblRv1c4Xw5Uw=;
+ b=U58E0mYoxAw+nh1vpoLQ+2InUSWQX27bDpvocXejXPfzOafJoNFnEppQFL0H8M82nxqY3S8gCYg41K3oRdrWKt9MG+GV5yGyc8YT89TsIVwqnoweyx83y2og91ecDHFX/anosuCv7w3jUY1bYNpZBXIYiUYfj0Opv5CMNnXybyM=
+Received: from SN7PR04CA0078.namprd04.prod.outlook.com (2603:10b6:806:121::23)
+ by DS0PR12MB8368.namprd12.prod.outlook.com (2603:10b6:8:fe::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.13; Thu, 18 Sep
+ 2025 20:15:23 +0000
+Received: from SN1PEPF00026369.namprd02.prod.outlook.com
+ (2603:10b6:806:121:cafe::1b) by SN7PR04CA0078.outlook.office365.com
+ (2603:10b6:806:121::23) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9137.14 via Frontend Transport; Thu,
+ 18 Sep 2025 20:15:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SN1PEPF00026369.mail.protection.outlook.com (10.167.241.134) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9137.12 via Frontend Transport; Thu, 18 Sep 2025 20:15:23 +0000
+Received: from [10.254.54.138] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 18 Sep
+ 2025 13:15:22 -0700
+Message-ID: <ed75d7b9-74d1-4ba7-9001-a94d0e3d4ff4@amd.com>
+Date: Thu, 18 Sep 2025 15:15:21 -0500
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: -nb3wVnAtqomihwZ5BzjAk2px7ex6dUi
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE4MDE3NiBTYWx0ZWRfX4Y8q+OJtcR0W
- +oYOau8ot7ilGTzu5PMGr/c3x1bedT9B3gqOZHC7hM/Xi6+uaY0+lHxn/Ka9lE213kL68CII/7K
- z3B5d+3wpbiSc/ygeHsIhiWDxHAwN+fGFwFsRE7UhGTUUvWkFkY05ELfd3kxwScqvazqt9rbonW
- bOXl1lczG5Z9G+teTpxDti5TNxhuajRiwYF0JOVA2rBw9NRviqGPh4HP+n9iXtIIMtm1GoToIaT
- Hu39ICr9dMFPAjamuD3EgvUaHLFY/4+APB4u9SBfeGw7HWZlMuLwY/AgydoBSK6opKQCrvQOWH5
- 3JASKIaygraugixdHv8cWWJX9wRaKGzhstUShrgPXa9rw8BJZv52JiSljT0Adk=
-X-Authority-Analysis: v=2.4 cv=G6AcE8k5 c=1 sm=1 tr=0 ts=68cc6188 cx=c_pps
- a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
- a=yJojWOMRYYMA:10 a=yPCof4ZbAAAA:8 a=auZRGODfdbgPxNsHCnAA:9
-X-Proofpoint-GUID: -nb3wVnAtqomihwZ5BzjAk2px7ex6dUi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-18_02,2025-09-18_02,2025-03-28_01
+User-Agent: Mozilla Thunderbird
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+Subject: Re: [RFC PATCH 11/18] cxl/core: Add CXL snoop filter setup and
+ checking
+To: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
+References: <20250812212921.9548-1-Benjamin.Cheatham@amd.com>
+ <20250812212921.9548-12-Benjamin.Cheatham@amd.com>
+ <6c63dc30-0ec1-4ead-a884-bdc87d07f70f@intel.com>
+Content-Language: en-US
+In-Reply-To: <6c63dc30-0ec1-4ead-a884-bdc87d07f70f@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF00026369:EE_|DS0PR12MB8368:EE_
+X-MS-Office365-Filtering-Correlation-Id: 686db1ab-ff22-4ab6-f10a-08ddf6f01930
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SEhDK2RGK1Jsclk3QzRwN253OGU5L0IramVnSmlaWGhWSGJKem0wSTdOTFB4?=
+ =?utf-8?B?eE56Z1orQm1hMWNFRUR2SVlycVlVcjNyMEhhZkVHVldXbWQrSEFGaVl1YzNU?=
+ =?utf-8?B?bzdiN3owK2xCWTJSNmhzSTRjajNDOXpuYTJhY21VV3VCQU9LZXJyZkVVWHVC?=
+ =?utf-8?B?VmNYdTZzckJZN1ZpRmV3Ny84cytWNk5GdlRBOTUyNlM0MHVIbFNUQkZudnFk?=
+ =?utf-8?B?alFMTUppdTArTHhzWDM3UlJ4TnpuVFlwdWw4a3hETDBNUGtTOUhiRVR1ZGtk?=
+ =?utf-8?B?aHJndzE4cWRiWldtSTk3dnhSOUV1eG1yOFF2a3VEMUF4RFNpMG5ta0JOVEVn?=
+ =?utf-8?B?emErbGZVLzltMmdwVGwxbXBNWTdjRWdtekVxOUQxNk10Sjk1NVdtRWlPU0pQ?=
+ =?utf-8?B?RHl2bnUxVUtaK0VUQUVPRTkzaGF6L3pWREVNbUNJL0FIM3hMSVlPUjNTR1px?=
+ =?utf-8?B?ME80RmpmcnFNb0xoemlEbFpaK1B4bmhZWis4K1dzUmpqR3pTWFB4UllmdmJD?=
+ =?utf-8?B?aG9TZWtSY2Z1SkZYc0l5ekhFNVBiM3ZPa21RMitpQ290VkJFS1BEYnp2cFZa?=
+ =?utf-8?B?YUtVamRBVm9OZkRPUEV2TzEvUFZsNjZ1bisraXB6T1lMazJxRE1vWjJZNmtQ?=
+ =?utf-8?B?OTFlM3ZTem9URXNkT2xtUUpSOWV2RkNFUTlydzFFQ2Y0TFo4dWJVKzZzVzdT?=
+ =?utf-8?B?VWUzVVJZVVU4MHB6eDdPVXVBeXdDWmlnMEtBaVFxRVNRaXBJTVdLUzBGd0RJ?=
+ =?utf-8?B?QWpCMllrbW9ka0c5YjJ5K1JTSGx1ZElDQll2RnJFcUtldWNsdHZQT2I0S3pF?=
+ =?utf-8?B?V1pTWUpDbWk5SjA4VDRPQ0xidFJGYk9ycldPLzdJTUtqYXBRUk9ZSVBxWjBT?=
+ =?utf-8?B?NENVUWtXOHprdWVkbzV5VzNHRTZMSXZlWTFJMnJkMUs4UHQrVjRrV2hVTGVr?=
+ =?utf-8?B?RnI3SkdHV0ZBb0hDT3hmVExFVlplSVZZbUlVUmtVbG53TjFlenRacmJEMXlP?=
+ =?utf-8?B?T3Btalc0MGduYktycEVXVHJCYmNHS3UxVmNoVnZ5bmdVaWlQeHAyNldQRzJE?=
+ =?utf-8?B?dzViZVhEdnhmdGxsM2lxcUR6VnRyYlBjc0hLUlpHdjRNdjA3MmJyNEUwT3Az?=
+ =?utf-8?B?ZXhiZGdpV0E3aTI3a3FVeVR3RGhvY2taUWdZVXM0aXpRaEp5MEZaSDZJSVNF?=
+ =?utf-8?B?TWZJZHg5WE5QYjh2NWQyYzEvM1laR3g1S0s4SDhDNXcxSDB6ODExRlRHMkFk?=
+ =?utf-8?B?akFiR1pCWWZtVmtWVEVEbG5vRDVTeTFKK3JraFJYUVpjNEFGcmNPWlFCZXNC?=
+ =?utf-8?B?Y3REbFliOXFJRkFBTHVoWHRMQUJkT29YNFk4c1MyZk8wdllEOEZoSzRobGlY?=
+ =?utf-8?B?TTFaV3ZrR1AraEpQWlA3UGwyWmFKU01YaTQ5QUNCZG1wZUlURXZTYmZjZTN3?=
+ =?utf-8?B?dEJUc2xDQUNIYlU0S0JNSzFDT1RXNm1zWGQ2K0xueEgxa2JDU2NIcWY1QVpr?=
+ =?utf-8?B?cEVpdStyV3R2OHZCdmZ5OW02bkQzVU1oUjBMZmZZN2VySFYwWXNlRUgvc2J2?=
+ =?utf-8?B?WlAvb3U1V3ZJQ3hmMlpSRVlFWDlxMXdjOUIya0JLbEpqelYwb1kwVUI5OVR3?=
+ =?utf-8?B?eXhzNHkyTGQrSGFzLzZuNEVnaWlCM05tT2RDVDhNQ0NOVFgwbmFSZmVYdEQ1?=
+ =?utf-8?B?R1Mycm5KTFI3TE1QNkh4RTR4MkovVFBDY0htdk9hR1paVjFYN1ZRTEI2aGtt?=
+ =?utf-8?B?NitFemRPQmMrUmV5KzQ3Z2dwNjhhVmdaZ0JHblBmSVBQbE9lQVMvb2lyQXdC?=
+ =?utf-8?B?NTRINU5jR25jQ1RDYm0wR2dLMDdVYW9QaU9NbEpFS0tJWU9iRU9rb1ZKWHdS?=
+ =?utf-8?B?TFFUYjhiSU41eXZ4eGs2dCtLbS9kekdFMFRFMXhPMzRoSjVEcjE0S2xJSWNL?=
+ =?utf-8?B?ZCtjU1hZQlRZajBYTlJTaE5obmpzckZQK2E5QjJ5NE0vd21Idm1QV1hzNXRr?=
+ =?utf-8?B?bGF2ZStsTUV6ZUNicE95TG5zRUJYUEM3bVNyNVVRZ1oySUhJODhvTWJwZHdR?=
+ =?utf-8?Q?NRXl2j?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2025 20:15:23.1087
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 686db1ab-ff22-4ab6-f10a-08ddf6f01930
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF00026369.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8368
 
-On Wed, 10 Sep 2025 21:22:11 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+[snip]
 
-> We can use the mmap insert pages functionality provided for use in
-> mmap_prepare to insert the kcov pages as required.
+Sorry for the delay, I've been reworking the cache id patches (next 2) and didn't want
+to reply with outdated info.
+
+>>  
+>> +struct cxl_snoop_filter {
+>> +	u64 size;
+>> +	struct xarray dports;
+>> +	struct xarray devs;
+>> +	struct mutex lock; /* Used for filter allocations */
+>> +};
+>> +
+>> +static struct cxl_snoop_filter *cxl_create_snoop_filter(struct cxl_dport *dport,
+>> +							u32 gid, u32 size)
+>> +{
+>> +	struct cxl_snoop_filter *sf;
+>> +	int rc;
+>> +
+>> +	sf = xa_load(&cxl_snoop_filters, gid);
+>> +	if (sf)
+>> +		return sf;
+>> +
+>> +	guard(rwsem_write)(&cxl_snoop_rwsem);
 > 
-> This does necessitate an allocation, but since it's in the mmap path this
-> doesn't seem egregious. The allocation/freeing of the pages array is
-> handled automatically by vma_desc_set_mixedmap_pages() and the mapping
-> logic.
+> I would move this right before the xa_insert of cxl_snoop_filters. That's what it's guarding right? Although I don't think xarray needs locking?
 > 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> ---
->  kernel/kcov.c | 42 ++++++++++++++++++++++++++----------------
->  1 file changed, 26 insertions(+), 16 deletions(-)
+
+I ended up rewriting this to get rid of the rwsem altogether. Instead of locking, I just try to add the snoop filter to the xarray and
+take the entry that's already there if it fails instead (while deleting the one I just made).
+
+>> +	sf = kzalloc(sizeof(*sf), GFP_KERNEL);
 > 
-> diff --git a/kernel/kcov.c b/kernel/kcov.c
-> index 1d85597057e1..2bcf403e5f6f 100644
-> --- a/kernel/kcov.c
-> +++ b/kernel/kcov.c
-> @@ -484,31 +484,41 @@ void kcov_task_exit(struct task_struct *t)
->  	kcov_put(kcov);
->  }
->  
-> -static int kcov_mmap(struct file *filep, struct vm_area_struct *vma)
-> +static int kcov_mmap_error(int err)
-> +{
-> +	pr_warn_once("kcov: vm_insert_page() failed\n");
-> +	return err;
-> +}
-> +
-> +static int kcov_mmap_prepare(struct vm_area_desc *desc)
->  {
->  	int res = 0;
-> -	struct kcov *kcov = vma->vm_file->private_data;
-> -	unsigned long size, off;
-> -	struct page *page;
-> +	struct kcov *kcov = desc->file->private_data;
-> +	unsigned long size, nr_pages, i;
-> +	struct page **pages;
->  	unsigned long flags;
->  
->  	spin_lock_irqsave(&kcov->lock, flags);
->  	size = kcov->size * sizeof(unsigned long);
-> -	if (kcov->area == NULL || vma->vm_pgoff != 0 ||
-> -	    vma->vm_end - vma->vm_start != size) {
-> +	if (kcov->area == NULL || desc->pgoff != 0 ||
-> +	    vma_desc_size(desc) != size) {
->  		res = -EINVAL;
->  		goto exit;
->  	}
->  	spin_unlock_irqrestore(&kcov->lock, flags);
-> -	vm_flags_set(vma, VM_DONTEXPAND);
-> -	for (off = 0; off < size; off += PAGE_SIZE) {
-> -		page = vmalloc_to_page(kcov->area + off);
-> -		res = vm_insert_page(vma, vma->vm_start + off, page);
-> -		if (res) {
-> -			pr_warn_once("kcov: vm_insert_page() failed\n");
-> -			return res;
-> -		}
-> -	}
-> +
-> +	desc->vm_flags |= VM_DONTEXPAND;
-> +	nr_pages = size >> PAGE_SHIFT;
-> +
-> +	pages = mmap_action_mixedmap_pages(&desc->action, desc->start,
-> +					   nr_pages);
+> Maybe you can create an helper alloc function and also a free function so you can utilize __free() and avoid the gotos.
+> 
 
-Hi Lorenzo,
+I changed the return type to 'int' as part of said rewrite. I didn't really need the snoop filter itself to begin with, just
+whether creating it was successful.
 
-Not sure if it belongs here before the EINVAL tests, but it looks like
-kcov->size doesn't have any page alignment.  I think size could be
-4000 bytes other unaligned values, so nr_pages should round up.
+>> +	if (!sf)
+>> +		return ERR_PTR(-ENOMEM);
+>> +
+>> +	sf->size = size;
+>> +	xa_init(&sf->dports);
+>> +	xa_init(&sf->devs);
+>> +	mutex_init(&sf->lock);
+>> +
+>> +	rc = xa_insert(&sf->dports, (unsigned long)dport->dport_dev, dport,
+>> +		       GFP_KERNEL);
+>> +	if (rc)
+>> +		goto err;
+>> +
+>> +	rc = xa_insert(&cxl_snoop_filters, gid, sf, GFP_KERNEL);
+>> +	if (rc)
+>> +		goto err;
+>> +
+>> +	return 0;
+>> +
+>> +err:
+>> +	xa_destroy(&sf->dports);
+>> +	xa_destroy(&sf->devs);
+>> +	mutex_destroy(&sf->lock);
+> 
+> Probably not needed since 'sf' gets free right after.
+> 
 
--chris
+Ok.
+
+>> +	kfree(sf);
+>> +	return ERR_PTR(rc);
+>> +}
+>> +
+>> +static void cxl_destroy_snoop_filters(void)
+>> +{
+>> +	struct cxl_snoop_filter *sf;
+>> +	unsigned long gid;
+>> +
+>> +	guard(rwsem_write)(&cxl_snoop_rwsem);
+>> +	xa_for_each(&cxl_snoop_filters, gid, sf) {
+>> +		xa_destroy(&sf->dports);
+>> +		xa_destroy(&sf->devs);
+>> +		mutex_destroy(&sf->lock);
+> 
+> Are we missing a kfree(sf) here?
+> 
+
+Already fixed :).
+
+>> +	}
+>> +
+>> +	xa_destroy(&cxl_snoop_filters);
+>> +}
+>> +
+>> +static void cxl_snoop_filter_free(void *data)
+>> +{
+>> +	struct cxl_cache_state *cstate = data;
+>> +	struct cxl_snoop_filter *sf;
+>> +
+>> +	sf = xa_load(&cxl_snoop_filters, cstate->snoop_id);
+>> +	if (!sf)
+>> +		return;
+>> +
+>> +	guard(mutex)(&sf->lock);
+>> +	sf->size += cstate->size;
+> 
+> Not sure I understand why the function is called cxl_snoop_filter_free() when we just increment the sf->size.
+> 
+
+It's supposed to be freeing capacity. I changed the names to devm_cxl_snoop_filter_alloc_capacity()/cxl_snoop_filter_free_capacity().
