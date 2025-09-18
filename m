@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBAD8246795
-	for <linux-cxl@vger.kernel.org>; Thu, 18 Sep 2025 21:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D815E21FF36
+	for <linux-cxl@vger.kernel.org>; Thu, 18 Sep 2025 22:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758231943; cv=none; b=UGG9BjFLG74VpErZYenv6TL/Ri604EQm5ISGsHSDAC1nUWRodtbC+KARgeeVbTJs/w6oI3wbyNN7RFeUwsMPbiygFIuqw3njPUmyoDWtCKFEZrAtaAX8Mr2XkWhUMIHZ9rbGuCCJLOVf730VaPBaCmPqqHOpObFxrOrQMIJNsJM=
+	t=1758233227; cv=none; b=aMUEi8naXuJ+6Udl3kRtOtrEEkTFGPjJ5rEOxapqd55tL+nis0AhADvcnGRVhJNPb7LazDH5IqwL8FKjp9WWVyUILKey9dci2Xek60ackpOfv61MOdYKp5FdI0jMGgusCN4JJvT1dSTCKbORiprGDR/TNG8VT9BCmIAvduKwtgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758231943; c=relaxed/simple;
-	bh=+fjbc64Q1wUeUhqpFBhlQeSsDVZj0KxpLf9tTaq11Bs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Ze2nn1SfAN3iDvoqwaGCl3AgPKqHXrFA3AzOSZ0tvm7/hn/WV25YmdOfSxFwDyNPS9K9CvQYdviWEcyDe209GRKOnMgCApMTZVHqEeF+qZ5siL3U8PVFP5fK7rH50AQYsoG2kzBFI6hosOrNEClZHxaPbT8SECsT2hTgisHN6Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=afD05eVq; arc=none smtp.client-ip=192.198.163.8
+	s=arc-20240116; t=1758233227; c=relaxed/simple;
+	bh=8H5oSNc1Cas7eJ7GjfrGr3SCaKoXEgZjcYR+OiqJocA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=nsELGaDqKnxDLEKW2D6c2ycc2cEv0IiOtJDd1454YSfzj3NWzAu1tsW9A6a7ZbAZRnpcZBMWK4BJkG6Kv6aD2VU47w0y9iMRZZ+PouWJvL7A6JV3RLQ2IsXqEaxMZzBAxzGwPq7n0FAw0DLPHhEhBg9vbvcP5hm9hLMKt3WVzA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U50dEJH8; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="afD05eVq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U50dEJH8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758231941; x=1789767941;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=+fjbc64Q1wUeUhqpFBhlQeSsDVZj0KxpLf9tTaq11Bs=;
-  b=afD05eVqmFbC2CT7ULJ+KhtMvNcT6aaruebjyQmAb6t4rZKRyb51ZxaY
-   Kdb7NR9YQ2SWN6mJ041bL1o4GrAxDDM+HcvNLoWD6PrNensFdNPQ1sRtC
-   wctR56FqirGoBOCIq2IpWV9eYQ7/TVgo1vJIsr2TA4aFYpJhRmAt2Fdv9
-   psmmg5MoeTL1ITXkg66nC9OkdVqXbOQ4Ec9ZTGYWZjosxhy7aHJTv1ZG7
-   vEnzN00l61uaTKvCo1tuVkuaRmg+SHG6Px6iL8E2h0Qf6fNilxw76fGN2
-   KWynD+akaCvwrV0f+51oaho3aIcukXlIL6dmHonCVU9IVzrZsnRGqCxj+
-   A==;
-X-CSE-ConnectionGUID: Tk07oQT6S5eWpmYlVsuWDw==
-X-CSE-MsgGUID: bFL96qyeSSGnWCYTYayCBw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11557"; a="78179981"
+  t=1758233224; x=1789769224;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=8H5oSNc1Cas7eJ7GjfrGr3SCaKoXEgZjcYR+OiqJocA=;
+  b=U50dEJH8nlAyB9ULzTTNEoCKamf3Fm2hj7rfT0zNjz1ASP6QPVdLYuZ+
+   ysr1zosEJFkjVmVU+zDSPkX4aGHRGDBJ40PUjSBXiKm7pbIhQw20N2n4R
+   IaI03cwo6lsSWwtlHol78bwycttehmi+9/5WLr5gd4c21kxOCH2lZXzjm
+   L4/gAGAWwrfFCCouJG7GxkZoB/H3ZovB0cOeegacsbCDEAYFWyaAWQ6Z1
+   Us991/hNPegknft3eljDU7hJETX5jiZ88tOtIxfHws6e7D91n8mW7Yf1p
+   kfCOP7VIOoJ6TPAVCjGiexH6tXr04/GQnS/PCD+6kZTxS4MofvVosYA2G
+   Q==;
+X-CSE-ConnectionGUID: jVuiVE5IQUuWIi42UZeecw==
+X-CSE-MsgGUID: Vp8nCPq4QYihFjorh41NKA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11557"; a="60271404"
 X-IronPort-AV: E=Sophos;i="6.18,276,1751266800"; 
-   d="scan'208";a="78179981"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 14:45:40 -0700
-X-CSE-ConnectionGUID: CN+ZX/bqRHyRoTC5j+cXqA==
-X-CSE-MsgGUID: kZV7Wv6FRk6XGafVjYLsTg==
+   d="scan'208";a="60271404"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 15:07:03 -0700
+X-CSE-ConnectionGUID: hl7MBgfxQoOL54oMH9mHIg==
+X-CSE-MsgGUID: UDilNNILSOy4CPDi7EHlNA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,276,1751266800"; 
-   d="scan'208";a="176471877"
+   d="scan'208";a="175588301"
 Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.108.28]) ([10.125.108.28])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 14:45:40 -0700
-Message-ID: <5edd311e-4ef5-454c-bdc3-6eac654e29e4@intel.com>
-Date: Thu, 18 Sep 2025 14:45:38 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 15:07:02 -0700
+Message-ID: <7b529e9f-062d-4775-a9b4-2c8703d95213@intel.com>
+Date: Thu, 18 Sep 2025 15:07:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,117 +52,130 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 18/18] cxl/core: Add cache device cache management
- attributes
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>,
- linux-cxl@vger.kernel.org
-References: <20250812212921.9548-1-Benjamin.Cheatham@amd.com>
- <20250812212921.9548-19-Benjamin.Cheatham@amd.com>
- <29b9953a-8367-4545-a783-dfabbfa488d7@intel.com>
- <9002a2f5-6319-405f-9fb4-22c841ae0191@amd.com>
-Content-Language: en-US
+Subject: Re: [PATCH] cxl: Move port register setup to when first dport appear
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <9002a2f5-6319-405f-9fb4-22c841ae0191@amd.com>
+To: linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, Robert Richter <rrichter@amd.com>
+References: <20250911204406.2454689-1-dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20250911204406.2454689-1-dave.jiang@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 9/18/25 1:16 PM, Cheatham, Benjamin wrote:
-> [snip]
+On 9/11/25 1:44 PM, Dave Jiang wrote:
+> This patch moves the port register setup to when the first dport appears
+> via the memdev probe path. At this point, the CXL link should be
+> established and the register access is expected to succeed. This change
+> addresses an error message observed when PCIe hotplug is enabled on
+> an Intel platform. The error messages "cxl portN: Couldn't locate the
+> CXL.cache and CXL.mem capability array header" is observed for the
+> host bridge (CHBCR) during cxl_acpi driver probe. If the cxl_acpi module
+> probe is running before the CXL link between the endpoint device and the
+> RP is established, then the platform may not have exposed DVSEC ID 3
+> and/or DVSEC ID 7 blocks which will trigger the error message. This
+> behavior is defined by the CXL spec r3.2 9.12.3 for RPs and DSPs, however
+> the Intel platform also added this behavior to the host bridge.
 > 
->>> +
->>> +int cxl_accel_caching_disabled(struct cxl_dev_state *cxlds)
->>
->> why not just return bool?
->>
+> This change also needs the dport enumeration to be moved to the memdev
+> probe path in order to address the issue. This change is not a wholly
+> contained solution by itself.
 > 
-> If, in the unlikely case, pci_read_config_word() fails. I can change it to bool
-> if we aren't concerned about that though.
+> Suggested-by: Dan Williamsn <dan.j.williams@intel.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Tested-by: Robert Richter <rrichter@amd.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-I think if you hit error, you just end up with returning false indicating caching disabled (whether due to not enabled or due to error)?
+Applied to cxl/next
+f6ee24913de24dbda8d49213e1a27f5e1a5204cc
 
+> ---
 > 
->>> +{
->>> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
->>> +	int dvsec, rc;
->>> +	u16 ctrl2;
->>> +
->>> +	device_lock_assert(cxlds->dev);
->>> +
->>> +	if (!dev_is_pci(cxlds->dev))
->>> +		return -EINVAL;
->>> +	pdev = to_pci_dev(cxlds->dev);
->>> +
->>> +	dvsec = cxlds->cxl_dvsec;
->>> +	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_CTRL2_OFFSET, &ctrl2);
->>> +	if (rc)
->>> +		return rc;
->>> +
->>> +	return !!(ctrl2 & CXL_DVSEC_DISABLE_CACHING);
->>> +}
->>> +EXPORT_SYMBOL_NS_GPL(cxl_accel_caching_disabled, "CXL");
->>> +
->>> +int cxl_accel_set_cache_disable(struct cxl_dev_state *cxlds, bool disable)
->>> +{
->>> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
->>> +	int dvsec, rc;
->>> +	u16 ctrl2;
->>> +
->>> +	if (!dev_is_pci(cxlds->dev))
->>> +		return -EINVAL;
->>> +
->>> +	guard(device)(cxlds->dev);
->>> +	dvsec = cxlds->cxl_dvsec;
->>> +	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_CTRL2_OFFSET, &ctrl2);
->>> +	if (rc)
->>> +		return rc;
->>> +
->>> +	if (!!(ctrl2 & CXL_DVSEC_DISABLE_CACHING) == disable)
->>> +		return 1;
->>> +
->>> +	ctrl2 &= ~CXL_DVSEC_DISABLE_CACHING;
->>> +	ctrl2 |= FIELD_PREP(CXL_DVSEC_DISABLE_CACHING, disable);
->>> +	return pci_write_config_word(pdev, dvsec + CXL_DVSEC_DISABLE_CACHING,
->>> +				     ctrl2);
->>> +}
->>> +EXPORT_SYMBOL_NS_GPL(cxl_accel_set_cache_disable, "CXL");
->>> +
->>> +int cxl_accel_initiate_wbinvd(struct cxl_dev_state *cxlds)
->>> +{
->>> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
->>> +	int dvsec, rc;
->>> +	u16 ctrl2;
->>> +
->>> +	if (!dev_is_pci(cxlds->dev))
->>> +		return -EINVAL;
->>> +
->>> +	if (cxl_accel_caching_disabled(cxlds) != 1)
->>> +		return -EBUSY;
->>> +
->>> +	guard(device)(cxlds->dev);
->>> +	dvsec = cxlds->cxl_dvsec;
->>> +	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_CTRL2_OFFSET, &ctrl2);
->>> +	if (rc)
->>> +		return rc;
->>> +
->>> +	ctrl2 |= CXL_DVSEC_INIT_WBINVD;
->>> +	return pci_write_config_word(pdev, dvsec + CXL_DVSEC_CTRL2_OFFSET,
->>> +				     ctrl2);
->>> +}
->>> +EXPORT_SYMBOL_NS_GPL(cxl_accel_initiate_wbinvd, "CXL");
->>> +
->>> +int cxl_accel_cache_invalid(struct cxl_dev_state *cxlds)
->>
->> return bool?
->>
+> I pulled this patch out to continue the discussion with Robert and not
+> hold up the dport series.
 > 
-> Same idea as above.
-
-Right, cache_invalid or error. Same result right? There is no different handling because of error.
-
+> While the behavior observed on the Intel platform is a quirk, similar
+> behavior can exist for RPs and DSPs allowed by the spec. CXL spec r3.2
+> 9.12.3 states that CXL DVSEC ID 3 and 7 may or may not be exposed and
+> the software can use ID 7 and link status to determine CXL link is
+> established. Thus to cover the spec allowance it is reasonable to not
+> access the port registers until we are certain the CXL link is initialized.
+> And the first dport appearance ensures that. While this issue is
+> only observed WRT CHBCR on that platform, the enabling code covers the
+> common case for all RPs and switches and the allowance provided by
+> the spec for future implementations.
+> ---
+>  drivers/cxl/core/port.c | 16 +++++++++++++---
+>  drivers/cxl/cxl.h       |  2 ++
+>  2 files changed, 15 insertions(+), 3 deletions(-)
 > 
-> Thanks,
-> Ben
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 76dd06d282df..416d45516d82 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -867,9 +867,7 @@ static int cxl_port_add(struct cxl_port *port,
+>  		if (rc)
+>  			return rc;
+>  
+> -		rc = cxl_port_setup_regs(port, component_reg_phys);
+> -		if (rc)
+> -			return rc;
+> +		port->component_reg_phys = component_reg_phys;
+>  	} else {
+>  		rc = dev_set_name(dev, "root%d", port->id);
+>  		if (rc)
+> @@ -1200,6 +1198,18 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>  
+>  	cxl_debugfs_create_dport_dir(dport);
+>  
+> +	/*
+> +	 * Setup port register if this is the first dport showed up. Having
+> +	 * a dport also means that there is at least 1 active link.
+> +	 */
+> +	if (port->nr_dports == 1 &&
+> +	    port->component_reg_phys != CXL_RESOURCE_NONE) {
+> +		rc = cxl_port_setup_regs(port, port->component_reg_phys);
+> +		if (rc)
+> +			return ERR_PTR(rc);
+> +		port->component_reg_phys = CXL_RESOURCE_NONE;
+> +	}
+> +
+>  	return dport;
+>  }
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 6c42646f47ba..bdc682a7d60b 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -599,6 +599,7 @@ struct cxl_dax_region {
+>   * @cdat: Cached CDAT data
+>   * @cdat_available: Should a CDAT attribute be available in sysfs
+>   * @pci_latency: Upstream latency in picoseconds
+> + * @component_reg_phys: Physical address of component register
+>   */
+>  struct cxl_port {
+>  	struct device dev;
+> @@ -622,6 +623,7 @@ struct cxl_port {
+>  	} cdat;
+>  	bool cdat_available;
+>  	long pci_latency;
+> +	resource_size_t component_reg_phys;
+>  };
+>  
+>  /**
 > 
+> base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+> prerequisite-patch-id: e96001d5ba3459a014f818421b1f771e88775c9f
+> prerequisite-patch-id: 8b216a3f53da0be4117ba50a3a8ecbb0dbe61041
+> prerequisite-patch-id: 8da2fd3d645d11c1c6cb33aab62590f2533b737b
+> prerequisite-patch-id: 04a9b9c9e69bbff4da3917a33e8b7c1d77059c1f
+> prerequisite-patch-id: c0accfef8f5a037fa7456d2517eb197eb910739c
+> prerequisite-patch-id: 0f3f0698af3958b2e4cabf66dd2268132c2c51fb
+> prerequisite-patch-id: 3f47d2470e1c7bd34fd509a27331d72c45d33847
+> prerequisite-patch-id: 434177b7f4f808aeeace5d7d1e17108f66a7d6cb
+> prerequisite-patch-id: 6a6f4dbe624e00865bb1e087dcbd8bc9c8807a18
+> prerequisite-patch-id: 95e0c0aa6d4589772e6c38780eaed739d54ee755
 
