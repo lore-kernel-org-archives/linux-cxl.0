@@ -1,50 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D815E21FF36
-	for <linux-cxl@vger.kernel.org>; Thu, 18 Sep 2025 22:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49061EDA26
+	for <linux-cxl@vger.kernel.org>; Thu, 18 Sep 2025 22:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758233227; cv=none; b=aMUEi8naXuJ+6Udl3kRtOtrEEkTFGPjJ5rEOxapqd55tL+nis0AhADvcnGRVhJNPb7LazDH5IqwL8FKjp9WWVyUILKey9dci2Xek60ackpOfv61MOdYKp5FdI0jMGgusCN4JJvT1dSTCKbORiprGDR/TNG8VT9BCmIAvduKwtgo=
+	t=1758236197; cv=none; b=gT7JaVTFLjRSSE9uZ98l6bBLUDtglXUlRkNYUT44LkplCbuwKhpYPBbC19gK9130TahrVhdWyNADqSHjIKJjBM2qNHl/01w71q0AlJ7oH5JqgaGG3gFbOrQKRYROpOy6fD1zVFaVhNbdgq3a+YyClGdt09XD9j0gfatFvpafljo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758233227; c=relaxed/simple;
-	bh=8H5oSNc1Cas7eJ7GjfrGr3SCaKoXEgZjcYR+OiqJocA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=nsELGaDqKnxDLEKW2D6c2ycc2cEv0IiOtJDd1454YSfzj3NWzAu1tsW9A6a7ZbAZRnpcZBMWK4BJkG6Kv6aD2VU47w0y9iMRZZ+PouWJvL7A6JV3RLQ2IsXqEaxMZzBAxzGwPq7n0FAw0DLPHhEhBg9vbvcP5hm9hLMKt3WVzA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U50dEJH8; arc=none smtp.client-ip=198.175.65.20
+	s=arc-20240116; t=1758236197; c=relaxed/simple;
+	bh=AgAaA31tbr0LIS/r/knmj5TH84aA25WcD6epqt2UqQY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qj3fSFO5LEcgrJmpze3vk+dMaui4L9ChSY7mHCWrOeloHx7HSn1or+4vOjgtZL0oHFhYmhSobftw6kYvDgCnCdtGhbfNIevKeul/dA8Z3wqd0TlL1BeMoTxnAq/bIQkNacWLq4ZNZ99UckGABiKBY7xVECjPEp3dUkjwFAOFZIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Li1f8oY4; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U50dEJH8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Li1f8oY4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758233224; x=1789769224;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=8H5oSNc1Cas7eJ7GjfrGr3SCaKoXEgZjcYR+OiqJocA=;
-  b=U50dEJH8nlAyB9ULzTTNEoCKamf3Fm2hj7rfT0zNjz1ASP6QPVdLYuZ+
-   ysr1zosEJFkjVmVU+zDSPkX4aGHRGDBJ40PUjSBXiKm7pbIhQw20N2n4R
-   IaI03cwo6lsSWwtlHol78bwycttehmi+9/5WLr5gd4c21kxOCH2lZXzjm
-   L4/gAGAWwrfFCCouJG7GxkZoB/H3ZovB0cOeegacsbCDEAYFWyaAWQ6Z1
-   Us991/hNPegknft3eljDU7hJETX5jiZ88tOtIxfHws6e7D91n8mW7Yf1p
-   kfCOP7VIOoJ6TPAVCjGiexH6tXr04/GQnS/PCD+6kZTxS4MofvVosYA2G
-   Q==;
-X-CSE-ConnectionGUID: jVuiVE5IQUuWIi42UZeecw==
-X-CSE-MsgGUID: Vp8nCPq4QYihFjorh41NKA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11557"; a="60271404"
+  t=1758236194; x=1789772194;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=AgAaA31tbr0LIS/r/knmj5TH84aA25WcD6epqt2UqQY=;
+  b=Li1f8oY45faEYvTVjHt2pKpNo9xJSg0YjkdIFsbjh1T5ZyFZDlJgP0yi
+   iNsdRNYtUBJzJmJTx++WFJtUb01+j6PeHwBbLANPdUJZAlJ0lE4CP8LZm
+   as5vYzbMzMU07rypPSf5bn7wxn310OkzVbOhu5GAgOT83K+0TC2SPTHEZ
+   YA7R9oe5h9PD1ZvJ6jsqHQLQRWTctCCfoe1TALyg+sukE+NGtiW0aI3Sp
+   kQf0hrALy2G37iYH7q6CRBwOvekK+uegcZBN+MUOUe40Nd5jeOWysZ6Rr
+   2mYYnXsfD+UmEI532fJCESjfnwhBgxmIBEedvVwXRKSP7f4gr2EuwYcpe
+   g==;
+X-CSE-ConnectionGUID: ne+L2xwgRYqD8n/5l8OJXw==
+X-CSE-MsgGUID: uHCicjOvRf+ViV4MDt09RQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11557"; a="59621873"
 X-IronPort-AV: E=Sophos;i="6.18,276,1751266800"; 
-   d="scan'208";a="60271404"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 15:07:03 -0700
-X-CSE-ConnectionGUID: hl7MBgfxQoOL54oMH9mHIg==
-X-CSE-MsgGUID: UDilNNILSOy4CPDi7EHlNA==
+   d="scan'208";a="59621873"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 15:56:34 -0700
+X-CSE-ConnectionGUID: UKiQP4AgS/qEzpAiiLZZcQ==
+X-CSE-MsgGUID: ofhfTh3sTX6Bq10j4IOfrw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,276,1751266800"; 
-   d="scan'208";a="175588301"
 Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.108.28]) ([10.125.108.28])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 15:07:02 -0700
-Message-ID: <7b529e9f-062d-4775-a9b4-2c8703d95213@intel.com>
-Date: Thu, 18 Sep 2025 15:07:01 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 15:56:33 -0700
+Message-ID: <7b22d214-6ba8-48fe-b3ab-2bdf0fb7ae3d@intel.com>
+Date: Thu, 18 Sep 2025 15:56:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,130 +50,316 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl: Move port register setup to when first dport appear
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, Robert Richter <rrichter@amd.com>
-References: <20250911204406.2454689-1-dave.jiang@intel.com>
+Subject: Re: [PATCH v3 1/3] cxl/region: Refactor address translation funcs for
+ testing
+To: Alison Schofield <alison.schofield@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org
+References: <cover.1758150087.git.alison.schofield@intel.com>
+ <f0913dd2db0b86c27021b9184d63fe12395bde4d.1758150087.git.alison.schofield@intel.com>
 Content-Language: en-US
-In-Reply-To: <20250911204406.2454689-1-dave.jiang@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <f0913dd2db0b86c27021b9184d63fe12395bde4d.1758150087.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 9/11/25 1:44 PM, Dave Jiang wrote:
-> This patch moves the port register setup to when the first dport appears
-> via the memdev probe path. At this point, the CXL link should be
-> established and the register access is expected to succeed. This change
-> addresses an error message observed when PCIe hotplug is enabled on
-> an Intel platform. The error messages "cxl portN: Couldn't locate the
-> CXL.cache and CXL.mem capability array header" is observed for the
-> host bridge (CHBCR) during cxl_acpi driver probe. If the cxl_acpi module
-> probe is running before the CXL link between the endpoint device and the
-> RP is established, then the platform may not have exposed DVSEC ID 3
-> and/or DVSEC ID 7 blocks which will trigger the error message. This
-> behavior is defined by the CXL spec r3.2 9.12.3 for RPs and DSPs, however
-> the Intel platform also added this behavior to the host bridge.
+On 9/17/25 5:10 PM, Alison Schofield wrote:
+> In preparation for adding a test module that exercises the address
+> translation calculations, extract the core calculations into stand-
+> alone functions that operate on base parameters without dependencies
+> on struct cxl_region.
 > 
-> This change also needs the dport enumeration to be moved to the memdev
-> probe path in order to address the issue. This change is not a wholly
-> contained solution by itself.
+> Perform additional parameter validation to protect against a test
+> module sending bad parameters. Export the validation function, as
+> well as the three core translation functions for use by test module
+> cxl_translate only.
 > 
-> Suggested-by: Dan Williamsn <dan.j.williams@intel.com>
+> This refactoring enables unit testing of the address translation logic
+> with controlled inputs, while preserving identical functionality in
+> the existing code paths.
+> 
 > Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Tested-by: Robert Richter <rrichter@amd.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-Applied to cxl/next
-f6ee24913de24dbda8d49213e1a27f5e1a5204cc
-
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > ---
+>  drivers/cxl/core/region.c | 204 ++++++++++++++++++++++++++------------
+>  drivers/cxl/cxl.h         |   6 ++
+>  2 files changed, 149 insertions(+), 61 deletions(-)
 > 
-> I pulled this patch out to continue the discussion with Robert and not
-> hold up the dport series.
-> 
-> While the behavior observed on the Intel platform is a quirk, similar
-> behavior can exist for RPs and DSPs allowed by the spec. CXL spec r3.2
-> 9.12.3 states that CXL DVSEC ID 3 and 7 may or may not be exposed and
-> the software can use ID 7 and link status to determine CXL link is
-> established. Thus to cover the spec allowance it is reasonable to not
-> access the port registers until we are certain the CXL link is initialized.
-> And the first dport appearance ensures that. While this issue is
-> only observed WRT CHBCR on that platform, the enabling code covers the
-> common case for all RPs and switches and the allowance provided by
-> the spec for future implementations.
-> ---
->  drivers/cxl/core/port.c | 16 +++++++++++++---
->  drivers/cxl/cxl.h       |  2 ++
->  2 files changed, 15 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 76dd06d282df..416d45516d82 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -867,9 +867,7 @@ static int cxl_port_add(struct cxl_port *port,
->  		if (rc)
->  			return rc;
->  
-> -		rc = cxl_port_setup_regs(port, component_reg_phys);
-> -		if (rc)
-> -			return rc;
-> +		port->component_reg_phys = component_reg_phys;
->  	} else {
->  		rc = dev_set_name(dev, "root%d", port->id);
->  		if (rc)
-> @@ -1200,6 +1198,18 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
->  
->  	cxl_debugfs_create_dport_dir(dport);
->  
-> +	/*
-> +	 * Setup port register if this is the first dport showed up. Having
-> +	 * a dport also means that there is at least 1 active link.
-> +	 */
-> +	if (port->nr_dports == 1 &&
-> +	    port->component_reg_phys != CXL_RESOURCE_NONE) {
-> +		rc = cxl_port_setup_regs(port, port->component_reg_phys);
-> +		if (rc)
-> +			return ERR_PTR(rc);
-> +		port->component_reg_phys = CXL_RESOURCE_NONE;
-> +	}
-> +
->  	return dport;
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index e14c1d305b22..27c5c7de1fff 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2934,28 +2934,119 @@ static bool has_spa_to_hpa(struct cxl_root_decoder *cxlrd)
+>  	return cxlrd->ops && cxlrd->ops->spa_to_hpa;
 >  }
 >  
+> -u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+> -		   u64 dpa)
+> +#define CXL_POS_ZERO 0
+> +/**
+> + * cxl_validate_translation_params
+> + * @eiw: encoded interleave ways
+> + * @eig: encoded interleave granularity
+> + * @pos: position in interleave
+> + *
+> + * Callers pass CXL_POS_ZERO when no position parameter needs validating.
+> + *
+> + * Returns: 0 on success, -EINVAL on first invalid parameter
+> + */
+> +int cxl_validate_translation_params(u8 eiw, u16 eig, int pos)
+>  {
+> -	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+> -	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
+> -	struct cxl_region_params *p = &cxlr->params;
+> -	struct cxl_endpoint_decoder *cxled = NULL;
+> -	u16 eig = 0;
+> -	u8 eiw = 0;
+> -	int pos;
+> -
+> -	for (int i = 0; i < p->nr_targets; i++) {
+> -		cxled = p->targets[i];
+> -		if (cxlmd == cxled_to_memdev(cxled))
+> -			break;
+> +	int ways, gran;
+> +
+> +	if (eiw_to_ways(eiw, &ways)) {
+> +		pr_debug("%s: invalid eiw=%u\n", __func__, eiw);
+> +		return -EINVAL;
+> +	}
+> +	if (eig_to_granularity(eig, &gran)) {
+> +		pr_debug("%s: invalid eig=%u\n", __func__, eig);
+> +		return -EINVAL;
+> +	}
+> +	if (pos < 0 || pos >= ways) {
+> +		pr_debug("%s: invalid pos=%d for ways=%u\n", __func__, pos,
+> +			 ways);
+> +		return -EINVAL;
+>  	}
+> -	if (!cxled || cxlmd != cxled_to_memdev(cxled))
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL_FOR_MODULES(cxl_validate_translation_params, "cxl_translate");
+> +
+> +u64 cxl_calculate_dpa_offset(u64 hpa_offset, u8 eiw, u16 eig)
+> +{
+> +	u64 dpa_offset, bits_lower, bits_upper, temp;
+> +	int ret;
+> +
+> +	ret = cxl_validate_translation_params(eiw, eig, CXL_POS_ZERO);
+> +	if (ret)
+>  		return ULLONG_MAX;
+>  
+> -	pos = cxled->pos;
+> -	ways_to_eiw(p->interleave_ways, &eiw);
+> -	granularity_to_eig(p->interleave_granularity, &eig);
+> +	/*
+> +	 * DPA offset: CXL Spec 3.2 Section 8.2.4.20.13
+> +	 * Lower bits [IG+7:0] pass through unchanged
+> +	 * (eiw < 8)
+> +	 *	Per spec: DPAOffset[51:IG+8] = (HPAOffset[51:IG+IW+8] >> IW)
+> +	 *	Clear the position bits to isolate upper section, then
+> +	 *	reverse the left shift by eiw that occurred during DPA->HPA
+> +	 * (eiw >= 8)
+> +	 *	Per spec: DPAOffset[51:IG+8] = HPAOffset[51:IG+IW] / 3
+> +	 *	Extract upper bits from the correct bit range and divide by 3
+> +	 *	to recover the original DPA upper bits
+> +	 */
+> +	bits_lower = hpa_offset & GENMASK_ULL(eig + 7, 0);
+> +	if (eiw < 8) {
+> +		temp = hpa_offset &= ~GENMASK_ULL(eig + eiw + 8 - 1, 0);
+> +		dpa_offset = temp >> eiw;
+> +	} else {
+> +		bits_upper = div64_u64(hpa_offset >> (eig + eiw), 3);
+> +		dpa_offset = bits_upper << (eig + 8);
+> +	}
+> +	dpa_offset |= bits_lower;
+> +
+> +	return dpa_offset;
+> +}
+> +EXPORT_SYMBOL_GPL_FOR_MODULES(cxl_calculate_dpa_offset, "cxl_translate");
+> +
+> +int cxl_calculate_position(u64 hpa_offset, u8 eiw, u16 eig)
+> +{
+> +	unsigned int ways = 0;
+> +	u64 shifted, rem;
+> +	int pos, ret;
+> +
+> +	ret = cxl_validate_translation_params(eiw, eig, CXL_POS_ZERO);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!eiw)
+> +		/* position is 0 if no interleaving */
+> +		return 0;
+> +
+> +	/*
+> +	 * Interleave position: CXL Spec 3.2 Section 8.2.4.20.13
+> +	 * eiw < 8
+> +	 *	Position is in the IW bits at HPA_OFFSET[IG+8+IW-1:IG+8].
+> +	 *	Per spec "remove IW bits starting with bit position IG+8"
+> +	 * eiw >= 8
+> +	 *	Position is not explicitly stored in HPA_OFFSET bits. It is
+> +	 *	derived from the modulo operation of the upper bits using
+> +	 *	the total number of interleave ways.
+> +	 */
+> +	if (eiw < 8) {
+> +		pos = (hpa_offset >> (eig + 8)) & GENMASK(eiw - 1, 0);
+> +	} else {
+> +		shifted = hpa_offset >> (eig + 8);
+> +		eiw_to_ways(eiw, &ways);
+> +		div64_u64_rem(shifted, ways, &rem);
+> +		pos = rem;
+> +	}
+> +
+> +	return pos;
+> +}
+> +EXPORT_SYMBOL_GPL_FOR_MODULES(cxl_calculate_position, "cxl_translate");
+> +
+> +u64 cxl_calculate_hpa_offset(u64 dpa_offset, int pos, u8 eiw, u16 eig)
+> +{
+> +	u64 mask_upper, hpa_offset, bits_upper;
+> +	int ret;
+> +
+> +	ret = cxl_validate_translation_params(eiw, eig, pos);
+> +	if (ret)
+> +		return ULLONG_MAX;
+>  
+>  	/*
+>  	 * The device position in the region interleave set was removed
+> @@ -2967,9 +3058,6 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+>  	 * 8.2.4.19.13 Implementation Note: Device Decode Logic
+>  	 */
+>  
+> -	/* Remove the dpa base */
+> -	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
+> -
+>  	mask_upper = GENMASK_ULL(51, eig + 8);
+>  
+>  	if (eiw < 8) {
+> @@ -2984,6 +3072,37 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+>  	/* The lower bits remain unchanged */
+>  	hpa_offset |= dpa_offset & GENMASK_ULL(eig + 7, 0);
+>  
+> +	return hpa_offset;
+> +}
+> +EXPORT_SYMBOL_GPL_FOR_MODULES(cxl_calculate_hpa_offset, "cxl_translate");
+> +
+> +u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+> +		   u64 dpa)
+> +{
+> +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	struct cxl_endpoint_decoder *cxled = NULL;
+> +	u64 dpa_offset, hpa_offset, hpa;
+> +	u16 eig = 0;
+> +	u8 eiw = 0;
+> +	int pos;
+> +
+> +	for (int i = 0; i < p->nr_targets; i++) {
+> +		if (cxlmd == cxled_to_memdev(p->targets[i])) {
+> +			cxled = p->targets[i];
+> +			break;
+> +		}
+> +	}
+> +	if (!cxled)
+> +		return ULLONG_MAX;
+> +
+> +	pos = cxled->pos;
+> +	ways_to_eiw(p->interleave_ways, &eiw);
+> +	granularity_to_eig(p->interleave_granularity, &eig);
+> +
+> +	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
+> +	hpa_offset = cxl_calculate_hpa_offset(dpa_offset, pos, eiw, eig);
+> +
+>  	/* Apply the hpa_offset to the region base address */
+>  	hpa = hpa_offset + p->res->start + p->cache_size;
+>  
+> @@ -3016,8 +3135,6 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+>  	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+>  	struct cxl_endpoint_decoder *cxled;
+>  	u64 hpa, hpa_offset, dpa_offset;
+> -	u64 bits_upper, bits_lower;
+> -	u64 shifted, rem, temp;
+>  	u16 eig = 0;
+>  	u8 eiw = 0;
+>  	int pos;
+> @@ -3039,50 +3156,15 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+>  	} else {
+>  		hpa_offset = offset;
+>  	}
+> -	/*
+> -	 * Interleave position: CXL Spec 3.2 Section 8.2.4.20.13
+> -	 * eiw < 8
+> -	 *	Position is in the IW bits at HPA_OFFSET[IG+8+IW-1:IG+8].
+> -	 *	Per spec "remove IW bits starting with bit position IG+8"
+> -	 * eiw >= 8
+> -	 *	Position is not explicitly stored in HPA_OFFSET bits. It is
+> -	 *	derived from the modulo operation of the upper bits using
+> -	 *	the total number of interleave ways.
+> -	 */
+> -	if (eiw < 8) {
+> -		pos = (hpa_offset >> (eig + 8)) & GENMASK(eiw - 1, 0);
+> -	} else {
+> -		shifted = hpa_offset >> (eig + 8);
+> -		div64_u64_rem(shifted, p->interleave_ways, &rem);
+> -		pos = rem;
+> -	}
+> +
+> +	pos = cxl_calculate_position(hpa_offset, eiw, eig);
+>  	if (pos < 0 || pos >= p->nr_targets) {
+>  		dev_dbg(&cxlr->dev, "Invalid position %d for %d targets\n",
+>  			pos, p->nr_targets);
+>  		return -ENXIO;
+>  	}
+>  
+> -	/*
+> -	 * DPA offset: CXL Spec 3.2 Section 8.2.4.20.13
+> -	 * Lower bits [IG+7:0] pass through unchanged
+> -	 * (eiw < 8)
+> -	 *	Per spec: DPAOffset[51:IG+8] = (HPAOffset[51:IG+IW+8] >> IW)
+> -	 *	Clear the position bits to isolate upper section, then
+> -	 *	reverse the left shift by eiw that occurred during DPA->HPA
+> -	 * (eiw >= 8)
+> -	 *	Per spec: DPAOffset[51:IG+8] = HPAOffset[51:IG+IW] / 3
+> -	 *	Extract upper bits from the correct bit range and divide by 3
+> -	 *	to recover the original DPA upper bits
+> -	 */
+> -	bits_lower = hpa_offset & GENMASK_ULL(eig + 7, 0);
+> -	if (eiw < 8) {
+> -		temp = hpa_offset &= ~((u64)GENMASK(eig + eiw + 8 - 1, 0));
+> -		dpa_offset = temp >> eiw;
+> -	} else {
+> -		bits_upper = div64_u64(hpa_offset >> (eig + eiw), 3);
+> -		dpa_offset = bits_upper << (eig + 8);
+> -	}
+> -	dpa_offset |= bits_lower;
+> +	dpa_offset = cxl_calculate_dpa_offset(hpa_offset, eiw, eig);
+>  
+>  	/* Look-up and return the result: a memdev and a DPA */
+>  	for (int i = 0; i < p->nr_targets; i++) {
 > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 6c42646f47ba..bdc682a7d60b 100644
+> index 64a523a51ed6..ee33fabfec4a 100644
 > --- a/drivers/cxl/cxl.h
 > +++ b/drivers/cxl/cxl.h
-> @@ -599,6 +599,7 @@ struct cxl_dax_region {
->   * @cdat: Cached CDAT data
->   * @cdat_available: Should a CDAT attribute be available in sysfs
->   * @pci_latency: Upstream latency in picoseconds
-> + * @component_reg_phys: Physical address of component register
->   */
->  struct cxl_port {
->  	struct device dev;
-> @@ -622,6 +623,7 @@ struct cxl_port {
->  	} cdat;
->  	bool cdat_available;
->  	long pci_latency;
-> +	resource_size_t component_reg_phys;
->  };
+> @@ -736,6 +736,12 @@ static inline bool is_cxl_root(struct cxl_port *port)
+>  	return port->uport_dev == port->dev.parent;
+>  }
 >  
->  /**
-> 
-> base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
-> prerequisite-patch-id: e96001d5ba3459a014f818421b1f771e88775c9f
-> prerequisite-patch-id: 8b216a3f53da0be4117ba50a3a8ecbb0dbe61041
-> prerequisite-patch-id: 8da2fd3d645d11c1c6cb33aab62590f2533b737b
-> prerequisite-patch-id: 04a9b9c9e69bbff4da3917a33e8b7c1d77059c1f
-> prerequisite-patch-id: c0accfef8f5a037fa7456d2517eb197eb910739c
-> prerequisite-patch-id: 0f3f0698af3958b2e4cabf66dd2268132c2c51fb
-> prerequisite-patch-id: 3f47d2470e1c7bd34fd509a27331d72c45d33847
-> prerequisite-patch-id: 434177b7f4f808aeeace5d7d1e17108f66a7d6cb
-> prerequisite-patch-id: 6a6f4dbe624e00865bb1e087dcbd8bc9c8807a18
-> prerequisite-patch-id: 95e0c0aa6d4589772e6c38780eaed739d54ee755
+> +/* Address translation functions exported to cxl_translate test module only */
+> +int cxl_validate_translation_params(u8 eiw, u16 eig, int pos);
+> +u64 cxl_calculate_hpa_offset(u64 dpa_offset, int pos, u8 eiw, u16 eig);
+> +u64 cxl_calculate_dpa_offset(u64 hpa_offset, u8 eiw, u16 eig);
+> +int cxl_calculate_position(u64 hpa_offset, u8 eiw, u16 eig);
+> +
+>  int cxl_num_decoders_committed(struct cxl_port *port);
+>  bool is_cxl_port(const struct device *dev);
+>  struct cxl_port *to_cxl_port(const struct device *dev);
 
