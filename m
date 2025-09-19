@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B9824E4D4;
-	Fri, 19 Sep 2025 19:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB831E5B63;
+	Fri, 19 Sep 2025 19:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758311173; cv=none; b=PtcKwp9gJuwE7s5FYO71OBZnl4A9TA/ev+x/zg6UN1dokl36EcUg9zEwaHupGMNBd+B5PKqqLq3lKbOwrRJ5zenq+gNuXmMmljt+XcXk51MbKtghgJ7sXzUXg4/vvMV1MDECOmpqr3kme5y4DAVicDGQWUwYtJKAfNHp2kIfUWM=
+	t=1758311894; cv=none; b=rOEtMPmsEntiwVNXQE6h+dhMzXOQhd/NxlZLQl9yrijjSDjBObvsBAGkf+Oq9HuSY2LwmOrcBuxzWfz8XiLa1DQeK82pb2oBRuqtqVRqvhyG3VMm775WbiBVqgfashig3lTUsq4HK+tYnPPuqtDER+eFj9EO71k0MFTIaSpq2zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758311173; c=relaxed/simple;
-	bh=Qxy5JuXnac9GW0vWPRGFZYQ4K8hZE/WIabH4rCSGmik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HQ5bo8bGqpzrxg+CdUalC83OfD5Gl/iUedEkWD/2OtK2HqjzytCvP+Aqs8E+MwIKUffRin5ZksmmPXZfPq3L0UClO1uLEQzqOeMAiB2DCTDP8QLgLWvdK136LqKHr5p954OlKBV75P1Oh8AMgSBZt2AbiuKs0JjIrfHacgeyDa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QsTu2g1Y; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1758311894; c=relaxed/simple;
+	bh=0O0MahJ+NiK3QdJLSSJEqa2OFc+vnA8WlR02GHdRTgk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Q6sIGAvp9DUr4pZecbM26D8nQrv7nbhpKbpGrLwijslEsomP1WO4capJIrlU4tXZCfmehWDy2OOcFJGA7FuBOz7ihKTHoYiR5Jn9C/NyN3zgyQWZ798gpJ0to9th2b57QrfJQST3tyCyBTSL+yBbhtQjEVdAl43Ylp0knNRIDr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hl4hZP7L; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QsTu2g1Y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hl4hZP7L"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758311172; x=1789847172;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Qxy5JuXnac9GW0vWPRGFZYQ4K8hZE/WIabH4rCSGmik=;
-  b=QsTu2g1YrY5J/r/Yg6fyzeDVaCLRuA4cd3GKfM0cu6PpFIM9UfD5yLEv
-   0DfGthcfsfVtv7aN7MRAt5QH4A+2r4PtO7BeOKoM/tM+DXr+Rqrh3Tmq9
-   lAAfAqxtPlIu7IZ5nwxuuiZgu+5ZzsG9tb9jt8GP1Jg6R1rZCKMZr7hGo
-   REaKvzyLiTwthuscHBr68dACmObgsDjBGef1JyY0HFlNamgsI4ZPypQEz
-   yjefoaaKn770zbQdZDmjLSjxjoQP8PmFIYLid0jUpmM759L6WMw/HV9Mf
-   uDCq+dtpNC4KKO5ErOz80sRsHJforhL7BIjtXYxnKNitTyopWOk/yTBKe
-   Q==;
-X-CSE-ConnectionGUID: F+4Ub+SITranBXno9TMN1Q==
-X-CSE-MsgGUID: NipoChkxSnGfhF07k6jkAQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11558"; a="83268950"
+  t=1758311893; x=1789847893;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=0O0MahJ+NiK3QdJLSSJEqa2OFc+vnA8WlR02GHdRTgk=;
+  b=Hl4hZP7Lp/9UN6G0eqVFtFQEn6vTUPxxs+HruNhv5NxzYP5hgzIa0nT3
+   ds6DGSnMnNqUl8UmnQAAMdklUPZpT2N6Ym9d80OokrBj/GwbdJW+LWOOi
+   A/37HQ+5mHtSED2up4IYtZ5z6cQl75PzT9IKmynmZJi2P5yf/riH3cqqW
+   eRbJ/3m6xl2PpRCnj/uQ7p88CufFdSzfl+y0jWDKdnOtnk3Vzj7T6u+Eu
+   y4bFgVPnEatbEh70F8k7yb/YlDJwprPORM5eKCX9unk4c+MuGA7tANENw
+   /e86XJsiaUQBYnMsdvuasoMpPTV5eMkK6nk7Iap4aq6xt63piiGu3lzbG
+   g==;
+X-CSE-ConnectionGUID: vf1P6JCKQ9+a9gS3GuWLvA==
+X-CSE-MsgGUID: RZn7dwQGQHq0IQ8kCNGQUg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11558"; a="60356804"
 X-IronPort-AV: E=Sophos;i="6.18,278,1751266800"; 
-   d="scan'208";a="83268950"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2025 12:46:11 -0700
-X-CSE-ConnectionGUID: PRfqglmRSSSaMxjQuFuxfw==
-X-CSE-MsgGUID: 7NjKp86uRqS6cL+jn964pQ==
+   d="scan'208";a="60356804"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2025 12:58:11 -0700
+X-CSE-ConnectionGUID: ++Rm/+bLQ5S3XzcYy8lhkw==
+X-CSE-MsgGUID: ydSCiQyiQgSc7XmY0M6GKQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,278,1751266800"; 
-   d="scan'208";a="213065584"
+   d="scan'208";a="181037540"
 Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.108.58]) ([10.125.108.58])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2025 12:46:09 -0700
-Message-ID: <bd1d7584-b842-4a65-967d-578bdbdda5ca@intel.com>
-Date: Fri, 19 Sep 2025 12:46:09 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2025 12:58:10 -0700
+Message-ID: <1b86bfc3-61da-421f-ba3d-bd738232996b@intel.com>
+Date: Fri, 19 Sep 2025 12:58:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,204 +52,73 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 11/20] cxl: Define a driver interface for DPA
- allocation
+Subject: Re: [PATCH v18 07/20] sfc: create type2 cxl memdev
+From: Dave Jiang <dave.jiang@intel.com>
 To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
  netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com,
  davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
-Cc: Alejandro Lucero <alucerop@amd.com>
+Cc: Alejandro Lucero <alucerop@amd.com>,
+ Martin Habets <habetsm.xilinx@gmail.com>, Fan Ni <fan.ni@samsung.com>,
+ Edward Cree <ecree.xilinx@gmail.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
 References: <20250918091746.2034285-1-alejandro.lucero-palau@amd.com>
- <20250918091746.2034285-12-alejandro.lucero-palau@amd.com>
+ <20250918091746.2034285-8-alejandro.lucero-palau@amd.com>
+ <58917e54-5631-4e68-8e0e-bcff94c41516@intel.com>
 Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250918091746.2034285-12-alejandro.lucero-palau@amd.com>
+In-Reply-To: <58917e54-5631-4e68-8e0e-bcff94c41516@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 9/18/25 2:17 AM, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
+On 9/19/25 8:59 AM, Dave Jiang wrote:
 > 
-> Region creation involves finding available DPA (device-physical-address)
-> capacity to map into HPA (host-physical-address) space.
 > 
-> In order to support CXL Type2 devices, define an API, cxl_request_dpa(),
-> that tries to allocate the DPA memory the driver requires to operate.The
-> memory requested should not be bigger than the max available HPA obtained
-> previously with cxl_get_hpa_freespace().
+> On 9/18/25 2:17 AM, alejandro.lucero-palau@amd.com wrote:
+>> From: Alejandro Lucero <alucerop@amd.com>
+>>
+>> Use cxl API for creating a cxl memory device using the type2
+>> cxl_dev_state struct.
+>>
+>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>> Reviewed-by: Martin Habets <habetsm.xilinx@gmail.com>
+>> Reviewed-by: Fan Ni <fan.ni@samsung.com>
+>> Acked-by: Edward Cree <ecree.xilinx@gmail.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
-> Based on https://lore.kernel.org/linux-cxl/168592158743.1948938.7622563891193802610.stgit@dwillia2-xfh.jf.intel.com/
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> ---
->  drivers/cxl/core/hdm.c | 83 ++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h      |  1 +
->  include/cxl/cxl.h      |  5 +++
->  3 files changed, 89 insertions(+)
+> with a nit below.
 > 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index e9e1d555cec6..d1b1d8ab348a 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -3,6 +3,7 @@
->  #include <linux/seq_file.h>
->  #include <linux/device.h>
->  #include <linux/delay.h>
-> +#include <cxl/cxl.h>
->  
->  #include "cxlmem.h"
->  #include "core.h"
-> @@ -556,6 +557,13 @@ bool cxl_resource_contains_addr(const struct resource *res, const resource_size_
->  	return resource_contains(res, &_addr);
->  }
->  
-> +/**
-> + * cxl_dpa_free - release DPA (Device Physical Address)
-> + *
-> + * @cxled: endpoint decoder linked to the DPA
-> + *
-> + * Returns 0 or error.
-> + */
->  int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
->  {
->  	struct cxl_port *port = cxled_to_port(cxled);
-> @@ -582,6 +590,7 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
->  	devm_cxl_dpa_release(cxled);
->  	return 0;
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_dpa_free, "CXL");
->  
->  int cxl_dpa_set_part(struct cxl_endpoint_decoder *cxled,
->  		     enum cxl_partition_mode mode)
-> @@ -613,6 +622,80 @@ int cxl_dpa_set_part(struct cxl_endpoint_decoder *cxled,
->  	return 0;
->  }
->  
-> +static int find_free_decoder(struct device *dev, const void *data)
-> +{
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct cxl_port *port;
-> +
-> +	if (!is_endpoint_decoder(dev))
-> +		return 0;
-> +
-> +	cxled = to_cxl_endpoint_decoder(dev);
-> +	port = cxled_to_port(cxled);
-> +
-> +	return cxled->cxld.id == (port->hdm_end + 1);
-> +}
-> +
-> +static struct cxl_endpoint_decoder *
-> +cxl_find_free_decoder(struct cxl_memdev *cxlmd)
-> +{
-> +	struct cxl_port *endpoint = cxlmd->endpoint;
-> +	struct device *dev;
-> +
-> +	guard(rwsem_read)(&cxl_rwsem.dpa);
-> +	dev = device_find_child(&endpoint->dev, NULL,
-> +				find_free_decoder);
-> +	if (dev)
-> +		return to_cxl_endpoint_decoder(dev);
-> +
-> +	return NULL;
-> +}
-> +
-> +/**
-> + * cxl_request_dpa - search and reserve DPA given input constraints
-> + * @cxlmd: memdev with an endpoint port with available decoders
-> + * @mode: DPA operation mode (ram vs pmem)
+>> ---
+>>  drivers/net/ethernet/sfc/efx_cxl.c | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+>> index 651d26aa68dc..177c60b269d6 100644
+>> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+>> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+>> @@ -82,6 +82,12 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>>  		return dev_err_probe(&pci_dev->dev, -ENODEV,
+>>  				     "dpa capacity setup failed\n");
+>>  
+>> +	cxl->cxlmd = devm_cxl_add_memdev(&pci_dev->dev, &cxl->cxlds, NULL);
+>> +	if (IS_ERR(cxl->cxlmd)) {
+>> +		pci_err(pci_dev, "CXL accel memdev creation failed");
+> 
+> As Jonathan mentioned. Maybe dev_err() to keep it consistent.
 
-s/DPA operation mode/CXL partition mode/
-
-I would just leave out ram vs pmem. When something new comes like DPA, you'll have to augment it if you had that.
-
-> + * @alloc: dpa size required
-> + *
-> + * Returns a pointer to a cxl_endpoint_decoder struct or an error
-
-Returns a pointer to a 'struct cxl_endpoint_decoder' on success or an errno encoded pointer on failure.
-
-> + *
-> + * Given that a region needs to allocate from limited HPA capacity it
-> + * may be the case that a device has more mappable DPA capacity than
-> + * available HPA. The expectation is that @alloc is a driver known
-> + * value based on the device capacity but it could not be available
-> + * due to HPA constraints.
-
-I'm not understanding what you mean by "but it could not be available due to HPA constraints". Maybe the last sentence needs to be rephrased.
-
-> + *
-> + * Returns a pinned cxl_decoder with at least @alloc bytes of capacity
-> + * reserved, or an error pointer. The caller is also expected to own the
-> + * lifetime of the memdev registration associated with the endpoint to
-> + * pin the decoder registered as well.
-> + */
-> +struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_memdev *cxlmd,
-> +					     enum cxl_partition_mode mode,
-> +					     resource_size_t alloc)
-> +{
-> +	struct cxl_endpoint_decoder *cxled __free(put_cxled) =
-> +					cxl_find_free_decoder(cxlmd);
-
-Move this down to right before cxled is checked. It's ok the declare variable right before using with cleanup macros.
+Hmm....looking at the rest of the driver files the pci_*() calls are used instead. So ignore my comment. Although typically device drivers use dev_*() calls and pci_*() calls are reserved for PCI core devices.
 
 DJ
-
-> +	int rc;
-> +
-> +	if (!IS_ALIGNED(alloc, SZ_256M))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	if (!cxled)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	rc = cxl_dpa_set_part(cxled, mode);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	rc = cxl_dpa_alloc(cxled, alloc);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	return no_free_ptr(cxled);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_request_dpa, "CXL");
-> +
->  static int __cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size)
->  {
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index ab490b5a9457..0020d8e474a6 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -625,6 +625,7 @@ struct cxl_root *find_cxl_root(struct cxl_port *port);
->  
->  DEFINE_FREE(put_cxl_root, struct cxl_root *, if (_T) put_device(&_T->port.dev))
->  DEFINE_FREE(put_cxl_port, struct cxl_port *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
-> +DEFINE_FREE(put_cxled, struct cxl_endpoint_decoder *, if (_T) put_device(&_T->cxld.dev))
->  DEFINE_FREE(put_cxl_root_decoder, struct cxl_root_decoder *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->cxlsd.cxld.dev))
->  DEFINE_FREE(put_cxl_region, struct cxl_region *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
->  
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 788700fb1eb2..0a607710340d 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -7,6 +7,7 @@
->  
->  #include <linux/node.h>
->  #include <linux/ioport.h>
-> +#include <linux/range.h>
->  #include <cxl/mailbox.h>
->  
->  /**
-> @@ -273,4 +274,8 @@ struct cxl_root_decoder *cxl_get_hpa_freespace(struct cxl_memdev *cxlmd,
->  					       unsigned long flags,
->  					       resource_size_t *max);
->  void cxl_put_root_decoder(struct cxl_root_decoder *cxlrd);
-> +struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_memdev *cxlmd,
-> +					     enum cxl_partition_mode mode,
-> +					     resource_size_t alloc);
-> +int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
->  #endif /* __CXL_CXL_H__ */
+  
+> 
+>> +		return PTR_ERR(cxl->cxlmd);
+>> +	}
+>> +
+>>  	probe_data->cxl = cxl;
+>>  
+>>  	return 0;
+> 
+> 
 
