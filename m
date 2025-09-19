@@ -1,214 +1,188 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BE619755B
-	for <linux-cxl@vger.kernel.org>; Fri, 19 Sep 2025 10:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE29519755B
+	for <linux-cxl@vger.kernel.org>; Fri, 19 Sep 2025 11:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758279387; cv=none; b=YlduhmUQRAradykaE/fHCsLd6y6CcakIA1FljRTKfqtdURRX2t/tN8Yb5LmVrirjLC7PKy7aedvQKHqMXPEBlNd5x8u+a4ZMGNCrxbjc37wW6KOqgeTsjtYnd2vLcb214995uRWqDC1hughtuxJKdjzH60lPP3TCALZcFHDh/3c=
+	t=1758279811; cv=none; b=QlsJKELAQAFNQBGQHV/WJJ0oUy7V56b5A9JXodp0zEilAJOacZCp4W9gzEL79DVRlrHlN3eUKrYk42gO44YX9jQIU7/lLFWzTc1ilcJkRXJnOEjOQs7JCJDxXmM/Y3zyjr5rtoZCfkySCB9FiduFFvpTujFSJACpSXmjBTZAvjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758279387; c=relaxed/simple;
-	bh=Y5qZrRpeYCuCKQclnW17M2ROywODQXhKx9nlWrW2Sis=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=UFYhmufztLEBgtED+HHgWgdH+6XyLh8EX3Lfl1JV7sciCa9emsEigSri0wa4+OUQCvtgHPz7JFRmuKsKSJNOljIUc3IAgTTv32bZd0x5/ItpaLF3WweS3szyGJuSITYpKrAkDjVNRVBdebHl9Vy+8Pfluhfzzbhm+5voWPKqGDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D/IVdPVc; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1758279811; c=relaxed/simple;
+	bh=OxbrzSFC1EPNAfXl/IWTc6wZg4oz2KAGit6n/46HSUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=pQAkiuHOXdbfzJdsFcCJwkSYUdrWNvOZpMqHfHtSZTPostRJG42LkTuSSA3R9twL5S3WmletzcBfspUqZ6lARY2KovEQ5PzxdGZerZ3AGyiZzH4LwJXz1n4J5qupDEKM2f0hkG8fBW9AkgZ74ErfIHOSQMfg4muRuX5vcGnIRhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=iZVQgNXo; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D/IVdPVc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758279384; x=1789815384;
-  h=date:from:to:cc:subject:message-id;
-  bh=Y5qZrRpeYCuCKQclnW17M2ROywODQXhKx9nlWrW2Sis=;
-  b=D/IVdPVc7zR3iqf6JMb00jvUakDR0dTLF40rKK0FY5lkpj5oK2RxJck0
-   HyP/yqIqAjTqPka/MeRcjf3HnYTuEj36Sdrfjj+Lz4IwUm7GyRZrDpaVB
-   lTtv0CM3EFIzZnXzhHlYTRygv42SonMppUtz9HYN43bviFmONa3gz99w7
-   pTjevOAA7/VXMN7enqpEQTijwQDxmDO1vRPiudEJds31uS1jc0FD/QsZW
-   18XtgiR3oyOcHhXzTBMJeQpQbgYJBtMjdyjfToByjPy0wXgOr0akkdKKq
-   B2If0lOcGuIDbMjX9h8u31R/luCLwghLBgMeZwNkUPqbcZg0xp6f73nTL
-   w==;
-X-CSE-ConnectionGUID: Okr7V/18TnKodf4wFD42Ng==
-X-CSE-MsgGUID: qswYCnJeSWKknHMq4Vly6g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11557"; a="60555253"
-X-IronPort-AV: E=Sophos;i="6.18,277,1751266800"; 
-   d="scan'208";a="60555253"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2025 03:56:23 -0700
-X-CSE-ConnectionGUID: 5k9L8GDTToCi5cEpqbyQ0w==
-X-CSE-MsgGUID: FyhzRtfDSjODCOTLzFPeXw==
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO 84a20bd60769) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 19 Sep 2025 03:56:22 -0700
-Received: from kbuild by 84a20bd60769 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uzYmq-0004Dz-0G;
-	Fri, 19 Sep 2025 10:56:20 +0000
-Date: Fri, 19 Sep 2025 18:56:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- 46037455cbb748c5e85071c95f2244e81986eb58
-Message-ID: <202509191855.59rDzWMt-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iZVQgNXo"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250919110325epoutp04c652d09f64659330ec381b10cd26d342~mqirtGFWW1637616376epoutp04O
+	for <linux-cxl@vger.kernel.org>; Fri, 19 Sep 2025 11:03:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250919110325epoutp04c652d09f64659330ec381b10cd26d342~mqirtGFWW1637616376epoutp04O
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1758279805;
+	bh=6kmVAHMIY5EUz8/oQT22z2+iEFOIcjXTLGTMM76hRUk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=iZVQgNXoDO9MvNk92urbtwm/zG66OBoWtfD5BF7tSULsPsL3faIfLyK4tKhv8FfNh
+	 dH4lm+xFcTcJyu5s/n2LbFGV//PxIcwJmaavivJMz2GSyQVqH5mx8vfCjWXrqlhHuh
+	 zNNR8TEO0GPVW80UycKBxIIrYt1AaOxs5cExCza8=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250919110324epcas5p205ecc138beaa8dca32cabc6905e1e101~mqiqq1-jQ1991019910epcas5p2s;
+	Fri, 19 Sep 2025 11:03:24 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.89]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4cSqP75wwXz6B9m6; Fri, 19 Sep
+	2025 11:03:23 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250919110323epcas5p38ea4211afa939c30510a8a0f9cff1c5f~mqipWW0x91372513725epcas5p35;
+	Fri, 19 Sep 2025 11:03:23 +0000 (GMT)
+Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250919110321epsmtip1030d4158b8b7f48695c99043044221e9~mqin6tbwy0084900849epsmtip1g;
+	Fri, 19 Sep 2025 11:03:21 +0000 (GMT)
+Date: Fri, 19 Sep 2025 16:33:12 +0530
+From: Arpit Kumar <arpit1.kumar@samsung.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: qemu-devel@nongnu.org, gost.dev@samsung.com, linux-cxl@vger.kernel.org,
+	dave@stgolabs.net, vishak.g@samsung.com, krish.reddy@samsung.com,
+	a.manzanares@samsung.com, alok.rathore@samsung.com, arpit.sysdev@gmail.com,
+	cpgs@samsung.com
+Subject: Re: [PATCH v4 1/2] hw/cxl: Refactored Identify Switch Device & Get
+ Physical Port State
+Message-ID: <20250919110312.naudjnvhsjmxaxjk@test-PowerEdge-R740xd>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <20250917165535.000021b1@huawei.com>
+X-CMS-MailID: 20250919110323epcas5p38ea4211afa939c30510a8a0f9cff1c5f
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----.2eTkDb0Wtw7DpTqHNw2IdxlY1ZkgCZiGa8-Nl.IQwSrXKTD=_1d3f5_"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250916080803epcas5p1cd11689108b259f21908d9779993cc0f
+References: <20250916080736.1266083-1-arpit1.kumar@samsung.com>
+	<CGME20250916080803epcas5p1cd11689108b259f21908d9779993cc0f@epcas5p1.samsung.com>
+	<20250916080736.1266083-2-arpit1.kumar@samsung.com>
+	<20250917165535.000021b1@huawei.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 46037455cbb748c5e85071c95f2244e81986eb58  Merge branch 'for-6.18/cxl-delay-dport' into cxl-for-next
+------.2eTkDb0Wtw7DpTqHNw2IdxlY1ZkgCZiGa8-Nl.IQwSrXKTD=_1d3f5_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-elapsed time: 731m
+On 17/09/25 04:55PM, Jonathan Cameron wrote:
+>On Tue, 16 Sep 2025 13:37:35 +0530
+>Arpit Kumar <arpit1.kumar@samsung.com> wrote:
+>
+>> -Storing physical ports info during enumeration.
+>> -Refactored changes using physical ports info for
+>>  Identify Switch Device (Opcode 5100h) & Get Physical Port State
+>>  (Opcode 5101h) physical switch FM-API command set.
+>>
+>> Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
+>
+>Hi Arpit.  One question inline, and one comment on code I've moved
+>around whilst queue this up.  I'll push out a tree to gitlab
+>(probably tomorrow) and when I do please check I didn't mess that up!
+>
+>Jonathan
+>
 
-configs tested: 136
-configs skipped: 3
+Hi Jonathan,
+Thank you for the swift response and review comments.
+Sure, will look into gitlab tree once up.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks,
+Arpit
+>
+>> +static CXLRetCode cxl_set_port_type(CXLUpstreamPort *ports, int pnum,
+>> +                                    CXLCCI *cci)
+>> +{
+>> +    uint8_t current_port_config_state;
+>> +    uint8_t connected_device_type;
+>> +    uint8_t supported_ld_count;
+>> +    uint16_t lnkcap, lnkcap2, lnksta;
+>> +    PCIBus *bus;
+>> +    PCIDevice *port_dev;
+>> +    PCIEPort *usp = PCIE_PORT(cci->d);
+>> +
+>> +    if (usp->port == pnum) {
+>> +        port_dev = PCI_DEVICE(usp);
+>> +        current_port_config_state = CXL_PORT_CONFIG_STATE_USP;
+>> +        connected_device_type = CXL_PORT_CONNECTED_DEV_TYPE_NONE;
+>> +        supported_ld_count = 0;
+>> +    } else {
+>> +        bus = &PCI_BRIDGE(cci->d)->sec_bus;
+>> +        port_dev = pcie_find_port_by_pn(bus, pnum);
+>> +        if (port_dev) { /* DSP */
+>> +            PCIDevice *ds_dev = pci_bridge_get_sec_bus(PCI_BRIDGE(port_dev))
+>> +                ->devices[0];
+>> +            current_port_config_state = CXL_PORT_CONFIG_STATE_DSP;
+>> +            if (ds_dev) {
+>> +                if (object_dynamic_cast(OBJECT(ds_dev), TYPE_CXL_TYPE3)) {
+>> +                    /* To-do: controllable */
+>
+>In what sense controllable?  It should always match what the downstream device
+>is presenting as.  Do you ultimately mean if we mess with the alternate modes
+>and reset the port to have it come up as a PCI only device?
+>This will need to be more complex as we add different CXL type 3 device support
+>of course, but I'd still expect to auto detect it rather that control it directly.
+>
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                         haps_hs_defconfig    gcc-15.1.0
-arc                   randconfig-001-20250919    gcc-15.1.0
-arc                   randconfig-002-20250919    gcc-8.5.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-22
-arm                          ep93xx_defconfig    clang-22
-arm                   randconfig-001-20250919    gcc-12.5.0
-arm                   randconfig-002-20250919    gcc-10.5.0
-arm                   randconfig-003-20250919    gcc-12.5.0
-arm                   randconfig-004-20250919    clang-22
-arm                        vexpress_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20250919    gcc-15.1.0
-arm64                 randconfig-002-20250919    gcc-8.5.0
-arm64                 randconfig-003-20250919    gcc-12.5.0
-arm64                 randconfig-004-20250919    gcc-11.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20250919    gcc-14.3.0
-csky                  randconfig-002-20250919    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon                             defconfig    clang-22
-hexagon               randconfig-001-20250919    clang-22
-hexagon               randconfig-002-20250919    clang-22
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20250919    clang-20
-i386        buildonly-randconfig-002-20250919    gcc-14
-i386        buildonly-randconfig-003-20250919    gcc-14
-i386        buildonly-randconfig-004-20250919    gcc-14
-i386        buildonly-randconfig-005-20250919    clang-20
-i386        buildonly-randconfig-006-20250919    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20250919    gcc-15.1.0
-loongarch             randconfig-002-20250919    clang-22
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                            alldefconfig    gcc-11.5.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250919    gcc-10.5.0
-nios2                 randconfig-002-20250919    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                generic-32bit_defconfig    gcc-15.1.0
-parisc                randconfig-001-20250919    gcc-15.1.0
-parisc                randconfig-002-20250919    gcc-15.1.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc                    mvme5100_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20250919    gcc-10.5.0
-powerpc               randconfig-002-20250919    gcc-8.5.0
-powerpc               randconfig-003-20250919    clang-18
-powerpc                     tqm8560_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20250919    gcc-8.5.0
-powerpc64             randconfig-002-20250919    gcc-13.4.0
-powerpc64             randconfig-003-20250919    clang-18
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20250919    gcc-10.5.0
-riscv                 randconfig-002-20250919    gcc-13.4.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-22
-s390                  randconfig-001-20250919    gcc-8.5.0
-s390                  randconfig-002-20250919    gcc-15.1.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20250919    gcc-12.5.0
-sh                    randconfig-002-20250919    gcc-10.5.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250919    gcc-14.3.0
-sparc                 randconfig-002-20250919    gcc-8.5.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20250919    clang-22
-sparc64               randconfig-002-20250919    gcc-14.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20250919    gcc-12
-um                    randconfig-002-20250919    clang-22
-um                           x86_64_defconfig    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250919    clang-20
-x86_64      buildonly-randconfig-002-20250919    gcc-14
-x86_64      buildonly-randconfig-003-20250919    gcc-14
-x86_64      buildonly-randconfig-004-20250919    clang-20
-x86_64      buildonly-randconfig-005-20250919    clang-20
-x86_64      buildonly-randconfig-006-20250919    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250919    gcc-11.5.0
-xtensa                randconfig-002-20250919    gcc-8.5.0
-xtensa                    xip_kc705_defconfig    gcc-15.1.0
+This is with respect to your review comment from v1 patch:
+https://lore.kernel.org/qemu-devel/20250602135942.2773823-1-arpit1.kumar@samsung.com/T/
+As per my understanding, controllable was identification of the specific type of 
+CXL type 3 device and accordingly initializing connected_device_type. Since you 
+mention auto-detect, does it mean using object_get_typename() to identify the type
+of device and initiliaze it directly to connected_device_type rather than specifying
+it explicitly. If yes, then this anyways rules out controllable part, hence the comment
+can be removed.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>> +                    connected_device_type = CXL_PORT_CONNECTED_DEV_TYPE_3_SLD;
+>> +                } else {
+>> +                    connected_device_type = CXL_PORT_CONNECTED_DEV_TYPE_PCIE;
+>> +                }
+>> +            } else {
+>> +                connected_device_type = CXL_PORT_CONNECTED_DEV_TYPE_NONE;
+>> +            }
+>> +            supported_ld_count = 3;
+>> +        } else {
+>> +            return CXL_MBOX_INVALID_INPUT;
+>> +        }
+>> +    }
+>
+>>  void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
+>>                                    DeviceState *d, size_t payload_max)
+>>  {
+>> @@ -4691,6 +4706,7 @@ void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
+>>      cci->d = d;
+>>      cci->intf = intf;
+>>      cxl_init_cci(cci, payload_max);
+>> +    cxl_set_phy_port_info(cci);
+>>  }
+>>
+>>  void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max)
+>> @@ -4777,4 +4793,5 @@ void cxl_initialize_usp_mctpcci(CXLCCI *cci, DeviceState *d, DeviceState *intf,
+>>      cci->d = d;
+>>      cci->intf = intf;
+>>      cxl_init_cci(cci, payload_max);
+>> +    cxl_set_phy_port_info(cci);
+>
+>I'll shift this to a later patch whilst picking this up for my staging tree.
+>I want this ahead of where we introduce cxl_initialize_usp_mctpcci.
+>
+Okay
+>>  }
+
+------.2eTkDb0Wtw7DpTqHNw2IdxlY1ZkgCZiGa8-Nl.IQwSrXKTD=_1d3f5_
+Content-Type: text/plain; charset="utf-8"
+
+
+------.2eTkDb0Wtw7DpTqHNw2IdxlY1ZkgCZiGa8-Nl.IQwSrXKTD=_1d3f5_--
