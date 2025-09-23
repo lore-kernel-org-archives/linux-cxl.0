@@ -1,228 +1,230 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012044.outbound.protection.outlook.com [52.101.43.44])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18DF6212D7C;
-	Tue, 23 Sep 2025 11:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758627824; cv=fail; b=LGoA7aniEhLBzwh2dJQMIYJXeKgp4SDqP91SiMJRX8Xk1TZl8TGkVNh6ZUwFaqUBSLn9S+cXvmn4lSy+jCAD3F1SGxFzc92jRDIVLAeqbh+xCDV4TMoefuo6ZT45HvjKBJY8SxfroQHYzu8msZGe0MjFfGdz90SbVY3A+teNOwU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758627824; c=relaxed/simple;
-	bh=PiO9AP+rFihki583R+rbVEN/4xXqFOtH7MPa/6ihX5E=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ep0gzzPzNp/aFNv5zSQQEXmIW/Ip3AZgI0/EOl56TBgiRJEJG7Gi9nDU/l8WsWDSqzL6sUnNPrLlRpUsqCVHnglPo6Xx29bMg5LAnSi4TDfEIgS2u6aVSKmljaz7xuT8pWPELnKDDDW/JcVMR2paI8BUfkH1Ocl4hcLw/FLwPFM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JEqiUcLJ; arc=fail smtp.client-ip=52.101.43.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5782E8881;
+	Tue, 23 Sep 2025 11:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758628385; cv=none; b=LXmK+HXY0ZgEN75GkRox8EDGaxy5MA65bmIE/5LxDFwRwpm14qSxsa2xGSdhmVkzAu/0t6eHAsUn9TU1H1zu4PrOcND+orEf/9Tct380YV/G/8YT37bXpLzk+pyvLbbbLSeWcbLFRqx/6xbJgKWSPObu/2rc01372dtaa2qhZIw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758628385; c=relaxed/simple;
+	bh=uC3KukjZxErvZyqVNyTZvCwwhubZja1S6u22ZrF2EwI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KDydQcy4398DaaLTE1shEEXK83C0oajYGMlHMFs3CZ+a04Ol9wrH0XUM7nUV8hMrvloQZ2Re1L8oyP91B9KzL0suQ4EzyEEi08jdSz3h560befX6/B9VWbG8Imphi+SXlRQ+9qwNfDwqAzx4HPjm658pqAcanFcVxB7P0hqf2DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EFGvr8Qy; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JEqiUcLJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=L1ua0b/mQLHJoQhMc3Jp3TntncPXj7Ddgf59Mtd7rlKPAdmPufqXEKTX8VUy+kTtGr4yQC6P/F6Dl5H7EBgrcL+K8+SbsNZ0Devpa2qPpOgGdZbjlZuDy/Fz5UlYwGD5nKtQg+Qt0ZBOqx79VvicxAwVJLezX6vP/chlSjGte5X23Vcz4ghE6GdOlGs/Jv28wo9j5Dcfrf+fU2upHZvdMSnAXMAwB67vA9crfFUTE9JRpc5q1nhV+yEHaqcdBUfHjSPOvLZQTcxxRlWVknXk+Yx5iZhJBM9pak2DgHWkYvEWNJvH6+Q5KN+nrHiPdTf9Mir3L36mm2v9pPxzq59SFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DaGhOoszEQ9Ii3sk9/lP4JcGOFQcbmYtvktYWhgBvaE=;
- b=lvSp2CR8uB/xuhiC5EqW9iG7ty5kqzRfNOKyxtccu5JdM032dTNlCnyRIh9yj+xVW46nlxnraszqlnY4ucttP2Q7YQVoAS2IL7YjfCdXBAR22rRN+ePdRmHgFJYbb9qCeXam2Jro90e/KKJxrtjceJQfXS3aotH9YcW2PZ9fxIDQEjHNz1aJqz3sxOVnJTHBgCT7R40wsz/UpjKh8SJ7Nv27fI0U2EhW/bbIJTs4OyUMxx/sLVsTMTZCLqh7W7K/u3syXqrI1ln/NlpFrBx3oDC7H/AHCCdYpF0pC7+I+lTSSWoZp+itBKDSJALOhernYvpt06kXzREIL2V/pMGOTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DaGhOoszEQ9Ii3sk9/lP4JcGOFQcbmYtvktYWhgBvaE=;
- b=JEqiUcLJGPwdJuol2AXKxgh/6I7W1tKJIEAMklkZLstWxvEcPPJ9fCJwW7RBFHKJwmMit/CkoUVPLSKEF5zkJ5XOf6Yc87NJGs2y//McWZRRhlFU6AHiDF/HQW2ZeVxTk3RecOIzzbzqKp8vodZshBUMYsDj2uh0Qj+1URRP6zc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by MW4PR12MB6975.namprd12.prod.outlook.com (2603:10b6:303:20a::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.20; Tue, 23 Sep
- 2025 11:43:40 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.9137.018; Tue, 23 Sep 2025
- 11:43:40 +0000
-Message-ID: <fd325d95-2e71-492f-ae87-86f591c6ffef@amd.com>
-Date: Tue, 23 Sep 2025 12:43:34 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 01/20] cxl: Add type2 device basic support
-Content-Language: en-US
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>,
- alejandro.lucero-palau@amd.com
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, dave.jiang@intel.com
-References: <20250918091746.2034285-1-alejandro.lucero-palau@amd.com>
- <20250918091746.2034285-2-alejandro.lucero-palau@amd.com>
- <bead66ee-b4ef-48b6-9164-d9086b6de3ae@amd.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <bead66ee-b4ef-48b6-9164-d9086b6de3ae@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0176.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:18a::19) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EFGvr8Qy"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58N8Y12b008695;
+	Tue, 23 Sep 2025 11:52:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=FZaoT1QNSR93wIPtHts3CPzp0ctIk0
+	vYDNbzffEOi0c=; b=EFGvr8QyltIf32/aszOR/qJfepgW+UcWXreJDplTglupit
+	m+X7rmX3tdEzuL1hJj2o5XWwJ0r+pCJ4BjGEMOhGvQ5uA7F1CUxQtR7TqdF163bV
+	I3YXhbagNN2r+8NAvqFEHYkOG72rBgt1rm+ek1A/MwpmvyPZqT+huO4x+iKBFWTR
+	eo6ih9hfsFn2nHia9aCP+YLY6UeADcGZp/ivckC/FFUA6i0IL4LnbBeJbqc6eiAl
+	5jWsuCjMMTLD7wV7h8suNXD082oB3YYd9QtgvibDoicaRjRsG3bClbPAwbAw7H1U
+	VId+vHnlTcxFpVyEmlJvEr0+HDviZMbBrXxprVQA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 499n0jgm9c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Sep 2025 11:52:19 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 58NBn9Dd005820;
+	Tue, 23 Sep 2025 11:52:18 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 499n0jgm96-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Sep 2025 11:52:18 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58N9Tk1U019675;
+	Tue, 23 Sep 2025 11:52:17 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49a83k31qr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Sep 2025 11:52:17 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58NBqDIE43516160
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 23 Sep 2025 11:52:13 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F401A20043;
+	Tue, 23 Sep 2025 11:52:12 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A61F420040;
+	Tue, 23 Sep 2025 11:52:10 +0000 (GMT)
+Received: from li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com (unknown [9.87.150.243])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 23 Sep 2025 11:52:10 +0000 (GMT)
+Date: Tue, 23 Sep 2025 13:52:09 +0200
+From: Sumanth Korikkar <sumanthk@linux.ibm.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
+        Guo Ren <guoren@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+        Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
+        ntfs3@lists.linux.dev, kexec@lists.infradead.org,
+        kasan-dev@googlegroups.com, Jason Gunthorpe <jgg@nvidia.com>,
+        iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>,
+        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v4 11/14] mm/hugetlbfs: update hugetlbfs to use
+ mmap_prepare
+Message-ID: <aNKJ6b7kmT_u0A4c@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+References: <cover.1758135681.git.lorenzo.stoakes@oracle.com>
+ <e5532a0aff1991a1b5435dcb358b7d35abc80f3b.1758135681.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|MW4PR12MB6975:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5e94a6c5-71d9-4efd-4029-08ddfa9670d1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?K1F2TitOTE12cHR5bmV5bHlWbXczdjJpSWlDNlkybU9LaHRKVEpzcjkzQWR3?=
- =?utf-8?B?SE1NZzVKbkVOdUduVE1OZmV2Z1g5SlA3Z0FQdnp2QXJSRS9LcjU5aktHemFL?=
- =?utf-8?B?ZmVPRE82WnBKYVZVTE5sWG9iOFVlQ0xMN08xSjFQaTNoallCSk9WTFlYRnlJ?=
- =?utf-8?B?ZUlvdzBmQmZoRjRyVTNwWjc1cm9Bc2t3eEVRZlBKbFVGUFdZd2lMY2Q2Vktm?=
- =?utf-8?B?T1FyV2FFazk1c1FVQWlYMldUdzZFSElKTzBidTZsdjlYNUZubm1NRXFTRnhS?=
- =?utf-8?B?OXRRVzZPamM1Qjc1SUVDa3BlSVBDbU5jUVZidlNGNVpib29YS2JlVGhQSjVT?=
- =?utf-8?B?ZUpyMWdTQUMzdjZzNVlMTXF1VWFENE5rTEFwcXcvTi9tQVhybWs4U2tqWHdN?=
- =?utf-8?B?V0FRMUFpVXhOMkx6cnVRUTBQUit0Y2NMZ3RuejVwbHNERG92WldaTksySXdE?=
- =?utf-8?B?aDNpM0hqak1pMStmdFNlL2wxQWgxN2tzZVhrYmhZdzl4d05NY2hqZ2pmemYr?=
- =?utf-8?B?R2lmcnJjcUFpL1ZLYWFVREtuTXNBSHUySTZNbFJOTVI0KzliMEpQbnBKUGFn?=
- =?utf-8?B?QXRwU3E4Y2Qra2hvKzRXTDNIL3FzWWxFS2xUZkhJTG5RcnVZU2F6Rnlhb3pO?=
- =?utf-8?B?OXNTay8wMnZqU3Z1emk3aHZsVnNmV1NWK2FXNW1JRGZMUWJFQTUzc1NGYVAx?=
- =?utf-8?B?dmY4dUpaU2pCMDdjM1VCL2M0akdYM0NLb0oxNHV4MC80Rks1WHlUTFQxM3Ba?=
- =?utf-8?B?Vkk3LzZCcm84cmd0cDNWamhpOEwzeWNYRW83STlWSnRXR2o2MnExWGc0UXZs?=
- =?utf-8?B?cElRTzM0N3VHUGNQZnV1NXVWcC9acmZMOWk4dUhpWCtzUnY3TUZuK3dHYWVD?=
- =?utf-8?B?dlpYQ3pkUTErRFh4dDM1OEhndDhnc2syRUEwRnJwT2dSVFdZSTdjSWEzVC9Y?=
- =?utf-8?B?ZnBBK3Rtc1JjT3ZCcUVFOEJwZUZBZk51alVCOTNibjZmTTg3NmdvOTdkSERt?=
- =?utf-8?B?VVUwSGhtQW5ZV2V2VDNiWlV5S1F4WTFhcFpBMnd2VndaQjRvbFplMEFNWW1Q?=
- =?utf-8?B?cmE0YVhYTUZDMXAzTUI0aExxVlQ3WTJRaU15MXZSbktTWnMxSWlmeFROcWFl?=
- =?utf-8?B?Mkp1cGttSFRVQ25nRWJuL3Y1Vy9WeFNDcGRnQ1ViT2paWGlPK0NFaWN5c3pT?=
- =?utf-8?B?d29mNzdjbUYya3ZqMVZiaXJnRk0wcjBjSGRKQ1crVTZHL1JoMStQNjBleHd1?=
- =?utf-8?B?ajlWdXQvSDZaRXVyZTY5V3B1VU9SUlpwbGdMZHBNUE5GNFpYdjdxZHRORmVT?=
- =?utf-8?B?RGFXYkJlQ1hkcXpCRmtoVG44TUE0QXl1V2ZabEYzUEpZTitaRERHZnB3cFp1?=
- =?utf-8?B?VTBIemRyc0Z2WWZnQzVKazR5eDBxUTlGQ2k1U3Z4OU1Oald5eXFwaGMzNThZ?=
- =?utf-8?B?NGFXcjRVV2dNbTZCaXltSW9qRkhPbjdKNUhMOFZqSlA1aTJIRTVvSGVNM09n?=
- =?utf-8?B?bTQxb2VDUFoxV3lad2YyTEVQQ2VnVFRFQlRUZlBpakFCK0pFQm5kZll1dzU4?=
- =?utf-8?B?WnVXa3hIYk14SE5IeUpleW1lc0FuTEtZWXBrOEtYTmNDRVhMM2xSR0xYY2dM?=
- =?utf-8?B?MDZOSXlIempIZnBIek1RZWU5T1plcTNQNFZqUGw1YjgyaEE1QzNwSTJ2TXdS?=
- =?utf-8?B?UERjVG5wUXF3eS9BMFB0eitaQjZxU1pSZVVna3lvWERkZEFuaEcyMFM4ek9L?=
- =?utf-8?B?RXQ5bmVJcUxNK1JPZnhUczRJMTFkdC9iZ3pIZHdzckFkb3RnUWZKU25yVjBp?=
- =?utf-8?B?Y0prOFBvNlZXN2c0UjNMRUVjbVZJOTN4Y1FIeTlBNG9hR0pGUFkxODdsNEZD?=
- =?utf-8?B?Q0JMTWdsV2JvSEUxRmpFZ0pRSm40ZUFJRFhmUDFMcGxxV0dSbFdRM241a0xz?=
- =?utf-8?Q?3WJrnuYNb1w=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eTVmTjZwMlhmanM2dCtUQzVQVDBKaC9tZTBZdWhvODhxVmE0UzZuYXY1cm9x?=
- =?utf-8?B?ZXNDVmJ3MWJxUi9UMGRJdUVZaWRBcUY4bm1ITW9IQnlmS3BXUjlRbjdPVGxz?=
- =?utf-8?B?dUJrcVN4TkhQZHZ4dUJtY2x2S0QxVGFJSXFvU0V5MkpWeGIvOW5TVFMrSnpy?=
- =?utf-8?B?WHhhQ0hlVzBCYloxeXBGaEVEc3JrOW9BejdubFFTSUV0TU16ZkhIdjhIWVBN?=
- =?utf-8?B?ZlpzaGdXemVxOC93L28xUWhOOFZWdm9Nc1Y1ejVLZGdSVFpUdTVQTWRsQ0R0?=
- =?utf-8?B?ZFFlb3ZNUlpxTlZpSlNxY2cxTXJveFJHN0V5QzJ1YjhiZHhVYWlzMmFhaWwr?=
- =?utf-8?B?TFhScnJHOEkwc3VGSUZ2R3hORm5LdmZZY0J4eEduYkwycTQvOHFHYml6aENk?=
- =?utf-8?B?S2F6RFdxYVpDaHhnN1JwRTNJSDMya3o5ZFR4dlpLVEQ1aTRJR3NMY2JvY0VY?=
- =?utf-8?B?NktBcWF0cVdreDNmbWV1UkQ0OEpMZngzaWU4bzVTWWZsOUhJZm5RbTVVNFZY?=
- =?utf-8?B?WW9yUXVDQVdaTTY3MVRFcWNBYUlpKzR1UzFmMVpoLzUwRDUwQXJnb0VaZ2pX?=
- =?utf-8?B?aTZiL2hTSWlnQlpwcUdlR3JUZDR2dzZDS3Fuc0NDR2tDdXRzZURtc3JXMXBj?=
- =?utf-8?B?NEFXK2c1S3R6Y0liZHBGOVpneDlaTVA0UlV4ZXRQcG9WUGZvVG55V3dUSXZo?=
- =?utf-8?B?aVhwOTQvd1c0MDRVeTM1NnJmTFFERG1zR3NURGhXbmtDZHBEY0dSdXpKemVB?=
- =?utf-8?B?VWhHYURWNFYrU1ArQkpXNUVmdWhCU2k5RVM1cjcwbWNQRTJwV3Fiamk5dEZS?=
- =?utf-8?B?THpJYmVGUEoxaTQ2MzJlNkZmWER6VGdaVTJhRnFpMkx6SnptTE5PUTBQd0px?=
- =?utf-8?B?QUR1QnZSQStYdlhNUnhFRk5OUjVPSldJNWdrL2NjTnJIYSt1dHFMYWp4WHcz?=
- =?utf-8?B?NHlDZ0JqbnNJKzNxMlNjRkhOa1hjR0FGUjErelEzZU43TFdVZUNQcktUU21C?=
- =?utf-8?B?NXdKVHBRdUxmbXVSaGV4WHAwLzU2bkJES3FpVzVZU1lmdmcvb0txKzc5TDhr?=
- =?utf-8?B?dWdTYVJQMkNvZEdFcHdxd2FtTktWN2xDUWhRcmFUMDYrTk5XWHpKR21HM01m?=
- =?utf-8?B?Q3V3MGlWckljTVAxNVAxQVJwcU5vRFhGYlE4bG9TZFJjY2x5TkVDbmRpcDNY?=
- =?utf-8?B?OGVyM0F4R2xrSWdXYzAvWVhqODJuTDFDVHBGeHNTQjVEZDcycDBGaXFyMkRC?=
- =?utf-8?B?RWhHQ0hYY0xzbFREMVdySC9raEQvMGVzS21nYkpnd1hxSW0yaWtiaVBnSmRH?=
- =?utf-8?B?aVF1UFg5OTkvSXRsRG5uN2xFdGVJZ0gzOTRSNmNFK016SGRXYWZtSWZSTm9q?=
- =?utf-8?B?d0c3YmNZeStCZ0g4enFzdzZDTjV2S2YvR0YwTk1LcVRrVlFtVEFFZ0N1ZXor?=
- =?utf-8?B?MEJLMTR4VWRSQ2s4VlFRcGJZZElnN3pBMm1ISHpmNUpyT0cvRE94eXpJRUda?=
- =?utf-8?B?cVN5R3ZmaUx5UVNaT01US25ZTWR1NlpnZnBzWEVqN0hMN2ppK2tQRFZ4SWw2?=
- =?utf-8?B?NnhPdG5iRklJSVZMRDdSKzJxMFVRNFpqZVNHWFVFRUpxRUVSNDAwVVcybEF1?=
- =?utf-8?B?L3ZJZnFXOHlmSkpmTHRPVWtKbkRUUDl6K0FXQWwxZDVkWHpadjFLWUdKbEZr?=
- =?utf-8?B?elhnRW50eXJIVjhob2c5M3BmNkVQTWJudjRtTWZPdmRuWEJ3UkV0c3JHMkN6?=
- =?utf-8?B?bjlkSTZmdXRDVTJVcDZ0Z3c3M0hBY0g2QUtiTnI2MkI5eE9hTjlwamozUTRq?=
- =?utf-8?B?Q0lpZTY1M2ZqTXlzazZlOE5xNkR3enFXU01pdnVqTzZubUtRbkltTVFwL0pR?=
- =?utf-8?B?bFdGYmxUQ0N6Qmo2YkhCYXlwYTdWL2JCT1NLRVVWRHJuckpCRk0wb1Q1MFZa?=
- =?utf-8?B?UGFUSHUvQ0JWSGM4U055ekV2aE4zbUIzbEc3TTFBbTVKRGlsU2l6WTdjWnRk?=
- =?utf-8?B?UDIvRkJyVG0zbTJrd2cvZFB1Rlhnem9TbUg2TVhGclBBSnA3MllUa0l6Z0Ez?=
- =?utf-8?B?NENLS2Q1UFBqUVRNbVRsQXZNQUwvbHlOVEJzYWpzQzkvUmhLdERSZWltS2N5?=
- =?utf-8?Q?mTdmb2JxmfmXQjbGEGWuApBYV?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e94a6c5-71d9-4efd-4029-08ddfa9670d1
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2025 11:43:40.3336
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UTJXgyNyusLqeR4gzZPYxkyBeS6NGxtoPiGF5KzbmlAlTkr5HWmvCJGmgXLinnEdyDvf+28QC74XYRFPDfSWdg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6975
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e5532a0aff1991a1b5435dcb358b7d35abc80f3b.1758135681.git.lorenzo.stoakes@oracle.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTIwMDAzMyBTYWx0ZWRfX1/CT4ehdu5F7
+ 6VnJC5JZb/TGq0GTxXqzwutGBpnh5zvXhqXxihnE0ZIBeLxavZe5A1rzKbuxO1bDNyuFhUEM+Rk
+ 4I1KMXyeBzNEU/g4Tedu1h1rULa5Sn/p0/UqkELdAnxrKDhWjf96WssSMg0ltTS+aMBZqn2U8bf
+ Mm6V030K3rfmUmm6+2tKL/Lil9yhk2vaa1ilZs3936p1XOaPfvsu3tSuBabaOBW+S4p6UJCCS7o
+ UssKxq/W9pewKawoXgWRMXrenvRD0Q+OeFvs8GRRauXhjlsHet/L1r4+QnnsJQ0kVijCVo4qQhY
+ p/3nafFZQN3AWkhiFthvrI3hfInHVuTDSlQN3xLdzE/r0zMDPQuTX7WW9M8m8X+BWNkt+j6HOZU
+ bcmWMt/c
+X-Authority-Analysis: v=2.4 cv=TOlFS0la c=1 sm=1 tr=0 ts=68d289f3 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=kj9zAlcOel0A:10 a=yJojWOMRYYMA:10 a=NEAV23lmAAAA:8 a=yPCof4ZbAAAA:8
+ a=Ikd4Dj_1AAAA:8 a=P7Dlay8f7KcL8MNlhToA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: F6nP2Q8ol4BSxLNz15joz3bImrmTREZ1
+X-Proofpoint-GUID: 5HR21TLQQZuGh5ctB-qo8M6ErsQDpoDW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-23_02,2025-09-22_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 priorityscore=1501 phishscore=0 impostorscore=0 adultscore=0
+ suspectscore=0 spamscore=0 bulkscore=0 malwarescore=0 classifier=typeunknown
+ authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2507300000 definitions=main-2509200033
+
+On Wed, Sep 17, 2025 at 08:11:13PM +0100, Lorenzo Stoakes wrote:
+> Since we can now perform actions after the VMA is established via
+> mmap_prepare, use desc->action_success_hook to set up the hugetlb lock
+> once the VMA is setup.
+> 
+> We also make changes throughout hugetlbfs to make this possible.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> ---
+>  fs/hugetlbfs/inode.c           | 36 ++++++++++------
+>  include/linux/hugetlb.h        |  9 +++-
+>  include/linux/hugetlb_inline.h | 15 ++++---
+>  mm/hugetlb.c                   | 77 ++++++++++++++++++++--------------
+>  4 files changed, 85 insertions(+), 52 deletions(-)
+> 
+> diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+> index f42548ee9083..9e0625167517 100644
+> --- a/fs/hugetlbfs/inode.c
+> +++ b/fs/hugetlbfs/inode.c
+> @@ -96,8 +96,15 @@ static const struct fs_parameter_spec hugetlb_fs_parameters[] = {
+>  #define PGOFF_LOFFT_MAX \
+>  	(((1UL << (PAGE_SHIFT + 1)) - 1) <<  (BITS_PER_LONG - (PAGE_SHIFT + 1)))
+>  
+> -static int hugetlbfs_file_mmap(struct file *file, struct vm_area_struct *vma)
+> +static int hugetlb_file_mmap_prepare_success(const struct vm_area_struct *vma)
+>  {
+> +	/* Unfortunate we have to reassign vma->vm_private_data. */
+> +	return hugetlb_vma_lock_alloc((struct vm_area_struct *)vma);
+> +}
+
+Hi Lorenzo,
+
+The following tests causes the kernel to enter a blocked state,
+suggesting an issue related to locking order. I was able to reproduce
+this behavior in certain test runs.
+
+Test case:
+git clone https://github.com/libhugetlbfs/libhugetlbfs.git
+cd libhugetlbfs ; ./configure
+make -j32
+cd tests
+echo 100 > /proc/sys/vm/nr_hugepages
+mkdir -p /test-hugepages && mount -t hugetlbfs nodev /test-hugepages
+./run_tests.py <in a loop>
+...
+shm-fork 10 100 (1024K: 64):    PASS
+set shmmax limit to 104857600
+shm-getraw 100 /dev/full (1024K: 32):
+shm-getraw 100 /dev/full (1024K: 64):   PASS
+fallocate_stress.sh (1024K: 64):  <blocked>
+
+Blocked task state below:
+
+task:fallocate_stres state:D stack:0     pid:5106  tgid:5106  ppid:5103
+task_flags:0x400000 flags:0x00000001
+Call Trace:
+ [<00000255adc646f0>] __schedule+0x370/0x7f0
+ [<00000255adc64bb0>] schedule+0x40/0xc0
+ [<00000255adc64d32>] schedule_preempt_disabled+0x22/0x30
+ [<00000255adc68492>] rwsem_down_write_slowpath+0x232/0x610
+ [<00000255adc68922>] down_write_killable+0x52/0x80
+ [<00000255ad12c980>] vm_mmap_pgoff+0xc0/0x1f0
+ [<00000255ad164bbe>] ksys_mmap_pgoff+0x17e/0x220
+ [<00000255ad164d3c>] __s390x_sys_old_mmap+0x7c/0xa0
+ [<00000255adc60e4e>] __do_syscall+0x12e/0x350
+ [<00000255adc6cfee>] system_call+0x6e/0x90
+task:fallocate_stres state:D stack:0     pid:5109  tgid:5106  ppid:5103
+task_flags:0x400040 flags:0x00000001
+Call Trace:
+ [<00000255adc646f0>] __schedule+0x370/0x7f0
+ [<00000255adc64bb0>] schedule+0x40/0xc0
+ [<00000255adc64d32>] schedule_preempt_disabled+0x22/0x30
+ [<00000255adc68492>] rwsem_down_write_slowpath+0x232/0x610
+ [<00000255adc688be>] down_write+0x4e/0x60
+ [<00000255ad1c11ec>] __hugetlb_zap_begin+0x3c/0x70
+ [<00000255ad158b9c>] unmap_vmas+0x10c/0x1a0
+ [<00000255ad180844>] vms_complete_munmap_vmas+0x134/0x2e0
+ [<00000255ad1811be>] do_vmi_align_munmap+0x13e/0x170
+ [<00000255ad1812ae>] do_vmi_munmap+0xbe/0x140
+ [<00000255ad183f86>] __vm_munmap+0xe6/0x190
+ [<00000255ad166832>] __s390x_sys_munmap+0x32/0x40
+ [<00000255adc60e4e>] __do_syscall+0x12e/0x350
+ [<00000255adc6cfee>] system_call+0x6e/0x90
 
 
-On 9/22/25 22:08, Cheatham, Benjamin wrote:
-> On 9/18/2025 4:17 AM, alejandro.lucero-palau@amd.com wrote:
->> From: Alejandro Lucero <alucerop@amd.com>
->>
->> Differentiate CXL memory expanders (type 3) from CXL device accelerators
->> (type 2) with a new function for initializing cxl_dev_state and a macro
->> for helping accel drivers to embed cxl_dev_state inside a private
->> struct.
->>
->> Move structs to include/cxl as the size of the accel driver private
->> struct embedding cxl_dev_state needs to know the size of this struct.
->>
->> Use same new initialization with the type3 pci driver.
->>
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-> [snip]
->
->> diff --git a/include/cxl/pci.h b/include/cxl/pci.h
->> new file mode 100644
->> index 000000000000..5729a93b252a
->> --- /dev/null
->> +++ b/include/cxl/pci.h
->> @@ -0,0 +1,23 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
->> +
->> +#ifndef __CXL_CXL_PCI_H__
->> +#define __CXL_CXL_PCI_H__
->> +
->> +/* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
->> +#define CXL_DVSEC_PCIE_DEVICE					0
->> +#define   CXL_DVSEC_CAP_OFFSET		0xA
->> +#define     CXL_DVSEC_MEM_CAPABLE	BIT(2)
->> +#define     CXL_DVSEC_HDM_COUNT_MASK	GENMASK(5, 4)
->> +#define   CXL_DVSEC_CTRL_OFFSET		0xC
->> +#define     CXL_DVSEC_MEM_ENABLE	BIT(2)
->> +#define   CXL_DVSEC_RANGE_SIZE_HIGH(i)	(0x18 + ((i) * 0x10))
->> +#define   CXL_DVSEC_RANGE_SIZE_LOW(i)	(0x1C + ((i) * 0x10))
->> +#define     CXL_DVSEC_MEM_INFO_VALID	BIT(0)
->> +#define     CXL_DVSEC_MEM_ACTIVE	BIT(1)
->> +#define     CXL_DVSEC_MEM_SIZE_LOW_MASK	GENMASK(31, 28)
->> +#define   CXL_DVSEC_RANGE_BASE_HIGH(i)	(0x20 + ((i) * 0x10))
->> +#define   CXL_DVSEC_RANGE_BASE_LOW(i)	(0x24 + ((i) * 0x10))
->> +#define     CXL_DVSEC_MEM_BASE_LOW_MASK	GENMASK(31, 28)
-> Terry added definitions for all of these (I think?) under include/uapi/linux/pci_regs.h (patch 7/23 as of v11).
-> Since that series is a pre-requisite for this one, I'd go replace these definitions with the uapi ones.
-
-
-Oh, yes. I did see the contention and avoid the patch removing the 
-original definition but I forgot to study the implications.
-
-
-I will solve this for v19.
-
-
-Thanks
-
-
-> With that (and Jonathan's suggestion):
-> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+Thanks,
+Sumanth
