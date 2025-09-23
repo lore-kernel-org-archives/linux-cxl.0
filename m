@@ -1,97 +1,106 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB0C25484D
-	for <linux-cxl@vger.kernel.org>; Tue, 23 Sep 2025 03:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB38253958
+	for <linux-cxl@vger.kernel.org>; Tue, 23 Sep 2025 09:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758598152; cv=none; b=uwt+b3zeEqCNuDrvc9YEUWSn24AvGbpXL/fNLZ1jbDyefFQJQKCNJB3qMSxrmQrKj5sUsEqSsRP+/+VCdScvkv824zPmdgPPoAykZalESC1KV1S8SHa5XUHaIwJYk+CvqU4DqOevRfsc+L70aGHYelpek6gwpuUPvd4rrkmHbNY=
+	t=1758619278; cv=none; b=sQFaoxcwEye5k+D4eLEDtCZb+nHe9kx4HMjsktw+T5uFDW/4sRr19Xy6eyiGaU8Zb75zvQuzFqtei+n1gCv5LNb8Lpz0D/mJUZmwxhYF3JC1JSOyfxzOHoQIJqOIpiOwcTwPzjBsr80fmvls8t5HdPjnsBFiozLOahI27RdIevA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758598152; c=relaxed/simple;
-	bh=EXwzx+jqaKv7lifaMmXXEYRnm1eiubi1vxbrL8+Liog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t9qDH5r19hMTDVttO/Oauo3bYBDiXyRoyl22q4uXH9nP5TYgX3TwjORvfWl5XuNRY3eNXH200XZXiyH12fCJwmcmbrJlnxdNoZQgIb4qwPNNk6zMs8yjObqV5MYMGALwV8CmkupvvG1zo057pAC+D+UK852b/wjwCAgualzJAsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=OHg+a34F; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1758619278; c=relaxed/simple;
+	bh=Cswo0LzDGBX49wI8j9kkVMGd7/Ano3IZZWfL4sip6E0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pLGURh88MSUgiLo5PRvVMN9RhLovohTMrzutK0U8uysJG0Meun4A0iGkrHmTNFrlwz9oz+OQek3WUFcgveiewG7uRFTavY3irSqMvUv0i6FuHqMEryBI8gcUk5FPREUHaCFRHHsdIMZWOOcr5E/3OwlV58GUC5Hf4D2N0w7Qs6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h4u4AjKV; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="OHg+a34F"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-88c347db574so165670439f.0
-        for <linux-cxl@vger.kernel.org>; Mon, 22 Sep 2025 20:29:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h4u4AjKV"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-26c209802c0so37264725ad.0
+        for <linux-cxl@vger.kernel.org>; Tue, 23 Sep 2025 02:21:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1758598150; x=1759202950; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EXwzx+jqaKv7lifaMmXXEYRnm1eiubi1vxbrL8+Liog=;
-        b=OHg+a34F7gBNu2ln4g7T5ELLoqz3SFDECE3JAY73bh9zSNypV1NwXD9LKPIrfPvp0A
-         US3QilXd+5TAy/oxA4KPelP5X3ofIk1IhtMRdhCx0FwyaiJrIuEjt4lpMqoyUZuXCekz
-         Y8or8qUXxgro2LcFTqSWBZkgc1/kjqWlQTe7Z/qytpKM9sO7V2fZA2SzI2ypKh6bEPbU
-         jJPoBMeQwzMmEaIbnbq8vPUAVEzl1Ufv8Orm/rnIGkTEe5Zx8igsGABnvY1PITE8remi
-         n1DKSa1gi9QHXViMb9QRpMUXli8bc8u3tJZt5Ua8Ja0Obh1/wMyUc/eS5vble7p2zSlx
-         Yn6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758598150; x=1759202950;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1758619276; x=1759224076; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EXwzx+jqaKv7lifaMmXXEYRnm1eiubi1vxbrL8+Liog=;
-        b=dukEzbhbO0BG8yM0NUqCSddRGa53vFBJ55/MFnWImU1I6ZAabsd+mVx1PhKGe8TBn3
-         oBgSNwLVNr3m741a1/gI3UJifv6PTNkP09p8AnrR8T0mo1m2tQn5i9KEIDnrzDsvejTi
-         CynL8LdHNsU9mGRXy4L4axhmxENTUhEx1D3xaSBgeTnNoW26D7k2xPzOjnaewpvJp35o
-         aI+5U5o3aqEEWZEhiU2SmTYj4prf2UUojBVDSjE1BeGz2jXWaVmfaoUrgw2MdXGWMJNj
-         I45uiz8cfUbKClos0sdJNJFWd/5QOAqsiqtL/9Zjmt3debkQAFek+9kZ9vYLHxZbKoYK
-         Briw==
-X-Forwarded-Encrypted: i=1; AJvYcCXL6sReQQJjmuT2Qk4B1YSZ4lFmmEMnbL7xlp1Fn1JsOoMGYAozHaw+C+/tNAYNKv96dDES9gxTckI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzrPP5VPF3uB6fLlvY/MmplMZnoYfB8HRu7Q8Re10Mw4v9KvF/
-	UGT27JWh128aEcV4br87B0ushk+wmZGK8+HSwxMiTII/XhgsQ0IZ5nqajAaFDJ4+40M=
-X-Gm-Gg: ASbGncvdjwjOz9hBOcq9IilnKwcVQV6EIr5IC+RJo10+nPcT8tFflH66fKkQRkS15Sj
-	+HHIpYRFPpuhnW6jDROnehc5R0FIQ67371RdXR6Yk6NRzLsvtum1L17QziYxNs/uQ+EKNW2VO6P
-	WvXwWIW4VILAPQXE/102tGxmWNuwPCuoGuPuktnWGnBR+CY/aaQ3lGiAlxV6kCL9AEgPd5LozcF
-	ThyfFMnx/7DKcA8hDNXnFXqaTD3ZqtlTw9Us49lJbqkBJOjheRfCq7uvx61BfMBJmMa49nghBCP
-	y4mFYvoPRpzjlaXi7PvBS7DdY54UEqFhTG1z2LBiMYjmwrelWdVQlm47uXduKlf2WHwuA5p+/4Z
-	0BIwAUPWJcm7VZUHKQ0/eCmcq3uPEJSQ9RiLCBwze9h+0HWvv8b1dmVRXpF1EWgwQjrlbER6C/2
-	U=
-X-Google-Smtp-Source: AGHT+IEFnoJ47e7b8X7FUCgUXJFp+M6HEk8QQku8r2B40eiA6Wxiefxrlh1a4+99394BsiieDEPFQw==
-X-Received: by 2002:a05:6602:2cc6:b0:896:fcb5:4ba3 with SMTP id ca18e2360f4ac-8e1c4800940mr291928639f.4.1758598150200;
-        Mon, 22 Sep 2025 20:29:10 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (50-32-2-77.vng01.dlls.pa.frontiernet.net. [50.32.2.77])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8a46b2f3cdasm503126939f.4.2025.09.22.20.29.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Sep 2025 20:29:09 -0700 (PDT)
-Date: Mon, 22 Sep 2025 23:29:07 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
-	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
-	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
-	lukas@wunner.de, Benjamin.Cheatham@amd.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v11 00/23] Enable CXL PCIe Port Protocol Error handling
- and logging
-Message-ID: <aNIUAy6VbNdSzplJ@gourry-fedora-PF4VCD3F>
-References: <20250827013539.903682-1-terry.bowman@amd.com>
+        bh=Cswo0LzDGBX49wI8j9kkVMGd7/Ano3IZZWfL4sip6E0=;
+        b=h4u4AjKVfmAEskwkOvwzqAgL88xwomHfGrvqa/5xhZTFEvKPRDxQ3mzuuNdgvUhCoK
+         kf8eytRgKJqhaVcHEnd14tfDLk4r7F0OulEsicASVZuyYg0kGQVOdiS3RVqTmXs+RKfF
+         5CMt5HxvdXkogUdqNdiB6nrFAVo7BZlFfk5fDdN7/YUVJGhWfK2vX2Czbky8A8EHk9Wz
+         xmheSDvK9GN7pax/RoyTCabh7iBQUZAZHIhVaSIRi7HFJOdLpxbjv/FrtG/4C3KHWm3T
+         6nxbMtXQ462veq5po0xK5zqGjkv5OfgiVKrhGSWLHCy56WGWB2HWeV5rrvxhxsKaxH7a
+         vkAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758619276; x=1759224076;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Cswo0LzDGBX49wI8j9kkVMGd7/Ano3IZZWfL4sip6E0=;
+        b=W9OvKPRzm21K+DQ6zsgyXaV6q+6rfU3ahbFDFOKVM7orPW7GrPSQfKhgxnMhxJme1x
+         qlUVrsIMIKypZqmbS3lIi8yh1AVT6RfgfTk9pY5N7YMD9pBAlMRJVbmR5CqIB5dnkVPD
+         1ZHX8/wbWGsEk1X4+/uFan3cZ5uGAgiooyE/+Z7CHryxPrrwu8Llob0/rnydfT1N3Nm2
+         N3ajS4LOlErZA04WSF2CSAO4VckJSwC4BLZhcPRwKvRF6HgAEgEG3OqOomZ251fMZRUp
+         OLSNgXXaL4Avh4JOglTSyMXGiI0ueBnhjs25I+SEugrdzYY0MVTIq020Wvsjt+m8lNGb
+         KGwg==
+X-Forwarded-Encrypted: i=1; AJvYcCXdTJS52YnqoBjH/6/F9vxm41tJ63+aNKNAL2xucrXevaALESBP3gMb5wXXAigEB9lZkt88+fEcVYw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcsU9Y5IQW24Zn8GhoZv434MdjVnvUCFei6g3pOR38SGl1QMuv
+	K9hw4i0UiW9FaaA+yyk/DwFRladVpEsf4Q4rI9Vnjmyw/Ohpl9RNOupeLIceqZrJ6POWYpnnS/i
+	CwXPiD7mmjWkMAD9nr6EW+yB8diuAWik=
+X-Gm-Gg: ASbGnctuahSbqZvXw11kLiqF+Fgbun7FotDqJNwcOtSb6v+QSjM2FCK8CfMQDg0GfgT
+	nISQSIWMUPPG8nmytB2tRaOug4t1BzqQUE44LZA1JeYme2X8EeDgx3SvpD1rno6oJvs8UmBlyKH
+	3s31ZE6Aq5VAUAX7ZA3ywMn0QDWcb8o2K4CX2eSc3ZOfqa6md4ifWhWvVXOrIFaJdiZO650pql6
+	acREoQ=
+X-Google-Smtp-Source: AGHT+IEXMKhCjwTKhodebRPoXK/OAjJWAlGGH8OjPPnekcnhylOt4yiZehwUT2NqIW2Pj2CyhcJ/iwqTogEC2ndcvmA=
+X-Received: by 2002:a17:902:e790:b0:269:a4c5:f442 with SMTP id
+ d9443c01a7336-27cc712289emr25047665ad.47.1758619276576; Tue, 23 Sep 2025
+ 02:21:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250827013539.903682-1-terry.bowman@amd.com>
+References: <20250827013539.903682-1-terry.bowman@amd.com> <aNIUAy6VbNdSzplJ@gourry-fedora-PF4VCD3F>
+In-Reply-To: <aNIUAy6VbNdSzplJ@gourry-fedora-PF4VCD3F>
+From: Srinivasulu Thanneeru <dev.srinivasulu@gmail.com>
+Date: Tue, 23 Sep 2025 14:51:04 +0530
+X-Gm-Features: AS18NWBwICuC4DXdolnXhBDgNb4F3syXj6-2puxjUsRmcPuIhwxe03vFc-A6n2I
+Message-ID: <CAMtOeKLe-HtjpNze4WPj-knDDZTw3GRq6qMwpig6ygKH+Mq7AQ@mail.gmail.com>
+Subject: Re: [PATCH v11 00/23] Enable CXL PCIe Port Protocol Error handling
+ and logging
+To: Gregory Price <gourry@gourry.net>
+Cc: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net, jonathan.cameron@huawei.com, 
+	dave.jiang@intel.com, alison.schofield@intel.com, dan.j.williams@intel.com, 
+	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com, 
+	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com, 
+	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com, 
+	lukas@wunner.de, Benjamin.Cheatham@amd.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, linux-cxl@vger.kernel.org, 
+	alucerop@amd.com, ira.weiny@intel.com, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 26, 2025 at 08:35:15PM -0500, Terry Bowman wrote:
-> This patchset adds CXL Protocol Error handling for CXL Ports and updates CXL
-> Endpoints (EP) handling. Previous versions of this series can be found here:
-> https://lore.kernel.org/linux-cxl/20250626224252.1415009-1-terry.bowman@amd.com/
+I had tested these series, Thank you Terry.
+
+Tested-by: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
+
+On Tue, Sep 23, 2025 at 8:59=E2=80=AFAM Gregory Price <gourry@gourry.net> w=
+rote:
 >
-
-I know there's still some in-flight work, but for the series so far:
-
-Tested-by: Gregory Price <gourry@gourry.net>
-
-Please ping me if major logical rework gets done and i'll roll through it again.
+> On Tue, Aug 26, 2025 at 08:35:15PM -0500, Terry Bowman wrote:
+> > This patchset adds CXL Protocol Error handling for CXL Ports and update=
+s CXL
+> > Endpoints (EP) handling. Previous versions of this series can be found =
+here:
+> > https://lore.kernel.org/linux-cxl/20250626224252.1415009-1-terry.bowman=
+@amd.com/
+> >
+>
+> I know there's still some in-flight work, but for the series so far:
+>
+> Tested-by: Gregory Price <gourry@gourry.net>
+>
+> Please ping me if major logical rework gets done and i'll roll through it=
+ again.
+>
