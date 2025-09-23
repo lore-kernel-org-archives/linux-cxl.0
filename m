@@ -1,243 +1,273 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D4130E82D;
-	Tue, 23 Sep 2025 21:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758664338; cv=fail; b=F6TVz81rABHnVAJhjLz2YVXyBHf8IC01SJTCWDSu39n0FXjtMRbv5zXHI0rGVpzltDrxOU4Tf/xIQkI3cV37endCOfSB1AJ9NwoQiiQidkJhptIGgvQZCXS8JvsphFZdPQdiagqgt+2pSAn8+Ch6lEgNyR+uf1h/CD398KGGLig=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758664338; c=relaxed/simple;
-	bh=5Bmmv/yAaHKjp9T+fPQd/rCUbui8femWfZbjFKssae8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=D4MQYV+tSnP5fFXVouxe/j95IXPA7H+Jug8i0RzPPsSJRfwYKYMH2tIpIya+WKLEQldR153IMdO+vjlSAtIgrQ7J8VhyN45aApyhE0r+DVhJzPBrrI7nJO1JXROhZMpkzu24Zma6GQ9dCmI+8K8NkFghxo+G8tyL0yrqTWZqN+A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SkoJ8cxL; arc=fail smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1C030F522;
+	Tue, 23 Sep 2025 22:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758667082; cv=none; b=b6eageT2z6qaW6fQ+TzVeS2ggbzWHKtb7hYfQfT/DNJfaP6KfLA5ochbfo3J2J/H06OV8eadhrdiwOWQOfSbQeKIJQbvoJFp78jkAJkW8u4hhPEeIZkNXJzl2ey0REjT7ISOZwKW1vGP0B2aIX1iqfsl7ySTleXVbuvWjNQ8+eg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758667082; c=relaxed/simple;
+	bh=18MRxfqbAerdt2DV+//v66GYQWGoRSGQpES+1chutj4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N4N02zD5sjQmH7ETy1qnPwrmWpblPoT3YEoVzd/rCzq/n9YF/7LFW2WHb8yW5VxHvJ/pbHRAuDntx8c4nXeae17QvVu9IQR+6OSK5DwUxR5c5JwPYTaOKKZmftSkzw/YYzrDF/+siKZjWfJ+Gj/ldaJZWJ8N3JRAZp/FlGLOks0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dee6mSo2; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SkoJ8cxL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dee6mSo2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758664337; x=1790200337;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=5Bmmv/yAaHKjp9T+fPQd/rCUbui8femWfZbjFKssae8=;
-  b=SkoJ8cxLpxlt8bMr8DZPrt2CDFXqtr/u7yA0kpZUCOb/u4ixNIncxrz6
-   xPegdcLi1x/WDn9aJpmL3I9iDHAtfrdzAHuV0aHP/1XgGqNPBpuYhVKQV
-   LhjNv3m0tFTMSCGn3IrV14/MTagZOsTJ420diB7hN4l8/dnltUmCU9fH4
-   qkB22omZuOFzGT2KpPjlydTLh6IWuKY63f/WUI3ky4byF5XZY7Ax7DhpA
-   yFYmT6aPC2nUKsHEUss2Tk97vlMOJfeMN/kCWbA5zyXSZnUhMIH6XnZsZ
-   TBv7Vs5TaWKWpM4hTPWg8aVlv6kZJ1gCl7QdMdHeCbC8FXiEXZqDqDglD
-   Q==;
-X-CSE-ConnectionGUID: /6OiV6DDSImnBPkwuhmyCQ==
-X-CSE-MsgGUID: jKkOC0SMRNy9HbQmnyw89A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="63582817"
+  t=1758667080; x=1790203080;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=18MRxfqbAerdt2DV+//v66GYQWGoRSGQpES+1chutj4=;
+  b=dee6mSo2QLHF5tm0fBe9JcW4KME4NoJQlXaBCT9z4CM9U+954/5oMCPO
+   8h7iRvk2PTJmR7g6EiS3dl/2F57DCOnGVkqPIgHkBBHeMTA5FeUlVGbjD
+   tnKDioopQOY2srUAr3h4dZV5rrX3NZrxvo1NJzcMogyunBUCAXreoTUN/
+   Thdrb7VlI/l8qQzWdI307fhMdwCXiSfdL22QOil5thyoJ+CixAklHDFJ/
+   w2NKevZiFIgiVymCfq4VcgiXCTM6n6HXfBpHeUNUPsN6EOUw1Ea2CzF7R
+   TeSkV5zR0nYC4JGHPrR0IG9jn+KLF7F4/H8pm5tTToJmHDTDkpBFX1TiR
+   g==;
+X-CSE-ConnectionGUID: 3jrBJCryRKK1wvxwxmc2Lw==
+X-CSE-MsgGUID: SQtEHI8lS4CGHTsAz/6CQg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="72315820"
 X-IronPort-AV: E=Sophos;i="6.18,289,1751266800"; 
-   d="scan'208";a="63582817"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 14:52:16 -0700
-X-CSE-ConnectionGUID: 5q+wUnCYQR25mI25XVIbxw==
-X-CSE-MsgGUID: tQe7E1/AQN+vxmC9Z3Vzdg==
+   d="scan'208";a="72315820"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 15:37:59 -0700
+X-CSE-ConnectionGUID: D8DZZWOHRRmLTOFJ33FWIw==
+X-CSE-MsgGUID: q74YHrNiSUaVslrb1S101A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,289,1751266800"; 
-   d="scan'208";a="207800793"
-Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 14:52:16 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Tue, 23 Sep 2025 14:52:15 -0700
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Tue, 23 Sep 2025 14:52:15 -0700
-Received: from PH0PR06CU001.outbound.protection.outlook.com (40.107.208.11) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Tue, 23 Sep 2025 14:52:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=e5OoYa89Uo1nWbW8kUEL13O0obY8XgjRsGB+3LTbSL1kvObrxd8IgQw2hbJDXzvwnDkEkDpWKzHS1yynBx8wdzXULdNr5aNEVcQljuDJ3+RENnbyLogXHQzeusitbt3An9DE6NLUgnYb/LIv57E0UDkmHlxlEOCa63a6y5XRqNtc7gqm8jxUWOsi7419aR6gwL8XjGjiaUlTXikC1dZgwmiIhQg5MVoHJxb/Qpb3YjkSkGhj8TgIMSryYLihhaiGdkt0mGVReV/+mz71m5BweI6YtFeEGaXYBFYtIKXUsMmupOyUwRxjn8Cst1gQwUGpo98uZOEGhcdpoV0osyziDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hkb5lND+hSGvRlkMLGEe/n9D5FgLzIli3bqGBaMSB8U=;
- b=XZYtDJHYHor8c3njocNi1sB74H6AaCE+wITjKeZ5iEK1MZmBb7Uftv9adcwJ0QXv5Bta/25ZjPhTMlhRosf5ffXk12gyh4ocOE+PDJtS/F3Ca/u/Vp1GLngWDRaJ451Zu930PGxGcXQQp9BcxeECuq6/fT+FTsYXLYBGFmHlY+mOTvsnZIWWmTJ+NMjD/K8zDiTqBPV28zY8FH+LZcqTE3hItLjaUdj/GnDdwUMEAInKQHJONrGT1bKA92zvc0FnLBusUJF6xrGAJCBTrZFOJp3vR5L7LCUjaBffN5IyxM6KTABi/Nq3De277E/ToD4PCBDE0AYqFaYLrNWoqZE9LQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- (2603:10b6:a0f:fc02::80b) by CH0PR11MB5297.namprd11.prod.outlook.com
- (2603:10b6:610:bc::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.9; Tue, 23 Sep
- 2025 21:52:12 +0000
-Received: from SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- ([fe80::4df9:6ae0:ba12:2dde]) by SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- ([fe80::4df9:6ae0:ba12:2dde%8]) with mapi id 15.20.9137.012; Tue, 23 Sep 2025
- 21:52:12 +0000
-Date: Tue, 23 Sep 2025 14:52:04 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Robert Richter <rrichter@amd.com>
-CC: Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Davidlohr
- Bueso" <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Gregory Price <gourry@gourry.net>, "Fabio M.
- De Francesco" <fabio.m.de.francesco@linux.intel.com>, Terry Bowman
-	<terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
-Subject: Re: [PATCH v3 05/11] cxl/region: Add @range argument to function
- cxl_calc_interleave_pos()
-Message-ID: <aNMWhG5Ftu8ETYwk@aschofie-mobl2.lan>
-References: <20250912144514.526441-1-rrichter@amd.com>
- <20250912144514.526441-6-rrichter@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250912144514.526441-6-rrichter@amd.com>
-X-ClientProxiedBy: BYAPR05CA0033.namprd05.prod.outlook.com
- (2603:10b6:a03:c0::46) To SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- (2603:10b6:a0f:fc02::80b)
+   d="scan'208";a="176001422"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.108.174]) ([10.125.108.174])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 15:37:56 -0700
+Message-ID: <c7b41eb6-b946-4ac0-9ddd-e75ba4ceb636@intel.com>
+Date: Tue, 23 Sep 2025 15:37:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PPF0D43D62C4:EE_|CH0PR11MB5297:EE_
-X-MS-Office365-Filtering-Correlation-Id: 299d5f97-a557-4bb2-e28e-08ddfaeb7382
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?4nmSMe6g+sBzdR338HZzkEBa98YgARCwPIyaUaQ7OnPC8CzVZmPp/Og0uDMc?=
- =?us-ascii?Q?Gdu+588na7Wliv10oswk2lBdpkYcR+wIjMkhWbOFZeCgskHACZ6z8NqpOT7k?=
- =?us-ascii?Q?ubqyHfjr+t6YiL4cyDdODDlcznmge4qA1ZBWI8eEyv8CTrJvdX3IPAW7+SVb?=
- =?us-ascii?Q?gTe1JPnYpD9SOHUgy/g++DnLEp+9PdhJCmy4kppdHbd/HVTSaiPs2mEG08lm?=
- =?us-ascii?Q?wzlakbx+5KCh5tgwOiuJCo7U3fEwB/w8IWA9nCi6/6lVPh7aTGuQCR9++x4M?=
- =?us-ascii?Q?JQW3gGm+g2a5YkothoH98oHvwXNATTzApzZ8xxY0Vv2inPHDp0Qu1gjL/MgX?=
- =?us-ascii?Q?ozqkpuZOtH9LL0P/CA2PJKAC42Hewit5pMUoYxVx5OFaJA4AXUC2Uei6fIQ5?=
- =?us-ascii?Q?PM0QTcpD9Zg2zY8tgWJVubjCA4UsUrBvUHd565s0fxHhdi7kAyjVcLVszEBU?=
- =?us-ascii?Q?Cyqk1EqZ0C2YHi0uo7uas/keo9KxrBepCKAbFes34AkSFL+jqpeNC9uBbBI2?=
- =?us-ascii?Q?3BMGW8eFfxgtKsuW5R6y4+LVxEHnVxCmi0GXS58Xludca2r4hjHthHX1m+w3?=
- =?us-ascii?Q?uUla8HI/yjkU9BbUYFKX8iiOL4r6EftC83ZouEFnEtk0r/fEcIQjfmy5gbUt?=
- =?us-ascii?Q?K3pKQYyk9MBhUk1oFK8LIDQcA23hATW6nUsfeQN1XHyy2eo+s3NRchF0FMQi?=
- =?us-ascii?Q?fvwX55QjpyLphwj90v5dQkngoKH5GvHtg3W4muI3FYtJm6AKPNG20F57X0FD?=
- =?us-ascii?Q?vceCvvxrSkP+NKx5PbZgLhFAlChAxuBheKTlz56NEtIvDkcscXLgb5+Pau5U?=
- =?us-ascii?Q?lQdGR3XVDzzxOMyivhFtDjLHhr/NqRKtjW5znRecE99UMwJuJh6RNoZB85rD?=
- =?us-ascii?Q?OQfrGtfLxQAsb4OIDuujZISwQ70k3hLePcBHF662HG54/fg/XuiU2FwBu39O?=
- =?us-ascii?Q?YFK13gP+EP/WJLqDVwD2m90xY2wuvl+z0rAmZ1LSw0RgtRykSfvGz/oM2jgX?=
- =?us-ascii?Q?Q+hw8AljIHwIe+q25Civvn9k3O29y89Ia6ZcLP7BZoq29w4tL8UDcVRazBVG?=
- =?us-ascii?Q?kFAuIt1ah6zulPht9SV8JFxHjoyt/uWikh4MRaiHtLIzPwyHre4K2rDJ8Ut+?=
- =?us-ascii?Q?226c/msdBW/80eOxUY1ZKSVKTYJ5eLNKEwm5+nXdhifyf3T8YblSBi6U0yOY?=
- =?us-ascii?Q?y9JpoLDP3T4AYseuSGNeIfyxmoW6vSEMAneMjjuEjE/S6eofPBzvISOTzTAH?=
- =?us-ascii?Q?WIL0pry7KX1KM+FXQYTuYKzzHdjLFriXJKIjc3qg75s0r5mi9HgYh7ES/ZGS?=
- =?us-ascii?Q?XX+QWYjvzoGDuitlAySckyjwGfaL3WDeXCxxdcwgqFGgHMdcd/CYlElnT4wn?=
- =?us-ascii?Q?l3CR123fCeZrMzzo8plusuSCT7CegA1cDkmgSW7GYAIAU+vN1gDYbxE/sHSC?=
- =?us-ascii?Q?XjlA8e4gPXg=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ5PPF0D43D62C4.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nQNHXxvVpaVnxxB+HP7nU/f8MisMmq70um4xp+lIrYCOEzv0bnQANTdPPJyj?=
- =?us-ascii?Q?o4HVeqd27nLI/w0P1j5gtBJpQYitEXCmoVT0wBtAX/a9UqfUjLrMHNwgtpug?=
- =?us-ascii?Q?w/p4g06qtyqUgc2bgPsL/C52Oqz1ae5AmLUjxrajPi3gJvh+98shi5YQKgEJ?=
- =?us-ascii?Q?3GiBouorqEiguxRS71S83Hml61vb282dRpNPMNXOkQz+vr3bXc0/z+yloEJm?=
- =?us-ascii?Q?UYZTQImkRBWFhSParaVcVRFKTkThOdS9HjjUPe89m9iW15xHDhKSX+IyF1W6?=
- =?us-ascii?Q?8OGE4J09qNKVuluAnfHWUs3CdjKL/xL3FESE0FN95W1Hi4o6axwG7XvoaCFf?=
- =?us-ascii?Q?5ldH/5IX8rfgJosdpQbgsnxhA58LiMeYXpsyDP7c7ncKG7RJbUL3VFh8ijZF?=
- =?us-ascii?Q?K3rpi+6GpT1yXip5czYQdYOoncebmXIdsHl0PHRMl0Z+rArZ977rnBkBNZhC?=
- =?us-ascii?Q?QJBQ4LdCQdolfN2OF18i0o9ruwH6aJzzvT/vE2d5T32sAAHpLuaqwCxlt2FN?=
- =?us-ascii?Q?rAPzlEUDpVc6K7QNWOe+Gu9SKrXuJu/LSPTyDOW8b4fJBkps/m1YVFbiOq7P?=
- =?us-ascii?Q?zuA3EPTf5O+fO1C2FRSj+aIYL4JWMDjnrv/Lqj7KXElQIyRAkzvQTrTaQ86a?=
- =?us-ascii?Q?zNikEU8DZEmaNg1Ry8czqmaOzJzffDwnxv+8V8dy5HPMhMBFw96DIC8wU6Yo?=
- =?us-ascii?Q?zok6V3wjytfnbj0r6XJW78SrjgNzAOL+xuaCLveCbOhDywInC3MuM8r7btym?=
- =?us-ascii?Q?0AULddYlxA3glqr14mzdm5+IuB6s1QblkCwzZGBR843//zOjWWom9qWjzAyy?=
- =?us-ascii?Q?bf3swmjS+LrGxcUTGe3Vx70kd933r/bgQhM8MkHxcELh/24kaIYs1muOf67z?=
- =?us-ascii?Q?EUXe6vf7C6zQbXvqFGO15eNTA/ZERLF5NECnDNuCYYdpww/AalaaFLNZKHBl?=
- =?us-ascii?Q?COnoQSA/uoijWuIgSu2VvhFTpMLZpJg8a7DWE5EL6a7rVYBu+GHn0EgX9EaQ?=
- =?us-ascii?Q?kgEx5rhr4zfy7gA7e2NgA0AofZ+JBd/M0oIS2nBpu8ew14KKombp/xNTvvas?=
- =?us-ascii?Q?u26DUEB97hg8skK+SKo4zJ3np+zLTeMFHS6ZY0IZZ0zYmuapaW5it5JIlbtl?=
- =?us-ascii?Q?9wMknkD6zpvWtfmTB3XeTYyyP0vHAcVHC0t3cRetQMBExqS5k5QYigUDC3hn?=
- =?us-ascii?Q?z9t48IsowrMZ4P3yLqnEJtyYUf5kqui5edZ7BPyNXAEj30KdphFpeg/NlAwc?=
- =?us-ascii?Q?kAhd/KUr7g7+aafvU3YkFKvHfMwFZRSu5ZNGhNkYPOjCI3lGb51/k1szEpny?=
- =?us-ascii?Q?eN+0UmHVNXU7xzNpzQUCyj1Oa+yY7hpMfTChdYdYjQsJ6yfZL9VmQvv2pzPG?=
- =?us-ascii?Q?h1d3c1zG5ixvgGofWuC/GgsB6mejEpoN5Tr92qBGRUJybyOO9XJBYt/SKVDM?=
- =?us-ascii?Q?FdDi01zvIRFwO5wdrES4VnoiNyVS6nOQAkZWSEKfX6SUSYCtpiSGcEFZ0eaQ?=
- =?us-ascii?Q?zuv4FfQFKerm3JbOWEapKJVs+1kf5mRH9KCKzwFRRCAJLhptDCwZB4PtK8rl?=
- =?us-ascii?Q?axonHQqFo5ZdsP/z+pyirddjY9NVNmPxP9eIzmemeFpx8j7eSePAEiA8wwoe?=
- =?us-ascii?Q?yQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 299d5f97-a557-4bb2-e28e-08ddfaeb7382
-X-MS-Exchange-CrossTenant-AuthSource: SJ5PPF0D43D62C4.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2025 21:52:12.0534
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lkf1OqGkC/yiMhGG5b3zyA2W1A6VtIi6voJf35d4Bk+Z4bCj327mjudKLpWhU9shkg3UMryGD4EhrO0Rr8y54YlzhlrygI79Snh3T55hW44=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5297
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 13/20] cxl/mem: Refactor cxl pmem region
+ auto-assembling
+To: Neeraj Kumar <s.neeraj@samsung.com>, linux-cxl@vger.kernel.org,
+ nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org, gost.dev@samsung.com
+Cc: a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
+ cpgs@samsung.com
+References: <20250917134116.1623730-1-s.neeraj@samsung.com>
+ <CGME20250917134157epcas5p1b30306bc8596b7b50548ddf3683c3b97@epcas5p1.samsung.com>
+ <20250917134116.1623730-14-s.neeraj@samsung.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250917134116.1623730-14-s.neeraj@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 12, 2025 at 04:45:07PM +0200, Robert Richter wrote:
-> cxl_calc_interleave_pos() uses the endpoint decoder's HPA range to
-> determine its interleaving position. This requires the endpoint
-> decoders to be an SPA, which is not the case for systems that need
-> address translation.
+
+
+On 9/17/25 6:41 AM, Neeraj Kumar wrote:
+> In 84ec985944ef3, devm_cxl_add_nvdimm() sequence was changed and called
+> before devm_cxl_add_endpoint(). It's because cxl pmem region auto-assembly
+> used to get called at last in cxl_endpoint_port_probe(), which requires
+> cxl_nvd presence.
 > 
-> Add a separate @range argument to function cxl_calc_interleave_pos()
-> to specify the address range. Now it is possible to pass the SPA
-> translated address range of an endpoint decoder to function
-> cxl_calc_interleave_pos().
+> For cxl region persistency, region creation happens during nvdimm_probe
+> which need the completion of endpoint probe.
 > 
-> Patch is a prerequisite to implement address translation.
+> In order to accommodate both cxl pmem region auto-assembly and cxl region
+> persistency, refactored following
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+> 1. Re-Sequence devm_cxl_add_nvdimm() after devm_cxl_add_endpoint(). This
+>    will be called only after successful completion of endpoint probe.
+> 
+> 2. Moved cxl pmem region auto-assembly from cxl_endpoint_port_probe() to
+>    cxl_mem_probe() after devm_cxl_add_nvdimm(). It gurantees both the
+>    completion of endpoint probe and cxl_nvd presence before its call.
+
+Given that we are going forward with this implementation [1] from Dan and drivers like the type2 enabling are going to be using it as well, can you please consider converting this change to Dan's mechanism instead of creating a whole new one?
+
+I think the region discovery can be done via the ops->probe() callback. Thanks.
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/commit/?h=for-6.18/cxl-probe-order&id=88aec5ea7a24da00dc92c7778df4851fe4fd3ec6
+
+DJ
+
+> 
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
 > ---
->  drivers/cxl/core/region.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  drivers/cxl/core/region.c | 33 +++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h         |  4 ++++
+>  drivers/cxl/mem.c         | 24 +++++++++++++++---------
+>  drivers/cxl/port.c        | 39 +--------------------------------------
+>  4 files changed, 53 insertions(+), 47 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 8ccc171ac724..106692f1e310 100644
+> index 7a0cead24490..c325aa827992 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
-> @@ -1844,11 +1844,11 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
->   * Return: position >= 0 on success
->   *	   -ENXIO on failure
->   */
-> -static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled)
-> +static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled,
-> +				   struct range *range)
+> @@ -3606,6 +3606,39 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, "CXL");
+>  
+> +static int discover_region(struct device *dev, void *unused)
+> +{
+> +	struct cxl_endpoint_decoder *cxled;
+> +	int rc;
+> +
+> +	if (!is_endpoint_decoder(dev))
+> +		return 0;
+> +
+> +	cxled = to_cxl_endpoint_decoder(dev);
+> +	if ((cxled->cxld.flags & CXL_DECODER_F_ENABLE) == 0)
+> +		return 0;
+> +
+> +	if (cxled->state != CXL_DECODER_STATE_AUTO)
+> +		return 0;
+> +
+> +	/*
+> +	 * Region enumeration is opportunistic, if this add-event fails,
+> +	 * continue to the next endpoint decoder.
+> +	 */
+> +	rc = cxl_add_to_region(cxled);
+> +	if (rc)
+> +		dev_dbg(dev, "failed to add to region: %#llx-%#llx\n",
+> +			cxled->cxld.hpa_range.start, cxled->cxld.hpa_range.end);
+> +
+> +	return 0;
+> +}
+> +
+> +void cxl_region_discovery(struct cxl_port *port)
+> +{
+> +	device_for_each_child(&port->dev, NULL, discover_region);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_region_discovery, "CXL");
+> +
+>  u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
 >  {
->  	struct cxl_port *iter, *port = cxled_to_port(cxled);
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> -	struct range *range = &cxled->cxld.hpa_range;
->  	int parent_ways = 0, parent_pos = 0, pos = 0;
->  	int rc;
-
-Will this work? Change the assignment rather than adding a parameter:
-
--       struct range *range = &cxled->cxld.hpa_range;
-+       struct range *range = &cxled->cxld.region->hpa_range;
-
-
-
+>  	struct cxl_region_ref *iter;
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 4fe3df06f57a..b57597e55f7e 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -873,6 +873,7 @@ struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
+>  int cxl_add_to_region(struct cxl_endpoint_decoder *cxled);
+>  struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
+>  u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa);
+> +void cxl_region_discovery(struct cxl_port *port);
+>  #else
+>  static inline bool is_cxl_pmem_region(struct device *dev)
+>  {
+> @@ -895,6 +896,9 @@ static inline u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint,
+>  {
+>  	return 0;
+>  }
+> +static inline void cxl_region_discovery(struct cxl_port *port)
+> +{
+> +}
+>  #endif
 >  
-> @@ -1909,7 +1909,7 @@ static int cxl_region_sort_targets(struct cxl_region *cxlr)
->  	for (i = 0; i < p->nr_targets; i++) {
->  		struct cxl_endpoint_decoder *cxled = p->targets[i];
+>  void cxl_endpoint_parse_cdat(struct cxl_port *port);
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 6e6777b7bafb..54501616ff09 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -152,15 +152,6 @@ static int cxl_mem_probe(struct device *dev)
+>  		return -ENXIO;
+>  	}
 >  
-> -		cxled->pos = cxl_calc_interleave_pos(cxled);
-> +		cxled->pos = cxl_calc_interleave_pos(cxled, &cxlr->hpa_range);
->  		/*
->  		 * Record that sorting failed, but still continue to calc
->  		 * cxled->pos so that follow-on code paths can reliably
-> @@ -2093,7 +2093,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->  		struct cxl_endpoint_decoder *cxled = p->targets[i];
->  		int test_pos;
+> -	if (cxl_pmem_size(cxlds) && IS_ENABLED(CONFIG_CXL_PMEM)) {
+> -		rc = devm_cxl_add_nvdimm(parent_port, cxlmd);
+> -		if (rc) {
+> -			if (rc == -ENODEV)
+> -				dev_info(dev, "PMEM disabled by platform\n");
+> -			return rc;
+> -		}
+> -	}
+> -
+>  	if (dport->rch)
+>  		endpoint_parent = parent_port->uport_dev;
+>  	else
+> @@ -184,6 +175,21 @@ static int cxl_mem_probe(struct device *dev)
+>  	if (rc)
+>  		dev_dbg(dev, "CXL memdev EDAC registration failed rc=%d\n", rc);
 >  
-> -		test_pos = cxl_calc_interleave_pos(cxled);
-> +		test_pos = cxl_calc_interleave_pos(cxled, &cxlr->hpa_range);
->  		dev_dbg(&cxled->cxld.dev,
->  			"Test cxl_calc_interleave_pos(): %s test_pos:%d cxled->pos:%d\n",
->  			(test_pos == cxled->pos) ? "success" : "fail",
-> -- 
-> 2.39.5
-> 
+> +	if (cxl_pmem_size(cxlds) && IS_ENABLED(CONFIG_CXL_PMEM)) {
+> +		rc = devm_cxl_add_nvdimm(parent_port, cxlmd);
+> +		if (rc) {
+> +			if (rc == -ENODEV)
+> +				dev_info(dev, "PMEM disabled by platform\n");
+> +			return rc;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * Now that all endpoint decoders are successfully enumerated, try to
+> +	 * assemble region autodiscovery from committed decoders.
+> +	 */
+> +	cxl_region_discovery(cxlmd->endpoint);
+> +
+>  	/*
+>  	 * The kernel may be operating out of CXL memory on this device,
+>  	 * there is no spec defined way to determine whether this device
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index cf32dc50b7a6..07bb909b7d2e 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -30,33 +30,6 @@ static void schedule_detach(void *cxlmd)
+>  	schedule_cxl_memdev_detach(cxlmd);
+>  }
+>  
+> -static int discover_region(struct device *dev, void *unused)
+> -{
+> -	struct cxl_endpoint_decoder *cxled;
+> -	int rc;
+> -
+> -	if (!is_endpoint_decoder(dev))
+> -		return 0;
+> -
+> -	cxled = to_cxl_endpoint_decoder(dev);
+> -	if ((cxled->cxld.flags & CXL_DECODER_F_ENABLE) == 0)
+> -		return 0;
+> -
+> -	if (cxled->state != CXL_DECODER_STATE_AUTO)
+> -		return 0;
+> -
+> -	/*
+> -	 * Region enumeration is opportunistic, if this add-event fails,
+> -	 * continue to the next endpoint decoder.
+> -	 */
+> -	rc = cxl_add_to_region(cxled);
+> -	if (rc)
+> -		dev_dbg(dev, "failed to add to region: %#llx-%#llx\n",
+> -			cxled->cxld.hpa_range.start, cxled->cxld.hpa_range.end);
+> -
+> -	return 0;
+> -}
+> -
+>  static int cxl_switch_port_probe(struct cxl_port *port)
+>  {
+>  	struct cxl_hdm *cxlhdm;
+> @@ -121,17 +94,7 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+>  	if (rc)
+>  		return rc;
+>  
+> -	rc = devm_cxl_enumerate_decoders(cxlhdm, &info);
+> -	if (rc)
+> -		return rc;
+> -
+> -	/*
+> -	 * Now that all endpoint decoders are successfully enumerated, try to
+> -	 * assemble regions from committed decoders
+> -	 */
+> -	device_for_each_child(&port->dev, NULL, discover_region);
+> -
+> -	return 0;
+> +	return devm_cxl_enumerate_decoders(cxlhdm, &info);
+>  }
+>  
+>  static int cxl_port_probe(struct device *dev)
+
