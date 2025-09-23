@@ -1,230 +1,148 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5782E8881;
-	Tue, 23 Sep 2025 11:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC49272E6D;
+	Tue, 23 Sep 2025 18:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758628385; cv=none; b=LXmK+HXY0ZgEN75GkRox8EDGaxy5MA65bmIE/5LxDFwRwpm14qSxsa2xGSdhmVkzAu/0t6eHAsUn9TU1H1zu4PrOcND+orEf/9Tct380YV/G/8YT37bXpLzk+pyvLbbbLSeWcbLFRqx/6xbJgKWSPObu/2rc01372dtaa2qhZIw=
+	t=1758652110; cv=none; b=OheC747+l9BrSnctvCl3PLs6XWGFZCFkdK1ujggmEycnZPPxOdGTzjaI0+qErgKQ9w1708sEYmD8pdBG9Defk7qjrCUh1JPVLp3EtgMYAftkGcGLIAyEsoXIdyJu2QUWb+4boUkSa5zVtL6u1QJfJtq0V9hxKKqu4L6MMpaCuQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758628385; c=relaxed/simple;
-	bh=uC3KukjZxErvZyqVNyTZvCwwhubZja1S6u22ZrF2EwI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KDydQcy4398DaaLTE1shEEXK83C0oajYGMlHMFs3CZ+a04Ol9wrH0XUM7nUV8hMrvloQZ2Re1L8oyP91B9KzL0suQ4EzyEEi08jdSz3h560befX6/B9VWbG8Imphi+SXlRQ+9qwNfDwqAzx4HPjm658pqAcanFcVxB7P0hqf2DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EFGvr8Qy; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1758652110; c=relaxed/simple;
+	bh=XzK8Ur5LPNCRLf4lx/sAri5lGTsfFnYyGyivCU1zyio=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=HAc0Ib3BxXQbN05VsJ4ePQo7kxNCwW/TJogTSW43gZJzwepgj+jsFbYXveSesRQttF6AUiE/vK67b0JmtGM+QSo1kPc5DpSyTKFB+ybuplp9zNPZ9H91uXuxQET1LVZyifTU1FDNBau/oD8Fav8sdAKLfY+53vXntcpsVOK7qBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=djd8ehe3; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EFGvr8Qy"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58N8Y12b008695;
-	Tue, 23 Sep 2025 11:52:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=FZaoT1QNSR93wIPtHts3CPzp0ctIk0
-	vYDNbzffEOi0c=; b=EFGvr8QyltIf32/aszOR/qJfepgW+UcWXreJDplTglupit
-	m+X7rmX3tdEzuL1hJj2o5XWwJ0r+pCJ4BjGEMOhGvQ5uA7F1CUxQtR7TqdF163bV
-	I3YXhbagNN2r+8NAvqFEHYkOG72rBgt1rm+ek1A/MwpmvyPZqT+huO4x+iKBFWTR
-	eo6ih9hfsFn2nHia9aCP+YLY6UeADcGZp/ivckC/FFUA6i0IL4LnbBeJbqc6eiAl
-	5jWsuCjMMTLD7wV7h8suNXD082oB3YYd9QtgvibDoicaRjRsG3bClbPAwbAw7H1U
-	VId+vHnlTcxFpVyEmlJvEr0+HDviZMbBrXxprVQA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 499n0jgm9c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Sep 2025 11:52:19 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 58NBn9Dd005820;
-	Tue, 23 Sep 2025 11:52:18 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 499n0jgm96-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Sep 2025 11:52:18 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58N9Tk1U019675;
-	Tue, 23 Sep 2025 11:52:17 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49a83k31qr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Sep 2025 11:52:17 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58NBqDIE43516160
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 23 Sep 2025 11:52:13 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F401A20043;
-	Tue, 23 Sep 2025 11:52:12 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A61F420040;
-	Tue, 23 Sep 2025 11:52:10 +0000 (GMT)
-Received: from li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com (unknown [9.87.150.243])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 23 Sep 2025 11:52:10 +0000 (GMT)
-Date: Tue, 23 Sep 2025 13:52:09 +0200
-From: Sumanth Korikkar <sumanthk@linux.ibm.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
-        Guo Ren <guoren@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>,
-        Muchun Song <muchun.song@linux.dev>,
-        Oscar Salvador <osalvador@suse.de>,
-        David Hildenbrand <david@redhat.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-        Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        Hugh Dickins <hughd@google.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
-        ntfs3@lists.linux.dev, kexec@lists.infradead.org,
-        kasan-dev@googlegroups.com, Jason Gunthorpe <jgg@nvidia.com>,
-        iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>,
-        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v4 11/14] mm/hugetlbfs: update hugetlbfs to use
- mmap_prepare
-Message-ID: <aNKJ6b7kmT_u0A4c@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
-References: <cover.1758135681.git.lorenzo.stoakes@oracle.com>
- <e5532a0aff1991a1b5435dcb358b7d35abc80f3b.1758135681.git.lorenzo.stoakes@oracle.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="djd8ehe3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758652109; x=1790188109;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=XzK8Ur5LPNCRLf4lx/sAri5lGTsfFnYyGyivCU1zyio=;
+  b=djd8ehe3+hIelt+hjNDOfw8gyXKq+3UrJ9Sxg47oZEYpoqp6ntXfgBr1
+   AFflGbwdDbZ/d1dpmnPUFB7akXICUjJfQuP4+jVgN1/maqcuifiK31e2S
+   c63A+QnlYnn94bHZmVcpWLCQLoSaG+ctQPlUH7IRFwBHElVvmfQaWG24F
+   3IbsW9PYVJK0LPik4jskMkCNlQSz1lEyx9PVcEH5x3n6tAVR2M/0jdsrM
+   U8u8ylCJ2XfoG8sHaUqOVuRUq1EpuZ2wQ9wFeFlFw2sjIxsPkwl9ULWHn
+   D7+htlY+gBYBCnZhV0fuG628ZIWPl7fSNdG2btxRHTDlrowlOuA+wUc5w
+   g==;
+X-CSE-ConnectionGUID: HQC8ioNyReKrzQgWztB5pw==
+X-CSE-MsgGUID: Tln6DZwYRbWDwSWzEEwHlw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="60858976"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="60858976"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 11:28:28 -0700
+X-CSE-ConnectionGUID: XetSAgxyQXue0ceWAnfDfA==
+X-CSE-MsgGUID: Wl4R6agrRO+WE3k7u1T3xw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,288,1751266800"; 
+   d="scan'208";a="213976224"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.108.174]) ([10.125.108.174])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 11:28:28 -0700
+Message-ID: <710dcb52-7f4d-46fe-a8ef-7e91d52af82d@intel.com>
+Date: Tue, 23 Sep 2025 11:28:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e5532a0aff1991a1b5435dcb358b7d35abc80f3b.1758135681.git.lorenzo.stoakes@oracle.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTIwMDAzMyBTYWx0ZWRfX1/CT4ehdu5F7
- 6VnJC5JZb/TGq0GTxXqzwutGBpnh5zvXhqXxihnE0ZIBeLxavZe5A1rzKbuxO1bDNyuFhUEM+Rk
- 4I1KMXyeBzNEU/g4Tedu1h1rULa5Sn/p0/UqkELdAnxrKDhWjf96WssSMg0ltTS+aMBZqn2U8bf
- Mm6V030K3rfmUmm6+2tKL/Lil9yhk2vaa1ilZs3936p1XOaPfvsu3tSuBabaOBW+S4p6UJCCS7o
- UssKxq/W9pewKawoXgWRMXrenvRD0Q+OeFvs8GRRauXhjlsHet/L1r4+QnnsJQ0kVijCVo4qQhY
- p/3nafFZQN3AWkhiFthvrI3hfInHVuTDSlQN3xLdzE/r0zMDPQuTX7WW9M8m8X+BWNkt+j6HOZU
- bcmWMt/c
-X-Authority-Analysis: v=2.4 cv=TOlFS0la c=1 sm=1 tr=0 ts=68d289f3 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=kj9zAlcOel0A:10 a=yJojWOMRYYMA:10 a=NEAV23lmAAAA:8 a=yPCof4ZbAAAA:8
- a=Ikd4Dj_1AAAA:8 a=P7Dlay8f7KcL8MNlhToA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-ORIG-GUID: F6nP2Q8ol4BSxLNz15joz3bImrmTREZ1
-X-Proofpoint-GUID: 5HR21TLQQZuGh5ctB-qo8M6ErsQDpoDW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-23_02,2025-09-22_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 priorityscore=1501 phishscore=0 impostorscore=0 adultscore=0
- suspectscore=0 spamscore=0 bulkscore=0 malwarescore=0 classifier=typeunknown
- authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2509200033
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v18 00/20] Type2 device basic support
+To: Alejandro Lucero Palau <alucerop@amd.com>,
+ alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+ netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
+References: <20250918091746.2034285-1-alejandro.lucero-palau@amd.com>
+ <33f5b788-c478-4279-bf9b-a5fc1000bc23@intel.com>
+ <c012498b-d9f9-439a-a926-ef5f10689bf7@amd.com>
+ <aea329a3-9cb9-4552-88e7-2b354483ad53@intel.com>
+ <0b36e5c2-2f15-4e83-bf4b-c4c15f55d3d2@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <0b36e5c2-2f15-4e83-bf4b-c4c15f55d3d2@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 17, 2025 at 08:11:13PM +0100, Lorenzo Stoakes wrote:
-> Since we can now perform actions after the VMA is established via
-> mmap_prepare, use desc->action_success_hook to set up the hugetlb lock
-> once the VMA is setup.
+
+
+On 9/23/25 3:35 AM, Alejandro Lucero Palau wrote:
 > 
-> We also make changes throughout hugetlbfs to make this possible.
+> On 9/19/25 22:42, Dave Jiang wrote:
+>>
+>> On 9/19/25 9:55 AM, Alejandro Lucero Palau wrote:
+>>> Hi Dave,
+>>>
+>>>
+>>>
+>>> On 9/19/25 17:26, Dave Jiang wrote:
+>>>> On 9/18/25 2:17 AM, alejandro.lucero-palau@amd.com wrote:
+>>>>> From: Alejandro Lucero <alucerop@amd.com>
+>>>>>
+>>>>> First of all, the patchset should be applied on the described base
+>>>>> commit then applying Terry's v11 about CXL error handling plus last four
+>>>>> pathces from Dan's for-6.18/cxl-probe-order branch.
+>>>>>
+>>> <snip>
+>>>
+>>>>> base-commit: f11a5f89910a7ae970fbce4fdc02d86a8ba8570f
+>>>>> prerequisite-patch-id: 44c914dd079e40d716f3f2d91653247eca731594
+>>>>> prerequisite-patch-id: b13ca5c11c44a736563477d67b1dceadfe3ea19e
+>>>>> prerequisite-patch-id: d0d82965bbea8a2b5ea2f763f19de4dfaa8479c3
+>>>>> prerequisite-patch-id: dd0f24b3bdb938f2f123bc26b31cd5fe659e05eb
+>>>>> prerequisite-patch-id: 2ea41ec399f2360a84e86e97a8f940a62561931a
+>>>>> prerequisite-patch-id: 367b61b5a313db6324f9cf917d46df580f3bbd3b
+>>>>> prerequisite-patch-id: 1805332a9f191bc3547927d96de5926356dac03c
+>>>>> prerequisite-patch-id: 40657fd517f8e835a091c07e93d6abc08f85d395
+>>>>> prerequisite-patch-id: 901eb0d91816499446964b2a9089db59656da08d
+>>>>> prerequisite-patch-id: 79856c0199d6872fd2f76a5829dba7fa46f225d6
+>>>>> prerequisite-patch-id: 6f3503e59a3d745e5ecff4aaed668e2d32da7e4b
+>>>>> prerequisite-patch-id: e9dc88f1b91dce5dc3d46ff2b5bf184aba06439d
+>>>>> prerequisite-patch-id: 196fe106100aad619d5be7266959bbeef29b7c8b
+>>>>> prerequisite-patch-id: 7e719ed404f664ee8d9b98d56f58326f55ea2175
+>>>>> prerequisite-patch-id: 560f95992e13a08279034d5f77aacc9e971332dd
+>>>>> prerequisite-patch-id: 8656445ee654056695ff2894e28c8f1014df919e
+>>>>> prerequisite-patch-id: 001d831149eb8f9ae17b394e4bcd06d844dd39d9
+>>>>> prerequisite-patch-id: 421368aa5eac2af63ef2dc427af2ec11ad45c925
+>>>>> prerequisite-patch-id: 18fd00d4743711d835ad546cfbb558d9f97dcdfc
+>>>>> prerequisite-patch-id: d89bf9e6d3ea5d332ec2c8e441f1fe6d84e726d3
+>>>>> prerequisite-patch-id: 3a6953d11b803abeb437558f3893a3b6a08acdbb
+>>>>> prerequisite-patch-id: 0dd42a82e73765950bd069d421d555ded8bfeb25
+>>>>> prerequisite-patch-id: da6e0df31ad0d5a945e0a0d29204ba75f0c97344
+>>>>> prerequisite-patch-id: ed7d9c768af2ac4e6ce87df2efd0ec359856c6e5
+>>>>> prerequisite-patch-id: ed7f4dce80b4f80ccafb57efcd6189a6e14c9208
+>>>>> prerequisite-patch-id: ccadb682c5edc3babaef5fe7ecb76ee5daa27ea4
+>>>> Alejandro,
+>>>> I'm having trouble creating a branch. The hashes for prereq don't seem to exist. Can you please post a public branch somewhere? Thanks!
+>>>
+>>> Did you read the first paragraph of the cover letter?
+>> I reset to f11a5f89910a7ae970fbce4fdc02d86a8ba8570f
+>> I was able to apply Terry's v11
+>> And after that I think I'm suppose to apply these 4 right?
+>> ab70c6227ee6 dax/cxl: Defer Soft Reserved registration
+>> 88aec5ea7a24 cxl/mem: Introduce a memdev creation ->probe() operation
+>> e23f37a4a834 cxl/port: Arrange for always synchronous endpoint attach
+>> 595f243eeac3 cxl/mem: Arrange for always-synchronous memdev attach
+>>
+>> It failed on cherry picking the first one: 595f243eeac3
+>>
 > 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> ---
->  fs/hugetlbfs/inode.c           | 36 ++++++++++------
->  include/linux/hugetlb.h        |  9 +++-
->  include/linux/hugetlb_inline.h | 15 ++++---
->  mm/hugetlb.c                   | 77 ++++++++++++++++++++--------------
->  4 files changed, 85 insertions(+), 52 deletions(-)
+> Hi Dave,
 > 
-> diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-> index f42548ee9083..9e0625167517 100644
-> --- a/fs/hugetlbfs/inode.c
-> +++ b/fs/hugetlbfs/inode.c
-> @@ -96,8 +96,15 @@ static const struct fs_parameter_spec hugetlb_fs_parameters[] = {
->  #define PGOFF_LOFFT_MAX \
->  	(((1UL << (PAGE_SHIFT + 1)) - 1) <<  (BITS_PER_LONG - (PAGE_SHIFT + 1)))
->  
-> -static int hugetlbfs_file_mmap(struct file *file, struct vm_area_struct *vma)
-> +static int hugetlb_file_mmap_prepare_success(const struct vm_area_struct *vma)
->  {
-> +	/* Unfortunate we have to reassign vma->vm_private_data. */
-> +	return hugetlb_vma_lock_alloc((struct vm_area_struct *)vma);
-> +}
+> 
+> My mistake. I did not remember I had to slightly modify Dan's patches.
+> 
+> 
+> I will send v19 including those patches and working on the minor issues from reviews.
 
-Hi Lorenzo,
+Pushing your code to a public branch on somewhere like github would be great. Thanks!
 
-The following tests causes the kernel to enter a blocked state,
-suggesting an issue related to locking order. I was able to reproduce
-this behavior in certain test runs.
+> 
+> 
+> Thanks
+> 
 
-Test case:
-git clone https://github.com/libhugetlbfs/libhugetlbfs.git
-cd libhugetlbfs ; ./configure
-make -j32
-cd tests
-echo 100 > /proc/sys/vm/nr_hugepages
-mkdir -p /test-hugepages && mount -t hugetlbfs nodev /test-hugepages
-./run_tests.py <in a loop>
-...
-shm-fork 10 100 (1024K: 64):    PASS
-set shmmax limit to 104857600
-shm-getraw 100 /dev/full (1024K: 32):
-shm-getraw 100 /dev/full (1024K: 64):   PASS
-fallocate_stress.sh (1024K: 64):  <blocked>
-
-Blocked task state below:
-
-task:fallocate_stres state:D stack:0     pid:5106  tgid:5106  ppid:5103
-task_flags:0x400000 flags:0x00000001
-Call Trace:
- [<00000255adc646f0>] __schedule+0x370/0x7f0
- [<00000255adc64bb0>] schedule+0x40/0xc0
- [<00000255adc64d32>] schedule_preempt_disabled+0x22/0x30
- [<00000255adc68492>] rwsem_down_write_slowpath+0x232/0x610
- [<00000255adc68922>] down_write_killable+0x52/0x80
- [<00000255ad12c980>] vm_mmap_pgoff+0xc0/0x1f0
- [<00000255ad164bbe>] ksys_mmap_pgoff+0x17e/0x220
- [<00000255ad164d3c>] __s390x_sys_old_mmap+0x7c/0xa0
- [<00000255adc60e4e>] __do_syscall+0x12e/0x350
- [<00000255adc6cfee>] system_call+0x6e/0x90
-task:fallocate_stres state:D stack:0     pid:5109  tgid:5106  ppid:5103
-task_flags:0x400040 flags:0x00000001
-Call Trace:
- [<00000255adc646f0>] __schedule+0x370/0x7f0
- [<00000255adc64bb0>] schedule+0x40/0xc0
- [<00000255adc64d32>] schedule_preempt_disabled+0x22/0x30
- [<00000255adc68492>] rwsem_down_write_slowpath+0x232/0x610
- [<00000255adc688be>] down_write+0x4e/0x60
- [<00000255ad1c11ec>] __hugetlb_zap_begin+0x3c/0x70
- [<00000255ad158b9c>] unmap_vmas+0x10c/0x1a0
- [<00000255ad180844>] vms_complete_munmap_vmas+0x134/0x2e0
- [<00000255ad1811be>] do_vmi_align_munmap+0x13e/0x170
- [<00000255ad1812ae>] do_vmi_munmap+0xbe/0x140
- [<00000255ad183f86>] __vm_munmap+0xe6/0x190
- [<00000255ad166832>] __s390x_sys_munmap+0x32/0x40
- [<00000255adc60e4e>] __do_syscall+0x12e/0x350
- [<00000255adc6cfee>] system_call+0x6e/0x90
-
-
-Thanks,
-Sumanth
