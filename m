@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC49272E6D;
-	Tue, 23 Sep 2025 18:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3FE27B4E5;
+	Tue, 23 Sep 2025 20:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758652110; cv=none; b=OheC747+l9BrSnctvCl3PLs6XWGFZCFkdK1ujggmEycnZPPxOdGTzjaI0+qErgKQ9w1708sEYmD8pdBG9Defk7qjrCUh1JPVLp3EtgMYAftkGcGLIAyEsoXIdyJu2QUWb+4boUkSa5zVtL6u1QJfJtq0V9hxKKqu4L6MMpaCuQ0=
+	t=1758659002; cv=none; b=oG1cBb10iJoWTMfF9/jOwlbDv8YtzUe8StuDNKVcT+1xmRcIGbXSYIDxhS73suBgfk2Wpqs1m+H5oCqnPwiBi8eDUq8zyHe9SE0Gb9iYvvbeksMX902MdDvxHKP3nmcxYUCpwZyig4k456CvFdoKq/4F3WV+l0YtUp0OyEhsN4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758652110; c=relaxed/simple;
-	bh=XzK8Ur5LPNCRLf4lx/sAri5lGTsfFnYyGyivCU1zyio=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=HAc0Ib3BxXQbN05VsJ4ePQo7kxNCwW/TJogTSW43gZJzwepgj+jsFbYXveSesRQttF6AUiE/vK67b0JmtGM+QSo1kPc5DpSyTKFB+ybuplp9zNPZ9H91uXuxQET1LVZyifTU1FDNBau/oD8Fav8sdAKLfY+53vXntcpsVOK7qBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=djd8ehe3; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1758659002; c=relaxed/simple;
+	bh=+cwFEtuDaXb/DaQ6ejtcHJQygdA5jvR5zMxQFdoqSFk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l343C6mX1uOOW8ITDZywNcdxmbBsnASy3OVaUv2j3gSDhea2raTDIuQbFGhiTffW7TP/FNXtb01iQdDqNaNlbi+YWbTWxjUG0Jx/MAYMFpOa8Y+WuZK3TMeea5XA8c1iHkOtgNdeCmcyVC6WaJdmpFdA6RaG6zBWY/478nC2e64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HsPmAthl; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="djd8ehe3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HsPmAthl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758652109; x=1790188109;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=XzK8Ur5LPNCRLf4lx/sAri5lGTsfFnYyGyivCU1zyio=;
-  b=djd8ehe3+hIelt+hjNDOfw8gyXKq+3UrJ9Sxg47oZEYpoqp6ntXfgBr1
-   AFflGbwdDbZ/d1dpmnPUFB7akXICUjJfQuP4+jVgN1/maqcuifiK31e2S
-   c63A+QnlYnn94bHZmVcpWLCQLoSaG+ctQPlUH7IRFwBHElVvmfQaWG24F
-   3IbsW9PYVJK0LPik4jskMkCNlQSz1lEyx9PVcEH5x3n6tAVR2M/0jdsrM
-   U8u8ylCJ2XfoG8sHaUqOVuRUq1EpuZ2wQ9wFeFlFw2sjIxsPkwl9ULWHn
-   D7+htlY+gBYBCnZhV0fuG628ZIWPl7fSNdG2btxRHTDlrowlOuA+wUc5w
-   g==;
-X-CSE-ConnectionGUID: HQC8ioNyReKrzQgWztB5pw==
-X-CSE-MsgGUID: Tln6DZwYRbWDwSWzEEwHlw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="60858976"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="60858976"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 11:28:28 -0700
-X-CSE-ConnectionGUID: XetSAgxyQXue0ceWAnfDfA==
-X-CSE-MsgGUID: Wl4R6agrRO+WE3k7u1T3xw==
+  t=1758659001; x=1790195001;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+cwFEtuDaXb/DaQ6ejtcHJQygdA5jvR5zMxQFdoqSFk=;
+  b=HsPmAthlWfsigzEXYtP9nHy436LEhS9Eyb+ixCMsYpVbDc6t9Pz0WxoO
+   LHxztIZOfIxZWcq75EmtQ4/otb7ekV7BIa6RcxH35WH29BBzdtL7oHOWQ
+   Pt69bNy7qocfWeN82quuq+D+IVT1/ArN5ot5/uVhvtf09u1gzVTptAiM5
+   sWLEwddNG65OvRM/29AIJiPLjUMowTEEPVtqX4c3RGXowB2gysRN1QhgG
+   EKLwh7Q49hlpv+2kmjNEIJhUhJQoGyXWas30Ccxm9IclnnXZWeFlEiFIw
+   4e+G1EK8fKqN1q5/+aZRb5ldGEtnXr1mjJo6O3OCKb6xzAReixjQzLmok
+   A==;
+X-CSE-ConnectionGUID: 1pvpZ0pmTFOgSYHNJ7jPDw==
+X-CSE-MsgGUID: 7Uq7y6PoTm6xg1t/i8JtSQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="71194083"
+X-IronPort-AV: E=Sophos;i="6.18,289,1751266800"; 
+   d="scan'208";a="71194083"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 13:23:20 -0700
+X-CSE-ConnectionGUID: bhr+XJUFT/KBngXpreS9eQ==
+X-CSE-MsgGUID: kuRAh+4HR1W49QaMFRrEig==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,288,1751266800"; 
-   d="scan'208";a="213976224"
+X-IronPort-AV: E=Sophos;i="6.18,289,1751266800"; 
+   d="scan'208";a="177642711"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.108.174]) ([10.125.108.174])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 11:28:28 -0700
-Message-ID: <710dcb52-7f4d-46fe-a8ef-7e91d52af82d@intel.com>
-Date: Tue, 23 Sep 2025 11:28:26 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 13:23:17 -0700
+Message-ID: <a1fa16f1-c75f-4f7d-b297-a32ba4c7d109@intel.com>
+Date: Tue, 23 Sep 2025 13:23:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,97 +52,79 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 00/20] Type2 device basic support
-To: Alejandro Lucero Palau <alucerop@amd.com>,
- alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
-References: <20250918091746.2034285-1-alejandro.lucero-palau@amd.com>
- <33f5b788-c478-4279-bf9b-a5fc1000bc23@intel.com>
- <c012498b-d9f9-439a-a926-ef5f10689bf7@amd.com>
- <aea329a3-9cb9-4552-88e7-2b354483ad53@intel.com>
- <0b36e5c2-2f15-4e83-bf4b-c4c15f55d3d2@amd.com>
+Subject: Re: [PATCH V3 12/20] nvdimm/region_label: Export routine to fetch
+ region information
+To: Neeraj Kumar <s.neeraj@samsung.com>, linux-cxl@vger.kernel.org,
+ nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org, gost.dev@samsung.com
+Cc: a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
+ cpgs@samsung.com
+References: <20250917134116.1623730-1-s.neeraj@samsung.com>
+ <CGME20250917134153epcas5p1e1f7a7a19fb41d12b9397c3e6265f823@epcas5p1.samsung.com>
+ <20250917134116.1623730-13-s.neeraj@samsung.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <0b36e5c2-2f15-4e83-bf4b-c4c15f55d3d2@amd.com>
+In-Reply-To: <20250917134116.1623730-13-s.neeraj@samsung.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 9/23/25 3:35 AM, Alejandro Lucero Palau wrote:
+On 9/17/25 6:41 AM, Neeraj Kumar wrote:
+> CXL region information preserved from the LSA needs to be exported for
+> use by the CXL driver for CXL region re-creation.
 > 
-> On 9/19/25 22:42, Dave Jiang wrote:
->>
->> On 9/19/25 9:55 AM, Alejandro Lucero Palau wrote:
->>> Hi Dave,
->>>
->>>
->>>
->>> On 9/19/25 17:26, Dave Jiang wrote:
->>>> On 9/18/25 2:17 AM, alejandro.lucero-palau@amd.com wrote:
->>>>> From: Alejandro Lucero <alucerop@amd.com>
->>>>>
->>>>> First of all, the patchset should be applied on the described base
->>>>> commit then applying Terry's v11 about CXL error handling plus last four
->>>>> pathces from Dan's for-6.18/cxl-probe-order branch.
->>>>>
->>> <snip>
->>>
->>>>> base-commit: f11a5f89910a7ae970fbce4fdc02d86a8ba8570f
->>>>> prerequisite-patch-id: 44c914dd079e40d716f3f2d91653247eca731594
->>>>> prerequisite-patch-id: b13ca5c11c44a736563477d67b1dceadfe3ea19e
->>>>> prerequisite-patch-id: d0d82965bbea8a2b5ea2f763f19de4dfaa8479c3
->>>>> prerequisite-patch-id: dd0f24b3bdb938f2f123bc26b31cd5fe659e05eb
->>>>> prerequisite-patch-id: 2ea41ec399f2360a84e86e97a8f940a62561931a
->>>>> prerequisite-patch-id: 367b61b5a313db6324f9cf917d46df580f3bbd3b
->>>>> prerequisite-patch-id: 1805332a9f191bc3547927d96de5926356dac03c
->>>>> prerequisite-patch-id: 40657fd517f8e835a091c07e93d6abc08f85d395
->>>>> prerequisite-patch-id: 901eb0d91816499446964b2a9089db59656da08d
->>>>> prerequisite-patch-id: 79856c0199d6872fd2f76a5829dba7fa46f225d6
->>>>> prerequisite-patch-id: 6f3503e59a3d745e5ecff4aaed668e2d32da7e4b
->>>>> prerequisite-patch-id: e9dc88f1b91dce5dc3d46ff2b5bf184aba06439d
->>>>> prerequisite-patch-id: 196fe106100aad619d5be7266959bbeef29b7c8b
->>>>> prerequisite-patch-id: 7e719ed404f664ee8d9b98d56f58326f55ea2175
->>>>> prerequisite-patch-id: 560f95992e13a08279034d5f77aacc9e971332dd
->>>>> prerequisite-patch-id: 8656445ee654056695ff2894e28c8f1014df919e
->>>>> prerequisite-patch-id: 001d831149eb8f9ae17b394e4bcd06d844dd39d9
->>>>> prerequisite-patch-id: 421368aa5eac2af63ef2dc427af2ec11ad45c925
->>>>> prerequisite-patch-id: 18fd00d4743711d835ad546cfbb558d9f97dcdfc
->>>>> prerequisite-patch-id: d89bf9e6d3ea5d332ec2c8e441f1fe6d84e726d3
->>>>> prerequisite-patch-id: 3a6953d11b803abeb437558f3893a3b6a08acdbb
->>>>> prerequisite-patch-id: 0dd42a82e73765950bd069d421d555ded8bfeb25
->>>>> prerequisite-patch-id: da6e0df31ad0d5a945e0a0d29204ba75f0c97344
->>>>> prerequisite-patch-id: ed7d9c768af2ac4e6ce87df2efd0ec359856c6e5
->>>>> prerequisite-patch-id: ed7f4dce80b4f80ccafb57efcd6189a6e14c9208
->>>>> prerequisite-patch-id: ccadb682c5edc3babaef5fe7ecb76ee5daa27ea4
->>>> Alejandro,
->>>> I'm having trouble creating a branch. The hashes for prereq don't seem to exist. Can you please post a public branch somewhere? Thanks!
->>>
->>> Did you read the first paragraph of the cover letter?
->> I reset to f11a5f89910a7ae970fbce4fdc02d86a8ba8570f
->> I was able to apply Terry's v11
->> And after that I think I'm suppose to apply these 4 right?
->> ab70c6227ee6 dax/cxl: Defer Soft Reserved registration
->> 88aec5ea7a24 cxl/mem: Introduce a memdev creation ->probe() operation
->> e23f37a4a834 cxl/port: Arrange for always synchronous endpoint attach
->> 595f243eeac3 cxl/mem: Arrange for always-synchronous memdev attach
->>
->> It failed on cherry picking the first one: 595f243eeac3
->>
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+> ---
+>  drivers/nvdimm/dimm_devs.c | 18 ++++++++++++++++++
+>  include/linux/libnvdimm.h  |  2 ++
+>  2 files changed, 20 insertions(+)
 > 
-> Hi Dave,
-> 
-> 
-> My mistake. I did not remember I had to slightly modify Dan's patches.
-> 
-> 
-> I will send v19 including those patches and working on the minor issues from reviews.
+> diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
+> index 918c3db93195..619c8ce56dce 100644
+> --- a/drivers/nvdimm/dimm_devs.c
+> +++ b/drivers/nvdimm/dimm_devs.c
+> @@ -280,6 +280,24 @@ void *nvdimm_provider_data(struct nvdimm *nvdimm)
+>  }
+>  EXPORT_SYMBOL_GPL(nvdimm_provider_data);
+>  
+> +bool nvdimm_has_cxl_region(struct nvdimm *nvdimm)
+> +{
+> +	if (nvdimm)
+> +		return nvdimm->is_region_label;
+> +
+> +	return false;
 
-Pushing your code to a public branch on somewhere like github would be great. Thanks!
+Just a nit. Would prefer return error early and return the success case last.
 
-> 
-> 
-> Thanks
-> 
+> +}
+> +EXPORT_SYMBOL_GPL(nvdimm_has_cxl_region);
+> +
+> +void *nvdimm_get_cxl_region_param(struct nvdimm *nvdimm)
+> +{
+> +	if (nvdimm)
+> +		return &nvdimm->cxl_region_params;
+> +
+> +	return NULL;
+
+same comment
+
+> +}
+> +EXPORT_SYMBOL_GPL(nvdimm_get_cxl_region_param);
+> +
+>  static ssize_t commands_show(struct device *dev,
+>  		struct device_attribute *attr, char *buf)
+>  {
+> diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+> index 07ea2e3f821a..3ffd50ab6ac4 100644
+> --- a/include/linux/libnvdimm.h
+> +++ b/include/linux/libnvdimm.h
+> @@ -330,6 +330,8 @@ int nvdimm_in_overwrite(struct nvdimm *nvdimm);
+>  bool is_nvdimm_sync(struct nd_region *nd_region);
+>  int nd_region_label_update(struct nd_region *nd_region);
+>  int nd_region_label_delete(struct nd_region *nd_region);
+> +bool nvdimm_has_cxl_region(struct nvdimm *nvdimm);
+> +void *nvdimm_get_cxl_region_param(struct nvdimm *nvdimm);
+>  
+>  static inline int nvdimm_ctl(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+>  		unsigned int buf_len, int *cmd_rc)
 
