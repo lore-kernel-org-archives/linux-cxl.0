@@ -1,311 +1,221 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4E230CB41;
-	Tue, 23 Sep 2025 23:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795431DB95E
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Sep 2025 01:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758671411; cv=none; b=JhzqsCHXTtN8/RrQ9C3bt10V9EyXmaNrAvqWw+VSgjaBwjZfOImDn8WOakbKZlNzz8L3j4xJOCTAI5FFse5g9lz/VFXX7b9dk6VHeaWcQaA0qQoGgvXf0WPn9iQoAyMTUjAy4iux0T/Wg/088lzPnWxNzY894SAGE/20mmExJg0=
+	t=1758677750; cv=none; b=jE/ggRV67enkmuj7oJVGz07AtiS9EzEUTtiJPmB/zseMrhLfU6CNbAzv9Wey2VDOEds0957Yx164S+4/nBWiYA0HjOWnuIuNS0Dvm1rHWJRXz3iOHRJMBfUd6fM+GBsrKengSFJLXb1iT4g9wrZazfaNRCM3Bxr/edZFh4TFHtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758671411; c=relaxed/simple;
-	bh=3TReChC6UqLrVCEazqygpmt1P3+KoM5T+eVB2X8OL7w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qww+h3uCsFCAKc50+tzUvb6cnDUYSCWqNS+kHSAwfJQmw1dqYVkgANizif7VIraot3Q6G+BmtMYvOyVBp7emuXYmGVnviKislHZZEBOW7RaJyFkAg7p+/I18TTBKMIw1g9P9q/pdIBWX2Vp7U9VHiBZSYWwlgX/b9pFCp7ffXic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gfgzvtfk; arc=none smtp.client-ip=198.175.65.17
+	s=arc-20240116; t=1758677750; c=relaxed/simple;
+	bh=BW27m63kEVn3ZsRp0XJOyC/RKdezXJU2GVRvhW/Dtts=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eVTbqJWf7ejRnzmpoilK4ef2c4fGgnEJWbXP1krR5erEpuw63CLG1T2ebzZHigwj/CgQ5YJGxPFx9V4ePdciM/cZ8TMH+jc23AzemX+79uYTdc1I/C9Hd4beGJjZy208Nx06aGgx/LXM6WYlhc9DhQiSmZfijgCJBCqwYRysBQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uz9YPwv4; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gfgzvtfk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uz9YPwv4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758671409; x=1790207409;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3TReChC6UqLrVCEazqygpmt1P3+KoM5T+eVB2X8OL7w=;
-  b=gfgzvtfkvoCdrafDsoi9ORLSjutE4BE0zUEtJNdZKzQ2xQAGQraaay3a
-   BfPo1d78yYvelvGFGOBl7aHyR1KCyJtBzpZFedMRj3EH10xwaE+jLjao2
-   u7qQvUC2o9l7+x/s4hxhuc9KwoZ3ZJ3fqUswu0metDRM3VE2ai19SP4Yz
-   jbeWYixpoSDB3Z/6DIe6xvoZpzAinjHPKC7IJyYsDQNyWZQ3TXZv4mMEG
-   LMjbzOHo6Dhap6Bkk7hpAnTGUny8gdJArenzFFVzU+OxaxV9cRjs5/U3H
-   ILakecom9zjSJhgaNMA4Z8BJ/XIN4vrzew90S1pSNgE2kTanRtYlE8FfB
+  t=1758677749; x=1790213749;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=BW27m63kEVn3ZsRp0XJOyC/RKdezXJU2GVRvhW/Dtts=;
+  b=Uz9YPwv43ECJ3VVpeP2egLDsZFt+Iy2m1YNbzB2sC9R5OoG5izwhwWMH
+   nBEhARVhoOHxUV4xNbv2z+oMEnz4Ym1Y5s2t5lpAPth0YsUY2wTtEKeMd
+   dsTJ2vrHh1bzfUniQ7WYeZd+62ogwR8sE1hy7svSKNdBGcez4VjFn32Uq
+   /p52s4J2rWROkXXYT66WmWpwJ0cFmO7ouuV88HM1a3mEWnVdCca1TurKs
+   MTpqd/zF8gfa375obC8iaHHqsbkcieTzPRrrVy3dANTyU9h136brgJIdG
+   ntrTYa3gUhfTGoClDRSyFMbu8fGskMI3ktG8RXtbk0DVSAyxFeW5LRkSn
    g==;
-X-CSE-ConnectionGUID: je4cy7CnTlmpA5baW+LUPw==
-X-CSE-MsgGUID: jhcqQQJ/QRiwQB8YnbWqDw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="60902278"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="60902278"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 16:50:08 -0700
-X-CSE-ConnectionGUID: WvnsVAy3QFa4AXMElD/HXg==
-X-CSE-MsgGUID: gJZiUyBbR/+/AaBpg9FGwA==
+X-CSE-ConnectionGUID: fpyuvM0gQxGIZ8zzRDs/eQ==
+X-CSE-MsgGUID: jppSSts5QzW4gitE+WGOqA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="61138501"
+X-IronPort-AV: E=Sophos;i="6.18,289,1751266800"; 
+   d="scan'208";a="61138501"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 18:35:49 -0700
+X-CSE-ConnectionGUID: u1KOl709SvCcVAWRL56FuA==
+X-CSE-MsgGUID: zcbMmhnoTLmBkU0p0nhN7A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,289,1751266800"; 
-   d="scan'208";a="177280665"
-Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.108.197]) ([10.125.108.197])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 16:50:06 -0700
-Message-ID: <e45d7687-fb93-4d2e-8cb4-e84c5a7ce782@intel.com>
-Date: Tue, 23 Sep 2025 16:50:05 -0700
+   d="scan'208";a="176846460"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.220.28])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 18:35:48 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Andreas Hasenack <andreas.hasenack@canonical.com>
+Subject: [ndctl PATCH] cxl/list: remove libtracefs build dependency for --media-errors
+Date: Tue, 23 Sep 2025 18:35:33 -0700
+Message-ID: <20250924013537.84630-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 14/20] cxl/region: Add devm_cxl_pmem_add_region() for
- pmem region creation
-To: Neeraj Kumar <s.neeraj@samsung.com>, linux-cxl@vger.kernel.org,
- nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org, gost.dev@samsung.com
-Cc: a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
- cpgs@samsung.com
-References: <20250917134116.1623730-1-s.neeraj@samsung.com>
- <CGME20250917134159epcas5p37716c48d36c07aaffe70dafca2fa207b@epcas5p3.samsung.com>
- <20250917134116.1623730-15-s.neeraj@samsung.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250917134116.1623730-15-s.neeraj@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+When the --media-errors option was added to cxl list it inadvertently
+changed the optional libtracefs requirement into a mandatory one.
+NDCTL versions 80,81,82 no longer build without libtracefs.
 
+With this change, NDCTL builds with or without libtracefs.
 
-On 9/17/25 6:41 AM, Neeraj Kumar wrote:
-> devm_cxl_pmem_add_region() is used to create cxl region based on region
-> information scanned from LSA.
-> 
-> devm_cxl_add_region() is used to just allocate cxlr and its fields are
-> filled later by userspace tool using device attributes (*_store()).
-> 
-> Inspiration for devm_cxl_pmem_add_region() is taken from these device
-> attributes (_store*) calls. It allocates cxlr and fills information
-> parsed from LSA and calls device_add(&cxlr->dev) to initiate further
-> region creation porbes
-> 
-> Renamed __create_region() to cxl_create_region() and make it an exported
-> routine. This will be used in later patch to create cxl region after
-> fetching region information from LSA.
-> 
-> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
-> ---
->  drivers/cxl/core/region.c | 127 ++++++++++++++++++++++++++++++++++++--
->  drivers/cxl/cxl.h         |  12 ++++
->  2 files changed, 134 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index c325aa827992..d5c227ce7b09 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2573,6 +2573,116 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
->  	return ERR_PTR(rc);
->  }
->  
-> +static ssize_t alloc_region_hpa(struct cxl_region *cxlr, u64 size)
-> +{
-> +	int rc;
-> +
-> +	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-> +	rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem);
-> +	if (rc)
-> +		return rc;
+Now, when libtracefs is not enabled, users will see:
+	$ cxl list -r region0 --media-errors
+	Error: unknown option `media-errors'
 
-Just a nit. Please conform to existing style in the subsystem for this new usage.
+The cxl-poison.sh unit test is omitted when libtracefs is disabled.
 
-  +	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-  +	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem))))
-  +		return rc;
+The man page gets a note:
+	The media-error option is only available with -Dlibtracefs=enabled.
 
-> +
-> +	if (!size)
-> +		return -EINVAL;
-> +
-> +	return alloc_hpa(cxlr, size);
-> +}
+Reported-by: Andreas Hasenack <andreas.hasenack@canonical.com>
+Fixes: d7532bb049e0 ("cxl/list: add --media-errors option to cxl list")
+Closes: https://github.com/pmem/ndctl/issues/289
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+ Documentation/cxl/cxl-list.txt |  2 ++
+ config.h.meson                 |  2 +-
+ cxl/json.c                     | 15 ++++++++++++++-
+ cxl/list.c                     |  4 ++++
+ test/meson.build               |  9 +++++++--
+ 5 files changed, 28 insertions(+), 4 deletions(-)
 
-I think you can create another helper free_region_hpa() and call them in size_store() function to remove the duplicate code.
-> +
-> +static ssize_t alloc_region_dpa(struct cxl_endpoint_decoder *cxled, u64 size)
-> +{
-> +	int rc;
-> +
-> +	if (!size)
-> +		return -EINVAL;
-> +
-> +	if (!IS_ALIGNED(size, SZ_256M))
-> +		return -EINVAL;
-> +
-> +	rc = cxl_dpa_free(cxled);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return cxl_dpa_alloc(cxled, size);
-> +}
-> +
-> +static struct cxl_region *
-> +devm_cxl_pmem_add_region(struct cxl_root_decoder *cxlrd, int id,
-> +			 enum cxl_partition_mode mode,
-
-Wouldn't this not needed since it would be CXL_PARTMODE_PMEM always? I also wonder if we need to rename devm_cxl_add_region() to devm_cxl_add_ram_region() to be explicit.
-
-> +			 enum cxl_decoder_type type,
-> +			 struct cxl_pmem_region_params *params,
-> +			 struct cxl_decoder *cxld)
-> +{
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct cxl_region_params *p;
-> +	struct cxl_port *root_port;
-> +	struct device *dev;
-> +	int rc;
-> +
-> +	struct cxl_region *cxlr __free(put_cxl_region) =
-> +		cxl_region_alloc(cxlrd, id);
-> +	if (IS_ERR(cxlr))
-> +		return cxlr;
-> +
-> +	cxlr->mode = mode;
-> +	cxlr->type = type;
-> +
-> +	dev = &cxlr->dev;
-> +	rc = dev_set_name(dev, "region%d", id);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	p = &cxlr->params;
-> +	p->uuid = params->uuid;
-> +	p->interleave_ways = params->nlabel;
-> +	p->interleave_granularity = params->ig;
-> +
-> +	rc = alloc_region_hpa(cxlr, params->rawsize);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	cxled = to_cxl_endpoint_decoder(&cxld->dev);
-> +
-> +	rc = cxl_dpa_set_part(cxled, CXL_PARTMODE_PMEM);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	rc = alloc_region_dpa(cxled, params->rawsize);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	/*
-> +	 * TODO: Currently we have support of interleave_way == 1, where
-> +	 * we can only have one region per mem device. It means mem device
-> +	 * position (params->position) will always be 0. It is therefore
-> +	 * attaching only one target at params->position
-> +	 */
-> +	if (params->position)
-> +		return ERR_PTR(-EINVAL);
-
-EOPNOTSUPP?
-
-Speaking of which, are there plans to support interleave in the near future?
-
-DJ
-
-> +
-> +	rc = attach_target(cxlr, cxled, params->position, TASK_INTERRUPTIBLE);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	rc = __commit(cxlr);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	rc = device_add(dev);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	root_port = to_cxl_port(cxlrd->cxlsd.cxld.dev.parent);
-> +	rc = devm_add_action_or_reset(root_port->uport_dev,
-> +			unregister_region, cxlr);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	dev_dbg(root_port->uport_dev, "%s: created %s\n",
-> +		dev_name(&cxlrd->cxlsd.cxld.dev), dev_name(dev));
-> +
-> +	return no_free_ptr(cxlr);
-> +}
-> +
->  static ssize_t __create_region_show(struct cxl_root_decoder *cxlrd, char *buf)
->  {
->  	return sysfs_emit(buf, "region%u\n", atomic_read(&cxlrd->region_id));
-> @@ -2590,8 +2700,10 @@ static ssize_t create_ram_region_show(struct device *dev,
->  	return __create_region_show(to_cxl_root_decoder(dev), buf);
->  }
->  
-> -static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
-> -					  enum cxl_partition_mode mode, int id)
-> +struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
-> +				     enum cxl_partition_mode mode, int id,
-> +				     struct cxl_pmem_region_params *pmem_params,
-> +				     struct cxl_decoder *cxld)
->  {
->  	int rc;
->  
-> @@ -2613,8 +2725,12 @@ static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
->  		return ERR_PTR(-EBUSY);
->  	}
->  
-> +	if (pmem_params)
-> +		return devm_cxl_pmem_add_region(cxlrd, id, mode,
-> +				CXL_DECODER_HOSTONLYMEM, pmem_params, cxld);
->  	return devm_cxl_add_region(cxlrd, id, mode, CXL_DECODER_HOSTONLYMEM);
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_create_region, "CXL");
->  
->  static ssize_t create_region_store(struct device *dev, const char *buf,
->  				   size_t len, enum cxl_partition_mode mode)
-> @@ -2627,7 +2743,7 @@ static ssize_t create_region_store(struct device *dev, const char *buf,
->  	if (rc != 1)
->  		return -EINVAL;
->  
-> -	cxlr = __create_region(cxlrd, mode, id);
-> +	cxlr = cxl_create_region(cxlrd, mode, id, NULL, NULL);
->  	if (IS_ERR(cxlr))
->  		return PTR_ERR(cxlr);
->  
-> @@ -3523,8 +3639,9 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  	struct cxl_region *cxlr;
->  
->  	do {
-> -		cxlr = __create_region(cxlrd, cxlds->part[part].mode,
-> -				       atomic_read(&cxlrd->region_id));
-> +		cxlr = cxl_create_region(cxlrd, cxlds->part[part].mode,
-> +					 atomic_read(&cxlrd->region_id),
-> +					 NULL, NULL);
->  	} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
->  
->  	if (IS_ERR(cxlr)) {
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index b57597e55f7e..3abadc3dc82e 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -874,6 +874,10 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled);
->  struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
->  u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa);
->  void cxl_region_discovery(struct cxl_port *port);
-> +struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
-> +				     enum cxl_partition_mode mode, int id,
-> +				     struct cxl_pmem_region_params *params,
-> +				     struct cxl_decoder *cxld);
->  #else
->  static inline bool is_cxl_pmem_region(struct device *dev)
->  {
-> @@ -899,6 +903,14 @@ static inline u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint,
->  static inline void cxl_region_discovery(struct cxl_port *port)
->  {
->  }
-> +static inline struct cxl_region *
-> +cxl_create_region(struct cxl_root_decoder *cxlrd,
-> +		  enum cxl_partition_mode mode, int id,
-> +		  struct cxl_pmem_region_params *params,
-> +		  struct cxl_decoder *cxld)
-> +{
-> +	return ERR_PTR(-EOPNOTSUPP);
-> +}
->  #endif
->  
->  void cxl_endpoint_parse_cdat(struct cxl_port *port);
+diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+index 9a9911e7dd9b..0595638ee054 100644
+--- a/Documentation/cxl/cxl-list.txt
++++ b/Documentation/cxl/cxl-list.txt
+@@ -425,6 +425,8 @@ OPTIONS
+ 	"source:" is one of: External, Internal, Injected, Vendor Specific,
+ 	or Unknown, as defined in CXL Specification v3.1 Table 8-140.
+ 
++The media-errors option is only available with '-Dlibtracefs=enabled'.
++
+ ----
+ # cxl list -m mem9 --media-errors -u
+ {
+diff --git a/config.h.meson b/config.h.meson
+index f75db3e6360f..e8539f8d04df 100644
+--- a/config.h.meson
++++ b/config.h.meson
+@@ -19,7 +19,7 @@
+ /* ndctl test support */
+ #mesondefine ENABLE_TEST
+ 
+-/* cxl monitor support */
++/* cxl monitor and cxl list --media-errors support */
+ #mesondefine ENABLE_LIBTRACEFS
+ 
+ /* Define to 1 if big-endian-arch */
+diff --git a/cxl/json.c b/cxl/json.c
+index e65bd803b706..a75928bf43ed 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -9,12 +9,15 @@
+ #include <json-c/json.h>
+ #include <json-c/printbuf.h>
+ #include <ccan/short_types/short_types.h>
++
++#ifdef ENABLE_LIBTRACEFS
+ #include <tracefs.h>
++#include "../util/event_trace.h"
++#endif
+ 
+ #include "filter.h"
+ #include "json.h"
+ #include "../daxctl/json.h"
+-#include "../util/event_trace.h"
+ 
+ #define CXL_FW_VERSION_STR_LEN	16
+ #define CXL_FW_MAX_SLOTS	4
+@@ -575,6 +578,7 @@ err_jobj:
+ 	return NULL;
+ }
+ 
++#ifdef ENABLE_LIBTRACEFS
+ /* CXL Spec 3.1 Table 8-140 Media Error Record */
+ #define CXL_POISON_SOURCE_MAX 7
+ static const char *const poison_source[] = { "Unknown", "External", "Internal",
+@@ -753,6 +757,15 @@ err_free:
+ 	tracefs_instance_free(inst);
+ 	return jpoison;
+ }
++#else
++static struct json_object *
++util_cxl_poison_list_to_json(struct cxl_region *region,
++			     struct cxl_memdev *memdev,
++			     unsigned long flags)
++{
++	return NULL;
++}
++#endif
+ 
+ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 		unsigned long flags)
+diff --git a/cxl/list.c b/cxl/list.c
+index 0b25d78248d5..d9412ec72375 100644
+--- a/cxl/list.c
++++ b/cxl/list.c
+@@ -57,8 +57,10 @@ static const struct option options[] = {
+ 		    "include memory device firmware information"),
+ 	OPT_BOOLEAN('A', "alert-config", &param.alert_config,
+ 		    "include alert configuration information"),
++#ifdef ENABLE_LIBTRACEFS
+ 	OPT_BOOLEAN('L', "media-errors", &param.media_errors,
+ 		    "include media-error information "),
++#endif
+ 	OPT_INCR('v', "verbose", &param.verbose, "increase output detail"),
+ #ifdef ENABLE_DEBUG
+ 	OPT_BOOLEAN(0, "debug", &debug, "debug list walk"),
+@@ -123,7 +125,9 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
+ 		param.fw = true;
+ 		param.alert_config = true;
+ 		param.dax = true;
++#ifdef ENABLE_LIBTRACEFS
+ 		param.media_errors = true;
++#endif
+ 		/* fallthrough */
+ 	case 2:
+ 		param.idle = true;
+diff --git a/test/meson.build b/test/meson.build
+index 775542c1b787..615376ea635a 100644
+--- a/test/meson.build
++++ b/test/meson.build
+@@ -167,7 +167,6 @@ cxl_events = find_program('cxl-events.sh')
+ cxl_sanitize = find_program('cxl-sanitize.sh')
+ cxl_destroy_region = find_program('cxl-destroy-region.sh')
+ cxl_qos_class = find_program('cxl-qos-class.sh')
+-cxl_poison = find_program('cxl-poison.sh')
+ 
+ tests = [
+   [ 'libndctl',               libndctl,		  'ndctl' ],
+@@ -200,7 +199,6 @@ tests = [
+   [ 'cxl-sanitize.sh',        cxl_sanitize,       'cxl'   ],
+   [ 'cxl-destroy-region.sh',  cxl_destroy_region, 'cxl'   ],
+   [ 'cxl-qos-class.sh',       cxl_qos_class,      'cxl'   ],
+-  [ 'cxl-poison.sh',          cxl_poison,         'cxl'   ],
+ ]
+ 
+ if get_option('destructive').enabled()
+@@ -253,6 +251,13 @@ if get_option('fwctl').enabled()
+   ]
+ endif
+ 
++if get_option('libtracefs').enabled()
++  cxl_poison = find_program('cxl-poison.sh')
++  tests += [
++    [ 'cxl-poison.sh', cxl_poison, 'cxl' ],
++  ]
++endif
++
+ test_env = [
+     'LC_ALL=C',
+     'NDCTL=@0@'.format(ndctl_tool.full_path()),
+-- 
+2.37.3
 
