@@ -1,316 +1,603 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04E1277016
-	for <linux-cxl@vger.kernel.org>; Thu, 25 Sep 2025 00:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758760038; cv=fail; b=BjTJt+w5qmczQIbNDcC5LyiG3tLjb6+XmEJ0GsFG++2gTiq0O+5OUX28f7UT4Ir0PCUQgKn2EwXr9Sq0Q8Fs+VJ0fzhY0Ch2E7wPmTD6Lap1XasP+Ny+JjjJ/D/Y6bebRG+oFRqv2sDdjr0bjkdf2W0tzdmRTQEGjHFRKmzQ4A4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758760038; c=relaxed/simple;
-	bh=aAwu7XB7wkF4Z5lRqYq3dajuuuekRBPQ8s/p/auCysY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=psVPp/TdVzhSsdXidCPXIvP+7nJR2XTFZs+mEa57pn5M2xvdqh5ePW7p/gbFxRcQ/8L2JnUK/6mzH6y/gpxjQ+T10Gpvew/roKHUNRR9PytzkuhkJTVFgVovAa/Xmgkj3rTxSMbqYWBxw8WM1nsd7nYsIjqgRQ5HFHpvaKVm1eA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HIqW8q/B; arc=fail smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AD825F7A9
+	for <linux-cxl@vger.kernel.org>; Thu, 25 Sep 2025 07:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758786886; cv=none; b=lAWsxU6zEzzzIpZlX5hn04T1TRAxsZDvUjzmJ7li99jN7gynab99BmKyUwlBUvEHj7OwvzxoQMsnMUuWHQlDoL8Q3UXmDwQF10e2TBm7g+CUdcFlQ321b2tRciQstB4FCxzjWOUWoLcqn5c5YS3Sb6qaqVP9zCc0D4lrxvxHH0Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758786886; c=relaxed/simple;
+	bh=jjCZ044ybAB6usxVpAr6EuCIruUqAxNhXLxyF0Cy2H4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pb51qJGsklvdEWZvPTWggNleg5UwBocLOlUdEIB6kA7XtYiNR7KJoAziF3DhJtryt3io1vXTyBSsRywtf6G6CtMoWImI2aoYrgfhsIT+nc7GKLDTXUEFeSs7gt5DmlFnGM4LmJguADhrxayNwHM4tuva7xPpdr/OpJwqd1LwLSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oCpY1+sn; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HIqW8q/B"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oCpY1+sn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758760037; x=1790296037;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=aAwu7XB7wkF4Z5lRqYq3dajuuuekRBPQ8s/p/auCysY=;
-  b=HIqW8q/Bspm9kQLQgMtMJUuNrheHfdQjBBfQXE/MD+UW3t1uFuUXgl7X
-   QGV9LkVMqFpuj8LshBKUwH0zL43JPaNDIHfz4y6JxBMM5JroS4zMDv01w
-   /IvCJapS1kK9OljX+T4V2jXATeloUJUxTEAt4IYtg5brD5ZKnzG19deyE
-   3fyVTvFvy9wx4QHkPOL+GUHaMBWmwbwp3UXuSOdW0vd6ydvKwzAKctWol
-   AuWeVisegOl3ClQZ1vhdUp3TwHrJsMvnrktokpptHuswMWNs6Qc6Iuifa
-   uFzPZ+lrlzWCHuuLt94OqvAUZ0SExeufYdk8d/ZhmvOPoTy1zHM6d9ydV
-   A==;
-X-CSE-ConnectionGUID: hHEQO2UiSp6rXQGRgHNvhQ==
-X-CSE-MsgGUID: cdKFZdgKRMSDbQmiAfvLqA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11563"; a="86515600"
-X-IronPort-AV: E=Sophos;i="6.18,291,1751266800"; 
-   d="scan'208";a="86515600"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 17:27:15 -0700
-X-CSE-ConnectionGUID: Hm44DitIR8yIYuD6WpYLKA==
-X-CSE-MsgGUID: oUw/La/JRQS5jrVHzW6AoQ==
+  t=1758786885; x=1790322885;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jjCZ044ybAB6usxVpAr6EuCIruUqAxNhXLxyF0Cy2H4=;
+  b=oCpY1+sni0TvgAMwtaDlmhAxX441/GYBs44hLhwBoefXXsNkkrR9PIjG
+   6u6dzXO4kcsnFeu13pxYG6rgxcuMtLW472J/L/uDUzvbWUKvzelMFdiC0
+   5MQ5XkwO5yaiHyQnxROieoBHFcHQHWF4Axq3KQM8WOqY7rHouOy6FOE5S
+   awBtbb6bTUKBN5dh/N1OjhD0yI6DbPBQIj5lghrirfENHTAY2ye8FRtYi
+   p+tF9DaqV1u6yqVWlorNuyPIj6OJdzL+YmxAN1xdz4GriYXUs3n+mMDHI
+   6pGIVs6vT/8EtVKFQQmEFYTJSdlNxlmqZfrdmqBXG4jNv9K0cL5TeBb3b
+   w==;
+X-CSE-ConnectionGUID: HYN11y02SIGxCyNPN0cAxw==
+X-CSE-MsgGUID: 4XpijN3gQOKFY5apaOm03w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11563"; a="83704654"
+X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
+   d="scan'208";a="83704654"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 00:54:44 -0700
+X-CSE-ConnectionGUID: MJRmZ1mBS+2DCVBwKgLTSw==
+X-CSE-MsgGUID: n2ui3W3FR9Geu4bzaG690w==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,291,1751266800"; 
-   d="scan'208";a="176470047"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 17:27:15 -0700
-Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Wed, 24 Sep 2025 17:27:14 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Wed, 24 Sep 2025 17:27:14 -0700
-Received: from CO1PR03CU002.outbound.protection.outlook.com (52.101.46.2) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Wed, 24 Sep 2025 17:27:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=En03E2RdAQyx0yF64SHIliDUiNgn7Yfc8Sy++IydK4cmk4h+b1sPgH8Y2hz6+8ECV6tYnDjssb21ou+kQOfAqNh7981IMB7CIuPQm7s4h6gkYTXtnLhIO3rTWKJdMR6Iy229ecv9sOX1MWLoswTskSh363Xop7uV99a2bStns5wLpWrDDzVQr92npeyFd5Z0Yt3qb7QROXBzAykt75yHeXPl8XRr1o0DcbuDxbwO82PMJTDbT7FBCnWakDc+A5bw5gGzNpkIYuSG2h6hiOjJpkhMt9aCAe5JUrOaoW1Jdy/yJlgtBOYoQrnnxFS4rGJxJX0W5iwHaO8YAj9ZyvgN8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kRMFAPCQ2viTRBfes3WnfUqv7zTjJVAWUFKsplqTkNE=;
- b=WpW333OcZsR85boy+1xeIEegYOOue/InFpnKNaGSiirVQU+Werbhutcp9MelBA9hJU8jlE745TAvZHgSrMB0KfrOopDcOwmOJ1IWyPkQeP5lj550VWkdOlk3yjZmcVzWg25ddO33ayZr7WPeEJTwofasKxwwv73A32eCFqqw1MOBMeXlIVeYtI2p5ZuD9ZsTlX0GmuI5MmLFcFzs3CDZ/dWdmXnHX6HBH7wLkdcC4+BeOnBeiKFNP6r5PC2oGR60XM9HOH64SwxZ0V3EqLVVG8pNQUYWEBjpqeJi59hP0sOyFu7WxQj/hKj61Y1AGu7pRDEpMUtnd6bv5ZlOhMuHXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- (2603:10b6:a0f:fc02::80b) by IA0PR11MB7815.namprd11.prod.outlook.com
- (2603:10b6:208:404::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.19; Thu, 25 Sep
- 2025 00:27:11 +0000
-Received: from SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- ([fe80::4df9:6ae0:ba12:2dde]) by SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- ([fe80::4df9:6ae0:ba12:2dde%8]) with mapi id 15.20.9137.012; Thu, 25 Sep 2025
- 00:27:10 +0000
-Date: Wed, 24 Sep 2025 17:27:08 -0700
+X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
+   d="scan'208";a="176863059"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.220.115])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 00:54:43 -0700
 From: Alison Schofield <alison.schofield@intel.com>
-To: <dan.j.williams@intel.com>
-CC: <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>, Andreas Hasenack
-	<andreas.hasenack@canonical.com>
-Subject: Re: [ndctl PATCH v2] cxl/list: remove libtracefs build dependency
- for --media-errors
-Message-ID: <aNSMXEP2YD3-MK3l@aschofie-mobl2.lan>
-References: <20250924045302.90074-1-alison.schofield@intel.com>
- <68d47a5d13605_1c791001d@dwillia2-mobl4.notmuch>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <68d47a5d13605_1c791001d@dwillia2-mobl4.notmuch>
-X-ClientProxiedBy: BYAPR05CA0053.namprd05.prod.outlook.com
- (2603:10b6:a03:74::30) To SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- (2603:10b6:a0f:fc02::80b)
+To: nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Andreas Hasenack <andreas.hasenack@canonical.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>
+Subject: [ndctl PATCH v3] cxl/list: remove libtracefs build dependency for --media-errors
+Date: Thu, 25 Sep 2025 00:54:29 -0700
+Message-ID: <20250925075438.148935-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PPF0D43D62C4:EE_|IA0PR11MB7815:EE_
-X-MS-Office365-Filtering-Correlation-Id: f6ae0790-5de0-4066-cafa-08ddfbca4469
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?9FQHdcN/ff60I7lYEbBd9EBXCf8vUu3oOUZQXBhw7fCU3CjNYgSF33MDkDZ5?=
- =?us-ascii?Q?rk2nKIghF+MeA8fhDdI4HWejGEKb2zuSmI+2ivUGjpHPiOUW53tSz+4hWMCj?=
- =?us-ascii?Q?kqNiJuyXlANAPEIv8NMIJe1NLLte7pvLVy8K6remMrd9PsbtDzh+CytMYuX4?=
- =?us-ascii?Q?PsukESu3bhx3vbK9UPtaao2ikwNZ/UlWKpqonZgE1ddTb+8tzIhZwg6+xO8y?=
- =?us-ascii?Q?2dv79mab4bYep4Xybm9xioyX2z8SrlQLwmH6eIPfg4ShgjauYHHL+5ufzG6d?=
- =?us-ascii?Q?BUj2XHDo8iO2Kv3aKS+T/GoLL9CeZ2D4AThHEWol1lK+0XQdmIJyH1/Kc3q/?=
- =?us-ascii?Q?QEn8mrw3nlVvbU5cJcj+jlM6PC/E4tdjcIbMtVQObhI0D8HlE4obCQ5vIvrL?=
- =?us-ascii?Q?IvQ3InWL4kt4kKokHwWlqhs8fwCSz+s/VCQYkd13lSxMEKhkCur4DWQTQzGP?=
- =?us-ascii?Q?OTGjrt7SmWoaJIPkexnqvpHijuy7sqhMC1DpoFVU77KiotP/Fr+MWGAU1O4d?=
- =?us-ascii?Q?/jI89kwhCWDtjj/498+1Q5dVekMXnVI++e4AgsF/HcrEmYCBUnE2RiP7RpPF?=
- =?us-ascii?Q?hbgePhoJwHHD/bAPTpLMJMGk8LN7iLNly/i+Ghpg3w94rIhegqvPJOlmsVqZ?=
- =?us-ascii?Q?MENzLITE++zi/FrYBPlv212fFkrF8Fb+Lx0ICuCTGTScn1avuFmyjk5TEvo7?=
- =?us-ascii?Q?LTJTdhQb4XT3C2oNzNJpt7IMqll+4jf7HI8GwM3iMymEGXKic00gN85WFx7i?=
- =?us-ascii?Q?+wpJzEgax2cPeXT+KMdSqFerm0oF1ZaJnZcus0izMEuOPuSv+SSdQITzkWcL?=
- =?us-ascii?Q?vJf+SfegSxXFI9YGJuJ2caPkIinohP8SbV1PnDVwtHxaWnj4W+EHXh+fl7H0?=
- =?us-ascii?Q?gv6ke38+bRWGSJMZpQamhp1TlbfoNABrLp4s5vq+HzMHvCqG0Upp7OWwsiw0?=
- =?us-ascii?Q?/PoxUQAFPGkSeLSyal2QI6NqxEfYxmJ/DTyVarnx+CdgnkD4cAiJokZutPoL?=
- =?us-ascii?Q?odSFbtXwoiaDfTQopxgD/qVn7efKVqkraN8RkDfx0Eui5V2sVdVRlKrZ0Lbx?=
- =?us-ascii?Q?C1JyLHYZmqhkXZ7bFPPz3BA4mwrFpO1mdWzvaJZRveyY5ATZJmE3/wtSiiym?=
- =?us-ascii?Q?9ZMtRJ/XyjO8R5NMoI0LbqtvOP3s7Y5T3A+b4kEpubMXg9PeJp+LjuxADZLz?=
- =?us-ascii?Q?w4WGq+zuBKFYzO/NYlu4XNPxd3oZylwrPeK0dZDmMo+orZETnn91JK2Ya1ZO?=
- =?us-ascii?Q?tRnTMcAMsa6Fv5ThH5dVWLB5DuBnGva4f2olN75iJYRHPOL1sqWHb6taYdgN?=
- =?us-ascii?Q?i+cONLTkZaaKk/Jf/mDIJdXXY+BDyO13qOu5z/PXlI5eAD+yzbJ2AZ46VPL4?=
- =?us-ascii?Q?WGMZNazJRITj7s5kCehz5pt1ltbafHW+SBjGSO4m8maKFN4yNOJhM7A5GutF?=
- =?us-ascii?Q?cwWEGbyfEdI=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ5PPF0D43D62C4.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1Pbjw06oJLUMw0kdof3/iV9EaWNshtpdkZ/eoUGsPJKJ4A3SDie2IH+mHxG2?=
- =?us-ascii?Q?axajO8Vy+u/3x+M4aSHk3eK0kShAZOEwhoMMGXK0xSPvva2p3BM+RiqgaJTt?=
- =?us-ascii?Q?x4q0dRJYr2JIfkW3fy+695z+UNTrvlmSZ4Gin2zRr245+jyer6c31acI5UO4?=
- =?us-ascii?Q?AI86uhftcPrQVHlmTOfDLUj5VqElcNnV8F/Fg5ta5AL9pEZJ0sKKjxxPUSaI?=
- =?us-ascii?Q?YDm3Lp/BqrVtzqCqu2swP464/njqPg3ZHFFtrixo3tRw3BcZMa1BWwDTkLdw?=
- =?us-ascii?Q?BLFnTUDV9yL8a0nxLuaDUknUoto5FQb2tby/NDiJIrILz3yWKIpOIz94udLH?=
- =?us-ascii?Q?6jretChG7yt9ZnF7sCcAbF/68N2Tx1ZczkoDz7cx1Od1+JQQD2nnJvlJcdZ6?=
- =?us-ascii?Q?dsF9XCruGrSl2b/3l67JrrSvxaLdyaCL0jQs0XL2QLV9cAGM3jJqUXCh05HA?=
- =?us-ascii?Q?rkBPw1IULrMOMNIVY1ujViA7LZwrbySM5pQyNOmZY8rxROuuRy0VqAHH090J?=
- =?us-ascii?Q?hY16SqdoZJNuBqLjDcLkURl1fKX/tCsPORozoLpGhFhA5xbbZqdeeLyKQScO?=
- =?us-ascii?Q?x7FB8ACLLxU9/j77yro1Fuk+ANd/zku3qU0mPYGRv017BDcfr3PKjE0qpTgH?=
- =?us-ascii?Q?K0ui0miiouQgMe9h40LFll4n/rj79VZL1UJ0T4g0Ox7tSbhHHGJWfpZqcx1Q?=
- =?us-ascii?Q?ka0/OwVRXLPmPP2RTEJOsKbzPNDansh/H8NcdTNCg8j/Qc+Ylyfg1dMqXWb3?=
- =?us-ascii?Q?vHwu3jvhwzXB6GYyhElrL7pJr4blPWXr7hl+REvky50Lo2C+sTomozkh6WQ9?=
- =?us-ascii?Q?YMOW7el3RzSAyT/0kyEkipOByCatmaWhRYLA5g/Q7AVbjDnITsYlzyBQmszM?=
- =?us-ascii?Q?SZN6xZYC967XNz9IOuR5cf+SL68gG54nMB6X7fh5pzgWUZvN/T64M0Vt1VJ0?=
- =?us-ascii?Q?HmhNr/LwqgqJWYUwQI5LgCVCBOW43l6EUoEiZ1pZ4t6tRnYndyCrLy5XUNt+?=
- =?us-ascii?Q?8WdhOXpgwYd9I3LqM9d+NR6Wxfz7Ey2Cf56sMvneXJKxL6BAYdjcp8lXOxg5?=
- =?us-ascii?Q?IFTVp0LP6j0CYt/EMhOWliIZXtJo7EQvwe5y2eo74PKwGE5w+uSY2e3Q3Vfn?=
- =?us-ascii?Q?CDCsMQx0UjS7O2xGNKwD2qgONaKgBT1rcw0r2NOsbP075Ax1GPwvkL58T/3T?=
- =?us-ascii?Q?9PyzvugKVn/gpuwr7ymYjWju1/al+ylDPxNrikvroL5DibJdA9EQkLy8sg9i?=
- =?us-ascii?Q?nxjROTfYobJSgRdc4fuEbXjQkg4Zbc4/EhFjmLyMQG8OPDKfxrf0JZBIOrsU?=
- =?us-ascii?Q?qJhCO9xDOAD3WD9BrKBeJGFOeNMrlwC7O44Y6yYjyZ8nVyeblonrxMMbiMEU?=
- =?us-ascii?Q?XKgk3GPphWc0BYyTNsWh1cIbwIgIsM/LZGKBfRg7d4r+7F6KUwowSnu9kPO3?=
- =?us-ascii?Q?CAVWVn2u8Y5mGMRBceZgzuwd46vUbHoOE5T2CV/5GudAP2k5ng3kiqjYwJWK?=
- =?us-ascii?Q?wXusaxsp6NBM7pyh+vJF8UrvPSF0YED42G44LojH0t0+Af/aR5Pj5mXn+9CZ?=
- =?us-ascii?Q?OlPjnEQsfGSGZIqjBG6u3U6f8R+9PgeVtOaBlX1kDjZfjsPoT/rbsx3ZXf6T?=
- =?us-ascii?Q?2Q=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6ae0790-5de0-4066-cafa-08ddfbca4469
-X-MS-Exchange-CrossTenant-AuthSource: SJ5PPF0D43D62C4.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Sep 2025 00:27:10.9164
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5IMpmfe64lKjM6XmhmSKDPqOQtoOsakjFpiLMmDoL/D9nMAcUfigAfA1hzcleUlstbPVQhFIEBO7dfpwOUJypWtjM9a8J9ODeAs9pi2btik=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7815
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-On Wed, Sep 24, 2025 at 04:10:21PM -0700, Dan Williams wrote:
-> Alison Schofield wrote:
-> > When the --media-errors option was added to cxl list it inadvertently
-> > changed the optional libtracefs requirement into a mandatory one.
-> > Ndctl versions 80,81,82 no longer build without libtracefs.
-> > 
-> > Remove that dependency.
-> > 
-> > When libtracefs is disabled the user will see a 'Notice' level
-> > message, like this:
-> > 	$ cxl list -r region0 --media-errors --targets
-> > 	cxl list: cmd_list: --media-errors support disabled at build time
-> > 
-> > ...followed by the region listing including the output for any other
-> > valid command line options, like --targets in the example above.
-> > 
-> > When libtracefs is disabled the cxl-poison.sh unit test is omitted.
-> > 
-> > The man page gets a note:
-> > 	The media-error option is only available with -Dlibtracefs=enabled.
-> > 
-> > Reported-by: Andreas Hasenack <andreas.hasenack@canonical.com>
-> > Fixes: d7532bb049e0 ("cxl/list: add --media-errors option to cxl list")
-> > Closes: https://github.com/pmem/ndctl/issues/289
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> > 
-> > Changes in v2:
-> > - Notify and continue when --media-error info is unavailable (Dan)
-> > 
-> > 
-> >  Documentation/cxl/cxl-list.txt |  2 ++
-> >  config.h.meson                 |  2 +-
-> >  cxl/json.c                     | 15 ++++++++++++++-
-> >  cxl/list.c                     |  6 ++++++
-> >  test/meson.build               |  9 +++++++--
-> >  5 files changed, 30 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
-> > index 9a9911e7dd9b..0595638ee054 100644
-> > --- a/Documentation/cxl/cxl-list.txt
-> > +++ b/Documentation/cxl/cxl-list.txt
-> > @@ -425,6 +425,8 @@ OPTIONS
-> >  	"source:" is one of: External, Internal, Injected, Vendor Specific,
-> >  	or Unknown, as defined in CXL Specification v3.1 Table 8-140.
-> >  
-> > +The media-errors option is only available with '-Dlibtracefs=enabled'.
-> > +
-> >  ----
-> >  # cxl list -m mem9 --media-errors -u
-> >  {
-> > diff --git a/config.h.meson b/config.h.meson
-> > index f75db3e6360f..e8539f8d04df 100644
-> > --- a/config.h.meson
-> > +++ b/config.h.meson
-> > @@ -19,7 +19,7 @@
-> >  /* ndctl test support */
-> >  #mesondefine ENABLE_TEST
-> >  
-> > -/* cxl monitor support */
-> > +/* cxl monitor and cxl list --media-errors support */
-> >  #mesondefine ENABLE_LIBTRACEFS
-> >  
-> >  /* Define to 1 if big-endian-arch */
-> > diff --git a/cxl/json.c b/cxl/json.c
-> > index e65bd803b706..a75928bf43ed 100644
-> > --- a/cxl/json.c
-> > +++ b/cxl/json.c
-> > @@ -9,12 +9,15 @@
-> >  #include <json-c/json.h>
-> >  #include <json-c/printbuf.h>
-> >  #include <ccan/short_types/short_types.h>
-> > +
-> > +#ifdef ENABLE_LIBTRACEFS
-> >  #include <tracefs.h>
-> > +#include "../util/event_trace.h"
-> > +#endif
-> 
-> Maybe this is my kernel taste leaking through, but I am allergic to
-> ifdef in ".c" files. In this case you could move the include of
-> tracefs.h into event_trace.h and then ifdef guard all the parts of
-> event_trace.h that need tracefs.h.
-> 
-> >  
-> >  #include "filter.h"
-> >  #include "json.h"
-> >  #include "../daxctl/json.h"
-> > -#include "../util/event_trace.h"
-> >  
-> >  #define CXL_FW_VERSION_STR_LEN	16
-> >  #define CXL_FW_MAX_SLOTS	4
-> > @@ -575,6 +578,7 @@ err_jobj:
-> >  	return NULL;
-> >  }
-> >  
-> > +#ifdef ENABLE_LIBTRACEFS
-> >  /* CXL Spec 3.1 Table 8-140 Media Error Record */
-> >  #define CXL_POISON_SOURCE_MAX 7
-> >  static const char *const poison_source[] = { "Unknown", "External", "Internal",
-> > @@ -753,6 +757,15 @@ err_free:
-> >  	tracefs_instance_free(inst);
-> >  	return jpoison;
-> >  }
-> > +#else
-> > +static struct json_object *
-> > +util_cxl_poison_list_to_json(struct cxl_region *region,
-> > +			     struct cxl_memdev *memdev,
-> > +			     unsigned long flags)
-> > +{
-> > +	return NULL;
-> > +}
-> > +#endif
-> 
-> This would move a new conditionally compiled ".c" file for just these
-> trace helpers.
-> 
-> >  struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
-> >  		unsigned long flags)
-> > diff --git a/cxl/list.c b/cxl/list.c
-> > index 0b25d78248d5..48bd1ebc3c0e 100644
-> > --- a/cxl/list.c
-> > +++ b/cxl/list.c
-> > @@ -146,6 +146,12 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
-> >  		param.ctx.log_priority = LOG_DEBUG;
-> >  	}
-> >  
-> > +#ifndef ENABLE_LIBTRACEFS
-> > +	if (param.media_errors) {
-> > +		notice(&param, "--media-errors support disabled at build time\n");
-> > +		param.media_errors = false;
-> > +	}
-> > +#endif
-> 
-> This would be a static inline helper in a header file that optionally
-> reports the problem.
-> 
-> All that said, I am not the maintainer so go with what you want, but
-> leaking ifdef in ".c" is, in my opinion, a slow walk into an
-> increasingly unreadable code base.
+When the --media-errors option was added to cxl list it inadvertently
+changed the optional libtracefs requirement into a mandatory one.
+Ndctl versions 80,81,82 no longer build without libtracefs.
 
-I can do what you suggest, with bells on!
-See you in v3 :)
+Remove that dependency.
+
+When libtracefs is disabled the user will see a this message logged
+to stderr:
+	$ cxl list -r region0 --media-errors --targets
+	cxl list: --media-errors support disabled at build time
+
+...followed by the region listing including the output for any other
+valid command line options, like --targets in the example above.
+
+When libtracefs is disabled the cxl-poison.sh unit test is omitted.
+
+The man page gets a note:
+	The media-error option is only available with -Dlibtracefs=enabled.
+
+Reported-by: Andreas Hasenack <andreas.hasenack@canonical.com>
+Fixes: d7532bb049e0 ("cxl/list: add --media-errors option to cxl list")
+Closes: https://github.com/pmem/ndctl/issues/289
+Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/20250924045302.90074-1-alison.schofield@intel.com
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+
+Changes in v3:
+- Remove ifdef's from .c files (Dan)
+  Move ifdef chunk in json.c to a new conditionally compiled json_poison.c.
+  Move ifdef notice message to !ENABLE_LIBTRACEFS stub in event_trace.h.
+Changes in v2:
+- Notify and continue when --media-error info is unavailable (Dan)
+
+ Documentation/cxl/cxl-list.txt |   2 +
+ config.h.meson                 |   2 +-
+ cxl/json.c                     | 180 --------------------------------
+ cxl/json_poison.c              | 185 +++++++++++++++++++++++++++++++++
+ cxl/meson.build                |   1 +
+ test/meson.build               |   9 +-
+ util/event_trace.h             |  14 +++
+ 7 files changed, 210 insertions(+), 183 deletions(-)
+ create mode 100644 cxl/json_poison.c
+
+diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+index 9a9911e7dd9b..0595638ee054 100644
+--- a/Documentation/cxl/cxl-list.txt
++++ b/Documentation/cxl/cxl-list.txt
+@@ -425,6 +425,8 @@ OPTIONS
+ 	"source:" is one of: External, Internal, Injected, Vendor Specific,
+ 	or Unknown, as defined in CXL Specification v3.1 Table 8-140.
+ 
++The media-errors option is only available with '-Dlibtracefs=enabled'.
++
+ ----
+ # cxl list -m mem9 --media-errors -u
+ {
+diff --git a/config.h.meson b/config.h.meson
+index f75db3e6360f..e8539f8d04df 100644
+--- a/config.h.meson
++++ b/config.h.meson
+@@ -19,7 +19,7 @@
+ /* ndctl test support */
+ #mesondefine ENABLE_TEST
+ 
+-/* cxl monitor support */
++/* cxl monitor and cxl list --media-errors support */
+ #mesondefine ENABLE_LIBTRACEFS
+ 
+ /* Define to 1 if big-endian-arch */
+diff --git a/cxl/json.c b/cxl/json.c
+index e65bd803b706..bde4589065e7 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -9,7 +9,6 @@
+ #include <json-c/json.h>
+ #include <json-c/printbuf.h>
+ #include <ccan/short_types/short_types.h>
+-#include <tracefs.h>
+ 
+ #include "filter.h"
+ #include "json.h"
+@@ -575,185 +574,6 @@ err_jobj:
+ 	return NULL;
+ }
+ 
+-/* CXL Spec 3.1 Table 8-140 Media Error Record */
+-#define CXL_POISON_SOURCE_MAX 7
+-static const char *const poison_source[] = { "Unknown", "External", "Internal",
+-					     "Injected", "Reserved", "Reserved",
+-					     "Reserved", "Vendor Specific" };
+-
+-/* CXL Spec 3.1 Table 8-139 Get Poison List Output Payload */
+-#define CXL_POISON_FLAG_MORE BIT(0)
+-#define CXL_POISON_FLAG_OVERFLOW BIT(1)
+-#define CXL_POISON_FLAG_SCANNING BIT(2)
+-
+-static int poison_event_to_json(struct tep_event *event,
+-				struct tep_record *record,
+-				struct event_ctx *e_ctx)
+-{
+-	struct cxl_poison_ctx *p_ctx = e_ctx->poison_ctx;
+-	struct json_object *jp, *jobj, *jpoison = p_ctx->jpoison;
+-	struct cxl_memdev *memdev = p_ctx->memdev;
+-	struct cxl_region *region = p_ctx->region;
+-	unsigned long flags = e_ctx->json_flags;
+-	const char *region_name = NULL;
+-	char flag_str[32] = { '\0' };
+-	bool overflow = false;
+-	u8 source, pflags;
+-	u64 offset, ts;
+-	u32 length;
+-	char *str;
+-	int len;
+-
+-	jp = json_object_new_object();
+-	if (!jp)
+-		return -ENOMEM;
+-
+-	/* Skip records not in this region when listing by region */
+-	if (region)
+-		region_name = cxl_region_get_devname(region);
+-	if (region_name)
+-		str = tep_get_field_raw(NULL, event, "region", record, &len, 0);
+-	if ((region_name) && (strcmp(region_name, str) != 0)) {
+-		json_object_put(jp);
+-		return 0;
+-	}
+-	/* Include offset,length by region (hpa) or by memdev (dpa) */
+-	if (region) {
+-		offset = trace_get_field_u64(event, record, "hpa");
+-		if (offset != ULLONG_MAX) {
+-			offset = offset - cxl_region_get_resource(region);
+-			jobj = util_json_object_hex(offset, flags);
+-			if (jobj)
+-				json_object_object_add(jp, "offset", jobj);
+-		}
+-	} else if (memdev) {
+-		offset = trace_get_field_u64(event, record, "dpa");
+-		if (offset != ULLONG_MAX) {
+-			jobj = util_json_object_hex(offset, flags);
+-			if (jobj)
+-				json_object_object_add(jp, "offset", jobj);
+-		}
+-	}
+-	length = trace_get_field_u32(event, record, "dpa_length");
+-	jobj = util_json_object_size(length, flags);
+-	if (jobj)
+-		json_object_object_add(jp, "length", jobj);
+-
+-	/* Always include the poison source */
+-	source = trace_get_field_u8(event, record, "source");
+-	if (source <= CXL_POISON_SOURCE_MAX)
+-		jobj = json_object_new_string(poison_source[source]);
+-	else
+-		jobj = json_object_new_string("Reserved");
+-	if (jobj)
+-		json_object_object_add(jp, "source", jobj);
+-
+-	/* Include flags and overflow time if present */
+-	pflags = trace_get_field_u8(event, record, "flags");
+-	if (pflags && pflags < UCHAR_MAX) {
+-		if (pflags & CXL_POISON_FLAG_MORE)
+-			strcat(flag_str, "More,");
+-		if (pflags & CXL_POISON_FLAG_SCANNING)
+-			strcat(flag_str, "Scanning,");
+-		if (pflags & CXL_POISON_FLAG_OVERFLOW) {
+-			strcat(flag_str, "Overflow,");
+-			overflow = true;
+-		}
+-		jobj = json_object_new_string(flag_str);
+-		if (jobj)
+-			json_object_object_add(jp, "flags", jobj);
+-	}
+-	if (overflow) {
+-		ts = trace_get_field_u64(event, record, "overflow_ts");
+-		jobj = util_json_object_hex(ts, flags);
+-		if (jobj)
+-			json_object_object_add(jp, "overflow_t", jobj);
+-	}
+-	json_object_array_add(jpoison, jp);
+-
+-	return 0;
+-}
+-
+-static struct json_object *
+-util_cxl_poison_events_to_json(struct tracefs_instance *inst,
+-			       struct cxl_poison_ctx *p_ctx,
+-			       unsigned long flags)
+-{
+-	struct event_ctx ectx = {
+-		.event_name = "cxl_poison",
+-		.event_pid = getpid(),
+-		.system = "cxl",
+-		.poison_ctx = p_ctx,
+-		.json_flags = flags,
+-		.parse_event = poison_event_to_json,
+-	};
+-	int rc;
+-
+-	p_ctx->jpoison = json_object_new_array();
+-	if (!p_ctx->jpoison)
+-		return NULL;
+-
+-	rc = trace_event_parse(inst, &ectx);
+-	if (rc < 0) {
+-		fprintf(stderr, "Failed to parse events: %d\n", rc);
+-		goto put_jobj;
+-	}
+-	if (json_object_array_length(p_ctx->jpoison) == 0)
+-		goto put_jobj;
+-
+-	return p_ctx->jpoison;
+-
+-put_jobj:
+-	json_object_put(p_ctx->jpoison);
+-	return NULL;
+-}
+-
+-static struct json_object *
+-util_cxl_poison_list_to_json(struct cxl_region *region,
+-			     struct cxl_memdev *memdev,
+-			     unsigned long flags)
+-{
+-	struct json_object *jpoison = NULL;
+-	struct cxl_poison_ctx p_ctx;
+-	struct tracefs_instance *inst;
+-	int rc;
+-
+-	inst = tracefs_instance_create("cxl list");
+-	if (!inst) {
+-		fprintf(stderr, "tracefs_instance_create() failed\n");
+-		return NULL;
+-	}
+-
+-	rc = trace_event_enable(inst, "cxl", "cxl_poison");
+-	if (rc < 0) {
+-		fprintf(stderr, "Failed to enable trace: %d\n", rc);
+-		goto err_free;
+-	}
+-
+-	if (region)
+-		rc = cxl_region_trigger_poison_list(region);
+-	else
+-		rc = cxl_memdev_trigger_poison_list(memdev);
+-	if (rc)
+-		goto err_free;
+-
+-	rc = trace_event_disable(inst);
+-	if (rc < 0) {
+-		fprintf(stderr, "Failed to disable trace: %d\n", rc);
+-		goto err_free;
+-	}
+-
+-	p_ctx = (struct cxl_poison_ctx){
+-		.region = region,
+-		.memdev = memdev,
+-	};
+-	jpoison = util_cxl_poison_events_to_json(inst, &p_ctx, flags);
+-
+-err_free:
+-	tracefs_instance_free(inst);
+-	return jpoison;
+-}
+-
+ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 		unsigned long flags)
+ {
+diff --git a/cxl/json_poison.c b/cxl/json_poison.c
+new file mode 100644
+index 000000000000..c8f18c73b83d
+--- /dev/null
++++ b/cxl/json_poison.c
+@@ -0,0 +1,185 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2015-2025 Intel Corporation. All rights reserved.
++#include <errno.h>
++#include <util/bitmap.h>
++#include <util/json.h>
++#include <cxl/libcxl.h>
++
++#include "../util/event_trace.h"
++
++/* CXL Spec 3.1 Table 8-140 Media Error Record */
++#define CXL_POISON_SOURCE_MAX 7
++static const char *const poison_source[] = { "Unknown", "External", "Internal",
++					     "Injected", "Reserved", "Reserved",
++					     "Reserved", "Vendor Specific" };
++
++/* CXL Spec 3.1 Table 8-139 Get Poison List Output Payload */
++#define CXL_POISON_FLAG_MORE BIT(0)
++#define CXL_POISON_FLAG_OVERFLOW BIT(1)
++#define CXL_POISON_FLAG_SCANNING BIT(2)
++
++static int poison_event_to_json(struct tep_event *event,
++				struct tep_record *record,
++				struct event_ctx *e_ctx)
++{
++	struct cxl_poison_ctx *p_ctx = e_ctx->poison_ctx;
++	struct json_object *jp, *jobj, *jpoison = p_ctx->jpoison;
++	struct cxl_memdev *memdev = p_ctx->memdev;
++	struct cxl_region *region = p_ctx->region;
++	unsigned long flags = e_ctx->json_flags;
++	const char *region_name = NULL;
++	char flag_str[32] = { '\0' };
++	bool overflow = false;
++	u8 source, pflags;
++	u64 offset, ts;
++	u32 length;
++	char *str;
++	int len;
++
++	jp = json_object_new_object();
++	if (!jp)
++		return -ENOMEM;
++
++	/* Skip records not in this region when listing by region */
++	if (region)
++		region_name = cxl_region_get_devname(region);
++	if (region_name)
++		str = tep_get_field_raw(NULL, event, "region", record, &len, 0);
++	if ((region_name) && (strcmp(region_name, str) != 0)) {
++		json_object_put(jp);
++		return 0;
++	}
++	/* Include offset,length by region (hpa) or by memdev (dpa) */
++	if (region) {
++		offset = trace_get_field_u64(event, record, "hpa");
++		if (offset != ULLONG_MAX) {
++			offset = offset - cxl_region_get_resource(region);
++			jobj = util_json_object_hex(offset, flags);
++			if (jobj)
++				json_object_object_add(jp, "offset", jobj);
++		}
++	} else if (memdev) {
++		offset = trace_get_field_u64(event, record, "dpa");
++		if (offset != ULLONG_MAX) {
++			jobj = util_json_object_hex(offset, flags);
++			if (jobj)
++				json_object_object_add(jp, "offset", jobj);
++		}
++	}
++	length = trace_get_field_u32(event, record, "dpa_length");
++	jobj = util_json_object_size(length, flags);
++	if (jobj)
++		json_object_object_add(jp, "length", jobj);
++
++	/* Always include the poison source */
++	source = trace_get_field_u8(event, record, "source");
++	if (source <= CXL_POISON_SOURCE_MAX)
++		jobj = json_object_new_string(poison_source[source]);
++	else
++		jobj = json_object_new_string("Reserved");
++	if (jobj)
++		json_object_object_add(jp, "source", jobj);
++
++	/* Include flags and overflow time if present */
++	pflags = trace_get_field_u8(event, record, "flags");
++	if (pflags && pflags < UCHAR_MAX) {
++		if (pflags & CXL_POISON_FLAG_MORE)
++			strcat(flag_str, "More,");
++		if (pflags & CXL_POISON_FLAG_SCANNING)
++			strcat(flag_str, "Scanning,");
++		if (pflags & CXL_POISON_FLAG_OVERFLOW) {
++			strcat(flag_str, "Overflow,");
++			overflow = true;
++		}
++		jobj = json_object_new_string(flag_str);
++		if (jobj)
++			json_object_object_add(jp, "flags", jobj);
++	}
++	if (overflow) {
++		ts = trace_get_field_u64(event, record, "overflow_ts");
++		jobj = util_json_object_hex(ts, flags);
++		if (jobj)
++			json_object_object_add(jp, "overflow_t", jobj);
++	}
++	json_object_array_add(jpoison, jp);
++
++	return 0;
++}
++
++static struct json_object *
++util_cxl_poison_events_to_json(struct tracefs_instance *inst,
++			       struct cxl_poison_ctx *p_ctx,
++			       unsigned long flags)
++{
++	struct event_ctx ectx = {
++		.event_name = "cxl_poison",
++		.event_pid = getpid(),
++		.system = "cxl",
++		.poison_ctx = p_ctx,
++		.json_flags = flags,
++		.parse_event = poison_event_to_json,
++	};
++	int rc;
++
++	p_ctx->jpoison = json_object_new_array();
++	if (!p_ctx->jpoison)
++		return NULL;
++
++	rc = trace_event_parse(inst, &ectx);
++	if (rc < 0) {
++		fprintf(stderr, "Failed to parse events: %d\n", rc);
++		goto put_jobj;
++	}
++	if (json_object_array_length(p_ctx->jpoison) == 0)
++		goto put_jobj;
++
++	return p_ctx->jpoison;
++
++put_jobj:
++	json_object_put(p_ctx->jpoison);
++	return NULL;
++}
++
++struct json_object *util_cxl_poison_list_to_json(struct cxl_region *region,
++			struct cxl_memdev *memdev, unsigned long flags)
++{
++	struct json_object *jpoison = NULL;
++	struct cxl_poison_ctx p_ctx;
++	struct tracefs_instance *inst;
++	int rc;
++
++	inst = tracefs_instance_create("cxl list");
++	if (!inst) {
++		fprintf(stderr, "tracefs_instance_create() failed\n");
++		return NULL;
++	}
++
++	rc = trace_event_enable(inst, "cxl", "cxl_poison");
++	if (rc < 0) {
++		fprintf(stderr, "Failed to enable trace: %d\n", rc);
++		goto err_free;
++	}
++
++	if (region)
++		rc = cxl_region_trigger_poison_list(region);
++	else
++		rc = cxl_memdev_trigger_poison_list(memdev);
++	if (rc)
++		goto err_free;
++
++	rc = trace_event_disable(inst);
++	if (rc < 0) {
++		fprintf(stderr, "Failed to disable trace: %d\n", rc);
++		goto err_free;
++	}
++
++	p_ctx = (struct cxl_poison_ctx){
++		.region = region,
++		.memdev = memdev,
++	};
++	jpoison = util_cxl_poison_events_to_json(inst, &p_ctx, flags);
++
++err_free:
++	tracefs_instance_free(inst);
++	return jpoison;
++}
+diff --git a/cxl/meson.build b/cxl/meson.build
+index e4d1683ce8c6..b9924ae8efea 100644
+--- a/cxl/meson.build
++++ b/cxl/meson.build
+@@ -29,6 +29,7 @@ if get_option('libtracefs').enabled()
+   cxl_src += [
+     '../util/event_trace.c',
+     'monitor.c',
++    'json_poison.c',
+   ]
+   deps += [
+     traceevent,
+diff --git a/test/meson.build b/test/meson.build
+index 775542c1b787..615376ea635a 100644
+--- a/test/meson.build
++++ b/test/meson.build
+@@ -167,7 +167,6 @@ cxl_events = find_program('cxl-events.sh')
+ cxl_sanitize = find_program('cxl-sanitize.sh')
+ cxl_destroy_region = find_program('cxl-destroy-region.sh')
+ cxl_qos_class = find_program('cxl-qos-class.sh')
+-cxl_poison = find_program('cxl-poison.sh')
+ 
+ tests = [
+   [ 'libndctl',               libndctl,		  'ndctl' ],
+@@ -200,7 +199,6 @@ tests = [
+   [ 'cxl-sanitize.sh',        cxl_sanitize,       'cxl'   ],
+   [ 'cxl-destroy-region.sh',  cxl_destroy_region, 'cxl'   ],
+   [ 'cxl-qos-class.sh',       cxl_qos_class,      'cxl'   ],
+-  [ 'cxl-poison.sh',          cxl_poison,         'cxl'   ],
+ ]
+ 
+ if get_option('destructive').enabled()
+@@ -253,6 +251,13 @@ if get_option('fwctl').enabled()
+   ]
+ endif
+ 
++if get_option('libtracefs').enabled()
++  cxl_poison = find_program('cxl-poison.sh')
++  tests += [
++    [ 'cxl-poison.sh', cxl_poison, 'cxl' ],
++  ]
++endif
++
+ test_env = [
+     'LC_ALL=C',
+     'NDCTL=@0@'.format(ndctl_tool.full_path()),
+diff --git a/util/event_trace.h b/util/event_trace.h
+index a87407ff8296..989c02ec2259 100644
+--- a/util/event_trace.h
++++ b/util/event_trace.h
+@@ -7,6 +7,9 @@
+ #include <ccan/list/list.h>
+ #include <ccan/short_types/short_types.h>
+ 
++#ifdef ENABLE_LIBTRACEFS
++#include <tracefs.h>
++
+ struct jlist_node {
+ 	struct json_object *jobj;
+ 	struct list_node list;
+@@ -39,4 +42,15 @@ u32 trace_get_field_u32(struct tep_event *event, struct tep_record *record,
+ 			const char *name);
+ u64 trace_get_field_u64(struct tep_event *event, struct tep_record *record,
+ 			const char *name);
++struct json_object *util_cxl_poison_list_to_json(struct cxl_region *region,
++			struct cxl_memdev *memdev, unsigned long flags);
++#else
++struct json_object *util_cxl_poison_list_to_json(struct cxl_region *region,
++			struct cxl_memdev *memdev, unsigned long flags)
++{
++	fprintf(stderr, "cxl list --media-errors support disabled at build time\n");
++	return NULL;
++}
++#endif /* ENABLE_LIBTRACEFS */
++
+ #endif
+-- 
+2.37.3
 
