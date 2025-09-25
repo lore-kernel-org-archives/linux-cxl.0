@@ -1,282 +1,770 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012016.outbound.protection.outlook.com [40.93.195.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8583112D0;
-	Thu, 25 Sep 2025 18:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E3713635E;
+	Thu, 25 Sep 2025 22:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.16
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758824273; cv=fail; b=m1boPFAk9K27lt5ZLUmjb8PvIbqE9JVFNjMVvg4J9hvr+/8u5akir/Wsdik90lwlukEmcHGdsFBwOpVbBFSJIroWzaQuIMrX8UTvOOuz1KzJzvM5ZmkB7eBu4YIawTbz8SNi6NfO6S/Ha+ES8H5AR/nx4F6/iEHPWLDHv/loReQ=
+	t=1758839698; cv=fail; b=JgwTFqaD4FbAUJIHb5iTd/14Y5y2OEAY78i3Pv4EwKb9KEUWpATye7dUATbUAyIgdqEC0X37loNNLRsrXbZjBRl0fwckxLFOsk4vLgjfP1Bg61NhmF7Kvv+ueWz5WLAgmI8j2SAIUejraaCkev5F9rGyiuXcuL9KMjP8csXBgw8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758824273; c=relaxed/simple;
-	bh=2SYCFV+rbv/yGuOKF/wzMxFOCNM4FDrSxB2TDiY/LvA=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=gPuRdhnRrwloY1Q3Atv/1sBW626SSEY6BmPTXNXIl8x1nP5zwMpOXJzGG0UBSZI+xa4RKRGldDpn4rQ6ycHoDIHuesz/aSoRR/zNuNOE1y5OMrCOCOz3p470IB4evoEE9Fqd9xWut+6Mm8R3VFD1wz8E3HoCLbtFNsLtHSGBfUY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hz2ueWGF; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1758839698; c=relaxed/simple;
+	bh=imoClUSzfis84AOkHZ15VehAmZcHM8Uy6t03GIiQl3I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LidTrDQs6PaAlvjhKujBa50lxoib94892Br3E+5riJ8J2DdHhRhhYv9HZB5MwB7xjdtLLuv0ALfgBHswcg1fpTs64nXeROYtqOIxQvWKqcypHOEFDZjCg2KUteAiv0Bd2XxcOp2LhJFBS7VOAIjUBliggRAp4qHx192dr19Jf/g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nY+AQLr+; arc=fail smtp.client-ip=40.93.195.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hz2ueWGF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758824272; x=1790360272;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=2SYCFV+rbv/yGuOKF/wzMxFOCNM4FDrSxB2TDiY/LvA=;
-  b=hz2ueWGF9/IskBZbwll0ek+dwhgNi9tsUaDzvHZ+Ik7D0yJF6Mn45maV
-   NAyst2z7ZQlDmBQF554ozj64JL83/Tmo4z+TvF8IZqA5SRzxL7oKzNrM2
-   vOEG9kSv7uL7qKywb7oACqwbxV5bGlFdn0FS6BqKED0RkkpN5jY1cICVz
-   OupWPCsIVN69vFCNT94+K46OnzyEalGvUMRWuNPDblzNEbys6PsiFCVHy
-   OSdmFhdzmd0zBMomkCu0xrDfHZAtrQqhyNxZjC7kz2U+U0pJ5UQdHmeaB
-   gaoKafcKOAPq8DoWv3oHbvo8ghmZWNXyNQfrRSxbXgL4erGXRgHhibLd1
-   g==;
-X-CSE-ConnectionGUID: 7HPt9OI/Q/Gt9qztZjUHJw==
-X-CSE-MsgGUID: RBJeIYPSS9m9mCrPC4Pkgg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11564"; a="61324431"
-X-IronPort-AV: E=Sophos;i="6.18,293,1751266800"; 
-   d="scan'208";a="61324431"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 11:17:51 -0700
-X-CSE-ConnectionGUID: zPdQKrbqR1izTxnjj3GEnA==
-X-CSE-MsgGUID: eHXfbpSlRJ2GjxZtl9VrsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,293,1751266800"; 
-   d="scan'208";a="178159134"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 11:17:49 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Thu, 25 Sep 2025 11:17:48 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Thu, 25 Sep 2025 11:17:48 -0700
-Received: from SA9PR02CU001.outbound.protection.outlook.com (40.93.196.39) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Thu, 25 Sep 2025 11:17:47 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nY+AQLr+"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=q9TePvl+o0RJPNuGl/V6mzyaTFxlzOIVmTA9Qxyi8TsnZLCEWOlEAJnh8SGGer6z/YE6xmomvj6z0DiCneUgNrz9SKGav998RWfr3sZdanmO4h0mpkxHGSStVk051corcLTZpKI7aBDq4oiMIBv87AKC7Av6iCq//oEAvMLonFiWRv8Nz3XkKpvwJ26NvVJ9ifod24+BnI/iJxD5zYocV7Cb+y/IugDoDahMKUGUnSV7lIi9OKFl/WvO1gIihL6UYnEx5FxYiLnspXf7FJ8R41pB22BqJ2xbMfLatoDCaQmOhEqc65PrKr2sCE3vpKwFQAj0/uahROtxBvE37ingug==
+ b=HDMciusKoI+BWS7Ps9IdXySvIuxl4XQUZsseCPSltaTUErG/TVVC3WsMK9uXOnZDLfiwheX7yUlW7/yxAerkGoSp+fy9XxkYoS9jp6Vk7aHJ16R6bsq3qpSmXRUzlz97k+VKUkfX5k8eYIAZuZhVU/3yGQEYnzQxj2cr2aO303VJYxvtQecD4CeNml2s2totMlgDYi+Xj5QHSfFXMH1llaqzxx/vEUl9MP5hJBbPScmmzFiNZS3P89YS1F94fXCAFp3tVyZLdzc5u0R4SWXH54ZTKW7uNaTs8i02i8pcrZIiXR784cmiC0YyWbRvXUASVgkNSqUvPk9MiAHHOM1M7A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dqv7jEHJPTFSBA748oWooGKVccw/Me1Gm2NAjlMGsbY=;
- b=rVqtOFI2jOrqF3dd4noCJDdDdoKOqQJqzxd3zW5PXC7DyH7A5cB0NDQYChOVy5sjJbeg8ATP3orJvYf7Zu2g+YOeKKewNgus/RicyCFoUWWdce5W0qJiogVjDoTXpldSTjUeA+RzfgB9cmUOKwXktXiZfc0gAqLOZC1hBa63FIx4K8S1g2IdgfMo72yEkmsB1wbWUcZCQdRoyCeUXEfwg+/+hScU7UuNhenf41vAfPkIfAYVCg0m36MCDwoPsuDNk1cUU8KvPl5PfiAy+QERura11G8OcoQHH2eUtY568LbNOzz0pnMlVF8ilFpyQN7u/zFDKl/ykEJYgufGzkSXhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CH3PR11MB8093.namprd11.prod.outlook.com (2603:10b6:610:139::10) with
+ bh=P9sN+BeohP1efr2fogM6FKPoy4RSlWO4tIq0Or6jFek=;
+ b=Co63mptCL2ge8gxnygX+LHqOH5V2KXeRjIYxn+FDLR9n5n/Awv2/ghFJS1yPZfWU0GPT4MLU9pCIHwt2AO1zdzuoZP5STP3eR/u9gp0NOL4tLv9Dw6MxTMvfI9R66rvPxwRZV0W6s+lOF/4OVJQkV0pB1eBF4BlP1rVzPZh0epERa/oli8PcAFzBY4jwq58L99io9sswLTb1j6lvc3JKMLiblfm3Pl11Wf8ck8zh3RNfYOhFO/abgsS2PDfKEQYfUwd4NYjmfQCDXzi0ePfAjPsabtrv2JiYV2Uuu9DL49HrMujNiCPOuaSVKSSaHdOEZTSxlR90jLNlA1icR2rE0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P9sN+BeohP1efr2fogM6FKPoy4RSlWO4tIq0Or6jFek=;
+ b=nY+AQLr+MK6yCDNnIMHuJwCrdKFMvWsR78sf20tQvhKkiSlUsB8fw5se3evOIZTiQp+2NUu0ab8Nx+diZYrCLprF08fihFwA8x5S0T/cVzZADeQ4BZiwCQs4ACK2eoeEt7AJFpkXj3JkylE47QmHtw36d6WupvnCP0Bwd9I2Jwg=
+Received: from BY3PR05CA0017.namprd05.prod.outlook.com (2603:10b6:a03:254::22)
+ by CH3PR12MB9344.namprd12.prod.outlook.com (2603:10b6:610:1c8::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.10; Thu, 25 Sep
- 2025 18:17:45 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%2]) with mapi id 15.20.9160.008; Thu, 25 Sep 2025
- 18:17:45 +0000
-From: <dan.j.williams@intel.com>
-Date: Thu, 25 Sep 2025 11:17:43 -0700
-To: "Koralahalli Channabasappa, Smita" <skoralah@amd.com>,
-	<dan.j.williams@intel.com>, Smita Koralahalli
-	<Smita.KoralahalliChannabasappa@amd.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-fsdevel@vger.kernel.org>, <linux-pm@vger.kernel.org>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Alison
- Schofield" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Matthew Wilcox
-	<willy@infradead.org>, Jan Kara <jack@suse.cz>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek
-	<pavel@kernel.org>, Li Ming <ming.li@zohomail.com>, Jeff Johnson
-	<jeff.johnson@oss.qualcomm.com>, Ying Huang <huang.ying.caritas@gmail.com>,
-	Yao Xingtao <yaoxt.fnst@fujitsu.com>, Peter Zijlstra <peterz@infradead.org>,
-	Greg KH <gregkh@linuxfoundation.org>, Nathan Fontenot
-	<nathan.fontenot@amd.com>, Terry Bowman <terry.bowman@amd.com>, "Robert
- Richter" <rrichter@amd.com>, Benjamin Cheatham <benjamin.cheatham@amd.com>,
-	PradeepVineshReddy Kodamati <PradeepVineshReddy.Kodamati@amd.com>, Zhijian Li
-	<lizhijian@fujitsu.com>, <ardb@kernel.org>, <bp@alien8.de>
-Message-ID: <68d587474b76c_10520100df@dwillia2-mobl4.notmuch>
-In-Reply-To: <d3e696c4-1ffa-47f0-baee-cb1bb4296332@amd.com>
-References: <20250822034202.26896-1-Smita.KoralahalliChannabasappa@amd.com>
- <20250822034202.26896-2-Smita.KoralahalliChannabasappa@amd.com>
- <68bf603dee8ff_75e31001d@dwillia2-mobl4.notmuch>
- <d3e696c4-1ffa-47f0-baee-cb1bb4296332@amd.com>
-Subject: Re: [PATCH 1/6] dax/hmem, e820, resource: Defer Soft Reserved
- registration until hmem is ready
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: MW4PR04CA0249.namprd04.prod.outlook.com
- (2603:10b6:303:88::14) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.20; Thu, 25 Sep
+ 2025 22:34:48 +0000
+Received: from SJ5PEPF000001EA.namprd05.prod.outlook.com
+ (2603:10b6:a03:254:cafe::29) by BY3PR05CA0017.outlook.office365.com
+ (2603:10b6:a03:254::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9160.10 via Frontend Transport; Thu,
+ 25 Sep 2025 22:34:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ5PEPF000001EA.mail.protection.outlook.com (10.167.242.198) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9160.9 via Frontend Transport; Thu, 25 Sep 2025 22:34:47 +0000
+Received: from ethanolx7ea3host.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 25 Sep
+ 2025 15:34:46 -0700
+From: Terry Bowman <terry.bowman@amd.com>
+To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
+	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
+	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	<linux-cxl@vger.kernel.org>, <alucerop@amd.com>, <ira.weiny@intel.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<terry.bowman@amd.com>
+Subject: [PATCH v12 00/25]  Enable CXL PCIe Port Protocol Error handling and logging
+Date: Thu, 25 Sep 2025 17:34:15 -0500
+Message-ID: <20250925223440.3539069-1-terry.bowman@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH3PR11MB8093:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8ed56f58-7cc2-4391-8a3a-08ddfc5fd318
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001EA:EE_|CH3PR12MB9344:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0eaf2400-9067-4507-0da7-08ddfc83bbd5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?YU9MNmdFRjR0cW1oUGhyTU1qb3ZuUXltNGFicDBsYmV6TzdmUDJhcXZET0ds?=
- =?utf-8?B?bUFsajBSNEhCTm4xTkZQaXExQ3V3dWxJRit0NXhmOVZnQysxbmkvSWdpUFh0?=
- =?utf-8?B?b1lrYWpwd3pTZ3l6VTZFNTZDK3JDTlZkQjhaaXhSRXpWYmJWRnpWeFBUSCtt?=
- =?utf-8?B?bDdVa2lyMGFYY1Jhb21RT2dOdzBwditPNXJpTm5nbHJZMWpURTVsbDFYSjhH?=
- =?utf-8?B?U0xJbytQSHF4YTc3R1FUeEFXT1FHbmpkbkxXV0FzZGluamF4OWc1Z2NGcmE4?=
- =?utf-8?B?U29ZS2pCckNoaWF6VzJYMnpTSzJYL2dmT1FwYlMwVVd2L3o0N2RCREs3SFhR?=
- =?utf-8?B?ck9Za05PclFZQVZ0NDA1VjhYZ0hEZ3YrTXBzSE1pS3VsS3podFFjcU9hZXBr?=
- =?utf-8?B?bklsLytjWkFLZmZkM0Z4QUNZbGZPOFYxOWk1UjJ4bUcwMWxMS0Y2ejZBOXVs?=
- =?utf-8?B?VE1LUWQyUkdaeHVYQnhiUEtldk9IWWFrQkhaVWpxaHc0UENrVDNJNEZEWGdX?=
- =?utf-8?B?WmxSVlJrYjVKckMvejFYc2lqaVFTVmVwK3pEeXNjNXJBRzhGRXd4dkI3U3BT?=
- =?utf-8?B?YUx6N0NoSnpyUkFDOFJrb1RoOERRZnZ4bjFuU29EUTBOZjlTWC9rZ01rOEc3?=
- =?utf-8?B?Zkw0a2xRY2ViaWQxSTZvTllCblptS0lWZFB6ek5jSEZPMUJKQWF5MGE5TDRP?=
- =?utf-8?B?ZHI4cENVNkN0a1RyZDhJdlE2aDNYZVdkMUhPMnJCMHF4R1ZlNmxoV3VJNXFx?=
- =?utf-8?B?c080VHNBZDU0VmdKWUpTdkRlVVc2WW5tbW50WE9nS0tWNmFPV2d4Z29LUEhZ?=
- =?utf-8?B?L1Q0UWtLblVWNVhmYkh5dnRMV3prZXZqeVZJamxMVXN4ZXpIc2lIUk80ZzJH?=
- =?utf-8?B?QzM0bzMxdlF1VVJxZG9LS3EyL2pnVFRrdmpEZ2o2RUNsOGM5UVVhTkN6WktW?=
- =?utf-8?B?Q09COURXeWxsci9MMFZ5eVRpaGQwd1R1aDBBOHJpTHVqSlh1WExySmpabjd1?=
- =?utf-8?B?NjVHSzBROHVkSWhoVGlrcmx4STZrSkNPc0R6YlV2OFUwQXZGOEE1UjhHdnYr?=
- =?utf-8?B?TEdvZzVRWG4rZWc5OWp6NXlLeVREY2lweHJEMThtb2wweE1tNzB2N2dhalpa?=
- =?utf-8?B?ako3SzJOakFpOTd2cS9vUG9NNjBVUGVHNlU2WG04MDhPRGswY3U1bVlxTFh6?=
- =?utf-8?B?WlBjbVNocXRBRXdKa2VxUkttWThSRE1kaENJd3VLK1FlaHUxOFVYSGkxZWVm?=
- =?utf-8?B?K2hHVEdMSTRNMThseVRkRXVnRWJyeGdpaElrZU03K2paQVBCZkxJdGlEVXps?=
- =?utf-8?B?QnVXWDljMG82UkVQS2hKY3VJUDlRcU96dDNFMlpxb2tURmV1U0NFcTFweXVn?=
- =?utf-8?B?cXBQN3dRWUJ3VUJQMnU3UmQ3TGEzVFFZWWU2azVacjV2dXduVnpyR1ZXdGJi?=
- =?utf-8?B?NzZWNUlvOEs0VTQyMEowNnVVN0VlRGh1NDQxRW9CUllsajVTeEh0ZzYxYlpV?=
- =?utf-8?B?SnJKbUxhdUxVamZOTUUvWnJTOGhaaDk3cXJYbkxsYUFMVkFIRUw4N3dJaTNH?=
- =?utf-8?B?WXZkNStVdkxDR0lKUkpiUTBOdncvSzk2eXlIVzNoVjM4MThLRUEyU3gzTkJV?=
- =?utf-8?B?ME1iUWVVWmljNlNqbjk5VjNEck1meXFzL05zY1RQZXZvZm50YmlOOTdKMVd4?=
- =?utf-8?B?dGVaYXVTeXJpKzhOMk4xbGxFRnlxTWVoNGFHdE5XclREZm5qZDVmOUQyOFlL?=
- =?utf-8?B?K0g2YU9YQVpvbllRMzhKQURISEtYR3d0VzlJYy9mTmMrTno4R003VmFxVGVz?=
- =?utf-8?B?MjRydEdydVRBUWM5LzRxMmsrT2dlMnNiK3NvaXdQL2lrS2dTWFh1N2h6OVZm?=
- =?utf-8?B?NjFDd3Q2YmlORFFPVWlTN1JZOVllTFVtK1I0Y2RlQmdpa1NTZGtEZWNncTFh?=
- =?utf-8?B?QmxoUG1DUVc0ek1SSE1XNXQycFM1cWxTV2d0eVFkc2s2Y094cG8wVGllOHRp?=
- =?utf-8?B?K09YU01NZkZBPT0=?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?b0Z5bVZMaytraUpzTHoxcVBqZ0hZelMySnhPVndieW45cnhzNW5Cb2ZiRGEz?=
- =?utf-8?B?WElqb3ZrOCtXcmJoYUtqaGpyMEdvWXIvTFFkWlcvNzhxdzN6dExiS0w2bk1s?=
- =?utf-8?B?SENWWWx6elREWkJFbHlrT2thc3dOR1BwOUZGRnR5WEZrdDVRbkYyc0Q3cUF1?=
- =?utf-8?B?YkFzUGdSY1RDeEM4VVVhNFRGUExPZlVkNGFBUk93SDlJdUV0SlZyc05qS3k2?=
- =?utf-8?B?TlRzbHVSWndJcUdjSW5LYmxxRmNQQnNPb1hxOWFnNGNDTUtOdlRZVjdTMktZ?=
- =?utf-8?B?aUlCN0VuYW4rM2VxSS9oK2syZjlFVGtiSXUwSXJEWDVDVGxUNlRHbVZySFJU?=
- =?utf-8?B?YUExN20yNjZyd0treTY5THhDcjBBNng0ZjU4eElzTnh3VERwTkZwV3B5V0hQ?=
- =?utf-8?B?UGFHOVNRMjJPb0F6RGttSzBVMFlTMmxGbGRSSGRDVFJhRENZR1FwNlF6aXY3?=
- =?utf-8?B?T3RjNFZiMmxqK25qWDF5REc1cDRYa0NnTURKcjJiTmVVaWt6cEYxMVRieW10?=
- =?utf-8?B?Zm9TMmRBWG8vWWdRdTl4cVhReVJPeG1KTFFnVHlmZVJwWW9GS3hweVhCQ0xK?=
- =?utf-8?B?a3JvUVU0c0toLzlPRjJVNWROaUJ0bzB0OE94Z2hxVW1VTnM4ZTFNcFJsK1FB?=
- =?utf-8?B?eUFCTWlGR25GczY4QnlHQTA2SzZ3YnJJUDdFVVBOckl2WjQ3bmxrTE5yWEow?=
- =?utf-8?B?VzNoVEZSSkRNOC93bnFIeVBBSDg4TndXc0dsUXJTMXNBMjcxSE00dHhmWTYv?=
- =?utf-8?B?aHZUYTI1RXVocUxXa2FHSFRNV0dkNnR1MFBIOWIxN1VJckpYaFhOK09UeXI1?=
- =?utf-8?B?bHNKSkExTU94Myt4dW5TY2hEM2dMQzZLbE1pTzNrUWFkOFVtRXcxOEwzczR3?=
- =?utf-8?B?RE1uUm44NTNDdjRLaEp1UjdPeFoyNldManFwOEFFTER4ZTgwNnQ3R3FtZEtP?=
- =?utf-8?B?aXhOazQ3MGxlYUdIRkpSc0UwQmNQTkhhOEhLWkk0Z0IxRmVjOEVncHhVZ1hr?=
- =?utf-8?B?RHFuU1AxOGhwbkhCRmtoU3c3QmJGdjdIdU9rYzZLQzBSaFNnbmVEWE1LMElY?=
- =?utf-8?B?NkpGZEI0L0xUOVY4Z0QrZ1RNUkZwVXdwU2VHZ1ZoeUJpZHNTSkRZbkU3dUJw?=
- =?utf-8?B?dThQRXlJbXQ4RGtvMHFURzE1OENHbVhDYlczRzRwWlBkWVJ3STd2eFhXaWt6?=
- =?utf-8?B?UkVTR29HUDJRaURvcUVqSWNnQkIxU0NMdE95OWZLcndpbk1odm96eVNuZTZB?=
- =?utf-8?B?VnZaRmN2TWtVMHFic1pPMnV5cTJBeXFlcjExM3NKa1l2aE5lcmk3NktVblZM?=
- =?utf-8?B?U0tEZWhRVm56eHRyeFhKRFlZNDMzYmlBK0xkVkZiMUU2OVA1N1E2M1loUFBT?=
- =?utf-8?B?b3FLNU1yMlZlYjhKU3pWcGc4akU1MTNjcHI2Uks0aVpnUjNISVFLandVZFN0?=
- =?utf-8?B?Z2ZWUWZnWm13azcybG1ERTVMZEU4MjNnSFFRK3ZzdjFkNFB5ZXh6S3VtRXF2?=
- =?utf-8?B?VHIxV0cyL05sK0N4b3dFTWtFWEMvYzl3Qkgxc0h0M0JpSGFMNUptOHpGTGZT?=
- =?utf-8?B?elB0TzZNbUpIcklVcHJZUmlmZWRZRHp2ODhLQnJtMHVEL1RTMTdhOXcybW5N?=
- =?utf-8?B?QlFBUm05ZFRmWXlCbzNKV2Y4TklzNkNuUHZkRlNwT1ZzZSt6VWxEcWhiQjJB?=
- =?utf-8?B?b0l1Vkd2WEQ5ZHZGeDlxRVpPc3hMSE9RK2h1Qyt3dU1LV3ZoZUZVSElIQ1c0?=
- =?utf-8?B?eDJOZ0tpZWdqRnJxalovSTlvSGtnM1pmYWpaU0I1WlBUOUlPRWNHaTZEL2Vt?=
- =?utf-8?B?OVJjZHFNc0tFSnNWdE1iVEZQeGdLL3JiYWRGeG9aVnJZbWh4RHZaRHRjS2pn?=
- =?utf-8?B?UnZRQ212ZHdLdUhRS3lac293TDZkR0xLZmlUYTdRZ3FBQitjSzNsQ1htTlNx?=
- =?utf-8?B?Tlp2Y3FybTdaMzNYWnBqYWdOakROOWhGTElSc0xaTDIrbVcyRzVyWk54VHVZ?=
- =?utf-8?B?N0dnZm5WQkhnc3NDMDBLWXlCeDZ3RjIyTkEyYzFqN2NOTXQ2SURiOXI2Q3BM?=
- =?utf-8?B?NFgvbzU5VnhvWWVmVmhsS3Z1RmdHdDk3VDMyN003S1JDQWlwOE93bGpJUC9p?=
- =?utf-8?B?d1hYWC90ZGZuVEVrT0JqUXJsL0N2UjZKUWZ3alc5U2JkKzhDRm1yMXFzb2hj?=
- =?utf-8?B?NFE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ed56f58-7cc2-4391-8a3a-08ddfc5fd318
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Sep 2025 18:17:45.2552
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014|7416014|921020|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?qZuE9PIg9JgzJgvllj3yZV/5/JDnZxygyoLXi+Yi4a0+b3qx8CCrY7yqsPpk?=
+ =?us-ascii?Q?GDP4TxdCBOV1BhBjNnVE2v6GLiCoQQVcfQkJhS6ZWCf+FOokwlbV0asMqVa7?=
+ =?us-ascii?Q?33PcYjfH2adTsorKn4DbH+l7pzn4JQR1dXH4AIKnAAHg/DXELoD5Ly88E8q1?=
+ =?us-ascii?Q?LtMg8n/r+rDn2tuSUdVgSX00WGjZ8CNNMo6KF4nxuujMEBiYKP0k1/ortqKX?=
+ =?us-ascii?Q?aP5ASJWgM+GUM7tmCQsrvOAOIeq4BV7ysAJV8VEyhANZjPbjEr+wwLZ/iJ7A?=
+ =?us-ascii?Q?lBrMqX44O1qv6Pc3mLIAxw8buBRYRyAK/qBzO8+w7iwxKPxYdp6u/2q/9g1F?=
+ =?us-ascii?Q?B8z3O/vriocszkNGVTtli1ulHO3ce7v0vFSd6/yM2yHjAhfxJWBfhCWIjf5u?=
+ =?us-ascii?Q?XD//rERjvbE26wXrQpmUUEZ3ap1r132nqf5gOEIqCsEgrZpx5+OebzZgfZmS?=
+ =?us-ascii?Q?pqJqr9SRuHaZTqigmDNZwLz3xpVURuhbfI2f+H65pYwxvgwGX0CTGCeigddf?=
+ =?us-ascii?Q?58ttcD7kt2EvJ5apPvKphTKSUqygr76lpJvdK09nMR5LuCH9gcw3XV42MFPo?=
+ =?us-ascii?Q?u5MgOaBSgakPjs7UmNzwLNVAB8iycyXOfR8/qOvg6bqMU95vSrL7Q9ibe8oN?=
+ =?us-ascii?Q?95zjYCTuCdUdBo9ycASwOXplr1+EYexhatLMuTa3nh/hYs3AmoQzvA7DiZWO?=
+ =?us-ascii?Q?vKs46hveiinmJ1YCYH0MY5l1f75mt5TQpZATbrnw68VvJY9GdyGuovVF7ua5?=
+ =?us-ascii?Q?uHTRTtj8gHLjazD5WWzwU+xrjaRfgjElfdP6pMNqbElJxSuQ/yK2JHh5I/5m?=
+ =?us-ascii?Q?ZLylru3fa0LX12zPwXEruGcQ0dyjs68uDJiXTZ8fvo5H+KCIRPoDd+b5DRdP?=
+ =?us-ascii?Q?ULvMpNucjaQHtTU/JiJoKkJLjwnutI4l+kMMCwi5Gt/shS/rvbF2gXYKJel2?=
+ =?us-ascii?Q?i93zHxJ7qQKJIGUcfZlBeL3UwknItVIg8VMebL3ox3Ext2Oi4Fol6oRV5V3J?=
+ =?us-ascii?Q?PQbCs/7k3bBsf2sn/6LPt898lfkY6Co6Um8CX5sYT5VeAVXkwWkIolcIuVwX?=
+ =?us-ascii?Q?4T8dw9soaCZba3IezsTiHv2xiCkFHkw3pQXlsBwjQEqVpBffWc3t9khXvrPu?=
+ =?us-ascii?Q?W3nPFv2MinRWjTzvAeF75uKih4FSNZT340OnzncRQxPMlT3QqkX9uB4NTsPp?=
+ =?us-ascii?Q?q6bfJ9cqZ8FYXpkZQ7m74iHrCcDo1cdhOemVwaaCft9u3nIQ7m8/8ov8OTXB?=
+ =?us-ascii?Q?JkTdAnK2Zl9TjqyDkjCG0IbYkQJULF3wsljTd/5YdbQ9hL8F/nPt8jSN9+lf?=
+ =?us-ascii?Q?OVFilms71awFuwzZdP0l8MPQEe2wfCyQMFigKnrFekAxzZXg8Vi5Rb173Ned?=
+ =?us-ascii?Q?0LUny2Cg0RqKVq0AGpdJ+ki80cjNquYqn+QUSFQNcIjVe1wU7EtCgUMMvSLX?=
+ =?us-ascii?Q?wc0SeaL9RBX0YOikzzk4PWrDJ5bQWQAPE9h9dq3VVQYIjCS1QHZNDptTmLO4?=
+ =?us-ascii?Q?uua7tNGahjN3sWJ+mL4wdoI6oZJlSf5hHOrApCdCLoUB+exPdnqBxOmweA?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014)(7416014)(921020)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Sep 2025 22:34:47.7314
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: L3Oz47qdKX008uXNdSExGYC9C5s9DyK7UnFqqVEc8WTAOA7DPsNU/0GYYKNqHoQlx+t5eVxSixjuPd3yqTA2vSxtuC+7NS53PV0jvpptaGY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8093
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0eaf2400-9067-4507-0da7-08ddfc83bbd5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001EA.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9344
 
-Koralahalli Channabasappa, Smita wrote:
-> On 9/8/2025 4:01 PM, dan.j.williams@intel.com wrote:
-> > [ add Boris and Ard ]
-> >=20
-> > Ard, Boris, can you have a look at the touches to early e820/x86 init
-> > (insert_resource_late()) and give an ack (or nak). The general problem
-> > here is conflicts between e820 memory resources and CXL subsystem memor=
-y
-> > resources.
-> >=20
-> > Smita Koralahalli wrote:
-> >> Insert Soft Reserved memory into a dedicated soft_reserve_resource tre=
-e
-> >> instead of the iomem_resource tree at boot.
-> >>
-> >> Publishing Soft Reserved ranges into iomem too early causes conflicts =
-with
-> >> CXL hotplug and region assembly failure, especially when Soft Reserved
-> >> overlaps CXL regions.
-> >>
-> >> Re-inserting these ranges into iomem will be handled in follow-up patc=
-hes,
-> >> after ensuring CXL window publication ordering is stabilized and when =
-the
-> >> dax_hmem is ready to consume them.
-> >>
-> >> This avoids trimming or deleting resources later and provides a cleane=
-r
-> >> handoff between EFI-defined memory and CXL resource management.
-> >>
-> >> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.c=
-om>
-> >=20
-> >=20
-> >> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> >=20
-> > Smita, if you added changes this should have Co-developed-by. Otherwise
-> > plain Signed-off-by is interpreted as only chain of custody.  Any other
-> > patches that you add my Signed-off-by to should also have
-> > Co-developed-by or be From: me.
-> >=20
-> > Alternatively if you completely rewritel a patch with your own approach
-> > then note the source (with a Link:) and leave off the original SOB.
-> >=20
-> > Lastly, in this case it looks unmodified from what I wrote? Then it
-> > should be:
-> >=20
-> > From: Dan Williams <dan.j.williams@intel.com>
-> >=20
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.co=
-m>
-> >=20
-> > ...to show the chain of custody of you forwarding a diff authored
-> > completely by someone else.
->=20
-> Thanks for clarifying, Dan. I wasn=E2=80=99t aware of the distinction bef=
-ore=20
-> (especially to handle the chain of custody..). I will update to reflect=20
-> that properly and will also be careful with how I handle authorship and=20
-> sign-offs in future submissions.
+This patchset updates CXL Protocol Error handling for CXL Ports and CXL
+Endpoints (EP). Previous versions of this series can be found here:
+https://lore.kernel.org/linux-cxl/20250827013539.903682-1-terry.bowman@amd.com/
 
-Yeah, the choice to replace From: is subjective and I usually reserve
-that for significant rewrites. If any of the original patch remains then
-add Co-developed-by + Signed-off-by. If none of the original patch
-remains I do still like to say:
+The first 4 patches remove unneeded RAS functions in core/pci.c and then
+move the remaining RAS logic to cxl/core/ras.c. CONFIG_PCIEAER_CXL is
+replaced with with CONFIG_CXL_RAS. Note CONFIG_PCIEAER_CXL was defined in
+AER driver's Kconfig and CONFIG_CXL_RAS is now defined in CXL's Kconfig.
 
-"based on an original patch by ..." with a Link: to that inspiration
-patch.
+The next 2 patches introduce drivers/pci/pcie/aer_cxl_rch.c and move in the
+AER driver's RCH code. CONFIG_CXL_RCH is introduced and used to
+conditionally compile aer_cxl_rch.c.
 
-...and if you just forward the original, keep From: untouched and just
-add your own Signed-off-by as documented in
-Documentation/process/submitting-patches.rst.=
+The next 3 patches introduce pcie_is_cxl() used in the AER driver's
+CXL-PCIe error logging. This includes moving CXL DVSEC definitions to
+uapi/linux/pci_regs.h.
+
+The following 8 patches are cleanup in preparation for introducing CXL
+device handling of CXL EP protocol errors. These rename the existing PCI
+handlers for EPs while also introducing EP CXL error handling routines.
+These also introduce PCI_ERS_RESULT_PANIC and update the handler CXL RAS
+routine interfaces to support CXL device callbacks to be added later.
+
+The following 3 patches address required changes for the CXL driver to
+dequeue kfifo work. This includes introducing aer_cxl_vh.c to the AER
+driver and moving in all AER driver's CXL RAS routines.
+
+The following 3 patches add CXL Port protocol error support. These
+also add CXL UCE recovery logic and move the following:
+drivers/cxl/pci.c (cxl_pci) is moved to drivers/cxl/core/pci_drv.c (cxl_core)
+This is required inorder to access cxl_pci_driver type from ras.c
+(cxl_core) for calling cxl_pci_drv_bound().
+
+The final 2 patches enable/disable CXL protocol errors. This is done
+by updating the CXL devices' AER mask registers during port creation
+and port teardown.
+
+In summary, the new and moved files in this series are given below.
+New Files:
+drivers/pci/pcie/ras.c
+drivers/pci/pcie/aer_cxl_rch.c
+drivers/pci/pcie/aer_cxl_vh.c
+
+Moved:
+drivers/cxl/pci.c -> drivers/cxl/core/pci_drv.c
+(this effectively eliminates the cxl_pci module).
+
+=== Testing ===
+Below are the testing results while using QEMU. The QEMU testing uses a CXL Root
+Port, CXL Upstream Switch Port, CXL Downstream Switch Port and CXL Endpoint as
+given below. I've attached the QEMU startup commandline used. This testing uses
+protocol error injection at all the devices.
+
+The sub-topology for the QEMU testing is:
+                    ---------------------
+                    | CXL RP - 0C:00.0  |
+                    ---------------------
+                              |
+                    ---------------------
+                    | CXL USP - 0D:00.0 |
+                    ---------------------
+                              |
+                    ---------------------
+                    | CXL DSP - 0E:00.0 |
+                    ---------------------
+                              |
+                    ---------------------
+                    | CXL EP - 0F:00.0  |
+                    ---------------------
+		    
+ root@tbowman-cxl:~# lspci -t
+ -+-[0000:00]- -00.0
+  |           +-01.0
+  |           +-02.0
+  |           +-03.0
+  |           +-1f.0
+  |           +-1f.2
+  |           \-1f.3
+  \-[0000:0c]---00.0-[0d-0f]----00.0-[0e-0f]----00.0-[0f]----00.0
+
+ The topology was created with:
+  ${qemu} -boot menu=on \
+             -cpu host \
+             -nographic \
+             -monitor telnet:127.0.0.1:1234,server,nowait \
+             -M virt,cxl=on \
+             -chardev stdio,id=s1,signal=off,mux=on -serial none \
+             -device isa-serial,chardev=s1 -mon chardev=s1,mode=readline \
+             -machine q35,cxl=on \
+             -m 16G,maxmem=24G,slots=8 \
+             -cpu EPYC-v3 \
+             -smp 16 \
+             -accel kvm \
+             -drive file=${img},format=raw,index=0,media=disk \
+             -device e1000,netdev=user.0 \
+             -netdev user,id=user.0,hostfwd=tcp::5555-:22 \
+             -object memory-backend-file,id=cxl-mem0,share=on,mem-path=/tmp/cxltest.raw,size=256M \
+             -object memory-backend-file,id=cxl-lsa0,share=on,mem-path=/tmp/lsa0.raw,size=256M \
+             -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+             -device cxl-rp,port=0,bus=cxl.1,id=root_port0,chassis=0,slot=0 \
+             -device cxl-upstream,bus=root_port0,id=us0 \
+             -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
+             -device cxl-type3,bus=swport0,volatile-memdev=cxl-mem0,lsa=cxl-lsa0,id=cxl-vmem0 \
+             -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
+
+=== Root Port ===
+root@tbowman-cxl:~/aer-inject# ./root-ce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00004000/00000000 into device 0000:0c:00.0
+pcieport 0000:0c:00.0: AER: Correctable error message received from 0000:0c:00.0
+aer_event: 0000:0c:00.0 CXL Bus Error: severity=Corrected, Corrected Internal Error, TLP Header=Not available
+pcieport 0000:0c:00.0: CXL Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+pcieport 0000:0c:00.0:   device [8086:7075] error status/mask=00004000/0000a000
+pcieport 0000:0c:00.0:    [14] CorrIntErr       
+cxl_aer_correctable_error: memdev=0000:0c:00.0 host=pci0000:0c serial=0: status: 'CRC Threshold Hit'
+
+root@tbowman-cxl:~/aer-inject# ./root-uce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0c:00.0
+pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0c:00.0
+aer_event: 0000:0c:00.0 CXL Bus Error: severity=Fatal, Uncorrectable Internal Error, TLP Header=Not available
+pcieport 0000:0c:00.0: CXL Bus Error: severity=Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
+pcieport 0000:0c:00.0:   device [8086:7075] error status/mask=00400000/02000000
+pcieport 0000:0c:00.0:    [22] UncorrIntErr          
+cxl_aer_uncorrectable_error: memdev=0000:0c:00.0 host=pci0000:0c serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=0000:0d:00.0 host=0000:0c:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=0000:0e:00.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=mem1 host=0000:0f:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=0000:0e:03.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=mem2 host=0000:12:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=0000:0e:02.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=mem0 host=0000:11:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=0000:0e:01.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=mem3 host=0000:10:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+Kernel panic - not syncing: CXL cachemem error.
+CPU: 10 UID: 0 PID: 185 Comm: kworker/10:1 Tainted: G            E       6.17.0-rc1-cxl-port-err-gc93c86e13947 #2170 PREEMPT(voluntary) 
+Tainted: [E]=UNSIGNED_MODULE
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+Workqueue: events cxl_proto_err_work_fn [cxl_core]
+Call Trace:
+ <TASK>
+ vpanic+0x33f/0x3b0
+ panic+0x5b/0x60
+ cxl_proto_err_work_fn+0x45f/0x470 [cxl_core]
+ process_one_work+0x196/0x3b0
+ ? __pfx_worker_thread+0x10/0x10
+ process_scheduled_works+0x42/0x60
+ worker_thread+0x11c/0x260
+ ? __pfx_worker_thread+0x10/0x10
+ kthread+0xfe/0x210
+ ? __pfx_kthread+0x10/0x10
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x18d/0x1e0
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel Offset: disabled
+---[ end Kernel panic - not syncing: CXL cachemem error. ]---
+
+=== Upstream Port ===
+root@tbowman-cxl:~/aer-inject# ./us-ce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00004000/00000000 into device 0000:0d:00.0
+pcieport 0000:0c:00.0: AER: Correctable error message received from 0000:0d:00.0
+aer_event: 0000:0d:00.0 CXL Bus Error: severity=Corrected, Corrected Internal Error, TLP Header=Not available
+pcieport 0000:0d:00.0: CXL Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+pcieport 0000:0d:00.0:   device [19e5:a128] error status/mask=00004000/0000a000
+pcieport 0000:0d:00.0:    [14] CorrIntErr            
+cxl_aer_correctable_error: memdev=0000:0d:00.0 host=0000:0c:00.0 serial=0: status: 'CRC Threshold Hit'
+
+root@tbowman-cxl:~/aer-inject# ./us-uce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0d:00.0
+pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0d:00.0
+aer_event: 0000:0d:00.0 CXL Bus Error: severity=Fatal, , TLP Header=Not available
+pcieport 0000:0d:00.0: AER: CXL Bus Error: severity=Uncorrectable (Fatal), type=Inaccessible, (Unregistered Agent ID)
+cxl_aer_uncorrectable_error: memdev=mem1 host=0000:0f:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+Kernel panic - not syncing: CXL cachemem error.
+CPU: 10 UID: 0 PID: 147 Comm: irq/24-aerdrv Tainted: G            E       6.17.0-rc1-cxl-port-err-gc93c86e13947 #2170 PREEMPT(voluntary) 
+Tainted: [E]=UNSIGNED_MODULE
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <TASK>
+ vpanic+0x33f/0x3b0
+ panic+0x5b/0x60
+ pci_error_detected+0x2b/0x30 [cxl_core]
+ report_error_detected+0xf7/0x170
+ ? __pfx_report_frozen_detected+0x10/0x10
+ __pci_walk_bus+0x4c/0x70
+ ? __pfx_report_frozen_detected+0x10/0x10
+ __pci_walk_bus+0x34/0x70
+ ? __pfx_report_frozen_detected+0x10/0x10
+ __pci_walk_bus+0x34/0x70
+ ? __pfx_report_frozen_detected+0x10/0x10
+ pci_walk_bus+0x31/0x50
+ pcie_do_recovery+0x163/0x2b0
+ aer_isr_one_error_type+0x1f3/0x380
+ aer_isr_one_error+0x117/0x140
+ aer_isr+0x4c/0x80
+ irq_thread_fn+0x24/0x70
+ irq_thread+0x199/0x2a0
+ ? __pfx_irq_thread_fn+0x10/0x10
+ ? __pfx_irq_thread_dtor+0x10/0x10
+ ? __pfx_irq_thread+0x10/0x10
+ kthread+0xfe/0x210
+ ? __pfx_kthread+0x10/0x10
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x18d/0x1e0
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel Offset: disabled
+---[ end Kernel panic - not syncing: CXL cachemem error. ]---
+
+=== Downstream Port ===
+root@tbowman-cxl:~/aer-inject# ./ds-ce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00004000/00000000 into device 0000:0e:00.0
+pcieport 0000:0c:00.0: AER: Correctable error message received from 0000:0e:00.0
+aer_event: 0000:0e:00.0 CXL Bus Error: severity=Corrected, Corrected Internal Error, TLP Header=Not available
+pcieport 0000:0e:00.0: CXL Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+pcieport 0000:0e:00.0:   device [19e5:a129] error status/mask=00004000/0000a000
+pcieport 0000:0e:00.0:    [14] CorrIntErr            
+cxl_aer_correctable_error: memdev=0000:0e:00.0 host=0000:0d:00.0 serial=0: status: 'CRC Threshold Hit'
+
+root@tbowman-cxl:~/aer-inject# ./ds-uce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0e:00.0
+pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0e:00.0
+aer_event: 0000:0e:00.0 CXL Bus Error: severity=Fatal, Uncorrectable Internal Error, TLP Header=Not available
+pcieport 0000:0e:00.0: CXL Bus Error: severity=Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
+pcieport 0000:0e:00.0:   device [19e5:a129] error status/mask=00400000/02000000
+pcieport 0000:0e:00.0:    [22] UncorrIntErr          
+cxl_aer_uncorrectable_error: memdev=0000:0d:00.0 host=0000:0c:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=0000:0e:00.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=mem0 host=0000:0f:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=0000:0e:01.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=mem2 host=0000:10:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=0000:0e:03.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=mem1 host=0000:12:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=0000:0e:02.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+cxl_aer_uncorrectable_error: memdev=mem3 host=0000:11:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+Kernel panic - not syncing: CXL cachemem error.
+CPU: 10 UID: 0 PID: 214 Comm: kworker/10:1 Tainted: G            E       6.17.0-rc1-cxl-port-err-gc93c86e13947 #2170 PREEMPT(voluntary) 
+Tainted: [E]=UNSIGNED_MODULE
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+Workqueue: events cxl_proto_err_work_fn [cxl_core]
+Call Trace:
+ <TASK>
+ vpanic+0x33f/0x3b0
+ panic+0x5b/0x60
+ cxl_proto_err_work_fn+0x45f/0x470 [cxl_core]
+ process_one_work+0x196/0x3b0
+ ? __pfx_worker_thread+0x10/0x10
+ process_scheduled_works+0x42/0x60
+ worker_thread+0x11c/0x260
+ ? __pfx_worker_thread+0x10/0x10
+ kthread+0xfe/0x210
+ ? __pfx_kthread+0x10/0x10
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x18d/0x1e0
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel Offset: disabled
+---[ end Kernel panic - not syncing: CXL cachemem error. ]---
+
+=== Endpoint ===
+root@tbowman-cxl:~/aer-inject# ./ep-ce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00004000/00000000 into device 0000:0f:00.0
+pcieport 0000:0c:00.0: AER: Correctable error message received from 0000:0f:00.0
+aer_event: 0000:0f:00.0 CXL Bus Error: severity=Corrected, Corrected Internal Error, TLP Header=Not available
+cxl_core 0000:0f:00.0: CXL Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+cxl_core 0000:0f:00.0:   device [8086:0d93] error status/mask=00004000/00000000
+cxl_core 0000:0f:00.0:    [14] CorrIntErr            
+cxl_aer_correctable_error: memdev=mem0 host=0000:0f:00.0 serial=0: status: 'CRC Threshold Hit'
+
+root@tbowman-cxl:~/aer-inject# ./ep-uce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0f:00.0
+pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0f:00.0
+aer_event: 0000:0f:00.0 CXL Bus Error: severity=Fatal, , TLP Header=Not available
+cxl_core 0000:0f:00.0: AER: CXL Bus Error: severity=Uncorrectable (Fatal), type=Inaccessible, (Unregistered Agent ID)
+cxl_aer_uncorrectable_error: memdev=mem0 host=0000:0f:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+Kernel panic - noroot@tbowman-cxlt syncing: CXL cacheme:~/aer-inject# m error.
+CPU: 10 UID: 0 PID: 147 Comm: irq/24-aerdrv Tainted: G            E       6.17.0-rc1-cxl-port-err-gc93c86e13947 #2170 PREEMPT(voluntary) 
+Tainted: [E]=UNSIGNED_MODULE
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <TASK>
+ vpanic+0x33f/0x3b0
+ panic+0x5b/0x60
+ pci_error_detected+0x2b/0x30 [cxl_core]
+ report_error_detected+0xf7/0x170
+ ? __pfx_report_frozen_detected+0x10/0x10
+ __pci_walk_bus+0x4c/0x70
+ ? __pfx_report_frozen_detected+0x10/0x10
+ pci_walk_bus+0x31/0x50
+ pcie_do_recovery+0x163/0x2b0
+ aer_isr_one_error_type+0x1f3/0x380
+ aer_isr_one_error+0x117/0x140
+ aer_isr+0x4c/0x80
+ irq_thread_fn+0x24/0x70
+ irq_thread+0x199/0x2a0
+ ? __pfx_irq_thread_fn+0x10/0x10
+ ? __pfx_irq_thread_dtor+0x10/0x10
+ ? __pfx_irq_thread+0x10/0x10
+ kthread+0xfe/0x210
+ ? __pfx_kthread+0x10/0x10
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x18d/0x1e0
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel Offset: disabled
+---[ end Kernel panic - not syncing: CXL cachemem error. ]---
+
+==== Changes ====
+Changes in v11 -> v12:
+cxl/pci: Remove unnecessary CXL Endpoint handling helper functions
+ - Added Dave Jiang's review by
+ - Moved to front of series
+cxl/pci: Remove unnecessary CXL RCH handling helper functions
+ - Add reviewed-by for Alejandro & Dave Jiang
+ - Moved to front of series
+cxl: Remove ifdef blocks of CONFIG_PCIEAER_CXL from core/pci.c
+ - Update CONFIG_CXL_RAS in CXL Kconfig to have CXL_PCI dependency (Terry)
+CXL/AER: Remove CONFIG_PCIEAER_CXL and replace with CONFIG_CXL_RAS 
+ - Added review-by for Sathyanarayanan
+ - Changed Kconfig dependency from PCIEAER_CXL to PCIEAER. Moved
+   this backwards into this patch.
+cxl: Move CXL driver RCH error handling into CONFIG_CXL_RCH_RAS conditio
+ - Moved CXL_RCH_RAS Kconfig definition here from following commit
+CXL/AER: Introduce aer_cxl_rch.c into AER driver for handling CXL RCH errors
+ - Rename drivers/pci/pcie/cxl_rch.c to drivers/pci/pcie/aer_cxl_rch.c (Lukas)
+ - Removed forward declararation of 'struct aer_err_info' in pci/pci.h (Terry)
+CXL/PCI: Move CXL DVSEC definitions into uapi/linux/pci_regs.h
+ - Change formatting to be same as existing definitions
+ - Change GENMASK() -> __GENMASK() and BIT() to _BITUL()
+PCI/CXL: Introduce pcie_is_cxl()
+ - Add review-by for Alejandro
+ - Add comment in set_pcie_cxl() explaining why updating parent status.
+PCI/AER: Report CXL or PCIe bus error type in trace logging
+ - Change aer_err_info::is_cxl to be bool a bitfield. Update structure padding. (Lukas)
+ - Add kernel-doc for 'struct aer_err_info' (Lukas)
+cxl/pci: Unify CXL trace logging for CXL Endpoints and CXL Ports 
+ - Correct parameters to call trace_cxl_aer_correctable_error() (Shiju)
+ - Add reviewed-by for Jonathan and Shiju
+cxl/pci: Map CXL Endpoint Port and CXL Switch Port RAS registers
+ - Add check for dport_parent->rch before calling cxl_dport_init_ras_reporting().
+ - RCH dports are initialized from cxl_dport_init_ras_reporting cxl_mem_probe().  
+CXL/PCI: Introduce PCI_ERS_RESULT_PANIC 
+ - Documentation requested by (Lukas)
+CXL/AER: Introduce aer_cxl_vh.c in AER driver for forwarding CXL errors
+ - Rename drivers/pci/pcie/cxl_aer.c to drivers/pci/pcie/aer_cxl_vh.c (Lukas)
+cxl: Introduce cxl_pci_drv_bound() to check for bound driver
+ - New patch
+PCI/AER: Dequeue forwarded CXL error
+ - Add guard for CE case in cxl_handle_proto_error() (Dave)
+ - Updated commit message (Terry)
+CXL/PCI: Introduce CXL Port protocol error handlers
+ - Add call to cxl_pci_drv_bound() in cxl_handle_proto_error() and
+   pci_to_cxl_dev() (Lukas)
+ - Change cxl_error_detected() -> cxl_cor_error_detected() (Terry)
+ - Remove NULL variable assignments (Jonathan)
+ - Replace bus_find_device() with find_cxl_port_by_uport() for upstream
+   port searches. (Dave)
+CXL/PCI: Export and rename merge_result() to pci_ers_merge_result()
+ - Remove static inline pci_ers_merge_result() definition for !CONFIG_PCIEAER.
+   Is not needed. (Lukas)
+CXL/PCI: Introduce CXL uncorrectable protocol error recovery
+ - Clean up port discovery in cxl_do_recovery() (Dave)
+ - Add PCI_EXP_TYPE_RC_END to type check in cxl_report_error_detected()
+
+Changes in v10 -> v11:
+ cxl: Remove ifdef blocks of CONFIG_PCIEAER_CXL from core/pci.c
+ - New patch
+ CXL/AER: Remove CONFIG_PCIEAER_CXL and replace with CONFIG_CXL_RAS
+ - New patch
+ cxl/pci: Remove unnecessary CXL RCH handling helper functions
+ - New patch
+ cxl: Move CXL driver RCH error handling into CONFIG_CXL_RCH_RAS conditional block
+ - New patch
+ CXL/AER: Introduce rch_aer.c into AER driver for handling CXL RCH errors
+ - Remove changes in code-split and move to earlier, new patch
+ - Add #include <linux/bitfield.h> to cxl_ras.c
+ - Move cxl_rch_handle_error() & cxl_rch_enable_rcec() declarations from pci.h
+   to aer.h, more localized.
+ - Introduce CONFIG_CXL_RCH_RAS, includes Makefile changes, ras.c ifdef changes
+ CXL/PCI: Move CXL DVSEC definitions into uapi/linux/pci_regs.h
+ - New patch
+ PCI/CXL: Introduce pcie_is_cxl()
+ - Amended set_pcie_cxl() to check for Upstream Port's and EP's parent
+   downstream port by calling set_pcie_cxl(). (Dan)
+ - Retitle patch: 'Add' -> 'Introduce'
+ - Add check for CXL.mem and CXL.cache (Alejandro, Dan)
+ PCI/AER: Report CXL or PCIe bus error type in trace logging
+ - Remove duplicate call to trace_aer_event() (Shiju)
+ - Added Dan William's and Dave Jiang's reviewed-by
+ CXL/AER: Update PCI class code check to use FIELD_GET()
+ - Add #include <linux/bitfield.h> to cxl_ras.c (Terry)
+ - Removed line wrapping at "(CXL 3.2, 8.1.12.1)". (Jonathan)
+ cxl/pci: Log message if RAS registers are unmapped
+ - Added Dave Jiang's review-by (Terry)
+ cxl/pci: Unify CXL trace logging for CXL Endpoints and CXL Ports
+ - Updated CE and UCE trace routines to maintian consistent TP_Struct ABI
+   and unchanged TP_printk() logging. (Shiju, Alison)
+ cxl/pci: Update cxl_handle_cor_ras() to return early if no RAS errors
+ - Added Dave Jiang and Jonathan Cameron's review-by
+ - Changes moved to core/ras.c
+ cxl/pci: Map CXL Endpoint Port and CXL Switch Port RAS registers
+ - Use local pointer for readability in cxl_switch_port_init_ras() (Jonathan Cameron)
+ - Rename port to be ep in cxl_endpoint_port_init_ras() (Dave Jiang)
+ - Rename dport to be parent_dport in cxl_endpoint_port_init_ras()
+   and cxl_switch_port_init_ras() (Dave Jiang)
+ - Port helper changes were in cxl/port.c, now in core/ras.c (Dave Jiang)
+ cxl/pci: Introduce CXL Endpoint protocol error handlers
+ - cxl_error_detected() - Change handlers' scoped_guard() to guard() (Jonathan)
+ - cxl_error_detected() - Remove extra line (Shiju)
+ - Changes moved to core/ras.c (Terry)
+ - cxl_error_detected(), remove 'ue' and return with function call. (Jonathan)
+ - Remove extra space in documentation for PCI_ERS_RESULT_PANIC definition
+ - Move #include "pci.h from cxl.h to core.h (Terry)
+ - Remove unnecessary includes of cxl.h and core.h in mem.c (Terry)   
+ CXL/AER: Introduce cxl_aer.c into AER driver for forwarding CXL errors
+ - Move RCH implementation to cxl_rch.c and RCH declarations to pci/pci.h. (Terry)
+ - Introduce 'struct cxl_proto_err_kfifo' containing semaphore, fifo,
+   and work struct. (Dan)
+ - Remove embedded struct from cxl_proto_err_work (Dan)
+ - Make 'struct work_struct *cxl_proto_err_work' definition static (Jonathan)
+ - Add check for NULL cxl_proto_err_kfifo to determine if CXL driver is
+   not registered for workqueue. (Dan)
+ PCI/AER: Dequeue forwarded CXL error
+ - Reword patch commit message to remove RCiEP details (Jonathan)
+ - Add #include <linux/bitfield.h> (Terry)
+ - is_cxl_rcd() - Fix short comment message wrap  (Jonathan)
+ - is_cxl_rcd() - Combine return calls into 1  (Jonathan)
+ - cxl_handle_proto_error() - Move comment earlier  (Jonathan)
+ - Usse FIELD_GET() in discovering class code (Jonathan)
+ - Remove BDF from cxl_proto_err_work_data. Use 'struct pci_dev *' (Dan)
+ CXL/PCI: Introduce CXL Port protocol error handlers
+ - Removed check for PCI_EXP_TYPE_RC_END in cxl_report_error_detected() (Terry)
+ - Update is_cxl_error() to check for acceptable PCI EP and port types
+ CXL/PCI: Export and rename merge_result() to pci_ers_merge_result()
+ - pci_ers_merge_result() - Change export to non-namespace and rename
+   to be pci_ers_merge_result() (Jonathan)
+ - Move pci_ers_merge_result() definition to pci.h. Needs pci_ers_result (Terry)
+ CXL/PCI: Introduce CXL uncorrectable protocol error recovery
+ - pci_ers_merge_results() - Move to earlier patch
+ CXL/PCI: Disable CXL protocol error interrupts during CXL Port cleanup
+ - Remove guard() in cxl_mask_proto_interrupts(). Observed device lockup/block
+   during testing. (Terry)
+  
+ Changes in v9 -> v10:
+ - Add drivers/pci/pcie/cxl_aer.c
+ - Add drivers/cxl/core/native_ras.c
+ - Change cxl_register_prot_err_work()/cxl_unregister_prot_err_work to return void
+ - Check for pcie_ports_native in cxl_do_recovery()
+ - Remove debug logging in cxl_do_recovery()
+ - Update PCI_ERS_RESULT_PANIC definition to indicate is CXL specific
+ - Revert trace logging changes: name,parent -> memdev,host.
+ - Use FIELD_GET() to check for EP class code (cxl_aer.c & native_ras.c).
+ - Change _prot_ to _proto_ everywhere
+ - cxl_rch_handle_error_iter(), check if driver is cxl_pci_driver
+ - Remove cxl_create_prot_error_info(). Move logic into forward_cxl_error()
+ - Remove sbdf_to_pci() and move logic into cxl_handle_proto_error()
+ - Simplify/refactor get_pci_cxl_host_dev()
+ - Simplify/refactor cxl_get_ras_base()
+ - Move patch 'Remove unnecessary CXL Endpoint handling helper functions' to front
+ - Update description for 'CXL/PCI: Introduce CXL Port protocol error
+   handlers' with why state is not used to determine handling
+ - Introduce cxl_pci_drv_bound() and call from cxl_rch_handle_error_iter()
+
+ Changes in v8 -> v9:
+ - Updated reference counting to use pci_get_device()/pci_put_device() in
+   cxl_disable_prot_errors()/cxl_enable_prot_errors
+ - Refactored cxl_create_prot_err_info() to fix reference counting
+ - Removed 'struct cxl_port' driver changes for error handler. Instead
+   check for CXL device type (EP or Port device) and call handler
+ - Make pcie_is_cxl() static inline in include/linux/linux.h
+ - Remove NULL check in create_prot_err_info()
+ - Change success return in cxl_ras_init() to use hardcoded 0
+ - Changed 'struct work_struct cxl_prot_err_work' declaration to static
+ - Change to use rate limited log with dev anchor in forward_cxl_error()
+ - Refactored forward-cxl_error() to remove severity auto variable
+ - Changed pci_aer_clear_nonfatal_status() to be static inline for
+   !(CONFIG_PCIEAER)
+ - Renamed merge_result() to be cxl_merge_result()
+ - Removed 'ue' condition in cxl_error_detected()
+ - Updated 2nd parameter in call to __cxl_handle_cor_ras()/__cxl_handle_ras()
+   in unify patch
+ - Added log message for failure while assigning interrupt disable callback
+ - Updated pci_aer_mask_internal_errors() to use pci_clear_and_set_config_dword()
+ - Simplified patch titles for clarity
+ - Moved CXL error interrupt disabling into cxl/core/port.c with CXL Port
+ teardown
+ - Updated 'struct cxl_port_err_info' to only contain sbdf and severity
+ Removed everything else.
+ - Added pdev and CXL device get_device()/put_device() before calling handlers
+ 
+ Changes in v7 -> v8:
+ [Dan] Use kfifo. Move handling to CXL driver. AER forwards error to CXL
+ driver
+ [Dan] Add device reference incrementors where needed throughout
+ [Dan] Initiate CXL Port RAS init from Switch Port and Endpoint Port init 
+ [Dan] Combine CXL Port and CXL Endpoint trace routine
+ [Dan] Introduce aer_info::is_cxl. Use to indicate CXL or PCI errors
+ [Jonathan] Add serial number for all devices in trace
+ [DaveJ] Move find_cxl_port() change into patch using it
+ [Terry] Move CXL Port RAS init into cxl/port.c
+ [Terry] Moved kfifo functions into cxl/core/ras.c 
+ 
+ Changes in v6 -> v7:
+ [Terry] Move updated trace routine call to later patch. Was causing build
+ error.
+ 
+ Changes in v5 -> v6:
+ [Ira] Move pcie_is_cxl(dev) define to a inline function
+ [Ira] Update returning value from pcie_is_cxl_port() to bool w/o cast
+ [Ira] Change cxl_report_error_detected() cleanup to return correct bool
+ [Ira] Introduce and use PCI_ERS_RESULT_PANIC
+ [Ira] Reuse comment for PCIe and CXL recovery paths
+ [Jonathan] Add type check in for cxl_handle_cor_ras() and cxl_handle_ras()
+ [Jonathan] cxl_uport/dport_init_ras_reporting(), added a mutex.
+ [Jonathan] Add logging example to patches updating trace output
+ [Jonathan] Make parameter 'const' to eliminate for cast in match_uport()
+ [Jonathan] Use __free() in cxl_pci_port_ras()
+ [Terry] Add patch to log the PCIe SBDF along with CXL device name
+ [Terry] Add patch to handle CXL endpoint and RCH DP errors as CXL errors
+ [Terry] Remove patch w USP UCE fatal support @ aer_get_device_error_info()
+ [Terry] Rebase to cxl/next commit 5585e342e8d3 ("cxl/memdev: Remove unused partition values")
+ [Gregory] Pre-initialize pointer to NULL in cxl_pci_port_ras()
+ [Gregory] Move AER driver bus name detection to a static function
+
+ Changes in v4 -> v5:
+ [Alejandro] Refactor cxl_walk_bridge to simplify 'status' variable usage
+ [Alejandro] Add WARN_ONCE() in __cxl_handle_ras() and cxl_handle_cor_ras()
+ [Ming] Remove unnecessary NULL check in cxl_pci_port_ras()
+ [Terry] Add failure check for call to to_cxl_port() in cxl_pci_port_ras()
+ [Ming] Use port->dev for call to devm_add_action_or_reset() in
+ cxl_dport_init_ras_reporting() and cxl_uport_init_ras_reporting()
+ [Jonathan] Use get_device()/put_device() to prevent race condition in
+ cxl_clear_port_error_handlers() and cxl_clear_port_error_handlers()
+ [Terry] Commit message cleanup. Capitalize keywords from CXL and PCI
+ specifications
+
+ Changes in v3 -> v4:
+ [Lukas] Capitalize PCIe and CXL device names as in specifications
+ [Lukas] Move call to pcie_is_cxl() into cxl_port_devsec()
+ [Lukas] Correct namespace spelling
+ [Lukas] Removed export from pcie_is_cxl_port()
+ [Lukas] Simplify 'if' blocks in cxl_handle_error()
+ [Lukas] Change panic message to remove redundant 'panic' text
+ [Ming] Update to call cxl_dport_init_ras_reporting() in RCH case
+ [lkp@intel] 'host' parameter is already removed. Remove parameter description too.
+ [Terry] Added field description for cxl_err_handlers in pci.h comment block
+
+ Changes in v1 -> v2:
+ [Jonathan] Remove extra NULL check and cleanup in cxl_pci_port_ras()
+ [Jonathan] Update description to DSP map patch description
+ [Jonathan] Update cxl_pci_port_ras() to check for NULL port
+ [Jonathan] Dont call handler before handler port changes are present (patch order)
+ [Bjorn] Fix linebreak in cover sheet URL
+ [Bjorn] Remove timestamps from test logs in cover sheet
+ [Bjorn] Retitle AER commits to use "PCI/AER:"
+ [Bjorn] Retitle patch#3 to use renaming instead of refactoring
+ [Bjorn] Fix base commit-id on cover sheet
+ [Bjorn] Add VH spec reference/citation
+ [Terry] Removed last 2 patches to enable internal errors. Is not needed
+ because internal errors are enabled in AER driver.
+ [Dan] Create cxl_do_recovery() and pci_driver::cxl_err_handlers.
+ [Dan] Use kernel panic in CXL recovery
+ [Dan] cxl_port_hndlrs -> cxl_port_error_handlers
+
+Dave Jiang (1):
+  cxl: Remove ifdef blocks of CONFIG_PCIEAER_CXL from core/pci.c
+
+Terry Bowman (24):
+  cxl/pci: Remove unnecessary CXL Endpoint handling helper functions
+  cxl/pci: Remove unnecessary CXL RCH handling helper functions
+  CXL/AER: Remove CONFIG_PCIEAER_CXL and replace with CONFIG_CXL_RAS
+  cxl: Move CXL driver RCH error handling into CONFIG_CXL_RCH_RAS
+    conditional block
+  CXL/AER: Introduce aer_cxl_rch.c into AER driver for handling CXL RCH
+    errors
+  CXL/PCI: Move CXL DVSEC definitions into uapi/linux/pci_regs.h
+  PCI/CXL: Introduce pcie_is_cxl()
+  PCI/AER: Report CXL or PCIe bus error type in trace logging
+  CXL/AER: Update PCI class code check to use FIELD_GET()
+  cxl/pci: Update RAS handler interfaces to also support CXL Ports
+  cxl/pci: Log message if RAS registers are unmapped
+  cxl/pci: Unify CXL trace logging for CXL Endpoints and CXL Ports
+  cxl/pci: Update cxl_handle_cor_ras() to return early if no RAS errors
+  cxl/pci: Map CXL Endpoint Port and CXL Switch Port RAS registers
+  CXL/PCI: Introduce PCI_ERS_RESULT_PANIC
+  cxl/pci: Introduce CXL Endpoint protocol error handlers
+  CXL/AER: Introduce aer_cxl_vh.c in AER driver for forwarding CXL
+    errors
+  cxl: Introduce cxl_pci_drv_bound() to check for bound driver
+  PCI/AER: Dequeue forwarded CXL error
+  CXL/PCI: Introduce CXL Port protocol error handlers
+  CXL/PCI: Export and rename merge_result() to pci_ers_merge_result()
+  CXL/PCI: Introduce CXL uncorrectable protocol error recovery
+  CXL/PCI: Enable CXL protocol errors during CXL Port probe
+  CXL/PCI: Disable CXL protocol error interrupts during CXL Port cleanup
+
+ Documentation/PCI/pci-error-recovery.rst |   6 +
+ drivers/cxl/Kconfig                      |  16 +-
+ drivers/cxl/Makefile                     |   2 -
+ drivers/cxl/core/Makefile                |   3 +-
+ drivers/cxl/core/core.h                  |  57 ++
+ drivers/cxl/core/pci.c                   | 381 +-----------
+ drivers/cxl/{pci.c => core/pci_drv.c}    |  27 +-
+ drivers/cxl/core/port.c                  |  21 +-
+ drivers/cxl/core/ras.c                   | 699 ++++++++++++++++++++++-
+ drivers/cxl/core/regs.c                  |  12 +-
+ drivers/cxl/core/trace.h                 |  68 +--
+ drivers/cxl/cxl.h                        |  10 +-
+ drivers/cxl/cxlpci.h                     |  56 --
+ drivers/cxl/mem.c                        |   4 +-
+ drivers/cxl/port.c                       |   5 +
+ drivers/pci/pci.c                        |  19 +-
+ drivers/pci/pci.h                        |  50 +-
+ drivers/pci/pcie/Kconfig                 |   9 -
+ drivers/pci/pcie/Makefile                |   2 +
+ drivers/pci/pcie/aer.c                   | 156 ++---
+ drivers/pci/pcie/aer_cxl_rch.c           |  99 ++++
+ drivers/pci/pcie/aer_cxl_vh.c            |  98 ++++
+ drivers/pci/pcie/err.c                   |  14 +-
+ drivers/pci/pcie/rcec.c                  |   1 +
+ drivers/pci/probe.c                      |  29 +
+ include/linux/aer.h                      |  29 +
+ include/linux/pci.h                      |  20 +
+ include/ras/ras_event.h                  |   9 +-
+ include/uapi/linux/pci_regs.h            |  65 ++-
+ tools/testing/cxl/Kbuild                 |   2 +-
+ 30 files changed, 1304 insertions(+), 665 deletions(-)
+ rename drivers/cxl/{pci.c => core/pci_drv.c} (98%)
+ create mode 100644 drivers/pci/pcie/aer_cxl_rch.c
+ create mode 100644 drivers/pci/pcie/aer_cxl_vh.c
+
+
+base-commit: 46037455cbb748c5e85071c95f2244e81986eb58
+-- 
+2.34.1
+
