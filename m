@@ -1,276 +1,125 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010016.outbound.protection.outlook.com [52.101.201.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F047C29BDA7;
-	Fri, 26 Sep 2025 09:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758880056; cv=fail; b=fK+AxEbZ+92j7fLEJxjlA9oW/ZtCptOKohJpvyjaifl+mFaiou+N3Eno28v2WO/jZNqMRhIrtQF3XECaJAj293/y6KfaAlIt/DcV+cVEEfvxXlTnQxAcMQQOBI4p1WV0m+pmzyeGgBVfxeWVUGvfNqKD/+WZa1MU38TtmRux2qU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758880056; c=relaxed/simple;
-	bh=P2G+bEJhMefxUVnp4XmzgLZPE8Ic8bxCr11D3KqNzNQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=BeGKbQ3RJlq0O+y05dDEaEFK68Ax3qdw4crAmU3NMQFIDBjC7OFUdurw5MKd2vinZq6hHp+s+N4otB5OCrV6evkl8DTz87KNYcA0V4CYclM2mbpH0OE+4iY0eisgGMeuPoumENRvG4bZO8rH6uFcLYc08lHm9M7wMHgQqWUckQE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eLA1QCoo; arc=fail smtp.client-ip=52.101.201.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB102EB5BD;
+	Fri, 26 Sep 2025 12:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758889960; cv=none; b=JsOU07sh64R2z1U8+r28dIPqwm+W0P07vuXMQXhWJg1Lj0E5SXFH2+0reDQfA/7sf3/Bb5iITJpeqSX6sKgOw1UqzdLdkaCNGcp1U21eKOVn/+B7nWo4dk0dxHY9oBHLXbVi1hU3fCtAbAgkm4z0nItpH9DG/KDN+xPxoKOpkZo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758889960; c=relaxed/simple;
+	bh=d4lDBbBZf+E+Vn1KVlhkxpqT6BzklI64/P5QoolGfXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sQpswWfNBkxuYlJk2s6SeAS0FJfXoBVuMYeAWtCrbiW66bRgGetoYHR+fT7rRm1treJPZm7OlpemVRPp03SiCuUp1remtm/HoqPshs+t9wKYbF8X/ntBSb+dEj0L3GeS/S8SpnOrEdJPVp1jWLZ0asLSE9s0LprZX+oP7OD07F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EVYWlJBv; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eLA1QCoo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cESTCZdU+6UezOtay/2S/hf/FNbBirPw0PQ+pxjXxAlQme5ZPqXqc4121+gP5Jf9HPJl5YBQPD+vinti8mlmeJnCVdcp9uxFgYUJEQsnFIsqwZi8MEVJ90xXk7kQLvdntDrYbpcbdvvvCAnqEEM9D2bko5Xa2H7hUa0XyLtSHZDNuuhW6/oxpukfXyyIKMf0GeX1iSRU14A1WMmWna7hSY5qC10JbFxGgy+V6plIo8JgCRP+S70fj07frjvxh825G0H5zzvVrbW1bFe/5aHE1YbtoduxfQulmzDL9VHaWWzVgh4RkndzHMBvoWWeaX+sW3DlV7BrDsKu6o09Plapvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YVhFkzVSyohZOnmJNYXRAQCYiqU6Z9S9b2CbDpN1c+A=;
- b=FzCTaJW49MOyN0dZYz0v5TSAtssj5lGoGK2bSkWCW9jpAuuQPapsEigl2eILLQiVX6Q0Q5JXufc3jBlIEb3b6k/9ah5lKSOxQaEqNT8NIGWEt+HVWhqrIKvivgUZ0P1jDFofrSLA8FgzG5OV5b/XX3nFLVlJvsHF5Dk3iWXkUdxVrMNBWqlrgCNJWWvSbEFfRhNYt6zapZaPrroCjU5iM6L4LFjgtrLElJsv2kmmmYdZd9YWwApJRxcvKtRmFWV3/RoxXjLv6IF75EQHGdtkri6ZnRJZsZbYfuIQmrafPUAbiW+WenzzE2k/KjtDp3+AQ4pDR8HfGPs5ZUUsUwBssQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YVhFkzVSyohZOnmJNYXRAQCYiqU6Z9S9b2CbDpN1c+A=;
- b=eLA1QCooofLk34+fR3TaFxbI6Y6upRkos8YByTyGhZVltRam28VBRpD8YtOiiqn7oftq79kMa/v1hsxP1Vne0/JNZ4hBa84c50701IPmwlKUEkXjMKpD0qFGxgY6DE4GUdMGji25cR9F2ncydYQLwJtx54InzEYz4w4NHwQa07k=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by CH3PR12MB8305.namprd12.prod.outlook.com (2603:10b6:610:12e::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.10; Fri, 26 Sep
- 2025 09:47:32 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.9137.018; Fri, 26 Sep 2025
- 09:47:32 +0000
-Message-ID: <26134b86-1481-451f-9337-70769ec9e792@amd.com>
-Date: Fri, 26 Sep 2025 10:47:27 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 20/20] sfc: support pio mapping based on cxl
-Content-Language: en-US
-To: Jonathan Cameron <jonathan.cameron@huawei.com>,
- alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
- dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
-References: <20250918091746.2034285-1-alejandro.lucero-palau@amd.com>
- <20250918091746.2034285-21-alejandro.lucero-palau@amd.com>
- <20250918160832.00001ed7@huawei.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <20250918160832.00001ed7@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P265CA0043.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:61::31) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EVYWlJBv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758889959; x=1790425959;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=d4lDBbBZf+E+Vn1KVlhkxpqT6BzklI64/P5QoolGfXU=;
+  b=EVYWlJBv7VeWxpnG/PRbzJll1v+OX2znRimfKUmShD/PXToYyUMkM9fA
+   oPjuBptqx52dPAGAHPppbVNMuUk8hNFLNoJV0nhvfn8jch1NGEA0tdZXB
+   BYEhBR0hZuvQ2yeRtWA4+fvl/YfIUafPSFEsMur7rGwnb5zBTNJfm+j6K
+   I8N5DfcGn03RrMlgBe3quoa10TKSMS6X8Ji+txG90y88pcn+y/WlzlidB
+   Qgx1HL5mPi9khqznehRQUhOiGaSS7UUJpbg19ZBY01rP3z6Vl4eXmcg7J
+   XurV3aKXkV+Zj3zmr09ZbU03sekfkaGDTJKCiS8eS7nfCHt5KhLG45+vR
+   g==;
+X-CSE-ConnectionGUID: EWhC6XBeQbags/e5upifQw==
+X-CSE-MsgGUID: 7GbJaeviQTOjzQoRZK3V/A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11564"; a="61140626"
+X-IronPort-AV: E=Sophos;i="6.18,295,1751266800"; 
+   d="scan'208";a="61140626"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 05:32:38 -0700
+X-CSE-ConnectionGUID: /WRcMq4LSQSb8mQYjQuYbQ==
+X-CSE-MsgGUID: r4JmafDPRa+InV9gPFFWXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,295,1751266800"; 
+   d="scan'208";a="178357303"
+Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
+  by fmviesa010.fm.intel.com with ESMTP; 26 Sep 2025 05:32:29 -0700
+Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v27ch-0006D7-0v;
+	Fri, 26 Sep 2025 12:32:27 +0000
+Date: Fri, 26 Sep 2025 20:32:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, dan.j.williams@intel.com,
+	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
+	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+	lukas@wunner.de, Benjamin.Cheatham@amd.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, terry.bowman@amd.com
+Subject: Re: [PATCH v12 06/25] CXL/AER: Introduce aer_cxl_rch.c into AER
+ driver for handling CXL RCH errors
+Message-ID: <202509262001.AJLzM9is-lkp@intel.com>
+References: <20250925223440.3539069-7-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|CH3PR12MB8305:EE_
-X-MS-Office365-Filtering-Correlation-Id: db297b46-7495-4eb0-39b2-08ddfce1b6c8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YjJPbU1jem90ZHY2alcwMktId3Njek4wY0lLby9RNHJvSjZ0RWc2UUpkZ1FV?=
- =?utf-8?B?TXFnMWs5ampkZzZkTjREa2Y4Um9uMUowei9iWFppdktQZCszNkl4Y1VXdFlu?=
- =?utf-8?B?VmhWZ2d0NmZjT3hZWlR2WVBraHdGRWY5eFJFZlc2VDBvYkREQUVDeHBGK21T?=
- =?utf-8?B?WC9mWXJCSkg2SDdVMlVaRU9BVlBKOEdqcnFjaDRnanZQUjN3SnM0RG8wQXNj?=
- =?utf-8?B?M3NIWHMyb3dFUFo3aTRraTdjS3ZhUWJiWm9acUVPQ0Z5VFRabEViemsreTFG?=
- =?utf-8?B?TWRaMGc1dEltYU5IT1dGVVEvSnU0ZHlrMUI0SHZiMzRTY2pxMDV4Y2tPdUxz?=
- =?utf-8?B?djFtTWp4U3hqK3hEc1dMdDg1ZzFRdTJuV3NqRURpV1k3OWUra09rZWF2d0R2?=
- =?utf-8?B?YWpMVXZyMENlSEdoQVZ5dGNBd3NmYjBmdzRHY3JKSGVGajZPc29LT3NqUEF2?=
- =?utf-8?B?Z1E2cjUweEpqNHh5MVZhVUNId3h1LzlhYTREc1R5V2YvRlVYT2UyaVlXNHhj?=
- =?utf-8?B?RXFCVFo0endZQ2UxZlFZRGlnVU9YSnc5Zitqd0ptMTFOSzdPUUkvL21YMXZ0?=
- =?utf-8?B?cjBVM2N6Y3U3ZXQrSUN4RWo5bjlJM1ZKRW1vQ2pKTll6Nk5pQnhDK3g1d2ZV?=
- =?utf-8?B?K0hGazdYUWJoZHdmL0p3Vy9NSW9YY2diMGl1K3lwaHM4ZnVLYU1hT1FRb1k0?=
- =?utf-8?B?R05QK2hTWDJ0ODFidDFMcGZucDJ4a2VzaUd3anNVYTFaWk50bmNsd1Nvc0ZS?=
- =?utf-8?B?UkExYUJSZ0NTV3pjZjc5R3RzcWppbjFlc01IbnBjNDJVSklMeVBRSHNvSHJL?=
- =?utf-8?B?cklBdC9LazJOdU5NWDRqenBheDk5TnBmSm4zczhNYjRzUGI3dTZPTnFLS0VX?=
- =?utf-8?B?WDAwUGRSV29Tcm9MSnprZEp0N3B2Wms3NUZaeHVpSU1qRi9iVm1LdG1DL2RF?=
- =?utf-8?B?YzNZRmtScjJ0aUxUdGM3MXZhUFFYQXJGMlQ4K3RKN0didUd1dUNsMmt2Sk5R?=
- =?utf-8?B?aHFUQXpmY0J5aFlqQ1hML2hnZnhtYU5EQm1oaUp6OWt5d2ljdW12VVE1K2Fs?=
- =?utf-8?B?V011UDUySTVaZnhsb3JtQ1pianhkSThUNms0TjVCOFhQK1hzek1QNzZ6OGF2?=
- =?utf-8?B?SHRDUk0waFdZa0Q3TVNEd0FJSXo0NDBWRmVleEs1VktEQzk4WDA5QkdFcDNW?=
- =?utf-8?B?MnR6R0xoL3djd1crcytldjFYcDlpOGNvOTByT1A2SXROUUhlQ3Z5MjRuOUZZ?=
- =?utf-8?B?WXlXRlFySEN4Yy9QejNxaVljQVFoL1NNcXJObFZkdG9mOUpPMXFWQjVPNUVL?=
- =?utf-8?B?YytaNS9MZEJYb2Y5M3A1aDhuVHArM1Z0TENERkpxUkxYeUNDbDZrd05Pc0Fw?=
- =?utf-8?B?eC9LbmlJaFhYZzFRNTl0ZmxaN1JoKzcva1dPOGg0ajJ2ci92QloxaFBxdVBT?=
- =?utf-8?B?WTAwcmpZejVxeEpXNXVaL0VpbENXMlhNQkQrNVJkb3pJWFJOV1RtRzhnTmEr?=
- =?utf-8?B?R2ptRHJRTFczTTNPTFZYSjlzOFFOT3FGd1dOQ3NteTd6M2FaVjFPTDVXdGgx?=
- =?utf-8?B?cHlTMzIreloxbWNjRGo3KzJvY1NNS1BiRFdJakx4UDZZMElobVc2RS9wQm54?=
- =?utf-8?B?REppZWM2QjMxbldGV3NXVjhwTzRnT2NTRHVkSFdLelF4T2E1NHp6RExWcVNj?=
- =?utf-8?B?R2xXTVFJN0VsY3hVbTBoVjhNTTZObUJOdDFYVHh2S1h5UWZqMXh0WEdOUHZQ?=
- =?utf-8?B?dVhhMUtRYUZwMG16ZUQrbWs2SExrbVlFcjN3SGxlYkVETUw5VFFpRzhjdkRG?=
- =?utf-8?B?d2lHNm5vcHl1aU9tZHE4MXlBbGFMWStXNVk5TVA1eGNaOTJPZ1VnRjAyaGlo?=
- =?utf-8?B?QmZWMjBjQVdsY1FYRFlsOFVvRHdsbVBMdjFlTmdlOC9GTklQZC9lWmhWcFk2?=
- =?utf-8?Q?/aR+5o12vPhAckNxmPH6FKRFMAcezLNv?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dTVPd3pvZUlCTmZROUlzd0cyQ0dWYlNGUFNCMDVTTk85SlYzbHBEbjlaQ0c1?=
- =?utf-8?B?M25BRUpkeElaTERTVjVoa2FGcmFYOVF2RUJXUE9sYTZ1dWdEbElYT0xrZjZQ?=
- =?utf-8?B?dmFlTmlyLzdEakJlTjU3UWIrOEZxOHdLTVlCSFpBK3loLzc5QjZEZ2VFU0Rq?=
- =?utf-8?B?WWJzd3FFL3Y1VlpMSm1pMGRzcWh1T0RjWW1vbGYxR0UvVFk2UHk1NVZBRHJC?=
- =?utf-8?B?dThnemxWaTRXOTZJVVphV0ZzT2tWUTlJb05zSFRGVm8vWjdLczBZVDlra3Vt?=
- =?utf-8?B?akVKVzV2dEN4c05BZkFmamxZcHREb3ZjNkVLZ1dTbEtNTnprWEZ6Q3plQzZK?=
- =?utf-8?B?Y0t4Sk53Sk9PbkJxVmNTbWY4cUc5cnpEOEJzMWRGU015TjI3ZXFibG5yais2?=
- =?utf-8?B?L09XYkdQelF1TnJYNnJtVTIyU2dmSTBiS2xZQ1VRcC9UK0NubUhmSUFQVWsx?=
- =?utf-8?B?am8vQ0VHSG1SM3p0K2NHUlBvRnM5UkpSbmcrOGpOUlAybmNLS1NQak9ka05j?=
- =?utf-8?B?d2lGNlp0RUZ2aWFPbTRBd2duZGZhemE0STYzVm9XOXROWnB4c0t4VHF0QUcx?=
- =?utf-8?B?NXEveUxKc3cwTWRKUFJKdTlmbm04eFJPMmhnSHlaeXduYytjZE5hSWYySVBZ?=
- =?utf-8?B?YUllQmFCNTdNalcrZWhjK3lTRDFidXlwZTFuTkpNL0d4bGRpTkMzWnMxMkk5?=
- =?utf-8?B?SURYbHV2VHNSWDJFV3V0QzQ0MGZ0V3JsYmZUSmcvQ3J4WUQ5YW94YjRnWGJR?=
- =?utf-8?B?eEw5cS83SDd4dVJIVkE0UExVMU9YN1FaUDdUeUszUkgzNDVBNXhmSG0rTC9p?=
- =?utf-8?B?dk9NL0FXSlJhWHpTVWNGVWJQcWk0WTAyTDZpV1lVdW4weGxkMmsxemVFT2hW?=
- =?utf-8?B?SUd4ZkRqRHFDWDRpV1JDb25wT3Fzc0lsT0xCUzhVTHVtZWhWQnRlbkJGS1Nn?=
- =?utf-8?B?UGVCUjl2dTNMdHhwYTVGU3JqQzBrTkRaczZ3MVJPYkwyUEZtUzg5MU5GTVhU?=
- =?utf-8?B?Q2wrbGJzNFZ4QTI0ai8rRTljVFNCeFY4UnVpMWJKd0E0cU1Pd1pCU0JKK2Mw?=
- =?utf-8?B?dmU4dXAwUXZ4eEZQQzFQU3dxTjJJYTRKTnF4RlUwV2c1bFNBTFpubTFwZU9l?=
- =?utf-8?B?WE50T2FQWlhmb0FBdWxPMmNlVDhyRXJyQ3FxVk95SmdBRFg0WDArMVVkajBK?=
- =?utf-8?B?YWFPNUlOZnZrZURaMUVreE8zMzFlL1hyMUFrNzZTeGpBKzB1OXh5YzMzZXZw?=
- =?utf-8?B?b1IxNnVPTzdWM1NhQ3M5N3NZRE5zVFNEVTQ0azQ3L04vTG5QY3k3UFJvcTJp?=
- =?utf-8?B?U3BFbmpCOHp3N3JmRy9zdjcrSUtVNlFNanRUYUt3NXRlc0t4aFFFbFFldjhT?=
- =?utf-8?B?RHFpTGw0T2lVQ01ub0N5MlZMOGNnb3FXalA4R0FuazI2VzFQQ1JuSlBGYXFX?=
- =?utf-8?B?Tloxa0JTalBSRGhzWlVURFhlc2FaMDJJbE1UZkJaaG1TaHY1ck1XanB2ZE5W?=
- =?utf-8?B?TURBOTdUZ3BiT2pQd1ZxVGtOWmlIbkdsMTdPR1JGb0ZJeHJ3NngvNmhlNnkr?=
- =?utf-8?B?OHlEQVVFYUJBMFlkSk4vaE8wV3N4YzFwVDFTVTBXV2ZydGo3aXRjem1ETnZK?=
- =?utf-8?B?QmcxQlM4cUJHR1hadG1tZ2ZNWnFBT1ZxVnZPMjdmeFJ5VnVJcU9jbVBuTzVt?=
- =?utf-8?B?dzdMbVVTZHpFYk42VGg2NlBHNXBuYXhDWFVJZkJQaTZyMkJmKzY2dStmQi9R?=
- =?utf-8?B?T1RzQkZubkpNcnhrMk9XU2ZRSjI0czRiYVNLKzZ3UjlZKy9YUXhRUW5yNjhn?=
- =?utf-8?B?cWtOZVNJOWFnVmo3RkVXNHJWb1MybTdIR3VYWjFNUk5JUU11OHZHV29JSEtN?=
- =?utf-8?B?Zy9CSTlIOGl5Y2czSUlLYm5TRWxGQ29vM1F1d2ZTTlcvQjlIN3g3UmF1V1Y5?=
- =?utf-8?B?b3NFQ0V5Z3hwbFFQeldnZ21qNHk5ekR3NDloL2FzazNaSXhjRG00cWJra0Vu?=
- =?utf-8?B?cHlFUVUvcWNLYTRkd2F3ek5YTjczMlhZY2w2U1hvSmsxNXBMeCtFZjJ6K2V3?=
- =?utf-8?B?cWk2NmllYkZtNFduU2MxdXhQNnZpRHd3d0FIWnMyM1lSN3BaT1FubC9XMG9q?=
- =?utf-8?Q?t2mEjrw8fzkpqatPahxNb6WtF?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db297b46-7495-4eb0-39b2-08ddfce1b6c8
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2025 09:47:32.2159
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pWF5Hvtlcs5agOrM3Z1jrLrhFPuzJU62rcEvhzjhoMPbXtzy66KkXIo7drzNOFhfdSVWzN8qbmGngZoZKtrhIA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8305
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250925223440.3539069-7-terry.bowman@amd.com>
+
+Hi Terry,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on 46037455cbb748c5e85071c95f2244e81986eb58]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Bowman/cxl-pci-Remove-unnecessary-CXL-Endpoint-handling-helper-functions/20250926-064816
+base:   46037455cbb748c5e85071c95f2244e81986eb58
+patch link:    https://lore.kernel.org/r/20250925223440.3539069-7-terry.bowman%40amd.com
+patch subject: [PATCH v12 06/25] CXL/AER: Introduce aer_cxl_rch.c into AER driver for handling CXL RCH errors
+config: microblaze-allnoconfig (https://download.01.org/0day-ci/archive/20250926/202509262001.AJLzM9is-lkp@intel.com/config)
+compiler: microblaze-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250926/202509262001.AJLzM9is-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509262001.AJLzM9is-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/pci/of.c:18:
+>> drivers/pci/pci.h:1208:69: warning: 'struct aer_err_info' declared inside parameter list will not be visible outside of this definition or declaration
+    1208 | static inline void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info) { }
+         |                                                                     ^~~~~~~~~~~~
+   drivers/pci/pci.h:1215:45: warning: 'struct aer_err_info' declared inside parameter list will not be visible outside of this definition or declaration
+    1215 | static inline bool is_internal_error(struct aer_err_info *info) { return false; }
+         |                                             ^~~~~~~~~~~~
 
 
-On 9/18/25 16:08, Jonathan Cameron wrote:
-> A few trivial things inline.
->
->> diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
->> index 47349c148c0c..7bc854e2d22a 100644
->> --- a/drivers/net/ethernet/sfc/ef10.c
->> +++ b/drivers/net/ethernet/sfc/ef10.c
->> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
->> index 85490afc7930..3dde59003cd9 100644
->> --- a/drivers/net/ethernet/sfc/efx_cxl.c
->> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
->> @@ -11,16 +11,23 @@
->>   
->>   #include "net_driver.h"
->>   #include "efx_cxl.h"
->> +#include "efx.h"
->>   
->>   #define EFX_CTPIO_BUFFER_SIZE	SZ_256M
->>   
->>   static void efx_release_cxl_region(void *priv_cxl)
->>   {
->>   	struct efx_probe_data *probe_data = priv_cxl;
->> +	struct efx_nic *efx = &probe_data->efx;
->>   	struct efx_cxl *cxl = probe_data->cxl;
->>   
->> +	/* Next avoid contention with efx_cxl_exit() */
->>   	probe_data->cxl_pio_initialised = false;
->> +
->> +	/* Next makes cxl-based piobus to no be used */
->> +	efx_ef10_disable_piobufs(efx);
->>   	iounmap(cxl->ctpio_cxl);
->> +
-> Avoid extra white space changes. Perhaps push to earlier patch.
+vim +1208 drivers/pci/pci.h
 
+  1199	
+  1200	#define PCI_CONF1_EXT_ADDRESS(bus, dev, func, reg) \
+  1201		(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
+  1202		 PCI_CONF1_EXT_REG(reg))
+  1203	
+  1204	#ifdef CONFIG_CXL_RCH_RAS
+  1205	void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info);
+  1206	void cxl_rch_enable_rcec(struct pci_dev *rcec);
+  1207	#else
+> 1208	static inline void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info) { }
+  1209	static inline void cxl_rch_enable_rcec(struct pci_dev *rcec) { }
+  1210	#endif
+  1211	
 
-I'll fix the spaces. Not sure what you mean with the second part of your 
-comment, but if I understand it right, I think those changes should be 
-added in this patch, just when the final functionality is added.
-
-
-FWIW, I have decided to drop this driver callback as Dan did not like 
-it, and after realizing those Dan's patches this patchset relies on fix 
-most of the problem this callback tried to address.
-
-
->>   	cxl_put_root_decoder(cxl->cxlrd);
->>   }
->>   
->> @@ -30,6 +37,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->>   	struct pci_dev *pci_dev = efx->pci_dev;
->>   	resource_size_t max_size;
->>   	struct efx_cxl *cxl;
->> +	struct range range;
->>   	u16 dvsec;
->>   	int rc;
->>   
->> @@ -133,17 +141,34 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->>   					    &probe_data);
->>   	if (IS_ERR(cxl->efx_region)) {
->>   		pci_err(pci_dev, "CXL accel create region failed");
->> -		cxl_dpa_free(cxl->cxled);
->>   		rc = PTR_ERR(cxl->efx_region);
->> -		goto err_decoder;
->> +		goto err_dpa;
-> Why do we now need to call cxl_dpa_free() and didn't previously here? That
-> seems like a probably bug in earlier patch.
-
-
-I think you misread it. We were calling cxl_dpa_free already, just 
-moving it to a goto label here.
-
-
-Thanks!
-
-
->> +	}
->> +
->> +	rc = cxl_get_region_range(cxl->efx_region, &range);
->> +	if (rc) {
->> +		pci_err(pci_dev, "CXL getting regions params failed");
->> +		goto err_detach;
->> +	}
->> +
->> +	cxl->ctpio_cxl = ioremap(range.start, range.end - range.start + 1);
->> +	if (!cxl->ctpio_cxl) {
->> +		pci_err(pci_dev, "CXL ioremap region (%pra) failed", &range);
->> +		rc = -ENOMEM;
->> +		goto err_detach;
->>   	}
->>   
->>   	probe_data->cxl = cxl;
->> +	probe_data->cxl_pio_initialised = true;
->>   
->>   	cxl_release_endpoint(cxl->cxlmd, cxl->endpoint);
->>   
->>   	return 0;
->>   
->> +err_detach:
->> +	cxl_decoder_detach(NULL, cxl->cxled, 0, DETACH_INVALIDATE);
->> +err_dpa:
->> +	cxl_dpa_free(cxl->cxled);
->>   err_decoder:
->>   	cxl_put_root_decoder(cxl->cxlrd);
->>   err_release:
->> @@ -154,7 +179,8 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->>   
->>   void efx_cxl_exit(struct efx_probe_data *probe_data)
->>   {
->> -	if (probe_data->cxl) {
->> +	if (probe_data->cxl_pio_initialised) {
->> +		iounmap(probe_data->cxl->ctpio_cxl);
->>   		cxl_decoder_detach(NULL, probe_data->cxl->cxled, 0,
->>   				   DETACH_INVALIDATE);
->>   		cxl_dpa_free(probe_data->cxl->cxled);
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
