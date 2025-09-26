@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97221EA7EC;
-	Fri, 26 Sep 2025 22:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9C323C51D;
+	Fri, 26 Sep 2025 22:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758924296; cv=none; b=OSuWTF90HPQLa7GzBiyNZpKDyBpgMO+wBorED+yexUvwtgB2Y2R73YCeM6l08ubEbCrI8BMSO9Y54tzApsd8l+XVhXQmCtFQfxVyMhCU9+6RF/VQLfgtVVNp02UXayi2mLk1oPp+AypIXxEN3IGHKxPscw2VgIk+tRrQOk4zEhU=
+	t=1758927368; cv=none; b=YxdwU1M+mBpm+A00ePufZjFhaUgxKuRrYvumnjEgSVCNZh3JXn7eVBYgk0XUffjW7U7c9cBZSiSTGghqgC8YiE+M2jBiQIC/rtNIhmfJiYNjUakJB+INIfmUwSFCWn1OvoBGYH+2tBzG2CsxVK+JC0cmMCRblqCFCcgm4jmmHAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758924296; c=relaxed/simple;
-	bh=iChzTYBRg7LwBhlljIu9DrgmCDInscnIZ0h7DSQ/6eU=;
+	s=arc-20240116; t=1758927368; c=relaxed/simple;
+	bh=1KarEp2nkL8Uz707BkDaeArI5woDEtlh04V1gdN3V4Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aS64JoWV8FS5aiTuWTlhA/2XrpLZ6y/0e9y2Ur+bYWvrktdvKC4NaMZdfIScbNDz9/3aI4X7U5bnOVPnidtGSxAtXwdpSpF8cgyh3J71vKuYWZQ8p+DiAvBR4tCO2lTb78bK33rPKBnFXT7d0J9UbP6A4ZIYfdCVbGWSjqdQw+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DwUWlGUJ; arc=none smtp.client-ip=198.175.65.16
+	 In-Reply-To:Content-Type; b=DtSmOOTaEiW3nfGDGWeibkBu8KUE7u5jVMSGJM+Mj4qwr3S+Xc6aCpgsIe/dWbCoYzdfDjoqHtN0rXJemwWNLE2uW5F/S+yO9HcSspBeq0JF6CgNXZG7bDrw0wKyvwshFzJ+sXjPRH887gEjtvDQwXXzwubpIR9dgFgw9MkJVYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xho4YV8N; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DwUWlGUJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xho4YV8N"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758924294; x=1790460294;
+  t=1758927367; x=1790463367;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=iChzTYBRg7LwBhlljIu9DrgmCDInscnIZ0h7DSQ/6eU=;
-  b=DwUWlGUJZo4yzghI/jJT3CYifkWh8BRs231wB/+VFCAKFo6frgH/c5ZU
-   ZgvVmvAMmjIvcyO+BKgsC4kpquhSijbsYN0DrxCsx9LMnEBgtTiRdXGn3
-   pkt28qHNnRFBtsCkGkhYa0GwefcyrPwMhc0Z7fz0a2rdI+p4iYCyHrD05
-   QsM93mku/cDZvzdyQLtHwBtB6LRPWLlWLvaHJLtdATP5k8jPxTfx+J2Ez
-   11MG1tnWqWsa4ejyiwzrDwEvvm/agqCXOGom9+mXoIGs+miuMJszNWC0A
-   Wq6wjUOiScrkTQygYoIzrQjXF9D1IDHOvNfcu27KXM7QZBIcYT9Pumw21
-   w==;
-X-CSE-ConnectionGUID: S83n9HQuQ4+Lf6YLSmI/MA==
-X-CSE-MsgGUID: EFKCVLc+RianP5NT7PSjiA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11565"; a="61430595"
+  bh=1KarEp2nkL8Uz707BkDaeArI5woDEtlh04V1gdN3V4Y=;
+  b=Xho4YV8N34bCpIOuZgVJTxKyOFNA9ryUazNRozQtIq2UqtTHTJB6ro46
+   VAJzRTJ69nD5p1AD3koDWm/L5pz1LAO+Bb7r8dIO5Ke1Sum7jsNrYfheN
+   EE+rT/upinz/L0jv0Ryghu0pw4mjpXBoYWuTo/4g1b/H3Fa2FiXicPAqe
+   bag/+8VEFhaVU7ySAfIV5vb3UlO36NcwKT1kkMfeEITN+PjiHxGfrycoG
+   hoRC3xpWPOoTNpGSJwiFOLUYbGODLFXU8CIpaNYJkq5Y12DxHJl9XyU44
+   Mf/5Zb2sH0bQRdgH2H96/saaYfzZ4aIQbTu8yLEJvrN5iiteDOlzdfoi8
+   Q==;
+X-CSE-ConnectionGUID: z7z0I3TrQMq+O00ZbmJVNA==
+X-CSE-MsgGUID: qoD+n+2zTG69exFklguQAg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11565"; a="61375316"
 X-IronPort-AV: E=Sophos;i="6.18,296,1751266800"; 
-   d="scan'208";a="61430595"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 15:04:53 -0700
-X-CSE-ConnectionGUID: iwyVSgFVSW6LP5x66o6DCw==
-X-CSE-MsgGUID: 25bAP5EUSSWKpQSxajt+dw==
+   d="scan'208";a="61375316"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 15:56:06 -0700
+X-CSE-ConnectionGUID: 4FhWfwHFRUSLf3cMB7zbGQ==
+X-CSE-MsgGUID: 8T7KhRgWRPuMiwYpdafpow==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,296,1751266800"; 
-   d="scan'208";a="177772816"
+   d="scan'208";a="201409726"
 Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.109.69]) ([10.125.109.69])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 15:04:52 -0700
-Message-ID: <beecc304-f201-4fa2-b2a7-810c82668be2@intel.com>
-Date: Fri, 26 Sep 2025 15:04:51 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 15:56:03 -0700
+Message-ID: <f895e2c8-c060-4a11-9123-ad19a4a2ef21@intel.com>
+Date: Fri, 26 Sep 2025 15:56:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 17/25] cxl/pci: Introduce CXL Endpoint protocol error
- handlers
+Subject: Re: [PATCH v12 18/25] CXL/AER: Introduce aer_cxl_vh.c in AER driver
+ for forwarding CXL errors
 To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
  jonathan.cameron@huawei.com, alison.schofield@intel.com,
  dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
@@ -64,40 +64,50 @@ To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
  linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
 Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 References: <20250925223440.3539069-1-terry.bowman@amd.com>
- <20250925223440.3539069-18-terry.bowman@amd.com>
+ <20250925223440.3539069-19-terry.bowman@amd.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250925223440.3539069-18-terry.bowman@amd.com>
+In-Reply-To: <20250925223440.3539069-19-terry.bowman@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+
+
 On 9/25/25 3:34 PM, Terry Bowman wrote:
-> CXL Endpoint protocol errors are currently handled using PCI error
-> handlers. The CXL Endpoint requires CXL specific handling in the case of
-> uncorrectable error (UCE) handling not provided by the PCI handlers.
+> CXL virtual hierarchy (VH) RAS handling for CXL Port devices will be added
+> soon. This requires a notification mechanism for the AER driver to share
+> the AER interrupt with the CXL driver. The notification will be used as an
+> indication for the CXL drivers to handle and log the CXL RAS errors.
 > 
-> Add CXL specific handlers for CXL Endpoints. Rename the existing
-> cxl_error_handlers to be pci_error_handlers to more correctly indicate
-> the error type and follow naming consistency.
+> Note, 'CXL protocol error' terminology will refer to CXL VH and not
+> CXL RCH errors unless specifically noted going forward.
 > 
-> The PCI handlers will be called if the CXL device is not trained for
-> alternate protocol (CXL). Update the CXL Endpoint PCI handlers to call the
-> CXL UCE handlers.
+> Introduce a new file in the AER driver to handle the CXL protocol errors
+> named pci/pcie/aer_cxl_vh.c.
 > 
-> The existing EP UCE handler includes checks for various results. These are
-> no longer needed because CXL UCE recovery will not be attempted. Implement
-> cxl_handle_ras() to return PCI_ERS_RESULT_NONE or PCI_ERS_RESULT_PANIC. The
-> CXL UCE handler is called by cxl_do_recovery() that acts on the return
-> value. In the case of the PCI handler path, call panic() if the result is
-> PCI_ERS_RESULT_PANIC.
+> Add a kfifo work queue to be used by the AER and CXL drivers. The AER
+> driver will be the sole kfifo producer adding work and the cxl_core will be
+> the sole kfifo consumer removing work. Add the boilerplate kfifo support.
+> Encapsulate the kfifo, RW semaphore, and work pointer in a single structure.
+> 
+> Add CXL work queue handler registration functions in the AER driver. Export
+> the functions allowing CXL driver to access. Implement registration
+> functions for the CXL driver to assign or clear the work handler function.
+> Synchronize accesses using the RW semaphore.
+> 
+> Introduce 'struct cxl_proto_err_work_data' to serve as the kfifo work data.
+> This will contain a reference to the erring PCI device and the error
+> severity. This will be used when the work is dequeued by the cxl_core driver.
 > 
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > 
 > ---
 > 
 > Changes in v11->v12:
-> - None
+> - Rename drivers/pci/pcie/cxl_aer.c to drivers/pci/pcie/aer_cxl_vh.c (Lukas)
 > 
 > Changes in v10->v11:
 > - cxl_error_detected() - Change handlers' scoped_guard() to guard() (Jonathan)
@@ -108,284 +118,236 @@ On 9/25/25 3:34 PM, Terry Bowman wrote:
 > - Move #include "pci.h from cxl.h to core.h (Terry)
 > - Remove unnecessary includes of cxl.h and core.h in mem.c (Terry)
 > ---
->  drivers/cxl/core/core.h |  17 +++++++
->  drivers/cxl/core/ras.c  | 110 +++++++++++++++++++---------------------
->  drivers/cxl/cxlpci.h    |  15 ------
->  drivers/cxl/pci.c       |   9 ++--
->  4 files changed, 75 insertions(+), 76 deletions(-)
+>  drivers/pci/pci.h             |  4 ++
+>  drivers/pci/pcie/Makefile     |  1 +
+>  drivers/pci/pcie/aer.c        | 25 ++-------
+>  drivers/pci/pcie/aer_cxl_vh.c | 95 +++++++++++++++++++++++++++++++++++
+>  include/linux/aer.h           | 17 +++++++
+>  5 files changed, 121 insertions(+), 21 deletions(-)
+>  create mode 100644 drivers/pci/pcie/aer_cxl_vh.c
 > 
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 8c51a2631716..74c64d458f12 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -6,6 +6,7 @@
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index f7631f40e57c..22e8f9a18a09 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -1234,8 +1234,12 @@ static inline void cxl_rch_enable_rcec(struct pci_dev *rcec) { }
 >  
->  #include <cxl/mailbox.h>
->  #include <linux/rwsem.h>
-> +#include <linux/pci.h>
->  
->  extern const struct device_type cxl_nvdimm_bridge_type;
->  extern const struct device_type cxl_nvdimm_type;
-> @@ -150,6 +151,11 @@ void cxl_ras_exit(void);
->  void cxl_switch_port_init_ras(struct cxl_port *port);
->  void cxl_endpoint_port_init_ras(struct cxl_port *ep);
->  void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host);
-> +pci_ers_result_t pci_error_detected(struct pci_dev *pdev,
-> +				    pci_channel_state_t error);
-> +void pci_cor_error_detected(struct pci_dev *pdev);
-> +void cxl_cor_error_detected(struct device *dev);
-> +pci_ers_result_t cxl_error_detected(struct device *dev);
+>  #ifdef CONFIG_CXL_RAS
+>  bool is_internal_error(struct aer_err_info *info);
+> +bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info);
+> +void cxl_forward_error(struct pci_dev *pdev, struct aer_err_info *info);
 >  #else
->  static inline int cxl_ras_init(void)
->  {
-> @@ -163,6 +169,17 @@ static inline void cxl_switch_port_init_ras(struct cxl_port *port) { }
->  static inline void cxl_endpoint_port_init_ras(struct cxl_port *ep) { }
->  static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport,
->  						struct device *host) { }
-> +static inline pci_ers_result_t pci_error_detected(struct pci_dev *pdev,
-> +						  pci_channel_state_t error)
-> +{
-> +	return PCI_ERS_RESULT_NONE;
-> +}
-> +static inline void pci_cor_error_detected(struct pci_dev *pdev) { }
-> +static inline void cxl_cor_error_detected(struct device *dev) { }
-> +static inline pci_ers_result_t cxl_error_detected(struct device *dev)
-> +{
-> +	return PCI_ERS_RESULT_NONE;
-> +}
->  #endif // CONFIG_CXL_RAS
+>  static inline bool is_internal_error(struct aer_err_info *info) { return false; }
+> +static inline bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info) { return false; }
+> +static inline void cxl_forward_error(struct pci_dev *pdev, struct aer_err_info *info) { }
+>  #endif
 >  
->  int cxl_gpf_port_setup(struct cxl_dport *dport);
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index 14a434bd68f0..39472d82d586 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> @@ -129,7 +129,7 @@ void cxl_ras_exit(void)
+>  #endif /* DRIVERS_PCI_H */
+> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
+> index 970e7cbc5b34..72992b3ea417 100644
+> --- a/drivers/pci/pcie/Makefile
+> +++ b/drivers/pci/pcie/Makefile
+> @@ -9,6 +9,7 @@ obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o bwctrl.o
+>  obj-y				+= aspm.o
+>  obj-$(CONFIG_PCIEAER)		+= aer.o err.o tlp.o
+>  obj-$(CONFIG_CXL_RCH_RAS)	+= aer_cxl_rch.o
+> +obj-$(CONFIG_CXL_RAS)		+= aer_cxl_vh.o
+>  obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
+>  obj-$(CONFIG_PCIE_PME)		+= pme.o
+>  obj-$(CONFIG_PCIE_DPC)		+= dpc.o
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 6ba8f84add70..ccefbcfe5145 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1093,8 +1093,6 @@ static bool find_source_device(struct pci_dev *parent,
+>  	return true;
 >  }
 >  
->  static void cxl_handle_cor_ras(struct device *dev, u64 serial, void __iomem *ras_base);
-> -static bool cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base);
-> +static pci_ers_result_t cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base);
->  
->  #ifdef CONFIG_CXL_RCH_RAS
->  static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
-> @@ -371,7 +371,7 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
->   * Log the state of the RAS status registers and prepare them to log the
->   * next error status. Return 1 if reset needed.
->   */
-> -static bool cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base)
-> +static pci_ers_result_t cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base)
->  {
->  	u32 hl[CXL_HEADERLOG_SIZE_U32];
->  	void __iomem *addr;
-> @@ -380,13 +380,13 @@ static bool cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_bas
->  
->  	if (!ras_base) {
->  		dev_warn_once(dev, "CXL RAS register block is not mapped");
-> -		return false;
-> +		return PCI_ERS_RESULT_NONE;
->  	}
->  
->  	addr = ras_base + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
->  	status = readl(addr);
->  	if (!(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK))
-> -		return false;
-> +		return PCI_ERS_RESULT_NONE;
->  
->  	/* If multiple errors, log header points to first error from ctrl reg */
->  	if (hweight32(status) > 1) {
-> @@ -403,76 +403,72 @@ static bool cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_bas
->  	trace_cxl_aer_uncorrectable_error(dev, status, fe, hl, serial);
->  	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
->  
-> -	return true;
-> +	return PCI_ERS_RESULT_PANIC;
->  }
->  
-> -void cxl_cor_error_detected(struct pci_dev *pdev)
-> +void cxl_cor_error_detected(struct device *dev)
-
-Why change the input parameter to 'struct device' to just convert it back in the first parameter? I understand that later on cxl_handle_proto_error() will pass in a 'dev', but since it's going to be a pci_dev anyways, can you just pass in a pci_dev instead of doing all this back and forth?
-
->  {
-> +	struct pci_dev *pdev = to_pci_dev(dev);
->  	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> -	struct device *dev = &cxlds->cxlmd->dev;
-> +	struct device *cxlmd_dev = &cxlds->cxlmd->dev;
->  
-> -	scoped_guard(device, dev) {
-> -		if (!dev->driver) {
-> -			dev_warn(&pdev->dev,
-> -				 "%s: memdev disabled, abort error handling\n",
-> -				 dev_name(dev));
-> -			return;
-> -		}
-> +	guard(device)(cxlmd_dev);
->  
-> -		if (cxlds->rcd)
-> -			cxl_handle_rdport_errors(cxlds);
-> -
-> -		cxl_handle_cor_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
-> +	if (!cxlmd_dev->driver) {
-> +		dev_warn(&pdev->dev, "%s: memdev disabled, abort error handling", dev_name(dev));
-> +		return;
->  	}
-> +
-> +	if (cxlds->rcd)
-> +		cxl_handle_rdport_errors(cxlds);
-> +
-> +	cxl_handle_cor_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_cor_error_detected, "CXL");
->  
-> -pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
-> -				    pci_channel_state_t state)
-> +void pci_cor_error_detected(struct pci_dev *pdev)
->  {
-> +	cxl_cor_error_detected(&pdev->dev);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(pci_cor_error_detected, "CXL");
-> +
-> +pci_ers_result_t cxl_error_detected(struct device *dev)
-
-Same comment as above.
-
-DJ
-
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
->  	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> -	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> -	struct device *dev = &cxlmd->dev;
-> -	bool ue;
-> +	struct device *cxlmd_dev = &cxlds->cxlmd->dev;
->  
-> -	scoped_guard(device, dev) {
-> -		if (!dev->driver) {
-> -			dev_warn(&pdev->dev,
-> -				 "%s: memdev disabled, abort error handling\n",
-> -				 dev_name(dev));
-> -			return PCI_ERS_RESULT_DISCONNECT;
-> -		}
-> +	guard(device)(cxlmd_dev);
->  
-> -		if (cxlds->rcd)
-> -			cxl_handle_rdport_errors(cxlds);
-> -		/*
-> -		 * A frozen channel indicates an impending reset which is fatal to
-> -		 * CXL.mem operation, and will likely crash the system. On the off
-> -		 * chance the situation is recoverable dump the status of the RAS
-> -		 * capability registers and bounce the active state of the memdev.
-> -		 */
-> -		ue = cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
-> -	}
-> -
-> -
-> -	switch (state) {
-> -	case pci_channel_io_normal:
-> -		if (ue) {
-> -			device_release_driver(dev);
-> -			return PCI_ERS_RESULT_NEED_RESET;
-> -		}
-> -		return PCI_ERS_RESULT_CAN_RECOVER;
-> -	case pci_channel_io_frozen:
-> +	if (!dev->driver) {
->  		dev_warn(&pdev->dev,
-> -			 "%s: frozen state error detected, disable CXL.mem\n",
-> +			 "%s: memdev disabled, abort error handling\n",
->  			 dev_name(dev));
-> -		device_release_driver(dev);
-> -		return PCI_ERS_RESULT_NEED_RESET;
-> -	case pci_channel_io_perm_failure:
-> -		dev_warn(&pdev->dev,
-> -			 "failure state error detected, request disconnect\n");
->  		return PCI_ERS_RESULT_DISCONNECT;
->  	}
-> -	return PCI_ERS_RESULT_NEED_RESET;
-> +
-> +	if (cxlds->rcd)
-> +		cxl_handle_rdport_errors(cxlds);
-> +
-> +	/*
-> +	 * A frozen channel indicates an impending reset which is fatal to
-> +	 * CXL.mem operation, and will likely crash the system. On the off
-> +	 * chance the situation is recoverable dump the status of the RAS
-> +	 * capability registers and bounce the active state of the memdev.
-> +	 */
-> +	return cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_error_detected, "CXL");
-> +
-> +pci_ers_result_t pci_error_detected(struct pci_dev *pdev,
-> +				    pci_channel_state_t error)
-> +{
-> +	pci_ers_result_t rc;
-> +
-> +	rc = cxl_error_detected(&pdev->dev);
-> +	if (rc == PCI_ERS_RESULT_PANIC)
-> +		panic("CXL cachemem error.");
-> +
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(pci_error_detected, "CXL");
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 3882a089ae77..189cd8fabc2c 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -77,19 +77,4 @@ static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
->  int devm_cxl_port_enumerate_dports(struct cxl_port *port);
->  struct cxl_dev_state;
->  void read_cdat_data(struct cxl_port *port);
-> -
 > -#ifdef CONFIG_CXL_RAS
-> -void cxl_cor_error_detected(struct pci_dev *pdev);
-> -pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
-> -				    pci_channel_state_t state);
-> -#else
-> -static inline void cxl_cor_error_detected(struct pci_dev *pdev) { }
 > -
-> -static inline pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
-> -						  pci_channel_state_t state)
-> -{
-> -	return PCI_ERS_RESULT_NONE;
-> -}
-> -#endif
-> -
->  #endif /* __CXL_PCI_H__ */
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index bd95be1f3d5c..71fb8709081e 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -16,6 +16,7 @@
->  #include "cxlpci.h"
->  #include "cxl.h"
->  #include "pmu.h"
-> +#include "core/core.h"
->  
 >  /**
->   * DOC: cxl pci
-> @@ -1112,11 +1113,11 @@ static void cxl_reset_done(struct pci_dev *pdev)
->  	}
+>   * pci_aer_unmask_internal_errors - unmask internal errors
+>   * @dev: pointer to the pci_dev data structure
+> @@ -1120,24 +1118,6 @@ void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_aer_unmask_internal_errors);
+>  
+> -bool cxl_error_is_native(struct pci_dev *dev)
+> -{
+> -	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+> -
+> -	return (pcie_ports_native || host->native_aer);
+> -}
+> -EXPORT_SYMBOL_NS_GPL(cxl_error_is_native, "CXL");
+> -
+> -bool is_internal_error(struct aer_err_info *info)
+> -{
+> -	if (info->severity == AER_CORRECTABLE)
+> -		return info->status & PCI_ERR_COR_INTERNAL;
+> -
+> -	return info->status & PCI_ERR_UNC_INTN;
+> -}
+> -EXPORT_SYMBOL_NS_GPL(is_internal_error, "CXL");
+> -#endif /* CONFIG_CXL_RAS */
+> -
+>  /**
+>   * pci_aer_handle_error - handle logging error into an event log
+>   * @dev: pointer to pci_dev data structure of error source device
+> @@ -1174,7 +1154,10 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>  static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+>  	cxl_rch_handle_error(dev, info);
+> -	pci_aer_handle_error(dev, info);
+> +	if (is_cxl_error(dev, info))
+> +		cxl_forward_error(dev, info);
+> +	else
+> +		pci_aer_handle_error(dev, info);
+>  	pci_dev_put(dev);
 >  }
 >  
-> -static const struct pci_error_handlers cxl_error_handlers = {
-> -	.error_detected	= cxl_error_detected,
-> +static const struct pci_error_handlers pci_error_handlers = {
-> +	.error_detected	= pci_error_detected,
->  	.slot_reset	= cxl_slot_reset,
->  	.resume		= cxl_error_resume,
-> -	.cor_error_detected	= cxl_cor_error_detected,
-> +	.cor_error_detected	= pci_cor_error_detected,
->  	.reset_done	= cxl_reset_done,
+> diff --git a/drivers/pci/pcie/aer_cxl_vh.c b/drivers/pci/pcie/aer_cxl_vh.c
+> new file mode 100644
+> index 000000000000..8c0979299446
+> --- /dev/null
+> +++ b/drivers/pci/pcie/aer_cxl_vh.c
+> @@ -0,0 +1,95 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright(c) 2025 AMD Corporation. All rights reserved. */
+> +
+> +#include <linux/pci.h>
+> +#include <linux/aer.h>
+> +#include <linux/pci.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/kfifo.h>
+> +#include "../pci.h"
+> +
+> +#define CXL_ERROR_SOURCES_MAX          128
+> +
+> +struct cxl_proto_err_kfifo {
+> +	struct work_struct *work;
+> +	struct rw_semaphore rw_sema;
+> +	DECLARE_KFIFO(fifo, struct cxl_proto_err_work_data,
+> +		      CXL_ERROR_SOURCES_MAX);
+> +};
+> +
+> +static struct cxl_proto_err_kfifo cxl_proto_err_kfifo = {
+> +	.rw_sema = __RWSEM_INITIALIZER(cxl_proto_err_kfifo.rw_sema)
+> +};
+> +
+> +bool cxl_error_is_native(struct pci_dev *dev)
+> +{
+> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+> +
+> +	return (pcie_ports_native || host->native_aer);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_error_is_native, "CXL");
+> +
+> +bool is_internal_error(struct aer_err_info *info)
+> +{
+> +	if (info->severity == AER_CORRECTABLE)
+> +		return info->status & PCI_ERR_COR_INTERNAL;
+> +
+> +	return info->status & PCI_ERR_UNC_INTN;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(is_internal_error, "CXL");
+> +
+> +bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info)
+> +{
+> +	if (!info || !info->is_cxl)
+> +		return false;
+> +
+> +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT)
+> +		return false;
+> +
+> +	return is_internal_error(info);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(is_cxl_error, "CXL");
+> +
+> +void cxl_forward_error(struct pci_dev *pdev, struct aer_err_info *info)
+> +{
+> +	struct cxl_proto_err_work_data wd = (struct cxl_proto_err_work_data) {
+> +		.severity = info->severity,
+> +		.pdev = pdev
+> +	};
+> +
+> +	guard(rwsem_write)(&cxl_proto_err_kfifo.rw_sema);
+> +
+> +	if (!cxl_proto_err_kfifo.work) {
+> +		dev_warn_once(&pdev->dev, "CXL driver is not registered for kfifo");
+> +		return;
+> +	}
+> +
+> +	if (!kfifo_put(&cxl_proto_err_kfifo.fifo, wd)) {
+> +		dev_err_ratelimited(&pdev->dev, "CXL kfifo overflow\n");
+> +		return;
+> +	}
+> +
+> +	schedule_work(cxl_proto_err_kfifo.work);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_forward_error, "CXL");
+> +
+> +void cxl_register_proto_err_work(struct work_struct *work)
+> +{
+> +	guard(rwsem_write)(&cxl_proto_err_kfifo.rw_sema);
+> +	cxl_proto_err_kfifo.work = work;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_register_proto_err_work, "CXL");
+> +
+> +void cxl_unregister_proto_err_work(void)
+> +{
+> +	guard(rwsem_write)(&cxl_proto_err_kfifo.rw_sema);
+> +	cxl_proto_err_kfifo.work = NULL;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_unregister_proto_err_work, "CXL");
+> +
+> +int cxl_proto_err_kfifo_get(struct cxl_proto_err_work_data *wd)
+> +{
+> +	guard(rwsem_read)(&cxl_proto_err_kfifo.rw_sema);
+> +	return kfifo_get(&cxl_proto_err_kfifo.fifo, wd);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_proto_err_kfifo_get, "CXL");
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index 2ef820563996..6b2c87d1b5b6 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -10,6 +10,7 @@
+>  
+>  #include <linux/errno.h>
+>  #include <linux/types.h>
+> +#include <linux/workqueue_types.h>
+>  
+>  #define AER_NONFATAL			0
+>  #define AER_FATAL			1
+> @@ -53,6 +54,16 @@ struct aer_capability_regs {
+>  	u16 uncor_err_source;
 >  };
 >  
-> @@ -1124,7 +1125,7 @@ static struct pci_driver cxl_pci_driver = {
->  	.name			= KBUILD_MODNAME,
->  	.id_table		= cxl_mem_pci_tbl,
->  	.probe			= cxl_pci_probe,
-> -	.err_handler		= &cxl_error_handlers,
-> +	.err_handler		= &pci_error_handlers,
->  	.dev_groups		= cxl_rcd_groups,
->  	.driver	= {
->  		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+> +/**
+> + * struct cxl_proto_err_work_data - Error information used in CXL error handling
+> + * @severity: AER severity
+> + * @pdev: PCI device detecting the error
+> + */
+> +struct cxl_proto_err_work_data {
+> +	int severity;
+> +	struct pci_dev *pdev;
+> +};
+> +
+>  #if defined(CONFIG_PCIEAER)
+>  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+>  int pcie_aer_is_native(struct pci_dev *dev);
+> @@ -68,8 +79,14 @@ static inline void pci_aer_unmask_internal_errors(struct pci_dev *dev) { }
+>  
+>  #ifdef CONFIG_CXL_RAS
+>  bool cxl_error_is_native(struct pci_dev *dev);
+> +int cxl_proto_err_kfifo_get(struct cxl_proto_err_work_data *wd);
+> +void cxl_register_proto_err_work(struct work_struct *work);
+> +void cxl_unregister_proto_err_work(void);
+>  #else
+>  static inline bool cxl_error_is_native(struct pci_dev *dev) { return false; }
+> +static inline int cxl_proto_err_kfifo_get(struct cxl_proto_err_work_data *wd) { return 0; }
+> +static inline void cxl_register_proto_err_work(struct work_struct *work) { }
+> +static inline void cxl_unregister_proto_err_work(void) { }
+>  #endif
+>  
+>  void pci_print_aer(struct pci_dev *dev, int aer_severity,
 
