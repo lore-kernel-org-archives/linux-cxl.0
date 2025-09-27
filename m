@@ -1,143 +1,167 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7130319C540
-	for <linux-cxl@vger.kernel.org>; Sat, 27 Sep 2025 00:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4201FF1A1
+	for <linux-cxl@vger.kernel.org>; Sat, 27 Sep 2025 01:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758932506; cv=none; b=WrE3IaCWDd7LbEF3/M4U/y9piB3VlAra+4qMaWt9DmhRh9RRlv7JiN5ZfcGtPVvLzdQnOKobDzs8oPyMA+mxyS7DAFROzLk0+6NJ4vP7dZ9546MHGUoxMtANRR8WGepqLnR2aQmWlPMRcrRHmBSrfT5BmlaTSf9mZzw5tTfbDJw=
+	t=1758937489; cv=none; b=t5POCuanbO1t8+ebEQfClWdaAXhNGbBd/4sip5etZkUTaVfcuaZryfoa3/KodJ+2eoTYpFklVRwtbVAzsGV5830XwOxGaP79FhQR7F1kPGSRRyuk1LfKvrkSJHgkemDdchQ0DHwVnWzujdcstzF/dgEPiT65E4NSDtQaz04cAv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758932506; c=relaxed/simple;
-	bh=38eGXnCnD1VW5ZAktJMdkMHniVocT57UMCBlXDhjRyY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ed+eTkmswHtG/RxyN4wbFETfj/KGponKtM/qoQrKD7bcZzN1UuvCBIgtCE4cK1E59czjRCuHjjlxBoIvbCl+7bEhke5xSFhVkj7s6O1NjbkBjqNC4wxlwoE94ISPYiwQ9ZqzwNBe9oq9/vgfh/5kK8MI/M9HJgDgK2LNL1OXZBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mbIxCwBj; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1758937489; c=relaxed/simple;
+	bh=dqdxCmArGa9yxPqwCNkcLXOI22MJukoEgJBNjnFbuNE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kuloXkjQReO0Kg356M+ArQZ94duuWXn5XRagYnUAZkBvAdBm+HFThSObYB6QMZoSRHS9BmLcR108f5qnGaECfyKliMG4YotVYXg0sH6LoAAmy9O01dEKvvWI4NIe66irSDUOVTOht3eTOr/pGgTEDSfUtBkWvtXYowbX49NJtZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=gan/JCB3; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mbIxCwBj"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-77f7da24397so2507885b3a.2
-        for <linux-cxl@vger.kernel.org>; Fri, 26 Sep 2025 17:21:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="gan/JCB3"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-858183680b4so358442385a.2
+        for <linux-cxl@vger.kernel.org>; Fri, 26 Sep 2025 18:44:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758932505; x=1759537305; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WgBS8TXXh/PJHvsCbZXkp2wZ9PaKkzgJFyRLqDXciTQ=;
-        b=mbIxCwBjFiKCJ6yfKgFq/nYSab2RT+LgOJhG4kggTazquBmWDnhETSbBe8wA8IMG87
-         foX7kR4sHgsDdikb2Hsrqz0JTKnOdUWEYY6VaNoJCWIRTmn8TucgNDrSOuHunfakVP/u
-         gozaV0VA9ZDRRXeDKbBR1TsNmCZf2ab7Kjpq6xw6yCfJM4XbvS7iG9192Qn4DDhCiP7B
-         DYKsXeGX3z0laB0aZfo93qvDmB0s6eVsEpdwwu39o4Uk2LsY/4iuc+mj8/Hw4VA/qheU
-         KqSYuKrSSklY7sEG1ZdWuio702AndE84lMtPar3ejFQ5NNnqv5Klq/PQoL44+hUipzBs
-         IR3A==
+        d=gourry.net; s=google; t=1758937487; x=1759542287; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eLtYuDKI14SpP+23oPAYnH6nmb86y+sxjILKpo0x83o=;
+        b=gan/JCB3r0kQMyh/Fi1W/RGWqgJipINImCGgW1AQA49Kx+QE1qBkn9QgKwzXI10Tbv
+         EjmO+Lnw5v8Sckc8irHAODbNZRMFXLq8shvfhwURtnTCqVFedK9dXDJoa1a9wUlEj/NG
+         Twhx92eGP5je7bj24VethvIovxAh71yOJYLkGxPfgPJMErOC9lrmNvhlgFhHh43fUfDf
+         yxve6BOK4fTQSjZFKpAb1+x8g9fxDChbakeaYo3P7mqnmxXBcdmboEhRpg49rtkdpw2V
+         Pbfcq1ApfVkRxUczAxUbecMIgXeHA6j+Wg3hv+z92yjYASo6GCYkJjkeVLbdY+JGVsjH
+         uSbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758932505; x=1759537305;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WgBS8TXXh/PJHvsCbZXkp2wZ9PaKkzgJFyRLqDXciTQ=;
-        b=FpSzWfBWbAO+cs7wF7CUGoO/pY+gwNmUIqoyxWy/lGkQiICz14Tvnn5KfvTRB8gsp5
-         JLMDjqUxlb+13VMYprq/vyQqXczRXf+8A2qhUnnXIq5gLQh6rfX2ljqOlhj4bBC7+7OW
-         w8BC5py9cZA3o4eCVyP/+IgFQf7ft+k/+xVxGTJndaC3/C6PIzE+nj5FqLLWF8WlQ2ID
-         BEtAW33KjSFcygLqmyFm5vrLnbwO7Led0GUCX0lKXj6C/sjzP8voOKlUled5tWw9+tUo
-         DVM6O7z7LIbXByNbd7+6uE0SDV073GI00o2JWpzxpLQDhlqr+/oO+1BKg6kBvQvWa27M
-         6w8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVZyNQfqpvip4p1txaG3vKwNGTxYOx37MTervwGLNkKfRrUu85DC3jrrmdiVnkoQfa/IofKE+W6pN4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd2Abh7TJ6LfiuPUCuLVdiaA4jQYo7GNR+1j7shfLnQnF0Yk47
-	cDacZx6GJVVPePg2BIbAC1uSGjuJAsWgCzH9Xw8g2OHWe5u0E714sRqG
-X-Gm-Gg: ASbGncsRQYl98dXuN67X2t/wYM6xMmNkJX+466cHaX8zx2tdqJNpfKYuDTuK/HeOHob
-	bMegksQNqaRW2tGazzdhB3i43RKvsrLjkbkca3ZBr310vx2rlj29kSaS7jKRgzght6V08yMIUoR
-	P4uE8vvTBXuXHezxLafcJqGDxjSjxx9Ilb5rCBu9pBI4rMlSUapsTln6ILzu7dznxdExvEcCLGe
-	WYW2TQftEQpj6ewMqzX5/kciiVjJGFpPQLcjfvT8tzwnNkOKu3igEJ3sGCsWncHUkTHk4snEsKZ
-	ZT2+rSuDtjBgZi6hek/S+7RQEz0mSsHK8vj0Js4qTHV65n6I2LBPHD03d2pxpnJeyG24UUM6gWo
-	LB18sujPMMKBFkXr9LtsGhlIzX7EGKyfhQ3Jq28F9DcY=
-X-Google-Smtp-Source: AGHT+IEiVK/GMzpOhOc6Ms3m/uHtgMeXjMFirWPawAmkGC16ttcIQ4tMR5IRpWvj2pdHvtjFvsYukA==
-X-Received: by 2002:a05:6a00:189a:b0:77f:472b:bc72 with SMTP id d2e1a72fcca58-780fcdc5b13mr8824571b3a.3.1758932504626;
-        Fri, 26 Sep 2025 17:21:44 -0700 (PDT)
-Received: from deb-101020-bm01.dtc.local ([149.97.161.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7810238ca29sm5350489b3a.6.2025.09.26.17.21.43
+        d=1e100.net; s=20230601; t=1758937487; x=1759542287;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eLtYuDKI14SpP+23oPAYnH6nmb86y+sxjILKpo0x83o=;
+        b=imB7xIrH9ZEu/WkrHt/7J9F5v/mJMslfD3YIngIiUsU5Vz2+yOp9li5ehg8ZzF+35q
+         VLQGt5wuV3xAqVaPbmuyzch8gU1DdhwCpV2Dbg90HVIRSr+tY02zEa5pGmqXN7s7kmSN
+         UXpzVc00BDIU+TJcHXBTz3UoAusJWpmko4uNL0KWbJ9NIBrGh3RUtW+rNU20HkLeMJVW
+         cMUCc48KxgV5OA7eAhC8oav0+BZfLmlOn6LT2rTWCI1/uEMtK7uRkWIZR6w4Lj3ox/dN
+         XAHwGa1e4bk63Yi+naEYRnyApZjs9G+GR4TIWXL7TkiMZTqzPpsNdlkIUAteKl8Dc1yJ
+         SUjA==
+X-Forwarded-Encrypted: i=1; AJvYcCVfCmD0FaUGzNhW1TasMqTpK4MetpKM1OjPMozpezK+dQGEMnqpFlAP0N9dJoTfRF+Z7AiLKUh+KBM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJDcM7U4pLLAGduowAM6lOmsx9FdhbY3EE76QdRA1C3QCvu2hp
+	SDInqk/X43NMxznkc0GIumPDPctNzldjksh4zqlpqLAD5+G/5ZSFfRGhVsgjvzOvmaw=
+X-Gm-Gg: ASbGnctAmFqTWQUrjgU3BKO1XWEj4pBRUfKkEDN7WR0NK2S7MomrHO1Rhz0rZdff//V
+	+z+R2Yue/4AzBYCA+2EGiNn/H3CkRqtRZDEEVSewaluB9U/e99dgUx6RQXwMjIxV4WvrkpqxVcb
+	EkPUJPdXQj8LMtsSGHh50WY/pgmlLRczP8mFVHL6sQ8LBcGrWDVfoJay9cGrqvoG0MiqlWOQ5CM
+	MqhwMtFnuN2of0NTWgoDDIx/EZhxpxlYzc76yr/qRHYLSLFWpCSOSzafOFGIR/QtT35JTg2KK1B
+	SXSGzqeKpYsv+rgBrS3LwTC0sXvgKD8m9xDJ+IcCtgvPAFzBt9IDctNw3qqZwJLdSF1SpNrT3ko
+	ckzLEAkCZyE3q3kZE5TYKYJKdkWTuluddBdCdshmrNRXd0HUe7bTtu8LbNc+ExAFO9cc1KL/ont
+	Yf1jGfKQ==
+X-Google-Smtp-Source: AGHT+IHp6aaJim+FGxPXwaKcRAhC/7o+RiCQEQ0xsgnerht7ZPGqeEPIy0Gt8By0UJ/GpFPpjGy09g==
+X-Received: by 2002:a05:620a:290a:b0:860:e823:887d with SMTP id af79cd13be357-860e8238f93mr631609685a.71.1758937486781;
+        Fri, 26 Sep 2025 18:44:46 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4db0b94599esm34985571cf.16.2025.09.26.18.44.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Sep 2025 17:21:44 -0700 (PDT)
-From: anisa.su887@gmail.com
-To: qemu-devel@nongnu.org
-Cc: Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net,
-	linux-cxl@vger.kernel.org,
-	Anisa Su <anisa.su@samsung.com>
-Subject: [QEMU PATCH 1/1] hw/cxl/cxl-mailbox-utils: Enable FMAPI Initiate Add for MHSLD
-Date: Sat, 27 Sep 2025 00:18:07 +0000
-Message-ID: <20250927002125.860668-2-anisa.su887@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250927002125.860668-1-anisa.su887@gmail.com>
-References: <20250927002125.860668-1-anisa.su887@gmail.com>
+        Fri, 26 Sep 2025 18:44:45 -0700 (PDT)
+Date: Fri, 26 Sep 2025 21:44:43 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>
+Subject: Re: [PATCH v3 11/11] cxl: Enable AMD Zen5 address translation using
+ ACPI PRMT
+Message-ID: <aNdBixt1AzIxdCpX@gourry-fedora-PF4VCD3F>
+References: <20250912144514.526441-1-rrichter@amd.com>
+ <20250912144514.526441-12-rrichter@amd.com>
+ <aNQl2ogOPKid7yyp@gourry-fedora-PF4VCD3F>
+ <aNbGfOxB4LXaFL0Z@rric.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aNbGfOxB4LXaFL0Z@rric.localdomain>
 
-From: Anisa Su <anisa.su@samsung.com>
+On Fri, Sep 26, 2025 at 06:59:40PM +0200, Robert Richter wrote:
+> On 24.09.25 13:09:46, Gregory Price wrote:
+> > On Fri, Sep 12, 2025 at 04:45:13PM +0200, Robert Richter wrote:
+> > > +static void cxl_prm_init(struct cxl_port *port)
+> > > +{
+> > > +	u64 spa;
+> > > +	struct prm_cxl_dpa_spa_data data = { .out = &spa, };
+> > > +	int rc;
+> > > +
+> > > +	if (!check_prm_address_translation(port))
+> > > +		return;
+> > > +
+> > > +	/* Check kernel (-EOPNOTSUPP) and firmware support (-ENODEV) */
+> > > +	rc = acpi_call_prm_handler(prm_cxl_dpa_spa_guid, &data);
+> > > +	if (rc == -EOPNOTSUPP || rc == -ENODEV)
+> > > +		return;
+> > > +
+> > > +	port->to_hpa = cxl_prm_to_hpa;
+> > > +
+> > > +	dev_dbg(port->host_bridge, "PRM address translation enabled for %s.\n",
+> > > +		dev_name(&port->dev));
+> > > +}
+> > 
+> > Is it possible that the PRMT function is present but uninitialize?
+> > For example if expanders are not in a normalized address mode.
+> > 
+> > This code would likely still add the to_hpa() function reference even
+> > if the underlying PRMT function hasn't been set up for translation.
+> 
+> At this point during init, it is not yet possible to determine
+> normalized address mode. Endpoint and hdm decoders are still unknown.
+> Thus, PRM is enabled for the port. Later, during region setup, there is
+> a check for that while determining the region's HPA range. Addresses
+> are translated and ranges adjusted only if needed. Once the ranges are
+> set up, no further PRM handler calls are executed.
+>
 
-Call mhd_reserve_extents in FMAPI Init Add (5604h)to enable sending
-FMAPI Add command to MHSLD.
+Right, but that errors out if address translation fails (below).
 
-Signed-off-by: Anisa Su <anisa.su@samsung.com>
----
- hw/cxl/cxl-mailbox-utils.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Is this code missing a check for the endpoint_decoder.start==0?
 
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index c5177dfd92..9ac60db4e1 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -24,6 +24,7 @@
- #include "system/hostmem.h"
- #include "qemu/range.h"
- #include "qapi/qapi-types-cxl.h"
-+#include "hw/cxl/mhsld/mhsld.h"
- 
- #define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
- #define CXL_DC_EVENT_LOG_SIZE 8
-@@ -4163,6 +4164,8 @@ static CXLRetCode cmd_fm_initiate_dc_add(const struct cxl_cmd *cmd,
-         CXLDCExtentRaw extents[];
-     } QEMU_PACKED *in = (void *)payload_in;
-     CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-+    CXLType3Class *cvc = CXL_TYPE3_GET_CLASS(ct3d);
-+    CXLDCRegion *region = &ct3d->dc.regions[in->reg_num];
-     int i, rc;
- 
-     switch (in->selection_policy) {
-@@ -4201,6 +4204,28 @@ static CXLRetCode cmd_fm_initiate_dc_add(const struct cxl_cmd *cmd,
-                 return rc;
-             }
- 
-+            /* If this is an MHD, attempt to reserve the extents */
-+            if (cvc->mhd_reserve_extents) {
-+                g_autofree CxlDynamicCapacityExtentList *records =
-+                    g_malloc0(in->ext_count * sizeof(*records));
-+                g_autofree CxlDynamicCapacityExtent *dc_exts =
-+                    g_malloc0(in->ext_count * sizeof(*dc_exts));
-+
-+                for (i = 0; i < in->ext_count; i++) {
-+                    CxlDynamicCapacityExtent *value = &dc_exts[i];
-+                    value->offset =
-+                        in->extents[i].start_dpa - region->base;
-+                    value->len = in->extents[i].len;
-+
-+                    records[i].value = value;
-+                    records[i].next = &records[i + 1];
-+                }
-+                records[in->ext_count - 1].next = NULL;
-+                if (!cvc->mhd_reserve_extents(&ct3d->parent_obj, records, in->reg_num)) {
-+                    return CXL_MBOX_INVALID_INPUT;
-+                }
-+            }
-+
-             CXLDCExtentGroup *group = NULL;
-             for (i = 0; i < in->ext_count; i++) {
-                 CXLDCExtentRaw *ext = &in->extents[i];
--- 
-2.51.0
+static int setup_address_translation(struct cxl_endpoint_decoder *cxled,
+                                     struct cxl_region_context *ctx)
+{
+...
+        /* Translate HPA range to SPA. */
+        range.start = port->to_hpa(cxld, range.start);
+        range.end = port->to_hpa(cxld, range.end);
 
+        if (range.start == ULLONG_MAX || range.end == ULLONG_MAX) {
+                dev_warn(&port->dev,
+                        "CXL address translation: Failed to translate HPA range: %#llx-%#llx:%#llx-%#llx(%s)\n",
+                        range.start, range.end, ctx->hpa_range.start,
+                        ctx->hpa_range.end, dev_name(&cxld->dev));
+                return -ENXIO;
+        }
+...
+}
+
+
+static int setup_region_params(struct cxl_endpoint_decoder *cxled,
+                               struct cxl_region_context *ctx)
+{          
+...
+        rc = setup_address_translation(cxled, ctx);
+...
+}
+
+
+int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
+{
+...
+        rc = setup_region_params(cxled, &ctx);
+        if (rc)
+                return rc;
+}
