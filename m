@@ -1,344 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DBE8834;
-	Fri, 26 Sep 2025 23:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C176817E4
+	for <linux-cxl@vger.kernel.org>; Sat, 27 Sep 2025 00:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758929216; cv=none; b=kb2ynRZdDSEMtSt2B6p2Y6Xn+s4w0Y8hSduMQX1QOhfAEd4pn8gYWRtUYclnkuTsibIiWORqhgzKsTvuoJK0QsWVo81SCzsSi6qRSkspL5qgBWq+FQ131BBuhLz1rr/CAoROS+Swxffizp2tc43eaqjXuwMeLdV2GqhmxIArfGI=
+	t=1758932505; cv=none; b=RYZSpuFiwGLPxRn1G7UIR+eG3TqiLUecz/ATugcKsXWubmkwx7GZ90bIZjD5pXbQKKEUsOCDZ+MBChrexfJbfZVNKmIi1C3wD7sVlHFLZ3hbS/ejL5VAsp4xHrqNz7I+xeIxGtbiU7R/43B7o5plkCroySpf7z7Sb8rvdCn2sCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758929216; c=relaxed/simple;
-	bh=pJeIjqGBwe+U7kx0K3qcjUZt2mpDEceDRMGQq8WSAAI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ni23oCCI/Ayh3+2zzwZb5oJLbumOs+De5WtyzTvD933Tp20EXkwu6aD/T1BkBP9sL12yoJOB/Se4B6YNzNqq/T+vWGEpx8FZ/Q9Oj4aUo9W6MrV5//yB8X8nxXFRjv0a4MsD+TbO86nKdazypgb5oFkU+VGxcjiAvJQs15Uf3cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QZR6x4T8; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1758932505; c=relaxed/simple;
+	bh=fGVl5iEOUqsyWw4eeEJe4XhswtCtS5zPwkYVkKqoBUw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ofMcLPQfeQdgTZDUnfPoaz5EfmmOaI4wInSM/WMzxK/xVtKkkx9iuXbpoMjKEwf9IaMjIWlfZbIUe+6fLS9dvqvge8SxTSCCzZxiXH3N/gGq/gW/Fd6uJt+UdAqlRZS6he0PistibKyr7tE4IPRvRBKKliWUXq+U/9HrnFhxLf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KpscJhp4; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QZR6x4T8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758929214; x=1790465214;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=pJeIjqGBwe+U7kx0K3qcjUZt2mpDEceDRMGQq8WSAAI=;
-  b=QZR6x4T8hchMhWQZauUXQu3YJADzJMSpzBIFGKFhe4pwxLB/ws97D8AU
-   hLUNMjNAvY7G+zLrBk70GoJt8jYBwXtxmTuyPFEJuwK0by7ru3ZQzzGCY
-   o7DmhloNk3Zk6NMmlHR58T5Ir7NZpiWbtRchjbTyAHqbEdJuLeEkVYo6r
-   Cf1DBnV82tOdxXxsjt74/q5UezcQfkaUYLsgaO5yCJICP7SzwVpoDe4TG
-   d8dTVJXwlOORfR2Q33OY3MOcgFSCHvIZ4MEj36/3ygHXpvfg1QnRXLoyh
-   xEp0OHSFbW9uFYqD94LKvHjOI8YZiqx6n3heQLalpLhXKS3LqI4fg0rP5
-   Q==;
-X-CSE-ConnectionGUID: jzqc9fX4SrmT948YfpU0ag==
-X-CSE-MsgGUID: NWoxRKKfTMmy+6DIpCzvgg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11565"; a="60303571"
-X-IronPort-AV: E=Sophos;i="6.18,296,1751266800"; 
-   d="scan'208";a="60303571"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 16:26:53 -0700
-X-CSE-ConnectionGUID: 5ic3nTkeSFe3NlSdTZpRbQ==
-X-CSE-MsgGUID: CCDPoB8nSI+r90I5QBd41w==
-X-ExtLoop1: 1
-Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.109.69]) ([10.125.109.69])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 16:26:50 -0700
-Message-ID: <f028d71d-0f0c-49e4-a90d-57176fcb7d45@intel.com>
-Date: Fri, 26 Sep 2025 16:26:49 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KpscJhp4"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-77f1f29a551so3691153b3a.3
+        for <linux-cxl@vger.kernel.org>; Fri, 26 Sep 2025 17:21:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758932503; x=1759537303; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tQTR/LW73pcGQZucVeSjNBBl318LBz6n0O2J7WibIuY=;
+        b=KpscJhp4vLQPTllWYNe2rSSwM/D4Bm1cLxAZf2fVqpwCtB3pCgPyWpGs8XuLIpTVcC
+         zRLKdBE4+XuRRJ2mMTg8tpuMi6yXjU/H0W3am+4Clp5Y6kAMc5cPFHIK0FjFwX+B54jc
+         XKud46WI6O4lgXRnQJDXMLdB1j2a31WuYOmHFOo9MpTgFiQObr0Mp3jvc9n66uVyxVZc
+         +8iQ3rcjfaTHUwpVECeCdRF+lTHDHoY1WQH8tYsy1LlWOQi5w+vy5/A0Vsd83Vm5qt68
+         JgOpElyt4rqM7OB49zAkptn22hTVkeJ2AGxJf3/gxsMmiFH9AUR0XVneD8ufWQxv6anj
+         wFjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758932503; x=1759537303;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tQTR/LW73pcGQZucVeSjNBBl318LBz6n0O2J7WibIuY=;
+        b=JIrMMd6DNWHJcvErB6XQmVNTVZB8b0lV2u7bS5WlMV5BVCRg0g6ro/t/D8OSiN0h8R
+         qIvmipTMgO+XtaqjmTM6R0CREWNv7hLPVVsKHjPOMIKyHB/Hj3Ja8Iz/XWjbxfoqNYv5
+         vWnCo1PUC5irfRje8UCNuKXylW1x0U+g7uTChYxVeZS52282CwKzqL6UnKViqH4/1CKv
+         0SIX268eMlPwn1shu7HvnVxcw2+a0mO/KArH/YKtEg90Tqxp0iOucoYPoe3cFw+M9X8d
+         XksDEfUGZH7J6Mu+usT290TiKjyO/LxkWnMcCp/qWnvy5SwP6HrI4RDfuoZtr66tfFFB
+         3+cQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWhsf4dn1B52YMRFOho0B8XUcY59xv7yEbQ39L61XL7LDXD1y41Mt6CsB3XyD830hpoJU62DW5h76s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw61x01+ZAxmTDKstj4S8KRnMnhrFfkSIhaJTXf7+jsxvbIKq2w
+	F7sTZ/3qtdT2x9S42bhnoJfkExG5FiCxsdBWVtpmQGpbeR4scdvwfA+w
+X-Gm-Gg: ASbGncu0Sf2wd5tN0iitimw9D6TRYR7vRL+YL95liAW1FcdWkdNsnSgQ2vVZans0gVe
+	2gQ/woNXDR/gGyxodZZsfggUZP6wFTq6QdBVSyqVrTfW1VgMROHDXxpgKl78GMTgmfdw1hWy+62
+	5NljeuI/rrl8zle6wAkmWLoRQ4tuh8/CeIw/gOmwfqHL100mVc4NcXuz6sHXgZMXKI8pgI6Om3y
+	t7hB/0dSB3s0+KOReWmVYqqSFSWCRMqlB2jtINmhQEynvn3vCwwIl+oPJeS4bxd8pkWPr/PTzC6
+	iGXE3kATxhOnOoQS+U5dY/QkIubHyzK3nKVy1F/xXH6+8/dl+93s8EFLMmAiP+8kswe2HWlKgYC
+	maU9O1trj3RrMjPExzusL23Uf6pkFhqGjc9FnWQXjlBmiH6ps0J/dlQ==
+X-Google-Smtp-Source: AGHT+IGxmhCV2WruVI+XO8VL9LJ3RKewJCIuMAwgl7jSu9H1qilIOZb32R7DmoucZ7lRJaQj+xypGg==
+X-Received: by 2002:a05:6a00:acd:b0:77f:50df:df36 with SMTP id d2e1a72fcca58-780fcec5cedmr10386545b3a.18.1758932502876;
+        Fri, 26 Sep 2025 17:21:42 -0700 (PDT)
+Received: from deb-101020-bm01.dtc.local ([149.97.161.244])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7810238ca29sm5350489b3a.6.2025.09.26.17.21.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Sep 2025 17:21:42 -0700 (PDT)
+From: anisa.su887@gmail.com
+To: qemu-devel@nongnu.org
+Cc: Jonathan.Cameron@huawei.com,
+	dave@stgolabs.net,
+	linux-cxl@vger.kernel.org,
+	Anisa Su <anisa.su@samsung.com>
+Subject: [QEMU PATCH 0/1] CXL: Enable FMAPI Add for MHSLDs
+Date: Sat, 27 Sep 2025 00:18:06 +0000
+Message-ID: <20250927002125.860668-1-anisa.su887@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 20/25] PCI/AER: Dequeue forwarded CXL error
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
- ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
- rrichter@amd.com, dan.carpenter@linaro.org,
- PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
- Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250925223440.3539069-1-terry.bowman@amd.com>
- <20250925223440.3539069-21-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250925223440.3539069-21-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Anisa Su <anisa.su@samsung.com>
 
+This patch adds support for FMAPI Initiate Add command (5604h) for MHSLDs. It
+is based on the following branch:
+https://gitlab.com/jic23/qemu/-/tree/cxl-2025-07-03
 
-On 9/25/25 3:34 PM, Terry Bowman wrote:
-> The AER driver is now designed to forward CXL protocol errors to the CXL
-> driver. Update the CXL driver with functionality to dequeue the forwarded
-> CXL error from the kfifo. Also, update the CXL driver to begin the protocol
-> error handling processing using the work received from the FIFO.
-> 
-> Update function cxl_proto_err_work_fn() to dequeue work forwarded by the
-> AER service driver. This will begin the CXL protocol error processing with
-> a call to cxl_handle_proto_error().
-> 
-> Introduce logic to take the SBDF values from 'struct cxl_proto_error_info'
-> and use in discovering the erring PCI device. The call to pci_get_domain_bus_and_slot()
-> will return a reference counted 'struct pci_dev *'. This will serve as
-> reference count to prevent releasing the CXL Endpoint's mapped RAS while
-> handling the error. Use scope base __free() to put the reference count.
-> This will change when adding support for CXL port devices in the future.
-> 
-> Implement cxl_handle_proto_error() to differentiate between Restricted CXL
-> Host (RCH) protocol errors and CXL virtual host (VH) protocol errors.
-> Maintain the existing RCH handling. Export the AER driver's pcie_walk_rcec()
-> allowing the CXL driver to walk the RCEC's secondary bus.
-> 
-> VH correctable error (CE) processing will call the CXL CE handler. VH
-> uncorrectable errors (UCE) will call cxl_do_recovery(), implemented as a
-> stub for now and to be updated in future patch. Export pci_aer_clean_fatal_status()
-> and pci_clean_device_status() used to clean up AER status after handling.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> ---
-> Changes in v11->v12:
-> - Add guard for CE case in cxl_handle_proto_error() (Dave)
-> 
-> Changes in v10->v11:
-> - Reword patch commit message to remove RCiEP details (Jonathan)
-> - Add #include <linux/bitfield.h> (Terry)
-> - is_cxl_rcd() - Fix short comment message wrap  (Jonathan)
-> - is_cxl_rcd() - Combine return calls into 1  (Jonathan)
-> - cxl_handle_proto_error() - Move comment earlier  (Jonathan)
-> - Usse FIELD_GET() in discovering class code (Jonathan)
-> - Remove BDF from cxl_proto_err_work_data. Use 'struct
-> pci_dev *' (Dan)
-> ---
->  drivers/cxl/core/ras.c  | 72 ++++++++++++++++++++++++++++++++++-------
->  drivers/pci/pci.c       |  1 +
->  drivers/pci/pci.h       |  7 ----
->  drivers/pci/pcie/aer.c  |  1 +
->  drivers/pci/pcie/rcec.c |  1 +
->  include/linux/aer.h     |  2 ++
->  include/linux/pci.h     |  9 ++++++
->  7 files changed, 75 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index 39472d82d586..9acfe24ba3bb 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> @@ -117,17 +117,6 @@ static void cxl_cper_prot_err_work_fn(struct work_struct *work)
->  }
->  static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
->  
-> -int cxl_ras_init(void)
-> -{
-> -	return cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
-> -}
-> -
-> -void cxl_ras_exit(void)
-> -{
-> -	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
-> -	cancel_work_sync(&cxl_cper_prot_err_work);
-> -}
-> -
->  static void cxl_handle_cor_ras(struct device *dev, u64 serial, void __iomem *ras_base);
->  static pci_ers_result_t cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base);
->  
-> @@ -331,6 +320,10 @@ void cxl_endpoint_port_init_ras(struct cxl_port *ep)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_port_init_ras, "CXL");
->  
-> +static void cxl_do_recovery(struct device *dev)
-> +{
-> +}
-> +
->  static void cxl_handle_cor_ras(struct device *dev, u64 serial, void __iomem *ras_base)
->  {
->  	void __iomem *addr;
-> @@ -472,3 +465,60 @@ pci_ers_result_t pci_error_detected(struct pci_dev *pdev,
->  	return rc;
->  }
->  EXPORT_SYMBOL_NS_GPL(pci_error_detected, "CXL");
-> +
-> +static void cxl_handle_proto_error(struct cxl_proto_err_work_data *err_info)
-> +{
-> +	struct pci_dev *pdev = err_info->pdev;
-> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+This code was tested by starting 2 VMs, host_1, which initializes the MHSLD, and
+host_2, with the following topologies, then sending the FMAPI command from both
+hosts.
 
-The pci_dev device lock needs to be held and cxl_pci_drv_bound() needs to be checked before this is called.
+host_1 = "-device usb-ehci,id=ehci \
+     -object memory-backend-file,id=cxl-mem1,mem-path=/tmp/t3_cxl1.raw,size=4G \
+     -object memory-backend-file,id=cxl-lsa1,mem-path=/tmp/t3_lsa1.raw,size=1M \
+     -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
+     -device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
+     -device cxl-mhsld,bus=cxl_rp_port0,num-dc-regions=2,volatile-dc-memdev=cxl-mem1,id=cxl-mhd0,sn=99,mhd-head=0,mhd-state_file=mhd_metadata,mhd-init=true \
+     -device usb-cxl-mctp,bus=ehci.0,id=usb0,target=cxl-mhd0\
+     -machine cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=1k"
 
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *host_dev __free(put_device) = get_device(&cxlmd->dev);
-> +
-> +	if (err_info->severity == AER_CORRECTABLE) {
-> +		int aer = pdev->aer_cap;
-> +
-> +		guard(device)(&pdev->dev);
-> +
-> +		if (aer)
-> +			pci_clear_and_set_config_dword(pdev,
-> +						       aer + PCI_ERR_COR_STATUS,
-> +						       0, PCI_ERR_COR_INTERNAL);
-> +
-> +		if (!cxl_pci_drv_bound(pdev))
-> +			return;
-> +
-> +		cxl_cor_error_detected(&cxlmd->dev);
-> +		pcie_clear_device_status(pdev);
-> +	} else {
-> +		cxl_do_recovery(&cxlmd->dev);
-> +	}
-> +}
-> +
-> +static void cxl_proto_err_work_fn(struct work_struct *work)
-> +{
-> +	struct cxl_proto_err_work_data wd;
-> +
-> +	while (cxl_proto_err_kfifo_get(&wd))
-> +		cxl_handle_proto_error(&wd);
-> +}
-> +
-> +static struct work_struct cxl_proto_err_work;
-> +static DECLARE_WORK(cxl_proto_err_work, cxl_proto_err_work_fn);
-> +
-> +int cxl_ras_init(void)
-> +{
-> +	if (cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work))
-> +		pr_err("Failed to initialize CXL RAS CPER\n");
-> +
-> +	cxl_register_proto_err_work(&cxl_proto_err_work);
-> +
-> +	return 0;
-> +}
-> +
-> +void cxl_ras_exit(void)
-> +{
-> +	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
-> +	cancel_work_sync(&cxl_cper_prot_err_work);
-> +
-> +	cxl_unregister_proto_err_work();
-> +	cancel_work_sync(&cxl_proto_err_work);
-> +}
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 1a4f61caa0db..c8f17233a18e 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2328,6 +2328,7 @@ void pcie_clear_device_status(struct pci_dev *dev)
->  	pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &sta);
->  	pcie_capability_write_word(dev, PCI_EXP_DEVSTA, sta);
->  }
-> +EXPORT_SYMBOL_NS_GPL(pcie_clear_device_status, "CXL");
->  #endif>  
->  /**
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 22e8f9a18a09..189b22ab2b1b 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -692,16 +692,10 @@ static inline bool pci_dpc_recovered(struct pci_dev *pdev) { return false; }
->  void pci_rcec_init(struct pci_dev *dev);
->  void pci_rcec_exit(struct pci_dev *dev);
->  void pcie_link_rcec(struct pci_dev *rcec);
-> -void pcie_walk_rcec(struct pci_dev *rcec,
-> -		    int (*cb)(struct pci_dev *, void *),
-> -		    void *userdata);
->  #else
->  static inline void pci_rcec_init(struct pci_dev *dev) { }
->  static inline void pci_rcec_exit(struct pci_dev *dev) { }
->  static inline void pcie_link_rcec(struct pci_dev *rcec) { }
-> -static inline void pcie_walk_rcec(struct pci_dev *rcec,
-> -				  int (*cb)(struct pci_dev *, void *),
-> -				  void *userdata) { }
->  #endif
->  
->  #ifdef CONFIG_PCI_ATS
-> @@ -1081,7 +1075,6 @@ void pci_restore_aer_state(struct pci_dev *dev);
->  static inline void pci_no_aer(void) { }
->  static inline void pci_aer_init(struct pci_dev *d) { }
->  static inline void pci_aer_exit(struct pci_dev *d) { }
-> -static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
->  static inline int pci_aer_clear_status(struct pci_dev *dev) { return -EINVAL; }
->  static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
->  static inline void pci_save_aer_state(struct pci_dev *dev) { }
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index ccefbcfe5145..e018531f5982 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -288,6 +288,7 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
->  	if (status)
->  		pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, status);
->  }
-> +EXPORT_SYMBOL_GPL(pci_aer_clear_fatal_status);
+host_2 = "-device usb-ehci,id=ehci \
+     -object memory-backend-file,id=cxl-mem1,mem-path=/tmp/t3_cxl1.raw,size=4G \
+     -object memory-backend-file,id=cxl-lsa1,mem-path=/tmp/t3_lsa1.raw,size=1M \
+     -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
+     -device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
+     -device cxl-mhsld,bus=cxl_rp_port0,num-dc-regions=2,volatile-dc-memdev=cxl-mem1,id=cxl-mhd0,sn=99,mhd-head=1,mhd-state_file=mhd_metadata,mhd-init=false \
+     -device usb-cxl-mctp,bus=ehci.0,id=usb0,target=cxl-mhd0\
+     -machine cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=1k"
 
-Not seeing this being used anywhee. Should this go to a different patch?
+libcxlmi is cloned on both hosts and used to send the FMAPI add/release commands
+from both host_1 and host_2 and the expected behavior is verified by printing
+the response payload from the Get DC Region Lists command (5603h).
+The following interactive program from libcxlmi is
+used to do so: https://github.com/computexpresslink/libcxlmi/blob/main/examples/fmapi-mctp.c
 
->  
->  /**
->   * pci_aer_raw_clear_status - Clear AER error registers.
-> diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
-> index d0bcd141ac9c..fb6cf6449a1d 100644
-> --- a/drivers/pci/pcie/rcec.c
-> +++ b/drivers/pci/pcie/rcec.c
-> @@ -145,6 +145,7 @@ void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
->  
->  	walk_rcec(walk_rcec_helper, &rcec_data);
->  }
-> +EXPORT_SYMBOL_NS_GPL(pcie_walk_rcec, "CXL");
+Question:
+Currently, the input payload to FMAPI Init Add contains an array of CXLDCExtentRaw
+elements. The mshld_reserve_extents() function expects a pointer of type
+CxlDynamicCapacityExtentList, so a loop is introduced to convert CXLDCExtentRaw[]
+to CxlDynamicCapacityExtentList.
 
-Not seeing this being used in this patch either.
+I am wondering why the typedefs for extents/extent list in qapi-types-cxl.h
+are separate from the typedefs in cxl_device.h? Is there a nice way to avoid
+introducing a loop here just to convert types here?
 
-DJ
+Anisa Su (1):
+  hw/cxl/cxl-mailbox-utils: Enable FMAPI Initiate Add for MHSLD
 
->  
->  void pci_rcec_init(struct pci_dev *dev)
->  {
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 6b2c87d1b5b6..64aef69fb546 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -66,6 +66,7 @@ struct cxl_proto_err_work_data {
->  
->  #if defined(CONFIG_PCIEAER)
->  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
-> +void pci_aer_clear_fatal_status(struct pci_dev *dev);
->  int pcie_aer_is_native(struct pci_dev *dev);
->  void pci_aer_unmask_internal_errors(struct pci_dev *dev);
->  #else
-> @@ -73,6 +74,7 @@ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->  {
->  	return -EINVAL;
->  }
-> +static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
->  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->  static inline void pci_aer_unmask_internal_errors(struct pci_dev *dev) { }
->  #endif
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index bc3a7b6d0f94..b8e36bde346c 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1825,6 +1825,9 @@ extern bool pcie_ports_native;
->  
->  int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
->  			  bool use_lt);
-> +void pcie_walk_rcec(struct pci_dev *rcec,
-> +		    int (*cb)(struct pci_dev *, void *),
-> +		    void *userdata);
->  #else
->  #define pcie_ports_disabled	true
->  #define pcie_ports_native	false
-> @@ -1835,8 +1838,14 @@ static inline int pcie_set_target_speed(struct pci_dev *port,
->  {
->  	return -EOPNOTSUPP;
->  }
-> +
-> +static inline void pcie_walk_rcec(struct pci_dev *rcec,
-> +				  int (*cb)(struct pci_dev *, void *),
-> +				  void *userdata) { }
->  #endif
->  
-> +void pcie_clear_device_status(struct pci_dev *dev);
-> +
->  #define PCIE_LINK_STATE_L0S		(BIT(0) | BIT(1)) /* Upstr/dwnstr L0s */
->  #define PCIE_LINK_STATE_L1		BIT(2)	/* L1 state */
->  #define PCIE_LINK_STATE_L1_1		BIT(3)	/* ASPM L1.1 state */
+ hw/cxl/cxl-mailbox-utils.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+-- 
+2.51.0
 
