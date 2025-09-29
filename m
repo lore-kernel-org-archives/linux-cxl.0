@@ -1,149 +1,227 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010042.outbound.protection.outlook.com [52.101.85.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A99222565;
-	Sun, 28 Sep 2025 10:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F206A2E0909;
+	Mon, 29 Sep 2025 10:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.42
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759054609; cv=pass; b=ZGPP19lW2kEEdYXYmL7A8unzAPhb7d07BIXrDu61ERhwR+Hp+UNL3MaOVQuCyBRb0u7wcKqMc3sr9l6iS4NqksiOdgPHx8epzM7MvHiiXz0jUgsMAqnpBN+u6Uctq5LXlUO1ayrieF0qcDeRKfOETAIJfUOvR5QwzwBV6qkKzj0=
+	t=1759141302; cv=fail; b=rdUvXoBjN+RA2k97RBgeETh5ll1waw+Dtx9i80YiOCA7MEsUyJYIjTDtgmneF7RPaxR9vbEFE5/pqvmLYOOxBWh00gH3as7yO0MptdKWVTUAX48U7xRWRtqjyGo6LTIZONRseQbiadXCHHeuy3XULs7RXnkTQVV5jFA04fkR32c=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759054609; c=relaxed/simple;
-	bh=+H9VdnqNSyhVBmdblY183rLbEM9XSxY6Yd0hQeZcY3Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=auukTdoixOyJ1BhVHCoX62aDeI/sxMx8XxxpACEZRhEAoWiywgPGaobovKFGpfsyt7rHLdSm/U7ufqtO9FdGQArvA/unYNdOblqqVzAOVxhf4RjTqcugzClHdVQPXD2INo1OwWoGY/Pze0oiX2UWm3o99bXyN4YA9sNwArW//1o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=cyJhuzYr; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	s=arc-20240116; t=1759141302; c=relaxed/simple;
+	bh=f4bJ79yGEFiMXSAvB6aPaTPCBrEEjhqZ7OjhFhcZ2NE=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=jKCZaqUuvbJ3hW16ipcgwui2mObMbGlE/ZeP5qC8U0lfyNNg6CWnmOW2qNvU/zMCtjpz0OGOfxNBuW08tL9YsosIBxlVj4LodUxGXX/9qUwGIQajKI1WtVYlok94kTq42O7A3iyJ41kZ6vtGWpI2r8jbWGofSrW7Re6EJeeoR8U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HwWhnFyg; arc=fail smtp.client-ip=52.101.85.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="cyJhuzYr"
-ARC-Seal: i=1; a=rsa-sha256; t=1759054597; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=jJYFM+neAQWXQB2cGsa059A37UafrOrAeVZiuV4CE7zRdQfPN0vFAT9bn9hfd34xGwacSV24TyBIY4dGjG9/nlvmiSYYfy2yMVStu+fS9POfqZO/ZJ19UBkJ5VKUbdWighpX5F5KvwZjMTVTrDgmEezZqBrbyLwZKHmnykzr26Q=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1759054597; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=VpJ42JwGW7UCIUZCk56ZiPKjeQZx31ky9Sdds9RDDE0=; 
-	b=LmEctG8cjRs0pjToGljveqgUQjyAm53JRwp4Bynq+kqA/SFHV+PnbK8EhypZtIWTR9W8lHwNQOI6MrITMSklfISjkA1ASwmTZpPawv1d9KI9CYi9rP4+T/YoDJw7teWlwIMtj3ApJkFHgIi9VzS9KUEO6oHtz/mbARZHM4BeokA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1759054597;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=VpJ42JwGW7UCIUZCk56ZiPKjeQZx31ky9Sdds9RDDE0=;
-	b=cyJhuzYrD67LRh8aX9QiOmLyspEpZHV4K8rHewSUYLqgEDrAhqwxuUnkyLMzF3or
-	Q1FyNzw5ehTe4RxXnDhjW7n9JRo7pd69JePZz+dBC0RUg+P8ohk9sDLAl3XbnSgTczO
-	60n1CPuN7hU50lWLvF43JyjCFTb7fr9lrJcCKQeQ=
-Received: by mx.zohomail.com with SMTPS id 1759054595484277.04724689880084;
-	Sun, 28 Sep 2025 03:16:35 -0700 (PDT)
-Message-ID: <b07ec317-e916-49bf-bec1-1f954c186457@zohomail.com>
-Date: Sun, 28 Sep 2025 18:16:34 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HwWhnFyg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OO2viwP6VJNquB4HKCOC+3vPqVRHWs35rWOZUs6BTpid+NzgrYkeIJqyJNR8m8ImMYA/U1eX08OqQhtOHurQ1ILByhnNYRqGMeZYkiAcLTCZBp2RTMteHWWvDxAjsT6j8QOdM6FWmV5n4vq6Z70wwFD51ELRBMjE6H8IZnLwlQd9ZwaF/b62DFbAsrd4oD0wbYMaJP8l7u9PLCTxgt7ldIPQ9wFx5iwBeTb0XcWd3UtcfJnsTZXEUqZmnCQZHTX9A4e1CZMBUtkBjRhGxIFthk4aB6qlR0tvguh77+1SMsFqrZxJkdioOqdvJYYALjDhJRllyh8qAALYA47V6fjz3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Xl25uE37nD3jZA84BF0OJAnHIieg7Uhv9zGkV7VzBuQ=;
+ b=OxEwPO6VGFTLvl8frTFuvGebAax8yITG7yLPMNDBx4t2Id1GNlTjjyXB8ar6bGj5y936h4ogfZN16lRnJNrLrfzbxDjCqNWzCuDP1rOyFszXb1l7aIaGc5AqcsmFr+SBYh9XFhyOB2T5cUZsYPYMpfqR5O47M4Jhvf9Qg1zmReJmEdE6uh60or6Hvy2zUcq78eTI/x8loVUm5J9K1QcW4wlVimQIIQgb83wbVg/seaI1yCQPvvXWDcZjQbCkc6zitB8NbFYla7R1ipxT0fmeEHaU2/gkR6BBvYzceIuP5+7tvZMwqb7MbFazr/FM1qcvdHwnIiZLLAJZ7NemH+rY/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xl25uE37nD3jZA84BF0OJAnHIieg7Uhv9zGkV7VzBuQ=;
+ b=HwWhnFygzo1spCbLt/hVEaeaNz+tuyKMra0K1g0pIenxQzfWMkXEOFbqFsHE0oExwTWMAlGiA6w/yVJgcI0YpMrbPyKV4HNVdMi8Yhu6Fd9YwQkvbNGj8/gQ4mGWPJcJtyasiOu+kL9uCQUo35FqVVUzkjnMvAeFyYM40JyCVhI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by PH7PR12MB6884.namprd12.prod.outlook.com (2603:10b6:510:1ba::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.17; Mon, 29 Sep
+ 2025 10:21:38 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.9137.018; Mon, 29 Sep 2025
+ 10:21:38 +0000
+Message-ID: <ee5d4ff7-da7b-4caa-b723-b4b5a09bfc39@amd.com>
+Date: Mon, 29 Sep 2025 11:21:33 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v18 01/20] cxl: Add type2 device basic support
+Content-Language: en-US
+From: Alejandro Lucero Palau <alucerop@amd.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>,
+ alejandro.lucero-palau@amd.com
+Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
+ dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
+ dave.jiang@intel.com, Alison Schofield <alison.schofield@intel.com>
+References: <20250918091746.2034285-1-alejandro.lucero-palau@amd.com>
+ <20250918091746.2034285-2-alejandro.lucero-palau@amd.com>
+ <20250918115512.00007a02@huawei.com>
+ <7d80a32f-149c-4812-8827-71befdaae924@amd.com>
+In-Reply-To: <7d80a32f-149c-4812-8827-71befdaae924@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO4P123CA0260.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:194::13) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] cxl/port: Avoid missing port component registers
- setup
-To: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250928082703.377604-1-ming.li@zohomail.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20250928082703.377604-1-ming.li@zohomail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr0801122797bed76955fafd33bcb314ec0000a1f87f7218a27dec8bca7e40cc5a976ec6e4309f9e97185078:zu08011227f1469caad17054085a11c72b0000c9ad2e567683e470eb3660837c9ed7f54c2cf6ff34e9d17320:rf0801122dc8cef12522f375a8397b5b9c0000da168a4a7fb79ab958201027d79c1fc903aeb25c84496bf9696c00847b6e74:ZohoMail
-X-ZohoMailClient: External
-
-Please ignore this version.
-If cxl_port_setup_regs() fails, should remove dport from port->dports. send out v2 to fix it.
-
-Ming
-
-On 9/28/2025 4:27 PM, Li Ming wrote:
-> port->nr_dports is used to represent how many dports added to the cxl
-> port, it will increase in add_dport() when a new dport is being added to
-> the cxl port, but it will not be reduced when a dport is removed from
-> the cxl port.
->
-> Currently, when the first dport is added to a cxl port, it will trigger
-> component registers setup on the cxl port, the implementation is using
-> port->nr_dports to confirm if the dport is the first dport.
->
-> A corner case here is that adding dport could fail after port->nr_dports
-> updating and before checking port->nr_dports for component registers
-> setup. If the failure happens during the first dport attaching, it will
-> cause that CXL subsystem has not chance to execute component registers
-> setup for the cxl port. the failure flow like below:
->
-> port->nr_dports = 0
-> dport 1 adding to the port:
-> 	add_dport()	# port->nr_dports: 1
-> 	failed on devm_add_action_or_reset() or sysfs_create_link()
-> 	return error	# port->nr_dports: 1
-> 	no chance for component registers setup execution
-> dport 2 adding to the port:
-> 	add_dport()	# port->nr_dports: 2
-> 	no failure
-> 	skip component registers setup because of port->nr_dports is 2
->
-> The solution here is that moving component registers setup closer to
-> add_dport(), so if add_dport() is executed correctly for the first
-> dport, component registers setup on the port will be executed
-> immediately after that.
->
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-> ---
-> base-commit: 46037455cbb748c5e85071c95f2244e81986eb58 cxl/next
-> ---
->  drivers/cxl/core/port.c | 24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index d5f71eb1ade8..e25f326acd7a 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1182,6 +1182,18 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
->  	if (rc)
->  		return ERR_PTR(rc);
->  
-> +	/*
-> +	 * Setup port register if this is the first dport showed up. Having
-> +	 * a dport also means that there is at least 1 active link.
-> +	 */
-> +	if (port->nr_dports == 1 &&
-> +	    port->component_reg_phys != CXL_RESOURCE_NONE) {
-> +		rc = cxl_port_setup_regs(port, port->component_reg_phys);
-> +		if (rc)
-> +			return ERR_PTR(rc);
-> +		port->component_reg_phys = CXL_RESOURCE_NONE;
-> +	}
-> +
->  	get_device(dport_dev);
->  	rc = devm_add_action_or_reset(host, cxl_dport_remove, dport);
->  	if (rc)
-> @@ -1200,18 +1212,6 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
->  
->  	cxl_debugfs_create_dport_dir(dport);
->  
-> -	/*
-> -	 * Setup port register if this is the first dport showed up. Having
-> -	 * a dport also means that there is at least 1 active link.
-> -	 */
-> -	if (port->nr_dports == 1 &&
-> -	    port->component_reg_phys != CXL_RESOURCE_NONE) {
-> -		rc = cxl_port_setup_regs(port, port->component_reg_phys);
-> -		if (rc)
-> -			return ERR_PTR(rc);
-> -		port->component_reg_phys = CXL_RESOURCE_NONE;
-> -	}
-> -
->  	return dport;
->  }
->  
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|PH7PR12MB6884:EE_
+X-MS-Office365-Filtering-Correlation-Id: ae010433-9520-443a-f7ac-08ddff41f96d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Wm43ZVRBOUZ1eStmMEtNeFZjVEJhSU9rYmdsY3JJWUFkWGdzTXZpdEo3V01t?=
+ =?utf-8?B?YmY3SUZQZk5SdVRNWnJpZEdjMXRpbUwvelNEOGxxSE03cjg3bnR0WXVqd09P?=
+ =?utf-8?B?MEF0RWJrQ21nWTNnS01RK3M1V0Vmck01MVpPdS9HSjlHKzZKVHBxZzBRTjZV?=
+ =?utf-8?B?c0liNjFPZ2NIYUdia1g1VlVKdUpiajNCMXRGdlRhV2FvY3l3RGkyWnc1SDJi?=
+ =?utf-8?B?b3pVVkNyY3hPN2lLSXlTVkdPRDJjZWg3NitJZFVHWkRkL213U3FFdWZzYkNt?=
+ =?utf-8?B?bnh5L2gweFA3aXhoMWhqUDFMYzdGdVp3WkNYUlM5UFNtQUhjbnhVb01tM0xG?=
+ =?utf-8?B?cmlVaWx2aXVnb2ZSemM4eGZIdFJsa0FkV1pUQWE4bllHaVdYd1ZpRjJCREJv?=
+ =?utf-8?B?aDJJQkJPeGhPRjVCQUlHU3hjak1lOXR3N2JZRFJ1RXB0bW9icEtsSlJ2RllF?=
+ =?utf-8?B?ZGhQVS95RGRaMFlmVThHSyt2ZUw0M3IraFZjTUF1T25JNUg1ZUpiTFZWd0FG?=
+ =?utf-8?B?YjduRVdnWnhZSHpGVHM3UmhHYUdUMXJBOGFIakFNMzNVNGtwTnNZUGREekhh?=
+ =?utf-8?B?ZkhEYjhsWC80bmkwL2xrMHJMUzhXWEpxOW9mc2dXRGhkSW8vajlKNVVCSC83?=
+ =?utf-8?B?bmpqT3pGUUlLS3NXeTFHSldwdmtwVEw0eSs2T1ZTMFcvWnJBL2VCWnR6ZDVz?=
+ =?utf-8?B?VUk2THpoTXE4eE9XdmZ4RlIwdUV5bzhISnpISTJCMmlqZjdsaGF6bTdNb2FY?=
+ =?utf-8?B?QzhOaHJjY0NXWVZtY21uUnpCSTdtZmlEOGhsaWU4Z1BIeUs0bENmU2RNMW1r?=
+ =?utf-8?B?d25PNnlvVjYvU2VGQ20wcmYwNXh1ckwzSG9kUTJOeWpXaE1VbGREY09NcmEz?=
+ =?utf-8?B?MWwvaUlXUlJJaXNNaWV1N1BnY3Nkc0NBYk1weUZIRUs4bzZacS9JK2N6VlFi?=
+ =?utf-8?B?NVdVdThJQmw3ZVJMQ2pVMlhZUjBPT2ExbFo2ZjRwOUZOVU5wYk5JQjlZdkJJ?=
+ =?utf-8?B?TEcvYmZmdGFHcW84cll4bzNHSlVBeXRzTERCdldsUysvb0FLM25VU0h2Lzcz?=
+ =?utf-8?B?Tmd5YjJKMTRXRFA0akorejlkZDB0L1JsR2NQdGtiaWk0L0EvVGpDRTFLUlRC?=
+ =?utf-8?B?SHpwMjNReHp0a2ZhUktnclRHR0pWOEJZZ0lsQS9UOCtEcXllR3R0VjROS1Nj?=
+ =?utf-8?B?WmY3engwYW5BeEJmL0s1RlB0VlFndlR2U2FmY2tSMXJWRGpMMWRtOTBjUElv?=
+ =?utf-8?B?SmRQeGY1d1lDVWpPOEtVZldqZzM0RDV6TjdFcGZjMExrQlNWQjlKWXl1NjRj?=
+ =?utf-8?B?Y2dMaWFOVkFCNTFvc1pSYzRZcHNlcWhjc1VEOVZMd0tLZjlPeFZsSVhsMUZS?=
+ =?utf-8?B?NTN0K0JvOFVRMzhMVzVKSnFseEtJd0JQMW5CUWhsQnBuYTRNRFFKTG9TbXRK?=
+ =?utf-8?B?bisySW5NVkgxa2NJTG1zY1gyNjJqRk0vUm45bWloY1RuY3lEYXVnY0dzZGdS?=
+ =?utf-8?B?T0ZNeG1raG1ma2FKTUlzQ3RiTHdqbEtFa25PUkJjOGthaHpscUVsS2w2eklh?=
+ =?utf-8?B?L2lYTXQxYmNnckNGUndOenRTQ1lONmhDb3IySERUZ29RdkZKekNCdFg0SzNU?=
+ =?utf-8?B?NllvdFJSYVpsc1YzMnROQWw3SVF4N1ZvbjBDR1lnblBUM0xGbENET2I4SkRN?=
+ =?utf-8?B?MFJPaWoxMTdFQWZhUzIzTmNnRUZ0cmp5TkdHdGhJSSs5dDJqRitsR2loTWFS?=
+ =?utf-8?B?MTR4TXBueUtWQWhlNEF5SUpSRGFua0FCN0I1OTYyUm8wdmJMOUZkeVBBMW5P?=
+ =?utf-8?B?NkprTlNwYUtwb0Q4SUdxVGlIamlFSXpVQ1p0aEUycWtPS1NXUnM1UnNQc2lB?=
+ =?utf-8?B?TTNRTlZGaWdsY0hHdnkyZmlUZms4U3FJSUJpYXNtZ2tmMjBkUEFabG04cVNE?=
+ =?utf-8?Q?DWBGNsQKU5FlUSNv4DQf5WqOPoOXuhWa?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eHc4MUthbmRwUU13anVKOHFFMWNsMzNmQlFUMWNIZElIZ0dXN3VkTmZudDRr?=
+ =?utf-8?B?dThmeERvVnZURDVkNDBlMUZMSXhrTU9nSFlvMnFYS21pSWJ4N3RuMGlLdXhR?=
+ =?utf-8?B?YTNJWkFxZy9HVVVLa1k2RzhBb1RPUjJXc3JsMjh1YkxsM3NDb2VCQ1VrTVg3?=
+ =?utf-8?B?ck5LQUpPNk51emlTb1U5ZzN1Q3QvaU9FUUNEYTdnSEJYMHo5NWNXYlB6Yk1H?=
+ =?utf-8?B?TFdMVGlUbUhvVndsRi9Gc1JmRTl6aGFia0ZRa2h0UXg1L1diNENOWXF2a2gr?=
+ =?utf-8?B?T3hEcjlEUFhwV2RkSnVQVkwwbUV0dTA0bWpJZG01d3hRUElpRFpyaXVsRnBO?=
+ =?utf-8?B?dXFBWVJyVE1UYUJ4a1owRG1FMXo2eUsyUHdMV0ZXZkFNRFdMd2hFellDSGtS?=
+ =?utf-8?B?TEtZUDg1QysxUTlJUmRSMk9MWktueTJDN2V5ZDVVa0JjWXd6TGpIK1BGbjFu?=
+ =?utf-8?B?eEQ4SXVnUk5Ta0w5RXp6OEZXTWJmS0R4QVk0Tmx2bEVWVVlZUFpSTTdHVUVt?=
+ =?utf-8?B?cXRhdzJKTkkvVEFuMEZZbjRhVDhhL1VLZ1pUUG5RVCt5cDdDWmlaVTQwZnZp?=
+ =?utf-8?B?L2lOc2lnazBGMEdwd2llTy8zWVRXdFhCUGh4a2NnMHMzK201ankzTk1ncWlt?=
+ =?utf-8?B?cFBTVkd2T2EvbDRDQXFzWG95N0JpTkthYkc0MnRvWUcxQUdhR2dGVDdMQnRk?=
+ =?utf-8?B?amJ6c0FCVENKSXFqTThkRXZ1QzdxVUZ0STJFMGFLN1FRTG1PQzBKNkREcmN3?=
+ =?utf-8?B?MDVKUFpSQUJpNUY3cW5mK0ptWGdzbVZ2cGVQekdiZW9QNGFKWFdwdHhTNFUw?=
+ =?utf-8?B?UG1qSFR0TDhnZWtxTlNuWDFRRUNJS3BFU0ZXMEJtNmxYQWpTalBPcGFpNmVt?=
+ =?utf-8?B?UXFDVmYrZXZPa05LKzZyVGYxMzZKRUdkMnZpMmtNZHFyL2hwb3FCVFdRKzNj?=
+ =?utf-8?B?ZzFFc3RDaWVHOUo1bWltamxidDB2U3lJWnU1cVdqSXBNL0JtWDMvL2JNS2Yx?=
+ =?utf-8?B?aHRKYUo2Y0Roa2pMOTJ1YlRBQTFzQ1VETERvbVEwNlV5UnFDVkZhVHFWNG4r?=
+ =?utf-8?B?UThCOENkQm9rOE82TnBtMnMwTjNWMlFuZUZONFlMRTA5VUM1TStyWFR6bktL?=
+ =?utf-8?B?aG5BRjczZ1lrb3I4Y1pMRjRJODFGUHk1STgzaVExTnZhSnNNZ2MxSXZSbW1r?=
+ =?utf-8?B?Y3lGVlNOK2xEdkZuSTY0U3F5UDNYVnY5NTFlYzdxQ1UzZ010QkVEczQyQ1lV?=
+ =?utf-8?B?YXVQWTg2UWdodWJPN3pXSmFFbHBLK0xWclpRcHZ0Q0dibVdWU1BKR3cvN053?=
+ =?utf-8?B?WU1TSk1ZOUt4Q3lhSjMrVFpOczA1SWVmeHQvRWFYckNhbFFKVCtXNEVrdElx?=
+ =?utf-8?B?aHg2cFVmSnVJaGF5V05YN3JLVDlyVVZZV1lsYlNOTFF3WGovdjhnVUs1d2lk?=
+ =?utf-8?B?cFRWQ21rdS9jRGpxQnRTVFNONm5tNjRvZGVJdDVLK044dlNmTEtETGQ2WWc1?=
+ =?utf-8?B?Q3Z4MFNlb3Y5QXNvQ3ArdFRqZ0lPVmpjZk1yV2k1Y2JBeG1mTWVVU05CanNp?=
+ =?utf-8?B?dHBFUXRkRDhUa09SR2hOZVN1TEVkaG53eUlLUVNYSThXbjJpY0tWQS9sWkds?=
+ =?utf-8?B?UGRSbk9Ob1owdnZpdGVoa0VZYVdERkdrTU40V1IxNU05V3g1QWpocWg1M0ZM?=
+ =?utf-8?B?R21UTDBpcWJLMXZWYTRTcnFRSlBQZlZ1ZVhGb1hjREhVK0dXbTJLSS85N0Vu?=
+ =?utf-8?B?dmNLVXhmTVNEc3ppaXVxQUU5cnRTMFlWNm82SWxHRlc0KzNnVUdBVWIzdjdP?=
+ =?utf-8?B?SDlPRDh4MDViS1ZCUENrUUllVGpDVEpQR3ZkVnAwSlNuRnZHR3d3ZlBNSnda?=
+ =?utf-8?B?dngzamFycHZpbHVEYUEvbTN2VzRWM3ZLczhFVTlJYmxmUGhsTUZPcWN3cGc5?=
+ =?utf-8?B?ZGJRa0xPdW9Ma1dWcytFMVdsWlNiSXRGNXRpdWk5bVAxNXc2VVcrdCthZnBE?=
+ =?utf-8?B?MTNOZHJEaGg0ZVBhOU92VnVuVDlzVXE5UkJHekFPSGtxQ2E3b2hWZnYyUVl4?=
+ =?utf-8?B?ZU9kd2VXTGxpM096ZTdGaWJ5Ny8rYTF3YlkrR3l2L0IyN3cvT0NGK3RtbEhF?=
+ =?utf-8?Q?+jKExDTx2zIYeMdZhR1ULT69x?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae010433-9520-443a-f7ac-08ddff41f96d
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2025 10:21:38.2079
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B5s+f9zxHKLm65+63SWq3l+3GRElyvZVEle+0ZNGTg57TX5YR1kG+IPKh2UUSXAcUCS4uYiY5JxApOClcWTjYw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6884
 
 
+On 9/23/25 12:21, Alejandro Lucero Palau wrote:
+>
+> On 9/18/25 11:55, Jonathan Cameron wrote:
+>> On Thu, 18 Sep 2025 10:17:27 +0100
+>> alejandro.lucero-palau@amd.com wrote:
+>>
+>>> From: Alejandro Lucero <alucerop@amd.com>
+>>>
+>>> Differentiate CXL memory expanders (type 3) from CXL device 
+>>> accelerators
+>>> (type 2) with a new function for initializing cxl_dev_state and a macro
+>>> for helping accel drivers to embed cxl_dev_state inside a private
+>>> struct.
+>>>
+>>> Move structs to include/cxl as the size of the accel driver private
+>>> struct embedding cxl_dev_state needs to know the size of this struct.
+>>>
+>>> Use same new initialization with the type3 pci driver.
+>>>
+>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>>> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+>>
+>>> diff --git a/Documentation/driver-api/cxl/theory-of-operation.rst 
+>>> b/Documentation/driver-api/cxl/theory-of-operation.rst
+>>> index 257f513e320c..ab8ebe7722a9 100644
+>>> --- a/Documentation/driver-api/cxl/theory-of-operation.rst
+>>> +++ b/Documentation/driver-api/cxl/theory-of-operation.rst
+>>> @@ -347,6 +347,9 @@ CXL Core
+>>>   .. kernel-doc:: drivers/cxl/cxl.h
+>>>      :internal:
+>>>   +.. kernel-doc:: include/cxl/cxl.h
+>>> +   :internal:
+>>> +
+>> Smells like a merge conflict issue given same entry is already there.
+>>
+>
+> Yes, I'll fix it.
+>
+>
+> Thanks
+>
+
+Hi Jonathan,
+
+
+When double-checking for v19, I am not sure what you meant here. It 
+seems my answer was in "automatic mode" since there is no duplicate 
+entry at all.
+
+
+Note there is one line for another file with same name but different 
+path. We discussed the file name for public cxl API for type2 drivers 
+time ago, so I think this should not be a problem.
+
+
+
+>
+>>>   .. kernel-doc:: drivers/cxl/acpi.c
+>>>      :identifiers: add_cxl_resources
+>>
