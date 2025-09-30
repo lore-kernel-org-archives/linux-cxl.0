@@ -1,327 +1,409 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C09155C82
-	for <linux-cxl@vger.kernel.org>; Tue, 30 Sep 2025 15:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC54C21B196;
+	Tue, 30 Sep 2025 16:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759246605; cv=none; b=bB28LNpUWUvtUg85uIz0hdBp3kWToq8Cz+ugVI2eSvBtWGUDT2gjziiCvzm2VjeSTLHVVNqgnjoeVTvgYn9sobHFkDxJgIRTMvYs2wuE5tVUEUeS6hVjced3/mddU8JpM93TFnrkpGZnoWjJK4zH6hHYTdEWTH+dW1+LwS1D2mU=
+	t=1759248558; cv=none; b=ZTq6qMH+N53YrsiOqHdqF5+gI6JUmmPtqOz2uMvAzyv5CZ4ku0FCvegmpVPuD651SmXMnukrEbyFGyyHyz3cbpPXgwmzkTTdfu4ULoDu6zGvswrowejoifGPwz1CJK2V219v2nU9fSlM0FxsDjmhNnNbWElj2LXWyV9UDY9S4qU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759246605; c=relaxed/simple;
-	bh=u1hvUrrgLJ1grF7nkkr6dDIbENB5hBpceKAmIjG/Mts=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mMV+ON/H2hsN/bS9cX07y7VoNWXiljUnVO++AMPri4ApV6jisc5aBkbERRvKp8IMjoxy5tLfbHHLF3gz7/mKdqk5wD1N+ExPpARPXu1+LWkT02ye1eY3vjI/NA7h6nYLgQXFoQoZYOyBSmMSvTeazNCQKo2uHSWLnMqcKPQWCqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cbhtr4yMhz6L4wr;
-	Tue, 30 Sep 2025 23:34:28 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4DED71402ED;
-	Tue, 30 Sep 2025 23:36:39 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 30 Sep
- 2025 16:36:38 +0100
-Date: Tue, 30 Sep 2025 16:36:36 +0100
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-CC: <ira.weiny@intel.com>, <lucerop@amd.com>, <a.manzanares@samsung.com>,
-	<mst@redhat.com>, <marcel.apfelbaum@gmail.com>, <armbru@redhat.com>,
-	<linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>
-Subject: Re: [PATCH 4/5] hw/cxl: Support type3 HDM-DB
-Message-ID: <20250930163636.00006770@huawei.com>
-In-Reply-To: <20250930032153.1127773-5-dave@stgolabs.net>
-References: <20250930032153.1127773-1-dave@stgolabs.net>
-	<20250930032153.1127773-5-dave@stgolabs.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1759248558; c=relaxed/simple;
+	bh=NU8qZxJpMKi+qfpPLhLMxxBu0n4q8ILjeAe2/L4iN1c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RrL0R8zCma5F/advWVsD93ZVG3f/VL0G4bk+qDm8FBfEBPCgIAg6tg6HVAg5o9by+KyXxCpZSdMlT5MOhhI1kDJQmmdczLaV8tZw+UXXy9bd58z7yWFAlIufho7zqtp6hd9GEC6BtG6NS3HZbUn+9Zbrk7T4ZyYdgi7h11+MLl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gHNA7fAU; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gHNA7fAU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759248555; x=1790784555;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=NU8qZxJpMKi+qfpPLhLMxxBu0n4q8ILjeAe2/L4iN1c=;
+  b=gHNA7fAUG3W28ukGIbhgkgqQLVK2WFE72P77xyF7mzzpwj+2FvNKquaw
+   XW2MBx0TaNIhnsHWFYGXf4VkDQo9XFSQ/Vux0icF5QmCL3dWsCJ/uAhPi
+   bKAzBcsqbVlpOJYpxy6bpKeB16w4sWdSQ13Cwl+DSMz8lpxA+VlQw6Y5J
+   oVuxzxPDEWpVOd6EIT3YV6yQO0k2Rs7LySjp4UmIL/0FgK473WBTN984/
+   jxNAbxGaUs6lVoPtBtNWkgio3Y5H2bNZDI/RcDdROeP9d6uinNP27LSIY
+   KeDMv/Pls4XoK1lEj2tp+zMzlVeRX9rK5Y7euaIzCIBJxQ+0KidokH65B
+   A==;
+X-CSE-ConnectionGUID: UECYZ0k/QGSLTSHRzsxazw==
+X-CSE-MsgGUID: U+fl7pIfS56yOIvXJLN4fQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11569"; a="65148505"
+X-IronPort-AV: E=Sophos;i="6.18,304,1751266800"; 
+   d="scan'208";a="65148505"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 09:09:13 -0700
+X-CSE-ConnectionGUID: Uyiaxj7wR1m/WpO8kT9U4A==
+X-CSE-MsgGUID: bC7h43oISpyUzdLHkE1CpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,304,1751266800"; 
+   d="scan'208";a="178347353"
+Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.109.162]) ([10.125.109.162])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 09:09:12 -0700
+Message-ID: <452c087b-17c2-4841-8169-0d9e1f90a31b@intel.com>
+Date: Tue, 30 Sep 2025 09:09:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 17/25] cxl/pci: Introduce CXL Endpoint protocol error
+ handlers
+To: "Bowman, Terry" <terry.bowman@amd.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
+ ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
+ rrichter@amd.com, dan.carpenter@linaro.org,
+ PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
+ Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250925223440.3539069-1-terry.bowman@amd.com>
+ <20250925223440.3539069-18-terry.bowman@amd.com>
+ <beecc304-f201-4fa2-b2a7-810c82668be2@intel.com>
+ <7d54aa5d-bef9-4611-b0ae-04279bb7dae2@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <7d54aa5d-bef9-4611-b0ae-04279bb7dae2@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 29 Sep 2025 20:21:52 -0700
-Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> Add basic plumbing for memory expander devices that support Back
-> Invalidation. This introduces a 'hdm-db=on|off' parameter and
-> exposes the relevant BI RT/Decoder component cachemem registers.
+
+On 9/30/25 7:06 AM, Bowman, Terry wrote:
 > 
-> Some noteworthy properties:
->  - Devices require enabling Flit mode.
->  - Explicit BI-ID commit is required.
->  - HDM decoder support both host and dev coherency models.
 > 
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-Hi Davidlohr,
-
-Comments inline mostly focus on the bi parameter.  I think flipping
-it to true for components where we are hard coding it as true will
-move that logic decision up a layer and make the code easier to follow.
-
-Thanks,
-
-Jonathan
-
-> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-> index a43d227336ca..2098e9999a88 100644
-> --- a/hw/cxl/cxl-component-utils.c
-> +++ b/hw/cxl/cxl-component-utils.c
-
-> @@ -235,7 +309,7 @@ static void ras_init_common(uint32_t *reg_state, uint32_t *write_msk)
->  }
->  
->  static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
-> -                            enum reg_type type)
-> +                            enum reg_type type, bool bi)
->  {
->      int decoder_count = CXL_HDM_DECODER_COUNT;
->      int hdm_inc = R_CXL_HDM_DECODER1_BASE_LO - R_CXL_HDM_DECODER0_BASE_LO;
-> @@ -260,7 +334,9 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
->                       UIO_DECODER_COUNT, 0);
->      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, MEMDATA_NXM_CAP, 0);
->      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY,
-> -                     SUPPORTED_COHERENCY_MODEL, 0); /* Unknown */
-> +                     SUPPORTED_COHERENCY_MODEL,
-> +                     /* host+dev or Unknown */
-> +                     type == CXL2_TYPE3_DEVICE && bi ? 3 : 0);
->      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_GLOBAL_CONTROL,
->                       HDM_DECODER_ENABLE, 0);
->      write_msk[R_CXL_HDM_DECODER_GLOBAL_CONTROL] = 0x3;
-> @@ -271,8 +347,7 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
->          write_msk[R_CXL_HDM_DECODER0_SIZE_HI + i * hdm_inc] = 0xffffffff;
->          write_msk[R_CXL_HDM_DECODER0_CTRL + i * hdm_inc] = 0x13ff;
->          if (type == CXL2_DEVICE ||
-> -            type == CXL2_TYPE3_DEVICE ||
-> -            type == CXL2_LOGICAL_DEVICE) {
-> +            type == CXL2_TYPE3_DEVICE || type == CXL2_LOGICAL_DEVICE) {
-
-Unrelated change? Or am I missing something real here?
-
->              write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_LO + i * hdm_inc] =
->                  0xf0000000;
->          } else {
-> @@ -283,9 +358,43 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
-
-
->  void cxl_component_register_init_common(uint32_t *reg_state,
->                                          uint32_t *write_msk,
-> -                                        enum reg_type type)
-> +                                        enum reg_type type,
-> +                                        bool bi)
-
-I wonder if we shouldn't set bi for all 3 component types that actually
-have the BI related capability?   For Type3 we keep it controllable
-and for DSP and RP hard code the parameter to true.
-
->  {
->      int caps = 0;
->  
-> @@ -325,7 +434,7 @@ void cxl_component_register_init_common(uint32_t *reg_state,
->      case CXL2_LOGICAL_DEVICE:
->          /* + HDM */
->          init_cap_reg(HDM, 5, 1);
-> -        hdm_init_common(reg_state, write_msk, type);
-> +        hdm_init_common(reg_state, write_msk, type, bi);
->          /* fallthrough */
->      case CXL2_DOWNSTREAM_PORT:
->      case CXL2_DEVICE:
-> @@ -340,6 +449,26 @@ void cxl_component_register_init_common(uint32_t *reg_state,
->          abort();
->      }
->  
-> +    /* back invalidate */
-
-With bi set true in cases where there is anything to do here, could wrap
-this in an if (bi)
-
-> +    switch (type) {
-> +    case CXL2_UPSTREAM_PORT:
-> +        init_cap_reg(BI_RT, 11, CXL_BI_RT_CAP_VERSION);
-> +        bi_rt_init_common(reg_state, write_msk);
-> +        break;
-> +    case CXL2_ROOT_PORT:
-> +    case CXL2_DOWNSTREAM_PORT:
-> +    case CXL2_TYPE3_DEVICE:
-> +        if (type == CXL2_TYPE3_DEVICE && !bi)  {
-
-With the values for the other types tweaked this check becomes unnecessary
-
-> +            break;
-> +        }
-> +
-> +        init_cap_reg(BI_DECODER, 12, CXL_BI_DECODER_CAP_VERSION);
-> +        bi_decoder_init_common(reg_state, write_msk, type);
-> +        break;
-> +    default:
-> +        break;
-> +    }
-> +
->      ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, ARRAY_SIZE, caps);
->  #undef init_cap_reg
->  }
-
->  
->  static uint64_t get_lsa_size(CXLType3Dev *ct3d)
-> diff --git a/hw/pci-bridge/cxl_downstream.c b/hw/pci-bridge/cxl_downstream.c
-> index f8d64263ac08..e0593e783803 100644
-> --- a/hw/pci-bridge/cxl_downstream.c
-> +++ b/hw/pci-bridge/cxl_downstream.c
-> @@ -42,7 +42,7 @@ static void latch_registers(CXLDownstreamPort *dsp)
->      uint32_t *write_msk = dsp->cxl_cstate.crb.cache_mem_regs_write_mask;
->  
->      cxl_component_register_init_common(reg_state, write_msk,
-> -                                       CXL2_DOWNSTREAM_PORT);
-> +                                       CXL2_DOWNSTREAM_PORT, false);
-This false briefly confused me and is the reason for comment above.
-DSPs and RPs have BI support and it's odd to set a parameter here called
-bi to false, only to enable it always.
-
->  }
->  
->  /* TODO: Look at sharing this code across all CXL port types */
-> diff --git a/hw/pci-bridge/cxl_root_port.c b/hw/pci-bridge/cxl_root_port.c
-> index f3472f081707..1c0087d3f111 100644
-> --- a/hw/pci-bridge/cxl_root_port.c
-> +++ b/hw/pci-bridge/cxl_root_port.c
-> @@ -106,7 +106,8 @@ static void latch_registers(CXLRootPort *crp)
->      uint32_t *reg_state = crp->cxl_cstate.crb.cache_mem_registers;
->      uint32_t *write_msk = crp->cxl_cstate.crb.cache_mem_regs_write_mask;
->  
-> -    cxl_component_register_init_common(reg_state, write_msk, CXL2_ROOT_PORT);
-> +    cxl_component_register_init_common(reg_state, write_msk,
-> +                                       CXL2_ROOT_PORT, false);
-
-Same here.  Also I think under 80 chars with CXL2_ROOT_PORT, on first line
+> On 9/26/2025 5:04 PM, Dave Jiang wrote:
+>> On 9/25/25 3:34 PM, Terry Bowman wrote:
+>>> CXL Endpoint protocol errors are currently handled using PCI error
+>>> handlers. The CXL Endpoint requires CXL specific handling in the case of
+>>> uncorrectable error (UCE) handling not provided by the PCI handlers.
+>>>
+>>> Add CXL specific handlers for CXL Endpoints. Rename the existing
+>>> cxl_error_handlers to be pci_error_handlers to more correctly indicate
+>>> the error type and follow naming consistency.
+>>>
+>>> The PCI handlers will be called if the CXL device is not trained for
+>>> alternate protocol (CXL). Update the CXL Endpoint PCI handlers to call the
+>>> CXL UCE handlers.
+>>>
+>>> The existing EP UCE handler includes checks for various results. These are
+>>> no longer needed because CXL UCE recovery will not be attempted. Implement
+>>> cxl_handle_ras() to return PCI_ERS_RESULT_NONE or PCI_ERS_RESULT_PANIC. The
+>>> CXL UCE handler is called by cxl_do_recovery() that acts on the return
+>>> value. In the case of the PCI handler path, call panic() if the result is
+>>> PCI_ERS_RESULT_PANIC.
+>>>
+>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>>> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>
+>>> ---
+>>>
+>>> Changes in v11->v12:
+>>> - None
+>>>
+>>> Changes in v10->v11:
+>>> - cxl_error_detected() - Change handlers' scoped_guard() to guard() (Jonathan)
+>>> - cxl_error_detected() - Remove extra line (Shiju)
+>>> - Changes moved to core/ras.c (Terry)
+>>> - cxl_error_detected(), remove 'ue' and return with function call. (Jonathan)
+>>> - Remove extra space in documentation for PCI_ERS_RESULT_PANIC definition
+>>> - Move #include "pci.h from cxl.h to core.h (Terry)
+>>> - Remove unnecessary includes of cxl.h and core.h in mem.c (Terry)
+>>> ---
+>>>  drivers/cxl/core/core.h |  17 +++++++
+>>>  drivers/cxl/core/ras.c  | 110 +++++++++++++++++++---------------------
+>>>  drivers/cxl/cxlpci.h    |  15 ------
+>>>  drivers/cxl/pci.c       |   9 ++--
+>>>  4 files changed, 75 insertions(+), 76 deletions(-)
+>>>
+>>> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+>>> index 8c51a2631716..74c64d458f12 100644
+>>> --- a/drivers/cxl/core/core.h
+>>> +++ b/drivers/cxl/core/core.h
+>>> @@ -6,6 +6,7 @@
+>>>  
+>>>  #include <cxl/mailbox.h>
+>>>  #include <linux/rwsem.h>
+>>> +#include <linux/pci.h>
+>>>  
+>>>  extern const struct device_type cxl_nvdimm_bridge_type;
+>>>  extern const struct device_type cxl_nvdimm_type;
+>>> @@ -150,6 +151,11 @@ void cxl_ras_exit(void);
+>>>  void cxl_switch_port_init_ras(struct cxl_port *port);
+>>>  void cxl_endpoint_port_init_ras(struct cxl_port *ep);
+>>>  void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host);
+>>> +pci_ers_result_t pci_error_detected(struct pci_dev *pdev,
+>>> +				    pci_channel_state_t error);
+>>> +void pci_cor_error_detected(struct pci_dev *pdev);
+>>> +void cxl_cor_error_detected(struct device *dev);
+>>> +pci_ers_result_t cxl_error_detected(struct device *dev);
+>>>  #else
+>>>  static inline int cxl_ras_init(void)
+>>>  {
+>>> @@ -163,6 +169,17 @@ static inline void cxl_switch_port_init_ras(struct cxl_port *port) { }
+>>>  static inline void cxl_endpoint_port_init_ras(struct cxl_port *ep) { }
+>>>  static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport,
+>>>  						struct device *host) { }
+>>> +static inline pci_ers_result_t pci_error_detected(struct pci_dev *pdev,
+>>> +						  pci_channel_state_t error)
+>>> +{
+>>> +	return PCI_ERS_RESULT_NONE;
+>>> +}
+>>> +static inline void pci_cor_error_detected(struct pci_dev *pdev) { }
+>>> +static inline void cxl_cor_error_detected(struct device *dev) { }
+>>> +static inline pci_ers_result_t cxl_error_detected(struct device *dev)
+>>> +{
+>>> +	return PCI_ERS_RESULT_NONE;
+>>> +}
+>>>  #endif // CONFIG_CXL_RAS
+>>>  
+>>>  int cxl_gpf_port_setup(struct cxl_dport *dport);
+>>> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+>>> index 14a434bd68f0..39472d82d586 100644
+>>> --- a/drivers/cxl/core/ras.c
+>>> +++ b/drivers/cxl/core/ras.c
+>>> @@ -129,7 +129,7 @@ void cxl_ras_exit(void)
+>>>  }
+>>>  
+>>>  static void cxl_handle_cor_ras(struct device *dev, u64 serial, void __iomem *ras_base);
+>>> -static bool cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base);
+>>> +static pci_ers_result_t cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base);
+>>>  
+>>>  #ifdef CONFIG_CXL_RCH_RAS
+>>>  static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
+>>> @@ -371,7 +371,7 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
+>>>   * Log the state of the RAS status registers and prepare them to log the
+>>>   * next error status. Return 1 if reset needed.
+>>>   */
+>>> -static bool cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base)
+>>> +static pci_ers_result_t cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base)
+>>>  {
+>>>  	u32 hl[CXL_HEADERLOG_SIZE_U32];
+>>>  	void __iomem *addr;
+>>> @@ -380,13 +380,13 @@ static bool cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_bas
+>>>  
+>>>  	if (!ras_base) {
+>>>  		dev_warn_once(dev, "CXL RAS register block is not mapped");
+>>> -		return false;
+>>> +		return PCI_ERS_RESULT_NONE;
+>>>  	}
+>>>  
+>>>  	addr = ras_base + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
+>>>  	status = readl(addr);
+>>>  	if (!(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK))
+>>> -		return false;
+>>> +		return PCI_ERS_RESULT_NONE;
+>>>  
+>>>  	/* If multiple errors, log header points to first error from ctrl reg */
+>>>  	if (hweight32(status) > 1) {
+>>> @@ -403,76 +403,72 @@ static bool cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_bas
+>>>  	trace_cxl_aer_uncorrectable_error(dev, status, fe, hl, serial);
+>>>  	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
+>>>  
+>>> -	return true;
+>>> +	return PCI_ERS_RESULT_PANIC;
+>>>  }
+>>>  
+>>> -void cxl_cor_error_detected(struct pci_dev *pdev)
+>>> +void cxl_cor_error_detected(struct device *dev)
+>> Why change the input parameter to 'struct device' to just convert it back in the first parameter? I understand that later on cxl_handle_proto_error() will pass in a 'dev', but since it's going to be a pci_dev anyways, can you just pass in a pci_dev instead of doing all this back and forth?
+> 
+> Dan made a point in previous revision that handling functions should work on 
+> devices (to include the parameter). This is to be consistent with CXL device/port error 
+> handling rather than PCIe error handling. Let me know how to proceed.
 
 
->  }
->  
->  static void build_dvsecs(PCIDevice *d, CXLComponentState *cxl)
-> diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
-> index e5a0d1fb308c..4bc185df8c87 100644
-> --- a/hw/pci-bridge/cxl_upstream.c
-> +++ b/hw/pci-bridge/cxl_upstream.c
-> @@ -136,7 +136,7 @@ static void latch_registers(CXLUpstreamPort *usp)
->      uint32_t *write_msk = usp->cxl_cstate.crb.cache_mem_regs_write_mask;
->  
->      cxl_component_register_init_common(reg_state, write_msk,
-> -                                       CXL2_UPSTREAM_PORT);
-> +                                       CXL2_UPSTREAM_PORT, false);
+Well, these are all PCI AER based handlers so they operate only on PCI devices.... If we are keeping it as 'struct device', I think we should add a check to make sure it's a pci device before doing any conversion from device to pci_dev. 
 
-Obviously different structure but still seems odd that bi is false yet we create
-BI_RT structure in this call.
+DJ
 
->      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, TARGET_COUNT, 8);
->  }
-
-> diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
-> index cd92cb02532a..0ff9f5b0fddf 100644
-> --- a/include/hw/cxl/cxl_component.h
-> +++ b/include/hw/cxl/cxl_component.h
-> @@ -67,6 +67,8 @@ CXLx_CAPABILITY_HEADER(LINK, 2)
->  CXLx_CAPABILITY_HEADER(HDM, 3)
->  CXLx_CAPABILITY_HEADER(EXTSEC, 4)
->  CXLx_CAPABILITY_HEADER(SNOOP, 5)
-> +CXLx_CAPABILITY_HEADER(BI_RT, 6)
-> +CXLx_CAPABILITY_HEADER(BI_DECODER, 7)
->  
->  /*
->   * Capability structures contain the actual registers that the CXL component
-> @@ -211,10 +213,55 @@ HDM_DECODER_INIT(3);
->      (CXL_IDE_REGISTERS_OFFSET + CXL_IDE_REGISTERS_SIZE)
->  #define CXL_SNOOP_REGISTERS_SIZE   0x8
->  
-> -QEMU_BUILD_BUG_MSG((CXL_SNOOP_REGISTERS_OFFSET +
-> -                    CXL_SNOOP_REGISTERS_SIZE) >= 0x1000,
-> +#define CXL_BI_RT_CAP_VERSION 1
-> +#define CXL_BI_RT_REGISTERS_OFFSET \
-> +    (CXL_SNOOP_REGISTERS_OFFSET + CXL_SNOOP_REGISTERS_SIZE)
-> +#define CXL_BI_RT_REGISTERS_SIZE   0xC
-> +
-> +REG32(CXL_BI_RT_CAPABILITY, CXL_BI_RT_REGISTERS_OFFSET)
-> +    FIELD(CXL_BI_RT_CAPABILITY, EXPLICIT_COMMIT, 0, 1)
-> +REG32(CXL_BI_RT_CTRL, CXL_BI_RT_REGISTERS_OFFSET + 0x4)
-> +    FIELD(CXL_BI_RT_CTRL, COMMIT, 0, 1)
-> +REG32(CXL_BI_RT_STATUS, CXL_BI_RT_REGISTERS_OFFSET + 0x8)
-> +    FIELD(CXL_BI_RT_STATUS, COMMITTED, 0, 1)
-> +    FIELD(CXL_BI_RT_STATUS, ERR_NOT_COMMITTED, 1, 1)
-> +    FIELD(CXL_BI_RT_STATUS, COMMIT_TMO_SCALE, 8, 4)
-> +    FIELD(CXL_BI_RT_STATUS, COMMIT_TMO_BASE, 12, 4)
-> +
-> +/* CXL r3.2 8.2.4.27 - CXL BI Decoder Capability Structure */
-> +#define CXL_BI_DECODER_CAP_VERSION 1
-> +#define CXL_BI_DECODER_REGISTERS_OFFSET \
-> +    (CXL_BI_RT_REGISTERS_OFFSET + CXL_BI_RT_REGISTERS_SIZE)
-> +#define CXL_BI_DECODER_REGISTERS_SIZE   0xC
-> +
-> +REG32(CXL_BI_DECODER_CAPABILITY, CXL_BI_DECODER_REGISTERS_OFFSET)
-> +    FIELD(CXL_BI_DECODER_CAPABILITY, HDM_D, 0, 1)
-> +    FIELD(CXL_BI_DECODER_CAPABILITY, EXPLICIT_COMMIT, 1, 1)
-> +REG32(CXL_BI_DECODER_CTRL, CXL_BI_DECODER_REGISTERS_OFFSET + 0x4)
-> +    FIELD(CXL_BI_DECODER_CTRL, BI_FW, 0, 1)
-> +    FIELD(CXL_BI_DECODER_CTRL, BI_ENABLE, 1, 1)
-> +    FIELD(CXL_BI_DECODER_CTRL, COMMIT, 2, 1)
-> +REG32(CXL_BI_DECODER_STATUS, CXL_BI_DECODER_REGISTERS_OFFSET + 0x8)
-> +    FIELD(CXL_BI_DECODER_STATUS, COMMITTED, 0, 1)
-> +    FIELD(CXL_BI_DECODER_STATUS, ERR_NOT_COMMITTED, 1, 1)
-> +    FIELD(CXL_BI_DECODER_STATUS, COMMIT_TMO_SCALE, 8, 4)
-> +    FIELD(CXL_BI_DECODER_STATUS, COMMIT_TMO_BASE, 12, 4)
-> +
-> +QEMU_BUILD_BUG_MSG((CXL_BI_DECODER_REGISTERS_OFFSET +
-> +                    CXL_BI_DECODER_REGISTERS_SIZE) >= 0x1000,
->                     "No space for registers");
->  
-> +/* track BI explicit commit handling for route table and decoder */
-> +enum {
-> +    CXL_BISTATE_RT = 0,
-> +    CXL_BISTATE_DECODER,
-> +    CXL_BISTATE_MAX
-> +};
-> +
-> +typedef struct bi_state {
-> +    uint64_t last_commit;  /* last 0->1 transition */
-> +} BIState;
-> +
->  typedef struct component_registers {
->      /*
->       * Main memory region to be registered with QEMU core.
-> @@ -260,6 +307,7 @@ typedef struct cxl_component {
->  
->      CDATObject cdat;
->      CXLCompObject compliance;
-> +    BIState bi_state[CXL_BISTATE_MAX];
->  } CXLComponentState;
->  
->  void cxl_component_register_block_init(Object *obj,
-> @@ -267,7 +315,7 @@ void cxl_component_register_block_init(Object *obj,
->                                         const char *type);
->  void cxl_component_register_init_common(uint32_t *reg_state,
->                                          uint32_t *write_msk,
-> -                                        enum reg_type type);
-> +                                        enum reg_type type, bool bi);
->  
->  void cxl_component_create_dvsec(CXLComponentState *cxl_cstate,
->                                  enum reg_type cxl_dev_type, uint16_t length,
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index 0abfd678b875..75603b8180b5 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -841,6 +841,9 @@ struct CXLType3Dev {
->      CXLMemSparingReadAttrs rank_sparing_attrs;
->      CXLMemSparingWriteAttrs rank_sparing_wr_attrs;
->  
-> +    /* BI flows */
-> +    bool hdmdb;
-> +
->      struct dynamic_capacity {
->          HostMemoryBackend *host_dc;
->          AddressSpace host_dc_as;
+> 
+> Terry
+>>>  {
+>>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>>>  	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+>>> -	struct device *dev = &cxlds->cxlmd->dev;
+>>> +	struct device *cxlmd_dev = &cxlds->cxlmd->dev;
+>>>  
+>>> -	scoped_guard(device, dev) {
+>>> -		if (!dev->driver) {
+>>> -			dev_warn(&pdev->dev,
+>>> -				 "%s: memdev disabled, abort error handling\n",
+>>> -				 dev_name(dev));
+>>> -			return;
+>>> -		}
+>>> +	guard(device)(cxlmd_dev);
+>>>  
+>>> -		if (cxlds->rcd)
+>>> -			cxl_handle_rdport_errors(cxlds);
+>>> -
+>>> -		cxl_handle_cor_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
+>>> +	if (!cxlmd_dev->driver) {
+>>> +		dev_warn(&pdev->dev, "%s: memdev disabled, abort error handling", dev_name(dev));
+>>> +		return;
+>>>  	}
+>>> +
+>>> +	if (cxlds->rcd)
+>>> +		cxl_handle_rdport_errors(cxlds);
+>>> +
+>>> +	cxl_handle_cor_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
+>>>  }
+>>>  EXPORT_SYMBOL_NS_GPL(cxl_cor_error_detected, "CXL");
+>>>  
+>>> -pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+>>> -				    pci_channel_state_t state)
+>>> +void pci_cor_error_detected(struct pci_dev *pdev)
+>>>  {
+>>> +	cxl_cor_error_detected(&pdev->dev);
+>>> +}
+>>> +EXPORT_SYMBOL_NS_GPL(pci_cor_error_detected, "CXL");
+>>> +
+>>> +pci_ers_result_t cxl_error_detected(struct device *dev)
+>> Same comment as above.
+>>
+>> DJ
+>>
+>>> +{
+>>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>>>  	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+>>> -	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+>>> -	struct device *dev = &cxlmd->dev;
+>>> -	bool ue;
+>>> +	struct device *cxlmd_dev = &cxlds->cxlmd->dev;
+>>>  
+>>> -	scoped_guard(device, dev) {
+>>> -		if (!dev->driver) {
+>>> -			dev_warn(&pdev->dev,
+>>> -				 "%s: memdev disabled, abort error handling\n",
+>>> -				 dev_name(dev));
+>>> -			return PCI_ERS_RESULT_DISCONNECT;
+>>> -		}
+>>> +	guard(device)(cxlmd_dev);
+>>>  
+>>> -		if (cxlds->rcd)
+>>> -			cxl_handle_rdport_errors(cxlds);
+>>> -		/*
+>>> -		 * A frozen channel indicates an impending reset which is fatal to
+>>> -		 * CXL.mem operation, and will likely crash the system. On the off
+>>> -		 * chance the situation is recoverable dump the status of the RAS
+>>> -		 * capability registers and bounce the active state of the memdev.
+>>> -		 */
+>>> -		ue = cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
+>>> -	}
+>>> -
+>>> -
+>>> -	switch (state) {
+>>> -	case pci_channel_io_normal:
+>>> -		if (ue) {
+>>> -			device_release_driver(dev);
+>>> -			return PCI_ERS_RESULT_NEED_RESET;
+>>> -		}
+>>> -		return PCI_ERS_RESULT_CAN_RECOVER;
+>>> -	case pci_channel_io_frozen:
+>>> +	if (!dev->driver) {
+>>>  		dev_warn(&pdev->dev,
+>>> -			 "%s: frozen state error detected, disable CXL.mem\n",
+>>> +			 "%s: memdev disabled, abort error handling\n",
+>>>  			 dev_name(dev));
+>>> -		device_release_driver(dev);
+>>> -		return PCI_ERS_RESULT_NEED_RESET;
+>>> -	case pci_channel_io_perm_failure:
+>>> -		dev_warn(&pdev->dev,
+>>> -			 "failure state error detected, request disconnect\n");
+>>>  		return PCI_ERS_RESULT_DISCONNECT;
+>>>  	}
+>>> -	return PCI_ERS_RESULT_NEED_RESET;
+>>> +
+>>> +	if (cxlds->rcd)
+>>> +		cxl_handle_rdport_errors(cxlds);
+>>> +
+>>> +	/*
+>>> +	 * A frozen channel indicates an impending reset which is fatal to
+>>> +	 * CXL.mem operation, and will likely crash the system. On the off
+>>> +	 * chance the situation is recoverable dump the status of the RAS
+>>> +	 * capability registers and bounce the active state of the memdev.
+>>> +	 */
+>>> +	return cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
+>>>  }
+>>>  EXPORT_SYMBOL_NS_GPL(cxl_error_detected, "CXL");
+>>> +
+>>> +pci_ers_result_t pci_error_detected(struct pci_dev *pdev,
+>>> +				    pci_channel_state_t error)
+>>> +{
+>>> +	pci_ers_result_t rc;
+>>> +
+>>> +	rc = cxl_error_detected(&pdev->dev);
+>>> +	if (rc == PCI_ERS_RESULT_PANIC)
+>>> +		panic("CXL cachemem error.");
+>>> +
+>>> +	return rc;
+>>> +}
+>>> +EXPORT_SYMBOL_NS_GPL(pci_error_detected, "CXL");
+>>> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+>>> index 3882a089ae77..189cd8fabc2c 100644
+>>> --- a/drivers/cxl/cxlpci.h
+>>> +++ b/drivers/cxl/cxlpci.h
+>>> @@ -77,19 +77,4 @@ static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
+>>>  int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+>>>  struct cxl_dev_state;
+>>>  void read_cdat_data(struct cxl_port *port);
+>>> -
+>>> -#ifdef CONFIG_CXL_RAS
+>>> -void cxl_cor_error_detected(struct pci_dev *pdev);
+>>> -pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+>>> -				    pci_channel_state_t state);
+>>> -#else
+>>> -static inline void cxl_cor_error_detected(struct pci_dev *pdev) { }
+>>> -
+>>> -static inline pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+>>> -						  pci_channel_state_t state)
+>>> -{
+>>> -	return PCI_ERS_RESULT_NONE;
+>>> -}
+>>> -#endif
+>>> -
+>>>  #endif /* __CXL_PCI_H__ */
+>>> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+>>> index bd95be1f3d5c..71fb8709081e 100644
+>>> --- a/drivers/cxl/pci.c
+>>> +++ b/drivers/cxl/pci.c
+>>> @@ -16,6 +16,7 @@
+>>>  #include "cxlpci.h"
+>>>  #include "cxl.h"
+>>>  #include "pmu.h"
+>>> +#include "core/core.h"
+>>>  
+>>>  /**
+>>>   * DOC: cxl pci
+>>> @@ -1112,11 +1113,11 @@ static void cxl_reset_done(struct pci_dev *pdev)
+>>>  	}
+>>>  }
+>>>  
+>>> -static const struct pci_error_handlers cxl_error_handlers = {
+>>> -	.error_detected	= cxl_error_detected,
+>>> +static const struct pci_error_handlers pci_error_handlers = {
+>>> +	.error_detected	= pci_error_detected,
+>>>  	.slot_reset	= cxl_slot_reset,
+>>>  	.resume		= cxl_error_resume,
+>>> -	.cor_error_detected	= cxl_cor_error_detected,
+>>> +	.cor_error_detected	= pci_cor_error_detected,
+>>>  	.reset_done	= cxl_reset_done,
+>>>  };
+>>>  
+>>> @@ -1124,7 +1125,7 @@ static struct pci_driver cxl_pci_driver = {
+>>>  	.name			= KBUILD_MODNAME,
+>>>  	.id_table		= cxl_mem_pci_tbl,
+>>>  	.probe			= cxl_pci_probe,
+>>> -	.err_handler		= &cxl_error_handlers,
+>>> +	.err_handler		= &pci_error_handlers,
+>>>  	.dev_groups		= cxl_rcd_groups,
+>>>  	.driver	= {
+>>>  		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+> 
 
