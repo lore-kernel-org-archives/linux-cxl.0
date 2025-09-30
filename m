@@ -1,50 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7922C4C6D;
-	Tue, 30 Sep 2025 00:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759192142; cv=none; b=XPNProZQRdG6k7rzzKhKdMe3AeIGiu5GKsJnHXSlf+dfzk10PBgL2xO/1V6+6GmUAa8EbHMsPveI2Ugcc0Z9bsH+AF+DWILqH2+kYKYpuxjK4kwDBYzvmdbDROUvVvfVyRggx5JhX4oUg0AzLkUDaBMfwrkiiQKpCXRmyS9zbT8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759192142; c=relaxed/simple;
-	bh=/K1NH2BBDWmQRvUSdG1cX2fwrdzzEIOzQ66NTsUv22Q=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39EF33C1F;
+	Tue, 30 Sep 2025 00:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759193206; cv=pass; b=q3mr/ikvWwSqSD4PbW/4KwvLe9k8kkiFO3MrtCY2TKaZ2w61bxv8L7PjsyiPVKje6eh5c6eLy6fm4N5Vg/GsBtNuLWLYx7OLMoRNx6gB0z3i+d55+KtmHJ589CfBZnNPYvOTdrto/aamFplzmypmO+WgVI/zhJWFsj/taAtxF+U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759193206; c=relaxed/simple;
+	bh=2tpsfHIZAitH+jO8mwTMMlIAUUlmPFMJxme1/9PLQzg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s2dwcgsjs9RbLiCYmePjkeNv36fo58KfFknBHDwrUzNhNF5K4PCArD35yQmwwSTfv3cwmnxjLoqx1InkG1Du1q5K9nKswa4rrR3YkM4Wti7WKiSOLcqkpyfSRbt8sEODpLVBR2u7deChOStFB8Bg8hxTt7HIvtGAdR9SpLmlpCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ADk3YYoI; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=QSzGvxw6/LQD4+49TJLIzjz77Jua8CIm8T+lX8vULb5oLNaDsMGJ0GChPac6EfuOgXfVgFLnagbsgjfLeubu2He3NrwxbRB7V1JhW5dswwBIk2H3zI6jt+SVFKsDjfhEOGQejYWNr/jH6cx3kUlWLmuYvhMpIOml1o9/DdwBkJU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=UZQo2Gfi; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ADk3YYoI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759192141; x=1790728141;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/K1NH2BBDWmQRvUSdG1cX2fwrdzzEIOzQ66NTsUv22Q=;
-  b=ADk3YYoIAxBnRYv5sjuIxrAexBPGcAitQdsZ3TyXwp2cPQO333xitwUl
-   07e10/V2QtnjmnXIxEVahkrNJw6U62oRgKeoFzZf6sYWWH6BUhCr0cFlg
-   Q5bx7Mk/zs/9yozFyLudZCERWgZW5n0Rj3xU9mr9wQj2pSEZIi75oRXD9
-   K1kvlq9mp1DCCP03NOE1BWL7fXo9QZ+lMLldGqDgzwzLrSyK8fC5qIECm
-   HK0cli96SPT5SpW97MW5mA81x64uS5hbfddOzS7UGMKVWwDLNxdtqr/kD
-   eJNiDpY0Dqf2AOVvFAyhkJPaEMB7B8I22cawtOm8oJoyy7hY/RNoxJmfL
-   Q==;
-X-CSE-ConnectionGUID: kdYvd1/rTAWXtACCLo+T9w==
-X-CSE-MsgGUID: wOigqN1eTv6Ag8PdTU6S8g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11568"; a="61485508"
-X-IronPort-AV: E=Sophos;i="6.18,302,1751266800"; 
-   d="scan'208";a="61485508"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 17:28:59 -0700
-X-CSE-ConnectionGUID: adU5OzbRSOmzBlhm3uNAPQ==
-X-CSE-MsgGUID: eIpb4bnERPizhWZeGOkPqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,302,1751266800"; 
-   d="scan'208";a="178410347"
-Received: from tslove-mobl4.amr.corp.intel.com (HELO [10.125.109.142]) ([10.125.109.142])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 17:28:58 -0700
-Message-ID: <43ca8a5c-9da5-4d36-a51a-f551174088e9@intel.com>
-Date: Mon, 29 Sep 2025 17:28:57 -0700
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="UZQo2Gfi"
+ARC-Seal: i=1; a=rsa-sha256; t=1759193192; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=XiHWckNxugZc2McztlIBkoMC0HEqdjtB3yUAwqwYvXMaB1kIgJKE7Ds3igEg/o/2GDBQXvVPLBRj54WgCAd8JLnQw6R3O6W11sWBt00OSRk3Ni5Wh+G3fSLal5MbZe+LYOQg0kSUwPdSE5rupcQcqiM827r82rz/1xorxoMX90w=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1759193192; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=+pssYrvbY8H+W1K4nWP6c9JK+9Cklrz9pjmXIYB1iKQ=; 
+	b=Q60jSGIkM/24wXBObsSKSwkr2E2WaJpSro9n3Uqpp8XykFJFP1bjxDiZ4O+gKV8xJkASo4m0FdCqjkvoKuwz/+bwosjB4RGy8n4GSXHB00QghplTZE1i5Vl6GHqQ2WNOKWXJ8qOV3LRc7KM8zNx06G6V/VeB4CXlC/xEJo0xuRU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1759193192;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=+pssYrvbY8H+W1K4nWP6c9JK+9Cklrz9pjmXIYB1iKQ=;
+	b=UZQo2Gfio7w24ZrCLeIJuSn/6G5GaKXIbEN9dHc8x4Jau+TE0GsnCiGXFWA5iKbh
+	V5PiFBBTkUC5P3ajqR3NSBTh3gaCCti6fN9Wt1ojzoBNPsTFLi4UCZ8IRPULJ34irYW
+	zPvVp7SCaKY5H1HkoQ/SD2VHoS94dlUFu0PUKekU=
+Received: by mx.zohomail.com with SMTPS id 17591931896491005.1533923106364;
+	Mon, 29 Sep 2025 17:46:29 -0700 (PDT)
+Message-ID: <34d5a43d-f3a7-4163-9ebc-afa2a9b666fb@zohomail.com>
+Date: Tue, 30 Sep 2025 08:46:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,114 +45,118 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 24/25] CXL/PCI: Enable CXL protocol errors during CXL
- Port probe
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
- ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
- rrichter@amd.com, dan.carpenter@linaro.org,
- PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
- Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250925223440.3539069-1-terry.bowman@amd.com>
- <20250925223440.3539069-25-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250925223440.3539069-25-terry.bowman@amd.com>
+Subject: Re: [PATCH v2 1/1] cxl/port: Avoid missing port component registers
+ setup
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ shiju.jose@huawei.com
+References: <20250928101433.424778-1-ming.li@zohomail.com>
+ <e2749038-bf78-47a6-83da-96f02bd75599@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <e2749038-bf78-47a6-83da-96f02bd75599@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+Feedback-ID: rr080112277bc4f69d2dd2bef3afc0bc3a0000361e0988edbf63b8e48cdefe8be2f0c3b7c2d63cae81f2fa39:zu080112271020ed59dce3032ead1044ba00006a866044d7807d133e27f5a5b44b8ef05a4c2452e5c3aeae55:rf0801122dd8a358ba50482d1c48e44b060000abc46f99175dca5a010515226a00b425d5b2e4e3055e413c9bce1722e0710c:ZohoMail
+X-ZohoMailClient: External
 
+On 9/30/2025 12:53 AM, Dave Jiang wrote:
+>
+> On 9/28/25 3:14 AM, Li Ming wrote:
+>> port->nr_dports is used to represent how many dports added to the cxl
+>> port, it will increase in add_dport() when a new dport is being added to
+>> the cxl port, but it will not be reduced when a dport is removed from
+>> the cxl port.
+>>
+>> Currently, when the first dport is added to a cxl port, it will trigger
+>> component registers setup on the cxl port, the implementation is using
+>> port->nr_dports to confirm if the dport is the first dport.
+>>
+>> A corner case here is that adding dport could fail after port->nr_dports
+>> updating and before checking port->nr_dports for component registers
+>> setup. If the failure happens during the first dport attaching, it will
+>> cause that CXL subsystem has not chance to execute component registers
+>> setup for the cxl port. the failure flow like below:
+>>
+>> port->nr_dports = 0
+>> dport 1 adding to the port:
+>> 	add_dport()	# port->nr_dports: 1
+>> 	failed on devm_add_action_or_reset() or sysfs_create_link()
+>> 	return error	# port->nr_dports: 1
+>> dport 2 adding to the port:
+>> 	add_dport()	# port->nr_dports: 2
+>> 	no failure
+>> 	skip component registers setup because of port->nr_dports is 2
+>>
+>> The solution here is that moving component registers setup closer to
+>> add_dport(), so if add_dport() is executed correctly for the first
+>> dport, component registers setup on the port will be executed
+>> immediately after that.
+>>
+>> Signed-off-by: Li Ming <ming.li@zohomail.com>
+> That makes sense. Please add a fixes tag. The commit in cxl/next should be stable.
 
+Thanks for the review, will do that.
 
-On 9/25/25 3:34 PM, Terry Bowman wrote:
-> CXL protocol errors are not enabled for all CXL devices after boot. These
-> must be enabled inorder to process CXL protocol errors.
-> 
-> Introduce cxl_unmask_proto_interrupts() to call pci_aer_unmask_internal_errors().
-> pci_aer_unmask_internal_errors() expects the pdev->aer_cap is initialized.
-> But, dev->aer_cap is not initialized for CXL Upstream Switch Ports and CXL
-> Downstream Switch Ports. Initialize the dev->aer_cap if necessary. Enable AER
-> correctable internal errors and uncorrectable internal errors for all CXL
-> devices.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Ming
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> 
-> ---
-> Changes in v11->v12:
-> - None
-> 
-> Changes in v10->v11:
-> - Added check for valid PCI devices in is_cxl_error() (Terry)
-> - Removed check for RCiEP in cxl_handle_proto_err() and
->   cxl_report_error_detected() (Terry)
-> ---
->  drivers/cxl/core/ras.c | 26 +++++++++++++++++++++++++-
->  1 file changed, 25 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index 45f92defca64..ea65001daba1 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> @@ -238,6 +238,21 @@ static inline void cxl_disable_rch_root_ints(struct cxl_dport *dport) { }
->  static inline void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) { }
->  #endif
->  
-> +static void cxl_unmask_proto_interrupts(struct device *dev)
-> +{
-> +	struct pci_dev *pdev __free(pci_dev_put) =
-> +		pci_dev_get(to_pci_dev(dev));
-> +
-> +	if (!pdev->aer_cap) {
-> +		pdev->aer_cap = pci_find_ext_capability(pdev,
-> +							PCI_EXT_CAP_ID_ERR);
-> +		if (!pdev->aer_cap)
-> +			return;
-> +	}
-> +
-> +	pci_aer_unmask_internal_errors(pdev);
-> +}
-> +
->  static void cxl_dport_map_ras(struct cxl_dport *dport)
->  {
->  	struct cxl_register_map *map = &dport->reg_map;
-> @@ -391,7 +406,10 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
->  
->  		cxl_dport_map_rch_aer(dport);
->  		cxl_disable_rch_root_ints(dport);
-> +		return;
->  	}
-> +
-> +	cxl_unmask_proto_interrupts(dport->dport_dev);
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
->  
-> @@ -402,8 +420,12 @@ static void cxl_uport_init_ras_reporting(struct cxl_port *port,
->  
->  	map->host = host;
->  	if (cxl_map_component_regs(map, &port->uport_regs,
-> -				   BIT(CXL_CM_CAP_CAP_ID_RAS)))
-> +				   BIT(CXL_CM_CAP_CAP_ID_RAS))) {
->  		dev_dbg(&port->dev, "Failed to map RAS capability\n");
-> +		return;
-> +	}
-> +
-> +	cxl_unmask_proto_interrupts(port->uport_dev);
->  }
->  
->  void cxl_switch_port_init_ras(struct cxl_port *port)
-> @@ -440,6 +462,8 @@ void cxl_endpoint_port_init_ras(struct cxl_port *ep)
->  	}
->  
->  	cxl_dport_init_ras_reporting(parent_dport, cxlmd->cxlds->dev);
-> +
-> +	cxl_unmask_proto_interrupts(cxlmd->cxlds->dev);
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_port_init_ras, "CXL");
->  
+>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>
+>> ---
+>> v2:
+>> - remove dport from port->dports in case of component registers setup
+>>   failed.
+>>
+>> base-commit: 46037455cbb748c5e85071c95f2244e81986eb58 cxl/next
+>> ---
+>>  drivers/cxl/core/port.c | 26 ++++++++++++++------------
+>>  1 file changed, 14 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+>> index d5f71eb1ade8..8128fd2b5b31 100644
+>> --- a/drivers/cxl/core/port.c
+>> +++ b/drivers/cxl/core/port.c
+>> @@ -1182,6 +1182,20 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>>  	if (rc)
+>>  		return ERR_PTR(rc);
+>>  
+>> +	/*
+>> +	 * Setup port register if this is the first dport showed up. Having
+>> +	 * a dport also means that there is at least 1 active link.
+>> +	 */
+>> +	if (port->nr_dports == 1 &&
+>> +	    port->component_reg_phys != CXL_RESOURCE_NONE) {
+>> +		rc = cxl_port_setup_regs(port, port->component_reg_phys);
+>> +		if (rc) {
+>> +			xa_erase(&port->dports, (unsigned long)dport->dport_dev);
+>> +			return ERR_PTR(rc);
+>> +		}
+>> +		port->component_reg_phys = CXL_RESOURCE_NONE;
+>> +	}
+>> +
+>>  	get_device(dport_dev);
+>>  	rc = devm_add_action_or_reset(host, cxl_dport_remove, dport);
+>>  	if (rc)
+>> @@ -1200,18 +1214,6 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>>  
+>>  	cxl_debugfs_create_dport_dir(dport);
+>>  
+>> -	/*
+>> -	 * Setup port register if this is the first dport showed up. Having
+>> -	 * a dport also means that there is at least 1 active link.
+>> -	 */
+>> -	if (port->nr_dports == 1 &&
+>> -	    port->component_reg_phys != CXL_RESOURCE_NONE) {
+>> -		rc = cxl_port_setup_regs(port, port->component_reg_phys);
+>> -		if (rc)
+>> -			return ERR_PTR(rc);
+>> -		port->component_reg_phys = CXL_RESOURCE_NONE;
+>> -	}
+>> -
+>>  	return dport;
+>>  }
+>>  
+
 
