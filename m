@@ -1,309 +1,276 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013014.outbound.protection.outlook.com [40.93.201.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E22D1E1A17;
-	Tue, 30 Sep 2025 04:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759205215; cv=fail; b=ifFKv5umhfKG2bKlw9VFlletXf62+eptJc7Y3dyQ1Iedx95prEVd6iz/5TxA7DqDShVXyzjsxLC0Aod3Z/2O2E+uzyCy/YjljkGzgmuv13lDPIGiwZxAU11hHx8tYNeRLdiSa29IqxSBYNJiRrAw/4EdBE49RIKjiJH2at/jioE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759205215; c=relaxed/simple;
-	bh=TaVVWvQkKDLv54VRT/8ZnTDqYe1j9CJjw5r6MYJyQ6o=;
-	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=oBvelNOX24PV+UjrT5PMaRDcsI+hgXMg5yp+xy3P4JsWWSWQSWGk6mh2Gx53hWU1tGEd3KcD3T4YXeWJYFJNYARS8wYGh+X/prTYQtJhkbul5LXxcNM7Mq0dUJ9ZbzmbNYVNTfImSVBsgxqhpSxkEXlz/1cPbg8o379rlKTsZ9Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ueRPZ12Y; arc=fail smtp.client-ip=40.93.201.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B23617BB21
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Sep 2025 04:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759205324; cv=none; b=Nx4odwT0edl8dM4Us2teSs05NPT0V4sZyh18lPB/TENksKDMDoDIsJy8cldTZ5mrP6DJ2i2Q2GLYsOjG3QIbtnGQU870wGL6DMeAedAWnDIGYAhiqJ5Ub8ERoYg+rvEhNILwoKPhZRjlebB/tzuUiYWHQkeBTEAyT+WzeKCsciw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759205324; c=relaxed/simple;
+	bh=bnmkkU0d2orLCCNwKxV+eOnO4kcbaF84unvK3HTQcO8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c+2vghLCzAaM5Q2N4vagorTWMmdFh9m7lD5B9S9D+w4gawjL3Kd7U4JePj01fHtHbHTaV/jSVv/CwciioZb2DS1eloVmvnn5fbLnc1wISTvzjQrhsjIO8Xj8YAa18neZXJtCSP0ONqTkU6kNSQlZB6xLW2+ggyooEr6JYfqEgH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gJA9EjIA; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ueRPZ12Y"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LdbYUe1sDOJI5R6+LAd+T7AAfN6CxCe9NUJQSUxTLnIjsKeCeJj3x86T+BMePL7TBSEKsH02nqvMKJvJTEplIsY1Z4n55nXFvXTwGttTO8VqiQie3XD7e3Nzc8YWpB7rN0lzutXMPFtnKuWwIc8sEosp1mmyNMjIiNH6HEXr7kdm2g/6xV2ykiae8D/crhehRVKn8f9Ym3qmXe1gud6Ew6ciNOWuN1Q7YUmUIAnbcyRLXFVF9h+HAm5ENB8i4Ui0t2x/IG8G52h/QPFa+9k8WcdKkufDPX1R2J40vUc1SP1s5ekR+XMtrz+gQmEey/S6kAH1ADgsvGJU7tstXTRu0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hG1+gMRQdfaBYpC9ah6/ZSru12Oc+V3RjhTNpAS17kU=;
- b=soapuygmGKlplmN7F3oqlrNmLt3fwKnPh8Y3HenCrM3R0nZec9rf4jm0XNXy4yXFv7BYdvHFnUuaH6zdCFsTnEaxA7Ybcbpt/pxUgl9yosPC7v6ZAPkh/VMZHHVuQ/QJGuptZkoplhDST6FwUW3p7SHay4zIBmfmB/m6+bpR6WSm/OgTmXbKywZbijtSJtdSznViP2U8UUpZTDZtWV9+IXQrBbDn/L0ciL46kAtRT6wxrz1YCqzg2aet3tv3K4pOs+1calObp8cqALfrU3qN91DAwOpbDWrldypqNFjxC6zS+vMlKqNxdZc4j+7J+VdHzyrCn8UOPeA2JDupHlhrDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hG1+gMRQdfaBYpC9ah6/ZSru12Oc+V3RjhTNpAS17kU=;
- b=ueRPZ12YlOZLSduQXDf4v7+zyeGUdZYiMCbojLsWt5VWf8bUdtlSCXFfDgbeu0Lyk/CKn+ZzJ6z83CvjxEZEL83j62wEffbvwI0lXqT0CcbGWB7IdWx/5UHTwMAaVqm6fPweTSbx8KwxAeHS+XSm70H8+9xgWzPNB1oqnOz7i8Y=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW4PR12MB7142.namprd12.prod.outlook.com (2603:10b6:303:220::6)
- by SJ2PR12MB9139.namprd12.prod.outlook.com (2603:10b6:a03:564::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.17; Tue, 30 Sep
- 2025 04:06:50 +0000
-Received: from MW4PR12MB7142.namprd12.prod.outlook.com
- ([fe80::e5b2:cd7c:ba7d:4be3]) by MW4PR12MB7142.namprd12.prod.outlook.com
- ([fe80::e5b2:cd7c:ba7d:4be3%7]) with mapi id 15.20.9160.015; Tue, 30 Sep 2025
- 04:06:49 +0000
-Message-ID: <652a4391-4825-46bf-9f64-52e0ef751dff@amd.com>
-Date: Mon, 29 Sep 2025 21:06:47 -0700
-User-Agent: Mozilla Thunderbird
-From: "Koralahalli Channabasappa, Smita" <skoralah@amd.com>
-Subject: Re: [RFC PATCH 6/6] cxl/region, dax/hmem: Guard CXL DAX region
- creation and tighten HMEM deps
-To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>,
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox
- <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
- Pavel Machek <pavel@kernel.org>, Li Ming <ming.li@zohomail.com>,
- Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Ying Huang <huang.ying.caritas@gmail.com>,
- "Xingtao Yao (Fujitsu)" <yaoxt.fnst@fujitsu.com>,
- Peter Zijlstra <peterz@infradead.org>, Greg KH <gregkh@linuxfoundation.org>,
- Nathan Fontenot <nathan.fontenot@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
- Benjamin Cheatham <benjamin.cheatham@amd.com>,
- PradeepVineshReddy Kodamati <PradeepVineshReddy.Kodamati@amd.com>
-References: <20250822034202.26896-1-Smita.KoralahalliChannabasappa@amd.com>
- <20250822034202.26896-7-Smita.KoralahalliChannabasappa@amd.com>
- <2397ebb5-ae63-402e-bc23-339c74be9210@fujitsu.com>
-Content-Language: en-US
-In-Reply-To: <2397ebb5-ae63-402e-bc23-339c74be9210@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR03CA0230.namprd03.prod.outlook.com
- (2603:10b6:a03:39f::25) To MW4PR12MB7142.namprd12.prod.outlook.com
- (2603:10b6:303:220::6)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gJA9EjIA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759205322; x=1790741322;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=bnmkkU0d2orLCCNwKxV+eOnO4kcbaF84unvK3HTQcO8=;
+  b=gJA9EjIA9iIp1G5hvBrrOk5QCRZMxXM8yHB65S1IZZBMQQqCiR88mYXl
+   0EbAnn0dGTax5WGY0WvONtQU1knQR2AfoJgTtLZiVlG4D+Us+9566wE4b
+   jWWI1yAIB+OcNjYw0BCGFh8fNWheWR2I6gEL0uZq3bftj5C5bDIYEMfvS
+   1Nc+KuZbc96fp48ztlumNRTzSN5mNVRceKub9eZMEc7+OuvbZjI9e3nx8
+   QuGOXeh1mL2vmL8vvY4ryBlPVIh33XabP2+EWHv1wOc5TlYmUbTZuhRqt
+   b55egFP9WvGggz3DaDLLd0JaFrr/vJp1rNRjvLAdKqf9ippCVJd5T5fh1
+   g==;
+X-CSE-ConnectionGUID: wLLFR/gLQh2Et+EqEm25iA==
+X-CSE-MsgGUID: OxY2P7a8ThKni+LdEUEnYA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11568"; a="72070878"
+X-IronPort-AV: E=Sophos;i="6.18,303,1751266800"; 
+   d="scan'208";a="72070878"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 21:08:41 -0700
+X-CSE-ConnectionGUID: M//b1KfTT0mqocRZ17wQ6Q==
+X-CSE-MsgGUID: 1KfDtrhETEeL/TuXzcSQpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,303,1751266800"; 
+   d="scan'208";a="209364085"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.239])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 21:08:41 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org,
+	Qing Huang <qing.huang@intel.com>
+Subject: [PATCH] cxl/region: Translate DPA->HPA in unaligned MOD3 regions
+Date: Mon, 29 Sep 2025 21:08:36 -0700
+Message-ID: <20250930040838.353229-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR12MB7142:EE_|SJ2PR12MB9139:EE_
-X-MS-Office365-Filtering-Correlation-Id: fc375d5f-c580-4a22-bf97-08ddffd6c7bc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UHRQUS8wbXkrZlJJeXA2VjNYV3dtTHBacElQRG0yYXBnclBqRkVLSzJWREtn?=
- =?utf-8?B?QjA1Sy9scE5aajVzM1lhR0R1MmttV1FmTUhUWWtDdmpaWUd1MExibjJsTUpo?=
- =?utf-8?B?NHVTejdGRzIrT0pqSzRxVlRTL2lFM1dXN2NNS2wvcUd3TThwMXQ5QzkzZGFY?=
- =?utf-8?B?SXhkaDYxWTVXcTIzQk1jUjNXZm5LeGJ6UjI2TzY0S1JFNTJSa3FPOGlhRWpP?=
- =?utf-8?B?MFd1SlAxYzBwNW5aM1g2YVpDMXVLUGtSU3RwYXpSR3RuNWVCSUJiaEpyRXVU?=
- =?utf-8?B?Skk5WXZtWFE4WTl6TW16OWRHWDRJdmVrMjJKTTdVL0R3VE5FSkl3MXc2UU9R?=
- =?utf-8?B?YXlzdGd3clZRalJ1VlNKMnRzT0VPenhyblBNZDFUaVVvOWplUkh6RDJnYnBo?=
- =?utf-8?B?MGJleU9abXJud3FMY3QyOWUzcVFLNGN2V3B3Mk9aUEVCaURlM29XMmJVMWxm?=
- =?utf-8?B?dDJFMEVDYjlhQ210WnhTKzNlTlp4VE85VVladWw3ME01Sjg4SzY3K1BKZEhB?=
- =?utf-8?B?SWt2NnpiRUdrVmNzR1hYaVFSaSs0SW5nbGtrbTJaZjNBRm9hb0t3NDI4Qktt?=
- =?utf-8?B?K0ZZUFpPUUVyQi9JN0ZVVjdoQkVOYk54RzVTQzBxRmVod1UzK1YyazdTeSty?=
- =?utf-8?B?VnVrbUJPNEhZVmJsWXJnNmJPNGhSWXV1SnRHSDNXUDVtOHpPRWJpM0hLL0Ey?=
- =?utf-8?B?aWZpQk1pR3dEd1JNT1ZLQU53NmZGcHZYR1NTaWpyNlgwU2RDNW9rQ2xncUUr?=
- =?utf-8?B?SGtXd2FNSFhOSC9tT0xnaGx3QUxqRlhpV3d6dW5tMzNqbGY1UUk2Z2ZRSEFX?=
- =?utf-8?B?VkM1d2hLM2xqZDhkUVp6ZTllWTRkSFNycWpCNjUwRGU4TjZjQ3RhRzVkRUJU?=
- =?utf-8?B?NzlkOUowYnpZOGQxQUFFbVFEbVBCRUdyb2xJM3ZBR3ljYUM4Tm9HdHA2UlJQ?=
- =?utf-8?B?d00raUhYUnBWS1RhTTJWcXdoY1JlK0xrQnYvUjVDRnVRY1ZRcTBvd3ZCR1Yy?=
- =?utf-8?B?Q2QvU2pqTmcvcVpac0tVeTU0V0hVdUxaWEhQa3FNd21lTElrMzZvb0VPamtH?=
- =?utf-8?B?QzlRaENEVFg5T3dkR1lLRGovMVYrT0NIQ1hjUnk0YXhnNDJhSGhHQWFyZmE5?=
- =?utf-8?B?ZWNKWUxJc0VGREFRQ2pEV0tpemdzdnJrNW9JRU5hK2xhSFVzTnUyQVNlWmFm?=
- =?utf-8?B?cGcxWlFHWjVtZVhNdHNSanpEbjEyNkFXL1YrblIvd3cwY0VrSUFBWTBPUlJ0?=
- =?utf-8?B?a25xTVoycVRsMHpuVTJ3OXlrWUNDQ2Y4ZTdYTks0YmlhT1hCUW8rVk51dzdK?=
- =?utf-8?B?a3RUK0xveGw0ci9VWks0U0RSVXVqNVNpZzRuRFBxTkxSU2MvQ1BXaENGRS9H?=
- =?utf-8?B?b2cyZzNicmtwRDVaSDdiQU9GVjFjOTFUbGZFaVhOaGxqczl3MEFJT2VFNDlp?=
- =?utf-8?B?WExpMFN2bkRZcEJhV0lXZzU2dWhBbXBRTm92ZDhWODdQdVBoRUE3ZHBiWW40?=
- =?utf-8?B?OTNWdGJXZi9BUzhHbEx6OXJZUDJjNTF3STJybHp2MjJSUW9yVTZlWGdmUU1h?=
- =?utf-8?B?TTJ5bEhRL0g0SFgvYnl0TmZ3MGQ0ekl0OVl4anJQQjJPYlZIN2h0YmlCcHR6?=
- =?utf-8?B?TnVuTGk0OHVocmV4bzRtQ2czUitvUkRxWkI5cklOQ0JSNVdFSmdvREg5QVpr?=
- =?utf-8?B?cDU1L1I4SjQrUlFQRkwzVWptUnJlUjd6NmJORXNTdTZFWHFtcTJHRDRmQ29F?=
- =?utf-8?B?a2RMSEdrQWRqYUF3dytzeER0YTZmM0dBaW9mQ0NVaStYWEM5Q1FDUEw3ZDhC?=
- =?utf-8?B?SEJhUURXcHNPdklaNXMwVXpFd3VVOXhzTkRIdXBxVXhmamJOVmhjT1ZvR1FB?=
- =?utf-8?B?OElCbXJsbnJLUWNYOHdaSFB1TnN3OXN4eCttMStXc3piUHdtM2VGUG01SnRS?=
- =?utf-8?Q?YuhRNYu7671GOExSc3GJeD02U38Xql+S?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB7142.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eFNESzdFc3kxZElPZDNPMjRqYWc4QW5tVllxUkxDaGRXd01BRjdMZ3hxdzhY?=
- =?utf-8?B?akFQenVsQnAxTU9qN3E0cnE1U3Z5a1ZYTnNNWmo0SFV1ZjRaWGZ0d2VwZ056?=
- =?utf-8?B?akZBbjV4WWJsZzhWNnRqOWtwc0RrUEV4OVBwb1RRYk9KY211bDZ3cXNpZGxw?=
- =?utf-8?B?Mkl4ZkN3RVp4Qzc0d1prRStuUVNtZTRScjJqZ3poc0xvSmxDeHVwZUJrT3F6?=
- =?utf-8?B?ZTJORUh5b1lFU3J0QU1RU3JZRzdXenREd0Fqc2grQXdxUmd1ZHVaQUVRVE5o?=
- =?utf-8?B?UU52alppRkVabzRleFh1V05LSXppVGtYNGxIWkkvQXltbzZzZk5qU2xma1dZ?=
- =?utf-8?B?Q0ViYTlGOWJNMkVrQ0RVYVAwQ0xxdUNNVElkc3pxWDZHMVFpUFA2QmJWUlNh?=
- =?utf-8?B?cFNFamJYQVpuaWdaVzJmR1F6T2RyNHd1d01JVmdUTm9mUWVHek83RVZIZ1Jn?=
- =?utf-8?B?cXdiTm5CRVFSOFhDelRFMkhxeVQ5ak9ORXhRTmJKYnRvL0VLWmhJVWpVMk4r?=
- =?utf-8?B?cXh6bzJpREFGWE5vNStsalo4YWdiNTd5eE5QdHJhZTNzNVp5REpCdkI0a1hT?=
- =?utf-8?B?bDIxMmdaM2FkRVVpVVJBWVY2MThhSXpTUHlZNlBDN3p1ZDV1M0F3YmpSc3RE?=
- =?utf-8?B?ZUYyU0dNcVMzMkZFenU0eTAxYVJsRXMxMDN2VGpRL25FK1h2V2pzOVA4UVJu?=
- =?utf-8?B?MUFiMTUxZ2JrN0pna24xVmRBWlNwQmNMSHc5aHMrYkRncXF4OUw0OGRRYWpC?=
- =?utf-8?B?Z3djOEFOeUZtOFAxaDc0MGkvdkVjaW5oZlExN1d2SXB6cks5QXpOSEMyVlJu?=
- =?utf-8?B?OHF2RVdqL25pdDlJekdONXlINmdYZUcvSzczZzI4U1VSVWc1ZWtQWlMvYXM2?=
- =?utf-8?B?MUE2aUJTc01zaGJKZnpFTTF4TE1sekZHcDRnQzc5bk8wR1RGME50RTFkYTZz?=
- =?utf-8?B?ZXJKbkJGOVV2b0xlQTVISWtibnRqYVkrRlZYaWRLZERvR09pMjVjRnNQY2N3?=
- =?utf-8?B?VUdpajJzK1JJQXh4SlVUYWxGQkxLamZZNW1NNG1QbkpGOExUem1XL1NhWk8v?=
- =?utf-8?B?cUlIMHRBb1FlS0piMUdBalpGZlhUVUZmRlk0eDZkc2IyZjB6cks2NHhTcW92?=
- =?utf-8?B?RkcwMFZUQ0Z0NUdoSUlyM2NBMUk1dHhxWFdJNFFwa0hKc2ZTZk5mcFFzdjgw?=
- =?utf-8?B?ZDVyVzZkZWdkcVNPQmJSR1dvQTJiajI3YjFhYS9LUUdINHdwSzErUXh1Rjcr?=
- =?utf-8?B?QTNVaTZpSjEzK0FXZVhncXlOV0RsNllUMU9jdEpnaGZxOFd0Z2kyS1MzYXRY?=
- =?utf-8?B?SzZuY085czlHNys4NzF3RForNWpXZXlGcXRIZW4rVlBybUtSTFY2b29ROUMy?=
- =?utf-8?B?NlBQc0QvaWJNcFBCNGhYK1NFbE1hUHI0eWx5K2g3eEh0WG56b3pwdXlvREUr?=
- =?utf-8?B?UFFvakdZZFptSHgrM2hwVklQRllFbEtJdHgrNGNQcjhKZUFhalVFa29yNmVD?=
- =?utf-8?B?YUkyZ2tZWFBnTFEySnMrdWxPWGd3ekYvSllwQVZxYTNXZ2VGaUxnNGhhTTh4?=
- =?utf-8?B?NG5zaldBM2ZQNzEvR1FPNGhEb1pWZlpFVWh2QlI0UExCVEJlN211UzFGYlJ0?=
- =?utf-8?B?TExGTHh5NExLSHhqUUsydWRNMWxBZmxwM0NCbDlmYncxYUI4T1ZGTExsYTN4?=
- =?utf-8?B?WXFDejhaRkFxdS9jam9DUkg4SjhyUkdvWGVQMy9SV1dFaVpkRzg3Q09pRlZu?=
- =?utf-8?B?dDVGYjBVOUFwVzdhWldzMHVXTkhXUjZxK3VBajR1TFU0c29LMmluZ0dCcjlr?=
- =?utf-8?B?T0o3d0pudXl5cU5VWnZmVEFxK3hBQ2N5WDBlVGJTVXllMUVjaEsyeG1vdjlj?=
- =?utf-8?B?M0lFVTZiVTR6QUlwS3VUbjljcHhHSmlGRmw1eGw0S2lsNFF3MWR5Zk5hbGd5?=
- =?utf-8?B?ekh2M0N1MEN5djg2QzY5Z0FCOXU4dHZWZ2RMQ0Y3UmNha1ZJL2ZONlpxeEZ1?=
- =?utf-8?B?UEo5NTZTUmg3aFI0WDhGVTFSWVlvMS9YaG9wOW4rYVZ2ZzZRVHRnM0xVK1l1?=
- =?utf-8?B?eWsrRU9CNG8rMUFUNnljRzRBcFpLRUtPd3dyeWZWbWovcEh5RDQwN3kxekJV?=
- =?utf-8?Q?ZQz4NNdlEAoTvmXpAvNbv+Oed?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc375d5f-c580-4a22-bf97-08ddffd6c7bc
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB7142.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2025 04:06:49.8349
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Mth+6WF7SZ75xLj4QkGsu3Ha5GADXXcU1w8x5rNkLnLf9H1Leenpvyxvoq/8hzoNaPvH+la/DHhp9TcLZvf9hA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9139
+Content-Transfer-Encoding: 8bit
 
-On 8/31/2025 11:21 PM, Zhijian Li (Fujitsu) wrote:
-> 
-> 
-> On 22/08/2025 11:42, Smita Koralahalli wrote:
->> Prevent cxl_region_probe() from unconditionally calling into
->> devm_cxl_add_dax_region() when the DEV_DAX_CXL driver is not enabled.
->> Wrap the call with IS_ENABLED(CONFIG_DEV_DAX_CXL) so region probe skips
->> DAX setup cleanly if no consumer is present.
-> 
-> A question came to mind:
->    
-> Why is the case of `CXL_REGION && !DEV_DAX_CXL` necessary? It appears to fall back to the hmem driver in that scenario.
-> If so, could we instead simplify it as follows?
->    
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -200,6 +200,7 @@ config CXL_REGION
->           depends on SPARSEMEM
->           select MEMREGION
->           select GET_FREE_REGION
-> +       select DEV_DAX_CXL
-> 
+The CXL driver implementation of DPA->HPA address translation depends
+on a region's starting address always being aligned to Host Bridge
+Interleave Ways * 256MB. The driver follows the decode methods
+defined in the CXL Spec[1] and expanded upon in the CXL Driver Writers
+Guide[2], which describe bit manipulations based on power-of-2
+alignment to translate a DPA to an HPA.
 
-I’m not entirely sure about the full implications of disabling 
-CXL_REGION when DEV_DAX_CXL is disabled.
+With the introduction of MOD3 interleave way support, platforms may
+create regions at starting addresses that are not power-of-2 aligned.
+This allows platforms to avoid gaps in the memory map, but addresses
+within those regions cannot be translated using the existing bit
+manipulation method.
 
-The primary intent of this patch was to address the scenario where 
-DEV_DAX_HMEM=y and CXL=m, which results in DEV_DAX_CXL being disabled. 
-In that configuration, ownership of the soft-reserved ranges incorrectly 
-falls back to hmem instead of being managed by CXL. This leads to 
-misleading output in /proc/iomem, as I illustrated earlier.
+Introduce an unaligned translation method for DPA->HPA that
+reconstructs an HPA by restoring the address first at the port level
+and then at the host bridge level.
 
-That said, as you pointed out, dax_hmem is not exclusive to CXL, so I 
-will drop this patch in v2. The next revision will therefore not cover 
-the case of DEV_DAX_HMEM=y and CXL=m. I would appreciate input on how 
-best to handle this scenario efficiently.
+[1] CXL Spec 3.2 8.2.4.20.13 Implementation Note Device Decoder Logic
+[2] CXL Type 3 Memory Software Guide 1.1 2.13.25 DPA to HPA Translation
 
-Thanks
-Smita
+Suggested-by: Qing Huang <qing.huang@intel.com>
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
 
->>
->> In parallel, update DEV_DAX_HMEM’s Kconfig to depend on
->> !CXL_BUS || (CXL_ACPI && CXL_PCI) || m. This ensures:
->>
->> Built-in (y) HMEM is allowed when CXL is disabled, or when the full
->> CXL discovery stack is built-in. Module (m) HMEM remains always possible.
-> 
-> Hmm,IIUC, `dax_hmem` isn't exclusively designed for CXL. It could support other special memory types (e.g., HBM).
-> 
-> Thanks
-> Zhijian
-> 
-> 
-> 
->>
->> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
->> ---
->> I did not want to override Dan’s original approach, so I am posting this
->> as an RFC.
->>
->> This patch addresses a corner case when applied on top of Patches 1–5.
->>
->> When DEV_DAX_HMEM=y and CXL=m, the DEV_DAX_CXL option ends up disabled.
->> In that configuration, with Patches 1–5 applied, ownership of the Soft
->> Reserved ranges falls back to dax_hmem. As a result, /proc/iomem looks
->> like this:
->>
->> 850000000-284fffffff : CXL Window 0
->>     850000000-284fffffff : region3
->>       850000000-284fffffff : Soft Reserved
->>         850000000-284fffffff : dax0.0
->>           850000000-284fffffff : System RAM (kmem)
->> 2850000000-484fffffff : CXL Window 1
->>     2850000000-484fffffff : region4
->>       2850000000-484fffffff : Soft Reserved
->>         2850000000-484fffffff : dax1.0
->>           2850000000-484fffffff : System RAM (kmem)
->> 4850000000-684fffffff : CXL Window 2
->>     4850000000-684fffffff : region5
->>       4850000000-684fffffff : Soft Reserved
->>         4850000000-684fffffff : dax2.0
->>           4850000000-684fffffff : System RAM (kmem)
->>
->> In this case the dax devices are created by dax_hmem, not by dax_cxl.
->> Consequently, a "cxl disable-region <regionx>" operation does not
->> unregister these devices. In addition, the dmesg output can be misleading
->> to users, since it looks like the CXL region driver created the devdax
->> devices:
->>
->>     devm_cxl_add_region: cxl_acpi ACPI0017:00: decoder0.2: created region5
->>     ..
->>     ..
->>
->> This patch addresses those situations. I am not entirely sure how clean
->> the approach of using “|| m” is, so I am sending it as RFC for feedback.
->> ---
->>    drivers/cxl/core/region.c | 4 +++-
->>    drivers/dax/Kconfig       | 1 +
->>    2 files changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index 71cc42d05248..6a2c21e55dbc 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -3617,7 +3617,9 @@ static int cxl_region_probe(struct device *dev)
->>    					p->res->start, p->res->end, cxlr,
->>    					is_system_ram) > 0)
->>    			return 0;
->> -		return devm_cxl_add_dax_region(cxlr);
->> +		if (IS_ENABLED(CONFIG_DEV_DAX_CXL))
->> +			return devm_cxl_add_dax_region(cxlr);
->> +		return 0;
->>    	default:
->>    		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
->>    			cxlr->mode);
->> diff --git a/drivers/dax/Kconfig b/drivers/dax/Kconfig
->> index 3683bb3f2311..fd12cca91c78 100644
->> --- a/drivers/dax/Kconfig
->> +++ b/drivers/dax/Kconfig
->> @@ -30,6 +30,7 @@ config DEV_DAX_PMEM
->>    config DEV_DAX_HMEM
->>    	tristate "HMEM DAX: direct access to 'specific purpose' memory"
->>    	depends on EFI_SOFT_RESERVE
->> +	depends on !CXL_BUS || (CXL_ACPI && CXL_PCI) || m
->>    	select NUMA_KEEP_MEMINFO if NUMA_MEMBLKS
->>    	default DEV_DAX
->>    	help
+Changes in v1 (was RFC):
+- Replace "/" with do_div() to quiet i386 build warning (lkp)
+- Replace 'cxld->interleave_ways' with 'hbiw' for clarity
+- Use div64_u64_rem() for alignment alignment
+- Fix up a printk format specifier (lkp)
+- Update code comments and commit log
+- Rebase on v717-rc7
+
+ drivers/cxl/core/region.c | 125 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 119 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 71cc42d05248..4fc0d1450c2c 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2918,13 +2918,115 @@ static bool cxl_is_hpa_in_chunk(u64 hpa, struct cxl_region *cxlr, int pos)
+ 	return false;
+ }
+ 
++static int decode_pos(int region_ways, int pos, int *pos_port, int *pos_hb)
++{
++	switch (region_ways) {
++	/*
++	 * Extract the port and hb positions from an endpoint position.
++	 * Knowing there is only one possible decode** for each of these
++	 * regions, decode logic is:
++	 *	 3-way: port always 0, hb is pos
++	 *	 6-way: port cycles thru 0,1, hb increments every 2
++	 *	12-way: port cycles thru 0,1,2,3, hb increments every 4
++	 *
++	 *	**CXL Spec 3.2 9.13.1.1 Legal Interleaving Configurations
++	 */
++	case 3:
++		*pos_port = 0;
++		*pos_hb = pos;
++		break;
++	case 6:
++		*pos_port = pos % 2;
++		*pos_hb = pos / 2;
++		break;
++	case 12:
++		*pos_port = pos % 4;
++		*pos_hb = pos / 4;
++		break;
++	default:
++		return -EINVAL;
++	}
++	return 0;
++}
++
++/*
++ * restore_parent() reconstruct the address in parent
++ *
++ * [mask] isolate the offset with the granularity
++ * [addr & ~mask] remove the offset leaving the aligned portion
++ * [* ways] distribute across all interleave ways
++ * [+ (pos * gran)] add the positional offset
++ * [+ (addr & mask)] restore the masked offset
++ */
++static u64 restore_parent(u64 addr, u64 pos, u64 gran, u64 ways)
++{
++	u64 mask = gran - 1;
++
++	return ((addr & ~mask) * ways) + (pos * gran) + (addr & mask);
++}
++
++/*
++ * unaligned_dpa_to_hpa() translates a DPA to HPA when the region resource
++ * start address is not aligned at Host Bridge Interleave Ways * 256MB.
++ *
++ * Unaligned start addresses only occur with MOD3 interleaves. All power-
++ * of-two interleaves are guaranteed aligned.
++ */
++static u64 unaligned_dpa_to_hpa(struct cxl_decoder *cxld,
++				struct cxl_region_params *p, int pos, u64 dpa)
++{
++	int ways_port = p->interleave_ways / cxld->interleave_ways;
++	int gran_port = p->interleave_granularity;
++	int gran_hb = cxld->interleave_granularity;
++	int ways_hb = cxld->interleave_ways;
++	int pos_port, pos_hb, gran_shift;
++	u64 shifted, hpa, hpa_port = 0;
++
++	/* Decode an endpoint 'pos' into port and host-bridge components */
++	if (decode_pos(p->interleave_ways, pos, &pos_port, &pos_hb)) {
++		dev_dbg(&cxld->dev, "not supported for region ways:%d\n",
++			p->interleave_ways);
++		return ULLONG_MAX;
++	}
++	/* Restore the port parent address if needed */
++	if (gran_hb != gran_port)
++		hpa_port = restore_parent(dpa, pos_port, gran_port, ways_port);
++	else
++		hpa_port = dpa;
++
++	/*
++	 * Complete the HPA reconstruction by restoring the address as if
++	 * each HB position is a candidate. Test against expected pos_hb
++	 * to confirm match.
++	 */
++	gran_shift = ilog2(gran_hb);
++	for (int index = 0; index < ways_hb; index++) {
++		hpa = restore_parent(hpa_port, index, gran_hb, ways_hb);
++		hpa += p->res->start;
++
++		shifted = hpa >> gran_shift;
++		if (do_div(shifted, ways_hb) == pos_hb)
++			return hpa;
++	}
++
++	dev_dbg(&cxld->dev, "fail dpa:%#llx region:%pr pos:%d\n", dpa, p->res,
++		pos);
++	dev_dbg(&cxld->dev, "     port-w/g/p:%d/%d/%d hb-w/g/p:%d/%d/%d\n",
++		ways_port, gran_port, pos_port, ways_hb, gran_hb, pos_hb);
++
++	return ULLONG_MAX;
++}
++
+ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 		   u64 dpa)
+ {
+ 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+-	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
++	u64 dpa_offset, rem, hpa_offset, bits_upper, mask_upper, hpa;
++	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+ 	struct cxl_region_params *p = &cxlr->params;
+ 	struct cxl_endpoint_decoder *cxled = NULL;
++	int hbiw = cxld->interleave_ways;
++	bool aligned;
+ 	u16 eig = 0;
+ 	u8 eiw = 0;
+ 	int pos;
+@@ -2937,6 +3039,18 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 	if (!cxled || cxlmd != cxled_to_memdev(cxled))
+ 		return ULLONG_MAX;
+ 
++	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
++	div64_u64_rem(p->res->start, (u64)hbiw * SZ_256M, &rem);
++	aligned = (rem == 0);
++	if (!aligned) {
++		hpa = unaligned_dpa_to_hpa(cxld, p, cxled->pos, dpa_offset);
++		if (hpa == ULLONG_MAX)
++			return ULLONG_MAX;
++
++		hpa += p->cache_size;
++		goto to_spa;
++	}
++
+ 	pos = cxled->pos;
+ 	ways_to_eiw(p->interleave_ways, &eiw);
+ 	granularity_to_eig(p->interleave_granularity, &eig);
+@@ -2951,9 +3065,6 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 	 * 8.2.4.19.13 Implementation Note: Device Decode Logic
+ 	 */
+ 
+-	/* Remove the dpa base */
+-	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
+-
+ 	mask_upper = GENMASK_ULL(51, eig + 8);
+ 
+ 	if (eiw < 8) {
+@@ -2971,6 +3082,7 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 	/* Apply the hpa_offset to the region base address */
+ 	hpa = hpa_offset + p->res->start + p->cache_size;
+ 
++to_spa:
+ 	/* Root decoder translation overrides typical modulo decode */
+ 	if (cxlrd->hpa_to_spa)
+ 		hpa = cxlrd->hpa_to_spa(cxlrd, hpa);
+@@ -2981,8 +3093,9 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 		return ULLONG_MAX;
+ 	}
+ 
+-	/* Simple chunk check, by pos & gran, only applies to modulo decodes */
+-	if (!cxlrd->hpa_to_spa && (!cxl_is_hpa_in_chunk(hpa, cxlr, pos)))
++	/* Chunk check applies to aligned modulo decodes only */
++	if (aligned && !cxlrd->hpa_to_spa &&
++	    !cxl_is_hpa_in_chunk(hpa, cxlr, pos))
+ 		return ULLONG_MAX;
+ 
+ 	return hpa;
+
+base-commit: 07e27ad16399afcd693be20211b0dfae63e0615f
+-- 
+2.37.3
 
