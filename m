@@ -1,81 +1,79 @@
-Received: from tiger.tulip.relay.mailchannels.net (tiger.tulip.relay.mailchannels.net [23.83.218.248])
+Received: from toucan.tulip.relay.mailchannels.net (toucan.tulip.relay.mailchannels.net [23.83.218.254])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D081B145B16
-	for <linux-cxl@vger.kernel.org>; Tue, 30 Sep 2025 03:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF3B246796
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Sep 2025 03:58:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.254
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759203082; cv=pass; b=EJYJdW6pNoU05doJo+XyjO2rTaWoxrGViZ2kmPpq4mObXrXA/naOaJXspuQztmC3SuO93ttji95D+6IeZiqtfnmVqhdGJ57npWH4M1TL1Bo2B0/0Hn7D7kYeK0reNCZ4sbQZSYxKaiVl3flvLYbva3950x37isawuk8AXlslvkc=
+	t=1759204696; cv=pass; b=puoEXzId+2URoEe1xFwoHOpB82kpha53ZlJUY2BZiRyS+229aOZrP71YlGVOOZGeQ88Csi1ktRY6f+wCXHmlcetfV6QgPb7Xb2VltO+oPLUqSgG/XRx1a1mUUT51yzkCoV0GnCAhrXxvpq9b/uuL7Ud5fzSkg05PekXe6ErkZcI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759203082; c=relaxed/simple;
-	bh=49dX/45Mizzg+eh+rwbGpo6pMN2mUNfn5MujbFjYpA0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CLqRNGpGchY9lsteZ12k6Difoosenv8s6negoW5qGGtrCeSto9Oz43/94K0LtRp6BjAvoiFYiESYs/rBJ5N5kWf9HkCyp+E+I33jMzyxXtzYg7kc9dOjm5yVWaOKHiy2ew/MYdaaNdmw4vQ1mHpqFW88/AmK0iNLyrJO9nqarxE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=jKCs+249; arc=pass smtp.client-ip=23.83.218.248
+	s=arc-20240116; t=1759204696; c=relaxed/simple;
+	bh=rg23KBhhTtfrWLanNbyuL5s12KDmItluU7fK++i6PJo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UmqmwjaYqjJDQjRAGctpgBRznMNSLxh+2AQdLJE0pU+2QvG1dJHb2WP5AUyoWbbxfxIdvw9MUcxDNxI1DJQMmqFDzbF1VxTm95tGvLRYC96prGkmYRAbVf84NTSALk6QJkoDfZl8HmGyYez+L0jgOQJ1y81ifRr5B5ITzGio3vg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=kwJgGbM5; arc=pass smtp.client-ip=23.83.218.254
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="jKCs+249"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="kwJgGbM5"
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 726CE70129B;
-	Tue, 30 Sep 2025 03:22:35 +0000 (UTC)
-Received: from pdx1-sub0-mail-a315.dreamhost.com (trex-blue-2.trex.outbound.svc.cluster.local [100.113.90.84])
+	by relay.mailchannels.net (Postfix) with ESMTP id 28651421FC3;
+	Tue, 30 Sep 2025 03:22:33 +0000 (UTC)
+Received: from pdx1-sub0-mail-a315.dreamhost.com (100-111-81-75.trex-nlb.outbound.svc.cluster.local [100.111.81.75])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id EEE22701406;
-	Tue, 30 Sep 2025 03:22:34 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1759202555; a=rsa-sha256;
+	by relay.mailchannels.net (Postfix) with ESMTPA id B91F742251A;
+	Tue, 30 Sep 2025 03:22:32 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1759202552; a=rsa-sha256;
 	cv=none;
-	b=0Ul5Ruien2kSpKHn2jCm384i6BCIWmvavKMUhRKq+5ZxFnkDd2Km8JiTuY5fK8MoFM/RB9
-	EWd84ZkT47NWNXcqO/FQ1wkx0Wh2SNl1pgaamuGFiGky80EaHjsl8SnOZHQBvQ7S27qHqp
-	QLDHbhjAdffAxgi1s4tbCYz7pkzCJwue8uFLGIyxn7qkp0eTWrUSZBTrHmBWYCJwEYwD/t
-	HQVwQdWNlV8RASiZ78OFQBolFhL/AB+BzhWZHj9v8kM4X+EDuWl9+yRZJ/WMA/kUJEShcH
-	jTqs0fj84BvWIA4aIzMMrkKDzQNHkn84baBH3lVsL+iPO0aBaSZUN2KVor2tGg==
+	b=u4wNwauwjghOq98QsLvNW33A1qBxKHf8lgpNptbUE1Xxpx4V+9cNR4br8loyvL5UXN3BL5
+	0xtRTMmFM6ljKhqDBC28dJBs36H0u2VlU5KvXqk3A5EzYIOzXa6vLJtZ4jhWJTLjHENp7j
+	dObOtmlP+Cv5Esk7l6nYynJDQAhb2Nh1odiziE+5SzYcg1pSWlcspsOlQKyjrw5uFfOurz
+	jfrNhviXDrw1ZC+Hi0YsDGFIKuvn+Rx13HHeJLFOzTsvZo7qiMzdVcNInaFoRHHdjszqgk
+	fGKTlxFmF2nxVddMv95cx6WCjxVUgpxadhnyy+Zg12PP2CdOkP2qlKIbPOG4SQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-	s=arc-2022; t=1759202555;
+	s=arc-2022; t=1759202552;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=F0QSnTgOLesF0aCE7qfgqoYpipQeSin3zJuG38HwYM8=;
-	b=TMqHu2Ri93H+5dQ2YjY9H2rEJ4m13lqhjNrImCNK1XMH+G99Q8kgtHxniYfeK1kW5ipicy
-	4TsrybgTLLFqae19+TlvBAPMmN+ew0C03lCGVOAbPX5slZyxyufT5SVEenBWY4dmZV/PhB
-	qlQBP62Fir2LEMY4hgqfJ2hom5nhxBWJj7/oFxHsqRUIzYx24si+3TDqmPMRULuP8z1py4
-	gOfMRqw+awSPz4BXbrEEYmOENOMd4gFc+Vk+Rmh9ufn2Ug7yBc1Gvo1QNqZwW8WPBcQDX/
-	4KuQsl93eU93zI+UIr/0YlEtkuFN8bJmOVystBjbFGMMhGE8FttVhvs9pK9O8Q==
+	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
+	bh=4HKJL5h1ARnqVldpjrYAQKbNdJpIoNaPV8mz4ta3ep8=;
+	b=MEL9ba2pVPDKNdXVTENJSek2fbBCGQlLuNfOyqulYifzYi90eeST3I4MYlLVg0aUSj2qUa
+	y3Em9ikEZvZ6VODgiRlEufgo1Q1SDisqfkFvP/eywU7Ai+eaIC7RpZLHbk5Zz1r+emzbvv
+	ZdZSgzlED8mU9AVMUAk21X6yiafXS60Z8bWn4IWWACtkWmZXuNc+1CIp0xMp8WkOU7hBEk
+	McTpzB0cEoWa/sZ72res6zqwA0rtO/8yaAqibS/06rPAaRfEntzKl23SS9v9x1pp0pGurK
+	nidaNog+uWb/2uN07UTYTejYRtqS9uZ+pHzeqhVlW0cidwrjLnzL9HU054p1Cg==
 ARC-Authentication-Results: i=1;
-	rspamd-9695c5dfc-p4zkv;
+	rspamd-867694b6c6-kkwjg;
 	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Cooperative-Versed: 68da6c04334e97d8_1759202555264_1212884388
-X-MC-Loop-Signature: 1759202555264:581522535
-X-MC-Ingress-Time: 1759202555264
+X-Eight-Ruddy: 0b037e9f5b2ff185_1759202553029_2640901499
+X-MC-Loop-Signature: 1759202553029:3492559014
+X-MC-Ingress-Time: 1759202553029
 Received: from pdx1-sub0-mail-a315.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.113.90.84 (trex/7.1.3);
-	Tue, 30 Sep 2025 03:22:35 +0000
+	by 100.111.81.75 (trex/7.1.3);
+	Tue, 30 Sep 2025 03:22:33 +0000
 Received: from offworld.lan (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a315.dreamhost.com (Postfix) with ESMTPSA id 4cbNfL1tjLzGS;
-	Mon, 29 Sep 2025 20:22:34 -0700 (PDT)
+	by pdx1-sub0-mail-a315.dreamhost.com (Postfix) with ESMTPSA id 4cbNfJ0CXlzR4;
+	Mon, 29 Sep 2025 20:22:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1759202554;
-	bh=F0QSnTgOLesF0aCE7qfgqoYpipQeSin3zJuG38HwYM8=;
+	s=dreamhost; t=1759202552;
+	bh=4HKJL5h1ARnqVldpjrYAQKbNdJpIoNaPV8mz4ta3ep8=;
 	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=jKCs+249ODl+OMJQ8q0UIwgAzyfaHcCKnW0NhJZ19uBk6xN7QHcAsk6fZuqm5tFBN
-	 DhanNshHxb+G9x/kVmLMkWZu/ljcMtAJleRivE2BLw1sSlsgVudjzBzoAI04xQncF8
-	 0f+9uHeYdsg1+HyQw6u5BSISHL6Q1lEmJg1VjdY0jGAGthPUM2Vu4I5Q+p5Zmq8n9e
-	 yuC/M+3NB7tEfLExEGL4OVpYolEUqGiDYbnGEZq0NmIdfk2iVpv7K4UBRRl4TOd3DV
-	 aoJOdBmciA0db2YIbot3ST66PofmsUvhGf2MCdOLY2tNno54qDBSr4PKysxmUwf3p3
-	 hD7yMUduI3Q5Q==
+	b=kwJgGbM5MNibHxtXtt7p6ZAZeoHbXFdfUuB8jaW2BAdUwu3e41HrrIIr2B7wVS0Vx
+	 VQyGgfmdu8SWpSiM3ADjqU29tbdQUVUG+z3NhvuOeYG2dmlySBrdvvYSsfi2WplsYi
+	 mlHazcw6iRY5ysG2XNjDuMO1g+aDsUbfATjJYNlmYOt/VEvul+oMGHifTwVtpDSOpE
+	 mm94JBIlJK70Nga4gyQMXbSenoRtyinxfYTng9BBxTzcSVVeRS6zkZ+/kGim+pu1DH
+	 l6djMlbsNKQjUr/isaWXWbUF7JZrdOX3e8/qaEB+lrDF4uRm7OJm46bHjw1AWuC284
+	 mdcA5cYuQ7RVg==
 From: Davidlohr Bueso <dave@stgolabs.net>
 To: jonathan.cameron@huawei.com
 Cc: ira.weiny@intel.com,
@@ -87,12 +85,10 @@ Cc: ira.weiny@intel.com,
 	linux-cxl@vger.kernel.org,
 	qemu-devel@nongnu.org,
 	dave@stgolabs.net
-Subject: [PATCH 3/5] hw/cxl: Allow BI by default in Window restrictions
-Date: Mon, 29 Sep 2025 20:21:51 -0700
-Message-Id: <20250930032153.1127773-4-dave@stgolabs.net>
+Subject: [PATCH v3 -qemu 0/5] hw/cxl: Support Back-Invalidate
+Date: Mon, 29 Sep 2025 20:21:48 -0700
+Message-Id: <20250930032153.1127773-1-dave@stgolabs.net>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250930032153.1127773-1-dave@stgolabs.net>
-References: <20250930032153.1127773-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -101,68 +97,79 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Update the CFMW restrictions to also permit Back-Invalidate
-flows by default, which is aligned with the no-restrictions
-policy.
+Hello,
 
-While at it, document the 'restrictions=' option.
+The following allows support for component basic back invalidation discovery
+and config, by exposing the BI routing table and decoder registers. Instead
+of going the type2[0] route, this series proposes adding support for type3
+hdm-db, which allows a more direct way of supporting BI in qemu.
 
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
- hw/cxl/cxl-host.c | 2 +-
- qapi/machine.json | 3 ++-
- qemu-options.hx   | 4 +++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+Changes from v2 (https://lore.kernel.org/linux-cxl/20250811033405.332295-1-dave@stgolabs.net/):
+  o Renamed 256b-flit to x-256b-flit (mst)
+  o Added a brief description of flit mode in patch 1 changelog (Markus)
+  o Added missing hdm-db parameter which went missing in v2.
+  o Replaced the new CXL3_TYPE3_DEVICE with passing 'bi' params. (Jonathan)
+  o Fixed writemask bits in patch 4. (Jonathan)
+  o Misc cleanups in patch 4. (Jonathan)
+  o New patch 5 to remove register special_ops read() cb. (Jonathan)
 
-diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
-index def2cf75be61..0d17ea3e4c26 100644
---- a/hw/cxl/cxl-host.c
-+++ b/hw/cxl/cxl-host.c
-@@ -64,7 +64,7 @@ static void cxl_fixed_memory_window_config(CXLFixedMemoryWindowOptions *object,
-     if (object->has_restrictions) {
-         fw->restrictions = object->restrictions;
-     } else {
--        fw->restrictions = 0xf; /* No restrictions */
-+        fw->restrictions = 0x2f; /* No restrictions */
-     }
- 
-     fw->targets = g_malloc0_n(fw->num_targets, sizeof(*fw->targets));
-diff --git a/qapi/machine.json b/qapi/machine.json
-index ac258578e4ab..ea8ba71305b0 100644
---- a/qapi/machine.json
-+++ b/qapi/machine.json
-@@ -589,7 +589,8 @@
- #     BIT(2) - Volatile
- #     BIT(3) - Persistent
- #     BIT(4) - Fixed Device Config
--#     Default is 0xF
-+#     BIT(5) - BI
-+#     Default is 0x2F
- #
- # @targets: Target root bridge IDs from -device ...,id=<ID> for each
- #     root bridge.
-diff --git a/qemu-options.hx b/qemu-options.hx
-index 1f862b19a676..2da65fad3c9f 100644
---- a/qemu-options.hx
-+++ b/qemu-options.hx
-@@ -142,7 +142,7 @@ SRST
-             -machine memory-backend=pc.ram
-             -m 512M
- 
--    ``cxl-fmw.0.targets.0=firsttarget,cxl-fmw.0.targets.1=secondtarget,cxl-fmw.0.size=size[,cxl-fmw.0.interleave-granularity=granularity]``
-+    ``cxl-fmw.0.targets.0=firsttarget,cxl-fmw.0.targets.1=secondtarget,cxl-fmw.0.size=size[,cxl-fmw.0.interleave-granularity=granularity,restrictions=restrictions]``
-         Define a CXL Fixed Memory Window (CFMW).
- 
-         Described in the CXL 2.0 ECN: CEDT CFMWS & QTG _DSM.
-@@ -168,6 +168,8 @@ SRST
-         interleave. Default 256 (bytes). Only 256, 512, 1k, 2k,
-         4k, 8k and 16k granularities supported.
- 
-+        ``restrictions=restrictions`` bitmask with the restrictions of the CFMW.
-+
-         Example:
- 
-         ::
--- 
+Changes from v1 (https://lore.kernel.org/qemu-devel/20250806055708.196851-1-dave@stgolabs.net/):
+  o Further lnk training in patch 1. (Jonathan)
+  o Flit parameter changed to bool in patch 1. (Jonathan)
+  o Do not set 68B in component Flexbus Port when in flitmode in patch 1.
+  o Doc build fixlet in patch 3.
+  o Pass the exact type3 type in cxl_component_create_dvsec() - unused, but better
+    for keeping track, in patch 4.
+  o Change doc example to volatile device in patch 4.
+
+Changes from rfc (https://lore.kernel.org/qemu-devel/20250729165441.1898150-1-dave@stgolabs.net/):
+  o Added 256b-flit parameter, per Jonathan.
+  o Added window restrictions changes.
+  o Dropped rfc tag.
+
+Patch 1 introduces the flit mode parameter.
+Patch 2 is lifted from Ira's series with some small (but non-trivial) changes.
+Patch 3 updates the cfmw restrictions option.
+Patch 4 adds BI decoder/rt register support to enable type3 HDM-DB.
+Patch 5 is a small cleanup.
+
+Testing wise, this has passed relevant kernel side BI register IO flows for
+BI-ID setup and deallocation.
+
+The next step for this would be to add UIO support to qemu.
+
+Applies against branch 'origin/cxl-2025-07-03' from Jonathan's repository.
+
+Thanks!
+
+Davidlohr Bueso (4):
+  hw/pcie: Support enabling flit mode
+  hw/cxl: Allow BI by default in Window restrictions
+  hw/cxl: Support type3 HDM-DB
+  hw/cxl: Remove register special_ops->read()
+
+Ira Weiny (1):
+  hw/cxl: Refactor component register initialization
+
+ docs/system/devices/cxl.rst               |  23 +++
+ hw/cxl/cxl-component-utils.c              | 214 ++++++++++++++++------
+ hw/cxl/cxl-host.c                         |   2 +-
+ hw/mem/cxl_type3.c                        |  18 +-
+ hw/pci-bridge/cxl_downstream.c            |  13 +-
+ hw/pci-bridge/cxl_root_port.c             |  14 +-
+ hw/pci-bridge/cxl_upstream.c              |  21 ++-
+ hw/pci-bridge/gen_pcie_root_port.c        |   1 +
+ hw/pci-bridge/pci_expander_bridge.c       |   2 +-
+ hw/pci/pcie.c                             |  23 ++-
+ include/hw/cxl/cxl_component.h            |  87 +++++++--
+ include/hw/cxl/cxl_device.h               |   4 +
+ include/hw/pci-bridge/cxl_upstream_port.h |   1 +
+ include/hw/pci/pcie.h                     |   2 +-
+ include/hw/pci/pcie_port.h                |   1 +
+ qapi/machine.json                         |   3 +-
+ qemu-options.hx                           |   4 +-
+ 17 files changed, 329 insertions(+), 104 deletions(-)
+
+--
 2.39.5
 
