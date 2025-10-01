@@ -1,231 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D73CB14A4CC;
-	Wed,  1 Oct 2025 23:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2B33594A;
+	Wed,  1 Oct 2025 23:31:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759360809; cv=none; b=RetvPbJofJZl5u8rv337WaunOeHQnABZ6zQOKsynCy4ExirMAqNVZiPoXR0ZYohBtvCGgQPm2Jx6lfHLzPZe6nHIxdsK3vwD4odYp3zwqEdAo6l7qSm8jBIuz+U3I3cIIfQdyu+pOjyKQoAN0dZ7JLYNk1sFLQtbr3V5gZyr8Qg=
+	t=1759361502; cv=none; b=Tx9Rvs3Y17VJX5G128B8+8ZM3wJA2vOSndgXALB7eegak7UBd5UGT1jrp7B29jlXolBdYqwGXfciFQbwaoyarE81mhVZhwSTd6GcnuX3QuG0sN5z0aLwtPeflX1dM+vglqFzxKXcGlDnYNCI5yAm+ajlxih6x3qx5l4HzPDFlPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759360809; c=relaxed/simple;
-	bh=1GotudXstGA6zlJ85YQoNZ4muGKnPBNPB0SVxS5tmGA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eJ+USwOB6GiMiHEsxOrE9INOEb7Y44ag7BPdis2eIPCdeGDWGYEfC48euGwkAaFhZ4OBAeaf850T9i40e4cfRa3lFxVu4Q9kqucCmgo9yqgcr7x/l9UUbrqzk5x3EFm9u6OVRoYp/P9DliYmWb3Au1XgXPy3/tlMVwRxk/QYB4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMsvBx1z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759361502; c=relaxed/simple;
+	bh=OGlK5L3ggNTJFXop7r3keERa3EKrM29ZMElxPIYJMHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tCiIYqRnQVyqARP47s5/l7ZIJtPpoOOHUhamfOC6j8joOfK65t4jxMrzGOnfTbaoUOgP+t/bQ5vexlTBeoYq5UCh9tUTVySO/mwG7ovWbtlcR2aHLkLIXHZ0o7bz6XfOm/z7HJEjuoMkxm6C3JgeCXlDiZZp/t3HdY0800MGfX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t5OrcNnJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMsvBx1z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5416BC4CEF1;
-	Wed,  1 Oct 2025 23:20:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t5OrcNnJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44208C4CEF1;
+	Wed,  1 Oct 2025 23:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759360808;
-	bh=1GotudXstGA6zlJ85YQoNZ4muGKnPBNPB0SVxS5tmGA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=TMsvBx1zw8c0vUhktb1+ePWueMRT9RZ+iQ9Ie8ghxMNhunrqXrYhb7zQHXm8j2t0c
-	 ROIMzaLkiX4eevBQnGralHbk9Q7k6tVhDg33uSlHBEM+xPW1rmKekGyt/sbuncFulO
-	 tDzFBI2zzBvhGbYCWqS/3JL7W+HN2bncnSXlWH5lgevOr0C/M8qK92iDdxXLhdz7S8
-	 Y+8CTlOyfEIJRFsJX3SW6g8ady6w26VblsxLbXxbXl9asTpfDyjudzixcNVwq8WCg3
-	 Oai2aRhp954AwnAjpTN8fRgonrDmTwe4tv6UYGW9w0gqk4F/VfI/mq33pYqe7Yfkck
-	 QTjI2BiIuxUsg==
-Message-ID: <8b6d2a9dfafe1cbf4311efe157f50e8f21702d04.camel@kernel.org>
-Subject: Re: [PATCH v18 04/20] cxl: allow Type2 drivers to map cxl component
- regs
-From: PJ Waskiewicz <ppwaskie@kernel.org>
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org, 
-	netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com, 
-	davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, 	dave.jiang@intel.com
-Cc: Alejandro Lucero <alucerop@amd.com>, Jonathan Cameron
-	 <Jonathan.Cameron@huawei.com>
-Date: Wed, 01 Oct 2025 16:20:07 -0700
-In-Reply-To: <20250918091746.2034285-5-alejandro.lucero-palau@amd.com>
-References: <20250918091746.2034285-1-alejandro.lucero-palau@amd.com>
-	 <20250918091746.2034285-5-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	s=k20201202; t=1759361501;
+	bh=OGlK5L3ggNTJFXop7r3keERa3EKrM29ZMElxPIYJMHQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t5OrcNnJRZl6gflPLlO7LLBZEmOdJ3NXgYQ6CdBf0v3BaHJ2P+n2N3PvXwMTW9gUr
+	 6EtiPCgl/JHF1O/UqUSAQpR+II3zPB4XAACMoDGzV1U309o90SzIVHUZyZGJePz0NZ
+	 thzUy7XLC2KYkrjk+yhbYcz06jFv01RJjA8bbjrhyofxtjg2PQP/vFv7ik+PoVR6ci
+	 fpouJohZ0OdV1MOe1uKinrV/n96glTjZou5zhNpgdGw8ha02geNWO/KBnM+N3U4xZp
+	 3xYqSDeuesYjm5rRBIRiY3w5+R5FiESXDdUAxJO61jjztSAgyVQ291xNYtqdYvWHex
+	 1kcqbBWu67kog==
+Date: Thu, 2 Oct 2025 00:31:34 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, james.morse@arm.com,
+	linux-cxl@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, Will Deacon <will@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Yicong Yang <yangyicong@huawei.com>, linuxarm@huawei.com,
+	Yushan Wang <wangyushan12@huawei.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 4/8] MAINTAINERS: Add Jonathan Cameron to drivers/cache
+Message-ID: <20251002-strainer-kindly-8e654868337a@spud>
+References: <20250820102950.175065-1-Jonathan.Cameron@huawei.com>
+ <20250820102950.175065-5-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="O121PAwtnwfexBg5"
+Content-Disposition: inline
+In-Reply-To: <20250820102950.175065-5-Jonathan.Cameron@huawei.com>
 
-Hi Alejandro,
 
-On Thu, 2025-09-18 at 10:17 +0100, alejandro.lucero-palau@amd.com
-wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
+--O121PAwtnwfexBg5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Aug 20, 2025 at 11:29:46AM +0100, Jonathan Cameron wrote:
+> Seems unfair to inflict the cache-coherency drivers on Conor with out
+> also stepping up as a second maintainer for drivers/cache.
 >=20
-> Export cxl core functions for a Type2 driver being able to discover
-> and
-> map the device component registers.
->=20
-> Use it in sfc driver cxl initialization.
->=20
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
-> =C2=A0drivers/cxl/core/port.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
-> =C2=A0drivers/cxl/cxl.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 7 -------
-> =C2=A0drivers/cxl/cxlpci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 12 -----------
-> =C2=A0drivers/net/ethernet/sfc/efx_cxl.c | 33
-> ++++++++++++++++++++++++++++++
-> =C2=A0include/cxl/cxl.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 20 +++++++++++++++=
-+++
-> =C2=A0include/cxl/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 15 ++++++++++++++
-> =C2=A06 files changed, 69 insertions(+), 19 deletions(-)
+> v3: Add lib/cache_maint.c and include/cache_coherency.h
+>     Conor, do you mind those two being in this entry? Seems silly to spin
+>     another MAINTAINERS entry for a few 10s of lines of simple code.
+
+Oh damn, I just found this randomly while wondering if this series was
+going ahead - you forgot to CC me here! I don't mind the extra bits, I
+think this makes sense, splitting it out would imply a different path
+for merging.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+FWIW, I don't mind using some non-personal tree location for this, but
+that's something that can be done independently if it's needed.
+
+> ---
+>  MAINTAINERS | 3 +++
+>  1 file changed, 3 insertions(+)
 >=20
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index bb326dc95d5f..240c3c5bcdc8 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -11,6 +11,7 @@
-> =C2=A0#include <linux/idr.h>
-> =C2=A0#include <linux/node.h>
-> =C2=A0#include <cxl/einj.h>
-> +#include <cxl/pci.h>
-> =C2=A0#include <cxlmem.h>
-> =C2=A0#include <cxlpci.h>
-> =C2=A0#include <cxl.h>
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index e197c36c7525..793d4dfe51a2 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -38,10 +38,6 @@ extern const struct nvdimm_security_ops
-> *cxl_security_ops;
-> =C2=A0#define=C2=A0=C2=A0 CXL_CM_CAP_HDR_ARRAY_SIZE_MASK GENMASK(31, 24)
-> =C2=A0#define CXL_CM_CAP_PTR_MASK GENMASK(31, 20)
-> =C2=A0
-> -#define=C2=A0=C2=A0 CXL_CM_CAP_CAP_ID_RAS 0x2
-> -#define=C2=A0=C2=A0 CXL_CM_CAP_CAP_ID_HDM 0x5
-> -#define=C2=A0=C2=A0 CXL_CM_CAP_CAP_HDM_VERSION 1
-> -
-> =C2=A0/* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability
-> Structure */
-> =C2=A0#define CXL_HDM_DECODER_CAP_OFFSET 0x0
-> =C2=A0#define=C2=A0=C2=A0 CXL_HDM_DECODER_COUNT_MASK GENMASK(3, 0)
-> @@ -205,9 +201,6 @@ void cxl_probe_component_regs(struct device *dev,
-> void __iomem *base,
-> =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct cxl_component_reg_map *map=
-);
-> =C2=A0void cxl_probe_device_regs(struct device *dev, void __iomem *base,
-> =C2=A0			=C2=A0=C2=A0 struct cxl_device_reg_map *map);
-> -int cxl_map_component_regs(const struct cxl_register_map *map,
-> -			=C2=A0=C2=A0 struct cxl_component_regs *regs,
-> -			=C2=A0=C2=A0 unsigned long map_mask);
-> =C2=A0int cxl_map_device_regs(const struct cxl_register_map *map,
-> =C2=A0			struct cxl_device_regs *regs);
-> =C2=A0int cxl_map_pmu_regs(struct cxl_register_map *map, struct
-> cxl_pmu_regs *regs);
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 4b11757a46ab..2247823acf6f 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -13,16 +13,6 @@
-> =C2=A0 */
-> =C2=A0#define CXL_PCI_DEFAULT_MAX_VECTORS 16
-> =C2=A0
-> -/* Register Block Identifier (RBI) */
-> -enum cxl_regloc_type {
-> -	CXL_REGLOC_RBI_EMPTY =3D 0,
-> -	CXL_REGLOC_RBI_COMPONENT,
-> -	CXL_REGLOC_RBI_VIRT,
-> -	CXL_REGLOC_RBI_MEMDEV,
-> -	CXL_REGLOC_RBI_PMU,
-> -	CXL_REGLOC_RBI_TYPES
-> -};
-> -
-> =C2=A0/*
-> =C2=A0 * Table Access DOE, CDAT Read Entry Response
-> =C2=A0 *
-> @@ -90,6 +80,4 @@ struct cxl_dev_state;
-> =C2=A0int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm
-> *cxlhdm,
-> =C2=A0			struct cxl_endpoint_dvsec_info *info);
-> =C2=A0void read_cdat_data(struct cxl_port *port);
-> -int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type
-> type,
-> -		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct cxl_register_map *map);
-> =C2=A0#endif /* __CXL_PCI_H__ */
-> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c
-> b/drivers/net/ethernet/sfc/efx_cxl.c
-> index 56d148318636..cdfbe546d8d8 100644
-> --- a/drivers/net/ethernet/sfc/efx_cxl.c
-> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> @@ -5,6 +5,7 @@
-> =C2=A0 * Copyright (C) 2025, Advanced Micro Devices, Inc.
-> =C2=A0 */
-> =C2=A0
-> +#include <cxl/cxl.h>
-> =C2=A0#include <cxl/pci.h>
-> =C2=A0#include <linux/pci.h>
-> =C2=A0
-> @@ -19,6 +20,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
-> =C2=A0	struct pci_dev *pci_dev =3D efx->pci_dev;
-> =C2=A0	struct efx_cxl *cxl;
-> =C2=A0	u16 dvsec;
-> +	int rc;
-> =C2=A0
-> =C2=A0	probe_data->cxl_pio_initialised =3D false;
-> =C2=A0
-> @@ -45,6 +47,37 @@ int efx_cxl_init(struct efx_probe_data
-> *probe_data)
-> =C2=A0	if (!cxl)
-> =C2=A0		return -ENOMEM;
-> =C2=A0
-> +	rc =3D cxl_pci_setup_regs(pci_dev, CXL_REGLOC_RBI_COMPONENT,
-> +				&cxl->cxlds.reg_map);
-> +	if (rc) {
-> +		dev_err(&pci_dev->dev, "No component registers
-> (err=3D%d)\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	if (!cxl->cxlds.reg_map.component_map.hdm_decoder.valid) {
-> +		dev_err(&pci_dev->dev, "Expected HDM component
-> register not found\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (!cxl->cxlds.reg_map.component_map.ras.valid)
-> +		return dev_err_probe(&pci_dev->dev, -ENODEV,
-> +				=C2=A0=C2=A0=C2=A0=C2=A0 "Expected RAS component
-> register not found\n");
-> +
-> +	rc =3D cxl_map_component_regs(&cxl->cxlds.reg_map,
-> +				=C2=A0=C2=A0=C2=A0 &cxl->cxlds.regs.component,
-> +				=C2=A0=C2=A0=C2=A0 BIT(CXL_CM_CAP_CAP_ID_RAS));
-> +	if (rc) {
-> +		dev_err(&pci_dev->dev, "Failed to map RAS
-> capability.\n");
-> +		return rc;
-> +	}
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index fe168477caa4..039d10ded9e9 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -23967,10 +23967,13 @@ F:	drivers/staging/
+> =20
+>  STANDALONE CACHE CONTROLLER DRIVERS
+>  M:	Conor Dooley <conor@kernel.org>
+> +M:	Jonathan Cameron <jonathan.cameron@huawei.com>
+>  S:	Maintained
+>  T:	git https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/
+>  F:	Documentation/devicetree/bindings/cache/
+>  F:	drivers/cache
+> +F:	include/cache_coherency.h
+> +F:	lib/cache_maint.c
+> =20
+>  STARFIRE/DURALAN NETWORK DRIVER
+>  M:	Ion Badulescu <ionut@badula.org>
+> --=20
+> 2.48.1
+>=20
 
-I've finally made some serious headway integrating v17 into my
-environment to better comment on this flow.
+--O121PAwtnwfexBg5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I'm running into what I'm seeing as a fundamental issue of resource
-ownership between a device driver, and the CXL driver core.  I'm having
-a hard time trying to resolve this.
+-----BEGIN PGP SIGNATURE-----
 
-If I do the above and call cxl_map_component_regs() with a valid CAP_ID
-(RAS, HDM, etc.), that eventually calls devm_cxl_iomap_block() from
-inside the CXL core drivers.  That calls devm_request_mem_region(), and
-this is where things get interesting.
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaN251gAKCRB4tDGHoIJi
+0toUAP0dOcmtbXnxZnNoXXCM7kD2Nsf3MpJIf+ZHnwEDwUNU6wEAvn+n1seE9hkC
+hVZLo8CCugs4ulT80RBNTP9Auu7ODw8=
+=p30I
+-----END PGP SIGNATURE-----
 
-If my device happens to land the CXL component registers inside of a
-BAR that has other items needed by my Type 2 device's driver, then we
-have a conflict.  My driver and the CXL core drivers cannot hold the
-same regions mapped.  i.e. I can't call pci_request_region() on my BAR,
-and then call the above.  One loses, and then we all lose.
-
-Curious if you have any ideas how we can improve this?
-
-Cheers,
--PJ
+--O121PAwtnwfexBg5--
