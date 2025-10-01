@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B010C27FD43;
-	Wed,  1 Oct 2025 15:58:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D16C34BA28;
+	Wed,  1 Oct 2025 16:12:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759334332; cv=none; b=pA8VxMF0yV8a3kF7MQ9+K0q0PVVlLIK2T+AmCNDWrvM81XLmgJP8FdHMhzZO55+7msHn/qS8vaKTAj5NbbP6qq1afnJtmokY+hYjbyW5jhrHKCJm4D2wntDfrfYOt9LXG8h8RmqZLMvdLyQXYjenES+BtmnkwMvCEc6hfKPQsJo=
+	t=1759335145; cv=none; b=PVuMVIAOmyGx/vGGiOf/ULjy3igYFzS5jF8yugIIvX3ldVSKgERnRR/eZ2IkH8bJhqMShyHul3s/bE37js3CyK7AJlOZcuok39n92v72HTs4v+V8IXJDkJM2e8hzQM1wgQhydKAobvyExmNgCFzt+yEyGvlhNcqF6cnh2JddLpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759334332; c=relaxed/simple;
-	bh=9iXkA7Hb7umjY+DYrImBDguUqZV9CGperOpBzoBALnU=;
+	s=arc-20240116; t=1759335145; c=relaxed/simple;
+	bh=9AKfBEaF4yzTvDwYTJVSbIKmdGVfNtriXroo62Fl6vw=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PWBcGI2x6dbdG10HdzWMHu4MVwN+Y620YcTg7kKwrYaGt+ZN+c0RQj1AOcSeU0L9u+8PRnAGhRazOgNfY1wsSdwJeibUbdI+uqzKmZVIXYfwLCEPROscIaHNC7LtXNbSBq65f3RGuADjnCRrV88xw4xaGRiATNKJQWvoWHMPLAU=
+	 MIME-Version:Content-Type; b=oj9UjDuXMPyqhNNGzdeVrkPy3s46gSA3A1/Bd2sThVOt0/mntt3WTdwrZtln1oKU4JmS/h99m8V2BnXX8kLy0GJ9Kca5Zroy0HE4Ugl2F/96jNSByWQw5P0rkS+3T7IqV1SKWhonxllRpTPlbwOLy8Q2mQ2PUX6g8FMcb0De938=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ccKJn416nz6K8pH;
-	Wed,  1 Oct 2025 23:55:37 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ccKdT2sKbz6L52D;
+	Thu,  2 Oct 2025 00:10:05 +0800 (CST)
 Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1EA641402EB;
-	Wed,  1 Oct 2025 23:58:46 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id E3E19140142;
+	Thu,  2 Oct 2025 00:12:18 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
  (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 1 Oct
- 2025 16:58:44 +0100
-Date: Wed, 1 Oct 2025 16:58:43 +0100
+ 2025 17:12:17 +0100
+Date: Wed, 1 Oct 2025 17:12:16 +0100
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: Terry Bowman <terry.bowman@amd.com>
 CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
@@ -35,12 +35,12 @@ CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
 	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
 	<linux-cxl@vger.kernel.org>, <alucerop@amd.com>, <ira.weiny@intel.com>,
 	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v12 07/25] CXL/PCI: Move CXL DVSEC definitions into
- uapi/linux/pci_regs.h
-Message-ID: <20251001165843.0000321e@huawei.com>
-In-Reply-To: <20250925223440.3539069-8-terry.bowman@amd.com>
+Subject: Re: [PATCH v12 10/25] CXL/AER: Update PCI class code check to use
+ FIELD_GET()
+Message-ID: <20251001171216.00005fa0@huawei.com>
+In-Reply-To: <20250925223440.3539069-11-terry.bowman@amd.com>
 References: <20250925223440.3539069-1-terry.bowman@amd.com>
-	<20250925223440.3539069-8-terry.bowman@amd.com>
+	<20250925223440.3539069-11-terry.bowman@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -50,68 +50,94 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
  dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Thu, 25 Sep 2025 17:34:22 -0500
+On Thu, 25 Sep 2025 17:34:25 -0500
 Terry Bowman <terry.bowman@amd.com> wrote:
 
-> The CXL DVSECs are currently defined in cxl/core/cxlpci.h. These are not
-> accessible to other subsystems.
+> Update the AER driver's is_cxl_mem_dev() to use FIELD_GET() while checking
+> for a CXL Endpoint class code.
 > 
-> Change DVSEC name formatting to follow the existing PCI format in
-> pci_regs.h. The current format uses CXL_DVSEC_XYZ. Change to be PCI_DVSEC_CXL_XYZ.
-> Reuse the existing formatting.
+> Introduce a genmask bitmask for checking PCI class codes and locate in
+> include/uapi/linux/pci_regs.h.
 > 
-> Update existing occurrences to match the name change.
-> 
-> Update the inline documentation to refer to latest CXL spec version.
+> Update the function documentation to reference the latest CXL
+> specification.
 > 
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> 
 
-Maybe we discussed it in earlier versions and I've forgotten but generally renaming
-uapi defines is a non starter.
+The way that class code definitions work in pci_ids.h is somewhat odd
+in my opinion, so I'd like input from Bjorn, Lukas etc on whether a
+generic mask definition is a good idea or more likely to cause problems.
 
-I was kind of assuming lspci used these, but nope, it uses hard coded
-value of 3 and it's own defines for the fields. (A younger me even reviewed
-the patch adding those :) )
+See for example. 
+#define PCI_BASE_CLASS_STORAGE		0x01
+...
 
-https://github.com/pciutils/pciutils/blob/master/ls-ecaps.c#L1279
-
-However, that doesn't mean other code isn't already using those defines.
-
-Minimum I think would be to state here why you think we can get away with
-this change. 
-
-Personally I'd just not bother changing that one.
-
-Jonathan
+#define PCI_CLASS_STORAGE_SATA		0x0106
+#define PCI_CLASS_STORAGE_SATA_AHCI	0x010601
 
 
+This variability in what is called CLASS_* leads to fun
+situations like in drivers/ata/ahci.c where we have some
+PCI_CLASS_* shifted and some not...
 
+> ---
+> 
+> Changes in v11->v12:
+> 
+> Changes in v10->v11:
+> - Add #include <linux/bitfield.h> to cxl_ras.c
+> - Removed line wrapping at "(CXL 3.2, 8.1.12.1)".
+> ---
+>  drivers/pci/pcie/aer.c         | 1 +
+>  drivers/pci/pcie/aer_cxl_rch.c | 6 +++---
+>  include/uapi/linux/pci_regs.h  | 2 ++
+>  3 files changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index befa73ace9bb..6ba8f84add70 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -30,6 +30,7 @@
+>  #include <linux/kfifo.h>
+>  #include <linux/ratelimit.h>
+>  #include <linux/slab.h>
+> +#include <linux/bitfield.h>
+>  #include <acpi/apei.h>
+>  #include <acpi/ghes.h>
+>  #include <ras/ras_event.h>
+> diff --git a/drivers/pci/pcie/aer_cxl_rch.c b/drivers/pci/pcie/aer_cxl_rch.c
+> index bfe071eebf67..c3e2d4cbe8cc 100644
+> --- a/drivers/pci/pcie/aer_cxl_rch.c
+> +++ b/drivers/pci/pcie/aer_cxl_rch.c
+> @@ -17,10 +17,10 @@ static bool is_cxl_mem_dev(struct pci_dev *dev)
+>  		return false;
+>  
+>  	/*
+> -	 * CXL Memory Devices must have the 502h class code set (CXL
+> -	 * 3.0, 8.1.12.1).
+> +	 * CXL Memory Devices must have the 502h class code set
+> +	 * (CXL 3.2, 8.1.12.1).
+>  	 */
+> -	if ((dev->class >> 8) != PCI_CLASS_MEMORY_CXL)
+> +	if (FIELD_GET(PCI_CLASS_CODE_MASK, dev->class) != PCI_CLASS_MEMORY_CXL)
+>  		return false;
+>  
+>  	return true;
 > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index f5b17745de60..bd03799612d3 100644
+> index bd03799612d3..802a7384f99a 100644
 > --- a/include/uapi/linux/pci_regs.h
 > +++ b/include/uapi/linux/pci_regs.h
-> @@ -1234,9 +1234,64 @@
->  /* Deprecated old name, replaced with PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE */
->  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE
+> @@ -73,6 +73,8 @@
+>  #define PCI_CLASS_PROG		0x09	/* Reg. Level Programming Interface */
+>  #define PCI_CLASS_DEVICE	0x0a	/* Device class */
 >  
-> -/* Compute Express Link (CXL r3.1, sec 8.1.5) */
-> -#define PCI_DVSEC_CXL_PORT				3
-
-This is a userspace header. We can't rename existing definitions
-as we have no idea who is using them.   Only option would be to
-add a comment making the old ones deprecated and adding new ones alongside.
-
-
-> -#define PCI_DVSEC_CXL_PORT_CTL				0x0c
-> -#define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
-
-....
-
-> +/* CXL 3.2 8.1.5: Extensions DVSEC for Ports */
-> +#define PCI_DVSEC_CXL_PORT_EXT					3
-> +#define   PCI_DVSEC_CXL_PORT_EXT_CTL_OFFSET			0x0c
-> +#define    PCI_DVSEC_CXL_PORT_EXT_CTL_UNMASK_SBR		0x00000001
+> +#define PCI_CLASS_CODE_MASK     __GENMASK(23, 8)
+> +
+>  #define PCI_CACHE_LINE_SIZE	0x0c	/* 8 bits */
+>  #define PCI_LATENCY_TIMER	0x0d	/* 8 bits */
+>  #define PCI_HEADER_TYPE		0x0e	/* 8 bits */
 
