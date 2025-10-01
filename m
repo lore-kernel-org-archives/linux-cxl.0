@@ -1,251 +1,336 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010016.outbound.protection.outlook.com [52.101.46.16])
+Received: from mail1.bemta39.messagelabs.com (mail1.bemta39.messagelabs.com [195.245.231.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6384D2D9488;
-	Tue, 27 Jan 2026 15:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769526288; cv=fail; b=snNhuNRPAjF/8L85ZKMAqA7fmajPPuDeTKZ8Pc9eoyMf+GCXJf1TJC7ahhji9fNlQAQo189j7w5Drmbr6j+f/ugUPJ0Mu0ZIhLW7Z8bWjfz83peuNf6kRLywXfME5sR8SFEg+GEcGF/3YzNjEWg+vBjPNPK+eLqfARMAnLbFO+A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769526288; c=relaxed/simple;
-	bh=PjNwj4kdesmOlh7unjUIe63qyUx3ayFZQmCPLH+o08o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=f8ElEezJOQnYvMt/j+jQGkZsYOW+gpKZIdcFeaiSt9/Qhb3ZWV6SrYBJAwjhgoz7PG0miROtU22Ev8U05nyaHTe90PRQJIfwyVaoKcC9YeGLekNH+wwi/+POMRh7FTvDpx4L/AQ/oG+amWXGUkn6Zi8b6mY8MFvpCgHdH9fkro8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=LOvrlevl; arc=fail smtp.client-ip=52.101.46.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B253EBF03;
+	Tue, 27 Jan 2026 15:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.245.231.3
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769526945; cv=none; b=BpdwXJNMIRvTAmX9UzNuzcKP/AunlLA1jRofba6MEQiPL8St2hm4Rsekg3a7jdVR8b5FxCfydcfut1XEg+1IzJLFHf6bv6mwBiWNUH8pP6P7nwPIwpYl/8DTkys/MQg5wYrQGX2XnTAZSzIhI+o8+3hISc5skyOrXEDyW0Xr+XI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769526945; c=relaxed/simple;
+	bh=3Ocr8+IV+WRlNqAHeAyIW1ArEK7R5P3dT2S+WayxlrY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=J+Qr7QGXv6rl0eF+yE1xdHrOgU5HDrVOv3Q4MYCHxqld+9IBJHZVDrTblHNIRX6EuhCVpPzLxa3I7Mbt4HSnjzfq3DmpVF51eDNBbk5Rc1lUq9S/3DjRmkh24Vn+YGfEXxwydp9Pt/jiGL+V9FqFo4A+/G/9MEGPOYGgoLqhwzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Y7Guxh82; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=fJdgKSL/; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=fJdgKSL/; arc=none smtp.client-ip=195.245.231.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="LOvrlevl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LzYjEHhrCy6vmvCyUHQKc5u6K6PMvfcZVhr0MSUjgMGmMSkHEfvytzWupRxtTumoDunMJQ1sOVBfjOgwa0b9b8vojhpTd5wS+S27nouP9fsoEdf9gLblVIYmAStZokpRUe9hqT9RBd++RxQIl4PFMhfLrTUARcnpID6hxep9qweHSZSRFe6LTDaw4GZD8pFwu8XBzPV5VZW948i53DyvEMyJW5bqt9zG3Tp2JfRr+mkMYyVDBu7ckJsWobmXob5xbPUIc1dMILQWw0jEGLHCEwElSLD21rZ1UaROxgNOvgoCcz8J6Bt4Z53rE5kBlrhSNPQNI8aOJ3Du3peYoBPzhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mnGF8v0CIOSu0E1CvSk7rs2V4492ItlK93woBNZvEJ8=;
- b=nzsYYTtCKwRDoN5M5V23Ele79w2A7RBDxTdYmL3ShxXCZFL2UtbSI6Z8CKJ9e2fEgFWILS5+bBJX0PKawilAl/LoqB4+JDg6YFHjxOL+VUsyhSeNbR8kaAXI5GSsNgY02XW5Jx739hlI3pSYAKqu0UbrHTe0yYkcOl5nLN80PK6WrLtJ55YXOS//nx0Q6bm2nr6TcdU7ZryqPe+gF6d9hGoNzflSkQyH98+APcdF4xP+3bZsssNub0S3b7j3UPLcrx7l+OKpkofVIz6NYY9eupz1AWFdQ353pvQvRxqkpA+3w5qkQ/aHjoZaG8xwgc4A4IrQGLR6/jiOxE4orCAHHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mnGF8v0CIOSu0E1CvSk7rs2V4492ItlK93woBNZvEJ8=;
- b=LOvrlevlhIZsW11ucfd8KGRofB1M4enRqrw1cugdUVumuPtRM6tyekBcuDScm7vQOAcZY4z1v/xil+hy9nDTb98CvW4b1BhMmDfvR/2WlqTiCYefVPkyFaNYLEEhlfGj5swfuSg7a50aFFvNUtzo2MbAxbx5RTEDoDedD5UM41DaOT+YbmwAYASYNGxL6X/ssrPjpa1/fugR/h+igCj6XlQ52ao/t3EqAgMK0KBFQ5Kl6cieErqhTIrz4HgSh5zCfLzFu3BNtQePsEYVOU1EsaW6plKuMAPSm5+tDIPYj4hSXtkHlKPLmJ+QApxT8eG/8fM3H/+mXZ24LW+vdqzQWQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
- by PH7PR12MB7116.namprd12.prod.outlook.com (2603:10b6:510:1ef::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.7; Tue, 27 Jan
- 2026 15:04:43 +0000
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c%3]) with mapi id 15.20.9542.015; Tue, 27 Jan 2026
- 15:04:42 +0000
-Date: Tue, 27 Jan 2026 11:04:40 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: "Williams, Dan J" <dan.j.williams@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"joro@8bytes.org" <joro@8bytes.org>,
-	"praan@google.com" <praan@google.com>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"miko.lenczewski@arm.com" <miko.lenczewski@arm.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH RFCv1 1/3] PCI: Allow ATS to be always on for CXL.cache
- capable devices
-Message-ID: <20260127150440.GF1134360@nvidia.com>
-References: <cover.1768624180.git.nicolinc@nvidia.com>
- <d1768bb6384050a23769f20ca28216f520f77e26.1768624181.git.nicolinc@nvidia.com>
- <BL1PR11MB5271F0BDC68C2D7F172122E98C96A@BL1PR11MB5271.namprd11.prod.outlook.com>
- <20260121100307.00004e60@huawei.com>
- <20260121130315.GE1134360@nvidia.com>
- <6971b9406d069_1d33100df@dwillia2-mobl4.notmuch>
- <20260122131432.GJ1134360@nvidia.com>
- <69727e7ded712_3095100ab@dwillia2-mobl4.notmuch>
- <BN9PR11MB527649A0049CA195E7BCF9218C90A@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB527649A0049CA195E7BCF9218C90A@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-ClientProxiedBy: BL0PR0102CA0050.prod.exchangelabs.com
- (2603:10b6:208:25::27) To LV8PR12MB9620.namprd12.prod.outlook.com
- (2603:10b6:408:2a1::19)
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Y7Guxh82";
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="fJdgKSL/";
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="fJdgKSL/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
+	s=170520fj; t=1769526940; i=@fujitsu.com;
+	bh=eKJgZOL9+TZVs7y3reqL2VrxdmtxW8FanAU5WaL7bc4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	b=Y7Guxh82jmLxwnMDghz1zHbcVBArW8J+LaRspyiKbkxRUZ5LWtc7kIufNtR+xQqiP
+	 LB3mcqmumQt0c5d85PeSSx1OHn0zFA12n1QXXeGGQrbp9dS2jfEtG/V5g/Mum3SKd9
+	 oVyiV31Fy/D8tBlvUtgq/Ebl+m1Gnw+9uAFTYkYDGAXHy89iYK3/NPJuPvehilUk7N
+	 lIaZHfrT+tsIzwjkZtnYTGj80m0rdKGPWM7RkLjpBcZDjDfhoSeUDEAHFBQW4GFtL6
+	 gGU0rYJpjrFScxVSWZBiK49bt/QXIyHKH3lPNv0/PSzwJZeKhsu4y0k38oywH9g8kL
+	 uRXgqq+oUa3PA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA22Sb0xTVxyGOffe3l6Qkkth49jBXGrGFjKKBDU
+  nSJiLWXJNlskcWdQP0xaubbEt2FtcWTIHAhMq/ywgWKTgnIYxsimIFEKFYUVEHRWEFRgBVFS6
+  MGFlCCJsrYhzyb69yfOc97wffhQuvEWKKFavY7UaqUpM+hCxMZQx3DSgV25oXRKhkXt2Eo1O/
+  MFDC7OPATpunsOQ6/wyicpK7QB1DWaQ6IfBOoAyz/xEop6GZyRqm3hIoIqyTAwZLf04qj09QC
+  JTiRVDPaZuArVarxOor+UUiVz5NoCyzVMA5UyUYuj7+Wc8lPM4HUfX8tsxVDlbiqPfTpwDqOz
+  REg/Vzc7gaLirh4eGijoxtDjvLrhsGyW2vsU8yS4gmOzeJZJpNo3wmSzbFI9pqAljzrROYkx9
+  bS7JtFXW8ZlHDScB0+5cAkxpxdfMzWobn3HVv8ksVnSCOL89PKVGlqzfx1OUFeTgKcXb9VVXe
+  3jpYD7GAHwoIX0RwD7Lbb4BeFMEvQMOjV0lPYCgLxHwwe+V/BXrKAZvPWghV63ixivY/1jlAL
+  oyGnEDoCiSjoDm4SjPg0A6EHYMzRCejNN2ElbPqj05gGbhmKsAWyl9G1Y3OZ/PENCxsHdhGvd
+  kSK+DzpIGnid701vgNx1nn/cI6Wh431yDr/j+8PrJ+y/618HMxooXb0Nh/y/1eBEIML2imV7R
+  qgFWCxDHag+x2vAoiUyrlCt0aqlSJZF+GS6VsKna5BQ2/AuW022UyBNSJCzHSbg0dYIqUaJhd
+  fXAfVM+03HVFrC4lB3RAdZSmPg1wbfn9Eqhnyw5MU0h5RR7takqlusAwRQlhoKdd9zMX8vKWf
+  1+pcp9masYUr7iQMHcFTcWcClSNaeUr6BuEEWNnLZacWpmsvRnXEhokjWsKEiQ5WmiPaoiVfO
+  yaPXKe0GIKEAAvLy8hL4prFat1P2XO0EQBcQBgoP97hZfpUb38j+newrmnlJ1LdUzRSf9F4nS
+  sQMjZ0N3Xmzb1Talc9LeuRsvx2zVPhTv/9v2+fr3x/aFSR19EUnxH+OFm/NJ0d17sjfkBscn2
+  z/t+dABBV6vb8OPp/Yb1Y4P3jWOL9oHJqbXDDvLhafMCwfN0Rtmm4yR+aBFPw4lg7K1GZs1U3
+  TNQpXhuz+X94yb8nZtEfqX+O22fXThEBFbkYSFdM40TQ4bnx7rK1/ey4/qarZM/9WeuNi5Oz4
+  9odjgv806lP9ZUrfq5pHKmFx73JG8icOhzkvRQwfumqZCZM2qr07EpNl/fOfX9+YsF47eOD8a
+  bAy6HejKztq0YCGD76yp7XwSVnQjXm7NOHY47ymKdMjXG8Y21YcUFooJTiGNDMO1nPQfhoo4K
+  WAEAAA=
+X-Env-Sender: Tomasz.Wolski@fujitsu.com
+X-Msg-Ref: server-10.tower-874.messagelabs.com!1769526937!463212!1
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received:
+X-StarScan-Version: 9.120.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 22084 invoked from network); 27 Jan 2026 15:15:38 -0000
+Received: from unknown (HELO n03ukasimr02.n03.fujitsu.local) (62.60.8.146)
+  by server-10.tower-874.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 27 Jan 2026 15:15:38 -0000
+Received: from n03ukasimr02.n03.fujitsu.local (localhost [127.0.0.1])
+	by n03ukasimr02.n03.fujitsu.local (Postfix) with ESMTP id 942E010060B;
+	Tue, 27 Jan 2026 15:15:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 n03ukasimr02.n03.fujitsu.local 942E010060B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
+	s=dspueurope; t=1769526937;
+	bh=eKJgZOL9+TZVs7y3reqL2VrxdmtxW8FanAU5WaL7bc4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fJdgKSL/yInFjLLT+wnUQb6GDlEIDNpHFMGTqp9lBw2HGu58Rcz4jgevdJ2KJ5cY8
+	 0FCERaA2b8iAxlUkoLOmuwTyxZZ29x84ztPiqIhZaiyP6LyyD3hNIsxa5xhO+lSrFP
+	 mWifWKeX42HdVbypZOmvbZRqXQgC4e0uZ1rVWz5IvcA8o3FQn8W3UkRQRkEAo8GRT8
+	 4n6BICzHOm2G/OCnCl6xOwQxYyrCcWZR2B75yAT8o3G/a2zhoiNKpoTL/Gvkx7TQra
+	 I99aEbQOSAbmrSvhxWwBvwaSFWEwXqu/4RHVfxHH2VFh3eSk+FpzszrZOgPutSaJ3/
+	 BAD9spur12iag==
+Received: from ubuntudhcp (unknown [10.172.107.4])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by n03ukasimr02.n03.fujitsu.local (Postfix) with ESMTPS id 6920C100605;
+	Tue, 27 Jan 2026 15:15:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 n03ukasimr02.n03.fujitsu.local 6920C100605
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
+	s=dspueurope; t=1769526937;
+	bh=eKJgZOL9+TZVs7y3reqL2VrxdmtxW8FanAU5WaL7bc4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fJdgKSL/yInFjLLT+wnUQb6GDlEIDNpHFMGTqp9lBw2HGu58Rcz4jgevdJ2KJ5cY8
+	 0FCERaA2b8iAxlUkoLOmuwTyxZZ29x84ztPiqIhZaiyP6LyyD3hNIsxa5xhO+lSrFP
+	 mWifWKeX42HdVbypZOmvbZRqXQgC4e0uZ1rVWz5IvcA8o3FQn8W3UkRQRkEAo8GRT8
+	 4n6BICzHOm2G/OCnCl6xOwQxYyrCcWZR2B75yAT8o3G/a2zhoiNKpoTL/Gvkx7TQra
+	 I99aEbQOSAbmrSvhxWwBvwaSFWEwXqu/4RHVfxHH2VFh3eSk+FpzszrZOgPutSaJ3/
+	 BAD9spur12iag==
+Received: from localhost.BIOS.GDCv6 (unknown [10.172.196.44])
+	by ubuntudhcp (Postfix) with ESMTP id 037E12202F9;
+	Tue, 27 Jan 2026 15:15:37 +0000 (UTC)
+From: Tomasz Wolski <Tomasz.Wolski@fujitsu.com>
+To: alucerop@amd.com
+Cc: Smita.KoralahalliChannabasappa@amd.com,
+	alison.schofield@intel.com,
+	ardb@kernel.org,
+	benjamin.cheatham@amd.com,
+	bp@alien8.de,
+	dan.j.williams@intel.com,
+	dave.jiang@intel.com,
+	dave@stgolabs.net,
+	gregkh@linuxfoundation.org,
+	huang.ying.caritas@gmail.com,
+	ira.weiny@intel.com,
+	jack@suse.cz,
+	jeff.johnson@oss.qualcomm.com,
+	jonathan.cameron@huawei.com,
+	len.brown@intel.com,
+	linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	lizhijian@fujitsu.com,
+	ming.li@zohomail.com,
+	nathan.fontenot@amd.com,
+	nvdimm@lists.linux.dev,
+	pavel@kernel.org,
+	peterz@infradead.org,
+	rafael@kernel.org,
+	rrichter@amd.com,
+	skoralah@amd.com,
+	terry.bowman@amd.com,
+	tomasz.wolski@fujitsu.com,
+	vishal.l.verma@intel.com,
+	willy@infradead.org,
+	yaoxt.fnst@fujitsu.com,
+	yazen.ghannam@amd.com
+Subject: Re: [PATCH v5 6/7] dax/hmem, cxl: Defer and resolve ownership of Soft Reserved memory ranges
+Date: Wed,  1 Oct 2025 19:15:46 +0200
+Message-ID: <20251001171553.31343-1-Tomasz.Wolski@fujitsu.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <f4bdf04d-7481-4282-b9da-ce5fcf911af9@amd.com>
+References: <f4bdf04d-7481-4282-b9da-ce5fcf911af9@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|PH7PR12MB7116:EE_
-X-MS-Office365-Filtering-Correlation-Id: c30195fb-381d-4ee8-a477-08de5db56637
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?2ossd/2vHpFrvqf8HKuISJSxTK9KqUnQ5n29W/iqpvvvvAjepmx3UCY/C3GF?=
- =?us-ascii?Q?0C5pO9/SwwFOKX0SYIXGszjTKU6YMLLrRFYsfO8pl8INA2Faylm72217Quma?=
- =?us-ascii?Q?oGrnykKuaGw4rIaWxrwHwQD8iQFbkYBnCMetytDR4FKkCt5ZemQmDYicKG1G?=
- =?us-ascii?Q?UMHISOnwjdZHD0R43Zc44hJlsOy2VG+TWPMeGCRnl46/2kbqpqzTOmaXnCGQ?=
- =?us-ascii?Q?P1fXhiyxJHqKzFJ8iIHw43ys2dmLq4SoPmD15ih8oMEDj4u/wAIpoOMqGPbn?=
- =?us-ascii?Q?bE71DhymYFlxsb8ctePIrhoxawmFRdBJdRMhGQHtjnJy3j2dAkBEgdLD9AiZ?=
- =?us-ascii?Q?bFR3C0J/sBMqAPKH0sn8oNEWHBuGGrKmGMc/kKVR9p1Dpi/hq34nlu4tuut0?=
- =?us-ascii?Q?r3pugM5EdDka2DDG3t2AA7z9/Q/yJGNa9yRihVl6B/dwzcHNxsfB8yv3Q0DN?=
- =?us-ascii?Q?drQryP3eDwqyEJ+5DD7sDAF9IS7iRCM3xsMP4Tvn7ZFrOE+sY9sadFmDht4A?=
- =?us-ascii?Q?eqneah25yBi/xqZqmEr8Qwj4Cg5vxT+g8rylf7ooErM5CElM+i//8WK3VX3M?=
- =?us-ascii?Q?k19ZVunXBCmNQBBuccsgIYI4nx6Yt33/INr4qELwe7NyIU+H/AIPe/0/PQNQ?=
- =?us-ascii?Q?2Rp0iwgGZNMfghwP3WDdmYgktdC1+h16TOYrZR8hgS/DabyZ/hFV2bkyuLi1?=
- =?us-ascii?Q?qMfLKuQaNd+nJ7l6uqDlWmGDV71zzf3CoWsJSGXlJwFG+Kr0uol8koUd43gV?=
- =?us-ascii?Q?/UpC+ZLFBl4EikTXs/BvNqrqcLtIQdSzODE4gUSSJflLj41ap4PHPE2HAklv?=
- =?us-ascii?Q?gF6G9dKiClAWAgQ8nlhehrb6UWYVMvpMFMoer1LVsjh+EfssdxbDjz/aTpAy?=
- =?us-ascii?Q?5puOUvCHHi9bjxF7IZbxi/L+eytWp+NTfG/WuF+H2n5cF3cmuDXqvMy8xEjJ?=
- =?us-ascii?Q?PFJxlqZuf1qYAfDR6iYdPUvEoDTvlvUzg9FQzadAWRmlcNLV804IvcjApApF?=
- =?us-ascii?Q?ccYMro/c9N0K0yn/KslAw4UsNc8fMevrJU7z+foDGMQ1gHw0Pd2b0PfOWqnk?=
- =?us-ascii?Q?hUVUv5kn5ZVTWaiTu09GapnTc8PbzmhAacE/lDaeFW0aT5mAL9WZVIBhU7TG?=
- =?us-ascii?Q?vcOvncX2/wSLlKMjyVkvZHBt2ExyK1kwdvs0eQxDj4HM4YbtmNeUselbEwL7?=
- =?us-ascii?Q?gTXcODyCSR9/oxLt2rGJC1NPo13zeK2I3WVvwBWveEssurvpdsz+MfbnxMMt?=
- =?us-ascii?Q?CtA/Tk1Sca/uTRu3hbjWZ2Njkf6bL2WNhZkIVnQQ+A5FbkpyM8Il0D/tM4D7?=
- =?us-ascii?Q?IcNugcAB4pu0alHmP1fd7kQNVPnRpoAAu8Aq+FZIiyugPCTyqkHTyYHvNmYK?=
- =?us-ascii?Q?/vj2QTyNFPfE+EWQpchHJ/jBp5FsoTDAFZG2d1xU9oJMQTAgVkQsUNi5LK60?=
- =?us-ascii?Q?dY991zW/Ug0Hx9z6ZdLyyjenNrTBlNuHqJ8BEHM0mITHHYsfp2N6zojFHRCo?=
- =?us-ascii?Q?IWzme64fyS0KX4Xf1JFaAiTCTtsDeA+lzg+9b+zCjFnaBknNZnRc/RiFLVuJ?=
- =?us-ascii?Q?rGY6D8ssaSdXBg+/6Lc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?1Xj1Yc6yemPo/hSFphn6MoUiDdCcBYqMsWusu/lf3wEbCvedY2peV27pcPfW?=
- =?us-ascii?Q?8JidbHehprzR7CyJ8eH+wmjFlkO6bpZqPePtmSahV4ZUU0x01sT4HoIu7Jby?=
- =?us-ascii?Q?cWnlYFsK6hx2QSeJk+bHHev062Y+XfyZwhd81P9B2y58PDa/LwaMMrLjijlF?=
- =?us-ascii?Q?SI5edgeKkPN/IH3MlOutbWQAoL5zp/cLOp0yfMnlSuOBfmQBjJY1hooINWik?=
- =?us-ascii?Q?hGeynhjR+fbrxxcUh34D37cjXkXEes8rBraYLX6zZ9D4a45m8Hs3s7jY+25w?=
- =?us-ascii?Q?WbMAD+U/u9GYFreTqUOVKuNCnOSCArk+M1y+kNPJjZkIXZ3uYAkks9HAxV41?=
- =?us-ascii?Q?1NiWqhz4vcqXKp/KyaJFQkZCQ7Cb/RVjeirnSFXIo8Qazwo8KbVT31DKl8Fh?=
- =?us-ascii?Q?+w0DEiR0HZbaZdvQbTGUk2GP1BgZUaL71vYORMHyyiQzXzRWomycaIM2GOzA?=
- =?us-ascii?Q?JTYXwiWKHnuOGsBDi94o3bmNqmVrIQ5bvPQv7Xdhoc/0tvmZbXqqJyfwRe8F?=
- =?us-ascii?Q?tuYwo221I7MyWou7XMTDxTafNjX4EpwtJbLv4O2uSRzcy3jbpHK6aiLvWlYP?=
- =?us-ascii?Q?tFgcvnfMvEgXSUgSpXhaI90rOH8cqBVz3lnbZy4IQ0FoXyrYmGyq1Gz5H+6d?=
- =?us-ascii?Q?ioYEjpB1/YdglIc3ARqZB27SN3HETbB5ZP6eXSRudtJODsI1CSmjL0CCu/sq?=
- =?us-ascii?Q?M/fk4YsU5M+UPMrg+E4PJzj11yWvd7CMAojKOcq4bP+E0ZKd3tEhQPI4HknQ?=
- =?us-ascii?Q?5jmEa4LyhUvGXGb0vfBKnLh3bhu+yNZP1ddkRHTVpHTLU5qVbwyT9OBbx9RV?=
- =?us-ascii?Q?cihbR2o5cCeb+EbqrPZfCUNhTKyeaAs6+jEJO6ZSHItnOX8k493wqwYbiGvT?=
- =?us-ascii?Q?1LBpCQyYhZm7CB8Hdm1mnlN20nfaipF+btAoCtpbSwLRrwK/y8VN+qsSlh0d?=
- =?us-ascii?Q?ZOIEJgefYp/Z/wNh7HZfcwAZ/0NwczGSKiFwskinVQnPZv36ITsUTTRnEiZy?=
- =?us-ascii?Q?YwO+fKW6cuv1Yu9E3dU8R3a0fLQM2Tw9E8M6YFDGLQuYhaBcJ1Pv+ZL9FiJj?=
- =?us-ascii?Q?nEmIq4CtyMjxxbT95bJtjTJJVTT4pAq5vOaagM5w7YNLDRO3gaD06QxMotFU?=
- =?us-ascii?Q?2RHsqZIGwd3GK12SGBfzLO9Q+YVR75FSpUulgv+WRwqIX3KJFjP6EaHnWG1P?=
- =?us-ascii?Q?UhPo0xOPlWDNfqzVXfkAlvU7sJsXN0+FO3eKNQgXV/bVFdx/wu55Jssn1lXh?=
- =?us-ascii?Q?yUdpwSxfUjOLkpEdOEP46nFPmbG5Njf2+ACsLUSnpg99xWL5mGS7/evhFE5C?=
- =?us-ascii?Q?kzOFa4iF9OQeXNcIuzUi7gps/F3igrTCXJK894fPohULiHU1ZOjJbJEfEi52?=
- =?us-ascii?Q?cPQHBpJL7/bkftUdx1aT3XVuRIP7ET8HY06URbNtwhhhbHApsrmp7xg+9ygI?=
- =?us-ascii?Q?XNuO3vjXrDUpWW7H76yMs9uTdz5KOoma5Ja2E/quQW+VI4f22LUUyPUxR4QO?=
- =?us-ascii?Q?I+LIl+LePMkQ9QbBv41t+3pIaMmf7StZY9uEsuJmbf1sKOUusLlr/JdMcK8O?=
- =?us-ascii?Q?tHOpcCMVyWmXNckwPMeOI8GcVEZGcvEcE4wXSpw6FUvz1ufViABqLSa8qmBQ?=
- =?us-ascii?Q?7eiAY1Nl70xBLTtKdoemHDAGcH1hVDMw2cutL5dl4wrteIi7bZ52KTLHf2dK?=
- =?us-ascii?Q?i4HtZFECln/aseByqn42wtcyHWQ6/i3CC81ANjErKc1qq7SWz8afYIIq9fUE?=
- =?us-ascii?Q?q8+F3PLbCQ=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c30195fb-381d-4ee8-a477-08de5db56637
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2026 15:04:42.0207
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dCzzGmrfYuCC9o9E24sWsLoVuarUmUyNXkTlWtfMiX5Qjfs4q22LNZN66uLNPTA2
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7116
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-On Tue, Jan 27, 2026 at 08:10:06AM +0000, Tian, Kevin wrote:
-> > From: Williams, Dan J <dan.j.williams@intel.com>
-> > Sent: Friday, January 23, 2026 3:46 AM
-> > 
-> > Jason Gunthorpe wrote:
-> > > On Wed, Jan 21, 2026 at 09:44:32PM -0800, dan.j.williams@intel.com
-> > wrote:
-> > > > I do not immediately see what is wrong with requiring userspace policy
-> > > > opt-in. That naturally gets replaced by installing the device's
-> > > > certificate (for native PCI CMA), authenticating the device with the
-> > > > TSM (for PCI IDE), or obviated by secure-ATS if that arrives.
-> > >
-> > > I think that goes back to the discussion about not loading drivers
-> > > before validating the device.
-> > >
-> > > It would also make alot of sense to leave the IOMMU blocking until the
-> > > driver is loaded for these secure situations. The blocking translation
-> > > should block ATS too.
-> > >
-> > > Then the flow you are describing will work well:
-> > >
-> > > 1) At pre-boot the IOMMU will block all DMA including Translated.
-> > > 2) The OS activates the IOMMU driver and keeps blocking.
-> > > 3) Instead of immediately binding a default domain the IOMMU core
-> > >    leaves the translation blocking.
-> > > 4) The OS defers loading the driver to userspace.
-> > > 5) Userspace measures the device and "accepts" it by loading the
-> > >    driver
-> > > 6) IOMMU core attaches a non-blocking default domain and activates ATS
-> > 
-> > That works for me. Give the paranoid the ability to have a point where they
-> > can
-> > be assured that the shields were not lowered prematurely.
-> 
-> Jason described the flow as "for these secure situations", i.e. not a general
-> requirement for cxl.cache, but iiuc Dan may instead want userspace policy
-> opt-in to be default (and with CMA/TSM etc. it gets easier)?
+>> [responding to the questions raised here before reviewing the patch...]
+>>
+>> Koralahalli Channabasappa, Smita wrote:
+>>> Hi Alejandro,
+>>>
+>>> On 1/23/2026 3:59 AM, Alejandro Lucero Palau wrote:
+>>>> On 1/22/26 04:55, Smita Koralahalli wrote:
+>>>>> The current probe time ownership check for Soft Reserved memory based
+>>>>> solely on CXL window intersection is insufficient. dax_hmem probing is
+>>>>> not
+>>>>> always guaranteed to run after CXL enumeration and region assembly, which
+>>>>> can lead to incorrect ownership decisions before the CXL stack has
+>>>>> finished publishing windows and assembling committed regions.
+>>>>>
+>>>>> Introduce deferred ownership handling for Soft Reserved ranges that
+>>>>> intersect CXL windows at probe time by scheduling deferred work from
+>>>>> dax_hmem and waiting for the CXL stack to complete enumeration and region
+>>>>> assembly before deciding ownership.
+>>>>>
+>>>>> Evaluate ownership of Soft Reserved ranges based on CXL region
+>>>>> containment.
+>>>>>
+>>>>>      - If all Soft Reserved ranges are fully contained within committed
+>>>>> CXL
+>>>>>        regions, DROP handling Soft Reserved ranges from dax_hmem and allow
+>>>>>        dax_cxl to bind.
+>>>>>
+>>>>>      - If any Soft Reserved range is not fully claimed by committed CXL
+>>>>>        region, tear down all CXL regions and REGISTER the Soft Reserved
+>>>>>        ranges with dax_hmem instead.
+>>>>
+>>>> I was not sure if I was understanding this properly, but after looking
+>>>> at the code I think I do ... but then I do not understand the reason
+>>>> behind. If I'm right, there could be two devices and therefore different
+>>>> soft reserved ranges, with one getting an automatic cxl region for all
+>>>> the range and the other without that, and the outcome would be the first
+>>>> one getting its region removed and added to hmem. Maybe I'm missing
+>>>> something obvious but, why? If there is a good reason, I think it should
+>>>> be documented in the commit and somewhere else.
+>>> Yeah, if I understood Dan correctly, that's exactly the intended behavior.
+>>>
+>>> I'm trying to restate the "why" behind this based on Dan's earlier
+>>> guidance. Please correct me if I'm misrepresenting it Dan.
+>>>
+>>> The policy is meant to be coarse: If all SR ranges that intersect CXL
+>>> windows are fully contained by committed CXL regions, then we have high
+>>> confidence that the platform descriptions line up and CXL owns the memory.
+>>>
+>>> If any SR range that intersects a CXL window is not fully covered by
+>>> committed regions then we treat that as unexpected platform shenanigans.
+>>> In that situation the intent is to give up on CXL entirely for those SR
+>>> ranges because partial ownership becomes ambiguous.
+>>>
+>>> This is why the fallback is global and not per range. The goal is to
+>>> leave no room for mixed some SR to CXL, some SR to HMEM configurations.
+>>> Any mismatch should push the platform issue back to the vendor to fix
+>>> the description (ideally preserving the simplifying assumption of a 1:1
+>>> correlation between CXL Regions and SR).
+>>>
+>>> Thanks for pointing this out. I will update the why in the next revision.
+>> You have it right. This is mostly a policy to save debug sanity and
+>> share the compatibility pain. You either always get everything the BIOS
+>> put into the memory map, or you get the fully enlightened CXL world.
+>>
+>> When accelerator memory enters the mix it does require an opt-in/out of
+>> this scheme. Either the device completely opts out of this HMEM fallback
+>> mechanism by marking the memory as Reserved (the dominant preference),
+>> or it arranges for CXL accelerator drivers to be present at boot if they
+>> want to interoperate with this fallback. Some folks want the fallback:
+>> https://lpc.events/event/19/contributions/2064/
+>
+>
+>I will take a look at this presentation, but I think there could be 
+>another option where accelerators information is obtained during pci 
+>enumeration by the kernel and using this information by this 
+>functionality skipping those ranges allocated to them. Forcing them to 
+>be compiled with the kernel would go against what distributions 
+>currently and widely do with initramfs. Not sure if some current "early" 
+>stubs could be used for this though but the information needs to be 
+>recollected before this code does the checks.
+>
+>
+>>>> I have also problems understanding the concurrency when handling the
+>>>> global dax_cxl_mode variable. It is modified inside process_defer_work()
+>>>> which I think can have different instances for different devices
+>>>> executed concurrently in different cores/workers (the system_wq used is
+>>>> not ordered). If I'm right race conditions are likely.
+>> It only works as a single queue of regions. One sync point to say "all
+>> collected regions are routed into the dax_hmem or dax_cxl bucket".
+>
+>
+>That is how I think it should work, handling all the soft reserved 
+>ranges vs regions by one code execution. But that is not the case. More 
+>later.
+>
+>
+>>> Yeah, this is something I spent sometime thinking on. My rationale
+>>> behind not having it and where I'm still unsure:
+>>>
+>>> My assumption was that after wait_for_device_probe(), CXL topology
+>>> discovery and region commit are complete and stable.
+>> ...or more specifically, any CXL region discovery after that point is a
+>> typical runtime dynamic discovery event that is not subject to any
+>> deferral.
+>>
+>>> And each deferred worker should observe the same CXL state and
+>>> therefore compute the same final policy (either DROP or REGISTER).
+>> The expectation is one queue, one event that takes the rwsem and
+>> dispositions all present regions relative to initial soft-reserve memory
+>> map.
+>>
+>>> Also, I was assuming that even if multiple process_defer_work()
+>>> instances run, the operations they perform are effectively safe to
+>>> repeat.. though I'm not sure on this.
+>> I think something is wrong if the workqueue runs more than once. It is
+>> just a place to wait for initial device probe to complete and then fixup
+>> all the regions (allow dax_region registration to proceed) that were
+>> waiting for that.
+>>
+>>> cxl_region_teardown_all(): this ultimately triggers the
+>>> devm_release_action(... unregister_region ...) path. My expectation was
+>>> that these devm actions are single shot per device lifecycle, so
+>>> repeated teardown attempts should become noops.
+>> Not noops, right? The definition of a devm_action is that they always
+>> fire at device_del(). There is no facility to device_del() a device
+>> twice.
+>>
+>>> cxl_region_teardown_all() ultimately leads to cxl_decoder_detach(),
+>>> which takes "cxl_rwsem.region". That should serialize decoder detach and
+>>> region teardown.
+>>>
+>>> bus_rescan_devices(&cxl_bus_type): I assumed repeated rescans during
+>>> boot are fine as the rescan path will simply rediscover already present
+>>> devices..
+>> The rescan path likely needs some logic to give up on CXL region
+>> autodiscovery for devices that failed their memmap compatibility check.
+>>
+>>> walk_hmem_resources(.., hmem_register_device): in the DROP case,I
+>>> thought running the walk multiple times is safe because devm managed
+>>> platform devices and memregion allocations should prevent duplicate
+>>> lifetime issues.
+>>>
+>>> So, even if multiple process_defer_work() instances execute
+>>> concurrently, the CXL operations involved in containment evaluation
+>>> (cxl_region_contains_soft_reserve()) and teardown are already guarded.
+>>>
+>>> But I'm still trying to understand if bus_rescan_devices(&cxl_bus_type)
+>>> is not safe when invoked concurrently?
+>> It already races today between natural bus enumeration and the
+>> cxl_bus_rescan() call from cxl_acpi. So it needs to be ok, it is
+>> naturally synchronized by the region's device_lock and regions' rwsem.
+>>
+>>> Or is the primary issue that dax_cxl_mode is a global updated from one
+>>> context and read from others, and should be synchronized even if the
+>>> computed final value will always be the same?
+>> There is only one global hmem_platform device, so only one potential
+>> item in this workqueue.
+>
+>
+>Well, I do not think so.
+>
+>
+>hmem_init() in drivers/dax/device.c walks IORESOURCE_MEM looking for 
+>IORES_DESC_SOFT_RESERVED descriptors and calling hmem_register_one for 
+>each of them. That leads to create an hmem_platform platform device (no 
+>typo, just emphasizing this is a platform device with name 
+>hmem_platform) so there will be as many hmem_platform devices as 
+>descriptors found.
+>
+>
+>Then each hmem_platform probe() will create an hmem platform device, 
+>where a work will be schedule passing this specific hmem platform device 
+>as argument. So, each work will check for the specific ranges of its own 
+>pdev and not all of them. The check can result in a different value 
+>assigned to dax_cxl_mode leading to potential race conditions with 
+>concurrent workers and also potentially leaving soft reserved ranges 
+>without both, a dax or an hmem device.
 
-I think the general strategy has been to push userspace to do security
-decisions before binding drivers. So we have a plan for confidential
-compute VMs, and if there is interest then we can probably re-use that
-plan in all other cases.
+Hi Alejandro,
 
-> At a glance cxl.cache devices have gained ATS enabled automatically in
-> most cases (same as for all other ats-capable PCI devices):
+Isn't below  check in __hmem_register_resource ensuring that only one
+hmem_platform device can be created? So first resource would
+create platform device and set the platform_initialized bool to true
 
-Yes.
- 
-> - ARM: ATS is enabled automatically when attaching the default domain
->   to the device in certain configurations, and this series tries to auto
->   enable it in a missing configuration
+static void __hmem_register_resource(int target_nid, struct resource *res)
+..
+	if (platform_initialized)
+		return;
+..
 
-Yes, ARM took the position that ATS should be left disabled for
-IDENTITY both because of SMMU constraints and also because it made
-some sense that you wouldn't want ATS overhead just to get a 1:1
-translation.
-
-> - AMD: ATS is enabled at domain attach time
-
-I'd argue this is an error and it should work like ARM
-
-> - Intel: ATS is enabled when a device is probed by intel-iommu driver
->   (incompatible with the suggested flow)
-
-This is definately not a good choice :)
-
-IMHO it is security required that the IOMMU driver block Translated
-requests while a BLOCKED domain is attached, and while the IOMMU is
-refusing ATS then device's ATS enable should be disabled.
-
-> Given above already shipped in distributions, probably we have to keep
-> them for compatibility (implying this series makes sense to fix a gap
-> in existing policy), then treat the suggested flow as an enhancement
-> for future?
-
-I don't think we have a compatability issue here, just a security
-one.
-
-Drivers need to ensure that ATS is disabled at PCI and Translated
-requestes blocked in IOMMU HW while a BLOCKED domain is attached.
-
-Drivers can choose if they want to enable ATS for IDENTITY or not,
-(recommend not for performance and consistency).
-
-Jason
+Thanks,
+Tomasz
