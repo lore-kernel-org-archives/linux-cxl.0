@@ -1,82 +1,47 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5946478F58
-	for <linux-cxl@vger.kernel.org>; Thu,  2 Oct 2025 05:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549602F4A;
+	Thu,  2 Oct 2025 07:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759384142; cv=none; b=GQSS9ZPvLwvDKiewaz5mfTauGwTtV3YSEJr0OhV/RkpJ7eHo8Kzn+fRjzrxT5fw4duH9NLuF0IE7mBcgbsdbPa7sA2KliQNPiw6/mWr+yJcm9VEB0SMRB2DtxWCFeRtSc1Jzt9ZezbmcdCj45Zv3cZd7tZsOk2F4md6umQ2AIfs=
+	t=1759391129; cv=none; b=Tqmg8c8zFWS/Am6eU4eqAPaABiG7z47gS7z39qPAEex7cxfuOskbwqTU5+7zZ3FkMd1gXkHg0i3rvM5x3AoaJVV9YkO5S3sGjOyHaOXKUFVur3RcAvBPGSm4hnJTlzBbMc655Hh/kMogs5KZKjC6IB+ssWq5kRxfGmG2rycJ+qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759384142; c=relaxed/simple;
-	bh=wcyEKCO6iRV6aRiIOdMgZ+yCTGNmYXo0JcYAp+28Yd8=;
+	s=arc-20240116; t=1759391129; c=relaxed/simple;
+	bh=kE/24R+PCV/l7eUZIlk5aGEh01L3C+6v7O1EKkb/aCQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NbmYcfr1CqybGJer05KkYqK9sjIiBRs2nhlUjvXXGmSaR43rFdhXjykJvdmS/klte2lOibBaKmiK5zs0vBye2CK0e21SCCB00kP3KQ48pUDMW7WGPavbFEjGpRHN4AVV/zZj3gIHYFXhIxy/4BQV+I29D0KlBE4o3AVK6X1Wxv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=G3nqAeIc; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="G3nqAeIc"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-863fa984ef5so81740985a.3
-        for <linux-cxl@vger.kernel.org>; Wed, 01 Oct 2025 22:49:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1759384139; x=1759988939; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qPH+KrW9WWxU2Cy/czL4pPvnzuAqDNan3io0ryUNydQ=;
-        b=G3nqAeIc/mS1fO15vQgOaDwngfytKFhNUSMKc2SpvBo2aXD7QGRZNFocVFAX9+mM9c
-         q8dAxt3lzh8EqWhT8wtli9iPsGA2fyZyHaEVSykxAZjdtZHSXcGS9DIyQDqe972odGpr
-         z8nWRYyE0YjtMv82bk+FiLW1ouIFZPD1pEJJIkgtoTfAEOOjJeE4tk2v4cq7HAHSTdZU
-         rD1ajaF2/8cPlSRg3yX8vmjbfz4tm93Bs7UQf1cta4iprv41ygNaUEqzvwrj37URyc60
-         Q19XYtg5oX6up61l9iLgy+xtUVLP9tOw+NN4m54rVR2YqESzPbZM4dcbSjL0nSc7C+uS
-         VLkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759384139; x=1759988939;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qPH+KrW9WWxU2Cy/czL4pPvnzuAqDNan3io0ryUNydQ=;
-        b=JO7INDUPbDZhBzoNHsiJV7z/81NBap0TgyvgkqVwKJJ8SgkZgthd5O5ArrElUhGmPn
-         CUo/EmMFKbAP6GaBrKtvrlOLFk6Ne11BZ2IUxVDnGkz+NiNG1iFg8vgU4/Lb8m5f7vJp
-         cWitpj8+K+BcgHe5+dvTDiNSv/hGF2hfV/Hjkum5mpnSb3FO+E4+2yYhKW3zkFCKOWod
-         fUUt5e/fgVyd4LAwb2cqsAXpNqLqidemue+SHj5U6BMQmqs1czQ1wdED+/9bueHXLcTR
-         t73+rnGlkWFj8nVzoZGrcds8ciQf+Hwoz3UHZ9LRr7ElJRnSJoGFulreoymJdSBCgMcF
-         i3kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNfbasQiCoOXNunR6pwymm6EsQzW1/PyLVln8Q07I6FhXG7PNJ3BA+gRImRnn4quqCO0IrPoGqeD4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTCw45WT6OXdTVmo8odHih1Mks7QW5mbSH+Ou0tKPZ3fUdvofo
-	Hr0Rrr42Kr3vPJU/9SI5KvLmrB2ZHttrpZKpcEwtXpuEhy7mcKmnvUvrVhTtP90XPvs=
-X-Gm-Gg: ASbGncsV2akxkKVRKYTLTMnJFqwAIHsrzJNV1l1oCxWdjerlnqTF9HhChmJCxTLM0oQ
-	4KxAxtXtlL0sT36Na+/rSdFC+sqXY3fKe3W+Ezf7n62KxTDFIJZx+PWj0h59qjuW1pPrF1t5C8C
-	Xpst4Gkfzt54HKUoB2AHa7q9NuBtke6wiPFhhNqqcwDqledaj0YorCRS5fhFi1w3Th2DaAyURbz
-	bS/UevA82xSEY7FqCwHeNhJOeVjOGDKM0cqCmAoJus69Lg5LV0Xu+1Zxf84F24taA2x1LdX77YC
-	A/M4dEh3jI3WolPqiCTyANpCgWQTraFhw0kYpT467CTXfd3tY8tNl50cgjj99Z48QKlxohnVRle
-	IFU0PGY3+4xtjjvMXhztNoch1zludc3xDJiqG5J4k7GvDLYSZ5Le0KKxW8lxVP5ItaQCbja6HCH
-	iRPRMgg9EJsTJpwZOEZ40ysX5zxF7FlA==
-X-Google-Smtp-Source: AGHT+IEhx9gZlJzZ4Qi6qF6wm60KnmFGKzm8v1QKTSYmj/krU2YemQjmdbWHw9GBA4Ia0vSPsAekKA==
-X-Received: by 2002:a05:620a:a08d:b0:877:8704:2c1c with SMTP id af79cd13be357-87787042c37mr230208885a.47.1759384139185;
-        Wed, 01 Oct 2025 22:48:59 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-87771129fdasm149560185a.6.2025.10.01.22.48.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Oct 2025 22:48:58 -0700 (PDT)
-Date: Thu, 2 Oct 2025 01:48:56 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Vishal Aslot <vaslot@nvidia.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Li Ming <ming.li@zohomail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Zijun Hu <zijun.hu@oss.qualcomm.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cxl/hdm: allow zero sized committed decoders
-Message-ID: <aN4SSEmaCaxbeiwJ@gourry-fedora-PF4VCD3F>
-References: <SN7PR12MB81316C958DF0F4B10369B928BBE6A@SN7PR12MB8131.namprd12.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mpv8LHAkAFEqJe48FpxxFQlpsrbhHhpD/WUWVGFzIKODvabuyDHa193rl5ytXPelgfUWVoacW5OEk4rB+WGSfVWkIl6zECT3sJ2uKEwfwMxprVsxTJ34Xnlr3AVoJpSybKcPxCanUXiebVp+JTA73/GKVpQPs0Wf7Hus5n7WUtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 1247A2C06F79;
+	Thu,  2 Oct 2025 09:40:12 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id A5FC85F8EA1; Thu,  2 Oct 2025 09:40:11 +0200 (CEST)
+Date: Thu, 2 Oct 2025 09:40:11 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	dan.j.williams@intel.com, bhelgaas@google.com,
+	shiju.jose@huawei.com, ming.li@zohomail.com,
+	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+	Benjamin.Cheatham@amd.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v12 10/25] CXL/AER: Update PCI class code check to use
+ FIELD_GET()
+Message-ID: <aN4sWxjrzxeCyGBO@wunner.de>
+References: <20250925223440.3539069-1-terry.bowman@amd.com>
+ <20250925223440.3539069-11-terry.bowman@amd.com>
+ <20251001171216.00005fa0@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -85,25 +50,69 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN7PR12MB81316C958DF0F4B10369B928BBE6A@SN7PR12MB8131.namprd12.prod.outlook.com>
+In-Reply-To: <20251001171216.00005fa0@huawei.com>
 
-On Wed, Oct 01, 2025 at 08:37:26PM +0000, Vishal Aslot wrote:
-> @@ -1210,6 +1210,11 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
->                 rc = init_hdm_decoder(port, cxld, target_map, hdm, i,
->                                       &dpa_base, info);
->                 if (rc) {
-> +                       if (rc == -ENOSPC) {
-> +                               put_device(&cxld->dev);
-> +                               rc = 0;
-> +                               continue;
-> +                       }
+On Wed, Oct 01, 2025 at 05:12:16PM +0100, Jonathan Cameron wrote:
+> On Thu, 25 Sep 2025 17:34:25 -0500 Terry Bowman <terry.bowman@amd.com> wrote:
+> The way that class code definitions work in pci_ids.h is somewhat odd
+> in my opinion, so I'd like input from Bjorn, Lukas etc on whether a
+> generic mask definition is a good idea or more likely to cause problems.
+> 
+> See for example. 
+> #define PCI_BASE_CLASS_STORAGE		0x01
+> ...
+> 
+> #define PCI_CLASS_STORAGE_SATA		0x0106
+> #define PCI_CLASS_STORAGE_SATA_AHCI	0x010601
+> 
+> This variability in what is called CLASS_* leads to fun
+> situations like in drivers/ata/ahci.c where we have some
+> PCI_CLASS_* shifted and some not...
 
-How do you suggest actually testing this? I briefly poked at this in
-QEMU trying to commit decoders, but i found myself incapable of
-exercising this path.
+Macros working with PCI class codes generally accept a "shift" parameter
+to know by how many bits the class code needs to be shifted, see e.g.
+DECLARE_PCI_FIXUP_CLASS_EARLY() and friends.
 
->                         dev_warn(&port->dev,
->                                  "Failed to initialize decoder%d.%d\n",
->                                  port->id, i);
-> --
-> 2.34.1
+A macro which shifts exactly by 8 is hence only of limited use.
+
+
+> > +++ b/drivers/pci/pcie/aer_cxl_rch.c
+> > @@ -17,10 +17,10 @@ static bool is_cxl_mem_dev(struct pci_dev *dev)
+> >  		return false;
+> >  
+> >  	/*
+> > -	 * CXL Memory Devices must have the 502h class code set (CXL
+> > -	 * 3.0, 8.1.12.1).
+> > +	 * CXL Memory Devices must have the 502h class code set
+> > +	 * (CXL 3.2, 8.1.12.1).
+> >  	 */
+> > -	if ((dev->class >> 8) != PCI_CLASS_MEMORY_CXL)
+> > +	if (FIELD_GET(PCI_CLASS_CODE_MASK, dev->class) != PCI_CLASS_MEMORY_CXL)
+> >  		return false;
+
+Hm, this doesn't look more readable TBH.
+
+Refactoring changes like this one should be submitted separately from
+this patch set.  If any of them are controversial, they delay upstreaming
+of the actual change, i.e. the CXL AER plumbing.  They also increase the
+size of the patch set, making it more difficult to review.
+
+
+> > +++ b/include/uapi/linux/pci_regs.h
+> > @@ -73,6 +73,8 @@
+> >  #define PCI_CLASS_PROG		0x09	/* Reg. Level Programming Interface */
+> >  #define PCI_CLASS_DEVICE	0x0a	/* Device class */
+> >  
+> > +#define PCI_CLASS_CODE_MASK     __GENMASK(23, 8)
+> > +
+> >  #define PCI_CACHE_LINE_SIZE	0x0c	/* 8 bits */
+> >  #define PCI_LATENCY_TIMER	0x0d	/* 8 bits */
+> >  #define PCI_HEADER_TYPE		0x0e	/* 8 bits */
+
+Putting this in a uapi header means we'll have to support it
+indefinitely.  Usually such macros are added to kernel-internal
+headers first and moved to uapi headers if/when the need arises.
+
+Thanks,
+
+Lukas
