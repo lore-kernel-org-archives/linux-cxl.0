@@ -1,174 +1,141 @@
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010007.outbound.protection.outlook.com [52.101.61.7])
+Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186412580E2;
-	Fri,  3 Oct 2025 20:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CBF34BA3C;
+	Sat,  4 Oct 2025 00:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.24
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759522386; cv=fail; b=MSCWe/LqfB1CwdYNyQ2UMwSWtc3gdMo2ZVcK2IZ1B5dPqi8uViBgjW/41AN+hVRsfIjjnGdF9Z2gHg0nnt2l3S/jlgrmkRek1bDLmYcjZ2p/Mn5gT2tLPz2Y6xfHROuKlfEcuop+Ga6ot3UNZQ0rvKIqgozI0F+vJW7bIQAz4gA=
+	t=1759537360; cv=pass; b=Fqyii+YNIZdRZScUSQcG/q4xEHST23v/R4B0/ss5Ok7KjGyJnTJA0iSOUdxWVOUqaHBRMge4/KSrEsDixAYahyko4JZWiMmY8KNEN2j1a3B9k/hRK7te7UXUcn5GVD/ChGwtnoeyBExBE/WmeFhnEJbxsi6EWaK8wdCY2wcBers=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759522386; c=relaxed/simple;
-	bh=J2q5igbJlFk0nVoPcODHaRlB7prBGEBn2EZaMxq404c=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=olGQatFn0kHjDBCsWJ/PRuXELbvi8qSxDtmcoADQUTypzU31IqtFQlEeST1spb3agf6Dte8fp8RbTgjy1YmQ0aZUcfH4MLfzHgQTkO2hQ2dxS2/wCp1+Sv84WdC4zDDjE+gu2sPIOxOJgQWodmU/V8ww6TnSG20ZtgSkExVfaCw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Jh0o3ypS; arc=fail smtp.client-ip=52.101.61.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1759537360; c=relaxed/simple;
+	bh=LRcgf3iMEM+qjHK9Z81mTEyoMcFrXF8kzKv7ohcJMuY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RQyHRREpyCJv+V6XO0lkab1cIHS/t9g9AaSK5UjPlMy5Rv4B+jwgvbPHYisQ1DV/azOnyiZzoHXQPPhzGxr85rz9VonJYGIcUqfN7LxcuNlDzZvyMhgD13rJZlRtvYy2FUeaMqOa9nTa8XPZaHIr9gwZHDvGZPMtI9eBFc2QiHQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=X7STbMa/; arc=pass smtp.client-ip=23.83.218.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Jh0o3ypS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b3t51k5MfjfWcjaOp4EcAlxhGnIXnfE20ZtOBktkkEn4drStbl+v7S+9Wzbzkz9uj/TyE5TaVjZ8cjHwf95cjBJrVOZaSdWxEq0toJYFSc1Pax/36ycolMTZ+Tt4PwY2ZWrdz3qXj3jJTU7LaPys07i1Q2Fl19gNUeWOiACddEZe7xrkL7ZWBO2RAuFmOs+7OkqaMIiAMdd9prK+XpZVrAC9atu4FRfL/yklO0Z1auxO853WiFidp08mVoK5LjafVaTHgEF8qKF+fP2AJjGOlr4gfG2sSBgPNaOL22iJzyybdOro8sM9GQd89b7cMaajpi22hM+RWbEdd2H6N869Zw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oOoEHxaj55pR4YDx5aMEs9Dq3H2k3Zb3HiYwj+w2h8M=;
- b=WH4cGjFxJKr6EhwsUGK6WVOi3VWwNB8WGzOeQyaOiH0V5JUuvjrGzAdbFmM9sKI2uWJdUWYRsfzb0PiXZBdQBKaOBDPR2HQSfkgWQ5M3xhUQVPTH24bAiPQFp6RdShnLjw3EWqb8+WaTjV6PMazDKGQvpRuFoAy0wC8+JOZLmgEKUKTsqT6IzyXrcYpFqef1IUIxWqTc53BUqdzULihK0Jn76fSbsKQVXl3I7k9KUWozfP0p2dbbRC3vlvT2PnpfqSs3bVcIvCYWVpD3xjFBtabEWl892KFCSWKwIRVZ0AntV7v1LAfF0eJO3fQLG5dpvLgNGWbsdxmKpNRxH8D4lg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oOoEHxaj55pR4YDx5aMEs9Dq3H2k3Zb3HiYwj+w2h8M=;
- b=Jh0o3ypSKsHmobUPKv3vd/bL26SQm3dpcn0LHa99XM65ejZbX/+1DVB7stRiI8wNnASVKpOCuuczKIVcLBj3U1Jy30VWDFh3mf+ILIehAuZ0LlMLZN2U6h4ynWJKs8uNEUTSDlgXsHXlOEFAHpW+wUNC7tXOdDC2XtMLslfri4o=
-Received: from DSZP220CA0002.NAMP220.PROD.OUTLOOK.COM (2603:10b6:5:280::6) by
- BY5PR12MB4259.namprd12.prod.outlook.com (2603:10b6:a03:202::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9182.16; Fri, 3 Oct
- 2025 20:12:53 +0000
-Received: from DS3PEPF000099D7.namprd04.prod.outlook.com
- (2603:10b6:5:280:cafe::69) by DSZP220CA0002.outlook.office365.com
- (2603:10b6:5:280::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9182.16 via Frontend Transport; Fri,
- 3 Oct 2025 20:13:03 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- DS3PEPF000099D7.mail.protection.outlook.com (10.167.17.8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9182.15 via Frontend Transport; Fri, 3 Oct 2025 20:12:53 +0000
-Received: from [10.254.54.138] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 3 Oct
- 2025 13:12:41 -0700
-Message-ID: <0d139f83-36a0-4f67-8a2e-421ad1c8663e@amd.com>
-Date: Fri, 3 Oct 2025 15:12:41 -0500
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="X7STbMa/"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id F20D66C203E;
+	Sat, 04 Oct 2025 00:06:35 +0000 (UTC)
+Received: from pdx1-sub0-mail-a275.dreamhost.com (trex-green-3.trex.outbound.svc.cluster.local [100.114.209.105])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 7B15C6C1FE5;
+	Sat, 04 Oct 2025 00:06:35 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1759536395; a=rsa-sha256;
+	cv=none;
+	b=Ycbg9AVr2E5HumI49jjjkYXOdhcUclfAQJP6eJ7M+Ac6SCqYTquwb6za4bFuNFoVcGa/sZ
+	YJq3yPihUyU7aTANZQw8ZzAo3+wvT5UUwdB7kL4rwIzrkh6cEPiMUYzdHJ7ZRCMOuUvK55
+	T1Fn1+2T3F6AMGNVdjSd2j2+w99+agiXgU2IDuA0I9hzkgxVCa0ONwIaF7kFhqkqaOttR0
+	usxJntlNICWf6xXdw3JhRmoOYp/lXEEXJwfETwlhjqtc11pckC4LVVbbauW/ADE7JGOWdj
+	v+Zw4ZEOtwIv6ynppV+7jZt06lxo9oZzdNp5llbo1tyZjQ0pUhAKvMy4XNTHkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1759536395;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=LRcgf3iMEM+qjHK9Z81mTEyoMcFrXF8kzKv7ohcJMuY=;
+	b=aGvhjLoqmjZJTZBXdp9UbBSPcJL/oRBiebnT59Xu2ylgN0qVzaiY4yL6qrv9xAmzi4LDgR
+	Anv4VmRv4K8W+NuFijByLYozt04KocnJBLTA2mpBzikY2noMDLP25AnomzxA7K158FyeMp
+	PqMxqmI8cT3goOXR94VLk5z9ZVmLu+BDjmtDYJrxVKdAhsIBikej4q1ddn8l4+V893JRUx
+	wMIyDO43I/+kwNzr97NsW10nWcCF/WA94JwkagjrO9OGUIKTcNVfBTKwydbiBxhlHKltxW
+	fLJiEDs4LQ//aHIa+PdruD0SR5Q97DK1+witZWIjqgMpZWUraxe8YW9BF7iY5g==
+ARC-Authentication-Results: i=1;
+	rspamd-84f8cfc67-xc8ls;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Versed-Absorbed: 3f6264a7705c779f_1759536395825_1284957329
+X-MC-Loop-Signature: 1759536395825:610673563
+X-MC-Ingress-Time: 1759536395825
+Received: from pdx1-sub0-mail-a275.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.114.209.105 (trex/7.1.3);
+	Sat, 04 Oct 2025 00:06:35 +0000
+Received: from offworld (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a275.dreamhost.com (Postfix) with ESMTPSA id 4cdm6L4Q8Mz3J;
+	Fri,  3 Oct 2025 17:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1759536395;
+	bh=LRcgf3iMEM+qjHK9Z81mTEyoMcFrXF8kzKv7ohcJMuY=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=X7STbMa/CsLXoBJglhKm3fE5hAXExPGwpmE0cyFXJ3uxcqCHwSDsmGPwF6/ivGdm6
+	 jZJBq47RIInjvKetG+lSEaVuVW7j2KxtZkmL9jRVTmtO+RWaNWUmVRtGuy1+2ux/IY
+	 B1yhoHmz0CUfCYjwneOKqqCOt6InU0FT+fAvLZnoz0erCdcNu8l3BNo+WLaHadmj2+
+	 C5hpCtbzsyk/g4Lec6V905ndrbRzHcFRaYploh8+CVmpIPyTsuPsopF26JBhXfS9EH
+	 CSM5FEccG26YZhkK/nHHEl/ZdW/h84jScZNbQILFjxZP6l0XbLmgnPSjAOwz0OfgSC
+	 qINTtB8CV0lIA==
+Date: Fri, 3 Oct 2025 17:06:31 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Vishal Aslot <vaslot@nvidia.com>
+Cc: Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Li Ming <ming.li@zohomail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Zijun Hu <zijun.hu@oss.qualcomm.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] cxl/hdm: allow zero sized committed decoders
+Message-ID: <20251004000631.h4vnnpxathjyoez7@offworld>
+References: <SN7PR12MB81316C958DF0F4B10369B928BBE6A@SN7PR12MB8131.namprd12.prod.outlook.com>
+ <cb300580-1297-4d4b-9a3a-2cf7445b739b@intel.com>
+ <SN7PR12MB8131FBDB82D2A3A539FA09D0BBE6A@SN7PR12MB8131.namprd12.prod.outlook.com>
+ <70a2ea96-0a4b-4185-8f37-ea77ed757b64@intel.com>
+ <SN7PR12MB81319CD146CC8B4CFD45E62FBBE7A@SN7PR12MB8131.namprd12.prod.outlook.com>
+ <SN7PR12MB8131F796BAE8B6243E088879BBE7A@SN7PR12MB8131.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH v12 19/25] cxl: Introduce cxl_pci_drv_bound() to check for
- bound driver
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <shiju.jose@huawei.com>, <ming.li@zohomail.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <rrichter@amd.com>,
-	<dan.carpenter@linaro.org>, <PradeepVineshReddy.Kodamati@amd.com>,
-	<lukas@wunner.de>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <alucerop@amd.com>, <ira.weiny@intel.com>,
-	<linux-cxl@vger.kernel.org>
-References: <20250925223440.3539069-1-terry.bowman@amd.com>
- <20250925223440.3539069-20-terry.bowman@amd.com>
-Content-Language: en-US
-In-Reply-To: <20250925223440.3539069-20-terry.bowman@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D7:EE_|BY5PR12MB4259:EE_
-X-MS-Office365-Filtering-Correlation-Id: 74c72ac9-9252-46c4-ac3b-08de02b93bee
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|7416014|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SFZnc3htSGo3TUgzQnpTSDFRaE1sWW5TdmR4KzJzMlVrVWM0KzAwK0FuZDlu?=
- =?utf-8?B?ZHVGWWRXNjJUS1o3eGRnUDBaeWkyTHhURHk4SHVnelFPbVIxNHExNjZQNUVo?=
- =?utf-8?B?UThBT01IMXZMZTljbWhMYnVBMVhxSkRFV0g3N3A3clBKUWNnemVCd3VidDBH?=
- =?utf-8?B?OThMVFhHN1RGK0c4UXdMd25TKzYyT2YwdEJsUU9tQ0ZCZlNqczNxMTFFaGgx?=
- =?utf-8?B?eFEvU2hLWkxwbncyQWRxcmxJOGQxWkVDVWs5Mk01OXZ5d0x2d3JsMzd6UXYx?=
- =?utf-8?B?ZjJSMzZETmxOcVBCazVkYVFFVWtoZ2Zncklrc1dheGhwb1YrTlZWWFQxK3BI?=
- =?utf-8?B?aC8vOWQ4akVHc1F0NmtZZnpWZmtINWZrNzBlY2NMNG1WYmpweHdtWkd6NnY1?=
- =?utf-8?B?MTdIbjlQek16eEdDY3VSK2xaTXZWbFR5Q25ad3lGUG5NWXIzVFhsU2pzcEM1?=
- =?utf-8?B?Q2tZQUhzbXZvSnIvWmdjaVNMd0xYeTMvTEhEWDMxdG5pSm1xZzZGeVM5dWpy?=
- =?utf-8?B?UnFKckxvWEZSdWJJS2Z3Sk1vQ1lMZCt1SXRmNlJrRWFMR3ZoenlrWUdLa1ds?=
- =?utf-8?B?dFN5UHhOVHJEQW9kT3ZYMW9yNGJNMGlJZ0FXdWNZZ2ltQjYrUHBDdytKa2VM?=
- =?utf-8?B?TEUrdS9TYUdnL0pERmtTN1JTT0o4L1RjcGpiY3dieTljSDlKak1DWmZ0cVNN?=
- =?utf-8?B?dkZwaG0veHYwM1VZcXJYYmlGUjBQQXZybzNBOGRpLzVVamR4TXhrc2VhcXRW?=
- =?utf-8?B?S1djZGhCMnl3THhIaEZlYk5kVFN0NDVPaXh5VkRCMTJTS0x6Qm5nMXI3Wldv?=
- =?utf-8?B?Mi9yejNURWkrRGZaT1ZVKzRFUlVDSjcybTkyNXNTY2gvU0tPSmZ2Mm9ENUFq?=
- =?utf-8?B?SDkvSkc0M0l5bDZyYXZkbWxxVXpKZ21obUV6endCNjBWZmtDYzBCVEVZRzFl?=
- =?utf-8?B?Z0FFa05EL2dGSGdNQ2ROYlVNLzVjWnlyWGlDTDlMTDJXQjFqaFppTytFTFIy?=
- =?utf-8?B?UFlzdjIra1FkUGlEaWRaVmhqSWx4bnZISzhkZytMVDVDa2V0bGpSbCtoK1lQ?=
- =?utf-8?B?Z0REVlBtcVV2TGdYMXo1K010MSt4U1ZYRUNwSTVYQW1KajBiMlFia0U0b3gr?=
- =?utf-8?B?eVdMbEpBcnRUK1pDQlhwSHNIdUhKbUVYRkdOVnNmL1MrTzB3LzE3WmlwWE0w?=
- =?utf-8?B?Q1FXbzdwZXZicmFOMUUyR1M2YWtIRGVnaW1hR3VqU3FOeDVNVjNqQ0JZNDhU?=
- =?utf-8?B?ZFBCRzE0aW1IaTI0U3NJN3dwZWRqUEdUUlFhTEtPVGFNaitpWVJLRGxseElZ?=
- =?utf-8?B?aTEwOXdndCs3TkxpVm1GT3pwMS9mOG9UN3JkU01lL2w5OGNwRktOeHd1dmE3?=
- =?utf-8?B?bThVME02VXZTV1czQzhhVGZIRjY4MGVzRDE5QVB2cDhtZHR1U0c1WmYvUm5T?=
- =?utf-8?B?VlNqVmZDOTRXNGVORFdBUVRPeGNVVXlHSVRlOEd2czB5VHVvSmhvY09Uazdo?=
- =?utf-8?B?eFI3TGxRdlAwMTNxdWxZUlVPTUVtRXZQbkhtZjZ1eFBuM2RlbFBlQXNyV2Vx?=
- =?utf-8?B?cUNMaXFTU0ZBNG4zS3JFYTZUUE1oN3JxeVB6Wmpwbms3OVZsN2NJSFd0aDhE?=
- =?utf-8?B?Z2VxcTltMDdRKzNHRjBuZmNSUTlESDMwR29oQk1xN2ZJbVcvSFZUZjljcCsr?=
- =?utf-8?B?MVZzbGI0cVBYT2xXclJKWm45WkErVHFXUnhnNGRGcks3dSs1WVJpbm95QjNx?=
- =?utf-8?B?L1FKbTEyYjlaakMyanhoTDk5NWlGQlpod2NabXkyV2phRHBlVkY0NE5weVdR?=
- =?utf-8?B?WWFzN1BKcUhLN0RPbVZubDlNNkZNNFJaZ2ovZ1UvTFZGTGpzYkRyMm9wQkFC?=
- =?utf-8?B?RThhL2RLV0VSTWFyNzJaNWd0OCtQdlIzS2JWTTFHYVVXVHRESkdTc0dLRWRV?=
- =?utf-8?B?UkQ2cThsQmxOVEFQcEp3Q2ZNWUNwb3kxWlZVa0N6dW5hdzFYSy9ZOFo0MzVR?=
- =?utf-8?B?VlhvNE5kTlpUcHU3aFA5dERhbzNDRmNrRmozd0tVc1RtNGRuSGtqaXJ2RWNH?=
- =?utf-8?B?V2l6NWFsZGtLZ3NheEwwdEFJL2ZidlNvUzJXVDNvT3VMR0duMlJVNW5xTjV6?=
- =?utf-8?Q?lPW8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(7416014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Oct 2025 20:12:53.0150
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 74c72ac9-9252-46c4-ac3b-08de02b93bee
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D7.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4259
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <SN7PR12MB8131F796BAE8B6243E088879BBE7A@SN7PR12MB8131.namprd12.prod.outlook.com>
+User-Agent: NeoMutt/20220429
 
-On 9/25/2025 5:34 PM, Terry Bowman wrote:
-> CXL devices handle protocol errors via driver-specific callbacks rather
-> than the generic pci_driver::err_handlers by default. The callbacks are
-> implemented in the cxl_pci driver and are not part of struct pci_driver, so
-> cxl_core must verify that a device is actually bound to the cxl_pci
-> module's driver before invoking the callbacks (the device could be bound
-> to another driver, e.g. VFIO).
-> 
-> However, cxl_core can not reference symbols in the cxl_pci module because
-> it creates a circular dependency. This prevents cxl_core from checking the
-> EP's bound driver and calling the callbacks.
-> 
-> To fix this, move drivers/cxl/pci.c into drivers/cxl/core/pci_drv.c and
-> build it as part of the cxl_core module. Compile into cxl_core using
-> CXL_PCI and CXL_CORE Kconfig dependencies. This removes the standalone cxl_pci
-> module, consolidates the cxl_pci driver code into cxl_core, and eliminates
-> the circular dependency so cxl_core can safely perform bound-driver checks
-> and invoke the CXL PCI callbacks.
-> 
-> Introduce cxl_pci_drv_bound() to return boolean depending on if the PCI EP
-> parameter is bound to a CXL driver instance. This will be used in future
-> patch when dequeuing work from the kfifo.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> 
-> ---
+On Fri, 03 Oct 2025, Vishal Aslot wrote:
 
-Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+>init_hdm_decoder() fails with -ENXIO if a
+>committed HDM decoder has zero size.
+
+This can be removed.
+
+>
+>The CXL spec permits committing zero sized decoders.
+
+This is enough info, no need for the quote below.
+And then add "Linux currently considers them an error".
+
+>See "8.2.4.20.12 Committing Decoder Programming".
+>It says,"It is legal for software to program Decoder
+>Size to 0 and commit it. Such a decoder will not
+>participate in HDM decode."
+>
+>This patch updates init_hdm_decoder() to return
+>-ENOSPC if the decoder is commited with zero-size.
+
+This is not needed in the changelog. Instead the reader
+could be enlightened for potential reasons and use
+cases of 0 sized decoders.
+
+>The caller leaves the decoder allocated but does not
+>add it. It simply continues to the next decoder.
+
+Thanks,
+Davidlohr
