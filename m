@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C88521FF48;
-	Mon,  6 Oct 2025 14:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E212641C6;
+	Mon,  6 Oct 2025 15:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759762452; cv=none; b=gYueOiPo7M/b0M+FGILmJ1iaA9mj3xJiC3RqUtbFo1q5cY5AJTOpt6Lowzruw3Ejj2TSgDdFzNH1Oza1UngOWfmamm65fd19ojjuxZbnQgiq8Ekjyqcq/83wFabRXR2vk8uXJfbIaKclZ2HEAj2P90z78zU2Bsu1oibE/e69IkM=
+	t=1759766156; cv=none; b=WkkRWzEriTRGgu0qcNuv6f2GLUDzrrPs8Erh12u9/VGVJvTLVJBN/fkL8w27gC69kWYtvwhE6nuVwl5m6tmo1qOLqtuY9n7YZjwwX/dgUHcUmeQhyQZhNZRqmJx25+1IQopQNgqGUzIriHVx881kZUKa0w6MTNB56BmN6diLvCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759762452; c=relaxed/simple;
-	bh=lKylPas55ITTVT/Acc/mCgXBUoM+tFkGFkBMhQ08gu8=;
+	s=arc-20240116; t=1759766156; c=relaxed/simple;
+	bh=bbY3CJftkec/YNYKO4Fm0HrwlOp58R/d8MGE465xN9g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fxokgd2aSSwbJLHjFBF55jiNThoym5en7UKtSrtQ6i1znFBZiYZrGDRiEt1L3HC9UFCB0l+ba+JI/U9KOxADyv9BbbjoEHqLvy19IH3cPgofW0g/FnqK1KJQ/Tv2nnShtON99NLV6RpAwO5995ndPkUI3etbQU46Qc9x4RxNYJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RzgzRTjW; arc=none smtp.client-ip=192.198.163.18
+	 In-Reply-To:Content-Type; b=K+DEg3uIjJkU8DBEp8AnyKhdMmzzUw+8CETw8FFik/MumRIkABr6EdXzQfo0HnSnYL6XTTtOaSfxLRxtNNmb/dbdwCjwTDqt79NL/KRExuTSyY1y2e3j4wladhxnZ4yg9WibLT9mCf9YTnyqITbJxwjltkV8CqeB816UIEssUe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B3jkVGxu; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RzgzRTjW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B3jkVGxu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759762451; x=1791298451;
+  t=1759766154; x=1791302154;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=lKylPas55ITTVT/Acc/mCgXBUoM+tFkGFkBMhQ08gu8=;
-  b=RzgzRTjWAKdJjDDjy1UbLnSpX9oQJkWRPzrDmMJZ2N74GJLIp9DhbNHt
-   KpQKc9CuDD1EgRwdcQxATgv8BloUZDTXn218h/h469EQK1QyeCteeFvqC
-   wyk/mQu/KfM0JxpyKhboUNslRicvyQrenWci6tI4h4qnWcyVxEerhZubj
-   i2AGm8yyM6iR/B+SfKq1m5RITPKQIuxFxDQC5TeLUVjdfRyUwcqR3PDYD
-   mtrNuWBvvc6Nwl+AJMOX9Up7kaOlaAYdwzXC8b74CIhoWmAHsszPvlMs7
-   BQIr/8s2aNq4M1p0GkiB9bLWKV2AhP6SLynOINP54G0QqhndKI+e+191Y
-   w==;
-X-CSE-ConnectionGUID: 5Cw5GUPzR1G08yX8t7ux3g==
-X-CSE-MsgGUID: EAkvjkLbQ8aRstjDOwR1uA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11574"; a="61142908"
+  bh=bbY3CJftkec/YNYKO4Fm0HrwlOp58R/d8MGE465xN9g=;
+  b=B3jkVGxuJgKsdvHDpmUNzC6w3gcKTsdzq/NOGqEa8CUWUM+A+9h5Ptgh
+   e+K7iBFfnyqtop7xODOqQPSMqY+cNuvnvoNM/OF7GWjAhkuQmrfNCPA2u
+   IUFoD8yOXivYGTgUEZ1wiHphG099KCWsLMeTJvptGKNkHxjrvX65HCRh5
+   IYWIP/Q0VfhfbFk/d7LETwyBq738QgOGJHlNoOl9GAtgvZeNmWZFvoSJ4
+   nlm6sU9t/gexsRjoga3oMthRvXYFqXmzHs70uryQ0oRvSuo3Vb2YI6COI
+   9qFTV6E+mACpyKguQsqh/kXUDy73iFRpixsXFeBOsOgQw5rakWLNgPF0x
+   g==;
+X-CSE-ConnectionGUID: orTPhdYSRLWkMs+zlTWlfA==
+X-CSE-MsgGUID: On3YmYBgQEW8dpSckd8QtA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11574"; a="61974997"
 X-IronPort-AV: E=Sophos;i="6.18,320,1751266800"; 
-   d="scan'208";a="61142908"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2025 07:54:09 -0700
-X-CSE-ConnectionGUID: ZnERCEnxRPm1rvbAGdEubg==
-X-CSE-MsgGUID: 2YfLwbmgSsSTgc2+yvtz1w==
+   d="scan'208";a="61974997"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2025 08:55:54 -0700
+X-CSE-ConnectionGUID: AX1pK7UCQ9CPvfrGsHWMSg==
+X-CSE-MsgGUID: KjdhSbBLRLixqHRNPExRfQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,320,1751266800"; 
-   d="scan'208";a="179507237"
+   d="scan'208";a="184194089"
 Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.110.110]) ([10.125.110.110])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2025 07:54:08 -0700
-Message-ID: <8877e886-c7f4-42c0-8e1d-422a40d6e092@intel.com>
-Date: Mon, 6 Oct 2025 07:54:07 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2025 08:55:53 -0700
+Message-ID: <361d0e84-9362-4389-a909-37878910b90f@intel.com>
+Date: Mon, 6 Oct 2025 08:55:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,100 +52,70 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/hdm: allow zero sized committed decoders
-To: Vishal Aslot <vaslot@nvidia.com>, Gregory Price <gourry@gourry.net>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Li Ming <ming.li@zohomail.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Zijun Hu <zijun.hu@oss.qualcomm.com>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <SN7PR12MB81316C958DF0F4B10369B928BBE6A@SN7PR12MB8131.namprd12.prod.outlook.com>
- <aN4SSEmaCaxbeiwJ@gourry-fedora-PF4VCD3F>
- <02a4b5f1-ad29-4825-9040-ff96e328f674@intel.com>
- <SN7PR12MB8131EE31375531673BCF0C62BBE4A@SN7PR12MB8131.namprd12.prod.outlook.com>
- <43ca6827-2bcc-41d3-8a7b-3aec24f2b0e1@intel.com>
- <SN7PR12MB8131FC2DE9E9A521CE91339DBBE5A@SN7PR12MB8131.namprd12.prod.outlook.com>
+Subject: Re: [PATCH V3 13/20] cxl/mem: Refactor cxl pmem region
+ auto-assembling
+To: Neeraj Kumar <s.neeraj@samsung.com>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-kernel@vger.kernel.org, gost.dev@samsung.com,
+ a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
+ cpgs@samsung.com
+References: <20250917134116.1623730-1-s.neeraj@samsung.com>
+ <CGME20250917134157epcas5p1b30306bc8596b7b50548ddf3683c3b97@epcas5p1.samsung.com>
+ <20250917134116.1623730-14-s.neeraj@samsung.com>
+ <c7b41eb6-b946-4ac0-9ddd-e75ba4ceb636@intel.com>
+ <1296674576.21759726502325.JavaMail.epsvc@epcpadp1new>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <SN7PR12MB8131FC2DE9E9A521CE91339DBBE5A@SN7PR12MB8131.namprd12.prod.outlook.com>
+In-Reply-To: <1296674576.21759726502325.JavaMail.epsvc@epcpadp1new>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 10/4/25 7:05 AM, Vishal Aslot wrote:
->> ________________________________________
->> From: Dave Jiang <dave.jiang@intel.com>
->> Sent: Friday, October 3, 2025 11:14 AM
->> To: Vishal Aslot; Gregory Price
->> Cc: Davidlohr Bueso; Jonathan Cameron; Alison Schofield; Vishal Verma; Ira Weiny; Dan Williams; Li Ming; Peter Zijlstra; Dan Carpenter; Zijun Hu; linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org
->> Subject: Re: [PATCH] cxl/hdm: allow zero sized committed decoders
->>
->> External email: Use caution opening links or attachments
+On 9/29/25 6:30 AM, Neeraj Kumar wrote:
+> On 23/09/25 03:37PM, Dave Jiang wrote:
 >>
 >>
->> On 10/2/25 6:03 PM, Vishal Aslot wrote:
->>>> ________________________________________
->>>> From: Dave Jiang <dave.jiang@intel.com>
->>>> Sent: Thursday, October 2, 2025 10:32 AM
->>>> To: Gregory Price; Vishal Aslot
->>>> Cc: Davidlohr Bueso; Jonathan Cameron; Alison Schofield; Vishal Verma; Ira Weiny; Dan Williams; Li Ming; Peter Zijlstra; Dan Carpenter; Zijun Hu; linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org
->>>> Subject: Re: [PATCH] cxl/hdm: allow zero sized committed decoders
->>>>
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> On 10/1/25 10:48 PM, Gregory Price wrote:
->>>>> On Wed, Oct 01, 2025 at 08:37:26PM +0000, Vishal Aslot wrote:
->>>>>> @@ -1210,6 +1210,11 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
->>>>>>                 rc = init_hdm_decoder(port, cxld, target_map, hdm, i,
->>>>>>                                       &dpa_base, info);
->>>>>>                 if (rc) {
->>>>>> +                       if (rc == -ENOSPC) {
->>>>>> +                               put_device(&cxld->dev);
->>>>>> +                               rc = 0;
->>>>>> +                               continue;
->>>>>> +                       }
->>>>>
->>>>> How do you suggest actually testing this? I briefly poked at this in
->>>>> QEMU trying to commit decoders, but i found myself incapable of
->>>>> exercising this path.
+>> On 9/17/25 6:41 AM, Neeraj Kumar wrote:
+>>> In 84ec985944ef3, devm_cxl_add_nvdimm() sequence was changed and called
+>>> before devm_cxl_add_endpoint(). It's because cxl pmem region auto-assembly
+>>> used to get called at last in cxl_endpoint_port_probe(), which requires
+>>> cxl_nvd presence.
 >>>
->>> I tested it locally with our BIOS (UEFI) where we commit and lock all decoders and
->>> all except decoder 0 are zero-sized.
+>>> For cxl region persistency, region creation happens during nvdimm_probe
+>>> which need the completion of endpoint probe.
 >>>
->>>>
->>>> It may be worthwhile adding a cxl_test test case for this.
+>>> In order to accommodate both cxl pmem region auto-assembly and cxl region
+>>> persistency, refactored following
 >>>
->>> Yeah, sure. Would cxl mock tests be the right place to explore this?
+>>> 1. Re-Sequence devm_cxl_add_nvdimm() after devm_cxl_add_endpoint(). This
+>>>    will be called only after successful completion of endpoint probe.
+>>>
+>>> 2. Moved cxl pmem region auto-assembly from cxl_endpoint_port_probe() to
+>>>    cxl_mem_probe() after devm_cxl_add_nvdimm(). It gurantees both the
+>>>    completion of endpoint probe and cxl_nvd presence before its call.
 >>
->> Yes. Under tools/testing/cxl. Let me know if you need help with that.
+>> Given that we are going forward with this implementation [1] from Dan and drivers like the type2 enabling are going to be using it as well, can you please consider converting this change to Dan's mechanism instead of creating a whole new one?
+>>
+>> I think the region discovery can be done via the ops->probe() callback. Thanks.
+>>
+>> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/commit/?h=for-6.18/cxl-probe-order&id=88aec5ea7a24da00dc92c7778df4851fe4fd3ec6
 >>
 >> DJ
+>>
 > 
-> Hi Dave,
->     Would the test be a separate patch or part of this one? Thanks.
+> Sure, Let me revisit this.
+> It seems [1] is there in seperate branch "for-6.18/cxl-probe-order", and not yet merged into next, right?
 
-It would be a separate patch and you post a series with a cover letter. You can see examples in the lore archive [1] of submissions more than 1 patches.
+Right. I believe Smita and Alejandro are using that as well. Depending on who gets there first. We can setup an immutable branch at some point.
 
-[1]: https://lore.kernel.org/linux-cxl/
+[1]: https://lore.kernel.org/linux-cxl/20250822034202.26896-1-Smita.KoralahalliChannabasappa@amd.com/T/#t
 
 DJ
 
-> -Vishal
 > 
->>>
->>>>>
->>>>>>                         dev_warn(&port->dev,
->>>>>>                                  "Failed to initialize decoder%d.%d\n",
->>>>>>                                  port->id, i);
->>>>>> --
->>>>>> 2.34.1
->>>
+> 
+> Regards,
+> Neeraj
 > 
 
