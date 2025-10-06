@@ -1,86 +1,79 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2A8221FA0
-	for <linux-cxl@vger.kernel.org>; Mon,  6 Oct 2025 17:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3A22248A8
+	for <linux-cxl@vger.kernel.org>; Mon,  6 Oct 2025 17:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759770416; cv=none; b=UEpmCNiFUL1siaQgTijN1ygTvrmfiiOMLIRlKRPWEWTdRCfFUO3VzIUJRHU7XvlPFQyDsd73L5/5nuVnC6nA9IadIhvc/4H1VC2kiQCFypsr4L0U/eUTdmnXm990UqbngiiHCqWsHJ/wXcRTjzKTskCIFsXhWDDXx6U4NPsBCBo=
+	t=1759772147; cv=none; b=GRxMeD04vvogjG/U8Y83IpgnbHTLFsgGPjvcIUvhY3iZ57xDB836SNUmsM8h5iU6fqjgBQ63GnN5vo80KftKoZqYQ3kgB5v7aNMqAjdlAvA3mNyDdMtJ5xcZRllI9XauozUrLPXQf0H0DiR2LrJ7afLXgxkjjwJQexEX9aXsaqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759770416; c=relaxed/simple;
-	bh=i2EkJ/x08v/kmNFdCKaOvysl2VoRkIydM+svs0676Cs=;
+	s=arc-20240116; t=1759772147; c=relaxed/simple;
+	bh=W195a0snK2qbMlgwvRIrKSLXzC/gj1N8SicfYvXdfZY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BRpgd+toV65llPhVL2TjzhODnjFAEMBjbEvW3CwIDx1wOdP/kkO0OLuErvY8BM0Ef3X0FLyVVOPFYUOmtIKdLqwhUe0inmAKtIJlf+GaiTChIkjxQGwFrmPaWx3bBmx9141xuEgieSVVx+xlWYjI2mvZzeo+TOXBM41VTQm6li0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=o2D3HwRx; arc=none smtp.client-ip=209.85.219.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=I9SLjaLSjrhP2PhDTwOFpZcP9TTmw3/VqTAX02tXQpi8kgcos0E85+IxVkPOJ0ZAOJyEjTWwSAmYNkEy04Z/yS5g32AXNFMXO3wxHiHWFenG1R1YQzfd7PUkcuoM2QppdlkLhDBQfsmH9MODAjw6cJJ09fQdp4Hi7PkfQX9LI2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Z4ZPlCwt; arc=none smtp.client-ip=209.85.222.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="o2D3HwRx"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-78f75b0a058so53901306d6.0
-        for <linux-cxl@vger.kernel.org>; Mon, 06 Oct 2025 10:06:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Z4ZPlCwt"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-863fa984ef5so650150985a.3
+        for <linux-cxl@vger.kernel.org>; Mon, 06 Oct 2025 10:35:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1759770413; x=1760375213; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1759772145; x=1760376945; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QgG7Kj7F8Fvf8QdLk2gzxRzLGx7bPBlhHTO5oE1aqE0=;
-        b=o2D3HwRxacVbEpskCXv9LRuXjXX7derKEUWKhYiVbIdz4rBqfUJbyQNPW3SwD3/9a5
-         B8g5RDgTScRJjzYEYgXo2+n3bb2M+5GiUOiRUNU8Vs72Zh2Q/TCWTVlKh4QObme3kzDy
-         ve1gSaQTK1ykGwlMEcEfIsk2kXUTUN3LqNbFl9C2ZjylkwlvNqlaf6FfwdMewDp4Ly4O
-         toNdelTzjbL24MOljqWKDAmIzfODLP6TPk+MJrSeNuS/aRWOQQew1GgYfuEbAK/+N16m
-         cSTcOSGXcmUbg0jqc7OAWKnGmYZ+PG8ilAD/HfPK6pPqqSFSqh3CjKS9Auja4T44ER5m
-         r48Q==
+        bh=kR53Dw5KXmac3PH9uOCTXtwUd6vhGp4REIph22KJFUU=;
+        b=Z4ZPlCwtMh0xurcLXNb/8qEC0lQS3m6nbc7H/qFd/DjHCAUgtB/ni5p8xXMqjl3qzV
+         7SBVVuBSzceOTzvDSnhGl4MFbiqqMOivpTQdBYR4TtqAm46EpSsknaurxjAj9FCFr0/j
+         C0vTgisGf4SLsrzTO/fzOYipz5SQM7J3xClyEHjc2kep2Vqy8dKz95qv3MKSxYzVU92s
+         p56E3NTYMVAv7e6lBH8NhYgvMA3XBYDM2sGEHsFgzxYt4i1NwKapup/0sfGObM9GeNEt
+         34fc/8LaaHkRCxt3xeLGOZyU23Upg1gSVpVe1R5jBCQeADPqhv+4Pu92Yg4RrqEgYEDu
+         mK/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759770413; x=1760375213;
+        d=1e100.net; s=20230601; t=1759772145; x=1760376945;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QgG7Kj7F8Fvf8QdLk2gzxRzLGx7bPBlhHTO5oE1aqE0=;
-        b=hon8D4ZYXAC1m3rJ7zDsFmWjPl1+AunRHAmLuCERocwD4wN+Nr70tDPx8w64uqcV1e
-         YJSMKup2u3olwJbwYpNfw47C3KoIzULwuUucJIa3Wbv+HDIBJB92vYYR1kRrWDwI6Fl7
-         wUEHEtkI95rPdMKkQyc5WfdGzkoJ6Ns5Tun/2rc264C0E8N5E8+cxiNpV9kRQDgbQtQ/
-         ckU+kmg0MTljSEicwrsp8zVsgQswobMnf+JLe8Yd9LpQ8sIOZjPQXNV5mbCE78yxB+8U
-         VqYqykXPwejkaQsidriahdRaPU5/6HUf1Q6MtYrJZjcHdNJmJG+1+v9ir1CirZWPCuh9
-         lY1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVi8o5lbBfs/HPCTpO6jvAbHpuZFoG4imBLuF+2KXxVR8gwNVwgrsRWod987UU2WNSiLxQB5wqrtw8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvY/WG+yo7nO0/mKhmqshFoEF9b+pXd0seLCq5hfV9qduK0+lc
-	tCogCXUFbh3HzdASzKTuB+8iTWII7YH+X/wq+A/pY/8Pb3D46KI1hcL+Rs/7xV80e3E=
-X-Gm-Gg: ASbGnctYgI8NPJQMA/7nkuT0znUxy/qNn/YGhu/8gwWMJL8+kpJRLbNHFOZu7D0KLxB
-	1aimLoSl0pYVKcb31qFw9Xe//oDheyT4Nk2ECkspgCW87ZZZ1oy8275LhqUNvzSIVOyoZVVHtHB
-	OhC5rd1YmJ31wHjFkFWNGIvcGak+WJX225IaomdHKeo2jGQ22r7lJWg0dE7oMXImr0w40OpxrUv
-	QSirW/KNPVQb2lf0DKeMtEyG84QYSl9jH6KPfXOGVRNaC6h4Et+DMSRl3py6xDWdUv3PekUN41n
-	HirRGuObXk7+9oI9XIplyJx4IJW9kFt5lDqlFfep43PMttkpV9O8IEm5GEhQMK3P+wRpx0P2eBr
-	cbCP/m9eTyLUA5uaj7pDg7JG+nRLXlUB2LxSvKwna9xcTq2vY8FvsdxpYQn3GaM3K4cc3ZCjcBW
-	mh3iJuuno0pBXH163Ej6SMm2xYIbD70PHqSM6ZNn5+
-X-Google-Smtp-Source: AGHT+IG4ZEw+VCFdNsTXOlMFhE8o6tJ1XiGtSukmRId1ODIYJZ+HVRAvZr4LoRCUnsgOjWfcW+1egg==
-X-Received: by 2002:a05:6214:2524:b0:782:a877:bbd1 with SMTP id 6a1803df08f44-879dc856462mr164109016d6.48.1759770412800;
-        Mon, 06 Oct 2025 10:06:52 -0700 (PDT)
+        bh=kR53Dw5KXmac3PH9uOCTXtwUd6vhGp4REIph22KJFUU=;
+        b=v2pGmHm3tAPzomzMsFLQLmfIGRp8oECsaR1verkUyG1VEV6zJBWT7G7MruIiJDekdD
+         dCQHCY1wGFoIU0hOkOB3FNJb9z4sX7LCugl5N14uHqvVkPuMJVodm0VdpTIYaIyXkXqc
+         LQ9CvXw+EWNkPYiYeTJAfxlXjWt+4fao3u8X/0Bgw2u/sVn60UxvkGC6hIO9JP6KCZRh
+         p+IVa9Uy79eApf4q/SuJhP8wzdWXxfWwwptNTN45hzdolG8t6Aj6OqCMtZfAp2UuJc6+
+         sKLm4sWU519Vm2xxMpdA9pXjY6d4/BDRcquQP2qar39wRlDCGM4RoTjno6xGoxZhgC9e
+         a4KQ==
+X-Gm-Message-State: AOJu0YwM+Srl3LDJ+pIcwC1z3xOPShJcZi2YCkHaLgbP/VIx2T07y/+K
+	BMUIgvn1k/8fidEeMTpZQ8EjkR3epfbJzNnDBNT/GFR4JOKbZeudthK6gGVsBagiEIg=
+X-Gm-Gg: ASbGncsYKHS03qiM6ynlsF3VolGvHjZhMte6vyvWfaJ8Nd/SkvFDS9X2uCPtQGV9qlx
+	Gwbs74rshLBpc6c/b/fmC8NdbY9maXNvL3Hb/hZmnL1v4qBozVqMDkiOnx/XkWH3j59U++yJPDf
+	oDaNBN2nS86x4zM9ORfuaPhdEvgd8y+fwQxDwKMo/Wr2PrSY+aLUQMIEI3yA5CYpxlp+a1YyP2S
+	PmlgFr8F0oWkC5tTHsvqjCUhfPvkjKy34H5bdsROkeoklm5HqP2L8/zfn55Ta/cjmGh6QAoVH5P
+	2FOnQQmJopzbwRItt0uSfgzBAZpp8edF7e5NQKRz2H2sM9coEtc3MpBCOLTzORgUSWkSp9ZoqX5
+	OeSBBHLH6a0/q9HMEkpskctfMvT5vol83gaIDqRzKZ07g+6GI7VJgjFEoE3faMpo2HZN01BaMS4
+	HrZD9z0qt2mVRMB35G0u05Cd8TM8AmSv/2XMcSc/LDmbMz5gsZuIg=
+X-Google-Smtp-Source: AGHT+IER8DoXpPhXVe8+Q8xupePoMW4LjKc805ivgHMRBIcpH9k3WI96ovGNcp68qp1cCNFhDqppHw==
+X-Received: by 2002:a05:620a:4154:b0:85c:bb2:ad9c with SMTP id af79cd13be357-87a3a34d280mr1467487385a.53.1759772144584;
+        Mon, 06 Oct 2025 10:35:44 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-878bb4465cesm123440686d6.17.2025.10.06.10.06.51
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-87772460ac0sm1375860885a.19.2025.10.06.10.35.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Oct 2025 10:06:52 -0700 (PDT)
-Date: Mon, 6 Oct 2025 13:06:50 -0400
+        Mon, 06 Oct 2025 10:35:44 -0700 (PDT)
+Date: Mon, 6 Oct 2025 13:35:42 -0400
 From: Gregory Price <gourry@gourry.net>
-To: Vishal Aslot <vaslot@nvidia.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Cc: linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
 	Alison Schofield <alison.schofield@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>,
-	Li Ming <ming.li@zohomail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Zijun Hu <zijun.hu@oss.qualcomm.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cxl/hdm: allow zero sized committed decoders
-Message-ID: <aOP3Kr3jHLWOydRp@gourry-fedora-PF4VCD3F>
-References: <SN7PR12MB81316C958DF0F4B10369B928BBE6A@SN7PR12MB8131.namprd12.prod.outlook.com>
- <aN4SSEmaCaxbeiwJ@gourry-fedora-PF4VCD3F>
- <02a4b5f1-ad29-4825-9040-ff96e328f674@intel.com>
- <SN7PR12MB8131EE31375531673BCF0C62BBE4A@SN7PR12MB8131.namprd12.prod.outlook.com>
- <aN_cUPzzwUy-s36n@gourry-fedora-PF4VCD3F>
- <SN7PR12MB8131CDE3909B30FCE3E24B6BBBE5A@SN7PR12MB8131.namprd12.prod.outlook.com>
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Robert Richter <rrichter@amd.com>,
+	Cheatham Benjamin <benjamin.cheatham@amd.com>
+Subject: Re: [PATCH 1/4 v5] cxl/core: Change match_*_by_range() signatures
+Message-ID: <aOP97tRkOhXmmMfk@gourry-fedora-PF4VCD3F>
+References: <20251006155836.791418-1-fabio.m.de.francesco@linux.intel.com>
+ <20251006155836.791418-2-fabio.m.de.francesco@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -89,38 +82,25 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN7PR12MB8131CDE3909B30FCE3E24B6BBBE5A@SN7PR12MB8131.namprd12.prod.outlook.com>
+In-Reply-To: <20251006155836.791418-2-fabio.m.de.francesco@linux.intel.com>
 
-On Sat, Oct 04, 2025 at 01:49:26PM +0000, Vishal Aslot wrote:
-> >>
-> >
-> > Ahhh, so are you saying that you will only ever observe the following
-> > (as an example)
-> >
-> > endpoint decoders...
-> > decoder2.0   ->  available and can be programmed
-> > decoder2.1   ->  size=0, locked
-> > ...
-> > decoder2.N   ->  size=0, locked
-> >
-> > or are you suggesting the following is valid:
-> >
-> > decoder2.0   ->  size=0, locked
-> > decoder2.1   ->  available and can be programmed
-> > ...
-> > decoder2.N   ->  available and can be programmed
-> >
-> > ~Gregory
+On Mon, Oct 06, 2025 at 05:58:04PM +0200, Fabio M. De Francesco wrote:
+> Replace struct range parameter with struct cxl_endpoint_decoder of
+> which range is a member in the match_*_by_range() functions and rename
+> them according to their semantics.
 > 
-> The first case is what we've got. In our case, the HB has 4 decoders. The end point (a Montage card with single port) has two decoders. For both, we commit & lock all decoders and all decoders except decoder<port>.0 are zero-sized.
+> This is in preparation for expanding these helpers to perform arch
+> specific Root Decoders and Region matchings with
+> cxl_endpoint_decoder(s).
+> 
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-If the second case is not supported (I don't think it is), then it's
-worth spelling this out.
+This may end up conflicting with the AMD ATL patch set, as that set also
+I believe made some changes to this area.  But somewhat irrelevant for
+the short term.
 
-I don't think either of these cases are relevant for scenarios outside
-of the scenario where the host pre-configures the decoders either -
-worth spelling that out as well.
-
-Just in the commit log.
-
-~Gregory
+Reviewed-by: Gregory Price <gourry@gourry.net>
