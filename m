@@ -1,136 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8FB223DF9
-	for <linux-cxl@vger.kernel.org>; Mon,  6 Oct 2025 10:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C88521FF48;
+	Mon,  6 Oct 2025 14:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759746424; cv=none; b=UNCkloYuiPi3RmjqBvqFQFxIhWjlwcSM79oHBHtT/YNySZkQOx5zI4kz9MPWKNg2wct9OW8awIGOz4G0X1u0um0gmBvSlGOtNMSABAaVg9z2rCsgM2pM+GlRw81fbhAhmxjWodg1OLHL9xRY/fgBA7bwTk7m/O1Wph9VYJcd+Cg=
+	t=1759762452; cv=none; b=gYueOiPo7M/b0M+FGILmJ1iaA9mj3xJiC3RqUtbFo1q5cY5AJTOpt6Lowzruw3Ejj2TSgDdFzNH1Oza1UngOWfmamm65fd19ojjuxZbnQgiq8Ekjyqcq/83wFabRXR2vk8uXJfbIaKclZ2HEAj2P90z78zU2Bsu1oibE/e69IkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759746424; c=relaxed/simple;
-	bh=pd+Wnlj7Q7smr1JlYgfSkU+nPVzlRWrx+A+2ISIkSmA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=tJBVsTfT2YfqBe2MzHp+UP3tPZaMECBm0lrrgkJOHUnLi0QFSS1zbczaZXz/1tL969Q8vuKRUMa0854xAwKnpZ/6A6f7CCmlK+ZstIgw3XRVswm97BkUPIP2l/+z37YXnHbhIN2lpBaNBIc9WzEFlWQx6mM1eWoDw5vRgNNQZwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E4eEXIvY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1759762452; c=relaxed/simple;
+	bh=lKylPas55ITTVT/Acc/mCgXBUoM+tFkGFkBMhQ08gu8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fxokgd2aSSwbJLHjFBF55jiNThoym5en7UKtSrtQ6i1znFBZiYZrGDRiEt1L3HC9UFCB0l+ba+JI/U9KOxADyv9BbbjoEHqLvy19IH3cPgofW0g/FnqK1KJQ/Tv2nnShtON99NLV6RpAwO5995ndPkUI3etbQU46Qc9x4RxNYJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RzgzRTjW; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E4eEXIvY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759746421;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hx1eRPIFFxHOm4a9J7E46IkAGP6DTYAnqRweVWO3UhI=;
-	b=E4eEXIvYZYApedhD9A/LHOx3s6AxHHyFrTFj4vGySah6Sp4/3QzhL/oL1rjQWNxeFG21vH
-	26VYn/TaPmPm4Rgq/xHZLepif80WT0pXLoNiIpi5gOuERF75mEo5w+DQJdJvF4ZqlGCLEA
-	aDTcDwQDdc4btNzgR2+9Vb4VimYt568=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-304-J_7PfE-GNmC16InQVMK1YA-1; Mon, 06 Oct 2025 06:26:58 -0400
-X-MC-Unique: J_7PfE-GNmC16InQVMK1YA-1
-X-Mimecast-MFC-AGG-ID: J_7PfE-GNmC16InQVMK1YA_1759746417
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-42558f501adso2072489f8f.1
-        for <linux-cxl@vger.kernel.org>; Mon, 06 Oct 2025 03:26:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759746417; x=1760351217;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hx1eRPIFFxHOm4a9J7E46IkAGP6DTYAnqRweVWO3UhI=;
-        b=L98AmUtpqci1wAUXro4cWwN8CXdoS50aO9bPkxhY2fuxYmyTmwHvtMZgwx5a5waXOp
-         0kn0NQQc35BwZNnI1U20TmI6Kvdqf0ColELqKbCJEj9I0ZYc0dHD4FVuaUJ0xblBbg90
-         OIyuJqeHHp/fzhYF79dfVBwkbr3tNXIqoGHJ/nxFdqU5xb+SbeoVbHQYEptfehZNQ8Wm
-         CJn5sks57YeNLRx1YnZWs+d0FiR6UTEaFcy1WNPRQkiXQyCuv2w+Oey9DhAjI8wniBA9
-         ApgvKwC7z7DisXiFVW9+ZJYnBLjvvtkDNJwexvw384+t55IjD5R2w6GfTm2Vwn/pVFjh
-         bF3w==
-X-Forwarded-Encrypted: i=1; AJvYcCVH8MRq7DejV0J/V1SKKz9NFUgZUYILl/rp3XaBffpCDmqQY8WXKnXlmU1t0aWZiou3eoe+M8ZM5yA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweqWq4RE/yHBBJzQv1M04deO+VTtnsxV13MqHLgcbJj/ayvBgt
-	D8YG6mbsRMlCj5DZU7jbU7NvmoXDwIjlVksuyyWAecDmsiVwgWljoA1kPb/j7JZztLZ3INip8vN
-	7+Ly2n1PaCRbEcSlt6fJ1UjWzn2e8RU40DIRKNtYYQ9423exk42jUBnw/00qdbA==
-X-Gm-Gg: ASbGncvfQjBCY+0OfohK3KBA6l1yOGj1CFgpP0XxeCTit9FOa3Ziby6u8gd74unC/2I
-	YZA4RuBz7q1oH9YR5+KhJ3om3CWEwEehZztn6vFGlBZNjNOVahU8+HTbk15WHN55OWsD5lRZVgP
-	j67pxuM9aT2zWosamwSK7RRR4oUfO3r6AmgC4a+UJ9V/VJEQaHx8IuhxyLjteY/dDfKu+WU7bva
-	TTtKN3ot9s9hNmw4i+nSM5D/Iy+1nguM3NA1A9h/3xXkKegPAIRCIs9C2P0W2FjnnS8zKhp6ol/
-	3mAbMHgSAvV8uUrh52zzWTPh8twx11UvxKCPU0k=
-X-Received: by 2002:a05:6000:43c6:10b0:425:72b3:7368 with SMTP id ffacd0b85a97d-42572b3739fmr4111755f8f.56.1759746417035;
-        Mon, 06 Oct 2025 03:26:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF9tVSThEbRlfl5KMR9XUYu2gh6jOa/VYTVmmVj5xGGUg3oMhlQzAXj+FGtfCBlHW8wyoHL1A==
-X-Received: by 2002:a05:6000:43c6:10b0:425:72b3:7368 with SMTP id ffacd0b85a97d-42572b3739fmr4111739f8f.56.1759746416515;
-        Mon, 06 Oct 2025 03:26:56 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1518:6900:b69a:73e1:9698:9cd3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4255d8e980dsm21747095f8f.36.2025.10.06.03.26.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Oct 2025 03:26:55 -0700 (PDT)
-Date: Mon, 6 Oct 2025 06:26:53 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Jonathan Cameron via <qemu-devel@nongnu.org>, shiju.jose@huawei.com,
-	Davidlohr Bueso <dave@stgolabs.net>, armbru@redhat.com,
-	Fan Ni <fan.ni@samsung.com>, linux-cxl@vger.kernel.org,
-	linuxarm@huawei.com, Ravi Shankar <venkataravis@micron.com>
-Subject: Re: [PATCH qemu for 10.2 0/3] cxl: Additional RAS features support.
-Message-ID: <20251006062628-mutt-send-email-mst@kernel.org>
-References: <20250917143330.294698-1-Jonathan.Cameron@huawei.com>
- <20251006101304.000055f8@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RzgzRTjW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759762451; x=1791298451;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lKylPas55ITTVT/Acc/mCgXBUoM+tFkGFkBMhQ08gu8=;
+  b=RzgzRTjWAKdJjDDjy1UbLnSpX9oQJkWRPzrDmMJZ2N74GJLIp9DhbNHt
+   KpQKc9CuDD1EgRwdcQxATgv8BloUZDTXn218h/h469EQK1QyeCteeFvqC
+   wyk/mQu/KfM0JxpyKhboUNslRicvyQrenWci6tI4h4qnWcyVxEerhZubj
+   i2AGm8yyM6iR/B+SfKq1m5RITPKQIuxFxDQC5TeLUVjdfRyUwcqR3PDYD
+   mtrNuWBvvc6Nwl+AJMOX9Up7kaOlaAYdwzXC8b74CIhoWmAHsszPvlMs7
+   BQIr/8s2aNq4M1p0GkiB9bLWKV2AhP6SLynOINP54G0QqhndKI+e+191Y
+   w==;
+X-CSE-ConnectionGUID: 5Cw5GUPzR1G08yX8t7ux3g==
+X-CSE-MsgGUID: EAkvjkLbQ8aRstjDOwR1uA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11574"; a="61142908"
+X-IronPort-AV: E=Sophos;i="6.18,320,1751266800"; 
+   d="scan'208";a="61142908"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2025 07:54:09 -0700
+X-CSE-ConnectionGUID: ZnERCEnxRPm1rvbAGdEubg==
+X-CSE-MsgGUID: 2YfLwbmgSsSTgc2+yvtz1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,320,1751266800"; 
+   d="scan'208";a="179507237"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.110.110]) ([10.125.110.110])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2025 07:54:08 -0700
+Message-ID: <8877e886-c7f4-42c0-8e1d-422a40d6e092@intel.com>
+Date: Mon, 6 Oct 2025 07:54:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20251006101304.000055f8@huawei.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: zakD4IMiMnYW0KQ29GXTeQoIoFAxNZybXLJWPxtAuVY_1759746417
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/hdm: allow zero sized committed decoders
+To: Vishal Aslot <vaslot@nvidia.com>, Gregory Price <gourry@gourry.net>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Li Ming <ming.li@zohomail.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>,
+ Zijun Hu <zijun.hu@oss.qualcomm.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <SN7PR12MB81316C958DF0F4B10369B928BBE6A@SN7PR12MB8131.namprd12.prod.outlook.com>
+ <aN4SSEmaCaxbeiwJ@gourry-fedora-PF4VCD3F>
+ <02a4b5f1-ad29-4825-9040-ff96e328f674@intel.com>
+ <SN7PR12MB8131EE31375531673BCF0C62BBE4A@SN7PR12MB8131.namprd12.prod.outlook.com>
+ <43ca6827-2bcc-41d3-8a7b-3aec24f2b0e1@intel.com>
+ <SN7PR12MB8131FC2DE9E9A521CE91339DBBE5A@SN7PR12MB8131.namprd12.prod.outlook.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <SN7PR12MB8131FC2DE9E9A521CE91339DBBE5A@SN7PR12MB8131.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 06, 2025 at 10:13:04AM +0100, Jonathan Cameron wrote:
-> On Wed, 17 Sep 2025 15:33:27 +0100
-> Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
-> 
-> > These two features have been used in testing the related EDAC RAS
-> > features drivers in Linux which are now upstream. Only minor tweaks
-> > from the second part of:
-> > https://lore.kernel.org/qemu-devel/20250811085530.2263-1-shiju.jose@huawei.com/
-> > [PATCH v6 0/8] hw/cxl: Update CXL events to rev3.2 and add maintenance support for memory repair features
-> > 
-> > I've split that series up as the two parts were only slightly connected.
-> > However there is some churn if this is applied without the other part of Shiju's posted
-> > series. That was sent a few minutes ago as:
-> > https://lore.kernel.org/qemu-devel/20250917141355.293217-1-Jonathan.Cameron@huawei.com/
-> > 
-> > Based on: [PATCH qemu for 10.2 0/5] cxl: r3.2 specification events updates.
-> > Based on: 20250917141355.293217-1-Jonathan.Cameron@huawei.com
-> > 
-> > Davidlohr Bueso (1):
-> >   hw/cxl: Add support for Maintenance command and Post Package Repair
-> >     (PPR)
-> > 
-> Hi Michael,
-> 
-> I see you have queued some stuff up on your gitlab tree.
-> Just wanted to make sure these are on the radar for possible inclusion.
-> No huge rush, but I'll queue some more series up on top of these
-> shortly.
-> 
-> Thanks
-> 
-> Jonathan
 
-thanks for the reminder, will queue.
 
-> > Shiju Jose (2):
-> >   hw/cxl/cxl-mailbox-utils: Move declaration of scrub and ECS feature
-> >     attributes in cmd_features_set_feature()
-> >   hw/cxl: Add emulation for memory sparing control feature
-> > 
-> >  include/hw/cxl/cxl_device.h | 145 +++++++++
-> >  include/hw/cxl/cxl_events.h |  47 +++
-> >  hw/cxl/cxl-mailbox-utils.c  | 566 +++++++++++++++++++++++++++++++++++-
-> >  hw/mem/cxl_type3.c          | 169 +++++++++++
-> >  4 files changed, 915 insertions(+), 12 deletions(-)
-> > 
+On 10/4/25 7:05 AM, Vishal Aslot wrote:
+>> ________________________________________
+>> From: Dave Jiang <dave.jiang@intel.com>
+>> Sent: Friday, October 3, 2025 11:14 AM
+>> To: Vishal Aslot; Gregory Price
+>> Cc: Davidlohr Bueso; Jonathan Cameron; Alison Schofield; Vishal Verma; Ira Weiny; Dan Williams; Li Ming; Peter Zijlstra; Dan Carpenter; Zijun Hu; linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org
+>> Subject: Re: [PATCH] cxl/hdm: allow zero sized committed decoders
+>>
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> On 10/2/25 6:03 PM, Vishal Aslot wrote:
+>>>> ________________________________________
+>>>> From: Dave Jiang <dave.jiang@intel.com>
+>>>> Sent: Thursday, October 2, 2025 10:32 AM
+>>>> To: Gregory Price; Vishal Aslot
+>>>> Cc: Davidlohr Bueso; Jonathan Cameron; Alison Schofield; Vishal Verma; Ira Weiny; Dan Williams; Li Ming; Peter Zijlstra; Dan Carpenter; Zijun Hu; linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org
+>>>> Subject: Re: [PATCH] cxl/hdm: allow zero sized committed decoders
+>>>>
+>>>> External email: Use caution opening links or attachments
+>>>>
+>>>>
+>>>> On 10/1/25 10:48 PM, Gregory Price wrote:
+>>>>> On Wed, Oct 01, 2025 at 08:37:26PM +0000, Vishal Aslot wrote:
+>>>>>> @@ -1210,6 +1210,11 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+>>>>>>                 rc = init_hdm_decoder(port, cxld, target_map, hdm, i,
+>>>>>>                                       &dpa_base, info);
+>>>>>>                 if (rc) {
+>>>>>> +                       if (rc == -ENOSPC) {
+>>>>>> +                               put_device(&cxld->dev);
+>>>>>> +                               rc = 0;
+>>>>>> +                               continue;
+>>>>>> +                       }
+>>>>>
+>>>>> How do you suggest actually testing this? I briefly poked at this in
+>>>>> QEMU trying to commit decoders, but i found myself incapable of
+>>>>> exercising this path.
+>>>
+>>> I tested it locally with our BIOS (UEFI) where we commit and lock all decoders and
+>>> all except decoder 0 are zero-sized.
+>>>
+>>>>
+>>>> It may be worthwhile adding a cxl_test test case for this.
+>>>
+>>> Yeah, sure. Would cxl mock tests be the right place to explore this?
+>>
+>> Yes. Under tools/testing/cxl. Let me know if you need help with that.
+>>
+>> DJ
+> 
+> Hi Dave,
+>     Would the test be a separate patch or part of this one? Thanks.
+
+It would be a separate patch and you post a series with a cover letter. You can see examples in the lore archive [1] of submissions more than 1 patches.
+
+[1]: https://lore.kernel.org/linux-cxl/
+
+DJ
+
+> -Vishal
+> 
+>>>
+>>>>>
+>>>>>>                         dev_warn(&port->dev,
+>>>>>>                                  "Failed to initialize decoder%d.%d\n",
+>>>>>>                                  port->id, i);
+>>>>>> --
+>>>>>> 2.34.1
+>>>
+> 
 
