@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6AA22D8DB9;
-	Mon,  6 Oct 2025 15:58:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579272D9494;
+	Mon,  6 Oct 2025 15:58:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759766339; cv=none; b=pPU57TlYS5RRRc2CN//7FrACiT/Z2nuzoJiBQu5KQJkKDOTxZ6lUWgjqj6zr1VON7ta2a+WKtnmrbyx1sDvkEnir1MCiqoZroAsXlHHRA65owW8PFjNpJRUFFJg0ztfAqGTO/DtU39qqA3U4ZeAlorGPvzV6bZmHmtai25vYvCc=
+	t=1759766341; cv=none; b=gJRrHFNWJvQq4HU9wnil+Y4J6wFrXtZJPlA1A6azDlKRjAO/ZfyhmuDZk4EVV2T3xvC5+ofMUmLqWRTf/Cx17dBt/3VlOSBAuG3eF4wRe+2QfWpCxwrqFvfIukJekXRlA+1W/IpdKB9cqTzCH/WLhikr7aoV8fYeh4UNGjFRx94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759766339; c=relaxed/simple;
-	bh=tICIjNuKpUmKFK93meEYeXqkDKxdYHSUFm3JlHZZWuA=;
+	s=arc-20240116; t=1759766341; c=relaxed/simple;
+	bh=xfZxBoXh41LQL83DNU0/RFHlC5XlyyDqch6/rPVAMhU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PbdlY0RRaGLsBKJbBmqNS+F0azNB1884nnMbjt3Q++OuYsKZ2oHKkhwcAIKGibnMooeGG51QN0PdqKvn9sizpHub9gzoiZsIMhP5yTzV/3z/Vx/hEolOsxvsc6G6nml51mW52HnUrl8hjxDo6EuRi2ldHZu5vTCdq+DkrS6TWIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MG3cTR1V; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version; b=M36P6PfIBGAqbSDVoWZ93QVjepX4L2qmALlFxPyvXZO6ZCHBGFLEgI7xvXUKl2xbgwqOEHcYBfkvi7lwqC4Jx2mtKSRD7dYSQEC+2ILPs/EOUap/b2z6s325drafLR0e5j9ehH10yRvWuswXdpAKVe9YpdcKrw6gUDscakP6w+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c7rW0zS6; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MG3cTR1V"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c7rW0zS6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759766337; x=1791302337;
+  t=1759766340; x=1791302340;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=tICIjNuKpUmKFK93meEYeXqkDKxdYHSUFm3JlHZZWuA=;
-  b=MG3cTR1Vd9UDT6v/PQ8vCLK05AyUsRf/dAFrWIuxlk2clsExYBPNjWTq
-   +e/SOiY9f0wsmKjM98Gg7qlI6mp41ngytnrb8cYjgGr/7gGwaVtEpnLV6
-   xRTWpFVUnWCRgw1+vi2Xbky4cLxTUT06DNd2yXApsb3w8uvaJEEWrI7VB
-   hfszO/EArrGNYVWJXmyw0dSPepcs0cuznsRhztXYe/I8jBu4Hfq3+Hokc
-   8/aoVfMJtmcdOUlNM86lpwZIOOF63e9MSVFLDZmTOj4MXmagrdPtsJLUn
-   8jxiI94SREUAi3Yp5oGiW9GJyY/FXXDDHxgiIiYaJyaS0v0MhuIpiNn/q
-   A==;
-X-CSE-ConnectionGUID: t2NhwkHtSFetpd4BeMHcEg==
-X-CSE-MsgGUID: Cs2LJbkiSKaWzJQc/1uYgw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11574"; a="61150562"
+  bh=xfZxBoXh41LQL83DNU0/RFHlC5XlyyDqch6/rPVAMhU=;
+  b=c7rW0zS6CNC/Cg8ghcu+n/tvN+k8aTJs7br4tm+usIXXQDEE/+q2j3vY
+   FsFTbRg4Bl3Revv0Hpdi/5FSA8tmwFsClC0pHK3KxCoAscP26yrUkJyT/
+   yUZCu4ZVXeJPkDB2pEYjhRAayzS8Up5ivtVs/87rOkz4LDXetwseaQZTY
+   7Kts9U5NAwMvC+6AZ+bhM+e4zchmPkjzNwZJtsxpA1o0eLidjElUFUvQ/
+   vqkttPHZurdJnD1THWEHuQs6hqE6senyFUhgcGN1y3B2WOsf0zPx/LMwk
+   +aHjQ5/bcqcYbinb5vGDBXzOX7UfumDabKbUk/ATjkr/FBGbZkDUR/6sX
+   w==;
+X-CSE-ConnectionGUID: lvP+ACXRSfKDU8gRItEr1w==
+X-CSE-MsgGUID: /CTncogSQa+aZarIl5H6gw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11574"; a="61150572"
 X-IronPort-AV: E=Sophos;i="6.18,320,1751266800"; 
-   d="scan'208";a="61150562"
+   d="scan'208";a="61150572"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2025 08:58:54 -0700
-X-CSE-ConnectionGUID: Bl2oNqNPQgmC5nzGI+gq6Q==
-X-CSE-MsgGUID: TZbgicnSSvm7lvsVGzj25g==
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2025 08:58:59 -0700
+X-CSE-ConnectionGUID: RV/EO52JSVmHD8aK/S+RSA==
+X-CSE-MsgGUID: +2Ep6JOWRQ6iATVAZLU3XQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,320,1751266800"; 
-   d="scan'208";a="185189577"
+   d="scan'208";a="185189594"
 Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.245.98])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2025 08:58:49 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2025 08:58:53 -0700
 From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: Davidlohr Bueso <dave@stgolabs.net>,
@@ -59,9 +59,9 @@ Cc: Davidlohr Bueso <dave@stgolabs.net>,
 	Robert Richter <rrichter@amd.com>,
 	Cheatham Benjamin <benjamin.cheatham@amd.com>,
 	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: [PATCH 1/4 v5] cxl/core: Change match_*_by_range() signatures
-Date: Mon,  6 Oct 2025 17:58:04 +0200
-Message-ID: <20251006155836.791418-2-fabio.m.de.francesco@linux.intel.com>
+Subject: [PATCH 2/4 v5] cxl/core: Add helpers to detect Low Memory Holes on x86
+Date: Mon,  6 Oct 2025 17:58:05 +0200
+Message-ID: <20251006155836.791418-3-fabio.m.de.francesco@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20251006155836.791418-1-fabio.m.de.francesco@linux.intel.com>
 References: <20251006155836.791418-1-fabio.m.de.francesco@linux.intel.com>
@@ -73,184 +73,226 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace struct range parameter with struct cxl_endpoint_decoder of
-which range is a member in the match_*_by_range() functions and rename
-them according to their semantics.
+On a x86 platform with a low memory hole (LHM), the BIOS may publish
+CFMWS that describes a system physical address (SPA) range that
+typically is only a subset of the corresponding CXL intermediate switch
+and endpoint decoder's host physical address (HPA) ranges. The CFMWS
+range never intersects the LHM and so the driver instantiates a root
+decoder whose HPA range size doesn't fully contain the matching switch
+and endpoint decoders' HPA ranges.[1]
 
-This is in preparation for expanding these helpers to perform arch
-specific Root Decoders and Region matchings with
-cxl_endpoint_decoder(s).
+To construct regions and attach decoders, the driver needs to match root
+decoders and regions with endpoint decoders. The process fails and
+returns errors because the driver is not designed to deal with SPA
+ranges which are smaller than the corresponding hardware decoders HPA
+ranges.
+
+Introduce two functions that indirectly detect the presence of x86 LMH
+and allow the matching between a root decoder or an already constructed
+region with a corresponding intermediate switch or endpoint decoder to
+enable the construction of a region and the subsequent attachment of the
+same decoders to that region.
+
+These functions return true when SPA/HPA misalignments due to LMH's are
+detected under specific conditions:
+
+- Both the SPA and HPA ranges must start at LMH_CFMWS_RANGE_START (i.e.,
+  0x0 on x86 with LMH's).
+- The SPA range's size is less than HPA's.
+- The SPA range's size is less than 4G.
+- The HPA range's size is aligned to the NIW * 256M rule.
+
+Also introduce a function that adjusts the range end of a region to be
+constructed and the DPA range's end of the endpoint decoders that will
+be later attached to that region.
+
+[1] commit 7a81173f3 ("cxl: Documentation/driver-api/cxl: Describe the x86 Low Memory Hole solution")
 
 Cc: Alison Schofield <alison.schofield@intel.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: Dave Jiang <dave.jiang@intel.com>
 Cc: Ira Weiny <ira.weiny@intel.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 ---
- drivers/cxl/core/region.c | 62 ++++++++++++++++++++++-----------------
- 1 file changed, 35 insertions(+), 27 deletions(-)
+ drivers/cxl/Kconfig                |  4 ++
+ drivers/cxl/core/Makefile          |  1 +
+ drivers/cxl/core/platform_quirks.c | 99 ++++++++++++++++++++++++++++++
+ drivers/cxl/core/platform_quirks.h | 33 ++++++++++
+ 4 files changed, 137 insertions(+)
+ create mode 100644 drivers/cxl/core/platform_quirks.c
+ create mode 100644 drivers/cxl/core/platform_quirks.h
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index e14c1d305b22..43a854036202 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1766,27 +1766,29 @@ static int cmp_interleave_pos(const void *a, const void *b)
- 	return cxled_a->pos - cxled_b->pos;
- }
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index 48b7314afdb8..03c0583bc9a3 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -211,6 +211,10 @@ config CXL_REGION
  
--static int match_switch_decoder_by_range(struct device *dev,
--					 const void *data)
-+static int match_cxlsd_to_cxled_by_range(struct device *dev, const void *data)
- {
-+	const struct cxl_endpoint_decoder *cxled = data;
- 	struct cxl_switch_decoder *cxlsd;
--	const struct range *r1, *r2 = data;
--
-+	const struct range *r1, *r2;
+ 	  If unsure say 'y'
  
- 	if (!is_switch_decoder(dev))
- 		return 0;
- 
- 	cxlsd = to_cxl_switch_decoder(dev);
- 	r1 = &cxlsd->cxld.hpa_range;
-+	r2 = &cxled->cxld.hpa_range;
- 
- 	if (is_root_decoder(dev))
- 		return range_contains(r1, r2);
- 	return (r1->start == r2->start && r1->end == r2->end);
- }
- 
--static int find_pos_and_ways(struct cxl_port *port, struct range *range,
--			     int *pos, int *ways)
-+static int find_pos_and_ways(struct cxl_port *port,
-+			     struct cxl_endpoint_decoder *cxled, int *pos,
-+			     int *ways)
- {
-+	struct range *range = &cxled->cxld.hpa_range;
- 	struct cxl_switch_decoder *cxlsd;
- 	struct cxl_port *parent;
- 	struct device *dev;
-@@ -1796,8 +1798,8 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
- 	if (!parent)
- 		return rc;
- 
--	dev = device_find_child(&parent->dev, range,
--				match_switch_decoder_by_range);
-+	dev = device_find_child(&parent->dev, cxled,
-+				match_cxlsd_to_cxled_by_range);
- 	if (!dev) {
- 		dev_err(port->uport_dev,
- 			"failed to find decoder mapping %#llx-%#llx\n",
-@@ -1883,7 +1885,7 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled)
- 		if (is_cxl_root(iter))
- 			break;
- 
--		rc = find_pos_and_ways(iter, range, &parent_pos, &parent_ways);
-+		rc = find_pos_and_ways(iter, cxled, &parent_pos, &parent_ways);
- 		if (rc)
- 			return rc;
- 
-@@ -3342,24 +3344,30 @@ static int devm_cxl_add_dax_region(struct cxl_region *cxlr)
- 	return rc;
- }
- 
--static int match_decoder_by_range(struct device *dev, const void *data)
-+static int match_cxlrd_to_cxled_by_range(struct device *dev, const void *data)
- {
--	const struct range *r1, *r2 = data;
--	struct cxl_decoder *cxld;
-+	const struct cxl_endpoint_decoder *cxled = data;
-+	struct cxl_root_decoder *cxlrd;
-+	const struct range *r1, *r2;
- 
--	if (!is_switch_decoder(dev))
-+	if (!is_root_decoder(dev))
- 		return 0;
- 
--	cxld = to_cxl_decoder(dev);
--	r1 = &cxld->hpa_range;
-+	cxlrd = to_cxl_root_decoder(dev);
-+	r1 = &cxlrd->cxlsd.cxld.hpa_range;
-+	r2 = &cxled->cxld.hpa_range;
++config CXL_PLATFORM_QUIRKS
++	def_bool y
++	depends on CXL_REGION
 +
- 	return range_contains(r1, r2);
- }
- 
- static struct cxl_decoder *
--cxl_port_find_switch_decoder(struct cxl_port *port, struct range *hpa)
-+cxl_port_find_root_decoder(struct cxl_port *port,
-+			   struct cxl_endpoint_decoder *cxled)
- {
--	struct device *cxld_dev = device_find_child(&port->dev, hpa,
--						    match_decoder_by_range);
-+	struct device *cxld_dev;
+ config CXL_REGION_INVALIDATION_TEST
+ 	bool "CXL: Region Cache Management Bypass (TEST)"
+ 	depends on CXL_REGION
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index 5ad8fef210b5..1684e46b8709 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -17,6 +17,7 @@ cxl_core-y += cdat.o
+ cxl_core-y += ras.o
+ cxl_core-$(CONFIG_TRACING) += trace.o
+ cxl_core-$(CONFIG_CXL_REGION) += region.o
++cxl_core-$(CONFIG_CXL_PLATFORM_QUIRKS) += platform_quirks.o
+ cxl_core-$(CONFIG_CXL_MCE) += mce.o
+ cxl_core-$(CONFIG_CXL_FEATURES) += features.o
+ cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
+diff --git a/drivers/cxl/core/platform_quirks.c b/drivers/cxl/core/platform_quirks.c
+new file mode 100644
+index 000000000000..7e76e392b1ae
+--- /dev/null
++++ b/drivers/cxl/core/platform_quirks.c
+@@ -0,0 +1,99 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +
-+	cxld_dev = device_find_child(&port->dev, cxled,
-+				     match_cxlrd_to_cxled_by_range);
- 
- 	return cxld_dev ? to_cxl_decoder(cxld_dev) : NULL;
- }
-@@ -3371,9 +3379,8 @@ cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
- 	struct cxl_port *port = cxled_to_port(cxled);
- 	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
- 	struct cxl_decoder *root, *cxld = &cxled->cxld;
--	struct range *hpa = &cxld->hpa_range;
- 
--	root = cxl_port_find_switch_decoder(&cxl_root->port, hpa);
-+	root = cxl_port_find_root_decoder(&cxl_root->port, cxled);
- 	if (!root) {
- 		dev_err(cxlmd->dev.parent,
- 			"%s:%s no CXL window for range %#llx:%#llx\n",
-@@ -3385,11 +3392,12 @@ cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
- 	return to_cxl_root_decoder(&root->dev);
- }
- 
--static int match_region_by_range(struct device *dev, const void *data)
-+static int match_region_to_cxled_by_range(struct device *dev, const void *data)
- {
-+	const struct cxl_endpoint_decoder *cxled = data;
-+	const struct range *r = &cxled->cxld.hpa_range;
- 	struct cxl_region_params *p;
- 	struct cxl_region *cxlr;
--	const struct range *r = data;
- 
- 	if (!is_cxl_region(dev))
- 		return 0;
-@@ -3547,12 +3555,13 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
- }
- 
- static struct cxl_region *
--cxl_find_region_by_range(struct cxl_root_decoder *cxlrd, struct range *hpa)
-+cxl_find_region_by_range(struct cxl_root_decoder *cxlrd,
-+			 struct cxl_endpoint_decoder *cxled)
- {
- 	struct device *region_dev;
- 
--	region_dev = device_find_child(&cxlrd->cxlsd.cxld.dev, hpa,
--				       match_region_by_range);
-+	region_dev = device_find_child(&cxlrd->cxlsd.cxld.dev, cxled,
-+				       match_region_to_cxled_by_range);
- 	if (!region_dev)
- 		return NULL;
- 
-@@ -3561,7 +3570,6 @@ cxl_find_region_by_range(struct cxl_root_decoder *cxlrd, struct range *hpa)
- 
- int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
- {
--	struct range *hpa = &cxled->cxld.hpa_range;
- 	struct cxl_region_params *p;
- 	bool attach = false;
- 	int rc;
-@@ -3577,7 +3585,7 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
- 	 */
- 	mutex_lock(&cxlrd->range_lock);
- 	struct cxl_region *cxlr __free(put_cxl_region) =
--		cxl_find_region_by_range(cxlrd, hpa);
-+		cxl_find_region_by_range(cxlrd, cxled);
- 	if (!cxlr)
- 		cxlr = construct_region(cxlrd, cxled);
- 	mutex_unlock(&cxlrd->range_lock);
++#include <linux/range.h>
++#include "platform_quirks.h"
++#include "cxlmem.h"
++#include "core.h"
++
++/* Start of CFMWS range that end before x86 Low Memory Holes */
++#define LMH_CFMWS_RANGE_START 0x0ULL
++
++/**
++ * platform_cxlrd_matches_cxled() - Platform quirk to match CXL Root and
++ * Endpoint Decoders. It allows matching on platforms with LMH's.
++ * @cxlrd: The Root Decoder against which @cxled is tested for matching.
++ * @cxled: The Endpoint Decoder to be tested for matching @cxlrd.
++ *
++ * platform_cxlrd_matches_cxled() is typically called from the
++ * match_*_by_range() functions in region.c. It checks if an endpoint decoder
++ * matches a given root decoder and returns true to allow the driver to succeed
++ * in the construction of regions where it would otherwise fail for the presence
++ * of a Low Memory Hole (see Documentation/driver-api/cxl/conventions.rst).
++ *
++ * In x86 platforms with LMH's, the CFMWS ranges never intersect the LMH, the
++ * endpoint decoder's HPA range size is always guaranteed aligned to NIW*256MB
++ * and also typically larger than the matching root decoder's, and the root
++ * decoder's range end is at an address that is necessarily less than SZ_4G
++ * (i.e., the Hole is in Low Memory - this function doesn't deal with other
++ * kinds of holes).
++ *
++ * Return: true if an endpoint matches a root decoder, else false.
++ */
++bool platform_cxlrd_matches_cxled(const struct cxl_root_decoder *cxlrd,
++				  const struct cxl_endpoint_decoder *cxled)
++{
++	const struct range *rd_r, *sd_r;
++	int align;
++
++	rd_r = &cxlrd->cxlsd.cxld.hpa_range;
++	sd_r = &cxled->cxld.hpa_range;
++	align = cxled->cxld.interleave_ways * SZ_256M;
++
++	if (rd_r->start == LMH_CFMWS_RANGE_START &&
++	    rd_r->start == sd_r->start && rd_r->end < sd_r->end &&
++	    rd_r->end < (LMH_CFMWS_RANGE_START + SZ_4G) &&
++	    IS_ALIGNED(range_len(sd_r), align))
++		return true;
++
++	return false;
++}
++
++/**
++ * platform_region_matches_cxld() - Platform quirk to match a CXL Region and a
++ * Switch or Endpoint Decoder. It allows matching on platforms with LMH's.
++ * @p: Region Params against which @cxled is matched.
++ * @cxld: Switch or Endpoint Decoder to be tested for matching @p.
++ *
++ * Similar to platform_cxlrd_matches_cxled(), it matches regions and
++ * decoders on platforms with LMH's.
++ *
++ * Return: true if a Decoder matches a Region, else false.
++ */
++bool platform_region_matches_cxld(const struct cxl_region_params *p,
++				  const struct cxl_decoder *cxld)
++{
++	const struct range *r = &cxld->hpa_range;
++	const struct resource *res = p->res;
++	int align = cxld->interleave_ways * SZ_256M;
++
++	if (res->start == LMH_CFMWS_RANGE_START && res->start == r->start &&
++	    res->end < r->end && res->end < (LMH_CFMWS_RANGE_START + SZ_4G) &&
++	    IS_ALIGNED(range_len(r), align))
++		return true;
++
++	return false;
++}
++
++void platform_res_adjust(struct resource *res,
++			 struct cxl_endpoint_decoder *cxled,
++			 const struct cxl_root_decoder *cxlrd)
++{
++	if (!platform_cxlrd_matches_cxled(cxlrd, cxled))
++		return;
++
++	guard(rwsem_write)(&cxl_rwsem.dpa);
++	dev_dbg(cxled_to_memdev(cxled)->dev.parent,
++		"Low Memory Hole detected. Resources were (%s: %pr, %pr)\n",
++		dev_name(&cxled->cxld.dev), res, cxled->dpa_res);
++	if (res) {
++		/* Trim region resource overlap with LMH */
++		res->end = cxlrd->res->end;
++	}
++	/* Match endpoint decoder's DPA resource to root decoder's */
++	cxled->dpa_res->end =
++		cxled->dpa_res->start +
++		resource_size(cxlrd->res) / cxled->cxld.interleave_ways - 1;
++	dev_info(cxled_to_memdev(cxled)->dev.parent,
++		 "Resources have been adjusted for LMH (%s: %pr, %pr)\n",
++		 dev_name(&cxled->cxld.dev), res, cxled->dpa_res);
++}
+diff --git a/drivers/cxl/core/platform_quirks.h b/drivers/cxl/core/platform_quirks.h
+new file mode 100644
+index 000000000000..a15592b4e90e
+--- /dev/null
++++ b/drivers/cxl/core/platform_quirks.h
+@@ -0,0 +1,33 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#include "cxl.h"
++
++#ifdef CONFIG_CXL_PLATFORM_QUIRKS
++bool platform_cxlrd_matches_cxled(const struct cxl_root_decoder *cxlrd,
++				  const struct cxl_endpoint_decoder *cxled);
++bool platform_region_matches_cxld(const struct cxl_region_params *p,
++				  const struct cxl_decoder *cxld);
++void platform_res_adjust(struct resource *res,
++			 struct cxl_endpoint_decoder *cxled,
++			 const struct cxl_root_decoder *cxlrd);
++#else
++static inline bool
++platform_root_decoder_contains(const struct cxl_root_decoder *cxlrd,
++			       const struct cxl_endpoint_decoder *cxled)
++{
++	return false;
++}
++
++static inline bool
++platform_region_matches_cxld(const struct cxl_region_params *p,
++			     const struct cxl_decoder *cxld)
++{
++	return false;
++}
++
++inline void platform_res_adjust(struct resource *res,
++				struct cxl_endpoint_decoder *cxled,
++				const struct cxl_root_decoder *cxlrd)
++{
++}
++#endif /* CONFIG_CXL_PLATFORM_QUIRKS */
 -- 
 2.50.1
 
