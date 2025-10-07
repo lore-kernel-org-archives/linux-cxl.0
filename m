@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A43D1FDE09
-	for <linux-cxl@vger.kernel.org>; Tue,  7 Oct 2025 16:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D77B19EEC2;
+	Tue,  7 Oct 2025 20:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759853509; cv=none; b=VHub+aoK8kcH8n40Ej3d3Fj0GnLdtduCWlYZ1Nvoa4n+uwGWz36BIbCUUxRKogX26+OOoURVOTlJJspQ66Bt6nxe/tIr+iJBS6a3eoR0aeaAD4TGrvVDm0IJJNOKqhc1MV6VsRbdbR3vr+9Rf2KOAghDstc7phNHbrK4pmvTwCY=
+	t=1759868715; cv=none; b=kKXGngWxGS2dH+yymSkDi6CUK5fq8sYnRneoIgVYmOBlp6hoAgUqFLybO26wzCmvtgM9gRFyDiqLSfh+1fnIjEqbUuWI246BAcr22TsMtkTo4uDFEaFIrXOSfnP/Paa3GZAoHhz0LT0m1y6i67rfhGvLVMA2Y1twdxOoOVkKx0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759853509; c=relaxed/simple;
-	bh=XQrCKVPmICvJTPfSvs3P2h3RnGlmC9gtUYDuYH5zYTc=;
+	s=arc-20240116; t=1759868715; c=relaxed/simple;
+	bh=esu6vwwSfDhTx89e5Xav97zZd7CnHA4/fBhMBiXUEHc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YVpake0a3SoZ/GN0rdzVLW8Jkc33qFl2KPz4s5AIm290Appm5MLzjjYm54nal/1hC14yqmFtYEKap03rw2kT70EtL6YRtCYblUZSmr8te1/Iv71ggJkfScpr8rc73JEaMwO4wlROP0i646prheIyN/U6HeToxh3BHwJu3+nOZ5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O48tUbty; arc=none smtp.client-ip=198.175.65.17
+	 In-Reply-To:Content-Type; b=QjWdhxvyS+LU6BV3ldP7UCBk42IaG+FiKAEmf50bnV8nQcrh3XEdLLg+EbYOIgZQxHyVzZLiNEq4AdVNAMAncpcybK5yfru1mPrKmVrIb8ky2P66DhRoWmYdPXxzp1iKcVRk9YboeGhDv6KgREFlGArd4U3ars+wguVUCdo6cX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N+oKMJ2k; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O48tUbty"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N+oKMJ2k"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759853508; x=1791389508;
+  t=1759868714; x=1791404714;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=XQrCKVPmICvJTPfSvs3P2h3RnGlmC9gtUYDuYH5zYTc=;
-  b=O48tUbtyMDchh/tkpH7Ee3WW/ujOE5vMNxGhuuNuxcq8DXjsK0aduIJh
-   e4ybOmKY+kjeSGWi6cZ9bGYbriDkZNNOYSP5ZntSwYCyWAoEA2ddNAPOy
-   75ZDPuJGaVn0e1l+k84P418dQ+a+ddeWhp8JaavhVHWsVNrAIvr06KJl2
-   o+y3YExTQNaNXBgA5dzJ2f2m/lFhlahmICpMVcUz69BIp7fsnm92D7xEw
-   7Q239f6o2RpPY8sf3BfOe3dsWwofOWwropwzIT8syMYgHO0ZOoAYVcK1B
-   BhejDoZeG2bxWnB1fMu4Ks9wQs7zjd200oD28az0/ad7ZVX3TUK6zueep
+  bh=esu6vwwSfDhTx89e5Xav97zZd7CnHA4/fBhMBiXUEHc=;
+  b=N+oKMJ2konUVIPkRueayvYSKdsUsyE8VLA7seV87oXv7dzRRrO9jfBw9
+   g+khFw1sGFRztv3z6W8f25hImXJe2C1EqkfWbOY+NDCIhoWXK0JcI9JgM
+   nS/jc/VGu6LRELS9xzddsy7ZCcZDSyJhbF0Mo+7C6m01S9LTBUEPIKumU
+   2gyqOt4bGHfEQPIuqF4lHZLNdTOIJArSyQNgFSYri+krS5JHnNZJ7Cl8m
+   lsJx/aWOy6lAir4rMOvl2Das6uOvme6hZL6ygJb+944czuu4zf5AzhG27
+   rHIc4HZvlPgNPB5kdNhgqva+rb4H6OG46W0TqnXWPO77ZbbKdldDgaSIo
    g==;
-X-CSE-ConnectionGUID: XK9eR/iZQEu0caV5Jgg7qg==
-X-CSE-MsgGUID: U5LvR2RgRvKXS0JddiAnbQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="61988443"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="61988443"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2025 09:11:47 -0700
-X-CSE-ConnectionGUID: qitWWa8VSNi+aD3MGTy17w==
-X-CSE-MsgGUID: nEPt6t5GQC62dV9xV9VBmA==
+X-CSE-ConnectionGUID: Zbr3wNseRSSXMWwSWTnzWA==
+X-CSE-MsgGUID: Nc6qfiFBRZeI14ZH8u9OAg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11575"; a="62158457"
+X-IronPort-AV: E=Sophos;i="6.18,321,1751266800"; 
+   d="scan'208";a="62158457"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2025 13:25:13 -0700
+X-CSE-ConnectionGUID: 0VLIA3cXS2yjlF7McAzNEw==
+X-CSE-MsgGUID: bI5JO7moRxSnSQbK2C65+Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,321,1751266800"; 
-   d="scan'208";a="180002435"
+   d="scan'208";a="217342372"
 Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.110.156]) ([10.125.110.156])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2025 09:11:47 -0700
-Message-ID: <a7223011-5fee-43d4-8053-5fe70e3dd33f@intel.com>
-Date: Tue, 7 Oct 2025 09:11:46 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2025 13:25:13 -0700
+Message-ID: <ed390a72-2470-4e09-8fbe-56915d619dfa@intel.com>
+Date: Tue, 7 Oct 2025 13:25:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,123 +52,110 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dax/hmem: Fix lockdep warning for
- hmem_register_resource()
-To: dan.j.williams@intel.com, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org
-Cc: vishal.l.verma@intel.com, ira.weiny@intel.com
-References: <20251007001252.2710860-1-dave.jiang@intel.com>
- <68e46a09c2a07_2980100f3@dwillia2-mobl4.notmuch>
+Subject: Re: [PATCH 3/4 v5] cxl/core: Enable Region creation on x86 with LMH
+To: Gregory Price <gourry@gourry.net>,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Cc: linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Jonathan Corbet <corbet@lwn.net>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Robert Richter <rrichter@amd.com>,
+ Cheatham Benjamin <benjamin.cheatham@amd.com>
+References: <20251006155836.791418-1-fabio.m.de.francesco@linux.intel.com>
+ <20251006155836.791418-4-fabio.m.de.francesco@linux.intel.com>
+ <aOQAb9H-wIxc6j31@gourry-fedora-PF4VCD3F>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <68e46a09c2a07_2980100f3@dwillia2-mobl4.notmuch>
+In-Reply-To: <aOQAb9H-wIxc6j31@gourry-fedora-PF4VCD3F>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 10/6/25 6:16 PM, dan.j.williams@intel.com wrote:
-> Dave Jiang wrote:
->> The following lockdep splat was observed while kernel auto-online a CXL
->> memory region:
+On 10/6/25 10:46 AM, Gregory Price wrote:
+> On Mon, Oct 06, 2025 at 05:58:06PM +0200, Fabio M. De Francesco wrote:
+>> The CXL Fixed Memory Window Structure (CFMWS) describes zero or more
+>> Host Physical Address (HPA) windows that are associated with each CXL
+>> Host Bridge. Each window represents a contiguous HPA that may be
+>> interleaved with one or more targets (CXL v3.2 - 9.18.1.3).
 >>
-> 
-> The entire spew with timestamps does not need to be saved in the git
-> history I would trim this to:
-> 
-> ---
->  ======================================================
->  WARNING: possible circular locking dependency detected
->  6.17.0djtest+ #53 Tainted: G        W
->  ------------------------------------------------------
->  systemd-udevd/3334 is trying to acquire lock:
->  ffffffff90346188 (hmem_resource_lock){+.+.}-{4:4}, at: hmem_register_resource+0x31/0x50
-> 
->  but task is already holding lock:
->  ffffffff90338890 ((node_chain).rwsem){++++}-{4:4}, at: blocking_notifier_call_chain+0x2e/0x70
-> 
->  which lock already depends on the new lock.
->  [..]
->  Chain exists of:
->    hmem_resource_lock --> mem_hotplug_lock --> (node_chain).rwsem
-> 
->   Possible unsafe locking scenario:
-> 
->         CPU0                    CPU1
->         ----                    ----
->    rlock((node_chain).rwsem);
->                                 lock(mem_hotplug_lock);
->                                 lock((node_chain).rwsem);
->    lock(hmem_resource_lock);
-> ---
-> 
->> The lock ordering can cause potential deadlock. There are instances
->> where hmem_resource_lock is taken after (node_chain).rwsem, and vice
->> versa. Narrow the scope of hmem_resource_lock in hmem_register_resource()
->> to avoid the circular locking dependency. The locking is only needed when
->> hmem_active needs to be protected.
-> 
-> It is only strictly necessary for hmem_active, but it happened to be
-> protecting theoretical concurrent callers of hmat_register_resource(). I
-> do not think it can happen in practice, but it is called by both initial
-> init and runtime notifier. The notifier path does:
-> 
-> hmat_callback() -> hmat_register_target()
-> 
-> That path seems impossible to add new hmem devices, but it is burning
-> cycles walking through all the memory ranges associated with a target
-> only to find that they are already registered. I think that can be
-> cleaned up with an unlocked check of target->registered.
-> 
-> If that loses some theoretical race then your new
-> hmem_request_resource() will pick a race winner for that target.
-> 
-> Otherwise, the code *looks* like it has a TOCTOU race with
-> platform_initialized. So feels like some comments and cleanups to make
-> that clear are needed.
-> 
-> Really I think hmat_callback() path should not be doing *any*
-> registration work, only update work.
-
-So are you saying that hmat_callback() should skip hmat_register_target_devices() when calling hmat_register_target()? hmat_init() calls hmat_register_targets() and hmem_init() also basically does something similar. So from that perspective, hmat_callback() shouldn't be finding something new. However if we drop the hmat_register_target() and a memory device gets hot-plugged (i.e. a new card gets inserted), do we lose something?
-
-If we base the calling of hmat_register_target_devices() on target->registered, I don't think it removes the lockdep splat because the locking order is unchanged.
-
-DJ
-
-> 
->> Fixes: 7dab174e2e27 ("dax/hmem: Move hmem device registration to dax_hmem.ko")
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>  drivers/dax/hmem/device.c | 42 +++++++++++++++++++++++----------------
->>  1 file changed, 25 insertions(+), 17 deletions(-)
+> ...
 >>
->> diff --git a/drivers/dax/hmem/device.c b/drivers/dax/hmem/device.c
->> index f9e1a76a04a9..ab5977d75d1f 100644
->> --- a/drivers/dax/hmem/device.c
->> +++ b/drivers/dax/hmem/device.c
->> @@ -33,21 +33,37 @@ int walk_hmem_resources(struct device *host, walk_hmem_fn fn)
->>  }
->>  EXPORT_SYMBOL_GPL(walk_hmem_resources);
->>  
->> -static void __hmem_register_resource(int target_nid, struct resource *res)
->> +static struct resource *hmem_request_resource(int target_nid,
->> +					      struct resource *res)
+>> Cc: Alison Schofield <alison.schofield@intel.com>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Dave Jiang <dave.jiang@intel.com>
+>> Cc: Ira Weiny <ira.weiny@intel.com>
+>> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+> 
+> Couple inlines but just nits
+> 
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> 
+>> @@ -1770,6 +1778,7 @@ static int match_cxlsd_to_cxled_by_range(struct device *dev, const void *data)
 >>  {
->> -	struct platform_device *pdev;
->>  	struct resource *new;
->> -	int rc;
+>>  	const struct cxl_endpoint_decoder *cxled = data;
+>>  	struct cxl_switch_decoder *cxlsd;
+>> +	struct cxl_root_decoder *cxlrd;
+>>  	const struct range *r1, *r2;
 >>  
->> -	new = __request_region(&hmem_active, res->start, resource_size(res), "",
->> -			       0);
->> +	guard(mutex)(&hmem_resource_lock);
->> +	new = __request_region(&hmem_active, res->start,
->> +			       resource_size(res), "", 0);
->>  	if (!new) {
->>  		pr_debug("hmem range %pr already active\n", res);
->> -		return;
->> +		return ERR_PTR(-ENOMEM);
+>>  	if (!is_switch_decoder(dev))
+>> @@ -1779,8 +1788,13 @@ static int match_cxlsd_to_cxled_by_range(struct device *dev, const void *data)
+>>  	r1 = &cxlsd->cxld.hpa_range;
+>>  	r2 = &cxled->cxld.hpa_range;
+>>  
+>> -	if (is_root_decoder(dev))
+>> -		return range_contains(r1, r2);
+>> +	if (is_root_decoder(dev)) {
+>> +		if (range_contains(r1, r2))
+>> +			return 1;
+>> +		cxlrd = to_cxl_root_decoder(dev);
+>> +		if (platform_cxlrd_matches_cxled(cxlrd, cxled))
+>> +			return 1;
+>> +	}
 > 
-> Probably does not matter since noone consumes this code, but this is
-> more -EBUSY than -ENOMEM.
+> Is there any concern for longer term maintainability if addition
+> match_*() functions are added?  Or is this upkeep just the unfortunate
+> maintenance cost of supportering the quirk?
+
+Suggestions welcome. Would be nice if we have cleaner ways of dealing with this.
+
+> 
+>>  
+>>  static struct cxl_decoder *
+>> @@ -3406,8 +3421,12 @@ static int match_region_to_cxled_by_range(struct device *dev, const void *data)
+>>  	p = &cxlr->params;
+>>  
+>>  	guard(rwsem_read)(&cxl_rwsem.region);
+>> -	if (p->res && p->res->start == r->start && p->res->end == r->end)
+>> -		return 1;
+>> +	if (p->res) {
+>> +		if (p->res->start == r->start && p->res->end == r->end)
+>> +			return 1;
+>> +		if (platform_region_matches_cxld(p, &cxled->cxld))
+>> +			return 1;
+>> +	}
+> 
+> 
+> if (!p->res)
+> 	return 0;
+> if (p->res->start == r->start && p->res->end == r->end)
+> 	return 1;
+> if (platform_region_matches_cxld(p, &cxled->cxld))
+> 	return 1;
+> return 0;
+> 
+> ?
+> 
+> I like flat, but I also dislike not-logic.  Style choice here, unless
+> others have a strong feeling this is fine.
+
+More flat is definitely the preferred way. With the changes, the last one we can actually do:
+
+return platform_region_matches_cxld(p, &cxled->cxld));
+
+
+> 
+> ~Gregory
 
