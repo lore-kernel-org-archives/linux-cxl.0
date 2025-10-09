@@ -1,80 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65D922578A;
-	Thu,  9 Oct 2025 03:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFAF235061;
+	Thu,  9 Oct 2025 03:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759979783; cv=fail; b=NTp9rMm+ea4KQNY5jbWdJzPnm2hR7z36mu2iPqVACBX9A/VmCzsQScLmVIXAyKt8upiJkCrLB2p/ovZw23ITISmCkB/Ze9UsnU+LcxI021Cw0pcrYYa2/YNH7+IE8t4dQeNUE0kk88tcR1BqLMa+IkkVeSXSq3GrfT8xfH7Gj50=
+	t=1759980583; cv=fail; b=urCf9pVAhHWfj/egtbwtDwljljpJBPsY3eJm5I4Y/sQiXUxgFaewu5k7Gz8uSKWenxxTzGW1HXdj4HCQBBeN0ID+DdP51jtmbqxXP4iUzDQSxXsG4cW7kfPYQVGiQ5IWe0HWZrYmnXdXiLBK8/BgsaYzxmlGvMKhlVmBcJQrDJM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759979783; c=relaxed/simple;
-	bh=mKAqWrKw4AYuA7J7JKvpBKrZNU+tl2WjUyRobZd5usU=;
+	s=arc-20240116; t=1759980583; c=relaxed/simple;
+	bh=PO9eVN+znBSilkH3z2ADqpovSO0vO9clqxhN2QKn6uI=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rev6uEMEv0oq0EBs1zLmTaBYa5TKkdpT/dY4vZyRRyeH7kvh1URj5LcWWdOvZq8Otii0ZZmBYmWgUKinAoK8AWCrqlF0wT1pTAzZkEMHBkNVp3+x3VEEBTaF1OIrarBhV/PYStdRywNdzvRvqRqA2660YJKeHHl5nKpXdorp/Ic=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BFGDFdYT; arc=fail smtp.client-ip=198.175.65.20
+	 Content-Disposition:In-Reply-To:MIME-Version; b=NDp45fIPljl+72SeRoXIB508FoOYH+dqKwfrZ0ulh0cSbsEzH5Mtt53oWO1SMJub45yHwtxTYcY+OGr/x2yg/2Gh+ND12u1wYEjPmWPIY1EzHK2s6IrrtOvSTo698jc35+YrElzfPqKolHzPKMmYVl5PKAnZmi0XM8iUsDa4BnE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XBYQoajv; arc=fail smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BFGDFdYT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XBYQoajv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759979781; x=1791515781;
+  t=1759980582; x=1791516582;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=mKAqWrKw4AYuA7J7JKvpBKrZNU+tl2WjUyRobZd5usU=;
-  b=BFGDFdYTYOdEcMqsSuM5NwkVqBYLKwfksX9/gjCqE5uXz6d/H61kTT7Z
-   3wWCD7F7g9a+tzih10R9lVWKuQP/RYE8dW8aPg84CKIT2gEU8GXtDUZeg
-   T+Za+L0oCDx1T3XDSQd6+O0Xfl9BS6nwQtXIt4FxoZek67KzKLzHNaCMb
-   wbWtfC+hs9wVOCyswvQgxw/PhUCakk/JhwX/wAzYGZqVIYpv+2yHjHXim
-   wIcmqkAXL97nVXl0tcIVe6Speo7Y4D7+s9Aj3YGbVrAz7F36Z1mEn0/FC
-   PK/hL518255WQXViBcpG/gmUxhtXNdsYOY5eFoodwJtPFJ9szjiLpkClx
-   w==;
-X-CSE-ConnectionGUID: 1Q8gpKTqTC6e3IG7rN9n9g==
-X-CSE-MsgGUID: JNu3LtuoSKauf8a9J8ps7g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11576"; a="61887697"
+  bh=PO9eVN+znBSilkH3z2ADqpovSO0vO9clqxhN2QKn6uI=;
+  b=XBYQoajv+xYd6cOLAzRr+/jkKbKNK1j9hdw1GMNO22SLWso6UkceccSO
+   alSMctY/lJoo4Zgk0KARmnbDguXo8QxosYgzBv4Q3/Pn3Jkxwrf8itZnN
+   RlZKKx3045nGsNlyCdhw5mWCJTjnYvpm2WiE2r4wh7QMw3C00801DyM4f
+   nk47LqWoljbZYAfWhslBWUWRjJpN0jfsc10wTip8q3pkUdxpP/2RAhVT6
+   Kl0U+fRcZ7/ys3HZUl/YZ4P5LESlPpbFVy37ex0g5vaRi1u4MRYQQ4G+B
+   5GZLXOlQYyXns1a6r6S+Wgh1Sdf5h7TzFQP6FPNHXthHe3O0qPwHl1rGa
+   Q==;
+X-CSE-ConnectionGUID: IXSe5fVJT+ypEIuxC898XQ==
+X-CSE-MsgGUID: uvezVLgER76FKox6vGcwjQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11576"; a="65829041"
 X-IronPort-AV: E=Sophos;i="6.19,215,1754982000"; 
-   d="scan'208";a="61887697"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2025 20:16:20 -0700
-X-CSE-ConnectionGUID: IEIC6tyORt6DxApjLKbzdQ==
-X-CSE-MsgGUID: CdOh3LLQRnSIyZ1rJ76oVw==
+   d="scan'208";a="65829041"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2025 20:29:41 -0700
+X-CSE-ConnectionGUID: uKaAmHNCRR++zB9lie2dng==
+X-CSE-MsgGUID: fwUF+sFgSImWzQPJuHjD9A==
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,215,1754982000"; 
+   d="scan'208";a="181013464"
 Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2025 20:16:19 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2025 20:29:40 -0700
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
  fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Wed, 8 Oct 2025 20:16:19 -0700
+ 15.2.2562.27; Wed, 8 Oct 2025 20:29:40 -0700
 Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Wed, 8 Oct 2025 20:16:19 -0700
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (52.101.43.65) by
+ 15.2.2562.27 via Frontend Transport; Wed, 8 Oct 2025 20:29:40 -0700
+Received: from SA9PR02CU001.outbound.protection.outlook.com (40.93.196.63) by
  edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Wed, 8 Oct 2025 20:16:18 -0700
+ 15.2.2562.27; Wed, 8 Oct 2025 20:29:39 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TptrwX5R8ypH90G/z2AnN2d3F2Mc9h0dfbmGbq39+h7gFWkCktsVvuQAKLUE34DCYjN2iGWwSVgWhOO12VYLzMfS2Vt3tgaEBBcKhLq6MDAUtYXMuI9XNFgnbmCP3qgFKLDxzX6rJy2AU9Lf3q+8uak12ivNlC8mCMYok7AohqlVHO0zl+pcbpcaoeDtHi3xpNl/B5VvsMjpUsY8gaeD2CqD6dKTvsTtTIAYrgAldEz759XNd0YVEVrG/z3fP2Z1f6Kxnvy3vSH0hxU7On2RGjv4GqlXUDZjXejvUvXU6FKhGK7udHb3fs0ShRtiZjnzDJJFgRgcwPHqKtXCLPOv3A==
+ b=qLFfv+5Bbu1PleBSzRZ4JuiDYiUFsDMJupjAtQmfSpQwbQiYJ18TOnyr0svY1Kx18L56byM17Hpw3sx0IFHnatSdQIVCHc/Q7WgMbEMrv/tHchyA34UOh4r2NplgNIhScSHq1rz75vDe2tjm/aBQI1GKl38F1KWSYFy5xXVACVjgbu6wENdGi3/qRLjwBhyijUE7DixIz5Xp9fmrbviA7NOHGm4n2PRD2GAHFYwn6JwXnX5ywcfQcCHGHqoVv87Y6nYaBNE4WClly+TQf9MD2/i5ZgxNKDG6jk+nRG2LZf7jb0w9JxvYaM2akLlYky98Uhy5/ErSEvpwMSlgkJZHdg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2UTrGbPcAFOzz5MAeJ8ihfA21D6pY0lRvHmkmrmYSXs=;
- b=xi8K8xNdfx9QwX0FRrqcnQAYVvl1HlOYLQhqi3wqb/tBiJXbNkKiNyGE/DF7bbTB9yyuoaH0GrwGP1rvuBQ9c2zZ1oPQNP/jjYn25aKm5rCcbl9/MraRjmCrq5k8HVbE9v920iTBbg8Ir23g5xidlg5fYzHY+lVkgqpsnOmIZn8rRqMx4won4ZdvVVGXyf99F7Go3JL1ESiEWwJftnbtSf3u/FZm35GK6j+0hJyWC8+Q/YwmB0HJhU0NIhxGaXpOXiHP6+b4htgtzWJytT3+89EI0/sblEazxneR2MNcXeGAWbFJ14JmZ5lWiNyt93vcYIEqKxHwBfzkyiNubR2euw==
+ bh=NDEyfYT3u8/9PI2pE4KUNtttP7Bdm/RjarXsMhIGK3o=;
+ b=ueQ2g359SdWyRy4qUw0/l+t9eJ1IbgjumZn8kOeaW53BaF5FRUgJ0Sa6KwyXCoCP/ic0YILtyLFQ3jlVLOALcJgBVimHCAKxCQ+hwQjwID1i4lesNxyobinAvuKCPWosv4vb3wP8K1kg3N1d5S6gK+yAa9bICFIx5t5zAbNspeZOv8h7l1E68r7O5lIrzm269ORl9QZiabYzJByAIv+m5zVIg3m643BLNMKVKcQFn+qXqF/6KdkiKJYZM+Kanz1wLcCxRJmo2tN6HXh20MftxlwK65mQgRnTFUSn3Cq0uIAI0W8YHs+p+RA29ONDeUgXDUYWHqA0WOYDZJj+2TJnzQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by CH0PR11MB8236.namprd11.prod.outlook.com (2603:10b6:610:184::14) with
+ by SA3PR11MB7526.namprd11.prod.outlook.com (2603:10b6:806:31c::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.10; Thu, 9 Oct
- 2025 03:16:13 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.9; Thu, 9 Oct
+ 2025 03:29:37 +0000
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::46c9:7f71:993d:8aee]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::46c9:7f71:993d:8aee%7]) with mapi id 15.20.9182.015; Thu, 9 Oct 2025
- 03:16:13 +0000
-Date: Wed, 8 Oct 2025 20:16:05 -0700
+ 03:29:37 +0000
+Date: Wed, 8 Oct 2025 20:29:29 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
 CC: <linux-cxl@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
@@ -84,16 +86,15 @@ CC: <linux-cxl@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
  Corbet <corbet@lwn.net>, <linux-doc@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, Gregory Price <gourry@gourry.net>, Robert
  Richter <rrichter@amd.com>, Cheatham Benjamin <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH 2/4 v5] cxl/core: Add helpers to detect Low Memory Holes
- on x86
-Message-ID: <aOco9dzjzcWJBNYh@aschofie-mobl2.lan>
+Subject: Re: [PATCH 3/4 v5] cxl/core: Enable Region creation on x86 with LMH
+Message-ID: <aOcsGbRlMesYgAyV@aschofie-mobl2.lan>
 References: <20251006155836.791418-1-fabio.m.de.francesco@linux.intel.com>
- <20251006155836.791418-3-fabio.m.de.francesco@linux.intel.com>
+ <20251006155836.791418-4-fabio.m.de.francesco@linux.intel.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20251006155836.791418-3-fabio.m.de.francesco@linux.intel.com>
-X-ClientProxiedBy: BYAPR07CA0051.namprd07.prod.outlook.com
- (2603:10b6:a03:60::28) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+In-Reply-To: <20251006155836.791418-4-fabio.m.de.francesco@linux.intel.com>
+X-ClientProxiedBy: SJ0PR13CA0183.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c3::8) To DS4PPF0BAC23327.namprd11.prod.outlook.com
  (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -102,119 +103,107 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|CH0PR11MB8236:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5bcbc749-9277-4eca-9bb3-08de06e2334e
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SA3PR11MB7526:EE_
+X-MS-Office365-Filtering-Correlation-Id: 52e8b823-0e39-40ab-8c78-08de06e412d3
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?uCCdC6eRXPGH2I+Ai1PKsFR0PRgrBePO6yf13GLQZu4N9AaRbFtwAKO906i+?=
- =?us-ascii?Q?gK2TMktwISmFUgXNrTalBC6DRSumqoH+bI63/KwoxZKM2vnHEqywRR9m2DEi?=
- =?us-ascii?Q?Zw/huGOBWn5Sc7b1FiHzTBmd+vbQ5oVVHw6ylRGINIIXy/HRRck382Ltbv3Y?=
- =?us-ascii?Q?NAki1Iy+iFe0Mfoj9lQMqlr+0eOjeh+CWpAEtX6rO0k6TnNJC1rKKLTZHk/f?=
- =?us-ascii?Q?mTxNH4bcaJi64Kl/oZUM0ob4Uts5n3lXGh+njqo1or7zBOhbSXUqouYT4KFq?=
- =?us-ascii?Q?dCPYj97MWGeWgni7x5Lz3PxGmmXis0PwInuwA/272JX8FsEP9Kfugr01LHGV?=
- =?us-ascii?Q?Yd0SGTw8CTOc3+acYha5ivLF/IoDgsK+V/FGniQ0sQcdARy9uOU06vSsm8jL?=
- =?us-ascii?Q?80p9iGm72/TjDK6fkrB4EiybufzA2jnbP7+gbCtvMUoYoMB8FgwZLQ/FRj+W?=
- =?us-ascii?Q?+CNEGlaf2/gQcN68mdqvHKnYTxZZEAf1V9RdYb+hzxq+z7NUWdA9FOFsf1xM?=
- =?us-ascii?Q?sEZ7GJTbjik6Lzryl/qmKInsZM6//FxCaV2tMramuXpMgkDyf/f2Y5e7Yev6?=
- =?us-ascii?Q?ugJFoWfZ3kP3WJkrPESUOr7YXh7wYqWhsloD3JSVGSxN77XQrRIyyqY9FY+L?=
- =?us-ascii?Q?qbBgKxjOQT1S5iSO6E9FGK4zPkE5qNjSYisUE3zb2EhrMkGRsGqn0HtwvjaA?=
- =?us-ascii?Q?bW/pQs3+vD8LKFhmaSicm8yShN8PZcS8lOY0qsev8tYGPImNQ4xrgv9fw96q?=
- =?us-ascii?Q?RmNzH5HWW/eh+9TPyGhrtl9AmdvimwlFf9yaO53kzwVCLJJdq8y/fiqX7CZ2?=
- =?us-ascii?Q?DsQQiRrGNSjw2IxEAI+9TgXkQrOwYLOkjIUvXnNg7DTmNqj+xB7nTGp8HdL2?=
- =?us-ascii?Q?s5tkrTkKceBvzpGlFiDeQKVOS/Ehgr3yHD9mzeikN9efxVsoc6php1z64VWv?=
- =?us-ascii?Q?JXEgpokxWuJFZSxchskYFJVpNu0IR0gbmghn+uE6FdjVPyIq0p1WXrzQIJbJ?=
- =?us-ascii?Q?0zOEEEdihgolRXIKjpevQlorDveq4y3xe/5HffneoIA0AraDJY7C97J7ybwr?=
- =?us-ascii?Q?LtepJRxZX1R9PlHfc7kURiL7wglTyqJ44YTV5d+RBwh1S2glcfn0PeB7Sfqx?=
- =?us-ascii?Q?AQN1QBX0Et6IL4R5CqhKCQGRVfvhfaNtL9wPZvkqnIEdLeprqjE2n/vGR23m?=
- =?us-ascii?Q?muR9LLOBnCgili4N7zOch5WjD2hG0TYYObEU3t/1pU8smaddySz7Je3lD06q?=
- =?us-ascii?Q?U+1UcswBAns03nFQ4kUCcH9DEm+zGrFBvlRWdYdCJI/ZcvIDMJgq1EZGWh53?=
- =?us-ascii?Q?3+ZDakJPBFZzoEobtxIJVjEieBUNe+0lVcdvPAWj9+lOTijOu2v9tMat7cMp?=
- =?us-ascii?Q?2TlCxemeNunrhhqGOQDaVPMHZdh9D8fVjaQGjtdpAbb1PqvyJu7Rli3Vz/lu?=
- =?us-ascii?Q?3KOAFF03D7K5IO901Rizz4LRXAc0agQo?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?5wFNQRuBHb4uIgdDQtmUV8beIO80uEKZxAlcwZepS9ci5Vb1yIMB2GoszGnu?=
+ =?us-ascii?Q?4QQbSGul4VO5ifhh/bkoGy5k3oaseKIb3IHSMnMmbETIY+0KbWkK/udA/MhW?=
+ =?us-ascii?Q?5ZfkEclI0UwWzqyFSn9NQ4/MuN0PMR+JmdsXehuPklf9enWQPCCp4OHdBkH9?=
+ =?us-ascii?Q?4HxkKzfMRj6D7jbFjeGbEIRnXa1d2q0tRx0vEw8dr1Yl7ePDC+uaZfnDJFzG?=
+ =?us-ascii?Q?Tr1fGLBHeJcLEzKjcvuEuKfBhPTaBh6Kdurs17A+EtxZkqAsCtIa2mhDYb8z?=
+ =?us-ascii?Q?fe5113ul9P1/RVEqnE2MlEBQqey0eF9x91uBHuG1Cog0YpUJpYstz+V04sUI?=
+ =?us-ascii?Q?gMh47BYjNwvpQNmHwUtpBDK/Llp019Z41ysnJg5Z5UREHksqZHY21PojrKpp?=
+ =?us-ascii?Q?bqnskAjYzVkO554ua2DXFNYWiMCPIIa6exTDhnwU9pHyznx54nQSAHlJGswp?=
+ =?us-ascii?Q?8SIFq9VTg1rh6T0XbgnhsDp5cTJwVzrZdHDsj1bR7gLderas7yS8nXsqA42+?=
+ =?us-ascii?Q?I6Aqmp8LmR4JzHIfhaMWulDRDvZnY6AhzUnacPkuiqJG8F2rwMZI4PuU0n0n?=
+ =?us-ascii?Q?nnUduyf5aqxXuaFcKEIbHzHIuSpe1KCJnITnZua0EHCeC+yHl83PXBfIhqpg?=
+ =?us-ascii?Q?Wo6mrsPz7J36/aQ91H08eh0CF4PHQxFpadWmwzJIxq+gm6gP/+aLEzhcSrnA?=
+ =?us-ascii?Q?2wTVDu1jCn2R38YN/CC+RN8D70CLHsWKCIb/DU6f00DrTUAgQKplr196zwLV?=
+ =?us-ascii?Q?0mI8ftUoywge13u6APJsEuf+C9VS4zz/2I3bgBFak/w0JJuCv3m6TDf/icib?=
+ =?us-ascii?Q?ZKhWb/RstN0HuqsffO26kvCB6sKNpPtvUyLAXrE6L8lBKNDZKoj6/p9TUx8g?=
+ =?us-ascii?Q?eUUD7kEo75iOa2H7yYVeOYrOTH4Ks8jZ8pGY3TBuVeLIEt5m/KzRhCv6JVVU?=
+ =?us-ascii?Q?1NKY6H2peIYf9KsucM1JNV0K7e9joOH0pC69vbI5otJoxpiP6qROi+LDnoty?=
+ =?us-ascii?Q?vIKR+uY31uh4wMZ5uq1yFe//7x6QUm6RhOObvel+ypt3xsWTVFyZ58dbjTrp?=
+ =?us-ascii?Q?7wVFSg0U416q6LlD3PCXsl2WfRXqx+1T3mIkXJX66o3VvLJ4xE4/wultgbKi?=
+ =?us-ascii?Q?0mcJSuiM7abaq/FeuDT81JNjMGBTkRo0Dy7E6g+ALn1BSAOv+I8xEaGgo6R8?=
+ =?us-ascii?Q?r0RiPmj4GWOMpIC6kvs1dltGmGIKigzUYZxReC8FSc32frJWjatEmvCjJxh2?=
+ =?us-ascii?Q?84O1jJ8m2hd3RpVu1qWxS+ZEMgit77Zr3NH7jqTKS/WwIamCcfgE/Q17VWRA?=
+ =?us-ascii?Q?2/Pcp9I4pG2ZKiVzZtMVi7suYfJ5VlpcLIDcs8oilYwwiJGLF3qvwJ/BrARw?=
+ =?us-ascii?Q?w/8JBnMqNhez9lAWwUb6RCliMQEU9FG6x9s+0wFlarKxGhY270ofaF1uVF0e?=
+ =?us-ascii?Q?/TRRYEbirhWXBRHmwGOMOitUNgg3kjWl?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?KRI/WswJ70xBM8nSxueU2afIoTtONY9NxFdd/qRC5JqaM6D7PQos531USxFu?=
- =?us-ascii?Q?kGWCXgdxK7k8I53wbwrOeIGwJ0IAPebfMEEjDJfsnfhNaf2dK17H+2GEU32g?=
- =?us-ascii?Q?UgXFzNF1sAkkW7rA9xZQP2ZX/AGMdTHPeKJDIX0OuPEo0jDGMlwTDYbXyvAu?=
- =?us-ascii?Q?h8T/vsEZt+1Bxs0FzpwzM4PIW84nYNOxCvrD5wWi7b7vQ50AuEMLlrSP5Rvf?=
- =?us-ascii?Q?uFZDg0qUXj51WQ6AhA2nAPHaF9p+Wx9x9f5xCCUJ4EigyTmnzc1m93KgEdMx?=
- =?us-ascii?Q?P9Ei0q5UWlgrYD6vrTI8azpaZd8jWYgzZ9PL72+Pb2Yn5SwTDPJRpAYoVzqt?=
- =?us-ascii?Q?SoGh7dgTtxpjPxtIDhmi7ua6Msa5JvjsH54/eDIBDZr9hxTPM7iqbmDwlurI?=
- =?us-ascii?Q?5pGCXvCumMUQOkPqvv8EramwhIKx9bY5d5bBOcyyIKG6Ne52DtBkwLxrWMIE?=
- =?us-ascii?Q?7MWq67aBI0PJQQHzxNpSrGywEWI+zYdDGFIZoQCvh7WXwQFifPeQ2Bt94pq5?=
- =?us-ascii?Q?P/XuOh1kEs3VXegTPx0TQw3N6VtiRxtMfCTxjXGrcP/nVJoorzOvX9WMeWYC?=
- =?us-ascii?Q?/wfjXobvcO2hmG6tKiJYCGWx3rWoaSe9yoEOJ6Kr5Kq2N/nvoylU0r+SBifG?=
- =?us-ascii?Q?W2Gfifn7lojyty+UJ+VtzTx7MCu4/uJfmKBDs4uU0VkVAc1VkhYH9UoDUVt2?=
- =?us-ascii?Q?gjoqeLkIHjAq0V3mIeH5yCDmTCjk7Zmh95C/MJ2rw859g/7yr5sVQWbeOwwX?=
- =?us-ascii?Q?arJMqdd0mX4tPtp8i/nk0h7mS32MjA7q7IxDwsUJpMlJT5MhSjtzMDP/pCS6?=
- =?us-ascii?Q?v2gmzKRH/z/1APuBUARRFRCRsW5fhyAwI5ONw6UIJvcUTFH32RieY7wWorPd?=
- =?us-ascii?Q?MaRruCcEwg+TXyNmsWKmqBJiOWC4KsYdOcco/t+n3zZd5onnbqtJfnYJRmXQ?=
- =?us-ascii?Q?imLD72tuPanEU0jcG2/Nd10m5WolL2ZuJ5ThaghAVjjQDyi/Myh4AQ1KbEsk?=
- =?us-ascii?Q?Vcb05ea9ZS4Xe9bUpcVhp0uwwD7T0Zieyg5loAAauAGOhoxWs/gX/Nc3WiZY?=
- =?us-ascii?Q?cRoyPLOlTSWyrn0ANeMgH8Agxp6aTgoQ8BikppR7XqZWdb5k6r9aclW48wn4?=
- =?us-ascii?Q?KORCo9TGVhlfbKwQix9okgXrG9kbq4JeCLahmg61nELf/uKSzKuBSq0wT7xv?=
- =?us-ascii?Q?euJTjvqFpNlrPY+XtKUXQTfr12mylv090ziAbXYHp7LQ/qjWw5xQElgXjjH2?=
- =?us-ascii?Q?wLpGMXNctptRZtGp/ZiP+Hi49g/JYOXY7txH7AyrhsVnv7d59LP2/dE3bzJ1?=
- =?us-ascii?Q?9GZnenSe1nfFeEzeLj2lK+UfmYg4wE5+xS/FWsHkOyUmFh+z98E+j5j6BZMS?=
- =?us-ascii?Q?MZP4DpWEZZd05E/ugWEbWB1EkVUZYcOJ1CGivtpGqG57L7twyj7cqZG/QjV+?=
- =?us-ascii?Q?ZWnBEoF1GznZmZvFuFqjWSpw4ZWGILBbYgYXg772yqFPSTmTi9YpbqXw+GJV?=
- =?us-ascii?Q?pv6JRmhrIf4RuwHYhsE3ct/bjBTHWjKhW4YOfcCPJ6gVpNczwGKU2fje2MGf?=
- =?us-ascii?Q?JV27kX+55gHaJxC3/sm+GKlqbPgtc+RAm+rHxbA0KYK6IVXqzNg7GqEJMh4v?=
- =?us-ascii?Q?Ng=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5bcbc749-9277-4eca-9bb3-08de06e2334e
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?30PWflxsEw1OYMMXI9jhwYlTJWB/v1GUCsIDPHNm72WvUtWg0/VoT9lPUw7b?=
+ =?us-ascii?Q?NQbcXn7a2y1Alxgm6HnwPoZ4Q8sieuQH9aLD2ZjgNq8uHupioBWVY2v8kRra?=
+ =?us-ascii?Q?mMUnK/PnK8JTxdm00PWH6amMquBc00XIVc4DQ9rjpM/pIODQ3ve8p0l5Lixr?=
+ =?us-ascii?Q?+3oQmEtSVcxgm1kuhJqeplKhAvjMZYqjvrGNx1keXbk+fjw8iycwCDULY73Q?=
+ =?us-ascii?Q?kfs6I67U4KL8gO63JFVZIGO2hV5ch5PZuYWMzz2utRf16342SoeSDxUy2Ko/?=
+ =?us-ascii?Q?TiusFxsVVfxaAxVunIevRiPxi4txXi6J8hLpi9yBRMC0leqNiyDgC/dhZLix?=
+ =?us-ascii?Q?vaWiUn5Hh4XLpYD/A7QJMcgELfTzYv8rb9BggQ7NAqBa5tzuo8vOuNOjrE/K?=
+ =?us-ascii?Q?+vA4WDcsyVSbcmi1+kQSSQMCQcOtYtkYfJVuvVQYqwL8y8R8sKqRdP+exB1L?=
+ =?us-ascii?Q?dLjOs4gEstIu5KT24fiBZK4XumYd7t4QOw40P1WR6GUOJ7QbTcaAQHzMEvob?=
+ =?us-ascii?Q?W8FCnRutWxBFlh04qez2VpPDlv77JBKDIp+6VbJWLzqSDbO58FkKB8KgyONb?=
+ =?us-ascii?Q?wKnqdAjN06wNaPMPg0G/yALAaA4H9RmxChEGbUVI3g2qLY7h1cTPIlMRfxQJ?=
+ =?us-ascii?Q?JHd5wI8S4sNXrDfmcT+rp9Njfldz9DbIs5x7z9fMgAhK4IsjsCH9Qd4uZafY?=
+ =?us-ascii?Q?2X/FjoFor56jzPvEaAUTFTUS10igu66GUWnVIj+dY+wAn1rxovxJ5Puur/cL?=
+ =?us-ascii?Q?5LUn2aKfN/3pItW2bfAOGhZS1scYYbH15mWDtF9PfFy3vn0qdVC/LsEMYHP+?=
+ =?us-ascii?Q?oT3BFvV6vBfJxCKVvdGPupIC5YDB4GrMrcwFid0yqLctwwIE2rQVC0ATwWZf?=
+ =?us-ascii?Q?5tVani0L9/Ndgj0gzGNUVmQAZSAaOyFIuKsXWNaCV1d/XV3t+NHxa8lepbrC?=
+ =?us-ascii?Q?YUl1L/uarUEmmtlvBPkd742ObIhq8JQZsRDB8dIcEHFejDdVt7TZl0aeYntp?=
+ =?us-ascii?Q?Z2XUueuwwHET+rHX8BniD2zYfEvs/jjTZ5Qfhnfs4fn782hTxQfe9XtBEXm/?=
+ =?us-ascii?Q?1Ed5Ym0/lDW6iZPqWpUXc6IFtYyOibNtOMUU3eUJCjX6YVYvumKy3MPecWzC?=
+ =?us-ascii?Q?hc3Su/MfOMH4UDkSCi7nd/rwOsuiCEByiB67B0I0Zeh/Kt/RRO+aSsjGg5eT?=
+ =?us-ascii?Q?vO5xQ4fPPcbfCsks2NFW2JTwzAFLEMJHqvssKzIUaJL/DMWAWnTXlJmI7ufV?=
+ =?us-ascii?Q?GgsoeAaBnuZXM+wRvTOiSgdsVbMxf9gShXh93AJUuXw9bIpVjCXvj1engmst?=
+ =?us-ascii?Q?CyenwwtvCtmqoOuXOTCTDhAL3wzTUIfYNMb6sOArEmN12HGalqdri2L3LWx+?=
+ =?us-ascii?Q?2D1nXak1pAuD9LBulTPaWzDmcmxLGf34s3qiKQ3HFp8pZ7bwFb4nJUBwSKr1?=
+ =?us-ascii?Q?4kX8iQJrHSj2gyn2xDfa63H6E/j6WYaQU1jkCF8pl2kREKzz3iUdc39TQaoI?=
+ =?us-ascii?Q?aiPTAQkQclueeBevYiDQH+AsgqI1RRlUzpEylp1ZIwSjKdy0BV3qUwifkOEI?=
+ =?us-ascii?Q?ohncpxCq7nkAhTqyjCIwf/SVjV0Fllb+bqFJSHr9bya/olFCW811o40K6xS+?=
+ =?us-ascii?Q?WQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52e8b823-0e39-40ab-8c78-08de06e412d3
 X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2025 03:16:13.1048
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2025 03:29:37.5350
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AMlhxHKk5xWUHnvMRDfnci9DxrPpoDFHqX4gn6PfWxDX8KfdHwsPFp8nS1Bopjdkyz11Pcffv8EO9GEeTzl651Im6Kkx1auN22cipC6qSw4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB8236
+X-MS-Exchange-CrossTenant-UserPrincipalName: CcjClfmTpTEFKVisrcm7gvhUhNVgL+XSbmXdF4AHcsuHbPCxzFF8m2wbU/jHM4VbDcMF+CHthRbGqYGapAmKqRdpcCA20f94EBGX3P2Vx6U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB7526
 X-OriginatorOrg: intel.com
 
-On Mon, Oct 06, 2025 at 05:58:05PM +0200, Fabio M. De Francesco wrote:
-> On a x86 platform with a low memory hole (LHM), the BIOS may publish
-> CFMWS that describes a system physical address (SPA) range that
-> typically is only a subset of the corresponding CXL intermediate switch
-> and endpoint decoder's host physical address (HPA) ranges. The CFMWS
-> range never intersects the LHM and so the driver instantiates a root
-> decoder whose HPA range size doesn't fully contain the matching switch
-> and endpoint decoders' HPA ranges.[1]
+On Mon, Oct 06, 2025 at 05:58:06PM +0200, Fabio M. De Francesco wrote:
+> The CXL Fixed Memory Window Structure (CFMWS) describes zero or more
+> Host Physical Address (HPA) windows that are associated with each CXL
+> Host Bridge. Each window represents a contiguous HPA that may be
+> interleaved with one or more targets (CXL v3.2 - 9.18.1.3).
 > 
-> To construct regions and attach decoders, the driver needs to match root
-> decoders and regions with endpoint decoders. The process fails and
-> returns errors because the driver is not designed to deal with SPA
-> ranges which are smaller than the corresponding hardware decoders HPA
-> ranges.
+> The Low Memory Hole (LMH) of x86 is a range of addresses of physical low
+> memory to which systems cannot send transactions. In some case the size
+> of that hole is not compatible with the constraint that the CFMWS size
+> shall be multiple of Interleave Ways * 256 MB. (CXL v3.2 - Table 9-22).
 > 
-> Introduce two functions that indirectly detect the presence of x86 LMH
-> and allow the matching between a root decoder or an already constructed
-> region with a corresponding intermediate switch or endpoint decoder to
-> enable the construction of a region and the subsequent attachment of the
-> same decoders to that region.
+> On those systems, the BIOS publishes CFMWS which communicate the active
+> System Physical Address (SPA) ranges that map to a subset of the Host
+> Physical Address (HPA) ranges. The SPA range trims out the hole, and the
+> capacity in the endpoint is lost with no SPA to map to CXL HPA in that
+> hole.
 > 
-> These functions return true when SPA/HPA misalignments due to LMH's are
-> detected under specific conditions:
+> In the early stages of CXL regions construction and attach on platforms
+> that have Low Memory Holes, cxl_add_to_region() fails and returns an
+> error for it can't find any CFMWS range that matches a given endpoint
+> decoder.
 > 
-> - Both the SPA and HPA ranges must start at LMH_CFMWS_RANGE_START (i.e.,
->   0x0 on x86 with LMH's).
-> - The SPA range's size is less than HPA's.
-> - The SPA range's size is less than 4G.
-> - The HPA range's size is aligned to the NIW * 256M rule.
-> 
-> Also introduce a function that adjusts the range end of a region to be
-> constructed and the DPA range's end of the endpoint decoders that will
-> be later attached to that region.
-
-Hi Fabio,
-
-Your getting some fresh eyes on some of this with my review.
-The adjustment of resources is what caught my eye, and I looked at
-platform_res_adjust() in this patch and it's usage in the next patch.
-
-
+> Detect an LMH by comparing root decoder and endpoint decoder range.
+> Match root decoders HPA range and constructed region with the
+> corresponding endpoint decoders. Construct CXL region with the end of
+> its HPA ranges end adjusted to the matching SPA and adjust the DPA
+> resource end of the hardware decoders to fit the region.  Allow the
+> attach target process to complete by allowing regions and decoders to
+> bypass the constraints that don't hold when an LMH is present.[1]
 > 
 > [1] commit 7a81173f3 ("cxl: Documentation/driver-api/cxl: Describe the x86 Low Memory Hole solution")
 > 
@@ -224,238 +213,64 @@ platform_res_adjust() in this patch and it's usage in the next patch.
 > Cc: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 > ---
->  drivers/cxl/Kconfig                |  4 ++
->  drivers/cxl/core/Makefile          |  1 +
->  drivers/cxl/core/platform_quirks.c | 99 ++++++++++++++++++++++++++++++
->  drivers/cxl/core/platform_quirks.h | 33 ++++++++++
->  4 files changed, 137 insertions(+)
->  create mode 100644 drivers/cxl/core/platform_quirks.c
->  create mode 100644 drivers/cxl/core/platform_quirks.h
+>  drivers/cxl/core/region.c | 47 ++++++++++++++++++++++++++++++++-------
+>  tools/testing/cxl/Kbuild  |  1 +
+>  2 files changed, 40 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index 48b7314afdb8..03c0583bc9a3 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -211,6 +211,10 @@ config CXL_REGION
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 43a854036202..9a499bfca23d 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/string_choices.h>
+>  #include <cxlmem.h>
+>  #include <cxl.h>
+> +#include "platform_quirks.h"
+>  #include "core.h"
 >  
->  	  If unsure say 'y'
->  
-> +config CXL_PLATFORM_QUIRKS
-> +	def_bool y
-> +	depends on CXL_REGION
-> +
-
-Why no help text for the new CONFIG option?
-That text will probably answer my next question: why do we have the
-option?
 
 snip
 
-
-I have comments for the callsites of platform_res_adjust() in the next
-patch, but I'll pull some of that back into this patch to keep it all
-in one, more logical, place.
-
-There are 2 callsites, and one passes in NULL for 'res' because
-at that site we know that the regions struct res has been adjusted.
-I felt that was subtle, and that it may be better to just pass in
-the 'res' all the time and let the function adjust if needed,
-ignore if not needed.
-
-The name platform_res_adjust() suggested that the 'res' as in the
-region 'res' was getting adjusted. This is adjusting multiple resources
-- the region resource and the endpoint decoder dpa resource. If it's
-meant to be kind of opaque, that's ok, but by using _res_ it sure sounds
-like it's adjusting the the region resource (when viewed from the call site).
-
-I might have done this in 2 helpers for crispness:
-res = platform_adjust_region_resource()
-cxled = platform_adjust_endpoint_decoder()
-
-Then you could adjust the region resource once when the region
-is constructed, and the endpoint regions every time in 
-cxl_add_to_region().
-
-If you are settled with one adjust routine, perhaps just a 
-rename to platform_adjust_resources() will make it sound as
-broad as it is.
-
-
-> +void platform_res_adjust(struct resource *res,
-> +			 struct cxl_endpoint_decoder *cxled,
-> +			 const struct cxl_root_decoder *cxlrd)
-> +{
-> +	if (!platform_cxlrd_matches_cxled(cxlrd, cxled))
-> +		return;
+> @@ -3479,6 +3498,12 @@ static int __construct_region(struct cxl_region *cxlr,
+>  	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
+>  				    dev_name(&cxlr->dev));
+>  
+> +	/*
+> +	 * Trim the HPA retrieved from hardware to fit the SPA mapped by the
+> +	 * platform
+> +	 */
+> +	platform_res_adjust(res, cxled, cxlrd);
 > +
-> +	guard(rwsem_write)(&cxl_rwsem.dpa);
-> +	dev_dbg(cxled_to_memdev(cxled)->dev.parent,
-> +		"Low Memory Hole detected. Resources were (%s: %pr, %pr)\n",
-> +		dev_name(&cxled->cxld.dev), res, cxled->dpa_res);
-> +	if (res) {
-> +		/* Trim region resource overlap with LMH */
-> +		res->end = cxlrd->res->end;
-> +	}
 
-Prefer dev_info so always appears.
-Prefer to see the region name.
-I'm guessing the dev_dbg() above and the dev_info() below are written
-with the idea that we want the before view only in dev_dbg() and the
-after view only in dev_info().
+Noted this a bit in other patch, not so sure about that comment.
+But anyway, do we really want to say what it is doing or let it be
+a mystery of the quirks. I'm really not clear on where we are going
+with these quirks and the naming of the helper functions.
 
-Looks like this now:
-[] cxl_core:platform_res_adjust:90: cxl_mock_mem cxl_mem.0: Low Memory Hole detected. Resources were (decoder12.0: [mem 0x3ff010000000-0x3ff04fffffff flags 0x200], [mem 0x00000000-0x1fffffff flags 0x80000200])
-[] cxl_mock_mem cxl_mem.0: Resources have been adjusted for LMH (decoder12.0: [mem 0x3ff010000000-0x3ff03fffffff flags 0x200], [mem 0x00000000-0x17ffffff flags 0x80000200])
-[] cxl_core:platform_res_adjust:90: cxl_mock_mem cxl_mem.4: Low Memory Hole detected. Resources were (decoder13.0: (null), [mem 0x00000000-0x1fffffff flags 0x80000200])
-[] cxl_mock_mem cxl_mem.4: Resources have been adjusted for LMH (decoder13.0: (null), [mem 0x00000000-0x17ffffff flags 0x80000200])
+If you split into 2 helpers, you can try something like:
+	*res = platform_adjust_region_resource(...);
 
-I'll suggest this to emit explicitly what is changing:
-[] cxl region0: LMH Low memory hole trims region resource [mem 0x3ff010000000-0x3ff04fffffff flags 0x200] to [mem 0x3ff010000000-0x3ff03fffffff flags 0x200])
-[] cxl decoder13.0: LMH Low memory hole trims DPA resource [mem 0x00000000-0x1fffffff flags 0x80000200] to [mem 0x00000000-0x17ffffff flags 0x80000200])
-[] cxl decoder17.0: LMH Low memory hole trims DPA resource [mem 0x00000000-0x1fffffff flags 0x80000200] to [mem 0x00000000-0x17ffffff flags 0x80000200])
+And then later, do the endpoint adjust. See below:
 
 
-> +	/* Match endpoint decoder's DPA resource to root decoder's */
-A 'Match' would be if the the endpoint and root decoder resource were
-same. This is more of adjustment or recalculation of the DPA length.
+>  	rc = cxl_extended_linear_cache_resize(cxlr, res);
+>  	if (rc && rc != -EOPNOTSUPP) {
+>  		/*
+> @@ -3588,6 +3613,12 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
+>  		cxl_find_region_by_range(cxlrd, cxled);
+>  	if (!cxlr)
+>  		cxlr = construct_region(cxlrd, cxled);
+> +	else
+> +		/*
+> +		 * Adjust the Endpoint Decoder's dpa_res to fit the Region which
+> +		 * it has to be attached to
+> +		 */
+> +		platform_res_adjust(NULL, cxled, cxlrd);
 
-> +	cxled->dpa_res->end =
-> +		cxled->dpa_res->start +
-> +		resource_size(cxlrd->res) / cxled->cxld.interleave_ways - 1;
+Following from above, would it work to skip the else, and knowing
+that the region resource was adjusted in construct_region(), only
+do this here for every cxled that attaches.
 
-I'm cautious about the use of division and suggest this as the more
-bullet-proof kernel style:
+	cxled = platform_adjust_endpoint_resource(...)
 
-	slice = div_u64(resource_size(cxlrd->res), cxled->cxld.interleave_ways);
-	cxled->dpa_res->end = cxled->dpa_res->start + slice - 1;
-
-
-
-> +	dev_info(cxled_to_memdev(cxled)->dev.parent,
-> +		 "Resources have been adjusted for LMH (%s: %pr, %pr)\n",
-> +		 dev_name(&cxled->cxld.dev), res, cxled->dpa_res);
-> +}
-
-Here's the diff showing how I emmited the that messaging above. I really
-wanted to have that region name to emit. This was done keeping the
-adjust in one function, but maybe you'll choose to split :)
-
-
----
- drivers/cxl/core/platform_quirks.c | 32 ++++++++++++++++++------------
- drivers/cxl/core/platform_quirks.h |  6 ++++--
- drivers/cxl/core/region.c          | 15 ++++++++------
- 3 files changed, 32 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/cxl/core/platform_quirks.c b/drivers/cxl/core/platform_quirks.c
-index aecd376f2766..aa25770c088a 100644
---- a/drivers/cxl/core/platform_quirks.c
-+++ b/drivers/cxl/core/platform_quirks.c
-@@ -81,24 +81,30 @@ EXPORT_SYMBOL_NS_GPL(__platform_region_matches_cxld, "CXL");
- 
- void platform_res_adjust(struct resource *res,
- 			 struct cxl_endpoint_decoder *cxled,
--			 const struct cxl_root_decoder *cxlrd)
-+			 const struct cxl_root_decoder *cxlrd,
-+			 const struct device *region_dev)
- {
-+	struct resource dpa_res_orig = *cxled->dpa_res;
-+	u64 slice;
-+
- 	if (!platform_cxlrd_matches_cxled(cxlrd, cxled))
- 		return;
- 
- 	guard(rwsem_write)(&cxl_rwsem.dpa);
--	dev_dbg(cxled_to_memdev(cxled)->dev.parent,
--		"Low Memory Hole detected. Resources were (%s: %pr, %pr)\n",
--		dev_name(&cxled->cxld.dev), res, cxled->dpa_res);
--	if (res) {
--		/* Trim region resource overlap with LMH */
-+
-+	/* Region resource will need a trim at first endpoint attach only */
-+	if ((res) && (res->end != cxlrd->res->end)) {
-+		dev_info(region_dev,
-+			 "LMH Low memory hole trims region resource %pr to %pr)\n",
-+			 res, cxlrd->res);
- 		res->end = cxlrd->res->end;
- 	}
--	/* Match endpoint decoder's DPA resource to root decoder's */
--	cxled->dpa_res->end =
--		cxled->dpa_res->start +
--		resource_size(cxlrd->res) / cxled->cxld.interleave_ways - 1;
--	dev_info(cxled_to_memdev(cxled)->dev.parent,
--		 "Resources have been adjusted for LMH (%s: %pr, %pr)\n",
--		 dev_name(&cxled->cxld.dev), res, cxled->dpa_res);
-+
-+	/* Adjust the endpoint decoder DPA resource end */
-+	slice = div_u64(resource_size(cxlrd->res), cxled->cxld.interleave_ways);
-+	cxled->dpa_res->end = cxled->dpa_res->start + slice - 1;
-+
-+	dev_info(&cxled->cxld.dev,
-+		 "LMH Low memory hole trims DPA resource %pr to %pr)\n",
-+		 &dpa_res_orig, cxled->dpa_res);
- }
-diff --git a/drivers/cxl/core/platform_quirks.h b/drivers/cxl/core/platform_quirks.h
-index bdea00365dad..55647711cdb4 100644
---- a/drivers/cxl/core/platform_quirks.h
-+++ b/drivers/cxl/core/platform_quirks.h
-@@ -17,7 +17,8 @@ bool __platform_region_matches_cxld(const struct cxl_region_params *p,
- 				    const struct cxl_decoder *cxld);
- void platform_res_adjust(struct resource *res,
- 			 struct cxl_endpoint_decoder *cxled,
--			 const struct cxl_root_decoder *cxlrd);
-+			 const struct cxl_root_decoder *cxlrd,
-+			 const struct device *region_dev);
- #else
- static inline bool
- platform_cxlrd_matches_cxled(const struct cxl_root_decoder *cxlrd,
-@@ -35,7 +36,8 @@ platform_region_matches_cxld(const struct cxl_region_params *p,
- 
- inline void platform_res_adjust(struct resource *res,
- 				struct cxl_endpoint_decoder *cxled,
--				const struct cxl_root_decoder *cxlrd)
-+				const struct cxl_root_decoder *cxlrd,
-+				const struct device *region_dev);
- {
- }
- #endif /* CONFIG_CXL_PLATFORM_QUIRKS */
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 9a499bfca23d..d4298a61b912 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3502,7 +3502,7 @@ static int __construct_region(struct cxl_region *cxlr,
- 	 * Trim the HPA retrieved from hardware to fit the SPA mapped by the
- 	 * platform
- 	 */
--	platform_res_adjust(res, cxled, cxlrd);
-+	platform_res_adjust(res, cxled, cxlrd, &cxlr->dev);
- 
- 	rc = cxl_extended_linear_cache_resize(cxlr, res);
- 	if (rc && rc != -EOPNOTSUPP) {
-@@ -3611,14 +3611,17 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
- 	mutex_lock(&cxlrd->range_lock);
- 	struct cxl_region *cxlr __free(put_cxl_region) =
- 		cxl_find_region_by_range(cxlrd, cxled);
--	if (!cxlr)
-+	if (!cxlr) {
- 		cxlr = construct_region(cxlrd, cxled);
--	else
-+	} else {
- 		/*
--		 * Adjust the Endpoint Decoder's dpa_res to fit the Region which
--		 * it has to be attached to
-+		 * Platform adjustments are done in construct_region()
-+		 * for first target, and here for additional targets.
- 		 */
--		platform_res_adjust(NULL, cxled, cxlrd);
-+		p = &cxlr->params;
-+		platform_res_adjust(p->res, cxled, cxlrd, &cxlr->dev);
-+	}
-+
- 	mutex_unlock(&cxlrd->range_lock);
- 
- 	rc = PTR_ERR_OR_ZERO(cxlr);
--- 
-2.37.3
-
-> 
+snip to end.
