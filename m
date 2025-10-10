@@ -1,279 +1,140 @@
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010068.outbound.protection.outlook.com [52.101.61.68])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60C0F9E8;
-	Fri, 10 Oct 2025 11:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760094985; cv=fail; b=QzmGoCM36H46pFh2mZbGf8nqZxPVhB69teECguzduTgnN9+pgF/3m7lFS+LOGXz7JpApAvTRiFvmnZQ5IoOpnZkX1DmpPbhWIifxAeY/vVNvDPbxb6fLz2zulj/3yvIkCZgS/aekuAAFR9fJg6+WPo/TELCEaN3N4co0j/HDMQU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760094985; c=relaxed/simple;
-	bh=Zsiqh730+u3ZpZmY6+alcTdX0IOgiZRa9gc8t965Bdg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pJulmL7XC9Drv9XPghd4HHSL6FZlnIEnclSLieYWk4pe8sLHeyqy+FlwijD6v3sIWFS8yNUbQcKsnIpMxMOjCKTnHGEpzmL4/EWPkGvlgNcUIuPkzjpCqWTghxmqJhMjSKtMT4N551Zh5rIjOqthXog7qUY/DPXmnfws63QogXk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=o7gn8zJl; arc=fail smtp.client-ip=52.101.61.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF1B2F6168;
+	Fri, 10 Oct 2025 14:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760107797; cv=none; b=BY4v5lDZ02Ybjh515NzCEXkdNd5ZfLRwGa0dV51QusWqR5PNuWOnoG8G8VDolsEtono7fDkjndhjpJX/wTx7/a0bHvTMx5cNnfNRVv3jnwFRYhArwy5zHMiy0QbFupPF5Njmk5mSgYshnp1KAcYnrUAfHFL0d7KLvE3YMRuWw7E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760107797; c=relaxed/simple;
+	bh=x/nQh9NYCS7bzE7Ro77DDsqXiiN6FnnyCHeEtoXsDIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=thvgGpMjLBU2mipBuz9PZmqZc8gNLGapO4ieQ8eh7mrDNR0UP0ZY7S2AVINxaxM5zDZ/9Sl1u+42QkuM9DVn7cDUiyDijwf03W8ZCbMETw2qIB1WU+4M/Q8f/stqMKcLgouP0OnmuYEUXFJYSH8prSHAcxB4dnz3CjtoxBnhByE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JPKVPQ46; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="o7gn8zJl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LD7j3RiRpilLofPkf9PNWmCBb0AjQXvHMcGy38r34Ho9OT/4kcyv6qmXqekq0+p0l0OYMjCELMfY9aq9O+mzv3P8Peopb0KostDsEl2S7nQ7CAP9omdb9p/GwyCn3D5h2IEwqt5C76KZvZELQpoJThphf3hjYuJ7o+WUhrRp+FNfGbp/x/1ahZLkOFEcSgUOMuAn6a6dh0oEkZXFkD9htgPU2Y7UKrtchLVGrCjkWPWTDzImKERJGTf+7Vppf9uy4DiSkQEomFekDDdfU3230Ib3Xeu42WezJNrkSO0DgM4v+BdBcapY7y4i8PKCih3jz8kVrdBBxdXI6pSs/TqnqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=osHSsvnwiveZ9P34+XZfk+tif6lShgH9H6bfb6z5jQs=;
- b=r4weafmJp94XMp+AjSYivSt0dJ4xM5qysY5TDlMa+s8L8iBxCMNzgoAlf/r2nBZVzBFG18UqKEfMWF6dzZ16flx/GAefQaRUqRcx7zdTP4zC8GwXo6TDixtVJ01VTaaVGs43g/KocrjhZG/Us8ND+LZsqNhnre0cqChaPMRqlBbeOND8wXOymxQHFoHQ1bcmqGIAbMLXJE1DIYBSsr8OE8NVOq5cV6gxYBLwcvx2ONqjwrg9cPbACvBinfpfZA9YLuncmS9SjGdvwyX/5JjqrkD6AdErtShdWy204w5j6xDvj1MEXBT52Slv5uCNLMu90wx02jK+uhki9QUanXrvqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=osHSsvnwiveZ9P34+XZfk+tif6lShgH9H6bfb6z5jQs=;
- b=o7gn8zJlGK9NA0uZwN0B8QrbOegOS7Sub9d0iEMxUIb6Zdvb88SGI/5R83yhMt+mMS18VGqHZp0mdWBjRvESHBMcn0XftVbGMaMu9DH68fouC+p0c0JYSitoxSSgExG1KYUZ4lpgJFSUIGwau0SoBq7jrJL9cE4QhWd1GfMXZKU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by DS7PR12MB5792.namprd12.prod.outlook.com (2603:10b6:8:77::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.9; Fri, 10 Oct
- 2025 11:16:20 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.9203.007; Fri, 10 Oct 2025
- 11:16:19 +0000
-Message-ID: <6fb97a7e-d39b-42e0-9443-8ea9271f277e@amd.com>
-Date: Fri, 10 Oct 2025 12:16:15 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 11/22] cxl: Define a driver interface for HPA free
- space enumeration
-Content-Language: en-US
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>,
- alejandro.lucero-palau@amd.com
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- linux-cxl@vger.kernel.org, netdev@vger.kernel.org, dan.j.williams@intel.com,
- edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
-References: <20251006100130.2623388-1-alejandro.lucero-palau@amd.com>
- <20251006100130.2623388-12-alejandro.lucero-palau@amd.com>
- <7a3d3249-ee08-4fe0-a016-829ece6f7b8e@amd.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <7a3d3249-ee08-4fe0-a016-829ece6f7b8e@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0222.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:33a::10) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JPKVPQ46"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760107795; x=1791643795;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=x/nQh9NYCS7bzE7Ro77DDsqXiiN6FnnyCHeEtoXsDIQ=;
+  b=JPKVPQ46RAxf7xEEzExmqPPEX3Is7JTG/XjQaShylStJkvNGbBP6XXKX
+   ACNtEwcZmRLLi169YzBQCtmLmWz2cFyBxdxQcsTWnzgTMjdNQxlXbk9W0
+   zgH+FSo+nFzAKKicIOO3JjNV+qllsx+GXhY9Ynq75l6nDJyloR2Seqh7X
+   ZMuPKTg70NEPZwBU+kdCRvwsHqmjPTMWW2UiJG+4y+2cLKlQSUbIfNDOk
+   Ew4q7djf+tXYOkQWfsorT06/EFoNfZ3zFeu1OhPqYGGxMkTUrvU+jmrp/
+   X/BVBPPelYP2XZGNSP3Wos0KwE+xNpLjK1VJR2dnokJ63i0L12syRDUTl
+   A==;
+X-CSE-ConnectionGUID: lzwbFXUmTt+X9pBpqhisQg==
+X-CSE-MsgGUID: nc7LRjxWQoak9Ot+wQjYiw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11578"; a="65980807"
+X-IronPort-AV: E=Sophos;i="6.19,219,1754982000"; 
+   d="scan'208";a="65980807"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2025 07:49:54 -0700
+X-CSE-ConnectionGUID: vv13mbr8Tf+TpG9cjxF5hg==
+X-CSE-MsgGUID: Q+xU13TNQUe3N+FGTwfKow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,219,1754982000"; 
+   d="scan'208";a="181011172"
+Received: from lkp-server01.sh.intel.com (HELO 6a630e8620ab) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 10 Oct 2025 07:49:50 -0700
+Received: from kbuild by 6a630e8620ab with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v7ERH-0002rv-2b;
+	Fri, 10 Oct 2025 14:49:47 +0000
+Date: Fri, 10 Oct 2025 22:49:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	linux-cxl@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
+	Robert Richter <rrichter@amd.com>,
+	Cheatham Benjamin <benjamin.cheatham@amd.com>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: Re: [PATCH 2/4 v5] cxl/core: Add helpers to detect Low Memory Holes
+ on x86
+Message-ID: <202510102229.iFcGqbMH-lkp@intel.com>
+References: <20251006155836.791418-3-fabio.m.de.francesco@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|DS7PR12MB5792:EE_
-X-MS-Office365-Filtering-Correlation-Id: fcc86c1a-c185-4281-8ec8-08de07ee7000
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RFBnM2lkTnZFaDB4emtwOTFjWkxoRTdJY1BLOUxiUUJRcTNQcjUrREJHUWYx?=
- =?utf-8?B?WmtpYzVBSmJJdjVqUEVJWm1ZbURhNUpKeXlqbVQ3QzFiSjlJTlRwYmZjbWgy?=
- =?utf-8?B?Qk02N0ZzTFk2blN3clNPQ0dvVFU1RjE0dkRjcTRaQUNjZUFJNFFQcUFwclda?=
- =?utf-8?B?QVhMMEtKalZBWGR4Nko2QndPeUluMWx5NE1CUW00RFBQMGtmN2hFK3pyU2pD?=
- =?utf-8?B?RVpDcUIveHhWeE9hNWtaczhCTEViSzF1cllzRWhqRi9EQjZuSWU5VU5QdGNw?=
- =?utf-8?B?cWduaTBNUEwvTGFiUFFiNFMyOVlHM0tTcjhsSUM2dzFSN2NrcXNteXA1OXQ3?=
- =?utf-8?B?OUk3c2JHQngxK3F0MjVWTHo0SkRBenkya0V2eUFxdXBDeklRYzNKaUNkSm5E?=
- =?utf-8?B?azZhU0F4V0xpLzNHWU1HSVB6V3duWjk0OWIxbEx4S2FqQUVLOGRqNU1QeUd5?=
- =?utf-8?B?U3A3R2dzSnVEd2hMRk9MMUgvb0phYXdmZUp4a2l1a3d4eU9uR3hhRk9nNng4?=
- =?utf-8?B?cGdXT1ZHZEt5TlpMUlh4cy9TdmdZemJIVU0xZUoyL2s3aVBDSHJxdm9BbHNn?=
- =?utf-8?B?TjQ4czFVUmZKNmVCeGRsZ2xMVkduV1BTOWdKUWx6U1hER0lWTXA0S1pzSHlE?=
- =?utf-8?B?Q0plcnZUcG1XeGVrbEorSmlVYWphMnBGWWFNUDNmSmdMa2VDR3l6Q1hnZVBy?=
- =?utf-8?B?K0J2eC9qTENJU3A4WXlXczB2WDgvVEZ1WFJ5Qmd6a3dXR2d2Qlk3VUVMNEZF?=
- =?utf-8?B?bGZ3ZVp4YklacEs0b09hb0k1ekhCZE05Y0pZM2NoK3IxZldqZUNicVBMbFRU?=
- =?utf-8?B?WlNIbk5jVkhXUUYzWHRxaXB5V3YwTzM3Y2hMaFJ6RjhLRnlaNCtzajZkLzls?=
- =?utf-8?B?K29XRnJKOU9pMlhZbTBFa0tmSnM3T2gyOVVjUHRyZ0RGQmlDZzJiQ21sbGtH?=
- =?utf-8?B?cHdPTlNCSkxHU1ZMOXVLKzBaSkFtN1V4NEt0QVdvSjYrd1lyajlwTCtYNmNI?=
- =?utf-8?B?YWZZMlpPeDJXaDNmc1A0UE9EOGIxRFp5cURhM3RZVlFFTWorTzJ2NzR4VE85?=
- =?utf-8?B?ZEJPbTBacjBwZkUxaUUvKy9RRDNNdHZxMW82cTNtaFNkVXhpVEM0dFoyOG5K?=
- =?utf-8?B?K0hOT0RsaHA3dnBLQi8xRXNDRjJVTXRHWW1xMDlTNEMwUGw3bjRnNHhkR29i?=
- =?utf-8?B?b0FWbFBiY3cyRmhaVzFncHpWU1FtL29ENGZBMmFFMlZ3U3RCVjRhd0J5a1hu?=
- =?utf-8?B?QW82Z09rVFIyVXU3eFlSY3MrOElJTnBlQU11bGZvSGdlSmpkSkREUHJFMkU2?=
- =?utf-8?B?SUlRRWRBenhNU0hRaENqemJraGsyMk9vSlgxYlZsTW1RclAwT2NYbHZ6emVB?=
- =?utf-8?B?NWFHem82RE5LZUlYNVJ2UlJ4a1NUZFJJbDk2V0ZSSlpOeXplRHJzMFcrTWYx?=
- =?utf-8?B?NWRob3BXOE10UzloVTI1V3dDUWZjN2VSaVRXb2ZYeStFdjYvRCtFdFZnV1Vl?=
- =?utf-8?B?bFRuZ25qWHZWWVBvRTU2NWNNZEsrbFM3bk5Ocmd1eGtjYWxxTUZlMEFjS3lE?=
- =?utf-8?B?ekFJby9NeUZOdUFIUUNOanRJU3o3RElFdXJLREZtYTBnd3NFVjhGSmJQbzlQ?=
- =?utf-8?B?ZnF4TUZUOUx4RzBNNWd5Q0IxZGpvSUNOZXFCaER4ZnRqZHBxanNsOG9aakdP?=
- =?utf-8?B?WEJPQjU5c3VGRzE4cnJHWU1VazY1RUNlUDUyaERwYXBkdTQzTm00M09KSTdm?=
- =?utf-8?B?Q2kzeGM5TUVYYnA4UWh2b0pNR2xsZGZlT2hKTVR3UmhPOEUzQm9xVXY5V1Bv?=
- =?utf-8?B?L2VVWnovOTZsTHMwQWd6KzFGeVNnNENTaS9KWW9WV05kZUdsa1RORHNlTTJv?=
- =?utf-8?B?d09PRkwvRHhTVURjTW5WQkVwWUdSUU9UUVNlc041UzZWZGc9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bzlueW1xODhmalRPdVdoRjhrM2hic0t3ZXZpY0VFM0NLY1ZMTVFlY0RyUEpT?=
- =?utf-8?B?czFPaHd6UGVDamh3SHhMYldNR0JEVHp3NTMyUWJhZi9IY3pXN21XTDhPNnVG?=
- =?utf-8?B?RklTWVlDQkttSEFXcVdTSzVyeGh5QmNTOFpyNjZrakFQZFN5aVljTS9CNXRv?=
- =?utf-8?B?R1E1WlN4OXZSNmFyQklwaXhEdnZPbU4yMTJYYUFyM0V6MUIxdHo3SnJZMHdJ?=
- =?utf-8?B?OEQydFlUUFhscnFyVFg3WmhJT2JuVUxCZ0dVWE1uV1d5SmQ0NU5iUUhJN0Zq?=
- =?utf-8?B?emxNbHREYUpHc0s1MU1TbGlSRGxzNG1qbGdrUkdsWS9JZm9yQ0xwMEc5MVdJ?=
- =?utf-8?B?c0E4T1hHZkcxSDZGU210TTY1Y2FZY0k0ZEcvRmRERGZaQzhzMTZwSUpDVXpP?=
- =?utf-8?B?dFJEOUJzLzJwOGhGVlE2MGJrNU1lNE9VcXkzUGt3cGV5VTA5Tytob0NoZzRZ?=
- =?utf-8?B?QWxtRWtyK2poTGl2MlhiVDQrMDQzT1ZaU1VlN0k2bDdnSyt3Zmdndy9Vb0ti?=
- =?utf-8?B?OHdhWFJIaXVNVnhMSTNsbmFWdFlibTRybXBIOXFqRTJSOGY5cU1QVnFzYStz?=
- =?utf-8?B?bkFoZFdXSFRZNWo2dDZzVlJyaXZ3U2hpeTNYeGkzNFlvRnlQWHo5dzh2ZXAz?=
- =?utf-8?B?YTVxZGx1OUZoZkF5NG9zT21oRXQ0UE1jajFOelNlY0c2WFJTMUdNcjY5c2oz?=
- =?utf-8?B?SEpvVGx3Y1BFUGQ0TnZxZDhJSlU5c1dHbEt3dDJLODhTV08vRG51bEhOODZH?=
- =?utf-8?B?V0FTZS9NUC9iL2JhK3FjdHlYeFNFUUNPWnBRd1A1TkFRaXBydDhNQ0E3eUhV?=
- =?utf-8?B?NmdJSDBmTTRlQ3ArYVpDVVhUY05JZVFtc0xaNEFNUGg1Q0ZtRjBWaVdoWVow?=
- =?utf-8?B?bEt4UnlyTitDV3llVURBZmxBZHkwZmV6UGZwL2JmcWFJOXMwVWNJR0dxSHV2?=
- =?utf-8?B?d0hVd0p4WFVCUXVjUmVVeFpabkRjYkpQZjlHbjRDSzA5MVQ4R0tCV0MwWWtB?=
- =?utf-8?B?TmRaV2NuNWYxck1sWStzQ3JLbUhHcWMvK0NCeklzdVpvUEpwOWJTb0QreW1k?=
- =?utf-8?B?dzdiMmhuTkZXQmM5UEJpdkFFdVhEMndIckVCakRYbmRKY0Z6M3BqQlptdjl5?=
- =?utf-8?B?MGZBN0lkN01iSlY2NFhjZ0QxdmY2VG9Mek5rZjAzV0NkM3lab28xWmd0WEFj?=
- =?utf-8?B?Y0hzcFplOTBDUTVJczFMTUcyMjhJM0YxRkU2QXNLWnVZK2ovcmQ2enl3VzlL?=
- =?utf-8?B?V3ZiVURDQ3FzUVNKZnpxS2I0bzFDZ29qb0VZRWpaWGFUWVNNVjltYzR4N0NB?=
- =?utf-8?B?aWZkaEJBRHRqalJETEs5QmwxK1dpa2d6RHpXdnBqYkhTczIzdmV0cC9PR2E5?=
- =?utf-8?B?QUxQQjNIZU82SlZ3Zk9TKzdZMHYreTBsRFNsQTd0Szk0RFNyZTVBcVZnWUFU?=
- =?utf-8?B?SUVMS1JVYnFxK3FEZm9tbE5NajdMNmd5Qlc1N2JmYm1tb0NFYVg1WlhLSytQ?=
- =?utf-8?B?aVgvL1BmVWJWZVpkVlliMWJwMVl4YW5Ub2cvVldIeHBoU3JmN2hEME9GUThF?=
- =?utf-8?B?UGYvbmhQR2R3b1BwelIxSDlDNE53TXh1UkNzTmN3WGVvZGMwSVV3M2tqQjhk?=
- =?utf-8?B?MGtFeUwxNytWZ3dPWVZUTW1rUWtxeTNFWWUrQ0VObnEyeEFmQkZHdnVhSis4?=
- =?utf-8?B?QVVXNnY2TFVhOGRUWWlUTWRvS1YzTWtCOUlZc2ZuRHVCUFBYTXRwT3l1bUtS?=
- =?utf-8?B?MmtqWHRoL1Nid25kam81TGZGYTBzRU0vRTYrSkRQdjJzMlhiSFZuN1lKYm00?=
- =?utf-8?B?aTVSc3AvVU5FRjVMaXp4NzRvSWFDTW5QN295Njd2OW1DREltZXBGUHlrN09y?=
- =?utf-8?B?a0tvVG50RXFZYldhQS93R2p3aWM5by9CQzg4N1ZwdWZ6dTRtbmlUT2xnUU5l?=
- =?utf-8?B?aXpJT256dnJuZ1J6YjNoOXBCRU83d2RPcWxwNUd6Ky9ZY0JMTEhqTlpCb1Iy?=
- =?utf-8?B?TmNBKzhXcEt2c2JhQ1RGWHFHZ1MwWkp5Z28zb2RYQUhSK1pkOUhkSmlaSFNX?=
- =?utf-8?B?OGo3U29ZYURKZFRkU1ZKektCckEwZVBUUk9wSWdJY0NBZ3EzVzBEb0RMZ3Bm?=
- =?utf-8?Q?+rea+b2rGjlnOgVIWDRto3QJR?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fcc86c1a-c185-4281-8ec8-08de07ee7000
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2025 11:16:19.7735
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UAFnPnNpmLZgOF4a88dwfaEs1sKpgmcEyPrD6q1wXOA3h3E0M+2sD7ltDLFML5EK0N7X1yHJB9IUsu/1Z53z4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5792
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251006155836.791418-3-fabio.m.de.francesco@linux.intel.com>
+
+Hi Fabio,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on 46037455cbb748c5e85071c95f2244e81986eb58]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Fabio-M-De-Francesco/cxl-core-Change-match_-_by_range-signatures/20251010-111627
+base:   46037455cbb748c5e85071c95f2244e81986eb58
+patch link:    https://lore.kernel.org/r/20251006155836.791418-3-fabio.m.de.francesco%40linux.intel.com
+patch subject: [PATCH 2/4 v5] cxl/core: Add helpers to detect Low Memory Holes on x86
+config: i386-randconfig-011-20251010 (https://download.01.org/0day-ci/archive/20251010/202510102229.iFcGqbMH-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251010/202510102229.iFcGqbMH-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510102229.iFcGqbMH-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/cxl/core/platform_quirks.c:70:36: warning: result of comparison of constant 4294967296 with expression of type 'const resource_size_t' (aka 'const unsigned int') is always true [-Wtautological-constant-out-of-range-compare]
+      70 |             res->end < r->end && res->end < (LMH_CFMWS_RANGE_START + SZ_4G) &&
+         |                                  ~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 warning generated.
 
 
-On 10/9/25 21:55, Cheatham, Benjamin wrote:
-> On 10/6/2025 5:01 AM, alejandro.lucero-palau@amd.com wrote:
->> From: Alejandro Lucero <alucerop@amd.com>
->>
->> CXL region creation involves allocating capacity from Device Physical Address
->> (DPA) and assigning it to decode a given Host Physical Address (HPA). Before
->> determining how much DPA to allocate the amount of available HPA must be
->> determined. Also, not all HPA is created equal, some HPA targets RAM, some
->> targets PMEM, some is prepared for device-memory flows like HDM-D and HDM-DB,
->> and some is HDM-H (host-only).
->>
->> In order to support Type2 CXL devices, wrap all of those concerns into
->> an API that retrieves a root decoder (platform CXL window) that fits the
->> specified constraints and the capacity available for a new region.
->>
->> Add a complementary function for releasing the reference to such root
->> decoder.
->>
->> Based on https://lore.kernel.org/linux-cxl/168592159290.1948938.13522227102445462976.stgit@dwillia2-xfh.jf.intel.com/
->>
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> ---
-> Hey Alejandro,
+vim +70 drivers/cxl/core/platform_quirks.c
 
+    50	
+    51	/**
+    52	 * platform_region_matches_cxld() - Platform quirk to match a CXL Region and a
+    53	 * Switch or Endpoint Decoder. It allows matching on platforms with LMH's.
+    54	 * @p: Region Params against which @cxled is matched.
+    55	 * @cxld: Switch or Endpoint Decoder to be tested for matching @p.
+    56	 *
+    57	 * Similar to platform_cxlrd_matches_cxled(), it matches regions and
+    58	 * decoders on platforms with LMH's.
+    59	 *
+    60	 * Return: true if a Decoder matches a Region, else false.
+    61	 */
+    62	bool platform_region_matches_cxld(const struct cxl_region_params *p,
+    63					  const struct cxl_decoder *cxld)
+    64	{
+    65		const struct range *r = &cxld->hpa_range;
+    66		const struct resource *res = p->res;
+    67		int align = cxld->interleave_ways * SZ_256M;
+    68	
+    69		if (res->start == LMH_CFMWS_RANGE_START && res->start == r->start &&
+  > 70		    res->end < r->end && res->end < (LMH_CFMWS_RANGE_START + SZ_4G) &&
+    71		    IS_ALIGNED(range_len(r), align))
+    72			return true;
+    73	
+    74		return false;
+    75	}
+    76	
 
-Hi Ben,
-
-
-> I've been testing this on my setup and noticed a few issues when BIOS sets up the HDM decoders. It came down to 2 issues:
-> 	1) Enabling "Specific Purpose Memory" added a Soft Reserve resource below the CXL window resource and broke
-> 	this patch (more below)
-
-
-Maybe we should talk (first) about this internally as it is about AMD 
-BIOS (I guess). I have been talking with the BIOS team about this 
-EFI_MEMORY_SP vs EFI_RESERVED_MEMORY, and I'm afraid the discussion is 
-not over yet :-).
-
-
-> 	2) The endpoint decoder was already set up which broke DPA allocation and then CXL region creation (see my response
-> 	to patch 18/22 for fix and explanation)
-
-
-Yes, if the BIOS configures the device HDM decoder, the current patchset 
-does not do the right thing. As I said in the cover letter, my 
-expectation at the time, and hopefully in the future as well, although 
-I'm not sure about it, was the BIOS not doing so. Most of the 
-implementation is based on QEMU, so I found this problem when dealing 
-with a real system with a Type2 aware BIOS ... . I was tempted to 
-include support for this case, but I did not do so for several reasons:
-
-
-1) I want to think the patchset is close to being accepted and changes 
-at this state could delay it further. After more than a year, and 
-because this patchset is about "initial Type2 support", I think it is 
-better to do so in a follow-up work, and when there is a client 
-requiring it.
-
-2) Because that conversation with BIOS guys, I prefer to be sure what to 
-do, as there are other things we need to clarify and in my opinion, far 
-more important than current Type2 support.
-
-3) CXL is a fast moving part of the kernel and I bet we will find 
-another case which the current patchset is not dealing with properly. In 
-fact there is another report of devices with the BAR with CXL 
-information being also used by the driver for other purposes and 
-existing a problem when mapping the CXL registers after the driver did 
-map the whole BAR.
-
-
-So, I think the current patchset where most of the API for Type2 drivers 
-is implemented should go as soon as possible, which will facilitate 
-those follow-up works for the case you describe and the other one about 
-BAR mappings. If not, even if retirement is still far away for me, I'll 
-be concerned about the impending future of this work ... but of course, 
-this is my suggestion, so let's see other opinions about it.
-
-
-Thank you.
-
-
->
-> The fix I did for 1 is a bit hacky but it's essentially checking none of the resources below the CXL window are onlined as
-> system memory. It's roughly equivalent to what's being done in the CXL_PARTMODE_RAM case of cxl_region_probe(), but
-> I'm restricting the resources to "Soft Reserved" to be safe.
->
-> The diff for 2 is pretty big. If you don't want to take it at this point I can send it as a follow up. In that case I'd definitely
-> add that auto regions won't work in at least the cover letter (and in the description of 18/22 as well?).
->
-> ---
->
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index acaca64764bf..2d60131edff3 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -784,6 +784,19 @@ static int find_max_hpa(struct device *dev, void *data)
->          lockdep_assert_held_read(&cxl_rwsem.region);
->          res = cxlrd->res->child;
->
-> +       /*
-> +        * BIOS may have marked the CXL window as soft reserved. Make sure it's
-> +        * free to use.
-> +        */
-> +       while (res && resource_size(res) == resource_size(cxlrd->res)) {
-> +               if ((res->flags & IORESOURCE_BUSY) ||
-> +                   (res->flags & IORESOURCE_SYSRAM) ||
-> +                   strcmp(res->name, "Soft Reserved") != 0)
-> +                       return 0;
-> +
-> +               res = res->child;
-> +       }
-> +
->          /* With no resource child the whole parent resource is available */
->          if (!res)
->                  max = resource_size(cxlrd->res);
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
