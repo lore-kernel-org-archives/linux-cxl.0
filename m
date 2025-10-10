@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0AB256C91
-	for <linux-cxl@vger.kernel.org>; Fri, 10 Oct 2025 20:58:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457812594BE
+	for <linux-cxl@vger.kernel.org>; Fri, 10 Oct 2025 20:58:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760129882; cv=none; b=ZEl4/sr0gMIZ2bFQKN2kofsC+Kc9PqEFKuPklfQ9mf7x6mJPExQ/Jtu2fTZrkZHRgdy4iW4vA4OBKv2rAF79pDM1s9viiJFWsEDgVrFgknM61Qct4tfeiXJFQaqOEpRg6MM3+YMqAcWOZ+oYbQoPxHdwFzZua211wUbiX24kt9o=
+	t=1760129884; cv=none; b=kUmM9siM8Dhju3brpcP353fSYAqJnPT7g5WDsGP1n38DAf4QV0TKAUjYS7tiMNih4bc50qaw6/C0ZLLqiCFiJB/bEvGFgbiUagyi8nGlVa8Cr6lPL6gfV2u2MAS1s75KclpPvSdKn2RV2J0vbFTjYrwr/NH0cbzgIYzpAKmTqZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760129882; c=relaxed/simple;
-	bh=nHCQvMR5ggSnNy/WvWEkS4DxA0yf1P85LRNCznhHFCc=;
+	s=arc-20240116; t=1760129884; c=relaxed/simple;
+	bh=mdR03Y722Y5W85BkZXFvprLiFR56gAai50pt1gB/pC4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pdUFe9ig2r1lSYv7zJ3HUQP/ojz4ISUQHwpOsYX+WZYd5OmPUndH6lu/EzJhu7AYh0TGVqJMSIJkBb79LB33WbCv5+3C/TOKGchb4c5ypflmW9uP3O/tmpizcJ1GMrYs+S5QnIWVdW67KeukRVuVb4a53LZ1TJ0ZVUTZrhf2L2w=
+	 MIME-Version; b=hzOEnsmYLAt5LLGrQvT2Zzi2Q5WZ3ekncRi/BqaizEbv8HSz7z+rlT2xX35yn0tWGzsYNK2GPbBylzDPfmbbLrU2nY0cCxk61BRhSCWfei6dKHxXnQpOjupNKl8yeEbe6PZoOjMLw9MFl04uWhhesjyh5QFfM9SWLQt5bEV2ytE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34891C4CEF1;
-	Fri, 10 Oct 2025 20:58:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97CF7C4CEF1;
+	Fri, 10 Oct 2025 20:58:03 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dave@stgolabs.net,
@@ -21,10 +21,11 @@ Cc: dave@stgolabs.net,
 	alison.schofield@intel.com,
 	vishal.l.verma@intel.com,
 	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Subject: [PATCH 2/3] cxl: Set range param for region_res_match_cxl_range() as const
-Date: Fri, 10 Oct 2025 13:57:54 -0700
-Message-ID: <20251010205755.205280-3-dave.jiang@intel.com>
+	dan.j.williams@intel.com,
+	stable@kernel.org
+Subject: [PATCH 3/3] cxl: Fix match_region_by_range() to use region_res_match_cxl_range()
+Date: Fri, 10 Oct 2025 13:57:55 -0700
+Message-ID: <20251010205755.205280-4-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251010205755.205280-1-dave.jiang@intel.com>
 References: <20251010205755.205280-1-dave.jiang@intel.com>
@@ -36,27 +37,38 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The function takes two parameters and compares them. The second parameter
-should be const since no modification should be done to it.
+match_region_by_range() is not using the helper function that also takes
+extended linear cache size into account when comparing regions. This
+causes a x2 region to show up as 2 partial incomplete regions rather
+than a single CXL region with extended linear cache support. Replace
+the open coded compare logic with the proper helper function for
+comparison. User visible impact is that when 'cxl list' is issued,
+no activa CXL region(s) are shown. There may be multiple idle regions
+present. No actual active CXL region is present in the kernel.
 
+Fixes: 0ec9849b6333 ("acpi/hmat / cxl: Add extended linear cache support for CXL")
+Cc: stable@kernel.org
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/core/region.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cxl/core/region.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 71cc42d05248..0ce50998c49f 100644
+index 0ce50998c49f..be4521184328 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -831,7 +831,7 @@ static int match_free_decoder(struct device *dev, const void *data)
+@@ -3287,10 +3287,7 @@ static int match_region_by_range(struct device *dev, const void *data)
+ 	p = &cxlr->params;
+ 
+ 	guard(rwsem_read)(&cxl_rwsem.region);
+-	if (p->res && p->res->start == r->start && p->res->end == r->end)
+-		return 1;
+-
+-	return 0;
++	return region_res_match_cxl_range(p, r);
  }
  
- static bool region_res_match_cxl_range(const struct cxl_region_params *p,
--				       struct range *range)
-+				       const struct range *range)
- {
- 	if (!p->res)
- 		return false;
+ static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
 -- 
 2.51.0
 
