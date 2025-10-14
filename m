@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2DD430F94B
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Oct 2025 08:24:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618EC30F94C
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Oct 2025 08:24:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760430284; cv=none; b=iif/Z4n6WZeLS/DNSAmZjA9yDCUG6zM2TssGNPmNhJ46gZNVeH5QbzQmlwly0xaWpyQc4TKT9qbDKxlnxEPOFqsLiWFFM8VHkba5jNZnT9UxlN9y4KLNVue4VIuZv7+q/bM5a+aTdDLOzNmIiUoAIKzCwNJM2PQBN6igUcZJnQo=
+	t=1760430286; cv=none; b=gBHEqQToTjjoUjTWzGii5QXrKBkuz4TJ1sqW1tgSYfIWkNcq0GFL93AU5T/FcOz5f7qHmJudIG5y5tR7/UrRbIOBJDzAc1O2OO2deyKHfmpW7R5mpeEYjfxyCdsm+ZKKb7vEDc2v6YnvK5o9+sGEQM73okyqneGQ9Ado4In8+Ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760430284; c=relaxed/simple;
-	bh=09dUHAM6xmtF0HO0cGILLevshiEpI9l2M0bCkowES0U=;
+	s=arc-20240116; t=1760430286; c=relaxed/simple;
+	bh=U+RBjLMzvgc5KHE+YVr7iQJcGlEYoqYHP0S737LKzCU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bMEnEVRElV7lHJCjd/MnQMFevB7PowP4oKw64uEY1e8H8wa0d/loHVFWlBhbSGuDy4CzenT/zaHEV8vxxFNpXLiBJdNTxef4LCg2mja3GHYbcCrshkObSdYr+VSTyxRHOs2wBOmQEM7EOXjG2Gbw8WURFj/ju1qLLijbipttbWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hdoziW2r; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version; b=Gc2JC7VKwZ9TuLfUkiLhuPA06lDGh6fT8ioNehY1U5ggQEMofXaGhoQuJDeZW+vjXd6MNFHkF0UmdeQkwAyKJ45JzAQJs70H+yk4qUug9ZY8FZdcWxveCIm++yBFHxUE4fMrU9sZw1ceYGbHMTIqzjy7Im4IIIiezrZMDimZotQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NTh4+9mA; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hdoziW2r"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NTh4+9mA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760430283; x=1791966283;
+  t=1760430284; x=1791966284;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=09dUHAM6xmtF0HO0cGILLevshiEpI9l2M0bCkowES0U=;
-  b=hdoziW2rxHwGvusDe7b5m6m3RAP0cyXweUGZDB26FW2+2bPjGYq/0Fft
-   ZXFeAwH8StWOzb364ZqHT3IR3WZTHPTgQbWdv2gLKvKAnBspC85q2e5lS
-   iQGa4dn9DOMVu7SiGqwES3dAIzYOppVQkTAMsZBZTcWFMdZOuBmrEc7Xt
-   77j118uc1ifilC18dSee77Yf+h6RpCksCCPjIEWNCMmnQh6ZNSe1yISXW
-   87h6Bje6p3ckh6752wxj3k3AcVMvCMZwXs1EOqAFjDOt+LRSHPsS5hb0J
-   mJsFHNc5l0BZCaoPAqGtNQxXE1G8oIXoIWRHu6j39pKdiBLBCWpzO6+Rg
-   A==;
-X-CSE-ConnectionGUID: N/n+9GUSQF2CkAoUSSzTKQ==
-X-CSE-MsgGUID: mnrzoQ7iSTmmgMEoa8ue0A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11581"; a="62619317"
+  bh=U+RBjLMzvgc5KHE+YVr7iQJcGlEYoqYHP0S737LKzCU=;
+  b=NTh4+9mAKKCpRp0L/276W3pxPaGZktE61KPaGStmFq/p7nntUICGenZi
+   gVuPD+cz29ulKtdYuBwWb980vuPHxbXjY2kPL9uZfJb97hksMlPUbVQ3y
+   wU9UD9o7iZfRxa4nMvvbyrTLuQ3To4XUYZRr6i78I5sS1suuR8y7cGdEn
+   mnhJ9r/tviFgAWALjGqmS2PcUeqV8I9OGhpl4XOUBS1TUnANuQUXuKTfA
+   rL9+A14sOA2oxOaQDgqEQmcV9fBrEHgbW9dhb6LPBIU591I2aGva97BWt
+   7ZfUzSpvMf+hcLuKm14YbWUSw7tpT3NVAarFBTySeLrG9/2XOj3kMVzRS
+   w==;
+X-CSE-ConnectionGUID: rY8Q1OGMQQqDRC3xqZseeg==
+X-CSE-MsgGUID: HG/gPr82QnGhWuRKuBalyQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11581"; a="62619325"
 X-IronPort-AV: E=Sophos;i="6.19,227,1754982000"; 
-   d="scan'208";a="62619317"
+   d="scan'208";a="62619325"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 01:24:42 -0700
-X-CSE-ConnectionGUID: 3D6D2JWPQwK1xaOrLFeZ7w==
-X-CSE-MsgGUID: h6+XuLR4S4yv9n0bOdmabw==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 01:24:44 -0700
+X-CSE-ConnectionGUID: 81CYzwUcQM23OoL9T/oe7w==
+X-CSE-MsgGUID: iUDQ6pbPSw+YZIIZoRX1WQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,227,1754982000"; 
-   d="scan'208";a="218966100"
+   d="scan'208";a="218966127"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.105])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 01:24:42 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 01:24:44 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
@@ -52,9 +52,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v4 2/3] cxl/acpi: Make the XOR calculations available for testing
-Date: Tue, 14 Oct 2025 01:24:31 -0700
-Message-ID: <bbea529ae0d0eda929fcc2ad245ec614ca7bf087.1760429439.git.alison.schofield@intel.com>
+Subject: [PATCH v4 3/3] cxl/test: Add cxl_translate module for address translation testing
+Date: Tue, 14 Oct 2025 01:24:32 -0700
+Message-ID: <1226331e8dd8d44943f5c632e675eddb91a1ec53.1760429439.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1760429439.git.alison.schofield@intel.com>
 References: <cover.1760429439.git.alison.schofield@intel.com>
@@ -66,116 +66,503 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In preparation for adding a test module that can exercise the address
-translation functions performed by the CXL Driver, refactor the XOR
-implementation like this:
+Add a loadable test module that validates CXL address translation
+calculations using parameterized test vectors. The module tests both
+host-to-device and device-to-host address translations for Modulo and
+XOR interleave arithmetic.
 
-- Extract the core calculation into a standalone helper function,
-- Export the new function for use by test module cxl_translate only,
-- Enhance the parameter validation since this new function will be
-  called from a test module with no guarantee of valid parameters,
-- Move the define of struct cxl_cxims_data to cxl.h so the test module
-  can build xormaps.
+Two types of testing are provided:
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+1. Parameterized test vectors:
+   Test vectors are passed as module parameters in the format:
+	"dpa pos r_eiw r_eig hb_ways math expected_spa".
+   Round-trip validation is performed:
+   - Translate a DPA and position to a SPA
+   - Verify the result matches expected SPA
+   - Translate that SPA back to a DPA and position
+   - Verify round-trip consistency
+
+2. Internal validation testing:
+   When no test vectors are provided, the module performs validation
+   of the translation functions by checking parameter boundaries and
+   running 10,000 iterations of randomly generated valid parameters
+   to exercise the core calculation functions.
+
+The module uses the CXL Driver translation functions through symbols
+exported exclusively for cxl_translate.
+
 Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/acpi.c | 41 ++++++++++++++++++++++++++++++-----------
- drivers/cxl/cxl.h  | 13 +++++++++++++
- 2 files changed, 43 insertions(+), 11 deletions(-)
+ tools/testing/cxl/test/Kbuild          |   1 +
+ tools/testing/cxl/test/cxl_translate.c | 445 +++++++++++++++++++++++++
+ 2 files changed, 446 insertions(+)
+ create mode 100644 tools/testing/cxl/test/cxl_translate.c
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index d7a5539d07d4..770014f3115c 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -11,25 +11,36 @@
- #include "cxlpci.h"
- #include "cxl.h"
+diff --git a/tools/testing/cxl/test/Kbuild b/tools/testing/cxl/test/Kbuild
+index 6b1927897856..af50972c8b6d 100644
+--- a/tools/testing/cxl/test/Kbuild
++++ b/tools/testing/cxl/test/Kbuild
+@@ -4,6 +4,7 @@ ccflags-y := -I$(srctree)/drivers/cxl/ -I$(srctree)/drivers/cxl/core
+ obj-m += cxl_test.o
+ obj-m += cxl_mock.o
+ obj-m += cxl_mock_mem.o
++obj-m += cxl_translate.o
  
--struct cxl_cxims_data {
--	int nr_maps;
--	u64 xormaps[] __counted_by(nr_maps);
--};
--
- static const guid_t acpi_cxl_qtg_id_guid =
- 	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
- 		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
- 
--static u64 cxl_apply_xor_maps(struct cxl_root_decoder *cxlrd, u64 addr)
+ cxl_test-y := cxl.o
+ cxl_mock-y := mock.o
+diff --git a/tools/testing/cxl/test/cxl_translate.c b/tools/testing/cxl/test/cxl_translate.c
+new file mode 100644
+index 000000000000..2200ae21795c
+--- /dev/null
++++ b/tools/testing/cxl/test/cxl_translate.c
+@@ -0,0 +1,445 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Copyright(c) 2025 Intel Corporation. All rights reserved.
++
++/* Preface all log entries with "cxl_translate" */
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/moduleparam.h>
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/slab.h>
++#include <linux/acpi.h>
++#include <cxlmem.h>
++#include <cxl.h>
++
++/* Maximum number of test vectors and entry length */
++#define MAX_TABLE_ENTRIES 128
++#define MAX_ENTRY_LEN 128
++
++/* Expected number of parameters in each test vector */
++#define EXPECTED_PARAMS 7
++
++/* Module parameters for test vectors */
++static char *table[MAX_TABLE_ENTRIES];
++static int table_num;
++
++/* Interleave Arithmetic */
++#define MODULO_MATH 0
++#define XOR_MATH 1
++
++/*
++ * XOR mapping configuration
++ * The test data sets all use the same set of xormaps. When additional
++ * data sets arrive for validation, this static setup will need to
++ * be changed to accept xormaps as additional parameters.
++ */
++struct cxl_cxims_data *cximsd;
++static u64 xormaps[] = {
++	0x2020900,
++	0x4041200,
++	0x1010400,
++	0x800,
++};
++
++static int nr_maps = ARRAY_SIZE(xormaps);
++
 +#define HBIW_TO_NR_MAPS_SIZE (CXL_DECODER_MAX_INTERLEAVE + 1)
 +static const int hbiw_to_nr_maps[HBIW_TO_NR_MAPS_SIZE] = {
 +	[1] = 0, [2] = 1, [3] = 0, [4] = 2, [6] = 1, [8] = 3, [12] = 2, [16] = 4
 +};
 +
-+static const int valid_hbiw[] = { 1, 2, 3, 4, 6, 8, 12, 16 };
++/**
++ * to_hpa - calculate an HPA offset from a DPA offset and position
++ *
++ * dpa_offset: device physical address offset
++ * pos: devices position in interleave
++ * r_eiw: region encoded interleave ways
++ * r_eig: region encoded interleave granularity
++ * hb_ways: host bridge interleave ways
++ * math: interleave arithmetic (MODULO_MATH or XOR_MATH)
++ *
++ * Returns: host physical address offset
++ */
++static u64 to_hpa(u64 dpa_offset, int pos, u8 r_eiw, u16 r_eig, u8 hb_ways,
++		  u8 math)
++{
++	u64 hpa_offset;
 +
-+u64 cxl_do_xormap_calc(struct cxl_cxims_data *cximsd, u64 addr, int hbiw)
- {
--	struct cxl_cxims_data *cximsd = cxlrd->platform_data;
--	int hbiw = cxlrd->cxlsd.nr_targets;
-+	int nr_maps_to_apply = -1;
- 	u64 val;
- 	int pos;
- 
--	/* No xormaps for host bridge interleave ways of 1 or 3 */
--	if (hbiw == 1 || hbiw == 3)
--		return addr;
-+	/*
-+	 * Strictly validate hbiw since this function is used for testing and
-+	 * that nullifies any expectation of trusted parameters from the CXL
-+	 * Region Driver.
-+	 */
-+	for (int i = 0; i < ARRAY_SIZE(valid_hbiw); i++) {
-+		if (valid_hbiw[i] == hbiw) {
-+			nr_maps_to_apply = hbiw_to_nr_maps[hbiw];
-+			break;
++	/* Calculate base HPA offset from DPA and position */
++	hpa_offset = cxl_calculate_hpa_offset(dpa_offset, pos, r_eiw, r_eig);
++
++	if (math == XOR_MATH) {
++		cximsd->nr_maps = hbiw_to_nr_maps[hb_ways];
++		if (cximsd->nr_maps)
++			return cxl_do_xormap_calc(cximsd, hpa_offset, hb_ways);
++	}
++	return hpa_offset;
++}
++
++/**
++ * to_dpa - translate an HPA offset to DPA offset
++ *
++ * hpa_offset: host physical address offset
++ * r_eiw: region encoded interleave ways
++ * r_eig: region encoded interleave granularity
++ * hb_ways: host bridge interleave ways
++ * math: interleave arithmetic (MODULO_MATH or XOR_MATH)
++ *
++ * Returns: device physical address offset
++ */
++static u64 to_dpa(u64 hpa_offset, u8 r_eiw, u16 r_eig, u8 hb_ways, u8 math)
++{
++	u64 offset = hpa_offset;
++
++	if (math == XOR_MATH) {
++		cximsd->nr_maps = hbiw_to_nr_maps[hb_ways];
++		if (cximsd->nr_maps)
++			offset =
++				cxl_do_xormap_calc(cximsd, hpa_offset, hb_ways);
++	}
++	return cxl_calculate_dpa_offset(offset, r_eiw, r_eig);
++}
++
++/**
++ * to_pos - extract an interleave position from an HPA offset
++ *
++ * hpa_offset: host physical address offset
++ * r_eiw: region encoded interleave ways
++ * r_eig: region encoded interleave granularity
++ * hb_ways: host bridge interleave ways
++ * math: interleave arithmetic (MODULO_MATH or XOR_MATH)
++ *
++ * Returns: devices position in region interleave
++ */
++static u64 to_pos(u64 hpa_offset, u8 r_eiw, u16 r_eig, u8 hb_ways, u8 math)
++{
++	u64 offset = hpa_offset;
++
++	/* Reverse XOR mapping if specified */
++	if (math == XOR_MATH)
++		offset = cxl_do_xormap_calc(cximsd, hpa_offset, hb_ways);
++
++	return cxl_calculate_position(offset, r_eiw, r_eig);
++}
++
++/**
++ * run_translation_test - execute forward and reverse translations
++ *
++ * @dpa: device physical address
++ * @pos: expected position in region interleave
++ * @r_eiw: region encoded interleave ways
++ * @r_eig: region encoded interleave granularity
++ * @hb_ways: host bridge interleave ways
++ * @math: interleave arithmetic (MODULO_MATH or XOR_MATH)
++ * @expect_spa: expected system physical address
++ *
++ * Returns: 0 on success, -1 on failure
++ */
++static int run_translation_test(u64 dpa, int pos, u8 r_eiw, u16 r_eig,
++				u8 hb_ways, int math, u64 expect_hpa)
++{
++	u64 translated_spa, reverse_dpa;
++	int reverse_pos;
++
++	/* Test Device to Host translation: DPA + POS -> SPA */
++	translated_spa = to_hpa(dpa, pos, r_eiw, r_eig, hb_ways, math);
++	if (translated_spa != expect_hpa) {
++		pr_err("Device to host failed: expected HPA %llu, got %llu\n",
++		       expect_hpa, translated_spa);
++		return -1;
++	}
++
++	/* Test Host to Device DPA translation: SPA -> DPA */
++	reverse_dpa = to_dpa(translated_spa, r_eiw, r_eig, hb_ways, math);
++	if (reverse_dpa != dpa) {
++		pr_err("Host to Device DPA failed: expected %llu, got %llu\n",
++		       dpa, reverse_dpa);
++		return -1;
++	}
++
++	/* Test Host to Device Position translation: SPA -> POS */
++	reverse_pos = to_pos(translated_spa, r_eiw, r_eig, hb_ways, math);
++	if (reverse_pos != pos) {
++		pr_err("Position lookup failed: expected %d, got %d\n", pos,
++		       reverse_pos);
++		return -1;
++	}
++
++	return 0;
++}
++
++/**
++ * parse_test_vector - parse a single test vector string
++ *
++ * entry: test vector string to parse
++ * dpa: device physical address
++ * pos: expected position in region interleave
++ * r_eiw: region encoded interleave ways
++ * r_eig: region encoded interleave granularity
++ * hb_ways: host bridge interleave ways
++ * math: interleave arithmetic (MODULO_MATH or XOR_MATH)
++ * expect_spa: expected system physical address
++ *
++ * Returns: 0 on success, negative error code on failure
++ */
++static int parse_test_vector(const char *entry, u64 *dpa, int *pos, u8 *r_eiw,
++			     u16 *r_eig, u8 *hb_ways, int *math,
++			     u64 *expect_hpa)
++{
++	unsigned int tmp_r_eiw, tmp_r_eig, tmp_hb_ways;
++	int parsed;
++
++	parsed = sscanf(entry, "%llu %d %u %u %u %d %llu", dpa, pos, &tmp_r_eiw,
++			&tmp_r_eig, &tmp_hb_ways, math, expect_hpa);
++
++	if (parsed != EXPECTED_PARAMS) {
++		pr_err("Parse error: expected %d parameters, got %d in '%s'\n",
++		       EXPECTED_PARAMS, parsed, entry);
++		return -EINVAL;
++	}
++	if (tmp_r_eiw > U8_MAX || tmp_r_eig > U16_MAX || tmp_hb_ways > U8_MAX) {
++		pr_err("Parameter overflow in entry: '%s'\n", entry);
++		return -ERANGE;
++	}
++	if (*math != MODULO_MATH && *math != XOR_MATH) {
++		pr_err("Invalid math type %d in entry: '%s'\n", *math, entry);
++		return -EINVAL;
++	}
++	*r_eiw = tmp_r_eiw;
++	*r_eig = tmp_r_eig;
++	*hb_ways = tmp_hb_ways;
++
++	return 0;
++}
++
++/*
++ * setup_xor_mapping - Initialize XOR mapping data structure
++ *
++ * The test data sets all use the same HBIG so we can use one set
++ * of xormaps, and set the number to apply based on HBIW before
++ * calling cxl_do_xormap_calc().
++ *
++ * When additional data sets arrive for validation with different
++ * HBIG's this static setup will need to be updated.
++ *
++ * Returns: 0 on success, negative error code on failure
++ */
++static int setup_xor_mapping(void)
++{
++	if (nr_maps <= 0)
++		return -EINVAL;
++
++	cximsd = kzalloc(struct_size(cximsd, xormaps, nr_maps), GFP_KERNEL);
++	if (!cximsd)
++		return -ENOMEM;
++
++	memcpy(cximsd->xormaps, xormaps, nr_maps * sizeof(*cximsd->xormaps));
++	cximsd->nr_maps = nr_maps;
++
++	return 0;
++}
++
++static int test_random_params(void)
++{
++	u8 valid_eiws[] = { 0, 1, 2, 3, 4, 8, 9, 10 };
++	u16 valid_eigs[] = { 0, 1, 2, 3, 4, 5, 6 };
++	int i, ways, pos, reverse_pos;
++	u64 dpa, hpa, reverse_dpa;
++	int iterations = 10000;
++	int failures = 0;
++
++	for (i = 0; i < iterations; i++) {
++		/* Generate valid random parameters for eiw, eig, pos, dpa */
++		u8 eiw = valid_eiws[get_random_u32() % ARRAY_SIZE(valid_eiws)];
++		u16 eig = valid_eigs[get_random_u32() % ARRAY_SIZE(valid_eigs)];
++
++		eiw_to_ways(eiw, &ways);
++		pos = get_random_u32() % ways;
++		dpa = get_random_u64() >> 12;
++
++		hpa = cxl_calculate_hpa_offset(dpa, pos, eiw, eig);
++		reverse_dpa = cxl_calculate_dpa_offset(hpa, eiw, eig);
++		reverse_pos = cxl_calculate_position(hpa, eiw, eig);
++
++		if (reverse_dpa != dpa || reverse_pos != pos) {
++			pr_err("test random iter %d FAIL hpa=%llu, dpa=%llu reverse_dpa=%llu, pos=%d reverse_pos=%d eiw=%u eig=%u\n",
++			       i, hpa, dpa, reverse_dpa, pos, reverse_pos, eiw,
++			       eig);
++
++			if (failures++ > 10) {
++				pr_err("test random too many failures, stop\n");
++				break;
++			}
 +		}
 +	}
-+	if (nr_maps_to_apply == -1 || nr_maps_to_apply > cximsd->nr_maps)
-+		return ULLONG_MAX;
- 
- 	/*
- 	 * In regions using XOR interleave arithmetic the CXL HPA may not
-@@ -60,6 +71,14 @@ static u64 cxl_apply_xor_maps(struct cxl_root_decoder *cxlrd, u64 addr)
- 
- 	return addr;
- }
-+EXPORT_SYMBOL_FOR_MODULES(cxl_do_xormap_calc, "cxl_translate");
++	pr_info("..... test random: PASS %d FAIL %d\n", i - failures, failures);
 +
-+static u64 cxl_apply_xor_maps(struct cxl_root_decoder *cxlrd, u64 addr)
-+{
-+	struct cxl_cxims_data *cximsd = cxlrd->platform_data;
++	if (failures)
++		return -EINVAL;
 +
-+	return cxl_do_xormap_calc(cximsd, addr, cxlrd->cxlsd.nr_targets);
++	return 0;
 +}
- 
- struct cxl_cxims_context {
- 	struct device *dev;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 10bee9aaa943..e8931b626fc6 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -743,6 +743,19 @@ int cxl_validate_translation_params(u8 eiw, u16 eig, int pos);
- u64 cxl_calculate_hpa_offset(u64 dpa_offset, int pos, u8 eiw, u16 eig);
- u64 cxl_calculate_dpa_offset(u64 hpa_offset, u8 eiw, u16 eig);
- int cxl_calculate_position(u64 hpa_offset, u8 eiw, u16 eig);
-+struct cxl_cxims_data {
-+	int nr_maps;
-+	u64 xormaps[] __counted_by(nr_maps);
++
++struct param_test {
++	u8 eiw;
++	u16 eig;
++	int pos;
++	bool expect; /* true: expect pass, false: expect fail */
++	const char *desc;
 +};
 +
-+#if IS_ENABLED(CONFIG_CXL_ACPI)
-+u64 cxl_do_xormap_calc(struct cxl_cxims_data *cximsd, u64 addr, int hbiw);
-+#else
-+static inline u64 cxl_do_xormap_calc(struct cxl_cxims_data *cximsd, u64 addr, int hbiw)
++static struct param_test param_tests[] = {
++	{ 0x0, 0, 0, true, "1-way, min eig=0, pos=0" },
++	{ 0x0, 3, 0, true, "1-way, mid eig=3, pos=0" },
++	{ 0x0, 6, 0, true, "1-way, max eig=6, pos=0" },
++	{ 0x1, 0, 0, true, "2-way, eig=0, pos=0" },
++	{ 0x1, 3, 1, true, "2-way, eig=3, max pos=1" },
++	{ 0x1, 6, 1, true, "2-way, eig=6, max pos=1" },
++	{ 0x2, 0, 0, true, "4-way, eig=0, pos=0" },
++	{ 0x2, 3, 3, true, "4-way, eig=3, max pos=3" },
++	{ 0x2, 6, 3, true, "4-way, eig=6, max pos=3" },
++	{ 0x3, 0, 0, true, "8-way, eig=0, pos=0" },
++	{ 0x3, 3, 7, true, "8-way, eig=3, max pos=7" },
++	{ 0x3, 6, 7, true, "8-way, eig=6, max pos=7" },
++	{ 0x4, 0, 0, true, "16-way, eig=0, pos=0" },
++	{ 0x4, 3, 15, true, "16-way, eig=3, max pos=15" },
++	{ 0x4, 6, 15, true, "16-way, eig=6, max pos=15" },
++	{ 0x8, 0, 0, true, "3-way, eig=0, pos=0" },
++	{ 0x8, 3, 2, true, "3-way, eig=3, max pos=2" },
++	{ 0x8, 6, 2, true, "3-way, eig=6, max pos=2" },
++	{ 0x9, 0, 0, true, "6-way, eig=0, pos=0" },
++	{ 0x9, 3, 5, true, "6-way, eig=3, max pos=5" },
++	{ 0x9, 6, 5, true, "6-way, eig=6, max pos=5" },
++	{ 0xA, 0, 0, true, "12-way, eig=0, pos=0" },
++	{ 0xA, 3, 11, true, "12-way, eig=3, max pos=11" },
++	{ 0xA, 6, 11, true, "12-way, eig=6, max pos=11" },
++	{ 0x5, 0, 0, false, "invalid eiw=5" },
++	{ 0x7, 0, 0, false, "invalid eiw=7" },
++	{ 0xB, 0, 0, false, "invalid eiw=0xB" },
++	{ 0xFF, 0, 0, false, "invalid eiw=0xFF" },
++	{ 0x1, 7, 0, false, "invalid eig=7 (out of range)" },
++	{ 0x2, 0x10, 0, false, "invalid eig=0x10" },
++	{ 0x3, 0xFFFF, 0, false, "invalid eig=0xFFFF" },
++	{ 0x1, 0, -1, false, "pos < 0" },
++	{ 0x1, 0, 2, false, "2-way, pos=2 (>= ways)" },
++	{ 0x2, 0, 4, false, "4-way, pos=4 (>= ways)" },
++	{ 0x3, 0, 8, false, "8-way, pos=8 (>= ways)" },
++	{ 0x4, 0, 16, false, "16-way, pos=16 (>= ways)" },
++	{ 0x8, 0, 3, false, "3-way, pos=3 (>= ways)" },
++	{ 0x9, 0, 6, false, "6-way, pos=6 (>= ways)" },
++	{ 0xA, 0, 12, false, "12-way, pos=12 (>= ways)" },
++};
++
++static int test_cxl_validate_translation_params(void)
 +{
-+	return ULLONG_MAX;
++	int i, rc, failures = 0;
++	bool valid;
++
++	for (i = 0; i < ARRAY_SIZE(param_tests); i++) {
++		struct param_test *t = &param_tests[i];
++
++		rc = cxl_validate_translation_params(t->eiw, t->eig, t->pos);
++		valid = (rc == 0);
++
++		if (valid != t->expect) {
++			pr_err("test params failed: %s\n", t->desc);
++			failures++;
++		}
++	}
++	pr_info("..... test params: PASS %d FAIL %d\n", i - failures, failures);
++
++	if (failures)
++		return -EINVAL;
++
++	return 0;
 +}
-+#endif
- 
- int cxl_num_decoders_committed(struct cxl_port *port);
- bool is_cxl_port(const struct device *dev);
++
++/*
++ * cxl_translate_init
++ *
++ * Run the internal validation tests when no params are passed.
++ * Otherwise, parse the parameters (test vectors), and kick off
++ * the translation test.
++ *
++ * Returns: 0 on success, negative error code on failure
++ */
++static int __init cxl_translate_init(void)
++{
++	int rc, i;
++
++	/* If no tables are passed, validate module params only */
++	if (table_num == 0) {
++		pr_info("Internal validation test start...\n");
++		rc = test_cxl_validate_translation_params();
++		if (rc)
++			return rc;
++
++		rc = test_random_params();
++		if (rc)
++			return rc;
++
++		pr_info("Internal validation test completed successfully\n");
++
++		return 0;
++	}
++
++	pr_info("CXL translate test module loaded with %d test vectors\n",
++		table_num);
++
++	rc = setup_xor_mapping();
++	if (rc)
++		return rc;
++
++	/* Process each test vector */
++	for (i = 0; i < table_num; i++) {
++		u64 dpa, expect_spa;
++		int pos, math;
++		u8 r_eiw, hb_ways;
++		u16 r_eig;
++
++		pr_debug("Processing test vector %d: '%s'\n", i, table[i]);
++
++		/* Parse the test vector */
++		rc = parse_test_vector(table[i], &dpa, &pos, &r_eiw, &r_eig,
++				       &hb_ways, &math, &expect_spa);
++		if (rc) {
++			pr_err("CXL Translate Test %d: FAIL\n"
++			       "    Failed to parse test vector '%s'\n",
++			       i, table[i]);
++			continue;
++		}
++		/* Run the translation test */
++		rc = run_translation_test(dpa, pos, r_eiw, r_eig, hb_ways, math,
++					  expect_spa);
++		if (rc) {
++			pr_err("CXL Translate Test %d: FAIL\n"
++			       "    dpa=%llu pos=%d r_eiw=%u r_eig=%u hb_ways=%u math=%s expect_spa=%llu\n",
++			       i, dpa, pos, r_eiw, r_eig, hb_ways,
++			       (math == XOR_MATH) ? "XOR" : "MODULO",
++			       expect_spa);
++		} else {
++			pr_info("CXL Translate Test %d: PASS\n", i);
++		}
++	}
++
++	kfree(cximsd);
++	pr_info("CXL translate test completed\n");
++
++	return 0;
++}
++
++static void __exit cxl_translate_exit(void)
++{
++	pr_info("CXL translate test module unloaded\n");
++}
++
++module_param_array(table, charp, &table_num, 0444);
++MODULE_PARM_DESC(table, "Test vectors as space-separated decimal strings");
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("cxl_test: cxl address translation test module");
++MODULE_IMPORT_NS("CXL");
++
++module_init(cxl_translate_init);
++module_exit(cxl_translate_exit);
 -- 
 2.37.3
 
