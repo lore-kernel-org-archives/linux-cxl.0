@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40712FE05A;
-	Tue, 14 Oct 2025 14:39:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8463D3002A6
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Oct 2025 14:41:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760452754; cv=none; b=ArMbFlqd7AJlMx7ByUMooiKCy+6ropxvSOsEiVaC+fMEjOqM1a7s8OLsbLwzxZ4mMWOjKOF2kYP3JP9X2O8f7ke2I38BvVvpKYO0H+SH9B86A5JhBBhDqG9crelPzpoRxKuRa+CcUPIfpPqp+I7joWOagPGCE55hnVJhdrqi5TM=
+	t=1760452871; cv=none; b=eqlH9lb1qKi5eGz00G48l3ZzaO7f3TgqTr61xin6XeyRUDYUiG/ZDGGn8G71mwh2wNUrJjiJGBG4FkXgfMpoeOFC6LTWJt25fXNZejxhk8rJMJfAZVP3pBoJVtKGnB0zPrbBvxoNewk34GAAqbuZbrwNuRYMDPXNXrWjhFzfVpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760452754; c=relaxed/simple;
-	bh=JIFXO/maDYxsszQjgtyWILDuEObhd/8GxCOtcj6zkMY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b3FsCWQaVoWseT4WYlciqaTHX+A4qXvqm6OJCJGL/CzbAtVbLk/bCpIt7UCM5ijCrlDZDVacBkfY8qmcZqimIdORiZk8LqG4ZmbQg2TeoFVeMMYI4OtEvAVSP8zr6XtfV517AF+TnrfOhnfGIWoMLstiRX9Y04yadqIpD0PwB0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V/x99eKQ; arc=none smtp.client-ip=192.198.163.8
+	s=arc-20240116; t=1760452871; c=relaxed/simple;
+	bh=y+90vcGB/pkFQr26kduKzyPfDN83e0EYRPAB+CbNWtQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=QWs2fG2KHC7Rt+8OT5gw0xswrb11q+Ij1ulRjhDzrz9J5MI30KBlO1yQkt8P/tJzuYrZPlVMpV5VSJhLZAbj1vY7oYNq1Wbw5TpF79l74/5QYrTmGoAF3eulYv98ZxkqHbZSbgkUlQXSdOxxj8y5o27RJz5TKjQ1JgnItL91Dgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XM8qmOLk; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V/x99eKQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XM8qmOLk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760452753; x=1791988753;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=JIFXO/maDYxsszQjgtyWILDuEObhd/8GxCOtcj6zkMY=;
-  b=V/x99eKQNk2zT/WKr2vPK3khZS54Mfqk2gw+ssfy8EbX0iFSe24zEXcB
-   j7A1bAMEXakBkuI7PzCGEm7oCsHnDv7mht2R3Sw2nAxmiJoXQ6ldVu8iM
-   SdPQcAuHw1D4P8BPY4MLwy9NwHlJskRI3RMO5xQKWAVxSLHF+FOCO72Og
-   Wh0qXYbbk0Wgx1Bq5r7PrfvKmfs6CAQth+5tvmlWZRAYg98VwhOgd48Dd
-   vZ8OcQfRAVuOTgRQ7310lKJB7xg4r0krR77El8W/6ZG90LcQqNXk7Mex7
-   +iDbD7zBZOGfcysBg96fIm7NlLuLJWXDnNnRQvszjVFNxfGd6j9g8bjBN
-   w==;
-X-CSE-ConnectionGUID: Rl4x+ZsLSe+eRAtlqTyM5Q==
-X-CSE-MsgGUID: WsIV1bCOSayADzt3qsOOXA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="80247041"
+  t=1760452870; x=1791988870;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=y+90vcGB/pkFQr26kduKzyPfDN83e0EYRPAB+CbNWtQ=;
+  b=XM8qmOLk1a9TWsD8jJHBaGqwtkDuiCIAxIEC3Edn2j6JxRf5JmU04Sye
+   uNNh52AFNKea3flOzihz1c+12q9G5QqcBYMMKm3v0BuphfENwhD3xVci9
+   dkZJJmwnyeb8pZUfDVo0S9XHD375OVaBOXjbpuvrVZ7Bl2P4G+9Xd9ay/
+   x7/h/O2pEHcLakfau6Shlt8eiP6WPrSFd0j4zjq/q9mS6/k5dwquwlBUU
+   i1335z9df6iHZW/E5W2z3CIeyKyk3CFKh28BSUOsUDKthobmrv0RoHVpO
+   5UiP32ad87Zts0ZIDlfl5E0uVr6aA2qkbpIC99yHvY7Bgt5PIERVtsTj1
+   A==;
+X-CSE-ConnectionGUID: R4a8EsQUSg2X/tzDXauDPA==
+X-CSE-MsgGUID: IWjTWLHFQR2x6Apfz6Hm9A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="80247264"
 X-IronPort-AV: E=Sophos;i="6.19,228,1754982000"; 
-   d="scan'208";a="80247041"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 07:39:12 -0700
-X-CSE-ConnectionGUID: AyZDS/eFQvS2rijZuAiWKA==
-X-CSE-MsgGUID: OTVzpTZ0SYSiJH3cLuwg3g==
+   d="scan'208";a="80247264"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 07:41:09 -0700
+X-CSE-ConnectionGUID: XzAkjfvUR2WId6KT3LjptA==
+X-CSE-MsgGUID: QGO59i5xT6O7B9nMbsCKpA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,228,1754982000"; 
-   d="scan'208";a="186321436"
+   d="scan'208";a="181848962"
 Received: from dwesterg-mobl1.amr.corp.intel.com (HELO [10.125.111.176]) ([10.125.111.176])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 07:39:11 -0700
-Message-ID: <565e8042-9a77-4dad-b111-156fcb9210e2@intel.com>
-Date: Tue, 14 Oct 2025 07:39:09 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 07:41:08 -0700
+Message-ID: <71991290-7c1b-4f4c-875a-8ed67a801e38@intel.com>
+Date: Tue, 14 Oct 2025 07:41:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,116 +52,63 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] cxl/port: Avoid missing port component registers
- setup
-To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251001060337.431639-1-ming.li@zohomail.com>
+Subject: Re: [PATCH] cxl/features: Add check for no entries in
+ cxl_feature_info
 From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com
+References: <20251009154001.2660917-1-dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <20251001060337.431639-1-ming.li@zohomail.com>
+In-Reply-To: <20251009154001.2660917-1-dave.jiang@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 9/30/25 11:03 PM, Li Ming wrote:
-> port->nr_dports is used to represent how many dports added to the cxl
-> port, it will increase in add_dport() when a new dport is being added to
-> the cxl port, but it will not be reduced when a dport is removed from
-> the cxl port.
+On 10/9/25 8:40 AM, Dave Jiang wrote:
+> cxl EDAC calls cxl_feature_info() to get the feature information and
+> if the hardware has no Features support, cxlfs may be passed in as
+> NULL.
 > 
-> Currently, when the first dport is added to a cxl port, it will trigger
-> component registers setup on the cxl port, the implementation is using
-> port->nr_dports to confirm if the dport is the first dport.
+> [   51.957498] BUG: kernel NULL pointer dereference, address: 0000000000000008
+> [   51.965571] #PF: supervisor read access in kernel mode
+> [   51.971559] #PF: error_code(0x0000) - not-present page
+> [   51.977542] PGD 17e4f6067 P4D 0
+> [   51.981384] Oops: Oops: 0000 [#1] SMP NOPTI
+> [   51.986300] CPU: 49 UID: 0 PID: 3782 Comm: systemd-udevd Not tainted 6.17.0dj
+> test+ #64 PREEMPT(voluntary)
+> [   51.997355] Hardware name: <removed>
+> [   52.009790] RIP: 0010:cxl_feature_info+0xa/0x80 [cxl_core]
 > 
-> A corner case here is that adding dport could fail after port->nr_dports
-> updating and before checking port->nr_dports for component registers
-> setup. If the failure happens during the first dport attaching, it will
-> cause that CXL subsystem has not chance to execute component registers
-> setup for the cxl port. the failure flow like below:
+> Add a check for cxlfs before dereferencing it and return -EOPNOTSUPP if
+> there is no cxlfs created due to no hardware support.
 > 
-> port->nr_dports = 0
-> dport 1 adding to the port:
-> 	add_dport()	# port->nr_dports: 1
-> 	failed on devm_add_action_or_reset() or sysfs_create_link()
-> 	return error	# port->nr_dports: 1
-> dport 2 adding to the port:
-> 	add_dport()	# port->nr_dports: 2
-> 	no failure
-> 	skip component registers setup because of port->nr_dports is 2
-> 
-> The solution here is that moving component registers setup closer to
-> add_dport(), so if add_dport() is executed correctly for the first
-> dport, component registers setup on the port will be executed
-> immediately after that.
-> 
-> Fixes: f6ee24913de2 ("cxl: Move port register setup to when first dport appear")
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+> Fixes: eb5dfcb9e36d ("cxl: Add support to handle user feature commands for set feature")
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-applied to cxl/fixes
+Applied to cxl/fixes
 
 > ---
-> v3:
-> - add fix tag
-> - add review tags
+>  drivers/cxl/core/features.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> v2:
-> - remove dport from port->dports in case of component registers setup
->   failed.
-> 
-> base-commit: 46037455cbb748c5e85071c95f2244e81986eb58 cxl/next
-> ---
->  drivers/cxl/core/port.c | 26 ++++++++++++++------------
->  1 file changed, 14 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index d5f71eb1ade8..8128fd2b5b31 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1182,6 +1182,20 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
->  	if (rc)
->  		return ERR_PTR(rc);
+> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+> index 7c750599ea69..4bc484b46f43 100644
+> --- a/drivers/cxl/core/features.c
+> +++ b/drivers/cxl/core/features.c
+> @@ -371,6 +371,9 @@ cxl_feature_info(struct cxl_features_state *cxlfs,
+>  {
+>  	struct cxl_feat_entry *feat;
 >  
-> +	/*
-> +	 * Setup port register if this is the first dport showed up. Having
-> +	 * a dport also means that there is at least 1 active link.
-> +	 */
-> +	if (port->nr_dports == 1 &&
-> +	    port->component_reg_phys != CXL_RESOURCE_NONE) {
-> +		rc = cxl_port_setup_regs(port, port->component_reg_phys);
-> +		if (rc) {
-> +			xa_erase(&port->dports, (unsigned long)dport->dport_dev);
-> +			return ERR_PTR(rc);
-> +		}
-> +		port->component_reg_phys = CXL_RESOURCE_NONE;
-> +	}
+> +	if (!cxlfs || !cxlfs->entries)
+> +		return ERR_PTR(-EOPNOTSUPP);
 > +
->  	get_device(dport_dev);
->  	rc = devm_add_action_or_reset(host, cxl_dport_remove, dport);
->  	if (rc)
-> @@ -1200,18 +1214,6 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
->  
->  	cxl_debugfs_create_dport_dir(dport);
->  
-> -	/*
-> -	 * Setup port register if this is the first dport showed up. Having
-> -	 * a dport also means that there is at least 1 active link.
-> -	 */
-> -	if (port->nr_dports == 1 &&
-> -	    port->component_reg_phys != CXL_RESOURCE_NONE) {
-> -		rc = cxl_port_setup_regs(port, port->component_reg_phys);
-> -		if (rc)
-> -			return ERR_PTR(rc);
-> -		port->component_reg_phys = CXL_RESOURCE_NONE;
-> -	}
-> -
->  	return dport;
->  }
->  
+>  	for (int i = 0; i < cxlfs->entries->num_features; i++) {
+>  		feat = &cxlfs->entries->ent[i];
+>  		if (uuid_equal(uuid, &feat->uuid))
+> 
+> base-commit: e5f0a698b34ed76002dc5cff3804a61c80233a7a
+> prerequisite-patch-id: e3c6c0e3b81959629a6ffecd3994f683d0d530e4
 
