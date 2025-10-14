@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A15B2E9EDF
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Oct 2025 14:38:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40712FE05A;
+	Tue, 14 Oct 2025 14:39:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760452692; cv=none; b=PDQQcD1/zVnmck7r7Q4VbHZ7/c1bieIIgzBajm131zj47cKfzZM/6W+LxeFcXuxXcrTfat6sflFVLqfg8ti4BG13XBiHHmopUguvwJ4NzmYW5dtMepo96icdcPpS+EmU6masfbtsBEUOBkGrS7Hrsvg4/K0ndblIHOIJaWuVstM=
+	t=1760452754; cv=none; b=ArMbFlqd7AJlMx7ByUMooiKCy+6ropxvSOsEiVaC+fMEjOqM1a7s8OLsbLwzxZ4mMWOjKOF2kYP3JP9X2O8f7ke2I38BvVvpKYO0H+SH9B86A5JhBBhDqG9crelPzpoRxKuRa+CcUPIfpPqp+I7joWOagPGCE55hnVJhdrqi5TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760452692; c=relaxed/simple;
-	bh=dgrLZTaJ01shVASqnWm3rphX31gKhcOHFpmNeMMfF7s=;
+	s=arc-20240116; t=1760452754; c=relaxed/simple;
+	bh=JIFXO/maDYxsszQjgtyWILDuEObhd/8GxCOtcj6zkMY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XkV6WM6LJPw7t8UnvMJDzNdAJAe0TLaUGKRNPTNL7n6CkTpKL9afx7l8B27dWCDqyEvMHNFczcjOxU3vIXbTNCB4DZXWKY1uSSob14liOVpNs0DeIixt6IRzXG5K0FAyUsz+abF1li5qOciJYSlrZWaJ84fIBbt4n7morFm2aN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kC9dMHFu; arc=none smtp.client-ip=192.198.163.8
+	 In-Reply-To:Content-Type; b=b3FsCWQaVoWseT4WYlciqaTHX+A4qXvqm6OJCJGL/CzbAtVbLk/bCpIt7UCM5ijCrlDZDVacBkfY8qmcZqimIdORiZk8LqG4ZmbQg2TeoFVeMMYI4OtEvAVSP8zr6XtfV517AF+TnrfOhnfGIWoMLstiRX9Y04yadqIpD0PwB0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V/x99eKQ; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kC9dMHFu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V/x99eKQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760452690; x=1791988690;
+  t=1760452753; x=1791988753;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=dgrLZTaJ01shVASqnWm3rphX31gKhcOHFpmNeMMfF7s=;
-  b=kC9dMHFuLkJZiWd75SFNVhlVB1tuh/nGEdzZqsjI2djxtJrFKX4IkjeP
-   5kC83qPHV6K/QsAIGIG5U3xLQIzklFyDdjatmpI2OIxIX8rqvuSmqSlgr
-   pGVqqn0cnPQrz4c5c2iOVFNAgd98ed4fpp32uhcFot66l9FHFz8b5jnLM
-   GSHibm8LX6qMqWhH65jJ9j7S92Dy0jfwh+HpU2Pd4B9odJbO4T0zjvGQP
-   bMZlLyf+5ZXEIAuiQwAcZc3+oEAqmH8hRBJvTYjyn3oTFQHd1yeKzrm3i
-   tUEs8xUCaLYo9nuaq6ImORC3eXbMH+zNA6wdX1ETEr4d/CkNE96Co12Tp
-   A==;
-X-CSE-ConnectionGUID: 5BfyQMgHT1edB6YZaJDYIA==
-X-CSE-MsgGUID: AQlAi2kWSlmiN6ADlDMK6w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="80246968"
+  bh=JIFXO/maDYxsszQjgtyWILDuEObhd/8GxCOtcj6zkMY=;
+  b=V/x99eKQNk2zT/WKr2vPK3khZS54Mfqk2gw+ssfy8EbX0iFSe24zEXcB
+   j7A1bAMEXakBkuI7PzCGEm7oCsHnDv7mht2R3Sw2nAxmiJoXQ6ldVu8iM
+   SdPQcAuHw1D4P8BPY4MLwy9NwHlJskRI3RMO5xQKWAVxSLHF+FOCO72Og
+   Wh0qXYbbk0Wgx1Bq5r7PrfvKmfs6CAQth+5tvmlWZRAYg98VwhOgd48Dd
+   vZ8OcQfRAVuOTgRQ7310lKJB7xg4r0krR77El8W/6ZG90LcQqNXk7Mex7
+   +iDbD7zBZOGfcysBg96fIm7NlLuLJWXDnNnRQvszjVFNxfGd6j9g8bjBN
+   w==;
+X-CSE-ConnectionGUID: Rl4x+ZsLSe+eRAtlqTyM5Q==
+X-CSE-MsgGUID: WsIV1bCOSayADzt3qsOOXA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="80247041"
 X-IronPort-AV: E=Sophos;i="6.19,228,1754982000"; 
-   d="scan'208";a="80246968"
+   d="scan'208";a="80247041"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 07:38:09 -0700
-X-CSE-ConnectionGUID: B52Bd9fUSZqljpI9WgXAIw==
-X-CSE-MsgGUID: ffSxew0mSGCb3MUdgkKbYQ==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 07:39:12 -0700
+X-CSE-ConnectionGUID: AyZDS/eFQvS2rijZuAiWKA==
+X-CSE-MsgGUID: OTVzpTZ0SYSiJH3cLuwg3g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,228,1754982000"; 
-   d="scan'208";a="186321130"
+   d="scan'208";a="186321436"
 Received: from dwesterg-mobl1.amr.corp.intel.com (HELO [10.125.111.176]) ([10.125.111.176])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 07:38:08 -0700
-Message-ID: <0a3201ec-3169-4e08-93e0-87a514d46a61@intel.com>
-Date: Tue, 14 Oct 2025 07:38:07 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 07:39:11 -0700
+Message-ID: <565e8042-9a77-4dad-b111-156fcb9210e2@intel.com>
+Date: Tue, 14 Oct 2025 07:39:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,69 +52,116 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/region: Use %pa printk format to emit resource_size_t
-To: Alison Schofield <alison.schofield@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-References: <20251014073106.730952-1-alison.schofield@intel.com>
+Subject: Re: [PATCH v3 1/1] cxl/port: Avoid missing port component registers
+ setup
+To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ shiju.jose@huawei.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20251001060337.431639-1-ming.li@zohomail.com>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <20251014073106.730952-1-alison.schofield@intel.com>
+In-Reply-To: <20251001060337.431639-1-ming.li@zohomail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 10/14/25 12:31 AM, Alison Schofield wrote:
-> KASAN reports a stack-out-of-bounds access in validate_region_offset()
-> while running the cxl-poison.sh unit test because the printk format
-> specifier, %pr format, is not a match for the resource_size_t type of
-> the variables. %pr expects struct resource pointers and attempts to
-> dereference the structure fields, reading beyond the bounds of the
-> stack variables.
+On 9/30/25 11:03 PM, Li Ming wrote:
+> port->nr_dports is used to represent how many dports added to the cxl
+> port, it will increase in add_dport() when a new dport is being added to
+> the cxl port, but it will not be reduced when a dport is removed from
+> the cxl port.
 > 
-> Since these messages emit  an 'A exceeds B' type of message, keep
-> the resource_size_t's and use the %pa specifier to be architecture
-> safe.
+> Currently, when the first dport is added to a cxl port, it will trigger
+> component registers setup on the cxl port, the implementation is using
+> port->nr_dports to confirm if the dport is the first dport.
 > 
-> BUG: KASAN: stack-out-of-bounds in resource_string.isra.0+0xe9a/0x1690
-> [] Read of size 8 at addr ffff88800a7afb40 by task bash/1397
-> ...
-> [] The buggy address belongs to stack of task bash/1397
-> []  and is located at offset 56 in frame:
-> []  validate_region_offset+0x0/0x1c0 [cxl_core]
+> A corner case here is that adding dport could fail after port->nr_dports
+> updating and before checking port->nr_dports for component registers
+> setup. If the failure happens during the first dport attaching, it will
+> cause that CXL subsystem has not chance to execute component registers
+> setup for the cxl port. the failure flow like below:
 > 
-> Fixes: c3dd67681c70 ("cxl/region: Add inject and clear poison by region offset")
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> port->nr_dports = 0
+> dport 1 adding to the port:
+> 	add_dport()	# port->nr_dports: 1
+> 	failed on devm_add_action_or_reset() or sysfs_create_link()
+> 	return error	# port->nr_dports: 1
+> dport 2 adding to the port:
+> 	add_dport()	# port->nr_dports: 2
+> 	no failure
+> 	skip component registers setup because of port->nr_dports is 2
+> 
+> The solution here is that moving component registers setup closer to
+> add_dport(), so if add_dport() is executed correctly for the first
+> dport, component registers setup on the port will be executed
+> immediately after that.
+> 
+> Fixes: f6ee24913de2 ("cxl: Move port register setup to when first dport appear")
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>> ---
->  drivers/cxl/core/region.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+applied to cxl/fixes
+
+> ---
+> v3:
+> - add fix tag
+> - add review tags
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index e14c1d305b22..4e567f7e06bc 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3666,14 +3666,14 @@ static int validate_region_offset(struct cxl_region *cxlr, u64 offset)
->  
->  	if (offset < p->cache_size) {
->  		dev_err(&cxlr->dev,
-> -			"Offset %#llx is within extended linear cache %pr\n",
-> +			"Offset %#llx is within extended linear cache %pa\n",
->  			offset, &p->cache_size);
->  		return -EINVAL;
->  	}
->  
->  	region_size = resource_size(p->res);
->  	if (offset >= region_size) {
-> -		dev_err(&cxlr->dev, "Offset %#llx exceeds region size %pr\n",
-> +		dev_err(&cxlr->dev, "Offset %#llx exceeds region size %pa\n",
->  			offset, &region_size);
->  		return -EINVAL;
->  	}
+> v2:
+> - remove dport from port->dports in case of component registers setup
+>   failed.
 > 
-> base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+> base-commit: 46037455cbb748c5e85071c95f2244e81986eb58 cxl/next
+> ---
+>  drivers/cxl/core/port.c | 26 ++++++++++++++------------
+>  1 file changed, 14 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index d5f71eb1ade8..8128fd2b5b31 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1182,6 +1182,20 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>  	if (rc)
+>  		return ERR_PTR(rc);
+>  
+> +	/*
+> +	 * Setup port register if this is the first dport showed up. Having
+> +	 * a dport also means that there is at least 1 active link.
+> +	 */
+> +	if (port->nr_dports == 1 &&
+> +	    port->component_reg_phys != CXL_RESOURCE_NONE) {
+> +		rc = cxl_port_setup_regs(port, port->component_reg_phys);
+> +		if (rc) {
+> +			xa_erase(&port->dports, (unsigned long)dport->dport_dev);
+> +			return ERR_PTR(rc);
+> +		}
+> +		port->component_reg_phys = CXL_RESOURCE_NONE;
+> +	}
+> +
+>  	get_device(dport_dev);
+>  	rc = devm_add_action_or_reset(host, cxl_dport_remove, dport);
+>  	if (rc)
+> @@ -1200,18 +1214,6 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>  
+>  	cxl_debugfs_create_dport_dir(dport);
+>  
+> -	/*
+> -	 * Setup port register if this is the first dport showed up. Having
+> -	 * a dport also means that there is at least 1 active link.
+> -	 */
+> -	if (port->nr_dports == 1 &&
+> -	    port->component_reg_phys != CXL_RESOURCE_NONE) {
+> -		rc = cxl_port_setup_regs(port, port->component_reg_phys);
+> -		if (rc)
+> -			return ERR_PTR(rc);
+> -		port->component_reg_phys = CXL_RESOURCE_NONE;
+> -	}
+> -
+>  	return dport;
+>  }
+>  
 
