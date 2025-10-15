@@ -1,194 +1,492 @@
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010032.outbound.protection.outlook.com [52.101.61.32])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6E830C628;
-	Wed, 15 Oct 2025 02:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760496098; cv=fail; b=DuAUe6EotcXJtf+4D/GNmr0Mzvi+bPgRRy5eCLN/g666eiKLHhNX3A8xiuQ0E0+eX0JvPOCWIfI+mX6mSeqAwNSQ+lUdvnGG7sRXquR/BJ/pdsjqWMaBYjQZFZyuXVYmgJAM+kMt/0clxBxiPp6K66niIN/Wu6geqG8TnGqxauc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760496098; c=relaxed/simple;
-	bh=JuAmlIh1rYtgWst1IdURgO6G/M2ktaHjVGY41weuD7g=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QnEI7ObTs+mXvHofi6PRyYMzieO1YtZbxRb/xKNEPmlrWwtrQmhLqH5JW+E4dv7jeb6ksUXnFQ20YTBeXAIfhV3KZtDJRa+3I0cnyp/cSnGy0EVXO3j3thDenm4dhEqnLg0HnaP6RQiGKNOSNgiVO1Dcr18nBYlXI45JmEOXF2k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=pJXCbgWQ; arc=fail smtp.client-ip=52.101.61.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830BB2FF164;
+	Wed, 15 Oct 2025 07:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760512521; cv=none; b=QMA2fpnHTmobKYk5DO160WElZipTJr0Z51cTPoR6VcnnpZzh/xdpHf2mml8k5+aMpr8PX8swesT47eR99l4SM1Wl+B1XIUGX/6aY9giEv/cUE5a7lH4+uz+1Baf9XXpjeAHg+OvTamUt/PQK6L0V6T/BdY5fBn/MoNdTuh02SEI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760512521; c=relaxed/simple;
+	bh=tHBL8LZQ/EzxCXyj4Rc5BBYpjFDtYhbliv5BSEcWpUY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ROejG08p+6UwZnzspKhVgei7mjs37Vf/zhApMC2AJk5p4a0VDkkJmTIKwL+PyvnW8/p34Z87hf6aYGeP07HD+a7hZpjYyZhQtmUgHLLmtOOzLptrufU4ovQHVdDV499X8zS8M1ZnNLo0rPOLxCiWmoQQ1NlX5IAZzTNPLUqdymo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=zlqpXhXG; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="pJXCbgWQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sh8UAzx1qeZgsHPLRwVa3fpqW7DasMy0RHgZYgNSBX80oVjFrSq7VHOrrV5HUoIXkuyICbc8vSGl59RXrb6VwMxibWx4J0H5ffg2aubNpIKUmr8N6bYrOKBnvfwIPkMzG9VKV492yyJj/re5zBxp2ntbdn1467ZEFz3oo4ULRhe7AX4gPkrUad7zOfd474tveF/sGzjug29ENDjnGMpvLijR4cFFNWWHgtOo0zHGkBS0RUfniOyzwr0YqqGKFUBUxyVNLm4LBFBin0ulX/1HWatjkaspqUqka0wqQ70K1cRnENYlr8Mdj60H595bw1B36tmmXGFOlMhqA2ZFH36CKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YM8hLsEVa4BU3QWp5S/40GgyvGf3J6kr9Dz9Fx+zuA4=;
- b=E9m1FlBWOx+PkArKQcvsoYLSARLA+l+OfiTj1HMsDXdgklcILUJxgL3rPjBOS2Z/ealSfFlXG9p5TScxA0yrni0W253PQC5z9kVReKJnr6qx3h6U4FLzKXYheOms+cLGoyINu8ywEkabVijYW2QtKmurPOGvKhvC8GLlBnvCKAO5sZISuKiN//7087wg3qAmK/ws6LON5GUp5BhcSYB2EMMkN57dZHrVIrsLQhxQk8pCPejtm+GOwHm9hvOZt/J+ubPoZ7x5C6/lPBVvxitloISBmFqKkj/eipOs64hl4piGdhzYxUn6Bs3vWnuTwYC/YwlAQmhFaiqUWVZKW0CpYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YM8hLsEVa4BU3QWp5S/40GgyvGf3J6kr9Dz9Fx+zuA4=;
- b=pJXCbgWQ2ZovQF2ScAWVf0MmQGESOUZ6Sq3Wch5wrJSdkTGj5EAIB0Aa1W14gt+Vo4J+jJiyDJxVUx8SyBhgsCO5zo+gxieyupvcXXREIM37c8VG0273Qj7NFq1+0kLbvzLd4Q7jEwkJvAMj884aHh4P1Y9slBZRCEPW/s1OX7Ytg70MpaxfqmkRh4IuYarzbrduZiRVSEDnHN9874x10oaB1jYaDLLaLKMILAWIwpamPlzAxscOs6BzugEOx5h0dTbOIV04pom1OFl+TI8uZIfRHToHEigRw8sy1f7l3Eci3Ojn/p+H9itp2rJAxkv8o2W61718JuF0uYXQ6re+kw==
-Received: from BL1P222CA0021.NAMP222.PROD.OUTLOOK.COM (2603:10b6:208:2c7::26)
- by IA0PR12MB7626.namprd12.prod.outlook.com (2603:10b6:208:438::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.10; Wed, 15 Oct
- 2025 02:41:33 +0000
-Received: from BL02EPF0002992D.namprd02.prod.outlook.com
- (2603:10b6:208:2c7:cafe::3f) by BL1P222CA0021.outlook.office365.com
- (2603:10b6:208:2c7::26) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9228.11 via Frontend Transport; Wed,
- 15 Oct 2025 02:41:33 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BL02EPF0002992D.mail.protection.outlook.com (10.167.249.58) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9228.7 via Frontend Transport; Wed, 15 Oct 2025 02:41:32 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.34; Tue, 14 Oct
- 2025 19:41:20 -0700
-Received: from vaslot-linux-dev.nvidia.com (10.126.230.35) by
- rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.20; Tue, 14 Oct 2025 19:41:19 -0700
-From: Vishal Aslot <vaslot@nvidia.com>
-To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Alison
- Schofield" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Li Ming <ming.li@zohomail.com>, Vishal Aslot
-	<vaslot@nvidia.com>, "open list:COMPUTE EXPRESS LINK (CXL)"
-	<linux-cxl@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v1 2/2] cxl: Allow zero sized HDM decoders
-Date: Tue, 14 Oct 2025 19:40:06 -0700
-Message-ID: <20251015024019.1189713-3-vaslot@nvidia.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251015024019.1189713-1-vaslot@nvidia.com>
-References: <20251015024019.1189713-1-vaslot@nvidia.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="zlqpXhXG"
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 7B852C09FA9;
+	Wed, 15 Oct 2025 07:14:56 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 62371606F9;
+	Wed, 15 Oct 2025 07:15:15 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2B4E7102F22AF;
+	Wed, 15 Oct 2025 09:14:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1760512513; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=3j60UDCwsR+fx7dgGrkveclozQFJiothgCwXrWCeZ/Y=;
+	b=zlqpXhXGF42GZ/lA/4uYP53YSSloszkjeYT4xh7RfHT9miTqIJdGrh0yMpPMsFDCMffSh/
+	krak6VQp10Bg9KxMIfb1nodOuz2bnRSTbPT19jBrX7Vaa24qGRY3MAeK4apukHjfPf0KXS
+	P7oTsGuPzNiy5RrDCeiZ1wXWTCvmrqJKka3DMzKd2DsT4AdfyZx2DslcwxY1twu/iiRTps
+	AyB67kGJnLx5WpV4L7oIS3FzKn+oN8VEjG934SHa7MPJXZHcWyW++MQG5EvdoExjVN/wEm
+	1o3I4irjoA6bnsYBSzPPJenH2Zj+3BJSV3GhX/sLzTMxEF2JPBTzWX1wOpQKAQ==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Len Brown <lenb@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Wolfram Sang <wsa@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	patches@opensource.cirrus.com,
+	linux-gpio@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v4 00/29] lan966x pci device: Add support for SFPs
+Date: Wed, 15 Oct 2025 09:13:47 +0200
+Message-ID: <20251015071420.1173068-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0002992D:EE_|IA0PR12MB7626:EE_
-X-MS-Office365-Filtering-Correlation-Id: 61889534-00f1-49e1-6718-08de0b945a54
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|7416014|1800799024|82310400026|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?bA79lANd8kPf90Az5me+HDCHS5RPB1bRfGB4ERpMwUkn9dKZmL3pzz1slDa0?=
- =?us-ascii?Q?ZKRu/L6olmrGqR3YfitWh8zpCF4nF9duaqm48YdCEBo9nOcq9kC2XXRWX2UH?=
- =?us-ascii?Q?gYsRZNSNCBsculBRoddBL1iFhgIAhdIuK8piuLt2j+dDSW5bLKtoucdoa0P6?=
- =?us-ascii?Q?AJGY6Ho3nsAwKJLF/Y5BlEUKWjHBMbg3rHcxkftmYRjRJy3Tkz2gITCALS3y?=
- =?us-ascii?Q?Xv8nI2lbytfhmnXhj7sc6CPXowdaz6rGPaId5crPZykfbwPqM4PeEZUnVXDO?=
- =?us-ascii?Q?8D7+Q6pcCBxlTtBVJhyOv4Q+Nh/k+M6Tub0NJgrYQ+rmshxYyQ2sL3cM51AA?=
- =?us-ascii?Q?31sopg0tSqmhrvoip8ZAkN8YEkYzosGdZ2AEiUE81DcBnuw6XQtFGW+PcwKl?=
- =?us-ascii?Q?AatX0jhMKV5aCajhQJ/Gfka2h1umiICT9W3ma2Vd+BS7Wp3jrkC6gMWKYxMf?=
- =?us-ascii?Q?OrqfFZJT8V2liqsLBhQhPHdqDjrUGhBq+4X/ImSWmqzpShzP4U7BJ6IWSjD5?=
- =?us-ascii?Q?GTl3IbZ/6KJXpceLqxi04MB/7muNLDqnE32yFwVZ3QpRk379u1dEO+gMKhaO?=
- =?us-ascii?Q?O6z+E/jOso0Lgx44R18JTB/VJts78jIwXXATiFYwg8tA30yyPMIIe5Px4zpo?=
- =?us-ascii?Q?l2myp3QlnlDhMbdnF5egOHPA4UdEVSvfZIyMqYGLmmz0/Hk5P5KURk68MItk?=
- =?us-ascii?Q?hCLmfpOl2VIqUL0u/hqIyXOO/usubgwZMqQIb0aVgdaHpfXRwjn7wlAJ0nvt?=
- =?us-ascii?Q?tHhoMbnpBXoBJ58NIKakyL07nizNPTncRq9DZEoAtJpf0oD0CWEGkeARpCCq?=
- =?us-ascii?Q?nxi0Q3XneUFE1pYG5qmAgdF4m1sjGGePS6zxadPzT+MldvobJDe6J2v+AlWa?=
- =?us-ascii?Q?rXxkCaq6zx+JY9SzU1L5kJlx1Bp1un0SB2+xUQ+fN3tiV1oltLulJPblKUNE?=
- =?us-ascii?Q?WqIrYTO/ANKcMJwLeLQPWWWnv/AEQnecOPb++e9MlxZX621Cjm/7JG5TS56h?=
- =?us-ascii?Q?DnR0NGcjHGU1eBBwefc7KxfGQjFUHBXrsNGClCPTBTFsx3tN/8M2bj7BBxCT?=
- =?us-ascii?Q?33mV4KmglH1NT30zB5gkYHRiWEfVN9TcoP4ulieHEQ9YJSu+HKOnZJvknlSR?=
- =?us-ascii?Q?5UQNG64CDGcu4yWRw1o20RekUiMeUedsgmclN8735QicKazNWkzCurynYhuf?=
- =?us-ascii?Q?qqDsDJaUZoZlM9Vkkzs/xK1s6UydlddZxvlPXmr+dsdBmUX0ncpPIWVjbPGc?=
- =?us-ascii?Q?kk0Fc/65o89I084civUe5sXhu955optT6tYtmhNp5HLDnuVoSIwgzPtsKkW2?=
- =?us-ascii?Q?ToUVdS8AvH1cnBiwl3H/XUt/r0bf2Lgcj8sLp8l9pcc94D8O6tqB+lckuAhm?=
- =?us-ascii?Q?1GFVWU4qckaQgAtjbkSvG7SYHZeAN7PhVpR9NnXcT2/LQPlwnTKz6a7oH/R5?=
- =?us-ascii?Q?ljcplW9vs/Ac4yC8fzZbgjbWC6uJ+KoZQd5ttzsbmwjM5DkzHl0mEJikWHaZ?=
- =?us-ascii?Q?CRVh8sYUZq2VG6rHAJlBmrecX6tbLkHJqjWAJ3NRNzf1y4pafMOKq5ih9fUj?=
- =?us-ascii?Q?YsjSYJ3OTiFqsihATDrd5CWR5VvRzT1ypZr8NslV?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(1800799024)(82310400026)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2025 02:41:32.9878
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61889534-00f1-49e1-6718-08de0b945a54
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0002992D.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7626
+X-Last-TLS-Session-Version: TLSv1.3
 
-CXL spec permits committing zero sized decoders.
-Linux currently considers them as an error.
+Hi,
 
-Zero-sized decoders are helpful when the BIOS
-is committing them. Often BIOS will also lock
-them to prevent them being changed due to the
-TSP requirement. For example, if the type 3
-device is part of a TCB.
+This series add support for SFPs ports available on the LAN966x PCI
+device. In order to have the SFPs supported, additional devices are
+needed such as clock controller and I2C.
 
-The host bridge, switch, and end-point decoders
-can all be committed with zero-size. If they are
-locked along the VH, it is often to prevent
-hotplugging of a new device that could not be
-attested post boot and cannot be included in
-TCB.
+As a reminder, the LAN966x PCI device driver use a device-tree overlay
+to describe devices available on the PCI board. Adding support for SFPs
+ports consists in adding more devices in the already existing
+device-tree overlay.
 
-The caller leaves the decoder allocated but does
-not add it. It simply continues to the next decoder.
+With those devices added, the device-tree overlay is more complex and
+some consumer/supplier relationship are needed in order to remove
+devices in correct order when the LAN966x PCI driver is removed.
 
-Signed-off-by: Vishal Aslot <vaslot@nvidia.com>
----
- drivers/cxl/core/hdm.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Those links are typically provided by fw_devlink and we faced some
+issues with fw_devlink and overlays.
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index d3a094ca01ad..1c036a485723 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -1036,13 +1036,14 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 			return -ENXIO;
- 		}
- 
-+		port->commit_end = cxld->id;
-+
- 		if (size == 0) {
--			dev_warn(&port->dev,
-+			dev_dbg(&port->dev,
- 				 "decoder%d.%d: Committed with zero size\n",
- 				 port->id, cxld->id);
--			return -ENXIO;
-+			return -ENOSPC;
- 		}
--		port->commit_end = cxld->id;
- 	} else {
- 		if (cxled) {
- 			struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-@@ -1198,6 +1199,8 @@ static int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
- 
- 		rc = init_hdm_decoder(port, cxld, hdm, i, &dpa_base, info);
- 		if (rc) {
-+			if (rc == -ENOSPC)
-+				continue;
- 			dev_warn(&port->dev,
- 				 "Failed to initialize decoder%d.%d\n",
- 				 port->id, i);
+This series gives the big picture related to the SFPs support from
+fixing issues to adding new devices. Of course, it can be split if
+needed.
+
+The first part of the series (patch 1, 2 and 3) fixes fw_devlink when it
+is used with overlay. Patches 1 and 3 were previously sent by Saravana
+[0]. I just rebased them on top of v6.18-rc1 and added patch 2 in order
+to take into account feedback received on the series sent by Saravana.
+
+Those modification were not sufficient in our case and so, on top of
+that, patches 4 to 7 fix some more issues related to fw_devlink.
+
+Patches 8 to 13 introduce and use fw_devlink_set_device() in already
+existing code.
+
+Patches 14 and 15 are related also to fw_devlink but specific to PCI and
+the device-tree nodes created during enumeration.
+
+Patches 16, 17 and 18 are related fw_devlink too but specific to I2C
+muxes. Patches purpose is to correctly set a link between an adapter
+supplier and its consumer. Indeed, an i2c mux adapter's parent is not
+the i2c mux supplier but the adapter the i2c mux is connected to. Adding
+a new link between the adapter supplier involved when i2c muxes are used
+avoid a freeze observed during device removal.
+
+Patch 19 adds support for fw_delink on x86. fw_devlink is needed to have
+the consumer/supplier relationship between devices in order to ensure a
+correct device removal order. Adding fw_devlink support for x86 has been
+tried in the past but was reverted [1] because it broke some systems.
+Instead of enabling fw_devlink on *all* x86 system, enable it on *all*
+x86 except on those where it leads to issue.
+
+Patches 20 and 21 allow to build clock and i2c controller used by the
+LAN966x PCI device when the LAN966x PCI device is enabled.
+
+Patches 22 to 26 are specific to the LAN966x. They touch the current
+dtso, split it in dtsi/dtso files, rename the dtso and improve the
+driver to allow easier support for other boards.
+
+The next patch (patch 27) update the LAN966x device-tree overlay itself
+to have the SPF ports and devices they depends on described.
+
+The last two patches (patches 28 and 29) sort the existing drivers in
+the needed driver list available in the Kconfig help and add new drivers
+in this list keep the list up to date with the devices described in the
+device-tree overlay.
+
+We believe some items from the above list can be merged separately, with
+no build dependencies. We expect:
+
+ - Patches 1 to 7 to be taken by driver core maintainers
+
+ - Patches 8 to 13 to be taken by driver core maintainers
+
+ - Patches 14 and 15 to be taken by driver core or PCI maintainers
+  (depend on patch 8)
+
+ - Patches 16 to 18 to be taken by I2C maintainers
+
+ - Patch 19 to be taken by driver core or OF maintainers
+
+ - Patch 20 to be taken by clock maintainers
+
+ - Patch 21 to be taken by I2C maintainers
+
+ - Patches 22 to 29 to be taken by misc maintainers
+
+Once again, this series gives the big picture and can be split if
+needed. Let me know.
+
+[0] https://lore.kernel.org/lkml/20240411235623.1260061-1-saravanak@google.com/
+[1] https://lore.kernel.org/lkml/3c1f2473-92ad-bfc4-258e-a5a08ad73dd0@web.de/
+
+Compare to previous iteration, this v4 series mainly:
+ - Introduce simple-platform-bus driver instead of modifying the
+   simple-bus driver (modifying the simple-bus driver could lead to
+   regressions).
+ - Use some device-tree properties to filter out x86 systems that do not
+   support fw_devlink instead of using kconfig symbols.
+ - Add '{Reviewed,Acked}-by'
+
+Best regards,
+Hervé
+
+Changes:
+
+v3 -> v4
+  v3: https://lore.kernel.org/lkml/20250613134817.681832-1-herve.codina@bootlin.com/
+
+  - Patch 1:
+    No change
+
+  - Patch 2:
+    Update and fix conflicts. Indeed, since v3 iteration
+    get_dev_from_fwnode() has been moved to device.h and used by
+    pmdomain/core.c.
+
+  - Patch 3:
+    remove '#define get_device_from_fwnode()'
+
+  - Patch 4:
+    Fix conflict (rebase v6.17-rc6)
+    Add 'Reviewed-by: Rafael J. Wysocki'
+    Add 'Reviewed-by: Saravana Kannan'
+
+  - Patch 5 (new in v4):
+    Introduce simple-platform-bus (binding)
+
+  - Patch 6 (5 in v3):
+    Rework patch and introduce simple-platform-bus
+
+  - Patch 7: (new)
+    Use simple-platform-bus in LAN966x
+
+  - Patch 8 (6 in v3):
+    - No change
+
+  - Patch 9 and 10 (7 and 8 in v3):
+    Add 'Reviewed-by: Andy Shevchenko'
+
+  - Patch 11 and 12 (9 and 10 in v3):
+    Add 'Reviewed-by: Dave Jiang'
+
+  - Patch 13 (11 in v3):
+    Add 'Reviewed-by: Andy Shevchenko'
+
+  - Patch 12 in v3:
+    Patch removed.
+    Adding __private tag in fwnode.dev is going to be handled in a
+    dedicated series. Indeed a test robot reported an issue and more
+    patches are needed (I have missed fwnode.dev users in several part
+    in the kernel).
+
+  - Patch 14 and 15 (13 and 14 in v3):
+    No change
+
+  - Patch 16 (14 in v3):
+    Add 'Reviewed-by: Andi Shyti'
+
+  - Patch 17 and 18 (16 and 17 in v3):
+    No change
+
+  - Patch 19 (18 in v3):
+    Filter out support for fw_devlink on x86 based on some device-tree
+    properties.
+    Rewrite commit changelog
+    Remove 'Reviewed-by: Andy Shevchenko' (significant modification)
+
+  - Patch 20 (19 in v3):
+    Add 'Acked-by: Stephen Boyd'
+
+  - Patch 21 (20 in v3):
+    Fix conflict (rebase v6.18-rc1)
+
+  - Patches 22 to 24 (21 to 23 in v3):
+    No change
+
+  - Patch 25 (24 in v3):
+    Fix conflict (rebase v6.18-rc1)
+    Add 'Acked-by: Bjorn Helgaas'
+
+  - Patches 26 to 29 (25 to 28 in v3):
+    No change
+
+v2 -> v3
+  v2: https://lore.kernel.org/all/20250507071315.394857-1-herve.codina@bootlin.com/
+
+  - Patch 1:
+    Add 'Acked-by: Mark Brown'
+
+  - Patch 2 and 3:
+    No changes
+
+  - Patch 4:
+    Rewrite the WARN_ON() condition to avoid an additional 'if'
+
+  - Patch 5:
+    Fix typos in commit log
+    Update a comment
+    Remove the unneeded check before calling of_platform_depopulate()
+
+  - Patches 6 to 11:
+    No changes
+
+  - Patch 12 (new in v3)
+    Tag the fwnode dev member as private
+
+  - Patch 13 (12 in v2)
+    Fix a typo in the commit log
+
+  - Patches 14 to 16 (13 to 15 in v2)
+    No changes
+
+  - Patch 17 (16 in v2)
+    Check parent_physdev for NULL
+
+  - Patch 18 (17 in v2)
+    Capitalize "Link:"
+    Add 'Reviewed-by: Andy Shevchenko'
+
+  - Patch 19 (18 in v2)
+    No changes
+
+  - Patch 20 (19 in v2)
+    Add 'Acked-by: Andi Shyti'
+
+  - Patch 21 (20 in v2)
+    No changes
+
+  - Patch 22 (21 in v2)
+    Add 'Reviewed-by: Andrew Lunn'
+
+  - Patch 23 (22 in v2)
+    Add 'Reviewed-by: Andrew Lunn'
+
+  - Patch 24 (new in v3)
+    Introduce PCI_DEVICE_ID_EFAR_LAN9662, the LAN966x PCI device ID
+
+  - Patch 25 (23 in v2)
+    Add 'Reviewed-by: Andrew Lunn'
+    Use PCI_DEVICE_DATA() with PCI_DEVICE_ID_EFAR_LAN9662 instead of
+    PCI_VDEVICE()
+
+  - Patch 26 to 28 (24 to 26 in v2)
+    No changes
+
+v1 -> v2
+  v1: https://lore.kernel.org/lkml/20250407145546.270683-1-herve.codina@bootlin.com/
+
+  - Patch 1 and 3
+    Remove 'From' tag from the commit log
+
+  - Patch 2
+    Add 'Reviewed-by: Andy Shevchenko'
+    Add 'Reviewed-by: Saravana Kannan'
+    Add 'Reviewed-by: Luca Ceresoli'
+
+  - Patch 4 and 5
+    No changes
+
+  - Patch 6 (new in v2)
+    Introduce fw_devlink_set_device()
+
+  - Patch 7 (new in v2)
+    Use existing device_set_node() helper.
+
+  - Patch 8 to 11 (new in v2)
+    Use fw_devlink_set_device() in existing code.
+
+  - Patch 12 (6 in v1)
+    Use fw_devlink_add_device()
+
+  - Patch 13 (7 in v1)
+    No changes
+
+  - Patch 14 (8 in v1)
+    Update commit log
+    Use 'physdev' instead of 'supplier'
+    Minor fixes in i2c_get_adapter_physdev() kdoc
+
+  - Patch 15 and 16 (9 and 10 in v1)
+    Use 'physdev' instead of 'supplier' (commit log, title and code)
+
+  - Patch 17 (11 in v2)
+    Enable fw_devlink on x86 only if PCI_DYNAMIC_OF_NODES is enabled.
+    Rework commit log.
+
+  - Patch 18, 19 and 20 (12, 13 and 14 in v1)
+    No changes
+
+  - Patch 21 (new in v2)
+    Split dtso in dtsi/dtso
+
+  - Patch 22 (new in v2)
+    Rename lan966x_pci.dtso using the specific board name
+
+  - Patch 23 (new in v2)
+    Improve the driver introducing board specific data to ease support
+    for other boards (avoid the direct dtbo reference in the function
+    loading the dtbo).
+
+  - Patch 24 (15 in v1)
+    Refactor due to dtso split in dtsi/dtso
+
+  - Patch 25 (new in v2)
+    Sort exist driver list in Kconfig help
+
+  - Patch 26 (16 in v1)
+    Keep alphanumeric order for new drivers added in Kconfig help
+
+Herve Codina (27):
+  driver core: Rename get_dev_from_fwnode() wrapper to
+    get_device_from_fwnode()
+  driver core: Avoid warning when removing a device while its supplier
+    is unbinding
+  dt-bindings: bus: Add simple-platform-bus
+  bus: Introduce simple-platorm-bus
+  misc: lan966x_pci: Use simple-platform-bus
+  driver core: fw_devlink: Introduce fw_devlink_set_device()
+  drivers: core: Use fw_devlink_set_device()
+  pinctrl: cs42l43: Use fw_devlink_set_device()
+  cxl/test: Use device_set_node()
+  cxl/test: Use fw_devlink_set_device()
+  PCI: of: Use fw_devlink_set_device()
+  PCI: of: Set fwnode device of newly created PCI device nodes
+  PCI: of: Remove fwnode_dev_initialized() call for a PCI root bridge
+    node
+  i2c: core: Introduce i2c_get_adapter_physdev()
+  i2c: mux: Set adapter physical device
+  i2c: mux: Create missing devlink between mux and adapter physical
+    device
+  of: property: Allow fw_devlink device-tree on x86
+  clk: lan966x: Add MCHP_LAN966X_PCI dependency
+  i2c: busses: at91: Add MCHP_LAN966X_PCI dependency
+  misc: lan966x_pci: Fix dtso nodes ordering
+  misc: lan966x_pci: Split dtso in dtsi/dtso
+  misc: lan966x_pci: Rename lan966x_pci.dtso to
+    lan966x_evb_lan9662_nic.dtso
+  PCI: Add Microchip LAN9662 PCI Device ID
+  misc: lan966x_pci: Introduce board specific data
+  misc: lan966x_pci: Add dtsi/dtso nodes in order to support SFPs
+  misc: lan966x_pci: Sort the drivers list in Kconfig help
+  misc: lan966x_pci: Add drivers needed to support SFPs in Kconfig help
+
+Saravana Kannan (2):
+  Revert "treewide: Fix probing of devices in DT overlays"
+  of: dynamic: Fix overlayed devices not probing because of fw_devlink
+
+ .../bindings/bus/simple-platform-bus.yaml     |  50 +++++
+ MAINTAINERS                                   |   3 +-
+ drivers/base/core.c                           |  99 +++++++---
+ drivers/bus/imx-weim.c                        |   6 -
+ drivers/bus/simple-pm-bus.c                   |  37 ++++
+ drivers/clk/Kconfig                           |   2 +-
+ drivers/i2c/busses/Kconfig                    |   2 +-
+ drivers/i2c/i2c-core-base.c                   |  16 ++
+ drivers/i2c/i2c-core-of.c                     |   5 -
+ drivers/i2c/i2c-mux.c                         |  26 +++
+ drivers/misc/Kconfig                          |  11 +-
+ drivers/misc/Makefile                         |   2 +-
+ drivers/misc/lan966x_evb_lan9662_nic.dtso     | 167 +++++++++++++++++
+ drivers/misc/lan966x_pci.c                    |  30 ++-
+ drivers/misc/lan966x_pci.dtsi                 | 172 +++++++++++++++++
+ drivers/misc/lan966x_pci.dtso                 | 177 ------------------
+ drivers/of/dynamic.c                          |   1 -
+ drivers/of/overlay.c                          |  15 ++
+ drivers/of/platform.c                         |   5 -
+ drivers/of/property.c                         |  31 ++-
+ drivers/pci/of.c                              |  10 +-
+ drivers/pci/quirks.c                          |   2 +-
+ drivers/pinctrl/cirrus/pinctrl-cs42l43.c      |   2 +-
+ drivers/pmdomain/core.c                       |   4 +-
+ drivers/spi/spi.c                             |   5 -
+ include/linux/device.h                        |   2 +-
+ include/linux/fwnode.h                        |   7 +
+ include/linux/i2c.h                           |   3 +
+ include/linux/pci_ids.h                       |   1 +
+ tools/testing/cxl/test/cxl.c                  |   4 +-
+ 30 files changed, 652 insertions(+), 245 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/simple-platform-bus.yaml
+ create mode 100644 drivers/misc/lan966x_evb_lan9662_nic.dtso
+ create mode 100644 drivers/misc/lan966x_pci.dtsi
+ delete mode 100644 drivers/misc/lan966x_pci.dtso
+
 -- 
-2.43.0
+2.51.0
 
