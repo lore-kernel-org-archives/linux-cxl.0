@@ -1,244 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA2A3074A2;
-	Wed, 15 Oct 2025 15:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D389337687;
+	Wed, 15 Oct 2025 16:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760542715; cv=none; b=KreI9oAF0Lng3hFzS7y1FYCAr0iSTnFGcePqFhO/du2th5Vrn+ydE8sHbAIYJN7XYnnjWgjEcOkxUOM4p8TRaHp2/YjYRsy2KwMqiDLrg/KzBf+rc8RQqhYmrrhOBMNkjk5LrH46P2QHOsxgjVqwaI1ivjXe7cji507N3YXz72Q=
+	t=1760545801; cv=none; b=G5CqGbIpE6YVT0Np6ORh1yHnYsCuTGrPjpDajtvc/hUusP0K2AmFHZtrnz4NSeDkftkZxCb0+t36eN7KUUyzslWVYjdjVfmTK+mdSfVwNYnrW8OrtNEa9ZqksGrOM7VaXoMBxZwNAMQuZVcjoo6q4fhVGRBzADa5NtrL0n7bT5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760542715; c=relaxed/simple;
-	bh=9pbyUAwwFE/QnPS4ZNdNETNv1vPeXcRmk7+KPeZVauw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=rVywi6FtBSNmogF1F4C0iVuCgeb7FjeNCwUad4jvTes04jE463LZs+5Jh7HxC2hdOb+NIaV2Bo0daRkrCmk8qZVwivob1tfNIs9wULM55WDEL1815A9XkUDgFDkSxgtciXHnbsKHZ+SyceBWVnyCWQxelGRQjRa9zyJXQuE3pnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V1ScEKp9; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V1ScEKp9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760542713; x=1792078713;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=9pbyUAwwFE/QnPS4ZNdNETNv1vPeXcRmk7+KPeZVauw=;
-  b=V1ScEKp9q1xlZiUyxhZ36AUuJaf7n6/vNCV9Qe6BTrsr4TYIJq18D9k8
-   kBprkFcyGJAPqsXoALwuj0bz91YM8sGw+2VpYcs3pLtcPbw1Bl0FvWBz/
-   u+QNsAAexW6Q3ngZON8TcnE75CHzawPVhhDeHl18kgTxC+QVGg6cre4iB
-   m9fEHz4srJEZkmGv/DG3/Ua2qQMCBUGbGPqyzxRiR6kpIhMQVcWX5cTlp
-   jtbmudTvNQnxH1lwt+lfo5X2bE6D8IQZUSIkBs6qjAgay916U8P3k2n5r
-   LfgOktLpNTqkrAmfXKXb+zckPaEQ0V5NRLVCOaVXQ4jOjqxkAYcG1tPwG
-   g==;
-X-CSE-ConnectionGUID: bAkE0eRlTP2xFgMafjeGug==
-X-CSE-MsgGUID: timFh+UsQEKL93aQJL5SPw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11583"; a="62429048"
-X-IronPort-AV: E=Sophos;i="6.19,231,1754982000"; 
-   d="scan'208";a="62429048"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 08:38:31 -0700
-X-CSE-ConnectionGUID: X/uJpIkAQLGgjChyA5kODQ==
-X-CSE-MsgGUID: 2wH9yJ6jRlCJMstXmDpRCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,231,1754982000"; 
-   d="scan'208";a="181418405"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.111.221]) ([10.125.111.221])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 08:38:31 -0700
-Message-ID: <de625425-bc2c-4fe8-850a-2196946ce9d8@intel.com>
-Date: Wed, 15 Oct 2025 08:38:29 -0700
+	s=arc-20240116; t=1760545801; c=relaxed/simple;
+	bh=GSXFtKanFdfOYZRoTNdsC3B5KrAnQuXQgV+M8GSSD0o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S22gZmgZBVRvAb1RXs14UIUnbnUttg+3xe5iYHhGd6PCiv97oLSD4Ps4xrfkf8456f3AX7COs4FyoewXpL0h6bicDBbok9ujg1qjgJmWfo0nX65zhGYJhVgT02KiFVPEOIi/P7C6k8ghdwMdPWiXqUorBMjBLCra40i5XvqExBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D05C4CEF8;
+	Wed, 15 Oct 2025 16:30:00 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: dan.j.williams@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	rafael@kernel.org
+Subject: [PATCH v2] acpi/hmat: Fix lockdep warning for hmem_register_resource()
+Date: Wed, 15 Oct 2025 09:29:57 -0700
+Message-ID: <20251015162958.11249-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] cxl_test: enable zero sized decoders under hb0
-To: Vishal Aslot <vaslot@nvidia.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Li Ming <ming.li@zohomail.com>,
- Peter Zijlstra <peterz@infradead.org>,
- "open list:COMPUTE EXPRESS LINK (CXL)" <linux-cxl@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20251015024019.1189713-1-vaslot@nvidia.com>
- <20251015024019.1189713-2-vaslot@nvidia.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20251015024019.1189713-2-vaslot@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+The following lockdep splat was observed while kernel auto-online a CXL
+memory region:
 
+======================================================
+WARNING: possible circular locking dependency detected
+6.17.0djtest+ #53 Tainted: G        W
+------------------------------------------------------
+systemd-udevd/3334 is trying to acquire lock:
+ffffffff90346188 (hmem_resource_lock){+.+.}-{4:4}, at: hmem_register_resource+0x31/0x50
 
-On 10/14/25 7:40 PM, Vishal Aslot wrote:
-> The cxl core in linux updated to supported committed
-> decoders of zero size, because this is allowed by
-> the CXL spec.
-> 
-> This patch updates cxl_test to enable decoders 1 and 2
-> in the host-bridge 0 port, in a switch uport under hb0,
-> and the endpoints ports with size zero simulating
-> committed zero sized decoders.
+but task is already holding lock:
+ffffffff90338890 ((node_chain).rwsem){++++}-{4:4}, at: blocking_notifier_call_chain+0x2e/0x70
 
-Hi Vishal, first of all, really appreciate you doing this. If there's another rev of the series, let's reorder and the test patch should go after the implementation patch.
+which lock already depends on the new lock.
+[..]
+Chain exists of:
+  hmem_resource_lock --> mem_hotplug_lock --> (node_chain).rwsem
 
-Can you add a little more in the commit log on how this is tested? i.e. this code is exercised in cxl-topology.sh unit test or something else etc etc.
+ Possible unsafe locking scenario:
 
-> 
-> Signed-off-by: Vishal Aslot <vaslot@nvidia.com>
-> ---
->  tools/testing/cxl/test/cxl.c | 96 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 94 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 2d135ca533d0..cb18ee41a7cf 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -719,6 +719,45 @@ static void default_mock_decoder(struct cxl_decoder *cxld)
->  	cxld->reset = mock_decoder_reset;
->  }
->  
-> +static void size_zero_mock_decoder_ep(struct cxl_decoder *cxld, u64 base)
-> +{
-> +	struct cxl_endpoint_decoder *cxled;
-> +
-> +	cxled = to_cxl_endpoint_decoder(&cxld->dev);
-> +	cxld->hpa_range = (struct range){
-> +		.start = base,
-> +		.end = base - 1,  /* Size 0 */
-> +	};
-> +
-> +	cxld->interleave_ways = 2;
-> +	cxld->interleave_granularity = 4096;
-> +	cxld->target_type = CXL_DECODER_HOSTONLYMEM;
-> +	cxld->flags = CXL_DECODER_F_ENABLE;
-> +	cxled->state = CXL_DECODER_STATE_AUTO;
-> +	cxld->commit = mock_decoder_commit;
-> +	cxld->reset = mock_decoder_reset;
-> +}
-> +
-> +static void size_zero_mock_decoder_sw(struct device *dev, u64 base, int i)
-> +{
-> +	struct cxl_switch_decoder *cxlsd;
-> +	struct cxl_decoder *cxld;
-> +
-> +	cxlsd = to_cxl_switch_decoder(dev);
-> +	cxld = &cxlsd->cxld;
-> +	cxld->flags = CXL_DECODER_F_ENABLE;
-> +	cxld->target_type = CXL_DECODER_HOSTONLYMEM;
-> +	if (i == 0)
-> +		cxld->interleave_ways = 2;
-> +	else
-> +		cxld->interleave_ways = 1;
-> +	cxld->interleave_granularity = 4096;
-> +	cxld->hpa_range = (struct range) {
-> +		.start = base,
-> +		.end = base - 1, /* Size 0 */
-> +	};
-> +}
-> +
->  static int first_decoder(struct device *dev, const void *data)
->  {
->  	struct cxl_decoder *cxld;
-> @@ -731,6 +770,30 @@ static int first_decoder(struct device *dev, const void *data)
->  	return 0;
->  }
->  
-> +static int second_decoder(struct device *dev, const void *data)
-> +{
-> +	struct cxl_decoder *cxld;
-> +
-> +	if (!is_switch_decoder(dev))
-> +		return 0;
-> +	cxld = to_cxl_decoder(dev);
-> +	if (cxld->id == 1)
-> +		return 1;
-> +	return 0;
-> +}
-> +
-> +static int third_decoder(struct device *dev, const void *data)
-> +{
-> +	struct cxl_decoder *cxld;
-> +
-> +	if (!is_switch_decoder(dev))
-> +		return 0;
-> +	cxld = to_cxl_decoder(dev);
-> +	if (cxld->id == 2)
-> +		return 1;
-> +	return 0;
-> +}
-> +
->  static void mock_init_hdm_decoder(struct cxl_decoder *cxld)
->  {
->  	struct acpi_cedt_cfmws *window = mock_cfmws[0];
-> @@ -743,7 +806,7 @@ static void mock_init_hdm_decoder(struct cxl_decoder *cxld)
->  	struct cxl_dport *dport;
->  	struct device *dev;
->  	bool hb0 = false;
-> -	u64 base;
-> +	u64 base = window->base_hpa;
->  	int i;
->  
->  	if (is_endpoint_decoder(&cxld->dev)) {
-> @@ -767,6 +830,20 @@ static void mock_init_hdm_decoder(struct cxl_decoder *cxld)
->  		port = cxled_to_port(cxled);
->  	}
->  
-> +	/*
-> +	 * Decoders 1 and 2 of the endpoint under host bridge 0 should be enabled as zero-sized.
-> +	 * It would be even better to make sure that the parent switch uport decoder was
-> +	 * also enabled before enabling the size zero decoders but there is no harm in doing it
-> +	 * anyway.
-> +	 */
-> +	if (hb0 && (cxld->id == 1 || cxld->id == 2)) {
-> +		port = to_cxl_port(cxld->dev.parent);
-> +		size_zero_mock_decoder_ep(cxld, base);
-> +		/* Commit the zero-sized decoder */
-> +		port->commit_end = cxld->id;
-> +		return;
-> +	}
-> +
->  	/*
->  	 * The first decoder on the first 2 devices on the first switch
->  	 * attached to host-bridge0 mock a fake / static RAM region. All
-> @@ -780,7 +857,6 @@ static void mock_init_hdm_decoder(struct cxl_decoder *cxld)
->  		return;
->  	}
->  
-> -	base = window->base_hpa;
->  	cxld->hpa_range = (struct range) {
->  		.start = base,
->  		.end = base + size - 1,
-> @@ -844,6 +920,22 @@ static void mock_init_hdm_decoder(struct cxl_decoder *cxld)
->  			.end = base + size - 1,
->  		};
->  		put_device(dev);
-> +
-> +		/* Enable the next two decoders also and make them zero sized */
+       CPU0                    CPU1
+       ----                    ----
+  rlock((node_chain).rwsem);
+                               lock(mem_hotplug_lock);
+                               lock((node_chain).rwsem);
+  lock(hmem_resource_lock);
 
-s/decoders/switch decoders/
+The lock ordering can cause potential deadlock. There are instances
+where hmem_resource_lock is taken after (node_chain).rwsem, and vice
+versa.
 
-> +		dev = device_find_child(&iter->dev, NULL, second_decoder);
+Remove registering of target devices from the hmat_callback(). By the
+time the hmat hotplug notifier is being called, there should not be
+hmem targets that still need to be registered.
 
-Maybe just pass in the index as the data parameter and then you can just use match_decoder_by_index instead of static code second and third.
+Fixes: cf8741ac57ed ("ACPI: NUMA: HMAT: Register "soft reserved" memory as an "hmem" device")
+Link: https://lore.kernel.org/nvdimm/68e46a09c2a07_2980100f3@dwillia2-mobl4.notmuch/
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+v2:
+- Drop target registering in hmat_callback instead. (Dan)
+---
+ drivers/acpi/numa/hmat.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-DJ
+diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+index 5a36d57289b4..5084ae1688f6 100644
+--- a/drivers/acpi/numa/hmat.c
++++ b/drivers/acpi/numa/hmat.c
+@@ -874,7 +874,8 @@ static void hmat_register_target_devices(struct memory_target *target)
+ 	}
+ }
+ 
+-static void hmat_register_target(struct memory_target *target)
++static void hmat_register_target(struct memory_target *target,
++				 bool register_devices)
+ {
+ 	int nid = pxm_to_node(target->memory_pxm);
+ 
+@@ -882,7 +883,8 @@ static void hmat_register_target(struct memory_target *target)
+ 	 * Devices may belong to either an offline or online
+ 	 * node, so unconditionally add them.
+ 	 */
+-	hmat_register_target_devices(target);
++	if (register_devices)
++		hmat_register_target_devices(target);
+ 
+ 	/*
+ 	 * Register generic port perf numbers. The nid may not be
+@@ -921,7 +923,7 @@ static void hmat_register_targets(void)
+ 	struct memory_target *target;
+ 
+ 	list_for_each_entry(target, &targets, node)
+-		hmat_register_target(target);
++		hmat_register_target(target, true);
+ }
+ 
+ static int hmat_callback(struct notifier_block *self,
+@@ -939,7 +941,7 @@ static int hmat_callback(struct notifier_block *self,
+ 	if (!target)
+ 		return NOTIFY_OK;
+ 
+-	hmat_register_target(target);
++	hmat_register_target(target, false);
+ 	return NOTIFY_OK;
+ }
+ 
 
-> +		WARN_ON(!dev);
-> +		if (dev) {
-> +			size_zero_mock_decoder_sw(dev, base, i);
-> +			iter->commit_end = 1;
-> +			put_device(dev);
-> +		}
-> +		dev = device_find_child(&iter->dev, NULL, third_decoder);
-> +		WARN_ON(!dev);
-> +		if (dev) {
-> +			size_zero_mock_decoder_sw(dev, base, i);
-> +			iter->commit_end = 2;
-> +			put_device(dev);
-> +		}
->  	}
->  }
->  
+base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+-- 
+2.51.0
 
