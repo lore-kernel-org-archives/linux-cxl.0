@@ -1,133 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00199137923;
-	Fri, 17 Oct 2025 16:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21EA2F12C9
+	for <linux-cxl@vger.kernel.org>; Fri, 17 Oct 2025 17:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760718652; cv=none; b=k9FMOEkkapHvZ95irYcleTtx/z1uJrfRYXp5oaBwemJ8o+mX9K2TKRPTf77TEY1IR+/AL9u1k/sB07vSyhVzIz8bKcnZqZQu7wfQoUqsYEDjyf1TfxdQ81Rwv6E3d+VY6Y/rWWXGzY28LyBWIPaP5nMfb+/z0Y/Ttb+lvy0cI6A=
+	t=1760720411; cv=none; b=AT0bZFiDwyMvvqfuRoHdeCiUECxybB6KZp11Yei9WNd/z4TmAu9k4A3x8BicaDIrtwVW8cKSpP7bJy0/9GdI3C5qI+9eaGeL17yHH3SlL7BYcnNSZLFZARAnfU09+wyzz7nK7zVEV2B2rONmxQ87+7HcXvccWSV/ll7kmE0z1FQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760718652; c=relaxed/simple;
-	bh=xamKdc8Fy5z0epEQXm3Wn0WLPZuqYDYYH6wCE5QSiow=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=nApw5YdNuOPMUVnQUBFvdfv2g5HBWNmCd9W/XpeneNBZx0/vYQKOREG7NCM/uLBC6s7NAOHisiNIWXa7LeoirXmNiuvnaFnbn5y+01wRXLak32POZIoqHaL7SuXpTZB+SG5MbLVzJGWFywungsWtLz7n777aEnLVgFxblQNTJfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CJMcpOPR; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CJMcpOPR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760718651; x=1792254651;
-  h=message-id:date:mime-version:from:to:cc:subject:
-   content-transfer-encoding;
-  bh=xamKdc8Fy5z0epEQXm3Wn0WLPZuqYDYYH6wCE5QSiow=;
-  b=CJMcpOPRu4b4lr/HiCh7AxVhq8jyvfAfrYd/0Wx8DkOnMcpWMhKn84jC
-   6eJkHeL2nEPT3I4N1kcjyuTYwCzArgykbPndhgyVk6+vQebDK2XJkY9nq
-   nK3MIvI7KjFE/TuS70SJy8NJgxV0tlyFKfYn6yAoOuzBY8npzfoG2gr7y
-   YZ7xWs3Gp4CUxKNKC17swP/fDlJDq6aI28Rwcdm1G7UYJDoxB+zy4R8da
-   y0cn6kE90BoG6E5MBN0iiHtgJwvvnGA/0jw7UOVwfQwoKNflsrhpZ8NbL
-   upRYvfJSi67ZtJdc0mJlTWQQXQRJ0DD+pyeXs/4bpsF3OdaqmcT/nBoYu
-   g==;
-X-CSE-ConnectionGUID: mTnngB8KRIC+0IrbUm86Ig==
-X-CSE-MsgGUID: p7TpgJ7dRUSFaTO3rb3COA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11585"; a="63081518"
-X-IronPort-AV: E=Sophos;i="6.19,236,1754982000"; 
-   d="scan'208";a="63081518"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 09:30:50 -0700
-X-CSE-ConnectionGUID: IPaMK2wETFqPXTkZGZ7+GQ==
-X-CSE-MsgGUID: j8isfBWFQCafPWqdPO0t6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,236,1754982000"; 
-   d="scan'208";a="181907541"
-Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.108.48]) ([10.125.108.48])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 09:30:50 -0700
-Message-ID: <ea01d693-0d81-419c-ae20-6332feadd412@intel.com>
-Date: Fri, 17 Oct 2025 09:30:49 -0700
+	s=arc-20240116; t=1760720411; c=relaxed/simple;
+	bh=7jqukuXCaqvmfJfAP/aE7po5/P9v8827vg40RbAyJeE=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AfRRF+OfFMZaAV94jV0/9puIBp74r1eT6BevBJ8Xr06RZh89G6cYhGg2p1qXbWMp3onOX32W/v83JceVnsv9NR1rFVvzLBMMBQQrOHnA5lNrRn4BgNN2IpmcU1qvqBwsfO4LDD0qd/ITKFpaCyqRGArpZUpfM0UV7utD4Yszo5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cp9wK65Tjz6L4t8;
+	Sat, 18 Oct 2025 00:57:05 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 89EE6140137;
+	Sat, 18 Oct 2025 01:00:04 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 17 Oct
+ 2025 18:00:03 +0100
+Date: Fri, 17 Oct 2025 18:00:01 +0100
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Gregory Price <gourry@gourry.net>
+CC: "Huang, Ying" <ying.huang@linux.alibaba.com>, Dan Williams
+	<dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>, <ira.weiny@intel.com>,
+	<vishal.l.verma@intel.com>, <seven.yi.lee@gmail.com>, <hch@infradead.org>,
+	<a.manzanares@samsung.com>, <fan.ni@samsung.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: Deep flush support for CXL pmem?
+Message-ID: <20251017180001.00006d6c@huawei.com>
+In-Reply-To: <aPJR1ihx1j3UqUjx@gourry-fedora-PF4VCD3F>
+References: <87zf9qf46z.fsf@DESKTOP-5N7EMDA>
+	<aPJR1ihx1j3UqUjx@gourry-fedora-PF4VCD3F>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Alison Schofield <alison.schofield@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Subject: [GIT PULL] Compute Express Link (CXL) Fixes for 6.18-rc2
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-Hi Linus, please pull from
+On Fri, 17 Oct 2025 10:25:26 -0400
+Gregory Price <gourry@gourry.net> wrote:
 
-git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-6.18-rc2
+> On Fri, Oct 17, 2025 at 02:11:16PM +0800, Huang, Ying wrote:
+> > Hi, All,
+> > 
+> > When reading the documentation of PMDK (https://github.com/pmem/pmdk), I
+> > found that deep flush is used for data loss recovery in addition to GPF.
+> > With that, we can identify that a file isn't affected by the GPF failure
+> > because it wasn't opened during the GPF failure.
+> > 
+> > However, IIUC, the Linux kernel doesn't support deep flush (via
+> > nvdimm_flush()) for CXL pmem at least for now.  For NVDIMM, we have WPQ,
+> > but it appears that we don't have that for CXL.  Is deep flush for CXL
+> > defined in some spec?
+> >  
+> 
+> Should note that this is relevant not just for pmem, but also for shared
+> memory use cases.  Last I looked there's nothing defined / implemented.
+> 
+> When I reviewed the cxl.mem protocol about a year or so ago, I came away
+> thinking a deep flush was going to be problematic for shared devices
+> (multiple separate coherency domains / non-coherent memory).
 
-...to receive a small collection of CXL fixes. In addition to some misc fixes
-for the CXL subsystem, a number of fixes for CXL extended linear cache support
-are included to make it functional again.
+Two things to deal with.  Getting it to the device.  For that what happens
+is CPU architecture / host system architecture dependent. Not all (possibly
+none) of the architectures have this well defined today - on some it
+just works (cross your fingers that this is always the case). In some systems
+using the persistent flushes gets it out on the bus whether or not the
+CXL device is persistent.
 
-While 0f6f1982cb28 ("cxl: Set range param for region_res_match_cxl_range() as const")
-is not a fix, it's a small change that addresses a compile warning that arose from the fix
-f4d027921c81 ("cxl: Fix match_region_by_range() to use region_res_match_cxl_range()").
+There are ways around that, such as 'device' like entities on particular
+systems that do this.  We have one in our Hydra Home Agent that is handled
+by the cache maintenance 'subsystem' series (I'll send v4 of that early
+next week). You can use that to guarantee caches are written back to
+the device. We don't currently use it outside of capacity additions / removal
+(DCD or address decoder programming routes).
 
-These have all appeared in -next for a few days with no reported issues.
+The other thing is getting the device to actually write it to persistent
+memory rather than relying on local or remote power to keep things up long
+enough for writes to complete.
 
----
+So I understand that there are gaps in what is guaranteed to do the job for both
+deep flushes to persist memory and for shared memory use cases.
 
-The following changes since commit 3a8660878839faadb4f1a6dd72c3179c1df56787:
+Jonathan
 
-  Linux 6.18-rc1 (2025-10-12 13:42:36 -0700)
+> 
+> ~Gregory
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-6.18-rc2
-
-for you to fetch changes up to a4bbb493a3247ef32f6191fd8b2a0657139f8e08:
-
-  cxl/trace: Subtract to find an hpa_alias0 in cxl_poison events (2025-10-14 14:48:14 -0700)
-
-----------------------------------------------------------------
-cxl fixes for v6.18-rc2
-
-- Avoid missing port component registers setup due to dport enumeration
-  failure
-- Add check for no entries in cxl_feature_info to address accessing
-  invalid pointer.
-- Use %pa printk format to emit resource_size_t in
-  validate_region_offset()
-
-CXL extended linear cache support fixes:
-- Fix setup of memory resource in cxl_acpi_set_cache_size()
-- Set range param for region_res_match_cxl_range() as const.
-  (Addresses a compile warning for match_region_by_range() fix)
-- Fix match_region_by_range() to use region_res_match_cxl_range()
-- Subtract to find an hpa_alias0 in cxl_poison events to correct
-  the alias math calculation.
-
-----------------------------------------------------------------
-Alison Schofield (2):
-      cxl/region: Use %pa printk format to emit resource_size_t
-      cxl/trace: Subtract to find an hpa_alias0 in cxl_poison events
-
-Dave Jiang (4):
-      cxl/features: Add check for no entries in cxl_feature_info
-      cxl/acpi: Fix setup of memory resource in cxl_acpi_set_cache_size()
-      cxl: Set range param for region_res_match_cxl_range() as const
-      cxl: Fix match_region_by_range() to use region_res_match_cxl_range()
-
-Li Ming (1):
-      cxl/port: Avoid missing port component registers setup
-
- drivers/cxl/acpi.c          |  2 +-
- drivers/cxl/core/features.c |  3 +++
- drivers/cxl/core/port.c     | 26 ++++++++++++++------------
- drivers/cxl/core/region.c   | 11 ++++-------
- drivers/cxl/core/trace.h    |  2 +-
- 5 files changed, 23 insertions(+), 21 deletions(-)
