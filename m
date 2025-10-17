@@ -1,271 +1,556 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BA021B9F5;
-	Fri, 17 Oct 2025 12:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760705232; cv=fail; b=faJRbv3rzCiC5VRQxMZa8tDCOtk1RxyA+TfM5GelOBFT3wCnpTTtZEqN4cIrTklcor/SL4imoxQ0GPSCVCQixb57C4gkGwo7k0Ofd3kz0nb0091U26X0U3hPWvLVe+3UQkhkikYfmX+nDYDyNLiwGYYwPGCFPM71B1Tj/OqJIlo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760705232; c=relaxed/simple;
-	bh=BmD3O2BrtxmMR6d/luJKWL/zwNk4SQXq//hEN42v+kU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=TfyObs7xd8cfn0wBCVpiMMo6aF6X+qgnYH0M5YW446zjeXhMJ8SG6aX0mrpqNebIiBv78KxBNGMh5o1wXxZVXbtN13bjwiYv5oCgOgaL4Rvk0j+G4x2oZ9jb+oNJC7eA87syWKoTM01pWaQEwteP7dFiMXz7ENJFoWb7h7B5tNk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=qw9hJogi; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=xqpcYlCD; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qw9hJogi";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="xqpcYlCD"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59HCdZYZ019395;
-	Fri, 17 Oct 2025 12:46:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=oI061dAy8vsrxlC0Z0
-	wPC3REZJnjXCHWEy6h0Lna4zs=; b=qw9hJogiVM1OosFztlA3vcIeDwG6RnStxB
-	aljILJD609euUKdCS5YwmXPe8tGrGeCcmJ3FM2Y2Q7Q/h2FIAtNj+Wc/UIQQe0xM
-	reR0+3yTic9rmGb4RzGptXD+9cpyH2imJa9RxrRSmsXHxwSVclg8mWUdNx7IDSjc
-	W89hQRUPzJOxcxz5RsrF/nfqskCFH0fQVPtVBfZUG9m7Iq2/XT2habbPOaqjkRRI
-	uRy+VwJPy3aMub9uqI28QnkSCjn7yWwMj7qnOeHIk1BCq3IbpwmYve4Hn4koge1L
-	GkE3y8FEyPlKo/7TPr3SkHrYFAbtzhn4e7cuhuU9dwspwvxuEwuQ==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 49qe59jwaa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 17 Oct 2025 12:46:27 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 59HCag8r000649;
-	Fri, 17 Oct 2025 12:46:27 GMT
-Received: from co1pr03cu002.outbound.protection.outlook.com (mail-westus2azon11010047.outbound.protection.outlook.com [52.101.46.47])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 49qdpd1ftt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 17 Oct 2025 12:46:26 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=o6yHbbY6DLxJVTAmOaPL0lSsud6KNTmo/dqjmGuKwwVHDkFpmzhyCcn5qdbcvY/5mB8SLePCCt3OmGq7bO7z0UsfevnBG17ikhZfZub2wJuV/vivDWzkqEo5af5r4ZRiFNuMoKwv3B6jgxqS+ipZeBHgq5qw7xp2bLAzRMX9MeIcGRlO+1D70mIV+BY0wp/GA9ch0LqAV1let/jhUGXYymWCAqwKge62PUXEtLsODIuCUKMuqfxZNS/4HL41NBZF83rod3GFPgJWFm1N5wTAU4h9edD+5YGhuY/diJGKkfgvnDYBzrH0BJnO3lanVklgF/UeAXtlpwMmfmiS94Fgrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oI061dAy8vsrxlC0Z0wPC3REZJnjXCHWEy6h0Lna4zs=;
- b=NVnzlgvhrfGnEXlKYsNtLUQE/+YhIUtjEjilzFTH1lW7RWtzIeADq69PzCIqfRVZt8Qlc31DvPe/pEkzLranU9K3kuPuMqzYD4W6KVHZr4KyTJG4HrWJtr4YgCRmQTHWflh5O0pJJCqxLAMci5iMWgnvYjOLqs3TRV94eP8e08GL/0ow14Aqp6JfvwU/GJhc0idE6TrsiA/CQDSnNYUkE2aLQ7sx7n3ReDRdewe2wYVMKH6eVTq/DD2PZ19VfGxDhRInGrm0JNrHEtd9R59WfRcigiLYooQBnznWs4gLYdnCNQE0aW/pshrfzhqEM8ISidjB9LLhfLAioSGS/igorA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oI061dAy8vsrxlC0Z0wPC3REZJnjXCHWEy6h0Lna4zs=;
- b=xqpcYlCDf5uv4AYt1N2vs6fqyBjljB1J+oO+B3TuxJGy12oHkCV/GvsSeQDM0AdEZDH3DdFtFDTGsOU8/v2Vf2f5y9GiMhfUTVJeDRD7Tu8qCdnp4FH3J6NLmx66Mr3+f2McyjYqeTsIPyb/BUmO7krCbylzkbGhZetll1jkygc=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by CYYPR10MB7627.namprd10.prod.outlook.com (2603:10b6:930:be::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.10; Fri, 17 Oct
- 2025 12:46:23 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%2]) with mapi id 15.20.9228.011; Fri, 17 Oct 2025
- 12:46:23 +0000
-Date: Fri, 17 Oct 2025 13:46:20 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Sumanth Korikkar <sumanthk@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
-        Guo Ren <guoren@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>,
-        Muchun Song <muchun.song@linux.dev>,
-        Oscar Salvador <osalvador@suse.de>,
-        David Hildenbrand <david@redhat.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-        Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        Hugh Dickins <hughd@google.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
-        ntfs3@lists.linux.dev, kexec@lists.infradead.org,
-        kasan-dev@googlegroups.com, Jason Gunthorpe <jgg@nvidia.com>,
-        iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>,
-        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v4 11/14] mm/hugetlbfs: update hugetlbfs to use
- mmap_prepare
-Message-ID: <c64e017a-5219-4382-bba9-d24310ad2c21@lucifer.local>
-References: <cover.1758135681.git.lorenzo.stoakes@oracle.com>
- <e5532a0aff1991a1b5435dcb358b7d35abc80f3b.1758135681.git.lorenzo.stoakes@oracle.com>
- <aNKJ6b7kmT_u0A4c@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
- <20250923141704.90fba5bdf8c790e0496e6ac1@linux-foundation.org>
- <aPI2SZ5rFgZVT-I8@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aPI2SZ5rFgZVT-I8@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
-X-ClientProxiedBy: LO2P265CA0149.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9::17) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E003332EDD
+	for <linux-cxl@vger.kernel.org>; Fri, 17 Oct 2025 13:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760706151; cv=none; b=OCdUrk+QUvT8abmzYros1pwmg87jUpyuSjO/1HXsuAILb184qPQ8qqa59uoWDbc2T970ZPk9ZuP3AupZO2tW8DgDI8bFpLI7NXbhyzAM/2B0uoAVkIX2qh37zicV8DzjdO8OTollPmP0ZQ1k660JnzZ6Fbdsoa0dPQ0JgRZeLpU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760706151; c=relaxed/simple;
+	bh=34g+La58VwqzxKJ/C7/IV+cGlQdf1z+UzgDzMAXfBAY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RfkCuEk15jD8R7C8F4fLI3m6c3VnHfzhN0z6MhApZpD96GQawa1MnscGwNgYAs32U1Fa6+vXoVYx/+plUkyq/zkcg0OrkFH5uVrj7aFuINE3BFXr+yxCdQqbKdx0rK3pCr7BMQ4Wxo8RT6iExYiuLli9RoUwXD+M1jeyIHohZSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cp4f83MKCz6L58j;
+	Fri, 17 Oct 2025 20:59:28 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id B84991400C8;
+	Fri, 17 Oct 2025 21:02:26 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 17 Oct
+ 2025 14:02:25 +0100
+Date: Fri, 17 Oct 2025 14:02:24 +0100
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Alireza Sanaee <alireza.sanaee@huawei.com>
+CC: <qemu-devel@nongnu.org>, <fan.ni@samsung.com>, <armbru@redhat.com>,
+	<lizhijian@fujitsu.com>, <zhao1.liu@intel.com>, <mst@redhat.com>,
+	<linux-cxl@vger.kernel.org>, <anisa.su@samsung.com>, <linuxarm@huawei.com>
+Subject: Re: [RFC PATCH] hw/cxl: Add a performant (and correct) path for the
+ non interleaved cases.
+Message-ID: <20251017140224.00000b61@huawei.com>
+In-Reply-To: <20251013143106.884-1-alireza.sanaee@huawei.com>
+References: <20251013143106.884-1-alireza.sanaee@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CYYPR10MB7627:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4e644385-67e4-40c3-db52-08de0d7b2dab
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QPLeEIcJ/w59HVFnCTEmNLMUIwdU5nhIfjMZH7IyCC464BQ2EmzZ8h6HCZwx?=
- =?us-ascii?Q?ZQcPhNWDSvIWr0uuVwnO6YN3XGzmYuAbtSyakg0SfsyMM8erwgTYCqCHUu2g?=
- =?us-ascii?Q?E0wwjZXVRU6KhguU/Bm2hEvYDx7OsLqfOhqeq3igTcG1oLBOVBQY2Shq/1XA?=
- =?us-ascii?Q?6OcZKPWI17ch7uTlRjull11omF/iw3L/dit8gduJY/+fPDIrHWBKhaWJMQSP?=
- =?us-ascii?Q?fS8lUAbf1pM5VtQQf58gZW9DV5YReEGrpy/aH60WlLeTggBCzILJrWeA/k4Y?=
- =?us-ascii?Q?vRh+O7rxb7YMvKa3LfhjdyLFNNfWHHuqXexjDS4lZvRPsPzAiIOebGa5utVz?=
- =?us-ascii?Q?nssfIcpZUbday1FH2MPn22zJk5xDkx7C254i58QP1tzNsAU+c1DNckIiDHBR?=
- =?us-ascii?Q?Mt3oQl6pT1JpSQBZWhcAn1gj4tcFBG7b1ZtFgICII0HMyjDHMUB40YTgI+9Y?=
- =?us-ascii?Q?wczQusQwwUNGg8UdgLy1qAqCCgQVlBQlKmAi/V2VATGgzFSPfeKB5SDg66J7?=
- =?us-ascii?Q?tm/6Yx6MgcMWwqT0gT2Irip05m5rkLX9mkyflGuR7kaT0gbR4rb9lxquGToX?=
- =?us-ascii?Q?GSddsciv2cCf0i9iLfwP2/2wuSwDIV7uXA8+ivK2DLmMIexIkeKh/BiI3bZl?=
- =?us-ascii?Q?UWTvO1GBg8zXR3mUL9OW9/MOIiFX11I72eKqr2Xtk8np8Cl4mGeqV8x/0wpb?=
- =?us-ascii?Q?2UC3+8gvTuXjt1G1Jx6nCptXV4d1BnsWZzEGaYQETRJqfwxJYSy1Ky0M5dbA?=
- =?us-ascii?Q?rExdemD5X39GaNyEoPsga+q8UIZHmDCA+tGdMJEijg/EXQLnLbxjSTHzT4ZJ?=
- =?us-ascii?Q?+svYIh3HJ35mgpTB1yJVI23qEMDy3GxXnuKEWnQuYMofnB9c+q3N9eQFnr/6?=
- =?us-ascii?Q?3le56jFz9vHACRMyOMfRUE7sSt3ede0JxaGDYSqYGCA3YxdouTbYmybVzSGQ?=
- =?us-ascii?Q?aOHaN/LsyJx5BzXu8LVhWxPJMxWEiOP4c8zsvUbCMX0L76neXyy0VWDDWEYN?=
- =?us-ascii?Q?S0IaTZwvREmzfLP1YOMDCvgGlAIV50fM+csbz7uTmpwGGprb8X//2DwQU5Yf?=
- =?us-ascii?Q?kha6rxm6wtjfQpYQhccjT4RDMQhrlyzeGk3M1DoiUe5/DKMLn83Rv+PY2j65?=
- =?us-ascii?Q?2z0Ek62D1/RqOISu+jsofJfzXbnZr01fOhDbjjS6Fp1c27WTTZh9sBhFibf7?=
- =?us-ascii?Q?Sx13g62oEbaa+Xzb2SGxN82SAYhZiJlN26BQa2dpcHxpeIK/dqTSPDDNsYSj?=
- =?us-ascii?Q?1jCWeb91N9N+8d6JD3MB5gaIuNq4LCYw6/XXXpLg0nASqow+unX4hwoZGrn+?=
- =?us-ascii?Q?E7TtSfNJj/hiGpxJlxKEs74MR5slhPy5+UWc2OEuWEBPQ7FTs8GsXGyOgpWd?=
- =?us-ascii?Q?aiGOcdtcbM6bUSFhpS9HPdE7uk6KkPLcFDhUUcRmZObUR7BOiAUzL6WPm9G9?=
- =?us-ascii?Q?YIyWlog8HPnpjn3ZFFp0qKAKzzmTK0VQ?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?H/w3MGCmG8RFh9h2aXw4RCdESHRsDE8VGfOXPQjXlTC12qyM1V/hxm19kzNJ?=
- =?us-ascii?Q?GxMTBeYtKgYLWntC2C217SIhs4gZYXRbyyU3uDt8FxMbXT+vTalloCnEdY3B?=
- =?us-ascii?Q?nQ+sENoUSn/FCHRQWszFO9m8NwUjxiVC+lKo5+Rftw6i1FqMBjsrcAx3eoKe?=
- =?us-ascii?Q?+qJCZISuVbKMsBahtAM+zbPwZOonGAiLgwgDNMiZgHi47FjNm0dC0+MSumEY?=
- =?us-ascii?Q?uPBLyv1tSqEjkpyOVxGhPUVRSsxGLirpOg2bUA9ooGmGyiC8p1D1q0TDadAi?=
- =?us-ascii?Q?fvfBS3yjjVxU2NAV78eye4cMtp/LlLnVnL4x5LzqTytBMwPVLRQuThb5La8S?=
- =?us-ascii?Q?BZzpyL5nCPElpa4FQ0GPblMcFT4zcmeTV1wB/Chxe5T680xbPo2O3cp4GZ6n?=
- =?us-ascii?Q?Mvq3F1yjNNAuz3GuxeYFQPURbEfKCGw6JaCv1H2wRlmSHREPKgtcFQ0apx16?=
- =?us-ascii?Q?5LwVIhcWr8IfPut0ozAQ+VqLVPuCp1ZmvAMTbU4R+kccBuE4wuBqEEDIpAP8?=
- =?us-ascii?Q?U4ADcRbYoDZdWDywSKZ+S6OcfRLPQK4H0OrvrxpfWQXWh0DDb3kIUs05RtgI?=
- =?us-ascii?Q?H+3IIIPqcRnIt2EGNqF0TIlWsfxf0EygecyZuYr8DVZn01b3g28p4Y0K3LAl?=
- =?us-ascii?Q?BROYvFsh4/phke9jv0b5tuwpZFMEFAlGDwD2W5kGGZ8XIQri9s2BG5ysOBO4?=
- =?us-ascii?Q?8TuX/wnonYcBF5cHnuwDJszMF7U00VMjGF9SWL04hWyBTOxNA22PhdqAvTGO?=
- =?us-ascii?Q?bkMlp9s+Hgugs5xYuEHx3gR83K62Y1hPC8g4spGWFSzmNwd2EYQMkcEz8J3e?=
- =?us-ascii?Q?mBs4Z5oIiXJr3jbHCBBPSwpDvta4WGQuS0rn3PVfdQiGePse2pGvdr1jQMoV?=
- =?us-ascii?Q?LPjMe5LmECVJ8YnSiljzVhX4Hk0QaYbznI7iSD7lkT+FpEjM6MJa11MbNBuR?=
- =?us-ascii?Q?VJSYfqT5M3hEae8K8X1loQREmOWrksd9WYdbW1HzMpVGF5leUsKnd0CuS7EM?=
- =?us-ascii?Q?JSwz/PPDGLGxhSjJBexCOsYPx+vF1Z+kGgJ/MowCdPf3ppFPS8PFpvmZjETv?=
- =?us-ascii?Q?4aUqyV+JcMFZn3+zPpnsS1DUriDvazcLPgJBoDEzLYil/hfCdHUbZDP5GCZ7?=
- =?us-ascii?Q?vJHstp8h7iyoE34S5eVJ7hbNM9yXozVM37Gs4Fu8wl5O2X/PpPX6wKfQvIPs?=
- =?us-ascii?Q?IWlOHiLh+V4JRc3SGG+ZZ+EA/61TDIvKi79I3lWGJLJjq8OkEgZeJXqVLD/i?=
- =?us-ascii?Q?K0NA+l7Y8qDNIMFaC6SUy4Bo1kQ3r52fTJ07YjCk6OIjCErBbG7FJWxvcVU/?=
- =?us-ascii?Q?TdCWP5sHm4B5Pm2XALHSB3Yj6nlI3ChiMsgPZn+4lgB+x6G6p7ox7/mwEU2g?=
- =?us-ascii?Q?LsCqpSkS6HR5C0NFxDbiZuLbgTFz8+bOgD8jqUFr6V1c7/OtWm7X7LOLvbZG?=
- =?us-ascii?Q?xeyZ6y7j76d11fuGOnP23pmGKtURg4PmLzGWDiYILZkpLiRhlguq8XbZu5BK?=
- =?us-ascii?Q?Eq6XgSULp5CZd3R6yGG+/Fq5xJtva6VeLI2DawW8KTQWr+dQpn7gI7hqblb+?=
- =?us-ascii?Q?WAXOgRUzRIxyAxycHXX66KNdu3GBZ6zR1JoYGRzJmj0J8zXqRWCnFtQOfJ5r?=
- =?us-ascii?Q?eQ=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	NCUDsCptfdl6NVzE+XRmAcfVB0TCO0kpXJIYms8adXUf22J0h7WZM4IIQd7nCVa1F70dSW1XQFFS4AAYF54RDH2F3aMWjcjcbahwaWKuOFaVO8N7AOo1W42VJaLM2K91sbRYV3Fl2Dke+PSfHAprFZF6wV98Mzuzz4mfzWBzFEPf5q1elBX9i4rYazjn1LsdPZYYPIdtpaA8/CxEK4qd9tgoNwxROINZji6a6T1obs7ArnN3seeZFVn65KgjLsWr/UGmKhr3M+R0smOhWExz+U24dH+tTsyew5TQ1vV50pCgs6MozIUgk+BcbH2jEACMHOX9ndzsi6ss27MIP44Mgw5LuIAtO1o0WlOo6f515vUCKwai+nz6QDrQT8RsiVmy5ZM1ebqHY3hYrXuTmOKIdP8124X0FpBYoXA8ASV/uoEuLithP7pJw5x8aujv2gOcrRUs7zETEwsOdhqBNvHJmiHUSHjJBwQPjxfYxpp3Gk+MczXRLdHqBCcrnUA/YjIBEr2DYazVyWKousL4/raMwtgmxhibM3sZoZwoprBgx2j/7ZjdfqhYUOktLnSqjqgWkt523qYg5SMtL8feCFCd+qG+y5F4cOZmlJNfc3SPG9M=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e644385-67e4-40c3-db52-08de0d7b2dab
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2025 12:46:23.2333
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lyLZpbdgkkaBS3MV9WFDbMuMpa0JedZDiK/jFohQfYTWt+VxXKJUsZBh2gIbhpo1iV3p4pNO+fQcbUE206exI9rSpTuPe9vvF3+pqNs1fXo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR10MB7627
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-17_04,2025-10-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 mlxscore=0
- adultscore=0 phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510020000
- definitions=main-2510170094
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDExMDAxMCBTYWx0ZWRfX3CdVs5SExetr
- yYo6EN3KDVrGoeTEdYk5fuIcEIIn0CT6zD1IeIJhsnYZGyqOnxxbkOqcpu40PCqlO2a1oYhrpmp
- x+n53pSct9KOct8ZXC2VMx4n4NZUKpkQdrZSBAcTkXPN7nH9H4lXTt15raRoMUF1eNpCY692sr4
- JMMc34YULLv0Zh1J+HBTbZfh8qB1EbDkN7JtDOObIHRFaS3DuQZKtjRZ/ff0bgaRN4ZbtkzNdfM
- ZTnY3s4sxeeL8UsBO04vvO0aTNFT7qT/51swibZ//2a2O1pAtLzIPeoDWPvoHnKZ5NNav+Sem7s
- YEyc2mfgbHWRTULBj4vAvk21A0iVSAymDW8TQfyFIrKrBZ0fRc940Gw5b1MbCXb3YurPx4vsK13
- 9GzrxUE6CRJORmob6d8Kijfw9C+W3A==
-X-Authority-Analysis: v=2.4 cv=V7JwEOni c=1 sm=1 tr=0 ts=68f23aa3 cx=c_pps
- a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=x6icFKpwvdMA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=eWYn1dIeHkTF74O058IA:9 a=CjuIK1q_8ugA:10
- a=UhEZJTgQB8St2RibIkdl:22 a=Z5ABNNGmrOfJ6cZ5bIyy:22 a=QOGEsqRv6VhmHaoFNykA:22
-X-Proofpoint-ORIG-GUID: 0ATmMJrwdHoEuzfB9kMIKut0xlYxjzQs
-X-Proofpoint-GUID: 0ATmMJrwdHoEuzfB9kMIKut0xlYxjzQs
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Fri, Oct 17, 2025 at 02:27:53PM +0200, Sumanth Korikkar wrote:
-> On Tue, Sep 23, 2025 at 02:17:04PM -0700, Andrew Morton wrote:
-> > On Tue, 23 Sep 2025 13:52:09 +0200 Sumanth Korikkar <sumanthk@linux.ibm.com> wrote:
-> >
-> > > > --- a/fs/hugetlbfs/inode.c
-> > > > +++ b/fs/hugetlbfs/inode.c
-> > > > @@ -96,8 +96,15 @@ static const struct fs_parameter_spec hugetlb_fs_parameters[] = {
-> > > >  #define PGOFF_LOFFT_MAX \
-> > > >  	(((1UL << (PAGE_SHIFT + 1)) - 1) <<  (BITS_PER_LONG - (PAGE_SHIFT + 1)))
-> > > >
-> > > > -static int hugetlbfs_file_mmap(struct file *file, struct vm_area_struct *vma)
-> > > > +static int hugetlb_file_mmap_prepare_success(const struct vm_area_struct *vma)
-> > > >  {
-> > > > +	/* Unfortunate we have to reassign vma->vm_private_data. */
-> > > > +	return hugetlb_vma_lock_alloc((struct vm_area_struct *)vma);
-> > > > +}
-> > >
-> > > Hi Lorenzo,
-> > >
-> > > The following tests causes the kernel to enter a blocked state,
-> > > suggesting an issue related to locking order. I was able to reproduce
-> > > this behavior in certain test runs.
-> >
-> > Thanks.  I pulled this series out of mm.git's mm-stable branch, put it
-> > back into mm-unstable.
->
-> Hi all,
->
-> The issue is reproducible again in linux-next with the following commit:
-> 5fdb155933fa ("mm/hugetlbfs: update hugetlbfs to use mmap_prepare")
+On Mon, 13 Oct 2025 15:31:06 +0100
+Alireza Sanaee <alireza.sanaee@huawei.com> wrote:
 
-Andrew - I see this series in mm-unstable, not sure what it's doing there
-as I need to rework this (when I get a chance, back from a 2 week vacation
-and this week has been - difficult :)
+> The CXL address to device decoding logic is complex because of the need
+> to correctly decode fine grained interleave. The current implementation
+> prevents use with KVM where executed instructions may reside in that
+> memory and gives very slow performance even in TCG.
+> 
+> In many real cases non interleaved memory configurations are useful and
+> for those we can use a more conventional memory region alias allowing
+> similar performance to other memory in the system.
+> 
+> Whether this fast path is applicable can be established once the full
+> set of HDM decoders has been committed (in whatever order the guest
+> decides to commit them). As such a check is performed on each commit /
+> uncommit of HDM decoder to establish if the alias should be added or
+> removed.
+> 
+> Co-developed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Signed-off-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
+Hi Ali,
 
-Can we please drop this until I have a chance to respin?
+Given your reply to add +CC had some broken wrapping I have probably
+confused things even more but this is a reply to the original email
+with the same +CC.  For future series that are qemu and CXL related
+as you've noted it needs to go to both main lists. It should also
+have
+[RFC PATCH qemu] as that helps Dave filter them out from the linux-cxl
+patchwork.
 
-Thanks, Lorenzo
+
+Various comments inline. Many of them in the code I hacked together.
+That younger me made a mess ;)
+
+> ---
+> Thanks to Jonathan Cameron for feedback and help with this patch.
+>  hw/cxl/cxl-component-utils.c |   9 ++
+>  hw/cxl/cxl-host.c            | 268 ++++++++++++++++++++++++++++++++++-
+>  hw/mem/cxl_type3.c           |   4 +
+>  include/hw/cxl/cxl.h         |   1 +
+>  include/hw/cxl/cxl_device.h  |  10 ++
+>  5 files changed, 289 insertions(+), 3 deletions(-)
+> 
+
+>  static void cxl_cache_mem_write_reg(void *opaque, hwaddr offset, uint64_t value,
+> diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
+> index 0d891c651d..3a563af3bc 100644
+> --- a/hw/cxl/cxl-host.c
+> +++ b/hw/cxl/cxl-host.c
+> @@ -12,6 +12,7 @@
+
+> @@ -226,7 +232,7 @@ static PCIDevice *cxl_cfmws_find_device(CXLFixedWindow *fw, hwaddr addr)
+>  
+>      cache_mem = usp_cstate->crb.cache_mem_registers;
+>  
+> -    target_found = cxl_hdm_find_target(cache_mem, addr, &target);
+> +    target_found = cxl_hdm_find_target(cache_mem, addr, &target, NULL);
+>      if (!target_found) {
+>          return NULL;
+>      }
+> @@ -248,6 +254,262 @@ static PCIDevice *cxl_cfmws_find_device(CXLFixedWindow *fw, hwaddr addr)
+>      return d;
+>  }
+>  
+> +static bool cfmws_is_not_interleaved(CXLFixedWindow *fw, hwaddr addr)
+Naming is a bit non obvious as it's not just checking the cfmws but
+also the rest of the path.  find_device doesn't suffer that confusion
+because it is finding a device under a cfwms.
+> +{
+
+It's a bit annoying how much this code shares with
+cxl_cfmws_find_device()
+
+As we take this forward perhaps we need a shared helper that both wrap
+which takes a interleave allowed parameter.
+
+Something like:
+
+static PCIDevice *do_cxl_cfws_find_device(CXLFixedWindow *fw, hwaddr addr,
+					  bool allow_interleave)
+(
+    CXLComponentState *hb_cstate, *usp_cstate;
+    PCIHostState *hb;
+    CXLUpstreamPort *usp;
+    int rb_index;
+    uint32_t *cache_mem;
+    uint8_t target;
+    bool target_found;
+    PCIDevice *rp, *d;
+    bool interleaved = false;
+
+    /* Address is relative to memory region. Convert to HPA */
+    addr += fw->base;
+
+//new bit
+    if ((fw->num_targets > 1) && !allow_interleave) {
+        return NULL;
+    }
+    rb_index = (addr / cxl_decode_ig(fw->enc_int_gran)) % fw->num_targets;
+    hb = PCI_HOST_BRIDGE(fw->target_hbs[rb_index]->cxl_host_bridge);
+    if (!hb || !hb->bus || !pci_bus_is_cxl(hb->bus)) {
+        return NULL;
+    }
+
+    if (cxl_get_hb_passthrough(hb)) {
+        rp = pcie_find_port_first(hb->bus);
+        if (!rp) {
+            return NULL;
+        }
+    } else {
+        hb_cstate = cxl_get_hb_cstate(hb);
+        if (!hb_cstate) {
+            return NULL;
+        }
+
+        cache_mem = hb_cstate->crb.cache_mem_registers;
+
+        target_found = cxl_hdm_find_target(cache_mem, addr, &target, &interleaved);
+        if (!target_found) {
+            return NULL;
+        }
+//new bit.
+	if (interleaved && !allow_interleave) {
+            return NULL;
+        }
+
+        rp = pcie_find_port_by_pn(hb->bus, target);
+        if (!rp) {
+            return NULL;
+        }
+    }
+
+    d = pci_bridge_get_sec_bus(PCI_BRIDGE(rp))->devices[0];
+    if (!d) {
+        return NULL;
+    }
+
+    if (object_dynamic_cast(OBJECT(d), TYPE_CXL_TYPE3)) {
+        return d;
+    }
+
+    /*
+     * Could also be a switch.  Note only one level of switching currently
+     * supported.
+     */
+    if (!object_dynamic_cast(OBJECT(d), TYPE_CXL_USP)) {
+        return NULL;
+    }
+    usp = CXL_USP(d);
+
+    usp_cstate = cxl_usp_to_cstate(usp);
+    if (!usp_cstate) {
+        return NULL;
+    }
+
+    cache_mem = usp_cstate->crb.cache_mem_registers;
+
+    target_found = cxl_hdm_find_target(cache_mem, addr, &target, &interleaved);
+    if (!target_found) {
+        return NULL;
+    }
+//new bit.
+    if (interleaved && !allow_interleave) {
+        return NULL;
+    }
+
+    d = pcie_find_port_by_pn(&PCI_BRIDGE(d)->sec_bus, target);
+    if (!d) {
+        return NULL;
+    }
+
+    d = pci_bridge_get_sec_bus(PCI_BRIDGE(d))->devices[0];
+    if (!d) {
+        return NULL;
+    }
+
+    if (!object_dynamic_cast(OBJECT(d), TYPE_CXL_TYPE3)) {
+        return NULL;
+    }
+
+    return d;
+}
+
+Then have two wrappers that hid away the oddity of the check.
+
+We still need to verify the interleave of the type3 but that
+happens when working out the mapping below.
+
+
+> +    PCIDevice *rp, *d;
+> +    PCIHostState *hb;
+> +    CXLComponentState *hb_cstate, *usp_cstate;
+> +    CXLUpstreamPort *usp;
+> +    uint32_t *cache_mem;
+> +    bool target_found, interleaved;
+> +    uint8_t target;
+> +
+> +    addr = fw->base;
+> +    if (fw->num_targets > 1) {
+> +        return false;
+> +    }
+> +
+> +    hb = PCI_HOST_BRIDGE(fw->target_hbs[0]->cxl_host_bridge);
+> +    if (!hb || !hb->bus || !pci_bus_is_cxl(hb->bus)) {
+> +        return false;
+> +    }
+> +    if (cxl_get_hb_passthrough(hb)) {
+> +        rp = pcie_find_port_first(hb->bus);
+> +        if (!rp) {
+> +            return false;
+> +        }
+> +    } else {
+> +        hb_cstate = cxl_get_hb_cstate(hb);
+> +        if (!hb_cstate) {
+> +            return false;
+> +        }
+> +        cache_mem = hb_cstate->crb.cache_mem_registers;
+> +
+> +        target_found = cxl_hdm_find_target(cache_mem, addr, &target,
+> +                                           &interleaved);
+> +        if (!target_found) {
+> +            return false;
+> +        }
+> +        if (interleaved) {
+> +            return false;
+> +        }
+> +
+> +        rp = pcie_find_port_by_pn(hb->bus, target);
+> +        if (!rp) {
+> +            return false;
+> +        }
+> +    }
+> +    d = pci_bridge_get_sec_bus(PCI_BRIDGE(rp))->devices[0];
+> +    if (!d) {
+> +        return false;
+> +    }
+> +
+> +    if (object_dynamic_cast(OBJECT(d), TYPE_CXL_TYPE3)) {
+> +        return true;
+> +    }
+> +    /*
+> +     * Could also be a switch.  Note only one level of switching currently
+> +     * supported.
+> +     */
+> +    if (!object_dynamic_cast(OBJECT(d), TYPE_CXL_USP)) {
+> +        return false;
+> +    }
+> +    usp = CXL_USP(d);
+> +
+> +    usp_cstate = cxl_usp_to_cstate(usp);
+> +    if (!usp_cstate) {
+> +        return false;
+> +    }
+> +
+> +    cache_mem = usp_cstate->crb.cache_mem_registers;
+> +
+> +    target_found = cxl_hdm_find_target(cache_mem, addr, &target,
+> +                                       &interleaved);
+> +    if (!target_found) {
+> +        return false;
+> +    }
+> +    if (interleaved) {
+> +        return false;
+> +    }
+> +
+> +    d = pcie_find_port_by_pn(&PCI_BRIDGE(d)->sec_bus, target);
+> +    if (!d) {
+> +        return false;
+> +    }
+> +
+> +    d = pci_bridge_get_sec_bus(PCI_BRIDGE(d))->devices[0];
+> +    if (!d) {
+> +        return false;
+> +    }
+> +
+> +    if (!object_dynamic_cast(OBJECT(d), TYPE_CXL_TYPE3)) {
+> +        return false;
+> +    }
+> +
+> +    return true;
+> +}
+> +
+> +static int cxl_fmws_direct_passthrough(Object *obj, void *opaque)
+> +{
+> +    struct cxl_direct_pt_state *state = opaque;
+> +    struct CXLFixedWindow *fw;
+> +    CXLType3Dev *ct3d = state->ct3d;
+> +
+> +    if (!object_dynamic_cast(obj, TYPE_CXL_FMW)) {
+> +        return 0;
+> +    }
+> +
+> +    fw = CXL_FMW(obj);
+> +
+> +    if (!cfmws_is_not_interleaved(fw, state->decoder_base)) {
+> +        return 0;
+> +    }
+> +
+> +    if (state->commit) {
+> +        MemoryRegion *mr = NULL;
+> +        uint64_t vmr_size = 0, pmr_size = 0;
+> +        uint64_t offset = 0;
+
+Might as well combine the two lines above given they are all set to 0
+so I don't think it hurt readability.
+
+> +
+> +        if (ct3d->hostvmem) {
+> +            MemoryRegion *vmr = host_memory_backend_get_memory(ct3d->hostvmem);
+
+Blank line here.
+
+> +            vmr_size = memory_region_size(vmr);
+> +            if (state->dpa_base < vmr_size) {
+> +                mr = vmr;
+> +                offset = state->dpa_base;
+> +            }
+> +        }
+> +        if (!mr && ct3d->hostpmem) {
+> +            MemoryRegion *pmr = host_memory_backend_get_memory(ct3d->hostpmem);
+
+and here.  I have it in my head that checkpatch moans about this, but maybe not.
+
+> +            pmr_size = memory_region_size(pmr);
+pmr size is used only once. Maybe...
+
+            if (state->dpa_base - vmr_size < memory_region_size(pmr)) {
+
+However it then looks more different from previous block, so perhaps
+this isn't a good change to make.  Up to you.
+
+> +            if (state->dpa_base - vmr_size < pmr_size) {
+> +                mr = pmr;
+> +                offset = state->dpa_base - vmr_size;
+> +            }
+> +        }
+> +
+> +        if (!mr) {
+> +            return 0;
+> +        }
+> +
+> +        if (memory_region_is_mapped(&ct3d->direct_mr[state->hdm_decoder_idx])) {
+> +            return 0;
+> +        }
+> +
+> +        memory_region_init_alias(&ct3d->direct_mr[state->hdm_decoder_idx],
+> +                                 OBJECT(ct3d), "direct-mapping", mr, offset,
+> +                                 state->decoder_size);
+> +        memory_region_add_subregion(&fw->mr,
+> +                                    state->decoder_base - fw->base,
+> +                                    &ct3d->direct_mr[state->hdm_decoder_idx]);
+> +    } else {
+> +        if (memory_region_is_mapped(&ct3d->direct_mr[state->hdm_decoder_idx])) {
+> +            memory_region_del_subregion(&fw->mr,
+> +                &ct3d->direct_mr[state->hdm_decoder_idx]);
+> +        }
+> +    }
+> +
+> +    return 0;
+> +}
+> +
+> +static int update_non_interleaved(Object *obj, void *opaque)
+> +{
+> +    CXLType3Dev *ct3d;
+> +    uint32_t *cache_mem;
+> +    unsigned int hdm_count, i;
+> +    uint32_t cap;
+> +    int hdm_inc = R_CXL_HDM_DECODER1_BASE_LO - R_CXL_HDM_DECODER0_BASE_LO;
+> +    uint64_t dpa_base = 0;
+> +    bool commit = *(bool *) opaque;
+> +
+> +    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
+> +        return 0;
+> +    }
+> +
+> +    ct3d = CXL_TYPE3(obj);
+> +    cache_mem = ct3d->cxl_cstate.crb.cache_mem_registers;
+> +    /*
+> +     * Walk the decoders and find any committed with iw set to 0
+> +     * (non interleaved).
+I'd move this down to...
+> +     */
+> +    cap = ldl_le_p(cache_mem + R_CXL_HDM_DECODER_CAPABILITY);
+> +    hdm_count = cxl_decoder_count_dec(FIELD_EX32(cap,
+> +                                                 CXL_HDM_DECODER_CAPABILITY,
+> +                                                 DECODER_COUNT));
+> +
+... here and drop the following code as we already said it was commiteed
+
+> +    /* Now for each committed HDM decoder */
+> +    for (i = 0; i < hdm_count; i++) {
+> +        uint64_t decoder_base, decoder_size, skip;
+> +        uint32_t hdm_ctrl, low, high;
+> +        int iw, committed;
+> +
+> +        hdm_ctrl = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL + i * hdm_inc);
+> +        committed = FIELD_EX32(hdm_ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED);
+> +        if (commit) {
+> +            if (!committed) {
+> +                return 0;
+> +            }
+> +        } else {
+> +            if (committed) {
+> +                return 0;
+> +            }
+> +        }
+
+Smells like if could be something like:
+        /* If this state isn't the one we are looking for, nothing to do */
+        if (commit ^ committed) { 
+            return 0;
+        }
+
+
+> +
+> +        /*
+> +         * Even if this decoder is interleaved need to keep track of DPA as the
+> +         * next HDM decoder may not be interleaved.
+> +         */
+
+This comment feels a bit belt and braces given we do the += skip just below.
+Probably left over from when I was thinking my way around the original PoC.
+So I'd drop ti.
+
+
+> +        low = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_DPA_SKIP_LO +
+> +                       i * hdm_inc);
+> +        high = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_DPA_SKIP_HI +
+> +                        i * hdm_inc);
+> +        skip = ((uint64_t)high << 32) | (low & 0xf0000000);
+> +        dpa_base += skip;
+> +
+> +        low = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_SIZE_LO + i * hdm_inc);
+> +        high = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_SIZE_HI + i * hdm_inc);
+> +        decoder_size = ((uint64_t)high << 32) | (low & 0xf0000000);
+> +        iw = FIELD_EX32(hdm_ctrl, CXL_HDM_DECODER0_CTRL, IW);
+> +        /* Get the HPA of the base */
+
+Similar on this. Comment feels a bit much given we use it to fill
+decoder_base.  Just drop it.
+
+> +        low = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_BASE_LO + i * hdm_inc);
+> +        high = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_BASE_HI + i * hdm_inc);
+> +        decoder_base = ((uint64_t)high << 32) | (low & 0xf0000000);
+> +
+> +#ifdef DEBUG
+> +        qemu_log("non interleaved decoder %lx %lx %lx %d\n", decoder_base,
+> +                 decoder_size, dpa_base, commit);
+> +#endif
+> +
+> +        /* Is it non interleaved? - need to check full path later */
+I'd drop the 'need to check the full path later' given it happens just below anyway.
+> +        if (iw == 0) {
+> +            struct cxl_direct_pt_state state = {
+> +                .ct3d = ct3d,
+> +                .decoder_base = decoder_base,
+> +                .decoder_size = decoder_size,
+> +                .dpa_base = dpa_base,
+> +                .hdm_decoder_idx = i,
+> +                .commit = commit,
+> +            };
+> +            object_child_foreach_recursive(object_get_root(),
+> +                                           cxl_fmws_direct_passthrough, &state);
+> +        }
+> +        dpa_base += decoder_size / cxl_interleave_ways_dec(iw, &error_fatal);
+> +
+> +    }
+> +    return 0;
+> +}
+
+
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 89411c8093..1d199d035e 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -584,6 +584,7 @@ struct CXLType3Dev {
+>      uint64_t sn;
+>  
+>      /* State */
+> +    MemoryRegion direct_mr[CXL_HDM_DECODER_COUNT];
+>      AddressSpace hostvmem_as;
+>      AddressSpace hostpmem_as;
+>      CXLComponentState cxl_cstate;
+> @@ -671,6 +672,15 @@ struct CSWMBCCIDev {
+>      CXLCCI *cci;
+>  };
+>  
+> +struct cxl_direct_pt_state {
+> +    CXLType3Dev *ct3d;
+> +    hwaddr decoder_base;
+> +    hwaddr decoder_size;
+> +    hwaddr dpa_base;
+> +    unsigned int hdm_decoder_idx;
+> +    bool commit;
+> +};
+
+I don't see why this is the header.  It's only used in cxl-host.c
+so I'd move it down there. If it were widely visible type you'd need
+to follow QEMU type naming conventions. For local types things tend to be
+a bit more relaxed.
+
+> +
+>  #define TYPE_CXL_SWITCH_MAILBOX_CCI "cxl-switch-mailbox-cci"
+>  OBJECT_DECLARE_TYPE(CSWMBCCIDev, CSWMBCCIClass, CXL_SWITCH_MAILBOX_CCI)
+>  
+
