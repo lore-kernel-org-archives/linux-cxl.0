@@ -1,99 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F422DE6E9;
-	Thu, 16 Oct 2025 21:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2960E322DC1
+	for <linux-cxl@vger.kernel.org>; Fri, 17 Oct 2025 06:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760649145; cv=none; b=AxZKSWdtyx8Wyq8ZA/hIWKtkbKG30jlALoDLwivP9dEJGoV0UweXvcCgki7zhiO9ODO5zq53VWKZvG34P6Umczv5gvo+o8T6Y3a1/RbUI+7xzIflAZMZC79T5mRvCAwfh/1LiS85KQUQuXyyf/pA9G39JFrqlepolgbX/RUzP7c=
+	t=1760681490; cv=none; b=FBKiOVw20Jdxd7SuzcNkCjqzL/UudSlTwfhR6kYbpTdO+bIGJjnn3Kkhlte5uadRUpq66WwIUcU5h3l8jFrG080sZwTflNUYpOIKV6NBGIZq+le4suoOIHGXZx1PZlWXh/zpo090TM0OxV0eS1uKgfbm5nXmihAb3xIRhY0yV2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760649145; c=relaxed/simple;
-	bh=KHK7I670oRMrWGeBaFZ9Bw2rnLfggfRJoEkZ7ISt2A8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SkeA29F0PbcV3gAjRWpaK7PJYvyi6rDPInNHJM3gAb/sV4fUAjpJjyZj9kA6DTqS85p3PqUykiyzH4I2dmpYyMvhG24mYSPIW2inV4/VSJRlwjP5ILB/11aKgzepGHz9zUY1Gy9NaDgkiaOoyGcjJQN68hCrZSxLEEjjMWBF4H4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bv5XTbrp; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1760681490; c=relaxed/simple;
+	bh=tikMEle/G/GkBijlPwu+3b7d1w+RJh81JR7+Jsyvuqk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VpdjeVHMOQVvpmSKL7b3a8ejX+9AgiDw8lc5rN1VUpu5m6ysQPm4g+S3tNhPR/JFNZisodY3WBIW+U7KIsjWB9Uv617y6HEcd+S85P3smV0NTVAqm2N3eN0qPcMIGSJ05iYWNqG3y7xaLYDmyVQuaLQ73VhNx9YHkbKe+oQq6Pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=wtacB6tF; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bv5XTbrp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760649143; x=1792185143;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=KHK7I670oRMrWGeBaFZ9Bw2rnLfggfRJoEkZ7ISt2A8=;
-  b=bv5XTbrpeXEYIB9hfx4YG04CmUIXNY5u0+4CkKBu9HIc0OU+vKs2s8Ju
-   cc/KOoEfMCDDSoD7CpfcQ3raN0+P3Wki7hQojm5ZehniWzI3SM9fkdMjc
-   ghLzqFnv+OGBR7UmiHz5j3Ll2fJkLVbam+CKgjIl58cqK+NHtpIF21i/Y
-   eTgMOVvzMJrrDQj2zaspj/DKYAJ+ZRv5h7n8PysLdJdiBNcHxACC1plZj
-   M1iXNIDGUxTIZnZDxeCNJ7FKyVlGQWfBLEUB9ZtgpIOlbyRCw3eddixq9
-   Fgz5uCvd4/HP+jyqr1KyN/FsHVyL2murRPf2MoLm/q5yJJ2DmvGy0NgcM
-   w==;
-X-CSE-ConnectionGUID: hiieLbcQQ7qSCIWfP7vgLA==
-X-CSE-MsgGUID: q53KAjqKQom2K7xywQ4Tew==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="66689174"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="66689174"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2025 14:12:23 -0700
-X-CSE-ConnectionGUID: NCTAk1dzRqWAbp98wjTmFQ==
-X-CSE-MsgGUID: d6GCJLmVTOeXPIe3tkWpbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,234,1754982000"; 
-   d="scan'208";a="213143132"
-Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.108.4]) ([10.125.108.4])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2025 14:12:23 -0700
-Message-ID: <8c65e30c-5273-4098-ab63-cba51563c244@intel.com>
-Date: Thu, 16 Oct 2025 14:12:21 -0700
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="wtacB6tF"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1760681479; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=AK572BdDRYMHWa5xjSSc+Cuv4nNXEjxPZUtK6w6ic8E=;
+	b=wtacB6tF1cFSyjeOpVtuW4x/B7fW1kMfJKWa4C/vfg8/ElM6ljJgjyD71kFAMTcF9cYvUPR6ORQPSCKctz5sQOUVQp7wu6dW1DQAS3NiEFBQFpymHOFQ8/x6kMnk2fG0N4b16fZIxYrcgt7Th+426GI1jaXtBIyVjlnM66QG3Zg=
+Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WqOlvx1_1760681478 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 17 Oct 2025 14:11:18 +0800
+From: "Huang, Ying" <ying.huang@linux.alibaba.com>
+To: Dan Williams <dan.j.williams@intel.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+ <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+ <seven.yi.lee@gmail.com>, <hch@infradead.org>, <a.manzanares@samsung.com>,
+ <fan.ni@samsung.com>
+Cc: <linux-cxl@vger.kernel.org>
+Subject: Deep flush support for CXL pmem?
+Date: Fri, 17 Oct 2025 14:11:16 +0800
+Message-ID: <87zf9qf46z.fsf@DESKTOP-5N7EMDA>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] acpi/hmat: Fix lockdep warning for
- hmem_register_resource()
-To: dan.j.williams@intel.com, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
-Cc: vishal.l.verma@intel.com, ira.weiny@intel.com, rafael@kernel.org
-References: <20251015162958.11249-1-dave.jiang@intel.com>
- <68f001e4e4a2c_2f8991001a@dwillia2-mobl4.notmuch>
- <32ca1961-5ed6-47b5-af0e-70e7e87bba96@intel.com>
- <68f1421f4320b_2a2b1004e@dwillia2-mobl4.notmuch>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <68f1421f4320b_2a2b1004e@dwillia2-mobl4.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ascii
 
+Hi, All,
 
+When reading the documentation of PMDK (https://github.com/pmem/pmdk), I
+found that deep flush is used for data loss recovery in addition to GPF.
+With that, we can identify that a file isn't affected by the GPF failure
+because it wasn't opened during the GPF failure.
 
-On 10/16/25 12:06 PM, dan.j.williams@intel.com wrote:
-> Dave Jiang wrote:
-> [..]
->>> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
->>> index 5a36d57289b4..9f9f09480765 100644
->>> --- a/drivers/acpi/numa/hmat.c
->>> +++ b/drivers/acpi/numa/hmat.c
->>> @@ -867,6 +867,9 @@ static void hmat_register_target_devices(struct memory_target *target)
->>>         if (!IS_ENABLED(CONFIG_DEV_DAX_HMEM))
->>>                 return;
->>>  
->>> +       if (target->registered)
->>> +               return;
->>> +
->>
->> So this still triggers the lockdep warning. I don't think it's smart
->> enough to know that it gets around the issue. My changes with a new
->> flag does not trigger the lockdep.
-> 
-> You have a case where target->registered is false in the
-> hmat_callback() path? How does that happen?
+However, IIUC, the Linux kernel doesn't support deep flush (via
+nvdimm_flush()) for CXL pmem at least for now.  For NVDIMM, we have WPQ,
+but it appears that we don't have that for CXL.  Is deep flush for CXL
+defined in some spec?
 
-It seems the ELC nodes are not on CPU node and also not generic port nodes. This platform has socket 0 and 1 where the memory targets are registered. However, node 2 and 3 gets hot-plugged and does not target registered at hmat_callback() time. > 
-> ...and the splat is the same hmem_resource lock entanglement?
-
-yes
-
-Yes.
+---
+Best Regards,
+Huang, Ying
