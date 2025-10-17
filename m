@@ -1,93 +1,178 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDBB2036E9;
-	Fri, 17 Oct 2025 21:37:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935B5223710
+	for <linux-cxl@vger.kernel.org>; Fri, 17 Oct 2025 22:25:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760737045; cv=none; b=QBEOw+lxd0phQdSYgpcjwzORj5sVJAnKLSsfC/7pmws2jYUff+l/qhwnux6NCqx828MuZQ/rTeRlbtDMebwv4dV48O2RlQZBzNGm8Z1J2xkbFlDJPzmDaaYNbbbIdmRFwuyuHJqDI0guOMt5524LKvHzZApbuARHSysWWsl9e70=
+	t=1760739938; cv=none; b=QdTvfnP4uJhzoAHvWwiotV1nUrwejLxTgYXBNKg6+PqhMUoLucl5yu8bttp0QDeyqf/Kf9dp+4NhAnZWdXGAuMfNCRzjkn/zvX7OegZGXivkgUHKhh3kUUELpmuBc8oOEEoq+kBUCTVzZRQt9Ed2UInU83xSGFqZoYKoxg5w08c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760737045; c=relaxed/simple;
-	bh=nYpBafhW7YwCHT2Y3O7Vz/Cfc9k402BvH2+Wh0f/DtA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=cd9pi7fG1cFjyUBuUA1T/KvVxayvLCNYinxzZkHNwWjUhC+wEPrsqY5nFy0FPpfaInFwhXASPu6m1jVDCLQTUayfplYuiHjIslNzlecVsYjfQe0r6lmQNS8Cm6yrAvC/W3mk+L54YHlZiMJTWC54Glq3d9zcJJ9Uxn+NWnfLmMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FE1dBvUV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FE1dBvUV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7221C4CEE7;
-	Fri, 17 Oct 2025 21:37:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1760737044;
-	bh=nYpBafhW7YwCHT2Y3O7Vz/Cfc9k402BvH2+Wh0f/DtA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FE1dBvUVul1ShFrtQ9a2yuuluVLEiX3PNARQaVwbXQaU+qoOwkoZFLo6b4wiRoAnn
-	 EAWR1VKBFA4zRtgkP4k2hogdZvMF/OsA2XiB7rwYq/IaAOtbxaSzMwRQdJIRLlTGrz
-	 ijhhPTnwyBb6OdZP8xn3qakbxsmeiLKTac97LR64=
-Date: Fri, 17 Oct 2025 14:37:22 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Sumanth Korikkar <sumanthk@linux.ibm.com>, Jonathan Corbet
- <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>, Guo Ren
- <guoren@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Heiko
- Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander
- Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>,
- "David S . Miller" <davem@davemloft.net>, Andreas Larsson
- <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Dan Williams <dan.j.williams@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
- Nicolas Pitre <nico@fluxnic.net>, Muchun Song <muchun.song@linux.dev>,
- Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@redhat.com>,
- Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Baoquan He
- <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young
- <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>, Reinette Chatre
- <reinette.chatre@intel.com>, Dave Martin <Dave.Martin@arm.com>, James Morse
- <james.morse@arm.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
- Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, "Liam R . Howlett"
- <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
- <mhocko@suse.com>, Hugh Dickins <hughd@google.com>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, Uladzislau Rezki <urezki@gmail.com>,
- Dmitry Vyukov <dvyukov@google.com>, Andrey Konovalov
- <andreyknvl@gmail.com>, Jann Horn <jannh@google.com>, Pedro Falcato
- <pfalcato@suse.de>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
- ntfs3@lists.linux.dev, kexec@lists.infradead.org,
- kasan-dev@googlegroups.com, Jason Gunthorpe <jgg@nvidia.com>,
- iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>, Will Deacon
- <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v4 11/14] mm/hugetlbfs: update hugetlbfs to use
- mmap_prepare
-Message-Id: <20251017143722.d045a2cd9d1839803da3f28a@linux-foundation.org>
-In-Reply-To: <c64e017a-5219-4382-bba9-d24310ad2c21@lucifer.local>
-References: <cover.1758135681.git.lorenzo.stoakes@oracle.com>
-	<e5532a0aff1991a1b5435dcb358b7d35abc80f3b.1758135681.git.lorenzo.stoakes@oracle.com>
-	<aNKJ6b7kmT_u0A4c@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
-	<20250923141704.90fba5bdf8c790e0496e6ac1@linux-foundation.org>
-	<aPI2SZ5rFgZVT-I8@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
-	<c64e017a-5219-4382-bba9-d24310ad2c21@lucifer.local>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1760739938; c=relaxed/simple;
+	bh=D0XiWAMkAc0ibsOSnA5Idu+CkpE3G0JwNqpcjusBh08=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OMoZSKM2V0j0ZrArAiebvDjMy1AKFc9uMEc+FWDxGebHfcTBufBd5ylt7rybT7bRBD5dA73ASJ14b1vzmGlxBx2KZkVmuqA6yi6COrPqT+q+jKVdZ+JuC4jpG5bJZOKSsnVpHv4SrrbCOqNfK/lcUWHfWV7KzIfY+dsgIzj4UPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F501C4CEE7;
+	Fri, 17 Oct 2025 22:25:37 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Subject: [PATCH v2] cxl/region: Add support to indicate region has extended linear cache
+Date: Fri, 17 Oct 2025 15:25:36 -0700
+Message-ID: <20251017222536.4160645-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 17 Oct 2025 13:46:20 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+Add a region sysfs attribute to show the size of the extended linear
+cache if there is any. The attribute is invisible when the cache
+size is 0, which indicates it does not exist.
 
-> > The issue is reproducible again in linux-next with the following commit:
-> > 5fdb155933fa ("mm/hugetlbfs: update hugetlbfs to use mmap_prepare")
-> 
-> Andrew - I see this series in mm-unstable, not sure what it's doing there
-> as I need to rework this (when I get a chance, back from a 2 week vacation
-> and this week has been - difficult :)
-> 
-> Can we please drop this until I have a chance to respin?
+Moved the cxl_region_visible() location in order to pick up the
+new sysfs attribute definition.
 
-No probs, gone.
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+v2:
+- Add documentation. (Alison)
+---
+ Documentation/ABI/testing/sysfs-bus-cxl |  8 ++++
+ drivers/cxl/core/region.c               | 63 +++++++++++++++++++------
+ 2 files changed, 56 insertions(+), 15 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 6b4e8c7a963d..8d529d68dfcd 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -498,6 +498,14 @@ Description:
+ 		there is no guarantee that a free followed by an allocate
+ 		results in the same address being allocated.
+ 
++What:		/sys/bus/cxl/devices/regionZ/extended_linear_cache_size
++Date:		October, 2025
++KernelVersion:	v6.19
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) The size of extended linear cache if there is one present.
++		The region 'size' attribute would reflect the total size where
++		the CXL region size plus the extended linear cache size.
+ 
+ What:		/sys/bus/cxl/devices/regionZ/mode
+ Date:		January, 2023
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index b06fee1978ba..531f790b9510 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -461,21 +461,6 @@ static ssize_t commit_show(struct device *dev, struct device_attribute *attr,
+ }
+ static DEVICE_ATTR_RW(commit);
+ 
+-static umode_t cxl_region_visible(struct kobject *kobj, struct attribute *a,
+-				  int n)
+-{
+-	struct device *dev = kobj_to_dev(kobj);
+-	struct cxl_region *cxlr = to_cxl_region(dev);
+-
+-	/*
+-	 * Support tooling that expects to find a 'uuid' attribute for all
+-	 * regions regardless of mode.
+-	 */
+-	if (a == &dev_attr_uuid.attr && cxlr->mode != CXL_PARTMODE_PMEM)
+-		return 0444;
+-	return a->mode;
+-}
+-
+ static ssize_t interleave_ways_show(struct device *dev,
+ 				    struct device_attribute *attr, char *buf)
+ {
+@@ -754,6 +739,21 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
+ }
+ static DEVICE_ATTR_RW(size);
+ 
++static ssize_t extended_linear_cache_size_show(struct device *dev,
++					       struct device_attribute *attr,
++					       char *buf)
++{
++	struct cxl_region *cxlr = to_cxl_region(dev);
++	struct cxl_region_params *p = &cxlr->params;
++	ssize_t rc;
++
++	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
++	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
++		return rc;
++	return sysfs_emit(buf, "%#llx\n", p->cache_size);
++}
++static DEVICE_ATTR_RO(extended_linear_cache_size);
++
+ static struct attribute *cxl_region_attrs[] = {
+ 	&dev_attr_uuid.attr,
+ 	&dev_attr_commit.attr,
+@@ -762,14 +762,44 @@ static struct attribute *cxl_region_attrs[] = {
+ 	&dev_attr_resource.attr,
+ 	&dev_attr_size.attr,
+ 	&dev_attr_mode.attr,
++	&dev_attr_extended_linear_cache_size.attr,
+ 	NULL,
+ };
+ 
++static umode_t cxl_region_visible(struct kobject *kobj, struct attribute *a,
++				  int n)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct cxl_region *cxlr = to_cxl_region(dev);
++
++	/*
++	 * Support tooling that expects to find a 'uuid' attribute for all
++	 * regions regardless of mode.
++	 */
++	if (a == &dev_attr_uuid.attr && cxlr->mode != CXL_PARTMODE_PMEM)
++		return 0444;
++
++	/*
++	 * Don't dispaly extended linear cache attribute if there is no
++	 * extended linear cache.
++	 */
++	if (a == &dev_attr_extended_linear_cache_size.attr &&
++	    cxlr->params.cache_size == 0)
++		return 0;
++
++	return a->mode;
++}
++
+ static const struct attribute_group cxl_region_group = {
+ 	.attrs = cxl_region_attrs,
+ 	.is_visible = cxl_region_visible,
+ };
+ 
++static const struct attribute_group *get_cxl_region_group(void)
++{
++	return &cxl_region_group;
++}
++
+ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
+ {
+ 	struct cxl_region_params *p = &cxlr->params;
+@@ -3478,6 +3508,9 @@ static int __construct_region(struct cxl_region *cxlr,
+ 		dev_warn(cxlmd->dev.parent,
+ 			 "Extended linear cache calculation failed rc:%d\n", rc);
+ 	}
++	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_group());
++	if (rc)
++		return rc;
+ 
+ 	rc = insert_resource(cxlrd->res, res);
+ 	if (rc) {
+
+base-commit: a4bbb493a3247ef32f6191fd8b2a0657139f8e08
+-- 
+2.51.0
+
