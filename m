@@ -1,115 +1,234 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012008.outbound.protection.outlook.com [52.101.43.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDE41C84DE
-	for <linux-cxl@vger.kernel.org>; Mon, 20 Oct 2025 14:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760969954; cv=none; b=Ti8eUpXHQPVJIjUQt231v8EumHnVjFcoLa4RQkIQ0NKjfz2+q9vMOvrw0YPCzsqAOS+RunSgy33dnp9na8hZZBJRtEbAhxoR1rTAfjE+JbpZu2c/NeXxBxS16kDWNsAzZbNr5PkbZSaAXozQhuPi2pFkQIIKEAznJiboHiJ406c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760969954; c=relaxed/simple;
-	bh=2npudKn3M3pGuvcNhStzzobNKAnWlVCYEMk+IX+Cn00=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uhtvg8C2YdsBDKbJvFw7qs2Ep76Pdpjdt+UCBEDoCKnYsQHgtQrsrjGKGiB9Sq/0kChOmCvB6Ld80ljed6WwhlL0Dgbgp6GApGp1g2Htg2NOr7WjFsTRVtvE7zMeVlKWYn6eyAWfwzMwiGCG/sHGbsAMTYSjxtfNZyIc13sHWx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=HLRQmwV3; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28AC1514F7;
+	Mon, 20 Oct 2025 14:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760972394; cv=fail; b=tXr4GWNMM9xIpis23Qk13zgz0hrnyLIkjSdCW1p+mjO6yOzP6rcsdo+0vEZmMdSjybZ5UbPvYmUYZAdroaoiMnnBq4sTUyFtJs6grf7AnkAau3nTPdCZZ/WCyKvYd9m0beljbK+MebGFn3nM0EnWVqc14nYDjaJ7n8/DDVOJYqc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760972394; c=relaxed/simple;
+	bh=kDOjwuCPah3EaH7fE5wgTTEmQKYBQFOGqkycEe4xmNs=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=RXJWirvt4KoNdR45x9a4paXR9vsw/CctqHP2PgDDl2VXwlpynmtd8NnHTogIvUZXHeGn8IU5FnpKoLaSrsns5GpB5lAKa2TFE8EYlS4HoGJJffCcsD7UaSk3TKJgcS3iUzgxem1opHx5WIgGIbEe87Xn6ronbVqWMj67fJej9Yk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hB/0FakX; arc=fail smtp.client-ip=52.101.43.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="HLRQmwV3"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7f04816589bso705506985a.3
-        for <linux-cxl@vger.kernel.org>; Mon, 20 Oct 2025 07:19:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1760969951; x=1761574751; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+qpyUIh0Tk7malHtrxqPktm9KOxI8snDhlaveespDlU=;
-        b=HLRQmwV3ChxvDcup/Z2+kAXm2ea9QBwL3R3+TcXkrOk7+FGDaTGQaK0OhpVt3opVWC
-         4jX3i5tVr3ObVn3s9AmgUE/fbwOj17wuWTvzpe+/WfNM+ZfypXURbLDpphy6U2qOyQL7
-         itjHOXZFnHnkuAcEaPHT9oY87gQJ1U9Vuc5q6NlJROIKPrbLQrE8hTLwuLAl6wp5+r0u
-         dwSV7PUL3js/7aHgWGcXvzxscfkh+L50DqgCJiYRWpHjtY1JdIiHq6CSbR20OR15bja4
-         uZP9ej1+oTMJrjmPiV/8Y4YJMhfvjDyXz5go9H19XCtvm0JjNDuK0/76Q96C4j1kJxxl
-         ATBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760969951; x=1761574751;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+qpyUIh0Tk7malHtrxqPktm9KOxI8snDhlaveespDlU=;
-        b=B8OwVTXdy2aGi2qWwVNdmezNCMk3oDuisaEhVmDQ+OGoQpjv8Jz3qb65tJbo46SFQE
-         RX65lwCGgiiOsmC8OZfFlcThWjgG1ovWiXPnDVKNNr1+/iNB3175h50EwFuTXRhCpLgF
-         SVNzS/KQ7XTiTN9RTh9S9seQziC57lkVDSgxabv6Ia2GB5UNG7ANI3/vRyx57F2FQnll
-         9+e8SCqPeskry4ClceOIgyN656BS3/PQrmyUltllDFarOVJaHrXmhiPe7jua+BaHd11R
-         IHPgMwFxUhD1AQ01g/kOAE94SFX2jwQo3bf+rSEF6FuX+3y/O39LLyyHS2krmhTV5TNp
-         k6LA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkiESBZajDMaWqEjyGlDJE9Z8WqJvN937oWHxXHWLiWgUqMg8oDfaGkDcylTSRdjn1Jtbxlehq8pA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaC4n2pGiuwKMtpg2chInld4YmUumHZeLKkqUcRm7dkIbCHgLX
-	lfPn3KZBSfjuMbM2uAVoEh9F7xeshHs+YQBG7x4Q1Xl9A81+deIKfJjIu9e/QCSYyaI=
-X-Gm-Gg: ASbGncsv8d4kD9pwdAL4fORtFHPSDBBvigjXCn+jd3rs2ZuKsVtUy8rQrQqKEfXYLiz
-	onRRMA7w5smrB8r0vOntdWUhbuDliz4w1rk+/ntYVaWqDy6FvEtkNCJkDpv9Mg7dgw2ds1Jk/Nr
-	y+JxNIeKzMmyBFxqJWUNnZsQzCghM+ATU52MzmF1MD5rFTD04CuF1fsr4Aw69w8L7u2PdJubPDn
-	5PFtOetzyDjPLfdqNojPdaHMF4ZwgTmQfMHs1eWR4c2Qvetk3l382aU5s+ga9vhTm6GFtwmYvEB
-	2567j9tcoV3oQIp49gx+JauBTSSHU0NYJ60F8AADyVk4iTOOE7X4VrxiQmDhidhVNkTdaKizT69
-	ty3mncJ2ddgv9xycU0d7EkZQeOD63wYpI/3mphluMja1ZomXievoAUkA5cDc6IY7yrDRYySEYdJ
-	QJ/ARs1DIzElsqVlZjzSlPQ83327v3pNx7Ja9S8nqn6rg/dEHKN6Sr5FN/cQZ9BvL+qALDqQ==
-X-Google-Smtp-Source: AGHT+IHRCRqY4YjVP7KDo2gTi6tLoUYXho+CWMkf+1VAhi9o3M4Tof/3oq0+LXyeXxZiWLuh71yZog==
-X-Received: by 2002:a05:620a:40c1:b0:891:6891:5668 with SMTP id af79cd13be357-891689161b5mr1432264685a.63.1760969951455;
-        Mon, 20 Oct 2025 07:19:11 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-891cf58eec0sm565840285a.45.2025.10.20.07.19.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Oct 2025 07:19:11 -0700 (PDT)
-Date: Mon, 20 Oct 2025 10:19:09 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Vishal Aslot <vaslot@nvidia.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Li Ming <ming.li@zohomail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"open list:COMPUTE EXPRESS LINK (CXL)" <linux-cxl@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/2] cxl_test: enable zero sized decoders under hb0
-Message-ID: <aPZE3Spas-IvHmfd@gourry-fedora-PF4VCD3F>
-References: <20251015024019.1189713-1-vaslot@nvidia.com>
- <20251015024019.1189713-2-vaslot@nvidia.com>
- <aPXgLp1Em6wKlx0t@aschofie-mobl2.lan>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hB/0FakX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Tj2l0Z0LOD+GO58gBC5EvHX1LGiwPy94TTCkvqnEsLBBMS4ATRgVRvFaJvVAEOgtD4x452ezZFKChlvMhN9OOFoO8VM4Bk8cboGPHD/fi4dDhEOeVfjwUFJ+TZduMo9jRGyra2AEQF0q8Z8AkXxZfsIxUM71rV6sAj/cqJvw8VBYzR/noDBSXluFcttCDlV3qZrqrTyMRj8pMhullWWMu65EC02ijKrCBYgyKkN9SgbKM4l6zJgAQaPmqfzbUh85ssCcHeo7vFhRNThGG9hztqmoHAr0C47uZ8j1+s+54UyMujugJm54xS/9JmkaBR6sKG2T0gN6SxRcRqlirgCWCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kDOjwuCPah3EaH7fE5wgTTEmQKYBQFOGqkycEe4xmNs=;
+ b=yl9yjTjd00DJ+xoZbNcTfFqYeWo8NOTnuBNvgnYT5kE4KhiTw62DZeGTMjy3c6aAwOJ5OZxM1ONkLw+EjqSAEqc/abKwpTlpRSs+W08tuAjdeASsREwWfI8d6s5V4qTGL+8iN8plBqj0LZ8sHjCZQIeQbFZRvP7twhtfBcjn5v7tnfbfmduxEqQMHXpXufplWCEXJTSEYc6FMxztNNfokz2pj30iotKtHDg6AugBTQxN0IW8rhkDPyG9wqma7BaSMu+hIgwYsbMyb6+6IEEGqvueEBQjrITP84YQbSjHoYP39sKIi81og80CZq0ZL+21O+YA/n2QDq7gWTFfi2GQ6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kDOjwuCPah3EaH7fE5wgTTEmQKYBQFOGqkycEe4xmNs=;
+ b=hB/0FakXNei5SOkgmP6qpJDhveoGL2bjLzVBDRyjjosUw0VgBD9eo28AQzvrqjcUZ0EEZt/yHVx1HxrSwJbd9da3Xbtt986kPs44cJ1AWrsCjQ8xbcCnVA/4KddylBt9U0OmT4y9rnhJQ4Xgh1rAX5POGZGGvddq5dfXmlU+tOo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by SJ2PR12MB7865.namprd12.prod.outlook.com (2603:10b6:a03:4cc::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.16; Mon, 20 Oct
+ 2025 14:59:48 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.9228.016; Mon, 20 Oct 2025
+ 14:59:48 +0000
+Message-ID: <3c0de7fb-5f0f-4f04-9175-fcbaa1cc07cd@amd.com>
+Date: Mon, 20 Oct 2025 15:59:44 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 18/22] cxl: Allow region creation by type2 drivers
+Content-Language: en-US
+To: Dave Jiang <dave.jiang@intel.com>,
+ "Cheatham, Benjamin" <benjamin.cheatham@amd.com>,
+ alejandro.lucero-palau@amd.com
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ linux-cxl@vger.kernel.org, netdev@vger.kernel.org, dan.j.williams@intel.com,
+ edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, edumazet@google.com
+References: <20251006100130.2623388-1-alejandro.lucero-palau@amd.com>
+ <20251006100130.2623388-19-alejandro.lucero-palau@amd.com>
+ <c42081c1-09e6-45be-8f9e-e4eea0eb1296@amd.com>
+ <aa942655-d740-4052-8ddc-13540b06ef14@intel.com>
+ <127311bc-d3cd-48e9-9fc3-f19853bb766b@amd.com>
+ <616d2aa4-96a7-4ed1-afd8-9fce85b45438@amd.com>
+ <a5b85488-2d68-4b78-8f9c-277e169b3571@intel.com>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <a5b85488-2d68-4b78-8f9c-277e169b3571@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: DUZPR01CA0051.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:469::15) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aPXgLp1Em6wKlx0t@aschofie-mobl2.lan>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|SJ2PR12MB7865:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3cbac409-e08e-4848-9504-08de0fe9506c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NEhtRWRHZ1N4NCsyRUt2cmdKblBKYU1DTTAyUERYbk10NXNuUlNxWjUvRGtU?=
+ =?utf-8?B?dVVjUE9Ca0VaU01NSUhJeExIZmhvRld0anM5TVIwYWJTT0xtRnNMNlVYMjdY?=
+ =?utf-8?B?bFgxWGwyTTJkQ2hPOUtrNXY2TU1POHFSSkZJTEV5dUpYNjBZdWl3UkxYZmd2?=
+ =?utf-8?B?bkxZNVdvdUlZMkZRa01CaTQrTWR0alIydjNSY2FQRnlYUHlaaEdTalR5Q0Y1?=
+ =?utf-8?B?QUliZ3RiN085eVptL0tCMDNxb2tSenloblYrclYyZE5EWlFGaTZINWRyR210?=
+ =?utf-8?B?OU1OWms1SjFBbk1IOE5FNCtnbzRuZkU4bUh3dTcva2tpSW5mTzFlZnowbCs0?=
+ =?utf-8?B?OE55dlduQXNxREVmUFcrUDJJeTZCSVJEZzJxUTBNSGhEUTZtbXdIVmJwN3ht?=
+ =?utf-8?B?MDQ0RDNFc2h4bXovQlAwTnByOUsvZ3R6ZFVXK1VuVW5kSFpoUnl5WnMwYzVt?=
+ =?utf-8?B?K2MxQkpHMVBhZXRnWURVemFaV1hVNGdoTE1tWDBadXRrNDk3VXJ6aHNCbnNr?=
+ =?utf-8?B?bXFGdW9qT2F1bEtLWTdUMHlObmx4SHRraDJmUkwrQU1ocU1IRlRNVTRqSkZI?=
+ =?utf-8?B?M0RFVThXaEpCN1l4SzJ2YnFCV3Q2S2pCeVArSmZUN2paWTZYM1dkSk1KbG1E?=
+ =?utf-8?B?MzRhSWwySEZEZFBGeitUSTlEdEpWakN5MXYrakQwOGExZ1pBaGRWRTMvczU5?=
+ =?utf-8?B?bUVEOWhPMzVPTUJvVXRVQkFyZVh6bFg0V1VZbGpNYnA4TldVZnJRazJ1MU5z?=
+ =?utf-8?B?aWFyWFRockQrTlRoZHR4Z29pWTZEdU9HMmQweTJudG5BTXJORXd1KzA1eEh5?=
+ =?utf-8?B?TzdwZkJsU2VlUHlrdlRQSTlQVlBqMFVNdDZtcnlkemQ1cGxZVHBUQjk3d25t?=
+ =?utf-8?B?Y3picXN1b0UyQ3dpYkFCNEQxYUxQdjd3VDVLWDN6QmZsdGozWlBudWZsbDFQ?=
+ =?utf-8?B?QldHS0xTaGxqMUpxT3docklxNS90cU1BVkNHTGVqNUxNRkZpM21SQTVlRk1o?=
+ =?utf-8?B?dm1zQW5qaFNkdHdXRFlDUE9ES3JaQjloamVVM3FQSDg0SjVPdktFMGRLVHJP?=
+ =?utf-8?B?bXQ2bzRZY2ZIVDJQZVdleWFGM29XdUVqNWdyRUI5K0VDSFpIbzNVYzRpVnBS?=
+ =?utf-8?B?aWZ3alJoVTQ0eTRVNWFkM3Zha3k5MXkzVkN3OU1vazQrTmZaYU03SkltaDdp?=
+ =?utf-8?B?Z0JIblB2Zk1GWVRBY0M5OG1PU0JOOW81dTNmT2hDMjRvblFEWVhkNjRDb2VP?=
+ =?utf-8?B?NnA4T2pJYVVTL013WXBPZEpUM0tRc3gxbHM0OGtoOTgzaGdqckE3K1dWZllz?=
+ =?utf-8?B?OS9GS216dFlsajdzaDU0aTFoZ2VNSzlPMTVZcVdwWEdmM21MZ1RJV2cySEMv?=
+ =?utf-8?B?RjM2RWZtbENNejRlN3N3UmpQSGN0VEM1blVsSzdOWHVDbmtqU1dOaXZuT0NZ?=
+ =?utf-8?B?aWMrTll1bGljNEpuL0l6MHNueGp3cXo3eTJFMEpSeXp2V3dDVVcxMUM0cjQw?=
+ =?utf-8?B?UXB3aU5XUmtrM2wyMnpGRmwwM1QzdU51MlV1VDY0WGJJVU5aWTljd1FVQXQ5?=
+ =?utf-8?B?YzZMQlRsUndSWmRNR29ydmhSVm84bzd0b1ZiRTBMRGVkM1dDblFwaGJHT2dG?=
+ =?utf-8?B?Zk8rYjdpN1ZxNWQ2L2VyVHZWc1lHQ2tkUUxHbkFGVWE0Mk9UT2t6cWxPa2xu?=
+ =?utf-8?B?a2JmQkc3ZEJFRXNRc0dwckNqVkpleVZoSHJSUVNGVEhudFBGdjUvdkJYZnZi?=
+ =?utf-8?B?SjcwQWQxVkpKbDMxc1hSUkhtNE91Nm51d3ZDOERlbi9MaEpoSU5qbEtudXp6?=
+ =?utf-8?B?MHE3TWdWbk5ZV2lxY1VHWDJCS0J1Z3MrZ093NGQ0cWFiUDRmZ0J3WDFLOFJQ?=
+ =?utf-8?B?c0xQTmdsOFFadEZpS21JbWllT2NaZkE3SkpNTmNMSFpxcXduc2hkYVE5N1Vh?=
+ =?utf-8?B?T3FlQWhuZXd2NXN3STRBRDFZR3EvdW9XWHFBVHVZQlVzWW1TTnhDNHpyRG9X?=
+ =?utf-8?B?TGxKQVIyMHNnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RU5qM3RpOFZibHRtcnJLcjBTdVhPQnF4K2FJSjd4NnVlaGZQYTRadlpzd0Zj?=
+ =?utf-8?B?SlZYNU1XMmpwU0ExMDJlZG04L0NRVCtGb3NWRTh0alFxSnNaTXFRQjg5S01B?=
+ =?utf-8?B?NmRLYlFhUzI0cEFocDA1Z29nRmI5MDRiY1p6QTJQUW0vZzkxYm5GUmJCZVd5?=
+ =?utf-8?B?YThFL0RDTi9FSmtCeUY5dDgvZnlIMjQ0dzVROGJHekdBRlVQOUN6OEpkMFc1?=
+ =?utf-8?B?SXd6N21jeGo3WFlOYnNFSmR0bHUvd2FSR1c4Um9TUkIzdFBKaGljYStsVUdS?=
+ =?utf-8?B?Q21RbGZSc1ByWHBUNVR5ajhCVklsZHJCVHVxdDBKK3Y5MXlrbm5EU1E5VTlK?=
+ =?utf-8?B?MEpEb1lKeEIrR0J1RGkwcHB4NkFUS3phL0kramNxTVZSb1hVZ0ZFV0lTdG1I?=
+ =?utf-8?B?T00zRmZDckk4SFFoUUJUMzh0WmhkSDNCaHhkMzN2S1I0bFFmcGpXeExQK2V4?=
+ =?utf-8?B?K0o0N1hRTTRkaC8wU0EvYkR6OExxRmJHQ0tkZFFOeFJFTDlKMDdJejhOWXZF?=
+ =?utf-8?B?cjJzRlVkMmNxK3NtWkxFSVRCQlkvUE5IUVZiZEVLU3lwWnVRUmt3TGdUc1lM?=
+ =?utf-8?B?Q1FLYUlNalVKMFcrc3NBMURqT2JuWkRtcnoyc1ErU0ZuNkswazhZYldTRVZL?=
+ =?utf-8?B?MkNlUzg3MC85bW9JTjVyRGtTbjNxWjBmWmtYOURsemdDTEx2Q3VsbEVrRGRR?=
+ =?utf-8?B?NHJjK0htWjJLUkZaa1BtT3NJbTVEMWxxZWZDbUZFYWhJc1RBOUg1OGNyZGh3?=
+ =?utf-8?B?QzlsYUcrVHBmQldyR3poYkdwemtYZjBKTU83dDNZTHZwYWNtQWtISWVMQ1Ba?=
+ =?utf-8?B?Q201OXRtdjFjRXJSeGJOMUg2K1VWcmg1OFliZDRFVTVLSmIzL1B6YkdZbk9X?=
+ =?utf-8?B?OUdOR3M3eFlqTlRKa2FGZ050RlRpSnYxdXdoUlFvMlBZSzc1VFcrQzgzdlhk?=
+ =?utf-8?B?cy9FYUtEQlM4c0V6Tm5XTEpRczF5T3pPSnNPdS9sT1hyWGxSRmFvVzVrQ0JX?=
+ =?utf-8?B?WERPQlJlTjk1UUZOUytmZWs1QjloU0JnakVnWGRvMUIwdTA5d1YxTU5HTitq?=
+ =?utf-8?B?N2Y2empKYkYzczZENmxMMHlOZ2V1bU15QnZQdXlCUnlSK0FVVElVcSswb2oy?=
+ =?utf-8?B?UjYvejVXcXZIVG9QMmFqREsyTHp5QXFoRmppVmNwK2JhMSs2VFpxenAwYU1h?=
+ =?utf-8?B?MkNXVUtQUFRCekFjVEU1U0k1dmlvUUhxZG9VQm9SbWF4eFoyeHExSVJPTFFC?=
+ =?utf-8?B?MG8wNEliZzQ1dFdRaU43WXYvRGJvbVAvVTk0MUlsbkRWZWlkZnk1dTZLelNQ?=
+ =?utf-8?B?SVpXOWRVMkRWYWNROFM2dXVHazFtakN3L2J1OVoybW9wRnE3Mys1TUg3ZVUy?=
+ =?utf-8?B?N3I5NEdZYUIvaTRDMnY5VjVoVERmNHlwM3IyemZkakJaTUNrZC8zR05MVC9i?=
+ =?utf-8?B?eHplSk0xRGFKUlRYYStZL2hqakFyakZobTdQMGpPazBsQWNwVkFMMkxyWFF5?=
+ =?utf-8?B?MngwTHc2bGdQdFlLdW42eFUxMnFrTTZaWjc1V2RLWWFSaEZzMlZYY3FjdnBE?=
+ =?utf-8?B?SUFiczUwcnRTaElka053WUNWcHBPMHBMQ2FXUVNBQXJWRktLSlVueEF3bkRG?=
+ =?utf-8?B?Y3pHTjBFU3Rub1J3K2F2R1NiSTN3ZnlObDlBd2lkUDlJMlJ0UG9nVEt3SFR2?=
+ =?utf-8?B?R3ZoR0xEU1EwVStiNzBocXdieWw0cVdJekI1bmVWM3dQRkpaRWR2THRkUk9S?=
+ =?utf-8?B?WDVQem1Ra0tPVTVqb3g1dk9XbGhrUnhtcTU3RnUwZEVaWEJwY3pvc2NzRjIx?=
+ =?utf-8?B?SEpsQ3E2RnYvVkN2UFhMTDhQWE0xYS9ZOTdZL2x4MGVJMWNLc3dQclEwMjdD?=
+ =?utf-8?B?MUQ3anppQVQwOFhPakFtK3VvVFRyZDNtb0RzZzFtbUdUN0g2QU9sR1NVd2hX?=
+ =?utf-8?B?MWpINDMyT2Jhb2RjL2dyY2I2S0ZHdmI4VnZpQ21xaDgwUHNCWDJWNDh0L1c4?=
+ =?utf-8?B?U2RZK0ZkblgvOHljNlZKQjU2aCtsSVBNVmZVVzdtQ1E0NGtWQ3JqdTN3blBB?=
+ =?utf-8?B?QjgyakRzNmtaTHFWdXk2Q0JEN1UvejdQbGdMVVIyQ2pxaWw0azViTnFWVFpn?=
+ =?utf-8?Q?zMIXqwzg6kpefB/rUcVW839SJ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3cbac409-e08e-4848-9504-08de0fe9506c
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2025 14:59:48.5986
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lh+4KSCgITuVPAVQQU7LAT3DKDKif8djGzrYdLmLbkUdasWUig7UUeiDSt+9mQxZzuzZz7GRHWkpLSWqyyo0aQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7865
 
-On Mon, Oct 20, 2025 at 12:09:34AM -0700, Alison Schofield wrote:
-> > This patch updates cxl_test to enable decoders 1 and 2
-> > in the host-bridge 0 port, in a switch uport under hb0,
-> > and the endpoints ports with size zero simulating
-> > committed zero sized decoders.
-> 
-> Decoders 1 & 2 - those are after decoder 0, the autoregion.
-> That's a problem ATM, when we try to teardown the autoregion we
-> get out of order resets. Like I asked in the other patch, if there
-> are rules about where these zero size decoders may appear, that
-> may make the solution here simpler.
-> 
 
-I think this is going to require a quirk-doc like other deviations.
+On 10/20/25 14:59, Dave Jiang wrote:
+>
+> On 10/20/25 6:24 AM, Alejandro Lucero Palau wrote:
+>> On 10/16/25 14:23, Cheatham, Benjamin wrote:
+>>> On 10/15/2025 4:42 PM, Dave Jiang wrote:
+>>>> On 10/9/25 1:56 PM, Cheatham, Benjamin wrote:
+>>>>> On 10/6/2025 5:01 AM, alejandro.lucero-palau@amd.com wrote:
+>>>>>> From: Alejandro Lucero <alucerop@amd.com>
+>>>>>>
+>>>>>> Creating a CXL region requires userspace intervention through the cxl
+>>>>>> sysfs files. Type2 support should allow accelerator drivers to create
+>>>>>> such cxl region from kernel code.
+>>>>>>
+>>>>>> Adding that functionality and integrating it with current support for
+>>>>>> memory expanders.
+>>>>>>
+>>>>>> Support an action by the type2 driver to be linked to the created region
+>>>>>> for unwinding the resources allocated properly.
+>>>>>>
+>>>>>> Based on https://lore.kernel.org/linux-cxl/168592159835.1948938.1647215579839222774.stgit@dwillia2-xfh.jf.intel.com/
+>>>>>>
+>>>>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>>>>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>>>>> ---
+>>>>> Fix for this one should be split between 13/22 and this patch, but the majority of it is in this one. The idea is
+>>>>> if we don't find a free decoder we check for pre-programmed decoders and use that instead. Unfortunately, this
+>>>>> invalidates some of the assumptions made by __construct_new_region().
+>>>> Wouldn't you look for a pre-programmed decoder first and construct the auto region before you try to manually create one? Also for a type 2 device, would the driver know what it wants and what the region configuration should look like? Would it be a single region either it's auto or manual, or would there be a configuration of multiple regions possible? To me a type 2 region is more intentional where the driver would know exactly what it needs and thus trying to get that from the cxl core.
+>>>>
+>>> Since this is a fix I didn't want to supersede the current behavior. A better solution would've been to add a flag to allow the type 2 driver
+>>> to set up an expected region type.
+>>>
+>>> As for multiple regions, I have no clue. I haven't heard of any reason why a type 2 device would need multiple regions, but it's still very
+>>> early days. I don't think there's anything in this set that keeps you from using multiple regions though.
+>>
+>> What Dave says is correct, so Type2 should  support these two possibilities, an HDM decoder already programmed by the BIOS and the BIOS doing nothing, at least with the Type2 HDM decoders. This patchset supports the latter, but the former is more than possible, even if the logic and what we have discussed since the RFC points to type2 driver having the full control.
+>>
+>>
+>> However, I would prefer to do that other support as a follow-up as the functionality added is enough for the initial client, the sfc driver, requiring this new Type2 support. The reason is clear: I do not want to delay this "basic Type2 support" more than necessary, and as I stated in another comment, I bet we will see other things to support soon, so better to increasingly add those after a first work set the base. Of course, the base needs to be right.
+> I'm fine with the follow on approach. We probably should make a note somewhere in a commit log somewhere that only manual assemble mode is currently supported. And need to reject the BIOS created region and exit type2 CXL setup if present?
 
-A committed decoder must have a base address, and with 0-size subsequent
-or previous decoders would also have an address that covers that address
-as well.  This is on top of the ordering issue if the 0-side decoders
-come after a programmable decoder.
 
-I'm not convinced this even makes sense as a security thing if you can
-reset the bus and re-activate everything (after a graceful teardown).
+Yes, it makes sense, and it is a minor change.
 
-Seems easier to just report the decoders as unavailable and then not
-probe them.
 
-~Gregory
+I'll do so.
+
+
+Thanks
+
+
+>
+> DJ
+>
+>>
+>> Thanks,
+>>
+>> Alejandro
+>>
+>>
+>>> Thanks,
+>>> Ben
+>>>
+>>>> DJ
+>>>>
