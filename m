@@ -1,215 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D338B22172E;
-	Mon, 20 Oct 2025 16:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232FF242D76;
+	Mon, 20 Oct 2025 18:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760978250; cv=none; b=V9ArlMP+nGHZgAfGJT5AoCG0DOCplbZ4a/bbnahQ3AS0xmlQ6P6CInoNtwYRyQYM/bs9igQvLSwbAfWxteJ5e5Wm9PUXF4XqO/GwKBSnOu522/fpTodLssEhxzuAXEeUlKBW0BWLQMGJ9arJdIhL3xWddH8/eEDv4UY0JWGe3HE=
+	t=1760984172; cv=none; b=WOV02KlHOmt5cPzHh6F6X9MJ3hN5/BQfsb7oxT9VrNtoSu8P6DfePedAhch6bFGN9ukWeV9DlwT9oDS5Q0GmNj1DguLrUVtyo06xB7IlvDjBMcNJLbA3kKf0UJZP7NQa49f5/CMC1z6dAjYxzvfFGh95GZO9RPwHhEtvwQLxLiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760978250; c=relaxed/simple;
-	bh=+qZlyl7YWbY2lLgbuJo2hAw91ag2rew7u58FOPhtmUc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vur5FNfifWmpQRJldMSCd4mVByB8/aX8XiPr6Vzj8+wkRyzm+WR4iLAP56NuKUF05zsK+UZXsgO8Bmy/i9bPduIo4glSiBrxf9ygM95GuDlm7Yztk6hWNbjrQPPWdymwMhxVYaulyyj79mvaXTrspF373q/6HTySmm+K2qixi30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=as/MNCVJ; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1760984172; c=relaxed/simple;
+	bh=g+2VpaD+FlA761mradaWnF6yVcLyinIaa0PWYsivwMA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=AGlc17a/VBsgtVbSeMznYQkGOZZJFkid0lkXyHMzsZ1FyiuujDwGuW8HgOccooE5Hz9I53guz4XFpnW/RpVUVDb3RiRteCXcPbOwaZpbKnUa+BTHnYxj6QXRo7cq0cdwuujm+IVns/q4gG2ooUK5dHrID4J2bCn3OVaYACy88h0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SFAdAhGZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="as/MNCVJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760978249; x=1792514249;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+qZlyl7YWbY2lLgbuJo2hAw91ag2rew7u58FOPhtmUc=;
-  b=as/MNCVJcrzmNh+0bn6hh1WJNoRzwygBr6cr8DU3pvqEtXW6zHouvebC
-   WpODTllRf00Rg6p3B1Sx9TKjnP3cZdhfW1BJN7IjKyODEhUw1DO7coUzw
-   SX7AeEfBSNwxsDYHw4dEZ9XcQ0ZwWTgEOBEVERMxGnX8I7yFU7/4VZPWB
-   LZxH8WtBjGgEW8D1y7JcCPN+AO3vWXtbwpJ5cJwX2Xc6JCu+Dc8rkxEc/
-   hxxVIjqmbp4Utz/dLKh1EJD/iwQLLs40BFC7uA7gv/NQD0GIdpAxjfDWW
-   KRH4IfDBkJ7KIYvy9n21OEnHPNkUwsV2SnXmcBYtZ5WTMIZWy8qffMhRs
-   Q==;
-X-CSE-ConnectionGUID: McZZEvecSS2YqWEVpaigCQ==
-X-CSE-MsgGUID: CMrSmZBjRpOfNm+xecXq1Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62128784"
-X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
-   d="scan'208";a="62128784"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 09:37:28 -0700
-X-CSE-ConnectionGUID: +UyQQ5tfSKWNT1m4Aaq+lw==
-X-CSE-MsgGUID: MUZlesziQx6BDxCrg5eraA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
-   d="scan'208";a="183385703"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.108.103]) ([10.125.108.103])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 09:37:25 -0700
-Message-ID: <ca6e8c5f-4420-4efa-93fc-0c79774e8a96@intel.com>
-Date: Mon, 20 Oct 2025 09:37:24 -0700
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SFAdAhGZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C732AC4CEF9;
+	Mon, 20 Oct 2025 18:16:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1760984171;
+	bh=g+2VpaD+FlA761mradaWnF6yVcLyinIaa0PWYsivwMA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SFAdAhGZ6XAI3/OSlRoUNUAwPSszkFJ5X78HTOFq1+uod1XbAgAQik0Ms/FVZwL8b
+	 s288oOWO3uGPngOYPSt2YpIWz3iBNwzxaqaJwbvYDnbDsjcDdrwTO7g030gpdL1GAy
+	 kdB06SO/8MeAHhERgECXjIJ5lY1Qda/IfEWb/rTg=
+Date: Mon, 20 Oct 2025 11:16:09 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
+ Guo Ren <guoren@kernel.org>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>, Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
+ <svens@linux.ibm.com>, "David S . Miller" <davem@davemloft.net>, Andreas
+ Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Dan Williams
+ <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Dave
+ Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>, Muchun Song
+ <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, David
+ Hildenbrand <david@redhat.com>, Konstantin Komarov
+ <almaz.alexandrovich@paragon-software.com>, Baoquan He <bhe@redhat.com>,
+ Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Tony Luck
+ <tony.luck@intel.com>, Reinette Chatre <reinette.chatre@intel.com>, Dave
+ Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>, Alexander
+ Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan
+ Kara <jack@suse.cz>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren
+ Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Hugh
+ Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
+ ntfs3@lists.linux.dev, kexec@lists.infradead.org,
+ kasan-dev@googlegroups.com, Jason Gunthorpe <jgg@nvidia.com>,
+ iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>, Will Deacon
+ <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Sumanth Korikkar
+ <sumanthk@linux.ibm.com>
+Subject: Re: [PATCH v5 00/15] expand mmap_prepare functionality, port more
+ users
+Message-Id: <20251020111609.cfafaa22c20ac33be573898f@linux-foundation.org>
+In-Reply-To: <cover.1760959441.git.lorenzo.stoakes@oracle.com>
+References: <cover.1760959441.git.lorenzo.stoakes@oracle.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6 v5] acpi/ghes: Add helper to copy CXL protocol error
- info to work struct
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- linux-cxl@vger.kernel.org
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Shuai Xue <xueshuai@linux.alibaba.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Sunil V L <sunilvl@ventanamicro.com>, Xiaofei Tan <tanxiaofei@huawei.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Huacai Chen <chenhuacai@kernel.org>,
- Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
- Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, Guo Weikang <guoweikang.kernel@gmail.com>,
- Xin Li <xin@zytor.com>, Will Deacon <will@kernel.org>,
- Huang Yiwei <quic_hyiwei@quicinc.com>, Gavin Shan <gshan@redhat.com>,
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Li Ming <ming.li@zohomail.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Karolina Stolarek <karolina.stolarek@oracle.com>,
- Jon Pan-Doh <pandoh@google.com>, Lukas Wunner <lukas@wunner.de>,
- Shiju Jose <shiju.jose@huawei.com>, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org
-References: <20251017133357.1150982-1-fabio.m.de.francesco@linux.intel.com>
- <20251017133357.1150982-6-fabio.m.de.francesco@linux.intel.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20251017133357.1150982-6-fabio.m.de.francesco@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Mon, 20 Oct 2025 13:11:17 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-
-On 10/17/25 6:30 AM, Fabio M. De Francesco wrote:
-> Make a helper out of cxl_cper_post_prot_err() that checks the CXL agent
-> type and copy the CPER CXL protocol errors information to a work data
-> structure.
+> Since commit c84bf6dd2b83 ("mm: introduce new .mmap_prepare() file
+> callback"), The f_op->mmap hook has been deprecated in favour of
+> f_op->mmap_prepare.
 > 
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> ---
->  drivers/acpi/apei/ghes.c | 42 ++++++++++++++++++++++++++--------------
->  include/cxl/event.h      | 10 ++++++++++
->  2 files changed, 37 insertions(+), 15 deletions(-)
+> This was introduced in order to make it possible for us to eventually
+> eliminate the f_op->mmap hook which is highly problematic as it allows
+> drivers and filesystems raw access to a VMA which is not yet correctly
+> initialised.
 > 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index e69ae864f43d3..e0f8b8ed2b7c4 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -734,20 +734,12 @@ int cxl_cper_sec_prot_err_valid(struct cxl_cper_sec_prot_err *prot_err)
->  }
->  EXPORT_SYMBOL_GPL(cxl_cper_sec_prot_err_valid);
->  
-> -static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> -				   int severity)
-> +int cxl_cper_sec_prot_err_copy_to_wd(struct cxl_cper_prot_err_work_data *wd,
+> This hook also introduced complexity for the memory mapping operation, as
+> we must correctly unwind what we do should an error arises.
+> 
+> Overall this interface being so open has caused significant problems for
+> us, including security issues, it is important for us to simply eliminate
+> this as a source of problems.
+> 
+> Therefore this series continues what was established by extending the
+> functionality further to permit more drivers and filesystems to use
+> mmap_prepare.
 
-Function name a bit awkward. Maybe cxl_cper_setup_error_work_data()?
-
-> +				     struct cxl_cper_sec_prot_err *prot_err,
-> +				     int severity)
->  {
-> -	struct cxl_cper_prot_err_work_data wd;
->  	u8 *dvsec_start, *cap_start;
->  
-> -	if (cxl_cper_sec_prot_err_valid(prot_err))
-> -		return;
-> -
-> -	guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
-> -
-> -	if (!cxl_cper_prot_err_work)
-> -		return;
-> -
->  	switch (prot_err->agent_type) {
->  	case RCD:
->  	case DEVICE:
-> @@ -756,20 +748,40 @@ static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
->  	case RP:
->  	case DSP:
->  	case USP:
-> -		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
-> +		memcpy(wd->prot_err, prot_err, sizeof(wd->prot_err));
->  
->  		dvsec_start = (u8 *)(prot_err + 1);
->  		cap_start = dvsec_start + prot_err->dvsec_len;
->  
-> -		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
-> -		wd.severity = cper_severity_to_aer(severity);
-> +		memcpy(wd->ras_cap, cap_start, sizeof(wd->ras_cap));
-> +		wd->severity = cper_severity_to_aer(severity);
->  		break;
->  	default:
->  		pr_err_ratelimited("CXL CPER invalid agent type: %d\n",
->  				   prot_err->agent_type);
-> -		return;
-> +		return -EINVAL;
->  	}
->  
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(cxl_cper_sec_prot_err_copy_to_wd);
-> +
-> +static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> +				   int severity)
-> +{
-> +	struct cxl_cper_prot_err_work_data wd;
-> +
-> +	if (cxl_cper_sec_prot_err_valid(prot_err))
-> +		return;
-> +
-> +	guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
-> +
-> +	if (!cxl_cper_prot_err_work)
-> +		return;
-> +
-> +	if (cxl_cper_sec_prot_err_copy_to_wd(&wd, prot_err, severity))
-> +		return;
-> +
->  	if (!kfifo_put(&cxl_cper_prot_err_fifo, wd)) {
->  		pr_err_ratelimited("CXL CPER kfifo overflow\n");
->  		return;
-> diff --git a/include/cxl/event.h b/include/cxl/event.h
-> index e1deb66c2197e..5f06cea5d6005 100644
-> --- a/include/cxl/event.h
-> +++ b/include/cxl/event.h
-> @@ -322,12 +322,22 @@ static inline int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data
->  
->  #ifdef CONFIG_ACPI_APEI_PCIEAER
->  int cxl_cper_sec_prot_err_valid(struct cxl_cper_sec_prot_err *prot_err);
-> +int cxl_cper_sec_prot_err_copy_to_wd(struct cxl_cper_prot_err_work_data *wd,
-> +				     struct cxl_cper_sec_prot_err *prot_err,
-> +				     int severity);
->  #else
->  static inline int
->  cxl_cper_sec_prot_err_valid(struct cxl_cper_sec_prot_err *prot_err)
->  {
->  	return -EINVAL;
->  }
-> +static inline int
-> +cxl_cper_sec_prot_err_copy_to_wd(struct cxl_cper_prot_err_work_data *wd,
-> +				 struct cxl_cper_sec_prot_err *prot_err,
-> +				 int severity)
-> +{
-> +	return -EINVAL;
-
--EOPNOTSUPP
-
-> +}
->  #endif
->  
->  #endif /* _LINUX_CXL_EVENT_H */
-
+Thanks, I (re-)added this series to mm.git.  I suppressed the usual
+emails.
