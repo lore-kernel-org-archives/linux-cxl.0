@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B0726B2B0;
-	Mon, 20 Oct 2025 16:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D338B22172E;
+	Mon, 20 Oct 2025 16:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760976248; cv=none; b=Ig+CX6rF3WEJOLmFj7/OYYcWqf6jiAEqDk2u4BvLbwMoPMlRhFV50yJN4yNEqKQ6S1eqZ7qwgofOVXYrpjGN94gYqPXywEGKeQtHsHSBQtRK9ZPweRc4ZiAoKc/xQ51BldCcbVCzAnAA6NX6TwIIqi6F5DxU7moGAXd6d0p5ZIk=
+	t=1760978250; cv=none; b=V9ArlMP+nGHZgAfGJT5AoCG0DOCplbZ4a/bbnahQ3AS0xmlQ6P6CInoNtwYRyQYM/bs9igQvLSwbAfWxteJ5e5Wm9PUXF4XqO/GwKBSnOu522/fpTodLssEhxzuAXEeUlKBW0BWLQMGJ9arJdIhL3xWddH8/eEDv4UY0JWGe3HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760976248; c=relaxed/simple;
-	bh=y87Qov3Jt4LC0JXlONBamFdqUvce5uT3fMcKNGfdSck=;
+	s=arc-20240116; t=1760978250; c=relaxed/simple;
+	bh=+qZlyl7YWbY2lLgbuJo2hAw91ag2rew7u58FOPhtmUc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f6x+0mo0f/YiHquohKY3Sk9JKOHztr9OuCC0jqO3tvgQE3RuFZhjOivYTKwgN1F/+fzZb4rLT53FtUPeuZgMFmg0+PHISW+R4mWe2qlp3wCzpQQPu0TvS/w3mWySUFF83ZjeeBy86+o+hFRvFvEp/vyeaqEUY4xhQzhAXcTEi6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JG4NnQgp; arc=none smtp.client-ip=192.198.163.13
+	 In-Reply-To:Content-Type; b=Vur5FNfifWmpQRJldMSCd4mVByB8/aX8XiPr6Vzj8+wkRyzm+WR4iLAP56NuKUF05zsK+UZXsgO8Bmy/i9bPduIo4glSiBrxf9ygM95GuDlm7Yztk6hWNbjrQPPWdymwMhxVYaulyyj79mvaXTrspF373q/6HTySmm+K2qixi30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=as/MNCVJ; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JG4NnQgp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="as/MNCVJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760976246; x=1792512246;
+  t=1760978249; x=1792514249;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=y87Qov3Jt4LC0JXlONBamFdqUvce5uT3fMcKNGfdSck=;
-  b=JG4NnQgpEDpAkeQUJXH0uPPb/WDSFXn8qlR9IPiLGKamX9lCzFtqmqK0
-   QX6wGrS7kwq5UuBSQrqhXD8l8MhZRaCeRnrws4ZFta+hjt7eUfGzwX51U
-   uvz4cvnWOTeMMJhP61uVH8OUImH6DSm6Ex+XRdJe6ATuqKF5QGhJ7Zkhq
-   HGQnDoEQ8P7BC6gXh8UC71GPLgk0v7Cc9chZRBkwJXfktT7ib6K4zWEuI
-   ukvdPfbQa5AuAIbuTzi+1FfONqyy5wTNdTRjhKkDYnR3fdhYzypnc1k3V
-   RqTmzFb+5RS5cWc1u+e7+YNgWfZhFNZp5+t30K3mqtDSyvEq9hmNeHWLo
-   w==;
-X-CSE-ConnectionGUID: kclfaq4xRUaerQvPFumMWQ==
-X-CSE-MsgGUID: ktlgrbi1Qj++j1i5OUg0UQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="65709012"
+  bh=+qZlyl7YWbY2lLgbuJo2hAw91ag2rew7u58FOPhtmUc=;
+  b=as/MNCVJcrzmNh+0bn6hh1WJNoRzwygBr6cr8DU3pvqEtXW6zHouvebC
+   WpODTllRf00Rg6p3B1Sx9TKjnP3cZdhfW1BJN7IjKyODEhUw1DO7coUzw
+   SX7AeEfBSNwxsDYHw4dEZ9XcQ0ZwWTgEOBEVERMxGnX8I7yFU7/4VZPWB
+   LZxH8WtBjGgEW8D1y7JcCPN+AO3vWXtbwpJ5cJwX2Xc6JCu+Dc8rkxEc/
+   hxxVIjqmbp4Utz/dLKh1EJD/iwQLLs40BFC7uA7gv/NQD0GIdpAxjfDWW
+   KRH4IfDBkJ7KIYvy9n21OEnHPNkUwsV2SnXmcBYtZ5WTMIZWy8qffMhRs
+   Q==;
+X-CSE-ConnectionGUID: McZZEvecSS2YqWEVpaigCQ==
+X-CSE-MsgGUID: CMrSmZBjRpOfNm+xecXq1Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62128784"
 X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
-   d="scan'208";a="65709012"
+   d="scan'208";a="62128784"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 09:04:04 -0700
-X-CSE-ConnectionGUID: +BNDHO+tROOuyxe325cjEA==
-X-CSE-MsgGUID: tGqTHgdfTEq/PAYuNSvGDQ==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 09:37:28 -0700
+X-CSE-ConnectionGUID: +UyQQ5tfSKWNT1m4Aaq+lw==
+X-CSE-MsgGUID: MUZlesziQx6BDxCrg5eraA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
-   d="scan'208";a="183379002"
+   d="scan'208";a="183385703"
 Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.108.103]) ([10.125.108.103])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 09:04:02 -0700
-Message-ID: <7d4a53ea-1d2b-42b5-ad22-3a023f415cd2@intel.com>
-Date: Mon, 20 Oct 2025 09:04:01 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 09:37:25 -0700
+Message-ID: <ca6e8c5f-4420-4efa-93fc-0c79774e8a96@intel.com>
+Date: Mon, 20 Oct 2025 09:37:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6 v5] acpi/ghes: Add helper for CPER CXL protocol errors
- checks
+Subject: Re: [PATCH 5/6 v5] acpi/ghes: Add helper to copy CXL protocol error
+ info to work struct
 To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
  linux-cxl@vger.kernel.org
 Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
@@ -86,105 +86,130 @@ Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
  linux-acpi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
  linux-pci@vger.kernel.org
 References: <20251017133357.1150982-1-fabio.m.de.francesco@linux.intel.com>
- <20251017133357.1150982-5-fabio.m.de.francesco@linux.intel.com>
+ <20251017133357.1150982-6-fabio.m.de.francesco@linux.intel.com>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <20251017133357.1150982-5-fabio.m.de.francesco@linux.intel.com>
+In-Reply-To: <20251017133357.1150982-6-fabio.m.de.francesco@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 10/17/25 6:30 AM, Fabio M. De Francesco wrote:
-> Move the CPER CXL protocol errors validity checks out of
-> cxl_cper_post_prot_err() to cxl_cper_sec_prot_err_valid() and check the
-> serial number only for CXL agents that are CXL devices (UEFI v2.10,
-> Appendix N.2.13).
+> Make a helper out of cxl_cper_post_prot_err() that checks the CXL agent
+> type and copy the CPER CXL protocol errors information to a work data
+> structure.
 > 
 > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 > ---
->  drivers/acpi/apei/ghes.c | 32 ++++++++++++++++++++++----------
+>  drivers/acpi/apei/ghes.c | 42 ++++++++++++++++++++++++++--------------
 >  include/cxl/event.h      | 10 ++++++++++
->  2 files changed, 32 insertions(+), 10 deletions(-)
+>  2 files changed, 37 insertions(+), 15 deletions(-)
 > 
 > diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index d6fe5f020e96e..e69ae864f43d3 100644
+> index e69ae864f43d3..e0f8b8ed2b7c4 100644
 > --- a/drivers/acpi/apei/ghes.c
 > +++ b/drivers/acpi/apei/ghes.c
-> @@ -706,30 +706,42 @@ static DEFINE_KFIFO(cxl_cper_prot_err_fifo, struct cxl_cper_prot_err_work_data,
->  static DEFINE_SPINLOCK(cxl_cper_prot_err_work_lock);
->  struct work_struct *cxl_cper_prot_err_work;
+> @@ -734,20 +734,12 @@ int cxl_cper_sec_prot_err_valid(struct cxl_cper_sec_prot_err *prot_err)
+>  }
+>  EXPORT_SYMBOL_GPL(cxl_cper_sec_prot_err_valid);
 >  
 > -static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
 > -				   int severity)
-> +int cxl_cper_sec_prot_err_valid(struct cxl_cper_sec_prot_err *prot_err)
+> +int cxl_cper_sec_prot_err_copy_to_wd(struct cxl_cper_prot_err_work_data *wd,
+
+Function name a bit awkward. Maybe cxl_cper_setup_error_work_data()?
+
+> +				     struct cxl_cper_sec_prot_err *prot_err,
+> +				     int severity)
 >  {
 > -	struct cxl_cper_prot_err_work_data wd;
-> -	u8 *dvsec_start, *cap_start;
+>  	u8 *dvsec_start, *cap_start;
+>  
+> -	if (cxl_cper_sec_prot_err_valid(prot_err))
+> -		return;
 > -
->  	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
->  		pr_err_ratelimited("CXL CPER invalid agent type\n");
+> -	guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
+> -
+> -	if (!cxl_cper_prot_err_work)
+> -		return;
+> -
+>  	switch (prot_err->agent_type) {
+>  	case RCD:
+>  	case DEVICE:
+> @@ -756,20 +748,40 @@ static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
+>  	case RP:
+>  	case DSP:
+>  	case USP:
+> -		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
+> +		memcpy(wd->prot_err, prot_err, sizeof(wd->prot_err));
+>  
+>  		dvsec_start = (u8 *)(prot_err + 1);
+>  		cap_start = dvsec_start + prot_err->dvsec_len;
+>  
+> -		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
+> -		wd.severity = cper_severity_to_aer(severity);
+> +		memcpy(wd->ras_cap, cap_start, sizeof(wd->ras_cap));
+> +		wd->severity = cper_severity_to_aer(severity);
+>  		break;
+>  	default:
+>  		pr_err_ratelimited("CXL CPER invalid agent type: %d\n",
+>  				   prot_err->agent_type);
 > -		return;
 > +		return -EINVAL;
 >  	}
 >  
->  	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
->  		pr_err_ratelimited("CXL CPER invalid protocol error log\n");
-> -		return;
-> +		return -EINVAL;
->  	}
->  
->  	if (prot_err->err_len != sizeof(struct cxl_ras_capability_regs)) {
->  		pr_err_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
->  				   prot_err->err_len);
-> -		return;
-> +		return -EINVAL;
->  	}
->  
-> -	if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
-> -		pr_warn(FW_WARN "CXL CPER no device serial number\n");
-> +	if ((prot_err->agent_type == RCD || prot_err->agent_type == DEVICE ||
-> +	     prot_err->agent_type == LD || prot_err->agent_type == FMLD) &&
-> +	    !(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
-> +		pr_warn_ratelimited(FW_WARN
-> +				    "CXL CPER no device serial number\n");
-> +
 > +	return 0;
 > +}
-> +EXPORT_SYMBOL_GPL(cxl_cper_sec_prot_err_valid);
+> +EXPORT_SYMBOL_GPL(cxl_cper_sec_prot_err_copy_to_wd);
 > +
 > +static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
 > +				   int severity)
 > +{
 > +	struct cxl_cper_prot_err_work_data wd;
-> +	u8 *dvsec_start, *cap_start;
 > +
 > +	if (cxl_cper_sec_prot_err_valid(prot_err))
 > +		return;
->  
->  	guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
->  
+> +
+> +	guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
+> +
+> +	if (!cxl_cper_prot_err_work)
+> +		return;
+> +
+> +	if (cxl_cper_sec_prot_err_copy_to_wd(&wd, prot_err, severity))
+> +		return;
+> +
+>  	if (!kfifo_put(&cxl_cper_prot_err_fifo, wd)) {
+>  		pr_err_ratelimited("CXL CPER kfifo overflow\n");
+>  		return;
 > diff --git a/include/cxl/event.h b/include/cxl/event.h
-> index 6fd90f9cc2034..e1deb66c2197e 100644
+> index e1deb66c2197e..5f06cea5d6005 100644
 > --- a/include/cxl/event.h
 > +++ b/include/cxl/event.h
-> @@ -320,4 +320,14 @@ static inline int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data
->  }
->  #endif
+> @@ -322,12 +322,22 @@ static inline int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data
 >  
-> +#ifdef CONFIG_ACPI_APEI_PCIEAER
-> +int cxl_cper_sec_prot_err_valid(struct cxl_cper_sec_prot_err *prot_err);
-> +#else
+>  #ifdef CONFIG_ACPI_APEI_PCIEAER
+>  int cxl_cper_sec_prot_err_valid(struct cxl_cper_sec_prot_err *prot_err);
+> +int cxl_cper_sec_prot_err_copy_to_wd(struct cxl_cper_prot_err_work_data *wd,
+> +				     struct cxl_cper_sec_prot_err *prot_err,
+> +				     int severity);
+>  #else
+>  static inline int
+>  cxl_cper_sec_prot_err_valid(struct cxl_cper_sec_prot_err *prot_err)
+>  {
+>  	return -EINVAL;
+>  }
 > +static inline int
-> +cxl_cper_sec_prot_err_valid(struct cxl_cper_sec_prot_err *prot_err)
+> +cxl_cper_sec_prot_err_copy_to_wd(struct cxl_cper_prot_err_work_data *wd,
+> +				 struct cxl_cper_sec_prot_err *prot_err,
+> +				 int severity)
 > +{
 > +	return -EINVAL;
 
--EOPNOTSUPP?
+-EOPNOTSUPP
 
 > +}
-> +#endif
-> +
+>  #endif
+>  
 >  #endif /* _LINUX_CXL_EVENT_H */
-
 
