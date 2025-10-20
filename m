@@ -1,207 +1,210 @@
-Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3279E2D9494;
-	Mon, 20 Oct 2025 06:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760943464; cv=none; b=NaIOSUbjmHQo8EjUaPNAD/BOBKwjTieCZMk57IygPtxjnjSNHJnNKWlfJsWAN0Ht9c9CJePbrjL7IUHNUTbyKhiyUTOQXdxUI/qEV5QcxUDOs0tyVDs3G13a7cps0W0WWsqpxIusl5PrilaDVLGbHEZzZE1tO67KZsKnqZY8XpE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760943464; c=relaxed/simple;
-	bh=1cmrYO5YSDcm5nA1LZYXoyvgBCQdesIMpsSK0ghqDws=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=L8IxTNqPE97P6yLDSRz5Q3RoHMEoce4FHqvnfSau+iUS0MWjXmCytFHosMHkg9IKlrPWybBc4ROO7C0Lag95MDMz9OR/ldcDROESQfUIgt24egBuwJ2PfIj5U1r7ODB08cXr4Gc7pg5nmV1rGzQAZ/OJ5/z1D2d5xkEztb7dIrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=6AmWEWZD; arc=none smtp.client-ip=113.46.200.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D462DF6E6;
+	Mon, 20 Oct 2025 07:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760944242; cv=fail; b=pkWPx2dWvKm4hKSYUKelT0ZYJuQ2HleKwAvDXlCsIFu0910wHLgJZJ6aFzAm4RLTxC1mayEP93TOj5+nsV0VdC/LRtU0iOq/ZtuN8PslBFkf8wF2U1FEKYvxhDAT0PZfl/Sbprt9GghXfh2zd9FtIUtulQNzNXWejZSq34HJ+SA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760944242; c=relaxed/simple;
+	bh=Qa1rCz07SPqPHVihN4TcAZJkwr+bfS+aidq5QOLX8kU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=LZ97uSgaHwu0ASrOWpPqqCMvjCr3xseVcyEZ7Iq66GULHompYw5VNCfFm3yuTpl+GyT0BsHNGXE3Lh1iZPpvi+m6PwOPYLeVxuy8+FNC85qtB9kfQ24z2knc32cbiPU6P89arueLvqz0rnhX2AfGem6vDzFkrzR0HV1cwIMes98=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JXLBCecR; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="6AmWEWZD"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=GOddeF4CmeQdoAneSYg3qKOAfjZnCurbFZKwrmWO7Wk=;
-	b=6AmWEWZDDRnn5UyfKveUzHV4h+LumJnl6lEA+NJTGFTcVzF9o37u4jLl/ljs1KNqP+VqWMnTW
-	jPLmWAJ2+/99CsIABgpC+hYZSAbpcqKdI1DY1hUtwCpaZ7GHP4TU/oP5LsMtz43Ld8EC/zMW8yv
-	QVYWBdteLf6HBHFiLBrWgxA=
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4cqmSq0TzpzRhsG;
-	Mon, 20 Oct 2025 14:57:15 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 962A5140257;
-	Mon, 20 Oct 2025 14:57:38 +0800 (CST)
-Received: from kwepemn100008.china.huawei.com (7.202.194.111) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JXLBCecR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760944240; x=1792480240;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=Qa1rCz07SPqPHVihN4TcAZJkwr+bfS+aidq5QOLX8kU=;
+  b=JXLBCecRgQAwAQXodAsJgH4Ok1wh5JPYRoxgzioEnypn8wmqp3JR3lhk
+   TWZpe7PZgQ+E/yVmvOlMBVG5l0Ho9iZWT/Z4Mu2caMffwm5Bm+bCpkRUV
+   7jtafJwQZ2ORw7D/hs9Zvbbosks8q/Ky7aTr+u5fMebqLd5Z+n9MINDEm
+   OY9LFwyAutcTzYnEpeVh4pBpqeDL0Uu9i+o5DlJD3N27wKKJRBbpHQ62H
+   8LYe0tMYbq9s9wvKKORpJD75CMGiMOvft5jhQkuHyUd3GHUU2NoGv8YcC
+   c6EDLXsY17EI9S4O9IF7xJLSBqgJkD9oKedwhbuNFqIvSWZe0hXlNBTR1
+   w==;
+X-CSE-ConnectionGUID: aEjvF85BQc+ZTVBkUMew8Q==
+X-CSE-MsgGUID: 8zVY8w55Q628eRYrzDel/Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11587"; a="63203042"
+X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
+   d="scan'208";a="63203042"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 00:09:51 -0700
+X-CSE-ConnectionGUID: 8R2PuUneQ4q0f+zMrd3fYg==
+X-CSE-MsgGUID: 6YRNaEFSQSeOoL1raanEUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
+   d="scan'208";a="187524702"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 00:09:47 -0700
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 20 Oct 2025 14:57:38 +0800
-Received: from localhost.huawei.com (10.90.31.46) by
- kwepemn100008.china.huawei.com (7.202.194.111) with Microsoft SMTP Server
+ 15.2.2562.27; Mon, 20 Oct 2025 00:09:44 -0700
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 20 Oct 2025 14:57:37 +0800
-From: Yushan Wang <wangyushan12@huawei.com>
-To: <wangyushan12@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>,
-	<james.morse@arm.com>, <linux-cxl@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-mm@kvack.org>, Will Deacon
-	<will@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, "H . Peter  Anvin" <hpa@zytor.com>, Peter Zijlstra
-	<peterz@infradead.org>
-Subject: [PATCH v3 0/8] Cache coherency management subsystem
-Date: Mon, 20 Oct 2025 14:57:37 +0800
-Message-ID: <20250820102950.175065-1-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.33.0
-X-UIDL: 286386
-X-Mozilla-Status: 0001
-X-Mozilla-Keys: $label3                                                                         
-Received: from kwepemn200008.china.huawei.com (7.202.194.131) by kwepemn100008.china.huawei.com (7.202.194.111) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11 via Mailbox Transport; Wed, 20 Aug 2025 18:29:54 +0800
-Received: from frapeml500008.china.huawei.com (7.182.85.71) by kwepemn200008.china.huawei.com (7.202.194.131) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 20 Aug 2025 18:29:54 +0800
-Received: from SecurePC-101-06.huawei.com (10.122.19.247) by frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 20 Aug 2025 12:29:51 +0200
-X-Mailer: git-send-email 2.48.1
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To frapeml500008.china.huawei.com (7.182.85.71)
-X-MS-Exchange-Transport-EndToEndLatency: 00:00:03.7121070
-X-MS-Exchange-Processed-By-BccFoldering: 15.02.1544.011
+ 15.2.2562.27 via Frontend Transport; Mon, 20 Oct 2025 00:09:44 -0700
+Received: from SA9PR02CU001.outbound.protection.outlook.com (40.93.196.42) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Mon, 20 Oct 2025 00:09:43 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mGeuKw5rMGR52D5b23a2IkY+qoQG6Jbbo2NB58M1GD1SdB78z+CzK0J/G2I9WEaxDEhNo64awtPBOK3N3JkjtxN9cj1Cs2O5ltS9VmckTbEgsLuTTKaQOJ7V/TrM2pcInRiPEy6wgk8SL0slaSZYqYma0Hw+/V2oxpDhkHAQbs34oelTgutvzlGzzVatC45ZT2YqwllR44hjkEmZKpgQxjh0qg3Ue+f8uEEodRWv6+2trheoscMroK3CYWnMEfT2eNRPMC9xX08NRcbovYVVbW90sALtOtdKXy0/xEHZm5pf63IB/4ESXaD0zWQKBgsIBEPX7giJiVeBIH+IwpvcUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZV2ZL1tOYMS2P6j8SbXOpk7NZUR1eZllS+F1ATgLHKc=;
+ b=CxkkIcR7Xe6OwcU1vEsS1tIv8+wpP/PBbXa5jfJJ0jToTNkH5dmVTvRE7wtZRBzRBcjIDaQswhgMBE+ZQdErZJxzuGyeal0E4qzOSbZZ/kphK2WrLF2hEU0OsZXsbOGc0WFJ6NRLTj0pFci4dsxcfqP6hSvlFxrpIJK6KglvAA9ZAQSdm+k+YW6GV0RF2GQ2dVX53pVCWbB32J+ZSEraWBqxO9Ci4+aXOelc26/9tfz6IRTzJg6I9dPW5WnmxChu09ragV5K0tXhlzjgQH/5hXcpob7DQzWB9S2/LUg0t2PJaQWrD06/kAh3lwdwf3hAneq5biFh3ULU1hzOWiZ1Mw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by DM4PR11MB5261.namprd11.prod.outlook.com (2603:10b6:5:388::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.16; Mon, 20 Oct
+ 2025 07:09:42 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::46c9:7f71:993d:8aee]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::46c9:7f71:993d:8aee%7]) with mapi id 15.20.9228.015; Mon, 20 Oct 2025
+ 07:09:42 +0000
+Date: Mon, 20 Oct 2025 00:09:34 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Vishal Aslot <vaslot@nvidia.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Vishal
+ Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, "Dan
+ Williams" <dan.j.williams@intel.com>, Li Ming <ming.li@zohomail.com>, "Peter
+ Zijlstra" <peterz@infradead.org>, "open list:COMPUTE EXPRESS LINK (CXL)"
+	<linux-cxl@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/2] cxl_test: enable zero sized decoders under hb0
+Message-ID: <aPXgLp1Em6wKlx0t@aschofie-mobl2.lan>
+References: <20251015024019.1189713-1-vaslot@nvidia.com>
+ <20251015024019.1189713-2-vaslot@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20251015024019.1189713-2-vaslot@nvidia.com>
+X-ClientProxiedBy: SJ0PR03CA0275.namprd03.prod.outlook.com
+ (2603:10b6:a03:39e::10) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemn100008.china.huawei.com (7.202.194.111)
-Message-ID: <20251020065737.WdVHZeR5rdBn_30NDB0Pf9iEyft-NKrVWWpRxnQlZYU@z>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DM4PR11MB5261:EE_
+X-MS-Office365-Filtering-Correlation-Id: a73683a6-7637-4e5f-68c5-08de0fa7a428
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?o0zHJoK/yuo7lLOZKEQpRNqe/jsDRloixTeRUde+ihbRSChQQLbEDjiveqcB?=
+ =?us-ascii?Q?klj0TQoLCNGB+1fNZsHUL1XJ6SS/p5xhaQYo9oojQH0dpYExFRjX1+g7qThC?=
+ =?us-ascii?Q?DGTmPwf7801xNOX2OrogNUSebOvNrurtuQSGRyPt6sFG+bBD607+Mcaz3XMl?=
+ =?us-ascii?Q?w8G4QhI3+1pZUNle/lniCpaGN+qZZWj9jX6QnZABWo0yInxg9nOvbvpU3Yew?=
+ =?us-ascii?Q?2m53HVDoc+xFfwz2TFtAaam6Hzrh9jFJNWCtnMhGclVMWmKkiWh78t3MzO5I?=
+ =?us-ascii?Q?FgvOhltlprXGth8+gbsdIkQJi3KMazH4RrdM3L5a3dab48asCxm9VJgaEX6v?=
+ =?us-ascii?Q?2UH/Ylh3h73f8qvvyXbTaRzfTDH9gxHQ4S1lvbfHAoQUrZUAfObsWylGDmbD?=
+ =?us-ascii?Q?1cZ4nrKZKT4zQvQT5xDmfuY7/7CwFIYXa97ctCp3wBpO2KBz/zwsSIqbWW+g?=
+ =?us-ascii?Q?4jJyVpsiYrRsvX0r0Iwmbc4+spot4ui62P0uWVNm0VPjNYthy9tHMuxDKjMY?=
+ =?us-ascii?Q?9bcBmU9qPLcxNgH2bkxfu5MV/qwNJPWmFSn/2IwVdNvYrSo6pSNjqQS0g4eu?=
+ =?us-ascii?Q?4/GZFOPK2KMEljU6IYcldCJQ/jqUg4NTXL16wOhcPZKoMLI3Cv77J/3s//ex?=
+ =?us-ascii?Q?fNtoMb7pr6UW75ioYc8Unvcwd00d8m+41PGZrkEvNxg/BQCw3QarPx7fJFxL?=
+ =?us-ascii?Q?H9iDX8V5+yCf9V8zhGFHY1X9++4oF4BQN8+6rEN06ed86840JM8XnX0wu9Ec?=
+ =?us-ascii?Q?qY5JJzKfde1MJmS38Tiiiq1ufRLptrCTUE/XSGGB78WOrQjBWWmd/u4mS/Ly?=
+ =?us-ascii?Q?MeYSAyc7xHkvvboFuw2enUEvHv4xukhJOdqrecVmV3fuOV/AVrizkLSHzj8J?=
+ =?us-ascii?Q?SfdP2wHZKH7Fn1jA2gNGKv61OB1tR3E7PXUvp+MVf9R8BeW1Y2ZOfkObtPke?=
+ =?us-ascii?Q?fYNE8ofT2HCbE93+owQZhxM83OFZGiFcTk4hyQ5Z0hwhUXHMkcoyhGagZUew?=
+ =?us-ascii?Q?COljgyYW2ySuaq76pasnvepTjx/toI+1N5YPSnQplrXLZ6UWpRTdwceVgFoc?=
+ =?us-ascii?Q?AHyC6RM/x7aqNn6Xz6dj8N9Nxy9ixzHAZtXFul6nZfemfqBr3Ac+yjhV3FvB?=
+ =?us-ascii?Q?3KxMBrB5ybcaBh/nVx/Q5WKBEns3aM4TFkoK+JLVeCgEoniqrt4VcMc4OPfQ?=
+ =?us-ascii?Q?dDv86Cr6itFCHnFCZZ9J2PIgU0MDUZcWp53CcfVisK8vdug34EUgGh3nDyVA?=
+ =?us-ascii?Q?4g4DJLOgU4gUiIHks6H9BxRhOKEKSs9NVHY7D631+O+WY0qZ3NSohR4tzfwu?=
+ =?us-ascii?Q?e/iUqmWgZLBMR9+lsg4qQByppytV6U8jH5nHc38VUf5XFHpNDhGgbyTr/XNW?=
+ =?us-ascii?Q?Wli4XuvUvQGwiz7+wxLl08sco0bI9drYCz3KLPFiFccxmmexJ9C2vkq4k6FB?=
+ =?us-ascii?Q?CBNYNVvPLeWdA93UZysSyXGez34ywbHl?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1B27bAMGHTRr3t2y9240CnJjzvToHiapRDbOYBO0ZSSmUDF6Dkb0MwgfKZoW?=
+ =?us-ascii?Q?AygFyqDOOLB7JJIvSJmezgWXXFhd8YwzyHy77xeRR+5EEokmQWBGEv/6cFHM?=
+ =?us-ascii?Q?v0noFb1Jn07Cp9zrBmFnW6cjS3ru+mm3u2W8XIo3e1uGlvS0RiO1mmCngm+7?=
+ =?us-ascii?Q?rW/+suPz1wzxW4GCKtWYBFl/QvtjuEpZ82MoxAPEaW7Czq1JrPW5/2UvoqmJ?=
+ =?us-ascii?Q?f8ReCJckjBb+/tA5uRRF5bprqpaFPK/4QkMxTlyep3q6+/CghUg8FJmHNbpJ?=
+ =?us-ascii?Q?E26iDsSXyztRMsBBFcy2rm7LAS3zxP4NnQo21A5Lvt/mvxQb/YmOLFM7Kyca?=
+ =?us-ascii?Q?5y49gI9nqd1lwzC9oyOyJsZiah8BKrL2eyH90AIeoxi1gL4z88DItAfoVp+r?=
+ =?us-ascii?Q?SkkXxCu6ibttrwhYun9KlAcCH6VZOOOmhab8tCvnvo15Z6Wnnvyei0sH81UG?=
+ =?us-ascii?Q?KNopCPQRkai6imqS7KRL0WbmeoqhvGi6l/5D0ekZMxBC+BkNyRWJq2oUhOCb?=
+ =?us-ascii?Q?DR9s+2awEbB770MZCOF+k5TnNMozfdCbQsdu21kh0lYie3ajNakgnGpyBvwL?=
+ =?us-ascii?Q?wAVmx0K8tMval3w3iQlYM9VCPq/IUqdtIvA7egaTCAOD5IJscE1jwDVDgVD8?=
+ =?us-ascii?Q?CZZLVtQaz74tg7Sa0O3LPThH0WmXOcFZSoHAonVTeJiZwt3bdEvOju0Srd5e?=
+ =?us-ascii?Q?qcPXlFz3fHfbzgPpLthfx3pJOfB6TG60V4l0NHAnW+rcCGHOzVg+pmKv4VWY?=
+ =?us-ascii?Q?ZezfHq9Ouo0MmkZf3oDWNee1tQl9lToiCGQIjS+MLw4iPT8aMzqocQ6dGIUQ?=
+ =?us-ascii?Q?VzkcGmIcDmGu+VLV1GdCjYl2xzcM7UBx9s/h20rmKdY5zvLCLmaxsm0g6Rui?=
+ =?us-ascii?Q?c6bT8rb9YKtGh8iLuUiCwZBrMeulvHvuLYQUVkNOlt7S1MGXIyrmEv4Fq4rm?=
+ =?us-ascii?Q?DMSFq7YdZ3ZWavKMCQnk9G/prT82x/iNhP/LktuE3zNHmm+XLfHghTbyw72x?=
+ =?us-ascii?Q?hF+A5Lu664tfXZ1l4+f9bEZANVv6VVp2Cnb1oBYGoH+twyRPR2EZGb8CZBvY?=
+ =?us-ascii?Q?GLtNRiaQGoJn4qrAjSU7vYAVRUrWo4qUl+nkm2nZXC5kY1BeGIs5dzzjkI20?=
+ =?us-ascii?Q?KNnzUmd+Mzr5dUrXX7SQCVHEn9Cr8g2h4FYDViKrBUMx0dO7LEmwO0mjLCgi?=
+ =?us-ascii?Q?u6XnjGITNAUaxtt9jjlKRcuFd++hlzfLuHzkHZQlP3R7tHwMimu7Wxi9ojxU?=
+ =?us-ascii?Q?qwXqdX6IgUb8fmqvyWD22fNP4iNT9hcZUgXRQ4ZxQQyXpSKXOkmhNwC90Ork?=
+ =?us-ascii?Q?myn5EEt/Cs4BUe2NvGM5/u92QJtBQjcONJQl1koCyrFImRW1JS8VHWMp+A/M?=
+ =?us-ascii?Q?UOUlSDmFd6dz3OEVlj4dLcOEG9WCrgnBM41QDvfJSf2WvyjS9Wb1ifGHdCcV?=
+ =?us-ascii?Q?laBzj8r1IOlW486800BHSnMPPeFQSxmdg9zVR5s5k7ucZQRgaOCVU9Khf2SG?=
+ =?us-ascii?Q?pGkyP8fswiIflkXq+IyYXrW4Kn9ESWrm185eO9iSOw5oofcQDjVq+x6LIk7M?=
+ =?us-ascii?Q?+Ngi+Y4OT8djyxgVDJY34yCWuwB/doh2L9CV3ryNNbvKxoO5HzL7j+stvREa?=
+ =?us-ascii?Q?Uw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a73683a6-7637-4e5f-68c5-08de0fa7a428
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2025 07:09:42.3178
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: g8+HeyJ2PXNGBqKPAdsZDlZbvH3Wn5JjVHPdtMBM/B2O7h2P9zPFp2qPhNxPfxlb5qPKjIuM94XB7HIN/mydunUig/aOA25DuQACkuLfuWM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5261
+X-OriginatorOrg: intel.com
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>=0D
+On Tue, Oct 14, 2025 at 07:40:05PM -0700, Vishal Aslot wrote:
+> The cxl core in linux updated to supported committed
+> decoders of zero size, because this is allowed by
+> the CXL spec.
 
-Support system level interfaces for cache maintenance as found on some=0D
-ARM64 systems. This is needed for correct functionality during various=0D
-forms of memory hotplug (e.g. CXL). Typical hardware has MMIO interface=0D
-found via ACPI DSDT.=0D
-=0D
-Includes parameter changes to cpu_cache_invalidate_memregion() but no=0D
-functional changes for architectures that already support this call.=0D
-=0D
-v3:=0D
-  - Squash the layers by moving all the management code into=0D
-    lib/cache_maint.c that architectures can opt into via=0D
-    GENERIC_CPU_CACHE_MAINTENANCE (Dan).  I added entries to Conor's=0D
-    drivers/cache MAINTAINERS entry to include this lib/ code but if=0D
-    preferred I can add a separate entry for it.=0D
-  - Add a new patch 1 that drops the old IODESC_RES_ parameter as it never=
-=0D
-    did anything other than document intent.  With the addition of a=0D
-    flushing range, we would have to check the range and resource type=0D
-    matched. Simpler to just drop the parameter. (Dan)=0D
-  - Minor fixes and renames as per reviews.=0D
-  - Even if all else looks good, I fully expect some discussion of the=0D
-    naming as I'm not particularly happy with it.=0D
-  - Open question on whether is acceptable for the answer to whether=0D
-    cpu_cache_invalidate_memregion() is supported to change as drivers=0D
-    register (potentially after initial boot).  Could design a firmware=0D
-    table solution to this, but will take a while - not sure if it is=0D
-    necessary.=0D
-  - Switch to a fwctl style allocation function that makes the container=0D
-    nature of the allocation explicit.=0D
-=0D
-On current ARM64 systems (and likely other architectures) the=0D
-implementation of cache flushing need for actions such as CXL memory=0D
-hotplug e.g. cpu_cache_invalidate_memregion(), is performed by system=0D
-components outside of the CPU, controlled via either firmware or MMIO=0D
-interfaces.=0D
-=0D
-These control units run the necessary coherency protocol operations to=0D
-cause the write backs and cache flushes to occur asynchronously. The allow=
-=0D
-filtering by PA range to reduce disruption to the system. Systems=0D
-supporting this interface must be designed to ensure that, when complete,=0D
-all cache lines in the range are in invalid state or clean state=0D
-(prefetches may have raced with the invalidation). This must include=0D
-memory-side caches and other non architectural caches beyond the Point=0D
-of Coherence (ARM terminology) such that writes will reach memory even=0D
-after OS programmable address decoders are modified (for CXL this is=0D
-any HDM decoders that aren't locked). Software will guarantee that no=0D
-writes to these memory ranges race with this operation. Whilst this is=0D
-subtly different from write backs must reach the physical memory that=0D
-difference probably doesn't matter to those reading this series.=0D
-=0D
-The possible distributed nature of the relevant coherency management=0D
-units (e.g. due to interleaving) requires the appropriate commands to be=0D
-issued to multiple (potentially heterogeneous) units. To enable this a=0D
-registration framework is provided to which drivers may register a set=0D
-of callbacks. Upon a request for a cache maintenance operation the=0D
-framework iterates over all registered callback sets, calling first a=0D
-command to write back and invalidate, and then optionally a command to wait=
-=0D
-for completion. Filtering on relevance is left to the individual drivers.=0D
-=0D
-Two drivers are included. This HiSilicon Hydra Home Agent driver which=0D
-controls hardware found on some of our relevant server SoCs and,=0D
-mostly to show that the approach is general, a driver based on a firmware=0D
-interface that was in a public PSCI specification alpha version=0D
-(now dropped - don't merge that!)=0D
-=0D
-QEMU emulation code at=0D
-http://gitlab.com/jic23/qemu cxl-2025-03-20 =0D
-=0D
-Remaining opens:=0D
-- Naming.  All suggestions welcome!=0D
-- I don't particularly like defining 'generic' infrastructure with so few=0D
-  implementations. If anyone can point me at docs for another one or two,=0D
-  or confirm that they think this is fine that would be great!=0D
-- I made up the ACPI spec - it's not documented, non official and honestly=
-=0D
-  needs work. I would however like to get feedback on whether it is=0D
-  something we want to try and get through the ACPI Working group as a much=
-=0D
-  improved code first proposal?  The potential justification being to avoid=
-=0D
-  the need for lots trivial drivers where maybe a bit of DSDT interpreted=0D
-  code does the job better. (Currently I'm not hearing much demand for this=
-=0D
-  so will probably drop in a future version).=0D
-=0D
-Thanks to all who engaged in the discussion so far.=0D
-=0D
-Jonathan=0D
-=0D
-Jonathan Cameron (5):=0D
-  memregion: Drop unused IORES_DESC_* parameter from=0D
-    cpu_cache_invalidate_memregion()=0D
-  MAINTAINERS: Add Jonathan Cameron to drivers/cache=0D
-  arm64: Select GENERIC_CPU_CACHE_MAINTENANCE and=0D
-    ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION=0D
-  acpi: PoC of Cache control via ACPI0019 and _DSM=0D
-  Hack: Pretend we have PSCI 1.2=0D
-=0D
-Yicong Yang (2):=0D
-  memregion: Support fine grained invalidate by=0D
-    cpu_cache_invalidate_memregion()=0D
-  lib: Support ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION=0D
-=0D
-Yushan Wang (1):=0D
-  cache: Support cache maintenance for HiSilicon SoC Hydra Home Agent=0D
-=0D
- MAINTAINERS                        |   3 +=0D
- arch/arm64/Kconfig                 |   2 +=0D
- arch/x86/mm/pat/set_memory.c       |   2 +-=0D
- drivers/cache/Kconfig              |  22 ++++=0D
- drivers/cache/Makefile             |   3 +=0D
- drivers/cache/acpi_cache_control.c | 153 +++++++++++++++++++++++=0D
- drivers/cache/hisi_soc_hha.c       | 187 +++++++++++++++++++++++++++++=0D
- drivers/cxl/core/region.c          |   5 +-=0D
- drivers/firmware/psci/psci.c       |   2 +=0D
- drivers/nvdimm/region.c            |   2 +-=0D
- drivers/nvdimm/region_devs.c       |   2 +-=0D
- include/linux/cache_coherency.h    |  57 +++++++++=0D
- include/linux/memregion.h          |  10 +-=0D
- lib/Kconfig                        |   3 +=0D
- lib/Makefile                       |   2 +=0D
- lib/cache_maint.c                  | 128 ++++++++++++++++++++=0D
- 16 files changed, 575 insertions(+), 8 deletions(-)=0D
- create mode 100644 drivers/cache/acpi_cache_control.c=0D
- create mode 100644 drivers/cache/hisi_soc_hha.c=0D
- create mode 100644 include/linux/cache_coherency.h=0D
- create mode 100644 lib/cache_maint.c=0D
-=0D
--- =0D
-2.48.1=0D
-=0D
+Tell more about what the spec allows?
+
+> 
+> This patch updates cxl_test to enable decoders 1 and 2
+> in the host-bridge 0 port, in a switch uport under hb0,
+> and the endpoints ports with size zero simulating
+> committed zero sized decoders.
+
+Decoders 1 & 2 - those are after decoder 0, the autoregion.
+That's a problem ATM, when we try to teardown the autoregion we
+get out of order resets. Like I asked in the other patch, if there
+are rules about where these zero size decoders may appear, that
+may make the solution here simpler.
+
+Add the skip to mock_devm_enumerate_decoders() to clean up -
+a bunch like this:
+[   94.222456] cxl decoder0.0: unsupported mode 223426864
+that were followed by construct region failures...
+[   94.222456] cxl decoder0.0: unsupported mode 223426864
+[   94.223790] probe of endpoint13 returned 0 after 136794 usecs
+[   94.224595] cxl_mock_mem cxl_mem.6: mem3:decoder15.1: construct_region failed assign region: -22
+
+FWIW - cxl-test mocks the init, enumerate, commit, and reset of the
+decoders, so all those need to be coordinated w the 'real' driver.
+That may sound like a pain and it could lead to bugs that are only
+in cxl-test - but it lets us then test region creation paths.
+
+-- Alison
+
