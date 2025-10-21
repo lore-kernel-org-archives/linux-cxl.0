@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4602D2BDC32
-	for <linux-cxl@vger.kernel.org>; Tue, 21 Oct 2025 22:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD212309AA
+	for <linux-cxl@vger.kernel.org>; Tue, 21 Oct 2025 22:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761085815; cv=none; b=I9gcuqkKDYs+9gZZAdHGEbzzTCwNBw8rcRwglnXd+nFEMkWXSkp6byGBXgu4FRXefRBD8hr3St+jo8VPZEW0FJE0UO+VU1yo5M7LHEZdufIgpiCajmQK3I+eC3R5kZ1s7TyLNz6N91YvuY/ww9nRLf1P+SGi3HX+Aav2ZDzQv4s=
+	t=1761087305; cv=none; b=rrxNvLVivMu9kFGBN4vSg8EoIh7w/uBouPovVNUSSA5FCc+ovKCCZnnj6912MBoSSCjtTgxG0BeOP3GB4PUz0SdvDDSJUEN2N44INyFpX3sSevrWguATya9MchnCC7AtuxZ3daBK5kt+X+LzSvpcVXROBf9/Cj3SjcyICpsf8yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761085815; c=relaxed/simple;
-	bh=pWRNtTFpZZaCi5Xldb5KkvQ+OnSSQ04gDHgWuZSfeSk=;
+	s=arc-20240116; t=1761087305; c=relaxed/simple;
+	bh=yl3sFk8HTYRypSnT9hnTAm8g3J2LD33iA5XdgVOEzwM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W71ywUjTjYkGYg0HHPkBnoy2DU1yUSJ4OwgL4N54wMFyTfsIMe4I5OnYWZKd/ddgasaMc6jh7mt90l5v0MAS+OdfP2bKVCF/9+XvQVQp0iwZIMoG+914+vSMJ2fGRBKy0gU1BYLvOX/7piNzwkRwotU6QnYPFH9hpqjyFheWC5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jDlfTXXP; arc=none smtp.client-ip=192.198.163.18
+	 In-Reply-To:Content-Type; b=NgFAwDCbtOXjJ4ZBndM7iODrzB6XPKki9R59GjqTTDR0HGudxChCsk+N0tYpFjjEeaytUX6YOuFljvAfyOd9l5Dyv6XDWEkGVsUiGBPYDsuva/7gn2nINCyneEBOxz1fjRzdtK7T3lSs12dn2VckMyozec9BkWmfAAs7YSfgxYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nihr8lZO; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jDlfTXXP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nihr8lZO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761085813; x=1792621813;
+  t=1761087304; x=1792623304;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=pWRNtTFpZZaCi5Xldb5KkvQ+OnSSQ04gDHgWuZSfeSk=;
-  b=jDlfTXXP/gEJeDYLYK3G9MdE7bmUOTjEv5bSa4gp6mU9CVWys3cpr621
-   +aMmm2QXx91M+guoo2hZ21SFphpfsCq7gkAdzolxbyYDztX6hG0DFX7AT
-   jaZjjaUwKZo1LcNHkT7T7fkFjdNaKPLrlt6M7GYV2QJkqUGzz0LWtnzNF
-   ke1zZjj+0ihc1yALu3vV4OEF0+2sRnG6G8/HEq8E2rnBKe/AFKK6ZLJ3P
-   qLxENGITUSfnWlCwq1W0zvs71vArkJFNwQMc2CXa5I+FD4eg1ZX0v1No7
-   u5a25uRimN3E/U/H/DPzt4zT5mmrVxF7rq+MY687zCsXBn0TyiXW5u658
+  bh=yl3sFk8HTYRypSnT9hnTAm8g3J2LD33iA5XdgVOEzwM=;
+  b=nihr8lZOjIkiH58g07NPAPcAcJUHqZS/v3+cNTEafNBdRxHgoB4M1rQe
+   OMhpDZEyutftT0LFIuSlzgTF3j9PradNDJsQcgi7vw6lwjnQOFFjAN7w1
+   X9RaICNrJOEBU4zNMUok5TjvKUyJYyQPaW4p8fMavu7TgPJ9HsNsoav7o
+   VZwXHBYFrnlAXlFSVv+rMC7lYGJ9dXvGeNfRgr1qikmtQqYG4XfIfzhFe
+   p0/hbbsv00n/i27o48J6xPhGbzSTqD1NdfII2bUo4o5En3CsYp8Mwns/L
+   O3D7LVbV052FBM4v5cC/JGOlzO/XkrewO8CwO0WVTFLXRIBT9URkFOMRp
    g==;
-X-CSE-ConnectionGUID: BImAu6VpQMCpj4iN4v6NEg==
-X-CSE-MsgGUID: lwDpVUgMR8ms+lbdrDdnBg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62432529"
+X-CSE-ConnectionGUID: w/niRePxRcieL2h2ufaYiA==
+X-CSE-MsgGUID: dz/o5hUmS0yQLOAnmf8jeg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63264771"
 X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
-   d="scan'208";a="62432529"
+   d="scan'208";a="63264771"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 15:30:11 -0700
-X-CSE-ConnectionGUID: U9HQbEb0QQ6zk4PEufYQog==
-X-CSE-MsgGUID: Wi/jngEFRumGDviza/PZZg==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 15:55:04 -0700
+X-CSE-ConnectionGUID: RoI2ip7nTlOqBr9HrkeA2Q==
+X-CSE-MsgGUID: 3FX18rbsRVicq1sn7/e1hQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
-   d="scan'208";a="188110325"
+   d="scan'208";a="188114451"
 Received: from schen9-mobl4.amr.corp.intel.com (HELO [10.125.108.169]) ([10.125.108.169])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 15:30:10 -0700
-Message-ID: <99d1884e-3586-468f-b232-6a40fd656887@intel.com>
-Date: Tue, 21 Oct 2025 15:30:09 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 15:55:03 -0700
+Message-ID: <fe8ab195-57bc-4569-bf0f-c8c2a93bc435@intel.com>
+Date: Tue, 21 Oct 2025 15:55:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,206 +52,111 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cxl/region: Add support to indicate region has
- extended linear cache
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, linux-cxl@vger.kernel.org
-References: <20251017222536.4160645-1-dave.jiang@intel.com>
- <beb4a761-c7f8-44d2-80c0-99ef0a20e811@amd.com>
+Subject: Re: [ndctl PATCH v3 1/7] libcxl: Add debugfs path to CXL context
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>, nvdimm@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org, alison.schofield@intel.com
+References: <20251021183124.2311-1-Benjamin.Cheatham@amd.com>
+ <20251021183124.2311-2-Benjamin.Cheatham@amd.com>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <beb4a761-c7f8-44d2-80c0-99ef0a20e811@amd.com>
+In-Reply-To: <20251021183124.2311-2-Benjamin.Cheatham@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 10/21/25 12:53 PM, Cheatham, Benjamin wrote:
-> On 10/17/2025 5:25 PM, Dave Jiang wrote:
->> Add a region sysfs attribute to show the size of the extended linear
->> cache if there is any. The attribute is invisible when the cache
->> size is 0, which indicates it does not exist.
->>
->> Moved the cxl_region_visible() location in order to pick up the
->> new sysfs attribute definition.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->> v2:
->> - Add documentation. (Alison)
->> ---
->>  Documentation/ABI/testing/sysfs-bus-cxl |  8 ++++
->>  drivers/cxl/core/region.c               | 63 +++++++++++++++++++------
->>  2 files changed, 56 insertions(+), 15 deletions(-)
->>
->> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
->> index 6b4e8c7a963d..8d529d68dfcd 100644
->> --- a/Documentation/ABI/testing/sysfs-bus-cxl
->> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
->> @@ -498,6 +498,14 @@ Description:
->>  		there is no guarantee that a free followed by an allocate
->>  		results in the same address being allocated.
->>  
->> +What:		/sys/bus/cxl/devices/regionZ/extended_linear_cache_size
->> +Date:		October, 2025
->> +KernelVersion:	v6.19
->> +Contact:	linux-cxl@vger.kernel.org
->> +Description:
->> +		(RO) The size of extended linear cache if there is one present.
+On 10/21/25 11:31 AM, Ben Cheatham wrote:
+> Find the CXL debugfs mount point and add it to the CXL library context.
+> This will be used by poison and procotol error library functions to
+> access the information presented by the filesystem.
 > 
-> s/if there is one present/if present
-
-ok
-
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+> ---
+>  cxl/lib/libcxl.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
 > 
->> +		The region 'size' attribute would reflect the total size where
->> +		the CXL region size plus the extended linear cache size.
-> 
-> Bit messy, maybe: "The region 'size' attribute is the CXL region size plus the extended linear cache size."
+> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+> index cafde1c..ea5831f 100644
+> --- a/cxl/lib/libcxl.c
+> +++ b/cxl/lib/libcxl.c
+> @@ -54,6 +54,7 @@ struct cxl_ctx {
+>  	struct kmod_ctx *kmod_ctx;
+>  	struct daxctl_ctx *daxctl_ctx;
+>  	void *private_data;
+> +	const char *debugfs;
+>  };
+>  
+>  static void free_pmem(struct cxl_pmem *pmem)
+> @@ -240,6 +241,43 @@ CXL_EXPORT void *cxl_get_private_data(struct cxl_ctx *ctx)
+>  	return ctx->private_data;
+>  }
+>  
+> +static char *get_debugfs_dir(void)
 
-ok
+const char *?
 
-> 
-> You should probably add a blurb to the size attribute's description about the extended linear cache size.
-> Changing the meaning of the size attribute outside its own description seems wrong.
-> 
-> At that point you could probably drop the second sentence altogether (I'll leave that one up to you though).
 
-I'll add something to 'size' and drop the additional stuff here.
+Also maybe get_debugfs_dir_path()
 
-> 
->>  
->>  What:		/sys/bus/cxl/devices/regionZ/mode
->>  Date:		January, 2023
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index b06fee1978ba..531f790b9510 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -461,21 +461,6 @@ static ssize_t commit_show(struct device *dev, struct device_attribute *attr,
->>  }
->>  static DEVICE_ATTR_RW(commit);
->>  
->> -static umode_t cxl_region_visible(struct kobject *kobj, struct attribute *a,
->> -				  int n)
->> -{
->> -	struct device *dev = kobj_to_dev(kobj);
->> -	struct cxl_region *cxlr = to_cxl_region(dev);
->> -
->> -	/*
->> -	 * Support tooling that expects to find a 'uuid' attribute for all
->> -	 * regions regardless of mode.
->> -	 */
->> -	if (a == &dev_attr_uuid.attr && cxlr->mode != CXL_PARTMODE_PMEM)
->> -		return 0444;
->> -	return a->mode;
->> -}
->> -
->>  static ssize_t interleave_ways_show(struct device *dev,
->>  				    struct device_attribute *attr, char *buf)
->>  {
->> @@ -754,6 +739,21 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
->>  }
->>  static DEVICE_ATTR_RW(size);
->>  
->> +static ssize_t extended_linear_cache_size_show(struct device *dev,
->> +					       struct device_attribute *attr,
->> +					       char *buf)
->> +{
->> +	struct cxl_region *cxlr = to_cxl_region(dev);
->> +	struct cxl_region_params *p = &cxlr->params;
->> +	ssize_t rc;
->> +
->> +	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
->> +	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
->> +		return rc;
->> +	return sysfs_emit(buf, "%#llx\n", p->cache_size);
->> +}
->> +static DEVICE_ATTR_RO(extended_linear_cache_size);
->> +
->>  static struct attribute *cxl_region_attrs[] = {
->>  	&dev_attr_uuid.attr,
->>  	&dev_attr_commit.attr,
->> @@ -762,14 +762,44 @@ static struct attribute *cxl_region_attrs[] = {
->>  	&dev_attr_resource.attr,
->>  	&dev_attr_size.attr,
->>  	&dev_attr_mode.attr,
->> +	&dev_attr_extended_linear_cache_size.attr,
->>  	NULL,
->>  };
->>  
->> +static umode_t cxl_region_visible(struct kobject *kobj, struct attribute *a,
->> +				  int n)
->> +{
->> +	struct device *dev = kobj_to_dev(kobj);
->> +	struct cxl_region *cxlr = to_cxl_region(dev);
->> +
->> +	/*
->> +	 * Support tooling that expects to find a 'uuid' attribute for all
->> +	 * regions regardless of mode.
->> +	 */
->> +	if (a == &dev_attr_uuid.attr && cxlr->mode != CXL_PARTMODE_PMEM)
->> +		return 0444;
->> +
->> +	/*
->> +	 * Don't dispaly extended linear cache attribute if there is no
->> +	 * extended linear cache.
->> +	 */
->> +	if (a == &dev_attr_extended_linear_cache_size.attr &&
->> +	    cxlr->params.cache_size == 0)
->> +		return 0;
->> +
->> +	return a->mode;
->> +}
->> +
->>  static const struct attribute_group cxl_region_group = {
->>  	.attrs = cxl_region_attrs,
->>  	.is_visible = cxl_region_visible,
->>  };
->>  
->> +static const struct attribute_group *get_cxl_region_group(void)
->> +{
->> +	return &cxl_region_group;
->> +}
->> +
-> 
-> Why introduce this function instead of using &cxl_region_group directly? I see there's
-> a precedent with the target group functions, but only get_cxl_region_target_group() needs
-> the function. The other two (get_cxl_region_accessX_group()) are only ever called after
-> the attribute definition and should probably get cleaned up at some point.
+> +{
+> +	char *dev, *dir, *type, *ret = NULL;
 
-Yeah I can drop that.
-
-> 
->>  static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
->>  {
->>  	struct cxl_region_params *p = &cxlr->params;
->> @@ -3478,6 +3508,9 @@ static int __construct_region(struct cxl_region *cxlr,
->>  		dev_warn(cxlmd->dev.parent,
->>  			 "Extended linear cache calculation failed rc:%d\n", rc);
->>  	}
->> +	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_group());
-> 
-> Missing whitespace above this line?
-
-yes.
-
-Thanks for the review Ben.
+'debugfs_dir' rather than 'ret' would be clearer to read.
 
 DJ
 
-> 
-> Thanks,
-> Ben
-> 
->> +	if (rc)
->> +		return rc;
->>  
->>  	rc = insert_resource(cxlrd->res, res);
->>  	if (rc) {
->>
->> base-commit: a4bbb493a3247ef32f6191fd8b2a0657139f8e08
-> 
+> +	char line[PATH_MAX + 256 + 1];
+> +	FILE *fp;
+> +
+> +	fp = fopen("/proc/mounts", "r");
+> +	if (!fp)
+> +		return ret;
+> +
+> +	while (fgets(line, sizeof(line), fp)) {
+> +		dev = strtok(line, " \t");
+> +		if (!dev)
+> +			break;
+> +
+> +		dir = strtok(NULL, " \t");
+> +		if (!dir)
+> +			break;
+> +
+> +		type = strtok(NULL, " \t");
+> +		if (!type)
+> +			break;
+> +
+> +		if (!strcmp(type, "debugfs")) {
+> +			ret = calloc(strlen(dir) + 1, 1);
+> +			if (!ret)
+> +				break;
+> +
+> +			strcpy(ret, dir);
+> +			break;
+> +		}
+> +	}
+> +
+> +	fclose(fp);
+> +	return ret;
+> +}
+> +
+>  /**
+>   * cxl_new - instantiate a new library context
+>   * @ctx: context to establish
+> @@ -295,6 +333,7 @@ CXL_EXPORT int cxl_new(struct cxl_ctx **ctx)
+>  	c->udev = udev;
+>  	c->udev_queue = udev_queue;
+>  	c->timeout = 5000;
+> +	c->debugfs = get_debugfs_dir();
+>  
+>  	return 0;
+>  
+> @@ -350,6 +389,7 @@ CXL_EXPORT void cxl_unref(struct cxl_ctx *ctx)
+>  	kmod_unref(ctx->kmod_ctx);
+>  	daxctl_unref(ctx->daxctl_ctx);
+>  	info(ctx, "context %p released\n", ctx);
+> +	free((void *)ctx->debugfs);
+>  	free(ctx);
+>  }
+>  
 
 
