@@ -1,72 +1,71 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367CC2EF66E
-	for <linux-cxl@vger.kernel.org>; Tue, 21 Oct 2025 10:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3D432E6A3
+	for <linux-cxl@vger.kernel.org>; Tue, 21 Oct 2025 10:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761043038; cv=none; b=BOSxMHZs+Y+4wmMWAmxUnrOz3VKu7lBZCiliNlGtiLJS20I7rQeH0YgZXM5xJUSmcyQURMRpkU5tWliwZ9UfYTST9SmpDUXmjClCwurQ/Xzqln1m+kmT3+Z441qpGAZF38OfssPz6FiRhkrKv04pzuXPjBCPxA3DkA/W5JjPS8Y=
+	t=1761043048; cv=none; b=Oc5PEnPXE09X+fI+johvm2RD2zG76KGc99dF9RjS+SXE03dyGxcww0iwAh2+pAjyKPmLBOxo5juQxdyE4qaevM2sOf3bDLFDjA6tuK3iib52/GYOa9zt4VHBE3UJR9V5G1QedJLn/nM9aXwgictboChLrRuvmTSmk9WQRwgNb9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761043038; c=relaxed/simple;
-	bh=q2nB0DwM2YccZrwzAwnGe8JbGMPoOZkWXyOBvo6HqOU=;
+	s=arc-20240116; t=1761043048; c=relaxed/simple;
+	bh=jY85f0BTm4xZQJc0duQtrHNO8Jvd21YwmPqak4eZGgY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ns7dF8I4NbjXj8VZSLjS8cJMOrraRw6jawXHD/rgLJwTtIC5Iz2ufyb0Z8vUMX2+d5ItYIiGL0ngPZXxLChBKXcd6l/qo7IkoZdf/PnLWY47k1i/uh2GK8YrouRQxfmqr43UvVjE7J6zJ+Y696QiNuCpNImUitIm15mndO4S+X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fVVVHy8s; arc=none smtp.client-ip=209.85.128.172
+	 To:Cc:Content-Type; b=CAZjwF/2oCFrDRURJPoleyjYCLEWwdD19Lldd4J45e/UwWaGnacTNTxTEQy0pWS33F4a51XO+BTfNVLx/UU3IgZyVdbcR9NcA4t0oOYmlnq42KqMqkwburSB/RFf1txf/6LjTWo0A5IUFykk76zWwL8eE845xsAe/39+7GFmPo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AGShXXRu; arc=none smtp.client-ip=209.85.128.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fVVVHy8s"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-71d6014810fso53295647b3.0
-        for <linux-cxl@vger.kernel.org>; Tue, 21 Oct 2025 03:37:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AGShXXRu"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-71d71bcab6fso52581867b3.0
+        for <linux-cxl@vger.kernel.org>; Tue, 21 Oct 2025 03:37:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761043034; x=1761647834; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1761043041; x=1761647841; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ph/ecut6A6hic5K1NGZ8Pu7nJ7zUO/n0Ty1uOi3Gzxk=;
-        b=fVVVHy8sLoQob27t0rEA0gaFAsTwrvZWMtiHra06oGlAgVvBRbCvi9Q0R5PsssM2VP
-         3opZzsj2yjl4mZN0m0fQOUCFaPGUlU0hdJQVEOAICP/F9edy4PeFxMDNRgqqE+vWlBwq
-         gRo4WOltCc2x1w7tzNmnsiUe7DLW4Wk385fOAjvx4xAjIy6N//5jx7kmheOrtwD7tWpE
-         2Ptn2+1PdgjD7SRm8u6GwWspp5Qow93y+PUJ1zdNcZ+cXFL0Hl9twy5pncYwDDJCM4IE
-         DPQhhySXv3aD4ZgJwdVFZNuZDXb8ihiBpVJW+A5z81zJ6Ce1m/3ygAE/YqYBEV2Yts0D
-         y4xQ==
+        bh=/A+ENDDOHSgvE5iS6/3zjzMWUCCsA0O3Bo7N+5kZEq0=;
+        b=AGShXXRuJ5ITWwpLzZJQ1VXWyVfQymzdKhuGNk25riiEfXTuHcL4EPvn7WHIF3kH8x
+         OhnKKvNizFxKrcRYmouNm2QzTLg9F6U6J1RI+oX2GED2eZgbASnNHqfEOqrZ3TtI9iPF
+         J5p310mP9UUOexfReXcEVrhGi5lqK3bZr2ur3ZtTX8FB0jcsNJtRSxI/NCjnUrdGeVLy
+         Rc0DkmPO2AB4WidOkKeisoVL7e3xqpHy96K6x11xdTr9NJgOLXMVhbEhXVg9VaRRC5mY
+         qnUdIVVTDcJ6Dl1jgkN3+L8UZR4GCsuyyzZd3iqsSfgDUEoErOhqbDjsu9V2mbDNm0CM
+         qEyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761043034; x=1761647834;
+        d=1e100.net; s=20230601; t=1761043041; x=1761647841;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Ph/ecut6A6hic5K1NGZ8Pu7nJ7zUO/n0Ty1uOi3Gzxk=;
-        b=np54/ul+EJkK6Y4h66mVU+prNJIjwLOZjYE4ybicIvVeoO6m53TbPq1ptjHHyGLnqQ
-         gw1ZyE5mxUq8ZbgeuCicztMqTpGWK13GF5za2BJEaZvBu7VbjCndv7rGcPIfkkaPDvu6
-         wnxKMMozpbSKxPaCV8qSQ83VXw3K8xBFfsI1Rm1lgj/Ir/wGDA7lEXQ8dNSJtWW2E9Ez
-         p3ZfKR8A+6vd1D/B+zWKSvd6FoSpX1NwSrd6JUbGDhXbmNrrZRL4mk+0LeOu9lpSw3tH
-         DpKU/Dg3CxJxF3dVtfO2NqDrYlwpF1rFITmt/RrZVPQgOVoHCMlmNdqaV2CuEmOxWfc8
-         m4FQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVA0X0mIhak6MFi49VJxkdGxmHI6WRubtGIi6Uw9zJR0fWLI7tWXYxe1d4by+uwicAnOBj40NhzynY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyw1/mre60YWCA2SKiA4wqm7QrmmQ8WDHuOWfoiN0/sPuwjJin7
-	fnyNb13ux1zAAnaYHojMwI+g+9jV/xtnDlQeJ3NMQXNrFen7TcOvHJX3T6DgrBtqV6fwGNT5YZf
-	kYJw6U5rEq+NZRVLJEPYPYz9Vcurq31Wi5pb46QaVAA==
-X-Gm-Gg: ASbGncuJeVtJowE4Ev6kCxdUbtMzxRT3kGWwCn6deiKeNTToEdLBjDJ1K9Bf1rOj5Ma
-	FCTfuCeLSRGvyLzihzdcuqjzULbLOMvG2FTCR3lXCPWOaW9NpeyG9Up5InYwjmjR25l6lQ1yU0B
-	6kek4iAJ3osCewsJXkvzzEpUe0dJS+LTyrMzXoJ2yNWkFVcrjqPM7u57VpGMmj+CZaD31vqhqN9
-	F2qrtFVFbIA8VqYnF0TdudOBssnh+GZVSgkMDGVQODLHjSXmfFBSTp97xOb5AGNW2CJSLQB
-X-Google-Smtp-Source: AGHT+IFNWe0p4ctoYWfajWc50aGmHTb0xLSf46n4ozIzG6IhVoLkeVF1uvz+zd4LTY4qziEKltpM47W2yp2BVV5LtGg=
-X-Received: by 2002:a05:690e:1c1d:b0:63f:2123:f966 with SMTP id
- 956f58d0204a3-63f2123f9b3mr679700d50.69.1761043034054; Tue, 21 Oct 2025
- 03:37:14 -0700 (PDT)
+        bh=/A+ENDDOHSgvE5iS6/3zjzMWUCCsA0O3Bo7N+5kZEq0=;
+        b=J5F+Z8mNDaMlOL64wv5yKBb/ibSFshtexJvcHCwscDT3nn90xDh/RFzwAjDJxguljG
+         CuB2wTaqbRV2vPtFni5Aw/yCOr5ad6uI9Pk4Z6L/AbVz1JvtIsOdIUkjMAkY4jNhBlOC
+         mg4q7E9BkQOk5hyYgh8g9IbIfTTdPKDK3RUSswRtGTcTUzGtXlJQJUuO7I1iE9OKqgdR
+         /gs3vLxV8CH7SYVCWjT9Mh21/v0z0nxOlOElVEUkiX7YvTmICpmhGMWh+M46PqB/LIfu
+         6qfECMQtIdP5FLUBKZFCDZdQStPV9SzUjDZFAGtmewm4Qavblk592Pki92yJQ2D3nJtz
+         gafA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPLRmxhwx1sef3n3cMh9Pq0e94RncZH6vkRF4zGVQCliu1p/x4hrpJ+8W0iUQbSKiQlOR+6798vAk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9HxeoMvM4R9SZFToCnlGoD6MDWrQxpFrMkZIgDThMBw0wQpQO
+	yxUDqiLLBI0BhEmtY1YgkVBe/L+/HTIS8sjTzOLN5ZNd/taGlImYf5llSnLZ2edntIcyVgUcl/+
+	mP+2SAB2qlSBgLBgpJw8iJtl610G6UdXlrqXUtcdW9g==
+X-Gm-Gg: ASbGnctQ5YACr59hYxJus8F2Wq1sGLzLyZtDJZO+iO2ghfn90KEiCWTYiUmW2EyPWMH
+	1AJlkpJVtaG9bpmLEupQVz2y8yRzTO+0k3QbOHlCpLsYn1r1J6ePZau32rbH5Osrugi1L0MNSgI
+	heVJCUml93xqRymOMhKesucLIg5b09sT4SthxmNKJ7qnP5+tm9D/uIAy2lapnqReIAS2kEGLa2r
+	AxNhFWgaPl5kJ/z7Vmy694pVKIYZjFaHcKe9BuFZa+pqU2PTFsTM47AyM6ldg==
+X-Google-Smtp-Source: AGHT+IHoJvOW0/D6MieN+AKPcyEQMvpsuZMp0uNhFRTQ30AAyYSDWJV0Zne8KGeUusjjnlwIFn81QpMo/9iO3PYky6c=
+X-Received: by 2002:a05:690e:134a:b0:63e:34ed:a11f with SMTP id
+ 956f58d0204a3-63e34eda840mr5668133d50.27.1761043041095; Tue, 21 Oct 2025
+ 03:37:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251015071420.1173068-1-herve.codina@bootlin.com> <20251015071420.1173068-3-herve.codina@bootlin.com>
-In-Reply-To: <20251015071420.1173068-3-herve.codina@bootlin.com>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com> <20251015071420.1173068-9-herve.codina@bootlin.com>
+In-Reply-To: <20251015071420.1173068-9-herve.codina@bootlin.com>
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 21 Oct 2025 12:36:38 +0200
-X-Gm-Features: AS18NWAASdG0xF_SzF3JiceFgjGSp70iEL12-_KJqlp8PTGQyhYi7YmRbNtNg04
-Message-ID: <CAPDyKFqKfCTab2OcY9Sj9xS949o+y5PpJvO0CP80eV2qr-0sdg@mail.gmail.com>
-Subject: Re: [PATCH v4 02/29] driver core: Rename get_dev_from_fwnode()
- wrapper to get_device_from_fwnode()
+Date: Tue, 21 Oct 2025 12:36:44 +0200
+X-Gm-Features: AS18NWD7omNxrmhFqrJYVWmQS9VjywGnfIZM0lhZMuwUv9gCSC75_xRcZL7iDfA
+Message-ID: <CAPDyKFr8C2VifsPa4YRPBEt4iAtM3eqnpH+C6wdSASF10fMO0w@mail.gmail.com>
+Subject: Re: [PATCH v4 08/29] driver core: fw_devlink: Introduce fw_devlink_set_device()
 To: Herve Codina <herve.codina@bootlin.com>
 Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -99,142 +98,41 @@ Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 15 Oct 2025 at 09:16, Herve Codina <herve.codina@bootlin.com> wrote:
+On Wed, 15 Oct 2025 at 09:17, Herve Codina <herve.codina@bootlin.com> wrote:
 >
-> get_dev_from_fwnode() calls get_device() and so it acquires a reference
-> on the device returned.
+> Setting fwnode->dev is specific to fw_devlink.
 >
-> In order to be more obvious that this wrapper is a get_device() variant,
-> rename it to get_device_from_fwnode().
+> In order to avoid having a direct 'fwnode->dev = dev;' in several
+> place in the kernel, introduce fw_devlink_set_device() helper to perform
+> this operation.
 >
-> Suggested-by: Mark Brown <broonie@kernel.org>
-> Link: https://lore.kernel.org/lkml/CAGETcx97QjnjVR8Z5g0ndLHpK96hLd4aYSV=iEkKPNbNOccYmA@mail.gmail.com/
 > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Saravana Kannan <saravanak@google.com>
-> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
 Kind regards
 Uffe
 
 
 > ---
->  drivers/base/core.c     | 18 +++++++++---------
->  drivers/pmdomain/core.c |  4 ++--
->  include/linux/device.h  |  2 +-
->  3 files changed, 12 insertions(+), 12 deletions(-)
+>  include/linux/fwnode.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
 >
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 3c533dab8fa5..334f5a4fbb9e 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -1888,7 +1888,7 @@ static bool fwnode_init_without_drv(struct fwnode_handle *fwnode)
->         if (!(fwnode->flags & FWNODE_FLAG_INITIALIZED))
->                 return false;
+> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+> index a921ca2fe940..a1345e274125 100644
+> --- a/include/linux/fwnode.h
+> +++ b/include/linux/fwnode.h
+> @@ -231,4 +231,10 @@ void fw_devlink_purge_absent_suppliers(struct fwnode_handle *fwnode);
+>  void fw_devlink_refresh_fwnode(struct fwnode_handle *fwnode);
+>  bool fw_devlink_is_strict(void);
 >
-> -       dev = get_dev_from_fwnode(fwnode);
-> +       dev = get_device_from_fwnode(fwnode);
->         ret = !dev || dev->links.status == DL_DEV_NO_DRIVER;
->         put_device(dev);
->
-> @@ -1957,7 +1957,7 @@ static struct device *fwnode_get_next_parent_dev(const struct fwnode_handle *fwn
->         struct device *dev;
->
->         fwnode_for_each_parent_node(fwnode, parent) {
-> -               dev = get_dev_from_fwnode(parent);
-> +               dev = get_device_from_fwnode(parent);
->                 if (dev) {
->                         fwnode_handle_put(parent);
->                         return dev;
-> @@ -2013,8 +2013,8 @@ static bool __fw_devlink_relax_cycles(struct fwnode_handle *con_handle,
->                 goto out;
->         }
->
-> -       sup_dev = get_dev_from_fwnode(sup_handle);
-> -       con_dev = get_dev_from_fwnode(con_handle);
-> +       sup_dev = get_device_from_fwnode(sup_handle);
-> +       con_dev = get_device_from_fwnode(con_handle);
->         /*
->          * If sup_dev is bound to a driver and @con hasn't started binding to a
->          * driver, sup_dev can't be a consumer of @con. So, no need to check
-> @@ -2153,7 +2153,7 @@ static int fw_devlink_create_devlink(struct device *con,
->         if (sup_handle->flags & FWNODE_FLAG_NOT_DEVICE)
->                 sup_dev = fwnode_get_next_parent_dev(sup_handle);
->         else
-> -               sup_dev = get_dev_from_fwnode(sup_handle);
-> +               sup_dev = get_device_from_fwnode(sup_handle);
->
->         if (sup_dev) {
->                 /*
-> @@ -2222,7 +2222,7 @@ static void __fw_devlink_link_to_consumers(struct device *dev)
->                 bool own_link = true;
->                 int ret;
->
-> -               con_dev = get_dev_from_fwnode(link->consumer);
-> +               con_dev = get_device_from_fwnode(link->consumer);
->                 /*
->                  * If consumer device is not available yet, make a "proxy"
->                  * SYNC_STATE_ONLY link from the consumer's parent device to
-> @@ -5279,7 +5279,7 @@ void device_set_node(struct device *dev, struct fwnode_handle *fwnode)
->  EXPORT_SYMBOL_GPL(device_set_node);
->
->  /**
-> - * get_dev_from_fwnode - Obtain a reference count of the struct device the
-> + * get_device_from_fwnode - Obtain a reference count of the struct device the
->   * struct fwnode_handle is associated with.
->   * @fwnode: The pointer to the struct fwnode_handle to obtain the struct device
->   * reference count of.
-> @@ -5297,11 +5297,11 @@ EXPORT_SYMBOL_GPL(device_set_node);
->   * This is possible since struct fwnode_handle has its own reference count and
->   * hence can out-live the struct device it is associated with.
->   */
-> -struct device *get_dev_from_fwnode(struct fwnode_handle *fwnode)
-> +struct device *get_device_from_fwnode(struct fwnode_handle *fwnode)
->  {
->         return get_device((fwnode)->dev);
->  }
-> -EXPORT_SYMBOL_GPL(get_dev_from_fwnode);
-> +EXPORT_SYMBOL_GPL(get_device_from_fwnode);
->
->  int device_match_name(struct device *dev, const void *name)
->  {
-> diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
-> index 61c2277c9ce3..5a7822de5d8a 100644
-> --- a/drivers/pmdomain/core.c
-> +++ b/drivers/pmdomain/core.c
-> @@ -2678,7 +2678,7 @@ int of_genpd_add_provider_simple(struct device_node *np,
->         genpd->dev.of_node = np;
->
->         fwnode = of_fwnode_handle(np);
-> -       dev = get_dev_from_fwnode(fwnode);
-> +       dev = get_device_from_fwnode(fwnode);
->         if (!dev && !genpd_is_no_sync_state(genpd)) {
->                 genpd->sync_state = GENPD_SYNC_STATE_SIMPLE;
->                 device_set_node(&genpd->dev, fwnode);
-> @@ -2753,7 +2753,7 @@ int of_genpd_add_provider_onecell(struct device_node *np,
->                 data->xlate = genpd_xlate_onecell;
->
->         fwnode = of_fwnode_handle(np);
-> -       dev = get_dev_from_fwnode(fwnode);
-> +       dev = get_device_from_fwnode(fwnode);
->         if (!dev)
->                 sync_state = true;
->         else
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index b031ff71a5bd..d8906136c086 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -1090,7 +1090,7 @@ void device_set_node(struct device *dev, struct fwnode_handle *fwnode);
->  int device_add_of_node(struct device *dev, struct device_node *of_node);
->  void device_remove_of_node(struct device *dev);
->  void device_set_of_node_from_dev(struct device *dev, const struct device *dev2);
-> -struct device *get_dev_from_fwnode(struct fwnode_handle *fwnode);
-> +struct device *get_device_from_fwnode(struct fwnode_handle *fwnode);
->
->  static inline struct device_node *dev_of_node(struct device *dev)
->  {
+> +static inline void fw_devlink_set_device(struct fwnode_handle *fwnode,
+> +                                        struct device *dev)
+> +{
+> +       fwnode->dev = dev;
+> +}
+> +
+>  #endif
 > --
 > 2.51.0
 >
