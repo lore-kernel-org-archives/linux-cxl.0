@@ -1,115 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012069.outbound.protection.outlook.com [52.101.43.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E417342C96;
-	Tue, 21 Oct 2025 15:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761059174; cv=none; b=tbcyDxclxIYAr8Jj/NPmkg1fnSmJnMv7KnkRnG1GIx57lYBU6rlONYHVrYXjy5ErliK7oeUA9FZ9zUTFgDfIH9N7lRY+2mGXRjwmawPkIS1k4SkPTKpqFi4face+z0RBg2NBeWTIpFxqdlDFZGSYnAz9FhkTNJS58oE0x19X550=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761059174; c=relaxed/simple;
-	bh=XvTwGNFuSfbqy6vW3WT4GVwL8451owX3V6vI14/b4+M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xt+n7FO6hg2vPRfZXbJ6bFFcvxBFD1aMSd2EM7qHYYD1LIFlHHQlLqL8TgZe6GXznZ0Ps3VsDAyF32k4s1pnuikJolnhnn+hhc0iF8Bnhj7h+Og+eh08Baxjvwr/PnxQk6aVPxSQXoFS0rV1DKV/9/I/qb9D9VhpAN7fh7CGObI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aYknvFXf; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CBB34D909
+	for <linux-cxl@vger.kernel.org>; Tue, 21 Oct 2025 18:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761071536; cv=fail; b=CH+Y6IxJjRv2Thb6Wgc+fZnFfl23llTQjFQyMcnqrqdf+EbbydFCap5VNumSCfaF3KbEcMa+roGbxj4SUjSxeL7r3dEpqS9I8rRDXWZ56QSQSzRUMUe9K+6tvjvzockT822qgAlPtMi3u1Bw73LBdKTlAVqK0ihKkZR5Jl2V+is=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761071536; c=relaxed/simple;
+	bh=d8QUyDGAMWhd3VzFk1QSmCXCi9olCHJoupaDuMvAoQM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UYKIWrbGrQhjkqVE1D8f/9K7l86DsmzI40ECw14VesDFDZ4AyKdQSLBZ7p4KyzLZrwB/L5k4cdT9rWQTFoHeN9x9MsYA2kEiKNUqffq6jmBii+AjUJSj+XypSc0/4OomGcxoG/60VxJnol+9sainJdMFpDyCY2fXTYMQTy+k+GM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=e4YhhKOn; arc=fail smtp.client-ip=52.101.43.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aYknvFXf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761059173; x=1792595173;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=XvTwGNFuSfbqy6vW3WT4GVwL8451owX3V6vI14/b4+M=;
-  b=aYknvFXf3KxFpfpYo5p/QXXge8C+31gS7jsGXW/0Rh6Od7mSyD043Tvk
-   uZ/NgqNVJw9zZPhbB35Aws4t3kyY/dOl4tCvh9hg9o8OznH8tCowieG5X
-   X8pOaQLHjF6F40qqWtAemuR/h52XwmMcN+7LvmcqMyLbb5bFhd9/nE41H
-   gmpmVbME+4rmu78EbKIe8NV9LRk6OV1LWEs2IPzIjgRKY+zrjiRiOAsZl
-   8NG2onoAiNq5VihSSKX8s4jF2bKrXY/hfptyFSHy6tvSCApdkF6ZhuMlD
-   V4WxPKL102VoXsD+5Pil/Mu3/VquiK+HZARFOESimmBG05h+KhZbqk9AK
-   A==;
-X-CSE-ConnectionGUID: sVK8fyeVSQm2D7yjB7pshA==
-X-CSE-MsgGUID: t/FL3wN9TTuq7sUpiJJLVQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63096641"
-X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
-   d="scan'208";a="63096641"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 08:06:12 -0700
-X-CSE-ConnectionGUID: hPdaPEAhRSSL3lr8QNk2Bw==
-X-CSE-MsgGUID: 5dPLaha8S0Obp9mkoJFipA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
-   d="scan'208";a="188016523"
-Received: from schen9-mobl4.amr.corp.intel.com (HELO [10.125.108.169]) ([10.125.108.169])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 08:06:10 -0700
-Message-ID: <2ee6c734-7a6e-4888-b00f-17de1c0f5e5a@intel.com>
-Date: Tue, 21 Oct 2025 08:06:09 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="e4YhhKOn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wXMRX0IQUsoftgG8kJPrGCFWtge7Z3RkU7wlW6wxuLf79xz4PsKakIoig9CcqQA9Rad+HL7lemu9Qyr9bX3NiHI0LRlKQkzN4jvD21mCAne2NPsElSU5hfzVQf63pQTmDIP0NzT3vV8tNUuD4ft6c5Mo+1nVGn07ymYGsb+8+WGmCzPZq7QB/rHQ3NljvmrjBSLo/Tx8hJ9zJpiZ5YqWDUV8CdtdRu8KTRfzi1jGUdGqbLmY057U22oiqSEIN9ZJWGW5Qw3rjMpGDLiKkix/TDFQNE3pYOC34DeNq5wj6jRCQEdVX1hhbOVFRxF6l/0OxEeZFm6o+24QcPN4VIyWGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CmI8CgR0J2tzPxyKBVEOZNt6BELgfoPmgSaJCpLf5xU=;
+ b=Q9TSORc88jYmIqsXYtVNgFSUnQF4qeCn1NoTxTRUlaA/EW+ziFde1a4BXup5EFoKpgimdDhqsSILtLXVrH1boIcCAIGCmko9mikbhr+dWka+tyEsZPOy+YkDF78ZGE0mdnfkDnd+K4SVH2pV8NS/w+tjQODX4Nu6KQOjInUQCTdNHrNOObpzAn2s9Z1hzwon40D1yfildhNSAoaW69yfxFKYWnznlabQl1MyYWjCOhjT9UcvmxUzCRtK6JVHbg3TYS0UrBV64bz9uJlbN/j2CU1bmT3V0+Pwp4UdihHnCSRJZU/fjHbVdeHMgKvD32YcpTUtSmlO9WxX/bY0jNrwPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CmI8CgR0J2tzPxyKBVEOZNt6BELgfoPmgSaJCpLf5xU=;
+ b=e4YhhKOnHYdL6tokEiuMstAUezvbNcMrQpPkQbwR0IY0E9L62LBi9Ih3JTOmreHPUQweufmyGbisroC2rIzoDt7xvcTUR/0kHvqJLAh3EClErOB3xtWVx6Z72vI+OCp9Du+rn3Y2M6xTzaJOeAmYgoSYBirpxl9M9JU9IoEbZUs=
+Received: from PH7P220CA0088.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:32c::32)
+ by IA0PR12MB8862.namprd12.prod.outlook.com (2603:10b6:208:48e::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.12; Tue, 21 Oct
+ 2025 18:32:10 +0000
+Received: from CY4PEPF0000EE39.namprd03.prod.outlook.com
+ (2603:10b6:510:32c:cafe::ac) by PH7P220CA0088.outlook.office365.com
+ (2603:10b6:510:32c::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9228.17 via Frontend Transport; Tue,
+ 21 Oct 2025 18:32:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CY4PEPF0000EE39.mail.protection.outlook.com (10.167.242.11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9253.7 via Frontend Transport; Tue, 21 Oct 2025 18:32:09 +0000
+Received: from SCS-L-bcheatha.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 21 Oct
+ 2025 11:31:31 -0700
+From: Ben Cheatham <Benjamin.Cheatham@amd.com>
+To: <nvdimm@lists.linux.dev>
+CC: <linux-cxl@vger.kernel.org>, <alison.schofield@intel.com>, Ben Cheatham
+	<Benjamin.Cheatham@amd.com>
+Subject: [ndctl PATCH v3 0/7] Add error injection support
+Date: Tue, 21 Oct 2025 13:31:17 -0500
+Message-ID: <20251021183124.2311-1-Benjamin.Cheatham@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] acpi,srat: Fix incorrect device handle check for
- Generic Initiator
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
- Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: lenb@kernel.org, robert.moore@intel.com, andrew@kernel.org,
- bfaccini@nvidia.com, eahariha@linux.microsoft.com, dan.j.williams@intel.com,
- thorsten.blum@linux.dev, gourry@gourry.net,
- nunodasneves@linux.microsoft.com, wangyuquan1236@phytium.com.cn,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- acpica-devel@lists.linux.dev,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-References: <20250913023224.39281-1-xueshuai@linux.alibaba.com>
- <20250915093549.00006109@huawei.com>
- <45d5e6a9-d561-4df9-96d4-285f2ca12888@linux.alibaba.com>
- <CAJZ5v0grihVDor12BXU3-tAiQ5WH6rK+AZK8aTtaUa3cq1i0jA@mail.gmail.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <CAJZ5v0grihVDor12BXU3-tAiQ5WH6rK+AZK8aTtaUa3cq1i0jA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE39:EE_|IA0PR12MB8862:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0f50583b-d243-4f00-0f62-08de10d02513
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?jmKFh0AdaiFQehLnbgMJrmad0Q2M9mzNfX9Cu4xKUkAHfw1MBg/U2SaDiAeF?=
+ =?us-ascii?Q?EiPrSDG3LBZMRIp59fVKTLm9yqXafvO5VmFSqQ0pyC5p83PHYf1akKyCkMyf?=
+ =?us-ascii?Q?H4VPj8mFh7O9f6/3ex5Wnb1XioO5/W4B6RF0hHf/YQep7RylkbTiQGPrXag6?=
+ =?us-ascii?Q?jQXnTw68nXtl+D5ulmJJ03QwZlUDL4RxmZzGx3rKR5QPEjTf1tDGy3O2YDen?=
+ =?us-ascii?Q?p7wBQJrq9BNx9AIUoiUqseQ0Z9Ji4LjidMcFv/gGLFfS8qcQ85rk1lTlEbNm?=
+ =?us-ascii?Q?QOmZYu9Whs8bG7u1pZOjDLmZnm17EYOQ31L2KLhQN1kQ89EbDhHpKI8bBZWy?=
+ =?us-ascii?Q?N3IbxDl0kAHZzI+7apNOHPGTd5OVAzXEDroADbF/MvKQD8kel8HftV/DS7Lq?=
+ =?us-ascii?Q?KkEzm+H7XPepqBZBNX7hjKj+2VR7fnn2ubvoPTavTc3mBp+nmHTIGG7NVT0u?=
+ =?us-ascii?Q?zTObSozx/Yz3RzF0LE8finEaThMA8LW0OYwrHAncz3Zbc2gb1s5d32zzgFJg?=
+ =?us-ascii?Q?gn2N7Z+74ojxjNyDM/s6amORRnWrbhYTB+8ZByUG3xHMhHz4gKCegF+H0HWM?=
+ =?us-ascii?Q?THvHyMjlga37DBoXvxWBOc51yssP1BJl2qNIemkQSwpIALw6DD1Fr0R+rw++?=
+ =?us-ascii?Q?0sevGJjXhs+UBBLogp6gkAB5UH2BDnli5i6s7HRfB8UbKLvIsPXGkVlWSnLo?=
+ =?us-ascii?Q?n2jXDH6f1B/ArDLuuqvTIR3MDOu3v7QV+U788rLgIolxfFlIE6hMsGBFkrna?=
+ =?us-ascii?Q?ndoiaFSxce5As4yPGndd5Dv5bICYdX0rVtBPiwTr0vgD9Rt+Yos0G0MjHQh4?=
+ =?us-ascii?Q?RmbghJCACU+Ck1PpZaoknKqM39W3je1YVf8hbtVx9D7RemogDS4OTGA5UaOo?=
+ =?us-ascii?Q?43XavmK8qUqXLzkCXbUw2ESGiX4Ocul+OWcaWSf53KGfesFsWhDNh8qfivbX?=
+ =?us-ascii?Q?XRseUDB/73AOwnmIt5XMEhTF13eFcUeWrXMa9IMb979vLLSQKnHzEJw0aB98?=
+ =?us-ascii?Q?zbRDNtiObUAdF5k3Pcn5wp+XgcAbKTjGBmx86bkWK69GEASHA2MgKkeZer1j?=
+ =?us-ascii?Q?xqYWf6yAisIs2abhj+p7OtPl4VIfQwoZBl4YQ04cUPsvq2+YyyaKODeofVkr?=
+ =?us-ascii?Q?HkL5/4b2HjAYMdvVFg2f8nGhc/ETc4TXQyqFQxhTNmrnxi+1LlHc+W0CB8cs?=
+ =?us-ascii?Q?53LzmUoV5Tl/ji146c74B36P5kTISapZf2DLwkh2OC61YgjjsefWlYjciPD7?=
+ =?us-ascii?Q?TzGMpLeplvCTJLjql+S81V6BduK0OS7Q0kmdlo9yHAAsvzNKCDoi9Vf2VOWF?=
+ =?us-ascii?Q?sOuqr4HybVQwm1L5xA8B6j/SfQgAYkkC5mcvjD3mhq4w7HXr0w0s/7uUdsHG?=
+ =?us-ascii?Q?+2JafKrq/GMDrQK2K59mRhp6N5609Xg7t0fAn2VtGoZ5arUT1vCi/jdviWDt?=
+ =?us-ascii?Q?LCk5ibrfFA9ZUJeq1+gs9NXgn1QS/5zyingeCCGEb0fqhvOh/tAra5O18bd3?=
+ =?us-ascii?Q?X++qB6C+nQIE2K7RToZKugwREqKfm0Pom+1S?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2025 18:32:09.3558
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f50583b-d243-4f00-0f62-08de10d02513
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE39.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8862
 
+v3 Changes:
+	- Rebase on v83 release
+	- Fix whitespace errors (Alison)
 
+v2 Changes:
+	- Make the --clear option of 'inject-error' its own command (Alison)
+	- Debugfs is now found using the /proc/mount entry instead of
+	providing the path using a --debugfs option
+	- Man page added for 'clear-error'
+	- Reword commit descriptions for clarity
 
-On 10/21/25 6:30 AM, Rafael J. Wysocki wrote:
-> On Tue, Oct 21, 2025 at 8:55 AM Shuai Xue <xueshuai@linux.alibaba.com> wrote:
->>
->>
->>
->> 在 2025/9/15 16:35, Jonathan Cameron 写道:
->>> On Sat, 13 Sep 2025 10:32:24 +0800
->>> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
->>>
->>>> The Generic Initiator Affinity Structure in SRAT table uses device
->>>> handle type field to indicate the device type. According to ACPI
->>>> specification, the device handle type value of 1 represents PCI device,
->>>> not 0.
->>>>
->>>> Fixes: 894c26a1c274 ("ACPI: Support Generic Initiator only domains")
->>>> Reported-by: Wu Zongyong <wuzongyong@linux.alibaba.com>
->>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->>>
->>> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
->>>
->>> Thanks!
->>>
->>>> ---
->>>> changes since v1: drop changes in actbl3.h to make it easy to progress per Jonathan
->>>> ---
->>
->>
->> Hi, Rafael,
->>
->> Gentle ping.
->>
->> Are you happy to pick this bugfix up in this cycle?
-> 
-> drives/acpi/numa/ is maintained by Dave.
+This series adds support for injecting CXL protocol (CXL.cache/mem)
+errors[1] into CXL RCH Downstream ports and VH root ports[2] and
+poison into CXL memory devices through the CXL debugfs. Errors are
+injected using a new 'inject-error' command, while errors are reported
+using a new cxl-list "-N"/"--injectable-errors" option. Device poison
+can be cleared using the 'clear-error' command.
 
-Applied to cxl/fixes
-7c3643f204edf1
+The 'inject-error'/'clear-error' commands and "-N" option of cxl-list all
+require access to the CXL driver's debugfs.
+
+The documentation for the new cxl-inject-error command shows both usage
+and the possible device/error types, as well as how to retrieve them
+using cxl-list. The documentation for cxl-list has also been updated to
+show the usage of the new injectable errors option.
+
+[1]: ACPI v6.5 spec, section 18.6.4
+[2]: ACPI v6.5 spec, table 18.31
+
+Ben Cheatham (7):
+  libcxl: Add debugfs path to CXL context
+  libcxl: Add CXL protocol errors
+  libcxl: Add poison injection support
+  cxl: Add inject-error command
+  cxl: Add clear-error command
+  cxl/list: Add injectable errors in output
+  Documentation: Add docs for inject/clear-error commands
+
+ Documentation/cxl/cxl-clear-error.txt  |  67 ++++++
+ Documentation/cxl/cxl-inject-error.txt | 129 ++++++++++++
+ Documentation/cxl/cxl-list.txt         |  35 +++-
+ Documentation/cxl/meson.build          |   2 +
+ cxl/builtin.h                          |   2 +
+ cxl/cxl.c                              |   2 +
+ cxl/filter.h                           |   3 +
+ cxl/inject-error.c                     | 253 +++++++++++++++++++++++
+ cxl/json.c                             |  30 +++
+ cxl/lib/libcxl.c                       | 274 +++++++++++++++++++++++++
+ cxl/lib/libcxl.sym                     |   8 +
+ cxl/lib/private.h                      |  14 ++
+ cxl/libcxl.h                           |  16 ++
+ cxl/list.c                             |   3 +
+ cxl/meson.build                        |   1 +
+ util/json.h                            |   1 +
+ 16 files changed, 839 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/cxl/cxl-clear-error.txt
+ create mode 100644 Documentation/cxl/cxl-inject-error.txt
+ create mode 100644 cxl/inject-error.c
+
+-- 
+2.34.1
 
