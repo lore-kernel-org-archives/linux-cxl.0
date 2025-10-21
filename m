@@ -1,129 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63AC30BB83;
-	Tue, 21 Oct 2025 14:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E417342C96;
+	Tue, 21 Oct 2025 15:06:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761055720; cv=none; b=KXpTgs8ahU5KVP0t8iGRAL+R1QPS4OWtkpbWK2NMnZpUTdUKIP/z4lfVwbBNOjZ5RSNynjKyf6XUM/wOOY6N1FKJoz9holC+1RA9698fRqlXsq9ym8qtn2DQVtc4janVQ/oWa1Nf0sXNqpC/5uGA1xxusABZhvF9DE3IjKLyBYQ=
+	t=1761059174; cv=none; b=tbcyDxclxIYAr8Jj/NPmkg1fnSmJnMv7KnkRnG1GIx57lYBU6rlONYHVrYXjy5ErliK7oeUA9FZ9zUTFgDfIH9N7lRY+2mGXRjwmawPkIS1k4SkPTKpqFi4face+z0RBg2NBeWTIpFxqdlDFZGSYnAz9FhkTNJS58oE0x19X550=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761055720; c=relaxed/simple;
-	bh=q0UJhFh/ymFNMfB5lO1iqfViSAmwOaowEDmMPzVVZh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EB66kghhWcB/9p+nU3jdMbxPnQekp8icIsmR0sB3Rl6cZpiNGfYOpB7g4IbYTzChpyaYtlzRrVAS1XGG07loIOyRposX+0XfvYmynAj1k2oufhIh0mo5WkdBCgQNJCpVrySBBHuT4FW+OgosV6Q3v3X48rOkQyPN6K4zxTtm2CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WU3j6eb+; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1761059174; c=relaxed/simple;
+	bh=XvTwGNFuSfbqy6vW3WT4GVwL8451owX3V6vI14/b4+M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xt+n7FO6hg2vPRfZXbJ6bFFcvxBFD1aMSd2EM7qHYYD1LIFlHHQlLqL8TgZe6GXznZ0Ps3VsDAyF32k4s1pnuikJolnhnn+hhc0iF8Bnhj7h+Og+eh08Baxjvwr/PnxQk6aVPxSQXoFS0rV1DKV/9/I/qb9D9VhpAN7fh7CGObI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aYknvFXf; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WU3j6eb+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aYknvFXf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761055719; x=1792591719;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=q0UJhFh/ymFNMfB5lO1iqfViSAmwOaowEDmMPzVVZh0=;
-  b=WU3j6eb+m6KsIQhDbJRuFft36e9aIu9q6LQB/8bj7iaN8SWrk+VsNrjz
-   9bcwu3kBwxb2ma1ijo6cuYqdagczSUFsNXQ4mWHboR0xfkKPu4XIGvUc7
-   oHsJrwE/wexEgOQ+kylLzubZwFc6MPtkN2W4QoHqwQ0CCYuJHxTOz5zy3
-   T4460lXT1/4EgLfAGEYMh30VR/dhiHtdZSvJliVhIGxTQcwKf/fkLqdOh
-   9vVFNTQqHl/e5pEyG627hbbmBYF2Prwo4rYvObkl+c2pIkiZHCtm096Rc
-   71LptO2UB/aH9mQlSs9ZMivcqxUeeSvMP2ZuT/ctQTkH55QjuTl4vVK7p
+  t=1761059173; x=1792595173;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=XvTwGNFuSfbqy6vW3WT4GVwL8451owX3V6vI14/b4+M=;
+  b=aYknvFXf3KxFpfpYo5p/QXXge8C+31gS7jsGXW/0Rh6Od7mSyD043Tvk
+   uZ/NgqNVJw9zZPhbB35Aws4t3kyY/dOl4tCvh9hg9o8OznH8tCowieG5X
+   X8pOaQLHjF6F40qqWtAemuR/h52XwmMcN+7LvmcqMyLbb5bFhd9/nE41H
+   gmpmVbME+4rmu78EbKIe8NV9LRk6OV1LWEs2IPzIjgRKY+zrjiRiOAsZl
+   8NG2onoAiNq5VihSSKX8s4jF2bKrXY/hfptyFSHy6tvSCApdkF6ZhuMlD
+   V4WxPKL102VoXsD+5Pil/Mu3/VquiK+HZARFOESimmBG05h+KhZbqk9AK
    A==;
-X-CSE-ConnectionGUID: ZuSWgQGUTV2WH0cXQEQM5A==
-X-CSE-MsgGUID: CA/4KTfLQqaqnQ73cNKrAA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="67045289"
+X-CSE-ConnectionGUID: sVK8fyeVSQm2D7yjB7pshA==
+X-CSE-MsgGUID: t/FL3wN9TTuq7sUpiJJLVQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63096641"
 X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
-   d="scan'208";a="67045289"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 07:08:38 -0700
-X-CSE-ConnectionGUID: lTF4vOHAQc2nPuVSYtPeyw==
-X-CSE-MsgGUID: xsJaPeS3RZicD7PgMDVkZA==
+   d="scan'208";a="63096641"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 08:06:12 -0700
+X-CSE-ConnectionGUID: hPdaPEAhRSSL3lr8QNk2Bw==
+X-CSE-MsgGUID: 5dPLaha8S0Obp9mkoJFipA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
-   d="scan'208";a="183539756"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.245.148])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 07:08:27 -0700
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vBD2F-00000001Vzw-0kAj;
-	Tue, 21 Oct 2025 17:08:23 +0300
-Date: Tue, 21 Oct 2025 17:08:22 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Len Brown <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
-	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 08/29] driver core: fw_devlink: Introduce
- fw_devlink_set_device()
-Message-ID: <aPeT1hzXgO2J-M0K@smile.fi.intel.com>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-9-herve.codina@bootlin.com>
+   d="scan'208";a="188016523"
+Received: from schen9-mobl4.amr.corp.intel.com (HELO [10.125.108.169]) ([10.125.108.169])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 08:06:10 -0700
+Message-ID: <2ee6c734-7a6e-4888-b00f-17de1c0f5e5a@intel.com>
+Date: Tue, 21 Oct 2025 08:06:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251015071420.1173068-9-herve.codina@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] acpi,srat: Fix incorrect device handle check for
+ Generic Initiator
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: lenb@kernel.org, robert.moore@intel.com, andrew@kernel.org,
+ bfaccini@nvidia.com, eahariha@linux.microsoft.com, dan.j.williams@intel.com,
+ thorsten.blum@linux.dev, gourry@gourry.net,
+ nunodasneves@linux.microsoft.com, wangyuquan1236@phytium.com.cn,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ acpica-devel@lists.linux.dev,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+References: <20250913023224.39281-1-xueshuai@linux.alibaba.com>
+ <20250915093549.00006109@huawei.com>
+ <45d5e6a9-d561-4df9-96d4-285f2ca12888@linux.alibaba.com>
+ <CAJZ5v0grihVDor12BXU3-tAiQ5WH6rK+AZK8aTtaUa3cq1i0jA@mail.gmail.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <CAJZ5v0grihVDor12BXU3-tAiQ5WH6rK+AZK8aTtaUa3cq1i0jA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 15, 2025 at 09:13:55AM +0200, Herve Codina wrote:
-> Setting fwnode->dev is specific to fw_devlink.
+
+
+On 10/21/25 6:30 AM, Rafael J. Wysocki wrote:
+> On Tue, Oct 21, 2025 at 8:55 AM Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+>>
+>>
+>>
+>> 在 2025/9/15 16:35, Jonathan Cameron 写道:
+>>> On Sat, 13 Sep 2025 10:32:24 +0800
+>>> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+>>>
+>>>> The Generic Initiator Affinity Structure in SRAT table uses device
+>>>> handle type field to indicate the device type. According to ACPI
+>>>> specification, the device handle type value of 1 represents PCI device,
+>>>> not 0.
+>>>>
+>>>> Fixes: 894c26a1c274 ("ACPI: Support Generic Initiator only domains")
+>>>> Reported-by: Wu Zongyong <wuzongyong@linux.alibaba.com>
+>>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>>>
+>>> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+>>>
+>>> Thanks!
+>>>
+>>>> ---
+>>>> changes since v1: drop changes in actbl3.h to make it easy to progress per Jonathan
+>>>> ---
+>>
+>>
+>> Hi, Rafael,
+>>
+>> Gentle ping.
+>>
+>> Are you happy to pick this bugfix up in this cycle?
 > 
-> In order to avoid having a direct 'fwnode->dev = dev;' in several
-> place in the kernel, introduce fw_devlink_set_device() helper to perform
-> this operation.
+> drives/acpi/numa/ is maintained by Dave.
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Applied to cxl/fixes
+7c3643f204edf1
 
