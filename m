@@ -1,116 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBD43009C3;
-	Wed, 22 Oct 2025 20:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA073016F7
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Oct 2025 20:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761166048; cv=none; b=RBLZKQwkbbZZMtxds+IdV0kUero4q5sB05W7dTPeIBpbuwDwldV/NSjtgeEGZmt60TUBzFIGL91TbRRY3UXU3m2F+ytAbBjYvi4Nbyeiqx1eYUHe6t2FgUFpD7N4x4DghyVUJK5bXVgcurr/JLnb6XLs1rZhE1o/hKMQFwEe+lQ=
+	t=1761166691; cv=none; b=SWh5wDF+7DtFx3WTFZHcnNtL4LZzHSXRaBdNDfsWS64WbZ0ZENmLYD677JaBpm8j7u6X6v/YTGx3QErNmZ62fGx4ppAy5DyAP5xR90T/GeIc47NqCnMljtNVhidTuAzNiO0mQlBo7+AvLnzLWZHrI8WxG5IfyvM7T3QZdHDH/Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761166048; c=relaxed/simple;
-	bh=e4wpAeuwnWxwPsv6xR22bTAFdrGhHjpoATj1khsZ/3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FjZaTWtmpIHvdKZ+xMOTAGundTbepc5SX2rsiVrm7AkW/M6OYfGN9DY5oF0insv/OAhaL39svhAl0cz3TH+V3wgcDuY0LB0hscXEwL2mcIcsrFwgnbOyAM2oJnhpeywdBbFR2QDY/IAmvvEE3FzTvqG77BQlQ4JzcgnzcyXVoEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eMDWLrfV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761166691; c=relaxed/simple;
+	bh=TQpYo82do9fbPBhDgOo/xfuRqTcK0JdKSr5C7vhi+wM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l4BXWBe59ol/AHVpb9uzuA212eM0EHI7OJ4VbtTZVQnzAxMKGML2BR4ymnzDNen3axBkZ+5oPFHe6gSRcs7fLHg/OA3T07nTYNPnbNp9AmH0guUp3jZKD5lzeE6SDElwMgqJCF2/I2CQ4Azg2OI9wctbKVlKxvdEu3lc1BH3HAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v7XkJIrI; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eMDWLrfV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F71BC4CEE7;
-	Wed, 22 Oct 2025 20:47:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761166047;
-	bh=e4wpAeuwnWxwPsv6xR22bTAFdrGhHjpoATj1khsZ/3E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eMDWLrfV+vZznUoPf7CPswB3dBThpbX2cO+2bWvkQ50o2TCrvoCdE1Cd8xXrUFRoi
-	 4RQOPMKhr+0tnSOK+DiKcMtj1oDkCTxPA4mHmnI44BotWVAjb9ldTnLMyTQjyS1Glb
-	 ijl24xdpzSdzrCZEKhn++IHDQPpZbUdTkCvlJsrAxJb/YRqToadM7K56X3TBjl4HEM
-	 Kyj7DofAye5roHM4RI4hcbcHBS9HAWzaMufkLYbmgqUo5c4mw2HV49+ecHPYhV766I
-	 BEuFIsEhcM7FbKPeKnO/YdST5KXQbtfPvLsfWmyESS1GnxaOKoG42xaOoXjHPKwp4J
-	 2Yalv6aXeJwRQ==
-Date: Wed, 22 Oct 2025 21:47:21 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-cxl@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	Dan Williams <dan.j.williams@intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>, james.morse@arm.com,
-	Will Deacon <will@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
-	linuxarm@huawei.com, Yushan Wang <wangyushan12@huawei.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v4 0/6] Cache coherency management subsystem
-Message-ID: <20251022-harsh-juggling-2d4778b0649e@spud>
-References: <20251022113349.1711388-1-Jonathan.Cameron@huawei.com>
- <20251022122241.d2aa0d7864f67112aa7691bf@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v7XkJIrI"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-63c44ea68f6so3824a12.0
+        for <linux-cxl@vger.kernel.org>; Wed, 22 Oct 2025 13:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761166686; x=1761771486; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KntpGwyw2h1eRy075Psp2+8kVtmZoXi9VrfpKSJ4LV4=;
+        b=v7XkJIrI7Mdd37n2sXuirq21chYlo91VOEZZVE+iNnlxw/nrfkxFwGYL3J6q8gXcPZ
+         wpzTemHYt+RbcRcTIASA44rzxN1qMzjpRF6OVs41oJKdYGK1cCCBgd0fqvqg5e5S7/hi
+         Pvjb9bp8egNQv/lJlr5sb1pMC++aKLCIhrPvf5oZcUMKmJ/L0i/QyjM8OeNpUSEprhuI
+         76JNV+8BzUNY8ZyIW5QjqfMoOYLoxdj03JDcE1+3Ij5my2SpSqXdsLbSpNberXHbnxnU
+         G2riA+BaPsf5yB4FzraXY+Vp0ZOLtVwQd/571ZbEVJZ6LXZZUL4Ya6rYKeqet7WTxJ5/
+         Q+/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761166686; x=1761771486;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KntpGwyw2h1eRy075Psp2+8kVtmZoXi9VrfpKSJ4LV4=;
+        b=i2kCuTr1ceJa8Tf2m2V2i1GkTyjKbUejs2XOCXtzaz8ZNwZEYbHzDKBRcRnaA8epih
+         EprdEwaBBg4f8wgoiMspIFv+qh8TMV6MEPjp5S/S8M1Pwb3/9bBz2m0lCs8MLhh3ybjX
+         IJ458GyFrMUGZ4YhgQpKqp6OaQx6chC+A31P7ROJyhSEvf+LKJlPio95LRVyH9wzwL9H
+         G4sqCIB6Ig9E9S7cJpMxTuQLWdhAOXEW7qQ7VpMMc3O22qmyh/D02TImA23TAAq/iOwQ
+         VraNbAi0D1irWgJycLnlKN9ad9OvNuseI+l4pHUnwtrIHPQN1DjrF96QbbWJ3IO6BOLo
+         2cjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXaGCHf8OdB6slJuMCVfP8Ijqc6p/yr3bTal1DdDqIuFiLSbl2dShidwGgb+oSszAQM7eG6dXRPKug=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr8fdLlPYZuaRVPKnEATDUGInNEhc2mW65VA8a6DiYSBeAA2lh
+	7sYfCh1iULrs9b78zWJOQDiyLlC8jhfjh0o+7ZhfQjnO1u8C2xxFS1a3TWKGWVafTFiYOLkB30s
+	A1ZxG3q2AQ9Kj1cgbIUMMVWnEEmRGv6H1HcEH6mEW
+X-Gm-Gg: ASbGnctIKRqgThqiOwMuWcL/U+jRYYL1Ol9ZmW0ItZ5Op02euED7e/nzSZrjIbvuRCk
+	BbJse5j/xd0uGr6OuKQzW3056sMy1JOMUkaubCkp+hXwpPQ84vyEl9jzY036ZuMC2Fusk7ZsPqR
+	pI0yle37p8SVAulzDQIK5p1wEddKpXST/PWciJNL+tSwEDkFju6qZP6DnEEHLwOfNujPgW9yhS4
+	lWiGX5efnuNTjNY6HQWHiimu2GMgRRbIk7GSEWKMIFxuoIGCelmywVROAViywzLqvQCA0I20XYt
+	E315Gcm3xNpQzJjIP8kkj/W0aA==
+X-Google-Smtp-Source: AGHT+IHgF4j/mUZEDqZAl++xOkAYLCnDO8Iy/nIey1xYjKyG9Wp2IkcKh6OYcT7hZgMYLxTQIiT4e0yyMs4NIgQAgdA=
+X-Received: by 2002:a05:6402:461c:20b0:63e:11ae:ff2e with SMTP id
+ 4fb4d7f45d1cf-63e3dfecdf6mr6012a12.3.1761166686350; Wed, 22 Oct 2025 13:58:06
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="S6HWZzkHmuKfgcDz"
-Content-Disposition: inline
-In-Reply-To: <20251022122241.d2aa0d7864f67112aa7691bf@linux-foundation.org>
-
-
---S6HWZzkHmuKfgcDz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20251002131900.3252980-1-mclapinski@google.com>
+In-Reply-To: <20251002131900.3252980-1-mclapinski@google.com>
+From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
+Date: Wed, 22 Oct 2025 13:57:55 -0700
+X-Gm-Features: AS18NWD7w3Vu9VTTfAZBw3yA23oVp-mhN22JxweH_RPe5JsaBthUo_xHsiEjfTs
+Message-ID: <CAAi7L5cJ=D76pD4tb5Bs0ULGXMEOM_yQcftFBQMZmzDJTzBZ+g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] dax: add PROBE_PREFER_ASYNCHRONOUS to the pmem driver
+To: Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 22, 2025 at 12:22:41PM -0700, Andrew Morton wrote:
-> On Wed, 22 Oct 2025 12:33:43 +0100 Jonathan Cameron <Jonathan.Cameron@hua=
-wei.com> wrote:
->=20
-> > Support system level interfaces for cache maintenance as found on some
-> > ARM64 systems. This is needed for correct functionality during various
-> > forms of memory hotplug (e.g. CXL). Typical hardware has MMIO interface
-> > found via ACPI DSDT.
-> >=20
-> > Includes parameter changes to cpu_cache_invalidate_memregion() but no
-> > functional changes for architectures that already support this call.
->=20
-> I see additions to lib/ so presumably there is an expectation that
-> other architectures might use this.
->=20
-> Please expand on this.  Any particular architectures in mind?  Any
-> words of wisdom which maintainers of those architectures might benefit
-> from?
+ping
 
-It seems fairly probable that we're gonna end up with riscv systems
-where drivers are being used for both this and the existing non-standard
-cache ops stuff.
-
-> > How to merge?  When this is ready to proceed (so subject to review
-> > feedback on this version), I'm not sure what the best route into the
-> > kernel is. Conor could take the lot via his tree for drivers/cache but
-> > the generic changes perhaps suggest it might be better if Andrew
-> > handles this?  Any merge conflicts in drivers/cache will be trivial
-> > build file stuff. Or maybe even take it throug one of the affected
-> > trees such as CXL.
->=20
-> Let's not split the series up.  Either CXL or COnor's tree is fine my
-> me.
-
-CXL is fine by me, greater volume there probably by orders of magnitude.
-
---S6HWZzkHmuKfgcDz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaPlC2QAKCRB4tDGHoIJi
-0tdvAQDJHGwCvxYrXGJs6nPPk7w5pV6+UajlzpKhldIVtCgm2QD/XrQK+qDLbAJA
-ymsJdZLdZoCSVVQ542yRJc4RjGzDnA8=
-=4U3B
------END PGP SIGNATURE-----
-
---S6HWZzkHmuKfgcDz--
+On Thu, Oct 2, 2025 at 6:19=E2=80=AFAM Michal Clapinski <mclapinski@google.=
+com> wrote:
+>
+> Comments in linux/device/driver.h say that the goal is to do async
+> probing on all devices. The current behavior unnecessarily slows down
+> the boot by synchronous probing dax_pmem devices, so let's change that.
+>
+> Signed-off-by: Michal Clapinski <mclapinski@google.com>
+> ---
+>  drivers/dax/pmem.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/dax/pmem.c b/drivers/dax/pmem.c
+> index bee93066a849..737654e8c5e8 100644
+> --- a/drivers/dax/pmem.c
+> +++ b/drivers/dax/pmem.c
+> @@ -77,6 +77,7 @@ static struct nd_device_driver dax_pmem_driver =3D {
+>         .probe =3D dax_pmem_probe,
+>         .drv =3D {
+>                 .name =3D "dax_pmem",
+> +               .probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+>         },
+>         .type =3D ND_DRIVER_DAX_PMEM,
+>  };
+> --
+> 2.51.0.618.g983fd99d29-goog
+>
