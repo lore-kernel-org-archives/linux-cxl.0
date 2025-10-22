@@ -1,49 +1,70 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694DA330B31;
-	Wed, 22 Oct 2025 11:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F7E347FF6
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Oct 2025 13:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761133024; cv=none; b=tzT5ndPVsBiGL5wvt0hT5AP3cLkj9hbSaxnluJLOLB4ieUyy2M20ckqdrffA8XALGjkOjNE3sF+JR5ZPbU7vDvRi45oI8gVwT6pQj5sdM8U/bUCJnOSZ2jVXrM4ggINQYELEqP43W4/VcXxPXr24YwYb1Wx9OrKp1csiRWXl+4o=
+	t=1761141488; cv=none; b=u2+cgEcurTpawOGwzOlOZlWQn7BmBINYqaUpoOFLLS1dp4Jvu4UPfsOdsf5QtEv1ltTY6pjBNWFLxfmZUGaZuDQ/V+z/cDi7lv5irfZTUg0kJZxmQorrYfN1Wr33CBNEKQwZi5j23KWZXbPXqJhfTQRCFTjCqCQFP+RBSYRwkB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761133024; c=relaxed/simple;
-	bh=eUP2JWcYH2Xfc3mBBq1TvqsFsfHr53x3783/xHOO4+Y=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VSy7uSLNh8KYb4kcbMw0pRG0gk8IOldlKNrzAufLfiRyOww3ytaOKq7+sz3+1dXF3f9Z413sO5FWwj2pt+Y+G7kUkjCRW0GKc8DB1o0ihLCNKyp3phTRYrqpggX2hs0P1DvGvSEKbi4HzqTbu/RTs7uNTbPNiCOS5XDi2JRRSm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cs6W0016lz6GDMq;
-	Wed, 22 Oct 2025 19:33:48 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 769971402FC;
-	Wed, 22 Oct 2025 19:37:00 +0800 (CST)
-Received: from SecurePC-101-06.huawei.com (10.122.19.247) by
- dubpeml100005.china.huawei.com (7.214.146.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 22 Oct 2025 12:36:59 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Conor Dooley <conor@kernel.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, <linux-cxl@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-arch@vger.kernel.org>,
-	<linux-mm@kvack.org>, Dan Williams <dan.j.williams@intel.com>, "H . Peter
- Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Andrew Morton
-	<akpm@linux-foundation.org>
-CC: <james.morse@arm.com>, Will Deacon <will@kernel.org>, Davidlohr Bueso
-	<dave@stgolabs.net>, <linuxarm@huawei.com>, Yushan Wang
-	<wangyushan12@huawei.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, <x86@kernel.org>, Andy Lutomirski
-	<luto@kernel.org>, Dave Jiang <dave.jiang@intel.com>
-Subject: [PATCH v4 6/6] cache: Support cache maintenance for HiSilicon SoC Hydra Home Agent
-Date: Wed, 22 Oct 2025 12:33:49 +0100
-Message-ID: <20251022113349.1711388-7-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20251022113349.1711388-1-Jonathan.Cameron@huawei.com>
-References: <20251022113349.1711388-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1761141488; c=relaxed/simple;
+	bh=HMs7QIS8TCQOly4UaNFuNAYRbyo2O/QzWPLtffXnMJM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pBFjBBaDun7vEONPEl6ldD0D0USGTUdiFcGHX06p8xMhEcnIfYwymEI96g6SBNkvkMtIsK5qIu2SsgYgLMg2GP63N2fY+m/oQmC7VpQViyJUtvHGcD5Z3XXfY7pTyF6sfibRbbYOCT2PM4hWPHtzVEOnnKNBWWxs9T1cAEEv8S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OYvcZECL; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYvcZECL"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-782e93932ffso6004361b3a.3
+        for <linux-cxl@vger.kernel.org>; Wed, 22 Oct 2025 06:58:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761141485; x=1761746285; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kp0mM9JFdY1qcqdgJXC1k4Ghi8aDtWlI8grf4712vk4=;
+        b=OYvcZECLGqNFSs8QD54Uym6Gd+qkOITbf2oo8bzNztMfY8ytAKxnjMwXivjnsENHUI
+         q/h4u1ucb5Fg1OmBDM2Nc6WmoVWag/sYSsSi+IdaYFtbKBjX09Cau1JAuENlxL/NtAgB
+         FcttGa6Sa8DRw+IMdI4Hb0lo3ZhwaR+pfTIL1XS3skUGXfYdR4KeB1InwVlkKWli3vw/
+         WcU7oS0EaaxFzVGLYFh3DqCr7Le74dD8h23g/GttChcLT80+H0K5lysi2i8GShKR4jtw
+         dqPF9l8rXTESx9HlRh5ZAbjDHy6SEOIaiA0bpq0goieFLDPexq/hN5dKOT4QCz47I6e2
+         FGYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761141485; x=1761746285;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Kp0mM9JFdY1qcqdgJXC1k4Ghi8aDtWlI8grf4712vk4=;
+        b=Wj37u/dfZ3LHyspPEzG0UyWtAs1NuRb5HvZr4pWqcrI1K5rM7V7Uar+fK0BPOeaqtF
+         FygKx5HjcC8JlvUBds+/OOr+ilwnpV72YFFMoi82D/sqSI161lHtKVoBtqojvgWwenzc
+         nEXkvTlnTAoWK2FcBaUfVzX5sAs5R03pQkyl/1EtxkdcfiaBqCcQNdDpuRMByHk7Jsag
+         taOieUrl0BXQ9DGN9L2NJdrcJSO6/DZy4ea9WDf/p0uIGEUMbZKpFSzYAfSa0ia3sOcC
+         0TAmn79uwGeHBGUHmYxDFcOQvjRKtZ/NOsI1ovr+NsmiRizqiCe70XPtiNCeyVBinipg
+         D8Yw==
+X-Gm-Message-State: AOJu0Yx1nHOgqj89quuqVmf86uaW9fH78Kzru1wjCq1RmbTvP4dl76Pu
+	Gq2cuVH+o4B4xTP54T0J4hauV07tH9fXkKK57HUKRWKsyuOziIeci4Uv
+X-Gm-Gg: ASbGncu6LUBFMw7qXizvrbFu4yixveBnpVTyx7xsDShYjykm42s0DXIDg6C7Q0g0+F1
+	4+G5YELvcrleyiTukvuUH4/o8sBDXZrYquOVGVliX3WVbJwMDNRxcyZApiM8vhWGishywWN/l5t
+	20vJIbnlh6ckFP3i6R0MSA5cMqKIvlbcOt/cEDiIKDLWNGnoJLc8jWSB+lR/BImUN28FbTQIcrd
+	NS+A72FEQ5qSvxrrtOtYKjWCbK5MGvqi629QfVxIUhEqw3ZE4trOErbJ1AH7T5FOA84wDYJb7/f
+	nA4oFmPQCX+DpEqOo2TfCkpQ+NlEZVGo8fXaIaIvXll9Nns2dy5Rn10j+PmzmBBtCWbZ9qObw+2
+	jItzHRCDKRNzaO/KtfVOCYf54QcbXQx9rsbJIEa5+xfVev9R+UqQAivja6BLZTaQvQ/Ehpc4Slj
+	7/UIRuCJV4LD8xs9c=
+X-Google-Smtp-Source: AGHT+IGjLidG7JODwnkAIkbP1GeDN8MYzPHhkFYBEqm9cXg1a5wgXqHHcQ6Qv3vY8mGO1EtlTtwdtQ==
+X-Received: by 2002:aa7:888e:0:b0:77f:4f3f:bfda with SMTP id d2e1a72fcca58-7a220b25969mr24268270b3a.31.1761141485168;
+        Wed, 22 Oct 2025 06:58:05 -0700 (PDT)
+Received: from localhost.localdomain ([240f:34:212d:1:671f:870c:96dd:31d0])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7a22ff15985sm15047365b3a.5.2025.10.22.06.58.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Oct 2025 06:58:04 -0700 (PDT)
+From: Akinobu Mita <akinobu.mita@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-cxl@vger.kernel.org,
+	linux-mm@kvack.org,
+	akinobu.mita@gmail.com
+Subject: oom-killer not invoked on systems with multiple memory-tiers
+Date: Wed, 22 Oct 2025 22:57:35 +0900
+Message-ID: <20251022135735.246203-1-akinobu.mita@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -51,266 +72,121 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- dubpeml100005.china.huawei.com (7.214.146.113)
 
-From: Yushan Wang <wangyushan12@huawei.com>
+On systems with multiple memory-tiers consisting of DRAM and CXL memory,
+the OOM killer is not invoked properly.
 
-Hydra Home Agent is a device used to maintain cache coherency, add support
-of explicit cache maintenance operations for it.
+Here's the command to reproduce:
 
-Memory resource of HHA conflicts with that of HHA PMU. A workaround is
-implemented here by replacing devm_ioremap_resource() to devm_ioremap() to
-workaround the resource conflict check.
+$ stress-ng --oomable -v --memrate 20 --memrate-bytes 10G \
+    --memrate-rd-mbs 1 --memrate-wr-mbs 1
 
-Co-developed-by: Yicong Yang <yangyicong@hisilicon.com>
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-Signed-off-by: Yushan Wang <wangyushan12@huawei.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+The memory usage is the number of workers specified with the --memrate
+option multiplied by the buffer size specified with the --memrate-bytes
+option, so please adjust it so that it exceeds the total size of the
+installed DRAM and CXL memory.
+
+If swap is disabled, you can usually expect the OOM killer to terminate
+the stress-ng process when memory usage approaches the installed memory size.
+
+However, if multiple memory-tiers exist (multiple
+/sys/devices/virtual/memory_tiering/memory_tier<N> directories exist),
+and /sys/kernel/mm/numa/demotion_enabled is true and
+/sys/kernel/mm/lru_gen/min_ttl_ms is 0, the OOM killer will not be invoked
+and the system will become inoperable.
+
+If /sys/kernel/mm/numa/demotion_enabled is false, or if demotion_enabled
+is true but /sys/kernel/mm/lru_gen/min_ttl_ms is set to a non-zero value
+such as 1000, the OOM killer will be invoked properly.
+
+This issue can be reproduced using NUMA emulation even on systems with
+only DRAM. However, to configure multiple memory-tiers using fake nodes,
+you must apply the attached patch.
+
+You can create two-fake memory-tiers by booting a single-node system with
+the following boot options:
+
+numa=fake=2
+numa_emulation.default_dram=1,0
+numa_emulation.read_latency=100,1000
+numa_emulation.write_latency=100,1000
+numa_emulation.read_bandwidth=100000,10000
+numa_emulation.write_bandwidth=100000,10000
 
 ---
-v4: Update for naming changes around device / instance.
-    Switch to kref put based freeing via helper.
----
- drivers/cache/Kconfig        |  15 +++
- drivers/cache/Makefile       |   2 +
- drivers/cache/hisi_soc_hha.c | 191 +++++++++++++++++++++++++++++++++++
- 3 files changed, 208 insertions(+)
+ mm/numa_emulation.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-diff --git a/drivers/cache/Kconfig b/drivers/cache/Kconfig
-index db51386c663a..4551b28e14dd 100644
---- a/drivers/cache/Kconfig
-+++ b/drivers/cache/Kconfig
-@@ -1,6 +1,21 @@
- # SPDX-License-Identifier: GPL-2.0
- menu "Cache Drivers"
- 
-+if GENERIC_CPU_CACHE_MAINTENANCE
-+
-+config HISI_SOC_HHA
-+	tristate "HiSilicon Hydra Home Agent (HHA) device driver"
-+	depends on (ARM64 && ACPI) || COMPILE_TEST
-+	help
-+	  The Hydra Home Agent (HHA) is responsible for cache coherency
-+	  on the SoC. This drivers enables the cache maintenance functions of
-+	  the HHA.
-+
-+	  This driver can be built as a module. If so, the module will be
-+	  called hisi_soc_hha.
-+
-+endif
-+
- config AX45MP_L2_CACHE
- 	bool "Andes Technology AX45MP L2 Cache controller"
- 	depends on RISCV
-diff --git a/drivers/cache/Makefile b/drivers/cache/Makefile
-index 55c5e851034d..b3362b15d6c1 100644
---- a/drivers/cache/Makefile
-+++ b/drivers/cache/Makefile
-@@ -3,3 +3,5 @@
- obj-$(CONFIG_AX45MP_L2_CACHE)		+= ax45mp_cache.o
- obj-$(CONFIG_SIFIVE_CCACHE)		+= sifive_ccache.o
- obj-$(CONFIG_STARFIVE_STARLINK_CACHE)	+= starfive_starlink_cache.o
-+
-+obj-$(CONFIG_HISI_SOC_HHA)		+= hisi_soc_hha.o
-diff --git a/drivers/cache/hisi_soc_hha.c b/drivers/cache/hisi_soc_hha.c
-new file mode 100644
-index 000000000000..bf403f711c6b
---- /dev/null
-+++ b/drivers/cache/hisi_soc_hha.c
-@@ -0,0 +1,191 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for HiSilicon Hydra Home Agent (HHA).
-+ *
-+ * Copyright (c) 2025 HiSilicon Technologies Co., Ltd.
-+ * Author: Yicong Yang <yangyicong@hisilicon.com>
-+ *         Yushan Wang <wangyushan12@huawei.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/cache_coherency.h>
-+#include <linux/dev_printk.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/kernel.h>
-+#include <linux/memregion.h>
+diff --git a/mm/numa_emulation.c b/mm/numa_emulation.c
+index 703c8fa05048..b1c283b99038 100644
+--- a/mm/numa_emulation.c
++++ b/mm/numa_emulation.c
+@@ -6,6 +6,9 @@
+ #include <linux/errno.h>
+ #include <linux/topology.h>
+ #include <linux/memblock.h>
++#include <linux/memory-tiers.h>
 +#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/mutex.h>
-+#include <linux/platform_device.h>
++#include <linux/node.h>
+ #include <linux/numa_memblks.h>
+ #include <asm/numa.h>
+ #include <acpi/acpi_numa.h>
+@@ -344,6 +347,46 @@ static int __init setup_emu2phys_nid(int *dfl_phys_nid)
+ 	return max_emu_nid;
+ }
+ 
++static bool default_dram[MAX_NUMNODES];
++module_param_array(default_dram, bool, NULL, 0400);
 +
-+#define HISI_HHA_CTRL		0x5004
-+#define   HISI_HHA_CTRL_EN	BIT(0)
-+#define   HISI_HHA_CTRL_RANGE	BIT(1)
-+#define   HISI_HHA_CTRL_TYPE	GENMASK(3, 2)
-+#define HISI_HHA_START_L	0x5008
-+#define HISI_HHA_START_H	0x500c
-+#define HISI_HHA_LEN_L		0x5010
-+#define HISI_HHA_LEN_H		0x5014
++static unsigned int read_latency[MAX_NUMNODES];
++module_param_array(read_latency, uint, NULL, 0400);
 +
-+/* The maintain operation performs in a 128 Byte granularity */
-+#define HISI_HHA_MAINT_ALIGN	128
++static unsigned int write_latency[MAX_NUMNODES];
++module_param_array(write_latency, uint, NULL, 0400);
 +
-+#define HISI_HHA_POLL_GAP_US		10
-+#define HISI_HHA_POLL_TIMEOUT_US	50000
++static unsigned int read_bandwidth[MAX_NUMNODES];
++module_param_array(read_bandwidth, uint, NULL, 0400);
 +
-+struct hisi_soc_hha {
-+	/* Must be first element */
-+	struct cache_coherency_ops_inst cci;
-+	/* Locks HHA instance to forbid overlapping access. */
-+	struct mutex lock;
-+	void __iomem *base;
++static unsigned int write_bandwidth[MAX_NUMNODES];
++module_param_array(write_bandwidth, uint, NULL, 0400);
++
++static int emu_calculate_adistance(struct notifier_block *self,
++				unsigned long nid, void *data)
++{
++	struct access_coordinate perf = {
++		.read_bandwidth = read_bandwidth[nid],
++		.write_bandwidth = write_bandwidth[nid],
++		.read_latency = read_latency[nid],
++		.write_latency = write_latency[nid],
++	};
++	int *adist = data;
++
++	if (default_dram[nid])
++		mt_set_default_dram_perf(nid, &perf, "numa_emu");
++
++	if (mt_perf_to_adistance(&perf, adist))
++		return NOTIFY_OK;
++
++	return NOTIFY_STOP;
++}
++
++static struct notifier_block emu_adist_nb = {
++	.notifier_call = emu_calculate_adistance,
++	.priority = INT_MIN,
 +};
 +
-+static bool hisi_hha_cache_maintain_wait_finished(struct hisi_soc_hha *soc_hha)
-+{
-+	u32 val;
+ /**
+  * numa_emulation - Emulate NUMA nodes
+  * @numa_meminfo: NUMA configuration to massage
+@@ -532,6 +575,8 @@ void __init numa_emulation(struct numa_meminfo *numa_meminfo, int numa_dist_cnt)
+ 		}
+ 	}
+ 
++	register_mt_adistance_algorithm(&emu_adist_nb);
 +
-+	return !readl_poll_timeout_atomic(soc_hha->base + HISI_HHA_CTRL, val,
-+					  !(val & HISI_HHA_CTRL_EN),
-+					  HISI_HHA_POLL_GAP_US,
-+					  HISI_HHA_POLL_TIMEOUT_US);
-+}
-+
-+static int hisi_soc_hha_wbinv(struct cache_coherency_ops_inst *cci,
-+			struct cc_inval_params *invp)
-+{
-+	struct hisi_soc_hha *soc_hha =
-+		container_of(cci, struct hisi_soc_hha, cci);
-+	phys_addr_t top, addr = invp->addr;
-+	size_t size = invp->size;
-+	u32 reg;
-+
-+	if (!size)
-+		return -EINVAL;
-+
-+	addr = ALIGN_DOWN(addr, HISI_HHA_MAINT_ALIGN);
-+	top = ALIGN(addr + size, HISI_HHA_MAINT_ALIGN);
-+	size = top - addr;
-+
-+	guard(mutex)(&soc_hha->lock);
-+
-+	if (!hisi_hha_cache_maintain_wait_finished(soc_hha))
-+		return -EBUSY;
-+
-+	/*
-+	 * Hardware will search for addresses ranging [addr, addr + size - 1],
-+	 * last byte included, and perform maintain in 128 byte granule
-+	 * on those cachelines which contain the addresses.
-+	 */
-+	size -= 1;
-+
-+	writel(lower_32_bits(addr), soc_hha->base + HISI_HHA_START_L);
-+	writel(upper_32_bits(addr), soc_hha->base + HISI_HHA_START_H);
-+	writel(lower_32_bits(size), soc_hha->base + HISI_HHA_LEN_L);
-+	writel(upper_32_bits(size), soc_hha->base + HISI_HHA_LEN_H);
-+
-+	reg = FIELD_PREP(HISI_HHA_CTRL_TYPE, 1); /* Clean Invalid */
-+	reg |= HISI_HHA_CTRL_RANGE | HISI_HHA_CTRL_EN;
-+	writel(reg, soc_hha->base + HISI_HHA_CTRL);
-+
-+	return 0;
-+}
-+
-+static int hisi_soc_hha_done(struct cache_coherency_ops_inst *cci)
-+{
-+	struct hisi_soc_hha *soc_hha =
-+		container_of(cci, struct hisi_soc_hha, cci);
-+
-+	guard(mutex)(&soc_hha->lock);
-+	if (!hisi_hha_cache_maintain_wait_finished(soc_hha))
-+		return -ETIMEDOUT;
-+
-+	return 0;
-+}
-+
-+static const struct cache_coherency_ops hha_ops = {
-+	.wbinv = hisi_soc_hha_wbinv,
-+	.done = hisi_soc_hha_done,
-+};
-+
-+static int hisi_soc_hha_probe(struct platform_device *pdev)
-+{
-+	struct hisi_soc_hha *soc_hha;
-+	struct resource *mem;
-+	int ret;
-+
-+	soc_hha = cache_coherency_ops_instance_alloc(&hha_ops,
-+						     struct hisi_soc_hha, cci);
-+	if (!soc_hha)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, soc_hha);
-+
-+	mutex_init(&soc_hha->lock);
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!mem) {
-+		ret = -ENOMEM;
-+		goto err_free_cci;
-+	}
-+
-+	/*
-+	 * HHA cache driver share the same register region with HHA uncore PMU
-+	 * driver in hardware's perspective, none of them should reserve the
-+	 * resource to itself only.  Here exclusive access verification is
-+	 * avoided by calling devm_ioremap instead of devm_ioremap_resource to
-+	 * allow both drivers to exist at the same time.
-+	 */
-+	soc_hha->base = ioremap(mem->start, resource_size(mem));
-+	if (!soc_hha->base) {
-+		ret = dev_err_probe(&pdev->dev, -ENOMEM,
-+				    "failed to remap io memory");
-+		goto err_free_cci;
-+	}
-+
-+	ret = cache_coherency_ops_instance_register(&soc_hha->cci);
-+	if (ret)
-+		goto err_iounmap;
-+
-+	return 0;
-+
-+err_iounmap:
-+	iounmap(soc_hha->base);
-+err_free_cci:
-+	cache_coherency_ops_instance_put(&soc_hha->cci);
-+	return ret;
-+}
-+
-+static void hisi_soc_hha_remove(struct platform_device *pdev)
-+{
-+	struct hisi_soc_hha *soc_hha = platform_get_drvdata(pdev);
-+
-+	cache_coherency_ops_instance_unregister(&soc_hha->cci);
-+	iounmap(soc_hha->base);
-+	cache_coherency_ops_instance_put(&soc_hha->cci);
-+}
-+
-+static const struct acpi_device_id hisi_soc_hha_ids[] = {
-+	{ "HISI0511", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, hisi_soc_hha_ids);
-+
-+static struct platform_driver hisi_soc_hha_driver = {
-+	.driver = {
-+		.name = "hisi_soc_hha",
-+		.acpi_match_table = hisi_soc_hha_ids,
-+	},
-+	.probe = hisi_soc_hha_probe,
-+	.remove = hisi_soc_hha_remove,
-+};
-+
-+module_platform_driver(hisi_soc_hha_driver);
-+
-+MODULE_IMPORT_NS("CACHE_COHERENCY");
-+MODULE_DESCRIPTION("HiSilicon Hydra Home Agent driver supporting cache maintenance");
-+MODULE_AUTHOR("Yicong Yang <yangyicong@hisilicon.com>");
-+MODULE_AUTHOR("Yushan Wang <wangyushan12@huawei.com>");
-+MODULE_LICENSE("GPL");
+ 	/* free the copied physical distance table */
+ 	memblock_free(phys_dist, phys_size);
+ 	return;
 -- 
-2.48.1
+2.43.0
 
