@@ -1,50 +1,31 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A3627F736
-	for <linux-cxl@vger.kernel.org>; Tue, 21 Oct 2025 23:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322231885A5;
+	Wed, 22 Oct 2025 02:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761090293; cv=none; b=EB/cnFQetoyf+qjEnx2sI/vKoD80e1cx/PS3OACICdc2lpQSjkw0LFGeF28Xm3m8YRisSASKp5H1hW84v6pZEviYLDyXKoLxewneXJspKjw5cuscdQq2PBolqihAdAwyPBBUwRqUhnfugdAodkNEs94fn0D0Bd+t4ibQosmwlmc=
+	t=1761098908; cv=none; b=QhJDZDbMZtc1yL3fQXPNMSpJle/uKbTMW0wegEzwhe7yB9foO8xTEtSLDRdPVvBDVhilBHBoryyB+0vNdo7w4xDlBdaVK/15x0dR83nQ/d0kW4FzZ2V8N8ozRmvfONbqPxqb9pmCdCvevHRRyDK+UDFghGPyh4GS/TtcsZZhKKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761090293; c=relaxed/simple;
-	bh=qezin9qfpUOS7iqA5K8z5H3JR61M5maoDKMujTe1kLw=;
+	s=arc-20240116; t=1761098908; c=relaxed/simple;
+	bh=i1/nDNEFVbEfImwpNCS2ynzRyOgKxIt3gfOTAj4NK6A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HwJHOrtSRpRU/XoYdD1ZXHSHn5g1WSBeYBkC1tuetaSjZizBAC2cZu1lQWdJyjWH/kaaEys131K/YmGbk/xien5W8lawl0FcPnQNU8zYI7nDxnAUUOxvIHY8rTRITBZ3fGCcCrRxuUadpl6WZZ6x3LU3bMTbbOHKG47KytIevHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hj/eO4wH; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=Kyg81o1A6MPKJCpZRZGkGvQlhS1gS2PC6ApVyxq8L2nA8Ah2OMh1lJgTdMoL3wIOOC8LG3dvdtutoVWAutywjxARo/T55wt/cDeozsKdV1VcDaNNaESbRwnUJu9Yh2d0PUrzMMnWARHU9DReQACnEXayscxqucm1eIxMQE1u9Vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QAm0pNqq; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hj/eO4wH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761090291; x=1792626291;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qezin9qfpUOS7iqA5K8z5H3JR61M5maoDKMujTe1kLw=;
-  b=hj/eO4wHG8cZZM52hDiTbzztCOgj1L32KkW9Brai+2JqmPSNT2Eer5i/
-   8RJgbEPiLaLKzndy1iaAtvzd/Sz6ZE39m89OVx75jwZQ0jWlHT/at6SK/
-   nXaJGt09M2Au11vs81f8FS8+bVi4FxzVFL8IeBTyq5XmHWV2MMj06ikVd
-   c4FmblX7lDuDPJ3UGP/vlq5D2Sqkse0a1gJFd6rc4DiG0Fm3YV4jojSxr
-   a+qz2DqrtedPle5FXPUMRVzh1BbCx3ht5v/Oli6tEDQwa2/MYeDVwUNF5
-   GWvpYaUTNvJmzjB7tpwz0T+LuLo33TXGTicfy3Igip37a/kNJZz3lTD80
-   g==;
-X-CSE-ConnectionGUID: I16S3jffTaOdeqYuK/vVNA==
-X-CSE-MsgGUID: 9I+hWnbATvqFlVCm/JJB7g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63267461"
-X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
-   d="scan'208";a="63267461"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 16:44:51 -0700
-X-CSE-ConnectionGUID: OylGxD/rQ3GXXJWHr2IJZw==
-X-CSE-MsgGUID: YVlZ3BYmSemelRPkoArJqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
-   d="scan'208";a="188123793"
-Received: from schen9-mobl4.amr.corp.intel.com (HELO [10.125.108.169]) ([10.125.108.169])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 16:44:50 -0700
-Message-ID: <4c452ff5-bcd3-4a3e-9fc1-04fb741f9e14@intel.com>
-Date: Tue, 21 Oct 2025 16:44:49 -0700
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QAm0pNqq"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1761098897; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=VZDctKiGHUM0XAo9DQHO2fuaaGzjYL24hYPkTKDpZyA=;
+	b=QAm0pNqq/awHAh1kVUW5etagLZOdINQDvNjolQALbtiLhKTLwy0QlVOQYy3OBfzCZ23cATWl5hEFN3an2sHecOpKcM6dhjucUwz9mEOUfwrKYhQo2bdKgWg97Cw47N7EJJiAH13UptV2gGWLVNHlIlhYbTtRQYYFjVaNYqPlvSA=
+Received: from 30.246.161.241(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WqkiZLE_1761098895 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 22 Oct 2025 10:08:16 +0800
+Message-ID: <d99a7a1e-f0ba-4bad-8bc6-c31e05187d4d@linux.alibaba.com>
+Date: Wed, 22 Oct 2025 10:08:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,140 +33,69 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [ndctl PATCH v3 3/7] libcxl: Add poison injection support
-To: Ben Cheatham <Benjamin.Cheatham@amd.com>, nvdimm@lists.linux.dev
-Cc: linux-cxl@vger.kernel.org, alison.schofield@intel.com
-References: <20251021183124.2311-1-Benjamin.Cheatham@amd.com>
- <20251021183124.2311-4-Benjamin.Cheatham@amd.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20251021183124.2311-4-Benjamin.Cheatham@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] acpi,srat: Fix incorrect device handle check for
+ Generic Initiator
+To: Dave Jiang <dave.jiang@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: lenb@kernel.org, robert.moore@intel.com, andrew@kernel.org,
+ bfaccini@nvidia.com, eahariha@linux.microsoft.com, dan.j.williams@intel.com,
+ thorsten.blum@linux.dev, gourry@gourry.net,
+ nunodasneves@linux.microsoft.com, wangyuquan1236@phytium.com.cn,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ acpica-devel@lists.linux.dev,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+References: <20250913023224.39281-1-xueshuai@linux.alibaba.com>
+ <20250915093549.00006109@huawei.com>
+ <45d5e6a9-d561-4df9-96d4-285f2ca12888@linux.alibaba.com>
+ <CAJZ5v0grihVDor12BXU3-tAiQ5WH6rK+AZK8aTtaUa3cq1i0jA@mail.gmail.com>
+ <2ee6c734-7a6e-4888-b00f-17de1c0f5e5a@intel.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <2ee6c734-7a6e-4888-b00f-17de1c0f5e5a@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-On 10/21/25 11:31 AM, Ben Cheatham wrote:
-> Add a library API for clearing and injecting poison into a CXL memory
-> device through the CXL debugfs.
+在 2025/10/21 23:06, Dave Jiang 写道:
 > 
-> This API will be used by the 'cxl-inject-error' and 'cxl-clear-error'
-> commands in later commits.
 > 
-> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
-> ---
->  cxl/lib/libcxl.c   | 60 ++++++++++++++++++++++++++++++++++++++++++++++
->  cxl/lib/libcxl.sym |  3 +++
->  cxl/libcxl.h       |  3 +++
->  3 files changed, 66 insertions(+)
+> On 10/21/25 6:30 AM, Rafael J. Wysocki wrote:
+>> On Tue, Oct 21, 2025 at 8:55 AM Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+>>>
+>>>
+>>>
+>>> 在 2025/9/15 16:35, Jonathan Cameron 写道:
+>>>> On Sat, 13 Sep 2025 10:32:24 +0800
+>>>> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+>>>>
+>>>>> The Generic Initiator Affinity Structure in SRAT table uses device
+>>>>> handle type field to indicate the device type. According to ACPI
+>>>>> specification, the device handle type value of 1 represents PCI device,
+>>>>> not 0.
+>>>>>
+>>>>> Fixes: 894c26a1c274 ("ACPI: Support Generic Initiator only domains")
+>>>>> Reported-by: Wu Zongyong <wuzongyong@linux.alibaba.com>
+>>>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>>>>
+>>>> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+>>>>
+>>>> Thanks!
+>>>>
+>>>>> ---
+>>>>> changes since v1: drop changes in actbl3.h to make it easy to progress per Jonathan
+>>>>> ---
+>>>
+>>>
+>>> Hi, Rafael,
+>>>
+>>> Gentle ping.
+>>>
+>>> Are you happy to pick this bugfix up in this cycle?
+>>
+>> drives/acpi/numa/ is maintained by Dave.
 > 
-> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-> index 9486b0f..9d4bd80 100644
-> --- a/cxl/lib/libcxl.c
-> +++ b/cxl/lib/libcxl.c
-> @@ -5019,3 +5019,63 @@ CXL_EXPORT struct cxl_cmd *cxl_cmd_new_set_alert_config(struct cxl_memdev *memde
->  {
->  	return cxl_cmd_new_generic(memdev, CXL_MEM_COMMAND_ID_SET_ALERT_CONFIG);
->  }
-> +
-> +CXL_EXPORT bool cxl_memdev_has_poison_injection(struct cxl_memdev *memdev)
-> +{
-> +	struct cxl_ctx *ctx = memdev->ctx;
-> +	size_t path_len;
-> +	bool exists;
-> +	char *path;
-> +
-> +	if (!ctx->debugfs)
-> +		return false;
-> +
-> +	path_len = strlen(ctx->debugfs) + 100;
-> +	path = calloc(path_len, sizeof(char));
-> +	if (!path)
-> +		return false;
-> +
-> +	snprintf(path, path_len, "%s/cxl/%s/inject_poison", ctx->debugfs,
-> +		 cxl_memdev_get_devname(memdev));
+> Applied to cxl/fixes
+> 7c3643f204edf1
 
-check return value
 
-> +	exists = access(path, F_OK) == 0;
-
-While this works, it is more readable this way:
-
-	exists = true;
-	...
-	rc = access(path, F_OK);
-	if (rc)
-		exists = false;> +
-> +	free(path);
-> +	return exists;
-> +}
-> +
-> +static int cxl_memdev_poison_action(struct cxl_memdev *memdev, size_t dpa,
-> +				    bool clear)
-> +{
-> +	struct cxl_ctx *ctx = memdev->ctx;
-> +	size_t path_len;
-> +	char addr[32];
-> +	char *path;
-> +	int rc;
-> +
-> +	if (!ctx->debugfs)
-> +		return -ENOENT;
-> +
-> +	path_len = strlen(ctx->debugfs) + 100;
-> +	path = calloc(path_len, sizeof(char));
-> +	if (!path)
-> +		return -ENOMEM;
-> +
-> +	snprintf(path, path_len, "%s/cxl/%s/%s", ctx->debugfs,
-> +		 cxl_memdev_get_devname(memdev),
-> +		 clear ? "clear_poison" : "inject_poison");
-> +	snprintf(addr, 32, "0x%lx\n", dpa);
-
-check return values for both snprintf()
-
-DJ
-
-> +
-> +	rc = sysfs_write_attr(ctx, path, addr);
-> +	free(path);
-> +	return rc;
-> +}
-> +
-> +CXL_EXPORT int cxl_memdev_inject_poison(struct cxl_memdev *memdev, size_t addr)
-> +{
-> +	return cxl_memdev_poison_action(memdev, addr, false);
-> +}
-> +
-> +CXL_EXPORT int cxl_memdev_clear_poison(struct cxl_memdev *memdev, size_t addr)
-> +{
-> +	return cxl_memdev_poison_action(memdev, addr, true);
-> +}
-> diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-> index 02d5119..3bce60d 100644
-> --- a/cxl/lib/libcxl.sym
-> +++ b/cxl/lib/libcxl.sym
-> @@ -304,4 +304,7 @@ global:
->  	cxl_protocol_error_get_num;
->  	cxl_protocol_error_get_str;
->  	cxl_dport_protocol_error_inject;
-> +	cxl_memdev_has_poison_injection;
-> +	cxl_memdev_inject_poison;
-> +	cxl_memdev_clear_poison;
->  } LIBCXL_9;
-> diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-> index 9026e05..3b51d61 100644
-> --- a/cxl/libcxl.h
-> +++ b/cxl/libcxl.h
-> @@ -105,6 +105,9 @@ int cxl_memdev_read_label(struct cxl_memdev *memdev, void *buf, size_t length,
->  		size_t offset);
->  int cxl_memdev_write_label(struct cxl_memdev *memdev, void *buf, size_t length,
->  		size_t offset);
-> +bool cxl_memdev_has_poison_injection(struct cxl_memdev *memdev);
-> +int cxl_memdev_inject_poison(struct cxl_memdev *memdev, size_t dpa);
-> +int cxl_memdev_clear_poison(struct cxl_memdev *memdev, size_t dpa);
->  struct cxl_cmd *cxl_cmd_new_get_fw_info(struct cxl_memdev *memdev);
->  unsigned int cxl_cmd_fw_info_get_num_slots(struct cxl_cmd *cmd);
->  unsigned int cxl_cmd_fw_info_get_active_slot(struct cxl_cmd *cmd);
-
+Thanks.
+Shuai
