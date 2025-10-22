@@ -1,192 +1,335 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F7E347FF6
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Oct 2025 13:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624F01C862E
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Oct 2025 17:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761141488; cv=none; b=u2+cgEcurTpawOGwzOlOZlWQn7BmBINYqaUpoOFLLS1dp4Jvu4UPfsOdsf5QtEv1ltTY6pjBNWFLxfmZUGaZuDQ/V+z/cDi7lv5irfZTUg0kJZxmQorrYfN1Wr33CBNEKQwZi5j23KWZXbPXqJhfTQRCFTjCqCQFP+RBSYRwkB8=
+	t=1761152787; cv=none; b=S/dqKRGDRq0n3CzuJGFcXQK7Mk0Kfh3JGNegi5eg2AYD8LmR31Byv4hJAosBs9XzaoLPzwucuKfatwbwZRYnzxgioM/y3K5XZrOXnB1bRseC+0VG7k/deqjfzDfKf/aFw2ucT5ejIsly8rPV36WETqilcJTmeRFvx9nlKPPpkHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761141488; c=relaxed/simple;
-	bh=HMs7QIS8TCQOly4UaNFuNAYRbyo2O/QzWPLtffXnMJM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pBFjBBaDun7vEONPEl6ldD0D0USGTUdiFcGHX06p8xMhEcnIfYwymEI96g6SBNkvkMtIsK5qIu2SsgYgLMg2GP63N2fY+m/oQmC7VpQViyJUtvHGcD5Z3XXfY7pTyF6sfibRbbYOCT2PM4hWPHtzVEOnnKNBWWxs9T1cAEEv8S0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OYvcZECL; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761152787; c=relaxed/simple;
+	bh=6JSoq6bxbTv+6CetE5GjSFVUs3mYo557bkdnOKpdFNA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dcZFz0CG+BhKoJlkfbMJlpdW8D8LPxRLSUDFMGf7sUn3RATknXCO1obH+Zz844V5DIZaAsthiyHIYHsDQG8LcdQ7iZ9vNsmdlgA0Q3uHJPg9zZjJd4MznJ6n65UMOhlax46AiCKpknKc/+savnmSzwXYg8DQF/q2a+XfObNb1FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=angtwymr; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYvcZECL"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-782e93932ffso6004361b3a.3
-        for <linux-cxl@vger.kernel.org>; Wed, 22 Oct 2025 06:58:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761141485; x=1761746285; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kp0mM9JFdY1qcqdgJXC1k4Ghi8aDtWlI8grf4712vk4=;
-        b=OYvcZECLGqNFSs8QD54Uym6Gd+qkOITbf2oo8bzNztMfY8ytAKxnjMwXivjnsENHUI
-         q/h4u1ucb5Fg1OmBDM2Nc6WmoVWag/sYSsSi+IdaYFtbKBjX09Cau1JAuENlxL/NtAgB
-         FcttGa6Sa8DRw+IMdI4Hb0lo3ZhwaR+pfTIL1XS3skUGXfYdR4KeB1InwVlkKWli3vw/
-         WcU7oS0EaaxFzVGLYFh3DqCr7Le74dD8h23g/GttChcLT80+H0K5lysi2i8GShKR4jtw
-         dqPF9l8rXTESx9HlRh5ZAbjDHy6SEOIaiA0bpq0goieFLDPexq/hN5dKOT4QCz47I6e2
-         FGYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761141485; x=1761746285;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Kp0mM9JFdY1qcqdgJXC1k4Ghi8aDtWlI8grf4712vk4=;
-        b=Wj37u/dfZ3LHyspPEzG0UyWtAs1NuRb5HvZr4pWqcrI1K5rM7V7Uar+fK0BPOeaqtF
-         FygKx5HjcC8JlvUBds+/OOr+ilwnpV72YFFMoi82D/sqSI161lHtKVoBtqojvgWwenzc
-         nEXkvTlnTAoWK2FcBaUfVzX5sAs5R03pQkyl/1EtxkdcfiaBqCcQNdDpuRMByHk7Jsag
-         taOieUrl0BXQ9DGN9L2NJdrcJSO6/DZy4ea9WDf/p0uIGEUMbZKpFSzYAfSa0ia3sOcC
-         0TAmn79uwGeHBGUHmYxDFcOQvjRKtZ/NOsI1ovr+NsmiRizqiCe70XPtiNCeyVBinipg
-         D8Yw==
-X-Gm-Message-State: AOJu0Yx1nHOgqj89quuqVmf86uaW9fH78Kzru1wjCq1RmbTvP4dl76Pu
-	Gq2cuVH+o4B4xTP54T0J4hauV07tH9fXkKK57HUKRWKsyuOziIeci4Uv
-X-Gm-Gg: ASbGncu6LUBFMw7qXizvrbFu4yixveBnpVTyx7xsDShYjykm42s0DXIDg6C7Q0g0+F1
-	4+G5YELvcrleyiTukvuUH4/o8sBDXZrYquOVGVliX3WVbJwMDNRxcyZApiM8vhWGishywWN/l5t
-	20vJIbnlh6ckFP3i6R0MSA5cMqKIvlbcOt/cEDiIKDLWNGnoJLc8jWSB+lR/BImUN28FbTQIcrd
-	NS+A72FEQ5qSvxrrtOtYKjWCbK5MGvqi629QfVxIUhEqw3ZE4trOErbJ1AH7T5FOA84wDYJb7/f
-	nA4oFmPQCX+DpEqOo2TfCkpQ+NlEZVGo8fXaIaIvXll9Nns2dy5Rn10j+PmzmBBtCWbZ9qObw+2
-	jItzHRCDKRNzaO/KtfVOCYf54QcbXQx9rsbJIEa5+xfVev9R+UqQAivja6BLZTaQvQ/Ehpc4Slj
-	7/UIRuCJV4LD8xs9c=
-X-Google-Smtp-Source: AGHT+IGjLidG7JODwnkAIkbP1GeDN8MYzPHhkFYBEqm9cXg1a5wgXqHHcQ6Qv3vY8mGO1EtlTtwdtQ==
-X-Received: by 2002:aa7:888e:0:b0:77f:4f3f:bfda with SMTP id d2e1a72fcca58-7a220b25969mr24268270b3a.31.1761141485168;
-        Wed, 22 Oct 2025 06:58:05 -0700 (PDT)
-Received: from localhost.localdomain ([240f:34:212d:1:671f:870c:96dd:31d0])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7a22ff15985sm15047365b3a.5.2025.10.22.06.58.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Oct 2025 06:58:04 -0700 (PDT)
-From: Akinobu Mita <akinobu.mita@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-cxl@vger.kernel.org,
-	linux-mm@kvack.org,
-	akinobu.mita@gmail.com
-Subject: oom-killer not invoked on systems with multiple memory-tiers
-Date: Wed, 22 Oct 2025 22:57:35 +0900
-Message-ID: <20251022135735.246203-1-akinobu.mita@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="angtwymr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761152786; x=1792688786;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6JSoq6bxbTv+6CetE5GjSFVUs3mYo557bkdnOKpdFNA=;
+  b=angtwymrFe/5pHqYIahF42rqXjfUWyWz8sJ4AYSeBdiApL6xN9nP2q5Z
+   evkXTImCU+Zf3Ad3rhuMR0VbCA9kZfLj5nGN94VpK7aO+TcM0euv9uvZd
+   prQyr58C5d7GbPER92XVOr6ks8TqEEW5fkFBTeLWWVJ6JAlMepSr0VcIB
+   aiig+rijfFVV8d8s71RtQvyEgrON5uSbUQXkwwf0zw+C7jATBL09OwoVK
+   tGMJvxadDvq1LUh06lYdfnoWvFjA6NXs50g28TnTH2PGLMoQ7Rkxj6Ppu
+   VXeqReauROCRmxm7WO9afZz4QFGUC4t853GAO7gWjcHQ6DVYR0/5oYKmf
+   A==;
+X-CSE-ConnectionGUID: 0gPP4gcCS/mkR/4gMvHzdw==
+X-CSE-MsgGUID: R0b+F23GRK68jfmlZ3LJ6w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="74748587"
+X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
+   d="scan'208";a="74748587"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 10:06:25 -0700
+X-CSE-ConnectionGUID: LeDrX2CYQViACVITFieabA==
+X-CSE-MsgGUID: 9793ziO3TGaBrkWGVCT57g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
+   d="scan'208";a="183514596"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.108.213]) ([10.125.108.213])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 10:06:25 -0700
+Message-ID: <5d3337cd-94c4-4d5e-beb6-219058af11a5@intel.com>
+Date: Wed, 22 Oct 2025 10:06:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ndctl PATCH v3 4/7] cxl: Add inject-error command
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>, nvdimm@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org, alison.schofield@intel.com
+References: <20251021183124.2311-1-Benjamin.Cheatham@amd.com>
+ <20251021183124.2311-5-Benjamin.Cheatham@amd.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20251021183124.2311-5-Benjamin.Cheatham@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On systems with multiple memory-tiers consisting of DRAM and CXL memory,
-the OOM killer is not invoked properly.
 
-Here's the command to reproduce:
 
-$ stress-ng --oomable -v --memrate 20 --memrate-bytes 10G \
-    --memrate-rd-mbs 1 --memrate-wr-mbs 1
+On 10/21/25 11:31 AM, Ben Cheatham wrote:
+> Add the 'cxl-inject-error' command. This command will provide CXL
+> protocol error injection for CXL VH root ports and CXL RCH downstream
+> ports, as well as poison injection for CXL memory devices.
+> 
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+> ---
+>  cxl/builtin.h      |   1 +
+>  cxl/cxl.c          |   1 +
+>  cxl/inject-error.c | 195 +++++++++++++++++++++++++++++++++++++++++++++
+>  cxl/meson.build    |   1 +
+>  4 files changed, 198 insertions(+)
+>  create mode 100644 cxl/inject-error.c
+> 
+> diff --git a/cxl/builtin.h b/cxl/builtin.h
+> index c483f30..e82fcb5 100644
+> --- a/cxl/builtin.h
+> +++ b/cxl/builtin.h
+> @@ -25,6 +25,7 @@ int cmd_create_region(int argc, const char **argv, struct cxl_ctx *ctx);
+>  int cmd_enable_region(int argc, const char **argv, struct cxl_ctx *ctx);
+>  int cmd_disable_region(int argc, const char **argv, struct cxl_ctx *ctx);
+>  int cmd_destroy_region(int argc, const char **argv, struct cxl_ctx *ctx);
+> +int cmd_inject_error(int argc, const char **argv, struct cxl_ctx *ctx);
+>  #ifdef ENABLE_LIBTRACEFS
+>  int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx);
+>  #else
+> diff --git a/cxl/cxl.c b/cxl/cxl.c
+> index 1643667..a98bd6b 100644
+> --- a/cxl/cxl.c
+> +++ b/cxl/cxl.c
+> @@ -80,6 +80,7 @@ static struct cmd_struct commands[] = {
+>  	{ "disable-region", .c_fn = cmd_disable_region },
+>  	{ "destroy-region", .c_fn = cmd_destroy_region },
+>  	{ "monitor", .c_fn = cmd_monitor },
+> +	{ "inject-error", .c_fn = cmd_inject_error },
+>  };
+>  
+>  int main(int argc, const char **argv)
+> diff --git a/cxl/inject-error.c b/cxl/inject-error.c
+> new file mode 100644
+> index 0000000..c48ea69
+> --- /dev/null
+> +++ b/cxl/inject-error.c
+> @@ -0,0 +1,195 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (C) 2025 AMD. All rights reserved. */
+> +#include <util/parse-options.h>
+> +#include <cxl/libcxl.h>
+> +#include <cxl/filter.h>
+> +#include <util/log.h>
+> +#include <stdlib.h>
+> +#include <unistd.h>
+> +#include <stdio.h>
+> +#include <errno.h>
+> +#include <limits.h>
+> +
+> +#define EINJ_TYPES_BUF_SIZE 512
+> +
+> +static bool debug;
+> +
+> +static struct inject_params {
+> +	const char *type;
+> +	const char *address;
+> +} inj_param;
+> +
+> +static const struct option inject_options[] = {
+> +	OPT_STRING('t', "type", &inj_param.type, "Error type",
+> +		   "Error type to inject into <device>"),
+> +	OPT_STRING('a', "address", &inj_param.address, "Address for poison injection",
+> +		   "Device physical address for poison injection in hex or decimal"),
+> +#ifdef ENABLE_DEBUG
+> +	OPT_BOOLEAN(0, "debug", &debug, "turn on debug output"),
+> +#endif
+> +	OPT_END(),
+> +};
+> +
+> +static struct log_ctx iel;
+> +
+> +static struct cxl_protocol_error *find_cxl_proto_err(struct cxl_ctx *ctx,
+> +						     const char *type)
+> +{
+> +	struct cxl_protocol_error *perror;
+> +
+> +	cxl_protocol_error_foreach(ctx, perror) {
+> +		if (strcmp(type, cxl_protocol_error_get_str(perror)) == 0)
+> +			return perror;
+> +	}
+> +
+> +	log_err(&iel, "Invalid CXL protocol error type: %s\n", type);
+> +	return NULL;
+> +}
+> +
+> +static struct cxl_dport *find_cxl_dport(struct cxl_ctx *ctx, const char *devname)
+> +{
+> +	struct cxl_port *port, *top;
+> +	struct cxl_dport *dport;
+> +	struct cxl_bus *bus;
+> +
+> +	cxl_bus_foreach(ctx, bus) {
+> +		top = cxl_bus_get_port(bus);
+> +
+> +		cxl_port_foreach_all(top, port)
+> +			cxl_dport_foreach(port, dport)
+> +				if (!strcmp(devname,
+> +					    cxl_dport_get_devname(dport)))
+> +					return dport;
 
-The memory usage is the number of workers specified with the --memrate
-option multiplied by the buffer size specified with the --memrate-bytes
-option, so please adjust it so that it exceeds the total size of the
-installed DRAM and CXL memory.
+Would it be worthwhile to create a util_cxl_dport_filter()?
 
-If swap is disabled, you can usually expect the OOM killer to terminate
-the stress-ng process when memory usage approaches the installed memory size.
+> +	}
+> +
+> +	log_err(&iel, "Downstream port \"%s\" not found\n", devname);
+> +	return NULL;
+> +}
+> +
+> +static struct cxl_memdev *find_cxl_memdev(struct cxl_ctx *ctx,
+> +					  const char *filter)
+> +{
+> +	struct cxl_memdev *memdev;
+> +
+> +	cxl_memdev_foreach(ctx, memdev) {
+> +		if (util_cxl_memdev_filter(memdev, filter, NULL))
+> +			return memdev;
+> +	}
+> +
+> +	log_err(&iel, "Memdev \"%s\" not found\n", filter);
+> +	return NULL;
+> +}
+> +
+> +static int inject_proto_err(struct cxl_ctx *ctx, const char *devname,
+> +			    struct cxl_protocol_error *perror)
+> +{
+> +	struct cxl_dport *dport;
+> +	int rc;
+> +
+> +	if (!devname) {
+> +		log_err(&iel, "No downstream port specified for injection\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	dport = find_cxl_dport(ctx, devname);
+> +	if (!dport)
+> +		return -ENODEV;
+> +
+> +	rc = cxl_dport_protocol_error_inject(dport,
+> +					     cxl_protocol_error_get_num(perror));
+> +	if (rc)
+> +		return rc;
+> +
+> +	printf("injected %s protocol error.\n",
+> +	       cxl_protocol_error_get_str(perror));
 
-However, if multiple memory-tiers exist (multiple
-/sys/devices/virtual/memory_tiering/memory_tier<N> directories exist),
-and /sys/kernel/mm/numa/demotion_enabled is true and
-/sys/kernel/mm/lru_gen/min_ttl_ms is 0, the OOM killer will not be invoked
-and the system will become inoperable.
+log_info() maybe?
 
-If /sys/kernel/mm/numa/demotion_enabled is false, or if demotion_enabled
-is true but /sys/kernel/mm/lru_gen/min_ttl_ms is set to a non-zero value
-such as 1000, the OOM killer will be invoked properly.
+> +	return 0;
+> +}
+> +
+> +static int poison_action(struct cxl_ctx *ctx, const char *filter,
+> +			 const char *addr)
+> +{
+> +	struct cxl_memdev *memdev;
+> +	size_t a;
 
-This issue can be reproduced using NUMA emulation even on systems with
-only DRAM. However, to configure multiple memory-tiers using fake nodes,
-you must apply the attached patch.
+Maybe rename 'addr' to 'addr_str' and rename 'a' to 'addr'
 
-You can create two-fake memory-tiers by booting a single-node system with
-the following boot options:
+> +	int rc;
+> +
+> +	memdev = find_cxl_memdev(ctx, filter);
+> +	if (!memdev)
+> +		return -ENODEV;
+> +
+> +	if (!cxl_memdev_has_poison_injection(memdev)) {
+> +		log_err(&iel, "%s does not support error injection\n",
+> +			cxl_memdev_get_devname(memdev));
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!addr) {
+> +		log_err(&iel, "no address provided\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	a = strtoull(addr, NULL, 0);
+> +	if (a == ULLONG_MAX && errno == ERANGE) {
+> +		log_err(&iel, "invalid address %s", addr);
+> +		return -EINVAL;
+> +	}
+> +
+> +	rc = cxl_memdev_inject_poison(memdev, a);
+> +
 
-numa=fake=2
-numa_emulation.default_dram=1,0
-numa_emulation.read_latency=100,1000
-numa_emulation.write_latency=100,1000
-numa_emulation.read_bandwidth=100000,10000
-numa_emulation.write_bandwidth=100000,10000
+unnecessary blank line> +	if (rc)
+> +		log_err(&iel, "failed to inject poison at %s:%s: %s\n",
+> +			cxl_memdev_get_devname(memdev), addr, strerror(-rc));
+> +	else
+> +		printf("poison injected at %s:%s\n",
+> +		       cxl_memdev_get_devname(memdev), addr);
 
----
- mm/numa_emulation.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+log_info() maybe?
 
-diff --git a/mm/numa_emulation.c b/mm/numa_emulation.c
-index 703c8fa05048..b1c283b99038 100644
---- a/mm/numa_emulation.c
-+++ b/mm/numa_emulation.c
-@@ -6,6 +6,9 @@
- #include <linux/errno.h>
- #include <linux/topology.h>
- #include <linux/memblock.h>
-+#include <linux/memory-tiers.h>
-+#include <linux/module.h>
-+#include <linux/node.h>
- #include <linux/numa_memblks.h>
- #include <asm/numa.h>
- #include <acpi/acpi_numa.h>
-@@ -344,6 +347,46 @@ static int __init setup_emu2phys_nid(int *dfl_phys_nid)
- 	return max_emu_nid;
- }
- 
-+static bool default_dram[MAX_NUMNODES];
-+module_param_array(default_dram, bool, NULL, 0400);
-+
-+static unsigned int read_latency[MAX_NUMNODES];
-+module_param_array(read_latency, uint, NULL, 0400);
-+
-+static unsigned int write_latency[MAX_NUMNODES];
-+module_param_array(write_latency, uint, NULL, 0400);
-+
-+static unsigned int read_bandwidth[MAX_NUMNODES];
-+module_param_array(read_bandwidth, uint, NULL, 0400);
-+
-+static unsigned int write_bandwidth[MAX_NUMNODES];
-+module_param_array(write_bandwidth, uint, NULL, 0400);
-+
-+static int emu_calculate_adistance(struct notifier_block *self,
-+				unsigned long nid, void *data)
-+{
-+	struct access_coordinate perf = {
-+		.read_bandwidth = read_bandwidth[nid],
-+		.write_bandwidth = write_bandwidth[nid],
-+		.read_latency = read_latency[nid],
-+		.write_latency = write_latency[nid],
-+	};
-+	int *adist = data;
-+
-+	if (default_dram[nid])
-+		mt_set_default_dram_perf(nid, &perf, "numa_emu");
-+
-+	if (mt_perf_to_adistance(&perf, adist))
-+		return NOTIFY_OK;
-+
-+	return NOTIFY_STOP;
-+}
-+
-+static struct notifier_block emu_adist_nb = {
-+	.notifier_call = emu_calculate_adistance,
-+	.priority = INT_MIN,
-+};
-+
- /**
-  * numa_emulation - Emulate NUMA nodes
-  * @numa_meminfo: NUMA configuration to massage
-@@ -532,6 +575,8 @@ void __init numa_emulation(struct numa_meminfo *numa_meminfo, int numa_dist_cnt)
- 		}
- 	}
- 
-+	register_mt_adistance_algorithm(&emu_adist_nb);
-+
- 	/* free the copied physical distance table */
- 	memblock_free(phys_dist, phys_size);
- 	return;
--- 
-2.43.0
+DJ
+
+> +
+> +	return rc;
+> +}
+> +
+> +static int inject_action(int argc, const char **argv, struct cxl_ctx *ctx,
+> +			 const struct option *options, const char *usage)
+> +{
+> +	struct cxl_protocol_error *perr;
+> +	const char * const u[] = {
+> +		usage,
+> +		NULL
+> +	};
+> +	int rc = -EINVAL;
+> +
+> +	log_init(&iel, "cxl inject-error", "CXL_INJECT_LOG");
+> +	argc = parse_options(argc, argv, options, u, 0);
+> +
+> +	if (debug) {
+> +		cxl_set_log_priority(ctx, LOG_DEBUG);
+> +		iel.log_priority = LOG_DEBUG;
+> +	} else {
+> +		iel.log_priority = LOG_INFO;
+> +	}
+> +
+> +	if (argc != 1) {
+> +		usage_with_options(u, options);
+> +		return rc;
+> +	}
+> +
+> +	if (strcmp(inj_param.type, "poison") == 0) {
+> +		rc = poison_action(ctx, argv[0], inj_param.address);
+> +		return rc;
+> +	}
+> +
+> +	perr = find_cxl_proto_err(ctx, inj_param.type);
+> +	if (perr) {
+> +		rc = inject_proto_err(ctx, argv[0], perr);
+> +		if (rc)
+> +			log_err(&iel, "Failed to inject error: %d\n", rc);
+> +	}
+> +
+> +	log_err(&iel, "Invalid error type %s", inj_param.type);
+> +	return rc;
+> +}
+> +
+> +int cmd_inject_error(int argc, const char **argv, struct cxl_ctx *ctx)
+> +{
+> +	int rc = inject_action(argc, argv, ctx, inject_options,
+> +			       "inject-error <device> [<options>]");
+> +
+> +	return rc ? EXIT_FAILURE : EXIT_SUCCESS;
+> +}
+> diff --git a/cxl/meson.build b/cxl/meson.build
+> index b9924ae..92031b5 100644
+> --- a/cxl/meson.build
+> +++ b/cxl/meson.build
+> @@ -7,6 +7,7 @@ cxl_src = [
+>    'memdev.c',
+>    'json.c',
+>    'filter.c',
+> +  'inject-error.c',
+>    '../daxctl/json.c',
+>    '../daxctl/filter.c',
+>  ]
+
 
