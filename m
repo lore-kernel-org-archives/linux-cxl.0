@@ -1,262 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010071.outbound.protection.outlook.com [52.101.46.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E496F3446A3;
-	Thu, 23 Oct 2025 17:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761242327; cv=none; b=ZH3B51zppXyP+j3rHB96y5BbIBrdrfE2XzAwYaDiDwKB0d+mJ2ez3iwnQeyZk2nR4DHTToaAkydOqG/MAABJo/E1hRr5x/hXgTmHYaOhrNHQ9ZFMIHlDzylOzQPu615NRB630+p5tWgUWZD651KrfOj4GweAt8fvuuWR5rpkfbI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761242327; c=relaxed/simple;
-	bh=5hAOPFF31Br87tc4UVkXvHPCgDvT6CIduQTFGMHxSPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IIvQMUzVqQ2k0t37eECmIMnn8+LkWrWkFEu39lEs763N3qX+wO6CA9UFazu0sxxpzJJRNAeceE1o14518EaETDzbrcTOP186Nxf92rHkoINhZ65zydVu8c72LJx+tUv49bg55JoAGQpdsbSupqRhwPYy73w+zW45gHrHmeH0srY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uDTdakLd; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140F128FFE7
+	for <linux-cxl@vger.kernel.org>; Thu, 23 Oct 2025 20:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761250518; cv=fail; b=lAIpoDIW2e4q9SjW64S8+wxEDuBRz4167awpeEy5bIVtVcj6ex9T0A2sBZO3WgRSuzZK8FIVGYkHBWlBQEZEmvYbyQB3dS+7gUVVKdwoIV0eDGtsCgPv8ArSsH8vYXBekP7fRbMY1s1eeecPm3yEO94xwdz4/HSvN2mGUKQwBXE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761250518; c=relaxed/simple;
+	bh=zJqmCOfUOutUYxrTSLe/XpZQZWIcaP3b6eo3j+D+KPo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=KMflwLvHlCy8S6fb6OiMYbxcaRr6cWH4Uu73XvolbGymUtP/BIJDE7SYJJ2QgfUlOc76tKSDnfL5lvpIH4CQ8Y/3oSd1K512A+DqXuT9v9ZiaW+dIqX8AZDmhc47PkBR6tBZbSpeyon+aLT7+1WZaLOvH1qLW6WIMdjNDjLja4I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=S75Bv93H; arc=fail smtp.client-ip=52.101.46.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uDTdakLd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DA94C4CEE7;
-	Thu, 23 Oct 2025 17:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761242326;
-	bh=5hAOPFF31Br87tc4UVkXvHPCgDvT6CIduQTFGMHxSPw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uDTdakLd6r4OY/6r0TYwuTZhmdhNg2OhLQDP2C3uQ3XUgwySj+IJi+7+CmAL5hQ6w
-	 y6iUK4JWwKvEI2UdtHgJS0luBhA6IuKpfjvOWBV/FuZkVajJupWdcYmMuw5As5SXG4
-	 Br7la0e/j6E4l0QNp+6JsNe0yQj+pkGqBdGQwV1EqWmr40nMP/gRxeAGk7RaajnoOF
-	 PweXScgF8r5sbFjuDud1HRNrPLLDYY5oHcORI5tcULj793gfN9R9ApMEijRBQLkhHy
-	 2q9jr+HBXGRsm7/oSBXylk+xwb2ytkiIsneSJymDHwSgstU9gGPFylwtMl0Pq+oYtL
-	 qpEn5iNE7k9sA==
-Date: Thu, 23 Oct 2025 18:58:39 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, linux-cxl@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>, james.morse@arm.com,
-	Will Deacon <will@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
-	linuxarm@huawei.com, Yushan Wang <wangyushan12@huawei.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v4 6/6] cache: Support cache maintenance for HiSilicon
- SoC Hydra Home Agent
-Message-ID: <20251023-deacon-freedom-91064dec93de@spud>
-References: <20251022113349.1711388-1-Jonathan.Cameron@huawei.com>
- <20251022113349.1711388-7-Jonathan.Cameron@huawei.com>
- <20251022-kite-revert-2c2684054d05@spud>
- <20251023124914.00001005@huawei.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="S75Bv93H"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BAlPtgBfRNmv9nXUflBlf2ROgrxqW3ZAZz4QgcqEzjc+Y1KdwgRnzwOee0Q/sxR1ZegFOTAln0T3e89zh6PLNHSn/QhgJSdEBCeU3QpKh98+cz500FaSVRa1MNGouYvBR7ykW3nmlCKE298cjYJwIXyFLDwtWNIZnamNywQ4Fs1Mtj7bKtffuL31te4+Cfg8oisXwOa2xVRPcDsCGeecquNXp9yfVYNoP4Vlmja4VqJ31OXNjfQyUxo1CJgCwZqdc8J7MdUk4XpYYkSsdrWVjEpMId5eHg1d1TckG3GtBjnHZteR5KEOJr73OVj/8BYvfchn+OPHk12AvhKAc92DkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NXXGvUm2R2biT6oFECAbBbnioYSZlkMvKuBAPEeeY10=;
+ b=ijteUNdMY9PH/u59l5X0cbnSMyv1tkSeUL92fF1VQe/E+r5AnHYdqrjEuOWYVEGtqHPsvu+HRi3wk4IeqcoLQ1ZDeuLN88caahnjLeqDiWyf0VpKiXek8stnvB+m7K+ExCAr27hTYe/APdL2Yn8Of4CuUELisTiOctyeMF3oxrZJS860AUR2bYi+h6t2kSZ8dIRWtynG0Hw1JkC4Exu1pjzfeDFx0CIrllVE64w1jwW4sCowxDOTqAlOA1CCJE1GvWJ4UOaK/iljHM49gyCKJSifw59n8mYhFnmDV6AMsGjvRhf433mBIDaV+RwLIbi0vIYaO2pZ2lbYMrWx94X5WA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NXXGvUm2R2biT6oFECAbBbnioYSZlkMvKuBAPEeeY10=;
+ b=S75Bv93HEKQLGDPmmzzovi+svLqCP7q3FJ86Qsq4TNqNK2hXwmknttVotaFjTStDKtxpXMMPBzTO5Ff37x321mi7QwLGdoQZkZCSrrW3ecSV66yoKhEub1zYs18gBXaacvec/+ogxdMADFVf8sPdseVd/svLyWvQCVAFTzBtcZg=
+Received: from MW4PR03CA0284.namprd03.prod.outlook.com (2603:10b6:303:b5::19)
+ by SA5PPFD911547FB.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8e4) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.13; Thu, 23 Oct
+ 2025 20:15:12 +0000
+Received: from SJ1PEPF00002326.namprd03.prod.outlook.com
+ (2603:10b6:303:b5:cafe::e1) by MW4PR03CA0284.outlook.office365.com
+ (2603:10b6:303:b5::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9253.12 via Frontend Transport; Thu,
+ 23 Oct 2025 20:15:11 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ1PEPF00002326.mail.protection.outlook.com (10.167.242.89) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9253.7 via Frontend Transport; Thu, 23 Oct 2025 20:15:11 +0000
+Received: from [10.254.54.138] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 23 Oct
+ 2025 13:15:05 -0700
+Message-ID: <b6d9fcba-3870-4944-ab07-a18279072820@amd.com>
+Date: Thu, 23 Oct 2025 15:15:04 -0500
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wGeFqUtAjCRVjVMX"
-Content-Disposition: inline
-In-Reply-To: <20251023124914.00001005@huawei.com>
+User-Agent: Mozilla Thunderbird
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+Subject: Re: [ndctl PATCH v3 1/7] libcxl: Add debugfs path to CXL context
+To: Dave Jiang <dave.jiang@intel.com>, <nvdimm@lists.linux.dev>
+CC: <linux-cxl@vger.kernel.org>, <alison.schofield@intel.com>
+References: <20251021183124.2311-1-Benjamin.Cheatham@amd.com>
+ <20251021183124.2311-2-Benjamin.Cheatham@amd.com>
+ <fe8ab195-57bc-4569-bf0f-c8c2a93bc435@intel.com>
+Content-Language: en-US
+In-Reply-To: <fe8ab195-57bc-4569-bf0f-c8c2a93bc435@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002326:EE_|SA5PPFD911547FB:EE_
+X-MS-Office365-Filtering-Correlation-Id: 313a0e56-bdb2-49fc-728d-08de1270ded3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QUQ3S3p3RW9GWVZReGlhUU1mV3JIVGwvR3VVUFRlUjJrbUpYSlhmUW8vOFhL?=
+ =?utf-8?B?R1VROTlXSmw1cjV1THpFc0pOVWYvT3VvTGVqdjFvN0M1R1ZXQ1M3blpGeGJK?=
+ =?utf-8?B?dlRIb3FScms3NThUTDhxL2s1cldBM3VYNDdUOTlKdzJlbE5HdnhmQW5ZWWFI?=
+ =?utf-8?B?aXpxYzY0elVDalpQbjA2TXFzK0ovRzBrb2NTKy9uMlNBWnNZZHkvM1VMeFFH?=
+ =?utf-8?B?bXdjNnVnNkQwWFMzOTF5NmQvWXJKYVgxbFFhVnFDNmxyU051bXdQZVg1ZHds?=
+ =?utf-8?B?MHdYRU04V0tIc2ZBTUkzWmpwMjNHeDF2d1dMWmlCR2RkUEJTSnU2cTM3NTFj?=
+ =?utf-8?B?OUdyYXhLU3pkbXFLYzhDOTBzUmxycjhlU3JSb09teFc5Mk1YWjhhK0E1bHZF?=
+ =?utf-8?B?ZUpwSnlkdXhNY2ZVbksxV3RkU1pOTHVLV1BYN29vbU8zUk1reC9jRmFpVHdE?=
+ =?utf-8?B?YVMwdjIwck9TdHBLVi9vKzJuZFA5QW9aODlmWWZnaERHZThVRjhQek03VXFx?=
+ =?utf-8?B?L0N3aXdOVkRzU0MzTDB5TWo1bG9pQmlNQU05SmxiYktscHE0dU9RL1JrYk5N?=
+ =?utf-8?B?MGpEcVNDTW0vYmZWaGluSlVZZEtFRWhaNjFoZ0p5OTluOVU2am5WeGQ5NzJB?=
+ =?utf-8?B?TzV5UWQ3NUR5TFAyZDdyNjhWUWhhek9PeGxyaVNWSHBBYWNQSTI2VXMrR01i?=
+ =?utf-8?B?a2dUNmRUTGxTZ3h6MXI2ZVdpemQvbUtPQWpySjAwaENTZEUydTJObm1Jb0lV?=
+ =?utf-8?B?TzZRSkVXZjVmN0ZhbDZYU2Y2Vk94T3hNdVA5bE9mTkZMUmZSb05WaE5wTXBt?=
+ =?utf-8?B?RFFaVTExZFlXRng3MTB5L0ZJeTdNWS9xTlVHSmpFZzk4NXV6RzNndVp2Wmtj?=
+ =?utf-8?B?S0cwTWRUVUZ0ckFxODRnaXQzU2hOdkNIZWRLTGZEYjkrZnNJdVptYTJobTRR?=
+ =?utf-8?B?REJYdXB1bUN4Q3NmUkt5bm5aMldsNVAyaUdhV0tOTDNmZEVnLzVUVjNFbjF0?=
+ =?utf-8?B?MlNDdHFSOFNpd3RTN0JScldHcy9zYTVRbWtqS28rM2w3ZWhYenlxNEwxeGdH?=
+ =?utf-8?B?c0FNeitWbklFT1NhVVdzUGN1NVVqTU91cEdzeFpHcjdSN3NuRmxDRUJ3VENU?=
+ =?utf-8?B?WHRteHFIOGJtamVSb3NENVFwVmxTSTlMMUpqUFQzTklwRXhKV1pnT2VKWC9N?=
+ =?utf-8?B?WTMrLzdnNVY1KytNNzFDVFB1RHptSkw2NXRKTzk1ajd4SHpVMkZ4RlZUZlZU?=
+ =?utf-8?B?R0tmVWxqQlZYRHlqZ0tzMFBkM2ZBMzM4by8vNDRHeU5QUkx0aWVUWkZGVjVJ?=
+ =?utf-8?B?ekQ2c0dVVjExVkZSTlJNbVRubUVhUkMzc1NWZ1UzZjlEd1BxYm10YXFaK1dM?=
+ =?utf-8?B?bis0VXB6R1MxWC9lUlM5ZVk2dWRzK3lNWXU3cHdqenhYNHhtTzNXZHlpNXZs?=
+ =?utf-8?B?b1cybWRpaFErQXgrbWVMc0FTQTNjdW05eGNxanR6TGRhdHVjaDF4VmdZRytG?=
+ =?utf-8?B?ZURleE1ycVlpdVJ4c2tkSk0ydnJEY2VwMEwyWnFpWDlCMGVsZzJvOWFJNDBk?=
+ =?utf-8?B?N01pNTAxWDZJbzFZRSsxREp1Zno3UFNKZFFWblFERmV1czB2TWJnTi8yZGs2?=
+ =?utf-8?B?MTllL0g1VTRsRkhodmRiWHhCa3VieG5BdjRUV2hiVFIzY2xPcEVnVUlGT2V2?=
+ =?utf-8?B?SEdDRWVhY1VxMXpCTzJaS3QybHpsWE51aHFEQWNVU0NPRWM0Mkc2dGg2bFdR?=
+ =?utf-8?B?d3lnU3FXWDl3SFBZVHdHbGRjZkR6ODh3VnlMMGlESVFaUXYwa0xOaWpoMytQ?=
+ =?utf-8?B?QXB2ZXQ3bXREMWcxcmhRbmQySnpkbk9Mc0ZrYW5LdHN6dGw2NUt5OEpEQzRs?=
+ =?utf-8?B?aXgwQy91b3orMktYaWt5VjFpKzRoWjJSMm50NnZWSGE0emUxRzFBb2lDZjYy?=
+ =?utf-8?B?ejdmakFFZDNaR0V3VURHTC9UaVc5K1dVb2txKzR4RUo2NzdzL1cxNTFrT2hR?=
+ =?utf-8?B?eVVPMkFGOGFZQ3YyQXVpbnoyWVRRNG56dDBIa2FTL0hOK0hNYzhlaG1kUElj?=
+ =?utf-8?B?VU5oa0VacWswcWRtQUNKQXRlbTdyUE0xeno5NkEya052YTVqM2ZVUFg2ZTZt?=
+ =?utf-8?Q?MNw4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2025 20:15:11.5822
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 313a0e56-bdb2-49fc-728d-08de1270ded3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00002326.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPFD911547FB
 
+Hi Dave, thanks for taking a look!
 
---wGeFqUtAjCRVjVMX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10/21/2025 5:55 PM, Dave Jiang wrote:
+> 
+> 
+> On 10/21/25 11:31 AM, Ben Cheatham wrote:
+>> Find the CXL debugfs mount point and add it to the CXL library context.
+>> This will be used by poison and procotol error library functions to
+>> access the information presented by the filesystem.
+>>
+>> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+>> ---
+>>  cxl/lib/libcxl.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 40 insertions(+)
+>>
+>> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+>> index cafde1c..ea5831f 100644
+>> --- a/cxl/lib/libcxl.c
+>> +++ b/cxl/lib/libcxl.c
+>> @@ -54,6 +54,7 @@ struct cxl_ctx {
+>>  	struct kmod_ctx *kmod_ctx;
+>>  	struct daxctl_ctx *daxctl_ctx;
+>>  	void *private_data;
+>> +	const char *debugfs;
+>>  };
+>>  
+>>  static void free_pmem(struct cxl_pmem *pmem)
+>> @@ -240,6 +241,43 @@ CXL_EXPORT void *cxl_get_private_data(struct cxl_ctx *ctx)
+>>  	return ctx->private_data;
+>>  }
+>>  
+>> +static char *get_debugfs_dir(void)
+> 
+> const char *?
+> 
 
-On Thu, Oct 23, 2025 at 12:49:14PM +0100, Jonathan Cameron wrote:
-> On Wed, 22 Oct 2025 22:39:28 +0100
-> Conor Dooley <conor@kernel.org> wrote:
->=20
-> Hi Conor,
->=20
-> > On Wed, Oct 22, 2025 at 12:33:49PM +0100, Jonathan Cameron wrote:
-> >=20
-> > > +static int hisi_soc_hha_wbinv(struct cache_coherency_ops_inst *cci,
-> > > +			struct cc_inval_params *invp)
-> > > +{
-> > > +	struct hisi_soc_hha *soc_hha =3D
-> > > +		container_of(cci, struct hisi_soc_hha, cci);
-> > > +	phys_addr_t top, addr =3D invp->addr;
-> > > +	size_t size =3D invp->size;
-> > > +	u32 reg;
-> > > +
-> > > +	if (!size)
-> > > +		return -EINVAL;
-> > > +
-> > > +	addr =3D ALIGN_DOWN(addr, HISI_HHA_MAINT_ALIGN);
-> > > +	top =3D ALIGN(addr + size, HISI_HHA_MAINT_ALIGN);
-> > > +	size =3D top - addr;
-> > > +
-> > > +	guard(mutex)(&soc_hha->lock);
-> > > +
-> > > +	if (!hisi_hha_cache_maintain_wait_finished(soc_hha))
-> > > +		return -EBUSY;
-> > > +
-> > > +	/*
-> > > +	 * Hardware will search for addresses ranging [addr, addr + size - =
-1],
-> > > +	 * last byte included, and perform maintain in 128 byte granule
-> > > +	 * on those cachelines which contain the addresses.
-> > > +	 */ =20
-> >=20
-> > Hmm, does this mean that the IP has some built-in handling for there
-> > being more than one "agent" in a system? IOW, if the address is not in
-> > its range, then the search will just fail into a NOP?
->=20
-> Exactly that. NOP if nothing to do. The hardware is only tracking
-> a subset of what it might contain (depending on which cachelines are
-> actually in caches) so it's very much a 'clear this if you happen to
-> have it' command.  Even if it is in the subset of PA being covered by
-> an instance, many cases will be a 'miss' and hence a NOP.
+Will do
 
-Okay, cool. I kinda figured this was the mostly outcome, when yous put
-"search" into the comment.
+> 
+> Also maybe get_debugfs_dir_path()
+> 
+>> +{
+>> +	char *dev, *dir, *type, *ret = NULL;
+> 
+> 'debugfs_dir' rather than 'ret' would be clearer to read.
+> 
 
-> > If that's not the case, is this particular "agent" by design not suitab=
-le
-> > for a system like that? Or will a dual hydra home agent system come with
-> > a new ACPI ID that we can use to deal with that kind of situation?
->=20
-> Existing systems have multiple instances of this hardware block.
->=20
-> Simplifying things over reality just to make this explanation less
-> messy.  (ignoring other levels of interleaving beyond the Point of
-> Coherency etc).
->=20
-> In servers the DRAM access are pretty much always interleaved=20
-> (usually at cache line granularity). That interleaving may go very
-> different physical locations on a die or across multiple dies.
->=20
-> Similarly the agent responsible for tracking the coherency state
-> (easy to think of this as a complete directory but it's never that
-> simple) is distributed so that it is on the path to the DRAM. Hence
-> if we have N way interleave there maybe N separate agents responsible for
-> different parts of the range 0..(64*N-1) (taking smallest possible
-> flush that would have to go to all those agents).
-
-Well, thanks for the explanation.. I was only looking to know if there
-were multiple, since it wasn't clear, but the reason why you do is
-welcome.
-
-> > (Although I don't know enough about ACPI to know where you'd even get
-> > the information about what instance handles what range from...)
->=20
-> We don't today. It would be easy to encode that information
-> as a resource and it may make sense for larger systems depending
-> on exactly how the coherency fabric in a system works. I'd definitely
-> expect to see some drivers doing this. Those drivers could then prefilter.
-
-Okay cool. I can clearly see how it'd be done in DT land, if required,
-but didn't know if it was possible on ACPI systems.
-
->=20
-> Interleaving gets really complex so any description is likely to only
-> provide a conservative superset of what is actually handled by a given
-> agent.
->=20
-> >=20
-> > > +	size -=3D 1;
-> > > +
-> > > +	writel(lower_32_bits(addr), soc_hha->base + HISI_HHA_START_L);
-> > > +	writel(upper_32_bits(addr), soc_hha->base + HISI_HHA_START_H);
-> > > +	writel(lower_32_bits(size), soc_hha->base + HISI_HHA_LEN_L);
-> > > +	writel(upper_32_bits(size), soc_hha->base + HISI_HHA_LEN_H);
-> > > +
-> > > +	reg =3D FIELD_PREP(HISI_HHA_CTRL_TYPE, 1); /* Clean Invalid */
-> > > +	reg |=3D HISI_HHA_CTRL_RANGE | HISI_HHA_CTRL_EN;
-> > > +	writel(reg, soc_hha->base + HISI_HHA_CTRL);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int hisi_soc_hha_done(struct cache_coherency_ops_inst *cci)
-> > > +{
-> > > +	struct hisi_soc_hha *soc_hha =3D
-> > > +		container_of(cci, struct hisi_soc_hha, cci);
-> > > +
-> > > +	guard(mutex)(&soc_hha->lock);
-> > > +	if (!hisi_hha_cache_maintain_wait_finished(soc_hha))
-> > > +		return -ETIMEDOUT;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static const struct cache_coherency_ops hha_ops =3D {
-> > > +	.wbinv =3D hisi_soc_hha_wbinv,
-> > > +	.done =3D hisi_soc_hha_done,
-> > > +};
-> > > +
-> > > +static int hisi_soc_hha_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct hisi_soc_hha *soc_hha;
-> > > +	struct resource *mem;
-> > > +	int ret;
-> > > +
-> > > +	soc_hha =3D cache_coherency_ops_instance_alloc(&hha_ops,
-> > > +						     struct hisi_soc_hha, cci);
-> > > +	if (!soc_hha)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	platform_set_drvdata(pdev, soc_hha);
-> > > +
-> > > +	mutex_init(&soc_hha->lock);
-> > > +
-> > > +	mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > +	if (!mem) {
-> > > +		ret =3D -ENOMEM;
-> > > +		goto err_free_cci;
-> > > +	}
-> > > +
-> > > +	/*
-> > > +	 * HHA cache driver share the same register region with HHA uncore =
-PMU
-> > > +	 * driver in hardware's perspective, none of them should reserve the
-> > > +	 * resource to itself only.  Here exclusive access verification is
-> > > +	 * avoided by calling devm_ioremap instead of devm_ioremap_resource=
- to =20
-> >=20
-> > The comment here doesn't exactly match the code, dunno if you went away
-> > from devm some reason and just forgot to to make the change or the other
-> > way around? Not a big deal obviously, but maybe you forgot to do
-> > something you intended doing. It's mentioned in the commit message too.
->=20
-> Ah. Indeed stale comment, I'll drop that.
->=20
-> Going away from devm was mostly a hang over from similar discussions in f=
-wctl
-> where I copied the pattern of embedded device(there)/kref(here) and reluc=
-tance
-> to hide way the final put().
->=20
-> >=20
-> > Other than the question I have about the multi-"agent" stuff, this
-> > looks fine to me. I assume it's been thought about and is fine for w/e
-> > reason, but I'd like to know what that is.
->=20
-> I'll see if I can craft a short intro bit of documentation for the
-> top of this driver file to state clearly that there are lots of instances
-> of this in a system and that a requests to clear something that isn't 'th=
-eirs'
-> results in a NOP.  Better to have that available so anyone writing
-> a similar driver thinks about whether that applies to what they have or
-> if they need to do in driver filtering.
-
-Yeah, adding a comment would be ideal, thanks.
-
---wGeFqUtAjCRVjVMX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaPpszwAKCRB4tDGHoIJi
-0jkxAQDKgL4QVcRIzCo6G66R++ICwhllMamNHAZf8jmI/CO/EQEAmiVSOKVdfzt6
-NvldkccfoWmDymH3aGdE/6ZlJtdghQg=
-=K+jA
------END PGP SIGNATURE-----
-
---wGeFqUtAjCRVjVMX--
+Makes sense, I'll change it.
