@@ -1,150 +1,94 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D921C84B9;
-	Mon, 27 Oct 2025 09:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886AC30C63B;
+	Mon, 27 Oct 2025 15:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761558268; cv=none; b=oGPruv2HR7CnliyEwy22N8/muI0ylzPeYVcYLiJjf+ftOVZ/o6srCvrp/h7i7vWsliIZJ6+KujXxLdm6B2SbrRsuiwe2Ygy1rzdTACNKUXYG9rYEBPBIgGGCelnBEA6gyppDMo4ht+HKXB5kC3QC31rwHvftxYOXo2GQ8KkWNSc=
+	t=1761580378; cv=none; b=FvWTmqaJ36gR3bm8go6ETFBGZNTAKkHihxvJg5ZeqK8oAGX1R76e/208THduVcNRDjKuqJtRyItZb98zjDcTLoB3D/kjzIZ7EakRqEWdMkOnAg+jCfXQDFkkkWY/NZCTar4Kd1jhPANpShAlvNcNflQ7e5VEqrToe2Qqj9+BXic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761558268; c=relaxed/simple;
-	bh=9XTOvCuUtrVVOvQE5iew+LTvoban5zu0e+4ac+NEIps=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Fvrq/Wtv/3zv08bz0iH0+8NPLHkQecDmfEd5KvUAUpss8Vvs2dfH2FpqFBJ3XxVdAKgtDa0YnBDSLE6Cw8wC2wEpHaGW2hkU61Bvb6YXUVzw+lqidfqhqwr6Donw58YVWOBF5waTG35hJWiZe4AkirTKDpMlIzUL0jI6fpr8nbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=eeY3yaie; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UUUfqptB; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1761580378; c=relaxed/simple;
+	bh=0FD8jE3r3BQAd8qLv61nGNeltiMZUGuEGNj1kE2QHCQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eOy/aac2cASwAfs0Q4vTn2TUjaQgIKiWkrezeG/WP/fjan7HZs5xRU8jcS20vuHJFzvzlSMK+4rOH1V0F8N4UzeUefKpZYLnYiCjNc9zOAQsggRuu96hGDr5OWWqTwUomL30iBALjZSUBVrYDOx9oMWcmMETeafONSx8jYi5OtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JcW83xkO; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="eeY3yaie";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UUUfqptB"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id BF3481D0016B;
-	Mon, 27 Oct 2025 05:44:25 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Mon, 27 Oct 2025 05:44:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1761558265;
-	 x=1761644665; bh=KJvSA8YZX3AlZqgSb2OmKRc9R00iJ2ZMmXzo0lfwC+4=; b=
-	eeY3yaieiEBumzryH7jLM/ghYrAibipO8peOhqtb8bfFMaTxJtEWmMtKNYAgCGm2
-	94kVW8q94feZ4UDf9dy2WZwRKsAN5exIaoEWP3Q84MA1Olo5olZRBom/k8mW2DWQ
-	kAp+KDnTvMnHNg3WVgqZQzITlfTu3Nmb2kUzC13QO6lpPMTMxSANzuMt1DHXyIAg
-	ixPpMcQwQdZMXhy+UNbO5b7wM1g9XuDpaOOTJzefns8EWvSODVNkXdvs6M4E3dqm
-	76l/gjzvk1CpdEM81uxcGYGm3zC0kXnt/ceOrFWv+8kwyVDZ3U9A3S7EHyIJAtLb
-	UP23hcaCoQGFWUhrbiB9Vw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1761558265; x=
-	1761644665; bh=KJvSA8YZX3AlZqgSb2OmKRc9R00iJ2ZMmXzo0lfwC+4=; b=U
-	UUfqptBz0CLlDAFrqFj4ffpuCDyU31b+r5lFDAIu6dzge23rw/riviHX/GPRYG4q
-	LqOXGm8I7NfwzfG8k+FMnAJewolkRJA4H8mu+oONFbBCpvjx2wUcreKYlLhU2jFi
-	XLeBppEmE6BwP5ED60rxwDh1HhWh953IA/L5NLc7Kii7bJLx5SJe1sF6ri5m1YrT
-	Rv7T4tTWCT8tOy1uG2V1gDqXQfq7UgDozCD9WpJKvrDdCXTQApu6jM5zuejt9ux1
-	0iSm1x4PE20xOnsaGbyc3pb+Z8bAveaRLzQ262amqBKRxbJXw4vIocrprykEKSaa
-	oNzg18SFj0+/+s+w83GCw==
-X-ME-Sender: <xms:-D7_aEovHD20lFstMNr2Zox0hzxEgh6Vw7Ha3expxITBZZnDYyCyIg>
-    <xme:-D7_aFdyQ_eTlvlZG8CW8XCqFpsS4SH0sdJ9k8-TNGSFTGlJBeEzTObEjAPRD3a94
-    -h-LdJuN28jqItIaKp8c5SpXjGarmfV_Ue-wrZSzZyceV_nsb5Wt50>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduheejieegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepvdelpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopegsphesrghlihgvnhekrdguvgdprhgtphhtthhopegtrghtrghlih
-    hnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohepjhgrmhgvshdrmhhorhhs
-    vgesrghrmhdrtghomhdprhgtphhtthhopehmrghrkhdrrhhuthhlrghnugesrghrmhdrtg
-    homhdprhgtphhtthhopegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhn
-    rdgtohhmpdhrtghpthhtohepjhhonhgrthhhrghnrdgtrghmvghrohhnsehhuhgrfigvih
-    drtghomhdprhgtphhtthhopehlihhnuhigrghrmheshhhurgifvghirdgtohhmpdhrtghp
-    thhtohepfigrnhhghihushhhrghnuddvsehhuhgrfigvihdrtghomhdprhgtphhtthhope
-    hpvghtvghriiesihhnfhhrrgguvggrugdrohhrgh
-X-ME-Proxy: <xmx:-D7_aPQWpquGASXx6NTT05lR8G-iE52Vn8_1U2O848xtp-a7S6oyXQ>
-    <xmx:-D7_aA7eTn11ifHMPUzl2oRGx8mgDp1q3eptoFPLfK4p9oAKgAnOQg>
-    <xmx:-D7_aCp-0wlpKruYkQ9qZyZnzM6GI5JPml2lrT9Lc-flz_TGog4EHA>
-    <xmx:-D7_aDSzE4Gtck2H-PagpOPmRP6nF8DgsBVQKcs6YP1M9hM-qhoHqQ>
-    <xmx:-T7_aMVJ9PF8LVIjl1uGufn8MO16JMBrWkhK842OCrMPk4Yb_-H7sE0X>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5E81B700054; Mon, 27 Oct 2025 05:44:24 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JcW83xkO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761580376; x=1793116376;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=0FD8jE3r3BQAd8qLv61nGNeltiMZUGuEGNj1kE2QHCQ=;
+  b=JcW83xkOJuL0HNcAahoKM6m4IpbztLthDVnGHOu0p/LKmkYqhri3u7FU
+   k+doAnAD3Tw2bTydQjsI/RCPZ4tVbYcC5FNlIJegq7oA0OgZaqcsqEjEK
+   +lpki6FgnOfkrza3Fi+woe3vLTEZEdlShOdC0CRYqdZEwI50M/SU85XAM
+   aRxgvIEC5v0FlcTuEHfSs3F6wxaKQdH1tb116cIPDzsi98vkkKWiTByZ+
+   3fc/u3r7XyGrJQBN1dXPMmO2JzJ9W//VasA7p49wCYE7cdwUPnYFCL/wS
+   lVrMxrtEscQT32WnPAu28Q0iHnZXAWrc4Mii7M1NnSilZ23lSVmAmfrAI
+   g==;
+X-CSE-ConnectionGUID: UtFlwR7GQV6Axdv7Yk4ooA==
+X-CSE-MsgGUID: YZF7BvzxSx6i8FBHAEc2cA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="66278297"
+X-IronPort-AV: E=Sophos;i="6.19,259,1754982000"; 
+   d="scan'208";a="66278297"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2025 08:52:56 -0700
+X-CSE-ConnectionGUID: G6bvje5XSum7S3DOyyrGBQ==
+X-CSE-MsgGUID: 7uM8cH15Q+eBpWxUiT2sTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,259,1754982000"; 
+   d="scan'208";a="222288557"
+Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.109.111]) ([10.125.109.111])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2025 08:52:55 -0700
+Message-ID: <380c7a65-109f-43ef-be1d-fc7735d5fe6e@intel.com>
+Date: Mon, 27 Oct 2025 08:52:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A1uCXwKauNWg
-Date: Mon, 27 Oct 2025 10:44:03 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Jonathan Cameron" <jonathan.cameron@huawei.com>,
- "Conor Dooley" <conor@kernel.org>
-Cc: "Andrew Morton" <akpm@linux-foundation.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>, linux-cxl@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- Linux-Arch <linux-arch@vger.kernel.org>, linux-mm@kvack.org,
- "Dan Williams" <dan.j.williams@intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "James Morse" <james.morse@arm.com>, "Will Deacon" <will@kernel.org>,
- "Davidlohr Bueso" <dave@stgolabs.net>, linuxarm@huawei.com,
- "Yushan Wang" <wangyushan12@huawei.com>,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>, x86@kernel.org,
- "Andy Lutomirski" <luto@kernel.org>, "Dave Jiang" <dave.jiang@intel.com>,
- "Krzysztof Kozlowski" <krzk@kernel.org>,
- "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Drew Fustini" <fustini@kernel.org>
-Message-Id: <fe57097b-1817-4428-9940-477c3f36cafb@app.fastmail.com>
-In-Reply-To: <20251023174026.00005b42@huawei.com>
-References: <20251022113349.1711388-1-Jonathan.Cameron@huawei.com>
- <20251022122241.d2aa0d7864f67112aa7691bf@linux-foundation.org>
- <20251022-harsh-juggling-2d4778b0649e@spud>
- <20251023174026.00005b42@huawei.com>
-Subject: Re: [PATCH v4 0/6] Cache coherency management subsystem
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5] dax: add PROBE_PREFER_ASYNCHRONOUS to all the dax
+ drivers
+To: Michal Clapinski <mclapinski@google.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org
+References: <20251024210518.2126504-1-mclapinski@google.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20251024210518.2126504-1-mclapinski@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 23, 2025, at 18:40, Jonathan Cameron wrote:
-> On Wed, 22 Oct 2025 21:47:21 +0100 Conor Dooley <conor@kernel.org> wrote:
 
-> On CXL discord, some reasonable doubts were expressed about justifying
-> this to Linus via CXL. Which is fair given tiny overlap from a 'where
-> the code is' point of view and also it seems I went too far in trying to
-> avoid people interpreting this as affecting x86 systems (see earlier
-> versions for how my badly scoped cover letter distracted from what this
-> was doing) and focus in on what was specifically being enabled rather
-> than the generic bit. Hence it mentions arm64 only right now and right
-> at the top of the cover letter.
->
-> Given it's not Arm architecture (hence just one Kconfig line in Arm
-> specific code) I guess alternative is back to drivers/cache and Conor which
-> I see goes via SoC (so +CC SoC tree maintainers).
 
-I tried to understand the driver from the cover letter and the
-implementation, but I think I still have some fundamental questions
-about which parts of the system require this for coherency with
-one another.
+On 10/24/25 2:05 PM, Michal Clapinski wrote:
+> Comments in linux/device/driver.h say that the goal is to do async
+> probing on all devices. The current behavior unnecessarily slows down
+> the boot by synchronously probing dax devices, so let's change that.
+> 
+> For thousands of devices, this change saves >1s of boot time.
+> 
+> Michal Clapinski (5):
+>   dax: add PROBE_PREFER_ASYNCHRONOUS to the pmem driver
+>   dax: add PROBE_PREFER_ASYNCHRONOUS to the kmem driver
+>   dax: add PROBE_PREFER_ASYNCHRONOUS to the cxl driver
+>   dax: add PROBE_PREFER_ASYNCHRONOUS to the hmem drivers
+>   dax: add PROBE_PREFER_ASYNCHRONOUS to the dax device driver
+> 
+>  drivers/dax/cxl.c       | 1 +
+>  drivers/dax/device.c    | 3 +++
+>  drivers/dax/hmem/hmem.c | 2 ++
+>  drivers/dax/kmem.c      | 3 +++
+>  drivers/dax/pmem.c      | 1 +
+>  5 files changed, 10 insertions(+)
+> 
 
-drivers/cache/* is about keeping coherency between DMA masters
-that lack support for snooping the CPU caches on low-end SoCs.
-Does the new code fit into the same category?
-Or is this about flushing cacheable mappings on CXL devices
-that are mapped as MMIO into the CPU physical address space,
-which sounds like it would be out of scope for drivers/cache?
-
-If it's the first of those two scenarios, we may want to
-generalize the existing riscv_nonstd_cache_ops structure into
-something that can be used across architectures.
-
-     Arnd
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+for the series
