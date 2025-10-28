@@ -1,131 +1,143 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B3219E82A
-	for <linux-cxl@vger.kernel.org>; Tue, 28 Oct 2025 16:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DFE263F32;
+	Tue, 28 Oct 2025 16:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761667534; cv=none; b=gQBBoniqsDBBGxZM0OIiibVdsFQ1aP3lrbp4EFiB2msvM3/FFZ41eKxqRRZ1hodRR5oFVta7cNTakBX8vkhufQkZ2tYcVgS6Jkgjc/MkBmQZVg6AAysRFyip7lzSpWmq8n5mI+6CuIxSgTxgUp8aBnUPFv87jHtU/1Bz5OxAJ/w=
+	t=1761668397; cv=none; b=oXOGiKDJUg2Ws1TXRmYKzkHrDwCX/FkVYsz6DwoZHp4Kvzp6L8MJTmv85OoWu9HK9IEymZ+v9npULJs4A/gyN1gu8nrZfNstuCVGabVJwBES9mpF/G9d+0AqmVR/W5777OlnuYZmt3Bc7sUNoUr4FFLI/6S4SA2y3wWBzn1svjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761667534; c=relaxed/simple;
-	bh=zcX/AgMc7T0SWereGnWnnCMiKC6j791RdkflJmO51rs=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DQ5Wap6yYABXmthLn2cyG8HPa+vGL8ITCREzjtMdeCmosByTN8dbCxLpGei+bNTAlwNSC8qxaLsj2YBpK2JTI+PdcFojczW81FF++5ItRoQi/YgQh221chbDD+gfVB7woXVBtBqrcUnek1Cb/05K9LZXkxAElALuzAFnYkD8KS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cwwCk5j6zz67G6Z;
-	Wed, 29 Oct 2025 00:03:46 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3BCD11402F7;
-	Wed, 29 Oct 2025 00:05:30 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 28 Oct
- 2025 16:05:29 +0000
-Date: Tue, 28 Oct 2025 16:05:27 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>
-Subject: Re: [PATCH v2] cxl: Adjust extended linear cache failure emission
- in cxl_acpi
-Message-ID: <20251028160527.00007723@huawei.com>
-In-Reply-To: <20251003185509.3215900-1-dave.jiang@intel.com>
-References: <20251003185509.3215900-1-dave.jiang@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1761668397; c=relaxed/simple;
+	bh=ql0oHBgcfkHjGUpO+SghiDYcqKotDono1NNct+0rvfg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YYcVHvPLGfxU+BqwFxU16+SkVdFqP2VZfsMppsE8DDyNLITtLqHNIpqGgmWQIcXsLFNuXxw8NEy83hquzzaat5oKKNufIxosQFs4GT5sgfwYnLVNZoYSV4Rdvi9IRj6FabXh1lDONl2yzCNGI5pdLimSpwtbKAu2EJgecn/W9Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MiP0vk8Y; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MiP0vk8Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761668395; x=1793204395;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ql0oHBgcfkHjGUpO+SghiDYcqKotDono1NNct+0rvfg=;
+  b=MiP0vk8Yk6OlWfel7fsvba+m2Tm8UZIc6r01s2MGC+0/OkWVHrN5jRRa
+   3fHYytH9gIR3NF18UjF5Vt/t5LTStzFDjcEWZbPFlPUQlp+lxFxoQfvQI
+   uGtl6vzcVz6fKmfN2wznE5usqB2hCfs96OLOTFB3hclv0+TYLpFIXqrZr
+   FALuKrX39QTM7eJ/5dbD3U3xcyKR7tf7l8/mjt0hsNiS0Xt4Rgp7rQ5+s
+   Uca2Yjpf9xkKx9iNLvOAMeN5mtH8onU3bOwnMwJOQh42bjXlYdMwbUY3m
+   XuBwstFT2q8zMN3VfUSNo8jgFaaFm/c1sumXAtFHWXnKOf/2jCRgPiAna
+   Q==;
+X-CSE-ConnectionGUID: 29TaYD4RRpWm1qtFNa9fqg==
+X-CSE-MsgGUID: GjXZNZQlR4a9S/E7CVuDjQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62979185"
+X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
+   d="scan'208";a="62979185"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 09:19:54 -0700
+X-CSE-ConnectionGUID: UGf4618tTTyI56XQsvU/MQ==
+X-CSE-MsgGUID: AY3nXcO2R7KvdLAQ9FIFXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
+   d="scan'208";a="190528315"
+Received: from soc-pf446t5c.clients.intel.com (HELO [10.24.81.126]) ([10.24.81.126])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 09:19:53 -0700
+Message-ID: <bf4e81e4-70c2-434d-960d-d3b2277ac8ca@linux.intel.com>
+Date: Tue, 28 Oct 2025 09:19:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6 v6] ACPI: extlog: Trace CPER Non-standard Section Body
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ linux-cxl@vger.kernel.org
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+ Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Shuai Xue <xueshuai@linux.alibaba.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Sunil V L <sunilvl@ventanamicro.com>, Xiaofei Tan <tanxiaofei@huawei.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
+ Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, Guo Weikang <guoweikang.kernel@gmail.com>,
+ Xin Li <xin@zytor.com>, Will Deacon <will@kernel.org>,
+ Huang Yiwei <quic_hyiwei@quicinc.com>, Gavin Shan <gshan@redhat.com>,
+ Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Li Ming <ming.li@zohomail.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>,
+ Karolina Stolarek <karolina.stolarek@oracle.com>,
+ Jon Pan-Doh <pandoh@google.com>, Lukas Wunner <lukas@wunner.de>,
+ Shiju Jose <shiju.jose@huawei.com>, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-pci@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+References: <20251023122612.1326748-1-fabio.m.de.francesco@linux.intel.com>
+ <20251023122612.1326748-2-fabio.m.de.francesco@linux.intel.com>
+Content-Language: en-US
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20251023122612.1326748-2-fabio.m.de.francesco@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Fri, 3 Oct 2025 11:55:09 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
 
-> The cxl_acpi module spams "Extended linear cache calculation failed"
-> when the hmat memory target is not found for a node. This is normal
-> when the memory target does not contain extended linear cache
-> attributes. Adjust cxl_acpi_set_cache_size() to just return 0 if error
-> is returned from hmat_get_extended_linear_cache_size(). That is the
-> only error returned from hmat_get_extended_linear_cache_size() as
-> -ENOENT.
+
+On 10/23/2025 5:25 AM, Fabio M. De Francesco wrote:
+> ghes_do_proc() has a catch-all for unknown or unhandled CPER formats
+> (UEFI v2.10 Appendix N 2.3), extlog_print() does not. This gap was
+
+Latest is v2.11, right? Why not use it for reference?
+
+> noticed by a RAS test that injected CXL protocol errors which were
+> notified to extlog_print() via the IOMCA (I/O Machine Check
+> Architecture) mechanism. Bring parity to the extlog_print() path by
+> including a similar log_non_standard_event().
 > 
-> Also remove the check for -EOPNOTSUPP in cxl_setup_extended_linear_cache()
-> since that errno is never returned by cxl_acpi_set_cache_size().
-> 
-> Suggeted-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
-Minor thing below. Either way
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-
-> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 > ---
-> v2:
-> - Rename subject line to reflect new changes.
-> - Further analysis of the code and determined this is the correct
->   change.
-> ---
->  drivers/cxl/acpi.c | 18 ++++++++----------
->  1 file changed, 8 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index d7a5539d07d4..cc4d7bf381d3 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -353,7 +353,7 @@ static int cxl_acpi_set_cache_size(struct cxl_root_decoder *cxlrd)
->  
->  	rc = hmat_get_extended_linear_cache_size(&res, nid, &cache_size);
->  	if (rc)
-> -		return rc;
-> +		return 0;
->  
->  	/*
->  	 * The cache range is expected to be within the CFMWS.
-> @@ -381,15 +381,13 @@ static void cxl_setup_extended_linear_cache(struct cxl_root_decoder *cxlrd)
->  	if (!rc)
->  		return;
-I'd prefer a logic flip so the error is out of line.
 
-	if (rc) {
-		/*
-		 * Failing to support extended linear cache region resize does not
-		 * prevent the region from functioning. Only causes cxl list showing
-		 * incorrect region size.
-		 */
-		dev_warn(cxlrd->cxlsd.cxld.dev.parent,
-			 "Extended linear cache calculation failed rc:%d\n", rc);
- 		cxlrd->cache_size = 0;
-	}
-}
->  
-> -	if (rc != -EOPNOTSUPP) {
-> -		/*
-> -		 * Failing to support extended linear cache region resize does not
-> -		 * prevent the region from functioning. Only causes cxl list showing
-> -		 * incorrect region size.
-> -		 */
-> -		dev_warn(cxlrd->cxlsd.cxld.dev.parent,
-> -			 "Extended linear cache calculation failed rc:%d\n", rc);
-> -	}
-> +	/*
-> +	 * Failing to retrieve extended linear cache region resize does not
-> +	 * prevent the region from functioning. Only causes cxl list showing
-> +	 * incorrect region size.
-> +	 */
-> +	dev_warn(cxlrd->cxlsd.cxld.dev.parent,
-> +		 "Extended linear cache retrieval failed rc:%d\n", rc);
->  
->  	/* Ignoring return code */
->  	cxlrd->cache_size = 0;
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+
+>  drivers/acpi/acpi_extlog.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> base-commit: 46037455cbb748c5e85071c95f2244e81986eb58
+> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+> index f6b9562779de..47d11cb5c912 100644
+> --- a/drivers/acpi/acpi_extlog.c
+> +++ b/drivers/acpi/acpi_extlog.c
+> @@ -183,6 +183,12 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
+>  			if (gdata->error_data_length >= sizeof(*mem))
+>  				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
+>  						       (u8)gdata->error_severity);
+> +		} else {
+> +			void *err = acpi_hest_get_payload(gdata);
+> +
+> +			log_non_standard_event(sec_type, fru_id, fru_text,
+> +					       gdata->error_severity, err,
+> +					       gdata->error_data_length);
+>  		}
+>  	}
+>  
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
