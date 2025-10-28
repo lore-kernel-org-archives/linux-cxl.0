@@ -1,143 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DFE263F32;
-	Tue, 28 Oct 2025 16:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEB527A47F
+	for <linux-cxl@vger.kernel.org>; Tue, 28 Oct 2025 16:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761668397; cv=none; b=oXOGiKDJUg2Ws1TXRmYKzkHrDwCX/FkVYsz6DwoZHp4Kvzp6L8MJTmv85OoWu9HK9IEymZ+v9npULJs4A/gyN1gu8nrZfNstuCVGabVJwBES9mpF/G9d+0AqmVR/W5777OlnuYZmt3Bc7sUNoUr4FFLI/6S4SA2y3wWBzn1svjk=
+	t=1761668470; cv=none; b=cFXrIgSSjO2WszcmOKAB8/bh30Qked0v26ZtyRLfPS26dm1qUknTQLC9lr+RrKWhM9BYWT+JCvcvepN/KAE8huM3lIB0UlNTBJGE/EqFMFaifqL5PgLUDXK8dT1a1TYeLm6G2YDYR2/zYtT8OGqt1fsytISJTthxHrScZG01TXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761668397; c=relaxed/simple;
-	bh=ql0oHBgcfkHjGUpO+SghiDYcqKotDono1NNct+0rvfg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YYcVHvPLGfxU+BqwFxU16+SkVdFqP2VZfsMppsE8DDyNLITtLqHNIpqGgmWQIcXsLFNuXxw8NEy83hquzzaat5oKKNufIxosQFs4GT5sgfwYnLVNZoYSV4Rdvi9IRj6FabXh1lDONl2yzCNGI5pdLimSpwtbKAu2EJgecn/W9Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MiP0vk8Y; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MiP0vk8Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761668395; x=1793204395;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ql0oHBgcfkHjGUpO+SghiDYcqKotDono1NNct+0rvfg=;
-  b=MiP0vk8Yk6OlWfel7fsvba+m2Tm8UZIc6r01s2MGC+0/OkWVHrN5jRRa
-   3fHYytH9gIR3NF18UjF5Vt/t5LTStzFDjcEWZbPFlPUQlp+lxFxoQfvQI
-   uGtl6vzcVz6fKmfN2wznE5usqB2hCfs96OLOTFB3hclv0+TYLpFIXqrZr
-   FALuKrX39QTM7eJ/5dbD3U3xcyKR7tf7l8/mjt0hsNiS0Xt4Rgp7rQ5+s
-   Uca2Yjpf9xkKx9iNLvOAMeN5mtH8onU3bOwnMwJOQh42bjXlYdMwbUY3m
-   XuBwstFT2q8zMN3VfUSNo8jgFaaFm/c1sumXAtFHWXnKOf/2jCRgPiAna
-   Q==;
-X-CSE-ConnectionGUID: 29TaYD4RRpWm1qtFNa9fqg==
-X-CSE-MsgGUID: GjXZNZQlR4a9S/E7CVuDjQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62979185"
-X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
-   d="scan'208";a="62979185"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 09:19:54 -0700
-X-CSE-ConnectionGUID: UGf4618tTTyI56XQsvU/MQ==
-X-CSE-MsgGUID: AY3nXcO2R7KvdLAQ9FIFXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
-   d="scan'208";a="190528315"
-Received: from soc-pf446t5c.clients.intel.com (HELO [10.24.81.126]) ([10.24.81.126])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 09:19:53 -0700
-Message-ID: <bf4e81e4-70c2-434d-960d-d3b2277ac8ca@linux.intel.com>
-Date: Tue, 28 Oct 2025 09:19:43 -0700
+	s=arc-20240116; t=1761668470; c=relaxed/simple;
+	bh=9TPJO+8i0CFLSMK+nIezoxJ+66BJy7wb+dGUCenTsR4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qGhJAwbOzG+73TyvQbeAHjaRue9azmgi0J0yGrImm2uyEMwuHOM2LgiwWCuDERZOggf2OIZiDtuIHJyAyPY3OiwEkKui8SwlgI5TuXVOVi8JV0oK+p+RqjrZ+6HHEzajbAlrCUuqFgMU2EUHu3FporHdOeGhfP7Z7TBpLIOoSmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cwwWF2hxhz6M4hV;
+	Wed, 29 Oct 2025 00:17:13 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id C92391402EB;
+	Wed, 29 Oct 2025 00:21:02 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 28 Oct
+ 2025 16:21:02 +0000
+Date: Tue, 28 Oct 2025 16:21:00 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: <anisa.su887@gmail.com>
+CC: <qemu-devel@nongnu.org>, <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
+	Anisa Su <anisa.su@samsung.com>
+Subject: Re: [QEMU PATCH 1/1] hw/cxl/cxl-mailbox-utils: Enable FMAPI
+ Initiate Add for MHSLD
+Message-ID: <20251028162100.00006fa8@huawei.com>
+In-Reply-To: <20250927002125.860668-2-anisa.su887@gmail.com>
+References: <20250927002125.860668-1-anisa.su887@gmail.com>
+	<20250927002125.860668-2-anisa.su887@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6 v6] ACPI: extlog: Trace CPER Non-standard Section Body
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- linux-cxl@vger.kernel.org
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Shuai Xue <xueshuai@linux.alibaba.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Sunil V L <sunilvl@ventanamicro.com>, Xiaofei Tan <tanxiaofei@huawei.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Huacai Chen <chenhuacai@kernel.org>,
- Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
- Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, Guo Weikang <guoweikang.kernel@gmail.com>,
- Xin Li <xin@zytor.com>, Will Deacon <will@kernel.org>,
- Huang Yiwei <quic_hyiwei@quicinc.com>, Gavin Shan <gshan@redhat.com>,
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Li Ming <ming.li@zohomail.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>,
- Karolina Stolarek <karolina.stolarek@oracle.com>,
- Jon Pan-Doh <pandoh@google.com>, Lukas Wunner <lukas@wunner.de>,
- Shiju Jose <shiju.jose@huawei.com>, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-References: <20251023122612.1326748-1-fabio.m.de.francesco@linux.intel.com>
- <20251023122612.1326748-2-fabio.m.de.francesco@linux.intel.com>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20251023122612.1326748-2-fabio.m.de.francesco@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
+On Sat, 27 Sep 2025 00:18:07 +0000
+anisa.su887@gmail.com wrote:
 
-
-On 10/23/2025 5:25 AM, Fabio M. De Francesco wrote:
-> ghes_do_proc() has a catch-all for unknown or unhandled CPER formats
-> (UEFI v2.10 Appendix N 2.3), extlog_print() does not. This gap was
-
-Latest is v2.11, right? Why not use it for reference?
-
-> noticed by a RAS test that injected CXL protocol errors which were
-> notified to extlog_print() via the IOMCA (I/O Machine Check
-> Architecture) mechanism. Bring parity to the extlog_print() path by
-> including a similar log_non_standard_event().
+> From: Anisa Su <anisa.su@samsung.com>
 > 
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+> Call mhd_reserve_extents in FMAPI Init Add (5604h)to enable sending
+> FMAPI Add command to MHSLD.
+> 
+> Signed-off-by: Anisa Su <anisa.su@samsung.com>
+Hi Anisa,
+
+I've not been quick on this one partly because it sits on top of the MHSLD
+work that I think needs a proper revisit to establish what is an up streamable
+path, but I haven't had time to do that :(
+
+Anyhow in meantime I'll take a look.  I suppose nothing stops me carrying
+this on top.
+
+Just one minor comment inline.
 > ---
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
-
->  drivers/acpi/acpi_extlog.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  hw/cxl/cxl-mailbox-utils.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 > 
-> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> index f6b9562779de..47d11cb5c912 100644
-> --- a/drivers/acpi/acpi_extlog.c
-> +++ b/drivers/acpi/acpi_extlog.c
-> @@ -183,6 +183,12 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
->  			if (gdata->error_data_length >= sizeof(*mem))
->  				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
->  						       (u8)gdata->error_severity);
-> +		} else {
-> +			void *err = acpi_hest_get_payload(gdata);
-> +
-> +			log_non_standard_event(sec_type, fru_id, fru_text,
-> +					       gdata->error_severity, err,
-> +					       gdata->error_data_length);
->  		}
->  	}
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index c5177dfd92..9ac60db4e1 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -24,6 +24,7 @@
+>  #include "system/hostmem.h"
+>  #include "qemu/range.h"
+>  #include "qapi/qapi-types-cxl.h"
+> +#include "hw/cxl/mhsld/mhsld.h"
 >  
+>  #define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
+>  #define CXL_DC_EVENT_LOG_SIZE 8
+> @@ -4163,6 +4164,8 @@ static CXLRetCode cmd_fm_initiate_dc_add(const struct cxl_cmd *cmd,
+>          CXLDCExtentRaw extents[];
+>      } QEMU_PACKED *in = (void *)payload_in;
+>      CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    CXLType3Class *cvc = CXL_TYPE3_GET_CLASS(ct3d);
+> +    CXLDCRegion *region = &ct3d->dc.regions[in->reg_num];
+>      int i, rc;
+>  
+>      switch (in->selection_policy) {
+> @@ -4201,6 +4204,28 @@ static CXLRetCode cmd_fm_initiate_dc_add(const struct cxl_cmd *cmd,
+>                  return rc;
+>              }
+>  
+> +            /* If this is an MHD, attempt to reserve the extents */
+> +            if (cvc->mhd_reserve_extents) {
+> +                g_autofree CxlDynamicCapacityExtentList *records =
+> +                    g_malloc0(in->ext_count * sizeof(*records));
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+I think it makes sense to use g_malloc0_n for these
+
+I changed this whilst applying it locally so it'll be there next time
+I push out a tree.
+
+Thanks,
+
+Jonathan
+
+
+> +                g_autofree CxlDynamicCapacityExtent *dc_exts =
+> +                    g_malloc0(in->ext_count * sizeof(*dc_exts));
+> +
+> +                for (i = 0; i < in->ext_count; i++) {
+> +                    CxlDynamicCapacityExtent *value = &dc_exts[i];
+> +                    value->offset =
+> +                        in->extents[i].start_dpa - region->base;
+> +                    value->len = in->extents[i].len;
+> +
+> +                    records[i].value = value;
+> +                    records[i].next = &records[i + 1];
+> +                }
+> +                records[in->ext_count - 1].next = NULL;
+> +                if (!cvc->mhd_reserve_extents(&ct3d->parent_obj, records, in->reg_num)) {
+> +                    return CXL_MBOX_INVALID_INPUT;
+> +                }
+> +            }
+> +
+>              CXLDCExtentGroup *group = NULL;
+>              for (i = 0; i < in->ext_count; i++) {
+>                  CXLDCExtentRaw *ext = &in->extents[i];
 
