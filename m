@@ -1,447 +1,208 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013013.outbound.protection.outlook.com [40.93.201.13])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3957405A;
-	Tue, 28 Oct 2025 09:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761644911; cv=fail; b=qC8W7YftzBBzcO8pKCykzM2oeh7synWkWqWQjbZ6k1u4WGgyc3fv6Usu7LOQ3IkJt8zTdduqHlQC8swIrQLp0ousocVVL23etQIszA+cC+0AYE3Lgd+6RP1g0GJqH8NR21tYaOXZDmtIwmU2bLEo8QYAMOXeWOnu5h5PyVJUk4g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761644911; c=relaxed/simple;
-	bh=kdAHt1PeqEoTV6Fpt2AAJHvvSKp7YhVHUznoYdDuCIo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YKC2PPPoW7l3c+5wA7/AJqsCwqWPamAXAab0lu93Oq9+NVreV2BTtK7vZe8UVLif7yuZBGbAHI3fK/cFmPLphfZDCZCSEMvLn/YOHaMWb8V+NFpidZ4bEpS97dkrUJR+eBGd6bf8lsbZbQDE5g4TG1DkregNlbeJIOp7fre/ywk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WnXR/QH0; arc=fail smtp.client-ip=40.93.201.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WnXR/QH0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Eu+h+vQT4TxMVVo8+HdgvQ2VQNH90XAKCW9iQEQBFocoR0TGwBdi/IAV3naAM7fbTlfqrCA7ABG6W8M/dqhAPu8ESU6rDiHJgTM+tV0QVvJF7MLTWuOcEexoAGOXCFS5QUHCMxpl2Th1lLQ92KDaC3Kvl9Ys/GP+wOKL03MUpriEqRDkQtj3QNsDfqOC0pWQta8prbogIArcaPXFHzfcJNozDddXQmCSPqNMAqruuDM6O4b/Jr42SChThVDHIPa4mQBtfVwEPA2pQ/WkmcoevR1Oipm11wfdPkdWUq3TXT9xU6B/OUc51ufIwWODT2U9gb+sw4OzBaSa5CAqUHe0gA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GcQTAb8VWyUrSlYXrgmKId2U1z9yACkCP+jVd92sF+Q=;
- b=pbN85Vb3NquIE2jV6O5ZuLke4AIlE/OhIn8kC+4zSxUzWgGQZWUOZjnl7dt+MCMw1LWnaQeIvqteJA12xtpZmaDLbn3bd/vUhHSG6DPLzPREg6/dgNlaAieM4MYncLH56J/NkXwdG3N6lxF1uUnHh6bBkXC/jx4kNixvk3oytIoKx7328aY3PNq9RAFPZiFSwFRjGW5xeRsxIlaAN8ulpmPTbElp5hwC5CUJqX7IH3mdDBQqcA2SjcyW3tuOW+EDlLAfGr+wpBveKTVuKxOfvpaP7hyS1DHL3zauQ4DsXJ6DNuS75lu6Er9FeuBRy7AXR6rQEb+Z40wJzhQRvaAZPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GcQTAb8VWyUrSlYXrgmKId2U1z9yACkCP+jVd92sF+Q=;
- b=WnXR/QH03nZ5AXuVFEu7tfsv8hkV0JbmArqwtzdcnWbemygE7bhK0bGnxHrmzeNX9CbZgXmn0SWFgtQO7MzRx2JuPSqC5mxgqjZs/QUl/FCQEnMga+Dv9ywl/i6O5sshlatln3lbYbrDj6GicLBs029x8sPljppP3Tk+DwqeHBI=
-Received: from BN9PR03CA0203.namprd03.prod.outlook.com (2603:10b6:408:f9::28)
- by DS7PR12MB8371.namprd12.prod.outlook.com (2603:10b6:8:e9::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.18; Tue, 28 Oct
- 2025 09:48:24 +0000
-Received: from BN2PEPF000044A5.namprd04.prod.outlook.com
- (2603:10b6:408:f9:cafe::e9) by BN9PR03CA0203.outlook.office365.com
- (2603:10b6:408:f9::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9253.17 via Frontend Transport; Tue,
- 28 Oct 2025 09:48:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- BN2PEPF000044A5.mail.protection.outlook.com (10.167.243.104) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9275.10 via Frontend Transport; Tue, 28 Oct 2025 09:48:24 +0000
-Received: from rric.localdomain (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 28 Oct
- 2025 02:48:21 -0700
-From: Robert Richter <rrichter@amd.com>
-To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
-	<gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>, Joshua Hahn
-	<joshua.hahnjy@gmail.com>, Robert Richter <rrichter@amd.com>
-Subject: [PATCH] cxl/region: Support multi-level interleaving with smaller granularities for lower levels
-Date: Tue, 28 Oct 2025 10:47:53 +0100
-Message-ID: <20251028094754.72816-1-rrichter@amd.com>
-X-Mailer: git-send-email 2.47.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67E12E6127;
+	Tue, 28 Oct 2025 11:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761651845; cv=none; b=hOzKifNHqcI5LH7OCB++dPID9YM6b3/ew/gW0uAt6XK1vW2CXBlz0i7Zw34ESGHS+Hk4Y1vAMNBoOuZB1DW+XSZFRk9FONOrF2pj3FT8vUxDlfnDo6SRdhpzrX6SEpWXNwrxFphNBd5W9qcC402wLEZxgru+QiZLx5oNjC7RDns=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761651845; c=relaxed/simple;
+	bh=q+opiOP6UNwKZqlNXmeNSX26KIFQVHSi9SmtYMBqeKo=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EctLu5MsuLimvMBT87YdGgIVGda7oUBi5x/5lT+ysjr+QirSaQhQJVR/nzy7MyHv+peMIaKxfBldYtj2tFKRx8mxjshPzBmCKBx8R5EgZiV1M6p7QoaxlbksR7y8Rvpe41ZOMqlxwa4rCEZFsOW2GcMucFbK6QeF9/OuftZ1h+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cwpMp484kz6L4yt;
+	Tue, 28 Oct 2025 19:40:22 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3FC4C1400D3;
+	Tue, 28 Oct 2025 19:43:52 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 28 Oct
+ 2025 11:43:50 +0000
+Date: Tue, 28 Oct 2025 11:43:48 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Arnd Bergmann <arnd@arndb.de>
+CC: Conor Dooley <conor@kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>,
+	<linux-cxl@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	Linux-Arch <linux-arch@vger.kernel.org>, <linux-mm@kvack.org>, Dan Williams
+	<dan.j.williams@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "Peter
+ Zijlstra" <peterz@infradead.org>, James Morse <james.morse@arm.com>, Will
+ Deacon <will@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+	<linuxarm@huawei.com>, Yushan Wang <wangyushan12@huawei.com>, "Lorenzo
+ Pieralisi" <lpieralisi@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dave
+ Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	<x86@kernel.org>, Andy Lutomirski <luto@kernel.org>, "Dave Jiang"
+	<dave.jiang@intel.com>, Krzysztof Kozlowski <krzk@kernel.org>, Alexandre
+ Belloni <alexandre.belloni@bootlin.com>, Linus Walleij
+	<linus.walleij@linaro.org>, Drew Fustini <fustini@kernel.org>
+Subject: Re: [PATCH v4 0/6] Cache coherency management subsystem
+Message-ID: <20251028114348.000006ed@huawei.com>
+In-Reply-To: <fe57097b-1817-4428-9940-477c3f36cafb@app.fastmail.com>
+References: <20251022113349.1711388-1-Jonathan.Cameron@huawei.com>
+	<20251022122241.d2aa0d7864f67112aa7691bf@linux-foundation.org>
+	<20251022-harsh-juggling-2d4778b0649e@spud>
+	<20251023174026.00005b42@huawei.com>
+	<fe57097b-1817-4428-9940-477c3f36cafb@app.fastmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044A5:EE_|DS7PR12MB8371:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4576cb39-0104-45ec-4262-08de16072330
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|7416014|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lkssumm5M9rbZimcLV2x/9EALj6CFKCjo7BFYsD89VX79wyFA/EwsrXfZfPz?=
- =?us-ascii?Q?yycXEYtuPuLexhV/ykGEZU7rEY3EKTuhqLtZowHXpCKdV3JEvqWfG80MCQy0?=
- =?us-ascii?Q?8F4Irerhl0DLOz+M7a05edPQD3QVAP4qC+2+AOep1uJLK4QWB4GVDUtYHHh2?=
- =?us-ascii?Q?5Lqhi9CppWqzmIA3csopR3cwleNtc/pU7HvKLXlTwtyljBdkaJlrA6HjVbfB?=
- =?us-ascii?Q?bxrk3iMIt0RXXN+XH4BixIlygH4L+e7/++2SEcO7qfp9pynXgTYevBPQC35W?=
- =?us-ascii?Q?ftzuZaYH8BusWcNR/O2eiFxt/80UqNUUmuNA3l9wyCe0jv5YHsvvXs5AtQZP?=
- =?us-ascii?Q?PLZC3Oc4b1GuPKMGEya8QIxCqWuou/V8YAiIRVzQ2phKR5SJBndcuq0o1+ox?=
- =?us-ascii?Q?K7OXYg1cQNAFiUxeLV8tHwGidEUkxm8JZY4gR1/BRSu00I70Dc+qmbLjg7xX?=
- =?us-ascii?Q?9sHFeo8NhwryONV/rxewOpe4MrPF7sSrTHjko7skO3nZLIBpIKG/BteqVZ3s?=
- =?us-ascii?Q?Sa5+Jor8HHbVFh9YblAedtQHIg3ah5iKW+CvP+2T87akdn8lxZImdYFTJhF0?=
- =?us-ascii?Q?ZWBVrqb2VcbHGrD/fQ9jSqEeoFYUhFcbn1W02YLtkrkPDlDOxPwUgQr4bjMi?=
- =?us-ascii?Q?GHn6gyE8UnQr0m2+VPrixy9cSgpXVstNNQ2SetDA23YDzOYIpKF9o6i50FAv?=
- =?us-ascii?Q?2QaHr1RQ9KNu6RFEEYZ42Q1AlLTMIjdOz5B8bwGgBJy4k+2z5giMk14PbZ5i?=
- =?us-ascii?Q?91HUR91Om+WjPcXLKhYFI6FEX91uDo7jredrWHeVLTk7KJ/dKke3xe88u9o/?=
- =?us-ascii?Q?1IMqKWG4Eijh5rFbv1hSoY703vFwAjdHuK87vnEgmyb8VABSypBAbLg/y8uh?=
- =?us-ascii?Q?cR9P7hoLllOzopo4wWR5vWwJXZoxcw2QulG9iQ5O12yS+OR+fd0D06GMu3RY?=
- =?us-ascii?Q?AHL+j9r3gyAyIrmaxA4Oo05pwb3e7R108NA5Lcz8rKGelYg7tmB4RQ8ATXtD?=
- =?us-ascii?Q?85FqqxuhOZMWyuE3xVvPmjVULka+PEmryO9Q0ymUhnXjSBJzmvCBNmRc/B/m?=
- =?us-ascii?Q?HS7n9Ht295eOku9wD9Wq67RkeIUIg9YTfNPcRPsqncqG7EtPIb0U6iZ10rcU?=
- =?us-ascii?Q?s18zB/sbcRz+/z9fmHQtnoPpRiwHARhViATGCzWbd5+QuOAmqPE9WB4CSA4E?=
- =?us-ascii?Q?bv0VyAvyVIEytLYKdYcZt1mofiJoqjpO37G3R97W34fk/6ZWG/ucuxEEpoVW?=
- =?us-ascii?Q?0X5Qb9WYRLKNHA+rRgICGZl0W/r/qVARH1esraDB6U9oBLOF3/0OR1EDz5v2?=
- =?us-ascii?Q?m4ogkYd/dVR0/dUIljZDS2CtWOlkd+dRfGwHDJkJw3k/qYWmZ72iSaxk5PGL?=
- =?us-ascii?Q?6+XRgCgE5DmP4O9Z/UYeIBpHuZQPDTKUtt1lQMQUcvC6EPACXz9zWJ3qmCL2?=
- =?us-ascii?Q?zVXjoFS/fN8RrGG+alK9Qx3TyW2pWNTja+7qDZIDj/GkYKcbXrKMCTzMbKOR?=
- =?us-ascii?Q?noJjI2qs3wxMtRD52sKmdpdbUxwPSX5X4+zGtXoOIEMO6NytHGZEu94GN2WA?=
- =?us-ascii?Q?4ITqyvO3dOT7q+ze+iI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(7416014)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2025 09:48:24.3710
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4576cb39-0104-45ec-4262-08de16072330
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044A5.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8371
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-The CXL specification supports multi-level interleaving "as long as
-all the levels use different, but consecutive, HPA bits to select the
-target and no Interleave Set has more than 8 devices" (from 3.2).
+On Mon, 27 Oct 2025 10:44:03 +0100
+"Arnd Bergmann" <arnd@arndb.de> wrote:
 
-Currently the kernel expects that a decoder's "interleave granularity
-is a multiple of @parent_port granularity". That is, the granularity
-of a lower level is bigger than those of the parent and uses the outer
-HPA bits as selector. It works e.g. for the following 8-way config:
+> On Thu, Oct 23, 2025, at 18:40, Jonathan Cameron wrote:
+> > On Wed, 22 Oct 2025 21:47:21 +0100 Conor Dooley <conor@kernel.org> wrote:  
+> 
+> > On CXL discord, some reasonable doubts were expressed about justifying
+> > this to Linus via CXL. Which is fair given tiny overlap from a 'where
+> > the code is' point of view and also it seems I went too far in trying to
+> > avoid people interpreting this as affecting x86 systems (see earlier
+> > versions for how my badly scoped cover letter distracted from what this
+> > was doing) and focus in on what was specifically being enabled rather
+> > than the generic bit. Hence it mentions arm64 only right now and right
+> > at the top of the cover letter.
+> >
+> > Given it's not Arm architecture (hence just one Kconfig line in Arm
+> > specific code) I guess alternative is back to drivers/cache and Conor which
+> > I see goes via SoC (so +CC SoC tree maintainers).  
+> 
+> I tried to understand the driver from the cover letter and the
+> implementation, but I think I still have some fundamental questions
+> about which parts of the system require this for coherency with
+> one another.
+> 
+> drivers/cache/* is about keeping coherency between DMA masters
+> that lack support for snooping the CPU caches on low-end SoCs.
+> Does the new code fit into the same category?
 
- * cross-link (cross-hostbridge config in CFMWS):
-   * 4-way
-   * 256 granularity
-   * Selector: HPA[8:9]
- * sub-link (CXL Host bridge config of the HDM):
-   * 2-way
-   * 1024 granularity
-   * Selector: HPA[10]
+Hi Arnd,
 
-Now, if the outer HPA bits are used for the cross-hostbridge, an 8-way
-config could look like this:
+Sort of if you squint a bit.  The biggest difference is every architecture
+has to do something explicit and often that's different from what it would
+do for local (same host) non coherent DMA. In some cases it's a CPU
+instruction (x86 - which this patch set doesn't touch) in others an MMIO
+interface (all known arm64 implementations today).
 
- * cross-link (cross-hostbridge config in CFMWS):
-   * 4-way
-   * 512 granularity
-   * Selector: HPA[9:10]
- * sub-link (CXL Host bridge config of the HDM):
-   * 2-way
-   * 256 granularity
-   * Selector: HPA[8]
+The closest to your question that this comes is if we do end up using this
+for the multi host non-coherent shared memory case.
 
-The enumeration of decoders for this configuration fails then with
-following error:
+Before I expand on this, note it is very doubtful this use case
+of the patch set here will be realized as the performance will
+be terrible unless the change of ownership is very very rare.
 
- cxl region0: pci0000:00:port1 cxl_port_setup_targets expected iw: 2 ig: 1024 [mem 0x10000000000-0x1ffffffffff flags 0x200]
- cxl region0: pci0000:00:port1 cxl_port_setup_targets got iw: 2 ig: 256 state: enabled 0x10000000000:0x1ffffffffff
- cxl_port endpoint12: failed to attach decoder12.0 to region0: -6
-
-Note that this happens only if firmware is setting up the decoders
-(CXL_REGION_F_AUTO). For userspace region assembly the granularities
-are chosen to increase from root down to the lower levels. That is,
-outer HPA bits are always used for lower interleaving levels.
-
-Rework the implementation to also support multi-level interleaving
-with smaller granularities for lower levels. Determine the interleave
-set of autodetected decoders. Check that it is a subset of the root
-interleave.
-
-The HPA selector bits are extracted for all decoders of the set and
-checked that there is no overlap and bits are consecutive. All
-decoders can be programmed now to use any bit range within the
-region's target selector.
-
-Signed-off-by: Robert Richter <rrichter@amd.com>
----
- drivers/cxl/core/region.c | 201 ++++++++++++++++++++------------------
- 1 file changed, 108 insertions(+), 93 deletions(-)
-
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index b06fee1978ba..79d35def7c79 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1323,57 +1323,119 @@ static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
- 	return 0;
- }
+In that case you could conceive of it being a bit like two symmetric
+DMA masters combined with CPUs. From viewpoint of each host the other one
+is the DMA master that doesn't support snooping.
  
-+static inline u64 get_selector(u64 ways, u64 gran)
-+{
-+	if (!is_power_of_2(ways))
-+		ways /= 3;
-+
-+	if (!is_power_of_2(ways) || !is_power_of_2(gran))
-+		return 0;
-+
-+	return (ways - 1) * gran;
-+}
-+
- static int cxl_port_setup_targets(struct cxl_port *port,
- 				  struct cxl_region *cxlr,
- 				  struct cxl_endpoint_decoder *cxled)
- {
- 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
--	int parent_iw, parent_ig, ig, iw, rc, inc = 0, pos = cxled->pos;
- 	struct cxl_port *parent_port = to_cxl_port(port->dev.parent);
- 	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
- 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
- 	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
- 	struct cxl_region_params *p = &cxlr->params;
- 	struct cxl_decoder *cxld = cxl_rr->decoder;
--	struct cxl_switch_decoder *cxlsd;
-+	struct cxl_switch_decoder *cxlsd = to_cxl_switch_decoder(&cxld->dev);
- 	struct cxl_port *iter = port;
--	u16 eig, peig;
--	u8 eiw, peiw;
-+	int ig, iw = cxl_rr->nr_targets, rc, inc = 0, pos = cxled->pos;
-+	int distance, parent_distance;
-+	u64 selector, cxlr_sel;
-+	u16 eig;
-+	u8 eiw;
- 
- 	/*
- 	 * While root level decoders support x3, x6, x12, switch level
- 	 * decoders only support powers of 2 up to x16.
- 	 */
--	if (!is_power_of_2(cxl_rr->nr_targets)) {
-+	if (!is_power_of_2(iw)) {
- 		dev_dbg(&cxlr->dev, "%s:%s: invalid target count %d\n",
--			dev_name(port->uport_dev), dev_name(&port->dev),
--			cxl_rr->nr_targets);
-+			dev_name(port->uport_dev), dev_name(&port->dev), iw);
- 		return -EINVAL;
- 	}
- 
--	cxlsd = to_cxl_switch_decoder(&cxld->dev);
--	if (cxl_rr->nr_targets_set) {
--		int i, distance = 1;
--		struct cxl_region_ref *cxl_rr_iter;
-+	if (iw > 8 || iw > cxlsd->nr_targets) {
-+		dev_dbg(&cxlr->dev,
-+			"%s:%s:%s: ways: %d overflows targets: %d\n",
-+			dev_name(port->uport_dev), dev_name(&port->dev),
-+			dev_name(&cxld->dev), iw, cxlsd->nr_targets);
-+		return -ENXIO;
-+	}
- 
--		/*
--		 * The "distance" between peer downstream ports represents which
--		 * endpoint positions in the region interleave a given port can
--		 * host.
--		 *
--		 * For example, at the root of a hierarchy the distance is
--		 * always 1 as every index targets a different host-bridge. At
--		 * each subsequent switch level those ports map every Nth region
--		 * position where N is the width of the switch == distance.
--		 */
--		do {
--			cxl_rr_iter = cxl_rr_load(iter, cxlr);
--			distance *= cxl_rr_iter->nr_targets;
--			iter = to_cxl_port(iter->dev.parent);
--		} while (!is_cxl_root(iter));
--		distance *= cxlrd->cxlsd.cxld.interleave_ways;
-+	/*
-+	 * Calculate the effective granularity and ways to determine
-+	 * HPA bits used as target selectors of the interleave set.
-+	 * Use this to check if the root decoder and all subsequent
-+	 * HDM decoders only use bits from that range as selectors.
-+	 *
-+	 * The "distance" between peer downstream ports represents which
-+	 * endpoint positions in the region interleave a given port can
-+	 * host.
-+	 *
-+	 * For example, at the root of a hierarchy the distance is
-+	 * always 1 as every index targets a different host-bridge. At
-+	 * each subsequent switch level those ports map every Nth region
-+	 * position where N is the width of the switch == distance.
-+	 */
-+
-+	/* Start with the root decoders selector and distance. */
-+	selector = get_selector(cxlrd->cxlsd.cxld.interleave_ways,
-+				cxlrd->cxlsd.cxld.interleave_granularity);
-+	distance = cxlrd->cxlsd.cxld.interleave_ways;
-+	if (!is_power_of_2(distance))
-+		distance /= 3;
-+
-+	for (iter = parent_port; !is_cxl_root(iter);
-+	     iter = to_cxl_port(iter->dev.parent)) {
-+		struct cxl_region_ref *cxl_rr_iter = cxl_rr_load(iter, cxlr);
-+		struct cxl_decoder *cxld_iter = cxl_rr_iter->decoder;
-+		u64 cxld_sel;
-+
-+		if (cxld_iter->interleave_ways == 1)
-+			continue;
-+
-+		cxld_sel = get_selector(cxld_iter->interleave_ways,
-+					cxld_iter->interleave_granularity);
-+
-+		if (cxld_sel & selector) {
-+			dev_dbg(&cxlr->dev, "%s:%s: overlapping selectors: %#llx:%#llx\n",
-+				dev_name(iter->uport_dev),
-+				dev_name(&iter->dev), cxld_sel, selector);
-+			return -ENXIO;
-+		}
- 
--		for (i = 0; i < cxl_rr->nr_targets_set; i++)
-+		selector |= cxld_sel;
-+		distance *= cxl_rr_iter->nr_targets;
-+	}
-+
-+	parent_distance = distance;
-+	distance *= iw;
-+
-+	/* The combined selector bits must fit the region selector. */
-+	cxlr_sel = get_selector(p->interleave_ways,
-+				p->interleave_granularity);
-+
-+	if ((cxlr_sel & selector) != selector) {
-+		dev_dbg(&cxlr->dev, "%s:%s: invalid selectors: %#llx:%#llx\n",
-+			dev_name(iter->uport_dev),
-+			dev_name(&iter->dev), cxlr_sel, selector);
-+		return -ENXIO;
-+	}
-+
-+	/* Calculate remaining selector bits available for use. */
-+	selector = cxlr_sel & ~selector;
-+
-+	if (cxl_rr->nr_targets_set) {
-+		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
- 			if (ep->dport == cxlsd->target[i]) {
- 				rc = check_last_peer(cxled, ep, cxl_rr,
- 						     distance);
-@@ -1384,87 +1446,40 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 		goto add_target;
- 	}
- 
--	if (is_cxl_root(parent_port)) {
-+	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
-+		ig = cxld->interleave_granularity;
-+	else
- 		/*
-+		 * Set the interleave granularity with each interleave
-+		 * level to a multiple of it's parent port interleave
-+		 * ways. Beginning with the granularity of the root
-+		 * decoder set to the region granularity (starting
-+		 * with the inner selector bits of the HPA), the
-+		 * granularity is increased with each level. Calculate
-+		 * this using the parent distance and region
-+		 * granularity.
-+		 *
- 		 * Root decoder IG is always set to value in CFMWS which
- 		 * may be different than this region's IG.  We can use the
- 		 * region's IG here since interleave_granularity_store()
- 		 * does not allow interleaved host-bridges with
- 		 * root IG != region IG.
- 		 */
--		parent_ig = p->interleave_granularity;
--		parent_iw = cxlrd->cxlsd.cxld.interleave_ways;
--		/*
--		 * For purposes of address bit routing, use power-of-2 math for
--		 * switch ports.
--		 */
--		if (!is_power_of_2(parent_iw))
--			parent_iw /= 3;
--	} else {
--		struct cxl_region_ref *parent_rr;
--		struct cxl_decoder *parent_cxld;
--
--		parent_rr = cxl_rr_load(parent_port, cxlr);
--		parent_cxld = parent_rr->decoder;
--		parent_ig = parent_cxld->interleave_granularity;
--		parent_iw = parent_cxld->interleave_ways;
--	}
--
--	rc = granularity_to_eig(parent_ig, &peig);
--	if (rc) {
--		dev_dbg(&cxlr->dev, "%s:%s: invalid parent granularity: %d\n",
--			dev_name(parent_port->uport_dev),
--			dev_name(&parent_port->dev), parent_ig);
--		return rc;
--	}
--
--	rc = ways_to_eiw(parent_iw, &peiw);
--	if (rc) {
--		dev_dbg(&cxlr->dev, "%s:%s: invalid parent interleave: %d\n",
--			dev_name(parent_port->uport_dev),
--			dev_name(&parent_port->dev), parent_iw);
--		return rc;
--	}
-+		ig = p->interleave_granularity * parent_distance;
- 
--	iw = cxl_rr->nr_targets;
- 	rc = ways_to_eiw(iw, &eiw);
--	if (rc) {
--		dev_dbg(&cxlr->dev, "%s:%s: invalid port interleave: %d\n",
--			dev_name(port->uport_dev), dev_name(&port->dev), iw);
--		return rc;
--	}
--
--	/*
--	 * Interleave granularity is a multiple of @parent_port granularity.
--	 * Multiplier is the parent port interleave ways.
--	 */
--	rc = granularity_to_eig(parent_ig * parent_iw, &eig);
--	if (rc) {
--		dev_dbg(&cxlr->dev,
--			"%s: invalid granularity calculation (%d * %d)\n",
--			dev_name(&parent_port->dev), parent_ig, parent_iw);
--		return rc;
--	}
--
--	rc = eig_to_granularity(eig, &ig);
--	if (rc) {
--		dev_dbg(&cxlr->dev, "%s:%s: invalid interleave: %d\n",
--			dev_name(port->uport_dev), dev_name(&port->dev),
--			256 << eig);
--		return rc;
--	}
-+	if (!rc)
-+		rc = granularity_to_eig(ig, &eig);
- 
--	if (iw > 8 || iw > cxlsd->nr_targets) {
--		dev_dbg(&cxlr->dev,
--			"%s:%s:%s: ways: %d overflows targets: %d\n",
-+	if (rc || (iw > 1 && ~selector & get_selector(iw, ig))) {
-+		dev_dbg(&cxlr->dev, "%s:%s: invalid port interleave: %d:%d:%#llx\n",
- 			dev_name(port->uport_dev), dev_name(&port->dev),
--			dev_name(&cxld->dev), iw, cxlsd->nr_targets);
-+			iw, ig, selector);
- 		return -ENXIO;
- 	}
- 
- 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
- 		if (cxld->interleave_ways != iw ||
--		    (iw > 1 && cxld->interleave_granularity != ig) ||
- 		    !region_res_match_cxl_range(p, &cxld->hpa_range) ||
- 		    ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)) {
- 			dev_err(&cxlr->dev,
--- 
-2.47.3
+View from Host A... Host B looks like non coherent DMA
+ ________                            ________
+|        |                          |        |
+| Host A |                          | Host B |
+|  CPU   |---------- MEM -----------|  (CPU) |
+| (DMA)  |                          |  DMA   | 
+|________|                          |________|
+
+View from Host B... Host A looks like non coherent DMA
+ ________                            ________
+|        |                          |        |
+| Host A |                          | Host B |
+| (CPU)  |---------- MEM -----------|  CPU   |
+|  DMA   |                          | (DMA)  | 
+|________|                          |________|
+
+In my opinion, new architecture is needed to make fine grained sharing
+without hardware coherency viable. Note that CXL supports fully hardware
+coherent multi host shared memory which resolves that problem but doesn't
+cover the hotplug aspect as the device won't flush out lines it never
+knew the host cached (before it was hot plugged!)
+
+Use case that matters is much closer to flushing because memory hotplug
+occurred - something hosts presumably do, but hide in firmware when it's
+physical DDR hotplug).  Arguably you could conceive of persistent memory
+hotplug as being non coherent DMA done by some host at an earlier time
+that is then exposed to the local host by the hotplug event.   Kind of
+a stretch though.
+
+> Or is this about flushing cacheable mappings on CXL devices
+> that are mapped as MMIO into the CPU physical address space,
+> which sounds like it would be out of scope for drivers/cache?
+
+Not MMIO. The memory in question is mapped as normal RAM - just the same
+as DDR DIMM or similar.
+
+As above, the easiest thing to think of it is as is memory hotplug where
+the memory may contain data (so could think of it as similar to
+hotplugging possibly persistent memory).
+
+Before the memory is there you can be served zeros (or poison) and when
+the memory is plugged in you need to make sure those zeros are not in
+cache.  More complex sequences of removing memory then putting other
+memory back at the same PA are covered as well.
+
+> 
+> If it's the first of those two scenarios, we may want to
+> generalize the existing riscv_nonstd_cache_ops structure into
+> something that can be used across architectures.
+
+There are some strong similarities, hence very similar function prototype
+for wbinv().  We could generalize that infrastructure and a) make it handle
+multiple (heterogeneous) flushing agents b) polling for completion c)
+late arrival of those agents which is a problem for anything that can't
+be made to wait by user space (not a problem for use cases I need this
+for, userspace is always in the loop for policy decisions anyway).
+
+The hard part would be that we'd have to add infrastructure to distinguish
+when the operation should be called and that the level of flush will be
+dependent on that.  An example is the use of the riscv ops in
+arch_invalidate_pmem(). That's used for clearing poison for example.
+
+On x86 the implementation of that is clflush_cache_range() whereas today
+the implementation we are replacing here is the much heavier WBINVD
+(whether we could use clflush is an open question that was discussed in
+earlier versions of this patch set - not in scope here though).
+On arm64 for this case today dcache_inval_poc() is enough as long as
+we are dealing with a single host (as those code paths are). If this
+flush did go far enough I believe a secondary issue is we would have to
+jump through hoops to create a temporary VA to PA mapping to memory
+that doesn't actually exist at some points in time where we flush/
+
+On arm64 at least, the Point of Coherence is currently a single host thing
+so not guaranteed to write far enough for the 'hotplug' of memory case
+(and does not do so on some existing hardware as for fully coherent
+single hosts this is a noop).
+
+Also the DMA use cases of the existing riscv ops are not applicable here
+at all as when DMA is going on we'd better be sure the memory remains
+available and doesn't need any flushes.
+
+Longer term I can see we might want to combine the two approaches or
+(this patch set and the existing riscv specific infrastructure), but
+I have little idea on how to do that with the usecases we have
+visibility of today.  This stuff is all in kernel so I'm not that worried
+about getting everything perfect first time.
+
+The drivers/cache placement was mostly about finding a place where
+we'd naturally see exactly the sort of overlap you've drawn attention to.
+
+Thanks,
+
+Jonathan
+
+> 
+>      Arnd
 
