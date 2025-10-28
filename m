@@ -1,64 +1,54 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA25F23AB88;
-	Tue, 28 Oct 2025 14:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BE8339B5E;
+	Tue, 28 Oct 2025 14:49:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761662905; cv=none; b=Gq7zUdqg8oXohVlPWpgdY0eKrCOjkIMAVEQfu6LgKvbKdueeWh2Vh4e1MyJYKTlKgCqhJgz6XiQ+JMN7eJS9rOi7BkxD1976JdX5nHDFvhFC6N344RjRH1jgZHF94GlWX3+v3F5VxUK96hz76IqNnXbiLQDI9+cqcqKJ83PL6aA=
+	t=1761662993; cv=none; b=SS5BnHrUiPs26synk0GYX/Pzhz9gDSY5zVwwaXUQ4paGQa6vY7Z5hPg7ic7L5tcX1ZT8C5V+N8WMIUcwH/xwmSfpffJU2UdKD35ywl8veXLOx5zAnyr6/rGVC5biYIA6p4vkkonsxoE2wOW6ZQwpBoKoPW34IrUkDOftX+SvLMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761662905; c=relaxed/simple;
-	bh=u5tgenMRvxilh77m58rybstaqB+YjCZ+fqhpsL+7yLw=;
+	s=arc-20240116; t=1761662993; c=relaxed/simple;
+	bh=I4DvcByX8SqwCnhS01VKz1RzKekob4iCVxHc1g6GETQ=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mq9gL0wZWsTB9kTKImcCnK73lnSJTd6ZCZCt9Ausw1czj50z0Ydeqod8MY4okFcuielxAYdVJEUOUKKsyXb84XOQzR/33YLljUQYNKimBQJdPDe/77almzqnyIhhoBjqpEvihSaXSk7JOxfJ87S7OoZEcUzthknCtf1RSs+8uX4=
+	 MIME-Version:Content-Type; b=CR7AeYF9moF/FCIWucGqRmgrCw7ItSMSjrWergCgzSfJniW9eA063vdrSB5l5UTWyMm1m5AE90PHsrnTtVk/bGakt3Ai3GF6Q0e5oh+RHqXDdeT1ahZQqyQ79fLeXoL9IIUUFNY7p7Lw4j4f2xAbqr8QWpqj/9x82IWcL43mZUs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cwtSH23J8z6M4hV;
-	Tue, 28 Oct 2025 22:44:31 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cwtVM24X9z6HJc8;
+	Tue, 28 Oct 2025 22:46:19 +0800 (CST)
 Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9749D1400D3;
-	Tue, 28 Oct 2025 22:48:20 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 540E01400C8;
+	Tue, 28 Oct 2025 22:49:49 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
  (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 28 Oct
- 2025 14:48:18 +0000
-Date: Tue, 28 Oct 2025 14:48:16 +0000
+ 2025 14:49:48 +0000
+Date: Tue, 28 Oct 2025 14:49:46 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-CC: <linux-cxl@vger.kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
-	"Len Brown" <lenb@kernel.org>, Tony Luck <tony.luck@intel.com>, Borislav
- Petkov <bp@alien8.de>, Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho
- Chehab <mchehab@kernel.org>, Shuai Xue <xueshuai@linux.alibaba.com>,
-	"Davidlohr Bueso" <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
-	"Alison Schofield" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	Sunil V L <sunilvl@ventanamicro.com>, Xiaofei Tan <tanxiaofei@huawei.com>,
-	Mario Limonciello <mario.limonciello@amd.com>, Huacai Chen
-	<chenhuacai@kernel.org>, Heinrich Schuchardt
+To: kernel test robot <lkp@intel.com>
+CC: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	<linux-cxl@vger.kernel.org>, <llvm@lists.linux.dev>,
+	<oe-kbuild-all@lists.linux.dev>, "Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Tony Luck <tony.luck@intel.com>, "Borislav
+ Petkov" <bp@alien8.de>, Hanjun Guo <guohanjun@huawei.com>, "Mauro Carvalho
+ Chehab" <mchehab@kernel.org>, <linux-media@vger.kernel.org>, Shuai Xue
+	<xueshuai@linux.alibaba.com>, Davidlohr Bueso <dave@stgolabs.net>, "Dave
+ Jiang" <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, "Ira Weiny" <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, Mahesh J Salgaonkar
+	<mahesh@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas
+	<helgaas@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, Xiaofei Tan
+	<tanxiaofei@huawei.com>, "Mario Limonciello" <mario.limonciello@amd.com>,
+	Huacai Chen <chenhuacai@kernel.org>, Heinrich Schuchardt
 	<heinrich.schuchardt@canonical.com>, Arnd Bergmann <arnd@arndb.de>, "Peter
  Zijlstra" <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, "Guo
- Weikang" <guoweikang.kernel@gmail.com>, Xin Li <xin@zytor.com>, Will Deacon
-	<will@kernel.org>, Huang Yiwei <quic_hyiwei@quicinc.com>, Gavin Shan
-	<gshan@redhat.com>, Smita Koralahalli
-	<Smita.KoralahalliChannabasappa@amd.com>, Uwe =?ISO-8859-1?Q?Kleine-K=F6n?=
- =?ISO-8859-1?Q?ig?= <u.kleine-koenig@baylibre.com>, Li Ming
-	<ming.li@zohomail.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>, Kuppuswamy Sathyanarayanan
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, Karolina Stolarek
-	<karolina.stolarek@oracle.com>, Jon Pan-Doh <pandoh@google.com>, "Lukas
- Wunner" <lukas@wunner.de>, Shiju Jose <shiju.jose@huawei.com>,
-	<linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 2/6 v6] ACPI: extlog: Trace CPER PCI Express Error
- Section
-Message-ID: <20251028144816.000018a3@huawei.com>
-In-Reply-To: <20251023122612.1326748-3-fabio.m.de.francesco@linux.intel.com>
-References: <20251023122612.1326748-1-fabio.m.de.francesco@linux.intel.com>
-	<20251023122612.1326748-3-fabio.m.de.francesco@linux.intel.com>
+ Weikang" <guoweikang.kernel@gmail.com>, Xin Li <xin@zytor.com>
+Subject: Re: [PATCH 3/6 v6] acpi/ghes: Make GHES select ACPI_APEI_PCIEAER
+Message-ID: <20251028144946.000063c4@huawei.com>
+In-Reply-To: <202510232204.7aYBpl7h-lkp@intel.com>
+References: <20251023122612.1326748-4-fabio.m.de.francesco@linux.intel.com>
+	<202510232204.7aYBpl7h-lkp@intel.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -71,64 +61,46 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
  dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Thu, 23 Oct 2025 14:25:37 +0200
-"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com> wrote:
+On Thu, 23 Oct 2025 22:56:02 +0800
+kernel test robot <lkp@intel.com> wrote:
 
-> I/O Machine Check Architecture events may signal failing PCIe components
-> or links. The AER event contains details on what was happening on the wire
-> when the error was signaled.
+> Hi Fabio,
 > 
-> Trace the CPER PCIe Error section (UEFI v2.10, Appendix N.2.7) reported
-> by the I/O MCA.
+> kernel test robot noticed the following build errors:
 > 
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-Hi Fabio,
-
-Was taking a fresh look at this as a precursor to looking at later
-patches in series and spotted something that I'm doubtful about.
-
-> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> index 47d11cb5c912..cefe8d2d8aff 100644
-> --- a/drivers/acpi/acpi_extlog.c
-> +++ b/drivers/acpi/acpi_extlog.c
-> @@ -132,6 +132,34 @@ static int print_extlog_rcd(const char *pfx,
->  	return 1;
->  }
->  
-> +static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
-> +			      int severity)
-> +{
-> +	struct aer_capability_regs *aer;
-> +	struct pci_dev *pdev;
-> +	unsigned int devfn;
-> +	unsigned int bus;
-> +	int aer_severity;
-> +	int domain;
-> +
-> +	if (!(pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID ||
-> +	      pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO))
-
-Looking again, I'm not sure this is as intended.  Is the aim to
-allow for either one of these two?  Or check that that are both present? 
-That is should it be !(A && B) rather than !(A || B)?
-
-
-> +		return;
-> +
-> +	aer_severity = cper_severity_to_aer(severity);
-> +	aer = (struct aer_capability_regs *)pcie_err->aer_info;
-> +	domain = pcie_err->device_id.segment;
-> +	bus = pcie_err->device_id.bus;
-> +	devfn = PCI_DEVFN(pcie_err->device_id.device,
-> +			  pcie_err->device_id.function);
-> +	pdev = pci_get_domain_bus_and_slot(domain, bus, devfn);
-> +	if (!pdev)
-> +		return;
-> +
-> +	pci_print_aer(pdev, aer_severity, aer);
-> +	pci_dev_put(pdev);
-> +}
+> [auto build test ERROR on 552c50713f273b494ac6c77052032a49bc9255e2]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Fabio-M-De-Francesco/ACPI-extlog-Trace-CPER-Non-standard-Section-Body/20251023-202846
+> base:   552c50713f273b494ac6c77052032a49bc9255e2
+> patch link:    https://lore.kernel.org/r/20251023122612.1326748-4-fabio.m.de.francesco%40linux.intel.com
+> patch subject: [PATCH 3/6 v6] acpi/ghes: Make GHES select ACPI_APEI_PCIEAER
+> config: x86_64-buildonly-randconfig-001-20251023 (https://download.01.org/0day-ci/archive/20251023/202510232204.7aYBpl7h-lkp@intel.com/config)
+> compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251023/202510232204.7aYBpl7h-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202510232204.7aYBpl7h-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> ld.lld: error: undefined symbol: cper_severity_to_aer  
+>    >>> referenced by ghes.c:626 (drivers/acpi/apei/ghes.c:626)
+>    >>>               drivers/acpi/apei/ghes.o:(ghes_do_proc) in archive vmlinux.a
+>    >>> referenced by ghes.c:753 (drivers/acpi/apei/ghes.c:753)
+>    >>>               drivers/acpi/apei/ghes.o:(ghes_do_proc) in archive vmlinux.a  
+> --
+> >> ld.lld: error: undefined symbol: aer_recover_queue  
+>    >>> referenced by ghes.c:642 (drivers/acpi/apei/ghes.c:642)
+>    >>>               drivers/acpi/apei/ghes.o:(ghes_do_proc) in archive vmlinux.a  
+> 
+> Kconfig warnings: (for reference only)
+>    WARNING: unmet direct dependencies detected for ACPI_APEI_PCIEAER
+>    Depends on [n]: ACPI [=y] && ACPI_APEI [=y] && PCIEAER [=n]
+>    Selected by [y]:
+>    - ACPI_APEI_GHES [=y] && ACPI [=y] && ACPI_APEI [=y]
+> 
+Ah. The old classic of selects not being recursive.  You'll need to select
+PCIEAER as well I think.
 
