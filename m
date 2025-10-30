@@ -1,324 +1,320 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28DF32AAD1
-	for <linux-cxl@vger.kernel.org>; Thu, 30 Oct 2025 03:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761793663; cv=fail; b=CLYqCJb0wv5pGuebQHH8c4gHsc9VzYcdRHeBf5dc91e+Ua5zIJRQAOaDAGLfHpt+j5+Qg+ljMzcVdFIdqdnzjYYLdCMjcJBp1tS+A/Rloh8hRbltHZTwuFzitbcPpNIHbD1+Gspuq2b/6CRZkvnK3u3Kq0aPSBVBGES+8MwglBc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761793663; c=relaxed/simple;
-	bh=wTzmPepg3Y/JcZ+j1mEgOtaXf1auZN4Z/gm7m2xD9OU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PQU/m6wCkf98tpm+NLdJCQ+IsPvjtAr5yXXIJOZUtg22ppnbK/Xd9nPiQWRdH4y1zLmgYH068zb7R4zsW91SSd7nhc5utuHRDGcABRCXsyHqhd5c6/RtiBlyRdgfT3rDRQoBBVuCriq+Nt3v5yhU2Wh3Mu++GPjjKczN9eAzpYg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L9lldeU7; arc=fail smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8BB29CE1
+	for <linux-cxl@vger.kernel.org>; Thu, 30 Oct 2025 03:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761794131; cv=none; b=KQzM/MMMF4Uz3i6j/VNLELSHE5gkXnoXAzIsGqexK0Ix9uBJNqgsi0HKgY72A1M5O7nwJW9Wgyg4uciDkcB/hEq/170RWTvXcri/gidfACZeU6ZY2P0ukOnZIYoylpYYZXe2Obp4Z8xNMSwH3K0axX4XX1Wm/Sd4ixbI6s5GVAc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761794131; c=relaxed/simple;
+	bh=uQep6K6qmUatOGAX/IrH6Jij6Sm682+ia9iDCM1qk0M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rFx6k6jncs+OVytkrxzcj1p7yntiPhg9+upYd2SIZ4bo0R0579BPt4OI+7RduwNIbk8Ez5q1YdRiXtGpMGQbZ5fChycRmIOXavxqonv/zpE+L9XYmpCWLa4Th5JlQfh1U66GA0KHyHvYykZjd2CrZczmQDTkz+h0kjI1n1TAJlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fmaUEKz7; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L9lldeU7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fmaUEKz7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761793661; x=1793329661;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=wTzmPepg3Y/JcZ+j1mEgOtaXf1auZN4Z/gm7m2xD9OU=;
-  b=L9lldeU7/JilcQ5fezrWijKCsH8QJZTDwGO9ad+zxyoA4mpzfgzc6x8s
-   rUsIyqfhMQKSENdOq/oxfkfx2wLYcL61XsHH7yqfmIbcCM4zWRQi6vEN4
-   Ih/thqUjZwnUlwwS+WJF8Lc84uQdGTNDZnq057hna2sdyIIVaXrNqpfcw
-   r56OGIoHCI7ojfdA4xpDIemfOlNfOcPH7j4dJSASwQ5fdZVdjNr6oRPQL
-   aaqDbIGs6FA0J8I5Tg3RHwdd4muNpcrYR2jd9zhTLVdePKVQ1RMpLpenC
-   I6JYidfTgzoWdv2zXiA6AlTapK7wVPj049f8uX8tzgGRMPpKKq6SzvQX3
-   Q==;
-X-CSE-ConnectionGUID: Akk5RPxYRe+2koCi/5HpNQ==
-X-CSE-MsgGUID: hC1XY4W+Q9e1qwsgRZ2YUg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11597"; a="63964491"
+  t=1761794131; x=1793330131;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uQep6K6qmUatOGAX/IrH6Jij6Sm682+ia9iDCM1qk0M=;
+  b=fmaUEKz76RaswmLNyXN5Lkz4IDOCRuXgh5CB7Bm91YIbi4hdenYdkXuv
+   3a9hO9adRXHWVWu/IheyFIVJgHwHezE6zOr4gbRYsl4uAUBgG4deM/3iG
+   KjSobdenNzTa/rn4fTfCvfDmWH7hYcr0Tp0M+KzQolyc1pV1O32Imod8M
+   Lo5WzQ6fb4eci2hhS+R0GsOGkosenjbnf8CX2eH0xYeLZQA3oWl7mXynP
+   L2c/QI5r154tdBf/a4HL+/UjeQ/5tkn0Hj6c3b2totWbSUuupsfx7pAQQ
+   d+VAwOlFdk6RDBsd01Gy3eTAikcxA6fTb7k7TeSql6hMDBUucSccoiYz9
+   A==;
+X-CSE-ConnectionGUID: BzLbF6gtT7mhNzzH72bdig==
+X-CSE-MsgGUID: dxnuX6oMTB++THMZQa1u7Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11597"; a="67579732"
 X-IronPort-AV: E=Sophos;i="6.19,265,1754982000"; 
-   d="scan'208";a="63964491"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 20:07:41 -0700
-X-CSE-ConnectionGUID: uy0NmU0eS3mG6nAgIBrLhQ==
-X-CSE-MsgGUID: GhSuWSqzRQWHbJ4SdwYO1w==
+   d="scan'208";a="67579732"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 20:15:29 -0700
+X-CSE-ConnectionGUID: fvnhNh7nT9ehWaRGB/culQ==
+X-CSE-MsgGUID: jB7Tv9rbT7eCuCBahqoLwA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,265,1754982000"; 
-   d="scan'208";a="185530492"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 20:07:41 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Wed, 29 Oct 2025 20:07:40 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Wed, 29 Oct 2025 20:07:40 -0700
-Received: from DM5PR21CU001.outbound.protection.outlook.com (52.101.62.53) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Wed, 29 Oct 2025 20:07:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EUa7yegGL/DWoR10mH0rFoz/bzkF6+VDtEKfsJVpbbsnD39K49r2B0eWSgz3ZB58plkmvMQuhpFHiUQpBmt5YcngtGCJ43fQADxvG9n01b10yCRL8oFZ4PrS5LeuRAURkppy5QSEDlzBkmIflYn3ZSq+pEMW+wvHPVLWz+G3ejoNTZ6XEJoWH5+WSM8/RT2nD7CxxfaFGo8SA04Hecg7a5kxSizD9mB+B17p/PON580GAhdtuADGhfMhH4fPNb/tmmNm0d1Y9qTm7RXbHT9AaKPHnuyCNyolGO467xG24xVsHZ/6BnLquTu6ZfngudD+hiyLqa4YgJG6vCYNC/iJCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5ORPp+tD/eXDKy2PHARSDd6Wf2xTo19ZPzlb4fDi1Zs=;
- b=Ji0+y+mvFGEHbKYciMTBNYkfOhIhi6uQ4QOfYCAVTCStQ32Jcgvo58FEk4kLwU6xjLLMoIQhSBy3bnqMi8i6CWsMLi969E+8/40DKHUdFJ46UwmnDnhnlgR82WIHLYyzblICVUzZthPAi7ctkV7RVzWzAWXTxiZrBsQY9tXiISNCDBZBPNyXYTZo3KIlWrC2AU6CZmQxD06r0MtvekifAo+vgzTERdpd8qR0p88qVXSliSAYpodRsxucWlb3pvGtKsUAD+AzX2HQxNkTb5sYKj3W4VflpiUGgkFdP+InctU49RjQ0GZ7TRZaESl+Ql7f1DEE7uI1ecBjV7cjHRQdRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by MW3PR11MB4666.namprd11.prod.outlook.com (2603:10b6:303:56::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.14; Thu, 30 Oct
- 2025 03:07:32 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::46c9:7f71:993d:8aee]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::46c9:7f71:993d:8aee%8]) with mapi id 15.20.9275.013; Thu, 30 Oct 2025
- 03:07:31 +0000
-Date: Wed, 29 Oct 2025 20:07:22 -0700
+   d="scan'208";a="216497293"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.223.174])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 20:15:27 -0700
 From: Alison Schofield <alison.schofield@intel.com>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	"Dan Williams" <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>, Qing
- Huang <qing.huang@intel.com>
-Subject: Re: [PATCH v2] cxl/region: Translate DPA->HPA in unaligned MOD3
- regions
-Message-ID: <aQLWagZsUnLVU6C7@aschofie-mobl2.lan>
-References: <20251014062850.727428-1-alison.schofield@intel.com>
- <20251029120357.000029f1@huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20251029120357.000029f1@huawei.com>
-X-ClientProxiedBy: BYAPR03CA0018.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::31) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org,
+	Qing Huang <qing.huang@intel.com>
+Subject: [PATCH v3] cxl/region: Translate DPA->HPA in unaligned MOD3 regions
+Date: Wed, 29 Oct 2025 20:15:21 -0700
+Message-ID: <20251030031523.1252791-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|MW3PR11MB4666:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1c636d77-e365-4ab5-729e-08de17617720
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?CDMFUu/kYxEFPpofrKlCLjzgTxNddMsfJ/oSagYOtry/yj8I3+t79uWoJeMi?=
- =?us-ascii?Q?Rim7a0ZELoh6E1C9Ljr60OEOWWC4YHtft1hHrnJtf6oHFXzhIg4Zz1lrbWjd?=
- =?us-ascii?Q?GxjItrLgNS6n7RflJBFFCyL7zU09eNVRDOCEO9pYWcgFiL2nnwMPgzxLfwkh?=
- =?us-ascii?Q?vwRiCeNPI/Xru+4OZjf4l7p/titx00qdKdyRXMkmD+xW66Hy2tH3s1/JoNpA?=
- =?us-ascii?Q?m2Z+coBjY7EKzsLDp3d8dQyP4v++Nfd4bM5M2ceYaL/ustoU2G5RapOoDoH1?=
- =?us-ascii?Q?tyWxCQDEXGb3D2T8nRfinmlhyN8WPytod8QCcb30NjzQFb5Z4MHf2TR64DJr?=
- =?us-ascii?Q?DWhO/JAOKdH73Co+urLHufmgw8N5FMiaYxGuS8AXzgC6ZW94vZQJqRczPoGc?=
- =?us-ascii?Q?CCrr8sYGvI+YKN/MiYIJumj1GO6ooojzE1D7duqqYpssz65ztpMy98dULCXi?=
- =?us-ascii?Q?kLVcFTOtQs5TWiy+3I4dfabZFvsjMQySd6i500gKrQd60ozUGH9JgFOsqeRk?=
- =?us-ascii?Q?57USwB3qtEo9RRVZUMk8zJCrfJLhn/vhWDnrvEf0HRcQ0V2FbrLhC/p4wsp9?=
- =?us-ascii?Q?lcmTCj0PaLG0uAnYHQb8LAd3i6wMX0GA0lf23tLLDluFmfVptMf8PeOg2qT6?=
- =?us-ascii?Q?FKTVWOOCB89eN4Kpcg0JKri8Xo8CbU4u+SjP/BinmCOhy1F9hUZLGVEUKX4h?=
- =?us-ascii?Q?ZgVaKSNMFjUJGQ1KvZu7KkfIYR7EBuXKVpE2rq0F5sfseb3epbLiL53WvKc5?=
- =?us-ascii?Q?urU5tYNWuIeCQiV8uBPAO9Kttihvxh9VERGPt6xkkhSFEef5JwPZSbjz3Dw1?=
- =?us-ascii?Q?Hf9iJX45KJ4MQjANASnVxyyfCNiwDB3IiPfjDBRT5UJ6S8ZuOmHIbgd73ijL?=
- =?us-ascii?Q?kzgFB1CjMuSZU54WdkVrSjIUq2IDRBLDvfMxBzdxUEz3yH1tIfIppkmli9CT?=
- =?us-ascii?Q?OnbDiS/B5I03Dz52a4k9gLNNBXYUr8DBXsKItRWrurzYwRhLbw5K07eBLnWm?=
- =?us-ascii?Q?iIA8ICXNzCkDnsu2WitHC7h56zD35sDCPy0vN0MoO1pRB/bCmjva1V6onx02?=
- =?us-ascii?Q?slxb8OUcl3AqFDYrHbDhHoD07NNupUzGH6Yh7lZggBfMzDAR0Iiwwink/tT6?=
- =?us-ascii?Q?gojUqGbeIL9oAi3AOBcpPYjFHMTig+vD98mq2o5puVft6lc9V9Ihxk6W9MDs?=
- =?us-ascii?Q?IOrHWmR3XVkP8RdfTkW9e1fcQN34WPbAxlEF/qdFaSU030HJDPCTIOAhuz+h?=
- =?us-ascii?Q?q0erV+ehu7ZJ+TJUNkDFLTfi0DOBliABCVlVZB9LJpgyrG0zOlgkn0lUnr0M?=
- =?us-ascii?Q?QF5kwpqct40jMUvbcsK5bk90ZSZMddI9C01lejFNFRKJr/9gEcRKeGnvGH1t?=
- =?us-ascii?Q?BWa+H/NTd/AhiHguZXApC2zHNaBEg4yEE+yjlO3z/HDiTtDGXRzvWghqaPb3?=
- =?us-ascii?Q?+FsXkRNaejEqgFNRo1v1rwn0haj5O3ei?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Yfk0g0AHC7siTQb+VNhxTlf5XTbnDBXhjjrInrfb09n7mztATJ9P0WhdueJs?=
- =?us-ascii?Q?9DSgJRXkLVf3fpf42DzxiDCqXofRY5uVHl4llJLE3t37oijW7vbYz8VOLmPy?=
- =?us-ascii?Q?udsRXRLc9ZW8ItCVRHl1t/3SlAy1k3HWcqhLgVqVa0FkK/FT4CTL1/wwWlkE?=
- =?us-ascii?Q?9kAY1TclNlZOBEZTQnvciRTrpJvkA19/NgWxz1Wd8PuLbIaWbvF7r5LwJBzU?=
- =?us-ascii?Q?Qtf/3ZMjp2MmkauDTKnKjx3yIchlHL2l6atZcnwCFnaStnRbWJ9w0eELIPUZ?=
- =?us-ascii?Q?B/WOQcz5tcpKH3lfMVmJbmmPqTZyEizuniJ2frz96U8upYvuJnnwLXFn3+8Q?=
- =?us-ascii?Q?7AkmbCEg7W16+24tzsTWGI3F097dUlYzSWy+cfn+oGu/taXrIdkftMpDW9nj?=
- =?us-ascii?Q?u8cNgI4938elgyFOAfxW4OA+AMYa9R9uPqWZC+r2ju5QTyCPkX0Korim3wyc?=
- =?us-ascii?Q?GjHrFjJFjMqbk55AzkP3cwCgcWZrQHpG4eEHz/5PD9sLSJ/Pncs/1CR121zm?=
- =?us-ascii?Q?v36Vmzrq4MmEGP6WOyCsppNxtI7TDkeAAyTjhUws9v6RqVWklZmaYKxQLa53?=
- =?us-ascii?Q?/6a3Lo6n5cvbEUCWtNarmO74fGM8dcSJ8sGo+1H7IT8qKIwCNOGhzk12RqB5?=
- =?us-ascii?Q?mBUHbaJc5U0LSwcCkOUUX01CzkxKRE+fAsUbGkTIYAg5p77cGeWl8jhUtHaf?=
- =?us-ascii?Q?fyBk91gzFbhBDxxTRtWHFR209RyrNmEZX8Bn6v7RVNFm7KjTF74fu7zeFrC9?=
- =?us-ascii?Q?gRj7qZaTcy9fNb635Cm//Ukx2qRL8vWmHuBWEcYqT9NY9zQQsEQeqzdaITww?=
- =?us-ascii?Q?UK68tWJCGeFcUJzNu9frIVys31T/Ov8L8mMgsyega8HnEtneMkBcw6Jptojv?=
- =?us-ascii?Q?DqZHDqUsmrGWBzylm3x65boBDPET1MYdgCkjk8QDUz0bVH5yVKX2w0HyWhW8?=
- =?us-ascii?Q?8dqTuZ30xBFvSr6eoPbx6ZSNvRRymTrzlhZCjuBdZNqQ5+I9m9rgGGV0AABH?=
- =?us-ascii?Q?qogqmr9S11YIQEgL9f4Gq193i7I+TUUADsA4M3E6mcazpSjFwxbqtBUd3x7k?=
- =?us-ascii?Q?NyzMsoyXvZIyC28HIhg32Cp5AnJ7CCzsoCiNzxwnnwcbxHedR4dJpOJwW3th?=
- =?us-ascii?Q?WKNXugvgf+hjhyFY51u/gp0r0iHGC3PSXIuOPOtHtfe3/Ygw9dQbYXN78J9f?=
- =?us-ascii?Q?/DJiZB326QQ8sD+dvp6T6jMdMVNYleOCFux+OAwmWzOUKt+RW4syVBo7kH+y?=
- =?us-ascii?Q?hcTLUW5KKmvlXwZ6LnoCuGas4E+moDEKAEy74XUV/PeORUoEruBJk0OlLrg5?=
- =?us-ascii?Q?aQ1Gnmzp6dn1Bzl51OK2246C0Rtm3I2JmVGYg1csocmizA+e0eX4VohUEc/W?=
- =?us-ascii?Q?YeUDrdT6mTEyccZa5jvnE3pynRNo+V7+rd3erSdXdIF1oMw8330p4PhksMDJ?=
- =?us-ascii?Q?YVm8pamaZCR0Z0VcmjpXnWMoqf2HKSgSQb8lv98BndEhxdeLUns4RBsSUxAV?=
- =?us-ascii?Q?oiEyq5QSoGNjkOM8C+FeIeBNUn4UNPfFBGLMDvX4aLX70XrxwHWgI5D6ryQv?=
- =?us-ascii?Q?XBHYuKsxm8iZyBSSHQW/X1pYKDM/jS7d7oV2t2wHceNL8GqfxhB2kCIrejf0?=
- =?us-ascii?Q?bA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1c636d77-e365-4ab5-729e-08de17617720
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2025 03:07:31.4678
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wBaUMtfjDcBzZVIwlRBvDNOKNjtpgLGiE+TlBJfvBjSVMYawfWga0kIorkixBN2DXzhneizAkB+I2Lt3caBjps3sHQUSYEN9sxgsI9YFlIk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4666
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 29, 2025 at 12:03:57PM +0000, Jonathan Cameron wrote:
-> On Mon, 13 Oct 2025 23:28:48 -0700
-> Alison Schofield <alison.schofield@intel.com> wrote:
-> 
-> > Suggested-by: Qing Huang <qing.huang@intel.com>
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> Hi Alison,
-> 
-> A few minor inline you might want to tweak a little. 
-> 
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+The CXL driver implementation of DPA->HPA address translation depends
+on a region's starting address always being aligned to Host Bridge
+Interleave Ways * 256MB. The driver follows the decode methods
+defined in the CXL Spec[1] and expanded upon in the CXL Driver Writers
+Guide[2], which describe bit manipulations based on power-of-2
+alignment to translate a DPA to an HPA.
 
-Thanks for the review...
-> 
-> >  drivers/cxl/core/region.c | 147 ++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 140 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index e14c1d305b22..3dc6f0ae9f19 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -2934,13 +2934,124 @@ static bool has_spa_to_hpa(struct cxl_root_decoder *cxlrd)
-> >  	return cxlrd->ops && cxlrd->ops->spa_to_hpa;
-> >  }
-> >  
-> > +static int decode_pos(int reg_ways, int hb_ways, int pos, int *pos_port,
-> > +		      int *pos_hb)
-> > +{
-> > +	int devices_per_hb;
-> > +
-> > +	/*
-> > +	 * Decode for 3-6-12 way interleaves as defined in the CXL
-> > +	 * Spec 3.2 9.13.1.1 Legal Interleaving Configurations.
-> > +	 */
-> > +	switch (hb_ways) {
-> > +	case 3: /* Supports 3-way, 6-way, or 12-way regions */
-> 
-> Does no harm I guess, but the comment seems a little unnecessary given
-> the line that immediately follows!
+With the introduction of MOD3 interleave way support, platforms may
+create regions at starting addresses that are not power-of-2 aligned.
+This allows platforms to avoid gaps in the memory map, but addresses
+within those regions cannot be translated using the existing bit
+manipulation method.
 
-I've removed my excessive narration. Thanks.
+Introduce an unaligned translation method for DPA->HPA that
+reconstructs an HPA by restoring the address first at the port level
+and then at the host bridge level.
 
-> 
-> > +		if (reg_ways != 3 && reg_ways != 6 && reg_ways != 12)
-> > +			return -EINVAL;
-> > +
-> > +		devices_per_hb = reg_ways / 3;
-> You could drop this out of the switch as
-> 
-> 	devices_per_hb = reg_ways / hb_ways;
-> 
-> Then the switch is simply checking for a valid config.
+[1] CXL Spec 3.2 8.2.4.20.13 Implementation Note Device Decoder Logic
+[2] CXL Type 3 Memory Software Guide 1.1 2.13.25 DPA to HPA Translation
 
-Nice, done!
+Suggested-by: Qing Huang <qing.huang@intel.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
 
-> 
-> > +		break;
-> > +
-> > +	case 6: /* Supports 6-way or 12-way regions */
-> > +		if (reg_ways != 6 && reg_ways != 12)
-> > +			return -EINVAL;
-> > +
-> > +		devices_per_hb = reg_ways / 6;
-> > +		break;
-> > +
-> > +	case 12: /* Supports 12-way regions */
-> > +		if (reg_ways != 12)
-> > +			return -EINVAL;
-> > +
-> > +		devices_per_hb = 1;
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +	/* Calculate port and host bridge positions */
-> > +	*pos_port = pos % devices_per_hb;
-> > +	*pos_hb = pos / devices_per_hb;
-> > +
-> > +	return 0;
-> > +}
-> 
-> ...
-> 
-> > +/*
-> > + * unaligned_dpa_to_hpa() translates a DPA to HPA when the region resource
-> > + * start address is not aligned at Host Bridge Interleave Ways * 256MB.
-> > + *
-> > + * Unaligned start addresses only occur with MOD3 interleaves. All power-
-> > + * of-two interleaves are guaranteed aligned.
-> > + */
-> > +static u64 unaligned_dpa_to_hpa(struct cxl_decoder *cxld,
-> > +				struct cxl_region_params *p, int pos, u64 dpa)
-> > +{
-> > +	int ways_port = p->interleave_ways / cxld->interleave_ways;
-> > +	int gran_port = p->interleave_granularity;
-> > +	int gran_hb = cxld->interleave_granularity;
-> > +	int ways_hb = cxld->interleave_ways;
-> > +	int pos_port, pos_hb, gran_shift;
-> > +	u64 shifted, hpa, hpa_port = 0;
-> 
-> Trivial but I really don't like mixing assignment and non assignments
-> in these.  Also can reduce scope of hpa and shifted which is probably a good
-> idea for readability.
+Changes in v3:
+- Add bracketing to avert possibly uninitialized usage (lkp)
+- Remove excessive narration in decode_pos()  (Jonathan)
+- Calculate devices_per_hb only once after switch in decode_pos() (Jonathan)
+- Reduce scope of hpa and shifted in unaligned_dpa_to_hpa() (Jonathan)
+- Unmix non- and assignment declarations in unaligned_dpa_to_hpa()  (Jonathan)
+- Add blank line after return ULLONG_MAX in unaligned_dpa_to_hpa() (Jonathan)
+- s/index/position in for loop in unaligned_dpa_to_hpa() (Jonathan)
+- Initialize bool aligned true
+- Comment that restore_parent() math relies on power-of-2 granularity
+- Tidy-up the restore_parent() comment block
 
-Done.
-Moved shifted and hpa to their smaller scope.
-Un-mixed assigns and non-assign declarations.
+Changes in v2:
+- Add 6 and 12 Host Bridge interleaves to decode_pos() (Jonathan)
+- Limit the unalignment check to MOD3 regions
+- Move the cache_size increment to a single place 
+- Updated some in code comments
+- Rebase on v6.18-rc1 
 
-> 
-> > +
-> > +	/* Decode an endpoint 'pos' into port and host-bridge components */
-> > +	if (decode_pos(p->interleave_ways, ways_hb, pos, &pos_port, &pos_hb)) {
-> > +		dev_dbg(&cxld->dev, "not supported for region ways:%d\n",
-> > +			p->interleave_ways);
-> > +		return ULLONG_MAX;
-> > +	}
-> 
-> Trivial but I'd put a blank line here if you end up respinning.
+Changes in v1 (was RFC):
+- Replace "/" with do_div() to quiet i386 build warning (lkp)
+- Replace 'cxld->interleave_ways' with 'hbiw' for clarity
+- Use div64_u64_rem() for alignment alignment
+- Fix up a printk format specifier (lkp)
+- Update code comments and commit log
+- Rebase on v6.17-rc7
 
-Done
+ drivers/cxl/core/region.c | 148 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 141 insertions(+), 7 deletions(-)
 
-> 
-> > +	/* Restore the port parent address if needed */
-> > +	if (gran_hb != gran_port)
-> > +		hpa_port = restore_parent(dpa, pos_port, gran_port, ways_port);
-> > +	else
-> > +		hpa_port = dpa;
-> > +
-> > +	/*
-> > +	 * Complete the HPA reconstruction by restoring the address as if
-> > +	 * each HB position is a candidate. Test against expected pos_hb
-> > +	 * to confirm match.
-> > +	 */
-> > +	gran_shift = ilog2(gran_hb);
-> > +	for (int index = 0; index < ways_hb; index++) {
-> Why not just i for the index?
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index b06fee1978ba..e5f9adb9e1d6 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2934,13 +2934,124 @@ static bool has_spa_to_hpa(struct cxl_root_decoder *cxlrd)
+ 	return cxlrd->ops && cxlrd->ops->spa_to_hpa;
+ }
+ 
++static int decode_pos(int reg_ways, int hb_ways, int pos, int *pos_port,
++		      int *pos_hb)
++{
++	int devices_per_hb;
++
++	/*
++	 * Decode for 3-6-12 way interleaves as defined in the CXL
++	 * Spec 3.2 9.13.1.1 Legal Interleaving Configurations.
++	 */
++	switch (hb_ways) {
++	case 3:
++		if (reg_ways != 3 && reg_ways != 6 && reg_ways != 12)
++			return -EINVAL;
++		break;
++	case 6:
++		if (reg_ways != 6 && reg_ways != 12)
++			return -EINVAL;
++		break;
++	case 12:
++		if (reg_ways != 12)
++			return -EINVAL;
++		break;
++	default:
++		return -EINVAL;
++	}
++	/* Calculate port and host bridge positions */
++	devices_per_hb = reg_ways / hb_ways;
++	*pos_port = pos % devices_per_hb;
++	*pos_hb = pos / devices_per_hb;
++
++	return 0;
++}
++
++/*
++ * restore_parent() reconstruct the address in parent
++ *
++ * This math, specifically the bitmask creation 'mask = gran - 1' relies
++ * on the CXL Spec requirement that interleave granularity is always a
++ * power of two.
++ *
++ * [mask]		isolate the offset with the granularity
++ * [addr & ~mask]	remove the offset leaving the aligned portion
++ * [* ways]		distribute across all interleave ways
++ * [+ (pos * gran)]	add the positional offset
++ * [+ (addr & mask)]	restore the masked offset
++ */
++static u64 restore_parent(u64 addr, u64 pos, u64 gran, u64 ways)
++{
++	u64 mask = gran - 1;
++
++	return ((addr & ~mask) * ways) + (pos * gran) + (addr & mask);
++}
++
++/*
++ * unaligned_dpa_to_hpa() translates a DPA to HPA when the region resource
++ * start address is not aligned at Host Bridge Interleave Ways * 256MB.
++ *
++ * Unaligned start addresses only occur with MOD3 interleaves. All power-
++ * of-two interleaves are guaranteed aligned.
++ */
++static u64 unaligned_dpa_to_hpa(struct cxl_decoder *cxld,
++				struct cxl_region_params *p, int pos, u64 dpa)
++{
++	int ways_port = p->interleave_ways / cxld->interleave_ways;
++	int gran_port = p->interleave_granularity;
++	int gran_hb = cxld->interleave_granularity;
++	int ways_hb = cxld->interleave_ways;
++	int pos_port, pos_hb, gran_shift;
++	u64 hpa_port = 0;
++
++	/* Decode an endpoint 'pos' into port and host-bridge components */
++	if (decode_pos(p->interleave_ways, ways_hb, pos, &pos_port, &pos_hb)) {
++		dev_dbg(&cxld->dev, "not supported for region ways:%d\n",
++			p->interleave_ways);
++		return ULLONG_MAX;
++	}
++
++	/* Restore the port parent address if needed */
++	if (gran_hb != gran_port)
++		hpa_port = restore_parent(dpa, pos_port, gran_port, ways_port);
++	else
++		hpa_port = dpa;
++
++	/*
++	 * Complete the HPA reconstruction by restoring the address as if
++	 * each HB position is a candidate. Test against expected pos_hb
++	 * to confirm match.
++	 */
++	gran_shift = ilog2(gran_hb);
++	for (int position = 0; position < ways_hb; position++) {
++		u64 shifted, hpa;
++
++		hpa = restore_parent(hpa_port, position, gran_hb, ways_hb);
++		hpa += p->res->start;
++
++		shifted = hpa >> gran_shift;
++		if (do_div(shifted, ways_hb) == pos_hb)
++			return hpa;
++	}
++
++	dev_dbg(&cxld->dev, "fail dpa:%#llx region:%pr pos:%d\n", dpa, p->res,
++		pos);
++	dev_dbg(&cxld->dev, "     port-w/g/p:%d/%d/%d hb-w/g/p:%d/%d/%d\n",
++		ways_port, gran_port, pos_port, ways_hb, gran_hb, pos_hb);
++
++	return ULLONG_MAX;
++}
++
+ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 		   u64 dpa)
+ {
+ 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+ 	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
++	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+ 	struct cxl_region_params *p = &cxlr->params;
+ 	struct cxl_endpoint_decoder *cxled = NULL;
++	int hbiw = cxld->interleave_ways;
++	bool aligned = true;
+ 	u16 eig = 0;
+ 	u8 eiw = 0;
+ 	int pos;
+@@ -2953,6 +3064,29 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 	if (!cxled || cxlmd != cxled_to_memdev(cxled))
+ 		return ULLONG_MAX;
+ 
++	/* Remove the dpa base */
++	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
++
++	/* Unaligned calc: MOD3 interleaves not hbiw * 256MB aligned */
++	if (!is_power_of_2(hbiw)) {
++		u64 rem;
++
++		div64_u64_rem(p->res->start, (u64)hbiw * SZ_256M, &rem);
++		aligned = (rem == 0);
++		if (!aligned) {
++			hpa = unaligned_dpa_to_hpa(cxld, p, cxled->pos,
++						   dpa_offset);
++			if (hpa == ULLONG_MAX)
++				return ULLONG_MAX;
++
++			goto skip_aligned;
++		}
++	}
++
++	/*
++	 * Aligned calc: all power-of-2 interleaves and MOD3 interleaves
++	 * that are aligned at hbiw * 256MB
++	 */
+ 	pos = cxled->pos;
+ 	ways_to_eiw(p->interleave_ways, &eiw);
+ 	granularity_to_eig(p->interleave_granularity, &eig);
+@@ -2967,9 +3101,6 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 	 * 8.2.4.19.13 Implementation Note: Device Decode Logic
+ 	 */
+ 
+-	/* Remove the dpa base */
+-	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
+-
+ 	mask_upper = GENMASK_ULL(51, eig + 8);
+ 
+ 	if (eiw < 8) {
+@@ -2985,7 +3116,10 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 	hpa_offset |= dpa_offset & GENMASK_ULL(eig + 7, 0);
+ 
+ 	/* Apply the hpa_offset to the region base address */
+-	hpa = hpa_offset + p->res->start + p->cache_size;
++	hpa = hpa_offset + p->res->start;
++
++skip_aligned:
++	hpa += p->cache_size;
+ 
+ 	/* Root decoder translation overrides typical modulo decode */
+ 	if (has_hpa_to_spa(cxlrd))
+@@ -2996,9 +3130,9 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
+ 		return ULLONG_MAX;
+ 	}
+-
+-	/* Simple chunk check, by pos & gran, only applies to modulo decodes */
+-	if (!has_hpa_to_spa(cxlrd) && (!cxl_is_hpa_in_chunk(hpa, cxlr, pos)))
++	/* Chunk check applies to aligned modulo decodes only */
++	if (aligned && !has_hpa_to_spa(cxlrd) &&
++	    !cxl_is_hpa_in_chunk(hpa, cxlr, pos))
+ 		return ULLONG_MAX;
+ 
+ 	return hpa;
 
-hmm...I was ready to just switch to i for brevity, but since you
-asked 'why', I stared longer and realized it should be renamed 'pos'.
-That is what it is and that matches the restore_parent() definition.
+base-commit: 211ddde0823f1442e4ad052a2f30f050145ccada
+-- 
+2.37.3
 
-> 
-> 		u64 hpa = restore_parent(hpa_port, index, gran_hb, ways_hb);
-> 
-
-Thanks for reviewing!
---Alison
-
-> 
