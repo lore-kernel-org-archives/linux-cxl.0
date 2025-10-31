@@ -1,123 +1,106 @@
-Received: from bumble.birch.relay.mailchannels.net (bumble.birch.relay.mailchannels.net [23.83.209.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7118628D83E;
-	Fri, 31 Oct 2025 16:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761927434; cv=pass; b=Jm7ue6tAJ7WuV5xcozouk3vwNAD/8fI4rc30cMQBKCcTdUBbrnzS6BlNfMJDaSvdmylttnqoYD5KBInUAJYPtjNcNco8f3FQtUvPKDOwj9LSmhCo1Sk0uv5mOn3ggpMpEKBkWyCnbyoQ2r1mHTXTqtrV3QEW+GjVmTrCEN7KHrM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761927434; c=relaxed/simple;
-	bh=aOOIgokpQl1lsGaXJ+1ZZ7zoYugBTfuX7IxTAgJklds=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WTNM0+EFFo2FrUBrVXNkD2b49uCebmvgCZDR2J+llGtFDOeJYVlCgMFx+Z4CFMcH2WkJqvYCIC95iODSLFRq/7lMiT+j12k745OfesdF/Mb53nmqebYdgxgDN+psGXqdtN9RyU9h1d71tjmKkTps7iA4wOyuCO2FuXMgJ43GskA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=BXsu/tGN; arc=pass smtp.client-ip=23.83.209.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C59951022
+	for <linux-cxl@vger.kernel.org>; Fri, 31 Oct 2025 16:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761929434; cv=none; b=RQpaSBagbqc1JU18tG7FDwUdqqs9XtxT/u69mZr61qggnw6/CtxbYw7JGlZ9UEiwRSKlW25kBHMkalKj2DXZxFOJ3fLgXO17Q1ebon0XG/UUjNkDsFNoGoqrYdVEd01+CCrr4oYNcJH5C1RpyQ80glGH2RS9paCpn3WJX23bu9g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761929434; c=relaxed/simple;
+	bh=CkTc3uqUV4oAWU25vKzur3uX0jgjdH9NEyqWGZX2ofM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gC5ubLma/nhEMNrq9fn3sBkkxnR6NPUrHJUB30cODtzoYj91MLNZe4AFr/p+l7+pBEkThZ+nZJpWj1lxARCfeOKyNXmci6JC77yO+foo5Qn7DmCTBuRKlaaHuqW5hJYwLV3NtWVwCTwJfFH5MHoGcHk2ly7LFhly/hUAdYGnfnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TSS0uqVA; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="BXsu/tGN"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id D2C3E16129B;
-	Fri, 31 Oct 2025 16:17:04 +0000 (UTC)
-Received: from pdx1-sub0-mail-a447 (trex-green-2.trex.outbound.svc.cluster.local [100.124.159.62])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 6C1F7163035;
-	Fri, 31 Oct 2025 16:17:00 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1761927420; a=rsa-sha256;
-	cv=none;
-	b=kmDktWeXk3HyLgMoL1BX+OmcYTQ582r24LoBQXMxabwOarc70lJeX1GMqTcxz4N4d/Euwd
-	jl5I1DnE782CnZupjBg1JNskJqvaHkTzU75I/4kgH85ura1Rly22reGjgk43zk6JW//xMN
-	amzrLDGO5t/YZh3hOP3ugiMHuA2/7ZI1/pfwFSMTPMr2VHYmcwrVc9yK/ny6SoM91gayYr
-	ZNn4O4+OtDL1lFWwoLF1NWnGxodhP/QQGmYrXfPM5qq2MwaP1MpO+4AIrr4B1xwZyBuPBP
-	Y1OY6JEYoIBzkC++Ag535ynbFDZq1jXBECIZ7IOsICIAnUdYjwFo8n8dRC6IwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1761927420;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=aOOIgokpQl1lsGaXJ+1ZZ7zoYugBTfuX7IxTAgJklds=;
-	b=323mOcu5zEOcBEi+2T0P097+6+GK3Wj4S+wdIzdb8hhkKl5TgN29qIicL0d4xDRijhsqm2
-	WJVUm2GZmG0/MIsUJm2xk+VsD62cJMyHmokWxCEtzMRI0qGW1kFav7i4j8VLD1ci2K73s8
-	k/V3iKf7gQpDVk1f5c8oSnbOt4m24tzdChiNUV6WkDG78wKQm9cnhNR1mYAWJpWAU1y5l9
-	5tzRIogyDfh4zFCHrSIVwbdhLfXuTWeUetH0TrBD79w6okXK4GQYrwKCsQnsjjBe82oQhj
-	hg2ouGqqb81VaPhepCuzfJM8HGx+tq8yj8m2qRj6a+ieKoZVXw2WzqGPAMCygw==
-ARC-Authentication-Results: i=1;
-	rspamd-77bb85d8d5-d2rt8;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Thoughtful-Cellar: 4ca3403c074a88a5_1761927420744_975491570
-X-MC-Loop-Signature: 1761927420744:3857003168
-X-MC-Ingress-Time: 1761927420744
-Received: from pdx1-sub0-mail-a447 (pop.dreamhost.com [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.124.159.62 (trex/7.1.3);
-	Fri, 31 Oct 2025 16:17:00 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1761927419;
-	bh=aOOIgokpQl1lsGaXJ+1ZZ7zoYugBTfuX7IxTAgJklds=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=BXsu/tGNbTLf2YW3cIn8BRT6+KVn/GLsvfKI4jIIofvS5rRycZ/lkjPQbhB7yEYv4
-	 s9pPtFqBKxlN6TAYa2/OkKaUPwiOMRdI1sEVAZkolqPivZTL2Rzvm2KmilXCHSqjwy
-	 AWYQxBEpwl9Wl6KHbvXzj0HENe5Lp2r6jeifGZ09ejAj88Geblz2vQk+7ofbqkhrmt
-	 xdxR1wn7nSBFhygKfYD9jAC2Knh/6T/1pK8Xlt3bkdctuD8csU1gu6USWldzRtQVKV
-	 3DmnAX/wuK6ZeJRbhq0lnuYQWnHddEjajOEI/jWnwEVUke/fieW6wZ6KmBpGkXoB/j
-	 MdHU6j5R4kOtQ==
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a447 (Postfix) with ESMTPSA id 4cymMZ6MY2z1wdQ;
-	Fri, 31 Oct 2025 09:16:58 -0700 (PDT)
-Date: Fri, 31 Oct 2025 09:16:56 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Marco Crivellari <marco.crivellari@suse.com>
-Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Michal Hocko <mhocko@suse.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH] cxl/pci: replace use of system_wq with system_percpu_wq
-Message-ID: <20251031161656.porcqeplmln3qzl5@offworld>
-References: <20251030163839.307752-1-marco.crivellari@suse.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TSS0uqVA"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-57bd482dfd2so2731414e87.2
+        for <linux-cxl@vger.kernel.org>; Fri, 31 Oct 2025 09:50:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1761929430; x=1762534230; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HECjj7h2ccCzw3YUDexJtN/DN7YGJtXB8c7kq1Ybt8w=;
+        b=TSS0uqVAgglLe5OBHsXx4Xwp88Tr8auE90Zf6D0y/NTmlq795OW7U+XmEj5ofTI4uV
+         IV+1FUXQZLxixWWsW20yremn4kZrWHgFUHSAJdM1gnGBJS7kTRLB1kve8hHCErFOxu3i
+         IKM6ogLi92qfHYe5+xUmbJONVXGk1F3zPJbjOfALZtYEVOLV5clHr6Si37IMEamSlhb2
+         miMznn7Jp8P9p8H7A+0qbnlOQv9NXJApcgU6564Hfn+8XC9IXp0qk0pGvpI5xSckrsS3
+         pfngGuT1SCbwAvW0MpAIOGMyF1BYafZ19Nc34xJ7HyFztuYbK4f6r4fparsFouCMumbt
+         ndaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761929430; x=1762534230;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HECjj7h2ccCzw3YUDexJtN/DN7YGJtXB8c7kq1Ybt8w=;
+        b=vUvMAaDm/VrUu+XmPVguPTjXZS2gJHkxiwy9TRkiycJu+dYetJ9Bh2H5ZpYvfXz5Ck
+         mmRJRW8ZW7tkASLsPQlRYd3ZBQ68moupHWRZ8zbIY22B198sNqHearBZBfeG8TbupTPK
+         TqoOnN+/Y+YaD3krbjIUutjKc+ZgR1knUzR7DvhvdF56W6gs4DQdHBlE0AuqV6eCEkw5
+         sUtrEEeg6E0A543JkojKWo3WQokVg/UFX9fBVCt051J2rKmMYTzJYGe0yyUR13qKxrP+
+         Ta2CAxkQ5gz3rlxqCk5gzjhTV+qm5/ykvPCBPah4K8lyzwDtkdZCXPqK+S4o8ykAC8Wi
+         dpNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQN6CGrMIZkKaMZIZNgAvbb2kBafCVkf4ZAMdQW0C3k6EFAdjjD3XJ4PlJuAFpO9rGvTy0chp3HOY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhZ6QXaucDYdl5tzYBVc+Kb0wn+JniH43jSI9YORVRaUlWOmRt
+	d8HgpyhQIm+0KRqegWbVlXrSV9xwxWjqZd2tt9/3fGzwEa0F15m3BkMkpS5JbDOwKSlux5ZFNLZ
+	rEX808uVQFUbjsxYtFtQiQ2AyfpHuquvarRaT5nMjHQ==
+X-Gm-Gg: ASbGncv2tTnoo0AVuOJM4osCMpXzshmTWuacL0q2LSFP9KLAggbY+fEcj3vz9+rgGCP
+	jpa+rNrxH1twh/nHtQ4ZRGqvu94jQotxZPoItfT6CZ37bareTovtE/wVh5vJzhlPUt1KMknGILA
+	XpBgG/NMm6jzo+mntcc1iiAy54FJ/HwsWuITFA7Y78rEG7GvLCgj9W4z3KhWqQiYD6c35Fogcrv
+	7mgC/haWtfDdPw8NUatRDISz4zLELv7hnMh0XFW7kV6BgTYaxnsFXrhOcCsmNf1GxxtsOfzlzTn
+	nI+EBtXgyiZ8DzYreQ==
+X-Google-Smtp-Source: AGHT+IHNkQkcVReeJSmIh2XeLdh1w6k92Iktx8NubjHPcdvXGpM8QNJ8YlcYkfCdWLOlRt0JgryZEzVytwgIdb8m41o=
+X-Received: by 2002:a05:6512:3b89:b0:592:fa1b:a952 with SMTP id
+ 2adb3069b0e04-5941d54f494mr1593682e87.49.1761929430131; Fri, 31 Oct 2025
+ 09:50:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20251030163839.307752-1-marco.crivellari@suse.com>
-User-Agent: NeoMutt/20220429
+References: <20251030163839.307752-1-marco.crivellari@suse.com> <6904cc6cb4123_23741210067@iweiny-mobl.notmuch>
+In-Reply-To: <6904cc6cb4123_23741210067@iweiny-mobl.notmuch>
+From: Marco Crivellari <marco.crivellari@suse.com>
+Date: Fri, 31 Oct 2025 17:50:19 +0100
+X-Gm-Features: AWmQ_bls58IN4Jraq6j6gpOUUrBCJuzYEiIJWhONPPwjCeljWuU0Ihmpll3Qlq8
+Message-ID: <CAAofZF48WB10W-wQtUAOghBvBAQEc9bkJqKLir7Qzr4pkhLOWQ@mail.gmail.com>
+Subject: Re: [PATCH] cxl/pci: replace use of system_wq with system_percpu_wq
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Michal Hocko <mhocko@suse.com>, Davidlohr Bueso <dave@stgolabs.net>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 30 Oct 2025, Marco Crivellari wrote:
+On Fri, Oct 31, 2025 at 3:47=E2=80=AFPM Ira Weiny <ira.weiny@intel.com> wro=
+te:
+>[...]
+> A reference to:
+>
+> commit 128ea9f6ccfb6960293ae4212f4f97165e42222d
+> Author: Marco Crivellari <marco.crivellari@suse.com>
+> Date:   Sat Jun 14 15:35:29 2025 +0200
+>
+>     workqueue: Add system_percpu_wq and system_dfl_wq
+>
+> ...
+>
+> Would have been nice just to save reviewers time.  Regardless.
+>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
->Currently if a user enqueue a work item using schedule_delayed_work() the
->used wq is "system_wq" (per-cpu wq) while queue_delayed_work() use
->WORK_CPU_UNBOUND (used when a cpu is not specified). The same applies to
->schedule_work() that is using system_wq and queue_work(), that makes use
->again of WORK_CPU_UNBOUND.
->
->This lack of consistency cannot be addressed without refactoring the API.
->
->system_wq should be the per-cpu workqueue, yet in this name nothing makes
->that clear, so replace system_wq with system_percpu_wq.
->
->The old wq (system_wq) will be kept for a few release cycles.
->
->Suggested-by: Tejun Heo <tj@kernel.org>
->Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
+Many thanks, and sorry for the trouble!
 
-Acked-by: Davidlohr Bueso <dave@stgolabs.net>
+
+--
+
+Marco Crivellari
+
+L3 Support Engineer, Technology & Product
