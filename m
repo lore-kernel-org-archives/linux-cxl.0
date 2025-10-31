@@ -1,166 +1,172 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CFA2192F5
-	for <linux-cxl@vger.kernel.org>; Fri, 31 Oct 2025 08:58:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4050633A024;
+	Fri, 31 Oct 2025 10:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761901114; cv=none; b=AWrfaQtpn+R29KdB8KbefiMJd/C7FzkV4xzv2GCjTl45/Xo5CNevgL+/KKvTQlcKYJuYz1hTTEWRFDDJfWd4IyYghcIYxNiznWVV2xKrO5VxAj4g6t+swX+VOpU/JP67HnuIz1/GlvZXD9KYMhRXubNbWedOjeOZbvczphA019M=
+	t=1761905925; cv=none; b=gV4JLTnXg3lRx+3xzJxZmEkxpPOLPlSAVbUG/oX6hgRrRGUpS9Z5tD9tOyyju3MyszVfsxSOwpVq80AB0KhhG1EpDfRLxRVBqK/vnLEICVci4iAF9u57LiAXP8ulJjhtC0rAdtQCijjTn8l0W+9wBB7IhEcXU8kjnfIALpuetA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761901114; c=relaxed/simple;
-	bh=NYbl8HJcgb3R5SVJ9GXGI/Jq2+mOIag8w0HzHBPHPoY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z6TxicOHNJ8Xzg77OGtut40Kq3+lNQaEi7DTNBq1eP/waDapN6GQRGy5EG9hnoAvzoIY3KliYcApgkhwIK0jfNOJHmxTwn6mgOVgP0V+8jUMvvoBHqlzLmENK7rsKe/68SzKLe1hH/AK06EUM32P/6zZ037+WWt//0Tco7Gtlrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4e896e91368so24299131cf.0
-        for <linux-cxl@vger.kernel.org>; Fri, 31 Oct 2025 01:58:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761901111; x=1762505911;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lQVVX5c2GB+a2QgL3UYe6DKU+bmVaydohzEFkpxq/1c=;
-        b=bKRkatDStaHMQKx+bSG7SQoQVysEH+7vE0OvOAoHoWe48XkXe8e10f2FSHKoye4woJ
-         +165c3PBe+g/eziee6XzPV2n1YDAph3u/wMsbU9LCMBOxTjfSyXyTeD8PDgFI171CxbT
-         IODCLwWxZCeIPCMfPChzISzk5Wrxn57OB7AlBetbluzkB5xJYHami8EU/Hg+Va5fNo2f
-         U1e+bRrn4CM+iE+0xiDLyHgMm7T2J6xeJ0D6P9Knmu3/X1/7EYSP/skYNvCg3j5bBMXR
-         rsiqkxrbkby+qVX2gHpepzblvx9uX9e24e/l45b2JNUYHMhADeTfDBbTnRMs8JT77yz1
-         4YrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXlv7oSMXe+QFZxXyg2uxBmPrPBQqI6V5SS+lE3FYWw8LDbqAs+pnvWXPPGg6DJUYfN6tpxjeRsdbA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUqBwynQSonh2tHR+9Z9cvmX+7k6jr2ofK4YPVnKlcLRoNbE3X
-	jMwSoQAcXj5FBbGeOb1moIjFJcI2+6KU1XAfnDaazifHVvnul6qEybxzkZsxuej2
-X-Gm-Gg: ASbGncs2onp9VozLAEKfMyi00Y3qb3rWdctcRgbVjvgHkOXVm9gEyC4d3xK3iRDyaMC
-	6imBX9BJ2cSgm+wd0LBdqIxLmvJnIM2W39xEjoQLk6bFlacj0T2FoDsi6CPOrkYnLY9ws89G8NH
-	GbXlpYWVkO9Hdq6PfbiqR+2WkILmi7Ff5+JOzFAiycR9yoPZigM+REUmVlVp9p3wSB1nGG+0Lh+
-	1D9pLH0/om1inYUIwFGa5Sc3DkoNCMRO1quEcNkjg3BJEbbDL02OtoBCCUihwQatX6k+PPgcqZG
-	eU4JpZOuX+ocjGkW7APafYZQvNXus9Qj5s4jkD+Mz3+PnsS/NLxoQwM2ju0OwHXLEZRuT3OcWM+
-	cO5/huM0lAlP7YwTDWPLWZEkbeHVtx7TgwXWPUGhPyckuwSd6ajPozGDc6A6O3JmXpBIUUFGU0h
-	TBctbWfMmHqtTtToBf+VO1nw/mno16PqlRc5YqabW5+w==
-X-Google-Smtp-Source: AGHT+IGnvRqs/wVFZOTyveqM7YRagGVzPdU5z3hDtTcQgRzAwAoD9dxi6f+d/wnVoqWigU8SaDDBNw==
-X-Received: by 2002:a05:622a:4898:b0:4ed:2140:7a96 with SMTP id d75a77b69052e-4ed30fff3afmr34451321cf.58.1761901111104;
-        Fri, 31 Oct 2025 01:58:31 -0700 (PDT)
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com. [209.85.160.175])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ed35068cbbsm7701621cf.15.2025.10.31.01.58.30
-        for <linux-cxl@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Oct 2025 01:58:30 -0700 (PDT)
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4e89ac45e61so17715031cf.2
-        for <linux-cxl@vger.kernel.org>; Fri, 31 Oct 2025 01:58:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVM6h2IA6CsC6B+UHlUV0vlX1fisVvx6skd9L6fDfVSW5lKcwBFpqeYWQZvyM3Oj187ZyQ8y6ZcXq4=@vger.kernel.org
-X-Received: by 2002:a05:6102:c13:b0:5d5:f6ae:38c6 with SMTP id
- ada2fe7eead31-5dbb136ecc7mr717064137.37.1761900747573; Fri, 31 Oct 2025
- 01:52:27 -0700 (PDT)
+	s=arc-20240116; t=1761905925; c=relaxed/simple;
+	bh=ScQKh0k+g0sLHY6zzPeiiWF3Mx49kdxeKS7TZIXktok=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oerCHwtGdqIc67mCjnve1K8p0mD5KA8pvsNKmOGmhCLiUCmx7VINWSH/jWfqLngqpeCKJ4J/f866qQMZB0CsQAFaEs0k5XshzvK+8Vb+085yewvUU/7JA431gZX9Yx3eeWOfuO4PLW34Rf9a23RdP/65PoTvrJpwCV4j6u1HUbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iEWEp9JC; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iEWEp9JC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761905923; x=1793441923;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ScQKh0k+g0sLHY6zzPeiiWF3Mx49kdxeKS7TZIXktok=;
+  b=iEWEp9JCYSCTMYEkh6+Zz1rt/s5pZ2VgFxzqpXxW+DRrRf5PNQ7aFvkL
+   CJD25IV0pzyfoFdwYjiecfuek128+Cm918K9zI40cDnoaDdvAbIjHd+VH
+   lByTnzpanD5vZeQ+iDwzf8rKH7k6E7TP0t4AshFxWu6xgBR+RxtWNSKoY
+   qkkCYYOWQLEXyK562JGi39oQHfDMoRo/M8GeCJrOV7VbTEH5UrohnX4PU
+   aH/VBCsvk5kusq7fqqhBsR+E/jlX3nrFtmTYO2v9+cGxjtf8Y712UDXAE
+   olJqMlsOagBzm9bLb/YzPKqX4yEhtnqA9aCYBwpOkQqji7laDm5s5njJM
+   Q==;
+X-CSE-ConnectionGUID: wudIQrEYThGBVwKxzKhXrw==
+X-CSE-MsgGUID: yP4uDmFtTxqbP1YRHiBnAw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="63761119"
+X-IronPort-AV: E=Sophos;i="6.19,269,1754982000"; 
+   d="scan'208";a="63761119"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 03:18:43 -0700
+X-CSE-ConnectionGUID: k25i44LyS2un9PQ5Y6ncag==
+X-CSE-MsgGUID: vJDIqqS8RQmFeEw6PNSdLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,269,1754982000"; 
+   d="scan'208";a="185890295"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.56])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 03:18:30 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Tony Luck <tony.luck@intel.com>,
+ Borislav Petkov <bp@alien8.de>, Hanjun Guo <guohanjun@huawei.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Shuai Xue <xueshuai@linux.alibaba.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Sunil V L <sunilvl@ventanamicro.com>, Xiaofei Tan <tanxiaofei@huawei.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
+ Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, Guo Weikang <guoweikang.kernel@gmail.com>,
+ Xin Li <xin@zytor.com>, Will Deacon <will@kernel.org>,
+ Huang Yiwei <quic_hyiwei@quicinc.com>, Gavin Shan <gshan@redhat.com>,
+ Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>,
+ Li Ming <ming.li@zohomail.com>,
+ Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ Karolina Stolarek <karolina.stolarek@oracle.com>,
+ Jon Pan-Doh <pandoh@google.com>, Lukas Wunner <lukas@wunner.de>,
+ Shiju Jose <shiju.jose@huawei.com>, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/6 v6] ACPI: extlog: Trace CPER PCI Express Error Section
+Date: Fri, 31 Oct 2025 11:18:27 +0100
+Message-ID: <2351924.vFx2qVVIhK@fdefranc-mobl3>
+In-Reply-To: <20251028144816.000018a3@huawei.com>
+References:
+ <20251023122612.1326748-1-fabio.m.de.francesco@linux.intel.com>
+ <20251023122612.1326748-3-fabio.m.de.francesco@linux.intel.com>
+ <20251028144816.000018a3@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251015071420.1173068-1-herve.codina@bootlin.com> <20251015071420.1173068-6-herve.codina@bootlin.com>
-In-Reply-To: <20251015071420.1173068-6-herve.codina@bootlin.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 31 Oct 2025 09:52:16 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVnsWMB24BTFKwggEXKOtqJ96GWZh2Xz+ogocQHM+=+6Q@mail.gmail.com>
-X-Gm-Features: AWmQ_bm5vGlc5XXZic8RvnXrZNNcCRnf0-7M9Km7uh4sqx0Aign1FjKoX2MZmow
-Message-ID: <CAMuHMdVnsWMB24BTFKwggEXKOtqJ96GWZh2Xz+ogocQHM+=+6Q@mail.gmail.com>
-Subject: Re: [PATCH v4 05/29] dt-bindings: bus: Add simple-platform-bus
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Hi Herv=C3=A9,
+On Tuesday, October 28, 2025 3:48:16=E2=80=AFPM Central European Standard T=
+ime Jonathan Cameron wrote:
+> On Thu, 23 Oct 2025 14:25:37 +0200
+> "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com> wrote:
+>=20
+> > I/O Machine Check Architecture events may signal failing PCIe components
+> > or links. The AER event contains details on what was happening on the w=
+ire
+> > when the error was signaled.
+> >=20
+> > Trace the CPER PCIe Error section (UEFI v2.10, Appendix N.2.7) reported
+> > by the I/O MCA.
+> >=20
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
+com>
+> Hi Fabio,
+>=20
+> Was taking a fresh look at this as a precursor to looking at later
+> patches in series and spotted something that I'm doubtful about.
+>=20
+> > diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+> > index 47d11cb5c912..cefe8d2d8aff 100644
+> > --- a/drivers/acpi/acpi_extlog.c
+> > +++ b/drivers/acpi/acpi_extlog.c
+> > @@ -132,6 +132,34 @@ static int print_extlog_rcd(const char *pfx,
+> >  	return 1;
+> >  }
+> > =20
+> > +static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
+> > +			      int severity)
+> > +{
+> > +	struct aer_capability_regs *aer;
+> > +	struct pci_dev *pdev;
+> > +	unsigned int devfn;
+> > +	unsigned int bus;
+> > +	int aer_severity;
+> > +	int domain;
+> > +
+> > +	if (!(pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID ||
+> > +	      pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO))
+>=20
+> Looking again, I'm not sure this is as intended.  Is the aim to
+> allow for either one of these two?  Or check that that are both present?=
+=20
+> That is should it be !(A && B) rather than !(A || B)?
+>=20
+Hi Jonathan,
 
-On Wed, 15 Oct 2025 at 09:17, Herve Codina <herve.codina@bootlin.com> wrote=
-:
-> A Simple Platform Bus is a transparent bus that doesn't need a specific
-> driver to perform operations at bus level.
->
-> Similar to simple-bus, a Simple Platform Bus allows to automatically
-> instantiate devices connected to this bus.
->
-> Those devices are instantiated only by the Simple Platform Bus probe
-> function itself.
->
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+You're right. We need to check that both are true and return if they are=20
+not, then the statement has to be !(A && B).
 
-Thanks for your patch!
+Thank you,
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/simple-platform-bus.yaml
-> @@ -0,0 +1,50 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bus/simple-platform-bus.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Simple Platform Bus
-> +
-> +maintainers:
-> +  - Herve Codina <herve.codina@bootlin.com>
-> +
-> +description: |
-> +  A Simple Platform Bus is a transparent bus that doesn't need a specifi=
-c
-> +  driver to perform operations at bus level.
-> +
-> +  Similar to simple-bus, a Simple Platform Bus allows to automatically
-> +  instantiate devices connected to this bus. Those devices are instantia=
-ted
-> +  only by the Simple Platform Bus probe function itself.
+=46abio=20
+>=20
+> > +		return;
+> > +
+> > +	aer_severity =3D cper_severity_to_aer(severity);
+> > +	aer =3D (struct aer_capability_regs *)pcie_err->aer_info;
+> > +	domain =3D pcie_err->device_id.segment;
+> > +	bus =3D pcie_err->device_id.bus;
+> > +	devfn =3D PCI_DEVFN(pcie_err->device_id.device,
+> > +			  pcie_err->device_id.function);
+> > +	pdev =3D pci_get_domain_bus_and_slot(domain, bus, devfn);
+> > +	if (!pdev)
+> > +		return;
+> > +
+> > +	pci_print_aer(pdev, aer_severity, aer);
+> > +	pci_dev_put(pdev);
+> > +}
+>=20
+>=20
 
-So what are the differences with simple-bus? That its children are
-instantiated "only by the Simple Platform Bus probe function itself"?
-If that is the case, in which other places are simple-bus children
-instantiated?
 
-Do we need properties related to power-management (clocks, power-domains),
-or will we need a "simple-pm-platform-bus" later? ;-)
 
-FTR, I still think we wouldn't have needed the distinction between
-"simple-bus" and "simple-pm-bus"...
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
