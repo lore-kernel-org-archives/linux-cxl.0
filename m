@@ -1,109 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B64830DD01;
-	Fri, 31 Oct 2025 07:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CFA2192F5
+	for <linux-cxl@vger.kernel.org>; Fri, 31 Oct 2025 08:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761894241; cv=none; b=Sl0O4ybVpq12kZJFMgrfEB6d9CC3mUqERq396BnumQI4fDEXr+AdvPkTlhFuymAmLWjFgx0/m1nZN0wXWUA4affR2/T6Z3Kw9U7ID7/tKYxpePsaRQeShE6VFedvYeTU78KtsWdbmeozq0OJLFeL/3nYGuuhVRmiRbSVjw8PR64=
+	t=1761901114; cv=none; b=AWrfaQtpn+R29KdB8KbefiMJd/C7FzkV4xzv2GCjTl45/Xo5CNevgL+/KKvTQlcKYJuYz1hTTEWRFDDJfWd4IyYghcIYxNiznWVV2xKrO5VxAj4g6t+swX+VOpU/JP67HnuIz1/GlvZXD9KYMhRXubNbWedOjeOZbvczphA019M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761894241; c=relaxed/simple;
-	bh=h945/dxqfx1BTBBtl+azCJKqnPUCASnWBKHAoqpp7k4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mH3B9w7GLAKKcA9wHUIwhNUl/jFwSb5seuVLneMRyJCVVVUdGihMINYZH+KfAjerMkFM8HGGyL05Onk+EdHOpMkIVclOcJ2/fnFUWgH/t9wp58OHY+3fIFxMHVAizwEknDsa1CUEijvMflsK0CnYiQH7mlWNfC/3QG6WKWeyVBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TrYRYSTG; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TrYRYSTG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761894239; x=1793430239;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=h945/dxqfx1BTBBtl+azCJKqnPUCASnWBKHAoqpp7k4=;
-  b=TrYRYSTGRZvpG6oPGbX8FKylNBPas0XL6Pk961fRnCOZK0BPgsDWHodK
-   oYtkEPJK8KimAoyca9mLDPOXRhI4+OoYHoX5++wG5evSxZ3PxE4HUP58b
-   pn+GE0Q+JZljhnvOd1GEe6xwZ6loVfHys9JmuEQx7k1odvgA30EPBSxNd
-   UHcC8lrAN1Xkznr5+UZ0FhyZ2ezte7YTEvbUnNJOLjyrGeTyX7p963Llb
-   ps1UmgBt+2W6svcJcIkrOqrHtW4uzZRt/18gvAGBCGDwjv5o34YsVd/IT
-   STl/fnGdzw3G31Q12b4YvMALhVcZPPV6ojefvwbFhOen+6RRzz51tI4cg
-   A==;
-X-CSE-ConnectionGUID: YTvKbh+pQ9eitlMKQpXVrg==
-X-CSE-MsgGUID: F1Veg936RXCtKquYN+n7FA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="75498358"
-X-IronPort-AV: E=Sophos;i="6.19,268,1754982000"; 
-   d="scan'208";a="75498358"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 00:03:54 -0700
-X-CSE-ConnectionGUID: INgihif2ThSVR7SAakLYkw==
-X-CSE-MsgGUID: NNg+GFeoRGSdSWEX7M7t5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,268,1754982000"; 
-   d="scan'208";a="185850502"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by fmviesa007.fm.intel.com with ESMTP; 31 Oct 2025 00:03:49 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vEjAq-000Mqe-11;
-	Fri, 31 Oct 2025 07:03:48 +0000
-Date: Fri, 31 Oct 2025 15:03:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Robert Richter <rrichter@amd.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>
-Cc: oe-kbuild-all@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>,
-	Robert Richter <rrichter@amd.com>
-Subject: Re: [PATCH] cxl/region: Support multi-level interleaving with
- smaller granularities for lower levels
-Message-ID: <202510311413.HdTizWHK-lkp@intel.com>
-References: <20251028094754.72816-1-rrichter@amd.com>
+	s=arc-20240116; t=1761901114; c=relaxed/simple;
+	bh=NYbl8HJcgb3R5SVJ9GXGI/Jq2+mOIag8w0HzHBPHPoY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z6TxicOHNJ8Xzg77OGtut40Kq3+lNQaEi7DTNBq1eP/waDapN6GQRGy5EG9hnoAvzoIY3KliYcApgkhwIK0jfNOJHmxTwn6mgOVgP0V+8jUMvvoBHqlzLmENK7rsKe/68SzKLe1hH/AK06EUM32P/6zZ037+WWt//0Tco7Gtlrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4e896e91368so24299131cf.0
+        for <linux-cxl@vger.kernel.org>; Fri, 31 Oct 2025 01:58:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761901111; x=1762505911;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lQVVX5c2GB+a2QgL3UYe6DKU+bmVaydohzEFkpxq/1c=;
+        b=bKRkatDStaHMQKx+bSG7SQoQVysEH+7vE0OvOAoHoWe48XkXe8e10f2FSHKoye4woJ
+         +165c3PBe+g/eziee6XzPV2n1YDAph3u/wMsbU9LCMBOxTjfSyXyTeD8PDgFI171CxbT
+         IODCLwWxZCeIPCMfPChzISzk5Wrxn57OB7AlBetbluzkB5xJYHami8EU/Hg+Va5fNo2f
+         U1e+bRrn4CM+iE+0xiDLyHgMm7T2J6xeJ0D6P9Knmu3/X1/7EYSP/skYNvCg3j5bBMXR
+         rsiqkxrbkby+qVX2gHpepzblvx9uX9e24e/l45b2JNUYHMhADeTfDBbTnRMs8JT77yz1
+         4YrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXlv7oSMXe+QFZxXyg2uxBmPrPBQqI6V5SS+lE3FYWw8LDbqAs+pnvWXPPGg6DJUYfN6tpxjeRsdbA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUqBwynQSonh2tHR+9Z9cvmX+7k6jr2ofK4YPVnKlcLRoNbE3X
+	jMwSoQAcXj5FBbGeOb1moIjFJcI2+6KU1XAfnDaazifHVvnul6qEybxzkZsxuej2
+X-Gm-Gg: ASbGncs2onp9VozLAEKfMyi00Y3qb3rWdctcRgbVjvgHkOXVm9gEyC4d3xK3iRDyaMC
+	6imBX9BJ2cSgm+wd0LBdqIxLmvJnIM2W39xEjoQLk6bFlacj0T2FoDsi6CPOrkYnLY9ws89G8NH
+	GbXlpYWVkO9Hdq6PfbiqR+2WkILmi7Ff5+JOzFAiycR9yoPZigM+REUmVlVp9p3wSB1nGG+0Lh+
+	1D9pLH0/om1inYUIwFGa5Sc3DkoNCMRO1quEcNkjg3BJEbbDL02OtoBCCUihwQatX6k+PPgcqZG
+	eU4JpZOuX+ocjGkW7APafYZQvNXus9Qj5s4jkD+Mz3+PnsS/NLxoQwM2ju0OwHXLEZRuT3OcWM+
+	cO5/huM0lAlP7YwTDWPLWZEkbeHVtx7TgwXWPUGhPyckuwSd6ajPozGDc6A6O3JmXpBIUUFGU0h
+	TBctbWfMmHqtTtToBf+VO1nw/mno16PqlRc5YqabW5+w==
+X-Google-Smtp-Source: AGHT+IGnvRqs/wVFZOTyveqM7YRagGVzPdU5z3hDtTcQgRzAwAoD9dxi6f+d/wnVoqWigU8SaDDBNw==
+X-Received: by 2002:a05:622a:4898:b0:4ed:2140:7a96 with SMTP id d75a77b69052e-4ed30fff3afmr34451321cf.58.1761901111104;
+        Fri, 31 Oct 2025 01:58:31 -0700 (PDT)
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com. [209.85.160.175])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ed35068cbbsm7701621cf.15.2025.10.31.01.58.30
+        for <linux-cxl@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Oct 2025 01:58:30 -0700 (PDT)
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4e89ac45e61so17715031cf.2
+        for <linux-cxl@vger.kernel.org>; Fri, 31 Oct 2025 01:58:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVM6h2IA6CsC6B+UHlUV0vlX1fisVvx6skd9L6fDfVSW5lKcwBFpqeYWQZvyM3Oj187ZyQ8y6ZcXq4=@vger.kernel.org
+X-Received: by 2002:a05:6102:c13:b0:5d5:f6ae:38c6 with SMTP id
+ ada2fe7eead31-5dbb136ecc7mr717064137.37.1761900747573; Fri, 31 Oct 2025
+ 01:52:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251028094754.72816-1-rrichter@amd.com>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com> <20251015071420.1173068-6-herve.codina@bootlin.com>
+In-Reply-To: <20251015071420.1173068-6-herve.codina@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 31 Oct 2025 09:52:16 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVnsWMB24BTFKwggEXKOtqJ96GWZh2Xz+ogocQHM+=+6Q@mail.gmail.com>
+X-Gm-Features: AWmQ_bm5vGlc5XXZic8RvnXrZNNcCRnf0-7M9Km7uh4sqx0Aign1FjKoX2MZmow
+Message-ID: <CAMuHMdVnsWMB24BTFKwggEXKOtqJ96GWZh2Xz+ogocQHM+=+6Q@mail.gmail.com>
+Subject: Re: [PATCH v4 05/29] dt-bindings: bus: Add simple-platform-bus
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Robert,
+Hi Herv=C3=A9,
 
-kernel test robot noticed the following build errors:
+On Wed, 15 Oct 2025 at 09:17, Herve Codina <herve.codina@bootlin.com> wrote=
+:
+> A Simple Platform Bus is a transparent bus that doesn't need a specific
+> driver to perform operations at bus level.
+>
+> Similar to simple-bus, a Simple Platform Bus allows to automatically
+> instantiate devices connected to this bus.
+>
+> Those devices are instantiated only by the Simple Platform Bus probe
+> function itself.
+>
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 
-[auto build test ERROR on cxl/next]
-[also build test ERROR on linus/master v6.18-rc3 next-20251030]
-[cannot apply to cxl/pending]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks for your patch!
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Robert-Richter/cxl-region-Support-multi-level-interleaving-with-smaller-granularities-for-lower-levels/20251028-175032
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-patch link:    https://lore.kernel.org/r/20251028094754.72816-1-rrichter%40amd.com
-patch subject: [PATCH] cxl/region: Support multi-level interleaving with smaller granularities for lower levels
-config: i386-randconfig-141-20251031 (https://download.01.org/0day-ci/archive/20251031/202510311413.HdTizWHK-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251031/202510311413.HdTizWHK-lkp@intel.com/reproduce)
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/bus/simple-platform-bus.yaml
+> @@ -0,0 +1,50 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bus/simple-platform-bus.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Simple Platform Bus
+> +
+> +maintainers:
+> +  - Herve Codina <herve.codina@bootlin.com>
+> +
+> +description: |
+> +  A Simple Platform Bus is a transparent bus that doesn't need a specifi=
+c
+> +  driver to perform operations at bus level.
+> +
+> +  Similar to simple-bus, a Simple Platform Bus allows to automatically
+> +  instantiate devices connected to this bus. Those devices are instantia=
+ted
+> +  only by the Simple Platform Bus probe function itself.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510311413.HdTizWHK-lkp@intel.com/
+So what are the differences with simple-bus? That its children are
+instantiated "only by the Simple Platform Bus probe function itself"?
+If that is the case, in which other places are simple-bus children
+instantiated?
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+Do we need properties related to power-management (clocks, power-domains),
+or will we need a "simple-pm-platform-bus" later? ;-)
 
->> ERROR: modpost: "__udivdi3" [drivers/cxl/core/cxl_core.ko] undefined!
+FTR, I still think we wouldn't have needed the distinction between
+"simple-bus" and "simple-pm-bus"...
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
