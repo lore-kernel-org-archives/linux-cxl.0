@@ -1,101 +1,157 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB08D223DDA
-	for <linux-cxl@vger.kernel.org>; Fri, 31 Oct 2025 13:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E3734B42C
+	for <linux-cxl@vger.kernel.org>; Fri, 31 Oct 2025 14:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761918162; cv=none; b=jWBHmjZyZRahbPfxWjAabEB4okkQBdt8aPTx43Oi7KCp6QMTWsg69/26VIF69so62rsXEvRO/jK5bAL+7SEE2w0Q2+I8R47pkz8350Xhv8i5oq1T+0ihyQYDWIB4k2A2zuY/STeBK9TOouaghvJom8lomoutkIW5mVZ+iIxTao8=
+	t=1761920996; cv=none; b=GRN4vpXhK3lMmEYLSG5ty94rPQ6sigJGD10dW9vFksNdelyUmy3MQw9GqYX7TltEkc0EmERzFCgJ1wKYjMPEXXM60qjXBLW8amyrIGOI2HK3ewaE2suxWZadlRGAWMVdUw1Au9VzMw9XRU40NNrLb18E8B4Bca5GMAkgdUllVcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761918162; c=relaxed/simple;
-	bh=2EuZPp6iiAor3qSHhoxp+TV6FSvUxVrS44tAjEFif+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dmWFAG1aJ5EzMyOCCM1YByud0+VafiDnve+V7lMemdDT8rhT7jNGCeXXAL2JwCgkel/Pzcdx5D08QCSIycao7qHMSKgAWYF5FGzonol9OOIsHzpwdzJypvx/xlpoPHLB3JpxnHXGtRz4ajlJLacVJkwgSmevXusBDWLSCKlRtr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Xi4h1bhi; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1761920996; c=relaxed/simple;
+	bh=DpRmmnQNFBCQ/QafgwFnqLT9Yw/H1JWWO9tLoLVtAy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hMMjOQbF57fXTy+zbieJu1qFW39orZSv+ayUi8JjyWWcCWxL1SCswVkW9rIRidzut4IYufxLO/gEUNuW/Ax5zw1xQEIbB6pnIwqjnYu6dwUIRFPx4aGzgGQKqU9xRfUqQbrjvaoFBDWQxW4Reo+l9cu3HD/x3FNppGBJ7eJ2tGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=m/llmHWP; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Xi4h1bhi"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-8a074e50b41so283120885a.3
-        for <linux-cxl@vger.kernel.org>; Fri, 31 Oct 2025 06:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1761918160; x=1762522960; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=njpOP5qLjsmm+goYm8hA16YQgCyFH9JxfoHaSdz75Hs=;
-        b=Xi4h1bhi12i0XcniD1+4ZhCWSnwuPBhQV8funvVYqLLKAVBGGO/bsuv3ogUTbZqHUY
-         CdFk3GzHrmFwdZx8WuCSPAm8GFi62NU66G9+bhSyHXAJAJd9OtiJjHZgCtpO5RzJD8zG
-         7ibCAFRhR6TvrFxU1GkzBVirk3/thsyYaAcyid7H8QdXpNCsaHWBgaZIOlshZnBk1Lu1
-         QPVWpl3wpC/MZ1YKj0vD9Bv59wYufKRLkgl/qVBmouzV5dKYDnBJ8K+37f/G2mzdRKHu
-         3JT5rB0ErR5h3gWE8uDPYIcOftaOBZyB+sxPdDf0uNk3skioEq58AmxQatN5w1C9nAio
-         +7jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761918160; x=1762522960;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=njpOP5qLjsmm+goYm8hA16YQgCyFH9JxfoHaSdz75Hs=;
-        b=mvLPUUKEPt3hJWmmFs8XzK0OcYlLeeQ909Gv2WAYwEVBm3n6j1Vhx32IMiEBos/GC8
-         mzsGlXf/f3qGS6BtypiImS/lhvZrYe2OxhTzdvGloEp26JJikihLTYRAW5BN9149M3D+
-         fEJ2Z5hrs3LEGX29K3NBUWtbTJZubSmG27J/xoBy4tqzEGbvQF7wLkYy55QiYuGBIgF8
-         QvyRJgsRUR1ZndOZ9tfS+Nyve9/pvChhQwqqy8u7o2Bt9enfqoX6HojF5aJJnkQkijie
-         AiDewTLRUdbVdDJDxzSwrXIHV4CrYkPOvI469V/v7DgMSI7EtyT+WBKwQ7Ai/p9cGByU
-         FXjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWH38aRndaYqouxkfUYEZZ13duxKFYTk6VLhVJ24ph0PaN9PECaykPiMiDxHzuKpld0w3T/mVqt5OU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvU/IBO0eTuDPY0ldmJwFeaEb3gXnTPcBavUhYfQYoKnvzogKp
-	LAZ+vNeMryMO0sZvovFbyN4py+5GWugLsmN+LfHeXbR5e/HGX6jRe/SHHxLlsKWgdwQ=
-X-Gm-Gg: ASbGncuUw7TxwC85d3HCqTyfy8jxNDeV+QNkq+/0dOrKq60ulFi4BWhWMztDysgcaYT
-	tf/QTtaOUPrEoLaYZdnNbdZg7nb9lWSBGN9/sL03D0fDKfRapXgh8vqHrFDz8PbcyPIpUM24xj6
-	FzeYeaeiLf8Jx8JWAR+NJDn6u2qScjfF2+mePkZFEQTkFysjnvlv1QYValtSuKRtGqdduJ8B85I
-	zaO9MDROaFia54cuhrp0td/5o3qUT5ohTyXe6hC+g5pBebxQjk39cBn0pBp2QPeSQl1YTCP1dXS
-	F5aDayWYmPvODAJXhTO3zcUkRczISiXMoEeCaCDAg5AlmO+V9YGhajKMwGcmgNleDCo/tF4GNEx
-	VhLLTcB+G9M4tZJ3SB2La5Wo+xGT27OcBDRQQJ1H69yg6k9HHTYXeDLUTxOp/Pim0gUt4Rr7xs5
-	hlArBeVjXwwPIl9hE08yniHIbADacjU01j9JTH/nRf9zVUKaiWsiuHHsn7ygo=
-X-Google-Smtp-Source: AGHT+IGI8y8YIPM3S6yMnHOJ6VxcbdkbS8NWxjTOpRsE5kmW+ZuRWtwB9gd6TlqHaKBjY4fr8ejo4g==
-X-Received: by 2002:a05:620a:28cc:b0:89f:3fa9:d2d4 with SMTP id af79cd13be357-8ab98eba4e2mr437021985a.15.1761918159702;
-        Fri, 31 Oct 2025 06:42:39 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8ac00a9a851sm111552085a.20.2025.10.31.06.42.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Oct 2025 06:42:39 -0700 (PDT)
-Date: Fri, 31 Oct 2025 09:42:36 -0400
-From: Gregory Price <gourry@gourry.net>
-To: kernel test robot <lkp@intel.com>
-Cc: Robert Richter <rrichter@amd.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, oe-kbuild-all@lists.linux.dev,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Terry Bowman <terry.bowman@amd.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>
-Subject: Re: [PATCH] cxl/region: Support multi-level interleaving with
- smaller granularities for lower levels
-Message-ID: <aQS8zJ4p-r5iSgd1@gourry-fedora-PF4VCD3F>
-References: <20251028094754.72816-1-rrichter@amd.com>
- <202510311413.HdTizWHK-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="m/llmHWP"
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 28032C0E954;
+	Fri, 31 Oct 2025 14:29:31 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 9DC5860704;
+	Fri, 31 Oct 2025 14:29:51 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C4B4A11818003;
+	Fri, 31 Oct 2025 15:29:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1761920989; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=H1xEmCgdr5BM399Kc4ZsWwaTbhEQ52MJYYiQpqbSK6Q=;
+	b=m/llmHWPK2GTOxgP86qebD1Z2Edet7KZozbxg7xHP71zP8WGHqlNCsjTjzbgRJW6AoYEg9
+	PGGuEBK7TNuc+3zADlLbC1jrjiYc/TXhPfAwEtjv3025kcM3TvB0cUwMNtHDn+fuYXbapk
+	18lKsj6lpv1/ObuOPQiBVRZx/Tm+zaLVFOXH7eT76X6+OiJSchpc3v+iGXicmC9AbAQ7Fi
+	n3R42rQTkma0JCEYRFgzMb9znRzRns4yCbMUv4DSU7pRjgiVIxLEd6NnupsCZT4TGW2iAp
+	n6HmKRiLt0yJEP375+9QgT+CNjKgF6b7Kiq48SW1im8mtyVm7PYpr3cu982RMw==
+Date: Fri, 31 Oct 2025 15:29:30 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
+ Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, Bjorn
+ Helgaas <bhelgaas@google.com>, Charles Keepax
+ <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
+ <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Mark Brown <broonie@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, Davidlohr
+ Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+ <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
+ Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 05/29] dt-bindings: bus: Add simple-platform-bus
+Message-ID: <20251031152930.3c51a313@bootlin.com>
+In-Reply-To: <CAMuHMdVnsWMB24BTFKwggEXKOtqJ96GWZh2Xz+ogocQHM+=+6Q@mail.gmail.com>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+	<20251015071420.1173068-6-herve.codina@bootlin.com>
+	<CAMuHMdVnsWMB24BTFKwggEXKOtqJ96GWZh2Xz+ogocQHM+=+6Q@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202510311413.HdTizWHK-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Fri, Oct 31, 2025 at 03:03:10PM +0800, kernel test robot wrote:
-> Hi Robert,
-> 
-> All errors (new ones prefixed by >>, old ones prefixed by <<):
-> 
-> >> ERROR: modpost: "__udivdi3" [drivers/cxl/core/cxl_core.ko] undefined!
-> 
+On Fri, 31 Oct 2025 09:52:16 +0100
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-IIRC this happens when you do 64-bit division because it's annoying and
-complicated. Ran into this madness in mempolicy.
+> Hi Hervé,
+> 
+> On Wed, 15 Oct 2025 at 09:17, Herve Codina <herve.codina@bootlin.com> wrote:
+> > A Simple Platform Bus is a transparent bus that doesn't need a specific
+> > driver to perform operations at bus level.
+> >
+> > Similar to simple-bus, a Simple Platform Bus allows to automatically
+> > instantiate devices connected to this bus.
+> >
+> > Those devices are instantiated only by the Simple Platform Bus probe
+> > function itself.
+> >
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>  
+> 
+> Thanks for your patch!
+> 
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/bus/simple-platform-bus.yaml
+> > @@ -0,0 +1,50 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/bus/simple-platform-bus.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Simple Platform Bus
+> > +
+> > +maintainers:
+> > +  - Herve Codina <herve.codina@bootlin.com>
+> > +
+> > +description: |
+> > +  A Simple Platform Bus is a transparent bus that doesn't need a specific
+> > +  driver to perform operations at bus level.
+> > +
+> > +  Similar to simple-bus, a Simple Platform Bus allows to automatically
+> > +  instantiate devices connected to this bus. Those devices are instantiated
+> > +  only by the Simple Platform Bus probe function itself.  
+> 
+> So what are the differences with simple-bus? That its children are
+> instantiated "only by the Simple Platform Bus probe function itself"?
+> If that is the case, in which other places are simple-bus children
+> instantiated?
 
-~Gregory
+In of_platform_populate(). It call of_platform_bus_create() which is
+recursive:
+  https://elixir.bootlin.com/linux/v6.14/source/drivers/of/platform.c#L374
+
+So children are instantiated out of the bus probe().
+
+
+> 
+> Do we need properties related to power-management (clocks, power-domains),
+> or will we need a "simple-pm-platform-bus" later? ;-)
+> 
+> FTR, I still think we wouldn't have needed the distinction between
+> "simple-bus" and "simple-pm-bus"...
+
+I would like that. Using simple-pm-bus solves my issue but I don't have any
+clocks or power-domains to set. The simple-pm-bus bus requires at least
+one of them. Even if the driver itself solved my issue, I cannot be
+compliant with its binding.
+
+Best regards,
+Hervé
