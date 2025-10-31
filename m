@@ -1,49 +1,71 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7C55C96;
-	Fri, 31 Oct 2025 05:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B64830DD01;
+	Fri, 31 Oct 2025 07:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761888652; cv=none; b=FFOFqxu+5yeIlTDblpuY20h2RG6EBA2cG9IYoxAIRBvLe1UK+aQJrBE2l1qFingfCOP3unC2XGb/vcsqRs0OGtETo63CZ03NL35FEH6oyfybmNrn6tXFtwNsUCDOl7jvnJC7DHRX/BN4TTrcSZv1by/OH+597gSb1uKWhC90NwA=
+	t=1761894241; cv=none; b=Sl0O4ybVpq12kZJFMgrfEB6d9CC3mUqERq396BnumQI4fDEXr+AdvPkTlhFuymAmLWjFgx0/m1nZN0wXWUA4affR2/T6Z3Kw9U7ID7/tKYxpePsaRQeShE6VFedvYeTU78KtsWdbmeozq0OJLFeL/3nYGuuhVRmiRbSVjw8PR64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761888652; c=relaxed/simple;
-	bh=Om9LVoX/Cs0SCI3rhvTpRuU7NE415+dVCJaSGTQQcCk=;
+	s=arc-20240116; t=1761894241; c=relaxed/simple;
+	bh=h945/dxqfx1BTBBtl+azCJKqnPUCASnWBKHAoqpp7k4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bedn4U/DQQOBxL9YXlLwupHh3ePXfQQ5Gh8zGDLSapiHmki7/oX1bHBsbEBBN0irjgwPOCA3kHE5ojwrXXfyTT9AvdBnMCiLT9cnF0XUTsgIxt1qXauemG4qnDzGmzwVmptr6I0RpT+1d8kzWcQHgIQpYrY7gzoiLF6K0OrW4uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id D11372C0009F;
-	Fri, 31 Oct 2025 06:30:38 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id B59605B97; Fri, 31 Oct 2025 06:30:38 +0100 (CET)
-Date: Fri, 31 Oct 2025 06:30:38 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: "Bowman, Terry" <terry.bowman@amd.com>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>, dave@stgolabs.net,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	dan.j.williams@intel.com, bhelgaas@google.com,
-	shiju.jose@huawei.com, ming.li@zohomail.com,
-	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
-	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
-	Benjamin.Cheatham@amd.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v12 10/25] CXL/AER: Update PCI class code check to use
- FIELD_GET()
-Message-ID: <aQRJfp0ImrWb-7Ip@wunner.de>
-References: <20250925223440.3539069-1-terry.bowman@amd.com>
- <20250925223440.3539069-11-terry.bowman@amd.com>
- <20251001171216.00005fa0@huawei.com>
- <aN4sWxjrzxeCyGBO@wunner.de>
- <639cb124-4c92-4d10-a4ce-78d6d862060f@amd.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=mH3B9w7GLAKKcA9wHUIwhNUl/jFwSb5seuVLneMRyJCVVVUdGihMINYZH+KfAjerMkFM8HGGyL05Onk+EdHOpMkIVclOcJ2/fnFUWgH/t9wp58OHY+3fIFxMHVAizwEknDsa1CUEijvMflsK0CnYiQH7mlWNfC/3QG6WKWeyVBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TrYRYSTG; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TrYRYSTG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761894239; x=1793430239;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=h945/dxqfx1BTBBtl+azCJKqnPUCASnWBKHAoqpp7k4=;
+  b=TrYRYSTGRZvpG6oPGbX8FKylNBPas0XL6Pk961fRnCOZK0BPgsDWHodK
+   oYtkEPJK8KimAoyca9mLDPOXRhI4+OoYHoX5++wG5evSxZ3PxE4HUP58b
+   pn+GE0Q+JZljhnvOd1GEe6xwZ6loVfHys9JmuEQx7k1odvgA30EPBSxNd
+   UHcC8lrAN1Xkznr5+UZ0FhyZ2ezte7YTEvbUnNJOLjyrGeTyX7p963Llb
+   ps1UmgBt+2W6svcJcIkrOqrHtW4uzZRt/18gvAGBCGDwjv5o34YsVd/IT
+   STl/fnGdzw3G31Q12b4YvMALhVcZPPV6ojefvwbFhOen+6RRzz51tI4cg
+   A==;
+X-CSE-ConnectionGUID: YTvKbh+pQ9eitlMKQpXVrg==
+X-CSE-MsgGUID: F1Veg936RXCtKquYN+n7FA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="75498358"
+X-IronPort-AV: E=Sophos;i="6.19,268,1754982000"; 
+   d="scan'208";a="75498358"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 00:03:54 -0700
+X-CSE-ConnectionGUID: INgihif2ThSVR7SAakLYkw==
+X-CSE-MsgGUID: NNg+GFeoRGSdSWEX7M7t5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,268,1754982000"; 
+   d="scan'208";a="185850502"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by fmviesa007.fm.intel.com with ESMTP; 31 Oct 2025 00:03:49 -0700
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vEjAq-000Mqe-11;
+	Fri, 31 Oct 2025 07:03:48 +0000
+Date: Fri, 31 Oct 2025 15:03:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Robert Richter <rrichter@amd.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>
+Cc: oe-kbuild-all@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>,
+	Robert Richter <rrichter@amd.com>
+Subject: Re: [PATCH] cxl/region: Support multi-level interleaving with
+ smaller granularities for lower levels
+Message-ID: <202510311413.HdTizWHK-lkp@intel.com>
+References: <20251028094754.72816-1-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,77 +74,36 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <639cb124-4c92-4d10-a4ce-78d6d862060f@amd.com>
+In-Reply-To: <20251028094754.72816-1-rrichter@amd.com>
 
-On Thu, Oct 30, 2025 at 12:16:06PM -0500, Bowman, Terry wrote:
-> On 10/2/2025 2:40 AM, Lukas Wunner wrote:
-> > On Wed, Oct 01, 2025 at 05:12:16PM +0100, Jonathan Cameron wrote:
-> >> On Thu, 25 Sep 2025 17:34:25 -0500 Terry Bowman <terry.bowman@amd.com> wrote:
-> >> The way that class code definitions work in pci_ids.h is somewhat odd
-> >> in my opinion, so I'd like input from Bjorn, Lukas etc on whether a
-> >> generic mask definition is a good idea or more likely to cause problems.
-> >>
-> >> See for example. 
-> >> #define PCI_BASE_CLASS_STORAGE		0x01
-> >> ...
-> >>
-> >> #define PCI_CLASS_STORAGE_SATA		0x0106
-> >> #define PCI_CLASS_STORAGE_SATA_AHCI	0x010601
-> >>
-> >> This variability in what is called CLASS_* leads to fun
-> >> situations like in drivers/ata/ahci.c where we have some
-> >> PCI_CLASS_* shifted and some not...
-> > Macros working with PCI class codes generally accept a "shift" parameter
-> > to know by how many bits the class code needs to be shifted, see e.g.
-> > DECLARE_PCI_FIXUP_CLASS_EARLY() and friends.
-> >
-> > A macro which shifts exactly by 8 is hence only of limited use.
-> >
-> >>> +++ b/drivers/pci/pcie/aer_cxl_rch.c
-> >>> @@ -17,10 +17,10 @@ static bool is_cxl_mem_dev(struct pci_dev *dev)
-> >>>  		return false;
-> >>>  
-> >>>  	/*
-> >>> -	 * CXL Memory Devices must have the 502h class code set (CXL
-> >>> -	 * 3.0, 8.1.12.1).
-> >>> +	 * CXL Memory Devices must have the 502h class code set
-> >>> +	 * (CXL 3.2, 8.1.12.1).
-> >>>  	 */
-> >>> -	if ((dev->class >> 8) != PCI_CLASS_MEMORY_CXL)
-> >>> +	if (FIELD_GET(PCI_CLASS_CODE_MASK, dev->class) != PCI_CLASS_MEMORY_CXL)
-> >>>  		return false;
-> > Hm, this doesn't look more readable TBH.
-> >
-> > Refactoring changes like this one should be submitted separately from
-> > this patch set.  If any of them are controversial, they delay upstreaming
-> > of the actual change, i.e. the CXL AER plumbing.  They also increase the
-> > size of the patch set, making it more difficult to review.
-> >
-> >>> +++ b/include/uapi/linux/pci_regs.h
-> >>> @@ -73,6 +73,8 @@
-> >>>  #define PCI_CLASS_PROG		0x09	/* Reg. Level Programming Interface */
-> >>>  #define PCI_CLASS_DEVICE	0x0a	/* Device class */
-> >>>  
-> >>> +#define PCI_CLASS_CODE_MASK     __GENMASK(23, 8)
-> >>> +
-> >>>  #define PCI_CACHE_LINE_SIZE	0x0c	/* 8 bits */
-> >>>  #define PCI_LATENCY_TIMER	0x0d	/* 8 bits */
-> >>>  #define PCI_HEADER_TYPE		0x0e	/* 8 bits */
-> > Putting this in a uapi header means we'll have to support it
-> > indefinitely.  Usually such macros are added to kernel-internal
-> > headers first and moved to uapi headers if/when the need arises.
-> 
-> The PCI_CLASS_CODE_MASK definition move to include/uapi/linux/pci_regs.h
-> was requested here:
-> https://lore.kernel.org/linux-cxl/6881626a784f_134cc7100b4@dwillia2-xfh.jf.intel.com.notmuch/
+Hi Robert,
 
-Hm, I'm not seeing such a request in the linked message.
+kernel test robot noticed the following build errors:
 
-> Would you like this patch removed altogether?
+[auto build test ERROR on cxl/next]
+[also build test ERROR on linus/master v6.18-rc3 next-20251030]
+[cannot apply to cxl/pending]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-"I wouldn't object to it being removed" would be a more pleasant way
-of phrasing it. ;)
+url:    https://github.com/intel-lab-lkp/linux/commits/Robert-Richter/cxl-region-Support-multi-level-interleaving-with-smaller-granularities-for-lower-levels/20251028-175032
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+patch link:    https://lore.kernel.org/r/20251028094754.72816-1-rrichter%40amd.com
+patch subject: [PATCH] cxl/region: Support multi-level interleaving with smaller granularities for lower levels
+config: i386-randconfig-141-20251031 (https://download.01.org/0day-ci/archive/20251031/202510311413.HdTizWHK-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251031/202510311413.HdTizWHK-lkp@intel.com/reproduce)
 
-Thanks,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510311413.HdTizWHK-lkp@intel.com/
 
-Lukas
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+>> ERROR: modpost: "__udivdi3" [drivers/cxl/core/cxl_core.ko] undefined!
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
