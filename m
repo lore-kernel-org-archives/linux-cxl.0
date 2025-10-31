@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4970426ED24
-	for <linux-cxl@vger.kernel.org>; Fri, 31 Oct 2025 21:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65CF1624DF
+	for <linux-cxl@vger.kernel.org>; Fri, 31 Oct 2025 23:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761944767; cv=none; b=KdZZvfb7L/gD4PzF+FRxbdOUklLZgicHo79A2VAewn7AA2Ycr3r5mIiyI3t3pK3QXRIMk4+EdZeAonanzrdxmyTD1nafGKNgZ2ZbTbC/ihCeA5Dgfy+uHzee4ujtwBuvmKpcamV0LUjjoYTfaY4vC8x4iZgqVSu1NZ524z0R7Is=
+	t=1761952591; cv=none; b=KMEluLq/sIzDpgLF+N/aud/lp0eLRi9YONS9yRuYAhzSc7tXMaE5uuXqYNBPtk67OcsvUC1ECKyz08ZwJS7I7LzDj8IqJEJylGdyzawgx4852MDb9m+UYsArgj175+pxi8xerw/KDtgGdLN5c1hAnv/ExntjArqXVsta446OXL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761944767; c=relaxed/simple;
-	bh=blMuZxVcQpLRrta4b7kXMGpaYZtLJU+TMu1aF+M0tAs=;
+	s=arc-20240116; t=1761952591; c=relaxed/simple;
+	bh=1VjmH4Nd2lJX6DwpcsHJHjBZpz6LiVVa8KH1fqJQExI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=orUz+0EZXYqziNGXVmP0J6T7EOd4ukGzwRKLyemwSLQygfeo4IGvbWZs5pkFxjcDu6RUo51Er0719re+39VasljFF8ynM2XY7trVNLmDlhK5hAFZiMaQXM2Npm6YiblIQVkPrfg2ZvJa5h3FdmjlnO8LOMtS39wFxjR4Axj3aSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PHPq6ped; arc=none smtp.client-ip=192.198.163.15
+	 In-Reply-To:Content-Type; b=tHBzZsUhRWZoVjkRtWlGeUwAqo7h8QuS2KO2xVzLyERh6aX9cifCErvQj4EXBqob4F2pEYiePHqRVeH/j5hc4vcl/nTkZsWDBjp7flpjAVRllxQs/wQx3Y9AmrEFqvg7aumcSzTtFSMTxfdq31ETKpmS+O44uQHvLJXDTZ5pV08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vvw7agWz; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PHPq6ped"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vvw7agWz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761944766; x=1793480766;
+  t=1761952590; x=1793488590;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=blMuZxVcQpLRrta4b7kXMGpaYZtLJU+TMu1aF+M0tAs=;
-  b=PHPq6pedJ7rSfltG1jDP7ZX/oJQ7FU5LeqpRIh/BPIxaqswqWO5CJAw+
-   rSsdtwRZxbvDIgKPQpogGN942Yp0vhuEiJKi8p40oc9O8Z5i8mn7RNZPq
-   USlD1rpwxtqgjFecNxXvglHF8iY3ugURAFHec3J2bzWp06ISgBHKBOuCw
-   xcNHBtOwpztRHmR3f6HrU8B8ALapytFuNr2q1cRWBaAPhxVUbXSUkliZi
-   ZW2MBnVTUTieprKP4vpnGtNPmngTRzRh+e2rEz5+p9ZFlXaSA5vXR4JJd
-   VRxSWxsKnbNdaflixq8JopADSWDloqD9YN/hmvoKaLZo0AwdcCmf838sK
-   A==;
-X-CSE-ConnectionGUID: /UDJaAMJQ0uIPYYj2Mg5/A==
-X-CSE-MsgGUID: agLbZ8eFSQKHCfsZ1eBdhA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11599"; a="64211993"
+  bh=1VjmH4Nd2lJX6DwpcsHJHjBZpz6LiVVa8KH1fqJQExI=;
+  b=Vvw7agWzazJk1b+vXRjXH/Q0NINDjZYdhdPG71UI2MBpHMXww6uM0WTo
+   I8+tsOqndx2sdE3CnlBIpA6LE4NTMcR7J+uD3bytaAOKD5rgB108X1gF3
+   PbfN9T5doFFseVH3ulmwhD11oys8DbOmpynptmumSOX6YnW7jrzRcT/vc
+   F+21jVU6uGRlOwwt81+bjfqG2vy3KvRgAi3FA7a8HWu8Z3avfOkXs0WDy
+   FIez8CKjoFSIpME91nvc0jDfQiK5Z01H+YLE4cQv0/8m9ymJHxRjVR4Vu
+   onUYQf9h1L4UM4ra6kHj3rvEanjyhgllusGzPeUtEu3+R1g0Kmr0y6nUw
+   w==;
+X-CSE-ConnectionGUID: PNWlRp7KTNqrRAbXgrV7VQ==
+X-CSE-MsgGUID: zg3Rut9XRjaU5rsjVvuBdw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11599"; a="64269218"
 X-IronPort-AV: E=Sophos;i="6.19,270,1754982000"; 
-   d="scan'208";a="64211993"
+   d="scan'208";a="64269218"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 14:06:05 -0700
-X-CSE-ConnectionGUID: Int+ilj9SK+UQQUnSWZMNg==
-X-CSE-MsgGUID: iJn8mTj/QsOIWQsWq85eqg==
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 16:16:29 -0700
+X-CSE-ConnectionGUID: pGTHgb3eRvyK4k9JHcxKkg==
+X-CSE-MsgGUID: 344TO1wvRs63ahRjxxOOTg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,270,1754982000"; 
-   d="scan'208";a="187070266"
+   d="scan'208";a="187090411"
 Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.110.49]) ([10.125.110.49])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 14:06:05 -0700
-Message-ID: <770c29cc-628b-496f-bfb6-6e64b10336c1@intel.com>
-Date: Fri, 31 Oct 2025 14:06:04 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 16:16:28 -0700
+Message-ID: <031a0108-6d30-4dab-b615-03a261eee18b@intel.com>
+Date: Fri, 31 Oct 2025 16:16:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,48 +52,146 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] cxl: Adjust offset calculation for poison injection
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
- jonathan.cameron@huawei.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+Subject: Re: [PATCH] cxl: Add handling of locked CXL decoder
+To: Alejandro Lucero Palau <alucerop@amd.com>, linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
  dan.j.williams@intel.com
-References: <20251031173224.3537030-1-dave.jiang@intel.com>
- <20251031173224.3537030-5-dave.jiang@intel.com>
- <aQUi5Tbcn2IHNgzY@aschofie-mobl2.lan>
+References: <20251021205055.2081800-1-dave.jiang@intel.com>
+ <0884302f-8713-4d97-9a08-56091985a5d1@amd.com>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <aQUi5Tbcn2IHNgzY@aschofie-mobl2.lan>
+In-Reply-To: <0884302f-8713-4d97-9a08-56091985a5d1@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 10/31/25 1:58 PM, Alison Schofield wrote:
-> On Fri, Oct 31, 2025 at 10:32:24AM -0700, Dave Jiang wrote:
->> The HPA to DPA translation for poison injection assumes that the
->> base address starts from where the CXL region begins. When the
->> extended linear cache is active, the offset can be within the DRAM
->> region. Adjust the offset so that it correctly reflects the offset
->> within the CXL region.
+On 10/29/25 9:17 AM, Alejandro Lucero Palau wrote:
 > 
-> Dave, good catch!
+> On 10/21/25 21:50, Dave Jiang wrote:
+>> When a decoder is locked, it means that its configuration cannot be
+>> changed. CXL spec r3.2 8.2.4.20.13 discusses the details regarding
+>> locked decoders. Locking happens when bit 8 of the decoder control
+>> register is set and then the decoder is committed afterwards (CXL
+>> spec r3.2 8.2.4.20.7).
+>>
+>> Given that the driver creates a virtual decoder for each CFMWS, the
+>> Fixed Device Configuration (bit 4) of the Window Restriction field is
+>> considered as locking for the virtual decoder by the driver.
+>>
+>> The current driver code disregards the locked status and a region can
+>> be destroyed regardless of the locking state.
+>>
+>> Add a region flag to indicate the region is in a locked configuration.
+>> The driver will considered a region locked if the CFMWS or any decoder
+>> is configured as locked. The consideration is all or nothing regarding
+>> the locked state. It is reasonable to determine the region "locked"
+>> status while the region is being assembled based on the decoders.
+>>
+>> Add a check in region commit_store() to intercept when a 0 is written
+>> to the commit sysfs attribute in order to prevent the destruction of a
+>> region when in locked state. This should be the only entry point from user
+>> space to destroy a region.
+>>
+>> Add a check is added to cxl_decoder_reset() to prevent resetting a locked
+>> decoder within the kernel driver.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>   drivers/cxl/core/hdm.c    |  3 +++
+>>   drivers/cxl/core/region.c | 16 ++++++++++++++++
+>>   drivers/cxl/cxl.h         |  8 ++++++++
+>>   3 files changed, 27 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+>> index d3a094ca01ad..1c5d2022c87a 100644
+>> --- a/drivers/cxl/core/hdm.c
+>> +++ b/drivers/cxl/core/hdm.c
+>> @@ -905,6 +905,9 @@ static void cxl_decoder_reset(struct cxl_decoder *cxld)
+>>       if ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)
+>>           return;
+>>   +    if (test_bit(CXL_DECODER_F_LOCK, &cxld->flags))
+>> +        return;
+>> +
 > 
-> This breakage was added in 6.18-rc1. Please consider it for a pull
-> request before the end of 6.18.
 > 
-> Here's justification and Fixes Tag:
+> This is correct, but is it enough?
 > 
-> Without this patch, when a user intends to inject poison at an offset
-> in region, it can inject poison into a location in a device that is
-> not mapped by that region.
 > 
-> The test case in cxl-poison-elc.sh that exposed this issue, injected
-> poison 0x20000000 which should have been the first byte of the CXL
-> half of an Extended Linear Cache (ELC) region. Instead, it injected
-> poison at the next byte of a device beyond the regions mapping.
+> Would not the region teardown imply also the reset of those decoders in the path from the root port? Can we assume those will also be locked or should we add some sanity checking here?
+
+Would checking the region the decoder belongs to for lock flag be sufficient?
+
+DJ
+
 > 
-> Fixes: c3dd67681c70 ("cxl/region: Add inject and clear poison by region offset")
 > 
-> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-> 
-Yeah I can move it to fixes instead
+>>       if (port->commit_end == id)
+>>           cxl_port_commit_reap(cxld);
+>>       else
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index b06fee1978ba..8647eff4fb78 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -419,6 +419,9 @@ static ssize_t commit_store(struct device *dev, struct device_attribute *attr,
+>>           return len;
+>>       }
+>>   +    if (test_bit(CXL_REGION_F_LOCK, &cxlr->flags))
+>> +        return -EPERM;
+>> +
+>>       rc = queue_reset(cxlr);
+>>       if (rc)
+>>           return rc;
+>> @@ -1059,6 +1062,16 @@ static int cxl_rr_assign_decoder(struct cxl_port *port, struct cxl_region *cxlr,
+>>       return 0;
+>>   }
+>>   +static void cxl_region_set_lock(struct cxl_region *cxlr,
+>> +                struct cxl_decoder *cxld)
+>> +{
+>> +    if (!test_bit(CXL_REGION_F_LOCK, &cxlr->flags))
+>> +        return;
+>> +
+>> +    set_bit(CXL_REGION_F_LOCK, &cxlr->flags);
+>> +    clear_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags);
+>> +}
+>> +
+>>   /**
+>>    * cxl_port_attach_region() - track a region's interest in a port by endpoint
+>>    * @port: port to add a new region reference 'struct cxl_region_ref'
+>> @@ -1170,6 +1183,8 @@ static int cxl_port_attach_region(struct cxl_port *port,
+>>           }
+>>       }
+>>   +    cxl_region_set_lock(cxlr, cxld);
+>> +
+>>       rc = cxl_rr_ep_add(cxl_rr, cxled);
+>>       if (rc) {
+>>           dev_dbg(&cxlr->dev,
+>> @@ -2439,6 +2454,7 @@ static struct cxl_region *cxl_region_alloc(struct cxl_root_decoder *cxlrd, int i
+>>       dev->bus = &cxl_bus_type;
+>>       dev->type = &cxl_region_type;
+>>       cxlr->id = id;
+>> +    cxl_region_set_lock(cxlr, &cxlrd->cxlsd.cxld);
+>>         return cxlr;
+>>   }
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 231ddccf8977..6382f1983865 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -517,6 +517,14 @@ enum cxl_partition_mode {
+>>    */
+>>   #define CXL_REGION_F_NEEDS_RESET 1
+>>   +/*
+>> + * Indicate whether this region is locked due to 1 or more decoders that have
+>> + * been locked. The approach of all or nothing is taken with regard to the
+>> + * locked attribute. CXL_REGION_F_NEEDS_RESET should not be set if this flag is
+>> + * set.
+>> + */
+>> +#define CXL_REGION_F_LOCK 2
+>> +
+>>   /**
+>>    * struct cxl_region - CXL region
+>>    * @dev: This region's device
+>>
+>> base-commit: 211ddde0823f1442e4ad052a2f30f050145ccada
+
