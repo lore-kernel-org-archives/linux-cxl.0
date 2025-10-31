@@ -1,172 +1,189 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4050633A024;
-	Fri, 31 Oct 2025 10:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC3C306B1A;
+	Fri, 31 Oct 2025 11:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761905925; cv=none; b=gV4JLTnXg3lRx+3xzJxZmEkxpPOLPlSAVbUG/oX6hgRrRGUpS9Z5tD9tOyyju3MyszVfsxSOwpVq80AB0KhhG1EpDfRLxRVBqK/vnLEICVci4iAF9u57LiAXP8ulJjhtC0rAdtQCijjTn8l0W+9wBB7IhEcXU8kjnfIALpuetA8=
+	t=1761909437; cv=none; b=VoSVzPpIW3esuDx8ilwNukMoYt+u17+Ek+GdHm4weBoEuzo1J3jFz0zNxmZNrSMTPfdc7Ui8WnEd2cUprTBJTEocKjrvAIt/uxr54juZh6AY626F4nF13oTbo6L6e0VNBXW+bsuxS8sRB0L0Nnny27fkDOgGDZ7U29UziTiK6Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761905925; c=relaxed/simple;
-	bh=ScQKh0k+g0sLHY6zzPeiiWF3Mx49kdxeKS7TZIXktok=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oerCHwtGdqIc67mCjnve1K8p0mD5KA8pvsNKmOGmhCLiUCmx7VINWSH/jWfqLngqpeCKJ4J/f866qQMZB0CsQAFaEs0k5XshzvK+8Vb+085yewvUU/7JA431gZX9Yx3eeWOfuO4PLW34Rf9a23RdP/65PoTvrJpwCV4j6u1HUbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iEWEp9JC; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iEWEp9JC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761905923; x=1793441923;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ScQKh0k+g0sLHY6zzPeiiWF3Mx49kdxeKS7TZIXktok=;
-  b=iEWEp9JCYSCTMYEkh6+Zz1rt/s5pZ2VgFxzqpXxW+DRrRf5PNQ7aFvkL
-   CJD25IV0pzyfoFdwYjiecfuek128+Cm918K9zI40cDnoaDdvAbIjHd+VH
-   lByTnzpanD5vZeQ+iDwzf8rKH7k6E7TP0t4AshFxWu6xgBR+RxtWNSKoY
-   qkkCYYOWQLEXyK562JGi39oQHfDMoRo/M8GeCJrOV7VbTEH5UrohnX4PU
-   aH/VBCsvk5kusq7fqqhBsR+E/jlX3nrFtmTYO2v9+cGxjtf8Y712UDXAE
-   olJqMlsOagBzm9bLb/YzPKqX4yEhtnqA9aCYBwpOkQqji7laDm5s5njJM
-   Q==;
-X-CSE-ConnectionGUID: wudIQrEYThGBVwKxzKhXrw==
-X-CSE-MsgGUID: yP4uDmFtTxqbP1YRHiBnAw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="63761119"
-X-IronPort-AV: E=Sophos;i="6.19,269,1754982000"; 
-   d="scan'208";a="63761119"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 03:18:43 -0700
-X-CSE-ConnectionGUID: k25i44LyS2un9PQ5Y6ncag==
-X-CSE-MsgGUID: vJDIqqS8RQmFeEw6PNSdLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,269,1754982000"; 
-   d="scan'208";a="185890295"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.56])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 03:18:30 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>, Tony Luck <tony.luck@intel.com>,
- Borislav Petkov <bp@alien8.de>, Hanjun Guo <guohanjun@huawei.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Shuai Xue <xueshuai@linux.alibaba.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Sunil V L <sunilvl@ventanamicro.com>, Xiaofei Tan <tanxiaofei@huawei.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Huacai Chen <chenhuacai@kernel.org>,
- Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
- Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, Guo Weikang <guoweikang.kernel@gmail.com>,
- Xin Li <xin@zytor.com>, Will Deacon <will@kernel.org>,
- Huang Yiwei <quic_hyiwei@quicinc.com>, Gavin Shan <gshan@redhat.com>,
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>,
- Li Ming <ming.li@zohomail.com>,
- Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Karolina Stolarek <karolina.stolarek@oracle.com>,
- Jon Pan-Doh <pandoh@google.com>, Lukas Wunner <lukas@wunner.de>,
- Shiju Jose <shiju.jose@huawei.com>, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/6 v6] ACPI: extlog: Trace CPER PCI Express Error Section
-Date: Fri, 31 Oct 2025 11:18:27 +0100
-Message-ID: <2351924.vFx2qVVIhK@fdefranc-mobl3>
-In-Reply-To: <20251028144816.000018a3@huawei.com>
-References:
- <20251023122612.1326748-1-fabio.m.de.francesco@linux.intel.com>
- <20251023122612.1326748-3-fabio.m.de.francesco@linux.intel.com>
- <20251028144816.000018a3@huawei.com>
+	s=arc-20240116; t=1761909437; c=relaxed/simple;
+	bh=rmzf6vaUfXpB/gU7kLbFY00wrLGp6GPaCpigSBaq1os=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GwH4v8ApIRwRhHo7rXPc46am2Di+s1taUXXHx3FEZTWUfOAV58Bv507xTPdK76hDncc9kyhFUCYPGYHREq90fDcNJeNr4f6zJ14XS/Jyd/M9QJ/L1NlYLJOcqoW/2ht5dVetz+cqyszQq2Hs0fpzEMAlO84SeX+/AreLx38vNS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4cydjQ6cF3zJ46bm;
+	Fri, 31 Oct 2025 19:16:58 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id D0B20140370;
+	Fri, 31 Oct 2025 19:17:11 +0800 (CST)
+Received: from SecurePC-101-06.huawei.com (10.122.19.247) by
+ dubpeml100005.china.huawei.com (7.214.146.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 31 Oct 2025 11:17:10 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Conor Dooley <conor@kernel.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, <linux-cxl@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-arch@vger.kernel.org>,
+	<linux-mm@kvack.org>, Dan Williams <dan.j.williams@intel.com>, "H . Peter
+ Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Andrew Morton
+	<akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Drew Fustini
+	<fustini@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre
+ Belloni <alexandre.belloni@bootlin.com>, Krzysztof Kozlowski
+	<krzk@kernel.org>
+CC: <james.morse@arm.com>, Will Deacon <will@kernel.org>, Davidlohr Bueso
+	<dave@stgolabs.net>, <linuxarm@huawei.com>, Yushan Wang
+	<wangyushan12@huawei.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, <x86@kernel.org>, Andy Lutomirski
+	<luto@kernel.org>, Dave Jiang <dave.jiang@intel.com>
+Subject: [PATCH v5 0/6]  Cache coherency management subsystem
+Date: Fri, 31 Oct 2025 11:17:03 +0000
+Message-ID: <20251031111709.1783347-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Tuesday, October 28, 2025 3:48:16=E2=80=AFPM Central European Standard T=
-ime Jonathan Cameron wrote:
-> On Thu, 23 Oct 2025 14:25:37 +0200
-> "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com> wrote:
->=20
-> > I/O Machine Check Architecture events may signal failing PCIe components
-> > or links. The AER event contains details on what was happening on the w=
-ire
-> > when the error was signaled.
-> >=20
-> > Trace the CPER PCIe Error section (UEFI v2.10, Appendix N.2.7) reported
-> > by the I/O MCA.
-> >=20
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
-com>
-> Hi Fabio,
->=20
-> Was taking a fresh look at this as a precursor to looking at later
-> patches in series and spotted something that I'm doubtful about.
->=20
-> > diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> > index 47d11cb5c912..cefe8d2d8aff 100644
-> > --- a/drivers/acpi/acpi_extlog.c
-> > +++ b/drivers/acpi/acpi_extlog.c
-> > @@ -132,6 +132,34 @@ static int print_extlog_rcd(const char *pfx,
-> >  	return 1;
-> >  }
-> > =20
-> > +static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
-> > +			      int severity)
-> > +{
-> > +	struct aer_capability_regs *aer;
-> > +	struct pci_dev *pdev;
-> > +	unsigned int devfn;
-> > +	unsigned int bus;
-> > +	int aer_severity;
-> > +	int domain;
-> > +
-> > +	if (!(pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID ||
-> > +	      pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO))
->=20
-> Looking again, I'm not sure this is as intended.  Is the aim to
-> allow for either one of these two?  Or check that that are both present?=
-=20
-> That is should it be !(A && B) rather than !(A || B)?
->=20
-Hi Jonathan,
+Support system level interfaces for cache maintenance as found on some
+ARM64 systems. It is expected that systems using other CPU architectures
+(such as RiscV) that support CXL memory and allow for native OS flows
+will also use this. This is needed for correct functionality during
+various forms of memory hotplug (e.g. CXL). Typical hardware has MMIO
+interface found via ACPI DSDT. A system will often contain multiple
+hardware instances.
 
-You're right. We need to check that both are true and return if they are=20
-not, then the statement has to be !(A && B).
+Includes parameter changes to cpu_cache_invalidate_memregion() but no
+functional changes for architectures that already support this call.
 
-Thank you,
+How to merge?
+- Current suggestion would be via Conor's drivers/cache tree which routes
+  through the SoC tree.
+  *  Andrew Morton has expressed he is fine with the MM related changes
+     going via another appropriate tree.
+  *  CXL maintainers expressed that they don't consider it appropriate
+     to go through theit tree.
+  *  The tiny touching of Arm specific code has an ack from Catalin.
 
-=46abio=20
->=20
-> > +		return;
-> > +
-> > +	aer_severity =3D cper_severity_to_aer(severity);
-> > +	aer =3D (struct aer_capability_regs *)pcie_err->aer_info;
-> > +	domain =3D pcie_err->device_id.segment;
-> > +	bus =3D pcie_err->device_id.bus;
-> > +	devfn =3D PCI_DEVFN(pcie_err->device_id.device,
-> > +			  pcie_err->device_id.function);
-> > +	pdev =3D pci_get_domain_bus_and_slot(domain, bus, devfn);
-> > +	if (!pdev)
-> > +		return;
-> > +
-> > +	pci_print_aer(pdev, aer_severity, aer);
-> > +	pci_dev_put(pdev);
-> > +}
->=20
->=20
+v5: Changes called out in individual patches.
+Comment and patch description updates to make the following clearer.
+  - Difference from cache-coherence operations for non-coherent DMA.
+    Longer term it may make sense to share infrastructure but for now
+    we have two parallel systems as there would be near zero overlap
+    in code or functionality.
+  - Why multiple agent handling is necessary and what that means for
+    the HiSilicon HHAs in our systems + the driver inclued in this set.
+ 
+v4: (Small changes called out in each patch)
+- Drop the ACPI driver. It has done it's job as a second implementation
+  to help with generality testing. I have heard zero interest in actually
+  doing the specification work needed to make that official. Easy to bring
+  back if needed in future. I have it locally still as a second test
+  case.
+- Add a cpu_cache_invalidate_all() helper for the 0,-1 case that is used
+  to indicate everything should be flushed as no fine grained range info
+  available.
+- Simplify the necessary symbols to be selected by architectures by
+  making CONFIG_GENERIC_CPU_CACHE_MAINTENANCE select
+  ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+- Avoid naming mentioning devices as there is no struct device.
+- Use a kref so as to have something on which a _put() operation makes
+  sense avoiding rather confusing freeing of an internal structure pointer
+  that was seen in v3.
+- Gather tags given.
+- Various minor things like typos, header tweaks etc.
+Thanks to all who reviewed v3.
 
+On current ARM64 systems (and likely other architectures) the
+implementation of cache flushing need for actions such as CXL memory
+hotplug e.g. cpu_cache_invalidate_memregion(), is performed by system
+components outside of the CPU, controlled via either firmware or MMIO
+interfaces.
 
+These control units run the necessary coherency protocol operations to
+cause the write backs and cache flushes to occur asynchronously. They allow
+filtering by PA range to reduce disruption to the system. Systems
+supporting this interface must be designed to ensure that, when complete,
+all cache lines in the range are in invalid state or clean state
+(prefetches may have raced with the invalidation). This must include
+memory-side caches and other non architectural caches beyond the Point
+of Coherence (ARM terminology) such that writes will reach memory even
+after OS programmable address decoders are modified (for CXL this is
+any HDM decoders that aren't locked). Software will guarantee that no
+writes to these memory ranges race with this operation. Whilst this is
+subtly different from write backs must reach the physical memory that
+difference probably doesn't matter to those reading this series.
 
+The often distributed nature of the relevant coherency management units
+(e.g. due to interleaving) requires the appropriate commands to be issued
+to multiple (potentially heterogeneous) units. To enable this a
+registration framework is provided to which drivers may register a set
+of callbacks. Upon a request for a cache maintenance operation the
+framework iterates over all registered callback sets, calling first a
+command to write back and invalidate, and then optionally a command to wait
+for completion. Filtering on relevance if a give request is left to the
+individual drivers.
+
+In this version only one driver is included. This is the HiSilicon Hydra
+Home Agent driver which controls hardware found on some of our relevant
+server SoCs. Also available (I can post if anyone is interested)
+is an ACPI driver based on a firmware interface that was in a public
+PSCI specification alpha version
+
+QEMU emulation code at
+http://gitlab.com/jic23/qemu cxl-2025-03-20 
+
+Notes:
+- I don't particularly like defining 'generic' infrastructure with so few
+  implementations. If anyone can point me at docs for another one or two,
+  or confirm that they think this is fine that would be great!
+  The converse to this is I don't want to wait longer for those to surface
+  given the necessity to support this one platform that I do know about!
+
+Jonathan Cameron (3):
+  memregion: Drop unused IORES_DESC_* parameter from
+    cpu_cache_invalidate_memregion()
+  arm64: Select GENERIC_CPU_CACHE_MAINTENANCE
+  MAINTAINERS: Add Jonathan Cameron to drivers/cache and add
+    lib/cache_maint.c + header
+
+Yicong Yang (2):
+  memregion: Support fine grained invalidate by
+    cpu_cache_invalidate_memregion()
+  lib: Support ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+
+Yushan Wang (1):
+  cache: Support cache maintenance for HiSilicon SoC Hydra Home Agent
+
+ MAINTAINERS                     |   3 +
+ arch/arm64/Kconfig              |   1 +
+ arch/x86/mm/pat/set_memory.c    |   2 +-
+ drivers/cache/Kconfig           |  15 +++
+ drivers/cache/Makefile          |   2 +
+ drivers/cache/hisi_soc_hha.c    | 194 ++++++++++++++++++++++++++++++++
+ drivers/cxl/core/region.c       |   5 +-
+ drivers/nvdimm/region.c         |   2 +-
+ drivers/nvdimm/region_devs.c    |   2 +-
+ include/linux/cache_coherency.h |  61 ++++++++++
+ include/linux/memregion.h       |  16 ++-
+ lib/Kconfig                     |   4 +
+ lib/Makefile                    |   2 +
+ lib/cache_maint.c               | 138 +++++++++++++++++++++++
+ 14 files changed, 439 insertions(+), 8 deletions(-)
+ create mode 100644 drivers/cache/hisi_soc_hha.c
+ create mode 100644 include/linux/cache_coherency.h
+ create mode 100644 lib/cache_maint.c
+
+-- 
+2.48.1
 
