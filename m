@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0AF26B0BE
-	for <linux-cxl@vger.kernel.org>; Mon,  3 Nov 2025 23:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A022FE593;
+	Mon,  3 Nov 2025 23:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762213421; cv=none; b=INayk+tZ7x0kPGRyCUov+dbXUxQgpRQXbP7E4+ejbGBg+r5FW6aLJO4/o5wX8vTTfi7YuzDscGuoFCArEyveby7iKzZqhsbedfvdgihYNdn+5KAbQAyKk88FFA92fHoqJvW0OJAHA3X2YdOpWwjaX5eMaOuKG3ScmbLUA6klmtc=
+	t=1762213465; cv=none; b=RiwMx9s0KVlUm2ZyU2fcj6OdIcwcyMeAfhXETRKBSSRox0y8RjFKooXrRBybyOByg5cWH7G8Qh3M0ONVDkahX5bnqE0NajeirstyHfosePVi4MGOivV/trcVTq/XUkiAcKU4tyWq3pPxYTIRZWi4Tf9X76EhDaMErEjKiKFEuEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762213421; c=relaxed/simple;
-	bh=JuEgmWHrcPl2bPIi2IudV1QB47+SgG/yBqxiplWeCPY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=TenO6HHE1Y4ZiutzeNOflPNnDP2edCtWwqz/iZGQxrOzsvxRqdZWpWVCmNoZy0Q01hAKO6rcg8A88aLdAgQJhVZw93gn76itapMjCrbEOfdxuWfrTZBnTJsk1tnYUrR3px4WW5PMJQ6w95lhNiXr2mPKlxXJReyRVUObWcNgsBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hGINp3Wd; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1762213465; c=relaxed/simple;
+	bh=4p1XAIgil+xci6N2vO4OA62EVqXe4tJ+TRXALK+NU6g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EGIXlW0W9Kr8eRMfF/cshB4jUDM6b5KINu8deiiIt/XoaYHKr7dXz5owMzrG1XA+vWvSNcGxoRj2toz+y7KGLILUF05CdUP3B5/oL39xcunPn7xR0PBMgYR6ON0KgqdZ1WBdBch0P85aGyd3MtvVE7xap45VucFx/XIlVoXGMWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DnhZdf1r; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hGINp3Wd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DnhZdf1r"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762213420; x=1793749420;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=JuEgmWHrcPl2bPIi2IudV1QB47+SgG/yBqxiplWeCPY=;
-  b=hGINp3WdXfts8yvB8pwy6JkNMdJD13at0M8UXgugirhn0rZ7XToh3A0U
-   vi5ahQzAgIuoMGxVa1AV0cZLTSX+82DVvr5krk5Pa8Lc3ENMSP0qvTAxV
-   BS2Wgd9SAUbsDqqGMtUuPHrAoJG94B5KJYYKV0g5ZIW+yGhOIri1qGonI
-   Lq4HNjJvNiZ4BNK5qooEdibES7XvI+pUFwHOKvM0jYVpavICbzCl0ikv7
-   bq8S2eH34mFaNDl2Ug5t5sFOqfThVcm8yiqU10d61Zh/ZCfRKOSCcALDs
-   5VlxdBdNO4hNv/f1YC+OPIopZa5pdyBV2sfXRxvTSVh373MVq1hNSR2H4
-   Q==;
-X-CSE-ConnectionGUID: B9tVbfz7TsutmTm+/HaEHg==
-X-CSE-MsgGUID: ix4oRMXmTNy42j2tgyLimA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11602"; a="89761868"
+  t=1762213463; x=1793749463;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4p1XAIgil+xci6N2vO4OA62EVqXe4tJ+TRXALK+NU6g=;
+  b=DnhZdf1rBH9GgJU8Q1/MSnKZgoq7FqGwlyEJ0v7CfCwsh+2Kn50iQA/u
+   Bx8V+2aaUEoCtE9ILudoj/S+dKlahaEIeLyLI3CJbnWDhT4sA8OoKa254
+   x+5os7wWTf2XnSSWeKZitRED3uomVavAwWC+5clNtKg4ihXlTKvHwilyJ
+   mHQMfNwDzpAJl+5SL7jvfEyL3R/r2sWvBY7jVp0Mxk/WkGzQYX7zutb3P
+   C5AYlNsc7kUFrLTH0vxNSzXWFz9uXBT9wluLdMHxL++DeZhzsb+fp87FZ
+   CANoeJ0J1INQm/h1WX1o+6q4bohlzw9+eOqlYLOST7i24/1U/aIAGstNO
+   g==;
+X-CSE-ConnectionGUID: mZdyP9ocSyeM5GWUd/u+bg==
+X-CSE-MsgGUID: fzYXH5AGQ0mrp5e8F/FYSg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11602"; a="81707363"
 X-IronPort-AV: E=Sophos;i="6.19,277,1754982000"; 
-   d="scan'208";a="89761868"
+   d="scan'208";a="81707363"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 15:43:40 -0800
-X-CSE-ConnectionGUID: bGMlXkJKSUakS92Mwsu7sw==
-X-CSE-MsgGUID: 2ksWidk5QbqD3lA+M+oy6w==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 15:44:16 -0800
+X-CSE-ConnectionGUID: Rhfyo2cgTZ+9jsGylf4fdg==
+X-CSE-MsgGUID: CaywF8dgSwO88EnWyneC9Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,277,1754982000"; 
-   d="scan'208";a="186678505"
+   d="scan'208";a="186678565"
 Received: from dwesterg-mobl1.amr.corp.intel.com (HELO [10.125.110.133]) ([10.125.110.133])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 15:43:39 -0800
-Message-ID: <07177d90-f588-4b98-a457-a0ba580d9d54@intel.com>
-Date: Mon, 3 Nov 2025 16:43:38 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 15:44:15 -0800
+Message-ID: <ce2f5f34-8855-41eb-9f4e-6bdaaaae90b4@intel.com>
+Date: Mon, 3 Nov 2025 16:44:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,52 +52,61 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl: fix typos in cdat.c comments
-To: Alok Tiwari <alok.a.tiwari@oracle.com>, linux-cxl@vger.kernel.org,
- dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
-References: <20251011183050.616325-1-alok.a.tiwari@oracle.com>
+Subject: Re: [PATCH] cxl/pci: replace use of system_wq with system_percpu_wq
+To: Marco Crivellari <marco.crivellari@suse.com>,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Michal Hocko <mhocko@suse.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>
+References: <20251030163839.307752-1-marco.crivellari@suse.com>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <20251011183050.616325-1-alok.a.tiwari@oracle.com>
+In-Reply-To: <20251030163839.307752-1-marco.crivellari@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 10/11/25 11:30 AM, Alok Tiwari wrote:
-> - Corrected spelling of "bandwdith" -> "bandwidth"
-> - Fixed "wht" -> "with"
+On 10/30/25 9:38 AM, Marco Crivellari wrote:
+> Currently if a user enqueue a work item using schedule_delayed_work() the
+> used wq is "system_wq" (per-cpu wq) while queue_delayed_work() use
+> WORK_CPU_UNBOUND (used when a cpu is not specified). The same applies to
+> schedule_work() that is using system_wq and queue_work(), that makes use
+> again of WORK_CPU_UNBOUND.
 > 
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> This lack of consistency cannot be addressed without refactoring the API.
+> 
+> system_wq should be the per-cpu workqueue, yet in this name nothing makes
+> that clear, so replace system_wq with system_percpu_wq.
+> 
+> The old wq (system_wq) will be kept for a few release cycles.
+> 
+> Suggested-by: Tejun Heo <tj@kernel.org>
+> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
 
 Applied to cxl/next
-040acb49bf862dd851144bfc0872555d4ac4ffd5
+952e9057e66c17a9718232664368ffdaca468f93
 
 > ---
->  drivers/cxl/core/cdat.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/cxl/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> index c4bd6e8a0cf0..7120b5f2e31f 100644
-> --- a/drivers/cxl/core/cdat.c
-> +++ b/drivers/cxl/core/cdat.c
-> @@ -826,7 +826,7 @@ static struct xarray *cxl_switch_gather_bandwidth(struct cxl_region *cxlr,
->  		cxl_coordinates_combine(coords, coords, ctx->coord);
->  
->  		/*
-> -		 * Take the min of the calculated bandwdith and the upstream
-> +		 * Take the min of the calculated bandwidth and the upstream
->  		 * switch SSLBIS bandwidth if there's a parent switch
->  		 */
->  		if (!is_root)
-> @@ -949,7 +949,7 @@ static struct xarray *cxl_hb_gather_bandwidth(struct xarray *xa)
->  /**
->   * cxl_region_update_bandwidth - Update the bandwidth access coordinates of a region
->   * @cxlr: The region being operated on
-> - * @input_xa: xarray holds cxl_perf_ctx wht calculated bandwidth per ACPI0017 instance
-> + * @input_xa: xarray holds cxl_perf_ctx with calculated bandwidth per ACPI0017 instance
->   */
->  static void cxl_region_update_bandwidth(struct cxl_region *cxlr,
->  					struct xarray *input_xa)
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index bd100ac31672..0be4e508affe 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -136,7 +136,7 @@ static irqreturn_t cxl_pci_mbox_irq(int irq, void *id)
+>  	if (opcode == CXL_MBOX_OP_SANITIZE) {
+>  		mutex_lock(&cxl_mbox->mbox_mutex);
+>  		if (mds->security.sanitize_node)
+> -			mod_delayed_work(system_wq, &mds->security.poll_dwork, 0);
+> +			mod_delayed_work(system_percpu_wq, &mds->security.poll_dwork, 0);
+>  		mutex_unlock(&cxl_mbox->mbox_mutex);
+>  	} else {
+>  		/* short-circuit the wait in __cxl_pci_mbox_send_cmd() */
 
