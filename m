@@ -1,76 +1,95 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010035.outbound.protection.outlook.com [52.101.201.35])
+Received: from dormouse.ash.relay.mailchannels.net (dormouse.ash.relay.mailchannels.net [23.83.222.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D5531DDA0;
-	Mon,  3 Nov 2025 18:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BB91F4289
+	for <linux-cxl@vger.kernel.org>; Mon,  3 Nov 2025 19:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762195808; cv=fail; b=pOu/MlIfpkt68yr4OwkyMIsUgyVbhMFAIlV5YwNXMmnqGBSvqer8uPTitcML41jHG9HAUSDxvqxFIRneT9ck/uS40Xg/oN5VxPltZJOUvCrr0jslyt08f91TkdfyYN7DBTqPw21sYiN9G+WfwQjUiYfTWWGS7hIYIsqr1fVQ7n0=
+	t=1762199601; cv=pass; b=UA3yZGeR0AhQ4Qt5cQWVIJMzji+TIh6U2MIJw/bwdltQ0GU7RuJv3H06NAl+H6XH6Jk8MV+VxDiaqQFDRtWJEWlz5Fenuzvo1xj2jGyFnhdorFXRdUygI0evFhexm7zeG5zkiGlFLHGpVZFQpM7zhvI15EdWfIoBy+5LkO5wzWk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762195808; c=relaxed/simple;
-	bh=7cA/b1aqJWCr1YiM1dCLs2Lj2/XpOA6O/Y97yf+Af/o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eNIz2phsvvgHGXC8O7NrYKX4wL2ywXt5c+kdOkiBoPxHHebXVmIsupJodfZ0HpgweQAHU40Sm1DaApF1V0rldDoeU+UOQzz5uuBSgwmbDh03KlxTb7W6P8koDpnUcBgRfZ8LS465gXAWph17ppQbGmcFUtPkyuV+TUjbdrUVwr0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0+iYQrXT; arc=fail smtp.client-ip=52.101.201.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1762199601; c=relaxed/simple;
+	bh=kEW/qK81mupCHr0O1X481uiEqTRIL8TzV1lPwNLagYU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OYnxv5nEuEl6AMN1zKfbgwbvJz2gmz7P++4wHTyd1z8nzGyhYwCi/n4Trl9qTA18NNpcNJd8WN/LoV2Gw7CQsjOijV0smbw3uc5PebNiesFf734pG61z2rXksxzx1cvvfSYcgkZWwPMHxNcZ5paoeTQ0Jjl0jpEgCijX2U9HaIo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=LO9CJrH3; arc=pass smtp.client-ip=23.83.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0+iYQrXT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XWBeXpWbRKvVvNP43WNioO+szBYKnEK16eRUz2YhSVZRclHGyKsyGyR38Og+dPfBr34u95TG6l87Tks5RIFVfnlTDeOXE++nKn7BrPV5l1X8DRKmEER2QPw1Oo7duzKGWWQ2HPo0GHHNDuPSVw7JnFyTrKYc32UjW0m8fMR60OZr8X7S0L/SayXCYxLNrLlO27faNNMJWd/umy289fb9yfKO7xTznNcRrUhoMDBGl+fGZ+qE5K3nCJhs+QM+Yug0nn2b7IeewcROLsj4z+z+juGskBoHrkbXcFLuiq1cA2FrB6pj6378roKFYVvLoqQWsS7UztvnuroLzYcOcYkWvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IanQgCfir8fuHJRIuDZvDzxeFl7UI85WxuYwmzAX1IU=;
- b=DX0MbalJMVql/JeHh+up8wUVnMYgxdiuHDC5+eAR7gFVSS2RaOVqkbo3ZFLmmak2WPzeRHwvMWEBDVLZPapMWRA13IjCG4b5F8yZf7Jf+JfmI0sxa7VUrwNlvBs35o4VsO+mhcE0aOCDsOlAXUx8TygUzRl9hvc9ii35HJIsHi3SOYCEglFZpSp2UYnwWROQv4h9DX3PEipfFpi672tGD8qCoG5iI4ri9sMGWz3LuDb1UP159bUIPWdt7rUaL8HRJf2+eYDbfajs/pKORQrYTykE4LLQkaGVp4jysCbp9rGEIHBHiQh4f/TeKiD3JA+DCyfS9WlKA6MPeWsH8xgGjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IanQgCfir8fuHJRIuDZvDzxeFl7UI85WxuYwmzAX1IU=;
- b=0+iYQrXTJXhwDIyyB0AMchfc3Osa52/RPkMCMjhksDrA1b2VAoRBHzC0wVU/hHYFNlsmNDUzxLRJSAsr81GuIZrqLwXdbtPoa85myipQzTWsirMU1921udFkMM3EzskYk1njE6N6MIr8VsM0MY2rhl/YpPOt2WuqiPV05KnlS5s=
-Received: from BL0PR02CA0101.namprd02.prod.outlook.com (2603:10b6:208:51::42)
- by PH7PR12MB8123.namprd12.prod.outlook.com (2603:10b6:510:2bb::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.16; Mon, 3 Nov
- 2025 18:50:00 +0000
-Received: from BL6PEPF00022572.namprd02.prod.outlook.com
- (2603:10b6:208:51:cafe::d5) by BL0PR02CA0101.outlook.office365.com
- (2603:10b6:208:51::42) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9275.16 via Frontend Transport; Mon,
- 3 Nov 2025 18:50:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- BL6PEPF00022572.mail.protection.outlook.com (10.167.249.40) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9298.6 via Frontend Transport; Mon, 3 Nov 2025 18:49:59 +0000
-Received: from rric.localdomain (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 3 Nov
- 2025 10:49:53 -0800
-From: Robert Richter <rrichter@amd.com>
-To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
-	<gourry@gourry.net>, "Fabio M. De Francesco"
-	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Robert Richter <rrichter@amd.com>
-Subject: [PATCH v4 14/14] cxl/region: Remove local variable @inc in cxl_port_setup_targets()
-Date: Mon, 3 Nov 2025 19:47:55 +0100
-Message-ID: <20251103184804.509762-15-rrichter@amd.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251103184804.509762-1-rrichter@amd.com>
-References: <20251103184804.509762-1-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="LO9CJrH3"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 6DC20120C92;
+	Mon, 03 Nov 2025 19:53:12 +0000 (UTC)
+Received: from pdx1-sub0-mail-a475.dreamhost.com (100-121-54-118.trex-nlb.outbound.svc.cluster.local [100.121.54.118])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id DA6E2121B24;
+	Mon, 03 Nov 2025 19:53:11 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1762199592; a=rsa-sha256;
+	cv=none;
+	b=Ws9uQEojG/MjLnhYdFeWX5nHFiSVoJbrvY88p8apTGSPU96fnGXeCvH3PISaRwyirNwfbD
+	nfca5qS60ui7Ep+e6gB0DGr7Tfu50nOMegc7QsDSBjBtZ1gGlu3kRTZym7Y31M7ZURiAQJ
+	j+dqMv3+yOjybo1Ija8rLCGGN8Kw5YgFgmvIkGT8nRWjoRB8K9CuTDIivciWezIpgJgi4k
+	CJQsUEckb96F9W0wv/VFMxGoIIfYXEgJ7T2qwMjIbP743JRbynaSi8o1hlGuVpWpAeSoo3
+	0ZKCmCB5H8PJEuiCqxaLRMFdcZVwnsLdx+Q7IxYKG8oHWu4ClJ/VDfQCzMn4vA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1762199591;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
+	bh=AmFoDFrxSC+IPGq7rdCR2qUi0cncf4yoFgbBTnBlvy8=;
+	b=o9+HGTQoaZmadgEbYYOCWwqXdWRp7klbSYSmUfz5UVv032LlZa9xUJg/RAswj7V5Sr4lYc
+	wi8lVMdNj0wYFAzYDowM77uvTvh/gBWJMP031eBHeASuQHM3ifDwAxnXqeXFzDW8pjqMyt
+	1CQghanDq14LyOm+RTky05gfRX2wpel7UlPu2oMRc1JCAsLcHxIp6IpdIGSLl7ZJHfzS8o
+	2eOJQtIEXzLvEfPL2aTFJnSwOFmE1MumChx7Csb/dh603Tppovn6qiQ36FkM0qO3etUFfw
+	mfwan+Emdyjc+sq0H7m/kkx5py4C2+6FKAabHqtgve8/nejOZmc30iSZe1ZJfg==
+ARC-Authentication-Results: i=1;
+	rspamd-768b565cdb-k86dj;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Tasty-Bored: 04d8a3331abfc5d1_1762199592187_3518719076
+X-MC-Loop-Signature: 1762199592187:897472234
+X-MC-Ingress-Time: 1762199592187
+Received: from pdx1-sub0-mail-a475.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.121.54.118 (trex/7.1.3);
+	Mon, 03 Nov 2025 19:53:12 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1762199591;
+	bh=AmFoDFrxSC+IPGq7rdCR2qUi0cncf4yoFgbBTnBlvy8=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=LO9CJrH3Ut1TrBMfRuCiVBERhuXMQUEFwF7zYQZ0GxJy3VdJFSfehgTpOU3GNqnm1
+	 yy/Px/FCT+TqUfbgHH6G/DwvIW2j8tjjRKIJI/xgaVAwnBQb5hvy2RXf4743K2DR6i
+	 AyrBCtHlIQUJfgwYlODWXfrEzbN2KU21IfqSzLczNhoaGUkxW36vDIixqbLjB6olET
+	 a6qrWUQse6DKt485orERn76ySWmgnB6ohWZuMg3GtdvI/3RDnjnwkZt60b3v5qT7Dp
+	 I4Mtl4tnirs4r15hXTcE6uISZpIbBZfQvTYxPlQzAStv0b4SWBOpmqylHYFCQdL3K1
+	 8A7mzfRI3NuJQ==
+Received: from offworld.lan (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a475.dreamhost.com (Postfix) with ESMTPSA id 4d0j1f5rq7z1wdh;
+	Mon,  3 Nov 2025 11:53:10 -0800 (PST)
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: jonathan.cameron@huawei.com
+Cc: ira.weiny@intel.com,
+	alucerop@amd.com,
+	a.manzanares@samsung.com,
+	dongjoo.seo1@samsung.com,
+	mst@redhat.com,
+	marcel.apfelbaum@gmail.com,
+	armbru@redhat.com,
+	linux-cxl@vger.kernel.org,
+	qemu-devel@nongnu.org,
+	dave@stgolabs.net
+Subject: [PATCH v4 -qemu 0/5] hw/cxl: Support Back-Invalidate
+Date: Mon,  3 Nov 2025 11:52:04 -0800
+Message-Id: <20251103195209.1319917-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -78,91 +97,84 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00022572:EE_|PH7PR12MB8123:EE_
-X-MS-Office365-Filtering-Correlation-Id: f1f49f10-7383-49d6-66c3-08de1b09ca6a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?GL0LL8YEEF0N82okCEz3Lkb1ihW3zuLH1NdjBx4IREBEJk3wSb2DapgUzlb6?=
- =?us-ascii?Q?Uxh7qD2umtz8tkFC3pBA4QrOyh60S0ZzgT8gWcOEtnGaE6ntR/gNY3ZFg27H?=
- =?us-ascii?Q?kdE/gcml5fW1JZCfyDxmP53HpKRdbSYSMR/0RRDxrCE6kSbMCXcxNgPj4kWv?=
- =?us-ascii?Q?yoF/jSPSTTXif02sD+K6ofiV96254ynel+fgroDsZrs+T9Po+9dmmjfrK9E5?=
- =?us-ascii?Q?PT/pL+/iD6cKdqghuBmVPDuYW2k19W3KJS8SD6OXkmXgOzQ0Bft0r3BC+h7L?=
- =?us-ascii?Q?7ZK1PQNvFGnfCFReTtZ961tk5iJb1NyOVMh8diD7KSAApHlp/Tm8N4326+PY?=
- =?us-ascii?Q?lV5LJ2cKJBm+MXwMdehmVMifMfYQHg3R58cPWI7jBbP9up0O/L1ZPMRP6mLB?=
- =?us-ascii?Q?cZ3jH+yxxPNELfeWIPpnHf1jMz5Vy4wtxKP5chnaoscPro4jDcAYxNDuPT8a?=
- =?us-ascii?Q?EdqBuNGXaLtou/8ma8TqvuGk1wcHO5jrAQSwvEFtn+wVRI62n0phuUmaFeG+?=
- =?us-ascii?Q?6Y0YZ34Loy7713krZSFNFIxK0vdaI6pUCgzkh6FxG7FUqd5mMpuYXTEBgzg6?=
- =?us-ascii?Q?Z15vqvfIwB4zVeCvpVpZ3cbYdwM3T9cYJmpJxg2KUENkdL4ELLFnZEk+hPa7?=
- =?us-ascii?Q?dIq047X4Lesuk6QoIPzEjKrzHOzx27CtVPJs7bF+IgkBQhnXB8wcyFwL/3uI?=
- =?us-ascii?Q?2QaCGurF0nXMRnUglqkZG13MeezPydq71PpLCI8UNZjBH9owX6Jj+qAIMmXR?=
- =?us-ascii?Q?Nam8TarzpuuDlJVJL5orBJ3HYBF6+pQfKmKjrnp7IYsrJ6ZLD183UHbxYeWg?=
- =?us-ascii?Q?XKC4VNoWW2w49hfdTLSeH72CfwUZ+aZmbAO677EmPGgoHUIiNfo74CUG6egs?=
- =?us-ascii?Q?ixjirX/3EmRrrnJwzooUej8KOeIq8PfjGb7VIHvOWmk5q5xaPSUE8BvVwC8o?=
- =?us-ascii?Q?wDzAGbsLJ168frMokp8x3EdexH+Of4idrbqk6xghRqGquF3LfKZT+3Jru0b8?=
- =?us-ascii?Q?9cqBt9x8/8ujpBT++Qx2o+RE27u0BkUKM4e3QOt0EYGliTnl43oU6MGINmBv?=
- =?us-ascii?Q?Aq+bH48N2D4AT/t8TclhcRb6PHWJtkgKxVQFUdr+EZS42Wk0jc9IHdo4BJvh?=
- =?us-ascii?Q?YanmiSDv24dbdsX5iIgQi/nZQbFbw9YfXjf/ah92ruy1b76ata4WrWKFHu8d?=
- =?us-ascii?Q?pZJSsnite+xi3VB9kKXAewW0gQIyqFFV7f7mXR3eYMwH1w9phexZ4B+/UsWc?=
- =?us-ascii?Q?C3G0img57hxToThGnllSLLUF6MvXzcpsXhgdgsAgFhpezz073xpYXQrJWLwG?=
- =?us-ascii?Q?HuczeXwBkf1QJ+eo0e9FYhvZg8ovBV5QKK3B0YMOeUwTJwTqi68DYWgW3Ug8?=
- =?us-ascii?Q?cJIAQicgkHlMEGPJd9O8qvQmiXYgfF+yoFELTYORPYqctTw1iWHMq31SN6PW?=
- =?us-ascii?Q?6rEfL53LtVyTEZ0YufDfVyr5JoJOeEbiwgVFu27GKVtzQU0kN9y9zwG9S8yM?=
- =?us-ascii?Q?9qbTSc3VtbqGxSZsM+C2Lpx3wyy4SSAxJpzDAFfK7ZSgn1yaNKnaY2RYeWyQ?=
- =?us-ascii?Q?EykosiNLO8Oq1iQBUuA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(7416014)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2025 18:49:59.7378
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1f49f10-7383-49d6-66c3-08de1b09ca6a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00022572.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8123
 
-Simplify the code by removing local variable @inc. The variable is not
-used elsewhere, remove it and directly increment the target number.
+The following allows support for component basic back invalidation discovery
+and config, by exposing the BI routing table and decoder registers. Instead
+of going the type2[0] route, this series proposes adding support for type3
+hdm-db, which allows a more direct way of supporting BI in qemu.
 
-Signed-off-by: Robert Richter <rrichter@amd.com>
----
- drivers/cxl/core/region.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Changes from v3 (https://lore.kernel.org/all/20250930032153.1127773-1-dave@stgolabs.net/):
+  o Fix Flexbus caps bits in patch 1. (Jonathan)
+  o Flipped the bi arg to true for hard-configured components in patch 4 (Jonathan).
+  o Expose the BI routing table only if the sw upstream port is in Flit mode.
+  o Removed the mem-path= arg in the documentation as it deals with volatile (Donjoo). 
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index dec003084521..a81fbe9cedae 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1332,7 +1332,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 				  struct cxl_endpoint_decoder *cxled)
- {
- 	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
--	int parent_iw, parent_ig, ig, iw, rc, inc = 0, pos = cxled->pos;
-+	int parent_iw, parent_ig, ig, iw, rc, pos = cxled->pos;
- 	struct cxl_port *parent_port = to_cxl_port(port->dev.parent);
- 	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
- 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-@@ -1524,9 +1524,8 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 		cxlsd->target[cxl_rr->nr_targets_set] = ep->dport;
- 		cxlsd->cxld.target_map[cxl_rr->nr_targets_set] = ep->dport->port_id;
- 	}
--	inc = 1;
-+	cxl_rr->nr_targets_set++;
- out_target_set:
--	cxl_rr->nr_targets_set += inc;
- 	dev_dbg(&cxlr->dev, "%s:%s target[%d] = %s for %s:%s @ %d\n",
- 		dev_name(port->uport_dev), dev_name(&port->dev),
- 		cxl_rr->nr_targets_set - 1, dev_name(ep->dport->dport_dev),
--- 
-2.47.3
+Changes from v2 (https://lore.kernel.org/linux-cxl/20250811033405.332295-1-dave@stgolabs.net/):
+  o Renamed 256b-flit to x-256b-flit (mst)
+  o Added a brief description of flit mode in patch 1 changelog (Markus)
+  o Added missing hdm-db parameter which went missing in v2.
+  o Replaced the new CXL3_TYPE3_DEVICE with passing 'bi' params. (Jonathan)
+  o Fixed writemask bits in patch 4. (Jonathan)
+  o Misc cleanups in patch 4. (Jonathan)
+  o New patch 5 to remove register special_ops read() cb. (Jonathan)
+
+Changes from v1 (https://lore.kernel.org/qemu-devel/20250806055708.196851-1-dave@stgolabs.net/):
+  o Further lnk training in patch 1. (Jonathan)
+  o Flit parameter changed to bool in patch 1. (Jonathan)
+  o Do not set 68B in component Flexbus Port when in flitmode in patch 1.
+  o Doc build fixlet in patch 3.
+  o Pass the exact type3 type in cxl_component_create_dvsec() - unused, but better
+    for keeping track, in patch 4.
+  o Change doc example to volatile device in patch 4.
+
+Changes from rfc (https://lore.kernel.org/qemu-devel/20250729165441.1898150-1-dave@stgolabs.net/):
+  o Added 256b-flit parameter, per Jonathan.
+  o Added window restrictions changes.
+  o Dropped rfc tag.
+
+Patch 1 introduces the flit mode parameter.
+Patch 2 is lifted from Ira's series with some small (but non-trivial) changes.
+Patch 3 updates the cfmw restrictions option.
+Patch 4 adds BI decoder/rt register support to enable type3 HDM-DB.
+Patch 5 is a small cleanup.
+
+Testing wise, this has passed relevant kernel side BI register IO flows for
+BI-ID setup and deallocation.
+
+The next step for this would be to add UIO support to qemu.
+
+Applies against branch 'origin/cxl-2025-10-03-draft' from Jonathan's repository.
+
+Thanks!
+
+Davidlohr Bueso (4):
+  hw/pcie: Support enabling flit mode
+  hw/cxl: Allow BI by default in Window restrictions
+  hw/cxl: Support type3 HDM-DB
+  hw/cxl: Remove register special_ops->read()
+
+Ira Weiny (1):
+  hw/cxl: Refactor component register initialization
+
+ docs/system/devices/cxl.rst               |  23 +++
+ hw/cxl/cxl-component-utils.c              | 211 ++++++++++++++++------
+ hw/cxl/cxl-host.c                         |   2 +-
+ hw/mem/cxl_type3.c                        |  15 +-
+ hw/pci-bridge/cxl_downstream.c            |  10 +-
+ hw/pci-bridge/cxl_root_port.c             |  11 +-
+ hw/pci-bridge/cxl_upstream.c              |  18 +-
+ hw/pci-bridge/gen_pcie_root_port.c        |   1 +
+ hw/pci-bridge/pci_expander_bridge.c       |   2 +-
+ hw/pci/pcie.c                             |  23 ++-
+ include/hw/cxl/cxl_component.h            |  87 +++++++--
+ include/hw/cxl/cxl_device.h               |   4 +
+ include/hw/pci-bridge/cxl_upstream_port.h |   1 +
+ include/hw/pci/pcie.h                     |   2 +-
+ include/hw/pci/pcie_port.h                |   1 +
+ qapi/machine.json                         |   3 +-
+ qemu-options.hx                           |   4 +-
+ 17 files changed, 319 insertions(+), 99 deletions(-)
+
+--
+2.39.5
 
