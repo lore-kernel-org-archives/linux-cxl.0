@@ -1,322 +1,315 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D4132B9BF;
-	Tue,  4 Nov 2025 23:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09651347FE4;
+	Tue,  4 Nov 2025 23:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762299345; cv=none; b=bfusF5Cvl4TzYXpPAGKfgUva/IUHezfW1kwk41F5GmNtyQY7A75WI9Ls0QFYNuIc3h41LnopE1DNcQW1c/om0KCSeo1wtL8xsqgSYaFGYS1QfnJjdC5SPWxcj8knbLCw4xIS8bXbP0jpHKQ1Fed2UmQ6n2QYk9i+OUGVAz3kbBY=
+	t=1762299580; cv=none; b=JXT+JgZXemlge3B3sr5kiaEY0yHG6cK7U6xXaVzekPXnQSt972X0ymELKWuwPS9+uEZm6GSD0GNaib95EwHYl5xpMVZEfiwkoyOjjVqKGJ7E+W54DeZCUo2Bo3yHcAbLeDGKBgn/aaiqkvOyhpRA6rbVOuhXYD8BSZkvmr3nRkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762299345; c=relaxed/simple;
-	bh=P8sM+279r/7jC+SZ4ufobrgc7rpxTIYv5eNtUj3Xros=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ze7cEl4InAguuNzKHnfBf0HC8jZo53KgLdblVVvzxM+k5WS7cu8DVzu1HIRkaZYUqVJi+A4bh75iL+anoqyyuo3E9X5YG8V/3zKHcQsQOzlnL8qyuQF0NvEXckQEN0GElrOBWRdBEc1840lHh0M6JoeLF+EGJIM58MmLHk7MA7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=llBSXQFT; arc=none smtp.client-ip=192.198.163.15
+	s=arc-20240116; t=1762299580; c=relaxed/simple;
+	bh=ngSWtS+7t7YeDDelZmLGDkmDvHQs35IKcq0WhDg97t4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qwSltpJlCJ7fgkp7kqqmWWZuHARcBCnFx5TBGfgdzw8Yr24tf83lvFVx4EKNkvDJrXhXwBfDLVZQd66e/xpvuWXzRXuXOPy+gDJFz1euEGB5c4VTXSHR2PS0pET0KVWcDUu5hoRvBLM2TB0mKXqcHG14UtTM/LTvYe2MeNn9PxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dT38Nbxk; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="llBSXQFT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dT38Nbxk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762299343; x=1793835343;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=P8sM+279r/7jC+SZ4ufobrgc7rpxTIYv5eNtUj3Xros=;
-  b=llBSXQFTXh38z34RDeEQx+bnwv4qTc7RylM+vDEKoyLvvuRxclb2OFyN
-   kLkBVHLaPcerfwApAVxWatRZPrZFD1KQDp9KsfCAzyd0mIXZnZDt+fhqe
-   mfSDfILuhlmntNYzznR1egRIdPAdNALHKCjDNZ+LhqKYfsOVDx+Cyjk5p
-   Px8OhBP8FjcN9qBFxxCAUb09CEHO09YVHjRG1iZ6CRImq72Uuy/dIZ4dZ
-   a0VSiGsMXlnYBJ+fmYeY3FXwKNHjxw2sFztPqaLfYdBJp1v1fE8AhWYNi
-   eeVTggxZxYECB48sMkL5p1hbblw5XEjdVXk+LFMM7v5ZTXIYfCkNDaeSs
+  t=1762299578; x=1793835578;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ngSWtS+7t7YeDDelZmLGDkmDvHQs35IKcq0WhDg97t4=;
+  b=dT38NbxkiGbAYguISil7yx77Qgv+PKWi3LTz+rECvd8nh8SUeR9DPEwA
+   9YfIxJquXVHBEpmtWARxGYd3fDLXJCr9DO+klNhX+fx0Uh7lM2N+1M7xE
+   kakNyMYj9XFMhJjU9j+40683npSOglBHYDUnwUO79APsgNciDOdZLL3e4
+   3HzppSEA4mQ5sNbBHCIwavgi4iQN2xo/9ZFl7Crq/+WHt+PweI0AWYOxP
+   IgKlYG971Zotsmf3MKg8Tqg3UagHPIFUZ3WG+QHS+RLBwaKJINwtEWpjE
+   2psJ2FM6C782aR80681lzIJLOEHR5a5FX+SRwl/ZwPK8soBBXHkbMGgXy
    Q==;
-X-CSE-ConnectionGUID: z8NLg7juRECFA6c+p/M8Iw==
-X-CSE-MsgGUID: q/MkU720Q6qECM+mm88ToA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="64505244"
+X-CSE-ConnectionGUID: 7BT8hNfCS3Wv3cd5hVKKJA==
+X-CSE-MsgGUID: OUo8TTzCSCqo2cQkLhjkUw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="64437913"
 X-IronPort-AV: E=Sophos;i="6.19,280,1754982000"; 
-   d="scan'208";a="64505244"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2025 15:35:43 -0800
-X-CSE-ConnectionGUID: tXH83n4/T8+V0cnwP08HyQ==
-X-CSE-MsgGUID: SymAw6/0SNeK+eYx1M/4Iw==
+   d="scan'208";a="64437913"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2025 15:39:37 -0800
+X-CSE-ConnectionGUID: COpyCtZmShyX7qdMSvkFQw==
+X-CSE-MsgGUID: 3PzKnvF3SfaiQPHca9eOcg==
 X-ExtLoop1: 1
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by fmviesa003.fm.intel.com with ESMTP; 04 Nov 2025 15:35:39 -0800
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vGQYr-000Rw4-1Z;
-	Tue, 04 Nov 2025 23:35:37 +0000
-Date: Wed, 5 Nov 2025 07:35:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: Robert Richter <rrichter@amd.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>
-Cc: oe-kbuild-all@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>,
-	Robert Richter <rrichter@amd.com>
-Subject: Re: [PATCH v4 10/14] cxl: Enable AMD Zen5 address translation using
- ACPI PRMT
-Message-ID: <202511050720.Hy1VQf0n-lkp@intel.com>
-References: <20251103184804.509762-11-rrichter@amd.com>
+X-IronPort-AV: E=Sophos;i="6.19,280,1754982000"; 
+   d="scan'208";a="187238158"
+Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.110.201]) ([10.125.110.201])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2025 15:39:36 -0800
+Message-ID: <848c69cd-297a-4c6b-9411-3dfa1fb3a259@intel.com>
+Date: Tue, 4 Nov 2025 16:39:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251103184804.509762-11-rrichter@amd.com>
-
-Hi Robert,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on 211ddde0823f1442e4ad052a2f30f050145ccada]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Robert-Richter/cxl-region-Store-root-decoder-in-struct-cxl_region/20251104-025351
-base:   211ddde0823f1442e4ad052a2f30f050145ccada
-patch link:    https://lore.kernel.org/r/20251103184804.509762-11-rrichter%40amd.com
-patch subject: [PATCH v4 10/14] cxl: Enable AMD Zen5 address translation using ACPI PRMT
-config: x86_64-randconfig-071-20251105 (https://download.01.org/0day-ci/archive/20251105/202511050720.Hy1VQf0n-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251105/202511050720.Hy1VQf0n-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511050720.Hy1VQf0n-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/cxl/core/atl.c: In function 'cxl_prm_translate_hpa_range':
->> drivers/cxl/core/atl.c:63:49: error: invalid use of undefined type 'struct cxl_region_context'
-      63 |         struct cxl_endpoint_decoder *cxled = ctx->cxled;
-         |                                                 ^~
-   drivers/cxl/core/atl.c:65:39: error: invalid use of undefined type 'struct cxl_region_context'
-      65 |         struct cxl_memdev *cxlmd = ctx->cxlmd;
-         |                                       ^~
-   drivers/cxl/core/atl.c:66:37: error: invalid use of undefined type 'struct cxl_region_context'
-      66 |         struct range hpa_range = ctx->hpa_range;
-         |                                     ^~
-   drivers/cxl/core/atl.c:92:16: error: invalid use of undefined type 'struct cxl_region_context'
-      92 |         if (ctx->interleave_ways != 1) {
-         |                ^~
-   In file included from include/linux/device.h:15,
-                    from include/linux/pci.h:37,
-                    from drivers/cxl/core/atl.c:7:
-   drivers/cxl/core/atl.c:94:28: error: invalid use of undefined type 'struct cxl_region_context'
-      94 |                         ctx->interleave_ways, ctx->interleave_granularity);
-         |                            ^~
-   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
-     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
-         |                                                        ^~~~~~~~~~~
-   drivers/cxl/core/atl.c:93:17: note: in expansion of macro 'dev_dbg'
-      93 |                 dev_dbg(&cxld->dev, "unexpected interleaving config: ways: %d granularity: %d\n",
-         |                 ^~~~~~~
-   drivers/cxl/core/atl.c:94:50: error: invalid use of undefined type 'struct cxl_region_context'
-      94 |                         ctx->interleave_ways, ctx->interleave_granularity);
-         |                                                  ^~
-   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
-     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
-         |                                                        ^~~~~~~~~~~
-   drivers/cxl/core/atl.c:93:17: note: in expansion of macro 'dev_dbg'
-      93 |                 dev_dbg(&cxld->dev, "unexpected interleaving config: ways: %d granularity: %d\n",
-         |                 ^~~~~~~
-   drivers/cxl/core/atl.c:114:60: error: invalid use of undefined type 'struct cxl_region_context'
-     114 |                         hpa_range.start, hpa_range.end, ctx->hpa_range.start,
-         |                                                            ^~
-   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
-     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
-         |                                                        ^~~~~~~~~~~
-   drivers/cxl/core/atl.c:112:17: note: in expansion of macro 'dev_dbg'
-     112 |                 dev_dbg(cxld->dev.parent,
-         |                 ^~~~~~~
-   drivers/cxl/core/atl.c:115:28: error: invalid use of undefined type 'struct cxl_region_context'
-     115 |                         ctx->hpa_range.end, dev_name(&cxld->dev));
-         |                            ^~
-   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
-     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
-         |                                                        ^~~~~~~~~~~
-   drivers/cxl/core/atl.c:112:17: note: in expansion of macro 'dev_dbg'
-     112 |                 dev_dbg(cxld->dev.parent,
-         |                 ^~~~~~~
-   drivers/cxl/core/atl.c:130:60: error: invalid use of undefined type 'struct cxl_region_context'
-     130 |                         hpa_range.start, hpa_range.end, ctx->hpa_range.start,
-         |                                                            ^~
-   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
-     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
-         |                                                        ^~~~~~~~~~~
-   drivers/cxl/core/atl.c:128:17: note: in expansion of macro 'dev_dbg'
-     128 |                 dev_dbg(cxld->dev.parent,
-         |                 ^~~~~~~
-   drivers/cxl/core/atl.c:131:28: error: invalid use of undefined type 'struct cxl_region_context'
-     131 |                         ctx->hpa_range.end, dev_name(&cxld->dev));
-         |                            ^~
-   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
-     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
-         |                                                        ^~~~~~~~~~~
-   drivers/cxl/core/atl.c:128:17: note: in expansion of macro 'dev_dbg'
-     128 |                 dev_dbg(cxld->dev.parent,
-         |                 ^~~~~~~
-   drivers/cxl/core/atl.c:156:60: error: invalid use of undefined type 'struct cxl_region_context'
-     156 |                         hpa_range.start, hpa_range.end, ctx->hpa_range.start,
-         |                                                            ^~
-   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
-     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
-         |                                                        ^~~~~~~~~~~
-   drivers/cxl/core/atl.c:154:17: note: in expansion of macro 'dev_dbg'
-     154 |                 dev_dbg(cxld->dev.parent,
-         |                 ^~~~~~~
-   drivers/cxl/core/atl.c:157:28: error: invalid use of undefined type 'struct cxl_region_context'
-     157 |                         ctx->hpa_range.end, dev_name(&cxld->dev));
-         |                            ^~
-   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
-     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
-         |                                                        ^~~~~~~~~~~
-   drivers/cxl/core/atl.c:154:17: note: in expansion of macro 'dev_dbg'
-     154 |                 dev_dbg(cxld->dev.parent,
-         |                 ^~~~~~~
-   drivers/cxl/core/atl.c:161:12: error: invalid use of undefined type 'struct cxl_region_context'
-     161 |         ctx->hpa_range = hpa_range;
-         |            ^~
-   drivers/cxl/core/atl.c:162:12: error: invalid use of undefined type 'struct cxl_region_context'
-     162 |         ctx->interleave_ways = ways;
-         |            ^~
-   drivers/cxl/core/atl.c:163:12: error: invalid use of undefined type 'struct cxl_region_context'
-     163 |         ctx->interleave_granularity = gran;
-         |            ^~
-   drivers/cxl/core/atl.c:167:29: error: invalid use of undefined type 'struct cxl_region_context'
-     167 |                 dev_name(ctx->cxlmd->dev.parent), base, len, hpa_range.start,
-         |                             ^~
-   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
-     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND v13 20/25] CXL/PCI: Introduce CXL Port protocol error
+ handlers
+To: "Bowman, Terry" <terry.bowman@amd.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
+ ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
+ rrichter@amd.com, dan.carpenter@linaro.org,
+ PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
+ Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20251104170305.4163840-1-terry.bowman@amd.com>
+ <20251104170305.4163840-21-terry.bowman@amd.com>
+ <5ed52253-a74d-4643-bdb6-a8d4852a9be7@intel.com>
+ <f09df618-987e-4051-b5a2-fd9d2cef18e2@amd.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <f09df618-987e-4051-b5a2-fd9d2cef18e2@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-vim +63 drivers/cxl/core/atl.c
 
-    59	
-    60	static int cxl_prm_translate_hpa_range(struct cxl_root *cxl_root, void *data)
-    61	{
-    62		struct cxl_region_context *ctx = data;
-  > 63		struct cxl_endpoint_decoder *cxled = ctx->cxled;
-    64		struct cxl_decoder *cxld = &cxled->cxld;
-    65		struct cxl_memdev *cxlmd = ctx->cxlmd;
-    66		struct range hpa_range = ctx->hpa_range;
-    67		struct pci_dev *pci_dev;
-    68		u64 spa_len, len = range_len(&hpa_range);
-    69		u64 addr, base_spa, base = hpa_range.start;
-    70		int ways, gran;
-    71	
-    72		/*
-    73		 * When Normalized Addressing is enabled, the endpoint
-    74		 * maintains a 1:1 mapping between HPA and DPA. If disabled,
-    75		 * skip address translation and perform only a range check.
-    76		 */
-    77		if (hpa_range.start != cxled->dpa_res->start)
-    78			return 0;
-    79	
-    80		if (!IS_ALIGNED(hpa_range.start, SZ_256M) ||
-    81		    !IS_ALIGNED(hpa_range.end + 1, SZ_256M)) {
-    82			dev_dbg(cxld->dev.parent,
-    83				"CXL address translation: Unaligned decoder HPA range: %#llx-%#llx(%s)\n",
-    84				hpa_range.start, hpa_range.end, dev_name(&cxld->dev));
-    85			return -ENXIO;
-    86		}
-    87	
-    88		/*
-    89		 * Endpoints are programmed passthrough in Normalized
-    90		 * Addressing mode.
-    91		 */
-    92		if (ctx->interleave_ways != 1) {
-    93			dev_dbg(&cxld->dev, "unexpected interleaving config: ways: %d granularity: %d\n",
-    94				ctx->interleave_ways, ctx->interleave_granularity);
-    95			return -ENXIO;
-    96		}
-    97	
-    98		if (!cxlmd || !dev_is_pci(cxlmd->dev.parent)) {
-    99			dev_dbg(&cxld->dev, "No endpoint found: %s, range %#llx-%#llx\n",
-   100				dev_name(cxld->dev.parent), hpa_range.start,
-   101				hpa_range.end);
-   102			return -ENXIO;
-   103		}
-   104	
-   105		pci_dev = to_pci_dev(cxlmd->dev.parent);
-   106	
-   107		/* Translate HPA range to SPA. */
-   108		hpa_range.start = base_spa = prm_cxl_dpa_spa(pci_dev, hpa_range.start);
-   109		hpa_range.end = prm_cxl_dpa_spa(pci_dev, hpa_range.end);
-   110	
-   111		if (hpa_range.start == ULLONG_MAX || hpa_range.end == ULLONG_MAX) {
-   112			dev_dbg(cxld->dev.parent,
-   113				"CXL address translation: Failed to translate HPA range: %#llx-%#llx:%#llx-%#llx(%s)\n",
-   114				hpa_range.start, hpa_range.end, ctx->hpa_range.start,
-   115				ctx->hpa_range.end, dev_name(&cxld->dev));
-   116			return -ENXIO;
-   117		}
-   118	
-   119		/*
-   120		 * Since translated addresses include the interleaving
-   121		 * offsets, align the range to 256 MB.
-   122		 */
-   123		hpa_range.start = ALIGN_DOWN(hpa_range.start, SZ_256M);
-   124		hpa_range.end = ALIGN(hpa_range.end, SZ_256M) - 1;
-   125	
-   126		spa_len = range_len(&hpa_range);
-   127		if (!len || !spa_len || spa_len % len) {
-   128			dev_dbg(cxld->dev.parent,
-   129				"CXL address translation: HPA range not contiguous: %#llx-%#llx:%#llx-%#llx(%s)\n",
-   130				hpa_range.start, hpa_range.end, ctx->hpa_range.start,
-   131				ctx->hpa_range.end, dev_name(&cxld->dev));
-   132			return -ENXIO;
-   133		}
-   134	
-   135		ways = spa_len / len;
-   136		gran = SZ_256;
-   137	
-   138		/*
-   139		 * Determine interleave granularity
-   140		 *
-   141		 * Note: The position of the chunk from one interleaving block
-   142		 * to the next may vary and thus cannot be considered
-   143		 * constant. Address offsets larger than the interleaving
-   144		 * block size cannot be used to calculate the granularity.
-   145		 */
-   146		while (ways > 1 && gran <= SZ_16M) {
-   147			addr = prm_cxl_dpa_spa(pci_dev, base + gran);
-   148			if (addr != base_spa + gran)
-   149				break;
-   150			gran <<= 1;
-   151		}
-   152	
-   153		if (gran > SZ_16M) {
-   154			dev_dbg(cxld->dev.parent,
-   155				"CXL address translation: Cannot determine granularity: %#llx-%#llx:%#llx-%#llx(%s)\n",
-   156				hpa_range.start, hpa_range.end, ctx->hpa_range.start,
-   157				ctx->hpa_range.end, dev_name(&cxld->dev));
-   158			return -ENXIO;
-   159		}
-   160	
-   161		ctx->hpa_range = hpa_range;
-   162		ctx->interleave_ways = ways;
-   163		ctx->interleave_granularity = gran;
-   164	
-   165		dev_dbg(&cxld->dev,
-   166			"address mapping found for %s (hpa -> spa): %#llx+%#llx -> %#llx+%#llx ways:%d granularity:%d\n",
-   167			dev_name(ctx->cxlmd->dev.parent), base, len, hpa_range.start,
-   168			spa_len, ways, gran);
-   169	
-   170		return 0;
-   171	}
-   172	
+On 11/4/25 2:27 PM, Bowman, Terry wrote:
+> 
+> 
+> On 11/4/2025 3:20 PM, Dave Jiang wrote:
+>>
+>> On 11/4/25 10:03 AM, Terry Bowman wrote:
+>>> Add CXL protocol error handlers for CXL Port devices (Root Ports,
+>>> Downstream Ports, and Upstream Ports). Implement cxl_port_cor_error_detected()
+>>> and cxl_port_error_detected() to handle correctable and uncorrectable errors
+>>> respectively.
+>>>
+>>> Introduce cxl_get_ras_base() to retrieve the cached RAS register base
+>>> address for a given CXL port. This function supports CXL Root Ports,
+>>> Downstream Ports, and Upstream Ports by returning their previously mapped
+>>> RAS register addresses.
+>>>
+>>> Add device lock assertions to protect against concurrent device or RAS
+>>> register removal during error handling. The port error handlers require
+>>> two device locks:
+>>>
+>>> 1. The port's CXL parent device - RAS registers are mapped using devm_*
+>>>    functions with the parent port as the host. Locking the parent prevents
+>>>    the RAS registers from being unmapped during error handling.
+>>>
+>>> 2. The PCI device (pdev->dev) - Locking prevents concurrent modifications
+>>>    to the PCI device structure during error handling.
+>>>
+>>> The lock assertions added here will be satisfied by device locks introduced
+>>> in a subsequent patch.
+>>>
+>>> Introduce get_pci_cxl_host_dev() to return the device responsible for
+>>> managing the RAS register mapping. This function increments the reference
+>>> count on the host device to prevent premature resource release during error
+>>> handling. The caller is responsible for decrementing the reference count.
+>>> For CXL endpoints, which manage resources without a separate host device,
+>>> this function returns NULL.
+>>>
+>>> Update the AER driver's is_cxl_error() to recognize CXL Port devices in
+>>> addition to CXL Endpoints, as both now have CXL-specific error handlers.
+>>>
+>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>
+>>> ---
+>>>
+>>> Changes in v12->v13:
+>>> - Move get_pci_cxl_host_dev() and cxl_handle_proto_error() to Dequeue
+>>>   patch (Terry)
+>>> - Remove EP case in cxl_get_ras_base(), not used. (Terry)
+>>> - Remove check for dport->dport_dev (Dave)
+>>> - Remove whitespace (Terry)
+>>>
+>>> Changes in v11->v12:
+>>> - Add call to cxl_pci_drv_bound() in cxl_handle_proto_error() and
+>>>   pci_to_cxl_dev()
+>>> - Change cxl_error_detected() -> cxl_cor_error_detected()
+>>> - Remove NULL variable assignments
+>>> - Replace bus_find_device() with find_cxl_port_by_uport() for upstream
+>>>   port searches.
+>>>
+>>> Changes in v10->v11:
+>>> - None
+>>> ---
+>>>  drivers/cxl/core/core.h       | 10 +++++++
+>>>  drivers/cxl/core/port.c       |  7 ++---
+>>>  drivers/cxl/core/ras.c        | 49 +++++++++++++++++++++++++++++++++++
+>>>  drivers/pci/pcie/aer_cxl_vh.c |  5 +++-
+>>>  4 files changed, 67 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+>>> index b2c0ccd6803f..046ec65ed147 100644
+>>> --- a/drivers/cxl/core/core.h
+>>> +++ b/drivers/cxl/core/core.h
+>>> @@ -157,6 +157,8 @@ void cxl_cor_error_detected(struct device *dev);
+>>>  pci_ers_result_t pci_error_detected(struct pci_dev *pdev,
+>>>  				    pci_channel_state_t error);
+>>>  void pci_cor_error_detected(struct pci_dev *pdev);
+>>> +pci_ers_result_t cxl_port_error_detected(struct device *dev);
+>>> +void cxl_port_cor_error_detected(struct device *dev);
+>>>  #else
+>>>  static inline int cxl_ras_init(void)
+>>>  {
+>>> @@ -176,6 +178,11 @@ static inline pci_ers_result_t pci_error_detected(struct pci_dev *pdev,
+>>>  	return PCI_ERS_RESULT_NONE;
+>>>  }
+>>>  static inline void pci_cor_error_detected(struct pci_dev *pdev) { }
+>>> +static inline void cxl_port_cor_error_detected(struct device *dev) { }
+>>> +static inline pci_ers_result_t cxl_port_error_detected(struct device *dev)
+>>> +{
+>>> +	return PCI_ERS_RESULT_NONE;
+>>> +}
+>>>  #endif /* CONFIG_CXL_RAS */
+>>>  
+>>>  /* Restricted CXL Host specific RAS functions */
+>>> @@ -190,6 +197,9 @@ static inline void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) { }
+>>>  #endif /* CONFIG_CXL_RCH_RAS */
+>>>  
+>>>  int cxl_gpf_port_setup(struct cxl_dport *dport);
+>>> +struct cxl_port *find_cxl_port(struct device *dport_dev,
+>>> +			       struct cxl_dport **dport);
+>>> +struct cxl_port *find_cxl_port_by_uport(struct device *uport_dev);
+>>>  
+>>>  struct cxl_hdm;
+>>>  int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+>>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+>>> index b70e1b505b5c..d060f864cf2e 100644
+>>> --- a/drivers/cxl/core/port.c
+>>> +++ b/drivers/cxl/core/port.c
+>>> @@ -1360,8 +1360,8 @@ static struct cxl_port *__find_cxl_port(struct cxl_find_port_ctx *ctx)
+>>>  	return NULL;
+>>>  }
+>>>  
+>>> -static struct cxl_port *find_cxl_port(struct device *dport_dev,
+>>> -				      struct cxl_dport **dport)
+>>> +struct cxl_port *find_cxl_port(struct device *dport_dev,
+>>> +			       struct cxl_dport **dport)
+>>>  {
+>>>  	struct cxl_find_port_ctx ctx = {
+>>>  		.dport_dev = dport_dev,
+>>> @@ -1564,7 +1564,7 @@ static int match_port_by_uport(struct device *dev, const void *data)
+>>>   * Function takes a device reference on the port device. Caller should do a
+>>>   * put_device() when done.
+>>>   */
+>>> -static struct cxl_port *find_cxl_port_by_uport(struct device *uport_dev)
+>>> +struct cxl_port *find_cxl_port_by_uport(struct device *uport_dev)
+>>>  {
+>>>  	struct device *dev;
+>>>  
+>>> @@ -1573,6 +1573,7 @@ static struct cxl_port *find_cxl_port_by_uport(struct device *uport_dev)
+>>>  		return to_cxl_port(dev);
+>>>  	return NULL;
+>>>  }
+>>> +EXPORT_SYMBOL_NS_GPL(find_cxl_port_by_uport, "CXL");
+>>>  
+>>>  static int update_decoder_targets(struct device *dev, void *data)
+>>>  {
+>>> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+>>> index beb142054bda..142ca8794107 100644
+>>> --- a/drivers/cxl/core/ras.c
+>>> +++ b/drivers/cxl/core/ras.c
+>>> @@ -145,6 +145,39 @@ static void cxl_dport_map_ras(struct cxl_dport *dport)
+>>>  		dev_dbg(dev, "Failed to map RAS capability.\n");
+>>>  }
+>>>  
+>>> +static void __iomem *cxl_get_ras_base(struct device *dev)
+>>> +{
+>>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>>> +
+>>> +	switch (pci_pcie_type(pdev)) {
+>>> +	case PCI_EXP_TYPE_ROOT_PORT:
+>>> +	case PCI_EXP_TYPE_DOWNSTREAM:
+>>> +	{
+>>> +		struct cxl_dport *dport;
+>>> +		struct cxl_port *port __free(put_cxl_port) = find_cxl_port(&pdev->dev, &dport);
+>>> +
+>>> +		if (!dport) {
+>>> +			pci_err(pdev, "Failed to find the CXL device");
+>>> +			return NULL;
+>>> +		}
+>>> +		return dport->regs.ras;
+>> The RAS MMIO mapping is done via devm_cxl_iomap_block() and is a devres against the device. Without holding the device lock, the port driver can unbind and the address mapping may go away in the middle or before cxl_handle_cor_ras()/cxl_handle_ras() being called. I think you'll have to hold the port lock here and make sure that the port driver is bound before reading the RAS register? I think the dport ras should be covered under the port umbrella.
+>>
+>>> +	}
+>>> +	case PCI_EXP_TYPE_UPSTREAM:
+>>> +	{
+>>> +		struct cxl_port *port __free(put_cxl_port) = find_cxl_port_by_uport(&pdev->dev);
+>>> +
+>>> +		if (!port) {
+>>> +			pci_err(pdev, "Failed to find the CXL device");
+>>> +			return NULL;
+>>> +		}
+>>> +		return port->uport_regs.ras;
+>> same here
+>>
+>> DJ> +	}
+> 
+> 
+> The cxl_port parent of the reported devices are locked previously. Locking is added in the CE case in the next patch.
+> and the UCE locking is in patch23. Locking logic is all made ASAP after after dequeueing.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Ok I see them.
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+> 
+> Terry
+> 
+>>> +	}
+>>> +
+>>> +	dev_warn_once(dev, "Error: Unsupported device type (%X)", pci_pcie_type(pdev));
+>>> +	return NULL;
+>>> +}
+>>> +
+>>>  /**
+>>>   * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
+>>>   * @dport: the cxl_dport that needs to be initialized
+>>> @@ -254,6 +287,22 @@ pci_ers_result_t cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ra
+>>>  	return PCI_ERS_RESULT_PANIC;
+>>>  }
+>>>  
+>>> +void cxl_port_cor_error_detected(struct device *dev)
+>>> +{
+>>> +	void __iomem *ras_base = cxl_get_ras_base(dev);
+>>> +
+>>> +	cxl_handle_cor_ras(dev, 0, ras_base);
+>>> +}
+>>> +EXPORT_SYMBOL_NS_GPL(cxl_port_cor_error_detected, "CXL");
+>>> +
+>>> +pci_ers_result_t cxl_port_error_detected(struct device *dev)
+>>> +{
+>>> +	void __iomem *ras_base = cxl_get_ras_base(dev);
+>>> +
+>>> +	return cxl_handle_ras(dev, 0, ras_base);
+>>> +}
+>>> +EXPORT_SYMBOL_NS_GPL(cxl_port_error_detected, "CXL");
+>>> +
+>>>  void cxl_cor_error_detected(struct device *dev)
+>>>  {
+>>>  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+>>> diff --git a/drivers/pci/pcie/aer_cxl_vh.c b/drivers/pci/pcie/aer_cxl_vh.c
+>>> index 5dbc81341dc4..25f9512b57f7 100644
+>>> --- a/drivers/pci/pcie/aer_cxl_vh.c
+>>> +++ b/drivers/pci/pcie/aer_cxl_vh.c
+>>> @@ -43,7 +43,10 @@ bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info)
+>>>  	if (!info || !info->is_cxl)
+>>>  		return false;
+>>>  
+>>> -	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT)
+>>> +	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
+>>> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT) &&
+>>> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_UPSTREAM) &&
+>>> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM))
+>>>  		return false;
+>>>  
+>>>  	return is_internal_error(info);
+> 
+
