@@ -1,454 +1,322 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE63C27F166
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Nov 2025 23:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D4132B9BF;
+	Tue,  4 Nov 2025 23:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762298720; cv=none; b=Kb12NhxUpQJN98zU2YI607VbDXgZxPz9Cbwje2Y4R4thnWVEKCjhFTszQG6g/s/vK+eXoGjL0Ts6VGIwbumKiR4arbneEioQhyaowXo0EjbX4q0gcI/5/ztrn5iYO1xHI61b3pcIOHdg68D27a7a36PmNzjOFBKPucvxTW8utSg=
+	t=1762299345; cv=none; b=bfusF5Cvl4TzYXpPAGKfgUva/IUHezfW1kwk41F5GmNtyQY7A75WI9Ls0QFYNuIc3h41LnopE1DNcQW1c/om0KCSeo1wtL8xsqgSYaFGYS1QfnJjdC5SPWxcj8knbLCw4xIS8bXbP0jpHKQ1Fed2UmQ6n2QYk9i+OUGVAz3kbBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762298720; c=relaxed/simple;
-	bh=fr5q5V5kxjPdkKrv3NCrE521KVSHGjQM+j+07OoxTpk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=BHluGxTDIMEXLBFWZg14aoiT2RfbI/zcrwoTZQ+fgbEEWMlKoF+UaqOoMVupMh5idAlHpKUZqipO8T/G6nateQPhdu4CCYUwFWgE3l+RTCsM/QkYLHR5CFVUgOR7qHqKKpVbtecEJ0gQN4OlbUBNcjh4ssAuYmr4VL55nawcxLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GgaB8pE6; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1762299345; c=relaxed/simple;
+	bh=P8sM+279r/7jC+SZ4ufobrgc7rpxTIYv5eNtUj3Xros=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ze7cEl4InAguuNzKHnfBf0HC8jZo53KgLdblVVvzxM+k5WS7cu8DVzu1HIRkaZYUqVJi+A4bh75iL+anoqyyuo3E9X5YG8V/3zKHcQsQOzlnL8qyuQF0NvEXckQEN0GElrOBWRdBEc1840lHh0M6JoeLF+EGJIM58MmLHk7MA7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=llBSXQFT; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GgaB8pE6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="llBSXQFT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762298718; x=1793834718;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=fr5q5V5kxjPdkKrv3NCrE521KVSHGjQM+j+07OoxTpk=;
-  b=GgaB8pE6JVt4wJJ1OSNW3za4ljI2rmze/nqGq1PF4gb2N6HrhvmW4pE/
-   mSxx8pw5XsOFyhr6GvxhlPTi5n9cbeOO4st/UEtkyryTlUOmL9lNIcSFW
-   ITHG4nEd9b5EPzabEw0m75lc7lYq0kbcdRt8XxBFxJVSncZ9Jbg+OvNpp
-   ftXZM+Q2+qZZmOU19yvQ8iVg136J/Lzho11iPTGTGVBvb4snBFXkxtCKZ
-   G37kz0AJoc3UUocHqg/LM1Os4QyiX4KWmA82SgaOrGmmJTYRADf2j6++D
-   0utWlGXCS2SJliPPVT1OpgEScFGdyJPwdIEntXkt39BEJ34GlKcKgY3HF
-   w==;
-X-CSE-ConnectionGUID: yO3DgQ0SRCaK/j1IXfJ71Q==
-X-CSE-MsgGUID: z3xt8u3lQMywmz7vGVSLrg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="68243836"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="68243836"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2025 15:25:17 -0800
-X-CSE-ConnectionGUID: NijjKA60S2GEsDHigxtCVw==
-X-CSE-MsgGUID: YMZVHTCcS8OFdhjy+UGmHg==
-X-ExtLoop1: 1
+  t=1762299343; x=1793835343;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=P8sM+279r/7jC+SZ4ufobrgc7rpxTIYv5eNtUj3Xros=;
+  b=llBSXQFTXh38z34RDeEQx+bnwv4qTc7RylM+vDEKoyLvvuRxclb2OFyN
+   kLkBVHLaPcerfwApAVxWatRZPrZFD1KQDp9KsfCAzyd0mIXZnZDt+fhqe
+   mfSDfILuhlmntNYzznR1egRIdPAdNALHKCjDNZ+LhqKYfsOVDx+Cyjk5p
+   Px8OhBP8FjcN9qBFxxCAUb09CEHO09YVHjRG1iZ6CRImq72Uuy/dIZ4dZ
+   a0VSiGsMXlnYBJ+fmYeY3FXwKNHjxw2sFztPqaLfYdBJp1v1fE8AhWYNi
+   eeVTggxZxYECB48sMkL5p1hbblw5XEjdVXk+LFMM7v5ZTXIYfCkNDaeSs
+   Q==;
+X-CSE-ConnectionGUID: z8NLg7juRECFA6c+p/M8Iw==
+X-CSE-MsgGUID: q/MkU720Q6qECM+mm88ToA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="64505244"
 X-IronPort-AV: E=Sophos;i="6.19,280,1754982000"; 
-   d="scan'208";a="187235877"
-Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.110.201]) ([10.125.110.201])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2025 15:25:18 -0800
-Message-ID: <10262fc6-72e7-4c71-8a02-86a20fa0915f@intel.com>
-Date: Tue, 4 Nov 2025 16:25:16 -0700
+   d="scan'208";a="64505244"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2025 15:35:43 -0800
+X-CSE-ConnectionGUID: tXH83n4/T8+V0cnwP08HyQ==
+X-CSE-MsgGUID: SymAw6/0SNeK+eYx1M/4Iw==
+X-ExtLoop1: 1
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by fmviesa003.fm.intel.com with ESMTP; 04 Nov 2025 15:35:39 -0800
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vGQYr-000Rw4-1Z;
+	Tue, 04 Nov 2025 23:35:37 +0000
+Date: Wed, 5 Nov 2025 07:35:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Robert Richter <rrichter@amd.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>
+Cc: oe-kbuild-all@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>,
+	Robert Richter <rrichter@amd.com>
+Subject: Re: [PATCH v4 10/14] cxl: Enable AMD Zen5 address translation using
+ ACPI PRMT
+Message-ID: <202511050720.Hy1VQf0n-lkp@intel.com>
+References: <20251103184804.509762-11-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ndctl PATCH v3] cxl: Add cxl-translate.sh unit test
-To: Alison Schofield <alison.schofield@intel.com>, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org
-References: <20250918003457.4111254-1-alison.schofield@intel.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250918003457.4111254-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251103184804.509762-11-rrichter@amd.com>
+
+Hi Robert,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on 211ddde0823f1442e4ad052a2f30f050145ccada]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Robert-Richter/cxl-region-Store-root-decoder-in-struct-cxl_region/20251104-025351
+base:   211ddde0823f1442e4ad052a2f30f050145ccada
+patch link:    https://lore.kernel.org/r/20251103184804.509762-11-rrichter%40amd.com
+patch subject: [PATCH v4 10/14] cxl: Enable AMD Zen5 address translation using ACPI PRMT
+config: x86_64-randconfig-071-20251105 (https://download.01.org/0day-ci/archive/20251105/202511050720.Hy1VQf0n-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251105/202511050720.Hy1VQf0n-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511050720.Hy1VQf0n-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/cxl/core/atl.c: In function 'cxl_prm_translate_hpa_range':
+>> drivers/cxl/core/atl.c:63:49: error: invalid use of undefined type 'struct cxl_region_context'
+      63 |         struct cxl_endpoint_decoder *cxled = ctx->cxled;
+         |                                                 ^~
+   drivers/cxl/core/atl.c:65:39: error: invalid use of undefined type 'struct cxl_region_context'
+      65 |         struct cxl_memdev *cxlmd = ctx->cxlmd;
+         |                                       ^~
+   drivers/cxl/core/atl.c:66:37: error: invalid use of undefined type 'struct cxl_region_context'
+      66 |         struct range hpa_range = ctx->hpa_range;
+         |                                     ^~
+   drivers/cxl/core/atl.c:92:16: error: invalid use of undefined type 'struct cxl_region_context'
+      92 |         if (ctx->interleave_ways != 1) {
+         |                ^~
+   In file included from include/linux/device.h:15,
+                    from include/linux/pci.h:37,
+                    from drivers/cxl/core/atl.c:7:
+   drivers/cxl/core/atl.c:94:28: error: invalid use of undefined type 'struct cxl_region_context'
+      94 |                         ctx->interleave_ways, ctx->interleave_granularity);
+         |                            ^~
+   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+         |                                                        ^~~~~~~~~~~
+   drivers/cxl/core/atl.c:93:17: note: in expansion of macro 'dev_dbg'
+      93 |                 dev_dbg(&cxld->dev, "unexpected interleaving config: ways: %d granularity: %d\n",
+         |                 ^~~~~~~
+   drivers/cxl/core/atl.c:94:50: error: invalid use of undefined type 'struct cxl_region_context'
+      94 |                         ctx->interleave_ways, ctx->interleave_granularity);
+         |                                                  ^~
+   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+         |                                                        ^~~~~~~~~~~
+   drivers/cxl/core/atl.c:93:17: note: in expansion of macro 'dev_dbg'
+      93 |                 dev_dbg(&cxld->dev, "unexpected interleaving config: ways: %d granularity: %d\n",
+         |                 ^~~~~~~
+   drivers/cxl/core/atl.c:114:60: error: invalid use of undefined type 'struct cxl_region_context'
+     114 |                         hpa_range.start, hpa_range.end, ctx->hpa_range.start,
+         |                                                            ^~
+   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+         |                                                        ^~~~~~~~~~~
+   drivers/cxl/core/atl.c:112:17: note: in expansion of macro 'dev_dbg'
+     112 |                 dev_dbg(cxld->dev.parent,
+         |                 ^~~~~~~
+   drivers/cxl/core/atl.c:115:28: error: invalid use of undefined type 'struct cxl_region_context'
+     115 |                         ctx->hpa_range.end, dev_name(&cxld->dev));
+         |                            ^~
+   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+         |                                                        ^~~~~~~~~~~
+   drivers/cxl/core/atl.c:112:17: note: in expansion of macro 'dev_dbg'
+     112 |                 dev_dbg(cxld->dev.parent,
+         |                 ^~~~~~~
+   drivers/cxl/core/atl.c:130:60: error: invalid use of undefined type 'struct cxl_region_context'
+     130 |                         hpa_range.start, hpa_range.end, ctx->hpa_range.start,
+         |                                                            ^~
+   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+         |                                                        ^~~~~~~~~~~
+   drivers/cxl/core/atl.c:128:17: note: in expansion of macro 'dev_dbg'
+     128 |                 dev_dbg(cxld->dev.parent,
+         |                 ^~~~~~~
+   drivers/cxl/core/atl.c:131:28: error: invalid use of undefined type 'struct cxl_region_context'
+     131 |                         ctx->hpa_range.end, dev_name(&cxld->dev));
+         |                            ^~
+   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+         |                                                        ^~~~~~~~~~~
+   drivers/cxl/core/atl.c:128:17: note: in expansion of macro 'dev_dbg'
+     128 |                 dev_dbg(cxld->dev.parent,
+         |                 ^~~~~~~
+   drivers/cxl/core/atl.c:156:60: error: invalid use of undefined type 'struct cxl_region_context'
+     156 |                         hpa_range.start, hpa_range.end, ctx->hpa_range.start,
+         |                                                            ^~
+   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+         |                                                        ^~~~~~~~~~~
+   drivers/cxl/core/atl.c:154:17: note: in expansion of macro 'dev_dbg'
+     154 |                 dev_dbg(cxld->dev.parent,
+         |                 ^~~~~~~
+   drivers/cxl/core/atl.c:157:28: error: invalid use of undefined type 'struct cxl_region_context'
+     157 |                         ctx->hpa_range.end, dev_name(&cxld->dev));
+         |                            ^~
+   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+         |                                                        ^~~~~~~~~~~
+   drivers/cxl/core/atl.c:154:17: note: in expansion of macro 'dev_dbg'
+     154 |                 dev_dbg(cxld->dev.parent,
+         |                 ^~~~~~~
+   drivers/cxl/core/atl.c:161:12: error: invalid use of undefined type 'struct cxl_region_context'
+     161 |         ctx->hpa_range = hpa_range;
+         |            ^~
+   drivers/cxl/core/atl.c:162:12: error: invalid use of undefined type 'struct cxl_region_context'
+     162 |         ctx->interleave_ways = ways;
+         |            ^~
+   drivers/cxl/core/atl.c:163:12: error: invalid use of undefined type 'struct cxl_region_context'
+     163 |         ctx->interleave_granularity = gran;
+         |            ^~
+   drivers/cxl/core/atl.c:167:29: error: invalid use of undefined type 'struct cxl_region_context'
+     167 |                 dev_name(ctx->cxlmd->dev.parent), base, len, hpa_range.start,
+         |                             ^~
+   include/linux/dev_printk.h:139:56: note: in definition of macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
 
 
+vim +63 drivers/cxl/core/atl.c
 
-On 9/17/25 5:34 PM, Alison Schofield wrote:
-> cxl-translate.sh performs 2 types of testing of the CXL Driver's
-> address translation capabilities:
-> 
-> 1. Parameterized test vectors:
-> The cxl-translate.sh unit test feeds trusted data sets to a kernel
-> test module: cxl_translate. That module accesses the CXL region
-> driver's address translation functions. The trusted samples are either
-> from the CXL Driver Writers Guide[1] or from another verified source
-> ie a spreadsheet reviewed by CXL developers.
-> 
-> 2. Internal validation testing:
-> The unit test also kicks off internal tests of the cxl_translate
-> module that validate parameters and exercise address translation
-> with randomly generated valid parameters.
-> 
-> [1] https://www.intel.com/content/www/us/en/content-details/643805/cxl-memory-device-sw-guide.html
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+    59	
+    60	static int cxl_prm_translate_hpa_range(struct cxl_root *cxl_root, void *data)
+    61	{
+    62		struct cxl_region_context *ctx = data;
+  > 63		struct cxl_endpoint_decoder *cxled = ctx->cxled;
+    64		struct cxl_decoder *cxld = &cxled->cxld;
+    65		struct cxl_memdev *cxlmd = ctx->cxlmd;
+    66		struct range hpa_range = ctx->hpa_range;
+    67		struct pci_dev *pci_dev;
+    68		u64 spa_len, len = range_len(&hpa_range);
+    69		u64 addr, base_spa, base = hpa_range.start;
+    70		int ways, gran;
+    71	
+    72		/*
+    73		 * When Normalized Addressing is enabled, the endpoint
+    74		 * maintains a 1:1 mapping between HPA and DPA. If disabled,
+    75		 * skip address translation and perform only a range check.
+    76		 */
+    77		if (hpa_range.start != cxled->dpa_res->start)
+    78			return 0;
+    79	
+    80		if (!IS_ALIGNED(hpa_range.start, SZ_256M) ||
+    81		    !IS_ALIGNED(hpa_range.end + 1, SZ_256M)) {
+    82			dev_dbg(cxld->dev.parent,
+    83				"CXL address translation: Unaligned decoder HPA range: %#llx-%#llx(%s)\n",
+    84				hpa_range.start, hpa_range.end, dev_name(&cxld->dev));
+    85			return -ENXIO;
+    86		}
+    87	
+    88		/*
+    89		 * Endpoints are programmed passthrough in Normalized
+    90		 * Addressing mode.
+    91		 */
+    92		if (ctx->interleave_ways != 1) {
+    93			dev_dbg(&cxld->dev, "unexpected interleaving config: ways: %d granularity: %d\n",
+    94				ctx->interleave_ways, ctx->interleave_granularity);
+    95			return -ENXIO;
+    96		}
+    97	
+    98		if (!cxlmd || !dev_is_pci(cxlmd->dev.parent)) {
+    99			dev_dbg(&cxld->dev, "No endpoint found: %s, range %#llx-%#llx\n",
+   100				dev_name(cxld->dev.parent), hpa_range.start,
+   101				hpa_range.end);
+   102			return -ENXIO;
+   103		}
+   104	
+   105		pci_dev = to_pci_dev(cxlmd->dev.parent);
+   106	
+   107		/* Translate HPA range to SPA. */
+   108		hpa_range.start = base_spa = prm_cxl_dpa_spa(pci_dev, hpa_range.start);
+   109		hpa_range.end = prm_cxl_dpa_spa(pci_dev, hpa_range.end);
+   110	
+   111		if (hpa_range.start == ULLONG_MAX || hpa_range.end == ULLONG_MAX) {
+   112			dev_dbg(cxld->dev.parent,
+   113				"CXL address translation: Failed to translate HPA range: %#llx-%#llx:%#llx-%#llx(%s)\n",
+   114				hpa_range.start, hpa_range.end, ctx->hpa_range.start,
+   115				ctx->hpa_range.end, dev_name(&cxld->dev));
+   116			return -ENXIO;
+   117		}
+   118	
+   119		/*
+   120		 * Since translated addresses include the interleaving
+   121		 * offsets, align the range to 256 MB.
+   122		 */
+   123		hpa_range.start = ALIGN_DOWN(hpa_range.start, SZ_256M);
+   124		hpa_range.end = ALIGN(hpa_range.end, SZ_256M) - 1;
+   125	
+   126		spa_len = range_len(&hpa_range);
+   127		if (!len || !spa_len || spa_len % len) {
+   128			dev_dbg(cxld->dev.parent,
+   129				"CXL address translation: HPA range not contiguous: %#llx-%#llx:%#llx-%#llx(%s)\n",
+   130				hpa_range.start, hpa_range.end, ctx->hpa_range.start,
+   131				ctx->hpa_range.end, dev_name(&cxld->dev));
+   132			return -ENXIO;
+   133		}
+   134	
+   135		ways = spa_len / len;
+   136		gran = SZ_256;
+   137	
+   138		/*
+   139		 * Determine interleave granularity
+   140		 *
+   141		 * Note: The position of the chunk from one interleaving block
+   142		 * to the next may vary and thus cannot be considered
+   143		 * constant. Address offsets larger than the interleaving
+   144		 * block size cannot be used to calculate the granularity.
+   145		 */
+   146		while (ways > 1 && gran <= SZ_16M) {
+   147			addr = prm_cxl_dpa_spa(pci_dev, base + gran);
+   148			if (addr != base_spa + gran)
+   149				break;
+   150			gran <<= 1;
+   151		}
+   152	
+   153		if (gran > SZ_16M) {
+   154			dev_dbg(cxld->dev.parent,
+   155				"CXL address translation: Cannot determine granularity: %#llx-%#llx:%#llx-%#llx(%s)\n",
+   156				hpa_range.start, hpa_range.end, ctx->hpa_range.start,
+   157				ctx->hpa_range.end, dev_name(&cxld->dev));
+   158			return -ENXIO;
+   159		}
+   160	
+   161		ctx->hpa_range = hpa_range;
+   162		ctx->interleave_ways = ways;
+   163		ctx->interleave_granularity = gran;
+   164	
+   165		dev_dbg(&cxld->dev,
+   166			"address mapping found for %s (hpa -> spa): %#llx+%#llx -> %#llx+%#llx ways:%d granularity:%d\n",
+   167			dev_name(ctx->cxlmd->dev.parent), base, len, hpa_range.start,
+   168			spa_len, ways, gran);
+   169	
+   170		return 0;
+   171	}
+   172	
 
-Tested-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
-> 
-> Changes in v3: 
-> Add test_internal() that that kicks off newly added tests in v3 of
-> the cxl_translate test module, in review here:
-> https://lore.kernel.org/linux-cxl/a2c74fa976862fe6472537eb438ec061278fb099.1758150087.git.alison.schofield@intel.com/
-> 
-> Changes in v2:
-> Use shell builtins true|false rather than string compares (Marc)
-> Further explain the disable of SC2034 for nameref's  (Marc)
-> Use long format journalctl options, ie. --reverse (Marc)
-> Correct module name as cxl_translate in commit log
-> 
-> 
->  test/cxl-translate.sh | 320 ++++++++++++++++++++++++++++++++++++++++++
->  test/meson.build      |   2 +
->  2 files changed, 322 insertions(+)
->  create mode 100755 test/cxl-translate.sh
-> 
-> diff --git a/test/cxl-translate.sh b/test/cxl-translate.sh
-> new file mode 100755
-> index 000000000000..1c1a39deb484
-> --- /dev/null
-> +++ b/test/cxl-translate.sh
-> @@ -0,0 +1,320 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2025 Intel Corporation. All rights reserved.
-> +
-> +# shellcheck disable=SC2034
-> +#
-> +# Arrays in this script are passed by name into helper functions using Bash's
-> +# nameref feature `declare -n`. This pattern supports writing generic test
-> +# harnesses that can iterate over many different test vector arrays simply by
-> +# passing the array name. ShellCheck doesn't track nameref indirection, so it
-> +# incorrectly reports these arrays as unused (SC2034). At runtime they are
-> +# fully used through the nameref, so these warnings are safe to ignore.
-> +
-> +# source common to get the err() only
-> +. "$(dirname "$0")"/common
-> +
-> +trap 'err $LINENO' ERR
-> +set -ex
-> +rc=1
-> +
-> +MODULO=0
-> +XOR=1
-> +
-> +# Test against 'Sample Sets' and 'XOR Tables'
-> +#
-> +# Sample Set's have a pattern and the expected HPAs have been verified
-> +# although maybe not published. They verify Modulo and XOR translations.
-> +#
-> +# XOR Table's are extracted from the CXL Driver Writers Guide [1].
-> +# Although the XOR Tables do not include an explicit check of the Modulo
-> +# translation result, a Modulo calculation is always the first step in
-> +# any XOR calculation. ie. if Modulo fails so does XOR.
-> +#
-> +# [1] https://www.intel.com/content/www/us/en/content-details/643805/cxl-memory-device-sw-guide.html
-> +
-> +# Start time for kernel log checking at millisecond granularity
-> +set_log_start_time() {
-> +        log_start_time=$(date '+%Y-%m-%d %H:%M:%S.%3N')
-> +}
-> +
-> +check_dmesg_results() {
-> +        local nr_entries=$1
-> +        local expect_failures=${2:-false}  # Optional param, builtin true|false
-> +        local log nr_pass nr_fail
-> +
-> +        log=$(journalctl --reverse --dmesg --since "$log_start_time")
-> +
-> +	nr_pass=$(echo "$log" | grep -c "CXL Translate Test.*PASS") || nr_pass=0
-> +        nr_fail=$(echo "$log" | grep -c "CXL Translate Test.*FAIL") || nr_fail=0
-> +
-> +        if ! $expect_failures; then
-> +                # Expect all PASS and no FAIL
-> +                [ "$nr_pass" -eq "$nr_entries" ] || err "$LINENO"
-> +                [ "$nr_fail" -eq 0 ] || err "$LINENO"
-> +        else
-> +                # Expect no PASS and all FAIL
-> +		[ "$nr_pass" -eq 0 ] || err "$LINENO"
-> +                [ "$nr_fail" -eq "$nr_entries" ] || err "$LINENO"
-> +        fi
-> +}
-> +
-> +# Sample Sets
-> +#
-> +# params_#: dpa, region eiw, region eig, host bridge ways
-> +# expect_[modulo|xor]_#: expected spa for each position in the region
-> +# 	interleave set for the modulo|xor math.
-> +#
-> +# Feeds the parameters with an expected SPA for each position in the region
-> +# interleave to the test module. Returns success if the calculation matches
-> +# the expected SPA and the reverse calculation returns the original DPA and
-> +# position.
-> +
-> +# 4 way region interleave using 4 host bridges
-> +# Notation: 1+1+1+1
-> +declare -A Sample_4R_4H=(
-> +	["params_0"]="0 2 0 4"
-> +	["expect_modulo_0"]="0 256 512 768"
-> +	["expect_xor_0"]="0 256 512 768"
-> +	["params_1"]="256 2 0 4"
-> +	["expect_modulo_1"]="1024 1280 1536 1792"
-> +	["expect_xor_1"]="1024 1280 1536 1792"
-> +	["params_2"]="2048 2 0 4"
-> +	["expect_modulo_2"]="8192 8448 8704 8960"
-> +	["expect_xor_2"]="8192 8448 8704 8960"
-> +)
-> +
-> +# 12 way region interleave using 12 host bridges
-> +# Notation: 1+1+1+1+1+1+1+1+1+1+1+1
-> +declare -A Sample_12R_12H=(
-> +	["params_0"]="0 10 0 12"
-> +	["expect_modulo_0"]="0 256 512 768 1024 1280 1536 1792 2048 2304 2560 2816"
-> +	["expect_xor_0"]="0 256 512 768 1024 1280 1536 1792 2304 2048 2816 2560"
-> +	["params_1"]="512 10 0 12"
-> +	["expect_modulo_1"]="6144 6400 6656 6912 7168 7424 7680 7936 8192 8448 8704 8960"
-> +	["expect_xor_1"]="6912 6656 6400 6144 7936 7680 7424 7168 8192 8448 8704 8960"
-> +)
-> +
-> +decode_r_eiw()
-> +{
-> +	case $1 in
-> +		0) echo 1 ;;
-> +		1) echo 2 ;;
-> +		2) echo 4 ;;
-> +		3) echo 8 ;;
-> +		4) echo 16 ;;
-> +		8) echo 3 ;;
-> +		9) echo 6 ;;
-> +		10) echo 12 ;;
-> +		*) echo "Invalid r_eiw value: $1" ; err "$LINENO" ;;
-> +	esac
-> +}
-> +
-> +generate_sample_tests() {
-> +        local -n input_sample_set=$1
-> +        local -n output_array=$2
-> +
-> +        # Find all params_* keys and extract the index
-> +        local indices=()
-> +        for key in "${!input_sample_set[@]}"; do
-> +                if [[ $key =~ ^params_([0-9]+)$ ]]; then
-> +                        indices+=("${BASH_REMATCH[1]}")
-> +                fi
-> +        done
-> +
-> +        # Sort indices to process in order
-> +	mapfile -t indices < <(printf '%s\n' "${indices[@]}" | sort -n)
-> +
-> +        for i in "${indices[@]}"; do
-> +                # Split the parameters and expected spa values
-> +                IFS=' ' read -r dpa r_eiw r_eig hb_ways <<< "${input_sample_set["params_$i"]}"
-> +                IFS=' ' read -r -a expect_modulo_values <<< "${input_sample_set["expect_modulo_$i"]}"
-> +                IFS=' ' read -r -a expect_xor_values <<< "${input_sample_set["expect_xor_$i"]}"
-> +
-> +                ways=$(decode_r_eiw "$r_eiw")
-> +                for ((pos = 0; pos < ways; pos++)); do
-> +                        expect_spa_modulo=${expect_modulo_values[$pos]}
-> +                        expect_spa_xor=${expect_xor_values[$pos]}
-> +
-> +                        # Add the MODULO test case, then the XOR test case
-> +                        output_array+=("$dpa $pos $r_eiw $r_eig $hb_ways $MODULO $expect_spa_modulo")
-> +                        output_array+=("$dpa $pos $r_eiw $r_eig $hb_ways $XOR $expect_spa_xor")
-> +                done
-> +        done
-> +}
-> +
-> +test_sample_sets() {
-> +        local sample_name=$1
-> +        local -n sample_set=$1
-> +        local generated_tests=()
-> +
-> +        generate_sample_tests sample_set generated_tests
-> +
-> +        IFS=','
-> +        table_string="${generated_tests[*]}"
-> +        IFS=' '
-> +
-> +        modprobe -r cxl-translate
-> +        set_log_start_time
-> +        echo "Testing $sample_name with ${#generated_tests[@]} test entries"
-> +        modprobe cxl-translate "table=$table_string"
-> +        check_dmesg_results "${#generated_tests[@]}"
-> +}
-> +
-> +# XOR Tables
-> +#
-> +# The tables that follow are the XOR translation examples in the
-> +# CXL Driver Writers Guide Sections 2.13.24.1 and 25.1
-> +# Note that the Guide uses the device number in its table notation.
-> +# Here the 'position' of that device number is used, not the
-> +# device number itself, which is meaningless in this context.
-> +#
-> +# Format: "dpa pos r_eiw r_eig hb_ways xor_math(0|1) xor_spa:
-> +
-> +# 4 way region interleave using 4 host bridges
-> +# Notation: 1+1+1+1
-> +XOR_Table_4R_4H=(
-> +	"248   0 2 0 4 1 248"
-> +	"16    1 2 0 4 1 272"
-> +	"16    2 2 0 4 1 528"
-> +	"32    3 2 0 4 1 800"
-> +	"288   0 2 0 4 1 1056"
-> +	"288   1 2 0 4 1 1312"
-> +	"288   2 2 0 4 1 1568"
-> +	"288   3 2 0 4 1 1824"
-> +	"544   1 2 0 4 1 2080"
-> +	"544   0 2 0 4 1 2336"
-> +	"544   3 2 0 4 1 2592"
-> +	"1040  2 2 0 4 1 4112"
-> +	"1568  3 2 0 4 1 6176"
-> +	"32784 1 2 0 4 1 131088"
-> +	"65552 2 2 0 4 1 262160"
-> +	"98336 3 2 0 4 1 393248"
-> +	"98328 2 2 0 4 1 393496"
-> +	"98352 2 2 0 4 1 393520"
-> +	"443953523 0 2 0 4 1 1775813747"
-> +)
-> +
-> +XOR_Table_8R_4H=(
-> +	"248       0 3 0 4 1 248"
-> +	"16        1 3 0 4 1 272"
-> +	"16        2 3 0 4 1 528"
-> +	"32        3 3 0 4 1 800"
-> +	"272       1 3 0 4 1 2064"
-> +	"528       2 3 0 4 1 4112"
-> +	"800       3 3 0 4 1 6176"
-> +	"16400     1 3 0 4 1 131088"
-> +	"32784     2 3 0 4 1 262160"
-> +	"49184     3 3 0 4 1 393248"
-> +	"49176     2 3 0 4 1 393496"
-> +	"49200     2 3 0 4 1 393520"
-> +	"116520373 3 3 0 4 1 932162229"
-> +	"244690459 5 3 0 4 1 1957525275"
-> +	"292862215 5 3 0 4 1 2342899463"
-> +	"30721158  4 3 0 4 1 245769350"
-> +	"246386959 4 3 0 4 1 1971096847"
-> +	"72701249  5 3 0 4 1 581610561"
-> +	"529382429 5 3 0 4 1 4235060509"
-> +	"191132300 2 3 0 4 1 1529057420"
-> +	"18589081  1 3 0 4 1 148712089"
-> +	"344295715 7 3 0 4 1 2754367011"
-> +)
-> +
-> +XOR_Table_12R_12H=(
-> +	"224 0 10 0 12 1 224"
-> +	"16  1 10 0 12 1 272"
-> +	"16  2 10 0 12 1 528"
-> +	"32  3 10 0 12 1 800"
-> +	"32  4 10 0 12 1 1056"
-> +	"32  5 10 0 12 1 1312"
-> +	"32  6 10 0 12 1 1568"
-> +	"32  7 10 0 12 1 1824"
-> +	"32  9 10 0 12 1 2080"
-> +	"32  8 10 0 12 1 2336"
-> +	"32 11 10 0 12 1 2592"
-> +	"32 10 10 0 12 1 2848"
-> +	"288 0 10 0 12 1 3360"
-> +	"299017087 7 10 0 12 1 3588205439"
-> +	"329210435 0 10 0 12 1 3950524995"
-> +	"151050637 11 10 0 12 1 1812608653"
-> +	"145169214  2 10 0 12 1 1742030654"
-> +	"328998732 10 10 0 12 1 3947985996"
-> +	"159252439  3 10 0 12 1 1911027415"
-> +	"342098916  5 10 0 12 1 4105186020"
-> +	"97970344   8 10 0 12 1 1175645096"
-> +	"214995572  8 10 0 12 1 2579948404"
-> +	"101289661  7 10 0 12 1 1215475645"
-> +	"40424079   7 10 0 12 1 485088911"
-> +	"231458716  7 10 0 12 1 2777503900"
-> +)
-> +
-> +# A fail table entry is expected to fail the DPA->SPA calculation.
-> +# Intent is to show that the test module can tell good from bad.
-> +# If one of these cases passes, don't trust other pass results.
-> +# This is not a test of module parsing, so don't send garbage.
-> +Expect_Fail_Table=(
-> +	"544   3 2 0 4 1 2080" # Change position
-> +        "544   2 2 0 4 1 2336"
-> +        "544   1 2 0 4 1 2592"
-> +	"272   1 2 0 4 1 2064" # Change r_eiw
-> +	"528   2 1 0 4 1 4112"
-> +	"800   3 10 0 4 1 6176"
-> +	"32  4 10 0 12 1 1156" # Change expected spa
-> +	"32  5 10 0 12 1 1112"
-> +	"32  6 10 0 12 1 1168"
-> +	"32  7 10 0 12 1 1124"
-> +)
-> +
-> +test_tables() {
-> +        local table_name=$1
-> +        local -n table_ref=$1
-> +        local expect_failures=${2:-false}  # Optional param, builtin true|false
-> +        local IFS
-> +
-> +        IFS=','
-> +        table_string="${table_ref[*]}"
-> +        IFS=' '
-> +
-> +        if $expect_failures; then
-> +                echo "Testing $table_name with ${#table_ref[@]} entries (expecting FAIL results)"
-> +        else
-> +                echo "Testing $table_name with ${#table_ref[@]} test entries"
-> +        fi
-> +
-> +        modprobe -r cxl-translate
-> +        set_log_start_time
-> +        modprobe cxl-translate "table=$table_string"
-> +
-> +        check_dmesg_results "${#table_ref[@]}" "$expect_failures"
-> +}
-> +
-> +test_internal() {
-> +	echo "Running internal validation..."
-> +	modprobe -r cxl-translate
-> +	set_log_start_time
-> +	modprobe cxl-translate
-> +
-> +	local log=$(journalctl --reverse --dmesg --since "$log_start_time")
-> +
-> +	if echo "$log" | grep -q "Internal validation test completed successfully"; then
-> +		echo "Internal validation test: PASS"
-> +	else
-> +		echo "Internal validation test: FAIL"
-> +		err "$LINENO"
-> +	fi
-> +
-> +	modprobe -r cxl-translate
-> +}
-> +
-> +test_internal
-> +
-> +test_tables Expect_Fail_Table true
-> +test_sample_sets Sample_4R_4H
-> +test_sample_sets Sample_12R_12H
-> +test_tables XOR_Table_4R_4H
-> +test_tables XOR_Table_8R_4H
-> +test_tables XOR_Table_12R_12H
-> +
-> +echo "Translate test complete with no failures"
-> +
-> +modprobe -r cxl-translate
-> diff --git a/test/meson.build b/test/meson.build
-> index 91eb6c2b1363..bf4d73eea918 100644
-> --- a/test/meson.build
-> +++ b/test/meson.build
-> @@ -168,6 +168,7 @@ cxl_sanitize = find_program('cxl-sanitize.sh')
->  cxl_destroy_region = find_program('cxl-destroy-region.sh')
->  cxl_qos_class = find_program('cxl-qos-class.sh')
->  cxl_poison = find_program('cxl-poison.sh')
-> +cxl_translate = find_program('cxl-translate.sh')
->  
->  tests = [
->    [ 'libndctl',               libndctl,		  'ndctl' ],
-> @@ -201,6 +202,7 @@ tests = [
->    [ 'cxl-destroy-region.sh',  cxl_destroy_region, 'cxl'   ],
->    [ 'cxl-qos-class.sh',       cxl_qos_class,      'cxl'   ],
->    [ 'cxl-poison.sh',          cxl_poison,         'cxl'   ],
-> +  [ 'cxl-translate.sh',       cxl_translate,      'cxl'   ],
->  ]
->  
->  if get_option('destructive').enabled()
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
