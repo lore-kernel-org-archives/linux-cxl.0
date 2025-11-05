@@ -1,128 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE05337B8D;
-	Wed,  5 Nov 2025 16:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06B13321D5
+	for <linux-cxl@vger.kernel.org>; Wed,  5 Nov 2025 17:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762359042; cv=none; b=CBfmb7wmwufc3H+VuqX3aWVAwhTCUOOEGumupx8DbOcX4fqd24N8KMFFYG1ojnFy+MA244ljftwE4qML1XS936gO1eW1Uu7uiHZE2d9OIpsKsMPsd6AF56iOApxPdpfpVElq0CQnRTsnvAQGUagXeIEE8X8XXQLpS5NJP9CQX9o=
+	t=1762365071; cv=none; b=A6xBvT8aRozdUXXlyrYejOS6fqcd9XtRrMPb3nzNgy+VI54X65qS0vtW80HSCM9i89DdwFOsLIJ8qZ0QxdH67cd46d/Pu/sUmLMWZHOsrfBksYFrAztd2jA7yVCCga4ioCTZKpRbE+bmFYrorFxNd1jGqjx+KbfSYuWE5COMT6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762359042; c=relaxed/simple;
-	bh=XYA0QT3mqjvdTOITUkYl9g9WPkydTiL2kfrfusBPpNU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z03HDRRbxqW4cMTY5xEogAb5X3AwpzvwPU5D2ovcNGlOhZL1GSyoCbQxdCXipDzXVgHyHuCL+JcMqvNsihZhFg0Rabw75Fc9B+1bsfXTfQrflba/GcQ+7HJSQr9TKGZlZgKWHCyDTgMQn7PbfaI0ynwotvpvx9QeO9H+SxZ1Pag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aa4LlpN2; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1762365071; c=relaxed/simple;
+	bh=tIgDGOVX99OdQ7xUMrv9gmtn1EgXPokG3WTHA51WYa4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EEJmXl+8rc8a0nEspkiORZPTcPGBZnpKfkWDdGkuTDARtWZ1RZqgesQRoVpf7YEmb2PZ40ZkZSRxLKOA1sLDgwzq1htaBFlFy4rtrKl9Oonn5SaLKjFpDTLwUR/1r3B8bECbhQPBju+R80dRxSCNrYGUBi0stug5THOSImqLHWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=p+qg5rB9; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aa4LlpN2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762359041; x=1793895041;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=XYA0QT3mqjvdTOITUkYl9g9WPkydTiL2kfrfusBPpNU=;
-  b=aa4LlpN2yOfkaUezIGabqAyathDHGILCtsFXpV9pPil0wB8Fb/CapP5R
-   nuj3mW+Z82GrastbGF6EcwQ5Ap30gxl9+1CeuGTwRiaF8GedyhxppZX65
-   2uiyhscojssgLA/ICn0qX4qIOEpPNmI96oODhkukC5ywxKVBC5WrkMyCR
-   7CJVEy8FCs0Fy7V7QcfPeWwims5PgkjSilGMceChoARr+DJbTKMf2d6My
-   MQ8tF4DAFLaQr9JrEWUObSdciWgW3CcMTP4YTByeW0gpm9e1EGKh+fiHS
-   UNA7VxwmDRXkqNBdjn/+KQ8tdiTfNYEHWWe1JN0mzEQOQpuyEwGMk22Mm
-   g==;
-X-CSE-ConnectionGUID: oNmqnrn1SKG843Gyb5fTzg==
-X-CSE-MsgGUID: fWYALw2uR9yHCMZm8SI48g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="68337305"
-X-IronPort-AV: E=Sophos;i="6.19,282,1754982000"; 
-   d="scan'208";a="68337305"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 08:10:40 -0800
-X-CSE-ConnectionGUID: oqAlASDJQ9ey+Wxwyv6JbA==
-X-CSE-MsgGUID: fxLVxVU5SN+2XZuOAeMlng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,282,1754982000"; 
-   d="scan'208";a="187158870"
-Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.110.242]) ([10.125.110.242])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 08:10:38 -0800
-Message-ID: <3024ae89-4c19-4d29-aca4-0aef21bcd5e9@intel.com>
-Date: Wed, 5 Nov 2025 09:10:37 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="p+qg5rB9"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-88058103dcfso1452046d6.3
+        for <linux-cxl@vger.kernel.org>; Wed, 05 Nov 2025 09:51:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1762365067; x=1762969867; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LDrtj0a1qY5KhyImx5VYDzDX8bVcvGFBBUFmZLDCfSw=;
+        b=p+qg5rB9I7ZEesolYhegQvv+t3d5zVArOc803nNlc6FndePPV+FkJZcu3/Aes5Pp/Q
+         X0ah9qDlM1DIWuF4f1p5bsaIT1tLGT7UWcyDVGoAPiVHbUnMXSxfIVCEjj0oRLJk379w
+         p/rzpZ4fDcYZKEkw33V0VPCNUQ4/pi2eogoRNG1ZH6WHP2NhnV2h05wlrc1CZSLqOwkc
+         DXK41s6HRPF3u2PWmqfiE6LZnSq5yNNsAhqvv9WT160BVNEGav2pR25CWDNdNHenpEnI
+         7zkXHCUotnxhOIqCqWl2rBZ6EUjpdKjIuVCY7eyxPWpdyS6CBPdvA0fGAriHMuFQbp/K
+         JsFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762365067; x=1762969867;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LDrtj0a1qY5KhyImx5VYDzDX8bVcvGFBBUFmZLDCfSw=;
+        b=K0ovaUDNd8bB7TVdWfCzScxrPk0s2KzJbqAqKMsz3AVlPFOLTkzqq7q084ZPW1sIkY
+         4rUGIHqj5+EGKVPq7v0zQYdnczvBHiKKd5DvaD9LwUrUyXVTv78XJ0R7Uj20qedcPN1C
+         g8Pe+nle5n116jZzr2l5x5VizLZf+9Bh3g25hh1yATjPcakXWAlDSpxoSW2SvR74Dbmt
+         Ue+tpQET6MfQDq+iJsuDHLbfjQALS8Vn9NJ/NobZDSuje6zCppbZdNXe0bcqFwCeo9tP
+         9DEbqwS7hhSa7VGGE3As+LFsiQ2xjnfniNDVfqMwDmSrOg9b8rTykA2MVstiLPcn4Bi/
+         LAeA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZiNzNrpqD7mcOx5uhpvIgE8KtGYnGG/sZR5oiRSuObZ72Gt1uHAxmCefGD7KGgaBQbrjmZ/yFeAM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjOhnjTEIchdW8JONDVqGqJF+bgAGTe0ea6t30fXNzgyv8Q1Dh
+	0Ofy92tuctjJY4OjphrxOAJbFs6uvWSl+ty/AKedFx2BuHpOx5EeZugRjKYaPI0cFAQ=
+X-Gm-Gg: ASbGncto8DOoa+Hg7GzzIqPup9CHhM1tksC6x/DYdANU02t905Ql6IuToiH2bUViejd
+	EqJk/jdlWNiWMG8jHgTFGjL5IXk59Ciak2S9ZXntGmJcbt2H8kLAaAj1B88faWQPM9Q50upLwrv
+	hcK2wFPSZzIneYxabmg35VPP4Slc8sWrpr/13/8praXfgAl4TZVe/6BQuSqt0+fw0kC+fxnrYCW
+	9MNUM/W8rDvm81qLSAAL1UgtCYMdk7j9J/3orUlouO3I1h74QjDKecKROLY+pIeueHc9F+YsSuF
+	foQYtPJMvgqW2ML2ToaOGHpoHOY6lk6ls8CanQvcWsx1TcjxqrUchppGphrP4TtXEN7BLRiGZst
+	HDkaqkM0uJtynCHdvgO4EaxjTzToyEw6GzyBlYSXs8NOzP1l5d1d9ZSRvwQ2PNqAL/AjYedvR0n
+	Uppj6eipdiakXQEJuWdYnQ8j9lkjsMhWRTaWKf68mbq13q8N79v/jjMOkHINE=
+X-Google-Smtp-Source: AGHT+IFbubKK7RHluWy72s0vGay11LKV+jA/RxKZTdEkayr9i/UfiWmuCSryIaOc1e9CcrXX+Lj9EA==
+X-Received: by 2002:a05:6214:2686:b0:87d:e456:4786 with SMTP id 6a1803df08f44-8807119644emr57736286d6.45.1762365066850;
+        Wed, 05 Nov 2025 09:51:06 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8808290d03asm1375476d6.26.2025.11.05.09.51.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Nov 2025 09:51:06 -0800 (PST)
+Date: Wed, 5 Nov 2025 12:51:04 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, dan.j.williams@intel.com,
+	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
+	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+	lukas@wunner.de, Benjamin.Cheatham@amd.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [RESEND v13 17/25] cxl: Introduce cxl_pci_drv_bound() to check
+ for bound driver
+Message-ID: <aQuOiK8S31w44pYR@gourry-fedora-PF4VCD3F>
+References: <20251104170305.4163840-1-terry.bowman@amd.com>
+ <20251104170305.4163840-18-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND v13 23/25] CXL/PCI: Introduce CXL uncorrectable protocol
- error recovery
-To: "Bowman, Terry" <terry.bowman@amd.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: dave@stgolabs.net, alison.schofield@intel.com, dan.j.williams@intel.com,
- bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
- Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
- dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
- lukas@wunner.de, Benjamin.Cheatham@amd.com,
- sathyanarayanan.kuppuswamy@linux.intel.com, linux-cxl@vger.kernel.org,
- alucerop@amd.com, ira.weiny@intel.com, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20251104170305.4163840-1-terry.bowman@amd.com>
- <20251104170305.4163840-24-terry.bowman@amd.com>
- <20251104184732.0000362f@huawei.com>
- <10115294-8be9-42af-a466-40a194cfa4e8@intel.com>
- <5246e21b-d226-4faf-936b-d3dffe2cc45e@amd.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <5246e21b-d226-4faf-936b-d3dffe2cc45e@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251104170305.4163840-18-terry.bowman@amd.com>
 
-
-
-On 11/5/25 7:59 AM, Bowman, Terry wrote:
+On Tue, Nov 04, 2025 at 11:02:57AM -0600, Terry Bowman wrote:
+> CXL devices handle protocol errors via driver-specific callbacks rather
+> than the generic pci_driver::err_handlers by default. The callbacks are
+> implemented in the cxl_pci driver and are not part of struct pci_driver, so
+> cxl_core must verify that a device is actually bound to the cxl_pci
+> module's driver before invoking the callbacks (the device could be bound
+> to another driver, e.g. VFIO).
 > 
+> However, cxl_core can not reference symbols in the cxl_pci module because
+> it creates a circular dependency. This prevents cxl_core from checking the
+> EP's bound driver and calling the callbacks.
 > 
-> On 11/4/2025 5:43 PM, Dave Jiang wrote:
->>
->> On 11/4/25 11:47 AM, Jonathan Cameron wrote:
->>> On Tue, 4 Nov 2025 11:03:03 -0600
->>> Terry Bowman <terry.bowman@amd.com> wrote:
-
-<snip>
-
->>>> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
->>>> index 5bc144cde0ee..52c6f19564b6 100644
->>>> --- a/drivers/cxl/core/ras.c
->>>> +++ b/drivers/cxl/core/ras.c
->>>> @@ -259,8 +259,138 @@ static void device_unlock_if(struct device *dev, bool take)
->>>>  		device_unlock(dev);
->>>>  }
->>>>  
->>>> +/**
->>>> + * cxl_report_error_detected
->>>> + * @dev: Device being reported
->>>> + * @data: Result
->>>> + * @err_pdev: Device with initial detected error. Is locked immediately
->>>> + *            after KFIFO dequeue.
->>>> + */
->>>> +static int cxl_report_error_detected(struct device *dev, void *data, struct pci_dev *err_pdev)
->>>> +{
->>>> +	bool need_lock = (dev != &err_pdev->dev);
->>> Add a comment on why this controls need for locking.
->>> The resulting code is complex enough I'd be tempted to split the whole
->>> thing into locked and unlocked variants.
->> May not be a bad idea. Terry, can you see if this would reduce the complexity?
->>
->> DJ 
+> To fix this, move drivers/cxl/pci.c into drivers/cxl/core/pci_drv.c and
+> build it as part of the cxl_core module. Compile into cxl_core using
+> CXL_PCI and CXL_CORE Kconfig dependencies. This removes the standalone
+> cxl_pci module, consolidates the cxl_pci driver code into cxl_core, and
+> eliminates the circular dependency so cxl_core can safely perform
+> bound-driver checks and invoke the CXL PCI callbacks.
 > 
-> I agree and will split into 2 functions. Do you have naming suggestions for a function copy 
-> without locks? Is cxl_report_error_detected_nolock() OK to go along with existing 
-> cxl_report_error_detected()? 
-
-Maybe cxl_report_error_detected_lock() vs cxl_report_error_detected().
-I think there's also precedent of __cxl_report_error_detected() with no lock and indicates a raw function vs cxl_report_error_detected() with lock. 
-
-DJ
-
+> Introduce cxl_pci_drv_bound() to return boolean depending on if the PCI EP
+> parameter is bound to a CXL driver instance. This will be used in future
+> patch when dequeuing work from the kfifo.
 > 
-> Terry
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> 
+> ---
 
+This commit causes my QEMU basic expander setup and a real device setup
+to fail to probe the cxl_core driver.
 
+[    2.697094] cxl_core 0000:0d:00.0: BAR 0 [mem 0xfe800000-0xfe80ffff 64bit]: not claimed; can't enable device
+[    2.697098] cxl_core 0000:0d:00.0: probe with driver cxl_core failed with error -22
+
+Probe order issue when CXL drivers are built-in maybe?
+
+~Gregory
