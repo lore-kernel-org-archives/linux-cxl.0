@@ -1,109 +1,139 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903BA26A1B9
-	for <linux-cxl@vger.kernel.org>; Wed,  5 Nov 2025 09:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DB131D372
+	for <linux-cxl@vger.kernel.org>; Wed,  5 Nov 2025 13:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762335149; cv=none; b=VMDS7KiugzQ+I3HDnHpeZijzu6oxnckmh3cmCqtEskxtcZHDynI3ufQQDyO4LFw2Av0cJEQZalOPyEzF5Tmy68x3tUUxndDItgEIZrf2gtNQ/+zVtAwET9IWW+Utj5ZjadFjT8N11r9R0mu3hX9iTahvMF8ekcKw+tdvwgGUtLU=
+	t=1762349034; cv=none; b=Oqx4bp9Nh/7ebEScJmrhRZiAVNZlSr52MeO9qsqMcsoENCISMouv6i/gBNnHkMDnN350b/eBRN9FdvJoE6bSGbR08WXYDLLozR0mFJtQpmDMcufMgqHrNe1VjbPMNUZR2xpVNhyxy7l6TcxmzdHiz9HCMxSfSqeNxdhkjiQ+wlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762335149; c=relaxed/simple;
-	bh=M25umAkiGD3jBlZh9qDI/mtWj+GxK9x367+Yt2GOKcE=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Lyy9RVL07JYw6DlQIWdrgBvVE2GLchd5z8rQY4mgp72iS8DUrZPeW4sY8eV+9xQPdGgQOMTBTAORPmLGiXs498jN59Q1oOlKaP5IRLrtspy47qFoDd+s27Fd+mVSqteD6CH8/1pWDL/HoI79DbRbVmcPhBS2Xfgt9yifteTzZRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d1g8M0ZlLzHnGcR;
-	Wed,  5 Nov 2025 17:32:19 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 276FD140278;
-	Wed,  5 Nov 2025 17:32:24 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 5 Nov
- 2025 09:32:23 +0000
-Date: Wed, 5 Nov 2025 09:32:21 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Peter Maydell <peter.maydell@linaro.org>
-CC: <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>, "Markus
- Armbruster" <armbru@redhat.com>, <linux-cxl@vger.kernel.org>,
-	<linuxarm@huawei.com>, <nifan.cxl@gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Add Fan Ni as Compute eXpress Link QEMU
- reviewer
-Message-ID: <20251105093221.00007b80@huawei.com>
-In-Reply-To: <CAFEAcA_Dm89kafy028KWjbtxTRdCKLgc4KGCPJwxLdXf6monjg@mail.gmail.com>
-References: <20230228113926.11485-1-Jonathan.Cameron@huawei.com>
-	<CAFEAcA_Dm89kafy028KWjbtxTRdCKLgc4KGCPJwxLdXf6monjg@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1762349034; c=relaxed/simple;
+	bh=s/94gijIF0XRuyDVkC8CAXhywzL9UjqQBpellCChGTw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Te4pjbrTky5AeTQbOfr5caVxLxH2mDOfs9a+OcABhgeMOk/1DYSsTNbO0c7A5o6695bRGbky3uUCrUj9K6DAeu0HXJFoGf0VZRQcXHoD6COmup9wC/Jkfk/OvhCmuwkC8XBkHOwllxAo4n+dP28IEiGSxDTUutG2QNXk87hJq1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YVAqOpsS; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YVAqOpsS"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-37a5bc6b491so1369181fa.0
+        for <linux-cxl@vger.kernel.org>; Wed, 05 Nov 2025 05:23:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762349031; x=1762953831; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2WNWzl9UPAGqC0OeojGWF3FUUOCD6lJ7lBCWbQ62ZwI=;
+        b=YVAqOpsSGvKYDPLoztpTZUQpcXAqF7Sh5EkX0naLQpd3lXJyWYNDgzURhuSMqjwvY+
+         /fsAXl6rl66QI5aytr9CHvZlc7yQ6lmILUm9+dvyf6ywUZhel9t9xy0Gy+TT6j1YrW2g
+         dqO1v4qS/qk191CknV18ms0h7NUfMTU7SLrjv5sfUEKhozsn/yyD/X7e/XLyg46/1WRU
+         BAJYXoX6KYZMoHlKisQA4vjdQZ79NnEu2IuN4RI3l6j0OpJyzkyhoALElXIM3FGn9zws
+         o39wmj3WajEJVWnLU6t37ccIdY++EwH4Cce0wWMKC6g3C7NDYz4H5Grb8z2WEMWonUVT
+         PHgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762349031; x=1762953831;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2WNWzl9UPAGqC0OeojGWF3FUUOCD6lJ7lBCWbQ62ZwI=;
+        b=eycKA5rNa4/YrIFLiRuAcIE6mjme3SftUlQqjkOn74loKB6Jt+ew4BOcg9SOEieGxI
+         dPLx59gTprb00HHbSQz1YklWAeR7vzYwX9jJ3EDlrR0hrODZnMkihEwMRSw8zd9OKqoq
+         4yvD0stztVveFSS2Bt6qd1E5bs6Ay+YqMV8MhV7J2bmasDMQNiaQTrY2e7r6D6P23o2X
+         dFk8rJWjt0PivHY+XAzs0uDdY6HyZYDnkKo8fnNQmFcljKGhuoXak6oCfYrU11JvGPQf
+         TyphL1S5fnBjXp3zozQ5lLTRI25mABr8YDtG8JTtlZ6FA7r6BS5s9Tw8oaaFU5ANA1UI
+         hBdA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLnwhC7TO04HmBIfcUqraXHNzF+1b6qO8gbC1TJLWcjq5l9Jd9tAxNP8SxkGDBYPeD0BqSafpQBn8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxo4CCutZmCKC0Qk1DJ38ga9JXlrmtM/fAu2bLPqpzvZCqfUKyX
+	w0sCjBRqgiMEd2snht2r/k2yZsueMhNQWsal00qixMrjN1sgrfkn9wlybDtuA0G7i7sT+pSP2ub
+	cIp5mGn8s3NiCPhQWEcbPd7k8RhXWTJ0=
+X-Gm-Gg: ASbGncu3OcUQnjVNXxlWHDcBz5+2Xb8Yi+UsShPCTWu09MybDE8A80VV2zBPw+nVJ30
+	f3VypCX596oQd5WSwx1RIyTE0G2KXrabm4HfTPVLCsCnm9XbvUi0VGskVwL4ixg1bQdpi2gN1+x
+	pg7Jb+s8/WjFu8+LpCy5J33PwD3kwoDEkLIsdMJRDVlGna1dMXVIpaq9FFf8cXAJeLzTACACvbn
+	AKYKAukbY2bgiHzor1IPFA+QGIk7jRbSyYH4r77ZB7F4qVEwwoFjQ2drAhXVtkpmsP/m04atrDa
+	r5rZWgo2NvhA
+X-Google-Smtp-Source: AGHT+IGdn3dvXTFfnd26oUCEg5vL/XwsKbx6eN6B7iFUvvLn+iruzlQSAGzvDJ9vCiy6F+m/VX5r20KcdkbP0rV3R/0=
+X-Received: by 2002:a2e:a109:0:b0:37a:3033:16f6 with SMTP id
+ 38308e7fff4ca-37a5142e2c8mr9741151fa.35.1762349030972; Wed, 05 Nov 2025
+ 05:23:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+References: <20251104003921.9707-1-akinobu.mita@gmail.com> <aQo1VjjQw1OZG8nY@kernel.org>
+In-Reply-To: <aQo1VjjQw1OZG8nY@kernel.org>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Date: Wed, 5 Nov 2025 22:23:39 +0900
+X-Gm-Features: AWmQ_bm7dSG6fty0drtbxuWvBO6bGxhtYdnsjyRSa0aF5n43MfZsmtccLtweZyg
+Message-ID: <CAC5umyigiSS+ynr2JnNSaR3irW0eEWFuUVnJvY2QvJJO4yfP-A@mail.gmail.com>
+Subject: Re: [PATCH] memblock: fix memblock_estimated_nr_free_pages() for
+ soft-reserved memory
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 4 Nov 2025 16:17:07 +0000
-Peter Maydell <peter.maydell@linaro.org> wrote:
-
-> On Tue, 28 Feb 2023 at 11:39, Jonathan Cameron via
-> <qemu-devel@nongnu.org> wrote:
+2025=E5=B9=B411=E6=9C=885=E6=97=A5(=E6=B0=B4) 2:18 Mike Rapoport <rppt@kern=
+el.org>:
+>
+> (added Dan Williams)
+>
+> Hi,
+>
+> On Tue, Nov 04, 2025 at 09:39:21AM +0900, Akinobu Mita wrote:
+> > memblock_estimated_nr_free_pages() returns the difference between the t=
+otal
+> > size of the "memory" memblock type and the "reserved" memblock type.
 > >
-> > Fan Ni has offered to help out with QEMU CXL emulation reviewing.
-> > Add him as a designated reviewer.
+> > The "soft-reserved" memory regions are added to the "reserved" memblock
+> > type, but not to the "memory" memblock type. Therefore,
+>
+> @Dan, do we really need to memblock_reserve() the E820_TYPE_SOFT_RESERVED
+> ranges?
+> Quick scan didn't show anything that requires this, but I could easily mi=
+ss
+> something.
+>
+> > memblock_estimated_nr_free_pages() may return a smaller value than
+> > expected, or if it underflows, an extremely large value.
 > >
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > /proc/sys/kernel/threads-max is determined by the value of
+> > memblock_estimated_nr_free_pages().  This issue was discovered on machi=
+nes
+> > with CXL memory because kernel.threads-max was either smaller than expe=
+cted
+> > or extremely large for the installed DRAM size.
 > >
-> > --
-> > Thanks to Fan for stepping up after I requested help following Ben
-> > stepping down as co-maintainer. Fan base been active in testing
-> > and review recently so great to have Fan on board.
+> > This fixes the issue by improving the accuracy of
+> > memblock_estimated_nr_free_pages() by subtracting only the overlapping =
+size
+> > of regions with "memory" and "reserved" memblock types.
 > >
-> > Based on patch [PATCH] MAINTAINERS: Remove CXL maintainer Ben Widawsky
-> >
-> > Based-of: Message-id: 20230220212437.1462314-1-armbru@redhat.com
+> > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 > > ---
-> >  MAINTAINERS | 1 +
-> >  1 file changed, 1 insertion(+)
+> >  mm/memblock.c | 33 ++++++++++++++++++++++++++++++++-
+> >  1 file changed, 32 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 7ea56c6ccc..838e1a91a4 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -2633,6 +2633,7 @@ T: git https://gitlab.com/vsementsov/qemu.git block
-> >
-> >  Compute Express Link
-> >  M: Jonathan Cameron <jonathan.cameron@huawei.com>
-> > +R: Fan Ni <fan.ni@samsung.com>
-> >  S: Supported
-> >  F: hw/cxl/
-> >  F: hw/mem/cxl_type3.c  
-> 
-> Hi; I noticed today that Fan's samsung email is now bouncing
-> with "550 5.1.1 Recipient address rejected: User unknown".
-> Do we have a altenate email for him, or should we remove
-> his entry from the QEMU MAINTAINERS file; and if so is there
-> anybody else we should add as a reviewer for CXL ?
+> > diff --git a/mm/memblock.c b/mm/memblock.c
+> > index e23e16618e9b..af014fa10a44 100644
+> > --- a/mm/memblock.c
+> > +++ b/mm/memblock.c
+>
+> ...
+>
+> > @@ -1826,7 +1842,22 @@ phys_addr_t __init_memblock memblock_reserved_ke=
+rn_size(phys_addr_t limit, int n
+> >   */
+> >  unsigned long __init memblock_estimated_nr_free_pages(void)
+> >  {
+> > -     return PHYS_PFN(memblock_phys_mem_size() - memblock_reserved_size=
+());
+>
+> We have memblock_reserved_kern_size() that tells how much memory was
+> reserved from the actual RAM. Replacing memblock_reserved_size() with
+> memblock_reserved_kern_size() will omit "soft-reserved" ranges.
 
-My bad. I've had this on my todo list since Fan moved.
-
-nifan.cxl@gmail.com
-is the address Fan asked me to use.
-
-I do plan to add a second reviewer (more welcome!) as Fan's time is
-limited (not the day job any more), but wanted to let them ramp up
-and review informally for a bit first.
-
-Thanks,
-
-Jonathan
-
-> 
-> thanks
-> -- PMM
-
+Replacing memblock_reserved_size() with memblock_reserved_kern_size(
+MEMBLOCK_ALLOC_ANYWHERE, NUMA_NO_NODE) also fixed the problem. Thank you.
