@@ -1,109 +1,297 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012007.outbound.protection.outlook.com [52.101.53.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B027A29E101
-	for <linux-cxl@vger.kernel.org>; Thu,  6 Nov 2025 18:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762453551; cv=none; b=cS8PgO37DLpqvbWLB9xTzfl4Cyo34yPbIb7hNM6xeM40Awowro+jPWMBrbbr0b+/ITiZszIhon9A49cx9H/cTNA4q7I8F2yUQLEQ5geILVGSCnmB4JPo0lBFAAbJcfcjL2TV5EmTLENNvirhB0VxbFWvaDuuTNOhdgzJjNzy7NA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762453551; c=relaxed/simple;
-	bh=d49GAtLiWQ+gY1EKaUZBNDB5hNzMmi3WaSSV6czVI5g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CziALbXaS183+5Q5vmWwGdYYWEiIdJpzGKqBfXT7pVpOS/zUwBcPryUPHTUJeUjUd3PMS3qKq1BiJUpCtwsqtjlLY02loL4qPBhFXomUfHkRb/hDeNGZLtgNjMJognNpOg6xYuDikkmZRG7VZW2mq2ocav+9TcRqdKbGo4Z8FaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Ja7dRWoI; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C239A2FC02D;
+	Thu,  6 Nov 2025 20:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762460886; cv=fail; b=RvRHE2eB0zqvVssrYpbbRnwr654nljj+7T0kBzzfj76Y93msH3GQTy0EfbXGL/OMAbYBuVV1pKGsH7TDdshiwvWwA/XFEkVEuxBeQmfXge82dPjLBHKv1l9gItRHyKy1mJ3qNP1Yxe1WOzS1eZg68Mlitw6uV7QLLvCPlk3m3K8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762460886; c=relaxed/simple;
+	bh=q63L8HQny6ODf6RH+lS+aIr8HiaoiKMHqwIqdQ4yFxU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=m1W+J2I8i3SAEBjV5EpNeDKuHQev531cgipCMf3bohlVbgkMC+EIspCVY0BCXF+ZdPuCeSfF1ctHErA7RnyMIT4zyFiA6u94doUjL1Ylmk5+y/roJUy9Tzr/IgpF5F99lv/HksCBzhdMa+bR3UbK8HCo/w+lqzI9Ar7ggnnn8wY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cXWUc2pU; arc=fail smtp.client-ip=52.101.53.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Ja7dRWoI"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-8909f01bd00so131715285a.0
-        for <linux-cxl@vger.kernel.org>; Thu, 06 Nov 2025 10:25:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1762453548; x=1763058348; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/aqZMvGx3cDulG83zxrmi7nWBQJY3Wx4JVbaMSnDC7s=;
-        b=Ja7dRWoI0cK6X9SIhwXec1MqPFgbCYOT/WSU0ShGgU4Ig6hDIMtq7ZAK9CQVAddiuj
-         i7nPPiZHyCSNkVGn7Ff8zI2UowNZXX3bbhacVno1AbZOKlrIZ42RaSerK0JeaHcL1aFN
-         duWCQ2RJDnmqr/FmXJQ5CKnbzD6d9Xw7ILzJreSxTb2PZxR8kO7pMqwgo2Etx+s7Sm1W
-         cd0SjODCaSg7IXiwDm874L8iTXe6nT0Fxi/reIpaw2xiYHSq7TfuuNXfSJ6eNpi5Lxq4
-         80he0pDqb8R3ZGWBVQLhIkWR1Bsxr25fiRofSetQt4af90XsobXWLBPu7jaNrGDgASYU
-         S6lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762453548; x=1763058348;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/aqZMvGx3cDulG83zxrmi7nWBQJY3Wx4JVbaMSnDC7s=;
-        b=s0CiGhhKSZ6ABvYda7KZZU94bYZFW4sUNBRLq9QAd5JmG1l4fs8C/sdisyfc403N79
-         VYdHEvVsXhAS8R1nxWriXbvGDn67qQjpy33IZ26Rgh2UaZZkP7TzYb8XJmAs59n6EEm1
-         J6jEY0At3DwbxUviZYSYWnj0I3EVKapFG2alMTqyGpbROjWoDyjjb5fheq56y4U+IUs7
-         iY6AoQ0iBIFloLKSHQfHZyCgG2wrqKV3vyKYGiQXNY7eDknNHtdMoVThtb+HxwAOjskW
-         VGA+fXkm9y5eo+tlhpQi81a0KbFMXH431GLSVPlFSRakRu825dZg2PcafcJm2DnYLw5J
-         +qHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUaDsRe7yT2R2/3B4G8ePSWGIi3zhq5D3i57thodiKYlmzL2pjJq5uktMs6NYSJhrTT12mUQeu2Y3U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqPccLl38FNdBb8Wujy5amY2d9PetulhndZ7JxMko5tLrzTe3i
-	xxt3oet4Jn07LojclqDfdTjSzFhXx3b2V0ka9/jxDXDHNW+KLtkTidDA9zLz0CjGtvg=
-X-Gm-Gg: ASbGnctqd6vKfVsP7kTPH+nmr6CG5TEJimSZ9M7FeysU8u9QBLYhy5sEomxOmgCJ3Rd
-	7DApU6btX9ZsgD4BOKkknI64VS2iznOFLSHITyLVFe6mcAO6UYXb/CQud5wwdRGsSkB+2Y47ZNb
-	7qxIMWQ7UzZyEhHZwLGz6ZwWjaPImiaByq3biXQOWLaCPxVnm+cIy3Xm9E4FXnjDKsri5hUXiwq
-	NnJYuLxHtLwARbIfmzkC4XLzUVC0EYHpevSxyW5CIWEZ1Efn8Wlj03qv4s5Yqwyjd9ZkwKb8QoR
-	M/g4p5eEwqZN21SvGQ7Pl+n5uB1QnozxKxWIjxxH8e3TqOS21AI5p5TaYnbA/hfcCgBUy21WmpS
-	Ou9uXjpT1ga3SdZsEz1sBXcLX2EYO6rzuziqCchYf95nuT5u3HMfPM4T5d+l/9d4FfCbAuyg87I
-	kLhZNWUdA+ahYbNCzZld4IpDS/LGnikulIdKLqX6JqCesRCM0QHxvgmPrxOXPDjloBJizyxA==
-X-Google-Smtp-Source: AGHT+IGG88vgYrBYLoLwBIyOKJFlPURjqblZiHgoX+67U5H3JIp6YoUJbgYMMwMECaFVdN+v2cX85w==
-X-Received: by 2002:a05:620a:1727:b0:89f:9693:2522 with SMTP id af79cd13be357-8b24533edd4mr86446585a.73.1762453548474;
-        Thu, 06 Nov 2025 10:25:48 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b2357dbebasm244367385a.31.2025.11.06.10.25.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 10:25:47 -0800 (PST)
-Date: Thu, 6 Nov 2025 13:25:45 -0500
-From: Gregory Price <gourry@gourry.net>
-To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-Cc: Nathan Fontenot <nathan.fontenot@amd.com>,
-	"Koralahalli Channabasappa, Smita" <Smita.KoralahalliChannabasappa@amd.com>,
-	"Bowman, Terry" <terry.bowman@amd.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-	Robert Richter <rrichter@amd.com>, Fan Ni <fan.ni@samsung.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	"Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] CXL/ACPI: Remove overlapping Soft Reserved regions before
- adding CFMW resources
-Message-ID: <aQzoKWqfw4vfpFrW@gourry-fedora-PF4VCD3F>
-References: <ad410c59-bf0f-47ae-aa65-c0d845e6f264@fujitsu.com>
- <2296acdf-de5d-4591-a165-d59f9f432dee@amd.com>
- <e545b630-1a89-40b1-996c-c843a9e8fad7@fujitsu.com>
- <aQznzIP6h5NibJM6@gourry-fedora-PF4VCD3F>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cXWUc2pU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bTOivv+HZ9SA9NwA+DW8t5yhvoBlqAiTNHeFf3rLUC0d0zhIH6lhj2KtyoL3WU8iwX4OFXxiAdGIQgUmXYpUMwj/70ijJpN4tc8Uf3+T3f97H6tZfRegM2vpHiqztYq/kI/Ptwco4Xljlo6qju7nYAHmOwTfn6rJ0dBCigMtappA8+4aWV4dqxVJPszNKoHL1MVolwCnzOvFnQwXpXaqzq32fsWTPg9+J8wUlU4/RoUvXPSb14HadodC7GFEX/DoPsEcjfzVIvSx/OTuw1KX+4keF7qrcAoyMZ+bfxU/xRzILfQz1qVy6/7F/VqOQl+ncUCfngAC0gMe8LnhgqThgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=u1cCcJV8Fs6hJ8q3U0JW/7KpVpQBbRUZ00Dc3/XN1Co=;
+ b=LksWYmm/86+2wQYiBCvm+vwYgT0CeVnQLVDm7hGG3Y44TdLuVWQcC8Qm5ibjTUD1b+3DAzz8blJ7gqFdAz6de2kKbBAT9UqYahLhxGlRgZllfqMzZmsw1WhV+pt+CL/dLePztul0BnJELHypBebm4bLFIW9Wz+hVm1xQZJ7faESFNbRFRtxqGUoN9gfl9btJs09CVZhQXjZ2yWsW2k1RugPnZyEMUBaTyCI0S4PSNNBMwptkIwV6hyEAkKf2ieOGN3wIQqojTE0x9ZhlvYv7UewU+o9iUMoOrjImCgWRQC6Oed8T2Ip8QTlOG1iyEAPQjiTyNUbToa9akQrHlVQz7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u1cCcJV8Fs6hJ8q3U0JW/7KpVpQBbRUZ00Dc3/XN1Co=;
+ b=cXWUc2pU6d0ESks4SzkVidxFDROrUhfET8ua7bIkfKyvxulWQaPhkOPpMc3dtsKyxEept1/AKqGNiN6nny4F8Q+OaXcCaU4FubcGpKHRDi29wonCwP0UdeCihqdbGSCfwg7WINK7nX+z6aCgHQht3DHkeqXckAElU+SwBaFBQHo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from LV8PR12MB9714.namprd12.prod.outlook.com (2603:10b6:408:2a0::5)
+ by SA5PPF6CDAEAF48.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8cf) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.15; Thu, 6 Nov
+ 2025 20:28:01 +0000
+Received: from LV8PR12MB9714.namprd12.prod.outlook.com
+ ([fe80::c18e:2d2:3255:7a8c]) by LV8PR12MB9714.namprd12.prod.outlook.com
+ ([fe80::c18e:2d2:3255:7a8c%4]) with mapi id 15.20.9298.010; Thu, 6 Nov 2025
+ 20:28:00 +0000
+Message-ID: <eb2e7040-539b-4406-9d14-3ffd261b07cf@amd.com>
+Date: Thu, 6 Nov 2025 12:27:58 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] acpi/hmat: Fix lockdep warning for
+ hmem_register_resource()
+To: Dave Jiang <dave.jiang@intel.com>, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc: dan.j.williams@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ rafael@kernel.org
+References: <20251105234851.81589-1-dave.jiang@intel.com>
+ <20251105234851.81589-6-dave.jiang@intel.com>
+Content-Language: en-US
+From: "Koralahalli Channabasappa, Smita" <skoralah@amd.com>
+In-Reply-To: <20251105234851.81589-6-dave.jiang@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR05CA0025.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::38) To LV8PR12MB9714.namprd12.prod.outlook.com
+ (2603:10b6:408:2a0::5)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aQznzIP6h5NibJM6@gourry-fedora-PF4VCD3F>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9714:EE_|SA5PPF6CDAEAF48:EE_
+X-MS-Office365-Filtering-Correlation-Id: c8f3dcc9-b52f-45a5-a622-08de1d72fa87
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bWU4bERPb05iYTVJVDAwdjhDUEV2Y3JwdzVQZWxZS0t1U2ZoMnAwOXVoelV1?=
+ =?utf-8?B?bXFFUzlUdzdlMjZMSUoyb05BTWozdjJTYkVWMkRXcE00S3lsQ2JDbThLcHFY?=
+ =?utf-8?B?dC9IYWtOQW1tanNNLzBuc01ITmwzYmFLOXhlMit1OTFneFUzRTZzWFFzSnJl?=
+ =?utf-8?B?TmhzTXYyRm40NTJiMU1HVGliYVVoNUlUUWpzV0Myb2xZWW1obFJTRFJsQThT?=
+ =?utf-8?B?dkZYazBiTExsT1lMZ3M5Y0h1MkhNWWVpMTUzeThldktNaXY4N2lqUEhmSURk?=
+ =?utf-8?B?akQ4MXgwd1RUYXBoQUtjNnFEVVhJeVZJMW5lbW5rY2VrWklIZ0lyWk9XRGUw?=
+ =?utf-8?B?SCsvaGlPeXVYa3o5Q1dvVDBwaCswdW16ZEJTZWVneEUyVmZFMUFvSzZ3VlAw?=
+ =?utf-8?B?Mms5ekdaRjBBV09yUlY1ako0Q0ZQNWV3RFlMT0Z3QVZ1b28rcmpnaWQxNzhV?=
+ =?utf-8?B?MVZ6N2pkbUpBTkFiZlkyOTBJN3BBSUk1WW4zNXIzSXI4SHdqREk5eS93UDBZ?=
+ =?utf-8?B?eWNoV080UzhFYXdYQWVSc0h6Zk0wb09EOG04MStNclV3NjZqYzY1d09LSHQ5?=
+ =?utf-8?B?cnhYQUYwL0pXTXg3RHJmY1hUcWVTcmxXYjFYa2JuclRRc2hGVjREOC84Mjdv?=
+ =?utf-8?B?OXhmd1RNR3VYbCtuNVMwcmh1N1JIR2xyYTJSbHlqcjVDKzR1N000eWtIaDN6?=
+ =?utf-8?B?b1dsTUI5VjRvc01Oc3RhMXFCajdPU00zd25BQURuMXZmVkExUUhIdkVlZ0ZZ?=
+ =?utf-8?B?SXk2Y3lsRWNTMFg2WWdJTVl4VGN1eSs5bnNEY1FlMEVTUUNwSC9oZHRHSGJY?=
+ =?utf-8?B?OXdhS1R2eFpKTThmT1dpNFlBdVg0K2JIN3VoWk81RDRoaHJUMDlzVlMrR1Ev?=
+ =?utf-8?B?SU8wTW44K1p1cDlCdTJhN21kcnkxVm9wNkU1SGh4WDVMMmYwRlNVdmpLckkv?=
+ =?utf-8?B?WXFnSlBLTTVONDBsWlZXSFVaQnhsR2tvbFF2NzRlbDJ0TTVzeUZaYnZNL243?=
+ =?utf-8?B?WmFJczJpOTRmTVZpMStmVWU5ZUNmaXRTdnJOZVMxYTd3YjBMcDVtYjZNNlI4?=
+ =?utf-8?B?emljUm80VFAwUjV2eFpnL1RwWG8zcVk1bGRaSEdTOVNBM2tqUEgyZjB4TEcw?=
+ =?utf-8?B?bmZhcFNlOGd2bDZYYk9WYS9uVEVPbTF0SVQ2RnBRTHQ5eGVJVTNhZjVadWtY?=
+ =?utf-8?B?NU9zRGN5RkV6RjFNaWNDZGRHZkxoenYrTXIwT2JPZmlZNncyamlQVllqK21O?=
+ =?utf-8?B?aGhvbUtUME52KzVIREJjajBkQmpvaW1zSlJ2OWcyRHl2U2I5b2JuZjhkLzBj?=
+ =?utf-8?B?R2N5WEFia3h5SUNUT1BhQndUcnhNRDdXNHNyS0ZVYVhqQVZWTlJXR0w1VXJ5?=
+ =?utf-8?B?T3hIeDdwcnROK2tYVjJmM3NDV1FabmxFNWFrRi8ycjkxYVhnSXVPc2p2TUtu?=
+ =?utf-8?B?dUgvcWVZMGVoYjVrV3F2dWhZdjRJR1FicDQrbEkwYndiSnlUUnNuWXlHclFt?=
+ =?utf-8?B?K1ZnN2xNY0pzYW8vTURaTFdiR2RiWkNpTVFVcEdPSGQ0anR0RlN3RDZaeDR4?=
+ =?utf-8?B?ejF3L1FFeUlST3pFM0dYWCtXZlUvTmdmWDBNNHprMGNpRm1QekpaRWlRYmtu?=
+ =?utf-8?B?bDdNcWh5cnJIR0xKYXByUlNvTXRMN3NkdnpVREVkejY1UWVCTlJzZGNSSmd6?=
+ =?utf-8?B?L084eDFKbUtydUdjSTZuSHU2YWJLR3hPaWxnbHBBc0ZnZndIUnJGVzQ0YkVz?=
+ =?utf-8?B?b0hxMXFKckxLODQ3VVRFMmVuUFpOKy8raDhPY2ZpVWFEM3ZickhFUDg1TmpT?=
+ =?utf-8?B?YzlwNHlEWHFaek5PU2dDYUhvZUsxY25KOWFYTUxXWk4yS1pOZmtaS0xlL1RV?=
+ =?utf-8?B?YnJMNUhKcEtsVUFJcFNIdFoyejMwNnpoNDg1OE1xTEgrM3o4UjVHOHY1L0hF?=
+ =?utf-8?Q?eBdXTtgRArLU7mAQpQ4pFcj+6rcMILmQ?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9714.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WWEwQjMzcWlGQUs3U1ROV0lGZHJVMWJhTEtpZ3hrVTBTTjlUUUp6SnhwMkFy?=
+ =?utf-8?B?QVl5QUs3Ni92SlhYcjNyR0JkbUVXN2FMeHZ0NHhLZFJNajhiZjNYcUw5RkRP?=
+ =?utf-8?B?VlNLNWs0c2xYa1VpZXJoc2dXdVhEcUFHWFNHamhDMWErUFRwZ3h0WmFQaWJ0?=
+ =?utf-8?B?UFhjV0pQbDYzaTlSczFCWnBiMG1XMjB3OXNSS0hQUVRaTmJoWTI0Zk1mVDRO?=
+ =?utf-8?B?RFJiV2lpMlZHd2xoRGllWlRMUXl6d08xckx6azlBVTlhMVIwd1RDWmZlWUF5?=
+ =?utf-8?B?OGVPMGdhakN2U2h5VTN3ZG1vN0xYNndDam1RaGY0b05WZUNIeXd5VWgxWUJh?=
+ =?utf-8?B?RnNyS2VBV0k5dmFSbERTRS9HazdQY0RxQUhzZXRrUHR6aWhuSFExTXNtOTVM?=
+ =?utf-8?B?cUcrM1V2WlVqbk5RWEI3TjliOHh5VUdwQkVEQ3ZsY3hGV3paSDhibkk3WEhm?=
+ =?utf-8?B?dEIreGV5VFdIc2RuTkJEY2Z3VzJlQ01WT1lhQnhXNkVKVks0bXBCU3IzT2Ur?=
+ =?utf-8?B?SVZtMjNjNnMzNnJuOVVUcU9YOG9XMG9rSnJnOTRGYlpXTEEwd2NHTit0WnNq?=
+ =?utf-8?B?MWtkN0xzOS9mNzBzWENmSktCdkxIR2tIWlRrYkRTb2VScmF4NW1KU2VZMlRu?=
+ =?utf-8?B?eEZDdVN3N24rT1ZnNkhRVmJDTk83TUdVaVdhQkh3QVV5UGtNZkVWMHdyQTFC?=
+ =?utf-8?B?cExFQ0RrVkJ2UHp6RTBwWmV0V1lyZHo1LzZYQ1IwdmRsWksrYXdlOGUzYWtQ?=
+ =?utf-8?B?emdIRTByNlR4b1k2OFMwTUZSRU5WYWlVYzZxL25XVnc4Q0NxWkNzY1BEOWtO?=
+ =?utf-8?B?aTlySUZyWURZZ1Y3ZTRwK0xONEFQM0J1SzBPajJSK3ovQ0NVbHA3TXRza3kv?=
+ =?utf-8?B?NEY1UlFhcFZjU1VGamwycGJXM0h1ZllBL1psTEVtaUV1ZVd1R2lwNi85R2l3?=
+ =?utf-8?B?Zm5QMmdEd0hrcFdGRjJBdG9iYmdyYXlsUXB1YmE0N010MmQxd2tyVGE5ZlpW?=
+ =?utf-8?B?TVMvSEZrR0RLMXpPZDkwU3pBaXlCaUFCc1FVUVhyS3RpVGE0QWU2MGdLNEFr?=
+ =?utf-8?B?UFowQThNZVpkKzdJc2JCZ1VES0d1TjVLY0dYbTV0Q3QvQlFhMVRpcUk5dlZD?=
+ =?utf-8?B?MS83VnVFeW52VXZFM01IOHpQT2NHMVB5NS9PRGcxcThEaExIRWxoY3psOUV6?=
+ =?utf-8?B?T1FIOHpLMnhtam53TWUxdkdVdDZPMGFsd21ma1o4dWhGc1ZPU2llTXFwMU9R?=
+ =?utf-8?B?SGRCZDVIUDF0YU5uNWc4aDVHZW44RzRubUlBcHk1U3BYN2s5QmRWUlU1NU4x?=
+ =?utf-8?B?eGZVcWJJK01oK0gvTWozYzhHTjlvcWl4dVpvVkROTll5bWhGNkdiWGVPUFBB?=
+ =?utf-8?B?dG4rQ3hXWG8rRjF2VkVOaitFck5Nc1hMQzV6bnVrSS9IZVJsUDU5MXQzYTdV?=
+ =?utf-8?B?bEZTZVJFbnNEclRDU1R1VDVpRTMrWEV5cTIrL0xzWnNGQS9UWnBsWlYvU0Rv?=
+ =?utf-8?B?ME5FaFEzVm8yTncxMVg0b2tSaXZsdE5USGpsT3NUaTMyQm5nb1h4dXBPYlhh?=
+ =?utf-8?B?b2dpKzdqVHIzVjJxbE14R0syM1BlTjcwYTJFV2dLcG5EcVJZQ3R6YjFTcVNS?=
+ =?utf-8?B?NTBzK1BpMXZzNnhJcVJxL1F5OEJvZzIrVHdpeThBNlpoeXVlWFpLbGVEdUx6?=
+ =?utf-8?B?bktrcWlsVTd1TFdnY3prM2cyREZqUDJ6b2N2M0x3cmhmRG5OSW5JTzhHYlp3?=
+ =?utf-8?B?S3dDakc3SkVQTkFHaXZNU1Fpc21iTWpaMWE2ZkgydXNiZjZCRFBFNTB3YWFY?=
+ =?utf-8?B?bFQwUTRYQXhLSlhpWWVzYVVmV0RyeHorcEVFQ3BXK0lmSnFQbHRjT0M3SU1D?=
+ =?utf-8?B?YVIwNHJXY0VpSDJZZlJ2R3pzTTNqMHNxaFJvM29NV2dYaDZtSXhFcjEvZk9j?=
+ =?utf-8?B?T0tIR1BuS2NCbGNxTHR6aUlrOVdaTjRaeElJdEhGdm9nQm1EelptOG5hQXhF?=
+ =?utf-8?B?V3JYN3Erejl1QmFhM1R5UWp5TFRYSE1JSEFWQi85L2xFbHhGKzJueXZnS1JI?=
+ =?utf-8?B?WjE3aytFU3h6QVBqRTlaZ3JxZlArbWsvM1JuSEN0dEdRa1NXd0drZDZYSEFG?=
+ =?utf-8?Q?onqeoMt85aNETtxsAW5KLoj5V?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8f3dcc9-b52f-45a5-a622-08de1d72fa87
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9714.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2025 20:28:00.1708
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EIRkAe8syl2QC1hslV1YboifHs5NwApiRbyPnEzLUJ6Almt4gU0AHI/eaAOT0bKh2vty21T4WWACn/X5rDM4Tw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPF6CDAEAF48
 
-On Thu, Nov 06, 2025 at 01:24:12PM -0500, Gregory Price wrote:
-> On Fri, Jul 11, 2025 at 05:34:27AM +0000, Zhijian Li (Fujitsu) wrote:
-> 
-> with CXL_REGION=n you cannot create the dax region.
-> 
-> region0 --creates-> dax_region0 --creates-> dax0
-> 
-> all you've done here by setting CXL_REGION=N is break the probe chain
-> but otherwise successfully attributed the memory to the CXL driver.
-> 
+Hi Dave,
 
-apologies, disregard, this old email somehow managed to make its way to
-the top of my queue.  This code has changed significantly since july
-lol.  Sorry for the noise.
+On 11/5/2025 3:48 PM, Dave Jiang wrote:
+> The following lockdep splat was observed while kernel auto-online a CXL
+> memory region:
+> 
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 6.17.0djtest+ #53 Tainted: G        W
+> ------------------------------------------------------
+> systemd-udevd/3334 is trying to acquire lock:
+> ffffffff90346188 (hmem_resource_lock){+.+.}-{4:4}, at: hmem_register_resource+0x31/0x50
+> 
+> but task is already holding lock:
+> ffffffff90338890 ((node_chain).rwsem){++++}-{4:4}, at: blocking_notifier_call_chain+0x2e/0x70
+> 
+> which lock already depends on the new lock.
+> [..]
+> Chain exists of:
+>    hmem_resource_lock --> mem_hotplug_lock --> (node_chain).rwsem
+> 
+>   Possible unsafe locking scenario:
+> 
+>         CPU0                    CPU1
+>         ----                    ----
+>    rlock((node_chain).rwsem);
+>                                 lock(mem_hotplug_lock);
+>                                 lock((node_chain).rwsem);
+>    lock(hmem_resource_lock);
+> 
+> The lock ordering can cause potential deadlock. There are instances
+> where hmem_resource_lock is taken after (node_chain).rwsem, and vice
+> versa.
+> 
+> Split out the target update section of hmat_register_target() so that
+> hmat_callback() only envokes that section instead of attempt to register
+> hmem devices that it does not need to.
+> 
+> Fixes: cf8741ac57ed ("ACPI: NUMA: HMAT: Register "soft reserved" memory as an "hmem" device")
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
 
-~Gregory
+Thanks for this fix.
+
+This resolves a deadlock I was hitting while working on the Soft 
+Reserved series.
+
+Before this change, the HMEM deferred work path could hold 
+hmem_resource_lock while eventually triggering memory onlining where 
+udev holds mem_hotplug_lock.
+
+Tested-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Reviewed-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+
+> v4:
+> - Fix fixes tag. (Jonathan)
+> - Refactor hmat_hotplug_target(). (Jonathan)
+> ---
+>   drivers/acpi/numa/hmat.c | 47 ++++++++++++++++++++++------------------
+>   1 file changed, 26 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> index 1dc73d20d989..d10cbe93c3a7 100644
+> --- a/drivers/acpi/numa/hmat.c
+> +++ b/drivers/acpi/numa/hmat.c
+> @@ -874,10 +874,33 @@ static void hmat_register_target_devices(struct memory_target *target)
+>   	}
+>   }
+>   
+> -static void hmat_register_target(struct memory_target *target)
+> +static void hmat_hotplug_target(struct memory_target *target)
+>   {
+>   	int nid = pxm_to_node(target->memory_pxm);
+>   
+> +	/*
+> +	 * Skip offline nodes. This can happen when memory
+> +	 * marked EFI_MEMORY_SP, "specific purpose", is applied
+> +	 * to all the memory in a proximity domain leading to
+> +	 * the node being marked offline / unplugged, or if
+> +	 * memory-only "hotplug" node is offline.
+> +	 */
+> +	if (nid == NUMA_NO_NODE || !node_online(nid))
+> +		return;
+> +
+> +	guard(mutex)(&target_lock);
+> +	if (target->registered)
+> +		return;
+> +
+> +	hmat_register_target_initiators(target);
+> +	hmat_register_target_cache(target);
+> +	hmat_register_target_perf(target, ACCESS_COORDINATE_LOCAL);
+> +	hmat_register_target_perf(target, ACCESS_COORDINATE_CPU);
+> +	target->registered = true;
+> +}
+> +
+> +static void hmat_register_target(struct memory_target *target)
+> +{
+>   	/*
+>   	 * Devices may belong to either an offline or online
+>   	 * node, so unconditionally add them.
+> @@ -896,25 +919,7 @@ static void hmat_register_target(struct memory_target *target)
+>   		}
+>   	}
+>   
+> -	/*
+> -	 * Skip offline nodes. This can happen when memory
+> -	 * marked EFI_MEMORY_SP, "specific purpose", is applied
+> -	 * to all the memory in a proximity domain leading to
+> -	 * the node being marked offline / unplugged, or if
+> -	 * memory-only "hotplug" node is offline.
+> -	 */
+> -	if (nid == NUMA_NO_NODE || !node_online(nid))
+> -		return;
+> -
+> -	mutex_lock(&target_lock);
+> -	if (!target->registered) {
+> -		hmat_register_target_initiators(target);
+> -		hmat_register_target_cache(target);
+> -		hmat_register_target_perf(target, ACCESS_COORDINATE_LOCAL);
+> -		hmat_register_target_perf(target, ACCESS_COORDINATE_CPU);
+> -		target->registered = true;
+> -	}
+> -	mutex_unlock(&target_lock);
+> +	hmat_hotplug_target(target);
+>   }
+>   
+>   static void hmat_register_targets(void)
+> @@ -940,7 +945,7 @@ static int hmat_callback(struct notifier_block *self,
+>   	if (!target)
+>   		return NOTIFY_OK;
+>   
+> -	hmat_register_target(target);
+> +	hmat_hotplug_target(target);
+>   	return NOTIFY_OK;
+>   }
+>   
+
