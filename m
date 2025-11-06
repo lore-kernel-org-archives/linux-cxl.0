@@ -1,83 +1,85 @@
 Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888C5335BDB
-	for <linux-cxl@vger.kernel.org>; Thu,  6 Nov 2025 17:11:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D431340A6D
+	for <linux-cxl@vger.kernel.org>; Thu,  6 Nov 2025 18:24:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762449110; cv=none; b=mjyvqIBIQJjdfYknwDEECr0GMxZRAgVRnyTUAH9D0ltcC+2ms8uIjOU5j2EfTc0M5nHSZkNCHp9/MDkeNBBiwwhFOpGMODpy6KQnQPrqeS5nWdIs+xfYzcekRx8ZHch3e+qEZxIuBr7JQLmYIQFjmdIXc/rCuzwFAD+n6zkG28E=
+	t=1762453457; cv=none; b=KO9IGuQAAH+Zoe5PIURc1AMDJhs5SAabwB/x3gAO82vNoLt4tqvxK6XbX1yJh+GhF1tqLgMfG/VPHI/LoLhWpOST8uadB4tW1spEnAOeDNWlCSAc51ZYte3pWEPQq9rVkKDkWqfIHsu+wug/LJ8rRwy9WtRgUntlzWWlYHLPGGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762449110; c=relaxed/simple;
-	bh=pBncupXbWkCVN1fOd+MWv1n3EGow7Y78ZsUbGG2oPVE=;
+	s=arc-20240116; t=1762453457; c=relaxed/simple;
+	bh=I+PMnAnId/4alYkZ2SH222g5oD7TTN8EQAKDuQUrfGw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CMkbaklaMByiUxkiiUpEu2+jv1mXQwL7svPmgHoNchngy1CpLgozTNZrtcgvz630Rc5l5FP3qC5TqLH72n9WDf+RTZjBWyRt8gBVqtU16N8MlYrLiwYJJ/jT9m5PN5AYBZ2R5IcJZFm8hDOGvErvpNU6bQD0qcooqeSeJf4RDz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=n3jgQyNj; arc=none smtp.client-ip=209.85.219.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=NFOKaBNMFNMrxV0biGPILPEwheB0dW+gAbQPrMHxLe+6VPY76lAccCaE3KBdMzSGBFOyttYPLr0zYS20MYWJVMg8L5+XQefy5ISDkjrjyDWP0Z7Tu0JypXuw2PLGQwIUmE2nS0daktXPwU0cPCQUsgkDu4TxQBkDq67x7bkoul0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=QVQHL3Wx; arc=none smtp.client-ip=209.85.219.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="n3jgQyNj"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-87a092251eeso28611916d6.0
-        for <linux-cxl@vger.kernel.org>; Thu, 06 Nov 2025 09:11:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="QVQHL3Wx"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-87dfd3cfafbso13416586d6.0
+        for <linux-cxl@vger.kernel.org>; Thu, 06 Nov 2025 10:24:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1762449106; x=1763053906; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1762453455; x=1763058255; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aKXFhe1XgNsEqIm7n3PyjdJL5U3TbOb6yB6jqMWUHW0=;
-        b=n3jgQyNjKBrhEYmKfs/HF2geSjgYhKEq/bvuMz+VOrujjHOqwIquqimWN0g+HE9GkX
-         g7dmaS/0I1VcZDwOhuzZ0E3s5jszR4aejv/zhci+5kjtZtUSDfgGLxTqvNV9wNtwkgJg
-         6c9UswPNUOIZVbs3MFqSmpIuVfRf/GqLVnhfCIi8kEDITV4xJUZU/Gk8hyDWxDBQeb1Q
-         TF3fuiUrV247AzlODSNdJnDB6KUl7bt75G73tPjEtWNk1CY+o+PSVjVPKoBBsusmYdKo
-         5TsdrLz12KzkYH0lCQyZROfKzU44EOxioSd/znx5IlpYFdiuUNkIFgBdp0QuPvzYk12P
-         omgA==
+        bh=+DhYqio1jPiAJ5YPea6WrbT/ecqDZeUIacRpFP6YnUE=;
+        b=QVQHL3Wx9FflcHjGKPQ6GEldmfygZI7gZjm2RBoxNH1/5HroRA4qTedo8Ub7hRqUps
+         7dPW1sQtXbGICkoF+VdLzh+ofEtXXxm7y4hohdzlWlhqHwMNJpiivmskD8ugq/nlknMy
+         lCIX+8I7sfxU1pO/yKOGvRgemWXAs9BJP1taV3UdwrIWj+wsysPTzabjQdj9DMx6tMrW
+         gN/Exh6+jAIekeXZSKpv8q7Qx9PvKdPpvaPmYPn1pz++ieBSexw9Weya+pAGsBdiP4tL
+         Z78CxQTtRio4FWemCY+u1LF1lBoZ3aakC0zkjpmWsaqlra7ZKpnVYlufrN5zCxuDGVYD
+         sKJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762449106; x=1763053906;
+        d=1e100.net; s=20230601; t=1762453455; x=1763058255;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aKXFhe1XgNsEqIm7n3PyjdJL5U3TbOb6yB6jqMWUHW0=;
-        b=EHdqLoMhTMfdmOVE2w9P9JlvvOkKCZVJsXcDl7kCgrJvHis/S/ApDF78nOiqlHzXGq
-         fjW6ZKe6uy3LtfyFvbE03pRxF4j30qDYlsC5gfvRdXGCJJQFbCf6EM+Lwzirq0OAi+Fo
-         XUCFT/t4MJIbPupiNTpNJ3G6W2Yn4ks4HOT0w+kIhhj84bNOEbMGVRJVxbnDDyiUl/V6
-         CXg+HXSmVpY+WcXpb40rQk4Igd1ACzaWRL23UQkhbueE1pzuqnCQvxZ3gaAbf4hBKI2T
-         y4zZMxZSvRYNrLkKEo4UuvapE42B6op1Mk70iQXhcE4WWAh6OB4gb/F4CMxahrFqJH+G
-         47Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCXl2e3MI5ckJ7GYVv4ruo5Gn+NLzcosbE6COGYVymPtfiZk9KaWCT6OgjbBU2+RAeUEEkVcDtYIBRk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS/SGljy/we6ptkMzFbyfiKcMXn1d1nyuz+l6gd+ipDVIlSuCA
-	GU05XuFg8XMLPJn227Lu8JcDb07qW2t/c+cV4/aQjG5i+JE931BQ7G/FXkALD54DeTg=
-X-Gm-Gg: ASbGncsMEd1rojxLztAW7kvHMvt00BSDDTJtJyynXu/gz4ciKbx5HdiUquKgYnx7kMW
-	fXK9YAlhYtv4IjFg5SdDfeIeunYk6LjOxSg49MGt3SJdj66PTmTNE/Ec6Sr2nPWeTUPHuQGXO2G
-	aayCX5+tV+1YZMNX1PwTGTC4Zif75nVHb7wQJt8lXfFrDA36JnUMEIrr+zinAc6x0cbLkMRomPc
-	FVxKz3hLXypVzPdDoS05B6MiCBLFzay2ZYJ+1+aFEB2QypMlBg/CCypwOOlTHWZFm4lQ9DW9B86
-	a8kHnBPBxxaScv26Tu+ugWZfIUfa6pHDW3LQIc6wbhvJIHerFm8ZzS0dv3dlNOWho6OLS3VC61/
-	jup1jUjkSfQ8lN9oamNnKG8X3Lt9GjfNA+Z+IR1KtaZiczjt/7LQUkeuaWoePXw06u/OwgASCid
-	KBBY01Wq5OcCfk7s59/tWEWnf+Q3tl2SuXpA1k4ldjlgpla42G3ydpqMaqOqs=
-X-Google-Smtp-Source: AGHT+IGtpHAhkhHyR6o5AHtiwz5cY+ehhjfBP8n5EpJqyPwP3g9GbLdMDu/RgBohpPPk3DUjCzmC2Q==
-X-Received: by 2002:a05:6214:62e:b0:880:53a8:404d with SMTP id 6a1803df08f44-88082834ec4mr51601596d6.3.1762449106390;
-        Thu, 06 Nov 2025 09:11:46 -0800 (PST)
+        bh=+DhYqio1jPiAJ5YPea6WrbT/ecqDZeUIacRpFP6YnUE=;
+        b=VnAtGFXBSbqQcaJdMt3soTKjCzcNWgRj4dQpXJ6S7Mkz5AUNdUQrWwcydTTJwU9W9B
+         yEEO7qOrWxNc1fSjmgfTQiO0pnqpixh6mNm3ctEoCWV1VqEetqIdbSB5sz42hmhZmhLT
+         k+0GrkS8m0eMrXfvYro4+g+3/KHcHXsYuwo/s8OnIBTpmVunWA1z1zWbrx1KROAtR79W
+         OPje3pl6k4/MsghzZJlef6yfpIr0Z7HlqBMsGsHsYjA66Kwn2xOshnmkpDxwxQ38TnO4
+         hExyDKn5QtHdpyLIs/pnLj9r021bJXQQs428eu9si3t4RtqBG7kZTCP3cUhN/xxZPyv2
+         YNmA==
+X-Forwarded-Encrypted: i=1; AJvYcCVoVYQaFuXL+dXN8uI1AFih5NIKKyCto1+bBI5g17iYd/aSVDfdLIGmEC3IQsqUOMXstkkZ7I3OaK0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8D/dY4TDGxE6k7Iz0+mE046o3McDHumihwFrte5x1ev+FbTGv
+	EjEGW+uc5Z4VGpHtRSx0ffCemT3bXgCaCf/zUObiktkHl6FR86HDmb8d9hqrsjpjXNs=
+X-Gm-Gg: ASbGncsCsygHoJktm64WH09gyDftk/mC7suht3YIw3HH6uqnnHFYgyjzvcN1Ts7W4IC
+	BmOYdMDLLwQy61ieKmMSP7QYAnnaStWPZSA5wSGmFreGoDemk5QrKVG2eejhOkiJJndri8Kw9Ql
+	vJYXleVoT21ivghjZ2gAm452eWO08+yzPEfm7c168HY1Fu86FyPXFb0OA1evsnkLXqZE4iiQqyK
+	O1L1S0LXd8cki1UsmgXoXAjh07IAvs8mUN07XN9yx6Zv2nbdSxJavmVIhb6eKEUiHeKCc/391he
+	NBCLTTnFOeydrrqipned2pIrPiEo9ezX79D3fogcfbcvjsI4I0H8oV4iqT5vo53Kg+E+wJkmhKH
+	ubMhNEr5R6ydCe1ep5XFD3f1VQZXyLD5Xi6mDC90CFco52izxCL5IuQ0xgKY/pAJX4qbV6Awcfs
+	cuoQEm38sihGtv+tUdmS8f47Wy22LicBKX7ZY4Pk47sq28SSJeq6Gms+xzCRc=
+X-Google-Smtp-Source: AGHT+IEJbh7T8K3ZC6AAJXZQCu8MCrm6YwZlCjie8EYnkSpY9hGIyoAmakIzFplNDN08Jy63W9bbyg==
+X-Received: by 2002:a05:6214:2469:b0:880:58ac:be6f with SMTP id 6a1803df08f44-8817673f54emr8035816d6.35.1762453455139;
+        Thu, 06 Nov 2025 10:24:15 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-880829ca35csm22268686d6.35.2025.11.06.09.11.44
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-880828c4570sm25286656d6.10.2025.11.06.10.24.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 09:11:45 -0800 (PST)
-Date: Thu, 6 Nov 2025 12:11:42 -0500
+        Thu, 06 Nov 2025 10:24:14 -0800 (PST)
+Date: Thu, 6 Nov 2025 13:24:12 -0500
 From: Gregory Price <gourry@gourry.net>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
-	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
-	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
-	lukas@wunner.de, Benjamin.Cheatham@amd.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [RESEND v13 17/25] cxl: Introduce cxl_pci_drv_bound() to check
- for bound driver
-Message-ID: <aQzWzp4DdSqTj9Hc@gourry-fedora-PF4VCD3F>
-References: <20251104170305.4163840-1-terry.bowman@amd.com>
- <20251104170305.4163840-18-terry.bowman@amd.com>
- <aQuOiK8S31w44pYR@gourry-fedora-PF4VCD3F>
- <aQufg2Nfq8YqkwHl@gourry-fedora-PF4VCD3F>
- <aQvO-eBboCOhRDOO@gourry-fedora-PF4VCD3F>
+To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+Cc: Nathan Fontenot <nathan.fontenot@amd.com>,
+	"Koralahalli Channabasappa, Smita" <Smita.KoralahalliChannabasappa@amd.com>,
+	"Bowman, Terry" <terry.bowman@amd.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+	Robert Richter <rrichter@amd.com>, Fan Ni <fan.ni@samsung.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] CXL/ACPI: Remove overlapping Soft Reserved regions before
+ adding CFMW resources
+Message-ID: <aQznzIP6h5NibJM6@gourry-fedora-PF4VCD3F>
+References: <ad410c59-bf0f-47ae-aa65-c0d845e6f264@fujitsu.com>
+ <2296acdf-de5d-4591-a165-d59f9f432dee@amd.com>
+ <e545b630-1a89-40b1-996c-c843a9e8fad7@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -86,25 +88,33 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aQvO-eBboCOhRDOO@gourry-fedora-PF4VCD3F>
+In-Reply-To: <e545b630-1a89-40b1-996c-c843a9e8fad7@fujitsu.com>
 
-On Wed, Nov 05, 2025 at 05:26:01PM -0500, Gregory Price wrote:
-> On Wed, Nov 05, 2025 at 02:03:31PM -0500, Gregory Price wrote:
-> > On Wed, Nov 05, 2025 at 12:51:04PM -0500, Gregory Price wrote:
-> > > 
-> > > [    2.697094] cxl_core 0000:0d:00.0: BAR 0 [mem 0xfe800000-0xfe80ffff 64bit]: not claimed; can't enable device
-> > > [    2.697098] cxl_core 0000:0d:00.0: probe with driver cxl_core failed with error -22
-> > > 
-> > > Probe order issue when CXL drivers are built-in maybe?
-> > > 
-> > 
+On Fri, Jul 11, 2025 at 05:34:27AM +0000, Zhijian Li (Fujitsu) wrote:
 > 
-> moving it back but leaving the function seemed to work for me, i don't
-> know what the implication of this is though (i.e. it's unclear to me
-> why you moved it from point a to point b in the first place).
 > 
-> (only tested this on QEMU)
+> On 11/07/2025 05:15, Nathan Fontenot wrote:
+> In this case(with your V4 patch), we would see:
+> ```
+> 5d0000000-6cfffffff : CXL Window 0
+>    5d0000000-6cfffffff : region0
+> ```
+> Actually, it cannot be consumed by the hmem/dax_hmem neither.
+> 
+> This made me realize that my current idea ignores the case of CXL_ACPI=y && CXL_REGION=n. I quickly tested it(I will take a deeper look later):
+> 
+> After the OS boots, we can see this resource. Can anyone tell me how to create the corresponding dax_region? Because I tried using dax create-device without success.
+> ```
+> 5d0000000-6cfffffff : CXL Window 0
+>    5d0000000-6cfffffff : Soft Reserved
+> ```
+> 
 
-also tested on Zen5 systems and others.  Seems stable to me.
+with CXL_REGION=n you cannot create the dax region.
+
+region0 --creates-> dax_region0 --creates-> dax0
+
+all you've done here by setting CXL_REGION=N is break the probe chain
+but otherwise successfully attributed the memory to the CXL driver.
 
 ~Gregory
