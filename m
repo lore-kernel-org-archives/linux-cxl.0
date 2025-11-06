@@ -1,72 +1,83 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71103287518
-	for <linux-cxl@vger.kernel.org>; Thu,  6 Nov 2025 17:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888C5335BDB
+	for <linux-cxl@vger.kernel.org>; Thu,  6 Nov 2025 17:11:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762449042; cv=none; b=tAMMwHuW4ihpbjuhSHyGa9Tj4dcvPvZnz4rkBiC/p1NBhgOZVlzHlmIZ+OVQ/dUUIvT4EC7crjLWERa8f2s/5H2t1vkaKXSkvl9sutKaFjufES/nOD21iGeLYS5Mo/D8/ZobtAEieEPBEozbL6wkbeYKpsRm0du4ePGRrWjs1Xs=
+	t=1762449110; cv=none; b=mjyvqIBIQJjdfYknwDEECr0GMxZRAgVRnyTUAH9D0ltcC+2ms8uIjOU5j2EfTc0M5nHSZkNCHp9/MDkeNBBiwwhFOpGMODpy6KQnQPrqeS5nWdIs+xfYzcekRx8ZHch3e+qEZxIuBr7JQLmYIQFjmdIXc/rCuzwFAD+n6zkG28E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762449042; c=relaxed/simple;
-	bh=rmeHfsMzlid1iyArckNbvRmnPpqtRLYF1zEU/JprJyw=;
+	s=arc-20240116; t=1762449110; c=relaxed/simple;
+	bh=pBncupXbWkCVN1fOd+MWv1n3EGow7Y78ZsUbGG2oPVE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZMNeobqz+o8fZgHK2EfxT2CcyolUOebZPw5jHoxTSf5e2hN9eYHsTcou7Pd/pitNn4gbRWTGhSDcXXGibJmeXlETUDwKlliLARlZ2jwjBaw9JIQrimLFINXx4saxAupP9EuvGyA7GZeymf05yP4wPq5CeE7ktsRaCY0omYjhPlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=sT7QePjR; arc=none smtp.client-ip=209.85.160.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=CMkbaklaMByiUxkiiUpEu2+jv1mXQwL7svPmgHoNchngy1CpLgozTNZrtcgvz630Rc5l5FP3qC5TqLH72n9WDf+RTZjBWyRt8gBVqtU16N8MlYrLiwYJJ/jT9m5PN5AYBZ2R5IcJZFm8hDOGvErvpNU6bQD0qcooqeSeJf4RDz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=n3jgQyNj; arc=none smtp.client-ip=209.85.219.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="sT7QePjR"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4ed66b5abf7so27188721cf.1
-        for <linux-cxl@vger.kernel.org>; Thu, 06 Nov 2025 09:10:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="n3jgQyNj"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-87a092251eeso28611916d6.0
+        for <linux-cxl@vger.kernel.org>; Thu, 06 Nov 2025 09:11:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1762449039; x=1763053839; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1762449106; x=1763053906; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6btJcIEuMjid7L88n76y/6zshxSUDozFJlS4QEWuRv4=;
-        b=sT7QePjRmMqOrFrGMVy1xi8DIQbuEcQY7oq7mw61skdO4SW7RuWstR1+Qmtsns0joI
-         h/BTr+eSS5bcJJPuDbMHWfoFHonxbw8R4fld+O3QrU4DtA7tEsjmTCWNxhlOV1I/2N+l
-         yu4XXSlPtBl71Cx5lXEP1Yq1ZFyvuORNUp5vBA7j11tUCHZ+Xz37PHgH7R4vWM2z+Wr7
-         xdaRymL3BjihCPxKFU3/0VlKhPQUHj8uIN1syzLPlIEzsKJvwhgnl5F3wrErLTnc+LH7
-         +32oVZzZyKfaN7kZ+vaX81/UbLNxhQJASzAF7Z1F6flq+NJHFe9LbKAcRiLlHuTwlmxM
-         3AqQ==
+        bh=aKXFhe1XgNsEqIm7n3PyjdJL5U3TbOb6yB6jqMWUHW0=;
+        b=n3jgQyNjKBrhEYmKfs/HF2geSjgYhKEq/bvuMz+VOrujjHOqwIquqimWN0g+HE9GkX
+         g7dmaS/0I1VcZDwOhuzZ0E3s5jszR4aejv/zhci+5kjtZtUSDfgGLxTqvNV9wNtwkgJg
+         6c9UswPNUOIZVbs3MFqSmpIuVfRf/GqLVnhfCIi8kEDITV4xJUZU/Gk8hyDWxDBQeb1Q
+         TF3fuiUrV247AzlODSNdJnDB6KUl7bt75G73tPjEtWNk1CY+o+PSVjVPKoBBsusmYdKo
+         5TsdrLz12KzkYH0lCQyZROfKzU44EOxioSd/znx5IlpYFdiuUNkIFgBdp0QuPvzYk12P
+         omgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762449039; x=1763053839;
+        d=1e100.net; s=20230601; t=1762449106; x=1763053906;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6btJcIEuMjid7L88n76y/6zshxSUDozFJlS4QEWuRv4=;
-        b=ZJuXM+TrjT6Z7tsq2Vy2gGcFE1VKnRfN8cozQi7/q3b8VfxLK1MyQ/M7X5VOX4GFNV
-         dQYWegME4ifa/HsjBHbL+1jClFEgr2Rj1UEuwDt/AVUywCahd8CM6yj/ZH8KigMWcJVE
-         UaUjxU/2eAY3elP/JGeRIERF2KLfsDBAQHTNJObVVgOrta31166R5qV+A8rAPtTMN07B
-         GWKmiDcW0FzX8951GsvvkXSY9VYqc8BVR0FhKWzJbsfVYlfWXyD8dt5K6Qc4Ws+C0Cbl
-         l1xB9Oxc2UqN08TdLuQL5INTyEaxIe7ptVpH89KsI8UuRgv8TkKGYgfkRnLWZ5voPLIE
-         F79w==
-X-Gm-Message-State: AOJu0YyUhx9/Iz9XdJbEZ2CFNtCPOZaoJKK1wmwAjE8zjWS4EanJlV5v
-	HuWWk5V1wmGTdjrklbQvI9qx8ZSyllpEAIdT4S/shYIT9BdmZ8zhC4XKt4dF7XWGkVk=
-X-Gm-Gg: ASbGncvhRm/6SiI2YcJSxV69MjT7wE0klVTrrD95FMwvYlnUF3v7xX/HmmoZON4ag4h
-	MwZefxaUHf9AL+wP7/WotJuDVr2CRS3+IOowOWN3Dxuu4EWcucl1KZy6d+1IHNFFQ7FBNkX3V2B
-	SOaQv7oBx8JSxaIlZjLSAEB6fv34N1hdKF32jEMsLn/Si+/SEdQuBOBWpnNzi6GN25DdbtOwN6+
-	hp36JyzANydMmPbmA+G6QfWjgpRXEolG0DIO2URciS3VH5dndI28wh8loe8uPmhhXdNfKQCyK1j
-	Rp+eBsxWj32Fxyamx5qfFn2Evm9BK2+Sr0R4XChbf4T+kR6AORj45NEHYQZoBPdDxIAgimpyRTW
-	SE/9UFQOzvtEqwHWaPCiGIpwNgl/Ep3n5Jnq2j/MREwhqK7wflEV9hkM520oS+32jhaZzyWEq24
-	6UTMioIbBg12OlzbX9DrQgLhrZmsS3WDpjXf8LoIi0QgG0Yo+0TdqGmeBAsKo=
-X-Google-Smtp-Source: AGHT+IGMD74RrqOAjmVZIgh0aHpGJ4SsG0wRkZd5oJt+BMqSzZaNIpzklToeDz7rhpSMvulWcy+Mqw==
-X-Received: by 2002:ac8:7f54:0:b0:4ed:181c:297b with SMTP id d75a77b69052e-4ed93a0a583mr4015791cf.8.1762449039075;
-        Thu, 06 Nov 2025 09:10:39 -0800 (PST)
+        bh=aKXFhe1XgNsEqIm7n3PyjdJL5U3TbOb6yB6jqMWUHW0=;
+        b=EHdqLoMhTMfdmOVE2w9P9JlvvOkKCZVJsXcDl7kCgrJvHis/S/ApDF78nOiqlHzXGq
+         fjW6ZKe6uy3LtfyFvbE03pRxF4j30qDYlsC5gfvRdXGCJJQFbCf6EM+Lwzirq0OAi+Fo
+         XUCFT/t4MJIbPupiNTpNJ3G6W2Yn4ks4HOT0w+kIhhj84bNOEbMGVRJVxbnDDyiUl/V6
+         CXg+HXSmVpY+WcXpb40rQk4Igd1ACzaWRL23UQkhbueE1pzuqnCQvxZ3gaAbf4hBKI2T
+         y4zZMxZSvRYNrLkKEo4UuvapE42B6op1Mk70iQXhcE4WWAh6OB4gb/F4CMxahrFqJH+G
+         47Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCXl2e3MI5ckJ7GYVv4ruo5Gn+NLzcosbE6COGYVymPtfiZk9KaWCT6OgjbBU2+RAeUEEkVcDtYIBRk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyS/SGljy/we6ptkMzFbyfiKcMXn1d1nyuz+l6gd+ipDVIlSuCA
+	GU05XuFg8XMLPJn227Lu8JcDb07qW2t/c+cV4/aQjG5i+JE931BQ7G/FXkALD54DeTg=
+X-Gm-Gg: ASbGncsMEd1rojxLztAW7kvHMvt00BSDDTJtJyynXu/gz4ciKbx5HdiUquKgYnx7kMW
+	fXK9YAlhYtv4IjFg5SdDfeIeunYk6LjOxSg49MGt3SJdj66PTmTNE/Ec6Sr2nPWeTUPHuQGXO2G
+	aayCX5+tV+1YZMNX1PwTGTC4Zif75nVHb7wQJt8lXfFrDA36JnUMEIrr+zinAc6x0cbLkMRomPc
+	FVxKz3hLXypVzPdDoS05B6MiCBLFzay2ZYJ+1+aFEB2QypMlBg/CCypwOOlTHWZFm4lQ9DW9B86
+	a8kHnBPBxxaScv26Tu+ugWZfIUfa6pHDW3LQIc6wbhvJIHerFm8ZzS0dv3dlNOWho6OLS3VC61/
+	jup1jUjkSfQ8lN9oamNnKG8X3Lt9GjfNA+Z+IR1KtaZiczjt/7LQUkeuaWoePXw06u/OwgASCid
+	KBBY01Wq5OcCfk7s59/tWEWnf+Q3tl2SuXpA1k4ldjlgpla42G3ydpqMaqOqs=
+X-Google-Smtp-Source: AGHT+IGtpHAhkhHyR6o5AHtiwz5cY+ehhjfBP8n5EpJqyPwP3g9GbLdMDu/RgBohpPPk3DUjCzmC2Q==
+X-Received: by 2002:a05:6214:62e:b0:880:53a8:404d with SMTP id 6a1803df08f44-88082834ec4mr51601596d6.3.1762449106390;
+        Thu, 06 Nov 2025 09:11:46 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ed813b6b9esm21624571cf.22.2025.11.06.09.10.37
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-880829ca35csm22268686d6.35.2025.11.06.09.11.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 09:10:38 -0800 (PST)
-Date: Thu, 6 Nov 2025 12:10:36 -0500
+        Thu, 06 Nov 2025 09:11:45 -0800 (PST)
+Date: Thu, 6 Nov 2025 12:11:42 -0500
 From: Gregory Price <gourry@gourry.net>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com
-Subject: Re: [PATCH 2/2] cxl: Clarify comment in spa_maps_hpa()
-Message-ID: <aQzWjOttMB2eCQRh@gourry-fedora-PF4VCD3F>
-References: <20251106170108.1468304-1-dave.jiang@intel.com>
- <20251106170108.1468304-3-dave.jiang@intel.com>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, dan.j.williams@intel.com,
+	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
+	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+	lukas@wunner.de, Benjamin.Cheatham@amd.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [RESEND v13 17/25] cxl: Introduce cxl_pci_drv_bound() to check
+ for bound driver
+Message-ID: <aQzWzp4DdSqTj9Hc@gourry-fedora-PF4VCD3F>
+References: <20251104170305.4163840-1-terry.bowman@amd.com>
+ <20251104170305.4163840-18-terry.bowman@amd.com>
+ <aQuOiK8S31w44pYR@gourry-fedora-PF4VCD3F>
+ <aQufg2Nfq8YqkwHl@gourry-fedora-PF4VCD3F>
+ <aQvO-eBboCOhRDOO@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -75,16 +86,25 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251106170108.1468304-3-dave.jiang@intel.com>
+In-Reply-To: <aQvO-eBboCOhRDOO@gourry-fedora-PF4VCD3F>
 
-On Thu, Nov 06, 2025 at 10:01:08AM -0700, Dave Jiang wrote:
-> Update the comment in spa_maps_hpa() to clearly convey the construction
-> of extended linear cache.
+On Wed, Nov 05, 2025 at 05:26:01PM -0500, Gregory Price wrote:
+> On Wed, Nov 05, 2025 at 02:03:31PM -0500, Gregory Price wrote:
+> > On Wed, Nov 05, 2025 at 12:51:04PM -0500, Gregory Price wrote:
+> > > 
+> > > [    2.697094] cxl_core 0000:0d:00.0: BAR 0 [mem 0xfe800000-0xfe80ffff 64bit]: not claimed; can't enable device
+> > > [    2.697098] cxl_core 0000:0d:00.0: probe with driver cxl_core failed with error -22
+> > > 
+> > > Probe order issue when CXL drivers are built-in maybe?
+> > > 
+> > 
 > 
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Link: https://lore.kernel.org/linux-cxl/68eea19c7e67e_2f899100a8@dwillia2-mobl4.notmuch/
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> moving it back but leaving the function seemed to work for me, i don't
+> know what the implication of this is though (i.e. it's unclear to me
+> why you moved it from point a to point b in the first place).
+> 
+> (only tested this on QEMU)
 
+also tested on Zen5 systems and others.  Seems stable to me.
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
-
+~Gregory
