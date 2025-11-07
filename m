@@ -1,63 +1,64 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C49314D21
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Nov 2025 22:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFB0315D46
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Nov 2025 22:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762555812; cv=none; b=CDk8+XSPMY0+WVbaSN/Ik/3ivxR99QB8wedDmstoMQCXf+2zCHUndran8masEBpgOjm5nHsTgmIraaCEZ2R3iCWKNPK73/wAYd1BbBlKHlUoES4cJcDY965d29USrRdsYSoNKdYLcEuNIVcya9meUJ9dEeyih3ocDV+OyjtCSRE=
+	t=1762555815; cv=none; b=lbMOMNh0pi1418BS/QO9mNLwUDzO6reXZZfVsUeTLQ7PFQ/VsCW68peCC/gPLDdk+V5UkjhIVQYyjqTJDd0ig7dG8GI9EfrBsBoD68N4iK8puTK7Lug5382g6eOeAmkPLvpTUohGf5eoMrUw28wOJEo8S+zeCjL8RUkRxubSrWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762555812; c=relaxed/simple;
-	bh=xnAgAOMUCvjgMIzfvkuvXLW+vDz6hedfcY4BtrN7jFg=;
+	s=arc-20240116; t=1762555815; c=relaxed/simple;
+	bh=t1PWd9W4F3MKCeCrtb+bV5TXG4Q3iLBygfAXlk1bL90=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FZVVEKT6Ymw3oHkpnx5mGSh4BCx1z9hbTxXhepDJfVHkRck5CKyy/yDJLVi7YgIInrJ2YVzWBuERECwI/b1g21Gge+bub/k/6jAtPy6dzoPwvFq2LmMaN9yDU/3kEB7aH8BI3zyAhJUVS56LrkbNGoVIjRT1csKRW4pj8jjwlQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=pse5v1JN; arc=none smtp.client-ip=209.85.160.179
+	 MIME-Version; b=QvDKCyl+A0hJgCNrDlmw7Mszh1/kXH7OaIdods54NIaSBeEhtLUjbPNy6J7x6d1pROE2SwjhByx64yTVbU7ollAcjnkGaXqh6DfYZGJW5sKYgbnMLoKAKpNW3X5sBla35h0cyGuRvcBHPEguKN8rCMmhDrhf1cCWFZ2U/byP9cU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=cXUpI7/c; arc=none smtp.client-ip=209.85.219.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="pse5v1JN"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4eda6c385c0so305041cf.3
-        for <linux-cxl@vger.kernel.org>; Fri, 07 Nov 2025 14:50:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="cXUpI7/c"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-88054872394so18532636d6.1
+        for <linux-cxl@vger.kernel.org>; Fri, 07 Nov 2025 14:50:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1762555809; x=1763160609; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1762555813; x=1763160613; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ia+a6MlTeonyCm8y2ltZ2UGJPZEO4eqXV9rDHC4VPW4=;
-        b=pse5v1JN4JmFn8nsWxTmUybb6xJrxAiWSvyLpbdxjxrkRNSOCwOXEKKSE9CYqCAz7R
-         DG4tGWw2NOEVISEvoXniGE2iHCGu9HmKkj99iGiAPmNPY9H6faOormfKp5z6ExpL80tZ
-         Jq27i60wbHwHmRtJITitAOuZZRfh5+fWtoLXJxG5QxkOmmYZeMysJgW/TbROgrz4GAnw
-         c1ng+PmCYm1vC6DjBrKI2TdUn4VS2VGMm6MErIKWpLboZSd9aHtTZ4Z1u0Y0JNTk5917
-         gZNeyismT/ARobIu1bT8jdqBJv/ojSv7Wzil4D6W2byrp4c8p+7BEM/pvK88x6H4JWGH
-         DiBQ==
+        bh=R64FiI16+WP3yeCxBiatrBL599beZnZfURxXJrYPjuA=;
+        b=cXUpI7/cMn5k+awQtKL0FOzd4sXqQOWsxwGnDkd9pHvPNP+VRHtl8gsSOyJyTCFgX/
+         +G9lsv3XAV5wWJM9ARO5AdGiKzvD52sYV4xiL8xlQs9V2UMJmSq60vKt4NmyFbn1twF6
+         v6ghTCtaqQ0N5MB3q7rDjxd4NWvCR7yN3v5a9eUjboC+PtXIHKyz2pVRo9//APtD26/0
+         2qV4sDsrJfNFMsg9eEGrkM67O2Ws/6dmR6CyRctDXzf7cxQDCM6XGC18mccYnyoChcKL
+         hzeeGpQSoN85dnIWy/EuE0jLbCtB20DwePbYgQsQXoVaE+tCKpDZsPI8q6oY0HpeT3bD
+         d4Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762555809; x=1763160609;
+        d=1e100.net; s=20230601; t=1762555813; x=1763160613;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ia+a6MlTeonyCm8y2ltZ2UGJPZEO4eqXV9rDHC4VPW4=;
-        b=uDJXzPJ6qrbGu9OvlQ6ObQZkmjEDgs04DmVEA1px5HZV7CAM1QL6C9PZn0vv89kORG
-         6HTk6gSXHm0jykHKlBGO6Rg8BaJzA8u6aSeL/mYSMrFYMZZNUf1qmfbsUKLpceZRM35d
-         wffHPHdT5Ov8hVKgjavqBg9JDtcnhmEnTZMV6sNNIom9G+D60lH05d8NjOGxoIpa++kJ
-         hjY9iLE4mi9aXGh8gq1SgYCmIBFVbF0PsMTBcaoDYhmOKoUx2Y89boeCw3jl/SuCvwdh
-         PyHf+cqeFYy2B0/WVO6DIR/40CRSt54StHchkREwrGOf1mipAyb6lQZIIG07cX5zsJov
-         qeBA==
-X-Gm-Message-State: AOJu0YwMAR6occi1rttsqOWloI3EJSime29Nsr3M+U2J6lSwjS6K0DnD
-	MHABtUtHIeKUvs/xzzfYSHksDD6LIV8cepCjjVnevAOlJGmmF8sivr2b6MteJWSdINo=
-X-Gm-Gg: ASbGnct4MeN2u4B/1QCH/6cpl5He1kFerp8QyfeuUOuO4ow0giLtZJt5dVkYFmLNKjr
-	AkNMnwTSq6x9X0dDFzG0eJ4/ETfDAIDP4Rulb9u9ycgx2jDkSGiJGiJnn0BaWQ1iFoaoAXnn3y7
-	FSK8THWnI/KnddkJsUwetn7BQXj7qw0l4gnKN9Z4l4O+uDNbqmYfw5PWUS1Lq21XCgqGLhr0Bpe
-	tACSov7kLif0zlpMykO4WYEeMfXDJSqVgfAiE+X9pMvLOvdOjPbk3JJO6gscUAU0RhEq8nd6pgw
-	WS7+RSfqUnLvaZllz3nlY9zJZfFOAixOGJfUgPe8TBXYlS3VuwSck+jtrf6i2YQqiPhukvMMWjH
-	2xnfmBLVCGRd/6x498l2mExze8EznTfoA0Ll6W0g8B4FeUMNc4K3g19ShhMxm+Xnt+nYS24dkUd
-	rZMnlrkIHMs6GBxSdyPLaLBcpLWDl3Ub+5a5MmmDwrWYGze7Ndd7Qh6qXPkJcSThOI
-X-Google-Smtp-Source: AGHT+IH86NSTDKP1XdsF31RYjR4tNihgD5BPq31D5+FTd6nH/ZnI3iDuVFCi3Tc0xbHdRJTu/D2ZGw==
-X-Received: by 2002:ac8:7d49:0:b0:4ed:6139:8ea1 with SMTP id d75a77b69052e-4eda4e734a8mr9627481cf.10.1762555809152;
-        Fri, 07 Nov 2025 14:50:09 -0800 (PST)
+        bh=R64FiI16+WP3yeCxBiatrBL599beZnZfURxXJrYPjuA=;
+        b=b054z9Z+cVD8u7rPmSZStzGcjzhd5TxLAsNaorsy7ltZ0oHr5sTfwxRmzjuK45By55
+         JxjjB/Fld90rRgPPyT8OW1HpRVQYIYwa/a0Xv6PPFlH9dapwFwT1z82hyBngZhfZXYVM
+         g3Hzcr02M7Fnm8j1JPnu/FTnM3wyHNiAkhMYCf+/4c3eSXsADoUd7fARR6Dg2zgDrg/c
+         jlJSzJBeZb5wrF3lBdxYXMh61fyri6z39V7t3qvaSQGXrJ2IFOy2a+8D9ZMqHicwLJEn
+         Ga7pJQBVmryGnXBzo/EiNWkfY7V4UPOxWCITZ4ySTi1F5antrWJGpyYASLwCJSfoq9pG
+         T82A==
+X-Gm-Message-State: AOJu0Yx2tUAqCkOSpm/Y54Xq0SsK8eOszt4UdY5pYLBVxveHsVBo+CAI
+	ba8IqpVvprhqxoTQtK0Xins9qPVJY2K6DyJHIQYNVgLvHYc3hbmjIEQT/TM7iEOurho=
+X-Gm-Gg: ASbGnctffOy9z2iAiK9a6mAf2KALCqnovZCQyVflgASzodq3S5l11aVpQh1sWgx4Lgm
+	DUEnurBTBtb1yMmBs3HRKQZQMWXXXr7PPGaIJVKUk0RxNxmcAHi1hYLFsfFoZP84kr3aVvL3Hvv
+	ZqjuE1xw0K1AI6bfKoFDRZ/ty1efLT39zGhlQAqbCRCBCdKBrf7hJ0vfxqnt/b7X/aoZGGokPcW
+	1UeKAhLGVZ5VfS6jzGCPSbNvgK8/IL8+LW8Nymhvm95/QGRsG1+eC910IgxT0JYxFoZ+/0p8ls8
+	L0dAOlgXsRi79AIaKa/6X+yTUwvc2tg5MVlHFMRqLDl3hL9tw8DPP28rA6IqXS7k8oCh7pGF5f9
+	obV2jw+JMBorT/lBGZxSxMm4IEfjT/PAqvmJq6NTW1X0JShZTC1fLZA5PuF64KsvzEUD1FeAbin
+	zXvlucFS1fKDS37m8/xhP+6NKjCM00+8G45B6+j8yHZSkLrsAyjuyq6cnjnKGkf6NtXT+uJ6lt9
+	cQ9O6AIZ/05ZA==
+X-Google-Smtp-Source: AGHT+IG4CM60aE94hoVAm6WlLLrQN78GzB6+sZgYXWXWNkYKc0tId9Jl3T1QS1663TlSzExe8IcNow==
+X-Received: by 2002:a05:6214:20eb:b0:882:36d3:2c60 with SMTP id 6a1803df08f44-88238616f43mr9660116d6.19.1762555812276;
+        Fri, 07 Nov 2025 14:50:12 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4eda57ad8e6sm3293421cf.27.2025.11.07.14.50.06
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4eda57ad8e6sm3293421cf.27.2025.11.07.14.50.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Nov 2025 14:50:08 -0800 (PST)
+        Fri, 07 Nov 2025 14:50:11 -0800 (PST)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: linux-cxl@vger.kernel.org,
@@ -126,9 +127,9 @@ Cc: linux-cxl@vger.kernel.org,
 	namcao@linutronix.de,
 	escape@linux.alibaba.com,
 	dongjoo.seo1@samsung.com
-Subject: [RFC PATCH 2/9] memory-tiers: create default_sysram_nodes
-Date: Fri,  7 Nov 2025 17:49:47 -0500
-Message-ID: <20251107224956.477056-3-gourry@gourry.net>
+Subject: [RFC PATCH 3/9] mm: default slub, oom_kill, compaction, and page_alloc to sysram
+Date: Fri,  7 Nov 2025 17:49:48 -0500
+Message-ID: <20251107224956.477056-4-gourry@gourry.net>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20251107224956.477056-1-gourry@gourry.net>
 References: <20251107224956.477056-1-gourry@gourry.net>
@@ -140,93 +141,121 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Record the set of memory nodes present at __init time, so that hotplug
-memory nodes can choose whether to expose themselves to the page
-allocator at hotplug time.
-
-Do not included non-sysram nodes in demotion targets.
+Constrain core users of nodemasks to the default_sysram_nodemask,
+which is guaranteed to either be NULL or contain the set of nodes
+with sysram memory blocks.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- include/linux/memory-tiers.h |  3 +++
- mm/memory-tiers.c            | 22 ++++++++++++++++++++--
- 2 files changed, 23 insertions(+), 2 deletions(-)
+ mm/oom_kill.c   |  5 ++++-
+ mm/page_alloc.c | 12 ++++++++----
+ mm/slub.c       |  4 +++-
+ 3 files changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
-index 7a805796fcfd..3d3f3687d134 100644
---- a/include/linux/memory-tiers.h
-+++ b/include/linux/memory-tiers.h
-@@ -39,6 +39,9 @@ struct access_coordinate;
- extern bool numa_demotion_enabled;
- extern struct memory_dev_type *default_dram_type;
- extern nodemask_t default_dram_nodes;
-+extern nodemask_t default_sysram_nodelist;
-+#define default_sysram_nodes (nodes_empty(default_sysram_nodelist) ? NULL : \
-+			      &default_sysram_nodelist)
- struct memory_dev_type *alloc_memory_type(int adistance);
- void put_memory_type(struct memory_dev_type *memtype);
- void init_node_memory_type(int node, struct memory_dev_type *default_type);
-diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-index 0ea5c13f10a2..b2ee4f73ad54 100644
---- a/mm/memory-tiers.c
-+++ b/mm/memory-tiers.c
-@@ -44,7 +44,12 @@ static LIST_HEAD(memory_tiers);
- static LIST_HEAD(default_memory_types);
- static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
- struct memory_dev_type *default_dram_type;
--nodemask_t default_dram_nodes __initdata = NODE_MASK_NONE;
-+
-+/* default_dram_nodes is the list of nodes with both CPUs and RAM */
-+nodemask_t default_dram_nodes = NODE_MASK_NONE;
-+
-+/* default_sysram_nodelist is the list of nodes with RAM at __init time */
-+nodemask_t default_sysram_nodelist = NODE_MASK_NONE;
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index c145b0feecc1..e0b6137835b2 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -34,6 +34,7 @@
+ #include <linux/export.h>
+ #include <linux/notifier.h>
+ #include <linux/memcontrol.h>
++#include <linux/memory-tiers.h>
+ #include <linux/mempolicy.h>
+ #include <linux/security.h>
+ #include <linux/ptrace.h>
+@@ -1118,6 +1119,8 @@ EXPORT_SYMBOL_GPL(unregister_oom_notifier);
+ bool out_of_memory(struct oom_control *oc)
+ {
+ 	unsigned long freed = 0;
++	if (!oc->nodemask)
++		oc->nodemask = default_sysram_nodes;
  
- static const struct bus_type memory_tier_subsys = {
- 	.name = "memory_tiering",
-@@ -427,6 +432,14 @@ static void establish_demotion_targets(void)
- 	disable_all_demotion_targets();
+ 	if (oom_killer_disabled)
+ 		return false;
+@@ -1154,7 +1157,7 @@ bool out_of_memory(struct oom_control *oc)
+ 	 */
+ 	oc->constraint = constrained_alloc(oc);
+ 	if (oc->constraint != CONSTRAINT_MEMORY_POLICY)
+-		oc->nodemask = NULL;
++		oc->nodemask = default_sysram_nodes;
+ 	check_panic_on_oom(oc);
  
- 	for_each_node_state(node, N_MEMORY) {
-+		/*
-+		 * If this is not a sysram node, direct-demotion is not allowed
-+		 * and must be managed by special logic that understands the
-+		 * memory features of that particular node.
-+		 */
-+		if (!node_isset(node, default_sysram_nodelist))
-+			continue;
-+
- 		best_distance = -1;
- 		nd = &node_demotion[node];
+ 	if (!is_memcg_oom(oc) && sysctl_oom_kill_allocating_task &&
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index fd5401fb5e00..18213eacf974 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -34,6 +34,7 @@
+ #include <linux/cpuset.h>
+ #include <linux/pagevec.h>
+ #include <linux/memory_hotplug.h>
++#include <linux/memory-tiers.h>
+ #include <linux/nodemask.h>
+ #include <linux/vmstat.h>
+ #include <linux/fault-inject.h>
+@@ -4610,7 +4611,7 @@ check_retry_cpuset(int cpuset_mems_cookie, struct alloc_context *ac)
+ 	 */
+ 	if (cpusets_enabled() && ac->nodemask &&
+ 			!cpuset_nodemask_valid_mems_allowed(ac->nodemask)) {
+-		ac->nodemask = NULL;
++		ac->nodemask = default_sysram_nodes;
+ 		return true;
+ 	}
  
-@@ -457,7 +470,8 @@ static void establish_demotion_targets(void)
- 				break;
+@@ -4794,7 +4795,7 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+ 	 * user oriented.
+ 	 */
+ 	if (!(alloc_flags & ALLOC_CPUSET) || reserve_flags) {
+-		ac->nodemask = NULL;
++		ac->nodemask = default_sysram_nodes;
+ 		ac->preferred_zoneref = first_zones_zonelist(ac->zonelist,
+ 					ac->highest_zoneidx, ac->nodemask);
+ 	}
+@@ -4946,7 +4947,8 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
+ 			ac->nodemask = &cpuset_current_mems_allowed;
+ 		else
+ 			*alloc_flags |= ALLOC_CPUSET;
+-	}
++	} else if (!ac->nodemask) /* sysram_nodes may be NULL during __init */
++		ac->nodemask = default_sysram_nodes;
  
- 			distance = node_distance(node, target);
--			if (distance == best_distance || best_distance == -1) {
-+			if ((distance == best_distance || best_distance == -1) &&
-+			    node_isset(target, default_sysram_nodelist)) {
- 				best_distance = distance;
- 				node_set(target, nd->preferred);
- 			} else {
-@@ -812,6 +826,7 @@ int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
- }
- EXPORT_SYMBOL_GPL(mt_perf_to_adistance);
+ 	might_alloc(gfp_mask);
  
-+
- /**
-  * register_mt_adistance_algorithm() - Register memory tiering abstract distance algorithm
-  * @nb: The notifier block which describe the algorithm
-@@ -922,6 +937,9 @@ static int __init memory_tier_init(void)
- 	nodes_and(default_dram_nodes, node_states[N_MEMORY],
- 		  node_states[N_CPU]);
+@@ -5190,8 +5192,10 @@ struct page *__alloc_frozen_pages_noprof(gfp_t gfp, unsigned int order,
+ 	/*
+ 	 * Restore the original nodemask if it was potentially replaced with
+ 	 * &cpuset_current_mems_allowed to optimize the fast-path attempt.
++	 *
++	 * If not set, default to sysram nodes.
+ 	 */
+-	ac.nodemask = nodemask;
++	ac.nodemask = nodemask ? nodemask : default_sysram_nodes;
  
-+	/* Record all nodes with non-hotplugged memory as default SYSRAM nodes */
-+	default_sysram_nodelist = node_states[N_MEMORY];
-+
- 	hotplug_node_notifier(memtier_hotplug_callback, MEMTIER_HOTPLUG_PRI);
- 	return 0;
- }
+ 	page = __alloc_pages_slowpath(alloc_gfp, order, &ac);
+ 
+diff --git a/mm/slub.c b/mm/slub.c
+index d4367f25b20d..b8358a961c4c 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -28,6 +28,7 @@
+ #include <linux/cpu.h>
+ #include <linux/cpuset.h>
+ #include <linux/mempolicy.h>
++#include <linux/memory-tiers.h>
+ #include <linux/ctype.h>
+ #include <linux/stackdepot.h>
+ #include <linux/debugobjects.h>
+@@ -3570,7 +3571,8 @@ static struct slab *get_any_partial(struct kmem_cache *s,
+ 	do {
+ 		cpuset_mems_cookie = read_mems_allowed_begin();
+ 		zonelist = node_zonelist(mempolicy_slab_node(), pc->flags);
+-		for_each_zone_zonelist(zone, z, zonelist, highest_zoneidx) {
++		for_each_zone_zonelist_nodemask(zone, z, zonelist, highest_zoneidx,
++						default_sysram_nodes) {
+ 			struct kmem_cache_node *n;
+ 
+ 			n = get_node(s, zone_to_nid(zone));
 -- 
 2.51.1
 
