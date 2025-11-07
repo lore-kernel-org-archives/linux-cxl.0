@@ -1,63 +1,64 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B29331A73
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Nov 2025 22:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB59033CEA8
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Nov 2025 22:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762555830; cv=none; b=udQBVs7ouNxLWkUqw5AEBFCPDpWwf5AotVtqnZzG496ai9dl4yWzv13nAH/gN9tItV0rC5Gbb6V7xInw5dLKLO1So01AzWYCQ3SAPjRGhSrCJLonhAIhb3yG9USMNrGHBaJL/5Rzi47Q/+mZG0Fu0cCUDEM28eJE0zPc4+lyT60=
+	t=1762555834; cv=none; b=J0/k/S39w8G+32B7VyN9KtJPoY/g6/kgm5AMWP/FBoW7arnVKRZ2sWmywTNWH5XQRMfK4IL1ERUpNcFFTzj4S0OS9Ka9Ld1wQRFsM/1AuC98LuX6lPM1OzVlSMCIMZYhfLZfKkHcAGMgwg4CJOF9CwG8NABngxY7drv2qbjGYxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762555830; c=relaxed/simple;
-	bh=CNVKe4UoF4HjKWlrvxf/qnyhxQc08gfgs8nx9Dft3Mo=;
+	s=arc-20240116; t=1762555834; c=relaxed/simple;
+	bh=OKl0yBHUY2HDyHAzrayh15w08hguionxpa8ckFMJLi4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p36XHsMRX60unagfaL62yjWPWxX0DgLtonWkhJppy50vArWuB1FRc8SoVA8vZAsTucYqqqXjhIWIKMcUz3ZZMVCGpY//6V69xdpyQRTCu8eUaogTWmS28jaHacs0lRE7jNR+pcub0Ugll7/CsWrkPumposX0HTbOgwpFEHn/BnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=q08QAoxW; arc=none smtp.client-ip=209.85.160.180
+	 MIME-Version; b=XjkzX6q4tqF3nFKcIr2VNlN6UtlVyKIxpaqp9i0R88tt2LHErA7BMSrXO5++pQIyyVhPJMTheoLyzgNvJKup37kzHNWaTomQoH4k8MuLHiSXEB1g6/0rOv8BYx17Z5YBuxFlH3aOVpXSerBqToGG7cwPJlTl2D1blDzqD2EkcrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=JsXbbN0S; arc=none smtp.client-ip=209.85.160.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="q08QAoxW"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4ed93f00ac8so12231991cf.2
-        for <linux-cxl@vger.kernel.org>; Fri, 07 Nov 2025 14:50:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="JsXbbN0S"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4e8a25d96ecso16507211cf.0
+        for <linux-cxl@vger.kernel.org>; Fri, 07 Nov 2025 14:50:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1762555827; x=1763160627; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1762555830; x=1763160630; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=raBRVFIoxXfgYF0FkwrcuU6SyEb+VTf3BUeepNhNHyc=;
-        b=q08QAoxWVJj69JFbkhxxapbBs4S8dpPKapCmH9sXwTVst1MP8fcWCHDuZgzdljL88L
-         H5vIVF/Ov67nCjUb+ldFEdIqq8PXzqV83sB3DKsUKdtmo6ocPd2nVi2cHA9lFp6BT373
-         +02gnhC1M6NSAKbGOuh9RcEVEWpyN4nrzaRGvdBl2ZKJwXPONSLHO6wk0fRrBj6ARh0F
-         odZqvQAs9wAgYFxUCZYqGhjFCRnLQKeg9k06osxeFnKA9a7GH8BRSdrpVJLK922lC7Ca
-         Fj2gO0yCKwQ1tYGZq0b0uH8PPrTQ1AJnch2Vv9ZWRZgItpiXtaSKa/GQk8mlrSNr8gsW
-         TJvg==
+        bh=t9lQPmHHEcXtG9PcD1wB7xt838yvOXXROIsvBhfuZzo=;
+        b=JsXbbN0Sm0Gp9Im7l8efJR3anggyEPz4GxYy2/jOm7VAq6KVCjqW9ysG//zWK4Dlrc
+         Alox5RvnKNeHohMRKzV7MSNSIbr6PZNcOYMIvSa0/Cbeu1jH/KXlLshN6mNbikS5V+45
+         0YwEilWPyJ60PkfgNu9BC+Szwkx6bQektMPdVxPsX6gEqFqo9XmSn+7WzGBW192q3t4u
+         knGir6N3Rt3UmTeoQdqibk/hKPIMzJmkCLLVwvQXGURD63cIsRdBunfx3E+x9UvqIqNK
+         Okwu4Wurq7kltARAshGCxokpWH2kzY/QmqCoyftmmkeCaEfED2Qbg4h8Al/bvp0zJlv2
+         mIWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762555827; x=1763160627;
+        d=1e100.net; s=20230601; t=1762555830; x=1763160630;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=raBRVFIoxXfgYF0FkwrcuU6SyEb+VTf3BUeepNhNHyc=;
-        b=ouayngo14TWUj8Ml0Iz+VmsI7LfnGMJdZ1XZcgRFWuoj1fNr49Zg9Fd+iFI1eE/GzH
-         Ob1LVCwbarEE37S8QJghcfEixibLYtbxghHQn1DGAzzcXqfa04TFidfDR74XNNzzWICz
-         iee4YRqyyUdrMrVk0f7HIZowuylNLAYnkRNPG/dLuDi9VP06UVIERVHZykH/oIKmQsoe
-         wA5Hn/h2MvkvV+OfqPdUYC7UEQJvhHivwNGglUV/ZSvqnKsjSt1bUY6tPBvGZ5NyrlVE
-         /jqTBgLJPTIDS5gRIlUEF1adzn+sD/ezBPhrZVaffF6rGGskQ9JF2D/9g+i7hZIG1vsq
-         3HjQ==
-X-Gm-Message-State: AOJu0YzXrdX0/LdIrvd15Q4ihn9iVOYRklulIPhbNT5cVecIHNf6eHl8
-	RHH0nklj54seACXh8flII4JVWNqYomGKQK+cm0ywgERV6Wo3rPnbOQSwE3i4Ijgr32g=
-X-Gm-Gg: ASbGncvSdi3KewQuyRnqQOeC2FBsHftJZEawsaHtQVM3bf2LhI3eCvayhtftTRNwo4z
-	jB7opNdg4luoZFLEi/vIjhrwYuz4e61iF2k2Jdj6kB4WD/yMi08UaaGwZ5TB3+StbcErMZKifcf
-	WYgpFOaT4K0asn06/gn2L102TmqojgSrWqlSW6Cwr4E0dAPv3H9xj1J0h0edKMw050lMlteBHHW
-	Nv32CaOlfmpcH9a2aglg4DdFKAxJbm4e6DBb/VMYBof/8sATjf98Xbz9QdTw9TwSIU2L8ulcsYg
-	zINMDXJU13TjZFWT22kZkal4C1LXEqJ/cEVAOntHLFZY1JhPMSXSlsAp0pbiy4C/63cELDckYZp
-	vdH8YjkX5TSkmZ9IoT+0RszlnQbiyUfZrxWZZ+R9lgjhiQECuZmxptV9sbBaF4alkJsetmXhfHL
-	VJiqjWzu2CvGkaXUOp56NK0KC2XkQZ9y6zw8GXckSV8LLW62Yl4FDKiSuz8spqJkYD
-X-Google-Smtp-Source: AGHT+IFm7+5mwYzM+NrPR3r2lO2/HN8TDlNByi59dSrMG4CDuhQ9TLgCeHpdJXuwA3iY2H9OGim97w==
-X-Received: by 2002:ac8:5751:0:b0:4e8:a0bf:f5b5 with SMTP id d75a77b69052e-4eda4fd4dd3mr9303801cf.73.1762555827556;
-        Fri, 07 Nov 2025 14:50:27 -0800 (PST)
+        bh=t9lQPmHHEcXtG9PcD1wB7xt838yvOXXROIsvBhfuZzo=;
+        b=a6LCPWNOFC7eOwSMaRPy/2kN1JazGpdUv7YlO7sEvVPubfp4Joo7BnNVnoc34VplcL
+         KM5B6h18cB0Ax+99lWvt3c7V7LPs1FGeONabBUe+FUwzBpkDTaJ/kiRbSSi8iTnBDp9U
+         /1OsXacaxm0Y7F0r7QXNf6DRbC9Dob6VNey63p59+GilgQwRLapNoxa1kDeUu0/hyGqk
+         P3wfg5R0Q1+Uejm1e30zia11a9qwrfPe8UQ9nygAJ+B0Flv6fDQK7KG9YIsCiU3Uft3I
+         0HaxqLg5KwS68iXfo7qch8N4scmpqdPp/CK8xSUpRBMhO3a5PDipoN7thwQS+cj3mCwi
+         yvWg==
+X-Gm-Message-State: AOJu0YyN8mYKl/4A9QUZKaNlbjgi2T3l0X2AjDP9ynkdYGiOYPZol3TD
+	Vg+msSpYcY2rE54KDcEUtkWXa/YwWxumT/PhNv+oqs67BqsoZGj766fpxoLz4Wepdak=
+X-Gm-Gg: ASbGncvHSnC1aQQtZkUpzhQXrLsur8IWTTDZw1qP4wySzyotuDVs5i3QB7jSRgeF7Sy
+	zyS0wRW+Joh3tX/U1b8FTpJFVv2hVuY6tQ6TeQHLqD+bmUUd+BYbQLFeSovv4lj07bpJIwZ1TYJ
+	uXqC9P62h3Z746Jn4BctwPI9aOEeYNxN0SAwd9HZ1Ujx19/pObUMXCzc8+AmYI9sufWPrkEUpan
+	7Gplw6yppsvQOya7m+vs75Zzrkq7iwfvtSfLWyIWlfZpR96oZP+Jky11LiChcMijBz8FDMb7pSC
+	AsR4zdjAsksVLyUl2HZG7BF5NBZHGt9nn5egZ8nejq+5+iMqpTHOYsugvbtOjAx21eN/CKoS85B
+	nyFg0SQpQTf0g/OLl9VZ3HRAUUMFJuilPiKorPwKQzrluLRnucbZo++jhUtu5z32xpdicflgBun
+	fAiLITADpr0NABSVIm/mBrp6K5AQ0/7R5I1bYCrh4hhRyEaoexdlsW7xScKhniFmkP6N6b/YliZ
+	dOVVEme0yib8A==
+X-Google-Smtp-Source: AGHT+IGiz0rmAqkF080s48owgkrlhIDOgmhn7Uh2wWe1SA/ZeGElIvqZ5FF6lfn2BTWxOTuvNIrg9w==
+X-Received: by 2002:ac8:5e47:0:b0:4e8:9683:3a35 with SMTP id d75a77b69052e-4eda4d392e9mr11493571cf.0.1762555830443;
+        Fri, 07 Nov 2025 14:50:30 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4eda57ad8e6sm3293421cf.27.2025.11.07.14.50.25
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4eda57ad8e6sm3293421cf.27.2025.11.07.14.50.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Nov 2025 14:50:27 -0800 (PST)
+        Fri, 07 Nov 2025 14:50:29 -0800 (PST)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: linux-cxl@vger.kernel.org,
@@ -126,9 +127,9 @@ Cc: linux-cxl@vger.kernel.org,
 	namcao@linutronix.de,
 	escape@linux.alibaba.com,
 	dongjoo.seo1@samsung.com
-Subject: [RFC PATCH 8/9] drivers/cxl: add protected_memory bit to cxl region
-Date: Fri,  7 Nov 2025 17:49:53 -0500
-Message-ID: <20251107224956.477056-9-gourry@gourry.net>
+Subject: [RFC PATCH 9/9] [HACK] mm/zswap: compressed ram integration example
+Date: Fri,  7 Nov 2025 17:49:54 -0500
+Message-ID: <20251107224956.477056-10-gourry@gourry.net>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20251107224956.477056-1-gourry@gourry.net>
 References: <20251107224956.477056-1-gourry@gourry.net>
@@ -140,98 +141,201 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add protected_memory bit to cxl region.  The setting is subsequently
-forwarded to the dax device it creates. This allows the auto-hotplug
-process to occur without an intermediate step requiring udev to poke
-the DAX device protected memory bit explicitly before onlining.
+Here is an example of how you might use a protected memory node.
+
+We hack in an mt_compressed_nodelist to memory-tiers.c as a standin
+for a proper compressed-ram component, and use that nodelist to
+determine if compressed ram is available in the zswap_compress
+function.
+
+If there is compressed ram available, we skip the entire software
+compression process and shunt memcpy directly to a compressed memory
+folio, and store the newly allocated compressed memory page as the
+zswap entry->handle.
+
+On decompress we do the opposite: copy directly from the stored
+compressed page to the new destination, and free the compressed
+memory page.
+
+Note: We do not integrate any compressed memory device checks at
+this point because this is a stand-in to demonstrate how the protected
+node allocation mechanism works.  See the "TODO" comment in
+`zswap_compress_direct()` for more details on how that would work.
+
+In reality, we would want to make this mechanism out of zswap into
+its own component (cram.c?), and enable a more direct migrate_page()
+call that actually re-maps the page read-only into any mappings, and
+then provides a write-fault handler which promotes the page on write.
+
+This prevents any run-away compression ratio failures, since the
+compression ratio would be checked on allocation, rather than allowed
+to silently decrease on writes until the device becomes unstable.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- drivers/cxl/core/region.c | 30 ++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h         |  2 ++
- drivers/dax/cxl.c         |  1 +
- 3 files changed, 33 insertions(+)
+ include/linux/memory-tiers.h |  1 +
+ mm/memory-tiers.c            |  3 ++
+ mm/memory_hotplug.c          |  2 ++
+ mm/zswap.c                   | 65 +++++++++++++++++++++++++++++++++++-
+ 4 files changed, 70 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index b06fee1978ba..a0e28821961c 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -754,6 +754,35 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
+diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
+index 3d3f3687d134..ff2ab7990e8f 100644
+--- a/include/linux/memory-tiers.h
++++ b/include/linux/memory-tiers.h
+@@ -42,6 +42,7 @@ extern nodemask_t default_dram_nodes;
+ extern nodemask_t default_sysram_nodelist;
+ #define default_sysram_nodes (nodes_empty(default_sysram_nodelist) ? NULL : \
+ 			      &default_sysram_nodelist)
++extern nodemask_t mt_compressed_nodelist;
+ struct memory_dev_type *alloc_memory_type(int adistance);
+ void put_memory_type(struct memory_dev_type *memtype);
+ void init_node_memory_type(int node, struct memory_dev_type *default_type);
+diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+index b2ee4f73ad54..907635611f17 100644
+--- a/mm/memory-tiers.c
++++ b/mm/memory-tiers.c
+@@ -51,6 +51,9 @@ nodemask_t default_dram_nodes = NODE_MASK_NONE;
+ /* default_sysram_nodelist is the list of nodes with RAM at __init time */
+ nodemask_t default_sysram_nodelist = NODE_MASK_NONE;
+ 
++/* compressed memory nodes */
++nodemask_t mt_compressed_nodelist = NODE_MASK_NONE;
++
+ static const struct bus_type memory_tier_subsys = {
+ 	.name = "memory_tiering",
+ 	.dev_name = "memory_tier",
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index ceab56b7231d..8fcd894de93c 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1592,6 +1592,8 @@ int add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+ 	/* At this point if not protected, we can add node to sysram nodes */
+ 	if (!(mhp_flags & MHP_PROTECTED_MEMORY))
+ 		node_set(nid, *default_sysram_nodes);
++	else /* HACK: We would create a proper interface for something like this */
++		node_set(nid, mt_compressed_nodelist);
+ 
+ 	/* create new memmap entry */
+ 	if (!strcmp(res->name, "System RAM"))
+diff --git a/mm/zswap.c b/mm/zswap.c
+index c1af782e54ec..09010ba2440c 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -25,6 +25,7 @@
+ #include <linux/scatterlist.h>
+ #include <linux/mempolicy.h>
+ #include <linux/mempool.h>
++#include <linux/memory-tiers.h>
+ #include <crypto/acompress.h>
+ #include <linux/zswap.h>
+ #include <linux/mm_types.h>
+@@ -191,6 +192,7 @@ struct zswap_entry {
+ 	swp_entry_t swpentry;
+ 	unsigned int length;
+ 	bool referenced;
++	bool direct;
+ 	struct zswap_pool *pool;
+ 	unsigned long handle;
+ 	struct obj_cgroup *objcg;
+@@ -717,7 +719,8 @@ static void zswap_entry_cache_free(struct zswap_entry *entry)
+ static void zswap_entry_free(struct zswap_entry *entry)
+ {
+ 	zswap_lru_del(&zswap_list_lru, entry);
+-	zs_free(entry->pool->zs_pool, entry->handle);
++	if (!entry->direct)
++		zs_free(entry->pool->zs_pool, entry->handle);
+ 	zswap_pool_put(entry->pool);
+ 	if (entry->objcg) {
+ 		obj_cgroup_uncharge_zswap(entry->objcg, entry->length);
+@@ -851,6 +854,43 @@ static void acomp_ctx_put_unlock(struct crypto_acomp_ctx *acomp_ctx)
+ 	mutex_unlock(&acomp_ctx->mutex);
  }
- static DEVICE_ATTR_RW(size);
  
-+static ssize_t protected_memory_show(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
++static struct page *zswap_compress_direct(struct page *src,
++					  struct zswap_entry *entry)
 +{
-+	struct cxl_region *cxlr = to_cxl_region(dev);
++	int nid = first_node(mt_compressed_nodelist);
++	struct page *dst;
++	gfp_t gfp;
 +
-+	return sysfs_emit(buf, "%d\n", cxlr->protected_memory);
++	if (nid == NUMA_NO_NODE)
++		return NULL;
++
++	gfp = GFP_NOWAIT | __GFP_NORETRY | __GFP_HIGHMEM | __GFP_MOVABLE |
++	      __GFP_PROTECTED;
++	dst = __alloc_pages(gfp, 0, nid, &mt_compressed_nodelist);
++	if (!dst)
++		return NULL;
++
++	/*
++	 * TODO: check that the page is safe to use
++	 *
++	 * In a real implementation, we would not be using ZSWAP to demonstrate this
++	 * and instead would implement a new component (compressed_ram, cram.c?)
++	 *
++	 * At this point we would check via some callback that the device's memory
++	 * is actually safe to use - and if not, free the page (without writing to
++	 * it), and kick off kswapd for that node to make room.
++	 *
++	 * Alternatively, if the compressed memory device(s) report a watermark
++	 * crossing via interrupt, a flag can be set that is checked here rather
++	 * that calling back into a device driver.
++	 *
++	 * In this case, we're testing with normal memory, so the memory is always
++	 * safe to use (i.e. no compression ratio to worry about).
++	 */
++	copy_mc_highpage(dst, src);
++	return dst;
 +}
 +
-+static ssize_t protected_memory_store(struct device *dev,
-+				      struct device_attribute *attr,
-+				      const char *buf, size_t len)
-+{
-+	struct cxl_region *cxlr = to_cxl_region(dev);
-+	bool val;
-+	int rc;
+ static bool zswap_compress(struct page *page, struct zswap_entry *entry,
+ 			   struct zswap_pool *pool)
+ {
+@@ -862,6 +902,19 @@ static bool zswap_compress(struct page *page, struct zswap_entry *entry,
+ 	gfp_t gfp;
+ 	u8 *dst;
+ 	bool mapped = false;
++	struct page *zpage;
 +
-+	rc = kstrtobool(buf, &val);
-+	if (rc)
-+		return rc;
-+
-+	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
-+		return rc;
-+
-+	cxlr->protected_memory = val;
-+	return len;
-+}
-+static DEVICE_ATTR_RW(protected_memory);
-+
- static struct attribute *cxl_region_attrs[] = {
- 	&dev_attr_uuid.attr,
- 	&dev_attr_commit.attr,
-@@ -762,6 +791,7 @@ static struct attribute *cxl_region_attrs[] = {
- 	&dev_attr_resource.attr,
- 	&dev_attr_size.attr,
- 	&dev_attr_mode.attr,
-+	&dev_attr_protected_memory.attr,
- 	NULL,
- };
++	/* Try to shunt directly to compressed ram */
++	if (!nodes_empty(mt_compressed_nodelist)) {
++		zpage = zswap_compress_direct(page, entry);
++		if (zpage) {
++			entry->handle = (unsigned long)zpage;
++			entry->length = PAGE_SIZE;
++			entry->direct = true;
++			return true;
++		}
++		/* otherwise fallback to normal zswap */
++	}
  
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 231ddccf8977..0ff4898224ba 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -530,6 +530,7 @@ enum cxl_partition_mode {
-  * @coord: QoS access coordinates for the region
-  * @node_notifier: notifier for setting the access coordinates to node
-  * @adist_notifier: notifier for calculating the abstract distance of node
-+ * @protected_memory: mark region memory as protected from kernel allocation
-  */
- struct cxl_region {
- 	struct device dev;
-@@ -543,6 +544,7 @@ struct cxl_region {
- 	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
- 	struct notifier_block node_notifier;
- 	struct notifier_block adist_notifier;
-+	bool protected_memory;
- };
+ 	acomp_ctx = acomp_ctx_get_cpu_lock(pool);
+ 	dst = acomp_ctx->buffer;
+@@ -939,6 +992,15 @@ static bool zswap_decompress(struct zswap_entry *entry, struct folio *folio)
+ 	int decomp_ret = 0, dlen = PAGE_SIZE;
+ 	u8 *src, *obj;
  
- struct cxl_nvdimm_bridge {
-diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
-index 13cd94d32ff7..a4232a5507b5 100644
---- a/drivers/dax/cxl.c
-+++ b/drivers/dax/cxl.c
-@@ -27,6 +27,7 @@ static int cxl_dax_region_probe(struct device *dev)
- 		.id = -1,
- 		.size = range_len(&cxlr_dax->hpa_range),
- 		.memmap_on_memory = true,
-+		.protected_memory = cxlr->protected_memory,
- 	};
++	/* compressed ram page */
++	if (entry->direct) {
++		struct page *src = (struct page*)entry->handle;
++		struct folio *zfolio = page_folio(src);
++		memcpy_folio(folio, 0, zfolio, 0, PAGE_SIZE);
++		__free_page(src);
++		goto direct_done;
++	}
++
+ 	acomp_ctx = acomp_ctx_get_cpu_lock(pool);
+ 	obj = zs_obj_read_begin(pool->zs_pool, entry->handle, acomp_ctx->buffer);
  
- 	return PTR_ERR_OR_ZERO(devm_create_dev_dax(&data));
+@@ -972,6 +1034,7 @@ static bool zswap_decompress(struct zswap_entry *entry, struct folio *folio)
+ 	zs_obj_read_end(pool->zs_pool, entry->handle, obj);
+ 	acomp_ctx_put_unlock(acomp_ctx);
+ 
++direct_done:
+ 	if (!decomp_ret && dlen == PAGE_SIZE)
+ 		return true;
+ 
 -- 
 2.51.1
 
