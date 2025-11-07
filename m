@@ -1,200 +1,281 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E71224AF7;
-	Fri,  7 Nov 2025 19:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E03304BA2
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Nov 2025 22:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762545550; cv=none; b=F7OwPwiObkgcPqGe3pd06r/yBSuy0UVsRI0TvhH+wyKtOBC0GMcNBei/0LjkA+yze3V8Nw9Db3t5xC42a7ZtxnBWXHr1rqyjSMIMTAPQB427OwHW/Vtd8u/NVeJrHUfREoBN0PK1iGEgf3Vl2kKQUwqLrkaHtePU4mbcsVRtHWU=
+	t=1762555805; cv=none; b=CMYen15T3eJKH+fNCKDJc3zjiRjCJ1VJ3Q9bZJz4dOvnbzYJLg61aTpN42uyzK3tGHicoFVCYs7LmhYPvzCye7sTZXrmSYjkSzyFDYVej3TpAcm6lpeFXW8YU3HfKMmNVLg9sJaLucGvwPrsg0letmm7p+CJbShaDn2CwVRkYD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762545550; c=relaxed/simple;
-	bh=o6sCKaIr+Mcsm7DmCaTJx6MhTkgDqm5CM83QolZ5QBY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qOe3Kf9ECy15HZsqfzYBc8argxOv9pEdWPMXzZxBgq1xvzAQIxb+4jot7H1hUIHwC+vVPfzFyg6Ieme04jZufPCss9fG9ZRF4gylzjy+3hbfoDZ77DLsad0at6bf6pyB77hPbzypOQJP2CFMjj9Em36YOqCgNmEtxKUEgVporT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V/UL/MF2; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1762555805; c=relaxed/simple;
+	bh=MlggfO79faftTr5r5TEYzz+mGbqyBDNnNZnD0sCXLe8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Fhj+vo+688ovqrzn4fl9hHs0/ph/btbEUg0Z/EUp56UW33aLStmXwj+gC0qi6opaDlui3UtGt4yZj9QnOrmt9k3dLtZsv2+RWc4tBks1NPuU0GmV7z7KWFnR3VljvgMdZ0yig9Q+M9XXdPr7RCamtR6MXXg6IL966zNwCEZX63E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=NA0sAHf7; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V/UL/MF2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762545549; x=1794081549;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=o6sCKaIr+Mcsm7DmCaTJx6MhTkgDqm5CM83QolZ5QBY=;
-  b=V/UL/MF2Fk6EqDevXEbtY5iJx6iqZAJVzLiJit3mNWRoCCadPvcCWQd6
-   tgiAA9MpgdBt25EZxMn/S+6obswZx41rZGPa+B+xqlPFEkorfmpNcpGqW
-   4w+8FneJmpqkusOx2hIMXN2SRNCFptU5KpDBx3cfdN+z1TW5YmFJd4jGH
-   /T1jhYXwoATEs8mjW+YA/YniNLxB1DdTiTKC7QTSq6KiqE8R0Y9W4HNT4
-   uQVKSLxEYG3GyBYqeN/0OPjHMXC8K/GSveJi7eLbLb+EYuhHqch9Xu6Bf
-   ZESM21VD3pj9syOUx3oohSZmKKegWcmRO334kkiylNqMjDeL0Ernfttik
-   g==;
-X-CSE-ConnectionGUID: 4QJBB2sZS9OGEOmAas+YvQ==
-X-CSE-MsgGUID: p23x5m/TT5CTIAuNY1dUlQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11606"; a="64737458"
-X-IronPort-AV: E=Sophos;i="6.19,287,1754982000"; 
-   d="scan'208";a="64737458"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2025 11:59:08 -0800
-X-CSE-ConnectionGUID: WQraglFVTdSNTqRT+O0OdA==
-X-CSE-MsgGUID: vV07ZoEeSlaSEo5q+8IIjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,287,1754982000"; 
-   d="scan'208";a="187370899"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.111.112]) ([10.125.111.112])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2025 11:59:07 -0800
-Message-ID: <85fa077c-0c69-452b-9503-0cd7f3e1b363@intel.com>
-Date: Fri, 7 Nov 2025 12:59:05 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="NA0sAHf7"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4ed82e82f0fso12045551cf.1
+        for <linux-cxl@vger.kernel.org>; Fri, 07 Nov 2025 14:50:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1762555802; x=1763160602; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=W/i5+G+JXNuEj74b+jlkiB1ru0BZu3qaV0THAJdKUHE=;
+        b=NA0sAHf7KcPSuhFkj2x8QXtvc+ndurMMNk4dks4zhnC+C1bVvYdWKbz2dXhGMxlqFs
+         gOGonsxLixWPW/yYIbNKdL4oXDxYAwr5SN51FKRqsNpvHAhiTDth+cbfki1WWwyun2BL
+         F4A96++jc/ZYNudpr1x0e1Le0iqlTY0thKkj9suJDtJRZA666KWqTpG1eh21YdMH5ugc
+         iU/H7LLVFNUIbe2tO4P+gFwfvaOaIAjCB14S9e+cJn4zYwplG1nLyJnx0W/LtvgMD9Wi
+         uuXW47Tasnln0eMAa3z4I3nLUplPm5GTNvkcYWjOikq/d10IFZaBCdzWPhaXMXmMaD8+
+         4z6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762555802; x=1763160602;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W/i5+G+JXNuEj74b+jlkiB1ru0BZu3qaV0THAJdKUHE=;
+        b=IYwaGy/+UEwtUbiF9DxlsMfzwRulXRN2954eMqswcaZCl+gZQb0dEbEtOjHRtW7fLw
+         MLULyKrMBDDfC/ynXnA5hh32bBqyfmYOnaxRMnjxR3X86Nwd+rkWGbgerGRAvXgpRilf
+         78h+bGX965dUSakNLSjAml6KL89hEi9yL5ocxdVxbQyYdeQequAhVcAlM++dolENrbNy
+         CnjgzGVXdYp/k88tBUQC62MEkV/ujwl/fxN8smmKODWTFwa7KPIwATtiHw+m4ZylmGXI
+         TSQIhhW57Y4GcHmxaUSZ4GvuNjXG0UH0D4KX1yzkyXhIGbsbijdgsuLWT3T4HGv9X9K0
+         dvXA==
+X-Gm-Message-State: AOJu0YxbbKZurc43/6qW7TaMOyO2Y3sdRr/0TzG2gF1FCP53d+woIbqK
+	RlPnEr0kuFqZiRGd1MYE4aYjU86W7ZUiT4IxeDcrlTd+6DXrxwW8Be8O110sUInDyIk=
+X-Gm-Gg: ASbGncut29WPqdKkoK4R6csr2jI2BCEgNYm6f7IIFSQ7ASLcDIXceHdsO939oogf1+4
+	RFeZkMX8bcgHzuxuMDw7jJHkUCuHKkqY1tAoZDcgH6phiQ1QzuACcp7N61g3S2n5YrqqLUnPjpC
+	jf511daQWg+CYvtXNmBZdhuAGHsJPgCS5yik0pXjxCqz8MoJ2jV1FUfIiesPmy4kSRcHhBW4lwE
+	wDhwekwcbzBt3hRafl++25+gqVEUkoKLmLDOH59vDucYFwxWFotoZUrh2v1HWBplpW3BohMlXPT
+	nAkQrPN3mWsAZLPD1c897ziYnj75A2mtdzDbJnr2Dx3KbJgMhJzFlUsegv6C5xBTIp0otEYbzGX
+	LH6Xvyxap9fJxai9+IvAS4Lr5igSxlYKUR7NnmFP4dPD8GkVY4ITKQ813g8/Bm09y/9+f2bfM0V
+	hpQzYTwi36iWGM/O7czWK6BeQRayOgDyXYpKoEHGrS1fSeef7relnmXge2QjjHVbQ6y2gWh+Imq
+	4S15GfsVNA/Zg==
+X-Google-Smtp-Source: AGHT+IEnnHkz/BZSg5DKCpmGTuSxg9EESDNIjBwNYfeFy3KOQNMlwaNzTyo63eXXhJ12ZyZIPB9YSg==
+X-Received: by 2002:ac8:59cb:0:b0:4b6:299d:dfe4 with SMTP id d75a77b69052e-4eda4f0a4a4mr12390191cf.32.1762555801614;
+        Fri, 07 Nov 2025 14:50:01 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4eda57ad8e6sm3293421cf.27.2025.11.07.14.49.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Nov 2025 14:50:01 -0800 (PST)
+From: Gregory Price <gourry@gourry.net>
+To: linux-mm@kvack.org
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	longman@redhat.com,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	osalvador@suse.de,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	byungchul@sk.com,
+	gourry@gourry.net,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	tj@kernel.org,
+	hannes@cmpxchg.org,
+	mkoutny@suse.com,
+	kees@kernel.org,
+	muchun.song@linux.dev,
+	roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev,
+	rientjes@google.com,
+	jackmanb@google.com,
+	cl@gentwo.org,
+	harry.yoo@oracle.com,
+	axelrasmussen@google.com,
+	yuanchu@google.com,
+	weixugc@google.com,
+	zhengqi.arch@bytedance.com,
+	yosry.ahmed@linux.dev,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev,
+	fabio.m.de.francesco@linux.intel.com,
+	rrichter@amd.com,
+	ming.li@zohomail.com,
+	usamaarif642@gmail.com,
+	brauner@kernel.org,
+	oleg@redhat.com,
+	namcao@linutronix.de,
+	escape@linux.alibaba.com,
+	dongjoo.seo1@samsung.com
+Subject: [RFC LPC2026 PATCH 0/9] Protected Memory NUMA Nodes
+Date: Fri,  7 Nov 2025 17:49:45 -0500
+Message-ID: <20251107224956.477056-1-gourry@gourry.net>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6 v7] ACPI: extlog: Trace CPER CXL Protocol Error
- Section
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- linux-cxl@vger.kernel.org
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Shuai Xue <xueshuai@linux.alibaba.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20251104182446.863422-1-fabio.m.de.francesco@linux.intel.com>
- <20251104182446.863422-7-fabio.m.de.francesco@linux.intel.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20251104182446.863422-7-fabio.m.de.francesco@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+Author Note
+-----------
+This is a code RFC for discussion related to
+
+"Mempolicy is dead, long live memory policy!"
+https://lpc.events/event/19/contributions/2143/
+
+Given the subtlety of some of these changes, and the upcoming holidays
+I wanted to publish this well ahead of time for discussion. This is
+the baseline patch set which predicates a new kind of mempolicy based
+on NUMA node memory features - which can be defined by the components
+adding memory to such NUMA nodes.
+
+Included is an example of a Compressed Memory Node, and how compressed
+RAM could be managed by zswap.  Compressed memory is its own rabbit
+hole - I recommend not getting hung up on the example. 
+
+The core discussion should be around whether such a "Protected Node"
+based system is reasonable - and whether there are sufficient potential
+users to warrant support.
+
+Also please do not get hung up on naming. "Protected" just means
+"Not-System-RAM".  If you see "Default" just assume "Systam RAM".
+
+base-commit: 1c353dc8d962de652bc7ad2ba2e63f553331391c
+-----------
+
+With this set, we aim to enable allocation of "special purpose memory"
+with the page allocator (mm/page_alloc.c) without exposing the same
+memory as "Typical System RAM".  Unless a non-userland component
+explicitly asks for the node, and does so with a GFP_PROTECTED flag,
+memory on that node cannot be "accidentally" used as normal ram.
+
+We present an example of using this mechanism within ZSWAP, as-if
+a "compressed memory node" was present.  How to describe the features
+of memory present on nodes is left up to comment here and at LPC '26.
+
+Important Note: Since userspace interfaces are restricted by the
+default_node mask (sysram), nothing in userspace can explicitly
+request memory from protected nodes.  Instead, the intent is to
+create new components which understand different node features,
+which abstracts the hardware complexity away from userland.
+
+The ZSWAP example demonstrates this with `mt_compressed_nodemask`
+which is simply a hack to simply demonstrate the idea.
+
+There are 4 major changes in this set:
+
+1) Introducing default_sysram_nodes in mm/memory-tiers.c which denotes
+   the set of default nodes which are eligible for use as normal sysram
+
+   Some existing users noew pass default_sysram_nodes into the page
+   allocator instead of NULL, but passing a NULL pointer in will simply
+   have it replaced by default_sysram_nodes anyway.
+
+   default_sysram_nodes is always guaranteed to contain the N_MEMORY
+   nodes that were present at boot time, and so it can never be empty.
 
 
+2) The addition of `cpuset.mems.default` which restricts cgroups to
+   using `default_sysram_nodes` by default, while allowing non-sysram
+   nodes into mems_effective (mems_allowed).
 
-On 11/4/25 11:22 AM, Fabio M. De Francesco wrote:
-> When Firmware First is enabled, BIOS handles errors first and then it
-> makes them available to the kernel via the Common Platform Error Record
-> (CPER) sections (UEFI 2.11 Appendix N.2.13). Linux parses the CPER
-> sections via one of two similar paths, either ELOG or GHES. The errors
-> managed by ELOG are signaled to the BIOS by the I/O Machine Check
-> Architecture (I/O MCA).
-> 
-> Currently, ELOG and GHES show some inconsistencies in how they report to
-> userspace via trace events.
-> 
-> Therefore, make the two mentioned paths act similarly by tracing the CPER
-> CXL Protocol Error Section.
-> 
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+   This is done to allow separate control over sysram and protected node
+   sets by cgroups while maintaining the hierarchical rules.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>> ---
->  drivers/acpi/Kconfig       |  1 +
->  drivers/acpi/acpi_extlog.c | 22 ++++++++++++++++++++++
->  drivers/cxl/core/ras.c     |  3 ++-
->  include/cxl/event.h        |  2 ++
->  4 files changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> index be02634f2320..c2ad24e77ddf 100644
-> --- a/drivers/acpi/Kconfig
-> +++ b/drivers/acpi/Kconfig
-> @@ -498,6 +498,7 @@ config ACPI_EXTLOG
->  	select ACPI_APEI
->  	select ACPI_APEI_PCIEAER
->  	select UEFI_CPER
-> +	select CXL_BUS
->  	help
->  	  Certain usages such as Predictive Failure Analysis (PFA) require
->  	  more information about the error than what can be described in
-> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> index b3976ceb4ee4..e6fb25395984 100644
-> --- a/drivers/acpi/acpi_extlog.c
-> +++ b/drivers/acpi/acpi_extlog.c
-> @@ -12,6 +12,7 @@
->  #include <linux/ratelimit.h>
->  #include <linux/edac.h>
->  #include <linux/ras.h>
-> +#include <cxl/event.h>
->  #include <acpi/ghes.h>
->  #include <asm/cpu.h>
->  #include <asm/mce.h>
-> @@ -160,6 +161,21 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
->  	pci_dev_put(pdev);
->  }
->  
-> +static void
-> +extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> +				int severity)
-> +{
-> +	struct cxl_cper_prot_err_work_data wd;
-> +
-> +	if (cxl_cper_sec_prot_err_valid(prot_err))
-> +		return;
-> +
-> +	if (cxl_cper_setup_prot_err_work_data(&wd, prot_err, severity))
-> +		return;
-> +
-> +	cxl_cper_handle_prot_err(&wd);
-> +}
-> +
->  static int extlog_print(struct notifier_block *nb, unsigned long val,
->  			void *data)
->  {
-> @@ -211,6 +227,12 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
->  			if (gdata->error_data_length >= sizeof(*mem))
->  				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
->  						       (u8)gdata->error_severity);
-> +		} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
-> +			struct cxl_cper_sec_prot_err *prot_err =
-> +				acpi_hest_get_payload(gdata);
-> +
-> +			extlog_cxl_cper_handle_prot_err(prot_err,
-> +							gdata->error_severity);
->  		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
->  			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
->  
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index 2731ba3a0799..a90480d07c87 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> @@ -63,7 +63,7 @@ static int match_memdev_by_parent(struct device *dev, const void *uport)
->  	return 0;
->  }
->  
-> -static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
-> +void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
->  {
->  	unsigned int devfn = PCI_DEVFN(data->prot_err.agent_addr.device,
->  				       data->prot_err.agent_addr.function);
-> @@ -104,6 +104,7 @@ static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
->  	else
->  		cxl_cper_trace_uncorr_prot_err(cxlmd, data->ras_cap);
->  }
-> +EXPORT_SYMBOL_GPL(cxl_cper_handle_prot_err);
->  
->  static void cxl_cper_prot_err_work_fn(struct work_struct *work)
->  {
-> diff --git a/include/cxl/event.h b/include/cxl/event.h
-> index 94081aec597a..ff97fea718d2 100644
-> --- a/include/cxl/event.h
-> +++ b/include/cxl/event.h
-> @@ -340,4 +340,6 @@ cxl_cper_setup_prot_err_work_data(struct cxl_cper_prot_err_work_data *wd,
->  }
->  #endif
->  
-> +void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *wd);
-> +
->  #endif /* _LINUX_CXL_EVENT_H */
+   current cpuset configuration
+   cpuset.mems_allowed
+    |.mems_effective         < (mems_allowed ∩ parent.mems_effective)
+    |->tasks.mems_allowed    < cpuset.mems_effective
+
+   new cpuset configuration
+   cpuset.mems_allowed
+    |.mems_effective        < (mems_allowed ∩ parent.mems_effective)
+    |.mems_default          < (mems_effective ∩ default_sys_nodemask)
+      |->task.mems_default  < cpuset.mems_default - (note renamed)
+
+3) Addition of MHP_PROTECTED_MEMORY flag to denote to memory-hotplug
+   that the memory capacity being added should mark the node as a
+   protected memory node.  A node is either SysRAM or Protected, and
+   cannot contain both (adding protected to an existing SysRAM node
+   will result in EINVAL).
+
+   DAX and CXL are made aware of the bit and have `protected_memory`
+   bits added to their relevant subsystems.
+
+4) Adding GFP_PROTECTED - which allows page_alloc.c to request memory
+   from the provided node or nodemask.  It changes the behavior of
+   the cpuset mems_allowed check.
+
+   Probably there needs to be some additional work done here to
+   restrict non-cgroup kernels.
+
+Gregory Price (9):
+  gfp: Add GFP_PROTECTED for protected-node allocations
+  memory-tiers: create default_sysram_nodes
+  mm: default slub, oom_kill, compaction, and page_alloc to sysram
+  mm,cpusets: rename task->mems_allowed to task->mems_default
+  cpuset: introduce cpuset.mems.default
+  mm/memory_hotplug: add MHP_PROTECTED_MEMORY flag
+  drivers/dax: add protected memory bit to dev_dax
+  drivers/cxl: add protected_memory bit to cxl region
+  [HACK] mm/zswap: compressed ram integration example
+
+ drivers/cxl/core/region.c       |  30 ++++++
+ drivers/cxl/cxl.h               |   2 +
+ drivers/dax/bus.c               |  39 ++++++++
+ drivers/dax/bus.h               |   1 +
+ drivers/dax/cxl.c               |   1 +
+ drivers/dax/dax-private.h       |   1 +
+ drivers/dax/kmem.c              |   2 +
+ fs/proc/array.c                 |   2 +-
+ include/linux/cpuset.h          |  52 +++++------
+ include/linux/gfp_types.h       |   3 +
+ include/linux/memory-tiers.h    |   4 +
+ include/linux/memory_hotplug.h  |  10 ++
+ include/linux/mempolicy.h       |   2 +-
+ include/linux/sched.h           |   6 +-
+ init/init_task.c                |   2 +-
+ kernel/cgroup/cpuset-internal.h |   8 ++
+ kernel/cgroup/cpuset-v1.c       |   7 ++
+ kernel/cgroup/cpuset.c          | 157 +++++++++++++++++++++-----------
+ kernel/fork.c                   |   2 +-
+ kernel/sched/fair.c             |   4 +-
+ mm/hugetlb.c                    |   8 +-
+ mm/memcontrol.c                 |   2 +-
+ mm/memory-tiers.c               |  25 ++++-
+ mm/memory_hotplug.c             |  25 +++++
+ mm/mempolicy.c                  |  34 +++----
+ mm/migrate.c                    |   4 +-
+ mm/oom_kill.c                   |  11 ++-
+ mm/page_alloc.c                 |  28 +++---
+ mm/show_mem.c                   |   2 +-
+ mm/slub.c                       |   4 +-
+ mm/vmscan.c                     |   2 +-
+ mm/zswap.c                      |  65 ++++++++++++-
+ 32 files changed, 411 insertions(+), 134 deletions(-)
+
+-- 
+2.51.1
 
