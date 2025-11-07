@@ -1,198 +1,195 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0535D19ABC6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0075D41C63
 	for <linux-cxl@vger.kernel.org>; Mon, 10 Nov 2025 04:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762749312; cv=none; b=UEUyzk+793/TNsTJ6ORr1ySdtjuUfmByDhpg/s+RfQy66zkcR9vn6GsQ7kt9hyzdQteBNKLaFN/mJhs+aR6RvZTB1MxYwWN6Wq102Qr2AD2al1DTVzB/5isRpoTqeATinZ8zrr7hkNxNxtGudGw9w3vXx+rRajzkXvysmQu+2mA=
+	t=1762749313; cv=none; b=n5FeujBSsAlLINMyQjiZnDrgqcfkXrH0oHDCSdhry1Vw7YXKJKMsY6yOTvSA6EKpab0BN7yvgXvXgaqJZPnbTyap1EQUQ+NkbYSQZuR1EBcu/hI1VKJWdX34uVNWdQbaMnC953ZXg9iaCmNDjHUNex6PXAUIVWFXUfcJ/qJaB4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762749312; c=relaxed/simple;
-	bh=OxbiXzogS18s9gWFpLOZC3SrNZNC2m487zexC//F/xc=;
+	s=arc-20240116; t=1762749313; c=relaxed/simple;
+	bh=qxQcWFEZDKCs4Qp5/D2p72QlkhzRvP9ZQzqijavBSkY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=DFixxsIFYM3ST5+DTJrKlEdlVAbyXW375oRDqnxyGZsKB8iOr4BFz8OCjAgGRo0xyPbQ4yr0vmxo/sokfbVACz6dIXvXvGKzy0zT4uEX6b5RVs2m2j18yDyFP+XxZ/yPOpCPJ6LolUOiQD8sd0GbAtxv62mpaoHD78zalutH+P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=aNzq5wCv; arc=none smtp.client-ip=203.254.224.34
+	 Content-Type:References; b=VdtlDxH/0oiBV44y+zgc0Rz0ykgNDFvVjFqqvCk7MoMwBi8NggbVXTbCZKH3BhnJIOi1YT9k2HVqmp8eOWwWDGALlbY12+9zrActmcmEKnPxO7viCovLxhjnr8cuJbnmSseLB2HXVyd0/BB5Txsy8mS4Z7Iap5j7Vn+9Z8GSKf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=lexdT/F2; arc=none smtp.client-ip=203.254.224.24
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aNzq5wCv"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20251110043502epoutp04e6fac66991a6f69709e93366b6107ebb~2iyatITWM0710807108epoutp04e
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lexdT/F2"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20251110043502epoutp0123089b2b363bb38384f7c9abcb28d3c1~2iyaqHhXR0789207892epoutp01c
 	for <linux-cxl@vger.kernel.org>; Mon, 10 Nov 2025 04:35:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20251110043502epoutp04e6fac66991a6f69709e93366b6107ebb~2iyatITWM0710807108epoutp04e
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20251110043502epoutp0123089b2b363bb38384f7c9abcb28d3c1~2iyaqHhXR0789207892epoutp01c
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
 	s=mail20170921; t=1762749302;
-	bh=jS2+O+mkFBWGVcMnmL+fQCLQwIFScok/uQfxL5hNerg=;
+	bh=CmNfyZ8B/JPUeYZvEfmYdeSwWDFaPBDrKgPgdjjzBVA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=aNzq5wCvGS9biQupwOu8y4oXzodh9756L4/sJND2vunYamilqmPThCcC8fhlo+h3p
-	 a5SXeZXH9PPYjEOrgu1ketJXQJdgDDebaQvkXNZWfAXl17HeC+5KAZRx+LykjTPu0O
-	 DWYX1J0z9P17j/tU99Terd3NlWVe17Y9BErTlHxQ=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20251110043502epcas5p40c79ebcd4b283b5a56a400726bc74b2c~2iyaZp46P0233102331epcas5p4w;
-	Mon, 10 Nov 2025 04:35:02 +0000 (GMT)
+	b=lexdT/F24ogtLPrGWO/wlopqjnK+zpvTV+zEqTZZ9J39WZ/SzF84X4GaubWF6z8Pm
+	 wFnVzlBrrRgEksm0rOkZlt6MoUZOnKcKU+ehLoBuK0KrqJBth6lm6uj/CazKxQ9SXo
+	 6R68I4ZdPVOiV32hZt1uMFCrYa5AcYGDwqZeXbxc=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20251110043501epcas5p3c73febf60560742c7e60fec9d89395bf~2iyaJ8NHm2710327103epcas5p3j;
+	Mon, 10 Nov 2025 04:35:01 +0000 (GMT)
 Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4d4cK20DGQz6B9mD; Mon, 10 Nov
-	2025 04:35:02 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20251107124920epcas5p3cf861b7cd977a52f4aa576525f3a054e~1umI4nRmV1142611426epcas5p3K;
-	Fri,  7 Nov 2025 12:49:20 +0000 (GMT)
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4d4cK15SW0z2SSKj; Mon, 10 Nov
+	2025 04:35:01 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20251107123926epcas5p11068433443badb6b8f19acbca16ce5cc~1udf7K1ex1256612566epcas5p1P;
+	Fri,  7 Nov 2025 12:39:26 +0000 (GMT)
 Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20251107124916epsmtip2bceff1a0e2e8f903166d263b2ee43cad~1umFfRvxD0278102781epsmtip2M;
-	Fri,  7 Nov 2025 12:49:16 +0000 (GMT)
-Date: Fri, 7 Nov 2025 18:19:09 +0530
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20251107123919epsmtip1476716405b7dd6adf419018f5de5d3e6~1udZ3ic002787027870epsmtip1y;
+	Fri,  7 Nov 2025 12:39:19 +0000 (GMT)
+Date: Fri, 7 Nov 2025 18:09:12 +0530
 From: Neeraj Kumar <s.neeraj@samsung.com>
 To: Dave Jiang <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
 	linux-kernel@vger.kernel.org, gost.dev@samsung.com,
 	a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
 	cpgs@samsung.com
-Subject: Re: [PATCH V3 18/20] cxl/pmem_region: Prep patch to accommodate
- pmem_region attributes
-Message-ID: <1296674576.21762749302024.JavaMail.epsvc@epcpadp1new>
+Subject: Re: [PATCH V3 13/20] cxl/mem: Refactor cxl pmem region
+ auto-assembling
+Message-ID: <1983025922.01762749301758.JavaMail.epsvc@epcpadp1new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <6e893bd1-467a-4e9a-91ca-536afa6e4767@intel.com>
-X-CMS-MailID: 20251107124920epcas5p3cf861b7cd977a52f4aa576525f3a054e
+In-Reply-To: <361d0e84-9362-4389-a909-37878910b90f@intel.com>
+X-CMS-MailID: 20251107123926epcas5p11068433443badb6b8f19acbca16ce5cc
 X-Msg-Generator: CA
 Content-Type: multipart/mixed;
-	boundary="----u9L2QgHoAwvmxKKc9G9JEwVzlbmkcdkJo4LdlrEXZ6gvS-I0=_a59bf_"
+	boundary="----fevm_dXp0U54qslEOU8oiqO.VnigTQz743t4hqwhjBnK2JlQ=_a59d6_"
 CMS-TYPE: 105P
 X-CPGSPASS: Y
 X-Hop-Count: 3
-X-CMS-RootMailID: 20250917134209epcas5p1b7f861dbd8299ec874ae44cbf63ce87c
+X-CMS-RootMailID: 20250917134157epcas5p1b30306bc8596b7b50548ddf3683c3b97
 References: <20250917134116.1623730-1-s.neeraj@samsung.com>
-	<CGME20250917134209epcas5p1b7f861dbd8299ec874ae44cbf63ce87c@epcas5p1.samsung.com>
-	<20250917134116.1623730-19-s.neeraj@samsung.com>
-	<147c4f1a-b8f6-4a99-8469-382b897f326d@intel.com>
-	<1279309678.121759726504330.JavaMail.epsvc@epcpadp1new>
-	<6e893bd1-467a-4e9a-91ca-536afa6e4767@intel.com>
+	<CGME20250917134157epcas5p1b30306bc8596b7b50548ddf3683c3b97@epcas5p1.samsung.com>
+	<20250917134116.1623730-14-s.neeraj@samsung.com>
+	<c7b41eb6-b946-4ac0-9ddd-e75ba4ceb636@intel.com>
+	<1296674576.21759726502325.JavaMail.epsvc@epcpadp1new>
+	<361d0e84-9362-4389-a909-37878910b90f@intel.com>
 
-------u9L2QgHoAwvmxKKc9G9JEwVzlbmkcdkJo4LdlrEXZ6gvS-I0=_a59bf_
+------fevm_dXp0U54qslEOU8oiqO.VnigTQz743t4hqwhjBnK2JlQ=_a59d6_
 Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
 
-On 06/10/25 09:06AM, Dave Jiang wrote:
+On 06/10/25 08:55AM, Dave Jiang wrote:
 >
 >
->On 9/29/25 6:57 AM, Neeraj Kumar wrote:
->> On 24/09/25 11:53AM, Dave Jiang wrote:
+>On 9/29/25 6:30 AM, Neeraj Kumar wrote:
+>> On 23/09/25 03:37PM, Dave Jiang wrote:
 >>>
 >>>
 >>> On 9/17/25 6:41 AM, Neeraj Kumar wrote:
->>>> Created a separate file core/pmem_region.c along with CONFIG_PMEM_REGION
->>>> Moved pmem_region related code from core/region.c to core/pmem_region.c
->>>> For region label update, need to create device attribute, which calls
->>>> nvdimm exported function thus making pmem_region dependent on libnvdimm.
->>>> Because of this dependency of pmem region on libnvdimm, segregated pmem
->>>> region related code from core/region.c
+>>>> In 84ec985944ef3, devm_cxl_add_nvdimm() sequence was changed and called
+>>>> before devm_cxl_add_endpoint(). It's because cxl pmem region auto-assembly
+>>>> used to get called at last in cxl_endpoint_port_probe(), which requires
+>>>> cxl_nvd presence.
+>>>>
+>>>> For cxl region persistency, region creation happens during nvdimm_probe
+>>>> which need the completion of endpoint probe.
+>>>>
+>>>> In order to accommodate both cxl pmem region auto-assembly and cxl region
+>>>> persistency, refactored following
+>>>>
+>>>> 1. Re-Sequence devm_cxl_add_nvdimm() after devm_cxl_add_endpoint(). This
+>>>>    will be called only after successful completion of endpoint probe.
+>>>>
+>>>> 2. Moved cxl pmem region auto-assembly from cxl_endpoint_port_probe() to
+>>>>    cxl_mem_probe() after devm_cxl_add_nvdimm(). It gurantees both the
+>>>>    completion of endpoint probe and cxl_nvd presence before its call.
 >>>
->>> We can minimize the churn in this patch by introduce the new core/pmem_region.c and related bits in the beginning instead of introduce new functions and then move them over from region.c.
+>>> Given that we are going forward with this implementation [1] from Dan and drivers like the type2 enabling are going to be using it as well, can you please consider converting this change to Dan's mechanism instead of creating a whole new one?
+>>>
+>>> I think the region discovery can be done via the ops->probe() callback. Thanks.
+>>>
+>>> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/commit/?h=for-6.18/cxl-probe-order&id=88aec5ea7a24da00dc92c7778df4851fe4fd3ec6
+>>>
+>>> DJ
+>>>
 >>
->> Hi Dave,
->>
->> As per LSA 2.1, during region creation we need to intract with nvdimmm
->> driver to write region label into LSA.
->> This dependency of libnvdimm is only for PMEM region, therefore I have
->> created a seperate file core/pmem_region.c and copied pmem related functions
->> present in core/region.c into core/pmem_region.c.
->> Because of this movemement of code we have churn introduced in this patch.
->> Can you please suggest optimized way to handle dependency on libnvdimm
->> with minimum code changes.
+>> Sure, Let me revisit this.
+>> It seems [1] is there in seperate branch "for-6.18/cxl-probe-order", and not yet merged into next, right?
 >
->Hmm....maybe relegate the introduction of core/pmem_region.c new file and only the moving of the existing bits into the new file to a patch. And then your patch will be rid of the delete/add bits of the old code? Would that work?
+>Right. I believe Smita and Alejandro are using that as well. Depending on who gets there first. We can setup an immutable branch at some point.
+>
+>[1]: https://lore.kernel.org/linux-cxl/20250822034202.26896-1-Smita.KoralahalliChannabasappa@amd.com/T/#t
 >
 >DJ
 
 Hi Dave,
 
-As per LSA 2.1, during region creation we need to intract with nvdimmm
-driver to write region label into LSA.
+As per Dan's [1] newly introduced infra, Following is my understanding.
 
-This dependency of libnvdimm is only for PMEM region, therefore I have
-created a seperate file core/pmem_region.c and copied pmem related functions
-present in core/region.c into core/pmem_region.c
+Currently cxl_pci does not care about the attach state of the cxl_memdev
+because all generic memory expansion functionality can be handled by the
+cxl_core. For accelerators, the driver needs to know and perform driver
+specific initialization if CXL is available, or exectute a fallback to PCIe
+only operation.
 
-I have moved following 7 pmem related functions from core/region.c to core/pmem_region.c
-  - cxl_pmem_region_release()
-  - cxl_pmem_region_alloc()
-  - cxlr_release_nvdimm()
-  - cxlr_pmem_unregister()
-  - devm_cxl_add_pmem_region()
-  - is_cxl_pmem_region()
-  - to_cxl_pmem_region()
+Dan's new infra is needed for CXL accelerator device drivers that need to
+make decisions about enabling CXL dependent functionality in the device, or
+falling back to PCIe-only operation.
 
-I have created region_label_update_show/store() and region_label_delete_store() which
-internally calls following libnvdimm exported function
-  - region_label_update_show/store()
-  - region_label_delete_store()
+During cxl_pci_probe() we call devm_cxl_add_memdev(struct cxl_memdev_ops *ops)
+where function pointer as ops gets registered which gets called in cxl_mem_probe()
+using cxlmd->ops->probe()
 
-I have added above attributes as following
+The probe callback runs after the port topology is successfully attached for
+the given memdev.
+
+So to use this infra we have to pass cxl_region_discovery() as ops parameter
+of devm_cxl_add_memdev() getting called from cxl_pci_probe().
+  
+In this patch-set cxl_region_discovery() signature is different from cxlmd->ops->probe()
+
     {{{
-	static struct attribute *cxl_pmem_region_attrs[] = {
-         	&dev_attr_region_label_update.attr,
-         	&dev_attr_region_label_delete.attr,
-         	NULL
-	};
-	static struct attribute_group cxl_pmem_region_group = {
-	        .attrs = cxl_pmem_region_attrs,
-	};
-	static const struct attribute_group *cxl_pmem_region_attribute_groups[] = {
-	        &cxl_base_attribute_group,
-	        &cxl_pmem_region_group,      ------> New addition in this patch
-	        NULL
-	};
-	const struct device_type cxl_pmem_region_type = {
-	        .name = "cxl_pmem_region",
-	        .release = cxl_pmem_region_release,
-	        .groups = cxl_pmem_region_attribute_groups,
-	};
-
-	static int cxl_pmem_region_alloc(struct cxl_region *cxlr)
+	void cxl_region_discovery(struct cxl_port *port)
 	{
-	        <snip>
-	        dev = &cxlr_pmem->dev;
-	        dev->parent = &cxlr->dev;
-	        dev->bus = &cxl_bus_type;
-	        dev->type = &cxl_pmem_region_type;
-		<snip>
+         	device_for_each_child(&port->dev, NULL, discover_region);
 	}
+
+	struct cxl_memdev_ops {
+	        int (*probe)(struct cxl_memdev *cxlmd);
+	};
     }}}
 
-So I mean to say all above mentioned functions are inter-connected and dependent on libnvdimm
-Keeping any of them in core/region.c to avoid churn, throws following linking error
-    {{{
-	ERROR: modpost: "nd_region_label_delete" [drivers/cxl/core/cxl_core.ko] undefined!
-	ERROR: modpost: "nd_region_label_update" [drivers/cxl/core/cxl_core.ko] undefined!
-	make[2]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
-    }}}
+Even after changing the signature of cxl_region_discovery() as per cxlmd->ops->probe()
+may create problem as when the ops->probe() fails, then it will halts the probe sequence
+of cxl_pci_probe()
 
-Keeping these functions in core/region.c (CONFIG_REGION)) and manually enabling CONFIG_LIBNVDIMM=y
-will make it pass.
+It is because discover_region() may fail if two memdevs are participating into one region
 
-Even if we can put these functions in core/region.c and forcefully make
-libnvdimm (CONFIG_LIBNVDIMM) dependent using Kconfig. But I find it little improper as
-this new dependency is not for all type of cxl devices (vmem and pmem) but only for cxl pmem
-device region.
+Also, region auto assembly is mandatory functionality which creates region
+if (cxled->state == CXL_DECODER_STATE_AUTO) gets satisfied.
 
-Therefore I have seperated it out in core/pmem_region.c under Kconfig control
-making libnvdimm forcefully enable if CONFIG_CXL_PMEM_REGION == y
+Currently region auto assembly (added by a32320b71f085) happens after successfull
+enumeration of endpoint decoders at cxl_endpoint_port_probe(), which I have moved at
+cxl_mem_probe() after devm_cxl_add_nvdimm() which prepares cxl_nvd infra required by it.
 
-So, I believe this prep patch is required for this LSA 2.1 support.
+As discussed in [1], this patch-set does the movement of auto region assembly from
+cxl_endpoint_port_probe() to cxl_mem_probe() and resolved the conflicting dependency
+of cxl_nvd infra required by both region creation using LSA and auto region assembly.
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/commit/?h=for-6.18/cxl-probe-order&id=88aec5ea7a24da00dc92c7778df4851fe4fd3ec6 
+[2]: https://lore.kernel.org/linux-cxl/1931444790.41752909482841.JavaMail.epsvc@epcpadp2new/
+
+Please let me know if my understanding is correct or I am missing something?
 
 
 Regards,
 Neeraj
 
-------u9L2QgHoAwvmxKKc9G9JEwVzlbmkcdkJo4LdlrEXZ6gvS-I0=_a59bf_
+
+------fevm_dXp0U54qslEOU8oiqO.VnigTQz743t4hqwhjBnK2JlQ=_a59d6_
 Content-Type: text/plain; charset="utf-8"
 
 
-------u9L2QgHoAwvmxKKc9G9JEwVzlbmkcdkJo4LdlrEXZ6gvS-I0=_a59bf_--
+------fevm_dXp0U54qslEOU8oiqO.VnigTQz743t4hqwhjBnK2JlQ=_a59d6_--
 
