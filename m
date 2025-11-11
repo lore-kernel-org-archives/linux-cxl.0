@@ -1,46 +1,46 @@
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012069.outbound.protection.outlook.com [52.101.48.69])
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012023.outbound.protection.outlook.com [40.107.209.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC7735CBA0
-	for <linux-cxl@vger.kernel.org>; Tue, 11 Nov 2025 21:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F089326938
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Nov 2025 21:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.23
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762897400; cv=fail; b=UZWlWn7ttR8TJRNmHgIgnAcXaldxiFMFdt5svMlU5P6aDL7ZlZn6t9XmI7rEQj28BIcXc4olM25zuvX897GmMkXWYzBNtqJmdlWMv/YKe9cJxCMzFAlzORxNWw/zcHc98lwHU/ugetUflPkk7DbQ29RjcE6FV0ExPjuQXNgsld4=
+	t=1762897410; cv=fail; b=RqdTG7pbfiSh6ZSfue+X4cP9tULlU1onBUR4gOXbeg4+Uz1876S/LyYWbwTVkiSeMz5eEFrD0ZLnTsKfbJS1mCz/u8PvB3e7pIQQitRZ0JeSG3LHv0hlpSOvkw94R/A/lGQWY56xVkeWKxkOGBvddjKeLCWQmTyWzU3y/q4qpg0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762897400; c=relaxed/simple;
-	bh=0AS7wO7KGMd0651C0uWRGAZkGUdzYYAf4fLsLtgA2xM=;
+	s=arc-20240116; t=1762897410; c=relaxed/simple;
+	bh=Eu1tYM/wPEBoCF+sJpK+fsrHEzL5ohCXpULjVFYnizk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SZdNrOdabj0Ao+SyPdsjnHtLGNpjIdKXxcH/EQDoyqsknSBMADYsqGY8BqsLtIvmbA52IkUbOJ/ByRdGhrZoEZ+ajDsZMMqbjGJJGGmtm9xwSVTALtTODNp9aVp+i6DmdpTg0H9CCe+4zZiW7YX2Gr0yGIXHNQpCyDGuf2xP7IQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wpRgHi3b; arc=fail smtp.client-ip=52.101.48.69
+	 MIME-Version:Content-Type; b=TYZyvwcNS0w8fUaE84dHk4QbJwo6pNqbBEmQ3Q8zQ3uzsHcM9jwRqlYxg9w4hYAGk97Kj9roPv7wVbi5kmRPw0YGyNbnMhCHVklk3Tm/Q8kJXXtw/HvGHmmHrvWeA9Iym9YKO05LwPR7oorwndPXm5WD9cE+FcUYBdXgUO4iGP4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cGwBJNBF; arc=fail smtp.client-ip=40.107.209.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wpRgHi3b"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cGwBJNBF"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NhjX64FUHVfP0zJ7F9EJ5QW4XVefsIoo4WYXXeGHrC1M6g9t/eEzBAmIsoPciK9znx+kCDGDkbeCx5zAvvoItiajK8unZYK3L/xmd7fFVHqjizpqjZF0gFxgJYeeIoKR2E8Po1K4eLOxdterol3/OlCzO7S89n8TeKkKcYsYoGaX4+Y99Ssbgnu8rdb2A7WvkLI9XWGynfNxxezzXor6eo6NsBVzJbip7RAo5ehrBv3+Zg1StzlNloFofog1Cdrbwjaoc48UnkNEF32r8l/IsAOC2a3Y5QTnlUa0FVnO9+5ihDB1LmREUHxm6PkhFAGf+aVmxN9U9yRTX3WE0EsLhg==
+ b=YbCRrc0XWRkISZ7a+rF6hxmW0HhGE+OktD0nkiiKTS/IExiWZcQwoUDHg2uCGa56pLgmrPt8u29LKnBn4VD/N4R8enmTK/g+apKZB/nq90UjJjtJR3j9u1I5UtAeqKtWI5sv0UJxHpOM692CgvyC3I0RCzYHPwrCgwkUz7gsXqAb0/ANngw8WNuAJDjEVie8cR9hWvzr3OjwaVVCKSCdNexJhYe7CztkoEFjkIuM6VLG/JCluu/PS5+xKd2NlmgwoGfHzKdKFdsTeM5h600B7ExAnMSk3oo0b0Kdklfduy2ojIDnCH7M1EwmFoyhWSVfYZCR/8WAH6OFcIMsWazaMg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uJiy3zi915ieu30jzfJToSmnwncyFsD5fRp2A5GKMt4=;
- b=cZcmlPxLZhtWKx60EDXk6H6lalEmpLzNeZjh96CMEJZsXZo+KtpwJvHwzjKzy8xRRbIO4B24+BPyR3Zwyk83LHIN6qWPzlkf23bhUDNuRq4cqFS8f3Twuu9Hfpy8t1V1Ug+60wpwUA2NQcSctSyccOICjYF7RoH7cu8m5J1ELWmj4yX0gu1IPEJuyVZwZyz1wug3zZTmLYDLKj1xlfoSSOfq6idkqwPpOzrefn0+6U6b7c4FbgG1zB9RkbtLhICof2PrA9YkC8jwxKjuKX/wQHX5RmyKiw3s35u9lcBawy25GhyhA3dKFef4KDOwQhzhMG7GqcFjNMbiqWcigDPVzA==
+ bh=1B1Rmpf/9vHg80fbhqTt+dTb6jy1CWCj4TYKbBrgqqg=;
+ b=MxbjBbi/mZgoMtOgqCl7GR6mWdJ+WRVhCNpcSrNMxvtjPkXZwDgOSSpGdzR5zkDyInWn83qm3zy21TazdbhhJacfnRma44TW5ZottWFzmCSz7doxy4gx2SYuVhT39pdzxcmQvAg29aEDtfgBBuziixLAHjVpy3l8bZaI5gDNQpa9OqyWC63aoAF3rgSEkGP//vvG3OGh2dldqwwsb+zfC1FZk89HyoJEdqgqAx0XkdbqM+AbRfcbONZoaS3gyEEb0gXiB4um7+cRpupzc7hqufPJddpvdUnQhvxK9g/cJPd7f5xCI3O6320B+tfvj2SoCF4P6iaPJwA+WUfMztyz1Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uJiy3zi915ieu30jzfJToSmnwncyFsD5fRp2A5GKMt4=;
- b=wpRgHi3bH8YtnXNqSO0iv56Q64/55wUhWHokU0W+RijjK60rnSynYfDFthzIe9u5EiR7p2eiFvhrcxF3UqeL002FBiCPiVeIGuzG85JoMgG059/d8D+iCagXi5sDSPCzywnXX8iptthmoNxsh46zaFZW3kJtozIe1vIQYhFplnA=
-Received: from BL1PR13CA0345.namprd13.prod.outlook.com (2603:10b6:208:2c6::20)
- by SJ0PR12MB6941.namprd12.prod.outlook.com (2603:10b6:a03:448::10) with
+ bh=1B1Rmpf/9vHg80fbhqTt+dTb6jy1CWCj4TYKbBrgqqg=;
+ b=cGwBJNBF3dI7pUh23svXCbXk/kXV5MimrUrlLnRYND58XdD69UlQ4oTwwox3/+oWwsoKrOeAgI0SOzaqCloGkyggo03ygg7F7rAwTj3Uom6WYyTmkgl9oUI7Eu8mQNzH6aC21z/ShpnoqOBeK/LscxRZgeV3a24hBRltbKr28hE=
+Received: from BLAPR03CA0060.namprd03.prod.outlook.com (2603:10b6:208:32d::35)
+ by LV2PR12MB5990.namprd12.prod.outlook.com (2603:10b6:408:170::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.15; Tue, 11 Nov
- 2025 21:43:14 +0000
-Received: from BL6PEPF0001AB57.namprd02.prod.outlook.com
- (2603:10b6:208:2c6:cafe::f8) by BL1PR13CA0345.outlook.office365.com
- (2603:10b6:208:2c6::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.15 via Frontend Transport; Tue,
- 11 Nov 2025 21:42:58 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.16; Tue, 11 Nov
+ 2025 21:43:23 +0000
+Received: from BL6PEPF0001AB53.namprd02.prod.outlook.com
+ (2603:10b6:208:32d:cafe::3b) by BLAPR03CA0060.outlook.office365.com
+ (2603:10b6:208:32d::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9298.16 via Frontend Transport; Tue,
+ 11 Nov 2025 21:43:23 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,19 +48,19 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- BL6PEPF0001AB57.mail.protection.outlook.com (10.167.241.9) with Microsoft
+ BL6PEPF0001AB53.mail.protection.outlook.com (10.167.241.5) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9320.13 via Frontend Transport; Tue, 11 Nov 2025 21:43:13 +0000
+ 15.20.9320.13 via Frontend Transport; Tue, 11 Nov 2025 21:43:23 +0000
 Received: from ausbcheatha02.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 11 Nov
- 2025 13:43:12 -0800
+ 2025 13:43:23 -0800
 From: Ben Cheatham <Benjamin.Cheatham@amd.com>
 To: <linux-cxl@vger.kernel.org>
 CC: <benjamin.cheatham@amd.com>
-Subject: [PATCH 12/17] cxl/core: Add CXL snoop filter setup and allocation
-Date: Tue, 11 Nov 2025 15:40:27 -0600
-Message-ID: <20251111214032.8188-13-Benjamin.Cheatham@amd.com>
+Subject: [PATCH 13/17] cxl/core: Add cache id verification
+Date: Tue, 11 Nov 2025 15:40:28 -0600
+Message-ID: <20251111214032.8188-14-Benjamin.Cheatham@amd.com>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20251111214032.8188-1-Benjamin.Cheatham@amd.com>
 References: <20251111214032.8188-1-Benjamin.Cheatham@amd.com>
@@ -76,468 +76,631 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB57:EE_|SJ0PR12MB6941:EE_
-X-MS-Office365-Filtering-Correlation-Id: 46d01d80-6f10-48e5-4aaa-08de216b50cc
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB53:EE_|LV2PR12MB5990:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8ae03d4f-e855-479c-7d4d-08de216b56e0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7WQcVgjUQLEqqySUecakU+eyPGA9+LG85uEbyjSYyM/wR163QjtH7Vi4W0Gc?=
- =?us-ascii?Q?/fA+RFELbVSJ3sWz4nr4Y7sMnvuyQraA9hmGqqlDr7cn6SsUh/dKRCu7GXfz?=
- =?us-ascii?Q?Tvf1FuaTvM9/7YuxCOeZo7dUhkCmizAhtPXqpxLYYfr87i6y0OQJQyYmE/Bt?=
- =?us-ascii?Q?YUsyc2IP4beE3piyeewbLU5buSpw86PNER6WUJNhp1aQ5NXSIJ5eearox1l0?=
- =?us-ascii?Q?onRhm2AEdU7dZt1KjuFcyi0YO2KEbANcVEABs5ipz2s6e3JjOjrkpF1dNoaq?=
- =?us-ascii?Q?Gt7V+bnwFW/E3sh/aVnB0PEIolhY2D+XcUlmJW9sqpjV04IRUfmwZzbs32zz?=
- =?us-ascii?Q?iZzKJ+8hlLm8kWL5IEdfzM0F68wNGREPcrupvSOwKwAoquH25WPAFahUfDAu?=
- =?us-ascii?Q?TICpkYm//luHCJ/+2xQeE2o/dEhnU8nv9j94Il63w0VuH5Ry3vSsGp+/Dc4k?=
- =?us-ascii?Q?SlC58bxZArTkSOgbE76KepO4Pz1kqS7DcmYGCSz1p3OVKZIXV/F699vEO+fZ?=
- =?us-ascii?Q?AikTXxi2Jt+uZeJ5DYlmeVsdYYbN9chdiBVeaE13aL2PxC68edOMR5BLUBBJ?=
- =?us-ascii?Q?fCM4pYBxWsCvlZKSam4BB6krbCqmF325bMo4u1XVHSX0YulpXIOqE6wmJlkO?=
- =?us-ascii?Q?8/A7PzvgdvwSQZVsFZinXr4l0ltZoRM4iKxbZ91M213kF3CPx/Sh5lZN5PWT?=
- =?us-ascii?Q?1YPn4ha6coPyncMQYsOle3S+MMzZ/c7gX+Gp0KkgIV0zXX70MgDnEtcXnD9T?=
- =?us-ascii?Q?a0ZcjN9n+14BEBi3ZswgRFMpjOnIcP28sqeh2V2hHAK0v1aL0EL7GWEZcYxJ?=
- =?us-ascii?Q?O79wPFH34oN/uB08WnvLhrnUf4M1fjTFwCEdaraJGvgvzAI0Vd3bBxGg02Y6?=
- =?us-ascii?Q?cH2mNdcXfiyd8oA38/EeLAJYGuHwGj2rj4jo+Wnl/DoqYjfwLmf+dZh/Fw3c?=
- =?us-ascii?Q?gzgAhQu9uWP75r4A999pDaKlxPds8yyS1djKsmqOQHftGyjyb2b0FZvd6hOp?=
- =?us-ascii?Q?LQaciJqoqupcRuXR/YqtOOEdFWGPjwc33A9lczPngp/op8z6TLzm+GvQ3nzX?=
- =?us-ascii?Q?B1JKGbFFoZH6ey7iPV4NlOPuJA+4Iq3j0drHmaY2HK0+fOM/AdRGWIEZficK?=
- =?us-ascii?Q?vIN3sjSze4FRG1ftJqza/zw2mz2ht9a0bl8TZOJPXCPrzhn8lH47KVezyk8I?=
- =?us-ascii?Q?VwWEIWmPpSPr1hCy4kJ2ZxeCf2w43x92W14FMnzsm1InDIijirP/r22lPTOy?=
- =?us-ascii?Q?DI2x24kj1OiFp0socLxYAjqeAkVibiyabaMHj6PsGXW1NKCrrCnwwFYrLJ+8?=
- =?us-ascii?Q?YRvRUbBVt5iISVNImQSE2Cwzb00ez6js51XeX0vlrwHtqgk71cXe1xJfotWs?=
- =?us-ascii?Q?fnua9PeTUNRqBdCgo6+UYoSSG6+1qaHVvIkO90TeLTEviLVol/CbB6ThcfzV?=
- =?us-ascii?Q?cgj/lVNXie0gNe4eNGgj5uV9aGFP+uYUC9t5akLnGmrg4e6UY8v/c5WeOWA6?=
- =?us-ascii?Q?maGTqNzDdynPLIWL2KLITHXGGnbvvtr7P1KpM3dfVYKADeM20alV4G0b5m6W?=
- =?us-ascii?Q?VFVPhkHCjideez4DvjI=3D?=
+	=?us-ascii?Q?8+qZ62AEMGdd6wuyUrXfubV9AyJxq5gURvApnztwzGzE0GF65CRUstoSar+q?=
+ =?us-ascii?Q?YSbdJQ4Q6+Vt8WwyBmVrKLOAeAqfuQRTdiG4GztAk+BZKmr1m1fCUOnu+ZIr?=
+ =?us-ascii?Q?LOf646QhNrN7VHVsGXbZqrvIrBP/BW6ybWKhxgBrvhbAL090Bmv7RPBnVAwJ?=
+ =?us-ascii?Q?ONOtcgj90fCJlrdcwvxjSEe354dzQ9bPf4dbGv/Q1LuE2fEn3DOYjx7MsPON?=
+ =?us-ascii?Q?PsykjDnAgqaiwp2IomjUIHkH4DZqXPmbKppUBK3IYDHazTQMbS1WXM+IN/TJ?=
+ =?us-ascii?Q?eQy/Vjfaa9qAqVAtLH9YKqFF8zO9NYvNbsKFoRS9BMnv+7IlSJIvxl+4M4md?=
+ =?us-ascii?Q?rBKv2SJuzM5mK16uXADSFiNa3lo2e7YknBMiSMWmHMh3PRVkDG8S4Pk1CUDt?=
+ =?us-ascii?Q?IKVhY2oUZ119NwKi4LQI42aQVUiYNiYarNJldnC5oXcPOZBufkSvtV48U1zn?=
+ =?us-ascii?Q?wqxNrD9VlHT81Nc3hjfPmgM/AOabH4zL35pQsoGYwTTLeOxt2Mg0SlHHS1qa?=
+ =?us-ascii?Q?WZx8XvUkPdxhBcl2g/JPEqKzFiq6d3wVcmAu6y7wIcRx2kNXpSwDyHbnBOZ7?=
+ =?us-ascii?Q?jZPB8SkHGCK8q20AtstaBL/nxDYQCGzR4rzAmDF+f9wmB0uJQehD15/MugCu?=
+ =?us-ascii?Q?lCkuXHfYtRkdF8ihmXV0e38sgdDw/7wKBoUdmLBKClBe5Pn/K5aHMclpTpDV?=
+ =?us-ascii?Q?dnrffCZMb1eU+s2GxuS8ZW0KX7LGZBNKVuP+jILIs1yXGxVbaMsiiWEMZzQj?=
+ =?us-ascii?Q?D6p/iXR/LUYX54O/PxOH3hNtGw/gE52L+4Wy3Er3dP+quUrTDoWKDEMop+KB?=
+ =?us-ascii?Q?dInl93p2FfxiuOysHc55+WShPzrR2ckvHClzre/WdoSzXmcZsu//DYU/olOJ?=
+ =?us-ascii?Q?waXV7Fxdjlx1Opd6z/2sBa13Mb0MRvltst3SPPGBiqS9PwEAvPeuQB2hoYbM?=
+ =?us-ascii?Q?vnaQj8toTx1P7Yn0c0M2PLgsCV4Yh/AdTlL/FJjRLLqBwBFzbiMYCf9tV9IO?=
+ =?us-ascii?Q?9J8FwFC3X/sr02ria8P/1stgKxEQomNj/wPIA2KtkCQ5cbtyCAut6dLoe2UT?=
+ =?us-ascii?Q?UfgD/j3o4inyiATls9CEY0ylRWzW1fFQGVm2ThnBoDIM+JwlgWmB8Ije6Bz2?=
+ =?us-ascii?Q?+uxEHFrqiqMgedOnRqs06LTz7VM1rxJZ2EKKXmrgrNIXiC94kCxM/tVHLanx?=
+ =?us-ascii?Q?b6pklln+xwUFo4OB0qL8Cc2c4urdL7gzIBQ+EfIaXoDIY+CZpb9PTJePQfOL?=
+ =?us-ascii?Q?1+h40Dibz/EdCIRuLFlVJ8PfRtGI92Vp/vwdvqe/gsCAZJhAFgnrK1UPnh0a?=
+ =?us-ascii?Q?lbBHjIaYcjOERV0JVmPrsooa49gJtHZZsXmRDABsvQZmlVS/Mb53fWHfuGJS?=
+ =?us-ascii?Q?17M+ogHIA86g2GGAMIiIpF04+9XRTeXn1IeaS4+jOaBGz1XBUgzHoy64rl16?=
+ =?us-ascii?Q?5Dn3WteE04UVv6RnXX0qbsTADrhUZLX+21cY9AnVsYUe98XZ30WmJ4HjRuHj?=
+ =?us-ascii?Q?/ctTsxxqEzbsPxL5pjbtFqrbhmkhpUrPNZe6nZZwKRgt30WPJ+Z95wHReZQG?=
+ =?us-ascii?Q?so+yx6T6ouG4JL8n68A=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2025 21:43:13.3463
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2025 21:43:23.5519
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46d01d80-6f10-48e5-4aaa-08de216b50cc
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ae03d4f-e855-479c-7d4d-08de216b56e0
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB57.namprd02.prod.outlook.com
+	BL6PEPF0001AB53.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6941
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5990
 
-The CXL snoop filter capability (CXL 3.2 8.2.4.23) is a mandatory
-capability for CXL 2.0+ root ports that is used by the host and CXL
-devices to manage CXL cache coherence.
+The CXL cache id capability (CXL 3.2 8.2.4.28/29) is an optional
+capability that allows for multiple CXL.cache devices to be enabled
+under a single virtual hierarchy (VH). The cache id capability is
+required for having multiple CXL.cache devices in the same VH.
 
-Snoop filters may be shared by several CXL root ports, with each snoop
-filter having a unique group id. Create snoop filter instances as CXL
-root ports are added to the system. If the snoop filter already exists,
-add the root port to the existing filter instead.
+It's possible for the platform to enable and set up the cache id for a
+CXL.cache device. Add code to cxl_cache to check whether the device's
+cache id is programmed and correct. If it is programmed, allocate the
+cache id to prevent reuse.
 
-Snoop filter instances are used to keep track of the amount of CXL cache
-space active under the filter. The CXL specification allows rejecting
-CXL devices based on the amount of filter subscription, but determining
-when the filter is oversaturated is most likely implementation specific.
-To address this, add a cxl_core module parameter to specify whether
-adding a CXL.cache device's cache to an already full filter should fail
-device probe. The default setting of the parameter is to allow
-oversaturation of the filter ("strict_snoop=off").
+Checking the correctness of the id requires knowing if the endpoint
+device is a type 2 device using HDM-D flows. Add a requirement for type
+2 driver to specify if the device is using HDM-D flows before calling
+devm_cxl_add_cachedev().
+
+Programming of cache ids will come in a later commit.
 
 Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
 ---
+ drivers/cxl/core/cachedev.c |  20 ++++
+ drivers/cxl/core/pci.c      |   4 +-
+ drivers/cxl/core/port.c     | 229 ++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/regs.c     |  20 ++++
+ drivers/cxl/cxl.h           |  44 +++++++
+ drivers/cxl/cxlcache.h      |   3 +-
+ drivers/cxl/port.c          |  28 ++++-
+ 7 files changed, 344 insertions(+), 4 deletions(-)
 
-Jonathan asked about the allocation policy when the snoop filter is
-"full". I had the device fail probe beforehand, but it got me thinking
-that it may be worthwhile to add an option to over commit the filter
-instead, hence the module parameter. I'm game to other suggestions, but
-a config symbol didn't feel right since the setting probably varies by
-platform/user.
-
-Also I'll add Cache_SF_Coverage support when this series goes out of
-RFC (I forgot to do it this time around).
-
----
- drivers/cxl/cache.c     |  35 ++++++++
- drivers/cxl/core/port.c | 178 ++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/regs.c |   7 ++
- drivers/cxl/cxl.h       |  14 ++++
- 4 files changed, 234 insertions(+)
-
-diff --git a/drivers/cxl/cache.c b/drivers/cxl/cache.c
-index dcc9816d9b37..40c3ffd9c89b 100644
---- a/drivers/cxl/cache.c
-+++ b/drivers/cxl/cache.c
-@@ -12,6 +12,10 @@
-  * device-specific driver is required for discovery and portions of set up.
-  */
+diff --git a/drivers/cxl/core/cachedev.c b/drivers/cxl/core/cachedev.c
+index 5693a63baa9b..0b7430450b4e 100644
+--- a/drivers/cxl/core/cachedev.c
++++ b/drivers/cxl/core/cachedev.c
+@@ -2,6 +2,7 @@
+ /* Copyright (C) 2025 Advanced Micro Devices, Inc. */
+ #include <linux/device.h>
+ #include <linux/pci.h>
++#include "cxlpci.h"
  
-+/* Controls whether failing to allocate snoop filter capacity is tolerated */
-+static bool strict_snoop;
-+module_param(strict_snoop, bool, 0644);
-+
- /**
-  * devm_cxl_add_cachedev - Add a CXL cache device
-  * @host: devres alloc/release context and parent for the cachedev
-@@ -54,6 +58,22 @@ struct cxl_cachedev *devm_cxl_add_cachedev(struct device *host,
+ #include "../cxlcache.h"
+ #include "private.h"
+@@ -93,3 +94,22 @@ struct cxl_cachedev *devm_cxl_cachedev_add_or_reset(struct device *host,
+ 	return cxlcd;
  }
- EXPORT_SYMBOL_NS_GPL(devm_cxl_add_cachedev, "CXL");
- 
-+static int cxl_populate_snoop_gid(struct cxl_cachedev *cxlcd)
-+{
-+	struct cxl_cache_state *cstate = &cxlcd->cxlds->cstate;
+ EXPORT_SYMBOL_NS_GPL(devm_cxl_cachedev_add_or_reset, "CXL");
 +
-+	for (struct cxl_dport *iter = cxlcd->endpoint->parent_dport;
-+	     iter && !is_cxl_root(iter->port);
-+	     iter = iter->port->parent_dport) {
-+		if (iter->snoop_id != CXL_SNOOP_ID_NO_ID) {
-+			cstate->snoop_id = iter->snoop_id;
-+			return 0;
++bool cxl_cachedev_is_type2(struct cxl_cachedev *cxlcd)
++{
++	struct cxl_dev_state *cxlds = cxlcd->cxlds;
++	int dvsec = cxlds->cxl_dvsec;
++	u32 cap;
++	int rc;
++
++	if (!dev_is_pci(cxlds->dev))
++		return false;
++
++	rc = pci_read_config_dword(to_pci_dev(cxlds->dev),
++				   dvsec + CXL_DVSEC_CAP_OFFSET, &cap);
++	if (rc)
++		return rc;
++
++	return (cap & CXL_DVSEC_MEM_CAPABLE) && (cap & CXL_DVSEC_CACHE_CAPABLE);
++}
++EXPORT_SYMBOL_NS_GPL(cxl_cachedev_is_type2, "CXL");
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 5b1cace8fc0f..27c74e90ade5 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -1264,11 +1264,12 @@ EXPORT_SYMBOL_NS_GPL(cxl_port_get_possible_dports, "CXL");
+ /**
+  * cxl_accel_read_cache_info - Get the CXL cache information of a CXL cache device
+  * @cxlds: CXL device state associated with cache device
++ * @hdmd: Whether the device uses HDM-D flows
+  *
+  * Returns 0 and populates the struct cxl_cache_state member of @cxlds on
+  * success, error otherwise.
+  */
+-int cxl_accel_read_cache_info(struct cxl_dev_state *cxlds)
++int cxl_accel_read_cache_info(struct cxl_dev_state *cxlds, bool hdmd)
+ {
+ 	struct cxl_cache_state *cstate = &cxlds->cstate;
+ 	struct pci_dev *pdev;
+@@ -1308,6 +1309,7 @@ int cxl_accel_read_cache_info(struct cxl_dev_state *cxlds)
+ 	if (!cstate->size)
+ 		return -ENXIO;
+ 
++	cxlds->hdmd = hdmd;
+ 	return 0;
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_accel_read_cache_info, "CXL");
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 70666a059d1f..1504631ae620 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -750,6 +750,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
+ 		dev->parent = uport_dev;
+ 
+ 	ida_init(&port->decoder_ida);
++	ida_init(&port->cache_ida);
+ 	port->hdm_end = -1;
+ 	port->commit_end = -1;
+ 	xa_init(&port->dports);
+@@ -2414,6 +2415,234 @@ int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld)
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_decoder_autoremove, "CXL");
+ 
++static bool cache_decoder_committed(struct cxl_dport *dport)
++{
++	u32 cap, stat;
++
++	cap = readl(dport->regs.cidd + CXL_CACHE_IDD_CAP_OFFSET);
++	if (!(cap & CXL_CACHE_IDD_CAP_COMMIT_REQUIRED))
++		return true;
++
++	stat = readl(dport->regs.cidd + CXL_CACHE_IDD_STAT_OFFSET);
++	return (stat & CXL_CACHE_IDD_STAT_COMMITTED);
++}
++
++static bool cache_decoder_valid(struct cxl_dport *dport, int id, bool endpoint)
++{
++	struct pci_dev *pdev = to_pci_dev(dport->dport_dev);
++	bool flit_256b = cxl_pci_flit_256(pdev);
++	u32 ctrl;
++
++	if (id && !flit_256b)
++		return false;
++
++	ctrl = readl(dport->regs.cidd + CXL_CACHE_IDD_CTRL_OFFSET);
++	if ((endpoint || !flit_256b) &&
++	    !(ctrl & CXL_CACHE_IDD_CTRL_ASGN_ID))
++		return false;
++	else if (!(ctrl & CXL_CACHE_IDD_CTRL_FWD_ID))
++		return false;
++
++	return true;
++}
++
++static int cxl_dport_get_cache_id(struct cxl_dport *dport,
++				  struct cxl_port *endpoint)
++{
++	u32 ctrl;
++	int id;
++
++	if (!is_cxl_endpoint(endpoint))
++		return CXL_CACHE_ID_NO_ID;
++
++	ctrl = readl(dport->regs.cidd + CXL_CACHE_IDD_CTRL_OFFSET);
++	if (ctrl & CXL_CACHE_IDD_CTRL_TYPE2)
++		id = FIELD_GET(CXL_CACHE_IDD_CTRL_TYPE2_ID_MASK, ctrl);
++	else
++		id = FIELD_GET(CXL_CACHE_IDD_CTRL_LOCAL_ID_MASK, ctrl);
++
++	if (!cache_decoder_valid(dport, is_cxl_endpoint(endpoint), id) ||
++	    !cache_decoder_committed(dport))
++		return CXL_CACHE_ID_NO_ID;
++
++	return id;
++}
++
++static bool cache_idrt_committed(struct cxl_port *port)
++{
++	u32 cap, stat;
++
++	cap = readl(port->regs.cidrt + CXL_CACHE_IDRT_CAP_OFFSET);
++	if (!(cap & CXL_CACHE_IDRT_CAP_COMMIT_REQUIRED))
++		return true;
++
++	stat = readl(port->regs.cidrt + CXL_CACHE_IDRT_STAT_OFFSET);
++	return (stat & CXL_CACHE_IDRT_STAT_COMMITTED);
++}
++
++static bool cache_idrt_entry_valid(struct cxl_port *port, int id)
++{
++	u16 target;
++	u32 cap;
++
++	cap = readl(port->regs.cidrt + CXL_CACHE_IDRT_CAP_OFFSET);
++	if (FIELD_GET(CXL_CACHE_IDRT_CAP_CNT_MASK, cap) <= id)
++		return false;
++
++	target = readw(port->regs.cidrt + CXL_CACHE_IDRT_TARGETN_OFFSET(id));
++	return (target & CXL_CACHE_IDRT_TARGETN_VALID);
++}
++
++int cxl_endpoint_map_cache_id_regs(struct cxl_port *port)
++{
++	struct cxl_dport *parent_dport = port->parent_dport;
++	int rc;
++
++	if (!is_cxl_cachedev(port->uport_dev))
++		return -EINVAL;
++
++	port = parent_port_of(port);
++	while (port) {
++		if (!port->reg_map.component_map.cidrt.valid)
++			return -ENXIO;
++
++		scoped_guard(device, &port->dev) {
++			if (!port->regs.cidrt) {
++				rc = cxl_map_component_regs(
++					&port->reg_map, &port->regs,
++					BIT(CXL_CM_CAP_CAP_ID_CIDRT));
++				if (rc)
++					return rc;
++			}
++		}
++
++		/*
++		 * Parent dports of host bridges are cxl root (ACPI0017) dports
++		 * and don't have cache id decoders.
++		 */
++		if (is_cxl_root(parent_dport->port))
++			break;
++
++		if (!parent_dport->reg_map.component_map.cidd.valid)
++			return -ENXIO;
++
++		scoped_guard(device, &parent_dport->port->dev) {
++			if (!parent_dport->regs.cidd) {
++				rc = cxl_map_component_regs(
++					&parent_dport->reg_map,
++					&parent_dport->regs.component,
++					BIT(CXL_CM_CAP_CAP_ID_CIDD));
++				if (rc)
++					return rc;
++			}
 +		}
 +	}
 +
-+	return -ENXIO;
-+}
-+
- static int cxl_cache_probe(struct device *dev)
- {
- 	struct cxl_cachedev *cxlcd = to_cxl_cachedev(dev);
-@@ -93,6 +113,21 @@ static int cxl_cache_probe(struct device *dev)
- 			return rc;
- 	}
- 
-+	rc = cxl_populate_snoop_gid(cxlcd);
-+	if (rc) {
-+		dev_dbg(&cxlcd->dev, "failed to get snoop id: %d\n", rc);
-+		return rc;
-+	}
-+
-+	rc = devm_cxl_snoop_filter_alloc_capacity(cxlcd);
-+	if (rc) {
-+		dev_dbg(&cxlcd->dev,
-+			"failed to allocate snoop filter capacity: %d\n", rc);
-+
-+		if (strict_snoop)
-+			return rc;
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index dc001e136782..70666a059d1f 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -34,6 +34,8 @@
- static DEFINE_IDA(cxl_port_ida);
- static DEFINE_XARRAY(cxl_root_buses);
- 
-+static DEFINE_XARRAY(cxl_snoop_filters);
-+
- /*
-  * The terminal device in PCI is NULL and @platform_bus
-  * for platform devices (for cxl_test)
-@@ -810,6 +812,175 @@ static int cxl_dport_setup_regs(struct device *host, struct cxl_dport *dport,
- 	return rc;
- }
- 
-+struct cxl_snoop_filter {
-+	u64 size;
-+	struct xarray dports;
-+	struct xarray devs;
-+	struct mutex lock; /* Used for filter allocations */
-+};
-+
-+static int cxl_snoop_filter_add_dport(struct cxl_dport *dport, u32 gid)
-+{
-+	struct cxl_snoop_filter *sf;
-+
-+	sf = xa_load(&cxl_snoop_filters, gid);
-+	if (sf)
-+		return xa_insert(&sf->dports, (unsigned long)dport->dport_dev,
-+				 dport, GFP_KERNEL);
-+
-+	return -ENXIO;
-+}
-+
-+static struct cxl_snoop_filter *cxl_alloc_snoop_filter(u64 size)
-+{
-+	struct cxl_snoop_filter *sf;
-+
-+	sf = kzalloc(sizeof(*sf), GFP_KERNEL);
-+	if (!sf)
-+		return NULL;
-+
-+	sf->size = size;
-+	xa_init(&sf->dports);
-+	xa_init(&sf->devs);
-+	mutex_init(&sf->lock);
-+
-+	return sf;
-+}
-+
-+static void cxl_destroy_snoop_filter(struct cxl_snoop_filter *sf)
-+{
-+	xa_destroy(&sf->dports);
-+	xa_destroy(&sf->devs);
-+	mutex_destroy(&sf->lock);
-+	kfree(sf);
-+}
-+
-+static int cxl_create_snoop_filter(struct cxl_dport *dport, u32 gid, u64 size)
-+{
-+	struct cxl_snoop_filter *sf;
-+	int rc;
-+
-+	sf = cxl_alloc_snoop_filter(size);
-+	if (!sf)
-+		return -ENOMEM;
-+
-+	rc = xa_insert(&sf->dports, (unsigned long)dport->dport_dev, dport,
-+		       GFP_KERNEL);
-+	if (rc) {
-+		cxl_destroy_snoop_filter(sf);
-+		return rc;
-+	}
-+
-+	rc = xa_insert(&cxl_snoop_filters, gid, sf, GFP_KERNEL);
-+	if (rc) {
-+		cxl_destroy_snoop_filter(sf);
-+
-+		/*
-+		 * The snoop filter insert failed due to a race, get the already
-+		 * made snoop filter.
-+		 */
-+		if (rc == -EBUSY)
-+			return cxl_snoop_filter_add_dport(dport, gid);
-+
-+		return rc;
-+	}
-+
 +	return 0;
 +}
-+
-+static void cxl_snoop_filter_free_capacity(void *data)
-+{
-+	struct cxl_cache_state *cstate = data;
-+	struct cxl_snoop_filter *sf;
-+
-+	sf = xa_load(&cxl_snoop_filters, cstate->snoop_id);
-+	if (!sf) {
-+		pr_debug("failed to find snoop filter with id %d\n",
-+			 cstate->snoop_id);
-+		return;
-+	}
-+
-+	guard(mutex)(&sf->lock);
-+	sf->size += cstate->size;
-+}
++EXPORT_SYMBOL_NS_GPL(cxl_endpoint_map_cache_id_regs, "CXL");
 +
 +/**
-+ * devm_cxl_snoop_filter_alloc_capacity - Reserve snoop filter capacity for a
-+ * CXL.cache device's cache.
-+ * @cxlcd: Device to allocate capacity for
++ * cxl_endpoint_allocate_cache_id - Allocate a cache id @id on the endpoint's
++ * host bridge.
++ * @endpoint: Endpoint port representing a CXL.cache device
++ * @id: Cache id to attempt to allocate
++ *
++ * Returns rc < 0 if id allocation fails. Returns allocated id otherwise.
 + */
-+int devm_cxl_snoop_filter_alloc_capacity(struct cxl_cachedev *cxlcd)
++int cxl_endpoint_allocate_cache_id(struct cxl_port *endpoint, int id)
 +{
-+	struct cxl_dev_state *cxlds = cxlcd->cxlds;
-+	struct cxl_cache_state *cstate = &cxlds->cstate;
-+	struct cxl_snoop_filter *sf;
-+	int gid = cstate->snoop_id;
++	struct cxl_cachedev *cxlcd;
++	struct cxl_port *hb;
++	int nr_hdmd;
++	u32 cap;
 +
-+	sf = xa_load(&cxl_snoop_filters, gid);
-+	if (!sf)
-+		return -ENODEV;
++	if (!is_cxl_cachedev(endpoint->uport_dev) || id < 0)
++		return -EINVAL;
++	cxlcd = to_cxl_cachedev(endpoint->uport_dev);
 +
-+	guard(mutex)(&sf->lock);
-+	if (cstate->size > sf->size)
-+		return -EBUSY;
++	hb = parent_port_of(endpoint);
++	while (!is_cxl_host_bridge(&hb->dev))
++		hb = parent_port_of(hb);
 +
-+	sf->size -= cstate->size;
-+	return devm_add_action_or_reset(&cxlcd->dev,
-+					cxl_snoop_filter_free_capacity, cstate);
-+}
-+EXPORT_SYMBOL_NS_GPL(devm_cxl_snoop_filter_alloc_capacity, "CXL");
++	if (cxl_cachedev_is_type2(cxlcd) && cxlcd->cxlds->hdmd) {
++		cap = readl(hb->regs.cidrt + CXL_CACHE_IDRT_CAP_OFFSET);
++		nr_hdmd = FIELD_GET(CXL_CACHE_IDRT_CAP_TYPE2_CNT_MASK, cap);
 +
-+static void cxl_destroy_snoop_filters(void)
-+{
-+	struct cxl_snoop_filter *sf;
-+	unsigned long gid;
++		guard(device)(&hb->dev);
++		if (hb->nr_hdmd + 1 >= nr_hdmd)
++			return -EINVAL;
 +
-+	xa_for_each(&cxl_snoop_filters, gid, sf)
-+		cxl_destroy_snoop_filter(sf);
-+
-+	xa_destroy(&cxl_snoop_filters);
-+}
-+
-+static int cxl_dport_setup_snoop_filter(struct cxl_dport *dport)
-+{
-+	struct cxl_port *port = dport->port;
-+	struct cxl_port *parent_port;
-+	u32 snoop, size;
-+	int gid, rc;
-+
-+	/* Capability is only support by CXL root ports */
-+	parent_port = parent_port_of(port);
-+	if (!parent_port || !is_cxl_root(parent_port))
-+		return 0;
-+
-+	if (!dport->reg_map.component_map.snoop.valid) {
-+		dev_dbg(dport->dport_dev, "missing snoop filter capability\n");
-+		return -ENXIO;
++		hb->nr_hdmd++;
 +	}
 +
-+	rc = cxl_map_component_regs(&dport->reg_map, &dport->regs.component,
-+				    BIT(CXL_CM_CAP_CAP_ID_SNOOP));
-+	if (rc)
-+		return rc;
++	return ida_alloc_range(&hb->cache_ida, id, id, GFP_KERNEL);
++}
++EXPORT_SYMBOL_NS_GPL(cxl_endpoint_allocate_cache_id, "CXL");
 +
-+	snoop = readl(dport->regs.snoop + CXL_SNOOP_GROUP_ID_OFFSET);
-+	gid = FIELD_GET(CXL_SNOOP_GROUP_ID_MASK, snoop);
++void cxl_endpoint_free_cache_id(struct cxl_port *endpoint, int id)
++{
++	struct cxl_cachedev *cxlcd;
++	struct cxl_port *hb;
 +
-+	size = readl(dport->regs.snoop + CXL_SNOOP_FILTER_SIZE_OFFSET);
-+	if (!size)
-+		dev_warn(dport->dport_dev, "CXL snoop filter has no capacity\n");
++	if (!is_cxl_cachedev(endpoint->uport_dev))
++		return;
++	cxlcd = to_cxl_cachedev(endpoint->uport_dev);
 +
-+	rc = cxl_snoop_filter_add_dport(dport, gid);
-+	if (rc) {
-+		rc = cxl_create_snoop_filter(dport, gid, size);
-+		if (rc)
-+			return rc;
++	hb = endpoint;
++	while (!is_cxl_host_bridge(&hb->dev))
++		hb = parent_port_of(hb);
++
++	if (cxl_cachedev_is_type2(cxlcd) && cxlcd->cxlds->hdmd) {
++		guard(device)(&hb->dev);
++		hb->nr_hdmd--;
 +	}
 +
-+	dport->snoop_id = gid;
++	ida_free(&hb->cache_ida, id);
++}
++EXPORT_SYMBOL_NS_GPL(cxl_endpoint_free_cache_id, "CXL");
++
++/**
++ * cxl_endpoint_get_cache_id - Get the cache id of a CXL.cache endpoint device
++ * @endpoint: Endpoint port representing cache device
++ * @cid: Pointer to store resulting cache id in
++ *
++ * Returns 0 and sets @cid to CXL_CACHE_ID_NO_ID if programmed cache id is
++ * invalid.
++ */
++int cxl_endpoint_get_cache_id(struct cxl_port *endpoint, int *cid)
++{
++	struct cxl_dport *dport = endpoint->parent_dport;
++	struct cxl_port *port = parent_port_of(endpoint);
++	bool ep = true;
++
++	if (!cid)
++		return -EINVAL;
++
++	*cid = cxl_dport_get_cache_id(dport, port);
++
++	while (!is_cxl_root(port)) {
++		if (!cache_idrt_entry_valid(port, *cid) ||
++		    !cache_idrt_committed(port)) {
++			*cid = CXL_CACHE_ID_NO_ID;
++			break;
++		}
++
++		if (!cache_decoder_valid(dport, ep, *cid) ||
++		    !cache_decoder_committed(dport)) {
++			*cid = CXL_CACHE_ID_NO_ID;
++			break;
++		}
++
++		dport = port->parent_dport;
++		port = dport->port;
++		ep = false;
++	}
++
 +	return 0;
 +}
++EXPORT_SYMBOL_NS_GPL(cxl_endpoint_get_cache_id, "CXL");
 +
- DEFINE_SHOW_ATTRIBUTE(einj_cxl_available_error_type);
- 
- static int cxl_einj_inject(void *data, u64 type)
-@@ -1177,6 +1348,7 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
- 	dport->dport_dev = dport_dev;
- 	dport->port_id = port_id;
- 	dport->port = port;
-+	dport->snoop_id = CXL_SNOOP_ID_NO_ID;
- 
- 	if (rcrb == CXL_RESOURCE_NONE) {
- 		rc = cxl_dport_setup_regs(&port->dev, dport,
-@@ -1207,6 +1379,11 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
- 		dev_dbg(dport_dev, "Component Registers found for dport: %pa\n",
- 			&component_reg_phys);
- 
-+	rc = cxl_dport_setup_snoop_filter(dport);
-+	if (rc)
-+		dev_dbg(dport->dport_dev,
-+			"failed to set up snoop filter capability %d\n", rc);
-+
- 	cond_cxl_root_lock(port);
- 	rc = add_dport(port, dport);
- 	cond_cxl_root_unlock(port);
-@@ -2585,6 +2762,7 @@ static void cxl_core_exit(void)
- 	bus_unregister(&cxl_bus_type);
- 	destroy_workqueue(cxl_bus_wq);
- 	cxl_memdev_exit();
-+	cxl_destroy_snoop_filters();
- 	debugfs_remove_recursive(cxl_debugfs);
- }
- 
+ /**
+  * __cxl_driver_register - register a driver for the cxl bus
+  * @cxl_drv: cxl driver structure to attach
 diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index 5ca7b0eed568..280978b34d2f 100644
+index 280978b34d2f..545a1b9e026c 100644
 --- a/drivers/cxl/core/regs.c
 +++ b/drivers/cxl/core/regs.c
-@@ -92,6 +92,12 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
- 			length = CXL_RAS_CAPABILITY_LENGTH;
- 			rmap = &map->ras;
+@@ -98,6 +98,24 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+ 			length = CXL_SNOOP_CAPABILITY_LENGTH;
+ 			rmap = &map->snoop;
  			break;
-+		case CXL_CM_CAP_CAP_ID_SNOOP:
-+			dev_dbg(dev, "found Snoop Filter capability (0x%x)\n",
++		case CXL_CM_CAP_CAP_ID_CIDRT: {
++			int entry_cnt;
++
++			dev_dbg(dev,
++				"found Cache ID Route Table capability (0x%x)\n",
 +				offset);
-+			length = CXL_SNOOP_CAPABILITY_LENGTH;
-+			rmap = &map->snoop;
++			entry_cnt = FIELD_GET(CXL_CACHE_IDRT_CAP_CNT_MASK, hdr);
++			length = 2 * entry_cnt + 0x10;
++			rmap = &map->cidrt;
++			break;
++		}
++		case CXL_CM_CAP_CAP_ID_CIDD:
++			dev_dbg(dev,
++				"found Cache ID Decoder capability (0x%x\n",
++				offset);
++			length = CXL_CACHE_IDD_CAPABILITY_LENGTH;
++			rmap = &map->cidd;
 +			break;
  		default:
  			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
  				offset);
-@@ -211,6 +217,7 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
- 	} mapinfo[] = {
+@@ -218,6 +236,8 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
  		{ &map->component_map.hdm_decoder, &regs->hdm_decoder },
  		{ &map->component_map.ras, &regs->ras },
-+		{ &map->component_map.snoop, &regs->snoop },
+ 		{ &map->component_map.snoop, &regs->snoop },
++		{ &map->component_map.cidrt, &regs->cidrt },
++		{ &map->component_map.cidd, &regs->cidd },
  	};
  	int i;
  
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index e8d66de469d6..de29ffc3d74f 100644
+index de29ffc3d74f..f4dc912d67ed 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -41,6 +41,7 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
- 
+@@ -42,6 +42,8 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
  #define   CXL_CM_CAP_CAP_ID_RAS 0x2
  #define   CXL_CM_CAP_CAP_ID_HDM 0x5
-+#define   CXL_CM_CAP_CAP_ID_SNOOP 0x8
+ #define   CXL_CM_CAP_CAP_ID_SNOOP 0x8
++#define   CXL_CM_CAP_CAP_ID_CIDRT 0xD
++#define   CXL_CM_CAP_CAP_ID_CIDD 0xE
  #define   CXL_CM_CAP_CAP_HDM_VERSION 1
  
  /* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
-@@ -152,6 +153,12 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
- #define CXL_HEADERLOG_SIZE SZ_512
- #define CXL_HEADERLOG_SIZE_U32 SZ_512 / sizeof(u32)
+@@ -159,6 +161,30 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+ #define CXL_SNOOP_FILTER_SIZE_OFFSET 0x4
+ #define CXL_SNOOP_CAPABILITY_LENGTH 0x8
  
-+/* CXL 3.2 8.2.4.23 CXL Snoop Filter Capability Structure */
-+#define CXL_SNOOP_GROUP_ID_OFFSET 0x0
-+#define   CXL_SNOOP_GROUP_ID_MASK GENMASK(15, 0)
-+#define CXL_SNOOP_FILTER_SIZE_OFFSET 0x4
-+#define CXL_SNOOP_CAPABILITY_LENGTH 0x8
++/* CXL 3.2 8.2.4.28 CXL Cache ID Route Table Capability Structure */
++#define CXL_CACHE_IDRT_CAP_OFFSET 0x0
++#define   CXL_CACHE_IDRT_CAP_CNT_MASK GENMASK(4, 0)
++#define   CXL_CACHE_IDRT_CAP_TYPE2_CNT_MASK GENMASK(11, 8)
++#define   CXL_CACHE_IDRT_CAP_COMMIT_REQUIRED BIT(16)
++#define CXL_CACHE_IDRT_STAT_OFFSET 0x8
++#define   CXL_CACHE_IDRT_STAT_COMMITTED BIT(0)
++#define CXL_CACHE_IDRT_TARGETN_OFFSET(n) (0x10 + (2 * (n)))
++#define   CXL_CACHE_IDRT_TARGETN_VALID BIT(0)
++#define   CXL_CACHE_IDRT_TARGETN_PORTN GENMASK(15, 8)
++
++/* CXL 3.2 8.2.4.29 CXL Cache ID Decoder Capability Structure */
++#define CXL_CACHE_IDD_CAP_OFFSET 0x0
++#define   CXL_CACHE_IDD_CAP_COMMIT_REQUIRED BIT(0)
++#define CXL_CACHE_IDD_CTRL_OFFSET 0x4
++#define   CXL_CACHE_IDD_CTRL_FWD_ID BIT(0)
++#define   CXL_CACHE_IDD_CTRL_ASGN_ID BIT(1)
++#define   CXL_CACHE_IDD_CTRL_TYPE2 BIT(2)
++#define   CXL_CACHE_IDD_CTRL_TYPE2_ID_MASK GENMASK(11, 8)
++#define   CXL_CACHE_IDD_CTRL_LOCAL_ID_MASK GENMASK(19, 16)
++#define CXL_CACHE_IDD_STAT_OFFSET 0x8
++#define   CXL_CACHE_IDD_STAT_COMMITTED BIT(0)
++#define CXL_CACHE_IDD_CAPABILITY_LENGTH 0xC
 +
  /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
  #define CXLDEV_CAP_ARRAY_OFFSET 0x0
  #define   CXLDEV_CAP_ARRAY_CAP_ID 0
-@@ -215,6 +222,7 @@ struct cxl_regs {
- 	struct_group_tagged(cxl_component_regs, component,
+@@ -223,6 +249,8 @@ struct cxl_regs {
  		void __iomem *hdm_decoder;
  		void __iomem *ras;
-+		void __iomem *snoop;
+ 		void __iomem *snoop;
++		void __iomem *cidrt;
++		void __iomem *cidd;
  	);
  	/*
  	 * Common set of CXL Device register block base pointers
-@@ -257,6 +265,7 @@ struct cxl_reg_map {
- struct cxl_component_reg_map {
+@@ -266,6 +294,8 @@ struct cxl_component_reg_map {
  	struct cxl_reg_map hdm_decoder;
  	struct cxl_reg_map ras;
-+	struct cxl_reg_map snoop;
+ 	struct cxl_reg_map snoop;
++	struct cxl_reg_map cidrt;
++	struct cxl_reg_map cidd;
  };
  
  struct cxl_device_reg_map {
-@@ -693,6 +702,7 @@ struct cxl_dport {
- 	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
- 	long link_latency;
- 	int gpf_dvsec;
-+	int snoop_id;
+@@ -609,7 +639,9 @@ struct cxl_dax_region {
+  * @parent_dport: dport that points to this port in the parent
+  * @decoder_ida: allocator for decoder ids
+  * @reg_map: component and ras register mapping parameters
++ * @regs: component register mappings
+  * @nr_dports: number of entries in @dports
++ * @nr_hdmd: number of type 2 devices using hdm-d flows below this port
+  * @hdm_end: track last allocated HDM decoder instance for allocation ordering
+  * @commit_end: cursor to track highest committed decoder for commit ordering
+  * @dead: last ep has been removed, force port re-creation
+@@ -618,6 +650,7 @@ struct cxl_dax_region {
+  * @cdat_available: Should a CDAT attribute be available in sysfs
+  * @pci_latency: Upstream latency in picoseconds
+  * @component_reg_phys: Physical address of component register
++ * @cache_ida: cache id allocator
+  */
+ struct cxl_port {
+ 	struct device dev;
+@@ -630,7 +663,9 @@ struct cxl_port {
+ 	struct cxl_dport *parent_dport;
+ 	struct ida decoder_ida;
+ 	struct cxl_register_map reg_map;
++	struct cxl_component_regs regs;
+ 	int nr_dports;
++	int nr_hdmd;
+ 	int hdm_end;
+ 	int commit_end;
+ 	bool dead;
+@@ -642,6 +677,7 @@ struct cxl_port {
+ 	bool cdat_available;
+ 	long pci_latency;
+ 	resource_size_t component_reg_phys;
++	struct ida cache_ida;
  };
  
  /**
-@@ -759,6 +769,7 @@ struct cxl_dpa_info {
+@@ -769,6 +805,7 @@ struct cxl_dpa_info {
  	int nr_partitions;
  };
  
-+#define CXL_SNOOP_ID_NO_ID (-1)
++#define CXL_CACHE_ID_NO_ID (-1)
+ #define CXL_SNOOP_ID_NO_ID (-1)
  
  /**
-  * struct cxl_cache_state - State of a device's CXL cache
-@@ -768,6 +779,7 @@ struct cxl_dpa_info {
- struct cxl_cache_state {
+@@ -780,6 +817,7 @@ struct cxl_cache_state {
  	u64 size;
  	u32 unit;
-+	int snoop_id;
+ 	int snoop_id;
++	int cache_id;
  };
  
  /**
-@@ -832,6 +844,8 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
- 	return dev_get_drvdata(cxl_mbox->host);
+@@ -797,6 +835,7 @@ struct cxl_cache_state {
+  * @cxl_dvsec: Offset to the PCIe device DVSEC
+  * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
+  * @media_ready: Indicate whether the device media is usable
++ * @hdmd: Whether this device is using HDM-D flows
+  * @dpa_res: Overall DPA resource tree for the device
+  * @part: DPA partition array
+  * @nr_partitions: Number of DPA partitions
+@@ -815,6 +854,7 @@ struct cxl_dev_state {
+ 	int cxl_dvsec;
+ 	bool rcd;
+ 	bool media_ready;
++	bool hdmd;
+ 	struct resource dpa_res;
+ 	struct cxl_dpa_partition part[CXL_NR_PARTITIONS_MAX];
+ 	unsigned int nr_partitions;
+@@ -946,6 +986,10 @@ static inline int cxl_root_decoder_autoremove(struct device *host,
+ 	return cxl_decoder_autoremove(host, &cxlrd->cxlsd.cxld);
+ }
+ int cxl_endpoint_autoremove(struct device *ep_dev, struct cxl_port *endpoint);
++int cxl_endpoint_map_cache_id_regs(struct cxl_port *endpoint);
++int cxl_endpoint_get_cache_id(struct cxl_port *endpoint, int *cid);
++int cxl_endpoint_allocate_cache_id(struct cxl_port *endpoint, int id);
++void cxl_endpoint_free_cache_id(struct cxl_port *endpoint, int id);
+ 
+ /**
+  * struct cxl_endpoint_dvsec_info - Cached DVSEC info
+diff --git a/drivers/cxl/cxlcache.h b/drivers/cxl/cxlcache.h
+index 6409e25dd1b4..fe9e44fda641 100644
+--- a/drivers/cxl/cxlcache.h
++++ b/drivers/cxl/cxlcache.h
+@@ -28,7 +28,8 @@ static inline struct cxl_cachedev *to_cxl_cachedev(struct device *dev)
+ 
+ bool is_cxl_cachedev(const struct device *dev);
+ 
+-int cxl_accel_read_cache_info(struct cxl_dev_state *cxlds);
++int cxl_accel_read_cache_info(struct cxl_dev_state *cxlds, bool hdmd);
+ struct cxl_cachedev *devm_cxl_add_cachedev(struct device *host,
+ 					   struct cxl_dev_state *cxlds);
++bool cxl_cachedev_is_type2(struct cxl_cachedev *cxlcd);
+ #endif
+diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+index ae38b9965a84..c1d1d28bee5c 100644
+--- a/drivers/cxl/port.c
++++ b/drivers/cxl/port.c
+@@ -7,6 +7,7 @@
+ #include "cxlmem.h"
+ #include "cxlpci.h"
+ #include "private.h"
++#include "cxlcache.h"
+ 
+ /**
+  * DOC: cxl port
+@@ -95,10 +96,33 @@ static int cxl_mem_endpoint_port_probe(struct cxl_port *port)
+ 	return 0;
  }
  
-+int devm_cxl_snoop_filter_alloc_capacity(struct cxl_cachedev *cxlcd);
++static void free_cache_id(void *data)
++{
++	struct cxl_cachedev *cxlcd = data;
++	int id = cxlcd->cxlds->cstate.cache_id;
 +
- /**
-  * struct cxl_region_ref - track a region's interest in a port
-  * @port: point in topology to install this reference
++	cxl_endpoint_free_cache_id(cxlcd->endpoint, id);
++}
++
+ static int cxl_cache_endpoint_port_probe(struct cxl_port *port)
+ {
+-	/* No further set up required for CXL.cache devices */
+-	return 0;
++	struct cxl_cachedev *cxlcd = to_cxl_cachedev(port->uport_dev);
++	int rc, id;
++
++	rc = cxl_endpoint_map_cache_id_regs(port);
++	if (rc)
++		return rc;
++
++	rc = cxl_endpoint_get_cache_id(port, &id);
++	if (rc)
++		return rc;
++
++	rc = cxl_endpoint_allocate_cache_id(port, id);
++	if (rc < 0)
++		return rc;
++
++	cxlcd->cxlds->cstate.cache_id = id;
++	return devm_add_action_or_reset(&cxlcd->dev, free_cache_id, cxlcd);
+ }
+ 
+ static int cxl_endpoint_port_probe(struct cxl_port *port)
 -- 
 2.51.1
 
