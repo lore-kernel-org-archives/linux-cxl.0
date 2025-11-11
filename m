@@ -1,87 +1,102 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C4131BC82;
-	Tue, 11 Nov 2025 13:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9B93043BF
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Nov 2025 14:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762868514; cv=none; b=a4k3HyaMP5JEnleMToCqb2BO7Ngixs8wHS13GhSOXtDRp2Hq7ICaxSdLDwgy4WIMi+tN212PJDTSGsFpvjYsYjpQzvXs9HlQaeh9QmjHtwEpAhHvHtG07pZgSadJkCGjcLdVQu4VOGJyEqeCuCjsYMqNXJtQqjhliUj5l+o1lhY=
+	t=1762869710; cv=none; b=Ow6gwASrkGczJ+fAfzvOckgGUr5ZvSwYAFMSLMLMByVlJr6J4iYLzzGBREDgHFFtmhYdOG/FneV27Rxj3D4gfnjeZdtE37PXlBR8JpEmDq4U3yGWT8WxbtnZkMpNB4nDPUf7U+a6SJV8BW5c0DR0vmLhBRPp6Dj8HIybqtrJVKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762868514; c=relaxed/simple;
-	bh=fe1+2gEl7BKxbS6yXkWkrlv07vfe9fxQ6miKsJwM5Qo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BuFOMu99FGQstwfetL+d/HDj7fahX6nNOHG14EcBKx7b1yCIOqTjkKB0EGwCcNdt/jQ6yS4c1+V8kTmluf92UERygt2S6/XkaTJSFdqA6unW02OHrOQub5ii3E9IOAeja5Ht3YmVePovMa3esS0b+5Mm/8Bxj0KNnucTNeEgeJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d5SP60BxwzHnGgr;
-	Tue, 11 Nov 2025 21:41:30 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 358701400D9;
-	Tue, 11 Nov 2025 21:41:47 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Tue, 11 Nov
- 2025 13:41:46 +0000
-Date: Tue, 11 Nov 2025 13:41:44 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Alejandro Lucero Palau <alucerop@amd.com>
-CC: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <dan.j.williams@intel.com>, <edward.cree@amd.com>,
-	<davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<edumazet@google.com>, <dave.jiang@intel.com>, "Ben Cheatham"
-	<benjamin.cheatham@amd.com>, Fan Ni <fan.ni@samsung.com>, "Alison Schofield"
-	<alison.schofield@intel.com>
-Subject: Re: [PATCH v19 06/22] cxl: Move pci generic code
-Message-ID: <20251111134144.0000513a@huawei.com>
-In-Reply-To: <15f7fc60-b7e5-44f2-99aa-a73dbc145f59@amd.com>
-References: <20251006100130.2623388-1-alejandro.lucero-palau@amd.com>
-	<20251006100130.2623388-7-alejandro.lucero-palau@amd.com>
-	<20251007140113.000028ad@huawei.com>
-	<15f7fc60-b7e5-44f2-99aa-a73dbc145f59@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1762869710; c=relaxed/simple;
+	bh=KMzpcEkWVzPwJOALZcd5Z38NN7WAXyzUhqVifBdo8RM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IKcXJq0VsVqHs/Zv0Ttp+/eTi/LMjZ7YAG6o7XLF2ATqvYnINvG0/Fajar9R2ZUkg9fUgDftMa8xPl6w+dz89FwstuZR73qjyF6xkLyQg070ZwE8W7u6U8YrJe6BtDZDJsRyCpYnSoEj+QTeKnBGGzbn6gVFQbXtRjtKQ8pTI34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=LgO0m2jH; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="LgO0m2jH"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-8826b83e405so3588586d6.0
+        for <linux-cxl@vger.kernel.org>; Tue, 11 Nov 2025 06:01:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1762869705; x=1763474505; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iVIlbaArLD+xEsJRTgweLsSstkPgQPx6U1v6mUAh+wQ=;
+        b=LgO0m2jH5gRmBfTq3ouXolP/anXHVuWs5qK0vAC5ByrETiRazeFQx0BB0v8+9Sse4w
+         aHlc6NgrMc6sHiQnUyaXXmwcDER0vXvKB1nqzEYKRGs94Wa2kfBF3d1CWQkNeS84vZOV
+         3WxcPHeMNIpky5rJUJT09Z/cmFt+eXf7nQXfgy0LWpEBY7AGa//V4nyBjWS1DP56eB9W
+         4CxGm4UKpAacET54Ik8oRIe0d0Pl0JKjQoBhj9/1s4B988AIYQr7y5IOUkk8+Dcv+SYJ
+         cF2x+/KVE9j0718s6xZ/rIg5Ku6VNnPlIt+WL9ZQsWGmcxz7907TaDStYi69ZWd2uZI+
+         MQeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762869705; x=1763474505;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iVIlbaArLD+xEsJRTgweLsSstkPgQPx6U1v6mUAh+wQ=;
+        b=MSBfw0WExwlPjLiHwxn2pd0NkHye+9yx59Ug7+M1ZTi+6tnx7E0Q8HD1/5fCPGRFjt
+         7WsBn5agFlJiOqEQhEGHyJxWPcdjtQ29pw4z1R9XJ0egOIrhcIqoanoy9LHcgDl6Ijvi
+         B+RWJW/KQI81jBbn66ItvR6Ly1E9Rvez+SZEbazXJLC7LYdwrjicvJuAv7OUdM4Jot10
+         pUs8D99Pq0J73w9hf9Gsj2u7/pU42/ZynLwUmSiwF9JZ7POrE8GUY8soAnM/r8yoMjmk
+         Y5AMRjSVZFlBkD+HCxGP6mNCozv1bUHQn4Z+658hueJTonIS6kVC3EdNGDXyNairxEtW
+         iu0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVDww1+uriaPEO/Fu+Ne4l/KbNSXlNO2q3rBwPEUGn6Asz8WECsm+yQknK3ywLk71GW0HfsJUdftS4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAgOWIgRomTdhCa+Y7uGnY2LSpNf0HQP2aGyg9x6CqUt6GQg1a
+	SsoVE2KWN4sne4mrCb/Gi26ttGtHrXVyXWkxywcLjrEwjq9pE81DENNZToJ8li70K+4=
+X-Gm-Gg: ASbGncvidVN775Z9Mt8j3ZHIQMPmVHaSZz7thjY5VFhbIHXWNg628Er8wMpLgNYpwK4
+	yOsHZYs8Y1SuF9rUFf0Wk9g5WrYFgP7vXpmJylXogNVEE4BP+FerCzp1H4LKXgb/kF6bzRDcgwC
+	SeEcuLj+6OHpAKdXwrhjaWu14u1Fat2mezhtRZSxVANONqzEucqfFjdjpC1PYkDkSaGSvvmWCDz
+	f1178pjpQm/XSX4twVJRJp7PB/CLI6wyf3UIBb8Y1k9ifSjSCc+TgJ61cALdLlMwGsQTW3LaxNb
+	KmmfHZ9N+rZ2DExfgV3iE6UQ1qBft7rZU38R8+wtK4htsVMmWVLGzxHVrn0WA8Dvs6BCDZgtQQ8
+	Wm8a2yc3PD4B8DJVyqxlGp2eOCNSgqyitrWgCDAgsgKvUcx8F7LFI0Y6SX6o2t45Eci/qLEp1So
+	MbB3p2Ku4mjl289PAjZCZPTZVKMRgLNHiwVPddZZhJkVQgZFNU+6FtM2aosalit3u/1OWTHw==
+X-Google-Smtp-Source: AGHT+IFWbPEXPWLzIkOWVIuQ03hw2eJ8p8ZC0z6FbQbFz3rRhv7LpdqZn+aAf49WvkXXdHfZGzUa0Q==
+X-Received: by 2002:a05:6214:cc4:b0:880:480c:6051 with SMTP id 6a1803df08f44-882385eeba3mr152689066d6.5.1762869704944;
+        Tue, 11 Nov 2025 06:01:44 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-88263830feesm11249586d6.36.2025.11.11.06.01.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Nov 2025 06:01:43 -0800 (PST)
+Date: Tue, 11 Nov 2025 09:01:42 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>
+Subject: Re: [PATCH v4 00/14] cxl: ACPI PRM Address Translation Support and
+ AMD Zen5 enablement
+Message-ID: <aRNBxlZhxWlaNL2P@gourry-fedora-PF4VCD3F>
+References: <20251103184804.509762-1-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251103184804.509762-1-rrichter@amd.com>
 
-On Mon, 10 Nov 2025 11:23:53 +0000
-Alejandro Lucero Palau <alucerop@amd.com> wrote:
-
-> On 10/7/25 14:01, Jonathan Cameron wrote:
-> > On Mon, 6 Oct 2025 11:01:14 +0100
-> > alejandro.lucero-palau@amd.com wrote:
-> >  
-> >> From: Alejandro Lucero <alucerop@amd.com>
-> >>
-> >> Inside cxl/core/pci.c there are helpers for CXL PCIe initialization
-> >> meanwhile cxl/pci.c implements the functionality for a Type3 device
-> >> initialization.
-> >>
-> >> Move helper functions from cxl/pci.c to cxl/core/pci.c in order to be
-> >> exported and shared with CXL Type2 device initialization.
-> >>
-> >> Fix cxl mock tests affected by the code move, deleting a function which
-> >> indeed was not being used since commit 733b57f262b0("cxl/pci: Early
-> >> setup RCH dport component registers from RCRB").
-> >>  
-> > Trivial but can we pull out that code removal as a separate patch?
-> > It's something Dave would probably pick up immediately.  
+On Mon, Nov 03, 2025 at 07:47:41PM +0100, Robert Richter wrote:
+> This patch set adds support for address translation using ACPI PRM and
+> enables this for AMD Zen5 platforms. This is another new appoach in
+> response to earlier attempts to implement CXL address translation:
 > 
+>  * v1: [1] and the comments on it, esp. Dan's [2],
+>  * v2: [3] and comments on [4], esp. Dave's [5]
+>  * v3: [6] and comments on it, esp. Dave's [7]
 > 
-> The justification for the removal comes from the changes introduced in 
-> this patch, so I think it should be fine to keep it as it is now, but if 
-> Dave prefers, I will do so. Not going it for v20 though.
-Ok. My confusion is this commit message says the function was not being
-used since commit ...
-Which isn't this patch.  Either that is true and the removal is unrelated
-or that description needs a tweak.
 
-Jonathan
+Have been testing this on my Zen5 systems backported to v6.16 with
+Terry's updated PCIe set as well and everything looks stable.
+
+Tested-by: Gregory Price <gourry@gourry.net>
