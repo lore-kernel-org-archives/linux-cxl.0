@@ -1,161 +1,337 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24ED28A701;
-	Wed, 12 Nov 2025 14:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8258D31B11F;
+	Wed, 12 Nov 2025 14:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762957595; cv=none; b=YyeFQAhQmhtzqfxbtxW7R4RobDeZ3/Lt3aVVoasmI0hxj7pZE1aNpuldL73QA73bUU8RvBw5fm1hHtQyc0OTzYr9xwIngyjqNMAThd29G2grah7kUkSDYQR2PSUXTxuEw7NFeRHma4a6M8vYkpvkFSkS8aUgAeGiIq6YHhJXkn8=
+	t=1762959235; cv=none; b=ZovctIHK2cRLMWJmEbBk32e1O7kOzU0HQPMltY5NLQovwdOmET7nJoUVRBAjURejp3o6jFPty4u5rDp3yWZ6SvM4NiYtvPwAJlan9OWl5TlXiHNjgH83TpH1NMxE4xMqZd+NGZ8Iem0MG/ADGYrI4Dr296qhG/yMrbuR2cOMG8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762957595; c=relaxed/simple;
-	bh=bNLqGrg/bxt16UHYQqXWyzLbnJanuTnn/DSzlHMqam8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qtqkH8KDJQJjkvIg1VxhtdsslmxVSp+JzGZ1eDETk9gLV+3LtC3LZ3UfqxclgnpUPBMBb8ad4aCUNoASSQGa2qV+3aNDjYGnnGss44naSBPz6mMissH6LIF12GL1+ggN/qHjUppwErkbg/iMjZ2pObPxB6Uq57GyoG6Vy5fG0Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4iXCp4z; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4iXCp4z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02366C19422;
-	Wed, 12 Nov 2025 14:26:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762957594;
-	bh=bNLqGrg/bxt16UHYQqXWyzLbnJanuTnn/DSzlHMqam8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m4iXCp4znKZvCzYkjhXZu1JL4COAdGb7yAm9UmEyz0xmhqXKj2K9504lPVGuTy2Jw
-	 oIs3gFjFC88Pg6vs33x0Y9J4Rt1LUAOWf+RlfjFyxs91gx9kSFDB51FMvZyE5chPXE
-	 aGtArRih0bDKoqGUZ1CFOq9Z1gR5u0u7H+Ia54U4ZgBoOw6F7RHwsyZbtTo73P+YtI
-	 MlFexT96E5ZxLwczc2sajdvyTdAl2dfa5pilRItuDN9x8WGEYbXAh10Kg5gBAGhHeA
-	 FzJ4mZv2YeFA2oWEIhZbh7ljpXAZyuUSAV7u6Cyu3iLC+0hy5axy54UvXp2gQgfYvb
-	 AydcA8t3H0Huw==
-Date: Wed, 12 Nov 2025 08:26:32 -0600
-From: Rob Herring <robh@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Len Brown <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
-	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 05/29] dt-bindings: bus: Add simple-platform-bus
-Message-ID: <20251112142632.GA1610836-robh@kernel.org>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-6-herve.codina@bootlin.com>
- <20251030141448.GA3853761-robh@kernel.org>
- <20251031162004.180d5e3f@bootlin.com>
+	s=arc-20240116; t=1762959235; c=relaxed/simple;
+	bh=rU0MyBBa/qOE8ElCHxl5lBbOyLP/0fAGsE3HWNBfSqw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rIQqnsbvkLbPxnAQ5D21g240RrdKx4zDjPUm83fP3fT7sU1YEEd7rNKBEaCVzrQoUEP7PokhF3hugFHIsY6By/1f+42XrGw5i7OPDzVVYqCD79CyA7GK52U/TOmZ5sylI/CwVyvm+75nbxDnNMG7CxVN2LBQscZDWOz+KeCMCwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d65xd1BXXzHnGf9;
+	Wed, 12 Nov 2025 22:53:25 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6429C1402CB;
+	Wed, 12 Nov 2025 22:53:44 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 12 Nov
+ 2025 14:53:43 +0000
+Date: Wed, 12 Nov 2025 14:53:41 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: <alejandro.lucero-palau@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
+	<dave.jiang@intel.com>
+Subject: Re: [PATCH v20 01/22] cxl/mem: Arrange for always-synchronous
+ memdev attach
+Message-ID: <20251112145341.00005b4e@huawei.com>
+In-Reply-To: <20251110153657.2706192-2-alejandro.lucero-palau@amd.com>
+References: <20251110153657.2706192-1-alejandro.lucero-palau@amd.com>
+	<20251110153657.2706192-2-alejandro.lucero-palau@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251031162004.180d5e3f@bootlin.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Fri, Oct 31, 2025 at 04:20:04PM +0100, Herve Codina wrote:
-> Hi Rob,
+On Mon, 10 Nov 2025 15:36:36 +0000
+alejandro.lucero-palau@amd.com wrote:
+
+> From: Dan Williams <dan.j.williams@intel.com>
 > 
-> On Thu, 30 Oct 2025 09:14:48 -0500
-> Rob Herring <robh@kernel.org> wrote:
+> In preparation for CXL accelerator drivers that have a hard dependency on
+> CXL capability initialization, arrange for the endpoint probe result to be
+> conveyed to the caller of devm_cxl_add_memdev().
 > 
-> > On Wed, Oct 15, 2025 at 09:13:52AM +0200, Herve Codina wrote:
-> > > A Simple Platform Bus is a transparent bus that doesn't need a specific
-> > > driver to perform operations at bus level.
-> > > 
-> > > Similar to simple-bus, a Simple Platform Bus allows to automatically
-> > > instantiate devices connected to this bus.
-> > > 
-> > > Those devices are instantiated only by the Simple Platform Bus probe
-> > > function itself.  
-> > 
-> > Don't let Greg see this... :)
-> > 
-> > I can't say I'm a fan either. "Platform bus" is a kernel thing, and the 
-> > distinction here between the 2 compatibles is certainly a kernel thing.
-> > 
-> > I think this needs to be solved within the kernel.
+> As it stands cxl_pci does not care about the attach state of the cxl_memdev
+> because all generic memory expansion functionality can be handled by the
+> cxl_core. For accelerators, that driver needs to know perform driver
+> specific initialization if CXL is available, or exectute a fallback to PCIe
+> only operation.
 > 
-> I fully agree with that.
+> By moving devm_cxl_add_memdev() to cxl_mem.ko it removes async module
+> loading as one reason that a memdev may not be attached upon return from
+> devm_cxl_add_memdev().
 > 
-> > 
-> > What I previously said is define a list of compatibles to not 
-> > instantiate the child devices. This would essentially be any case having 
-> > a specific compatible and having its own driver. So if someone has 
-> > 'compatible = "vendor,not-so-simple-bus", "simple-bus"', when and if 
-> > they add a driver for "vendor,not-so-simple-bus", then they have to add 
-> > the compatible to the list in the simple-pm-bus driver. I wouldn't 
-> > expect this to be a large list. There's only a handful of cases where 
-> > "simple-bus" has a more specific compatible. And only a few of those 
-> > have a driver. A more general and complicated solution would be making 
-> > linux handle 2 (or more) drivers matching a node and picking the driver 
-> > with most specific match. That gets complicated with built-in vs. 
-> > modules. I'm not sure we really need to solve that problem.
+> The diff is busy as this moves cxl_memdev_alloc() down below the definition
+> of cxl_memdev_fops and introduces devm_cxl_memdev_add_or_reset() to
+> preclude needing to export more symbols from the cxl_core.
 > 
-> Right. Let discard the "more general and complicated solution" and focus
-> on the list of compatible to avoid child devices instantiation.
-> 
-> Do you mean that, for "simple-bus" compatible we should:
->  - Remove the recursive device instantiation from of_platform_populate().
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-That may be a problem I hadn't considered. While we've solved most probe 
-ordering issues, I think some may remain. Even when of_platform_populate() 
-is called affects this. For example, I tried removing various arm32 
-of_platform_.*populate() calls which run earlier than the default call, 
-but that broke some platforms. (Looking at the list of remaining ones, I 
-fixed the at91 pinctrl/gpio drivers, but never tried to remove the 
-calls again.)
+Alejandro, read submitting patches again.  Whilst the first sign off should
+indeed by Dan's this also needs one from you as a 'handler' of the patch.
 
-Maybe this can be restricted to cases which are not recursively created 
-from the root node. Not sure how we detect that. Perhaps no OF_POPULATED 
-flag on the parent node? Or we could just enable this for OF_DYNAMIC 
-nodes? That should be sufficient for your usecase.
+Be very careful checking these tag chains. If they are wrong no one can
+merge the set and it just acts as a silly blocker.
 
-I would like to solve this more generally though. So we could try it in 
-kernelci and/or linux-next and see what happens.
+I would have split this up and made the changes to cxl_memdev_alloc in
+a precursor patch (use of __free is obvious one) then could have stated
+that that was simply moved in this patch.
 
->  - In simple-bus probe(), check the device we probe against the
->    'no_instantiate_children' list
->       - If it matches, do not instantiate chidren
->       - If it doesn't match instantiate children
+There are other changes in there that are really hard to spot though
+and I think there are some bugs lurking in error paths.
 
-Right.
+Jonathan
 
-Rob
+> ---
+>  drivers/cxl/Kconfig       |   2 +-
+>  drivers/cxl/core/memdev.c | 101 ++++++++++++++------------------------
+>  drivers/cxl/mem.c         |  41 ++++++++++++++++
+>  drivers/cxl/private.h     |  10 ++++
+>  4 files changed, 90 insertions(+), 64 deletions(-)
+>  create mode 100644 drivers/cxl/private.h
+
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index e370d733e440..14b4601faf66 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/idr.h>
+>  #include <linux/pci.h>
+>  #include <cxlmem.h>
+> +#include "private.h"
+>  #include "trace.h"
+>  #include "core.h"
+>  
+> @@ -648,42 +649,25 @@ static void detach_memdev(struct work_struct *work)
+>  
+>  static struct lock_class_key cxl_memdev_key;
+>  
+> -static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+> -					   const struct file_operations *fops)
+> +int devm_cxl_memdev_add_or_reset(struct device *host, struct cxl_memdev *cxlmd)
+>  {
+> -	struct cxl_memdev *cxlmd;
+> -	struct device *dev;
+> -	struct cdev *cdev;
+> +	struct device *dev = &cxlmd->dev;
+> +	struct cdev *cdev = &cxlmd->cdev;
+>  	int rc;
+>  
+> -	cxlmd = kzalloc(sizeof(*cxlmd), GFP_KERNEL);
+> -	if (!cxlmd)
+> -		return ERR_PTR(-ENOMEM);
+> -
+> -	rc = ida_alloc_max(&cxl_memdev_ida, CXL_MEM_MAX_DEVS - 1, GFP_KERNEL);
+> -	if (rc < 0)
+> -		goto err;
+> -	cxlmd->id = rc;
+> -	cxlmd->depth = -1;
+> -
+> -	dev = &cxlmd->dev;
+> -	device_initialize(dev);
+> -	lockdep_set_class(&dev->mutex, &cxl_memdev_key);
+> -	dev->parent = cxlds->dev;
+> -	dev->bus = &cxl_bus_type;
+> -	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
+> -	dev->type = &cxl_memdev_type;
+> -	device_set_pm_not_required(dev);
+> -	INIT_WORK(&cxlmd->detach_work, detach_memdev);
+> -
+> -	cdev = &cxlmd->cdev;
+> -	cdev_init(cdev, fops);
+> -	return cxlmd;
+> +	rc = cdev_device_add(cdev, dev);
+> +	if (rc) {
+> +		/*
+> +		 * The cdev was briefly live, shutdown any ioctl operations that
+> +		 * saw that state.
+> +		 */
+> +		cxl_memdev_shutdown(dev);
+> +		return rc;
+> +	}
+>  
+> -err:
+> -	kfree(cxlmd);
+> -	return ERR_PTR(rc);
+> +	return devm_add_action_or_reset(host, cxl_memdev_unregister, cxlmd);
+>  }
+> +EXPORT_SYMBOL_NS_GPL(devm_cxl_memdev_add_or_reset, "CXL");
+>  
+>  static long __cxl_memdev_ioctl(struct cxl_memdev *cxlmd, unsigned int cmd,
+>  			       unsigned long arg)
+> @@ -1051,50 +1035,41 @@ static const struct file_operations cxl_memdev_fops = {
+>  	.llseek = noop_llseek,
+>  };
+>  
+> -struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
+> -				       struct cxl_dev_state *cxlds)
+> +struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds)
+>  {
+> -	struct cxl_memdev *cxlmd;
+> +	struct cxl_memdev *cxlmd __free(kfree) =
+> +		kzalloc(sizeof(*cxlmd), GFP_KERNEL);
+
+Trivial and perhaps not worth the hassle.
+I'd pull this out of the declarations block to have
+
+ 	struct device *dev;
+ 	struct cdev *cdev;
+ 	int rc;
+
+	struct cxl_memdev *cxlmd __free(kfree) =
+		kzalloc(sizeof(*cxlmd), GFP_KERNEL);
+	if (!cxlmd)
+		return ERR_PTR(-ENOMEM);
+
+That is treat the __free() related statement as an inline declaration of
+the type we only really allow for these.
+
+
+>  	struct device *dev;
+>  	struct cdev *cdev;
+>  	int rc;
+>  
+> -	cxlmd = cxl_memdev_alloc(cxlds, &cxl_memdev_fops);
+> -	if (IS_ERR(cxlmd))
+> -		return cxlmd;
+>  
+> -	dev = &cxlmd->dev;
+> -	rc = dev_set_name(dev, "mem%d", cxlmd->id);
+> -	if (rc)
+> -		goto err;
+> +	if (!cxlmd)
+> +		return ERR_PTR(-ENOMEM);
+>  
+> -	/*
+> -	 * Activate ioctl operations, no cxl_memdev_rwsem manipulation
+> -	 * needed as this is ordered with cdev_add() publishing the device.
+> -	 */
+> +	rc = ida_alloc_max(&cxl_memdev_ida, CXL_MEM_MAX_DEVS - 1, GFP_KERNEL);
+> +	if (rc < 0)
+> +		return ERR_PTR(rc);
+> +	cxlmd->id = rc;
+> +	cxlmd->depth = -1;
+>  	cxlmd->cxlds = cxlds;
+>  	cxlds->cxlmd = cxlmd;
+
+These two lines weren't previously in cxl_memdev_alloc()
+I'd like a statement in the commit message of why they are now. It seems
+harmless because they are still ordered before the add and are
+ultimately freed 
+
+I'm not immediately spotting why they now are.  This whole code shift
+and complex diff is enough of a pain I'd be tempted to do the move first
+so that we can then see what is actually changed much more easily.
+
+
+>  
+> -	cdev = &cxlmd->cdev;
+> -	rc = cdev_device_add(cdev, dev);
+> -	if (rc)
+> -		goto err;
+> -
+> -	rc = devm_add_action_or_reset(host, cxl_memdev_unregister, cxlmd);
+> -	if (rc)
+> -		return ERR_PTR(rc);
+> -	return cxlmd;
+> +	dev = &cxlmd->dev;
+> +	device_initialize(dev);
+> +	lockdep_set_class(&dev->mutex, &cxl_memdev_key);
+> +	dev->parent = cxlds->dev;
+> +	dev->bus = &cxl_bus_type;
+> +	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
+> +	dev->type = &cxl_memdev_type;
+> +	device_set_pm_not_required(dev);
+> +	INIT_WORK(&cxlmd->detach_work, detach_memdev);
+>  
+> -err:
+> -	/*
+> -	 * The cdev was briefly live, shutdown any ioctl operations that
+> -	 * saw that state.
+> -	 */
+> -	cxl_memdev_shutdown(dev);
+> -	put_device(dev);
+> -	return ERR_PTR(rc);
+> +	cdev = &cxlmd->cdev;
+> +	cdev_init(cdev, &cxl_memdev_fops);
+> +	return_ptr(cxlmd);
+>  }
+> -EXPORT_SYMBOL_NS_GPL(devm_cxl_add_memdev, "CXL");
+> +EXPORT_SYMBOL_NS_GPL(cxl_memdev_alloc, "CXL");
+>  
+>  static void sanitize_teardown_notifier(void *data)
+>  {
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index d2155f45240d..fa5d901ee817 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -7,6 +7,7 @@
+>  
+>  #include "cxlmem.h"
+>  #include "cxlpci.h"
+> +#include "private.h"
+>  
+>  /**
+>   * DOC: cxl mem
+> @@ -202,6 +203,45 @@ static int cxl_mem_probe(struct device *dev)
+>  	return devm_add_action_or_reset(dev, enable_suspend, NULL);
+>  }
+>  
+> +static void __cxlmd_free(struct cxl_memdev *cxlmd)
+> +{
+> +	cxlmd->cxlds->cxlmd = NULL;
+> +	put_device(&cxlmd->dev);
+> +	kfree(cxlmd);
+> +}
+> +
+> +DEFINE_FREE(cxlmd_free, struct cxl_memdev *, __cxlmd_free(_T))
+> +
+> +/**
+> + * devm_cxl_add_memdev - Add a CXL memory device
+> + * @host: devres alloc/release context and parent for the memdev
+> + * @cxlds: CXL device state to associate with the memdev
+> + *
+> + * Upon return the device will have had a chance to attach to the
+> + * cxl_mem driver, but may fail if the CXL topology is not ready
+> + * (hardware CXL link down, or software platform CXL root not attached)
+> + */
+> +struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
+> +				       struct cxl_dev_state *cxlds)
+> +{
+> +	struct cxl_memdev *cxlmd __free(cxlmd_free) = cxl_memdev_alloc(cxlds);
+> +	int rc;
+> +
+> +	if (IS_ERR(cxlmd))
+> +		return cxlmd;
+> +
+> +	rc = dev_set_name(&cxlmd->dev, "mem%d", cxlmd->id);
+> +	if (rc)
+> +		return ERR_PTR(rc);
+> +
+> +	rc = devm_cxl_memdev_add_or_reset(host, cxlmd);
+> +	if (rc)
+> +		return ERR_PTR(rc);
+
+Is the reference tracking right here?  If the above call fails
+then it is possible cxl_memdev_unregister() has been called
+or just cxl_memdev_shutdown().
+
+If nothing else (and I suspect there is worse but haven't
+counted references) that will set
+cxlmd->cxlds = NULL;
+s part of cxl_memdev_shutdown()
+The __cxlmd_free() then dereferences that and boom.
+
+
+> +
+> +	return no_free_ptr(cxlmd);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(devm_cxl_add_memdev, "CXL");
+
