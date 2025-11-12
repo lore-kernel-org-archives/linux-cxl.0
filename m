@@ -1,98 +1,85 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08DE2E3AF1
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 22:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A889A186294
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 23:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762987250; cv=none; b=fkUQHIWnEc0EHH3rQO7bGelDI+KRk5cyTdwaPGKhnS4jl34eynqI4uLcP0SSq+3yvMXbnKVhkVXN49gT9OjzSEpwKwb18RsO/cbFZE4v9dAxTuR5ytBkOyYnucPlIE3+tIWTTKjfDN6AH+GWiIER8+Pp/BXJ/iDUeEkZQ+CSxeo=
+	t=1762988445; cv=none; b=hAUbOClaXYIGFqpsLfgDgVAA7vmMlANDQw4Sr/fsOMqKSdRZha9XmguUxV9jF6z/0Wsm1S8nKHkr7Jr+Q28K0jPCNTNWzYJdOa1OVu+XFYcH+PkLn/yy+Y7tNVMHj0XL8T+cBYlL5mm6jibnguRXQ/XC1GFG5M7izuF+Ev+w93s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762987250; c=relaxed/simple;
-	bh=P8wB0FO0yByvcvYYoigc7wENN3w1QKW/CVSgfU3dczk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q9Z6T8Vv5E+F0xuc+GCqB6UqPn+zGf0XEV66i18KC07cDLRLRrAHn2r/ryfV63EDRl8H/0yvbY2LYe8U3T/45EOdjnvrWYDdhCCisRZtf4rJBqbtZ8H3q0SYGzhQW1kQWiZ0XFixTFb+KnhYCVGMNg2Ck+VLSBH/1i87LKNFPHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=gFuUU9NL; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1762988445; c=relaxed/simple;
+	bh=vS2mZNb/QPOp/YjlDKrru+c71JmWvPZTAinIhh6sfBo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ddUoL2D6stDn6gkCvaCgWJXWY50weNYPG0gkPynBp6MfdheE5FuR4GAWz2KYeFaz8clQZWLYa+/CMCESQaGfd30CXJOWi+mxyuov4ZQdgwbFWxayndZ59zCsdUN9WxG8HshogcL1MH8QIcsCTXF6Qqo8wLFSsrd55L+7BicyZF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f2/0crNo; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="gFuUU9NL"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-8b272a4ca78so27671685a.1
-        for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 14:40:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1762987247; x=1763592047; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=F17wxxxXjWtCXfhR3CI+FvZY7BooVKr92Re6tDYp9Fw=;
-        b=gFuUU9NLnPq0pZltIS7VfSRVBI9hAcVHRRKJ9jUfTXh4j/PYZz0aXktUxkZLvcSfp1
-         c/T2qLIVUjVgwvlm/T9qvbQOMG9DQnYApp/n3ZkuNUIngmsF9+V3bR9iZQzYnOGPsaqe
-         8FRJXOYxh8yKmxRqa6kJAGmVjutpalAZr+uuKWNkKOEDPM8f701eQ9wLu+EVC3Y9lmXF
-         bmJVI78QzSCqkdKZTA9vhq0GA3fdZNIXt6hewOe/8wGY2rFa25WFZME7G4lWynAoU5Jd
-         MktZ527Rw80xRWTW6pvVn1FkowIjeo660niVLgj5XfimGTKGzj2YYOpP4ondsd27ydr2
-         Y9gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762987247; x=1763592047;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F17wxxxXjWtCXfhR3CI+FvZY7BooVKr92Re6tDYp9Fw=;
-        b=eA9L6/5wM33beBlA/g3uSE1sYQ73AZ4XRCK4s5SgAf6a1N2xrEn+qmVHSFfV+EQ2uH
-         WOgD51WmoAUhvR6xV/qrmdEf0W78G+dmX6V3r/vWcWi5IZqtTXpokUzzqLO5FdCKE1ab
-         6yqU+0n+qUn63E/4pTFELaNPrachFvRYL3IUNwJus5Xq/uFITmE3ek833rvIDuCLKZHE
-         gTM6p8qQttc8BNCd0fxYiwZJn/gEsyajCqWC9ItjzOB2wxhpP2Ln+Yy6kgwuRS12t7Hs
-         BAMEFKLxb5NgJHqgABxTplgTsx/IP2rXKnGJkbe1UdPcyuvR3Ot+fRPpBJ0UE9SmCQQ0
-         PfQw==
-X-Forwarded-Encrypted: i=1; AJvYcCW3lLBxYSFKWxKjziumsh1Z6dKVMiPsP9ej73YMRcwuc+lnMutMmN7Z/HEmXIkVxR74/GW/j3NBrsk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxT/CFLhaEsVi3sqVrtGUYCIaEF/LtqewSIIn60vK38znPlGte
-	IED7iuK2atAoNmdPgj1HqD8Zqofz/vxKSx/x6uy34UbZNND/KrAJRZ6rZaWMHvtXEpQ=
-X-Gm-Gg: ASbGncuR/E7Nr5lmqTJgmmPPmMUQdYz+eF7iHsGIywICz5pSshs/guWSnZmFpSBgljx
-	dAZhY/GHK1HkNJ/m71TQJjZFXZYgidNsHNu7MoHpgKlTOC9bKjb9cRDYWHvtLnCOxEXuKi56Cod
-	0BMs2KdF34a/KuGMr3iI6tBw9dAIwG6Ybgv1D17BYzLsap5JPySErwi5Nkt8WlZwv6vd+cP7oQE
-	ya6+ucsUzSNXLCfcuHM+an/fg0UceJSdeZsf8P9iPCmmbz0Knzn76Ayplg3qceH87oMF9zej+SY
-	n7VFQjHQWLadejhnccq0swe86iQmkjD7whOFClrmRZ3Flotxz6Mf4gcqNQ4zc+3W6e9nayCGj3N
-	j7wqEVudEa96CDj7LpONRJnFwDIfmHnaYAGmNAMPmH3EEmThfA/2I8jaY3qOQfubaeudH7Rc5dE
-	uGCCqbY0pVoRBcEr3b5yaELJwJe4zbY0km8QSeLc7p03X0pNdkv0b1AE1GR7o=
-X-Google-Smtp-Source: AGHT+IHsrZxr2i8YDSF/b/oh9D32f8B4GcLii5rT3OW7CqVC+9w6JNHV8qPW/fd6ArMwiMM3EC3jWQ==
-X-Received: by 2002:a05:620a:4112:b0:8b2:1f8d:f115 with SMTP id af79cd13be357-8b29b7df2f6mr678375485a.65.1762987247480;
-        Wed, 12 Nov 2025 14:40:47 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b2aee9eeb1sm12252285a.8.2025.11.12.14.40.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 14:40:47 -0800 (PST)
-Date: Wed, 12 Nov 2025 17:40:45 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>
-Subject: Re: [PATCH 3/3] cxl/region: Remove local variable @inc in
- cxl_port_setup_targets()
-Message-ID: <aRUM7bij1XY6sInV@gourry-fedora-PF4VCD3F>
-References: <20251112205105.1271726-1-rrichter@amd.com>
- <20251112205105.1271726-4-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f2/0crNo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762988444; x=1794524444;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=vS2mZNb/QPOp/YjlDKrru+c71JmWvPZTAinIhh6sfBo=;
+  b=f2/0crNoYC+A4mKKobYtqYM12/b6AmIfLAeA1iIRZGjTeDZg1fv08eL1
+   zIdPJG3L42zvwB/Ids93XPeuKrgL7PC96zhSn0hD+AVZfOvz94DYfhWVR
+   3fm426c0FTzCHXwRDg7i7VdNaMisxLLumxPCJAleLOZWWkDcUtFvwMbOw
+   HsWIkfFkCzhGqriFW9ypQooOIERXQJfInlqKOCoTfu2oSYqj2lTpx68sf
+   iC9hCQzJ6wxTmPFsPTgzV/ecpKHi2yLIj2r/fUQGhZWNIrXM1PDieVzaW
+   lsVnDR3hs0WP5KCjm352Mt+lu42etpyZNe/FtlkdYPscb+HMod0lE8ZCT
+   w==;
+X-CSE-ConnectionGUID: 1/8TGP4WRq2W2hp8vmf3Hg==
+X-CSE-MsgGUID: tOsCE6GYSWKwgxk3aWwyTQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11611"; a="75676151"
+X-IronPort-AV: E=Sophos;i="6.19,300,1754982000"; 
+   d="scan'208";a="75676151"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 15:00:43 -0800
+X-CSE-ConnectionGUID: wFqbLcZMQMOgzl/w2zS1/A==
+X-CSE-MsgGUID: MSlBcvetQj+O9SlVYTJdCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,300,1754982000"; 
+   d="scan'208";a="189197553"
+Received: from spandruv-mobl4.amr.corp.intel.com (HELO [10.125.108.30]) ([10.125.108.30])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 15:00:41 -0800
+Message-ID: <7602dde9-ff71-4bde-a056-58c171e25ea5@intel.com>
+Date: Wed, 12 Nov 2025 16:00:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251112205105.1271726-4-rrichter@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] cxl: Cleanup region_res_match_cxl_range() function
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: dan.j.williams@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com
+References: <20251106170108.1468304-1-dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20251106170108.1468304-1-dave.jiang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Nov 12, 2025 at 09:51:04PM +0100, Robert Richter wrote:
-> Simplify the code by removing local variable @inc. The variable is not
-> used elsewhere, remove it and directly increment the target number.
+
+
+On 11/6/25 10:01 AM, Dave Jiang wrote:
+> Small series rename and clean up comment of region_res_match_cxl_range().
 > 
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Dave Jiang (2):
+>   cxl: Rename region_res_match_cxl_range() to spa_maps_hpa()
+>   cxl: Clarify comment in spa_maps_hpa()
+> 
+>  drivers/cxl/core/region.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> 
+> base-commit: 6146a0f1dfae5d37442a9ddcba012add260bceb0
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+Applied to cxl/next
+c43521b9db7f5ed481cfdfb04ad2e7fe0cb9dcf5
+8d27dd0b219f00fc1e0548ae5008abd7bb350611
+
 
