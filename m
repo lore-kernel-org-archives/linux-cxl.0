@@ -1,42 +1,42 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DE4347BC9;
-	Wed, 12 Nov 2025 14:57:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9046D34E763;
+	Wed, 12 Nov 2025 15:00:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762959471; cv=none; b=Egpi3kPnKli2UUGrqVQRmK1F/3KeIThpXfSJTcTRSOzrQ2ANG45Q4eLx9FyFBH5hR2JoAkHHPn//HDsSWbYbKQtUHTVUZHl3HU3y8c04Y8kFHTSiGXP7l23PKcwL7hOPkixMdjKske4iKTy/yQ4ESW78rBLBO1KztCUnLZShwRM=
+	t=1762959656; cv=none; b=L5ESHQQFHZKA9pmf2Tif7Ebe8fTsxfttNm7tey9z499dnIavHFeN6oW1SxQNqFNHsaPOhJIvJrcTCvDWiMGMJQ5gAuOyjzYVYDrtsY8D9lkPy0mem7NzY4GHwdAHxLwGY+FsxpZeh5XHJJZGKVZRyTvUpcfSzmXs6Vtt98feUWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762959471; c=relaxed/simple;
-	bh=aTwqvPfWOeYJQqqzPM5NDZoXgiN4DjHpYrR/AV+lr5M=;
+	s=arc-20240116; t=1762959656; c=relaxed/simple;
+	bh=S+PyYYzTuXQCv8RPHj7xGnHIGy7tg7vHYYIK3s3OVDI=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V971PUpCuHxUJyhRoHPMaTZLnaEpe66kvx+Ewh6NZOYalMnM+b937rnOMuMjciR6N6t+iP0GaT899h+OIwPoo9iQasnKoGK/gUOEDJTszXZ9vhITtIXfhlZghyFNJwyIZq5pwdG6Q+bmT7zHzeYZ88K1ZcTbiOekCeCr+YdAD6E=
+	 MIME-Version:Content-Type; b=QOsWXkbGdA8rMLSAS33fvj+xAqX5N/I8njDH74XSv540eN+V1jINYvvgULF82NUYLuLYBJpcBl+dydbuz/9S6omBmNvJDxsu6Tmhd0jODQbvtOGRkuuMplzynm9N8xXs2J2ZDKPoIMRxu79UvhoDAKERaahybiQxlAAbMf0MOg4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d662H4kKXzHnH8m;
-	Wed, 12 Nov 2025 22:57:27 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d665r6JDVzHnH95;
+	Wed, 12 Nov 2025 23:00:32 +0800 (CST)
 Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id E0042140371;
-	Wed, 12 Nov 2025 22:57:46 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 232C51402CB;
+	Wed, 12 Nov 2025 23:00:52 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
  (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 12 Nov
- 2025 14:57:46 +0000
-Date: Wed, 12 Nov 2025 14:57:44 +0000
+ 2025 15:00:51 +0000
+Date: Wed, 12 Nov 2025 15:00:50 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: <alejandro.lucero-palau@amd.com>
 CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
 	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
 	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
 	<dave.jiang@intel.com>
-Subject: Re: [PATCH v20 02/22] cxl/port: Arrange for always synchronous
- endpoint attach
-Message-ID: <20251112145744.0000595f@huawei.com>
-In-Reply-To: <20251110153657.2706192-3-alejandro.lucero-palau@amd.com>
+Subject: Re: [PATCH v20 03/22] cxl/mem: Introduce a memdev creation
+ ->probe() operation
+Message-ID: <20251112150050.00000578@huawei.com>
+In-Reply-To: <20251110153657.2706192-4-alejandro.lucero-palau@amd.com>
 References: <20251110153657.2706192-1-alejandro.lucero-palau@amd.com>
-	<20251110153657.2706192-3-alejandro.lucero-palau@amd.com>
+	<20251110153657.2706192-4-alejandro.lucero-palau@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -49,20 +49,25 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
  dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Mon, 10 Nov 2025 15:36:37 +0000
+On Mon, 10 Nov 2025 15:36:38 +0000
 alejandro.lucero-palau@amd.com wrote:
 
 > From: Dan Williams <dan.j.williams@intel.com>
 > 
-> Make it so that upon return from devm_cxl_add_endpoint() that
-> cxl_mem_probe() can assume that the endpoint has had a chance to complete
-> cxl_port_probe().
+> Allow for a driver to pass a routine to be called in cxl_mem_probe()
+> context. This ability mirrors the semantics of faux_device_create() and
+> allows for the caller to run CXL-topology-attach dependent logic on behalf
+> of the caller.
 > 
-> I.e. cxl_port module loading has completed prior to device registration.
+> This capability is needed for CXL accelerator device drivers that need to
+> make decisions about enabling CXL dependent functionality in the device, or
+> falling back to PCIe-only operation.
 > 
-> MODULE_SOFTDEP() is not sufficient for this purpose, but a hard link-time
-> dependency is reliable.
+> The probe callback runs after the port topology is successfully attached
+> for the given memdev.
 > 
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Other than possible churn form patch 1 feedback LGTM.
+If that churn is large, perhaps drop this tag, if not...
 
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
