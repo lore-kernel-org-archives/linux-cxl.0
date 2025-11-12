@@ -1,167 +1,313 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2CC34DB5B
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 19:29:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D000B340287
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 19:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762975763; cv=none; b=mZMEcTqG1hELWw24hlRYhY304khyJD1ifhLm6mcStp3Zi3NsDoBgqg3Gng8lPuK677pBKvlpTBb6ZipDbqk08g3L9cJpE0vGTDCjAEN3neOksYEVu4Hom1s/HZ4+BbML2Zgs0EMAjhAgw0Qnz2XZb4tZNeJOQZ7kij7hOlnAUfg=
+	t=1762975790; cv=none; b=uMLdpXPNZYN3g/BslBHnS+F+773ahM1O6qpJnxQmX8Y38KGMoxmMkot6CGMRrFvFKG1GRv0mepsYOl30Why71ICBRxlVEodMyvdSalgC2q/0rHJTDL50pkaJu+AjsCBXGXbAFYEGn6ql8+SH6z0MG1g+yPrYkKQ23YWH61a2rOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762975763; c=relaxed/simple;
-	bh=cBs5VsCM5bkQCwAVcWEWV1HKeCFrZdeAh6gx6vjF0Ps=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KHwg2yEqL//3yhZQ++AW0ajJauP/lVGFB8J1ShSY7D9VFoIVU5p/SMfFUr/iUBPBIL3sXMtQ7zJG+9MWn2wJxImeOlbJH9IxMFL21AqWp1gHmxqUhWMQw4uH9GvU/jWwAo/dTm4QYnE2kp3DPnpRX48Tiwttsa/fT3NvDrFQ0cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K352Iz8A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762975790; c=relaxed/simple;
+	bh=StySJd2HRBF/nsbSvPA1UpC//DtcjLkEErMiwN89jiY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DAGiB91+itGR0/B980pc6Qmaod8z1L/7vVc1Hc3AEOTYAsu0U0dHA5N0MWJQxEzV4aZGDKmsdjVESau37CBy4imYdAvVQ29+EMF8qxi7QpX2FKk+eQ+LrBGKsW+Q0gclsW29gEXCbYVF3NuV+afNfXN7Z7xK1e1YpBYrX9PB8WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=kPslgnrY; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K352Iz8A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C102C4CEF1
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 19:29:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762975763;
-	bh=cBs5VsCM5bkQCwAVcWEWV1HKeCFrZdeAh6gx6vjF0Ps=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=K352Iz8Ah3njTVW7iehUnnH7mqi0Jd6YwMB4qZkyO+cIO1D7Pz6qNEcuOZXb/AXkw
-	 pcmFXpcyZMls1fI59UI/29eJypzLeW20lErann0mpshHzt3ur4vj67oY3kW4uBN2+D
-	 wdkZ7dKutDKfxp/0HGFCbyl6exwmzFCVe6M/nkpYSoUlXpG0XiZwVxcppdH7WD6Ni9
-	 z+iTp0EgYBh7btC3FXy9oVN5fPG+ADnQ8+SmKYuB+BPDNb5Nlzg2CF6LxSEFIG7x6r
-	 UwVZqF1WwD656gypaRpT/CvjAXPRt6J5giHHLr3kYehrERBJTQ0mYJ1NxiDLglYNmD
-	 Y3PHhD2Z86n6w==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6431b0a1948so10307a12.3
-        for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 11:29:22 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVGsFhfNid1wjpFIhPrwLww+SMzRXJZiicSnAbkTNV5jQ9naDfnQo8FEzis11ZnEtDaJCvPfjhfMuI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1SR+HA7RCa5mBgqUEi9W0K68Rsv+J9XMZfVkHbcOZ4FBi4HgZ
-	/w30SBI8aKqMZPwhFQPvq6P/MS26H/aVLziCzZl0ZwoE+uXoiQCtVp7BViSMEhtqK9ac6Ig3GCm
-	x3efBhW33Br+tDipX8HEe4Oh/n+jIRg==
-X-Google-Smtp-Source: AGHT+IHHsq6g1iGPfNpj/BGp5eL9w+14A+MEbPOCADp6BJOBMQBWxT0j5cv1w9FevsaSK63J53W6goPTLfg5SnHB+/k=
-X-Received: by 2002:a05:6402:34ce:b0:63b:ef0e:dfa7 with SMTP id
- 4fb4d7f45d1cf-6431a4bfc9cmr3902960a12.6.1762975760981; Wed, 12 Nov 2025
- 11:29:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="kPslgnrY"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-8b22b1d3e7fso3464785a.3
+        for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 11:29:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1762975788; x=1763580588; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4+0KzZp8SwB3qOByrtp+OoMjU8q91P/BfZmx06JIMXk=;
+        b=kPslgnrYpqHIQjPFcsrIDhqEtQ1JNEu5iSvU6x2oRwl94QRIgdKacOaPhiiCb8pzAQ
+         M8ahQmcg/4j0ll2J7v5kNW6YPLB6ogtqkuqR7XQED7L4HHCkcoeHn+yLbGQLEbLegSXc
+         Ro7QPHg4cfWL78ZYxVpTvZNstzZW/viDp1roG1Z/7mKNJtFTF8ScUWey7Cj6kFVOAZav
+         MT9gTL7j+W95G/7hrDcBfrLJv3NBhlczstak2LByYpnVkDDVhzxiFU2RDpLtnNl+qN4r
+         KqR9+2EUWpZeqRIathAQXku1Gm6cuYKTnV8clFT4vbFNK/pVIgWNT1XItt2w7ZNXjpWW
+         smLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762975788; x=1763580588;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4+0KzZp8SwB3qOByrtp+OoMjU8q91P/BfZmx06JIMXk=;
+        b=D443ia3FV7a22/KBcihM4Ej958JjfcRJfZD9iKDlE038hSntXecxbBFAIUn8/q2oHy
+         0W5UH7dlUXLxGehd8YcQqDKgYr0uDtdxBJGd67pxPnfC+fXJDjR2Y6Rpby4sg/VPU9Yi
+         TXvuP+St23WJ3C+ncvkEXvG2D5IJLoUdLRY+qVH8goEXcLnU9y02PQ9A2hgjDii3KRTH
+         pyE35/r9iUvQdUd2qwABLcIHNSgNTcYSNPBAD8kCiYryMgi93x2xm473hF29EeMEZg8j
+         OlUPQAuR0J2w79Hqi8yjpCPSy8ZwTBqvZQrerkaOLNME1Mn3yRuVFiC0Q3KkDdTcKR0/
+         FLtw==
+X-Forwarded-Encrypted: i=1; AJvYcCUxzUZKYEOsSHqo52MNurNUNcrFTLLcsZJtYY18AceA+LQBtO0P3H3ciiyJdZVmvcAvQsSdJp8lj1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaaA0fEuaN/O1nDnBUmDxRYpdt1epIMBp4wpd7uo4fiBkGf/vj
+	ycyNXTQ2Mza5fN0Fw/URmUhSSjv4lzE4I46wTItraOzpoUoEDLQgujQaRm0DPqyRYb0=
+X-Gm-Gg: ASbGnctocNJHrnUUSgTE9/5uH4imSosPx/osRzWGMWP/BL3jACB1G8kDUzHL+IesaaN
+	kUliPEvRHVWEosVk7UCv8Aj81ZjfqwVRIcmLG3nbeEDAHzqZh3qZfEINpdcqDLBYF3nT3qko59h
+	gEOWnWi8CMrgmsmYNE8qcti6W5xRliKlEARCz6NIggTGLZqJ4hATve+pYHYqc0+FOuNddv1JPZR
+	8xO+eHkdTz78Xvn6XHBABQ7haR0U4/rWbbXICpbBd3HVndMHyfoWoWqUXXMrNeAgXQalKr09x/v
+	bqZvWD1TMKbCQrobRGGG81gdjiJ7Qwy7xYolaN9v5mNydEh2EOyVB4ZlLK20b1/5Wjs35j46ZQ9
+	K8E2d9bqrLAKUwBjLexxFN8oTkJt3pjZvWTivSFo90fDGq5NAC7VGBUttCW1SmubCQu9ECYSmml
+	uXlLB3aaMXUcdtWbQDhiLIWh69WhbM+87sYg1aAMsDD8XWXYo/FCkH8WrPGf9nqfOY
+X-Google-Smtp-Source: AGHT+IED/6odDPyQbULX4YBs7xZBD1FyA57cRMNb3Lw5e2EsWmuJNVD+txeZjw/L/EjeaGulzMWhyA==
+X-Received: by 2002:a05:620a:f15:b0:892:8439:2efa with SMTP id af79cd13be357-8b29b77ab2bmr557638985a.23.1762975787508;
+        Wed, 12 Nov 2025 11:29:47 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b29aa0082esm243922885a.50.2025.11.12.11.29.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Nov 2025 11:29:47 -0800 (PST)
+From: Gregory Price <gourry@gourry.net>
+To: linux-mm@kvack.org
+Cc: kernel-team@meta.com,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	longman@redhat.com,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	osalvador@suse.de,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	byungchul@sk.com,
+	gourry@gourry.net,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	tj@kernel.org,
+	hannes@cmpxchg.org,
+	mkoutny@suse.com,
+	kees@kernel.org,
+	muchun.song@linux.dev,
+	roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev,
+	rientjes@google.com,
+	jackmanb@google.com,
+	cl@gentwo.org,
+	harry.yoo@oracle.com,
+	axelrasmussen@google.com,
+	yuanchu@google.com,
+	weixugc@google.com,
+	zhengqi.arch@bytedance.com,
+	yosry.ahmed@linux.dev,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev,
+	fabio.m.de.francesco@linux.intel.com,
+	rrichter@amd.com,
+	ming.li@zohomail.com,
+	usamaarif642@gmail.com,
+	brauner@kernel.org,
+	oleg@redhat.com,
+	namcao@linutronix.de,
+	escape@linux.alibaba.com,
+	dongjoo.seo1@samsung.com
+Subject: [RFC LPC2026 PATCH v2 00/11] Specific Purpose Memory NUMA Nodes
+Date: Wed, 12 Nov 2025 14:29:16 -0500
+Message-ID: <20251112192936.2574429-1-gourry@gourry.net>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-6-herve.codina@bootlin.com> <20251030141448.GA3853761-robh@kernel.org>
- <20251031162004.180d5e3f@bootlin.com> <20251112142632.GA1610836-robh@kernel.org>
-In-Reply-To: <20251112142632.GA1610836-robh@kernel.org>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 12 Nov 2025 13:29:09 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ89EcUvQnS0xYXOrw6wJ30TT5oFA85eCqHYdu43056cw@mail.gmail.com>
-X-Gm-Features: AWmQ_bnvVqS34104BGAfHcYDtcOO0joqpBN-zpybKauFgaXAFRsInCQMBTqH6M4
-Message-ID: <CAL_JsqJ89EcUvQnS0xYXOrw6wJ30TT5oFA85eCqHYdu43056cw@mail.gmail.com>
-Subject: Re: [PATCH v4 05/29] dt-bindings: bus: Add simple-platform-bus
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 12, 2025 at 8:26=E2=80=AFAM Rob Herring <robh@kernel.org> wrote=
-:
->
-> On Fri, Oct 31, 2025 at 04:20:04PM +0100, Herve Codina wrote:
-> > Hi Rob,
-> >
-> > On Thu, 30 Oct 2025 09:14:48 -0500
-> > Rob Herring <robh@kernel.org> wrote:
-> >
-> > > On Wed, Oct 15, 2025 at 09:13:52AM +0200, Herve Codina wrote:
-> > > > A Simple Platform Bus is a transparent bus that doesn't need a spec=
-ific
-> > > > driver to perform operations at bus level.
-> > > >
-> > > > Similar to simple-bus, a Simple Platform Bus allows to automaticall=
-y
-> > > > instantiate devices connected to this bus.
-> > > >
-> > > > Those devices are instantiated only by the Simple Platform Bus prob=
-e
-> > > > function itself.
-> > >
-> > > Don't let Greg see this... :)
-> > >
-> > > I can't say I'm a fan either. "Platform bus" is a kernel thing, and t=
-he
-> > > distinction here between the 2 compatibles is certainly a kernel thin=
-g.
-> > >
-> > > I think this needs to be solved within the kernel.
-> >
-> > I fully agree with that.
-> >
-> > >
-> > > What I previously said is define a list of compatibles to not
-> > > instantiate the child devices. This would essentially be any case hav=
-ing
-> > > a specific compatible and having its own driver. So if someone has
-> > > 'compatible =3D "vendor,not-so-simple-bus", "simple-bus"', when and i=
-f
-> > > they add a driver for "vendor,not-so-simple-bus", then they have to a=
-dd
-> > > the compatible to the list in the simple-pm-bus driver. I wouldn't
-> > > expect this to be a large list. There's only a handful of cases where
-> > > "simple-bus" has a more specific compatible. And only a few of those
-> > > have a driver. A more general and complicated solution would be makin=
-g
-> > > linux handle 2 (or more) drivers matching a node and picking the driv=
-er
-> > > with most specific match. That gets complicated with built-in vs.
-> > > modules. I'm not sure we really need to solve that problem.
-> >
-> > Right. Let discard the "more general and complicated solution" and focu=
-s
-> > on the list of compatible to avoid child devices instantiation.
-> >
-> > Do you mean that, for "simple-bus" compatible we should:
-> >  - Remove the recursive device instantiation from of_platform_populate(=
-).
->
-> That may be a problem I hadn't considered. While we've solved most probe
-> ordering issues, I think some may remain. Even when of_platform_populate(=
-)
-> is called affects this. For example, I tried removing various arm32
-> of_platform_.*populate() calls which run earlier than the default call,
-> but that broke some platforms. (Looking at the list of remaining ones, I
-> fixed the at91 pinctrl/gpio drivers, but never tried to remove the
-> calls again.)
->
-> Maybe this can be restricted to cases which are not recursively created
-> from the root node. Not sure how we detect that. Perhaps no OF_POPULATED
-> flag on the parent node? Or we could just enable this for OF_DYNAMIC
-> nodes? That should be sufficient for your usecase.
+This is a code RFC for discussion related to
 
-Thinking a bit more about this, I think you don't have to do anything.
-If child nodes already got populated, calling of_platform_populate() a
-second time is essentially a nop. And for cases you care about, that
-wouldn't have happened. Of course, I'd still rather there only be 1
-path that devices could have been instantiated.
+"Mempolicy is dead, long live memory policy!"
+https://lpc.events/event/19/contributions/2143/
 
-Rob
+base-commit: 24172e0d79900908cf5ebf366600616d29c9b417
+(version notes at end)
+
+At LSF 2026, I plan to discuss:
+- Why? (In short: shunting to DAX is a failed pattern for users)
+- Other designs I considered (mempolicy, cpusets, zone_device)
+- Why mempolicy.c and cpusets as-is are insufficient
+- SPM types seeking this form of interface (Accelerator, Compression)
+- Platform extensions that would be nice to see (SPM-only Bits)
+
+Open Questions
+- Single SPM nodemask, or multiple based on features?
+- Apply SPM/SysRAM bit on-boot only or at-hotplug?
+- Allocate extra "possible" NUMA nodes for flexbility?
+- Should SPM Nodes be zone-restricted? (MOVABLE only?)
+- How to handle things like reclaim and compaction on these nodes.
+
+
+With this set, we aim to enable allocation of "special purpose memory"
+with the page allocator (mm/page_alloc.c) without exposing the same
+memory as "System RAM".  Unless a non-userland component, and does so
+with the GFP_SPM_NODE flag, memory on these nodes cannot be allocated.
+
+This isolation mechanism is a requirement for memory policies which
+depend on certain sets of memory never being used outside special
+interfaces (such as a specific mm/component or driver).
+
+We present an example of using this mechanism within ZSWAP, as-if
+a "compressed memory node" was present.  How to describe the features
+of memory present on nodes is left up to comment here and at LPC '26.
+
+Userspace-driven allocations are restricted by the sysram_nodes mask,
+nothing in userspace can explicitly request memory from SPM nodes.
+
+Instead, the intent is to create new components which understand memory
+features and register those nodes with those components. This abstracts
+the hardware complexity away from userland while also not requiring new
+memory innovations to carry entirely new allocators.
+
+The ZSwap example demonstrates this with the `mt_spm_nodemask`.  This
+hack treats all spm nodes as-if they are compressed memory nodes, and
+we bypass the software compression logic in zswap in favor of simply
+copying memory directly to the allocated page.  In a real design
+
+There are 4 major changes in this set:
+
+1) Introducing mt_sysram_nodelist in mm/memory-tiers.c which denotes
+   the set of nodes which are eligible for use as normal system ram
+
+   Some existing users now pass mt_sysram_nodelist into the page
+   allocator instead of NULL, but passing a NULL pointer in will simply
+   have it replaced by mt_sysram_nodelist anyway.  Should a fully NULL
+   pointer still make it to the page allocator, without GFP_SPM_NODE
+   SPM node zones will simply be skipped.
+
+   mt_sysram_nodelist is always guaranteed to contain the N_MEMORY nodes
+   present during __init, but if empty the use of mt_sysram_nodes()
+   will return a NULL to preserve current behavior.
+
+
+2) The addition of `cpuset.mems.sysram` which restricts allocations to
+   `mt_sysram_nodes` unless GFP_SPM_NODE is used.
+
+   SPM Nodes are still allowed in cpuset.mems.allowed and effective.
+
+   This is done to allow separate control over sysram and SPM node sets
+   by cgroups while maintaining the existing hierarchical rules.
+
+   current cpuset configuration
+   cpuset.mems_allowed
+    |.mems_effective         < (mems_allowed ∩ parent.mems_effective)
+    |->tasks.mems_allowed    < cpuset.mems_effective
+
+   new cpuset configuration
+   cpuset.mems_allowed
+    |.mems_effective         < (mems_allowed ∩ parent.mems_effective)
+    |.sysram_nodes           < (mems_effective ∩ default_sys_nodemask)
+    |->task.sysram_nodes     < cpuset.sysram_nodes
+
+   This means mems_allowed still restricts all node usage in any given
+   task context, which is the existing behavior.
+
+3) Addition of MHP_SPM_NODE flag to instruct memory_hotplug.c that the
+   capacity being added should mark the node as an SPM Node. 
+
+   A node is either SysRAM or SPM - never both.  Attempting to add
+   incompatible memory to a node results in hotplug failure.
+
+   DAX and CXL are made aware of the bit and have `spm_node` bits added
+   to their relevant subsystems.
+
+4) Adding GFP_SPM_NODE - which allows page_alloc.c to request memory
+   from the provided node or nodemask.  It changes the behavior of
+   the cpuset mems_allowed and mt_node_allowed() checks.
+
+v1->v2:
+- naming improvements
+    default_node -> sysram_node
+    protected    -> spm (Specific Purpose Memory)
+- add missing constify patch
+- add patch to update callers of __cpuset_zone_allowed
+- add additional logic to the mm sysram_nodes patch
+- fix bot build issues (ifdef config builds)
+- fix out-of-tree driver build issues (function renames)
+- change compressed_nodelist to spm_nodelist
+- add latch mechanism for sysram/spm nodes (Dan Williams)
+  this drops some extra memory-hotplug logic which is nice
+v1: https://lore.kernel.org/linux-mm/20251107224956.477056-1-gourry@gourry.net/
+
+Gregory Price (11):
+  mm: constify oom_control, scan_control, and alloc_context nodemask
+  mm: change callers of __cpuset_zone_allowed to cpuset_zone_allowed
+  gfp: Add GFP_SPM_NODE for Specific Purpose Memory (SPM) allocations
+  memory-tiers: Introduce SysRAM and Specific Purpose Memory Nodes
+  mm: restrict slub, oom, compaction, and page_alloc to sysram by
+    default
+  mm,cpusets: rename task->mems_allowed to task->sysram_nodes
+  cpuset: introduce cpuset.mems.sysram
+  mm/memory_hotplug: add MHP_SPM_NODE flag
+  drivers/dax: add spm_node bit to dev_dax
+  drivers/cxl: add spm_node bit to cxl region
+  [HACK] mm/zswap: compressed ram integration example
+
+ drivers/cxl/core/region.c       |  30 ++++++
+ drivers/cxl/cxl.h               |   2 +
+ drivers/dax/bus.c               |  39 ++++++++
+ drivers/dax/bus.h               |   1 +
+ drivers/dax/cxl.c               |   1 +
+ drivers/dax/dax-private.h       |   1 +
+ drivers/dax/kmem.c              |   2 +
+ fs/proc/array.c                 |   2 +-
+ include/linux/cpuset.h          |  62 +++++++------
+ include/linux/gfp_types.h       |   5 +
+ include/linux/memory-tiers.h    |  47 ++++++++++
+ include/linux/memory_hotplug.h  |  10 ++
+ include/linux/mempolicy.h       |   2 +-
+ include/linux/mm.h              |   4 +-
+ include/linux/mmzone.h          |   6 +-
+ include/linux/oom.h             |   2 +-
+ include/linux/sched.h           |   6 +-
+ include/linux/swap.h            |   2 +-
+ init/init_task.c                |   2 +-
+ kernel/cgroup/cpuset-internal.h |   8 ++
+ kernel/cgroup/cpuset-v1.c       |   7 ++
+ kernel/cgroup/cpuset.c          | 158 ++++++++++++++++++++------------
+ kernel/fork.c                   |   2 +-
+ kernel/sched/fair.c             |   4 +-
+ mm/compaction.c                 |  10 +-
+ mm/hugetlb.c                    |   8 +-
+ mm/internal.h                   |   2 +-
+ mm/memcontrol.c                 |   3 +-
+ mm/memory-tiers.c               |  66 ++++++++++++-
+ mm/memory_hotplug.c             |   7 ++
+ mm/mempolicy.c                  |  34 +++----
+ mm/migrate.c                    |   4 +-
+ mm/mmzone.c                     |   5 +-
+ mm/oom_kill.c                   |  11 ++-
+ mm/page_alloc.c                 |  57 +++++++-----
+ mm/show_mem.c                   |  11 ++-
+ mm/slub.c                       |  15 ++-
+ mm/vmscan.c                     |   6 +-
+ mm/zswap.c                      |  66 ++++++++++++-
+ 39 files changed, 532 insertions(+), 178 deletions(-)
+
+-- 
+2.51.1
+
