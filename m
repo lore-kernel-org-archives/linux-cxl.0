@@ -1,203 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DD82E92DA
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 22:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F47247281
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 22:35:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762984899; cv=none; b=PinRRiIWQgM1qhWB7uls1RSuOQKExqPNYvNxvULbXt/iNw1ChLQCqsRNcyzvWkSjtVOqD+GGTcRaRj/MoixjF5PlsSCstIUz4lvulDWgmPPviS2z7atZPNuZ7lR1b1q5u0c27F+QcMEmdze4CWScxLD5qpYIEprt9P5BLMO7pcs=
+	t=1762986956; cv=none; b=fJp84WNt1yUwb7KQYHjBmMyswOwd6CW4jF1X53bsZ/yAGuSgoXFRLbetAMrHmIUoSbaqldesGr5hVIQZTEJMi55vmT90N4EPpWYKZHu3jmMCkdEz+fl9csdxfcaKIFNRkVkofJNEALFWCz9+1q1U6hB0a3f35wT3zV3I424Bv/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762984899; c=relaxed/simple;
-	bh=owyogqBuAVW7bQ9lKnJ/8lAnzgSFbsHoIJ+cXsED/p8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=lij/7CZGex7JPY1wRiM5gDbTmtLcbD5fk/0+U7GhK+W8F1tttOCbJj9mLsyr9XhyTQkt0h6Xq2QKFnP89Wd2l7yyYMFA9KentLoEguXonTk6t4MqylK/7QjEqzJKf4lJdK4l4mE2IJt5eJLhih5YTEcKxilUEX40Vt+SPdl1sY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MOWV3UDm; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1762986956; c=relaxed/simple;
+	bh=QrFgy8kef1RTClQoguANzsfanj0qLkO8wMzPB/Oop2o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XJomBWlD64VBZ4axv1I9CG8NS6I+OGzEIA3xrh10J1IeMsO6QqrJX2v6xzh0x/dl/mCxpChoX+tCMP7JtKOkWB9YTLTFfFC6te0psP98sbnKqVSK8SrnD1iM2pI41qLta/oKjBHP8wg1w3nM24xQH6je3ai2PsC4r4SbeVVh4VY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=AbZqB6Hu; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MOWV3UDm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762984897; x=1794520897;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=owyogqBuAVW7bQ9lKnJ/8lAnzgSFbsHoIJ+cXsED/p8=;
-  b=MOWV3UDmC2PeVnsYD1RqlrtSZD3cYMecE/oHVHaXJC3dSJSZVfw+hkJY
-   ljICDvilJUuchrDhIKywUFhK4P9pQHTUUWNPn4clvgOvdMiQgTZ7u6uU4
-   1FIenQIJq1Y7ycHiwAFoUB/fmitvqJOzvaBnllAj9U+k/q+I4xKdnRg+T
-   Io1/0Lld69K8bKz/yvV1wRJm1+kiHHeKu4Gd8A3/DVJAa/luXgWIbg9iE
-   xMNp8CitXbzhoLlwbaS1+2UVSsnKDBNdhivMr2m6DGBWnC5yvu1C9tSxR
-   I833Tu5OFpkVdSXBR/S/n3Qom0WaGNsPnFi8kOIeZoNhUH+EhrAtugphV
-   A==;
-X-CSE-ConnectionGUID: LT2d99mMS+CUIhHoiiWcTw==
-X-CSE-MsgGUID: j+/gzbY+Qa2pCbEzFZlG0Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11611"; a="90531728"
-X-IronPort-AV: E=Sophos;i="6.19,300,1754982000"; 
-   d="scan'208";a="90531728"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 14:01:36 -0800
-X-CSE-ConnectionGUID: 2Qj0WhfGTf2+c4bws3mvCA==
-X-CSE-MsgGUID: /gseOEJUR3mHA6Un92PNIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,300,1754982000"; 
-   d="scan'208";a="219985400"
-Received: from spandruv-mobl4.amr.corp.intel.com (HELO [10.125.108.30]) ([10.125.108.30])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 14:01:36 -0800
-Message-ID: <99bd23dc-c15c-4bff-a23e-02ee4400e782@intel.com>
-Date: Wed, 12 Nov 2025 15:01:35 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="AbZqB6Hu"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-8b21fc25ae1so20456685a.1
+        for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 14:35:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1762986953; x=1763591753; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5SCRb0goywJQgJBdSKI77dEqVkqf5FzF9n7s1+P7Ecw=;
+        b=AbZqB6HuGm6VuqZWbnMFo/gc7+e1z8j46rYYfZuqembi3g8lx0MCXFAroH8IK3EixH
+         G0M5989MKnYeK5TF+o8edaBel/6iivfivkL5Yuv3+NxnxxuiB3khfBXMtIk3n0HL5u5L
+         VMmyW1G5vmeGTIPnNJnpRQqJYDunYBy6z+uWG+bptPz+HnNPSoqFLq0yFR00wBUA8T9/
+         8yeuVyUNbp5U7RdNpVXmclhUOv9tDS8gb/G40msmnLdDOv0lRkkoPfM0UI6k1MWPjiEL
+         V8pjKk3ZAVx4tNC+r+HXpAX37KjwCYZC3xuHiRUOlYh5CoEwHXKxO3j2CzyZEP3/PjDD
+         m97Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762986953; x=1763591753;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5SCRb0goywJQgJBdSKI77dEqVkqf5FzF9n7s1+P7Ecw=;
+        b=SElgP6SDlNw1dlC+7YCrL+a8T8sKwDtj732bDcZb/oWLqc7DHk4ZzZ1xOUdvqpYOn2
+         VuddzsjiE0qxZ0p2wy17LyV5i72mzUeY6L0vwmo5FVGs+zJKlZNERhosxt18zx2yKuS5
+         SAdsCHM347tUZyqiti9S21hj7U6w6A/aIa0Vp6XZ7lT53J31tRzpUc7Ou7eYOJYnqZ8R
+         PLxf1fkaurfbzXRSqImwDLOW6qXME2uEwHwPTRLr+qBHvkRJG77R7UCYeBHpUkPK8Ws6
+         n/5KNHJwHK7lKXdwPPzKBd5gDXvEd7fFQdPDSUU4SSevJlzam2AKmcbeBCFqXSvapgqX
+         6Q6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVPHv6jR6C5QferFq0iqNrwkeDm0bN2RqCoIklHQVa/xnAWBQbE4ljJ1EAYXPhUkNxbwiuIqV3kOmU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxBrpKVxiYDt/ZXaicYDIpgRdY14oJUTty42g/5SZZJpKtRboV
+	S98MeGWUZePoqhMwE0k090XvvedHKPTKEQ5EpdiW9/7nTafwQ6aCazZ9jUk6kariybA=
+X-Gm-Gg: ASbGncuC9DpxrACjoR4i4syZu9y88wWTaE3l3oYASYESnJOI7UGDwkmbDq3xWlv478N
+	2fXkKvprhldtew+i0lnHV0Z7z59woXvcTndziVJUhwbkVYKuWgFQRh/Xwg/mcetzB6vd37aPKq0
+	nRNx3Su6gQ4gSKylIs4ku7ZMuHKoBDZp3Ozi4jXsGQrhKTE+BQQiV7j9YOTpoDSutHu7oa72+n5
+	SVA5fYbLdia2JTFKsIfOw5zyJupAqAPJcOrz8j+3iPGC+/KpzgFYyxEENCZRtjskHvtnQyT7Ey2
+	SgR3KKBHu3EBkRhGyF6TFsGTBG8VNL3OwVJ7w4kjrcwol/zlTAOtSEpa2lnsccCh0aGSozLbtdY
+	CZfOT+CMiZpqqVM+P1GPWc9Rmcxj90p1TUJEHWPwsHlagO2/Spn25WNffTDjx4cTCExXp0bUHit
+	jO0wZy8Io/s/df7M41a3AnEVL0P/Z1D6URRxPDooNwhR/Ebw9hC+mq2ag+coE=
+X-Google-Smtp-Source: AGHT+IHWGpmoPeLN99RSRKB2vhWe71CpUl612R6GfVmHX8/+13R+ZA4bwWYytCuQvVanxwsa6ZIqLw==
+X-Received: by 2002:a05:620a:1726:b0:8a3:e51d:63c9 with SMTP id af79cd13be357-8b29b764a2dmr589563885a.25.1762986953124;
+        Wed, 12 Nov 2025 14:35:53 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b2aef2f784sm10061485a.38.2025.11.12.14.35.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Nov 2025 14:35:52 -0800 (PST)
+Date: Wed, 12 Nov 2025 17:35:50 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>
+Subject: Re: [PATCH 1/3] cxl: Simplify cxl_rd_ops allocation and handling
+Message-ID: <aRULxsKoSTXZfPqN@gourry-fedora-PF4VCD3F>
+References: <20251112205105.1271726-1-rrichter@amd.com>
+ <20251112205105.1271726-2-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] cxl: Add handling of locked CXL decoder
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com
-References: <20251105201826.2901915-1-dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20251105201826.2901915-1-dave.jiang@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251112205105.1271726-2-rrichter@amd.com>
 
+On Wed, Nov 12, 2025 at 09:51:02PM +0100, Robert Richter wrote:
+> A root decoder's callback handlers are collected in struct cxl_rd_ops.
+> The structure is dynamically allocated, though it contains only a few
+> pointers in it. This also requires to check two pointes to check for
+> the existance of a callback.
+> 
+> Simplify the allocation, release and handler check by embedding the
+> ops statically in struct cxl_root_decoder.
+> 
+> Implementation is equivalent to how struct cxl_root_ops handles the
+> callbacks.
+> 
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-
-On 11/5/25 1:18 PM, Dave Jiang wrote:
-> When a decoder is locked, it means that its configuration cannot be
-> changed. CXL spec r3.2 8.2.4.20.13 discusses the details regarding
-> locked decoders. Locking happens when bit 8 of the decoder control
-> register is set and then the decoder is committed afterwards (CXL
-> spec r3.2 8.2.4.20.7).
-> 
-> Given that the driver creates a virtual decoder for each CFMWS, the
-> Fixed Device Configuration (bit 4) of the Window Restriction field is
-> considered as locking for the virtual decoder by the driver.
-> 
-> The current driver code disregards the locked status and a region can
-> be destroyed regardless of the locking state.
-> 
-> Add a region flag to indicate the region is in a locked configuration.
-> The driver will considered a region locked if the CFMWS or any decoder
-> is configured as locked. The consideration is all or nothing regarding
-> the locked state. It is reasonable to determine the region "locked"
-> status while the region is being assembled based on the decoders.
-> 
-> Add a check in region commit_store() to intercept when a 0 is written
-> to the commit sysfs attribute in order to prevent the destruction of a
-> region when in locked state. This should be the only entry point from user
-> space to destroy a region.
-> 
-> Add a check is added to cxl_decoder_reset() to prevent resetting a locked
-> decoder within the kernel driver.
-> 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Applied to cxl/next:
-2230c4bdc4120417799c74326ade3123da226d54
-
-> ---
-> v3:
-> - Move region lock check to cxl_region_decode_reset(). (Alejandro)
-> ---
->  drivers/cxl/core/hdm.c    |  3 +++
->  drivers/cxl/core/region.c | 19 +++++++++++++++++++
->  drivers/cxl/cxl.h         |  8 ++++++++
->  3 files changed, 30 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index d3a094ca01ad..1c5d2022c87a 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -905,6 +905,9 @@ static void cxl_decoder_reset(struct cxl_decoder *cxld)
->  	if ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)
->  		return;
->  
-> +	if (test_bit(CXL_DECODER_F_LOCK, &cxld->flags))
-> +		return;
-> +
->  	if (port->commit_end == id)
->  		cxl_port_commit_reap(cxld);
->  	else
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index b06fee1978ba..b52738e46b5d 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -245,6 +245,9 @@ static void cxl_region_decode_reset(struct cxl_region *cxlr, int count)
->  	struct cxl_region_params *p = &cxlr->params;
->  	int i;
->  
-> +	if (test_bit(CXL_REGION_F_LOCK, &cxlr->flags))
-> +		return;
-> +
->  	/*
->  	 * Before region teardown attempt to flush, evict any data cached for
->  	 * this region, or scream loudly about missing arch / platform support
-> @@ -419,6 +422,9 @@ static ssize_t commit_store(struct device *dev, struct device_attribute *attr,
->  		return len;
->  	}
->  
-> +	if (test_bit(CXL_REGION_F_LOCK, &cxlr->flags))
-> +		return -EPERM;
-> +
->  	rc = queue_reset(cxlr);
->  	if (rc)
->  		return rc;
-> @@ -1059,6 +1065,16 @@ static int cxl_rr_assign_decoder(struct cxl_port *port, struct cxl_region *cxlr,
->  	return 0;
->  }
->  
-> +static void cxl_region_set_lock(struct cxl_region *cxlr,
-> +				struct cxl_decoder *cxld)
-> +{
-> +	if (!test_bit(CXL_DECODER_F_LOCK, &cxld->flags))
-> +		return;
-> +
-> +	set_bit(CXL_REGION_F_LOCK, &cxlr->flags);
-> +	clear_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags);
-> +}
-> +
->  /**
->   * cxl_port_attach_region() - track a region's interest in a port by endpoint
->   * @port: port to add a new region reference 'struct cxl_region_ref'
-> @@ -1170,6 +1186,8 @@ static int cxl_port_attach_region(struct cxl_port *port,
->  		}
->  	}
->  
-> +	cxl_region_set_lock(cxlr, cxld);
-> +
->  	rc = cxl_rr_ep_add(cxl_rr, cxled);
->  	if (rc) {
->  		dev_dbg(&cxlr->dev,
-> @@ -2439,6 +2457,7 @@ static struct cxl_region *cxl_region_alloc(struct cxl_root_decoder *cxlrd, int i
->  	dev->bus = &cxl_bus_type;
->  	dev->type = &cxl_region_type;
->  	cxlr->id = id;
-> +	cxl_region_set_lock(cxlr, &cxlrd->cxlsd.cxld);
->  
->  	return cxlr;
->  }
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 231ddccf8977..6382f1983865 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -517,6 +517,14 @@ enum cxl_partition_mode {
->   */
->  #define CXL_REGION_F_NEEDS_RESET 1
->  
-> +/*
-> + * Indicate whether this region is locked due to 1 or more decoders that have
-> + * been locked. The approach of all or nothing is taken with regard to the
-> + * locked attribute. CXL_REGION_F_NEEDS_RESET should not be set if this flag is
-> + * set.
-> + */
-> +#define CXL_REGION_F_LOCK 2
-> +
->  /**
->   * struct cxl_region - CXL region
->   * @dev: This region's device
-> 
-> base-commit: 211ddde0823f1442e4ad052a2f30f050145ccada
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
