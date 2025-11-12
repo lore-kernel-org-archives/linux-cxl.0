@@ -1,42 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9046D34E763;
-	Wed, 12 Nov 2025 15:00:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A87F301033;
+	Wed, 12 Nov 2025 15:33:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762959656; cv=none; b=L5ESHQQFHZKA9pmf2Tif7Ebe8fTsxfttNm7tey9z499dnIavHFeN6oW1SxQNqFNHsaPOhJIvJrcTCvDWiMGMJQ5gAuOyjzYVYDrtsY8D9lkPy0mem7NzY4GHwdAHxLwGY+FsxpZeh5XHJJZGKVZRyTvUpcfSzmXs6Vtt98feUWM=
+	t=1762961622; cv=none; b=eQiLnlAEGdsQgxWhx7cIQOsCGFJf5+xet09Lbj+95AXXEfqEzCNYm1tEARNuCCQyaDXhhJZu9x2H/5jYrn4RUEhj3EK02qwzTgXgA6Jfa2VKYhIXOdvDRq1mHIs6cEpWt6oz/R23v9YJLIBrQDwaOayCOwEprPcpCXg0Vm6ksps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762959656; c=relaxed/simple;
-	bh=S+PyYYzTuXQCv8RPHj7xGnHIGy7tg7vHYYIK3s3OVDI=;
+	s=arc-20240116; t=1762961622; c=relaxed/simple;
+	bh=HI3eCi1JvGJlHpKpgnqDyPjCMMeri77ni9tLhmKxALM=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QOsWXkbGdA8rMLSAS33fvj+xAqX5N/I8njDH74XSv540eN+V1jINYvvgULF82NUYLuLYBJpcBl+dydbuz/9S6omBmNvJDxsu6Tmhd0jODQbvtOGRkuuMplzynm9N8xXs2J2ZDKPoIMRxu79UvhoDAKERaahybiQxlAAbMf0MOg4=
+	 MIME-Version:Content-Type; b=agp3ymtzYATwkmytolXILttuwfSh8NNbyhwJapAqiP1JgBYQsMqiKRJ99dL5C37tZlr9Rn2XNGXZzt8mf0B1NGJlZ6QN3Col0W1ChzOqgyI1yh95zvTRuMKvppert2jbTDrkpYTpEq9+t0YsZ4WOSsQ3ThKu27TEuoezcXJOA1c=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d665r6JDVzHnH95;
-	Wed, 12 Nov 2025 23:00:32 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d66qd2jXGzHnGh0;
+	Wed, 12 Nov 2025 23:33:17 +0800 (CST)
 Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 232C51402CB;
-	Wed, 12 Nov 2025 23:00:52 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id A53071402CB;
+	Wed, 12 Nov 2025 23:33:36 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
  (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 12 Nov
- 2025 15:00:51 +0000
-Date: Wed, 12 Nov 2025 15:00:50 +0000
+ 2025 15:33:35 +0000
+Date: Wed, 12 Nov 2025 15:33:34 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: <alejandro.lucero-palau@amd.com>
 CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
 	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
 	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
-	<dave.jiang@intel.com>
-Subject: Re: [PATCH v20 03/22] cxl/mem: Introduce a memdev creation
- ->probe() operation
-Message-ID: <20251112150050.00000578@huawei.com>
-In-Reply-To: <20251110153657.2706192-4-alejandro.lucero-palau@amd.com>
+	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>, "Alison
+ Schofield" <alison.schofield@intel.com>, Ben Cheatham
+	<benjamin.cheatham@amd.com>
+Subject: Re: [PATCH v20 04/22] cxl: Add type2 device basic support
+Message-ID: <20251112153334.00000ea2@huawei.com>
+In-Reply-To: <20251110153657.2706192-5-alejandro.lucero-palau@amd.com>
 References: <20251110153657.2706192-1-alejandro.lucero-palau@amd.com>
-	<20251110153657.2706192-4-alejandro.lucero-palau@amd.com>
+	<20251110153657.2706192-5-alejandro.lucero-palau@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -46,28 +47,57 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
  dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Mon, 10 Nov 2025 15:36:38 +0000
+On Mon, 10 Nov 2025 15:36:39 +0000
 alejandro.lucero-palau@amd.com wrote:
 
-> From: Dan Williams <dan.j.williams@intel.com>
+> From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Allow for a driver to pass a routine to be called in cxl_mem_probe()
-> context. This ability mirrors the semantics of faux_device_create() and
-> allows for the caller to run CXL-topology-attach dependent logic on behalf
-> of the caller.
+> Differentiate CXL memory expanders (type 3) from CXL device accelerators
+> (type 2) with a new function for initializing cxl_dev_state and a macro
+> for helping accel drivers to embed cxl_dev_state inside a private
+> struct.
 > 
-> This capability is needed for CXL accelerator device drivers that need to
-> make decisions about enabling CXL dependent functionality in the device, or
-> falling back to PCIe-only operation.
+> Move structs to include/cxl as the size of the accel driver private
+> struct embedding cxl_dev_state needs to know the size of this struct.
 > 
-> The probe callback runs after the port topology is successfully attached
-> for the given memdev.
+> Use same new initialization with the type3 pci driver.
 > 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Other than possible churn form patch 1 feedback LGTM.
-If that churn is large, perhaps drop this tag, if not...
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+One minor thing that's probably a merge conflict gone slightly wrong
+or something like that. After this patch you end up with two
+CXL_NR_PARTITIONS_MAX defines.
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> ---
+>  drivers/cxl/core/mbox.c      |  12 +-
+>  drivers/cxl/core/memdev.c    |  32 +++++
+>  drivers/cxl/core/pci_drv.c   |  15 +--
+>  drivers/cxl/cxl.h            |  97 +--------------
+>  drivers/cxl/cxlmem.h         |  85 +------------
+>  include/cxl/cxl.h            | 226 +++++++++++++++++++++++++++++++++++
+>  tools/testing/cxl/test/mem.c |   3 +-
+>  7 files changed, 276 insertions(+), 194 deletions(-)
+>  create mode 100644 include/cxl/cxl.h
+> 
+
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> new file mode 100644
+> index 000000000000..13d448686189
+> --- /dev/null
+> +++ b/include/cxl/cxl.h
+> @@ -0,0 +1,226 @@
+
+
+
+> +#define CXL_NR_PARTITIONS_MAX 2
+Adds a definition but doesn't remove the one in driver/cxl/cxlmem.h
+That seems odd.
+
+
+
