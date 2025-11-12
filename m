@@ -1,138 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8CD328270;
-	Wed, 12 Nov 2025 16:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2CC34DB5B
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 19:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762965279; cv=none; b=ZJXBStMZa/Y2nPIm6rC94i5RtyBBtKVbELoTSVdRlv7xWRtVLnuYUiII23NTnkU+G1wrm+9J7/lzwL0GoQ0BEhjCv593xMehfg00HFYjgCU4hpQd9ngerr4kfsikPyuw1dy7E3J2rPBGZNhoLFnqVMsSpu7f238kSC2dPhomAsM=
+	t=1762975763; cv=none; b=mZMEcTqG1hELWw24hlRYhY304khyJD1ifhLm6mcStp3Zi3NsDoBgqg3Gng8lPuK677pBKvlpTBb6ZipDbqk08g3L9cJpE0vGTDCjAEN3neOksYEVu4Hom1s/HZ4+BbML2Zgs0EMAjhAgw0Qnz2XZb4tZNeJOQZ7kij7hOlnAUfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762965279; c=relaxed/simple;
-	bh=/l9AryvK0XODGKgVN8v4lcQFAVF222fvqL2WuzAN7xI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QGs6XP02xZB8V3Hr/Ijovyzngh8Ff+sAB4NVvkKzBjrwWaobmsriZ1DqkrH9KEQ+0MbkZpVE1+xGVcvkMEBMYJYrHGHDbjn8a5b5eOl41tmqWiuOGLRMo6YfeMw4f+HV5aly2S1ZHbsMatbcQs74o0EmRw+hZyybn7rM4S2a8zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=la1RCOx0; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1762975763; c=relaxed/simple;
+	bh=cBs5VsCM5bkQCwAVcWEWV1HKeCFrZdeAh6gx6vjF0Ps=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KHwg2yEqL//3yhZQ++AW0ajJauP/lVGFB8J1ShSY7D9VFoIVU5p/SMfFUr/iUBPBIL3sXMtQ7zJG+9MWn2wJxImeOlbJH9IxMFL21AqWp1gHmxqUhWMQw4uH9GvU/jWwAo/dTm4QYnE2kp3DPnpRX48Tiwttsa/fT3NvDrFQ0cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K352Iz8A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="la1RCOx0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762965277; x=1794501277;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/l9AryvK0XODGKgVN8v4lcQFAVF222fvqL2WuzAN7xI=;
-  b=la1RCOx0ux8ziX/4W0OsxzsZbgc6iIVZKdK0lfoFIHwcG7VWLyibuA8T
-   cXO29Tz7yCGUqeu8qUIHrWei8ZlrS0Kwxg5nKPtTIpInf5IF9LKrHsADF
-   ToEHcBLw18wGQSfHyEGtTUehN7aB3FcqrXuzvJCX1JSQ909ziYagBVCP0
-   Gd/0kpPWEL5tqLuGDqVLO3orYB/NKaJuw7KypFfGTDHSwH4GfWJu7FN/D
-   hnIMtkTUkZbqgSYhJf61b/C77yaBbP9eABxR5cCNxHNEE2jg8koFxFwHf
-   b3zkcTG1i7UCPOzjEAkQqtho5kY24Iy6qwHrop5ZPLM+V1XDVpkQBJtyL
-   w==;
-X-CSE-ConnectionGUID: dnhteoXQTBqdk8Ua+CTCrA==
-X-CSE-MsgGUID: BdWO9u6RRgqqn+b5YnAcdg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11611"; a="64917130"
-X-IronPort-AV: E=Sophos;i="6.19,299,1754982000"; 
-   d="scan'208";a="64917130"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 08:34:36 -0800
-X-CSE-ConnectionGUID: VJ0H4UPWRNueNF3K+BF+sA==
-X-CSE-MsgGUID: qrv1CK8wTvyDqxkZiIwaIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,299,1754982000"; 
-   d="scan'208";a="188515630"
-Received: from spandruv-mobl4.amr.corp.intel.com (HELO [10.125.108.30]) ([10.125.108.30])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 08:34:36 -0800
-Message-ID: <6f1eaf10-071c-41ad-bda3-62eb6b1119e9@intel.com>
-Date: Wed, 12 Nov 2025 09:34:34 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K352Iz8A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C102C4CEF1
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 19:29:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762975763;
+	bh=cBs5VsCM5bkQCwAVcWEWV1HKeCFrZdeAh6gx6vjF0Ps=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=K352Iz8Ah3njTVW7iehUnnH7mqi0Jd6YwMB4qZkyO+cIO1D7Pz6qNEcuOZXb/AXkw
+	 pcmFXpcyZMls1fI59UI/29eJypzLeW20lErann0mpshHzt3ur4vj67oY3kW4uBN2+D
+	 wdkZ7dKutDKfxp/0HGFCbyl6exwmzFCVe6M/nkpYSoUlXpG0XiZwVxcppdH7WD6Ni9
+	 z+iTp0EgYBh7btC3FXy9oVN5fPG+ADnQ8+SmKYuB+BPDNb5Nlzg2CF6LxSEFIG7x6r
+	 UwVZqF1WwD656gypaRpT/CvjAXPRt6J5giHHLr3kYehrERBJTQ0mYJ1NxiDLglYNmD
+	 Y3PHhD2Z86n6w==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6431b0a1948so10307a12.3
+        for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 11:29:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVGsFhfNid1wjpFIhPrwLww+SMzRXJZiicSnAbkTNV5jQ9naDfnQo8FEzis11ZnEtDaJCvPfjhfMuI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1SR+HA7RCa5mBgqUEi9W0K68Rsv+J9XMZfVkHbcOZ4FBi4HgZ
+	/w30SBI8aKqMZPwhFQPvq6P/MS26H/aVLziCzZl0ZwoE+uXoiQCtVp7BViSMEhtqK9ac6Ig3GCm
+	x3efBhW33Br+tDipX8HEe4Oh/n+jIRg==
+X-Google-Smtp-Source: AGHT+IHHsq6g1iGPfNpj/BGp5eL9w+14A+MEbPOCADp6BJOBMQBWxT0j5cv1w9FevsaSK63J53W6goPTLfg5SnHB+/k=
+X-Received: by 2002:a05:6402:34ce:b0:63b:ef0e:dfa7 with SMTP id
+ 4fb4d7f45d1cf-6431a4bfc9cmr3902960a12.6.1762975760981; Wed, 12 Nov 2025
+ 11:29:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 11/14] cxl/atl: Lock decoders that need address
- translation
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
- "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
-References: <20251103184804.509762-1-rrichter@amd.com>
- <20251103184804.509762-12-rrichter@amd.com>
- <ae28560c-ed16-400b-bf3d-86e2cc8617cf@intel.com>
- <aRMx-YYhaouP4LvR@rric.localdomain>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <aRMx-YYhaouP4LvR@rric.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+ <20251015071420.1173068-6-herve.codina@bootlin.com> <20251030141448.GA3853761-robh@kernel.org>
+ <20251031162004.180d5e3f@bootlin.com> <20251112142632.GA1610836-robh@kernel.org>
+In-Reply-To: <20251112142632.GA1610836-robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 12 Nov 2025 13:29:09 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ89EcUvQnS0xYXOrw6wJ30TT5oFA85eCqHYdu43056cw@mail.gmail.com>
+X-Gm-Features: AWmQ_bnvVqS34104BGAfHcYDtcOO0joqpBN-zpybKauFgaXAFRsInCQMBTqH6M4
+Message-ID: <CAL_JsqJ89EcUvQnS0xYXOrw6wJ30TT5oFA85eCqHYdu43056cw@mail.gmail.com>
+Subject: Re: [PATCH v4 05/29] dt-bindings: bus: Add simple-platform-bus
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Nov 12, 2025 at 8:26=E2=80=AFAM Rob Herring <robh@kernel.org> wrote=
+:
+>
+> On Fri, Oct 31, 2025 at 04:20:04PM +0100, Herve Codina wrote:
+> > Hi Rob,
+> >
+> > On Thu, 30 Oct 2025 09:14:48 -0500
+> > Rob Herring <robh@kernel.org> wrote:
+> >
+> > > On Wed, Oct 15, 2025 at 09:13:52AM +0200, Herve Codina wrote:
+> > > > A Simple Platform Bus is a transparent bus that doesn't need a spec=
+ific
+> > > > driver to perform operations at bus level.
+> > > >
+> > > > Similar to simple-bus, a Simple Platform Bus allows to automaticall=
+y
+> > > > instantiate devices connected to this bus.
+> > > >
+> > > > Those devices are instantiated only by the Simple Platform Bus prob=
+e
+> > > > function itself.
+> > >
+> > > Don't let Greg see this... :)
+> > >
+> > > I can't say I'm a fan either. "Platform bus" is a kernel thing, and t=
+he
+> > > distinction here between the 2 compatibles is certainly a kernel thin=
+g.
+> > >
+> > > I think this needs to be solved within the kernel.
+> >
+> > I fully agree with that.
+> >
+> > >
+> > > What I previously said is define a list of compatibles to not
+> > > instantiate the child devices. This would essentially be any case hav=
+ing
+> > > a specific compatible and having its own driver. So if someone has
+> > > 'compatible =3D "vendor,not-so-simple-bus", "simple-bus"', when and i=
+f
+> > > they add a driver for "vendor,not-so-simple-bus", then they have to a=
+dd
+> > > the compatible to the list in the simple-pm-bus driver. I wouldn't
+> > > expect this to be a large list. There's only a handful of cases where
+> > > "simple-bus" has a more specific compatible. And only a few of those
+> > > have a driver. A more general and complicated solution would be makin=
+g
+> > > linux handle 2 (or more) drivers matching a node and picking the driv=
+er
+> > > with most specific match. That gets complicated with built-in vs.
+> > > modules. I'm not sure we really need to solve that problem.
+> >
+> > Right. Let discard the "more general and complicated solution" and focu=
+s
+> > on the list of compatible to avoid child devices instantiation.
+> >
+> > Do you mean that, for "simple-bus" compatible we should:
+> >  - Remove the recursive device instantiation from of_platform_populate(=
+).
+>
+> That may be a problem I hadn't considered. While we've solved most probe
+> ordering issues, I think some may remain. Even when of_platform_populate(=
+)
+> is called affects this. For example, I tried removing various arm32
+> of_platform_.*populate() calls which run earlier than the default call,
+> but that broke some platforms. (Looking at the list of remaining ones, I
+> fixed the at91 pinctrl/gpio drivers, but never tried to remove the
+> calls again.)
+>
+> Maybe this can be restricted to cases which are not recursively created
+> from the root node. Not sure how we detect that. Perhaps no OF_POPULATED
+> flag on the parent node? Or we could just enable this for OF_DYNAMIC
+> nodes? That should be sufficient for your usecase.
 
+Thinking a bit more about this, I think you don't have to do anything.
+If child nodes already got populated, calling of_platform_populate() a
+second time is essentially a nop. And for cases you care about, that
+wouldn't have happened. Of course, I'd still rather there only be 1
+path that devices could have been instantiated.
 
-On 11/11/25 5:54 AM, Robert Richter wrote:
-> On 04.11.25 10:13:34, Dave Jiang wrote:
->>
->>
->> On 11/3/25 11:47 AM, Robert Richter wrote:
->>> There is only support to translate addresses from an endpoint to its
->>> CXL host bridge, but not in the opposite direction from the bridge to
->>> the endpoint. Thus, the endpoint address range cannot be determined
->>> and setup manually for a given SPA range of a region. If the endpoint
->>> has address translation enabled, lock it to prevent the kernel from
->>> reconfiguring it.
->>>
->>> Reviewed-by: Gregory Price <gourry@gourry.net>
->>> Signed-off-by: Robert Richter <rrichter@amd.com>
->>> ---
->>>  drivers/cxl/core/atl.c | 10 ++++++++++
->>>  1 file changed, 10 insertions(+)
->>>
->>> diff --git a/drivers/cxl/core/atl.c b/drivers/cxl/core/atl.c
->>> index d6aa7e6d0ac5..5c15e4d12193 100644
->>> --- a/drivers/cxl/core/atl.c
->>> +++ b/drivers/cxl/core/atl.c
->>> @@ -158,6 +158,16 @@ static int cxl_prm_translate_hpa_range(struct cxl_root *cxl_root, void *data)
->>>  		return -ENXIO;
->>>  	}
->>>  
->>> +	/*
->>> +	 * There is only support to translate from the endpoint to its
->>> +	 * parent port, but not in the opposite direction from the
->>> +	 * parent to the endpoint. Thus, the endpoint address range
->>> +	 * cannot be determined and setup manually. If the address range
->>> +	 * was translated and modified, forbid reprogramming of the
->>> +	 * decoders and lock them.
->>> +	 */
->>> +	cxld->flags |= CXL_DECODER_F_LOCK;
->>
->  
->> Feels like this should be something the BIOS should enforce if that
->> is the expectation? And the kernel checks and warns if that is not
->> the case.
-> 
-> I think this is more a limitation of the kernel implementation rather
-> than the BIOS. The BIOS provides enought information by CFMWS, PRM,
-> HDM and PCI topology. In theory and if there is demand for it, support
-> could be added for driver region setup.
-
-But shouldn't the BIOS set the decoder lock rather than the kernel setting a software lock flag based on assumption of the PRM based setup?
-
-DJ
-
-> 
-> -Robert
-> 
->>
->>> +
->>>  	ctx->hpa_range = hpa_range;
->>>  	ctx->interleave_ways = ways;
->>>  	ctx->interleave_granularity = gran;
->>
-> ?
-
+Rob
