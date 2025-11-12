@@ -1,132 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49F71F4176;
-	Wed, 12 Nov 2025 16:23:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CADA2D3233;
+	Wed, 12 Nov 2025 16:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762964638; cv=none; b=OCtiRrykHUyTRia/9pexyzddkRDYd1J/rGkNCNLv9u3evZAPHZfocb7H+OLvTjI3zdoy8vTgLo1ciz7gTiykU+qe4KWFUGTDQo10Vh7hlL/W3xsNrypAFOjciwDntbDuS8Vm4aQSrk538O5T1XMx8TKWyED11WwgI3mB7ZXC1C0=
+	t=1762964685; cv=none; b=sJKeIxih2Mdkgxp3ZZ2yOiJLKM2p6Jr+a7aykiYlyA0SRZtfG4y4CDnfTlAksAeLdiFYbF18nfkmNiPCdlwijZgqp/J1S7lDiGmLSlcpulYuwGEtW6KPXmsVm0dKngVIWh/QnrHULeEluKhf64rqoFzIXuS0bzJsRB+wm9yUN+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762964638; c=relaxed/simple;
-	bh=85iOPPCnPTcylTWGYbyHyZLBg6P3sq4n5iKzl/1KuRY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rtVtzvKp5g5sGyXxAxo0lCmUpzMl2EjM2jQrJv9CKiHbVc/IwDBrmGGu5GvE5tYEESJqkMz6p6tlTeohw1pgeiwNjWxyXvOAOOIrck+VbniqHFpnTm8cqdvpiRn2FKOww4zoWb4QeSPBCugwS34CiD0aLt/QFOREy/AYmsilRQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z5urpiHk; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z5urpiHk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762964637; x=1794500637;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=85iOPPCnPTcylTWGYbyHyZLBg6P3sq4n5iKzl/1KuRY=;
-  b=Z5urpiHkztlHyPHs8Z7b3bDObhBrV7Y7xaarsKaoZ8kTMa4gUCVL/jTV
-   yZ3BnNLXIFuy3C0C8Oc28rk0Zf45qKDhZJZILvcG53TlCjiX7xHGFKDE5
-   EmHJGQczS2OSV7+38Cj5BBmMSLwwOhegkGx6dIKqbsNW4q6x460X5lmRs
-   XjmqwvTeozJ+J8rjrhWnTmrIRsrPaNG5qqexrPkITOsb4dasOoloXOKLN
-   L2Nz3yB5sFE/I6XP+2jXUu+uj6xEV518jiwmQamivjrGgBwJLQ2CS57rr
-   30UYdgEuiSaECDwiLlx8rD4X6nO97+KzmpM4OupOF1oGB/cfpy7Iqf7bR
-   Q==;
-X-CSE-ConnectionGUID: 6vVWxrioSva/GRCkdb3BgA==
-X-CSE-MsgGUID: wpYJIXDQSPS8u6uQ0kdqXw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11611"; a="75713345"
-X-IronPort-AV: E=Sophos;i="6.19,299,1754982000"; 
-   d="scan'208";a="75713345"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 08:23:56 -0800
-X-CSE-ConnectionGUID: 4LRDhCj/TKSWDdJePcx9ow==
-X-CSE-MsgGUID: t8SFj0J3SgmXb8XzxAYDZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,299,1754982000"; 
-   d="scan'208";a="189248987"
-Received: from spandruv-mobl4.amr.corp.intel.com (HELO [10.125.108.30]) ([10.125.108.30])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 08:23:56 -0800
-Message-ID: <4270add5-8ef1-4400-b884-c47b8af98b19@intel.com>
-Date: Wed, 12 Nov 2025 09:23:54 -0700
+	s=arc-20240116; t=1762964685; c=relaxed/simple;
+	bh=JE3oMv4YnUFo9jCU6sfzYuoxpQAjOfKoehpW0EECicg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JPYLYtc3t2JK9F2gycx6cKtlqIi99LpdzSqwJFk7pp+H7TqdWunpseQ8rLZxysxS+3pmBeUgivb/ABMTKjAU6QaV3m6zyupnk+V+NQsrllkzNJ/QvKJ3218iKgxpDx0Luh/6B7Q3PmKLmsV23l3RiQSzMr6bEavjyHpX9/31nco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d67yX3GM9zHnGhQ;
+	Thu, 13 Nov 2025 00:24:20 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id C96E31400FD;
+	Thu, 13 Nov 2025 00:24:39 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 12 Nov
+ 2025 16:24:39 +0000
+Date: Wed, 12 Nov 2025 16:24:37 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: <alejandro.lucero-palau@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
+	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [PATCH v20 22/22] sfc: support pio mapping based on cxl
+Message-ID: <20251112162437.00001859@huawei.com>
+In-Reply-To: <20251110153657.2706192-23-alejandro.lucero-palau@amd.com>
+References: <20251110153657.2706192-1-alejandro.lucero-palau@amd.com>
+	<20251110153657.2706192-23-alejandro.lucero-palau@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/14] cxl/region: Rename misleading variable name @hpa
- to @hpa_range
-To: Jonathan Cameron <jonathan.cameron@huawei.com>,
- Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
- <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
- "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
-References: <20251103184804.509762-1-rrichter@amd.com>
- <20251103184804.509762-4-rrichter@amd.com>
- <20251111144149.00007c63@huawei.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20251111144149.00007c63@huawei.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
+On Mon, 10 Nov 2025 15:36:57 +0000
+alejandro.lucero-palau@amd.com wrote:
 
+> From: Alejandro Lucero <alucerop@amd.com>
+> 
+> A PIO buffer is a region of device memory to which the driver can write a
+> packet for TX, with the device handling the transmit doorbell without
+> requiring a DMA for getting the packet data, which helps reducing latency
+> in certain exchanges. With CXL mem protocol this latency can be lowered
+> further.
+> 
+> With a device supporting CXL and successfully initialised, use the cxl
+> region to map the memory range and use this mapping for PIO buffers.
+> 
+> Add the disabling of those CXL-based PIO buffers if the callback for
+> potential cxl endpoint removal by the CXL code happens.
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+One comment on something I thought you meant you were changing for v20
+but haven't.  Not important, so either way:
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-On 11/11/25 7:41 AM, Jonathan Cameron wrote:
-> On Mon, 3 Nov 2025 19:47:44 +0100
-> Robert Richter <rrichter@amd.com> wrote:
-> 
->> @hpa is actually a @hpa_range, rename variables accordingly.
->>
->> Reviewed-by: Gregory Price <gourry@gourry.net>
->> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Passing comment below on readability (unrelated to the change you made)
-> 
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> 
-> Dave, I wonder if it is reasonable to queue at least some of Robert's series
-> like this one so that people can start basing on top of those and the
-> merge conflicts will be less painful in the long run.
+> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+> index 79fe99d83f9f..a84ce45398c1 100644
+> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+> @@ -11,6 +11,7 @@
+>  #include <cxl/pci.h>
+>  #include "net_driver.h"
+>  #include "efx_cxl.h"
+> +#include "efx.h"
+>  
+>  #define EFX_CTPIO_BUFFER_SIZE	SZ_256M
+>  
+> @@ -20,6 +21,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>  	struct pci_dev *pci_dev = efx->pci_dev;
+>  	resource_size_t max_size;
+>  	struct efx_cxl *cxl;
+> +	struct range range;
+>  	u16 dvsec;
+>  	int rc;
+>  
+> @@ -119,19 +121,40 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>  	cxl->efx_region = cxl_create_region(cxl->cxlrd, &cxl->cxled, 1);
+>  	if (IS_ERR(cxl->efx_region)) {
+>  		pci_err(pci_dev, "CXL accel create region failed");
+> -		cxl_put_root_decoder(cxl->cxlrd);
+> -		cxl_dpa_free(cxl->cxled);
+> -		return PTR_ERR(cxl->efx_region);
+> +		rc = PTR_ERR(cxl->efx_region);
+> +		goto err_dpa;
 
-We can certainly do that, if the patches can be split out to a different series. Next week is the last week I'll take patches for this cycle.
+I thought you agreed with moving this err_dpa path into the earlier patch to
+reduce churn.  Maybe you already had v20 ready when you replied to the late
+v19 feedback on this.  I don't mind much either way as its just a really
+minor patch churn thing.
 
-DJ
-
-> 
->> ---
->>  drivers/cxl/core/region.c | 30 ++++++++++++++++--------------
->>  1 file changed, 16 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index a780e65532a7..bb889c891cf7 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
-> 
->> @@ -3577,12 +3578,13 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
->>  		return -ENXIO;
->>  
->>  	/*
->> -	 * Ensure that if multiple threads race to construct_region() for @hpa
->> -	 * one does the construction and the others add to that.
->> +	 * Ensure that if multiple threads race to construct_region()
->> +	 * for the HPA range one does the construction and the others
->> +	 * add to that.
-> 
-> Unrelated but a few commas would make this easier to read. Something like:
-> 
-> 	 * Ensure that, if multiple threads race to construct_region()
-> 	 * for the HPA range, one does the construction and the others
-> 	 * add to that.
-> 
->>  	 */
->>  	mutex_lock(&cxlrd->range_lock);
->>  	struct cxl_region *cxlr __free(put_cxl_region) =
->> -		cxl_find_region_by_range(cxlrd, hpa);
->> +		cxl_find_region_by_range(cxlrd, hpa_range);
->>  	if (!cxlr)
->>  		cxlr = construct_region(cxlrd, cxled);
->>  	mutex_unlock(&cxlrd->range_lock);
-> 
-
+> +	}
+> +
+> +	rc = cxl_get_region_range(cxl->efx_region, &range);
+> +	if (rc) {
+> +		pci_err(pci_dev, "CXL getting regions params failed");
+> +		goto err_detach;
+> +	}
+> +
+> +	cxl->ctpio_cxl = ioremap(range.start, range.end - range.start + 1);
+> +	if (!cxl->ctpio_cxl) {
+> +		pci_err(pci_dev, "CXL ioremap region (%pra) failed", &range);
+> +		rc = -ENOMEM;
+> +		goto err_detach;
+>  	}
+>  
+>  	probe_data->cxl = cxl;
+> +	probe_data->cxl_pio_initialised = true;
+>  
+>  	return 0;
+> +
+> +err_detach:
+> +	cxl_decoder_detach(NULL, cxl->cxled, 0, DETACH_INVALIDATE);
+> +err_dpa:
+> +	cxl_put_root_decoder(cxl->cxlrd);
+> +	cxl_dpa_free(cxl->cxled);
+> +	return rc;
+>  }
