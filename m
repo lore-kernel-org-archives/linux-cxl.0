@@ -1,298 +1,310 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010002.outbound.protection.outlook.com [52.101.46.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539CD354713
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 19:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762975825; cv=none; b=tDmC0nKwVxndFTqD4D5wYiAF74Zt57v0kmfxI/Yu2RHtKzcOIqR18Pdq2DkF14AjFrF9PUzYxohH7s6u1wpvdgcdz8VaOiifPyYTTSMz6k2ak8Uo60lcCkyTreXICaxiOZWUmgdU0LNHIqtuQcsANlwT+50fw+JDjKZa0Pbsku4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762975825; c=relaxed/simple;
-	bh=rQ2kHp6lPREv3YxzvbPdgaiaRh8JzJ1empdCPfgiMYg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U6Ij13qvN4BGh5Gf4SWMgmWUFllpWkCA5ogNtcKq3fOBdNY87Z6yQoWFQCuVwzHOPywAlB2sEUXH/5rGJhEKofoXNMfjcxXgAZE7S62xYpCwEiC+uOangzJbD3rdYURvi8XmWdJWBFuzHwLlFdH7Q4Vt9OCZnKJgCxRr8EdfS/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=pOiqeYQC; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E301E2C08AD;
+	Wed, 12 Nov 2025 20:32:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.2
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762979523; cv=fail; b=CzWPl1BO/Ny1r8xlRRhK5MCV4ZA2dEucRS7CRbznxa56QwtTsmzFkZ+Of2H/ljRNt6JNsbqPH0Y+R1PdkX5UnU87LsdOj0xscGcB4zT7W2AdKfLpRbm+hNzicRk48guOvWC6sUbpdGCnIDaTbLnF8y3nGHsQFv+WRyrfnTry1VY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762979523; c=relaxed/simple;
+	bh=M4EkzQkbquA6WJrZCFNWHH/wEIBCdXy9UDDXyf9SC+Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=N9bhB+QoyYuvnuDj+9SNlmu6aMq/X4xJQ00IAlw/DRupg1q51Uz6C9zXzpBLesTHfD++BNiSKAJW2QhBSfChfDuXVPDTmVLqMJPN6AYlRIUcOr7whVM+XvSEKtyBSnTDktwMosLnENj2YPX/ZvEqSVz9FyftyLTQjZcAPbA3Ghc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qd7x3q/d; arc=fail smtp.client-ip=52.101.46.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="pOiqeYQC"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4e88cacc5d9so9855101cf.0
-        for <linux-cxl@vger.kernel.org>; Wed, 12 Nov 2025 11:30:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1762975822; x=1763580622; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EE3olEnyRjl52kAEWnA02JLmmLDlTmwS9hIpIeJT8kY=;
-        b=pOiqeYQCabQJef3Rs9wWabdkiZ771ipQtxnLdPN8Y9Io/D5tmux82CXFBxpEiwDOD3
-         0HUsImdY3DffKnat2HR1WwA/P2GcwlnLE/ElaNkW+LibWaC/wOhEyfS3X3f6H9Wpebgt
-         AmFZr9UQ8dGUE5gkR2dNl93p5S3mo9aNaje3hsRTg475vogLENODR6MIfAUfIcnfiRRQ
-         uxfbG9o1CGd6U45pXz/Ye39X5Lq8jQeY0f1h3PQKS5hpmmSwmc6v3AYRPU945hJG7ATL
-         A8Jmn6od++41aDCAYWvKcjFMxXI0rtOELJL0B8WwxGS1nxIpebr7U0zst7YWxVjs1rQv
-         2WKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762975822; x=1763580622;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=EE3olEnyRjl52kAEWnA02JLmmLDlTmwS9hIpIeJT8kY=;
-        b=Wp47tchn/Xkxbk1tPTsExHvxpROeIENP5o4xyQ4rr+TUzvQFde+kpl5E495/lDDXEO
-         RCkTzvvNU//OebOytmY4Mgu4Kudxr62WStAYviB0JVGOTpp7QJhQohrjUSMi/9IROumH
-         +AViWMpqvUGtr+JHFR0hjiyozvIjYb4ZxLrB7rpOkkcHCIgkmKv/TyLqIljwO3UyQRbn
-         6auZq4A3sCN/rdLxyuPo/HC6ZKGAaZZz2IPD9+O1gQRSyztJYBn/m2brWdRPZKThEWSJ
-         sAlV1rwImaQWFshc1DrdQYoCGakRoI41ZSR/2/CRDLfhf6DBMQJHZzX9LtaF33GM3D2r
-         PXwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWc+/7sqWwPUhPsxMB7jOq/2kNjGOITG+LYSWm5F4mX7eunM5QrvJo/poKgeWniq0cq3hjW9CrxDtM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yysn9Qwc7hdOr9++ICWiEj0AxDtU1QrJj00/ZgA9M8OgJqKMRaG
-	XceOHMUZwaOs9FU7bjZGiuejIQDY8HE5jL2XZMdZsnYICcg5j7oq4PrQJezwUN08fCk=
-X-Gm-Gg: ASbGncuzmuUeaQJkes8Wc1XySeJ9aHhLqA5Rw68knR74ir8tlqsmuRGKqcfd6uN4T3H
-	Cpb/cc0PHrBq9fL5iY8wL1ym0ni9b6MacDOjRyBJByoVTG3BRFCcq0LMgqGXgrGu7nMweuhEOfe
-	TWIKb+dqyhxKDcx47K8DKJo/ozVLkHZCg7ND/ctt+/bmX7Y/mwAg6XTkqO6+k9W7c4lUQPwuKzw
-	BgFF2XBX7+Uo8jYe3gQAKBzm5VkXUy6YIQIguyTLEvYr1iW0WP2FLy+MJOKHunULbopNjN1IG8M
-	jrPYZk3juujEin15mmMXdVO6HLkkJR0jEOzvfFtyj/3uYvTtUYHgCHMaJjxcDy9BrHTxsVz+4As
-	BLlnxZjEO18WQjri4CLzh7QjxmC5uOoKVHaglKR4oT28qX9X1T9J+JuI9F3y2LA50SI8GuYRMh5
-	Fv8QnDWqGxdZOAdjlxDQRraEMVxGRtArNMD4QVsjt0fotXk2LKUPA6JEsoCbVDkwg8
-X-Google-Smtp-Source: AGHT+IEpkA9sHRf+vDkvWZyRaV+z+4MD09rdo9Mmp9OjAhV3qhp/e6NAADZhOGarPgun9sbSz0rc+w==
-X-Received: by 2002:a05:622a:14f:b0:4e8:b980:4792 with SMTP id d75a77b69052e-4eddbcb30a2mr55332141cf.37.1762975821965;
-        Wed, 12 Nov 2025 11:30:21 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b29aa0082esm243922885a.50.2025.11.12.11.30.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 11:30:21 -0800 (PST)
-From: Gregory Price <gourry@gourry.net>
-To: linux-mm@kvack.org
-Cc: kernel-team@meta.com,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	longman@redhat.com,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	osalvador@suse.de,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	byungchul@sk.com,
-	gourry@gourry.net,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	tj@kernel.org,
-	hannes@cmpxchg.org,
-	mkoutny@suse.com,
-	kees@kernel.org,
-	muchun.song@linux.dev,
-	roman.gushchin@linux.dev,
-	shakeel.butt@linux.dev,
-	rientjes@google.com,
-	jackmanb@google.com,
-	cl@gentwo.org,
-	harry.yoo@oracle.com,
-	axelrasmussen@google.com,
-	yuanchu@google.com,
-	weixugc@google.com,
-	zhengqi.arch@bytedance.com,
-	yosry.ahmed@linux.dev,
-	nphamcs@gmail.com,
-	chengming.zhou@linux.dev,
-	fabio.m.de.francesco@linux.intel.com,
-	rrichter@amd.com,
-	ming.li@zohomail.com,
-	usamaarif642@gmail.com,
-	brauner@kernel.org,
-	oleg@redhat.com,
-	namcao@linutronix.de,
-	escape@linux.alibaba.com,
-	dongjoo.seo1@samsung.com
-Subject: [RFC PATCH v2 11/11] [HACK] mm/zswap: compressed ram integration example
-Date: Wed, 12 Nov 2025 14:29:27 -0500
-Message-ID: <20251112192936.2574429-12-gourry@gourry.net>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <20251112192936.2574429-1-gourry@gourry.net>
-References: <20251112192936.2574429-1-gourry@gourry.net>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qd7x3q/d"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pzM02K20OR1OaqDv2ChKxZ/Odw+cPwYlSrhs9dTXIV1FqQP+VOXhCxKgsUVdljkLEzhq2sIyyMHt7JKXRn0AIdrVl0FpUkvdgqq1zZ2L+t9qymtnbxnzEDVUEm9rVIaBqmbjbMahw3c7kSxTxh+FuTA/v82UxqtjDfJ34BK/swgGkhCT8FOAUftgBMwyTsH9TiaOR6sY9rPrUvMJbUSmcYQ/whZnvhB6hF1Si4uKfjao/SyCePJahjftV1UtD9sO/TK6x6zdR2vKpLVm8vW6mFE3I9jv2tnLNNhWYuceCoOxVvRZ0tsa5bVgYXIQX2ndBD6GoP7tmXlRTXPHBEmf6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cvUX0JH2uCoLfhLjeH+NbDVdP8JQ2VfjBfKbvjaGIEI=;
+ b=eTGUBjBICWz6SxF9Q8xs/zkDG1Y8i/24hVpfqGs/gWCtJAEClVanFXLmAEzxWKXAWNQCy/LihyocnC3aTwlzf/9+FREEBo5l6nbbBRycuoA/dAQTB3ThYJRecmkRduFUMWscNwX1ZBrUaDyG0FXbIQb6vmocd9xzqn7fzcWem3fSXhtXgseDSzZTnEKmanQ+JsjnyV9HC3IyHnGdoUlyjXfEYPLbaMGJH9jcA3HtN13yeuvlwvJCQb0SKmJNXq6V+NNLgokNCZfQ+NruH+8Gpj7xPBW2wyWbDcBKrYR08FP3uR7LK9JuQGPsD7nNngbUrkduU1XFc5EFWLI6lV+84g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cvUX0JH2uCoLfhLjeH+NbDVdP8JQ2VfjBfKbvjaGIEI=;
+ b=qd7x3q/dpFi7+z5gOXAkufF7xMDgaWaolzzyjld0Msw/mpzryGaPYNHB5+ITdz5/WQknMjecADMIJd8zC227U3WnCO3xi/JdIDPzQDMmVuta/pMKO+/iUbw2TZfI+Z3sdMhDzHLwM9O0UrPevSiYYPW0RYctMTJprYvt2uJOS50=
+Received: from CH0P221CA0046.NAMP221.PROD.OUTLOOK.COM (2603:10b6:610:11d::19)
+ by BY5PR12MB4163.namprd12.prod.outlook.com (2603:10b6:a03:202::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.15; Wed, 12 Nov
+ 2025 20:31:57 +0000
+Received: from CH1PEPF0000AD80.namprd04.prod.outlook.com
+ (2603:10b6:610:11d:cafe::33) by CH0P221CA0046.outlook.office365.com
+ (2603:10b6:610:11d::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.17 via Frontend Transport; Wed,
+ 12 Nov 2025 20:31:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CH1PEPF0000AD80.mail.protection.outlook.com (10.167.244.90) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9320.13 via Frontend Transport; Wed, 12 Nov 2025 20:31:56 +0000
+Received: from rric.localdomain (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 12 Nov
+ 2025 12:31:54 -0800
+From: Robert Richter <rrichter@amd.com>
+To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
+	<gourry@gourry.net>, "Fabio M. De Francesco"
+	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Robert Richter <rrichter@amd.com>
+Subject: [PATCH v5 00/11] cxl: ACPI PRM Address Translation Support and AMD Zen5 enablement
+Date: Wed, 12 Nov 2025 21:31:27 +0100
+Message-ID: <20251112203143.1269944-1-rrichter@amd.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD80:EE_|BY5PR12MB4163:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3c624c86-3085-46ef-15cc-08de222a864e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|7416014|1800799024|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?S3RWcm1KMWh6YWlEVFpkb1phRDdXNE03WVVGMDNYbW1FU29MekpLTjRMd00x?=
+ =?utf-8?B?c2lIUUdPSGc5WFJScDJHZ0lFMlJjNWVqSUJlTkxjTzdDV05yQ2lBQjZSWits?=
+ =?utf-8?B?N2RubkRYVGlCMWx1YjBpeGlQcTBCU1IzYm9KK2ExcHhVVlVWQXN0c0F0eXVP?=
+ =?utf-8?B?RnZ2cXhHNHc0THY3dERRaVU2WDBwYkhRNHhtTlFIdHd5NG9ud2RUc0IvWlZv?=
+ =?utf-8?B?S2Qyc3c1TUxTd3FvSE9UVlc2d01XdWdkbGlUUXZGK2IxNUtXMXkyVFpzT1No?=
+ =?utf-8?B?ZmxrcG4zZEdkTWplZExPcHF1bFN4SDNRalh0S0F0VU5hdlNEbHpjOXg1aWdM?=
+ =?utf-8?B?MUQ3RTl3WWZCcTVpOHpLSFFPQlNYWE5KeE1QQXh1dTlSWkE2WUFaSHg3N25L?=
+ =?utf-8?B?M3FubHpwbVdGc2FCbzlHQ0hiMFFCc0NocWpPYzFNWHNoc0tTelU3cDA4TUMr?=
+ =?utf-8?B?ZUpQeXh5MlRnZE9Rb1A1SVZkQTgyWjNYY3JZZjV1TWllaXNVMS9tTVI3MU91?=
+ =?utf-8?B?V3JuWGFHeFJsY2loVHRVdCtldUJVSEVJaU4xRkNRSTRTZUFzTStoaWd3aWl6?=
+ =?utf-8?B?UEViL3hCaEhOYTk2ditiaTdPQ3dSaFF0WWJGRzZzTElpMGVZZkQyNFBFaWZZ?=
+ =?utf-8?B?VzdxblJJYytiWG15aTA2Mmc1MStxdm5ONlRDS1Jod1lqb2pyekpycXFxSUJh?=
+ =?utf-8?B?NmlBQUIvTlBWTldlR2l0eXhCcXN0QzJVZTZaRk1UTWJHcXVDaDVkdjZORUc4?=
+ =?utf-8?B?Z2RucVRHRURNUS9lN29weitseXJVMEVKSzkxeFVyNVFEbmpaeEJWM0swOVFY?=
+ =?utf-8?B?ZFEySUVmMkxUUnVLUTNzUGJKNWlOeUtsa3hoaHpKN3hCeE83NW5HNXRFWWRO?=
+ =?utf-8?B?cUFaRFBMT0tBbFhYZkp3aGgwMkI5K3V4Q1Z1MFlRZTZpZGdURnYwOEYzcC8x?=
+ =?utf-8?B?bnJId2hkdm55NzJDRnhwcmdPalcrWEczMWhmR0ppNzJ2ZStOaWN5MjNTWEJN?=
+ =?utf-8?B?MVovTktNZ0w5MitXZWVnTEdxaERRN28wSGx0NU5SWE0vaUw5djdmcjdOZ3Fn?=
+ =?utf-8?B?T3VmT09vUWZnL0MvaUgyQjIvNWwxY210Z0dhY1M1Y1pDVGJ5Ny8rZ3dIdGtB?=
+ =?utf-8?B?MjlZeGZSY1Vwb0c1cmpHdnhpQzJENThEUzJHeG80TjA4bjBuL0tXQ0k3M2Ey?=
+ =?utf-8?B?TEZHU2lyNDYyaWREVDVNRnJpL2hQSWJiRzFZSnJ6cWxHZVhhYmhrQ2U5MmlU?=
+ =?utf-8?B?b3h0Q2ZyYzVreE1qdnYrdEZTKzJ5NHN5dWs2citkS0M1VEsrMm9KdEFvejNi?=
+ =?utf-8?B?SEZTVVB5dmlXUXRkVFBmeDM1T1Z3cjVSY1pZVGZyU2U1V1hITlFqOE90SHE1?=
+ =?utf-8?B?OG13OXA4c1l2ZHVKd2psWVlUQlA1SCtlVjNwWkxmSGRkaUlBSXczaFMwVE1W?=
+ =?utf-8?B?UW9LNFlaTGNNY2pxd0Fhbm5JdkxRSmhCYjN2UWhZTitqWHpWZkZNWE5rQkk4?=
+ =?utf-8?B?SzJEUEkvaGp5YWZWcTdMaVUwOGp3NFNnZFJwTlBwUy9SNStLdTdrY3RTYzNV?=
+ =?utf-8?B?SEVTVG9DS1g1VENaakdGbURjVTJTN2kvT2Q0U2RGVEFqN1JFQkVzc21UL3hm?=
+ =?utf-8?B?SVk5MGdSVStINGthR1VpOW5PNUEzSytDdFYvZmNxcU5ZcG45VExtMWpFQStz?=
+ =?utf-8?B?RXBaSUhFM3JPOW82MWdpenhNYUJEblkrT3ZIdUhpZk1NQ2p4Z0VTTHhiaVUr?=
+ =?utf-8?B?cVZCTldiTytNODNhNDQ1aDF2YmNyOHIzZUVjak8xaTJ1emFvR2daN1NnMGpN?=
+ =?utf-8?B?UHFuK1pVQlhaVExXalVCRmFha2lFdTZkaWZpUE1uQW5VdzNHNGplR0ZXVzZm?=
+ =?utf-8?B?ajU4SFJyQWRqTjBYd1NxbytYV3hvQXRLRnN3SWJwWCthUWI0a1hOb1E3RS9i?=
+ =?utf-8?B?UjVBZDArNEVTZ3BCdUhESEJFTk1DNjUyNzAwd25kbjA3UWNESW5BQTcyTk5n?=
+ =?utf-8?B?eDNPZEsxb04wVHc2Zy9yazdsY2NpblVNZ0lIMmh5WnluUUJ0dXp1VkFJU3A1?=
+ =?utf-8?Q?k4MxXI?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2025 20:31:56.9880
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c624c86-3085-46ef-15cc-08de222a864e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000AD80.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4163
 
-Here is an example of how you might use a SPM memory node.
+This patch set adds support for address translation using ACPI PRM and
+enables this for AMD Zen5 platforms. v4 is the current appoach in
+response to earlier attempts to implement CXL address translation:
 
-If there is compressed ram available (in this case, a bit present
-in mt_spm_nodelist), we skip the entire software compression process
-and memcpy directly to a compressed memory folio, and store the newly
-allocated compressed memory page as the zswap entry->handle.
+ * v1: [1] and the comments on it, esp. Dan's [2],
+ * v2: [3] and comments on [4], esp. Dave's [5],
+ * v3: [6] and comments on it, esp. Dave's [7],
+ * v4: [8].
 
-On decompress we do the opposite: copy directly from the stored
-page to the destination, and free the compressed memory page.
+This version addresses review comments. No major changes compared to
+the previous submission. See the changelog for details. Thank you all
+for your reviews and testing.
 
-Note: We do not integrate any compressed memory device checks at
-this point because this is a stand-in to demonstrate how the SPM
-node allocation mechanism works.
+Documentation of CXL Address Translation Support will be added to the
+Kernel's "Compute Express Link: Linux Conventions". This patch
+submission will be the base for a documention patch that describes CXL
+Address Translation support accordingly.
 
-See the "TODO" comment in `zswap_compress_direct()` for more details
+The CXL driver currently does not implement address translation which
+assumes the host physical addresses (HPA) and system physical
+addresses (SPA) are equal.
 
-In reality, we would want to move this mechanism out of zswap into
-its own component (cram.c?), and enable a more direct migrate_page()
-call that actually re-maps the page read-only into any mappings, and
-then provides a write-fault handler which promotes the page on write.
+Systems with different HPA and SPA addresses need address translation.
+If this is the case, the hardware addresses esp. used in the HDM
+decoder configurations are different to the system's or parent port
+address ranges. E.g. AMD Zen5 systems may be configured to use
+'Normalized addresses'. Then, CXL endpoints have their own physical
+address base which is not the same as the SPA used by the CXL host
+bridge. Thus, addresses need to be translated from the endpoint's to
+its CXL host bridge's address range.
 
-(Similar to a NUMA Hint Fault, but only on write-access)
+To enable address translation, the endpoint's HPA range must be
+translated to the CXL host bridge's address range. A callback is
+introduced to translate a decoder's HPA to the CXL host bridge's
+address range. The callback is then used to determine the region
+parameters which includes the SPA translated address range of the
+endpoint decoder and the interleaving configuration. This is stored in
+struct cxl_region which allows an endpoint decoder to determine that
+parameters based on its assigned region.
 
-This prevents any run-away compression ratio failures, since the
-compression ratio would be checked on allocation, rather than allowed
-to silently decrease on writes until the device becomes unstable.
+Note that only auto-discovery of decoders is supported. Thus, decoders
+are locked and cannot be configured manually.
 
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- mm/zswap.c | 66 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 65 insertions(+), 1 deletion(-)
+Finally, Zen5 address translation is enabled using ACPI PRMT.
 
-diff --git a/mm/zswap.c b/mm/zswap.c
-index c1af782e54ec..e6f48a4e90f1 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -25,6 +25,7 @@
- #include <linux/scatterlist.h>
- #include <linux/mempolicy.h>
- #include <linux/mempool.h>
-+#include <linux/memory-tiers.h>
- #include <crypto/acompress.h>
- #include <linux/zswap.h>
- #include <linux/mm_types.h>
-@@ -191,6 +192,7 @@ struct zswap_entry {
- 	swp_entry_t swpentry;
- 	unsigned int length;
- 	bool referenced;
-+	bool direct;
- 	struct zswap_pool *pool;
- 	unsigned long handle;
- 	struct obj_cgroup *objcg;
-@@ -717,7 +719,8 @@ static void zswap_entry_cache_free(struct zswap_entry *entry)
- static void zswap_entry_free(struct zswap_entry *entry)
- {
- 	zswap_lru_del(&zswap_list_lru, entry);
--	zs_free(entry->pool->zs_pool, entry->handle);
-+	if (!entry->direct)
-+		zs_free(entry->pool->zs_pool, entry->handle);
- 	zswap_pool_put(entry->pool);
- 	if (entry->objcg) {
- 		obj_cgroup_uncharge_zswap(entry->objcg, entry->length);
-@@ -851,6 +854,43 @@ static void acomp_ctx_put_unlock(struct crypto_acomp_ctx *acomp_ctx)
- 	mutex_unlock(&acomp_ctx->mutex);
- }
- 
-+static struct page *zswap_compress_direct(struct page *src,
-+					  struct zswap_entry *entry)
-+{
-+	int nid = first_node(mt_spm_nodelist);
-+	struct page *dst;
-+	gfp_t gfp;
-+
-+	if (nid == NUMA_NO_NODE)
-+		return NULL;
-+
-+	gfp = GFP_NOWAIT | __GFP_NORETRY | __GFP_HIGHMEM | __GFP_MOVABLE |
-+	      __GFP_SPM_NODE;
-+	dst = __alloc_pages(gfp, 0, nid, &mt_spm_nodelist);
-+	if (!dst)
-+		return NULL;
-+
-+	/*
-+	 * TODO: check that the page is safe to use
-+	 *
-+	 * In a real implementation, we would not be using ZSWAP to demonstrate this
-+	 * and instead would implement a new component (compressed_ram, cram.c?)
-+	 *
-+	 * At this point we would check via some callback that the device's memory
-+	 * is actually safe to use - and if not, free the page (without writing to
-+	 * it), and kick off kswapd for that node to make room.
-+	 *
-+	 * Alternatively, if the compressed memory device(s) report a watermark
-+	 * crossing via interrupt, a flag can be set that is checked here rather
-+	 * that calling back into a device driver.
-+	 *
-+	 * In this case, we're testing with normal memory, so the memory is always
-+	 * safe to use (i.e. no compression ratio to worry about).
-+	 */
-+	copy_mc_highpage(dst, src);
-+	return dst;
-+}
-+
- static bool zswap_compress(struct page *page, struct zswap_entry *entry,
- 			   struct zswap_pool *pool)
- {
-@@ -862,6 +902,19 @@ static bool zswap_compress(struct page *page, struct zswap_entry *entry,
- 	gfp_t gfp;
- 	u8 *dst;
- 	bool mapped = false;
-+	struct page *zpage;
-+
-+	/* Try to shunt directly to compressed ram */
-+	if (!nodes_empty(mt_spm_nodelist)) {
-+		zpage = zswap_compress_direct(page, entry);
-+		if (zpage) {
-+			entry->handle = (unsigned long)zpage;
-+			entry->length = PAGE_SIZE;
-+			entry->direct = true;
-+			return true;
-+		}
-+		/* otherwise fallback to normal zswap */
-+	}
- 
- 	acomp_ctx = acomp_ctx_get_cpu_lock(pool);
- 	dst = acomp_ctx->buffer;
-@@ -939,6 +992,16 @@ static bool zswap_decompress(struct zswap_entry *entry, struct folio *folio)
- 	int decomp_ret = 0, dlen = PAGE_SIZE;
- 	u8 *src, *obj;
- 
-+	/* compressed ram page */
-+	if (entry->direct) {
-+		struct page *src = (struct page *)entry->handle;
-+		struct folio *zfolio = page_folio(src);
-+
-+		memcpy_folio(folio, 0, zfolio, 0, PAGE_SIZE);
-+		__free_page(src);
-+		goto direct_done;
-+	}
-+
- 	acomp_ctx = acomp_ctx_get_cpu_lock(pool);
- 	obj = zs_obj_read_begin(pool->zs_pool, entry->handle, acomp_ctx->buffer);
- 
-@@ -972,6 +1035,7 @@ static bool zswap_decompress(struct zswap_entry *entry, struct folio *folio)
- 	zs_obj_read_end(pool->zs_pool, entry->handle, obj);
- 	acomp_ctx_put_unlock(acomp_ctx);
- 
-+direct_done:
- 	if (!decomp_ret && dlen == PAGE_SIZE)
- 		return true;
- 
+This series bases on cxl/next.
+
+V5:
+ * fixed build error with !CXL_REGION (kbot),
+ * updated sob-chains,
+ * added note to get_cxl_root_decoder() to drop reference after use
+   (Dave),
+ * moved initialziation of base* variables in
+   cxl_prm_translate_hpa_range() (Dave, Jonathan),
+ * fixed initialization of cxlr->hpa_range for the non-auto case
+   (Alison),
+ * added description of the @hpa_range arg to
+   cxl_calc_interleave_pos() (kbot),
+ * removed optional patches 12-14 to send them separately (Alison,
+   Dave),
+ * reordered patches 1-6 to reduce dependencies between them and give
+   way for early pick up candidates,
+ * rebased onto cxl/next (c692f5a947ad),
+ * added commas in comment in cxl_add_to_region() (Jonathan),
+ * removed cxlmd from struct cxl_region_context (Dave, Jonathan),
+ * removed use of PTR_ERR_OR_ZERO() (Jonathan),
+ * increased wrap width to 80 chars for comments in cxl_atl.c (Jonathan),
+ * moved (ways > 1) check out of while loop in cxl_prm_translate_hpa_range()
+   (Jonathan),
+ * removed trailing comma in struct prm_cxl_dpa_spa_data initializer (Jonathan),
+ * updated patch description on locking the decoders (Dave, Jonathan),
+ * spell fix in patch description (Jonathan),
+
+V4:
+ * rebased onto v6.18-rc2 (cxl/next),
+ * updated sob-chain,
+ * reworked and simplified code to use an address translation callback
+   bound to the root port,
+ * moved all address translation code to core/atl.c,
+ * cxlr->cxlrd change, updated patch description (Alison),
+ * use DEFINE_RANGE() (Jonathan),
+ * change name to @hpa_range (Dave, Jonathan),
+ * updated patch description if there is a no-op (Gregory),
+ * use Designated initializers for struct cxl_region_context (Dave),
+ * move callback handler to struct cxl_root_ops (Dave),
+ * move hanler inialization to acpi_probe() (Dave),
+ * updated comment where Normalized Addressing is checked (Dave),
+ * limit PRM enablement only to AMD supported kernel configs (AMD_NB)
+   (Jonathan),
+ * added 3 related optional cleanup patches at the end of the series,
+
+V3:
+ * rebased onto cxl/next,
+ * complete rework to reduce number of required changes/patches and to
+   remove platform specific code (Dan and Dave),
+ * changed implementation allowing to add address translation to the
+   CXL specification (documention patch in preparation),
+ * simplified and generalized determination of interleaving
+   parameters using the address translation callback,
+ * depend only on the existence of the ACPI PRM GUID for CXL Address
+   Translation enablement, removed platform checks,
+ * small changes to region code only which does not require a full
+   rework and refactoring of the code, just separating region
+   parameter setup and region construction,
+ * moved code to new core/atl.c file,
+ * fixed subsys_initcall order dependency of EFI runtime services
+   (Gregory and Joshua),
+
+V2:
+ * rebased onto cxl/next,
+ * split of v1 in two parts:
+   * removed cleanups and updates from this series to post them as a
+     separate series (Dave),
+   * this part 2 applies on top of part 1, v3,
+ * added tags to SOB chain,
+ * reworked architecture, vendor and platform setup (Jonathan):
+   * added patch "cxl/x86: Prepare for architectural platform setup",
+   * added function arch_cxl_port_platform_setup() plus a __weak
+     versions for archs other than x86,
+   * moved code to core/x86,
+ * added comment to cxl_to_hpa_fn (Ben),
+ * updated year in copyright statement (Ben),
+ * cxl_port_calc_hpa(): Removed HPA check for zero (Jonathan), return
+   1 if modified,
+ * cxl_port_calc_pos(): Updated description and wording (Ben),
+ * added sereral patches around interleaving and SPA calculation in
+   cxl_endpoint_decoder_initialize(),
+ * reworked iterator in cxl_endpoint_decoder_initialize() (Gregory),
+ * fixed region interleaving parameters() (Alison),
+ * fixed check in cxl_region_attach() (Alison),
+ * Clarified in coverletter that not all ports in a system must
+   implement the to_hpa() callback (Terry).
+
+[1] https://lore.kernel.org/linux-cxl/20240701174754.967954-1-rrichter@amd.com/
+[2] https://lore.kernel.org/linux-cxl/669086821f136_5fffa29473@dwillia2-xfh.jf.intel.com.notmuch/
+[3] https://patchwork.kernel.org/project/cxl/cover/20250218132356.1809075-1-rrichter@amd.com/
+[4] https://patchwork.kernel.org/project/cxl/cover/20250715191143.1023512-1-rrichter@amd.com/
+[5] https://lore.kernel.org/all/78284b12-3e0b-4758-af18-397f32136c3f@intel.com/
+[6] https://patchwork.kernel.org/project/cxl/cover/20250912144514.526441-1-rrichter@amd.com/
+[7] https://lore.kernel.org/all/20250912144514.526441-8-rrichter@amd.com/T/#m23c2adb9d1e20770ccd5d11475288bda382b0af5
+[8] https://patchwork.kernel.org/project/cxl/cover/20251103184804.509762-1-rrichter@amd.com/
+
+Robert Richter (11):
+  cxl/region: Rename misleading variable name @hpa to @hpa_range
+  cxl/region: Store root decoder in struct cxl_region
+  cxl/region: Store HPA range in struct cxl_region
+  cxl: Simplify cxl_root_ops allocation and handling
+  cxl/region: Separate region parameter setup and region construction
+  cxl/region: Add @hpa_range argument to function
+    cxl_calc_interleave_pos()
+  cxl/region: Use region data to get the root decoder
+  cxl: Introduce callback for HPA address ranges translation
+  cxl/acpi: Prepare use of EFI runtime services
+  cxl: Enable AMD Zen5 address translation using ACPI PRMT
+  cxl/atl: Lock decoders that need address translation
+
+ drivers/cxl/Kconfig       |   5 +
+ drivers/cxl/acpi.c        |  17 ++--
+ drivers/cxl/core/Makefile |   1 +
+ drivers/cxl/core/atl.c    | 207 ++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/cdat.c   |   8 +-
+ drivers/cxl/core/core.h   |   8 ++
+ drivers/cxl/core/port.c   |   9 +-
+ drivers/cxl/core/region.c | 156 +++++++++++++++++-----------
+ drivers/cxl/cxl.h         |  31 ++++--
+ 9 files changed, 356 insertions(+), 86 deletions(-)
+ create mode 100644 drivers/cxl/core/atl.c
+
+
+base-commit: c692f5a947ad17ab155dc78631342b44acce5a96
 -- 
-2.51.1
+2.47.3
 
