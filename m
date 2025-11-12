@@ -1,202 +1,239 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013057.outbound.protection.outlook.com [40.93.196.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1702C1581;
-	Wed, 12 Nov 2025 20:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762980118; cv=none; b=AnSlw24m5T6Kuq7V1QfbYG6MVZ0ikhs5qLsS4emFr8aYR+On/gG+q+1QToc64/6CjfxmRcvPK3voOMuceT7Vmz6vvG2X08jFYa0kyC+ES2XBJiMuUhdcQVBoMI3x1kqFPKTBs91k8cHeSi5aCt3Qb4jClma39VPrRkuRnXWXgjk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762980118; c=relaxed/simple;
-	bh=g+Xw7BPdzEBxw6q3bSFXlrq7sqUQnBs9h7Pk/Q4IXh0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XKkJU+tYCJyTLT7epSIhhohPU6Snl9Wu8RY5galw5341TXDP69VQyP2o+Q6YIgzqOQeXgqls/uXtdvwgsVOQUJYG4CL9lcEaEOhBxIdGRAAdaMNHdw1JuXYeKA5vGSMt25qTh08VJpt4rWJHclry3F9xWG9nx1BDdx0vrJiq4+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bXJh+C3i; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5D32D1911;
+	Wed, 12 Nov 2025 20:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762980693; cv=fail; b=gCQKlQORAgFBAIDg6XXCx56pSQL8dx8yy4pKwIN1YqucvxRG+B3ZbYfMmwy9uHQZByAVZ8VO57IBxYGBEy5CF5FwrFWi5GCF2OGcnHR+CHlvCiOAvbuGMnDctdab1mmxPUMOpYHkjUL9OHuaKyVhlq28Dpfhy2LlByFEFrA1UME=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762980693; c=relaxed/simple;
+	bh=8fEuaUJq6hnppPcJgE76MlplmW/P2brzXo1BFCCJvj8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TWOw9DOqPkl14T6pnT6Tk0sXy4DMnE4u8lBeAPoQRCAfXrLDEvRmZowMSNFf9X1Q/un3h37ZN+kf9nbf3m86/J2lNx4aX753I/6WhtyqLXM7DvIT8Yh++c3ncRkM0sGxN+UoIuscu6RjTThaBKSIvCcJjZjsDBWC0RKsG1aSk3w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FYSsp93O; arc=fail smtp.client-ip=40.93.196.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bXJh+C3i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762980116; x=1794516116;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=g+Xw7BPdzEBxw6q3bSFXlrq7sqUQnBs9h7Pk/Q4IXh0=;
-  b=bXJh+C3iCmAQ2R7BWGMuwGTttkPtVvjq53LMOtkoiv/tx8O3QLODYxKB
-   Hd8OY2DkMEU69zJ3fiUV3MdcGImCaPSP9LW5jZXAaYUIk4ns1bVpN1jit
-   DybnRn/lcCBU80v1s+OPLquBOEVYA5FtZvD7kNLAqpdeg1uzBpvNFxske
-   UjfrEeg9QNLoM5YLG11AYSFwBhr8yuDLVJTJyYuGh7rmFp/F1xAdy84Qw
-   rgQZrYPabPM9YuJILozfCcWW7D6xMVvUMveUgg+K/Zr3k3/cZmCwThXfg
-   FLi/Up53m4WN8I9AN/EGFVixB25T2TuKk5qUbRJmp90GnkRG5ejF25jwj
-   Q==;
-X-CSE-ConnectionGUID: nExPJQpoSzGMJiIJ+rTAIw==
-X-CSE-MsgGUID: eQTZnMb+TsmnYvEV3FG9+g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11611"; a="64938345"
-X-IronPort-AV: E=Sophos;i="6.19,300,1754982000"; 
-   d="scan'208";a="64938345"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 12:41:55 -0800
-X-CSE-ConnectionGUID: nuFgINl/Rg2KCimrlImb5g==
-X-CSE-MsgGUID: i+I/7OpbTG2B2QTmlum93w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,300,1754982000"; 
-   d="scan'208";a="219970307"
-Received: from spandruv-mobl4.amr.corp.intel.com (HELO [10.125.108.30]) ([10.125.108.30])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 12:41:55 -0800
-Message-ID: <55116a54-dd66-4444-aaeb-56ffc3ff5712@intel.com>
-Date: Wed, 12 Nov 2025 13:41:54 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FYSsp93O"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=chQV3CZXLRCeARWy37bxe2Z3ccmyjaTv0CBrQRh3C86ux7OcuC35VhxVWYTM7TiJnw8nRw/jFVDgJevfhTp+USEYqtU4rXUnMkB8R5nPXvotcbSWIuVi7ShXGu2u5MfQwQEordcjPfSz8bbdK9UNBTrUZGyBTTgte/poXiOJwnq2c8xFc45cQGn+h+1AkqzpFIqc89FhpbSsD9W38MjVviqnSyiUJlneZ2KL4g8IS6aBFdLtApfQP89U5FCnM4drf/N5gcB2EsnwWhkXSut4PyT2QS45WW9s0oAohLnaw3kwzHL8nGwf46HdPp61H3yU6H1W0zzsSSXqNrcqhN7lIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3v7jgDbos57NmVjFsBB0NnJdEk8rmOjeUDghDshnTRM=;
+ b=qExN99gnh1U3YQLsQCORTXFeHzo8cK+NY6TpxFt13Z/EpW4evjGBprsNEmGmYcWhyJbFx7OeDTVO3oUauY0L5k54rHnf5HXkvUVC1UfnfbBuurk7HwS7DEnCGS2dpzeuN2Pc91nilvJS4fjwOYjKyLQtR2kXyfLAs02DZ/QzlDfoJf1hh699mgyGhIIdyRFchBa1ozRFtJHyg0xTM979+/+AlkatE06JfgLEOBso0SggdKOzlZml3sDuFiqAlk5siEqSrC2rXD+BdMaaS2kLJHQyztk0IIeacIUATmfMUolQYj7ifHKdhpYM3Ks5PgECfvtgh56C5fUKVCJsuwNbPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3v7jgDbos57NmVjFsBB0NnJdEk8rmOjeUDghDshnTRM=;
+ b=FYSsp93OsAa3UbNBEYmhasXDbv63ZTQfIRS4h7lDqpxwp8V4d+Ay/XcqGgQF4vrfLFdFvUz/jvms8BqBX8eGtMhAooKzRLncPet0Pd+TMWNatEHigQ8P5QJyzePz3IMEReuaQu7J4Wz8mdYQLfe6IkIm8QrzkI2uJCDGkQQq6LI=
+Received: from SN7PR04CA0192.namprd04.prod.outlook.com (2603:10b6:806:126::17)
+ by DS2PR12MB9567.namprd12.prod.outlook.com (2603:10b6:8:27c::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.16; Wed, 12 Nov
+ 2025 20:51:29 +0000
+Received: from SN1PEPF0002BA4E.namprd03.prod.outlook.com
+ (2603:10b6:806:126:cafe::fa) by SN7PR04CA0192.outlook.office365.com
+ (2603:10b6:806:126::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.17 via Frontend Transport; Wed,
+ 12 Nov 2025 20:51:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SN1PEPF0002BA4E.mail.protection.outlook.com (10.167.242.71) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9320.13 via Frontend Transport; Wed, 12 Nov 2025 20:51:29 +0000
+Received: from rric.localdomain (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 12 Nov
+ 2025 12:51:25 -0800
+From: Robert Richter <rrichter@amd.com>
+To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
+	<gourry@gourry.net>, "Fabio M. De Francesco"
+	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Robert Richter <rrichter@amd.com>
+Subject: [PATCH 1/3] cxl: Simplify cxl_rd_ops allocation and handling
+Date: Wed, 12 Nov 2025 21:51:02 +0100
+Message-ID: <20251112205105.1271726-2-rrichter@amd.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20251112205105.1271726-1-rrichter@amd.com>
+References: <20251112205105.1271726-1-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH v4 2/2] acpi/hmat: Fix lockdep warning for
- hmem_register_resource()
-To: dan.j.williams@intel.com, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
-Cc: vishal.l.verma@intel.com, ira.weiny@intel.com, rafael@kernel.org
-References: <20251105235115.85062-1-dave.jiang@intel.com>
- <20251105235115.85062-3-dave.jiang@intel.com>
- <690e977966ca5_74f59100b@dwillia2-mobl4.notmuch>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <690e977966ca5_74f59100b@dwillia2-mobl4.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4E:EE_|DS2PR12MB9567:EE_
+X-MS-Office365-Filtering-Correlation-Id: c34ab8e9-b809-4953-f7b8-08de222d4106
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|7416014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?m0GYajwfDOSBOmIw2923SbKPzQH3S9io5liq7qgkMx8Mg0+Jb/eAuBWLalNa?=
+ =?us-ascii?Q?HwdI7sOcPQtLtHFFIOO9jK3o8kvbo6yPiVdfsLleKKH8cLMhhjW7e67/Ozgo?=
+ =?us-ascii?Q?4/2Al2FPr8kA1+iMA1C2Bv0xuDe7E6X5AizUXIrD0xS2Xe7hWcFr96D5PcoP?=
+ =?us-ascii?Q?NeYhgvEmw4hsuv8pZLsJ7Ae2KeGwePJLG0AoeXMM/00CprTPxW4VGG2hWbHo?=
+ =?us-ascii?Q?b4WD/DY+bNRftF44rGS/FfiencjsZxBMHjm/LH9JyEAkHoGTzj0u4wTai4UP?=
+ =?us-ascii?Q?n2EAecfE0pFqk9v0lURsevriSpsA9rowWRkKrFMtST5q8wpn4ZKnf88ZO7ZT?=
+ =?us-ascii?Q?PrXdpyRYLApQ5JA15HJ8IxuAmsVlWyJU/8dVbE8Ut9wgKMNXdP3HbqNF2V40?=
+ =?us-ascii?Q?7ZRhVZtO4iRzaQApZFL9GuUjJTmd3PTz0bVXNKrM2ELqnCNYKx0bGFVAbOtt?=
+ =?us-ascii?Q?uBUB6DpTmn1hB3l9Wp2IcdhhvxO8LY8EJB6a5Wjz0VbaMp3ZEjhxgG1zbil6?=
+ =?us-ascii?Q?6bNTXzMUv+ytwRwCFeTg6KuixqHq2UKuK/jvj7UvQt8GBmSvCe07nTGljs9Q?=
+ =?us-ascii?Q?C/8QXHZu6ZQGGTFyZ7GDTCDRZFvdKzuKEb+575L1asqtA42vFJiyuW95DFA8?=
+ =?us-ascii?Q?Ohxv/WX1FOBn2uzO7MVu0YP6N49I736eks6sMECw5ZYMvebAyOYg6ZcuTCRs?=
+ =?us-ascii?Q?HBsliwOBborD3pBTgbR7cBhF63+o5dWOPeSd8HVkZoTC+4DtltYxdpx546hb?=
+ =?us-ascii?Q?QVahGEL55c7llOXmCm4XOQql+H4IljjBjbXDYUbjojllqb0TNcpT9y9kr6FU?=
+ =?us-ascii?Q?8G9eRwrHbVAT24voWOFhb6rPCKVu9Vtw1kki4IZWoEVpjZx+W2prjq0z5Q5E?=
+ =?us-ascii?Q?vINyxJ0/J9nJWNGnk9hkrRJgdGtWM+l1BiO9zyeHsIy4U2UHyxm/Qrl3IGU0?=
+ =?us-ascii?Q?/m60XzhvUZJBvWyX3RZ9Z+KQ4ZKID4jHCYub7QXMYFMW8qZkFTg5coUDD2Dn?=
+ =?us-ascii?Q?rsiU2mREP62OS3eYvbWvGaOe4JsGRj9QFDynu+RRB1LQaD8JBP4vxEOWvKU/?=
+ =?us-ascii?Q?YJk5/ou6GdbQ7+WMSAemb0Qb0TN/S93VXIvsofJz6Ac5imOk5xOcMBHDGp0z?=
+ =?us-ascii?Q?YQjgIyF6ASlUFt1IxVRysu+YTyt14YucSn/4kSLhdrt2VY4j+PXaMhwH2yUk?=
+ =?us-ascii?Q?3yxypJlicEQM2eEEUWiHO5Xwcoq8/Gu88+aTQnmYUEu/fYeVpLsZkQEIsEVb?=
+ =?us-ascii?Q?6XhTBOfoXDgV7An3IndybpP+jCeNh8gB5xaBvLsoQlA+cITKqVnZOf+fwf57?=
+ =?us-ascii?Q?Vk3VwzKTEgJdX9V1HmaZLDgCV0yn7J5/UzRzTW/tyPQH0vpq2atMPp5sNwJl?=
+ =?us-ascii?Q?MjnXpVrpyKKIldf+9HRKfJ/Ea5kjPNTFd+lv+oVQfu0fm8bYxxfDWlE8TpjH?=
+ =?us-ascii?Q?UGUMKSJCYhGI9VhBkBFNqHU8yKN3nDJb5Z9Qu4LAYtn2OJ4X30did6FYeL0U?=
+ =?us-ascii?Q?alotCDkWDj4KDrGVxGw5jPxsmlulzK/PnGhcVXxNzb9Ed9rHD3NHO9YSooNm?=
+ =?us-ascii?Q?WPkWasV0yKyY8fVxdik=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(7416014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2025 20:51:29.2384
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c34ab8e9-b809-4953-f7b8-08de222d4106
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002BA4E.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS2PR12MB9567
 
+A root decoder's callback handlers are collected in struct cxl_rd_ops.
+The structure is dynamically allocated, though it contains only a few
+pointers in it. This also requires to check two pointes to check for
+the existance of a callback.
 
+Simplify the allocation, release and handler check by embedding the
+ops statically in struct cxl_root_decoder.
 
-On 11/7/25 6:06 PM, dan.j.williams@intel.com wrote:
-> Dave Jiang wrote:
->> The following lockdep splat was observed while kernel auto-online a CXL
->> memory region:
->>
->> ======================================================
->> WARNING: possible circular locking dependency detected
->> 6.17.0djtest+ #53 Tainted: G        W
->> ------------------------------------------------------
->> systemd-udevd/3334 is trying to acquire lock:
->> ffffffff90346188 (hmem_resource_lock){+.+.}-{4:4}, at: hmem_register_resource+0x31/0x50
->>
->> but task is already holding lock:
->> ffffffff90338890 ((node_chain).rwsem){++++}-{4:4}, at: blocking_notifier_call_chain+0x2e/0x70
->>
->> which lock already depends on the new lock.
->> [..]
->> Chain exists of:
->>   hmem_resource_lock --> mem_hotplug_lock --> (node_chain).rwsem
->>
->>  Possible unsafe locking scenario:
->>
->>        CPU0                    CPU1
->>        ----                    ----
->>   rlock((node_chain).rwsem);
->>                                lock(mem_hotplug_lock);
->>                                lock((node_chain).rwsem);
->>   lock(hmem_resource_lock);
->>
->> The lock ordering can cause potential deadlock. There are instances
->> where hmem_resource_lock is taken after (node_chain).rwsem, and vice
->> versa.
->>
->> Split out the target update section of hmat_register_target() so that
->> hmat_callback() only envokes that section instead of attempt to register
-> 
-> s/envokes/invokes/
-> 
->> hmem devices that it does not need to.
->>
->> Fixes: cf8741ac57ed ("ACPI: NUMA: HMAT: Register "soft reserved" memory as an "hmem" device")
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->> v4:
->> - Fix fixes tag. (Jonathan)
->> - Refactor hmat_hotplug_target(). (Jonathan)
->> ---
->>  drivers/acpi/numa/hmat.c | 47 ++++++++++++++++++++++------------------
->>  1 file changed, 26 insertions(+), 21 deletions(-)
->>
->> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
->> index 1dc73d20d989..d10cbe93c3a7 100644
->> --- a/drivers/acpi/numa/hmat.c
->> +++ b/drivers/acpi/numa/hmat.c
->> @@ -874,10 +874,33 @@ static void hmat_register_target_devices(struct memory_target *target)
->>  	}
->>  }
->>  
->> -static void hmat_register_target(struct memory_target *target)
->> +static void hmat_hotplug_target(struct memory_target *target)
-> 
-> Ah, this makes sense, but is quite a bit of churn with the new
-> indentation and new function name which is a slightly odd fit since
-> initial setup is not "hotplug". Is the following equivalent / easier to
-> follow?
+Implementation is equivalent to how struct cxl_root_ops handles the
+callbacks.
 
-Yes and no. We also need to remove the generic target block out of the hotplug path. So I'll just keep the original version.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Signed-off-by: Robert Richter <rrichter@amd.com>
+---
+ drivers/cxl/acpi.c        |  8 ++------
+ drivers/cxl/core/region.c | 20 +++++---------------
+ drivers/cxl/cxl.h         |  2 +-
+ 3 files changed, 8 insertions(+), 22 deletions(-)
 
-DJ
-
-> 
-> Either way,
-> 
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> 
-> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> index 5a36d57289b4..a1be8cf70dc4 100644
-> --- a/drivers/acpi/numa/hmat.c
-> +++ b/drivers/acpi/numa/hmat.c
-> @@ -878,22 +878,16 @@ static void hmat_register_target(struct memory_target *target)
->  {
->  	int nid = pxm_to_node(target->memory_pxm);
->  
-> -	/*
-> -	 * Devices may belong to either an offline or online
-> -	 * node, so unconditionally add them.
-> -	 */
-> -	hmat_register_target_devices(target);
-> -
->  	/*
->  	 * Register generic port perf numbers. The nid may not be
->  	 * initialized and is still NUMA_NO_NODE.
->  	 */
-> -	mutex_lock(&target_lock);
-> +	guard(mutex)(&target_lock);
->  	if (*(u16 *)target->gen_port_device_handle) {
->  		hmat_update_generic_target(target);
->  		target->registered = true;
-> +		return;
->  	}
-> -	mutex_unlock(&target_lock);
->  
->  	/*
->  	 * Skip offline nodes. This can happen when memory
-> @@ -905,7 +899,6 @@ static void hmat_register_target(struct memory_target *target)
->  	if (nid == NUMA_NO_NODE || !node_online(nid))
->  		return;
->  
-> -	mutex_lock(&target_lock);
->  	if (!target->registered) {
->  		hmat_register_target_initiators(target);
->  		hmat_register_target_cache(target);
-> @@ -913,15 +906,16 @@ static void hmat_register_target(struct memory_target *target)
->  		hmat_register_target_perf(target, ACCESS_COORDINATE_CPU);
->  		target->registered = true;
->  	}
-> -	mutex_unlock(&target_lock);
->  }
->  
->  static void hmat_register_targets(void)
->  {
->  	struct memory_target *target;
->  
-> -	list_for_each_entry(target, &targets, node)
-> +	list_for_each_entry(target, &targets, node) {
-> +		hmat_register_target_devices(target);
->  		hmat_register_target(target);
-> +	}
->  }
->  
->  static int hmat_callback(struct notifier_block *self,
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index d5119de7f5a9..fab736aa77dc 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -487,12 +487,8 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+ 	cxlrd->qos_class = cfmws->qtg_id;
+ 
+ 	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_XOR) {
+-		cxlrd->ops = kzalloc(sizeof(*cxlrd->ops), GFP_KERNEL);
+-		if (!cxlrd->ops)
+-			return -ENOMEM;
+-
+-		cxlrd->ops->hpa_to_spa = cxl_apply_xor_maps;
+-		cxlrd->ops->spa_to_hpa = cxl_apply_xor_maps;
++		cxlrd->ops.hpa_to_spa = cxl_apply_xor_maps;
++		cxlrd->ops.spa_to_hpa = cxl_apply_xor_maps;
+ 	}
+ 
+ 	rc = cxl_decoder_add(cxld);
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 451e5492911c..2b5ae5d9a4b6 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2958,16 +2958,6 @@ static bool cxl_is_hpa_in_chunk(u64 hpa, struct cxl_region *cxlr, int pos)
+ 	return false;
+ }
+ 
+-static bool has_hpa_to_spa(struct cxl_root_decoder *cxlrd)
+-{
+-	return cxlrd->ops && cxlrd->ops->hpa_to_spa;
+-}
+-
+-static bool has_spa_to_hpa(struct cxl_root_decoder *cxlrd)
+-{
+-	return cxlrd->ops && cxlrd->ops->spa_to_hpa;
+-}
+-
+ #define CXL_POS_ZERO 0
+ /**
+  * cxl_validate_translation_params
+@@ -3141,8 +3131,8 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 	hpa = hpa_offset + p->res->start + p->cache_size;
+ 
+ 	/* Root decoder translation overrides typical modulo decode */
+-	if (has_hpa_to_spa(cxlrd))
+-		hpa = cxlrd->ops->hpa_to_spa(cxlrd, hpa);
++	if (cxlrd->ops.hpa_to_spa)
++		hpa = cxlrd->ops.hpa_to_spa(cxlrd, hpa);
+ 
+ 	if (!cxl_resource_contains_addr(p->res, hpa)) {
+ 		dev_dbg(&cxlr->dev,
+@@ -3151,7 +3141,7 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 	}
+ 
+ 	/* Simple chunk check, by pos & gran, only applies to modulo decodes */
+-	if (!has_hpa_to_spa(cxlrd) && (!cxl_is_hpa_in_chunk(hpa, cxlr, pos)))
++	if (!cxlrd->ops.hpa_to_spa && !cxl_is_hpa_in_chunk(hpa, cxlr, pos))
+ 		return ULLONG_MAX;
+ 
+ 	return hpa;
+@@ -3184,8 +3174,8 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+ 	 * If the root decoder has SPA to CXL HPA callback, use it. Otherwise
+ 	 * CXL HPA is assumed to equal SPA.
+ 	 */
+-	if (has_spa_to_hpa(cxlrd)) {
+-		hpa = cxlrd->ops->spa_to_hpa(cxlrd, p->res->start + offset);
++	if (cxlrd->ops.spa_to_hpa) {
++		hpa = cxlrd->ops.spa_to_hpa(cxlrd, p->res->start + offset);
+ 		hpa_offset = hpa - p->res->start;
+ 	} else {
+ 		hpa_offset = offset;
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 0481679eb109..91ff47382111 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -451,7 +451,7 @@ struct cxl_root_decoder {
+ 	void *platform_data;
+ 	struct mutex range_lock;
+ 	int qos_class;
+-	struct cxl_rd_ops *ops;
++	struct cxl_rd_ops ops;
+ 	struct cxl_switch_decoder cxlsd;
+ };
+ 
+-- 
+2.47.3
 
