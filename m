@@ -1,189 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3928433F8BA;
-	Wed, 12 Nov 2025 15:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE5B1F4176;
+	Wed, 12 Nov 2025 16:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762962949; cv=none; b=dzP1fa9nijEg/W2vVNpiRCD6PFxKWAVPkboWOyUoBvC/10L5G64uIsyMbw9PeRH8N5fQA0tjxaOCLySJB2pnkrtmTY3eH2sP2rHGAALTdZOD/5c1MFPzB3GVCYEh4UwFqU9ST1UrJS+2Z/Hd09082mcHzfoBIGd2Z3siG5z6KGo=
+	t=1762963866; cv=none; b=YUlCvf8pSYugyOL7bKMUfpXcKPvWs8bku4uhMKAxEKVJSg+AMOIOJH9h0DU3PC5oLhPMM+WyLNogkfTydAzYSWLyIMZoblULUhQi9wQFsFfTiErgIusM6Raea4YSMMgdLj5M9T4KVd6ezRbotQ7xVJhKL6/hvBWQy3ZECzRLSLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762962949; c=relaxed/simple;
-	bh=XBvdmJ37bzVPfaNJQdFZ0mHd+DP97BaYdjtePvKH4rw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y2Bt5ltENA5tsC4rz32tLOtG9INv4sL3Fgju2Dt6f9tSzgVIZ6iQfSSQKmZsCq0JFQPf2QVkqkuj3v8aLQo1O/YF6y23zWEuo8quik2lGzwEtGfosiYZHDhtDNNjPUAztAnIupAOk6Yu4VW76GJMOA1WmDi8S9AQf4WLDZ8nP14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FsBY6DDI; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FsBY6DDI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762962947; x=1794498947;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=XBvdmJ37bzVPfaNJQdFZ0mHd+DP97BaYdjtePvKH4rw=;
-  b=FsBY6DDIF5Dz2EIBAjF9FWwhzyG23LtnJJEeJap3X4pL/iCa9/jbd3O4
-   Iejls7fi1aWypKPWlpIO+K0MHW6kHoMGCplpf+HGUuvbU3BDuawUTLLBY
-   1xTuWIXZE7Xo8HnxcJG2rd7D+m5Rvcl25jIV0lHcRUrEkje0faS5Aasps
-   LHzlDlwEPYNREaAfM/6pI8wBkXpxvazVSuYjsrVaYJgzdF9PzXssSX1Qc
-   yFsb6Vs/NIUIvNBXc/vnDHCH7/oM9eSzipp8ZyduZ56SrjRfrd0CVMTg8
-   sYK16BAzM6y8s/QO8DjAvrPttnOWNmlXYkJql2ueiDCYVKA7HcT435skx
-   g==;
-X-CSE-ConnectionGUID: YGmEohdSShS3PJ18Bop+qQ==
-X-CSE-MsgGUID: rbIYkeRwRCGY1wV2TNmRjg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11611"; a="67630320"
-X-IronPort-AV: E=Sophos;i="6.19,299,1754982000"; 
-   d="scan'208";a="67630320"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 07:55:46 -0800
-X-CSE-ConnectionGUID: JORSUiZkR5i/BhCSGCphTw==
-X-CSE-MsgGUID: QtTUdJYtQGC5vM30Ae7zYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,299,1754982000"; 
-   d="scan'208";a="226529653"
-Received: from spandruv-mobl4.amr.corp.intel.com (HELO [10.125.108.30]) ([10.125.108.30])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 07:55:46 -0800
-Message-ID: <a204bc0e-1111-4ff9-a8d2-eeb8b7b9fe8d@intel.com>
-Date: Wed, 12 Nov 2025 08:55:45 -0700
+	s=arc-20240116; t=1762963866; c=relaxed/simple;
+	bh=Hl7cj5szMspfIuzcNNGsidp6HmcFgFkc2lGAZtEzj5c=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C9MJsFKqC8GVmefgQ+87kT7o/eLdr+gV30ZAl+a2JwTeL3HrkY5RMnC1IDx2JBtFkwUXHTGAiKyR1vIDSIv7RhBOqjvRk8PgkQeT5iaG6DxVRyxa8LRaElS1ogA8yXdJjtxWqr5qGOX9fBOCCkI3Sxu6rgIGQAs0I20fl8RIvWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d67fX3f3DzJ46Cf;
+	Thu, 13 Nov 2025 00:10:28 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3CEC31402F5;
+	Thu, 13 Nov 2025 00:11:01 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 12 Nov
+ 2025 16:11:00 +0000
+Date: Wed, 12 Nov 2025 16:10:59 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: <alejandro.lucero-palau@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
+	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [PATCH v20 11/22] cxl: Define a driver interface for HPA free
+ space enumeration
+Message-ID: <20251112161059.000033bc@huawei.com>
+In-Reply-To: <20251110153657.2706192-12-alejandro.lucero-palau@amd.com>
+References: <20251110153657.2706192-1-alejandro.lucero-palau@amd.com>
+	<20251110153657.2706192-12-alejandro.lucero-palau@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 13/20] cxl/mem: Refactor cxl pmem region
- auto-assembling
-To: Neeraj Kumar <s.neeraj@samsung.com>
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-kernel@vger.kernel.org, gost.dev@samsung.com,
- a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
- cpgs@samsung.com
-References: <20250917134116.1623730-1-s.neeraj@samsung.com>
- <CGME20250917134157epcas5p1b30306bc8596b7b50548ddf3683c3b97@epcas5p1.samsung.com>
- <20250917134116.1623730-14-s.neeraj@samsung.com>
- <c7b41eb6-b946-4ac0-9ddd-e75ba4ceb636@intel.com>
- <1296674576.21759726502325.JavaMail.epsvc@epcpadp1new>
- <361d0e84-9362-4389-a909-37878910b90f@intel.com>
- <1983025922.01762749301758.JavaMail.epsvc@epcpadp1new>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <1983025922.01762749301758.JavaMail.epsvc@epcpadp1new>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
+
+On Mon, 10 Nov 2025 15:36:46 +0000
+<alejandro.lucero-palau@amd.com> wrote:
+
+> From: Alejandro Lucero <alucerop@amd.com>
+> 
+> CXL region creation involves allocating capacity from Device Physical
+> Address (DPA) and assigning it to decode a given Host Physical Address
+> (HPA). Before determining how much DPA to allocate the amount of available
+> HPA must be determined. Also, not all HPA is created equal, some HPA
+> targets RAM, some targets PMEM, some is prepared for device-memory flows
+> like HDM-D and HDM-DB, and some is HDM-H (host-only).
+> 
+> In order to support Type2 CXL devices, wrap all of those concerns into
+> an API that retrieves a root decoder (platform CXL window) that fits the
+> specified constraints and the capacity available for a new region.
+> 
+> Add a complementary function for releasing the reference to such root
+> decoder.
+> 
+> Based on https://lore.kernel.org/linux-cxl/168592159290.1948938.13522227102445462976.stgit@dwillia2-xfh.jf.intel.com/
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+Took a fresh look and I think there are some algorithm optimizations
+available that also simplify the code by getting rid of next.
 
 
+> ---
+>  drivers/cxl/core/region.c | 164 ++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h         |   3 +
+>  include/cxl/cxl.h         |   6 ++
+>  3 files changed, 173 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index b06fee1978ba..99e47d261c9f 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
 
-On 11/7/25 5:39 AM, Neeraj Kumar wrote:
-> On 06/10/25 08:55AM, Dave Jiang wrote:
->>
->>
->> On 9/29/25 6:30 AM, Neeraj Kumar wrote:
->>> On 23/09/25 03:37PM, Dave Jiang wrote:
->>>>
->>>>
->>>> On 9/17/25 6:41 AM, Neeraj Kumar wrote:
->>>>> In 84ec985944ef3, devm_cxl_add_nvdimm() sequence was changed and called
->>>>> before devm_cxl_add_endpoint(). It's because cxl pmem region auto-assembly
->>>>> used to get called at last in cxl_endpoint_port_probe(), which requires
->>>>> cxl_nvd presence.
->>>>>
->>>>> For cxl region persistency, region creation happens during nvdimm_probe
->>>>> which need the completion of endpoint probe.
->>>>>
->>>>> In order to accommodate both cxl pmem region auto-assembly and cxl region
->>>>> persistency, refactored following
->>>>>
->>>>> 1. Re-Sequence devm_cxl_add_nvdimm() after devm_cxl_add_endpoint(). This
->>>>>    will be called only after successful completion of endpoint probe.
->>>>>
->>>>> 2. Moved cxl pmem region auto-assembly from cxl_endpoint_port_probe() to
->>>>>    cxl_mem_probe() after devm_cxl_add_nvdimm(). It gurantees both the
->>>>>    completion of endpoint probe and cxl_nvd presence before its call.
->>>>
->>>> Given that we are going forward with this implementation [1] from Dan and drivers like the type2 enabling are going to be using it as well, can you please consider converting this change to Dan's mechanism instead of creating a whole new one?
->>>>
->>>> I think the region discovery can be done via the ops->probe() callback. Thanks.
->>>>
->>>> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/commit/?h=for-6.18/cxl-probe-order&id=88aec5ea7a24da00dc92c7778df4851fe4fd3ec6
->>>>
->>>> DJ
->>>>
->>>
->>> Sure, Let me revisit this.
->>> It seems [1] is there in seperate branch "for-6.18/cxl-probe-order", and not yet merged into next, right?
->>
->> Right. I believe Smita and Alejandro are using that as well. Depending on who gets there first. We can setup an immutable branch at some point.
->>
->> [1]: https://lore.kernel.org/linux-cxl/20250822034202.26896-1-Smita.KoralahalliChannabasappa@amd.com/T/#t
->>
->> DJ
-> 
-> Hi Dave,
-> 
-> As per Dan's [1] newly introduced infra, Following is my understanding.
-> 
-> Currently cxl_pci does not care about the attach state of the cxl_memdev
-> because all generic memory expansion functionality can be handled by the
-> cxl_core. For accelerators, the driver needs to know and perform driver
-> specific initialization if CXL is available, or exectute a fallback to PCIe
-> only operation.
-> 
-> Dan's new infra is needed for CXL accelerator device drivers that need to
-> make decisions about enabling CXL dependent functionality in the device, or
-> falling back to PCIe-only operation.
-> 
-> During cxl_pci_probe() we call devm_cxl_add_memdev(struct cxl_memdev_ops *ops)
-> where function pointer as ops gets registered which gets called in cxl_mem_probe()
-> using cxlmd->ops->probe()
-> 
-> The probe callback runs after the port topology is successfully attached for
-> the given memdev.
-> 
-> So to use this infra we have to pass cxl_region_discovery() as ops parameter
-> of devm_cxl_add_memdev() getting called from cxl_pci_probe().
->  
-> In this patch-set cxl_region_discovery() signature is different from cxlmd->ops->probe()
-> 
->    {{{
->     void cxl_region_discovery(struct cxl_port *port)
->     {
->             device_for_each_child(&port->dev, NULL, discover_region);
->     }
-> 
->     struct cxl_memdev_ops {
->             int (*probe)(struct cxl_memdev *cxlmd);
->     };
->    }}}
-> 
-> Even after changing the signature of cxl_region_discovery() as per cxlmd->ops->probe()
-> may create problem as when the ops->probe() fails, then it will halts the probe sequence
-> of cxl_pci_probe()
-> 
-> It is because discover_region() may fail if two memdevs are participating into one region
+> +static int find_max_hpa(struct device *dev, void *data)
+> +{
+> +	struct cxlrd_max_context *ctx = data;
 
-While discover_region() may fail, the return value is ignored. The current code disregards failures from device_for_each_child(). And also above, cxl_region_discovery() returns void. So I don't follow how ops->probe() would fail if we ignore errors from discover_region().
+...
 
-DJ
+> +	for (prev = NULL; res; prev = res, res = res->sibling) {
+> +		struct resource *next = res->sibling;
+> +		resource_size_t free = 0;
+> +
+> +		/*
+> +		 * Sanity check for preventing arithmetic problems below as a
+> +		 * resource with size 0 could imply using the end field below
+> +		 * when set to unsigned zero - 1 or all f in hex.
+> +		 */
+> +		if (prev && !resource_size(prev))
+> +			continue;
+> +
+> +		if (!prev && res->start > cxlrd->res->start) {
+> +			free = res->start - cxlrd->res->start;
+> +			max = max(free, max);
+> +		}
+> +		if (prev && res->start > prev->end + 1) {
+> +			free = res->start - prev->end + 1;
+> +			max = max(free, max);
+> +		}
+> +		if (next && res->end + 1 < next->start) {
+> +			free = next->start - res->end + 1;
+> +			max = max(free, max);
+> +		}
 
-> 
-> Also, region auto assembly is mandatory functionality which creates region
-> if (cxled->state == CXL_DECODER_STATE_AUTO) gets satisfied.
-> 
-> Currently region auto assembly (added by a32320b71f085) happens after successfull
-> enumeration of endpoint decoders at cxl_endpoint_port_probe(), which I have moved at
-> cxl_mem_probe() after devm_cxl_add_nvdimm() which prepares cxl_nvd infra required by it.
-> 
-> As discussed in [1], this patch-set does the movement of auto region assembly from
-> cxl_endpoint_port_probe() to cxl_mem_probe() and resolved the conflicting dependency
-> of cxl_nvd infra required by both region creation using LSA and auto region assembly.
-> 
-> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/commit/?h=for-6.18/cxl-probe-order&id=88aec5ea7a24da00dc92c7778df4851fe4fd3ec6 [2]: https://lore.kernel.org/linux-cxl/1931444790.41752909482841.JavaMail.epsvc@epcpadp2new/
-> 
-> Please let me know if my understanding is correct or I am missing something?
-> 
-> 
-> Regards,
-> Neeraj
-> 
->
+Why doesn't the next case happen on the following loop iteration?
+I think this if (next ... ) is checking same thing as the if (prev ...)
+of the following iteration.
+
+Given the !next only happens on final iteration you should also be bale
+to do that out side the loop which might simplify thing further...
+
+
+> +		if (!next && res->end + 1 < cxlrd->res->end + 1) {
+> +			free = cxlrd->res->end + 1 - res->end + 1;
+> +			max = max(free, max);
+> +		}
+> +	}
+outside the loop the final test is something like
+	if (prev && prev->end + 1 < cxlrd->res->end + 1) {
+		free = cxlrd->res->end + 1 - prev->end + 1;
+		max = max(free, max);
+	}
+as prev is now what was res above due to the final loop variable update.
+
+> +
+> +	dev_dbg(cxlrd_dev(cxlrd), "found %pa bytes of free space\n", &max);
+> +	if (max > ctx->max_hpa) {
+> +		if (ctx->cxlrd)
+> +			put_device(cxlrd_dev(ctx->cxlrd));
+> +		get_device(cxlrd_dev(cxlrd));
+> +		ctx->cxlrd = cxlrd;
+> +		ctx->max_hpa = max;
+> +	}
+> +	return 0;
+> +}
+
+
