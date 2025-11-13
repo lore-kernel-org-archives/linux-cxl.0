@@ -1,141 +1,121 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E18732ED4E
-	for <linux-cxl@vger.kernel.org>; Thu, 13 Nov 2025 07:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7393332F74A
+	for <linux-cxl@vger.kernel.org>; Thu, 13 Nov 2025 07:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763020206; cv=none; b=kX23ADhxlAjYo5/Qk/UC1HB6TRQi3WZqeXu5PsVAYJjbINCzlJoXKpj8Aj8z6Vyc8sLV2dY9ts8Y9kjm3b5OQ/5/PvdxFgjl4MXNg3DM1OKiGWLTWDmqh1OSn5Zs+Bk7MdiufXKsbtEMSZwXOP9E4CpRMop0JL8JOrRftBAgn7Q=
+	t=1763020207; cv=none; b=r9VmasD6axb5XXthggF53sfbD1PhmhWs8kXM5Ai5fijyroVsqRnt/XF62eo6HQ30ab6XMZEhlZb/meJlqC9x4hWXSBYqORyHr6wdJMg64rIOResQ2ZgMhSxOjndk5RxIPehkN2hVso0VsInVA3gm72lmtGqvGYEGpoJnw8gXB8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763020206; c=relaxed/simple;
-	bh=rPpv0YpI1s5IrHKxhIrzkZ9tfhot0vKl5EEgO7jMoXw=;
+	s=arc-20240116; t=1763020207; c=relaxed/simple;
+	bh=Tivo3GFoS1phCSWYDeFF9DTpbwFBRvC/+ODFjHKNmMg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=SnOP6Mfv5CqT9tUNoLyG6nowIJQIES/+QVq0IFRr2EEkVoXtqZYc2aaqskivWgRn0dXT7n1/D6Uqk8WKZUnjaRiIvV3dGnmwA7ERXLRO9fGHy4HYytGWjhhpyu46hmTiqKO+V2eHAVu2HjZ9/5t61Mxd6LpLaTuijGPlO5JPzgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=A9l14zFZ; arc=none smtp.client-ip=203.254.224.34
+	 Content-Type:References; b=GcZtS11llMso7h724jduriL8pkmAlln6vDVwsPNXHN1aI7JEl3c/QoQzzDP5Jk04R9S8/H+E/BGUfa6Q2Pt+MaQgSz4Jfo47cipxid5B1pMKwanMzCwq65BG8f4ybWn/WnU8XzNoBdI5t97I895qYlNPwseouSYw652uADFu55w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=WO4ou/E7; arc=none smtp.client-ip=203.254.224.24
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="A9l14zFZ"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20251113075002epoutp0430d9578d9c06114c024a00806d5591d7~3gYiBtFfN0328503285epoutp04U
-	for <linux-cxl@vger.kernel.org>; Thu, 13 Nov 2025 07:50:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20251113075002epoutp0430d9578d9c06114c024a00806d5591d7~3gYiBtFfN0328503285epoutp04U
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WO4ou/E7"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20251113075003epoutp013ee156d102c75064b5bb1bea8b57a993~3gYjCkN4G2266522665epoutp01d
+	for <linux-cxl@vger.kernel.org>; Thu, 13 Nov 2025 07:50:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20251113075003epoutp013ee156d102c75064b5bb1bea8b57a993~3gYjCkN4G2266522665epoutp01d
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1763020202;
-	bh=rPpv0YpI1s5IrHKxhIrzkZ9tfhot0vKl5EEgO7jMoXw=;
+	s=mail20170921; t=1763020203;
+	bh=PrAqxrRuWP1UVQFq/hrOFrgLMn50SDu0myTwZAkgdZI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=A9l14zFZuSkh+OidejInaqgr+qLiNd+IwX/OebIx1AoomckDymuGsivNFVyzMEwEE
-	 JSpmaW/oWo78pYwbzW5R0ws3qAspDdoj3sXsTWRSHOx+ipaBSxoHOIkeVTrc3C01kf
-	 ItnqK9I6WqBjgC2a/DoCJ+mazpcyG9U01k/sEP2M=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20251113075002epcas5p2223c3bb7ed92c0b3dd1494dc7113ef43~3gYhvQe4-2564525645epcas5p2O;
-	Thu, 13 Nov 2025 07:50:02 +0000 (GMT)
+	b=WO4ou/E77rffoLa78AnZDACnmFJhzfBQy4ehPdp13sv/7/pFDdZhU0zGPs2HjgMNC
+	 juHU2D5cmG9lDg21yK+lsymvvJ9hPkUjn3yblbmpHBuF+hqEUs8Ieo4DWAmyvBlbQY
+	 7nvphZMHGVOJyn51CiKz2I244Rmm85GAtHjuqssE=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20251113075003epcas5p169a8bfdf20f110a1a12a42123b741e19~3gYitkL9g2606826068epcas5p1f;
+	Thu, 13 Nov 2025 07:50:03 +0000 (GMT)
 Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4d6XVf0cddz6B9m6; Thu, 13 Nov
-	2025 07:50:02 +0000 (GMT)
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4d6XVg0xcKz2SSKf; Thu, 13 Nov
+	2025 07:50:03 +0000 (GMT)
 Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20251113072717epcas5p22ac6aa251df5c33fadfe2c100ab833b1~3gEqdwnW62353123531epcas5p2U;
-	Thu, 13 Nov 2025 07:27:17 +0000 (GMT)
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20251113072918epcas5p3995164aced1a029b71ba5807705531f9~3gGbV46ey2448624486epcas5p3o;
+	Thu, 13 Nov 2025 07:29:18 +0000 (GMT)
 Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
 	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20251113072715epsmtip1f93902a24349817692a96ba43c340c6c~3gEpFe0zQ2815128151epsmtip1S;
-	Thu, 13 Nov 2025 07:27:15 +0000 (GMT)
-Date: Thu, 13 Nov 2025 12:57:09 +0530
+	20251113072913epsmtip1b466bafcc451ab1ad11391ed310e73cd~3gGXHnJBP2873728737epsmtip16;
+	Thu, 13 Nov 2025 07:29:13 +0000 (GMT)
+Date: Thu, 13 Nov 2025 12:59:07 +0530
 From: Neeraj Kumar <s.neeraj@samsung.com>
 To: Dave Jiang <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
 	linux-kernel@vger.kernel.org, gost.dev@samsung.com,
 	a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
 	cpgs@samsung.com
-Subject: Re: [PATCH V3 13/20] cxl/mem: Refactor cxl pmem region
- auto-assembling
-Message-ID: <1983025922.01763020202072.JavaMail.epsvc@epcpadp1new>
+Subject: Re: [PATCH V3 18/20] cxl/pmem_region: Prep patch to accommodate
+ pmem_region attributes
+Message-ID: <1931444790.41763020203119.JavaMail.epsvc@epcpadp1new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <a204bc0e-1111-4ff9-a8d2-eeb8b7b9fe8d@intel.com>
-X-CMS-MailID: 20251113072717epcas5p22ac6aa251df5c33fadfe2c100ab833b1
+In-Reply-To: <2aca7703-fae6-46bb-bef1-ee29e822b4c8@intel.com>
+X-CMS-MailID: 20251113072918epcas5p3995164aced1a029b71ba5807705531f9
 X-Msg-Generator: CA
 Content-Type: multipart/mixed;
-	boundary="----DpLuDkH5jVwtRmV_no6S5rPRFid5ecuUEflgz2nUXUkLddKC=_bc0e0_"
+	boundary="----xsJXu.fD5V5xDhddWNWtQINaZQo.kzBR_hLvg.7oVeVxw7Lp=_bb9c1_"
 CMS-TYPE: 105P
 X-CPGSPASS: Y
 X-Hop-Count: 3
-X-CMS-RootMailID: 20250917134157epcas5p1b30306bc8596b7b50548ddf3683c3b97
+X-CMS-RootMailID: 20250917134209epcas5p1b7f861dbd8299ec874ae44cbf63ce87c
 References: <20250917134116.1623730-1-s.neeraj@samsung.com>
-	<CGME20250917134157epcas5p1b30306bc8596b7b50548ddf3683c3b97@epcas5p1.samsung.com>
-	<20250917134116.1623730-14-s.neeraj@samsung.com>
-	<c7b41eb6-b946-4ac0-9ddd-e75ba4ceb636@intel.com>
-	<1296674576.21759726502325.JavaMail.epsvc@epcpadp1new>
-	<361d0e84-9362-4389-a909-37878910b90f@intel.com>
-	<1983025922.01762749301758.JavaMail.epsvc@epcpadp1new>
-	<a204bc0e-1111-4ff9-a8d2-eeb8b7b9fe8d@intel.com>
+	<CGME20250917134209epcas5p1b7f861dbd8299ec874ae44cbf63ce87c@epcas5p1.samsung.com>
+	<20250917134116.1623730-19-s.neeraj@samsung.com>
+	<147c4f1a-b8f6-4a99-8469-382b897f326d@intel.com>
+	<1279309678.121759726504330.JavaMail.epsvc@epcpadp1new>
+	<6e893bd1-467a-4e9a-91ca-536afa6e4767@intel.com>
+	<1296674576.21762749302024.JavaMail.epsvc@epcpadp1new>
+	<2aca7703-fae6-46bb-bef1-ee29e822b4c8@intel.com>
 
-------DpLuDkH5jVwtRmV_no6S5rPRFid5ecuUEflgz2nUXUkLddKC=_bc0e0_
+------xsJXu.fD5V5xDhddWNWtQINaZQo.kzBR_hLvg.7oVeVxw7Lp=_bb9c1_
 Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
 
-On 12/11/25 08:55AM, Dave Jiang wrote:
->
+On 12/11/25 08:40AM, Dave Jiang wrote:
 >
 
 <snip>
 
->> During cxl_pci_probe() we call devm_cxl_add_memdev(struct cxl_memdev_ops *ops)
->> where function pointer as ops gets registered which gets called in cxl_mem_probe()
->> using cxlmd->ops->probe()
+>> Keeping these functions in core/region.c (CONFIG_REGION)) and manually enabling CONFIG_LIBNVDIMM=y
+>> will make it pass.
 >>
->> The probe callback runs after the port topology is successfully attached for
->> the given memdev.
+>> Even if we can put these functions in core/region.c and forcefully make
+>> libnvdimm (CONFIG_LIBNVDIMM) dependent using Kconfig. But I find it little improper as
+>> this new dependency is not for all type of cxl devices (vmem and pmem) but only for cxl pmem
+>> device region.
 >>
->> So to use this infra we have to pass cxl_region_discovery() as ops parameter
->> of devm_cxl_add_memdev() getting called from cxl_pci_probe().
->>  
->> In this patch-set cxl_region_discovery() signature is different from cxlmd->ops->probe()
+>> Therefore I have seperated it out in core/pmem_region.c under Kconfig control
+>> making libnvdimm forcefully enable if CONFIG_CXL_PMEM_REGION == y
 >>
->>    {{{
->>     void cxl_region_discovery(struct cxl_port *port)
->>     {
->>             device_for_each_child(&port->dev, NULL, discover_region);
->>     }
->>
->>     struct cxl_memdev_ops {
->>             int (*probe)(struct cxl_memdev *cxlmd);
->>     };
->>    }}}
->>
->> Even after changing the signature of cxl_region_discovery() as per cxlmd->ops->probe()
->> may create problem as when the ops->probe() fails, then it will halts the probe sequence
->> of cxl_pci_probe()
->>
->> It is because discover_region() may fail if two memdevs are participating into one region
+>> So, I believe this prep patch is required for this LSA 2.1 support.
 >
->While discover_region() may fail, the return value is ignored. The current code disregards failures from device_for_each_child(). And also above, cxl_region_discovery() returns void. So I don't follow how ops->probe() would fail if we ignore errors from discover_region().
+>I think you misunderstood what I said. What I was trying to say is if possible to move all the diff changes of moving the existing code to a different place to a different patch. That way this patch is not full of those diff changes and make it easier to review.
 >
 >DJ
 
-Hi Dave,
+Hi Dave, Thanks for the clarification. Yes now I am able to get your point clear.
 
-Yes, you are correct. We can just change signature of cxl_region_discovery() as per
-cxlmd->ops->probe(), anyway we are ignoring errors from discover_region().
-With this change we can directly register cxl_region_discovery() with
-devm_cxl_add_memdev(struct cxl_memdev_ops *ops) during pci_probe() using Dan's Infra.
-
-I will use this new infra for region auto-assembling and share the v4 series shortly.
-
+I should split this patch into two patches
+1. First prep patch with no functionality change (Just code movement from core/region.c to newly core/pmem_region.c)
+2. Second patch which calls the libnvdimm exported routines
+	- region_label_update_show/store()
+	- region_label_delete_store()
 
 Regards,
 Neeraj
 
-------DpLuDkH5jVwtRmV_no6S5rPRFid5ecuUEflgz2nUXUkLddKC=_bc0e0_
+------xsJXu.fD5V5xDhddWNWtQINaZQo.kzBR_hLvg.7oVeVxw7Lp=_bb9c1_
 Content-Type: text/plain; charset="utf-8"
 
 
-------DpLuDkH5jVwtRmV_no6S5rPRFid5ecuUEflgz2nUXUkLddKC=_bc0e0_--
+------xsJXu.fD5V5xDhddWNWtQINaZQo.kzBR_hLvg.7oVeVxw7Lp=_bb9c1_--
 
