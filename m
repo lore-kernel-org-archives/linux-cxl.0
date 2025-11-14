@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B583330D5D;
-	Fri, 14 Nov 2025 15:21:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877B023C8C7;
+	Fri, 14 Nov 2025 15:24:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763133708; cv=none; b=pxtwIqO31ubagV3xoWu1BoD9NrfcSOU/91WJ1WUY+wOoLp+McPQL7er9xPoieMRWYH7nIw/0A+sLJfXe3iTj3/6wfJw5oEqiqPSXfvpfKyYu0fup4mVxolPvxR0pTKqYfsd1sPyEONQtoSliQ1RFVe4AqrX5QuMWJ+wkLLRQCZo=
+	t=1763133885; cv=none; b=btzCtc+7XCjwHno0Dz+SI0ghSS3v21kEFdOTiGFCGrzZPEPGXay0DIxc2N0qRV/RdUUVafvtSpIXYQ5BjVdBfdV5eiANIjF5lRe5u1TmC7gi4aod0Yy2tK0gcmRrn2MYqG0D71G1KKKhcMRmpgZTY9qQBd5gamjSBicrQ8F5Ckw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763133708; c=relaxed/simple;
-	bh=Tr9BxVjgFEJZ83aXHYKUo2kJADqcemsuI7gnR9GKR1g=;
+	s=arc-20240116; t=1763133885; c=relaxed/simple;
+	bh=BPIcm4BPS8JNbDaHuf77kx4MaMajI1d4wnZLXgFJ14o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OwRl4uAqgFt7RRYSoiwkkgPY8j1U/vSGl/uI4QkruihLzqHpvqEL/H+A5czyom2Qg5+nOIgLpkhyEhC1ZKpgve0/RSRqjfD2QFgUUoIY9tiOrqscfbkMXIWQNaXYFftKIcEJiBPpAtAfbQBjjjbZ48kbLXvUYEX1oVAjEyFPor0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MY9eO7Y7; arc=none smtp.client-ip=198.175.65.21
+	 In-Reply-To:Content-Type; b=hk9hmpAd0Zv7CcQXzf2d+VrEa3v4D1WcHAVYJyNED0JTA+7SB+B4vQdA8o0wKNA7WlYKYEWo8xA64LSjm+GXRpZsDJ9p0MV6Yms8qDpWhQGkkBm2iy0i8Sd325/YE4piRCNzv+oCS3sQGQyNMgML3V9yvzdrpd+A5aOxiEfTDnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DKp5/jK5; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MY9eO7Y7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DKp5/jK5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763133708; x=1794669708;
+  t=1763133884; x=1794669884;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Tr9BxVjgFEJZ83aXHYKUo2kJADqcemsuI7gnR9GKR1g=;
-  b=MY9eO7Y7JjYqcoj0JslKGLmysZngso5i38WlT30EMzoNK/DYyc4XpD/B
-   u8f/v50rSvtBSVJ0u/phdUNo/pnEp0bw+odjpjKzs19lgGGqUN7M6surb
-   zZWIToXRZKyuOUWZUYpihrxIQylqZLxmLlmPu2detW9lqnSfr+K3HGsWQ
-   erIj/XdIwpYM+G+pOcNd4GEaeZtkKMpGW31DwQfKItGqgN1l/6frhGW9E
-   pZ1JDNuAZA0dbcwuSBSOU8u/oE4Andlm88HG5RyBID7FZAaJJtPv3AMSD
-   WhE07h6XGHPrWWz+rHs+G8uoIcSEUQgvTMUM7sMNG14gC5wza1AXq6dd7
-   Q==;
-X-CSE-ConnectionGUID: HGEKlDbhS4aV/ACtZBhz/w==
-X-CSE-MsgGUID: jg+FEPsNSP6ExONMOYWczg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="65160824"
+  bh=BPIcm4BPS8JNbDaHuf77kx4MaMajI1d4wnZLXgFJ14o=;
+  b=DKp5/jK5kJ4Xgf4GxoQqAvH/mz+Gk4AJ+ON3o2ukKnTCiqTepJMeuqEv
+   7UVfjsCNg3kW5Az3TwBDgG+qgeAhn4ooL8PSccSWkXXl9HyLFiOiBg/lg
+   7joQWPwkYNDxqUkoEiMUEV/17doGPx/zhpPuylSRgrz7vMRl7l4xWQjKj
+   1ORIu7HGfsyO6VbIYrWF/r/AaYgFCMTEnyf9zS+2Lmb6lw4WzU8HN9AJ3
+   vNm24+ths/NAkGE7b2uqnuhY2lHPJ29DakJqJ7CRYAtJp8TpLwTSn+40M
+   s4HKQfejUVP6zw5LLCVNbF1J/wiEYeNUy5wHG7kPGCddfKpi73r9/+SWh
+   w==;
+X-CSE-ConnectionGUID: HShXmaY9QiK9JG/1AqEAcA==
+X-CSE-MsgGUID: myeIAUGqSF+B8UCZEZxATA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="65160988"
 X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="65160824"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2025 07:21:47 -0800
-X-CSE-ConnectionGUID: CA/oUoEgS7W+RgyIlrfJ9Q==
-X-CSE-MsgGUID: 9dDhs43hTZi2KwGH9WMR6Q==
+   d="scan'208";a="65160988"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2025 07:24:43 -0800
+X-CSE-ConnectionGUID: K2Z8wWIJQ7iS0yDw6R4XTg==
+X-CSE-MsgGUID: IfnXatAjQ0Sku25vLBP7KA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,305,1754982000"; 
-   d="scan'208";a="190051571"
+   d="scan'208";a="189094560"
 Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.108.188]) ([10.125.108.188])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2025 07:21:45 -0800
-Message-ID: <ac8dae0d-251e-405a-be24-c553fcedf05f@intel.com>
-Date: Fri, 14 Nov 2025 08:21:44 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2025 07:24:42 -0800
+Message-ID: <688bd79c-91aa-4d67-8291-dd0b222bebbf@intel.com>
+Date: Fri, 14 Nov 2025 08:24:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,112 +52,312 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 11/14] cxl/atl: Lock decoders that need address
- translation
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
- "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
-References: <20251103184804.509762-1-rrichter@amd.com>
- <20251103184804.509762-12-rrichter@amd.com>
- <ae28560c-ed16-400b-bf3d-86e2cc8617cf@intel.com>
- <aRMx-YYhaouP4LvR@rric.localdomain>
- <6f1eaf10-071c-41ad-bda3-62eb6b1119e9@intel.com>
- <aRY6EaTALW4SvkaW@rric.localdomain>
- <7eea091e-f241-4305-a233-ba56a4ed5df3@intel.com>
- <aRbboCjBhCujhh67@rric.localdomain>
+Subject: Re: [PATCH v20 01/22] cxl/mem: Arrange for always-synchronous memdev
+ attach
+To: Alejandro Lucero Palau <alucerop@amd.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ alejandro.lucero-palau@amd.com
+Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
+ dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
+References: <20251110153657.2706192-1-alejandro.lucero-palau@amd.com>
+ <20251110153657.2706192-2-alejandro.lucero-palau@amd.com>
+ <20251112145341.00005b4e@huawei.com>
+ <374f8a2c-df06-4df9-8816-d91d3236cd58@amd.com>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <aRbboCjBhCujhh67@rric.localdomain>
+In-Reply-To: <374f8a2c-df06-4df9-8816-d91d3236cd58@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 11/14/25 12:34 AM, Robert Richter wrote:
-> On Thu, Nov 13, 2025 at 01:36:26PM -0700, Dave Jiang wrote:
+On 11/14/25 4:10 AM, Alejandro Lucero Palau wrote:
+> 
+> On 11/12/25 14:53, Jonathan Cameron wrote:
+>> On Mon, 10 Nov 2025 15:36:36 +0000
+>> alejandro.lucero-palau@amd.com wrote:
 >>
->>
->> On 11/13/25 1:05 PM, Robert Richter wrote:
->>> On 12.11.25 09:34:34, Dave Jiang wrote:
->>>>
->>>>
->>>> On 11/11/25 5:54 AM, Robert Richter wrote:
->>>>> On 04.11.25 10:13:34, Dave Jiang wrote:
->>>>>>
->>>>>>
->>>>>> On 11/3/25 11:47 AM, Robert Richter wrote:
->>>>>>> There is only support to translate addresses from an endpoint to its
->>>>>>> CXL host bridge, but not in the opposite direction from the bridge to
->>>>>>> the endpoint. Thus, the endpoint address range cannot be determined
->>>>>>> and setup manually for a given SPA range of a region. If the endpoint
->>>>>>> has address translation enabled, lock it to prevent the kernel from
->>>>>>> reconfiguring it.
->>>>>>>
->>>>>>> Reviewed-by: Gregory Price <gourry@gourry.net>
->>>>>>> Signed-off-by: Robert Richter <rrichter@amd.com>
->>>>>>> ---
->>>>>>>  drivers/cxl/core/atl.c | 10 ++++++++++
->>>>>>>  1 file changed, 10 insertions(+)
->>>>>>>
->>>>>>> diff --git a/drivers/cxl/core/atl.c b/drivers/cxl/core/atl.c
->>>>>>> index d6aa7e6d0ac5..5c15e4d12193 100644
->>>>>>> --- a/drivers/cxl/core/atl.c
->>>>>>> +++ b/drivers/cxl/core/atl.c
->>>>>>> @@ -158,6 +158,16 @@ static int cxl_prm_translate_hpa_range(struct cxl_root *cxl_root, void *data)
->>>>>>>  		return -ENXIO;
->>>>>>>  	}
->>>>>>>  
->>>>>>> +	/*
->>>>>>> +	 * There is only support to translate from the endpoint to its
->>>>>>> +	 * parent port, but not in the opposite direction from the
->>>>>>> +	 * parent to the endpoint. Thus, the endpoint address range
->>>>>>> +	 * cannot be determined and setup manually. If the address range
->>>>>>> +	 * was translated and modified, forbid reprogramming of the
->>>>>>> +	 * decoders and lock them.
->>>>>>> +	 */
->>>>>>> +	cxld->flags |= CXL_DECODER_F_LOCK;
->>>>>>
->>>>>  
->>>>>> Feels like this should be something the BIOS should enforce if that
->>>>>> is the expectation? And the kernel checks and warns if that is not
->>>>>> the case.
->>>>>
->>>>> I think this is more a limitation of the kernel implementation rather
->>>>> than the BIOS. The BIOS provides enought information by CFMWS, PRM,
->>>>> HDM and PCI topology. In theory and if there is demand for it, support
->>>>> could be added for driver region setup.
->>>>
+>>> From: Dan Williams <dan.j.williams@intel.com>
 >>>
->>>> But shouldn't the BIOS set the decoder lock rather than the kernel
->>>> setting a software lock flag based on assumption of the PRM based
->>>> setup?
+>>> In preparation for CXL accelerator drivers that have a hard dependency on
+>>> CXL capability initialization, arrange for the endpoint probe result to be
+>>> conveyed to the caller of devm_cxl_add_memdev().
 >>>
->>> If BIOS locks the decoders, it cannot be removed even for the case
->>> there the OS can actually handle it.
+>>> As it stands cxl_pci does not care about the attach state of the cxl_memdev
+>>> because all generic memory expansion functionality can be handled by the
+>>> cxl_core. For accelerators, that driver needs to know perform driver
+>>> specific initialization if CXL is available, or exectute a fallback to PCIe
+>>> only operation.
+>>>
+>>> By moving devm_cxl_add_memdev() to cxl_mem.ko it removes async module
+>>> loading as one reason that a memdev may not be attached upon return from
+>>> devm_cxl_add_memdev().
+>>>
+>>> The diff is busy as this moves cxl_memdev_alloc() down below the definition
+>>> of cxl_memdev_fops and introduces devm_cxl_memdev_add_or_reset() to
+>>> preclude needing to export more symbols from the cxl_core.
+>>>
+>>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>> Alejandro, read submitting patches again.  Whilst the first sign off should
+>> indeed by Dan's this also needs one from you as a 'handler' of the patch.
 >>
+>> Be very careful checking these tag chains. If they are wrong no one can
+>> merge the set and it just acts as a silly blocker.
 > 
->> Oh so the current implementation is auto region by BIOS but in the
->> future it may not be? But if you add a lock flag, you wouldn't be
->> able to remove it later anyhow since it's presented as locked?
 > 
-> The BIOS provides all necessary data for address translation, so that
-> decoders can be reconfigured (including normalized endpoint
-> addresses). There is no reason to lock the decoders by the BIOS, as
-> otherwise, with a capable kernel (or other OS), it would not be
-> possible to shutdown auto-generated regions.
+> Hi Jonathan,
 > 
-> However, current kernel implementation does not support this and is
-> unable to create the region. That is why the kernel and not the BIOS
-> should lock the decoders.
+> 
+> I did the amend but it is true I did some work on it. Would it be enough to add my signed-off-by along with Dan's one?
 
-Ok I see what you are saying. Fair enough. As long as we have a comment that makes note of this detail.
+Yes. Essentially whenever you are posting someone else's patches as part of your series, you need to add your sign off after theirs for those patches. Similar to I sign off all the patches I ask Linus to pull even though I did not work on them.
 
+DJ> 
 > 
-> -Robert
+>> I would have split this up and made the changes to cxl_memdev_alloc in
+>> a precursor patch (use of __free is obvious one) then could have stated
+>> that that was simply moved in this patch.
+> 
+> 
+> OK. I think I was fixing a bug in original Dan's patch regarding cxlmd release in case of error inside devm_cxl_add_memdev, but I think the bug is in the current code of that function as it is not properly released if error after a successful allocation. So splitting the patch could allow to make this clearer and adding the Fixes tag as well.
+> 
+> 
+>> There are other changes in there that are really hard to spot though
+>> and I think there are some bugs lurking in error paths.
+> 
+> 
+> I did spot one after your comment, checking cxlmd pointer is not an error pointer inside __cxlmd_free. If you spotted something else, please tell me :-)
+> 
+> 
+> Thank you!
+> 
+> 
+>> Jonathan
+>>
+>>> ---
+>>>   drivers/cxl/Kconfig       |   2 +-
+>>>   drivers/cxl/core/memdev.c | 101 ++++++++++++++------------------------
+>>>   drivers/cxl/mem.c         |  41 ++++++++++++++++
+>>>   drivers/cxl/private.h     |  10 ++++
+>>>   4 files changed, 90 insertions(+), 64 deletions(-)
+>>>   create mode 100644 drivers/cxl/private.h
+>>> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+>>> index e370d733e440..14b4601faf66 100644
+>>> --- a/drivers/cxl/core/memdev.c
+>>> +++ b/drivers/cxl/core/memdev.c
+>>> @@ -8,6 +8,7 @@
+>>>   #include <linux/idr.h>
+>>>   #include <linux/pci.h>
+>>>   #include <cxlmem.h>
+>>> +#include "private.h"
+>>>   #include "trace.h"
+>>>   #include "core.h"
+>>>   @@ -648,42 +649,25 @@ static void detach_memdev(struct work_struct *work)
+>>>     static struct lock_class_key cxl_memdev_key;
+>>>   -static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+>>> -                       const struct file_operations *fops)
+>>> +int devm_cxl_memdev_add_or_reset(struct device *host, struct cxl_memdev *cxlmd)
+>>>   {
+>>> -    struct cxl_memdev *cxlmd;
+>>> -    struct device *dev;
+>>> -    struct cdev *cdev;
+>>> +    struct device *dev = &cxlmd->dev;
+>>> +    struct cdev *cdev = &cxlmd->cdev;
+>>>       int rc;
+>>>   -    cxlmd = kzalloc(sizeof(*cxlmd), GFP_KERNEL);
+>>> -    if (!cxlmd)
+>>> -        return ERR_PTR(-ENOMEM);
+>>> -
+>>> -    rc = ida_alloc_max(&cxl_memdev_ida, CXL_MEM_MAX_DEVS - 1, GFP_KERNEL);
+>>> -    if (rc < 0)
+>>> -        goto err;
+>>> -    cxlmd->id = rc;
+>>> -    cxlmd->depth = -1;
+>>> -
+>>> -    dev = &cxlmd->dev;
+>>> -    device_initialize(dev);
+>>> -    lockdep_set_class(&dev->mutex, &cxl_memdev_key);
+>>> -    dev->parent = cxlds->dev;
+>>> -    dev->bus = &cxl_bus_type;
+>>> -    dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
+>>> -    dev->type = &cxl_memdev_type;
+>>> -    device_set_pm_not_required(dev);
+>>> -    INIT_WORK(&cxlmd->detach_work, detach_memdev);
+>>> -
+>>> -    cdev = &cxlmd->cdev;
+>>> -    cdev_init(cdev, fops);
+>>> -    return cxlmd;
+>>> +    rc = cdev_device_add(cdev, dev);
+>>> +    if (rc) {
+>>> +        /*
+>>> +         * The cdev was briefly live, shutdown any ioctl operations that
+>>> +         * saw that state.
+>>> +         */
+>>> +        cxl_memdev_shutdown(dev);
+>>> +        return rc;
+>>> +    }
+>>>   -err:
+>>> -    kfree(cxlmd);
+>>> -    return ERR_PTR(rc);
+>>> +    return devm_add_action_or_reset(host, cxl_memdev_unregister, cxlmd);
+>>>   }
+>>> +EXPORT_SYMBOL_NS_GPL(devm_cxl_memdev_add_or_reset, "CXL");
+>>>     static long __cxl_memdev_ioctl(struct cxl_memdev *cxlmd, unsigned int cmd,
+>>>                      unsigned long arg)
+>>> @@ -1051,50 +1035,41 @@ static const struct file_operations cxl_memdev_fops = {
+>>>       .llseek = noop_llseek,
+>>>   };
+>>>   -struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
+>>> -                       struct cxl_dev_state *cxlds)
+>>> +struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds)
+>>>   {
+>>> -    struct cxl_memdev *cxlmd;
+>>> +    struct cxl_memdev *cxlmd __free(kfree) =
+>>> +        kzalloc(sizeof(*cxlmd), GFP_KERNEL);
+>> Trivial and perhaps not worth the hassle.
+>> I'd pull this out of the declarations block to have
+>>
+>>       struct device *dev;
+>>       struct cdev *cdev;
+>>       int rc;
+>>
+>>     struct cxl_memdev *cxlmd __free(kfree) =
+>>         kzalloc(sizeof(*cxlmd), GFP_KERNEL);
+>>     if (!cxlmd)
+>>         return ERR_PTR(-ENOMEM);
+>>
+>> That is treat the __free() related statement as an inline declaration of
+>> the type we only really allow for these.
+>>
+>>
+>>>       struct device *dev;
+>>>       struct cdev *cdev;
+>>>       int rc;
+>>>   -    cxlmd = cxl_memdev_alloc(cxlds, &cxl_memdev_fops);
+>>> -    if (IS_ERR(cxlmd))
+>>> -        return cxlmd;
+>>>   -    dev = &cxlmd->dev;
+>>> -    rc = dev_set_name(dev, "mem%d", cxlmd->id);
+>>> -    if (rc)
+>>> -        goto err;
+>>> +    if (!cxlmd)
+>>> +        return ERR_PTR(-ENOMEM);
+>>>   -    /*
+>>> -     * Activate ioctl operations, no cxl_memdev_rwsem manipulation
+>>> -     * needed as this is ordered with cdev_add() publishing the device.
+>>> -     */
+>>> +    rc = ida_alloc_max(&cxl_memdev_ida, CXL_MEM_MAX_DEVS - 1, GFP_KERNEL);
+>>> +    if (rc < 0)
+>>> +        return ERR_PTR(rc);
+>>> +    cxlmd->id = rc;
+>>> +    cxlmd->depth = -1;
+>>>       cxlmd->cxlds = cxlds;
+>>>       cxlds->cxlmd = cxlmd;
+>> These two lines weren't previously in cxl_memdev_alloc()
+>> I'd like a statement in the commit message of why they are now. It seems
+>> harmless because they are still ordered before the add and are
+>> ultimately freed
+>>
+>> I'm not immediately spotting why they now are.  This whole code shift
+>> and complex diff is enough of a pain I'd be tempted to do the move first
+>> so that we can then see what is actually changed much more easily.
+>>
+>>
+>>>   -    cdev = &cxlmd->cdev;
+>>> -    rc = cdev_device_add(cdev, dev);
+>>> -    if (rc)
+>>> -        goto err;
+>>> -
+>>> -    rc = devm_add_action_or_reset(host, cxl_memdev_unregister, cxlmd);
+>>> -    if (rc)
+>>> -        return ERR_PTR(rc);
+>>> -    return cxlmd;
+>>> +    dev = &cxlmd->dev;
+>>> +    device_initialize(dev);
+>>> +    lockdep_set_class(&dev->mutex, &cxl_memdev_key);
+>>> +    dev->parent = cxlds->dev;
+>>> +    dev->bus = &cxl_bus_type;
+>>> +    dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
+>>> +    dev->type = &cxl_memdev_type;
+>>> +    device_set_pm_not_required(dev);
+>>> +    INIT_WORK(&cxlmd->detach_work, detach_memdev);
+>>>   -err:
+>>> -    /*
+>>> -     * The cdev was briefly live, shutdown any ioctl operations that
+>>> -     * saw that state.
+>>> -     */
+>>> -    cxl_memdev_shutdown(dev);
+>>> -    put_device(dev);
+>>> -    return ERR_PTR(rc);
+>>> +    cdev = &cxlmd->cdev;
+>>> +    cdev_init(cdev, &cxl_memdev_fops);
+>>> +    return_ptr(cxlmd);
+>>>   }
+>>> -EXPORT_SYMBOL_NS_GPL(devm_cxl_add_memdev, "CXL");
+>>> +EXPORT_SYMBOL_NS_GPL(cxl_memdev_alloc, "CXL");
+>>>     static void sanitize_teardown_notifier(void *data)
+>>>   {
+>>> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+>>> index d2155f45240d..fa5d901ee817 100644
+>>> --- a/drivers/cxl/mem.c
+>>> +++ b/drivers/cxl/mem.c
+>>> @@ -7,6 +7,7 @@
+>>>     #include "cxlmem.h"
+>>>   #include "cxlpci.h"
+>>> +#include "private.h"
+>>>     /**
+>>>    * DOC: cxl mem
+>>> @@ -202,6 +203,45 @@ static int cxl_mem_probe(struct device *dev)
+>>>       return devm_add_action_or_reset(dev, enable_suspend, NULL);
+>>>   }
+>>>   +static void __cxlmd_free(struct cxl_memdev *cxlmd)
+>>> +{
+>>> +    cxlmd->cxlds->cxlmd = NULL;
+>>> +    put_device(&cxlmd->dev);
+>>> +    kfree(cxlmd);
+>>> +}
+>>> +
+>>> +DEFINE_FREE(cxlmd_free, struct cxl_memdev *, __cxlmd_free(_T))
+>>> +
+>>> +/**
+>>> + * devm_cxl_add_memdev - Add a CXL memory device
+>>> + * @host: devres alloc/release context and parent for the memdev
+>>> + * @cxlds: CXL device state to associate with the memdev
+>>> + *
+>>> + * Upon return the device will have had a chance to attach to the
+>>> + * cxl_mem driver, but may fail if the CXL topology is not ready
+>>> + * (hardware CXL link down, or software platform CXL root not attached)
+>>> + */
+>>> +struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
+>>> +                       struct cxl_dev_state *cxlds)
+>>> +{
+>>> +    struct cxl_memdev *cxlmd __free(cxlmd_free) = cxl_memdev_alloc(cxlds);
+>>> +    int rc;
+>>> +
+>>> +    if (IS_ERR(cxlmd))
+>>> +        return cxlmd;
+>>> +
+>>> +    rc = dev_set_name(&cxlmd->dev, "mem%d", cxlmd->id);
+>>> +    if (rc)
+>>> +        return ERR_PTR(rc);
+>>> +
+>>> +    rc = devm_cxl_memdev_add_or_reset(host, cxlmd);
+>>> +    if (rc)
+>>> +        return ERR_PTR(rc);
+>> Is the reference tracking right here?  If the above call fails
+>> then it is possible cxl_memdev_unregister() has been called
+>> or just cxl_memdev_shutdown().
+>>
+>> If nothing else (and I suspect there is worse but haven't
+>> counted references) that will set
+>> cxlmd->cxlds = NULL;
+>> s part of cxl_memdev_shutdown()
+>> The __cxlmd_free() then dereferences that and boom.
+>>
+>>
+>>> +
+>>> +    return no_free_ptr(cxlmd);
+>>> +}
+>>> +EXPORT_SYMBOL_NS_GPL(devm_cxl_add_memdev, "CXL");
 
