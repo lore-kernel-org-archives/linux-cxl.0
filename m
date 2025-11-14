@@ -1,177 +1,151 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CB533122A;
-	Fri, 14 Nov 2025 16:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A3932939D;
+	Fri, 14 Nov 2025 16:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763136248; cv=none; b=X+rrXKVF0tKXwMqLkv9KfziVDKqkR9/N+uRe2KYR9PTyeFSy0Qvs4WtHF1TINjvTZNDUaqG+pZDoguzLAwcCbvgjv6htyEtqbF65E5VOom51YjnmDKVzEScLKjlcPiA4K7fqFcTtUqwlsiwbiH2PEtxgkRqoTMYYo6ZpA94Q59w=
+	t=1763136594; cv=none; b=HqDgKhB6Tp+xgoUSpi7OymSmKGddJLJ/1bD+9jecRNSnFWJx7CgUPliHrSSD7SmPJlxHaq18JgkQEC1ho3dhGs7r8NLxVMqSNs6asNu3wyov9EP5+9F/RUkRcx7wVKxQgCClncaYvM0xmZdCSV3sdHy9xBVMqCNxKXNNYCDlDgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763136248; c=relaxed/simple;
-	bh=P9cGJ7zPlBYZv8kQOzQWIlRFIUZrgMvyo5+1wG6uoUM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=p47+B5qH8JjXaB/cpkfCWpQAzOyRbPJ5G6WgcJYvLUDA0Aa5oO7jAXIgpOAp38+XASH2qXwKqgQEBn/OmC5UlHfSQy5rrxceuJTSzzYgYdQgc9IinGNy212s/OhdUl2Axy6AGJYJ3SY+r95ShyJUwlDpWbGzLV2iHDknR+zCmFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=iUuUK+Iq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EPmgzzJc; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="iUuUK+Iq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EPmgzzJc"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 8E2337A01AE;
-	Fri, 14 Nov 2025 11:04:02 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Fri, 14 Nov 2025 11:04:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1763136242;
-	 x=1763222642; bh=M9f+1V/Gs5C5ClKhbfgT9um9exOzG9W9HnZ9J5MzYFY=; b=
-	iUuUK+IqWqJXW16WpkpxRxPRAtrf6jqtV7WJneZ3XbpcXufA5YS7BhLcfFN3iKGY
-	wVjrBvMkUBSaeOk9SVPhEh1CmfMmrDpdE2ogQ3sHiuidBHmYT82ymxj8Pm/g/Pea
-	gJeWNvSxej3ucg9i89MEvdGDo5tFuWpSKmkzX5kBAKAalJPch9aE780StTAW5NFx
-	Cmlbpi50BB2XPnhFURxMaI1Hg2WDObVPkE0uxWY/hKvxsjiJgtzpzTzyhgMibwPi
-	JOP5y0ENCFAaaMokteMOyLWKENySsm/55Y1q8nVGAJkalDFY1CiipLPwPWHNRXzz
-	Pf7LCQRkIHYGJB9bmpGdYA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763136242; x=
-	1763222642; bh=M9f+1V/Gs5C5ClKhbfgT9um9exOzG9W9HnZ9J5MzYFY=; b=E
-	PmgzzJcrt+h0JC8NtWhi4UJRX9JSEuwVpcW9P6a4pCvY0SdhcCGIMF6xyQFbrC0G
-	BOtT89f8YPJKbFNjWyvAXNY+1I/nW62tdg3sfFoEUhthpdYnbptmds2a0TaCpQFp
-	96IC/ikXcG4TaiQ9TitSuG0vIJmE3/sD82Beh1LV023voCOJPXGvFUIlw0fEV5n/
-	9sX7vQuB8+9cFSdG91otRe3+89cpyfjFrlWd+3azBdxXeGXipIhkFf5y623elKZL
-	hWa3BFMOxipEnFpGZOXyFgIdtR1niCl/7Mi+dLC7+VqVKhoMN8Kov+EHxRGA2qDW
-	BSNisJaMiHTUZPS/8y9GQ==
-X-ME-Sender: <xms:8VIXaSQUTbGlNqoBm96asAebHCJLTwjAMNlPXbzGLJF4vrZcYX7zhw>
-    <xme:8VIXaSm_qGICw4h1CKRHnPHP4ec_0wMH3rj0ydB-3a3qqTvG1luEEXgi3ZUCQIKN6
-    6FvXdlGJZEkYEGxiV3PNVZSbxyKCOQFWYGELxzfm0ejHp0QQWCE_aY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvuddtvdehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepvdelpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopegsphesrghlihgvnhekrdguvgdprhgtphhtthhopegtrghtrghlih
-    hnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohepjhgrmhgvshdrmhhorhhs
-    vgesrghrmhdrtghomhdprhgtphhtthhopehmrghrkhdrrhhuthhlrghnugesrghrmhdrtg
-    homhdprhgtphhtthhopegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhn
-    rdgtohhmpdhrtghpthhtohepjhhonhgrthhhrghnrdgtrghmvghrohhnsehhuhgrfigvih
-    drtghomhdprhgtphhtthhopehlihhnuhigrghrmheshhhurgifvghirdgtohhmpdhrtghp
-    thhtohepfigrnhhghihushhhrghnuddvsehhuhgrfigvihdrtghomhdprhgtphhtthhope
-    hpvghtvghriiesihhnfhhrrgguvggrugdrohhrgh
-X-ME-Proxy: <xmx:8VIXaaCQi_bM4GIEQ_jBunmYtmzlrZxFP7n5lAYiWyfa-4msWaS0iQ>
-    <xmx:8VIXaVSysmvIwseAM0TznwvZ94MPNSpd_nqP7aY25ncwx8evwSv4_w>
-    <xmx:8VIXaRalsjiiTdT-vQi9kNTQC_wzVzBavsjweVEQDrXnjhGzfpXXpg>
-    <xmx:8VIXaaW8w0IjPS9W8wroo2kONi-pnHfHvtBzWdvJYt9D-V7aoy1gzQ>
-    <xmx:8lIXaaNw9x_t5t-hIL3XLxZP43HBdfy0h65TDU0tI1Usk61Z7PgFp97w>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 41EC1700065; Fri, 14 Nov 2025 11:04:01 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1763136594; c=relaxed/simple;
+	bh=pRtMd1SoyFUJdKxhaNPKzWEj3xGqymtep+wzgQhZAe8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=niPGiuu+NKxFZFCEWH03bjMgQ1LA1hqYdOzL0gZYKimc/Bl6VLk1/8yOZX7Hi3gxKGqz4ovpjlBc5zG4KyUuveb0CbO8h06HepYAjXvyL3nwyrN3i3+Mc5KibZ/MyvUHN8k9BfcMROTtCGRCabesxolgdCcmHyh3YT0SdA5gPhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d7MXN6V08zHnH72;
+	Sat, 15 Nov 2025 00:09:24 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 28CB3140133;
+	Sat, 15 Nov 2025 00:09:48 +0800 (CST)
+Received: from localhost (10.126.173.232) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Fri, 14 Nov
+ 2025 16:09:46 +0000
+Date: Fri, 14 Nov 2025 16:09:45 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: "Bowman, Terry" <terry.bowman@amd.com>
+CC: Bjorn Helgaas <helgaas@kernel.org>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
+	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
+	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	<linux-cxl@vger.kernel.org>, <alucerop@amd.com>, <ira.weiny@intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [RESEND v13 22/25] CXL/PCI: Export and rename merge_result() to
+ pci_ers_merge_result()
+Message-ID: <20251114160945.0000727d@huawei.com>
+In-Reply-To: <31f7da35-e603-4272-9e9f-8edc8b4f2075@amd.com>
+References: <20251104190348.GA1865266@bhelgaas>
+	<31f7da35-e603-4272-9e9f-8edc8b4f2075@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AWJreI-smgpg
-Date: Fri, 14 Nov 2025 17:03:40 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Jonathan Cameron" <Jonathan.Cameron@huawei.com>
-Cc: "Conor Dooley" <conor@kernel.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>, linux-cxl@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- Linux-Arch <linux-arch@vger.kernel.org>, linux-mm@kvack.org,
- "Dan Williams" <dan.j.williams@intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Drew Fustini" <fustini@kernel.org>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
- "Krzysztof Kozlowski" <krzk@kernel.org>,
- "James Morse" <james.morse@arm.com>, "Will Deacon" <will@kernel.org>,
- "Davidlohr Bueso" <dave@stgolabs.net>, linuxarm@huawei.com,
- "Yushan Wang" <wangyushan12@huawei.com>,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>, x86@kernel.org,
- "Andy Lutomirski" <luto@kernel.org>,
- "Dave Jiang" <dave.jiang@intel.com>
-Message-Id: <93c1c6be-dae5-477e-8924-1b77f8567732@app.fastmail.com>
-In-Reply-To: <20251114155746.00003719@huawei.com>
-References: <20251031111709.1783347-1-Jonathan.Cameron@huawei.com>
- <20251108-spearmint-contend-aa3dd8a0220e@spud>
- <20251114124958.00006a85@huawei.com>
- <20251114-juror-stiffness-046b47b8d9f7@spud>
- <02244119-d6b8-4ef4-833f-b8fba7a73f43@app.fastmail.com>
- <20251114155746.00003719@huawei.com>
-Subject: Re: [PATCH v5 0/6]  Cache coherency management subsystem
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Fri, Nov 14, 2025, at 16:57, Jonathan Cameron wrote:
-> On Fri, 14 Nov 2025 15:07:33 +0100 "Arnd Bergmann" <arnd@arndb.de> wrote:
-> Hi Arnd,
->
-> Thanks for taking another look.
->
-> Agreed splitting the menus reduces chance of confusion, so makes
-> sense to me as well.
->
-> Implementation wise I think we have to use menuconfig + bool if we want
-> to have help and dependencies and then an if block under that.
-> The syntax for Kconfig always leaves me finding an example to copy
-> rather than finding it intuitive
->
-> menuconfig CACHEMAINT_FOR_DMA
-> 	bool "Cache management for noncoherent DMA"
-> 	depends on RISCV
-> 	help
-> 	  These drivers implement support for noncoherent DMA master devices
-> 	  on platforms that lack the standard CPU interfaces for this.
->
-> if CACHEMAINT_FOR_DMA
-> ... drivers here...
->
-> endif #CACHEMAINT_FOR_DMA
->
-> menuconfig CACHEMAINT_FOR_HOTPLUG
-> 	bool "Cache management for hotplug like operations"
-> 	depends on GENERIC_CPU_CACHE_MAINTENANCE
-> 	help
-> 	   These drivers implement support for cache management flows
-> 	   as required for action such as memory hotplug on platforms
-> 	   where this is done by platform specific interfaces.
->
-> if CACHEMAINT_FOR_HOTPLUG
-> ... drivers here
->
-> endif #CACHEMAINT_FOR_HOTPLUG
+On Fri, 14 Nov 2025 09:20:08 -0600
+"Bowman, Terry" <terry.bowman@amd.com> wrote:
 
-Works for me.
+> On 11/4/2025 1:03 PM, Bjorn Helgaas wrote:
+> > On Tue, Nov 04, 2025 at 11:03:02AM -0600, Terry Bowman wrote: =20
+> >> CXL uncorrectable errors (UCE) will soon be handled separately from th=
+e PCI
+> >> AER handling. The merge_result() function can be made common to use in=
+ both
+> >> handling paths.
+> >>
+> >> Rename the PCI subsystem's merge_result() to be pci_ers_merge_result().
+> >> Export pci_ers_merge_result() to make available for the CXL and other
+> >> drivers to use.
+> >>
+> >> Update pci_ers_merge_result() to support recently introduced PCI_ERS_R=
+ESULT_PANIC
+> >> result. =20
+> > Seems like this merge_result() change maybe should be in the same
+> > patch that added PCI_ERS_RESULT_PANIC?  That would also solve the
+> > problem that the subject line doesn't mention this important
+> > functional change.
+> >
+> > I haven't seen the user(s) of pci_ers_merge_result() yet, but this
+> > seems like it might be a little too low level to be exported to
+> > modules and in include/linux/pci.h.  Maybe there's no other way. =20
+>=20
+> This is used in the UCE handling patch. I will move there.
+>=20
+> Jonathan suggested updating |merge_result()| to handle both PCIe and CXL =
+error=A0
+> cases with shared logic. The only other option I see is to remove the exp=
+ort here=A0
+> and duplicate the function in the CXL drivers?
 
-> I'm not sure if the 'hotplug like' is close enough to all the cases
-> for device drivers that provide the services needed to implement
-> ARCH_HAS_CPU_CACHE_INVALIDATE_MEMEGION
+I don't mind if turns out we do need to duplicate this little bit of code.
 
-The _FOR_HOTPLUG does feel a little more specific than it should be,
-but I haven't come up with a better name for it yet. We'll
-probably figure that out if we ever get a second driver here.
+Jonathan
+> /
+> /
+>=20
+> - Terry
+>=20
+>=20
+> > Wrap commit log to fit in 75 columns.
+> >
+> > Suggest possible subject prefix of "PCI/ERR" since the only CXL
+> > connection is that you want to *use* this from CXL.
+> > =20
+> >> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> >> --- Changes in v12->v13: - Renamed pci_ers_merge_result() to pcie_ers_=
+merge_result(). pci_ers_merge_result() is already used in eeh driver. (Bot)=
+ Changes in v11->v12: - Remove static inline pci_ers_merge_result() definit=
+ion for !CONFIG_PCIEAER. Is not needed. (Lukas) Changes in v10->v11: - New =
+patch - pci_ers_merge_result() - Change export to non-namespace and rename =
+to be pci_ers_merge_result() - Move pci_ers_merge_result() definition to pc=
+i.h. Needs pci_ers_result --- drivers/pci/pcie/err.c | 14 +++++++++----- in=
+clude/linux/pci.h | 7 +++++++ 2 files changed, 16 insertions(+), 5 deletion=
+s(-) diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c index beb=
+e4bc111d7..9394bbdcf0fb 100644 --- a/drivers/pci/pcie/err.c +++ b/drivers/p=
+ci/pcie/err.c @@ -21,9 +21,12 @@ #include "portdrv.h" #include "../pci.h" -=
+static pci_ers_result_t merge_result(enum pci_ers_result orig, - enum pci_e=
+rs_result new) +pci_ers_result_t pcie_ers_merge_result(enum pci_ers_result =
+orig, + enum
+> >> pci_ers_result new) { + if (new =3D=3D PCI_ERS_RESULT_PANIC) + return =
+PCI_ERS_RESULT_PANIC; + if (new =3D=3D PCI_ERS_RESULT_NO_AER_DRIVER) return=
+ PCI_ERS_RESULT_NO_AER_DRIVER; @@ -45,6 +48,7 @@ static pci_ers_result_t me=
+rge_result(enum pci_ers_result orig, return orig; } +EXPORT_SYMBOL(pcie_ers=
+_merge_result); static int report_error_detected(struct pci_dev *dev, pci_c=
+hannel_state_t state, @@ -81,7 +85,7 @@ static int report_error_detected(st=
+ruct pci_dev *dev, vote =3D err_handler->error_detected(dev, state); } pci_=
+uevent_ers(dev, vote); - *result =3D merge_result(*result, vote); + *result=
+ =3D pcie_ers_merge_result(*result, vote); device_unlock(&dev->dev); return=
+ 0; } @@ -139,7 +143,7 @@ static int report_mmio_enabled(struct pci_dev *de=
+v, void *data) err_handler =3D pdrv->err_handler; vote =3D err_handler->mmi=
+o_enabled(dev); - *result =3D merge_result(*result, vote); + *result =3D pc=
+ie_ers_merge_result(*result, vote); out: device_unlock(&dev->dev); return 0=
+; @@ -159,7 +163,7 @@ static int
+> >> report_slot_reset(struct pci_dev *dev, void *data) err_handler =3D pdr=
+v->err_handler; vote =3D err_handler->slot_reset(dev); - *result =3D merge_=
+result(*result, vote); + *result =3D pcie_ers_merge_result(*result, vote); =
+out: device_unlock(&dev->dev); return 0; diff --git a/include/linux/pci.h b=
+/include/linux/pci.h index 33d16b212e0d..d3e3300f79ec 100644 --- a/include/=
+linux/pci.h +++ b/include/linux/pci.h @@ -1887,9 +1887,16 @@ static inline =
+void pci_hp_unignore_link_change(struct pci_dev *pdev) { } #ifdef CONFIG_PC=
+IEAER bool pci_aer_available(void); void pcie_clear_device_status(struct pc=
+i_dev *dev); +pci_ers_result_t pcie_ers_merge_result(enum pci_ers_result or=
+ig, + enum pci_ers_result new); #else static inline bool pci_aer_available(=
+void) { return false; } static inline void pcie_clear_device_status(struct =
+pci_dev *dev) { } +static inline pci_ers_result_t pcie_ers_merge_result(enu=
+m pci_ers_result orig, + enum pci_ers_result new) +{ + return PCI_ERS_RESUL=
+T_NONE; +} #endif bool
+> >> pci_ats_disabled(void); -- 2.34.1  =20
+>=20
 
-> Alternative might be to phrase around pushing beyond the point of
-> coherence, but that seems to be an ARM specific term and would
-> seem to incorporate fine grained sharing where this interface might
-> work but isn't a good solution.
-
-Agreed.
-
-     Arnd
