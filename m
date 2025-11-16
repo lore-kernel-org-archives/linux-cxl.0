@@ -1,47 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BA19463
-	for <linux-cxl@vger.kernel.org>; Sun, 16 Nov 2025 01:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9431D7E42
+	for <linux-cxl@vger.kernel.org>; Sun, 16 Nov 2025 01:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763256642; cv=none; b=VnpvwHe30BuaAai4gkokUMmGzyOJzgeKHbx513qq/Q/bHXIm5kngH5JqRkujJAteeWqxHloTx4BVpJqfk49VuhiIwbwzZU7pKHKI8wtUN3uKaU9jDJ4HwFBrFHH2Jdy5vQ/Bakt79BE/DyaPAKIh0SWVYTOumoZTr6LRza1Gcj0=
+	t=1763257115; cv=none; b=HwecrqNC9biCyus/TQ5jxOTVvjM/mxQ7/bgVLQx6yvURqHE0FNakY9oZof/FxZthiIU1edH2+cZ4U3pq2pKoItlTMYFUEainCAfYmXFO3sLtkW9m2tqFBiJ0q80nB6hGFL5+NHICjrFAQErey2oUhtZrniEbZrPQJfBRoHKWzKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763256642; c=relaxed/simple;
-	bh=IcC3O37zAFtwlO5QRzilP2WStEEEGyvAYhWdzivZ3fE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UHAoHbptN8jrw1drOaF6vWzy68yNrpvbGLxIyTmz+Lugpd8NPNWk2XpTfIdr22TTG0XjGPG4dRyuZ0YzuGNZ8qfKLrh4eg3d1uD2FwqjsPwk3NjGY4Bo8aZixlCv6eTJA13V2IwhW/pi8T0Q1YID1HADJMLJWKPAhjwIOD04WQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dLUjbRq+; arc=none smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1763257115; c=relaxed/simple;
+	bh=SpxniP4OwMtGS2yuG2u8RnPYYP3nqWaqheCVGJ1TpT0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pXjaFRF+6shse7QimXY6XchnTlzoxvmnLDoxGpq61nk8PlwhPlA6mfaOaRnpkRJw76voT26lopJylvhmQWadBMoQ3HuRwJOUF+XSfvPrLoIATaOGzlahpJ6m59dTYGmZbvj9JlEH1FSYyCMpOAwJcmTzy96aMmOElDziNt78+ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cdseoqUM; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dLUjbRq+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cdseoqUM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763256642; x=1794792642;
+  t=1763257113; x=1794793113;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=IcC3O37zAFtwlO5QRzilP2WStEEEGyvAYhWdzivZ3fE=;
-  b=dLUjbRq+r5M9NZ3qh1vnf5XdDHvY1wpnv2APmmHPlHxQ3AHMYy+gW2te
-   YYR5etUBFheR3LYbL5TPk2aseGpQkvitdjoG6rNzQNX2FSi7t4J9mup3f
-   Xby8B+YcaUCC9FUjFtb2CjeUEQ+rnUKuL4BrqjURJAr8ACfGsOwq9Gv57
-   P7I2kwj8OBeQBVDTc89Tlw683otanYM9IBBaup4ipN8waBaroSy61M6zg
-   vkCrQCRffcLej2tjn82OKGZkXHasniFgfaooZ0Me//3g/MMCOFePDybZy
-   MoZDioXHpkkZmPswMpNCDv17vH1fR03e0D4wWS7xvTLIPXboPkZXFYxUf
-   A==;
-X-CSE-ConnectionGUID: 0yWUjbTSSP6gZOK+AiO7Kg==
-X-CSE-MsgGUID: x0QlGnOVTAS8MzOrsk0y/g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11614"; a="65185273"
+  bh=SpxniP4OwMtGS2yuG2u8RnPYYP3nqWaqheCVGJ1TpT0=;
+  b=cdseoqUMed8eJTV/dbGSPutB0Glbd7p05a/vLSLvuMc3GVR0hgRZ0+i3
+   uR4JgjN8uO8tTU/+yETrF921qN5NEQLKAXUKNm6clRIjPcqeTKFWNmDCV
+   KXaxTeiq5/W9fM+vcLt7C8U+9Z9WEWqvvFxrY8MA84imAGFJo4stvwgbo
+   l3Vw1YzHLBLUYh0pREn015wVNRY+ByUhEnKQGFNUJ/bpZdaRBIiYKKUpU
+   TB+E/Yfr6CfU9FzhJdlBAKX0BN0UzvnFPXOyawoYc+3fuz/z0x/hH2UaF
+   cOos/vttfsKShSPDIXxnTjynMINSTBL7PUg1YUcWUQcMM4sSz2+OnkraY
+   g==;
+X-CSE-ConnectionGUID: zS5atLKOTXiORPJ6WWlU3g==
+X-CSE-MsgGUID: jfj6E7jxRzOrQ+iZbgEpCQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11614"; a="69167829"
 X-IronPort-AV: E=Sophos;i="6.19,308,1754982000"; 
-   d="scan'208";a="65185273"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2025 17:30:41 -0800
-X-CSE-ConnectionGUID: hw4aZL1dTXSno9slroLdZQ==
-X-CSE-MsgGUID: wpwXEQR9TtCQT3gTvOkxPw==
+   d="scan'208";a="69167829"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2025 17:38:33 -0800
+X-CSE-ConnectionGUID: a44uBRr3TzqVoNbhzM1gNg==
+X-CSE-MsgGUID: DvKDd3tdSEeTO8Z1K9+lLw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,308,1754982000"; 
-   d="scan'208";a="227471523"
+   d="scan'208";a="220787128"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.220.132])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2025 17:30:40 -0800
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2025 17:38:32 -0800
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
@@ -50,10 +50,12 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Vishal Verma <vishal.l.verma@intel.com>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH] cxl/test: Assign overflow_err_count from log->nr_overflow
-Date: Sat, 15 Nov 2025 17:30:32 -0800
-Message-ID: <20251116013036.1713313-1-alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org,
+	Itaru Kitayama <itaru.kitayama@fujitsu.com>,
+	"Fabio M . De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: [PATCH] cxl/test: Remove ret_limit race condition in mock_get_event()
+Date: Sat, 15 Nov 2025 17:37:49 -0800
+Message-ID: <20251116013819.1713780-1-alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -63,49 +65,82 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-mock_get_event() uses an uninitialized local variable, nr_overflow, to
-populate the overflow_err_count field. That results in incorrect
-overflow_err_count values in mocked cxl_overflow trace events, such as
-this case where the records are reported as 0 and should be non-zero:
+Commit 364ee9f3265e ("cxl/test: Enhance event testing") changed the
+loop iterator in mock_get_event() from a static constant,
+CXL_TEST_EVENT_CNT, to a dynamic global variable, ret_limit. The
+intent was to vary the number of events returned per call to simulate
+events occurring while logs are being read.
 
-[] cxl_overflow: memdev=mem7 host=cxl_mem.6 serial=7: log=Failure : 0 records from 1763228189130895685 to 1763228193130896180
+However, ret_limit is modified without synchronization. When multiple
+threads call mock_get_event() concurrently, one thread may read
+ret_limit, another thread may increment it, and the first thread's
+loop condition and size calculation see and use the updated value.
 
-Fix by using log->nr_overflow and remove the unused local variable.
+This is visible during cxl_test module load when all memdevs are
+initializing simultaneously, which includes getting event records. It
+is not tied to the cxl-events.sh unit test specifically, as that
+operates on a single memdev.
 
-A follow-up change was considered in cxl_mem_get_records_log() to
-confirm that the overflow_err_count is non-zero when the overflow flag
-is set [1]. Since the driver has no functional dependency on this
-constraint, and a device that violates this specific requirement does
-not cause incorrect driver behavior, no validation check is added.
+While no actual harm results (the buffer is always large enough and
+the record count fields correctly reflect what was written), this is
+a correctness issue. The race creates an inconsistent state within
+mock_get_event() and adding variability based on a race appears
+unintended.
 
-[1] CXL 3.2, Table 8-65 Get Event Records Output Payload
+Make ret_limit a local variable populated from an atomic counter. Each
+call gets a stable value that won't change during execution. That
+preserves the intended behavior of varying the return counts across
+calls while eliminating the race condition.
+
+This implementation uses "+ 1" to produce the full range of 1 to
+CXL_TEST_EVENT_RET_MAX (4) records. Previously only 1, 2, 3 were
+produced.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- tools/testing/cxl/test/mem.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+
+This was found while chasing a NULL payload_out issue in mock_get_event()
+that Itaru reported here [1] and Fabio and I have both seen but not been
+able to reliably reproduce. Although the accounting can be wrong wrt
+ret_limit, no potential overflow was found.
+
+[1] https://lore.kernel.org/linux-cxl/49A4B521-AB66-4037-A23D-1D0D7AF0F42F@linux.dev/
+
+
+ tools/testing/cxl/test/mem.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index d533481672b7..9853bccfa185 100644
+index d533481672b7..6809c4a26f5e 100644
 --- a/tools/testing/cxl/test/mem.c
 +++ b/tools/testing/cxl/test/mem.c
-@@ -256,7 +256,6 @@ static int mock_get_event(struct device *dev, struct cxl_mbox_cmd *cmd)
+@@ -250,22 +250,22 @@ static void mes_add_event(struct mock_event_store *mes,
+  * Vary the number of events returned to simulate events occuring while the
+  * logs are being read.
+  */
+-static int ret_limit = 0;
++static atomic_t event_counter = ATOMIC_INIT(0);
+ 
+ static int mock_get_event(struct device *dev, struct cxl_mbox_cmd *cmd)
  {
  	struct cxl_get_event_payload *pl;
  	struct mock_event_log *log;
--	u16 nr_overflow;
+ 	u16 nr_overflow;
++	int ret_limit;
  	u8 log_type;
  	int i;
  
-@@ -299,7 +298,7 @@ static int mock_get_event(struct device *dev, struct cxl_mbox_cmd *cmd)
- 		u64 ns;
+ 	if (cmd->size_in != sizeof(log_type))
+ 		return -EINVAL;
  
- 		pl->flags |= CXL_GET_EVENT_FLAG_OVERFLOW;
--		pl->overflow_err_count = cpu_to_le16(nr_overflow);
-+		pl->overflow_err_count = cpu_to_le16(log->nr_overflow);
- 		ns = ktime_get_real_ns();
- 		ns -= 5000000000; /* 5s ago */
- 		pl->first_overflow_timestamp = cpu_to_le64(ns);
+-	ret_limit = (ret_limit + 1) % CXL_TEST_EVENT_RET_MAX;
+-	if (!ret_limit)
+-		ret_limit = 1;
++	/* Vary return limit from 1 to CXL_TEST_EVENT_RET_MAX */
++	ret_limit = (atomic_inc_return(&event_counter) % CXL_TEST_EVENT_RET_MAX) + 1;
+ 
+ 	if (cmd->size_out < struct_size(pl, records, ret_limit))
+ 		return -EINVAL;
 
 base-commit: e9a6fb0bcdd7609be6969112f3fbfcce3b1d4a7c
 -- 
