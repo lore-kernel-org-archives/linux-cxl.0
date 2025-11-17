@@ -1,116 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2003023F439;
-	Mon, 17 Nov 2025 15:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D3024CEEA
+	for <linux-cxl@vger.kernel.org>; Mon, 17 Nov 2025 15:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763391631; cv=none; b=phaAjX/cxnmvAb/QrQce6BXRrQAG/DVk1R53xaGIpWob/wnd7s8x3MHPqlxg+3hWbifZqVSRcaUDhZXAFC6xUac35GZfy3wE2/VrlOnzBcjpxEDFU5nuL8Kx4pEGUmv80QjHN2av72QNL9gvuLOLUAXuZkX/xeeOLl7Fpiv4JDQ=
+	t=1763393571; cv=none; b=rbEs9bacptsJ0NeHbV6tKmIilEaYxjwqxSu8Iibb1tg074hdgVRYxilpC+6MbctHmYyGKSA1xiEv2ho0Z9Flqa9PcBvD814sHsFZ/Rw8oJrjOlNmVntVSzDydeAJd8vCDwLwWBRGHG2McOrzIfrSX6nJaQx9vRyDYhUUX03a6O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763391631; c=relaxed/simple;
-	bh=hmMEbfTFN5n4CBo7J7vCAo90FSilyOzfTyWJPEvu0pw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xk2SVXOVti5LtdzbC+WQ+FX0QbqQg3HoizFnmW6OMdCgeOK2AEOBh5D/3179LktedgPC9HQtneL8vehChl39nLu80g9rNQTXEUAN/8iSVr56tQ3gc7l4JP+QD6piy2TaiCyd1MwS0023K+PPGXBLMEovVHXrDi7Zo9PXNXrDFlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TrbAwHvH; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1763393571; c=relaxed/simple;
+	bh=XrgAn6aqkVWqQ7ZPbi/a6T1xGS2Dv9R/RZDwMyLptSs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VLy7K6uN9TOGYtA8vISeQpq3oT3mpi7f+zXq+B1nMdVWWbvE4PP5rckgaXb25V5c/Ie7Dzd7ylLOMKkcD9cKjROG87IZbFjHslV7DB7AC3MhcBfKXcvTydQb7yaUKcvQeZzLUo+rGZ3oVSs7dM+UyqfHBwNmyxoPheY/Dw4Dsb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dMWFiSpT; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TrbAwHvH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dMWFiSpT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763391629; x=1794927629;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=hmMEbfTFN5n4CBo7J7vCAo90FSilyOzfTyWJPEvu0pw=;
-  b=TrbAwHvHHwOhDRbAQHXqadnhxkEx1unaHmh1vvvY4M/7XRcCpx0htGWI
-   GiUSvpINXBJyfe0y2FYAY91kQaxSS1bCsyD/nBqLInzTMMVVjpj5VusE1
-   c0kCNbZ02J/65vgTy2OVRuoM9FPVmLyjmLvvU2Ks1LeIesTAr2lkhY7Ht
-   46ANLYbWO4oM2EIxUtZJz2HS5gps0h0wGzI456RdVVgxDuIC7afWrVNHb
-   ylMojHN0DvXvF4kCWq78NooaVqnrrm/OkAjgYDrcRVTm0tdtG8XWLJhDj
-   0HTQ4FNY1wgmVt8l23+GDuC2auoiCOsJRqWDLuZQkzzjVxvGhyL0kRSjX
-   w==;
-X-CSE-ConnectionGUID: wcx/rsR9S92I8ppBFxq0Ig==
-X-CSE-MsgGUID: 0joTU6b/Rrao/Y8Py7hd8w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="76494758"
+  t=1763393570; x=1794929570;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=XrgAn6aqkVWqQ7ZPbi/a6T1xGS2Dv9R/RZDwMyLptSs=;
+  b=dMWFiSpThOmPkSmusyHj3yBtPrqvzBOHmBaQYfRy1bp0TqM8trzXtZzc
+   ROfpHW3rBT3oJw6qTjA81yCBOfHv5x69pbeqQcLHme6vWsFllof4OnDRr
+   gEGetq3fCR6JVNS7bg7cfGtcodVA9kl6hoNYF97yQxFCRdY6ZBdxvIsaE
+   JeHL4JTFNYy8I/7O26xjgbte/3zzCVbvfDCNlzXCIXAxPfmhXn3jbPHRZ
+   Ky1WGhao5VgSK5GRW8rsKCVivy6u4H/jUSRwGHDUyhL53XLGv8eQKJEwQ
+   8jSjwIGFiEr6M8+j26fuWDLpCvRwuF98dLchWNEogONMhtlKiAJe/s+NQ
+   A==;
+X-CSE-ConnectionGUID: tqH4e6nPQk2k3IrxdfA6VA==
+X-CSE-MsgGUID: gf27z1XCTrm+X0cgMV6mdQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="76074022"
 X-IronPort-AV: E=Sophos;i="6.19,312,1754982000"; 
-   d="scan'208";a="76494758"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 07:00:28 -0800
-X-CSE-ConnectionGUID: 67tIj6PyS6e/Mbr+45zG3w==
-X-CSE-MsgGUID: w/9CJWlwShy9SNemyIRH6A==
+   d="scan'208";a="76074022"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 07:32:48 -0800
+X-CSE-ConnectionGUID: 0KzML8UwShi5/LaFvam9eA==
+X-CSE-MsgGUID: G79wUFv4TB2t264TuH75JA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,312,1754982000"; 
-   d="scan'208";a="194569126"
-Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.109.43]) ([10.125.109.43])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 07:00:27 -0800
-Message-ID: <3ef9ee39-b568-4f08-ba4f-82be65248cf6@intel.com>
-Date: Mon, 17 Nov 2025 08:00:26 -0700
+   d="scan'208";a="190930485"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.28])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 07:32:46 -0800
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: linux-cxl@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com
+Subject: Re: [PATCH v2 1/3] cxl/test: Standardize CXL auto region size
+Date: Mon, 17 Nov 2025 16:32:44 +0100
+Message-ID: <3401928.fdyTQepKt5@fdefranc-mobl3>
+In-Reply-To: <20251117144611.903692-2-dave.jiang@intel.com>
+References:
+ <20251117144611.903692-1-dave.jiang@intel.com>
+ <20251117144611.903692-2-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 06/22] cxl: Move pci generic code
-To: Alejandro Lucero Palau <alucerop@amd.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
- dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
- Ben Cheatham <benjamin.cheatham@amd.com>, Fan Ni <fan.ni@samsung.com>,
- Alison Schofield <alison.schofield@intel.com>
-References: <20251110153657.2706192-1-alejandro.lucero-palau@amd.com>
- <20251110153657.2706192-7-alejandro.lucero-palau@amd.com>
- <20251112154103.000025fd@huawei.com>
- <8d0b9a21-c1bd-453f-903b-22aa302b3639@amd.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <8d0b9a21-c1bd-453f-903b-22aa302b3639@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+
+On Monday, November 17, 2025 3:46:09=E2=80=AFPM Central European Standard T=
+ime Dave Jiang wrote:
+> Create a global define for the size of the mock CXL auto region used
+> in cxl_test. Remove the declared size in mock_init_hdm_decoder()
+> function.
+>=20
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> v2:
+> - Make auto region size a global that can be changed at init. (Fabio)
+> ---
+
+Reviewed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+
+>  tools/testing/cxl/test/cxl.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> index 2d135ca533d0..f0e734536081 100644
+> --- a/tools/testing/cxl/test/cxl.c
+> +++ b/tools/testing/cxl/test/cxl.c
+> @@ -26,6 +26,9 @@ static int interleave_arithmetic;
+>  #define NR_CXL_PORT_DECODERS 8
+>  #define NR_BRIDGES (NR_CXL_HOST_BRIDGES + NR_CXL_SINGLE_HOST + NR_CXL_RC=
+H)
+> =20
+> +#define MOCK_AUTO_REGION_SIZE_DEFAULT SZ_512M
+> +static int mock_auto_region_size =3D MOCK_AUTO_REGION_SIZE_DEFAULT;
+> +
+>  static struct platform_device *cxl_acpi;
+>  static struct platform_device *cxl_host_bridge[NR_CXL_HOST_BRIDGES];
+>  #define NR_MULTI_ROOT (NR_CXL_HOST_BRIDGES * NR_CXL_ROOT_PORTS)
+> @@ -738,7 +741,6 @@ static void mock_init_hdm_decoder(struct cxl_decoder =
+*cxld)
+>  	struct cxl_endpoint_decoder *cxled;
+>  	struct cxl_switch_decoder *cxlsd;
+>  	struct cxl_port *port, *iter;
+> -	const int size =3D SZ_512M;
+>  	struct cxl_memdev *cxlmd;
+>  	struct cxl_dport *dport;
+>  	struct device *dev;
+> @@ -783,7 +785,7 @@ static void mock_init_hdm_decoder(struct cxl_decoder =
+*cxld)
+>  	base =3D window->base_hpa;
+>  	cxld->hpa_range =3D (struct range) {
+>  		.start =3D base,
+> -		.end =3D base + size - 1,
+> +		.end =3D base + mock_auto_region_size - 1,
+>  	};
+> =20
+>  	cxld->interleave_ways =3D 2;
+> @@ -792,7 +794,8 @@ static void mock_init_hdm_decoder(struct cxl_decoder =
+*cxld)
+>  	cxld->flags =3D CXL_DECODER_F_ENABLE;
+>  	cxled->state =3D CXL_DECODER_STATE_AUTO;
+>  	port->commit_end =3D cxld->id;
+> -	devm_cxl_dpa_reserve(cxled, 0, size / cxld->interleave_ways, 0);
+> +	devm_cxl_dpa_reserve(cxled, 0,
+> +			     mock_auto_region_size / cxld->interleave_ways, 0);
+>  	cxld->commit =3D mock_decoder_commit;
+>  	cxld->reset =3D mock_decoder_reset;
+> =20
+> @@ -841,7 +844,7 @@ static void mock_init_hdm_decoder(struct cxl_decoder =
+*cxld)
+>  		cxld->interleave_granularity =3D 4096;
+>  		cxld->hpa_range =3D (struct range) {
+>  			.start =3D base,
+> -			.end =3D base + size - 1,
+> +			.end =3D base + mock_auto_region_size - 1,
+>  		};
+>  		put_device(dev);
+>  	}
+> --=20
+> 2.51.1
+>=20
+>=20
+>=20
 
 
 
-On 11/15/25 1:12 AM, Alejandro Lucero Palau wrote:
-> 
-> On 11/12/25 15:41, Jonathan Cameron wrote:
->> On Mon, 10 Nov 2025 15:36:41 +0000
->> alejandro.lucero-palau@amd.com wrote:
->>
->>> From: Alejandro Lucero <alucerop@amd.com>
->>>
->>> Inside cxl/core/pci.c there are helpers for CXL PCIe initialization
->>> meanwhile cxl/pci.c implements the functionality for a Type3 device
->>> initialization.
->>>
->>> Move helper functions from cxl/pci.c to cxl/core/pci.c in order to be
->>> exported and shared with CXL Type2 device initialization.
->>>
->>> Fix cxl mock tests affected by the code move, deleting a function which
->>> indeed was not being used since commit 733b57f262b0("cxl/pci: Early
->>> setup RCH dport component registers from RCRB").
->> As I replied late to v19, I'd like to understand more about this comment.
->> If it was not being used, why can't we remove it before this patch?
-> 
-> 
-> I replied back then, but if you think this is what I should do with no exception, I'll do it.
-> 
-> Should it be part of this patchset or something I should send independently?
-
-Alison is out this week due to a personal matter. I would just send this ahead and be done with it if it's just a function removal cleanup. 
-
-DJ
-
-> 
-> 
->>
->>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->>> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
->>> Reviewed-by: Fan Ni <fan.ni@samsung.com>
->>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
->>> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
