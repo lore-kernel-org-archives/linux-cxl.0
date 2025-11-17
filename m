@@ -1,107 +1,100 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550ED29DB88
-	for <linux-cxl@vger.kernel.org>; Mon, 17 Nov 2025 17:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8335C29B20D
+	for <linux-cxl@vger.kernel.org>; Mon, 17 Nov 2025 18:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763400202; cv=none; b=GyFcUG1w04J8rviw0uQgeHIO8EI1o53EAhooUW/6QEB1aOoQ7GpXFAI07hVKZWdb485KjYlHgAg9vvsUg0VYKjbLBy78PhJPxcJgPe7ZMb2jBEDwAmBfDYnNrGOTrzFCQoPSpsOlxqhA8Dh0w2b1KTfYj4XDt6pjU+8PezqOKXc=
+	t=1763403218; cv=none; b=LK/zQNc0xNUtgWXhZ+txZOttZJSbshFuJf0p0anRWd/ObGXFPaO6WlgeXYHIVDQqOw+N875GNjIcN8EBAHnMzJda40jI89Ig6TvF2yKKFOSrWt1nFnjSKzZpqVhwqzTH02tZg97IQXJoHSgLvUdONy4RMcq/9SrjteYEnmHsFYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763400202; c=relaxed/simple;
-	bh=DcF+mtUkLCta7BB0IhgluQ0mrEwuGNBLuuOdpn2rEBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pGuLWQ+eGNj6bEvUwCk8/LX/NhGqhWPRRBOjUSbIikply+NOMyZFDqGaLNopCvdLln3cuG+X1wp+n0myi+jCWiGsBtJVCBpXjQb5kpJU36kO46VJo32YHGjSPTAdYQo8EkR1yvjXqC2ioQ9hNYEkoYt735ttx71vzamscaB2kfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=jpItD3uu; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1763403218; c=relaxed/simple;
+	bh=90R3wzazKW0QXxHJW2q2x+J/FjVRjvzHCZns8xo33LA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=sfnmvOLeW+Gaj8bauFW++L/7JsYlLvODkWT8/OyNhSnQCVZlMDX8z9YRxA14UY0zoW9TpCaPyfvrMiL89SfCuQnbEfuMDL30jaCW0BVJiqMhh/FAYxpRdyajNQAMYogC0p6dkUEGLKyuFqXIqDpjwgVllZeU7cfeT2dK/VsSE2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O3ypit+l; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="jpItD3uu"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-47755de027eso32128255e9.0
-        for <linux-cxl@vger.kernel.org>; Mon, 17 Nov 2025 09:23:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1763400198; x=1764004998; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lu+6cnu1qButzW44m7BEqIZyPFtZnUU5pUSJ+AtHLBs=;
-        b=jpItD3uu0PLNMOQmOFseN3jmgmSjK3/6B8kJlVno7JE1zi4TlYQsYaNM/ncF6EHuqK
-         YbywHq+ELJ/QKi6sTW3x41Q6gFmx4CJr0zC5bgbnC+EXuZX0/SRZvERvRy8rB+afdxjM
-         XvPx2VJ3TauExLhyicHQuE9Lvrhvv6SI15LIHWhFVzYMzIJNXG7NQutLi9ZMg3zQaKWX
-         O5XfgdQI/JH9m7G+5oGcORMWHvl+bV+pPgFLOOJM5mST6hRG68gBrC4iwl4U0jmPgsjU
-         hNSY2Egdq8W5au1wudlUTEgups1G/hi/hkLv9gfVUc4DBsfJZBhLP+1VqJ5cRMQbseIJ
-         gvfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763400198; x=1764004998;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Lu+6cnu1qButzW44m7BEqIZyPFtZnUU5pUSJ+AtHLBs=;
-        b=r/sMk77i2JrPFtvd20FFdoOTe2xPvOKfTiAfZs8OJkCMxnjc/Bl5LYoJskK7gxu3eL
-         VRSUq7/847iIzZVtRT6E6iwsxLh0T8cTWcujqMd+tPNULW4tg1Mj1rM+7bSQe6G1Nj2K
-         ovOJxsB1IyOCbltCyvxsq0NJLjThQ94TxlZ9iw9wP24PH2xVDnO80dvSr3As+PqmlsJI
-         JUDtSPe4uy3YL7P5IeAgae/sVnsWmPXjb8aVnhJNrSYKDC5Eaqrr8EjvWJbvfA7zxiWb
-         ygwaywQXXwRFEaSsB0X1QTL6NOYWZt2NBHmQ8bu5cwmxUQo1o9lOOjFJfjuKGe783IFM
-         Imyw==
-X-Forwarded-Encrypted: i=1; AJvYcCWByGKURLYdhBI7TSevwUVeL+detisPSZwvyv8IS80wAo/+Bezu2GiWH5I+rrqxVFI7K2pPbuMUC9g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywr4rk3dY8/t6CFqMJiHm/dLu3n4l5eRhLS9Jk7hkkl4EiFXDUb
-	vZ94B8SevBfrjb0U4WlQ1QBlsSQAvnMSAAFI94Ma9WKT94cRClUDw58SQS3GysqXftg=
-X-Gm-Gg: ASbGncs/jnutismKW532QjPLR5w4AL7Gluat4rDY1+aVU8Ao7zUo6OACgELYg6l99lQ
-	giZD4ctFfVliYDoRVuVlEcTB5h10ab3kwqQXLdEWk66F2GSRZ0Euy36N+IRd1uN/Yw2Ya7uqy+8
-	v9Scvya6+xbBWVnj8/7KbAA3XXYYTdGbkiLiKJh212lxB3yOnOw0wTGLnUzbgcOuJbR+qlvNZIH
-	dNf4fMQHvSG/5PLKQylPvxaJnBRrqGHiAuqT/V/egQu3ibdhuO8Rs2ztNCqU/QtivYPn/k7mzLf
-	v5qmCaXu/rtEIPXoiI16nqUcrsezdIGvHjQVvs0GZexATijfEo6MffdLPvjGsmhkjYmES5qws5K
-	0eKQRu+j7BeBtuCEb/DBtXQNhDpuVbg0BNPmCYWNOYgz8Zpt+Ruq3xoQBp+NLs+rZCYWKitJgEQ
-	YkYGXn711G
-X-Google-Smtp-Source: AGHT+IEQvjfeTYX3OgKPKJ19MA+p76DDh2uqndjk7m70WHzzEQZxUSf6OpYVBbgQOz2i6gSauFue8w==
-X-Received: by 2002:a05:600c:1986:b0:477:28c1:26ce with SMTP id 5b1f17b1804b1-4778fe41be4mr118976935e9.7.1763400198391;
-        Mon, 17 Nov 2025 09:23:18 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F ([2620:10d:c092:500::7:392e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47798dd2e8fsm63855275e9.7.2025.11.17.09.23.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Nov 2025 09:23:17 -0800 (PST)
-Date: Mon, 17 Nov 2025 11:23:15 -0600
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>
-Subject: Re: [PATCH v4 00/14] cxl: ACPI PRM Address Translation Support and
- AMD Zen5 enablement
-Message-ID: <aRtaAwa1k39kPQgN@gourry-fedora-PF4VCD3F>
-References: <20251103184804.509762-1-rrichter@amd.com>
- <aQonCRITOLOH0cG3@aschofie-mobl2.lan>
- <aRtAap0NsNElyKEy@rric.localdomain>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O3ypit+l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763403217; x=1794939217;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=90R3wzazKW0QXxHJW2q2x+J/FjVRjvzHCZns8xo33LA=;
+  b=O3ypit+lkVyE64tM8raY3R5E5nGYwJxM1aJqbyhiuijgyjMn4hEzgrIc
+   qkUWJxbY+xxL1hT/KN7JGjYqMRUDefUq08VjwMl6oNCgihFqtplDXIJug
+   EK76Ps9jueWk/WAktxQrTjWOVCXJkHG0/bEHNNBSZTRw1nqlgCITPV3gv
+   ZrfqVttgB+GoSdtq96XLlvfcI939TiITAvSkgcjyu6iHyQL5EG+zPcmyg
+   icqk85IpoeUzqTEuykLjzKAjA5WO52ZtMs3WrjB+AMViepiDIP+jddBT+
+   WdTdVt3xEX9BWTWAUDz+OPIAJscinhaqxvuS4+hxQII27QTO+a1WZZ4KB
+   Q==;
+X-CSE-ConnectionGUID: /lXYjdBrQT2IE7isqHxp/A==
+X-CSE-MsgGUID: K26+1P0OSM+GhYzqr3uzyg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="76874262"
+X-IronPort-AV: E=Sophos;i="6.19,312,1754982000"; 
+   d="scan'208";a="76874262"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 10:13:36 -0800
+X-CSE-ConnectionGUID: lxFmxSdkQdaIrateXnAAXQ==
+X-CSE-MsgGUID: +S6vIeX9Qa+4M2NT2AvKOA==
+X-ExtLoop1: 1
+Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.109.43]) ([10.125.109.43])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 10:13:35 -0800
+Message-ID: <35b71f1f-6260-4cd0-840e-75e501d06dbc@intel.com>
+Date: Mon, 17 Nov 2025 11:13:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aRtAap0NsNElyKEy@rric.localdomain>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] cxl/test: Add unit testing for extended linear
+ cache
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com
+References: <20251117144611.903692-1-dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20251117144611.903692-1-dave.jiang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 17, 2025 at 04:34:02PM +0100, Robert Richter wrote:
-> On Tue, Nov 04, 2025 at 08:17:13AM -0800, Alison Schofield wrote:
+
+
+On 11/17/25 7:46 AM, Dave Jiang wrote:
+> v2:
+> - Use a global variable 'mock_auto_region_size' instead of a static define.
+>   Expectation is LMH will change that value for its testing.
 > 
-> > > Documentation of CXL Address Translation Support will be added to the
-> > > Kernel's "Compute Express Link: Linux Conventions". This patch
-> > > submission will be the base for a documention patch that describes CXL
-> > > Address Translation support accordingly.
+> The series adds support for mocking of extended linear cache support
+> in cxl_test. A module parameter is introduced to activate the mocking.
+> Tests will be added to CXL CLI user tools for regression testing.
 > 
-> I am aware of the lack of documentation here and am preparing a patch
-> for this. Though, I hope the patch descriptions are clear and
-> descriptive on their own.
->
+> This series depends on the patch [1] that provides the extended linear
+> cache size via sysfs.
+> 
+> [1]: https://lore.kernel.org/linux-cxl/20251022203052.4078527-1-dave.jiang@intel.com/
+> 
+> Dave Jiang (3):
+>   cxl/test: Standardize CXL auto region size
+>   cxl/test: Add cxl_test CFMWS support for extended linear cache
+>   cxl/test: Add support for acpi extended linear cache
+> 
+>  tools/testing/cxl/Kbuild      |  1 +
+>  tools/testing/cxl/test/cxl.c  | 56 ++++++++++++++++++++++++++++++++---
+>  tools/testing/cxl/test/mock.c | 20 +++++++++++++
+>  tools/testing/cxl/test/mock.h |  3 ++
+>  4 files changed, 76 insertions(+), 4 deletions(-)
+> 
+> 
+> base-commit: e9a6fb0bcdd7609be6969112f3fbfcce3b1d4a7c
 
-If it would help, I can take a quick run at this doc this week, unless
-you already have a draft.  Let me know if I can help.
+applied to cxl/next
+68f4a852e183 cxl/test: Add support for acpi extended linear cache
+4b1c0466c8fb cxl/test: Add cxl_test CFMWS support for extended linear cache
+fa59c35167af cxl/test: Standardize CXL auto region size
 
-~Gregory
