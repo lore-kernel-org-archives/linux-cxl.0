@@ -1,99 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010021.outbound.protection.outlook.com [52.101.61.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77272F6909
-	for <linux-cxl@vger.kernel.org>; Tue, 18 Nov 2025 02:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C735A275864;
+	Tue, 18 Nov 2025 07:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.21
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763431813; cv=fail; b=lZGDbVluG21Tc9SPTPfaPfvvj5k8zGiPCk5ulN1Q+xxyy+QZsARI29r1JgJ7+WHUmiG6N+zaXlykAs/eDxOLu93rm/FeIWfcwZeGIAxW+J8EOb8o6KBtXWV2rLhtu412J+r7Gpjuega/9IF7+9kI99pf9agny5c/mzw45uMsfk4=
+	t=1763449336; cv=fail; b=sL67k6N6VQLDZWdGoFyaZp46B6xIoz1xmBIRhBpeVz83RI1SZUUQjrsGt5YGrPnautpWHo6/l0hgtVPQnvc10PaNzj295gpp+ZTMiC9CNorJEDayfOl2nt5N8giZuk6/N3bvrRao35RqS3vW0Dyw3rLQhNw/YkP99fagg+NFKGc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763431813; c=relaxed/simple;
-	bh=L6mmepMq5TqB+MVXRoYKPty/GXNyhNcwvvoTsX20+Wc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=WbW3GAZBkRxBidGRyVXZFZGXLvbSj5sTfSKfny2/+dWvJ1Xjf59JQvIgiBBrkYnk5RvTjCxCojYl0bvW6uOBYtBfCjxl4WY1EsSTm13UwH75it5KsY79a3uoNqkbTVBYpXWCPLdjnbYJfTmzWH+zKnezEbCfOZdeUo9yTuvv3NE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hayEtb9R; arc=fail smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1763449336; c=relaxed/simple;
+	bh=cB9iWRlhf2Dw0xu7A+ZArUOvMrWLYdETUPZfV3mP3Tg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=nZ0bfP0IdhAmxwaDBW2gPBjaXJuRerOSA7N9NWK/A3YTEgiJabdabNlwO8qObnNBwS7xYT0jIpFWmD3VPylGo21B3kDUdGdqEnHoGtzfzbuYxzu6SMQWJ6yUPpnZ0wc0d7tQn1nCP2TeujOPy1cW4svHVJkym/210nnlm0r1b+I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=g+hrBE2/; arc=fail smtp.client-ip=52.101.61.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hayEtb9R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763431812; x=1794967812;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=L6mmepMq5TqB+MVXRoYKPty/GXNyhNcwvvoTsX20+Wc=;
-  b=hayEtb9RobGnWI+WR27M90fWz55aYfgXeqz336fw90gYvx/SKbHNbZCR
-   MM4a8mw6yl15B37x5JgPc+4OEL5l1MCLKh3XDg8TRomFu+ThY6eX6RlOa
-   O372NwSzqksLFc19t1CvPjyyYGec9sSjpE2N4gzLZ7br2o8ym4ckaDvOq
-   Bc8A0RioPJcAq1m07nrLqRK6ghCEzMSO5s2LQSJb17ebiS/F+kvrf9CCh
-   4FeexBBYIPbuLmwX55gJn0mR2i4ALR4rLG+lvs8iJfW2kGduulIUMA5PP
-   KqSh9y99TsH6QvVUO5rTSevVXz/xQkTetrbjU8E4x3K8fOkVWAihKrLlJ
-   w==;
-X-CSE-ConnectionGUID: 2vD7CslOTGeUC7aVuL8B7g==
-X-CSE-MsgGUID: DrH/Ic+VRU6NZy2X5bbxIA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="90919872"
-X-IronPort-AV: E=Sophos;i="6.19,313,1754982000"; 
-   d="scan'208";a="90919872"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 18:10:11 -0800
-X-CSE-ConnectionGUID: MLuZbgK7RGa1bWYtoIP97A==
-X-CSE-MsgGUID: WAF3pzGfTEKjBFrF2g5Ilg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,313,1754982000"; 
-   d="scan'208";a="195546362"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 18:10:11 -0800
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Mon, 17 Nov 2025 18:10:11 -0800
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Mon, 17 Nov 2025 18:10:10 -0800
-Received: from MW6PR02CU001.outbound.protection.outlook.com (52.101.48.25) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Mon, 17 Nov 2025 18:10:10 -0800
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="g+hrBE2/"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TWOFmxBp/SEqSAWVRzW4FBi88DQ7JczRXZIjbQ1iRvBbU1+6255qBG8M+5fcBpQlKCtfpBpTO23ILy5xkWnIMN8rKNV6J8UbdtmpK9epR+fIkScHGOJr9YUGEqYE/sAzopooQXwmbuf2h9MbNXWSqHUkFa1BHQATf45MNgbff8qfWyEToY+3CnKacsnH1M6W4qBOgB2U8jSOkwQaLfndyS5FJ40vGPMxeySE8zMlA+yWTlkIyljCp6yRXGAhjQk81Y7iZ/IkcTMdRBYU04oBCbK/AObNdt1bYAlo9tWEu4OR8d/bZfUqL875ZuoPe6cdnm2v0S8pnK3PlkyEBxoQzA==
+ b=ukIZsfEn+a2Ld0cfCsOGISHSb+k8x3mAPHivoQZXrzzaTEu8YOCUb2dVIrQz8JdKStG4AwV7R1NuSRLTdxrDJADsCm7EE61GQKxBo4uIda50kzCc8fe5vGxbu7ac0cHx2nDPpUnE8UtDlwmfparUcgFHCpjjRU67IiR/b2ayJI6Rp4yYgMNuX1B9mDdA0Sqpeg3rrGawW+k6Mt+YMpyabCMeozt+ZfYveJURBcipHa2orWFznBi4dgbDSn6mXhLGBzsdoBdxGCy6BZthVub10njnoxaFubrM/XdGKN9RRg6sLtY5jne+rLgUnQYEyEyCFvw1XKoY9+cD8ob7F5sNHw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EE5FrHSSmTSApD9mLV93vtJlIjyTRMg7PVAmGGWJlBQ=;
- b=nu8N4oXzdDcSu0RLK6xp2CelxqowE4Sp42I7oX+tl5JmbQbmcUeqT2Y6Cvwmc6k6RwBJn2A4HfP+nauuS+aJDispS1hfrf5h6FSiwf+qkNgDfufE9MrRs9e82CU6WTSsA/GKhjCnq0+z0I8EBDQFaceL2MId3tKn66fW3/k5qNzgXippxhvRomuHOjfnfKMbMTdb/6wNUQOeLiaPJKHQPEsTINWzSG3aTYQriONCLP9RhgFnkiuQ6doCk+7OpNZWwj8oZazc3Hlo/ServXqLQJYQJA5CBITsGKaeRttuXkAfhhLH+i85So445Q9DrfII2N9mhj/SKCIr47BXQJiztw==
+ bh=AGWR6rfBeKNpqJT5UASilZ/Kxk9tDnl0IlBbpjCPM24=;
+ b=sg6L6XjGKJTQugHIrBMYtu3tU+WTMjDu2d/qY/Iw0HBRBPjhxWtM8B+Bz5QfcnduVqQmOYTYstV7wjAmcWSF2Q0sB+np2H3R+3uQjIvp9EXtalqOipItPpwoPeinlRURsblRWQugLtfh74BThP/saMAxNzm5cRfLBkISCdrTP5wJy3mrpfjcUfyzmDhStTQfkJgwaxHxhcbhXRtbhMveNWJ9hecClV0SXmR7WnEogcjtqjuMvVKyBPg43hy85gim6G55zBo+WsfH+kztgdqjyB6qD48lMF5t01Ix5FhJaWVBX51hUDmQgYO81mjc6ca1eEtOn2NarF9fp+HuI4NDAg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AGWR6rfBeKNpqJT5UASilZ/Kxk9tDnl0IlBbpjCPM24=;
+ b=g+hrBE2/bZ+2tfPBa7hFh2d5uW1fSfypLxxmBSx1EM44n192lxBrlP/8nSiH6Hmfu9WOhsKUzBGRGJxJYWLzMrg01axQFmdRVw1Nu/HotXfVXvs+cpTgl2O9BBn7hWO0zagV1Pjx3wL/TOytLUiyDdT8wfyuiyGPQ73XhybH6jth97YG2+274PPg2vQ8GorOxbjAkGE3bA6yuAtPHxF8h/rxva6WnjyfxKl0NWRLVzvOq/C/bf61/BsTFVnkCNo0G1lHC77jdmgVhOy2a9+mdkWMXK86xCxH502BBaUoNjon8/FRda3Gd18qcq+EDaU3IkecWyHMR0FXCoKc1r1WVg==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
- (2603:10b6:518:1::d3c) by CH3PR11MB7324.namprd11.prod.outlook.com
- (2603:10b6:610:14f::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.22; Tue, 18 Nov
- 2025 02:10:09 +0000
-Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
- ([fe80::8289:cecc:ea5b:f0c]) by PH3PPF9E162731D.namprd11.prod.outlook.com
- ([fe80::8289:cecc:ea5b:f0c%8]) with mapi id 15.20.9320.021; Tue, 18 Nov 2025
- 02:10:08 +0000
-Date: Mon, 17 Nov 2025 20:12:34 -0600
-From: Ira Weiny <ira.weiny@intel.com>
-To: Alison Schofield <alison.schofield@intel.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, "Dave
- Jiang" <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, Itaru Kitayama <itaru.kitayama@fujitsu.com>,
-	"Fabio M . De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: Re: [PATCH] cxl/test: Remove ret_limit race condition in
- mock_get_event()
-Message-ID: <691bd61210fe4_5df310028@iweiny-mobl.notmuch>
-References: <20251116013819.1713780-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ CY8PR12MB8267.namprd12.prod.outlook.com (2603:10b6:930:7c::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9320.22; Tue, 18 Nov 2025 07:02:07 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%4]) with mapi id 15.20.9320.018; Tue, 18 Nov 2025
+ 07:02:07 +0000
+Date: Tue, 18 Nov 2025 18:02:02 +1100
+From: Alistair Popple <apopple@nvidia.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-mm@kvack.org, kernel-team@meta.com, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	cgroups@vger.kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com, 
+	dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com, 
+	ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com, 
+	akpm@linux-foundation.org, david@redhat.com, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com, 
+	mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com, 
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com, 
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, tj@kernel.org, 
+	hannes@cmpxchg.org, mkoutny@suse.com, kees@kernel.org, muchun.song@linux.dev, 
+	roman.gushchin@linux.dev, shakeel.butt@linux.dev, rientjes@google.com, jackmanb@google.com, 
+	cl@gentwo.org, harry.yoo@oracle.com, axelrasmussen@google.com, 
+	yuanchu@google.com, weixugc@google.com, zhengqi.arch@bytedance.com, 
+	yosry.ahmed@linux.dev, nphamcs@gmail.com, chengming.zhou@linux.dev, 
+	fabio.m.de.francesco@linux.intel.com, rrichter@amd.com, ming.li@zohomail.com, usamaarif642@gmail.com, 
+	brauner@kernel.org, oleg@redhat.com, namcao@linutronix.de, escape@linux.alibaba.com, 
+	dongjoo.seo1@samsung.com
+Subject: Re: [RFC LPC2026 PATCH v2 00/11] Specific Purpose Memory NUMA Nodes
+Message-ID: <aktv2ivkrvtrox6nvcpxsnq6sagxnmj4yymelgkst6pazzpogo@aexnxfcklg75>
+References: <20251112192936.2574429-1-gourry@gourry.net>
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251116013819.1713780-1-alison.schofield@intel.com>
-X-ClientProxiedBy: BYAPR07CA0067.namprd07.prod.outlook.com
- (2603:10b6:a03:60::44) To PH3PPF9E162731D.namprd11.prod.outlook.com
- (2603:10b6:518:1::d3c)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251112192936.2574429-1-gourry@gourry.net>
+X-ClientProxiedBy: SYCP282CA0010.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:80::22) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -101,119 +81,300 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH3PPF9E162731D:EE_|CH3PR11MB7324:EE_
-X-MS-Office365-Filtering-Correlation-Id: de1593ea-9b84-4d82-a712-08de2647991d
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|CY8PR12MB8267:EE_
+X-MS-Office365-Filtering-Correlation-Id: ceaa6cb2-7f8c-491d-d339-08de267062d7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?sdNN1qIUlj4pM+b7mxli1nfjgN5keoDSquxyINq8F+FpDbqKkwkwQgFvGRPG?=
- =?us-ascii?Q?2pEADci/seOOr4cCeUuv8YiFjbUaXouxyXZp2p1qeZFCkfX+MBSG4xn9H+os?=
- =?us-ascii?Q?8isu5JMi22/vkZMNSymdZJEjqITZPd290PWPgr77dNLiCij/fGRLGX7E3gSj?=
- =?us-ascii?Q?2WKVDiM9+sUinXsL4rlyNuxX43RdkCyo8Ztl9LVrsDA0FtPx7NgdmVwQRdX0?=
- =?us-ascii?Q?AQfYM8ZiugigBHAoczXCbiuYP0yluT/d/dwZLopgm995ajI1An694ZcjqK5Z?=
- =?us-ascii?Q?7ZszmhVQtsn5VvUl64YRufMX8Hg2fRRRFup8QZxlE9a4RhGe9vHWNgaiWwMP?=
- =?us-ascii?Q?2HQVJ5PBEfK7YF9qEa7QM41lZgTDwWGSDAK1tisclLLlQnLVX8NAWPdvKuPH?=
- =?us-ascii?Q?crlPYl6bwK9dSrv4dqBTPicTm3650iOOOB4doR+bxG+Tr0BdyCH2QMa52SBL?=
- =?us-ascii?Q?K8NFYVJIcx7J0a+PGQyhtNfQ7Qd2i29reWaAbsu9IEGD9EnZ9Gy4FnxsoWbZ?=
- =?us-ascii?Q?5ggBoAHh6i7c/CGXVbKChkjxJ78OCAzdEcHV4vMFhoB4FszAcxrRNiu0E6HS?=
- =?us-ascii?Q?y/gHcVTBfRHDebyyyhoXmQxGajB7X4UaRSoR2CYRGXLmD3BJYe2z9gOrmK9n?=
- =?us-ascii?Q?x0fkh6mrMMW5fkAdsaHMD2cZDSLpT25cPQkJUB1WgVxLA7ItDnsvkOzGnNtm?=
- =?us-ascii?Q?6mz9Q5mt8M+EAY0zG+cHJ8ex6AUp14YH4WDG+lBZs//r1fItIYEzDivNM8GX?=
- =?us-ascii?Q?J6BrxFhroqYi2sz69KUpGbDbpFvRETQvpQEHy3NzTvRSB9ZaOh/cvlkNsbaU?=
- =?us-ascii?Q?oyIAJZVUaEZyT59/BTjPLCaJyFQmCKgegITyO44vIhlRPDaQn/XkecQXLePt?=
- =?us-ascii?Q?wWeHE1Sh1r8RHhQ5liJlpSFobBNNO6PvPAA+HgFIJY7XnKWy5EISNa0hfOZS?=
- =?us-ascii?Q?aafpZT+pdL2tckinfzM64IZKR+xm8zfTs/aEa/A/dnrQYLs8VyL/YSsrLj5s?=
- =?us-ascii?Q?ySzfl0YEaDhuDnAQmz+OuGnbJ6H9UhztNeSO/TFC+1gEP5ai9rBEFBklzdU8?=
- =?us-ascii?Q?k0uuIFFE3VXIQMfMpVnKE2+wqSEidRdMmtP3q8SDp05JEsoS4eaiehOV7p44?=
- =?us-ascii?Q?EVqmg6fNjoN6uRL6jaPzWjnDI33iqek7HAwB2V7847nP20G40sQK8vc7tkAm?=
- =?us-ascii?Q?87b9EAolXjBNkffsY0cngyi4Lh/uPjzGJmhD3zEmwgJar8SUe9JVLGF/Ubd1?=
- =?us-ascii?Q?aXUkyXPYkK7hag+3sM09Wq0iDTXjoyUfQBRSKmWc6vcVtvjCjj83egId7QTz?=
- =?us-ascii?Q?VG3Z7JTJJnXTqgLSmwgIgGV1RytMumvHzrVaWpmq85MQVeZ99wHS3ZbUEhDR?=
- =?us-ascii?Q?RtMlCLJbfqn/WpJv1wjg33LFvwiETn3kSGJ97dlOoqQ+f2WJKMkc6KymW8kw?=
- =?us-ascii?Q?O4wtXUU7DAP0MNaufULLu2sOBz1X3pBU?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH3PPF9E162731D.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MHBqay8rY21UU2lHaWJvbG01UUdzOXhqL2RwK0RYV0Jrdm44TTVGVm8rRkFE?=
+ =?utf-8?B?bTM4Y0VJQUZqWENaWFdKSk13RDk1N3ZSN25ybjV2eGl4SW1TTVNVNm1DYzVS?=
+ =?utf-8?B?WUg2YWsxZStJdCtOQWNGV3FCUVN1bVcxa1dCQ3Bha0JicVNWcGlBc1F1emdv?=
+ =?utf-8?B?V0poSmJudDVRTDYvQWU4ZkZjd1U2RU8xSHA1YlhrcGtaUE9aajQ2THd5WVcx?=
+ =?utf-8?B?TVVWaHUwcVBJVEtFR3UrMVkvcDNDSkFhME5ocnNWem0veDlDeERGcHJDTG0y?=
+ =?utf-8?B?VlBqOWdUTmF3QXBkd1VOeXFyaW9OQkhUSCtqRE1OOCtxOHBGckl0TWhSQThy?=
+ =?utf-8?B?N1RYb1F3eTFSS3ZqQitZc3lNM3BkaysramZ0cTZqNGZsb3JOUkI3RUN3cTJr?=
+ =?utf-8?B?R0tmVFhxQXh3LzNPaGJZc01xN3RiQUw3NUtrM1hKcGUvMjV0L0VJV1NmTEpP?=
+ =?utf-8?B?Z0ZuMm1lUHhTWUs1amtVVWJ2SGpuSG0xZ2o0aUdKYXhYaHExMWpMQlRlNXIv?=
+ =?utf-8?B?a2tjWFlOMUlDUFd4QnZ5cklFSkJlM3hDVUI3RUtZSTBYK0R6Q1MrNUhPWS9T?=
+ =?utf-8?B?ai9UdmJxMmU2Ukk1L1JNMUZ1bVVhQVMvSFNFaDZGR3R2ZGM0TzVqMVEvTGY4?=
+ =?utf-8?B?cStqZlF4dFZpZUFKazlHRXBzL0FUY3lqblR5UDNuK2tOalQ3RVdUbDlxM1BZ?=
+ =?utf-8?B?dEo2YkwzSFdMV0FCZTdyR2M4c3ZLaDQ1WGFhRnJCR1k5WjJZQ1kzT0NPV1Iy?=
+ =?utf-8?B?UEdWZFlMN3BDelN5dGFHQzBLM1kzcStEQ1JvS2tlWWd0QjB4Y1RDejk1RXVx?=
+ =?utf-8?B?UmlBMjRtZ0pkTlN0UkJIRmJRL29lZWxNSnEwUVNhdVpOaXV6R2FSakk1Wjc2?=
+ =?utf-8?B?cjFoR040Q3FuTTFXdFpUN2pPZ1FxcGdKWDRhRGFpQlBYSmZ0OWdrTjVNU2Zj?=
+ =?utf-8?B?eE1Zd3dLY0VNQ2FSYmhoNGgyMnBvYnlGOGNUUXlScVhhZFdrSHdaVjNGTG5k?=
+ =?utf-8?B?YWVFbm9TQlRpYW9xeXN5ME9aYUUxL2tPRzFFUVM5RXM5OWJsZURLaVkzeFVV?=
+ =?utf-8?B?MHhWNDdIUlRxVlJxOEpYTWwzSEJvWEN3bVhuWmRiTGk3OXAwRXZHMGNyQXlE?=
+ =?utf-8?B?bVJ5ODNnb1RybjFNSlIzK0t3dnFFUDZQT255VDhaVzQ2bzBXWWh1Ri81MTIr?=
+ =?utf-8?B?RG1zYlNjWmhpaHI0THFncjhNWjlqeXN2QTNTUjZmTGhnMTlyZENGaVpBVEkz?=
+ =?utf-8?B?a0l4L3dFay9LL2ZPdHRsdzlXTEpCV3dTMjcyR0Q2VE1mMEVPVmJyL29HME9W?=
+ =?utf-8?B?ZDJCUVd3NFZES1krbFBtSUhGbG5pMWd6d2MxK2piN1pXZmZvNWpucENpZ1ly?=
+ =?utf-8?B?MDBRTEZ5dEkzOTMvSkIvN2RJOUI5c3BNSGs2eXB4RUdWWWpGVXIvaWhiUDJB?=
+ =?utf-8?B?Rm9kNUR3L2RXQW10U2NzOTRmbUlXeGkwTUF5clNjSUg2VytUZnZPWFJ6U3Mw?=
+ =?utf-8?B?dHRIeGhNbDdNcm1jbjd5cXdsUnArNmVMblM3RE8yUFZlMGp0TVJNZGtKbFdh?=
+ =?utf-8?B?WnhEbmN1NXRCM1FRUTVpUnF4M3ZjRGl6Wk8rbE9wS1dVWTVmZk44VEpqbmFF?=
+ =?utf-8?B?Q3VPdGsxcFYrbWtoSHRGY0J2eEp4dVlMN3lXNmk5M1BTemMybWJYelVqTHl1?=
+ =?utf-8?B?eHBjajdpTEd6MVZYY1BOMWFxMStjbENGZFpLbHFtTmtZZEp3b3ZJSWtOUDgx?=
+ =?utf-8?B?dmRMMDRjWUlLTWFObzQ1Z0VCNVJzL01uSUpTdUFkV3I3WTNzMUxjV1dHemw1?=
+ =?utf-8?B?VW5ZNEk3SmtlRHE5eEZWQm9YN3kwcGc3bTZBWVFyQ0pOOGZSbjdxWThZQkta?=
+ =?utf-8?B?QWxNSm84aTZOL0NiR1J1MS9FTk5CcURvYnZDRWlJNlJ3a1pxUERpR2phMFJH?=
+ =?utf-8?Q?Hb1nr1QVl/dWO4LifesOshL559+ZbXHc?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PNeo9i7nqDHwKRKK0r22SI9VfJkNsKkBLqPyykRd587Wu0iTrKR7+8XYjsIj?=
- =?us-ascii?Q?D9dF7jpAjzhpdPSvzy7FPKnr4dIqezkn2a2imP5QNk0XJZfPvKix+Zzxgxl0?=
- =?us-ascii?Q?JUnGzszXKPeVtPJjNX98ZQaWAwmQD4EBbenfiFvzZMRL5iZKZ6YRPCg+VQ/F?=
- =?us-ascii?Q?yiz+hN+Yiw9rM94O683qaDg1wsA25YKxW9wc0UXip/ebJIeLSl+rohZjiEBE?=
- =?us-ascii?Q?m7KWuzQIYmT7YnbEVmpb6fSXbO5rJVWPERMXhZkla5oZGeqy8u6x604u72km?=
- =?us-ascii?Q?sSp8xKqQW/pniWkQ2yin6OX8eduPGdDDG6EcOKXIWd/6OuGLUrKNLc8Sh00x?=
- =?us-ascii?Q?JGX07J2E2qBiCgmo9hAdjOIHjUxs5a0gFvL+bN6veEWyEY7cI6UgpubA8nbH?=
- =?us-ascii?Q?llu/iiroZHoMdx46nrIfbK3ZzFvpFxr/+030WjV0RTQalMHIYp7l8lEaXzkG?=
- =?us-ascii?Q?v6tPWqkwMvQG0LxgW2Q/OBNJhLucTCuaN6DK0GUY4toSimnID3Cd3jT6bp9j?=
- =?us-ascii?Q?SPjL4hiXgpzxWwi/HD7zSRoux4JMJX5OiNcnIBiSiHnugk6kxs5rFwy7bymA?=
- =?us-ascii?Q?g2fA12UQETSzYBk4N5L1G79slK28edIK2jNSpk2RvQOAbOAvxtMWSjM9n1f9?=
- =?us-ascii?Q?cfJGyVF4UzlZu6/w5H8/XxFIYq3UJZwDIaJB/C7/Z6GIbaZ9PuA5H0kYbTa8?=
- =?us-ascii?Q?ZaY/dcMj2/ZHos3mC4grkwim4GkyejshKosBYGA/9K0blBFNa5GvOJk/f1p/?=
- =?us-ascii?Q?d85WRpAFJthSrBVp2oUkIM0txaRf4FqErrBzi0FpQvZbpsQtTCQ0P53hL8Ir?=
- =?us-ascii?Q?4PxMSdLJ1myTup3TNJAJdiV7oO5lOpo6UTQXFJYd9XO+qzwxNGqkmDrExnIi?=
- =?us-ascii?Q?z3AGnw6Awg1Mo6o0iavFbdmGD5mBXmPZB/XU5cphq6sBlIIwV4yIuQCeg+1c?=
- =?us-ascii?Q?N9SgcwL5dRMZ7+ywQoiyWZ1EP2kYOYnGveHln6ja/gYVDCryJkIgHjojUSDx?=
- =?us-ascii?Q?bs/gZSyH+PQzAQHlABU890hJAY+6dTKZ5cIVF0E1JipPVYtqKb5RLbqXyfIi?=
- =?us-ascii?Q?oLC339GhnspgExKWsSJfExPBa1q5SfZbJlBaF1F28A5M5gFSLbIBdhYmO7hz?=
- =?us-ascii?Q?4zMNSY/UzKFyFSCWn7snyIIN0LkNGtw+vJVro3LBIKUS37KEMCJZkS+JXe1b?=
- =?us-ascii?Q?xLBMm1FEysl/SMXKfHPT4kKJ0BqodEG4zx9QaAcOdUHyo0nKyTqCshynJwii?=
- =?us-ascii?Q?7Nb8y/oGNUR0LohoYO2N/uLR3gs5/KfAwqrrVWO738sLmMdJGXcB3q2BuImb?=
- =?us-ascii?Q?vhCa7ugHmEN9ETukaSe3IxOFTCv5TXQCw3ECFjxIdvOCNWspy4+BWWVd46Wv?=
- =?us-ascii?Q?phDeXOY69p2dePg3uYCoKD9r08MnF6knwuY8Nup+xajVR12nbFBNa27m3IxY?=
- =?us-ascii?Q?occv9DTYfm/ifiw2WyvalUPul18t5lVRdr5ULVHdNsLVkliHrKjELHgKwJIB?=
- =?us-ascii?Q?qjuV+id3g92LxL3BPB+KMOht0+osn5g5//OJgxcjXU9oFK919wTb0/KFlvsz?=
- =?us-ascii?Q?yE5fmEIXXzLT3diPBBSX+DUBrUp+Si8p/gxjtfm3?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: de1593ea-9b84-4d82-a712-08de2647991d
-X-MS-Exchange-CrossTenant-AuthSource: PH3PPF9E162731D.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TkI5RWI3Wk1Za0UvY2MzTjBRNnp1a2hoNXl0LzVpcE51RWZHYnByOXBZV2c3?=
+ =?utf-8?B?VzFDTXlSQXN2U2paMUZHUzFCOGRSYi95UjdBbll5TDNEZEoxT3dDY1B1Sjla?=
+ =?utf-8?B?VXo2UUx2M0dRNmluODdJQUVSZU9VekEwcEVoTGt3SURWdFoyMkt2dXNjMmx3?=
+ =?utf-8?B?ZC9LQlp0bDhMbFBBVzNMSTZKSE1EUmxvRk5DUmllNUlISm1tc25Kd1hhUnR0?=
+ =?utf-8?B?Q0FWajNieDJPNlpTdS9oUisrRjFlemxYazh6OEs0R3J6ckhIcFlvaGd3LzhQ?=
+ =?utf-8?B?cUUrSk5Ya25GaGFqNWlrVkdoaXBHd25ZOHRyVVhtRFpNS2pyYkFPRnhTc1Bs?=
+ =?utf-8?B?d25ISEJiUHpHN0FaRDNDbXYreTZKLytmVmw5TVFNWE1HOEwrYlZLSjQyOWFH?=
+ =?utf-8?B?UXIrR2krZHhzQjNoNTRQTHh0SjRQL3RLTDJ0TWRZbmFKSWpKUVd4T05mQ1dy?=
+ =?utf-8?B?WHBacFo3aGkvNlZtdVUzNkJuYi9QdE83a1gvUnNBNG5NZnA5RG5wdkxJSVJv?=
+ =?utf-8?B?RGRpVmI1UXBXY1FkNVZmaU1UaGVaSStGL3IrVGdTZmlJMW5Qc2FybWZHcnI3?=
+ =?utf-8?B?ZDQxdzM3cHNvMGNMb0tHWjk5YVQzdFlKZkFJUnp3T244K0gxNUxCNDZkVWUr?=
+ =?utf-8?B?Sk13ZnVjWkt4bGZ4U0hKc3ZhRi82QkdzNWZ6YjVqUCtGMVMvTDVqM2xHVmFz?=
+ =?utf-8?B?YkNlcXIySHlyTERSVWZmSllUQ0F6MERnWktPWE5HK2srQTZaenJFb0hnVWlS?=
+ =?utf-8?B?Z1llbERaVmNDYVFQQllmeEJPNEtuSHNiZzJ1V0V3L3lzYXBKbzJUL1g4d01P?=
+ =?utf-8?B?UGcvV2lPbFE4blhRU3RlVkRZNWx1Wk10bXJ0aWhnTW1XMXYzNzBxWlJWYWZw?=
+ =?utf-8?B?R25JRElHUkFYSTdNMHIzdUZIVE4yQUFHODZyNXpRYXJRQTJkNE1LcjZuajhO?=
+ =?utf-8?B?WWw5a0lSSCtBU0w0YjdzT25iYldFcGM4VjNtN1c5L0kzOGo2MndNUVN4clla?=
+ =?utf-8?B?SUpucDlNQ29rRUpQUTdVdlVjZE5uUlRWOG56eVp5MG0walhmbjcranpqRlRh?=
+ =?utf-8?B?eUVOUzRyTlBiSWorZ2c2bGFiWEdjSEFDNFlJTEk3WXpXeG9xUTRKb3plWW5Y?=
+ =?utf-8?B?NVllNHIxOFRJODRGR0tmSFJXWlJreWM5SG1WWUt6clNzek85dkJlaWVESlo5?=
+ =?utf-8?B?ajVRaEswNHc5RFBOK05mTkV3MmhnRE5XRVJOR3M0OWJRMEFlRVg1eWNubWJJ?=
+ =?utf-8?B?dlc0SDNpRnVydi9LTTZkVkhBRE5UM0t4YnhDS2JibE9JTERkZTNLMUxUNmwr?=
+ =?utf-8?B?Um1OcWpINDlDV1k3ZE5kbGo3enZsb29TTEYxaFJzS0ZISnhxdEhxUkRLdGdi?=
+ =?utf-8?B?aU5GM2lBc2xTeTRudU5VZ1JacktEdHJ2L0RNTkhOdW5mRWs1dGhtczRZN0k0?=
+ =?utf-8?B?aGk3MFdsWlZvRlQyWXdLd2krbGE4dXJnQnU4VnVyMGQwTWZNNFkyUUVuangy?=
+ =?utf-8?B?SGNSR2IrQmUycGJOa3RPRmhEeWdiYm9zVGMxNG02TjNrYkZzMFM3M0FDbVRp?=
+ =?utf-8?B?SHZ6SFdvazlIQklGcE9PZDI0c0gyangzRnc1WVZDVHI2YmVxUXhpYy9wMWZW?=
+ =?utf-8?B?K1A1SGpKamh6V0d2a1hiTXlheG53OFpBbThmSUhRelV2Z1dJbnBzeTRjWVFC?=
+ =?utf-8?B?VGllN1ZQbFFXZEJLUGlTUDdkSUJQUVduUlp1cTdxRmI5S1l5V1lna2MvdHZp?=
+ =?utf-8?B?V3NZWUxwVk9IeThqVWxxZ21CNmE4Sm5IczFZcnJleC9vQ0pGd3pmYUphblow?=
+ =?utf-8?B?YTM5WmdHMm4yTmxyVlphVVdCb3VKYTdxNEVDcnpMYmR0Y0dTeWRnY0w3bjho?=
+ =?utf-8?B?MGs4RVhoUVRPQnFjYnNRbXlOc0Q5a3hlcHdNamlXMkVMc0lWWU5xTExOQ3pF?=
+ =?utf-8?B?T3IrendFSmhZS2lCQnpxMUdueStaMkhlRE5VUXNna1ZNbGJEdTBVRVhhaDJ1?=
+ =?utf-8?B?YmNJSlp5N2NWRHJTOWxaRDVkY0FXTEJ5dTZ2UE9SS0ErU1NtZUZwZVVVTWd1?=
+ =?utf-8?B?RjRLUzhGREx3cGNEUkdIZHpEUDZpYloyMnM2c29vZlZaL3VXa3F2L0NwLzI5?=
+ =?utf-8?Q?SUQf4yxiW887DB4nJO+/Xu1hx?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ceaa6cb2-7f8c-491d-d339-08de267062d7
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2025 02:10:08.8618
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2025 07:02:07.2697
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OmXVJ8BTcKygMMuboe41EL1poCmg3ujcGehr4qUeIF8yTOWgnqO+lXiPAbYG5nSQyF+VWkq9rwlsuiC4hRRuxA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7324
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: 97Qr0sHgISVNUT0ohdI8npR8LT4ahXnLmsJTkl0WsZ7EyyIpk9rebqv1PsVmBTKNX1XuLuqvtufWl0Jt/DxY/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8267
 
-Alison Schofield wrote:
-> Commit 364ee9f3265e ("cxl/test: Enhance event testing") changed the
-> loop iterator in mock_get_event() from a static constant,
-> CXL_TEST_EVENT_CNT, to a dynamic global variable, ret_limit. The
-> intent was to vary the number of events returned per call to simulate
-> events occurring while logs are being read.
+On 2025-11-13 at 06:29 +1100, Gregory Price <gourry@gourry.net> wrote...
+> This is a code RFC for discussion related to
 > 
-> However, ret_limit is modified without synchronization. When multiple
-> threads call mock_get_event() concurrently, one thread may read
-> ret_limit, another thread may increment it, and the first thread's
-> loop condition and size calculation see and use the updated value.
+> "Mempolicy is dead, long live memory policy!"
+> https://lpc.events/event/19/contributions/2143/
 > 
-> This is visible during cxl_test module load when all memdevs are
-> initializing simultaneously, which includes getting event records. It
-> is not tied to the cxl-events.sh unit test specifically, as that
-> operates on a single memdev.
+> base-commit: 24172e0d79900908cf5ebf366600616d29c9b417
+> (version notes at end)
 > 
-> While no actual harm results (the buffer is always large enough and
-> the record count fields correctly reflect what was written), this is
-> a correctness issue. The race creates an inconsistent state within
-> mock_get_event() and adding variability based on a race appears
-> unintended.
+> At LSF 2026, I plan to discuss:
+
+Excellent! This all sounds quite interesting to me at least so I've added my two
+cents here but looking forward to discussing at LPC.
+
+> - Why? (In short: shunting to DAX is a failed pattern for users)
+> - Other designs I considered (mempolicy, cpusets, zone_device)
+
+I'm interested in the contrast with zone_device, and in particular why
+device_coherent memory doesn't end up being a good fit for this.
+
+> - Why mempolicy.c and cpusets as-is are insufficient
+> - SPM types seeking this form of interface (Accelerator, Compression)
+
+I'm sure you can guess my interest is in GPUs which also have memory some people
+consider should only be used for specific purposes :-) Currently our coherent
+GPUs online this as a normal NUMA noode, for which we have also generally
+found mempolicy, cpusets, etc. inadequate as well, so it will be interesting to
+hear what short comings you have been running into (I'm less familiar with the
+Compression cases you talk about here though).
+
+> - Platform extensions that would be nice to see (SPM-only Bits)
 > 
-> Make ret_limit a local variable populated from an atomic counter.
+> Open Questions
+> - Single SPM nodemask, or multiple based on features?
+> - Apply SPM/SysRAM bit on-boot only or at-hotplug?
+> - Allocate extra "possible" NUMA nodes for flexbility?
 
-Ah yea...  good catch.
+I guess this might make hotplug easier? Particularly in cases where FW hasn't
+created the nodes.
 
->
-> Each
-> call gets a stable value that won't change during execution. That
-> preserves the intended behavior of varying the return counts across
-> calls while eliminating the race condition.
+> - Should SPM Nodes be zone-restricted? (MOVABLE only?)
+
+For device based memory I think so - otherwise you can never gurantee devices
+can be removed or drivers (if required to access the memory) can be unbound as
+you can't migrate things off the memory.
+
+> - How to handle things like reclaim and compaction on these nodes.
 > 
-> This implementation uses "+ 1" to produce the full range of 1 to
-> CXL_TEST_EVENT_RET_MAX (4) records. Previously only 1, 2, 3 were
-> produced.
+> 
+> With this set, we aim to enable allocation of "special purpose memory"
+> with the page allocator (mm/page_alloc.c) without exposing the same
+> memory as "System RAM".  Unless a non-userland component, and does so
+> with the GFP_SPM_NODE flag, memory on these nodes cannot be allocated.
+> 
+> This isolation mechanism is a requirement for memory policies which
+> depend on certain sets of memory never being used outside special
+> interfaces (such as a specific mm/component or driver).
+> 
+> We present an example of using this mechanism within ZSWAP, as-if
+> a "compressed memory node" was present.  How to describe the features
+> of memory present on nodes is left up to comment here and at LPC '26.
+> 
+> Userspace-driven allocations are restricted by the sysram_nodes mask,
+> nothing in userspace can explicitly request memory from SPM nodes.
+> 
+> Instead, the intent is to create new components which understand memory
+> features and register those nodes with those components. This abstracts
+> the hardware complexity away from userland while also not requiring new
+> memory innovations to carry entirely new allocators.
+> 
+> The ZSwap example demonstrates this with the `mt_spm_nodemask`.  This
+> hack treats all spm nodes as-if they are compressed memory nodes, and
+> we bypass the software compression logic in zswap in favor of simply
+> copying memory directly to the allocated page.  In a real design
 
-Does cxl_event.sh need the limits to increment?  Would it be better to use
-a random number of events?
+So in your example (I get it's a hack) is the main advantage that you can use
+all the same memory allocation policies (eg. cgroups) when needing to allocate
+the pages? Given this is ZSwap I guess these pages would never be mapped
+directly into user-space but would anything in the design prevent that? For
+example could a driver say allocate SPM memory and then explicitly migrate an
+existing page to it?
 
-Regardless.
-
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-
-[snip]
+> There are 4 major changes in this set:
+> 
+> 1) Introducing mt_sysram_nodelist in mm/memory-tiers.c which denotes
+>    the set of nodes which are eligible for use as normal system ram
+> 
+>    Some existing users now pass mt_sysram_nodelist into the page
+>    allocator instead of NULL, but passing a NULL pointer in will simply
+>    have it replaced by mt_sysram_nodelist anyway.  Should a fully NULL
+>    pointer still make it to the page allocator, without GFP_SPM_NODE
+>    SPM node zones will simply be skipped.
+> 
+>    mt_sysram_nodelist is always guaranteed to contain the N_MEMORY nodes
+>    present during __init, but if empty the use of mt_sysram_nodes()
+>    will return a NULL to preserve current behavior.
+> 
+> 
+> 2) The addition of `cpuset.mems.sysram` which restricts allocations to
+>    `mt_sysram_nodes` unless GFP_SPM_NODE is used.
+> 
+>    SPM Nodes are still allowed in cpuset.mems.allowed and effective.
+> 
+>    This is done to allow separate control over sysram and SPM node sets
+>    by cgroups while maintaining the existing hierarchical rules.
+> 
+>    current cpuset configuration
+>    cpuset.mems_allowed
+>     |.mems_effective         < (mems_allowed ∩ parent.mems_effective)
+>     |->tasks.mems_allowed    < cpuset.mems_effective
+> 
+>    new cpuset configuration
+>    cpuset.mems_allowed
+>     |.mems_effective         < (mems_allowed ∩ parent.mems_effective)
+>     |.sysram_nodes           < (mems_effective ∩ default_sys_nodemask)
+>     |->task.sysram_nodes     < cpuset.sysram_nodes
+> 
+>    This means mems_allowed still restricts all node usage in any given
+>    task context, which is the existing behavior.
+> 
+> 3) Addition of MHP_SPM_NODE flag to instruct memory_hotplug.c that the
+>    capacity being added should mark the node as an SPM Node. 
+> 
+>    A node is either SysRAM or SPM - never both.  Attempting to add
+>    incompatible memory to a node results in hotplug failure.
+> 
+>    DAX and CXL are made aware of the bit and have `spm_node` bits added
+>    to their relevant subsystems.
+> 
+> 4) Adding GFP_SPM_NODE - which allows page_alloc.c to request memory
+>    from the provided node or nodemask.  It changes the behavior of
+>    the cpuset mems_allowed and mt_node_allowed() checks.
+> 
+> v1->v2:
+> - naming improvements
+>     default_node -> sysram_node
+>     protected    -> spm (Specific Purpose Memory)
+> - add missing constify patch
+> - add patch to update callers of __cpuset_zone_allowed
+> - add additional logic to the mm sysram_nodes patch
+> - fix bot build issues (ifdef config builds)
+> - fix out-of-tree driver build issues (function renames)
+> - change compressed_nodelist to spm_nodelist
+> - add latch mechanism for sysram/spm nodes (Dan Williams)
+>   this drops some extra memory-hotplug logic which is nice
+> v1: https://lore.kernel.org/linux-mm/20251107224956.477056-1-gourry@gourry.net/
+> 
+> Gregory Price (11):
+>   mm: constify oom_control, scan_control, and alloc_context nodemask
+>   mm: change callers of __cpuset_zone_allowed to cpuset_zone_allowed
+>   gfp: Add GFP_SPM_NODE for Specific Purpose Memory (SPM) allocations
+>   memory-tiers: Introduce SysRAM and Specific Purpose Memory Nodes
+>   mm: restrict slub, oom, compaction, and page_alloc to sysram by
+>     default
+>   mm,cpusets: rename task->mems_allowed to task->sysram_nodes
+>   cpuset: introduce cpuset.mems.sysram
+>   mm/memory_hotplug: add MHP_SPM_NODE flag
+>   drivers/dax: add spm_node bit to dev_dax
+>   drivers/cxl: add spm_node bit to cxl region
+>   [HACK] mm/zswap: compressed ram integration example
+> 
+>  drivers/cxl/core/region.c       |  30 ++++++
+>  drivers/cxl/cxl.h               |   2 +
+>  drivers/dax/bus.c               |  39 ++++++++
+>  drivers/dax/bus.h               |   1 +
+>  drivers/dax/cxl.c               |   1 +
+>  drivers/dax/dax-private.h       |   1 +
+>  drivers/dax/kmem.c              |   2 +
+>  fs/proc/array.c                 |   2 +-
+>  include/linux/cpuset.h          |  62 +++++++------
+>  include/linux/gfp_types.h       |   5 +
+>  include/linux/memory-tiers.h    |  47 ++++++++++
+>  include/linux/memory_hotplug.h  |  10 ++
+>  include/linux/mempolicy.h       |   2 +-
+>  include/linux/mm.h              |   4 +-
+>  include/linux/mmzone.h          |   6 +-
+>  include/linux/oom.h             |   2 +-
+>  include/linux/sched.h           |   6 +-
+>  include/linux/swap.h            |   2 +-
+>  init/init_task.c                |   2 +-
+>  kernel/cgroup/cpuset-internal.h |   8 ++
+>  kernel/cgroup/cpuset-v1.c       |   7 ++
+>  kernel/cgroup/cpuset.c          | 158 ++++++++++++++++++++------------
+>  kernel/fork.c                   |   2 +-
+>  kernel/sched/fair.c             |   4 +-
+>  mm/compaction.c                 |  10 +-
+>  mm/hugetlb.c                    |   8 +-
+>  mm/internal.h                   |   2 +-
+>  mm/memcontrol.c                 |   3 +-
+>  mm/memory-tiers.c               |  66 ++++++++++++-
+>  mm/memory_hotplug.c             |   7 ++
+>  mm/mempolicy.c                  |  34 +++----
+>  mm/migrate.c                    |   4 +-
+>  mm/mmzone.c                     |   5 +-
+>  mm/oom_kill.c                   |  11 ++-
+>  mm/page_alloc.c                 |  57 +++++++-----
+>  mm/show_mem.c                   |  11 ++-
+>  mm/slub.c                       |  15 ++-
+>  mm/vmscan.c                     |   6 +-
+>  mm/zswap.c                      |  66 ++++++++++++-
+>  39 files changed, 532 insertions(+), 178 deletions(-)
+> 
+> -- 
+> 2.51.1
+> 
