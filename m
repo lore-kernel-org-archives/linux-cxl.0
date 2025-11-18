@@ -1,162 +1,253 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FA0314B79;
-	Tue, 18 Nov 2025 09:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B1830DEB7
+	for <linux-cxl@vger.kernel.org>; Tue, 18 Nov 2025 09:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763458249; cv=none; b=Vs04e+g5vNOPGq+bF3u2LG4KBmM6WEd6HYRJ8nIMumGKOOievrxq1Y0g9vgPDnSXU3OatEJk+dyx9mw6dORBaaNcKp9JQZXJN4otoeN237AJTvWPVBp+8ENee/3BU7SJoZlai2SNtR8z0j5S5ejUmcx+oekFhe4u4u3an2ksHi8=
+	t=1763459774; cv=none; b=TbejK78LzBZImBkgrSjJWBYx6oSXqAY/QkvSDs0zhvLL3iOqGIk5h95C2NyMeReNM8pnNzcGmpkON8+chq6nGJOv8pJZRWGaZ/vl9tOexKkLxj3d4n1FqtBmUuuoYB6riCZ0vM62JeEiOD60KCE8xv8eyGcglyAgJR4pHrZRinE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763458249; c=relaxed/simple;
-	bh=U8SoEWNVo7Bg/vtnXCbFJOk39i8M3igdqr7sqdQ+yp4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=chli7Jtj5SsehUVnZqEnw/yDHZpoAAbXGI1BLh9DwBtpJnWh+t4NYE9Gs2LYWEh2iPo2tUBzXoIpElEXj+z0F9UJXKvJHhJ5YYs5cXlUAL4w1ys47ET9GtflzHsbacOP7xqJml42IKeKot5iSKpGxHOZ35to9q5fUc9Vgitv88o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d9fTk1j18zJ46cb;
-	Tue, 18 Nov 2025 17:30:02 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3F92E140277;
-	Tue, 18 Nov 2025 17:30:44 +0800 (CST)
-Received: from localhost (10.48.158.191) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Tue, 18 Nov
- 2025 09:30:42 +0000
-Date: Tue, 18 Nov 2025 09:30:41 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Conor Dooley <conor@kernel.org>
-CC: Randy Dunlap <rdunlap@infradead.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, <linux-cxl@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-arch@vger.kernel.org>,
-	<linux-mm@kvack.org>, Dan Williams <dan.j.williams@intel.com>, "H . Peter
- Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, "Andrew
- Morton" <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "Drew
- Fustini" <fustini@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Krzysztof Kozlowski
-	<krzk@kernel.org>, <james.morse@arm.com>, Will Deacon <will@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, <linuxarm@huawei.com>, Yushan Wang
-	<wangyushan12@huawei.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, "Mark
- Rutland" <mark.rutland@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, <x86@kernel.org>, Andy Lutomirski
-	<luto@kernel.org>, Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v6 3/7] lib: Support
- ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
-Message-ID: <20251118093041.00000c9e@huawei.com>
-In-Reply-To: <20251117-definite-uncounted-7cc07a377a71@spud>
-References: <20251117104800.2041329-1-Jonathan.Cameron@huawei.com>
-	<20251117104800.2041329-4-Jonathan.Cameron@huawei.com>
-	<3bf1793a-2ffd-4017-b4bf-dc63f3a2a7c8@infradead.org>
-	<20251117-definite-uncounted-7cc07a377a71@spud>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1763459774; c=relaxed/simple;
+	bh=peMzvVQEJNwCtOHvpuBpSDwDl0zroyHzuKmJk3Ber14=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=qYlKLzQZfm2Kow9xDKqMN6tFUp+8biqw9GE7YxfcnIqVzkQPt5ChHpVRIN3GwiS4cAOnhtv2OY2qQ6i7CCme191/4WqjQAFZEtjk3UBhfBP03uXZHURC8gvhpHzIxVDmFYj+QwqZkB5l/ePvmgpPW+wBs6MWt1Lc+1TGKkZptuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ch9wfU9C; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ch9wfU9C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763459773; x=1794995773;
+  h=date:from:to:cc:subject:message-id;
+  bh=peMzvVQEJNwCtOHvpuBpSDwDl0zroyHzuKmJk3Ber14=;
+  b=ch9wfU9COdHSHu8ce+jCWPgc+z0AfA/VTxqLvPTfIo4pFOtaGsqe7zjt
+   Hhrm7jj6dxsWJziO0VuKw1qEjPCUBMfTKU4bzWSDplEY9g8+IDYsnGLPa
+   iMt+g5DbCzmxcbFmZWOO0AZgb21Xy57fgOpBXjTZ265BUDK9daTgESfEX
+   pvvdbR60CeHInqjoOClgQOYnq3PnOOhkzrrSxT8dUx0Fozp5+hWORgdMC
+   ReGiAklSS7tIqFHD/9VVwu+D/SoSnLlUTpViW0c19z6HlLqHODE0rmHn9
+   xF5NTQ6hSp9T8rrZjGgg5bkQP/VlXs7ylatlfwAg55E2wez3OdI/FU8bv
+   w==;
+X-CSE-ConnectionGUID: i0x0/xnqQPmDdL1eB1XL9w==
+X-CSE-MsgGUID: XdfWWIM6TOWFxua+IO87TQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="65181345"
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="65181345"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 01:56:11 -0800
+X-CSE-ConnectionGUID: wyHM0YKbTsG87xdmfjAFbA==
+X-CSE-MsgGUID: 55b7lsHfSs2b7iPhOHaWbQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="195029507"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 18 Nov 2025 01:56:10 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vLIRT-0001Ze-1v;
+	Tue, 18 Nov 2025 09:56:07 +0000
+Date: Tue, 18 Nov 2025 17:55:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ 7ec9db66cc552f2f8a6779c16d01a2a01eccedde
+Message-ID: <202511181743.RkLCz69C-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
- dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Tue, 18 Nov 2025 00:13:07 +0000
-Conor Dooley <conor@kernel.org> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: 7ec9db66cc552f2f8a6779c16d01a2a01eccedde  Merge branch 'for-6.19/cxl-elc-test' into cxl-for-next
 
-> On Mon, Nov 17, 2025 at 10:51:11AM -0800, Randy Dunlap wrote:
-> > Hi,
-> > 
-> > On 11/17/25 2:47 AM, Jonathan Cameron wrote:  
-> > > diff --git a/lib/Kconfig b/lib/Kconfig
-> > > index e629449dd2a3..e11136d188ae 100644
-> > > --- a/lib/Kconfig
-> > > +++ b/lib/Kconfig
-> > > @@ -542,6 +542,10 @@ config MEMREGION
-> > >  config ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
-> > >  	bool
-> > >  
-> > > +config GENERIC_CPU_CACHE_MAINTENANCE
-> > > +	bool
-> > > +	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
-> > > +
-> > >  config ARCH_HAS_MEMREMAP_COMPAT_ALIGN
-> > >  	bool  
-> > 
-> > Architectures and/or platforms select ARCH_HAS_*.
-> > 
-> > With this change above, it becomes the only entry in
-> > lib/Kconfig that does "select ARCH_HAS_anytning".
-> > 
-> > so I think this is wrong, back*wards.  
-> 
-> Maybe it is backwards, but I feel like this way is more logical. ARM64
-> has memregion invalidation only because this generic approach is
-> enabled, so the arch selects what it needs to get the support.
+elapsed time: 939m
 
-Exactly this. Catalin requested this form in response to an earlier
-version where arm64 Kconfig just had both selects for pretty much that
-reason. This is expected to be used on a subset of architectures.
-It is similar to things like GENERIC_ARCH_NUMA in this respect (though the
-arch_numa_init() etc in there are called only from other arch code
-so no ARCH_HAS_ symbols are associated with them).
+configs tested: 173
+configs skipped: 4
 
-> Alternatively, something like
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I'm fine with this solution if Randy prefers it.
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20251118    gcc-14.3.0
+arc                   randconfig-002-20251118    gcc-15.1.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                              allyesconfig    gcc-15.1.0
+arm                                 defconfig    clang-22
+arm                         lpc18xx_defconfig    clang-22
+arm                   randconfig-001-20251118    gcc-8.5.0
+arm                   randconfig-002-20251118    gcc-10.5.0
+arm                   randconfig-003-20251118    clang-22
+arm                   randconfig-004-20251118    clang-22
+arm                        spear6xx_defconfig    clang-22
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                            allyesconfig    clang-22
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20251118    clang-20
+arm64                 randconfig-002-20251118    clang-22
+arm64                 randconfig-003-20251118    clang-19
+arm64                 randconfig-004-20251118    clang-17
+csky                             allmodconfig    gcc-15.1.0
+csky                              allnoconfig    gcc-15.1.0
+csky                             allyesconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20251118    gcc-10.5.0
+csky                  randconfig-002-20251118    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-22
+hexagon                             defconfig    clang-22
+hexagon               randconfig-001-20251118    clang-16
+hexagon               randconfig-002-20251118    clang-22
+i386                             allmodconfig    gcc-14
+i386                              allnoconfig    gcc-14
+i386                             allyesconfig    gcc-14
+i386                                defconfig    clang-20
+i386                  randconfig-001-20251118    clang-20
+i386                  randconfig-002-20251118    clang-20
+i386                  randconfig-003-20251118    gcc-14
+i386                  randconfig-004-20251118    gcc-14
+i386                  randconfig-005-20251118    clang-20
+i386                  randconfig-006-20251118    gcc-14
+i386                  randconfig-007-20251118    gcc-14
+i386                  randconfig-011-20251118    gcc-14
+i386                  randconfig-012-20251118    gcc-12
+i386                  randconfig-013-20251118    clang-20
+i386                  randconfig-014-20251118    gcc-14
+i386                  randconfig-015-20251118    gcc-14
+i386                  randconfig-016-20251118    gcc-14
+i386                  randconfig-017-20251118    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch                        allyesconfig    clang-22
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20251118    gcc-15.1.0
+loongarch             randconfig-002-20251118    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                             allmodconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                             allyesconfig    gcc-15.1.0
+mips                         db1xxx_defconfig    clang-22
+mips                          eyeq6_defconfig    clang-22
+mips                        maltaup_defconfig    clang-22
+nios2                            allmodconfig    gcc-11.5.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                            allyesconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20251118    gcc-11.5.0
+nios2                 randconfig-002-20251118    gcc-8.5.0
+openrisc                         allmodconfig    gcc-15.1.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20251118    gcc-14.3.0
+parisc                randconfig-002-20251118    gcc-12.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-22
+powerpc                      ppc44x_defconfig    clang-22
+powerpc               randconfig-001-20251118    clang-22
+powerpc               randconfig-002-20251118    clang-22
+powerpc64             randconfig-001-20251118    gcc-13.4.0
+powerpc64             randconfig-002-20251118    gcc-8.5.0
+riscv                            allmodconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-22
+riscv                 randconfig-001-20251118    gcc-10.5.0
+riscv                 randconfig-002-20251118    clang-22
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-22
+s390                  randconfig-002-20251118    gcc-9.5.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                    randconfig-001-20251118    gcc-11.5.0
+sh                    randconfig-002-20251118    gcc-15.1.0
+sh                          rsk7269_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                            allyesconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20251118    gcc-8.5.0
+sparc                 randconfig-002-20251118    gcc-8.5.0
+sparc64                          allmodconfig    clang-22
+sparc64                          allyesconfig    gcc-15.1.0
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20251118    clang-22
+sparc64               randconfig-002-20251118    clang-22
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-14
+um                                  defconfig    clang-22
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20251118    clang-22
+um                    randconfig-002-20251118    clang-22
+um                           x86_64_defconfig    clang-22
+x86_64                           allmodconfig    clang-20
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20251118    clang-20
+x86_64      buildonly-randconfig-002-20251118    gcc-14
+x86_64      buildonly-randconfig-003-20251118    clang-20
+x86_64      buildonly-randconfig-004-20251118    clang-20
+x86_64      buildonly-randconfig-005-20251118    clang-20
+x86_64      buildonly-randconfig-006-20251118    clang-20
+x86_64                              defconfig    gcc-14
+x86_64                randconfig-001-20251118    clang-20
+x86_64                randconfig-002-20251118    gcc-12
+x86_64                randconfig-003-20251118    gcc-14
+x86_64                randconfig-004-20251118    gcc-14
+x86_64                randconfig-005-20251118    clang-20
+x86_64                randconfig-006-20251118    clang-20
+x86_64                randconfig-011-20251118    clang-20
+x86_64                randconfig-012-20251118    clang-20
+x86_64                randconfig-013-20251118    gcc-14
+x86_64                randconfig-014-20251118    clang-20
+x86_64                randconfig-015-20251118    clang-20
+x86_64                randconfig-016-20251118    clang-20
+x86_64                randconfig-071-20251118    gcc-13
+x86_64                randconfig-072-20251118    clang-20
+x86_64                randconfig-073-20251118    gcc-14
+x86_64                randconfig-074-20251118    gcc-13
+x86_64                randconfig-075-20251118    gcc-14
+x86_64                randconfig-076-20251118    clang-20
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                           alldefconfig    gcc-15.1.0
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                           allyesconfig    gcc-15.1.0
+xtensa                randconfig-001-20251118    gcc-9.5.0
+xtensa                randconfig-002-20251118    gcc-15.1.0
 
-Thanks for your help with this.
-
-Jonathan
-
-> | diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> | index 5f7f63d24931..75b2507f7eb2 100644
-> | --- a/arch/arm64/Kconfig
-> | +++ b/arch/arm64/Kconfig
-> | @@ -21,6 +21,7 @@ config ARM64
-> |  	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
-> |  	select ARCH_HAS_CACHE_LINE_SIZE
-> |  	select ARCH_HAS_CC_PLATFORM
-> | +	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
-> |  	select ARCH_HAS_CURRENT_STACK_POINTER
-> |  	select ARCH_HAS_DEBUG_VIRTUAL
-> |  	select ARCH_HAS_DEBUG_VM_PGTABLE
-> | @@ -146,7 +147,6 @@ config ARM64
-> |  	select GENERIC_ARCH_TOPOLOGY
-> |  	select GENERIC_CLOCKEVENTS_BROADCAST
-> |  	select GENERIC_CPU_AUTOPROBE
-> | -	select GENERIC_CPU_CACHE_MAINTENANCE
-> |  	select GENERIC_CPU_DEVICES
-> |  	select GENERIC_CPU_VULNERABILITIES
-> |  	select GENERIC_EARLY_IOREMAP
-> | diff --git a/lib/Kconfig b/lib/Kconfig
-> | index 09aec4a1e13f..ac223e627bc5 100644
-> | --- a/lib/Kconfig
-> | +++ b/lib/Kconfig
-> | @@ -544,8 +544,9 @@ config ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
-> |  	bool
-> |  
-> |  config GENERIC_CPU_CACHE_MAINTENANCE
-> | -	bool
-> | -	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
-> | +	def_bool y
-> | +	depends on ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
-> | +	depends on ARM64
-> |  
-> |  config ARCH_HAS_MEMREMAP_COMPAT_ALIGN
-> |  	bool
-> implies (to me at least) that arm64 has memregion invalidation as an
-> architectural feature and that the GENERIC_CPU_CACHE_MAINTENANCE option
-> is a just common cross-arch code, like generic entry etc, rather than
-> being the option gating the drivers that provide the feature in the
-> first place.
-> 
-> I didn't really care which way it went, and was gonna post something to
-> squash and avoid another revision, but I found the resultant Kconfig
-> setup to be make less sense to me than what came before. If the switched
-> around version is less likely to be problematic etc, then sure, but I
-> amn't convinced by switching it at a first glance.
-> 
-
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
