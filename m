@@ -1,253 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B1830DEB7
-	for <linux-cxl@vger.kernel.org>; Tue, 18 Nov 2025 09:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F652F1FC8
+	for <linux-cxl@vger.kernel.org>; Tue, 18 Nov 2025 10:36:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763459774; cv=none; b=TbejK78LzBZImBkgrSjJWBYx6oSXqAY/QkvSDs0zhvLL3iOqGIk5h95C2NyMeReNM8pnNzcGmpkON8+chq6nGJOv8pJZRWGaZ/vl9tOexKkLxj3d4n1FqtBmUuuoYB6riCZ0vM62JeEiOD60KCE8xv8eyGcglyAgJR4pHrZRinE=
+	t=1763462219; cv=none; b=uS+Gi9GrxkYRU6uMbQVzlXA8EYzlMrzCzGKoFgTR0lIwPOYkUa+Si/AO4L0ZqYM/REeho7YU4j/fs7m9zXbmKHbllsodjdCn0mU/EyRNdx74vGfLJwARPHUF5otjJtE6ictD+39jFlYpj5qFX9nMfC918zJ/JeHm6mwR6xDmEhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763459774; c=relaxed/simple;
-	bh=peMzvVQEJNwCtOHvpuBpSDwDl0zroyHzuKmJk3Ber14=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=qYlKLzQZfm2Kow9xDKqMN6tFUp+8biqw9GE7YxfcnIqVzkQPt5ChHpVRIN3GwiS4cAOnhtv2OY2qQ6i7CCme191/4WqjQAFZEtjk3UBhfBP03uXZHURC8gvhpHzIxVDmFYj+QwqZkB5l/ePvmgpPW+wBs6MWt1Lc+1TGKkZptuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ch9wfU9C; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1763462219; c=relaxed/simple;
+	bh=n9vlPUa0RZdNDYkpD1WuwTh/G9Vi0s80rppCl0dir8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gQlDZ5hoq6kjxZMA8HUlxoMj0fxKLII1lR40xCPINlagzmWoeM1WNBm7K4bavaZNPdorGE5jGg1sIzbVEx1aR1iljvh74n9JsV9hNWdWKT3THmtWSGI2WvHQ35BwOT5tlrgS8MxrLoI1J7HNwiuxjE6FbWrx+ETG9W5og+N2yQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=u5ET/t0z; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ch9wfU9C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763459773; x=1794995773;
-  h=date:from:to:cc:subject:message-id;
-  bh=peMzvVQEJNwCtOHvpuBpSDwDl0zroyHzuKmJk3Ber14=;
-  b=ch9wfU9COdHSHu8ce+jCWPgc+z0AfA/VTxqLvPTfIo4pFOtaGsqe7zjt
-   Hhrm7jj6dxsWJziO0VuKw1qEjPCUBMfTKU4bzWSDplEY9g8+IDYsnGLPa
-   iMt+g5DbCzmxcbFmZWOO0AZgb21Xy57fgOpBXjTZ265BUDK9daTgESfEX
-   pvvdbR60CeHInqjoOClgQOYnq3PnOOhkzrrSxT8dUx0Fozp5+hWORgdMC
-   ReGiAklSS7tIqFHD/9VVwu+D/SoSnLlUTpViW0c19z6HlLqHODE0rmHn9
-   xF5NTQ6hSp9T8rrZjGgg5bkQP/VlXs7ylatlfwAg55E2wez3OdI/FU8bv
-   w==;
-X-CSE-ConnectionGUID: i0x0/xnqQPmDdL1eB1XL9w==
-X-CSE-MsgGUID: XdfWWIM6TOWFxua+IO87TQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="65181345"
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="65181345"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 01:56:11 -0800
-X-CSE-ConnectionGUID: wyHM0YKbTsG87xdmfjAFbA==
-X-CSE-MsgGUID: 55b7lsHfSs2b7iPhOHaWbQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="195029507"
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 18 Nov 2025 01:56:10 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vLIRT-0001Ze-1v;
-	Tue, 18 Nov 2025 09:56:07 +0000
-Date: Tue, 18 Nov 2025 17:55:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- 7ec9db66cc552f2f8a6779c16d01a2a01eccedde
-Message-ID: <202511181743.RkLCz69C-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="u5ET/t0z"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-477a1c28778so26260855e9.3
+        for <linux-cxl@vger.kernel.org>; Tue, 18 Nov 2025 02:36:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1763462215; x=1764067015; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3QW3YrzLI1OSdQK0hkzbyW5ur3dKrb2BxfDVA3CM9uI=;
+        b=u5ET/t0zmcZkIje6lURTeWI9QJRvjHSu5BeJ+B9nVVwsEGFVZQ/GG3ryKQtl/MX8CZ
+         RwSfpz+8GBM5KUXlYV/WQ2ISL+J+CgB8c7JK2RFGJFlT5nCs8P98Uf6RKlMDB2yyFIgk
+         tlOa9aQSFItAwO7cPC4mMNrlMP+Jpo6gCnTl2LgRPibf+1oJ4kdOEhmH35uoSi7SeTty
+         LGQ92KKiuKICivueun0soCB5FYdQLjwKMa8Qp8V8Fj5HOZ9xC8krzaF58sqKE+eMB+56
+         mEs1CQyiFJOIfODB9LOnmojrAPCevYOWeZ+uN5642ECjoEV1M9fSepZhBdCNqhZZ3Nke
+         K0zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763462215; x=1764067015;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3QW3YrzLI1OSdQK0hkzbyW5ur3dKrb2BxfDVA3CM9uI=;
+        b=fFieIpyvU7aOPQBjxKYuHK3YceXFxkotnQsEaY1jQfRKsnT4E4zDOyee9rEaf34IHW
+         IiylxB801ajaqAcVsm+J/w5kauU8D8kW2/JZ6lb2kISk9mXIXmRWBdwz47du9F2QZlRP
+         EkxtSUWuSHCvKMdbXWUa9yLUMcBAiHpcHtZsliX+I4rdQm2rPEpDN5hazD9wNXMxhTUS
+         FBrhs2MaTRxNf9vC5IE8Ust1TCw6ryXR9ErGr94gJgAp2oFG9qQ4V0gt1lb6yiMxV8zZ
+         CLoJedhd5Gg63cd0/AZ9VbdfK1IbiB7FT4QQlJpp6vx02CkzNJY3HqIkKyVqINSykcdY
+         5Qmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUcOMXhyIRhVY8k0Y4dHRvT13TdDXLxLpajNbZdys8em7hSqI8n0tTsoNgovmDLniUHxa+knV/7Fzs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgqzbG/fQDpQxa3OUNWuf0MmJOQskl2Hmm7Tce4PZLKhs3tTey
+	lDpkxkyp89rxBtr+Brve1xCcKGnncJeLyb+TQ7/VvAp0jk1guhWfWUkS3vXbswhoIOg=
+X-Gm-Gg: ASbGncsb1pqcGMyNOjiYrj1JLG3eOHOs5h8V3I+FnuVq5cC8A/2n5wMVUg6WNiuLqXZ
+	QvCNuL1tmFUmOr9zAwZ9JGl34aeQgbba5VPQDqQ85uZmFVAilh9F5n9uNd8qW8rc47Vy/tBHYby
+	Oun1Z+72TbS2ty+9ABzzUqCkLTeOj42t02btLHPH6X8t0tElrdUnxjQiZvmiPT0GE01cjrfDOuC
+	u2A4R3grQe9m8XH4Qmi4lc16uo0BAG6wT04vrW+s5LIkcoCQE/1NlbVIW+97+2K+P0wqWpNjW5A
+	DrSNT3Qe4Lw4gxNqYRHKHuglNqWY3RtuRzd1ihG3UxJ5PRppA2T3iiiJkXXPqqedEAqz3uLztAu
+	f33HpecuYV1DcJB/cOdafSEBneLjMguBDJibMY8fm+I5MJa8h4m3i5r0QVWJk/xSVn/zignn2iN
+	lht+xkXlcA
+X-Google-Smtp-Source: AGHT+IHcPSG42oTSue/l29JNxRqWkMjwCuc7Im45XklO36HK61beZa9KMPscvjf0ZVFq7e39VGxhYw==
+X-Received: by 2002:a05:600c:350d:b0:475:dd59:d8d8 with SMTP id 5b1f17b1804b1-4778fe4f716mr149402675e9.8.1763462214605;
+        Tue, 18 Nov 2025 02:36:54 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F ([2620:10d:c092:500::4:7772])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4779527235esm219825575e9.8.2025.11.18.02.36.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Nov 2025 02:36:53 -0800 (PST)
+Date: Tue, 18 Nov 2025 04:36:47 -0600
+From: Gregory Price <gourry@gourry.net>
+To: Alistair Popple <apopple@nvidia.com>
+Cc: linux-mm@kvack.org, kernel-team@meta.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, david@redhat.com,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, mingo@redhat.com,
+	peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, kees@kernel.org, muchun.song@linux.dev,
+	roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+	rientjes@google.com, jackmanb@google.com, cl@gentwo.org,
+	harry.yoo@oracle.com, axelrasmussen@google.com, yuanchu@google.com,
+	weixugc@google.com, zhengqi.arch@bytedance.com,
+	yosry.ahmed@linux.dev, nphamcs@gmail.com, chengming.zhou@linux.dev,
+	fabio.m.de.francesco@linux.intel.com, rrichter@amd.com,
+	ming.li@zohomail.com, usamaarif642@gmail.com, brauner@kernel.org,
+	oleg@redhat.com, namcao@linutronix.de, escape@linux.alibaba.com,
+	dongjoo.seo1@samsung.com
+Subject: Re: [RFC LPC2026 PATCH v2 00/11] Specific Purpose Memory NUMA Nodes
+Message-ID: <aRxMP_wDRxJIhIiB@gourry-fedora-PF4VCD3F>
+References: <20251112192936.2574429-1-gourry@gourry.net>
+ <aktv2ivkrvtrox6nvcpxsnq6sagxnmj4yymelgkst6pazzpogo@aexnxfcklg75>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aktv2ivkrvtrox6nvcpxsnq6sagxnmj4yymelgkst6pazzpogo@aexnxfcklg75>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 7ec9db66cc552f2f8a6779c16d01a2a01eccedde  Merge branch 'for-6.19/cxl-elc-test' into cxl-for-next
+On Tue, Nov 18, 2025 at 06:02:02PM +1100, Alistair Popple wrote:
+> On 2025-11-13 at 06:29 +1100, Gregory Price <gourry@gourry.net> wrote...
+> > - Why? (In short: shunting to DAX is a failed pattern for users)
+> > - Other designs I considered (mempolicy, cpusets, zone_device)
+> 
+> I'm interested in the contrast with zone_device, and in particular why
+> device_coherent memory doesn't end up being a good fit for this.
+>
 
-elapsed time: 939m
+I did consider zone_device briefly, but if you want sparse allocation
+you end up essentially re-implementing some form of buddy allocator.
 
-configs tested: 173
-configs skipped: 4
+That seemed less then ideal, to say the least.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Additionally, pgmap use precludes these pages from using LRU/Reclaim,
+and some devices may very well be compatible with such patterns.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20251118    gcc-14.3.0
-arc                   randconfig-002-20251118    gcc-15.1.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-22
-arm                         lpc18xx_defconfig    clang-22
-arm                   randconfig-001-20251118    gcc-8.5.0
-arm                   randconfig-002-20251118    gcc-10.5.0
-arm                   randconfig-003-20251118    clang-22
-arm                   randconfig-004-20251118    clang-22
-arm                        spear6xx_defconfig    clang-22
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                            allyesconfig    clang-22
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20251118    clang-20
-arm64                 randconfig-002-20251118    clang-22
-arm64                 randconfig-003-20251118    clang-19
-arm64                 randconfig-004-20251118    clang-17
-csky                             allmodconfig    gcc-15.1.0
-csky                              allnoconfig    gcc-15.1.0
-csky                             allyesconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20251118    gcc-10.5.0
-csky                  randconfig-002-20251118    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon                             defconfig    clang-22
-hexagon               randconfig-001-20251118    clang-16
-hexagon               randconfig-002-20251118    clang-22
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    gcc-14
-i386                                defconfig    clang-20
-i386                  randconfig-001-20251118    clang-20
-i386                  randconfig-002-20251118    clang-20
-i386                  randconfig-003-20251118    gcc-14
-i386                  randconfig-004-20251118    gcc-14
-i386                  randconfig-005-20251118    clang-20
-i386                  randconfig-006-20251118    gcc-14
-i386                  randconfig-007-20251118    gcc-14
-i386                  randconfig-011-20251118    gcc-14
-i386                  randconfig-012-20251118    gcc-12
-i386                  randconfig-013-20251118    clang-20
-i386                  randconfig-014-20251118    gcc-14
-i386                  randconfig-015-20251118    gcc-14
-i386                  randconfig-016-20251118    gcc-14
-i386                  randconfig-017-20251118    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                        allyesconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20251118    gcc-15.1.0
-loongarch             randconfig-002-20251118    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                             allmodconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                             allyesconfig    gcc-15.1.0
-mips                         db1xxx_defconfig    clang-22
-mips                          eyeq6_defconfig    clang-22
-mips                        maltaup_defconfig    clang-22
-nios2                            allmodconfig    gcc-11.5.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                            allyesconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251118    gcc-11.5.0
-nios2                 randconfig-002-20251118    gcc-8.5.0
-openrisc                         allmodconfig    gcc-15.1.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20251118    gcc-14.3.0
-parisc                randconfig-002-20251118    gcc-12.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc                      ppc44x_defconfig    clang-22
-powerpc               randconfig-001-20251118    clang-22
-powerpc               randconfig-002-20251118    clang-22
-powerpc64             randconfig-001-20251118    gcc-13.4.0
-powerpc64             randconfig-002-20251118    gcc-8.5.0
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20251118    gcc-10.5.0
-riscv                 randconfig-002-20251118    clang-22
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-22
-s390                  randconfig-002-20251118    gcc-9.5.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20251118    gcc-11.5.0
-sh                    randconfig-002-20251118    gcc-15.1.0
-sh                          rsk7269_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                            allyesconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251118    gcc-8.5.0
-sparc                 randconfig-002-20251118    gcc-8.5.0
-sparc64                          allmodconfig    clang-22
-sparc64                          allyesconfig    gcc-15.1.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20251118    clang-22
-sparc64               randconfig-002-20251118    clang-22
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251118    clang-22
-um                    randconfig-002-20251118    clang-22
-um                           x86_64_defconfig    clang-22
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20251118    clang-20
-x86_64      buildonly-randconfig-002-20251118    gcc-14
-x86_64      buildonly-randconfig-003-20251118    clang-20
-x86_64      buildonly-randconfig-004-20251118    clang-20
-x86_64      buildonly-randconfig-005-20251118    clang-20
-x86_64      buildonly-randconfig-006-20251118    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-001-20251118    clang-20
-x86_64                randconfig-002-20251118    gcc-12
-x86_64                randconfig-003-20251118    gcc-14
-x86_64                randconfig-004-20251118    gcc-14
-x86_64                randconfig-005-20251118    clang-20
-x86_64                randconfig-006-20251118    clang-20
-x86_64                randconfig-011-20251118    clang-20
-x86_64                randconfig-012-20251118    clang-20
-x86_64                randconfig-013-20251118    gcc-14
-x86_64                randconfig-014-20251118    clang-20
-x86_64                randconfig-015-20251118    clang-20
-x86_64                randconfig-016-20251118    clang-20
-x86_64                randconfig-071-20251118    gcc-13
-x86_64                randconfig-072-20251118    clang-20
-x86_64                randconfig-073-20251118    gcc-14
-x86_64                randconfig-074-20251118    gcc-13
-x86_64                randconfig-075-20251118    gcc-14
-x86_64                randconfig-076-20251118    clang-20
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                           alldefconfig    gcc-15.1.0
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                           allyesconfig    gcc-15.1.0
-xtensa                randconfig-001-20251118    gcc-9.5.0
-xtensa                randconfig-002-20251118    gcc-15.1.0
+(I think compression will be, but it still needs work)
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> > - Why mempolicy.c and cpusets as-is are insufficient
+> > - SPM types seeking this form of interface (Accelerator, Compression)
+> 
+> I'm sure you can guess my interest is in GPUs which also have memory some people
+> consider should only be used for specific purposes :-) Currently our coherent
+> GPUs online this as a normal NUMA noode, for which we have also generally
+> found mempolicy, cpusets, etc. inadequate as well, so it will be interesting to
+> hear what short comings you have been running into (I'm less familiar with the
+> Compression cases you talk about here though).
+> 
+
+The TL;DR:
+
+cpusets as-designed doesn't really allow the concept of "Nothing can
+access XYZ node except specific things" because this would involve
+removing a node from the root cpusets.mems - and that can't be loosened.
+
+mempolicy is more of a suggestion and can be completely overridden. It
+is entirely ignored by things like demotion/reclaim/etc.
+
+I plan to discuss a bit of the specifics at LPC, but a lot of this stems
+from the zone-iteration logic in page_alloc.c and the rather... ermm...
+"complex" nature of how mempolicy and cpusets interacts with each other.
+
+I may add some additional notes on this thread prior to LPC given that
+time may be too short to get into the nasty bits in the session.
+
+> > - Platform extensions that would be nice to see (SPM-only Bits)
+> > 
+> > Open Questions
+> > - Single SPM nodemask, or multiple based on features?
+> > - Apply SPM/SysRAM bit on-boot only or at-hotplug?
+> > - Allocate extra "possible" NUMA nodes for flexbility?
+> 
+> I guess this might make hotplug easier? Particularly in cases where FW hasn't
+> created the nodes.
+>
+
+In cases where you need to reach back to the device for some signal, you
+likely need to have the driver for that device manage the alloc/free
+patterns - so this may (or may not) generalize to 1-device-per-node.
+
+In the scenario where you want some flexibility in managing regions,
+this may require multiple nodes for device.  Maybe one device provides
+multiple types of memory - you want those on separate nodes.
+
+This doesn't seem like something you need to solve right away, just
+something for folks to consider.
+
+> > - Should SPM Nodes be zone-restricted? (MOVABLE only?)
+> 
+> For device based memory I think so - otherwise you can never gurantee devices
+> can be removed or drivers (if required to access the memory) can be unbound as
+> you can't migrate things off the memory.
+> 
+
+Zones in this scenario are bit of a square-peg/round-hole.  Forcing
+everything in ZONE_MOVABLE means you can't do page pinning or things
+like 1GB gigantic pages.  But the device driver should be capable of
+managing hotplug anyway, so what's the point of ZONE_MOVABLE? :shrug:
+
+> > The ZSwap example demonstrates this with the `mt_spm_nodemask`.  This
+> > hack treats all spm nodes as-if they are compressed memory nodes, and
+> > we bypass the software compression logic in zswap in favor of simply
+> > copying memory directly to the allocated page.  In a real design
+> 
+> So in your example (I get it's a hack) is the main advantage that you can use
+> all the same memory allocation policies (eg. cgroups) when needing to allocate
+> the pages? Given this is ZSwap I guess these pages would never be mapped
+> directly into user-space but would anything in the design prevent that? 
+
+This is, in-fact, the long term intent. As long as the device can manage
+inline decompression with reasonable latencies, there's no reason you
+shouldn't be able to leave the pages mapped Read-Only in user-space.
+
+The driver would be responsible for migrating on write-fault, similar to
+a NUMA Hint Fault on the existing transparent page placement system.
+
+> For example could a driver say allocate SPM memory and then explicitly
+> migrate an existing page to it?
+
+You might even extend migrate_pages with a new flag that simply drops
+the write-able flag from the page table mapping and abstract that entire
+complexity out of the driver :]
+
+~Gregory
