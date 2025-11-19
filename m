@@ -1,206 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9379526E703;
-	Wed, 19 Nov 2025 09:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C22D274669;
+	Wed, 19 Nov 2025 09:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763544871; cv=none; b=dJGkRl8COcoBpQSIxlv3p+M4fvQ2Jvxo4AIxAJDZFNVrhL/xIoRhFQ8xc/HaehyfY0zYA6/GmSyHolKiZyGYfXAaZDTk8DsEvJR/fh6SCvMRicBOTgMBXQCYnxrKdbPCdwyuF3hMB8Y31ssEjtqoF8K/svrtnJBXtqpKEM7Dlmc=
+	t=1763545384; cv=none; b=aTnnotPSRX/kXTrCa1jXNhMPU2QuhL4sCtbxiCTYWGU4CleXD+wqSiBF3an7lcIh8RmvORZUL5V0vZi4I5ODG1c7Fyr/Tl8xdRxfoHxAIv7B1d1KUQGsn2Z5GbHEx3esD7YrZr1sjPMtjCYW4WC40XlixQjRa+2y1ICZUfYcMLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763544871; c=relaxed/simple;
-	bh=rt1dK5mUjJCU+oDDyz7ttJ0ljVGuDFtw09KBx+xqZ0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PqZN8fbKUciSoNJHrbjTtxtnIdXaFRbkOBqqOR7Urjneo9tvipS5zC7+w4IGQGypB4Ve4ovFNFVrlf/Z4LskqoXZDHGgXh8aoO/DxvCserwdMGz+JJoYYQU8oG+2FDlcDF9KfM9MbCptLxdsn2KyXmHuyRghyEkURUJjSimATS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bqmNHyZL; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bqmNHyZL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763544869; x=1795080869;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rt1dK5mUjJCU+oDDyz7ttJ0ljVGuDFtw09KBx+xqZ0M=;
-  b=bqmNHyZLGWuv2dWXr8j/UAqvT0ZRToi1gOS8/nu1C4X2Qt3s3DvoRLwb
-   RGxkF8mmKDxpd7MR1pzyU1cAHbDbGBukjmZnhd1VFu8QDt4Hd5XX7uEd+
-   d1FLhg+qu8oomTxCR9RX6IzstCLlJZB3/CdbhuNqBRtzUj+/sxShpi6pm
-   +g5NlVVCezBTfei3LjQCRc2N5LGrWh8Fkzy6jXUFsTLRI57zORqgJPdUz
-   Jlaow7H0x+mLlIB9OSJhi2w+WhLMInOQ+uy9PCkd5yp3VK59UD2yjM9Mv
-   10wNaGudwJ2ZeevqvXM5fn0jZZ0zVnURTi5fDjaKzsbncHakJ4tQJ/fVv
-   w==;
-X-CSE-ConnectionGUID: cHTebIuSQm2S4P67dlwfYQ==
-X-CSE-MsgGUID: YvMJvA9OSg+qr0EQqp3PeQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="77038021"
-X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="77038021"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 01:34:29 -0800
-X-CSE-ConnectionGUID: NA1UNjAUR0SNiQW3iAbJ3Q==
-X-CSE-MsgGUID: jwnvvV7wQUGSssZm4Fikrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="190805313"
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 19 Nov 2025 01:34:25 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vLeZz-0002fL-0w;
-	Wed, 19 Nov 2025 09:34:23 +0000
-Date: Wed, 19 Nov 2025 17:33:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	linux-cxl@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
-	Robert Richter <rrichter@amd.com>,
-	Cheatham Benjamin <benjamin.cheatham@amd.com>,
-	"Fabio M . De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: Re: [PATCH 4/4 v6] cxl/test: Simulate an x86 Low Memory Hole for
- tests
-Message-ID: <202511191640.3qEkK2oZ-lkp@intel.com>
-References: <20251118194321.1773484-5-fabio.m.de.francesco@linux.intel.com>
+	s=arc-20240116; t=1763545384; c=relaxed/simple;
+	bh=6JCu47eH0Q+PpTjXFXPeuMA5TI1o0dypOyyry4RuPnU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CnUnZzbkeFB//iTJ739TlyiYp5hFEbxaYqe08nGaDHNwZiEfxW9+blskD9QP07gV9D2c+EoiuLivkec/CeoxxP1PQx1kgn//k0NRLRhzpLScV0ZtBRAWY/ysgHtNBq6JGcqEPcDsuvDxelTsajP58HhHOYDxSQbgx5XTQOFHBsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dBGjL4B8yzJ46jN;
+	Wed, 19 Nov 2025 17:42:14 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3D0E91401DC;
+	Wed, 19 Nov 2025 17:42:58 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 19 Nov
+ 2025 09:42:56 +0000
+Date: Wed, 19 Nov 2025 09:42:55 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+CC: Conor Dooley <conor@kernel.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, <linux-cxl@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-arch@vger.kernel.org>,
+	<linux-mm@kvack.org>, Dan Williams <dan.j.williams@intel.com>, "H . Peter
+ Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "Drew
+ Fustini" <fustini@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Krzysztof Kozlowski
+	<krzk@kernel.org>, <james.morse@arm.com>, Will Deacon <will@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, <linuxarm@huawei.com>, Yushan Wang
+	<wangyushan12@huawei.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, "Mark
+ Rutland" <mark.rutland@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, <x86@kernel.org>, Andy Lutomirski
+	<luto@kernel.org>, Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v6 3/7] lib: Support
+ ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+Message-ID: <20251119094255.00000020@huawei.com>
+In-Reply-To: <2241d985-0e35-41e5-93b1-1e8d4e7a84bf@infradead.org>
+References: <20251117104800.2041329-1-Jonathan.Cameron@huawei.com>
+	<20251117104800.2041329-4-Jonathan.Cameron@huawei.com>
+	<3bf1793a-2ffd-4017-b4bf-dc63f3a2a7c8@infradead.org>
+	<20251117-definite-uncounted-7cc07a377a71@spud>
+	<20251118093041.00000c9e@huawei.com>
+	<2241d985-0e35-41e5-93b1-1e8d4e7a84bf@infradead.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251118194321.1773484-5-fabio.m.de.francesco@linux.intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-Hi Fabio,
+On Tue, 18 Nov 2025 17:18:31 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-kernel test robot noticed the following build errors:
+> On 11/18/25 1:30 AM, Jonathan Cameron wrote:
+> > On Tue, 18 Nov 2025 00:13:07 +0000
+> > Conor Dooley <conor@kernel.org> wrote:
+> >   
+> >> On Mon, Nov 17, 2025 at 10:51:11AM -0800, Randy Dunlap wrote:  
+> >>> Hi,
+> >>>
+> >>> On 11/17/25 2:47 AM, Jonathan Cameron wrote:    
+> >>>> diff --git a/lib/Kconfig b/lib/Kconfig
+> >>>> index e629449dd2a3..e11136d188ae 100644
+> >>>> --- a/lib/Kconfig
+> >>>> +++ b/lib/Kconfig
+> >>>> @@ -542,6 +542,10 @@ config MEMREGION
+> >>>>  config ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+> >>>>  	bool
+> >>>>  
+> >>>> +config GENERIC_CPU_CACHE_MAINTENANCE
+> >>>> +	bool
+> >>>> +	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+> >>>> +
+> >>>>  config ARCH_HAS_MEMREMAP_COMPAT_ALIGN
+> >>>>  	bool    
+> >>>
+> >>> Architectures and/or platforms select ARCH_HAS_*.
+> >>>
+> >>> With this change above, it becomes the only entry in
+> >>> lib/Kconfig that does "select ARCH_HAS_anytning".
+> >>>
+> >>> so I think this is wrong, back*wards.    
+> >>
+> >> Maybe it is backwards, but I feel like this way is more logical. ARM64
+> >> has memregion invalidation only because this generic approach is
+> >> enabled, so the arch selects what it needs to get the support.  
+> > 
+> > Exactly this. Catalin requested this form in response to an earlier
+> > version where arm64 Kconfig just had both selects for pretty much that
+> > reason. This is expected to be used on a subset of architectures.
+> > It is similar to things like GENERIC_ARCH_NUMA in this respect (though the
+> > arch_numa_init() etc in there are called only from other arch code
+> > so no ARCH_HAS_ symbols are associated with them).
+> >   
+> >> Alternatively, something like  
+> > 
+> > I'm fine with this solution if Randy prefers it.  
+> 
+> I do much prefer this alternative.
+> 
+> > Thanks for your help with this.  
+> 
+> Thanks for listening.
 
-[auto build test ERROR on 7ec9db66cc552f2f8a6779c16d01a2a01eccedde]
+Conor,
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Fabio-M-De-Francesco/cxl-core-Change-match_-_by_range-signatures/20251119-034652
-base:   7ec9db66cc552f2f8a6779c16d01a2a01eccedde
-patch link:    https://lore.kernel.org/r/20251118194321.1773484-5-fabio.m.de.francesco%40linux.intel.com
-patch subject: [PATCH 4/4 v6] cxl/test: Simulate an x86 Low Memory Hole for tests
-config: powerpc64-randconfig-001-20251119 (https://download.01.org/0day-ci/archive/20251119/202511191640.3qEkK2oZ-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251119/202511191640.3qEkK2oZ-lkp@intel.com/reproduce)
+Given it is your proposed solution, I'm guessing you'll either spin a patch
+on top or squash it into original.  If you spin a patch for this.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511191640.3qEkK2oZ-lkp@intel.com/
+Acked-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-All errors (new ones prefixed by >>):
+Thanks again!
 
->> drivers/cxl/core/region.c:892:9: error: call to undeclared function '__platform_region_matches_cxld'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     892 |         return platform_region_matches_cxld(p, cxld);
-         |                ^
-   drivers/cxl/core/platform_quirks.h:48:38: note: expanded from macro 'platform_region_matches_cxld'
-      48 | #define platform_region_matches_cxld DECLARE_TESTABLE(platform_region_matches_cxld)
-         |                                      ^
-   drivers/cxl/core/platform_quirks.h:46:29: note: expanded from macro 'DECLARE_TESTABLE'
-      46 | #define DECLARE_TESTABLE(x) __##x
-         |                             ^
-   <scratch space>:63:1: note: expanded from here
-      63 | __platform_region_matches_cxld
-         | ^
-   drivers/cxl/core/region.c:892:9: note: did you mean 'platform_region_matches_cxld'?
-   drivers/cxl/core/platform_quirks.h:48:38: note: expanded from macro 'platform_region_matches_cxld'
-      48 | #define platform_region_matches_cxld DECLARE_TESTABLE(platform_region_matches_cxld)
-         |                                      ^
-   drivers/cxl/core/platform_quirks.h:46:29: note: expanded from macro 'DECLARE_TESTABLE'
-      46 | #define DECLARE_TESTABLE(x) __##x
-         |                             ^
-   <scratch space>:63:1: note: expanded from here
-      63 | __platform_region_matches_cxld
-         | ^
-   drivers/cxl/core/platform_quirks.h:31:1: note: 'platform_region_matches_cxld' declared here
-      31 | platform_region_matches_cxld(const struct cxl_region_params *p,
-         | ^
->> drivers/cxl/core/region.c:1837:7: error: call to undeclared function '__platform_cxlrd_matches_cxled'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    1837 |                 if (platform_cxlrd_matches_cxled(cxlrd, cxled))
-         |                     ^
-   drivers/cxl/core/platform_quirks.h:47:38: note: expanded from macro 'platform_cxlrd_matches_cxled'
-      47 | #define platform_cxlrd_matches_cxled DECLARE_TESTABLE(platform_cxlrd_matches_cxled)
-         |                                      ^
-   drivers/cxl/core/platform_quirks.h:46:29: note: expanded from macro 'DECLARE_TESTABLE'
-      46 | #define DECLARE_TESTABLE(x) __##x
-         |                             ^
-   <scratch space>:101:1: note: expanded from here
-     101 | __platform_cxlrd_matches_cxled
-         | ^
-   drivers/cxl/core/region.c:1837:7: note: did you mean 'platform_cxlrd_matches_cxled'?
-   drivers/cxl/core/platform_quirks.h:47:38: note: expanded from macro 'platform_cxlrd_matches_cxled'
-      47 | #define platform_cxlrd_matches_cxled DECLARE_TESTABLE(platform_cxlrd_matches_cxled)
-         |                                      ^
-   drivers/cxl/core/platform_quirks.h:46:29: note: expanded from macro 'DECLARE_TESTABLE'
-      46 | #define DECLARE_TESTABLE(x) __##x
-         |                             ^
-   <scratch space>:101:1: note: expanded from here
-     101 | __platform_cxlrd_matches_cxled
-         | ^
-   drivers/cxl/core/platform_quirks.h:24:1: note: 'platform_cxlrd_matches_cxled' declared here
-      24 | platform_cxlrd_matches_cxled(const struct cxl_root_decoder *cxlrd,
-         | ^
-   drivers/cxl/core/region.c:2056:32: error: call to undeclared function '__platform_cxlrd_matches_cxled'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    2056 |             resource_size(p->res) && !platform_cxlrd_matches_cxled(cxlrd, cxled)) {
-         |                                       ^
-   drivers/cxl/core/platform_quirks.h:47:38: note: expanded from macro 'platform_cxlrd_matches_cxled'
-      47 | #define platform_cxlrd_matches_cxled DECLARE_TESTABLE(platform_cxlrd_matches_cxled)
-         |                                      ^
-   drivers/cxl/core/platform_quirks.h:46:29: note: expanded from macro 'DECLARE_TESTABLE'
-      46 | #define DECLARE_TESTABLE(x) __##x
-         |                             ^
-   <scratch space>:102:1: note: expanded from here
-     102 | __platform_cxlrd_matches_cxled
-         | ^
-   drivers/cxl/core/region.c:3490:4: error: call to undeclared function '__platform_cxlrd_matches_cxled'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    3490 |                 (platform_cxlrd_matches_cxled(cxlrd, cxled));
-         |                  ^
-   drivers/cxl/core/platform_quirks.h:47:38: note: expanded from macro 'platform_cxlrd_matches_cxled'
-      47 | #define platform_cxlrd_matches_cxled DECLARE_TESTABLE(platform_cxlrd_matches_cxled)
-         |                                      ^
-   drivers/cxl/core/platform_quirks.h:46:29: note: expanded from macro 'DECLARE_TESTABLE'
-      46 | #define DECLARE_TESTABLE(x) __##x
-         |                             ^
-   <scratch space>:84:1: note: expanded from here
-      84 | __platform_cxlrd_matches_cxled
-         | ^
-   4 errors generated.
+Jonathan
 
+> 
+> 
+> >> | diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> >> | index 5f7f63d24931..75b2507f7eb2 100644
+> >> | --- a/arch/arm64/Kconfig
+> >> | +++ b/arch/arm64/Kconfig
+> >> | @@ -21,6 +21,7 @@ config ARM64
+> >> |  	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
+> >> |  	select ARCH_HAS_CACHE_LINE_SIZE
+> >> |  	select ARCH_HAS_CC_PLATFORM
+> >> | +	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+> >> |  	select ARCH_HAS_CURRENT_STACK_POINTER
+> >> |  	select ARCH_HAS_DEBUG_VIRTUAL
+> >> |  	select ARCH_HAS_DEBUG_VM_PGTABLE
+> >> | @@ -146,7 +147,6 @@ config ARM64
+> >> |  	select GENERIC_ARCH_TOPOLOGY
+> >> |  	select GENERIC_CLOCKEVENTS_BROADCAST
+> >> |  	select GENERIC_CPU_AUTOPROBE
+> >> | -	select GENERIC_CPU_CACHE_MAINTENANCE
+> >> |  	select GENERIC_CPU_DEVICES
+> >> |  	select GENERIC_CPU_VULNERABILITIES
+> >> |  	select GENERIC_EARLY_IOREMAP
+> >> | diff --git a/lib/Kconfig b/lib/Kconfig
+> >> | index 09aec4a1e13f..ac223e627bc5 100644
+> >> | --- a/lib/Kconfig
+> >> | +++ b/lib/Kconfig
+> >> | @@ -544,8 +544,9 @@ config ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+> >> |  	bool
+> >> |  
+> >> |  config GENERIC_CPU_CACHE_MAINTENANCE
+> >> | -	bool
+> >> | -	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+> >> | +	def_bool y
+> >> | +	depends on ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+> >> | +	depends on ARM64
+> >> |  
+> >> |  config ARCH_HAS_MEMREMAP_COMPAT_ALIGN
+> >> |  	bool
+> >> implies (to me at least) that arm64 has memregion invalidation as an
+> >> architectural feature and that the GENERIC_CPU_CACHE_MAINTENANCE option
+> >> is a just common cross-arch code, like generic entry etc, rather than
+> >> being the option gating the drivers that provide the feature in the
+> >> first place.
+> >>
+> >> I didn't really care which way it went, and was gonna post something to
+> >> squash and avoid another revision, but I found the resultant Kconfig
+> >> setup to be make less sense to me than what came before. If the switched
+> >> around version is less likely to be problematic etc, then sure, but I
+> >> amn't convinced by switching it at a first glance.  
+> 
+> 
 
-vim +/__platform_region_matches_cxld +892 drivers/cxl/core/region.c
-
-384e624bb211b4 Dan Williams          2022-06-07  872  
-c43521b9db7f5e Dave Jiang            2025-11-06  873  static bool spa_maps_hpa(const struct cxl_region_params *p,
-0f6f1982cb28ab Dave Jiang            2025-10-10  874  			 const struct range *range)
-0ec9849b63338d Dave Jiang            2025-02-26  875  {
-7c15a3666e848d Fabio M. De Francesco 2025-11-18  876  	struct cxl_decoder *cxld;
-7c15a3666e848d Fabio M. De Francesco 2025-11-18  877  
-0ec9849b63338d Dave Jiang            2025-02-26  878  	if (!p->res)
-0ec9849b63338d Dave Jiang            2025-02-26  879  		return false;
-0ec9849b63338d Dave Jiang            2025-02-26  880  
-0ec9849b63338d Dave Jiang            2025-02-26  881  	/*
-8d27dd0b219f00 Dave Jiang            2025-11-06  882  	 * The extended linear cache region is constructed by a 1:1 ratio
-8d27dd0b219f00 Dave Jiang            2025-11-06  883  	 * where the SPA maps equal amounts of DRAM and CXL HPA capacity with
-8d27dd0b219f00 Dave Jiang            2025-11-06  884  	 * CXL decoders at the high end of the SPA range.
-0ec9849b63338d Dave Jiang            2025-02-26  885  	 */
-7c15a3666e848d Fabio M. De Francesco 2025-11-18  886  	if (p->res->start + p->cache_size == range->start &&
-7c15a3666e848d Fabio M. De Francesco 2025-11-18  887  	    p->res->end == range->end)
-7c15a3666e848d Fabio M. De Francesco 2025-11-18  888  		return true;
-7c15a3666e848d Fabio M. De Francesco 2025-11-18  889  
-7c15a3666e848d Fabio M. De Francesco 2025-11-18  890  	cxld = container_of(range, struct cxl_decoder, hpa_range);
-7c15a3666e848d Fabio M. De Francesco 2025-11-18  891  
-7c15a3666e848d Fabio M. De Francesco 2025-11-18 @892  	return platform_region_matches_cxld(p, cxld);
-0ec9849b63338d Dave Jiang            2025-02-26  893  }
-0ec9849b63338d Dave Jiang            2025-02-26  894  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
