@@ -1,178 +1,255 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD79C19D07E;
-	Wed, 19 Nov 2025 01:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763515124; cv=none; b=Ox/vF8dTpkNeeUcIeUDJ7oIw1FwzMvX/x9z7T5iMZ+v5IN1gY1AF5Caj50BZ9Hmv3L5BkE5bJ/1zSl7pxtVM8IZ9aFYsnemEKHUhm1umA5DiBEZcR46OwW2uA1JatwL5zmiPWZWxkC0bXcqrS7ocB1F9GWpxyXnM2u6CQVyy3No=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763515124; c=relaxed/simple;
-	bh=66Pk51Y6hl6cFLy/Cjj2s2RgDzKKBJ5zXtSZ1r+4xsY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kVmTx63JOeghdMIK/2vGEZBdfQEXT4+c2y8SgIhTMsAFKGPnhJjBulCjupa3iInJrigWLoSnBkBPKJc58u//581PXHgPeueF+CQu8V1X3e24dwcm3dvbJBcG5Btx29xu6/mq3nT+TNxkjKoOjwyfGF+0l8ynlFER9vIWceZP5KQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QC1tunr6; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50152224D6;
+	Wed, 19 Nov 2025 03:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763522388; cv=fail; b=P8ykyzhKQsq9xheQQeT9C0/layFNxU8rOtxh3y8cx51J14RQ1lRoXe4dQITJuum0eFG0Ja/eCr4SXBXRga/wbrCSMHEjAXCJzA9vAsJiNZIne7Kfs+9MDVzeE6V2W5XOfrsloPvM/NLuIzTiVBRy8GAJ9K4nr5ZPGOq4UEqRUuA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763522388; c=relaxed/simple;
+	bh=pMv6tDLUwfFwOcU4tbzg0bhEYfEB4B0hlfpH4Aiu+Uw=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=sTSZoklhGDkDhT9tNbJ8+BEiLrvXeZF7ARC/qnUOYhZQO934Yo/X2pU/xnei5ZAjxHJSk2YxIgY4G4PXZ0RWRrDmArREhmPtoGjAAkQkRwsRpj0w2N5z5oSho78P22ACeEQYpcyMZnNW6ygKd5irFJNWTyd5vlqkAxli0JmN2Kk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CWvbFtD7; arc=fail smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QC1tunr6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=jEWakcvW1TnAMoV+h8ZFjseo1NzKkn1k3ld14oxm230=; b=QC1tunr6eaQovDaqvqIBwr3X+/
-	C3C5mLb7Pa22aUwA2v5Fa6Ah0VeP6F5VFmTRWqBPTqD0qJqZ0fFlPrCq6bhhkG1jA0YTxGkJaUBwi
-	GQkwuUOualXgI8nvNDfrZZEwbffMu/1H2i/6cwuef4EsvzFYIzGipzrky8OkwVCzRZOpxybG/1TzI
-	NhRJtkYVP1+gbltlQKPs1SuTkbYcWXrjwLS1XcMN8Cvaxk5vtIdYcqZZ4YH+fjMgc+o50wNVoyCp+
-	l8heA9Yu81ccf5Z2bwICTGnz4TXBZCY9VEDbV5p6HemHQ4kcT9TxY/pIPsmLWD7eBJBUuYTcpZU1W
-	5typ2JHQ==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vLWq8-00000001L1B-2Eo5;
-	Wed, 19 Nov 2025 01:18:32 +0000
-Message-ID: <2241d985-0e35-41e5-93b1-1e8d4e7a84bf@infradead.org>
-Date: Tue, 18 Nov 2025 17:18:31 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CWvbFtD7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763522387; x=1795058387;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=pMv6tDLUwfFwOcU4tbzg0bhEYfEB4B0hlfpH4Aiu+Uw=;
+  b=CWvbFtD78IfoOd5dimzLQ3YAlEZcfOW+nUjJAc71+ujsWG54kXt33k2B
+   FCzE2vw+SOShfNYrafZJJsT8lqtlKVbUvN7oWftZimfif1Y6E48VHV48F
+   +kjBdQuzEJcCvOMUKoK3Pc2VL9lLh5YAdxcwRlL0a8U6eoM3ycO2ljCr0
+   JKx1QZeWhYSDemBQq8gVI3K+2MpREQm1C1/a7tcfbbgirf6SrY1CdhwS4
+   ua/x+Et3IgimDzGcGxROyUYTzYUyZztIUrioTJG6tYA02wLTmXk6mTnbs
+   NBL1Wb3GIqsDZAFf58iiYRxHHXZW59jm9Uw6ns3mVjoo7KtEORnJWbtRH
+   w==;
+X-CSE-ConnectionGUID: 7JaYJNKaTy2zErjrp/qGPw==
+X-CSE-MsgGUID: hGqrFiTFRaiP+/X13LMR8Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="65497534"
+X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
+   d="scan'208";a="65497534"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 19:19:46 -0800
+X-CSE-ConnectionGUID: dLycHRbqQGWZJjh7ktpGow==
+X-CSE-MsgGUID: J6NeAyUsQPmOkCJjrmUsug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
+   d="scan'208";a="196067499"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 19:19:45 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Tue, 18 Nov 2025 19:19:45 -0800
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27 via Frontend Transport; Tue, 18 Nov 2025 19:19:45 -0800
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (40.93.194.38)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Tue, 18 Nov 2025 19:19:45 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=h8bUYiiKrQruh5UB7zfbQhNjO/Jf9yAJTUcjYtSC6hds2q+cfk6JzINHt/ugfLhawT/HJAhrJVEWjV4F06HR0oItdeboWwFObdB4I8bsddc+sNlet+Yf6aztq34Znul4PC4ljN6kKCGX1IKAKw+UzryN8qcXmsIjJR3DbCJ4ghT1SFF3R7TJLENdDbMGo8rPX6W2dxlohCEYjCM3ry+o6gCW+uCwzW8X2Z9YwAtNmzdOe5oO75d1KeBOD9s8N2YaTmPbj4OKNogGSAgSBU/rb+JHFP7eEv8S2qtPieB0B4cmHYuMrtuHOBHTk0l+eE5xm3bpr+21awN7K+y0S6j4Qw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eLJAkDM4sqFC/qUkrCJpXCKv+WzngWSuuUnAdVONySE=;
+ b=uPaBKHL7wGe3vW1Ut2lDJW+35Z85sKeZhM57mKZbiaHQJgOT1ok/SmSMJfQ5eec9N5bLRcwbv+NS0VzrcyiiF+z9KGnIAYUQUSF/Sp4TiZLr6SCEAjM/G+lq+DgP79PhSm9htiV9hoDVWEanotLGxePH4dE+zfqiBJSTfVy25bRL9ccrkQolA/sVSMiS6tME4qOXGTyS5DHoKwmvGXV2CZIIs79oSHnUXG8OikryFQNN52lu1cc8UgZ+SgCBV2SpLSqzdOVzVMWvl4HQwaM48Vw1i8+S6tMzVpSp09zQLbySRfEI2onOVT5gtPvRyyLfHth67EnvJplLsYNOEg/9kQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by IA3PR11MB8937.namprd11.prod.outlook.com (2603:10b6:208:57c::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.10; Wed, 19 Nov
+ 2025 03:19:38 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff%4]) with mapi id 15.20.9320.021; Wed, 19 Nov 2025
+ 03:19:38 +0000
+From: <dan.j.williams@intel.com>
+Date: Tue, 18 Nov 2025 19:19:36 -0800
+To: Terry Bowman <terry.bowman@amd.com>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <shiju.jose@huawei.com>, <ming.li@zohomail.com>,
+	<Smita.KoralahalliChannabasappa@amd.com>, <rrichter@amd.com>,
+	<dan.carpenter@linaro.org>, <PradeepVineshReddy.Kodamati@amd.com>,
+	<lukas@wunner.de>, <Benjamin.Cheatham@amd.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+	<alucerop@amd.com>, <ira.weiny@intel.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<terry.bowman@amd.com>
+Message-ID: <691d37481e71d_1a37510042@dwillia2-mobl4.notmuch>
+In-Reply-To: <20251104170305.4163840-11-terry.bowman@amd.com>
+References: <20251104170305.4163840-1-terry.bowman@amd.com>
+ <20251104170305.4163840-11-terry.bowman@amd.com>
+Subject: Re: [RESEND v13 10/25] cxl/pci: Update RAS handler interfaces to also
+ support CXL Ports
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY5PR20CA0030.namprd20.prod.outlook.com
+ (2603:10b6:a03:1f4::43) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/7] lib: Support
- ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
-To: Jonathan Cameron <jonathan.cameron@huawei.com>,
- Conor Dooley <conor@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, linux-cxl@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
- linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
- Drew Fustini <fustini@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Krzysztof Kozlowski <krzk@kernel.org>, james.morse@arm.com,
- Will Deacon <will@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
- linuxarm@huawei.com, Yushan Wang <wangyushan12@huawei.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- Andy Lutomirski <luto@kernel.org>, Dave Jiang <dave.jiang@intel.com>
-References: <20251117104800.2041329-1-Jonathan.Cameron@huawei.com>
- <20251117104800.2041329-4-Jonathan.Cameron@huawei.com>
- <3bf1793a-2ffd-4017-b4bf-dc63f3a2a7c8@infradead.org>
- <20251117-definite-uncounted-7cc07a377a71@spud>
- <20251118093041.00000c9e@huawei.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20251118093041.00000c9e@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA3PR11MB8937:EE_
+X-MS-Office365-Filtering-Correlation-Id: fd89ba7d-c880-4913-d371-08de271a7861
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7416014|921020|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?REtlaW9Wa2RWczl6TE15bGc5M3UyNXFORmlRVXJuZ3BtaWptRUk2TGRwZzVs?=
+ =?utf-8?B?Z3JiM0hQdGd2OWJIOW5SWVZEYTd5SFZGZW5Wa1Q5TW5mV2xscnpHemdDZ0hq?=
+ =?utf-8?B?bVQwdjdpSmEwMHJQNEFVZkc2ZndWVExDL0pMVC92cDE1ZmlhSGJDNTEvamlt?=
+ =?utf-8?B?VnIvYTZTMFR0Q1JFTnduOWlJKzBIN0dWZFhXcHVaR21jb201ZEE0U0ZGS25N?=
+ =?utf-8?B?NHJvTjZmK09kejJGbVpCWEwxYUltOEZyY05FWDVISyt3UVU0S09SR0ZoRXk5?=
+ =?utf-8?B?YlVWMjcxcHBUMWlWV3dKUXV3b05vdE11S0d6MzlPUDBOdmNIL2U2dmtOd0VY?=
+ =?utf-8?B?NnhBa2xGNkczM1VWMWNTN25kWHh3bHI0WFdESjlzQ0VBVkppNUhZRm0vVVFV?=
+ =?utf-8?B?STZPaklUc01BTzV0T24xOUpVYzNVREQxeUl2Q1JMbW5YNkNRZllPUFNsTWF2?=
+ =?utf-8?B?NDFya3NCMnpFbFgvSTNjNkx2b1ZhS2x5UlkxZGFQWmNnWDg5N1hadDFHSWZJ?=
+ =?utf-8?B?a1RMVGxJWEVrZ1Vla2VEZHNoNk5FOXRJSkJNWjcvd1RtVXU3YVh4bm9BbDd2?=
+ =?utf-8?B?YS83U3BFaEtrLzNOdVVOS1ZkMklRKzRwSUpVOHlic0t2c0xqVlNxdUljbGdH?=
+ =?utf-8?B?c1laSzU3UEVOdmIrYnBBYzEzSHp4Q3NPcU1HaEVhWU16Yjc4NUZ2bitoZHN2?=
+ =?utf-8?B?WlFsZk9Vd0RQWXh3c2tpOEV0bUFDbU9yT3VmelNBZGFiYitSVDNWUjVDWEor?=
+ =?utf-8?B?bE9JaU91bWMwUXpPTlV0OWVyVnU2cHBqUUM5bjZuZjYxdzlpUk1VK3VxMUF1?=
+ =?utf-8?B?MWFCMzlBRXJHUUNoelozWC9WUi9xYTlxZUIvajJTZEJMaS9YK1Q1djZSZkQ3?=
+ =?utf-8?B?WlVKVWxCbk82UWZaQzFORTdjdW9FNm5uUmJZQ0N2WFRuZER3MTYzUnlMWERF?=
+ =?utf-8?B?bXdvWmliaXhVdHJTSHdKUzlFWWFnakw2dy9qTkFyeDlZT0U0RVg3K0NUNDl5?=
+ =?utf-8?B?L1poQlczQ3EvL0VxeDl2LzFVVHBDekxjbDNoWXpva29RTm1ZWC8yd2VvaCtF?=
+ =?utf-8?B?NFR3QXJ1Sk9VbXg1TUpSd0pIdSt2alFnNm1Gb3NoYWVVSVV5QklvQjJvQlVH?=
+ =?utf-8?B?ckpnenR0NmhEOVpsU2I4SUpWSkVOT04zdk5KREtCMi96STZDTElEVDdIZGs2?=
+ =?utf-8?B?UFJBaU9IK3d1aVJKSDFvZHBRc09YcXI2TW8yTytsYzlmdHYweEx0aWREU2ZD?=
+ =?utf-8?B?d3Vxc00xSDJLK0dPSktZN2FkTyszUzRBbTVaRm5TV3A1UjJDRkpVZHh3bVZP?=
+ =?utf-8?B?MCtrTCtxak43UUNHbmFGVEplM2dLQXRjcXByM29ycEZmajRDS3N1aHpiay9i?=
+ =?utf-8?B?S051NlBhbHB0WlZxNkwrSkFHSEh1Y2lGc1hWMUV2VDdtbkpmcW5BZG1oMjdR?=
+ =?utf-8?B?bTBUNWVDYjkwNEVFYzJHYUtmTlN5VEgxa2J5Ykp0bGFJWTAybzd2NDFxb0ti?=
+ =?utf-8?B?T2lGVGJwK0ZSVVVLU24rRkc5U0hxZDFGOFpheUMyQmZXdFN3K2MxazgvTTB1?=
+ =?utf-8?B?a3pFRkswZS9DYjZxTWsvekNYbGFiUnBVeVJnb2s2VnlGMXZpdzVha04reUhh?=
+ =?utf-8?B?ME4weXBrUzNsRWg5eDVIUHd0NjQ5Y0JUbzFJOUczZ3o5UUY1dTRnT0UrSVpJ?=
+ =?utf-8?B?RDRQYVp1akdVRHUySTFJMFVlVWdVRjRTRHd0UHhobEJweUhYZit5VXROeFhU?=
+ =?utf-8?B?RWJ5YUJ3TlhSVVUwamhUcHUxOTVpcmJIZzZPaWxXOHBBZE5UTGJvcU93VXZH?=
+ =?utf-8?B?VHdiUmtFRzdCMUs4Rkl1NlBMOVNDWmd2MkdFWExHZjNpU0d5Y2IvblhQS2pB?=
+ =?utf-8?B?KytzOVNNcmlxOEVmV29JbGZsbEgxdlhzNG1sbEFTTG5nS3ZKUlRVYjcxSzZo?=
+ =?utf-8?B?V2pzUjZwd1VKOVNrREJQaWhrb3lmRzQ4Zy85NVZGU0pFVlI3K1ZIRFZ4ZHEr?=
+ =?utf-8?B?QWtLT3IrVzM5b1g1Z3VtQkVoOVAzTGNDaVh2UkozMU5ab0x6c1A1NVJNaXpW?=
+ =?utf-8?Q?ctZS0D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ek1YRFlHR0FkRDg4KzBvc2V5SFVKRDF3NGE1bTA4Sms0NlMzZGNBZEpYRUls?=
+ =?utf-8?B?TVo2UzVYYnErQWEvZkQ2ZDdJMXIzeTJSa09iL2JsTnl6akkzSDU0ZUV3WjZV?=
+ =?utf-8?B?bm1pYnJKVk8xQ2FOSlk3b09lUmVOL0w5d0svWjdLeWdCRElIM2VKNFBvZmV3?=
+ =?utf-8?B?K0FKNmFNOTFUa1REQ1IwQVBoaDIzMWJOQi9xL2xrejFGQlQwdTQ4NVhjditW?=
+ =?utf-8?B?Uk1ObHFwUnJYR3FqSXBZR3lPYjI4MVhqQ2JXR2VQZ1FORkkzU0QweG91d1hn?=
+ =?utf-8?B?OHgxRTJFQlJLUWJWV2ZMcGp1QWl1WXQwWTl1L2tpcWQxb09RNkt1SHBucytm?=
+ =?utf-8?B?dWRvQy9vZVVYQ2pHMHRFNmVQSVpUaDFTNUhkYkJRQk40NEpPdXorMHdVMlpv?=
+ =?utf-8?B?d29TeVE5Z0pUWUdXTElqamhTUzBERk94M21zalVaRC9GSC9NVmNmNERrR3FJ?=
+ =?utf-8?B?eEExOXIzUmtCT29nMERHSlJXNUEwaGo3Z28zdnNwSWNsd2E3ejg1QnFUVkd1?=
+ =?utf-8?B?SzBVdnpoa0g2ZWN1Q3I4elh6TWthUlNSL3F6dGpMcHlIRmphRWhVMVBkZWI5?=
+ =?utf-8?B?aFh3WUdnUS9qREM3RFVDcHVYN1JFdkYxYjJFTFZUYmVrOXM5QWdOaVRZUTZD?=
+ =?utf-8?B?TE1sYkE3Y2t4ZmVyeDJGMGhTNGdVaFRpTVhOWVROVmNwbTBHL3ZJTEhNVFpE?=
+ =?utf-8?B?THkvTFJZQkVmbEZTUjc0RVJCbTArQ3YrNWVRVVFiM1hSNFByK1ZHUUtnVUQx?=
+ =?utf-8?B?aVFNOS9ldUlOTUZ5YUtNRE8vRG1lZzZpUnk1OC83RTlVNE9OTjdua1NkSzlZ?=
+ =?utf-8?B?VkFaQ3d0TTYrT2RUNEp1SUtkRFhwalJKM2lFR0pmOFJEOVF1YWE0M2ZVdVc0?=
+ =?utf-8?B?dERIb2pkU01idVIvUDB5TC9EcE1MMG9FNHhRZnZuUjROanRlbjJnVXFHMHo4?=
+ =?utf-8?B?b0trSWJReXZVcFZaTnlwNXU0Y1pIZ2JpNHFKQmtCd09JbUowbmRFT3FZcGs0?=
+ =?utf-8?B?ekl1bHNZdHhWelJCTitvUS9zVjI0bnZEdXZRWWlOeHUwWnJCT1RaTUppVDA0?=
+ =?utf-8?B?V3JuTkZ6Q0E2YlV3NlJrWmlQaWtvQ3lhTzBvYVRVVFNCS0xMVEZMSktzZnhU?=
+ =?utf-8?B?RERXZWhDcytycEFpd0F6c3E4aDM3aDlWWkhhSTkwZU5GYUcrVXBwalBjOEsx?=
+ =?utf-8?B?bUpYMHJLcHVXRGJSZ0JJbk9UNm9TM2hqUEFTb0NmRzEwcDh2QXpjK3hBeUMv?=
+ =?utf-8?B?SDBKQVl2em1UMzZWWlMzRUIzZXRvTFI2cUFicXp2Y3RTWEZGMCtZWHpWb1c0?=
+ =?utf-8?B?cmpvZWFLb3oxcTFPZGYyVUR6ZnpVWnhLeVBHOXA1cFNTRmtENDdFS2VXeHFR?=
+ =?utf-8?B?ejluVmUrRm15YUx0aU51UFllS1FZTVVCV0lla0Q2M3g5MFRWbUlWdUNiSkhi?=
+ =?utf-8?B?bkhiSENNU0lwTGxlbE13L3VWUHVRUTNxN0haaVZRUjdnRGxxM09IbGlpRzJH?=
+ =?utf-8?B?N3N3MWZkN0MyRlZzclNvRTRjbWt4TFZDNHBTejk0RVAzeG1GbG5icHI4YzZE?=
+ =?utf-8?B?SmhRSVJKd3lOMUpzcFhmamJ5ZDNjTGxTemg1TElPTkhHdmJxNXRQM2lKQ3BY?=
+ =?utf-8?B?dHhxRElqZXRJR0oyVE4vYXdSWE5QckI5T2YzTEU4QmRkdC9DUlNqcTBRWUZH?=
+ =?utf-8?B?SjhzMC9vcjYyc2xzWVh2ZGhNbmEzeUl5bmRwSUhTRzJINkFtd3BmQno5Rk03?=
+ =?utf-8?B?Q3hRL0laek9WRXlYSlQ2bDIvTTRtYXE0N1dzZWtvOWxvb3NyYTJaZ3BqZ3Vj?=
+ =?utf-8?B?bGVLcnVEWkxjSWFBOFpRN1VuVGdYek1VTzIwdnY5REQ5ZWtwd2dSUkRJL1Bq?=
+ =?utf-8?B?eFY1dkxZbW9JT0JKRjdNbXdvMTRxVlFSWEowNUVCdHhwZk5jVmtjY21wN0Mw?=
+ =?utf-8?B?K29ibWpjaEpUcFRkd0loM0prZTZZWStNTEtEL3RPd2hxeXEvblRJYkQyYXpj?=
+ =?utf-8?B?VnNQUzQzdVpFN0psREZOcjJtSUh5QlN2U1B6dUdBWWZlL2ZuWEQ1OStWd1ln?=
+ =?utf-8?B?ZlJXWHVUdTVZNUhqTlJTd1FBS3BNZmo4b1l2NjdqUXhqcVNpRS9zYU9URXd0?=
+ =?utf-8?B?Z2d1LzBqTUVCb0Zzc1o1WHFCVXN5MEhzQWF0dUE4czZlUkpzTGxEMnBhUDVo?=
+ =?utf-8?B?NHc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd89ba7d-c880-4913-d371-08de271a7861
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2025 03:19:37.9092
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 99i/3ZpWJ5MbNhy4GOpyIpEyi5sZwf+/RY3tHDOn8ATHDaDM/bm/vMYbwB3Jmtycm0A3eXevT/LeRCJbzKsgvgZotAGWlfvJNNZui+ZNowM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR11MB8937
+X-OriginatorOrg: intel.com
 
-
-
-On 11/18/25 1:30 AM, Jonathan Cameron wrote:
-> On Tue, 18 Nov 2025 00:13:07 +0000
-> Conor Dooley <conor@kernel.org> wrote:
+Terry Bowman wrote:
+> CXL PCIe Port Protocol Error handling support will be added to the
+> CXL drivers in the future. In preparation, rename the existing
+> interfaces to support handling all CXL PCIe Port Protocol Errors.
 > 
->> On Mon, Nov 17, 2025 at 10:51:11AM -0800, Randy Dunlap wrote:
->>> Hi,
->>>
->>> On 11/17/25 2:47 AM, Jonathan Cameron wrote:  
->>>> diff --git a/lib/Kconfig b/lib/Kconfig
->>>> index e629449dd2a3..e11136d188ae 100644
->>>> --- a/lib/Kconfig
->>>> +++ b/lib/Kconfig
->>>> @@ -542,6 +542,10 @@ config MEMREGION
->>>>  config ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
->>>>  	bool
->>>>  
->>>> +config GENERIC_CPU_CACHE_MAINTENANCE
->>>> +	bool
->>>> +	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
->>>> +
->>>>  config ARCH_HAS_MEMREMAP_COMPAT_ALIGN
->>>>  	bool  
->>>
->>> Architectures and/or platforms select ARCH_HAS_*.
->>>
->>> With this change above, it becomes the only entry in
->>> lib/Kconfig that does "select ARCH_HAS_anytning".
->>>
->>> so I think this is wrong, back*wards.  
->>
->> Maybe it is backwards, but I feel like this way is more logical. ARM64
->> has memregion invalidation only because this generic approach is
->> enabled, so the arch selects what it needs to get the support.
+> The driver's RAS support functions currently rely on a 'struct
+> cxl_dev_state' type parameter, which is not available for CXL Port
+> devices. However, since the same CXL RAS capability structure is
+> needed across most CXL components and devices, a common handling
+> approach should be adopted.
 > 
-> Exactly this. Catalin requested this form in response to an earlier
-> version where arm64 Kconfig just had both selects for pretty much that
-> reason. This is expected to be used on a subset of architectures.
-> It is similar to things like GENERIC_ARCH_NUMA in this respect (though the
-> arch_numa_init() etc in there are called only from other arch code
-> so no ARCH_HAS_ symbols are associated with them).
+> To accommodate this, update the __cxl_handle_cor_ras() and
+> __cxl_handle_ras() functions to use a `struct device` instead of
+> `struct cxl_dev_state`.
 > 
->> Alternatively, something like
+> No functional changes are introduced.
 > 
-> I'm fine with this solution if Randy prefers it.
+> [1] CXL 3.1 Spec, 8.2.4 CXL.cache and CXL.mem Registers
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Alejandro Lucero <alucerop@amd.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+[..]
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index b933030b8e1e..72908f3ced77 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -160,7 +160,7 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
+>  
+> -void cxl_handle_cor_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base)
+> +void cxl_handle_cor_ras(struct device *dev, void __iomem *ras_base)
+>  {
+>  	void __iomem *addr;
+>  	u32 status;
+> @@ -172,7 +172,7 @@ void cxl_handle_cor_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base)
+>  	status = readl(addr);
+>  	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
+>  		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+> -		trace_cxl_aer_correctable_error(cxlds->cxlmd, status);
+> +		trace_cxl_aer_correctable_error(to_cxl_memdev(dev), status);
 
-I do much prefer this alternative.
+This indeed looks like an equivalent conversion, I just worry it does
+not work if this function get re-used for protocol errors on non-memdev
+(port) devices.
 
-> Thanks for your help with this.
+For now, at this stage of the series:
 
-Thanks for listening.
-
-
->> | diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> | index 5f7f63d24931..75b2507f7eb2 100644
->> | --- a/arch/arm64/Kconfig
->> | +++ b/arch/arm64/Kconfig
->> | @@ -21,6 +21,7 @@ config ARM64
->> |  	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
->> |  	select ARCH_HAS_CACHE_LINE_SIZE
->> |  	select ARCH_HAS_CC_PLATFORM
->> | +	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
->> |  	select ARCH_HAS_CURRENT_STACK_POINTER
->> |  	select ARCH_HAS_DEBUG_VIRTUAL
->> |  	select ARCH_HAS_DEBUG_VM_PGTABLE
->> | @@ -146,7 +147,6 @@ config ARM64
->> |  	select GENERIC_ARCH_TOPOLOGY
->> |  	select GENERIC_CLOCKEVENTS_BROADCAST
->> |  	select GENERIC_CPU_AUTOPROBE
->> | -	select GENERIC_CPU_CACHE_MAINTENANCE
->> |  	select GENERIC_CPU_DEVICES
->> |  	select GENERIC_CPU_VULNERABILITIES
->> |  	select GENERIC_EARLY_IOREMAP
->> | diff --git a/lib/Kconfig b/lib/Kconfig
->> | index 09aec4a1e13f..ac223e627bc5 100644
->> | --- a/lib/Kconfig
->> | +++ b/lib/Kconfig
->> | @@ -544,8 +544,9 @@ config ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
->> |  	bool
->> |  
->> |  config GENERIC_CPU_CACHE_MAINTENANCE
->> | -	bool
->> | -	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
->> | +	def_bool y
->> | +	depends on ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
->> | +	depends on ARM64
->> |  
->> |  config ARCH_HAS_MEMREMAP_COMPAT_ALIGN
->> |  	bool
->> implies (to me at least) that arm64 has memregion invalidation as an
->> architectural feature and that the GENERIC_CPU_CACHE_MAINTENANCE option
->> is a just common cross-arch code, like generic entry etc, rather than
->> being the option gating the drivers that provide the feature in the
->> first place.
->>
->> I didn't really care which way it went, and was gonna post something to
->> squash and avoid another revision, but I found the resultant Kconfig
->> setup to be make less sense to me than what came before. If the switched
->> around version is less likely to be problematic etc, then sure, but I
->> amn't convinced by switching it at a first glance.
-
-
--- 
-~Randy
-
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
