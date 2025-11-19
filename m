@@ -1,245 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787BB3126B0;
-	Wed, 19 Nov 2025 22:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E82337105
+	for <linux-cxl@vger.kernel.org>; Wed, 19 Nov 2025 22:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763591072; cv=none; b=Y4E3YCsJWj2WTogMXKqgqU3k4b+jcSB1qdZgZo7GivHg+rsU9NpSXAAu7rEK8LXkoRpsUF7VVcXTnDifGg/Tw2RLkNtAGrQ4OWmGyFhWw+QX7ntHIHEh9qT7Avx9601FmQWMc47iIhMIMeYzA67uDcluWsrdK6eDbRqGd9XMwoo=
+	t=1763592178; cv=none; b=Z+PO/Z5RvIWrxLzu2Doo+16ASYftj0gj++5B2ydeiHJ7HVgf2d/xHd4VgPRNXKSJhiM8vPWT5wCjCgDJ/cirdoB8RRm/sozu8tRpcDaBMvohQojFVQcP7m0bZGcClLo27bjzsnO90X9Xf4ANb2B+maaMcCRsVB10wtaSZHMBUz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763591072; c=relaxed/simple;
-	bh=O7VLxpaiyBZT0QDbO2gyUlXF2NSO8KqMV93LJDv/qOI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TViWRizX9WuAXHeK6ZhATybhquMZp0XvlObuFcqY+rDtbQZ6QwO266MBMfXBR5FJKO1h1tEI1mAGqDaV1KLw+z7OYSBSD0aWH8LLeZOfM6o3ikE+hxBEqxq1Moh60WWUho7wIPAFEjZwJEQMxCI4UDAmE2EJehZTRwVAuOgVO0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nMSlugML; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1763592178; c=relaxed/simple;
+	bh=Dmi/gNc2WqTmoiCwsXtE9B4qvf+07Fr77NPdal7Sw7s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ONrzKDopdLCi8v9qXdQ/d5gq4eY8kj1GIKe92zoWgRBvqgp9O/OBYQ3N+kkqEospKgUegMMsEU72Ads8GVbfLRK6ZmW/RwSDKBTtf8w8O0G8/rE63bn3iAPmlKawxGCmIaXYyV/F/dkeFGYMnxXasL+ohPqG4SHqFFWe+Ml7XxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=yfvISeaD; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nMSlugML"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763591071; x=1795127071;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=O7VLxpaiyBZT0QDbO2gyUlXF2NSO8KqMV93LJDv/qOI=;
-  b=nMSlugMLtkkb6lq11+6hI9v68AOek1XEcaQhBDxzawNKd5znFZwTaqaT
-   WBJGBG16Wn0cHcrJJLis4jlaJ3RFbeLnHhQLltBmWxPXircFb1o7qrCWL
-   BsC3IFqJJESNuVyIHTrNCIN1YQ5RowOvjKQ4kd9OeeV1E2OcvWv/eExiY
-   tAMnZpNQqtGISEmeiX/VINnFuKuRu6pqKG6C5uUlXCa33XRtUt8nlMOfr
-   LBY1+jccBDrxHpKf8VmjvFd9pP41ZafcRztnYC1hkDrBbAJ45BHSZgJwJ
-   kNhK5dO3vFY0dpjkExOquZ7C5yaRYns25iyxxILqDX5OmfvikSarc8LRg
-   Q==;
-X-CSE-ConnectionGUID: xKiTCbctQyaZAdpvsNGzHA==
-X-CSE-MsgGUID: iTstmLsQQ1yQGT1BLJWYUg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="65806898"
-X-IronPort-AV: E=Sophos;i="6.19,316,1754982000"; 
-   d="scan'208";a="65806898"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 14:24:30 -0800
-X-CSE-ConnectionGUID: WBHotaZ3R/W+klziL6NZlA==
-X-CSE-MsgGUID: tpixlAaPRtW6+MfSR63oPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,316,1754982000"; 
-   d="scan'208";a="196139649"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.109.179]) ([10.125.109.179])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 14:24:29 -0800
-Message-ID: <baa9b670-fbfe-4050-bceb-cccc42efad88@intel.com>
-Date: Wed, 19 Nov 2025 15:24:28 -0700
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="yfvISeaD"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <david.laight.linux_spam@runbox.com>)
+	id 1vLqt3-006kyF-9D; Wed, 19 Nov 2025 23:42:53 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
+	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To
+	:Message-Id:Date:Subject:Cc:To:From;
+	bh=5MEknnuAKfJCHXLhDStxABn6W3caLDFPqFcUl+Xl1Hg=; b=yfvISeaDRfFAovzyue1CSfQ/GP
+	cC7NAjRKGJ9qBaGGYP2GJlLbnGgp2/HRubwEQtx9qp0226/4WYXuCk3P465hHpwvpcpiu+U2sgD7Q
+	m0HarcgKN7MYOMq91S5tpj6nCgsxh3CU56Bfni1xExo1F/QQalViyDWqzwl4QCM8l+HkZc2GyJRN3
+	354LvGa1FdtnzdWMm35F+8gJWqkRYevxbQswY1AWZIuT4HUqDL5bYaOG5euQ+mZ1vn01nyYu9wA2/
+	s0oFJnRK5SapWrFBFOl2KBiOCSXFgFvdoPksWpmYB0p1t6/SBTkgQc/o9dJwDUtw+wgKqmvuXKwwP
+	gT967xGw==;
+Received: from [10.9.9.74] (helo=submission03.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <david.laight.linux_spam@runbox.com>)
+	id 1vLqt2-00086j-Vg; Wed, 19 Nov 2025 23:42:53 +0100
+Received: by submission03.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1vLqsc-00Fos6-L4; Wed, 19 Nov 2025 23:42:26 +0100
+From: david.laight.linux@gmail.com
+To: linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	David Laight <david.laight.linux@gmail.com>
+Subject: [PATCH 17/44] drivers/cxl: use min() instead of min_t()
+Date: Wed, 19 Nov 2025 22:41:13 +0000
+Message-Id: <20251119224140.8616-18-david.laight.linux@gmail.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20251119224140.8616-1-david.laight.linux@gmail.com>
+References: <20251119224140.8616-1-david.laight.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 14/17] cxl/pmem_region: Introduce
- CONFIG_CXL_PMEM_REGION for core/pmem_region.c
-To: Neeraj Kumar <s.neeraj@samsung.com>, linux-cxl@vger.kernel.org,
- nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org, gost.dev@samsung.com
-Cc: a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com
-References: <20251119075255.2637388-1-s.neeraj@samsung.com>
- <CGME20251119075335epcas5p3a8fdc68301233f899d9041a300309fa2@epcas5p3.samsung.com>
- <20251119075255.2637388-15-s.neeraj@samsung.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20251119075255.2637388-15-s.neeraj@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: David Laight <david.laight.linux@gmail.com>
 
+min_t(unsigned int, a, b) casts an 'unsigned long' to 'unsigned int'.
+Use min(a, b) instead as it promotes any 'unsigned int' to 'unsigned long'
+and so cannot discard significant bits.
 
-On 11/19/25 12:52 AM, Neeraj Kumar wrote:
-> As pmem region label update/delete has hard dependency on libnvdimm.
-> It is therefore put core/pmem_region.c under CONFIG_CXL_PMEM_REGION
-> control. It handles the dependency by selecting CONFIG_LIBNVDIMM
-> if not enabled.
-> 
-> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+In this case the 'unsigned long' value is small enough that the result
+is ok.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Detected by an extra check added to min_t().
 
-> ---
->  drivers/cxl/Kconfig       | 15 +++++++++++++++
->  drivers/cxl/core/Makefile |  3 ++-
->  drivers/cxl/core/core.h   | 17 +++++++++++------
->  drivers/cxl/core/region.c |  2 ++
->  drivers/cxl/cxl.h         | 24 ++++++++++++++----------
->  tools/testing/cxl/Kbuild  |  3 ++-
->  6 files changed, 46 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index f1361ed6a0d4..307fed8f1f56 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -211,6 +211,21 @@ config CXL_REGION
->  
->  	  If unsure say 'y'
->  
-> +config CXL_PMEM_REGION
-> +	bool "CXL: Pmem Region Support"
-> +	default CXL_BUS
-> +	depends on CXL_REGION
-> +	depends on ARCH_HAS_PMEM_API
-> +	depends on PHYS_ADDR_T_64BIT
-> +	depends on BLK_DEV
-> +	select LIBNVDIMM
-> +	help
-> +	   Enable the CXL core to enumerate and provision CXL pmem regions.
-> +	   A CXL pmem region need to update region label into LSA. For LSA
-> +	   update/delete libnvdimm is required.
-> +
-> +	   If unsure say 'y'
-> +
->  config CXL_REGION_INVALIDATION_TEST
->  	bool "CXL: Region Cache Management Bypass (TEST)"
->  	depends on CXL_REGION
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index fe0fcab6d730..399157beb917 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -16,7 +16,8 @@ cxl_core-y += pmu.o
->  cxl_core-y += cdat.o
->  cxl_core-y += ras.o
->  cxl_core-$(CONFIG_TRACING) += trace.o
-> -cxl_core-$(CONFIG_CXL_REGION) += region.o pmem_region.o
-> +cxl_core-$(CONFIG_CXL_REGION) += region.o
-> +cxl_core-$(CONFIG_CXL_PMEM_REGION) += pmem_region.o
->  cxl_core-$(CONFIG_CXL_MCE) += mce.o
->  cxl_core-$(CONFIG_CXL_FEATURES) += features.o
->  cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 5ebbc3d3dde5..beeb9b7527b8 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -34,7 +34,6 @@ int cxl_decoder_detach(struct cxl_region *cxlr,
->  #define CXL_REGION_ATTR(x) (&dev_attr_##x.attr)
->  #define CXL_REGION_TYPE(x) (&cxl_region_type)
->  #define SET_CXL_REGION_ATTR(x) (&dev_attr_##x.attr),
-> -#define CXL_PMEM_REGION_TYPE(x) (&cxl_pmem_region_type)
->  #define CXL_DAX_REGION_TYPE(x) (&cxl_dax_region_type)
->  int cxl_region_init(void);
->  void cxl_region_exit(void);
-> @@ -89,17 +88,23 @@ static inline struct cxl_region *to_cxl_region(struct device *dev)
->  {
->  	return NULL;
->  }
-> -static inline int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
-> -{
-> -	return 0;
-> -}
->  #define CXL_REGION_ATTR(x) NULL
->  #define CXL_REGION_TYPE(x) NULL
->  #define SET_CXL_REGION_ATTR(x)
-> -#define CXL_PMEM_REGION_TYPE(x) NULL
->  #define CXL_DAX_REGION_TYPE(x) NULL
->  #endif
->  
-> +#ifdef CONFIG_CXL_PMEM_REGION
-> +#define CXL_PMEM_REGION_TYPE(x) (&cxl_pmem_region_type)
-> +int devm_cxl_add_pmem_region(struct cxl_region *cxlr);
-> +#else
-> +#define CXL_PMEM_REGION_TYPE(x) NULL
-> +static inline int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
->  struct cxl_send_command;
->  struct cxl_mem_query_commands;
->  int cxl_query_cmd(struct cxl_mailbox *cxl_mbox,
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 9798120b208e..408e139718f1 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3918,6 +3918,8 @@ static int cxl_region_probe(struct device *dev)
->  			dev_dbg(&cxlr->dev, "CXL EDAC registration for region_id=%d failed\n",
->  				cxlr->id);
->  
-> +		if (!IS_ENABLED(CONFIG_CXL_PMEM_REGION))
-> +			return -EINVAL;
->  		return devm_cxl_add_pmem_region(cxlr);
->  	case CXL_PARTMODE_RAM:
->  		rc = devm_cxl_region_edac_register(cxlr);
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 684a0d1b441a..6ac3b40cb5ff 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -899,21 +899,11 @@ int devm_cxl_add_nvdimm(struct cxl_port *parent_port, struct cxl_memdev *cxlmd);
->  struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_port *port);
->  
->  #ifdef CONFIG_CXL_REGION
-> -bool is_cxl_pmem_region(struct device *dev);
-> -struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
->  int cxl_add_to_region(struct cxl_endpoint_decoder *cxled);
->  struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
->  u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa);
->  int cxl_region_discovery(struct cxl_memdev *cxlmd);
->  #else
-> -static inline bool is_cxl_pmem_region(struct device *dev)
-> -{
-> -	return false;
-> -}
-> -static inline struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
-> -{
-> -	return NULL;
-> -}
->  static inline int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
->  {
->  	return 0;
-> @@ -933,6 +923,20 @@ static inline int cxl_region_discovery(struct cxl_memdev *cxlmd)
->  }
->  #endif
->  
-> +#ifdef CONFIG_CXL_PMEM_REGION
-> +bool is_cxl_pmem_region(struct device *dev);
-> +struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
-> +#else
-> +static inline bool is_cxl_pmem_region(struct device *dev)
-> +{
-> +	return false;
-> +}
-> +static inline struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
-> +{
-> +	return NULL;
-> +}
-> +#endif
-> +
->  void cxl_endpoint_parse_cdat(struct cxl_port *port);
->  void cxl_switch_parse_cdat(struct cxl_dport *dport);
->  
-> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-> index ad2496b38fdd..024922326a6b 100644
-> --- a/tools/testing/cxl/Kbuild
-> +++ b/tools/testing/cxl/Kbuild
-> @@ -59,7 +59,8 @@ cxl_core-y += $(CXL_CORE_SRC)/pmu.o
->  cxl_core-y += $(CXL_CORE_SRC)/cdat.o
->  cxl_core-y += $(CXL_CORE_SRC)/ras.o
->  cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
-> -cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o $(CXL_CORE_SRC)/pmem_region.o
-> +cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
-> +cxl_core-$(CONFIG_CXL_PMEM_REGION) += $(CXL_CORE_SRC)/pmem_region.o
->  cxl_core-$(CONFIG_CXL_MCE) += $(CXL_CORE_SRC)/mce.o
->  cxl_core-$(CONFIG_CXL_FEATURES) += $(CXL_CORE_SRC)/features.o
->  cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += $(CXL_CORE_SRC)/edac.o
+Signed-off-by: David Laight <david.laight.linux@gmail.com>
+---
+ drivers/cxl/core/mbox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index fa6dd0c94656..17aec916e8cd 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -663,7 +663,7 @@ static int cxl_xfer_log(struct cxl_memdev_state *mds, uuid_t *uuid,
+ 	u32 offset = 0;
+ 
+ 	while (remaining) {
+-		u32 xfer_size = min_t(u32, remaining, cxl_mbox->payload_size);
++		u32 xfer_size = min(remaining, cxl_mbox->payload_size);
+ 		struct cxl_mbox_cmd mbox_cmd;
+ 		struct cxl_mbox_get_log log;
+ 		int rc;
+-- 
+2.39.5
 
