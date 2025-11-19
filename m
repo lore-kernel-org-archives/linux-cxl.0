@@ -1,842 +1,258 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010012.outbound.protection.outlook.com [52.101.201.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CBA3A9C18;
-	Wed, 19 Nov 2025 15:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763567494; cv=none; b=IrDsK+3wlqyxPnj8oY1gL4+aLg+LmqLrMbxeiWEj3aa4ioBuL44kajcSpxnje6FJ3f6JxQT7z2cw0ixL3jsq68QSSUEN6cUb36qK6vNQqgHp1vWUhxrOfm/QNj5pogOcUHpQyEhXS0bY5YU0nX6DH8G6Nox27rkSYw+cJdo2ACQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763567494; c=relaxed/simple;
-	bh=08f5OQX/KfKrDq6/Tv3JHLjZd40S/bQboftipOXuk0E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AwTiFGPqEdsawv08q6vN6pjmPf2BupsmJE56MKkEdmFQ28I33hWqUdfdIv9Z5SnN740aLSlrh3L+xnLVmWdPTFZiIOII5cSGphHCWGUyNsxWfUywkb+HVLAA6SliXGhlmCTOMGvUxYbB3zMTexoMTMwV68Fih3vI03SE4U9HDJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IvziGqFj; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A17232ED5D;
+	Wed, 19 Nov 2025 15:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763567765; cv=fail; b=EIo2PVVE7e7ur9sWgnwIdbGdKiXAx7WvwiyrUvRitowhhBkI9fYuLZXswMzbsmJ/97Dyv4HnZm3CtGOXjp4MQ5dIjlTd4Qu5BV8aZwCeRO1Lw7Qe4noFQsVtZuzH3my8M6N+KEIzbLusyG2ppypoNr/0yYdRhYk7eSl2UiDfPEo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763567765; c=relaxed/simple;
+	bh=IGaK3y1cbjB1re/VPsknkA3weCd4PDFwNWFMIm7zGDY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=E53Y9aw7vAD94S1BsSyPU+RUkJVIIkYcZySWRkZlQbAKxoWMMgC01kR1P5xgRzKw1PdGXRf86h+SqvWQSn9CpbPXolWoFrV/Twv7ZSu6TdjxZoG+8PNF7DgU8JWTDp6NilbkEMYkGua+jMt8oXohlDsU3u/nGhD9YQIcMNMPZvY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LW0dDffr; arc=fail smtp.client-ip=52.101.201.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IvziGqFj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763567491; x=1795103491;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=08f5OQX/KfKrDq6/Tv3JHLjZd40S/bQboftipOXuk0E=;
-  b=IvziGqFj0OhyYxkkF0zGwJoiZKyYldWx1voY7jrc/bhFOr+6cOshdwPL
-   n8q2uXW+i4hG32pfHIHd5mPNeVSrp6MjoYSYXhupPHMoQ+Z3xXwbQ2VBf
-   mA0I7VynX5zot5kwJRMbEByTb1S9UgqEQaM1PyTxZTBI3FZ/w8Xvvimz0
-   U9FPvQE4XEpItry6G2dVXolBebnLuGQI8MPnuj62L2qvX2wucGTewO+1C
-   IEpEWZeju5wzAX6kXA6OV4WOCKR+sXZyteOa+mXqAOoCS6Xm8BOfzI3v3
-   lpxv8DH5B20PLawetymBwuXGJDLjLaq6ANFh7eqFUHaiuQzXYRzdoyUyh
-   w==;
-X-CSE-ConnectionGUID: I6z5UuCjRqibpjc9eQsgGA==
-X-CSE-MsgGUID: nPr6OnslSEy7d5cChwxTvA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="76291448"
-X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="76291448"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 07:51:29 -0800
-X-CSE-ConnectionGUID: YIWMoTgQSrSm1OTHkT6tHA==
-X-CSE-MsgGUID: kXDnHojKQ9OXUY9Ogoso2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="191127733"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.109.179]) ([10.125.109.179])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 07:51:28 -0800
-Message-ID: <01438ef7-c97b-4a20-9b65-7ae0958db213@intel.com>
-Date: Wed, 19 Nov 2025 08:51:27 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LW0dDffr"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DLrAMknfRG5eH+8glq01otYb7LRFfFE4OiQNzPY44QQP7q/CAX2qQzqTXQ78tbISa/X/p+qxlfmg83e9HQHxLoVMcP81W5qmIW8d3O20hTfLg+gdcd/e/bi5ZxC1HDJV6DePeWZqBMpRFjXqIsKPA+v3tbQuivMgenIa1g85LNJB5MH4Nx90gPctbaTnLHQHkyT82yxfI4XzQgAOEjipcfVzVk8QJ1at2+L/we/Z1goWTH6WG3fddQY/wdKgec1zJOnvxmjUCNtTA/eBdInT2oKni6Tf/bgh8imYLRUUAG9iM1InPcA5jrPJ/V2IVsYTwnl5jjDkKesfJmtQsPp/oQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0S7A719ujXZT4mkFaF/ITNQJPCOtMy4Tpk/e1N3ERZE=;
+ b=E/sSD1aFEluy58nDGMf18I/mj4/WoMy8jTS71hta/eo8qq+BG37+F+idcXDzXNcuRvhtbC4QJagUP/CETPG4It8h7eQwzputFx0KP3rscsjX3hAuzHvs9SibLEgnew0kD43yvceOzZLCSGLr7kIhDSZ/eRJIMo1vQVrCrnB7HLi2WmxtNSz+Ut9AQcMOPwvSsdFz28+/D7zReiS/mlOgzdtbvlYtV6I9HuySpilk0WLOA2BZQrBgW5EQkBKJTPVjRSoPyd6obCwr3mq+ON0d6K3QFRZLWMylRKCGK0sBmdwvGgx+W+QO82feNIzfD7X4G4r1BPqh9fjq4LDr0U8kLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0S7A719ujXZT4mkFaF/ITNQJPCOtMy4Tpk/e1N3ERZE=;
+ b=LW0dDffr0DbIyIaANtAMpQbSvyFXLoSGR+UGgN1a3Nwf43SR9Q0uXf7xUjcUyF2TSlwdaECTYE8swpIgzQHfIrHx5hFNsjVmsXWGHWWL/VMQZvW+ezf6/YfD9SvA2TL4UJXSXlqSDuEFzEdz0seFXPXhGQkNQ9FE//ajgIppmz4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH8PR12MB9766.namprd12.prod.outlook.com (2603:10b6:610:2b6::10)
+ by SN7PR12MB7106.namprd12.prod.outlook.com (2603:10b6:806:2a1::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.13; Wed, 19 Nov
+ 2025 15:56:00 +0000
+Received: from CH8PR12MB9766.namprd12.prod.outlook.com
+ ([fe80::499:541e:a7d8:8c14]) by CH8PR12MB9766.namprd12.prod.outlook.com
+ ([fe80::499:541e:a7d8:8c14%5]) with mapi id 15.20.9343.009; Wed, 19 Nov 2025
+ 15:56:00 +0000
+Message-ID: <930fcd64-92b2-462c-8301-6c753f41c498@amd.com>
+Date: Wed, 19 Nov 2025 09:55:56 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND v13 02/25] PCI/CXL: Introduce pcie_is_cxl()
+To: dan.j.williams@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, bhelgaas@google.com,
+ shiju.jose@huawei.com, ming.li@zohomail.com,
+ Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+ dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+ lukas@wunner.de, Benjamin.Cheatham@amd.com,
+ sathyanarayanan.kuppuswamy@linux.intel.com, linux-cxl@vger.kernel.org,
+ alucerop@amd.com, ira.weiny@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20251104170305.4163840-1-terry.bowman@amd.com>
+ <20251104170305.4163840-3-terry.bowman@amd.com>
+ <691d375d78bd8_1a37510040@dwillia2-mobl4.notmuch>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <691d375d78bd8_1a37510040@dwillia2-mobl4.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN6PR05CA0034.namprd05.prod.outlook.com
+ (2603:10b6:805:de::47) To CH8PR12MB9766.namprd12.prod.outlook.com
+ (2603:10b6:610:2b6::10)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 03/17] nvdimm/label: Add namespace/region label support
- as per LSA 2.1
-To: Neeraj Kumar <s.neeraj@samsung.com>, linux-cxl@vger.kernel.org,
- nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org, gost.dev@samsung.com
-Cc: a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com
-References: <20251119075255.2637388-1-s.neeraj@samsung.com>
- <CGME20251119075311epcas5p1af6f86ca65fd4a8452979e861b87a841@epcas5p1.samsung.com>
- <20251119075255.2637388-4-s.neeraj@samsung.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20251119075255.2637388-4-s.neeraj@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH8PR12MB9766:EE_|SN7PR12MB7106:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7ddb9471-1410-49a8-0600-08de27842258
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?THlXTmRpTVpJSm9adGdvNVV0Y1hncFVMcTUvK2t3STUxbFU2NFpOcmFncCtB?=
+ =?utf-8?B?c0lQZ2R1ZHNsWHhFUnlud3Y5ZDVkQXdqVjdjdFFWZ0gvWEhaWkJFaDdWc3Iw?=
+ =?utf-8?B?VCtLeFlrRWFaNlVYSGpISTBIQ1RwL05sbHhoOUEwbWhnOU90Q0o0TWNOeFJG?=
+ =?utf-8?B?MHExaGxLdDdzOHZNbFNzQ1YxMTVJVzNURlVMclpGUVhQbnMxWnc0eDZDSHJp?=
+ =?utf-8?B?YnRkcDl0WXdid1Rtc1ZpdThWbjJCNkNGMy9ZN3RxeUovdlkxckpPSlpLM2h1?=
+ =?utf-8?B?RXAzTnUvdnZ6OHFvRWMyWVRxMGY0T0p2R04rblVIKzRUM0VzczNHYmU2bG15?=
+ =?utf-8?B?QkNjNmFnVXFLVEdORGFLUStFZm4xQjgvRmFaQWxEZHZkQWpjVVk4bEtiRXhE?=
+ =?utf-8?B?WnZEK0FYK0VHaEpIZmQwcStsSWpMY3QxUVpOWlFVZ1IyOTdITGlMdHR6QVV5?=
+ =?utf-8?B?cTlVTTdQcTdtNHhiWXZRa1graGgxckJ3aHp2RTBYYkZpektzZUc3VTBZcXFG?=
+ =?utf-8?B?RkJGY3htcVV1aWprenM2UzBpNlNJT0RhdGU0ZHdwUUZkNENTd1ZjbCtzU21Z?=
+ =?utf-8?B?Y1pMY3RkSFJsRzRVMDh1YytCeWtOYmVtYmhXS2FvNHJ6bExPc1RiQWY1SXJU?=
+ =?utf-8?B?M1VFMEE2QzhUWjVQMmhvWDVDcVk0dFpzTlFRMWc3TVRxcWN1VE1Yb2UwV1RM?=
+ =?utf-8?B?dmNFV29SY3B5M3UrYUExdk9uckhRSGRraWRwbnZEbmZVR3lwbkxEWTJldE1I?=
+ =?utf-8?B?QVJjZXlsdERpZGdoQnhjYzFlU1dmUjkzTkYzR3JudHl2Q1B6TEIrVG9GYjRN?=
+ =?utf-8?B?Z1JDNjgyUWJlNzlaSDUyM0hyeVR4TzVjWU9GNStNTFM1clFBYkhZK25MSE02?=
+ =?utf-8?B?Y3A5anphRnlmWGNLWjl1M2RMSlVwVktoMmNZbmtEemNjQWNqMjk3OUhNcXh0?=
+ =?utf-8?B?TTM0cW00Z0F5L0M4YXFHWkhISTJ1cGNrUmUzb0tydjVLS0M1ck9KTDdUeG8v?=
+ =?utf-8?B?MS9BVFRVa3hKSnBUeEFxeVdBbjNoL1NiczZROXZDUmtzaWNRTSs4WnFQMGZV?=
+ =?utf-8?B?bllFVHlCNjdwZUhUYkxYbUFrMDBXYlQ0NkxHN2dSZmhSdGVsNkoycUpsdGdS?=
+ =?utf-8?B?Q0wvQUdFTFh4TVZoaEFlanpzTEhuZEFIR2JTb1M3S250clBtTmFSaFdtb3Er?=
+ =?utf-8?B?c3RuT09LdW1adFhOaWFraFRzOFV0MXJZSUlwbElkbzQwYWx4b3N2MkwySlVa?=
+ =?utf-8?B?S2NtWDBYZUttaHg0Uy9wZFZJMUwwTDdwWFBXWG1LSE9hazdwUE0vbEFQck1z?=
+ =?utf-8?B?b0NJZCtxNlRCN1E0azF0YmJhOVpYRWcvRlFQS0d0aFU2YTJ0Y3JkOFZGQ2ho?=
+ =?utf-8?B?aDZ3RU0yMWhsVlp3TjY3cE9ZQTVpaHRES1JQdis1TlpqVjBsWjE0d0dzbVFw?=
+ =?utf-8?B?M1pEd2Q1Q2FqYkhIYzNkWUtzUm1yekVUSks4dlV3SlpRRVUzc0xWYmJvd0Fx?=
+ =?utf-8?B?MHBEelJnWkZLS20zVEwyK0Q3dXVhSitBQ1JqczRua3Vmcm5JemlCQ3g2MmJi?=
+ =?utf-8?B?bE92UEpnWlo3L2VmUzZ3RTU3NEJYa0NDdm9kN2F0Q1JrMGMyZU4wUDBUbXB6?=
+ =?utf-8?B?RHZBcEpUOFhxdlRKOS9aUGlDN2hWbVNmRlNFbVR1YWdwUXlHbHBxallmWEI4?=
+ =?utf-8?B?UXdJOXNWcTVxL2p1aHpoY1hxYzhZdFFuTW1tZjFzNlY4dTc1dXVNQUhubVNZ?=
+ =?utf-8?B?UkxhWEVDdW9sd0RDMEk1Y1B3SDRCTVVsRXcwNk1NcTFpckFEeTRMeUpsdXQw?=
+ =?utf-8?B?ZVdFemMwU1BmM3FuUWcxMUdqY2VnMVo3TUFKR0NBUmhpOWQ3WEZUcmFkUnVo?=
+ =?utf-8?B?SHdHRjM3TXR0SEdqc0xiZHpTTDRyWFFVRm0yczB4SkZHU1RJNGZUbUNQWGtO?=
+ =?utf-8?B?WWFjeExHQjFkaS9ReFJrUFgzaHhCSy81THJKbThFWVpyNndCTFd1dWdKblow?=
+ =?utf-8?Q?5Kvk7NzCyd4JwO6O2PqtMLixguwKOM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH8PR12MB9766.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MnRVSmk0Um82anNaWUNsWW93NGJUcWJpMDJrcFBsOE5sOXVaOVpRWTB4NjVD?=
+ =?utf-8?B?c29kSEcwWXBXUkcxZ20vQTNQcHJOa3lkRXl4VnU2eG9VR1dMRWNJNGN2bFRT?=
+ =?utf-8?B?QUVmTVJDRW1ucERUdXVjVXZKaWlpeU5xOE9WbmQ3VGwrOUU0aVJhbS9QQllJ?=
+ =?utf-8?B?ZDVudmorVzF0SXNmZjBYYmtQbkx4K3NpcnFZazJvNS9kUDRPNUdBcU5XSmJ1?=
+ =?utf-8?B?SnpNUXMwK3h0Sk4wN2R0THVjUWQraG93bGdERlZkWndQMitOLzQvM3lzVFIz?=
+ =?utf-8?B?UjBXYzBtY3JqMnJkeS9SMENLU2pIdFRWM1dOUkExcUlPVDdoU3F3MXhORnRS?=
+ =?utf-8?B?dTF1NmZMTTd1QmNUeWJiR1hIVlJoRWV2U1Faanl4WWRUandNUXRLR0pmSVhu?=
+ =?utf-8?B?TUlNaS9UNllWQ2tpSENTZ3N5OUwybmJDVHhDOGhIRnVYM040S3lWODkrWlBK?=
+ =?utf-8?B?Tktqa2R1TVRiK3F5YUJsY2ZjWEVXSmFJZDlPeExyRS9icHlVMDZteW82djdH?=
+ =?utf-8?B?Ryt4bnBMdWZ4VVBsVFdEMEdpMW90bFJFY2J1M1BLRFRCYkZSU01LWEZqVWQ3?=
+ =?utf-8?B?RHU4ODhSSVhLWVR1eWF4UW5ERHlLUW1SdVNhVE43TE4zSHJZeVJZdjhzRjFL?=
+ =?utf-8?B?T1VTN1BTcS9JRVBTeXUyakVzbFRObTFYd0xCR2FpR0NXTW42MjZzUHpnTHNm?=
+ =?utf-8?B?blRTTGtOVjJsNEhtNkhZa2cxTDgzc09TMFNaNEJsZU5USVFrV1VHSmtZWm4x?=
+ =?utf-8?B?bFZld2xJS2xZajh5enhBd0w4eVNTYzkxWnVMc1V3dHlZbWpIa01oaHY1RTZ6?=
+ =?utf-8?B?RTJObS9pN2d1ZlJic1RjN2hSQzRzdFU5cVlMR2FQVXJPM2E5ZFBTdnErUEx6?=
+ =?utf-8?B?aVBwcWZqZ1d5VEEzN2dXZEFnQjZRR3F6TWtaY000NGF3dVRTZ1JRY1hYSSt1?=
+ =?utf-8?B?ZUI4TWhwckdZOHo5akRpWVZsbWV4NXBhQWNVTzVOWlg1RVBRb1dkNDVsNHVs?=
+ =?utf-8?B?QmdPcEVNU3NEczh6ODEwek9LRmVYU0pCUGZQQUJBYVpoY29kNkwzTEZ2VlN4?=
+ =?utf-8?B?cVIwOHNKbFdZLzlJWlZ2RmRuZnVzSU5xdFlBWHlsVHBvMUsrYVJzZHZERS9s?=
+ =?utf-8?B?My9wbDRYTFp0UFpHajlhQXdzeE9Rc0tSN2dCaUJvcm1PeTFVVU5aSjk1a0Qr?=
+ =?utf-8?B?V0UxUnZMMVh5c2pvT0E4NmREVGE0ZUNoN1RyYWltZzNsQTRUQ0t0citCYy9Y?=
+ =?utf-8?B?ODZPZ0dsWmRaUlNLVktaNTZjVmVzSi9VVmlYcUNRVE9sblpGNEx3a0U1bmFZ?=
+ =?utf-8?B?bGFkWk1BZVFqT3lrYUtteHFhWlgzUmE3MEJqVlc1QTExWVI4VXFIVGlnUXgz?=
+ =?utf-8?B?OEJpR3FPQkFGSGtMankwK0NvWTIzWkFGblAzd1VRS1dZUkFkTGhVWHhSZXRB?=
+ =?utf-8?B?dWFLM3g4Y3VORUIzaGZ6YzZRLytlQW1kMkFSUGc2S09UYVU0RVRQZVJsR3hl?=
+ =?utf-8?B?c2RFS2lNcTYrVnpjbUNPeDJTdWtYbytreHFuNDAyRld4aVhvMGp3eW5aZ0RF?=
+ =?utf-8?B?bDlOdzFYZENtb3VjenF3UVRpSmNibUNnbVRDdHJ1Ri9qa3YvQzVLbnhqVHVS?=
+ =?utf-8?B?NGUxYlRNNklRWGJPMm9JTUNteWhOeHNTR201N3dleC8zTDNLS2NvWnQ1UjVO?=
+ =?utf-8?B?bnJjMFdxd2pGUGdDK1FXWFA4aGJTRm0rVU9DUDlHaDFjczhaWFJDQVBhd0Zn?=
+ =?utf-8?B?dkVZbjhyMHo2NWNhR1JsNlpvV0RwV0NRZEg5U2h2RUhzbkt2OVBXQjVkQ1RG?=
+ =?utf-8?B?NFFsUW1vSlhnMlJ2VmkzODZqZ1JOYzQrWVhrNk5wYnZ1RlNSZjkvR0VERjJC?=
+ =?utf-8?B?VXZGeDk4M29XaEplRHBDcTRNUklLLzh6NVBjQnlPSWFheEZJbmhFTU4xUFpj?=
+ =?utf-8?B?QVAwMjJFbG0vbFY0V1FoREFGU3BUNXNwTi96RmpMWStCb0o5MWQvSXhRZTN5?=
+ =?utf-8?B?REd1aytmakYxdWRBb213c0o5RFhFQUwxbEp5ZW5hbVFpd01jT2Jyek9IQlYw?=
+ =?utf-8?B?Vk5TZlNYSDZWYXhTZmNKSVFDWENWMFdxTUE1QncyN0VoWGdFOUtGbjk3TXlB?=
+ =?utf-8?Q?pglansVHfLOXki95P7+udYETs?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ddb9471-1410-49a8-0600-08de27842258
+X-MS-Exchange-CrossTenant-AuthSource: CH8PR12MB9766.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2025 15:56:00.0317
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: odlPOE5QVJG2Hj3E8enMmBY3Z4M/CBbAl61gfJSpaH7eXIm1EuIlrFrAFgKyosLfjqimDTAuZXltBAMay8zxIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7106
 
 
 
-On 11/19/25 12:52 AM, Neeraj Kumar wrote:
-> Modify __pmem_label_update() to update region labels into LSA
-> 
-> CXL 3.2 Spec mentions CXL LSA 2.1 Namespace Labels at section 9.13.2.5
-> Modified __pmem_label_update() using setter functions to update
-> namespace label as per CXL LSA 2.1
-> 
-> Create export routine nd_region_label_update() used for creating
-> region label into LSA. It will be used later from CXL subsystem
-> 
-> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+On 11/18/2025 9:19 PM, dan.j.williams@intel.com wrote:
+> Terry Bowman wrote:
+>> CXL and AER drivers need the ability to identify CXL devices.
+>>
+>> Introduce set_pcie_cxl() with logic checking for CXL.mem or CXL.cache
+>> status in the CXL Flexbus DVSEC status register. The CXL Flexbus DVSEC
+>> presence is used because it is required for all the CXL PCIe devices.[1]
+>>
+>> Add boolean 'struct pci_dev::is_cxl' with the purpose to cache the CXL
+>> CXL.cache and CXl.mem status.
+>>
+>> In the case the device is an EP or USP, call set_pcie_cxl() on behalf of
+>> the parent downstream device. Once a device is created there is
+>> possibilty the parent training or CXL state was updated as well. This
+>> will make certain the correct parent CXL state is cached.
+>>
+>> Add function pcie_is_cxl() to return 'struct pci_dev::is_cxl'.
+>>
+>> [1] CXL 3.1 Spec, 8.1.1 PCIe Designated Vendor-Specific Extended
+>>     Capability (DVSEC) ID Assignment, Table 8-2
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+>> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Reviewed-by: Alejandro Lucero <alucerop@amd.com>
+>> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+>>
+>> ---
+>>
+>> Changes in v12->v13:
+>> - Add Ben's "reviewed-by"
+>>
+>> Changes in v11->v12:
+>> - Add review-by for Alejandro
+>> - Add comment in set_pcie_cxl() explaining why updating parent status.
+>>
+>> Changes in v10->v11:
+>> - Amend set_pcie_cxl() to check for Upstream Port's and EP's parent
+>>   downstream port by calling set_pcie_cxl(). (Dan)
+>> - Retitle patch: 'Add' -> 'Introduce'
+>> - Add check for CXL.mem and CXL.cache (Alejandro, Dan)
+> [..]
+>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>> index 0ce98e18b5a8..63124651f865 100644
+>> --- a/drivers/pci/probe.c
+>> +++ b/drivers/pci/probe.c
+>> @@ -1709,6 +1709,33 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
+>>  		dev->is_thunderbolt = 1;
+>>  }
+>>  
+>> +static void set_pcie_cxl(struct pci_dev *dev)
+>> +{
+>> +	struct pci_dev *parent;
+>> +	u16 dvsec = pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
+>> +					      PCI_DVSEC_CXL_FLEXBUS_PORT);
+>> +	if (dvsec) {
+>> +		u16 cap;
+>> +
+>> +		pci_read_config_word(dev, dvsec + PCI_DVSEC_CXL_FLEXBUS_STATUS_OFFSET, &cap);
+>> +
+>> +		dev->is_cxl = FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_STATUS_CACHE_MASK, cap) ||
+>> +			FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_STATUS_MEM_MASK, cap);
+>> +	}
+>> +
+>> +	if (!pci_is_pcie(dev) ||
+>> +	    !(pci_pcie_type(dev) == PCI_EXP_TYPE_ENDPOINT ||
+>> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM))
+>> +		return;
+> Why are downstream ports excluded?
+I thought we only need to check the upstream 'parent' if dev is an EP 
+or USP as those are the only PCIe types in CXL that interface directly 
+to the upstream dport device. And its the upstream dport device that must 
+be checked to ensure it has the correct is_cxl setting. 
 
-A few nits below, otherwise
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Do I need to update is_cxl for USP in the case of DSP-USP topology? 
+
+Terry
+>> +
+>> +	/*
+>> +	 * Update parent's CXL state because alternate protocol training
+>> +	 * may have changed
+>> +	 */
+>> +	parent = pci_upstream_bridge(dev);
+> This parent is a downstream port...
 
 
-> ---
->  drivers/nvdimm/label.c          | 360 ++++++++++++++++++++++++++------
->  drivers/nvdimm/label.h          |  17 +-
->  drivers/nvdimm/namespace_devs.c |  25 ++-
->  drivers/nvdimm/nd.h             |  66 ++++++
->  include/linux/libnvdimm.h       |   8 +
->  5 files changed, 406 insertions(+), 70 deletions(-)
-> 
-> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-> index 0a9b6c5cb2c3..0d587a5b9f7e 100644
-> --- a/drivers/nvdimm/label.c
-> +++ b/drivers/nvdimm/label.c
-> @@ -22,8 +22,8 @@ static uuid_t nvdimm_btt2_uuid;
->  static uuid_t nvdimm_pfn_uuid;
->  static uuid_t nvdimm_dax_uuid;
->  
-> -static uuid_t cxl_region_uuid;
-> -static uuid_t cxl_namespace_uuid;
-> +uuid_t cxl_region_uuid;
-> +uuid_t cxl_namespace_uuid;
->  
->  static const char NSINDEX_SIGNATURE[] = "NAMESPACE_INDEX\0";
->  
-> @@ -278,15 +278,38 @@ static struct nd_namespace_label *nd_label_base(struct nvdimm_drvdata *ndd)
->  	return base + 2 * sizeof_namespace_index(ndd);
->  }
->  
-> +static unsigned long find_slot(struct nvdimm_drvdata *ndd,
-> +			       unsigned long label)
-> +{
-> +	unsigned long base;
-> +
-> +	base = (unsigned long) nd_label_base(ndd);
-
-No need for space after casting
-
-> +	return (label - base) / sizeof_namespace_label(ndd);
-> +}
-> +
-> +static int to_lsa_slot(struct nvdimm_drvdata *ndd,
-> +		       union nd_lsa_label *lsa_label)
-> +{
-> +	return find_slot(ndd, (unsigned long) lsa_label);
-> +}
-> +
->  static int to_slot(struct nvdimm_drvdata *ndd,
-> -		struct nd_namespace_label *nd_label)
-> +		   struct nd_label_ent *label_ent)
-> +{
-> +	if (uuid_equal(&cxl_region_uuid, &label_ent->label_uuid))
-> +		return find_slot(ndd, (unsigned long) label_ent->region_label);
-> +	else
-> +		return find_slot(ndd, (unsigned long) label_ent->label);
-> +}
-> +
-> +static union nd_lsa_label *to_lsa_label(struct nvdimm_drvdata *ndd, int slot)
->  {
->  	unsigned long label, base;
->  
-> -	label = (unsigned long) nd_label;
->  	base = (unsigned long) nd_label_base(ndd);
-> +	label = base + sizeof_namespace_label(ndd) * slot;
->  
-> -	return (label - base) / sizeof_namespace_label(ndd);
-> +	return (union nd_lsa_label *) label;
->  }
->  
->  static struct nd_namespace_label *to_label(struct nvdimm_drvdata *ndd, int slot)
-> @@ -381,6 +404,16 @@ static void nsl_calculate_checksum(struct nvdimm_drvdata *ndd,
->  	nsl_set_checksum(ndd, nd_label, sum);
->  }
->  
-> +static void region_label_calculate_checksum(struct nvdimm_drvdata *ndd,
-> +				   struct cxl_region_label *region_label)
-> +{
-> +	u64 sum;
-> +
-> +	region_label_set_checksum(region_label, 0);
-> +	sum = nd_fletcher64(region_label, sizeof_namespace_label(ndd), 1);
-> +	region_label_set_checksum(region_label, sum);
-> +}
-> +
->  static bool slot_valid(struct nvdimm_drvdata *ndd,
->  		struct nd_namespace_label *nd_label, u32 slot)
->  {
-> @@ -584,7 +617,7 @@ int nd_label_active_count(struct nvdimm_drvdata *ndd)
->  	return count;
->  }
->  
-> -struct nd_namespace_label *nd_label_active(struct nvdimm_drvdata *ndd, int n)
-> +union nd_lsa_label *nd_label_active(struct nvdimm_drvdata *ndd, int n)
->  {
->  	struct nd_namespace_index *nsindex;
->  	unsigned long *free;
-> @@ -601,7 +634,7 @@ struct nd_namespace_label *nd_label_active(struct nvdimm_drvdata *ndd, int n)
->  			continue;
->  
->  		if (n-- == 0)
-> -			return to_label(ndd, slot);
-> +			return to_lsa_label(ndd, slot);
->  	}
->  
->  	return NULL;
-> @@ -737,9 +770,9 @@ static int nd_label_write_index(struct nvdimm_drvdata *ndd, int index, u32 seq,
->  }
->  
->  static unsigned long nd_label_offset(struct nvdimm_drvdata *ndd,
-> -		struct nd_namespace_label *nd_label)
-> +		union nd_lsa_label *lsa_label)
->  {
-> -	return (unsigned long) nd_label
-> +	return (unsigned long) lsa_label
->  		- (unsigned long) to_namespace_index(ndd, 0);
->  }
->  
-> @@ -823,11 +856,15 @@ static void reap_victim(struct nd_mapping *nd_mapping,
->  		struct nd_label_ent *victim)
->  {
->  	struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
-> -	u32 slot = to_slot(ndd, victim->label);
-> +	u32 slot = to_slot(ndd, victim);
->  
->  	dev_dbg(ndd->dev, "free: %d\n", slot);
->  	nd_label_free_slot(ndd, slot);
-> -	victim->label = NULL;
-> +
-> +	if (uuid_equal(&cxl_region_uuid, &victim->label_uuid))
-> +		victim->region_label = NULL;
-> +	else
-> +		victim->label = NULL;
->  }
->  
->  static void nsl_set_type_guid(struct nvdimm_drvdata *ndd,
-> @@ -884,26 +921,20 @@ enum nvdimm_claim_class nsl_get_claim_class(struct nvdimm_drvdata *ndd,
->  	return guid_to_nvdimm_cclass(&nd_label->efi.abstraction_guid);
->  }
->  
-> -static int __pmem_label_update(struct nd_region *nd_region,
-> -		struct nd_mapping *nd_mapping, struct nd_namespace_pmem *nspm,
-> -		int pos, unsigned long flags)
-> +static int namespace_label_update(struct nd_region *nd_region,
-> +				  struct nd_mapping *nd_mapping,
-> +				  struct nd_namespace_pmem *nspm,
-> +				  int pos, u64 flags,
-> +				  struct nd_namespace_label *ns_label,
-> +				  struct nd_namespace_index *nsindex,
-> +				  u32 slot)
->  {
->  	struct nd_namespace_common *ndns = &nspm->nsio.common;
->  	struct nd_interleave_set *nd_set = nd_region->nd_set;
->  	struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
-> -	struct nd_namespace_label *nd_label;
-> -	struct nd_namespace_index *nsindex;
-> -	struct nd_label_ent *label_ent;
->  	struct nd_label_id label_id;
->  	struct resource *res;
-> -	unsigned long *free;
-> -	u32 nslot, slot;
-> -	size_t offset;
->  	u64 cookie;
-> -	int rc;
-> -
-> -	if (!preamble_next(ndd, &nsindex, &free, &nslot))
-> -		return -ENXIO;
->  
->  	cookie = nd_region_interleave_set_cookie(nd_region, nsindex);
->  	nd_label_gen_id(&label_id, nspm->uuid, 0);
-> @@ -916,33 +947,150 @@ static int __pmem_label_update(struct nd_region *nd_region,
->  		return -ENXIO;
->  	}
->  
-> +	nsl_set_type(ndd, ns_label);
-> +	nsl_set_uuid(ndd, ns_label, nspm->uuid);
-> +	nsl_set_name(ndd, ns_label, nspm->alt_name);
-> +	nsl_set_flags(ndd, ns_label, flags);
-> +	nsl_set_nlabel(ndd, ns_label, nd_region->ndr_mappings);
-> +	nsl_set_nrange(ndd, ns_label, 1);
-> +	nsl_set_position(ndd, ns_label, pos);
-> +	nsl_set_isetcookie(ndd, ns_label, cookie);
-> +	nsl_set_rawsize(ndd, ns_label, resource_size(res));
-> +	nsl_set_lbasize(ndd, ns_label, nspm->lbasize);
-> +	nsl_set_dpa(ndd, ns_label, res->start);
-> +	nsl_set_slot(ndd, ns_label, slot);
-> +	nsl_set_alignment(ndd, ns_label, 0);
-> +	nsl_set_type_guid(ndd, ns_label, &nd_set->type_guid);
-> +	nsl_set_region_uuid(ndd, ns_label, &nd_set->uuid);
-> +	nsl_set_claim_class(ndd, ns_label, ndns->claim_class);
-> +	nsl_calculate_checksum(ndd, ns_label);
-> +	nd_dbg_dpa(nd_region, ndd, res, "\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static void region_label_update(struct nd_region *nd_region,
-> +				struct cxl_region_label *region_label,
-> +				struct nd_mapping *nd_mapping,
-> +				int pos, u64 flags, u32 slot)
-> +{
-> +	struct nd_interleave_set *nd_set = nd_region->nd_set;
-> +	struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
-> +
-> +	/* Set Region Label Format identification UUID */
-> +	uuid_copy((uuid_t *)region_label->type, &cxl_region_uuid);
-> +
-> +	/* Set Current Region Label UUID */
-> +	export_uuid(region_label->uuid, &nd_set->uuid);
-> +
-> +	region_label->flags = __cpu_to_le32(flags);
-> +	region_label->nlabel = __cpu_to_le16(nd_region->ndr_mappings);
-> +	region_label->position = __cpu_to_le16(pos);
-> +	region_label->dpa = __cpu_to_le64(nd_mapping->start);
-> +	region_label->rawsize = __cpu_to_le64(nd_mapping->size);
-> +	region_label->hpa = __cpu_to_le64(nd_set->res->start);
-> +	region_label->slot = __cpu_to_le32(slot);
-> +	region_label->ig = __cpu_to_le32(nd_set->interleave_granularity);
-> +	region_label->align = __cpu_to_le32(0);
-> +
-> +	/* Update fletcher64 Checksum */
-> +	region_label_calculate_checksum(ndd, region_label);
-> +}
-> +
-> +static bool is_label_reapable(struct nd_interleave_set *nd_set,
-> +			       struct nd_namespace_pmem *nspm,
-> +			       struct nvdimm_drvdata *ndd,
-> +			       struct nd_label_ent *label_ent,
-> +			       enum label_type ltype,
-> +			       unsigned long *flags)
-> +{
-> +	switch (ltype) {
-> +	case NS_LABEL_TYPE:
-> +		if (test_and_clear_bit(ND_LABEL_REAP, flags) ||
-> +		    nsl_uuid_equal(ndd, label_ent->label, nspm->uuid))
-> +			return true;
-> +
-> +		break;
-> +	case RG_LABEL_TYPE:
-> +		if (region_label_uuid_equal(label_ent->region_label,
-> +		    &nd_set->uuid))
-> +			return true;
-> +
-> +		break;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static bool is_label_present(struct nd_label_ent *label_ent,
-> +			     enum label_type ltype)
-> +{
-> +	switch (ltype) {
-> +	case NS_LABEL_TYPE:
-> +		if (label_ent->label)
-> +			return true;
-> +
-> +		break;
-> +	case RG_LABEL_TYPE:
-> +		if (label_ent->region_label)
-> +			return true;
-> +
-> +		break;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static int __pmem_label_update(struct nd_region *nd_region,
-> +			       struct nd_mapping *nd_mapping,
-> +			       struct nd_namespace_pmem *nspm,
-> +			       int pos, unsigned long flags,
-> +			       enum label_type ltype)
-> +{
-> +	struct nd_interleave_set *nd_set = nd_region->nd_set;
-> +	struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
-> +	struct nd_namespace_index *nsindex;
-> +	struct nd_label_ent *label_ent;
-> +	union nd_lsa_label *lsa_label;
-> +	unsigned long *free;
-> +	struct device *dev;
-> +	u32 nslot, slot;
-> +	size_t offset;
-> +	int rc;
-> +
-> +	if (!preamble_next(ndd, &nsindex, &free, &nslot))
-> +		return -ENXIO;
-> +
->  	/* allocate and write the label to the staging (next) index */
->  	slot = nd_label_alloc_slot(ndd);
->  	if (slot == UINT_MAX)
->  		return -ENXIO;
->  	dev_dbg(ndd->dev, "allocated: %d\n", slot);
->  
-> -	nd_label = to_label(ndd, slot);
-> -	memset(nd_label, 0, sizeof_namespace_label(ndd));
-> -	nsl_set_uuid(ndd, nd_label, nspm->uuid);
-> -	nsl_set_name(ndd, nd_label, nspm->alt_name);
-> -	nsl_set_flags(ndd, nd_label, flags);
-> -	nsl_set_nlabel(ndd, nd_label, nd_region->ndr_mappings);
-> -	nsl_set_nrange(ndd, nd_label, 1);
-> -	nsl_set_position(ndd, nd_label, pos);
-> -	nsl_set_isetcookie(ndd, nd_label, cookie);
-> -	nsl_set_rawsize(ndd, nd_label, resource_size(res));
-> -	nsl_set_lbasize(ndd, nd_label, nspm->lbasize);
-> -	nsl_set_dpa(ndd, nd_label, res->start);
-> -	nsl_set_slot(ndd, nd_label, slot);
-> -	nsl_set_type_guid(ndd, nd_label, &nd_set->type_guid);
-> -	nsl_set_claim_class(ndd, nd_label, ndns->claim_class);
-> -	nsl_calculate_checksum(ndd, nd_label);
-> -	nd_dbg_dpa(nd_region, ndd, res, "\n");
-> +	lsa_label = to_lsa_label(ndd, slot);
-> +	memset(lsa_label, 0, sizeof_namespace_label(ndd));
-> +
-> +	switch (ltype) {
-> +	case NS_LABEL_TYPE:
-> +		dev = &nspm->nsio.common.dev;
-> +		rc = namespace_label_update(nd_region, nd_mapping,
-> +				nspm, pos, flags, &lsa_label->ns_label,
-> +				nsindex, slot);
-> +		if (rc)
-> +			return rc;
-> +
-> +		break;
-> +	case RG_LABEL_TYPE:
-> +		dev = &nd_region->dev;
-> +		region_label_update(nd_region, &lsa_label->region_label,
-> +				    nd_mapping, pos, flags, slot);
-
-inconsistent tabbing this one vs the case above. Should pick the one that conforms to the rest of this file. And yeah I get it. The tab formatting under nvdimm is different than CXL and it's a pain going between the two.
-
-DJ
-
-> +
-> +		break;
-> +	}
->  
->  	/* update label */
-> -	offset = nd_label_offset(ndd, nd_label);
-> -	rc = nvdimm_set_config_data(ndd, offset, nd_label,
-> +	offset = nd_label_offset(ndd, lsa_label);
-> +	rc = nvdimm_set_config_data(ndd, offset, lsa_label,
->  			sizeof_namespace_label(ndd));
->  	if (rc < 0)
->  		return rc;
-> @@ -950,10 +1098,11 @@ static int __pmem_label_update(struct nd_region *nd_region,
->  	/* Garbage collect the previous label */
->  	mutex_lock(&nd_mapping->lock);
->  	list_for_each_entry(label_ent, &nd_mapping->labels, list) {
-> -		if (!label_ent->label)
-> +		if (!is_label_present(label_ent, ltype))
->  			continue;
-> -		if (test_and_clear_bit(ND_LABEL_REAP, &label_ent->flags) ||
-> -		    nsl_uuid_equal(ndd, label_ent->label, nspm->uuid))
-> +
-> +		if (is_label_reapable(nd_set, nspm, ndd, label_ent, ltype,
-> +				      &label_ent->flags))
->  			reap_victim(nd_mapping, label_ent);
->  	}
->  
-> @@ -961,16 +1110,21 @@ static int __pmem_label_update(struct nd_region *nd_region,
->  	rc = nd_label_write_index(ndd, ndd->ns_next,
->  			nd_inc_seq(__le32_to_cpu(nsindex->seq)), 0);
->  	if (rc == 0) {
-> -		list_for_each_entry(label_ent, &nd_mapping->labels, list)
-> -			if (!label_ent->label) {
-> -				label_ent->label = nd_label;
-> -				nd_label = NULL;
-> -				break;
-> -			}
-> -		dev_WARN_ONCE(&nspm->nsio.common.dev, nd_label,
-> -				"failed to track label: %d\n",
-> -				to_slot(ndd, nd_label));
-> -		if (nd_label)
-> +		list_for_each_entry(label_ent, &nd_mapping->labels, list) {
-> +			if (is_label_present(label_ent, ltype))
-> +				continue;
-> +
-> +			if (ltype == NS_LABEL_TYPE)
-> +				label_ent->label = &lsa_label->ns_label;
-> +			else
-> +				label_ent->region_label = &lsa_label->region_label;
-> +
-> +			lsa_label = NULL;
-> +			break;
-> +		}
-> +		dev_WARN_ONCE(dev, lsa_label, "failed to track label: %d\n",
-> +			      to_lsa_slot(ndd, lsa_label));
-> +		if (lsa_label)
->  			rc = -ENXIO;
->  	}
->  	mutex_unlock(&nd_mapping->lock);
-> @@ -978,7 +1132,8 @@ static int __pmem_label_update(struct nd_region *nd_region,
->  	return rc;
->  }
->  
-> -static int init_labels(struct nd_mapping *nd_mapping, int num_labels)
-> +static int init_labels(struct nd_mapping *nd_mapping, int num_labels,
-> +		       enum label_type ltype)
->  {
->  	int i, old_num_labels = 0;
->  	struct nd_label_ent *label_ent;
-> @@ -998,6 +1153,16 @@ static int init_labels(struct nd_mapping *nd_mapping, int num_labels)
->  		label_ent = kzalloc(sizeof(*label_ent), GFP_KERNEL);
->  		if (!label_ent)
->  			return -ENOMEM;
-> +
-> +		switch (ltype) {
-> +		case NS_LABEL_TYPE:
-> +			uuid_copy(&label_ent->label_uuid, &cxl_namespace_uuid);
-> +			break;
-> +		case RG_LABEL_TYPE:
-> +			uuid_copy(&label_ent->label_uuid, &cxl_region_uuid);
-> +			break;
-> +		}
-> +
->  		mutex_lock(&nd_mapping->lock);
->  		list_add_tail(&label_ent->list, &nd_mapping->labels);
->  		mutex_unlock(&nd_mapping->lock);
-> @@ -1041,19 +1206,19 @@ static int del_labels(struct nd_mapping *nd_mapping, uuid_t *uuid)
->  
->  	mutex_lock(&nd_mapping->lock);
->  	list_for_each_entry_safe(label_ent, e, &nd_mapping->labels, list) {
-> -		struct nd_namespace_label *nd_label = label_ent->label;
-> -
-> -		if (!nd_label)
-> +		if (label_ent->label)
->  			continue;
->  		active++;
-> -		if (!nsl_uuid_equal(ndd, nd_label, uuid))
-> +		if (!nsl_uuid_equal(ndd, label_ent->label, uuid))
->  			continue;
->  		active--;
-> -		slot = to_slot(ndd, nd_label);
-> +		slot = to_slot(ndd, label_ent);
->  		nd_label_free_slot(ndd, slot);
->  		dev_dbg(ndd->dev, "free: %d\n", slot);
->  		list_move_tail(&label_ent->list, &list);
-> -		label_ent->label = NULL;
-> +
-> +		if (uuid_equal(&cxl_namespace_uuid, &label_ent->label_uuid))
-> +			label_ent->label = NULL;
->  	}
->  	list_splice_tail_init(&list, &nd_mapping->labels);
->  
-> @@ -1067,6 +1232,19 @@ static int del_labels(struct nd_mapping *nd_mapping, uuid_t *uuid)
->  			nd_inc_seq(__le32_to_cpu(nsindex->seq)), 0);
->  }
->  
-> +static int find_region_label_count(struct nd_mapping *nd_mapping)
-> +{
-> +	struct nd_label_ent *label_ent;
-> +	int region_label_cnt = 0;
-> +
-> +	guard(mutex)(&nd_mapping->lock);
-> +	list_for_each_entry(label_ent, &nd_mapping->labels, list)
-> +		if (uuid_equal(&cxl_region_uuid, &label_ent->label_uuid))
-> +			region_label_cnt++;
-> +
-> +	return region_label_cnt;
-> +}
-> +
->  int nd_pmem_namespace_label_update(struct nd_region *nd_region,
->  		struct nd_namespace_pmem *nspm, resource_size_t size)
->  {
-> @@ -1075,6 +1253,7 @@ int nd_pmem_namespace_label_update(struct nd_region *nd_region,
->  	for (i = 0; i < nd_region->ndr_mappings; i++) {
->  		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
->  		struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
-> +		int region_label_cnt = 0;
->  		struct resource *res;
->  		int count = 0;
->  
-> @@ -1090,12 +1269,20 @@ int nd_pmem_namespace_label_update(struct nd_region *nd_region,
->  				count++;
->  		WARN_ON_ONCE(!count);
->  
-> -		rc = init_labels(nd_mapping, count);
-> +		region_label_cnt = find_region_label_count(nd_mapping);
-> +		/*
-> +		 * init_labels() scan labels and allocate new label based
-> +		 * on its second parameter (num_labels). Therefore to
-> +		 * allocate new namespace label also include previously
-> +		 * added region label
-> +		 */
-> +		rc = init_labels(nd_mapping, count + region_label_cnt,
-> +				 NS_LABEL_TYPE);
->  		if (rc < 0)
->  			return rc;
->  
->  		rc = __pmem_label_update(nd_region, nd_mapping, nspm, i,
-> -				NSLABEL_FLAG_UPDATING);
-> +				NSLABEL_FLAG_UPDATING, NS_LABEL_TYPE);
->  		if (rc)
->  			return rc;
->  	}
-> @@ -1107,7 +1294,48 @@ int nd_pmem_namespace_label_update(struct nd_region *nd_region,
->  	for (i = 0; i < nd_region->ndr_mappings; i++) {
->  		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
->  
-> -		rc = __pmem_label_update(nd_region, nd_mapping, nspm, i, 0);
-> +		rc = __pmem_label_update(nd_region, nd_mapping, nspm, i, 0,
-> +				NS_LABEL_TYPE);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int nd_pmem_region_label_update(struct nd_region *nd_region)
-> +{
-> +	int i, rc;
-> +
-> +	for (i = 0; i < nd_region->ndr_mappings; i++) {
-> +		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
-> +		struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
-> +		int region_label_cnt = 0;
-> +
-> +		/* No need to update region label for non cxl format */
-> +		if (!ndd->cxl)
-> +			return 0;
-> +
-> +		region_label_cnt = find_region_label_count(nd_mapping);
-> +		rc = init_labels(nd_mapping, region_label_cnt + 1,
-> +				 RG_LABEL_TYPE);
-> +		if (rc < 0)
-> +			return rc;
-> +
-> +		rc = __pmem_label_update(nd_region, nd_mapping, NULL, i,
-> +				NSLABEL_FLAG_UPDATING, RG_LABEL_TYPE);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	/* Clear the UPDATING flag per UEFI 2.7 expectations */
-> +	for (i = 0; i < nd_region->ndr_mappings; i++) {
-> +		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
-> +		struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
-> +
-> +		WARN_ON_ONCE(!ndd->cxl);
-> +		rc = __pmem_label_update(nd_region, nd_mapping, NULL, i, 0,
-> +				RG_LABEL_TYPE);
->  		if (rc)
->  			return rc;
->  	}
-> diff --git a/drivers/nvdimm/label.h b/drivers/nvdimm/label.h
-> index 0650fb4b9821..f11f54056353 100644
-> --- a/drivers/nvdimm/label.h
-> +++ b/drivers/nvdimm/label.h
-> @@ -30,6 +30,11 @@ enum {
->  	ND_NSINDEX_INIT = 0x1,
->  };
->  
-> +enum label_type {
-> +	RG_LABEL_TYPE,
-> +	NS_LABEL_TYPE,
-> +};
-> +
->  /**
->   * struct nd_namespace_index - label set superblock
->   * @sig: NAMESPACE_INDEX\0
-> @@ -183,6 +188,15 @@ struct nd_namespace_label {
->  	};
->  };
->  
-> +/*
-> + * LSA 2.1 format introduces region label, which can also reside
-> + * into LSA along with only namespace label as per v1.1 and v1.2
-> + */
-> +union nd_lsa_label {
-> +	struct nd_namespace_label ns_label;
-> +	struct cxl_region_label region_label;
-> +};
-> +
->  #define NVDIMM_BTT_GUID "8aed63a2-29a2-4c66-8b12-f05d15d3922a"
->  #define NVDIMM_BTT2_GUID "18633bfc-1735-4217-8ac9-17239282d3f8"
->  #define NVDIMM_PFN_GUID "266400ba-fb9f-4677-bcb0-968f11d0d225"
-> @@ -215,7 +229,7 @@ struct nvdimm_drvdata;
->  int nd_label_data_init(struct nvdimm_drvdata *ndd);
->  size_t sizeof_namespace_index(struct nvdimm_drvdata *ndd);
->  int nd_label_active_count(struct nvdimm_drvdata *ndd);
-> -struct nd_namespace_label *nd_label_active(struct nvdimm_drvdata *ndd, int n);
-> +union nd_lsa_label *nd_label_active(struct nvdimm_drvdata *ndd, int n);
->  u32 nd_label_alloc_slot(struct nvdimm_drvdata *ndd);
->  bool nd_label_free_slot(struct nvdimm_drvdata *ndd, u32 slot);
->  u32 nd_label_nfree(struct nvdimm_drvdata *ndd);
-> @@ -223,4 +237,5 @@ struct nd_region;
->  struct nd_namespace_pmem;
->  int nd_pmem_namespace_label_update(struct nd_region *nd_region,
->  		struct nd_namespace_pmem *nspm, resource_size_t size);
-> +int nd_pmem_region_label_update(struct nd_region *nd_region);
->  #endif /* __LABEL_H__ */
-> diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-> index 43fdb806532e..b1abbe602a5e 100644
-> --- a/drivers/nvdimm/namespace_devs.c
-> +++ b/drivers/nvdimm/namespace_devs.c
-> @@ -232,6 +232,18 @@ static ssize_t __alt_name_store(struct device *dev, const char *buf,
->  	return rc;
->  }
->  
-> +int nd_region_label_update(struct nd_region *nd_region)
-> +{
-> +	int rc;
-> +
-> +	nvdimm_bus_lock(&nd_region->dev);
-> +	rc = nd_pmem_region_label_update(nd_region);
-> +	nvdimm_bus_unlock(&nd_region->dev);
-> +
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_GPL(nd_region_label_update);
-> +
->  static int nd_namespace_label_update(struct nd_region *nd_region,
->  		struct device *dev)
->  {
-> @@ -2122,13 +2134,20 @@ static int init_active_labels(struct nd_region *nd_region)
->  		if (!count)
->  			continue;
->  		for (j = 0; j < count; j++) {
-> -			struct nd_namespace_label *label;
-> +			union nd_lsa_label *lsa_label;
->  
->  			label_ent = kzalloc(sizeof(*label_ent), GFP_KERNEL);
->  			if (!label_ent)
->  				break;
-> -			label = nd_label_active(ndd, j);
-> -			label_ent->label = label;
-> +
-> +			lsa_label = nd_label_active(ndd, j);
-> +			if (is_region_label(ndd, lsa_label)) {
-> +				label_ent->region_label = &lsa_label->region_label;
-> +				uuid_copy(&label_ent->label_uuid, &cxl_region_uuid);
-> +			} else {
-> +				label_ent->label = &lsa_label->ns_label;
-> +				uuid_copy(&label_ent->label_uuid, &cxl_namespace_uuid);
-> +			}
->  
->  			mutex_lock(&nd_mapping->lock);
->  			list_add_tail(&label_ent->list, &nd_mapping->labels);
-> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-> index f631bd84d6f0..5fd69c28ffe7 100644
-> --- a/drivers/nvdimm/nd.h
-> +++ b/drivers/nvdimm/nd.h
-> @@ -14,6 +14,9 @@
->  #include <linux/nd.h>
->  #include "label.h"
->  
-> +extern uuid_t cxl_namespace_uuid;
-> +extern uuid_t cxl_region_uuid;
-> +
->  enum {
->  	/*
->  	 * Limits the maximum number of block apertures a dimm can
-> @@ -295,6 +298,67 @@ static inline const u8 *nsl_uuid_raw(struct nvdimm_drvdata *ndd,
->  	return nd_label->efi.uuid;
->  }
->  
-> +static inline void nsl_set_type(struct nvdimm_drvdata *ndd,
-> +				struct nd_namespace_label *ns_label)
-> +{
-> +	if (!(ndd->cxl && ns_label))
-> +		return;
-> +
-> +	uuid_copy((uuid_t *)ns_label->cxl.type, &cxl_namespace_uuid);
-> +}
-> +
-> +static inline void nsl_set_alignment(struct nvdimm_drvdata *ndd,
-> +				     struct nd_namespace_label *ns_label,
-> +				     u32 align)
-> +{
-> +	if (!ndd->cxl)
-> +		return;
-> +
-> +	ns_label->cxl.align = __cpu_to_le32(align);
-> +}
-> +
-> +static inline void nsl_set_region_uuid(struct nvdimm_drvdata *ndd,
-> +				       struct nd_namespace_label *ns_label,
-> +				       const uuid_t *uuid)
-> +{
-> +	if (!(ndd->cxl && uuid))
-> +		return;
-> +
-> +	export_uuid(ns_label->cxl.region_uuid, uuid);
-> +}
-> +
-> +static inline bool is_region_label(struct nvdimm_drvdata *ndd,
-> +				   union nd_lsa_label *lsa_label)
-> +{
-> +	uuid_t *region_type;
-> +
-> +	if (!ndd->cxl)
-> +		return false;
-> +
-> +	region_type = (uuid_t *) lsa_label->region_label.type;
-> +	return uuid_equal(&cxl_region_uuid, region_type);
-> +}
-> +
-> +static inline bool
-> +region_label_uuid_equal(struct cxl_region_label *region_label,
-> +			const uuid_t *uuid)
-> +{
-> +	return uuid_equal((uuid_t *) region_label->uuid, uuid);
-> +}
-> +
-> +static inline u64
-> +region_label_get_checksum(struct cxl_region_label *region_label)
-> +{
-> +	return __le64_to_cpu(region_label->checksum);
-> +}
-> +
-> +static inline void
-> +region_label_set_checksum(struct cxl_region_label *region_label,
-> +			  u64 checksum)
-> +{
-> +	region_label->checksum = __cpu_to_le64(checksum);
-> +}
-> +
->  bool nsl_validate_type_guid(struct nvdimm_drvdata *ndd,
->  			    struct nd_namespace_label *nd_label, guid_t *guid);
->  enum nvdimm_claim_class nsl_get_claim_class(struct nvdimm_drvdata *ndd,
-> @@ -376,7 +440,9 @@ enum nd_label_flags {
->  struct nd_label_ent {
->  	struct list_head list;
->  	unsigned long flags;
-> +	uuid_t label_uuid;
->  	struct nd_namespace_label *label;
-> +	struct cxl_region_label *region_label;
->  };
->  
->  enum nd_mapping_lock_class {
-> diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-> index 5696715c33bb..2c213b9dac66 100644
-> --- a/include/linux/libnvdimm.h
-> +++ b/include/linux/libnvdimm.h
-> @@ -117,6 +117,13 @@ struct nd_interleave_set {
->  	u64 altcookie;
->  
->  	guid_t type_guid;
-> +
-> +	/* v2.1 region label info */
-> +	uuid_t uuid;
-> +	int interleave_ways;
-> +	int interleave_granularity;
-> +	struct resource *res;
-> +	int nr_targets;
->  };
->  
->  struct nd_mapping_desc {
-> @@ -307,6 +314,7 @@ int nvdimm_has_flush(struct nd_region *nd_region);
->  int nvdimm_has_cache(struct nd_region *nd_region);
->  int nvdimm_in_overwrite(struct nvdimm *nvdimm);
->  bool is_nvdimm_sync(struct nd_region *nd_region);
-> +int nd_region_label_update(struct nd_region *nd_region);
->  
->  static inline int nvdimm_ctl(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
->  		unsigned int buf_len, int *cmd_rc)
-
+Terry
