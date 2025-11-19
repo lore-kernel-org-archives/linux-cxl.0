@@ -1,50 +1,37 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB2B3126A4
-	for <linux-cxl@vger.kernel.org>; Tue, 18 Nov 2025 23:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD79C19D07E;
+	Wed, 19 Nov 2025 01:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763508925; cv=none; b=WNtAggAo5SEpIgyRRKgpE9p9KJqspuMu/AHzt3gre7y5Zy+Q2O4khiGQwu/lcwvNaZGoDSlKACZIHzyTlLIFU3F8t7sN6Jel/U0u66g4XFQ1Rm+01JHv+BV3dmok+dEsllHKcetOVzBL/KvlzwyMy9d0FgTND3Tu9YXAUjB9UwI=
+	t=1763515124; cv=none; b=Ox/vF8dTpkNeeUcIeUDJ7oIw1FwzMvX/x9z7T5iMZ+v5IN1gY1AF5Caj50BZ9Hmv3L5BkE5bJ/1zSl7pxtVM8IZ9aFYsnemEKHUhm1umA5DiBEZcR46OwW2uA1JatwL5zmiPWZWxkC0bXcqrS7ocB1F9GWpxyXnM2u6CQVyy3No=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763508925; c=relaxed/simple;
-	bh=vbyQpCOuIUwoNJYIu5boe7KRM3ONknryjksD3//GSes=;
+	s=arc-20240116; t=1763515124; c=relaxed/simple;
+	bh=66Pk51Y6hl6cFLy/Cjj2s2RgDzKKBJ5zXtSZ1r+4xsY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xr6B1LrusVfEXX9oWzWyfd99aU2WgQNQuKAQrTwyxaIRKd6BDh3ehXuG1r1eJVjja0o2c8d3+JkGOEPV5Jamt+68beMpYrPGS2hcbDQjwo4E1B3EjJtkIidn7Qw+QSY0Czuzs2TseoojQlyCVGK1XdOtCK8cx0n8cBofkiXJBOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AU8ZsNvq; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=kVmTx63JOeghdMIK/2vGEZBdfQEXT4+c2y8SgIhTMsAFKGPnhJjBulCjupa3iInJrigWLoSnBkBPKJc58u//581PXHgPeueF+CQu8V1X3e24dwcm3dvbJBcG5Btx29xu6/mq3nT+TNxkjKoOjwyfGF+0l8ynlFER9vIWceZP5KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QC1tunr6; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AU8ZsNvq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763508925; x=1795044925;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vbyQpCOuIUwoNJYIu5boe7KRM3ONknryjksD3//GSes=;
-  b=AU8ZsNvq0lF9iVMiFABGqaAwjU/8fddDNpKS4kFaCEEQzT8WmAXsudxN
-   k4nYSy8lWV8fXTDUJ4iH6IsH4WUiuRwM+RgwbJqTWb6xvrr8yjZfGjNvc
-   377zzcs2TyHlzuoxOfg3CVYeRtojkg3QjWMp3VcHoweAeF2MNSrXp1Woa
-   VVxt1Ov0dCyORC9A3R5N22Mg0x+gHlVoSKBvGu5VlelKUPlAniiz+R7J2
-   ZdULHmT+y3eJC7niek1U3ZXKelrzZ0Vd4CWTNL7EPTUWV/693721fWg85
-   ICMphO+OfL4ackJgb/oqF0IIykOg3kTRbax8yGeBHdpVFAhULTwmh9AhP
-   g==;
-X-CSE-ConnectionGUID: UHcuNRpxSdCmH4HCVF3fbQ==
-X-CSE-MsgGUID: GHyzMF7HTY+yQ0UUXzjjeg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="76648928"
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="76648928"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 15:35:24 -0800
-X-CSE-ConnectionGUID: b+RP98S8RP6YV0j1r59Z4g==
-X-CSE-MsgGUID: rycI38AMTIe+yNut4Fslvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="191026284"
-Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.109.115]) ([10.125.109.115])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 15:35:23 -0800
-Message-ID: <10f99d05-4fa8-4e7e-9ecf-cc0d69eee668@intel.com>
-Date: Tue, 18 Nov 2025 16:35:22 -0700
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QC1tunr6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=jEWakcvW1TnAMoV+h8ZFjseo1NzKkn1k3ld14oxm230=; b=QC1tunr6eaQovDaqvqIBwr3X+/
+	C3C5mLb7Pa22aUwA2v5Fa6Ah0VeP6F5VFmTRWqBPTqD0qJqZ0fFlPrCq6bhhkG1jA0YTxGkJaUBwi
+	GQkwuUOualXgI8nvNDfrZZEwbffMu/1H2i/6cwuef4EsvzFYIzGipzrky8OkwVCzRZOpxybG/1TzI
+	NhRJtkYVP1+gbltlQKPs1SuTkbYcWXrjwLS1XcMN8Cvaxk5vtIdYcqZZ4YH+fjMgc+o50wNVoyCp+
+	l8heA9Yu81ccf5Z2bwICTGnz4TXBZCY9VEDbV5p6HemHQ4kcT9TxY/pIPsmLWD7eBJBUuYTcpZU1W
+	5typ2JHQ==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vLWq8-00000001L1B-2Eo5;
+	Wed, 19 Nov 2025 01:18:32 +0000
+Message-ID: <2241d985-0e35-41e5-93b1-1e8d4e7a84bf@infradead.org>
+Date: Tue, 18 Nov 2025 17:18:31 -0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,105 +39,140 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/test: Remove ret_limit race condition in
- mock_get_event()
-To: Alison Schofield <alison.schofield@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org, Itaru Kitayama <itaru.kitayama@fujitsu.com>,
- "Fabio M . De Francesco" <fabio.m.de.francesco@linux.intel.com>
-References: <20251116013819.1713780-1-alison.schofield@intel.com>
-From: Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v6 3/7] lib: Support
+ ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+To: Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Conor Dooley <conor@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, linux-cxl@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+ linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
+ Drew Fustini <fustini@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>, james.morse@arm.com,
+ Will Deacon <will@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ linuxarm@huawei.com, Yushan Wang <wangyushan12@huawei.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+ Andy Lutomirski <luto@kernel.org>, Dave Jiang <dave.jiang@intel.com>
+References: <20251117104800.2041329-1-Jonathan.Cameron@huawei.com>
+ <20251117104800.2041329-4-Jonathan.Cameron@huawei.com>
+ <3bf1793a-2ffd-4017-b4bf-dc63f3a2a7c8@infradead.org>
+ <20251117-definite-uncounted-7cc07a377a71@spud>
+ <20251118093041.00000c9e@huawei.com>
 Content-Language: en-US
-In-Reply-To: <20251116013819.1713780-1-alison.schofield@intel.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20251118093041.00000c9e@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 11/15/25 6:37 PM, Alison Schofield wrote:
-> Commit 364ee9f3265e ("cxl/test: Enhance event testing") changed the
-> loop iterator in mock_get_event() from a static constant,
-> CXL_TEST_EVENT_CNT, to a dynamic global variable, ret_limit. The
-> intent was to vary the number of events returned per call to simulate
-> events occurring while logs are being read.
+On 11/18/25 1:30 AM, Jonathan Cameron wrote:
+> On Tue, 18 Nov 2025 00:13:07 +0000
+> Conor Dooley <conor@kernel.org> wrote:
 > 
-> However, ret_limit is modified without synchronization. When multiple
-> threads call mock_get_event() concurrently, one thread may read
-> ret_limit, another thread may increment it, and the first thread's
-> loop condition and size calculation see and use the updated value.
+>> On Mon, Nov 17, 2025 at 10:51:11AM -0800, Randy Dunlap wrote:
+>>> Hi,
+>>>
+>>> On 11/17/25 2:47 AM, Jonathan Cameron wrote:  
+>>>> diff --git a/lib/Kconfig b/lib/Kconfig
+>>>> index e629449dd2a3..e11136d188ae 100644
+>>>> --- a/lib/Kconfig
+>>>> +++ b/lib/Kconfig
+>>>> @@ -542,6 +542,10 @@ config MEMREGION
+>>>>  config ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+>>>>  	bool
+>>>>  
+>>>> +config GENERIC_CPU_CACHE_MAINTENANCE
+>>>> +	bool
+>>>> +	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+>>>> +
+>>>>  config ARCH_HAS_MEMREMAP_COMPAT_ALIGN
+>>>>  	bool  
+>>>
+>>> Architectures and/or platforms select ARCH_HAS_*.
+>>>
+>>> With this change above, it becomes the only entry in
+>>> lib/Kconfig that does "select ARCH_HAS_anytning".
+>>>
+>>> so I think this is wrong, back*wards.  
+>>
+>> Maybe it is backwards, but I feel like this way is more logical. ARM64
+>> has memregion invalidation only because this generic approach is
+>> enabled, so the arch selects what it needs to get the support.
 > 
-> This is visible during cxl_test module load when all memdevs are
-> initializing simultaneously, which includes getting event records. It
-> is not tied to the cxl-events.sh unit test specifically, as that
-> operates on a single memdev.
+> Exactly this. Catalin requested this form in response to an earlier
+> version where arm64 Kconfig just had both selects for pretty much that
+> reason. This is expected to be used on a subset of architectures.
+> It is similar to things like GENERIC_ARCH_NUMA in this respect (though the
+> arch_numa_init() etc in there are called only from other arch code
+> so no ARCH_HAS_ symbols are associated with them).
 > 
-> While no actual harm results (the buffer is always large enough and
-> the record count fields correctly reflect what was written), this is
-> a correctness issue. The race creates an inconsistent state within
-> mock_get_event() and adding variability based on a race appears
-> unintended.
+>> Alternatively, something like
 > 
-> Make ret_limit a local variable populated from an atomic counter. Each
-> call gets a stable value that won't change during execution. That
-> preserves the intended behavior of varying the return counts across
-> calls while eliminating the race condition.
-> 
-> This implementation uses "+ 1" to produce the full range of 1 to
-> CXL_TEST_EVENT_RET_MAX (4) records. Previously only 1, 2, 3 were
-> produced.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> I'm fine with this solution if Randy prefers it.
 
-applied to cxl/next
-b6369daf0d6a cxl/test: Remove ret_limit race condition in mock_get_event()
+I do much prefer this alternative.
 
-> ---
-> 
-> This was found while chasing a NULL payload_out issue in mock_get_event()
-> that Itaru reported here [1] and Fabio and I have both seen but not been
-> able to reliably reproduce. Although the accounting can be wrong wrt
-> ret_limit, no potential overflow was found.
-> 
-> [1] https://lore.kernel.org/linux-cxl/49A4B521-AB66-4037-A23D-1D0D7AF0F42F@linux.dev/
-> 
-> 
->  tools/testing/cxl/test/mem.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> index d533481672b7..6809c4a26f5e 100644
-> --- a/tools/testing/cxl/test/mem.c
-> +++ b/tools/testing/cxl/test/mem.c
-> @@ -250,22 +250,22 @@ static void mes_add_event(struct mock_event_store *mes,
->   * Vary the number of events returned to simulate events occuring while the
->   * logs are being read.
->   */
-> -static int ret_limit = 0;
-> +static atomic_t event_counter = ATOMIC_INIT(0);
->  
->  static int mock_get_event(struct device *dev, struct cxl_mbox_cmd *cmd)
->  {
->  	struct cxl_get_event_payload *pl;
->  	struct mock_event_log *log;
->  	u16 nr_overflow;
-> +	int ret_limit;
->  	u8 log_type;
->  	int i;
->  
->  	if (cmd->size_in != sizeof(log_type))
->  		return -EINVAL;
->  
-> -	ret_limit = (ret_limit + 1) % CXL_TEST_EVENT_RET_MAX;
-> -	if (!ret_limit)
-> -		ret_limit = 1;
-> +	/* Vary return limit from 1 to CXL_TEST_EVENT_RET_MAX */
-> +	ret_limit = (atomic_inc_return(&event_counter) % CXL_TEST_EVENT_RET_MAX) + 1;
->  
->  	if (cmd->size_out < struct_size(pl, records, ret_limit))
->  		return -EINVAL;
-> 
-> base-commit: e9a6fb0bcdd7609be6969112f3fbfcce3b1d4a7c
+> Thanks for your help with this.
+
+Thanks for listening.
+
+
+>> | diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> | index 5f7f63d24931..75b2507f7eb2 100644
+>> | --- a/arch/arm64/Kconfig
+>> | +++ b/arch/arm64/Kconfig
+>> | @@ -21,6 +21,7 @@ config ARM64
+>> |  	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
+>> |  	select ARCH_HAS_CACHE_LINE_SIZE
+>> |  	select ARCH_HAS_CC_PLATFORM
+>> | +	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+>> |  	select ARCH_HAS_CURRENT_STACK_POINTER
+>> |  	select ARCH_HAS_DEBUG_VIRTUAL
+>> |  	select ARCH_HAS_DEBUG_VM_PGTABLE
+>> | @@ -146,7 +147,6 @@ config ARM64
+>> |  	select GENERIC_ARCH_TOPOLOGY
+>> |  	select GENERIC_CLOCKEVENTS_BROADCAST
+>> |  	select GENERIC_CPU_AUTOPROBE
+>> | -	select GENERIC_CPU_CACHE_MAINTENANCE
+>> |  	select GENERIC_CPU_DEVICES
+>> |  	select GENERIC_CPU_VULNERABILITIES
+>> |  	select GENERIC_EARLY_IOREMAP
+>> | diff --git a/lib/Kconfig b/lib/Kconfig
+>> | index 09aec4a1e13f..ac223e627bc5 100644
+>> | --- a/lib/Kconfig
+>> | +++ b/lib/Kconfig
+>> | @@ -544,8 +544,9 @@ config ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+>> |  	bool
+>> |  
+>> |  config GENERIC_CPU_CACHE_MAINTENANCE
+>> | -	bool
+>> | -	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+>> | +	def_bool y
+>> | +	depends on ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+>> | +	depends on ARM64
+>> |  
+>> |  config ARCH_HAS_MEMREMAP_COMPAT_ALIGN
+>> |  	bool
+>> implies (to me at least) that arm64 has memregion invalidation as an
+>> architectural feature and that the GENERIC_CPU_CACHE_MAINTENANCE option
+>> is a just common cross-arch code, like generic entry etc, rather than
+>> being the option gating the drivers that provide the feature in the
+>> first place.
+>>
+>> I didn't really care which way it went, and was gonna post something to
+>> squash and avoid another revision, but I found the resultant Kconfig
+>> setup to be make less sense to me than what came before. If the switched
+>> around version is less likely to be problematic etc, then sure, but I
+>> amn't convinced by switching it at a first glance.
+
+
+-- 
+~Randy
 
