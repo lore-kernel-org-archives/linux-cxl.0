@@ -1,55 +1,56 @@
 Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472F0330B09
-	for <linux-cxl@vger.kernel.org>; Wed, 19 Nov 2025 07:53:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35773314B5
+	for <linux-cxl@vger.kernel.org>; Wed, 19 Nov 2025 07:53:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763538815; cv=none; b=KWaMeko5kTaVhDmhn0eXWCm9oXKiopUXRrfpXiH+Yf36XzCzH8ADn0PykOWkTysPAMs+7O5gvCahPiwSlnTCjQwNHSE+ExzSiqSfWceRvVrKSXshtfxiZZWfmxi2Wose38jQl2UYAjpP6TjJlSv4Ubpy33k1bfcK8B7D0sMkbTs=
+	t=1763538821; cv=none; b=PNq7MYVeS2quARW4Fy5msRNBpefgJj5rabD55pZ0aVP5+W22kmmYHxWk8FYma8aOr7021HrHbZGSFYUHaRxqpIZLb+aze+Sm1EmiILHqCOO5x1vJVSTQD+gjhSkg2L7pIp/9H13n2m/6Dmdrf0+k+ItyedlQOzBLi49Y3oeWYKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763538815; c=relaxed/simple;
-	bh=ESls8kczsiy757C1K/kgmyz7R8++FryTKTQjvShztDk=;
+	s=arc-20240116; t=1763538821; c=relaxed/simple;
+	bh=VQWxKAopaeO60DUBcEMSdVQoa1prMpXpDOwUpLcLDLQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=WyifJXzSNu6XUOFQXi4rTIb1IXKfhyiCE9zDbbM2ovbszeB1Kb83dNG35nv4UG1pGTaxTNzorLS5LRFvVFonE4lwcgJmIUKVtnFl8fp3OptZ6GO3u1qWX5/K/YQKKhvXIbV0Y7m71POp3+5TFBeXyCK9QVp/rKdwPppbogTWvBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=lWNBzxYV; arc=none smtp.client-ip=203.254.224.25
+	 Content-Type:References; b=F4n0gZRVJYr15X0QP5JlMvXvaZZVdPT8484DTghvclFeipXwyvy3ZvexQajipKuApZLP/k0Y/7JXzQLsxbaIlNlZIwjOMVHYvxY/FQ6BVJ0T1fDp5/xBKlIIsp/44d8KAd62q/a1LXhHX+Nv/DWunqV4vHniZ4y1eyy6HWgkHys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=VCE+29Yf; arc=none smtp.client-ip=203.254.224.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lWNBzxYV"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20251119075331epoutp023a0b5a0b50d543439d0a9128d4e20009~5WTST4jJ22709627096epoutp02F
-	for <linux-cxl@vger.kernel.org>; Wed, 19 Nov 2025 07:53:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20251119075331epoutp023a0b5a0b50d543439d0a9128d4e20009~5WTST4jJ22709627096epoutp02F
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VCE+29Yf"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20251119075336epoutp020fb227bf2834ff5c12bddeadc6a2dbe5~5WTXbMWpv2564225642epoutp02J
+	for <linux-cxl@vger.kernel.org>; Wed, 19 Nov 2025 07:53:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20251119075336epoutp020fb227bf2834ff5c12bddeadc6a2dbe5~5WTXbMWpv2564225642epoutp02J
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1763538811;
-	bh=IlJP9oSMjOblSzq1z4N3+ZlVhBcZJv4QELzYajuAbpM=;
+	s=mail20170921; t=1763538816;
+	bh=nRmk4CyFkpvjGxbn2pi4XQTyhVHs86/ZbxOiVLXLGKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lWNBzxYViYjm+2tIJV/of6TYr00mzciDU5/RBDTvA3HHUOQVjmyUZHYhgsDy/8Dls
-	 F5ZhlfJt1jw51Q5g9uJIv7g/N/jGOJhvdeV/G6CAe7324KHEG/7Mi/1ooEwH7p+Vqg
-	 kczGtye1Z/1p2outH5KBgo4vN19+FnCH9NMcDQNo=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20251119075331epcas5p2818ec9fdfbf39c78bea13810170fc9b9~5WTSDr0Fj0870708707epcas5p2c;
-	Wed, 19 Nov 2025 07:53:31 +0000 (GMT)
-Received: from epcas5p4.samsung.com (unknown [182.195.38.92]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4dBDHt0XSqz6B9mR; Wed, 19 Nov
-	2025 07:53:30 +0000 (GMT)
+	b=VCE+29YfJVrqKI6OAO4HBla3faffmq3PbNf7m37Uaz2RcJbx06KKtWd2C2FEEJsbC
+	 2EQpRp1zLNZSph/w5xAWyI/tDIx52m0e8Rx3pbcRx4Qz5Phq8U10QxrKM9zOowF+CD
+	 A+p86b4Jsgn+9sHt6AuJKVhIuBSJWX9+pSDqKrbw=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20251119075336epcas5p3bfd918b9cb28d764dd04aacef9f3554f~5WTXGnxia0829208292epcas5p3X;
+	Wed, 19 Nov 2025 07:53:36 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.38.90]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4dBDHz33G9z2SSKd; Wed, 19 Nov
+	2025 07:53:35 +0000 (GMT)
 Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20251119075329epcas5p2e59df029313007c9adcf3a09ef0185cf~5WTQppWtC1868418684epcas5p2t;
-	Wed, 19 Nov 2025 07:53:29 +0000 (GMT)
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20251119075335epcas5p3a8fdc68301233f899d9041a300309fa2~5WTVpryIm0406004060epcas5p3k;
+	Wed, 19 Nov 2025 07:53:35 +0000 (GMT)
 Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
 	by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20251119075328epsmtip15b78488122daa96e7f27f1dd016a83c1~5WTPG3_V_2566025660epsmtip1R;
-	Wed, 19 Nov 2025 07:53:27 +0000 (GMT)
+	20251119075333epsmtip1ad0c9c9bc13dc254306e6c791530c2f3~5WTTzWIX92573225732epsmtip1-;
+	Wed, 19 Nov 2025 07:53:32 +0000 (GMT)
 From: Neeraj Kumar <s.neeraj@samsung.com>
 To: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
 	linux-kernel@vger.kernel.org, gost.dev@samsung.com
 Cc: a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
 	Neeraj Kumar <s.neeraj@samsung.com>
-Subject: [PATCH V4 12/17] cxl/pmem: Preserve region information into nd_set
-Date: Wed, 19 Nov 2025 13:22:50 +0530
-Message-Id: <20251119075255.2637388-13-s.neeraj@samsung.com>
+Subject: [PATCH V4 14/17] cxl/pmem_region: Introduce CONFIG_CXL_PMEM_REGION
+ for core/pmem_region.c
+Date: Wed, 19 Nov 2025 13:22:52 +0530
+Message-Id: <20251119075255.2637388-15-s.neeraj@samsung.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251119075255.2637388-1-s.neeraj@samsung.com>
 Precedence: bulk
@@ -59,56 +60,186 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20251119075329epcas5p2e59df029313007c9adcf3a09ef0185cf
+X-CMS-MailID: 20251119075335epcas5p3a8fdc68301233f899d9041a300309fa2
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 105P
 cpgsPolicy: CPGSC10-542,Y
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20251119075329epcas5p2e59df029313007c9adcf3a09ef0185cf
+X-CMS-RootMailID: 20251119075335epcas5p3a8fdc68301233f899d9041a300309fa2
 References: <20251119075255.2637388-1-s.neeraj@samsung.com>
-	<CGME20251119075329epcas5p2e59df029313007c9adcf3a09ef0185cf@epcas5p2.samsung.com>
+	<CGME20251119075335epcas5p3a8fdc68301233f899d9041a300309fa2@epcas5p3.samsung.com>
 
-Save region information stored in cxlr to nd_set during
-cxl_pmem_region_probe in nd_set. This saved region information is being
-stored into LSA, which will be used for cxl region persistence
+As pmem region label update/delete has hard dependency on libnvdimm.
+It is therefore put core/pmem_region.c under CONFIG_CXL_PMEM_REGION
+control. It handles the dependency by selecting CONFIG_LIBNVDIMM
+if not enabled.
 
 Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
 ---
- drivers/cxl/pmem.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/cxl/Kconfig       | 15 +++++++++++++++
+ drivers/cxl/core/Makefile |  3 ++-
+ drivers/cxl/core/core.h   | 17 +++++++++++------
+ drivers/cxl/core/region.c |  2 ++
+ drivers/cxl/cxl.h         | 24 ++++++++++++++----------
+ tools/testing/cxl/Kbuild  |  3 ++-
+ 6 files changed, 46 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-index e197883690ef..a6eba3572090 100644
---- a/drivers/cxl/pmem.c
-+++ b/drivers/cxl/pmem.c
-@@ -377,6 +377,7 @@ static int cxl_pmem_region_probe(struct device *dev)
- 	struct nd_mapping_desc mappings[CXL_DECODER_MAX_INTERLEAVE];
- 	struct cxl_pmem_region *cxlr_pmem = to_cxl_pmem_region(dev);
- 	struct cxl_region *cxlr = cxlr_pmem->cxlr;
-+	struct cxl_region_params *p = &cxlr->params;
- 	struct cxl_nvdimm_bridge *cxl_nvb = cxlr->cxl_nvb;
- 	struct cxl_pmem_region_info *info = NULL;
- 	struct nd_interleave_set *nd_set;
-@@ -465,12 +466,12 @@ static int cxl_pmem_region_probe(struct device *dev)
- 	ndr_desc.num_mappings = cxlr_pmem->nr_mappings;
- 	ndr_desc.mapping = mappings;
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index f1361ed6a0d4..307fed8f1f56 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -211,6 +211,21 @@ config CXL_REGION
  
--	/*
--	 * TODO enable CXL labels which skip the need for 'interleave-set cookie'
--	 */
--	nd_set->cookie1 =
--		nd_fletcher64(info, sizeof(*info) * cxlr_pmem->nr_mappings, 0);
--	nd_set->cookie2 = nd_set->cookie1;
-+	nd_set->uuid = p->uuid;
-+	nd_set->interleave_ways = p->interleave_ways;
-+	nd_set->interleave_granularity = p->interleave_granularity;
-+	nd_set->res = p->res;
-+	nd_set->nr_targets = p->nr_targets;
+ 	  If unsure say 'y'
+ 
++config CXL_PMEM_REGION
++	bool "CXL: Pmem Region Support"
++	default CXL_BUS
++	depends on CXL_REGION
++	depends on ARCH_HAS_PMEM_API
++	depends on PHYS_ADDR_T_64BIT
++	depends on BLK_DEV
++	select LIBNVDIMM
++	help
++	   Enable the CXL core to enumerate and provision CXL pmem regions.
++	   A CXL pmem region need to update region label into LSA. For LSA
++	   update/delete libnvdimm is required.
 +
- 	ndr_desc.nd_set = nd_set;
++	   If unsure say 'y'
++
+ config CXL_REGION_INVALIDATION_TEST
+ 	bool "CXL: Region Cache Management Bypass (TEST)"
+ 	depends on CXL_REGION
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index fe0fcab6d730..399157beb917 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -16,7 +16,8 @@ cxl_core-y += pmu.o
+ cxl_core-y += cdat.o
+ cxl_core-y += ras.o
+ cxl_core-$(CONFIG_TRACING) += trace.o
+-cxl_core-$(CONFIG_CXL_REGION) += region.o pmem_region.o
++cxl_core-$(CONFIG_CXL_REGION) += region.o
++cxl_core-$(CONFIG_CXL_PMEM_REGION) += pmem_region.o
+ cxl_core-$(CONFIG_CXL_MCE) += mce.o
+ cxl_core-$(CONFIG_CXL_FEATURES) += features.o
+ cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 5ebbc3d3dde5..beeb9b7527b8 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -34,7 +34,6 @@ int cxl_decoder_detach(struct cxl_region *cxlr,
+ #define CXL_REGION_ATTR(x) (&dev_attr_##x.attr)
+ #define CXL_REGION_TYPE(x) (&cxl_region_type)
+ #define SET_CXL_REGION_ATTR(x) (&dev_attr_##x.attr),
+-#define CXL_PMEM_REGION_TYPE(x) (&cxl_pmem_region_type)
+ #define CXL_DAX_REGION_TYPE(x) (&cxl_dax_region_type)
+ int cxl_region_init(void);
+ void cxl_region_exit(void);
+@@ -89,17 +88,23 @@ static inline struct cxl_region *to_cxl_region(struct device *dev)
+ {
+ 	return NULL;
+ }
+-static inline int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
+-{
+-	return 0;
+-}
+ #define CXL_REGION_ATTR(x) NULL
+ #define CXL_REGION_TYPE(x) NULL
+ #define SET_CXL_REGION_ATTR(x)
+-#define CXL_PMEM_REGION_TYPE(x) NULL
+ #define CXL_DAX_REGION_TYPE(x) NULL
+ #endif
  
- 	cxlr_pmem->nd_region =
++#ifdef CONFIG_CXL_PMEM_REGION
++#define CXL_PMEM_REGION_TYPE(x) (&cxl_pmem_region_type)
++int devm_cxl_add_pmem_region(struct cxl_region *cxlr);
++#else
++#define CXL_PMEM_REGION_TYPE(x) NULL
++static inline int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
++{
++	return 0;
++}
++#endif
++
+ struct cxl_send_command;
+ struct cxl_mem_query_commands;
+ int cxl_query_cmd(struct cxl_mailbox *cxl_mbox,
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 9798120b208e..408e139718f1 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -3918,6 +3918,8 @@ static int cxl_region_probe(struct device *dev)
+ 			dev_dbg(&cxlr->dev, "CXL EDAC registration for region_id=%d failed\n",
+ 				cxlr->id);
+ 
++		if (!IS_ENABLED(CONFIG_CXL_PMEM_REGION))
++			return -EINVAL;
+ 		return devm_cxl_add_pmem_region(cxlr);
+ 	case CXL_PARTMODE_RAM:
+ 		rc = devm_cxl_region_edac_register(cxlr);
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 684a0d1b441a..6ac3b40cb5ff 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -899,21 +899,11 @@ int devm_cxl_add_nvdimm(struct cxl_port *parent_port, struct cxl_memdev *cxlmd);
+ struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_port *port);
+ 
+ #ifdef CONFIG_CXL_REGION
+-bool is_cxl_pmem_region(struct device *dev);
+-struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
+ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled);
+ struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
+ u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa);
+ int cxl_region_discovery(struct cxl_memdev *cxlmd);
+ #else
+-static inline bool is_cxl_pmem_region(struct device *dev)
+-{
+-	return false;
+-}
+-static inline struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
+-{
+-	return NULL;
+-}
+ static inline int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
+ {
+ 	return 0;
+@@ -933,6 +923,20 @@ static inline int cxl_region_discovery(struct cxl_memdev *cxlmd)
+ }
+ #endif
+ 
++#ifdef CONFIG_CXL_PMEM_REGION
++bool is_cxl_pmem_region(struct device *dev);
++struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
++#else
++static inline bool is_cxl_pmem_region(struct device *dev)
++{
++	return false;
++}
++static inline struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
++{
++	return NULL;
++}
++#endif
++
+ void cxl_endpoint_parse_cdat(struct cxl_port *port);
+ void cxl_switch_parse_cdat(struct cxl_dport *dport);
+ 
+diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+index ad2496b38fdd..024922326a6b 100644
+--- a/tools/testing/cxl/Kbuild
++++ b/tools/testing/cxl/Kbuild
+@@ -59,7 +59,8 @@ cxl_core-y += $(CXL_CORE_SRC)/pmu.o
+ cxl_core-y += $(CXL_CORE_SRC)/cdat.o
+ cxl_core-y += $(CXL_CORE_SRC)/ras.o
+ cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
+-cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o $(CXL_CORE_SRC)/pmem_region.o
++cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
++cxl_core-$(CONFIG_CXL_PMEM_REGION) += $(CXL_CORE_SRC)/pmem_region.o
+ cxl_core-$(CONFIG_CXL_MCE) += $(CXL_CORE_SRC)/mce.o
+ cxl_core-$(CONFIG_CXL_FEATURES) += $(CXL_CORE_SRC)/features.o
+ cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += $(CXL_CORE_SRC)/edac.o
 -- 
 2.34.1
 
