@@ -1,93 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C951E34D934
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Nov 2025 15:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958F7372AD9
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Nov 2025 17:11:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763651240; cv=none; b=Lk0T3bfQtgN+Rj4Sqy8qxcb6Tcb0sBVK2JW7tS6RGxBjadrvBV3sdfVDNozpREyAXI+VS5ETpoL+PM2Zb9Fi01HJBJBC8o0Qhyk68vhA59l6nVX90oPq74LobPmuECxC6vfXETvriytw1TJ5klpY6epfjeQtwVAnOycIntfEJIs=
+	t=1763658705; cv=none; b=WL9oQn6O3FWge2C07yu9Wts87EfICowb9BB1+jUnCsEqRit0PZHwfwMjfqZ7poANz1lENfmeHMNZM5Gf+6kg4whgqa3iLrKUpe9L/7ll/OAu7YVwKxCcxaCU4JxxR+rGZgol+MQuR+yP6XuBjtgUZgokK6K5sGjbjDkC/NgkTc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763651240; c=relaxed/simple;
-	bh=1bWlZJsYohIFTNUpNYNhevZ13fi4R2sorKkXYA7iT+s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=jwuUbcj1Q9VgwgrB/tg06fpo9X6q+qt9gpqbzzUS7jpcaemlk1uKqYKglZN5fvfWQEhtch1D4Xtba9bL/D/I+ro/azw6rfK4DaiYJPy0Jc4IlZ1m3FQH4sAa+HwJCvLJ1Npw3cd+61H0HPI+FMaUm9yh/jtVhiUqqVrmq6YA2uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SVKcg44u; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1763658705; c=relaxed/simple;
+	bh=2U5H0M+AmHJOzPsmhzLUd9oy7nlu/R+qhpQ/NyzGF28=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OuS6JWgmsML4La3vgXMiesMtwabmIgq09ke6smuHX3BKSAZMkFJy6iRtbHkIF9Yl1I3Nf5P+fPWuVi4hTr088HFn1ayyHhGTCIzhmIzJVENWKROM56e/xriRPk602zZcOwb0jXNvOnKbL3N9BeLzqw0Wp6iOBdX37QygadnPahM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VJQe5wZe; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SVKcg44u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763651239; x=1795187239;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=1bWlZJsYohIFTNUpNYNhevZ13fi4R2sorKkXYA7iT+s=;
-  b=SVKcg44uOkVStDTBgfwuJ3yXVS7KfNyu3A0j4OP0yB0G7Eaa2EDLnF6d
-   8PwRQJfg8d0V9CjdlH3X7mtpG43E9IRGx9uz1KIvjoN5kZI657d56u0q4
-   Jh7gTEfvlq2nzIp4mri4vqy5aEyWQucLv448iTRG4v9ECpQucSTurw0gf
-   RJyOL3vvRIaKq6hV2Ka8M3Q75HjZsIqhPcBS2Me7QiYexTpQHJGxX6OXm
-   A7zlBAWeiNgBwQiS+bQP8a3vRcwsI/wjHTQBVo+3p8GiLlqdmKpoSHNja
-   nazrpE0IsRB69NO950MufoiA1itIWYs1UsTSB8TAMwoCj/PRgvjFCb8lU
-   Q==;
-X-CSE-ConnectionGUID: QfX7hDP/St6gkzKDSYp37w==
-X-CSE-MsgGUID: R7MCYjaeTCm71YpfzQv2lA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11619"; a="68329026"
-X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
-   d="scan'208";a="68329026"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 07:07:18 -0800
-X-CSE-ConnectionGUID: XX7p6iXzQQOIP29BUb4Hzw==
-X-CSE-MsgGUID: 3Oj9RXTERU6inJnwsHsX5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
-   d="scan'208";a="195861947"
-Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.109.233]) ([10.125.109.233])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 07:07:17 -0800
-Message-ID: <cd3a11f8-88a1-4c9e-9ebe-2675bb292c93@intel.com>
-Date: Thu, 20 Nov 2025 08:07:16 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VJQe5wZe"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-640fb02a662so11614a12.1
+        for <linux-cxl@vger.kernel.org>; Thu, 20 Nov 2025 09:11:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1763658702; x=1764263502; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N/Z72n9Cl1RL7pgenMI30Fd9ER6zUw/sTuQNIj1Gn78=;
+        b=VJQe5wZe5CNOaRPOkeiVUPK6AdKPq270RU4A9N59lS03gXV/ip2ENgqZsVHU3KmsfK
+         Mjn8Kh6CO5yUX452vf/IJneVShK6r83/w1FIZ+eTAf6Oe1W+9Cs7/aC7xY2WK55W4QgT
+         xeBPoVq6EXYshMPAxbn+AKuyyTU9M/aY21GcVj3HZMMapDzrVBi4b7jJg8gXD1Lduzo5
+         Ix9s7bt2Nyz1rhvdB6V9qlD1h+DVHBizIPxs5oX/EtklWnIFRdgFjtaAFhQbDT1zj4en
+         80T4EFpJPVa9E6gm63kxyw0MPdxDA+URCR60Nuuk3/bHQWm7Mmyq/K+tOplpWe5zs/72
+         25fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763658702; x=1764263502;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=N/Z72n9Cl1RL7pgenMI30Fd9ER6zUw/sTuQNIj1Gn78=;
+        b=CGhvHB8Q1HxcaP3ipP11JqEmT/fVOV6RSqgIXiJ9fWah+UQZuDS6EuHdEry/SvB1UF
+         2quDPepRVwU9c6SMc0PF2G8munGBtsNKqKt6BHmiTe8XIBrjwpuaNZBRtV8cItLDGgXU
+         YEz9Ko29og8mHg+lNJoqFFnZZLONJUDYGoUmb1lc5ktJVY6ZPORIRqLXnJ7d1R0cTt/k
+         pbf9PWyDGVc5M98HuzL+RDTWMkcQtD8Bbwyn1yGhGlINcrmokOXy5qhZTBIidEg/VhKr
+         NLy3VcWAh2ZXLzQuRaNn1/z8XIWduMnTSxmrob0+0wQmJyWeEKlaEzNcVLjAIkHGTTOm
+         DBZw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpJcOms2epwgUBs7f0DE8axQhZH9lipMh12wFVu1QNHkNQca1iGz+K0IzAZj7MOXaM0lviWqZE2ek=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxY5/3boaH6yRKvyQGJVbqJDKb/88VXM6bDJijiv17DsfF/JPg/
+	ybNM3PKQwZ9bLka3MENU9p/2aZJmNV8id6eMw/7SVnT2TFIhO1SGnSgd3++kpCrbdlgMC+s2KOi
+	Wv5H3P/ulxOHRojYcXPgqQ636tfmmI/2jWmkT7Oiy
+X-Gm-Gg: ASbGncuOI/pMPa2bVgNM0QBSzG43/JgCyT9jkUNX+uz481KGMaqK0xCYPo+lpXnqiPK
+	a56qEGnggssPLPQrxh9zHDoHDLns+p25wYxgxn9vWv7t65SFz0Ro0gtCrFhrzlpAPobK2Xz+CVC
+	tTxVXK4PVQhi5ZzNV2gWghsWbCHzBAMyYw9nZZR6psB3RIgexUerhIZpN73olMSEl6+2rmWSMQU
+	WEh1DW7cD4dEnhf0VvKkSaBvWnMK9g6s1ehcfe7lcZKl02W5eA7LMgT2kyeAcNkrOgme3dKeit/
+	60Y50Pmmrxd5iTwHF25+KZE/tA==
+X-Google-Smtp-Source: AGHT+IGeUbm7Ie6pXSb+0wmq57u5fAGeqTIJ1BMG7y6hDCVTSEGpacFalC/5UQNwdn4sUHRkFYy+wUrbd07aK5lUCBY=
+X-Received: by 2002:a05:6402:460b:20b0:62f:9f43:2117 with SMTP id
+ 4fb4d7f45d1cf-645369d2740mr52100a12.0.1763658701850; Thu, 20 Nov 2025
+ 09:11:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Interest in contributing to the CXL community
-To: Arvind Nanjundaswamy <nanjundaswamy.arvind@gmail.com>,
- linux-cxl@vger.kernel.org
-References: <CAK8XrEWTauMKpWpuzfnpxGuY3gbr8EuuoAgaHm+awyhZnZ3EiQ@mail.gmail.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <CAK8XrEWTauMKpWpuzfnpxGuY3gbr8EuuoAgaHm+awyhZnZ3EiQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20251024210518.2126504-1-mclapinski@google.com>
+ <20251024210518.2126504-6-mclapinski@google.com> <691ce9acae44c_7a9a10020@iweiny-mobl.notmuch>
+In-Reply-To: <691ce9acae44c_7a9a10020@iweiny-mobl.notmuch>
+From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
+Date: Thu, 20 Nov 2025 18:11:29 +0100
+X-Gm-Features: AWmQ_bkl38cRsErW02FYYsJNSvgkRtb1E7YCtig5YF_mXurH4QMwznjZdg5sa3s
+Message-ID: <CAAi7L5foTbvvskLxKW50T49bdUBbedoxQHifZ-4NJYf+Fv7YvA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] dax: add PROBE_PREFER_ASYNCHRONOUS to the dax
+ device driver
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Nov 18, 2025 at 10:46=E2=80=AFPM Ira Weiny <ira.weiny@intel.com> wr=
+ote:
+>
+> Michal Clapinski wrote:
+> > Signed-off-by: Michal Clapinski <mclapinski@google.com>
+> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>
+> Sorry for the delay.  I picked up this series but I find that this breaks
+> the device-dax and daxctl-create.sh.
+>
+> I was able to fix device-dax with a sleep, see below.
+>
+> I'm not 100% sure what to do about this.
+>
+> I don't want to sprinkle sleeps around the tests.  daxctl-create.sh also
+> randomly fail due to the races introduced.  So not sure exactly where to
+> sprinkle them without more work.
 
+I see 2 possible solutions here:
+1. Modify the tests to just poll for the devices to appear.
+2. Modify ndctl to poll for the devices to appear before returning.
 
-On 11/20/25 5:04 AM, Arvind Nanjundaswamy wrote:
-> Hello All,
-> 
-> I'm Aravind, ex-HP-UX kernel developer and have worked in virtual
-> memory solutions during 2002 - 2010. I have a decent understanding of
-> system architecture and its programming aspects related to VM. I have
-> worked on ccNUMA extensions, memory Online/offline solutions and
-> enabling largepage support.
-> 
-> I have ventured elsewhere since 2010 and want to get back to VM
-> development, especially about CXL implications on VM operations.
-> 
-> I'm open to taking up small beginner-friendly patches since this is my
-> first time contributing to the community. I'm looking for mentors who
-> can help me through the process.
-> 
-> Kindly help.
-> 
-> Thank you,
-> Aravind Nanjundaswamy
-> 
+What do you think about those?
 
-You should just start contributing on topics of interest and we can go from there. Also take a look at the maturity map [1] and see what areas need work. And if you are new to Linux patch submission, please take a look at this [2] doc.
+> Could dropping just this patch and landing the others achieve most of wha=
+t
+> you need?
 
-[1]: https://docs.kernel.org/driver-api/cxl/maturity-map.html
-[2]: https://www.kernel.org/doc/html/v5.17/process/submitting-patches.html
-
+No, device-dax is the only one I actually care about.
