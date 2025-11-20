@@ -1,250 +1,238 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D07171CD
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Nov 2025 01:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763601846; cv=none; b=Jgnn28+p4WrCqxhno4SOYDeo3FmMcW4js5bwzq0l/yV+kerw1Dj5aszVd/Ytd+iG88H7mZq/9kEMOi6Lz/ITNJjxMZJZC15GDvHxNXUbVWVgungbQFrywqq7wy7kDc9fxjjFc4xKCUl4eevOJk0VG8mT9KWHVfmtAr15yZPpc0Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763601846; c=relaxed/simple;
-	bh=WVekVFMr93gu7B7tQyDL7H4OOlLNiptTS2q6UXDprwQ=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=f1pq7B/MtHDi4yBudDDwXMxSjwOEuycSou9OIR+Hvk+makFaRye3WojAG5WVeFu6UG1m8eO9ZASxozv+PUzHyNRCutcCXLAKN1PW9qANKWBnVG+YMNcFdmjTiZFDZzUODrSwt4QF1uoncJyWifHEiSTeS/CXpC9KBOwFSyGKID0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QzG24jaW; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71ABA171CD;
+	Thu, 20 Nov 2025 01:24:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763601868; cv=fail; b=SvpaAYNb6Q2PFYCetjhHqAyTOzRFU1lohVyemYwiG9MBdnnVzxtNEytcE2HvLPR9ikOcNkbkrcoTAXDqpGOzWkMVNOWT8WXQvCxC1Ig7bMQAzaIOcEJ21LxeCrjVikfFJ8BLAxJDZdCCtJ9JCwCyaeqlGo8gdGjQT0PmEElgykU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763601868; c=relaxed/simple;
+	bh=wh/eZ4+yFzwJS+A0TBjxwMv3xUcWEiyFXrFz2/aJPAs=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=BiRMrsROJYz6wL/Gve0r9RY8Iwn5Ieh+VJsxaLloI2j2ljnLJwN/57ugmFTtHau3NYdxlGHD9yV6H6tZ50ThvOlIwWodVzlQrpi8ti87u5y1miNatDWeKAKkQqLhUF+hlarIW3fWPWeiLdsM6nPizJPQLudvjx1Z0PJ1GcbQcnI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ngyiq7xt; arc=fail smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QzG24jaW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ngyiq7xt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763601844; x=1795137844;
-  h=date:from:to:cc:subject:message-id;
-  bh=WVekVFMr93gu7B7tQyDL7H4OOlLNiptTS2q6UXDprwQ=;
-  b=QzG24jaWHedWjRTzZy3BrUpkwP+OpQF47toOktiPkk/uMvykHivVBQyw
-   siNX2gP+c1LJdgrHi/sWZMDuTMTprJy6VX9k8XW4QGcGLDeIBNsVIqEi7
-   NJDIq3kuHkaQpnzVdTxhddVLNVWRYa1L3T1A4ZfbHXVhGtdWq8/SQUAE/
-   KhH/SEYYy2t8/zPoD3vN7Lx+bVy0Yu08w34KAzjgNnqx8u+qro2pDg8L1
-   9jkuG3pxhaKu8dpmtCIdThBifuNVtztWV8hcy2ZmAdIwi/cLUNwbf7Lnp
-   ED0Ty775ag4O2BvXk8iMUbumOCgrszqVOSUsWXVgMPSn6GN3bdISf04Cx
-   Q==;
-X-CSE-ConnectionGUID: IU7HBKn6R6yJxvDRv2nv2A==
-X-CSE-MsgGUID: Bhq89SSoQhyuNc70dM37Ag==
-X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="83047702"
+  t=1763601867; x=1795137867;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=wh/eZ4+yFzwJS+A0TBjxwMv3xUcWEiyFXrFz2/aJPAs=;
+  b=ngyiq7xt8iGlOttTqMGM/iEtsJ/y46u109LmdCKccXQpqlRgdXVnRdZs
+   Fjap9cBjPca1EM4yYyMRcL0kfR/49gTNXolz+tL/tD3MS8A23aUCNVHIH
+   A0k9ZIsfO6Am4w75P9Cdr4R/XDSz4SEhpP+A89/9lN3SrG99e90x4fK+e
+   bH4yh3u0kH/FGxFlflXtJAZPcSfHKDUz483aHKhH0dtKYCvOuDW9wBhhE
+   4ShYUalVsurT88CF8uUroByPZH4lSmHleyUq/DURorgm4LvgFqfFoWpRh
+   1wfRpaAPACEUBlFEgH+B+q/fxHbOhGRepNVEOMBNJz8q9YELbo6gnbCQl
+   A==;
+X-CSE-ConnectionGUID: hHEMfDIOQ2KHdptVohkgSA==
+X-CSE-MsgGUID: BbiY4HmoQj+Y1tDPZHbShg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="69511406"
 X-IronPort-AV: E=Sophos;i="6.19,316,1754982000"; 
-   d="scan'208";a="83047702"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 17:24:04 -0800
-X-CSE-ConnectionGUID: yDLyRmZzT629yBMAzSwQTg==
-X-CSE-MsgGUID: GZd4m7ZgSkaHpv15gGuPQg==
+   d="scan'208";a="69511406"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 17:24:26 -0800
+X-CSE-ConnectionGUID: lW5XmETsStCXDYljWrcs6Q==
+X-CSE-MsgGUID: h/96t29ZS/ecq/dju0zDkA==
 X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 19 Nov 2025 17:24:01 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vLtOx-0003UR-1v;
-	Thu, 20 Nov 2025 01:23:59 +0000
-Date: Thu, 20 Nov 2025 09:23:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- ea5514e300568cbe8f19431c3e424d4791db8291
-Message-ID: <202511200914.cEG20WoQ-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+X-IronPort-AV: E=Sophos;i="6.19,316,1754982000"; 
+   d="scan'208";a="196173635"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 17:24:23 -0800
+Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Wed, 19 Nov 2025 17:24:21 -0800
+Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
+ FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27 via Frontend Transport; Wed, 19 Nov 2025 17:24:21 -0800
+Received: from CH1PR05CU001.outbound.protection.outlook.com (52.101.193.69) by
+ edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Wed, 19 Nov 2025 17:24:23 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Jbm7QMI3Ii6EyMjBae5JBLMYY1fQH4A1SnLIyjxAa/fydMlA0IFAhbMGbMvKE5hF4N4zxRUugbvuIojlR1JviGTEINIWdsVD1mpgotn44odVACwa4WgtI38iZbu9KODipiWE5kMFxvu+PXzEAxhIkadveqnOgPpnN3GSLLBHDr3wtus2JGvdtwsBKOeyjERGGqCLWd85swFe+oRPL5KzKClbin9MXJuz+d87ugfItf47WF448L/IIlQyrwqaTRCJVRhRzSzr8a3BHCxlKW7NZDFrgsN+LFV/8PnH1CorvIYg+8StKoMCwSPRSAu+Rkyr8H0zt2NEYWvjF2GI511FFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ad9tE07QmF+Hv9PL4ipIevb4d4jRIcTAYiIGx+6SifM=;
+ b=GxIfP/PEKwY65MxZi5W1lMDJeQfIIex56mHCn68cC2M2bNrq3mHjTPu0c6hsdQZTV+8UroXRenLpWCD4Zt/BProYXWpHCSYTG4Yf6DNfH16rLlb7HFqnN6fzTASdceYSeBuIvf42RMW2dXF11B5Gb6670ongAJz8zG96oFsYeGjA9lgZ3uthHS+9x4FYEe4YZLMS6BTClxmi4JBrhxCnlb7fcsI6nJRrwDfetQ+F+62h9cJEGJOLBzUa4p4WXw/lnBO/ZiJsQZsZoAqLWEPmszoCB9ezlau9oUGG7t8Fq/VHlMbvsnUIHueUHe/INTp270PpjdtoBBZM7eQ6yilUJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SN7PR11MB7116.namprd11.prod.outlook.com (2603:10b6:806:29b::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.10; Thu, 20 Nov
+ 2025 01:24:19 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff%4]) with mapi id 15.20.9343.009; Thu, 20 Nov 2025
+ 01:24:19 +0000
+From: <dan.j.williams@intel.com>
+Date: Wed, 19 Nov 2025 17:24:18 -0800
+To: Terry Bowman <terry.bowman@amd.com>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <shiju.jose@huawei.com>, <ming.li@zohomail.com>,
+	<Smita.KoralahalliChannabasappa@amd.com>, <rrichter@amd.com>,
+	<dan.carpenter@linaro.org>, <PradeepVineshReddy.Kodamati@amd.com>,
+	<lukas@wunner.de>, <Benjamin.Cheatham@amd.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+	<alucerop@amd.com>, <ira.weiny@intel.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<terry.bowman@amd.com>
+Message-ID: <691e6dc22618_1a37510035@dwillia2-mobl4.notmuch>
+In-Reply-To: <20251104170305.4163840-18-terry.bowman@amd.com>
+References: <20251104170305.4163840-1-terry.bowman@amd.com>
+ <20251104170305.4163840-18-terry.bowman@amd.com>
+Subject: Re: [RESEND v13 17/25] cxl: Introduce cxl_pci_drv_bound() to check
+ for bound driver
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR05CA0131.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d::16) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SN7PR11MB7116:EE_
+X-MS-Office365-Filtering-Correlation-Id: eaa97520-da9d-42ec-1ef9-08de27d38742
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|921020;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?MEozWGdheXQxOEJ4VEo1SDFRVm9ROXJGV3lUWFlLdFpSeGVBbXNPYUZyOEJ6?=
+ =?utf-8?B?b2paU0pPcGd0dE9MK01ZbjlTS0RKa0RnU1NTN3RjOC93amorRnRSZ09xdGN2?=
+ =?utf-8?B?WTlqQkVLbHc2TkFtWjNyZU4zNGJuek0xSDg2ZjluRVNBV3hUckExWGpiVmRk?=
+ =?utf-8?B?ZVc1Tmg5TkxVaDlwOHdWMkxtalF0NWk5d2dvRlk2alpCZnB3Z2R2Q3NPZ1Z1?=
+ =?utf-8?B?aHlqN0c2TjUvVG9OTlpHNHV0TnpKYmRoYjFVb3FrSE1RL3BDNnRIMzRCa3F6?=
+ =?utf-8?B?Mk5JeU9GWlNJaUF5NHQrR2d3WklRaHhJVXpnVjl0MVYwWjZXcGlDRndreXhp?=
+ =?utf-8?B?UzZtcDhDbEtNZDVtZ2Q1NTNQWmxpK2NoQStzbFlFMjNCOFNtai9SaFR3RU1m?=
+ =?utf-8?B?WE91OHV3ZWdDSkNwZmFzYk8yTjJZcFNMamp5U2RRVFhqWGduVjZ5OWVJODlC?=
+ =?utf-8?B?R1hTRkYwWWw5SUNiY1h2SGJVTy8wLzV3bGEySURIc2Zkb3VTem5LVHZuYnBr?=
+ =?utf-8?B?STdUS2EybEVkeVNYMkJ6cDRZai92TVdZSGNyM05BNWh2WUg2UWVEeUxCa2oz?=
+ =?utf-8?B?WDZXeVVOS3FVK1Z4MzFwRFRzajBIM1hoeHlkM21PKyt1MGhEbFY5OEZ2WEpa?=
+ =?utf-8?B?a0lKUml5WWNnK1FSRy9IRXl6RHdxbHA5UDJIQzZLRTdnVkdGdHA3dWZuRG41?=
+ =?utf-8?B?Sm0zUllvald3NC9EYk13Uk9VamppTytFb3ZSeDJmcG1RLzBPdGN0T3ZXMlJT?=
+ =?utf-8?B?OTM2anYvYzZ4c3BWMnR3S1psS1l0OThuQjJvT2RNSVRjTTJPREhRQ2wvTy9N?=
+ =?utf-8?B?Zk9wVTNuRUhodEZZK3RCRGpsSmNQVDVpTTl2c0tqRFo0MUdySk9LcW54TEY2?=
+ =?utf-8?B?cUN4OWR1TTZEVmRNbG1nbUtrM3pxUkZ6WnNRT2RWS05paVY3ejA1TTByVzRS?=
+ =?utf-8?B?cHRjSWdzalhFYVZjQ2JGbUprNG1jM2l0MzBVaXppdDlxcWRoZit2bzdyVUtE?=
+ =?utf-8?B?am5LZ2dOTlFLSkczeFBtTlhlTmhscHVCc3hFaDd4RCtjZzdBa1hDODdMUS9P?=
+ =?utf-8?B?N2Q4cDdKeFpHR09nU1B4cmtrdWxIcW41OThLNkZMKy8rNFNuRXFqdDRJWXNQ?=
+ =?utf-8?B?VVJMMUJBOEJNYjR6SGw1V0dreUc2Q1pyWEhxc1llbnRaNEs4YzlJbm13OVRZ?=
+ =?utf-8?B?UkpZQ2E3WVNSS01kRmxEMHRiM2syczVsb2xEM1prVU5neDF1QjUxazltTkxp?=
+ =?utf-8?B?YWk1RDVEaExOR2FCY3c1UWEzTGpnMFNYU1RiQnFCb2Z0dWNjQk13SWZ1dVdO?=
+ =?utf-8?B?bHpHWTJJN005MGZWbjNURVBidmNvQitoT1JxNDF5a3FUNHlHemkwNWVVOVp4?=
+ =?utf-8?B?bzJMWnVDWnI4ejRYdERPNk0vMGlzSmhGOTVNNmhySFZlN3VlR01DTHRjM0pz?=
+ =?utf-8?B?cWtxdXN4cWp4RUU2R2p3QXlxbkhSNFZ6QnkzQy93SG9TUXNFSDR2TXVEanR3?=
+ =?utf-8?B?SUxqcE1JdUNSNHJhbnNBM1hQUkFvZE5ramMxSFpoV0VRNjNnMU9sWWRPL0pH?=
+ =?utf-8?B?SUk1OGExV1c1UVlCdGY1d09VM2tFOFc2cXIrN3d4ZmFPVk1rc2V0alJvTG1H?=
+ =?utf-8?B?QXdteEo5SytxU3p0S3lGa2N6RWJpS0R3RjFCRXo0aFVrUXdIR3dLRlZ3cnpE?=
+ =?utf-8?B?bXBGSzR4ajZINVFLblh2NkYyeEhjaG5JdEJabWFMd2N4cGJBYlo1RWtyQTNC?=
+ =?utf-8?B?eXdWL3ZoS3hPRGY0dlR2MklweS8xYVlqTE5aWHdJUkdMQzFGdExQNWx4WGc3?=
+ =?utf-8?B?ZzVuYjhoWk82RlFOQ2Z4WGlPZ2hwSnlhV1FoWHp4Qm1VOTJKSy9takhTM3Jj?=
+ =?utf-8?B?eU8xSzZON2dLU1lwTUY5U0JIWlU4b29NRnY5dnNYczlQdFhoMEhhQXRhVGxY?=
+ =?utf-8?B?K0NZN1UwcVB5S1h4TTRDREZESXJnMDVBK2trMTZkZUFPUEpmbURUWnBVTTVZ?=
+ =?utf-8?B?UFZkdGZUeWNUclVRMEVMaGR4allEYkhCQlR1VmtzbzY3UHVJWjkwSnpTUWtk?=
+ =?utf-8?Q?V97new?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?alozL0x6OVFXQk9hTlhZbUNoRVhxSk5pSDRrS21vZHVGTDRDWmlPYlhmV0pZ?=
+ =?utf-8?B?c240aVp4QS9CK3Fvc1gxTnRkaE1IcVVxTVltbXlLVWcvQjh2Z1ROek9McjBE?=
+ =?utf-8?B?cy8rSjNlYWFId2dLTktWQWxyaXIyeGViRDBBQ202MHRpbW10bTZuNVBWd3o0?=
+ =?utf-8?B?a2k4c05JUXdDVjZHVlR1SWh1RzJmZTUyWXR5VUF3bllobVpLWnE3eC9tWkVF?=
+ =?utf-8?B?dnBYS3VhbTZQWDEyYjNadmtKVEtYZ1NGYUdHWVpOZ2JzQnZwWTBvRzVtd3FD?=
+ =?utf-8?B?QUJOd3Q5SzdNZ1V1NUVlQXB1bFcwUFJ0YVV3MXl1YWVGMlpXWUEvdUZyVmRE?=
+ =?utf-8?B?dUJsdVozVU9QNDlvM3lOUStwYStGUGNxa2h2T0d5SGlqZWRLRWYyRERkenVV?=
+ =?utf-8?B?M1FNUUF1Z1dya2hyRjJINVBySkFHZEZoNTRiVGhsbm16THlwNlRLMzVGQU51?=
+ =?utf-8?B?QWd6RnZKOEZBUmtoVjQ3OEZjOEwzeld0RlNZZlFDU1ZKYzY4NktValUwQXA5?=
+ =?utf-8?B?VFRHd09TSmw4RFNUWGprOUlVWjkrdXlySjJKVmhNcVN4cVRuMzJ3WlJOR3g3?=
+ =?utf-8?B?aTR4UlpHZCtDeHRmT3R4blQxMU5qaHhCL0IwSTFoNlEvb3NtdVNCNWZ3dFdz?=
+ =?utf-8?B?ejRNYUU1RVF6YlowMjJTM0hhYnUyWGFZTml6WHh2UTFJNG84VFl3bGwweXZz?=
+ =?utf-8?B?Zk1zRk1OK1pKM2Y3OG1tRWk5OVV5WmFsVDlJU3I5c29oZk96TVl0ZWQxc1ZS?=
+ =?utf-8?B?UWlqbEV5eE5RZ0haajVUTWNJRUhvczA0bktnejBsMzRkdHI0Y0ZhYUlJR3Vi?=
+ =?utf-8?B?UG9ZZGltKzV2b2RNelgzdVlaTEtDTzVCdnp3WnlCeWVpZGN5ajJaL3ZLMEk3?=
+ =?utf-8?B?QlhkSVVXL1padUM5ZmlIS09USllCcHFXcVdzWS9oV1Z1NDdIMmtoS20yak93?=
+ =?utf-8?B?TXlRVXBsRVNPU25ENy9EbkdqSkxBMDI3MllQdTVEamRtMGFqVnIrWnp1YVVT?=
+ =?utf-8?B?cVhIOTFGQ2RQQXQ0bTFlbFFObWN2MW1qVTUzUkNnVzVoTXZxU2gwbm5JS25j?=
+ =?utf-8?B?TzRpUUkrNVozT3VEQ1AxamdHRkljc0ErZUhLeEgyK1ZDZEFzZGtGVHY3TTRw?=
+ =?utf-8?B?aE8vTEpBa1UrUVNQbDNrMUdlT004ZFN1bnZLTEhGWnd5cjVlOG5Xd1JtaW8z?=
+ =?utf-8?B?MVkrOXNVN1RPSVF3OTc4Mm9IOEtBU0hQRUNVNG9pMjBJZzJjLyt6L2I3Mm43?=
+ =?utf-8?B?cUVXUko2RFNrVzZTUVpUYVFHUnljVFlxMjFCSUFMSElkMmgvRTYrRXpoMkFa?=
+ =?utf-8?B?ZFI5M0FRY2kwSmwrdmxuL2Nvc1A4MFBzaXYwVVVYOXgzNk5NZGx2NlRZMWR3?=
+ =?utf-8?B?NVNkZnJnZitHdkF4OStmVTE1VVRkS1RIRmdZREZUNjhHb1BxM1VvYy9PRG91?=
+ =?utf-8?B?QW51NXZ6SlNCMmNaKzB0NjFBWTBsaURQb09PSkpQMWdRNkNOcmFiM3ZBb3pM?=
+ =?utf-8?B?cWpqT0RUb2JqRnoxNTFiQzUyTkJEUldvNG5xblNUaE0yVCt3NW1XY255YkdQ?=
+ =?utf-8?B?T0NiSzBWejVQUHpVLzljVXFPRTJySFBvd3RBaUpuaUFvaElvYlVGaVVrUStk?=
+ =?utf-8?B?MHJxZmJYdGxpazAwNm5zeHgvSVNncnpyNjcvekN1aXZ2dDh2YTd3MlFVa0dp?=
+ =?utf-8?B?a3BMWTYxZGd6UHdicmhnOVA3MFlPakM4aXVIelUyUU9oemsxKzlvb1hCSkps?=
+ =?utf-8?B?dmFOc3kvbjNmMHV2cG5wZ1IwZ0U0VnREdkFZZDJzUURqNTZ2aGtZTUR6clZx?=
+ =?utf-8?B?Z01leUlzVzlCWlVQc3dFNG5VbjdIeVpJWG9xcTlKbzUzOENkU3BIbkNiMm9z?=
+ =?utf-8?B?UThSQWl1S0ZnU1pGZnR5cGFoRDF5dVJRTFJGbG5MOFFEaDBwVVJsL0hibDdZ?=
+ =?utf-8?B?U2dNVXBRQWxuUDRGeDZiWkx5RFhEWkpmZ3VMY1gzekZRRWZsVUFhV3plaE9k?=
+ =?utf-8?B?bFJTaHhwajdFVHhmMm5YUysyaWVtZG1EekY0eUFrTXhZaDYrVWdYajVubnNM?=
+ =?utf-8?B?VzZaSFlaZzlkU1BKOHlHSkxJdVk2K3Jza2sweG9CVThxQWQ5cGtab0d5Uldz?=
+ =?utf-8?B?SFFzNUtuSlB3a2t4VXAzZU5lbHJGL0praHdQUFZXUFJzQ2NLaUN2QlFjMHBa?=
+ =?utf-8?B?cnc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: eaa97520-da9d-42ec-1ef9-08de27d38742
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2025 01:24:19.5612
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: caSj0bg1UP/sJel0a/N+4Px4PRo6/r9SL9xlI2BXVUu/Z6II2w4KxXbKP7CRxGCT0o1TQbtsuyjMdKOKDdyBBDyld38kvLb2CsHpb7Gsnxw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7116
+X-OriginatorOrg: intel.com
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: ea5514e300568cbe8f19431c3e424d4791db8291  Merge branch 'for-6.19/cxl-misc' into cxl-for-next
+Terry Bowman wrote:
+> CXL devices handle protocol errors via driver-specific callbacks rather
+> than the generic pci_driver::err_handlers by default. The callbacks are
+> implemented in the cxl_pci driver and are not part of struct pci_driver, so
+> cxl_core must verify that a device is actually bound to the cxl_pci
+> module's driver before invoking the callbacks (the device could be bound
+> to another driver, e.g. VFIO).
+> 
+> However, cxl_core can not reference symbols in the cxl_pci module because
+> it creates a circular dependency. This prevents cxl_core from checking the
+> EP's bound driver and calling the callbacks.
+> 
+> To fix this, move drivers/cxl/pci.c into drivers/cxl/core/pci_drv.c and
+> build it as part of the cxl_core module. Compile into cxl_core using
+> CXL_PCI and CXL_CORE Kconfig dependencies. This removes the standalone
+> cxl_pci module, consolidates the cxl_pci driver code into cxl_core, and
+> eliminates the circular dependency so cxl_core can safely perform
+> bound-driver checks and invoke the CXL PCI callbacks.
+> 
+> Introduce cxl_pci_drv_bound() to return boolean depending on if the PCI EP
+> parameter is bound to a CXL driver instance. This will be used in future
+> patch when dequeuing work from the kfifo.
 
-elapsed time: 1513m
+I am thoroughly confused about what this patch is trying to do. The
+whole point of a cxl_core is to separate the potential shared mechanics
+across CXL device types from the specific special case of the CXL memory
+class device.
 
-configs tested: 172
-configs skipped: 4
+This would be like saying that all PCI drivers need to be built-into the
+PCI core to satisfy PCI error handling.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+If the core needs to verify the driver before calling the handler then
+the design is broken.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20251119    gcc-10.5.0
-arc                   randconfig-002-20251119    gcc-8.5.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-22
-arm                   randconfig-001-20251119    gcc-8.5.0
-arm                   randconfig-002-20251119    clang-16
-arm                   randconfig-003-20251119    clang-22
-arm                   randconfig-004-20251119    gcc-13.4.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                            allyesconfig    clang-22
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20251119    clang-22
-arm64                 randconfig-002-20251119    gcc-8.5.0
-arm64                 randconfig-003-20251119    clang-22
-arm64                 randconfig-004-20251119    clang-22
-csky                             allmodconfig    gcc-15.1.0
-csky                              allnoconfig    gcc-15.1.0
-csky                             allyesconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20251119    gcc-15.1.0
-csky                  randconfig-002-20251119    gcc-10.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon                             defconfig    clang-22
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20251119    gcc-14
-i386        buildonly-randconfig-002-20251119    clang-20
-i386        buildonly-randconfig-003-20251119    clang-20
-i386        buildonly-randconfig-004-20251119    clang-20
-i386        buildonly-randconfig-005-20251119    gcc-14
-i386        buildonly-randconfig-006-20251119    gcc-14
-i386                                defconfig    clang-20
-i386                  randconfig-001-20251119    clang-20
-i386                  randconfig-002-20251119    clang-20
-i386                  randconfig-003-20251119    clang-20
-i386                  randconfig-004-20251119    clang-20
-i386                  randconfig-005-20251119    clang-20
-i386                  randconfig-006-20251119    gcc-14
-i386                  randconfig-007-20251119    gcc-14
-i386                  randconfig-011-20251119    clang-20
-i386                  randconfig-012-20251119    clang-20
-i386                  randconfig-013-20251119    clang-20
-i386                  randconfig-014-20251119    gcc-14
-i386                  randconfig-015-20251119    gcc-14
-i386                  randconfig-016-20251119    clang-20
-i386                  randconfig-017-20251119    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                        allyesconfig    clang-22
-loongarch                           defconfig    clang-19
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-m68k                       m5208evb_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                             allmodconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                             allyesconfig    gcc-15.1.0
-nios2                            allmodconfig    gcc-11.5.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                            allyesconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-openrisc                         allmodconfig    gcc-15.1.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20251119    gcc-8.5.0
-parisc                randconfig-002-20251119    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc                    ge_imp3a_defconfig    gcc-15.1.0
-powerpc                      pcm030_defconfig    clang-22
-powerpc               randconfig-001-20251119    clang-16
-powerpc               randconfig-002-20251119    clang-22
-powerpc                  storcenter_defconfig    gcc-15.1.0
-powerpc                     tqm8548_defconfig    clang-22
-powerpc                        warp_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20251119    clang-19
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20251119    gcc-15.1.0
-riscv                 randconfig-002-20251119    gcc-10.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-22
-s390                  randconfig-001-20251119    gcc-8.5.0
-s390                  randconfig-002-20251119    clang-22
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                          landisk_defconfig    gcc-15.1.0
-sh                    randconfig-001-20251119    gcc-11.5.0
-sh                    randconfig-002-20251119    gcc-9.5.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                            allyesconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251119    gcc-15.1.0
-sparc                 randconfig-002-20251119    gcc-15.1.0
-sparc64                          allmodconfig    clang-22
-sparc64                          allyesconfig    gcc-15.1.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20251119    gcc-15.1.0
-sparc64               randconfig-002-20251119    clang-22
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251119    clang-16
-um                    randconfig-002-20251119    gcc-14
-um                           x86_64_defconfig    clang-22
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20251119    gcc-14
-x86_64      buildonly-randconfig-002-20251119    gcc-14
-x86_64      buildonly-randconfig-003-20251119    clang-20
-x86_64      buildonly-randconfig-004-20251119    clang-20
-x86_64      buildonly-randconfig-005-20251119    gcc-14
-x86_64      buildonly-randconfig-006-20251119    gcc-12
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-001-20251119    clang-20
-x86_64                randconfig-002-20251119    clang-20
-x86_64                randconfig-003-20251119    gcc-14
-x86_64                randconfig-004-20251119    gcc-14
-x86_64                randconfig-005-20251119    gcc-14
-x86_64                randconfig-006-20251119    clang-20
-x86_64                randconfig-011-20251119    clang-20
-x86_64                randconfig-012-20251119    clang-20
-x86_64                randconfig-013-20251119    clang-20
-x86_64                randconfig-014-20251119    gcc-14
-x86_64                randconfig-015-20251119    clang-20
-x86_64                randconfig-016-20251119    gcc-14
-x86_64                randconfig-071-20251119    gcc-14
-x86_64                randconfig-072-20251119    clang-20
-x86_64                randconfig-073-20251119    gcc-12
-x86_64                randconfig-074-20251119    clang-20
-x86_64                randconfig-075-20251119    clang-20
-x86_64                randconfig-076-20251119    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                  audio_kc705_defconfig    gcc-15.1.0
-xtensa                randconfig-001-20251119    gcc-8.5.0
-xtensa                randconfig-002-20251119    gcc-11.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+The design should accommodate a case of *only* a CXL accelerator driver
+loading and not a CXL memory expander driver. Let me go take a look at
+how cxl_pci_drv_bound() is used. There must be a simple misunderstanding
+that we can resolve quickly.
