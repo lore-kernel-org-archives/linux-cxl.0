@@ -1,86 +1,161 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D68372ADC
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Nov 2025 12:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF432BF000
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Nov 2025 14:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763640314; cv=none; b=bHaVivNrr74s8r5UOFchNjDKLLN7INPkTHiRnW7QjaLzd7HaxdICZyt9lFtnG/C4ytsMe7uLkTkm53n7gBYm4DHXQIbDAbXvAGFftiQ+82KlsdDyuZwbQmrIQbyodrql3gDGMpTXE7KBd8CKa52hwUQcteQpx2zGm9U5UMANU7w=
+	t=1763650371; cv=none; b=UcMDYnvxmRzk+CQgSzbH1segrJnpXg1+OZT9xzpq+AcLprm2F7ikqqzR1JLfP/qxJ1VvvKpycI5DvT9FOLypNhR7ZCA1un1M38wnSUDRkh4zskmaAFHYP0mEVGZ8E2C2tQcpHOViLdBbtq6GiGB4AbcLK41LMn5MKQ5paqJ7YQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763640314; c=relaxed/simple;
-	bh=5Uzd3tC60R46c0DaRRbvIIaOvV8AddSoXq8IRkQQtU0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=egWrCEeOB0FZJ8ll9TITdh6aKApu/8ha4d4mt5wCswyQlkr9KQAXhDBkD94YQEQSsa5XiRdFCH79+YCuunb4Z4XIaGtPZpH9vsBPdVcSRXP1ouKipgSJaBEJOhRx5n7ALOBFoz7LGhMGGBEJcbN96JuqvTkRI1+30MN9VkiPYOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZTHdB32t; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1763650371; c=relaxed/simple;
+	bh=fJNbQYu7PoiJLsEPpjUYNqAPI6k2geFEJacIKnsv5a4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=TXEbB1eUVH8L+Wqj3NukzdLW62EdATs19OO06AS62AA7UzWjrBUAwca31HpTr8qEllkXGun+KRTffmPkcgcE/3ElBggV2ebDTP2vsvad/oXCRyUXDN/AIZmFPOizXnNV6w+jcChXuRoF26+mckDfLcYpa+hV6Z6edCSo+JVsMdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Nlop4bDN; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZTHdB32t"
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-55b0d4b560aso1198611e0c.0
-        for <linux-cxl@vger.kernel.org>; Thu, 20 Nov 2025 04:05:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Nlop4bDN"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-43346da8817so5269585ab.0
+        for <linux-cxl@vger.kernel.org>; Thu, 20 Nov 2025 06:52:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763640311; x=1764245111; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5Uzd3tC60R46c0DaRRbvIIaOvV8AddSoXq8IRkQQtU0=;
-        b=ZTHdB32t+Ea5FTywiloeuJxc8iCbZJYhcqDHLZfpbM608Gnk6+9j0BE0FnIGhcMUxi
-         iLx00DTjrSnjvDB/dVtmAs7oC2ERe3ge2/uyhcP1ffJx6ADvUENA5W0/rigB9jbrJigv
-         ty666Zk6twzzrpwK7Sj5+I4w0cST+k3K55SuLNemqDhll8f/Zg9NEMd6z/PmiLP3pArU
-         WMq5Er+mi7qHexgUwsOGTPghGqkcIMXKoSnaeAaVqJp0eVbgkklj4ZbnUPvFHJE/5I9v
-         KJCdsuG/861I8ZPVjhnIMZB1Ce+dkdwJXxS+OxOunjIsEGpdsn97Vbcboeix9s4EqO88
-         h/GQ==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1763650367; x=1764255167; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mIp1emodWmrQX+c6TjoXmEBGWcecINECr9nK+dGHBUw=;
+        b=Nlop4bDNIOkjuo0pMhzaqc0ODrEsmRo7XtLqwhp00uyFASxw+sbIvvfDKg63/0WNIr
+         Irgw7i1L5c7f3KspyZuRfY76O51HffIuodvQy5ZIcDN4No7WwIxUOGZ9dpes/M6K+nsd
+         SNLzENdMcdkRpJUmuFjuM9BMlGaR61DPmsUMatu7aVJzbpi7Z/RO6GbliOgOscpBha8S
+         DnzFtV5phPRpPEJgf98WlMFKyzL6CdLykV3ZnkTgBAq3ZRb9M24771+6fglXYKmcEHuj
+         JwzMwrRMP1iOEu/PZF6XSo/nxjqLzdvmfaif9TGvKGR4YXIy2m1LIpokuAZvSHGS7C+s
+         olCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763640311; x=1764245111;
-        h=to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Uzd3tC60R46c0DaRRbvIIaOvV8AddSoXq8IRkQQtU0=;
-        b=PnWPlVCWFHEXpC4E4xqVAts8yO0Bq5xmOTkX4ByWZhtEmGBxFCLufZkzPBljpbsc5q
-         dkBhNl6XDFld2tAlRWukBd3SUE5AP2h++44DAcoi+f5uWJ6ywEWy4iISLL8x7uPhxba+
-         mH/XAEEhGVqAoH9zFdHsLfkf5Vd4CMW04szfJJ1pIvLsH+AspTIXriXvwES5Vmne7bkd
-         DLMsc1z4qDPT7OTmssQzwmUamx1a0nQmYvtryZg7kZ1kRCxHEgoHxDQtIG0gbPhk8d3e
-         B6BNc3VjqrnaHAro6eu69CMunWgjw7F0sSiRU0tiBIx8qNYsgrdbZbNa2n5MX6lT+3lc
-         3ARg==
-X-Gm-Message-State: AOJu0YwK94mRhC0oA//xz/TfrkW+J4BHE4FJrYJDeZ3T3VMMNIjPFi4C
-	Xgk/k56/NE6JaQ0MmhjWrNcpdrxgV9uTRG9Bp83Uc3JiH4Uiq3EDAYw/M4J3ItWKBijEcU+gOdY
-	0RARK/sMobMsHGNSGO9LdIZnqcVoQw280Kl87cbA=
-X-Gm-Gg: ASbGncs+O7VXZg0Oez/FlqmO8tid5FL+RfMPbefshyvFRartfNATRKpcjgNDvjwR0IH
-	RzjgjSe017S8lNl9rQ0eEZ7PGpwjTwhQpjdlwHsV6jXixC2nXFrx7hk1k8FKbN6VhsitpSCN6MQ
-	x+iumRGxzNUPsXf45pNJXBaVZFjswmOQSJgAzOGYSvKAFt2IirxcUm86AixVB+XbSKdju6q2PqW
-	uYbxhFY+M8EhhUkYbRQyMn1rLmDOd3B9ytD32uyUw+f8chQftdJh7gqxYE15NCnXWJy+PMF8TFY
-	poNZEjSW270QcTfDL1+x+5gB451AFuHgTXcNxSGkuny4JMcAcdumSYUNVK8=
-X-Google-Smtp-Source: AGHT+IGzfIbIJTD4msuRDmPqshEiaAvraYExoGliYza3BnEvKZ0mSXVWP1CnJ1qd00l5WqyRqbURT7qcJstryniYZXM=
-X-Received: by 2002:a05:6102:6444:b0:5d5:f6ae:3903 with SMTP id
- ada2fe7eead31-5e1c41bae5fmr701876137.20.1763640311317; Thu, 20 Nov 2025
- 04:05:11 -0800 (PST)
+        d=1e100.net; s=20230601; t=1763650367; x=1764255167;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mIp1emodWmrQX+c6TjoXmEBGWcecINECr9nK+dGHBUw=;
+        b=ZFiA/R8mnP45PDaA64A7KrSB22j/4tDByAxInQTRL0+RP0LDq+JnWuUjAB6eqIz47p
+         sMZwpfTrdm+z3p0fV56Xc84k68epM3WiYi8Hf0QRDSdNT3pTgzwFUjyBDsLhROvsl1nC
+         qkXdQVth3ECv/ceP5cI56HcejTZ0pDfLqMTAUv1uj1g31VrDWVzSUllFQrIBX29/gmiB
+         L/AtVYMOunL3h4eXXVKGPU/DUgE39N5AJStDYB9rf67AjoBvUuvkDcs5JdlKa70EXAUv
+         uNqntwQ6MiepsvMQv/7Yg4c9xkmRIMdrvoZmp54atqO/9eH7bp0VAStqWs+yalWep4i8
+         Xxow==
+X-Forwarded-Encrypted: i=1; AJvYcCVaD7oKiTxPv0cm2p1xicwGVwVWapVFGBl092T7UDbZ8Ld3Tq9tBYMDJTwuGAy3VSCx2imIO8/m22s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsnyZNO4JRLsk7HiTrbKxwwzn5jdUjHz80+LgxXLyZI2PAF9WC
+	XK+WOV0EA46Hl97Sw8hQnKaF4bbCvb66x70lzy3UmXNyzdlWK8kRE8QrskPlvEukuMo=
+X-Gm-Gg: ASbGnctI0LjBK5cJIwGIIdafetNhnLKoJ35DeT+GCHbuDxNSuLLSrXd81gnJa63UIrF
+	seiaAHl1XdgMeNBOeeUaqFH+Zhb2IZgRXU0HkgqZLZptgxJ38u0Lh3ws1tTNDp6+0/6X0CeRslX
+	6h0yc/JYlVb/KKK39efE8weHu9xiPPeMDZ5HYAsJoUAimvIzLntxMvj0LuytHvX+6ZmMVQy89+q
+	oUZ3DRqkEpcE7BuwSJK91IpHu4Wc4YNmCBNmJgC5wnEjCRuMyt5bIymeJaxGLBNSF9ZFkQqngVE
+	1y1VmkYTWPKju5PyCyCsTlnYrpEzJMShuh0Ip4coHKc6LbdYTUe4bxOQU193yB7wcJ3RsAefWax
+	NhcWrONipRCHNhiz/bSFcLNvIP4oz8dmPa/40Gj5p4QsUkwXPp9wX5T0hM8ztDtrKHMt6ElgHqJ
+	7t9A==
+X-Google-Smtp-Source: AGHT+IEmRlVKCe07qbgo1t2w3uFpBKsqx62crTftDC+8sZ0oUBIrcGL53VTRakva//fmnWvcfQrQww==
+X-Received: by 2002:a05:6e02:1c01:b0:433:1d5a:5157 with SMTP id e9e14a558f8ab-435aa88e822mr21434775ab.6.1763650367018;
+        Thu, 20 Nov 2025 06:52:47 -0800 (PST)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b954b207d7sm1008611173.33.2025.11.20.06.52.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Nov 2025 06:52:46 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-kernel@vger.kernel.org, david.laight.linux@gmail.com
+Cc: Alan Stern <stern@rowland.harvard.edu>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Alexei Starovoitov <ast@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>, Andrew Lunn <andrew@lunn.ch>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Andrii Nakryiko <andrii@kernel.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Ard Biesheuvel <ardb@kernel.org>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Borislav Petkov <bp@alien8.de>, 
+ Christian Brauner <brauner@kernel.org>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Christoph Hellwig <hch@lst.de>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Dan Williams <dan.j.williams@intel.com>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, 
+ Dave Jiang <dave.jiang@intel.com>, David Ahern <dsahern@kernel.org>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, Ingo Molnar <mingo@redhat.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Jakub Sitnicki <jakub@cloudflare.com>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ Jarkko Sakkinen <jarkko@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+ Jiri Slaby <jirislaby@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+ John Allen <john.allen@amd.com>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Juergen Gross <jgross@suse.com>, Kees Cook <kees@kernel.org>, 
+ KP Singh <kpsingh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+ Mika Westerberg <westeri@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+ Miklos Szeredi <miklos@szeredi.hu>, Namhyung Kim <namhyung@kernel.org>, 
+ Neal Cardwell <ncardwell@google.com>, nic_swsd@realtek.com, 
+ OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
+ Olivia Mackall <olivia@selenic.com>, Paolo Abeni <pabeni@redhat.com>, 
+ Paolo Bonzini <pbonzini@redhat.com>, Peter Huewe <peterhuewe@gmx.de>, 
+ Peter Zijlstra <peterz@infradead.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Sean Christopherson <seanjc@google.com>, 
+ Srinivas Kandagatla <srini@kernel.org>, 
+ Stefano Stabellini <sstabellini@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>, 
+ Theodore Ts'o <tytso@mit.edu>, Thomas Gleixner <tglx@linutronix.de>, 
+ Tom Lendacky <thomas.lendacky@amd.com>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, x86@kernel.org, 
+ Yury Norov <yury.norov@gmail.com>, amd-gfx@lists.freedesktop.org, 
+ bpf@vger.kernel.org, cgroups@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, io-uring@vger.kernel.org, 
+ kvm@vger.kernel.org, linux-acpi@vger.kernel.org, 
+ linux-block@vger.kernel.org, linux-crypto@vger.kernel.org, 
+ linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org, 
+ linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+ linux-integrity@vger.kernel.org, linux-mm@kvack.org, 
+ linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ linux-serial@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-usb@vger.kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org, 
+ usb-storage@lists.one-eyed-alien.net, David Hildenbrand <david@kernel.org>
+In-Reply-To: <20251119224140.8616-1-david.laight.linux@gmail.com>
+References: <20251119224140.8616-1-david.laight.linux@gmail.com>
+Subject: Re: (subset) [PATCH 00/44] Change a lot of min_t() that might mask
+ high bits
+Message-Id: <176365036384.566630.2992984118137417732.b4-ty@kernel.dk>
+Date: Thu, 20 Nov 2025 07:52:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Arvind Nanjundaswamy <nanjundaswamy.arvind@gmail.com>
-Date: Thu, 20 Nov 2025 17:34:59 +0530
-X-Gm-Features: AWmQ_bmmbdnSRsPT1m6GSf9Jtb7nFKW4F8yH-6tDp7f4AyPBOmurxEECpNtrwJc
-Message-ID: <CAK8XrEWTauMKpWpuzfnpxGuY3gbr8EuuoAgaHm+awyhZnZ3EiQ@mail.gmail.com>
-Subject: Interest in contributing to the CXL community
-To: linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
 
-Hello All,
 
-I'm Aravind, ex-HP-UX kernel developer and have worked in virtual
-memory solutions during 2002 - 2010. I have a decent understanding of
-system architecture and its programming aspects related to VM. I have
-worked on ccNUMA extensions, memory Online/offline solutions and
-enabling largepage support.
+On Wed, 19 Nov 2025 22:40:56 +0000, david.laight.linux@gmail.com wrote:
+> It in not uncommon for code to use min_t(uint, a, b) when one of a or b
+> is 64bit and can have a value that is larger than 2^32;
+> This is particularly prevelant with:
+> 	uint_var = min_t(uint, uint_var, uint64_expression);
+> 
+> Casts to u8 and u16 are very likely to discard significant bits.
+> 
+> [...]
 
-I have ventured elsewhere since 2010 and want to get back to VM
-development, especially about CXL implications on VM operations.
+Applied, thanks!
 
-I'm open to taking up small beginner-friendly patches since this is my
-first time contributing to the community. I'm looking for mentors who
-can help me through the process.
+[12/44] block: use min() instead of min_t()
+        commit: 9420e720ad192c53c8d2803c5a2313b2d586adbd
 
-Kindly help.
+Best regards,
+-- 
+Jens Axboe
 
-Thank you,
-Aravind Nanjundaswamy
+
+
