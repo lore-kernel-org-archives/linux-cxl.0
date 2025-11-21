@@ -1,189 +1,131 @@
-Received: from canpmsgout09.his.huawei.com (canpmsgout09.his.huawei.com [113.46.200.224])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5185271468;
-	Fri, 21 Nov 2025 02:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.224
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B300F2F5487;
+	Fri, 21 Nov 2025 06:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763691768; cv=none; b=MaEIyvneXMhzTJsr5h+wDMipbS8I5p8tLCT9/Vwsv/q2vQ9Aup3pcoqB5YDBXvLGmmitpA6io0EosOziKotc8djkZImTIFztsC139jOGhAWoNeLL+MFaWL4qiEq0UHqTnzrLpsFYNkZR242HijGnJGFFYFqUjHeuNgpf3RcL87c=
+	t=1763707278; cv=none; b=PYFwC8wWFfNr+0K1NMX+Vawwxvx/IjWfISD/vccNRkRkw2UNlhlP4A8u+wYj2bb5IzXcsm/7OmXrIwaPX0NDJEtDFuOp36jJ88jfb0x5QFpQzXr4H3nfdRDW3thJnBHnmlOyTXL57CldZerrRES2Q2o3YS09j5LUkqCJlPhIwKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763691768; c=relaxed/simple;
-	bh=imOM9ispNwy0dbIWzenEKC4Q4T3ugDuuj8Sub6JuHXY=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=uRHTa281iAVUYU8E0SubcPTcyLOFlJiS9ocHd/4wb/BY3/dECNpYll3rSamGYFeSzG+Rlya/tpnDg3SZgFJnHV0mX7HbPokODXy3b6EmqO9N24d+nvxMQmIt53c5Bs1QvVknJqJRammUMkmnfaiG+cNLzNOLETHNAUe6UQVFSoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=R1hj1NNz; arc=none smtp.client-ip=113.46.200.224
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1763707278; c=relaxed/simple;
+	bh=uYFvjqEc51Mdt5o+/a/tTRDyKKIcuwZGwngRMwPgH44=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gENaVoPrNf5+HywkMyKnv/6XQLLDML1J0hKyBTv1gc+ur7ZTjSzVka6Z9B+labfavCg/Ih84rM4RnRt+ufaDo3D1BUoOfso+Vl6Va5J0XcSLV47A6tLwK8YoZkmlYg5MiO3ev98SvKDPTPTRLiZxPEeRGc8yaO2y52v5BLpzIl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gyfAeaz2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="R1hj1NNz"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=OWpop7EczyzMtxVk1H5X074PcZRbXBU8JW4kSewAWro=;
-	b=R1hj1NNznJn+tfgB0ayfX5o8vmLAqmDbDTi1fp3nnhDkgAf6rMG/ePZi+uUhRMkQV4/vAbCoN
-	Poc/xtx15swDW+oJSzVQMLYtuQYTppIcU7FHk/aGDH+GjZutx7oVhiNgAd+CjL9/xHjmo4B6B9Q
-	jJ8vGiLRCyw+nWn0bw39sao=
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4dCJq63xSKz1cyQG;
-	Fri, 21 Nov 2025 10:20:50 +0800 (CST)
-Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id AB8A8140295;
-	Fri, 21 Nov 2025 10:22:35 +0800 (CST)
-Received: from [10.174.178.247] (10.174.178.247) by
- dggpemf500002.china.huawei.com (7.185.36.57) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 21 Nov 2025 10:22:34 +0800
-Subject: Re: [PATCH 5/6 v7] acpi/ghes: Add helper to copy CXL protocol error
- info to work struct
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>
-CC: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, Mauro
- Carvalho Chehab <mchehab@kernel.org>, Shuai Xue <xueshuai@linux.alibaba.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Alison
- Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	<linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>
-References: <20251104182446.863422-1-fabio.m.de.francesco@linux.intel.com>
- <20251104182446.863422-6-fabio.m.de.francesco@linux.intel.com>
-From: Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <db92285d-43ec-c057-ad35-bbbdff7b8608@huawei.com>
-Date: Fri, 21 Nov 2025 10:22:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gyfAeaz2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 088A7C4CEF1;
+	Fri, 21 Nov 2025 06:41:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763707278;
+	bh=uYFvjqEc51Mdt5o+/a/tTRDyKKIcuwZGwngRMwPgH44=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=gyfAeaz258kV8f9IQSLueORrn2WaBhy+kOxZ7BTgdJaFN1iUPuEUoy10gXY1U8Sh9
+	 7Bg8SqVE2DAyIVCPnOxgCgAQbubRJsKvb7vBdfgmKtLCEmEZqmqVOhwd484glRu9d+
+	 4cDyxSMgZa4p7duJccGM7Ut/5leZHNZHPHSFbRRoJb9ImbLzRYH63sRNH3W1r8kC1B
+	 h0vhdnoJ8O5b9gUVmIpD719srxJvOiZHJV2VyZ585hNTimZs4GQcvxkDRxgcvLACG9
+	 SxCSM3wLqw7G8796FoFKC9UlE7EhwAriikgcceTSt3TojAJsIE8qxAcY0DF81DjFDI
+	 KBpK5nyPoktFg==
+Message-ID: <e3d376c8a1ac1ee9b75d02f78bdc25f7c556bb20.camel@kernel.org>
+Subject: Re: [PATCH v21 00/23] Type2 device basic support
+From: PJ Waskiewicz <ppwaskie@kernel.org>
+To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org, 
+	netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com, 
+	davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, 	dave.jiang@intel.com
+Cc: Alejandro Lucero <alucerop@amd.com>
+Date: Thu, 20 Nov 2025 22:41:17 -0800
+In-Reply-To: <20251119192236.2527305-1-alejandro.lucero-palau@amd.com>
+References: <20251119192236.2527305-1-alejandro.lucero-palau@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.1 (3.58.1-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20251104182446.863422-6-fabio.m.de.francesco@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- dggpemf500002.china.huawei.com (7.185.36.57)
 
-On 2025/11/5 2:22, Fabio M. De Francesco wrote:
-> Make a helper out of cxl_cper_post_prot_err() that checks the CXL agent
-> type and copy the CPER CXL protocol errors information to a work data
-> structure.
-> 
-> Export the new symbol for reuse by ELOG.
-> 
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> ---
->   drivers/acpi/apei/ghes.c | 42 ++++++++++++++++++++++++++--------------
->   include/cxl/event.h      | 10 ++++++++++
->   2 files changed, 37 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index e69ae864f43d..2f4632d9855a 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -734,20 +734,12 @@ int cxl_cper_sec_prot_err_valid(struct cxl_cper_sec_prot_err *prot_err)
->   }
->   EXPORT_SYMBOL_GPL(cxl_cper_sec_prot_err_valid);
->   
-> -static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> -				   int severity)
-> +int cxl_cper_setup_prot_err_work_data(struct cxl_cper_prot_err_work_data *wd,
-> +				      struct cxl_cper_sec_prot_err *prot_err,
-> +				      int severity)
->   {
-> -	struct cxl_cper_prot_err_work_data wd;
->   	u8 *dvsec_start, *cap_start;
->   
-> -	if (cxl_cper_sec_prot_err_valid(prot_err))
-> -		return;
-> -
-> -	guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
-> -
-> -	if (!cxl_cper_prot_err_work)
-> -		return;
-> -
->   	switch (prot_err->agent_type) {
->   	case RCD:
->   	case DEVICE:
-> @@ -756,20 +748,40 @@ static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
->   	case RP:
->   	case DSP:
->   	case USP:
-> -		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
-> +		memcpy(&wd->prot_err, prot_err, sizeof(wd->prot_err));
->   
->   		dvsec_start = (u8 *)(prot_err + 1);
->   		cap_start = dvsec_start + prot_err->dvsec_len;
->   
-> -		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
-> -		wd.severity = cper_severity_to_aer(severity);
-> +		memcpy(&wd->ras_cap, cap_start, sizeof(wd->ras_cap));
-> +		wd->severity = cper_severity_to_aer(severity);
->   		break;
->   	default:
->   		pr_err_ratelimited("CXL CPER invalid agent type: %d\n",
->   				   prot_err->agent_type);
-> -		return;
-> +		return -EINVAL;
->   	}
->   
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(cxl_cper_setup_prot_err_work_data);
-> +
-> +static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> +				   int severity)
-> +{
-> +	struct cxl_cper_prot_err_work_data wd;
-> +
-> +	if (cxl_cper_sec_prot_err_valid(prot_err))
-> +		return;
-> +
-> +	guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
-> +
-> +	if (!cxl_cper_prot_err_work)
-> +		return;
-> +
-> +	if (cxl_cper_setup_prot_err_work_data(&wd, prot_err, severity))
-> +		return;
-> +
->   	if (!kfifo_put(&cxl_cper_prot_err_fifo, wd)) {
->   		pr_err_ratelimited("CXL CPER kfifo overflow\n");
->   		return;
-> diff --git a/include/cxl/event.h b/include/cxl/event.h
-> index 4d7d1036ea9c..94081aec597a 100644
-> --- a/include/cxl/event.h
-> +++ b/include/cxl/event.h
-> @@ -322,12 +322,22 @@ static inline int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data
->   
->   #ifdef CONFIG_ACPI_APEI_PCIEAER
->   int cxl_cper_sec_prot_err_valid(struct cxl_cper_sec_prot_err *prot_err);
-> +int cxl_cper_setup_prot_err_work_data(struct cxl_cper_prot_err_work_data *wd,
-> +				      struct cxl_cper_sec_prot_err *prot_err,
-> +				      int severity);
->   #else
->   static inline int
->   cxl_cper_sec_prot_err_valid(struct cxl_cper_sec_prot_err *prot_err)
->   {
->   	return -EOPNOTSUPP;
->   }
-> +static inline int
-> +cxl_cper_setup_prot_err_work_data(struct cxl_cper_prot_err_work_data *wd,
-> +				  struct cxl_cper_sec_prot_err *prot_err,
-> +				  int severity)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
->   #endif
->   
->   #endif /* _LINUX_CXL_EVENT_H */
+On Wed, 2025-11-19 at 19:22 +0000, alejandro.lucero-palau@amd.com
+wrote:
 
-Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+Hi Alejandro,
 
-Thanks
-Hanjun
+Sorry it's been a bit since I've been able to comment.  I've been
+trying to test these patchsets with varying degrees of success.  Still
+haven't gotten things up and running fully.  One comment below.
+
+> From: Alejandro Lucero <alucerop@amd.com>
+>=20
+> The patchset should be applied on the described base commit then
+> applying
+> Terry's v13 about CXL error handling. The first 4 patches come from
+> Dan's
+> for-6.18/cxl-probe-order branch with minor modifications.
+>=20
+> v21 changes;
+>=20
+> =C2=A0 patch1-2: v20 patch1 splitted up doing the code move in the second
+> 	=C2=A0=C2=A0=C2=A0 patch in v21. (Jonathan)
+> =C2=A0
+> =C2=A0 patch1-4: adding my Signed-off tag along with Dan's
+>=20
+> =C2=A0 patch5: fix duplication of CXL_NR_PARTITION definition
+>=20
+> =C2=A0 patch7: dropped the cxl test fixes removing unused function. It wa=
+s
+> 	=C2=A0 sent independently ahead of this version.
+>=20
+> =C2=A0 patch12: optimization for max free space calculation (Jonathan)
+>=20
+> =C2=A0 patch19: optimization for returning on error (Jonathan)
+
+I cannot test these v21 patches or the v20 patches for the same reason.
+I suspect v19 is also affected, but I was stuck on v17 for awhile (b4
+was really not likely the prereq patches you required to get the tree
+into a usable state to apply your patchset).
+
+When I build and go to install the kernel mods, depmod fails:
+
+DEPMOD  /lib/modules/6.18.0-rc6+
+depmod: ERROR: Cycle detected: cxl_core -> cxl_mem -> cxl_port ->
+cxl_core
+depmod: ERROR: Cycle detected: cxl_core -> cxl_mem -> cxl_core
+depmod: ERROR: Found 3 modules in dependency cycles!
+
+I repro'd this on a few different systems, and just finally repro'd
+this on a box outside of my work network.
+
+This is unusable unfortunately, so I can't test this if I wanted to.
+
+My .config for CXL:
+
+
+CONFIG_PCIEAER_CXL=3Dy
+CONFIG_CXL_BUS=3Dm
+CONFIG_CXL_PCI=3Dy
+# CONFIG_CXL_MEM_RAW_COMMANDS is not set
+CONFIG_CXL_ACPI=3Dm
+CONFIG_CXL_PMEM=3Dm
+CONFIG_CXL_MEM=3Dm
+CONFIG_CXL_FEATURES=3Dy
+# CONFIG_CXL_EDAC_MEM_FEATURES is not set
+CONFIG_CXL_PORT=3Dm
+CONFIG_CXL_SUSPEND=3Dy
+CONFIG_CXL_REGION=3Dy
+# CONFIG_CXL_REGION_INVALIDATION_TEST is not set
+CONFIG_CXL_RAS=3Dy
+CONFIG_CXL_RCH_RAS=3Dy
+CONFIG_CXL_PMU=3Dm
+CONFIG_DEV_DAX_CXL=3Dm
+
+Pretty simple to repro.
+
+$ make -j<N> && make modules && make modules_install
+
+Hopefully there's a solution here that doesn't involve building the
+whole mess into the kernel directly.
+
+Cheers,
+-PJ
