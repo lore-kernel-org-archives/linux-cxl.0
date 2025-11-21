@@ -1,112 +1,102 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F010D46BF
-	for <linux-cxl@vger.kernel.org>; Fri, 21 Nov 2025 16:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFC01AF4D5
+	for <linux-cxl@vger.kernel.org>; Fri, 21 Nov 2025 18:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763742800; cv=none; b=OUNLb8j8wa2h6h+u4mxWWFJd/EGPq5urd08chn8+nCVE6qhjg8fCpRa8HLJ0afJ5WE2Q9EZrjZr+RiSQnTQ0F8YAvYnKx4xOxbyoC2YowI1enQ4bCctxUUsyyLknuLuN7/Dr9EtkU7ooLIqclxGjymUiapg++PZO/iXBaUHBDVI=
+	t=1763749635; cv=none; b=FdVw15KiXNcXRe9NqmlrYZ2eKs4542i6yejqb5WS0ap9RPrkPXn2tbTXE1sCcj6ak1HCWjlAkrLiLh82YVRP9Vvx+J0DUF0TYG7ka0gfMhVEtAbSjf69PSof3cTtBp3E3mY3/jjMoJxvyupA7+iILlGUjpbjVdjyKwT3rzvWfaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763742800; c=relaxed/simple;
-	bh=i8lB6Xhq5qIw2LcR2aiuLwMvtK9l/CCFSlX/E7C3KfM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rzKl6hsFRib9ndIRIQJ+mn1A5zquusVrRTSnkFntRJb6L+BhjwZ3CC1pvZDQF9/pQAZ+5UC01TbESZRqNsrkLBwL8LGtJt2KGco/PKny+DHrjdZvdc6YPCEk73nh6l4drlitug1pifd/vXKpKKiPWMCT+LON52DLFoVk6yZKzzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GApQD58W; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1763749635; c=relaxed/simple;
+	bh=RIpIicnRHmRQuJRBvM2SWLEVi/ryf1VeYisOEFqReEA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jV8IcLF8+hjlQuBqWRaKk2yGeHo2KS7kY4ptW+dqlWh50ALKvm93cS32yF7TiCkIUv3oXoOZSeDfTjRMgfrdtlFP23shqNpnNZmD0qG8jHPIhaYCte9/pW2D0BqeVmB1nhHLJsg2/TIgIB1Axl6ZDFQzEj4xSGNFkMlg/31Pmvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=nIzTxwdC; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GApQD58W"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-644fbd758b3so12609a12.0
-        for <linux-cxl@vger.kernel.org>; Fri, 21 Nov 2025 08:33:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="nIzTxwdC"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-8b2ed01b95dso231349185a.0
+        for <linux-cxl@vger.kernel.org>; Fri, 21 Nov 2025 10:27:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763742796; x=1764347596; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7JzPZ5dDJUXWF4qsjg1CzRRu4TDRFyC7Z3p5Tit9Rbc=;
-        b=GApQD58WtPlmEbdVGxZPy7vH0/BVS6GEtREzi2BISpCHyKrpy5CkzDF6suseCx0D31
-         iHwN8p6m4LDaU50iYWAoA1+5+qnTYYuNePf/wILP7hk3RDhqGbfFKnx55Q+EVoJ0Hl4M
-         c9p3KSi0qyXjMX0cuk8kG3q7D/q6YmVZvAEmQEBcFm63YDoTR/hn1L/qri7OMNF9XClG
-         aRLCb2XwHywu4X/2FjnSM4Z5q7qB92fASmfJU6hPcIyJ2mM3sZmhbUbQrXn4HrSynXaK
-         dfaoedIWCp/g4xT+eZ93OnYrGivkjJlQwmX+MUECQ9pwaAaQtOb+/kkNAFLHUgvLtgTm
-         u8wQ==
+        d=gourry.net; s=google; t=1763749632; x=1764354432; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BSM9j3tB0BFCd1CCyzkIWTNWPTuFhRIBwlbOOYldaI8=;
+        b=nIzTxwdCwowG9WkkEHVkK0Oe4o9wzgOPDawTxTsGxd3KOHvZhTotXETK2RKHeVJBw1
+         KfNMF25L/mpmHax9xiaxVVwVRHMjz9ppAKwKsZNjSwDU/wp2vEvIZUlsW0DQbN2Je8+v
+         dJWN81G9ZpTwdvfyVuKy/kKkMwLJHNKluRBOs5PP5dDrnbVOsNLiF3w0p6Q3Mbk0lpFq
+         b/jGf9rIWEzltOk+kdQZ+XUo08yh4I2aE3qp6ZTB0uiR0fHrd2rs9a4med+TmApmL3Dj
+         382GeDK/ajyJDwCTdrvirJdenn3nfj9pgaoIzLQFZklOOHads7ZuOvB0Tc8/LOnrWZVO
+         yAXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763742796; x=1764347596;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7JzPZ5dDJUXWF4qsjg1CzRRu4TDRFyC7Z3p5Tit9Rbc=;
-        b=qYnKBR9Qv1W/7WNnY8ynu7fysVvdyvIvSaDzrvobrT2MUpRe+BC9Z+nCdJmqxnLY7n
-         rC2AWJXh/SyhRf6eoSs48DTCxsKZvxk/PAV4M9oSEtp+uiVHRYS1Qi1veiUcb1kjwLK/
-         hdND+Ls3Eh46iNLc96RaxQ+TURNX0RFZsasgqetYRgQfLocxZlENNorkGyqqmEZYWS2l
-         2BDgFveDRpxl1rFHOao3Mgci9FWUzTI1crDKFvs49pd2Hilt91U7iLYmdVfbn6Ssp/tH
-         V2UJeLCWkZKhFRjWNBvXqLceIpHgH93/LaYXhB+dCVbHUCtTg6j/sbjCr/521kKxxT8E
-         K2XQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWmEKwVwNlwFdSkyTWZWYHPtDWsY8Vb3uuS1BUeqdNkG6pXFxqZff4Bsdgg36mbUYnmf8K1gDgstPc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMz+95jVdYE+XkL8QNBuzfHNClYeMb6V16WijiCx/Mw1ejz7Vc
-	X8qpgdAPklVHMM1HxBlk0D0yfTS8D/clBK85mjg9Gy6GS16ACxSxtNvvf8VOoHVl/YM+DdM6US9
-	bpHxmJk2pFnacHQfzJRf0vdsWli8h0PA9uB6UT0IVjM4lsdcFIRRSpEvS
-X-Gm-Gg: ASbGncu8jmN6tKBeZXisVKRlgpY9lF2yasHmS8bcQJlcKwr1QUFyI1DCFx0JV//W1i1
-	0N1gDmtb6n1FoPWUsUrecthQyJBw0bVyjnAYBMtbzJDRDXX71plmkG96+fVpFf+etKdoVzP/nhh
-	XOlHEEs+rVCDRYH79W14YjprrlyRN8wCJ9/fgpRf7brhJ3UMabDkJDei55jge8kZ08SX3j3H1Fd
-	OPDZeXHpMJ2nMRolrSWeveDJUvpf7y3zJeWn5bJLG8+rNFC/k+mH36SbInv9UnLNxAGCw==
-X-Google-Smtp-Source: AGHT+IFpxSpkHvgiR26r1tEmf7VxOLY1UkCTmNLNhgG/6y5ncF7GrU9I7etp9Olb6Azm/mZLVSBUngvpmUYPrboW9KM=
-X-Received: by 2002:a05:6402:1214:b0:634:90ba:2361 with SMTP id
- 4fb4d7f45d1cf-645548332cbmr42770a12.7.1763742795987; Fri, 21 Nov 2025
- 08:33:15 -0800 (PST)
+        d=1e100.net; s=20230601; t=1763749632; x=1764354432;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BSM9j3tB0BFCd1CCyzkIWTNWPTuFhRIBwlbOOYldaI8=;
+        b=ewMKvssj6CFTTW3sElgVjRUhosKsap9rbdNxvyDyH9NKKIV4JsN3speL87S8pBbTQb
+         8JEaOIGsNA8fESYhZzb3nYHvIVOICGzbic2tJi988+tmDZ1c0xT4LAaKd1S5I7TDS5mf
+         amGJe/CTv+0AXFscFD3L2xOBmd1oY7Bim8pDgo81RlnNJLJ3H5zPjGLMYigIuesXznzk
+         q5iNID06VRg+mmo7/jzWBgDCydsQCUsmDMXpI7DeL+oXnleRh7iYxtE7JjQZe0L/kqjs
+         WU5RRyZxqzBWe4WjScc3uG3j8s3o1CWc2oQhms7oRnUJQGUSzOrwoO1XL4fg07LmvzJE
+         MVgw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYc2ZOuQUZs+uudMG+tRHJmNA+HzEU0zByIu7njEIDsJ6SCbjuBBBpWfD29eqZ1JcE2qU5tC8GKMg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnNrWjQkl5q+2WVkp/0epO2nglN4iPhqK8udS/tINksppiZIiy
+	D0L8hJFy4csBqz4qXKB3KT5hbVTz+zxsD8t8ByLqeaf97PoUj/5IJSXJEAbKadyW6uw=
+X-Gm-Gg: ASbGnct0Jms6sAyErLGi8NUDCSYJLJGwbaxG3uKk234N7rMsXMyPvVvSC1Gw02Ofzw4
+	8llUn2FhPKBZZJVERbXRd7wSCk9SYJeKcRMsZH2MEamp41eSeTkzssfQNu5Q1jhxoYtJZNN/n6f
+	aWA7Nzey2jTiIPdeZ1pdFinWlaz0/Ilrtu19DEIJFtDb8wwjqMRMsqXHSjzl2/F8Z9tcQyuw/iG
+	ESOEDt66N2sheS3k6BGOoNzM88+sWDsucQBh91w6g8q1tKBS+w9V8GMRo0ddhCJA3xIzo/IJzmp
+	6MiajFFhsJ/i7KXGzsINed9U3px6zVCo8J/EVKopwCV6ixyE5t3kMEyhJUiOfY8jPAd10zcI6mP
+	HLqCtEc1Jxu2dH6FU1OsJFzFqfH1ZbSdCCfHEeUrHbsguMajgZ7wLE3lMAgv4ouZT70uYHzfqfZ
+	Jq/C5wjiHGEZulNtIn3CRjdZrRuQ2tIMXncRB8IoTdmDjVtKiA0SJd0Ibp22NP6VAgxkRAxQ==
+X-Google-Smtp-Source: AGHT+IGKm8uH3sKDW5KC8Eriuk3f7FVRukai4cHX9cxHkx709+pQdR97f/CiOuxJQvK4Xa3LIBqdGQ==
+X-Received: by 2002:a05:620a:29d4:b0:8b2:ea56:9660 with SMTP id af79cd13be357-8b33d1d0d69mr407483985a.30.1763749631705;
+        Fri, 21 Nov 2025 10:27:11 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b3295c3306sm418206685a.31.2025.11.21.10.27.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Nov 2025 10:27:11 -0800 (PST)
+Date: Fri, 21 Nov 2025 13:27:00 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Corbet <corbet@lwn.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] Documentation/driver-api/cxl: ACPI PRM Address
+ Translation Support and AMD Zen5 enablement
+Message-ID: <aSCu9DqRde7ry7l-@gourry-fedora-PF4VCD3F>
+References: <20251121121655.338491-1-rrichter@amd.com>
+ <20251121121655.338491-2-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251024210518.2126504-1-mclapinski@google.com> <691fb94f7aee9_1eb85100cd@dwillia2-mobl4.notmuch>
-In-Reply-To: <691fb94f7aee9_1eb85100cd@dwillia2-mobl4.notmuch>
-From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
-Date: Fri, 21 Nov 2025 17:33:05 +0100
-X-Gm-Features: AWmQ_bmBax4LGJ2h84vcUCeMiOFbAjV3E_6Wqj0TFMrz__FQfZpYWYQp8nAZZRc
-Message-ID: <CAAi7L5fMGANdMts8k4NGxJcWYsPmNwy4zJOXJ-t9T7h3h=mjOg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] dax: add PROBE_PREFER_ASYNCHRONOUS to all the dax drivers
-To: dan.j.williams@intel.com
-Cc: Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251121121655.338491-2-rrichter@amd.com>
 
-On Fri, Nov 21, 2025 at 1:59=E2=80=AFAM <dan.j.williams@intel.com> wrote:
->
-> Michal Clapinski wrote:
-> > Comments in linux/device/driver.h say that the goal is to do async
-> > probing on all devices. The current behavior unnecessarily slows down
-> > the boot by synchronously probing dax devices, so let's change that.
-> >
-> > For thousands of devices, this change saves >1s of boot time.
-> >
-> > Michal Clapinski (5):
-> >   dax: add PROBE_PREFER_ASYNCHRONOUS to the pmem driver
-> >   dax: add PROBE_PREFER_ASYNCHRONOUS to the kmem driver
-> >   dax: add PROBE_PREFER_ASYNCHRONOUS to the cxl driver
-> >   dax: add PROBE_PREFER_ASYNCHRONOUS to the hmem drivers
-> >   dax: add PROBE_PREFER_ASYNCHRONOUS to the dax device driver
->
-> After seeing the trouble this causes with libdaxctl and failing to find
-> a quick fix I wonder if you should just go through route of eating the
-> potential regressions in your own environment.
->
-> I.e. instead of making it a problem that the kernel needs to debug for
-> all legacy users, how about you just boot with the command line option:
->
->    driver_async_probe=3Ddevice_dax
->
-> ...or add the following to your mopdrobe configuration:
->
->    options device_dax async_probe
->
-> I.e. do you really need to change this policy globally for everyone at
-> this point?
+On Fri, Nov 21, 2025 at 01:16:51PM +0100, Robert Richter wrote:
+> This adds a convetion document for the following patch series:
+> 
+>  [v7,00/11] cxl: ACPI PRM Address Translation Support and AMD Zen5 enablement
+>  https://patchwork.kernel.org/project/cxl/cover/20251114213931.30754-1-rrichter@amd.com/
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 
-I'll do that or I'll just cherry-pick this to our kernel. Thank you.
+With a once-through I don't see any obvious nits.  lgtm
 
-> I do want to improve this, but I think it will take time for libdaxctl
-> to get ready for this flag day.
+Reviewed-by: Gregory Price <gourry@gourry.net>
+
