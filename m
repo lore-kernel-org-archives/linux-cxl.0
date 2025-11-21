@@ -1,42 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B300F2F5487;
-	Fri, 21 Nov 2025 06:41:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B009334C07;
+	Fri, 21 Nov 2025 06:54:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763707278; cv=none; b=PYFwC8wWFfNr+0K1NMX+Vawwxvx/IjWfISD/vccNRkRkw2UNlhlP4A8u+wYj2bb5IzXcsm/7OmXrIwaPX0NDJEtDFuOp36jJ88jfb0x5QFpQzXr4H3nfdRDW3thJnBHnmlOyTXL57CldZerrRES2Q2o3YS09j5LUkqCJlPhIwKE=
+	t=1763708064; cv=none; b=jB9UAUt6NQYK621baryOiFsJAujosq/QHjo5vFhkjApVgqdqQweqQzdHWlWEAlwIuZsE8M2I+jBCrUP/uVmCwCt6iBu8plrL9vfBH2OB032r0NBtcbz9i+JfBMUCYSjTgivV8Qhgpv6B8Qk0FnflD1foU+HLa9VmRcMYl25z+C8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763707278; c=relaxed/simple;
-	bh=uYFvjqEc51Mdt5o+/a/tTRDyKKIcuwZGwngRMwPgH44=;
+	s=arc-20240116; t=1763708064; c=relaxed/simple;
+	bh=UoanuHaH3kDT9dVLP/jEcuIEoiZk2BFtm8HM/KO5F20=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gENaVoPrNf5+HywkMyKnv/6XQLLDML1J0hKyBTv1gc+ur7ZTjSzVka6Z9B+labfavCg/Ih84rM4RnRt+ufaDo3D1BUoOfso+Vl6Va5J0XcSLV47A6tLwK8YoZkmlYg5MiO3ev98SvKDPTPTRLiZxPEeRGc8yaO2y52v5BLpzIl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gyfAeaz2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=HwYZG9XU0kuEuQaigVi7a5ZioIcsWzl/DWYijQYjVZP1I4D79z/wfYYoYqnIZgzqIDgBdBwOYxkA4QoRZgzfx9lVAz0P56jXLM2MXzGqkHX8X89Zr+v7O4W6Dfl8frxc7mo9bl6K3a18dUg7KZkube9GTC+vHqBxhbWKXY3x+Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fNHiwlwI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gyfAeaz2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 088A7C4CEF1;
-	Fri, 21 Nov 2025 06:41:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNHiwlwI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9383EC4CEFB;
+	Fri, 21 Nov 2025 06:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763707278;
-	bh=uYFvjqEc51Mdt5o+/a/tTRDyKKIcuwZGwngRMwPgH44=;
+	s=k20201202; t=1763708063;
+	bh=UoanuHaH3kDT9dVLP/jEcuIEoiZk2BFtm8HM/KO5F20=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=gyfAeaz258kV8f9IQSLueORrn2WaBhy+kOxZ7BTgdJaFN1iUPuEUoy10gXY1U8Sh9
-	 7Bg8SqVE2DAyIVCPnOxgCgAQbubRJsKvb7vBdfgmKtLCEmEZqmqVOhwd484glRu9d+
-	 4cDyxSMgZa4p7duJccGM7Ut/5leZHNZHPHSFbRRoJb9ImbLzRYH63sRNH3W1r8kC1B
-	 h0vhdnoJ8O5b9gUVmIpD719srxJvOiZHJV2VyZ585hNTimZs4GQcvxkDRxgcvLACG9
-	 SxCSM3wLqw7G8796FoFKC9UlE7EhwAriikgcceTSt3TojAJsIE8qxAcY0DF81DjFDI
-	 KBpK5nyPoktFg==
-Message-ID: <e3d376c8a1ac1ee9b75d02f78bdc25f7c556bb20.camel@kernel.org>
-Subject: Re: [PATCH v21 00/23] Type2 device basic support
+	b=fNHiwlwIBMtDe3DRlEaZMy1upZfs4R3lun+TfS2clY/Cul6iIC0Ih4hsF2l4ikNvH
+	 IUKiOkv/L/zaSGpnZQVkc2+dDWvr8zhR9kCDF5K8uB2ytG3vIhdQAWyT/fAk5fD2uN
+	 S1rXvho2CtS6a4jMo9TPxN45hYj/2g8uY+vPFHrvGbuZtfYSLHtD++MLbnC+jdITKg
+	 pv69nmcON2R0LQj734sLg0xtdYFerrHsY5vd0Iv2XwV3YaPDuUL11SVoOqBAVuoKID
+	 84xAy9cIWMomb0q6oP7sgWm4ViYfFXjuTx+LBefDwNNi0hWEO34djYOfJrVRwhvp4H
+	 AmlTlCL4C0gdg==
+Message-ID: <93fdd5d5ded2260c612875943adab8fcfffc3064.camel@kernel.org>
+Subject: Re: [PATCH v21 08/23] cxl/sfc: Map cxl component regs
 From: PJ Waskiewicz <ppwaskie@kernel.org>
 To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org, 
 	netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com, 
 	davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
  edumazet@google.com, 	dave.jiang@intel.com
-Cc: Alejandro Lucero <alucerop@amd.com>
-Date: Thu, 20 Nov 2025 22:41:17 -0800
-In-Reply-To: <20251119192236.2527305-1-alejandro.lucero-palau@amd.com>
+Cc: Alejandro Lucero <alucerop@amd.com>, Edward Cree
+ <ecree.xilinx@gmail.com>,  Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Ben Cheatham <benjamin.cheatham@amd.com>
+Date: Thu, 20 Nov 2025 22:54:22 -0800
+In-Reply-To: <20251119192236.2527305-9-alejandro.lucero-palau@amd.com>
 References: <20251119192236.2527305-1-alejandro.lucero-palau@amd.com>
+	 <20251119192236.2527305-9-alejandro.lucero-palau@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.58.1 (3.58.1-1.fc43) 
@@ -52,80 +55,313 @@ wrote:
 
 Hi Alejandro,
 
-Sorry it's been a bit since I've been able to comment.  I've been
-trying to test these patchsets with varying degrees of success.  Still
-haven't gotten things up and running fully.  One comment below.
-
 > From: Alejandro Lucero <alucerop@amd.com>
 >=20
-> The patchset should be applied on the described base commit then
-> applying
-> Terry's v13 about CXL error handling. The first 4 patches come from
-> Dan's
-> for-6.18/cxl-probe-order branch with minor modifications.
+> Export cxl core functions for a Type2 driver being able to discover
+> and
+> map the device component registers.
 >=20
-> v21 changes;
+> Use it in sfc driver cxl initialization.
 >=20
-> =C2=A0 patch1-2: v20 patch1 splitted up doing the code move in the second
-> 	=C2=A0=C2=A0=C2=A0 patch in v21. (Jonathan)
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> Acked-by: Edward Cree <ecree.xilinx@gmail.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+> ---
+> =C2=A0drivers/cxl/core/pci.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
+> =C2=A0drivers/cxl/core/pci_drv.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0 1 +
+> =C2=A0drivers/cxl/core/port.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
+> =C2=A0drivers/cxl/core/regs.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
+> =C2=A0drivers/cxl/cxl.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 7 ------
+> =C2=A0drivers/cxl/cxlpci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 12 ----------
+> =C2=A0drivers/net/ethernet/sfc/efx_cxl.c | 35
+> ++++++++++++++++++++++++++++++
+> =C2=A0include/cxl/cxl.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 19 +++++++++++++++=
++
+> =C2=A0include/cxl/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 21 +++++++++++++++=
++++
+> =C2=A09 files changed, 79 insertions(+), 19 deletions(-)
+> =C2=A0create mode 100644 include/cxl/pci.h
+>=20
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 566d57ba0579..90a0763e72c4 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -6,6 +6,7 @@
+> =C2=A0#include <linux/delay.h>
+> =C2=A0#include <linux/pci.h>
+> =C2=A0#include <linux/pci-doe.h>
+> +#include <cxl/pci.h>
+> =C2=A0#include <linux/aer.h>
+> =C2=A0#include <cxlpci.h>
+> =C2=A0#include <cxlmem.h>
+> diff --git a/drivers/cxl/core/pci_drv.c b/drivers/cxl/core/pci_drv.c
+> index a35e746e6303..4c767e2471b8 100644
+> --- a/drivers/cxl/core/pci_drv.c
+> +++ b/drivers/cxl/core/pci_drv.c
+> @@ -11,6 +11,7 @@
+> =C2=A0#include <linux/pci.h>
+> =C2=A0#include <linux/aer.h>
+> =C2=A0#include <linux/io.h>
+> +#include <cxl/pci.h>
+> =C2=A0#include <cxl/mailbox.h>
+> =C2=A0#include <cxl/cxl.h>
+> =C2=A0#include "cxlmem.h"
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index d19ebf052d76..7c828c75e7b8 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -11,6 +11,7 @@
+> =C2=A0#include <linux/idr.h>
+> =C2=A0#include <linux/node.h>
+> =C2=A0#include <cxl/einj.h>
+> +#include <cxl/pci.h>
+> =C2=A0#include <cxlmem.h>
+> =C2=A0#include <cxlpci.h>
+> =C2=A0#include <cxl.h>
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index fc7fbd4f39d2..dcf444f1fe48 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -4,6 +4,7 @@
+> =C2=A0#include <linux/device.h>
+> =C2=A0#include <linux/slab.h>
+> =C2=A0#include <linux/pci.h>
+> +#include <cxl/pci.h>
+> =C2=A0#include <cxlmem.h>
+> =C2=A0#include <cxlpci.h>
+> =C2=A0#include <pmu.h>
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 536c9d99e0e6..d7ddca6f7115 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -39,10 +39,6 @@ extern const struct nvdimm_security_ops
+> *cxl_security_ops;
+> =C2=A0#define=C2=A0=C2=A0 CXL_CM_CAP_HDR_ARRAY_SIZE_MASK GENMASK(31, 24)
+> =C2=A0#define CXL_CM_CAP_PTR_MASK GENMASK(31, 20)
 > =C2=A0
-> =C2=A0 patch1-4: adding my Signed-off tag along with Dan's
->=20
-> =C2=A0 patch5: fix duplication of CXL_NR_PARTITION definition
->=20
-> =C2=A0 patch7: dropped the cxl test fixes removing unused function. It wa=
-s
-> 	=C2=A0 sent independently ahead of this version.
->=20
-> =C2=A0 patch12: optimization for max free space calculation (Jonathan)
->=20
-> =C2=A0 patch19: optimization for returning on error (Jonathan)
+> -#define=C2=A0=C2=A0 CXL_CM_CAP_CAP_ID_RAS 0x2
+> -#define=C2=A0=C2=A0 CXL_CM_CAP_CAP_ID_HDM 0x5
+> -#define=C2=A0=C2=A0 CXL_CM_CAP_CAP_HDM_VERSION 1
+> -
+> =C2=A0/* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability
+> Structure */
+> =C2=A0#define CXL_HDM_DECODER_CAP_OFFSET 0x0
+> =C2=A0#define=C2=A0=C2=A0 CXL_HDM_DECODER_COUNT_MASK GENMASK(3, 0)
+> @@ -206,9 +202,6 @@ void cxl_probe_component_regs(struct device *dev,
+> void __iomem *base,
+> =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct cxl_component_reg_map *map=
+);
+> =C2=A0void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+> =C2=A0			=C2=A0=C2=A0 struct cxl_device_reg_map *map);
+> -int cxl_map_component_regs(const struct cxl_register_map *map,
+> -			=C2=A0=C2=A0 struct cxl_component_regs *regs,
+> -			=C2=A0=C2=A0 unsigned long map_mask);
+> =C2=A0int cxl_map_device_regs(const struct cxl_register_map *map,
+> =C2=A0			struct cxl_device_regs *regs);
+> =C2=A0int cxl_map_pmu_regs(struct cxl_register_map *map, struct
+> cxl_pmu_regs *regs);
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 24aba9ff6d2e..53760ce31af8 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -13,16 +13,6 @@
+> =C2=A0 */
+> =C2=A0#define CXL_PCI_DEFAULT_MAX_VECTORS 16
+> =C2=A0
+> -/* Register Block Identifier (RBI) */
+> -enum cxl_regloc_type {
+> -	CXL_REGLOC_RBI_EMPTY =3D 0,
+> -	CXL_REGLOC_RBI_COMPONENT,
+> -	CXL_REGLOC_RBI_VIRT,
+> -	CXL_REGLOC_RBI_MEMDEV,
+> -	CXL_REGLOC_RBI_PMU,
+> -	CXL_REGLOC_RBI_TYPES
+> -};
+> -
+> =C2=A0/*
+> =C2=A0 * Table Access DOE, CDAT Read Entry Response
+> =C2=A0 *
+> @@ -100,6 +90,4 @@ static inline void
+> cxl_uport_init_ras_reporting(struct cxl_port *port,
+> =C2=A0						struct device *host)
+> { }
+> =C2=A0#endif
+> =C2=A0
+> -int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type
+> type,
+> -		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct cxl_register_map *map);
+> =C2=A0#endif /* __CXL_PCI_H__ */
+> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c
+> b/drivers/net/ethernet/sfc/efx_cxl.c
+> index 8e0481d8dced..34126bc4826c 100644
+> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+> @@ -7,6 +7,8 @@
+> =C2=A0
+> =C2=A0#include <linux/pci.h>
+> =C2=A0
+> +#include <cxl/cxl.h>
+> +#include <cxl/pci.h>
+> =C2=A0#include "net_driver.h"
+> =C2=A0#include "efx_cxl.h"
+> =C2=A0
+> @@ -18,6 +20,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+> =C2=A0	struct pci_dev *pci_dev =3D efx->pci_dev;
+> =C2=A0	struct efx_cxl *cxl;
+> =C2=A0	u16 dvsec;
+> +	int rc;
+> =C2=A0
+> =C2=A0	probe_data->cxl_pio_initialised =3D false;
+> =C2=A0
+> @@ -44,6 +47,38 @@ int efx_cxl_init(struct efx_probe_data
+> *probe_data)
+> =C2=A0	if (!cxl)
+> =C2=A0		return -ENOMEM;
+> =C2=A0
+> +	rc =3D cxl_pci_setup_regs(pci_dev, CXL_REGLOC_RBI_COMPONENT,
+> +				&cxl->cxlds.reg_map);
+> +	if (rc) {
+> +		pci_err(pci_dev, "No component registers\n");
+> +		return rc;
+> +	}
+> +
+> +	if (!cxl->cxlds.reg_map.component_map.hdm_decoder.valid) {
+> +		pci_err(pci_dev, "Expected HDM component register
+> not found\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!cxl->cxlds.reg_map.component_map.ras.valid) {
+> +		pci_err(pci_dev, "Expected RAS component register
+> not found\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	rc =3D cxl_map_component_regs(&cxl->cxlds.reg_map,
+> +				=C2=A0=C2=A0=C2=A0 &cxl->cxlds.regs.component,
+> +				=C2=A0=C2=A0=C2=A0 BIT(CXL_CM_CAP_CAP_ID_RAS));
 
-I cannot test these v21 patches or the v20 patches for the same reason.
-I suspect v19 is also affected, but I was stuck on v17 for awhile (b4
-was really not likely the prereq patches you required to get the tree
-into a usable state to apply your patchset).
+I'm going to reiterate a previous concern here with this.  When all of
+this was in the CXL core, the CXL core owned whatever BAR these
+registers were in in its entirety.  Now with a Type2 device, splitting
+this out has implications.
 
-When I build and go to install the kernel mods, depmod fails:
+The cxl_map_component_regs() is going to try and map the register map
+you request as a reserved resource, which will fail if this Type2
+driver has the BAR mapped (which basically all of these drivers do).
 
-DEPMOD  /lib/modules/6.18.0-rc6+
-depmod: ERROR: Cycle detected: cxl_core -> cxl_mem -> cxl_port ->
-cxl_core
-depmod: ERROR: Cycle detected: cxl_core -> cxl_mem -> cxl_core
-depmod: ERROR: Found 3 modules in dependency cycles!
+I think it's worth either a big comment or something explicit in the
+patch description that calls this limitation or restriction out. =C2=A0
+Hardware designers will be caught off-guard if they design their
+hardware where the CXL component regs are in a BAR shared by other
+register maps in their devices.  If they land the CXL regs in the
+middle of that BAR, they will have to do some serious gymnastics in the
+drivers to map pieces of their BAR to allow the kernel to map the
+component regs.  OR...they can have some breadcrumbs to try and design
+the HW where the CXL component regs are at the very beginning or very
+end of their BAR.  That way drivers have an easier way to reserve a
+subset of a contiguous BAR, and allow the kernel to grab the remainder
+for CXL access and management.
 
-I repro'd this on a few different systems, and just finally repro'd
-this on a box outside of my work network.
-
-This is unusable unfortunately, so I can't test this if I wanted to.
-
-My .config for CXL:
-
-
-CONFIG_PCIEAER_CXL=3Dy
-CONFIG_CXL_BUS=3Dm
-CONFIG_CXL_PCI=3Dy
-# CONFIG_CXL_MEM_RAW_COMMANDS is not set
-CONFIG_CXL_ACPI=3Dm
-CONFIG_CXL_PMEM=3Dm
-CONFIG_CXL_MEM=3Dm
-CONFIG_CXL_FEATURES=3Dy
-# CONFIG_CXL_EDAC_MEM_FEATURES is not set
-CONFIG_CXL_PORT=3Dm
-CONFIG_CXL_SUSPEND=3Dy
-CONFIG_CXL_REGION=3Dy
-# CONFIG_CXL_REGION_INVALIDATION_TEST is not set
-CONFIG_CXL_RAS=3Dy
-CONFIG_CXL_RCH_RAS=3Dy
-CONFIG_CXL_PMU=3Dm
-CONFIG_DEV_DAX_CXL=3Dm
-
-Pretty simple to repro.
-
-$ make -j<N> && make modules && make modules_install
-
-Hopefully there's a solution here that doesn't involve building the
-whole mess into the kernel directly.
+I think this is a pretty serious implication that I don't see a way
+around.  But letting a HW designer fall into this hole and realize they
+can only fix it with a horrible set of driver hacks, or a silicon
+respin, really sucks.
 
 Cheers,
 -PJ
+
+> +	if (rc) {
+> +		pci_err(pci_dev, "Failed to map RAS capability.\n");
+> +		return rc;
+> +	}
+> +
+> +	/*
+> +	 * Set media ready explicitly as there are neither mailbox
+> for checking
+> +	 * this state nor the CXL register involved, both not
+> mandatory for
+> +	 * type2.
+> +	 */
+> +	cxl->cxlds.media_ready =3D true;
+> +
+> =C2=A0	probe_data->cxl =3D cxl;
+> =C2=A0
+> =C2=A0	return 0;
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index 13d448686189..7f2e23bce1f7 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -70,6 +70,10 @@ struct cxl_regs {
+> =C2=A0	);
+> =C2=A0};
+> =C2=A0
+> +#define=C2=A0=C2=A0 CXL_CM_CAP_CAP_ID_RAS 0x2
+> +#define=C2=A0=C2=A0 CXL_CM_CAP_CAP_ID_HDM 0x5
+> +#define=C2=A0=C2=A0 CXL_CM_CAP_CAP_HDM_VERSION 1
+> +
+> =C2=A0struct cxl_reg_map {
+> =C2=A0	bool valid;
+> =C2=A0	int id;
+> @@ -223,4 +227,19 @@ struct cxl_dev_state
+> *_devm_cxl_dev_state_create(struct device *dev,
+> =C2=A0		(drv_struct *)_devm_cxl_dev_state_create(parent,
+> type, serial, dvsec,	\
+> =C2=A0						=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> sizeof(drv_struct), mbox);	\
+> =C2=A0	})
+> +
+> +/**
+> + * cxl_map_component_regs - map cxl component registers
+> + *
+> + * @map: cxl register map to update with the mappings
+> + * @regs: cxl component registers to work with
+> + * @map_mask: cxl component regs to map
+> + *
+> + * Returns integer: success (0) or error (-ENOMEM)
+> + *
+> + * Made public for Type2 driver support.
+> + */
+> +int cxl_map_component_regs(const struct cxl_register_map *map,
+> +			=C2=A0=C2=A0 struct cxl_component_regs *regs,
+> +			=C2=A0=C2=A0 unsigned long map_mask);
+> =C2=A0#endif /* __CXL_CXL_H__ */
+> diff --git a/include/cxl/pci.h b/include/cxl/pci.h
+> new file mode 100644
+> index 000000000000..a172439f08c6
+> --- /dev/null
+> +++ b/include/cxl/pci.h
+> @@ -0,0 +1,21 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+> +
+> +#ifndef __CXL_CXL_PCI_H__
+> +#define __CXL_CXL_PCI_H__
+> +
+> +/* Register Block Identifier (RBI) */
+> +enum cxl_regloc_type {
+> +	CXL_REGLOC_RBI_EMPTY =3D 0,
+> +	CXL_REGLOC_RBI_COMPONENT,
+> +	CXL_REGLOC_RBI_VIRT,
+> +	CXL_REGLOC_RBI_MEMDEV,
+> +	CXL_REGLOC_RBI_PMU,
+> +	CXL_REGLOC_RBI_TYPES
+> +};
+> +
+> +struct cxl_register_map;
+> +
+> +int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type
+> type,
+> +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct cxl_register_map *map);
+> +#endif
