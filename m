@@ -1,224 +1,235 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f45.google.com (mail-yx1-f45.google.com [74.125.224.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA87A3128AB
-	for <linux-cxl@vger.kernel.org>; Mon, 24 Nov 2025 14:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9DB314D17
+	for <linux-cxl@vger.kernel.org>; Mon, 24 Nov 2025 15:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763996018; cv=none; b=FLJkCHrnfeyxG/HNkDBkTYzz+QJcqGGRrRUea9YkzavVpZg89o+j5Uo9mPEsplOaYAE4GzPAHXy0gCyow0F3AZqd/w7L6oYLmA1kmRn3G49hf5CiI67lzD/jMbzGVbwfvDof5izuUr9xAicVSGYukYu+fd9SBPJRfnyXWNxKwJ8=
+	t=1763998111; cv=none; b=EiIW01BqO5olBk+YHhTo8c17NWxEvGQXT2MdcxGlt7dchINxsgUfjxT0Z+bxx0mUmjP4ZvOikytbCUVU7LlqySJwzzxszHi8Vx9ShcSs5KQoz7csMfD7luCEe4NPy1p8HCozUdfnEW2V9WNQe1JKOH2GPYYYMf2oC1t7BGAJWc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763996018; c=relaxed/simple;
-	bh=pqB+fORk4m1HommlyJq2ylzh3yrOPYjttsDy21RyYgU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RWPfQ/BVaL7KJ7SM55uY3NFTIkWoOUqoZTOb6PDNMZVHr33sb0dZgBtBL0ptFqmN/nYMWakzGkJR31bQjtQmviRkWPHgxigXJXI1ZbZAFmHVZ6f0/mRg9EsHjrbWNtG8OBphiCelZkgonDemal0CY9QaVYo8eZdCi2kDLBpzBa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMb6m25O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763998111; c=relaxed/simple;
+	bh=e7umUecNMkT5NIFhgt8CWZQ7TyVGwODRnftqlFBtnJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NnJn/bGK6Gp8lT/9YQ1DIuml1h+bi2f3PAY+jZI+xllVE4ETjVd8A5mEIbcK10q9tVi2jrYklcMGdgCgzMxeuqaUdUXPyEp9Lizr5uOYNwK/GXyGHLdKrfNT/vGab7Gw8xIPJrY7pMwjQildFbDY6AWxhzCenGHtcf1CZFSopag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=cc29oQnE; arc=none smtp.client-ip=74.125.224.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMb6m25O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3F6BC2BCB8
-	for <linux-cxl@vger.kernel.org>; Mon, 24 Nov 2025 14:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763996018;
-	bh=pqB+fORk4m1HommlyJq2ylzh3yrOPYjttsDy21RyYgU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nMb6m25OZAmG9HoIT2tbcmIEu13l7KCo7qOUGpyGEKCNQcoXyatztdhBRNLniFe9H
-	 iUdVditSVkqyQiMezr7SYacU6Fuh69mx8tZ6HDosgigcJ7TNS8ewvckx1mRHr6NlZt
-	 RWM8icBK1O8jQhaM4gp0YkOJQgjXWAyI8xiPVEYlJ3DkjIoq77cbsLvgsZRPjeajw5
-	 8sEh+NULl+wAlgsYj5XrTH8jDP5jIfl3lXYc/9MC+OwkZ77Z0TrZEH9HA6zGsIGsV0
-	 bCBliNvETdNSesdMuPYmG5wowk+JVHFxuQ5LpJR277mGaalzkxvAyPK9bCT6wAmjCe
-	 fm54dLY0Qsw/w==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-640a503fbe8so7684665a12.1
-        for <linux-cxl@vger.kernel.org>; Mon, 24 Nov 2025 06:53:38 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU1mIxYOJBHFj15bH7eD2PFt4mKqR6XcbM0TzxALtBTN28ey155Unnfz1Mx0V3ZFlc4/8Kf0QWw/5I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeEudEzvq2Dpz3M/3XPawzskWAZfW7fy91cx4DVeXGaE3Wl2pk
-	7dKIO26ZIkT1SRk1lnjMtorpVBhWBjXwlZaXm/Kw2gLtv08IAYBrVZha+bMSINZHvRvmdg7DrMJ
-	h71UnP5KPYhgJiJ6kq+47QEnf9r41FQ==
-X-Google-Smtp-Source: AGHT+IFMnKpbOKpALlRbon6njvQlHioDFBZ6ps4Ha77/hkzyeDp8YHGtY6SBZLINsmH8f54C5ek7l5d85xk5VAIwd4A=
-X-Received: by 2002:a05:6402:26c3:b0:639:f7b5:9c2d with SMTP id
- 4fb4d7f45d1cf-6455444987cmr9474492a12.9.1763996016204; Mon, 24 Nov 2025
- 06:53:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="cc29oQnE"
+Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-640c9c85255so5949627d50.3
+        for <linux-cxl@vger.kernel.org>; Mon, 24 Nov 2025 07:28:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1763998108; x=1764602908; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rmvwb/YqLsu0y+cxhnZ07KM1iGl9RhSbLvXeq5B7c8s=;
+        b=cc29oQnEhRT6CbYNfkpLXsssu8DlJUZNo/wghRIYnvRxFwEO/evTZtymBpqaVUl5SK
+         ma1KeTPXm8tbbtzQBiMThDA6F889ulQhDqcnWx5mm7fTUu46xWlgg7lr6Iv3hZagFzSe
+         CUzh1yn2c+u+VG8M9W5hvNANPXU7Pc3d9s7wep/sMfxA7M38VeXLCq53lM3Goz8o3+JD
+         pY8C11pKhw0FFLx30udvepqepVVJ3E70I+pJzlLdraeb8vOWSGERYA8tRPZvbtSB+1H6
+         JPFPWBA+QldxFlrDr+h4V6lhGqb5KFL+rSyyT+BPcU7R4UXXn/QGHnpf6QAYPAbdB3Dm
+         /NTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763998108; x=1764602908;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rmvwb/YqLsu0y+cxhnZ07KM1iGl9RhSbLvXeq5B7c8s=;
+        b=QZ30fwhmYZegb8iiSxeg6tErP2ySsdOvRREQ47pn0l0NanAb4MR77T5Bev/UllXaQ4
+         YwLneg/sVhXH0R3N2x1ebTDlVBvTma57Skla7tSoEsi9ZvUUtRtn/XMOff5pnGRVVZtq
+         QkfPxGyyXAZJIWuDLjmp20UfYJXCPz1D03ee549o3IMo/TjcSUfcqznNu0miCZTRCAYa
+         mNzmahVtzLInoccwLBqo1YKRz4oWE+Abto4J8v/jPuqxsmECoaQ9ZySTEpZpSmHsyZSU
+         SMS9Dd9NOQxlQCu4bJT3DsFAzsceiHQKvag0THOxwIuxCjbq2AKB0ApfYVYqa+EWfdXJ
+         dg/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX+6K2mGfaI9At0PxCrXzPeWT7Gse0jj7jo+NR+UNI1vuqLHoNOOR/Sw760GAF9b5epT86pp/sKUUg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIJ6Ud69lnAgrjyJq9gFVWJaLLIg1TPK5L+o0PkP7+PEfg6mV0
+	Moe4fX4xTBlWRCc0I4uYCZaUETHpLHwzCkevyS8qn+DwUDBA0rPnULGNMplxfY/Zyz8=
+X-Gm-Gg: ASbGncsVsoR/4wIt4SWAMLYPKTjq7SQG+/t3Atd6T5E2JaOuNouUj3AicpU2RYFJCT4
+	kFMs9py1ZiuE1cFfDyCj/RcKdGnjNtPh7h4E6s2vHdm2N+JIZcpw8zat/UoRGm7ewiqCiafLvfD
+	mdqK9IGPYn1AxTY0sTovpfZQYf56Uxf/RGfYCv354qDNll6EBZ6A/e4L9YJS8O246vG4T+iGkJI
+	kakuRdZ8E5HQM7/x6WdDtVqWvXcXOe/Td4IlpDXz9l4YFrHXFF0HzUMFIv6i13z9fi/fUAJbBVW
+	yjxoJEbrjrS1fFcPE7Jy+hNHbKSaz83QgHwD8ffQM0RM+4hfBJd9MXygjFYiJ+FSZ2Duq8dZaYc
+	a/52LfVwduRykvB8uXG8bVCbzE3764nxjRB6PO9sfT8t+cYMVY6ZEVzwez1UUS9arPq/bpd9M9L
+	hbbxEcuMc=
+X-Google-Smtp-Source: AGHT+IF2wNBmZkbTfngTULZjgnH8cbmz94buOftiW7SxjvwrErr131yc1azbjD5qkix9lvoC5B3wPQ==
+X-Received: by 2002:a05:690e:158d:20b0:641:f5bc:68d0 with SMTP id 956f58d0204a3-64302ad80f8mr6454834d50.77.1763998108057;
+        Mon, 24 Nov 2025 07:28:28 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:400::5:62f9])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-642f718bbbesm5022280d50.21.2025.11.24.07.28.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Nov 2025 07:28:27 -0800 (PST)
+Date: Mon, 24 Nov 2025 08:28:23 -0700
+From: Gregory Price <gourry@gourry.net>
+To: Alistair Popple <apopple@nvidia.com>
+Cc: linux-mm@kvack.org, kernel-team@meta.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, david@redhat.com,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, mingo@redhat.com,
+	peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, kees@kernel.org, muchun.song@linux.dev,
+	roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+	rientjes@google.com, jackmanb@google.com, cl@gentwo.org,
+	harry.yoo@oracle.com, axelrasmussen@google.com, yuanchu@google.com,
+	weixugc@google.com, zhengqi.arch@bytedance.com,
+	yosry.ahmed@linux.dev, nphamcs@gmail.com, chengming.zhou@linux.dev,
+	fabio.m.de.francesco@linux.intel.com, rrichter@amd.com,
+	ming.li@zohomail.com, usamaarif642@gmail.com, brauner@kernel.org,
+	oleg@redhat.com, namcao@linutronix.de, escape@linux.alibaba.com,
+	dongjoo.seo1@samsung.com
+Subject: Re: [RFC LPC2026 PATCH v2 00/11] Specific Purpose Memory NUMA Nodes
+Message-ID: <aSR5l_fuONlCws8i@gourry-fedora-PF4VCD3F>
+References: <20251112192936.2574429-1-gourry@gourry.net>
+ <aktv2ivkrvtrox6nvcpxsnq6sagxnmj4yymelgkst6pazzpogo@aexnxfcklg75>
+ <aSDUl7kU73LJR78g@gourry-fedora-PF4VCD3F>
+ <c5enwlaui37lm4uxlsjbuhesy6hfwwqbxzzs77zn7kmsceojv3@f6tquznpmizu>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-2-herve.codina@bootlin.com> <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
-In-Reply-To: <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 24 Nov 2025 08:53:25 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
-X-Gm-Features: AWmQ_bmYzp1pjz08UuT7I12fxIYXbO1yVvjH9IMl7-quEF7iTRxZTROtz2B7mnw
-Message-ID: <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT overlays"
-To: Kalle Niemi <kaleposti@gmail.com>
-Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c5enwlaui37lm4uxlsjbuhesy6hfwwqbxzzs77zn7kmsceojv3@f6tquznpmizu>
 
-On Mon, Nov 24, 2025 at 8:48=E2=80=AFAM Kalle Niemi <kaleposti@gmail.com> w=
-rote:
->
-> On 10/15/25 10:13, Herve Codina wrote:
-> > From: Saravana Kannan <saravanak@google.com>
-> >
-> > This reverts commit 1a50d9403fb90cbe4dea0ec9fd0351d2ecbd8924.
-> >
-> > While the commit fixed fw_devlink overlay handling for one case, it
-> > broke it for another case. So revert it and redo the fix in a separate
-> > patch.
-> >
-> > Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overlays")
-> > Reported-by: Herve Codina <herve.codina@bootlin.com>
-> > Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgy=
-o8x6=3D9F9rZ+-KzjOg@mail.gmail.com/
-> > Closes: https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin.com=
-/
-> > Closes: https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootlin.co=
-m/
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > Link: https://lore.kernel.org/lkml/20240411235623.1260061-2-saravanak@g=
-oogle.com/
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > Acked-by: Mark Brown <broonie@kernel.org>
-> > ---
-> >   drivers/bus/imx-weim.c    | 6 ------
-> >   drivers/i2c/i2c-core-of.c | 5 -----
-> >   drivers/of/dynamic.c      | 1 -
-> >   drivers/of/platform.c     | 5 -----
-> >   drivers/spi/spi.c         | 5 -----
-> >   5 files changed, 22 deletions(-)
-> >
-> > diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
-> > index 83d623d97f5f..87070155b057 100644
-> > --- a/drivers/bus/imx-weim.c
-> > +++ b/drivers/bus/imx-weim.c
-> > @@ -327,12 +327,6 @@ static int of_weim_notify(struct notifier_block *n=
-b, unsigned long action,
-> >                                "Failed to setup timing for '%pOF'\n", r=
-d->dn);
-> >
-> >               if (!of_node_check_flag(rd->dn, OF_POPULATED)) {
-> > -                     /*
-> > -                      * Clear the flag before adding the device so tha=
-t
-> > -                      * fw_devlink doesn't skip adding consumers to th=
-is
-> > -                      * device.
-> > -                      */
-> > -                     rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE=
-;
-> >                       if (!of_platform_device_create(rd->dn, NULL, &pde=
-v->dev)) {
-> >                               dev_err(&pdev->dev,
-> >                                       "Failed to create child device '%=
-pOF'\n",
-> > diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-> > index eb7fb202355f..30b48a428c0b 100644
-> > --- a/drivers/i2c/i2c-core-of.c
-> > +++ b/drivers/i2c/i2c-core-of.c
-> > @@ -176,11 +176,6 @@ static int of_i2c_notify(struct notifier_block *nb=
-, unsigned long action,
-> >                       return NOTIFY_OK;
-> >               }
-> >
-> > -             /*
-> > -              * Clear the flag before adding the device so that fw_dev=
-link
-> > -              * doesn't skip adding consumers to this device.
-> > -              */
-> > -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
-> >               client =3D of_i2c_register_device(adap, rd->dn);
-> >               if (IS_ERR(client)) {
-> >                       dev_err(&adap->dev, "failed to create client for =
-'%pOF'\n",
-> > diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> > index 2eaaddcb0ec4..b5be7484fb36 100644
-> > --- a/drivers/of/dynamic.c
-> > +++ b/drivers/of/dynamic.c
-> > @@ -225,7 +225,6 @@ static void __of_attach_node(struct device_node *np=
-)
-> >       np->sibling =3D np->parent->child;
-> >       np->parent->child =3D np;
-> >       of_node_clear_flag(np, OF_DETACHED);
-> > -     np->fwnode.flags |=3D FWNODE_FLAG_NOT_DEVICE;
-> >
-> >       raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> >
-> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > index f77cb19973a5..ef9445ba168b 100644
-> > --- a/drivers/of/platform.c
-> > +++ b/drivers/of/platform.c
-> > @@ -739,11 +739,6 @@ static int of_platform_notify(struct notifier_bloc=
-k *nb,
-> >               if (of_node_check_flag(rd->dn, OF_POPULATED))
-> >                       return NOTIFY_OK;
-> >
-> > -             /*
-> > -              * Clear the flag before adding the device so that fw_dev=
-link
-> > -              * doesn't skip adding consumers to this device.
-> > -              */
-> > -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
-> >               /* pdev_parent may be NULL when no bus platform device */
-> >               pdev_parent =3D of_find_device_by_node(parent);
-> >               pdev =3D of_platform_device_create(rd->dn, NULL,
-> > diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> > index 2e0647a06890..b22944a207c9 100644
-> > --- a/drivers/spi/spi.c
-> > +++ b/drivers/spi/spi.c
-> > @@ -4791,11 +4791,6 @@ static int of_spi_notify(struct notifier_block *=
-nb, unsigned long action,
-> >                       return NOTIFY_OK;
-> >               }
-> >
-> > -             /*
-> > -              * Clear the flag before adding the device so that fw_dev=
-link
-> > -              * doesn't skip adding consumers to this device.
-> > -              */
-> > -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
-> >               spi =3D of_register_spi_device(ctlr, rd->dn);
-> >               put_device(&ctlr->dev);
-> >
-> Sorry, some of you will receive this message now for second time. First
-> message was sent to older series of patches.
-> -
->
-> Hello,
->
-> Test system testing drivers for ROHM ICs bisected this commit to cause
-> BD71847 drivers probe to not be called.
+On Mon, Nov 24, 2025 at 10:09:37AM +1100, Alistair Popple wrote:
+> On 2025-11-22 at 08:07 +1100, Gregory Price <gourry@gourry.net> wrote...
+> > On Tue, Nov 18, 2025 at 06:02:02PM +1100, Alistair Popple wrote:
+> > > 
+> 
+> There are multiple types here (DEVICE_PRIVATE and DEVICE_COHERENT). The former
+> is mostly irrelevant for this discussion but I'm including the descriptions here
+> for completeness.
+> 
 
-This driver (and overlay support) is in linux-next or something out of
-tree on top of linux-next?
+I appreciate you taking the time here.  I'll maybe try to look at
+updating the docs as this evolves.
 
-Rob
+> > But I could imagine an (overly simplistic) pattern with SPM Nodes:
+> > 
+> > fd = open("/dev/gpu_mem", ...)
+> > buf = mmap(fd, ...)
+> > buf[0] 
+> >    1) driver takes the fault
+> >    2) driver calls alloc_page(..., gpu_node, GFP_SPM_NODE)
+> >    3) driver manages any special page table masks
+> >       Like marking pages RO/RW to manage ownership.
+> 
+> Of course as an aside this needs to match the CPU PTEs logic (this what
+> hmm_range_fault() is primarily used for).
+>
+
+This is actually the most interesting part of series for me.  I'm using
+a compressed memory device as a stand-in for a memory type that requires
+special page table entries (RO) to avoid compression ratios tanking
+(resulting, eventually, in a MCE as there's no way to slow things down).
+
+You can somewhat "Get there from here" through device coherent
+ZONE_DEVICE, but you still don't have access to basic services like
+compaction and reclaim - which you absolutely do want for such a memory
+type (for the same reasons we groom zswap and zram).
+
+I wonder if we can even re-use the hmm interfaces for SPM nodes to make
+managing special page table policies easier as well.  That seems
+promising.
+
+I said this during LSFMM: Without isolation, "memory policy" is really
+just a suggestion.  What we're describing here is all predicated on
+isolation work, and all of a sudden much clearer examples of managing
+memory on NUMA boundaries starts to make a little more sense.
+
+> >    4) driver sends the gpu the (mapping_id, pfn, index) information
+> >       so that gpu can map the region in its page tables.
+> 
+> On coherent systems this often just uses HW address translation services
+> (ATS), although I think the specific implementation of how page-tables are
+> mirrored/shared is orthogonal to this.
+>
+
+Yeah this part is completely foreign to me, I just presume there's some
+way to tell the GPU how to recontruct the virtually contiguous setup.
+
+That mechanism would be entirely reusable here (I assume).
+
+> This is roughly how things work with DEVICE_PRIVATE/COHERENT memory today,
+> except in the case of DEVICE_PRIVATE in step (5) above. In that case the page is
+> mapped as a non-present special swap entry that triggers a driver callback due
+> to the lack of cache coherence.
+> 
+
+Btw, just an aside, Lorenzo is moving to rename these entries to
+softleaf (software-leaf) entries. I think you'll find it welcome.
+https://lore.kernel.org/linux-mm/c879383aac77d96a03e4d38f7daba893cd35fc76.1762812360.git.lorenzo.stoakes@oracle.com/
+
+> > Driver doesn't have to do much in the way of allocationg management.
+> > 
+> > This is probably less compelling since you don't want general purposes
+> > services like reclaim, migration, compaction, tiering - etc.  
+> 
+> On at least some of our systems I'm told we do want this, hence my interest
+> here. Currently we have systems not using DEVICE_COHERENT and instead just
+> onlining everything as normal system managed memory in order to get reclaim
+> and tiering. Of course then people complain that it's managed as normal system
+> memory and non-GPU related things (ie. page-cache) end up in what's viewed as
+> special purpose memory.
+> 
+
+Ok, so now this gets interesting then.  I don't understand how this
+makes sense (not saying it doesn't, I simply don't understand).
+
+I would presume that under no circumstance do you want device memory to
+just suddenly disappear without some coordination from the driver.
+
+Whether it's compaction or reclaim, you have some thread that's going to
+migrate a virtual mapping from HPA(A) to HPA(B) and HPA(B) may or may not
+even map to the same memory device.
+
+That thread may not even be called in the context of a thread which
+accesses GPU memory (although, I think we could enforce that on top
+of SPM nodes, but devil is in the details).
+
+Maybe that "all magically works" because of the ATS described above?
+
+I suppose this assumes you have some kind of unified memory view between
+host and device memory?  Are there docs here you can point me at that
+might explain this wizardry?  (Sincerely, this is fascinating)
+
+> > The value is clearly that you get to manage GPU memory like any other
+> > memory, but without worry that other parts of the system will touch it.
+> > 
+> > I'm much more focused on the "I have memory that is otherwise general
+> > purpose, and wants services like reclaim and compaction, but I want
+> > strong controls over how things can land there in the first place".
+> 
+> So maybe there is some overlap here - what I have is memoy that we want managed
+> much like normal memory but with strong controls over what it can be used for
+> (ie. just for tasks utilising the processing element on the accelerator).
+> 
+
+I think it might be great if we could discuss this a bit more in-depth,
+as i've already been considering very mild refactors to reclaim to
+enable a driver to engage it with an SPM node as the only shrink target.
+
+This all becomes much more complicated due to per-memcg LRUs and such.
+
+All that said, I'm focused on the isolation / allocation pieces first.
+If that can't be agreed upon, the rest isn't worth exploring.
+
+I do have a mild extension to mempolicy that allows mbind() to hit an
+SPM node as an example as well.  I'll discuss this in the response to
+David's thread, as he had some related questions about the GFP flag.
+
+~Gregory
+
