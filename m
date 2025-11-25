@@ -1,53 +1,53 @@
-Received: from esa1.hc1455-7.c3s2.iphmx.com (esa1.hc1455-7.c3s2.iphmx.com [207.54.90.47])
+Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639D918FDBE;
-	Tue, 25 Nov 2025 14:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8A132572E;
+	Tue, 25 Nov 2025 14:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764081460; cv=none; b=b9d+WDNkfzOnFzdS/G1MwLP32ER/HTL6Gcxc3cu6PZ56xf8AZNXlptKUyjeHwXcJKXdeeDuolggIeg1J2caVnvqBiOwgS5ZjgccIvs4DTXJfQ9gbDonWo4KE2tuce7YPDkFkAHVwqOgwT2sZKiBWBDWyBUTeIjrsiv0GLmJDWb8=
+	t=1764081461; cv=none; b=Uf5/zeaNON5+bVN8/FpMbtsfnBAuZQCWmvceL2Th4hrTjssYWYh3q7CeztXw+owjdlzh36fzEnuFbmBxuhKDaiNHpqlIjZF1I2kDVNlSv2Svb5l0kbB2+urKpre3k42XsRp9zn2a/3OlqMcMtkjLRlT1i01tGK363do3fOg0qKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764081460; c=relaxed/simple;
-	bh=4ZfhF/nit6+jZ7R00OaNpYr+i410Lqt3VQVUET5Wvm8=;
+	s=arc-20240116; t=1764081461; c=relaxed/simple;
+	bh=G0/MBVaVUSJEMjwaIVqzxBwjG+MMLP0g5258UR/9qY8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Lgmd/NcuL/9Jee1ZGI7/vIo38iwtX2rbUfON/tpRDWnOWCtzrLJjMkJ0pBC2h6FUQmI/z9HJP5XqE21RTgeff0qdUogUxtqdSvZKdLMtTDSKsBczqv8sBBoojr047noniO3al9UN22nJ/WDY//Nq6fg1xIAObDdHMztvHYM0Zyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=NWws6v1s; arc=none smtp.client-ip=207.54.90.47
+	 MIME-Version; b=MBinZi19sDuc+scVxr5MreW68HRRlN/fypIVgj0A1rRuDcL6EGDpxjSpRz34yfE5zVuNm0OqNBDUKj3VMJ0m0p71qSRgnf+gFTOs/tuwrucZKGSwmWqOn+Ul1+xbATG7TV9KF9K5y5XFBaJ6jAQTwcrkaA3pmAQq+qo7EzckDt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=mJlcGQmn; arc=none smtp.client-ip=207.54.90.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="NWws6v1s"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="mJlcGQmn"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1764081458; x=1795617458;
+  t=1764081460; x=1795617460;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4ZfhF/nit6+jZ7R00OaNpYr+i410Lqt3VQVUET5Wvm8=;
-  b=NWws6v1sP3ki7fhhrrZNTZzC+x973h20pF0Ii2sHFrlL7j7AOcuxfYUI
-   m25AaAWSaRkGuzGCT065aRwk3n5P6xHdvc3m9BCBxEyhpvc9A7opq0j4Y
-   4OfnKBkLDz9T1/OPtALMw1SJ3aTBueJGzo11p+6+D7S69BeS0sTnlgAr3
-   mVFZBOdWX7rRBjDBUHNXO4TI1EyqjazAocHsXO+xL7rHGL0uzCuaExmUP
-   vuxwd9bmJzZQQToU+mrVnONWcX3kzP4r6T0xtpZ8XCt/WW50rIJ+LaLhS
-   rmdgo2ljZIJ3VUrSnOn5SNTwRty+/Pf6jUZjY2f5af+WQ9CLK9Tdlj01a
-   A==;
-X-CSE-ConnectionGUID: FZDzuV8OTjqjE/R8OkuHMQ==
-X-CSE-MsgGUID: MMlH/nixRGauWB8iboomMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="220378823"
+  bh=G0/MBVaVUSJEMjwaIVqzxBwjG+MMLP0g5258UR/9qY8=;
+  b=mJlcGQmn5oKsMtlx6QU9r+Mzf5DzspEWybuyBK3IJw2ZoCyq3RUCA0sy
+   BFk4ax6uEq9LrfnYx9rgr3uCap49sASPe4AZIfIC4JMHpDNemG5b71Stm
+   zMMNwLX7cF7uVBu0a03Qa+FIc/TRXuLGxTvoPixoKUrHMaitsCFPLiR/5
+   U+gSwUC7Jh5B6/44oHGwtPuqE0n4JpUnruaTps5L8hIIz0QdlyBxdaYUA
+   y5XpsybfZqLEL6TQQIUmC8LfoPVljYOsLpSkK+562VHzmb7ERXnrqUqPU
+   WBAZWXdNLQ93l5NynK1OVSE1UovBo9FsIyhueAQcl0wlX7t1xtRD+rRLw
+   Q==;
+X-CSE-ConnectionGUID: uWuqJbmmQvCBtxv3v7sEJw==
+X-CSE-MsgGUID: L66ne24SQVy9CQU4z60pIg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="220337716"
 X-IronPort-AV: E=Sophos;i="6.20,225,1758553200"; 
-   d="scan'208";a="220378823"
-Received: from unknown (HELO az2nlsmgr4.o.css.fujitsu.com) ([51.138.80.169])
-  by esa1.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 23:36:26 +0900
-Received: from az2nlsmgm2.o.css.fujitsu.com (unknown [10.150.26.202])
+   d="scan'208";a="220337716"
+Received: from unknown (HELO az2uksmgr1.o.css.fujitsu.com) ([52.151.125.19])
+  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 23:36:29 +0900
+Received: from az2uksmgm4.o.css.fujitsu.com (unknown [10.151.22.201])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by az2nlsmgr4.o.css.fujitsu.com (Postfix) with ESMTPS id B548542A301;
-	Tue, 25 Nov 2025 14:36:26 +0000 (UTC)
+	by az2uksmgr1.o.css.fujitsu.com (Postfix) with ESMTPS id 04A421C1C711;
+	Tue, 25 Nov 2025 14:36:29 +0000 (UTC)
 Received: from m3003.s.css.fujitsu.com (sqmail-3003.b.css.fujitsu.com [10.128.233.114])
-	by az2nlsmgm2.o.css.fujitsu.com (Postfix) with ESMTP id 26C5E1C0014C;
-	Tue, 25 Nov 2025 14:36:26 +0000 (UTC)
+	by az2uksmgm4.o.css.fujitsu.com (Postfix) with ESMTP id 7FD621400383;
+	Tue, 25 Nov 2025 14:36:28 +0000 (UTC)
 Received: from nezuko.soft.fujitsu.com (unknown [10.118.236.61])
-	by m3003.s.css.fujitsu.com (Postfix) with ESMTP id 81C572005371;
-	Tue, 25 Nov 2025 23:36:24 +0900 (JST)
+	by m3003.s.css.fujitsu.com (Postfix) with ESMTP id DD2D22005371;
+	Tue, 25 Nov 2025 23:36:26 +0900 (JST)
 From: Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
 To: dan.j.williams@intel.com,
 	alison.schofield@intel.com
@@ -60,9 +60,9 @@ Cc: Smita.KoralahalliChannabasappa@amd.com,
 	vishal.l.verma@intel.com,
 	ira.weiny@intel.com,
 	Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
-Subject: [RFC PATCH v1 1/2] cxl/cli: add helpers to collect and sort regions by HPA
-Date: Tue, 25 Nov 2025 23:38:23 +0900
-Message-ID: <20251125143826.282312-2-pawel.mielimonka@fujitsu.com>
+Subject: [RFC PATCH v1 2/2] cxl/cli: enforce HPA-descending teardown order for destroy-region
+Date: Tue, 25 Nov 2025 23:38:24 +0900
+Message-ID: <20251125143826.282312-3-pawel.mielimonka@fujitsu.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20251125143826.282312-1-pawel.mielimonka@fujitsu.com>
 References: <20251125143826.282312-1-pawel.mielimonka@fujitsu.com>
@@ -74,89 +74,103 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce cmp_region_hpa() and collect_regions_sorted() helpers to
-enumerate CXL regions under a given decoder and sort them by their host
-physical address.
-These helpers will be used by the "cxl destroy-region" command to tear
-down regions in HPA-descending order, i.e. in the reverse order of
-region creation. This matches the decoder programming requirements from
-the CXL specification (8.2.4.20.12 - continuous HPA coverage at all
-times when Lock On Commit is used) and avoids teardown sequences that
-can leve decoder state inconsistent when the decoder is fully populated
-(known problem).
-This patch only adds the helpers; no functional changes is intended yet.
+Implement destroy_multiple_regions() and bypass the generic
+do_region_xable() path for ACTION_DESTROY. Regions are collected and
+sorted by HPA, then destroyed from highest to lowest, stopping at the
+first "matching after skipped" to provide user with better error log.
+This prevents attempts on non-last regions and aligns destroy-region
+with required decoder programming order.
 
 Signed-off-by: Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
 ---
- cxl/region.c | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+ cxl/region.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 57 insertions(+), 3 deletions(-)
 
 diff --git a/cxl/region.c b/cxl/region.c
-index 207cf2d0..58765b3d 100644
+index 58765b3d..1bf1901a 100644
 --- a/cxl/region.c
 +++ b/cxl/region.c
-@@ -831,6 +831,61 @@ out:
- 	return cxl_region_disable(region);
+@@ -950,6 +950,57 @@ static int destroy_region(struct cxl_region *region)
+ 	return cxl_region_delete(region);
  }
  
-+static int cmp_region_hpa(const void *l, const void *r)
++static int destroy_multiple_regions(struct parsed_params *p,
++				 struct cxl_decoder *decoder,
++				 int *count)
 +{
-+	const struct cxl_region *const *left = l;
-+	const struct cxl_region *const *right = r;
-+	u64 left_start = cxl_region_get_resource((struct cxl_region *) *left);
-+	u64 right_start = cxl_region_get_resource((struct cxl_region *) *right);
++	struct cxl_region **list;
++	int nr, rc, i;
++	bool skipped = false;
 +
-+	if (left_start < right_start)
-+		return -1;
-+	if (left_start > right_start)
-+		return 1;
-+	return 0;
-+}
++	rc = collect_regions_sorted(decoder, NULL, &list, &nr);
++	if (rc) {
++		log_err(&rl, "failed to allocate region list: %s\n", strerror(-rc));
++		return rc;
++	}
 +
-+static int collect_regions_sorted(struct cxl_decoder *root,
-+								  const char *filter,
-+								  struct cxl_region ***out,
-+								  int *out_nr)
-+{
-+	struct cxl_region *region;
-+	struct cxl_region **list = NULL;
-+	int nr = 0, alloc = 0;
++	for (i = nr - 1; i >= 0; --i) {
++		struct cxl_region *region = NULL;
 +
-+	cxl_region_foreach(root, region) {
-+		if (filter && !util_cxl_region_filter(region, filter))
-+			continue;
-+		if (nr == alloc) {
-+			int new_alloc = alloc ? alloc * 2 : 8;
-+			int new_size = (size_t)new_alloc * sizeof(*list);
-+			struct cxl_region **tmp;
-+
-+			tmp = realloc(list, new_size);
-+			if (!tmp) {
-+				free(list);
-+				return -ENOMEM;
-+			}
-+			list = tmp;
-+			alloc = new_alloc;
++		for (int j = 0; j < p->argc; j++) {
++			region = util_cxl_region_filter(list[i], p->argv[j]);
++			if (region)
++				break;
 +		}
-+		list[nr++] = region;
-+	}
 +
-+	if (!nr) {
-+		free(list);
-+		*out = NULL;
-+		*out_nr = 0;
-+		return 0;
-+	}
++		if (!region) {
++			skipped = true;
++			continue;
++		}
 +
-+	qsort(list, nr, sizeof(*list), cmp_region_hpa);
-+	*out = list;
-+	*out_nr = nr;
-+	return 0;
++		/* if current region matches filter, but previous didn't, destroying would
++		 * result in breaking HPA continuity
++		 */
++		if (skipped) {
++			log_err(&rl, "failed to destroy %s: not a valid HPA suffix under %s\n",
++				cxl_region_get_devname(region),
++				cxl_decoder_get_devname(decoder));
++			rc = -EINVAL;
++			break;
++		}
++
++		rc = destroy_region(region);
++		if (rc) {
++			log_err(&rl, "%s: failed: %s\n",
++				cxl_region_get_devname(region), strerror(-rc));
++			break;
++		}
++		++(*count);
++	}
++	free(list);
++	return rc;
 +}
 +
- static int destroy_region(struct cxl_region *region)
+ static int do_region_xable(struct cxl_region *region, enum region_actions action)
  {
- 	const char *devname = cxl_region_get_devname(region);
+ 	switch (action) {
+@@ -957,8 +1008,6 @@ static int do_region_xable(struct cxl_region *region, enum region_actions action
+ 		return cxl_region_enable(region);
+ 	case ACTION_DISABLE:
+ 		return disable_region(region);
+-	case ACTION_DESTROY:
+-		return destroy_region(region);
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -1026,7 +1075,12 @@ static int region_action(int argc, const char **argv, struct cxl_ctx *ctx,
+ 			if (!util_cxl_decoder_filter(decoder,
+ 						     param.root_decoder))
+ 				continue;
+-			rc = decoder_region_action(p, decoder, action, count);
++
++			if (action == ACTION_DESTROY)
++				rc = destroy_multiple_regions(p, decoder, count);
++			else
++				rc = decoder_region_action(p, decoder, action, count);
++
+ 			if (rc)
+ 				err_rc = rc;
+ 		}
 -- 
 2.45.1.windows.1
 
