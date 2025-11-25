@@ -1,154 +1,109 @@
-Received: from flow-a2-smtp.messagingengine.com (flow-a2-smtp.messagingengine.com [103.168.172.137])
+Received: from esa5.hc1455-7.c3s2.iphmx.com (esa5.hc1455-7.c3s2.iphmx.com [68.232.139.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4BF32255C;
-	Tue, 25 Nov 2025 14:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E33E2DAFB5;
+	Tue, 25 Nov 2025 14:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764079788; cv=none; b=IGZqti2cFhyUDEXVIJEVh6vI/TX9IYN9o4OaBtyardgA9NRrpALQWWinPIZq4jKTgu0scH3IrtxFoFTcMuftw8q0Q82ej9tA9bygPG3Quu90XbQXHgCIAqhJ3ooVEqPlMSmqGsel5RLHiyv5G7wfonkhYK5zPJ2qG4lF9xXfPXc=
+	t=1764081388; cv=none; b=Hy/QQ+T0gcpxzHn2Kseyt61M28CrKYu/Umo24dRlQs8DBXlOv1u/tkzhtDdLtAawzx3fQpIkZzq4qUmY+/x8abXUbm+XPtbR85rCKWWxDE6q6ZVJB4RDZ+XXCAA9VgFHgvqgSNK2OT0IFrOjEN0o/vvGsArFITobDs2V5Y7Nbg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764079788; c=relaxed/simple;
-	bh=41wuBfK6KmZfFSph9AoLMj/4UnC1VKX3ed8Fm4gY7Qk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rls3yt4yCFbF/9hoYA8mXJ+oOeKK5Ca6wbD5+gZzK4Q9nKoFdqgdm5uHyzbx8WOOM9rz0HeITfzXKPmNwhczxXyt4IX6PlVWIYnphmOgGOZDSLwRmFEG+bwyfTQG84qg3mDLIgyxLMiWGGaAZ12pNcwnT/rqfBkGn+95bQnRS74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=OMPvzKlF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YLka3iJJ; arc=none smtp.client-ip=103.168.172.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+	s=arc-20240116; t=1764081388; c=relaxed/simple;
+	bh=8b7urrXN6YtwvK1HvGbozepxJw4SYgsLqBo1XzShTqo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L2oVsBiYntUMJECQnYQ23lU3rMBa1FqTlSae7C3SVj5WWAH3KRZ0wreICvTVIPwsH9rBi5x4f11563OVtq5392cLn9xqcCEm6JyNdhwegElyrnlWIarwxpjxOcHwECfUl7ix1QiMNvdw/LDTIC6zHmuKVAa3hbwNjvmliu1zdGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=GaVPz0gO; arc=none smtp.client-ip=68.232.139.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="OMPvzKlF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YLka3iJJ"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailflow.phl.internal (Postfix) with ESMTP id 809B21380546;
-	Tue, 25 Nov 2025 09:09:45 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Tue, 25 Nov 2025 09:09:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1764079785; x=
-	1764086985; bh=3bMvsZSIiVU3pUA1Q96vlRsnQkJ+zVUPQsOHI7GHg2U=; b=O
-	MPvzKlFHkHMEkgAvO1Uyss+96M/hGKj5YsQfHejRjOSc4qcoxmXMj4hhXg44W1Ef
-	f+2FZmek/Vp7VMAcKSWKu5vw2ELUh/4TKqh05W+XH3fqT/kg0gRDs1cSTZFEzwsY
-	lfUK/XstLQ/GgwvHNBGpiPsihS3C907bycj46mTcTPjPWBcIFuNO2mkJK87dq41v
-	nEaYF+SW/r9n3rXEn7zZvJvhaqJKngqjJVqgYKouNkyWaY7csAolp+xbmx+7XCc6
-	NTnu6vEK2LnrusXBylHkCIdYJU8Qwx8yLU37YVnlHB1bRfm2yV73RrmEmaeu/OnY
-	zVRksTDa34siBV1sEgVBg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1764079785; x=1764086985; bh=3bMvsZSIiVU3pUA1Q96vlRsnQkJ+zVUPQsO
-	HI7GHg2U=; b=YLka3iJJS4uHYf+RVmsIhTYDXpAvrL5WrL9BPBFcYF8nsukYggb
-	QHO6tT2dwT3h9TcJys0ZthsLNKdLgkuGaDv5MkN8DaRBDYOvSDFB76gBeKNn5W0/
-	CVCemM3ZxiBVvJLvrV/KsXaaVnrH/XSHm5BR36zUS10Fj/JaEk3C0JUVf4tBZhI1
-	rwv6nH1MsGZq8Rx4O9829S+HBuzkXZM4K4wcZY5iTTS7mIR4Fo1mVU9WkuJ1CMd2
-	uD6szhHUcKTSLnb6TESaW5TxAiS8SqYaev0d0D3FkzA2naE3DgHaXS1hUhvkgcn9
-	odS/eCQqz0+KbMLRtjqc8IUq4qTlSRV2bug==
-X-ME-Sender: <xms:pbglaWvKN1DJZAzYSwKMRx9-OgT3rdfcTgkjojWPEw8KNW7Cx0AEAw>
-    <xme:pbglaTXf9w3AHkCR2Fi9l8wIxJHg69s8vY_NmbLplbMAS7ZPJhAxU4ZyvP7W59tRY
-    6tYZ94S8k6_dYSWuO2CmKlawxLgNFJRUNzUYh5ghix47LoIvHqcJ3E>
-X-ME-Received: <xmr:pbglaTVq6gxwgmVLYbKwhZEo3Ue8V3Yipkq04ow2rgFUWOH-1wlLy2M77sQWTg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvgeduieejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfhfgggtuggjsehttdfstd
-    dttddvnecuhfhrohhmpefmihhrhihlucfuhhhuthhsvghmrghuuceokhhirhhilhhlsehs
-    hhhuthgvmhhovhdrnhgrmhgvqeenucggtffrrghtthgvrhhnpeejheeufeduvdfgjeekie
-    dvjedvgeejgfefieetveffhfdtvddtleduhfeffeffudenucevlhhushhtvghrufhiiigv
-    pedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghmohhvrd
-    hnrghmvgdpnhgspghrtghpthhtohepudefiedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepghhouhhrrhihsehgohhurhhrhidrnhgvthdprhgtphhtthhopehlihhnuhigqd
-    hmmheskhhvrggtkhdrohhrghdprhgtphhtthhopehkvghrnhgvlhdqthgvrghmsehmvght
-    rgdrtghomhdprhgtphhtthhopehlihhnuhigqdgtgihlsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtohepnhhvughimhhmsehlihhsthhsrdhlihhnuhigrdguvghvpd
-    hrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopegtghhrohhuphhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtohepuggrvhgvsehsthhgohhlrggsshdrnhgvth
-X-ME-Proxy: <xmx:pbglaW_0cXMtMthUHN5H-fE7CGn6DIwBKbPochRZeWCN8gj92pgAfQ>
-    <xmx:pbglab-e-8tK-jGoWZSTzd4htoSykssNFuRJIH-N3luEajg_qhcROg>
-    <xmx:pbglaS8xVJOZqKo-Vsq3I59doGzt7pGvGwt-1UuY4j1VdvVF-sGV3A>
-    <xmx:pbglabLAvm1PrWnHzKLnOzKQUK7tS39E5pLPz3qn6MaXu68uj2z1VA>
-    <xmx:qbglaXODIQJ_Tp6UtA9zcmakBUdCO8tVHH50Z00bPS2jBHC-6eFUxFQ4>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 25 Nov 2025 09:09:40 -0500 (EST)
-Date: Tue, 25 Nov 2025 14:09:39 +0000
-From: Kiryl Shutsemau <kirill@shutemov.name>
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-mm@kvack.org, kernel-team@meta.com, linux-cxl@vger.kernel.org,
- 	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, 	cgroups@vger.kernel.org,
- dave@stgolabs.net, jonathan.cameron@huawei.com, 	dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com,
- 	ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com,
- 	akpm@linux-foundation.org, david@redhat.com, lorenzo.stoakes@oracle.com,
- 	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
- surenb@google.com, 	mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com,
- matthew.brost@intel.com, 	joshua.hahnjy@gmail.com, rakie.kim@sk.com,
- byungchul@sk.com, ying.huang@linux.alibaba.com, 	apopple@nvidia.com,
- mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
- 	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
- rostedt@goodmis.org, 	bsegall@google.com, mgorman@suse.de,
- vschneid@redhat.com, tj@kernel.org, 	hannes@cmpxchg.org,
- mkoutny@suse.com, kees@kernel.org, muchun.song@linux.dev,
- 	roman.gushchin@linux.dev, shakeel.butt@linux.dev, rientjes@google.com,
- jackmanb@google.com, 	cl@gentwo.org, harry.yoo@oracle.com,
- axelrasmussen@google.com, 	yuanchu@google.com, weixugc@google.com,
- zhengqi.arch@bytedance.com, 	yosry.ahmed@linux.dev, nphamcs@gmail.com,
- chengming.zhou@linux.dev, 	fabio.m.de.francesco@linux.intel.com,
- rrichter@amd.com, ming.li@zohomail.com, usamaarif642@gmail.com,
- 	brauner@kernel.org, oleg@redhat.com, namcao@linutronix.de,
- escape@linux.alibaba.com, 	dongjoo.seo1@samsung.com
-Subject: Re: [RFC LPC2026 PATCH v2 00/11] Specific Purpose Memory NUMA Nodes
-Message-ID: <h7vt26ek4wzrls6twsveinxz7aarwqtkhydbgvihsm7xzsjiuz@yk2dltuf2eoh>
-References: <20251112192936.2574429-1-gourry@gourry.net>
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="GaVPz0gO"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1764081387; x=1795617387;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=8b7urrXN6YtwvK1HvGbozepxJw4SYgsLqBo1XzShTqo=;
+  b=GaVPz0gOormUegL+0qHZsGKyg/Vp4Qv98ZLqEn2ojCZcoe0U2I1vU+RY
+   /2URmC/UcQT7H7d0/up4lz0ZN4L/e5OJGLbjiZ1Muuzy5UXeRmv65RNIb
+   9XoLLcOcnSDqsWMRp+nOcTCs6n/LxW2L3S0nZmWLMcle70h3oEuenDT4f
+   NDzbQyVQ9wPj8QLVhsmkmornw81Yi6m9EGEFlHDghn72cqZm7VHuUug67
+   oJ+JXkxQQZPAxuE2GD1D+qbPBOXQIwAgEqHruCuPewDHQf6pgcZ1/f83t
+   rh3eZEroHp7KWIn8lPFA2cPrdT5Ky3Cu66OYCUxJg/UJv1spBmwGcaZh9
+   A==;
+X-CSE-ConnectionGUID: fMnLFYc5Qj2NkTP1RDm3PQ==
+X-CSE-MsgGUID: 538E0P1URHi/1wy4ThpiZg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="219738539"
+X-IronPort-AV: E=Sophos;i="6.20,225,1758553200"; 
+   d="scan'208";a="219738539"
+Received: from unknown (HELO az2nlsmgr3.o.css.fujitsu.com) ([51.138.80.169])
+  by esa5.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 23:36:19 +0900
+Received: from az2nlsmgm1.o.css.fujitsu.com (unknown [10.150.26.203])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by az2nlsmgr3.o.css.fujitsu.com (Postfix) with ESMTPS id 771B51000344;
+	Tue, 25 Nov 2025 14:36:19 +0000 (UTC)
+Received: from m3003.s.css.fujitsu.com (sqmail-3003.b.css.fujitsu.com [10.128.233.114])
+	by az2nlsmgm1.o.css.fujitsu.com (Postfix) with ESMTP id E7DA7C01ECA;
+	Tue, 25 Nov 2025 14:36:18 +0000 (UTC)
+Received: from nezuko.soft.fujitsu.com (unknown [10.118.236.61])
+	by m3003.s.css.fujitsu.com (Postfix) with ESMTP id 381D42005371;
+	Tue, 25 Nov 2025 23:36:17 +0900 (JST)
+From: Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
+To: dan.j.williams@intel.com,
+	alison.schofield@intel.com
+Cc: Smita.KoralahalliChannabasappa@amd.com,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
+Subject: [RFC PATCH v1 0/2] cxl/cli: HPA-ordered destroy-region teardown
+Date: Tue, 25 Nov 2025 23:38:22 +0900
+Message-ID: <20251125143826.282312-1-pawel.mielimonka@fujitsu.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251112192936.2574429-1-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 12, 2025 at 02:29:16PM -0500, Gregory Price wrote:
-> With this set, we aim to enable allocation of "special purpose memory"
-> with the page allocator (mm/page_alloc.c) without exposing the same
-> memory as "System RAM".  Unless a non-userland component, and does so
-> with the GFP_SPM_NODE flag, memory on these nodes cannot be allocated.
+This series addresses an issue in destroy-region, where
+region teardown relied on libcxl enumeration order, which is not
+guaranteed to match the increasing HPA order exposed by the kernel. 
+When a decoder window is fully populated, attempting to destroy a
+non-last region causes kernel-side validation to fail (e.g.
+set_dpa_size(..., 0) returns an error), and subsequent destroy/create
+sequences may become impossible.
 
-How special is "special purpose memory"? If the only difference is a
-latency/bandwidth discrepancy compared to "System RAM", I don't believe
-it deserves this designation.
+The CXL specification requires that decoder programming (and the
+implicit teardown path) must preserve continuous HPA coverage and
+proceed strictly in order: decoder m before decoder m+1, with each
+covering an HPA range below the next one. Practically, this means that
+region teardown must follow HPA-descending order and must stop as soon
+as a gap in the requested suffix is encountered.
 
-I am not in favor of the new GFP flag approach. To me, this indicates
-that our infrastructure surrounding nodemasks is lacking. I believe we
-would benefit more by improving it rather than simply adding a GFP flag
-on top.
+The patch introduces destroy_multiple_regions(), which collects all
+regions under a given root decoder, sorts them by HPA, and destroys
+only the suffix requested by the user (or all regions in the case of
+“all”). The implementation guarantees that only valid teardown
+sequences are attempted and prevents decoder state inconsistencies
+observed during repeated destroy/create cycles.
 
-While I am not an expert in NUMA, it appears that the approach with
-default and opt-in NUMA nodes could be generally useful. Like,
-introduce a system-wide default NUMA nodemask that is a subset of all
-possible nodes. This way, users can request the "special" nodes by using
-a wider mask than the default.
+Enable/disable paths and all existing bus/port/decoder filtering
+remain unchanged.
 
-cpusets should allow to set both default and possible masks in a
-hierarchical manner where a child's default/possible mask cannot be
-wider than the parent's possible mask and default is not wider that
-own possible.
+Pawel Mielimonka (2):
+  cxl/cli: add helpers to collect and sort regions by HPA
+  cxl/cli: enforce HPA-descending teardown order for destroy-region
 
-> Userspace-driven allocations are restricted by the sysram_nodes mask,
-> nothing in userspace can explicitly request memory from SPM nodes.
-> 
-> Instead, the intent is to create new components which understand memory
-> features and register those nodes with those components. This abstracts
-> the hardware complexity away from userland while also not requiring new
-> memory innovations to carry entirely new allocators.
-
-I don't see how it is a positive. It seems to be negative side-effect of
-GFP being a leaky abstraction.
+ cxl/region.c | 114 +++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 111 insertions(+), 3 deletions(-)
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.45.1.windows.1
+
