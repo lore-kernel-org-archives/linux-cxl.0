@@ -1,176 +1,274 @@
-Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8A132572E;
-	Tue, 25 Nov 2025 14:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D0032694C
+	for <linux-cxl@vger.kernel.org>; Tue, 25 Nov 2025 15:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764081461; cv=none; b=Uf5/zeaNON5+bVN8/FpMbtsfnBAuZQCWmvceL2Th4hrTjssYWYh3q7CeztXw+owjdlzh36fzEnuFbmBxuhKDaiNHpqlIjZF1I2kDVNlSv2Svb5l0kbB2+urKpre3k42XsRp9zn2a/3OlqMcMtkjLRlT1i01tGK363do3fOg0qKU=
+	t=1764083130; cv=none; b=DrEn9bbT2t1tjncZ4zFQrIcFbW5Vt+qU6h8SzLcRuL4xK4Jbyv4UutFCAKKVunlQtFiYNXWd/EbjdMfTswKxC9k2tcm38aFdMGcFqvSSOnV44W3ipkqVYiEFgg1MIzZl28rYG/XOX/fJ+Ro1aTU4hXIUEVTLnUA99N7ivNhG+QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764081461; c=relaxed/simple;
-	bh=G0/MBVaVUSJEMjwaIVqzxBwjG+MMLP0g5258UR/9qY8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MBinZi19sDuc+scVxr5MreW68HRRlN/fypIVgj0A1rRuDcL6EGDpxjSpRz34yfE5zVuNm0OqNBDUKj3VMJ0m0p71qSRgnf+gFTOs/tuwrucZKGSwmWqOn+Ul1+xbATG7TV9KF9K5y5XFBaJ6jAQTwcrkaA3pmAQq+qo7EzckDt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=mJlcGQmn; arc=none smtp.client-ip=207.54.90.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1764083130; c=relaxed/simple;
+	bh=pjzHMxpUkO8Li3i8jQNI3TpiuWXXjBQIOqEQEY3Q07Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t8jfmly41OrEANQsg9e57u7igR6tip4Jddj4XtWIi3GcUhTh5lqKEqQAf/TjIO5qo1LrWO1CIybXO0z5PAAzu6WSBaXHuotLyH/3EIVAJ69m8UdlVtPsj+DAa2z4+czIbVfTDqSrzS+6id6xDxG8qtDd/g8NU+/nIupySoNAB2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=V9vxHUqW; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="mJlcGQmn"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1764081460; x=1795617460;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=G0/MBVaVUSJEMjwaIVqzxBwjG+MMLP0g5258UR/9qY8=;
-  b=mJlcGQmn5oKsMtlx6QU9r+Mzf5DzspEWybuyBK3IJw2ZoCyq3RUCA0sy
-   BFk4ax6uEq9LrfnYx9rgr3uCap49sASPe4AZIfIC4JMHpDNemG5b71Stm
-   zMMNwLX7cF7uVBu0a03Qa+FIc/TRXuLGxTvoPixoKUrHMaitsCFPLiR/5
-   U+gSwUC7Jh5B6/44oHGwtPuqE0n4JpUnruaTps5L8hIIz0QdlyBxdaYUA
-   y5XpsybfZqLEL6TQQIUmC8LfoPVljYOsLpSkK+562VHzmb7ERXnrqUqPU
-   WBAZWXdNLQ93l5NynK1OVSE1UovBo9FsIyhueAQcl0wlX7t1xtRD+rRLw
-   Q==;
-X-CSE-ConnectionGUID: uWuqJbmmQvCBtxv3v7sEJw==
-X-CSE-MsgGUID: L66ne24SQVy9CQU4z60pIg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="220337716"
-X-IronPort-AV: E=Sophos;i="6.20,225,1758553200"; 
-   d="scan'208";a="220337716"
-Received: from unknown (HELO az2uksmgr1.o.css.fujitsu.com) ([52.151.125.19])
-  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 23:36:29 +0900
-Received: from az2uksmgm4.o.css.fujitsu.com (unknown [10.151.22.201])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by az2uksmgr1.o.css.fujitsu.com (Postfix) with ESMTPS id 04A421C1C711;
-	Tue, 25 Nov 2025 14:36:29 +0000 (UTC)
-Received: from m3003.s.css.fujitsu.com (sqmail-3003.b.css.fujitsu.com [10.128.233.114])
-	by az2uksmgm4.o.css.fujitsu.com (Postfix) with ESMTP id 7FD621400383;
-	Tue, 25 Nov 2025 14:36:28 +0000 (UTC)
-Received: from nezuko.soft.fujitsu.com (unknown [10.118.236.61])
-	by m3003.s.css.fujitsu.com (Postfix) with ESMTP id DD2D22005371;
-	Tue, 25 Nov 2025 23:36:26 +0900 (JST)
-From: Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
-To: dan.j.williams@intel.com,
-	alison.schofield@intel.com
-Cc: Smita.KoralahalliChannabasappa@amd.com,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
-Subject: [RFC PATCH v1 2/2] cxl/cli: enforce HPA-descending teardown order for destroy-region
-Date: Tue, 25 Nov 2025 23:38:24 +0900
-Message-ID: <20251125143826.282312-3-pawel.mielimonka@fujitsu.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251125143826.282312-1-pawel.mielimonka@fujitsu.com>
-References: <20251125143826.282312-1-pawel.mielimonka@fujitsu.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="V9vxHUqW"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4eddfb8c7f5so47976141cf.1
+        for <linux-cxl@vger.kernel.org>; Tue, 25 Nov 2025 07:05:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1764083127; x=1764687927; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ardSa1fh2pHETKiwXzwSN9Th9brxN1pF2dM3Ndqaang=;
+        b=V9vxHUqWq85oWTzLG3IVlyTwxaUMmUd4TeFWrgX2RRt2sreWUaDiqybsI3MOFLyBQi
+         YLLwk8zYXpFBJM49t+hfL1UUAHEjCQ72vkipD65+mDsOw9KRFJwcbGAX1wMk1TwNJspB
+         AgCTHadnYF+CNwVtCRacRPRorqrdz6Q1B7K9vgZDR1wnq/OMM+jyYgx/81nnLx7Vba1N
+         yQAQc1Vgig9FY2Xafy2fxVjmcJCw0HBmcwahdCfWMOkWwqweWBoc25WmTNCLwwMJts40
+         Y196lEpmAOkrHYj6PWe5+vo61yqlkkxCWtZ0PHLRnqU3bTAQnvJxNLOpI/4wggpDdQz7
+         NC9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764083127; x=1764687927;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ardSa1fh2pHETKiwXzwSN9Th9brxN1pF2dM3Ndqaang=;
+        b=Q/7xhfjhDgYSPES0iT7cfRKLB0sbTAjgeZd+ZwaxtRXVS5nZah6BgBUwgCJKRrNj0J
+         p1a9B7NboS2TNUIAsAu5UvmmQr4MKkFhLHNKO936uf6OhG3ZrKU4R9EFT5Ozl8t8oNPd
+         5rYgObim8A0nfS2Xzb34uosp6uiIOWQjurEFndYH9dAJU7CPqwH4hqTbMdPVc6PodmlN
+         HZ2gmblRfzYGVjDj2OaA3iJy6794FflFAsz+1d0IBDA48jCv0F8t16dQq5bpIfQizVru
+         HEdvKN9aIIjBqy8Kf+Q107zRG81leLsOHyEgbaxHFA9bpxxLXWva16wu8OQ7XGmu9m+Q
+         zG7g==
+X-Forwarded-Encrypted: i=1; AJvYcCU4HE/Zs70QxhzU4KLyb/oHdIXJJPETMEasRg1hUQVVHQrV8Ayg8bNXA7W3sLY0NcWdSdbRmNPuk/s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywys+H6Pb07bM3fBNptXdQufC6FyzZULyhsBVzajKhomdU7UA5v
+	zSKt6QYgwSpRg4qyJ1xN7j0p490HIZC0oQIlGIXBSghSs5SgtPXSF54dY/ugkoktMO4=
+X-Gm-Gg: ASbGncvgNqPa7AMYx3CN3gYoA2H6WRBiYfhN6N8dKHEGSRaZ111f270zye3dcBzP8r8
+	00W7Wz4UHHBQ3UHo5OHD/mPR8YXOTN42PLp23YHRbhr2Xql/DF/67YRSizeq0h1j95yI9eTU74n
+	WJZ/nJqlRyNxh1DeO2gQU5ZKfGhkZtSA+0DYrf6fP4JgmaDUmgXbMZMZti9t8iG3sLQrgfFogFE
+	FONCULN4UR0PcMDdk/xAmjcz74PRtEp2Zg7pRCkDnlhH8XSSQiX6dsrds/2VN7faM5XzyyoqnbI
+	RK0a2FcvZZ616MLRAOE9cMH/0u1asXquPYIiAhmAfFP5aPIwqKcYXmpTsqo50Eqlh4z6HwKnfSt
+	lnNkwckVIfuJDOtuh5nu3TXksVvI04wGuZEtCcTO1+Hc1rYesk78cdAovYaxh+Y/atabNfNWeM5
+	x11fevVHhfStsFC6ZsUixGuW7PYf3u3ZPeGq/WvXoAwyQmfimL4lNduSFNpVyh3tNE3JKyNQ==
+X-Google-Smtp-Source: AGHT+IEFL/RZ3x9jACD+3qnEV8d73oOLgzxVvrrp/q6V+1ebLXwAT8RkswYTT3oWsjpBiQE2LKDSqw==
+X-Received: by 2002:ac8:7c55:0:b0:4ee:1e63:a4e0 with SMTP id d75a77b69052e-4efbdb25399mr46248441cf.74.1764083126842;
+        Tue, 25 Nov 2025 07:05:26 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b3295f2f6dsm1195203285a.54.2025.11.25.07.05.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Nov 2025 07:05:25 -0800 (PST)
+Date: Tue, 25 Nov 2025 10:05:21 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Kiryl Shutsemau <kirill@shutemov.name>
+Cc: linux-mm@kvack.org, kernel-team@meta.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, david@redhat.com,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, mingo@redhat.com,
+	peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, kees@kernel.org, muchun.song@linux.dev,
+	roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+	rientjes@google.com, jackmanb@google.com, cl@gentwo.org,
+	harry.yoo@oracle.com, axelrasmussen@google.com, yuanchu@google.com,
+	weixugc@google.com, zhengqi.arch@bytedance.com,
+	yosry.ahmed@linux.dev, nphamcs@gmail.com, chengming.zhou@linux.dev,
+	fabio.m.de.francesco@linux.intel.com, rrichter@amd.com,
+	ming.li@zohomail.com, usamaarif642@gmail.com, brauner@kernel.org,
+	oleg@redhat.com, namcao@linutronix.de, escape@linux.alibaba.com,
+	dongjoo.seo1@samsung.com
+Subject: Re: [RFC LPC2026 PATCH v2 00/11] Specific Purpose Memory NUMA Nodes
+Message-ID: <aSXFseE5FMx-YzqX@gourry-fedora-PF4VCD3F>
+References: <20251112192936.2574429-1-gourry@gourry.net>
+ <h7vt26ek4wzrls6twsveinxz7aarwqtkhydbgvihsm7xzsjiuz@yk2dltuf2eoh>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <h7vt26ek4wzrls6twsveinxz7aarwqtkhydbgvihsm7xzsjiuz@yk2dltuf2eoh>
 
-Implement destroy_multiple_regions() and bypass the generic
-do_region_xable() path for ACTION_DESTROY. Regions are collected and
-sorted by HPA, then destroyed from highest to lowest, stopping at the
-first "matching after skipped" to provide user with better error log.
-This prevents attempts on non-last regions and aligns destroy-region
-with required decoder programming order.
+On Tue, Nov 25, 2025 at 02:09:39PM +0000, Kiryl Shutsemau wrote:
+> On Wed, Nov 12, 2025 at 02:29:16PM -0500, Gregory Price wrote:
+> > With this set, we aim to enable allocation of "special purpose memory"
+> > with the page allocator (mm/page_alloc.c) without exposing the same
+> > memory as "System RAM".  Unless a non-userland component, and does so
+> > with the GFP_SPM_NODE flag, memory on these nodes cannot be allocated.
+> 
+> How special is "special purpose memory"? If the only difference is a
+> latency/bandwidth discrepancy compared to "System RAM", I don't believe
+> it deserves this designation.
+> 
 
-Signed-off-by: Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
----
- cxl/region.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 57 insertions(+), 3 deletions(-)
+That is not the only discrepancy, but it can certainly be one of them.
 
-diff --git a/cxl/region.c b/cxl/region.c
-index 58765b3d..1bf1901a 100644
---- a/cxl/region.c
-+++ b/cxl/region.c
-@@ -950,6 +950,57 @@ static int destroy_region(struct cxl_region *region)
- 	return cxl_region_delete(region);
- }
- 
-+static int destroy_multiple_regions(struct parsed_params *p,
-+				 struct cxl_decoder *decoder,
-+				 int *count)
-+{
-+	struct cxl_region **list;
-+	int nr, rc, i;
-+	bool skipped = false;
-+
-+	rc = collect_regions_sorted(decoder, NULL, &list, &nr);
-+	if (rc) {
-+		log_err(&rl, "failed to allocate region list: %s\n", strerror(-rc));
-+		return rc;
-+	}
-+
-+	for (i = nr - 1; i >= 0; --i) {
-+		struct cxl_region *region = NULL;
-+
-+		for (int j = 0; j < p->argc; j++) {
-+			region = util_cxl_region_filter(list[i], p->argv[j]);
-+			if (region)
-+				break;
-+		}
-+
-+		if (!region) {
-+			skipped = true;
-+			continue;
-+		}
-+
-+		/* if current region matches filter, but previous didn't, destroying would
-+		 * result in breaking HPA continuity
-+		 */
-+		if (skipped) {
-+			log_err(&rl, "failed to destroy %s: not a valid HPA suffix under %s\n",
-+				cxl_region_get_devname(region),
-+				cxl_decoder_get_devname(decoder));
-+			rc = -EINVAL;
-+			break;
-+		}
-+
-+		rc = destroy_region(region);
-+		if (rc) {
-+			log_err(&rl, "%s: failed: %s\n",
-+				cxl_region_get_devname(region), strerror(-rc));
-+			break;
-+		}
-+		++(*count);
-+	}
-+	free(list);
-+	return rc;
-+}
-+
- static int do_region_xable(struct cxl_region *region, enum region_actions action)
- {
- 	switch (action) {
-@@ -957,8 +1008,6 @@ static int do_region_xable(struct cxl_region *region, enum region_actions action
- 		return cxl_region_enable(region);
- 	case ACTION_DISABLE:
- 		return disable_region(region);
--	case ACTION_DESTROY:
--		return destroy_region(region);
- 	default:
- 		return -EINVAL;
- 	}
-@@ -1026,7 +1075,12 @@ static int region_action(int argc, const char **argv, struct cxl_ctx *ctx,
- 			if (!util_cxl_decoder_filter(decoder,
- 						     param.root_decoder))
- 				continue;
--			rc = decoder_region_action(p, decoder, action, count);
-+
-+			if (action == ACTION_DESTROY)
-+				rc = destroy_multiple_regions(p, decoder, count);
-+			else
-+				rc = decoder_region_action(p, decoder, action, count);
-+
- 			if (rc)
- 				err_rc = rc;
- 		}
--- 
-2.45.1.windows.1
+I do think, at a certain latency/bandwidth level, memory becomes
+"Specific Purpose" - because the performance implications become so
+dramatic that you cannot allow just anything to land there.
 
+In my head, I've been thinking about this list
+
+1) Plain old memory (<100ns)
+2) Kinda slower, but basically still memory (100-300ns)
+3) Slow Memory (>300ns, up to 2-3us loaded latencies)
+4) Types 1-3, but with a special feature (Such as compression)
+5) Coherent Accelerator Memory (various interconnects now exist)
+6) Non-coherent Shared Memory and PMEM (FAMFS, Optane, etc)
+
+Originally I was considering [3,4], but with Alistar's comments I am
+also thinking about [5] since apparently some accelerators already
+toss their memory into the page allocator for management.
+
+
+Re: Slow memory --
+
+   Think >500-700ns cache line fetches, or 1-2us loaded.
+
+   It's still "Basically just memory", but the scenarios in which
+   you can use it transparently shrink significantly.  If you can
+   control what and how things can land there with good policy,
+   this can still be a boon compared to hitting I/O.
+
+   But you still want things like reclaim and compaction to run
+   on this memory, and you still want buddy-allocation of this memory.
+
+Re: Compression
+
+  This is a class of memory device which presents "usable memory"
+  but which carries stipulations around its use.
+
+  The compressed case is the example I use in this set.  There is an
+  inline compression mechanism on the device.  If the compression ratio
+  drops to low, writes can get dropped resulting in memory poison.
+
+  We could solve this kind of problem only allowing allocation via
+  demotion and hack off the Write-bit in the PTE. This provides the
+  interposition needed to fend-off compression ratio issues.
+
+  But... it's basically still "just memory" - you can even leave it
+  mapped in the CPU page tables and allow userland to read unimpeded.
+
+  In fact, we even want things like compaction and reclaim to run here.
+  This cannot be done *unless* this memory is in the page allocator,
+  and basically necessitates reimplementing all the core services the
+  kernel provides.
+
+Re: Accelerators
+
+  Alistair has described accelerators onlining their memory as NUMA
+  nodes being an existing pattern (apparently not in-tree as far as I
+  can see, though).
+
+  General consensus is "don't do this" - and it should be obvious
+  why.  Memory pressure can cause non-workload memory to spill to
+  these NUMA nodes as fallback allocation targets.
+
+  But if we had a strong isolation mechanism, this could be supported.
+  I'm not convinced this kind of memory actually needs core services
+  like reclaim, so I will wait to see those arguments/data before I
+  conclude whether the idea is sound.
+
+
+>
+> I am not in favor of the new GFP flag approach. To me, this indicates
+> that our infrastructure surrounding nodemasks is lacking. I believe we
+> would benefit more by improving it rather than simply adding a GFP flag
+> on top.
+> 
+
+The core of this series is not the GFP flag, it is the splitting of
+(cpuset.mems_allowed) into (cpuset.mems_allowed, cpuset.sysram_nodes)
+
+That is the nodemask infrastructure improvement.  The GFP flag is one
+mechanism of loosening the validation logic from limiting allocations
+from (sysram_nodes) to including all nodes present in (mems_allowed).
+
+> While I am not an expert in NUMA, it appears that the approach with
+> default and opt-in NUMA nodes could be generally useful. Like,
+> introduce a system-wide default NUMA nodemask that is a subset of all
+> possible nodes.
+
+This patch set does that (cpuset.sysram_nodes and mt_sysram_nodemask)
+
+> This way, users can request the "special" nodes by using
+> a wider mask than the default.
+> 
+
+I describe in the response to David that this is possible, but creates
+extreme tripping hazards for a large swath of existing software.
+
+snippet
+'''
+Simple answer:  We can choose how hard this guardrail is to break.
+
+This initial attempt makes it "Hard":
+   You cannot "accidentally" allocate SPM, the call must be explicit.
+
+Removing the GFP would work, and make it "Easier" to access SPM memory.
+
+This would allow a trivial 
+
+   mbind(range, SPM_NODE_ID)
+
+Which is great, but is also an incredible tripping hazard:
+
+   numactl --interleave --all
+
+and in kernel land:
+
+   __alloc_pages_noprof(..., nodes[N_MEMORY])
+
+These will now instantly be subject to SPM node memory.
+'''
+
+There are many places that use these patterns already.
+
+But at the end of the day, it is preference: we can choose to do that.
+
+> cpusets should allow to set both default and possible masks in a
+> hierarchical manner where a child's default/possible mask cannot be
+> wider than the parent's possible mask and default is not wider that
+> own possible.
+> 
+
+This patch set implements exactly what you describe:
+   sysram_nodes = default
+   mems_allowed = possible
+
+> > Userspace-driven allocations are restricted by the sysram_nodes mask,
+> > nothing in userspace can explicitly request memory from SPM nodes.
+> > 
+> > Instead, the intent is to create new components which understand memory
+> > features and register those nodes with those components. This abstracts
+> > the hardware complexity away from userland while also not requiring new
+> > memory innovations to carry entirely new allocators.
+> 
+> I don't see how it is a positive. It seems to be negative side-effect of
+> GFP being a leaky abstraction.
+> 
+
+It's a matter of applying an isolation mechanism and then punching an
+explicit hole in it.  As it is right now, GFP is "leaky" in that there
+are, basically, no walls.  Reclaim even ignored cpuset controls until
+recently, and the page_alloc code even says to ignore cpuset when 
+in an interrupt context.
+
+The core of the proposal here is to provide a strong isolation mechanism
+and then allow punching explicit holes in it.  The GFP flag is one
+pattern, I'm open to others.
+
+~Gregory
