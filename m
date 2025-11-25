@@ -1,282 +1,122 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C466429ACF7
-	for <linux-cxl@vger.kernel.org>; Tue, 25 Nov 2025 06:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FDC2512EE
+	for <linux-cxl@vger.kernel.org>; Tue, 25 Nov 2025 13:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764052980; cv=none; b=tyht2G2WS0DiIykKn/lcoOLoyRc3IkHv60SlnODxn9FnQHDW8E4KrXbLW9rVu84Ztc+FoOftKVKV2sK9MbKElnMu/EGR/I2MyIcLmAjIHki8S/GDSxN/HOsVFV4TLp0zuI9uo2KqLnGNMiAuOuWTvNQQT+C4KKwF9woBQowkY6w=
+	t=1764078906; cv=none; b=a0VzCS2SQufoo7P2b8sEkcuDINyucetDC87yTE+uNQfO3l8u8lenZivHMkSBC5QtCWHTIOtZgGMWoqMupRJyVwipJIIHDDbVQmeSd24/6hG6igenHfclvCbfVlG9AKh5mrothTV2EPsEkRVKzlyDXxAwBNQmLNbXW+y1P2LJ6ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764052980; c=relaxed/simple;
-	bh=bMVM6nwiRnBB3ygequtCXeKaSYZ8JKMr74Alu8bdTfM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PE6fv+EmPLjdeAcb8yp0oCiV+VZNtkBoSkz1bgHFACNOzeOgsnxrfnr+JaRPWks2X0ys/soKOrPz/5Cs58ZLkwo8Pj1ggFRgcw8j1sRFrhi6EX92zPqFxMIYdE+8R5R9Mom2Yr1p25XSsjpsW7VCCmaynBFN6f6d7lwpkiGdMn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PXM4Oi51; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1764078906; c=relaxed/simple;
+	bh=9cdDbADaV+G9ohLC6r88tq7oW1kjh+5VpyuQIt9brqU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FKfh5LOz/sNqaORmezitSIGtBL14VxECz8hK2dMuLpdsnpHEgrmA85s5YqqO7eq20Vg798c0GgpATgKFsTNh8cLj2bS8mf0wgKQgiPAqaTANaDqI+u7RNHk0dLXOIyVpPE5gv0QcYCNuTVtoVf2p3oU/INE9TwGff/J6wQ3oYGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=pgxN/Hky; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXM4Oi51"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-37bbb36c990so50373001fa.0
-        for <linux-cxl@vger.kernel.org>; Mon, 24 Nov 2025 22:42:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="pgxN/Hky"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-8b144ec3aa8so545011785a.2
+        for <linux-cxl@vger.kernel.org>; Tue, 25 Nov 2025 05:55:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764052975; x=1764657775; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oDwgPrbqR3WPQpKO2RN5Ep6D/2LO+UnqChlfZRK6eKg=;
-        b=PXM4Oi51/FPSyFM+6n3W1MkZ8lRcQmQDf5xTo4W0x/8klPd2i17BG+PpU/k99qVrEd
-         8FhrIhgvL/oMBEixwIderB1Ww0ZYJApyL96SU76Usb+75ViTYcgBbNIJmkdB2sqglt39
-         EHyCtOP7rzTY2LMk/dKOF1maizgzB3exwy6gBuLAE/kfnFoF1jwJzDmiGDfDXLV4J1hr
-         fHJIyFU4x2tpUq0fiJRIhox+RXrqjVWTwCFxxGlJtK13wa3x8sCRrXjhS17HwHoQn1a3
-         abGsydVqkqA5KRHnBiiW/E6itTeHdADHv/d7USbpF/FQoDWy/pxy9oSZYL14nXXU1RoR
-         xnBw==
+        d=gourry.net; s=google; t=1764078903; x=1764683703; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BN0Gd9FIr+nCWCDMfR+V4cuqmnLr3RwYOCmv9D7V0q0=;
+        b=pgxN/Hky6yFaO6c92cxygrwsGitFlxGbZo4w2l1vJOYac11hp+trjrSQaFq6Gso4ly
+         EM7qpaOVLCMx3S1yZw0nkH/pcci+clHaiOO16Q4V0s6Tdrw4CbK4cuCQnCoh5CaPm/Lz
+         jv7P1ZBd1KuT8LIpxUMEHqSrLOsh9vraHMqC3W2lcyBzZzf40W7XgtE4gtx40mlHlgLM
+         bpHa6h6FaulHms2vk/suJkcBqzKusqd0b9b2MDUAIZO91GM/FOcOORu3/uV8/ZUqRFRX
+         VAaUpqawOx8oH28+YPCMv+nt8DHPCN4yYtIrjx6kdpFgWKEr/V9xG7s2Fr4HQks7rnHC
+         rOoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764052975; x=1764657775;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oDwgPrbqR3WPQpKO2RN5Ep6D/2LO+UnqChlfZRK6eKg=;
-        b=fwGQnfQLjnXMxRrvCxR7FDXtGZkulsxUhTCDNlXgs0RZMj2ic+JUtv0o28hLv2g2vX
-         GNbzIRgMAGghqmH9YUzpTOG0cDcA7lLP5fzcrIpaQrudV9eR9kPJHPiopYwmesHiALAq
-         LL2Sp6O+bOVF7he9jnCzYyj+bAwwfOpXWUqa93liJEGGtKadVdd6b1seJkO3YMZt/ZNW
-         grW7/eE4UiOeNM8OXul7+333RHqveQ5K6Q/9JIb/ADkrRRiLr5YM8fRnkmEqSgkkqxe4
-         Qcf4v27cUrNxd7FeWifrwhd4+USan4aW2DUcg6PsMXltiO6fMhw2d4nqgL4XMwI6Odz+
-         ebRg==
-X-Forwarded-Encrypted: i=1; AJvYcCXtThjkIRWyJZN7P/vG6rsEc/rzBG0dwP+9rEDvCmKj3IFa4/LsVMwmo/7cFANHBKHUvLQHwsNj0yY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNG3vTP5ekFHD7A3zO+gazfCB5b6U7FEG72sPofoOcAquQkJ1l
-	xglcN9J5wBkLGf4T2Jh4Q8MyG0fCELMDPeECIGOLhlM1KsN/f/83DTVJ
-X-Gm-Gg: ASbGncssWi2NGQ46uscYt4k3gBNQLnvdHoqes76fjSsYNWV5EIWSguigEgRY8MU6i1+
-	2i7OZ3ZTWkP2AsqVekzv9bynPVYZO/gKi6R1M6T5B2v5m/LaKBtHv4iPkz38/7dGckmDyPl9dJK
-	BDf6ipmIbwe6mH2Q6cIAD6bYhzjVucV6iWQ7vFLCeFgq3pptyqejiEZCBQQbkL6AVYDcZcercxN
-	ITVPY7SumEnHVYUzHGESE/qLmps0P5aIENf5nsUANo+jheOFgO7SsKoVM6f98ClPgxD8fGH07Sf
-	6Icb+FQSx0AAlxUAiYglxqg04Wv3TPXb6QyVf6FiEgkTKFEHIi4uFOj7xhFIWmcZdL+bcx6JYNa
-	5WgJjH0VXrf9elXMZ7F5WLH48F5/oJt9/wWqUF5uvkEw3c2172VPZXUSQrPAkXh5jUZIANGr+5u
-	+DHj0AdNi+jP5TR9zs0lYGXD7RuDLoCDpwPJxEHx0SZoChk4Vyv8dB/4a4OlWdthP1pmpr
-X-Google-Smtp-Source: AGHT+IGn4O/LdPwrRfIUFu/wkzsPRHVD6YOLdNx92wJy+rnsWi85zUpEuMS1eU2wO8cl4kItz2sVag==
-X-Received: by 2002:a2e:a805:0:b0:37a:3910:6c77 with SMTP id 38308e7fff4ca-37cc82af4a6mr55071391fa.5.1764052974535;
-        Mon, 24 Nov 2025 22:42:54 -0800 (PST)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-37cc6b59ff5sm31356131fa.15.2025.11.24.22.42.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Nov 2025 22:42:53 -0800 (PST)
-Message-ID: <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
-Date: Tue, 25 Nov 2025 08:42:50 +0200
+        d=1e100.net; s=20230601; t=1764078903; x=1764683703;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BN0Gd9FIr+nCWCDMfR+V4cuqmnLr3RwYOCmv9D7V0q0=;
+        b=w7YCIb26i3Cv+j16vLw+QrAMqFr/FLHzz21o70drdmIlyNH5bpKQFa+17jRoI+MY4Y
+         p33Tr8jR6X2VyoRlby6ofEYaHVwCQpQUwUE+CpM954BhU2w6PGCT4vH+0OdMLE9VMKgz
+         CBC2zcgZh2FC+0X1/svtErbQRdpbEeEpfUoY9xNMm8x5ewWl94MOWvJbo9S/2mPW/6+w
+         43p8oXzR/EMJfSABSb50wAcH7cWNvEJgKF8waLwdmoRwetaq+7sUuvDj/wF3tlGDY2+n
+         F9VEGY6pDDO5KixkSCeDlzYg9TEqk49aMtPeGyOx1GFbg3zJFoELEZCVND6qbZ6nBFJH
+         1E/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXpB+Sw8IUeIaiQpDVLbsbavrZeKx7IaQtU5hYOp3fNq+ahWIpvCF3Cmn8xlOoRbWKI7miYbMOoSLE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxm3nhgiYl0I1mIg1rRUUht5OqY6FG3RbiTyjpoCIr1hxui0XyX
+	50FpybbO/61JDw07366XYRfFX3dRmHLCktmh/0GqLc9Vpz2q9bRmOVKrnf3/TA7cPZg=
+X-Gm-Gg: ASbGncvDapORX617TqnmxNBfbqSVx1wtLdpXrB1pMNeTh3K7fnN5VdJ0mQehOdeelQ+
+	Rr2mTiBPy2u6zI5CsNyvH/B+7K4URi6Hh9Ryj7xDJrEgPS/0FxWa+PYdd++2Qlo6l/hESpL0sss
+	zEV1997pYDEavBwLnHAF3rXOBLB4w1Wfl42Bnl86yRWTnuYZzMv/uQj48rtxr4zSNw0kLjBot9z
+	RWnQzaaavqmZksM4+T1LSPj94ieN7mlvTLlpdXkSUM+8UpT6SYkp5gn+wIYU6REa2J/0wxSKuh0
+	F27OywI+7FeHr/Shm0p3wGiF74dfJYYcUryxGPB0yVtThE4q3HA36EHExQTbRG3xUWBFzCMTs2L
+	vHTKHl+lMIU85pKamt2lyLUQyPIUO2+aMr0ILO4k+b3kziuprfDFrydU9EOQtqijVKxAageBWD4
+	w7DLQXbOkslFP71AJtLWs18WvPkATVb9Hc1eMIRLrCddCV7XBYiCXzK5451pPmKBo1jEN+Ug==
+X-Google-Smtp-Source: AGHT+IFx3qYvfMeNQjPsq0h3FXby92i43IYo4538aKMep94Ks7M8pwR0PaaNTSu6rKB1+FH0hRPYfg==
+X-Received: by 2002:a05:620a:294a:b0:8b2:5cdd:6a16 with SMTP id af79cd13be357-8b33d4823efmr2004079685a.82.1764078901111;
+        Tue, 25 Nov 2025 05:55:01 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b329431939sm1147831285a.18.2025.11.25.05.55.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Nov 2025 05:55:00 -0800 (PST)
+Date: Tue, 25 Nov 2025 08:54:58 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Robert Richter <rrichter@amd.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>
+Subject: Re: [PATCH v6 00/11] cxl: ACPI PRM Address Translation Support and
+ AMD Zen5 enablement
+Message-ID: <aSW1MlUSs2jjdVjO@gourry-fedora-PF4VCD3F>
+References: <20251114004021.1310661-1-rrichter@amd.com>
+ <aReKmdOeHBBDWMuC@aschofie-mobl2.lan>
+ <aRs4ILR8EEwnfOtQ@rric.localdomain>
+ <aSOxXX7xX4jYqqvF@aschofie-mobl2.lan>
+ <aSS7n40Hmiaf7ibc@gourry-fedora-PF4VCD3F>
+ <aSUh-9fXFGsK_Z1_@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
- overlays"
-To: Rob Herring <robh@kernel.org>, Kalle Niemi <kaleposti@gmail.com>
-Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
- Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Charles Keepax <ckeepax@opensource.cirrus.com>,
- Richard Fitzgerald <rf@opensource.cirrus.com>,
- David Rhodes <david.rhodes@cirrus.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
- Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>,
- Steen Hegelund <steen.hegelund@microchip.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-2-herve.codina@bootlin.com>
- <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
- <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
- <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
- <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aSUh-9fXFGsK_Z1_@aschofie-mobl2.lan>
 
-On 24/11/2025 19:01, Rob Herring wrote:
-> On Mon, Nov 24, 2025 at 10:44 AM Kalle Niemi <kaleposti@gmail.com> wrote:
->>
->>
->> On 11/24/25 16:53, Rob Herring wrote:
->>> On Mon, Nov 24, 2025 at 8:48 AM Kalle Niemi <kaleposti@gmail.com> wrote:
->>>> On 10/15/25 10:13, Herve Codina wrote:
->>>>> From: Saravana Kannan <saravanak@google.com>
->>>>>
->>>>> This reverts commit 1a50d9403fb90cbe4dea0ec9fd0351d2ecbd8924.
->>>>>
->>>>> While the commit fixed fw_devlink overlay handling for one case, it
->>>>> broke it for another case. So revert it and redo the fix in a separate
->>>>> patch.
->>>>>
->>>>> Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overlays")
->>>>> Reported-by: Herve Codina <herve.codina@bootlin.com>
->>>>> Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgyo8x6=9F9rZ+-KzjOg@mail.gmail.com/
->>>>> Closes: https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin.com/
->>>>> Closes: https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootlin.com/
->>>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
->>>>> Link: https://lore.kernel.org/lkml/20240411235623.1260061-2-saravanak@google.com/
->>>>> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
->>>>> Acked-by: Mark Brown <broonie@kernel.org>
->>>>> ---
->>>>>     drivers/bus/imx-weim.c    | 6 ------
->>>>>     drivers/i2c/i2c-core-of.c | 5 -----
->>>>>     drivers/of/dynamic.c      | 1 -
->>>>>     drivers/of/platform.c     | 5 -----
->>>>>     drivers/spi/spi.c         | 5 -----
->>>>>     5 files changed, 22 deletions(-)
->>>>>
->>>>> diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
->>>>> index 83d623d97f5f..87070155b057 100644
->>>>> --- a/drivers/bus/imx-weim.c
->>>>> +++ b/drivers/bus/imx-weim.c
->>>>> @@ -327,12 +327,6 @@ static int of_weim_notify(struct notifier_block *nb, unsigned long action,
->>>>>                                  "Failed to setup timing for '%pOF'\n", rd->dn);
->>>>>
->>>>>                 if (!of_node_check_flag(rd->dn, OF_POPULATED)) {
->>>>> -                     /*
->>>>> -                      * Clear the flag before adding the device so that
->>>>> -                      * fw_devlink doesn't skip adding consumers to this
->>>>> -                      * device.
->>>>> -                      */
->>>>> -                     rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
->>>>>                         if (!of_platform_device_create(rd->dn, NULL, &pdev->dev)) {
->>>>>                                 dev_err(&pdev->dev,
->>>>>                                         "Failed to create child device '%pOF'\n",
->>>>> diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
->>>>> index eb7fb202355f..30b48a428c0b 100644
->>>>> --- a/drivers/i2c/i2c-core-of.c
->>>>> +++ b/drivers/i2c/i2c-core-of.c
->>>>> @@ -176,11 +176,6 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
->>>>>                         return NOTIFY_OK;
->>>>>                 }
->>>>>
->>>>> -             /*
->>>>> -              * Clear the flag before adding the device so that fw_devlink
->>>>> -              * doesn't skip adding consumers to this device.
->>>>> -              */
->>>>> -             rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
->>>>>                 client = of_i2c_register_device(adap, rd->dn);
->>>>>                 if (IS_ERR(client)) {
->>>>>                         dev_err(&adap->dev, "failed to create client for '%pOF'\n",
->>>>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
->>>>> index 2eaaddcb0ec4..b5be7484fb36 100644
->>>>> --- a/drivers/of/dynamic.c
->>>>> +++ b/drivers/of/dynamic.c
->>>>> @@ -225,7 +225,6 @@ static void __of_attach_node(struct device_node *np)
->>>>>         np->sibling = np->parent->child;
->>>>>         np->parent->child = np;
->>>>>         of_node_clear_flag(np, OF_DETACHED);
->>>>> -     np->fwnode.flags |= FWNODE_FLAG_NOT_DEVICE;
->>>>>
->>>>>         raw_spin_unlock_irqrestore(&devtree_lock, flags);
->>>>>
->>>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->>>>> index f77cb19973a5..ef9445ba168b 100644
->>>>> --- a/drivers/of/platform.c
->>>>> +++ b/drivers/of/platform.c
->>>>> @@ -739,11 +739,6 @@ static int of_platform_notify(struct notifier_block *nb,
->>>>>                 if (of_node_check_flag(rd->dn, OF_POPULATED))
->>>>>                         return NOTIFY_OK;
->>>>>
->>>>> -             /*
->>>>> -              * Clear the flag before adding the device so that fw_devlink
->>>>> -              * doesn't skip adding consumers to this device.
->>>>> -              */
->>>>> -             rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
->>>>>                 /* pdev_parent may be NULL when no bus platform device */
->>>>>                 pdev_parent = of_find_device_by_node(parent);
->>>>>                 pdev = of_platform_device_create(rd->dn, NULL,
->>>>> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
->>>>> index 2e0647a06890..b22944a207c9 100644
->>>>> --- a/drivers/spi/spi.c
->>>>> +++ b/drivers/spi/spi.c
->>>>> @@ -4791,11 +4791,6 @@ static int of_spi_notify(struct notifier_block *nb, unsigned long action,
->>>>>                         return NOTIFY_OK;
->>>>>                 }
->>>>>
->>>>> -             /*
->>>>> -              * Clear the flag before adding the device so that fw_devlink
->>>>> -              * doesn't skip adding consumers to this device.
->>>>> -              */
->>>>> -             rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
->>>>>                 spi = of_register_spi_device(ctlr, rd->dn);
->>>>>                 put_device(&ctlr->dev);
->>>>>
->>>> Sorry, some of you will receive this message now for second time. First
->>>> message was sent to older series of patches.
->>>> -
->>>>
->>>> Hello,
->>>>
->>>> Test system testing drivers for ROHM ICs bisected this commit to cause
->>>> BD71847 drivers probe to not be called.
->>> This driver (and overlay support) is in linux-next or something out of
->>> tree on top of linux-next?
->>>
->>> Rob
->>
->> Yes the driver is in mainline linux: /drivers/mfd/rohm-bd718x7.c
+On Mon, Nov 24, 2025 at 07:26:51PM -0800, Alison Schofield wrote:
+> On Mon, Nov 24, 2025 at 03:10:07PM -0500, Gregory Price wrote:
+> > 
+> > IIRC the to_spa() function wouldn't be populated (will be NULL) if this
+> > is the case, so you wouldn't even be able to call the translation
+> > function.
 > 
-> I don't see any support to apply overlays in that driver.
+> The hpa_to_spa fn defined as a root decoder ops is an additional layer for
+> arch's needing HPA to SPA translation. It's optional. If there is no
+> hpa_to_spa fn, then it is assumed that the CXL HPA==SPA and that is the
+> 'final answer'  added to the trace log.
+> 
+> Sounds like you are on one of these systems, so maybe you could take a
+> look at what happens. If your devices support, try to inject and/or
+> clear poison and see the resulting kernel trace log. There is an
+> example for that here:
+> https://github.com/pmem/ndctl/blob/main/test/cxl-poison.sh
+> 
 
-Ah. Sorry for the confusion peeps. I asked Kalle to report this without 
-proper consideration. 100% my bad.
+Servers am able to test on are @ 6.16 with cxl .17+.18 backports
 
-While the bd718x7 drive indeed is mainline (and tested), the actual 
-'glue-code' doing the overlay is part of the downstream test 
-infrastructure. So yes, this is not a bug in upstream kernel - this 
-falls in the category of an upstream change causing downstream things to 
-break. So, feel free to say: "Go fix your code" :)
+I don't see: /sys/kernel/debug/cxl/$dev/${action}_poison
+in my sysfs
 
-Now that this is sorted, if someone is still interested in helping us to 
-get our upstream drivers tested - the downstream piece is just taking 
-the compiled device-tree overlay at runtime (via bin-attribute file), 
-and applying it using the of_overlay_fdt_apply(). The approach is 
-working for our testing purposes when the device is added to I2C/SPI 
-node which is already enabled. However, in case where we have the I2C 
-disabled, and enable it in the same overlay where we add the new device 
-- then the new device does not get probed.
+Have enabled enabling various debug and einj options.
 
-I would be really grateful if someone had a pointer for us.
+When were these added? Am i missing build options?
 
-Yours,
-	-- Matti
-
--- 
----
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
-
-~~ When things go utterly wrong vim users can always type :help! ~~
+~Gregory
