@@ -1,214 +1,271 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011000.outbound.protection.outlook.com [52.101.52.0])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524042D3EC1
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Nov 2025 08:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764145762; cv=none; b=OyWjT6MD/O2GKR6oREg5SmkynVDiwUa2RpXchAMgV9dV0elDRpdLfLK5ERkxdMSJ5fCYVqvkB4qJh5Kdy2eG7MEUFgN2e2WSYvzr2+lwARdkS9wCaLrz7q6wDDHWTe4nCvPJXxdmTc3WUPr+f0MiybqWrHy4lSWMNY4dkAK3Em8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764145762; c=relaxed/simple;
-	bh=KmE6Igx4ArlklYpCUhW2nfSXXQpiVHQ/XePwfChAx2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pQc7OfA2PbaKp5saB5s7g6r4I/eWk4TLQ+zLcOC1xkw/2UOw59GPXqIZxQfeqStdfBqvUEIgBVGT+dNsdPNDvI7maE0Nk0R4XJ1anith6rHZJPXS9kiyw0drw+DF7OA8PyL6zXeSqmqH6DJzTWs20ePHD0Sk7HliM0gD/OEE/U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=GmyXSOU3; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53AB24166C;
+	Wed, 26 Nov 2025 09:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.0
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764148157; cv=fail; b=Lm3KerYEFKq5d7eI2NTRfvrbrq+yunb7BkQzRN1ma47M0lv2f4ZEKsK4nwWU/UGEcPiT6kXvebc7e8wmCUoUydOctHDsYx/LreiU8GKwnNAnqjKoPct8XG4XhkKWK66nvOdYzP+41+TpZXrmigy2Wh85DrlhVJWlBZPHQcEtV1M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764148157; c=relaxed/simple;
+	bh=zLLkOdXha8CIkQJ2XmPe4rwAm3TocQvm0Rw057aTivc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HL2PVBQVft0azgf7ri1gf/S0G6gvpHhJKEau7+3D0Kk+GH21flCiYYqf4+/cBviR81dpQyAUAhskM7mZw4q2oNBecDLMrxD1MZMMDAhu5E9IxCu5OjErmDH7LuTvZkCel9fjtbYYhooDzP/HQUb3jZf/xzXGoDeCC74++mq6ORo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YQA3ioFt; arc=fail smtp.client-ip=52.101.52.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="GmyXSOU3"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4ee0084fd98so53358201cf.3
-        for <linux-cxl@vger.kernel.org>; Wed, 26 Nov 2025 00:29:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1764145759; x=1764750559; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LpTPqSNb5/1LIA5hUrs72gqy0nx3RKk/281zC2fbaaY=;
-        b=GmyXSOU3a7ZwoWhtW6Heu2r0e8UiyJjsHXq9uNhwcI8f9w7gHXKQ/WB9j+b4kPZejd
-         1UDWBTbd379HWbCU6UT2NNLsq/X1qK5OpP5TaRClURpOYQwFB/Esis3AtcVaQtX3RO7Y
-         ZilMpdWI0mjjqqsJd+FF8hVt3a3OUu3pq/fi4sVWe4YJOUNBgt2oi98nSsNuNV4ZfV4g
-         5PRgx51YIo8LvPe7M+EuT78U2kzEuaon8UqVtEfScaDCnkyxg2bpvZmucryCCF+wyZST
-         9dNcZflrzpXveW8GkvL1OxYzjaclt9iF/V/+CgBNwACd0NlJ77eVV/UxZgjd2pG5jMO8
-         9p7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764145759; x=1764750559;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LpTPqSNb5/1LIA5hUrs72gqy0nx3RKk/281zC2fbaaY=;
-        b=l5TyxzMYPyt7cbTS2csimRYGDruVLxHEnzAIQdthdxi9l7ZJuXwkJ2eKX5eRVoPQaF
-         ZzsT9A63tQCxyq+ExBbvDZCCCs1ZKjqEf/tzO1kenSz9TsMe6breWbyH6Lr8Ct49WF3v
-         aeND4XAWRWxddBPEDn189cu83cPLKBPC9/9DU9lqS2R7xD1/vjBLq5rJ1mvImWLxS/r1
-         e8GmgOPK9sd7b30fT4WJZgM7QuNKOh2Rs9de4yOWOqIKoluSIXWWZaj+W4JL8thqRO6W
-         08IUbPWSzDkXqi30jnWDtkgb1vJ0ka3ldrb6NUVHR3g2QatFxt/dKxoIi+rdt/lAz7Ec
-         lPtg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTkDfc+T0x2a0XCfmG6EHJOTFEggNi1AkQ4WNKZNZO3xs5qGw5w3H+8A4RaTYbA5WJYO5AwKWSzvA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxychZ7TiP1W3pLXNPLkdgFv+xHeTjEcXjVdyyVjv/dzn6yxy5q
-	cugJ5rIXGGzSKc3bfKngXW4uas77rspzqq8u0JA9A9zkgGMoBY87t5cxsKthLSSCB8g=
-X-Gm-Gg: ASbGnctiVEzcPfk4O0OP5tSsXDG2eFoK3mhIICzRnk9Ns2BwEgGYEYEKeld+4/dnu9t
-	iqgwKtp0hpKS9H3KzbZpBodF144NztCLTxZKO53QmxU8cLL11biEu0SyFxdtQxDKqEM6GWmDHFE
-	wSGeHtCDBAyhx8fmc9T4tycWhz9G4ycaCz1QO2FBNkxSXwEfPVNmcCnkZNRKr0x1ZA7TFtzWEdq
-	9noYYtZMnSwtNp4WMAuw6kIDQSyPG6pUZnAPS5qyvBdU1ugmk1fPQs0mqMtzECu3NDnWFJ64TE9
-	m8JzYy890kIvAugEA1GVhTZYsEd0kgZrVsbMY+g1RmKgTbCjXuW2AfjKTTDsK5iooM7YJeMh0jJ
-	RhL42z1jUuTr4pif1LjrIQGjfxVzEHf7uKhuedTjOhNmuTrbXEZtz6cSWLgD4CIbOGWCTcuFJ7n
-	x0soyM1juFgb61OFBapch/zo/cSdeaFGrNgJH7OXW1wXdNy/r43Ys0oC55heWuWscuffNtQA==
-X-Google-Smtp-Source: AGHT+IHuUv0EzqPvaVNL3leGpr9lqb8F9vUc6VmdQSLEZ6njqgrsaluCQ4pnfGmE+DrmYi9rZ0TzBg==
-X-Received: by 2002:ac8:7c4c:0:b0:4ed:e40c:872d with SMTP id d75a77b69052e-4ee58b12a27mr235496851cf.59.1764145758923;
-        Wed, 26 Nov 2025 00:29:18 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ee4cbc3c81sm113574331cf.16.2025.11.26.00.29.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Nov 2025 00:29:17 -0800 (PST)
-Date: Wed, 26 Nov 2025 03:29:14 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Balbir Singh <balbirs@nvidia.com>
-Cc: linux-mm@kvack.org, kernel-team@meta.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@redhat.com,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, apopple@nvidia.com, mingo@redhat.com,
-	peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, kees@kernel.org, muchun.song@linux.dev,
-	roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	rientjes@google.com, jackmanb@google.com, cl@gentwo.org,
-	harry.yoo@oracle.com, axelrasmussen@google.com, yuanchu@google.com,
-	weixugc@google.com, zhengqi.arch@bytedance.com,
-	yosry.ahmed@linux.dev, nphamcs@gmail.com, chengming.zhou@linux.dev,
-	fabio.m.de.francesco@linux.intel.com, rrichter@amd.com,
-	ming.li@zohomail.com, usamaarif642@gmail.com, brauner@kernel.org,
-	oleg@redhat.com, namcao@linutronix.de, escape@linux.alibaba.com,
-	dongjoo.seo1@samsung.com
-Subject: Re: [RFC LPC2026 PATCH v2 00/11] Specific Purpose Memory NUMA Nodes
-Message-ID: <aSa6Wik2lZiULBsg@gourry-fedora-PF4VCD3F>
-References: <20251112192936.2574429-1-gourry@gourry.net>
- <48078454-f441-4699-9c50-db93783f00fd@nvidia.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YQA3ioFt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fpJm2yITQiOuku8Y80K3EN28Ts3P+iN7ytfK3iH45TT97aakEhf2vT71bYLgfa51sP+jqn+Ave3sSUxHikcZ/d9R7afLlSZ2owdQ3a4rF8ytLKTMBUZ6x41B0fNg1Z+GB3PnfJm25lnNQPlOPn5Tb0YIUpOIT+HuUSiAdvFZLi8H1fhqJ1ADE+/r+rK0nrbBN6xP62UqEy8bHOgU0u1ROTiee1gyLiiwBr9Jzl8gi5AOZf1n/9lm2eEnTCUj7reH9MGghuxHLOMsyCOrvGpnM5tWeXHTNvj4eaREiZ+BQXbUJTGE7IstGbeTPi5KfcLj1pPzylcplrXTEgt+InJkfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dsltPpmQZr9KAAlOafb1g+xggfVHqZv/tz22snXHza8=;
+ b=jF4Ul1omziho2r7xOyFZgcEk7jqlnAjXBnuC1kGjgEUYsx5/ksJs6653kbPnWNeMVvH/4ZRPMrFzRanXsQqnZhuqooNJF9/hOyRaAwM5QdTKZ3DGRpRNetBa47kYDiWnvaLNj00u3vuCt2EDfVwpw2ViuNqCGTAsO2hvXvbBlJkWXlqoRQfLrj0IBZV55nDIjZpwNM9EZ8JojRI9ULGc9NM6mxMlK6p2VwN0q2Bx6joItyq3AdL1nkDY86B9lvHC0bFUdQR8SaOFwaLQhby4fiNnGK7nkils9bMJ3fofmKwQI9vjkY/WrHYBMDT8fEW+uSZYf/lq2DFjGOHj/aaRsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dsltPpmQZr9KAAlOafb1g+xggfVHqZv/tz22snXHza8=;
+ b=YQA3ioFtrzLhftriQ4Qt9zRGhE4k5b+6ZG24qh0mbR9FK9v0wfiwylR2PG+0PfSFGSRNgW1KKLcj7PmWCXDczK1hX3tTMtxpvtm1nVBhMm1czd9g4W7E6id+EsFUxIZ0nhLYpaLfaQh94W+6nOZqw1B3N4htbXThWAFbujDe4CA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by MN0PR12MB5812.namprd12.prod.outlook.com (2603:10b6:208:378::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.12; Wed, 26 Nov
+ 2025 09:09:12 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.9366.009; Wed, 26 Nov 2025
+ 09:09:11 +0000
+Message-ID: <34f7771f-7d6d-4bfd-9212-889433d80b4c@amd.com>
+Date: Wed, 26 Nov 2025 09:09:04 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v21 15/23] sfc: get endpoint decoder
+Content-Language: en-US
+To: PJ Waskiewicz <ppwaskie@kernel.org>, alejandro.lucero-palau@amd.com,
+ linux-cxl@vger.kernel.org, netdev@vger.kernel.org, dan.j.williams@intel.com,
+ edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
+Cc: Martin Habets <habetsm.xilinx@gmail.com>,
+ Edward Cree <ecree.xilinx@gmail.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Ben Cheatham <benjamin.cheatham@amd.com>
+References: <20251119192236.2527305-1-alejandro.lucero-palau@amd.com>
+ <20251119192236.2527305-16-alejandro.lucero-palau@amd.com>
+ <4aab1857efeaf2888b1c85cbac1fc5c8fc5c8cbc.camel@kernel.org>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <4aab1857efeaf2888b1c85cbac1fc5c8fc5c8cbc.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO2P265CA0341.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:d::17) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <48078454-f441-4699-9c50-db93783f00fd@nvidia.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|MN0PR12MB5812:EE_
+X-MS-Office365-Filtering-Correlation-Id: 495408b9-431a-4f40-8cb7-08de2ccb769a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?YXJoQjkrZVFWcC9rWE1GSDBibnBoa1RMQzlyTW5OZEJoWjFpcXlTOEFPaVha?=
+ =?utf-8?B?SjY4SVlPRHN4MjVoQkhZLzlYWk9xZEMrVkU1SGhZNTkxWXpQNlZRZi9FWkJB?=
+ =?utf-8?B?WTd5TEVKV1Mrdkd4QjdsZSthMEtkVTM0VjNUQmFsVlkybGx2elFGUDRGMHp6?=
+ =?utf-8?B?N2ZTM0EzWFRrLzhvOXJDNkxvV0FJSzdBYmt5cjFDemhMQXVtNDZYTGI5VXdo?=
+ =?utf-8?B?RGJIR3hTT1pCWkRlalROSStjWjIwMDhJb1lxR2tZOWNPV2lrdzJVUzdON2dP?=
+ =?utf-8?B?YVUxcTVKYmE5b3V0N2cya2Qra0sydXlIYldUb2tlcE5CWkI1T2hwYlQwVTlW?=
+ =?utf-8?B?WHE4NVd5c2RuSzVIRG9POS90bHpqWnNxdFdtSExhYmU3WWhvVFNLSitvYjBJ?=
+ =?utf-8?B?dnJRMk1qTnFJdFZPQmtKMlBWZ1lIR3U1bVlvMkJvZ1NvMGtYYzBkUWYwM0hX?=
+ =?utf-8?B?RVRQbUhVQnlEc0xqK0haS0JhTjNJMHI1UUpyS0RoM1pEVzlNckFodkVlMWk0?=
+ =?utf-8?B?WThVT29mNndlSFpOcWRGeTI2bzVRSFhEK1A5SGg4amxrL2h0UnkrUTRzbUxq?=
+ =?utf-8?B?eEZtdlFVUm5sUHNXUC9wQlNIK2NqUDNjRWg1djQ1S1pqT1ZzY0R3a00yU2FU?=
+ =?utf-8?B?T3VTODJETG11TDJRYkUzM1M4UmplMlE0cXFEUEp6OVRXeG11ZG93VlFNaSto?=
+ =?utf-8?B?dGlEUkRKY1l2OThaaGtFd3pPU0xnSFZDT25JVk5OUlNDSHFzck9HRVVxMUtk?=
+ =?utf-8?B?RVZnUXBKV1NvRTVyV3RFWnp2RFBSRHlYV3k5dHIweGZiM1RmZFYwclUraWJi?=
+ =?utf-8?B?cFpjWUZVK2tqamx5L25MZ1lDN2gwOVc4d0FOdndGMmNwZytkWDZoU2V0RzVr?=
+ =?utf-8?B?VnFmWENpN0x6bHlmc0tLQ0dPU3VLUG9VS1dkUnpDVVYrb2x1Y0ZYQ09NNzRl?=
+ =?utf-8?B?SVNOdnZzaHN1ZDdjSTlnWXJRdFBvcENjQmE2dlVFSzd5SktIR3F6OUFzaXRI?=
+ =?utf-8?B?WlRueXpkWVZRSndoMWtqSVlQMVM1SmNmNE85dXRhZW1IcVlOTXk4YldxZkps?=
+ =?utf-8?B?amYvb2UxQnBvRng3L1VDUmkwR3kvZDB4OXlYNFFLMjdvckhNbE16QTF5Wjhl?=
+ =?utf-8?B?YXIxUUtYUUhWWkZub2dDRGo0S3dNSFN0WURnczQwSVdnZW9Ca0ZWRVd2Nmth?=
+ =?utf-8?B?SmxGWnV0UElGNFRqTGFtb2hZc3RsRHJuN0N4alg4cS9ub1AxdXNhanFkaWdn?=
+ =?utf-8?B?TWtLbG16TkpOOVdCNTlGTzZVVFNocE9jYzc0OTNRQ0F0YTJxd3NTNE5zTGFi?=
+ =?utf-8?B?YWN0bnY1OXdBRk9CMG1IQ2xNdDZRK0VPMTMvdmxEZGFsWXY0cEl2RzdWRXVx?=
+ =?utf-8?B?UWdCUWhFR2xTUk9zRUJySGdYR0xTbTdxYVM3Vm5rNTUwbUlLVEROQlpRNkdj?=
+ =?utf-8?B?VlRPRC9rTm96UTZ2d1BaeHZxNTlsenBBc2JwbFFTM2s1UTdnd0NMUkM0ZXJl?=
+ =?utf-8?B?UnFSUXNKS3NBQXVsNkM0ZEN1d094SFgzRTVlNFZQeWV6TE1UZzVVVXNYLzRT?=
+ =?utf-8?B?RlM0YkVWTUdKSFVjMjRrSDVBbjBuVFpSK2sxL1FNakE5RjdPY2tSZ3JKcEp6?=
+ =?utf-8?B?Qms4SldLclFGNGw4MWNxS0ZYWlNIbXBNTldoU012Q3NzTHEzZ01CV1NtYW9P?=
+ =?utf-8?B?OVBxRWszQ3RnNlFCVkpmMUJNNTZZMFhmOHBoclExZlcyYU9PVHVRUkZRZHRn?=
+ =?utf-8?B?ZlB3U1BMWEErMWNXRXhFaktnL3ZQNTZFVjJISUlJL004YmhxR3h0OUhFNkdN?=
+ =?utf-8?B?MGg0SE9SczBNR2xYcG9qb3gyL0hGV3NsbHRqYlVlTS8vT2ZTdWptaXcvUFFP?=
+ =?utf-8?B?QndjOGZGbXcyMXFxMVFkdG1FN2s5N2ZLYU1PT29YZnkrdEFpYUliMll1K0cv?=
+ =?utf-8?B?dWxVbjNpOURDdHpNTFF3RVNkdFlwOE5aQm5TQkNZT0VITmFYVnFJbmN4Mk4v?=
+ =?utf-8?B?dWpYaEpVNnhDKzZCZkU0SVIxcXdBd010eDhmTWV1TGJuUklLdVFnelZLb2RH?=
+ =?utf-8?Q?8RTi82?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bDNQQzg5UzYralRhdmhSV3VmTk5LVEVsNER1OHVPa0Z3czRyYThrL1Q5YVZz?=
+ =?utf-8?B?azQ0L2p3REdPamhyOG9wK2xmN1NZRjZVb2VvR3NXNXJOUDM5Snd2UG1vUTkv?=
+ =?utf-8?B?VkVGdWpQTDdsVG4relZVM1hUR0d5bW80WEY4MEJXK1lyYy9jdTE0SmRVaGg4?=
+ =?utf-8?B?UjgxelU1Zk9KeU16RGhFS0tlZVBMTWNjVCtmenJFWGhrZGtUM29JNU1IS0hY?=
+ =?utf-8?B?TkV1YlBaYVVaV1FvTTNOeVdTNWFPdkhhNFlkazc3bU5KcEhaV0FMM0ttU0FF?=
+ =?utf-8?B?WXFMMjk3MG1vZWhFL3BneGtva2NwcGdQT0tCSHJDYkxlVTJ4VWVYWHEvNTBT?=
+ =?utf-8?B?VFdsdXpWRWloTVhmNElsMkdqdWVaWnFkM2U1QzNQazBZY3FDWEExcUtmbFRC?=
+ =?utf-8?B?UHJHVGlxc0twR3pQTkRTODhLTVoyU2xKZEl2b0NpdlltL2xzUTRuUDZwZ1Rj?=
+ =?utf-8?B?N3gvUjEvSW9SRGFDTjJRSWZFclZpZGZrTkJ0K0F1ZmNCR1ZPYW1kYjRLZzdD?=
+ =?utf-8?B?Z2ZqNzgzNWhscisrQjNiNlhnRzJIelp2VEVGM3BVUC9vWi9pTld1d2lGUkRm?=
+ =?utf-8?B?MXhGSUxFYjFBUFJQRDh5SUdsZkgxclRObTZEMHh3T1Brc3NSVFpvQkt1d1BP?=
+ =?utf-8?B?MlJndVYzbTloZFgwVG5pUlIyZUVhZk1YTTRMMFNjYjcrbmxTeXduTVBQRHVj?=
+ =?utf-8?B?ZHFBZFdUM1N4RHhaOU9ObHZ4VnQ3cXJIMkdJRGdOdzZEdmhsTDUrMjQxdlZo?=
+ =?utf-8?B?NE9aOXVQQ1RJNkJSUUQxdmMrSUpHaFVWUThCU2hwV1h3UjJYbFQ0YmtmNjUz?=
+ =?utf-8?B?a0Y5OWtJWXVEMkFiUE54TjdyM01zQmpGWHFXcmVwS3FiWXN5Vm1majVmVXpj?=
+ =?utf-8?B?bm53aGx5d2lTb1VzRVY5dndTS1NhVXlQcnZJWlpzeXYwTGhxUnlZZmg2bjFo?=
+ =?utf-8?B?SkMzelNOU09VeXAvU1htR0Mxb0JFQWlDemljRW43a2lHY3lwb2ZrRWExRkNq?=
+ =?utf-8?B?VkFkd1E2RzZRcmUySFN0VjF4WEV3MHc1aHVkS3VjQ1AvaFZ6dGh3WGkrb0k1?=
+ =?utf-8?B?VXhWS05IUkRhWDJhbnNBZS8yUjFXc1lORXVCL0tiVjNiNVlYSVlFUFJLbHA0?=
+ =?utf-8?B?M1dHM1kwR3c2YzRaeHpkUHFVMittdW82cEMybWFpOVdKTktYNzh5b3JqclhU?=
+ =?utf-8?B?OVJhc09lT0VROGRXbk9zWUpEZEZXVGpac3NYTW1wNlY3Qy9GUlhOOEZSZThC?=
+ =?utf-8?B?L2JLNExGVEtJdzhPNHRSUjY3SDBzTTZORFlvVng1d0E4WTU0Y0JxWml1b2RI?=
+ =?utf-8?B?dmszOHVzai8waFpkbXBvQzQ2UGFURms4SHRCYlJ6ZnYwelZnSzZBRVV0SHdu?=
+ =?utf-8?B?ZmVzNWVJRjdDYVFCWHpvaHdoSlg2bWxad0UxOVhMRGtMSWNwN2VsdFN3MTBn?=
+ =?utf-8?B?NDBmZnpTZitHYWtNMXBqaXFuNkI5VlFDVXhDZVBiTHJkZ0RJOW53VFZsV3Fn?=
+ =?utf-8?B?cmlGVWRPRnZRcTFCLytBRTlPbkNvelYwbUZVcEp0WGE3bmdDOWZ2UFI1enIx?=
+ =?utf-8?B?d0RPVkZpdkNnSUFFMjI0cHNpRmF3bjBOZ2daL1RRUXBTMXRpWDdCMWJYdEJl?=
+ =?utf-8?B?ZzQ4SENTSGFQU09wT0VSZkxOaHVXa0ZNYnMvaVRWaytLaE44NDV2UThjOTdh?=
+ =?utf-8?B?VlZCTUxJSTVIMEh6aERnYVZueDA4QlZPd0ZiRG14cjZrSlpmWjJScG9QREdF?=
+ =?utf-8?B?ckdXMTJTUUZ4M0VZdW5ndy9LL1hyZ1c4YmZRR1hJVDV5eVh1andBUTl3alNw?=
+ =?utf-8?B?ZjliT1k5RmVrTnEzb1pBaklMMFpsRGVzeWVaVVM1K1llN0x0VGFwb2FSbklZ?=
+ =?utf-8?B?ZkprdGIzU0JuUjdhM0hKamtvQ3loekE5S3ozRVhYeFNJdFA5N1VYVkFFMity?=
+ =?utf-8?B?UEhJNU1HUmQyeXBYck5yWmNRU2lGZlBvc1J6blRWWldJeHV2TVlGUGFUQjJj?=
+ =?utf-8?B?SXV0MXMrTi9FUjFwVUxzSXVBeFRoRlRZeU1yL0dFeklYbkdYY1I0ZkFHVmdn?=
+ =?utf-8?B?bHM1WHFkS2Z5cjdJZ2tCclgxVm1RbFBmYzVtVXJ3cDdmZTJuSmFJcXV2N0xM?=
+ =?utf-8?Q?rRd5sXIu9ttJwByFQbURxqgCr?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 495408b9-431a-4f40-8cb7-08de2ccb769a
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2025 09:09:11.4902
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Gl4vo0hzgPd9mqIdOeT8NbA7LXCkL1WScogg83FWSQQRbC7rAmR+bRQqY6AdC5jJv8/bFbk+OleGvVPRkG9IiA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5812
 
-On Wed, Nov 26, 2025 at 02:23:23PM +1100, Balbir Singh wrote:
-> On 11/13/25 06:29, Gregory Price wrote:
-> > This is a code RFC for discussion related to
-> > 
-> > "Mempolicy is dead, long live memory policy!"
-> > https://lpc.events/event/19/contributions/2143/
-> > 
-> 
-> :)
-> 
-> I am trying to read through your series, but in the past I tried
-> https://lwn.net/Articles/720380/
-> 
 
-This is very interesting, I gave the whole RFC a read and it seems you
-were working from the same conclusion ~8 years ago - that NUMA just
-plainly "Feels like the correct abstraction".
-
-First, thank you, the read-through here filled in some holes regarding
-HMM-CDM for me.  If you have developed any other recent opinions on the
-use of HMM-CDM vs NUMA-CDM, your experience is most welcome.
-
-
-Some observations:
-
-1) You implemented what amounts to N_SPM_NODES 
-
-   - I find it funny we separately came to the same conclusion. I had
-     not seen your series while researching this, that should be an
-     instructive history lesson for readers.
-
-   - N_SPM_NODES probably dictates some kind of input from ACPI table
-     extension, drivers input (like my MHP flag), or kernel configs
-     (build/init) to make sense.
-
-   - I discussed in my note to David that this is probably the right
-     way to go about doing it. I think N_MEMORY can still be set, if
-     a new global-default-node policy is created.
-
-   - cpuset/global sysram_nodes masks in this set are that policy.
-
-
-2) You bring up the concept of NUMA node attributes
-
-   - I have privately discussed this concept with MM folks, but had
-     not come around to formalize this.  It seems a natural extension.
-
-   - I wasn't sure whether such a thing would end up in memory-tiers.c
-     or somehow abstracted otherwise.  We definitely do not want node
-     attributes to imply infinite N_XXXXX masks.
-
-
-3) You attacked the problem from the zone iteration mechanism as the
-   primary allocation filter - while I used cpusets and basically
-   implemented a new in-kernel policy (sysram_nodes)
-
-   - I chose not to take that route (omitting these nodes from N_MEMORY)
-     precisely because it would require making changes all over the
-     kernel for components that may want to use the memory which
-     leverage N_MEMORY for zone iteration.
-
-   - Instead, I can see either per-component policies (reclaim->nodes)
-     or a global policy that covers all of those components (similar to
-     my sysram_nodes).  Drivers would then be responsible to register
-     their hotplugged memory nodes with those components accordingly.
-
-   - My mechanism requires a GFP flag to punch a hole in the isolation,
-     while yours depends on the fact that page_alloc uses N_MEMORY if
-     nodemask is not provided.  I can see an argument for going that
-     route instead of the sysram_nodes policy, but I also understand
-     why removing them from N_MEMORY causes issues (how do you opt these
-     nodes into core services like kswapd and such).
-
-     Interesting discussions to be had.
+On 11/26/25 01:27, PJ Waskiewicz wrote:
+> Hi Alejandro,
+>
+> On Wed, 2025-11-19 at 19:22 +0000, alejandro.lucero-palau@amd.com
+> wrote:
+>> From: Alejandro Lucero <alucerop@amd.com>
+>>
+>> Use cxl api for getting DPA (Device Physical Address) to use through
+>> an
+>> endpoint decoder.
+>>
+>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>> Reviewed-by: Martin Habets <habetsm.xilinx@gmail.com>
+>> Acked-by: Edward Cree <ecree.xilinx@gmail.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>   drivers/net/ethernet/sfc/efx_cxl.c | 12 +++++++++++-
+>>   1 file changed, 11 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c
+>> b/drivers/net/ethernet/sfc/efx_cxl.c
+>> index d7c34c978434..1a50bb2c0913 100644
+>> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+>> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+>> @@ -108,6 +108,14 @@ int efx_cxl_init(struct efx_probe_data
+>> *probe_data)
+>>   		return -ENOSPC;
+>>   	}
+>>   
+>> +	cxl->cxled = cxl_request_dpa(cxl->cxlmd, CXL_PARTMODE_RAM,
+>> +				     EFX_CTPIO_BUFFER_SIZE);
+> I've been really struggling to get this flow working in my environment.
+> The above function call has a call-chain like this:
+>
+> - cxl_request_dpa()
+>    => cxl_dpa_alloc()
+>       => __cxl_dpa_alloc()
+>          => __cxl_dpa_reserve()
+>             => __request_region()
+>
+> That last call to __request_region() is not handling a Type2 device
+> that has its mem region defined as EFI Special Purpose memory.
+> Basically if the underlying hardware has the memory region marked that
+> way, it's still getting mapped into the host's physical address map,
+> but it's explicitly telling the OS to bugger off and not try to map it
+> as system RAM, which is what we want. Since this is being used as an
+> acceleration path, we don't want the OS to muck about with it.
+>
+> The issue here is now that I have to build CXL into the kernel itself
+> to get around the circular dependency issue with depmod, I see this
+> when my kernel boots and the device trains, but *before* my driver
+> loads:
+>
+> # cat /proc/iomem
+> [...snip...]
+> c050000000-c08fffffff : CXL Window 0
+>    c050000000-c08fffffff : Soft Reserved
+>
+> That right there is my device.  And it's being presented correctly that
+> it's reserved so the OS doesn't mess with it.  However, that call to
+> __request_region() fails with -EBUSY since it can't take ownership of
+> that region since it's already owned by the core.
+>
+> I can't just skip over this flow for DPA init, so I'm at a bit of a
+> loss how to proceed.  How is your device presenting the .mem region to
+> the host?
 
 
-4)   Many commenters tried pushing mempolicy as the place to do this.
-     We both independently came to the conclusion that 
+Hi PJ,
 
-   - mempolicy is at best an insufficient mechanism for isolation due
-     to the way the rest of the system is designed (cpusets, zones)
 
-   - at worst, actually harmful because it leads kernel developers to
-     believe users view mempolicy APIs as reasonable. They don't.
-     In my experience it's viewed as:
-         - too complicated (SW doesn't want to know about HW)
-         - useless (it's not even respected by reclaim)
-         - actively harmful (it makes your code less portable)
-	 - "The only thing we have"
+My work is based on the device not using EFI_CONVENTIONAL_MEMORY + 
+EFI_MEMORY_SP but EFI_RESERVED_TYPE. In the first case the kernel can 
+try to use that memory and the BIOS goes through default initialization, 
+the latter will avoid BIOS or kernel to mess with such a memory. Because 
+there is no BIOS yet supporting this I had to remove DAX support from 
+the kernel and deal (for testing) with some BIOS initialization we will 
+not have in production.
 
-Your RFC has the same concerns expressed that I have seen over past
-few years in Device-Memory development groups... except that the general
-consensus was (in 2017) that these devices were not commodity hardware
-the kernel needs a general abstraction (NUMA) to support.
 
-"Push the complexity to userland" (mempolicy), and
-"Make the driver manage it." (hmm/zone_device)
+For your case I thought this work 
+https://lore.kernel.org/linux-cxl/20251120031925.87762-1-Smita.KoralahalliChannabasappa@amd.com/T/#me2bc0d25a2129993e68df444aae073addf886751 
+was solving your problem but after looking at it now, I think that will 
+only be useful for Type3 and the hotplug case. Maybe it is time to add 
+Type2 handling there. I'll study that patchset with more detail and 
+comment for solving your case.
 
-Have been the prevailing opinions as a result.
 
-From where I sit, this depends on the assumption that anyone using such
-systems is presumed to be sophisticated and empowered enough to accept
-that complexity.  This is just quite bluntly no longer the case.
+FWIW, last year in Vienna I raised the concern of the kernel doing 
+exactly what you are witnessing, and I proposed having a way for taking 
+the device/memory from DAX but I was told unanimously that was not 
+necessary and if the BIOS did the wrong thing, not fixing that in the 
+kernel. In hindsight I would say this conflict was not well understood 
+then (me included) with all the details, so maybe it is time to have 
+this capacity, maybe from user space or maybe specific kernel param 
+triggering the device passing from DAX.
 
-GPUs, unified memory, and coherent interconnects have all become
-commodity hardware in the data center, and the "users" here are
-infrastructure-as-a-service folks that want these systems to be
-some definition of fungible.
 
-~Gregory
+>
+> Cheers,
+> -PJ
