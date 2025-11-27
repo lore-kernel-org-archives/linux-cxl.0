@@ -1,38 +1,38 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA992405E1
-	for <linux-cxl@vger.kernel.org>; Thu, 27 Nov 2025 22:56:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC43B324B0F
+	for <linux-cxl@vger.kernel.org>; Thu, 27 Nov 2025 22:56:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764284172; cv=none; b=lLZv/2UB+n4Be6oQnqY7t5ZukPi4Zg+nJjv2zLijjNIVt/GHewWrw+CzwJ/6/+KZC/VNdo4jQPB0w1CrSRghYM732XrTs7FngcT2EFdgAYALY0QKeKwrEMSs6CprojGEhNy+VXxtxERag02PR4ApsPJGWwGfoxmli9ROzpCNwFw=
+	t=1764284200; cv=none; b=Pe/O5LgJ0nFHpxLmCVLUq3qBXWJZ90PZ5u95S+mnQlmMhJtlZVC8PaDMN6JUaA7n5yhjJy3i+cPai8ZbspJNeEZ2dBeB+7DzY0SMMWE8pNu58rRpyqBM5jUSvGpQO56UXN3iHvjLvRjtAzotUCqo0O1fQnvQDSdjfMXwYivdw2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764284172; c=relaxed/simple;
-	bh=2ZGQHDS1KkugZ+PhSaB9EarWLIozI2qhdt8RQchFFog=;
+	s=arc-20240116; t=1764284200; c=relaxed/simple;
+	bh=X4u6T1lQYlBc0Pwvf6ILv50teyBjcmHZGGBdGATVfU0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qtEDA+Zc5OGLlzh25vypdd2qA2B/TTGODzMPk2EccZ23k+IUrwEKac/e3ww4dswCUvZZWS3lv/kPUJ24T+NnE3Wfy949jTgTUWGtRUQ5pdbggyWXBqvxK0lgJf+V7vI+GRxmaGmag0mlmOYsZUXYw2gtLW4th9S+GIMzxQ8vIT4=
+	 MIME-Version:Content-Type; b=Du2EEX7ZjTiZ1wDjKuF9JXdTog8M8LONSzSlGgav63gK+NbI0RhhfuNARWf2iN0yQfzijm+FdiVr3znVOmkRMXwJs3zSp9CnPUOLm+HEf1ycsYkKbqUTJyhLBnwXfn9EdnPUeIPohnvSxGeHsgO1C4Iadu672FFQYFtiHqU5zcg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dHWwV1VPszJ467Q;
-	Fri, 28 Nov 2025 06:55:06 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dHWxG5ZhrzHnGch;
+	Fri, 28 Nov 2025 06:55:46 +0800 (CST)
 Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id C2D751402E9;
-	Fri, 28 Nov 2025 06:56:03 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 208491402E9;
+	Fri, 28 Nov 2025 06:56:36 +0800 (CST)
 Received: from a2303103017.china.huawei.com (10.47.72.83) by
  dubpeml500005.china.huawei.com (7.214.145.207) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 27 Nov 2025 22:56:02 +0000
+ 15.2.1544.11; Thu, 27 Nov 2025 22:56:35 +0000
 From: Alireza Sanaee <alireza.sanaee@huawei.com>
 To: <qemu-devel@nongnu.org>
 CC: <jonathan.cameron@huawei.com>, <linuxarm@huawei.com>, <eblake@redhat.com>,
 	<armbru@redhat.com>, <berrange@redhat.com>, <pbonzini@redhat.com>,
 	<mst@redhat.com>, <lizhijian@fujitsu.com>, <anisa.su@samsung.com>,
 	<linux-cxl@vger.kernel.org>
-Subject: [RFC PATCH 1/7] hw/mem: Add tagged memory backend object
-Date: Thu, 27 Nov 2025 22:55:19 +0000
-Message-ID: <20251127225526.700-2-alireza.sanaee@huawei.com>
+Subject: [RFC PATCH 2/7] hw/cxl: Allow initializing type3 device with no backing device
+Date: Thu, 27 Nov 2025 22:55:20 +0000
+Message-ID: <20251127225526.700-3-alireza.sanaee@huawei.com>
 X-Mailer: git-send-email 2.51.0.windows.2
 In-Reply-To: <20251127225526.700-1-alireza.sanaee@huawei.com>
 References: <20251127225526.700-1-alireza.sanaee@huawei.com>
@@ -47,248 +47,292 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
  dubpeml500005.china.huawei.com (7.214.145.207)
 
-Add a new memory-backend-tagged supports a tag property where you can
-find it based on tag. This is useful for scenarios where you want to add
-a piece of memory for a particular purpose to be passed for another
-device.
-
-At the moment, this only supports a ram-backed object where we add a tag
-to it, and it temporary. However, we are planning for a generalized
-approach. The plan is to have a shim object where we add a tag to it,
-and then it can be later linked to any BACKEND object types.
-
-Example use QMP API:
-{
-
-    "execute": "object-add",
-    "arguments": {
-        "qom-type": "memory-backend-tagged",
-        "id": "tm0",
-        "size": 1073741824,
-        "tag": "6be13bce-ae34-4a77-b6c3-16df975fcf1a"
-    }
-}
-
-Tags are assumed to be UUID. But this is something for debate maybe.
+Allow creating a type3 device without any backing device for DC. In
+Dynamic Capacity scenarios, memory can show up asynchronously and it can
+be coming from difference resources, RAM, PMEM, FILE BACKED. For these
+cases, only one parameter will be needed to know total size of DC which
+is exposed by dc-total-regions-size.
 
 Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
 ---
- hw/mem/meson.build          |   1 +
- hw/mem/tagged_mem.c         | 116 ++++++++++++++++++++++++++++++++++++
- include/hw/mem/tagged_mem.h |  31 ++++++++++
- qapi/qom.json               |  15 +++++
- 4 files changed, 163 insertions(+)
- create mode 100644 hw/mem/tagged_mem.c
- create mode 100644 include/hw/mem/tagged_mem.h
+ hw/mem/cxl_type3.c          | 157 ++++++++++++++++++++++++++----------
+ include/hw/cxl/cxl_device.h |   1 +
+ 2 files changed, 115 insertions(+), 43 deletions(-)
 
-diff --git a/hw/mem/meson.build b/hw/mem/meson.build
-index 1c1c6da24b..529d86f840 100644
---- a/hw/mem/meson.build
-+++ b/hw/mem/meson.build
-@@ -10,3 +10,4 @@ system_ss.add(when: 'CONFIG_MEM_DEVICE', if_false: files('memory-device-stubs.c'
- system_ss.add_all(when: 'CONFIG_MEM_DEVICE', if_true: mem_ss)
- 
- system_ss.add(when: 'CONFIG_SPARSE_MEM', if_true: files('sparse-mem.c'))
-+system_ss.add(files('tagged_mem.c'))
-diff --git a/hw/mem/tagged_mem.c b/hw/mem/tagged_mem.c
-new file mode 100644
-index 0000000000..27b88e845e
---- /dev/null
-+++ b/hw/mem/tagged_mem.c
-@@ -0,0 +1,116 @@
-+/*
-+ * Tagged memory backend. Temporary implementation for testing purposes and
-+ * only supports RAM based.
-+ *
-+ * SPDX-License-Identifier: GPL-2.0-or-later
-+ */
-+
-+#include "qemu/osdep.h"
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index 8cdb3bff7e..690b3ab658 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -30,6 +30,7 @@
+ #include "system/numa.h"
+ #include "hw/cxl/cxl.h"
+ #include "hw/pci/msix.h"
 +#include "hw/mem/tagged_mem.h"
-+#include "qapi/error.h"
-+#include "qemu/module.h"
-+#include "hw/qdev-properties.h"
-+#include "hw/qdev-properties-system.h"
-+#include "qapi/error.h"
-+#include "qemu/log.h"
-+#include "qom/object.h"
-+#include "qom/qom-qobject.h"
-+
-+static int check_property_equals_test(Object *obj, void *opaque)
-+{
-+    Error *err = NULL;
-+    struct TagSearchContext *ctx = opaque;
-+    g_autofree char *value;
-+
-+    if (!object_dynamic_cast(OBJECT(obj), TYPE_MEMORY_BACKEND_TAGGED)) {
-+        return 0;
+ 
+ /* type3 device private */
+ enum CXL_T3_MSIX_VECTOR {
+@@ -190,12 +191,15 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
+     }
+ 
+     if (ct3d->dc.num_regions) {
+-        if (!ct3d->dc.host_dc) {
+-            return -EINVAL;
+-        }
+-        dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
+-        if (!dc_mr) {
+-            return -EINVAL;
++        /* Only check if DC is static */
++        if (ct3d->dc.total_capacity_cmd == 0) {
++            if (!ct3d->dc.host_dc) {
++                return -EINVAL;
++            }
++            dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
++            if (!dc_mr) {
++                return -EINVAL;
++            }
+         }
+         len += CT3_CDAT_NUM_ENTRIES * ct3d->dc.num_regions;
+     }
+@@ -216,7 +220,7 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
+         cur_ent += CT3_CDAT_NUM_ENTRIES;
+     }
+ 
+-    if (dc_mr) {
++    if (dc_mr || ct3d->dc.total_capacity_cmd) {
+         int i;
+         uint64_t region_base = vmr_size + pmr_size;
+ 
+@@ -651,8 +655,13 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
+     MemoryRegion *mr;
+     uint64_t dc_size;
+ 
+-    mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
+-    dc_size = memory_region_size(mr);
++    if (ct3d->dc.total_capacity_cmd != 0) {
++        dc_size = ct3d->dc.total_capacity_cmd;
++    } else {
++        mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
++        dc_size = memory_region_size(mr);
 +    }
 +
-+    value = object_property_get_str(obj, "tag", &err);
-+    if (err) {
-+        error_report_err(err);
-+        return 0;
-+    }
-+
-+    if (strcmp(value, ctx->tag_value) == 0) {
-+        ctx->result = MEMORY_BACKEND(obj);
-+        return 1;
-+    }
-+
-+    return 0;
-+}
-+
-+HostMemoryBackend *memory_backend_tagged_find_by_tag(const char *tag,
-+                                                     Error **errp)
+     region_len = DIV_ROUND_UP(dc_size, ct3d->dc.num_regions);
+ 
+     if (dc_size % (ct3d->dc.num_regions * CXL_CAPACITY_MULTIPLIER) != 0) {
+@@ -810,39 +819,43 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+ 
+     ct3d->dc.total_capacity = 0;
+     if (ct3d->dc.num_regions > 0) {
+-        MemoryRegion *dc_mr;
+-        char *dc_name;
++        if (ct3d->dc.total_capacity_cmd == 0) {
++            MemoryRegion *dc_mr;
++            char *dc_name;
+ 
+-        if (!ct3d->dc.host_dc) {
+-            error_setg(errp, "dynamic capacity must have a backing device");
+-            return false;
+-        }
++            if (!ct3d->dc.host_dc) {
++                error_setg(errp, "dynamic capacity must have a backing device");
++                return false;
++            }
+ 
+-        dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
+-        if (!dc_mr) {
+-            error_setg(errp, "dynamic capacity must have a backing device");
+-            return false;
+-        }
++            dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
++            if (!dc_mr) {
++                error_setg(errp, "dynamic capacity must have a backing device");
++                return false;
++            }
+ 
+-        if (host_memory_backend_is_mapped(ct3d->dc.host_dc)) {
+-            error_setg(errp, "memory backend %s can't be used multiple times.",
+-               object_get_canonical_path_component(OBJECT(ct3d->dc.host_dc)));
+-            return false;
+-        }
+-        /*
+-         * Set DC regions as volatile for now, non-volatile support can
+-         * be added in the future if needed.
+-         */
+-        memory_region_set_nonvolatile(dc_mr, false);
+-        memory_region_set_enabled(dc_mr, true);
+-        host_memory_backend_set_mapped(ct3d->dc.host_dc, true);
+-        if (ds->id) {
+-            dc_name = g_strdup_printf("cxl-dcd-dpa-dc-space:%s", ds->id);
+-        } else {
+-            dc_name = g_strdup("cxl-dcd-dpa-dc-space");
++            if (host_memory_backend_is_mapped(ct3d->dc.host_dc)) {
++                error_setg(errp,
++                           "memory backend %s can't be used multiple times.",
++                           object_get_canonical_path_component(
++                               OBJECT(ct3d->dc.host_dc)));
++                return false;
++            }
++            /*
++             * Set DC regions as volatile for now, non-volatile support can
++             * be added in the future if needed.
++             */
++            memory_region_set_nonvolatile(dc_mr, false);
++            memory_region_set_enabled(dc_mr, true);
++            host_memory_backend_set_mapped(ct3d->dc.host_dc, true);
++            if (ds->id) {
++                dc_name = g_strdup_printf("cxl-dcd-dpa-dc-space:%s", ds->id);
++            } else {
++                dc_name = g_strdup("cxl-dcd-dpa-dc-space");
++            }
++            address_space_init(&ct3d->dc.host_dc_as, dc_mr, dc_name);
++            g_free(dc_name);
+         }
+-        address_space_init(&ct3d->dc.host_dc_as, dc_mr, dc_name);
+-        g_free(dc_name);
+ 
+         if (!cxl_create_dc_regions(ct3d, errp)) {
+             error_append_hint(errp, "setup DC regions failed");
+@@ -1284,6 +1297,8 @@ static const Property ct3_props[] = {
+     DEFINE_PROP_UINT8("num-dc-regions", CXLType3Dev, dc.num_regions, 0),
+     DEFINE_PROP_LINK("volatile-dc-memdev", CXLType3Dev, dc.host_dc,
+                      TYPE_MEMORY_BACKEND, HostMemoryBackend *),
++    DEFINE_PROP_SIZE("dc-regions-total-size", CXLType3Dev,
++                     dc.total_capacity_cmd, 0),
+     DEFINE_PROP_PCIE_LINK_SPEED("x-speed", CXLType3Dev,
+                                 speed, PCIE_LINK_SPEED_32),
+     DEFINE_PROP_PCIE_LINK_WIDTH("x-width", CXLType3Dev,
+@@ -1952,12 +1967,38 @@ bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
+     return false;
+ }
+ 
++static bool cxl_device_lazy_dynamic_capacity_init(CXLType3Dev *ct3d,
++                                                  const char *tag, Error **errp)
 +{
-+    struct TagSearchContext ctx = {
-+        .tag_value = tag,
-+        .result = NULL,
-+    };
++    MemoryRegion *dc_mr;
 +
-+    object_child_foreach_recursive(object_get_objects_root(),
-+                                   check_property_equals_test, &ctx);
-+
-+    if (!ctx.result) {
-+        qemu_log("didn't find any results!\n");
-+        return NULL;
-+    }
-+
-+    return ctx.result;
-+}
-+
-+static void tagged_mem_set_tag(Object *obj, const char *value, Error **errp)
-+{
-+    MemoryBackendTagged *tm = MEMORY_BACKEND_TAGGED(obj);
-+    g_free(tm->tag);
-+    tm->tag = g_strdup(value);
-+}
-+
-+static char *tagged_mem_get_tag(Object *obj, Error **errp)
-+{
-+    MemoryBackendTagged *tm = MEMORY_BACKEND_TAGGED(obj);
-+    return g_strdup(tm->tag);
-+}
-+
-+static bool ram_backend_memory_alloc(HostMemoryBackend *backend, Error **errp)
-+{
-+    g_autofree char *name = NULL;
-+    uint32_t ram_flags;
-+
-+    if (!backend->size) {
-+        error_setg(errp, "can't create backend with size 0");
++    ct3d->dc.host_dc = memory_backend_tagged_find_by_tag(tag, errp);
++    if (!ct3d->dc.host_dc) {
++        error_setg(errp, "dynamic capacity must have a backing device");
 +        return false;
 +    }
 +
-+    name = host_memory_backend_get_name(backend);
-+    ram_flags = backend->share ? RAM_SHARED : RAM_PRIVATE;
-+    ram_flags |= backend->reserve ? 0 : RAM_NORESERVE;
-+    ram_flags |= backend->guest_memfd ? RAM_GUEST_MEMFD : 0;
-+    return memory_region_init_ram_flags_nomigrate(
-+        &backend->mr, OBJECT(backend), name, backend->size, ram_flags, errp);
++    dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
++    if (!dc_mr) {
++        error_setg(errp, "test dynamic capacity must have a backing device");
++        return false;
++    }
++
++    if (host_memory_backend_is_mapped(ct3d->dc.host_dc)) {
++        qemu_log("Warning: memory backend %s is already mapped. Reusing it.\n",
++               object_get_canonical_path_component(OBJECT(ct3d->dc.host_dc)));
++        return true;
++    }
++
++    return true;
 +}
 +
-+static void memory_backend_tagged_class_init(ObjectClass *oc, const void *data)
-+{
-+    HostMemoryBackendClass *bc = MEMORY_BACKEND_CLASS(oc);
-+
-+    bc->alloc = ram_backend_memory_alloc;
-+    object_class_property_add_str(oc, "tag", tagged_mem_get_tag,
-+                                  tagged_mem_set_tag);
-+    object_class_property_set_description(oc, "tag",
-+        "A user-defined tag to identify this memory backend");
-+}
-+
-+static const TypeInfo memory_backend_tagged_info = {
-+    .name = TYPE_MEMORY_BACKEND_TAGGED,
-+    .parent = TYPE_MEMORY_BACKEND,
-+    .instance_size = sizeof(MemoryBackendTagged),
-+    .class_init = memory_backend_tagged_class_init,
-+};
-+
-+static void memory_backend_tagged_register_types(void)
-+{
-+    type_register_static(&memory_backend_tagged_info);
-+}
-+
-+type_init(memory_backend_tagged_register_types);
-diff --git a/include/hw/mem/tagged_mem.h b/include/hw/mem/tagged_mem.h
-new file mode 100644
-index 0000000000..4f3b033597
---- /dev/null
-+++ b/include/hw/mem/tagged_mem.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Tagged Memory backend
-+ *
-+ * Copyright (c) 2025 Alireza Sanaee <alireza.sanaee@huawei.com>
-+ */
-+#ifndef HW_TAGGED_MEM_H
-+#define HW_TAGGED_MEM_H
-+
-+#include "hw/qdev-core.h"
-+#include "system/memory.h"
-+#include "system/hostmem.h"
-+
-+#define TYPE_MEMORY_BACKEND_TAGGED "memory-backend-tagged"
-+OBJECT_DECLARE_SIMPLE_TYPE(MemoryBackendTagged, MEMORY_BACKEND_TAGGED)
-+
-+typedef struct MemoryBackendTagged {
-+    HostMemoryBackend parent_obj;
-+
-+    char *tag;
-+} MemoryBackendTagged;
-+
-+struct TagSearchContext {
-+    const char *tag_value;
-+    HostMemoryBackend *result;
-+};
-+
-+HostMemoryBackend *memory_backend_tagged_find_by_tag(const char *tag,
-+                                                     Error **errp);
-+
-+#endif
-diff --git a/qapi/qom.json b/qapi/qom.json
-index 830cb2ffe7..96d0184864 100644
---- a/qapi/qom.json
-+++ b/qapi/qom.json
-@@ -687,6 +687,19 @@
-             'size': 'size',
-             '*x-use-canonical-path-for-ramblock-id': 'bool' } }
+ /*
+  * The main function to process dynamic capacity event with extent list.
+  * Currently DC extents add/release requests are processed.
+  */
+ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
+-        uint16_t hid, CXLDCEventType type, uint8_t rid,
++        uint16_t hid, CXLDCEventType type, uint8_t rid, const char *tag,
+         CxlDynamicCapacityExtentList *records, Error **errp)
+ {
+     Object *obj;
+@@ -1966,8 +2007,10 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
+     CxlDynamicCapacityExtentList *list;
+     CXLDCExtentGroup *group = NULL;
+     g_autofree CXLDCExtentRaw *extents = NULL;
+-    uint64_t dpa, offset, len, block_size;
++    uint64_t dpa, offset, block_size;
++    uint64_t len = 0;
+     g_autofree unsigned long *blk_bitmap = NULL;
++    QemuUUID uuid;
+     int i;
  
-+##
-+# @MemoryBackendTaggedProperties:
-+#
-+# Properties for objects of classes derived from memory-backend.
-+#
-+# @tag: Memory tag
-+#
-+# Since: 11.0
-+##
-+{ 'struct': 'MemoryBackendTaggedProperties',
-+  'base': 'MemoryBackendProperties',
-+  'data': { '*tag': 'str' } }
+     obj = object_resolve_path_type(path, TYPE_CXL_TYPE3, NULL);
+@@ -1996,6 +2039,7 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
+         offset = list->value->offset;
+         len = list->value->len;
+         dpa = offset + dcd->dc.regions[rid].base;
++        qemu_uuid_parse(tag, &uuid);
+ 
+         if (len == 0) {
+             error_setg(errp, "extent with 0 length is not allowed");
+@@ -2049,6 +2093,31 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
+         num_extents++;
+     }
+ 
++    if (type == DC_EVENT_ADD_CAPACITY && dcd->dc.total_capacity_cmd) {
++        MemoryRegion *host_dc_mr;
++        uint64_t size;
 +
- ##
- # @MemoryBackendFileProperties:
- #
-@@ -1218,6 +1231,7 @@
-     { 'name': 'memory-backend-memfd',
-       'if': 'CONFIG_LINUX' },
-     'memory-backend-ram',
-+    'memory-backend-tagged',
-     { 'name': 'memory-backend-shm',
-       'if': 'CONFIG_POSIX' },
-     'pef-guest',
-@@ -1296,6 +1310,7 @@
-       'memory-backend-memfd':       { 'type': 'MemoryBackendMemfdProperties',
-                                       'if': 'CONFIG_LINUX' },
-       'memory-backend-ram':         'MemoryBackendProperties',
-+      'memory-backend-tagged':      'MemoryBackendTaggedProperties',
-       'memory-backend-shm':         { 'type': 'MemoryBackendShmProperties',
-                                       'if': 'CONFIG_POSIX' },
-       'pr-manager-helper':          { 'type': 'PrManagerHelperProperties',
++        if (num_extents > 1) {
++            error_setg(errp, "Only single extent add is supported currently");
++            return;
++        }
++
++        if (!cxl_device_lazy_dynamic_capacity_init(dcd, tag, errp)) {
++            return;
++        }
++
++        host_dc_mr = host_memory_backend_get_memory(dcd->dc.host_dc);
++        size = memory_region_size(host_dc_mr);
++
++        if (size != len) {
++            error_setg(errp,
++                       "Host memory backend size 0x%" PRIx64
++                       " does not match extent length 0x%" PRIx64,
++                       size, len);
++            return;
++        }
++    }
++
+     /* Create extent list for event being passed to host */
+     i = 0;
+     list = records;
+@@ -2060,7 +2129,7 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
+ 
+         extents[i].start_dpa = dpa;
+         extents[i].len = len;
+-        memset(extents[i].tag, 0, 0x10);
++        memcpy(extents[i].tag, &uuid.data, 0x10);
+         extents[i].shared_seq = 0;
+         if (type == DC_EVENT_ADD_CAPACITY) {
+             group = cxl_insert_extent_to_extent_group(group,
+@@ -2091,7 +2160,8 @@ void qmp_cxl_add_dynamic_capacity(const char *path, uint16_t host_id,
+     case CXL_EXTENT_SELECTION_POLICY_PRESCRIPTIVE:
+         qmp_cxl_process_dynamic_capacity_prescriptive(path, host_id,
+                                                       DC_EVENT_ADD_CAPACITY,
+-                                                      region, extents, errp);
++                                                      region, tag, extents,
++                                                      errp);
+         return;
+     default:
+         error_setg(errp, "Selection policy not supported");
+@@ -2122,7 +2192,8 @@ void qmp_cxl_release_dynamic_capacity(const char *path, uint16_t host_id,
+     switch (removal_policy) {
+     case CXL_EXTENT_REMOVAL_POLICY_PRESCRIPTIVE:
+         qmp_cxl_process_dynamic_capacity_prescriptive(path, host_id, type,
+-                                                      region, extents, errp);
++                                                      region, tag, extents,
++                                                      errp);
+         return;
+     default:
+         error_setg(errp, "Removal policy not supported");
+diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+index 1d199d035e..bfd1a97e03 100644
+--- a/include/hw/cxl/cxl_device.h
++++ b/include/hw/cxl/cxl_device.h
+@@ -633,6 +633,7 @@ struct CXLType3Dev {
+          * memory region size.
+          */
+         uint64_t total_capacity; /* 256M aligned */
++        uint64_t total_capacity_cmd; /* 256M aligned */
+         CXLDCExtentList extents;
+         CXLDCExtentGroupList extents_pending;
+         uint32_t total_extent_count;
 -- 
 2.43.0
 
