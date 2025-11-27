@@ -1,235 +1,274 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE542248AE;
-	Wed, 26 Nov 2025 18:35:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260371FF7C8
+	for <linux-cxl@vger.kernel.org>; Thu, 27 Nov 2025 01:54:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764182140; cv=none; b=tHj2ZhNZm+2OLadvkPlDh29ErtnV9kvVv5XfeYLrqn8A1WZtWmfZMPqS8Q9D8DF9tuy/63trKMzyp3+g+rhS2nQS94UOdB0F/YsZcM5trsEIsuonIH+8PWlWSlViYh2G6YPZfd2Hc3Pit0sjrBs/smEJ/33xylUHFBSfiI1cLA8=
+	t=1764208487; cv=none; b=h4vgLlbBEnuzd2Dhm933zAAFZWS390Bs/CrrlT8LfvnD9kgdMJ4Cb/9a4UoU/rrUOq4EVRYYzUTptw9tQF3wgjqEdKdLwEa6cwwPgUH+doJTTzwILa5hYdFL4+q1B95MWDSEMG0eXvyhk1sPZB2qkneB7UKBWj54UL+kFcp+MpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764182140; c=relaxed/simple;
-	bh=oTaJfHnKsmK6inQoltB8x3WChksALN+IW6Kq2p4t8P8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=e3c8kb0KSHPMKWMiBNF/G3BOZ5JrXI9ghUYyMWNlb9d2X9vTDwoxER6P5ZY0u9OCXyKp33QuMmApDo+a+JZ32+Z6tAuTLqkeSO1ZHe77ZyOg3mrI/IURlAncf+TmjzVbQ7viBRJxngEeRy0MS5P0fors0qbbIRvvZVq+tZpV8eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TBGkIfMn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764208487; c=relaxed/simple;
+	bh=f0EdgUznNZO54LZecInfA4y5+ELOv8o96l9SDsv2F0k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uocZ5L3VRbbeiYTgxpgL4nP3FfArnDnMT7+EvYGbCh6sJROul3ns2OEmAoSjw+TSyVXAkq1gzQEiosfn/Ruhdp0d8DadGWD0Lq/aGwsEej57Wh0LUuHxJeVf2SYRcy3jqjzkotPvVK+5aWKeHTR2AaSuwBJH2qSosP6GiIvr18g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e3Oy2PuI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TBGkIfMn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15B8AC4CEF7;
-	Wed, 26 Nov 2025 18:35:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e3Oy2PuI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6F9BC19425
+	for <linux-cxl@vger.kernel.org>; Thu, 27 Nov 2025 01:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764182139;
-	bh=oTaJfHnKsmK6inQoltB8x3WChksALN+IW6Kq2p4t8P8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=TBGkIfMn6szVeVn2AuROOCU8qv8ps8NCC0q66qob7yBtbmFnTvG9VK7H61gpzst7N
-	 YdgOlu4/HbUNxd0CAVxhIZ/S59Xh4qkZ1M03PN+9olXhbG5FICB7U0PUBAz6gcmuMh
-	 uUiCQyO0/NCay3OLu5DJd4+4npO0RufzU0GtLScJYDU7YE0AH40KsaEGJ2UyvlVCXg
-	 +eZO+4rwx2RhZsOTKbhfsug8qtv2GDEvy5GRgkRYE7czt0rZXk3TNFHAQkWrSGyepv
-	 Xz47jhzjpWWJp4m6tvrNS3x8cNSUNxDnQP38Aodk0a26smRyc4+T05k3137jGHGN7K
-	 5rsxcg2ba6B0g==
-Message-ID: <7f1e56067bdc46195a9e36f914aa103dc76d4f7f.camel@kernel.org>
-Subject: Re: [PATCH v21 15/23] sfc: get endpoint decoder
-From: PJ Waskiewicz <ppwaskie@kernel.org>
-To: Alejandro Lucero Palau <alucerop@amd.com>,
- alejandro.lucero-palau@amd.com, 	linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, 	edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
-	edumazet@google.com, dave.jiang@intel.com
-Cc: Martin Habets <habetsm.xilinx@gmail.com>, Edward Cree
-	 <ecree.xilinx@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Ben Cheatham <benjamin.cheatham@amd.com>
-Date: Wed, 26 Nov 2025 10:35:38 -0800
-In-Reply-To: <34f7771f-7d6d-4bfd-9212-889433d80b4c@amd.com>
-References: <20251119192236.2527305-1-alejandro.lucero-palau@amd.com>
-	 <20251119192236.2527305-16-alejandro.lucero-palau@amd.com>
-	 <4aab1857efeaf2888b1c85cbac1fc5c8fc5c8cbc.camel@kernel.org>
-	 <34f7771f-7d6d-4bfd-9212-889433d80b4c@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.1 (3.58.1-1.fc43) 
+	s=k20201202; t=1764208486;
+	bh=f0EdgUznNZO54LZecInfA4y5+ELOv8o96l9SDsv2F0k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=e3Oy2PuIRVyYpX9jNitvWPFzXas2PMbyATpc2928NtxLJraxbQwSUdIwnW6wG2wao
+	 muCzWNAzr3gs7gh9NhR3L5m30waMtP6zV+5ml4QlYDe1LvsJVGugH3q3MPepKnOBhN
+	 sqBEX9h2jiicZUil2xgm/E43ZekOqTPu6Ksi+0Kbl8xIvG8siN1gZLyAu0DZgRMhpq
+	 xJ0qFDhXSiGr8LcYluXXH2sNbDB7xofFj34H8BnvxKE6T93lBlwukgVHVpdQxtiYrC
+	 0o5ReshKqWaf+Ch5mkV059dZn1R+0ls7+OlqVxg+oM50dIpXci6fcrdTLwLXog8+XN
+	 rwrVAU8azfpmg==
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-644fcafdce9so705157a12.1
+        for <linux-cxl@vger.kernel.org>; Wed, 26 Nov 2025 17:54:46 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXbFcaIUCVPuqbv5V7RBcO7PpyJBL+bEZL8XoPuk+Pmvee2U3b2JCkhEA6bm4pKYURmu+fN0gld19c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztfDH8zVST1xENni36aI4bflGrdfyV4lpU5rk8PQpSt6ync38L
+	RHKsOAIeMyFHptfV3OttyJ77+EsD9JNrbiwz4IaNF+SWoQqSG5K/CMdXhwNyRp0050aW1+yJbxw
+	CCFHGQIdi6lsZ0ZypUpsd+0/HwjGZPg==
+X-Google-Smtp-Source: AGHT+IEKWFjQTeH/gw4l8j+96xvyDrFErJSXFFFwjwYJm2zw06q8mwVDlJH1+0djMgauaqAXyS9qMnoqGjEF33qExow=
+X-Received: by 2002:a05:6402:2803:b0:634:ce70:7c5 with SMTP id
+ 4fb4d7f45d1cf-645eb2b8003mr8895933a12.17.1764208485058; Wed, 26 Nov 2025
+ 17:54:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+ <20251015071420.1173068-2-herve.codina@bootlin.com> <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
+ <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
+ <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com> <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
+ <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
+In-Reply-To: <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 26 Nov 2025 19:54:33 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
+X-Gm-Features: AWmQ_bmOuLhKUl5W5zrcj5AQOjs5kC_X5Om5_otgYtq0JTdMygrEymDVT57WU48
+Message-ID: <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
+Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT overlays"
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Kalle Niemi <kaleposti@gmail.com>, Herve Codina <herve.codina@bootlin.com>, 
+	Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Alejandro,
+On Tue, Nov 25, 2025 at 12:43=E2=80=AFAM Matti Vaittinen
+<mazziesaccount@gmail.com> wrote:
+>
+> On 24/11/2025 19:01, Rob Herring wrote:
+> > On Mon, Nov 24, 2025 at 10:44=E2=80=AFAM Kalle Niemi <kaleposti@gmail.c=
+om> wrote:
+> >>
+> >>
+> >> On 11/24/25 16:53, Rob Herring wrote:
+> >>> On Mon, Nov 24, 2025 at 8:48=E2=80=AFAM Kalle Niemi <kaleposti@gmail.=
+com> wrote:
+> >>>> On 10/15/25 10:13, Herve Codina wrote:
+> >>>>> From: Saravana Kannan <saravanak@google.com>
+> >>>>>
+> >>>>> This reverts commit 1a50d9403fb90cbe4dea0ec9fd0351d2ecbd8924.
+> >>>>>
+> >>>>> While the commit fixed fw_devlink overlay handling for one case, it
+> >>>>> broke it for another case. So revert it and redo the fix in a separ=
+ate
+> >>>>> patch.
+> >>>>>
+> >>>>> Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overla=
+ys")
+> >>>>> Reported-by: Herve Codina <herve.codina@bootlin.com>
+> >>>>> Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_=
+rJgyo8x6=3D9F9rZ+-KzjOg@mail.gmail.com/
+> >>>>> Closes: https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin=
+.com/
+> >>>>> Closes: https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootli=
+n.com/
+> >>>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> >>>>> Link: https://lore.kernel.org/lkml/20240411235623.1260061-2-saravan=
+ak@google.com/
+> >>>>> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> >>>>> Acked-by: Mark Brown <broonie@kernel.org>
+> >>>>> ---
+> >>>>>     drivers/bus/imx-weim.c    | 6 ------
+> >>>>>     drivers/i2c/i2c-core-of.c | 5 -----
+> >>>>>     drivers/of/dynamic.c      | 1 -
+> >>>>>     drivers/of/platform.c     | 5 -----
+> >>>>>     drivers/spi/spi.c         | 5 -----
+> >>>>>     5 files changed, 22 deletions(-)
+> >>>>>
+> >>>>> diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
+> >>>>> index 83d623d97f5f..87070155b057 100644
+> >>>>> --- a/drivers/bus/imx-weim.c
+> >>>>> +++ b/drivers/bus/imx-weim.c
+> >>>>> @@ -327,12 +327,6 @@ static int of_weim_notify(struct notifier_bloc=
+k *nb, unsigned long action,
+> >>>>>                                  "Failed to setup timing for '%pOF'=
+\n", rd->dn);
+> >>>>>
+> >>>>>                 if (!of_node_check_flag(rd->dn, OF_POPULATED)) {
+> >>>>> -                     /*
+> >>>>> -                      * Clear the flag before adding the device so=
+ that
+> >>>>> -                      * fw_devlink doesn't skip adding consumers t=
+o this
+> >>>>> -                      * device.
+> >>>>> -                      */
+> >>>>> -                     rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DE=
+VICE;
+> >>>>>                         if (!of_platform_device_create(rd->dn, NULL=
+, &pdev->dev)) {
+> >>>>>                                 dev_err(&pdev->dev,
+> >>>>>                                         "Failed to create child dev=
+ice '%pOF'\n",
+> >>>>> diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
+> >>>>> index eb7fb202355f..30b48a428c0b 100644
+> >>>>> --- a/drivers/i2c/i2c-core-of.c
+> >>>>> +++ b/drivers/i2c/i2c-core-of.c
+> >>>>> @@ -176,11 +176,6 @@ static int of_i2c_notify(struct notifier_block=
+ *nb, unsigned long action,
+> >>>>>                         return NOTIFY_OK;
+> >>>>>                 }
+> >>>>>
+> >>>>> -             /*
+> >>>>> -              * Clear the flag before adding the device so that fw=
+_devlink
+> >>>>> -              * doesn't skip adding consumers to this device.
+> >>>>> -              */
+> >>>>> -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
+> >>>>>                 client =3D of_i2c_register_device(adap, rd->dn);
+> >>>>>                 if (IS_ERR(client)) {
+> >>>>>                         dev_err(&adap->dev, "failed to create clien=
+t for '%pOF'\n",
+> >>>>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> >>>>> index 2eaaddcb0ec4..b5be7484fb36 100644
+> >>>>> --- a/drivers/of/dynamic.c
+> >>>>> +++ b/drivers/of/dynamic.c
+> >>>>> @@ -225,7 +225,6 @@ static void __of_attach_node(struct device_node=
+ *np)
+> >>>>>         np->sibling =3D np->parent->child;
+> >>>>>         np->parent->child =3D np;
+> >>>>>         of_node_clear_flag(np, OF_DETACHED);
+> >>>>> -     np->fwnode.flags |=3D FWNODE_FLAG_NOT_DEVICE;
+> >>>>>
+> >>>>>         raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> >>>>>
+> >>>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> >>>>> index f77cb19973a5..ef9445ba168b 100644
+> >>>>> --- a/drivers/of/platform.c
+> >>>>> +++ b/drivers/of/platform.c
+> >>>>> @@ -739,11 +739,6 @@ static int of_platform_notify(struct notifier_=
+block *nb,
+> >>>>>                 if (of_node_check_flag(rd->dn, OF_POPULATED))
+> >>>>>                         return NOTIFY_OK;
+> >>>>>
+> >>>>> -             /*
+> >>>>> -              * Clear the flag before adding the device so that fw=
+_devlink
+> >>>>> -              * doesn't skip adding consumers to this device.
+> >>>>> -              */
+> >>>>> -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
+> >>>>>                 /* pdev_parent may be NULL when no bus platform dev=
+ice */
+> >>>>>                 pdev_parent =3D of_find_device_by_node(parent);
+> >>>>>                 pdev =3D of_platform_device_create(rd->dn, NULL,
+> >>>>> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> >>>>> index 2e0647a06890..b22944a207c9 100644
+> >>>>> --- a/drivers/spi/spi.c
+> >>>>> +++ b/drivers/spi/spi.c
+> >>>>> @@ -4791,11 +4791,6 @@ static int of_spi_notify(struct notifier_blo=
+ck *nb, unsigned long action,
+> >>>>>                         return NOTIFY_OK;
+> >>>>>                 }
+> >>>>>
+> >>>>> -             /*
+> >>>>> -              * Clear the flag before adding the device so that fw=
+_devlink
+> >>>>> -              * doesn't skip adding consumers to this device.
+> >>>>> -              */
+> >>>>> -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
+> >>>>>                 spi =3D of_register_spi_device(ctlr, rd->dn);
+> >>>>>                 put_device(&ctlr->dev);
+> >>>>>
+> >>>> Sorry, some of you will receive this message now for second time. Fi=
+rst
+> >>>> message was sent to older series of patches.
+> >>>> -
+> >>>>
+> >>>> Hello,
+> >>>>
+> >>>> Test system testing drivers for ROHM ICs bisected this commit to cau=
+se
+> >>>> BD71847 drivers probe to not be called.
+> >>> This driver (and overlay support) is in linux-next or something out o=
+f
+> >>> tree on top of linux-next?
+> >>>
+> >>> Rob
+> >>
+> >> Yes the driver is in mainline linux: /drivers/mfd/rohm-bd718x7.c
+> >
+> > I don't see any support to apply overlays in that driver.
+>
+> Ah. Sorry for the confusion peeps. I asked Kalle to report this without
+> proper consideration. 100% my bad.
+>
+> While the bd718x7 drive indeed is mainline (and tested), the actual
+> 'glue-code' doing the overlay is part of the downstream test
+> infrastructure. So yes, this is not a bug in upstream kernel - this
+> falls in the category of an upstream change causing downstream things to
+> break. So, feel free to say: "Go fix your code" :)
+>
+> Now that this is sorted, if someone is still interested in helping us to
+> get our upstream drivers tested - the downstream piece is just taking
+> the compiled device-tree overlay at runtime (via bin-attribute file),
+> and applying it using the of_overlay_fdt_apply(). The approach is
+> working for our testing purposes when the device is added to I2C/SPI
+> node which is already enabled. However, in case where we have the I2C
+> disabled, and enable it in the same overlay where we add the new device
+> - then the new device does not get probed.
+>
+> I would be really grateful if someone had a pointer for us.
 
-On Wed, 2025-11-26 at 09:09 +0000, Alejandro Lucero Palau wrote:
->=20
-> On 11/26/25 01:27, PJ Waskiewicz wrote:
-> > Hi Alejandro,
-> >=20
-> > On Wed, 2025-11-19 at 19:22 +0000, alejandro.lucero-palau@amd.com
-> > wrote:
-> > > From: Alejandro Lucero <alucerop@amd.com>
-> > >=20
-> > > Use cxl api for getting DPA (Device Physical Address) to use
-> > > through
-> > > an
-> > > endpoint decoder.
-> > >=20
-> > > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> > > Reviewed-by: Martin Habets <habetsm.xilinx@gmail.com>
-> > > Acked-by: Edward Cree <ecree.xilinx@gmail.com>
-> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
-> > > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > > ---
-> > > =C2=A0=C2=A0drivers/net/ethernet/sfc/efx_cxl.c | 12 +++++++++++-
-> > > =C2=A0=C2=A01 file changed, 11 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/drivers/net/ethernet/sfc/efx_cxl.c
-> > > b/drivers/net/ethernet/sfc/efx_cxl.c
-> > > index d7c34c978434..1a50bb2c0913 100644
-> > > --- a/drivers/net/ethernet/sfc/efx_cxl.c
-> > > +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> > > @@ -108,6 +108,14 @@ int efx_cxl_init(struct efx_probe_data
-> > > *probe_data)
-> > > =C2=A0=C2=A0		return -ENOSPC;
-> > > =C2=A0=C2=A0	}
-> > > =C2=A0=20
-> > > +	cxl->cxled =3D cxl_request_dpa(cxl->cxlmd,
-> > > CXL_PARTMODE_RAM,
-> > > +				=C2=A0=C2=A0=C2=A0=C2=A0 EFX_CTPIO_BUFFER_SIZE);
-> > I've been really struggling to get this flow working in my
-> > environment.
-> > The above function call has a call-chain like this:
-> >=20
-> > - cxl_request_dpa()
-> > =C2=A0=C2=A0 =3D> cxl_dpa_alloc()
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D> __cxl_dpa_alloc()
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D> __cxl_dpa_reserve=
-()
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D>=
- __request_region()
-> >=20
-> > That last call to __request_region() is not handling a Type2 device
-> > that has its mem region defined as EFI Special Purpose memory.
-> > Basically if the underlying hardware has the memory region marked
-> > that
-> > way, it's still getting mapped into the host's physical address
-> > map,
-> > but it's explicitly telling the OS to bugger off and not try to map
-> > it
-> > as system RAM, which is what we want. Since this is being used as
-> > an
-> > acceleration path, we don't want the OS to muck about with it.
-> >=20
-> > The issue here is now that I have to build CXL into the kernel
-> > itself
-> > to get around the circular dependency issue with depmod, I see this
-> > when my kernel boots and the device trains, but *before* my driver
-> > loads:
-> >=20
-> > # cat /proc/iomem
-> > [...snip...]
-> > c050000000-c08fffffff : CXL Window 0
-> > =C2=A0=C2=A0 c050000000-c08fffffff : Soft Reserved
-> >=20
-> > That right there is my device.=C2=A0 And it's being presented correctly
-> > that
-> > it's reserved so the OS doesn't mess with it.=C2=A0 However, that call
-> > to
-> > __request_region() fails with -EBUSY since it can't take ownership
-> > of
-> > that region since it's already owned by the core.
-> >=20
-> > I can't just skip over this flow for DPA init, so I'm at a bit of a
-> > loss how to proceed.=C2=A0 How is your device presenting the .mem regio=
-n
-> > to
-> > the host?
->=20
->=20
-> Hi PJ,
->=20
->=20
-> My work is based on the device not using EFI_CONVENTIONAL_MEMORY +=20
-> EFI_MEMORY_SP but EFI_RESERVED_TYPE. In the first case the kernel can
-> try to use that memory and the BIOS goes through default
-> initialization,=20
+Seems to be fw_devlink related. I suppose if you turn it off it works?
+There's info about the dependencies in sysfs or maybe debugfs. I don't
+remember the details, but that should help to tell you why things
+aren't probing.
 
-I'm not sure I follow.  Your device is based on using
-EFI_RESERVED_TYPE?  Or is it based on the former?  My device is based
-on EFI_RESERVED_TYPE, which translates into the Soft Reserved status as
-a result of BIOS enumeration and the CXL core enumerating that memory
-resource.
+I've dropped the changes for 6.18 for now. No one really seems to be
+in need of them yet AFAICT.
 
-> the latter will avoid BIOS or kernel to mess with such a memory.
-> Because=20
-> there is no BIOS yet supporting this I had to remove DAX support from
-> the kernel and deal (for testing) with some BIOS initialization we
-> will=20
-> not have in production.
-
-Can you elaborate what you mean here?  Do you mean the proposed patches
-here are trying to work around this BIOS limitation?
-
-I'm not sure I understand what BIOS limitations you mean though.  I see
-on both an AMD and Intel host (CXL 2.0-capable) the same behavior that
-I'd expect of EFI_RESERVED_TYPE getting set aside so the OS doesn't
-mess with it.  This is on CRB-level stuff plus production-level
-platforms.
-
->=20
->=20
-> For your case I thought this work=20
-> https://lore.kernel.org/linux-cxl/20251120031925.87762-1-Smita.Koralahall=
-iChannabasappa@amd.com/T/#me2bc0d25a2129993e68df444aae073addf886751
-> =C2=A0
-> was solving your problem but after looking at it now, I think that
-> will=20
-> only be useful for Type3 and the hotplug case. Maybe it is time to
-> add=20
-> Type2 handling there. I'll study that patchset with more detail and=20
-> comment for solving your case.
-
-I just looked through that, and I might be able to cherry-pick some
-stuff.  I'll do the same offline and see if I can come up with a
-workable solution to get past this wall for now.
-
-That said though, I don't really want or care about DAX.  I can already
-find and map the underlying CXL.mem accelerated region through other
-means (RCRB, DVSEC, etc.).
-
-What I'm trying to do is get the regionX object to instantiate on my
-CXL.mem memory block, so that I can remove the region, ultimately
-tearing down the decoders, and allowing me to hotplug the device.  The
-patches here seem to still assume a Type3-ish device where there's DPA
-needing to get mapped into HPA, which our devices are already allocated
-in the decoders due to the EFI_RESERVED_TYPE enumeration.  But the
-patches aren't seeing that firmware already set them up, since the
-decoders haven't been committed yet.
-
-My root decoder has 1GB of space, which is the size of my endpoint
-device's memory size (1GB).  There is no DPA to map, and the HPA
-already appears "full" since the device is already configured in the
-decoder.
-
-TL;DR: if your device you're testing with presents the CXL.mem region
-as EFI_RESERVED_TYPE, I don't see how these patches are working.=20
-Unless you're doing something extra outside of the patches, which isn't
-obvious to me.
-
->=20
->=20
-> FWIW, last year in Vienna I raised the concern of the kernel doing=20
-> exactly what you are witnessing, and I proposed having a way for
-> taking=20
-> the device/memory from DAX but I was told unanimously that was not=20
-> necessary and if the BIOS did the wrong thing, not fixing that in the
-> kernel. In hindsight I would say this conflict was not well
-> understood=20
-> then (me included) with all the details, so maybe it is time to have=20
-> this capacity, maybe from user space or maybe specific kernel param=20
-> triggering the device passing from DAX.
-
-I do recall this.  Unfortunately I brought up similar concerns way back
-in Dublin in 2021 regarding all of this flow well before 2.0-capable
-hosts arrived.  I think I started asking the questions way too early,
-since this was of little to no concern at the time (nor was Type2
-device support).
-
-Cheers,
--PJ
+Rob
