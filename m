@@ -1,110 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB48224A044;
-	Mon,  1 Dec 2025 19:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A22727FD5A;
+	Mon,  1 Dec 2025 21:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764618980; cv=fail; b=YbyU2fIVD5V4hY380K8EhqF5ySat36KtpbUGTgTn54kjngQPCKAcHDV5L63Kv7YPBr4jUaOxIR7nRVPWwkIzV+uge5TI8uqTLUr+z4+DB5ImYgGpQErMP2G/n610aCD3urhBmdotx9gN1HCvQ0iwGeK92/DHy44h/Xbv8nxjrow=
+	t=1764624571; cv=fail; b=f9mMlTThKkbRtNx2nTsq1At19Lxz7bFR/eJfF5hNJ15+2X3YKn/KvQRNfExuIb9CU4Nk3/hSTG/F1vkIGXvXrheuab5zxE4h5dX3AM8t8zAyaO2xVWj4I952cy/WXqJq4mLjh5GZaqv/3FyVfayoAXZZlGFnrF0vr6plwP2qyRI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764618980; c=relaxed/simple;
-	bh=dw0Y6jbpcX3djgHEg8HSZgiM+pRzwEoZfXdMsvxkvjQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=l2kRYXi7ODoym9onQYTPfHNwdG6cm30BlID669YkFaiJUB6AyOWGv1eWvK9bBefmUqoePLe03RCbJrrKyHBlV9Nml/zFV8rq3d/2DGoMvK5T3CRlf5NiXe+olJEPGIm4K9Lp0I2CEiOPRU2slXf4A3vNQmNMliBY5s8rzzzIAak=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G71mCmHS; arc=fail smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1764624571; c=relaxed/simple;
+	bh=csrgogbsrGWKZ7GjSv+QWjYK8yZm7NFaEISgZY6890g=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=QZBPIBsr29IpKwTVEdO3gKnqfp+0TcnFv/gWe0VzRopXGfFNSpfKBXUqG1waQDdcYEeNDMyIqO73FpnaerQjlREe5/acykzbDg5kqlnI7k+EMhm5oO6Sn4zP3cwpRT8Xrth3vgePMdbJK/N2LhWrhqEpYwCeFUZu8fd4/z8iTN0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EK8M8OF+; arc=fail smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G71mCmHS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EK8M8OF+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764618977; x=1796154977;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=dw0Y6jbpcX3djgHEg8HSZgiM+pRzwEoZfXdMsvxkvjQ=;
-  b=G71mCmHSmkiwm2sZBS5wVTyEMh9n7PBpaLLjEG14KCdmPUTPK61yppBp
-   NXzWhCMd82rCCL6yXpNzJBHpyKEGB3CPXjqWNEhDhpTq1z2cBPg/VnM7a
-   sv3FmKR9/8fhP4201ohQkgtmtyG19C2mylnoQJAePvIEI8Ob5p94D7QwV
-   KCstqzF2QsXMYNr5n6z6UTg8cwqBI8aMDlOOLlnfPstuNq591FybRCCXr
-   iy0fGse7snB6SizSC7sDhG9XjCOq0GEct8aXOlEzjwQ+WrIJfdH/kNoBE
-   qSm0qm8N7vvPCGG+aSWD8UUXCsoLX3US6wqr6yCNewUcvxJpXP+Dzt4+f
-   g==;
-X-CSE-ConnectionGUID: 2pFTbCv1S1yf6qEmG9faPQ==
-X-CSE-MsgGUID: /LgKju+qSoaAudXJXyDbYA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11630"; a="83965092"
+  t=1764624569; x=1796160569;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=csrgogbsrGWKZ7GjSv+QWjYK8yZm7NFaEISgZY6890g=;
+  b=EK8M8OF+uuFMpIPlxHsuyYHzMGm7ti+Z5vEy4Wy16NgRrcGIYTA74R0S
+   9GMFc2XN6TxvOL63QDrCFAnfPmISORlh4jDJwhEkRr2YLn298Du19HoiK
+   /Q74hVy9XrvpNWYtaCxH5SBVwUZZqW5kgvuHClEti3Dt1tmKK7OmLufkm
+   zLjPE+5f1mcAkkcwx0VV7F11vGJZ+kpHZgP/ASLazSuLefhAA4wt+vqsO
+   Kwdyp0iAPH3KKBslY3WnEFEwZQSjFrTR6wvsVpbPZkCpGJ03dGrEgZ5Cp
+   9OYlnRFGJ9PUVu2IU2cXiLX5aeK7CkTNGw/cAt9ERkOAJUiOXIC+RPNda
+   A==;
+X-CSE-ConnectionGUID: 5f4HXsjSSbe9WmcYaK66bw==
+X-CSE-MsgGUID: 6lnaU2lyQkudDtc57dXReA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11630"; a="65581642"
 X-IronPort-AV: E=Sophos;i="6.20,241,1758610800"; 
-   d="scan'208";a="83965092"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 11:56:17 -0800
-X-CSE-ConnectionGUID: 5mqnHMouQv+9I/NYaSOYGw==
-X-CSE-MsgGUID: Xt/Wb0rpSx2BPq4wiDbyoQ==
+   d="scan'208";a="65581642"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 13:29:28 -0800
+X-CSE-ConnectionGUID: Ri5u4psyRu6ZTEhqh1G88Q==
+X-CSE-MsgGUID: CoFH0z/qSyGj7w5zN/eGfg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,241,1758610800"; 
-   d="scan'208";a="217506663"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 11:56:16 -0800
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+   d="scan'208";a="198641683"
+Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 13:29:28 -0800
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Mon, 1 Dec 2025 11:56:16 -0800
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ 15.2.2562.29; Mon, 1 Dec 2025 13:29:27 -0800
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29 via Frontend Transport; Mon, 1 Dec 2025 11:56:15 -0800
-Received: from BL2PR02CU003.outbound.protection.outlook.com (52.101.52.44) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ 15.2.2562.29 via Frontend Transport; Mon, 1 Dec 2025 13:29:27 -0800
+Received: from CH4PR04CU002.outbound.protection.outlook.com (40.107.201.65) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Mon, 1 Dec 2025 11:56:15 -0800
+ 15.2.2562.29; Mon, 1 Dec 2025 13:29:27 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Nhk9CLggMorDhr75nu+uu9ytDDNz/PP9D3xoICI+W0FhxsVTVZ4dYdXfk8ir8QLIKA3DGiwBSK04ZkNQAues5tNaFcjPIxmwoFtG2FFTNH9FB/+sN00RP/fKHTAFF2j0sA6Qjru0vCj860DphG/hfaeQbGND1d83yD7AZDcdWgHYQqDn+2xj9Pi6POZVu5Ty6u4xrCFnHtyPZC3MD5ylAIkSGeAnJ4oyu1i6gd/Jt1AFTtGgBt1nFw3gtLhocwhyRKG78WX5BtoTA4/jQDi3rMg1CCXZJlHDgxZq2pi6yxenc/F/1j3dcj6gqtOmmnMEYoB1bMe7j36nQUzQ47nycw==
+ b=HNmQrOjo3kiZ1XnTyoGvJyVPmh4zpXZCa5GqLuKb+qjZG827jHzR6HLoflEAO342qbiHOyrpaoqzivYwDYEkrc3fZQkfZJN7s0gQeU8nYvOEpOg/wRSIk0fn4L6A1VMp3FrzDSH6DHVUEWVR0Kgz9XZsbSASSB1cJ4BCRu2mWlLSyCUG7Mc+l/M5SOoevja5Z2Sv7vKSIhQ3hIJz4JEMU3IR1MKoWFHwjPhyazJDVJn0GpzdX4CaI6yzdXACpz0WS2roABW8y5UoblHnfHk1HDe9MQ48ZDC2bqoUB21imG5SrppJeyMz6J1sLXkUaZcK4e/kppEEWISnUn+qYiW4JA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XUI0JEztSAi6RM+IITzX4jBzlfKWdXxVujfpvk2H1kM=;
- b=nhKnYJcwQcI753q10MynWR3kgHPFkhlsr1RTteFV3qJgsYNqSzpEfjHE2mlXQvrDcC2BWTxO/EisNgS25C2Dh9aPKgV0Fchkj2xMoTgANOW88NgM8iPWGX8BxUt0oYt27Z2WmgVhoSkFZc5bzJ8aSSRih5R1ZZygifUoBZFHrTHX1fG9k2jGyw1bcBdd5EI7u3mO6nV7FMrL9foH8dcGKZ9cK7Lpss9Qm3zgPhuqDkrXpUZMgSDVdkdlEOnjrVw+COJA5w1tH5gyzHGSX/oA3M2LwNB6Ts60SpLnnu1PHUrR0jGfddcNEKrpcEnSJ0plTDvdAQRTHK7cg9Z5A1F66Q==
+ bh=8uJIlI4PfL94itT5vmuuOwtk24QVkrCUUyv5gx9hWRc=;
+ b=s6GJk/4Xm9kPuBtVAMgmmxVv0jN79ZvNxaODmzarRZb7TujNn8e0i9zAX4ciONotyaylmQpkAX8lOi/WKdhPz2voEIOWVC0wgZWKhiwxQldioPPNzMD4X6G8/IO5U6DhcyKZOQ0C7q/0xxJ4bT9fCi7OwPWnoO1U4fTjYKv0dWDBAphoVIbSKx7MFKwwigPzssDqzidb7erHe9w02k4dwUebNPdQN+xkpusYyEDrbzPoVrgSw7NUf97TR7hQewyT65rUXqmlmz57Ix6Y+F+RE+1BDxBi7IP1dm7tW8xQTye1Q1LnfcL0mBRKzK0ywJ7ShXChQkkaYWjvPm3crgH6gA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by SA1PR11MB6781.namprd11.prod.outlook.com (2603:10b6:806:25d::12) with
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CYYPR11MB8357.namprd11.prod.outlook.com (2603:10b6:930:c5::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Mon, 1 Dec
- 2025 19:56:08 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::46c9:7f71:993d:8aee]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::46c9:7f71:993d:8aee%8]) with mapi id 15.20.9366.012; Mon, 1 Dec 2025
- 19:56:08 +0000
-Date: Mon, 1 Dec 2025 11:56:02 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Yazen Ghannam
-	<yazen.ghannam@amd.com>, Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Matthew Wilcox <willy@infradead.org>, Jan Kara
-	<jack@suse.cz>, "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown
-	<len.brown@intel.com>, Pavel Machek <pavel@kernel.org>, Li Ming
-	<ming.li@zohomail.com>, Jeff Johnson <jeff.johnson@oss.qualcomm.com>, "Ying
- Huang" <huang.ying.caritas@gmail.com>, Yao Xingtao <yaoxt.fnst@fujitsu.com>,
-	Peter Zijlstra <peterz@infradead.org>, Greg KH <gregkh@linuxfoundation.org>,
-	Nathan Fontenot <nathan.fontenot@amd.com>, Terry Bowman
-	<terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>, Benjamin Cheatham
-	<benjamin.cheatham@amd.com>, Zhijian Li <lizhijian@fujitsu.com>, "Borislav
- Petkov" <bp@alien8.de>, Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v4 0/9] dax/hmem, cxl: Coordinate Soft Reserved handling
- with CXL and HMEM
-Message-ID: <aS3y0j96t1ygwJsR@aschofie-mobl2.lan>
-References: <20251120031925.87762-1-Smita.KoralahalliChannabasappa@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20251120031925.87762-1-Smita.KoralahalliChannabasappa@amd.com>
-X-ClientProxiedBy: BY1P220CA0013.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:59d::17) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+ 2025 21:29:25 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff%4]) with mapi id 15.20.9366.012; Mon, 1 Dec 2025
+ 21:29:24 +0000
+From: <dan.j.williams@intel.com>
+Date: Mon, 1 Dec 2025 13:29:22 -0800
+To: Dave Hansen <dave.hansen@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, <dave.hansen@linux.intel.com>,
+	<peterz@infradead.org>
+CC: <linux-mm@kvack.org>, <linux-cxl@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, Balbir Singh <balbirs@nvidia.com>, Ingo Molnar
+	<mingo@kernel.org>, Kees Cook <kees@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>, Andy Lutomirski <luto@kernel.org>, Logan Gunthorpe
+	<logang@deltatee.com>, Andrew Morton <akpm@linux-foundation.org>, "David
+ Hildenbrand" <david@redhat.com>, Lorenzo Stoakes
+	<lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren
+ Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, "Yasunori
+ Gotou (Fujitsu)" <y-goto@fujitsu.com>
+Message-ID: <692e08b2516d4_261c1100a3@dwillia2-mobl4.notmuch>
+In-Reply-To: <2d4fb1ce-176c-404a-852f-987a9481046d@intel.com>
+References: <20251108023215.2984031-1-dan.j.williams@intel.com>
+ <2d4fb1ce-176c-404a-852f-987a9481046d@intel.com>
+Subject: Re: [PATCH] x86/kaslr: P2PDMA is one of a class of ZONE_DEVICE-KASLR
+ collisions
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR05CA0130.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d::15) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -112,297 +109,267 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SA1PR11MB6781:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2aaae78a-31c7-442a-797d-08de3113ab19
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CYYPR11MB8357:EE_
+X-MS-Office365-Filtering-Correlation-Id: e0a91953-b919-466a-39f1-08de3120b309
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?2No5i4mi1aQt1+EWQX9F3ZPceDVIqGL6QDF7R93/0pMoUbaL5ZJhod0RCern?=
- =?us-ascii?Q?j/Zq1otejTGmHqKkRn45uSzISe03YF0lSvXzH6pLbn3iyzBzyrxNTTAN+No0?=
- =?us-ascii?Q?IyOv4hAUp18doKU/KvIyPoBNVdw5UJGB7QyQDQ+r+/YzgCJyb0djeiFGjPGM?=
- =?us-ascii?Q?IUlDwt1bxjxcPijqJzUUlY5A6bH7GLp5kvz+TOb0ABTXx52wxNAit93M0IWd?=
- =?us-ascii?Q?mZk3lUTo72FmeFq3vQEeOS01xBVFwK4WN7VvO1MIXMv/XPmP5MsEnCNcqLf2?=
- =?us-ascii?Q?Dq9MSiqRirkr0kZk1CeMUj8zNJxsAuPItByWryYNOZdpX8FPfXLeYvWxg/Mx?=
- =?us-ascii?Q?/F29RvbpCnunAxiGTf9KESAH7wWPLssgQzVss7ylrM3PE3WasuXoMI9d27pE?=
- =?us-ascii?Q?Qx5X8x+9VJQL2AyB9dFTJHQHve+GR0hSkmGTmD0JVE2YMh6kqXJDt7ETJ0ZH?=
- =?us-ascii?Q?iOw9NCndkFzrTjtyhY+KNvlfJmBaM3Xq8iReS9SM5lYNg932TsO5vcke36Jt?=
- =?us-ascii?Q?A++WnTynzqG3edRXjsnho0iEo+2AryJub6YhxFYUekAHPa56dgXWYGjtKQLy?=
- =?us-ascii?Q?Z2up6Y7SJZ9lE1QbmpeBIjhdg08+CfYViJ3WN3cvWHpxN35fLksRbup6P6wS?=
- =?us-ascii?Q?vxMylqxOWRgEApIfBoyL5O0kVOZESDz5qgfidKYDgYIGvRgAJljfaPHH6lPE?=
- =?us-ascii?Q?vk8+9FMEEfikLGDZ4D3GFDYO2irH+RMP77dFL7Xw+F6/gR7GYvCZ3HdquCMz?=
- =?us-ascii?Q?O+xGnj+SD4k+vY9OyNB0Oz19K7L/FZV61g3VAYIGcz94+LGZIIu5TEVigm8S?=
- =?us-ascii?Q?ylds7v/yeO448LIUdsC5HlC4bldcdJ0X/SAYHMpGMClYPOsqgBZYFlDosmME?=
- =?us-ascii?Q?EnajVfIgaMkpFZBrLjZO/Hx34J0BgUjKbTl035iFFVP0oec96ujIwno+ECQ7?=
- =?us-ascii?Q?yuZoF62HJmGHmkMbTs+1QWofAMFi3P8KGk2spjUiZUe49qS8wJySMgotIQJ7?=
- =?us-ascii?Q?1J8k3wVlnbC8b/25vpxqh1rUoe5kvFMseqnW/3fYvdLnDZw09uCzuj7HUBCf?=
- =?us-ascii?Q?E5zbW1GaVSUbbOnnuaE+WjTnWHL4sbX70300uBTl1bvDu52xXEy1DaKc3FXG?=
- =?us-ascii?Q?eyLEkx2ecIbHrknGaBdkHB/1Ki8nUKfgJqV3MUkGzzJaTMBwaFDQCpy1rt6S?=
- =?us-ascii?Q?1Gi/Vn/cJAxQkcMO9lo2Oxw+UjFI8R+WlAuMtVKFdhLJKg/nDdfQyptTQNIx?=
- =?us-ascii?Q?ODJMATAusY2437OFbIn6GCnJcwIuEi6+HUGiXu7td9P6BeCOMaOOA0soFwYr?=
- =?us-ascii?Q?FqJ4jkJVgff8/2EyWjJjOSG9Pe6+er+QfLhpYAl2DrlnV/bHGv1Ae2el4D3W?=
- =?us-ascii?Q?2IIOzoSHfUMmmPCsYVvEiRJH7vew/lTQQPJOX8e9f2nr2q1qB9jRDGmgH8tM?=
- =?us-ascii?Q?xvqpEwViymck7aJfJAxPglLJYZDzv0QEQ4hKARilMUI3HjDLkUv8ZA=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?OXBEUnpIbHRQSDNYNDViS0I4aGgzVE0wYklkOEhOOG82Q0VOYTM4L08wVGpD?=
+ =?utf-8?B?d3JLeGd2ZmhrOWM0TmxvZUNOMm9NSDk5MzJCZkJMU3VZTXNjNHJEOG9HNXFo?=
+ =?utf-8?B?Zk4yRHZ0eXhSR3BSTXFpWDBDem4zSWV3R00xRG45VjQ3RzlreDZueThOVlJI?=
+ =?utf-8?B?bFV5dVhlOTgweC9lU0VSWDF4N0F6dlFiZGtuWEpsYS9IeGhMYnROblV4WEZH?=
+ =?utf-8?B?WGRwRjhBUGgvT3MvU081K0hsdkRoYUttRnZvZG53NWNjbkxydGo5VWEvbHd6?=
+ =?utf-8?B?Wm84bEdObWRQZDhyRjhIZ3VzeGRUZGtrdkZ2cmxnZ0NvdFJnUVBYeENiT3Zr?=
+ =?utf-8?B?MkV0QTVuZnVjWFdFeXo1WWNZQVN1VUVOajBNTGFOcnFKenhNSWROemlTSTNR?=
+ =?utf-8?B?RUlkMVN0bFJrVWYwSEdpcG1rUml3d0w1ZGltZW1TcEF5azBER1hNaTV4em45?=
+ =?utf-8?B?Z3IvTEVqVXR5ejAzcElkdnZ3WGlNRVZWYVRtU2liNVArL2RMY2ZNNGZkeVpj?=
+ =?utf-8?B?bzhrYm5wUDdtMkJhMlEzTHNxdExib04vMTAvLzQrTnhTODkySmhyTWpCNmVn?=
+ =?utf-8?B?am5xYVUzaURCQUY3SGFmQkUrRDd5cVNCbjg3L3NCTW5HMTVtaXlOWkxLN2NK?=
+ =?utf-8?B?OGRUTDRINm4zSTVCVjJ2WSs2WE9obUMyR24yVlhQS09BZ0NpYjAwM0kyYjky?=
+ =?utf-8?B?bE1wN05nM1Rtc2JVbHhzaHpyRkdmc013Wnl0WXowMElSbTdEdHpIK3JlN0ho?=
+ =?utf-8?B?SndSUUltVEhWU3hTbkpxdStQL2pYbDNtS3dmY25jbTJ4L3c1eUVndGpWNVc4?=
+ =?utf-8?B?b1UrWVdkRFA4S0c4bWtSYzRUeW9pRkhPTW5VditJN1ZubmlTOXFMQnl1V3Fk?=
+ =?utf-8?B?T1JhUGE0ekhYbjZ5QkViK3BNTTJKeTVhRlNqcmZ0U1R6MzY0ZzlLcGtuNnE3?=
+ =?utf-8?B?MUM5elppbEFjY0QzQW9DWFB5dmdSeUpNUmNHb0lmNVJqTjZMTWFCYW9ldlNU?=
+ =?utf-8?B?c2FZZ3ZRaW14UHAyT1JEZFQ5ZFNCVXVRNGRYMTBFcGhDUnp4QlFtRTZNNTd3?=
+ =?utf-8?B?cENURDhrK0dKVGpHQTdNTVl3anZETXdwaU5KR3lPZXFkZnNwUmxBNnRDS1FL?=
+ =?utf-8?B?YkZxSmxCZUl1T1pobGhoY2hzTEVjYWFRbzVQaUZsVFNSSlc0Nm40WGc4VXJy?=
+ =?utf-8?B?MnVWclR2L1kvdzRGTER4N2V0aTJtaVhsYWM2MjRZcEhFQmxGaEtTb2FGR0VB?=
+ =?utf-8?B?MitPL2R1TStuMkFPMk95MElpQUl2d1pRN2EwTmI0Mnc4MWlFK01aQVRhMnJQ?=
+ =?utf-8?B?VHhpSUs5WHh0b3pFQXpsMkY0WElzcEZFREc1dWJwaHY5dmJ4NmRJUWZhdjRq?=
+ =?utf-8?B?MUxXMzdoY0paWXlsRVVtb1RDREpnM1NYSHJXd3dXYVoveEovWFhDT3B1d2gr?=
+ =?utf-8?B?S0ltalc5WVU3ZmpxK3pHbUNVQ2czM2w1akFzWjlSNHAvS09lM3ZVNmRzSVJo?=
+ =?utf-8?B?akNiZE0xK1hVZWlRWHl3RWk2UUh0VlRtZ0pCeWZGb0pCR3hVb0M2WlVRQlhG?=
+ =?utf-8?B?QmplajcyNzJYbFBLNFFsaFQ0YlRIZGFiWmV2d2oxQ2ZLUDMxWitkMDdvWTlE?=
+ =?utf-8?B?ODNuWnFQbE9IKzNWQktKSTUvd2xGeXJ1Nm91VUU1VXRPdUtMZHYyMU52eGk0?=
+ =?utf-8?B?RXpMSXZxMHBxQk41eXFIY0czRDBiczV6ckI0VElmd0FGSXZ3MG5IZitoL1Nx?=
+ =?utf-8?B?OWVCTVZiSFlzb3NLUnRnSkwvSjRTY01CNXhmeUM2WDBWcGRkVHgwWXZxL3R2?=
+ =?utf-8?B?dmpFNm5mK1I0WW1kWVRGU2JNQWVqcEVMZncwVFYwbGdlaVdtWS92VkpEYXBZ?=
+ =?utf-8?B?NitCZlVNa29mdVlGYjlpZHh1VHNma2VKaVZiN2Z6dmxoNElRZTVETE5ZUENq?=
+ =?utf-8?B?S0p3aUNDRTJqenRLWTkrMjNLWmloM3BwWWlXSDNXclQzSjFYYkJhNldLYWlV?=
+ =?utf-8?B?Tjgyc082MVdBPT0=?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?BtxKjHu9sYnstS89SVtK8T7o3J0HB+sXIce5aHxOU5czOKlutw3R/48wLsO+?=
- =?us-ascii?Q?jfnBECl70DTSc5rJxf9mjGtxvRiu3STaN8N04T2CJt7AERCdqmsMUbmU4Ro5?=
- =?us-ascii?Q?meVm5YHKV3Z4nFHHOujmhVla628HwkqmnH0H767FqZCDiJ+TtZP/ekiVBS0l?=
- =?us-ascii?Q?NEb56ZT89rs08JNmNwhJQKpRYHEc2ZWr2wBH/PrJhAcwcf05sBFVpZnSPdz0?=
- =?us-ascii?Q?qQ9JcKC7E2vXxJgF0/wq5se4C9PEaDJmTIrn4Ed92rGOt8SyA63bwtxGaXaJ?=
- =?us-ascii?Q?IfVXXrWnGJMLJzUA8hBkzp4Kxm8Jx6xt+wOZIsxBZuN4kkJ25KdteZx2gZiZ?=
- =?us-ascii?Q?9+L8TEGtbPckgUn5me+6WTZdVAxqSKYhaxbbU0zweuPVRCDIUL/91trPSPbQ?=
- =?us-ascii?Q?ZlFzc4zZaDNZwB3Wh6OskeqHTRY3UbOAYV9WkJD1DP5Kobn0GciKqfTLPJU5?=
- =?us-ascii?Q?RYBBH3wu5oPMUzNfqm4AMukRu5uvektgCxQ7OoKTgR0+uVPZ3xkucUA/zPag?=
- =?us-ascii?Q?CwlsPoiHT2UiDFnoA1o1FGmRyPUvAoUFLywYYe4KAe/qFH0UysCcVj9AJMNV?=
- =?us-ascii?Q?En+MHpEUgszaSdeAGcCVTJ+oax6W5HnxzIf1t673urcfsQX6aWSGypKtWiru?=
- =?us-ascii?Q?FWw0GjMMMSJpT6Hk43sr4I+v3RqA/RKO/A9kLU+txYauKdJuBtwaz92SavQi?=
- =?us-ascii?Q?ySSD0q2vtGh7SHq1rYi8yY5UFqCmkUIOtsdeNOhufMeTmNb6apmfK62qHF8n?=
- =?us-ascii?Q?95TElI4GQp2+diTiR4MUqVYhWiqoLojk6Qp6aH1fGH3xuHysMtLYt4i6o0xJ?=
- =?us-ascii?Q?VW+3awHRq8i2HH2O037Iq832mA/vZHn3A8sHeUIEccJyBmJA66tr/J2sdZ6q?=
- =?us-ascii?Q?mRKNuNNv9iyaJJaJXnSi/mA0+Xv51dJ9D0kfmV7O8124afm7NcT1ZKwN8zKT?=
- =?us-ascii?Q?ircFYKkjhlOYTwz3ve53rBm3gh33wp9nbgZS85E3ptDPxC2knaLDD4MCfNEH?=
- =?us-ascii?Q?+oJs+4jjfzkZIdNDfah/E+jfhwWgTy0esDq9urwEgxl82X/AyntOXjErFfqQ?=
- =?us-ascii?Q?Gc/iZyIpAA2W+aE/1ewn0hHTRuyO9MyqFe4rxdQvolTo7PvHZsiGOttaet70?=
- =?us-ascii?Q?GRAzRZltWkzmugxf/Of62ksbfDnAU8rhCRcJfxY1ZcAE5PvCdsprKoBySlDp?=
- =?us-ascii?Q?0PlhOc/6+q9qxZ4hYLQb4l/m+KnAnDwUZ1kzhm6KJZwCSHDAPwDCx28TSc1a?=
- =?us-ascii?Q?Xfow+3QudLqkeZXTuKuImr8ino9Y94uzLg5UpjagEqlPmi0ryl92qHaSNMFY?=
- =?us-ascii?Q?24oml5aeZ7KS9RIUapvfHDpalfVuJn9Buskkl2sYRjpiWCVRoH5qBywCJccy?=
- =?us-ascii?Q?jbtUDI/tH90hPWZ3pf97dso5ArsURDVJhwQs14TmYw6e3AAvDpjtFCJ3UnLV?=
- =?us-ascii?Q?EyiH2E6w/gFOAMUcF1+i768BCJS64ILrNDwfRYWhPoCSMMFDgTJkh3HUBUj7?=
- =?us-ascii?Q?iWKbU6syCQ4e7i8xxJd1WCqRZChjQ8cRePZDmXobREE7WaQUnLHp70MU0jAS?=
- =?us-ascii?Q?4+vrtDu9TT446O/GtSvadgJDHl1VuEiB6Q9mtZ6hlRmmd8QCxY/B1owC4opn?=
- =?us-ascii?Q?bA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2aaae78a-31c7-442a-797d-08de3113ab19
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UjcxN2JTWEp5N0VzaTlYNVBXNzlheHJjT3B1dFdZRGE2endDVnR5RVM2UzNL?=
+ =?utf-8?B?T0psaElvZ01ndnZLTTlNZ2xMUGpUbkRyMVFnSkJ4ajZaZVg0RnJ6SlhuUDhR?=
+ =?utf-8?B?eWpLUm80aHhUMzhtQ3VvVVdQZFBvZkFUaCtZK3Uyck1wN3dQcENRamNSbjNw?=
+ =?utf-8?B?Nis5OWEwek93eCs4TDZONlJWekM2S0xUem5TWHhUdStvL2JldmRmMVROQ2tW?=
+ =?utf-8?B?a3NRczlrRDlhaVNUa0xSUFBaV1NxNFVvVWl5ODk0V205ZDVsMlBMU0lUc2Y3?=
+ =?utf-8?B?ZC9CQlBVV2xaVWNmNkdKRXRTa3p1VDc1UzZKQlZHM2VjRERRalNTYmZqT1dP?=
+ =?utf-8?B?SXVMa0twcEFlaFF5OU40dGh2S0FsYzJOdWtvUTk5cUxEcVFkWDJqZkswd0RV?=
+ =?utf-8?B?djF4bFQzc3hEbGxZc0txZE9JY09DMksxWXZNM3ZMRjd1VXEzWHhMUThvTE5m?=
+ =?utf-8?B?REVsaUJOelVSeStFV2gyQ20zQlpvWnBIR05qSjBUekRYc21jUE9WazRmUmZx?=
+ =?utf-8?B?TWpTc3FyaUJYTkhtMDdJaWFtMUdwb2FScE9na3E1M0NuUjI1QTh5cjU4N2s1?=
+ =?utf-8?B?OUFqMEMxaklSeGh2eitHYjd3eDdCdnIrSnd4RkVnWGN0NmJRNks3YkxXWHhn?=
+ =?utf-8?B?L0pBZnBiZFRwME5YWCtlVmpGcVBlck9WTmc1dFFxNDNpMmFhb2dHUHI3cVVB?=
+ =?utf-8?B?THljVGZIeVNBRVUrZThHWlVZZFBWNUpZZDY0c0d4RnRhQ1dlKytNU3N0T0tt?=
+ =?utf-8?B?VkJBRERaa1dWekZrTHRzZThaN2QzZGVXdk95ekhFOVUzTjVTRGFqbG5Qb3Nl?=
+ =?utf-8?B?dWRLaHc5Uk1LK2ZXemhKUytreXA2dmpQSFBuSS82OGJWU2R2UEhrMU90SmlE?=
+ =?utf-8?B?Smxlck9oalB2blV3SEZKZ2NoSkJMVVJ3eFZxUU5uRVFOTC9ZNUJXWUdTY2dP?=
+ =?utf-8?B?eDBueEt1ekJ3OHJRekNqNFJYMVF0OXZRRUl2Z3FzQm1DK2gyTVM5WDNYSEZq?=
+ =?utf-8?B?RXZaZ0g5a3cvc1dCYWVOdzl4clgvaXZodm5LUnhDUC9tKzFFMHkvQnBCRlZD?=
+ =?utf-8?B?aDlGMlR1WnRlYjBndG9HaEJOR2NZSkdReU5mUVoyYzJxTGpMd1k3NTZvMXdu?=
+ =?utf-8?B?cnMrWjJ0VkJuQVk4eWdGaG53OUdPZlVwSnllcFFRcDFrU2tJdWhDbnhJOGVy?=
+ =?utf-8?B?UjVRMjU0NkhwQ3VGUjdydkxSWnlFSEl6N1JaSWRMUHhBbGhqS25iNkkzb2JQ?=
+ =?utf-8?B?aE05UmhKVVNwYjQyTFpvT01NTnYveGo5blR6RDNiUHNDRktVT0F4TkpJUVli?=
+ =?utf-8?B?ZGoxNEg3VjhHTWpBS0JFSVZOR1BZQkNBMlRZUGlIS2k1ZTJDTGZOalpLM3FC?=
+ =?utf-8?B?VFdDVnp5cEpzOU5KMnZBbWkrUHBGNElHWndrUExFbzFKWVdUREYrNVE4MjEx?=
+ =?utf-8?B?Q3RySzUwZEVVamw4czl0aWhlejFWa3h0SmV3b3ptd09SNEVZRmFQZmVmZDRn?=
+ =?utf-8?B?MHBxU2dKNUNrcXFzL3NVZjl2dlVxZlNFOEs2Zlcyb0NROTh3bFM1NlJVQkYz?=
+ =?utf-8?B?eU9sMm5xS2swdDdPbWo4ZlpKdUtyR3RQelREOEp4a0VZYnZubUhFbHI4T3hN?=
+ =?utf-8?B?bzhGZDA4NGdWRkl6TmIwNERSdTFURmtNOEZLUDA5MEV5UUVYK1A3clc5QlF6?=
+ =?utf-8?B?WDZ6Q2MydzEySU9pK2F2WTMwcDJzN2d3dXc1cDNBRzQwU0ZJZ1pjc25iaW5F?=
+ =?utf-8?B?OWI0SFB5bjV6VFpJY0t4Q1ZMR01jcTRwSWcrZmZQS2lxTkZHVHRRM01DdUly?=
+ =?utf-8?B?TytFM1pPZ1NINy9mcFhldDJZbVVmbFY3bCtNRnFna0E1RWlndDhpcWUzcjNs?=
+ =?utf-8?B?YWE4Z3ZHSGlrQlJtcytFMlBYNDlTNjh5eG93ZXZLYWk1eDdla3E1MzVMMEFw?=
+ =?utf-8?B?QS94TlNsTi9tMDkvdjgyVFg4UzJ4R2UvemNKZWw1U2RuOEVqeWN3R2ZpSHM0?=
+ =?utf-8?B?amRuWmtzSVJxdjVBOUpMRGlRZHFJTk5rY1phUlhMQWVId3J1ZUVyZHVMNTha?=
+ =?utf-8?B?NW5NbkR1VXpyQ3VzREw0WXJCb2RQc3lvZ1dTVjd4Rk1RSE9OMjZhZ2h2V0N6?=
+ =?utf-8?B?RGhhZndMclpYdWZFaEpPWGZCR2tzZnpnRlBSYVMzUllPc0QySXpSUkJyYXlU?=
+ =?utf-8?B?eWc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e0a91953-b919-466a-39f1-08de3120b309
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2025 19:56:08.1038
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2025 21:29:24.7854
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Fzti6ZveKilqB6VE/NTcgdDvkLEi0Jh0mrRtpcTwsYmrFCtJk7qh6k4m86HjIlog5/HFWh/6ZKTIRW8qGeO5ufKXPr6ydsE/m1V21YOLNDQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6781
+X-MS-Exchange-CrossTenant-UserPrincipalName: JICb5ZQsIs56n0SQ8yjIi2d7atTqDzDYhX0SMoAbyPt4DJFzXuOIlJ47X11XyeIT05KYwEVcJOdwfvzPioWr6HMrodtT7LtGYijQJpkfUAk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR11MB8357
 X-OriginatorOrg: intel.com
 
-On Thu, Nov 20, 2025 at 03:19:16AM +0000, Smita Koralahalli wrote:
-> This series aims to address long-standing conflicts between HMEM and
-> CXL when handling Soft Reserved memory ranges.
+Dave Hansen wrote:
+> The subject probably wants to be something along the lines of:
 > 
-> Reworked from Dan's patch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/patch/?id=ab70c6227ee6165a562c215d9dcb4a1c55620d5d
-> 
-> Previous work:
-> https://lore.kernel.org/all/20250715180407.47426-1-Smita.KoralahalliChannabasappa@amd.com/
-> 
-> Link to v3:
-> https://lore.kernel.org/all/20250930044757.214798-1-Smita.KoralahalliChannabasappa@amd.com
-> 
-> This series should be applied on top of:
-> "214291cbaace: acpi/hmat: Fix lockdep warning for hmem_register_resource()"
-> and is based on:
-> base-commit: 211ddde0823f1442e4ad052a2f30f050145ccada
-> 
-> I initially tried picking up the three probe ordering patches from v20/v21
-> of Type 2 support, but I hit a NULL pointer dereference in
-> devm_cxl_add_memdev() and cycle dependency with all patches so I left
-> them out for now. With my current series rebased on 6.18-rc2 plus
-> 214291cbaace, probe ordering behaves correctly on AMD systems and I have
-> verified the scenarios mentioned below. I can pull those three patches
-> back in for a future revision once the failures are sorted out.
+> 	x86/kaslr: Recognize all ZONE_DEVICE users as physaddr consumers
 
-Hi Smita,
-
-This is a regression from the v3 version for my hotplug test case.
-I believe at least partially due to the ommitted probe order patches.
-I'm not clear why that 'dax18.0' still exists after region teardown.
-
-Upon booting:
-- Do not expect to see that Soft Reserved resource
-
-68e80000000-8d37fffffff : CXL Window 9
-  68e80000000-70e7fffffff : region9
-    68e80000000-70e7fffffff : Soft Reserved
-      68e80000000-70e7fffffff : dax18.0
-        68e80000000-70e7fffffff : System RAM (kmem)
-
-After region teardown:
-- Do not expect to see that Soft Reserved resource
-- Do not expect to see that DAX or kmem
-
-68e80000000-8d37fffffff : CXL Window 9
-  68e80000000-70e7fffffff : Soft Reserved
-    68e80000000-70e7fffffff : dax18.0
-      68e80000000-70e7fffffff : System RAM (kmem)
-
-Create the region anew:
-- Here we see a new region and dax devices created in the
-available space after the Soft Reserved. We don't want
-that. We want to be able to recreate in that original
-space of 68e80000000-70e7fffffff.
-
-68e80000000-8d37fffffff : CXL Window 9
-  68e80000000-70e7fffffff : Soft Reserved
-    68e80000000-70e7fffffff : dax18.0
-      68e80000000-70e7fffffff : System RAM (kmem)
-  70e80000000-78e7fffffff : region9
-    70e80000000-78e7fffffff : dax9.0
-      70e80000000-78e7fffffff : System RAM (kmem)
-
-
--- Alison
-
+...works for me.
 
 > 
-> Probe order patches of interest:
-> cxl/mem: refactor memdev allocation
-> cxl/mem: Arrange for always-synchronous memdev attach
-> cxl/port: Arrange for always synchronous endpoint attach
+> On 11/7/25 18:32, Dan Williams wrote:
+> > Commit 7ffb791423c7 ("x86/kaslr: Reduce KASLR entropy on most x86 systems")
+> > is too narrow. ZONE_DEVICE, in general, lets any physical address be added
+> > to the direct-map. I.e. not only ACPI hotplug ranges, CXL Memory Windows,
+> > or EFI Specific Purpose Memory, but also any PCI MMIO range for the
+> > CONFIG_DEVICE_PRIVATE and CONFIG_PCI_P2PDMA cases.
 > 
-> [1] Hotplug looks okay. After offlining the memory I can tear down the
-> regions and recreate it back if CXL owns entire SR range as Soft Reserved
-> is gone. dax_cxl creates dax devices and onlines memory.
-> 850000000-284fffffff : CXL Window 0
->   850000000-284fffffff : region0
->     850000000-284fffffff : dax0.0
->       850000000-284fffffff : System RAM (kmem)
+> This should probably also mention the fact that:
 > 
-> [2] With CONFIG_CXL_REGION disabled, all the resources are handled by
-> HMEM. Soft Reserved range shows up in /proc/iomem, no regions come up
-> and dax devices are created from HMEM.
-> 850000000-284fffffff : CXL Window 0
->   850000000-284fffffff : Soft Reserved
->     850000000-284fffffff : dax0.0
->       850000000-284fffffff : System RAM (kmem)
+> 	config PCI_P2PDMA
+> 		depends on ZONE_DEVICE
 > 
-> [3] Region assembly failures also behave okay and work same as [2].
+> It would also be nice to point out how the "too narrow" check had an
+> impact on real ZONE_DEVICE but !PCI_P2PDMA users. This isn't just a
+> theoretical problem, right?
+
+Yasunori filled in a detail [1] that I did not have when creating the
+patch, specifically that when he enountered the CXL collision with KASLR
+he was running on a kernel before commit 7ffb791423c7 ("x86/kaslr:
+Reduce KASLR entropy on most x86 systems").
+
+Either way, a pre-7ffb791423c7 kernel and a kernel with
+CONFIG_PCI_P2PDMA=n would fail the same way. Yasunori confirmed that
+current kernel with CONFIG_PCI_P2PDMA=y, or this patch solved the
+problem for him.
+
+See below for a reworked patch with these changes.
+
+[1]: http://lore.kernel.org/OS9PR01MB124215C4182B59D590049B99390CCA@OS9PR01MB12421.jpnprd01.prod.outlook.com
 > 
-> Before:
-> 2850000000-484fffffff : Soft Reserved
->   2850000000-484fffffff : CXL Window 1
->     2850000000-484fffffff : dax4.0
->       2850000000-484fffffff : System RAM (kmem)
+> > A potential path to recover entropy would be to walk ACPI and determine the
+> > limits for hotplug and PCI MMIO before kernel_randomize_memory(). On
+> > smaller systems that could yield some KASLR address bits. This needs
+> > additional investigation to determine if some limited ACPI table scanning
+> > can happen this early without an open coded solution like
+> > arch/x86/boot/compressed/acpi.c needs to deploy.
 > 
-> After tearing down dax4.0 and creating it back:
+> Yeah, a more flexible runtime solution would be highly preferred over
+> the existing solution built around config options. But this is really
+> orthogonal to the bug fix here.
 > 
-> Logs:
-> [  547.847764] unregister_dax_mapping:  mapping0: unregister_dax_mapping
-> [  547.855000] trim_dev_dax_range: dax dax4.0: delete range[0]: 0x2850000000:0x484fffffff
-> [  622.474580] alloc_dev_dax_range: dax dax4.1: alloc range[0]: 0x0000002850000000:0x000000484fffffff
-> [  752.766194] Fallback order for Node 0: 0 1
-> [  752.766199] Fallback order for Node 1: 1 0
-> [  752.766200] Built 2 zonelists, mobility grouping on.  Total pages: 8096220
-> [  752.783234] Policy zone: Normal
-> [  752.808604] Demotion targets for Node 0: preferred: 1, fallback: 1
-> [  752.815509] Demotion targets for Node 1: null
+> With the changelog fixes above:
 > 
-> After:
-> 2850000000-484fffffff : Soft Reserved
->   2850000000-484fffffff : CXL Window 1
->     2850000000-484fffffff : dax4.1
->       2850000000-484fffffff : System RAM (kmem)
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
 > 
-> [4] A small hack to tear down the fully assembled and probed region
-> (i.e region in committed state) for range 850000000-284fffffff.
-> This is to test the region teardown path for regions which don't
-> fully cover the Soft Reserved range.
-> 
-> 850000000-284fffffff : Soft Reserved
->   850000000-284fffffff : CXL Window 0
->     850000000-284fffffff : dax5.0
->       850000000-284fffffff : System RAM (kmem)
-> 2850000000-484fffffff : CXL Window 1
->   2850000000-484fffffff : region1
->     2850000000-484fffffff : dax1.0
->       2850000000-484fffffff : System RAM (kmem)
-> .4850000000-684fffffff : CXL Window 2
->   4850000000-684fffffff : region2
->     4850000000-684fffffff : dax2.0
->       4850000000-684fffffff : System RAM (kmem)
-> 
-> daxctl list -R -u
-> [
->   {
->     "path":"\/platform\/ACPI0017:00\/root0\/decoder0.1\/region1\/dax_region1",
->     "id":1,
->     "size":"128.00 GiB (137.44 GB)",
->     "align":2097152
->   },
->   {
->     "path":"\/platform\/hmem.5",
->     "id":5,
->     "size":"128.00 GiB (137.44 GB)",
->     "align":2097152
->   },
->   {
->     "path":"\/platform\/ACPI0017:00\/root0\/decoder0.2\/region2\/dax_region2",
->     "id":2,
->     "size":"128.00 GiB (137.44 GB)",
->     "align":2097152
->   }
-> ]
-> 
-> I couldn't test multiple regions under same Soft Reserved range
-> with/without contiguous mapping due to limiting BIOS support. Hopefully
-> that works.
-> 
-> v4 updates:
-> - No changes patches 1-3.
-> - New patches 4-7.
-> - handle_deferred_cxl() has been enhanced to handle case where CXL
-> regions do not contiguously and fully cover Soft Reserved ranges.
-> - Support added to defer cxl_dax registration.
-> - Support added to teardown cxl regions.
-> 
-> v3 updates:
->  - Fixed two "From".
-> 
-> v2 updates:
->  - Removed conditional check on CONFIG_EFI_SOFT_RESERVE as dax_hmem
->    depends on CONFIG_EFI_SOFT_RESERVE. (Zhijian)
->  - Added TODO note. (Zhijian)
->  - Included region_intersects_soft_reserve() inside CONFIG_EFI_SOFT_RESERVE
->    conditional check. (Zhijian)
->  - insert_resource_late() -> insert_resource_expand_to_fit() and
->    __insert_resource_expand_to_fit() replacement. (Boris)
->  - Fixed Co-developed and Signed-off by. (Dan)
->  - Combined 2/6 and 3/6 into a single patch. (Zhijian).
->  - Skip local variable in remove_soft_reserved. (Jonathan)
->  - Drop kfree with __free(). (Jonathan)
->  - return 0 -> return dev_add_action_or_reset(host...) (Jonathan)
->  - Dropped 6/6.
->  - Reviewed-by tags (Dave, Jonathan)
-> 
-> Dan Williams (4):
->   dax/hmem, e820, resource: Defer Soft Reserved insertion until hmem is
->     ready
->   dax/hmem: Request cxl_acpi and cxl_pci before walking Soft Reserved
->     ranges
->   dax/hmem: Gate Soft Reserved deferral on DEV_DAX_CXL
->   dax/hmem: Defer handling of Soft Reserved ranges that overlap CXL
->     windows
-> 
-> Smita Koralahalli (5):
->   cxl/region, dax/hmem: Arbitrate Soft Reserved ownership with
->     cxl_regions_fully_map()
->   cxl/region: Add register_dax flag to control probe-time devdax setup
->   cxl/region, dax/hmem: Register devdax only when CXL owns Soft Reserved
->     span
->   cxl/region, dax/hmem: Tear down CXL regions when HMEM reclaims Soft
->     Reserved
->   dax/hmem: Reintroduce Soft Reserved ranges back into the iomem tree
-> 
->  arch/x86/kernel/e820.c    |   2 +-
->  drivers/cxl/acpi.c        |   2 +-
->  drivers/cxl/core/region.c | 181 ++++++++++++++++++++++++++++++++++++--
->  drivers/cxl/cxl.h         |  17 ++++
->  drivers/dax/Kconfig       |   2 +
->  drivers/dax/hmem/device.c |   4 +-
->  drivers/dax/hmem/hmem.c   | 137 ++++++++++++++++++++++++++---
->  include/linux/ioport.h    |  13 ++-
->  kernel/resource.c         |  92 ++++++++++++++++---
->  9 files changed, 415 insertions(+), 35 deletions(-)
-> 
-> base-commit: 211ddde0823f1442e4ad052a2f30f050145ccada
-> -- 
-> 2.17.1
-> 
+> Oh, and does this need to be cc:stable@?
+
+Yes, especially because it would create a dependency on 7ffb791423c7
+also being backported and that would have helped Yasunori avoid this
+problem (for CONFIG_PCI_P2PDMA=y builds at least).
+
+-- >8 --
+From d2f4b9ac915ce35e2ec842548ae1ccb4f1690b04 Mon Sep 17 00:00:00 2001
+From: Dan Williams <dan.j.williams@intel.com>
+Date: Thu, 6 Nov 2025 15:13:50 -0800
+Subject: [PATCH v2] x86/kaslr: Recognize all ZONE_DEVICE users as physaddr
+ consumers
+
+Commit 7ffb791423c7 ("x86/kaslr: Reduce KASLR entropy on most x86 systems")
+is too narrow. The effect being mitigated in that commit is caused by
+ZONE_DEVICE which PCI_P2PDMA has a dependency. ZONE_DEVICE, in general,
+lets any physical address be added to the direct-map. I.e. not only ACPI
+hotplug ranges, CXL Memory Windows, or EFI Specific Purpose Memory, but
+also any PCI MMIO range for the DEVICE_PRIVATE and PCI_P2PDMA cases. Update
+the mitigation, limit KASLR entropy, to apply in all ZONE_DEVICE=y cases.
+
+Distro kernels typically have PCI_P2PDMA=y, so the practical exposure of
+this problem is limited to the PCI_P2PDMA=n case.
+
+A potential path to recover entropy would be to walk ACPI and determine the
+limits for hotplug and PCI MMIO before kernel_randomize_memory(). On
+smaller systems that could yield some KASLR address bits. This needs
+additional investigation to determine if some limited ACPI table scanning
+can happen this early without an open coded solution like
+arch/x86/boot/compressed/acpi.c needs to deploy.
+
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Fixes: 7ffb791423c7 ("x86/kaslr: Reduce KASLR entropy on most x86 systems")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Balbir Singh <balbirs@nvidia.com>
+Tested-by: Yasunori Goto <y-goto@fujitsu.com>
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+---
+ drivers/pci/Kconfig |  6 ------
+ mm/Kconfig          | 12 ++++++++----
+ arch/x86/mm/kaslr.c | 10 +++++-----
+ 3 files changed, 13 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index f94f5d384362..47e466946bed 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -207,12 +207,6 @@ config PCI_P2PDMA
+ 	  P2P DMA transactions must be between devices behind the same root
+ 	  port.
+ 
+-	  Enabling this option will reduce the entropy of x86 KASLR memory
+-	  regions. For example - on a 46 bit system, the entropy goes down
+-	  from 16 bits to 15 bits. The actual reduction in entropy depends
+-	  on the physical address bits, on processor features, kernel config
+-	  (5 level page table) and physical memory present on the system.
+-
+ 	  If unsure, say N.
+ 
+ config PCI_LABEL
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 0e26f4fc8717..d17ebcc1a029 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -1128,10 +1128,14 @@ config ZONE_DEVICE
+ 	  Device memory hotplug support allows for establishing pmem,
+ 	  or other device driver discovered memory regions, in the
+ 	  memmap. This allows pfn_to_page() lookups of otherwise
+-	  "device-physical" addresses which is needed for using a DAX
+-	  mapping in an O_DIRECT operation, among other things.
+-
+-	  If FS_DAX is enabled, then say Y.
++	  "device-physical" addresses which is needed for DAX, PCI_P2PDMA, and
++	  DEVICE_PRIVATE features among others.
++
++	  Enabling this option will reduce the entropy of x86 KASLR memory
++	  regions. For example - on a 46 bit system, the entropy goes down
++	  from 16 bits to 15 bits. The actual reduction in entropy depends
++	  on the physical address bits, on processor features, kernel config
++	  (5 level page table) and physical memory present on the system.
+ 
+ #
+ # Helpers to mirror range of the CPU page tables of a process into device page
+diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
+index 3c306de52fd4..834641c6049a 100644
+--- a/arch/x86/mm/kaslr.c
++++ b/arch/x86/mm/kaslr.c
+@@ -115,12 +115,12 @@ void __init kernel_randomize_memory(void)
+ 
+ 	/*
+ 	 * Adapt physical memory region size based on available memory,
+-	 * except when CONFIG_PCI_P2PDMA is enabled. P2PDMA exposes the
+-	 * device BAR space assuming the direct map space is large enough
+-	 * for creating a ZONE_DEVICE mapping in the direct map corresponding
+-	 * to the physical BAR address.
++	 * except when CONFIG_ZONE_DEVICE is enabled. ZONE_DEVICE wants to map
++	 * any physical address into the direct-map. KASLR wants to reliably
++	 * steal some physical address bits. Those design choices are in direct
++	 * conflict.
+ 	 */
+-	if (!IS_ENABLED(CONFIG_PCI_P2PDMA) && (memory_tb < kaslr_regions[0].size_tb))
++	if (!IS_ENABLED(CONFIG_ZONE_DEVICE) && (memory_tb < kaslr_regions[0].size_tb))
+ 		kaslr_regions[0].size_tb = memory_tb;
+ 
+ 	/*
+-- 
+2.51.1
