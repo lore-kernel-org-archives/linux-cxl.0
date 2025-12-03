@@ -1,67 +1,67 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA212D77E2
-	for <linux-cxl@vger.kernel.org>; Wed,  3 Dec 2025 09:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4702E7650
+	for <linux-cxl@vger.kernel.org>; Wed,  3 Dec 2025 10:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764752961; cv=none; b=OM52DMAb0qirDS9dap305PjYdzZjGVvKsp9Pl0RPKnDXo9OXhfVpG2AJ6DWI8OC939kn1kfkncXBZ5VnSCzrPV1BvoAcRnTl1iPcrex7Zfr+GhmkXHTx5M2E5VImB/+gB7Yt6zm84uetrBOLMn812BJpHPm2aliNtKGszCDSbhU=
+	t=1764756711; cv=none; b=DzLSepXpl46Jk5fFID2YHUQ7nLRksE7BlnU3bNmy9kpHcU0oUZ5KnA8+4qIRD773z9bQ1HykfNRS4getHT1Xv9DfWtBz6P05D33Am1cq8IK2iSbHoDSjRD9S0cg8i8JgL9vfyJuz5+wTFESPISK9EwCsW85mIYeO5Y2dkO8ioiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764752961; c=relaxed/simple;
-	bh=k+2Etm99JbSEA+WCnKtBPF/mWFi9cMFd2NJl1bxp5Xk=;
+	s=arc-20240116; t=1764756711; c=relaxed/simple;
+	bh=yy2j4Gr2kBYId3840eqEXHigGss3DzYkeqaEM7aYlHA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N84iZObArPtr1EN/WVHhFE8kMM0yucUrvp2Zmvybq66Px2NMc0H5ZHozoyIDUbw8EdEqaIWvuXGfEwTXEcfcObBKZAG+hKJ2ylvu4cNv38SMl+REHiuB2N4iWs8HsDTqUmSvYeZQ3CnxeqxrsdFjxBYoZMdhZE81Qn8OTOoiL/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h2C3nNIt; arc=none smtp.client-ip=209.85.218.53
+	 In-Reply-To:Content-Type; b=ZWPy29b9sxntAVN6GntxXziqThDuGnTez0LyOWxRuezvGnK8h4dLV0J82/7zDbunwsP2Z42LJnuWCOM9/UKxS7p0tJPSSyYcKSkMvI0j9Hj5qWsI2W8XpSqd8G5nSHaLpmiUS5POeM2+EtqSbX+X6rOrG2T9xJCuVU2PItry4+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CGQ3qm8f; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2C3nNIt"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b76b5afdf04so1114754766b.1
-        for <linux-cxl@vger.kernel.org>; Wed, 03 Dec 2025 01:09:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CGQ3qm8f"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-37b999d0c81so54021671fa.2
+        for <linux-cxl@vger.kernel.org>; Wed, 03 Dec 2025 02:11:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764752958; x=1765357758; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1764756707; x=1765361507; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=DWBGLCFBomVbrDoB7b+HIef+8KhLxHYFNcq2HKmvMnY=;
-        b=h2C3nNItV41VPqBi00ryO0hvMGkgPE2bKHlAtBt85EZpD9r8Cc4JJ1qDbPOf1FwlTy
-         EH9pbfV1If/SPoUfchej0Q/Zkp1fryp8RM5R4Vv1OaLcTlLXdP/eMXWGh7AxwboEUZPQ
-         UdeFwZTmi5fzBFupw8scmEbra+PlrafSa56R7j/zO5OuV7TYUHnDn9n5S/DQMU3W/T7X
-         HVHl18tIBlt4vt/+NBpxm0f0HZ76Aj9YLcdhwqu9tu7SA0a2Uvw0XBPLtOs8anwf9ZJ4
-         GkHWCiztwl9YSUAo0F828PsvJCCfUfAHgHtA5JUyXRxQTR+qatBry4sTMYRmH9DxVsAs
-         kdkA==
+        bh=7hkzMjIodS1pI1goTlzUE28NNMhc2FNCH6n3nOuMBQE=;
+        b=CGQ3qm8f+FnQjwU2B6pdhx/AwemgYV6WVz3Dj7xUo4cV3I4MJgz1nWnTG6r2YQPOjf
+         fP8b+31wR1gNKe6nGF9q9e+RncRGjSWqm3UGUrUsUmPAxzh+gkAJ7quVLcI9rMrMg7vB
+         Uq0TC/2dS4oGg0gFqFJdmhF5vXYCsU+okjdR6We64fb16qwZPbwsgj6AxYG9IZAgrwah
+         tARdWVM8K9aVO6PuvFeMcAZk9zmPV6pfQJxh1anrbDS95rvuNVWG8Lrc27VSlQ9/IY0L
+         55DMxgyxALBxlRdganrQNQwaut8ICacgWsjCQgecIbz6bI07RlBRM+UX0VQC2wwTLQW+
+         owHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764752958; x=1765357758;
+        d=1e100.net; s=20230601; t=1764756707; x=1765361507;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=DWBGLCFBomVbrDoB7b+HIef+8KhLxHYFNcq2HKmvMnY=;
-        b=aJUh6xJX71SUzzYuFvELgTYTFRwN4jIL9xbcnkUb3x74CDp6l10+y1GlXIR7k9NTgx
-         6BciwgF+exxL4c8pQyVhdFcf9USHlLDq8OHgyZtoKEGZh8hqm2FvYYygJtAWWIR6CaxX
-         o3lK5qO4LVBbcwQCxyyWYY6WU9xOnbg1qSeId7qRwdx9gQjRJ12DBNuyyoTQfe58cGHb
-         FP5K3N7vx793SVznsSui2IUfNO/Fq5yyvyMe+BkEj6ZHJTzIgoIX3mHCEndmk5lHgWHZ
-         YFbX5kFynHbN0swFKU+U/s9mMjet9ZMJ/Qm1kG/EYquz1GbuoKtj85/Ol+s1r1zmqbOp
-         RZdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV4nIOf2fI0kq3Xx46jHhgk1aLrwLZvVdzFO+7b9IEtdHC7B9wgA4ooJEO9TKzgF1ZcYHg3D7vgvfk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVnUxoObRHps6PeLQo4ipzClSAmDdvamOiuegt9KR9Zar5r5Gv
-	SAnD1++jU+D6ZmYYsxWhsjdXMLszGTFUrePOeGlrk3QbyoPfmyGqVZQ8
-X-Gm-Gg: ASbGncvSbWvojEZl5Ie4cRoUynag12IKqRNDlS6l3pRB9YXL0Zhzz0/OBrp2pA3BMYv
-	HTGEvybZOAOFFc9f6RuFDeBecr3/uFwnw5v0M2/BvPBmOgKzEfBYBHRDKhVAPkddG1OKsW61EZg
-	t+RtkRXUO+kKzrK3333GMW1eKYuuWCbOYTMBEOj2BcB87wzC3pouMpl6ysSrvINzACn/pF4lnJl
-	+NqxoyQtsYOqqGKDYoF4segwd93GIGHegVdzKkudAOLWVC1Y2h98haQchg78nAGG3OEP1EtRS+C
-	8kXQUF3SfjnpiQUrPXiF7O/GvuLObITSTZzoYnYHBz/pfmAUvjlrIx2OsowrgnlcnSgYKY5pQ6E
-	ROhu1P269MmVzkKStH3Rv0mr4KGeWBfPEvzcp2h9J3aaydN3o4H4pwicOa4qnLKjCRTUsXn/+IB
-	WWpAOK+nQPhuxzWeGpsmqZizyNM+WXVXD0Ssc18COXzK9GbZA4fA==
-X-Google-Smtp-Source: AGHT+IHZT7vIFKQKX1rZhpQrBa6Ofod91g5bav7DiW3HcI/VLhFVFE7y0i47aGVT8p7OquV3UCNv/g==
-X-Received: by 2002:a17:906:730d:b0:b79:b910:fd45 with SMTP id a640c23a62f3a-b79dc72f82bmr137044366b.38.1764752957417;
-        Wed, 03 Dec 2025 01:09:17 -0800 (PST)
-Received: from [192.168.99.24] (78-9-233-67.static.inetia.pl. [78.9.233.67])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b76f519e2f0sm1764864366b.21.2025.12.03.01.09.16
+        bh=7hkzMjIodS1pI1goTlzUE28NNMhc2FNCH6n3nOuMBQE=;
+        b=GOOAhnE6wEUMyNW/0nm+zRMpt7XTWySzGGmZVSUszx420VszsyvJlwXY/7QlO6LZwf
+         wRofWlyj/Mi7Q7MAJw0Fcfb99BHE6NbhmqC7kKk0TbidxxuXt0d895YSdjbfiPKf6SEh
+         bXEq7574rZqH6E8NMczS7xJ9cL2x2BGp9hH/S907a2ZQFO5NKGbnZfD+OlaQrZ14Y89X
+         j3z0UXCHRcK5zb0RdNLKob4gzO9KgCs0oR0R87QdRoKZybR6YVk7V+C5oN1kfyEL5W/C
+         Eyo962Iai2lwOUw/yYYo99NZboO36vzbkMbJOEhxGagzu0Rs4jkcG7WujeMIkZTL+AuL
+         4yoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVkJFcH+DoKYWcZ+X7H99SPCgtb7B1seGSJRmYDacVu9UxWzt6ZnwPv1bP3QWjld1PRTdYGhsU/BWM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBUenrD6pwW0pqgVmqMA3qIH8y5/616iiiNNkhZqucAc+INCWU
+	78e1RjwIKW1qL9OcI7xjwCUt2B0FOVvgvbe8kOKNrmTB6L/x1LLieRKQ
+X-Gm-Gg: ASbGncugFGVfU0XOAElQ4hHHcwn/HRHIkNzgAVvGbrvG3AFpG1XgtzC5mzI1nAtV2Ym
+	j/HB7yYBnAS8z8E2E6f0amGeV0c3Z7I5WCRs0H4ctFqLgNUt9KQtZTJWpdQupxvvzhKbu8j+oRB
+	S8mLMoZNSAQ/wmTEjerWsl7ngeTMRCqcccRdOCOmGEhSnqiRb9MJYTfs25Abiju0KsuPm5zmhCN
+	2xL5jpOZt58KxuXT1JdXx8QrCBB28HbiJ8roU8udKF3ZvlvWy/M/ai14ePL5obQyuIi4XulL29A
+	IKGylb50idGdnyiHD+cqb0K565HzNdVgQDCceESGBa/OH1wfDZJVlrYfVEmYY4oUOcubeksZsTF
+	p7luvYU6ZvR2w/nnD0z4UsrzvnjbpwTWB/MoLqDtm/Qk/rmUYaU74pejRVv8WiBjyvFL5190+5/
+	juczIEYA1J7TixNg==
+X-Google-Smtp-Source: AGHT+IGClRjrRzHtx62krt4asIMCvQHnP6xr/r5CpGOAwQrXHtwf7m7w8S9UGWZzoda9nXqVUQIx4Q==
+X-Received: by 2002:a05:6512:12c4:b0:595:7d86:f654 with SMTP id 2adb3069b0e04-597d3fb539emr853943e87.26.1764756707102;
+        Wed, 03 Dec 2025 02:11:47 -0800 (PST)
+Received: from [10.38.18.76] ([213.255.186.37])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-596bf8a7b2asm5560144e87.12.2025.12.03.02.11.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Dec 2025 01:09:16 -0800 (PST)
-Message-ID: <7eaf281d-6b92-4d8b-a633-e81925116364@gmail.com>
-Date: Wed, 3 Dec 2025 10:09:15 +0100
+        Wed, 03 Dec 2025 02:11:46 -0800 (PST)
+Message-ID: <dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com>
+Date: Wed, 3 Dec 2025 12:11:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -69,130 +69,187 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: [RFC PATCH v1 1/2] cxl/cli: add helpers to collect and sort regions
- by HPA
-To: Alison Schofield <alison.schofield@intel.com>,
- Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
-Cc: dan.j.williams@intel.com, Smita.KoralahalliChannabasappa@amd.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, dave@stgolabs.net,
- jonathan.cameron@huawei.com, dave.jiang@intel.com, vishal.l.verma@intel.com,
- ira.weiny@intel.com
-References: <20251125143826.282312-1-pawel.mielimonka@fujitsu.com>
- <20251125143826.282312-2-pawel.mielimonka@fujitsu.com>
- <aS-0DNw3Jnw4ZR-y@aschofie-mobl2.lan>
+Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
+ overlays"
+To: Herve Codina <herve.codina@bootlin.com>, Rob Herring <robh@kernel.org>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
+ Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Charles Keepax <ckeepax@opensource.cirrus.com>,
+ Richard Fitzgerald <rf@opensource.cirrus.com>,
+ David Rhodes <david.rhodes@cirrus.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+ Allan Nielsen <allan.nielsen@microchip.com>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>,
+ Steen Hegelund <steen.hegelund@microchip.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+ <20251015071420.1173068-2-herve.codina@bootlin.com>
+ <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
+ <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
+ <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
+ <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
+ <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
+ <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
+ <55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
+ <20251202102619.5cd971cc@bootlin.com>
+ <088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com>
+ <20251202175836.747593c0@bootlin.com>
 Content-Language: en-US
-From: =?UTF-8?Q?Pawe=C5=82_Mielimonka?= <pawel.mielimonka@gmail.com>
-In-Reply-To: <aS-0DNw3Jnw4ZR-y@aschofie-mobl2.lan>
+From: Kalle Niemi <kaleposti@gmail.com>
+In-Reply-To: <20251202175836.747593c0@bootlin.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+On 12/2/25 18:58, Herve Codina wrote:
+> Hi Kalle, Matti,
+> 
+> On Tue, 2 Dec 2025 13:21:16 +0200
+> Kalle Niemi <kaleposti@gmail.com> wrote:
+> 
+>> On 12/2/25 11:26, Herve Codina wrote:
+>>> Hi Kalle,
+>>>
+>>> On Fri, 28 Nov 2025 10:34:57 +0200
+>>> Kalle Niemi <kaleposti@gmail.com> wrote:
+>>>
+>>> ...
+>>>>>>>>>>
+>>>>>>>>>> Hello,
+>>>>>>>>>>
+>>>>>>>>>> Test system testing drivers for ROHM ICs bisected this commit to cause
+>>>>>>>>>> BD71847 drivers probe to not be called.
+>>>>>>>>> This driver (and overlay support) is in linux-next or something out of
+>>>>>>>>> tree on top of linux-next?
+>>>>>>>>>
+>>>>>>>>> Rob
+>>>>>>>> Yes the driver is in mainline linux: /drivers/mfd/rohm-bd718x7.c
+>>>>>>> I don't see any support to apply overlays in that driver.
+>>>>>> Ah. Sorry for the confusion peeps. I asked Kalle to report this without
+>>>>>> proper consideration. 100% my bad.
+>>>>>>
+>>>>>> While the bd718x7 drive indeed is mainline (and tested), the actual
+>>>>>> 'glue-code' doing the overlay is part of the downstream test
+>>>>>> infrastructure. So yes, this is not a bug in upstream kernel - this
+>>>>>> falls in the category of an upstream change causing downstream things to
+>>>>>> break. So, feel free to say: "Go fix your code" :)
+>>>>>>
+>>>>>> Now that this is sorted, if someone is still interested in helping us to
+>>>>>> get our upstream drivers tested - the downstream piece is just taking
+>>>>>> the compiled device-tree overlay at runtime (via bin-attribute file),
+>>>>>> and applying it using the of_overlay_fdt_apply(). The approach is
+>>>>>> working for our testing purposes when the device is added to I2C/SPI
+>>>>>> node which is already enabled. However, in case where we have the I2C
+>>>>>> disabled, and enable it in the same overlay where we add the new device
+>>>>>> - then the new device does not get probed.
+>>>>>>
+>>>>>> I would be really grateful if someone had a pointer for us.
+>>>>> Seems to be fw_devlink related. I suppose if you turn it off it works?
+>>>>> There's info about the dependencies in sysfs or maybe debugfs. I don't
+>>>>> remember the details, but that should help to tell you why things
+>>>>> aren't probing.
+>>>
+>>> Rob reverted patches but I plan to continue my work on it.
+>>> On my side, I need the reverted patches but I fully understand that, on
+>>> your side, you need a working system.
+>>>
+>>> In order to move forward and find a solution for my next iteration, can you
+>>> send your overlay (dtso) used in your working and non working cases?
+>>>
+>>> Best regards,
+>>> Hervé
+>>
+>> Hello Hervé,
+>>
+>> I have attached the overlay source file: bd71847_overlay.dts
+> 
+> Thanks a lot for your overlay.
+> 
+> I did an update of the reverted patches and I didn't detect any regression
+> with the update applied on my use case but I don't have the needed code to
+> perform tests similar to your use case. Indeed, you apply the overlay using
+> an out of tree code.
+> 
+> May I ask you to perform a test of this update on your side?
+> 
+> First you can use the last linux-next kernel where reverted patches are present.
+> The next-20251127 tag is a good candidate. Indeed both patches are present:
+>    - 76841259ac092 ("of: dynamic: Fix overlayed devices not probing because of fw_devlink")
+>    - 7d67ddc5f0148 ("Revert "treewide: Fix probing of devices in DT overlays"")
+> 
+> Of course, be sure to have the issue using this kernel with your overlays.
+> 
+> Then can you add the following modification on your faulty kernel:
+> ---- 8< ----
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index 1528d8ad9f26..aea7bb26d9c4 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -190,6 +190,20 @@ static void overlay_fw_devlink_refresh(struct overlay_changeset *ovcs)
+>          for (int i = 0; i < ovcs->count; i++) {
+>                  struct device_node *np = ovcs->fragments[i].target;
+>   
+> +               /*
+> +                * The device related to target node itself could have been
+> +                * removed and re-added. This happens when the 'status' property
+> +                * in the target node has been changed by the overlay.
+> +                *
+> +                * In that case the parent node needs to be fixed.
+> +                *
+> +                * Before fixing the target node itself, fix its parent. To keep
+> +                * things simple, fix the parent in any case. If nothing needs
+> +                * to be fixed, fw_devlink_refresh_fwnode() acts as a no-op.
+> +                */
+> +               if (np->parent)
+> +                       fw_devlink_refresh_fwnode(of_fwnode_handle(np->parent));
+> +
+>                  fw_devlink_refresh_fwnode(of_fwnode_handle(np));
+>          }
+>   }
+> ---- 8< ----
+> 
+> My hope is that this modification will fix your issue.
+> If so, I will add it in my next iteration.
+> 
+> If you cannot perform the test on your side, can you provide me the out of
+> tree code you use to apply the overlay?
+> 
+> Best regards,
+> Hervé
+Hello Hervé,
 
-W dniu 3.12.2025 o 04:52, Alison Schofield pisze:
-> On Tue, Nov 25, 2025 at 11:38:23PM +0900, Pawel Mielimonka wrote:
->> Introduce cmp_region_hpa() and collect_regions_sorted() helpers to
->> enumerate CXL regions under a given decoder and sort them by their host
->> physical address.
->> These helpers will be used by the "cxl destroy-region" command to tear
->> down regions in HPA-descending order, i.e. in the reverse order of
->> region creation. This matches the decoder programming requirements from
->> the CXL specification (8.2.4.20.12 - continuous HPA coverage at all
->> times when Lock On Commit is used) and avoids teardown sequences that
->> can leve decoder state inconsistent when the decoder is fully populated
->> (known problem).
->> This patch only adds the helpers; no functional changes is intended yet.
->>
->> Signed-off-by: Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
->> ---
->>   cxl/region.c | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 55 insertions(+)
->>
->> diff --git a/cxl/region.c b/cxl/region.c
->> index 207cf2d0..58765b3d 100644
->> --- a/cxl/region.c
->> +++ b/cxl/region.c
->> @@ -831,6 +831,61 @@ out:
->>   	return cxl_region_disable(region);
->>   }
->>   
->> +static int cmp_region_hpa(const void *l, const void *r)
->> +{
->> +	const struct cxl_region *const *left = l;
->> +	const struct cxl_region *const *right = r;
->> +	u64 left_start = cxl_region_get_resource((struct cxl_region *) *left);
->> +	u64 right_start = cxl_region_get_resource((struct cxl_region *) *right);
->> +
->> +	if (left_start < right_start)
->> +		return -1;
->> +	if (left_start > right_start)
->> +		return 1;
-> Suggest calling them hpa's and using this more common kernel compare pattern.
-> (yeah, in ndctl, cxl/cli, we try to be like kernel)
->
-> static int cmp_region_hpa(const void *a, const void *b)
-> {
->          const struct cxl_region *const *r1 = a;
->          const struct cxl_region *const *r2 = b;
->          u64 hpa1 = cxl_region_get_resource((struct cxl_region *) *r1);
->          u64 hpa2 = cxl_region_get_resource((struct cxl_region *) *r2);
->
->          return (hpa1 > hpa2) - (hpa1 < hpa2);
-> }
-I followed the pattern in region.c but you're right, I'll fix it in v2.
->
->> +	return 0;
->> +}
->> +
->> +static int collect_regions_sorted(struct cxl_decoder *root,
->> +								  const char *filter,
->> +								  struct cxl_region ***out,
->> +								  int *out_nr)
->> +{
-> I think there is an alignment issue above.
-> The filter parameter is always called w NULL in patcht 2.
-> If it's not going to be used, remove it.
->
->> +	struct cxl_region *region;
->> +	struct cxl_region **list = NULL;
->> +	int nr = 0, alloc = 0;
->> +
->> +	cxl_region_foreach(root, region) {
->> +		if (filter && !util_cxl_region_filter(region, filter))
->> +			continue;
->> +		if (nr == alloc) {
->> +			int new_alloc = alloc ? alloc * 2 : 8;
->> +			int new_size = (size_t)new_alloc * sizeof(*list);
-> Looks like new_size should be size_t to match what realloc() expects.
-Both changes I'll make in v2. Thanks for noticing.
->
->> +			struct cxl_region **tmp;
->> +
->> +			tmp = realloc(list, new_size);
->> +			if (!tmp) {
->> +				free(list);
->> +				return -ENOMEM;
->> +			}
->> +			list = tmp;
->> +			alloc = new_alloc;
->> +		}
->> +		list[nr++] = region;
->> +	}
->> +
->> +	if (!nr) {
->> +		free(list);
->> +		*out = NULL;
->> +		*out_nr = 0;
->> +		return 0;
->> +	}
->> +
->> +	qsort(list, nr, sizeof(*list), cmp_region_hpa);
->> +	*out = list;
->> +	*out_nr = nr;
->> +	return 0;
->> +}
->> +
->>   static int destroy_region(struct cxl_region *region)
->>   {
->>   	const char *devname = cxl_region_get_devname(region);
->> -- 
->> 2.45.1.windows.1
->>
+I tried this patch on next-20251127 by manually adding the added lines 
+to /drivers/of/overlay.c, and it did not solve the issue. I will 
+continue to test this.
+
+BR
+Kalle
