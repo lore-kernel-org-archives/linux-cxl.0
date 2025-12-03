@@ -1,98 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC501238C1B;
-	Wed,  3 Dec 2025 03:53:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917952A1BB;
+	Wed,  3 Dec 2025 04:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764733983; cv=fail; b=IRmC9mRsd82i5uNb85u5azy0kQAgnsC1ZHwytnYDJ6eJlK/j0hFLvo7AuJS3owiZpYFblu2960FQ57yO8kTTKq/h2ALJa67I+N+yoJaKoWbLhS3ryck9KorBIWE735cbiFBKlfAbG7+crZg433CbMs+I/BYH5SX7Tl2QgOMI/0o=
+	t=1764735355; cv=fail; b=UeV9V+JcZcN2efIS+3U5Xm51kDTqSoZcx9LKTyA0cYjz1kz0wYslnrdXcabqcVE0aZIkQGesaacOxEJSuccMOgqTAQr18rVg4pvPCkqubgkpr8J94y5u7p03Id5YnQwcyL15g6NbQLefdCIYvH7N0P8+hm3QdFFOJ4O8jp1xrjM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764733983; c=relaxed/simple;
-	bh=p1ysYyEaYUfe/EBVHbOJXk4syGNOgjQ5XSYBpVjWjg4=;
+	s=arc-20240116; t=1764735355; c=relaxed/simple;
+	bh=TUQiEHLshPpKJE71EdfKNe0xZFjJTgyMEsn4Y1HSJio=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=fVcgcj0Wayum3dq9bQ6xOGYYJQdBfnxI/tBnC29eQjsmfMX2CiIKVbQ4W0q5mveHpMzXy0NJhrKrIPIryAaY3KCxWkT6Lb2wEWBOcvbHyp6kvoDFDsxRsuZGF1MU+q7DGljDc7nzw/EO9WFRkUnmH+wy3e8mbxPtoutLueEjf1s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Soa3nBIz; arc=fail smtp.client-ip=198.175.65.14
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Am8hX1+hFCDOWFA9YuPjv+C1kfTeDfpBA2UUfB4GnBsKe8AhuxTXm30uwgHB20hP68nrOvzCNYF6L65Jgk73YpDLigyX0CxeluzgPH0uahpGaYCRTMrxRJcuyEACky0N9momX+aT84kbr9BtLuMERTrR7eMFI6T2674YoBodgv8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J0l6bNxn; arc=fail smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Soa3nBIz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J0l6bNxn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764733982; x=1796269982;
+  t=1764735353; x=1796271353;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=p1ysYyEaYUfe/EBVHbOJXk4syGNOgjQ5XSYBpVjWjg4=;
-  b=Soa3nBIzyd003oFIegTgL7hybFz8jxy+3cM+JjTRnAlpIHspgSzpNpEf
-   3d9BvrmgFGIMZPw8mtJuiKDApRdFi6EpGWdvCmqiDkABV+TL3XeF0NEqj
-   uT88w2+9zjdxa4pR60ynA2TtY+woSxTDkrZOLEkhfU70NC9iHn0Gn/Ep0
-   yVrjfxYyj5BG5iVvIJcWgFtGQIsZrJEwvyHAc7uMEw3yrv3J1yYq0s7zp
-   P1ankytB4rT6h+J83RBJ0Zo4B2/P0CqckQ1L8D7TBPVAtOvnj7JDogIYV
-   tpKRmS7MDPeKgP5JtsmsHB+2aEO/9kgk1/VcQUgyPGS2hj1hFd6ga/7hi
-   g==;
-X-CSE-ConnectionGUID: ggoiTERuQf2K6Rgtr3k5cQ==
-X-CSE-MsgGUID: CESfCZukSziqoC/4g/2F9Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11631"; a="70577014"
+  bh=TUQiEHLshPpKJE71EdfKNe0xZFjJTgyMEsn4Y1HSJio=;
+  b=J0l6bNxn1mzV52bxaEwy+AmqAWuJIyn2jAHUci2CBCaTKErKgiESRYLb
+   br3nhHY/oHGTcrAU6/3WEwH1X8yRu+Ci7Xd4RWnHX7mUFw3Td0ZF33hnk
+   YRy3v9IXOM+xke5sd87vzT5W9w/FP6QFVUoNSRI/25aGbudXh0jMDnfjK
+   0SBvXFYZTvuD0it3zyUElQalUvQHNmHWaioqExv1izsZ0p+qxz9XyI4xH
+   VtuGdZ6TAWz4O8rYL02rrydgpL6LNS87d5b9cvgBgbSZt5PdmgM/YyLrc
+   xVRF6W3CauDefs+Y8+0o8TlIud2AnAT45Fdqoik5KBpRWeW3HZ2PVm4Os
+   Q==;
+X-CSE-ConnectionGUID: LQrMEkjsQK6wklQXkh3NnA==
+X-CSE-MsgGUID: ntMrN6NxS3CW51/WDmq7qQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11631"; a="66795333"
 X-IronPort-AV: E=Sophos;i="6.20,244,1758610800"; 
-   d="scan'208";a="70577014"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2025 19:53:01 -0800
-X-CSE-ConnectionGUID: qmptcWBaQtalGdKIqPWgwA==
-X-CSE-MsgGUID: qdMTIK9JSeKZZD3Bo7JfHw==
+   d="scan'208";a="66795333"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2025 20:15:52 -0800
+X-CSE-ConnectionGUID: 2Z3PU/5kSMq1LNuwS9mSnQ==
+X-CSE-MsgGUID: h130Qw5bRk6v/UL5YTbp8A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,244,1758610800"; 
-   d="scan'208";a="194556500"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2025 19:53:01 -0800
-Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+   d="scan'208";a="194385480"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2025 20:15:49 -0800
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Tue, 2 Dec 2025 19:53:00 -0800
-Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ 15.2.2562.29; Tue, 2 Dec 2025 20:15:45 -0800
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29 via Frontend Transport; Tue, 2 Dec 2025 19:53:00 -0800
-Received: from CO1PR03CU002.outbound.protection.outlook.com (52.101.46.56) by
- edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
+ 15.2.2562.29 via Frontend Transport; Tue, 2 Dec 2025 20:15:45 -0800
+Received: from SA9PR02CU001.outbound.protection.outlook.com (40.93.196.25) by
+ edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Tue, 2 Dec 2025 19:52:59 -0800
+ 15.2.2562.29; Tue, 2 Dec 2025 20:15:44 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FEWwIcXITBLwJgZacyht/5ePhQCD0ym6JabAdpvCz54UWySA8kpYCvMcGbMeMkb2LHjk85T+ffLbF+PC25UMEeLbhO09tvFMeRSsn/ydtriPzQXCIJqMQCAnnXfKLiEDDTWJfVkZrv49q1mdjxcE81pzJBUAUGmsSurAqwto2Z0sITppk3PojXWJSf9F7Xk4vBwfHMVJ2l8EhgfmgkJh+nJjxtx70UljxJuUmbhVWX/4mBVcI0RPEYGo6fN1aXVWDm0YNDkfJQCwWVkxUKZvgEtL1Ms51zloNBjpuBg228c3+LzUs2x4JXWRr7KW6SveHoU0NBd+YW0C/+g7vhjv/Q==
+ b=q8H/NplPTZYTLzrGuOLRSz7aLkj5IIefMQmpXcRcGwXY0RSzkL7ibrvM9mP2CtCMhCvccA5hYlvunZ2gjxRbXoftwCK6BxkuMwsKbXcA43NdW4imx8jdT53ouizpOLhCf58BGXR0GgAS8iKLkJdvwE5GqZhWf3Pksba619y+jvTSh7VMwfII3AwUSkxNnBJfA/PI2sn7LN4zyRBmozgDU1XGL//gMg/ldly55tGQf6SLBZBRU5jz5OtIyZGFnzr2J/stlxCmkDICO82JEWr9OzatjgkZnEgWXZgd+DIwKKRt+IimzYjreusrYRGdidnH82WllXT61AZBK9FHSMCh2A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KooigZawXAch82PlmAZsLQQtAVD8TaQodGiUiN7P3bE=;
- b=H9nUZA8/6hG6QjRrT5hToZ1jRYgax/3fof2PeXUkg411FxeXDbnh9AJyVXUqgmC7/OIbiLYyqTbn2Bu2i+Kyo5SmXM53Kmd3XaZzUx8lxc7VbeCL8PI62GpCIZW1aQmYibd6+FYh4kJwqNH/88RhQL03g8edup77lSef5HUICr4b499GP90AbL5bcIdkNZL91Y93jDR3gAsfMgNdri3tNVspSaWzjbHZ31gpS2UwnRlqKfi/aJHuTAkcRdzxFu9YD4RUdlXZrNkrDF/1lA4DnMZZHHL2FVhRA5M+cDcrj28WkWHEZv5T6uTmdX9mh0YK45A1T7o551pBhL6CHS+CKQ==
+ bh=1jb00oWgTh4219r1seRAiFPSrKFpUJu8bW+ODWTBmVM=;
+ b=PPdcT8NeN0gSHLBxY1dYAGJquoz9uJAhGwe7YCbC6rpfiNE3KE3w+utBUoGptye052zzgXwIW6/FAuxJ4upeYaVbTPR7jkKfXOLdKtlxwa8RsbdaDvWJPPesWT0CKJ1I11JQvOEXYFUp8NpofLrCxy6YlXWIIWzlmwb1s45dN3iWuD9d977B20jH0PJWsi2XKuS/j73pI+5PoPvoeTKTMJeaCxcZhfd9bHuojiej/H3gAy+KUNYHWuAj0D04vxCHopqR7VBn6sn5Iu5spC982GMCpja6H+nknoJo2b33smJi4f9XtoT+1S7Xj18UTZTFeS0kr2qcUElDVFVAkmlndw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by SA2PR11MB5114.namprd11.prod.outlook.com (2603:10b6:806:114::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.9; Wed, 3 Dec
- 2025 03:52:53 +0000
+ by DS7PR11MB7808.namprd11.prod.outlook.com (2603:10b6:8:ee::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9388.9; Wed, 3 Dec 2025 04:15:42 +0000
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::46c9:7f71:993d:8aee]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::46c9:7f71:993d:8aee%8]) with mapi id 15.20.9388.003; Wed, 3 Dec 2025
- 03:52:53 +0000
-Date: Tue, 2 Dec 2025 19:52:44 -0800
+ 04:15:42 +0000
+Date: Tue, 2 Dec 2025 20:15:34 -0800
 From: Alison Schofield <alison.schofield@intel.com>
 To: Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
 CC: <dan.j.williams@intel.com>, <Smita.KoralahalliChannabasappa@amd.com>,
 	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
 	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>
-Subject: Re: [RFC PATCH v1 1/2] cxl/cli: add helpers to collect and sort
- regions by HPA
-Message-ID: <aS-0DNw3Jnw4ZR-y@aschofie-mobl2.lan>
+Subject: Re: [RFC PATCH v1 2/2] cxl/cli: enforce HPA-descending teardown
+ order for destroy-region
+Message-ID: <aS-5Zjhz-5Mkdqpy@aschofie-mobl2.lan>
 References: <20251125143826.282312-1-pawel.mielimonka@fujitsu.com>
- <20251125143826.282312-2-pawel.mielimonka@fujitsu.com>
+ <20251125143826.282312-3-pawel.mielimonka@fujitsu.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20251125143826.282312-2-pawel.mielimonka@fujitsu.com>
-X-ClientProxiedBy: SJ0P220CA0003.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:41b::34) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+In-Reply-To: <20251125143826.282312-3-pawel.mielimonka@fujitsu.com>
+X-ClientProxiedBy: SJ0PR05CA0066.namprd05.prod.outlook.com
+ (2603:10b6:a03:332::11) To DS4PPF0BAC23327.namprd11.prod.outlook.com
  (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -101,185 +100,208 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SA2PR11MB5114:EE_
-X-MS-Office365-Filtering-Correlation-Id: ae2065be-e512-427b-7eba-08de321f6f59
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DS7PR11MB7808:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3bfefcaf-a908-4874-50a8-08de32229fc8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?4hCk1gcyNYFsxrQxGE7k7YD8F7DYv7dteYsVAJyZqNysgb3gjiZyGBSm2DPK?=
- =?us-ascii?Q?V6nTSvz+ZX1wBvm9m/WzIci20v9VkRFusYqPXcuetkJZikdc2pobMO7aqe1w?=
- =?us-ascii?Q?tWqpmlXp8vaQ80w9Iaw38LnDriI7s444AK4KMVNt6zddJyOx3FrFvPDxunwU?=
- =?us-ascii?Q?Mf4fAz/g4S5C6SQ88JZBRtTk50jhSASXYfWM2uMuMFnEdIhAjYRM/paWBSUo?=
- =?us-ascii?Q?XKaPV9wPGJxZrQvEEbdr18rX3BRTndDaejLNYzKmKHXzvsHG09BDOhkrw2FD?=
- =?us-ascii?Q?CBgoWj7J/JQ1TsIf52lAkR9LCHAPy+ZK9PTubIBV6wlNQ/yPTkq/aFSrTHmv?=
- =?us-ascii?Q?ytf1vbx8V2W6FnkJxqwb5y9QJw0IZOh6Ero4MoCLO9eAv0HRnw2CIfVfV6Hm?=
- =?us-ascii?Q?Qvj3mRNun0bRjWIQTsEjTYKWzmXLiahj1qeHaxyOt2ZZp6alC5/IWhrUtm5l?=
- =?us-ascii?Q?LQynuDFUvd0UZPmCGA7nXFcwG+GvQ/IyUMhhbdzSBf/sdebulmoN+C/L9DSm?=
- =?us-ascii?Q?Rl2OCVproqqRU2oyO5JMeLCu4DLxX3q8ahyHTsk0T4w9AyVaxtwH1vxSuCBK?=
- =?us-ascii?Q?xOqozDpE2O0qJJCog6LE6ed1O/pWmkSEezxIFseNNQZ0y5ZsyoFqh0r8As5d?=
- =?us-ascii?Q?h0qNWzpDYxXP/kxjrhOhaDn+xRvwtKbQLaJnFkJZ5Hson8ojmpbN0M6fqXFi?=
- =?us-ascii?Q?P3Kv/Rs8sizWdtDyYq1sGREO9jHgtZNevQZrpaELfM539LHdopJJ8SnWq2f5?=
- =?us-ascii?Q?DruBwW4mFJKgkkLGYSNtPhU8Xnqds3m61CmCLccTZ3yC2nwdoPIAUzUjLJbt?=
- =?us-ascii?Q?vC1DxPWdByUl9BnEy43MYhm5IB0oVnIBwhTEXZ9TjulotGuxKAIeCTG5wry2?=
- =?us-ascii?Q?10+UBGyidhYu14s3iICZ5h0afwomjG83g1wjUPfxefQbuJZW6ku43io+W0Wd?=
- =?us-ascii?Q?J1ef64+Ftl/BTPuppOhgfsieze3ExyiEzsd1FIUmroZLFXb2vkhLfJIBvZJL?=
- =?us-ascii?Q?ILGt8We5hVAcG2tOUBHCPjiOYDFOXha/FYEc+0Yqg3bvPNhMP9PNzJOBu78g?=
- =?us-ascii?Q?g88SsTxbsTQtLey2PiGJbylh19uW7GtUk0ZANxfuNa5hKyhYXMRG16cFa460?=
- =?us-ascii?Q?ja3KNU5JWGblIYUaiTwlM2djH69/EOe9Ctt/8yuHxger3p3fB8HlRVlsQkj7?=
- =?us-ascii?Q?rTnIddMrjxFS22fRa1A7XFesAzQKMSt0v+Dx+7eFNXZ9lLpQHYTcTl37xAUB?=
- =?us-ascii?Q?tbPuoJ7EpmsYJQJW5F/zmcBa08lpF3JG2aQM5Ibv9Z/3RYGxBqg5DuUPqA/5?=
- =?us-ascii?Q?DtOb643bFDkHRfoHCCW+REABHTuys653lBvZ22Hb3j8nxEB7RIqC9viNm3Ac?=
- =?us-ascii?Q?F8Y8Xeutzqg+QprjFDfEtiArLkb2TTp1JA2aUvY6oAA5JNSBwD/Q5wv0oTXH?=
- =?us-ascii?Q?qcQyNL42zhwcwS+bNl+clYI7McyXzSxZ?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?3AvUT6kg2/qAXaxT08SGDfGnqDQmKBjBhLjlscKceUb6b5pY7U8tv578aE11?=
+ =?us-ascii?Q?z7Z+HfnDYidCN4mT7tGptruoLoPygJhLBg2An2VfkDZzV3vStUfuBQfym4KW?=
+ =?us-ascii?Q?185xk4UcwzqG/QKSQq8k/Gu3/UJRyVTZURUOqKFc6YhvtrHIUbv90OcQSVY7?=
+ =?us-ascii?Q?w9Z7PafAi3anDvjUpFBgpEVLULsZNYxzbtJmOHBiO52zOcfK/8wCDURSGKOw?=
+ =?us-ascii?Q?BY5ct4yc78pQu9GPHGNxh6P8TV2x4eEuTlinNJXWIHlQ9Jj/4of6eLsuuyAP?=
+ =?us-ascii?Q?sEYFqAGxlzoge5gT0BIF5Do14qsWr3FKWkR8dElWOWavXaqSfdoj9qIBNWC6?=
+ =?us-ascii?Q?ms/UU/Tq89hPNv/0Us5Yrom54AbQKaevSwZO9X6Cj89U37iV/m5zdz9YEfKw?=
+ =?us-ascii?Q?OgNOt5uMdrNK7KpWfIozzw0uPGdlHAcgB9MlnGqDfxHgwocdpUEuXe6z9LOe?=
+ =?us-ascii?Q?ndVP35WUYu7l5fphjlvruXaDUlM5/TfsFlkWDM8z6EsV2unytN/nIxHDRzVJ?=
+ =?us-ascii?Q?7ZwkTAmaGWXHhl+3iZ4QpJS8rDvThcdzF2OW76UVigLmPATbRqK2phaqqT9k?=
+ =?us-ascii?Q?bBPZoJrj56UGM5lT4EZL8cqduIr7gmRsLI7UabshvyXx0OZSF3mqmBqRb6EX?=
+ =?us-ascii?Q?y6ErHqL3zwpnRm6QwaiiDH20tQKHEXMNWTMnlY987KJfDy51HJyVDQ6Uhooz?=
+ =?us-ascii?Q?GnqiXS6WhD26mClo+qDoOWz+aRKWUpYyOrhZ3N5FLXl1xXQW9qvMYFDBFxYj?=
+ =?us-ascii?Q?CMyI8i21ruFojiNH3JsCsuoyOBojnIdLcBEV2VXZwg4DD+WQ5xDwdUrZ/0wL?=
+ =?us-ascii?Q?OAGveLeqtP4nwnmgoRAIJRZfqApW4ljgKdpymyC7+sf+CCP7pPyHYYkzIgXF?=
+ =?us-ascii?Q?0pPkzIOiyDHxjpRYf3nlautc6MKnncnU0UX/JeymZ04pfFJD7vqQo6p0yMKZ?=
+ =?us-ascii?Q?l7RfZXtsYc6GfIn5S9kGIuc2zjqWO6MD62lQc3HxOHDTUk1EIKiR3lSTVdd0?=
+ =?us-ascii?Q?BHK6kzCsqknRiDt0XnjplDiiss80lVCEn8kl9tL6/w9IDrk4NL3vfYWCv0SB?=
+ =?us-ascii?Q?Y1l4PUzDBSrwia6tXI9azoqFvTSmu96v5Ct5G4yf6i12biL4ThtfzqznsWLh?=
+ =?us-ascii?Q?9GUO9ZVxcJ4KUZQVbzBXAuwQbNUyW8n8pkeljRywn+VV5iYQFIrEykyklR4p?=
+ =?us-ascii?Q?6WWKjMdoUHnl2qtQpy76NYbRj3TyHaUJXqx4fNTITraz2pDtajjvaX7T863n?=
+ =?us-ascii?Q?56aBcyIJ18EvWROeGrwCUTwcK22qt4ly+rKM9KGQSeWOlvLDK7RxSTvtvmyt?=
+ =?us-ascii?Q?qhh67UnTDOIWAUYH+GoefQRekJ2sbx5eTD8N06cdwuGufuIFsSYAnvca1r1s?=
+ =?us-ascii?Q?I2HllFbDS1stL9aKbMuVcrJF8GovEZ0GOaAXkdzcmeZ+hnak1IieE87XDxH1?=
+ =?us-ascii?Q?L8LGs+2RgGbh25saEf5xD3sYjAy7S7UY?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?4rr4I+wZ8NrEjrFwZF2fiD93V3YdK+qXHbLpeF70OUgIi9tArF7tjGy/4/3B?=
- =?us-ascii?Q?7vCUNByDpMZGSR3IChjmTU7bYYcytxL5rWFO1qvNHsbx1lspNWcHcQH4LtO6?=
- =?us-ascii?Q?5nsHD8dRxItw9fK6IU5aOdkvJss1a5jhRT3EbVxps1wGMRx4ERjEkDg/pG2r?=
- =?us-ascii?Q?xa18P6NKeL7b8CpRDubBhRv8odcyeEYgXvVUSJO+QmkrpzQvtZWC/gjaaaH9?=
- =?us-ascii?Q?Z7Y02JweLNoxYSvP4d9nqEfjYJwF9WcDOTIqci4HJatBx5Zqo0+1+lLWvoa9?=
- =?us-ascii?Q?sIdDWKeVD0PoaGbqzu/wsar2GKEY2uHcpOWjxFilYVek5toEBhHceSh6Xsz5?=
- =?us-ascii?Q?FUn8N1KoaP+uKGqunsZZrJrq75PCq/EmH0R7y9Md1zU7vjH70knD5rolCV0R?=
- =?us-ascii?Q?9nsqYbaAikNVScobvQ1O386c50XqZjI/EEh+V02zAaI9OzKnpxPYOhO73Qa8?=
- =?us-ascii?Q?30umcDApgwBjsuApRRxNc8xfHXC0P48UL5TSD346ZNC9h98o5RzbMeU/5X5T?=
- =?us-ascii?Q?H4ElMiRbBc3r9/hrPIkjGlxQsmJwTTaflx7leaX6Au25R2kHe5aR9TyV0/Hx?=
- =?us-ascii?Q?qVOW44Sxbx3GEuLi4jrGKN4z91gSDivasMsvHeoVRTrBkyX6mOR04fqhc5Vu?=
- =?us-ascii?Q?L9kdQjhrV5caPipKgk+CYzHoDDMkiQHlLZncmf61ZT3wr9YsiCIxFSCxPD5u?=
- =?us-ascii?Q?A4rrsehDSbxKQHj3wT8frlda/5c3XmMbT96R1vO8J1E4/3Gfrq86koSw896J?=
- =?us-ascii?Q?7NTZ0WEPA/ixUUs796Qu2+QllyG25dMhthiveGBnYtzOb2XQmGT320Mc4TSr?=
- =?us-ascii?Q?CtQNG8AfHgfzlQiAkhtyh61ZMCBefAo62eA04YEgzrZwrCilr88k6rqPW/uB?=
- =?us-ascii?Q?2ArJc3+8op9nAXZmrFbUEpqqfGmKXMkXY4EMYMa8m17qonmg/ls+f9hLFcYT?=
- =?us-ascii?Q?H98lOQp+MRv/wMjvG/ToaOj++DCqd1XMi5haPIqs1L9q7/jRrmxJpRrO2Wzj?=
- =?us-ascii?Q?i9lZLxfzrlwrs68kK2t2PptBXqhosVQ3nRFFMg16/9lDVLBroFGZ2K0T5N+F?=
- =?us-ascii?Q?NBvtSx6+luQcQCWw7hwxROEL1RnyCKoaqb60jgSHmLwDqq1qXigRyxQbJd08?=
- =?us-ascii?Q?SgZrJMVzUslJUPwzB9E3+AQcxZPwW5u496la+DWjrX+WIL5JLhK4b1tL3OrY?=
- =?us-ascii?Q?oSemcJXrYZJuZCPYdry88+MeInBdSEddLpqLuvmjGuQsesNOFhTvyljk8o93?=
- =?us-ascii?Q?SadHkTomV50WcsPCTr9X5EhP9M+SVebkU1PVDRgiwkq9ZZxPHyadr/EhGzGr?=
- =?us-ascii?Q?lGRxzkBbtsguWopWu+rZCCVo/OO9UfAKgXSsf3BT260KbqADC4NxaG3RSEZ9?=
- =?us-ascii?Q?qt3YOi6r19kONJlpqLi6VDax+S3M8//JmLbTu0bTCVnC7llnMY0exIKWCg3a?=
- =?us-ascii?Q?M2n8f5mhYNnMWoJT0zTdIme+kQ9o1udAPoKFdQBxXMiphzYnl1GQCqZIRt8J?=
- =?us-ascii?Q?QG331NYKnBi7uptdiCg3F8IPm8zlnf93sl7gCfjBpy60ABlpz07L8xWCHoKD?=
- =?us-ascii?Q?bjS+dtzNZU15slbnOIRvCKSrQSuLOLgbdPqzaNAF+aQrR7RaTlv/LaF+2MdF?=
- =?us-ascii?Q?MQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae2065be-e512-427b-7eba-08de321f6f59
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?XU4DKKGsrytZ6fxjyQgJo4obprwNuKwpl4XzN1sKrVA5HbYAAdEUAQcAiUXr?=
+ =?us-ascii?Q?1k4FZv/xsSF9yGwQhwpAfxVlewU7m3kxWHUMkdM38QOWw26IEUH4Oh0IN+dp?=
+ =?us-ascii?Q?VzRK37pB5Pt4fB9g2o26hwIqhI8SaBgXNruNK37nJ4FTqFy3yEd/aIcA7fcC?=
+ =?us-ascii?Q?VxJpiAnX2BnilwDrtA763idsNBJ+dSSODBNKua7oQANdOIYsLrJ2KHe+wblf?=
+ =?us-ascii?Q?M80KWd7QozIIaQ9Ffx5qm3V7QM82HBakrCOvG0iAEsPULz/DTTvWhySMe/ai?=
+ =?us-ascii?Q?h2lyRM/TQY2N2U6CRgjUBcn74efnqZd0DuNFvodPrNqQuH1DerlEJuun5oUx?=
+ =?us-ascii?Q?On73u76YYOASUb/ACtz+q19X6NRRIkAi5qMFCopNBQpD/BRSH9srfGjCSvI5?=
+ =?us-ascii?Q?7+yynLUsN3aI/GZFIomzH1Z3kaSwL2yr6AX0z7eR0Z//J8PuMBBDwhb1dXko?=
+ =?us-ascii?Q?5fSmokD6iGu+f6H8WASJzx4I2uanjGfpIcCnqXfviOkKswI4oV1m2IsSNF7U?=
+ =?us-ascii?Q?uX8xCAZjChNiFallpAEESX7iajhXhKf3hDqrv8EQScmv2HgLLZWY0TTX+CE5?=
+ =?us-ascii?Q?z6NfIpmw05BAtUvlrDBKXXcks+JIh3qIz6tS/9UTEJkJcQdNTc9Fe5NokE2y?=
+ =?us-ascii?Q?RWnEaVt0FLskcII0N9LhZYU7uyohUP2OX82pJJ6UqPB6VqEwKZt0yHxK2Its?=
+ =?us-ascii?Q?c60j/j6uDzmApNS6tZilRSBhEUdcBlhJfIuTQuQZRIKfVWRCfOKLaNj4QBqo?=
+ =?us-ascii?Q?7t+nBrZyWshf9atzL3bWNh+AOWYt/PMs2IfFts7REiHRxj3IKo42RCatL+zV?=
+ =?us-ascii?Q?aCMTYNVuzIcBtouESTGknmTgpDPqyOuoUh/+yqAphZB7gp8P+pHajk82fxp+?=
+ =?us-ascii?Q?jD/ZzhulGTGJDswKzoGtlLDBu61Aafuz4rmseO9a9C3WZnhpK3HAuaFwwn3M?=
+ =?us-ascii?Q?JeMX4ERxSBYp66+Km1wiL9LHvEnw3lADpAo6jLnqiWy2H0OcbjVNI4UEEsaM?=
+ =?us-ascii?Q?WGPYLyIyZOOt1RRpRDXBzawXwUhzME+ZbGj6p26XF9iK5RIWwWPbrcVyyuHY?=
+ =?us-ascii?Q?mqMuysbmJHEVlLA06stdHTBFAHLjj2aTb7FC1+gahkNKtCnCjGY8BAeHSVfP?=
+ =?us-ascii?Q?WRPMySEbqQ2zihJiGJ7Ud++eOsC8O9kym1N4rOyGBHb8YlcYSVTzIPTB1BXQ?=
+ =?us-ascii?Q?X3DQ0x5d5BGPEmZmkgQwa2dHDp7qRE9Wrkfo8pVgbYaJxBMvawB6kFlI2JR9?=
+ =?us-ascii?Q?AcdVcNqj2qDfHXYSdNYhCmSUNSHObhR+4D5gLZEeLQlk09cwdQuZkscyxe0/?=
+ =?us-ascii?Q?bFv8TrjYR+CzZJ79Enpx4rC3kMcDbmHpiurmUlD1igXUugwOz38Yl5TyPu1x?=
+ =?us-ascii?Q?WladedOMaXxaNX5WwFbCwE7dI0GjtTb/Sf8FpjegPTL6ms1KlZVrw9o834ah?=
+ =?us-ascii?Q?Kmjnt9p8XdbCdbPy4LNLrgn+SUzPI5V9xSXI+nP5Yn8f5pG/B5XRKjcie/OM?=
+ =?us-ascii?Q?bnvgHrHmyKt3XlJQgQvaaXdsBBUik43F/F+R1f6wEnQ5xti0AOwETsFP1XAz?=
+ =?us-ascii?Q?qAEBjPVyCg5/aMbg73C6ZNyLx9frA2uvn9rJVwJlmKEM7yHElJ8C3kKAy6Gz?=
+ =?us-ascii?Q?Pw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3bfefcaf-a908-4874-50a8-08de32229fc8
 X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2025 03:52:52.9760
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2025 04:15:42.5617
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DeTJ5XTZl4QknRH7cTdYeuKy+7ldW8YvkE61g1kAJuF9ZzyLZomorcfV44RM4RrCsT5tKR0vure7aTl1tqGj7W2ReVItGBCKGl9bPxdTXwE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB5114
+X-MS-Exchange-CrossTenant-UserPrincipalName: fcVzkq77ITRFuIzZaINst23kSxBA/qshasxvrMyIuro057l3Adl6EET4h+k3TGDFkylkvrDoMv76rHHczhJl9V+989lRNsZx6uLCcFd+4X4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB7808
 X-OriginatorOrg: intel.com
 
-On Tue, Nov 25, 2025 at 11:38:23PM +0900, Pawel Mielimonka wrote:
-> Introduce cmp_region_hpa() and collect_regions_sorted() helpers to
-> enumerate CXL regions under a given decoder and sort them by their host
-> physical address.
-> These helpers will be used by the "cxl destroy-region" command to tear
-> down regions in HPA-descending order, i.e. in the reverse order of
-> region creation. This matches the decoder programming requirements from
-> the CXL specification (8.2.4.20.12 - continuous HPA coverage at all
-> times when Lock On Commit is used) and avoids teardown sequences that
-> can leve decoder state inconsistent when the decoder is fully populated
-> (known problem).
-> This patch only adds the helpers; no functional changes is intended yet.
+On Tue, Nov 25, 2025 at 11:38:24PM +0900, Pawel Mielimonka wrote:
+> Implement destroy_multiple_regions() and bypass the generic
+> do_region_xable() path for ACTION_DESTROY. Regions are collected and
+> sorted by HPA, then destroyed from highest to lowest, stopping at the
+> first "matching after skipped" to provide user with better error log.
+> This prevents attempts on non-last regions and aligns destroy-region
+> with required decoder programming order.
+
+It would be useful to add a sample bad spew or what happens now
+on attempt to destroy out of order.  Folks sometimes search on
+those strings.
+
+
 > 
 > Signed-off-by: Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
 > ---
->  cxl/region.c | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
+>  cxl/region.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 57 insertions(+), 3 deletions(-)
 > 
 > diff --git a/cxl/region.c b/cxl/region.c
-> index 207cf2d0..58765b3d 100644
+> index 58765b3d..1bf1901a 100644
 > --- a/cxl/region.c
 > +++ b/cxl/region.c
-> @@ -831,6 +831,61 @@ out:
->  	return cxl_region_disable(region);
+> @@ -950,6 +950,57 @@ static int destroy_region(struct cxl_region *region)
+>  	return cxl_region_delete(region);
 >  }
 >  
-> +static int cmp_region_hpa(const void *l, const void *r)
+> +static int destroy_multiple_regions(struct parsed_params *p,
+> +				 struct cxl_decoder *decoder,
+> +				 int *count)
 > +{
-> +	const struct cxl_region *const *left = l;
-> +	const struct cxl_region *const *right = r;
-> +	u64 left_start = cxl_region_get_resource((struct cxl_region *) *left);
-> +	u64 right_start = cxl_region_get_resource((struct cxl_region *) *right);
+> +	struct cxl_region **list;
+> +	int nr, rc, i;
+> +	bool skipped = false;
 > +
-> +	if (left_start < right_start)
-> +		return -1;
-> +	if (left_start > right_start)
-> +		return 1;
-
-Suggest calling them hpa's and using this more common kernel compare pattern.
-(yeah, in ndctl, cxl/cli, we try to be like kernel)
-
-static int cmp_region_hpa(const void *a, const void *b)
-{
-        const struct cxl_region *const *r1 = a;
-        const struct cxl_region *const *r2 = b;
-        u64 hpa1 = cxl_region_get_resource((struct cxl_region *) *r1);
-        u64 hpa2 = cxl_region_get_resource((struct cxl_region *) *r2);
-
-        return (hpa1 > hpa2) - (hpa1 < hpa2);
-}
-
-> +	return 0;
-> +}
+> +	rc = collect_regions_sorted(decoder, NULL, &list, &nr);
+> +	if (rc) {
+> +		log_err(&rl, "failed to allocate region list: %s\n", strerror(-rc));
+> +		return rc;
+> +	}
 > +
-> +static int collect_regions_sorted(struct cxl_decoder *root,
-> +								  const char *filter,
-> +								  struct cxl_region ***out,
-> +								  int *out_nr)
-> +{
-
-I think there is an alignment issue above.
-The filter parameter is always called w NULL in patcht 2.
-If it's not going to be used, remove it.
-
-> +	struct cxl_region *region;
-> +	struct cxl_region **list = NULL;
-> +	int nr = 0, alloc = 0;
+> +	for (i = nr - 1; i >= 0; --i) {
+> +		struct cxl_region *region = NULL;
 > +
-> +	cxl_region_foreach(root, region) {
-> +		if (filter && !util_cxl_region_filter(region, filter))
-> +			continue;
-> +		if (nr == alloc) {
-> +			int new_alloc = alloc ? alloc * 2 : 8;
-> +			int new_size = (size_t)new_alloc * sizeof(*list);
 
-Looks like new_size should be size_t to match what realloc() expects.
+Here is where there is a difference btw 'all' and a decoder. 'All' gets
+passed as an argument and the filter function recognizes it. But for the
+by decoder option: "cxl destroy-region -f -d decoder0.2" argc=0 needs
+special handling
+
+Inserting this here worked for me:
++               /* If no region arguments provided, match all regions */
++               if (p->argc == 0)
++                       region = list[i];
++
+
+Then with argc == 0 this next loop is a no-op but that is OK because
+region is now assigned.
 
 
-> +			struct cxl_region **tmp;
-> +
-> +			tmp = realloc(list, new_size);
-> +			if (!tmp) {
-> +				free(list);
-> +				return -ENOMEM;
-> +			}
-> +			list = tmp;
-> +			alloc = new_alloc;
+> +		for (int j = 0; j < p->argc; j++) {
+> +			region = util_cxl_region_filter(list[i], p->argv[j]);
+> +			if (region)
+> +				break;
 > +		}
-> +		list[nr++] = region;
-> +	}
 > +
-> +	if (!nr) {
-> +		free(list);
-> +		*out = NULL;
-> +		*out_nr = 0;
-> +		return 0;
-> +	}
+> +		if (!region) {
+> +			skipped = true;
+> +			continue;
+> +		}
 > +
-> +	qsort(list, nr, sizeof(*list), cmp_region_hpa);
-> +	*out = list;
-> +	*out_nr = nr;
-> +	return 0;
+> +		/* if current region matches filter, but previous didn't, destroying would
+> +		 * result in breaking HPA continuity
+> +		 */
+
+Use kernel comment style. See other samples in this file.
+
+
+> +		if (skipped) {
+> +			log_err(&rl, "failed to destroy %s: not a valid HPA suffix under %s\n",
+
+I'm not familiar w the usage of 'suffix' in this context.
+How about replace "not a valid HPA suffix under"
+with "out of order decoder reset"
+
+
+> +				cxl_region_get_devname(region),
+> +				cxl_decoder_get_devname(decoder));
+> +			rc = -EINVAL;
+> +			break;
+> +		}
+> +
+> +		rc = destroy_region(region);
+> +		if (rc) {
+> +			log_err(&rl, "%s: failed: %s\n",
+> +				cxl_region_get_devname(region), strerror(-rc));
+> +			break;
+> +		}
+> +		++(*count);
+> +	}
+> +	free(list);
+> +	return rc;
 > +}
 > +
->  static int destroy_region(struct cxl_region *region)
+>  static int do_region_xable(struct cxl_region *region, enum region_actions action)
 >  {
->  	const char *devname = cxl_region_get_devname(region);
+>  	switch (action) {
+> @@ -957,8 +1008,6 @@ static int do_region_xable(struct cxl_region *region, enum region_actions action
+>  		return cxl_region_enable(region);
+>  	case ACTION_DISABLE:
+>  		return disable_region(region);
+> -	case ACTION_DESTROY:
+> -		return destroy_region(region);
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -1026,7 +1075,12 @@ static int region_action(int argc, const char **argv, struct cxl_ctx *ctx,
+>  			if (!util_cxl_decoder_filter(decoder,
+>  						     param.root_decoder))
+>  				continue;
+> -			rc = decoder_region_action(p, decoder, action, count);
+> +
+> +			if (action == ACTION_DESTROY)
+> +				rc = destroy_multiple_regions(p, decoder, count);
+> +			else
+> +				rc = decoder_region_action(p, decoder, action, count);
+> +
+>  			if (rc)
+>  				err_rc = rc;
+>  		}
 > -- 
 > 2.45.1.windows.1
 > 
