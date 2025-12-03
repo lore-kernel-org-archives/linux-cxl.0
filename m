@@ -1,390 +1,427 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931FF158535
-	for <linux-cxl@vger.kernel.org>; Wed,  3 Dec 2025 21:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764796769; cv=none; b=TL3Nxqi0vU0hfcqOd4GE5oI2NitgetErJUPBYbWptWGMtRHn3Uq7pQ2h9qG6SK8TbjIY8ltj0KydUG7k8oDF23pRH1zK62w5jlprcyZYFPtvuVp/0JYOOaiDm3aIRiJZ/+EiRWcsqLUJ5epK5f3Py8ARohOnzB6sE5BetUJb7SQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764796769; c=relaxed/simple;
-	bh=x8qXC15/Cgop3/K39LwGYppSCTxA3BgaImYAalJPkb8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MJ7xEqpzV42Vq1/24yGwCAnuvz9oM2nyMFHBVeImpwnmqMun8JitGihsdgQ7xtwthbXePxr2grs4R0dnPLXjcKWHWrgxP5uqL94OEMeI0xsjSHQp5NJmZP34Wzrcx3AZFsk22INY+kyjbIMkyjcWHIhmPVKwXE/ku11iCvhPuWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RNXehJGg; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369E32C375E;
+	Wed,  3 Dec 2025 22:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764799569; cv=fail; b=VGkda+UBSI6jnf7/4oJyRxX8CjNzj0zDYvmC+og7kpYtxuD3Aa+AonkXgVlyNIkbKfBWo4CK4EcJnilsGz/N9pcKlm9Ap2jTQdHg0xZfvpnGN0neNnPvW/Jm+T9hBhg0wOx83SuBE2Z6a4MBL5YwnwdnT0b8iUeoTY7XGjMzHeY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764799569; c=relaxed/simple;
+	bh=qeorh4zrStyzrp5KKQ54KygSKbJ7hj0F71IwPtodUtI=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=g1InZSwT1+pX/ImWYyUZzQ5RSSCCiRwuAX7nmCkR0erWGYTZLdN/0wViyjuv/vfUzCEATS46Pws0MBgN+aFAZMw4dCW0rtgBkrD2u5dKUBpAaznF1B/oixa+COLIFWRUAGbSF2vsp+SD0W1PZi/SMWbh1Vc6Mv7EshKHf2VdCZ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b3+8u4+z; arc=fail smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RNXehJGg"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3436d6ca17bso145446a91.3
-        for <linux-cxl@vger.kernel.org>; Wed, 03 Dec 2025 13:19:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764796767; x=1765401567; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QvAamsCq1XkVVXH71kkXw+EqO7rzJ4O2VYlpeut4OGs=;
-        b=RNXehJGgfwKwqED5vhbLHTHjsJM7ubI2ow8TZyyWT/jVHYb7m/B9tsXwoWsM0x1Jcp
-         5xCbwewPYBzD8UVbrBqdV02NimXyr8iSQu76XzL+ZIw+tPvQH9UIa71sKeQPoNnFPxxf
-         be0dNm8foBGc6aAiVwKekA2c2ErCcHlp5YOxrU4Cga5O3cBUmneungic/KzwRicpZJyU
-         ay1z4+ntlfFv5YzPVrrLLv3XgRKVrqhUUle4aJ7ofc+Jj5bHsHvvEOLW3/e3Qio7sZRT
-         FKLRzdPJcgQhZMncT/4nr0JSuV2I7rYE6NNIqsbkpWqcnul4ofdhJ90bXTXq8xNUKct7
-         LZwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764796767; x=1765401567;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QvAamsCq1XkVVXH71kkXw+EqO7rzJ4O2VYlpeut4OGs=;
-        b=RDDx5RCj/mCw2tnzyAKTvvl99Qx3ZoBwthT+fA7UXGOgSejGQtPw1KiCRmmqjDTGjT
-         9yoiN27g6rCjU/d5geBz6AXV0hSr8sS2/vi+jYzpqD+K/vVULxF16qnU/L4oIB6K1ykC
-         wv3zSAKDfBZHdhEaKx+IPkwGdZ7dU65WFk5BW1qjUbrfT7n6o38lBjdz2EJCiBbDop5C
-         y1+8HFjX3hGFNA6C4KzS/rnEqGoawd5SDaS2l9m2HXVT5LEWsx3mnNftMP/dXYFwgfuf
-         tokAHXv+NjhwQ2igisF24SKS2X9S5n2de17n9WQCWz1+8q8dZDgjCGY3FyDdKHpcQEoj
-         /W5w==
-X-Gm-Message-State: AOJu0YzRNqQfE9sx6/OiShnbS8s5QrE2SVfHlJztO0UA3SbcESfWNo7i
-	gEjo2Fby2MldWRi1ygcsrV0fv6cgpD5f+PuLNE1vqfFTRZ7QNBmFDjT0tLEqcQ==
-X-Gm-Gg: ASbGncsp+FCL+nhywWu9JZaretoUCsfSsNkMpkMwIIppF2tjy39I5G++D1re9GIwSI/
-	pSgDJQBwi3EOP0GoUYScYy2lHkqy6OTcDmoJhOTFiuazNsGjkRbi6AEXUQqaQUKmHKvBqmX7/fC
-	QrxEjcSFiAAo/oXPRSh2B/PBO3VacJ/0ZEJ38SC9ieg3cquTQvWIIrv+5eebsQIH+rJPsTnwPbp
-	btMvNGu6LBem8JI5vcjFnMDd+8ne614Y4Pu/K6KLgcPwx/JZ6xibR5zO27SNz4hhoQhvlA1dQ4Z
-	67O36XxEckUT8HpdQAGQlqoDU8M/j4c9Zq4k9MGPEMi37vMsO4rjyEhanySk8+rWZrcntFRxhSd
-	VoOduqMN6dNekGa8hxen9ZVdw4iYWKRoOd2uzVOclTlzN2ww66JNIX4YKOkWRH2AHE+N2Soyq4i
-	Ihal8ilJtxtlHsNPCobGYQh9X/wh1IElOFewfvvg==
-X-Google-Smtp-Source: AGHT+IG5oma5XZltcByQMBBLA883nmzhZSBFYDt3tsNsfUu7urZS18FL9TsDQWOkfB9yP9MyKJ8odg==
-X-Received: by 2002:a17:90b:2fd0:b0:330:82b1:ef76 with SMTP id 98e67ed59e1d1-349126d814bmr3998774a91.28.1764796766511;
-        Wed, 03 Dec 2025 13:19:26 -0800 (PST)
-Received: from deb-101020-bm01.eng.stellus.in ([149.97.161.244])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-349129beec4sm1327648a91.2.2025.12.03.13.19.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Dec 2025 13:19:26 -0800 (PST)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Wed, 3 Dec 2025 21:19:24 +0000
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, dave@stgolabs.net,
-	linux-cxl@vger.kernel.org, nifan.cxl@gmail.com,
-	dongjoo.seo1@samsung.com
-Subject: Re: [RFC PATCH 0/3] Add Support for Multiple DC Regions
-Message-ID: <aTCpXMxnxtq4ZAPI@deb-101020-bm01.eng.stellus.in>
-References: <20251203203540.1091827-1-anisa.su887@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b3+8u4+z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764799568; x=1796335568;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=qeorh4zrStyzrp5KKQ54KygSKbJ7hj0F71IwPtodUtI=;
+  b=b3+8u4+zRn+FZ00Hsk2OV6yZl7X1RmO4KKfjSgta6yTy7AARdSKcZkub
+   oy7kGSlPAq6DLMQwUWVHluPZxBWWlAOqMmiECv1DMJxSnoVRndrP4+VVh
+   qqYgeEolnXv54ZsLIBMlroPsPOa987WWCD3Sb3opnFS5BrtDiPMTFVszr
+   sIGFNnA4IgGawGz6apQpUOapdmWwFQOoUSGTjKN9J3E0wQg9Xn4q1F2DK
+   Dvt9oIz7260L2Rm8AqCEi2s9q6wQbk9zAsIG5hx0HwqUOEC1ruVNOlftv
+   PEDKAEtKB7DqMYn34nlCfk7prLLx1bQnmYxlN92N1ZVbanR9JSRwoGRSP
+   A==;
+X-CSE-ConnectionGUID: AsiG1wk2TrOyMEaKOe39xA==
+X-CSE-MsgGUID: ZPGXdxOqRv2cfxCkOlBllQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11631"; a="66697779"
+X-IronPort-AV: E=Sophos;i="6.20,247,1758610800"; 
+   d="scan'208";a="66697779"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2025 14:06:07 -0800
+X-CSE-ConnectionGUID: uHJnS9NFTOKjPFx8yw9D+Q==
+X-CSE-MsgGUID: O6v/X0LcSBWZFww5WUUQSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,247,1758610800"; 
+   d="scan'208";a="198977798"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2025 14:06:05 -0800
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Wed, 3 Dec 2025 14:06:05 -0800
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29 via Frontend Transport; Wed, 3 Dec 2025 14:06:05 -0800
+Received: from BL2PR02CU003.outbound.protection.outlook.com (52.101.52.21) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Wed, 3 Dec 2025 14:06:03 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=j3lyELbh/SrdPpKTlSzUSk7FxLqDC2QjOFVm/Aw/dr12wRxisN5InlovwJZMIFz5qPz9EET8bqE1k6VpG329oY+E4jCuZO+dYC/tFITKniTqLjgov69lvNTbLOSEK13ZTTs/lK4GZ0Yk6xL0CzYlobYHmjUyU1/K+K/1YsXWyCVTLAf80irAOFzYZskMQ4RRLTpGCJ75eeY2Bd3+uUvcKaPmqDiuGatEo8w/uGUCsakiAgLwaDj4013ZaLnms6hkeGJiLtRnehc+XJkN4gaKo85oCt9rXf+fQr7PxpGBm/BBIMwkQZ+5IrvJDm9NpU9lR512q1Ut0vWcYxjtFPoG9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Se2KBF+UeyLrYm/DhF2wQ+6XODwHmwhtvCaN4/J+tKo=;
+ b=SQCbTmnISidoSbZhm557XRsYTAOkvFmDiDTUZHQC96TV1qtDfjacSxnZVlCSbN+pqE4xj+wwM9VJ88rDdozlFH5fM4QXQ8DiHF8520/96h6tomHGu92dR+lv9wRC4dDPEvdtArRXrUNtnVqxOUZ1IoR+QBDwY952laRQpW5pbMZEk2puya3w/nvuTHSSPiQwGnB2p80pRxFq2nb7BbqbFJuHeGUpPd8MJGZqXu7UYxkKoOmdPF/xLC8h9I5+1RIXwf/dnU/hxNwd9xsEGs1KK5YJ2D5zfQhDVbMuKMvLpoPsj60gcHrdkYPXHEThbmgbT0a5N2rVDylnclGbur4gdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CH3PR11MB7345.namprd11.prod.outlook.com (2603:10b6:610:14a::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.11; Wed, 3 Dec
+ 2025 22:06:01 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff%4]) with mapi id 15.20.9366.012; Wed, 3 Dec 2025
+ 22:06:01 +0000
+From: <dan.j.williams@intel.com>
+Date: Wed, 3 Dec 2025 14:05:59 -0800
+To: Tomasz Wolski <tomasz.wolski@fujitsu.com>, <alison.schofield@intel.com>
+CC: <Smita.KoralahalliChannabasappa@amd.com>, <ardb@kernel.org>,
+	<benjamin.cheatham@amd.com>, <bp@alien8.de>, <dan.j.williams@intel.com>,
+	<dave.jiang@intel.com>, <dave@stgolabs.net>, <gregkh@linuxfoundation.org>,
+	<huang.ying.caritas@gmail.com>, <ira.weiny@intel.com>, <jack@suse.cz>,
+	<jeff.johnson@oss.qualcomm.com>, <jonathan.cameron@huawei.com>,
+	<len.brown@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <lizhijian@fujitsu.com>, <ming.li@zohomail.com>,
+	<nathan.fontenot@amd.com>, <nvdimm@lists.linux.dev>, <pavel@kernel.org>,
+	<peterz@infradead.org>, <rafael@kernel.org>, <rrichter@amd.com>,
+	<terry.bowman@amd.com>, <vishal.l.verma@intel.com>, <willy@infradead.org>,
+	<yaoxt.fnst@fujitsu.com>, <yazen.ghannam@amd.com>
+Message-ID: <6930b447c48d6_198110029@dwillia2-mobl4.notmuch>
+In-Reply-To: <20251203133552.15468-1-tomasz.wolski@fujitsu.com>
+References: <aS3y0j96t1ygwJsR@aschofie-mobl2.lan>
+ <20251203133552.15468-1-tomasz.wolski@fujitsu.com>
+Subject: Re: [PATCH v4 0/9] dax/hmem, cxl: Coordinate Soft Reserved handling
+ with CXL and HMEM
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR05CA0060.namprd05.prod.outlook.com
+ (2603:10b6:a03:33f::35) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251203203540.1091827-1-anisa.su887@gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH3PR11MB7345:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7585520f-6164-4eba-1bd5-08de32b824eb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?OC9XaEFXd3JNeTBVQWt3MnpBMGtlSERWYVVKRjJRVFJBallGZm85UitNZmFp?=
+ =?utf-8?B?WjBVOWtwa3BEZmNxU0JHc0NpTXYzVEVJVi9scmZMbWVBajRZZG56RlZIcHF2?=
+ =?utf-8?B?QXRaOWpIcWtIZGRSakRQYkxuWnpqYnRIK2EweU5UL2FrdXc2QlhtNE9PSDI4?=
+ =?utf-8?B?THN3VDNxVnQ1UlZwSkN0VnludFRkNFUzZTViNFl5cGgxU2hCRDFQZUZrbVlh?=
+ =?utf-8?B?anFab3poREllUmE5VUdsVWYraFkyRkNXTVdkb2hBSFBtYjRHUEU5eU50M1JK?=
+ =?utf-8?B?M3ZQVEp3LzNvSWVMbXNqT3ZNdFc1enRnbzh4a3VCWkRnRlJhRWNMR1haelNP?=
+ =?utf-8?B?ai9sQkQ3VmduQWo0Tk91MzRNTkNocjM3NzRKbU9hSjFSTDBzTnVDY2pzd3c1?=
+ =?utf-8?B?YzNibnZmVWtXS0Z3ZVRtbHVOMS9RVnozbVRDcFVNY2NwY1M3ZmNFbzlOczhL?=
+ =?utf-8?B?K0ZQdDJJVEsyNVNoclJBY2YrelhTdEs1eXNkc3NyZWo2R3lmaDhBVXlsaERW?=
+ =?utf-8?B?VFZhaEN0eVhLUGFkVVZQT2xxa2tjTHMyTW5LVmNKaUZFNzZNeFNGN052L0FI?=
+ =?utf-8?B?RllNZ01uSFgzM1krWDdrR0szd2JPYmIxdTBPNFBWL3MrOGFRdW5LTmdoZ2J1?=
+ =?utf-8?B?aXJqVVlybkQyMkpQeTFGSjNNL2VER2g5MjZOTnJIc0NkVWNFOUhDNkRCSkVy?=
+ =?utf-8?B?cFRKYlkxZ1NHZU5lTVlSTHBnV1d3MkxlRThWS1NrOFFZMUM2dEZja2ROQzlF?=
+ =?utf-8?B?QmdMalFYYy9sZ3g4bklUVTVNSTFtOFgrT2laMFY4NVFqWUJ4RC9rRzJoN0E4?=
+ =?utf-8?B?S1FmSTlsNTh6U3Ywb1dWZ0RxazF4SGxKSVFKMjBtd0tUTkVTdTRvdGVlSGFS?=
+ =?utf-8?B?M1pSY3UzOUd5aDU1cGlTV3dGeXZyYWtCRmR4SnU2WFJJMUNoRXFQM2dTM1h3?=
+ =?utf-8?B?RWFUU1Ardmo4Mkxud2ZkUWpaUHFBZUF6RjdMVHdzLzV3ZUdyVjZybW4zU3dL?=
+ =?utf-8?B?SVRQOU5WSGNFSW04TFVDZmhsaXR6Y3RhN3MzVk9RMFlZd04rcnFydndaaXB0?=
+ =?utf-8?B?eEluUmV6SVJWODNBZlZXYkRKc3VRMlZ1cmVhTVk4RGdpRE1ucG1ZTXVGRTZj?=
+ =?utf-8?B?STlUaDRaRjQyVUxtSVFNY1Bsd0JrL0FqV3JXMVZvN0hmQXI5eUFSbnVXU3FJ?=
+ =?utf-8?B?L0pGV1hpMEtsVDNiekY4d0p6K3c3UzZ6Sm8zSkZ5SUJyKzdGY2VoT1hMb1RN?=
+ =?utf-8?B?YURrZnRubFlQaUVEQkxaYlQ0anNTTUtJeUdPZ0RRRVF0YWhnZStLMWdiRUQz?=
+ =?utf-8?B?U0VYTHRyc2hyZWF4KzZCV3JTelRZbjZtbTJRNnhLbkdKNWhBWVdBL3FXdEk0?=
+ =?utf-8?B?VEgwM0J4Z0J2alA4UzlFT096SmdIVFhYSEE1dmRTR2kwRmRkaEt2S2kzbWgw?=
+ =?utf-8?B?SktuemorZkNtVWJ2U0l6ODFqZFpuSlo4a1QyUC9SYlNlUGRocDVpUnNzdnFW?=
+ =?utf-8?B?dlVteU94L1JMeXU5VnYyeVF0emJZdGtpcmZBR0JiNldpSDBFVnZZMitQbjRD?=
+ =?utf-8?B?aTlEdFE4WFJzWjB2eStUTkVxV0NKM245T1hyQ2tWdDBvbGdZTnB6WlM2U0V4?=
+ =?utf-8?B?UjdaMWxWdUFMa0xhcXNVajdFQjFaQzE5bkpMOEEzWUdEeUtHZ2ZSYjZBVHd4?=
+ =?utf-8?B?b2UwUDhYNEJqVFk5ZmZPMGZEVGRsQTBwN25pZnFhMlhlUWswTEYvRUVmdG95?=
+ =?utf-8?B?OHczUHRQVjVoTUpXdXhtb2U2VzdCZjdReU1GN0I4VE1DdDFUNTUxaFFrNTlN?=
+ =?utf-8?B?eEErbFQwSnJvcUlPdWtrRDFHcmovdW1YdDFvSm83RXYxQUc3VVVsVmZFbDlB?=
+ =?utf-8?B?UXFjazdOeUw3c3dkcUh4N1F4K1UwMENuU3AzRUpuSWRISXAwZzhHZ282SzY1?=
+ =?utf-8?Q?w66fQXznbtHXvTvEOA9neUyLwkubmPoW?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?K1hKN1VqNHBlY1c2Q2VPbVBwNktEZDF3V2J0bWNMQ1l0UG0reFRLdFhpeGZ2?=
+ =?utf-8?B?cXAxK1p6QlB4bkNHZWs4NnJTbXVydU5keENWa1hLNWJYMjRKY0lnTnl0U0Jt?=
+ =?utf-8?B?Q1pBU0NhMTB6VUhtUEVNaHNsekxYVGp0bFpqZ3UzSUJkOU02MHgwcVVpYVdm?=
+ =?utf-8?B?c0l3MTJsYmRROTR6TFJKWk5ycnB6Ymt3WXZRYldhQy9JRXVKdjRLOGY1ZWcz?=
+ =?utf-8?B?OEhqdFgzRWFFZVYyUE1seGJXdEIyaEM4TGo0c3JTelJ5aXNiVzBXZ25NeDVI?=
+ =?utf-8?B?OUlvWkNpK0ZCVk1jVUM0UU9BTk4wZUFXTjh3cGc3VTAvdU1vRjFyeTJxWXBp?=
+ =?utf-8?B?MWNzblVzUW15YlJZSVc0NDVXK1ZHeUxmOGQrWnRIZ0MwaE1KMmdoRWRXRXlL?=
+ =?utf-8?B?N0o3TmY1SEd2THJtMStCWXNBTnZuNDVGU0owN2RjT2JZSU84NU5jZU8wVTBz?=
+ =?utf-8?B?cytXNVQwRzV6TmdLN2xVNXRhQ08rMTd6MXNrd1VVaVNkVUVWdEZEUjVmZ2Iw?=
+ =?utf-8?B?TWVkeXgzR3RVK1A0K2JlTVYycHp2Rk5JYTF1Y2JQU25JTFVaVlFSZUpkUGIr?=
+ =?utf-8?B?QzZKam9la0IydGNkcnlSY2ZKZmRIa2pEbWUySkxBNGZzckVyQWJmak9uSE5x?=
+ =?utf-8?B?eTczY3ZXcE9NbTkvOVM0TllHOG8zamR0SXpCaWZQM09Vc0VaMzJBbllYRkNI?=
+ =?utf-8?B?cjJRQXZVWjRyRHNuZW1nOFJmeG54dG9vRHZ3N05zSU41RFlKbVEvZ1UwcWdL?=
+ =?utf-8?B?QlNNdU1jL1Y3cEJ1Qk05SlN4WUZhQkxxb2RVcllldlplMS9UUDlzTTUxZ3Q4?=
+ =?utf-8?B?RmY5aEpsenlPaUFCVCsxQU5qV2hGN2dtOU9OYnFEWG96ZUJ4NXdvK2JXQTIr?=
+ =?utf-8?B?d3VNdEJ6VmdwOTkrT04wK0hNNVd5NDhML1VrRUFmUWRWRmFnR0JadmxmdGtl?=
+ =?utf-8?B?QUNQMDcxU3o2Sk9adGo5empPMWNTRXd5VmtWTi81TVJhWmxpam1WOFZCV0M5?=
+ =?utf-8?B?Q1Zhb00wdkFxMU11OU1SK2RiNVkvTDhHKy9CLy81T2tEdU5SMW04RTBYVVNB?=
+ =?utf-8?B?d1oyeWtjZW4xMmsyRDhZWFB5M09vVC9xaFdCV0QvYWhOaHgrdTdpK29ZakZX?=
+ =?utf-8?B?NmFaNjA4Rm1xVXN6UkFaM3F2T29JYlliTGp3VDZjdm9zUGRsdjdVNkQ3K0Np?=
+ =?utf-8?B?bjJHc1JzdThSMFA1UjhxTjh3Z0N4N2RBSld5aFp2VXVlRk9wYTBMem1OOHpV?=
+ =?utf-8?B?TjBHUTFWY0ZBcGlndjNBSmhJZmxUWDJWL1RYYVJHNXg4NFRYeTdLdHEvY29H?=
+ =?utf-8?B?U0hHTFgrS2pxU1dVK29CS0wwck8yQWJuM1dWclBHM0RyY2hYOGtlYURjMjFx?=
+ =?utf-8?B?NExuZGJBM0xtRkdLR1lFbjR0d0o5c3dHcGtQdUNGMTdtei91dXByNXN1Y2hn?=
+ =?utf-8?B?WHBENHlxSy9iMnZjaWdqcjBnenNZWUZJeU1CRVlmSHRGNEk1WkhVK1Vjd2Z0?=
+ =?utf-8?B?RUZYTjJLQVVKakVxUUF1MmZ6UWwzNzV2cFlUMGpwRWY3RDJ6U3ZmZ3RMUGRE?=
+ =?utf-8?B?NGNRTDNKakJ4RXdZdTlwWERoNGZpZlRtVmxGUnd4WkRDYlhoank1eDhNRGlV?=
+ =?utf-8?B?T3MxQ2ZhMlpDMlAwRURUcTVCS3FVUFI1VUE5TkpzT3QrWTN1OFpFcm5zMWEx?=
+ =?utf-8?B?RHZnRGhEV2wxYmE5ekhKeDNEajdmcHFzcnNwb3U0blBoN2VYSzdNekZ5b0tI?=
+ =?utf-8?B?c09Fb2FQM2IvKzE3OGlzQjhjaEN6ai9sV2ZpZGpaZGxrcmdEc0pGYitDZTll?=
+ =?utf-8?B?NU9FTDhiVkNPbktReDIwaEpxQ2pVTXB6M1liUHY0eStWN0FGd0t5S3JMbGpl?=
+ =?utf-8?B?dEZGajZiSWdvbmw3ajlYMmJ1ZThJYTMzN1FrR2w3VUh6bGYzTjJnUU9FcUJa?=
+ =?utf-8?B?elR6MG5nd3g5UWE1MU9lMHkvVVo2b0JSbk5kMVhhVEw1L2Z0cXNNWGdKSE14?=
+ =?utf-8?B?QWtzTnRsZWRNQUdPUGxaVDBsbXJBRzBrQkVxSGZpQnIzSVduSlYyY3E1cEpx?=
+ =?utf-8?B?S2ZCYVNDQVpVd1EvSUphdjVrcUZrYUlkWUFVN0YxV1UyVUhyWTh3MGhpSklG?=
+ =?utf-8?B?M3ZYNlg5UERZOXh1dGY4RXJwVlVuZkdUbURuaDVmSlIyNWdhYllVUzY1d2Ix?=
+ =?utf-8?B?TGc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7585520f-6164-4eba-1bd5-08de32b824eb
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2025 22:06:00.9959
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ne/50NtxCVcW1khYuiQvTGA1nCDfQifNzKt5Io8YlRQ9bW7DnWjWmNxe/8dyA4TJpnmRjkfqHK5THsrvU/MjH2NuoluxsqfOwpF1+QW5qxk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7345
+X-OriginatorOrg: intel.com
 
-On Wed, Dec 03, 2025 at 08:29:10PM +0000, anisa.su887@gmail.com wrote:
-> From: Anisa Su <anisa.su@samsung.com>
+Tomasz Wolski wrote:
+[..]
 > 
-> This patchset introduces support for multiple DC regions. It is rebased on top
-> of the latest branch published to Ira's repository:
-> https://github.com/weiny2/linux-kernel/tree/dcd-v6-2025-09-23.
-> We hope it will be useful in the meantime for others and restart some
-> discussion around how to move DCD forward.
+> Hello Smita, Alison
 > 
-> The corresponding NDCTL support can be found on this branch:
-> https://github.com/anisa-su993/anisa-ndctl/tree/multiple-dc-region-support.
-> I will reply to this thread with a reference to the thread for the
-> NDCTL patches once published.
-> 
+> I did some testing and came across issues with probe order so I applied the 
+> three patches mentioned by Smita + fix for the NULL dereference.
+> I noticed issues in scenario 3.1 and 4 below but maybe they are related to
+> the test setup:
 
-NDCTL thread: https://lore.kernel.org/linux-cxl/20251203211642.1104918-1-anisa.su887@gmail.com/T/#u
+BTW, thanks for all these tests, it helps!
 
-> Testing:
-> This patchset was tested on a QEMU VM with the following topology:
+> [1] QEMU: 1 CFMWS + Host-bridge + 1 CXL device
+> Soft reserve in not seen in the iomem:
 > 
-> PCIE Root (pcie.0)
-> │
-> ├─ CXL Fixed Memory Window cxl-fmw.0
-> ├─ CXL Root Complex cxl.0
-> │  └─ Root Port root_port1
-> │     └─ CXL Type-3 Device cxl-dcd0
-> │
-> ├─ CXL Fixed Memory Window cxl-fmw.1
-> ├─ CXL Root Complex cxl.1
-> │  └─ Root Port root_port2
-> │     └─ CXL Type-3 Device cxl-dcd1
-> └─
+> a90000000-b8fffffff : CXL Window 0
+>   a90000000-b8fffffff : region0
+>     a90000000-b8fffffff : dax0.0
+>       a90000000-b8fffffff : System RAM (kmem)
+> 	  
+> kernel: [    0.000000][    T0] BIOS-e820: [mem 0x0000000a90000000-0x0000000b8fffffff] soft reserved
 > 
-> "-object memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/t3_cxl1.raw,size=8G \
-> -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=/tmp/t3_lsa1.raw,size=1M \
-> -object memory-backend-file,id=cxl-mem2,share=on,mem-path=/tmp/t3_cxl2.raw,size=8G \
-> -object memory-backend-file,id=cxl-lsa2,share=on,mem-path=/tmp/t3_lsa2.raw,size=1M \
-> -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.0,hdm_for_passthrough=true \
-> -device pxb-cxl,bus_nr=48,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
-> -device cxl-rp,port=0,bus=cxl.0,id=root_port1,chassis=0,slot=1 \
-> -device cxl-rp,port=1,bus=cxl.1,id=root_port2,chassis=1,slot=1 \
-> -device cxl-type3,bus=root_port1,volatile-dc-memdev=cxl-mem1,id=cxl-dcd0,lsa=cxl-lsa1,num-dc-regions=8,sn=99 \
-> -device cxl-type3,bus=root_port2,volatile-dc-memdev=cxl-mem2,id=cxl-dcd1,lsa=cxl-lsa2,num-dc-regions=8,sn=100 \
-> -machine cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=8G,cxl-fmw.1.targets.0=cxl.1,cxl-fmw.1.size=8G"
+> == region teardown
+> a90000000-b8fffffff : CXL Window 0
+>  // no dax devices
+>  
+> == region recreate
+> a90000000-b8fffffff : CXL Window 0
+>   a90000000-b8fffffff : region0
+>     a90000000-b8fffffff : dax0.0
+>       a90000000-b8fffffff : System RAM (kmem)
+> 	  
+> == booted with no PCI attached
+> a90000000-b8fffffff : Soft Reserved
+>   a90000000-b8fffffff : CXL Window 0
+>     a90000000-b8fffffff : dax1.0
+>       a90000000-b8fffffff : System RAM (kmem)
+
+So this is the expected behavior with the proposal that if the device and
+memory is present at boot, but the driver is disabled or fails to
+assemble, then the solution falls back to "region-less" dax.
+
+> == ..and hot plug via QEMU terminal => is the following iomem tree expected?
+> a90000000-b8fffffff : Soft Reserved
+>   a90000000-b8fffffff : CXL Window 0
+>     a90000000-b8fffffff : region0
+>       a90000000-b8fffffff : dax1.0
+>         a90000000-b8fffffff : System RAM (kmem)
+
+Unless I am missing something, this looks like a bug in the test because
+if you are truly hot-adding the device after boot, then the BIOS would
+have had no reason/chance to create that Soft Reserved entry. The
+assumption is that the presence of Soft Reserved always implies that it
+was mapping physical hardware that was present at boot.
+
+> kernel: [  129.820136][   T65] cxl_acpi ACPI0017:00: decoder0.0: created region0
+> ..
+> kernel: [  129.827126][   T65] cxl_region region0: [mem 0xa90000000-0xb8fffffff flags 0x200] has System RAM: [mem 0xa90000000-0xb8fffffff flags 0x83000200]
 > 
-> 2 CFMWs and 2 root complexes are emulated because QEMU creates
-> 4 decoders/topology level. With 1 root complex, there are only 4 upstream
-> decoders. Therefore in order to create 4+ regions, we need a total of
-> 8 upstream decoders. This does mean that we are only able to create
-> 4 regions on each device, although up to 8 are supported.
+> [1.1] QEMU: 1 CFMWS + Host-bridge + 1 CXL device
+>       Region is smaller than SR - hmem claims the space
+
+The expectation is that a configuration like this is out of scope.
+Unless CXL fully covers a Soft Reserved entry it must assume that the
+platform is doing something custom / special and disable the CXL
+subsystem in its entirety.
+
+The simplifying hope is that there is always a 1:1 correlation between
+CXL Region and ACPI SRAT/HMAT range entries such that a Soft Reserved
+resource is never misaligned to a CXL region.
+
+Hmm, this might highlight a gap in the implementation. I think we need
+to make sure that drivers/acpi/numa/hmat.c::alloc_memory_target()
+injects boundaries into soft_reserve_resource. I.e. I think a BIOS might
+create a merged EFI memory map entry that spans multiple SRAT/HMAT
+ranges in the same proximity domain.
+
+It would be lovely to require BIOS to bound their descriptions on CXL
+region boundaries.
+
+> a90000000-bcfffffff : Soft Reserved
+>   a90000000-bcfffffff : CXL Window 0
+>     a90000000-bcfffffff : dax1.0
+>       a90000000-bcfffffff : System RAM (kmem)
 > 
-> Using `cxl list`, we can see mem0 and mem1 have dynamic_ram_* capablities:
-> root@deb-101020-bm01:~# cxl list
-> [
->   {
->     "memdevs":[
->       {
->         "memdev":"mem0",
->         "dynamic_ram_0_size":1073741824,
->         "dynamic_ram_1_size":1073741824,
->         "dynamic_ram_2_size":1073741824,
->         "dynamic_ram_3_size":1073741824,
->         "dynamic_ram_4_size":1073741824,
->         "dynamic_ram_5_size":1073741824,
->         "dynamic_ram_6_size":1073741824,
->         "dynamic_ram_7_size":1073741824,
->         "serial":100,
->         "host":"0000:31:00.0",
->         "firmware_version":"BWFW VERSION 00"
->       },
->       {
->         "memdev":"mem1",
->         "dynamic_ram_0_size":1073741824,
->         "dynamic_ram_1_size":1073741824,
->         "dynamic_ram_2_size":1073741824,
->         "dynamic_ram_3_size":1073741824,
->         "dynamic_ram_4_size":1073741824,
->         "dynamic_ram_5_size":1073741824,
->         "dynamic_ram_6_size":1073741824,
->         "dynamic_ram_7_size":1073741824,
->         "serial":99,
->         "host":"0000:0d:00.0",
->         "firmware_version":"BWFW VERSION 00"
->       }
->     ]
->   }
-> ]
+> [2] QEMU: 1 CFMWS + Host-bridge + 2 CXL devices
 > 
-> To create the 8 regions:
-> cxl create-region -m -d decoder0.0 -w 1 -s 1G mem1 -t dynamic_ram_0
-> cxl create-region -m -d decoder0.0 -w 1 -s 1G mem1 -t dynamic_ram_1
-> cxl create-region -m -d decoder0.0 -w 1 -s 1G mem1 -t dynamic_ram_2
-> cxl create-region -m -d decoder0.0 -w 1 -s 1G mem1 -t dynamic_ram_3
+> kernel: [    0.000000][    T0] BIOS-e820: [mem 0x0000000a90000000-0x0000000c8fffffff] soft reserved
 > 
-> cxl create-region -m -d decoder0.1 -w 1 -s 1G mem0 -t dynamic_ram_4
-> cxl create-region -m -d decoder0.1 -w 1 -s 1G mem0 -t dynamic_ram_5
-> cxl create-region -m -d decoder0.1 -w 1 -s 1G mem0 -t dynamic_ram_6
-> cxl create-region -m -d decoder0.1 -w 1 -s 1G mem0 -t dynamic_ram_7
+> a90000000-c8fffffff : CXL Window 0
+>   a90000000-b8fffffff : region1
+>     a90000000-b8fffffff : dax1.0
+>       a90000000-b8fffffff : System RAM (kmem)
+>   b90000000-c8fffffff : region0
+>     b90000000-c8fffffff : dax0.0
+>       b90000000-c8fffffff : System RAM (kmem)
+
+Wait, you have a CXL region that partially overlaps a Soft Reserved
+range? That does not look a configuration the subsystem could ever
+support and should fallback to disabling CXL.
+
+> == region1 teardown
+> a90000000-c8fffffff : CXL Window 0
+>   a90000000-b8fffffff : region0
+>     a90000000-b8fffffff : dax0.0
+>       a90000000-b8fffffff : System RAM (kmem)
 > 
+> == recreate region1 - created in correct address range
 > 
-> We can verify the 8 regions:
-> root@deb-101020-bm01:~# cxl list
-> [
->   {
->     "memdevs":[
-> ...
->   },
->   {
->     "regions":[
->       {
->         "region":"region0",
->         "resource":79993765888,
->         "size":1073741824,
->         "interleave_ways":1,
->         "interleave_granularity":256,
->         "decode_state":"commit"
->       },
->       {
->         "region":"region6",
->         "resource":81067507712,
->         "size":1073741824,
->         "interleave_ways":1,
->         "interleave_granularity":256,
->         "decode_state":"commit"
->       },
->       {
->         "region":"region7",
->         "resource":82141249536,
->         "size":1073741824,
->         "interleave_ways":1,
->         "interleave_granularity":256,
->         "decode_state":"commit"
->       },
->       {
->         "region":"region8",
->         "resource":83214991360,
->         "size":1073741824,
->         "interleave_ways":1,
->         "interleave_granularity":256,
->         "decode_state":"commit"
->       },
->       {
->         "region":"region1",
->         "resource":88315265024,
->         "size":1073741824,
->         "interleave_ways":1,
->         "interleave_granularity":256,
->         "decode_state":"commit"
->       },
->       {
->         "region":"region2",
->         "resource":89389006848,
->         "size":1073741824,
->         "interleave_ways":1,
->         "interleave_granularity":256,
->         "decode_state":"commit"
->       },
->       {
->         "region":"region3",
->         "resource":90462748672,
->         "size":1073741824,
->         "interleave_ways":1,
->         "interleave_granularity":256,
->         "decode_state":"commit"
->       },
->       {
->         "region":"region4",
->         "resource":91536490496,
->         "size":1073741824,
->         "interleave_ways":1,
->         "interleave_granularity":256,
->         "decode_state":"commit"
->       }
->     ]
->   }
-> ]
+> a90000000-c8fffffff : CXL Window 0
+>   a90000000-b8fffffff : region0
+>     a90000000-b8fffffff : dax0.0
+>       a90000000-b8fffffff : System RAM (kmem)
+>   b90000000-c8fffffff : region1
+>     b90000000-c8fffffff : dax1.0
+>       b90000000-c8fffffff : System RAM (kmem)
 > 
-> Extents of various sizes (128MB, 256MB, 512MB, and 1GB) are added from mem1,
-> which correspond to regions 0-3, then DAX devices are created from them.
-> The extent DPAs are as follows, which allows each one to map to a distinct
-> region:
->  - [0-128] --> region0
->  - [1024-1280] --> region1
->  - [2048-2560] --> region2
->  - [3072-4096] --> region3
+> [2.1] QEMU: 1 CFMWS + Host-bridge + 2 CXL devices
+>       Region is smaller than SR - hmem claims the whole space
 > 
-> The correct sizes can be verified when creating the DAX device.
-> root@deb-101020-bm01:~/libcxlmi# daxctl create-device -r region0
-> [
->   {
->     "chardev":"dax0.1",
->     "size":134217728,
->     "target_node":1,
->     "align":2097152,
->     "mode":"devdax"
->   }
-> ]
-> created 1 device
-> root@deb-101020-bm01:~/libcxlmi# daxctl create-device -r region1
-> [
->   {
->     "chardev":"dax1.1",
->     "size":268435456,
->     "target_node":1,
->     "align":2097152,
->     "mode":"devdax"
->   }
-> ]
-> created 1 device
-> root@deb-101020-bm01:~/libcxlmi# daxctl create-device -r region2
-> [
->   {
->     "chardev":"dax2.1",
->     "size":536870912,
->     "target_node":1,
->     "align":2097152,
->     "mode":"devdax"
->   }
-> ]
-> created 1 device
-> root@deb-101020-bm01:~/libcxlmi# daxctl create-device -r region3
-> [
->   {
->     "chardev":"dax3.1",
->     "size":1073741824,
->     "target_node":1,
->     "align":2097152,
->     "mode":"devdax"
->   }
-> ]
-> created 1 device
+> kernel: [    0.000000][    T0] BIOS-e820: [mem 0x0000000a90000000-0x0000000ccfffffff] soft reserved
 > 
-> Then the DAX devices are reconfigured to system-ram mode and verified with lsmem.
-> root@deb-101020-bm01:~/libcxlmi# daxctl reconfigure-device dax0.1 -m system-ram
-> [
->   {
->     "chardev":"dax0.1",
->     "size":134217728,
->     "target_node":1,
->     "align":2097152,
->     "mode":"system-ram",
->     "online_memblocks":1,
->     "total_memblocks":1,
->     "movable":true
->   }
-> ]
-> reconfigured 1 device
-> root@deb-101020-bm01:~/libcxlmi# daxctl reconfigure-device dax1.1 -m system-ram
-> ...
-> root@deb-101020-bm01:~/libcxlmi# daxctl reconfigure-device dax2.1 -m system-ram
-> ...
-> root@deb-101020-bm01:~/libcxlmi# daxctl reconfigure-device dax3.1 -m system-ram
-> ...
+> a90000000-ccfffffff : Soft Reserved
+>   a90000000-ccfffffff : CXL Window 0
+>     a90000000-ccfffffff : dax1.0
+>       a90000000-ccfffffff : System RAM (kmem)
 > 
+> [3] QEMU: 2 CFMWS + Host-bridge + 2 CXL devices
 > 
-> root@deb-101020-bm01:~/libcxlmi# lsmem
-> RANGE                                  SIZE  STATE REMOVABLE   BLOCK
-> 0x0000000000000000-0x000000007fffffff    2G online       yes    0-15
-> 0x0000000100000000-0x000000027fffffff    6G online       yes   32-79
-> 0x00000012a0000000-0x00000012a7ffffff  128M online       yes     596
-> 0x00000012e0000000-0x00000012efffffff  256M online       yes 604-605
-> 0x0000001320000000-0x000000133fffffff  512M online       yes 612-615
-> 0x0000001360000000-0x000000139fffffff    1G online       yes 620-627
+> a90000000-b8fffffff : CXL Window 0
+>   a90000000-b8fffffff : region0
+>     a90000000-b8fffffff : dax0.0
+>       a90000000-b8fffffff : System RAM (kmem)
+> b90000000-c8fffffff : CXL Window 1
+>   b90000000-c8fffffff : region1
+>     b90000000-c8fffffff : dax1.0
+>       b90000000-c8fffffff : System RAM (kmem)
 > 
-> Memory block size:                128M
-> Total online memory:              9.9G
-> Total offline memory:               0B
+> == Tearing down region 1
 > 
-> -------------------------------------------------------------------------------
-> Note: I did try hacking QEMU to create 8 decoders at each level to avoid having
-> 2 separate host bridges/DCDs by modifying include/hw/cxl/cxl_component.h like so:
+> a90000000-b8fffffff : CXL Window 0
+>   a90000000-b8fffffff : region0
+>     a90000000-b8fffffff : dax0.0
+>       a90000000-b8fffffff : System RAM (kmem)
+> b90000000-c8fffffff : CXL Window 1
 > 
-> #define CXL_HDM_DECODER_COUNT 8
-> HDM_DECODER_INIT(0);
-> HDM_DECODER_INIT(1);
-> HDM_DECODER_INIT(2);
-> HDM_DECODER_INIT(3);
-> HDM_DECODER_INIT(4);
-> HDM_DECODER_INIT(5);
-> HDM_DECODER_INIT(6);
-> HDM_DECODER_INIT(7);
+> == Recreate region 1 
+> a90000000-b8fffffff : CXL Window 0
+>   a90000000-b8fffffff : region0
+>     a90000000-b8fffffff : dax0.0
+>       a90000000-b8fffffff : System RAM (kmem)
+> b90000000-c8fffffff : CXL Window 1
+>   b90000000-c8fffffff : region1
+>     b90000000-c8fffffff : dax1.0
+>       b90000000-c8fffffff : System RAM (kmem)
 > 
-> However, when attempting to create the 5th cxl region,
-> I ran into a timeout error when committing the decoders.
-> Did not spend much time pursuing this further, most likely
-> need to change more things on the QEMU side.
-> But the 8 decoders do show up correctly under sysfs.
+> [3.1] QEMU: 2 CFMWS + Host-bridge + 2 CXL devices
+>       Region does not span whole CXL Window - hmem should claim the whole space, but kmem failed with EBUSY
 > 
-> Fan Ni (3):
->   core/region: fix return logic for store_targetN
->   dax/cxl: add existing dc extents when probing dax region
->   dcd: Add support for multiple DC regions
+> a90000000-ccfffffff : Soft Reserved
+>   a90000000-bcfffffff : CXL Window 0
+>   bd0000000-ccfffffff : CXL Window 1
+
+Again, we do not expect that a real world BIOS would ever present this.
+It might be the case that there is a single EFI entry that covers
+a90000000-ccfffffff, but the expectation is that SRAT would have
+separate entries for a90000000-bcfffffff and bd0000000-ccfffffff so that
+everything lines up.
+
+For simplicity I want the fallback to be all or nothing because either
+there is full confidence that the CXL Subsystem understands the
+configuration, or there is zero confidence. Leave no room for complex
+"partial assembly" configurations to debug.
+
+[..]
 > 
->  drivers/cxl/core/cdat.c   |   2 +-
->  drivers/cxl/core/core.h   |   9 +-
->  drivers/cxl/core/extent.c |   2 +-
->  drivers/cxl/core/hdm.c    |  18 +++-
->  drivers/cxl/core/mbox.c   |  39 +++++----
->  drivers/cxl/core/memdev.c | 179 +++++++++++++++++++++++++-------------
->  drivers/cxl/core/port.c   |  45 ++++++++--
->  drivers/cxl/core/region.c |  65 ++++++++------
->  drivers/cxl/cxl.h         |  23 ++++-
->  drivers/cxl/cxlmem.h      |   5 +-
->  drivers/dax/cxl.c         |  28 ++----
->  11 files changed, 281 insertions(+), 134 deletions(-)
+> [4] Physical machine: 2 CFMWS + Host-bridge + 2 CXL devices
 > 
-> -- 
-> 2.51.0
+> kernel: BIOS-e820: [mem 0x0000002070000000-0x000000a06fffffff] soft reserved
 > 
+> 2070000000-606fffffff : CXL Window 0
+>   2070000000-606fffffff : region0
+>     2070000000-606fffffff : dax0.0
+>       2070000000-606fffffff : System RAM (kmem)
+> 6070000000-a06fffffff : CXL Window 1
+>   6070000000-a06fffffff : region1
+>     6070000000-a06fffffff : dax1.0
+>       6070000000-a06fffffff : System RAM (kmem)
+
+Ok, so a real world maching that creates a merged
+0x0000002070000000-0x000000a06fffffff range. Can you confirm that the
+SRAT has separate entries for those ranges? Otherwise, need to rethink
+how to keep this fallback algorithm simple and predictable.
+
+> kernel: BIOS-e820: [mem 0x0000002070000000-0x000000a06fffffff] soft reserved
+> 
+> == region 1 teardown and unplug (the unplug was done via ubind/remove in /sys/bus/pci/devices)
+
+Note that you need to explicitly destroy the region for the physical
+removal case. Otherwise, decoders stay committed throughout the
+hierarchy. Simple unbind / PCI device removal does not manage CXL
+decoders.
+
+> 
+> 2070000000-606fffffff : CXL Window 0
+>   2070000000-606fffffff : region0
+>     2070000000-606fffffff : dax0.0
+>       2070000000-606fffffff : System RAM (kmem)
+> 6070000000-a06fffffff : CXL Window 1
+> 
+> == plug - after PCI rescan cannot create hmem 
+> 6070000000-a06fffffff : CXL Window 1
+>   6070000000-a06fffffff : region1
+> 
+> kernel: cxl_region region1: config state: 0
+> kernel: cxl_acpi ACPI0017:00: decoder0.1: created region1
+> kernel: cxl_pci 0000:04:00.0: mem1:decoder10.0: __construct_region region1 res: [mem 0x6070000000-0xa06fffffff flags 0x200] iw: 1 ig: 4096
+> kernel: cxl_mem mem1: decoder:decoder10.0 parent:0000:04:00.0 port:endpoint10 range:0x6070000000-0xa06fffffff pos:0
+> kernel: cxl region1: region sort successful
+> kernel: cxl region1: mem1:endpoint10 decoder10.0 add: mem1:decoder10.0 @ 0 next: none nr_eps: 1 nr_targets: 1
+> kernel: cxl region1: pci0000:00:port2 decoder2.1 add: mem1:decoder10.0 @ 0 next: mem1 nr_eps: 1 nr_targets: 1
+> kernel: cxl region1: pci0000:00:port2 cxl_port_setup_targets expected iw: 1 ig: 4096 [mem 0x6070000000-0xa06fffffff flags 0x200]
+> kernel: cxl region1: pci0000:00:port2 cxl_port_setup_targets got iw: 1 ig: 256 state: disabled 0x6070000000:0xa06fffffff
+
+Did the device get reset in the process? This looks like decoders
+bounced in an inconsistent fashion from unplug to replug and
+autodiscovery.
