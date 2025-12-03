@@ -1,67 +1,67 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4702E7650
-	for <linux-cxl@vger.kernel.org>; Wed,  3 Dec 2025 10:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CF82E7F0B
+	for <linux-cxl@vger.kernel.org>; Wed,  3 Dec 2025 10:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764756711; cv=none; b=DzLSepXpl46Jk5fFID2YHUQ7nLRksE7BlnU3bNmy9kpHcU0oUZ5KnA8+4qIRD773z9bQ1HykfNRS4getHT1Xv9DfWtBz6P05D33Am1cq8IK2iSbHoDSjRD9S0cg8i8JgL9vfyJuz5+wTFESPISK9EwCsW85mIYeO5Y2dkO8ioiM=
+	t=1764756795; cv=none; b=rGY64z74V8daMnfSh6/jum1VMuVscRhZzXR21Ji1RpLGWie3UIv69id7CZfew12hWUdtChmHEOjraUerlKFRQsci8fFgz164rhm/JavJ9haeDLY8LgEsS2cd2t6TufMvfjFPwdqzOuWqLwvRbewGxgjMu1y8eIDBHtDRjZi7fCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764756711; c=relaxed/simple;
-	bh=yy2j4Gr2kBYId3840eqEXHigGss3DzYkeqaEM7aYlHA=;
+	s=arc-20240116; t=1764756795; c=relaxed/simple;
+	bh=BiT+d5qc8C4RsGYH+SCaa+oeC3Yav6s+/ZzqrsgmzJc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZWPy29b9sxntAVN6GntxXziqThDuGnTez0LyOWxRuezvGnK8h4dLV0J82/7zDbunwsP2Z42LJnuWCOM9/UKxS7p0tJPSSyYcKSkMvI0j9Hj5qWsI2W8XpSqd8G5nSHaLpmiUS5POeM2+EtqSbX+X6rOrG2T9xJCuVU2PItry4+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CGQ3qm8f; arc=none smtp.client-ip=209.85.208.177
+	 In-Reply-To:Content-Type; b=bDCLX+6GgmOELg3YlKsdDdUZM4NX/ajmE22im2TCfM82m3YMuNgz5zz9NytQiaRRbvOihRwN9FFYxb2fbEldNy32dWR6gY3Uubm2yvlYuu25C7C7N1w+/Bqb6S934bcPHuO+bgaqqJJUrdpm5TkfbmU+b4rmKcVNZ8vh9kDHrGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J1bUHkZL; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CGQ3qm8f"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-37b999d0c81so54021671fa.2
-        for <linux-cxl@vger.kernel.org>; Wed, 03 Dec 2025 02:11:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1bUHkZL"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-640c1fda178so12267844a12.1
+        for <linux-cxl@vger.kernel.org>; Wed, 03 Dec 2025 02:13:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764756707; x=1765361507; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1764756792; x=1765361592; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7hkzMjIodS1pI1goTlzUE28NNMhc2FNCH6n3nOuMBQE=;
-        b=CGQ3qm8f+FnQjwU2B6pdhx/AwemgYV6WVz3Dj7xUo4cV3I4MJgz1nWnTG6r2YQPOjf
-         fP8b+31wR1gNKe6nGF9q9e+RncRGjSWqm3UGUrUsUmPAxzh+gkAJ7quVLcI9rMrMg7vB
-         Uq0TC/2dS4oGg0gFqFJdmhF5vXYCsU+okjdR6We64fb16qwZPbwsgj6AxYG9IZAgrwah
-         tARdWVM8K9aVO6PuvFeMcAZk9zmPV6pfQJxh1anrbDS95rvuNVWG8Lrc27VSlQ9/IY0L
-         55DMxgyxALBxlRdganrQNQwaut8ICacgWsjCQgecIbz6bI07RlBRM+UX0VQC2wwTLQW+
-         owHg==
+        bh=25t6xy0yqULv0JiwkJYiO6xQv5aKUXjoZCh/BoUPI5E=;
+        b=J1bUHkZLgmtNcm/WtVt5c8Kzeuw9wZf7N4YMnOEi4dgW8Z6DDWrttcX1E4/WviG8Kv
+         D0hm4iaHr7pcke2Qh5Sod3SIiysD5c9JbR6zP2jOktafbby8kSv/HWDWWaOR45J2Wr1l
+         NoiQw++oH9wXVgwFoIPOV2USgPAqeASYfIuYRMdor9EOtqKIgjKvett+byNOQroLDEI2
+         jalUCstuMVPEzYlPKIVVSorYvNRhNsxFRYIzN/ZzTAUBsfg2zPBkbynARVgXU4kWQCE7
+         WRVZo/W+fC3/C+Tv480zfONwWNILvfMnfUVqXKEp2lfnRTU+9P9ZxlCrRgbw6L6LNoz0
+         PHPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764756707; x=1765361507;
+        d=1e100.net; s=20230601; t=1764756792; x=1765361592;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7hkzMjIodS1pI1goTlzUE28NNMhc2FNCH6n3nOuMBQE=;
-        b=GOOAhnE6wEUMyNW/0nm+zRMpt7XTWySzGGmZVSUszx420VszsyvJlwXY/7QlO6LZwf
-         wRofWlyj/Mi7Q7MAJw0Fcfb99BHE6NbhmqC7kKk0TbidxxuXt0d895YSdjbfiPKf6SEh
-         bXEq7574rZqH6E8NMczS7xJ9cL2x2BGp9hH/S907a2ZQFO5NKGbnZfD+OlaQrZ14Y89X
-         j3z0UXCHRcK5zb0RdNLKob4gzO9KgCs0oR0R87QdRoKZybR6YVk7V+C5oN1kfyEL5W/C
-         Eyo962Iai2lwOUw/yYYo99NZboO36vzbkMbJOEhxGagzu0Rs4jkcG7WujeMIkZTL+AuL
-         4yoA==
-X-Forwarded-Encrypted: i=1; AJvYcCVkJFcH+DoKYWcZ+X7H99SPCgtb7B1seGSJRmYDacVu9UxWzt6ZnwPv1bP3QWjld1PRTdYGhsU/BWM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBUenrD6pwW0pqgVmqMA3qIH8y5/616iiiNNkhZqucAc+INCWU
-	78e1RjwIKW1qL9OcI7xjwCUt2B0FOVvgvbe8kOKNrmTB6L/x1LLieRKQ
-X-Gm-Gg: ASbGncugFGVfU0XOAElQ4hHHcwn/HRHIkNzgAVvGbrvG3AFpG1XgtzC5mzI1nAtV2Ym
-	j/HB7yYBnAS8z8E2E6f0amGeV0c3Z7I5WCRs0H4ctFqLgNUt9KQtZTJWpdQupxvvzhKbu8j+oRB
-	S8mLMoZNSAQ/wmTEjerWsl7ngeTMRCqcccRdOCOmGEhSnqiRb9MJYTfs25Abiju0KsuPm5zmhCN
-	2xL5jpOZt58KxuXT1JdXx8QrCBB28HbiJ8roU8udKF3ZvlvWy/M/ai14ePL5obQyuIi4XulL29A
-	IKGylb50idGdnyiHD+cqb0K565HzNdVgQDCceESGBa/OH1wfDZJVlrYfVEmYY4oUOcubeksZsTF
-	p7luvYU6ZvR2w/nnD0z4UsrzvnjbpwTWB/MoLqDtm/Qk/rmUYaU74pejRVv8WiBjyvFL5190+5/
-	juczIEYA1J7TixNg==
-X-Google-Smtp-Source: AGHT+IGClRjrRzHtx62krt4asIMCvQHnP6xr/r5CpGOAwQrXHtwf7m7w8S9UGWZzoda9nXqVUQIx4Q==
-X-Received: by 2002:a05:6512:12c4:b0:595:7d86:f654 with SMTP id 2adb3069b0e04-597d3fb539emr853943e87.26.1764756707102;
-        Wed, 03 Dec 2025 02:11:47 -0800 (PST)
-Received: from [10.38.18.76] ([213.255.186.37])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-596bf8a7b2asm5560144e87.12.2025.12.03.02.11.45
+        bh=25t6xy0yqULv0JiwkJYiO6xQv5aKUXjoZCh/BoUPI5E=;
+        b=ZCUd6G2RoTBz0Z5uAIWHvB/DKYM3kWi2gPEQwlICYocElQgEXfgrrFBc8n1vFM42lt
+         FF61ODpeaqIUXjsxLttUVJ1xy92YRy1ysMYJxgN1PbQGUy+VW+cs0utwry+E8zJLGFP1
+         yfofpxxa5M8sdKjNoI+TjKMqGckDcY1NUnw69BWvamQblUdhySZvSWc74edtECR9Ps8u
+         YUY4HZsQqXMvHvNH7qHnmf6QQ+41oEnmEfFnaVIhyx7FTV4DAlBzW+dvXZmxK2wKREWX
+         N7aaQ/EkBgVAsoYW9mdBtARBg3eKYhJ+Nf2QK4eYomvFu4GopfrRxcV7oihlVjNpGbb9
+         6MXw==
+X-Forwarded-Encrypted: i=1; AJvYcCWQmyx83G14z+e3g1/jLugWAiQmK2D5qNME7Dob5kyMOdoC5VJ/zSJIqi6EoeDBzaf1fK0iUfxWtVk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuS2d1g6DWWhdOhyfsKdO94ZnmHfZ7it1iN33rFLWntKDfUt+r
+	OVrHNXS1XazY8944xv9j9ym8pqEpAL5571ZnwTjajc4GtulJilHVO60Q
+X-Gm-Gg: ASbGncvKaicVhOfZKXPNguhoAqOQl/L/w0G69mwaRhormIQg+3y5HNyuQQ0qJxEzH8K
+	oI4F0HSB+GcO9SWpt9JdA2ir+D21A+RtVLcnGXspD4UG0DWIbRGcsls4f7+xc4eibTSUb+GKfeL
+	7g21s97Q4PRFjyy9pspXeSJtjjJ3wVC0S74XcZQ7fpTFPthtEXGrDCVKnY56HBrYVOqLwgfNyvS
+	ZlrG/9I1IC39TrZ3RJJRpwbmrdz4f84FCJBY+MhrUp5j7ETfvT1KTOkQv6Fxb3X26wYizrEpIj9
+	CVuQ6u8KHz4QqjPdlkG7syfPJGJvgrskJsrGvoLrNONVF+cp+sUa8PUoED5w3723dBfGPcnnWvo
+	tM4zVEF3VZR4S73IQ1XZP57hUBVLq4HsYHxyn5Vb6smkOiA0PCJMA4OaEUwow8LZb+zATBskJLa
+	v3J4rt+zSF34oYuolUyooZ70BgfgXtf0TNVOWR6Z9Xq+/YU+PZ8Q==
+X-Google-Smtp-Source: AGHT+IHTMMMGbyG3xoxSU5KF7TdsFbHPq8VHtexaM2213sNX8hNsAco+kYiqaZeWu8gHFrIEPy/iYg==
+X-Received: by 2002:a05:6402:5cd:b0:643:8183:7912 with SMTP id 4fb4d7f45d1cf-6479c468083mr1301257a12.9.1764756791360;
+        Wed, 03 Dec 2025 02:13:11 -0800 (PST)
+Received: from [192.168.99.24] (78-9-233-67.static.inetia.pl. [78.9.233.67])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-64751062709sm17985810a12.35.2025.12.03.02.13.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Dec 2025 02:11:46 -0800 (PST)
-Message-ID: <dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com>
-Date: Wed, 3 Dec 2025 12:11:45 +0200
+        Wed, 03 Dec 2025 02:13:10 -0800 (PST)
+Message-ID: <360de9fe-75eb-4327-a35a-8811fa2d1201@gmail.com>
+Date: Wed, 3 Dec 2025 11:13:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -69,187 +69,183 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
- overlays"
-To: Herve Codina <herve.codina@bootlin.com>, Rob Herring <robh@kernel.org>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
- Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Charles Keepax <ckeepax@opensource.cirrus.com>,
- Richard Fitzgerald <rf@opensource.cirrus.com>,
- David Rhodes <david.rhodes@cirrus.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
- Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>,
- Steen Hegelund <steen.hegelund@microchip.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-2-herve.codina@bootlin.com>
- <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
- <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
- <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
- <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
- <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
- <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
- <55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
- <20251202102619.5cd971cc@bootlin.com>
- <088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com>
- <20251202175836.747593c0@bootlin.com>
+Subject: [RFC PATCH v1 2/2] cxl/cli: enforce HPA-descending teardown order for
+ destroy-region
+To: Alison Schofield <alison.schofield@intel.com>,
+ Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
+Cc: dan.j.williams@intel.com, Smita.KoralahalliChannabasappa@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com
+References: <20251125143826.282312-1-pawel.mielimonka@fujitsu.com>
+ <20251125143826.282312-3-pawel.mielimonka@fujitsu.com>
+ <aS-5Zjhz-5Mkdqpy@aschofie-mobl2.lan>
 Content-Language: en-US
-From: Kalle Niemi <kaleposti@gmail.com>
-In-Reply-To: <20251202175836.747593c0@bootlin.com>
+From: =?UTF-8?Q?Pawe=C5=82_Mielimonka?= <pawel.mielimonka@gmail.com>
+In-Reply-To: <aS-5Zjhz-5Mkdqpy@aschofie-mobl2.lan>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 12/2/25 18:58, Herve Codina wrote:
-> Hi Kalle, Matti,
-> 
-> On Tue, 2 Dec 2025 13:21:16 +0200
-> Kalle Niemi <kaleposti@gmail.com> wrote:
-> 
->> On 12/2/25 11:26, Herve Codina wrote:
->>> Hi Kalle,
->>>
->>> On Fri, 28 Nov 2025 10:34:57 +0200
->>> Kalle Niemi <kaleposti@gmail.com> wrote:
->>>
->>> ...
->>>>>>>>>>
->>>>>>>>>> Hello,
->>>>>>>>>>
->>>>>>>>>> Test system testing drivers for ROHM ICs bisected this commit to cause
->>>>>>>>>> BD71847 drivers probe to not be called.
->>>>>>>>> This driver (and overlay support) is in linux-next or something out of
->>>>>>>>> tree on top of linux-next?
->>>>>>>>>
->>>>>>>>> Rob
->>>>>>>> Yes the driver is in mainline linux: /drivers/mfd/rohm-bd718x7.c
->>>>>>> I don't see any support to apply overlays in that driver.
->>>>>> Ah. Sorry for the confusion peeps. I asked Kalle to report this without
->>>>>> proper consideration. 100% my bad.
->>>>>>
->>>>>> While the bd718x7 drive indeed is mainline (and tested), the actual
->>>>>> 'glue-code' doing the overlay is part of the downstream test
->>>>>> infrastructure. So yes, this is not a bug in upstream kernel - this
->>>>>> falls in the category of an upstream change causing downstream things to
->>>>>> break. So, feel free to say: "Go fix your code" :)
->>>>>>
->>>>>> Now that this is sorted, if someone is still interested in helping us to
->>>>>> get our upstream drivers tested - the downstream piece is just taking
->>>>>> the compiled device-tree overlay at runtime (via bin-attribute file),
->>>>>> and applying it using the of_overlay_fdt_apply(). The approach is
->>>>>> working for our testing purposes when the device is added to I2C/SPI
->>>>>> node which is already enabled. However, in case where we have the I2C
->>>>>> disabled, and enable it in the same overlay where we add the new device
->>>>>> - then the new device does not get probed.
->>>>>>
->>>>>> I would be really grateful if someone had a pointer for us.
->>>>> Seems to be fw_devlink related. I suppose if you turn it off it works?
->>>>> There's info about the dependencies in sysfs or maybe debugfs. I don't
->>>>> remember the details, but that should help to tell you why things
->>>>> aren't probing.
->>>
->>> Rob reverted patches but I plan to continue my work on it.
->>> On my side, I need the reverted patches but I fully understand that, on
->>> your side, you need a working system.
->>>
->>> In order to move forward and find a solution for my next iteration, can you
->>> send your overlay (dtso) used in your working and non working cases?
->>>
->>> Best regards,
->>> Hervé
+
+W dniu 3.12.2025 o 05:15, Alison Schofield pisze:
+> On Tue, Nov 25, 2025 at 11:38:24PM +0900, Pawel Mielimonka wrote:
+>> Implement destroy_multiple_regions() and bypass the generic
+>> do_region_xable() path for ACTION_DESTROY. Regions are collected and
+>> sorted by HPA, then destroyed from highest to lowest, stopping at the
+>> first "matching after skipped" to provide user with better error log.
+>> This prevents attempts on non-last regions and aligns destroy-region
+>> with required decoder programming order.
+> It would be useful to add a sample bad spew or what happens now
+> on attempt to destroy out of order.  Folks sometimes search on
+> those strings.
+In all cases in which I reproduced this misbehavior, in log i could find:
+
+"write(3</sys/devices/platform/ACPI0017:00/root0/port1/endpoint2/decoder2.0/dpa_size>, 
+"0\n\0", 3) = -1 EBUSY (Device or resource busy)"
+
+And the cli returned:
+
+"cxl region: destroy_region: decoder 2.0: set_dpa_size failed: Device or 
+resource busy"
+
+>
+>> Signed-off-by: Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
+>> ---
+>>   cxl/region.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++---
+>>   1 file changed, 57 insertions(+), 3 deletions(-)
 >>
->> Hello Hervé,
->>
->> I have attached the overlay source file: bd71847_overlay.dts
-> 
-> Thanks a lot for your overlay.
-> 
-> I did an update of the reverted patches and I didn't detect any regression
-> with the update applied on my use case but I don't have the needed code to
-> perform tests similar to your use case. Indeed, you apply the overlay using
-> an out of tree code.
-> 
-> May I ask you to perform a test of this update on your side?
-> 
-> First you can use the last linux-next kernel where reverted patches are present.
-> The next-20251127 tag is a good candidate. Indeed both patches are present:
->    - 76841259ac092 ("of: dynamic: Fix overlayed devices not probing because of fw_devlink")
->    - 7d67ddc5f0148 ("Revert "treewide: Fix probing of devices in DT overlays"")
-> 
-> Of course, be sure to have the issue using this kernel with your overlays.
-> 
-> Then can you add the following modification on your faulty kernel:
-> ---- 8< ----
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 1528d8ad9f26..aea7bb26d9c4 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -190,6 +190,20 @@ static void overlay_fw_devlink_refresh(struct overlay_changeset *ovcs)
->          for (int i = 0; i < ovcs->count; i++) {
->                  struct device_node *np = ovcs->fragments[i].target;
->   
-> +               /*
-> +                * The device related to target node itself could have been
-> +                * removed and re-added. This happens when the 'status' property
-> +                * in the target node has been changed by the overlay.
-> +                *
-> +                * In that case the parent node needs to be fixed.
-> +                *
-> +                * Before fixing the target node itself, fix its parent. To keep
-> +                * things simple, fix the parent in any case. If nothing needs
-> +                * to be fixed, fw_devlink_refresh_fwnode() acts as a no-op.
-> +                */
-> +               if (np->parent)
-> +                       fw_devlink_refresh_fwnode(of_fwnode_handle(np->parent));
+>> diff --git a/cxl/region.c b/cxl/region.c
+>> index 58765b3d..1bf1901a 100644
+>> --- a/cxl/region.c
+>> +++ b/cxl/region.c
+>> @@ -950,6 +950,57 @@ static int destroy_region(struct cxl_region *region)
+>>   	return cxl_region_delete(region);
+>>   }
+>>   
+>> +static int destroy_multiple_regions(struct parsed_params *p,
+>> +				 struct cxl_decoder *decoder,
+>> +				 int *count)
+>> +{
+>> +	struct cxl_region **list;
+>> +	int nr, rc, i;
+>> +	bool skipped = false;
+>> +
+>> +	rc = collect_regions_sorted(decoder, NULL, &list, &nr);
+>> +	if (rc) {
+>> +		log_err(&rl, "failed to allocate region list: %s\n", strerror(-rc));
+>> +		return rc;
+>> +	}
+>> +
+>> +	for (i = nr - 1; i >= 0; --i) {
+>> +		struct cxl_region *region = NULL;
+>> +
+> Here is where there is a difference btw 'all' and a decoder. 'All' gets
+> passed as an argument and the filter function recognizes it. But for the
+> by decoder option: "cxl destroy-region -f -d decoder0.2" argc=0 needs
+> special handling
+>
+> Inserting this here worked for me:
+> +               /* If no region arguments provided, match all regions */
+> +               if (p->argc == 0)
+> +                       region = list[i];
 > +
->                  fw_devlink_refresh_fwnode(of_fwnode_handle(np));
->          }
->   }
-> ---- 8< ----
-> 
-> My hope is that this modification will fix your issue.
-> If so, I will add it in my next iteration.
-> 
-> If you cannot perform the test on your side, can you provide me the out of
-> tree code you use to apply the overlay?
-> 
-> Best regards,
-> Hervé
-Hello Hervé,
+>
+> Then with argc == 0 this next loop is a no-op but that is OK because
+> region is now assigned.
+Thanks for the suggestion.
 
-I tried this patch on next-20251127 by manually adding the added lines 
-to /drivers/of/overlay.c, and it did not solve the issue. I will 
-continue to test this.
+According to the manual, "cxl destroy-region -f -d decoder0.2" is not a
+valid CLI invocation — a region number (or "all") is required:
 
-BR
-Kalle
+     SYNOPSIS
+         cxl destroy-region <region> [<options>]
+
+So the case you describe would normally be written as
+"cxl destroy-region all -f -d decoder0.2". If we want to accept the case
+where no region argument is provided, it feels like this should be
+handled earlier during parsing and the documentation should explicitly
+state that "all" is assumed when <region> is omitted.
+
+Given the current docs, I would lean towards reporting an error when
+p->argc == 0, unless we decide to update the documentation to permit the
+implicit "all" behavior.
+
+I've also tested various cases with explicit region arguments, e.g.
+"cxl destroy-region 1 2 3" with regions 0..7 present, and those paths
+behave correctly.
+
+Happy to adjust in whichever direction makes the most sense.
+>
+>> +		for (int j = 0; j < p->argc; j++) {
+>> +			region = util_cxl_region_filter(list[i], p->argv[j]);
+>> +			if (region)
+>> +				break;
+>> +		}
+>> +
+>> +		if (!region) {
+>> +			skipped = true;
+>> +			continue;
+>> +		}
+>> +
+>> +		/* if current region matches filter, but previous didn't, destroying would
+>> +		 * result in breaking HPA continuity
+>> +		 */
+> Use kernel comment style. See other samples in this file.
+>
+>
+>> +		if (skipped) {
+>> +			log_err(&rl, "failed to destroy %s: not a valid HPA suffix under %s\n",
+> I'm not familiar w the usage of 'suffix' in this context.
+> How about replace "not a valid HPA suffix under"
+> with "out of order decoder reset"
+I intended it to mean "the last region in HPA order". Your wording is 
+clearer,
+so I'll adopt your suggestion in v2.
+>
+>> +				cxl_region_get_devname(region),
+>> +				cxl_decoder_get_devname(decoder));
+>> +			rc = -EINVAL;
+>> +			break;
+>> +		}
+>> +
+>> +		rc = destroy_region(region);
+>> +		if (rc) {
+>> +			log_err(&rl, "%s: failed: %s\n",
+>> +				cxl_region_get_devname(region), strerror(-rc));
+>> +			break;
+>> +		}
+>> +		++(*count);
+>> +	}
+>> +	free(list);
+>> +	return rc;
+>> +}
+>> +
+>>   static int do_region_xable(struct cxl_region *region, enum region_actions action)
+>>   {
+>>   	switch (action) {
+>> @@ -957,8 +1008,6 @@ static int do_region_xable(struct cxl_region *region, enum region_actions action
+>>   		return cxl_region_enable(region);
+>>   	case ACTION_DISABLE:
+>>   		return disable_region(region);
+>> -	case ACTION_DESTROY:
+>> -		return destroy_region(region);
+>>   	default:
+>>   		return -EINVAL;
+>>   	}
+>> @@ -1026,7 +1075,12 @@ static int region_action(int argc, const char **argv, struct cxl_ctx *ctx,
+>>   			if (!util_cxl_decoder_filter(decoder,
+>>   						     param.root_decoder))
+>>   				continue;
+>> -			rc = decoder_region_action(p, decoder, action, count);
+>> +
+>> +			if (action == ACTION_DESTROY)
+>> +				rc = destroy_multiple_regions(p, decoder, count);
+>> +			else
+>> +				rc = decoder_region_action(p, decoder, action, count);
+>> +
+>>   			if (rc)
+>>   				err_rc = rc;
+>>   		}
+>> -- 
+>> 2.45.1.windows.1
+>>
