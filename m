@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9E92D46B3;
-	Thu,  4 Dec 2025 15:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09AF5346FC3;
+	Thu,  4 Dec 2025 16:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764861772; cv=none; b=nKm80WLUW3vHCQ//krqRZEDgiKV6zwDKtMLDDTNwK5+2uvs+aFiMGdWGM4+X64yUqJq+NW01Q44dXPY+kmCSli/MP8fKeMqUAefDDdUVYTLwR/a3xnobAHzuvs7NZkdNlb3l3iRH1u/l0PMt+gFuAf8BRceop5PnqmN0S8ierrI=
+	t=1764866897; cv=none; b=RMTl/MpO2ezNc/rvXQyzXmSN2+bvwcRjisCic/Bog9bubfx/+gpY0JQxuN+Cxvd8n6Vtp+5Mh5NPAiaWnD214/i2qZugqx+lPKq3IgzOFg9Z0/tzUe7gifL6+XqSYwgcrSQl2WpRqFNXTUvrKnL7rwY/IhyPuNcDBnSZas9U2gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764861772; c=relaxed/simple;
-	bh=AtG6V41tRNLSBeH0QVyr9oYTYe7p2nCevvJJAVEqvdw=;
+	s=arc-20240116; t=1764866897; c=relaxed/simple;
+	bh=Ss3M8z+aKjSM9Ih0OM3WyHut07k+69cuXb727C3E748=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lM5d6/O662Cc8SOMYyqV2LyAB2mqLK0mhNsXR3R1+D5sq1nECoBRj5sJsQaG9WUyqjYzCfOVSAJ2SMm31FGot5RgsZ+oXCiJiPzpfa3GmilU3MTWcm3vwPdR9TCmAqV9rJ8MdJ7gvgWg0NE+gwAj1exlpY841CU0DTgu48Dmaq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b349mCVe; arc=none smtp.client-ip=198.175.65.13
+	 In-Reply-To:Content-Type; b=djXATwWIQih9g5mk+2TVy7Z9V7Z4k4Wf3qe5XCV9zhOQW6dhjuWlmkQ7YekhEE3mfj8F8EZoqdm+JHcN8Y9m1f7rCZ+NOGvYer0ySE8QNWYlSaTity3vudqq3yeGMcBFQ9SXPct7eim4ioOmg1J7TEnZY5HrQ4KITDuIoUStlWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E/QMXN3x; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b349mCVe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E/QMXN3x"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764861770; x=1796397770;
+  t=1764866896; x=1796402896;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=AtG6V41tRNLSBeH0QVyr9oYTYe7p2nCevvJJAVEqvdw=;
-  b=b349mCVe2pgq2HWYJQA9tl61oJs9GzyppJ6vC5Zm6Ufb3BZtO6UzOQ/4
-   fVx8sZ6lYMGxo6ZZwju3qoUtCOKwpzBz3D13HUrElZwWwCSH6XtLugZE0
-   cKtjIBK+66Avb0OsEtq6lwb+Ke+dBX2xZO6JPyqKcil2LeMF8wuI8uqqe
-   63ggZwNYv565MU2pBb2oqNC6A59ebWiYJVw4XcGYWJc4l0tvnUJlzmERc
-   cpUJLsjToo7wC9Cp9r2wP1a9VLI1soFSbmNJbMwUklr6nrYG1ukPWU9tT
-   xbMoaC+aVowPiCKAwXJnjC6rerudpGS+HGopYJHcxplJG4J+ZJ4kdXozz
-   w==;
-X-CSE-ConnectionGUID: SGbVoM72SNaVLx+sXJSWww==
-X-CSE-MsgGUID: 0/QcKy4vSgOQQFolDxshEA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11632"; a="77992117"
+  bh=Ss3M8z+aKjSM9Ih0OM3WyHut07k+69cuXb727C3E748=;
+  b=E/QMXN3xQzzu9AbOAPXm0oTwPIBdmg/qLvB5t+xRaoqL9QOZGMd3hxUb
+   +6goDW9kWUOZxdRn+Et3qveAAZdPg4XijWMOlKOuSwMXd8jfaaBe0zQG6
+   oopYHroCBaqkDNtO+3Z+IBm39RjCFyGNNMt0UIdRvif0BeXeXcAl7OI6R
+   TBr3c4oeJgPfHH+7N1mgquyeizFXzNKG/AIRO9KUwQJh38vmiMc/ozQJu
+   3ZmBVFzc5jAF45Jc/85hgE4KO2sYM2PL6BlsJ6xjah0f+SWrevrlo3GAy
+   SnIuByW7/wEdkt7Sb416cNjwMnIDf1rGEt54S/jaVAk+2ISdVuO8gyuRn
+   Q==;
+X-CSE-ConnectionGUID: TWQuOIxYRw2pHjuLMSnG4Q==
+X-CSE-MsgGUID: B+6osZ3NQ+WnULQxjPZPtQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11632"; a="89543224"
 X-IronPort-AV: E=Sophos;i="6.20,249,1758610800"; 
-   d="scan'208";a="77992117"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2025 07:22:47 -0800
-X-CSE-ConnectionGUID: +rbVuqn/QPSE1LqCz2yEAQ==
-X-CSE-MsgGUID: 0b8MxBPIRHiFUwc9xHM6Rg==
+   d="scan'208";a="89543224"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2025 08:48:15 -0800
+X-CSE-ConnectionGUID: l3XiH4VZSTO8zV9XlMTQ5Q==
+X-CSE-MsgGUID: AFEFfjxRT8y4v2VNHGS72g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,249,1758610800"; 
-   d="scan'208";a="195431462"
+   d="scan'208";a="225694942"
 Received: from schen9-mobl4.amr.corp.intel.com (HELO [10.125.108.95]) ([10.125.108.95])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2025 07:22:45 -0800
-Message-ID: <4ef90eea-5a42-4c41-bfd0-9e46d0ade81d@intel.com>
-Date: Thu, 4 Dec 2025 08:22:44 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2025 08:48:15 -0800
+Message-ID: <2010f8dc-7cc6-4a42-a181-37e65fffd22f@intel.com>
+Date: Thu, 4 Dec 2025 09:48:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,49 +52,183 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/region: fix format string for resource_size_t
-To: Arnd Bergmann <arnd@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Ben Cheatham <benjamin.cheatham@amd.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Gregory Price <gourry@gourry.net>,
- Robert Richter <rrichter@amd.com>, Li Ming <ming.li@zohomail.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251204095237.1032528-1-arnd@kernel.org>
+Subject: Re: [PATCH 1/6] cxl/mem: Fix devm_cxl_memdev_edac_release() confusion
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Smita.KoralahalliChannabasappa@amd.com, alison.schofield@intel.com,
+ terry.bowman@amd.com, alejandro.lucero-palau@amd.com,
+ linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com,
+ Shiju Jose <shiju.jose@huawei.com>
+References: <20251204022136.2573521-1-dan.j.williams@intel.com>
+ <20251204022136.2573521-2-dan.j.williams@intel.com>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <20251204095237.1032528-1-arnd@kernel.org>
+In-Reply-To: <20251204022136.2573521-2-dan.j.williams@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 12/4/25 2:52 AM, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On 12/3/25 7:21 PM, Dan Williams wrote:
+> A device release method is only for undoing allocations on the path to
+> preparing the device for device_add(). In contrast, devm allocations are
+> post device_add(), are acquired during / after ->probe() and are released
+> synchronous with ->remove().
 > 
-> The size of this type is architecture specific, and the recommended
-> way to print it portably is through the custom %pap format string.
+> So, a "devm" helper in a "release" method is a clear anti-pattern.
 > 
-> Fixes: d6602e25819d ("cxl/region: Add support to indicate region has extended linear cache")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Move this devm release action where it belongs, an action created at edac
+> object creation time. Otherwise, this leaks resources until
+> cxl_memdev_release() time which may be long after these xarray and error
+> record caches have gone idle.
+> 
+> Note, this also fixes up the type of @cxlmd->err_rec_array which needlessly
+> dropped type-safety.
+> 
+> Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation attributes from the current boot")
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Shiju Jose <shiju.jose@huawei.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>> ---
->  drivers/cxl/core/region.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+This can go into fixes right? Does not look like a dependency for the rest of the series.
+
+> ---
+>  drivers/cxl/cxlmem.h      |  5 +--
+>  drivers/cxl/core/edac.c   | 64 ++++++++++++++++++++++-----------------
+>  drivers/cxl/core/memdev.c |  1 -
+>  3 files changed, 38 insertions(+), 32 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index ae899f68551f..fc36a5413d3f 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -759,7 +759,7 @@ static ssize_t extended_linear_cache_size_show(struct device *dev,
->  	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
->  	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
->  		return rc;
-> -	return sysfs_emit(buf, "%#llx\n", p->cache_size);
-> +	return sysfs_emit(buf, "%pap\n", &p->cache_size);
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 434031a0c1f7..c12ab4fc9512 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -63,7 +63,7 @@ struct cxl_memdev {
+>  	int depth;
+>  	u8 scrub_cycle;
+>  	int scrub_region_id;
+> -	void *err_rec_array;
+> +	struct cxl_mem_err_rec *err_rec_array;
+>  };
+>  
+>  static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
+> @@ -877,7 +877,6 @@ int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd);
+>  int devm_cxl_region_edac_register(struct cxl_region *cxlr);
+>  int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt);
+>  int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt);
+> -void devm_cxl_memdev_edac_release(struct cxl_memdev *cxlmd);
+>  #else
+>  static inline int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
+>  { return 0; }
+> @@ -889,8 +888,6 @@ static inline int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd,
+>  static inline int cxl_store_rec_dram(struct cxl_memdev *cxlmd,
+>  				     union cxl_event *evt)
+>  { return 0; }
+> -static inline void devm_cxl_memdev_edac_release(struct cxl_memdev *cxlmd)
+> -{ return; }
+>  #endif
+>  
+>  #ifdef CONFIG_CXL_SUSPEND
+> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+> index 79994ca9bc9f..81160260e26b 100644
+> --- a/drivers/cxl/core/edac.c
+> +++ b/drivers/cxl/core/edac.c
+> @@ -1988,6 +1988,40 @@ static int cxl_memdev_soft_ppr_init(struct cxl_memdev *cxlmd,
+>  	return 0;
 >  }
->  static DEVICE_ATTR_RO(extended_linear_cache_size);
+>  
+> +static void err_rec_free(void *_cxlmd)
+> +{
+> +	struct cxl_memdev *cxlmd = _cxlmd;
+> +	struct cxl_mem_err_rec *array_rec = cxlmd->err_rec_array;
+> +	struct cxl_event_gen_media *rec_gen_media;
+> +	struct cxl_event_dram *rec_dram;
+> +	unsigned long index;
+> +
+> +	cxlmd->err_rec_array = NULL;
+> +	xa_for_each(&array_rec->rec_dram, index, rec_dram)
+> +		kfree(rec_dram);
+> +	xa_destroy(&array_rec->rec_dram);
+> +
+> +	xa_for_each(&array_rec->rec_gen_media, index, rec_gen_media)
+> +		kfree(rec_gen_media);
+> +	xa_destroy(&array_rec->rec_gen_media);
+> +	kfree(array_rec);
+> +}
+> +
+> +static int devm_cxl_memdev_setup_err_rec(struct cxl_memdev *cxlmd)
+> +{
+> +	struct cxl_mem_err_rec *array_rec =
+> +		kzalloc(sizeof(*array_rec), GFP_KERNEL);
+> +
+> +	if (!array_rec)
+> +		return -ENOMEM;
+> +
+> +	xa_init(&array_rec->rec_gen_media);
+> +	xa_init(&array_rec->rec_dram);
+> +	cxlmd->err_rec_array = array_rec;
+> +
+> +	return devm_add_action_or_reset(&cxlmd->dev, err_rec_free, cxlmd);
+> +}
+> +
+>  int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
+>  {
+>  	struct edac_dev_feature ras_features[CXL_NR_EDAC_DEV_FEATURES];
+> @@ -2038,15 +2072,9 @@ int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
+>  		}
+>  
+>  		if (repair_inst) {
+> -			struct cxl_mem_err_rec *array_rec =
+> -				devm_kzalloc(&cxlmd->dev, sizeof(*array_rec),
+> -					     GFP_KERNEL);
+> -			if (!array_rec)
+> -				return -ENOMEM;
+> -
+> -			xa_init(&array_rec->rec_gen_media);
+> -			xa_init(&array_rec->rec_dram);
+> -			cxlmd->err_rec_array = array_rec;
+> +			rc = devm_cxl_memdev_setup_err_rec(cxlmd);
+> +			if (rc)
+> +				return rc;
+>  		}
+>  	}
+>  
+> @@ -2088,22 +2116,4 @@ int devm_cxl_region_edac_register(struct cxl_region *cxlr)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(devm_cxl_region_edac_register, "CXL");
+>  
+> -void devm_cxl_memdev_edac_release(struct cxl_memdev *cxlmd)
+> -{
+> -	struct cxl_mem_err_rec *array_rec = cxlmd->err_rec_array;
+> -	struct cxl_event_gen_media *rec_gen_media;
+> -	struct cxl_event_dram *rec_dram;
+> -	unsigned long index;
+> -
+> -	if (!IS_ENABLED(CONFIG_CXL_EDAC_MEM_REPAIR) || !array_rec)
+> -		return;
+> -
+> -	xa_for_each(&array_rec->rec_dram, index, rec_dram)
+> -		kfree(rec_dram);
+> -	xa_destroy(&array_rec->rec_dram);
+>  
+> -	xa_for_each(&array_rec->rec_gen_media, index, rec_gen_media)
+> -		kfree(rec_gen_media);
+> -	xa_destroy(&array_rec->rec_gen_media);
+> -}
+> -EXPORT_SYMBOL_NS_GPL(devm_cxl_memdev_edac_release, "CXL");
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index e370d733e440..4dff7f44d908 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -27,7 +27,6 @@ static void cxl_memdev_release(struct device *dev)
+>  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+>  
+>  	ida_free(&cxl_memdev_ida, cxlmd->id);
+> -	devm_cxl_memdev_edac_release(cxlmd);
+>  	kfree(cxlmd);
+>  }
 >  
 
