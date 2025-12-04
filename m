@@ -1,81 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A4A1684B4;
-	Thu,  4 Dec 2025 09:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97882338901
+	for <linux-cxl@vger.kernel.org>; Thu,  4 Dec 2025 10:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764841964; cv=none; b=T8mznTipov2VnbTW1UvAwGd2/W7lAD1pjWf2nwLUOu38gQgTgW4vYDppdv52IqjdAZnb1Zo1Cj2Owszyf18R4voCD0V5ObX/r3GBDUT+O8KkxPhX4x1fA0KGxfETK+D4RiQAJKirKCy4i+WhNIbKMpZsrZTa+Eba6U1TmY4ul4w=
+	t=1764845800; cv=none; b=uJ6s/ZlUU8AIWRV30p51KEXa2JL9nw8ugBPfwycOC68ACU4auAywDl69zgqhouDWWgAHTw3IS8mWTPaIq8WEa3eJ/z9jrQDWCc1/gSPv99kqOPuQyZzDLT5vizlotesCv84EJ0hvzm8imP3ueydrAjYaEsZt1JqLRmX8CPl/4x0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764841964; c=relaxed/simple;
-	bh=Rk9mdF2ymMauXgR/2ePzRrPEWQA679iAeGy+k5dg7Wg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R9av+BfmbLrM6Rgqdc47hWVuffejAtl2l9HMHff/Wwf2c3IjoqQHbIPTzOyxFKAiurIlllo08z4/CMxaB5EKC+K+jIOnjZU+EANaTezD2Ivf/PGsRl3NdsXJw1A5zsRU1DMQX9okofvRcBbjA5CECMGM9dj3omq102R+C76LFpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PvkFRlHu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PvkFRlHu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7952BC4CEFB;
-	Thu,  4 Dec 2025 09:52:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764841964;
-	bh=Rk9mdF2ymMauXgR/2ePzRrPEWQA679iAeGy+k5dg7Wg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=PvkFRlHuhakrUvDquNY0SrKrwPUYIQlk2oQTihRg8in+++le3XgDzcmgD12esFdKO
-	 4GcnHKfU3KZy9B+md3wqiau2PFKfJ/s4umqMyaMy89ksS/Y56ptEUjjs/FNJ3ysP/G
-	 +E42o7lexUlx4IdA4Cs/rvuSQSrUG+0F/I8P1y8QSwfh3ilrI1MgDhHikLx8FLz212
-	 Vgo6dUjU6V/O658UVdoqyQtsgvjmLSDgBerCAGl7XIZfbZwvqkM/W0B+RGOV2hdDZC
-	 8VOkNH3vCR0In2FMKFLaCzQ0B/3DiJ1Y8ZgqvQNX3pghck50f5XPyGzBOW8b0M5Rce
-	 5KhgEIM4BEgpA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Ben Cheatham <benjamin.cheatham@amd.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Gregory Price <gourry@gourry.net>,
-	Robert Richter <rrichter@amd.com>,
-	Li Ming <ming.li@zohomail.com>,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] cxl/region: fix format string for resource_size_t
-Date: Thu,  4 Dec 2025 10:52:26 +0100
-Message-Id: <20251204095237.1032528-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1764845800; c=relaxed/simple;
+	bh=6slcK3EQrAXupPVJr9jM3Pcmh+QTUwh+iVFWsaKxXWo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cpowfw09t+tKSzyNNT4TwhWqT1FPbnxN6hCB/nYhMp0LGGaXoKScMW4DaqQ0k32ybk/wSuC0CgjIrTD6n6djM+6sXyCmMLzXHYYzSh4AQND8Qr6i7mkKtJqZiMQ5oDoKaGMloypw5pYWQPiIBXOxo1Tp7ct3ZJopYSeZuk+RDg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-295548467c7so9131995ad.2
+        for <linux-cxl@vger.kernel.org>; Thu, 04 Dec 2025 02:56:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764845797; x=1765450597;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=gfnzYJnOAkS7SHNqKKzIeFzoFbDZmoEYIAPmuyxm7j4=;
+        b=djBTpP2yzf7MVR/q7UDC4lv/R2viHWU/aJmcFo4V8soiZGgR2GaDhUVlml32dA/RkR
+         7GZDfGktrT7qZn/Ydu3Tv2NGcMu9ozEe4UIYEEUGP8Ww7XCIAGJglOUxkDXDXPTbrRPO
+         n0uMN0yMpvYsJCIw152UHrf+Acw2cCDpgiik/59L9Yvwg5v9L8oTbpKu9MEUxQSGKRCT
+         yxYBtZDL4pFIpx6sXGMcthvCw6KDI2H1aue58AfHS8N/2+usD11VIWSbZzHFFa198VUb
+         LCqTZ0u48aFeCJHYO3MB/c9NLkfqxEZz7S6Ev1CPiD7PZKI4GzHZWGV5L9jFvuvKSKha
+         j/zw==
+X-Forwarded-Encrypted: i=1; AJvYcCURDriwaBjRHMlbG+Po3FqGk7yRpj6dGxRyfRInNon1kRHf+fkTHi5NKLprhCcO0TAeTEuG8h806lM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxviXGLA77jiBv2VnwoUQJDr7mF41qsGuRHjgUvJJSnuWQySp9v
+	ignCtnn6rbO/z7AVfmEQcwUpRGrux8+DP1/DtV7koBhu560gH4snrMoxxPWmE41H
+X-Gm-Gg: ASbGncv77/94i9zvqLWnG9x5DdGlJajK1Vq1NLbnXtTiGo44w8Ei7TDoQYGaIRtnwC0
+	GRwdviAdnMC5gQ609AgDWe5g1DfgTf9wVNelxFJvAvZgaGYUQ0u2zfJY2zZN+y1d7rr+EkTLnU/
+	l9JeRlSOz8TAOXEwgcAXqBJlXk/n+XO7xoipvXihKwqpPTX95iJJ6pSMIknsddt/o1TKUnjweC2
+	bPCSC6wHsecp2A1twgox835ZYGKFm07wHgaRvAlLjuFVFn9eAVYKWs1UcgNv18UihrHFHpGSCbJ
+	eicgUhTW93uDBKyaFgv0yKbmlUwCE+hxoY/RBlOG534qhXBbvYl1HQEiq3onTbVACfdYPSdFnAP
+	unCWeMkjpb25jmvZ1c7ic6zPaQwngaLaNqUOhasYiwrb16rsUerYMnBx2fwVnM5AmmTcTkdjmbk
+	F1Gz/zoISdYg3SHNPNnkqXfTHwim+lZ1Q59LLWGwvnJst5i25zTbFD
+X-Google-Smtp-Source: AGHT+IEufXLxb1bh52VwOPQEU+DWRH4VpAUDZHJFnKSKfZsItKsGZpdcYmcCN5KZePvmwb6kIb+teA==
+X-Received: by 2002:a17:903:3545:b0:298:1422:510d with SMTP id d9443c01a7336-29d6844ec87mr64541665ad.48.1764845797343;
+        Thu, 04 Dec 2025 02:56:37 -0800 (PST)
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com. [209.85.214.172])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29dae99f223sm16520955ad.62.2025.12.04.02.56.36
+        for <linux-cxl@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Dec 2025 02:56:37 -0800 (PST)
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-295548467c7so9131845ad.2
+        for <linux-cxl@vger.kernel.org>; Thu, 04 Dec 2025 02:56:36 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXSrGsI+9cOA0H6EZ/0jLHAHPpgaGK7BkxZim8CSCE970VCDINL3EmAACVcpJjoM793V3RvvfXDFaM=@vger.kernel.org
+X-Received: by 2002:a05:6102:6889:b0:5dd:b69a:cdce with SMTP id
+ ada2fe7eead31-5e48e28ea62mr1665640137.1.1764845364523; Thu, 04 Dec 2025
+ 02:49:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+ <20251015071420.1173068-2-herve.codina@bootlin.com> <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
+ <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
+ <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com> <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
+ <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com> <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
+ <55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com> <20251202102619.5cd971cc@bootlin.com>
+ <088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com> <20251202175836.747593c0@bootlin.com>
+ <dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com> <20251204083839.4fb8a4b1@bootlin.com>
+In-Reply-To: <20251204083839.4fb8a4b1@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 4 Dec 2025 11:49:13 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXdwf7La1EYBWTJadsTAJG3nKQVW6wtBn-bUqshA=XHRw@mail.gmail.com>
+X-Gm-Features: AWmQ_blMXTXWTKLb__jRgM2vj510G0Mh23mSqsI1Cojt34ffki3w4wmdXTg_pQg
+Message-ID: <CAMuHMdXdwf7La1EYBWTJadsTAJG3nKQVW6wtBn-bUqshA=XHRw@mail.gmail.com>
+Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT overlays"
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Kalle Niemi <kaleposti@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Matti Vaittinen <mazziesaccount@gmail.com>, linux-arm-kernel@lists.infradead.org, 
+	Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev, linux-clk@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
+	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Arnd Bergmann <arnd@arndb.de>
+Hi Herv=C3=A9,
 
-The size of this type is architecture specific, and the recommended
-way to print it portably is through the custom %pap format string.
+On Thu, 4 Dec 2025 at 08:39, Herve Codina <herve.codina@bootlin.com> wrote:
+> Indeed, Kalle, Geert, I don't have your hardware, your related overlay or
+> a similar one that could be used for test and also I don't have your out =
+of
+> tree code used to handle this overlay.
+>
+> I know overlays and fw_devlink have issues. Links created by fw_devlink
+> when an overlay is applied were not correct on my side.
+>
+> Can you check your <supplier>--<consumer> links with 'ls /sys/class/devli=
+nks'
+>
+> On my side, without my patches some links were not correct.
+> They linked to the parent of the supplier instead of the supplier itself.
+> The consequence is a kernel crash, use after free, refcounting failure, .=
+..
+> when the supplier device is removed.
+>
+> Indeed, with wrong links consumers were not removed before suppliers they
+> used.
+>
+> Looking at Geert traces:
+> --- 8< ---
+> rcar_sound ec500000.sound: Failed to create device link (0x180) with
+> supplier soc for /soc/sound@ec500000/rcar_sound,src/src-0
+> rcar_sound ec500000.sound: Failed to create device link (0x180) with
+> supplier soc for /soc/sound@ec500000/rcar_sound,src/src-1
+> [...]
+> --- 8< ---
+>
+> Even if it is not correct, why the soc device cannot be a provider?
+> I don't have the answer to this question yet.
 
-Fixes: d6602e25819d ("cxl/region: Add support to indicate region has extended linear cache")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/cxl/core/region.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I have no idea. These failures (sound) are also not related to the
+device I am adding through the overlay (SPI EEPROM).
+Note that these failures appear only with your suggested fix, and are
+not seen with just the patch in the subject of this email thread.
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index ae899f68551f..fc36a5413d3f 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -759,7 +759,7 @@ static ssize_t extended_linear_cache_size_show(struct device *dev,
- 	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
- 	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
- 		return rc;
--	return sysfs_emit(buf, "%#llx\n", p->cache_size);
-+	return sysfs_emit(buf, "%pap\n", &p->cache_size);
- }
- static DEVICE_ATTR_RO(extended_linear_cache_size);
- 
--- 
-2.39.5
+> Without having the exact tree structure of the base device-tree, the over=
+lay
+> and the way it is applied, and so without been able to reproduce the issu=
+e
+> on my side, investigating the issue is going to be difficult.
+>
+> I hope to find some help to move forward and fix the issue.
 
+Base DTS is [1], overlay DTS is [2].
+Applying and removing the overlay is done using OF_CONFIGFS[3],
+and "overlay [add|rm] 25lc040"[4].
+
+I assume you can reproduce the issue on any board that has an SPI
+EEPROM, after moving the SPI bus enablement and SPI EEPROM node to an
+overlay. Probably even with an I2C EEPROM instead.  Or even without
+an actual EEPROM connected, as even the SPI bus fails to appear.
+
+> Saravana's email (Saravana Kannan <saravanak@google.com>) seems incorrect=
+.
+> Got emails delivery failure with this email address.
+
+Yeah, he moved company.
+He is still alive, I met him in the LPC Training Session yesterday ;-)
+
+Thanks!
+
+[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drive=
+rs.git/tree/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+[2] https://web.git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drive=
+rs.git/tree/arch/arm64/boot/dts/renesas/r8a77990-ebisu-cn41-msiof0-25lc040.=
+dtso?h=3Dtopic/renesas-overlays-v6.17-rc1
+[3] https://web.git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drive=
+rs.git/log/?h=3Dtopic/overlays-v6.17-rc1
+[4] https://elinux.org/R-Car/DT-Overlays#Helper_Script
+[5] https://lore.kernel.org/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgyo8x6=3D9F9rZ+=
+-KzjOg@mail.gmail.com/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
