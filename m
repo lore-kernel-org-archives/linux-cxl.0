@@ -1,72 +1,74 @@
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012059.outbound.protection.outlook.com [40.107.200.59])
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013061.outbound.protection.outlook.com [40.107.201.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C469312803;
-	Fri,  5 Dec 2025 11:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D12E27F736;
+	Fri,  5 Dec 2025 11:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.61
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764935595; cv=fail; b=dHxPSdzZnsRm4rk6nwpXCnKyCOH2ilj2oB+/VGjOxpcDvqhXBBuh11IczA3KEXoRo7HR+nJ781XF61kVdrwWmJZga3M6zGbGDm8NySzhSqBTKkEcBATgYc0YF2teOZpUkVCelg+eu3b8M+t1at29iGvs8sR7aMrA6Ssc2evzslY=
+	t=1764935598; cv=fail; b=p3Ydq+O6p1X1OYoSFGxrCxislUvDRzByO5Az9rw9fAWAeKFOsNoKKbk+KgpJvs0zLHD6tpUlA6AldxJdqwkcSF/9xMHczK8CrPmTkaJvrq4oWjhR7HbJqlFCHILrJSHm+74bISIWvTVOtodMQE/VY0ETLD4qHeS83OWaWCM50Bg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764935595; c=relaxed/simple;
-	bh=HHh9iOzHUefUzAkftt9ujTMLTstgDtUqOubdXZEqVdo=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OKyuvmJ2qq1L0vuHtPprmSPHL+ukpc7fVWa9p79H2xxLAl5GsM/P4oz3Bm4bYh3bgYMWVasKL+NcNmBsgpeCnG8SOlFCkGbTmCA+5AsRdDGtwOyPIApONWNeGcGDycbRxfQqsYMqP3oTURN6x0SrsytmQweBjlU+nBYQhsLZ5Dk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=uYxIK1Wp; arc=fail smtp.client-ip=40.107.200.59
+	s=arc-20240116; t=1764935598; c=relaxed/simple;
+	bh=+9N+IIX6sGduKg4CvnCqOG2cM4wqI+gWgHtLOnaQaSs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AVv5CVRElKaJladrMFa/EsxVf30WxTfMA/oj0ciEWHVUbmnOvoD1d18rWXK4s17beYVfKWgJOOdkcxWx/dM1SK8UQjbmzpk1/6mM503mvD3IxMATkGHJxSbKMCQ4xLyaIHDabpHq0f1tsmKHRys+vr868FPiK/lK61ZRzFmT0cA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JwF5ktJA; arc=fail smtp.client-ip=40.107.201.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="uYxIK1Wp"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JwF5ktJA"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AR73qGCMDbhUIcayQP9A17eUmEDias1L5fq1U8HUZeg1yvBkJAYTwYTXyx23d+U4DSJcnQnABlCI3HkxK6CO59zJBmNxUFMJNfxhwUiCX0lGRwMhJmy8dMHTHo2i4Km+nfM91KIivHN5uONbnZaUY7Ec5xt1c2poupKNrWO0344VBBRjjgkjQQJoGoKpPHxznRyEwrkSn40cFtoS0RAOUb9wWc3tn6aAdACPoNeIvgyIFE9xzT+WGY3w944i+/EZL2hQXOwAn/ShQwzwKcIib6Lboq7/o9vYyysArlLTynSzJXnTPoa24Yxx4aeT2cjPxtFvbuUSuodYDpTd3djKpA==
+ b=WxSJ9P/TDSJ1L7WeuJRuYm9Bjua1d7p8imSeSF+sg5FsZq7Vd2h2k2WE+COAC+M7RdlS+tJk0aSlTQeTJXRoBmhl8P4nEeuiMWxgspDouvNNh7KcuYoHErc4O5u7n9nr+04pEGdmstKAUyDJcWrU+qlv2pEfVm8kij8FM/LW4CEe45BS/cX0e07DxawzOg26M3GDlIybo+aMZSpAP9XYahwilk1q9qHyihV8wKO/oSIHoZvEI99KhycjN6WMql/Im+xiYrzq5VHp+hbll3kxNajjF5o+ufZplfnXdbNERsZc+tvGV20QOnRI8WU+IJ2bsHfKkSfQrecZlGsF6UNWZg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QUXtvu+5xTjj8aOv/zGHf+PlP81e67Ck8rJvmMT1fkU=;
- b=q3iCt/05thYG0NyMb/l+ggX+SbtwVFIHBU/50abWLuIUZK1k91NmyOtp/JfEinbvgiLkAN3l8vZfvNUIGZT41h0N1WVAgQuwmM/vuCj942LivU5RzVYgL4nW1NnxR1smkNSOtSKxnwDqDryQgTvE46ROqkzNW2Nchj+lFVCj4cH2k4RDfGNyZ2q+9WDWjI0IYNH0ChXbcpB9OhvwGdJXpVkirtMuk+IhTaBN6v5w/28yyvPUwuDWOonB9EidMcpJfcwJeGx96zn8UFOBd8WusMxwFFBb0aS7NSWplSs2RXZYTWHpF0Yn21SbYX8qUD8YikSYcdfqoVlBsMjhcV7zMg==
+ bh=3sN/U439SAwAW26mhOipC+j+4UWMPk+3FpV9uBR5Xgc=;
+ b=mWqNRnUhdaOt6dNJQrkcGZ8xva+0zZLNSUXaFKXuiXpBOqyEsPyC7UpO63MgATh8Nn0AcGvRDtm+ibhc1JV4k18Wd5+u3qZBW9Jr+Cp631vOcGVNyBCZuoHiUObrqH+IhHpkgwQYfg7EueEsiyqYoB8ICeYt3wpyaNxipaehBL2jYqJZ3SkZi1X9luCc4xIrSv8Fb/dyyGm7NS25NVhE/vtdhX6uHAS1doUn1lHZUxIY0h/Ply3R2JoTbpWK8diZ6bPoLtvXh5rJfMXxviIRt+lZ5IzBF5UCXNqB9qhU9d0cOZ+BdCfge6bwau40ZN/TQT4UxYjkDwKHeRAzF8Rqmg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QUXtvu+5xTjj8aOv/zGHf+PlP81e67Ck8rJvmMT1fkU=;
- b=uYxIK1WptJq1a7qiKzS+LphKAuyvTWGab5Yq08tfXU1xRA0QBpA6rH2PrtDbor1eE+owxep7HtePVzsN3JLQUeHE5ogOzFzsyds2oAuES2oo4LZGKwzt0AoXcpJIEsCiSlwDMUvY5ZAq2fHrCTuCF/qQFWnYX66/0y2mEN3PKkE=
-Received: from SN1PR12CA0045.namprd12.prod.outlook.com (2603:10b6:802:20::16)
- by LV5PR12MB9755.namprd12.prod.outlook.com (2603:10b6:408:307::18) with
+ bh=3sN/U439SAwAW26mhOipC+j+4UWMPk+3FpV9uBR5Xgc=;
+ b=JwF5ktJA/4UXv005HAY5xWEl6zuJR/VQBVOPwkpQzfRTiQ2389k53iGuqomO5mwyNC/2NWz0eYfuiB6lS9xXo5keEtYddasjM5mNl2QTVOfAuOMoXH44+kpUcV0+BMymGbz/ZmdB9x6nQAA07tADponGnML6v4rAtBztBRAlQqo=
+Received: from BY3PR03CA0024.namprd03.prod.outlook.com (2603:10b6:a03:39a::29)
+ by IA0PR12MB9010.namprd12.prod.outlook.com (2603:10b6:208:48e::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.9; Fri, 5 Dec
- 2025 11:53:04 +0000
-Received: from SA2PEPF000015CA.namprd03.prod.outlook.com
- (2603:10b6:802:20:cafe::62) by SN1PR12CA0045.outlook.office365.com
- (2603:10b6:802:20::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9388.11 via Frontend Transport; Fri,
- 5 Dec 2025 11:53:08 +0000
+ 2025 11:53:10 +0000
+Received: from SJ5PEPF000001D5.namprd05.prod.outlook.com
+ (2603:10b6:a03:39a:cafe::3a) by BY3PR03CA0024.outlook.office365.com
+ (2603:10b6:a03:39a::29) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9388.12 via Frontend Transport; Fri,
+ 5 Dec 2025 11:53:09 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
 Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- SA2PEPF000015CA.mail.protection.outlook.com (10.167.241.200) with Microsoft
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ5PEPF000001D5.mail.protection.outlook.com (10.167.242.57) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9388.8 via Frontend Transport; Fri, 5 Dec 2025 11:53:04 +0000
-Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.9412.4 via Frontend Transport; Fri, 5 Dec 2025 11:53:10 +0000
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 5 Dec
- 2025 05:53:01 -0600
+ 2025 05:53:07 -0600
 Received: from xcbalucerop40x.xilinx.com (10.180.168.240) by
  satlexmb08.amd.com (10.181.42.217) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Fri, 5 Dec 2025 03:53:00 -0800
+ 15.2.2562.17 via Frontend Transport; Fri, 5 Dec 2025 03:53:06 -0800
 From: <alejandro.lucero-palau@amd.com>
 To: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
 	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
 	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
 	<dave.jiang@intel.com>
-Subject: [PATCH v22 03/25] cxl/mem: Introduce a memdev creation ->probe() operation
-Date: Fri, 5 Dec 2025 11:52:26 +0000
-Message-ID: <20251205115248.772945-4-alejandro.lucero-palau@amd.com>
+CC: Alejandro Lucero <alucerop@amd.com>, Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>, Ben Cheatham <benjamin.cheatham@amd.com>
+Subject: [PATCH v22 07/25] cxl/sfc: Map cxl component regs
+Date: Fri, 5 Dec 2025 11:52:30 +0000
+Message-ID: <20251205115248.772945-8-alejandro.lucero-palau@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251205115248.772945-1-alejandro.lucero-palau@amd.com>
 References: <20251205115248.772945-1-alejandro.lucero-palau@amd.com>
@@ -80,248 +82,302 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015CA:EE_|LV5PR12MB9755:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7342d97f-f284-4ff3-d4a9-08de33f4d935
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D5:EE_|IA0PR12MB9010:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5bb3c6f2-c969-4e4e-c838-08de33f4dce5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|30052699003|36860700013|1800799024|82310400026;
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5Tu+CjCmWdnyddFfmDNSIBUcK1hrWHxeyS38itZxQLBomI7NZ16mwKU2OE4h?=
- =?us-ascii?Q?t7zv+88tFf3aQLdrbZhnOvQ0Szg0OOiaIQAfyEDysfcrrm8yEn32w9axQSeN?=
- =?us-ascii?Q?U75u71E0ekOSYceoh2ZU/07uSzmkGsAN6IrhOUo975IAkzMBmXyVhxToiQKm?=
- =?us-ascii?Q?8hYRMMIoCSBUz2Oj/8sTukBVIZEQyv7D9uv3DSq8s6JBLmvBgSGeO8Zqwi0Y?=
- =?us-ascii?Q?RgGBcC91JFuBDy9HLB15NoA+c2Fld+0HYP+doOjB6dDOyOKtrUobiOXBfoT3?=
- =?us-ascii?Q?Pybu2ax/o2wZZ0kuXidgmpubkid3WTEs2DyKpqEtpaew6G5d1iYOoudGYwRJ?=
- =?us-ascii?Q?GcSzkbSiZzjYcEjOY/mL/5RCq575sfCgU15FY6HQwJ2TWr70NQDwcfOy1dVA?=
- =?us-ascii?Q?kXjQ6JMAxM7ZmHhffYoWjEJVo73BtqkeyhLr8mvNv2IdWVzSK73xGed/GONv?=
- =?us-ascii?Q?IMsKL5MmFdMFXjKekgOSx98lab2rc8XEWW45r95qEY/k3uUszftoACpNJDly?=
- =?us-ascii?Q?2/18n0EmAqIU+30PvS8TxW4TzKZzQJOf+EVAJfovU4x5rAKmxGamlmxRb2v/?=
- =?us-ascii?Q?G/tvRd814QxEt3E2E5LJOatcttm1Dbi0bENYS+JO3X2DEZBAkqXwHjfv0f6V?=
- =?us-ascii?Q?JrsbRYbjrtbZRiHqowXbtzjQwfq9LxNRnmmQNbEYyZtLLAyuLTENS4SBwNy4?=
- =?us-ascii?Q?OaDKj99E/D0p8h5wvSwz4mIbAFO0W2I2Pi3UJ6qXTMNqLOESgXsRLyvGNKM4?=
- =?us-ascii?Q?zlGFbYWlqWV9nWDRW5lwnCoO0SbZnyOCsZ70N014CJyac+GceOEA0U0YKArZ?=
- =?us-ascii?Q?ydfzw/nKrzHoPle5v8+sCNYv39+Boe9LvO2J5BaVrGyPNy4MWzGtgGM1EOC8?=
- =?us-ascii?Q?7E9dmpgxKaoHZBc0Hk6v/5+NcZxX0888O0mCDRDhQg3bNf1FUAJS3Npv5k2/?=
- =?us-ascii?Q?UxGSEXkWiSKtGhz30AOtyFzKE5o1bOQI1OuJnEuXTjE+gWeLDOwBapyUY1Nv?=
- =?us-ascii?Q?8pzHUBBbK3NlYTrIxRb2xou0Ovrta0gmVakZj+OqJubvuIuhpgug79poPlve?=
- =?us-ascii?Q?oI+s+9v/AGT7T6yIwujaYvHdZ8l6ZUFPN45868HE31nC5iPLUjYqhLt7z7oO?=
- =?us-ascii?Q?9d4C5zBwSNeiUWHBlI/90Qq+qrKoqXqkmvzFUlFoVe7iWR3ES1ySTEC3/WeT?=
- =?us-ascii?Q?RH7nfFaZJ6rYpgT7Jz0NgXxKOAhZC91KLFT8yYKfLyvaztvRjJK0Bi1LvJVw?=
- =?us-ascii?Q?8iSllAvzEZ2wHH4RIjEHxC+HVG0UtO5mUcv+Rc6Tg9oVLN/rfrWt5Bna1Q0e?=
- =?us-ascii?Q?MAXanrIqt3aCyMuUyLzTiBMgLI8WtqfyC001zlmpZwchl4Tr0dvZg7GO2h2o?=
- =?us-ascii?Q?9MoFZvlbzYR4CusANRqdHybxPSFLaVMD8rWt7RRZ8JIYrTEs09skNXf25VUX?=
- =?us-ascii?Q?W1yVx5sAIkYtfx/ym6kPuQlMBdRvp0FFhKoQ3DZd2gAMf2GLQJaV0WWVIGBe?=
- =?us-ascii?Q?6F8VgRJE9ymB1q68k1tN99zp1pnXkjhw+v6bCqDhGeS8bYzlDUtBewb/UQ?=
- =?us-ascii?Q?=3D=3D?=
+	=?us-ascii?Q?lRlaBu8Tl1gvDtdWdEB+Fxu4T6cqqWJ1j2GEcAF3RWrocYb0vkboiMsKEiP8?=
+ =?us-ascii?Q?pFTNO2s4BsSi+WMVd9giVPWapn7PIXFct9OE+1kfQi+yarUoJ3XrD57CqfQ4?=
+ =?us-ascii?Q?9kZo+IRDpTKvxrw8LLrGHtVCVVLvXE8Dv6ArlovG1EXPqqww0+7PQDfQVETs?=
+ =?us-ascii?Q?mf4mdwW8XnsYbMbxXDLhyTjpaXvMqQsqnnzCvcbAw9fYop1qU0qtBkuRcfEr?=
+ =?us-ascii?Q?fUhAdbARaIF5j6ANwma7cVLHQqpZBkoDQVMPewHbjiQRLgdPmukfUG23IZSp?=
+ =?us-ascii?Q?AM4NEn3TFLg6es6MHNy51kZjtC9vmlUmRCFOmUeRT+jQlEyDr1q30YhyKK/H?=
+ =?us-ascii?Q?g/QrF79nkNfuYtvw9h49dnIGNqPu854J+Wb0exbdDTUlb29MQv9aR+u/d/1Y?=
+ =?us-ascii?Q?pbHKdB85Alt8a/H1Mtm9lJwmXsbVai1uD+SKFc+h5LNXSkQFxa+uG8ujM7Hx?=
+ =?us-ascii?Q?U2EOelLE1Tz0n9IA6Tw7miMEstYSh1eecK6UQyvkn+5th7V48/wFHl2ZVJS9?=
+ =?us-ascii?Q?Hknp2rY7OgD4g4gT0kS4xr015cLHqXJBBYCib+Kmlf921dDMmYcU11hXi4ZE?=
+ =?us-ascii?Q?5zgCIYGANf/ru9tJyFxG9Ma36eHkmSuKX/UuOLTJqqoRo+y10lT0AuQtNzaE?=
+ =?us-ascii?Q?tJElaUnT3++AjLPhLLKIieVnBu19+D1Is0/tTurgxlJF92apHfIs8jg+E06q?=
+ =?us-ascii?Q?aw6wO8zh+NqrwcuBaHEImQKMEv0KW+dASH7n4rAHodPkzdtlLXjv/e4F6OU9?=
+ =?us-ascii?Q?+1skmuHxOrnskf/Pzk4z6Q7/AZTGk8kIh7qEptBo2RyMQ3CzjvSROzewI4vV?=
+ =?us-ascii?Q?YSWgCMsWZbxNK5ALiTd8oQ8aSQUosGrPnK0fEFemaSPTArwdeoFCiwqSF97b?=
+ =?us-ascii?Q?BvvM04coSmKsE7STG63kxpON9bj5rgvX2xgmN2R91O/28yVkSFRq3Zchhxbz?=
+ =?us-ascii?Q?we86KEYVgeQaGvMUl0gk60HsSzhBl+OhBzq76hWl0DtOLmqpDMC8ILdGlVCe?=
+ =?us-ascii?Q?6BShzFUMWHtVys/IS+nayPiDaL2g4CZjx2SsznA/wwScn6CEhsrJrHy+U3FF?=
+ =?us-ascii?Q?vJMJNrSO7cNPiQxnYyR5cEIrNvL9xYN69d206E9SVMsmftvrfViuf+gPbqzf?=
+ =?us-ascii?Q?tDZ5UYSous/ZLAen0iKDGSHwfRAXmsDHjHXKcBPEHCOuy2NtxAaF/cZub/5D?=
+ =?us-ascii?Q?JxFXoraKFEryKPC9NziIonCUr/oMqNAfLJghR6jMM6WJw/H7e9gFQ86ChHMq?=
+ =?us-ascii?Q?I3fQK4FWavu2+QQCbAy/JUc9vowyY55im98htxUe/SaTstTmriRspvaXVpd1?=
+ =?us-ascii?Q?kptNiIl079QSB3cs2m72w5Hlftz2+x5p3l4Lf4XRSyQPd4CH9t3QgCVSSmC5?=
+ =?us-ascii?Q?XtPutHjZpwYpONJR1gopZc7l04G2g4rUHhk6R73HTbrQbrLPdcUm9jr82Ri3?=
+ =?us-ascii?Q?9zDuhQhNidBfUxVEkNek/AtmFwJ1n3aSxnTp4628OaHCGKAlb4GjupBiu8bI?=
+ =?us-ascii?Q?sQThFEupQoDdoJRY1FyQXc+uTJ2xIh1T3AIwgxa1FTWDalGax28Toug0eb03?=
+ =?us-ascii?Q?0+wjrCETYN6F6IjwY70=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(30052699003)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2025 11:53:04.1768
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2025 11:53:10.2930
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7342d97f-f284-4ff3-d4a9-08de33f4d935
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5bb3c6f2-c969-4e4e-c838-08de33f4dce5
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF000015CA.namprd03.prod.outlook.com
+	SJ5PEPF000001D5.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV5PR12MB9755
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB9010
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Alejandro Lucero <alucerop@amd.com>
 
-Allow for a driver to pass a routine to be called in cxl_mem_probe()
-context. This ability mirrors the semantics of faux_device_create() and
-allows for the caller to run CXL-topology-attach dependent logic on behalf
-of the caller.
+Export cxl core functions for a Type2 driver being able to discover and
+map the device component registers.
 
-This capability is needed for CXL accelerator device drivers that need to
-make decisions about enabling CXL dependent functionality in the device, or
-falling back to PCIe-only operation.
+Use it in sfc driver cxl initialization.
 
-The probe callback runs after the port topology is successfully attached
-for the given memdev.
-
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
 ---
- drivers/cxl/core/memdev.c    |  5 ++++-
- drivers/cxl/core/pci_drv.c   |  2 +-
- drivers/cxl/cxlmem.h         | 10 +++++++++-
- drivers/cxl/mem.c            | 33 ++++++++++++++++++++++++++++++---
- drivers/cxl/private.h        |  3 ++-
- tools/testing/cxl/test/mem.c |  2 +-
- 6 files changed, 47 insertions(+), 8 deletions(-)
+ drivers/cxl/core/pci.c             |  1 +
+ drivers/cxl/core/pci_drv.c         |  1 +
+ drivers/cxl/core/port.c            |  1 +
+ drivers/cxl/core/regs.c            |  1 +
+ drivers/cxl/cxl.h                  |  7 ------
+ drivers/cxl/cxlpci.h               | 12 ----------
+ drivers/net/ethernet/sfc/efx_cxl.c | 35 ++++++++++++++++++++++++++++++
+ include/cxl/cxl.h                  | 19 ++++++++++++++++
+ include/cxl/pci.h                  | 21 ++++++++++++++++++
+ 9 files changed, 79 insertions(+), 19 deletions(-)
+ create mode 100644 include/cxl/pci.h
 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 3152e9ef41fc..fd64f558c8fd 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -1039,7 +1039,8 @@ static const struct file_operations cxl_memdev_fops = {
- 	.llseek = noop_llseek,
- };
- 
--struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds)
-+struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
-+				    const struct cxl_memdev_ops *ops)
- {
- 	struct cxl_memdev *cxlmd;
- 	struct device *dev;
-@@ -1056,6 +1057,8 @@ struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds)
- 
- 	cxlmd->id = rc;
- 	cxlmd->depth = -1;
-+	cxlmd->ops = ops;
-+	cxlmd->endpoint = ERR_PTR(-ENXIO);
- 	cxlmd->cxlds = cxlds;
- 	cxlds->cxlmd = cxlmd;
- 
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 566d57ba0579..90a0763e72c4 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -6,6 +6,7 @@
+ #include <linux/delay.h>
+ #include <linux/pci.h>
+ #include <linux/pci-doe.h>
++#include <cxl/pci.h>
+ #include <linux/aer.h>
+ #include <cxlpci.h>
+ #include <cxlmem.h>
 diff --git a/drivers/cxl/core/pci_drv.c b/drivers/cxl/core/pci_drv.c
-index bc3c959f7eb6..f43590062efd 100644
+index 761779528eb5..4a812765217e 100644
 --- a/drivers/cxl/core/pci_drv.c
 +++ b/drivers/cxl/core/pci_drv.c
-@@ -1007,7 +1007,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		dev_dbg(&pdev->dev, "No CXL Features discovered\n");
+@@ -11,6 +11,7 @@
+ #include <linux/pci.h>
+ #include <linux/aer.h>
+ #include <linux/io.h>
++#include <cxl/pci.h>
+ #include <cxl/mailbox.h>
+ #include "cxlmem.h"
+ #include "cxlpci.h"
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index d19ebf052d76..7c828c75e7b8 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -11,6 +11,7 @@
+ #include <linux/idr.h>
+ #include <linux/node.h>
+ #include <cxl/einj.h>
++#include <cxl/pci.h>
+ #include <cxlmem.h>
+ #include <cxlpci.h>
+ #include <cxl.h>
+diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+index fc7fbd4f39d2..dcf444f1fe48 100644
+--- a/drivers/cxl/core/regs.c
++++ b/drivers/cxl/core/regs.c
+@@ -4,6 +4,7 @@
+ #include <linux/device.h>
+ #include <linux/slab.h>
+ #include <linux/pci.h>
++#include <cxl/pci.h>
+ #include <cxlmem.h>
+ #include <cxlpci.h>
+ #include <pmu.h>
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 536c9d99e0e6..d7ddca6f7115 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -39,10 +39,6 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
+ #define   CXL_CM_CAP_HDR_ARRAY_SIZE_MASK GENMASK(31, 24)
+ #define CXL_CM_CAP_PTR_MASK GENMASK(31, 20)
  
--	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlds);
-+	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlds, NULL);
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
+-#define   CXL_CM_CAP_CAP_ID_RAS 0x2
+-#define   CXL_CM_CAP_CAP_ID_HDM 0x5
+-#define   CXL_CM_CAP_CAP_HDM_VERSION 1
+-
+ /* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
+ #define CXL_HDM_DECODER_CAP_OFFSET 0x0
+ #define   CXL_HDM_DECODER_COUNT_MASK GENMASK(3, 0)
+@@ -206,9 +202,6 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+ 			      struct cxl_component_reg_map *map);
+ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+ 			   struct cxl_device_reg_map *map);
+-int cxl_map_component_regs(const struct cxl_register_map *map,
+-			   struct cxl_component_regs *regs,
+-			   unsigned long map_mask);
+ int cxl_map_device_regs(const struct cxl_register_map *map,
+ 			struct cxl_device_regs *regs);
+ int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs);
+diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+index 24aba9ff6d2e..53760ce31af8 100644
+--- a/drivers/cxl/cxlpci.h
++++ b/drivers/cxl/cxlpci.h
+@@ -13,16 +13,6 @@
+  */
+ #define CXL_PCI_DEFAULT_MAX_VECTORS 16
  
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 434031a0c1f7..63b1957fddda 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -34,6 +34,10 @@
- 	(FIELD_GET(CXLMDEV_RESET_NEEDED_MASK, status) !=                       \
- 	 CXLMDEV_RESET_NEEDED_NOT)
+-/* Register Block Identifier (RBI) */
+-enum cxl_regloc_type {
+-	CXL_REGLOC_RBI_EMPTY = 0,
+-	CXL_REGLOC_RBI_COMPONENT,
+-	CXL_REGLOC_RBI_VIRT,
+-	CXL_REGLOC_RBI_MEMDEV,
+-	CXL_REGLOC_RBI_PMU,
+-	CXL_REGLOC_RBI_TYPES
+-};
+-
+ /*
+  * Table Access DOE, CDAT Read Entry Response
+  *
+@@ -100,6 +90,4 @@ static inline void cxl_uport_init_ras_reporting(struct cxl_port *port,
+ 						struct device *host) { }
+ #endif
  
-+struct cxl_memdev_ops {
-+	int (*probe)(struct cxl_memdev *cxlmd);
-+};
-+
- /**
-  * struct cxl_memdev - CXL bus object representing a Type-3 Memory Device
-  * @dev: driver core device object
-@@ -43,6 +47,7 @@
-  * @cxl_nvb: coordinate removal of @cxl_nvd if present
-  * @cxl_nvd: optional bridge to an nvdimm if the device supports pmem
-  * @endpoint: connection to the CXL port topology for this memory device
-+ * @ops: incremental caller specific probe routine
-  * @id: id number of this memdev instance.
-  * @depth: endpoint port depth
-  * @scrub_cycle: current scrub cycle set for this device
-@@ -59,6 +64,7 @@ struct cxl_memdev {
- 	struct cxl_nvdimm_bridge *cxl_nvb;
- 	struct cxl_nvdimm *cxl_nvd;
- 	struct cxl_port *endpoint;
-+	const struct cxl_memdev_ops *ops;
- 	int id;
- 	int depth;
- 	u8 scrub_cycle;
-@@ -96,7 +102,9 @@ static inline bool is_cxl_endpoint(struct cxl_port *port)
- }
+-int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+-		       struct cxl_register_map *map);
+ #endif /* __CXL_PCI_H__ */
+diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+index 8e0481d8dced..34126bc4826c 100644
+--- a/drivers/net/ethernet/sfc/efx_cxl.c
++++ b/drivers/net/ethernet/sfc/efx_cxl.c
+@@ -7,6 +7,8 @@
  
- struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
--				       struct cxl_dev_state *cxlds);
-+				       struct cxl_dev_state *cxlds,
-+				       const struct cxl_memdev_ops *ops);
-+
- int devm_cxl_sanitize_setup_notifier(struct device *host,
- 				     struct cxl_memdev *cxlmd);
- struct cxl_memdev_state;
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 8569c01bf3c2..b36d8bb812a3 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -144,6 +144,12 @@ static int cxl_mem_probe(struct device *dev)
- 			return rc;
- 	}
+ #include <linux/pci.h>
  
-+	if (cxlmd->ops) {
-+		rc = cxlmd->ops->probe(cxlmd);
-+		if (rc)
-+			return rc;
++#include <cxl/cxl.h>
++#include <cxl/pci.h>
+ #include "net_driver.h"
+ #include "efx_cxl.h"
+ 
+@@ -18,6 +20,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+ 	struct pci_dev *pci_dev = efx->pci_dev;
+ 	struct efx_cxl *cxl;
+ 	u16 dvsec;
++	int rc;
+ 
+ 	probe_data->cxl_pio_initialised = false;
+ 
+@@ -44,6 +47,38 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+ 	if (!cxl)
+ 		return -ENOMEM;
+ 
++	rc = cxl_pci_setup_regs(pci_dev, CXL_REGLOC_RBI_COMPONENT,
++				&cxl->cxlds.reg_map);
++	if (rc) {
++		pci_err(pci_dev, "No component registers\n");
++		return rc;
 +	}
 +
- 	rc = devm_cxl_memdev_edac_register(cxlmd);
- 	if (rc)
- 		dev_dbg(dev, "CXL memdev EDAC registration failed rc=%d\n", rc);
-@@ -169,15 +175,17 @@ static int cxl_mem_probe(struct device *dev)
-  * devm_cxl_add_memdev - Add a CXL memory device
-  * @host: devres alloc/release context and parent for the memdev
-  * @cxlds: CXL device state to associate with the memdev
-+ * @ops: optional operations to run in cxl_mem::{probe,remove}() context
-  *
-  * Upon return the device will have had a chance to attach to the
-  * cxl_mem driver, but may fail if the CXL topology is not ready
-  * (hardware CXL link down, or software platform CXL root not attached)
-  */
- struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
--				       struct cxl_dev_state *cxlds)
-+				       struct cxl_dev_state *cxlds,
-+				       const struct cxl_memdev_ops *ops)
- {
--	struct cxl_memdev *cxlmd = cxl_memdev_alloc(cxlds);
-+	struct cxl_memdev *cxlmd = cxl_memdev_alloc(cxlds, ops);
- 	int rc;
- 
- 	if (IS_ERR(cxlmd))
-@@ -189,7 +197,26 @@ struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
- 		return ERR_PTR(rc);
- 	}
- 
--	return devm_cxl_memdev_add_or_reset(host, cxlmd);
-+	cxlmd = devm_cxl_memdev_add_or_reset(host, cxlmd);
-+	if (IS_ERR(cxlmd))
-+		return cxlmd;
++	if (!cxl->cxlds.reg_map.component_map.hdm_decoder.valid) {
++		pci_err(pci_dev, "Expected HDM component register not found\n");
++		return -ENODEV;
++	}
++
++	if (!cxl->cxlds.reg_map.component_map.ras.valid) {
++		pci_err(pci_dev, "Expected RAS component register not found\n");
++		return -ENODEV;
++	}
++
++	rc = cxl_map_component_regs(&cxl->cxlds.reg_map,
++				    &cxl->cxlds.regs.component,
++				    BIT(CXL_CM_CAP_CAP_ID_RAS));
++	if (rc) {
++		pci_err(pci_dev, "Failed to map RAS capability.\n");
++		return rc;
++	}
 +
 +	/*
-+	 * If ops is provided fail if the driver is not attached upon
-+	 * return. The ->endpoint ERR_PTR may have a more precise error
-+	 * code to convey. Note that failure here could be the result of
-+	 * a race to teardown the CXL port topology. I.e.
-+	 * cxl_mem_probe() could have succeeded and then cxl_mem unbound
-+	 * before the lock is acquired.
++	 * Set media ready explicitly as there are neither mailbox for checking
++	 * this state nor the CXL register involved, both not mandatory for
++	 * type2.
 +	 */
-+	guard(device)(&cxlmd->dev);
-+	if (ops && !cxlmd->dev.driver) {
-+		if (IS_ERR(cxlmd->endpoint))
-+			return ERR_CAST(cxlmd->endpoint);
-+		return ERR_PTR(-ENXIO);
-+	}
++	cxl->cxlds.media_ready = true;
 +
-+	return cxlmd;
- }
- EXPORT_SYMBOL_NS_GPL(devm_cxl_add_memdev, "CXL");
+ 	probe_data->cxl = cxl;
  
-diff --git a/drivers/cxl/private.h b/drivers/cxl/private.h
-index 93ff0101dd4b..167a538efd18 100644
---- a/drivers/cxl/private.h
-+++ b/drivers/cxl/private.h
-@@ -7,7 +7,8 @@
-  */
- #ifndef __CXL_PRIVATE_H__
- #define __CXL_PRIVATE_H__
--struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds);
-+struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
-+				    const struct cxl_memdev_ops *ops);
- struct cxl_memdev *devm_cxl_memdev_add_or_reset(struct device *host,
- 						struct cxl_memdev *cxlmd);
- int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index d533481672b7..33d06ec5a4b9 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -1768,7 +1768,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+ 	return 0;
+diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+index 13d448686189..7f2e23bce1f7 100644
+--- a/include/cxl/cxl.h
++++ b/include/cxl/cxl.h
+@@ -70,6 +70,10 @@ struct cxl_regs {
+ 	);
+ };
  
- 	cxl_mock_add_event_logs(&mdata->mes);
- 
--	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlds);
-+	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlds, NULL);
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
- 
++#define   CXL_CM_CAP_CAP_ID_RAS 0x2
++#define   CXL_CM_CAP_CAP_ID_HDM 0x5
++#define   CXL_CM_CAP_CAP_HDM_VERSION 1
++
+ struct cxl_reg_map {
+ 	bool valid;
+ 	int id;
+@@ -223,4 +227,19 @@ struct cxl_dev_state *_devm_cxl_dev_state_create(struct device *dev,
+ 		(drv_struct *)_devm_cxl_dev_state_create(parent, type, serial, dvsec,	\
+ 						      sizeof(drv_struct), mbox);	\
+ 	})
++
++/**
++ * cxl_map_component_regs - map cxl component registers
++ *
++ * @map: cxl register map to update with the mappings
++ * @regs: cxl component registers to work with
++ * @map_mask: cxl component regs to map
++ *
++ * Returns integer: success (0) or error (-ENOMEM)
++ *
++ * Made public for Type2 driver support.
++ */
++int cxl_map_component_regs(const struct cxl_register_map *map,
++			   struct cxl_component_regs *regs,
++			   unsigned long map_mask);
+ #endif /* __CXL_CXL_H__ */
+diff --git a/include/cxl/pci.h b/include/cxl/pci.h
+new file mode 100644
+index 000000000000..a172439f08c6
+--- /dev/null
++++ b/include/cxl/pci.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
++
++#ifndef __CXL_CXL_PCI_H__
++#define __CXL_CXL_PCI_H__
++
++/* Register Block Identifier (RBI) */
++enum cxl_regloc_type {
++	CXL_REGLOC_RBI_EMPTY = 0,
++	CXL_REGLOC_RBI_COMPONENT,
++	CXL_REGLOC_RBI_VIRT,
++	CXL_REGLOC_RBI_MEMDEV,
++	CXL_REGLOC_RBI_PMU,
++	CXL_REGLOC_RBI_TYPES
++};
++
++struct cxl_register_map;
++
++int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
++		       struct cxl_register_map *map);
++#endif
 -- 
 2.34.1
 
