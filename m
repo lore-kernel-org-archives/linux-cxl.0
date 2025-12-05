@@ -1,238 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mail1.bemta45.messagelabs.com (mail1.bemta45.messagelabs.com [85.158.142.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427AE40855;
-	Fri,  5 Dec 2025 21:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764969484; cv=fail; b=uwVE7XMkHjQE+3xFvQEAdBMAcGT73zPfkg57AQfgrdVti3tmyfik0DWLZimOFYvcz5+20i3BvPAOLtEiUvYUtY8hgF50mIIB3/c1rXysXqPaRyymCqFdnIfIk4S68tF5etpAD4mveXSSVnUnYWLqwS8U7Y1cub5KXaVbDIsR57E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764969484; c=relaxed/simple;
-	bh=SN2+fbgTQB9vFo9tnIagvAI0HrGmwtesgfGdNzKpIqY=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=JdFj8xBQqGKNBQc2Q/vyBYvneTRAurvJ0IFcCX6C+PB2gJd6JJA+qp7rrV7LVOS/Bdgwfl7pTykA2rd59ovONCLFZg14DvE0D4ZStfgMZrGDOXny5O+wNWSW3RuBuMGhjtGJ5J1+ap6b8aP5hRDz2kBS/flRn1g3z2BcOm3VU2c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dzvJyO77; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3288F3B8D67;
+	Fri,  5 Dec 2025 23:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.158.142.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764975856; cv=none; b=qV+ohP8TuWle2aJAO8twFU9y/eMBhOSr5W1V7Z7bCgVvYIh33MpMPnRmD3Ux9P20ORzMbYB7IFKbKjaZ1U5Yvnc5FUu1fGlLIXIulA7DfQfT09suh11K+30shlNBqBG7z9XAqnDS75RCuHDUvuyBXdHni1YbWBA+w/fxUOPYnpg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764975856; c=relaxed/simple;
+	bh=6C6fC86OQWVle70CRS/xPm4uczU5DaR6lMAdQEoXrfk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Z4kKJk+xL5JmRZrcxxOz82W2REffu2b7+wwafUhDhUxXRyrse9gtBhGsjrxP5sLmMt+UkyMUc0/Gs/O5PkVJkf12zQBsq5EnH3fNjRbUXE4nYjIB+EypYZiYSEGLz6AVbtcEU4SmhXXNUSxzYjYI5V7DplsnIC3yiepLmS4rdIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=WUINFPsX; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=QE5KlkiY; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=fqMJg5+G; arc=none smtp.client-ip=85.158.142.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dzvJyO77"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764969482; x=1796505482;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=SN2+fbgTQB9vFo9tnIagvAI0HrGmwtesgfGdNzKpIqY=;
-  b=dzvJyO77XgNBhisExG4bvZjOvSDvxyNm6qcMZIKMMAfhIU5ZOWVKyOaA
-   tXvfQQ7D1HaawxdQRU8L+Y14/4eXe5wn+yW9VOSGwdcHay0oHAPfQUeIc
-   6DO+5qJbJIT+f1bquloM4wHeJ1u4QMA93VuMflNWu5viyf8n9C13FWogE
-   dbVqMpdxNGx9wNHtvTEuLbdINssSps83HO5tQ4w4Jf8MqQQw52sQp/OTl
-   yhJHzI4t7Hs6vyVVLtSRDh0RwLbRVJqOW3zE3xi5mNmiYXY7HLpZQ30iS
-   Blvcx26BQGZinKExI+w9MtwjRSa5B6HRDY6DngdMakGan4SDOkygJoml2
-   g==;
-X-CSE-ConnectionGUID: 4t30DHmQQD+sxhCMVyOU1A==
-X-CSE-MsgGUID: 5MCxMO4NStWcVXeVVgf/8A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11633"; a="77694231"
-X-IronPort-AV: E=Sophos;i="6.20,252,1758610800"; 
-   d="scan'208";a="77694231"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2025 13:18:01 -0800
-X-CSE-ConnectionGUID: KbUt4BApQN6EU2etihgIUg==
-X-CSE-MsgGUID: 3nJDPhqkQP24fHfRb7b0bQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,252,1758610800"; 
-   d="scan'208";a="232770282"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2025 13:18:01 -0800
-Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Fri, 5 Dec 2025 13:18:00 -0800
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29 via Frontend Transport; Fri, 5 Dec 2025 13:18:00 -0800
-Received: from CH1PR05CU001.outbound.protection.outlook.com (52.101.193.49) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Fri, 5 Dec 2025 13:18:00 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=s2R9cJZ0FRMMyU1o9PV3YwFA2OYl0aQxSAk1t0xWf4a40cPasKuhkqBgVEnoETrcUUAjI72jmkwF7sLSPVYsmsgeMiW9sWQOyWQI5m7xv4fkBc06MNzXizBUAJ7kYVxjY6oOa2MJGlULiNdKOXJ4ZBLZ6mxPDtuCUSS5NSJK9tADW0ZCV7Usjcm+37ZGCl+NWQood0kiXsUaB79Kwrs5H7gVvyZHEGpJmhu24Auj6rLersWQD9zOn+CNSGwPPhEV8y2ONrrwnIN81iCiHTpGRTbZY3MdhIOFfw+k/Pe8QFMZ9ztoCg0ohpkAYFpz1EuA0MSYFktToBJ+igqNGm60/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eUM59ZoFmnN1cd/8+X+0KeaVi+tqNid2dJaDoqI/47A=;
- b=ofybpOesIYDrRa1hnUQwXjvRQnlchchtolttlnxfmKGZzEHRJjcBnIiKN+1RyiPUYXKwBzqSFhr5x0+z4Wnm+dDUEYxbmLFZftMoH6L3/bitEVYvdZIGYfJjRM9v3UZVQHF8yGGJITUw/SWUssUY5hkbba4UfhYaED7LUZkXwpqLSV0Bag4Xcq2Q6mwm1WQQyko7EuTjouGIH8foCNiSsbSjUeoZ1+MPbcsxKywph8PUN7ynsNL6oASn8fmtesM2mKMpnChpaDIpc+UozSiWzneXtQHalrt3P4jGv07fRSJJqLyer0uZC+02EzMZ2vLzhwDwCU2pQ+T39BvIjx5yfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by BL3PR11MB6457.namprd11.prod.outlook.com (2603:10b6:208:3bc::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Fri, 5 Dec
- 2025 21:17:57 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff%4]) with mapi id 15.20.9388.011; Fri, 5 Dec 2025
- 21:17:57 +0000
-From: <dan.j.williams@intel.com>
-Date: Fri, 5 Dec 2025 13:17:55 -0800
-To: Alejandro Lucero Palau <alucerop@amd.com>, Dan Williams
-	<dan.j.williams@intel.com>, <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <alison.schofield@intel.com>,
-	<terry.bowman@amd.com>, <alejandro.lucero-palau@amd.com>,
-	<linux-pci@vger.kernel.org>, <Jonathan.Cameron@huawei.com>, Shiju Jose
-	<shiju.jose@huawei.com>
-Message-ID: <69334c038705b_1b2e100b5@dwillia2-mobl4.notmuch>
-In-Reply-To: <143deecb-aa53-42e6-b7eb-91fb392e7502@amd.com>
-References: <20251204022136.2573521-1-dan.j.williams@intel.com>
- <143deecb-aa53-42e6-b7eb-91fb392e7502@amd.com>
-Subject: Re: [PATCH 0/6] cxl: Initialization reworks in support Soft Reserve
- Recovery and Accelerator Memory
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR05CA0020.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::25) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="WUINFPsX";
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="QE5KlkiY";
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="fqMJg5+G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
+	s=170520fj; t=1764975852; i=@fujitsu.com;
+	bh=Y7fXjpD4VkGcCCMANUeO6niKVPw+9njd3zj/Dv483Co=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	b=WUINFPsXqv0GiAwot7aCkqM+sfA3L0pmWaPWYxVFqEobQtc4w1+8yFwSH7oMLBpkv
+	 eeTUX3kymdFs9/JVJbhwTzCTmm+fYCkPZ8a8IRNt3qpexC/Xchf8oQRQAo32m5Vucy
+	 0ZErMESnN/0SdivcIFlpOcnJ7uIQ5bp+GwVYhJmPgmPHI+w3UlabUdnj0xG157T8Fl
+	 yoEYam/0sE5BmZ09vDI9aXqIiL3WygeGRYIkjsRq4AyBG1nnq1K2myb97W4KLZNMUw
+	 chWPGU3Pyf+aJ2WwMJdBhlvjZHaadx5tlskTy775ACStUPZVFJdOnC5u8bt2MEbL6w
+	 dJiY8s2Bb79xw==
+X-Brightmail-Tracker: H4sIAAAAAAAAA1WSfVAUZRzHeXb39hbimOWg3BhCuxlwZOYOkbG
+  ezBiciWbJmYQ/yKJJWmC7u7o3d486GCoKLgGBSDmROzUMR3mNBDJieFOIE0LODB1RsWbgTA9I
+  jbfjRWwPguy/7zOfz+/3fP/4Eaj0ZzyIYE1GltMxGhnug0XvJA7J76ZFqbeaiwg4MnoZh/PT9
+  wH8+sQsAqe+X8ZhmeUygBeHP8dh7XAdgDmVDTh0NC3hsNP5JwZtZTkIPNRyFYU1J6/h0Frajk
+  CHtR+Dbe19GPyt9RgOp4p6ADSfmAQwz2lBYLV7SQTz7mej0F7UhcDj0xYU3jpyGsC66YcovHn
+  RIYI3SnoRuOgWZjt6fsdiQug5czFGm688wumfrCNiOrdnUkQ3VYXTlW33ELqxJh+nO4/Xiem7
+  TeWA7nI9ArTF9hk9UNEjpqcaQ+hFWy+I90sSqXUpetN7ItWlU0WYYdrbNF41i2aDPKIAeBNSs
+  hlQE5NJnoyRe6iC7hpRAfAR8jmMsrjdqOchJQ8gVO3MN2DNqq0tRNethdsWZNU6Cqgviqswj4
+  WTEdT1w8dWJgLJZ6jihSbMI6FkO051WM+hHhBA7qPqbddFq2tDqdmOs4gnS8ho6mbuabEnU+R
+  GylXatOJ4k8nUiL0QWS2+T+jX+q/vT/WVj618jAp+zg82dHU2jLo62IiWgADrE5r1Ca0CIDXg
+  JZ7lPmI5+XZFCqdWqoxaRq1RMJlyRsGmc3oDK9fpOaMqUqFMNShYnlfwGdpUTZpCxxobgXBLP
+  g/It1pAxVhuxAXwLIHInpbY4qPUUr8UfVqGiuFVyVy6huUvgGCCkFGSOykC8+dYJWt6X60RLn
+  INU4SvLFByKUrAEt7AaHm1chX1gyji7O2udpR4eM9yHpViOr2ODdogGWAElfSoqnTd+qK1674
+  CngsKkAAvLy+pr4HltGrj/7kLbCCALECyJ1XY4qvWGdf/cwlVEKFK+IFtnipG5j8UlI3Ub75j
+  epz7zohmKjTVvqk8ays/F9ewY+/w5obuwKzE5UW/bZrXvkvYa/Pxa0RaEgpvLUewk2f+WpTPO
+  jOwN3ZV4+N1Z2y7+9yyUdGo7/aQHPuN2tf7JyZm2lAvaZiDrOTze7cog6N/bd6Ub5c4B59aUk
+  Zw+yeipMsx3Oj8DpHo1ZIj4g/fzHxlZ2Ts37uxk6HXNuJtxd8OzR3sjpB6xZ4vfzshTGn44I+
+  wnH7q0+QvTcZS/4H9u553TufGYL0pLwQXfCV+N1AzlD8pHy/7JTZuPk7bOTbndmQedDUn6pcT
+  H0xkLJxKUsbOvFz9SexMvG3sx/oXH7cOZo2YP97S7T8UEH20VYbxKiYyHOV45h8+FePqWAQAA
+  A==
+X-Env-Sender: tomasz.wolski@fujitsu.com
+X-Msg-Ref: server-12.tower-838.messagelabs.com!1764975847!38940!1
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received:
+X-StarScan-Version: 9.120.0; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 26844 invoked from network); 5 Dec 2025 23:04:08 -0000
+Received: from unknown (HELO n03ukasimr02.n03.fujitsu.local) (62.60.8.146)
+  by server-12.tower-838.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 5 Dec 2025 23:04:08 -0000
+Received: from n03ukasimr02.n03.fujitsu.local (localhost [127.0.0.1])
+	by n03ukasimr02.n03.fujitsu.local (Postfix) with ESMTP id 07284104798;
+	Fri,  5 Dec 2025 23:04:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 n03ukasimr02.n03.fujitsu.local 07284104798
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
+	s=dspueurope; t=1764975847;
+	bh=Y7fXjpD4VkGcCCMANUeO6niKVPw+9njd3zj/Dv483Co=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QE5KlkiY44HYL3AI+5ggy8tJJo8l5Oiod4RyNXI82tloYIefX0tKFd8FP8yLKBzd9
+	 OgjbglfldgF5m3E7P7weI+NE5QPwe+93TYZ85qxDITHiDHG/nFj6ccvtrjQJwtZi2l
+	 pUnppbOseaJFZ/yXx4DTwb/xL8/G3KaIVd1skVEqs1XYa4pWf9rsjjxDUqxPy2WcAP
+	 2oygyZZG9npafU3G+FBSZOEK79HbN2EG+xJy85bwx5lOYTa+iWR0Ck60UkgWtsNN5F
+	 ZJuUQqDYGJ/21R/oZ1Xv8+LTgwegnsgAGFolfaz0gnTCd+cj9EjvizM8/2KX8lqYZm
+	 s6R9SFNh9/mig==
+Received: from ubuntudhcp (unknown [10.172.107.4])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by n03ukasimr02.n03.fujitsu.local (Postfix) with ESMTPS id D92F81005E1;
+	Fri,  5 Dec 2025 23:04:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 n03ukasimr02.n03.fujitsu.local D92F81005E1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
+	s=dspueurope; t=1764975846;
+	bh=Y7fXjpD4VkGcCCMANUeO6niKVPw+9njd3zj/Dv483Co=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fqMJg5+GnlwcXge+7D6S4U3LOI3cvuY04MWDvJ9kOxLiL8+umshJPnxtzh+TaL8Uo
+	 QXlsldAeU2f64P9iQjDj9RCu7OcO+edyWaLb009/ls+8WSmuTzc8a30ne6z8NfSiPE
+	 9f2kTZfUUKUmwgwx+KeirRfHZOPGFhq1voLf9nb8ODHQP0RadyWANjn+q0XMJBWhJl
+	 GdS9Wz8IjbNh298I/HHJKPGDmCEyJQoNmEvaULLDYG5+pCQ/SCgTPfrnK5T0tb+bYP
+	 tGBNq0BUfEFlKgbVQJFi7HjBwxSLktbrbFkrSiX6Ty0zNjfpuHS5fbjlEK537v1cCI
+	 x1un6ooWVDtvA==
+Received: from localhost.BIOS.GDCv6 (unknown [10.172.196.36])
+	by ubuntudhcp (Postfix) with ESMTP id A113322059C;
+	Fri,  5 Dec 2025 23:04:26 +0000 (UTC)
+From: Tomasz Wolski <tomasz.wolski@fujitsu.com>
+To: y-goto@fujitsu.com
+Cc: Smita.KoralahalliChannabasappa@amd.com,
+	alison.schofield@intel.com,
+	ardb@kernel.org,
+	benjamin.cheatham@amd.com,
+	bp@alien8.de,
+	dan.j.williams@intel.com,
+	dave.jiang@intel.com,
+	dave@stgolabs.net,
+	gregkh@linuxfoundation.org,
+	huang.ying.caritas@gmail.com,
+	ira.weiny@intel.com,
+	jack@suse.cz,
+	jeff.johnson@oss.qualcomm.com,
+	jonathan.cameron@huawei.com,
+	len.brown@intel.com,
+	linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	lizhijian@fujitsu.com,
+	ming.li@zohomail.com,
+	nathan.fontenot@amd.com,
+	nvdimm@lists.linux.dev,
+	pavel@kernel.org,
+	peterz@infradead.org,
+	rafael@kernel.org,
+	rrichter@amd.com,
+	terry.bowman@amd.com,
+	tomasz.wolski@fujitsu.com,
+	vishal.l.verma@intel.com,
+	willy@infradead.org,
+	yaoxt.fnst@fujitsu.com,
+	yazen.ghannam@amd.com
+Subject: Re: [PATCH v4 0/9] dax/hmem, cxl: Coordinate Soft Reserved handling with CXL and HMEM
+Date: Sat,  6 Dec 2025 00:04:35 +0100
+Message-ID: <20251205230445.16100-1-tomasz.wolski@fujitsu.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <OS9PR01MB124214C25B1A4A4FA1075CADA90A7A@OS9PR01MB12421.jpnprd01.prod.outlook.com>
+References: <OS9PR01MB124214C25B1A4A4FA1075CADA90A7A@OS9PR01MB12421.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|BL3PR11MB6457:EE_
-X-MS-Office365-Filtering-Correlation-Id: 451763fd-e2b1-447e-6acf-08de3443c2f8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?UWF1aXpHNW1JdHk5VkZ3Z2RvQTFjT21DL3FXUndlTHB6NGVMaXRwamtJSE1p?=
- =?utf-8?B?RGQwYkZaMjZXd2FMelJyZFJ2NzRUU0J3Y3BldXJ2ZmY3UWhVei9Qc05yWmV2?=
- =?utf-8?B?MEpYQWpkbWtST3dyN2laOHZFZGtCQ0kyQmozbnYzZUsxL3VFVDY5SUJBek9I?=
- =?utf-8?B?RVZjUHRHV3Nob25lZWg4R1pDK3cvZ3JMeXB6V2twK0FSMFpDYWJTOXd1czdl?=
- =?utf-8?B?YkxWNFh2WEVlQVlkTFpwY0ZzbW1sZm1DeWlFYU5FUEc3clBNMkRwOVA2WU9F?=
- =?utf-8?B?czNGVVFidXpxRDViT3A3cTBRSWJuVG8xdDJmYzFuanYzejFROTV3QjRkeEdz?=
- =?utf-8?B?cmFYYW5IZkJuUnpkeFBhOGd4djlvL2tiUjVlYXJxbEVlQkNYRUxLMXlrSURI?=
- =?utf-8?B?Sk9jZEZzekN2NFdJVVJxOGFlaCt6b3k0Sm9DMjArbmpmZXhnV29scXJNejFS?=
- =?utf-8?B?WlNjRG12Y3JWb3liZTRCdExyL0pmeTlzM0lFalg5MzlJTkVnM2tKcG0vMXh3?=
- =?utf-8?B?UVg4RUxQVHpOdVRHRXJ4ZlVHOEZNRlpSUnM5RS8vTVZhSDdTb2NxcmlVcU5H?=
- =?utf-8?B?dnlYVDczbWVhMVZ4MVBzSXNUQi9OMnpucWc3ZkhFamJUNDVqYTkwYUdER1Yz?=
- =?utf-8?B?R0YwK2NCVzYwLy9xT21jQWNXajRBL1c2ZDJlTm91ajFSMVVzTUZ1V29neUNZ?=
- =?utf-8?B?eXQ4RTdLanRybFdUK2Y5SzZrS2J1M1BPY1g1N0krakVrTENIdy81M2tpdHNn?=
- =?utf-8?B?N2JUY2k0Z2JVNnMyVVJGNGQ4K0xNRTRFdkNjSk1TMnBaYVkxUlJFbG5zNktY?=
- =?utf-8?B?RDFJY3RyQkVWenlTZmE1ZGN3QW55bHptcDZMMG1meXZFM1dwSGY5dXNDQ2pP?=
- =?utf-8?B?WElSaE1kU1RUd09RRG1YNFpxM0xiUnpRRkpUQ25iVmRpV3hrNzBEREQ3ZTJm?=
- =?utf-8?B?c1laTkVsa2F5aTJlQWNVZXgyWlIrWVJWV3Q5NFZubks4TzdwUFg0SDE0Q2hE?=
- =?utf-8?B?OUc0NFhBeHpWZklQaHJ0ajBSWEJmZndKUmZIS2l3eXdEWnk4aUppQkJPTFhJ?=
- =?utf-8?B?a3pzQXQ2S3FXVU1SNk9DVDZoZ3NHa2I0STdrY3VMVndpV3drOFp3SUNzeGlO?=
- =?utf-8?B?SURzd1lWYUk4OHVMT0xGVU9nQnBHeXBXbTdLWW1FMzVYT1VLSGpXZzRUcnox?=
- =?utf-8?B?RXZCbFJ1R2llbVpMUCtxWHM4SStXNWErVlJsMUpiWUt0czRoVk9HcHVKTmw5?=
- =?utf-8?B?VDhRMUFDZTUyL0ZBOThPdml1aVY3UDZ1SEk4TnlQeVA3MWkydForU1dJdndj?=
- =?utf-8?B?aFdYNEt5V0t3empkSHZnRm5EUW1FN2RqcXduVXVENWl2djRkQlQwYzFmbnFh?=
- =?utf-8?B?aHJQTTMzZzRSSHowZ3BBU0d2VUN4UjVObzY0VkF6bVIyNTE5VHc5Qlc2UENq?=
- =?utf-8?B?MlBlRkQ5eXgwd1J6SXpUb0hNcFJkWmdiSFZ3L2tQcEdlcFRheWMvVHRGT2J2?=
- =?utf-8?B?VDNWcUw3ME1LVEdSUzFrL0xtV3pRM0crS1ZoWFp5UDlXeUY3T29JSWRVM2J4?=
- =?utf-8?B?OEtrOEJZSkUrRTJPbGZpUjIxdms4UDl0aXFqZ092czd4ZWJmR3JaSGVTZlA4?=
- =?utf-8?B?a0VxK2EyaWZFVDhlNzFaU1FiUEsySytpbXNDTXZteUUxQ3R6eHMxVUwzcTZH?=
- =?utf-8?B?b0Z4ekMvSDZnQXVLckxoNHZmdDFUa2l6KzJUV1V4dm9oWXR1ejBlVkd0bVkx?=
- =?utf-8?B?eDREQW5mblNHdERxdGpXMnJQbS94S21GQm5temRENUdFV3h1TkJjRU95b2ZT?=
- =?utf-8?B?RHo1U3JEamQ3amtuaThNeUtEWU00aGlqc1NhbDR4amxPV09BNjhqbnVSd3Iw?=
- =?utf-8?B?M2pkL2FvcWFqQmlnYU5RL25YckEyMmZ4UWVmSU0vdFNlcEhKSFhEZWpOUnB0?=
- =?utf-8?Q?rwgVk2LzzxtCj6+/yXDG3I2dEfXh6aMw?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MFVvL1VkMWgxK0JoVWhUR3lBTUFITEtkNHhCY05VNnF5TndMNEVndmtxOEV3?=
- =?utf-8?B?RUcxcGh2OXdyUUthcTZIK1k3Q3FISGwremNrVExjZUoxeGZNMzJONnpaYTJZ?=
- =?utf-8?B?NTQzdUUvUGF2NUcwbC9NVHBkdE1qcnJrWW01L2NUeG1pZGZzcHNNeEsvMnZN?=
- =?utf-8?B?cU1vWTdycWYrQ0o3VXFSOWdTeWdET1dvNUNFQlF6eDNPUStaVHVOcFBib3Q2?=
- =?utf-8?B?cHNCYUlrSzRkdVpSSExRdkF3emRJUnFQZkNqbTVBQWEvcGFZK3czVUFQWEFj?=
- =?utf-8?B?NzZTOEVBWHBVS0htV1dCWUx4S3g2SjgvUkYvSy9iQW5xYnFpK1V3dm4rclJJ?=
- =?utf-8?B?WkpZWWlLVmRKbVZzblduL3ZPOGlhYk1NNThLRURyYWYzOHpxQnQyOUM4RGZk?=
- =?utf-8?B?RHA0bFZGR3Q1QmVYR0pLRm55QThaa09GVTg3a3cwdGxnTHlJeVM1RWRnNDdM?=
- =?utf-8?B?d3ZZWnhOcjQwQjJBblEwZlU5enBtWkM5ZjhpVDEwOXZVWVRDeGZwUWxVcFJR?=
- =?utf-8?B?aFRsUnZjWWJRV0hxMnhsdEdtbTk1aGk2VU96UGZiUE92OEpkdlF3MWpOaTlH?=
- =?utf-8?B?RDdNSHAvNlJRQlR3aTJGTnVDMWlxNzZuZHo1MEJRWGsrc000Q2N6dWtld1dW?=
- =?utf-8?B?WDFvNjBoalZBTmFvT0crQ2Z2V2NzQ1VXWXRROW5OYmxGTzNFTTBsZ2RMbXlH?=
- =?utf-8?B?eExxdSttWW5nNHhZQWRUL0I4MTVwZWYrR3hJTVpKUThSVU5ocytvSVVkTG1n?=
- =?utf-8?B?NlV3akJTbG9TUlJYTEhiNU9KT3oyQ0ZPdmRrSlFHejBFdGxPbWdtVFJXZFJx?=
- =?utf-8?B?S1lmRUpNdVYvMU1haThmenJRbnVUVDBXZlBDVDlsQTQ0MkxzSG5PZUs2VWE3?=
- =?utf-8?B?NU10UmNYZEdxdUEydHBxbGkyZ1c3MWNNUVZFc0pLNUdydUJXU25qb0Nzcmor?=
- =?utf-8?B?MHFVQmowZW8yenlpTGlvdXJUcEh2Zk9zQmc0TEwvdW9XSkJnVFRUdmhBUHRh?=
- =?utf-8?B?TWJPQW04OE0xK2Z1cVNlTHBUS1MwdDE5eUdMbkU3WDZNalNQYTJhNlpVWUta?=
- =?utf-8?B?aUNuOEpuSE94eTk3QmJCUmxsYlVRYlFnZ1hzYlRFQVBOdUR0Z0k4NVV4SThD?=
- =?utf-8?B?Z0tDczhOMmJ6MC9ENTBrS2F6ZGVNWWdUMUd4aXVPMjBJRTdjTWNQa2R0S0ZI?=
- =?utf-8?B?NUhTbG5PVk4vVE1pT1FuSUhDWEphcURPa2Zwem1Ya3pqQjZUOSsrUjRJbE9i?=
- =?utf-8?B?SDdpdHFRaVE5b0hMWjBnaEVuNG9LL0diUlRFT3BySGgvU3pGTVEwWDdYTlJV?=
- =?utf-8?B?L3pPSVVFNVloSzJzVjdUZnNRWGNjYXFndWI0K0NhSHM3SkIwNUlIUlVDM2Ni?=
- =?utf-8?B?U0p4b0JUdUY5a0ppdk9sbGdwUEsxU1lORjRLNkJEa0tBZGZMdDRNMlN6eGM2?=
- =?utf-8?B?ZTBmbUJQeXJ4UVU2Q2dKM1FBbk1nbXVNL2FXQTJXSnEwWTFSM24ybWxHRUhZ?=
- =?utf-8?B?Z0o3STFyZ2xKWHlOaVZHQmgyb21sMytwU1Nza1FHaEZaVmRuSmRKalFkOXQw?=
- =?utf-8?B?UEpIS0QwUnRqemdyQ1Z0ajlXd1B6K3lkUmpveHU5ZEl1eTUzUkE1UDJTbGdx?=
- =?utf-8?B?bWVjUERvSzhrWjB0eHBZU3ZnRDFGNlFrejZ6R1lBYzAvaVpxSkdQNkdrSlRj?=
- =?utf-8?B?Nmo1T0ZqOXdYUzJvMDRGUXhGRTVYS2lzRDZMS1U4ZGl5MFJ6QVhKeW9zL3Rn?=
- =?utf-8?B?Vk92Q1kwRy9nUGQ0UzJsOW9XcDNTYW5wQ1JEbWoxbzFGaTIrWGJpMlNyNVlQ?=
- =?utf-8?B?MGxiWE1ad2xaVkI0S21RbkVWV29VcDRDdllscVEySlZJcWJDbURlMXo5L1JQ?=
- =?utf-8?B?bW4vMExIb1o5S2ZMQkxXYU1GMEhIZUJCZklRVGt5a21Lb0VlSmJVcThsc0Q5?=
- =?utf-8?B?alFhVWVmazZxQS9LV2xySVh5Wis0WExPZlFZdmJuWFVBaWJEamExeGNZUzFW?=
- =?utf-8?B?cEhWL2RlKzdZV1VXTUlXVHlOZXVRalIyQ0krUVhHNVJJbEVoeTRCNXVPSS9F?=
- =?utf-8?B?UDV0UjhxdTZFaUVOT052YmVCKzlQREdMYTZZdEFuK0ErZmRnTVcrbGdZOEp3?=
- =?utf-8?B?b2ZMK1dXcmFzclVxRFBvKzVtbzBkeHRKVTNnYW80ZC92aTBNWEEzWm1ya09p?=
- =?utf-8?B?T0E9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 451763fd-e2b1-447e-6acf-08de3443c2f8
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2025 21:17:57.2856
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: flBK3Uz1wnGBlMuwj81WaBmHVkdm33rxnlu8Dq1aId3u3Z/gyBJgLgY6KXhNbXxiEQF2mfwfPfHYnPjV2qPWMQfaY5Gpe/hhg8XqqkhtVgg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR11MB6457
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-Alejandro Lucero Palau wrote:
-[..]
-> > For "Accelerator Memory", the driver is not cxl_pci, but any potential
-> > PCI driver that wants to use the devm_cxl_add_memdev() ABI to attach to
-> > the CXL memory domain. Those drivers want to know if the CXL link is
-> > live end-to-end (from endpoint, through switches, to the host bridge)
-> > and CXL memory operations are enabled. If not, a CXL accelerator may be
-> > able to fall back to PCI-only operation. Similar to the "Soft Reserve
-> > Memory" it needs to know that the CXL subsystem had a chance to probe
-> > the ancestor topology of the device and let that driver make a
-> > synchronous decision about CXL operation.
-> 
-> 
-> IMO, this is not the problem with accelerators, because this can not be 
-> dynamically done, or not easily.
+Hello Dan & Gotou-san,
 
-Hmm, what do you mean can not be dynamically done? The observation is
-that a CXL card and its driver have no idea if the card is going to be
-plugged into a PCIe only slot.
+Many thanks for your remarks for the test cases
+For the qemu tests I used modified qemu and sebios, therefore some 'strange' cases
+are only testable on virtual setups - thanks for making it clear which configurations
+are supported in real life
 
-At runtime the driver only finds out the CXL is not there from the
-result of devm_cxl_add_memdev().
+>> 
+>> [4] Physical machine: 2 CFMWS + Host-bridge + 2 CXL devices
+>> 
+>> kernel: BIOS-e820: [mem 0x0000002070000000-0x000000a06fffffff] soft 
+>> reserved
+>> 
+>> 2070000000-606fffffff : CXL Window 0
+>>   2070000000-606fffffff : region0
+>>     2070000000-606fffffff : dax0.0
+>>       2070000000-606fffffff : System RAM (kmem) 6070000000-a06fffffff 
+>> : CXL Window 1
+>>   6070000000-a06fffffff : region1
+>>     6070000000-a06fffffff : dax1.0
+>>       6070000000-a06fffffff : System RAM (kmem)
+>
+>Ok, so a real world maching that creates a merged 0x0000002070000000-0x000000a06fffffff range. Can you confirm that the SRAT has separate entries for those ranges? >Otherwise, need to rethink how to keep this fallback algorithm simple and predictable.
 
-> The HW will support CXL or PCI, and if 
-> CXL mem is not enabled by the firmware, likely due to a 
-> negotiation/linking problem, the driver can keep going with CXL.io.
+I looked into the syslogs and I see the SRAT has separate entries:
 
-Right, I think we are in violent agreement.
+[    0.005128] [      T0] ACPI: SRAT: Node 2 PXM 2 [mem 0x2070000000-0x606fffffff] hotplug
+[    0.005129] [      T0] ACPI: SRAT: Node 2 PXM 2 [mem 0x6070000000-0xa06fffffff] hotplug
 
-> Of course, this is from my experience with sfc driver/hardware. Note
-> sfc driver added the check for CXL availability based on Terry's v13.
-
-Note that Terry's check for CXL availabilty is purely a hardware
-detection, there are still software reasons why cxl_acpi and cxl_mem
-can prevent devm_cxl_add_memdev() success.
-
-> But this is useful for solving the problem of module removal which can 
-> leave the type2 driver without the base for doing any unwinding. Once a 
-> type2 uses code from those other cxl modules explicitly, the problem is 
-> avoided. You seem to have forgotten about this problem, what I think it 
-> is worth to describe.
-
-What problem exactly? If it needs to be captured in these changelogs or
-code comments, let me know.
