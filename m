@@ -1,138 +1,241 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE9C1E1A3B;
-	Mon,  8 Dec 2025 18:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679182E6CA8;
+	Mon,  8 Dec 2025 19:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765219372; cv=none; b=TZw+8ORzenZH4MrW+/+PWv+nhklMGA74rnC+iFVsADa9Q6yGK9tTRLtaLievdWmdGDudAJfGy9csyUn1uCbzlpx1nsB+1jey3dGC+bB+FzpP60yjbFsDITMRJE+LfmXSxI/DjQniShNdThIr2D49gTcNe/T6WnKVO/zzo618OUM=
+	t=1765221624; cv=none; b=E507CT0AIq7BZecWQgUT3C5UPwzn0RiqaNPmLr58ROIyWnAmFh9mtZOPiwC6cGYrAd57EXSxcGPcUKgOOpvoZIITUYxmqWERv4br9R0BXHJQi+bAWJZt8/tL63xbtEKv9tD59hwVy5S6OW4CTzYShsfyM9HU6idpiCC5vwkVSKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765219372; c=relaxed/simple;
-	bh=jWA1csN2NaMy1biIHW07S62YLP09S/Y53pVeDtyETO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rnpJ1LFfUWkcyr7uh6RCNE7zMkZzHfPYX/OFcpoNOhzFuYFtJnhTT25mMr2V5NmDSzgxGjP7/pfH45wW+DS7MztIDIY+v4yXleGELOVOkg/JDd7yNxW3L3NMKFhrha1b/MFNdojADp/9kZ94zxjYnXusJdIFXwKSoSkrtv5tdeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNQ/lhFQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNQ/lhFQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BB1BC4CEF1;
-	Mon,  8 Dec 2025 18:42:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765219371;
-	bh=jWA1csN2NaMy1biIHW07S62YLP09S/Y53pVeDtyETO4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=mNQ/lhFQt2Pe2XN8D5Sspg/H7Xd6ijJtscUPjYKtOEqVv8JIB8aU1mM6Ack7KPb0V
-	 a9cSIHMCE+0lIh8tidR9tnstjKY6/6s7LlNQ3D6GO7NEM4v0csZYyA6VF1AH58G4UX
-	 3hHFkaKbZYXoa3ak/YT6UOdBBn1p22t9a8M10MmmQXFZWro4FPEMpOe5SQHFymeCHc
-	 Hv8EDBjYHD1fQUf4Vb5qyAIdF23wk4ZjDR7QGxjSi0S/oqk9RuGPWtHqO5SwQHAi9T
-	 AVwAo8+cjtNpUUcTrjA2u/hiMJUTHlj4eSCHQnu4TAVQtrjGNblsS58zACMlBK/EIu
-	 +GLl+c14mAZ8A==
-Date: Mon, 8 Dec 2025 12:42:50 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Bowman, Terry" <terry.bowman@amd.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
-	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
-	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
-	lukas@wunner.de, Benjamin.Cheatham@amd.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [RESEND v13 00/25] Enable CXL PCIe Port Protocol Error handling
- and logging
-Message-ID: <20251208184250.GA3299436@bhelgaas>
+	s=arc-20240116; t=1765221624; c=relaxed/simple;
+	bh=ZvzubhbjaPPIB27TBG+LgkPEThq3zam8An+ceJQtgSk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NyQBeD6XWmWHMry66V96Si73QQxoBaWpc1LPPCbkqo/aL/YS3L1bLUahpo8bivbM7gyLNwL4g1c+nGFtVZsIKG/aGdvvORApuDp1gPELs7JLQBXQw2w4osiURg6Y+ABPilHqUdyaLiSU+8jWLmUp2vXWtfI+++RW25feuEXoCXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.150])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dQBdF1BVYzJ468L;
+	Tue,  9 Dec 2025 03:20:01 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4D2D840565;
+	Tue,  9 Dec 2025 03:20:16 +0800 (CST)
+Received: from dubpeml100008.china.huawei.com (7.214.145.227) by
+ dubpeml500005.china.huawei.com (7.214.145.207) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 8 Dec 2025 19:20:15 +0000
+Received: from dubpeml100008.china.huawei.com ([7.214.145.227]) by
+ dubpeml100008.china.huawei.com ([7.214.145.227]) with mapi id 15.02.1544.036;
+ Mon, 8 Dec 2025 19:20:15 +0000
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>
+CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Smita.KoralahalliChannabasappa@amd.com"
+	<Smita.KoralahalliChannabasappa@amd.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "terry.bowman@amd.com" <terry.bowman@amd.com>,
+	"alejandro.lucero-palau@amd.com" <alejandro.lucero-palau@amd.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>
+Subject: RE: [PATCH 1/6] cxl/mem: Fix devm_cxl_memdev_edac_release() confusion
+Thread-Topic: [PATCH 1/6] cxl/mem: Fix devm_cxl_memdev_edac_release()
+ confusion
+Thread-Index: AQHcZMSxU6y9BCMwtEyyE/sQ3sAKtbUYJCZQ
+Date: Mon, 8 Dec 2025 19:20:15 +0000
+Message-ID: <4a489f66af1c4f83b0ece5d54ef35fc9@huawei.com>
+References: <20251204022136.2573521-1-dan.j.williams@intel.com>
+ <20251204022136.2573521-2-dan.j.williams@intel.com>
+In-Reply-To: <20251204022136.2573521-2-dan.j.williams@intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <00537640-96a1-4476-afd4-c8c4894d7931@amd.com>
 
-On Thu, Dec 04, 2025 at 11:30:45AM -0600, Bowman, Terry wrote:
-> On 11/4/2025 4:12 PM, Bjorn Helgaas wrote:
-> > On Tue, Nov 04, 2025 at 03:54:21PM -0600, Bowman, Terry wrote:
-> >>
-> >>
-> >> On 11/4/2025 1:11 PM, Bjorn Helgaas wrote:
-> >>> On Tue, Nov 04, 2025 at 11:02:40AM -0600, Terry Bowman wrote:
-> >>>> This patchset updates CXL Protocol Error handling for CXL Ports and CXL
-> >>>> Endpoints (EP). Previous versions of this series can be found here:
-> >>>> https://lore.kernel.org/linux-cxl/20250925223440.3539069-1-terry.bowman@amd.com/
-> >>>> ...
-> >>>> Terry Bowman (24):
-> >>>>   CXL/PCI: Move CXL DVSEC definitions into uapi/linux/pci_regs.h
-> >>>>   PCI/CXL: Introduce pcie_is_cxl()
-> >>>>   cxl/pci: Remove unnecessary CXL Endpoint handling helper functions
-> >>>>   cxl/pci: Remove unnecessary CXL RCH handling helper functions
-> >>>>   cxl: Move CXL driver's RCH error handling into core/ras_rch.c
-> >>>>   CXL/AER: Replace device_lock() in cxl_rch_handle_error_iter() with
-> >>>>     guard() lock
-> >>>>   CXL/AER: Move AER drivers RCH error handling into pcie/aer_cxl_rch.c
-> >>>>   PCI/AER: Report CXL or PCIe bus error type in trace logging
-> >>>>   cxl/pci: Update RAS handler interfaces to also support CXL Ports
-> >>>>   cxl/pci: Log message if RAS registers are unmapped
-> >>>>   cxl/pci: Unify CXL trace logging for CXL Endpoints and CXL Ports
-> >>>>   cxl/pci: Update cxl_handle_cor_ras() to return early if no RAS errors
-> >>>>   cxl/pci: Map CXL Endpoint Port and CXL Switch Port RAS registers
-> >>>>   CXL/PCI: Introduce PCI_ERS_RESULT_PANIC
-> >>>>   CXL/AER: Introduce pcie/aer_cxl_vh.c in AER driver for forwarding CXL
-> >>>>     errors
-> >>>>   cxl: Introduce cxl_pci_drv_bound() to check for bound driver
-> >>>>   cxl: Change CXL handlers to use guard() instead of scoped_guard()
-> >>>>   cxl/pci: Introduce CXL protocol error handlers for Endpoints
-> >>>>   CXL/PCI: Introduce CXL Port protocol error handlers
-> >>>>   PCI/AER: Dequeue forwarded CXL error
-> >>>>   CXL/PCI: Export and rename merge_result() to pci_ers_merge_result()
-> >>>>   CXL/PCI: Introduce CXL uncorrectable protocol error recovery
-> >>>>   CXL/PCI: Enable CXL protocol errors during CXL Port probe
-> >>>>   CXL/PCI: Disable CXL protocol error interrupts during CXL Port cleanup
-> >>> Is the mix of "CXL/PCI" vs "cxl/pci" in the above telling me
-> >>> something, or should they all match?
-> >>>
-> >>> As a rule of thumb, I'm going to look at things that start with "PCI"
-> >>> and skip most of the rest on the assumption that the rest only have
-> >>> incidental effects on PCI.
-> >>
-> >> I think there was logic behind the (un)capitalized but I forget the
-> >> reasoning. It's  better to keep it simple. I'll change to use
-> >> PCI/CXL and AER/CXL.
-> > 
-> > I don't know what "AER/CXL" means.  I think "PCI" and "CXL" are the
-> > big chunks here and one of them should be first in the prefix.
-> > 
-> > I do think there's value in using "PCI/AER" for things specific to AER
-> > and "PCI/ERR" for more generic PCI error handling, and maybe "PCI/CXL"
-> > for significant CXL-related things in drivers/pci/.
-> 
-> I was informed any patch touching PCI files requires a PCI maintainer 
-> review or acknowledgment. I misunderstood how to communicate this.
-> 
-> In my workflow, I used uppercase tags like PCI or AER to indicate that 
-> a patch needed PCI review or ack. For example, when I wrote CXL/PCI, I 
-> intended to signal that the patch was primarily CXL-related but in a 
-> PCI context, and therefore might need PCI review.
-> 
-> To avoid confusion in the future, can you advise on the best way to 
-> indicate a patch needs your PCI review—even if the PCI changes are
-> minor and don’t warrant leading with the PCI label?
-> 
-> Also, can you review the following patches?
-> [RESEND v13 01/25] CXL-PCI-Move-CXL-DVSEC-definitions-into-uapi-lin
-> [RESEND v13 02/25] PCI-CXL-Introduce-pcie_is_cxl
-> [RESEND v13 07/25] CXL-AER-Replace-device_lock-in-cxl_rch_handle_er
-> [RESEND v13 08/25] CXL-AER-Move-AER-drivers-RCH-error-handling-into
-> [RESEND v13 16/25] CXL-AER-Introduce-pcie-aer_cxl_vh.c-in-AER-drive
-> [RESEND v13 20/25] CXL-PCI-Introduce-CXL-Port-protocol-error-handle
-> [RESEND v13 22/25] CXL-PCI-Export-and-rename-merge_result-to-pci_er
-> [RESEND v13 23/25] CXL-PCI-Introduce-CXL-uncorrectable-protocol-err
-> [RESEND v13 25/25] CXL-PCI-Disable-CXL-protocol-error-interrupts-du
+>-----Original Message-----
+>From: Dan Williams <dan.j.williams@intel.com>
+>Sent: 04 December 2025 02:22
+>To: dave.jiang@intel.com
+>Cc: linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org;
+>Smita.KoralahalliChannabasappa@amd.com; alison.schofield@intel.com;
+>terry.bowman@amd.com; alejandro.lucero-palau@amd.com; linux-
+>pci@vger.kernel.org; Jonathan Cameron <jonathan.cameron@huawei.com>;
+>Shiju Jose <shiju.jose@huawei.com>
+>Subject: [PATCH 1/6] cxl/mem: Fix devm_cxl_memdev_edac_release() confusion
+>
+>A device release method is only for undoing allocations on the path to pre=
+paring
+>the device for device_add(). In contrast, devm allocations are post device=
+_add(),
+>are acquired during / after ->probe() and are released synchronous with -
+>>remove().
+>
+>So, a "devm" helper in a "release" method is a clear anti-pattern.
+>
+>Move this devm release action where it belongs, an action created at edac =
+object
+>creation time. Otherwise, this leaks resources until
+>cxl_memdev_release() time which may be long after these xarray and error
+>record caches have gone idle.
+>
+>Note, this also fixes up the type of @cxlmd->err_rec_array which needlessl=
+y
+>dropped type-safety.
+>
+>Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation
+>attributes from the current boot")
+>Cc: Dave Jiang <dave.jiang@intel.com>
+>Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>Cc: Shiju Jose <shiju.jose@huawei.com>
+>Cc: Alison Schofield <alison.schofield@intel.com>
+>Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Sorry, I responded to most of the first v13 series because I didn't
-notice the resend, so this got a little fragmented.  Let me know if
-there's more I should look at.
+Tested-by: Shiju Jose <shiju.jose@huawei.com>
+Reviewed-by: Shiju Jose <shiju.jose@huawei.com>
+>---
+> drivers/cxl/cxlmem.h      |  5 +--
+> drivers/cxl/core/edac.c   | 64 ++++++++++++++++++++++-----------------
+> drivers/cxl/core/memdev.c |  1 -
+> 3 files changed, 38 insertions(+), 32 deletions(-)
+>
+>diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h index
+>434031a0c1f7..c12ab4fc9512 100644
+>--- a/drivers/cxl/cxlmem.h
+>+++ b/drivers/cxl/cxlmem.h
+>@@ -63,7 +63,7 @@ struct cxl_memdev {
+> 	int depth;
+> 	u8 scrub_cycle;
+> 	int scrub_region_id;
+>-	void *err_rec_array;
+>+	struct cxl_mem_err_rec *err_rec_array;
+> };
+>
+> static inline struct cxl_memdev *to_cxl_memdev(struct device *dev) @@ -87=
+7,7
+>+877,6 @@ int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd);
+>int devm_cxl_region_edac_register(struct cxl_region *cxlr);  int
+>cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt);  =
+int
+>cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt); -void
+>devm_cxl_memdev_edac_release(struct cxl_memdev *cxlmd);  #else  static
+>inline int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)  { retu=
+rn
+>0; } @@ -889,8 +888,6 @@ static inline int cxl_store_rec_gen_media(struct
+>cxl_memdev *cxlmd,  static inline int cxl_store_rec_dram(struct cxl_memdev
+>*cxlmd,
+> 				     union cxl_event *evt)
+> { return 0; }
+>-static inline void devm_cxl_memdev_edac_release(struct cxl_memdev *cxlmd)=
+ -
+>{ return; }  #endif
+>
+> #ifdef CONFIG_CXL_SUSPEND
+>diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c index
+>79994ca9bc9f..81160260e26b 100644
+>--- a/drivers/cxl/core/edac.c
+>+++ b/drivers/cxl/core/edac.c
+>@@ -1988,6 +1988,40 @@ static int cxl_memdev_soft_ppr_init(struct
+>cxl_memdev *cxlmd,
+> 	return 0;
+> }
+>
+>+static void err_rec_free(void *_cxlmd)
+>+{
+>+	struct cxl_memdev *cxlmd =3D _cxlmd;
+>+	struct cxl_mem_err_rec *array_rec =3D cxlmd->err_rec_array;
+>+	struct cxl_event_gen_media *rec_gen_media;
+>+	struct cxl_event_dram *rec_dram;
+>+	unsigned long index;
+>+
+>+	cxlmd->err_rec_array =3D NULL;
+>+	xa_for_each(&array_rec->rec_dram, index, rec_dram)
+>+		kfree(rec_dram);
+>+	xa_destroy(&array_rec->rec_dram);
+>+
+>+	xa_for_each(&array_rec->rec_gen_media, index, rec_gen_media)
+>+		kfree(rec_gen_media);
+>+	xa_destroy(&array_rec->rec_gen_media);
+>+	kfree(array_rec);
+>+}
+>+
+>+static int devm_cxl_memdev_setup_err_rec(struct cxl_memdev *cxlmd) {
+>+	struct cxl_mem_err_rec *array_rec =3D
+>+		kzalloc(sizeof(*array_rec), GFP_KERNEL);
+>+
+>+	if (!array_rec)
+>+		return -ENOMEM;
+>+
+>+	xa_init(&array_rec->rec_gen_media);
+>+	xa_init(&array_rec->rec_dram);
+>+	cxlmd->err_rec_array =3D array_rec;
+>+
+>+	return devm_add_action_or_reset(&cxlmd->dev, err_rec_free, cxlmd); }
+>+
+> int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)  {
+> 	struct edac_dev_feature ras_features[CXL_NR_EDAC_DEV_FEATURES];
+>@@ -2038,15 +2072,9 @@ int devm_cxl_memdev_edac_register(struct
+>cxl_memdev *cxlmd)
+> 		}
+>
+> 		if (repair_inst) {
+>-			struct cxl_mem_err_rec *array_rec =3D
+>-				devm_kzalloc(&cxlmd->dev, sizeof(*array_rec),
+>-					     GFP_KERNEL);
+>-			if (!array_rec)
+>-				return -ENOMEM;
+>-
+>-			xa_init(&array_rec->rec_gen_media);
+>-			xa_init(&array_rec->rec_dram);
+>-			cxlmd->err_rec_array =3D array_rec;
+>+			rc =3D devm_cxl_memdev_setup_err_rec(cxlmd);
+>+			if (rc)
+>+				return rc;
+> 		}
+> 	}
+>
+>@@ -2088,22 +2116,4 @@ int devm_cxl_region_edac_register(struct
+>cxl_region *cxlr)  }  EXPORT_SYMBOL_NS_GPL(devm_cxl_region_edac_register,
+>"CXL");
+>
+>-void devm_cxl_memdev_edac_release(struct cxl_memdev *cxlmd) -{
+>-	struct cxl_mem_err_rec *array_rec =3D cxlmd->err_rec_array;
+>-	struct cxl_event_gen_media *rec_gen_media;
+>-	struct cxl_event_dram *rec_dram;
+>-	unsigned long index;
+>-
+>-	if (!IS_ENABLED(CONFIG_CXL_EDAC_MEM_REPAIR) || !array_rec)
+>-		return;
+>-
+>-	xa_for_each(&array_rec->rec_dram, index, rec_dram)
+>-		kfree(rec_dram);
+>-	xa_destroy(&array_rec->rec_dram);
+>
+>-	xa_for_each(&array_rec->rec_gen_media, index, rec_gen_media)
+>-		kfree(rec_gen_media);
+>-	xa_destroy(&array_rec->rec_gen_media);
+>-}
+>-EXPORT_SYMBOL_NS_GPL(devm_cxl_memdev_edac_release, "CXL"); diff --git
+>a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c index
+>e370d733e440..4dff7f44d908 100644
+>--- a/drivers/cxl/core/memdev.c
+>+++ b/drivers/cxl/core/memdev.c
+>@@ -27,7 +27,6 @@ static void cxl_memdev_release(struct device *dev)
+> 	struct cxl_memdev *cxlmd =3D to_cxl_memdev(dev);
+>
+> 	ida_free(&cxl_memdev_ida, cxlmd->id);
+>-	devm_cxl_memdev_edac_release(cxlmd);
+> 	kfree(cxlmd);
+> }
+>
+>--
+>2.51.1
+>
 
-Bjorn
