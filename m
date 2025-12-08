@@ -1,163 +1,260 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013034.outbound.protection.outlook.com [40.93.196.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE9C3148DD
-	for <linux-cxl@vger.kernel.org>; Mon,  8 Dec 2025 09:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765186891; cv=none; b=rtJqdCLO3g+eaXfBGrw19Yj6lHDc5THk/V0AHywOOXcfmLNMXMPfr7fx04Zy+uzAg3G3B81i3TDogb1sMiZ9yusMXb9+RCl7/7SphTD2apyJWdCL7NuJlYeuqzEsHwNMk+K/6jKFTJ3gY8hKobBGDoMMF6f5GcH130gW2TStnb8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765186891; c=relaxed/simple;
-	bh=vaRn1KfT36KE3FEN/+Bf12Zbj9vhejAeH1OmduUjF4A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NP3VlOFCKgJ5UA6YtURn/UnJGbYjZ3CNe1ISiD1psNB6jKrWvdZd8g2NkLNX/bJIhuFhfFtAFLNh2YD+8dlcNAR/tcM4IBboKCMopJPiMOfDHuZ15Z+3/kyHNSoKyK4g8wtJDsQjr8uP7h5tWJvo/IqqQUfUnnEj9/K/U5ivR5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VbOxDbxq; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBA22C08D4;
+	Mon,  8 Dec 2025 14:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.34
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765202770; cv=fail; b=Mg+hlr7tCDGfxTIK2sJc0m55z+YbVyRiwR205+JD/+BuWstDJRNyr9n593WtpMJ4533FgXH1sG+FjKQjhDIA9FIWRlsTG1s8Sz1r8woImDI4YZqHoZPuJmNDK/oFXZmNwIjVnVGA78fCIMdwrhTnJoXdIzky3Yf83chBYF/61aE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765202770; c=relaxed/simple;
+	bh=5wIujHsfVtUbEkv3fHQXvXhA9Nv3HPqPKmTKZxyDvOE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=poQ5T3gTANEcfT0IQy/13diY8TwiGDDbmsUU4YCwcBx2S/VYUak+qPE7/0RPtJaLyVwPMjgx+/SBzgN+/RQNsV19vi4H7M1y3Z1edZ8aJ1wN6gKjjNfyRlT+UYG9hbN19jHKLpDw1b61Fb32QV9xpeWM+8Kp7wUjhxg6jLiXmAw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FOrvqosZ; arc=fail smtp.client-ip=40.93.196.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VbOxDbxq"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7e1651ae0d5so3062500b3a.1
-        for <linux-cxl@vger.kernel.org>; Mon, 08 Dec 2025 01:41:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765186889; x=1765791689; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bExisJd2rawtEUNYxhwuMVIv9x+cEHj6grigFw1J+tY=;
-        b=VbOxDbxqhxFfad/uYI8S2RJHYoEde3IUbvqYyxj8GojEYzhXXBzaOmzonaGKyxiL+S
-         2qn2C1npNUyd/eJBcgs4Ligzyawsi9YdqOMeUnIgwHx+LBwycvM599Z8BkST6vmJX4bA
-         xH/sJTbqVbf8iJrttOb461pUY4jb2OHFnd+4TSVcx8xJ4JscmI8tOFU4vT0JzKYE8HN9
-         JiJ9EwkVDMnsxcWQxqoZl5SQtYcgP/UE9A2WBsccLRJhD2aozHFe9HN1zEvNtG7S47wS
-         CAhbMHvD4UCpjdtQfvUYyMuI/qtCuGFVtutCcUTPeeihOcwwKcP6hhos/mtEygLjmPlr
-         opjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765186889; x=1765791689;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bExisJd2rawtEUNYxhwuMVIv9x+cEHj6grigFw1J+tY=;
-        b=h0X+WLqh1Dvk2yEsfzvuudmLcsqILX2JHOUalYYHCwCTOtcBCfvyyD13w15N9LuLb3
-         wNF2HSxDSlj276bXC4yusAw1tZE0DiygdXV1DPWWRFaFaSZLLvhko8Izj2IvWjcibgAM
-         POyC79dn/YBAsZRUr0j5NmkOMGc+za/g1I9WCL2eiQ1/7aDzCS/dSrLe4Gf+s+zVZRFG
-         1PVLjeZwQfHLa5zBC6rlULHBcWGByhL/Mo84ve2awMN8ablrnf7kfASoFSTrO2iBlWDz
-         uGVZy/G1D+D1D8ji+e4SL7N+9JgfBQBjezfNEk4JSjt/TsFgHZ2Wy7tzp8BLRXo3aobV
-         eGGg==
-X-Gm-Message-State: AOJu0YzAZ1t9C2sVHePorwmKbo+nT6/xbwzNUfT+jxthArwlUeFqw1Rh
-	92NmpDscPJyvrrmwgGIkGGlm3k1PV+lNSeHE+q5dGV4nYvXfnYG/nd3O
-X-Gm-Gg: ASbGncsvcigxD6PQLWZTOhYUjDiYgjwk8fbX1NYKKl6kGdHDa9zkMKIbTxIACbQZ+ZD
-	QtskUhs6UMoO1Xk9CrQ9bEFcZdEKg0HmXhdirkBBfjPQmnp4UXGPK8bELgk2vhiQZTp5qxHKUWD
-	aNUvlagCi4UYdMrwvCVpotPSjg0/bS4zp7aIUQCw0SosNtQ/hLqIG3b1inJ3qnfE7HUCKjGBoNL
-	AmYqSzo/vVRLcysfaqUVvP4LUTJJtbDPb1C49H2a5I6SQjGBGkviCnY5yS6hgsiHvscSGkjxDka
-	gkRVt2FVXUko3L1Nd6uQXyW6EcPzHJ/8ckaiP0WCAL6PgRu1G8nLbOBTTEHbi6pHTR190MyVV9h
-	jkd/W7zdX2PVaLXPVGHsJZFEGr6bWBnT1IW/kKMWuxSMDemitwsBnydM1jOnKyD5HgfDfVqh+7U
-	D1JRfdtDzpFoNMOA0saa3fQYFt
-X-Google-Smtp-Source: AGHT+IFqvRUGIwFEaNgQfl/NTg1cwY2IZM60Uy8TIHC22S07N4FVSlZj92GMWE1sIDQ0qozblkpCYw==
-X-Received: by 2002:a05:6a20:ed0f:20b0:366:1e42:630 with SMTP id adf61e73a8af0-3661e420638mr4892693637.1.1765186889147;
-        Mon, 08 Dec 2025 01:41:29 -0800 (PST)
-Received: from localhost.localdomain ([240f:34:212d:1:e251:d9f:c2ef:caf4])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-bf6a36bbc60sm11675279a12.36.2025.12.08.01.41.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Dec 2025 01:41:28 -0800 (PST)
-From: Akinobu Mita <akinobu.mita@gmail.com>
-To: akinobu.mita@gmail.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	axelrasmussen@google.com,
-	yuanchu@google.com,
-	weixugc@google.com,
-	hannes@cmpxchg.org,
-	david@kernel.org,
-	mhocko@kernel.org,
-	zhengqi.arch@bytedance.com,
-	shakeel.butt@linux.dev,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com
-Subject: [PATCH 2/2] mm/vmscan: don't demote if there is not enough free memory in the lower memory tier
-Date: Mon,  8 Dec 2025 18:40:28 +0900
-Message-ID: <20251208094028.214949-3-akinobu.mita@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251208094028.214949-1-akinobu.mita@gmail.com>
-References: <20251208094028.214949-1-akinobu.mita@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FOrvqosZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Cy4QWKIXp83OnLpI5k7aiE6fsOMLg9KAqCWAL3zBlI7u0FyaqgYczlMb6qumTfdCHbOphZZasWqss/JPYPHf2I2q0S9EchNM5v5BT7TuOodTGQGooxywAe7mbQbolJ+Cz/wRNKjdzY1+MCvA9GayBnSY08b5Wo6eCCpWeCjlIrXyLEU+ZClTJd4As8bEtY1nZ1i9r536nraThXKaJWBBfHot6GThufJGf7hWFK+yIN/pL68ZDvQkb02ZIQSlwda7ZnXp5DTKOWn1Lr0nX+YuxQJwUGV+w0iuMZvRyVAAnXGQgwezg8KBSE9z1uv1I2hQANH+DoEJ6B/V7uEL/AmDHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aTQZ2xRSpBcuuVZApaEdkbm27CmJGDO007AndhgVigc=;
+ b=N5kDFdnOmX9WD8AjE4fhueClL1+UzYyKPQE09cDek7Y3POBMDeH+2CWQB5hFS9ekXbpPJQBDC3PVrUe7lg861iQd8U9aYVZx1r5qKxhYyqYkrEH7sm0XvmbQmO8rS2nEcS1S8/3q+HRgt512krW+vZQ1OxxjX8kO2oVLYjtzImvmU3nG6IdYPnbIOv8+vjyWSfivY1oe+K8cZGPaTWuwHs8gqKfepuLOh0+gRaSS8YYTYmePkPTYZgGyTc15FTmQEbPymYL7sHn7jyhrV6w3Gi8JrKaj/iV+w5qg5KGWbk5QcM3s5tS++9ZYtQOJm6oqZab43bgoHSvT9u9g3LwzBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aTQZ2xRSpBcuuVZApaEdkbm27CmJGDO007AndhgVigc=;
+ b=FOrvqosZ+wLje/7I5A2UP++grBkPGqeHDoupB6m4p09S/C2LDR3nidpepmrMrHeHBTbz+j/jQn3FdmspZwsG0+WufY68SaOmDVyXNXFX1C7EhsewDU+OwGRbZNEh45B9NyrfxiumR798rQxojy+OC4TgNX1CDh+nL+59Ntqw49o=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by DS7PR12MB6334.namprd12.prod.outlook.com (2603:10b6:8:95::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.14; Mon, 8 Dec
+ 2025 14:04:52 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.9388.013; Mon, 8 Dec 2025
+ 14:04:51 +0000
+Message-ID: <f45b11fc-270d-4047-8149-75081399b2ed@amd.com>
+Date: Mon, 8 Dec 2025 14:04:47 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] cxl: Initialization reworks in support Soft Reserve
+ Recovery and Accelerator Memory
+Content-Language: en-US
+To: dan.j.williams@intel.com, dave.jiang@intel.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Smita.KoralahalliChannabasappa@amd.com, alison.schofield@intel.com,
+ terry.bowman@amd.com, alejandro.lucero-palau@amd.com,
+ linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com,
+ Shiju Jose <shiju.jose@huawei.com>
+References: <20251204022136.2573521-1-dan.j.williams@intel.com>
+ <143deecb-aa53-42e6-b7eb-91fb392e7502@amd.com>
+ <69334c038705b_1b2e100b5@dwillia2-mobl4.notmuch>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <69334c038705b_1b2e100b5@dwillia2-mobl4.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DUZPR01CA0027.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:46b::14) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|DS7PR12MB6334:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1327b76c-107f-4da3-00fe-08de3662c13f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RzFiZ2RwSVl0a1YvQzlCNlloVUpJSFhBU3RDdlQ2L1VhZDFtL3k5K2VpRkJY?=
+ =?utf-8?B?VVlROHpmR2wxQ3Y3U0ZTbDN3azR1WVFBL3lkWnhwRGM1ZCt6K09JYzl1N2Nu?=
+ =?utf-8?B?MFYraWFHS2RwZDlxNWltT29teVBSVEMrTEI0cDR4b3cxNU9MSVdpSFNmaHRG?=
+ =?utf-8?B?dXNqbVYzZHRTaXFkMnRLRStGUEJDclF1NzIva1E1cVJXNVpqamhBQnQ5aUpj?=
+ =?utf-8?B?amhIZ0RmTDI3UytvZ3hBY0NjWkdqd0FJdVFGcFd3T2xlRG1kSmJQejlWQTg1?=
+ =?utf-8?B?MmRPeVpGUSttdWlDQTRnYlh3WlJjNVRKR0xVNU43ZmJ4NmN6RTdEb20rbFRU?=
+ =?utf-8?B?dkcyT0t4MGcwTzllRXJxbUVTUUNvdngxNHJ2MW51NkgvRmU1L0NHS2JHM0ZM?=
+ =?utf-8?B?QVFub25KM1FvVkN5WVFXQWo4U08wTU5JVmJqakdjZEJQcHdLdUl4TGMwbEoz?=
+ =?utf-8?B?ZGVwdjVhTXhQSlNPV09OVlFjUmxrbDQ1QTFXM3JwNHp4NUFCblE5WE54Y0Ry?=
+ =?utf-8?B?WmpYRTJ1clNidEsvby9vZXFBdjFxREhOYkpFWWFHN3l1K0tNNW5EbHU3dnBa?=
+ =?utf-8?B?dkxRY29FRUtvNi9CbHlVTUZsM0haWXJKT21sQWd6aXVFOUZHMkJTRHd1ZXRV?=
+ =?utf-8?B?blNDNjlVeWc3YlQ4dDM5TFFCTkFKRnRtUk5ENS9GN09VSEVtZ2FvR3pOem1z?=
+ =?utf-8?B?dXV1ZUZLV3hzQjB2cTVZTVRDUmZ4Y29YZUEwaGhSSm1Yc1dBaHJ4UGtFRXNM?=
+ =?utf-8?B?NUlsZVNRTDZQUzkxbnhCUzFhTENaZi8ydDdtSGdkL2d0VkVYR1VUUlcwMFZW?=
+ =?utf-8?B?bTZhblJjMm5mV2t1SEhiS1JqazdoaHhFdTZoNXZjWEIvWU1KV0VSZE9ILzFE?=
+ =?utf-8?B?dUd3RlRwR2g4NXZxam80TFZMWVRacFpsTjRLelN3M3E4VmFLYjZzSXFEdGRC?=
+ =?utf-8?B?eDkvaHdtNTRYMDdKbEZEb1Evc1l0SmRSVDNTUyt0c3VRZXBUNDlPY09UeWJY?=
+ =?utf-8?B?QTRqaGFYU2xsckRwZmtOUFoxU3psaU41UDlTcHBvU3VXWWVvMWZaSGpCVDFP?=
+ =?utf-8?B?bGswYWFOVTltZ0pMMm4waXVrYlYzbE9hbHlYQk5qZGNGbUpZYmhSS3JkVU01?=
+ =?utf-8?B?Qm01ZThFbzJZMDY1SlA0N2dxQ2tuVjZFNUo2TXVWS2xnOFlSTHhnY2dYNDFH?=
+ =?utf-8?B?QmZHSHNaWWdFaCs4Qll5NGVZTERCOE1ObjZhNk9QbCtlWUo3TVFqa2ZCTWFk?=
+ =?utf-8?B?QlBTVW9WWU9QK1l0TERBeXlzVmNyL0QxcWlWdkJZaE9DL21JeXh6WnY3SWVZ?=
+ =?utf-8?B?SXd3UW1NNWJROFpMenBqekRLVjEyZks0dnAyL21NYTJld0pUam5ic0ZyVHdD?=
+ =?utf-8?B?a25TMkFKL1NFWkxzV21KNi82Tlh6Uit2WWVQL1JjckIrdldMSGdXeG9ZTXk4?=
+ =?utf-8?B?ZitRM3FBY3BHUzlCNjhpOWcwWEF2amtWQnVaOVJ1cTlTaTkwL0paL2tndXhB?=
+ =?utf-8?B?SDBSeDYwUVdnRGZDUjRNQjRFZHBQSG1JUGlYVkVmV2VMV25hZDBUbDJKQm1S?=
+ =?utf-8?B?dnBGalZaNFF5TXdITSttRTJqNnp3TFc4R2F4R3FzSThyNkpHTU8zRXpta0pz?=
+ =?utf-8?B?MW1zTmdRZmRQQU1iU0RBNjlUWHN3ekM3V2hiZkxPTHVqUUUrY0NUL2I2eEsz?=
+ =?utf-8?B?aStXUUxwNG85RDhJNnFqTTBybFBEU3FseUs5Z2JNZHBaRkR6R1BjeStwMGtM?=
+ =?utf-8?B?ZmRTR2lqUkMxZFBuYkkrTGtqK3lFTUk3aUd6RDBHdjhUVlBMM0ZpN2xsOGRz?=
+ =?utf-8?B?TysvbUFjNm4xV0JUZFN3aDJtcjlISGxDc2NuQ3gwQ3JDRkNOZ2t1WGxJRXhp?=
+ =?utf-8?B?c3Z1bEt3Q2Q0SGRpcXg0a1lDeEhyZmZpelc0SmQvMytrQ0FRcjFCZG1hbmZh?=
+ =?utf-8?B?ZFkzbGozQnVpbGNtWGJDSlNkQTZsZ3BMaDdIV1EzcEs1WUhqcUlxTCtvMWNI?=
+ =?utf-8?B?QzJERzlQejJ3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VWJsWWF0WW9rRlpBbGxGbytuS0JFbEo0RUk0VWZOWHozTE9BOHlQSXJ4WGFY?=
+ =?utf-8?B?YXRNalZVc2ZqQlZhelZJVjkyQU1ZSUlJWXlaRndVbjcwTmhxUFN6OUhhbnlr?=
+ =?utf-8?B?MUljWXdGUFFSTUtadUJ3ZExOLzFhQUk4bjdBcFNlWldNQ0RReVFmQUVBS0F4?=
+ =?utf-8?B?Q1dFV1F5bUpzSjdqT25BaEdjcDg0bDVmbTNWWnllOGxtZ094eXc4U1BMYVdB?=
+ =?utf-8?B?c0RBL1NXeFlNM05TM25xVG5TeTBkclV0OVc0Mmk0MHFUbFlWQXlNT1VqZStC?=
+ =?utf-8?B?V3o5ejRIbGkybkwzcGFuSXQrdkVmWnZ4eXRsaERxYm1FVStja3JVQllkVVpD?=
+ =?utf-8?B?dm5UMFVpTytGbmVlY1JPUVprUmxSRFBSSDVjWkRGcVdpdExBUUJKSjZuT0Jv?=
+ =?utf-8?B?Z0xiYkhpYU1ENmxPZDdiNUpvVkc0VTFWVmVhbEowRzBWRG5ucUVNVERmUDVD?=
+ =?utf-8?B?K1pRaTBvRVJqSHFhbWRKNG5CcXJva3JkaVBUdVhHMzRja2kzQmNQREpoYWww?=
+ =?utf-8?B?aUNYaVY0NWJhd1o0aFAzLzdOVitzWFRaZi8wVEdnYnEzZU5xZmlrVVdhMkE2?=
+ =?utf-8?B?V0FXNkZtbUNZdjVqcFN0ODJySGRxSE1Ca2RPWlZkMUF0RGxKTXhmYmhqekd1?=
+ =?utf-8?B?alAvSzhtenNONlR4WExab0ZtMGNOZ3pRQkZONkpwZ2NqbDd6UEtWdmtsbnBF?=
+ =?utf-8?B?ZGlUcGpSaFQ2MXhvcExGVVpsbXBzU1FLektRZ0lkVndJQXdtbVovQnVPemhL?=
+ =?utf-8?B?OGtqSldpMjFmUUVyaWlpV1gzZVY2UU5mSHBPZk5KaE1OalhsSjFtcllmYUJs?=
+ =?utf-8?B?cGpSRjAzUkxkM0NGZkNyTk5QVHdVOGczSTgxeHZTdWFmci9KeGxxSTduYU9s?=
+ =?utf-8?B?NWhzb1lmdXhHeWxRMnEwLzhiOExKdjlWQklOVUdvcUUyQllZQW5EK1g3V2Mv?=
+ =?utf-8?B?b2plWXpXQ2Z3NWFNRXRzdThqaldFTTN6d2oyN0g5NFlKK3V3cy82UDBlVUZU?=
+ =?utf-8?B?VzRJVi91OFo0WERTNTdDdW02cUdreGg3NDVhRG84Qmt6ZEo1cGsvdDkwQ1h6?=
+ =?utf-8?B?MEVHNURINW8wQmg4aHJ2QU9VdEVWMXFaNm9HWnYyVUFiQyttUGxyWEVkNzNG?=
+ =?utf-8?B?blM1MVlUOS9pV2Z2QysvUmxUdzFzYitQc2hTOG5PeldVZGdOVXhTL0RjR3Mx?=
+ =?utf-8?B?QmxkdTFmbW9rdzFNSzR1R1duMEhIekliMjIra3YrZEtWMFVxd1RVVERsRGFt?=
+ =?utf-8?B?Zy9XNW9zUndVcDg4cVR5RHl4bXk1TDRpTHYycnYvVlhSNWFObEwzeGg2UjV0?=
+ =?utf-8?B?ZWo4eENDSld6NndjRHd6QUdqV3p5bVcwZmU2THd4aTlhbE43WjNMdDJLZ2Ex?=
+ =?utf-8?B?VWdkdlovc1NTMks1ZGdmWk95MzJnVHMyajhOOFp6ZDBaUkx0cTM1ekJaQkt1?=
+ =?utf-8?B?RUZmV2YrejFKT3NJd1d4Rk9aU0xQK2pxb0FROW5ZWlMzY3RBeHlrNG9zemFk?=
+ =?utf-8?B?QU5vM1YzdDkwMEhlWER5ZnlIbjFtMVlwa2tkS1k5TDhXYlZKc1Bud3dBck80?=
+ =?utf-8?B?UDNHMmFYVWN0cUZ0bnAzcVpTWDRZbjdNdUQvcUtraHQwNUZubHZZYVlnKzRR?=
+ =?utf-8?B?SVJ0YzNuYVpxTjl5L0RscWt0ZkltbHRuemVkcEE2WXJlR0x5dTBMb3hVOVYw?=
+ =?utf-8?B?a3FvZWVOUUxYTnVuaTlvYmltTmRtOW5WRjBFR016a3RJbXR2TGxoUEkzNXd4?=
+ =?utf-8?B?a0Z4N3EvTWtuVTQ1Y3hXRmtXdWxYdFhKVUF0dnVEWWh4RHgyMkVsck85OE1P?=
+ =?utf-8?B?bkFxWWtLTUVNeFhUTkV4UGxCS2E5bDdZczhGdVI4MUZSWEErWVl6YmVIb1Bn?=
+ =?utf-8?B?UnlPRFFpUDVVWHZkRFVlQWFOU1dYVDRBc0RFK0kvVWw0TnF3bFY3WS9rWVNx?=
+ =?utf-8?B?MkdZcFFEamlOcEFOeDRIbUFuMmxuV1VXVVFpQjhzN09ha2t5b2hvekpVMTc1?=
+ =?utf-8?B?aWtveXV5QTlsMS9JMkkwbmpWVDc5ZUpsYlZVQnVveDVscUZDZFpWK3VSYTRS?=
+ =?utf-8?B?UzhiYVlMeXRyekoxa2pEaVNyVnA3L29QZFlDL2NRSDVxa3l6Skx5dVY0c3BM?=
+ =?utf-8?Q?PsHyOhWn/ceXoPKyLNmzEKlWu?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1327b76c-107f-4da3-00fe-08de3662c13f
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2025 14:04:51.1830
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mxeZcw3yolGQpCH2UOWsLvIfVLXBGzMvDmnBXJtj65fVc+jX8cdQXSeplDI7JxGAspXrvUVv9rn/fUxNp1pZCg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6334
 
-On systems with multiple memory-tiers consisting of DRAM and CXL memory,
-the OOM killer is not invoked properly.
 
-Here's the command to reproduce:
+On 12/5/25 21:17, dan.j.williams@intel.com wrote:
+> Alejandro Lucero Palau wrote:
+> [..]
+>>> For "Accelerator Memory", the driver is not cxl_pci, but any potential
+>>> PCI driver that wants to use the devm_cxl_add_memdev() ABI to attach to
+>>> the CXL memory domain. Those drivers want to know if the CXL link is
+>>> live end-to-end (from endpoint, through switches, to the host bridge)
+>>> and CXL memory operations are enabled. If not, a CXL accelerator may be
+>>> able to fall back to PCI-only operation. Similar to the "Soft Reserve
+>>> Memory" it needs to know that the CXL subsystem had a chance to probe
+>>> the ancestor topology of the device and let that driver make a
+>>> synchronous decision about CXL operation.
+>>
+>> IMO, this is not the problem with accelerators, because this can not be
+>> dynamically done, or not easily.
+> Hmm, what do you mean can not be dynamically done? The observation is
+> that a CXL card and its driver have no idea if the card is going to be
+> plugged into a PCIe only slot.
 
-$ sudo swapoff -a
-$ stress-ng --oomable -v --memrate 20 --memrate-bytes 10G \
-    --memrate-rd-mbs 1 --memrate-wr-mbs 1
 
-The memory usage is the number of workers specified with the --memrate
-option multiplied by the buffer size specified with the --memrate-bytes
-option, so please adjust it so that it exceeds the total size of the
-installed DRAM and CXL memory.
+Right.
 
-If swap is disabled, you can usually expect the OOM killer to terminate
-the stress-ng process when memory usage approaches the installed memory
-size.
 
-However, if multiple memory-tiers exist (multiple
-/sys/devices/virtual/memory_tiering/memory_tier<N> directories exist),
-and /sys/kernel/mm/numa/demotion_enabled is true and
-/sys/kernel/mm/lru_gen/min_ttl_ms is 0, the OOM killer will not be invoked
-and the system will become inoperable.
+>
+> At runtime the driver only finds out the CXL is not there from the
+> result of devm_cxl_add_memdev().
 
-This issue can be reproduced using NUMA emulation even on systems with
-only DRAM.  You can create two-fake memory-tiers by booting a single-node
-system with "numa=fake=2 numa_emulation.adistance=576,704" kernel
-parameters.
 
-The reason for this issue is that if the target node for allocation has
-an underlying memory tier, it is always assumed that it can be reclaimed
-via demotion.
+If there is no CXL properly initialized, what also implies a PCI-only 
+slot, the driver can know looking at the CXL.mem and CXL.cache status in 
+the CXL control register. That is what sfc driver does now using Terry's 
+patchset instead of only checking CXL DVSEC and trying further CXL 
+initialization using the CXL core API for Type2. Neither call to create 
+cxl dev state nor memdev is needed to figure out. Of course, those calls 
+can point to another kind of problem, but the driver can find out 
+without using them.
 
-So this change avoids this issue by not attempting to demote if the
-demoting node has less free memory than the minimum watermark.
 
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
- mm/vmscan.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+>> The HW will support CXL or PCI, and if
+>> CXL mem is not enabled by the firmware, likely due to a
+>> negotiation/linking problem, the driver can keep going with CXL.io.
+> Right, I think we are in violent agreement.
+>
+>> Of course, this is from my experience with sfc driver/hardware. Note
+>> sfc driver added the check for CXL availability based on Terry's v13.
+> Note that Terry's check for CXL availabilty is purely a hardware
+> detection, there are still software reasons why cxl_acpi and cxl_mem
+> can prevent devm_cxl_add_memdev() success.
+>
+>> But this is useful for solving the problem of module removal which can
+>> leave the type2 driver without the base for doing any unwinding. Once a
+>> type2 uses code from those other cxl modules explicitly, the problem is
+>> avoided. You seem to have forgotten about this problem, what I think it
+>> is worth to describe.
+> What problem exactly? If it needs to be captured in these changelogs or
+> code comments, let me know.
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index fddd168a9737..f4748f258294 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -356,7 +356,20 @@ static bool can_demote(int nid, struct scan_control *sc,
- 		return false;
- 
- 	/* If demotion node isn't in the cgroup's mems_allowed, fall back */
--	return mem_cgroup_node_allowed(memcg, demotion_nid);
-+	if (mem_cgroup_node_allowed(memcg, demotion_nid)) {
-+		int z;
-+		struct zone *zone;
-+		struct pglist_data *pgdat = NODE_DATA(demotion_nid);
-+		unsigned int highest_zoneidx = sc ? sc->reclaim_idx : MAX_NR_ZONES - 1;
-+		int order = sc ? sc->order : 0;
-+
-+		for_each_managed_zone_pgdat(zone, pgdat, z, highest_zoneidx) {
-+			if (zone_watermark_ok(zone, order, min_wmark_pages(zone),
-+						highest_zoneidx, 0))
-+				return true;
-+		}
-+	}
-+	return false;
- }
- 
- static inline bool can_reclaim_anon_pages(struct mem_cgroup *memcg,
--- 
-2.43.0
+
+It is a surprise you not remembering this ...
+
+
+v17 tried to fix this problem which was pointed out in v16 by you in 
+several patches.
+
+
+v17:
+
+https://lore.kernel.org/linux-cxl/6887b72724173_11968100cb@dwillia2-mobl4.notmuch/
+
+
+Next my reply to another comment from you trying to clarify/enumerate 
+different problems which were getting intertwined creating confusion (at 
+least to me). Sadly none did comment further, likely none read my 
+explanation ... even if I asked for it with another email and 
+specifically in one community meeting:
+
+https://lore.kernel.org/linux-cxl/836d06d6-a36f-4ba3-b7c9-ba8687ba2190@amd.com/
+
+
+Next discussion about trying to solve the modules removal adding a 
+callback by the driver which you did not like:
+
+https://lore.kernel.org/linux-cxl/6892325deccdb_55f09100fb@dwillia2-xfh.jf.intel.com.notmuch/
+
+
+Here, v16, you stated specifically about cxl kernel modules removed 
+while a Type2 driver is using cxl:
+
+https://lore.kernel.org/linux-cxl/682e2a0b9b15b_1626e10088@dwillia2-xfh.jf.intel.com.notmuch/
+
+https://lore.kernel.org/linux-cxl/682e300371a0_1626e1003@dwillia2-xfh.jf.intel.com.notmuch/
+
+https://lore.kernel.org/linux-cxl/682e3f3343977_1626e100b0@dwillia2-xfh.jf.intel.com.notmuch/
+
 
