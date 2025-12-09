@@ -1,86 +1,67 @@
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012007.outbound.protection.outlook.com [52.101.48.7])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012057.outbound.protection.outlook.com [40.107.200.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B6332FA2D;
-	Tue,  9 Dec 2025 16:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8AC3019B5
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Dec 2025 17:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765299198; cv=fail; b=Ej221SF50yBVqR1i/sZLnjrU0FvqhqF1MEAiUqrvpK3muvEywn0grIaB+fJ2lDUDokmZmt0fpHh1lgtvpJDgysqWHDfi9O5vq3qm6uXEm/nyfYDvIwD9MK6S+tirNCZYBZf0LpbdC3K2qT5qMhJyA551UJKAHVJ0Nu/4f27tCps=
+	t=1765300460; cv=fail; b=QEDEe8RzqogaUsHCMm/vhx38NPe+p0gRuwTM0ygcaB2ciZuvtS8SwGgse9g0RLPwwrBbYut6MAB2v/ZXSyNtAlr5qEOpj8GS8Ux2GDNZxJZgrcWAKyPZblgdzyGd7gK8VDdHiHzWdH57jeIl7R/SPRdPObB0iCfgy//Cb53/bZg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765299198; c=relaxed/simple;
-	bh=q7TT0WiKBIg/2HCITOZmfCyRYiZfFHh2clZZ/nSETGA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IxyQQqVWe08EEOlz1dnIMD2GYntV7L6mVt8pJJ2I4f3FDSIuC3JiRDsfCj0hJAC33I5vBxJVshc7AjU+/A9X2I5hJCzN9rAesIeb69escnoGSNM8ZQqOrxBYgRS9crGenM4HlawMcxDjbvLWPrZiO1dZbUPttfLNW3lYMe1N6hw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=R/Vd3IZY; arc=fail smtp.client-ip=52.101.48.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1765300460; c=relaxed/simple;
+	bh=HMdtN3rsRH6t48QtVDS5U+2zXJuO/lz+liD1xKorAbM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AORT58w+MZWMjWCPXV1pxMNqJGVAR88VF4qLaM8xUiFzIyObz6XHDdRQGBRLFqwulucKJ+Iunt7CpYNZ2NLFGBeGybgYQ2oGAg5Rpbs6UKo949isdcgXK7RXmliyhiWOkM/zn887B7Gjgw+kolUfn9+hwK3n94PEiIumPEOnVIM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Cpru+Wfz; arc=fail smtp.client-ip=40.107.200.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="R/Vd3IZY"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Cpru+Wfz"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=j38lMJnuQC3S2PSiDTQCsQ+1/OmkCTXT2Ouiu4qS2jUfvcfp/jYPaJy2kAl6wgvUeOKdbikOA7X/6iT6E7usK1A1T86yWmcuP4pHwvnvlNARq2jEKsIQoX6FIcgxsCB+eZ08HhcNTRUP8JdM8iRJTsaBu1J5orWbW4z+zWqCQr5b0geBlEY+KDLlRJZcrAXu4PB3W8IKJdonYsogPQjzEQ1glsXFPwDDjP1feTZ/u2MRSMOjM01x/8i/bXb44O2b8uMwjVIQbvehKUk10p4oHcqu7TNQmYZVUVzFOJKXZBicZinvZE0+G2RIJYN1BOKc99ZdYjLhqMFiw68I12/y0w==
+ b=X1XeH0HzWaPkx/KV6xM2L8barfDZ5CGf4miIc080Ts9CapiYiFA33ZJiD6sZUuzc8iOhn3zsdEVb1D2Izppc0W2mCJVjwa9lTb5HxmXLQksoK7MmV66mfYtl4iCGJifJVxScs0s9hjc7QQEi9PtJ6GXUSGMgZ0JdqWPPAwbyAvuW3YgsQKnlZKJ7qWHJAY5i7NaoV4AlvbC5zyjx0UQKCPG9h9eViMFdvoNSUls4H+95DBL1Ro9Iz3fK3+5a0m1Tw34npsATL4b4ZcHtq+EYF9jMbInSeeuh2OKWQdLhfBAGhxLWN0kQsE33wEagv9NNcsl+Buc54GB4ulisHDTtXQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=H+wxjLkkEC1MkIDazcv7DRsiT2Cba9T35qc2AOF+czg=;
- b=scScSdt4TNvoqcssDVnkhvWz1zIOgQF+MSBmZxpwH3MyFSabXS9Pzs3P/Dpng44SiEgWUeI2vf5WV6do6oWLA3bnMz4aBa6k3f18PX4uthoEALBIN6RZ36kksGG37PhL75xd6E6+40vsgd9DVIrqobJ5IlMDnGexHCvDLfL8qs9MDARkACJlIxfuo3gbaS1Wd2CJg0AIiGj7eMBKcwE9cMPbBvL3ouhC3oQEVbxU+SFyzJc2V+ONEGBFg0BlnxZhoqYsKvUCzfqPUzzmudQhtUsT+nbq6ozoI1uqZBGzms5dKTMQWX9jhn1ykty1ZZIKnj3D3DF2S5dgpgVBuTidAQ==
+ bh=Q7lVzunFdOwh/mrL50fOpup1wdLU175lGFbaWzpfviI=;
+ b=ZUnbEa2xztMGA0Z6Zq1ntatXYfGBRT3xno6lN5DNPJbXvm6Mj/zAIGPcsGpjcM3JsGkD69dab1Ui1Rac4NyeRA442Zn3glOWS7o0b47pFZ0lbHAQb6ONkILnAOeeCg8ceJoRXyNTTO0RjMiE/CE56fTVtaFgaNNMtI2qsBAJAD8BLeJEIaYZAHVWxqDRafi8NW+fJ4/KIwl/f1t+OLMjAqoYIJkAk0hkMrVJa9+EbgIgW+3CyGtrU7gF0kCe16qAOUU/Hox5shBPQah/T+iH1VRfgTixzH4nNlcPSa3pjJ7lmz0U7duBcsFY162aWVO9fbX0kVyo7TyaLUYgzHBrDw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ 165.204.84.17) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H+wxjLkkEC1MkIDazcv7DRsiT2Cba9T35qc2AOF+czg=;
- b=R/Vd3IZYgLuQzUmToqwlfJ3A2nhqXCEuW6AOgfkMLvjaHJFB643Qk2kF/EcB9zA03kay8IkaJDLCbq/fW5K7tZV8jY6m6h1xXm2/eaACIqUrmkvo3fVb1cZ+rnDrt7HVklyYIdwXnA2UZUhUQEhl1oJQEOgZZY+xzT9iWNP/N3ufpMK55GgrUhltF3pxHgPThKYT7hElfz4ub3qCh0P+nvcUOhVvo0QLYqqp07312wPoZvbSKBJOwtOjyD/KCXbzvAHtQklx5SJ4hsrWI+GscfOOhrjXsj4b4wleYV5YGgMxg87TPKXHEajQN7M3mZVP66hD4I82eWsh0WePUpfmYg==
-Received: from BN0PR03CA0035.namprd03.prod.outlook.com (2603:10b6:408:e7::10)
- by LV2PR12MB5990.namprd12.prod.outlook.com (2603:10b6:408:170::16) with
+ bh=Q7lVzunFdOwh/mrL50fOpup1wdLU175lGFbaWzpfviI=;
+ b=Cpru+WfzwLHILjycR1VULzTYoXGI4RUAIZZJRbKti7R8INm0x6Vaw3huTXlxOaayQyRUJjDyq7ZxAZwum9HrXH9+JhakVQGhbawKGW+1LXJam3Qgso617QvFJsbRC7t6FwVBVeP8fiQsUbsTThUAKbaVPdsFaj39mMICd6rknlY=
+Received: from PH8PR05CA0009.namprd05.prod.outlook.com (2603:10b6:510:2cc::26)
+ by SA0PR12MB4414.namprd12.prod.outlook.com (2603:10b6:806:9a::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.6; Tue, 9 Dec
- 2025 16:53:08 +0000
-Received: from BN2PEPF000044A3.namprd02.prod.outlook.com
- (2603:10b6:408:e7:cafe::a9) by BN0PR03CA0035.outlook.office365.com
- (2603:10b6:408:e7::10) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9388.14 via Frontend Transport; Tue,
- 9 Dec 2025 16:52:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN2PEPF000044A3.mail.protection.outlook.com (10.167.243.154) with Microsoft
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.7; Tue, 9 Dec
+ 2025 17:14:15 +0000
+Received: from SJ1PEPF000023D4.namprd21.prod.outlook.com
+ (2603:10b6:510:2cc:cafe::cb) by PH8PR05CA0009.outlook.office365.com
+ (2603:10b6:510:2cc::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9412.6 via Frontend Transport; Tue, 9
+ Dec 2025 17:14:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ1PEPF000023D4.mail.protection.outlook.com (10.167.244.69) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9412.4 via Frontend Transport; Tue, 9 Dec 2025 16:53:08 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 9 Dec
- 2025 08:52:43 -0800
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 9 Dec
- 2025 08:52:42 -0800
-Received: from nvidia-4028GR-scsim.nvidia.com (10.127.8.11) by mail.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Tue, 9 Dec 2025 08:52:35 -0800
-From: <mhonap@nvidia.com>
-To: <aniketa@nvidia.com>, <ankita@nvidia.com>, <alwilliamson@nvidia.com>,
-	<vsethi@nvidia.com>, <jgg@nvidia.com>, <mochs@nvidia.com>,
-	<skolothumtho@nvidia.com>, <alejandro.lucero-palau@amd.com>,
-	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, <jgg@ziepe.ca>,
-	<yishaih@nvidia.com>, <kevin.tian@intel.com>
-CC: <cjia@nvidia.com>, <kwankhede@nvidia.com>, <targupta@nvidia.com>,
-	<zhiw@nvidia.com>, <kjaju@nvidia.com>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <kvm@vger.kernel.org>, <mhonap@nvidia.com>
-Subject: [RFC v2 15/15] cxl/mem: Fix NULL pointer deference in memory device paths
-Date: Tue, 9 Dec 2025 22:20:19 +0530
-Message-ID: <20251209165019.2643142-16-mhonap@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20251209165019.2643142-1-mhonap@nvidia.com>
-References: <20251209165019.2643142-1-mhonap@nvidia.com>
+ 15.20.9434.0 via Frontend Transport; Tue, 9 Dec 2025 17:14:15 +0000
+Received: from ausbcheatha02.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 9 Dec
+ 2025 11:14:14 -0600
+From: Ben Cheatham <Benjamin.Cheatham@amd.com>
+To: <nvdimm@lists.linux.dev>
+CC: <linux-cxl@vger.kernel.org>, <alison.schofield@intel.com>,
+	<dave.jiang@intel.com>, <benjamin.cheatham@amd.com>
+Subject: [ndctl PATCH v4 0/7] Add error injection support
+Date: Tue, 9 Dec 2025 11:13:57 -0600
+Message-ID: <20251209171404.64412-1-Benjamin.Cheatham@amd.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -89,113 +70,126 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044A3:EE_|LV2PR12MB5990:EE_
-X-MS-Office365-Filtering-Correlation-Id: 059a33e9-2a73-4d89-9669-08de37436e5b
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D4:EE_|SA0PR12MB4414:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1bb8ef9a-50d9-4d95-f9ca-08de3746616c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|82310400026|1800799024|36860700013|921020;
+	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?8L58uRmshPkYNMbSBo/QAWeaG/ZmGTY/yfUeHswM9nBMaVAigFvCS2X9dd0Z?=
- =?us-ascii?Q?SgyHxmHgJkjJWhrKF9k6vFdGHqP4e0V1ywYyQ+B96n1d9MS4SSkSxxy8TmPn?=
- =?us-ascii?Q?aYRRaF+bBk8ORAim7kKWXq57HgA3ZucYqEDurmnow8Q0EsFfE9V+jmznF7/m?=
- =?us-ascii?Q?4cUnwcRZWi+buWgqg8WpMHLFNAJwaQ2Fr81iYLftUXDTBM6tM6ch/Tmx6eqK?=
- =?us-ascii?Q?ixyorP7Yj2nB/ElnozGOtJ8hSwXrQWWAOqsQvrULetH9J4iDh8adO7xEDixo?=
- =?us-ascii?Q?Gc4hA5aMcPCcP7VsdGB6T3FMjnHYL5odcu/Cs2E6eajmeSLfxq4Dxjt9iKmc?=
- =?us-ascii?Q?4F763btCgShflk72OXYpZXjAGwxzXbl8X4NBzKOQyMg95gGqLsRRo3FsTOPL?=
- =?us-ascii?Q?lIdJ6nYS6kvijE9oYWtdPAa9mn8WW/s4POvt/9js8AZwYbuaa6ERTxKmdV5G?=
- =?us-ascii?Q?jFOkM/7H/D1a0NdwDlsTW4IS0SrgTdWpTmPtzRSvl0DLXgjBauNshoh5WFqa?=
- =?us-ascii?Q?+JgW55+lAflnwlm0Ade9GmeWv9i7U8DGxGIeTdAucaIWdl6Ry5yHKiVs3F5s?=
- =?us-ascii?Q?qUxVO5imfa724qtK3ev9cB2mrVKmm4eUOlfE8tt00Qc0wq2fdIYLEOktbIuT?=
- =?us-ascii?Q?hvyoU6iJ/dckdf2zLC3pfaIFe60pbOhrQ7JjPM/kLhY0EwFIo9xPUTtMvH29?=
- =?us-ascii?Q?YWytzr59dOZUY3IHPYx3AeBkrmgJ9bMlhY6KjTI7O1kPpx4dUk8At0D0dhRN?=
- =?us-ascii?Q?nIW/C3TGUdpx0REVA5s4KOVngNaaZAoydnPwD2Ghd6HSlIlj7bz77yU8STTD?=
- =?us-ascii?Q?RuiCikKKXsSKZB0lQ+NrZaKZGO967eG6upwtx0pOahq8dwfgGuc4GNw5+ES9?=
- =?us-ascii?Q?RA2i7HOZjYwDmzS860YqnHVWkH4BMSLrO1aWvf0+CQRjEiVRHtchIL43uBoJ?=
- =?us-ascii?Q?66pqXMdeBZofZh71tHIPwxEMrvq+iO7k9AQtGDMiQ+j1CuhYlduBDIrHxRA2?=
- =?us-ascii?Q?VaaG5rGiAJ5PE21W/k2QhKE7GcWt3xokg85mVa+AelEKcZydbi0qDyuHANoC?=
- =?us-ascii?Q?QvmCYckqqkzDC/6/iWdRbH20V6qrKBF1uFCtKNh66a/mwMblTerGFjwI8bIS?=
- =?us-ascii?Q?7OFz7aKXMnUuqjPTLSYsdpdnEPd21FLzrIOUaFARjt8pRzOa8BVi6WxtKGvD?=
- =?us-ascii?Q?bomRRoaUOgU/JOCnp1B0wQu3DrEz+U5r/8jUfoKjZH1HaTgyXlRrwVRJUTon?=
- =?us-ascii?Q?pBcpQTgGp2l3QwSLCjC9Ro9+vqGVEfQjyO+28IV9uBt9SRKSQ8rfc5KbyjOm?=
- =?us-ascii?Q?LWOTzyipFhFAA5H1fAPMdNu0hVmCRC/CfTIsPpcbDLS1+ztL0mo9ulZ6ml8v?=
- =?us-ascii?Q?outDt+NdSx6NkzybIDzkAL3jHLHJ+kmo9M+C0ca+jU39XPBtZVItEHNtSZBN?=
- =?us-ascii?Q?CKQ12IH6eDKDlm5+bUpH3n/edfni6GbuVfNe7PsGgGZPTHmhJTGBy+kISorc?=
- =?us-ascii?Q?C2+smYzUt6/3Qr+4hnMRTZuOA1lOk6GstCTy5LhnfWmMSEhmtyJOqgUXSd/A?=
- =?us-ascii?Q?LCi3D0ZMVYDYRrUjlv8BWeuDVuQqSv5E0p1bz0rd?=
+	=?us-ascii?Q?LdkHbuyCm99TTG+ugVizz/MrdsD6eG87jMzPAI4cGZ0d/3ze3tSkp0ZhHpPi?=
+ =?us-ascii?Q?5mslIusus8Iz+BLtgUtMoohtgu8Rl25ASo0QxWdSX9HkT/GflvrAZQfJ5lhp?=
+ =?us-ascii?Q?pEABR0k+8mYI1dDuW0yULNhUF1kko3JjZoePNbqIc6IbycJAhoo/+RsJTWqL?=
+ =?us-ascii?Q?j8Aeka3OQjKYJFV25Gia0KBrRdya2z+Gs487Ezo0ZjlOMwKs14bXGT3SZ0dV?=
+ =?us-ascii?Q?m4IvyPccmDgBaZfWILdlZME5ZnGVL25HiJ8H7YlOYjcIp5D7i4RF9ipgPza0?=
+ =?us-ascii?Q?/p8ZBU1QOXBEQDbX39/AjxPCbwNvkum7cqdnUEJKpBLLyUJdL6kwz/57cKcO?=
+ =?us-ascii?Q?H9fLay1BO8m1pVBh2ycUi2h3CEoCZSvQctR+n7XXy3W0YDppiFcDcJ72j0P4?=
+ =?us-ascii?Q?rhSpiciQ0/bxoqbORN/qHNTnLKQVwoLxKKZVk9o/ho8mOOIOMSIpzKk4sxl6?=
+ =?us-ascii?Q?W30DYxnvrPqn6gfdcN17JkTZUN5B5c/FjEmhZwELmLI35egZOnzWzmosgQji?=
+ =?us-ascii?Q?tLj/B+2XjKzyv/Lb3DPCgr8tDYcBEnd3UhSdgeXcBPuPwXL20bllgivOLBaL?=
+ =?us-ascii?Q?rYr4UpTaPJVMRydYjHX/BMS0IVnxMM+5xJxNkrePmrsKPE3eFZc24KS7PM4w?=
+ =?us-ascii?Q?+2/SErbY0xEUpgNJBVLCj1Y3Ntpin7ni63Xp7VQlvUXt0Jd/pAwgxdKRLPJs?=
+ =?us-ascii?Q?QN2qoYxoePyIyVnOVmAx9d6YCNvcEFoCYS8Y5S4hhrFNRurif1S8iKMtsiZT?=
+ =?us-ascii?Q?KSx7FwIYLsi6t38wvJXrN1tHafQLYgqm8q8XEis6rPw5ORYU0UGOE+pbQRFz?=
+ =?us-ascii?Q?3/EBLfvPGAbJx1mSAsUjMdQPy2ZUkKvGLyndoKofqBTh0lXelzk727dKBAj+?=
+ =?us-ascii?Q?WLsisYe5HArcWw9gC2wprWzQ9Kn+lK9hnGWV4xFm6v61c8fb8/JcJDtxGRiF?=
+ =?us-ascii?Q?ckhb5RDrs5mA36MiIPhwkih+aTOPJfLqoMncc1G3m1eUhcGlOJKXOAenOnZv?=
+ =?us-ascii?Q?CwCNckSsM3FosHnmjIASZaIUT8yXJ/cawCMVkx+xJ8Ic8D9sDK0fl8WP5Y8B?=
+ =?us-ascii?Q?AXjgpXtEpKzlrElJZdkPF8vqjmm5gvZBwvqJeXqPgdJcEtKsicZNdLe5KW//?=
+ =?us-ascii?Q?2fwYmeQC8XclAqbtvJA9FJdswMPC5HK26BHuQsgQFEpRbAB4MyzSKfB1otv9?=
+ =?us-ascii?Q?WJYlH3d7j8XEIPIK6UoCbfrb90hndhMW1UO3y/AxcT1ho+z1is0iRpICvcto?=
+ =?us-ascii?Q?Uhz7kx525Ld0k4gkmSHfAMDVaGR8AxGP5L7kM5kQwmpULcpUgX18PMCSaSd1?=
+ =?us-ascii?Q?VrM/Yam98cEMwi8ox32vgTgLn7plRNPxFUTgd0Mc/jQbKsM5MB9tl0fByOkc?=
+ =?us-ascii?Q?tx3rTQ+Zd11FOVGBxxxA1cBaz66RKBQVdgcWqftxqPdudt6x/f8zGReLu6kj?=
+ =?us-ascii?Q?99T/HRFc1gC6wReLC82T0+xsn+n1KSh/12ReOURJGJC57HplWybUM8ZBWkZh?=
+ =?us-ascii?Q?3tHbf53bB7cU8/HpwySY6jcfFXqKLLgYeYJX?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(1800799024)(36860700013)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2025 16:53:08.5187
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2025 17:14:15.3904
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 059a33e9-2a73-4d89-9669-08de37436e5b
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1bb8ef9a-50d9-4d95-f9ca-08de3746616c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044A3.namprd02.prod.outlook.com
+	SJ1PEPF000023D4.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5990
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4414
 
-From: Manish Honap <mhonap@nvidia.com>
+v4 Changes:
+	- Variable renames for clarity (Dave)
+	- Use errno instead of rc for access() calls (Dave)
+	- Check returns for snprintf() (Dave)
+	- Add util_cxl_dport_filter() (Dave)
+	- Replace printf() calls with log_info() (Dave)
+	- Write correct value to debugfs during protocol error injection
+	(BIT(error) vs. error)
 
-Add NULL pointer validation in CXL memory device code paths that can
-be triggered during error scenarios and device cleanup operations.
+v3 Changes:
+	- Rebase on v83 release
+	- Fix whitespace errors (Alison)
 
-Two crash scenarios have been identified during VFIO-CXL testing:
+v2 Changes:
+	- Make the --clear option of 'inject-error' its own command (Alison)
+	- Debugfs is now found using the /proc/mount entry instead of
+	providing the path using a --debugfs option
+	- Man page added for 'clear-error'
+	- Reword commit descriptions for clarity
 
-1. __cxlmd_free() can be called with a NULL cxlmd pointer during
-   error handling paths in device probe/remove sequences. This leads
-   to a NULL pointer dereference when accessing cxlmd->cxlds.
+This series adds support for injecting CXL protocol (CXL.cache/mem)
+errors[1] into CXL RCH Downstream ports and VH root ports[2] and
+poison into CXL memory devices through the CXL debugfs. Errors are
+injected using a new 'inject-error' command, while errors are reported
+using a new cxl-list "-N"/"--injectable-errors" option. Device poison
+can be cleared using the 'clear-error' command.
 
-2. cxl_memdev_has_poison_cmd() can receive a cxlmd where the
-   conversion to cxl_memdev_state via to_cxl_memdev_state() returns
-   NULL. This occurs when the device state hasn't been fully
-   initialized yet, causing a crash when test_bit() attempts to
-   access mds->poison.enabled_cmds.
+The 'inject-error'/'clear-error' commands and "-N" option of cxl-list all
+require access to the CXL driver's debugfs.
 
-Fix by adding defensive NULL checks:
-- In __cxlmd_free(), return early if cxlmd is NULL to avoid
-  dereferencing an invalid pointer
-- In cxl_memdev_has_poison_cmd(), validate mds before accessing
-  the poison.enabled_cmds bitmap
+The documentation for the new cxl-inject-error command shows both usage
+and the possible device/error types, as well as how to retrieve them
+using cxl-list. The documentation for cxl-list has also been updated to
+show the usage of the new injectable errors option.
 
-Signed-off-by: Manish Honap <mhonap@nvidia.com>
----
- drivers/cxl/core/memdev.c | 2 +-
- drivers/cxl/mem.c         | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+[1]: ACPI v6.5 spec, section 18.6.4
+[2]: ACPI v6.5 spec, table 18.31
 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index d281843fb2f4..eb694203a259 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -207,7 +207,7 @@ bool cxl_memdev_has_poison_cmd(struct cxl_memdev *cxlmd,
- {
- 	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
- 
--	return test_bit(cmd, mds->poison.enabled_cmds);
-+	return (mds) ? test_bit(cmd, mds->poison.enabled_cmds) : false;
- }
- 
- static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index d91d08d25bc4..d5a942ba97b2 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -188,6 +188,9 @@ static int cxl_mem_probe(struct device *dev)
- 
- static void __cxlmd_free(struct cxl_memdev *cxlmd)
- {
-+	if (!cxlmd)
-+		return;
-+
- 	cxlmd->cxlds->cxlmd = NULL;
- 	put_device(&cxlmd->dev);
- 	kfree(cxlmd);
+Ben Cheatham (7):
+  libcxl: Add debugfs path to CXL context
+  libcxl: Add CXL protocol errors
+  libcxl: Add poison injection support
+  cxl: Add inject-error command
+  cxl: Add clear-error command
+  cxl/list: Add injectable errors in output
+  Documentation: Add docs for inject/clear-error commands
+
+ Documentation/cxl/cxl-clear-error.txt  |  67 ++++++
+ Documentation/cxl/cxl-inject-error.txt | 129 ++++++++++
+ Documentation/cxl/cxl-list.txt         |  35 ++-
+ Documentation/cxl/meson.build          |   2 +
+ cxl/builtin.h                          |   2 +
+ cxl/cxl.c                              |   2 +
+ cxl/filter.c                           |  26 ++
+ cxl/filter.h                           |   5 +
+ cxl/inject-error.c                     | 249 +++++++++++++++++++
+ cxl/json.c                             |  30 +++
+ cxl/lib/libcxl.c                       | 316 +++++++++++++++++++++++++
+ cxl/lib/libcxl.sym                     |   8 +
+ cxl/lib/private.h                      |  14 ++
+ cxl/libcxl.h                           |  16 ++
+ cxl/list.c                             |   3 +
+ cxl/meson.build                        |   1 +
+ util/json.h                            |   1 +
+ 17 files changed, 905 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/cxl/cxl-clear-error.txt
+ create mode 100644 Documentation/cxl/cxl-inject-error.txt
+ create mode 100644 cxl/inject-error.c
+
 -- 
-2.25.1
+2.51.1
 
