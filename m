@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3AA22FE0A;
-	Wed, 10 Dec 2025 17:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497753009C7
+	for <linux-cxl@vger.kernel.org>; Wed, 10 Dec 2025 18:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765388667; cv=none; b=cyfaObTKl4lVjV7M1D5sCnNPWykMpuD/P1LBY3QFe1UFdsRThXVqGvvBOLXTXtT9UfrBKBJ/ViNMy69zYzzlD0Wh652S9n29zhqVtW6t41MZOy1UkcnRpIeZwasOnyvchZidoJxsdog1B8eJETdJHo8lJCikGV0UWU9fhSVysTI=
+	t=1765390804; cv=none; b=LD4piqDj1O9+sJ2wDoHFRjk/sNHFRjcw+jdR/CFwxe1cOfFa2adPZSySgUu3Dm/NDa+AjXHJpwjoM+UD/kY6NuNMj++cm1knGfrWDcrDlv6yuhrhcFHOuAS1xYG4bVDU6/atzPi6I6FNASDOvnmcNz9cQgL+/fWst1oZL9D4MzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765388667; c=relaxed/simple;
-	bh=d274ld5rBlVfqZFv1licFy1ssifbec0TrkvLSfRgfjc=;
+	s=arc-20240116; t=1765390804; c=relaxed/simple;
+	bh=nuaXqQWebuTE7r2tecRXfY7cUN9gU8XXBxTPlLCOoFI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n8x3SMz9kQXz+1WGfFWDPPn1HlZ7eM65EWnq+3DM27KBoFJ7Bb28QidEF+xIjSdkBMyoa0fWcp8TW1ZmxIKHTbLQNNBMSB/Rcy2hYpwOA3dzlQrQ9YqPOroyhQ/9jbb15rZsFPlA1qIfnc5xaJylWaHV6m+rOGyVMOIQLVmXMyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A3lmTIzh; arc=none smtp.client-ip=198.175.65.18
+	 In-Reply-To:Content-Type; b=AgmU7NGkB3WYyqxh8YAkJrDCEPlEJfGU44KYRwYKkB06F8tJ+tnK9OUxatDkCEwnkZdZpmMz+GRKQz3LHq/xNyoXN59gTrrTby5d3YhmjfkeZE+4KGNpRL/kxEB72tNhxF3u+3n51VSI16eKOXyChSp8nxuFZ8OMfLBSCAHjnTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B1j19XIh; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A3lmTIzh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B1j19XIh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765388665; x=1796924665;
+  t=1765390801; x=1796926801;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=d274ld5rBlVfqZFv1licFy1ssifbec0TrkvLSfRgfjc=;
-  b=A3lmTIzhOjOma+4qIn1ATWVmgChU/hfQGHkTbtweK4dx8Ti9R92+/hbz
-   m+JNznizU7QnesyIybZzsIWyArrLtw7kdM+INdJKuIGOgnqDuqNFafXXT
-   j5HztcV9w7eXB+oiSmbsl5Y7Cr+P5g3Lt47CXB3fPrayW/ApEygDjOJSw
-   vqc791K0U4YXyDt3kXivyJIc80OnmpU9Hv05wKVCSxzk5hqJoW24mniPv
-   8RoaR7x3Fs/GuaeTO5Fav66Q5ZupOYLCrFwvMIzNyEQQMPCzIHG7HdMU5
-   IFeJzYvTQHkVzCmPT4Sdl8BnsfW5MmNk5mZa9Xmj5odONT63Ox70QM3PC
-   w==;
-X-CSE-ConnectionGUID: XRw4+KUuQpSWlFqBzYMT/g==
-X-CSE-MsgGUID: JcMQez/BQV6i9iZcUGuDRQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11638"; a="67414098"
+  bh=nuaXqQWebuTE7r2tecRXfY7cUN9gU8XXBxTPlLCOoFI=;
+  b=B1j19XIhz7DbbqNMwf4ZOgdVOMMymaEoztgafkb0025TbcikFG6EjtC2
+   eH+khnC6n+LAp8wS2aiTpSa9eWB3L3r/4MCD4TxwwMfm5ZvvWiSxgkjr9
+   Ij71kQEV41Aa9ztV+RtCuYZvNfOwGRLKuL/0/Teur/+dEfDUwexEmFdYH
+   lWA4WTDczGQg5Vx33IHY1M9aOfNu+qfNYfIKYNjDJCi3uoQVihJWt7vjw
+   29exWqcEEk1pjgRYztVdYJT9nsXuUMCbmS6HV+4RNQskymtsemcVXxQdk
+   9e2oomXMiIvJ9b5FIxLoeoVR6PtrhPW7U4jmGV/1Q+0o6MQabe6zK0S2G
+   Q==;
+X-CSE-ConnectionGUID: NZEA7/ZYQAGFdQEDZRcYLA==
+X-CSE-MsgGUID: Bc68coJHQNC81UOGPh4lVw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11638"; a="84974743"
 X-IronPort-AV: E=Sophos;i="6.20,264,1758610800"; 
-   d="scan'208";a="67414098"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2025 09:44:25 -0800
-X-CSE-ConnectionGUID: YRZ1xlhWTPSXRYg1UGivHw==
-X-CSE-MsgGUID: O1ohR3HqSkmSZBF4aloTnw==
+   d="scan'208";a="84974743"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2025 10:20:01 -0800
+X-CSE-ConnectionGUID: 7ACIsEJ6QS2f2l1up3P3Pg==
+X-CSE-MsgGUID: H+JD1HwaQiGVOZASkxUNxA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,264,1758610800"; 
-   d="scan'208";a="197364691"
+   d="scan'208";a="227233046"
 Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.109.138]) ([10.125.109.138])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2025 09:44:23 -0800
-Message-ID: <7e9a44be-7360-44dc-8a6a-7b899514f979@intel.com>
-Date: Wed, 10 Dec 2025 10:44:22 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2025 10:20:01 -0800
+Message-ID: <b7971d26-3108-4e31-9b7e-9b9d0e063012@intel.com>
+Date: Wed, 10 Dec 2025 11:19:59 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,171 +52,104 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 13/13] cxl: Disable HPA/SPA translation handlers for
- Normalized addressing
-To: Robert Richter <rrichter@amd.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Gregory Price <gourry@gourry.net>,
- "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
-References: <20251209180659.208842-1-rrichter@amd.com>
- <20251209180659.208842-14-rrichter@amd.com>
+Subject: Re: [PATCH v4 1/7] libcxl: Add debugfs path to CXL context
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>, nvdimm@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org, alison.schofield@intel.com
+References: <20251209171404.64412-1-Benjamin.Cheatham@amd.com>
+ <20251209171404.64412-2-Benjamin.Cheatham@amd.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20251209180659.208842-14-rrichter@amd.com>
+In-Reply-To: <20251209171404.64412-2-Benjamin.Cheatham@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 12/9/25 11:06 AM, Robert Richter wrote:
-> The root decoder implements callbacks hpa_to_spa and spa_to_hpa to
-> perform Host Physical Address (HPA) and System Physical Address
-> translations respectively. The callbacks are needed in cases where HPA
-> != SPA to convert addresses for tracing and error handling and to
-> setup Poison injection. Currently this is used for XOR interleaving.
+On 12/9/25 10:13 AM, Ben Cheatham wrote:
+> Find the CXL debugfs mount point and add it to the CXL library context.
+> This will be used by poison and procotol error library functions to
+> access the information presented by the filesystem.
 > 
-> In AMD Zen5 systems with Normalized addressing, the addresses of
-> endpoints are not SPA and those callbacks need to be implemented.
-> 
-> Now, as ACPI PRM translation could be expensive in tracing or error
-> handling code paths, do not yet enable this direction of translation
-> (hpa_to_spa) to avoid its intensive use. Instead, mark the HPA invalid
-> and return an error for this case.
-> 
-> The spa_to_hpa callback will be used in region_offset_to_dpa_result()
-> to determine the endpoint by the position in the interleaving
-> chunk. With Normalized addressing, the order of endpoints in the
-> interleaving chunk is implementation defined. Do not use this approach
-> and and return an error instead.
-> 
-> Disable both HPA/SPA translation handlers for Normalized addressing by
-> returning an error (ULLONG_MAX).
-> 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
 > ---
->  drivers/cxl/core/atl.c    | 35 +++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/region.c | 21 ++++++++++++++++++++-
->  drivers/cxl/cxl.h         |  1 +
->  3 files changed, 56 insertions(+), 1 deletion(-)
+>  cxl/lib/libcxl.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/atl.c b/drivers/cxl/core/atl.c
-> index 4bd2289b8bbb..9d05a83bde73 100644
-> --- a/drivers/cxl/core/atl.c
-> +++ b/drivers/cxl/core/atl.c
-> @@ -57,6 +57,39 @@ static u64 prm_cxl_dpa_spa(struct pci_dev *pci_dev, u64 dpa)
->  	return spa;
->  }
->  
-> +static u64 atl_hpa_to_spa(struct cxl_root_decoder *cxlrd, u64 hpa)
-> +{
-> +	/*
-> +	 * PRM translation could be expensive in tracing or error
-> +	 * handling code paths. Avoid this for now and return an
-> +	 * error instead.
-> +	 */
-> +
-> +	return ULLONG_MAX;
-> +}
-> +
-> +static u64 atl_spa_to_hpa(struct cxl_root_decoder *cxlrd, u64 spa)
-> +{
-> +	/*
-> +	 * The callback will be used in region_offset_to_dpa_result()
-> +	 * to determine the endpoint by the position in the
-> +	 * interleaving chunk. With Normalized addressing, the order
-> +	 * of endpoints in the interleaving chunk is implementation
-> +	 * defined. Do not use this approach and and return an error
-> +	 * instead.
-> +	 */
-> +
-> +	return ULLONG_MAX;
-> +}
-> +
-> +static int cxl_prm_setup_region(struct cxl_region *cxlr)
-> +{
-> +	cxlr->cxlrd->ops.hpa_to_spa = atl_hpa_to_spa;
-> +	cxlr->cxlrd->ops.spa_to_hpa = atl_spa_to_hpa;
-> +
-> +	return 0;
-> +}
-> +
->  static int cxl_prm_setup_root(struct cxl_root *cxl_root, void *data)
->  {
->  	struct cxl_region_context *ctx = data;
-> @@ -183,6 +216,8 @@ static int cxl_prm_setup_root(struct cxl_root *cxl_root, void *data)
->  	ctx->interleave_ways = ways;
->  	ctx->interleave_granularity = gran;
->  
-> +	cxl_root->ops.translation_setup_region = cxl_prm_setup_region;
-> +
->  	dev_dbg(&cxld->dev,
->  		"address mapping found for %s (hpa -> spa): %#llx+%#llx -> %#llx+%#llx ways:%d granularity:%d\n",
->  		dev_name(cxlmd->dev.parent), base, len, hpa_range.start,
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 2c070c7c7bfe..130af1cf95b7 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -623,6 +623,21 @@ static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR_RO(mode);
->  
-> +static int cxl_region_setup_translation(struct cxl_region *cxlr)
-> +{
-> +	struct cxl_port *root = to_cxl_port(cxlr->dev.parent->parent);
-> +	struct cxl_root *cxl_root;
-> +
-> +	if (!root || !is_cxl_root(root))
-> +		return 0;
-> +
-> +	cxl_root = to_cxl_root(root);
-> +	if (!cxl_root || !cxl_root->ops.translation_setup_region)
-> +		return 0;
-> +
-> +	return cxl_root->ops.translation_setup_region(cxlr);
-> +}
-> +
->  static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
->  {
->  	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
-> @@ -666,7 +681,7 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
->  	p->res = res;
->  	p->state = CXL_CONFIG_INTERLEAVE_ACTIVE;
->  
-> -	return 0;
-> +	return cxl_region_setup_translation(cxlr);
->  }
->  
->  static void cxl_region_iomem_release(struct cxl_region *cxlr)
-> @@ -3663,6 +3678,10 @@ static int __construct_region(struct cxl_region *cxlr,
->  	p->interleave_granularity = ctx->interleave_granularity;
->  	p->state = CXL_CONFIG_INTERLEAVE_ACTIVE;
->  
-> +	rc = cxl_region_setup_translation(cxlr);
-> +	if (rc)
-> +		return rc;
-> +
->  	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
->  	if (rc)
->  		return rc;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 20b0fd43fa7b..f4623728a815 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -653,6 +653,7 @@ struct cxl_root_ops {
->  			 struct access_coordinate *coord, int entries,
->  			 int *qos_class);
->  	int (*translation_setup_root)(struct cxl_root *cxl_root, void *data);
-> +	int (*translation_setup_region)(struct cxl_region *cxlr);
+> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+> index cafde1c..3718b76 100644
+> --- a/cxl/lib/libcxl.c
+> +++ b/cxl/lib/libcxl.c
+> @@ -54,6 +54,7 @@ struct cxl_ctx {
+>  	struct kmod_ctx *kmod_ctx;
+>  	struct daxctl_ctx *daxctl_ctx;
+>  	void *private_data;
+> +	const char *debugfs;
 >  };
 >  
+>  static void free_pmem(struct cxl_pmem *pmem)
+> @@ -240,6 +241,43 @@ CXL_EXPORT void *cxl_get_private_data(struct cxl_ctx *ctx)
+>  	return ctx->private_data;
+>  }
+>  
+> +static const char *get_debugfs_dir(void)
+
+I would suggest taking a look at setmntent()/getmntent() usages. Probably easier than trying to open code this and do it yourself here. You should be able to pass "/proc/mounts" to setmntent() and then do everything through a loop of getmntent().
+
+DJ
+
+> +{
+> +	char *dev, *dir, *type, *debugfs_dir = NULL;
+> +	char line[PATH_MAX + 256 + 1];
+> +	FILE *fp;
+> +
+> +	fp = fopen("/proc/mounts", "r");
+> +	if (!fp)
+> +		return debugfs_dir;
+> +
+> +	while (fgets(line, sizeof(line), fp)) {
+> +		dev = strtok(line, " \t");
+> +		if (!dev)
+> +			break;
+> +
+> +		dir = strtok(NULL, " \t");
+> +		if (!dir)
+> +			break;
+> +
+> +		type = strtok(NULL, " \t");
+> +		if (!type)
+> +			break;
+> +
+> +		if (!strcmp(type, "debugfs")) {
+> +			debugfs_dir = calloc(strlen(dir) + 1, 1);
+> +			if (!debugfs_dir)
+> +				break;
+> +
+> +			strcpy(debugfs_dir, dir);
+> +			break;
+> +		}
+> +	}
+> +
+> +	fclose(fp);
+> +	return debugfs_dir;
+> +}
+> +
 >  /**
+>   * cxl_new - instantiate a new library context
+>   * @ctx: context to establish
+> @@ -295,6 +333,7 @@ CXL_EXPORT int cxl_new(struct cxl_ctx **ctx)
+>  	c->udev = udev;
+>  	c->udev_queue = udev_queue;
+>  	c->timeout = 5000;
+> +	c->debugfs = get_debugfs_dir();
+>  
+>  	return 0;
+>  
+> @@ -350,6 +389,7 @@ CXL_EXPORT void cxl_unref(struct cxl_ctx *ctx)
+>  	kmod_unref(ctx->kmod_ctx);
+>  	daxctl_unref(ctx->daxctl_ctx);
+>  	info(ctx, "context %p released\n", ctx);
+> +	free((void *)ctx->debugfs);
+>  	free(ctx);
+>  }
+>  
 
