@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A092FFF95;
-	Wed, 10 Dec 2025 15:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2A223C4FD;
+	Wed, 10 Dec 2025 16:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765381475; cv=none; b=CT83ukaTdrjuKDjfdyKzQOJagnAwx3jROhQkZ3Hy67ifhC4ujdWSffN+Z3fG+vQz8mn7ike0KzBJS29wWbV4G0E41ZiTe2LQqghPC9JFGtX7H8sMVZ9sm5Wsa84xgyWmYfl1lIaaZz48KUB8ICqzHqNslURMOc2jpeva8L6ryRI=
+	t=1765383829; cv=none; b=h/mR94EbFRO68gjFG/Qu4l1ufZevK9pyTsv7OTd7vabgl3CIIoCuQPgfca/Jzj3y24t9P2Gd4uYFtrSEpOG0HhQ6jBxBJE93SZzJ66WIkJnZPh5b+vSEHiLWtl3aEgcwxMcwCzdgQCZeI06I15QfgiTDiaVDZI0vBNCbQeMa0fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765381475; c=relaxed/simple;
-	bh=K7bMQJ8AX7Jzr0xyT5MjUO6Lvd8NVfX+SZWfBLl5w2E=;
+	s=arc-20240116; t=1765383829; c=relaxed/simple;
+	bh=UBp9ky9gpU5ZQWr67cEeCkr77va6ZZIWw4wC85As4S0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c5d7SJVoTVMequIuWtGgcke17fCou9jZaLLZDowi0nbEoXQBcsnLlFVItWzmQr2tGHumvpOPJSSxrJF7K4vRyjaF0UOpfPk/8Vd9pFIDx/2otPimsp/z+B/+zFknN4olm7OvWmBq1ZopkbrAhtJqsrjLJVG8kYyMYN3gd4S2Dcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UUl9css1; arc=none smtp.client-ip=192.198.163.14
+	 In-Reply-To:Content-Type; b=qALxe4982z4g63rQC0s13kp0Nbdw80xi6NonQVQbrhk1N7VcRnlzcw8G4geGUW8DzkR/L8HJSRkb5izGGL5vQ3qJHSDbUvNNYZ3+aKV7ejh6o++sW6engsIcM1A1z/We/uyPjW7l/yYdiI0+ZYYlKQKMa3DFZL9IXzssxm3WdTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wwrj52zh; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UUl9css1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wwrj52zh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765381473; x=1796917473;
+  t=1765383827; x=1796919827;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=K7bMQJ8AX7Jzr0xyT5MjUO6Lvd8NVfX+SZWfBLl5w2E=;
-  b=UUl9css1qvLCXhHNs/5BrrIxfVYPWiDZpNZ1OLNmbw5W+tAgNyT65B5j
-   NgmfujSXkvFHJx4GVs1Lt9hAnA7ykVdi5nnwLq+zj0/E28AVoA8xr9f2y
-   69euqWopDNlGIyrUABYzuEhGXle0/hmi+S20oZL1ka5AeGznoCzFmu9bc
-   kr8gHe2HqpsZK1dRmAPMaNmzuiZlbqaIZPa8p2a1IM0e+4AAtzrEUkx1z
-   w7BI8Vy7UDBzsL1kdk/ZMb504WdYEmZ0Jq5P8o02l9uov1qfMPT9ThRJz
-   8iyEL+RVIF0Xu1ig9LWaEBwPMDQJSNZrR4fLtGL5AVN+hUO5ivehcQADX
+  bh=UBp9ky9gpU5ZQWr67cEeCkr77va6ZZIWw4wC85As4S0=;
+  b=Wwrj52zhXaw7OxGZJLqMaPgLfwG3SDfZqcJs56+hrHiuZkybFDIxTv35
+   JFhj9jEGpDaTm69swxhWB2v64+2tg4HY0waQUMn3hnjnOqx379jj8aqcH
+   PbkdtSNZolwMALDEjGywNtjaxsbPPXpGhSUwh5pQxu5ipfrhqqNaNYRYM
+   6yLWhHqb24OHyY31mu/N9hxg1QVEqiaoRGIlfOYPzn+II6PDZRpM1AyYc
+   N7R2Q8sA13pbH8ge0mVY8pVqMmCPlPawQ1NmGcvl0VrRdF1LqnKUBThtx
+   YMBQ0bj8HFV5DIbJyr9jSlJK9TihjhkZDR7ZnemRxpB0U7XrLqz/X6SOT
    A==;
-X-CSE-ConnectionGUID: OE9CySUXRnKE+74m1PW31A==
-X-CSE-MsgGUID: 296Bd5oETpCaLe1WXigfQA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11638"; a="67391089"
+X-CSE-ConnectionGUID: rNCUvPnBRtGhm1tRvzlQ7Q==
+X-CSE-MsgGUID: FXngTfHrQvyxWdZh2AWmjQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11638"; a="92834688"
 X-IronPort-AV: E=Sophos;i="6.20,264,1758610800"; 
-   d="scan'208";a="67391089"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2025 07:44:32 -0800
-X-CSE-ConnectionGUID: 5D/Gcgf8S/u1YfTvGJWghg==
-X-CSE-MsgGUID: ASTREkokQqiuq9LaRHsZvw==
+   d="scan'208";a="92834688"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2025 08:23:45 -0800
+X-CSE-ConnectionGUID: 3in+NhsxSjutrJ07NFY+Yw==
+X-CSE-MsgGUID: /KUqW6WbRq+6CN45GJHpJQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,264,1758610800"; 
-   d="scan'208";a="201463819"
+   d="scan'208";a="196161496"
 Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.109.138]) ([10.125.109.138])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2025 07:44:31 -0800
-Message-ID: <a3d725c9-71d8-4bb3-b1b9-6404cbd9eb21@intel.com>
-Date: Wed, 10 Dec 2025 08:44:30 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2025 08:23:45 -0800
+Message-ID: <a143dda4-53b2-4962-8e30-ceae969fb93c@intel.com>
+Date: Wed, 10 Dec 2025 09:23:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,246 +52,169 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] Documentation/driver-api/cxl: ACPI PRM Address
- Translation Support and AMD Zen5 enablement
+Subject: Re: [PATCH v8 12/13] cxl: Check if ULLONG_MAX was returned from
+ translation functions
 To: Robert Richter <rrichter@amd.com>,
  Alison Schofield <alison.schofield@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
  Dan Williams <dan.j.williams@intel.com>,
  Jonathan Cameron <jonathan.cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Jonathan Corbet <corbet@lwn.net>
+ Davidlohr Bueso <dave@stgolabs.net>
 Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
  Gregory Price <gourry@gourry.net>,
  "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>,
- Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org
-References: <20251209181959.210533-1-rrichter@amd.com>
- <20251209181959.210533-2-rrichter@amd.com>
+ Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
+References: <20251209180659.208842-1-rrichter@amd.com>
+ <20251209180659.208842-13-rrichter@amd.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20251209181959.210533-2-rrichter@amd.com>
+In-Reply-To: <20251209180659.208842-13-rrichter@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 12/9/25 11:19 AM, Robert Richter wrote:
-> This adds a convention document for the following patch series:
+On 12/9/25 11:06 AM, Robert Richter wrote:
+> The return address of translation functions is not consistently
+> checked for a valid address. Check if ULLONG_MAX was returned.
 > 
->  cxl: ACPI PRM Address Translation Support and AMD Zen5 enablement
-> 
-> Version 7 and later:
-> 
->  https://patchwork.kernel.org/project/cxl/cover/20251114213931.30754-1-rrichter@amd.com/
-> 
-> Reviewed-by: Gregory Price <gourry@gourry.net>
 > Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+>  drivers/cxl/core/hdm.c                 |  2 +-
+>  drivers/cxl/core/region.c              | 36 +++++++++++++++++++-------
+>  tools/testing/cxl/test/cxl_translate.c |  4 +--
+>  3 files changed, 29 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 1c5d2022c87a..8b50cdce4b29 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -530,7 +530,7 @@ resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled)
+>  
+>  resource_size_t cxl_dpa_resource_start(struct cxl_endpoint_decoder *cxled)
+>  {
+> -	resource_size_t base = -1;
+> +	resource_size_t base = ULLONG_MAX;
+>  
+>  	lockdep_assert_held(&cxl_rwsem.dpa);
+>  	if (cxled->dpa_res)
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index c7ac78f1b644..2c070c7c7bfe 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3124,7 +3124,7 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+>  	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	struct cxl_endpoint_decoder *cxled = NULL;
+> -	u64 dpa_offset, hpa_offset, hpa;
+> +	u64 base, dpa_offset, hpa_offset, hpa;
+>  	u16 eig = 0;
+>  	u8 eiw = 0;
+>  	int pos;
+> @@ -3142,8 +3142,14 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+>  	ways_to_eiw(p->interleave_ways, &eiw);
+>  	granularity_to_eig(p->interleave_granularity, &eig);
+>  
+> -	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
+> +	base = cxl_dpa_resource_start(cxled);
+> +	if (base == ULLONG_MAX)
+> +		return ULLONG_MAX;
+> +
+> +	dpa_offset = dpa - base;
+>  	hpa_offset = cxl_calculate_hpa_offset(dpa_offset, pos, eiw, eig);
+> +	if (hpa_offset == ULLONG_MAX)
+> +		return ULLONG_MAX;
+>  
+>  	/* Apply the hpa_offset to the region base address */
+>  	hpa = hpa_offset + p->res->start + p->cache_size;
+> @@ -3152,6 +3158,9 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+>  	if (cxlrd->ops.hpa_to_spa)
+>  		hpa = cxlrd->ops.hpa_to_spa(cxlrd, hpa);
+>  
+> +	if (hpa == ULLONG_MAX)
+> +		return ULLONG_MAX;
+> +
+>  	if (!cxl_resource_contains_addr(p->res, hpa)) {
+>  		dev_dbg(&cxlr->dev,
+>  			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
+> @@ -3176,10 +3185,11 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
+>  	struct cxl_endpoint_decoder *cxled;
+> -	u64 hpa, hpa_offset, dpa_offset;
+> +	u64 hpa_offset = offset;
+> +	u64 dpa_base, dpa_offset;
+>  	u16 eig = 0;
+>  	u8 eiw = 0;
+> -	int pos;
+> +	int pos = -1;
+>  
+>  	lockdep_assert_held(&cxl_rwsem.region);
+>  	lockdep_assert_held(&cxl_rwsem.dpa);
+> @@ -3193,13 +3203,14 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+>  	 * CXL HPA is assumed to equal SPA.
+>  	 */
+>  	if (cxlrd->ops.spa_to_hpa) {
+> -		hpa = cxlrd->ops.spa_to_hpa(cxlrd, p->res->start + offset);
+> -		hpa_offset = hpa - p->res->start;
+> -	} else {
+> -		hpa_offset = offset;
+> +		hpa_offset = cxlrd->ops.spa_to_hpa(cxlrd, p->res->start + offset);
+> +		if (hpa_offset != ULLONG_MAX)
 
-The content looks good. Would love to see an ascii block diagram showing the relationships of SPA/HPA/DPA in this scenario.
+Should it just return error here when hpa_offset == ULLONG_MAX?
+
+> +			hpa_offset -= p->res->start;
+>  	}>  
+> -	pos = cxl_calculate_position(hpa_offset, eiw, eig);
+> +	if (hpa_offset != ULLONG_MAX)
+
+And this check won't be need if it returned earlier above
+
+> +		pos = cxl_calculate_position(hpa_offset, eiw, eig);
+> +
+>  	if (pos < 0 || pos >= p->nr_targets) {
+>  		dev_dbg(&cxlr->dev, "Invalid position %d for %d targets\n",
+>  			pos, p->nr_targets);
+> @@ -3213,8 +3224,13 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+>  		cxled = p->targets[i];
+>  		if (cxled->pos != pos)
+>  			continue;
+> +
+> +		dpa_base = cxl_dpa_resource_start(cxled);
+> +		if (dpa_base == ULLONG_MAX)
+> +			continue;
+
+If dpa_base is ULLONG_MAX, should it be an error and exit instead of continuing?
 
 DJ
-
-> ---
-> v2:
->  * updated sob-chain,
->  * spell fix in patch description (Randy),
->  * made small changes as suggested by Randy,
->  * Removed include:: <isonum.txt> line (Jon).
-> ---
-> ---
->  Documentation/driver-api/cxl/conventions.rst  |   1 +
->  .../driver-api/cxl/conventions/cxl-atl.rst    | 174 ++++++++++++++++++
->  2 files changed, 175 insertions(+)
->  create mode 100644 Documentation/driver-api/cxl/conventions/cxl-atl.rst
-> 
-> diff --git a/Documentation/driver-api/cxl/conventions.rst b/Documentation/driver-api/cxl/conventions.rst
-> index 53f31a229c8d..cf427afac58b 100644
-> --- a/Documentation/driver-api/cxl/conventions.rst
-> +++ b/Documentation/driver-api/cxl/conventions.rst
-> @@ -8,4 +8,5 @@ Compute Express Link: Linux Conventions
->     :caption: Contents
+> +
+>  		result->cxlmd = cxled_to_memdev(cxled);
+> -		result->dpa = cxl_dpa_resource_start(cxled) + dpa_offset;
+> +		result->dpa = dpa_base + dpa_offset;
 >  
->     conventions/cxl-lmh.rst
-> +   conventions/cxl-atl.rst
->     conventions/template.rst
-> diff --git a/Documentation/driver-api/cxl/conventions/cxl-atl.rst b/Documentation/driver-api/cxl/conventions/cxl-atl.rst
-> new file mode 100644
-> index 000000000000..955263dcbb3a
-> --- /dev/null
-> +++ b/Documentation/driver-api/cxl/conventions/cxl-atl.rst
-> @@ -0,0 +1,174 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +ACPI PRM CXL Address Translation
-> +================================
-> +
-> +Document
-> +--------
-> +
-> +CXL Revision 3.2, Version 1.0
-> +
-> +License
-> +-------
-> +
-> +SPDX-License Identifier: CC-BY-4.0
-> +
-> +Creator/Contributors
-> +--------------------
-> +
-> +- Robert Richter, AMD
-> +
-> +Summary of the Change
-> +---------------------
-> +
-> +The CXL Fixed Memory Window Structure (CFMWS) describes zero or more
-> +Host Physical Address (HPA) windows that are associated with each CXL
-> +Host Bridge. The HPA ranges of a CFMWS may include addresses that are
-> +currently assigned to CXL.mem devices, or an OS may assign ranges from
-> +an address window to a device.
-> +
-> +Host-managed Device Memory is Device-attached memory that is mapped to
-> +system coherent address space and accessible to the Host using
-> +standard write-back semantics. The managed address range is configured
-> +in the CXL HDM Decoder registers of the device. An HDM Decoder in a
-> +device is responsible for converting HPA into DPA by stripping off
-> +specific address bits.
-> +
-> +CXL devices and CXL bridges use the same HPA space. It is common
-> +across all components that belong to the same host domain. The view of
-> +the address region must be consistent on the CXL.mem path between the
-> +Host and the Device.
-> +
-> +This is described in the current CXL specification (Table 1-1, 3.3.1,
-> +8.2.4.20, 9.13.1, 9.18.1.3). [#cxl-spec-3.2]_
-> +
-> +Depending on the interconnect architecture of the platform, components
-> +attached to a host may not share the same host physical address space.
-> +Those platforms need address translation to convert an HPA between the
-> +host and the attached component, such as a CXL device. The translation
-> +mechanism is host-specific and implementation dependent.
-> +
-> +E.g., x86 AMD platforms use a Data Fabric that manages access to
-> +physical memory. Devices have their own memory space and can be
-> +configured to use 'Normalized addresses' different to System Physical
-> +Addresses (SPA). Address translation is needed then. Details are
-> +described also under x86 AMD
-> +Documentation/admin-guide/RAS/address-translation.rst.
-> +
-> +Those AMD platforms provide PRM handlers in firmware to perform
-> +various types of address translation, including for CXL endpoints.
-> +AMD Zen5 systems implement the ACPI PRM CXL Address Translation
-> +firmware call. The ACPI PRM handler has a specific GUID to uniquely
-> +identify platforms with support of Normalized addressing. This is
-> +documented in the ACPI v6.5 Porting Guide, Address Translation - CXL
-> +DPA to System Physical Address.  [#amd-ppr-58088]_
-> +
-> +When in Normalized address mode, HDM decoder address ranges must be
-> +configured and handled differently. Hardware addresses used in the HDM
-> +decoder configurations of an endpoint are not SPA and need to be
-> +translated from the endpoint's to its CXL host bridge's address range.
-> +This is especially important to find an endpoint's associated CXL Host
-> +Bridge and HPA window described in the CFMWS. Also, the interleave
-> +decoding is done by the Data Fabric and the endpoint does not perform
-> +decoding when converting HPA to DPA. Instead, interleaving is switched
-> +off for the endpoint (1 way). Finally, address translation might also
-> +be needed to inspect the Endpoint's hardware addresses, such as during
-> +profiling, tracing or error handling.
-> +
-> +For example, with Normalized addressing the HDM decoders could look as
-> +following:
-> +
-> +.. code-block:: none
-> +
-> + /sys/bus/cxl/devices/endpoint5/decoder5.0/interleave_granularity:256
-> + /sys/bus/cxl/devices/endpoint5/decoder5.0/interleave_ways:1
-> + /sys/bus/cxl/devices/endpoint5/decoder5.0/size:0x2000000000
-> + /sys/bus/cxl/devices/endpoint5/decoder5.0/start:0x0
-> + /sys/bus/cxl/devices/endpoint8/decoder8.0/interleave_granularity:256
-> + /sys/bus/cxl/devices/endpoint8/decoder8.0/interleave_ways:1
-> + /sys/bus/cxl/devices/endpoint8/decoder8.0/size:0x2000000000
-> + /sys/bus/cxl/devices/endpoint8/decoder8.0/start:0x0
-> + /sys/bus/cxl/devices/endpoint11/decoder11.0/interleave_granularity:256
-> + /sys/bus/cxl/devices/endpoint11/decoder11.0/interleave_ways:1
-> + /sys/bus/cxl/devices/endpoint11/decoder11.0/size:0x2000000000
-> + /sys/bus/cxl/devices/endpoint11/decoder11.0/start:0x0
-> + /sys/bus/cxl/devices/endpoint13/decoder13.0/interleave_granularity:256
-> + /sys/bus/cxl/devices/endpoint13/decoder13.0/interleave_ways:1
-> + /sys/bus/cxl/devices/endpoint13/decoder13.0/size:0x2000000000
-> + /sys/bus/cxl/devices/endpoint13/decoder13.0/start:0x0
-> +
-> +Note the endpoint interleaving configurations with a direct mapping
-> +(1-way).
-> +
-> +With PRM calls, the kernel can determine the following mappings:
-> +
-> +.. code-block:: none
-> +
-> + cxl decoder5.0: address mapping found for 0000:e2:00.0 (hpa -> spa):
-> +   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
-> + cxl decoder8.0: address mapping found for 0000:e3:00.0 (hpa -> spa):
-> +   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
-> + cxl decoder11.0: address mapping found for 0000:e4:00.0 (hpa -> spa):
-> +   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
-> + cxl decoder13.0: address mapping found for 0000:e1:00.0 (hpa -> spa):
-> +   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
-> +
-> +The corresponding CXL host bridge (HDM) decoders and root decoder
-> +(CFMWS) show and match with the calculated endpoint mappings:
-> +
-> +.. code-block:: none
-> +
-> + /sys/bus/cxl/devices/port1/decoder1.0/interleave_granularity:256
-> + /sys/bus/cxl/devices/port1/decoder1.0/interleave_ways:4
-> + /sys/bus/cxl/devices/port1/decoder1.0/size:0x8000000000
-> + /sys/bus/cxl/devices/port1/decoder1.0/start:0x850000000
-> + /sys/bus/cxl/devices/port1/decoder1.0/target_list:0,1,2,3
-> + /sys/bus/cxl/devices/port1/decoder1.0/target_type:expander
-> + /sys/bus/cxl/devices/root0/decoder0.0/interleave_granularity:256
-> + /sys/bus/cxl/devices/root0/decoder0.0/interleave_ways:1
-> + /sys/bus/cxl/devices/root0/decoder0.0/size:0x8000000000
-> + /sys/bus/cxl/devices/root0/decoder0.0/start:0x850000000
-> + /sys/bus/cxl/devices/root0/decoder0.0/target_list:7
-> +
-> +The following changes of the specification are needed:
-> +
-> +* Allow a CXL device to be in a different HPA space other than the
-> +  host's space.
-> +
-> +* The platform can use implementation-specific address translation
-> +  when crossing memory domains on the CXL.mem path between the Host
-> +  and the Device.
-> +
-> +* The kernel (OSPM) determines Endpoint SPA range and interleaving
-> +  configuration using platform-specific address translation methods.
-> +
-> +Benefits of the Change
-> +----------------------
-> +
-> +Without the change, the OSPM may not determine the memory region and
-> +Root Decoder of an Endpoint and its corresponding HDM decoder. Region
-> +creation would fail. Platforms with a different interconnect
-> +architecture would fail to setup and use CXL.
-> +
-> +References
-> +----------
-> +
-> +.. [#cxl-spec-3.2] Compute Express Link Specification, Revision 3.2, Version 1.0,
-> +   https://www.computeexpresslink.org/
-> +
-> +.. [#amd-ppr-58088] AMD Family 1Ah Models 00h–0Fh and Models 10h–1Fh,
-> +   ACPI v6.5 Porting Guide, Publication # 58088,
-> +   https://www.amd.com/en/search/documentation/hub.html
-> +
-> +Detailed Description of the Change
-> +----------------------------------
-> +
-> +Add the following paragraph in 8.2.4.20 CXL HDM Decoder Capability
-> +Structure of the specification [#cxl-spec-3.2]_ to the end:
-> +
-> +"A device may use a different HPA space that is not common to other
-> +components of the host domain. The platform is responsible for address
-> +translation when crossing HPA spaces. The OSPM must determine the
-> +interleaving configuration and perform address translation to HPA
-> +ranges of the HDM decoders as needed. The translation mechanism is
-> +host-specific and implementation dependent."
+>  		return 0;
+>  	}
+> diff --git a/tools/testing/cxl/test/cxl_translate.c b/tools/testing/cxl/test/cxl_translate.c
+> index 2200ae21795c..66f8270aacd8 100644
+> --- a/tools/testing/cxl/test/cxl_translate.c
+> +++ b/tools/testing/cxl/test/cxl_translate.c
+> @@ -69,7 +69,7 @@ static u64 to_hpa(u64 dpa_offset, int pos, u8 r_eiw, u16 r_eig, u8 hb_ways,
+>  	/* Calculate base HPA offset from DPA and position */
+>  	hpa_offset = cxl_calculate_hpa_offset(dpa_offset, pos, r_eiw, r_eig);
+>  
+> -	if (math == XOR_MATH) {
+> +	if (hpa_offset != ULLONG_MAX && math == XOR_MATH) {
+>  		cximsd->nr_maps = hbiw_to_nr_maps[hb_ways];
+>  		if (cximsd->nr_maps)
+>  			return cxl_do_xormap_calc(cximsd, hpa_offset, hb_ways);
+> @@ -262,7 +262,7 @@ static int test_random_params(void)
+>  		reverse_dpa = cxl_calculate_dpa_offset(hpa, eiw, eig);
+>  		reverse_pos = cxl_calculate_position(hpa, eiw, eig);
+>  
+> -		if (reverse_dpa != dpa || reverse_pos != pos) {
+> +		if (hpa == ULLONG_MAX || reverse_dpa != dpa || reverse_pos != pos) {
+>  			pr_err("test random iter %d FAIL hpa=%llu, dpa=%llu reverse_dpa=%llu, pos=%d reverse_pos=%d eiw=%u eig=%u\n",
+>  			       i, hpa, dpa, reverse_dpa, pos, reverse_pos, eiw,
+>  			       eig);
 
