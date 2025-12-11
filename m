@@ -1,412 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471B71F03EF;
-	Thu, 11 Dec 2025 18:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918D732572B;
+	Thu, 11 Dec 2025 19:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765476807; cv=none; b=Cl8StiNqGalsr/z4SgvRAD4IO0wlqPYD4OfY/PjKl7V4GrDLVRC5Rg5B3QgNotsar4Lt4GAe2q/ik55irOpCSsK2rAfkmCTk9+r8fmhKeqIZVVxmgdCmHeTkBjlAVkoe+fkRQtF8TU3w466Xe44o6g+ivbyIkYZIX6/AssJcOgU=
+	t=1765482650; cv=none; b=UUPC8u074hJl2m4Tualz6xC6rc0eqCw2nU2wOnfHCZ04s9j/oge7t4/aZkDTHYAalt7wuNvol+HOfOfSIrr9CXUHACvG1bzZPNU2SUPHVci+N39RxajrLjrgDrBvn5L/8b/QNzJKCKrrEg+tgmJu0KZGBha7Y1O1JUSVzGijVgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765476807; c=relaxed/simple;
-	bh=1ja2nTWbyUNeaHEFWkxsohvtLZ5vFjtzbve/3ZK1I3I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d6RQR7mFaenMA/DJRYfZ36OOiYVb6nYZ+ABnuqNJlrTPAbbfABLi2kS4jqAKqqwtW5uP0elphyaDmFommkCtFPEpfP/wcjZfU5v8evdYh5LWkwTjn716SHh/UjA01j2aNzt5IMrsdQCi1S9NzSVV5Xsg0+Vjihs/IzTplsO0BA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KDhnaYbr; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1765482650; c=relaxed/simple;
+	bh=h98nDTBwLWOQxUX4rIYi0XylQMBoOGf9BLwzRLg4sHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XvbUtKHmzJVkZWb8WeUc84YihoycPHVZ7ynUzPkt576hGvNa55axEEUGROgDpMNgsGjEtWDHz0iwmKebSTTmFwu/AT542LgNkDqOBC/4PfZAErsR04sHzC5WOcqJUoXy5stxANG86VZc34YanDkumN8gN5WLIuf9D43RGc6Jf7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dkqjxcKw; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KDhnaYbr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dkqjxcKw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765476805; x=1797012805;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=1ja2nTWbyUNeaHEFWkxsohvtLZ5vFjtzbve/3ZK1I3I=;
-  b=KDhnaYbrHTS9SjHCbzSJxncBg8N9ERAuCb8Muk6KJ/oxNarjO6WcIi0i
-   EMn/tpUBZ/IxqjGys+CQ+DxjegZ2b/YYbXZvSgxJLpoZFFdiNmLOG/5zG
-   As0Wg/WYEbbKW13yAHQgQ/AIAXJbC5ylT8Kw3eHxxKSXCVRE4XiVoIB6D
-   FQASVySUjFHq8Oe1kJpV0OP5gyTsCwo6kLi3GyByfYliP9PNSYAx8jsms
-   dYtyEb0wiuMj8PZMzrZPaC06r1xkft1SbEXhGBOGEMSZm5RrVkOCjWbF2
-   o6BKxvyu69NvmZIEcpUXXwUMavzb7ewgUkf4/dgSsfvo/kcqE2UdWMHKL
-   w==;
-X-CSE-ConnectionGUID: 80Yvf0M2QwarBMtgGYPo1Q==
-X-CSE-MsgGUID: 9+2luauyR4mHJXDX5pB86w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11639"; a="92945419"
+  t=1765482649; x=1797018649;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=h98nDTBwLWOQxUX4rIYi0XylQMBoOGf9BLwzRLg4sHQ=;
+  b=dkqjxcKw8P+odaDze6FqKUg8CEJY2nyYHRfcUvApPsa7zxsT6/v++fXO
+   4NzAobVIzVyu8GHAPqkO+X0rpM0JwPA57BsV9h54BVFVSwcoTkqPKFYuF
+   2AFBnc1N/K34c6WO0lxeYegYvUxvT9cY7fxya62P95VGHEMBsCAAdu2JX
+   yrKH5eWwgAWQHeCTZrDd6YSoTiZqYyE8IKPeNop156sZOnFE0tGfh8CJe
+   bSZFuOAsdr3goZfLLdgOxIgWd6Dd0Gw53uBtDuo5Zztv7esZr6Vx4V49x
+   oRnfHUOi+2eTkyhZRYc3Gl3L10n7C+R3ndVryLoBfNyKsmDeYNuXfDv6G
+   Q==;
+X-CSE-ConnectionGUID: XRq6o+QATom0TFfgzhYoFA==
+X-CSE-MsgGUID: qFmbbvRmRduek+D0H/Yj1Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11639"; a="67516516"
 X-IronPort-AV: E=Sophos;i="6.21,141,1763452800"; 
-   d="scan'208";a="92945419"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2025 10:13:24 -0800
-X-CSE-ConnectionGUID: pww1HZVkSri2lClMit+QLw==
-X-CSE-MsgGUID: vR+5UJhDTVGSDfwULKc0rw==
+   d="scan'208";a="67516516"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2025 11:50:47 -0800
+X-CSE-ConnectionGUID: Utkf77Q9TKSaueRphHE9iw==
+X-CSE-MsgGUID: y440hin5Qx271vfEpRMh9Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,141,1763452800"; 
-   d="scan'208";a="196150835"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.109.218]) ([10.125.109.218])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2025 10:13:23 -0800
-Message-ID: <80c04058-833b-4056-b47c-54a3a50f5f89@intel.com>
-Date: Thu, 11 Dec 2025 11:13:21 -0700
+   d="scan'208";a="201360420"
+Received: from lkp-server01.sh.intel.com (HELO d335e3c6db51) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 11 Dec 2025 11:50:44 -0800
+Received: from kbuild by d335e3c6db51 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vTmgT-0000000051p-1R39;
+	Thu, 11 Dec 2025 19:50:41 +0000
+Date: Fri, 12 Dec 2025 03:50:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Robert Richter <rrichter@amd.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>
+Cc: oe-kbuild-all@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>,
+	Robert Richter <rrichter@amd.com>
+Subject: Re: [PATCH v8 12/13] cxl: Check if ULLONG_MAX was returned from
+ translation functions
+Message-ID: <202512120346.aT9GKk20-lkp@intel.com>
+References: <20251209180659.208842-13-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 11/15] vfio/cxl: introduce the emulation of HDM registers
-To: mhonap@nvidia.com, aniketa@nvidia.com, ankita@nvidia.com,
- alwilliamson@nvidia.com, vsethi@nvidia.com, jgg@nvidia.com,
- mochs@nvidia.com, skolothumtho@nvidia.com, alejandro.lucero-palau@amd.com,
- dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- jgg@ziepe.ca, yishaih@nvidia.com, kevin.tian@intel.com
-Cc: cjia@nvidia.com, kwankhede@nvidia.com, targupta@nvidia.com,
- zhiw@nvidia.com, kjaju@nvidia.com, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, kvm@vger.kernel.org
-References: <20251209165019.2643142-1-mhonap@nvidia.com>
- <20251209165019.2643142-12-mhonap@nvidia.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20251209165019.2643142-12-mhonap@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251209180659.208842-13-rrichter@amd.com>
+
+Hi Robert,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on ea5514e300568cbe8f19431c3e424d4791db8291]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Robert-Richter/cxl-region-Rename-misleading-variable-name-hpa-to-hpa_range/20251210-021858
+base:   ea5514e300568cbe8f19431c3e424d4791db8291
+patch link:    https://lore.kernel.org/r/20251209180659.208842-13-rrichter%40amd.com
+patch subject: [PATCH v8 12/13] cxl: Check if ULLONG_MAX was returned from translation functions
+config: i386-randconfig-141-20251212 (https://download.01.org/0day-ci/archive/20251212/202512120346.aT9GKk20-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.4.0-5) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251212/202512120346.aT9GKk20-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202512120346.aT9GKk20-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from include/linux/limits.h:7,
+                    from include/linux/overflow.h:6,
+                    from include/linux/string.h:13,
+                    from include/linux/seq_file.h:6,
+                    from drivers/cxl/core/hdm.c:3:
+   drivers/cxl/core/hdm.c: In function 'cxl_dpa_resource_start':
+>> include/vdso/limits.h:16:25: warning: conversion from 'long long unsigned int' to 'resource_size_t' {aka 'unsigned int'} changes value from '18446744073709551615' to '4294967295' [-Woverflow]
+      16 | #define ULLONG_MAX      (~0ULL)
+         |                         ^
+   drivers/cxl/core/hdm.c:533:32: note: in expansion of macro 'ULLONG_MAX'
+     533 |         resource_size_t base = ULLONG_MAX;
+         |                                ^~~~~~~~~~
 
 
+vim +16 include/vdso/limits.h
 
-On 12/9/25 9:50 AM, mhonap@nvidia.com wrote:
-> From: Manish Honap <mhonap@nvidia.com>
-> 
-> CXL devices have HDM registers in its CXL MMIO bar. Many HDM registers
-> requires a PA and they are owned by the host in virtualization.
-> 
-> Thus, the HDM registers needs to be emulated accordingly so that the
-> guest kernel CXL core can configure the virtual HDM decoders.
-> 
-> Intorduce the emulation of HDM registers that emulates the HDM decoders.
-> 
-> Co-developed-by: Zhi Wang <zhiw@nvidia.com>
-> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
-> Signed-off-by: Manish Honap <mhonap@nvidia.com>
-> ---
->  drivers/vfio/pci/vfio_cxl_core.c     |   7 +-
->  drivers/vfio/pci/vfio_cxl_core_emu.c | 242 +++++++++++++++++++++++++++
->  include/linux/vfio_pci_core.h        |   2 +
->  3 files changed, 248 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/vfio/pci/vfio_cxl_core.c b/drivers/vfio/pci/vfio_cxl_core.c
-> index cb75e9f668a7..c0bdf55997da 100644
-> --- a/drivers/vfio/pci/vfio_cxl_core.c
-> +++ b/drivers/vfio/pci/vfio_cxl_core.c
-> @@ -247,8 +247,6 @@ int vfio_cxl_core_enable(struct vfio_cxl_core_device *cxl,
->  	if (!dvsec)
->  		return -ENODEV;
->  
-> -	cxl->dvsec = dvsec;
-> -
->  	cxl_core = devm_cxl_dev_state_create(&pdev->dev, CXL_DEVTYPE_DEVMEM,
->  					     pdev->dev.id, dvsec, struct vfio_cxl,
->  					     cxlds, false);
-> @@ -257,9 +255,12 @@ int vfio_cxl_core_enable(struct vfio_cxl_core_device *cxl,
->  		return -ENOMEM;
->  	}
->  
-> +	cxl->dvsec = dvsec;
-> +	cxl->cxl_core = cxl_core;
-> +
->  	ret = find_comp_regs(cxl);
->  	if (ret)
-> -		return -ENODEV;
-> +		return ret;
->  
->  	ret = setup_virt_regs(cxl);
->  	if (ret)
-> diff --git a/drivers/vfio/pci/vfio_cxl_core_emu.c b/drivers/vfio/pci/vfio_cxl_core_emu.c
-> index a0674bacecd7..6711ff8975ef 100644
-> --- a/drivers/vfio/pci/vfio_cxl_core_emu.c
-> +++ b/drivers/vfio/pci/vfio_cxl_core_emu.c
-> @@ -5,6 +5,239 @@
->  
->  #include "vfio_cxl_core_priv.h"
->  
-> +typedef ssize_t reg_handler_t(struct vfio_cxl_core_device *cxl, void *buf,
-> +			      u64 offset, u64 size);
-> +
-> +static struct vfio_emulated_regblock *
-> +new_reg_block(struct vfio_cxl_core_device *cxl, u64 offset, u64 size,
-> +	      reg_handler_t *read, reg_handler_t *write)
-> +{
-> +	struct vfio_emulated_regblock *block;
-> +
-> +	block = kzalloc(sizeof(*block), GFP_KERNEL);
-> +	if (!block)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	block->range.start = offset;
-> +	block->range.end = offset + size - 1;
-> +	block->read = read;
-> +	block->write = write;
-> +
-> +	INIT_LIST_HEAD(&block->list);
-> +
-> +	return block;
-> +}
-> +
-> +static int new_mmio_block(struct vfio_cxl_core_device *cxl, u64 offset, u64 size,
-> +			  reg_handler_t *read, reg_handler_t *write)
-> +{
-> +	struct vfio_emulated_regblock *block;
-> +
-> +	block = new_reg_block(cxl, offset, size, read, write);
-> +	if (IS_ERR(block))
-> +		return PTR_ERR(block);
-> +
-> +	list_add_tail(&block->list, &cxl->mmio_regblocks_head);
-> +	return 0;
-> +}
-> +
-> +static u64 hdm_reg_base(struct vfio_cxl_core_device *cxl)
-> +{
-> +	return cxl->comp_reg_offset + cxl->hdm_reg_offset;
-> +}
-> +
-> +static u64 to_hdm_reg_offset(struct vfio_cxl_core_device *cxl, u64 offset)
-> +{
-> +	return offset - hdm_reg_base(cxl);
-> +}
-> +
-> +static void *hdm_reg_virt(struct vfio_cxl_core_device *cxl, u64 hdm_reg_offset)
-> +{
-> +	return cxl->comp_reg_virt + cxl->hdm_reg_offset + hdm_reg_offset;
-> +}
-> +
-> +static ssize_t virt_hdm_reg_read(struct vfio_cxl_core_device *cxl, void *buf,
-> +				 u64 offset, u64 size)
-> +{
-> +	offset = to_hdm_reg_offset(cxl, offset);
-> +	memcpy(buf, hdm_reg_virt(cxl, offset), size);
-> +
-> +	return size;
-> +}
-> +
-> +static ssize_t virt_hdm_reg_write(struct vfio_cxl_core_device *cxl, void *buf,
-> +				  u64 offset, u64 size)
-> +{
-> +	offset = to_hdm_reg_offset(cxl, offset);
-> +	memcpy(hdm_reg_virt(cxl, offset), buf, size);
-> +
-> +	return size;
-> +}
-> +
-> +static ssize_t virt_hdm_rev_reg_write(struct vfio_cxl_core_device *cxl,
-> +				      void *buf, u64 offset, u64 size)
-> +{
-> +	/* Discard writes on reserved registers. */
-> +	return size;
-> +}
-> +
-> +static ssize_t hdm_decoder_n_lo_write(struct vfio_cxl_core_device *cxl,
-> +				      void *buf, u64 offset, u64 size)
-> +{
-> +	u32 new_val = le32_to_cpu(*(u32 *)buf);
-> +
-> +	if (WARN_ON_ONCE(size != 4))
-> +		return -EINVAL;
-> +
-> +	/* Bit [27:0] are reserved. */
-> +	new_val &= ~GENMASK(27, 0);
+3e0e9f8c6e3ca9 Vincenzo Frascino 2020-03-20   4  
+3e0e9f8c6e3ca9 Vincenzo Frascino 2020-03-20   5  #define USHRT_MAX	((unsigned short)~0U)
+3e0e9f8c6e3ca9 Vincenzo Frascino 2020-03-20   6  #define SHRT_MAX	((short)(USHRT_MAX >> 1))
+3e0e9f8c6e3ca9 Vincenzo Frascino 2020-03-20   7  #define SHRT_MIN	((short)(-SHRT_MAX - 1))
+3e0e9f8c6e3ca9 Vincenzo Frascino 2020-03-20   8  #define INT_MAX		((int)(~0U >> 1))
+3e0e9f8c6e3ca9 Vincenzo Frascino 2020-03-20   9  #define INT_MIN		(-INT_MAX - 1)
+3e0e9f8c6e3ca9 Vincenzo Frascino 2020-03-20  10  #define UINT_MAX	(~0U)
+3e0e9f8c6e3ca9 Vincenzo Frascino 2020-03-20  11  #define LONG_MAX	((long)(~0UL >> 1))
+3e0e9f8c6e3ca9 Vincenzo Frascino 2020-03-20  12  #define LONG_MIN	(-LONG_MAX - 1)
+3e0e9f8c6e3ca9 Vincenzo Frascino 2020-03-20  13  #define ULONG_MAX	(~0UL)
+3e0e9f8c6e3ca9 Vincenzo Frascino 2020-03-20  14  #define LLONG_MAX	((long long)(~0ULL >> 1))
+3e0e9f8c6e3ca9 Vincenzo Frascino 2020-03-20  15  #define LLONG_MIN	(-LLONG_MAX - 1)
+3e0e9f8c6e3ca9 Vincenzo Frascino 2020-03-20 @16  #define ULLONG_MAX	(~0ULL)
+3e0e9f8c6e3ca9 Vincenzo Frascino 2020-03-20  17  #define UINTPTR_MAX	ULONG_MAX
+3e0e9f8c6e3ca9 Vincenzo Frascino 2020-03-20  18  
 
-maybe define the mask
-
-> +
-> +	new_val = cpu_to_le32(new_val);
-> +	offset = to_hdm_reg_offset(cxl, offset);
-> +	memcpy(hdm_reg_virt(cxl, offset), &new_val, size);
-> +	return size;
-> +}
-> +
-> +static ssize_t hdm_decoder_global_ctrl_write(struct vfio_cxl_core_device *cxl,
-> +					     void *buf, u64 offset, u64 size)
-> +{
-> +	u32 hdm_decoder_global_cap;
-> +	u32 new_val = le32_to_cpu(*(u32 *)buf);
-> +
-> +	if (WARN_ON_ONCE(size != 4))
-> +		return -EINVAL;
-> +
-> +	/* Bit [31:2] are reserved. */
-> +	new_val &= ~GENMASK(31, 2);
-
-same here re mask
-
-> +
-> +	/* Poison On Decode Error Enable bit is 0 and RO if not support. */
-> +	hdm_decoder_global_cap = le32_to_cpu(*(u32 *)hdm_reg_virt(cxl, 0));
-> +	if (!(hdm_decoder_global_cap & BIT(10)))
-> +		new_val &= ~BIT(0);
-
-Would be good to define the register bits to ease reading the code
-
-> +
-> +	new_val = cpu_to_le32(new_val);
-> +	offset = to_hdm_reg_offset(cxl, offset);
-> +	memcpy(hdm_reg_virt(cxl, offset), &new_val, size);
-> +	return size;
-> +}
-> +
-> +static ssize_t hdm_decoder_n_ctrl_write(struct vfio_cxl_core_device *cxl,
-> +					void *buf, u64 offset, u64 size)
-> +{
-> +	u32 hdm_decoder_global_cap;
-> +	u32 ro_mask, rev_mask;
-> +	u32 new_val = le32_to_cpu(*(u32 *)buf);
-> +	u32 cur_val;
-> +
-> +	if (WARN_ON_ONCE(size != 4))
-> +		return -EINVAL;
-> +
-> +	offset = to_hdm_reg_offset(cxl, offset);
-> +	cur_val = le32_to_cpu(*(u32 *)hdm_reg_virt(cxl, offset));
-> +
-> +	/* Lock on commit */
-> +	if (cur_val & BIT(8))
-
-define bit(s). same comment for the rest of the patch.
-
-DJ
-
-> +		return size;
-> +
-> +	hdm_decoder_global_cap = le32_to_cpu(*(u32 *)hdm_reg_virt(cxl, 0));
-> +
-> +	/* RO and reserved bits in the spec */
-> +	ro_mask = BIT(10) | BIT(11);
-> +	rev_mask = BIT(15) | GENMASK(31, 28);
-> +
-> +	/* bits are not valid for devices */
-> +	ro_mask |= BIT(12);
-> +	rev_mask |= GENMASK(19, 16) | GENMASK(23, 20);
-> +
-> +	/* bits are reserved when UIO is not supported */
-> +	if (!(hdm_decoder_global_cap & BIT(13)))
-> +		rev_mask |= BIT(14) | GENMASK(27, 24);
-> +
-> +	/* clear reserved bits */
-> +	new_val &= ~rev_mask;
-> +
-> +	/* keep the RO bits */
-> +	cur_val &= ro_mask;
-> +	new_val &= ~ro_mask;
-> +	new_val |= cur_val;
-> +
-> +	/* emulate HDM decoder commit/de-commit */
-> +	if (new_val & BIT(9))
-> +		new_val |= BIT(10);
-> +	else
-> +		new_val &= ~BIT(10);
-> +
-> +	new_val = cpu_to_le32(new_val);
-> +	memcpy(hdm_reg_virt(cxl, offset), &new_val, size);
-> +	return size;
-> +}
-> +
-> +static int setup_mmio_emulation(struct vfio_cxl_core_device *cxl)
-> +{
-> +	u64 offset, base;
-> +	int ret;
-> +
-> +	base = hdm_reg_base(cxl);
-> +
-> +#define ALLOC_BLOCK(offset, size, read, write) do {			\
-> +		ret = new_mmio_block(cxl, offset, size, read, write);	\
-> +		if (ret)						\
-> +			return ret;					\
-> +	} while (0)
-> +
-> +	ALLOC_BLOCK(base + 0x4, 4,
-> +		    virt_hdm_reg_read,
-> +		    hdm_decoder_global_ctrl_write);
-> +
-> +	offset = base + 0x10;
-> +	while (offset < base + cxl->hdm_reg_size) {
-> +		/* HDM N BASE LOW */
-> +		ALLOC_BLOCK(offset, 4,
-> +			    virt_hdm_reg_read,
-> +			    hdm_decoder_n_lo_write);
-> +
-> +		/* HDM N BASE HIGH */
-> +		ALLOC_BLOCK(offset + 0x4, 4,
-> +			    virt_hdm_reg_read,
-> +			    virt_hdm_reg_write);
-> +
-> +		/* HDM N SIZE LOW */
-> +		ALLOC_BLOCK(offset + 0x8, 4,
-> +			    virt_hdm_reg_read,
-> +			    hdm_decoder_n_lo_write);
-> +
-> +		/* HDM N SIZE HIGH */
-> +		ALLOC_BLOCK(offset + 0xc, 4,
-> +			    virt_hdm_reg_read,
-> +			    virt_hdm_reg_write);
-> +
-> +		/* HDM N CONTROL */
-> +		ALLOC_BLOCK(offset + 0x10, 4,
-> +			    virt_hdm_reg_read,
-> +			    hdm_decoder_n_ctrl_write);
-> +
-> +		/* HDM N TARGET LIST LOW */
-> +		ALLOC_BLOCK(offset + 0x14, 0x4,
-> +			    virt_hdm_reg_read,
-> +			    virt_hdm_rev_reg_write);
-> +
-> +		/* HDM N TARGET LIST HIGH */
-> +		ALLOC_BLOCK(offset + 0x18, 0x4,
-> +			    virt_hdm_reg_read,
-> +			    virt_hdm_rev_reg_write);
-> +
-> +		/* HDM N REV */
-> +		ALLOC_BLOCK(offset + 0x1c, 0x4,
-> +			    virt_hdm_reg_read,
-> +			    virt_hdm_rev_reg_write);
-> +
-> +		offset += 0x20;
-> +	}
-> +
-> +#undef ALLOC_BLOCK
-> +	return 0;
-> +}
-> +
->  void vfio_cxl_core_clean_register_emulation(struct vfio_cxl_core_device *cxl)
->  {
->  	struct list_head *pos, *n;
-> @@ -17,10 +250,19 @@ void vfio_cxl_core_clean_register_emulation(struct vfio_cxl_core_device *cxl)
->  
->  int vfio_cxl_core_setup_register_emulation(struct vfio_cxl_core_device *cxl)
->  {
-> +	int ret;
-> +
->  	INIT_LIST_HEAD(&cxl->config_regblocks_head);
->  	INIT_LIST_HEAD(&cxl->mmio_regblocks_head);
->  
-> +	ret = setup_mmio_emulation(cxl);
-> +	if (ret)
-> +		goto err;
-> +
->  	return 0;
-> +err:
-> +	vfio_cxl_core_clean_register_emulation(cxl);
-> +	return ret;
->  }
->  
->  static struct vfio_emulated_regblock *
-> diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
-> index 12ded67c7db7..31fd28626846 100644
-> --- a/include/linux/vfio_pci_core.h
-> +++ b/include/linux/vfio_pci_core.h
-> @@ -251,5 +251,7 @@ ssize_t vfio_cxl_core_write(struct vfio_device *core_vdev, const char __user *bu
->  			    size_t count, loff_t *ppos);
->  long vfio_cxl_core_ioctl(struct vfio_device *core_vdev, unsigned int cmd,
->  			 unsigned long arg);
-> +int vfio_cxl_core_setup_register_emulation(struct vfio_cxl_core_device *cxl);
-> +void vfio_cxl_core_clean_register_emulation(struct vfio_cxl_core_device *cxl);
->  
->  #endif /* VFIO_PCI_CORE_H */
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
