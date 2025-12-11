@@ -1,161 +1,304 @@
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC722F693A
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Dec 2025 15:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BDE29BDB3;
+	Thu, 11 Dec 2025 16:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765466366; cv=none; b=uME+6APR3TG43GAv7oscz1BAHOF2HyC4A1mhigabA+VPRNnV/pq9jBHsrQ++iIc7kP4y0B5DvzarZrHea+CHs81K3bYeBQ9cEiH8CXIbE1wZqegA8ZcY6pyxQBXwY4noVVgS6vZB497gA7LfeiR43UIXT0LHWa6qL2kdqKMJNl0=
+	t=1765469177; cv=none; b=ggzeV+tA3Vx4UMxMFdLlQM/PJ2v7oxhn5yLmHl9XnKVA5vUOhp29iJzPnViIfpGfUriJSCqaP0rniokod/PmAzDd6dhgZ1lt3WifNoOvsuvTgPZTLFFtEjs1ujhQ4jQW3tQkGCyP/7qc2j8e0aGqBTlWDm+XHbJsMS72UHW2Kis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765466366; c=relaxed/simple;
-	bh=fWpmLL1z7q9BxSPVUYz8JHtTujuBUEm3CzFbbQaDgtc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PjGR9AdkR5Zm0Py/M6B+dh3Uanst0wXn8Pa4N9IXiczW3kU1tOdc17aXsfM8XoInM3AZB44KP4UYxOCS2GK7tgJLHeChf07hi7BTbhVaVKyc9PzrtXB3xJZZQKENPUPVoUHI5h32ffC2ZbOL9pXy1z5lG8y3absxC/Dlz6J/e9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GZ04GN+Y; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1765469177; c=relaxed/simple;
+	bh=CFQLU0VJkAgP0hpz642KnBRdfJD0rE2rWXLTg+VxLj0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s8dK+/gjBXwdF8aZkk5zYP3kO2FSFhAHkgrXK0SohWfNEH4p1clMWhQxGcEA3t3aLYR0gqjbX7LGPtNeTbpbjFg0IJiJmgluy99AuSnEzcJytDMtSzwraOSqyRY7sH5dz5+QbUvxAgri6TihzVsQqE3pY2H3/7TZCH3YCfGmCE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sfx7CJ8R; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GZ04GN+Y"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 1D1B31A20EC;
-	Thu, 11 Dec 2025 15:19:22 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id D5BA16068C;
-	Thu, 11 Dec 2025 15:19:21 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 641CD103C8C7B;
-	Thu, 11 Dec 2025 16:19:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1765466359; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=7YFG4wLJmjR/E/MqOc1NCEw1lot9ZBUWy77cdvC/abM=;
-	b=GZ04GN+YsE0cv0BQQYoZpyVYAYEsovdzJ9rXmDON0bJIZxnJU7VPl2eg1p8e0NQ9k+K5Dp
-	/LRca+qQVGSjdqk8rZVoLiG+Y+sqtI/yxaymDKJc9jZxsUrEC0ffilz5i/Pg3I8zRmwpJS
-	taMVcM89WUFFX51Ek3tAsGArlvFRqyRVPdmd6IrgjHKE7xrG4LzqbztURSYcKnyHSuVeO0
-	J67fZCzMN/AGR3a33M4QUHtoTEJbjcuY3+UKEhaz2RTDuiDFFZpLeGkOJMjJFnFSz1vbjo
-	hs+44nERIBIh7DW/ujTn09iVGaGgu0W9sZBJpf2sMe5nwN92PyYkCL/V4aE1wA==
-Date: Thu, 11 Dec 2025 16:19:02 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Kalle Niemi <kaleposti@gmail.com>, linux-arm-kernel@lists.infradead.org,
- Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
- Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, Charles
- Keepax <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
- <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
- Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally
- <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
- <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Alison
- Schofield <alison.schofield@intel.com>, Vishal Verma
- <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
- <dan.j.williams@intel.com>, Wolfram Sang <wsa@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
- overlays"
-Message-ID: <20251211161902.11ef4248@bootlin.com>
-In-Reply-To: <1b9fa77b-d74a-4fa7-b2e7-8b389d59a5a0@gmail.com>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
-	<f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
-	<CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
-	<5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
-	<CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
-	<072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
-	<CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
-	<55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
-	<20251202102619.5cd971cc@bootlin.com>
-	<088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com>
-	<20251202175836.747593c0@bootlin.com>
-	<dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com>
-	<20251204083839.4fb8a4b1@bootlin.com>
-	<CAMuHMdXdwf7La1EYBWTJadsTAJG3nKQVW6wtBn-bUqshA=XHRw@mail.gmail.com>
-	<20251210132140.32dbc3d7@bootlin.com>
-	<c50c40cc-69f6-436c-a94e-94a3a10f6727@gmail.com>
-	<20251211132044.10f5b1ea@bootlin.com>
-	<1b9fa77b-d74a-4fa7-b2e7-8b389d59a5a0@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sfx7CJ8R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1765469176; x=1797005176;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=CFQLU0VJkAgP0hpz642KnBRdfJD0rE2rWXLTg+VxLj0=;
+  b=Sfx7CJ8RP0k6bItZ9SqHczsN/kQjhkUdLVyZFIJW23RSzeHmYLluEor9
+   7mL0q6DhqHhNDI3bCQf5BMFOBJWdMQL/sBC/sAZYeY5GTfUYEhLpaEy0O
+   /Zvc15Z/TGktbxX2zblydy3YYbh5PTbyzfJ3xOrIe7803CzLDQuqLwdB1
+   JDTgXdcJkpo8CIWJVHDv50fKNJGSMjEk3g2FPNRuNkVVOcHRXTm7YNOJu
+   sFmAMGBnnqLSY+nQl74n7Y7xK282HnKydx57QW/o6E19Ww8OKAVVQcLO4
+   osevq7feKE4yoHjuTDaqP0mf+TBKxyjvRs3N2s/LB+8UJK84qeeXb0myK
+   Q==;
+X-CSE-ConnectionGUID: 42MAKFzeS5qRzZgcIq3L/A==
+X-CSE-MsgGUID: P7yfBNs7T9+e9XTDU7WUJw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11639"; a="71076418"
+X-IronPort-AV: E=Sophos;i="6.21,141,1763452800"; 
+   d="scan'208";a="71076418"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2025 08:06:15 -0800
+X-CSE-ConnectionGUID: 92acwOcRQcu1wjKKV73g1Q==
+X-CSE-MsgGUID: 2OYO21ACQueLPQTXRdhzfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,141,1763452800"; 
+   d="scan'208";a="227479162"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.109.218]) ([10.125.109.218])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2025 08:06:14 -0800
+Message-ID: <9f2d5327-6d23-4d4a-aede-f6161a59f086@intel.com>
+Date: Thu, 11 Dec 2025 09:06:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 07/15] vfio/cxl: expose CXL region to the userspace via a
+ new VFIO device region
+To: mhonap@nvidia.com, aniketa@nvidia.com, ankita@nvidia.com,
+ alwilliamson@nvidia.com, vsethi@nvidia.com, jgg@nvidia.com,
+ mochs@nvidia.com, skolothumtho@nvidia.com, alejandro.lucero-palau@amd.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ jgg@ziepe.ca, yishaih@nvidia.com, kevin.tian@intel.com
+Cc: cjia@nvidia.com, kwankhede@nvidia.com, targupta@nvidia.com,
+ zhiw@nvidia.com, kjaju@nvidia.com, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, kvm@vger.kernel.org
+References: <20251209165019.2643142-1-mhonap@nvidia.com>
+ <20251209165019.2643142-8-mhonap@nvidia.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20251209165019.2643142-8-mhonap@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 7bit
 
-Hi Matti, Geert, all,
 
-On Thu, 11 Dec 2025 15:52:28 +0200
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-> On 11/12/2025 14:20, Herve Codina wrote:
-> > Hi Matti,
-> > 
-> > On Thu, 11 Dec 2025 10:34:46 +0200
-> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> >   
-> /snip
+On 12/9/25 9:50 AM, mhonap@nvidia.com wrote:
+> From: Manish Honap <mhonap@nvidia.com>
 > 
-> > 
-> > Do you see the same trace with:
-> > - "pinctrl-0 = <&i2c1_pins>;" in your overlay
-> > - fragment0 removed from the overlay (i2c1_pins definition removed from
-> >    the overlay.
-> > - i2c1_pins node defined in your base DT.  
+> To directly access the device memory, a CXL region is required. Creating
+> a CXL region requires to configure HDM decoders on the path to map the
+> access of HPA level by level and evetually hit the DPA in the CXL
+> topology.
 > 
-> Just tested. The i2c1 appears and the test-overlay probe gets called, 
-> when the i2c1_pins is in the base-dt and not in the overlay.
-
-Geert, do you expirement same results?
-
+> For the userspace, e.g. QEMU, to access the CXL region, the region is
+> required to be exposed via VFIO interfaces.
 > 
-> > In other word, is the issues related to adding a pinctrl sub-node (pinctrl
-> > pins definition) in the overlay or is it something else?  
+> Introduce a new VFIO device region and region ops to expose the created
+> CXL region when initialize the device in the vfio-cxl-core. Introduce a
+> new sub region type for the userspace to identify a CXL region.
 > 
-> Seems to be related to the pinctrl.
+> Co-developed-by: Zhi Wang <zhiw@nvidia.com>
+> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
+> Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> ---
+>  drivers/vfio/pci/vfio_cxl_core.c | 122 +++++++++++++++++++++++++++++++
+>  drivers/vfio/pci/vfio_pci_core.c |   3 +-
+>  include/linux/vfio_pci_core.h    |   5 ++
+>  include/uapi/linux/vfio.h        |   4 +
+>  4 files changed, 133 insertions(+), 1 deletion(-)
 > 
+> diff --git a/drivers/vfio/pci/vfio_cxl_core.c b/drivers/vfio/pci/vfio_cxl_core.c
+> index cf53720c0cb7..35d95de47fa8 100644
+> --- a/drivers/vfio/pci/vfio_cxl_core.c
+> +++ b/drivers/vfio/pci/vfio_cxl_core.c
+> @@ -231,6 +231,128 @@ void vfio_cxl_core_destroy_cxl_region(struct vfio_cxl_core_device *cxl)
+>  }
+>  EXPORT_SYMBOL_GPL(vfio_cxl_core_destroy_cxl_region);
+>  
+> +static int vfio_cxl_region_mmap(struct vfio_pci_core_device *pci,
+> +				struct vfio_pci_region *region,
+> +				struct vm_area_struct *vma)
+> +{
+> +	struct vfio_cxl_region *cxl_region = region->data;
+> +	u64 req_len, pgoff, req_start, end;
+> +	int ret;
+> +
+> +	if (!(region->flags & VFIO_REGION_INFO_FLAG_MMAP))
+> +		return -EINVAL;
+> +
+> +	if (!(region->flags & VFIO_REGION_INFO_FLAG_READ) &&
+> +	    (vma->vm_flags & VM_READ))
+> +		return -EPERM;
+> +
+> +	if (!(region->flags & VFIO_REGION_INFO_FLAG_WRITE) &&
+> +	    (vma->vm_flags & VM_WRITE))
+> +		return -EPERM;
+> +
+> +	pgoff = vma->vm_pgoff &
+> +		((1U << (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT)) - 1);
+> +
+> +	if (check_sub_overflow(vma->vm_end, vma->vm_start, &req_len) ||
+> +	    check_add_overflow(PHYS_PFN(cxl_region->addr), pgoff, &req_start) ||
+> +	    check_add_overflow(PFN_PHYS(pgoff), req_len, &end))
+> +		return -EOVERFLOW;
+> +
+> +	if (end > cxl_region->size)
+> +		return -EINVAL;
+> +
+> +	if (cxl_region->noncached)
+> +		vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+> +	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
+> +
+> +	vm_flags_set(vma, VM_ALLOW_ANY_UNCACHED | VM_IO | VM_PFNMAP |
+> +		     VM_DONTEXPAND | VM_DONTDUMP);
+> +
+> +	ret = remap_pfn_range(vma, vma->vm_start, req_start,
+> +			      req_len, vma->vm_page_prot);
+> +	if (ret)
+> +		return ret;
+> +
+> +	vma->vm_pgoff = req_start;
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t vfio_cxl_region_rw(struct vfio_pci_core_device *core_dev,
+> +				  char __user *buf, size_t count, loff_t *ppos,
+> +				  bool iswrite)
+> +{
+> +	unsigned int i = VFIO_PCI_OFFSET_TO_INDEX(*ppos) - VFIO_PCI_NUM_REGIONS;
+> +	struct vfio_cxl_region *cxl_region = core_dev->region[i].data;
+> +	loff_t pos = *ppos & VFIO_PCI_OFFSET_MASK;
+> +
+> +	if (!count)
+> +		return 0;
+> +
+> +	return vfio_pci_core_do_io_rw(core_dev, false,
+> +				      cxl_region->vaddr,
+> +				      (char __user *)buf, pos, count,
+> +				      0, 0, iswrite);
+> +}
+> +
+> +static void vfio_cxl_region_release(struct vfio_pci_core_device *vdev,
+> +				    struct vfio_pci_region *region)
+> +{
+> +}
+> +
+> +static const struct vfio_pci_regops vfio_cxl_regops = {
+> +	.rw             = vfio_cxl_region_rw,
+> +	.mmap           = vfio_cxl_region_mmap,
+> +	.release        = vfio_cxl_region_release,
+> +};
+> +
+> +int vfio_cxl_core_register_cxl_region(struct vfio_cxl_core_device *cxl)
+> +{
+> +	struct vfio_pci_core_device *pci = &cxl->pci_core;
+> +	struct vfio_cxl *cxl_core = cxl->cxl_core;
+> +	u32 flags;
+> +	int ret;
+> +
+> +	if (WARN_ON(!cxl_core->region.region || cxl_core->region.vaddr))
+> +		return -EEXIST;
+> +
+> +	cxl_core->region.vaddr = ioremap(cxl_core->region.addr, cxl_core->region.size);
+> +	if (!cxl_core->region.addr)
 
-I don't think that the issue is related to pinctrl itself.
+I think you are wanting to check cxl_core->region.vaddr here right?
 
-IMHO, I think the issue is related to overlays and fw_devlink.
-The distinction between "a new node is going to lead to a device" vs "a new
-node is just data and will never been attached to a new device" when an
-overlay is applied is broken.
+Also, what is the ioremap'd region for?
 
-This is broken with the upstream "treewide: Fix probing of devices in DT
-overlays" commit I've tried to revert. Indeed, on the LAN966x PCI device
-use case devlinks created are not correct with this commit applied.
+DJ
 
-I am not sure also that devlinks created with a more complex overlay will be
-correct. For instance, Matti, with your overlay not sure that a phandle from
-the oscillator node referencing the pmic node will lead to a correct
-provider/consumer devlink between the pmic device and the oscillator device.
+> +		return -EFAULT;
+> +
+> +	flags = VFIO_REGION_INFO_FLAG_READ |
+> +		VFIO_REGION_INFO_FLAG_WRITE |
+> +		VFIO_REGION_INFO_FLAG_MMAP;
+> +
+> +	ret = vfio_pci_core_register_dev_region(pci,
+> +						PCI_VENDOR_ID_CXL |
+> +						VFIO_REGION_TYPE_PCI_VENDOR_TYPE,
+> +						VFIO_REGION_SUBTYPE_CXL,
+> +						&vfio_cxl_regops,
+> +						cxl_core->region.size, flags,
+> +						&cxl_core->region);
+> +	if (ret) {
+> +		iounmap(cxl_core->region.vaddr);
+> +		cxl_core->region.vaddr = NULL;
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(vfio_cxl_core_register_cxl_region);
+> +
+> +void vfio_cxl_core_unregister_cxl_region(struct vfio_cxl_core_device *cxl)
+> +{
+> +	struct vfio_cxl *cxl_core = cxl->cxl_core;
+> +
+> +	if (WARN_ON(!cxl_core->region.region || !cxl_core->region.vaddr))
+> +		return;
+> +
+> +	iounmap(cxl_core->region.vaddr);
+> +	cxl_core->region.vaddr = NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(vfio_cxl_core_unregister_cxl_region);
+> +
+>  MODULE_LICENSE("GPL");
+>  MODULE_AUTHOR(DRIVER_AUTHOR);
+>  MODULE_DESCRIPTION(DRIVER_DESC);
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 7dcf5439dedc..c0695b5db66d 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -1698,12 +1698,13 @@ static vm_fault_t vfio_pci_mmap_page_fault(struct vm_fault *vmf)
+>  	return vfio_pci_mmap_huge_fault(vmf, 0);
+>  }
+>  
+> -static const struct vm_operations_struct vfio_pci_mmap_ops = {
+> +const struct vm_operations_struct vfio_pci_mmap_ops = {
+>  	.fault = vfio_pci_mmap_page_fault,
+>  #ifdef CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP
+>  	.huge_fault = vfio_pci_mmap_huge_fault,
+>  #endif
+>  };
+> +EXPORT_SYMBOL_GPL(vfio_pci_mmap_ops);
+>  
+>  int vfio_pci_core_mmap(struct vfio_device *core_vdev, struct vm_area_struct *vma)
+>  {
+> diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
+> index a343b91d2580..3474835f5d65 100644
+> --- a/include/linux/vfio_pci_core.h
+> +++ b/include/linux/vfio_pci_core.h
+> @@ -102,6 +102,7 @@ struct vfio_cxl_region {
+>  	struct cxl_region *region;
+>  	u64 size;
+>  	u64 addr;
+> +	void *vaddr;
+>  	bool noncached;
+>  };
+>  
+> @@ -203,6 +204,8 @@ vfio_pci_core_to_cxl(struct vfio_pci_core_device *pci)
+>  	return container_of(pci, struct vfio_cxl_core_device, pci_core);
+>  }
+>  
+> +extern const struct vm_operations_struct vfio_pci_mmap_ops;
+> +
+>  int vfio_cxl_core_enable(struct vfio_cxl_core_device *cxl,
+>  			 struct vfio_cxl_dev_info *info);
+>  void vfio_cxl_core_finish_enable(struct vfio_cxl_core_device *cxl);
+> @@ -210,5 +213,7 @@ void vfio_cxl_core_disable(struct vfio_cxl_core_device *cxl);
+>  void vfio_cxl_core_close_device(struct vfio_device *vdev);
+>  int vfio_cxl_core_create_cxl_region(struct vfio_cxl_core_device *cxl, u64 size);
+>  void vfio_cxl_core_destroy_cxl_region(struct vfio_cxl_core_device *cxl);
+> +int vfio_cxl_core_register_cxl_region(struct vfio_cxl_core_device *cxl);
+> +void vfio_cxl_core_unregister_cxl_region(struct vfio_cxl_core_device *cxl);
+>  
+>  #endif /* VFIO_PCI_CORE_H */
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 75100bf009ba..95be987d2ed5 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -372,6 +372,10 @@ struct vfio_region_info_cap_type {
+>  /* sub-types for VFIO_REGION_TYPE_GFX */
+>  #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
+>  
+> +/* 1e98 vendor PCI sub-types */
+> +/* sub-type for VFIO CXL region */
+> +#define VFIO_REGION_SUBTYPE_CXL                 (1)
+> +
+>  /**
+>   * struct vfio_region_gfx_edid - EDID region layout.
+>   *
 
-On the other hand, this is broken with "of: dynamic: Fix overlayed devices
-not probing because of fw_devlink" works for the LAN966x PCI device use case
-an lead to correct devlinks but breaks your use cases.
-
-Does anyone have an idea about how to fix those issues?
-
-Best regards,
-Hervé
