@@ -1,42 +1,45 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCC6286D5C
-	for <linux-cxl@vger.kernel.org>; Mon, 15 Dec 2025 10:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5782EB5B8;
+	Mon, 15 Dec 2025 11:14:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765795989; cv=none; b=fhXPG8MpovbXR41FOkHCGbLIgUmeIlAIW1/oX3WtrAYJe2atI40MvNrtlQng+jbjOqxkpAvfRHCEOZiTEyaDoKG2MI8qU/Xyv6UINFAosckyO/eDEHEpXJCGE0R2JD1rXYf5Qu/4lBQC6j5hjctn8k+SEQUx4NVF5jLNVA3HKBI=
+	t=1765797303; cv=none; b=AoqZ0hOFjzzOrNw2VzonSyAaXzbOccGZ38deQUIDHHgTiXyAECj5/3gZfVu29EhXevd4/Wk+Nk5OPJPGD1l/rZyBOg3JU40Lqs1IzT0LaNAOHkBcBnBMpuTY2ARRZRLdbfLnXBIRWoHmN233ZusIoqjS0DQuESOnzTO+YJoMlyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765795989; c=relaxed/simple;
-	bh=SFN6Br3QE3azNF1cwCtUqlkwp40eKlpvDs/ENDj/aY0=;
+	s=arc-20240116; t=1765797303; c=relaxed/simple;
+	bh=f38WDaP1WboTC3N6ET0xMwgwaMI4Qhpvho4znpVo+vU=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FXZni3T0wWx5qfnmDg5/TNHNU9QYK01qIGtCjPqzyUmyc5P/IqqDVfN4BwjTx9gPLQrv5Ib2mVvJmEBBB4OGEAjSJsX5rPjgRfsdXDF9AT4Ee61dgtAZiYgA3QWqrHsa2wYQ/SrIeIaQPdC2JLUHxD4tpBo9thrbSgvqrlbbFf0=
+	 MIME-Version:Content-Type; b=s2AR3Z2y+cc7XPSyj1rqweBQq2MxNgbc2fS57feJku9riuUde7DJY6vU5bqhS6YClH3PiJew4/9gzyf9o0ZGUGilIaLJwGYoyE2UEK3TAGz8RJpNiwaNnMmSSNTdaFsbKqKabZGvLGsC+e9ejmlt8dlOFJtRcf7Xf+I26OuquxA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dVH2Q0kCXzJ46m0;
-	Mon, 15 Dec 2025 18:52:30 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dVHWn6rkQzJ46kB;
+	Mon, 15 Dec 2025 19:14:29 +0800 (CST)
 Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 13E0C4056A;
-	Mon, 15 Dec 2025 18:52:56 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id ED56B40086;
+	Mon, 15 Dec 2025 19:14:55 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
  (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Mon, 15 Dec
- 2025 10:52:55 +0000
-Date: Mon, 15 Dec 2025 10:52:53 +0000
+ 2025 11:14:55 +0000
+Date: Mon, 15 Dec 2025 11:14:53 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <shiju.jose@huawei.com>, <linux-cxl@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <alison.schofield@intel.com>,
-	<dave@stgolabs.net>, <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH] cxl/events: Update memory event type for patrol scrub
- cycle end event
-Message-ID: <20251215105253.00003fd6@huawei.com>
-In-Reply-To: <a98e51a3-7939-4fca-9983-413d250f178a@intel.com>
-References: <20251210131235.1731-1-shiju.jose@huawei.com>
-	<a98e51a3-7939-4fca-9983-413d250f178a@intel.com>
+To: Robert Richter <rrichter@amd.com>
+CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Davidlohr
+ Bueso" <dave@stgolabs.net>, Jonathan Corbet <corbet@lwn.net>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
+	<gourry@gourry.net>, "Fabio M. De Francesco"
+	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Randy Dunlap <rdunlap@infradead.org>,
+	<linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] cxl, doc: Moving conventions in separate files
+Message-ID: <20251215111453.000072a2@huawei.com>
+In-Reply-To: <20251209181959.210533-1-rrichter@amd.com>
+References: <20251209181959.210533-1-rrichter@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -44,106 +47,135 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
  dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Wed, 10 Dec 2025 07:47:20 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Tue, 9 Dec 2025 19:19:55 +0100
+Robert Richter <rrichter@amd.com> wrote:
 
-> On 12/10/25 6:12 AM, shiju.jose@huawei.com wrote:
-> > From: Shiju Jose <shiju.jose@huawei.com>
-> > 
-> > According to the CXL Specification Revision 4.0, Advanced CVME (Corrected
-> > Volatile Memory Error) enhancements added additional granularity control
-> > and event generation for Patrol Scrub cycle end.
-> > 
-> > Update Memory Event Type field in the trace events for section
-> > 8.2.10.2.1.1, Table 8-224 (General Media Event Record), and section
-> > 8.2.10.2.1.2, Table 8-225 (DRAM Event Record), to include the event type
-> > 'Patrol Scrub cycle end'.
-> > 
-> > Signed-off-by: Shiju Jose <shiju.jose@huawei.com>  
-> 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> 
-> > ---
-> > Open Question,
-> > Option to enable event generation for 'Patrol Scrub cycle end' is given in
-> > the Memory Error Threshold feature, Section 8.2.10.9.11.3 Advanced
-> > Programmable Corrected  Volatile Memory Error Threshold Feature Discovery
-> > and Configuration. Does support of this Memory Error Threshold feature is
-> > required in the kernel or via fwctl?  
-> 
-> Any thoughts Jonathan? Is that something that would be exposed through EDAC?
+> Moving conventions in separate files.
+>=20
+> Note this patch removes the line to include:: <isonum.txt>. From Jon:
+>=20
+> "This include has been cargo-culted around the docs...the only real
+> use of it is to write |copy| rather than =A9, but these docs don't even
+> do that. It can be taken out."
 
-I asked Shiju to add this comment because I wasn't sure of the answer about those
-controls.  Given the current conservative view point being taken around more
-complex scrub features in general in EDAC (which I'm not saying I disagree with!),
-these might be very hard to land unless there are similar facilities in other
-Scrub controllers and we can argue it is about generalizing the interface.
+Hi Robert,
 
-For anyone following along this new stuff is about counting granularity,
-thresholds, resets of counters etc not the reporting of individual errors.
-So more telemetry than error detection. 
+Whilst I don't really care that much for docs, this is an unrelated
+change so I'd have done that as a precursor patch.
 
-So gut feeling is these are probably a fwctl / userspace tool problem but I may
-well be wrong and then we run into that question of whether we can rip out
-exiting functionality exposed via fwctl later. IIRC correctly we decided
-we could but still don't want to do that unless we have to!
+Other than that, looks like sensible path to better scalability of
+these docs.  However, questions inline as this is doing a little
+more than simply moving stuff around. The intro text on what the whole
+thing is about disappears.
 
-Jonathan
+>=20
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+> v2:
+>  * Removed include:: <isonum.txt> line (Jon).
+> ---
+> ---
+>  Documentation/driver-api/cxl/conventions.rst  | 183 +-----------------
+>  .../driver-api/cxl/conventions/cxl-lmh.rst    | 135 +++++++++++++
+>  .../driver-api/cxl/conventions/template.rst   |  38 ++++
+>  3 files changed, 179 insertions(+), 177 deletions(-)
+>  create mode 100644 Documentation/driver-api/cxl/conventions/cxl-lmh.rst
+>  create mode 100644 Documentation/driver-api/cxl/conventions/template.rst
+>=20
+> diff --git a/Documentation/driver-api/cxl/conventions.rst b/Documentation=
+/driver-api/cxl/conventions.rst
+> index e37336d7b116..53f31a229c8d 100644
+> --- a/Documentation/driver-api/cxl/conventions.rst
+> +++ b/Documentation/driver-api/cxl/conventions.rst
+> @@ -1,182 +1,11 @@
+>  .. SPDX-License-Identifier: GPL-2.0
+> -.. include:: <isonum.txt>
+> =20
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>  Compute Express Link: Linux Conventions
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +#######################################
+> =20
+> -There exists shipping platforms that bend or break CXL specification
+> -expectations. Record the details and the rationale for those deviations.
+> -Borrow the ACPI Code First template format to capture the assumptions
+> -and tradeoffs such that multiple platform implementations can follow the
+> -same convention.
+
+This block around the format choice etc to me has some value, so why not ke=
+ep
+it about the ToC?  I'd rather we didn't end up with conventions that are
+about something completely different in here just because the title first
+(code style maybe?)
 
 
 
-> 
-> DJ
-> 
-> > ---
-> >  drivers/cxl/core/trace.h | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> > index a972e4ef1936..e79c2bd415af 100644
-> > --- a/drivers/cxl/core/trace.h
-> > +++ b/drivers/cxl/core/trace.h
-> > @@ -367,6 +367,7 @@ TRACE_EVENT(cxl_generic_event,
-> >  #define CXL_GMER_MEM_EVT_TYPE_SCRUB_MEDIA_ECC_ERROR	0x04
-> >  #define CXL_GMER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE	0x05
-> >  #define CXL_GMER_MEM_EVT_TYPE_CKID_VIOLATION		0x06
-> > +#define CXL_GMER_MEM_EVT_TYPE_AP_CME_PS_CYCLE_END	0x07
-> >  #define show_gmer_mem_event_type(type)	__print_symbolic(type,				\
-> >  	{ CXL_GMER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },			\
-> >  	{ CXL_GMER_MEM_EVT_TYPE_INV_ADDR,		"Invalid Address" },		\
-> > @@ -374,7 +375,8 @@ TRACE_EVENT(cxl_generic_event,
-> >  	{ CXL_GMER_MEM_EVT_TYPE_TE_STATE_VIOLATION,	"TE State Violation" },		\
-> >  	{ CXL_GMER_MEM_EVT_TYPE_SCRUB_MEDIA_ECC_ERROR,	"Scrub Media ECC Error" },	\
-> >  	{ CXL_GMER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE,	"Adv Prog CME Counter Expiration" },	\
-> > -	{ CXL_GMER_MEM_EVT_TYPE_CKID_VIOLATION,		"CKID Violation" }		\
-> > +	{ CXL_GMER_MEM_EVT_TYPE_CKID_VIOLATION,		"CKID Violation" },		\
-> > +	{ CXL_GMER_MEM_EVT_TYPE_AP_CME_PS_CYCLE_END,	"Adv Prog CME Patrol Scrub Cycle End" }	\
-> >  )
-> >  
-> >  #define CXL_GMER_TRANS_UNKNOWN				0x00
-> > @@ -554,6 +556,7 @@ TRACE_EVENT(cxl_general_media,
-> >  #define CXL_DER_MEM_EVT_TYPE_TE_STATE_VIOLATION	0x04
-> >  #define CXL_DER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE	0x05
-> >  #define CXL_DER_MEM_EVT_TYPE_CKID_VIOLATION		0x06
-> > +#define CXL_DER_MEM_EVT_TYPE_AP_CME_PS_CYCLE_END	0x07
-> >  #define show_dram_mem_event_type(type)	__print_symbolic(type,					\
-> >  	{ CXL_DER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },				\
-> >  	{ CXL_DER_MEM_EVT_TYPE_SCRUB_MEDIA_ECC_ERROR,	"Scrub Media ECC Error" },		\
-> > @@ -561,7 +564,8 @@ TRACE_EVENT(cxl_general_media,
-> >  	{ CXL_DER_MEM_EVT_TYPE_DATA_PATH_ERROR,		"Data Path Error" },			\
-> >  	{ CXL_DER_MEM_EVT_TYPE_TE_STATE_VIOLATION,	"TE State Violation" },			\
-> >  	{ CXL_DER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE,	"Adv Prog CME Counter Expiration" },	\
-> > -	{ CXL_DER_MEM_EVT_TYPE_CKID_VIOLATION,		"CKID Violation" }			\
-> > +	{ CXL_DER_MEM_EVT_TYPE_CKID_VIOLATION,		"CKID Violation" },			\
-> > +	{ CXL_DER_MEM_EVT_TYPE_AP_CME_PS_CYCLE_END,	"Adv Prog CME Patrol Scrub Cycle End" }	\
-> >  )
-> >  
-> >  #define CXL_DER_VALID_CHANNEL				BIT(0)  
-> 
-> 
+> +.. toctree::
+> +   :maxdepth: 1
+> +   :caption: Contents
+
+> +   conventions/cxl-lmh.rst
+> +   conventions/template.rst
+
+...
+
+> diff --git a/Documentation/driver-api/cxl/conventions/template.rst b/Docu=
+mentation/driver-api/cxl/conventions/template.rst
+> new file mode 100644
+> index 000000000000..39a9ca87cf92
+> --- /dev/null
+> +++ b/Documentation/driver-api/cxl/conventions/template.rst
+> @@ -0,0 +1,38 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +.. :: Template Title here:
+> +
+> +Template File
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Document
+> +--------
+> +CXL Revision <rev>, Version <ver>
+> +
+> +License
+> +-------
+> +SPDX-License Identifier: CC-BY-4.0
+> +
+> +Creator/Contributors
+> +--------------------
+> +
+> +Summary of the Change
+> +---------------------
+> +
+> +<Detail the conflict with the specification and where available the
+> +assumptions and tradeoffs taken by the hardware platform.>
+> +
+
+Obviously unrelated change but maybe drop a blank line here anyway
+just for consistency with the rest where 1 is=20
+
+> +
+> +Benefits of the Change
+> +----------------------
+> +
+> +<Detail what happens if platforms and Linux do not adopt this
+> +convention.> =20
+> +
+> +References
+> +----------
+> +
+> +Detailed Description of the Change
+> +----------------------------------
+> +
+> +<Propose spec language that corrects the conflict.>
+>=20
+> base-commit: 9d887fa9036f64331038b48199ae07da89777160
 
