@@ -1,117 +1,74 @@
-Received: from cross.elm.relay.mailchannels.net (cross.elm.relay.mailchannels.net [23.83.212.46])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0D42F12C1
-	for <linux-cxl@vger.kernel.org>; Tue, 16 Dec 2025 15:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765898707; cv=pass; b=egA+zPwMrMcTwLkLFZ4jaKYwtQv1bf1weyD9oLCiisazbXHrN0dMF/pB+D4Q6BxknrPxg6okhU7CmTt5LKdLNR5Lsx0lbpgCKtYHtmUX6PjdCmPAnBhLOLKCBUI9H+pCf/wGZaPECeZsQYCnAMpozJ5GTiIUD9+m9Xjp9oNdsr4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765898707; c=relaxed/simple;
-	bh=hCCjvgenz77JUeHhv7Xih0uM29cppVmyMSbt1yWmakY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MsF55Xznh7XOkcZ1aIIkfgzgSH+IsGBwTfiCVJzIh5H6c+IXTta7fPdCcLBvS6/PvUZxQkwMmfdYrbv+XHgeGtyJyIGB44xETuqhNIuuo0qfyGokiBUvv8hUhQI28jTfh1SUF/HkCbUMfEqZ6KZ461GvIv1vYbPFp3iSbjeACk8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=q3xv1VoS; arc=pass smtp.client-ip=23.83.212.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B8825785D;
+	Tue, 16 Dec 2025 20:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765916683; cv=none; b=t5aAGIsA5aX0HKg9p1+ufk0q73BWId5FRmWWH537mpIQ40Q8vFB7mSePmfkqozMBKeNIlwxRFazbgkmbUuKpmi87GYZdU3oeHD4qWUZmoV58WKPyibm0NqfHi5pOCCAqYxDgRNfx36VsD8JmUerTNPDx8x0gaNt9m4gyC0LTN6o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765916683; c=relaxed/simple;
+	bh=ycv7no2r0HogxUiULI/OFg8qd8I2bXxi6V1PqZaAaKk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=HyOYwQHJdixvkuxZEhx1Ctkozbq6R2ebpMUucdSDcS8ps7K490KRXnOxNDljU82+VNi2Oq5RJjeHbAfjoAAVZtSblMIyvDbkBQCArxzddCApTJAh8z8Tg3ZJR75hy6dbh6qKzi2darexhK0fYlARUxS/o0sIf5GlZ2eDGDQFolg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=rzS9hdJi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="q3xv1VoS"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id AF794161525;
-	Tue, 16 Dec 2025 15:24:59 +0000 (UTC)
-Received: from pdx1-sub0-mail-a258.dreamhost.com (100-103-169-129.trex-nlb.outbound.svc.cluster.local [100.103.169.129])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 63F60161D72;
-	Tue, 16 Dec 2025 15:24:58 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1765898698;
-	b=+FFLEATeKvtx9uMf9WDlQWZtIoThhsuW/cWSWMuCxj5SiBj8vsgteVG/RH5R5stEsWgmCe
-	YxddGBLB8BpHpRPwBnXjtZgEJxUQHvT9hxgu93EZxLqvtRPMMjr8sdrzvpB371vwiY/tT7
-	Es8EmECoCWXaMOpVue7XH/AerJIrZ+zcbTs/bbZwp1g/fxBolEDvCl8caloKUwMY6gztzp
-	A6nOJFm/5ZS0zGSzz27e+2hdMgQie4iLzhw6ywdQ+eDWe9enQKvvT9zVisXNH+v+dSx8gM
-	oq5zKpL5mVvviZHCIiDAYc9i3SJUeYI/Fw1FhjzCJiy22m/DbfByk6r3wgjcZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1765898698;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=V6cZ6hVfzbwD0/szhv0n+m7UeoPuCzz7r4RjXAaVA5g=;
-	b=jzCK7ZJYdIxar32KGty6fkRgG2GaT+mG2GpnM9NPH76nniidV02O1IeynuNweZeT2ITnGi
-	JOqiWDVuLGS01kdiE/fhIGsw2nd75OSmyXdoMqbG1Dzwa7mnbi2Sdf7FzxGl/7UrLGjc5b
-	tvpnAzcWBF4kpmmtQr3YyePHrI5mfvruvD4uy7MgGu0IGO3OGR4IkioTH8ZE/3E+7VgvD2
-	V4+ZSqZIS+ZBtCLboh7AB2tNTHQuJ6gMSeq3FjF1G2Ze6YdRcbjYr5wiVm1Gmlsr5sj4nQ
-	3piE1nfFSLHHbXpa9J3N0cgr4CnkgHPXUzMEw0dCK1UHm6g4DQFXdq8VKwdlVw==
-ARC-Authentication-Results: i=1;
-	rspamd-659888d77d-4crmn;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Attack-Bubble: 55f6989866ea5fff_1765898699456_3183201204
-X-MC-Loop-Signature: 1765898699456:1131494184
-X-MC-Ingress-Time: 1765898699455
-Received: from pdx1-sub0-mail-a258.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.103.169.129 (trex/7.1.3);
-	Tue, 16 Dec 2025 15:24:59 +0000
-Received: from offworld (unknown [205.220.129.21])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a258.dreamhost.com (Postfix) with ESMTPSA id 4dW11s0lfqz1066;
-	Tue, 16 Dec 2025 07:24:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1765898698;
-	bh=V6cZ6hVfzbwD0/szhv0n+m7UeoPuCzz7r4RjXAaVA5g=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=q3xv1VoSocvjp4cr4gvq5+vyjvzd+7Ko1SItkU5jmyG1MbobTMVeJzpfdNo76kZCT
-	 IKUtI8f63uMp4LlD3I1OYcz9Gp1xGDiWjjQ+B3h8AjEtV3wazdr3VEKsp2Vha2rn4E
-	 orPZOQLSZYC2cGbrfYC4+lkTtEx+BLMPLxXATHHzQzvmonABo+ry8RCP+3yr9t4Y23
-	 BgL3duuy0cyRivj5/IHUl/Ep2VDuVy1a7w/XygS0AAowlMPGERhPimKB2BrzZPqYSe
-	 2Xt7Q8WeJ2ugh1n4ZGqU1R3JM0hJHAARigCjl0fNCYhoeY5OUBwx5jyjb3Wq+vxVQQ
-	 NOQE/lmweNlfw==
-Date: Tue, 16 Dec 2025 07:24:11 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Markus Armbruster <armbru@redhat.com>
-Cc: jonathan.cameron@huawei.com, ira.weiny@intel.com, alucerop@amd.com,
-	a.manzanares@samsung.com, dongjoo.seo1@samsung.com, mst@redhat.com,
-	marcel.apfelbaum@gmail.com, linux-cxl@vger.kernel.org,
-	qemu-devel@nongnu.org
-Subject: Re: [PATCH v4 -qemu 0/5] hw/cxl: Support Back-Invalidate
-Message-ID: <20251216152411.mlx5tgsdwnjss7ku@offworld>
-References: <20251103195209.1319917-1-dave@stgolabs.net>
- <87cy4esysa.fsf@pond.sub.org>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="rzS9hdJi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34DEEC4CEF1;
+	Tue, 16 Dec 2025 20:24:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1765916682;
+	bh=ycv7no2r0HogxUiULI/OFg8qd8I2bXxi6V1PqZaAaKk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rzS9hdJiYKkF5jy6MSgIR8HlM3FIDA5F6SVzhIqgOpqDJ6MZkA57rhcPmGQxPC08Z
+	 wmS5ly+0puFtohUYi0O+DrA6bWEPmE9JRp+lkOig5st+Xb6XFSDkLn2DD4Lmzv+DMR
+	 9zvxeeh2FL+1w1BiI/eD9LhObmcLQgRqTga0xW7U=
+Date: Tue, 16 Dec 2025 12:24:41 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, axelrasmussen@google.com, yuanchu@google.com,
+ weixugc@google.com, hannes@cmpxchg.org, david@kernel.org,
+ mhocko@kernel.org, zhengqi.arch@bytedance.com, shakeel.butt@linux.dev,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com
+Subject: Re: [PATCH 1/2] mm: memory-tiers, numa_emu: enable to create memory
+ tiers using fake numa nodes
+Message-Id: <20251216122441.2810043bbc51621315e3862c@linux-foundation.org>
+In-Reply-To: <20251208094028.214949-2-akinobu.mita@gmail.com>
+References: <20251208094028.214949-1-akinobu.mita@gmail.com>
+	<20251208094028.214949-2-akinobu.mita@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <87cy4esysa.fsf@pond.sub.org>
-User-Agent: NeoMutt/20220429
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 16 Dec 2025, Markus Armbruster wrote:
+On Mon,  8 Dec 2025 18:40:27 +0900 Akinobu Mita <akinobu.mita@gmail.com> wrote:
 
->Davidlohr Bueso <dave@stgolabs.net> writes:
->
->> The following allows support for component basic back invalidation discovery
->> and config, by exposing the BI routing table and decoder registers. Instead
->> of going the type2[0] route, this series proposes adding support for type3
->> hdm-db, which allows a more direct way of supporting BI in qemu.
->
->[...]
->
->> Applies against branch 'origin/cxl-2025-10-03-draft' from Jonathan's repository.
->
->URL?
+> This makes it possible to create memory tiers using fake numa nodes
+> generated by numa emulation.
+> 
+> The new "numa_emulation.adistance" kernel parameter allows you to set the
+> abstract distance for each NUMA node.
+> 
+> For example, if the system is booted with the parameters
+> "numa=fake=2 numa_emulation.adistance=576,704", it will configure memory
+> tiers with node0 having the default DRAM adistance value and node1 having
+> a lower adistance value.
 
-That would be:
-      https://gitlab.com/jic23/qemu/-/commits/cxl-2025-10-03-draft
+Confusing.  I'd have thought that this commandline would gave node0 a
+distance of 576 and node1 a distance of 704?  But the text talks about
+some third "default" distance, of unknown value.
+
+Can we please clear all this up?
+
+Also, we have little documentation for this stuff. 
+fake-numa-for-cpusets.rst and kernel-parameters.txt.  Can you please
+find somewhere appropriate to document this new user-facing feature? 
+Maybe a new Documentation file?
 
