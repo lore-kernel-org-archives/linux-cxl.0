@@ -1,67 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624AF2BDC16;
-	Tue, 16 Dec 2025 05:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B72D33468C;
+	Tue, 16 Dec 2025 05:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765862529; cv=fail; b=FPejNjaVIYRuPdmDYXBTWOkaBQRliQ441+rkpVgoVZT2SrRVhZ+Nx7xRjgebglUdeqdqEM9CvYJLh8J9zOaGAg6horxSX5bDhrsL7ictAJ5sIFOGmQEX4vr5OW8Q9O1U3UKKb0pz3GDC45eCbFX6ohLMOQ8NWUF3whBq0RrnYb0=
+	t=1765862836; cv=fail; b=o14QIvS2SqaFUdRVmsgidRFMmq7SFMxwqcJ+ojEyQ3PMO5Y9yyTX6K9cWW5oINJkZDH4EgXDuI1EYaG6b9VwiEBTK10wnBgNz+f5QwlVg9Xe/gjC9urY+JjosBAVlUphYHGnSzbuwATl6hMLzYtjysArg8MLSF8r7u99jfkckIo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765862529; c=relaxed/simple;
-	bh=3XbzMLnSXpzFCsmObnO3SD8ranLduwhrFF5YeYFkDyI=;
+	s=arc-20240116; t=1765862836; c=relaxed/simple;
+	bh=sjrb7DXrroNz5btGNBEcmvszkq9pppzXs/ftPajN2EM=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=l1TeLBtfNsUBreKnHHXpp7nhu2LFvrz6Q9asCnLF0rT4B5AMY5ip0m3rcBXp6LuScsfRm4+5cKJHhFyOxxxLmtzrRVWFwdlzjUnoIVUJY0tt9jy9G019UvSWJQlGBqjrbiu5A0QgEqC3V/m282ggHwDMdHy9Tfv7StF8KwmFJ68=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fOJ/pwul; arc=fail smtp.client-ip=192.198.163.19
+	 Content-Disposition:In-Reply-To:MIME-Version; b=VwCWvb0TPJc/YrYFfJQ5qToOo3aUo+LX6xsWYHaYGQk9Y56VmdbJ057NTibSWO3GEUQ8lUtW3XZ8rsQTSNW+SW3vAO3tH5R2dt739nBX0RJoWiC0mM0Y+GeozKfFODfCU1Q06ROwVONZFGuB5thZnZDZ3tFJPxYGcSCoPTEuSgE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n61q7JES; arc=fail smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fOJ/pwul"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n61q7JES"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765862521; x=1797398521;
+  t=1765862827; x=1797398827;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=3XbzMLnSXpzFCsmObnO3SD8ranLduwhrFF5YeYFkDyI=;
-  b=fOJ/pwult6cLnZpwQu05AupEDc36y9qSEnaARA4NpWml0E0vQGEs+q+m
-   LALxmWO4KlKvEkGy2pIyJ3NEZicAUO8uhD6wgAyf1hMKpVs+nFtoqBDE7
-   Qx9V7BXrpL5liGeINAnZnsY7Od+eHRuqSqZSjyBPkC+vZMVdgWIGLw/8+
-   M+zGhQijdJQQ0XU1JO64mLtTy8sAV2EET1Ev7d1hdKNc9a+AvSUSokmvh
-   I/dvhwX3C7NFOIz0MlCaB3HSVylHggtz8wPZnSMSw8qkochDs3TUkH0iw
-   sxspPjAVv+KRCKptyEa9S47N6e0UCWFCsinEUaze4GXh+9CJPNw4I4jAk
-   Q==;
-X-CSE-ConnectionGUID: oA78VQ/2RQ6z1VtgFMUl2w==
-X-CSE-MsgGUID: +yb4U1Y/RxSjiyl6VhdYWQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11643"; a="66761763"
+  bh=sjrb7DXrroNz5btGNBEcmvszkq9pppzXs/ftPajN2EM=;
+  b=n61q7JESvMrurYN/iGlrh7bdBo9zZHV/rSK9vQrkkg3DWdn3Mu3DslHR
+   dTl7isv0PbGCcA7ffpgD2bxguIwqB/8myoEHnY2kbppM5fSdds492PwFM
+   Vb+FurB9j9+s9jt6qC9kgaozUvw3FNPCa/sTe1B+U2mjMEV9Tjg8V9X7z
+   vJCjDQTkWpr1NRSqjsOLJgxSwe4Wo2EQWANcG3ftkdihTZs5BdZvP8NpJ
+   42N8lZairAJghnE6e4mF+mzFJ8P9GRdfdhHpoyLslTl+xVdUG7Wt5e2CC
+   UJ+oA13k/3wG1P3b/s3VoRGNRdOXCysGnGBUzUxaixTgKwXDgymuu93Je
+   g==;
+X-CSE-ConnectionGUID: 8qjZMr1dRtGSUZjHQw74Zg==
+X-CSE-MsgGUID: 6RbVjuPRQYWnpljZRvHzwQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11643"; a="55341785"
 X-IronPort-AV: E=Sophos;i="6.21,152,1763452800"; 
-   d="scan'208";a="66761763"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2025 21:21:55 -0800
-X-CSE-ConnectionGUID: 3+5GKN84RTaqexKUEmGnuw==
-X-CSE-MsgGUID: avjcYuZ3RjSBlbFDKrkt/A==
+   d="scan'208";a="55341785"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2025 21:27:00 -0800
+X-CSE-ConnectionGUID: LSmKc63mTBSKQV0V2sRLfQ==
+X-CSE-MsgGUID: YyFjJfbgRuO6UNxpCfAAcw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,152,1763452800"; 
-   d="scan'208";a="197971186"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2025 21:21:55 -0800
+   d="scan'208";a="228996742"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2025 21:27:00 -0800
 Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Mon, 15 Dec 2025 21:21:54 -0800
+ 15.2.2562.29; Mon, 15 Dec 2025 21:27:00 -0800
 Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
  FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29 via Frontend Transport; Mon, 15 Dec 2025 21:21:54 -0800
-Received: from BYAPR05CU005.outbound.protection.outlook.com (52.101.85.66) by
+ 15.2.2562.29 via Frontend Transport; Mon, 15 Dec 2025 21:27:00 -0800
+Received: from PH7PR06CU001.outbound.protection.outlook.com (52.101.201.28) by
  edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Mon, 15 Dec 2025 21:21:54 -0800
+ 15.2.2562.29; Mon, 15 Dec 2025 21:26:59 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LzKK6ISRK2q5/EOzpgW552OGe8h7Aon9V8C8RFvlESeqWCodj+Ov+HSdZqcMDlD+Tvumxq7/5VnkfCNfph6/btpUPvYLoJcxh5gYZC6EcmcivttOD+cruP4Ntno+8RjPtNzX91dvGwck0tEwZv+42wkInUSaswp+9MUNiK+BDQRG3jEvn/qDIGatFpj5iioUelRaqnpqUK9ZPdbkmejEBOk4J94+GnU4e59XxiB978d3O/isy+iaVA7xiadZNxWXUPC9eiodpzWNymw3uohbaRyYJUFq9/PeMjnYu1yMjjvaQqlJNthsfNFB4Vmzz0bDgnz09Rfq7NIR906PreFEww==
+ b=zNskbuWMFS+hGylFNQZkDtsAuMwxieczLo0gt2RoCgIpYtOkuy42RhNi/rXxmOaFztw2KVMET6DRfw2oU/TxoecPnhDSfPWycUTfGkrPLQ88TLK5FQfLFqb02G9P1YZuor3JGyFL0UEtBvL2o43vAFfJYgVVJGt/FJxRsCuuuc1DiCKLS1gi4rTaPNa1zA9H9+v8paTbewN7XD9/A2DAEUz15923VRdHRVhZUC9RGeeJiAkgD8WrdKq/TG50MPGiKGh6drCGq3UBblFDo/Q8oQu8SH4WvJyxmwMga2TC782qD+SA2ClMUr4X2wgXSCwLAM4J5CRmDWTOMIpvnLoUIA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bN3PSqGnuT+2FEH3SNUOev+M3JfajnPmQlz5yF4uZGg=;
- b=uPu7qcHYvCKJO4GrZW4be4/wAvRZ4wil6JeoFwtRq10VFr1ygnomz+GotiT1eZtMNafErtgV8NpRyfUWFSh+pfe28Gy0QWDw+Vby2fAkTiEYuHxGsEml2uxjaXhai/SDP6s7FwLAbynnuiAk2hpSdP6oKtkFFMhMzLYV/mVD4tvZmhC7zi2qWoO1kFURDilLrLFRnP7b54OLWFP/8e0xeA8lyIC4NbR987r3llDAoiWXDeyteapf4w982ntPvxrKx3Te9T+zSmdyiIm1ig1Hxzy8C0FUyU+dkMhRCJjC+u63jnFbNXcw/U5nXmmKrRba52eo5Zqpxo78bcBNEwbYuA==
+ bh=VeN14Y0gKrIzT5Y80WBVSMsBcHVIbvObVRWS2D9WMAs=;
+ b=hJUelA/c2ykV8h6QzPF/Ye+xGwyDT3Ok2XRmQQi6izFFsWJHazsTpxgktmxLSBPQt7VZmohTA3ZmmBnpxZNxN+XMBxpbDWRtbTXi5kPrJCQ6KldoeYo1Y1zFTr33xmb7TY/NQf4xocc2REMin7CW8IoqvtuF96AVnjfSLPZ2+vQTfJgDmh+NaH1wMYkOqyaCHz8H/3fT2fPywxOWbNu6KkKOeeNHARn5uRo85S7ZqYRg8EMOSwGvlkxBnAW87B0/WI4IXaSo8/Eyv8pZZ2x7Q3RaR4KCa0Q06C1okTRHZ6bwSydJIox5OUgDUtvF7du/DoNgEwWJnam187rtyD6PSA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
@@ -71,12 +71,12 @@ Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
  by SA1PR11MB6989.namprd11.prod.outlook.com (2603:10b6:806:2be::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.13; Tue, 16 Dec
- 2025 05:21:52 +0000
+ 2025 05:26:57 +0000
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::46c9:7f71:993d:8aee]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::46c9:7f71:993d:8aee%8]) with mapi id 15.20.9412.011; Tue, 16 Dec 2025
- 05:21:52 +0000
-Date: Mon, 15 Dec 2025 21:21:48 -0800
+ 05:26:56 +0000
+Date: Mon, 15 Dec 2025 21:26:52 -0800
 From: Alison Schofield <alison.schofield@intel.com>
 To: Robert Richter <rrichter@amd.com>
 CC: Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
@@ -86,16 +86,16 @@ CC: Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
 	<linux-kernel@vger.kernel.org>, Gregory Price <gourry@gourry.net>, "Fabio M.
  De Francesco" <fabio.m.de.francesco@linux.intel.com>, Terry Bowman
 	<terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
-Subject: Re: [PATCH v8 13/13] cxl: Disable HPA/SPA translation handlers for
- Normalized addressing
-Message-ID: <aUDsbCutp0JPD4UX@aschofie-mobl2.lan>
+Subject: Re: [PATCH v8 12/13] cxl: Check if ULLONG_MAX was returned from
+ translation functions
+Message-ID: <aUDtnOIGKiHTEpEO@aschofie-mobl2.lan>
 References: <20251209180659.208842-1-rrichter@amd.com>
- <20251209180659.208842-14-rrichter@amd.com>
+ <20251209180659.208842-13-rrichter@amd.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20251209180659.208842-14-rrichter@amd.com>
-X-ClientProxiedBy: SJ0PR03CA0205.namprd03.prod.outlook.com
- (2603:10b6:a03:2ef::30) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+In-Reply-To: <20251209180659.208842-13-rrichter@amd.com>
+X-ClientProxiedBy: BYAPR05CA0004.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::17) To DS4PPF0BAC23327.namprd11.prod.outlook.com
  (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -105,268 +105,221 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SA1PR11MB6989:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1e5795cb-8000-4741-45ae-08de3c630533
+X-MS-Office365-Filtering-Correlation-Id: db1d1102-d4d4-4ada-ec00-08de3c63bac7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?INoFUaz1GFxQUMyDo4xqO32xJvz1PmKaOpu13XRpLeseMk0n2DVAj8D06Mbm?=
- =?us-ascii?Q?sNs5V0UAL3UUaSHt7ty4qWPfPMlTDmcJF2Hd2/FNkPRDzZp8tC2jlp/wiw6v?=
- =?us-ascii?Q?yJtUDli69F56yJMrDeMurgZjZEjqCVHykrN50quia26MYjTR7lTKgs4sEJ7I?=
- =?us-ascii?Q?RcQm2zNirtcjMCucd8wfNoE1z4gRLTlrWiSG9FEY8qV84YOLPIb+H8ZiOx+K?=
- =?us-ascii?Q?yrkeOMzAYKDjWxAeQoT8lZQ+/DvgG12gM1Qk8+1Jh/ILW1nB0SPN2jJ3CDan?=
- =?us-ascii?Q?15LE6weDmV9EX+liBVkcl+3uuOyq3v5vYYk+SAS9V7fLKWqUetYX+7vz3EA6?=
- =?us-ascii?Q?PjsODsYs983WNjR6Q8eDmsom2rhZ/mbNm++j0i/hNvER6hyCytzXcQP/86t2?=
- =?us-ascii?Q?HFA3q9RM6Kg11TlEguDJSobCwUDVh8KzzyZ4ACv7ymsOPP8/AxaQ5u0cxLSF?=
- =?us-ascii?Q?K2L8I+1WGXAqAed8kpslY/2L5Bi3h2mwRIevfNVDsL6h8JEKXQselx+rlhFK?=
- =?us-ascii?Q?PP2iy3ARRMcxH06cmCverQeSGn/1yoME3pJ9LZnaxNhhVyNCqGSiU5+UDDuU?=
- =?us-ascii?Q?qNJ9qwOE6xknG+RFHyblOnI1/xxBl0Nj0GMMjwWAHVzHAi2F5WHxF8tBVYJp?=
- =?us-ascii?Q?tD66vO8kDGUTP/wB0V7lMQcN5zrZEHM3EdGOzfj/yvHCCvbvos18fySXRlIP?=
- =?us-ascii?Q?r1i8wcZ7T20wOUaSODvcxSo28KLUjORXSOtFygmdiMEIS8JY1gOQsW9Mstv4?=
- =?us-ascii?Q?vpsoqPttAnLxgQOdh/DmfyIH0CblUJ8rhuJY0/HgVK1EfhisJSiYT76Zzgun?=
- =?us-ascii?Q?wspbifoMK73cVJHOP/IFTqZ1+w+oLU95u58IiCoIAziTJfYAwQrxm5DgDL+A?=
- =?us-ascii?Q?BaR4cNw0gpad/U79Odf7NQgvWHg3DgozdAvZCR89LMz3zuLQ/4FbSK7jqLKn?=
- =?us-ascii?Q?+ZWSz+TxImrjB/W78cwUdjQ5uqyz8XWDvPLP8kqNs8bwwU6I0TIs35pip61Q?=
- =?us-ascii?Q?r4sIvx0X7rZZ077DWGUnMmruncrdo3p+JmFodFXiT8DGFIoZ37xWNAYUm7nP?=
- =?us-ascii?Q?RkDKemRQwcL4FPzUSJ+3qotfXUxoULhLDv/SENIaHr69teDSl+PY62xJkG3J?=
- =?us-ascii?Q?XTmOrntLfQ3q0LyQwwgMwF5IErLrP/Kjnle2TY1RJnjqsLwNtC20DohSSd2K?=
- =?us-ascii?Q?UNkFddK09KoDXTzqr4Al20jsnCb/00EwgrTk4P2/7JM/OyFKHidMGRJns6BT?=
- =?us-ascii?Q?piQewEI5gl/HXgK7F/iyeJdcK3RaZB/he1OHmnic1bIO5RIqPJnLUV/VzOLC?=
- =?us-ascii?Q?rSD7zJSvzrM6G675N9nUduzXMrEbIrHljQ9K06zwydIL+oGWZ7iaFAFNId21?=
- =?us-ascii?Q?8BM6Oe0EuRVymzPLi1rbu07PQ22mLAL7xrEAr6sLjssjsYZpEeCr/W5xWZy6?=
- =?us-ascii?Q?GKEvxyVOBnO3IHzYY3xTJzu/4bECE/6P?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?8av0yUtfPVvCOFUSERnYIWX8RMFYygGK2rnjrRzRsy9xrAqYtbPB+DKvFepa?=
+ =?us-ascii?Q?O8Ik4lnDirFeOZVKKqlsPn2f66o57zuw9KJ0FzpvmQ0SiBCPyOxPfSnboUT5?=
+ =?us-ascii?Q?tY18AykKCSDznBxHYeaFSOtH02kzE9VRutgqsWjjgb8TcgQicL7wQkz4wluo?=
+ =?us-ascii?Q?+WoggHgkC/O1BziTwdzv0A0SjbraIDcYdOxKADsGPYmkbgrPXRPN6Rq98u+I?=
+ =?us-ascii?Q?dS4ZVvqjG/D2RiKoM1n8jDDWqIUZl1U5cPrZQbJeAEeuq3kCVg78te0MmRnw?=
+ =?us-ascii?Q?XejB3QOthsHkXLrfqYBqJjw2UVeuGKdTmzfLVTAluqNSJ8xB4sEFp/GAlmVU?=
+ =?us-ascii?Q?8h4OE/JIPNFh4H18mMn/UdwLLxi7lHfadeSSngIJCMrosDJPBQrj2MkUsKDE?=
+ =?us-ascii?Q?3sacN+0SJPqhFaokexa6kEiKwq02C2NU8bvTUnYQG2Ikcq4xVbaoKKYaoEOd?=
+ =?us-ascii?Q?Sz23KaYnGf92UPu6J0YXE+0FNlSw7qJjxReh0sy7nRJlbHB+u43vYNA3UjGs?=
+ =?us-ascii?Q?CkOZKtwTfFkIi3+ZBTyMhxrvWFjvpWdIG2nx10CkcMepLYEfiJKlBUoIyeOL?=
+ =?us-ascii?Q?pm57+AavhGOH+wK/R0aky1KmXqy33jftsO0fIG211kX3HQkK8NQsoz7oy4Tv?=
+ =?us-ascii?Q?BF+CUGdSeDMlBegpJrrPoWzl0AgrnMvv6o6CJ5mn/9s9QwANUj7/fnI0r2Sm?=
+ =?us-ascii?Q?YF4XMKfc7N5CNS0UvA+zd6JEY4H4LWFxkjQYyobt8KsMSPuj0/zonxfLNm4e?=
+ =?us-ascii?Q?f+9glmdKPqZMUlISVSsom0KfB5mjNAm/b4phLtGRzT2mS+iAZxzkUQXk6XtF?=
+ =?us-ascii?Q?dAwCfgvyiCxQuGs2YnDT43Of61PvLjjX8Hc9L2BaINals1Ikl22UOggFBOKE?=
+ =?us-ascii?Q?F1XHUngdtMWPhEDS4QX7irGhvbRsEH6+DbaLKYEqEffRqu1ym+ZjgJLwVCcC?=
+ =?us-ascii?Q?Je0w2LIEpeSElrCv8q1OK2q+1ErvWXw3b7R6LgKOwE0ZdgHb/mV1gWXTSmXN?=
+ =?us-ascii?Q?x4G2opZxAO/1WQNITXveUrSFFr7Pm98MYgF5S0AUJPB1htoqpbXdP/TdQEBU?=
+ =?us-ascii?Q?aK8yZJmP8Ua5MFxdr/z2/0qRBAyOeJu3G2sHoT1OzAsdHd9etp57520cPpSM?=
+ =?us-ascii?Q?b35gVVxCvxFeisHo/k0Ibpd63MAHUkclpZMdO2msXBZ1mLyewLd/FTV9tc/D?=
+ =?us-ascii?Q?Q9zcSXZtdTaIf/5rNckDxKoIVoUQTbcHh8SFQnPEm6kVM+97+CriuAvOjw37?=
+ =?us-ascii?Q?wY3+zoQ/iWAM5tHzbq8nkJ6jYSGnC73N53VXubAhEs7WByMI9keic/rBcnoZ?=
+ =?us-ascii?Q?2lkULxD7KHXDjLX+rC0SlTrm5f5YWlTIQWE1h8gRpkWYRBWF/gFEcqlAsJLf?=
+ =?us-ascii?Q?Y9iikwUvtp205uqOSX4Ke2LNIYMERWAcS5MPpNrxQnhHSVhR77FJVhLY7tp8?=
+ =?us-ascii?Q?BU8JyVtxJAixgMVVOnHYjWKvBYDjaKCv?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?jCkPmXjEFsPKouvS9hxfVKFzhNxZnnqwnsrE65INAGra/49PaRtKLJPSXi/T?=
- =?us-ascii?Q?ZIVzEDaF0Gm7G43urBb8mYbRw+2htRAV220UsDC9tvTC20vONuaKmuV3f/DX?=
- =?us-ascii?Q?j3rx20ZAQwp6+aqFvwZvygq0S87G9BQGZ7VQTtTH/sTaS+NUsgGQdoYsXGaW?=
- =?us-ascii?Q?IYii2y88pkitPbsB2KZvoTYZPKj7mkJhDymvPp1pKMVCm3tIXUn5wRUNoDqE?=
- =?us-ascii?Q?3orjPD4O20kFkne6ey+5r6WUGFXNgmWFsZy5ZThMbfZMas1S+nRd8NLClugI?=
- =?us-ascii?Q?8jgjF7OPstu88NTHlGa4I25KVGToymB/XD4k2DpefTwJWKYspuzr4SGjw6Yd?=
- =?us-ascii?Q?wtcVeSGTj8y7gxiLC27WLiHEqDkEf7v06xCtG8xfAgzeXnrj968ZyQqk+m5L?=
- =?us-ascii?Q?uff/ay+dqXkgzu+5BsIbtHMnaCgvrIVWItdf9PxVAr1I37tp74qtZhfRUTlf?=
- =?us-ascii?Q?AY7dftbqmDXCbV22TBBIs9HbeHzqFW0z+a2mOE6ErWBfvB8yXnnOUx7npOSk?=
- =?us-ascii?Q?xKUfsLm2dG71xeiZtNK5+SnOED2YraG6qtbgAO+C+wp8hl3PljyEkR+uCriI?=
- =?us-ascii?Q?QOHwkobJvEB8xHURJXmQgrPQSyqjxmdOnKORZO9eunvMKY3osOFxPXOmD7+V?=
- =?us-ascii?Q?LYr6RHChr/QCuyVnlQbmcLDkHgtazy7y+7N4uqF7MpN78CYbJC+2pP6vEPGi?=
- =?us-ascii?Q?WuDR/gxnSMti5WvoYIY1ZWGsLmC7ntlWG78i0jh088HI1p7tl/kJgrvYpnr7?=
- =?us-ascii?Q?CjjtqDAUl0Mogu9mPz4J6wof9VFrqM4d2dQ3H4NNOUeP8gyXDGXb7tGiTQcf?=
- =?us-ascii?Q?/cUkpIbhnF+9BetvZNCyI9NhRqgWxW+7rGeCuxUXM6FydGLDkeF67I8b+E1O?=
- =?us-ascii?Q?vYumiDC4fSJ3RW3w69q0MH4WMmMxHxh9qqd+vp1z9a+XB+gSpnYW00e/Smqo?=
- =?us-ascii?Q?2/ZYjv/tjsrnmTYMt7WVi4hmu3dheF+GkzP0fkbZ6XfMWCZzYusMbumGsiM8?=
- =?us-ascii?Q?oUCkrG/y+yWEW5HjQwhBVyG3nm//RdAh4HbeYaRONjpyBBdIxYYeVzWNh0p1?=
- =?us-ascii?Q?30TuHZsgnuaxnhwzTDeCeAxEcvODYPM75Qs5F262Vp1jJt0IZ7A9FBS8ilEo?=
- =?us-ascii?Q?k0Zri0XDdBbWCF28Qlnm2IB73FelEQiKkBZAE/Qne7oYW50Ura0HlFMr2Gg1?=
- =?us-ascii?Q?pPLbXKlS7vu/RB2n375UxB8djp+/k4co4MMzjkFS5hYop216CYs0fFwkDTFM?=
- =?us-ascii?Q?R2LVv3P+a9JQMYW0xoxrJelTESPidTADwAfZzCUOZKmJ36y8MuSYSJeRJFuR?=
- =?us-ascii?Q?tpuC1ERC4VyezV0MNltqe0Cfzy/qivFJ3BYHrwaozjWXrr0rdwGYb0YBHSYe?=
- =?us-ascii?Q?kWOcrF13HOpqU2nB7dc76FMLBwsjKGsbj0E+WnFJjggxy5USjj33i616l2b8?=
- =?us-ascii?Q?1RcfQdUx4PfPcMysQ14YdiSUsa8k9RGkfkHFEOMKYqJg3Wl+i1H763o+I2Ac?=
- =?us-ascii?Q?OzPwtt6v/f579CT+kzpmgakLf1iR54lHfzcQNZSe9JiVhiSJf/20pEYi9Qz8?=
- =?us-ascii?Q?ybCX8ZXOqINaHbnlehSKlcnh8RlN2AIbGkyYOP+gqmfHm7K/NUchtH6JZb1f?=
- =?us-ascii?Q?5A=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e5795cb-8000-4741-45ae-08de3c630533
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PldtsYjlMkUCXjn18Z1L3L4LozLg/2uZSS5PD4rbMNKHyMT5topAKkLY/61E?=
+ =?us-ascii?Q?TQpeTB0TO7yQaZogerPvKug4Uo4GGFJziA6+f+fS/ild+MN4K3/oO8FLKmzX?=
+ =?us-ascii?Q?Hl+Z3B64+u6pVv3gSJLAe5Rsg7v4pjjhVaBxuZsV0PYxEMnarTcEHupawan1?=
+ =?us-ascii?Q?ag2iITa0qJ2cfX2y6rSOXXDXnSKKQKgZSdpMh1Ic83nLf//chv9bXVca5F7t?=
+ =?us-ascii?Q?2g3/NtTWAlyO6uypcYInToqhTPrNVL5gtRUX2hwUd8NR30ArVDVbB2JVDUHJ?=
+ =?us-ascii?Q?qoWgalw3/SFCB2QGxJVrW4kI7eu5h6nirmJpa3MIij4ymvlsMiCn6jOyiK9t?=
+ =?us-ascii?Q?aCDVFVjzNeRjiYiJWklOn9ksVoYzatG1ATOGbkCuf9M1jXUxHkL48D9Ts13m?=
+ =?us-ascii?Q?D2Z+3yG5si0N3BOdpbM+gwFWDycuxcBd/0KH75Pg5Q0Eo7Kd58Q5Ai3oGlOF?=
+ =?us-ascii?Q?kneGyuSI8bTgnf0xApupTz8CSmEY2BzqYyHr0cJ1JjXtLWQTdz7ZUbLgWz2B?=
+ =?us-ascii?Q?0FTImlc8jEKY7EmwfnHO4HQvn9uY4+ws7GMPD4XdyywOcTPUpAqQZS73gDjx?=
+ =?us-ascii?Q?oteJaulwK1L04/LvyZnS+N0UIigENr9atr+LGBugHfVUXJa3EusFqlXX8nR6?=
+ =?us-ascii?Q?f+QBh4TFkkI5m9U1rh2PQoYUJ1rnSFKfBVKOXi9tNc9Kaj1Yo2RaXzV2LPOJ?=
+ =?us-ascii?Q?Zybe2NEyGPRGjBxC0JbM0Wcu7KRTpsQ4nTh25kIJMIKcAec93ZsBlEnGAek2?=
+ =?us-ascii?Q?1/Ybdz+wg2gVi4P000gpthWVNmJPzGyxYya03CPh6OaoRaGHKmbkT4N4CqSJ?=
+ =?us-ascii?Q?XyQXbHCXTcYdNEeXAq6QheB2s6U6K/gnyTr/Jq6IIVxV5ezE2bhRON0XsPsl?=
+ =?us-ascii?Q?gh9q+S/B6vbnrfU8HmSHjhLjjKIVvnA4oryIsbDkTsNtyJPVuxQBmcSr8EMy?=
+ =?us-ascii?Q?+cn4blWx4CAXoSArcQj14suc95YaihLacI8EBZjLCQcS3IRJGVFnA+QZWDlS?=
+ =?us-ascii?Q?pLLkBM+A3qe2OyohkDWZbK1BfTIftDVNW9xZICq9UioM8xAt49ZzrEsb1o5I?=
+ =?us-ascii?Q?M3LCarCxb/xd3eTupr1HY+vp3d9yCuDCEe43wjDQyyagYVb8N8yNCdsyUY7E?=
+ =?us-ascii?Q?t0jJreTKDKXPJz9LK7/OgRgHoMn0khF8U+4sgj2OuZBaqxrCcR92YHYBH17y?=
+ =?us-ascii?Q?dh7fL7kH5VYsTOM4C1sK9OYN4lO4mnBt3o+NBkQMVzUawXpbmjoAI+Q3ChaD?=
+ =?us-ascii?Q?mJx2WAVvRxh9iu8Umjucdw2rF3wA/TFPHL0wBmstgrx1b/9r4tMBZjjXdsYv?=
+ =?us-ascii?Q?I7ONzDVtyVXEGSGwrKTBCtc6/uF+4srIOUhtq2b2+b2GNnluUh1BCpV99h7m?=
+ =?us-ascii?Q?ZVRKgMWCnE7STj6w4Goa8tXK67NHOJbJSyLC8c8NlwNX7Rgtzonc2c28lRI+?=
+ =?us-ascii?Q?5AwMEdupV1VrzJRo3RtYlY7IPOLMZwP7Q3F2clcsJ2bia88gdOX5PaZms8JH?=
+ =?us-ascii?Q?9seNAynHVMZt3+QBwQYWyVgLuDzsjDPQNPVTs2Stvctp3M9Y4Y2p6mFtDxwm?=
+ =?us-ascii?Q?d4lYw5AXdasrHlD56PQsSm37PHp6zzFAIo6OOmhrw5OYLgdcpuMEXw7eY8rZ?=
+ =?us-ascii?Q?9Q=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: db1d1102-d4d4-4ada-ec00-08de3c63bac7
 X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2025 05:21:52.1725
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2025 05:26:56.7958
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Co1hOkuTMSIn43fggb44/nKMGhA3OKrL1OGZ7/GSYJ9l7BhLPxxpQZCBi0XPA6pRUY/mdh+ObMGoeutEriue+QYAVpGjo/17DC7O2HB14Jk=
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9fVexQkraZCCuvFiIbJJgQf4XA27NJpz6d5YA9/YcpCCwZF4DPiJ46dQoqJ0Pl1TZWvJUK3t5cy2lSTnbPXltJ1fV9Ek6p26yjBEF+WDgJU=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6989
 X-OriginatorOrg: intel.com
 
-On Tue, Dec 09, 2025 at 07:06:49PM +0100, Robert Richter wrote:
-> The root decoder implements callbacks hpa_to_spa and spa_to_hpa to
-> perform Host Physical Address (HPA) and System Physical Address
-> translations respectively. The callbacks are needed in cases where HPA
-> != SPA to convert addresses for tracing and error handling and to
-> setup Poison injection. Currently this is used for XOR interleaving.
-> 
-> In AMD Zen5 systems with Normalized addressing, the addresses of
-> endpoints are not SPA and those callbacks need to be implemented.
-> 
-> Now, as ACPI PRM translation could be expensive in tracing or error
-> handling code paths, do not yet enable this direction of translation
-> (hpa_to_spa) to avoid its intensive use. Instead, mark the HPA invalid
-> and return an error for this case.
-> 
-> The spa_to_hpa callback will be used in region_offset_to_dpa_result()
-> to determine the endpoint by the position in the interleaving
-> chunk. With Normalized addressing, the order of endpoints in the
-> interleaving chunk is implementation defined. Do not use this approach
-> and and return an error instead.
-> 
-> Disable both HPA/SPA translation handlers for Normalized addressing by
-> returning an error (ULLONG_MAX).
+On Tue, Dec 09, 2025 at 07:06:48PM +0100, Robert Richter wrote:
+> The return address of translation functions is not consistently
+> checked for a valid address. Check if ULLONG_MAX was returned.
 
+The why of the dpa base address change is not explained as that
+That -1 return would be ULLONG_MAX in 64 bit system, so not
+clear why the return value of cxl_dpa_resource_start() needs to
+change. 
 
-Hi Robert,
-
-I did suggest failing gracefully, like you implement here, but now it
-feels like we are 'weaseling our way'[1] out of something.
-
-We can shut these features down at a higher level rather than tiptoeing
-through their implementation and adding a clever exit point.
-
-This struck me in the changes to cxl_dpa_to_hpa() work because I suspect
-the work that even gets us from a DPA to a CXL_HPA is not accurate for
-Zen5, and so we're being wasteful going through the motions of DPA to HPA
-only to know we are going to throw it all away at the end in an HPA->SPA
-callback. And then for the region_offset_to_dpa_result() it seems silly to
-even offer the inject poison by region offset option if we intend to fail
-it every time.
-
-Please consider this -
-
-SPA->HPA:
-region_offset_to_dpa_result() exists to support inject and clear poison by
-region offset. That's an expert user feature for testing only and I'm
-thinking we should just turn it off for Zen5. By turning it off, then the
-debugfs attributes will not be present, and it becomes a no-op. Note this
-also avoids users seeing but always failing attempts to use the feature.
-
-How to turn it off?  Look in region driver where we turn it on based
-on memdev capabilities and add an arch specific check.
-
-HPA->SPA:
-cxl_dpa_to_hpa() provides the translated addresses that get reported in
-trace events for errors and also for actions related to poison list reads,
-and poison inject and clear by memdev. Please note that when we say 'trace'
-in this context it's all about how we report the details of these errors:
-poison, general media, or dram errors in trace events. It is not about any
-performance path tracing activity.
-
-How to turn it off?  Look in cxl/core.h. Here we turn it on for CXL_REGION
-and off otherwise. Can you expand that to turn it off for CXL_ATL?
-
-
--- Alison
-
-
-[1] To "weasel your way" (in or out of something) means to get into or
-avoid a situation using cleverness, trickery, or dishonesty, much like
-the sly, slippery nature of the animal. 
+Is this is for general cleanup, then, like DaveJ noted, returning
+sooner is better. I guess post this as a general cleanup pointing
+out why the earlier returns are needed.
 
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
 > ---
->  drivers/cxl/core/atl.c    | 35 +++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/region.c | 21 ++++++++++++++++++++-
->  drivers/cxl/cxl.h         |  1 +
->  3 files changed, 56 insertions(+), 1 deletion(-)
+>  drivers/cxl/core/hdm.c                 |  2 +-
+>  drivers/cxl/core/region.c              | 36 +++++++++++++++++++-------
+>  tools/testing/cxl/test/cxl_translate.c |  4 +--
+>  3 files changed, 29 insertions(+), 13 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/atl.c b/drivers/cxl/core/atl.c
-> index 4bd2289b8bbb..9d05a83bde73 100644
-> --- a/drivers/cxl/core/atl.c
-> +++ b/drivers/cxl/core/atl.c
-> @@ -57,6 +57,39 @@ static u64 prm_cxl_dpa_spa(struct pci_dev *pci_dev, u64 dpa)
->  	return spa;
->  }
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 1c5d2022c87a..8b50cdce4b29 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -530,7 +530,7 @@ resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled)
 >  
-> +static u64 atl_hpa_to_spa(struct cxl_root_decoder *cxlrd, u64 hpa)
-> +{
-> +	/*
-> +	 * PRM translation could be expensive in tracing or error
-> +	 * handling code paths. Avoid this for now and return an
-> +	 * error instead.
-> +	 */
-> +
-> +	return ULLONG_MAX;
-> +}
-> +
-> +static u64 atl_spa_to_hpa(struct cxl_root_decoder *cxlrd, u64 spa)
-> +{
-> +	/*
-> +	 * The callback will be used in region_offset_to_dpa_result()
-> +	 * to determine the endpoint by the position in the
-> +	 * interleaving chunk. With Normalized addressing, the order
-> +	 * of endpoints in the interleaving chunk is implementation
-> +	 * defined. Do not use this approach and and return an error
-> +	 * instead.
-> +	 */
-> +
-> +	return ULLONG_MAX;
-> +}
-> +
-> +static int cxl_prm_setup_region(struct cxl_region *cxlr)
-> +{
-> +	cxlr->cxlrd->ops.hpa_to_spa = atl_hpa_to_spa;
-> +	cxlr->cxlrd->ops.spa_to_hpa = atl_spa_to_hpa;
-> +
-> +	return 0;
-> +}
-> +
->  static int cxl_prm_setup_root(struct cxl_root *cxl_root, void *data)
+>  resource_size_t cxl_dpa_resource_start(struct cxl_endpoint_decoder *cxled)
 >  {
->  	struct cxl_region_context *ctx = data;
-> @@ -183,6 +216,8 @@ static int cxl_prm_setup_root(struct cxl_root *cxl_root, void *data)
->  	ctx->interleave_ways = ways;
->  	ctx->interleave_granularity = gran;
+> -	resource_size_t base = -1;
+> +	resource_size_t base = ULLONG_MAX;
 >  
-> +	cxl_root->ops.translation_setup_region = cxl_prm_setup_region;
-> +
->  	dev_dbg(&cxld->dev,
->  		"address mapping found for %s (hpa -> spa): %#llx+%#llx -> %#llx+%#llx ways:%d granularity:%d\n",
->  		dev_name(cxlmd->dev.parent), base, len, hpa_range.start,
+>  	lockdep_assert_held(&cxl_rwsem.dpa);
+>  	if (cxled->dpa_res)
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 2c070c7c7bfe..130af1cf95b7 100644
+> index c7ac78f1b644..2c070c7c7bfe 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
-> @@ -623,6 +623,21 @@ static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR_RO(mode);
->  
-> +static int cxl_region_setup_translation(struct cxl_region *cxlr)
-> +{
-> +	struct cxl_port *root = to_cxl_port(cxlr->dev.parent->parent);
-> +	struct cxl_root *cxl_root;
-> +
-> +	if (!root || !is_cxl_root(root))
-> +		return 0;
-> +
-> +	cxl_root = to_cxl_root(root);
-> +	if (!cxl_root || !cxl_root->ops.translation_setup_region)
-> +		return 0;
-> +
-> +	return cxl_root->ops.translation_setup_region(cxlr);
-> +}
-> +
->  static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
->  {
+> @@ -3124,7 +3124,7 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
 >  	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
-> @@ -666,7 +681,7 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
->  	p->res = res;
->  	p->state = CXL_CONFIG_INTERLEAVE_ACTIVE;
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	struct cxl_endpoint_decoder *cxled = NULL;
+> -	u64 dpa_offset, hpa_offset, hpa;
+> +	u64 base, dpa_offset, hpa_offset, hpa;
+>  	u16 eig = 0;
+>  	u8 eiw = 0;
+>  	int pos;
+> @@ -3142,8 +3142,14 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+>  	ways_to_eiw(p->interleave_ways, &eiw);
+>  	granularity_to_eig(p->interleave_granularity, &eig);
 >  
-> -	return 0;
-> +	return cxl_region_setup_translation(cxlr);
->  }
->  
->  static void cxl_region_iomem_release(struct cxl_region *cxlr)
-> @@ -3663,6 +3678,10 @@ static int __construct_region(struct cxl_region *cxlr,
->  	p->interleave_granularity = ctx->interleave_granularity;
->  	p->state = CXL_CONFIG_INTERLEAVE_ACTIVE;
->  
-> +	rc = cxl_region_setup_translation(cxlr);
-> +	if (rc)
-> +		return rc;
+> -	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
+> +	base = cxl_dpa_resource_start(cxled);
+> +	if (base == ULLONG_MAX)
+> +		return ULLONG_MAX;
 > +
->  	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
->  	if (rc)
->  		return rc;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 20b0fd43fa7b..f4623728a815 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -653,6 +653,7 @@ struct cxl_root_ops {
->  			 struct access_coordinate *coord, int entries,
->  			 int *qos_class);
->  	int (*translation_setup_root)(struct cxl_root *cxl_root, void *data);
-> +	int (*translation_setup_region)(struct cxl_region *cxlr);
->  };
+> +	dpa_offset = dpa - base;
+>  	hpa_offset = cxl_calculate_hpa_offset(dpa_offset, pos, eiw, eig);
+> +	if (hpa_offset == ULLONG_MAX)
+> +		return ULLONG_MAX;
 >  
->  /**
+>  	/* Apply the hpa_offset to the region base address */
+>  	hpa = hpa_offset + p->res->start + p->cache_size;
+> @@ -3152,6 +3158,9 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+>  	if (cxlrd->ops.hpa_to_spa)
+>  		hpa = cxlrd->ops.hpa_to_spa(cxlrd, hpa);
+>  
+> +	if (hpa == ULLONG_MAX)
+> +		return ULLONG_MAX;
+> +
+>  	if (!cxl_resource_contains_addr(p->res, hpa)) {
+>  		dev_dbg(&cxlr->dev,
+>  			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
+> @@ -3176,10 +3185,11 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
+>  	struct cxl_endpoint_decoder *cxled;
+> -	u64 hpa, hpa_offset, dpa_offset;
+> +	u64 hpa_offset = offset;
+> +	u64 dpa_base, dpa_offset;
+>  	u16 eig = 0;
+>  	u8 eiw = 0;
+> -	int pos;
+> +	int pos = -1;
+>  
+>  	lockdep_assert_held(&cxl_rwsem.region);
+>  	lockdep_assert_held(&cxl_rwsem.dpa);
+> @@ -3193,13 +3203,14 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+>  	 * CXL HPA is assumed to equal SPA.
+>  	 */
+>  	if (cxlrd->ops.spa_to_hpa) {
+> -		hpa = cxlrd->ops.spa_to_hpa(cxlrd, p->res->start + offset);
+> -		hpa_offset = hpa - p->res->start;
+> -	} else {
+> -		hpa_offset = offset;
+> +		hpa_offset = cxlrd->ops.spa_to_hpa(cxlrd, p->res->start + offset);
+> +		if (hpa_offset != ULLONG_MAX)
+> +			hpa_offset -= p->res->start;
+>  	}
+>  
+> -	pos = cxl_calculate_position(hpa_offset, eiw, eig);
+> +	if (hpa_offset != ULLONG_MAX)
+> +		pos = cxl_calculate_position(hpa_offset, eiw, eig);
+> +
+>  	if (pos < 0 || pos >= p->nr_targets) {
+>  		dev_dbg(&cxlr->dev, "Invalid position %d for %d targets\n",
+>  			pos, p->nr_targets);
+> @@ -3213,8 +3224,13 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+>  		cxled = p->targets[i];
+>  		if (cxled->pos != pos)
+>  			continue;
+> +
+> +		dpa_base = cxl_dpa_resource_start(cxled);
+> +		if (dpa_base == ULLONG_MAX)
+> +			continue;
+> +
+>  		result->cxlmd = cxled_to_memdev(cxled);
+> -		result->dpa = cxl_dpa_resource_start(cxled) + dpa_offset;
+> +		result->dpa = dpa_base + dpa_offset;
+>  
+>  		return 0;
+>  	}
+> diff --git a/tools/testing/cxl/test/cxl_translate.c b/tools/testing/cxl/test/cxl_translate.c
+> index 2200ae21795c..66f8270aacd8 100644
+> --- a/tools/testing/cxl/test/cxl_translate.c
+> +++ b/tools/testing/cxl/test/cxl_translate.c
+> @@ -69,7 +69,7 @@ static u64 to_hpa(u64 dpa_offset, int pos, u8 r_eiw, u16 r_eig, u8 hb_ways,
+>  	/* Calculate base HPA offset from DPA and position */
+>  	hpa_offset = cxl_calculate_hpa_offset(dpa_offset, pos, r_eiw, r_eig);
+>  
+> -	if (math == XOR_MATH) {
+> +	if (hpa_offset != ULLONG_MAX && math == XOR_MATH) {
+>  		cximsd->nr_maps = hbiw_to_nr_maps[hb_ways];
+>  		if (cximsd->nr_maps)
+>  			return cxl_do_xormap_calc(cximsd, hpa_offset, hb_ways);
+> @@ -262,7 +262,7 @@ static int test_random_params(void)
+>  		reverse_dpa = cxl_calculate_dpa_offset(hpa, eiw, eig);
+>  		reverse_pos = cxl_calculate_position(hpa, eiw, eig);
+>  
+> -		if (reverse_dpa != dpa || reverse_pos != pos) {
+> +		if (hpa == ULLONG_MAX || reverse_dpa != dpa || reverse_pos != pos) {
+>  			pr_err("test random iter %d FAIL hpa=%llu, dpa=%llu reverse_dpa=%llu, pos=%d reverse_pos=%d eiw=%u eig=%u\n",
+>  			       i, hpa, dpa, reverse_dpa, pos, reverse_pos, eiw,
+>  			       eig);
 > -- 
 > 2.47.3
 > 
