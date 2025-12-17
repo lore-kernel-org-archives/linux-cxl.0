@@ -1,195 +1,247 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010059.outbound.protection.outlook.com [52.101.201.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67F12ED87C
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Dec 2025 21:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766006032; cv=none; b=OtGdvmLfPxxTTg3SwY2mdz3Jlg1sMI9wIIOSj27xlAZ9rkNP/lv32zT2WXWE4mHIyYZwDzQwNmEjEmsNiZCumK+KciSV1J7p5d6/Bru7rMMQ8EqhXLOAM0kMBkAi6NUWbAi1glvxmzaVuc1phuX7bzvgv8seqYmArdQZyOwk230=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766006032; c=relaxed/simple;
-	bh=H6Dnvdf9bmtdIjrm3kzMHDEtw/qB7Ge+CUXBEkKfJQ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eK80GIQKyWmL2zTe8zIY7VChHOvF9MuFPVHAewNT8yjYZGRN1JhoEqkGBbPJFKc2EzJx/87sRtjTR07GUjagPI4WyhesDcvLYYjmonJEYd0OPrDwX+r9uaNiR8RDufwfNru8kalwY7u8TyzFEYqF+19dy6VeEz+0GOPXOGXj89E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZjUsuM3B; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918BC296BBF
+	for <linux-cxl@vger.kernel.org>; Wed, 17 Dec 2025 21:29:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766006961; cv=fail; b=Uez0HIZS4rkLr0pnv5fLxDl2DrkSIXSqTX48cMbHYvn+eMVBM1AOHRuzmCgDKlHlWZ/vrqzjcYmtAaUqVbf9PaoM62dOqS2jHsg9cA66NGmat7CAnHXC3YsZe3MpxmiHQWIrUjmtFReJXOJvBwnlFHWpp1WS0qzWA+2vIb1YM6o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766006961; c=relaxed/simple;
+	bh=vOuDOxf9hiNWH+obP7CvCI0EQlOcf0N6EUcyE4hMxjo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=pflNlJ939NjqeyJO0Ib5VjTAgf3vwAq9aGA+S+gJBLbhY6o9+NhhWprjT++OGnnCK/pVCLr7wGhNie3Qdst58IohpXxhvqTbsji/knJLOfwh0EHR3ep2KdM8/DMlPA/l03s9uStWscrjJUmxthbta7Xpx2047fMj0Xtv0rMLp70=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=a/g0QOUg; arc=fail smtp.client-ip=52.101.201.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjUsuM3B"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-7caf5314847so2821747a34.0
-        for <linux-cxl@vger.kernel.org>; Wed, 17 Dec 2025 13:13:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766006028; x=1766610828; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=WykdBCYT8yJh4sQTY3N188JsaYBSsyfv2BDjqpmbRM8=;
-        b=ZjUsuM3BbnWCEV1r0mJOiH8IiuyV8itGy80DbJ2DvaVz9XpYqHnyM1Os5jhx7SQPT+
-         74uV/PE0mILYb2H+7izwWvGAgpqHhF9HSmwtjpICIKA0FxlJs1GOzSxTCMw4q6hVbKnu
-         0h1gz5kc+Tx+PsFmhISimdbhRddvPupnkfzdRIqHxbK65nPPIFzg5ZjzpgpxaZn7Zi1+
-         Ddrx1iWrBRJIzTbi158EGCv335o8UjbbwAY3Jk0ffx4IS3nxXvYLxRsOQ01LPOJNOm9u
-         5nTxpcR4SdXc1LsIk822yGZBlMn8wt2UVvNRhOUGd63S/3f2jAmvQbzdIUHVsZLVGimp
-         iexQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766006028; x=1766610828;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WykdBCYT8yJh4sQTY3N188JsaYBSsyfv2BDjqpmbRM8=;
-        b=cpoV5pLy/T1WJmAeADfY/tngBy8YWVOHtdUoQcdPas3ioIW+oKj/G1yXZbe2l4NY7F
-         YD6spBq6LBmoYjPheTVQpCI4rw0nl4kUKreeCFt33IYCZlVNdkFeKuonFHuukV4a/aHd
-         A/3RkRz1yfvToRHjVD6eUo2r8P6WOWOzSFNCgWJxl5TSjwaxPh8aJlV0O0HtEof+3hBN
-         6J6NOuYfEwk7qa5OlKmfma4NESi/ooFfJ92l5QmoXqBJSs8bR+chRNsA27F6cZx6CfF3
-         ABN7sxUuR7Cjx2JjFafVpPRrYDF0n93xIyxqdj7BH5MzKJn0pTm0w7imRgetVPaEKG1F
-         xWow==
-X-Forwarded-Encrypted: i=1; AJvYcCU61M1DmyCn+QR8gyJGKuoRdj+juYMfhgI3khRwRjk7L8v0G+mwVqiwIZdsUvbTK/sSIekoheA6oCE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXNKsGHfAc01YLerF6/v7b82FV6gNia7GmwpHIEUq9SR2lYqqN
-	V327Otswp3k/EscQ4pv5gKr2O//BhtbJG35Y8FctZVK1b9XMeXN9LbcV
-X-Gm-Gg: AY/fxX53C89n/HvFfwbYShsqdtlGgq99lIzBpkiSeHpr0BvUz2ASR97LHOJxFQhHnjz
-	jRyiUzDhjq/b3QqnlodXxQLOXeXFvFPxQkzLvT6OWcaUZ1ie/9kkdCefAQ8exoHId59QLT5Ymd4
-	Vq0HVSEPweqpZyoJGI/4eZ21300H8KvTGIZxd400EbngDWzInwLi6qzbyJsIU9wSUuK01izX+I5
-	Hl086xuuG/8NlqFw+O+c/HdqOfJJcVIPY9s8/Il77SzC55SSf+O1B6v4HcfTAsDDkZZ1BeXB66j
-	z8VJ5ku4e8kMG8bGmwAmg2tYkHaUWh+YWZ68bRZvKY4vVpVW2hZMUIrcqhR9GO9gRRIcFD2t5Sy
-	aMMSo/jKEEFncho6kmrkUPMN42gXpzTSNP4tphKAiHp04eL1B3uqxFmitpvCJ5ZVT4I3NClDxjI
-	25fR7PPGNaHJEHUj+NNn4IEJSIUh3JUqPAg3aHgP28j8s=
-X-Google-Smtp-Source: AGHT+IEJ79LfZmTkRRoNE6whe1Hjdhe/lgdvw3Z/AFdcRJKL1VDs0J2lLY280PufpqnuhZpriR704A==
-X-Received: by 2002:a05:6830:254a:b0:7c6:9d7b:b033 with SMTP id 46e09a7af769-7cae8355339mr10935440a34.22.1766006027800;
-        Wed, 17 Dec 2025 13:13:47 -0800 (PST)
-Received: from localhost.localdomain ([2603:8080:1500:3d89:a468:73ca:1f36:d52])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3fa179f3a71sm354640fac.0.2025.12.17.13.13.46
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 17 Dec 2025 13:13:47 -0800 (PST)
-Sender: John Groves <grovesaustin@gmail.com>
-From: John Groves <John@Groves.net>
-X-Google-Original-From: John Groves <john@groves.net>
-To: David Hildenbrand <david@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: John Groves <John@Groves.net>,
-	John Groves <jgroves@micron.com>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Gregory Price <gourry@gourry.net>,
-	Balbir Singh <bsingharora@gmail.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>,
-	John Groves <john@groves.net>
-Subject: [PATCH] mm/memremap: fix spurious large folio warning for FS-DAX
-Date: Wed, 17 Dec 2025 15:13:10 -0600
-Message-ID: <20251217211310.98772-1-john@groves.net>
-X-Mailer: git-send-email 2.50.1
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="a/g0QOUg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EFd/YGfvwB0DIBgCOimeUJiX6KBDtyf+FYlKS6X0h96b91jeLhJPkyrIN4TuzCyo3lro5Ks0GQl8BieIut6VXXbaZWxW3wndHrWqmdbRXXb1mZBo7hBHkFRH8ObbzkvXDq0t6ZSzrMLVJe2rwUrg5EIqhfuYXggYO0KFXKKH1eHPHy8HXHChGy+WnL7M38tbljFyjArE9Ezfm8aD2l7b+n+tHcJzTwxxJxVmbhQzDYa9FtShmpJE1EENhfY1larNnD3UHg/7QwQyQu3v1Gww5rX7Sr1EmVPmePo8vc9f/BngK3QPRd9Rj1EI370ftHE8FuG/OpOEakyiuSlqw1MIww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1I4+M+9cQgka7X/EhnpTLM45rNFfYbRCYsaKifDIzag=;
+ b=Mzo/Z9Nroj6s/ItqnpYTR335T4bs8IXbHqfLq506GmBlucUYyj9Zt49NGhQYJ2J44UmrEhIT/ds4iCdv1mNpUCnncQllomHf9WVEaveFm40QQ+sSO49gVtFxvnsq8UDV/AFGAmyaVccAbzCoOoZR4e0cLcZ0h1Yzl4+KqrE8PkZlWegN9lpnMH/4jIv+ItKasI7ZC6Ufr542zQDUL0d6yk1aWPkLPAM55C3UVsK2ceplI8sYzB/P+etg5OKNBAJXYTps3+8OU9qjkYTKICWQkNisBA7Tv90oJgSPH6hfNrVZX4fE15dBIm0BnQ9zntuhPCyJ/vGgE73G7XKatNHPxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1I4+M+9cQgka7X/EhnpTLM45rNFfYbRCYsaKifDIzag=;
+ b=a/g0QOUgiQTD0nwI5Ag91b/vHDk+4XCxQxhvCw2pjQM7ed0004SDEdM6P5BL1Gnvrd6+LbLXt0KupQgMfD7NSjO0q277sVjHjmFlU2hGVEoS3DEZO/LIePr70FLApivWeRJJdMqOFaHXrXKNDbjXtX904t44VRnkSvqca9pPPho=
+Received: from PH8P220CA0036.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:348::16)
+ by BL3PR12MB6619.namprd12.prod.outlook.com (2603:10b6:208:38e::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.6; Wed, 17 Dec
+ 2025 19:56:19 +0000
+Received: from SN1PEPF0002529F.namprd05.prod.outlook.com
+ (2603:10b6:510:348:cafe::53) by PH8P220CA0036.outlook.office365.com
+ (2603:10b6:510:348::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9434.7 via Frontend Transport; Wed,
+ 17 Dec 2025 19:56:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SN1PEPF0002529F.mail.protection.outlook.com (10.167.242.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9434.6 via Frontend Transport; Wed, 17 Dec 2025 19:56:18 +0000
+Received: from [10.236.188.135] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 17 Dec
+ 2025 13:56:07 -0600
+Message-ID: <474e2821-7ab4-4092-9376-87f311fab25b@amd.com>
+Date: Wed, 17 Dec 2025 13:56:02 -0600
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+Subject: Re: [PATCH v5 4/7] cxl: Add inject-error command
+To: Alison Schofield <alison.schofield@intel.com>
+CC: <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
+	<dave.jiang@intel.com>
+References: <20251215213630.8983-1-Benjamin.Cheatham@amd.com>
+ <20251215213630.8983-5-Benjamin.Cheatham@amd.com>
+ <aUIzVWxpu_nHBKVo@aschofie-mobl2.lan>
+Content-Language: en-US
+In-Reply-To: <aUIzVWxpu_nHBKVo@aschofie-mobl2.lan>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002529F:EE_|BL3PR12MB6619:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1283fd77-d994-48bf-2def-08de3da6582e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dlZMZ24xQzhSTnNiZWlHZDY3RUlGNjI0ak1EVzc3aVp3bnhOeDR4bzF3WlYx?=
+ =?utf-8?B?ZHVFdFVlYVJKRTRPbDNpUlZlNHZ5VDkwaE14dVphWVh1dG5kMHZvMDVJMTR2?=
+ =?utf-8?B?SjNhMEVKQSsyb2ZlYktmYkNqZm1LUHRxTGlmeFlYdCt4a3g0MHZxcHNBYnN4?=
+ =?utf-8?B?WHVvaE41V1o0eG9LN0IydTcrMFBiV2xuYitncXZpOEF3KzUxQ29PL283QkQ2?=
+ =?utf-8?B?TTJHbEZSdC9Cak9oYVgweFhERktzNDMvNzkyQVprZHhxQUZrTFFUYkl2bWRL?=
+ =?utf-8?B?UDJ4NGcwSHgzL1I0cktmeE1JckU2ODcvL1dHZFVLUVZQb1cvN2Q2RzFhZHpQ?=
+ =?utf-8?B?OWljZi9ySS9WZFRmZ3dpME5hMDJ0UlhhcXdSS0NOUkYzbGd0T0tnVHY5VlJX?=
+ =?utf-8?B?eTRPR09lTmUwd2p6aHltQ1pRR3RTWHFWNjB4Z1lnU0Y2cDhKY2JtY2s1TWRj?=
+ =?utf-8?B?VDhNYTk0NUorSklFSlZxMTQ1UGV1ZlNkR3ROdDRlT0tZQzQ2eEJ3TlJwbmZ2?=
+ =?utf-8?B?L0V5dlZPS2pySXB3VlVabi9vWHprSTVlbUZOUlRCODNXNlE5STBSQ3lDWUht?=
+ =?utf-8?B?WEIwVDFoRmc0a2JIdXNWaStHOVh0dVBlRGR5Y3BXSzVudC96VHpxalN2eURJ?=
+ =?utf-8?B?dGhLR1l4Q1Jqa1FEcnphNlAwZ2cvNWFoenRxUkhTN1RhYldRajk0L0loZ0VL?=
+ =?utf-8?B?Yy9raFlhQmNHZlppVDMzUVU0VE9uQW5Qc1NIc0c0SEttV3gyb2lHUkJXSjN6?=
+ =?utf-8?B?NndreDI5KzJBbHYrRjNETVFHQ0VYVkVrRUsvK25yT0pyYXRuZmZGdHh2Y3hK?=
+ =?utf-8?B?c083U1BwNGo0Z0hKdGFRMlZJTm8zSU1qcVE3UlZDVHY5cFpyejlUVWVscUVv?=
+ =?utf-8?B?VG9qUlpreUxnbHZDeVQ4VXZYTnZnU1ZNRkxnSzN6ZW40UGQvTDZsZndSR0Fx?=
+ =?utf-8?B?THRuQ0lwWURTKzRWODJBTUcvNFlLeThjWkNPR3dyT2p1eUp0L3JiNURhQzha?=
+ =?utf-8?B?QkxjbzVJNjZCVzBwNysxeUF6UXByUWFhU2VGdnlKaTBHV1lkUGFDOWRqZlJq?=
+ =?utf-8?B?TUdzRS9UOGNSSEkyVTlkYWV0bFJUcFBnWEsxVHhxdlQzc05zSlFoN1R2akRW?=
+ =?utf-8?B?WGxkbktuRnNJQVpxMUpIcFF4SlVNS3JPcDA4MzN3d1BiYitXSmhmUklRRVZa?=
+ =?utf-8?B?YzFCRWk5WXpRNlhBcENTbzVVZUNCSHFwNVNDQ01sQnZhbm9kUmtpUVFIS2Vm?=
+ =?utf-8?B?N1BETHlCODFCYzFDaE01MC93eG5DWUJZNXZJMXA3RjVaZjhLcmZJVEdPbmhP?=
+ =?utf-8?B?SGcyZXkzUUJkZjlGc1g3VDM2Rjl0bTdsSktPL01hVGVySmpwNkNWbS9iOEkz?=
+ =?utf-8?B?ZHpyRzF2NkI0OTRWNStmeXJnaFhSRUdCeGNLeW5oWVJHUmswSitMeGdRVm56?=
+ =?utf-8?B?L25jZE9oZzhtd3RlbjJWQVJHVC9iejU3RjhMV2xMSW1FZFRJeFE4cjcyM3pl?=
+ =?utf-8?B?M0tPb1NpTHJ4OVRJeGlpaTFyVllLUW9xdndoOFVqaGhsbDB4Z0Nnb1h4RTJ0?=
+ =?utf-8?B?OHhwR0dtMXZJZVlxdDhGQ1BnUzV1bVJ0WmViRDhZSmJsN1VlTHpMSTFrbEZL?=
+ =?utf-8?B?QmduWS9CbGcvcnRrRk9Icnpwc1U0ZGxKT2IvZG8zOUJsbTZINkNBWFcvWktF?=
+ =?utf-8?B?YWFrWFVLLy8wRHYyb2RBUkhKWlJqNmtid1BYMjI4dS9yZWwvekFxK0JudW41?=
+ =?utf-8?B?M2Eyb2JSVm0vYkowb2FWQnBCMndNeW9iMzNieC9ad0MvK1RZUW9heVVSNVBK?=
+ =?utf-8?B?QjRXTDZ2ZmRkc3ljV0F2bHl3VVVXb0Y3UGRJbEFzd1E1ZDV1OVlnMFNjM1NM?=
+ =?utf-8?B?ZnFMaXlLMlZDbWFKMUdLdC9RallQUDNMTmhMOE5ZeUFFOUkxVUpFUm5hWEpX?=
+ =?utf-8?B?bWhGZm9hVkhsLzBJYnhrNWhrbDA1ZmFvRHRIQzVZaTFmN24wRGcrWm9taEF1?=
+ =?utf-8?B?Q1Rlc3c2aVpVUGFkc2NRcmt0YU9iSFFaOTN3a1JNOGZKMnBTS3I0eTNaUmFx?=
+ =?utf-8?B?YVVacDcvWEdzR0NJODhVV2VDWG9lWEUydGNXdnJhbXNoM3VmWG90aFNTV0I3?=
+ =?utf-8?Q?TnLc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2025 19:56:18.5812
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1283fd77-d994-48bf-2def-08de3da6582e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002529F.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6619
 
-From: John Groves <John@Groves.net>
+On 12/16/2025 10:36 PM, Alison Schofield wrote:
+> On Mon, Dec 15, 2025 at 03:36:27PM -0600, Ben Cheatham wrote:
+>> Add the 'cxl-inject-error' command. This command will provide CXL
+>> protocol error injection for CXL VH root ports and CXL RCH downstream
+>> ports, as well as poison injection for CXL memory devices.
+>>
+>> Add util_cxl_dport_filter() to find downstream ports by either dport id
+>> or device name.
+> 
+> Does above comment match code? Does util_cxl_dport_filter() match by
+> 'id' or 'name' ?
 
-This patch addresses a warning that I discovered while working on famfs,
-which is an fs-dax file system that virtually always does PMD faults
-(next famfs patch series coming after the holidays).
+It should just be 'name'; I forgot to update the commit message from v4.
 
-However, XFS also does PMD faults in fs-dax mode, and it also triggers
-the warning. It takes some effort to get XFS to do a PMD fault, but
-instructions to reproduce it are below.
+> 
+> 
+> snip
+> 
+>> +#define EINJ_TYPES_BUF_SIZE 512
+> 
+> above appears unused
 
-The VM_WARN_ON_ONCE(folio_test_large(folio)) check in
-free_zone_device_folio() incorrectly triggers for MEMORY_DEVICE_FS_DAX
-when PMD (2MB) mappings are used.
+It is, I replaced it with SYSFS_ATTR_SIZE IIRC. I'll remove it.
 
-FS-DAX legitimately creates large file-backed folios when handling PMD
-faults. This is a core feature of FS-DAX that provides significant
-performance benefits by mapping 2MB regions directly to persistent
-memory. When these mappings are unmapped, the large folios are freed
-through free_zone_device_folio(), which triggers the spurious warning.
+> 
+> 
+> snip
+> 
+>> +static int poison_action(struct cxl_ctx *ctx, const char *filter,
+>> +			 const char *addr_str)
+>> +{
+>> +	struct cxl_memdev *memdev;
+>> +	size_t addr;
+>> +	int rc;
+>> +
+>> +	memdev = find_cxl_memdev(ctx, filter);
+>> +	if (!memdev)
+>> +		return -ENODEV;
+>> +
+>> +	if (!cxl_memdev_has_poison_injection(memdev)) {
+>> +		log_err(&iel, "%s does not support error injection\n",
+>> +			cxl_memdev_get_devname(memdev));
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (!addr_str) {
+>> +		log_err(&iel, "no address provided\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	addr = strtoull(addr_str, NULL, 0);
+>> +	if (addr == ULLONG_MAX && errno == ERANGE) {
+>> +		log_err(&iel, "invalid address %s", addr_str);
+>> +		return -EINVAL;
+>> +	}
+> 
+> errno best set to 0 before strtoull
+> there is a type mismatch btw addr of size_t and strtoull
 
-The warning was introduced by commit that added support for large zone
-device private folios. However, that commit did not account for FS-DAX
-file-backed folios, which have always supported large (PMD-sized)
-mappings.
+Got it, I'll fix those.
 
-The check distinguishes between anonymous folios (which clear
-AnonExclusive flags for each sub-page) and file-backed folios. For
-file-backed folios, it assumes large folios are unexpected - but this
-assumption is incorrect for FS-DAX.
+> 
+> snip
+> 
+>> +static int inject_action(int argc, const char **argv, struct cxl_ctx *ctx,
+>> +			 const struct option *options, const char *usage)
+>> +{
+>> +	struct cxl_protocol_error *perr;
+>> +	const char * const u[] = {
+>> +		usage,
+>> +		NULL
+>> +	};
+>> +	int rc = -EINVAL;
+>> +
+>> +	log_init(&iel, "cxl inject-error", "CXL_INJECT_LOG");
+>> +	argc = parse_options(argc, argv, options, u, 0);
+>> +
+>> +	if (debug) {
+>> +		cxl_set_log_priority(ctx, LOG_DEBUG);
+>> +		iel.log_priority = LOG_DEBUG;
+>> +	} else {
+>> +		iel.log_priority = LOG_INFO;
+>> +	}
+>> +
+>> +	if (argc != 1) {
+>> +		usage_with_options(u, options);
+>> +		return rc;
+>> +	}
+> 
+> The above catches bad syntax like this where I omit type:
+> # cxl inject-error mem10 -t -a 0x0
+> 
+> We also need to catch this where I omit the option altogether:
+> # cxl inject-error mem10  -a 0x0
+> Segmentation fault (core dumped)
 
-The fix is to exempt MEMORY_DEVICE_FS_DAX from the large folio warning,
-allowing FS-DAX to continue using PMD mappings without triggering false
-warnings.
+Good point. I'll change it to catch omitted required options as well.
 
-Signed-off-by: John Groves <john@groves.net>
----
-=== How to reproduce ===
-
-A reproducer is available at:
-
-    git clone https://github.com/jagalactic/dax-pmd-test.git
-    cd xfs-dax-test
-    make
-    sudo make test
-
-This will set up XFS on pmem with 2MB stripe alignment and run a test
-that triggers the warning.
-
-Alternatively, follow the manual steps below.
-
-Prerequisites:
-  - Linux kernel with FS-DAX support and CONFIG_DEBUG_VM=y
-  - A pmem device (real or emulated)
-  - An fsdax namespace configured via ndctl as /dev/pmem0
-
-Manual steps:
-
-1. Create an fsdax namespace (if not already present):
-   # ndctl create-namespace -m fsdax -e namespace0.0
-
-2. Create XFS with 2MB stripe alignment:
-   # mkfs.xfs -f -d su=2m,sw=1 /dev/pmem0
-   # mount -o dax /dev/pmem0 /mnt/pmem
-
-3. Compile and run the reproducer:
-   # gcc -Wall -O2 -o dax_pmd_test dax_pmd_test.c
-   # ./dax_pmd_test /mnt/pmem/testfile
-
-4. Check dmesg for the warning:
-   WARNING: mm/memremap.c:431 at free_zone_device_folio+0x.../0x...
-
-Note: The 2MB stripe alignment (-d su=2m,sw=1) is critical. XFS normally
-allocates blocks at arbitrary offsets, causing PMD faults to fall back
-to PTE faults. The stripe alignment forces 2MB-aligned allocations,
-allowing PMD faults to succeed and exposing this bug.
-
-=== Proposed fix ===
-
-mm/memremap.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/mm/memremap.c b/mm/memremap.c
-index 4c2e0d68eb27..af37c3b4e39b 100644
---- a/mm/memremap.c
-+++ b/mm/memremap.c
-@@ -428,7 +428,12 @@ void free_zone_device_folio(struct folio *folio)
- 		for (i = 0; i < nr; i++)
- 			__ClearPageAnonExclusive(folio_page(folio, i));
- 	} else {
--		VM_WARN_ON_ONCE(folio_test_large(folio));
-+		/*
-+		 * FS_DAX legitimately uses large file-mapped folios for
-+		 * PMD mappings, so only warn for other device types.
-+		 */
-+		VM_WARN_ON_ONCE(pgmap->type != MEMORY_DEVICE_FS_DAX &&
-+				folio_test_large(folio));
- 	}
- 
- 	/*
-
-base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
--- 
-2.49.0
+> 
+>> +
+>> +	if (strcmp(inj_param.type, "poison") == 0) {
+>> +		rc = poison_action(ctx, argv[0], inj_param.address);
+>> +		return rc;
+>> +	}
+> 
+> snip
+> 
 
