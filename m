@@ -1,42 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D421134678B;
-	Wed, 17 Dec 2025 15:40:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA6F2FF164;
+	Wed, 17 Dec 2025 15:48:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765986057; cv=none; b=F2u74aflWEe/pNd3z8H4FIIXj/E1BguyRswfR9SoMd7wfzJol1IekzLmCTKRIQFL2vlMvqbsesRenAzjOtazwlMc6KQ+H7dI7IvnrBCWlTyDqKsTNNbBiuITpinsCQMkBLfcrZXUOXrsWk9Uc5yh7islNZqLtjqAj0vJZbCp714=
+	t=1765986517; cv=none; b=SiQqhZut0WBKk9f/sK76IvODfaniatTKK4ujhfp9UGgFt4iRHeUibLemO1U2UzCAnRM09BBJwwvUmReilySfpuwJJEdGEm+ux7+Lmyi9qAzUxsJhsPebNnzfLl+7l/lluuzx5h7LibkCI3SS/U1CxX2cn8jjDuATK9qQPip1Yp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765986057; c=relaxed/simple;
-	bh=mieFvdmb0UCHzioczhpeBTgA40ha7jMZMTlU92fLngY=;
+	s=arc-20240116; t=1765986517; c=relaxed/simple;
+	bh=4Z/fRxAkhYB+S6AnaWaXiWnOUn/71F98GuSAN1l8tKU=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CTZXZo1b77mBTlOw3j8c4GqjEvpALRm2eJ6tbWTHp8cZLN+IaFJ3/T9tofkD+xgM2wCWGc1k2bosqibntPygPGYMFVaAQWK+0HKCdHOCtzpvjO8TNrl2JlYeaSjdzbMb0ysWIeTzW98M8vRBiunLw2YWY05tCvpZv0ubTDERf6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=fail smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=huawei.com
+	 MIME-Version:Content-Type; b=GaqUW9cjC/w6h0FB9nvjx6Q6H7OV90F4gAoAKYGuMyD5prCdXTYUwxH3hzU6sU6bgaBVOpc56t/0APaYZMj78BJutwNvzDjHujN6sPdVd9bTTP9Zi/nJLalAJyYaWSkOez8tp2gkjoUGMzqsttRwlC+m16CZ5cKpsuK1cVP+P00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dWdKl0nt1zHnGcs;
-	Wed, 17 Dec 2025 23:40:27 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dWdVW1sgKzJ46Bd;
+	Wed, 17 Dec 2025 23:48:03 +0800 (CST)
 Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 88EC040565;
-	Wed, 17 Dec 2025 23:40:52 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id CBA4940565;
+	Wed, 17 Dec 2025 23:48:32 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
  (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 17 Dec
- 2025 15:40:51 +0000
-Date: Wed, 17 Dec 2025 15:40:50 +0000
+ 2025 15:48:31 +0000
+Date: Wed, 17 Dec 2025 15:48:30 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Neeraj Kumar <s.neeraj@samsung.com>
-CC: <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <gost.dev@samsung.com>,
-	<a.manzanares@samsung.com>, <vishak.g@samsung.com>, <neeraj.kernel@gmail.com>
-Subject: Re: [PATCH V4 15/17] cxl/pmem_region: Add sysfs attribute cxl
- region label updation/deletion
-Message-ID: <20251217154050.00003293@huawei.com>
-In-Reply-To: <20251119075255.2637388-16-s.neeraj@samsung.com>
-References: <20251119075255.2637388-1-s.neeraj@samsung.com>
-	<CGME20251119075337epcas5p2cb576137ca33d6304add4e1ba0b2bdc1@epcas5p2.samsung.com>
-	<20251119075255.2637388-16-s.neeraj@samsung.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<alison.schofield@intel.com>, <terry.bowman@amd.com>,
+	<alejandro.lucero-palau@amd.com>, <linux-pci@vger.kernel.org>, Ben Cheatham
+	<benjamin.cheatham@amd.com>, Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [PATCH v2 4/6] cxl/mem: Convert devm_cxl_add_memdev() to
+ scope-based-cleanup
+Message-ID: <20251217154830.00001085@huawei.com>
+In-Reply-To: <20251216005616.3090129-5-dan.j.williams@intel.com>
+References: <20251216005616.3090129-1-dan.j.williams@intel.com>
+	<20251216005616.3090129-5-dan.j.williams@intel.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -49,62 +50,41 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
  dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Wed, 19 Nov 2025 13:22:53 +0530
-Neeraj Kumar <s.neeraj@samsung.com> wrote:
+On Mon, 15 Dec 2025 16:56:14 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Using these attributes region label is added/deleted into LSA. These
-> attributes are called from userspace (ndctl) after region creation.
+> In preparation for adding more setup steps, convert the current
+> implementation to scope-based cleanup.
 > 
-> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
-One quick addition to what Dave called out.
+> The cxl_memdev_shutdown() is only required after cdev_device_add(). With
+> that moved to a helper function it precludes the need to add
+> scope-based-handler for that cleanup if devm_add_action_or_reset() fails.
+> 
+> Cc: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+> Tested-by: Alejandro Lucero <alucerop@amd.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+One trivial thing below that is probably fine to cleanup whilst picking this
+up.
 
-Thanks,
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-Jonathan
+> ---
+>  drivers/cxl/core/memdev.c | 70 ++++++++++++++++++++++++---------------
+>  1 file changed, 44 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 7a4153e1c6a7..18efbf294db5 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
 
-> diff --git a/drivers/cxl/core/pmem_region.c b/drivers/cxl/core/pmem_region.c
-> index b45e60f04ff4..be4feb73aafc 100644
-> --- a/drivers/cxl/core/pmem_region.c
-> +++ b/drivers/cxl/core/pmem_region.c
-> @@ -30,9 +30,100 @@ static void cxl_pmem_region_release(struct device *dev)
->  	kfree(cxlr_pmem);
->  }
->  
-> +static ssize_t region_label_update_store(struct device *dev,
-> +					 struct device_attribute *attr,
-> +					 const char *buf, size_t len)
-> +{
-> +	struct cxl_pmem_region *cxlr_pmem = to_cxl_pmem_region(dev);
-> +	struct cxl_region *cxlr = cxlr_pmem->cxlr;
-> +	ssize_t rc;
-> +	bool update;
 > +
-> +	rc = kstrtobool(buf, &update);
-> +	if (rc)
-> +		return rc;
-> +
-> +	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-> +	rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem);
-> +	if (rc)
-I'd stick to one style for these.  Elsewhere you have
-	if ((rc = ACQUIRE_ERR())
+> +DEFINE_FREE(put_cxlmd, struct cxl_memdev *,
+> +	    if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev);)
 
-> +		return rc;
-> +
-> +	/* Region not yet committed */
-> +	if (update && cxlr && cxlr->params.state != CXL_CONFIG_COMMIT) {
-> +		dev_dbg(dev, "region not committed, can't update into LSA\n");
-> +		return -ENXIO;
-> +	}
-> +
-> +	if (!cxlr || !cxlr->cxlr_pmem || !cxlr->cxlr_pmem->nd_region)
-> +		return 0;
-> +
-> +	rc = nd_region_label_update(cxlr->cxlr_pmem->nd_region);
-> +	if (rc)
-> +		return rc;
-> +
-> +	cxlr->params.state_region_label = CXL_REGION_LABEL_ACTIVE;
-> +
-> +	return len;
-> +}
+Bonus ; ?
+
+
+
