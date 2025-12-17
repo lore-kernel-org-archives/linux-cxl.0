@@ -1,127 +1,316 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7FE393DE7
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Dec 2025 14:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C80B3A3F0E;
+	Wed, 17 Dec 2025 14:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765981840; cv=none; b=clEWboANsjH8FhVpNhDsUj5Jt+UgnqLwjHLVD1+hXu9k15RMAXTu1qjJ/gAINwCtp6rd+myHb/IFAmfYBeKXHxRwOnYhk2Nf6pVMqygta6WioI4qsny+Wpz7CJTMVnLWIqH2aA8dKBvIhRTHAN9sWcbP14Q7Aesu7h6o8ivUnRc=
+	t=1765981900; cv=none; b=ir+bXQ3SBa1pFKE1n64wZjDxv4tjMTwTOJXQHSPOtDZ/E1MlPzXgvL6yAFSlLvHOV+IMFfePsCKyJMCltuX37FM1hr2pqCriwXikPlhbV7Cy0AdQTLo0M80xD3KmR3hhzso/6Q1mTAk2v/6A+D1pHy+pdnpVfr7LI8z/RPDxApM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765981840; c=relaxed/simple;
-	bh=Fh6DABJrbPJT1PTCHfTOdEoXaqOKIP3VETOEhx/5FRU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pny6LPtnr+ZfrCm5Zizh0GBYeVq+YTNQAL/6RmP5kgYrQuNvPRER33wRK4zOUSeJ9q6GWHD00M6c2vFx54xUL100uPNIGVfKP9kIaC0p7fPvukundnc94/3FI1hlsd093EJhW7ICq6Pj+hy+t0oAFqoYLfalYD5vGBFFmEFjWY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UXvl9aFk; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXvl9aFk"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-88888d80590so35405586d6.3
-        for <linux-cxl@vger.kernel.org>; Wed, 17 Dec 2025 06:30:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765981838; x=1766586638; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bObqtAYbtqPyRtytU8ZPzJkSMQTXmYD1zvhyUZB6ziM=;
-        b=UXvl9aFkorwau3Gj9I6RVLPbTu9JAbLfbzcS3BvfyI5Xgk2LyrADbXIBkqdKijDMa0
-         9ZiTf93HvJQwpobOHzxnxHsFuEwZyguMH38RrhH5GfzLeNtPSywHiochaMf9//dCkEQt
-         l04LiyOcJ7fX9+6w44Zkmr3jhxfHC5YibA2rzRixbCp3lC6pTQyVwTzQw5yg0KPhXIYK
-         PvGuGDNJPRPlyeTB5XiPTCxVoKAaCev+XSsmVtyldzkP8o5WvO/WbBMKgIOv8rbPeuZm
-         7bkIMiJKnuMBoGsqQQjxaHKelpNEetZnl7ZTGaRlToo3g/HM3ihGgdcGyg6XdCRikC3v
-         BJow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765981838; x=1766586638;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bObqtAYbtqPyRtytU8ZPzJkSMQTXmYD1zvhyUZB6ziM=;
-        b=Ev3SDJPwjGqtkQk/cYMDAbF9aOLyplVsIUUcxE0PEm1rZxOYIh4XqM+laMXMWONxMx
-         EgD8s29cy1feL/ago02EfViNrVyeo2SfVYiYOhzM2Pwh2benNbxVAQA+sozO4FkIxf12
-         FBAUpZCgyu+q3TAAypXIqEiU3b2FGUI6KGC1X7/Wbu8bMswXB8gtY+h28FvA8QkfPug3
-         v6JINvfz7G+EvFZv/eE6y/78yzLEHAZc9P5Jt36WmYuaj7dlywZvzaObL1rYdar7tIV2
-         N9PImMuaXcRu+D3vzneyoFpnqQYqliC6T6dQIoIWjTyV4dQAmTWxoev0+0Wx7ycK0ij4
-         msqw==
-X-Gm-Message-State: AOJu0Ywd7bFSIqEfpetBhAW2/ui2SkeipEsZunAwKXRChaOwUieRUWSq
-	G5YRiLzINnEwJC3WhdCaJXq/VmcdRBR0G+1TQ6fjG+8iu/A5XYs5eW0Vs/JmtUSWA4e1IkWknP5
-	3RuCO/QZoXOoaqqQI4GxZ4H1+9aGyDuE=
-X-Gm-Gg: AY/fxX4B5k0t8ZwTjfSdNNrxTZ9t7TLHvHbsxKJmGFs+/IOHTYB70rAgtdEftuOWguB
-	qU99S/Sqq0833P6rS+N3dyjoz+6AnS+mN90/NgJtgMEdbmXKMXtuMX5gSU8tsrjvyibEU2+Q6+R
-	GORdei95lq5bA6iBQfrjP4cHQgPmCuWmg5zccyN1v8DpO+A5rxuCFW1b0MWAVvNXlZEsUQ8ib9v
-	m2gqQO8+62AecL+if2Ieo2gGmoblOJwmzVA/yfkN+zoE1F87KoDXQ0S8NPBMWuaJKTffdld9ZkY
-	DdJDiDZM9C6goWIeLZmgnOI=
-X-Google-Smtp-Source: AGHT+IG9CjUX9xvTFuZx6a2NPrFwtCK7bxkx/r5NoPA7mfHv28qSmnSSIjA0N0/sFHA8ebvWgtfC8wdZ4CSHTHQWhq0=
-X-Received: by 2002:a05:6214:1301:b0:87f:fecf:17b2 with SMTP id
- 6a1803df08f44-8887e1681dfmr277315766d6.64.1765981837872; Wed, 17 Dec 2025
- 06:30:37 -0800 (PST)
+	s=arc-20240116; t=1765981900; c=relaxed/simple;
+	bh=a66rKQ9Iz3JERQ7jJa5b2/oBz7TesvgqfSJe/vTvL+M=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rK8ECePp7dVZCrs7T1/EC7A1uuziE2RZUWUUVMnGIO9XATwzgb1/la89/D9uwmeAP7p0n0HnBSz8WcAiWPeUeBdDMkImSc8Zxmgm2jqX3rZCVyt0c9a3wlsqqH/VBnuXdLDRcIwXw5ge7CEOo5C8wvUsdcD6GGp9GY+wecdkqQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dWbnk285yzJ469G;
+	Wed, 17 Dec 2025 22:31:06 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id C02EA4056B;
+	Wed, 17 Dec 2025 22:31:35 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 17 Dec
+ 2025 14:31:35 +0000
+Date: Wed, 17 Dec 2025 14:31:33 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>
+CC: <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <gost.dev@samsung.com>,
+	<a.manzanares@samsung.com>, <vishak.g@samsung.com>, <neeraj.kernel@gmail.com>
+Subject: Re: [PATCH V4 03/17] nvdimm/label: Add namespace/region label
+ support as per LSA 2.1
+Message-ID: <20251217143133.00003109@huawei.com>
+In-Reply-To: <20251119075255.2637388-4-s.neeraj@samsung.com>
+References: <20251119075255.2637388-1-s.neeraj@samsung.com>
+	<CGME20251119075311epcas5p1af6f86ca65fd4a8452979e861b87a841@epcas5p1.samsung.com>
+	<20251119075255.2637388-4-s.neeraj@samsung.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251208094028.214949-1-akinobu.mita@gmail.com>
- <20251208094028.214949-3-akinobu.mita@gmail.com> <01d780a3-16ef-4f87-b57d-00d50afa4bed@suse.cz>
-In-Reply-To: <01d780a3-16ef-4f87-b57d-00d50afa4bed@suse.cz>
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Date: Wed, 17 Dec 2025 23:30:26 +0900
-X-Gm-Features: AQt7F2r857gCtTYlq9_ZRMrLStQLliPCzDrXV1Jhny-QQKzbfSA_Im20lse9vVk
-Message-ID: <CAC5umygxuqYrV1w3kMc+uaZuBgqcx3sX4MsZ1C3tLpHHTFZW2w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mm/vmscan: don't demote if there is not enough free
- memory in the lower memory tier
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, akpm@linux-foundation.org, axelrasmussen@google.com, 
-	yuanchu@google.com, weixugc@google.com, hannes@cmpxchg.org, david@kernel.org, 
-	mhocko@kernel.org, zhengqi.arch@bytedance.com, shakeel.butt@linux.dev, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org, 
-	surenb@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-2025=E5=B9=B412=E6=9C=8817=E6=97=A5(=E6=B0=B4) 21:55 Vlastimil Babka <vbabk=
-a@suse.cz>:
->
-> On 12/8/25 10:40, Akinobu Mita wrote:
-> > On systems with multiple memory-tiers consisting of DRAM and CXL memory=
-,
-> > the OOM killer is not invoked properly.
-> >
-> > Here's the command to reproduce:
-> >
-> > $ sudo swapoff -a
-> > $ stress-ng --oomable -v --memrate 20 --memrate-bytes 10G \
-> >     --memrate-rd-mbs 1 --memrate-wr-mbs 1
-> >
-> > The memory usage is the number of workers specified with the --memrate
-> > option multiplied by the buffer size specified with the --memrate-bytes
-> > option, so please adjust it so that it exceeds the total size of the
-> > installed DRAM and CXL memory.
-> >
-> > If swap is disabled, you can usually expect the OOM killer to terminate
-> > the stress-ng process when memory usage approaches the installed memory
-> > size.
-> >
-> > However, if multiple memory-tiers exist (multiple
-> > /sys/devices/virtual/memory_tiering/memory_tier<N> directories exist),
-> > and /sys/kernel/mm/numa/demotion_enabled is true and
-> > /sys/kernel/mm/lru_gen/min_ttl_ms is 0, the OOM killer will not be invo=
-ked
->
-> Does this mean only mglru has the problem, or !mglru too?
+On Wed, 19 Nov 2025 13:22:41 +0530
+Neeraj Kumar <s.neeraj@samsung.com> wrote:
 
-!mglru has the problem, too.
+> Modify __pmem_label_update() to update region labels into LSA
+> 
+> CXL 3.2 Spec mentions CXL LSA 2.1 Namespace Labels at section 9.13.2.5
+> Modified __pmem_label_update() using setter functions to update
+> namespace label as per CXL LSA 2.1
+> 
+> Create export routine nd_region_label_update() used for creating
+> region label into LSA. It will be used later from CXL subsystem
+> 
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+Hi Neeraj,
 
-> Also is min_ttl_ms =3D 0 a sensible setting? What happens without it?
+A few things inline from a fresh read.
 
-Setting min_tto_ms =3D 1 or a longer value will cause kswapd
-to trigger the oom-killer.
+Thanks,
 
-However, when the stress-ng devshm test was run in addition to
-the above test to increase the load, the system remained inoperable
-with only the oom-killer by kswapd.
+Jonathan
 
-> If !mglru doesn't have this problem, how does the fix affect it?
+> ---
+>  drivers/nvdimm/label.c          | 360 ++++++++++++++++++++++++++------
+>  drivers/nvdimm/label.h          |  17 +-
+>  drivers/nvdimm/namespace_devs.c |  25 ++-
+>  drivers/nvdimm/nd.h             |  66 ++++++
+>  include/linux/libnvdimm.h       |   8 +
+>  5 files changed, 406 insertions(+), 70 deletions(-)
+> 
+> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
+> index 0a9b6c5cb2c3..0d587a5b9f7e 100644
+> --- a/drivers/nvdimm/label.c
+> +++ b/drivers/nvdimm/label.c
 
-With this patch, the oom-killer will be triggered directly from
-memory allocations, regardless of mglru or not.
+
+
+
+> @@ -978,7 +1132,8 @@ static int __pmem_label_update(struct nd_region *nd_region,
+>  	return rc;
+>  }
+
+>  int nd_pmem_namespace_label_update(struct nd_region *nd_region,
+>  		struct nd_namespace_pmem *nspm, resource_size_t size)
+>  {
+> @@ -1075,6 +1253,7 @@ int nd_pmem_namespace_label_update(struct nd_region *nd_region,
+>  	for (i = 0; i < nd_region->ndr_mappings; i++) {
+>  		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
+>  		struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
+> +		int region_label_cnt = 0;
+
+Always initialized anyway before use I think. So no need to do it here.
+
+>  		struct resource *res;
+>  		int count = 0;
+>  
+> @@ -1090,12 +1269,20 @@ int nd_pmem_namespace_label_update(struct nd_region *nd_region,
+>  				count++;
+>  		WARN_ON_ONCE(!count);
+>  
+> -		rc = init_labels(nd_mapping, count);
+> +		region_label_cnt = find_region_label_count(nd_mapping);
+> +		/*
+> +		 * init_labels() scan labels and allocate new label based
+> +		 * on its second parameter (num_labels). Therefore to
+> +		 * allocate new namespace label also include previously
+> +		 * added region label
+> +		 */
+> +		rc = init_labels(nd_mapping, count + region_label_cnt,
+> +				 NS_LABEL_TYPE);
+>  		if (rc < 0)
+>  			return rc;
+>  
+>  		rc = __pmem_label_update(nd_region, nd_mapping, nspm, i,
+> -				NSLABEL_FLAG_UPDATING);
+> +				NSLABEL_FLAG_UPDATING, NS_LABEL_TYPE);
+>  		if (rc)
+>  			return rc;
+>  	}
+
+> +int nd_pmem_region_label_update(struct nd_region *nd_region)
+> +{
+> +	int i, rc;
+> +
+> +	for (i = 0; i < nd_region->ndr_mappings; i++) {
+> +		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
+> +		struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
+> +		int region_label_cnt = 0;
+
+Seems to always be initialized before use anyway so no need to do it here.
+
+> +
+> +		/* No need to update region label for non cxl format */
+> +		if (!ndd->cxl)
+> +			return 0;
+> +
+> +		region_label_cnt = find_region_label_count(nd_mapping);
+> +		rc = init_labels(nd_mapping, region_label_cnt + 1,
+> +				 RG_LABEL_TYPE);
+> +		if (rc < 0)
+> +			return rc;
+> +
+> +		rc = __pmem_label_update(nd_region, nd_mapping, NULL, i,
+> +				NSLABEL_FLAG_UPDATING, RG_LABEL_TYPE);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	/* Clear the UPDATING flag per UEFI 2.7 expectations */
+> +	for (i = 0; i < nd_region->ndr_mappings; i++) {
+> +		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
+> +		struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
+> +
+> +		WARN_ON_ONCE(!ndd->cxl);
+> +		rc = __pmem_label_update(nd_region, nd_mapping, NULL, i, 0,
+> +				RG_LABEL_TYPE);
+>  		if (rc)
+>  			return rc;
+>  	}
+
+> diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+> index 43fdb806532e..b1abbe602a5e 100644
+> --- a/drivers/nvdimm/namespace_devs.c
+> +++ b/drivers/nvdimm/namespace_devs.c
+> @@ -232,6 +232,18 @@ static ssize_t __alt_name_store(struct device *dev, const char *buf,
+>  	return rc;
+>  }
+>  
+> +int nd_region_label_update(struct nd_region *nd_region)
+> +{
+> +	int rc;
+> +
+> +	nvdimm_bus_lock(&nd_region->dev);
+> +	rc = nd_pmem_region_label_update(nd_region);
+> +	nvdimm_bus_unlock(&nd_region->dev);
+
+In line with much of the nvdimm stuff I'd use guard and save a couple of lines.
+
+	guard(nvdimm_bus)(&nd_region->dev);
+	return nd_pmem_region_label_update(nd_region);
+
+> +
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_GPL(nd_region_label_update);
+
+> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+> index f631bd84d6f0..5fd69c28ffe7 100644
+> --- a/drivers/nvdimm/nd.h
+> +++ b/drivers/nvdimm/nd.h
+> @@ -14,6 +14,9 @@
+>  #include <linux/nd.h>
+>  #include "label.h"
+>  
+> +extern uuid_t cxl_namespace_uuid;
+> +extern uuid_t cxl_region_uuid;
+> +
+>  enum {
+>  	/*
+>  	 * Limits the maximum number of block apertures a dimm can
+> @@ -295,6 +298,67 @@ static inline const u8 *nsl_uuid_raw(struct nvdimm_drvdata *ndd,
+>  	return nd_label->efi.uuid;
+>  }
+>  
+> +static inline void nsl_set_type(struct nvdimm_drvdata *ndd,
+> +				struct nd_namespace_label *ns_label)
+> +{
+> +	if (!(ndd->cxl && ns_label))
+> +		return;
+> +
+> +	uuid_copy((uuid_t *)ns_label->cxl.type, &cxl_namespace_uuid);
+
+uuid_import() perhaps more appropriate given it is coming(I think)
+from a __u8 &.
+
+> +}
+> +
+
+
+> +
+> +static inline bool is_region_label(struct nvdimm_drvdata *ndd,
+> +				   union nd_lsa_label *lsa_label)
+> +{
+> +	uuid_t *region_type;
+> +
+> +	if (!ndd->cxl)
+> +		return false;
+> +
+> +	region_type = (uuid_t *) lsa_label->region_label.type;
+> +	return uuid_equal(&cxl_region_uuid, region_type)
+
+I'd match style of next function and not have the local variable.
+
+	return uuid_equal(&cxl_region_uuid,
+			  (uuid_t *)lsa_label->region_label.type);
+> +}
+> +
+> +static inline bool
+> +region_label_uuid_equal(struct cxl_region_label *region_label,
+> +			const uuid_t *uuid)
+> +{
+> +	return uuid_equal((uuid_t *) region_label->uuid, uuid);
+
+Dave pointed out that there shouldn't be a space after the cast.
+Make sure you catch all of these.
+
+> +}
+> +
+> +static inline u64
+> +region_label_get_checksum(struct cxl_region_label *region_label)
+> +{
+> +	return __le64_to_cpu(region_label->checksum);
+> +}
+> +
+> +static inline void
+> +region_label_set_checksum(struct cxl_region_label *region_label,
+> +			  u64 checksum)
+> +{
+> +	region_label->checksum = __cpu_to_le64(checksum);
+> +}
+
+Perhaps add a little justification to the patch description on why these
+get/set are helpful? Seems like just setting them directly would perhaps
+be fine as all call sites can see the structure definition anyway?
+
+> +
+>  bool nsl_validate_type_guid(struct nvdimm_drvdata *ndd,
+>  			    struct nd_namespace_label *nd_label, guid_t *guid);
+>  enum nvdimm_claim_class nsl_get_claim_class(struct nvdimm_drvdata *ndd,
+> @@ -376,7 +440,9 @@ enum nd_label_flags {
+>  struct nd_label_ent {
+>  	struct list_head list;
+>  	unsigned long flags;
+> +	uuid_t label_uuid;
+>  	struct nd_namespace_label *label;
+> +	struct cxl_region_label *region_label;
+>  };
+>  
+>  enum nd_mapping_lock_class {
+> diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+> index 5696715c33bb..2c213b9dac66 100644
+> --- a/include/linux/libnvdimm.h
+> +++ b/include/linux/libnvdimm.h
+> @@ -117,6 +117,13 @@ struct nd_interleave_set {
+>  	u64 altcookie;
+>  
+>  	guid_t type_guid;
+> +
+> +	/* v2.1 region label info */
+> +	uuid_t uuid;
+> +	int interleave_ways;
+> +	int interleave_granularity;
+> +	struct resource *res;
+> +	int nr_targets;
+>  };
+>  
+>  struct nd_mapping_desc {
+> @@ -307,6 +314,7 @@ int nvdimm_has_flush(struct nd_region *nd_region);
+>  int nvdimm_has_cache(struct nd_region *nd_region);
+>  int nvdimm_in_overwrite(struct nvdimm *nvdimm);
+>  bool is_nvdimm_sync(struct nd_region *nd_region);
+> +int nd_region_label_update(struct nd_region *nd_region);
+>  
+>  static inline int nvdimm_ctl(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+>  		unsigned int buf_len, int *cmd_rc)
+
