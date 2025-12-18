@@ -1,245 +1,204 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848902E0926
-	for <linux-cxl@vger.kernel.org>; Thu, 18 Dec 2025 18:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA9928506A;
+	Thu, 18 Dec 2025 19:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766083287; cv=none; b=XtTi7qCQKfN2fZCiyohRwXIIzoUuOduYPBWydAB8HspHwFNHuvj0d4rFGNvKXb+N/43TzR0+6WXe3QEB6/YIjktWvBcLO3prMjOb6bIRhWlx5nlWueLuHDejEGXoJD/e38gB3T9qotb+vRCuH+7IKB1fLrAjeb1Fi7B+rwISlmU=
+	t=1766086608; cv=none; b=OCzpsYMLsULezKHYu7KICYN+6GpTerdHAiXqO2/F8kkQkHtn89DhWmK2ct88BG17Mxm2cxGvmB0otsXNKMNCHWqLp5zGRBJCLgEpsxxpSZjDQypKuqesC5dXg0ygod1GtMNaasrpVpAE5+8yP3hHURxCh9rMbdlx7m4UoeTJwm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766083287; c=relaxed/simple;
-	bh=nnwnSg69IBgq/M/m6M4U/ij0P06c3galag9NLHhdSMY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=SlMwvL3qUCOQqaANm37SrXySpVqqWSrmOCwZb3aZKep0sCCYUB8JR1RF24i7KZLgKkAOjxeL932xvB7Lm+O686Hc1xSAgx5PNQEbHwt+TrM1E/8NWCfNh2TwnZKM34siJv3AqUbOaOMdfVgZ/dT/pLmNSvgiCYL5OykoHKtuzk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MXRtaLkc; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1766086608; c=relaxed/simple;
+	bh=C38ghsjuQimfuBc48UBJ2Ufk5zJMq7cUdePsSHl094Q=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=T4UP344u26IzPDblxhTDgDfcY9lKlRd/US6c9dRiqnw9GCcjPEWGKjXUQjviKOdIYfiWH3yldtHwPhxJcfmK/Y9ydhvzsyeUVxf5s1yNu8JwjqOWHfTzLbTFmO9dS+KBFEdKwojXt8tvMjLIUrcFDMhWDkFkUex42WwXF5WixmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qPWHlBCU; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MXRtaLkc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766083286; x=1797619286;
-  h=date:from:to:cc:subject:message-id;
-  bh=nnwnSg69IBgq/M/m6M4U/ij0P06c3galag9NLHhdSMY=;
-  b=MXRtaLkceZPJFRcw71uMXvTAXlFun3kjX2XBHofYP8UgB8sj+ei4N03Y
-   z1TahEf4LVn99VSWchGI7WBj72byA7bzpm83fq5f1zR4q+WIfeQeEM4Kq
-   v7AYfbCE6hvuC6YV82bQwlaT2m0Sz/sSTftiM1fQBYKdQ0PO+0k4C8OD5
-   kxKpp9MCqzCTAWa2GkErf6A07FClLDD39Lo2AEb8kggY6hkGdnF5DFQgj
-   NZaHrW9Z0y5huE24RFNN2ZWJhOGa3T/Zt26CX6fvd/bLdhuel3jHyWxM6
-   4QuzLLrew+IzU8ohKT7tlxiI8V8+1v6nurk5WeNiyvdKSEZGaINGiz+QJ
-   A==;
-X-CSE-ConnectionGUID: hpaNv7sxTFS3oh2Ab0VnlA==
-X-CSE-MsgGUID: hA3/auwXTvagOs3zRqshLA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11646"; a="68200009"
-X-IronPort-AV: E=Sophos;i="6.21,159,1763452800"; 
-   d="scan'208";a="68200009"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2025 10:41:24 -0800
-X-CSE-ConnectionGUID: nux6pIFqQ4+CVEarnv6aFw==
-X-CSE-MsgGUID: E4k+Tl+jS0aCfAJRZCk6ew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,159,1763452800"; 
-   d="scan'208";a="198421490"
-Received: from lkp-server01.sh.intel.com (HELO 0d09efa1b85f) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 18 Dec 2025 10:41:22 -0800
-Received: from kbuild by 0d09efa1b85f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vWIwB-000000002SH-2wFF;
-	Thu, 18 Dec 2025 18:41:19 +0000
-Date: Fri, 19 Dec 2025 02:40:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:for-7.0/cxl-init] BUILD SUCCESS
- e69c86f703135e7baab901aced57df8e23fb2b18
-Message-ID: <202512190211.EWrddAi5-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qPWHlBCU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:References:Cc:To:Subject:From:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=l1xNmQUvehhgwKpE+comx12cHZ+VwWpRWrLfhwMSlHE=; b=qPWHlBCUlrSQp3hLHl0z8x27/t
+	IQoMFuTFaMuBZs/ptJnZCEJoAzFc9oNIsKmUg3QMUBIfwpuPDmFGJHxTPx+rmDzZcXLynIRAW0jl9
+	GIc0U464AwXK0csxTQkjlWjIWEnsnvp1WkxQcHiRnQxL4c2qx9VId/HEw7PSibRzNN1rkiip3yxzs
+	d9U6WdhK43/gaTLHneStKnRTBsSHLW5sVAM64qUdkViJ18UT6z3qIn6cH7Q8b++uYzdw8oIZw/9hA
+	affQSaP8TrRjYoleM1heixc6RzGWGEhYL7yHPDsEeTIPdo/OAcMkK0IGZh71l3KTpCRCz/SZu0EpK
+	4n+iwcug==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vWJnn-000000096PP-0L1q;
+	Thu, 18 Dec 2025 19:36:43 +0000
+Message-ID: <efc86f10-3255-4132-bae3-8fa6c6dc924b@infradead.org>
+Date: Thu, 18 Dec 2025 11:36:41 -0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v2] Documentation/driver-api/cxl: device hotplug section
+To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com, dan.j.williams@intel.com, corbet@lwn.net
+References: <20251218170747.1278327-1-gourry@gourry.net>
+Content-Language: en-US
+In-Reply-To: <20251218170747.1278327-1-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-7.0/cxl-init
-branch HEAD: e69c86f703135e7baab901aced57df8e23fb2b18  cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation
+Hi,
 
-elapsed time: 1465m
+On 12/18/25 9:07 AM, Gregory Price wrote:
+> Describe cxl memory device hotplug implications, in particular how the
+> platform CEDT CFMWS must be described to support successful hot-add of
+> memory devices.
+> 
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> ---
+> v2: Jonathan's clarifications and diagrams.
+> 
+>  Documentation/driver-api/cxl/index.rst        |   1 +
+>  .../cxl/platform/device-hotplug.rst           | 112 ++++++++++++++++++
+>  2 files changed, 113 insertions(+)
+>  create mode 100644 Documentation/driver-api/cxl/platform/device-hotplug.rst
+> 
 
-configs tested: 166
-configs skipped: 1
+> diff --git a/Documentation/driver-api/cxl/platform/device-hotplug.rst b/Documentation/driver-api/cxl/platform/device-hotplug.rst
+> new file mode 100644
+> index 000000000000..617e340bd556
+> --- /dev/null
+> +++ b/Documentation/driver-api/cxl/platform/device-hotplug.rst
+> @@ -0,0 +1,112 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +==================
+> +CXL Device Hotplug
+> +==================
+> +
+> +Device hotplug refers to *physical* hotplug of a device (addition or removal
+> +of a physical device from the machine).
+> +
+> +Hot-Remove
+> +==========
+> +Hot removal of a device typically requires careful removal of software
+> +constructs (memory regions, associated drivers) which manage these devices.
+> +
+> +Hard-removing a CXL.mem device without carefully tearing down driver stacks
+> +is likely to cause the system to machine-check (or at least SIGBUS if memory
+> +access is limited to user space).
+> +
+> +Memory Device Hot-Add
+> +=====================
+> +A device present at boot will be associated with a CXL Fixed Memory Window
+> +reported in :doc:`CEDT<acpi/cedt>`.  That CFMWS may match the size of the
+> +device, but the construction of the CEDT CFMWS is platform-defined.
+> +
+> +Hot-adding a memory device requires this pre-defined (*static*) CFMWS has
+> +sufficient space to describe that device.
+> +
+> +There are a few common scenarios to consider.
+> +
+> +Single-Endpoint Memory Device Present at Boot
+> +---------------------------------------------
+> +A device present at boot likely had its capacity reported in the
+> +:doc:`CEDT<acpi/cedt>`.  If a device is removed and a new device hotplugged,
+> +the capacity of the new device will be limited to the original CFMWS capacity.
+> +
+> +Adding capacity larger than the original device will cause memory region
+> +creation to fail if the region size is greater than the CFMWS size.
+> +
+> +The CFMWS is *static* and cannot be adjusted.  Platforms which may expect
+> +different sized devices to be hotplugged must allocate sufficient CFMWS space
+> +*at boot time* to cover all future expected devices.
+> +
+> +Multi-Endpoint Memory Device Present at Boot
+> +--------------------------------------------
+> +A hot-plug capable CXL memory device, such as one which presents multiple
+> +expanders as a single large-capacity device, should report the maximum
+> +*possible* capacity for the device at boot. ::
+> +
+> +                  HB0
+> +                  RP0
+> +                   |
+> +     [Multi-Endpoint Memory Device]
+> +              _____|_____
+> +             |          |
+> +        [Endpoint0]   [Empty]
+> +
+> +
+> +Limiting the size to the capacity preset at boot will limit hot-add support
+> +to replacing capacity that was present at boot.
+> +
+> +No CXL Device Present at Boot
+> +-----------------------------
+> +When no CXL memory device is present on boot, some platforms omit the CFMWS
+> +in the :doc:`CEDT<acpi/cedt>`.  When this occurs, hot-add is not possible.
+> +
+> +For a platform to support hot-add of a full memory device, it must allocate
+> +a CEDT CFMWS region with sufficient memory capacity to cover all future
+> +potentially added capacity.
+> +
+> +To support memory hotplug directly on the host bridge, or on a switch
+> +downstream of the host bridge (but not contained within a CXL memory device),
+> +a platform must construct a CEDT CFMWS at boot with sufficient resources to
+> +support the max possible (or expected) hotplug memory capacity. ::
+> +
+> +         HB0                 HB1
+> +      RP0    RP1             RP2
+> +       |      |               |
+> +     Empty  Empty            USP
+> +                      ________|________
+> +                      |    |    |     |
+> +                     DSP  DSP  DSP   DSP
+> +                      |    |    |    |
+> +                         All  Empty
+> +
+> +For example, a BIOS/EFI may expose an option to configure a CEDT CFMWS with
+> +a pre-configured amount of memory capacity (per host bridge, or host bridge
+> +interleave set), even if no device is attached to Root Ports or Downstream
+> +Ports at boot (as depicted in the figure above).
+> +
+> +
+> +Interleave Sets
+> +===============
+> +
+> +Host Bridge Interleave
+> +----------------------
+> +Host-bridge interleaved memory regions are defined *statically* in the
+> +:doc:`CEDT<acpi/cedt>`.  To apply cross-host-bridge interleave, a CFMWS entry
+> +describing that interleave must have been provided *at boot*.  Hotplugged
+> +devices cannot add host-bridge interleave capabilities at hotplug time.
+> +
+> +See the :doc:`Flexible CEDT Configuration<example-configurations/flexible>`
+> +example to see how a platform can provide this kind of flexibility regarding
+> +hotplugged memory devices.  BIOS/EFI software should consider options to
+> +present flexible CEDT configurations with hotplug support.
+> +
+> +HDM Interleave
+> +--------------
+> +Decoder-applied interleave can flexibly handle hotplugged devices, as decoders
+> +can be re-programmed after hotplug.
+> +
+> +To add or remove a device to/from an existing HDM-applied interleaved region,
+> +that region must be torn down an re-created.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+                                 ^s/an/and/
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                        nsimosci_defconfig    gcc-15.1.0
-arc                   randconfig-001-20251218    gcc-8.5.0
-arc                   randconfig-002-20251218    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-22
-arm                   randconfig-001-20251218    clang-22
-arm                   randconfig-002-20251218    clang-22
-arm                   randconfig-003-20251218    gcc-14.3.0
-arm                   randconfig-004-20251218    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20251218    gcc-8.5.0
-arm64                 randconfig-002-20251218    clang-19
-arm64                 randconfig-003-20251218    gcc-14.3.0
-arm64                 randconfig-004-20251218    clang-22
-csky                             allmodconfig    gcc-15.1.0
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20251218    gcc-15.1.0
-csky                  randconfig-002-20251218    gcc-9.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                             defconfig    clang-22
-hexagon               randconfig-001-20251218    clang-18
-hexagon               randconfig-002-20251218    clang-22
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20251218    gcc-14
-i386        buildonly-randconfig-002-20251218    gcc-14
-i386        buildonly-randconfig-003-20251218    gcc-14
-i386        buildonly-randconfig-004-20251218    gcc-14
-i386        buildonly-randconfig-005-20251218    gcc-14
-i386        buildonly-randconfig-006-20251218    gcc-14
-i386                                defconfig    clang-20
-i386                  randconfig-001-20251218    clang-20
-i386                  randconfig-002-20251218    gcc-14
-i386                  randconfig-003-20251218    gcc-14
-i386                  randconfig-004-20251218    gcc-12
-i386                  randconfig-005-20251218    clang-20
-i386                  randconfig-006-20251218    gcc-14
-i386                  randconfig-007-20251218    gcc-12
-i386                  randconfig-011-20251218    gcc-13
-i386                  randconfig-012-20251218    gcc-14
-i386                  randconfig-013-20251218    gcc-14
-i386                  randconfig-014-20251218    clang-20
-i386                  randconfig-015-20251218    clang-20
-i386                  randconfig-016-20251218    gcc-14
-i386                  randconfig-017-20251218    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20251218    clang-18
-loongarch             randconfig-002-20251218    clang-18
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                         apollo_defconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                             allmodconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                             allyesconfig    gcc-15.1.0
-nios2                            allmodconfig    gcc-11.5.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251218    gcc-11.5.0
-nios2                 randconfig-002-20251218    gcc-8.5.0
-openrisc                         allmodconfig    gcc-15.1.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20251218    gcc-11.5.0
-parisc                randconfig-002-20251218    gcc-9.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                 mpc8313_rdb_defconfig    gcc-15.1.0
-powerpc                     ppa8548_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20251218    clang-22
-powerpc               randconfig-002-20251218    clang-22
-powerpc64                        alldefconfig    clang-22
-powerpc64             randconfig-001-20251218    gcc-8.5.0
-powerpc64             randconfig-002-20251218    gcc-8.5.0
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20251218    gcc-14.3.0
-riscv                 randconfig-002-20251218    gcc-8.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-22
-s390                  randconfig-001-20251218    clang-22
-s390                  randconfig-002-20251218    clang-22
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20251218    gcc-15.1.0
-sh                    randconfig-002-20251218    gcc-15.1.0
-sh                           se7343_defconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251218    gcc-15.1.0
-sparc                 randconfig-002-20251218    gcc-15.1.0
-sparc64                          allmodconfig    clang-22
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20251218    gcc-8.5.0
-sparc64               randconfig-002-20251218    gcc-15.1.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251218    gcc-14
-um                    randconfig-002-20251218    clang-22
-um                           x86_64_defconfig    clang-22
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20251218    gcc-14
-x86_64      buildonly-randconfig-002-20251218    gcc-14
-x86_64      buildonly-randconfig-003-20251218    clang-20
-x86_64      buildonly-randconfig-004-20251218    gcc-14
-x86_64      buildonly-randconfig-005-20251218    gcc-14
-x86_64      buildonly-randconfig-006-20251218    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-001-20251218    clang-20
-x86_64                randconfig-002-20251218    clang-20
-x86_64                randconfig-003-20251218    clang-20
-x86_64                randconfig-004-20251218    clang-20
-x86_64                randconfig-005-20251218    clang-20
-x86_64                randconfig-006-20251218    clang-20
-x86_64                randconfig-011-20251218    gcc-14
-x86_64                randconfig-012-20251218    gcc-14
-x86_64                randconfig-013-20251218    clang-20
-x86_64                randconfig-014-20251218    gcc-12
-x86_64                randconfig-015-20251218    gcc-14
-x86_64                randconfig-016-20251218    gcc-14
-x86_64                randconfig-071-20251218    gcc-14
-x86_64                randconfig-072-20251218    gcc-14
-x86_64                randconfig-073-20251218    gcc-12
-x86_64                randconfig-074-20251218    clang-20
-x86_64                randconfig-075-20251218    gcc-12
-x86_64                randconfig-076-20251218    clang-20
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                       common_defconfig    gcc-15.1.0
-xtensa                randconfig-001-20251218    gcc-15.1.0
-xtensa                randconfig-002-20251218    gcc-10.5.0
+and one note: There are several places where you use one asterisk for emphasis,
+e.g., *statically*. This means <italic> in Sphinx/ReST. If you happen
+to mean/want bold, then use **bold text** (double asterisks).
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Otherwise it LGTM. Thanks.
+
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+
+-- 
+~Randy
+
