@@ -1,211 +1,301 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010028.outbound.protection.outlook.com [40.93.198.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3713570C6;
-	Thu, 18 Dec 2025 15:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766071586; cv=none; b=LfMlggbKh0xcJWltUU6KwgD0QvYxkLMiwNJ11vw0APu6S3g+15WkXUXBxTZCs7Xl6WTaseKqsBBvmnWHfzpQ3240pgk7AgT3OzDcoctVbf3K7x0H48rBwWxMMtXv6HKbuaFPaznkfiF+8lAcRnzAgkghDUmc/FwCIWdlwAkNE6U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766071586; c=relaxed/simple;
-	bh=bJgkiMqX9YlHLjTI/Lv0jp6/0k3FJQPRz9YD4GRo2hI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CX7k4iO33Rb8j0J6xDGZOy19t6dtEiNdhaUv55EIOx1+FH/Y2uSKAvyfvsxGlYaXnMBcHrfs195PmB/etePEiGa+V8t4Rovi/rszxSAHnSnlNxUqi50LEzUUR074QW7gw6yBHfL79dMttUQrjaSeL/iMX9TzE0bfYLxnJ/9exnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dXDyR1959zHnH7D;
-	Thu, 18 Dec 2025 23:25:51 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 879EA40565;
-	Thu, 18 Dec 2025 23:26:18 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 18 Dec
- 2025 15:26:17 +0000
-Date: Thu, 18 Dec 2025 15:26:16 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Gregory Price <gourry@gourry.net>
-CC: <linux-cxl@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, <corbet@lwn.net>,
-	<kernel-team@meta.com>, <alejandro.lucero-palau@amd.com>
-Subject: Re: [PATCH] Documentation/driver-api/cxl: device hotplug section
-Message-ID: <20251218152616.00005b73@huawei.com>
-In-Reply-To: <20251218144636.1232527-1-gourry@gourry.net>
-References: <20251218144636.1232527-1-gourry@gourry.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DAF32E699;
+	Thu, 18 Dec 2025 15:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.28
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766071660; cv=fail; b=E0X/1dlNKiwH9f5S9bw9CeWr0ZiZ4nH7MtmWmp2T3PW+fP2s3k6NIZnAviO+dOVas3ur8w19i2ELLeHsD/jlf9xId/S0Xisk4/+mhM47SS8c0tSiw/uVjMUjiK3GvWsd0WXh/rz3ziOuK68S/Vb9Fx1F0QKQDmA4llm+/mu/d4I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766071660; c=relaxed/simple;
+	bh=8VIFnRomPbr+6GvjqsNDInHs3WB4+aT/7HArB23h+cU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Qvc9dAmy+GnTu6rVFJep+P1rslLwKST1++p2U6A5sPKeaxGLOygEflKZzK65WFtCOgYyiMMLiuSivOgy46UKvtL23veDOcFf4Q+HGOzT5VjCLg7v3HafnxHIcry26KqcE5nto1rERqFqxbrs//DX2IM92HE2N232KuUec7I4/uM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TPDlriVI; arc=fail smtp.client-ip=40.93.198.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TPDlriVI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cs62ydxA279y1d++a37wtaxO0Eq8iYga3MVF+gRJLiSkghar+k2wtd42OIKt9kMsHzWlUsgp7SWIW8fdHayX/wgD++U4J3jtlHqFjaiJjVGBIThc6OttfrQ38uuYSaSI6XGSvLdFWnk5RTnC2Tt8tbqYEvF4d1T2ZVdHmMU3TN9v6gfhyX9o7rlYwUL+7H2QSQXH+IqitW100YhoUPFxGecw9uCosxBLAwOwNByzV/Rxe+ujb2401ZrIXzZ4ZdFKk/FwLFM8DPrMeSSGuJjjMHMZzwohOOuivUTTw4SFnGRHmpMBISnbof9EY5XJxWeapVAzsQQ5FzY60CgTIx/Nzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=F2AWUba5bvXdY0oi55E6M+w8yJwDuHJSUA0YBX6UA/g=;
+ b=aGnRKWz2swDCFWSRjTo3oxUqvCwgsOfVbPD4Ysc8unpbfmgDfAVEylBQgiMaIiIQTTTjooIDDWSMuIRpzgiBKDvrylHUIe1JIj/OX8x2qO7rIrO32bf+1usP7GyOPb2m9FB4v9UCkKsCG2hT7Hbb/3VHaDlVSMrhel9LJse11VLvlTCXUR8RulFT+Aep7BRvXsMoW1gB7IiwUJ1rwBX46E+ftF/F1QyMDBSRljstuDm/XCu+Z9A0yBXo7w+Xo2ZSqx0hvOXzwmC5e+kV8b89WRMDIQlCHN9Z/g2smP9AxTTgygOa7sVqwb51Gxxx9yfReaWmdQd+hULuB7lUGl0eVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F2AWUba5bvXdY0oi55E6M+w8yJwDuHJSUA0YBX6UA/g=;
+ b=TPDlriVIfi622tn9JnXivKjKG3mm2SabC138S/iutjDojkpcZADaKlRYaRsGNpoHsTCCtqZkLDOcfH4m+1OIGO5i4qtkxdm8nT0TIbvk392R7QUCmMLhOeH8JIxboWmjeN0h8SoaypIhYdqLwQR0JRK7HgNRX37DOZx6Iz9zlT0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by PH0PR12MB8098.namprd12.prod.outlook.com (2603:10b6:510:29a::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.6; Thu, 18 Dec
+ 2025 15:27:33 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.9434.001; Thu, 18 Dec 2025
+ 15:27:33 +0000
+Message-ID: <1e98adcc-feeb-41cb-b1fe-618597cb0be4@amd.com>
+Date: Thu, 18 Dec 2025 15:27:29 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v22 11/25] cxl/hdm: Add support for getting region from
+ committed decoder
+Content-Language: en-US
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+ netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, dave.jiang@intel.com
+References: <20251205115248.772945-1-alejandro.lucero-palau@amd.com>
+ <20251205115248.772945-12-alejandro.lucero-palau@amd.com>
+ <20251215135047.000018f7@huawei.com>
+ <f56f7a6b-7931-4264-8d42-50603ce81cba@amd.com>
+ <20251218150309.00006837@huawei.com>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <20251218150309.00006837@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P265CA0261.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:37c::14) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|PH0PR12MB8098:EE_
+X-MS-Office365-Filtering-Correlation-Id: ede855a4-30b1-4aea-ce37-08de3e49f73e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?L3JyM0MzdnRuTkQ0Ri9CejVmdmNOdDkzdnB5MnVJZ25ZWGZtVXZpK2w1RUVs?=
+ =?utf-8?B?NXZCQUEwdGxKMVJ5N2lJUWJ2RGp6K0pPYi9jSW4yMTc3cDNONm0zblFhUk0z?=
+ =?utf-8?B?MTcrMG9HdU1xdEdMSUNmYk1odjgyZnN6emZFL1BkYU5VS0hxK2VHbUpGaCtI?=
+ =?utf-8?B?NnZuZVIvTFBhL253RXN1d0NYRHpDQXNyTFR0WC80WU14eVd4R1dhV3NsUmhW?=
+ =?utf-8?B?WHhFU0ZrWG9HeTI1QnFrMU5sMkxRUmRxRnFCUWF6ZTVhTFlvTklVRk9tN0ZC?=
+ =?utf-8?B?QkJEL3YwN08rcnZ0Nnp5VitCRjZnNVdFdERzc1JCNFRMUGIrK05JVXUremlP?=
+ =?utf-8?B?K0U3bG1rMENHdmFqb01odHBmOThGTUp6OVRDZGdoRG1kbERqcXJwZEV4UEJw?=
+ =?utf-8?B?dE9TRVVJWW1yOU00Y1JpcFZFUU9hV3VUTkp1MFNYWEFUVHdDK0xmQjdmUmhw?=
+ =?utf-8?B?dWRON0dCU1FSQjJ2SGkvQmhHZFZDZDBJNDNnK0JqV1Q1MmNEclpzRXI4bi9U?=
+ =?utf-8?B?NmNlK2FBUnR3SktnMnVRZ3ZDWnpxM3JuVHpZV2RpbHBVMGFsMk5qQ0pGN3lD?=
+ =?utf-8?B?Z1FxOHZXc0FJc01wQUVzL1NabXA5SjBwUXRWUDdBcm1DZFIyK3FiWjNJVWhJ?=
+ =?utf-8?B?ck1TT0xTSmpqNEZCZFNTNXlEQWpGU0hWV0txeGVwaGhzN2MrYzhXbmtEQUJn?=
+ =?utf-8?B?M2hTNVdSTjNuM1g0U3hlUGMvWUdvQ3B5cFlsc0JsYlFqL2pRNGhDL1Z6dmdN?=
+ =?utf-8?B?a3NJQlh3U2ZiSWtVTGliOEpWTkJaOGRMRkJxbzMyV21iWVRwa2YzVTJwVStV?=
+ =?utf-8?B?VlVrbGxqbWp5SGxWYzh4ZDdzNGFrK0lVVUpSVkJrOENqUEtWMS9FbStoTXEz?=
+ =?utf-8?B?d2cvNjNleEhaZjVSSm9pSE9qZDZvbVFVVXNvVFVQcGZuS3pqOXdGRWc1em90?=
+ =?utf-8?B?QUtXN1F1bjM5VGJTZmgzWlJVb2M3MEVLUVNGV2FLd3YrVXZrVWlmQU45bjda?=
+ =?utf-8?B?WjhDUTBtejNTaEJvUUZ5aEorR09CNG9GRWxqRktZR3BmTG02UFBMbEg2ZHVP?=
+ =?utf-8?B?TDlnZ3pqNk1QbnRkdDJNQ29VVDdlOS9DdDZZb3kzUDhDYUp1MWo2QXExandF?=
+ =?utf-8?B?UzJva3Nhc0NaYzVLSXNnZmJrd0ZxMGJzSEZmTWlqVjg5UFl5SHJQcHlKSWY3?=
+ =?utf-8?B?VElzUkhBcmk4NHJZWXZKdjZ1ZGpUUm56STF6RjdwakZLeUtubjlPU2xSS2Ny?=
+ =?utf-8?B?RElNWStDT3NFbXNLZzV5ajdKNWdYWlU5MjBjY0lVa0ZVLzJJanZPb0J1UFJv?=
+ =?utf-8?B?ZHVIeENFdCtBdUx6V0dCRHg4QXVUZVZwZUE5M3p0ak1XT3QzWWRqOGNFZWkw?=
+ =?utf-8?B?YUZ4QTFjZDRZOEg3WlkreHNwaEIrekx0TkpmL3lLZ2tTZUJhOVdReUFoRmhn?=
+ =?utf-8?B?dGJHRlRGd0gwdnVOQXN2UnVzQWhDQmwvR0F3UGxVaVJyYkN5L0ZYa2g3UVZP?=
+ =?utf-8?B?Uzd1eFBkVWlRNUo1dXlPV1lGYUFUZXk1ZGlvOVZDUVFvd2VaK0syYTA4NGtt?=
+ =?utf-8?B?VXViWUkzYjZFU010b0d2Sjh4cTJTN1o5djJ4U2NzTVhGNlhOdEJRSTIxWTFO?=
+ =?utf-8?B?TmRaUGQ3NnE2SEVaTmkzQklaNUJNOTZlaFRaaDNudk9GQm5xZE9rQnYxS1JH?=
+ =?utf-8?B?WlhESEVUY1NQTCtlQ3EwamE0RUhmS3NzVnNFUFMrWTR0anZXTmF6eUpVNUJ0?=
+ =?utf-8?B?WHpvNXFTb3IvM01sSmQ3QVEyemJCSkhNT3FzT09MSW5mSmF4RHRQWkxSVGtU?=
+ =?utf-8?B?OUh5b1pPYVdtdDRpeXNIVDB3ODBWM2Rxc0JhNXBFMXJrWXdzaW9Xc3RnSGd4?=
+ =?utf-8?B?YUFLQUg5UVBmWERnaVhDQlBSSzhyQlZpTUZabWcwZHJVdzVnYmUwNnRsK1ZT?=
+ =?utf-8?Q?GWuP9+yvpi2Iv4+ev9odZ6nSEI19SwbX?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?a1NKOWp5ZnZHOHFwaGRMLzJuUzM1RjNIcFhyaGxGaGVPeFVmMU1qVVc5OXE2?=
+ =?utf-8?B?empvcTRaREh0VXp4dUpBV0Rxc2JrZE1QVzM5TC9WNUEzNGZwbnMrS0M4ZW5K?=
+ =?utf-8?B?aTJIcFdCQ1p0eFFpR1IxM0FjeUtMUkw1UEtjOVNTdldOTUV6MithbW8rTTcv?=
+ =?utf-8?B?ZXRGSDZ6VUsxOUQxa3NYamsvbjgvSTJhbzREbXMydnJ5a0N6VllHS1JTSUhL?=
+ =?utf-8?B?Vm9xL0NLSlFkUkcyaDhlYklrSk9yYi9tWGRtUmlVQTJWZ1V5cE45SC9PVStQ?=
+ =?utf-8?B?OVZPZDU2M2hhUUdBTE8zTWRTcktGdm9ONDlXWmowb2V2WU84SGw5eTNkZG50?=
+ =?utf-8?B?QUVBanVkWm82K0t5L0dpdUpjMyt6bkZUS0FKaXZEdER1SDhDdzFvSjFFVXVn?=
+ =?utf-8?B?QmpXbWMwaitDQ1NRd0lPM09hS0hGZCs0M25FTjB5YytWc29HSzBpSnoxN0Zv?=
+ =?utf-8?B?NXhGWEorYU5iSlVvMDhlOWxISmpjS0pLbm1CYWpXWGtCWGNpR2h4N1FpOVpU?=
+ =?utf-8?B?NTQ1NStDU3phVnV1Q2pZZlp1cFhhZXhZa0tJUHlrN1c5VDQ1S3ZZNVhXRnNv?=
+ =?utf-8?B?N1k2U21tQWUwWGorU21yc0hXNzVVN1RwenpRbnJDblEydS90TTZBdW04amNh?=
+ =?utf-8?B?eVArd2RDblE1V3FWTkhndTlRb0Z1UkxlUi9lWTBLMEJNSVhBU0xndXJSNEZY?=
+ =?utf-8?B?T0x1bjNFZ3hOZkdaRmFRL2FZVEJtMGxhdUhjS3YyTDNqR2ZKVzZ6TTROY1B5?=
+ =?utf-8?B?TVduZVQxWXRHcThSU2ttWU8zTW5CUnJrUnBpU1JGYytLQzdqZUplYWZTQVhX?=
+ =?utf-8?B?NzRVL09EZ3hiQ2FiM2JkZzhkRG9qdmtLQzBVSUxtamtZZnFBRW83U2lNTmh0?=
+ =?utf-8?B?OFhENk1mRWxKZmhieS9pQVRqWFRTbnJZcjFMa0ZNbVA5RXl0RFlmWjVnWVpN?=
+ =?utf-8?B?MFF0djc2aGJvQnRmMVNRenBzVDhlb1IxNEtQNEZCMWJ0YzhiV2lwRkxPakVj?=
+ =?utf-8?B?YlJadytHOXRUNFZNNHl5N2svS2JnRms3MU11V2xQQVZOVmZodVhnNGpXVDQx?=
+ =?utf-8?B?WjRvRXVnZi9TMWZnbjVDWWJYNmlKbkV6ZUo3SUYvSDRNRjNVWXhvQ0lJM0J4?=
+ =?utf-8?B?am5yaS9iQm9mdWR6andzek1ING5YQzdZMldFSUkzdHFIWHd2aHViaCtNNktC?=
+ =?utf-8?B?d1pabnFJR3FlTVBjNG9TRFgvTmpwU2w3QUZhL1ZmeVE2anNidDcyVHhCZm1W?=
+ =?utf-8?B?WW02cUVuV3U5dGtnSGxVSmp6QVh3OHRSV1RoaDdGMllHOExLTkozdDY4bHlG?=
+ =?utf-8?B?dENMUktnY0VZVzliMUt2MHNUWUVuWkQwaG5WNThtRmVwZWFnVXA2angxVDg3?=
+ =?utf-8?B?TUZPSjIva1BnaUlncVoxSWQrN0pnU0xWbVcwRGJlQzBSWllWOUpNOWRZNjJB?=
+ =?utf-8?B?SzJNQmw2RHNaQzlvcFo1Z0M4RHVLNUFlR0NlOVNaaEZ6QWFwckhNMkF5czIr?=
+ =?utf-8?B?L3A5MjlEQ25nUHl2N3ZGSzBlUXFuL0JIMlk4TTlyYlJJY2MzakMxYzRGWlFB?=
+ =?utf-8?B?NnJjejduSFBNMFpiMHljM0dLVDZKNE5mK3pEM3F5QlNqamxsTzVydktIUnBX?=
+ =?utf-8?B?R1NpYTFBLzc0M0FaTXB1SEI4NFA5WjBiK1c0VElhVk5HMmp5ejBSQWJGS3FN?=
+ =?utf-8?B?YVBON1NSTmRIeXB5cWhMTnRZcWxva0poalIxak0rako2a2ZacGtFNTJHVFJ3?=
+ =?utf-8?B?a0dSYzczRVdHSnU3bkFsNVRFUWllMzhUemlvVGpzb3VPTDlwWmVSM1lqNVdY?=
+ =?utf-8?B?WlFQUDRDVkUrcW9ZV1VCR0pCYW9zNVpuUnp2THZCSHArcFdoSS9CZU14OHVv?=
+ =?utf-8?B?QW12aHFjWEduUGlacDRVb2VpS05KQlk0UXRqcTNMV1dYVHJYdTJsSmRLRUFL?=
+ =?utf-8?B?WlJ6eG8zdWN6ODNBSHZZWXQ2cTl4SjZaWUU3QWlNczJ0czI4elExaGEzWXl5?=
+ =?utf-8?B?Y2JxTitIaXhUbnF0cFcwNjEzMFFjNmxQRDJzZElOS0wvOUxuS0J1TFhEeWlt?=
+ =?utf-8?B?TmVkMUF2anBpcWJPOVg0aGh3MFpUcDdwOXRFZFhwYXp5VUFJWks3OWQ0MG9Z?=
+ =?utf-8?Q?XeWO/uUWutaKBUJsIgPY+H7FO?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ede855a4-30b1-4aea-ce37-08de3e49f73e
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2025 15:27:33.6344
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BjKvfUUluPkAqZa6USZ6IQXSUEq0/mt5LypVOTx/R850foOmnmkMfUJ3YuI2O9xPFs1kv5JKCEXwHQR2d4nY3A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8098
 
-On Thu, 18 Dec 2025 09:46:36 -0500
-Gregory Price <gourry@gourry.net> wrote:
 
-> Describe cxl memory device hotplug implications, in particular how the
-> platform CEDT CFMWS must be described to support successful hot-add of
-> memory devices.
-> 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
+On 12/18/25 15:03, Jonathan Cameron wrote:
+> On Thu, 18 Dec 2025 11:52:58 +0000
+> Alejandro Lucero Palau <alucerop@amd.com> wrote:
+>
+>> Hi Jonathan,
+>>
+>>
+>> On 12/15/25 13:50, Jonathan Cameron wrote:
+>>> On Fri, 5 Dec 2025 11:52:34 +0000
+>>> <alejandro.lucero-palau@amd.com> wrote:
+>>>   
+>>>> From: Alejandro Lucero <alucerop@amd.com>
+>>>>
+>>>> A Type2 device configured by the BIOS can already have its HDM
+>>>> committed. Add a cxl_get_committed_decoder() function for cheking
+>>> checking if this is so after memdev creation.
+>>>   
+>>>> so after memdev creation. A CXL region should have been created
+>>>> during memdev initialization, therefore a Type2 driver can ask for
+>>>> such a region for working with the HPA. If the HDM is not committed,
+>>>> a Type2 driver will create the region after obtaining proper HPA
+>>>> and DPA space.
+>>>>
+>>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>>> Hi Alejandro,
+>>>
+>>> I'm in two minds about this.  In general there are devices that have
+>>> been configured by the BIOS because they are already in use. I'm not sure
+>>> the driver you are working with here is necessarily set up to survive
+>>> that sort of live setup without interrupting data flows.
+>>
+>> This is not mainly about my driver/device but something PJ and Dan agree
+>> on support along this type2 patchset.
+>>
+>> You can see the v21 discussions, but basically PJ can not have his
+>> driver using the committed decoders from BIOS. So this change addresses
+>> that situation which my driver/device can also benefit from as current
+>> BIOS available is committing decoders regardless of UEFI flags like
+>> EFI_RESERVED_TYPE.
+>>
+>>
+>> Neither in my case nor in PJ case the device will be in use before
+>> kernel is executing, although PJ should confirm this.
+> There was some discussion in that thread of whether the decoders are locked.
+> If they aren't (and if the device is not in use, or some other hard constraint
+> isn't requiring it, in my view they definitely shouldn't be!) I'd at least
+> like to consider the option of a 'cleanup pass' to tear them down and give
+> the driver a clean slate to build on. Kind of similar to what we do in
+> making PCI reeumerate in the kernel if we really don't like what the bios did.
 
-Hi Gregory,
 
-Thanks for drawing this up.
+I do not mind to support that option, but could we do it as a follow-up?
 
-> ---
->  Documentation/driver-api/cxl/index.rst        |  1 +
->  .../cxl/platform/device-hotplug.rst           | 77 +++++++++++++++++++
->  2 files changed, 78 insertions(+)
->  create mode 100644 Documentation/driver-api/cxl/platform/device-hotplug.rst
-> 
-> diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-> index c1106a68b67c..5a734988a5af 100644
-> --- a/Documentation/driver-api/cxl/index.rst
-> +++ b/Documentation/driver-api/cxl/index.rst
-> @@ -30,6 +30,7 @@ that have impacts on each other.  The docs here break up configurations steps.
->     platform/acpi
->     platform/cdat
->     platform/example-configs
-> +   platform/device-hotplug
->  
->  .. toctree::
->     :maxdepth: 2
-> diff --git a/Documentation/driver-api/cxl/platform/device-hotplug.rst b/Documentation/driver-api/cxl/platform/device-hotplug.rst
-> new file mode 100644
-> index 000000000000..9af8988bd47a
-> --- /dev/null
-> +++ b/Documentation/driver-api/cxl/platform/device-hotplug.rst
-> @@ -0,0 +1,77 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +==================
-> +CXL Device Hotplug
-> +==================
-> +
-> +Device hotplug refers to *physical* hotplug of a device (addition or removal
-> +of a physical device from the machine).
-> +
-> +Hot-Remove
-> +==========
-> +Hot removal of a device typically requires careful removal of software
-> +constructs (memory regions, associated drivers) which manage these devices.
-> +
-> +Hard-removing a CXL.mem device without carefully tearing down driver stacks
-> +is likely to cause the system to machine-check (or at least SIGBUS if memory
-> +access is limited to user space).
-> +
-> +Memory Device Hot-Add
-> +=====================
-> +Hot-adding a memory device requires that the memory associated with that
-> +device fits in a pre-defined (*static*) CXL Fixed Memory Window in the
-> +:doc:`CEDT<acpi/cedt>`.
-> +
-> +There are two basic hot-add scenarios which may occur.
-> +
-> +Device Present at Boot
-> +----------------------
-> +A device present at boot likely had its capacity reported in the
-> +:doc:`CEDT<acpi/cedt>`.  If a device is removed and a new device hotplugged,
 
-The concept of reporting in CEDT is a little vague. Perhaps expand on that a little
-with something like:
+> Might not be possible if there is another higher numbered decoder in use
+> though :(
+>
+>>
+>>> If it is fair enough to support this, otherwise my inclination is tear
+>>> down whatever the bios did and start again (unless locked - in which
+>>> case go grumble at your BIOS folk). Reasoning being that we then only
+>>> have to handle the equivalent of the hotplug flow in both cases rather
+>>> than having to handle 2.
+>>
+>> Well, the automatic discovery region used for Type3 can be reused for
+>> Type2 in this scenario, so we do not need to tear down what the BIOS
+>> did. However, the argument is what we should do when the driver exits
+>> which the current functionality added with the patchset being tearing
+>> down the device and CXL bridge decoders. Dan seems to be keen on not
+>> doing this tear down even if the HDMs are not locked.
+> That's the question that makes this interesting.  What is reasoning for
+> leaving bios stuff around in type 2 cases? I'd definitely like 'a way'
+> to blow it away even if another option keeps it in place.
+> A bios configures for what it can see at boot not necessarily what shows
+> up later.  Similar cases exist in PCI such as resizeable BARs.
+> The OS knows a lot more about the workload than the bios ever does and
+> may choose to reconfigure because of hotplugged devices.
 
-A device present at boot will be associated with a CFMWS reported in
-@doc:`CEDT<acpi/cedt>` and that CFMWS may match the size of the device.
 
-> +the capacity of the new device will be limited to the original CFMWS capacity.
-> +
-> +Adding a device larger than the original device will cause memory region
-> +creation to fail if the region size is greater than the CFMWS size.
+The main reason seems to be an assumption from BIOSes that only 
+advertise CFMWS is there exists a CXL.mem enabled ... with the CXL Host 
+Bridge CFMWS being equal to the total CXL.mem advertises by those 
+devices discovered. This is something I have been talking about in 
+discord and internally because I think that creates problems with 
+hotplugging and future FAM support, or maybe current DCD.
 
-Adding capacity larger than the original device
-(can add a subset of the new device capacity)
-> +
-> +The CFMWS is *static* and cannot be adjusted.  Platforms which may expect
-> +different sized devices to be hotplugged must allocate sufficient CFMWS space
-> +*at boot time* to cover all future expected devices.
-> +
-> +No CXL Device Present at Boot
-> +-----------------------------
-> +When no CXL device is present on boot, most platforms omit the CFMWS in the
-> +:doc:`CEDT<acpi/cedt>`.  When this occurs, hot-add is not possible.
 
-Relax to 'some platforms'
+One case, theoretical but I think quite possible, is a device requiring 
+the CXL.mem not using the full capacity in all modes, likely because 
+that device memory used for other purposes and kept hidden from the 
+host. So the one knowing what to do should be the driver and dependent 
+on the device and likely some other data maybe even configurable from 
+user space.
 
-Just to future proof the doc for when people start mostly doing the sensible thing.
 
-> +
-> +For a platform to support hot-add of a memory device, it must allocate a
-For a platofmr to support hot-add of a full memory device
-(see above for partial capacity being fine)
+So yes, I agree with you that the kernel should be able to do things far 
+better than the BIOS ...
 
-> +CEDT CFMWS region with sufficient memory capacity to cover all future
-> +potentially added capacity.
-> +
-> +Switches in the fabric should report the max possible memory capacity
-> +expected to be hot-added so that platform software may construct the
-> +appropriately sized CFMWS.
 
-How do switches report this? I don't think they can as it really has nothing
-to do with the switch beyond maybe how many DSPs it has (which incidentally
-is what is used to work out space for PCI HP where the code divides up space
-left over space between HP DSPs.).
 
-Obviously this excludes the weird switches that are out there than pretend
-to be a single memory device as those are not switches at all as far
-as Linux is concerned.
+>>
+>> What I can say is I have tested this patchset with an AMD system and
+>> with the BIOS committing the HDM decoders for my device, and the first
+>> time the driver loads it gets the region from the automatic discovery
+>> while creating memdev, and the driver does tear down the HDMs when
+>> exiting. Subsequent driver loads do the HDM configuration as this
+>> patchset had been doing from day one. So all works as expected.
+>>
+>>
+>> I'm inclined to leave the functionality as it is now, and your
+>> suggestion or Dan's one for keeping the HDMs, as they were configured by
+>> the BIOS, when driver exits should require, IMO, a good reason behind it.
+> I'd definitely not make the assumption that BIOS' always do things for
+> good reasons. They do things because someone once thought there was
+> a good reason - or some other OS relied on them doing some part of setup.
+>
 
-> +
-> +Interleave Sets
-> +===============
-> +
-> +Host Bridge Interleave
-> +----------------------
-> +Host-bridge interleaved memory regions are defined *statically* in the
-> +:doc:`CEDT<acpi/cedt>`.  To apply cross-host-bridge interleave, a CFMWS entry
-> +describing that interleave must have been provided *at boot*.  Hotplugged
-> +devices cannot add host-bridge interleave capabilities at hotplug time.
-> +
-> +See the :doc:`Flexible CEDT Configuration<example-configurations/flexible>`
-> +example to see how a platform can provide this kind of flexibility regarding
-> +hotplugged memory devices.
-> +
-> +Platform vendors should work with switch vendors to work out how this
-> +HPA space reservation should work when one or more interleave options are
-> +intended to be presented to a host.
+100% agreement again.
 
-Same as above. Nothing to do with switches as far as I understand things
-beyond them providing fan out. So if you have
-       HB0          HB1
-    RP0 RP1         RP2
-     |   |           | 
-   Empty Empty      USP
-              _______|_______
-             |    |   |     |
-            DSP  DSP  DSP   DSP
-             |    |   |     |
-                All empty
+>>
+>>> There are also the TSP / encrypted link cases where we need to be careful.
+>>> I have no idea if that applies here.
+>>
+>> I would say, let's wait until this support is completed, but as far as I
+>> know, this is not a requirement for current Type2 clients (sfc and jump
+>> trading).
+> Dealing with this later works for me.  As long as it fails cleanly all good.
 
-You might provide more room for devices below HB1 than HB0 if you don't expect
-to see switches being hot added.
 
-Jonathan
+Great.
 
-> +
-> +HDM Interleave
-> +--------------
-> +Decoder-applied interleave can flexibly handle hotplugged devices, as decoders
-> +can be re-programmed after hotplug.
-> +
-> +To add or remove a device to/from an existing HDM-applied interleaved region,
-> +that region must be torn down an re-created.
+Thanks!
 
+
+> Jonathan
+>
