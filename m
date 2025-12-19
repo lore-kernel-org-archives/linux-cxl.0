@@ -1,206 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC4232ABC1;
-	Fri, 19 Dec 2025 12:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF1B33121B;
+	Fri, 19 Dec 2025 14:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766148085; cv=none; b=ZP1qTn53J/vIPD42ZVs51shPKmTUPQrsIQ4rfQ/CDSaSmgVwhdLc3IzEb7TCZ6LIYf82LkTO8cXpqG1mY5GPk6K8Uhuh2dzDMzk1ujQn1xOCWLdTJd4rgIhiHlZ08ZQV7c/qvo0UIOSWBRP/rlh5hzjjGGpRBAjraqUKJn1Umqs=
+	t=1766153700; cv=none; b=C1M6g443HuUjBs7Tl7BbARHseYtCX1f3q2IynjfMIfSknY3JIAxNHBwTrTuysnMoD5p8T3IwKhBfi1iThLyhhjT1+CZ6zEgrLy2qCdlV4bnSmOKmgy/ycmDgKhRAhQM+18WUHUM/ftnmH6KIDucJNMqAWoxcR0o6b1aeQL3qjk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766148085; c=relaxed/simple;
-	bh=YiVlGQCr+FTIJ4B2/AoJNeziKA/MhUEzfyR0foaLu2g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=husHebaQxETbJKsZhwV+hYjnOHPdjzCzeu05QvunEn4S2PGtlaKzk6jn6S3tUH2xY3YvqPnr0SlXEnL0z19O2/cpWS0pNmp7kXE44ttGi7C6ow3nkIJ/odkFJlfXMA5cMcnD05sLYRqvr88J/Hx8FNVfJ8VQXkrUXbyatAItV2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i2UGar3y; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1766153700; c=relaxed/simple;
+	bh=h9gatBXLPknkA9XB/kDpWVDHKRf+rqWFuU1zgf9gItM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G8ZcEzkV6lae7U+ZUu3a9K0j7Udy40id61LeTOH4FtVjQ3OZNueiBmC7VBNFqzqdtHlRjOtzb46UNhMnPUTa13+c1c2hm4+SpPKaQj34QxbEfqR7iI6HHPdYcQo+2phRCdaN6iMScyGPBEwqUyolviZzLIiBh/IrRWAelNvYSYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O717isD1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i2UGar3y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766148083; x=1797684083;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=YiVlGQCr+FTIJ4B2/AoJNeziKA/MhUEzfyR0foaLu2g=;
-  b=i2UGar3yXwWQbaAHjyKf6qzFrUqkP1yEVIG//RjHIWT1TySNftplhsXI
-   xXj8jwgRu96qpsjPIMtp2QqQDIwH4p4fbCloSQn01xdGkgWLel0hKoPu7
-   pzXxcTctHzDUzObhkVXIm27jLj4fQcgV0N18JLjQBIPbhKokpmX3JKonS
-   +hcTClf63fjFS0780PDgiyBh1Z1j7BUuKjq+bO+mXirltCF3GwJ0b2Ijh
-   s+sbQJJjghgdNJwW0umAR9nzk0cR4Bk/5oWrKGsqIfuoSZsgd1OLb7GIW
-   iTM3OEV/XXHa0pvEhWHJl3dtxezjSuuixcTF2aoHhuRHvio7QdO2Eg+RJ
-   Q==;
-X-CSE-ConnectionGUID: COthT8mgRHqM5Y+8B14zpA==
-X-CSE-MsgGUID: zqK5nn2SSTOz7XLAmUdKww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11646"; a="78742760"
-X-IronPort-AV: E=Sophos;i="6.21,161,1763452800"; 
-   d="scan'208";a="78742760"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2025 04:41:23 -0800
-X-CSE-ConnectionGUID: /mUh9VRuT1iN9qqHBweqWg==
-X-CSE-MsgGUID: dTwCf6M5QyixEW97DiZ4Pw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,161,1763452800"; 
-   d="scan'208";a="198444435"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.52])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2025 04:41:17 -0800
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: Rafael J Wysocki <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: [PATCH 5/5 v8] ACPI: extlog: Trace CPER CXL Protocol Error Section
-Date: Fri, 19 Dec 2025 13:39:44 +0100
-Message-ID: <20251219124042.3759749-6-fabio.m.de.francesco@linux.intel.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251219124042.3759749-1-fabio.m.de.francesco@linux.intel.com>
-References: <20251219124042.3759749-1-fabio.m.de.francesco@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O717isD1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 405DDC4CEF1;
+	Fri, 19 Dec 2025 14:14:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766153699;
+	bh=h9gatBXLPknkA9XB/kDpWVDHKRf+rqWFuU1zgf9gItM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=O717isD1mHBm5W4zYOFNoyxyRF7E9NbvNqjbXcL4AhlmDAOPyLQ33+Kr9Lv7uuq14
+	 ohp1+/WYbEhEL/CST8pbWNnvW1sAS2iIOYrj8+0JrEqqvx3mvCjjI/LgdiYcd93cL6
+	 HCAERNkf2egSFz2ikTO1H4RjquN2pCH+Ajbdo0teEkX5FcAq1oLo+JGYJGghTlxmjQ
+	 5XqtpYvGZgHHWjpDNXYlBjZubxrTfFTk59FwbQz6CINzp98bvVwDsuCxsSD9bDXoaa
+	 ItcakAYKMnhUHmAucPOMJcoLlPH8n1AtCbGfuHdvDf/Gqm1zCOuRrh8nrgPdf8np1P
+	 yE+NKtFJE/Bzw==
+Message-ID: <3f3e2e99-cf87-4498-93a7-700ecb42a2a9@kernel.org>
+Date: Fri, 19 Dec 2025 15:14:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] mm/memremap: fix spurious large folio warning for
+ FS-DAX
+To: John Groves <John@Groves.net>, Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: John Groves <jgroves@micron.com>, "Darrick J . Wong" <djwong@kernel.org>,
+ Dan Williams <dan.j.williams@intel.com>, Gregory Price <gourry@gourry.net>,
+ Balbir Singh <bsingharora@gmail.com>, Alistair Popple <apopple@nvidia.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, Aravind Ramesh <arramesh@micron.com>,
+ Ajay Joshi <ajayjoshi@micron.com>
+References: <20251219123717.39330-1-john@groves.net>
+From: "David Hildenbrand (Red Hat)" <david@kernel.org>
+Content-Language: en-US
+In-Reply-To: <20251219123717.39330-1-john@groves.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When Firmware First is enabled, BIOS handles errors first and then it
-makes them available to the kernel via the Common Platform Error Record
-(CPER) sections (UEFI 2.11 Appendix N.2.13). Linux parses the CPER
-sections via one of two similar paths, either ELOG or GHES. The errors
-managed by ELOG are signaled to the BIOS by the I/O Machine Check
-Architecture (I/O MCA).
+On 12/19/25 13:37, John Groves wrote:
+> From: John Groves <John@Groves.net>
+> 
+> This patch addresses a warning that I discovered while working on famfs,
+> which is an fs-dax file system that virtually always does PMD faults
+> (next famfs patch series coming after the holidays).
+> 
+> However, XFS also does PMD faults in fs-dax mode, and it also triggers
+> the warning. It takes some effort to get XFS to do a PMD fault, but
+> instructions to reproduce it are below.
+> 
+> The VM_WARN_ON_ONCE(folio_test_large(folio)) check in
+> free_zone_device_folio() incorrectly triggers for MEMORY_DEVICE_FS_DAX
+> when PMD (2MB) mappings are used.
+> 
+> FS-DAX legitimately creates large file-backed folios when handling PMD
+> faults. This is a core feature of FS-DAX that provides significant
+> performance benefits by mapping 2MB regions directly to persistent
+> memory. When these mappings are unmapped, the large folios are freed
+> through free_zone_device_folio(), which triggers the spurious warning.
+> 
+> The warning was introduced by commit that added support for large zone
+> device private folios. However, that commit did not account for FS-DAX
+> file-backed folios, which have always supported large (PMD-sized)
+> mappings.
+> 
+> The check distinguishes between anonymous folios (which clear
+> AnonExclusive flags for each sub-page) and file-backed folios. For
+> file-backed folios, it assumes large folios are unexpected - but this
+> assumption is incorrect for FS-DAX.
+> 
+> The fix is to exempt MEMORY_DEVICE_FS_DAX from the large folio warning,
+> allowing FS-DAX to continue using PMD mappings without triggering false
+> warnings.
+> 
+> Fixes: d245f9b4ab80 ("mm/zone_device: support large zone device private folios")
+> Signed-off-by: John Groves <john@groves.net>
+> ---
+> 
+> Change since V1: Deleted the warning altogether, rather than exempting
+> fs-dax.
+> 
+> === How to reproduce ===
+> 
+> A reproducer is available at:
+> 
+>      git clone https://github.com/jagalactic/dax-pmd-test.git
+>      cd xfs-dax-test
+>      make
+>      sudo make test
+> 
+> This will set up XFS on pmem with 2MB stripe alignment and run a test
+> that triggers the warning.
+> 
+> Alternatively, follow the manual steps below.
+> 
+> Prerequisites:
+>    - Linux kernel with FS-DAX support and CONFIG_DEBUG_VM=y
+>    - A pmem device (real or emulated)
+>    - An fsdax namespace configured via ndctl as /dev/pmem0
+> 
+> Manual steps:
+> 
+> 1. Create an fsdax namespace (if not already present):
+>     # ndctl create-namespace -m fsdax -e namespace0.0
+> 
+> 2. Create XFS with 2MB stripe alignment:
+>     # mkfs.xfs -f -d su=2m,sw=1 /dev/pmem0
+>     # mount -o dax /dev/pmem0 /mnt/pmem
+> 
+> 3. Compile and run the reproducer:
+>     # gcc -Wall -O2 -o dax_pmd_test dax_pmd_test.c
+>     # ./dax_pmd_test /mnt/pmem/testfile
+> 
+> 4. Check dmesg for the warning:
+>     WARNING: mm/memremap.c:431 at free_zone_device_folio+0x.../0x...
+> 
+> Note: The 2MB stripe alignment (-d su=2m,sw=1) is critical. XFS normally
+> allocates blocks at arbitrary offsets, causing PMD faults to fall back
+> to PTE faults. The stripe alignment forces 2MB-aligned allocations,
+> allowing PMD faults to succeed and exposing this bug.
+> 
+> 
+>   mm/memremap.c | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index 4c2e0d68eb27..63c6ab4fdf08 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -427,8 +427,6 @@ void free_zone_device_folio(struct folio *folio)
+>   	if (folio_test_anon(folio)) {
+>   		for (i = 0; i < nr; i++)
+>   			__ClearPageAnonExclusive(folio_page(folio, i));
+> -	} else {
+> -		VM_WARN_ON_ONCE(folio_test_large(folio));
+>   	}
+>   
 
-Currently, ELOG and GHES show some inconsistencies in how they report to
-userspace via trace events.
+LGTM
 
-Therefore, make the two mentioned paths act similarly by tracing the CPER
-CXL Protocol Error Section.
+Acked-by: David Hildenbrand (Red Hat) <david@kernel.org>
 
-Cc: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
----
- drivers/acpi/Kconfig       |  2 ++
- drivers/acpi/acpi_extlog.c | 24 ++++++++++++++++++++++++
- drivers/cxl/core/ras.c     |  3 ++-
- include/cxl/event.h        |  2 ++
- 4 files changed, 30 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-index ca00a5dbcf750..df0ff0764d0d5 100644
---- a/drivers/acpi/Kconfig
-+++ b/drivers/acpi/Kconfig
-@@ -494,6 +494,8 @@ config ACPI_EXTLOG
- 	tristate "Extended Error Log support"
- 	depends on X86_MCE && X86_LOCAL_APIC && EDAC
- 	select UEFI_CPER
-+	select ACPI_APEI
-+	select ACPI_APEI_GHES
- 	help
- 	  Certain usages such as Predictive Failure Analysis (PFA) require
- 	  more information about the error than what can be described in
-diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-index 88a2237772c26..7ad3b36013cc6 100644
---- a/drivers/acpi/acpi_extlog.c
-+++ b/drivers/acpi/acpi_extlog.c
-@@ -12,6 +12,7 @@
- #include <linux/ratelimit.h>
- #include <linux/edac.h>
- #include <linux/ras.h>
-+#include <cxl/event.h>
- #include <acpi/ghes.h>
- #include <asm/cpu.h>
- #include <asm/mce.h>
-@@ -162,6 +163,23 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
- #endif
- }
- 
-+static void
-+extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-+				int severity)
-+{
-+#ifdef ACPI_APEI_PCIEAER
-+	struct cxl_cper_prot_err_work_data wd;
-+
-+	if (cxl_cper_sec_prot_err_valid(prot_err))
-+		return;
-+
-+	if (cxl_cper_setup_prot_err_work_data(&wd, prot_err, severity))
-+		return;
-+
-+	cxl_cper_handle_prot_err(&wd);
-+#endif
-+}
-+
- static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			void *data)
- {
-@@ -213,6 +231,12 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			if (gdata->error_data_length >= sizeof(*mem))
- 				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
- 						       (u8)gdata->error_severity);
-+		} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
-+			struct cxl_cper_sec_prot_err *prot_err =
-+				acpi_hest_get_payload(gdata);
-+
-+			extlog_cxl_cper_handle_prot_err(prot_err,
-+							gdata->error_severity);
- 		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
- 			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
- 
-diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-index 2731ba3a07993..a90480d07c878 100644
---- a/drivers/cxl/core/ras.c
-+++ b/drivers/cxl/core/ras.c
-@@ -63,7 +63,7 @@ static int match_memdev_by_parent(struct device *dev, const void *uport)
- 	return 0;
- }
- 
--static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
-+void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
- {
- 	unsigned int devfn = PCI_DEVFN(data->prot_err.agent_addr.device,
- 				       data->prot_err.agent_addr.function);
-@@ -104,6 +104,7 @@ static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
- 	else
- 		cxl_cper_trace_uncorr_prot_err(cxlmd, data->ras_cap);
- }
-+EXPORT_SYMBOL_GPL(cxl_cper_handle_prot_err);
- 
- static void cxl_cper_prot_err_work_fn(struct work_struct *work)
- {
-diff --git a/include/cxl/event.h b/include/cxl/event.h
-index 94081aec597ae..ff97fea718d2c 100644
---- a/include/cxl/event.h
-+++ b/include/cxl/event.h
-@@ -340,4 +340,6 @@ cxl_cper_setup_prot_err_work_data(struct cxl_cper_prot_err_work_data *wd,
- }
- #endif
- 
-+void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *wd);
-+
- #endif /* _LINUX_CXL_EVENT_H */
 -- 
-2.52.0
+Cheers
 
+David
