@@ -1,47 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE2D3081BE;
-	Fri, 19 Dec 2025 10:26:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4272FFF8C;
+	Fri, 19 Dec 2025 10:49:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766140020; cv=none; b=dGFvId6qida3l2zVnACx0ScbEI1pV33EY4AMFMuCOaka7uwQwYpxhwwMTnxgByGL2XvRZlipNrrB3/c/VTaOYfZTrM8nKWEnQHN3E2A+tv/+XljIOgYQb1bN6pWHgwiURtfnxZQfdHpyp6M1v1MLET0oyTLedCOE8LkiOLyLH70=
+	t=1766141396; cv=none; b=QbFLglPQfbD8xFbPavcuVUndtVmHuSfouB5bkP/jGjgFhEupMktkFirHHttLfNw9mG6GR0J0wBxTAP1Lyje+gXlG8GJTE7+oojmb+Krhd9jOBbjtWuyU7EsvBhB7SgKBiPBgMqPseznqTpUcc1Eykb2O/hj8PywDpJnDxqcTAZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766140020; c=relaxed/simple;
-	bh=s7w3+0u8YJxJZ5Tv8/HVjgV6HKoHPOt+K52XivPpl24=;
+	s=arc-20240116; t=1766141396; c=relaxed/simple;
+	bh=EA3AGVtIbx9eHxoEUqw+LqmUyI2twMThkPEvTDxdC14=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XvfeW1henUFMLjXc1RDy2Js/leY2B82WA41dJBd1jo5KqyPlx4AOiO0tWJlSY/ywMoCrd3pb5OW8lSZW1AwS9++4goeeIgeOP+YV4+IzpXRNB9soYyF0BVlAiyaNOT+Bh4hfBkyHOHKbctODCQr/Jou6iKsxEvOMuS6+E55hlBk=
+	 MIME-Version:Content-Type; b=FOZ8EaxWYp00JpKxxGM7nMXAuCSVuKe+GSSRD5x8BDSorbbCejeKwrWEOu8Hsv219+7d/k6cB8hKALMNIqNw/fdNczGPy/LmTvBX4C9JE/BvEWMAQjRCyAGUDwfBtBhzzt+OaNJ/O+aq+JCaIN39LPwbSacdnR6KoT/nrlXzWIE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dXkGT1YDGzHnHG5;
-	Fri, 19 Dec 2025 18:26:25 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.224.150])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dXkmk5fPFzJ46nc;
+	Fri, 19 Dec 2025 18:49:10 +0800 (CST)
 Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 298674056C;
-	Fri, 19 Dec 2025 18:26:54 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 45F9A40565;
+	Fri, 19 Dec 2025 18:49:43 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
  (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Fri, 19 Dec
- 2025 10:26:53 +0000
-Date: Fri, 19 Dec 2025 10:26:51 +0000
+ 2025 10:49:42 +0000
+Date: Fri, 19 Dec 2025 10:49:40 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: <dan.j.williams@intel.com>
-CC: <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<alison.schofield@intel.com>, <terry.bowman@amd.com>,
-	<alejandro.lucero-palau@amd.com>, <linux-pci@vger.kernel.org>, Ben Cheatham
-	<benjamin.cheatham@amd.com>, Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v2 6/6] cxl/mem: Introduce cxl_memdev_attach for
- CXL-dependent operation
-Message-ID: <20251219102651.00005da1@huawei.com>
-In-Reply-To: <69445af227f36_1cee1009e@dwillia2-mobl4.notmuch>
-References: <20251216005616.3090129-1-dan.j.williams@intel.com>
-	<20251216005616.3090129-7-dan.j.williams@intel.com>
-	<20251217155712.000012da@huawei.com>
-	<6942d9d46e09e_1cee10089@dwillia2-mobl4.notmuch>
-	<20251218144608.0000238c@huawei.com>
-	<69445af227f36_1cee1009e@dwillia2-mobl4.notmuch>
+To: Gregory Price <gourry@gourry.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, <corbet@lwn.net>,
+	<kernel-team@meta.com>, <alejandro.lucero-palau@amd.com>
+Subject: Re: [PATCH] Documentation/driver-api/cxl: device hotplug section
+Message-ID: <20251219104940.00004446@huawei.com>
+In-Reply-To: <aUQllpH-4c2pGugv@gourry-fedora-PF4VCD3F>
+References: <20251218144636.1232527-1-gourry@gourry.net>
+	<20251218152616.00005b73@huawei.com>
+	<aUQllpH-4c2pGugv@gourry-fedora-PF4VCD3F>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -51,131 +47,110 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
  dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Thu, 18 Dec 2025 11:50:10 -0800
-<dan.j.williams@intel.com> wrote:
+On Thu, 18 Dec 2025 11:02:30 -0500
+Gregory Price <gourry@gourry.net> wrote:
 
-> Jonathan Cameron wrote:
-> > On Wed, 17 Dec 2025 08:27:00 -0800
-> > dan.j.williams@intel.com wrote:
+> On Thu, Dec 18, 2025 at 03:26:16PM +0000, Jonathan Cameron wrote:
+> > On Thu, 18 Dec 2025 09:46:36 -0500
+> > Gregory Price <gourry@gourry.net> wrote:
 > >   
-> > > Jonathan Cameron wrote:  
-> > > > On Mon, 15 Dec 2025 16:56:16 -0800
-> > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > >     
-> > > > > Unlike the cxl_pci class driver that opportunistically enables memory
-> > > > > expansion with no other dependent functionality, CXL accelerator drivers
-> > > > > have distinct PCIe-only and CXL-enhanced operation states. If CXL is
-> > > > > available some additional coherent memory/cache operations can be enabled,
-> > > > > otherwise traditional DMA+MMIO over PCIe/CXL.io is a fallback.
-> > > > > 
-> > > > > Allow for a driver to pass a routine to be called in cxl_mem_probe()
-> > > > > context. This ability is inspired by and mirrors the semantics of
-> > > > > faux_device_create(). It allows for the caller to run CXL-topology
-> > > > > attach-dependent logic on behalf of the caller.    
-> > > > 
-> > > > This seems confusing.     
+> > > Describe cxl memory device hotplug implications, in particular how the
+> > > platform CEDT CFMWS must be described to support successful hot-add of
+> > > memory devices.
 > > > 
-> > > Is faux_device_create() confusing?  
+> > > Signed-off-by: Gregory Price <gourry@gourry.net>  
 > > 
-> > Just to be clear this question is all about the word 'caller' being repeated
-> > in that sentence. Not about the code itself or anything else in the explanation
-> > or flow.   
+> > Hi Gregory,
+> > 
+> > Thanks for drawing this up.  
 > 
-> Oh, sorry, I took it as the design was confusing.
-
-I should have been clearer!
-
+> ack on most of your notes, discussion on platform/switch stuff
 > 
-> > This comment that reads very oddly to me and I think means something very
-> > different from what is going on here.
+> > > +CEDT CFMWS region with sufficient memory capacity to cover all future
+> > > +potentially added capacity.
+> > > +
+> > > +Switches in the fabric should report the max possible memory capacity
+> > > +expected to be hot-added so that platform software may construct the
+> > > +appropriately sized CFMWS.  
+> > 
+> > How do switches report this? I don't think they can as it really has nothing
+> > to do with the switch beyond maybe how many DSPs it has (which incidentally
+> > is what is used to work out space for PCI HP where the code divides up space
+> > left over space between HP DSPs.).
+> > 
+> > Obviously this excludes the weird switches that are out there than pretend
+> > to be a single memory device as those are not switches at all as far
+> > as Linux is concerned.
 > >   
-> > >   
-> > > > The caller is running logic for the caller?  It can do that whenever
-> > > > it likes!  One of those is presumably callee    
-> > > 
-> > > No, it cannot execute CXL topology attach dependendent functionality in
-> > > the device's initial probe context synchronous with the device-attach
-> > > event "whenever it likes".  
-> > 
-> > I'm still lost. Why 'caller to run' ... 'on behalf of the caller.'  In this case
-> > caller is in both cases the function calling cxl_memdev_alloc()?
-> > 
-> > Maybe something like
-> > 
-> > "This arranges for CXL-topology attach-dependent logic to be run later, on behalf of
-> > the caller."
-> > 
-> > Though that kind of repeats what follows, so maybe just drop the sentence.  
 > 
-> How about this reworked changelog?
+> Good point - in reality, it probably should say something like:
 > 
-> ---
-> 
-> Unlike the cxl_pci class driver that opportunistically enables memory
-> expansion with no other dependent functionality, CXL accelerator drivers
-> have distinct PCIe-only and CXL-enhanced operation states. If CXL is
-> available some additional coherent memory/cache operations can be enabled,
-> otherwise traditional DMA+MMIO over PCIe/CXL.io is a fallback.
-> 
-> This constitutes a new mode of operation where the caller of
-> devm_cxl_add_memdev() wants to make a "go/no-go" decision about running
-> in CXL accelerated mode or falling back to PCIe-only operation. Part of
-> that decision making process likely also includes additional
-> CXL-acceleration-specific resource setup. Encapsulate both of those
-> requirements into 'struct cxl_memdev_attach' that provides a ->probe()
-> callback. The probe callback runs in cxl_mem_probe() context, after the
-> port topology is successfully attached for the given memdev. It supports
-> a contract where, upon successful return from devm_cxl_add_memdev(),
-> everything needed for CXL accelerated operation has been enabled.
-> 
-> Additionally the presence of @cxlmd->attach indicates that the accelerator
-> driver be detached when CXL operation ends. This conceptually makes a CXL
-> link loss event mirror a PCIe link loss event which results in triggering
-> the ->remove() callback of affected devices+drivers. A driver can re-attach
-> to recover back to PCIe-only operation. Live recovery, i.e. without a
-> ->remove()/->probe() cycle, is left as a future consideration.  
-Nice.  Thanks for the rewrite.
+> ```
+> A hot-plug capable CXL memory device should report the maximum possible
+> capacity for the device in the CEDT CFMWS, rather than the CFMWS memory
+> region to the capacity present at boot time.
+
+Might want to broaden to "the device or possible hot replacements"
 
 > 
-> ---
+> To support memory device hotplug directly on the host bridge (or on a
+> switch downstream of a HB without built-in memory device capabilities),
+> a platform must construct a CEDT CFMWS at boot with sufficient resources
+> to support the max possible (or expected) hotplug memory capacity.
+> ```
 > 
-> > > > > @@ -1081,6 +1093,18 @@ static struct cxl_memdev *cxl_memdev_autoremove(struct cxl_memdev *cxlmd)
-> > > > >  {
-> > > > >  	int rc;
-> > > > >  
-> > > > > +	/*    
-> > > > 
-> > > > The general approach is fine but is the function name appropriate for this
-> > > > new stuff?  Naturally I'm not suggesting the bikeshed should be any particular
-> > > > alternative color just maybe not the current blue.    
-> > > 
-> > > The _autoremove() verb appears multiple times in the subsystem, not sure
-> > > why it is raising bikeshed concerns now. Please send a new proposal if
-> > > "autoremove" is not jibing.  
+> In one case, an attached device which supports hotplug (which somewhat
+> implies a switch is present), is responsible for presenting the platform
+
+I'd write this to allow for RP hotplug as well. Might not be common yet
+but who wants to remember to update the doc when that changes :)
+
+> the resources.  In theory, at least, a platform doesn't need to do
+> anything here if the device vendor has set things up correctly.
+> 
+> In the second case, the platform is responsible for making that decision,
+> at it's on the ODM+CPU manufacturers to make sufficient BIOS/EFI/etc
+> options available to support this kind of pre-allocation lacking any
+> attached device at boot.  (not sure whether i should add this explicitly
+> above).
+
+Yeah, this is will be bios menu / reflashing the bios stuff or config
+files in flash. Similar to happens for the big PCI storage servers with lots
+of hotplug ports where we need to make space in PCI enumeration for stuff
+that isn't there yet. CXL brings a few extra corner cases but fundamentally
+it's a similar problem.
+ 
+> 
+> > > +Platform vendors should work with switch vendors to work out how this
+> > > +HPA space reservation should work when one or more interleave options are
+> > > +intended to be presented to a host.  
 > > 
-> > It felt like a stretch given the additional code that is not about registering
-> > autoremove for later, but doing it now under some circumstances.  Ah well I don't
-> > care that much what it's called.  
+> > Same as above. Nothing to do with switches as far as I understand things
+> > beyond them providing fan out. So if you have
+> >        HB0          HB1
+> >     RP0 RP1         RP2
+> >      |   |           | 
+> >    Empty Empty      USP
+> >               _______|_______
+> >              |    |   |     |
+> >             DSP  DSP  DSP   DSP
+> >              |    |   |     |
+> >                 All empty
+> > 
+> > You might provide more room for devices below HB1 than HB0 if you don't expect
+> > to see switches being hot added.
+> >   
 > 
-> It is the same semantic as devm_add_action_or_reset() in that if the
-> "add_action" fails then the "reset" is triggered.
+> Same note from above
 > 
-> Yes, there is additional code that validates that the device to be
-> registered for removal is attached to its driver. That organization
-> supports having a single handoff from scoped-based cleanup to devm based
-> cleanup.
-> 
-> If you can think of a better organization and name I am open to hearing
-> options, but nothing better is immediately jumping out at me.
-> 
-Let's go with current naming.  I don't like the only options I can come up
-with either.  If inspiration strikes we can always change it later.
+> also *yoink* your ascii :]
+I hope you tidied it up!  That's really ugly :(
 
 Jonathan
 
-
-
+> 
+> ~Gregory
 
