@@ -1,182 +1,194 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369B91391;
-	Fri, 19 Dec 2025 11:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4E12594BD
+	for <linux-cxl@vger.kernel.org>; Fri, 19 Dec 2025 12:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766142145; cv=none; b=pM8PGCcndxuc0nyZpyXEizzpE0C6wdCxaMj916x2b2LC/afAfMNarOXWpQ9Y00+VYvvA6HIo67qOF0ukFbD6mefYPVxwHaqmT9pE1PhprC5r0qP3H2+zEo69FysZegRT2gShLVee3JVM1Ttc7JmeU1Z+khZ2l57lqT2LYQNAfww=
+	t=1766147846; cv=none; b=h/Gn++wGMSwZBeP27insM65rumZ6P4/rMNJIqfqwo9RypR4v5xCGRyic4sRvTf8iR2KdEpzkc99jnybySN4EBQoZEMwqu9JX2THBZqz949k87DkeLgKcp3ZHl3DTsEHy5pPir7/pFg/iddB/PCmDWm+9JvaD9lMFOOBon1uazSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766142145; c=relaxed/simple;
-	bh=mYNc9wY1ehLz6KUVsIPjnaF9fPn1y8Uq0YhGUO8eZRc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uGPPgsDjG9d8gOIg0p9krn59c0lN6aXEV82DBn7nNs1GB3Y2QTalzkGoTv92kfHM+E6PG3uEfGw+JyUCbhOJ2iKrfG6+UnB3PZKVHaXf1/+UbA6v+/dkyHp0mpFI7n7RMbJSFsqD/maB93JrG6m2OJ3LFTG/9iJyB4grxi5cJb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dXl3H4MCyzJ4681;
-	Fri, 19 Dec 2025 19:01:47 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1C9C040539;
-	Fri, 19 Dec 2025 19:02:20 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Fri, 19 Dec
- 2025 11:02:19 +0000
-Date: Fri, 19 Dec 2025 11:02:17 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Alejandro Lucero Palau <alucerop@amd.com>
-CC: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <dan.j.williams@intel.com>, <edward.cree@amd.com>,
-	<davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<edumazet@google.com>, <dave.jiang@intel.com>
-Subject: Re: [PATCH v22 11/25] cxl/hdm: Add support for getting region from
- committed decoder
-Message-ID: <20251219110217.000063b0@huawei.com>
-In-Reply-To: <1e98adcc-feeb-41cb-b1fe-618597cb0be4@amd.com>
-References: <20251205115248.772945-1-alejandro.lucero-palau@amd.com>
-	<20251205115248.772945-12-alejandro.lucero-palau@amd.com>
-	<20251215135047.000018f7@huawei.com>
-	<f56f7a6b-7931-4264-8d42-50603ce81cba@amd.com>
-	<20251218150309.00006837@huawei.com>
-	<1e98adcc-feeb-41cb-b1fe-618597cb0be4@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1766147846; c=relaxed/simple;
+	bh=/KO9zUvcW4Dg8BOmM2ZDfaFSNvhLzW8vK8xe00YlUgg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dAogiN/ccWJXTfx4H5tJ+nQQycldBn5lq5DhDV5KMfNkT7HHWnFEtGcr11UdgZtZs9JEyxrPvYHmhU00jzoT1tm4UNlUVf6LggmK8Dw6gF5zuQIgNQwCgoS8EZMIAgaYKm+67R4iI54snbd/45rnpx80DcXjaAbz3XFqNHLQTjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H4+ytKGK; arc=none smtp.client-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4+ytKGK"
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-7c78d30649aso1039374a34.2
+        for <linux-cxl@vger.kernel.org>; Fri, 19 Dec 2025 04:37:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766147842; x=1766752642; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=IcHUaTFrmXuihljZ9NPOpOfzWyP2bzk3HiTs5aJT8Q8=;
+        b=H4+ytKGKrZl5ieedBgH3OEWHdiLUDJTBLJ6up2s0wvV+akqhLMWA7t+St6X19O3PiF
+         7AkxXkvq8OaptIQS2hh5L4CzyXLBurbiqXCTYtsyUSJoukrfX6/ujtHxwLpUhi3F7SAB
+         rxsZl/lPoizwrOWV+fsTp0jt2cD2F/tFyUaB3TesssVG206e06qoIQdHtsU5SUYQZ1nV
+         JB+JOOp0NwOBtHM4K/Rkw/KIJFb0H4gphB9TPUAfPsUHDEWI7FsWpXefFRp+dxbb51EO
+         rRQEXrD24Xe0BNT2JMNv93nyaWesBykjEIdwstnpFdAMghWYMW4fDQTDN+K1CCTDhJBR
+         +6Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766147842; x=1766752642;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IcHUaTFrmXuihljZ9NPOpOfzWyP2bzk3HiTs5aJT8Q8=;
+        b=oUHqSIBaDLejPccVRtdu5BYj43UwzLwiUG7O+rZKj459DLqagHFxdJAy7R4OfHkcgJ
+         Wle1xf6mGcOrYw2NOT1VKwRagbJaolWJ4QnUX8Czqg/bmU8VuyhuRzbXhqffmcLR2ESa
+         7GjX2TiHnBF7kQz7ipydBbPmicTzf1bWIqFBMaxwjzv1us7njYuNoKjZT5VU6aRgR0kh
+         L64Uy0QI/2kffp/UzeAG9jhCyd6Xl78heKqsL4DNxKZrkRidId6Sg54YBeHZ0Y2zUvdz
+         mzUNrokKRHerL/K2JX/hKRF2O8RgC7roMtHJGGHGy827Ab06u65kIQ/YcAW+gBq1LDun
+         Ek9g==
+X-Forwarded-Encrypted: i=1; AJvYcCXFd560NdkyCjUKjZ4UxNKINpYUS02C2dPUcaUXYV/fBrxbck7S0LxPXoiR4I++7Zf770dY58j9eZk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKY8VZUufUVo5jwA3WutxyY1GlQhDNyZELN5Ie4cmiyzyUn3Jf
+	97QzgqvMgpeDSjoR9FXU4i9X/35uCAMCr5eHzCM9OZ1K8G43nzKfTlvP
+X-Gm-Gg: AY/fxX6+O0EJbZko07EM5N+nk8VLoMkdwO3dpGMzxVgy6B/UGWB5H/YvwzFZtxmG77o
+	4jNoDuShN77z2VTdtTuAABHFyyQ2ujp9cTJ9NNsC2AB5Epv1YDCymcQJuN7h36wVnFNe2VV0IEI
+	nChrTGRqIPlvfC+g76gFYuA+Ar9+FvnH83vnNnJjUvLeFfnEIpPvbLUj/KewApuR0aNUbHCFklw
+	krDFBN1/TFSFnnW1MAijyk37IDS9daolm961KnKHWZCxWxppUURg4bSJt3wMqFKuT1NzhW5Q7PV
+	HIEP12LwQBkvQptYb+K/oXjsqyBwpgzxaP2q251wIzB4UQzPtBvix9e8+PwxrKbb7jJHXA0+TvX
+	NsSOWn5C2LL9THGEl/LVYppniOGriEWoYLmmm5HuigGKGZPGZMcvP6SpmVyOhEZMkHXLBwGesz+
+	aQuYOAmNVaSDG00s6i6Yb/2ZfC7wfdzLUNFoT0KsBubUlg
+X-Google-Smtp-Source: AGHT+IEgOA0/a6B77dCuTQnCdZXbZikCeOm1NYByQGossxUkCBmPTXJQBtJah4Ps9oYiD64ephxmcQ==
+X-Received: by 2002:a05:6830:25d4:b0:7c7:591a:7e91 with SMTP id 46e09a7af769-7cc668a4bd5mr1727231a34.7.1766147842443;
+        Fri, 19 Dec 2025 04:37:22 -0800 (PST)
+Received: from localhost.localdomain ([2603:8080:1500:3d89:7cbc:db2c:ec63:19af])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7cc667ebe98sm1571289a34.21.2025.12.19.04.37.21
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 19 Dec 2025 04:37:21 -0800 (PST)
+Sender: John Groves <grovesaustin@gmail.com>
+From: John Groves <John@Groves.net>
+X-Google-Original-From: John Groves <john@groves.net>
+To: David Hildenbrand <david@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: John Groves <John@Groves.net>,
+	John Groves <jgroves@micron.com>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Gregory Price <gourry@gourry.net>,
+	Balbir Singh <bsingharora@gmail.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>,
+	John Groves <john@groves.net>
+Subject: [PATCH V2] mm/memremap: fix spurious large folio warning for FS-DAX
+Date: Fri, 19 Dec 2025 06:37:17 -0600
+Message-ID: <20251219123717.39330-1-john@groves.net>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+Content-Transfer-Encoding: 8bit
 
-On Thu, 18 Dec 2025 15:27:29 +0000
-Alejandro Lucero Palau <alucerop@amd.com> wrote:
+From: John Groves <John@Groves.net>
 
-> On 12/18/25 15:03, Jonathan Cameron wrote:
-> > On Thu, 18 Dec 2025 11:52:58 +0000
-> > Alejandro Lucero Palau <alucerop@amd.com> wrote:
-> >  
-> >> Hi Jonathan,
-> >>
-> >>
-> >> On 12/15/25 13:50, Jonathan Cameron wrote:  
-> >>> On Fri, 5 Dec 2025 11:52:34 +0000
-> >>> <alejandro.lucero-palau@amd.com> wrote:
-> >>>     
-> >>>> From: Alejandro Lucero <alucerop@amd.com>
-> >>>>
-> >>>> A Type2 device configured by the BIOS can already have its HDM
-> >>>> committed. Add a cxl_get_committed_decoder() function for cheking  
-> >>> checking if this is so after memdev creation.
-> >>>     
-> >>>> so after memdev creation. A CXL region should have been created
-> >>>> during memdev initialization, therefore a Type2 driver can ask for
-> >>>> such a region for working with the HPA. If the HDM is not committed,
-> >>>> a Type2 driver will create the region after obtaining proper HPA
-> >>>> and DPA space.
-> >>>>
-> >>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>  
-> >>> Hi Alejandro,
-> >>>
-> >>> I'm in two minds about this.  In general there are devices that have
-> >>> been configured by the BIOS because they are already in use. I'm not sure
-> >>> the driver you are working with here is necessarily set up to survive
-> >>> that sort of live setup without interrupting data flows.  
-> >>
-> >> This is not mainly about my driver/device but something PJ and Dan agree
-> >> on support along this type2 patchset.
-> >>
-> >> You can see the v21 discussions, but basically PJ can not have his
-> >> driver using the committed decoders from BIOS. So this change addresses
-> >> that situation which my driver/device can also benefit from as current
-> >> BIOS available is committing decoders regardless of UEFI flags like
-> >> EFI_RESERVED_TYPE.
-> >>
-> >>
-> >> Neither in my case nor in PJ case the device will be in use before
-> >> kernel is executing, although PJ should confirm this.  
-> > There was some discussion in that thread of whether the decoders are locked.
-> > If they aren't (and if the device is not in use, or some other hard constraint
-> > isn't requiring it, in my view they definitely shouldn't be!) I'd at least
-> > like to consider the option of a 'cleanup pass' to tear them down and give
-> > the driver a clean slate to build on. Kind of similar to what we do in
-> > making PCI reeumerate in the kernel if we really don't like what the bios did.  
-> 
-> 
-> I do not mind to support that option, but could we do it as a follow-up?
+This patch addresses a warning that I discovered while working on famfs,
+which is an fs-dax file system that virtually always does PMD faults
+(next famfs patch series coming after the holidays).
 
-Sure. I'm wondering a bit on whether it's a global flag similar to the
-one for full PCI bus reenumeration or more like the stuff that repairs corners
-of PCI enumeration if the kernel doesn't like what it finds.
+However, XFS also does PMD faults in fs-dax mode, and it also triggers
+the warning. It takes some effort to get XFS to do a PMD fault, but
+instructions to reproduce it are below.
 
-> 
-> 
-> > Might not be possible if there is another higher numbered decoder in use
-> > though :(
-> >  
-> >>  
-> >>> If it is fair enough to support this, otherwise my inclination is tear
-> >>> down whatever the bios did and start again (unless locked - in which
-> >>> case go grumble at your BIOS folk). Reasoning being that we then only
-> >>> have to handle the equivalent of the hotplug flow in both cases rather
-> >>> than having to handle 2.  
-> >>
-> >> Well, the automatic discovery region used for Type3 can be reused for
-> >> Type2 in this scenario, so we do not need to tear down what the BIOS
-> >> did. However, the argument is what we should do when the driver exits
-> >> which the current functionality added with the patchset being tearing
-> >> down the device and CXL bridge decoders. Dan seems to be keen on not
-> >> doing this tear down even if the HDMs are not locked.  
-> > That's the question that makes this interesting.  What is reasoning for
-> > leaving bios stuff around in type 2 cases? I'd definitely like 'a way'
-> > to blow it away even if another option keeps it in place.
-> > A bios configures for what it can see at boot not necessarily what shows
-> > up later.  Similar cases exist in PCI such as resizeable BARs.
-> > The OS knows a lot more about the workload than the bios ever does and
-> > may choose to reconfigure because of hotplugged devices.  
-> 
-> 
-> The main reason seems to be an assumption from BIOSes that only 
-> advertise CFMWS is there exists a CXL.mem enabled ... with the CXL Host 
+The VM_WARN_ON_ONCE(folio_test_large(folio)) check in
+free_zone_device_folio() incorrectly triggers for MEMORY_DEVICE_FS_DAX
+when PMD (2MB) mappings are used.
 
-Just to confirm, do you mean CXL.mem is enabled for the device? I.e.
-memory is in use at boot?  If that config bit is set then we have
-to leave it alone as we have very little idea what traffic is in flight.
-Or just that there is some memory advertised by the device.
+FS-DAX legitimately creates large file-backed folios when handling PMD
+faults. This is a core feature of FS-DAX that provides significant
+performance benefits by mapping 2MB regions directly to persistent
+memory. When these mappings are unmapped, the large folios are freed
+through free_zone_device_folio(), which triggers the spurious warning.
 
-> Bridge CFMWS being equal to the total CXL.mem advertises by those 
-> devices discovered. This is something I have been talking about in 
-> discord and internally because I think that creates problems with 
-> hotplugging and future FAM support, or maybe current DCD.
+The warning was introduced by commit that added support for large zone
+device private folios. However, that commit did not account for FS-DAX
+file-backed folios, which have always supported large (PMD-sized)
+mappings.
 
-For DCD it shouldn't matter as long as there is space for all the DC
-regions.  Whether that is backed by the device shouldn't be something
-the bios cares about.  For the others fully agree its a wrong bios
-writer assumption that we should try to get them to stop making!
+The check distinguishes between anonymous folios (which clear
+AnonExclusive flags for each sub-page) and file-backed folios. For
+file-backed folios, it assumes large folios are unexpected - but this
+assumption is incorrect for FS-DAX.
 
-> 
-> 
-> One case, theoretical but I think quite possible, is a device requiring 
-> the CXL.mem not using the full capacity in all modes, likely because 
-> that device memory used for other purposes and kept hidden from the 
-> host. So the one knowing what to do should be the driver and dependent 
-> on the device and likely some other data maybe even configurable from 
-> user space.
+The fix is to exempt MEMORY_DEVICE_FS_DAX from the large folio warning,
+allowing FS-DAX to continue using PMD mappings without triggering false
+warnings.
 
-Yes. This is kind of similar to some of the things that happen with
-resizeable BARs in PCI.
+Fixes: d245f9b4ab80 ("mm/zone_device: support large zone device private folios")
+Signed-off-by: John Groves <john@groves.net>
+---
 
-> 
-> 
-> So yes, I agree with you that the kernel should be able to do things far 
-> better than the BIOS ...
+Change since V1: Deleted the warning altogether, rather than exempting
+fs-dax.
 
-I'm sure everyone reading this email agrees policy in the OS where possible
-not the BIOS :)
+=== How to reproduce ===
 
-Jonathan
+A reproducer is available at:
+
+    git clone https://github.com/jagalactic/dax-pmd-test.git
+    cd xfs-dax-test
+    make
+    sudo make test
+
+This will set up XFS on pmem with 2MB stripe alignment and run a test
+that triggers the warning.
+
+Alternatively, follow the manual steps below.
+
+Prerequisites:
+  - Linux kernel with FS-DAX support and CONFIG_DEBUG_VM=y
+  - A pmem device (real or emulated)
+  - An fsdax namespace configured via ndctl as /dev/pmem0
+
+Manual steps:
+
+1. Create an fsdax namespace (if not already present):
+   # ndctl create-namespace -m fsdax -e namespace0.0
+
+2. Create XFS with 2MB stripe alignment:
+   # mkfs.xfs -f -d su=2m,sw=1 /dev/pmem0
+   # mount -o dax /dev/pmem0 /mnt/pmem
+
+3. Compile and run the reproducer:
+   # gcc -Wall -O2 -o dax_pmd_test dax_pmd_test.c
+   # ./dax_pmd_test /mnt/pmem/testfile
+
+4. Check dmesg for the warning:
+   WARNING: mm/memremap.c:431 at free_zone_device_folio+0x.../0x...
+
+Note: The 2MB stripe alignment (-d su=2m,sw=1) is critical. XFS normally
+allocates blocks at arbitrary offsets, causing PMD faults to fall back
+to PTE faults. The stripe alignment forces 2MB-aligned allocations,
+allowing PMD faults to succeed and exposing this bug.
+
+
+ mm/memremap.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/mm/memremap.c b/mm/memremap.c
+index 4c2e0d68eb27..63c6ab4fdf08 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -427,8 +427,6 @@ void free_zone_device_folio(struct folio *folio)
+ 	if (folio_test_anon(folio)) {
+ 		for (i = 0; i < nr; i++)
+ 			__ClearPageAnonExclusive(folio_page(folio, i));
+-	} else {
+-		VM_WARN_ON_ONCE(folio_test_large(folio));
+ 	}
+ 
+ 	/*
+
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+-- 
+2.49.0
 
