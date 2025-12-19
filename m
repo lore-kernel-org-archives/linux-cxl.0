@@ -1,161 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f67.google.com (mail-qv1-f67.google.com [209.85.219.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF1B33121B;
-	Fri, 19 Dec 2025 14:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026BA329E74
+	for <linux-cxl@vger.kernel.org>; Fri, 19 Dec 2025 14:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766153700; cv=none; b=C1M6g443HuUjBs7Tl7BbARHseYtCX1f3q2IynjfMIfSknY3JIAxNHBwTrTuysnMoD5p8T3IwKhBfi1iThLyhhjT1+CZ6zEgrLy2qCdlV4bnSmOKmgy/ycmDgKhRAhQM+18WUHUM/ftnmH6KIDucJNMqAWoxcR0o6b1aeQL3qjk4=
+	t=1766154732; cv=none; b=rRkFpyRzed2QLO142eIehDJCor9ZcbOankwYbd0QKfBjcn1AL0VqZlKJXrwUA3vo1lrzSwiQVBiWd1EJmeXhZkr7HSWae8q+piRQ3+Z+awXJplMrKTdNb/5BEoht8DkpglHCEGE8ubI1LfU7TPqGnsGKmbLb/B5Z6TWIVgMDKIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766153700; c=relaxed/simple;
-	bh=h9gatBXLPknkA9XB/kDpWVDHKRf+rqWFuU1zgf9gItM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G8ZcEzkV6lae7U+ZUu3a9K0j7Udy40id61LeTOH4FtVjQ3OZNueiBmC7VBNFqzqdtHlRjOtzb46UNhMnPUTa13+c1c2hm4+SpPKaQj34QxbEfqR7iI6HHPdYcQo+2phRCdaN6iMScyGPBEwqUyolviZzLIiBh/IrRWAelNvYSYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O717isD1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766154732; c=relaxed/simple;
+	bh=ADWK1K6u6t0CaWFJITvqzw+3tp6y+TaCRw5mAd3q2gU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QdC3gw/QGzQQ857qneqffs6u4mhYdlllYKGt93csrkm6fAcKURTpU+o2YxHO3xp3qhsgfniC3ueY7dkdXGbINOsMrYfCv6Xp06YEgbhAWCfIpp7wriay81VFFlHFbkpI+BM5+Lg1lFmETdXO4BBRk1bRyZlKzAahLbs+bHbWJ/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=gNDdAWLp; arc=none smtp.client-ip=209.85.219.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O717isD1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 405DDC4CEF1;
-	Fri, 19 Dec 2025 14:14:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766153699;
-	bh=h9gatBXLPknkA9XB/kDpWVDHKRf+rqWFuU1zgf9gItM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=O717isD1mHBm5W4zYOFNoyxyRF7E9NbvNqjbXcL4AhlmDAOPyLQ33+Kr9Lv7uuq14
-	 ohp1+/WYbEhEL/CST8pbWNnvW1sAS2iIOYrj8+0JrEqqvx3mvCjjI/LgdiYcd93cL6
-	 HCAERNkf2egSFz2ikTO1H4RjquN2pCH+Ajbdo0teEkX5FcAq1oLo+JGYJGghTlxmjQ
-	 5XqtpYvGZgHHWjpDNXYlBjZubxrTfFTk59FwbQz6CINzp98bvVwDsuCxsSD9bDXoaa
-	 ItcakAYKMnhUHmAucPOMJcoLlPH8n1AtCbGfuHdvDf/Gqm1zCOuRrh8nrgPdf8np1P
-	 yE+NKtFJE/Bzw==
-Message-ID: <3f3e2e99-cf87-4498-93a7-700ecb42a2a9@kernel.org>
-Date: Fri, 19 Dec 2025 15:14:53 +0100
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="gNDdAWLp"
+Received: by mail-qv1-f67.google.com with SMTP id 6a1803df08f44-88a26ce6619so17900066d6.3
+        for <linux-cxl@vger.kernel.org>; Fri, 19 Dec 2025 06:32:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1766154729; x=1766759529; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ivd5VUDwxKrJjsOzp1+SZHitpb44btNy0UY1qm1oXXk=;
+        b=gNDdAWLpTkL4yzLz4kJEKfQZiQ04pNofmdooFUhwckx3MWcSeUkw67hsz5q4w83T3E
+         u2IPd1JsLAuI6zYH1TnyTsLCOuFIkunOb3tbvCKnFouEtyhOY3vFKSXB5ugyQs7NpeFo
+         w3s+GpsPfxDiajzMU7NbnWR2+X9UDUm+L6JEt+/5qWmvzQY9dJwr5a6ePtILcjlXDuWk
+         IL5uBNqNwlbgWtM1nq61Ubu5fYEhI4VyXFupZAlOXa6iDxPJr4QOK5Vf66O82m9s+UZi
+         QGvMUJZMEnTQ02ZK/bE8v8Ag/GlsYIvjkVzhKEMaYWDQGAhV3vtS4oQ2Zt7DIlTrvFDx
+         Ihbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766154729; x=1766759529;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ivd5VUDwxKrJjsOzp1+SZHitpb44btNy0UY1qm1oXXk=;
+        b=lojVL9sYQzos8uitJl87mYmoMSsEhJG27G7zzkO0vK3Z22/VUK3jo6DPOthhevUfds
+         YoJhPDKNu+b1Gj6+d6mW5wfkNfIx8jXET8XJ4vaumZoynV2q2EcwMT0tWkDHwV7mmuSN
+         dqYKFaKU+qHp1N4zeSwTtxfmVyfeltZ9GZU6S/JSOaBFBgjT9ja3Tnz+O+4dtZsv0soF
+         6xXJ6HLC6z4IrYKuDvXuvx9+QN2GhjIy0zuQG3JSpLDr3INvK4rcaNjqiPQBKqSr3t7F
+         LkBl8zW6qn2Bi0p5bj5menO5RL8nVqL/NsL+vG7eIaUQyMCbqPhxQxoAYF4tsbVmgxdK
+         E/sQ==
+X-Gm-Message-State: AOJu0YxP515cH8QaP00LABLKE8W58qTL4uyMyuw6rak7GojtU9/YM6Cz
+	6GnYFSzzBi3rBcXbdzestHp0lXidVus8In9qJUrZCmfXPlVoaJoIlBS44DQ2Vw7kJjc=
+X-Gm-Gg: AY/fxX5EhGPyD+op0c37ykzrHWhByz2M8GjsjfifZQOGvTFAcC2yA0yPe/yx4AzdTti
+	1S+Mg6ixzjTVYpLvazckPDW0hpoGGX3cewa035+U+Du8WhDGyI1ym0fdX57bzIfTQFIdoz7iPoi
+	8F9Bf9Ba/1akBNSSaQ6BAqv10t+RA//qrFa7Pjcen9edaZPfP1W514ur+40XrjwvZxQwjS38kB4
+	EtGVFK9Hzl1DWzg/+sDo7IDWMKbcQHUiVorSYwJuw//fwEMvZzZ7MYWxIHIpN9D3tryO6bApsGX
+	ELW9GYXjPMuoleI/DrRsYXSOvKmGP3cRY4g13bpPaBwCdV0KoZTOqIJ5fiQnVT/4cQ3xRRHkCns
+	TqViWV2OJjeS5SXrLqcJnQLsVs631QTw2AD7xGcq7QT+8Ez/n3jB1t6hBQLlagZPldr/7cSHj6D
+	SK8TkgX8C0hkJ6bn5T4qLhNMiZ32IhxRHxWIErT5iK5iSGWiEjgLpxj/Y63IqyEfn2F8Y0xA==
+X-Google-Smtp-Source: AGHT+IHFFb9WYMCs70KCnwOLuU8Gjvo2loQhh9U7/SRr9OdjbdGz6to5W9XjQQ2TooWYSjdCemC3fg==
+X-Received: by 2002:ad4:5003:0:b0:88a:347c:4117 with SMTP id 6a1803df08f44-88d85bae7c9mr33202336d6.19.1766154729462;
+        Fri, 19 Dec 2025 06:32:09 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-88d997aeef5sm20208696d6.27.2025.12.19.06.32.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Dec 2025 06:32:09 -0800 (PST)
+Date: Fri, 19 Dec 2025 09:31:32 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	dave@stgolabs.net, dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, corbet@lwn.net
+Subject: Re: [PATCH v2] Documentation/driver-api/cxl: device hotplug section
+Message-ID: <aUVhxIJzGiiGs9ee@gourry-fedora-PF4VCD3F>
+References: <20251218170747.1278327-1-gourry@gourry.net>
+ <20251219105518.00005ca6@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] mm/memremap: fix spurious large folio warning for
- FS-DAX
-To: John Groves <John@Groves.net>, Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: John Groves <jgroves@micron.com>, "Darrick J . Wong" <djwong@kernel.org>,
- Dan Williams <dan.j.williams@intel.com>, Gregory Price <gourry@gourry.net>,
- Balbir Singh <bsingharora@gmail.com>, Alistair Popple <apopple@nvidia.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Aravind Ramesh <arramesh@micron.com>,
- Ajay Joshi <ajayjoshi@micron.com>
-References: <20251219123717.39330-1-john@groves.net>
-From: "David Hildenbrand (Red Hat)" <david@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20251219123717.39330-1-john@groves.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251219105518.00005ca6@huawei.com>
 
-On 12/19/25 13:37, John Groves wrote:
-> From: John Groves <John@Groves.net>
+On Fri, Dec 19, 2025 at 10:55:18AM +0000, Jonathan Cameron wrote:
+> On Thu, 18 Dec 2025 12:07:47 -0500
+> Gregory Price <gourry@gourry.net> wrote:
 > 
-> This patch addresses a warning that I discovered while working on famfs,
-> which is an fs-dax file system that virtually always does PMD faults
-> (next famfs patch series coming after the holidays).
+> > +
+> > +Multi-Endpoint Memory Device Present at Boot
+> > +--------------------------------------------
+> > +A hot-plug capable CXL memory device, such as one which presents multiple
+> > +expanders as a single large-capacity device, should report the maximum
+> > +*possible* capacity for the device at boot. ::
+> > +
+> > +                  HB0
+> > +                  RP0
+> > +                   |
+> > +     [Multi-Endpoint Memory Device]
 > 
-> However, XFS also does PMD faults in fs-dax mode, and it also triggers
-> the warning. It takes some effort to get XFS to do a PMD fault, but
-> instructions to reproduce it are below.
+> So this is the weird switch as end point thing?   Maybe a reference.
+> My guess is these will go away as switch and memory device vendors catch
+> up with the spec, but maybe I'm wrong.
 > 
-> The VM_WARN_ON_ONCE(folio_test_large(folio)) check in
-> free_zone_device_folio() incorrectly triggers for MEMORY_DEVICE_FS_DAX
-> when PMD (2MB) mappings are used.
-> 
-> FS-DAX legitimately creates large file-backed folios when handling PMD
-> faults. This is a core feature of FS-DAX that provides significant
-> performance benefits by mapping 2MB regions directly to persistent
-> memory. When these mappings are unmapped, the large folios are freed
-> through free_zone_device_folio(), which triggers the spurious warning.
-> 
-> The warning was introduced by commit that added support for large zone
-> device private folios. However, that commit did not account for FS-DAX
-> file-backed folios, which have always supported large (PMD-sized)
-> mappings.
-> 
-> The check distinguishes between anonymous folios (which clear
-> AnonExclusive flags for each sub-page) and file-backed folios. For
-> file-backed folios, it assumes large folios are unexpected - but this
-> assumption is incorrect for FS-DAX.
-> 
-> The fix is to exempt MEMORY_DEVICE_FS_DAX from the large folio warning,
-> allowing FS-DAX to continue using PMD mappings without triggering false
-> warnings.
-> 
-> Fixes: d245f9b4ab80 ("mm/zone_device: support large zone device private folios")
-> Signed-off-by: John Groves <john@groves.net>
-> ---
-> 
-> Change since V1: Deleted the warning altogether, rather than exempting
-> fs-dax.
-> 
-> === How to reproduce ===
-> 
-> A reproducer is available at:
-> 
->      git clone https://github.com/jagalactic/dax-pmd-test.git
->      cd xfs-dax-test
->      make
->      sudo make test
-> 
-> This will set up XFS on pmem with 2MB stripe alignment and run a test
-> that triggers the warning.
-> 
-> Alternatively, follow the manual steps below.
-> 
-> Prerequisites:
->    - Linux kernel with FS-DAX support and CONFIG_DEBUG_VM=y
->    - A pmem device (real or emulated)
->    - An fsdax namespace configured via ndctl as /dev/pmem0
-> 
-> Manual steps:
-> 
-> 1. Create an fsdax namespace (if not already present):
->     # ndctl create-namespace -m fsdax -e namespace0.0
-> 
-> 2. Create XFS with 2MB stripe alignment:
->     # mkfs.xfs -f -d su=2m,sw=1 /dev/pmem0
->     # mount -o dax /dev/pmem0 /mnt/pmem
-> 
-> 3. Compile and run the reproducer:
->     # gcc -Wall -O2 -o dax_pmd_test dax_pmd_test.c
->     # ./dax_pmd_test /mnt/pmem/testfile
-> 
-> 4. Check dmesg for the warning:
->     WARNING: mm/memremap.c:431 at free_zone_device_folio+0x.../0x...
-> 
-> Note: The 2MB stripe alignment (-d su=2m,sw=1) is critical. XFS normally
-> allocates blocks at arbitrary offsets, causing PMD faults to fall back
-> to PTE faults. The stripe alignment forces 2MB-aligned allocations,
-> allowing PMD faults to succeed and exposing this bug.
-> 
-> 
->   mm/memremap.c | 2 --
->   1 file changed, 2 deletions(-)
-> 
-> diff --git a/mm/memremap.c b/mm/memremap.c
-> index 4c2e0d68eb27..63c6ab4fdf08 100644
-> --- a/mm/memremap.c
-> +++ b/mm/memremap.c
-> @@ -427,8 +427,6 @@ void free_zone_device_folio(struct folio *folio)
->   	if (folio_test_anon(folio)) {
->   		for (i = 0; i < nr; i++)
->   			__ClearPageAnonExclusive(folio_page(folio, i));
-> -	} else {
-> -		VM_WARN_ON_ONCE(folio_test_large(folio));
->   	}
->   
 
-LGTM
+I guess I just don't want to dictate the innards of a multi-endpoint
+memory device.  It *really really* implies there must be some kind of
+switch inside - but that switch might not even be runtime programmable
+or discoverable (basically all the settings get locked on boot and it
+becomes passthrough).
 
-Acked-by: David Hildenbrand (Red Hat) <david@kernel.org>
+If you'd rather just not have this section at all, I'm ok with that.
+The switch case below this covers the base case for a switch-based
+device where everything is programmable.
 
--- 
-Cheers
-
-David
+> > +              _____|_____
+> > +             |          |
+> > +        [Endpoint0]   [Empty]
+> > +
+> > +
+> > +Limiting the size to the capacity preset at boot will limit hot-add support
+> > +to replacing capacity that was present at boot.
+> 
+> 
