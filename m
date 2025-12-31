@@ -1,28 +1,28 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DFE3002A0;
-	Tue, 30 Dec 2025 08:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D562701D1;
+	Wed, 31 Dec 2025 03:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767081608; cv=none; b=JO9vG4ZIl45JgE6w1zEOpxVOCpSLfLfdXSZ4A50BCVTsZCVtE9mbccNy1zKkuxC2MbHVG0u7EEs+l8e3DAV9ZH3Zj57UROOpdGLVjUP9Z4F0dvZ3nrU8V9/yVRnFZ5GIXJ5JZDQA0UACGFN+SEa+oslf1Q8vuduHN7uThuSTjVM=
+	t=1767150353; cv=none; b=FJXRsw7z2OUGVjEEmv/9v2CzJhVH5jWaEakios7j2qCeTWumbLJMNslcG+ndTlDJTJEHSHYjfqkBj0uHDUUL/t0seeWYIy7sgYuMyGj7mfNTPw1JUJZZI9qqMwNWuw/BB1QkkVBh43ympJIM1hfKBCh6H80beSAYKAwYBZsQuCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767081608; c=relaxed/simple;
-	bh=eCCYJjKE6CD+uM3U7MkDkM0hIvY1cQm9VjBaCMPn0fs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QwLhyxEM1nfZDJL7Wr+4VEt99fab6SiauuR3jQUsxePYptrNNaabh47ttfqNfeNk7V/y5JG+DGd5c5f0ySftWLrEg3bRVV9sC2MyLeK7Z8zdLY7UiBYAqeahPJ66WBbZRdj6TlyIhRhAmvd8wNe8Vej1aJX8++9nQkCE8aWzT4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=rUBfgaG4; arc=none smtp.client-ip=115.124.30.119
+	s=arc-20240116; t=1767150353; c=relaxed/simple;
+	bh=fvm7Pr8ChlF9fMq8hHGbH/R7KbUFKKH+LxpSVw3aPNo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fVl+EuoaLzHu3L8JmXuNZDupotbptovt7sRLqFWo+NCD73nGde65+5TTO9pcAVGAn4c5Ye0slqBnJXgao9MeRodWz/mhAw+n1Sqbb02Ljas87eGiJ0cLo8kSGoAlzKEDAdpYsZ6Eur/0ApOGiIMHTP2I4moOe96Eac3+fpJ/jJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=NV4p3loP; arc=none smtp.client-ip=115.124.30.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="rUBfgaG4"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="NV4p3loP"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1767081594; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=J/INasNsc6dwCLeywPMorn73E7fm1dR7+Oa4nPzj7lg=;
-	b=rUBfgaG4a2hYvEOzto5pIa7f90fGj8B4nM6Diapf15pbaPyb46uHXvT+zaRnYMMLu3WXewxLtD+NTjf0Wsp33B7l1voe0VvZUQI7ynW5iPMfZw2NLPdo90wsMSsPpyghi6iNM5TsMqTC1qfwdPPl9sb/nui2X6J7Fv2imgzeZsk=
-Received: from localhost(mailfrom:tianruidong@linux.alibaba.com fp:SMTPD_---0WvzM7Xx_1767081593 cluster:ay36)
+	t=1767150339; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=SN48A7LMVLnJ6v/o+xWlCwiKyMcSY/eXb1mrlaUXvtI=;
+	b=NV4p3loPDqkZ7+D92eyf8c1RQXK9MqOjjV4x5+/hrJcvHa1gRVv3M/lMUNlgMjf/dbWuI+avCJt16T1X26doUw28Ffljx6zhBU7ukA05oUN8swUT3MvbCcWEEn1aN6BFc8wTQp3bra91Q9g1XYKoMdQX1Od/tVGVAk7vru9Oe3k=
+Received: from localhost(mailfrom:tianruidong@linux.alibaba.com fp:SMTPD_---0Ww.grOC_1767150333 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 30 Dec 2025 15:59:54 +0800
+          Wed, 31 Dec 2025 11:05:38 +0800
 From: Ruidong Tian <tianruidong@linux.alibaba.com>
 To: dan.j.williams@intel.com,
 	vishal.l.verma@intel.com,
@@ -34,9 +34,9 @@ To: dan.j.williams@intel.com,
 	linux-kernel@vger.kernel.org,
 	xueshuai@linux.alibaba.com
 Cc: Ruidong Tian <tianruidong@linux.alibaba.com>
-Subject: [RFC PATCH] device/dax: Allow MCE recovery when accessing PFN metadata
-Date: Tue, 30 Dec 2025 15:59:51 +0800
-Message-Id: <20251230075951.85252-1-tianruidong@linux.alibaba.com>
+Subject: [RFC PATCH v2] device/dax: Allow MCE recovery when accessing PFN metadata
+Date: Wed, 31 Dec 2025 11:05:26 +0800
+Message-Id: <20251231030526.108309-1-tianruidong@linux.alibaba.com>
 X-Mailer: git-send-email 2.33.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -83,15 +83,15 @@ User application receive SIGBUS, system still alive.
 
 Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
 ---
- drivers/dax/dax-private.h | 26 ++++++++++++++++++++++++++
+ drivers/dax/dax-private.h | 25 +++++++++++++++++++++++++
  drivers/dax/device.c      | 20 ++++++++++++++++----
- 2 files changed, 42 insertions(+), 4 deletions(-)
+ 2 files changed, 41 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-index 0867115aeef2..84325963fa3d 100644
+index 0867115aeef2..4fd3065ae3ba 100644
 --- a/drivers/dax/dax-private.h
 +++ b/drivers/dax/dax-private.h
-@@ -129,4 +129,30 @@ static inline bool dax_align_valid(unsigned long align)
+@@ -129,4 +129,29 @@ static inline bool dax_align_valid(unsigned long align)
  	return align == PAGE_SIZE;
  }
  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
@@ -120,10 +120,9 @@ index 0867115aeef2..84325963fa3d 100644
 +	return copy_mc_to_kernel(&_f, folio, sizeof(struct folio));
 +}
 +#endif
-+#endif
  #endif
 diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-index 22999a402e02..a7f2217b9b62 100644
+index 22999a402e02..cafe802aacb2 100644
 --- a/drivers/dax/device.c
 +++ b/drivers/dax/device.c
 @@ -80,7 +80,7 @@ __weak phys_addr_t dax_pgoff_to_phys(struct dev_dax *dev_dax, pgoff_t pgoff,
@@ -142,7 +141,7 @@ index 22999a402e02..a7f2217b9b62 100644
 +	for (i = 0; i < nr_pages; i++) {
 +		struct page *p = pfn_to_page(pfn + i);
 +
-+		if (dax_test_page_mc(p) || dax_test_page_mc(page_folio(p)))
++		if (dax_test_page_mc(p) || dax_test_folio_mc(page_folio(p)))
 +			return -EFAULT;
 +	}
 +
