@@ -1,105 +1,291 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59592BD597
-	for <linux-cxl@vger.kernel.org>; Fri,  2 Jan 2026 16:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767371727; cv=none; b=En3bFZMFIP9RbTHiF3kQUs5QO80imLTogr+A/CJwz7LqfZbcVnn57xPfnzNUbfG9U2wjXVjnvFlLKfC6nv86ROBHMmGsnY92vsneJ0bthLDEmBsLucMrvsb+oVydJwZgtMzFj/89WE70OQxDiRqiXoEDiy87tBtWPiwF0W3r8SI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767371727; c=relaxed/simple;
-	bh=k0J631j3cFA+6kWbYZAtvC2FCq7uXkRMQQ5N3txfl5Q=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PJmqAF7afLsh2qzBWrpjQnGYvKFfzSl/2vbAJaNcgYLXS+rlBe6L3QQMLSLN6k1lAkYcaVxA8jhKBA0TNQVbBJXua1wCzcXEsnru1KtkViMRVCjVfObxEkKgtWBeLzDzZOOKEQYCQGOSrWxEhYk43W4zo7eCbSo3g362zR2IEcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4djTmf2TRdzJ467L;
-	Sat,  3 Jan 2026 00:34:26 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1430540086;
-	Sat,  3 Jan 2026 00:35:22 +0800 (CST)
-Received: from localhost (10.122.19.247) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Fri, 2 Jan
- 2026 16:35:21 +0000
-Date: Fri, 2 Jan 2026 16:35:19 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-CC: Jonathan Cameron via <qemu-devel@nongnu.org>, <ira.weiny@intel.com>,
-	<alucerop@amd.com>, <a.manzanares@samsung.com>, <dongjoo.seo1@samsung.com>,
-	<mst@redhat.com>, <marcel.apfelbaum@gmail.com>, <armbru@redhat.com>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v4 -qemu 0/5] hw/cxl: Support Back-Invalidate
-Message-ID: <20260102163519.00005de4@huawei.com>
-In-Reply-To: <20251230182330.upui2kkymnlylkh2@offworld>
-References: <20251103195209.1319917-1-dave@stgolabs.net>
-	<20251216011211.anwnw25ot6n3euhq@offworld>
-	<20251217135930.00004616@huawei.com>
-	<20251223115325.00000a36@huawei.com>
-	<20251230182330.upui2kkymnlylkh2@offworld>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA8030ACFB
+	for <linux-cxl@vger.kernel.org>; Fri,  2 Jan 2026 18:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.179
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767377051; cv=pass; b=fmK5gFN+sKNBTYkYLZA8GIkZhEVpq+bLWQtU/8SRdTpWkNBdJ1tCUaNZ5WFPpeIhwbXmf7KsIxkS3zUQpk22o+Gk0hFxsMtoa8gEFeKSVzhyO09Xm742FHN+tVwMEvkDan56RUme9r9J3Erokt2YqFe0Se64y00wLicE3xHvVM4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767377051; c=relaxed/simple;
+	bh=ksPuzDhEsNwwadpdao9ypfLnzBz9TXOr7Qq8wOanBfg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QGFlwmMG4yHkIMg4nua5+1wXn8/lI1DYDW4pmczjirPYlEqoNHjKk+M0M0jJdVNvkdaFQmpyXGo0xqgCfs6dERvL72wHkEjqMs+lfMDAZ4DEcndghJktZs/eVijM+jP2EYS3iUp+P/9xHBPLlywjKHwrDyjarD1Bdx9b7tegVec=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HdS5VSkM; arc=pass smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HdS5VSkM"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4ee147baf7bso11051cf.1
+        for <linux-cxl@vger.kernel.org>; Fri, 02 Jan 2026 10:04:04 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1767377042; cv=none;
+        d=google.com; s=arc-20240605;
+        b=M0WXvuRgoV9ViEK11pBbNMLBso9I+C73gSQKbokqy3+Xy0xZ99TnFDzEflgbFeAMEN
+         Z8on5fDcHawFT20n5Vg+uqkz5suy0616sAr//SzImNZ/9ErATASceNF8E+ksgBYBJOZj
+         WYVEm8OQcQltwZshy8Xjy3TzgmpeD/UCGeb7qAUGBQwGk2sm6LwnRDKq6a06hKQPtUrG
+         ada3ZAoO1P4BpAoVl67oipz2f86ahPG2SE95EEMMLscdQokAH1w7LgXdhRrinOsb54N/
+         +QkWCxfjhzQpPV5+GEwqEVNA8BUyQOnDL4/AT00tBKM8EdL39SpjXf6J2hZvGhT0UL8O
+         stwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=VF7Ncw4qUW1QvZXNeYN2PHKmriSnoyG5jmMgiKLYwBI=;
+        fh=SWkjDUxwGRrdYAr3KARMWXkVUJDO1Y+YkJlyfLNTufU=;
+        b=apfeEEMxbxRmBcJLL+nG0JnzMitrIa3hwfZqdyDnoZnR4oEWNAB7I8CpMy9kK8mjgl
+         VDwTI5hWW2ZZuYhxQ32I8b5J8O9D3jskhJTaqw51jEkV4pTMxxu6n7/tJ9+g5DSvqTDt
+         RPDC3iDl8phuZeHlO/Hk6yQkrxcSDdBe4YAkHwAOmUOwbxir1Aqroo2ySzudwaYCR+SY
+         x303de+HszEV7Zj2VXKyb6iQkM0YOSNm/G0dSpa5ci65xNl+Z1NY3tuQ4zJQsXMF17QD
+         yF0GbTawZGoRfy4NADMTeDRennQJwGL9wXv6/t9liGYNuWbD6VcqBWVcDoJY7MHsHxVN
+         uT8A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1767377042; x=1767981842; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VF7Ncw4qUW1QvZXNeYN2PHKmriSnoyG5jmMgiKLYwBI=;
+        b=HdS5VSkMl2fMvmYmBbhT/8bhZzDSgMLHBPooEAVzZaA2KhwWXpAsATKal+yDrYJFyW
+         TsgNIKvbRz0AapI/c5ccL4QdkAiPoYIlFpWcV+zR9Y5vNcohp9rtvEFrPHpjgngO0nZ7
+         V1bAPX0/7mnEwt0mNgAOEhpDMR3MSfUh+ZQ3QPXimeLalCGJ0uu7SODshg2WPqQy8Bdz
+         W26QyDDP6cezxmOEP9xMJ/W5L07cZkyPMGJ5K3VQFcQetq6fJHFzI876wnCaFlQWksIl
+         JMWqyRnvAI4xRryENHltmewZL8GO9iTvMwcz9TolLRPC3wqBcDe67kFnBVYL+bSw/Z1o
+         1Jmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767377042; x=1767981842;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VF7Ncw4qUW1QvZXNeYN2PHKmriSnoyG5jmMgiKLYwBI=;
+        b=Qjq4TjI5FYrMTCbNejvaV5zQkRZ1xVQPIptpP0hhUKXhNwXZkDH2FeM4WQhq4VmFoA
+         o535sk8kfd0GVxub5BTIfrsPG02mlRpdXeMfVegw67bHfDobJCSsYQsIr8qzGMnV1qoK
+         WuyWFg09Ep1rR149EgtTwg9g+DvUTAqZ7Bkno7PGMpufRT4hyZ8mDd4cbjSQc5lyWJbY
+         rzbnC3aK7t4snefzxNOUi022kIyM14F64sR9rYyA5RvmU2z4x0TZPykR+BAHLaolq/00
+         ZSZtueBQAWvLWfz4mMJJM8E9kvyucSavS5+aZRmHi7bn46ePyc36KG9BDJhwDAJUSGd9
+         TQag==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ72epOgWXAnzzneH73vdpEeO031mTUREZAU6n9BOBO/80TsiZhvuiXVtlLZAYXj6Bj4C/N27Kz1A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpVCLPqDwmXtE6geeoN7CVGxYxr57wuTxuwclBgPiLLoYV+gEq
+	ayQowP9UEUyXq4Fj+js9iIHK8zXd13cUWB12K2ERJksYpyBruTktiytSoq2WX2G02NwVOmppZAD
+	iZs79CA2/OWlLAbL454yjbjtBT6tzrvXfp/w3B8Sm
+X-Gm-Gg: AY/fxX4/tb58nrAJy/xO/juVVL9K30kuehl2IeMa7+OTb1d6amw+92GuvdMCGCSPqUj
+	WU96TV2kaxlyRXlC++WR5eToQML6BrHKxcTa0MDYOL3mncbOikkvLNWPkSc49fuVKiy0lf3cNRI
+	n9cIKmNBBJVJXzW+MTHt/ovlQ0+epppzP5wJIQqqEymDNFvngwhIc45aZxiI4SQkH/3pReJpJZg
+	byMUOdQ4sPi84ndWLTjE972TPlGicsqWKpM2uD1qTQA/YQB7GSm68rKKr6zWo23QdKUUFU=
+X-Google-Smtp-Source: AGHT+IE626c1niVbXfJuRnnEKb/XVpUT3xgOsgVHvUYmmAhOToE2K50Gpbsa48xtp+jOGlgqExM/NP3EnDee4koBR/0=
+X-Received: by 2002:a05:622a:8016:b0:4fb:e3b0:aae6 with SMTP id
+ d75a77b69052e-4fbe3b0ad54mr14392961cf.1.1767377041692; Fri, 02 Jan 2026
+ 10:04:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+References: <20260102070005.65328-1-rppt@kernel.org>
+In-Reply-To: <20260102070005.65328-1-rppt@kernel.org>
+From: Frank van der Linden <fvdl@google.com>
+Date: Fri, 2 Jan 2026 10:03:49 -0800
+X-Gm-Features: AQt7F2qPng5Y0NvX0my5UG4cpefC6iiH19nIvMPHQLdOtt1JmQ_l0Tjv8FxQEzo
+Message-ID: <CAPTztWaZZt_ygCDNaDdW9A_TtT1FNZW6hFzyiq2b6_xxMw38gQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/28] arch, mm: consolidate hugetlb early reservation
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Alex Shi <alexs@kernel.org>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, 
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, 
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	"David S. Miller" <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonathan Corbet <corbet@lwn.net>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Hocko <mhocko@suse.com>, 
+	Michal Simek <monstr@monstr.eu>, Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Richard Weinberger <richard@nod.at>, 
+	Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, x86@kernel.org, 
+	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-mm@kvack.org, 
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 30 Dec 2025 10:23:30 -0800
-Davidlohr Bueso <dave@stgolabs.net> wrote:
+On Thu, Jan 1, 2026 at 11:00=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wro=
+te:
+>
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>
+> Hi,
+>
+> Order in which early memory reservation for hugetlb happens depends on
+> architecture, on configuration options and on command line parameters.
+>
+> Some architectures rely on the core MM to call hugetlb_bootmem_alloc()
+> while others call it very early to allow pre-allocation of HVO-style
+> vmemmap.
+>
+> When hugetlb_cma is supported by an architecture it is initialized during
+> setup_arch() and then later hugetlb_init code needs to understand did it
+> happen or not.
+>
+> To make everything consistent and unified, both reservation of hugetlb
+> memory from bootmem and creation of CMA areas for hugetlb must be called
+> from core MM initialization and it would have been a simple change.
+> However, HVO-style pre-initialization ordering requirements slightly
+> complicate things and for HVO pre-init to work sparse and memory map shou=
+ld
+> be initialized after hugetlb reservations.
+>
+> This required pulling out the call to free_area_init() out of setup_arch(=
+)
+> path and moving it MM initialization and this is what the first 23 patche=
+s
+> do.
+>
+> These changes are deliberately split into per-arch patches that change ho=
+w
+> the zone limits are calculated for each architecture and the patches 22 a=
+nd
+> 23 just remove the calls to free_area_init() and sprase_init() from arch/=
+*.
+>
+> Patch 24 is a simple cleanup for MIPS.
+>
+> Patches 25 and 26 actually consolidate hugetlb reservations and patches 2=
+7
+> and 28 perform some aftermath cleanups.
+>
+> I tried to trim the distribution list and although it's still quite long
+> if you feel that someone was wrongly excluded please add them back.
+>
+> The changes also available in git:
+> https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=3Dh=
+ugetlb-init/v2
+>
+> v2 changes:
+> * move the hugetlb and memory map initializaion to mm_core_init_early()
+> * add Acks
+>
+> v1: https://lore.kernel.org/all/20251228124001.3624742-1-rppt@kernel.org
+>
+> Mike Rapoport (Microsoft) (28):
+>   alpha: introduce arch_zone_limits_init()
+>   arc: introduce arch_zone_limits_init()
+>   arm: introduce arch_zone_limits_init()
+>   arm64: introduce arch_zone_limits_init()
+>   csky: introduce arch_zone_limits_init()
+>   hexagon: introduce arch_zone_limits_init()
+>   loongarch: introduce arch_zone_limits_init()
+>   m68k: introduce arch_zone_limits_init()
+>   microblaze: introduce arch_zone_limits_init()
+>   mips: introduce arch_zone_limits_init()
+>   nios2: introduce arch_zone_limits_init()
+>   openrisc: introduce arch_zone_limits_init()
+>   parisc: introduce arch_zone_limits_init()
+>   powerpc: introduce arch_zone_limits_init()
+>   riscv: introduce arch_zone_limits_init()
+>   s390: introduce arch_zone_limits_init()
+>   sh: introduce arch_zone_limits_init()
+>   sparc: introduce arch_zone_limits_init()
+>   um: introduce arch_zone_limits_init()
+>   x86: introduce arch_zone_limits_init()
+>   xtensa: introduce arch_zone_limits_init()
+>   arch, mm: consolidate initialization of nodes, zones and memory map
+>   arch, mm: consolidate initialization of SPARSE memory model
+>   mips: drop paging_init()
+>   x86: don't reserve hugetlb memory in setup_arch()
+>   mm, arch: consolidate hugetlb CMA reservation
+>   mm/hugetlb: drop hugetlb_cma_check()
+>   Revert "mm/hugetlb: deal with multiple calls to hugetlb_bootmem_alloc"
+>
+>  .../driver-api/cxl/linux/early-boot.rst       |  2 +-
+>  Documentation/mm/memory-model.rst             |  3 --
+>  .../translations/zh_CN/mm/memory-model.rst    |  2 -
+>  arch/alpha/kernel/setup.c                     |  1 -
+>  arch/alpha/mm/init.c                          | 16 ++++----
+>  arch/arc/mm/init.c                            | 37 +++++++++---------
+>  arch/arm/mm/init.c                            | 25 ++----------
+>  arch/arm64/include/asm/hugetlb.h              |  2 -
+>  arch/arm64/mm/hugetlbpage.c                   | 10 ++---
+>  arch/arm64/mm/init.c                          | 39 ++++++++-----------
+>  arch/csky/kernel/setup.c                      | 16 ++++----
+>  arch/hexagon/mm/init.c                        | 19 +++------
+>  arch/loongarch/include/asm/pgtable.h          |  2 -
+>  arch/loongarch/kernel/setup.c                 | 10 -----
+>  arch/loongarch/mm/init.c                      |  6 +--
+>  arch/m68k/mm/init.c                           |  8 ++--
+>  arch/m68k/mm/mcfmmu.c                         |  3 --
+>  arch/m68k/mm/motorola.c                       |  6 +--
+>  arch/m68k/mm/sun3mmu.c                        |  9 -----
+>  arch/microblaze/mm/init.c                     | 22 +++++------
+>  arch/mips/include/asm/pgalloc.h               |  2 -
+>  arch/mips/include/asm/pgtable.h               |  2 +-
+>  arch/mips/kernel/setup.c                      | 15 +------
+>  arch/mips/loongson64/numa.c                   | 10 ++---
+>  arch/mips/mm/init.c                           |  8 +---
+>  arch/mips/sgi-ip27/ip27-memory.c              |  8 +---
+>  arch/nios2/mm/init.c                          | 12 +++---
+>  arch/openrisc/mm/init.c                       | 10 +----
+>  arch/parisc/mm/init.c                         | 11 +-----
+>  arch/powerpc/include/asm/hugetlb.h            |  5 ---
+>  arch/powerpc/include/asm/setup.h              |  4 ++
+>  arch/powerpc/kernel/setup-common.c            |  1 -
+>  arch/powerpc/mm/hugetlbpage.c                 | 11 ++----
+>  arch/powerpc/mm/mem.c                         | 27 +++++--------
+>  arch/powerpc/mm/numa.c                        |  2 -
+>  arch/riscv/mm/hugetlbpage.c                   |  8 ++++
+>  arch/riscv/mm/init.c                          | 10 +----
+>  arch/s390/kernel/setup.c                      |  2 -
+>  arch/s390/mm/hugetlbpage.c                    |  8 ++++
+>  arch/s390/mm/init.c                           | 13 +++----
+>  arch/sh/mm/init.c                             | 12 +++---
+>  arch/sparc/mm/init_64.c                       | 17 +++-----
+>  arch/sparc/mm/srmmu.c                         | 17 ++++----
+>  arch/um/kernel/mem.c                          | 10 ++---
+>  arch/x86/kernel/setup.c                       |  5 ---
+>  arch/x86/mm/hugetlbpage.c                     |  8 ++++
+>  arch/x86/mm/init.c                            |  8 +---
+>  arch/x86/mm/init_32.c                         |  2 -
+>  arch/x86/mm/init_64.c                         |  4 --
+>  arch/x86/mm/mm_internal.h                     |  1 -
+>  arch/xtensa/mm/init.c                         | 14 +++----
+>  include/linux/hugetlb.h                       | 12 ++----
+>  include/linux/mm.h                            |  5 ++-
+>  include/linux/mmzone.h                        |  2 -
+>  init/main.c                                   |  1 +
+>  mm/hugetlb.c                                  | 13 -------
+>  mm/hugetlb_cma.c                              | 33 ++++++++--------
+>  mm/hugetlb_cma.h                              |  5 ---
+>  mm/hugetlb_vmemmap.c                          | 11 ------
+>  mm/internal.h                                 |  6 +++
+>  mm/mm_init.c                                  | 20 ++++++----
+>  61 files changed, 219 insertions(+), 394 deletions(-)
+>
+>
+> base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+> --
+> 2.51.0
+>
 
-> On Tue, 23 Dec 2025, Jonathan Cameron wrote:
-> 
-> >On Wed, 17 Dec 2025 13:59:30 +0000
-> >Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
-> >
-> >Seems the release has been tagged, so I've just rebased and pushed
-> >out a draft tree as cxl-2025-12-23-draft
-> >Draft because it is very very lightly tested so far.  
-> 
-> Thank you for picking this up, 'draft' is fine with me :)
-> However, I am not seeing this new branch in your tree(?)
+Thanks for this series. When I introduced HVO pre-init, I noticed the
+inconsistencies in init order, but shied away from attempting any
+general cleanup, as I had only tested pre-init on x86.
 
-Hi Davidlohr,
+With this, it should be possible to enable
+ARCH_WANT_HUGETLB_VMEMMAP_PREINIT on architectures that support HVO. I
+think that's only riscv and loongarch right now. But that's out of
+scope here, though.
 
-Happy new year.
-
-Hmm. Could have sworn I pushed i out... Guess messed that up :(
-
-Note there is a stray change in there for an unrelated tests
-tree that I've tidied up in my local tree.
-
-I'll push a new tree out next week but assuming this series
-isn't otherwise messed up by me, I'd like to email this out as
-something I think is ready to merge before I do that. 
-
-If you spot anything bad with this I might shuffle things around
-to put the physical port commands set ahead of it.
-
-Jonathan
-
-
-
-> 
-> >
-> >On that I've merged in these patches with a few tweaks + added the
-> >table test updates.  If you get a minute to take a look please do.
-> >
-> >It's behind a couple of left over series from earlier cycles but my
-> >intent is to post it for reviews prior to merge shortly.  That
-> >may not include in the restrictions control qapi as I think that interface
-> >may need more thought.  For now I've added a patch that just enables
-> >BI always for CFMWSes.  
-> 
-> Makes sense.
-> 
-> Thanks,
-> Davidlohr
-> 
-
+- Frank
