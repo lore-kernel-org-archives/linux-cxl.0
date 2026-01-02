@@ -1,103 +1,37 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E923530F942;
-	Fri,  2 Jan 2026 07:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4973F1E7C23
+	for <linux-cxl@vger.kernel.org>; Fri,  2 Jan 2026 15:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767337628; cv=none; b=Mhi9JNJpjZCzMJxbeMKCLF3mIVzyfbhyR2w6WbuO1T2wPyKmMkRGBdc36SW+aTdIWChkSt3QWIXO42+QZEYHzNxUnYLKBI/T8AHVNgfNiYJHeY1rBZ0ZM5nqNyCK7Z9+jA0CwXJlOd5pg9EkrJweEYHSuofpM2PE1XgZ4Hsve1M=
+	t=1767366919; cv=none; b=oaWtlokpHfaB1bBrNr3XrPl/dsXI5CZfdXAjXmiyr7qPsrWgvp9lscDvm4UZF+pxFnyCr8ATNZ3kCR4w+trm80qFiwO43Yv0pc01Df7ehLxhq3DbvZvde1sbr+zH1xNY6HhecFZUkbYyYeBaDhqpfuHU/wqQMl7R0AeyBfJcuHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767337628; c=relaxed/simple;
-	bh=HRLMNbJfcIyzccjy/sfTD1k/8iARayV6dPdQfJTMnWo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sq367tkA+3HKdqfRoijh3muQRiSM54dyQ+gOj0T0ATLhs8aZ810gZBv8n+nzsXr+uzO/VyDLOL/gjeUtjXxC1lTBiwpRAt6gvg6L7ox6oMBrpFLNjKeyJsRpgGoo+skMUfCQCFh8Wo+mmHcGXz+aQ1d+xYdQkNI7flrrrbh4eOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CxvPssLF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CxvPssLF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E504C116B1;
-	Fri,  2 Jan 2026 07:06:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767337627;
-	bh=HRLMNbJfcIyzccjy/sfTD1k/8iARayV6dPdQfJTMnWo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CxvPssLFALKnAzAlXBll5rTphhZU7lG8jhoItNzn1fDH5h3/PSapvXks4U3zBNKEd
-	 Gjt8HaJNmGMQm+aKOWUJhnKIeCQ7VO+u8fAo/doIZz/Il+9XwBm8RvGrlfHBY4wksj
-	 Cq6GIEs4nXBSlEFiuN6ruwU2ocb72rmtMW/CPlqo0QaPKgGKxexcSr/e058WN5u+vt
-	 lU7HuQVp28/ddYn1T2PDlLul6PCmb+/cdQqpBV+UeDT6K9x9v670twTwtzSruR1eek
-	 5EbuXWwPo0AdoPZsDEj9liyOPfYpCx9mEEd3RXrrfPHn5OQecwQijHHNqnHYPLSYBm
-	 a5OWg4z3pZQcw==
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alex Shi <alexs@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@kernel.org>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	Matt Turner <mattst88@gmail.com>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Hocko <mhocko@suse.com>,
-	Michal Simek <monstr@monstr.eu>,
-	Mike Rapoport <rppt@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>,
-	Stafford Horne <shorne@gmail.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Vineet Gupta <vgupta@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Will Deacon <will@kernel.org>,
-	x86@kernel.org,
-	linux-alpha@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org
-Subject: [PATCH v2 28/28] Revert "mm/hugetlb: deal with multiple calls to hugetlb_bootmem_alloc"
-Date: Fri,  2 Jan 2026 09:00:04 +0200
-Message-ID: <20260102070005.65328-29-rppt@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260102070005.65328-1-rppt@kernel.org>
-References: <20260102070005.65328-1-rppt@kernel.org>
+	s=arc-20240116; t=1767366919; c=relaxed/simple;
+	bh=EQ1dhy3suI4aJygEBgEm4jp6DZlzD6y4+qG+xAHBO3Q=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ouHXY+r7kaoqV9sM0Dm0DjYWsYeubl+3z0+pBUTsugoJ+ZDxL4twg9iESQbdpyK17z+H4qUxg2NHy7FmXRCiwKo9fx30KST7PcglzhRjfWviGqJEwbLrNOeFxo4+FIo9fIRcLKgV4JmG4DCQX72O4nWlocgIPYi2N5Dy6HvWmnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4djS0B08StzJ467L;
+	Fri,  2 Jan 2026 23:14:18 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id A1F494056F;
+	Fri,  2 Jan 2026 23:15:13 +0800 (CST)
+Received: from SecurePC-101-06.huawei.com (10.122.19.247) by
+ dubpeml100005.china.huawei.com (7.214.146.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.36; Fri, 2 Jan 2026 15:15:13 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Michael Tsirkin <mst@redhat.com>, <qemu-devel@nongnu.org>,
+	<shiju.jose@huawei.com>, <armbru@redhat.com>
+CC: <linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>, Ravi Shankar
+	<venkataravis@micron.com>
+Subject: [PATCH qemu v2 0/5] cxl: r3.2 specification event updates.
+Date: Fri, 2 Jan 2026 15:15:07 +0000
+Message-ID: <20260102151512.460766-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -105,115 +39,43 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Hi Michael,
 
-This reverts commit d58b2498200724e4f8c12d71a5953da03c8c8bdf.
+This is a rebase/resend of:
+https://lore.kernel.org/qemu-devel/20250917141355.293217-1-Jonathan.Cameron@huawei.com/
+which I think slipped through the cracks for 10.2.
 
-hugetlb_bootmem_alloc() is called only once, no need to check if it was
-called already at its entry.
+Original cover letter:
 
-Other checks performed during HVO initialization are also no longer
-necessary because sparse_init() that calls hugetlb_vmemmap_init_early()
-and hugetlb_vmemmap_init_late() is always called after
-hugetlb_bootmem_alloc().
+This is the 1st CXL set that I think is ready for upstream.
+They are lightly tweaked and rebased from the first part of:
+https://lore.kernel.org/qemu-devel/20250811085530.2263-1-shiju.jose@huawei.com/
+[PATCH v6 0/8] hw/cxl: Update CXL events to rev3.2 and add maintenance support for memory repair features
 
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Acked-by: Muchun Song <muchun.song@linux.dev>
----
- include/linux/hugetlb.h |  6 ------
- mm/hugetlb.c            | 12 ------------
- mm/hugetlb_vmemmap.c    | 11 -----------
- 3 files changed, 29 deletions(-)
+I've split that series up as the two parts were only slightly connected.
 
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 08fc332e88a7..c8b1a6dd2d46 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -175,7 +175,6 @@ extern int sysctl_hugetlb_shm_group __read_mostly;
- extern struct list_head huge_boot_pages[MAX_NUMNODES];
- 
- void hugetlb_bootmem_alloc(void);
--bool hugetlb_bootmem_allocated(void);
- extern nodemask_t hugetlb_bootmem_nodes;
- void hugetlb_bootmem_set_nodes(void);
- 
-@@ -1300,11 +1299,6 @@ static inline bool hugetlbfs_pagecache_present(
- static inline void hugetlb_bootmem_alloc(void)
- {
- }
--
--static inline bool hugetlb_bootmem_allocated(void)
--{
--	return false;
--}
- #endif	/* CONFIG_HUGETLB_PAGE */
- 
- static inline spinlock_t *huge_pte_lock(struct hstate *h,
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 82b322ae3fdc..e5a350c83d75 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -4470,21 +4470,11 @@ void __init hugetlb_bootmem_set_nodes(void)
- 	}
- }
- 
--static bool __hugetlb_bootmem_allocated __initdata;
--
--bool __init hugetlb_bootmem_allocated(void)
--{
--	return __hugetlb_bootmem_allocated;
--}
--
- void __init hugetlb_bootmem_alloc(void)
- {
- 	struct hstate *h;
- 	int i;
- 
--	if (__hugetlb_bootmem_allocated)
--		return;
--
- 	hugetlb_bootmem_set_nodes();
- 
- 	for (i = 0; i < MAX_NUMNODES; i++)
-@@ -4498,8 +4488,6 @@ void __init hugetlb_bootmem_alloc(void)
- 		if (hstate_is_gigantic(h))
- 			hugetlb_hstate_alloc_pages(h);
- 	}
--
--	__hugetlb_bootmem_allocated = true;
- }
- 
- /*
-diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
-index 9d01f883fd71..a9280259e12a 100644
---- a/mm/hugetlb_vmemmap.c
-+++ b/mm/hugetlb_vmemmap.c
-@@ -794,14 +794,6 @@ void __init hugetlb_vmemmap_init_early(int nid)
- 	struct huge_bootmem_page *m = NULL;
- 	void *map;
- 
--	/*
--	 * Noting to do if bootmem pages were not allocated
--	 * early in boot, or if HVO wasn't enabled in the
--	 * first place.
--	 */
--	if (!hugetlb_bootmem_allocated())
--		return;
--
- 	if (!READ_ONCE(vmemmap_optimize_enabled))
- 		return;
- 
-@@ -847,9 +839,6 @@ void __init hugetlb_vmemmap_init_late(int nid)
- 	struct hstate *h;
- 	void *map;
- 
--	if (!hugetlb_bootmem_allocated())
--		return;
--
- 	if (!READ_ONCE(vmemmap_optimize_enabled))
- 		return;
- 
+The initial rework was a request from Markus from an earlier version.
+
+Shiju Jose (5):
+  qapi: cxl: Refactor CXL event injection for common commands arguments
+  hw/cxl/events: Update for rev3.2 common event record format
+  hw/cxl/events: Updates for rev3.2 general media event record
+  hw/cxl/events: Updates for rev3.2 DRAM event record
+  hw/cxl/events: Updates for rev3.2 memory module event record
+
+ qapi/cxl.json               | 151 +++++++++++++++++++++++++--------
+ include/hw/cxl/cxl_device.h |   7 +-
+ include/hw/cxl/cxl_events.h |  38 +++++++--
+ hw/cxl/cxl-events.c         |   3 +-
+ hw/cxl/cxl-mailbox-utils.c  |   3 +-
+ hw/mem/cxl_type3.c          | 163 ++++++++++++++++++++++++++++++++++--
+ hw/mem/cxl_type3_stubs.c    |  41 ++++++++-
+ 7 files changed, 347 insertions(+), 59 deletions(-)
+
 -- 
-2.51.0
+2.48.1
 
