@@ -1,99 +1,115 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB73266EE9
-	for <linux-cxl@vger.kernel.org>; Fri,  2 Jan 2026 23:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F9E26CE39
+	for <linux-cxl@vger.kernel.org>; Sat,  3 Jan 2026 05:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767396816; cv=none; b=UU6CSVxsD3xx0w4ce0s07lsFUqT+hh4638624LtHpW4/TSDvwATJZccFYTmE6JCvqZU08R3bnyQ6Yvjue0DSpk2sd5N60V8l4AG9XebpTbrp1nMJYMCKjfc2VRjDSdNvGshBcHz4lE6o435fNvPVMH2fF8iwdRb6+Q6uSVQdVz8=
+	t=1767418596; cv=none; b=ZcN3ZfHeytY6YOjOxYzvAQPKjDC2WjS20ATCC9bhdTAFZWHLRMnFvHlfYU4VvgosxeUhQqJt9Ty6sl5Ede3IV65RHvtjQgkL9+BLCvv2rmjhV10q1nW6r1ZFdUrt98GZkpdo5Ndf/Pdylk2JVDIco7ZBM3qoLzRKyMoU3uQ/ucA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767396816; c=relaxed/simple;
-	bh=fPgjbu8KKW+OSKM0Ml+0HRcMf9aJuuECFk5FjJFgyaA=;
+	s=arc-20240116; t=1767418596; c=relaxed/simple;
+	bh=ATXYUvNs1r7k2R+QkRXiglU8qywdgmSoPgsNlVWS4pc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TjwpLHxPa/jCZjefrfRHqhsGaf1+EEv+Hdkwd8j2EUhzjjYU5oL9MirctqHDD2JM0camMWLMu59/CKU2gNFFStHwNUknditb+DG0lpoEzQ6rLgYLuZk6P24yec/YUtougTc0YM93ytPEGMdqAEX+O5Pjzwu/j4U0xsmndj4pn3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VoPhXJLH; arc=none smtp.client-ip=209.85.167.41
+	 Content-Type:Content-Disposition:In-Reply-To; b=up7CjDlbVo4DnjYhYZ2Gwif69H8cA8VmwhnUpt67q3tAQfgPEKZw6u0V6wfs5EED2Tx17HMn6yOWQFUItzxvOF+i5pAG7366YhcFalYs/4vpZCtuF9fz9L/7gtg4G3NxTUWzOnughoCU0CmKU0psAW1ygatRiV5ruZ6ingsJSDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gDXMiTxx; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoPhXJLH"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-594330147efso14532616e87.2
-        for <linux-cxl@vger.kernel.org>; Fri, 02 Jan 2026 15:33:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDXMiTxx"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-42fb5810d39so8128696f8f.2
+        for <linux-cxl@vger.kernel.org>; Fri, 02 Jan 2026 21:36:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767396811; x=1768001611; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1767418591; x=1768023391; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7oJkD+3I1ySqG2dU6TJV84R7uGtBSIJL6aFjqNNbCRs=;
-        b=VoPhXJLHVhnkhe7w44O6EhEYeaOAvJornqISvaJnJKneuBoFraUN3ZhnQDLUho3LRT
-         T38Xh+XzhI6D7YxcmBiwUX2ZQtWI8XejkxwKWGQRX/OlzaDDfLrXi4jM+IomnMtjZI8X
-         9gTTATppouOOAMaZJIVJdyeATRRQ1N0c7+dyY3fhjrtudX/Gu+bdk0YbrTATVrNDaZBA
-         z7UWZDTnqpZSkphilxTVMzYbqlQVFHKe9CiNfB+4sjRcPiot9XB0JR4oI0jESiE8uoL1
-         qg7f9jcPeh/kNEFBgqHLRF/VxpXKqacz6k3UF6jNLqCJq6w3RvsL0c01Ep7gNs9x0w90
-         3OpA==
+        bh=10gk4kIzv5viXrYP6wsblohOaaYzL8Wh9uCfOfLAyTE=;
+        b=gDXMiTxxJbSjZSyFQUB6T5kBrvh2LsNE97UOkAmZYirAEl0yRraTfieWvOhBoqRUqm
+         FIHLEGPxujyCQ7b66gUmIrAfOBp7ZQQM3oo59+R2v2NQ6TSeJYwC1+sItTOs92L+mPC0
+         YOyKfOGX7SpTHcnTlGt7O7cRpP7+e1ku6+iHq6X7qBAfXhq/5C14HOJ86NOU1aIrYiYH
+         eCgLhdjtCLh/ZPCiL4WZX3EZAkiX1RxBgsaDDWflHrVLWdoHDOG4GK6ARhzE6uUQrbGT
+         SxBpM24mo+zNzRAf3+4C+lNZlydg1P+21uuT1rhnmXBZLBRxqG5dbSIdSV7mOFxyqUk6
+         b+mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767396811; x=1768001611;
+        d=1e100.net; s=20230601; t=1767418591; x=1768023391;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7oJkD+3I1ySqG2dU6TJV84R7uGtBSIJL6aFjqNNbCRs=;
-        b=G1cHsrkRoUb8SSTGGg+I1zHYuzf/IjvzBOPy1UZyOk9L/mtNV7mVTDk5nBHSsTq7q2
-         oJsfIiyMeBkE3Se/olfHj4cqIGKlUYgP/mD5Xjng6NGNi3isLgIpIkYlbDpCaNvBjQ5V
-         U2PDsYZtjmafesd68znS19j2fKk2nUd35qPhfZVnSlX6FRODnMGG7WCWaU3UVZRDYQjR
-         bEnS5vrN24oTtHE4u4Z8fGfHuYzCJPu6NanNxSsSUTesJtwoVNKrDVVBK8ya5CM5x+sM
-         Xu+c2aBzzRbcHjjmH7M+ILebFSxqimY6bJTY2GINKEyO9VpBh04uWbHxLBlKs2JqxtKx
-         3NWA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQU5l15rc1gcNIurIYaKF+WOXrGZono4N1h7me6Hqu3ykeBHwduqKhlmRNpoQA2vTBx/Eu3/nl9vs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSIDlOZ4ppPstld2gAkCZgFFHyup3mtf/fRSPjIUodjZkmv7d7
-	Qv/xFK04GDU8TLxQdKkU7lUCVkfA7KdvL5Vi2+CgheFp7DZzqntEzTvT
-X-Gm-Gg: AY/fxX7V+L18K8OJXTEL1PLuUMtQUP2G0l/sbid+FJ0ndPS0D781T1dUmvKFEBkZQZm
-	GuKWG7EO/P1aW4QkDHVIICN00X2JL4ItqCd+vGAI6CU/AnpTLeoqgZuBDYEwBCsFArHtIyN+9NZ
-	ACwZtCKcCIgwx8fCLhYKcYv/m5atGlqBIUCQLGp7lKBByxi0Tl+qZP4ZAUke/MpQMupCFS8/Mx3
-	jZb+iuNy5Gk4Qq6eUrmDFj6woxMC/2Yuimurs/EiXVieB3/q2KH/6oBbDlwYnUINsljxP6bFuOl
-	Pz5YhnYVtLao0SnJ4uP7oobYWMULSBnbJarF9ekBYB18TUctXSxNSxznRUa55iqasvSnLWzcvXB
-	vVeoPrBrdEwISy2fwA+wsHxCjqv0fB6LPejFq3g1JKEi/j4xg9FbPIal9HX6dO/9/mH4tIcNjQI
-	jR+q+P53WHIwaUFAJqvC/KXu0t
-X-Google-Smtp-Source: AGHT+IH2H1z9QVIhTu3A3MPtZYT5DDmpE6MbcXNtDvemf/egyv4QEgcDqeHHJdIO1qKRKt95zoj43Q==
-X-Received: by 2002:ac2:4e08:0:b0:594:93b8:88b6 with SMTP id 2adb3069b0e04-59a17db705bmr11802619e87.38.1767396810454;
-        Fri, 02 Jan 2026 15:33:30 -0800 (PST)
-Received: from localhost (soda.int.kasm.eu. [2001:678:a5c:1202:4fb5:f16a:579c:6dcb])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59a185ea248sm12368060e87.43.2026.01.02.15.33.29
+        bh=10gk4kIzv5viXrYP6wsblohOaaYzL8Wh9uCfOfLAyTE=;
+        b=dhxrz/q2jIWrgIIyTgz+bzKLHkLzSs9TEU8rMdZqFuRSq3N5IWnT0YUrRzxQyM30pN
+         5gwYT2jBJmrjSJ9Kk9qzrNB493dLgRPippS5OR1VLYxdUj+eIB8UMHUW0mHZaSE9qTJG
+         YYpxnv8jchZUfwTwOsJakIz6scm04WYfddDa/pS6o9L7sMMmgeEFyA/P37mLe7Zh8s69
+         54E9teOMh/LRJbFd34cVKPP9AOwyg18+4arqGkDzUfIxyWtl0fN9SnkX5FW15QV2ifJj
+         JLZBvUXMymEqTJyvu33+thTnjX4Egzq0RAfFYUplfnFNvzDLs9l+OhLvKm7vvPcv53Ih
+         mrCw==
+X-Forwarded-Encrypted: i=1; AJvYcCV0sRyxqMcSPscPyCXEEcT1XGZCcF4pGSED7jawuMbcLJQcZGtSLCJkNhnxUwWXaBLV5xy7HDRVtZw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXmqnBEZoGWewy6klv1NMTv01jxzcefgmiyZprNaIw1Et9+o9m
+	5jwpDqWqTr8w/K06en6QhX9gWZPVfy+9GE3cwVzbAOSowv+u0q/1njch
+X-Gm-Gg: AY/fxX4GPhS+efYS72hTFfnvHgOCHhMoQnNLZUG+RF71MniGSiS7ON7u8McH4j/unpe
+	S1hZtgjMKFKlNddMzCLkIX8L+b1R4j/PbO7CPhkqA5aRWZB3w7ZDNm/rxEr2cqFOrZkgOfPFILM
+	cxFWw4ArX34D8611P7sXoALABRl+PdQFA77oJJ7VlVdqgDWs7mbfnmdaxGALYNMW4DtCA5xAFkJ
+	aU92NzzU0zc+VjvcueBxtRQswT/jFP+Rqmt/HodN668K6UhtBK47/SxCnF1FkH8HUPfAIU0bOkC
+	LuGUst/AtVmTMOAwqC6wCmWoDj253VzRfgyxIOnV5Y5P+TVhhrqch/3szz7mjIjCpVLpzik8ZMv
+	C8H8jAH4Q2aqXghDeU+N6iX0GKPh5GwqDyAai1ThpW0dvTkWSWPi65Iyglsw8s8kgjzfmrgH9R7
+	pl2c3/ghdI/nTKXG0GOELR/fPaeblQgoVA1bL0B1Wq16DZFO6y0RDfrwps3kHwG264
+X-Google-Smtp-Source: AGHT+IGVfFhDmvRzquITceR9a5MtoKyW2aPxvUx0HbCgVxiLGpVVcSZGOqzt3JsoKLBzXfIUaXLywg==
+X-Received: by 2002:a05:6000:178f:b0:430:fd84:317a with SMTP id ffacd0b85a97d-4324e4fb825mr53362620f8f.38.1767418590643;
+        Fri, 02 Jan 2026 21:36:30 -0800 (PST)
+Received: from localhost (brnt-04-b2-v4wan-170138-cust2432.vm7.cable.virginm.net. [94.175.9.129])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324eaa4749sm89007161f8f.37.2026.01.02.21.36.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jan 2026 15:33:29 -0800 (PST)
-Date: Sat, 3 Jan 2026 00:33:29 +0100
-From: Klara Modin <klarasmodin@gmail.com>
+        Fri, 02 Jan 2026 21:36:28 -0800 (PST)
+Date: Sat, 3 Jan 2026 05:36:26 +0000
+From: Stafford Horne <shorne@gmail.com>
 To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Alex Shi <alexs@kernel.org>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, 
-	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	"David S. Miller" <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
-	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonathan Corbet <corbet@lwn.net>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>, 
-	Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, 
-	Stafford Horne <shorne@gmail.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, x86@kernel.org, 
-	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-mm@kvack.org, linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v2 22/28] arch, mm: consolidate initialization of nodes,
- zones and memory map
-Message-ID: <aVhN2NgQEKe0yzva@soda.int.kasm.eu>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Alex Shi <alexs@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@kernel.org>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
+	x86@kernel.org, linux-alpha@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org
+Subject: Re: [PATCH v2 12/28] openrisc: introduce arch_zone_limits_init()
+Message-ID: <aViq2vsMk5tltK0f@antec>
 References: <20260102070005.65328-1-rppt@kernel.org>
- <20260102070005.65328-23-rppt@kernel.org>
+ <20260102070005.65328-13-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -102,245 +118,52 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260102070005.65328-23-rppt@kernel.org>
+In-Reply-To: <20260102070005.65328-13-rppt@kernel.org>
 
-Hi,
-
-On 2026-01-02 08:59:58 +0200, Mike Rapoport wrote:
+On Fri, Jan 02, 2026 at 08:59:48AM +0200, Mike Rapoport wrote:
 > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 > 
-> To initialize node, zone and memory map data structures every architecture
-> calls free_area_init() during setup_arch() and passes it an array of zone
-> limits.
+> Move calculations of zone limits to a dedicated arch_zone_limits_init()
+> function.
 > 
-> Beside code duplication it creates "interesting" ordering cases between
-> allocation and initialization of hugetlb and the memory map. Some
-> architectures allocate hugetlb pages very early in setup_arch() in certain
-> cases, some only create hugetlb CMA areas in setup_arch() and sometimes
-> hugetlb allocations happen mm_core_init().
-> 
-> With arch_zone_limits_init() helper available now on all architectures it
-> is no longer necessary to call free_area_init() from architecture setup
-> code. Rather core MM initialization can call arch_zone_limits_init() in a
-> single place.
-> 
-> This allows to unify ordering of hugetlb vs memory map allocation and
-> initialization.
-> 
-> Remove the call to free_area_init() from architecture specific code and
-> place it in a new mm_core_init_early() function that is called immediately
-> after setup_arch().
-> 
-> After this refactoring it is possible to consolidate hugetlb allocations
-> and eliminate differences in ordering of hugetlb and memory map
-> initialization among different architectures.
-> 
-> As the first step of this consolidation move hugetlb_bootmem_alloc() to
-> mm_core_early_init().
+> Later MM core will use this function as an architecture specific callback
+> during nodes and zones initialization and thus there won't be a need to
+> call free_area_init() from every architecture.
 > 
 > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-
-This breaks boot on my Raspberry Pi 1. The reason seems to be the use of
-page_folio() when initializing the dynamically allocated zero page in
-arm, which doesn't work when free_area_init() hasn't been called yet.
-
-The following oopses are generated:
-
- Booting Linux on physical CPU 0x0
- Linux version 6.19.0-rc3-03898-g7975b0084358 (klara@soda.int.kasm.eu) (armv6j-unknown-linux-gnueabihf-gcc (Gentoo 15.2.1_p20251122 p3) 15.2.1 20251122, GNU ld (Gentoo 2.45.1 p1) 2.45.1) #451 Fri Jan  2 20:26:00 CET 2026
- CPU: ARMv6-compatible processor [410fb767] revision 7 (ARMv7), cr=00c5387d
- CPU: PIPT / VIPT nonaliasing data cache, VIPT nonaliasing instruction cache
- OF: fdt: Machine model: Raspberry Pi Model B Rev 2
- earlycon: pl11 at MMIO32 0x20201000 (options '')
- printk: legacy bootconsole [pl11] enabled
- Memory policy: Data cache writeback
- Reserved memory: created CMA memory pool at 0x19400000, size 64 MiB
- OF: reserved mem: initialized node linux,cma, compatible id shared-dma-pool
- OF: reserved mem: 0x19400000..0x1d3fffff (65536 KiB) map reusable linux,cma
- 8<--- cut here ---
- Unable to handle kernel paging request at virtual address 003dfb44 when read
- [003dfb44] *pgd=00000000
- Internal error: Oops: 5 [#1] ARM
- CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.19.0-rc3-03898-g7975b0084358 #451 NONE
- Hardware name: BCM2835
- PC is at paging_init (include/linux/page-flags.h:284 (discriminator 2) arch/arm/mm/mmu.c:1790 (discriminator 2))
- LR is at paging_init (arch/arm/mm/mmu.c:1789 (discriminator 1))
- pc :    lr :    psr: 600000d3
- sp : c0d01ef8  ip : defdb000  fp : 0000000b
- r10: 00200000  r9 : d9400000  r8 : ffe00000
- r7 : c0d09050  r6 : c0d0902c  r5 : c0d43d40  r4 : 0001efda
- r3 : c0dab20c  r2 : 00000000  r1 : 003dfb40  r0 : 00000000
- Flags: nZCv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment none
- Control: 00c5387d  Table: 00004008  DAC: 00000051
- Register r0 information: NULL pointer
- Register r1 information: non-paged memory
- Register r2 information: NULL pointer
- Register r3 information:
- 8<--- cut here ---
- Unable to handle kernel paging request at virtual address 0001b564 when read
- [0001b564] *pgd=00000000
- Internal error: Oops: 5 [#2] ARM
- CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.19.0-rc3-03898-g7975b0084358 #451 NONE
- Hardware name: BCM2835
- PC is at kmem_dump_obj (mm/slab.h:142 (discriminator 2) mm/slab.h:178 (discriminator 2) mm/slab_common.c:609 (discriminator 2))
- LR is at 0x1
- pc :    lr :    psr: 200001d3
- sp : c0d01cc8  ip : 00000000  fp : 0000000b
- r10: 00200000  r9 : c0dab1dc  r8 : 00000000
- r7 : 00000005  r6 : 00000dab  r5 : 0001b560  r4 : c0dab20c
- r3 : c0dc2058  r2 : 1f000000  r1 : 00c00000  r0 : 00000001
- Flags: nzCv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment none
- Control: 00c5387d  Table: 00004008  DAC: 00000051
- Register r0 information: non-paged memory
- Register r1 information: non-paged memory
- Register r2 information: non-paged memory
- Register r3 information:
- 8<--- cut here ---
-
-and the second one repeats for some time afterwards.
-
-I experimented a little by allocating the zero page statically as many
-other arches do which fixes the issue as it does not need to be
-initialized at this point anymore, though I have no idea if that's
-appropriate.
-
-Regards,
-Klara Modin
-
-...
-
-> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-> index bdcc3639681f..a8f7b4084715 100644
-> --- a/arch/arm/mm/init.c
-> +++ b/arch/arm/mm/init.c
-> @@ -118,15 +118,6 @@ void __init arch_zone_limits_init(unsigned long *max_zone_pfn)
->  #endif
->  }
+> ---
+>  arch/openrisc/mm/init.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/openrisc/mm/init.c b/arch/openrisc/mm/init.c
+> index 9382d9a0ec78..67de93e7a685 100644
+> --- a/arch/openrisc/mm/init.c
+> +++ b/arch/openrisc/mm/init.c
+> @@ -39,15 +39,19 @@
 >  
-> -static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
-> -	unsigned long max_high)
-> -{
+>  int mem_init_done;
+>  
+> -static void __init zone_sizes_init(void)
+> +void __init arch_zone_limits_init(unsigned long *max_zone_pfns)
+>  {
 > -	unsigned long max_zone_pfn[MAX_NR_ZONES] = { 0 };
 > -
-> -	arch_zone_limits_init(max_zone_pfn);
-> -	free_area_init(max_zone_pfn);
-> -}
-> -
->  #ifdef CONFIG_HAVE_ARCH_PFN_VALID
->  int pfn_valid(unsigned long pfn)
->  {
-> @@ -222,13 +213,6 @@ void __init bootmem_init(void)
->  	 * done after the fixed reservations
+>  	/*
+>  	 * We use only ZONE_NORMAL
 >  	 */
->  	sparse_init();
-> -
-> -	/*
-> -	 * Now free the memory - free_area_init needs
-> -	 * the sparse mem_map arrays initialized by sparse_init()
-> -	 * for memmap_init_zone(), otherwise all PFNs are invalid.
-> -	 */
-> -	zone_sizes_init(min_low_pfn, max_low_pfn, max_pfn);
->  }
->  
->  /*
-
-...
-
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 628c0e0ac313..64d6f9c15ef1 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -45,6 +45,7 @@ struct pt_regs;
->  struct folio_batch;
->  
->  void arch_mm_preinit(void);
-> +void mm_core_init_early(void);
->  void mm_core_init(void);
->  void init_mm_internals(void);
->  
-> @@ -3536,7 +3537,7 @@ static inline unsigned long get_num_physpages(void)
->  }
->  
->  /*
-> - * Using memblock node mappings, an architecture may initialise its
-> + * FIXME: Using memblock node mappings, an architecture may initialise its
->   * zones, allocate the backing mem_map and account for memory holes in an
->   * architecture independent manner.
->   *
-> @@ -3551,7 +3552,6 @@ static inline unsigned long get_num_physpages(void)
->   *	memblock_add_node(base, size, nid, MEMBLOCK_NONE)
->   * free_area_init(max_zone_pfns);
->   */
-> -void free_area_init(unsigned long *max_zone_pfn);
->  void arch_zone_limits_init(unsigned long *max_zone_pfn);
->  unsigned long node_map_pfn_alignment(void);
->  extern unsigned long absent_pages_in_range(unsigned long start_pfn,
-> diff --git a/init/main.c b/init/main.c
-> index b84818ad9685..445b5643ecec 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -1025,6 +1025,7 @@ void start_kernel(void)
->  	page_address_init();
->  	pr_notice("%s", linux_banner);
->  	setup_arch(&command_line);
-> +	mm_core_init_early();
->  	/* Static keys and static calls are needed by LSMs */
->  	jump_label_init();
->  	static_call_init();
-> diff --git a/mm/mm_init.c b/mm/mm_init.c
-> index fc2a6f1e518f..ffc4a0f1fee9 100644
-> --- a/mm/mm_init.c
-> +++ b/mm/mm_init.c
-> @@ -1810,7 +1810,6 @@ static void __init set_high_memory(void)
->  
->  /**
->   * free_area_init - Initialise all pg_data_t and zone data
-> - * @max_zone_pfn: an array of max PFNs for each zone
->   *
->   * This will call free_area_init_node() for each active node in the system.
->   * Using the page ranges provided by memblock_set_node(), the size of each
-> @@ -1821,17 +1820,14 @@ static void __init set_high_memory(void)
->   * starts where the previous one ended. For example, ZONE_DMA32 starts
->   * at arch_max_dma_pfn.
->   */
-> -void __init free_area_init(unsigned long *max_zone_pfn)
-> +static void __init free_area_init(void)
->  {
-> +	unsigned long max_zone_pfn[MAX_NR_ZONES] = { 0 };
->  	unsigned long start_pfn, end_pfn;
->  	int i, nid, zone;
->  	bool descending;
->  
-> -	/* Record where the zone boundaries are */
-> -	memset(arch_zone_lowest_possible_pfn, 0,
-> -				sizeof(arch_zone_lowest_possible_pfn));
-> -	memset(arch_zone_highest_possible_pfn, 0,
-> -				sizeof(arch_zone_highest_possible_pfn));
-> +	arch_zone_limits_init(max_zone_pfn);
->  
->  	start_pfn = PHYS_PFN(memblock_start_of_DRAM());
->  	descending = arch_has_descending_max_zone_pfns();
-> @@ -2681,13 +2677,19 @@ void __init __weak mem_init(void)
->  {
->  }
->  
-> +void __init mm_core_init_early(void)
-> +{
-> +	hugetlb_bootmem_alloc();
-> +
-> +	free_area_init();
+> -	max_zone_pfn[ZONE_NORMAL] = max_low_pfn;
+> +	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
 > +}
 > +
->  /*
->   * Set up kernel memory allocators
->   */
->  void __init mm_core_init(void)
->  {
->  	arch_mm_preinit();
-> -	hugetlb_bootmem_alloc();
+> +static void __init zone_sizes_init(void)
+> +{
+> +	unsigned long max_zone_pfn[MAX_NR_ZONES] = { 0 };
 >  
->  	/* Initializations relying on SMP setup */
->  	BUILD_BUG_ON(MAX_ZONELISTS > 2);
-> -- 
-> 2.51.0
-> 
+> +	arch_zone_limits_init(max_zone_pfn);
+>  	free_area_init(max_zone_pfn);
+>  }
+
+Thanks, this looks like a good cleanup.
+
+
+Acked-by: Stafford Horne <shorne@gmail.com>
