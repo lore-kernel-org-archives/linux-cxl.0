@@ -1,50 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012065.outbound.protection.outlook.com [52.101.43.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCA5265CA2;
-	Mon,  5 Jan 2026 21:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767647451; cv=none; b=mY1Rt4yLgqxxoggRo0cYk+tX0TpXR1tB6q1tHw9ojqOooSJdqpXj1vLd8Xnscty26Q9MPQOJO1cRyZfJae7Cizt0wQ8s+npH6Awzxl7O85meRt6pIXqFhdHkzWp1StIzd+iSKGWRgwVzOUnR+kMKUFJyUm6alIv6ykSl9lfc7SE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767647451; c=relaxed/simple;
-	bh=K/MLEv800jeZGm8iAy2BhdCeur6VtWkHHjegTHjmSCI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nl6F6Js070EZFTPS1E7Pp2QpY6fYgDvxfjHxR7mws4XIbXdvb4B5M9CXhzMuwL0xdA0/lGMGUXoUKIqyBgJe+DR0s7pMfXbq2kWbkGcOfSON7TPjPkLkbVLGuwOX8jkpzZz2LSrXk3XxpRLIlSfIfdLKzRDgupUbql3RBZ5VEag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cu5tdoTL; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895DA2DCBFD
+	for <linux-cxl@vger.kernel.org>; Mon,  5 Jan 2026 21:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767647600; cv=fail; b=aPu7m8G4juIFS+LpCVvcyIu1Yj9zq4Bh8mXOChR7FpdTPuTLCK2lJayNrILMx4indo1UzhiQXJRlR2XiPMVTBw14qER2qDFPBbJPyhtMnx687+pNXLt6aVT9Ofsj0rFWwbXlvaq0IXpZ/9i5OPGEo+/cF0+SXoI6fqi1XXQXrRk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767647600; c=relaxed/simple;
+	bh=dRHDXdNZFvyit0kGaiT9RmwuILxFH70h7zjjYKjZXJs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LDLR4dpULN5U2gOMhTXdj8YCsECUadQ4KUrdiqu9NIU09SGpian7kp62wHubxX9B9puCP/+e4DQ8Vmf5THgVjDF/Vx5ltugXCOfy25eCcWcDVhNa2rBbBe4s6fP4JfyHqe1Jo7hTJp+yaFR7E2Ozj/PmhA9loMpRfTyAEcBlIqA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=G6aZMMED; arc=fail smtp.client-ip=52.101.43.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cu5tdoTL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767647449; x=1799183449;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=K/MLEv800jeZGm8iAy2BhdCeur6VtWkHHjegTHjmSCI=;
-  b=Cu5tdoTLLLYGduvx1RETPt4GJYvM57MwuAfzC/DnK1AQ2AHii3PxIjxQ
-   dmyVw19XgFp0/inGRvvJ0zx4VSPuSAa2eskdUAcvXyewofjmJZ6Blzacc
-   45CsWVch+ympttKBItlkFw7bIfzB/GS/z3B+98t91SaHRMWZWjv1w8n5/
-   MdFBo42ekxnQkLkI+ds7VwkUyoU6rUyO9HG+jcbZqZytxEvvbFDLezLw9
-   YbtadBCLk1YZGKO3c9ALAoG004aKXw5uJ7FXYqucOI9u96L+RcTrYTFRk
-   DCcVEFeIN8VRH7d1owcMsrmeLW9jiwjDFic08+iM+ZNXdj7nNbMC72y1R
-   g==;
-X-CSE-ConnectionGUID: wrALv6OHSha4iHA3Z0lMdw==
-X-CSE-MsgGUID: ozk6m5NdQqyujMIcAmjAmQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11662"; a="79322483"
-X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
-   d="scan'208";a="79322483"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2026 13:10:47 -0800
-X-CSE-ConnectionGUID: DSf3fdLiS7SQ2L74XHxOZw==
-X-CSE-MsgGUID: jNVFjKMgTXq83i+a0KaoOw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
-   d="scan'208";a="206955734"
-Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.109.45]) ([10.125.109.45])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2026 13:10:46 -0800
-Message-ID: <29e5de15-6e4f-4d0d-ae76-a39db99f9f59@intel.com>
-Date: Mon, 5 Jan 2026 14:10:45 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="G6aZMMED"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hFVR/5yzQX03QlJdDTU1uNULh/qqfuZK4FpV66Zu3uo2B6M6FP3wrYZuSOxFouOF+oGSUEDXfr4+PF2/xbNfydO/AM7UHB2XuErXsuUL5nBlooDRhZ5oIdkTJTM9Od6hc246/4PvfX+f5/Kx47B6xsOnIMaeo/jmhfU4gRGAAbxu1ZaFfH0CGNO2epWn65j4u6HG+TAv28FGmnjhKcxu9xnyDyx1zwdcsbKOwQJ4XJE3KWetHba6h/jupV2+wcEAdhW9VICnkPyxb2yofA/xUx+vIeCaDO42sI4WDSmGSPa/plluMNN8EJA7kF8DD4/nz68TlsrJb2rUNpNE76w46Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aiDR3Bby6ogfwKfO48mR+aqiokMf3wxDmSf2Nuy0lbU=;
+ b=gnEibHZ7xq+MhwzggK1lXq8LT8WZDMKntV7H8YC6ptlLS8IzaqY5R9GBZSAfuuoquMswecNtaWlvpTQ+VQbZ4A6jfmH/hrmdWUOrKKdCYUOmpXiNBtP/mIvZovoHWcUyRMgrw/+GY/7TXXfNpwQEI+gkZtRGXKA49wNM2JkuVElFlg1yHFB10rpo4P5XWEqC9aRxy75wyItrLB6oZVIl+HmtGbKtRES6Uk4gTVGnkUTCCdIeiiP9BofwThr66UYMN8OTtDVKssJHMjgZS3e7U7sfCl2740pudV7dJygHGiKN2Xd79poVcjyE0ouwXY3HegVl0MMUXJyIDd0neojg2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aiDR3Bby6ogfwKfO48mR+aqiokMf3wxDmSf2Nuy0lbU=;
+ b=G6aZMMEDOWHYCjzKyfOYpkAXdGbW/P57as3pJxacBc9VlSxpr+/Ov9DdH0MBn/+tJhKBC116cIxQiBlg4xFRp3b4aCK3pqBpPbaiDYs7kh+Jk5QrKlk15YubDyFUdbY9xAUHRkontgLjs9QKCdwxfnxJN+gbJ5/Uwlnmt4nDCow=
+Received: from BN0PR10CA0015.namprd10.prod.outlook.com (2603:10b6:408:143::33)
+ by PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Mon, 5 Jan
+ 2026 21:13:11 +0000
+Received: from BN1PEPF0000468E.namprd05.prod.outlook.com
+ (2603:10b6:408:143:cafe::9a) by BN0PR10CA0015.outlook.office365.com
+ (2603:10b6:408:143::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9478.4 via Frontend Transport; Mon, 5
+ Jan 2026 21:13:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BN1PEPF0000468E.mail.protection.outlook.com (10.167.243.139) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9499.1 via Frontend Transport; Mon, 5 Jan 2026 21:13:11 +0000
+Received: from [172.31.132.101] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 5 Jan
+ 2026 15:13:09 -0600
+Message-ID: <3eae10e0-0203-4cce-b060-88c69b2e2f41@amd.com>
+Date: Mon, 5 Jan 2026 15:13:03 -0600
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,204 +64,279 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] Documentation/driver-api/cxl: device hotplug
- section
-To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, corbet@lwn.net, rakuram.e96@gmail.com,
- alucerop@amd.com
-References: <20251219170538.1675743-1-gourry@gourry.net>
- <20251219170538.1675743-3-gourry@gourry.net>
+Subject: Re: [PATCH v5 7/7] Documentation: Add docs for inject/clear-error
+ commands
+To: Alison Schofield <alison.schofield@intel.com>
+CC: <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
+	<dave.jiang@intel.com>
+References: <20251215213630.8983-1-Benjamin.Cheatham@amd.com>
+ <20251215213630.8983-8-Benjamin.Cheatham@amd.com>
+ <aUTaIPvIeILjEnnI@aschofie-mobl2.lan>
 Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20251219170538.1675743-3-gourry@gourry.net>
-Content-Type: text/plain; charset=UTF-8
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+In-Reply-To: <aUTaIPvIeILjEnnI@aschofie-mobl2.lan>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF0000468E:EE_|PH7PR12MB5712:EE_
+X-MS-Office365-Filtering-Correlation-Id: ac09ede5-03bd-4055-75a4-08de4c9f3b4f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Ylc1TENlbmtuMnlvamdJVVNCQTZqUG9vSFlCZVdDS2MzRlRhOEZZaVRIQk1u?=
+ =?utf-8?B?RGFRSmo4QTJ1NXBqMUREb2M1V1ZHeDd5TzZ4c0tmMjVWNkdEVGNBUmJkS3Nj?=
+ =?utf-8?B?WTZLNnphVU1OaWhONUpXM1ZjeDNXT1U3SWViQzNaVExWQ3JNb20xNTBidUEx?=
+ =?utf-8?B?Zzd5RHZlbHNRcGFOT2dxNnhvaFg1QWo4emc3WituSW5aRTVVeHdNRm1odzZD?=
+ =?utf-8?B?b29UOGpqajM1UktQSFp4cFBGZklOemZDY3lyYVVVaU5wdGw4WDRCVzdkaFRw?=
+ =?utf-8?B?RjZRdG9IZ1Ziakl0b1BuRS9xOXNweXJEbHBSdG9yQXBUK2k0R3NTYkpxbkFH?=
+ =?utf-8?B?cElqYVlGYnd3N2RFN3N4cmFSTU5BL2RuUXIxODVBZ01nVjROMjNvVzNMUm5i?=
+ =?utf-8?B?VE13QmlCVnFjNktWdzM1Wk9qeHBabmY0WERJTlVVSHl3bDRBazkwQUFZYStp?=
+ =?utf-8?B?M3hjZkNPZjBVQnZnWWdJTDBlczhDUmlUY1dGUTBUMTZaK09iWVE4QVJkdC9z?=
+ =?utf-8?B?MXVRdUxFMW94S3ZxZ0xmNUZoN0VMOGZRUE9tU1BnZk4xYXJOL1UwN1pTekpF?=
+ =?utf-8?B?MWg1dHlHVnNwWUpMdDFRNDh1THJ5a0JJOVIyNGx6YWNQa1pkVGkvdVZoVkJZ?=
+ =?utf-8?B?V1ovbVZFdTlvNCtUSFEvOGd6eEF1NFVZQ2I0QTUrK1cxOTdwNDNETkRMVDFs?=
+ =?utf-8?B?MFNZSC9xdVVZa2xWd05QcDlRMm9vVlozN3hWWDcyWWVtdktBWXFpdXllQ3h5?=
+ =?utf-8?B?Zms5d1ZkWGRzQTR6b01FWm9Xb1BWM04zYmtZUmo3UkloQlNGVmh2eWpCMWNt?=
+ =?utf-8?B?ZlE4MEZUNkhQQUtJWmlLblRqbXNuT3UwTmtpaFQ1SHdXdjlGTm1BVFpyNEpU?=
+ =?utf-8?B?VnU2bUxEaG91MHFwcFZ2ZkxxUnAzSEZYZkRURDBUM2ZvT0c0RFcrTVo1dklF?=
+ =?utf-8?B?b0dZOXc0SHhJUFJ2Yi8xWE5VMmFCTnRUNkU0Ni9sNUJzMkd4dzFtNk1lWG8z?=
+ =?utf-8?B?VzBLUXNNazZHMHFVY3UyWjdKNmxIc1Z6citBb092VmE1UjhjWGlaZGR5TS9M?=
+ =?utf-8?B?OEhibkxLVXEzVmlkUUFqaVYxVU9wb1d1ZjdYbFRKSXFDT3RXRmZjODRTOFBK?=
+ =?utf-8?B?R2ZmQkU3SFlCMGVTdWFHMVBKa2JCekNod2lLQWhranptaHRQNWRXTTN6Y2Jv?=
+ =?utf-8?B?UFFobUVMblNPVGhHS2tTdjJsUWVDV1dReDFKY2FBcjN2UGpVY1FuR1lBdkpH?=
+ =?utf-8?B?R1p6MHlSVGNQVVY1VVJ5Y09DQ3YrT3d4MXRzWi9LeDFDM1plenhYMXRtQmZM?=
+ =?utf-8?B?b3ZHSXlQT1RqMStWVXNnb0hxaHlFZGoveC9wNjFLY3JxWTJMenMwRURBVGJl?=
+ =?utf-8?B?cGo2ZGNOU3JkM0tKaGNOcTJ4MW9UL3AxbkpNZXdndVNUWmRaQWxQeEc5MFI0?=
+ =?utf-8?B?NDdDRkFwZWczMG02M3VzZGlyZWorNHVEaVJ3a0x3WDU3cDdyZ1BFN29ITndj?=
+ =?utf-8?B?dUYrcndBQ0Facm8zZTRsVmlId1lzdjVWZVVONXg5d2VveDhMbnJiSWhKbmxO?=
+ =?utf-8?B?R1g5d0xkMkxWbTkra0orTGhZQnpVWGJQWTVIbTVWSVJIbzgyR1VyWEtucVZW?=
+ =?utf-8?B?Q3JDYWRKalVNVUZaOTg3QjN3SU05UWZCOHp0Q3NLL2hScXUvdEZmSzJIbHpD?=
+ =?utf-8?B?Qzc1RitXR2lVdkJqVkY1U2Z6SU9xYWJxc0g4dVNYOVdRL3hEUFlFYmJMWXlz?=
+ =?utf-8?B?RS94MGRlR2ZlS2NFNWoyMnN3U0U2U3lBc2FHWUZOSjdzUk9teitLUGRFdWJw?=
+ =?utf-8?B?Wndjb3htNUxHbW5iRUdsaGxVUGVrT3pTQVJTdldJZFpqc2o5QzFUV1pNbWZx?=
+ =?utf-8?B?VFdCZ01UVkIxRktXUGN2VWZTWE16d1NiYUdnbW5Wc25rUCtuRkRHYkFza0dV?=
+ =?utf-8?B?bm5nOUdGY053aUhSVWJqUDd6S25lR1BuVWtieGpEbFRzdWVjeXlDN05MUlIw?=
+ =?utf-8?B?b3k0NHNGR1Q4eG9FMVc4RVY3UEhJdWpFdHlSME1iQ01Hamo2WDVGcDlVcGVl?=
+ =?utf-8?Q?bKaW41?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2026 21:13:11.1314
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac09ede5-03bd-4055-75a4-08de4c9f3b4f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF0000468E.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5712
 
 
 
-On 12/19/25 10:05 AM, Gregory Price wrote:
-> Describe cxl memory device hotplug implications, in particular how the
-> platform CEDT CFMWS must be described to support successful hot-add of
-> memory devices.
+On 12/18/2025 10:52 PM, Alison Schofield wrote:
+> On Mon, Dec 15, 2025 at 03:36:30PM -0600, Ben Cheatham wrote:
+>> Add man pages for the 'cxl-inject-error' and 'cxl-clear-error' commands.
+>> These man pages show usage and examples for each of their use cases.
+>>
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+>> ---
+>>  Documentation/cxl/cxl-clear-error.txt  |  67 +++++++++++++
+>>  Documentation/cxl/cxl-inject-error.txt | 129 +++++++++++++++++++++++++
+>>  Documentation/cxl/meson.build          |   2 +
+>>  3 files changed, 198 insertions(+)
+>>  create mode 100644 Documentation/cxl/cxl-clear-error.txt
+>>  create mode 100644 Documentation/cxl/cxl-inject-error.txt
 > 
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
-> v3: Jonathan updates, change some italics to bold, add some bits about
->     Linux's expectations for BIOS/EFI behavior at runtime.
+> snip
 > 
->  Documentation/driver-api/cxl/index.rst        |   1 +
->  .../driver-api/cxl/platform/bios-and-efi.rst  |   3 +
->  .../cxl/platform/device-hotplug.rst           | 130 ++++++++++++++++++
->  3 files changed, 134 insertions(+)
->  create mode 100644 Documentation/driver-api/cxl/platform/device-hotplug.rst
+>> diff --git a/Documentation/cxl/cxl-inject-error.txt b/Documentation/cxl/cxl-inject-error.txt
+>> new file mode 100644
+>> index 0000000..e1bebd7
+>> --- /dev/null
+>> +++ b/Documentation/cxl/cxl-inject-error.txt
+>> @@ -0,0 +1,129 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +cxl-inject-error(1)
+>> +===================
+>> +
+>> +NAME
+>> +----
+>> +cxl-inject-error - Inject CXL errors into CXL devices
+>> +
+>> +SYNOPSIS
+>> +--------
+>> +[verse]
+>> +'cxl inject-error' <device name> [<options>]
+>> +
+>> +Inject an error into a CXL device. The type of errors supported depend on the
+>> +device specified. The types of devices supported are:
+>> +
+>> +"Downstream Ports":: A CXL RCH downstream port (dport) or a CXL VH root port.
+>> +Eligible CXL 2.0+ ports are dports of ports at depth 1 in the output of cxl-list.
+>> +Dports are specified by host name ("0000:0e:01.1").
 > 
-> diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-> index c1106a68b67c..5a734988a5af 100644
-> --- a/Documentation/driver-api/cxl/index.rst
-> +++ b/Documentation/driver-api/cxl/index.rst
-> @@ -30,6 +30,7 @@ that have impacts on each other.  The docs here break up configurations steps.
->     platform/acpi
->     platform/cdat
->     platform/example-configs
-> +   platform/device-hotplug
->  
->  .. toctree::
->     :maxdepth: 2
-> diff --git a/Documentation/driver-api/cxl/platform/bios-and-efi.rst b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
-> index 9034c206cf8e..a4b44c018f09 100644
-> --- a/Documentation/driver-api/cxl/platform/bios-and-efi.rst
-> +++ b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
-> @@ -49,6 +49,9 @@ up without requiring CXL driver support.  These platform vendors should
->  test their configurations with the existing CXL driver and provide driver
->  support for their auto-configurations if features like RAS are required.
->  
-> +Platforms requiring boot-time programming and/or locking of CXL fabric
-> +components may prevent features, such as device hot-plug, from working.
-> +
->  UEFI Settings
->  =============
->  If your platform supports it, the :code:`uefisettings` command can be used to
-> diff --git a/Documentation/driver-api/cxl/platform/device-hotplug.rst b/Documentation/driver-api/cxl/platform/device-hotplug.rst
-> new file mode 100644
-> index 000000000000..e4a065fdd3ec
-> --- /dev/null
-> +++ b/Documentation/driver-api/cxl/platform/device-hotplug.rst
-> @@ -0,0 +1,130 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +==================
-> +CXL Device Hotplug
-> +==================
-> +
-> +Device hotplug refers to *physical* hotplug of a device (addition or removal
-> +of a physical device from the machine).
-> +
-> +BIOS/EFI software is expected to configure sufficient resources **at boot
-> +time** to allow hotplugged devices to be configured by software (such as
-> +proximity domains, HPA regions, and host-bridge configurations).
-> +
-> +BIOS/EFI is not expected (**nor suggested**) to configure hotplugged
-> +devices at hotplug time (i.e. HDM decoders should be left unprogrammed).
-> +
-> +This document covers some examples of those resources, but should not
-> +be considered exhaustive.
-> +
-> +Hot-Remove
-> +==========
-> +Hot removal of a device typically requires careful removal of software
-> +constructs (memory regions, associated drivers) which manage these devices.
-> +
-> +Hard-removing a CXL.mem device without carefully tearing down driver stacks
-> +is likely to cause the system to machine-check (or at least SIGBUS if memory
-> +access is limited to user space).
-> +
-> +Memory Device Hot-Add
-> +=====================
-> +A device present at boot may be associated with a CXL Fixed Memory Window
-> +reported in :doc:`CEDT<acpi/cedt>`.  That CFMWS may match the size of the
-> +device, but the construction of the CEDT CFMWS is platform-defined.
-> +
-> +Hot-adding a memory device requires this pre-defined, **static** CFMWS to
-> +have sufficient HPA space to describe that device.
-> +
-> +There are a few common scenarios to consider.
-> +
-> +Single-Endpoint Memory Device Present at Boot
-> +---------------------------------------------
-> +A device present at boot likely had its capacity reported in the
-> +:doc:`CEDT<acpi/cedt>`.  If a device is removed and a new device hotplugged,
-> +the capacity of the new device will be limited to the original CFMWS capacity.
-> +
-> +Adding capacity larger than the original device will cause memory region
-> +creation to fail if the region size is greater than the CFMWS size.
-> +
-> +The CFMWS is **static** and cannot be adjusted.  Platforms which may expect
-> +different sized devices to be hotplugged must allocate sufficient CFMWS space
-> +**at boot time** to cover all future expected devices.
-> +
-> +Multi-Endpoint Memory Device Present at Boot
-> +--------------------------------------------
-> +Non-switch-based Multi-Endpoint devices are outside the scope of what the
-> +CXL specification describes, but they are technically possible. We describe
-> +them here for instructive reasons only - this does not imply Linux support.
-> +
-> +A hot-plug capable CXL memory device, such as one which presents multiple
-> +expanders as a single large-capacity device, should report the **maximum
-> +possible capacity** for the device at boot. ::
-> +
-> +                  HB0
-> +                  RP0
-> +                   |
-> +     [Multi-Endpoint Memory Device]
-> +              _____|_____
-> +             |          |
-> +        [Endpoint0]   [Empty]
-> +
-> +
-> +Limiting the size to the capacity preset at boot will limit hot-add support
-> +to replacing capacity that was present at boot.
-> +
-> +No CXL Device Present at Boot
-> +-----------------------------
-> +When no CXL memory device is present on boot, some platforms omit the CFMWS
-> +in the :doc:`CEDT<acpi/cedt>`.  When this occurs, hot-add is not possible.
-> +
-> +This describes the base case for any given device not being present at boot.
-> +If a future possible device is not described in the CEDT at boot, hot-add
-> +of that device is either limited or not possible.
-> +
-> +For a platform to support hot-add of a full memory device, it must allocate
-> +a CEDT CFMWS region with sufficient memory capacity to cover all future
-> +potentially added capacity (along with any relevant CEDT CHBS entry).
-> +
-> +To support memory hotplug directly on the host bridge/root port, or on a switch
-> +downstream of the host bridge, a platform must construct a CEDT CFMWS at boot
-> +with sufficient resources to support the max possible (or expected) hotplug
-> +memory capacity. ::
-> +
-> +         HB0                 HB1
-> +      RP0    RP1             RP2
-> +       |      |               |
-> +     Empty  Empty            USP
-> +                      ________|________
-> +                      |    |    |     |
-> +                     DSP  DSP  DSP   DSP
-> +                      |    |    |    |
-> +                         All  Empty
-> +
-> +For example, a BIOS/EFI may expose an option to configure a CEDT CFMWS with
-> +a pre-configured amount of memory capacity (per host bridge, or host bridge
-> +interleave set), even if no device is attached to Root Ports or Downstream
-> +Ports at boot (as depicted in the figure above).
-> +
-> +
-> +Interleave Sets
-> +===============
-> +
-> +Host Bridge Interleave
-> +----------------------
-> +Host-bridge interleaved memory regions are defined **statically** in the
-> +:doc:`CEDT<acpi/cedt>`.  To apply cross-host-bridge interleave, a CFMWS entry
-> +describing that interleave must have been provided **at boot**.  Hotplugged
-> +devices cannot add host-bridge interleave capabilities at hotplug time.
-> +
-> +See the :doc:`Flexible CEDT Configuration<example-configurations/flexible>`
-> +example to see how a platform can provide this kind of flexibility regarding
-> +hotplugged memory devices.  BIOS/EFI software should consider options to
-> +present flexible CEDT configurations with hotplug support.
-> +
-> +HDM Interleave
-> +--------------
-> +Decoder-applied interleave can flexibly handle hotplugged devices, as decoders
-> +can be re-programmed after hotplug.
-> +
-> +To add or remove a device to/from an existing HDM-applied interleaved region,
-> +that region must be torn down an re-created.
+> How are users to find that dport host?
+
+The user needs to know beforehand at the moment. More below.
+
+> 
+> Is there a cxl list "show me the dports where i can inject protocol errors"
+> incantation that we can recommend here.
+> 
+> I ended up looking at /sys/kernel/debug/cxl/ to find the hosts.
+> 
+> Would another attribute added to those dports make sense, be possible?
+> like is done for the poison injectable memdevs?  ie 'protocol_injectable: true'
+
+Which ports support error injection depends on the CXL version of the host. For CXL 1.1
+hosts it's any memory-mapped downstream port, while for 2.0+ it's only CXL root ports
+(ACPI 6.5 Table 18-31).
+
+The kernel adds a debugfs entry for all downstream ports regardless of those requirements IIRC.
+Having the extra entries doesn't break anything since the platform firmware should reject invalid
+injection targets, but it does add an extra hurdle for the user.
+
+I think what I'll do here is submit a kernel patch to clean up the extra entries (needed to be done anyway)
+and add a 'protocol_injectable' attribute for the downstream port when a debugfs entry exists. I'll probably
+send out the kernel patch at the same time as v6.
+
+Let me know if any of that sounds unreasonable or you'd rather I do something else!
+
+Thanks,
+Ben
+> 
+> 
+>> +"memdevs":: A CXL memory device. Memory devices are specified by device name
+>> +("mem0"), device id ("0"), and/or host device name ("0000:35:00.0").
+>> +
+>> +There are two types of errors which can be injected: CXL protocol errors
+>> +and device poison.
+>> +
+>> +CXL protocol errors can only be used with downstream ports (as defined above).
+>> +Protocol errors follow the format of "<protocol>-<severity>". For example,
+>> +a "mem-fatal" error is a CXL.mem fatal protocol error. Protocol errors can be
+>> +found with the '-N' option of 'cxl-list' under a CXL bus object. For example:
+>> +
+>> +----
+>> +
+>> +# cxl list -NB
+>> +[
+>> +  {
+>> +	"bus":"root0",
+>> +	"provider":"ACPI.CXL",
+>> +	"injectable_protocol_errors":[
+>> +	  "mem-correctable",
+>> +	  "mem-fatal",
+>> +	]
+>> +  }
+>> +]
+>> +
+>> +----
+>> +
+>> +CXL protocol (CXL.cache/mem) error injection requires the platform to support
+>> +ACPI v6.5+ error injection (EINJ). In addition to platform support, the
+>> +CONFIG_ACPI_APEI_EINJ and CONFIG_ACPI_APEI_EINJ_CXL kernel configuration options
+>> +will need to be enabled. For more information, view the Linux kernel documentation
+>> +on EINJ.
+>> +
+>> +Device poison can only by used with CXL memory devices. A device physical address
+>> +(DPA) is required to do poison injection. DPAs range from 0 to the size of
+>> +device's memory, which can be found using 'cxl-list'. An example injection:
+>> +
+>> +----
+>> +
+>> +# cxl inject-error mem0 -t poison -a 0x1000
+>> +poison injected at mem0:0x1000
+>> +# cxl list -m mem0 -u --media-errors
+>> +{
+>> +  "memdev":"mem0",
+>> +  "ram_size":"256.00 MiB (268.44 MB)",
+>> +  "serial":"0",
+>> +  "host":"0000:0d:00.0",
+>> +  "firmware_version":"BWFW VERSION 00",
+>> +  "media_errors":[
+>> +    {
+>> +      "offset":"0x1000",
+>> +      "length":64,
+>> +      "source":"Injected"
+>> +    }
+>> +  ]
+>> +}
+>> +
+>> +----
+>> +
+>> +Not all devices support poison injection. To see if a device supports poison injection
+>> +through debugfs, use 'cxl-list' with the '-N' option and look for the "poison-injectable"
+>> +attribute under the device. Example:
+>> +
+>> +----
+>> +
+>> +# cxl list -Nu -m mem0
+>> +{
+>> +  "memdev":"mem0",
+>> +  "ram_size":"256.00 MiB (268.44 MB)",
+>> +  "serial":"0",
+>> +  "host":"0000:0d:00.0",
+>> +  "firmware_version":"BWFW VERSION 00",
+>> +  "poison_injectable":true
+>> +}
+>> +
+>> +----
+>> +
+>> +This command depends on the kernel debug filesystem (debugfs) to do CXL protocol
+>> +error and device poison injection.
+>> +
+>> +OPTIONS
+>> +-------
+>> +-a::
+>> +--address::
+>> +	Device physical address (DPA) to use for poison injection. Address can
+>> +	be specified in hex or decimal. Required for poison injection.
+>> +
+>> +-t::
+>> +--type::
+>> +	Type of error to inject into <device name>. The type of error is restricted
+>> +	by device type. The following shows the possible types under their associated
+>> +	device type(s):
+>> +----
+>> +
+>> +Downstream Ports: ::
+>> +	cache-correctable, cache-uncorrectable, cache-fatal, mem-correctable,
+>> +	mem-fatal
+>> +
+>> +Memdevs: ::
+>> +	poison
+>> +
+>> +----
+>> +
+>> +--debug::
+>> +	Enable debug output
+>> +
+>> +SEE ALSO
+>> +--------
+>> +linkcxl:cxl-list[1]
+>> diff --git a/Documentation/cxl/meson.build b/Documentation/cxl/meson.build
+>> index 8085c1c..0b75eed 100644
+>> --- a/Documentation/cxl/meson.build
+>> +++ b/Documentation/cxl/meson.build
+>> @@ -50,6 +50,8 @@ cxl_manpages = [
+>>    'cxl-update-firmware.txt',
+>>    'cxl-set-alert-config.txt',
+>>    'cxl-wait-sanitize.txt',
+>> +  'cxl-inject-error.txt',
+>> +  'cxl-clear-error.txt',
+>>  ]
+>>  
+>>  foreach man : cxl_manpages
+>> -- 
+>> 2.52.0
+>>
 
