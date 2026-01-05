@@ -1,140 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB512820A4;
-	Sun,  4 Jan 2026 22:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E37263F5F;
+	Mon,  5 Jan 2026 20:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767564465; cv=none; b=rdVQCrfIebnfhOvwYUnOgEeVlBV45L2zHwbO1xOg9UWPP6OPZ5qXuv9kFxUy5+P30Voxk1bMhAsNdDiQ+0YiDs2qKgClyl7Cfc1+QoSYvAB50huimiWF7Sa3PABLn9/7/a/2KypUf3Iism/Jb4+HGeGVNLMEUgMs5KvcftP6/Gs=
+	t=1767645530; cv=none; b=E0h+ykxx1+4HvhkJGpB+RwEZCM7rVCPkWgTNF/S4X7sNHL+vLuiy9SuTmGfCSoZKi4NJzLMlDpcA+fU0SFyfVsIvtNxdsYKMi9KRznEJprskkpCIGnBD0ssBSeU6y8Kyqj4OOZEsayerHdtlmSp6P0jiFQcrcNTlEBmYSdgz5xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767564465; c=relaxed/simple;
-	bh=Ee42W97PW2cmqfwn1Sv3QlRj9Q5zCvDbUSuBQxv/Op0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O8HLYx1cMog07vD01vHXdwUj3X2izcGioc9f5SKQh/C8I1Hub+vYP0RJ0dFxRKxIiQPwcG4lr0pSwdOCZiH+lIakQ/j04VG9RclpTr1/z/oGe/AoGWScdG41Mnnq0bI2VErkh4dOsIN+C5PmuAgzqfjOIu65LJ3LgcxrKlDtfrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gScty2Ff; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767645530; c=relaxed/simple;
+	bh=1lIUMD23Z9ohe0QWCsI48WLsS+piG8EAOC6P4/HGXT8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hsV9DUpE22fSDffNrR1YLSz2xLqglRYjGvUybiEgr2TZ2+uqITJTByT0xEv4o80fB6cWxU1keVvcpfqpet6YY0cNwRWlbYYSjypDRRDbI6HGsD1YWPQXIgrlQ9yE73GEXc4Kzfdkeptao5cnO5o9FdL8jj7kpkJPht0TdF/v/JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=BZ860cQR; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gScty2Ff"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E756CC4CEF7;
-	Sun,  4 Jan 2026 22:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767564464;
-	bh=Ee42W97PW2cmqfwn1Sv3QlRj9Q5zCvDbUSuBQxv/Op0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gScty2FfULdESXHMa7hr8G8loXGEUlcQN5S80gDD5UqJ9suJ3KSg5EBnAfBmPbN4t
-	 9i+loVAvbh0AVx5Yk4Koh1k8IXcYongXSPkBU/coQveXqy9HIob5+WjT9N8n85Gjtm
-	 QC1qHBE6xVD7AdKk4C44SLTYTxRO2wXx2AsAtG8JDeEhyiIAC6f2WQDRBjpGsCOR0w
-	 FS8iQ8IYIJkUJd7l21ONO+cGDEowjKvrtTSsbbdAQreKdAJdoXpAyGIgxSjm5iGWsN
-	 P4fDUybYnndFC6q8lAflfYkDiUy/1o2TDN1ho6i4H4kKv0NoHgcQix3vta1Wo/qJz4
-	 ESWpk4nesfdDw==
-Date: Mon, 5 Jan 2026 00:07:22 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Klara Modin <klarasmodin@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alex Shi <alexs@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Richard Weinberger <richard@nod.at>,
-	Stafford Horne <shorne@gmail.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
-	x86@kernel.org, linux-alpha@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org
-Subject: Re: [PATCH 3.5] arm: make initialization of zero page independent of
- the memory map (was Re: [PATCH v2 22/28] arch, mm: consolidate
- initialization of nodes, zones and memory map)
-Message-ID: <aVrkmnzgwM5i1VqX@kernel.org>
-References: <20260102070005.65328-1-rppt@kernel.org>
- <20260102070005.65328-23-rppt@kernel.org>
- <aVhN2NgQEKe0yzva@soda.int.kasm.eu>
- <aVll339wim7dCIaQ@kernel.org>
- <aVlwOyicOLPB9SOa@parmesan.int.kasm.eu>
- <aVpWpLV4Dut5Muo2@kernel.org>
- <aVrUDeSkqqY9ZCtS@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BZ860cQR"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 605Hp55H1934953;
+	Mon, 5 Jan 2026 20:38:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=WhTlznQgSIVyQMzddyYJpKe2xP228
+	0SnyNSHuCmuIZc=; b=BZ860cQRe3igW0r6cCZuKWDZp76/uc6qMnVTUgzto/WmR
+	uqSzbX7RvhJigRCDPfTiLBUixfysl1mvZGaxWbmvd+1de8xplknuZsJLQSJ5FWEB
+	o3WekLXSaumZzO84uktJuuwF6bQcEcNbRwffi+s4n4R0JslGhn9U6CcgDQXBkB5s
+	nQJ2tg6vU99B8jpe7Wl2AUKjOtjAAXiNeRM8ks2B/2sxe34JS2nkis9hXR/wOtek
+	gfjkzS/GMcpcdJT9MfV3iye7qBxfi0/ZeJCPB7XyDFMJP9Q4IDX+pVFHxf/Ozw9p
+	pB6wX9oDsYlcvuiY4kcqgQhafAKLR7pEV0qdK+RAQ==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4bgj2c08a6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 05 Jan 2026 20:38:35 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 605IooJe015471;
+	Mon, 5 Jan 2026 20:38:34 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 4besj7j808-1;
+	Mon, 05 Jan 2026 20:38:34 +0000
+From: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
+To: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+        lison.schofield@intel.com, vishal.l.verma@intel.com
+Cc: ira.weiny@intel.com, dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] cxl/pci: Remove outdated FIXME comment and BUILD_BUG_ON
+Date: Mon,  5 Jan 2026 12:38:33 -0800
+Message-ID: <20260105203833.1604585-1-samasth.norway.ananda@oracle.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aVrUDeSkqqY9ZCtS@shell.armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-05_02,2026-01-05_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 phishscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2512120000
+ definitions=main-2601050180
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA1MDE3OSBTYWx0ZWRfX7rsX2+BxF6Tf
+ qmEcGdP2piZ6fx4t7nYCT0kXUo2UKl9Ni+MGJiYRjd3FXWIvhhBS7bxV6jPmKztctDEMu/wCtj9
+ BxV8c89HzjltrOmmFOiONBP+CUQnvWJ2ygfmsTTaiDs0kmjrLhxKkd3sUPFZs/rsjQDZ6GEhBYV
+ +Jup4Hd+k0Ff0p5n1AwZGj98aZpwd4zCoIaPFXLwzeDq7EbARC3t1bt/bD5cjIDI3VyRxF282LF
+ SAwtXE2NQeFxyaPuan5AalyyjiiqcNnBFk8WWCJlnRDUi1f3A4Dlk9NUiOd3/8AV2IRsTx+YrXf
+ kauKq91VJoyyHJr+2S1EbX9MEozBzM98Vs1F3RaLZ/d5oZXjzWlSkrkfhqS7lJUZp1SfHaKuRIf
+ /n0/7+b6lKQBEPZ67mVfLpS4bGCISSb60okyvS4+IlYOZpLr0cBKVFVR85cQ5b8raxjkEJp/nZi
+ n4EKw0fs31CWAYu6fEg==
+X-Authority-Analysis: v=2.4 cv=KeDfcAYD c=1 sm=1 tr=0 ts=695c214b cx=c_pps
+ a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17
+ a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8
+ a=tjgsuXTvzfAlEncZS1gA:9
+X-Proofpoint-ORIG-GUID: F8omdBBmaukeBFnkLcCG2cvm3PQ23FW3
+X-Proofpoint-GUID: F8omdBBmaukeBFnkLcCG2cvm3PQ23FW3
 
-On Sun, Jan 04, 2026 at 08:56:45PM +0000, Russell King (Oracle) wrote:
-> On Sun, Jan 04, 2026 at 02:01:40PM +0200, Mike Rapoport wrote:
-> > From 35d016bbf5da7c08cc5c5547c85558fc50cb63aa Mon Sep 17 00:00:00 2001
-> > From: Klara Modin <klarasmodin@gmail.com>
-> > Date: Sat, 3 Jan 2026 20:40:09 +0200
-> > Subject: [PATCH] arm: make initialization of zero page independent of the
-> >  memory map
-> > 
-> > Unlike most architectures, arm keeps a struct page pointer to the
-> > empty_zero_page and to initialize it requires conversion of a virtual
-> > address to page which makes it necessary to have memory map initialized
-> > before creating the empty_zero_page.
-> > 
-> > Make empty_zero_page a stataic array in BSS to decouple it's
-> > initialization from the initialization of the memory map.
-> 
-> I see you haven't considered _why_ ARM does this.
-> 
-> You are getting rid of the flush_dcache_page() call, which ensures
-> that the zeroed contents of the page are pushed out of the cache
-> into memory. This is necessary.
-> 
-> BSS is very similar. It's memset() during the kernel boot _after_
-> the caches are enabled. Without an explicit flush, nothing
-> guarantees that those writes will be visible to userspace.
+Remove the outdated FIXME comment about switching to struct_group() and
+the associated BUILD_BUG_ON check. This work was already completed in
+commit 301e68dd9b9b ("cxl/core: Replace unions with struct_group()")
+which converted struct cxl_regs to use struct_group_tagged().
 
-There's a call to flush_cache_all() paging_init()->devicemaps_init() that
-will guarantee that those writes are flushed long before userspace starts.
+The BUILD_BUG_ON was checking that anonymous union layout was preserved,
+but since struct_group() now handles this correctly, the compile-time
+check is no longer necessary.
+
+Signed-off-by: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
+---
+ drivers/cxl/pci.c | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 0be4e508affe..3b2293dffb3f 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -912,13 +912,6 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	unsigned int i;
+ 	bool irq_avail;
  
-> To me, this seems like a bad idea, which will cause userspace to
-> break.
-> 
-> We need to call flush_dcache_page(), and _that_ requires a struct
-> page.
-
-Right now there's __flush_dcache_folio() that will break anyway when folio
-divorces from struct page.   
-
+-	/*
+-	 * Double check the anonymous union trickery in struct cxl_regs
+-	 * FIXME switch to struct_group()
+-	 */
+-	BUILD_BUG_ON(offsetof(struct cxl_regs, memdev) !=
+-		     offsetof(struct cxl_regs, device_regs.memdev));
+-
+ 	rc = pcim_enable_device(pdev);
+ 	if (rc)
+ 		return rc;
 -- 
-Sincerely yours,
-Mike.
+2.50.1
+
