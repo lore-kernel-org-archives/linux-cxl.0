@@ -1,48 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37E6365A1C;
-	Tue,  6 Jan 2026 17:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9631B36B048;
+	Tue,  6 Jan 2026 17:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767722056; cv=none; b=habqkPPq8MYfzB/GluWKA/3lx/MijM/QVtRwlDkMatKhojMuWkt6MDTfLAIJvD6jJQNtn4RLaB0wypR95fbEc0FBiYQIOpHWq1GTslZUD/Vhl/LSuPQGMXSVpjJrnz9mKlAT75F6XuYy9o6jSr2UyD7/AIhNWuOHfKcahySz0Fw=
+	t=1767722120; cv=none; b=GBqCUZedURlExM3gMcZ8+PpZ9v8LO+qJfS28hMkSEbdqdQ/osUymCMYqRGKTLN3p4XqN8jWVT7ryNkcQV5G2Aoufq1gU5+EDQeUhVUoGiPP1GPn9FJpF1bPYM/YrOagAV9eg/KELxVI4XqKVNV5GsgH5EpFwIL9JINAc8MJhI0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767722056; c=relaxed/simple;
-	bh=hMbWpDwFSphPeIsWsASVMOZNr+PtHza/3gaRPtfLtNk=;
+	s=arc-20240116; t=1767722120; c=relaxed/simple;
+	bh=y4Jd2BJKKXFVHARl6UUkt+RWFWcl2/xFoiSKaW5q5wc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jWtpL/9fMeXLtySg3VakAK+aruqwuqk/NtQc1A6sNgavbLOegEdCRx2zWnbrx3DiSZSQF566UdQkF/gXXGn509GMmfd68xqlCXAC0bqJTuualn97Fa1bZidgx3S3BMREgWZAwZxQ40mQiNSUD7UKYCtP0GN6myqxAaJgFf2pij8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KKOGwqBE; arc=none smtp.client-ip=192.198.163.18
+	 In-Reply-To:Content-Type; b=AZ/+aBdPeCGYzvWrSW/JPKOLyDeHodTlLwJI8Ads/v/w6VNu8KxWV/fhAGkcYnW3kRIDtckxdpXqxrFDsavmhw0Y+pcbz23KzOjRyHiJmz2ahSVrp32jBd/N1MTg6s+dIW09FqD0nODrwhsPQaF+86OHsjz3FpnfNLyFSjwTIKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lkNi2iWi; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KKOGwqBE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lkNi2iWi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767722054; x=1799258054;
+  t=1767722119; x=1799258119;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=hMbWpDwFSphPeIsWsASVMOZNr+PtHza/3gaRPtfLtNk=;
-  b=KKOGwqBEvj+8rhyOcWO/s3icR+8/dALULRBxIXQMpCMEtWFSgcxxMf+P
-   A0RLqklK5Qs+ObWWEy7FXM9XYkwysbaQWs5w4nR+2u5Cc6NlNKN4jojlL
-   L9697QGz7H7Us7TPjWfHoQuIxTNJwsfgtwrJTfdsEAbwJTy3lENBl7hoC
-   Y5db4eXxR5OYczPpcgBvOtab+zpAFG8cT+k6q4mRF8zPWjLIv8a5vK9Ue
-   dMlQwthh8GMyJWJgQ3sEipTbdliTKjqV6PWDnMzg/aNEvfNAggDPeEMPQ
-   wT0amMOL2oZtjiVWnBsKX0PZYEI8fEYacKDk+I10Cse1iMWqYYHChX9Qu
+  bh=y4Jd2BJKKXFVHARl6UUkt+RWFWcl2/xFoiSKaW5q5wc=;
+  b=lkNi2iWiNBcnJPqmKLZ7+eQVKRoN6MvzvanpaIOfHzANxJdF4iEQZ/bJ
+   d1X7mkrROP4Dq4MRD/ANK3F5UcLiPFtOgj9VPuhofZQyaseiPr6iOoY9L
+   bTH6qmVfxBNIVtGTQ6D6sbYm9eCOyj3aRAiM/CjsXskrddKi5huEjTrBf
+   PA/YjQmanYKOfwPGRZ1aQJQb70RXFSYO2icJ6bl5T/KLrb4uXhAuFSLw9
+   XPPAP0HEzH0PwKQDRMKGRiCzaYlE32lyQGPWEzhyH/uVp/7IhmIyi50Jw
+   UyUAuWjLYfZ5VCKxpJxnsar8J6cvfCRvIUaLMekgMTkUfac0XAA4uSxrp
    Q==;
-X-CSE-ConnectionGUID: U1ODlYgpTmiUJ63eSU59Tg==
-X-CSE-MsgGUID: rf+iyPOBTkK+7wV+D+SPhA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11663"; a="68287994"
+X-CSE-ConnectionGUID: M2bHSLp9QqCSkujOkjUHVA==
+X-CSE-MsgGUID: wBE/rw9tQ5mAXhxeBnZ9bg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11663"; a="68104048"
 X-IronPort-AV: E=Sophos;i="6.21,206,1763452800"; 
-   d="scan'208";a="68287994"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 09:54:13 -0800
-X-CSE-ConnectionGUID: xBuy5fBvS5uXU4iVBiNAGA==
-X-CSE-MsgGUID: T7PDgIYTQTSWy9R/9roH/Q==
+   d="scan'208";a="68104048"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 09:55:18 -0800
+X-CSE-ConnectionGUID: Ru5HFSM0QvSS5b4qFNIm2w==
+X-CSE-MsgGUID: 4Muz8/RaSjmgOeng1bzDJw==
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,206,1763452800"; 
+   d="scan'208";a="203166092"
 Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.109.101]) ([10.125.109.101])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 09:54:12 -0800
-Message-ID: <57244070-3ed8-47e1-a1c5-2e0d420731f9@intel.com>
-Date: Tue, 6 Jan 2026 10:54:11 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 09:55:15 -0800
+Message-ID: <56cc995d-9b5a-41f5-a719-92835f376d13@intel.com>
+Date: Tue, 6 Jan 2026 10:55:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -50,40 +52,55 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] Documentation/driver-api/cxl: device hotplug
-To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, corbet@lwn.net, rakuram.e96@gmail.com,
- alucerop@amd.com
-References: <20251219170538.1675743-1-gourry@gourry.net>
+Subject: Re: [PATCH] cxl/pci: Remove outdated FIXME comment and BUILD_BUG_ON
+To: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, lison.schofield@intel.com,
+ vishal.l.verma@intel.com
+Cc: ira.weiny@intel.com, dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260105203833.1604585-1-samasth.norway.ananda@oracle.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20251219170538.1675743-1-gourry@gourry.net>
+In-Reply-To: <20260105203833.1604585-1-samasth.norway.ananda@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 12/19/25 10:05 AM, Gregory Price wrote:
-> Add some documentation on Linux expectations of platform software
-> configurations to support device hotplug.
+On 1/5/26 1:38 PM, Samasth Norway Ananda wrote:
+> Remove the outdated FIXME comment about switching to struct_group() and
+> the associated BUILD_BUG_ON check. This work was already completed in
+> commit 301e68dd9b9b ("cxl/core: Replace unions with struct_group()")
+> which converted struct cxl_regs to use struct_group_tagged().
 > 
-> Add some docs about general BIOS/EFI expectations regarding CXL devices
-> in general as a predicate.
+> The BUILD_BUG_ON was checking that anonymous union layout was preserved,
+> but since struct_group() now handles this correctly, the compile-time
+> check is no longer necessary.
 > 
-> Gregory Price (2):
->   Documentation/driver-api/cxl: BIOS/EFI expectation update
->   Documentation/driver-api/cxl: device hotplug section
-> 
->  Documentation/driver-api/cxl/index.rst        |   1 +
->  .../driver-api/cxl/platform/bios-and-efi.rst  |  23 ++++
->  .../cxl/platform/device-hotplug.rst           | 130 ++++++++++++++++++
->  3 files changed, 154 insertions(+)
->  create mode 100644 Documentation/driver-api/cxl/platform/device-hotplug.rst
-> 
+> Signed-off-by: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
 
-Applied to cxl/next
-63e5a6294dad80be9830c935e8952a1f62068c86
-fa19611f96fd8573c826d61a1e9410938a581bf3
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+> ---
+>  drivers/cxl/pci.c | 7 -------
+>  1 file changed, 7 deletions(-)
+> 
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 0be4e508affe..3b2293dffb3f 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -912,13 +912,6 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	unsigned int i;
+>  	bool irq_avail;
+>  
+> -	/*
+> -	 * Double check the anonymous union trickery in struct cxl_regs
+> -	 * FIXME switch to struct_group()
+> -	 */
+> -	BUILD_BUG_ON(offsetof(struct cxl_regs, memdev) !=
+> -		     offsetof(struct cxl_regs, device_regs.memdev));
+> -
+>  	rc = pcim_enable_device(pdev);
+>  	if (rc)
+>  		return rc;
+
