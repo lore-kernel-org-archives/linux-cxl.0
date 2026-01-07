@@ -1,417 +1,196 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from mail-qt1-f196.google.com (mail-qt1-f196.google.com [209.85.160.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9818839A7F4
-	for <linux-cxl@vger.kernel.org>; Wed,  7 Jan 2026 15:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C70837BE83
+	for <linux-cxl@vger.kernel.org>; Wed,  7 Jan 2026 15:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767800114; cv=none; b=gzBZyJeW999j+8qYfBVkizrYQ8artC6988J0riVRiO6fz7scICqsX/0Mfl4UMWXzhzClReooDfbsCtau6p8k2Kvo8mUPuPOB6p3Fc3wINi58TiHkaVLb5FOzo3lulN5avEqvvUQe6dPTAYbwWQgOrydLd3Cq45mPO1GtYm0T128=
+	t=1767801304; cv=none; b=OdOFu/tlgIArItYlfYpGFWZYx4NwJg2dDI5fd1RHRcws2OfKPO3GI0IIlxzCSa9i3/WbY1P4xmS4LhroPorkc2o+cgKFUOiQJ9Ilv/vLLQaIymxsjh4Ywg8wvaZ1sy4l3a3PRtIWwKfIS9Nz3WwMO6Z2dSRhwBS7kXaLtqyRgt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767800114; c=relaxed/simple;
-	bh=UH7UVmm/ifZMz2a7ctzEVAj9QL1YqJfv9TEsJAmqvl0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R9DIA036fU+/EJONMx/0EixYvJlHM/T37zx0wsnKSjY9OSBl2EjGUe7Z4MAr1X0IFJTcDvvGDIPWmP7UO95DNyNhIaI6Cvq8SFpnoK8ydZ/kf+HJtYWJWHPhgQpZebDPkg1Ir09TGV+sG8KzGRIibzHwUuA0qR8JSFo/VXPg3r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bMuO/cKD; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767801304; c=relaxed/simple;
+	bh=WYEOL0RkopAT8vHLW3yYNxpW83vvZLkZz4GxJKbBsdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cl/I4LOYd+WrUKDblnTqXnRlB3+FZut7u4/yYmtIBxc8T30m3UVBd95OXT9UzwqR81UY/py9JmEObVh9YbB1nbzUB95cZiRo/5z8Apn1VAIb82CYjQ2bEPNKb6qymY3Du2v4/uzN23S+XUyeinQrLkT77m2sLSEDUMAHsxZNpAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=CGkNNUDf; arc=none smtp.client-ip=209.85.160.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bMuO/cKD"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-450be85b7d9so1408781b6e.0
-        for <linux-cxl@vger.kernel.org>; Wed, 07 Jan 2026 07:35:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="CGkNNUDf"
+Received: by mail-qt1-f196.google.com with SMTP id d75a77b69052e-4ee05b2b1beso20474921cf.2
+        for <linux-cxl@vger.kernel.org>; Wed, 07 Jan 2026 07:54:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767800110; x=1768404910; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ezmCIUYTCpc47N9MRFviC1UdzpKfkRUPsUPtXb573Uk=;
-        b=bMuO/cKDgBQ7MDSk9U5rZupNeiODJwTx7I9gFDCFydqoRNF5bb5XBxGm7iO3pn2zmN
-         RJWqRTwynU8DZ/Me9oX3OL1LfaPxg14B7bdiRmWRZS4TZHssZrk3Ihp97s+ZtjHgWNh8
-         YIjNdzcT0FtM+bnOwTgYOjNB8SCxhrBqERxthL0J3Mt/FA+v5wfAwF54UwLNOv5dmsA0
-         EcVHjxwIK7HTCh57TbkiagniQE4U0EG04F69w+iLXXUK3kwMCPRTkYLC444XDiw9oYf5
-         aXZlR7uvFrBdaNyQhR/ylbn4O75Y8KrKto8jynUQU7yvwgquWvo1bIsqDzcVZzo4TFGl
-         9tBw==
+        d=gourry.net; s=google; t=1767801290; x=1768406090; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Bjq1wNZqnohOPk2/673/mr1eb1p695Mtldzjo3XTb1k=;
+        b=CGkNNUDfU/ZNikeTnRqvMDFI28NLbTTGOmOJXKmkT4LBnJTC5p9aKuRXXbrcTp+goS
+         2YkBE0CQcCml9p8mZu40DnekRcF0KSiWP9B8zNVmAVzNp9EVBtrh8FDwXsvk6cxXCNnt
+         W+4JboD8Hhpxi+9ycaVI74CimzQfOlJ7m5XiKMDBe3sYBRMbMeQNjzbt9SfB/pC2t1rV
+         E4NtxmJUDRna8hovQ3aMFjWPo7kYuRn9j5iZreQUgw2CxLMGweAX7rmLOtY823PkBEk5
+         4n0nbYCFGPzEV5SU1YnKEqhGGNVRFeHiSQX5rW3aJt2Nqt4IKEmS3lTJCwKlpA4djNh7
+         07YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767800110; x=1768404910;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-gg
+        d=1e100.net; s=20230601; t=1767801290; x=1768406090;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ezmCIUYTCpc47N9MRFviC1UdzpKfkRUPsUPtXb573Uk=;
-        b=dbjtjcPae6iYvhh058whQ23yuSQWy8itB3cMmHvrQHP9Q6DIjqON4DFEd38srmKMkb
-         CJNQncuxFu3Zk1ukSey9Jc20gMoy9MU8HZJuDD8LXsePUX90Rj4lML9Lc1zPS1by86tB
-         E303QuB79wJRu1mC6+3bWxGB8cO0ungk1K5ErqDaKvaH27oMCOH/hGsUAp2SOz8fRjA4
-         qvIb/tAdyusxPXBX7VdpFvF5ZWRO2SMZKGUTjo+jtbkpusSdPJEb4n2WrZA36R5uZNqk
-         kwebQE+0zmCdfAAMvRIQObzt8v4X/2YcEkI81ZPylApfSp2FlSCzI8gi+sLTjZ0nGy/y
-         nnqg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNe81mVvDc9V+U6X9ilyGBJKEp1a1debfxA9oJ5/9/vg+IOQlGD0cdlQtWID/eszkEJM2rjJGy9to=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVMwbr8QF/M6NAwqY/fWsN1HgN/pnurGgcmrNmB8PO0ybdPRYD
-	VU1QHFAOCe4M3UFwv5s2h082vjnCpS2s4LyJ5iJiFiKe5QSinbdzDfYe
-X-Gm-Gg: AY/fxX5+MvwjAlqyyeKb0AI4NbG23xXuQmvrzFVBQ5+vlBI7CBoFq228+B39yeF+Loe
-	8ezE1dYOr+GplPv+R1wTd/bSaSiUPKKjuJBS3KcVnCQSXXq4BWQUKGB6ZOXnkve+rCmnDcXLOr1
-	2dqjOVQO1BQ5d5sm2MOvLjYdcVpKg9z5bHgqX9e3vpYux7fpelt7f9sL3Vf/cnb43XyXyPv1GCu
-	wVDiYOlvMaQXwk4SUosyhm+GjMV8MVGv/LLf/ATnh93HkaPP72oePnu/mgTVKaITpUsDQMPK/Br
-	bVaBBTvzBdapqCyj3allKWMVuoVdBR36m0qTnSFSFzuR6GPHAFyhraqe0JhDs4At26dO1qh7uxe
-	k5Ma9HQJEGEq0ICKtPMK/uelIQirn0MkRsM5bgXT+6+EzuJBRIB3nHUghTKhKYR3PgajpOSWmXg
-	BkG6I75UUHyZg+0TaICixsYzVT5GYzGkviKWDzevCi29Il
-X-Google-Smtp-Source: AGHT+IHvJerAp0F2qVu0ANwUQaq5jdMW03NUN3RN1p6cxOBwInFyFNG7vh1+02TkB75u28LmDWlVDQ==
-X-Received: by 2002:a05:6808:2208:b0:459:bcff:a9ff with SMTP id 5614622812f47-45a6be8b053mr1272252b6e.34.1767800109996;
-        Wed, 07 Jan 2026 07:35:09 -0800 (PST)
-Received: from localhost.localdomain ([2603:8080:1500:3d89:a917:5124:7300:7cef])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-45a5e183cd4sm2415499b6e.1.2026.01.07.07.35.07
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 07 Jan 2026 07:35:09 -0800 (PST)
-Sender: John Groves <grovesaustin@gmail.com>
-From: John Groves <John@Groves.net>
-X-Google-Original-From: John Groves <john@groves.net>
-To: John Groves <John@Groves.net>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Bernd Schubert <bschubert@ddn.com>,
-	Alison Schofield <alison.schofield@intel.com>
-Cc: John Groves <jgroves@micron.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	David Hildenbrand <david@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Stefan Hajnoczi <shajnocz@redhat.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Chen Linxuan <chenlinxuan@uniontech.com>,
-	James Morse <james.morse@arm.com>,
-	Fuad Tabba <tabba@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Shivank Garg <shivankg@amd.com>,
-	Ackerley Tng <ackerleytng@google.com>,
-	Gregory Price <gourry@gourry.net>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>,
-	venkataravis@micron.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	John Groves <john@groves.net>
-Subject: [PATCH 2/2] Add test/daxctl-famfs.sh to test famfs mode transitions:
-Date: Wed,  7 Jan 2026 09:34:59 -0600
-Message-ID: <20260107153459.64821-3-john@groves.net>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20260107153459.64821-1-john@groves.net>
-References: <20260107153244.64703-1-john@groves.net>
- <20260107153459.64821-1-john@groves.net>
+        bh=Bjq1wNZqnohOPk2/673/mr1eb1p695Mtldzjo3XTb1k=;
+        b=aBOJPzQhyB7eYAfVy0YkLdYvUt21C7i4WnQfR07c+MuBJv64XgCAYpPWXip8DtZ/Vj
+         hzv5AvQzzRIO+cffSEzIvCMhmY+35CY4sGjy2lRYK9SDvZkBsuzRZs0WFxgp35IG1bpo
+         BV0M0NxxGEPgFpcIdtB/nWX6A92FKJKJgu/aDlZolWBJys8zC8zoyoGJ2+vU+j64a+rC
+         fmzMUacQm6ocqb9n25Gc/9aOUXiBmmkpDUYcrU9V8Wjh9lGyO9IP2LuaO8651JYgvb0O
+         NexTJiodxu3HJLJDXq6/3BkJzYrgf8Eof8Dv2mh/JC39YirszdTtC6MwJAueBKMDBTvA
+         LxEg==
+X-Gm-Message-State: AOJu0YwZzukDFXcM2pK9Re5zjNp8Js4sHQxYa7/P4TW9lXsDCrCUAtj7
+	NuPJCohwJeDQBICsFP1QRRljhEDDQ0hTVYUCya1HXQJJR9rJ4eYlHMjvTgMHMxqlbS8=
+X-Gm-Gg: AY/fxX7IiJfQlf1N3UauGScthwX+2+NCwaTxkGeVubCAfns3ZdSY7lhixxt1nqxAzbO
+	KubfGSuDPQ5A76wojV8+eUHu/XsGDSqP85SMBrxYd4rgMKQW+IeIyhFPxvMpSv+wqUuQmOg7QHn
+	wr2c3T+eWHBR/MVWZ5uAGO12XbYQvQwvpVguGhQIP3GS2vGG00fTehpFnPrRPt1FoBtNd8Nrccs
+	D/Ljm4kDrvQZKmQtMOMj5TKdv7OXY74fhEto/h/4VKZb2H9q+zlQENPBQlXbyx3OxMcL2WutK9Z
+	+FaJICgtg0rkCgVGaim1t/8CVx5/Ul7RX+UY7jejUpEp53MaqvlI7uehecMLriX/4buQr3KmWhO
+	Vk/nk8KiKup+LRD4BxKwS91URV+3Fmv/5n8YJkn1iM/HUofU3i8AEGoR/njXT8BrlNjgT+inF1J
+	YwzTCLWwDKEhfmGF8gI7tZ7zNJuTHSTG2HQVArXfDz6uqxoFoJuAsx+fKvOlgyaImgS7ExAA==
+X-Google-Smtp-Source: AGHT+IFpHX6/YFKVjY16kkps3B6rjOjHNzpeXC9ORk5Bf21BUdwNhxYNCkRmY3HRfO/4NIPq5km3Ag==
+X-Received: by 2002:a05:622a:4086:b0:4ed:e337:2e52 with SMTP id d75a77b69052e-4ffb4980436mr38934021cf.30.1767801290097;
+        Wed, 07 Jan 2026 07:54:50 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ffa926a9d9sm31623201cf.25.2026.01.07.07.54.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Jan 2026 07:54:49 -0800 (PST)
+Date: Wed, 7 Jan 2026 10:54:16 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, corbet@lwn.net, rakuram.e96@gmail.com,
+	alucerop@amd.com
+Subject: Re: [PATCH v3 2/2] Documentation/driver-api/cxl: device hotplug
+ section
+Message-ID: <aV6BqOarpY0PUt7h@gourry-fedora-PF4VCD3F>
+References: <20251219170538.1675743-1-gourry@gourry.net>
+ <20251219170538.1675743-3-gourry@gourry.net>
+ <aV3CsPl8Zsp5JtGu@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aV3CsPl8Zsp5JtGu@aschofie-mobl2.lan>
 
-From: John Groves <John@Groves.net>
+On Tue, Jan 06, 2026 at 06:19:28PM -0800, Alison Schofield wrote:
+> On Fri, Dec 19, 2025 at 12:05:38PM -0500, Gregory Price wrote:
+> > Describe cxl memory device hotplug implications, in particular how the
+> > platform CEDT CFMWS must be described to support successful hot-add of
+> > memory devices.
+> 
+> Who is the intended audience for this doc?
+> 
+> Maybe it's already in another section not being edited, but I'd
+> expect to see CXL spec references.
+>
 
-- devdax <-> famfs mode switches
-- Verify famfs -> system-ram is rejected (must go via devdax)
-- Test JSON output shows correct mode
-- Test error handling for invalid modes
+The audience for this particular doc is platform folks who want to know
+what limitations there are on cxl-device hotplug in linux.
 
-The test is added to the destructive test suite since it
-modifies device modes.
+This originated from a discussion at LPC where some device folks
+understood the hotplug process, but did not understand the linux
+limitations (in particular around the CFMWS and node creation).
 
-Signed-off-by: John Groves <john@groves.net>
+Tl;dr: Linux consumes ACPI tables to generate NUMA nodes and constructs
+memory regions.  This is linux "having an opinion" on "how ACPI tables
+should reasonably be constructed" - and this tries to document that.
+
+This is all obviously mutable, but it at least helps drive understanding
+between device, bios, platform, and linux if we at least have this
+document that says "this is what Linux wants/expects".
+
+I'm not sure what if anything I would reference in the spec, since this
+largely describes what linux wants, not what the spec says is possible.
+
+Happy to improve.
+
+> > +Memory Device Hot-Add
+> > +=====================
+> > +A device present at boot may be associated with a CXL Fixed Memory Window
+> > +reported in :doc:`CEDT<acpi/cedt>`.  That CFMWS may match the size of the
+> > +device, but the construction of the CEDT CFMWS is platform-defined.
+> > +
+> > +Hot-adding a memory device requires this pre-defined, **static** CFMWS to
+> > +have sufficient HPA space to describe that device.
+> > +
+> 
+> Isn't it more like the usable capacity of the hot added device will be 
+> limited to the HPA space described in the CFMWS?
+> 
+> a bit similar comment below -
+> 
+> 
+
+This is more precise and concise.  I can change that.
+
+> > +Single-Endpoint Memory Device Present at Boot
+> > +---------------------------------------------
+> > +A device present at boot likely had its capacity reported in the
+> > +:doc:`CEDT<acpi/cedt>`.  If a device is removed and a new device hotplugged,
+> > +the capacity of the new device will be limited to the original CFMWS capacity.
+> > +
+> > +Adding capacity larger than the original device will cause memory region
+> > +creation to fail if the region size is greater than the CFMWS size.
+> 
+> While it’s true that the CFMWS bounds the maximum HPA space available,
+> hotplugging a device with larger physical capacity doesn’t necessarily
+> cause region creation to fail outright. It only fails if the requested
+> region size exceeds the CFMWS size. Users can still create smaller
+> regions that fit within the existing CFMWS window, even if the device
+> itself has additional unused capacity
+
+This does say: "if the region size is greater than the CFMWS size"
+
+But maybe it's more accurate to say "if the unused CFMWS HPA space is
+smaller than a user-defined memory region capacity".
+
+This is really all saying the same thing though - if your device
+capacity is smaller than your CFMWS, you can't map the entire device.
+
+> 
+> > +
+> > +The CFMWS is **static** and cannot be adjusted.  Platforms which may expect
+> > +different sized devices to be hotplugged must allocate sufficient CFMWS space
+> > +**at boot time** to cover all future expected devices.
+> 
+> Yes. Above is crisp. Might be crisper by suggesting that the 'sufficient'
+> CFMWS space could be achieved with one monster CFMWS or multiple CFMWS of
+> all their imaginable capacities.
+> 
+> Like my first comment, I'm not clear on why we are dipping our toe in
+> here, when understanding requires CXL spec, platform provider, and more
+> guidance. Are we describing anything Linux specific here.
+> 
+
+Linux specific piece here is the fact that once Linux proceeds past
+__init, you cannot achieve hotplug for CXL memory not described (or
+insufficiently described) in the ACPI tables.
+
+In this case - memory is special.  We're (linux) basically telling
+platform vendors "You can't add memory you haven't described in some way
+since the beginning of time".
+
+It's unclear that the same would be true on all operating systems, but
+it is true on linux.
+
 ---
- test/daxctl-famfs.sh | 253 +++++++++++++++++++++++++++++++++++++++++++
- test/meson.build     |   2 +
- 2 files changed, 255 insertions(+)
- create mode 100755 test/daxctl-famfs.sh
 
-diff --git a/test/daxctl-famfs.sh b/test/daxctl-famfs.sh
-new file mode 100755
-index 0000000..12fbfef
---- /dev/null
-+++ b/test/daxctl-famfs.sh
-@@ -0,0 +1,253 @@
-+#!/bin/bash -Ex
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2025 Micron Technology, Inc. All rights reserved.
-+#
-+# Test daxctl famfs mode transitions and mode detection
-+
-+rc=77
-+. $(dirname $0)/common
-+
-+trap 'cleanup $LINENO' ERR
-+
-+daxdev=""
-+original_mode=""
-+
-+cleanup()
-+{
-+	printf "Error at line %d\n" "$1"
-+	# Try to restore to original mode if we know it
-+	if [[ $daxdev && $original_mode ]]; then
-+		"$DAXCTL" reconfigure-device -f -m "$original_mode" "$daxdev" 2>/dev/null || true
-+	fi
-+	exit $rc
-+}
-+
-+# Check if fsdev_dax module is available
-+check_fsdev_dax()
-+{
-+	if modinfo fsdev_dax &>/dev/null; then
-+		return 0
-+	fi
-+	if grep -qF "fsdev_dax" "/lib/modules/$(uname -r)/modules.builtin" 2>/dev/null; then
-+		return 0
-+	fi
-+	printf "fsdev_dax module not available, skipping\n"
-+	exit 77
-+}
-+
-+# Check if kmem module is available (needed for system-ram mode tests)
-+check_kmem()
-+{
-+	if modinfo kmem &>/dev/null; then
-+		return 0
-+	fi
-+	if grep -qF "kmem" "/lib/modules/$(uname -r)/modules.builtin" 2>/dev/null; then
-+		return 0
-+	fi
-+	printf "kmem module not available, skipping system-ram tests\n"
-+	return 1
-+}
-+
-+# Find an existing dax device to test with
-+find_daxdev()
-+{
-+	# Look for any available dax device
-+	daxdev=$("$DAXCTL" list | jq -er '.[0].chardev // empty' 2>/dev/null) || true
-+
-+	if [[ ! $daxdev ]]; then
-+		printf "No dax device found, skipping\n"
-+		exit 77
-+	fi
-+
-+	# Save the original mode so we can restore it
-+	original_mode=$("$DAXCTL" list -d "$daxdev" | jq -er '.[].mode')
-+
-+	printf "Found dax device: %s (current mode: %s)\n" "$daxdev" "$original_mode"
-+}
-+
-+daxctl_get_mode()
-+{
-+	"$DAXCTL" list -d "$1" | jq -er '.[].mode'
-+}
-+
-+# Ensure device is in devdax mode for testing
-+ensure_devdax_mode()
-+{
-+	local mode
-+	mode=$(daxctl_get_mode "$daxdev")
-+
-+	if [[ "$mode" == "devdax" ]]; then
-+		return 0
-+	fi
-+
-+	if [[ "$mode" == "system-ram" ]]; then
-+		printf "Device is in system-ram mode, attempting to convert to devdax...\n"
-+		"$DAXCTL" reconfigure-device -f -m devdax "$daxdev"
-+	elif [[ "$mode" == "famfs" ]]; then
-+		printf "Device is in famfs mode, converting to devdax...\n"
-+		"$DAXCTL" reconfigure-device -m devdax "$daxdev"
-+	else
-+		printf "Device is in unknown mode: %s\n" "$mode"
-+		return 1
-+	fi
-+
-+	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
-+}
-+
-+#
-+# Test basic mode transitions involving famfs
-+#
-+test_famfs_mode_transitions()
-+{
-+	printf "\n=== Testing famfs mode transitions ===\n"
-+
-+	# Ensure starting in devdax mode
-+	ensure_devdax_mode
-+	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
-+	printf "Initial mode: devdax - OK\n"
-+
-+	# Test: devdax -> famfs
-+	printf "Testing devdax -> famfs... "
-+	"$DAXCTL" reconfigure-device -m famfs "$daxdev"
-+	[[ $(daxctl_get_mode "$daxdev") == "famfs" ]]
-+	printf "OK\n"
-+
-+	# Test: famfs -> famfs (re-enable in same mode)
-+	printf "Testing famfs -> famfs (re-enable)... "
-+	"$DAXCTL" reconfigure-device -m famfs "$daxdev"
-+	[[ $(daxctl_get_mode "$daxdev") == "famfs" ]]
-+	printf "OK\n"
-+
-+	# Test: famfs -> devdax
-+	printf "Testing famfs -> devdax... "
-+	"$DAXCTL" reconfigure-device -m devdax "$daxdev"
-+	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
-+	printf "OK\n"
-+
-+	# Test: devdax -> devdax (re-enable in same mode)
-+	printf "Testing devdax -> devdax (re-enable)... "
-+	"$DAXCTL" reconfigure-device -m devdax "$daxdev"
-+	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
-+	printf "OK\n"
-+}
-+
-+#
-+# Test mode transitions with system-ram (requires kmem)
-+#
-+test_system_ram_transitions()
-+{
-+	printf "\n=== Testing system-ram transitions with famfs ===\n"
-+
-+	# Ensure we start in devdax mode
-+	ensure_devdax_mode
-+	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
-+
-+	# Test: devdax -> system-ram
-+	printf "Testing devdax -> system-ram... "
-+	"$DAXCTL" reconfigure-device -N -m system-ram "$daxdev"
-+	[[ $(daxctl_get_mode "$daxdev") == "system-ram" ]]
-+	printf "OK\n"
-+
-+	# Test: system-ram -> famfs should fail
-+	printf "Testing system-ram -> famfs (should fail)... "
-+	if "$DAXCTL" reconfigure-device -m famfs "$daxdev" 2>/dev/null; then
-+		printf "FAILED - should have been rejected\n"
-+		return 1
-+	fi
-+	printf "OK (correctly rejected)\n"
-+
-+	# Test: system-ram -> devdax -> famfs (proper path)
-+	printf "Testing system-ram -> devdax -> famfs... "
-+	"$DAXCTL" reconfigure-device -f -m devdax "$daxdev"
-+	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
-+	"$DAXCTL" reconfigure-device -m famfs "$daxdev"
-+	[[ $(daxctl_get_mode "$daxdev") == "famfs" ]]
-+	printf "OK\n"
-+
-+	# Restore to devdax for subsequent tests
-+	"$DAXCTL" reconfigure-device -m devdax "$daxdev"
-+}
-+
-+#
-+# Test JSON output shows correct mode
-+#
-+test_json_output()
-+{
-+	printf "\n=== Testing JSON output for mode field ===\n"
-+
-+	# Test devdax mode in JSON
-+	ensure_devdax_mode
-+	printf "Testing JSON output for devdax mode... "
-+	mode=$("$DAXCTL" list -d "$daxdev" | jq -er '.[].mode')
-+	[[ "$mode" == "devdax" ]]
-+	printf "OK\n"
-+
-+	# Test famfs mode in JSON
-+	"$DAXCTL" reconfigure-device -m famfs "$daxdev"
-+	printf "Testing JSON output for famfs mode... "
-+	mode=$("$DAXCTL" list -d "$daxdev" | jq -er '.[].mode')
-+	[[ "$mode" == "famfs" ]]
-+	printf "OK\n"
-+
-+	# Restore to devdax
-+	"$DAXCTL" reconfigure-device -m devdax "$daxdev"
-+}
-+
-+#
-+# Test error messages for invalid transitions
-+#
-+test_error_handling()
-+{
-+	printf "\n=== Testing error handling ===\n"
-+
-+	# Ensure we're in famfs mode
-+	"$DAXCTL" reconfigure-device -m famfs "$daxdev"
-+
-+	# Test that invalid mode is rejected
-+	printf "Testing invalid mode rejection... "
-+	if "$DAXCTL" reconfigure-device -m invalidmode "$daxdev" 2>/dev/null; then
-+		printf "FAILED - invalid mode should be rejected\n"
-+		return 1
-+	fi
-+	printf "OK (correctly rejected)\n"
-+
-+	# Restore to devdax
-+	"$DAXCTL" reconfigure-device -m devdax "$daxdev"
-+}
-+
-+#
-+# Main test sequence
-+#
-+main()
-+{
-+	check_fsdev_dax
-+	find_daxdev
-+
-+	rc=1  # From here on, failures are real failures
-+
-+	test_famfs_mode_transitions
-+	test_json_output
-+	test_error_handling
-+
-+	# System-ram tests require kmem module
-+	if check_kmem; then
-+		# Save and disable online policy for system-ram tests
-+		saved_policy="$(cat /sys/devices/system/memory/auto_online_blocks)"
-+		echo "offline" > /sys/devices/system/memory/auto_online_blocks
-+
-+		test_system_ram_transitions
-+
-+		# Restore online policy
-+		echo "$saved_policy" > /sys/devices/system/memory/auto_online_blocks
-+	fi
-+
-+	# Restore original mode
-+	printf "\nRestoring device to original mode: %s\n" "$original_mode"
-+	"$DAXCTL" reconfigure-device -f -m "$original_mode" "$daxdev"
-+
-+	printf "\n=== All famfs tests passed ===\n"
-+
-+	exit 0
-+}
-+
-+main
-diff --git a/test/meson.build b/test/meson.build
-index 615376e..ad1d393 100644
---- a/test/meson.build
-+++ b/test/meson.build
-@@ -209,6 +209,7 @@ if get_option('destructive').enabled()
-   device_dax_fio = find_program('device-dax-fio.sh')
-   daxctl_devices = find_program('daxctl-devices.sh')
-   daxctl_create = find_program('daxctl-create.sh')
-+  daxctl_famfs = find_program('daxctl-famfs.sh')
-   dm = find_program('dm.sh')
-   mmap_test = find_program('mmap.sh')
- 
-@@ -226,6 +227,7 @@ if get_option('destructive').enabled()
-     [ 'device-dax-fio.sh', device_dax_fio, 'dax'   ],
-     [ 'daxctl-devices.sh', daxctl_devices, 'dax'   ],
-     [ 'daxctl-create.sh',  daxctl_create,  'dax'   ],
-+    [ 'daxctl-famfs.sh',   daxctl_famfs,   'dax'   ],
-     [ 'dm.sh',             dm,		   'dax'   ],
-     [ 'mmap.sh',           mmap_test,	   'dax'   ],
-   ]
--- 
-2.49.0
+general note - i'm happy to drop this if folks think it's not the right
+place to put it, but based on LPC discussions and feedback from Jonathan
+and Dan, it seemed useful.
 
+Maybe I should just be writing a book instead, lol. (Please no)
+
+~Gregory
