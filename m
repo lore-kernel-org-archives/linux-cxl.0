@@ -1,173 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1818E3A0B0A;
-	Wed,  7 Jan 2026 18:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949992E7F25
+	for <linux-cxl@vger.kernel.org>; Wed,  7 Jan 2026 21:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767809311; cv=none; b=WiQTsBSMui2T90M0+zWkUH8XlUY0w6ak0Zs4qkTYJDt9rN405Y6lO6rZUTUuurRbaYxMHFMsGoqt3z9hNx1Ffxxdo21Bzh/SnGlQFukCmcpGJuOhex0JUQWubed2XOOZJ8A78KbmIHYHy7k2dQS8c6j2R2Y8nLopZ4MJ0d9hCvA=
+	t=1767821453; cv=none; b=qlRyqOmFWUwoqsx40MXWTb8yiW8yc/KuG3mUfjXdDQP2ibSF5R65HFASlCu0n8gdIyaRyIds1f66gu18dDAL0DwCnXxnvwZtPAYZ4N4pX7ffF2dJi2IgHZTCXK/Ii0FDIlFzYcnkXCb56G93MBiRTyagSoXAtyVYy7QkAZNgLLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767809311; c=relaxed/simple;
-	bh=h3diFW+6swCdQwulrfxNuv36O/MywyrOiDWDmax+1eY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A6P7q4MRomCJhsmrBJW6Uucv3+ACfIZopPDAUNpSx2JS7b3wRWyfahUUGDOeVNZ8V/RtI0bdUe32CXL+n1An8ncSSSLnjXSUZqpRWWft3OXrEh2wHDQw8hCAXVkpNiPgt2BQPowfX2UbhUyFLXXt3gE00f5eAcvwEIOGo9OmBg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YVQLfaYh; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1767821453; c=relaxed/simple;
+	bh=hJBhEZEn2IW0Qs8Ce9poSTsX2HFP1recNbm+Qx+TfOg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bJoxeixpOFAmEZilgLaUtKbyDewg5UjVuzbUQvKyqfSTz+FtY+7/uZg595sU7MfpuOflhJRA5O3+vgnsPcZATDfxI1I6cS/M4Ein3J2XcJ5UYB/J9GLLsXSgqRxZjMe3ijjL6Y7mB5iE8WIGhJSkHbLxZVgPQoKrSHJbwgpfEJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k620oX6k; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YVQLfaYh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767809310; x=1799345310;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=h3diFW+6swCdQwulrfxNuv36O/MywyrOiDWDmax+1eY=;
-  b=YVQLfaYhevZU0EhuFLtn5tQ4zTzdtKU1ow+O21526i43wjX/4ckrPjEz
-   VOudX/mOtgAB5fReMB3bRYqPCnrYiKCpYMSmxLCNdiXu/5gf0svQbrkXK
-   GJAPZTa5iGuTjdTiQF2f66q/hlXfwOgHXu22VwHGs0ST+HmMREFxzsGQb
-   5HYuhrWIrCabvq8DWUer+N0oTRzNy9gkWYrf7DF2n7EvB9KWRltqf8bGU
-   eZ9PYZj8ViAFc38pW3jjKxdUZb7KixM0WH2jeQ3lmpJY0bkcbppDrCZ6V
-   RdIWK95RQwibj9EqXf/lJ1Hqvm+dWDq6HdmjNGbo1grR+r9yDf+cdTgpj
-   g==;
-X-CSE-ConnectionGUID: kF+llbLCSPq1xOkZCbJyXA==
-X-CSE-MsgGUID: RAPTHQDuRv+FRrWfiv/Mkg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11664"; a="80299589"
-X-IronPort-AV: E=Sophos;i="6.21,208,1763452800"; 
-   d="scan'208";a="80299589"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2026 10:08:29 -0800
-X-CSE-ConnectionGUID: YUsRkDezQ6GGYDrdpTlo9Q==
-X-CSE-MsgGUID: w+/cUEI1SsOjIE6BDQgpZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,208,1763452800"; 
-   d="scan'208";a="207133629"
-Received: from jdoman-mobl3.amr.corp.intel.com (HELO [10.125.109.157]) ([10.125.109.157])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2026 10:08:29 -0800
-Message-ID: <261e2dde-de8f-4d19-b5df-7e65eb3a994d@intel.com>
-Date: Wed, 7 Jan 2026 11:08:28 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k620oX6k"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-3fe9d6179efso784678fac.1
+        for <linux-cxl@vger.kernel.org>; Wed, 07 Jan 2026 13:30:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767821449; x=1768426249; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PgyJxKcUhgy66+q0k0EwvKHt6dTWi7O1SwlvNA4nT9c=;
+        b=k620oX6kftWHDnDeRjmIEer/+zMgkbptqwQN/iMdDylr09K3ufPyVnfXo4YiSIh1uA
+         37Q7ccohaGiHSeMyJPY3HpkSMeabsbyia9fxbcPZWbXYa/y057+G/CU/usYGfIr3LwHU
+         v94gAyZs2dUGI4cUoKL1DEcP/6HZVRLfPR8BJ5ItqNThR2onBRZnfnAr4W4uilFDuPQB
+         yXd2El8PgA7qNs1hZTkDtPIUjd3G3MnWRpUTzgB0CxiRDfTSYRl2OF03yjawJkIqQ/MC
+         lV91klAR4LJVkvTetxZv5qeSxSngJBJBhwgskucop3zv5gS0gqh2PlEWbsshAVOq9KUI
+         IRyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767821449; x=1768426249;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PgyJxKcUhgy66+q0k0EwvKHt6dTWi7O1SwlvNA4nT9c=;
+        b=b2gmzEbE8cXAqVl1fO7hhsT4QVpH3AfNU13MLqMoCZFT2LEMddlEHSwC0RoZAl6TQg
+         a+Uw+Up7xTa/+DS9KFCUWPIjrRHHkwZ0iiTBsQ2jWq0vhG+unZyuHByIzt5tnGTQ1GEs
+         34LeUyA+t9an60pAjeX6pEPXp4mtQRsTR5XjiESWNwRlyeqnbLHjlxtMcuxlF8e/PhkR
+         MRwHKA6uA+OPkIDVJDcgD3O6RiZGcHUKoRTqJaLeuy1w05HGRkoeA3JvaFRVMtBFX6ZM
+         xsgRofXTO7vPeeaRZgLsIkMQS37Chs0MIkCopdj5Gu9khPhO5hOUnViVDtn6OVDxxBa2
+         gY6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVPh7hSl+tmjXplMJ7xxy5hFYCwrn4VSNbYNVkHS+6V9Dgjrcq2aP2Zh5Zdoc9Wxssz6n+Tk9vNvvY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnfX4JxwQiNe1aLh5Jr/0J550xxEm5S8BuxmaMirFUoE8SBi0Y
+	wJ5TGv6P/M0/UuqscVwMNQPkapSv9QRTF8F5Ug+tXTWhfGiHBmoChFmV
+X-Gm-Gg: AY/fxX7Y8MXMS6pHFNlGjOLwZIQENEXkTXxWBZtLftCzmNAHYDW60vTR1skccQjBTC9
+	xUjtd1ux7usVJapZl6+w0f+7Vi+dt8upSwEZhoXgbs1Z6BcD79WEpWUICYRHNayKv17XWGQ79xq
+	WCEraefX3z4vqNqTrnfRlKzrsb4iDaDnJ/Ywr3Sr8j1XGGpJvJnRg0NulHBzhJE7jNd6FB0zhGv
+	iRYKlWMeVqkb7n6hgOch9ioB/Z27/lxHY9TbnOJyJ+gRBmRmiWxkLAZiYk41oMqh/09NNYocNwl
+	zbrNxkBhJ+IB77W4DONw3lwCm8r3Q4x6TlQ8WxBFlPqmihOpLoYOul+MxtnsaiTVvZiqL9+zqV6
+	4hTdj2A7iARJpyyhDeYmdxaDgdLRHsXP21MqS4M8cZMRTz5wvnUvW0DTcobG9Vnd8VV2sJWBEKx
+	HGEsFwXvGODLlR2aWS7vYSoKGIazvN0yCG9JoA1zn4
+X-Google-Smtp-Source: AGHT+IGBpBXjThN1EPukRyzeQDjnIkWKrC19wevk+xy19Ke7HdDQYha50/3EOc1Su9/w3oCaFtcjKw==
+X-Received: by 2002:a05:6870:4191:b0:3e8:92f2:caa2 with SMTP id 586e51a60fabf-3ffbed0d56dmr2067280fac.5.1767821449438;
+        Wed, 07 Jan 2026 13:30:49 -0800 (PST)
+Received: from groves.net ([2603:8080:1500:3d89:a917:5124:7300:7cef])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3ffa4e3e844sm3874317fac.9.2026.01.07.13.30.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Jan 2026 13:30:48 -0800 (PST)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Wed, 7 Jan 2026 15:30:46 -0600
+From: John Groves <John@groves.net>
+To: Miklos Szeredi <miklos@szeredi.hu>, 
+	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
+	Alison Schofield <alison.schofield@intel.com>
+Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Chen Linxuan <chenlinxuan@uniontech.com>, James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, venkataravis@micron.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V3 15/21] famfs_fuse: Create files with famfs fmaps
+Message-ID: <smqodjljwvhnssmq4ho3hicnomzyrpsawy65ykxhigrjl7yawu@xwtbxjamivk7>
+References: <20260107153244.64703-1-john@groves.net>
+ <20260107153332.64727-1-john@groves.net>
+ <20260107153332.64727-16-john@groves.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] cxl/port: Fix target list setup for multiple decoders
- sharing the same dport
-To: Robert Richter <rrichter@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260107100356.389490-1-rrichter@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260107100356.389490-1-rrichter@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260107153332.64727-16-john@groves.net>
 
-
-
-On 1/7/26 3:03 AM, Robert Richter wrote:
-> If a switch port has more than one decoder that is using the same
-> downstream port, the enumeration of the target lists may fail with:
+On 26/01/07 09:33AM, John Groves wrote:
+> On completion of GET_FMAP message/response, setup the full famfs
+> metadata such that it's possible to handle read/write/mmap directly to
+> dax. Note that the devdax_iomap plumbing is not in yet...
 > 
->  # dmesg | grep target.list
->  update_decoder_targets: cxl decoder1.0: dport3 found in target list, index 3
->  update_decoder_targets: cxl decoder1.0: dport2 found in target list, index 2
->  update_decoder_targets: cxl decoder1.0: dport0 found in target list, index 0
->  update_decoder_targets: cxl decoder2.0: dport3 found in target list, index 1
->  update_decoder_targets: cxl decoder4.0: dport3 found in target list, index 1
->  cxl_mem mem6: failed to find endpoint12:0000:00:01.4 in target list of decoder2.1
->  cxl_mem mem8: failed to find endpoint13:0000:20:01.4 in target list of decoder4.1
+> * Add famfs_kfmap.h: in-memory structures for resolving famfs file maps
+>   (fmaps) to dax.
+> * famfs.c: allocate, initialize and free fmaps
+> * inode.c: only allow famfs mode if the fuse server has CAP_SYS_RAWIO
+> * Update MAINTAINERS for the new files.
 > 
-> The case, that the same downstream port can be used in multiple target
-> lists, is allowed and possible.
-> 
-> Fix the update of the target list. Enumerate all children of the
-> switch port and do not stop the iteration after the first matching
-> target was found.
-> 
-> With the fix applied:
-> 
->  # dmesg | grep target.list
->  update_decoder_targets: cxl decoder1.0: dport2 found in target list, index 2
->  update_decoder_targets: cxl decoder1.0: dport0 found in target list, index 0
->  update_decoder_targets: cxl decoder1.0: dport3 found in target list, index 3
->  update_decoder_targets: cxl decoder2.0: dport3 found in target list, index 1
->  update_decoder_targets: cxl decoder2.1: dport3 found in target list, index 1
->  update_decoder_targets: cxl decoder4.0: dport3 found in target list, index 1
->  update_decoder_targets: cxl decoder4.1: dport3 found in target list, index 1
-> 
-> Analyzing the conditions when this happens:
-> 
-> 1) A dport is shared by multiple decoders.
-> 
-> 2) The decoders have interleaving configured (ways > 1).
-> 
-> The configuration above has the following hierarchy details (fixed
-> version):
-> 
->  root0
->  |_
->  | |
->  | decoder0.1
->  | ways: 2
->  | target_list: 0,1
->  |_______________________________________
->  |                                       |
->  | dport0                                | dport1
->  |                                       |
->  port2                                   port4
->  |                                       |
->  |___________________                    |_____________________
->  | |                 |                   | |                   |
->  | decoder2.0        decoder2.1          | decoder4.0          decoder4.1
->  | ways: 2           ways: 2             | ways: 2             ways: 2
->  | target_list: 2,3  target_list: 2,3    | target_list: 2,3    target_list: 2,3
->  |___________________                    |___________________
->  |                   |                   |                   |
->  | dport2            | dport3            | dport2            | dport3
->  |                   |                   |                   |
->  endpoint7           endpoint12          endpoint9           endpoint13
->  |_                  |_                  |_                  |_
->  | |                 | |                 | |                 | |
->  | decoder7.0        | decoder12.0       | decoder9.0        | decoder13.0
->  | decoder7.2        | decoder12.2       | decoder9.2        | decoder13.2
->  |                   |                   |                   |
->  mem3                mem5                mem6                mem8
-> 
-> Note: Device numbers vary for every boot.
-> 
-> Current kernel fails to enumerate endpoint12 and endpoint13 as the
-> target list is not updated for the second decoder.
-> 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-Can you add a Fixes tag pls?
-
-DJ
+> Signed-off-by: John Groves <john@groves.net>
 > ---
->  drivers/cxl/core/port.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  MAINTAINERS               |   1 +
+>  fs/fuse/famfs.c           | 355 +++++++++++++++++++++++++++++++++++++-
+>  fs/fuse/famfs_kfmap.h     |  67 +++++++
+>  fs/fuse/fuse_i.h          |  22 ++-
+>  fs/fuse/inode.c           |  21 ++-
+>  include/uapi/linux/fuse.h |  56 ++++++
+>  6 files changed, 510 insertions(+), 12 deletions(-)
+>  create mode 100644 fs/fuse/famfs_kfmap.h
 > 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index fef3aa0c6680..3310dbfae9d6 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1590,7 +1590,7 @@ static int update_decoder_targets(struct device *dev, void *data)
->  			cxlsd->target[i] = dport;
->  			dev_dbg(dev, "dport%d found in target list, index %d\n",
->  				dport->port_id, i);
-> -			return 1;
-> +			return 0;
->  		}
->  	}
+
+[ ... ]
+
+> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> index 9e121a1d63b7..391ead26bfa2 100644
+> --- a/fs/fuse/inode.c
+> +++ b/fs/fuse/inode.c
+> @@ -121,7 +121,7 @@ static struct inode *fuse_alloc_inode(struct super_block *sb)
+>  		fuse_inode_backing_set(fi, NULL);
 >  
-> 
-> base-commit: 88c72bab77aaf389beccf762e112828253ca0564
-> prerequisite-patch-id: a92b04b164c158c7f0f0dcde957bf5c02ffb3918
+>  	if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX))
+> -		famfs_meta_set(fi, NULL);
+> +		famfs_meta_init(fi);
+>  
+>  	return &fi->inode;
+>  
+> @@ -1485,8 +1485,21 @@ static void process_init_reply(struct fuse_mount *fm, struct fuse_args *args,
+>  				timeout = arg->request_timeout;
+>  
+>  			if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX) &&
+> -			    flags & FUSE_DAX_FMAP)
+> -				fc->famfs_iomap = 1;
+> +			    flags & FUSE_DAX_FMAP) {
+> +				/* famfs_iomap is only allowed if the fuse
+> +				 * server has CAP_SYS_RAWIO. This was checked
+> +				 * in fuse_send_init, and FUSE_DAX_IOMAP was
+> +				 * set in in_flags if so. Only allow enablement
+> +				 * if we find it there. This function is
+> +				 * normally not running in fuse server context,
+> +				 * so we can do the capability check here...
+                                         ^^^
+Oops: this should be "can't" - we can't do the capability check here since we're not in
+fuse server context. Will fix before merge...
+
+[ ... ]
+
+John
 
