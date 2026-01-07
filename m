@@ -1,181 +1,225 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012004.outbound.protection.outlook.com [40.107.200.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84AFE25A2CF
-	for <linux-cxl@vger.kernel.org>; Wed,  7 Jan 2026 04:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767761905; cv=none; b=KGvns3mOW5LuggDVauEycoQI+LITQHYt74IFUzM+Eh34T6TmlK7+q/cOHy38ZCriVDoAF3LfhB8HtLl7bXOSH3us5CdbGbwUBCYOWE37E3BGCeFliE8kXEgJL625R0FlcDi0ExhlLXw67icX9/t9qwe7nb2ICKH+haM8k6Fx06o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767761905; c=relaxed/simple;
-	bh=u52IYXtkIGi8sisrJ2GXaZQiFovGjOBhfJtTiCU+FIM=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-Version:Content-Type; b=f3ClpozWFVypuJGp/HFpMLtPNkR3UXEVdB2GY9eNlddcPSqOFxI/GjuxxqiEJ8BlDa8XoUbx6MdAOLodSZ5kyvae81t8noyRxW68h8EV9WRISFbaRy39/d3dgCt460HLJ22CgQtR813LX5wYoxiJH5BTBCS6zgV9YgQjybin/tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XE9OHB7K; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1B02F746D;
+	Wed,  7 Jan 2026 10:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.4
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767780265; cv=fail; b=o7qlfzKGMYahvLkUd40S73qF4357bUoLAJyr69QjNQTqsCAN5HBRgSBseXP7h1kJsOIF9UJGFKhAOpE051NJARhwy4YVxA3vwc5Sk7v/PyK3iSsFgjbK2NKiPS3uhGuHOoR7XVYK8A4k/QDrKXyIugB/gn+ltNQ033aRs6Bh6cA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767780265; c=relaxed/simple;
+	bh=T2dRqtn9G3BnbQOxAljFN7CN3NGFl9/zMRhVu6OuFQg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gtCI9THomQqwIGjoRUP1P7MBKQ/FSeYRh0GC7aK2VkzE7zewh67ZV0RAE5eV9uMKVeDG3M7vY8++ra2rBVi7FTLfJykM++luA8FA7N3SC2FJkyi7fAw3/q47hnoHl+r8E43YG24102wfVK/Txy4z0sJdfVQ6a/oVHTryXaIzsfM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LAnk3SZN; arc=fail smtp.client-ip=40.107.200.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XE9OHB7K"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-34c3cb504efso1468107a91.2
-        for <linux-cxl@vger.kernel.org>; Tue, 06 Jan 2026 20:58:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767761902; x=1768366702; darn=vger.kernel.org;
-        h=mime-version:references:message-id:date:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nurUXHNs091EaceKYt0jtxQiBJ2IaAdTDr7CGJ+zWBU=;
-        b=XE9OHB7Kl+IegOavGwsCniq7IfH569pyWSwOB3GH4IFakEzMoVU0qTAM99Htm/LTZa
-         oIrdXqofABAYlYf0vbgd+n0GUNiJzVIPiyO8CScU6yhPMURk/UDM/RVMGFEztgjtLPNS
-         WRPiIEJnD0Ff9/Z8WNMKc7Anw6/nMx8MAbq3s3xv9xn+5m1oNJCX1ktobB6O3+C+tCKf
-         0dT43+gSNEm71HVEC9CZgI8klLsPbgoiQqrHQwigH/O6I0GQ3Ti8owh0piXgvhZN4xe2
-         1m7D9Rr/nZ33sxwqrbUB/YINiEIurizt1znhUcLNHdGYLs9ErvXCDeFUGjhnGu4pVoK6
-         wLTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767761902; x=1768366702;
-        h=mime-version:references:message-id:date:in-reply-to:subject:cc:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nurUXHNs091EaceKYt0jtxQiBJ2IaAdTDr7CGJ+zWBU=;
-        b=X8kCXaWHtahWrc4N19xhIq/8EuvqEmFmtzqTVXmqwQKWHHg1jPdaVhi3GM6J62ISWv
-         9fdifXgkW5kcg3qTN6JJOOrbBUZaYjViAdzyI0tlGFFS1vmuy36rmmw0xIJRAZfYqbWY
-         r9kwKdJhXfJS8G0fkRwHf+HChQoD+he0j9F4rp4kmjo4cS2mFT+PIrwCs+0yucKWGsG6
-         ahVaxNBuceOLdB/TVt/MS5xzoo9i82nWij72MOsed5NWkoIxT0udk2cmY4vr95lWyQ4b
-         ehvzMxiNTAm624191lcCJuZ+qWd+N9gLigroFOlPcxUaMCWSil2gFaS8X56P7uERwIbR
-         6yUA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4+rOfsRUqwG5B8JdbuHEmkqHy5bkKiDqZfhJQn7DfW82Nr/lWKJfB7yFyyP6qeIYRFG1vIoWKYP8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzmi2oPbqWW7fsS3dTDMrg287jMZkx9U0hj/A3y+IcQWrYk01Ao
-	rtl6Pbz52c7zvrHcuq3ALD8yg0QqG+SD9CMurqv+TN4fekbAXrG2RZSV
-X-Gm-Gg: AY/fxX62fbPZEM4WIHX476e8FD8diowu8bBVUDpGbUrKcaY+QL13ZYCJjUgI03V31Hh
-	qXA6ITlXsHxozW+iIyz5vFSbX+I1Wi4tktHF0rVBZ81JeyDBiDQJxsZ9PX6NOU/Eh/Ew8W9gmfF
-	oUdkIrGI1fxsonV3GPyiAeSMnJD99gTrdfsqQ4RoxVtMd8tEh/mqRxE/+tUyjjDCY0GYoIjXz69
-	30iHXWlR1U6vZeTdR7v6tO1T3T77YW7iMSFjCImN2UiZodZ9CuQ1R354EfS6AyORsdePC9KI4UA
-	i51ZehlmwW9XNT3dFg8GcVv7H3NQ8cs/hB1vHVc0Xt8RMLA168BxEQ5cK4EUsN98B0tFWrarXDP
-	rpoSnBbjlL0wDqpXJyymuhd5YhgMRQRDHDr/QXDwdL2+rNrFhHMrMsEc6sA3hcypTCCXk39Pv6M
-	BH3iC/uQ==
-X-Google-Smtp-Source: AGHT+IE3iEJ4twso46GOnqJPDopUox2qFLaKHiDPKI95vlPPxjV/F7mxvaI/CeOE2s8GrRHRScEd6Q==
-X-Received: by 2002:a17:90b:6c7:b0:335:2eef:4ca8 with SMTP id 98e67ed59e1d1-34f68d3b4a4mr1191743a91.33.1767761901762;
-        Tue, 06 Jan 2026 20:58:21 -0800 (PST)
-Received: from dw-tp ([49.207.192.172])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34f5fb75902sm3622895a91.16.2026.01.06.20.58.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 20:58:20 -0800 (PST)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Alex Shi <alexs@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Andreas Larsson <andreas@gaisler.com>, Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	"David S. Miller" <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonathan Corbet <corbet@lwn.net>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>, 
-	Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Hocko <mhocko@suse.com>, 
-	Michal Simek <monstr@monstr.eu>, Mike Rapoport <rppt@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Richard Weinberger <richard@nod.at>, 
-	Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, x86@kernel.org, 
-	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
-	linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v2 14/28] powerpc: introduce arch_zone_limits_init()
-In-Reply-To: <20260102070005.65328-15-rppt@kernel.org>
-Date: Wed, 07 Jan 2026 09:57:34 +0530
-Message-ID: <87ldia9he1.ritesh.list@gmail.com>
-References: <20260102070005.65328-1-rppt@kernel.org> <20260102070005.65328-15-rppt@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LAnk3SZN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iQumg2qKd13K6tMWAbv4OtX4Ad10uphG8dTvxVxz6eZMPqUnr/27UthDuIHvERB1LuZq71n88h4B2zZU/+wEBSgqgumFMbQZG7H97m24fgNPmA/6fxtmBAutgckfD13rzH4DrwmbQz/OrSiY6bSrEsYzxWiBHk/1k+Z5/vGsp6Jb1B/QllEmIE3q9jyB7SadiCauM8JfFAB7YMnKvPB44KCfG8+PIJXpQQ03E54Spg8HZ77ok+94V2bGMtEMoqfzSBkbxZ4feelFOVql8+OLy74eMvPRtBL63R0G5Xsvz3iAOvZmRGnoNE+uszv9XKlrgKJwkjYjeX88xijV6AsxsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lT8qfu5LGtHbRmIbfztApLpBppYUSNhfXhLgXqGNE/k=;
+ b=Dj8+SFRiPxK2dVZSdw+NR5fOzA6HV8xnifNh3GtNwKO9ACvn6ABlL513CgStKOqV+3orhLXMiLf7QkCde/AHgkO8XyL70z7cDJ6bzSKQRmOLLLTbUGzlDraYIkdw1AY0fo3PS9Xpx2nRt0sMCVjlbKqccibQRK3N/yJ258Vv/7Wn/19IJs4qLscj99l5r2OU0388aJQBlrszICttvL1U1JrLb6CbHnu8U9X4MMg63dwm/jzqza50QSAfu4sDbeP1vtPk9m/ocKGaQB0Dt4aUsXBzR/3J981NQjS4Y36BwgBK/MNHhCNfvheVFh3T9A8+5QEwJRXWhkKbPiQ6E71G1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lT8qfu5LGtHbRmIbfztApLpBppYUSNhfXhLgXqGNE/k=;
+ b=LAnk3SZNa1BvZ01QxVgN+/jnJQdYYDvRDxlmxRGekeJ9UCp9qX8gKIITfbufBPlDO1EE98DRRi6poWC303TA3DPhYfHBvHcNOcHp7UNjKUUDuR7BWme33LZPMQRvC5Amw2Osc0kJAhIb4YpE7GNIs/Lua5YuP9PhcXZxp/70+So=
+Received: from BY5PR17CA0043.namprd17.prod.outlook.com (2603:10b6:a03:167::20)
+ by PH8PR12MB7232.namprd12.prod.outlook.com (2603:10b6:510:224::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.2; Wed, 7 Jan
+ 2026 10:04:18 +0000
+Received: from SJ1PEPF000023D2.namprd02.prod.outlook.com
+ (2603:10b6:a03:167:cafe::be) by BY5PR17CA0043.outlook.office365.com
+ (2603:10b6:a03:167::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9478.4 via Frontend Transport; Wed, 7
+ Jan 2026 10:04:17 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ1PEPF000023D2.mail.protection.outlook.com (10.167.244.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9499.1 via Frontend Transport; Wed, 7 Jan 2026 10:04:17 +0000
+Received: from rric.localdomain (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 7 Jan
+ 2026 04:04:15 -0600
+From: Robert Richter <rrichter@amd.com>
+To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>
+CC: Robert Richter <rrichter@amd.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v1] cxl/port: Fix target list setup for multiple decoders sharing the same dport
+Date: Wed, 7 Jan 2026 11:03:55 +0100
+Message-ID: <20260107100356.389490-1-rrichter@amd.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D2:EE_|PH8PR12MB7232:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8b5546f4-1223-49ea-976f-08de4dd41ee5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?tv4o/qN3kh5MDrdrTPlgfRp//b6rmICQDWm/Zvc0RxBseA0qgrZju3W2sCEh?=
+ =?us-ascii?Q?IQMfHu84gMcGYnE9ibLMkib8oyWepDi5Rrmkn330aCRjHt7fj59yeYEAXtk0?=
+ =?us-ascii?Q?XfZ+AVMN+aJ3FxaPRq3swKksSdGdP9dq8YeH5lJQFy8Btug4XZeOXJit0j7v?=
+ =?us-ascii?Q?6/PJMsHsRU0IEbRLOJNFtumY0fLgpgpgQsJqn/A62/Dn4IYA1XRQJE0ibZjW?=
+ =?us-ascii?Q?a0JiafifbXm8xOGgmsUbAqGMWlP7e6Xijc1QO9XjZZY2QPIJiXthK86voAFT?=
+ =?us-ascii?Q?g6CBDdU/U+oQd7SVityTucb+hrAfXsAPencZ/Z/TIv1g6JnnGCoSg8PHBo2F?=
+ =?us-ascii?Q?B05AdJDrGTLb2ZmHfYx/gzGYX5JMk4vnXU2v9m2Kn7oXqJzRdu7OcxTspK88?=
+ =?us-ascii?Q?C6mW/vDimrofCFJ0npfn38l7KqgNqFGtbDaPLbxLQqWwquz6AHG3ryWKuVEB?=
+ =?us-ascii?Q?4yecgESaCJdQGm/P3Ej7Vlq5Zbd3RDbOrZ0C5n9zNOzOCoV8kFpQS7/wMUpn?=
+ =?us-ascii?Q?08RE4IrVzBC9QPMKLpTTo4V3ZxgpWsLoMdDm3jOFIGw7AHj7p7wOPnSOcVuC?=
+ =?us-ascii?Q?4ITNyRx6kDf8/U4xEXltGAEwFqg+3Xrbm0ku3lR/YIuLFD1eJ9U04xuuJ0c/?=
+ =?us-ascii?Q?S6soL44XUjmLZfLSb1svtHAZRMSmrDMbiTMNNo1jF4L5DUKL/tgj+LPPX7nB?=
+ =?us-ascii?Q?Pozooou1N0rJnSpi4L2FudpedO0Uet8YwAECEf9f7na2cRTBBbafXVP2QXcX?=
+ =?us-ascii?Q?dQND/aK+p9QCgPjNZgzBVqBG/PhhOXNARtfPhhnQQUF35u7dCEwGGjKC5xsk?=
+ =?us-ascii?Q?wFfdsST4hmtS7FRTj9kItKEvU+Q2zlMJTxFlS54Y+gqbdyJNi2aHqpuoyeA2?=
+ =?us-ascii?Q?ZNbK73QuHSeqP7A4X8SlvZWHecjfYDMEpwEzd/o6pTw6jQK3fcYEd9O0C1gb?=
+ =?us-ascii?Q?x/ODDsB5VuOAop5WFu/ncSnmUpe5FvJlRcdVL4XP8WupQB0zQnIMfHOgTKZD?=
+ =?us-ascii?Q?KP26oja8XrlTvnBkp1KhyNdLgcQ3u4wzfhnIAjBo/CqYm93tqEffhyERUmwP?=
+ =?us-ascii?Q?22U3fnvYggD/z1fBuhhu8H6e2eBHTQWSaZCw9anQt1PUrxfRsKr1Pfj0Hj3U?=
+ =?us-ascii?Q?ssZ3d3rMoLKT4jlbEO4fwg4G8yU63chVHyPX2CGYcrA1/y760aqyncSSXkjN?=
+ =?us-ascii?Q?6AyKaMjxWb7zXEqiyAx0qbdSldQBGMw+eCgiHDFiBur5Z65LCLB1Ek98BGza?=
+ =?us-ascii?Q?FkI24bipjZ5DqE585hr7PIIDWcCsLkrpN+xuGmdEEoSZrexTjSHlt3uQElQr?=
+ =?us-ascii?Q?VTl15ufHgJsVq/j/8Yd9W4szjQbsgB7Mt++LMrX7AWRxVRan89chOkkhn10G?=
+ =?us-ascii?Q?ciw3AtamNW4tS05Mi25paBRm15NKVYDLywreixO6dLZ8s5oIux+QOTkoBM6F?=
+ =?us-ascii?Q?dchVdrHvBEgdv4+1gQon4roC5Hw0kTgHkAoDUxWhsVsurvquMWHvuqIGAE1P?=
+ =?us-ascii?Q?PEm9Z3ghj0NJSFqW8jBpmJbwqi1yT8/Ip59VMqdv8F66UY5uZI3udJsFpsR6?=
+ =?us-ascii?Q?RnFrCnyUgKgOXVwnpwg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2026 10:04:17.8590
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b5546f4-1223-49ea-976f-08de4dd41ee5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF000023D2.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7232
 
-Mike Rapoport <rppt@kernel.org> writes:
+If a switch port has more than one decoder that is using the same
+downstream port, the enumeration of the target lists may fail with:
 
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->
-> Move calculations of zone limits to a dedicated arch_zone_limits_init()
-> function.
->
-> Later MM core will use this function as an architecture specific callback
-> during nodes and zones initialization and thus there won't be a need to
-> call free_area_init() from every architecture.
->
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  arch/powerpc/mm/mem.c | 22 ++++++++++++----------
->  1 file changed, 12 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> index 3ddbfdbfa941..32c496bfab4f 100644
-> --- a/arch/powerpc/mm/mem.c
-> +++ b/arch/powerpc/mm/mem.c
-> @@ -221,13 +221,23 @@ static int __init mark_nonram_nosave(void)
->   * anyway) will take a first dip into ZONE_NORMAL and get otherwise served by
->   * ZONE_DMA.
->   */
-> -static unsigned long max_zone_pfns[MAX_NR_ZONES];
-> +void __init arch_zone_limits_init(unsigned long *max_zone_pfns)
-> +{
-> +#ifdef CONFIG_ZONE_DMA
-> +	max_zone_pfns[ZONE_DMA]	= min(zone_dma_limit, max_low_pfn - 1) + 1;
+ # dmesg | grep target.list
+ update_decoder_targets: cxl decoder1.0: dport3 found in target list, index 3
+ update_decoder_targets: cxl decoder1.0: dport2 found in target list, index 2
+ update_decoder_targets: cxl decoder1.0: dport0 found in target list, index 0
+ update_decoder_targets: cxl decoder2.0: dport3 found in target list, index 1
+ update_decoder_targets: cxl decoder4.0: dport3 found in target list, index 1
+ cxl_mem mem6: failed to find endpoint12:0000:00:01.4 in target list of decoder2.1
+ cxl_mem mem8: failed to find endpoint13:0000:20:01.4 in target list of decoder4.1
 
-Hi Mike, 
+The case, that the same downstream port can be used in multiple target
+lists, is allowed and possible.
 
-This doesn't look correct. Isn't the zone_dma_limit value in bytes actually?
-Shouldn't it be -
+Fix the update of the target list. Enumerate all children of the
+switch port and do not stop the iteration after the first matching
+target was found.
 
-     max_zone_pfns[ZONE_DMA] = min((zone_dma_limit >> PAGE_SHIFT) + 1, max_low_pfn);
+With the fix applied:
 
+ # dmesg | grep target.list
+ update_decoder_targets: cxl decoder1.0: dport2 found in target list, index 2
+ update_decoder_targets: cxl decoder1.0: dport0 found in target list, index 0
+ update_decoder_targets: cxl decoder1.0: dport3 found in target list, index 3
+ update_decoder_targets: cxl decoder2.0: dport3 found in target list, index 1
+ update_decoder_targets: cxl decoder2.1: dport3 found in target list, index 1
+ update_decoder_targets: cxl decoder4.0: dport3 found in target list, index 1
+ update_decoder_targets: cxl decoder4.1: dport3 found in target list, index 1
 
--ritesh
+Analyzing the conditions when this happens:
 
+1) A dport is shared by multiple decoders.
 
-> +#endif
-> +	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
-> +#ifdef CONFIG_HIGHMEM
-> +	max_zone_pfns[ZONE_HIGHMEM] = max_pfn;
-> +#endif
-> +}
->  
->  /*
->   * paging_init() sets up the page tables - in fact we've already done this.
->   */
->  void __init paging_init(void)
->  {
-> +	unsigned long max_zone_pfns[MAX_NR_ZONES];
->  	unsigned long long total_ram = memblock_phys_mem_size();
->  	phys_addr_t top_of_ram = memblock_end_of_DRAM();
->  	int zone_dma_bits;
-> @@ -259,15 +269,7 @@ void __init paging_init(void)
->  
->  	zone_dma_limit = DMA_BIT_MASK(zone_dma_bits);
->  
-> -#ifdef CONFIG_ZONE_DMA
-> -	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn,
-> -				      1UL << (zone_dma_bits - PAGE_SHIFT));
-> -#endif
-> -	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
-> -#ifdef CONFIG_HIGHMEM
-> -	max_zone_pfns[ZONE_HIGHMEM] = max_pfn;
-> -#endif
-> -
-> +	arch_zone_limits_init(max_zone_pfns);
->  	free_area_init(max_zone_pfns);
->  
->  	mark_nonram_nosave();
-> -- 
-> 2.51.0
+2) The decoders have interleaving configured (ways > 1).
+
+The configuration above has the following hierarchy details (fixed
+version):
+
+ root0
+ |_
+ | |
+ | decoder0.1
+ | ways: 2
+ | target_list: 0,1
+ |_______________________________________
+ |                                       |
+ | dport0                                | dport1
+ |                                       |
+ port2                                   port4
+ |                                       |
+ |___________________                    |_____________________
+ | |                 |                   | |                   |
+ | decoder2.0        decoder2.1          | decoder4.0          decoder4.1
+ | ways: 2           ways: 2             | ways: 2             ways: 2
+ | target_list: 2,3  target_list: 2,3    | target_list: 2,3    target_list: 2,3
+ |___________________                    |___________________
+ |                   |                   |                   |
+ | dport2            | dport3            | dport2            | dport3
+ |                   |                   |                   |
+ endpoint7           endpoint12          endpoint9           endpoint13
+ |_                  |_                  |_                  |_
+ | |                 | |                 | |                 | |
+ | decoder7.0        | decoder12.0       | decoder9.0        | decoder13.0
+ | decoder7.2        | decoder12.2       | decoder9.2        | decoder13.2
+ |                   |                   |                   |
+ mem3                mem5                mem6                mem8
+
+Note: Device numbers vary for every boot.
+
+Current kernel fails to enumerate endpoint12 and endpoint13 as the
+target list is not updated for the second decoder.
+
+Signed-off-by: Robert Richter <rrichter@amd.com>
+---
+ drivers/cxl/core/port.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index fef3aa0c6680..3310dbfae9d6 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -1590,7 +1590,7 @@ static int update_decoder_targets(struct device *dev, void *data)
+ 			cxlsd->target[i] = dport;
+ 			dev_dbg(dev, "dport%d found in target list, index %d\n",
+ 				dport->port_id, i);
+-			return 1;
++			return 0;
+ 		}
+ 	}
+ 
+
+base-commit: 88c72bab77aaf389beccf762e112828253ca0564
+prerequisite-patch-id: a92b04b164c158c7f0f0dcde957bf5c02ffb3918
+-- 
+2.47.3
 
