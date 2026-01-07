@@ -1,64 +1,64 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BB7398705
-	for <linux-cxl@vger.kernel.org>; Wed,  7 Jan 2026 15:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F90B399035
+	for <linux-cxl@vger.kernel.org>; Wed,  7 Jan 2026 15:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767800099; cv=none; b=kXYRD//WeXXG0fzjQ4991QZhUAcPjOAmWAgxWxgXbmsOfc1trfTWdq2pjQRAdfitixvi0h741roQHKRW9fvMQQe8AwJDMceK4M8zpe1ZZTrPaQv6MsRZOrHQVKWnkH58Pi83N2zNThOCdYyQl8M4tsEF9y7AwP5InMsJHCkQfLM=
+	t=1767800104; cv=none; b=OrZ8z+eCsHdWb9P/WfZIGzEGRWsu3QEg30xPwCjqUGd+194mOWHbi53SRdByIAV8LJtqjl2AYsIlVffYFthzSeN/vemUaqFfbrJhSC2N/iHRBWYDbD0JhXWqNyPyY446GZ3ukHTHtuhXhqpwc3lGqmRLhDmCIHdy5Nw2t1HyDUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767800099; c=relaxed/simple;
-	bh=3CO44iNrPAkdfYLxe1mcSvtJfmua9dBTiPyw/Zw6zgo=;
+	s=arc-20240116; t=1767800104; c=relaxed/simple;
+	bh=HM4lKamXQwEUZnRqp2/mgy4o0pjN0zbCyAQ9KEkrnNs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vEmmLkVqJWgw0E4bWKJAl2yPaIv6RvlcajhuLg1jtyz1iCWMJkvetJElGVU/sfDcWTMcoEFtLaFFwx4EizLZyk2dvjel7thSmMG6PeZcvhViUUTrD2jBpbtXBoqFr9UqDHR1Oc6PTpIuiwlsktOMRodQIzxiOpy7E5eBpe2Bz6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UlyzrF/X; arc=none smtp.client-ip=209.85.167.172
+	 MIME-Version; b=ZuXhDV0ccsiBAiYx1NONQ7GXrAlIIUpSNGPBXO8fZ9WaqQn1TKavRtoZddh9lUsrNd2XFzdG+iGT1b33hOer943hQPC792ysxzRt/JOEBUM+6m6cBlA1a003HxddGigHpUdFOWCebWxjB4uT8RpWggOJs4416UxCt0wSCzchM9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TBfRge6Z; arc=none smtp.client-ip=209.85.167.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlyzrF/X"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-45090ef26c6so834488b6e.2
-        for <linux-cxl@vger.kernel.org>; Wed, 07 Jan 2026 07:34:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBfRge6Z"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-450b3f60c31so1049994b6e.3
+        for <linux-cxl@vger.kernel.org>; Wed, 07 Jan 2026 07:35:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767800097; x=1768404897; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1767800099; x=1768404899; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3n8Kb47Rl130Byxu0ad+8SvRWtkqSvh8ZeidUsu8Q2I=;
-        b=UlyzrF/XmN05HA8PEjpbuqMKIxx6O8wSt2fCFJoABez6wlizZ79QjgpsYRx/PagwSv
-         aFSZzo0XW7wjrLvKNUbPNWYGGdtU0/YPxOJbWREdy1/XecdFZNmiL85RnhW+HvdjT4uI
-         WGo8FT0h1ziCxDr0ibrUqSNq9TnHnncITTFvgYI3O3d9nZhM9BB/0KvupT6d5TlNYykt
-         5auxcqE3iDkoH2Btc7JA9ecrgsh/VNTLoNfp3hFq1IQb70zhvXL2ixaTfkQr+/DMuhVj
-         yl981S+hkIE3mf2MImnTIMl8GzQ0akcPzC+l5xu8jUWWIXH9OYGdiSLi8l8JOVvbY+cE
-         P3Dw==
+        bh=OPrNuirfi0NELPHMFcu/1KlJClDuCwOT8DJm2N/JJag=;
+        b=TBfRge6ZoGYJNVe+MfO7B8Q/lEdSD76bj1t7mMM11HcoqkehMf7mYPh6Br09hLbmwh
+         y5aMVudtDQjn9njNFVyKm4KX8K6HPC9G1m2LTLxOTYg8eCLtKE4p/qAEEvo6YzWRuHtW
+         NdwWCLBC+PnDiHoahfPE0Kdc3e9EZRSWIiFGx1np9Vwxfs5x5NQ53vKDhtG4cWTXjTXR
+         Cl+zwf/ufAj5/JpjyWYyyz7eH3pOHbDEAX3WCpWYztlP6NXg3E7CujM3RMhrebI/iWts
+         kIwDZ3OB6Z32qnSp4QVo8SUwFMQ31YEstNwTC/Fc7lpl/JGrYHY3yx4MA72PakPxGF9S
+         wIDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767800097; x=1768404897;
+        d=1e100.net; s=20230601; t=1767800099; x=1768404899;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3n8Kb47Rl130Byxu0ad+8SvRWtkqSvh8ZeidUsu8Q2I=;
-        b=ueW0iXQgAZA3CgthfIXuHUpaLdRa8IlGgzKNS5wY6IoR0m/0XzqLgJ4IGyO6noJRGn
-         RblJw0CUOg4bnCihQ2FLMgedb1xNIbTvVbdr+yus1hqVmM1t9gSmhaT1CxF/Qe0R2x3l
-         OgS0AxJRCrZuxgDJy/acvtfgEJCT5LjZ0/H1vDam075sCOKIvu3cHj1j6sQ7x/P/JK1+
-         +v3oYD29osY+zKI1ebX5y67xpl5vZUs/MS9RMSCSB7ghSWQO1iHvXcfaiYiAeT9rCV2e
-         bi/N90XwzIMxU+y/dbwV9Twi6+b/5J/JjnESNnFiKW02zqAMRMk8lk4izhBlQgDZHTUU
-         1HhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRF72gKykA/zIP+qDeu09ALIF5728FNvFCaoWJUj9diLFzBW8jQq38LdeRE56KP+yMqi9BqX1SUq4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKsCU3lgzSRlrfojHcLV7YSCuqzRWmrbi+QE95WFqKfSYqTuOj
-	4Q7S6kBTqbbAg6blN1wakmknguP7nOfM3/YhByXi781EE2qYgJpKPHfq
-X-Gm-Gg: AY/fxX4cI8GhmyqHoTyOGt8tepbpzSE7vTkuCDrpLfb36VHYmsVeXD6i65mFpSxbC4u
-	/ttbuIcboKNu2RD98HATlwcplExu55EQX7emfFfBAD7HZlRQBQw4swHgI0DSKCxs8g0a+oQEnKN
-	N632CQ21HiN7I7s7UxGnkDfn+10D27JI+eyE9EwHPFYH6vGIRDo7I4ddDf0IsoZlrUoz/+uLJy0
-	J6ZEIZjarVXep5I4U/jeztmYjmkD3eu1byJ8knaD0538+knb78ZlammdFPZ1+K5MOv2ZKg47Pn1
-	zb0GelE7n1R8qBbnJh2Nq94m5rude5+1h6IlYLEtmXUA37+iAgPVqCHrFoVKoFiHYnIgxLdUimS
-	SogJIqFKA2srK/eNKnFCEcqXadAs38ghF9klLOnhkoheP+b6Jkk2vFh+l4kuRE8vfX1mrZG3OHF
-	6Nz+bBfdXiQ8EDDvszTxuJ09WUC9TpA8AaqBa0CUrtnFmD
-X-Google-Smtp-Source: AGHT+IEkv++nP1XZgFGglQlyqUlGW3kCUi7rPnay9ZMhKErbt4qPcz86yrkR1ubRTqfHLlOPMJj8bg==
-X-Received: by 2002:a05:6808:16a8:b0:45a:55e6:f5d6 with SMTP id 5614622812f47-45a6bd87897mr1217540b6e.12.1767800096765;
-        Wed, 07 Jan 2026 07:34:56 -0800 (PST)
+        bh=OPrNuirfi0NELPHMFcu/1KlJClDuCwOT8DJm2N/JJag=;
+        b=svwS2f1Lcol2w7G+XQsJt3+IOLDSrg8oIM/C+VZwEU0cHg0UYEEub3gN7+eoaR+uXz
+         ZMGjFlJ/BjjhAhNOTWLN+N5l0ZWzhiByeAkVSstt2O8r0L12iBA8jDF3h7+c+aeo1mrA
+         r492KbhsCMUO4oDH2F+A/d+SdwGMX2S+mCeB8PRamCCSFfb2NtbQ4GSz13h7BzIOzD6E
+         /W4mx9SYGxjQ5gV74FEq1epooWPKyqfBRNuT/wegWPPaJaYLN1qzCrvwS8UM0XS5dU8V
+         0ASnTpiGlXIUSjQEhWcnbFkrJxIMzAQzxwW74d+QuSa04frKtNYk0S0mWaD/AOvav0/X
+         7i7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXF2U2cfooIo7BrC7HHybg2y0xGIAXGRqLja23ySuJ6yMDgeBIScEAePcLsZUZLiWskNPZ7oQVX+as=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTkOMXxrWStFNbBJ558ZV8LPptW9y6f5OouKn4B815zN98s4WO
+	U+pStAUOlNIv2hP6n/urTqdygshiYojZ1/iWLGvfW/VpagV8jvBQTJBh
+X-Gm-Gg: AY/fxX5HyzBs5XyQganQHuDchN6aJTgf73Kd/Axr4UKciTZixRjl7IybPfPBqhMpkeM
+	Ey4AeYzgTEyFZ/7KFE/bTtTV6VdrwKOg5O+yH2IuHAufPxr9VUk3vHBwzjpF4D7Ukj7byGJ8ZKp
+	6GYDlgPvWo432KzayBgBqX5MXkb5zyijr+Azz+Lz/COX3tbWCMKyQ+52R1RaObyUfpVuWMKPW3g
+	Dr69OQaY9AfKCl+vxAdhny33HtRHoN6gFdZJTpdOM6c7oQ+/lvKwmarvP/prJ7U1YCV9ljrWJry
+	TJkqgUwXSPXazzVHpRmMGZwCuW+DVm/t7A9y38tY+Wio0whj93/OWQxwdYuxKfpyS1J7pIRLmSb
+	pocKhkJ48iX0ExTnYd4vYAYcOre+gl/36RaGd0mLS7n+ymSg+iIUTpal4uzI4h7CKwWd0UDXD6f
+	SMPzRCTShlWK++oeD6ecnbpAtmWnd7+LV5W8YTHAxMiFxK
+X-Google-Smtp-Source: AGHT+IFUAwqlKPFZxOP8hKjN3yWWiewXwLTUZV8MqKGeOfhFctvOkPQ3NvPc2aDZQl4je/LWLvX3LQ==
+X-Received: by 2002:a05:6808:3206:b0:450:c877:fd6f with SMTP id 5614622812f47-45a6befa901mr1333720b6e.67.1767800099405;
+        Wed, 07 Jan 2026 07:34:59 -0800 (PST)
 Received: from localhost.localdomain ([2603:8080:1500:3d89:a917:5124:7300:7cef])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-45a5e183ac3sm2398424b6e.4.2026.01.07.07.34.54
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-45a5e183ac3sm2398424b6e.4.2026.01.07.07.34.57
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 07 Jan 2026 07:34:56 -0800 (PST)
+        Wed, 07 Jan 2026 07:34:59 -0800 (PST)
 Sender: John Groves <grovesaustin@gmail.com>
 From: John Groves <John@Groves.net>
 X-Google-Original-From: John Groves <john@groves.net>
@@ -101,9 +101,9 @@ Cc: John Groves <jgroves@micron.com>,
 	linux-cxl@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
 	John Groves <john@groves.net>
-Subject: [PATCH V3 3/4] fuse: add API to set kernel mount options
-Date: Wed,  7 Jan 2026 09:34:42 -0600
-Message-ID: <20260107153443.64794-4-john@groves.net>
+Subject: [PATCH V3 4/4] fuse: add famfs DAX fmap support
+Date: Wed,  7 Jan 2026 09:34:43 -0600
+Message-ID: <20260107153443.64794-5-john@groves.net>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260107153443.64794-1-john@groves.net>
 References: <20260107153244.64703-1-john@groves.net>
@@ -116,106 +116,157 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add fuse_add_kernel_mount_opt() to allow libfuse callers to pass
-additional mount options directly to the kernel. This enables
-filesystem-specific kernel mount options that aren't exposed through
-the standard libfuse mount option parsing.
+Add new FUSE operations and capability for famfs DAX file mapping:
 
-For example, famfs uses this to set the "shadow=" mount option
-for shadow file system mounts.
+- FUSE_CAP_DAX_FMAP: New capability flag at bit 32 (using want_ext/capable_ext
+  fields) to indicate kernel and userspace support for DAX fmaps
 
-API addition:
-  int fuse_add_kernel_mount_opt(struct fuse_session *se, const char *mount_opt)
+- GET_FMAP: New operation to retrieve a file map for DAX-mapped files.
+  Returns a fuse_famfs_fmap_header followed by simple or interleaved
+  extent descriptors. The kernel passes the file size as an argument.
+
+- GET_DAXDEV: New operation to retrieve DAX device info by index.
+  Called when GET_FMAP returns an fmap referencing a previously
+  unknown DAX device.
+
+These operations enable FUSE filesystems to provide direct access
+mappings to persistent memory, allowing the kernel to map files
+directly to DAX devices without page cache intermediation.
 
 Signed-off-by: John Groves <john@groves.net>
 ---
- include/fuse_lowlevel.h | 10 ++++++++++
- lib/fuse_i.h            |  1 +
- lib/fuse_lowlevel.c     |  5 +++++
- lib/fuse_versionscript  |  1 +
- lib/mount.c             |  8 ++++++++
- 5 files changed, 25 insertions(+)
+ include/fuse_common.h   |  5 +++++
+ include/fuse_lowlevel.h | 37 +++++++++++++++++++++++++++++++++++++
+ lib/fuse_lowlevel.c     | 31 ++++++++++++++++++++++++++++++-
+ 3 files changed, 72 insertions(+), 1 deletion(-)
 
-diff --git a/include/fuse_lowlevel.h b/include/fuse_lowlevel.h
-index 016f831..d2bbcca 100644
---- a/include/fuse_lowlevel.h
-+++ b/include/fuse_lowlevel.h
-@@ -2195,6 +2195,16 @@ static inline int fuse_session_custom_io(struct fuse_session *se,
- }
- #endif
+diff --git a/include/fuse_common.h b/include/fuse_common.h
+index 041188e..e428ddb 100644
+--- a/include/fuse_common.h
++++ b/include/fuse_common.h
+@@ -512,6 +512,11 @@ struct fuse_loop_config_v1 {
+  */
+ #define FUSE_CAP_OVER_IO_URING (1UL << 31)
  
 +/**
-+ * Allow a libfuse caller to directly add kernel mount opts
-+ *
-+ * @param se session object
-+ * @param mount_opt the option to add
-+ *
-+ * @return 0 on success, -1 on failure
++ * handle files that use famfs dax fmaps
 + */
-+int fuse_add_kernel_mount_opt(struct fuse_session *se, const char *mount_opt);
++#define FUSE_CAP_DAX_FMAP (1UL<<32)
 +
  /**
-  * Mount a FUSE file system.
+  * Ioctl flags
   *
-diff --git a/lib/fuse_i.h b/lib/fuse_i.h
-index 65d2f68..41285d2 100644
---- a/lib/fuse_i.h
-+++ b/lib/fuse_i.h
-@@ -220,6 +220,7 @@ void destroy_mount_opts(struct mount_opts *mo);
- void fuse_mount_version(void);
- unsigned get_max_read(struct mount_opts *o);
- void fuse_kern_unmount(const char *mountpoint, int fd);
-+int __fuse_add_kernel_mount_opt(struct fuse_session *se, const char *mount_opt);
- int fuse_kern_mount(const char *mountpoint, struct mount_opts *mo);
+diff --git a/include/fuse_lowlevel.h b/include/fuse_lowlevel.h
+index d2bbcca..55fcfd7 100644
+--- a/include/fuse_lowlevel.h
++++ b/include/fuse_lowlevel.h
+@@ -1341,6 +1341,43 @@ struct fuse_lowlevel_ops {
+ 	 */
+ 	void (*statx)(fuse_req_t req, fuse_ino_t ino, int flags, int mask,
+ 		      struct fuse_file_info *fi);
++
++	/**
++	 * Get a famfs/devdax/fsdax fmap
++	 *
++	 * Retrieve a file map (aka fmap) for a previously looked-up file.
++	 * The fmap is serialized into the buffer, anchored by
++	 * struct fuse_famfs_fmap_header, followed by one or more
++	 * structs fuse_famfs_simple_ext, or fuse_famfs_iext (which itself
++	 * is followed by one or more fuse_famfs_simple_ext...
++	 *
++	 * Valid replies:
++	 *    fuse_reply_buf  (TODO: variable-size reply)
++	 *    fuse_reply_err
++	 *
++	 * @param req request handle
++	 * @param ino the inode number
++	 */
++	void (*get_fmap) (fuse_req_t req, fuse_ino_t ino, size_t size);
++
++	/**
++	 * Get a daxdev by index
++	 *
++	 * Retrieve info on a daxdev by index. This will be called any time
++	 * GET_FMAP has returned a file map that references a previously
++	 * unused daxdev. struct famfs_simple_ext, which is used for all
++	 * resolutions to daxdev offsets, references daxdevs by index.
++	 * In user space we maintain a master list of all referenced daxdevs
++	 * by index, which is queried by get_daxdev.
++	 *
++	 * Valid replies:
++	 *    fuse_reply_buf
++	 *    fuse_reply_err
++	 *
++	 * @param req request handle
++	 * @param ino the index of the daxdev
++	 */
++	void (*get_daxdev) (fuse_req_t req, int daxdev_index);
+ };
  
- int fuse_send_reply_iov_nofree(fuse_req_t req, int error, struct iovec *iov,
+ /**
 diff --git a/lib/fuse_lowlevel.c b/lib/fuse_lowlevel.c
-index 0cde3d4..413e7c3 100644
+index 413e7c3..c3adfa2 100644
 --- a/lib/fuse_lowlevel.c
 +++ b/lib/fuse_lowlevel.c
-@@ -4349,6 +4349,11 @@ int fuse_session_custom_io_30(struct fuse_session *se,
- 			offsetof(struct fuse_custom_io, clone_fd), fd);
+@@ -2769,7 +2769,8 @@ _do_init(fuse_req_t req, const fuse_ino_t nodeid, const void *op_in,
+ 			se->conn.capable_ext |= FUSE_CAP_NO_EXPORT_SUPPORT;
+ 		if (inargflags & FUSE_OVER_IO_URING)
+ 			se->conn.capable_ext |= FUSE_CAP_OVER_IO_URING;
+-
++		if (inargflags & FUSE_DAX_FMAP)
++			se->conn.capable_ext |= FUSE_CAP_DAX_FMAP;
+ 	} else {
+ 		se->conn.max_readahead = 0;
+ 	}
+@@ -2932,6 +2933,8 @@ _do_init(fuse_req_t req, const fuse_ino_t nodeid, const void *op_in,
+ 		outargflags |= FUSE_REQUEST_TIMEOUT;
+ 		outarg.request_timeout = se->conn.request_timeout;
+ 	}
++	if (se->conn.want_ext & FUSE_CAP_DAX_FMAP)
++		outargflags |= FUSE_DAX_FMAP;
+ 
+ 	outarg.max_readahead = se->conn.max_readahead;
+ 	outarg.max_write = se->conn.max_write;
+@@ -3035,6 +3038,30 @@ static void do_destroy(fuse_req_t req, fuse_ino_t nodeid, const void *inarg)
+ 	_do_destroy(req, nodeid, inarg, NULL);
  }
  
-+int fuse_add_kernel_mount_opt(struct fuse_session *se, const char *mount_opt)
++static void
++do_get_fmap(fuse_req_t req, fuse_ino_t nodeid, const void *inarg)
 +{
-+	return __fuse_add_kernel_mount_opt(se, mount_opt);
++	struct fuse_session *se = req->se;
++	struct fuse_getxattr_in *arg = (struct fuse_getxattr_in *) inarg;
++
++	if (se->op.get_fmap)
++		se->op.get_fmap(req, nodeid, arg->size);
++	else
++		fuse_reply_err(req, -EOPNOTSUPP);
 +}
 +
- int fuse_session_mount(struct fuse_session *se, const char *_mountpoint)
- {
- 	int fd;
-diff --git a/lib/fuse_versionscript b/lib/fuse_versionscript
-index f9562b6..536569a 100644
---- a/lib/fuse_versionscript
-+++ b/lib/fuse_versionscript
-@@ -220,6 +220,7 @@ FUSE_3.18 {
- 
- 		fuse_reply_statx;
- 		fuse_fs_statx;
-+		fuse_add_kernel_mount_opt;
- } FUSE_3.17;
- 
- FUSE_3.19 {
-diff --git a/lib/mount.c b/lib/mount.c
-index 7a856c1..e6c2305 100644
---- a/lib/mount.c
-+++ b/lib/mount.c
-@@ -674,6 +674,14 @@ void destroy_mount_opts(struct mount_opts *mo)
- 	free(mo);
- }
- 
-+int __fuse_add_kernel_mount_opt(struct fuse_session *se, const char *mount_opt)
++static void
++do_get_daxdev(fuse_req_t req, fuse_ino_t nodeid, const void *inarg)
 +{
-+	if (!se->mo)
-+		return -1;
-+	if (!mount_opt)
-+		return -1;
-+	return fuse_opt_add_opt(&se->mo->kernel_opts, mount_opt);
++	struct fuse_session *se = req->se;
++	(void)inarg;
++
++	if (se->op.get_daxdev)
++		se->op.get_daxdev(req, nodeid); /* Use nodeid as daxdev_index */
++	else
++		fuse_reply_err(req, -EOPNOTSUPP);
 +}
- 
- int fuse_kern_mount(const char *mountpoint, struct mount_opts *mo)
++
+ static void list_del_nreq(struct fuse_notify_req *nreq)
  {
+ 	struct fuse_notify_req *prev = nreq->prev;
+@@ -3470,6 +3497,8 @@ static struct {
+ 	[FUSE_LSEEK]	   = { do_lseek,       "LSEEK"	     },
+ 	[FUSE_STATX]	   = { do_statx,       "STATX"	     },
+ 	[CUSE_INIT]	   = { cuse_lowlevel_init, "CUSE_INIT"   },
++	[FUSE_GET_FMAP]	   = { do_get_fmap, "GET_FMAP"       },
++	[FUSE_GET_DAXDEV]  = { do_get_daxdev, "GET_DAXDEV"   },
+ };
+ 
+ static struct {
 -- 
 2.49.0
 
