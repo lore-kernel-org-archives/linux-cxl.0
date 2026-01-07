@@ -1,62 +1,64 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EDB34C124
-	for <linux-cxl@vger.kernel.org>; Wed,  7 Jan 2026 17:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9FE34164B
+	for <linux-cxl@vger.kernel.org>; Wed,  7 Jan 2026 17:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767806841; cv=none; b=K0XT8jCGUYpURdBvzb2xRUhUmn85k0qfqs8uwsWfeMxzj32ZcAu5sOlfeEEU93hqs0jJUCOZSp1tGSKxfBcRYVWvxS275ayXW+5BgTuNND2wY37Li2WCL88m1CBnMCoWo1V73q9EY8DVkMj+V8EQwtYXpL4UnCH+YYdX4kcjLVc=
+	t=1767807332; cv=none; b=cjh7qhBp5g7oc4Kk6HVN1+cyKztiMgalWIaLIv47dmXV5q4O02MUAYtaUKDbtf5X9Pn7rJqtKrmUJIs9dBsTPOypM5i242HlBhPt2oaXq3wY8/6PobJt4lkagvOFDicffMkprj4l3Us9oixNWqDH4A5nj4b25Fzf27g0g9w9Knc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767806841; c=relaxed/simple;
-	bh=Ttkg2XpXdV7mU4TtIvuypgDn9POxEKCuiqAdPxPROfQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dhrf84F6Dnh0iPPQSoXd2hpI+hfLRYDMqSYNoJnxp3v8attHEgJRoKmjP+lBThFL3kTy5dLJA1iQdI+bMXV5XP3CcGV6Q6pooo7vasLZAd86KGQ9BHmd0XDDsgIzgcp7I/9hd7tMFxoEA3yN3cbhH/h0D57B+7O7eDRqm3gEalg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RhqxfTrs; arc=none smtp.client-ip=209.85.210.181
+	s=arc-20240116; t=1767807332; c=relaxed/simple;
+	bh=JZb4un39BlPP+OGm49xPg22uNlLarYMy/HsntlA1Vg4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ft+xUdbh9YBoWxusIFhxo4biYjMXu49Ooytb2uiZI8FXYtl6L22egM+BarYr/oLCKRXXUIU/5Hrc8V1aK4VozRbGp4Ms0zupMnkhI86VJDo7If8ZrJeoOnYO4n+z19Y+SfbW7U31Vv/jcb6TtFZ7H9QECOd5mreKKnt17azwccg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YBuGQcBt; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RhqxfTrs"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7bb710d1d1dso2599982b3a.1
-        for <linux-cxl@vger.kernel.org>; Wed, 07 Jan 2026 09:27:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YBuGQcBt"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-29f1bc40b35so28299865ad.2
+        for <linux-cxl@vger.kernel.org>; Wed, 07 Jan 2026 09:35:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767806826; x=1768411626; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=smDhjw69opHcgwAO6wrw0z059aJcdcN+GUjt6JFpHNc=;
-        b=RhqxfTrst4ZYWbVGwexHqhF3wZK9bRo4MGeBDpbx8lNrUU9X7XiYFhmePeT/2lxqRg
-         KgaylNXhJ6gzRocZ2JDKFO8KFH7G+gveU00ZZ//MpcJcDpOPoVjO6DGADzJYFrvXUhjN
-         LOpikDt9flu0vP572sMn73IpPSNDHwq9GW8m4BEZ1r69SwHPXGe/BQacKW0O0nm1aamj
-         AncYBeNCqwgTHuNtmrK97geCDX8tajzx+duPRWjNPXTaW88Mqg1w7HbZR/m/a1XyWNm0
-         O+eS7ckOKBE75JeZT2xCAaDmnn7qDD8UWt5r9cTwi7uMlPmJkv1bOdFyFq5nVAOlwVeg
-         nfEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767806826; x=1768411626;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1767807330; x=1768412130; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=smDhjw69opHcgwAO6wrw0z059aJcdcN+GUjt6JFpHNc=;
-        b=v4pz4eQaP6OSLogyHE8bVU/7KhRnIs5Tf4taG19wyBSlx0jy6Vnn6C7JCohF0wTXK9
-         ln1ksATHGcbvSzelyvRmzE3VQoryamh3uCoU/0benHiM0DUq/QJfbsynHnRz9sBfHRwz
-         fDwmtTrPVaUbyjy0ysDDMLHbhP78o0Ym5q49hIE/IGMtqcySMyGieK9wO33VI2csifLs
-         nw3HJlliy1oETGc6781HaGUhFpS+EPr2XV9Se8wcFoWPzvA4mJnk3j0wjgMckBfPc67Y
-         L9EBDsEoe6yE3F7+9mQxSnBI00sOXY6e+P7+1h25P929r9wrJ8J1Wa/3hljHYzOxfAwM
-         Zfsg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjyXEIKy3Q4LEIoTd8OIi8eM6uxh9QM93WT3+keuaH/Yd4hGZcJFDowYKU5gxVCmOUIfNdLEsijqc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxBFHHqLniQtd9yNBnVY8/NgBWzZI8S2eEEw1IklhKJVgNjZqN
-	KwJr5DuS3xap0DYwPT9e+5fl82ibGKbURl44E1Tfe//O5ZVt01zVkjaB
-X-Gm-Gg: AY/fxX6yZD4F/bfDr/+CGJtLw1+7c+Izq4x4Qwy7bYfmwlQ6Y+ZOKel7PyAFncQYMzE
-	9E8zqpGTJjPgTdPv7YwHpXTx5V6EHFIco+IatIr60sybLTZRfOpnvhoGvkhUp2jWE4BNW/iggCx
-	LtXlZJM1yXc1irOIJb7Eql5v3V8I0xEhyydPazdhy6j4lMILYpcmTFP4JzuncbA0fftXUV0p0Q3
-	TBgGDxgVj42klXL/z4MhlHH4qoRqlaZGo/x8KJBz1uo6bZYAOmGAmxSAQVpAfuW52OGcLYqoBVM
-	2Lx3rMcEoGRNk8qIVe3IuzZXd1Fm0Mo+6Idc/lqnPBe7TH+bYqQVWOXOYCWq6R2FERPLUZ/EqOE
-	0GQvmB2dOPgLQVlQkeXOHVIFZoiGMmsXU7+h3NwuyEB9IlYa46IWUrRmJTAYrrBRT48U6/ILURR
-	WzE29gHNDQb5lZ16bcXy+8xbAZh1J+cyJNC0SSAPyp0LKP
-X-Google-Smtp-Source: AGHT+IGk3VZwDE/lNocDKTrmheVpB/dJskVwCoQ351Cwl656mI6EkUE/J2SR25sUuHffBBW1+p+c1g==
-X-Received: by 2002:a05:6808:668c:10b0:45a:7773:9013 with SMTP id 5614622812f47-45a77739cc0mr200634b6e.21.1767799968204;
-        Wed, 07 Jan 2026 07:32:48 -0800 (PST)
+        bh=txgoLEmMjHER+EBzHDKZOrkZdUQtWotXYsSwAupxNQg=;
+        b=YBuGQcBtTKHkdGoSsSQfROawhzW5Lfa1axoLwUoOu4+ineF1WJ1XNvf/3/EKdo1KV4
+         cJfvKBaUjwAbX3IqN54QTwH5qoLJoXlk379eN8pJk7f0nI/B4a6EHn7enuu0oQJ4GqAq
+         q0l2HMzARyeBOW5OX56AUmDiulouZY3Yb36EsS2bA6luqg6qUYl6xfgU5P+ISiCa6iXT
+         NebWCWqd1UwoLYVVXdb6mfUIGHKAaCsCxUYxDarvLPI9Jr/Kfi6fVeNXQKsOiB8mPoFz
+         BraNVCGmRzPjU0AkJWNnRp/KvTpB5I+MVBeNPTWpxAhVM6V8FrQ8AJinfzoPIWtfz+Ix
+         wnFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767807330; x=1768412130;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=txgoLEmMjHER+EBzHDKZOrkZdUQtWotXYsSwAupxNQg=;
+        b=upnlIyfZ9AiPhtjTfKfp06+L8aUYXu35pVjXAvoe9BplEMYJoUdkQgrdzIXggwO8Ca
+         0BcinvM1ighNJsWI00EhlxtbeHYub1bVpq87JFp+tjI1KOdxdNfSFn+Dq7iiExeUGAck
+         Dv3KiRkCfj9h4qTPapp+lMnaGG7VmrqgiHE7SUd/H9yzv69+9M6Ek7Wsklcv6iiuY71I
+         k9vkgwF1waMXyqILGjt4kOPOOGae2AQjq+qjl8GaITGd1u10yjggXJ90+2hssNii60xA
+         N2E7oREP/4TrGRPFBWhEUeMpiX5dKi5P5PL9Azw1z6mCfBhcKsPBRbfFN99qmjvzMhFh
+         fkUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVsvgdM5VrvKmN+1kFZv/s46HBtJsAGVQpjqpER9fFK3m1aGGFYKEv96qrOpPWdi9cgm4/6cCTO10Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJK1rOBgOBoxM39vFLutQnFrq64KRZNkz+3z+conz1/ZEeju8f
+	PK2IIEZEVq/y2sDnOVV6v/CA4wH4dCPVLne2AEq6VuK3JVLiSU70+/eOKTQKoQ==
+X-Gm-Gg: AY/fxX7V6femG8bFV7mjpiJYpGW9vx8Ch5KOZTxvX4DjF8GtCBC1OapnbX0jk9UJXC9
+	uCQyTZtP/Cu4cLFivrr+hH0Te9KdPuefUmpCC6QIBhSVSLJ3QLDjVR3vaZZQ6KygXEbyVf0zufi
+	1BjoX/pZyU7MyXNb1QxfVqLcyQ+eYrGgDTs7gvXoL5jVEMWG+wtjuKykPVDzBsPOTmga4Hr8/Ii
+	lqmZfBj5XqEJhvEWPYScxEbbud4M4+aeze1803RhQYVUgnhigY8UYvVC8I3Ul9OZcb+Wk0ro87R
+	VXKmo1mXFwS7/ZW+zoLuW74/cBvzBPUjzHnkaUIPAgi/Mc4HwUjVFobNhy5ixPRCc1L3M4DNcJ6
+	ZpTK0QK8B1IQEdQ03sA4sUkuhJ5HbJ06YtnLr3lwu9hpXtNglUI7BtX3hkRGnbSbuS6taZYChAS
+	s/7ZIdjjoWlpP8ZGsvrz8fTJ4AaNy7/9bBNO9TdKGwP4Gj
+X-Google-Smtp-Source: AGHT+IFI7aw5Hflr3Zesdi0nYazb40KN8jZ7mrRBERbvb07PBqlelReQ+seRv6/V7wYnwshvoEme0w==
+X-Received: by 2002:a05:6808:144e:b0:450:b14:7a6a with SMTP id 5614622812f47-45a6bef2392mr1217539b6e.60.1767800088459;
+        Wed, 07 Jan 2026 07:34:48 -0800 (PST)
 Received: from localhost.localdomain ([2603:8080:1500:3d89:a917:5124:7300:7cef])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7ce478af8b2sm3393292a34.15.2026.01.07.07.32.45
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-45a5e183ac3sm2398424b6e.4.2026.01.07.07.34.46
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 07 Jan 2026 07:32:47 -0800 (PST)
+        Wed, 07 Jan 2026 07:34:48 -0800 (PST)
 Sender: John Groves <grovesaustin@gmail.com>
 From: John Groves <John@Groves.net>
 X-Google-Original-From: John Groves <john@groves.net>
@@ -97,11 +99,14 @@ Cc: John Groves <jgroves@micron.com>,
 	linux-kernel@vger.kernel.org,
 	nvdimm@lists.linux.dev,
 	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH BUNDLE] famfs: Fabric-Attached Memory File System
-Date: Wed,  7 Jan 2026 09:32:44 -0600
-Message-ID: <20260107153244.64703-1-john@groves.net>
+	linux-fsdevel@vger.kernel.org,
+	John Groves <john@groves.net>
+Subject: [PATCH V3 0/4] libfuse: add basic famfs support to libfuse
+Date: Wed,  7 Jan 2026 09:34:39 -0600
+Message-ID: <20260107153443.64794-1-john@groves.net>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20260107153244.64703-1-john@groves.net>
+References: <20260107153244.64703-1-john@groves.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -110,77 +115,33 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is a coordinated patch submission for famfs (Fabric-Attached Memory
-File System) across three repositories:
 
-  1. Linux kernel (21 patches) - dax fsdev driver + fuse/famfs integration
-  2. libfuse (4 patches) - famfs protocol support for fuse servers
-  3. ndctl/daxctl (2 patches) - support for the new "famfs" devdax mode
+This short series adds adds the necessary support for famfs to libfuse.
 
-Each series is posted as a reply to this cover message, with individual
-patches replying to their respective series cover.
-
-Overview
---------
-Famfs exposes shared memory as a file system. It consumes shared memory
-from dax devices and provides memory-mappable files that map directly to
-the memory with no page cache involvement. Famfs differs from conventional
-file systems in fs-dax mode in that it handles in-memory metadata in a
-sharable way (which begins with never caching dirty shared metadata).
-
-Famfs started as a standalone file system [1,2], but the consensus at
-LSFMM 2024 and 2025 [3,4] was that it should be ported into fuse.
-
-The key performance requirement is that famfs must resolve mapping faults
-without upcalls. This is achieved by fully caching the file-to-devdax
-metadata for all active files via two fuse client/server message/response
-pairs: GET_FMAP and GET_DAXDEV.
-
-Patch Series Summary
---------------------
-
-Linux Kernel (V3, 21 patches):
-  - dax: New fsdev driver (drivers/dax/fsdev.c) providing a devdax mode
-    compatible with fs-dax. Devices can be switched among 'devdax', 'fsdev'
-    and 'system-ram' modes via daxctl or sysfs.
-  - fuse: Famfs integration adding GET_FMAP and GET_DAXDEV messages for
-    caching file-to-dax mappings in the kernel.
-
-libfuse (V2, 4 patches):
-  - Updates fuse_kernel.h to kernel 6.19 baseline
-  - Adds famfs DAX fmap protocol definitions
-  - Adds API for kernel mount options
-  - Implements famfs DAX fmap support for fuse servers
-
-ndctl/daxctl (2 patches):
-  - Adds daxctl support for the new "famfs" mode of devdax
-  - Adds test/daxctl-famfs.sh for testing mode transitions
-
-Changes Since V2 (kernel)
--------------------------
-- Dax: Completely new fsdev driver replaces the dev_dax_iomap modifications.
-  Uses MEMORY_DEVICE_FS_DAX type with order-0 folios for fs-dax compatibility.
-- Dax: The "poisoned page" problem is properly fixed via fsdev_clear_folio_state()
-  which clears stale mapping/compound state when fsdev binds.
-- Dax: Added dax_set_ops() and driver unbind protection while filesystem mounted.
-- Fuse: Famfs mounts require CAP_SYS_RAWIO (exposing raw memory devices).
-- Fuse: Added DAX address_space_operations with noop_dirty_folio.
-- Rebased to latest kernels, compatible with recent dax refactoring.
-
-Testing
--------
-The famfs user space [5] includes comprehensive smoke and unit tests that
-exercise all three components together. The ndctl series includes a
-dedicated test for famfs mode transitions.
+This series is also a pull request at [1].
 
 References
-----------
-[1] https://lore.kernel.org/linux-cxl/cover.1708709155.git.john@groves.net/
-[2] https://lore.kernel.org/linux-cxl/cover.1714409084.git.john@groves.net/
-[3] https://lwn.net/Articles/983105/ (LSFMM 2024)
-[4] https://lwn.net/Articles/1020170/ (LSFMM 2025)
-[5] https://famfs.org (famfs user space)
-[6] https://lore.kernel.org/linux-cxl/20250703185032.46568-1-john@groves.net/ (V2)
 
---
-John Groves
+[1] - https://github.com/libfuse/libfuse/pull/1414
+
+
+John Groves (4):
+  fuse_kernel.h: bring up to baseline 6.19
+  fuse_kernel.h: add famfs DAX fmap protocol definitions
+  fuse: add API to set kernel mount options
+  fuse: add famfs DAX fmap support
+
+ include/fuse_common.h   |  5 +++
+ include/fuse_kernel.h   | 98 ++++++++++++++++++++++++++++++++++++++++-
+ include/fuse_lowlevel.h | 47 ++++++++++++++++++++
+ lib/fuse_i.h            |  1 +
+ lib/fuse_lowlevel.c     | 36 ++++++++++++++-
+ lib/fuse_versionscript  |  1 +
+ lib/mount.c             |  8 ++++
+ 7 files changed, 194 insertions(+), 2 deletions(-)
+
+
+base-commit: 6278995cca991978abd25ebb2c20ebd3fc9e8a13
+-- 
+2.49.0
+
