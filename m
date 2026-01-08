@@ -1,229 +1,168 @@
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8B223C505
-	for <linux-cxl@vger.kernel.org>; Thu,  8 Jan 2026 15:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1502921B9C5;
+	Thu,  8 Jan 2026 16:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767887955; cv=none; b=bEm+jbomddAMq33SeVchVGzcQw4zxvPAzIZLzUY91gDkjf9LZGVDM9St9T+Omw+SteMF/Qdnh0JpVoqyrk/kXsPP9S3wsxqpBGhBLBmXVk//xIeHAm0OHgv8D92qS/ptKcMGQ5VZ2z3C6czx5YzmLhDkOhhgYlzPl62DphQ2S78=
+	t=1767888523; cv=none; b=prGtMJhqcnFKMohh95jpXEuAp+ouYy7FZPeN4VcsuRiVMwYHPq4KbN4dOEMn459El45xdifcVnC5S5rqu6Bch+yeQ8TpjD/LkL6anKT0L0wa2ayA8lefy8rTXfEE5I1HO/k406Inj5ihI3yBDSE3uZT/Xm0mYu/OkvMdV33gTfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767887955; c=relaxed/simple;
-	bh=41MAT2/GQhUhZZZxTkEgC7wOnFJQ5cRRMtMK8ZjDIpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FMUADiihHvMn+aQ4YRf4gAo4UD/GuscCEcs7QpP33aDDbJavqMveL3T5Zasw+9gLy9INHzpupRue3Z1XQQvUQdCj26nXRkq21yKEyP4DYqaQlBJFFaWlKJiD2dpu2e8h+gqe3zxD3qEZMTC5573coppB7MF30qJ2ArNLJM/YL1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kXW/Km/O; arc=none smtp.client-ip=209.85.167.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kXW/Km/O"
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-4503ee5c160so2075868b6e.1
-        for <linux-cxl@vger.kernel.org>; Thu, 08 Jan 2026 07:59:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767887951; x=1768492751; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dP32v1J28ETzWwf3EZSCOYB/oPSc0qp3HyTWJMzhC1U=;
-        b=kXW/Km/OPmNOw89NSZHBQDs/yfznPv7d2BCz4acDpf+dHw23Eo9ntD0Bw0kfYsTnhJ
-         SPOasllJ+CQOylxcuMreJulVSeIkjuAXrJktEIGOL33Ei+ZKf6PvJmEKmRL2eJ6tbpZx
-         ZjpH20nJCQj9UU6p0L6ttv9Y5aVlFYzHKqupSQrCme3oFiPhG4+4Qw6+JnW0Nf4V3vqc
-         +zAqHSyE0IrmZmtbzfy5Ta9pl8+6mfX1Nhm4ND//2TavkKlM3a452bllDuCPz1Em8uu4
-         APiNsj7IZ2O303EO6cM+y8Ti5veg7fbdErl0x4iIqKdTb6FTLxXeXQ7DkQYgoc3Of95w
-         +eLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767887951; x=1768492751;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dP32v1J28ETzWwf3EZSCOYB/oPSc0qp3HyTWJMzhC1U=;
-        b=DVTjb129VuID6tDjLJeR54sABiaINKLt27K4Ro5dCVD0f43DvuqIXKY2A2aqeCM544
-         hyNfCNRaeEQvRV/kd/wMFOIuaCMU2X7UJ3SNt5laXTgmbycPE4LTyQW/uw5zBqM3KHv+
-         +q64fezJ34gRQNfuMF1ol5ae5yMdANirvhJZ1R0Yhy1rfk9nO2zb4s4Z0sXdV0cFGTfO
-         2O0EM4i9+lePx3JC5WCGwqI9iRie3WuEhnavmPoomcdOufJhXBAB2PE311hPQw7Iy6i3
-         U0Pq2zyYKHtB4j35lOE5fA7GX/7wOWfeVQUOk93QH/L2BgjdqVSVUzURRTgbw5IZ0bpC
-         +nOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVz9mt4eQzXMQY8SVKiwCfN296FtCgC4FjQKfZo3RFc5t8QdU23+Tt7Zobmu0o8SbJI4GMLQAH7opA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIWJgZFFiv0uDHuHB0WoOFwfuy9NZB251c6w07NAAkEY45r2jm
-	Qk4Y26d4djHvTOR3seqW0yxn3MnxpZdPl7sLn83hj86sgjUbALvtAoNn
-X-Gm-Gg: AY/fxX7Jxna+zLNvHaQaKWpuTFluSZ4/HwFkESOOR0yQ6CAKCbAcWphjzs3ELV5Oi7B
-	qxDEB+wL5Ne8Xzu9bx78by2OBfcTLxzGAJGOygY0j9aRzSnA8lQlwDouBqSPKGPaW8Cmub74TyE
-	RaQAzswnP50vpU1pDaLZdcpeW4UtjjFtAWBW7a2JO7GOV3seRUY1Tcdnklj1HlCRg6EUkaVEdnz
-	1pPAFPRtX5B1MIPPPVFEthwi3rZDztYCIRCR11P6+XxnX0eJZmySGIS6aifMSpBtRqWWIjkkwpM
-	RlzLcQZbyBkMONlz9Q6p1owYOHtjnxMpbkmOBoBbT/7R2fOQq9cPhF7xT98j1mEbjbcMbFga1sk
-	3Uig2gfjrIQ+lJomHrCoDZgY1tBDYZ7RxcLYm2tcuc7dG1dUzdsDCMs40JmJ5jOCSLTgZegyaNs
-	pl3bprcBVyjuLBy4CcZQZc/EbdBW/HrQ==
-X-Google-Smtp-Source: AGHT+IG8/pJiADBVJQcwYeuov1zJxNe4GKIPyzKZ3LLskqg6PZuOotYGSOumCQ8DG0Yg9NjTKaIQrg==
-X-Received: by 2002:a05:6808:c2a2:b0:45a:135c:4d80 with SMTP id 5614622812f47-45a6bec82dfmr2418714b6e.61.1767887951217;
-        Thu, 08 Jan 2026 07:59:11 -0800 (PST)
-Received: from groves.net ([2603:8080:1500:3d89:902b:954a:a912:b0f5])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-45a5e2894e0sm3614343b6e.13.2026.01.08.07.59.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jan 2026 07:59:10 -0800 (PST)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Thu, 8 Jan 2026 09:59:08 -0600
-From: John Groves <John@groves.net>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, venkataravis@micron.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V3 04/21] dax: Add dax_operations for use by fs-dax on
- fsdev dax
-Message-ID: <gqwlb6ept22edcuiwwzxkboeioin6l4afemn3lenbduuwbb357@tnkceo5764vf>
-References: <20260107153244.64703-1-john@groves.net>
- <20260107153332.64727-1-john@groves.net>
- <20260107153332.64727-5-john@groves.net>
- <20260108115037.00003295@huawei.com>
+	s=arc-20240116; t=1767888523; c=relaxed/simple;
+	bh=Nt0nEjSdwh+7d6YTXB4uo25bCCuH25fYNI9EoLGB5UQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UMwxRfdProv2jeqc7azDZljqNKFY2ZRFeF17cA4um5g8JGe55A7MuzjjrVDWKZYsOweDy8GGAPuDdpY3wtYyiO6KgTk/7Wfk0y8FvdOnQ5D8+2J0HR74zfXaeAc4bhTR86xjrIXc/Bt3VrTlx8GMP2bhZeDGZCYdFSEwIiauZhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.150])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dn8w06hV0zJ46B9;
+	Fri,  9 Jan 2026 00:08:32 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0602540563;
+	Fri,  9 Jan 2026 00:08:38 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 8 Jan
+ 2026 16:08:37 +0000
+Date: Thu, 8 Jan 2026 16:08:35 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Robert Richter <rrichter@amd.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] cxl/port: Fix target list setup for multiple
+ decoders sharing the same dport
+Message-ID: <20260108160835.0000092e@huawei.com>
+In-Reply-To: <20260108101324.509667-1-rrichter@amd.com>
+References: <20260108101324.509667-1-rrichter@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260108115037.00003295@huawei.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-On 26/01/08 11:50AM, Jonathan Cameron wrote:
-> On Wed,  7 Jan 2026 09:33:13 -0600
-> John Groves <John@Groves.net> wrote:
-> 
-> > From: John Groves <John@Groves.net>
-> > 
-> Hi John
-> 
-> The description should generally make sense without the title.
-> Sometimes that means more or less repeating the title.
-> 
-> A few other things inline.
+On Thu, 8 Jan 2026 11:13:23 +0100
+Robert Richter <rrichter@amd.com> wrote:
 
-Will do
-
+> If a switch port has more than one decoder that is using the same
+> downstream port, the enumeration of the target lists may fail with:
 > 
-> > * These methods are based on pmem_dax_ops from drivers/nvdimm/pmem.c
-> > * fsdev_dax_direct_access() returns the hpa, pfn and kva. The kva was
-> >   newly stored as dev_dax->virt_addr by dev_dax_probe().
-> > * The hpa/pfn are used for mmap (dax_iomap_fault()), and the kva is used
-> >   for read/write (dax_iomap_rw())
-> > * fsdev_dax_recovery_write() and dev_dax_zero_page_range() have not been
-> >   tested yet. I'm looking for suggestions as to how to test those.
-> > * dax-private.h: add dev_dax->cached_size, which fsdev needs to
-> >   remember. The dev_dax size cannot change while a driver is bound
-> >   (dev_dax_resize returns -EBUSY if dev->driver is set). Caching the size
-> >   at probe time allows fsdev's direct_access path can use it without
-> >   acquiring dax_dev_rwsem (which isn't exported anyway).
-> > 
-> > Signed-off-by: John Groves <john@groves.net>
+>  # dmesg | grep target.list
+>  update_decoder_targets: cxl decoder1.0: dport3 found in target list, index 3
+>  update_decoder_targets: cxl decoder1.0: dport2 found in target list, index 2
+>  update_decoder_targets: cxl decoder1.0: dport0 found in target list, index 0
+>  update_decoder_targets: cxl decoder2.0: dport3 found in target list, index 1
+>  update_decoder_targets: cxl decoder4.0: dport3 found in target list, index 1
+>  cxl_mem mem6: failed to find endpoint12:0000:00:01.4 in target list of decoder2.1
+>  cxl_mem mem8: failed to find endpoint13:0000:20:01.4 in target list of decoder4.1
 > 
-> > diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
-> > index c5c660b193e5..9e2f83aa2584 100644
-> > --- a/drivers/dax/fsdev.c
-> > +++ b/drivers/dax/fsdev.c
-> > @@ -27,6 +27,81 @@
-> >   * - No mmap support - all access is through fs-dax/iomap
-> >   */
-> >  
-> > +static void fsdev_write_dax(void *pmem_addr, struct page *page,
-> > +		unsigned int off, unsigned int len)
-> > +{
-> > +	while (len) {
-> > +		void *mem = kmap_local_page(page);
+> The case, that the same downstream port can be used in multiple target
+> lists, is allowed and possible.
 > 
-> I guess it's pretty simple, but do we care about HIGHMEM for this
-> new feature?  Maybe it's just easier to support it than argue about it however ;)
-
-I think this compiles to zero overhead, and is an established pattern -
-but I'm ok following a consensus elsewhere...
-
+> Fix the update of the target list. Enumerate all children of the
+> switch port and do not stop the iteration after the first matching
+> target was found.
 > 
-> > +		unsigned int chunk = min_t(unsigned int, len, PAGE_SIZE - off);
-> > +
-> > +		memcpy_flushcache(pmem_addr, mem + off, chunk);
-> > +		kunmap_local(mem);
-> > +		len -= chunk;
-> > +		off = 0;
-> > +		page++;
-> > +		pmem_addr += chunk;
-> > +	}
-> > +}
-> > +
-> > +static long __fsdev_dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff,
-> > +			long nr_pages, enum dax_access_mode mode, void **kaddr,
-> > +			unsigned long *pfn)
-> > +{
-> > +	struct dev_dax *dev_dax = dax_get_private(dax_dev);
-> > +	size_t size = nr_pages << PAGE_SHIFT;
-> > +	size_t offset = pgoff << PAGE_SHIFT;
-> > +	void *virt_addr = dev_dax->virt_addr + offset;
-> > +	phys_addr_t phys;
-> > +	unsigned long local_pfn;
-> > +
-> > +	WARN_ON(!dev_dax->virt_addr);
-> > +
-> > +	phys = dax_pgoff_to_phys(dev_dax, pgoff, nr_pages << PAGE_SHIFT);
+> With the fix applied:
 > 
-> Use size given you already computed it.
-
-Not sure I follow. nr_pages is the size of the access or fault, not the size
-of the device. 
-
+>  # dmesg | grep target.list
+>  update_decoder_targets: cxl decoder1.0: dport2 found in target list, index 2
+>  update_decoder_targets: cxl decoder1.0: dport0 found in target list, index 0
+>  update_decoder_targets: cxl decoder1.0: dport3 found in target list, index 3
+>  update_decoder_targets: cxl decoder2.0: dport3 found in target list, index 1
+>  update_decoder_targets: cxl decoder2.1: dport3 found in target list, index 1
+>  update_decoder_targets: cxl decoder4.0: dport3 found in target list, index 1
+>  update_decoder_targets: cxl decoder4.1: dport3 found in target list, index 1
 > 
-> > +
-> > +	if (kaddr)
-> > +		*kaddr = virt_addr;
-> > +
-> > +	local_pfn = PHYS_PFN(phys);
-> > +	if (pfn)
-> > +		*pfn = local_pfn;
-> > +
-> > +	/*
-> > +	 * Use cached_size which was computed at probe time. The size cannot
-> > +	 * change while the driver is bound (resize returns -EBUSY).
-> > +	 */
-> > +	return PHYS_PFN(min_t(size_t, size, dev_dax->cached_size - offset));
+> Analyzing the conditions when this happens:
 > 
-> Is the min_t() needed?  min() is pretty good at picking right types these days.
-
-Changed to min()
-
+> 1) A dport is shared by multiple decoders.
 > 
-> > +}
-> > +
-> > +static int fsdev_dax_zero_page_range(struct dax_device *dax_dev,
-> > +			pgoff_t pgoff, size_t nr_pages)
-> > +{
-> > +	void *kaddr;
-> > +
-> > +	WARN_ONCE(nr_pages > 1, "%s: nr_pages > 1\n", __func__);
-> > +	__fsdev_dax_direct_access(dax_dev, pgoff, 1, DAX_ACCESS, &kaddr, NULL);
-> > +	fsdev_write_dax(kaddr, ZERO_PAGE(0), 0, PAGE_SIZE);
-> > +	return 0;
-> > +}
-> > +
-> > +static long fsdev_dax_direct_access(struct dax_device *dax_dev,
-> > +		  pgoff_t pgoff, long nr_pages, enum dax_access_mode mode,
-> > +		  void **kaddr, unsigned long *pfn)
-> > +{
-> > +	return __fsdev_dax_direct_access(dax_dev, pgoff, nr_pages, mode,
-> > +				       kaddr, pfn);
+> 2) The decoders have interleaving configured (ways > 1).
 > 
-> Alignment in this file is a bit random, but I'd at least align this one
-> after the (
+> The configuration above has the following hierarchy details (fixed
+> version):
+> 
+>  root0
+>  |_
+>  | |
+>  | decoder0.1
 
-Done, thanks!
+Hi Robert,
 
-John
+I'm struggling a bit to align this with the above prints. Where is
+decoder1.0 for example?  As it's below the root port, I think it's the
+host bridge decoder, which might be this one on your diagram?
+
+Fix makes sense to me.
+
+Jonathan
+
+
+>  | ways: 2
+>  | target_list: 0,1
+>  |_______________________________________
+>  |                                       |
+>  | dport0                                | dport1
+>  |                                       |
+>  port2                                   port4
+>  |                                       |
+>  |___________________                    |_____________________
+>  | |                 |                   | |                   |
+>  | decoder2.0        decoder2.1          | decoder4.0          decoder4.1
+>  | ways: 2           ways: 2             | ways: 2             ways: 2
+>  | target_list: 2,3  target_list: 2,3    | target_list: 2,3    target_list: 2,3
+>  |___________________                    |___________________
+>  |                   |                   |                   |
+>  | dport2            | dport3            | dport2            | dport3
+>  |                   |                   |                   |
+>  endpoint7           endpoint12          endpoint9           endpoint13
+>  |_                  |_                  |_                  |_
+>  | |                 | |                 | |                 | |
+>  | decoder7.0        | decoder12.0       | decoder9.0        | decoder13.0
+>  | decoder7.2        | decoder12.2       | decoder9.2        | decoder13.2
+>  |                   |                   |                   |
+>  mem3                mem5                mem6                mem8
+> 
+> Note: Device numbers vary for every boot.
+> 
+> Current kernel fails to enumerate endpoint12 and endpoint13 as the
+> target list is not updated for the second decoder.
+> 
+> Fixes: 4f06d81e7c6a ("cxl: Defer dport allocation for switch ports")
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+> v2:
+>  * updated sob-chain,
+>  * added fixes tag (Dave).
+> ---
+>  drivers/cxl/core/port.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index fef3aa0c6680..3310dbfae9d6 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1590,7 +1590,7 @@ static int update_decoder_targets(struct device *dev, void *data)
+>  			cxlsd->target[i] = dport;
+>  			dev_dbg(dev, "dport%d found in target list, index %d\n",
+>  				dport->port_id, i);
+> -			return 1;
+> +			return 0;
+>  		}
+>  	}
+>  
+> 
+> base-commit: 88c72bab77aaf389beccf762e112828253ca0564
+> prerequisite-patch-id: f44102a7b095afa1588a5cac012ec2e0d852c021
 
