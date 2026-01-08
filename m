@@ -1,239 +1,217 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948392EBDD9;
-	Thu,  8 Jan 2026 18:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767895638; cv=fail; b=HWpUo0X886Kld8hYrxeHRXzVhNvtbyXveS0Udx4zaNc5hHs54BLUJYGmvKGc03qf/PRhaAKbjZZt24naeSYSG/OGXaURkYG883SjCU5tig6Gr6CbTtX3W7VeQHslje+2/FMfWK6380/8p+xAfcBFKizJXGo/GxIoOSTtVkV2FP0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767895638; c=relaxed/simple;
-	bh=md3puLw8S9ahGIlAFsowrQal6GQVXSQlGQSIsbRx3Eo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=bGdaqa7a3uf1EGueQNW+qMwodhOwmGR/9le+z/Dx9umymsExXzQ8y6bNgjPq5SFJx/ozMIhAF5gDttHgwvGzkdXCeKwBcV8btQO8YJj8cvw78grP5s/yFOiErIWS3Z0gtrkwlwMaDP5ulz+nWu1saaToawNfpB6oDi4Gh/ofCNU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RLsqZvW6; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588BF2EC57C
+	for <linux-cxl@vger.kernel.org>; Thu,  8 Jan 2026 18:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767895704; cv=none; b=hpEzj6+Ol1O+kt9/lawwFdrt8K0Im1Na9tSeFZ0zeRzOMRZ59fu4xwc+CJWajhszvcSmj9kLGGIXzFRWIzjdHnKTugYq8BC3D4bNlG9CG3FkD+tfKnudCNBuvDC74Nn5pCIcF2xePTxjwDzV21hM7/Iamiq3qm/R3MveDDZJ+oA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767895704; c=relaxed/simple;
+	bh=MmK1SujRNf2S2W33zhGcNZEf7Eh4KS8jaIg2kKAyUI4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aEmHRUqentsSYD0+hH0jcpwdwfad9AfT5FMg5NOJfRXvIXObK086J7F54ys/anM8IGTI9p7FLgRKHpD1ts2p2J3ZMMuDwdEki32ACh56jm7En60wIH3sfJm9UOPpCeMXXcH6ITov3WU1W5zCbruOTU4VygcdbqhakjxxMUMmRpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AvpTh8Ti; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RLsqZvW6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767895636; x=1799431636;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=md3puLw8S9ahGIlAFsowrQal6GQVXSQlGQSIsbRx3Eo=;
-  b=RLsqZvW6wkQxzYjmYH3OuYCe+TyfjEuPadZtU61e8T7I0u6lDrPFGIKX
-   y+/YhIseoh1iuXTgSmuX0AHncilVp63r81Ugz1DjdHaE4brPCnXgyUo/I
-   X9pDEvJyX2vu+oLe0ON+9l5+wrSWQa86xQG0l9eGSqhpkukZZA+hDR/fX
-   dJZ51twMpJUnHy4C5U2gpI9uZ/G8q9dquYxaMNoDNyYz03YB68szhgjEQ
-   cXtwenCBpacmgEFHz8TdmpXon1saxWYU187KJFTizVxYnRFjbTGNB7pDe
-   R4RQm0Dnaev5QfTakAYBACeJ57ELO/dj+ol3iMsIi1CfTgTFBSzL+v8a5
-   g==;
-X-CSE-ConnectionGUID: P1WzBn9JTOifl3oBk0Nlbg==
-X-CSE-MsgGUID: UFkMZHmDTc2vyqsHY72pFw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11665"; a="69353923"
-X-IronPort-AV: E=Sophos;i="6.21,211,1763452800"; 
-   d="scan'208";a="69353923"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 10:07:16 -0800
-X-CSE-ConnectionGUID: ShNA5I/IQ8mZF6ahyo30Cw==
-X-CSE-MsgGUID: AWI8Dx4+QfKQruhNuOXA4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,211,1763452800"; 
-   d="scan'208";a="207404377"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 10:07:16 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Thu, 8 Jan 2026 10:07:15 -0800
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29 via Frontend Transport; Thu, 8 Jan 2026 10:07:15 -0800
-Received: from BL0PR03CU003.outbound.protection.outlook.com (52.101.53.71) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Thu, 8 Jan 2026 10:07:15 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cqqPBdMCtpeqzhAwuUPFhPn1j9S70IdOEzCaLbmlLOyA0pJ4plUL1+gedxRCoAOqvHAgLpU6mgm8KqbwCPLTGWucMubv/iWga/fP33+MGUul3T+OrqRYGa4vBN4+9p6tBVw3KvT9cv/qRUXLdksbCd4WGM0Q0UzKR2oX4Pf2etiz1n2zYJwc2v7kQ7krcJvnyFUwODUYzGvdr5v6bbnbojLtiFAKJGUzfGcb1rXFRlfcFXSuRkQnj3gRwyePEWlimxZVUd5D138fuX5GNQlAODxH8a+H9ZzFYODycSbvc5LHgmSuTLaUnbzqZ7fo0RMid42Kx6st8ODyvBI6fr4+ZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wMGlSNn/fUaajix+NGKdIiARP+n2lIJDCN4cpVC8I6c=;
- b=clP8zRi2h03k5dELi5Lls28qMBe7Z2LW3el0ag55apr/jRmvGMbANPHrc9Rfnb8FE3qRdeqH0W44KiLVg9lwIbM+aC8dVIApZY+oerFzQozD/kw32f7tCsqrDIZBi1xupOItLxPfMbfFAG1WXlaKDH6IsUEvtl9W1V3DSCgclLZKx867SNYUInZqMBZIcIbBinLrLyYTKTtbnuCvKXu1V5swREwahp55ssrNlAKg2aAL804rp66jf1jlS2UsgzsGjZCudMIYGqXj88YOADlSco+336S2zYGwCVSQylE57KO/0Zz8jHgBtukUKLu4c4BrUTeVXbsZSYV3oCIp+4SB1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by LV8PR11MB8485.namprd11.prod.outlook.com (2603:10b6:408:1e6::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.3; Thu, 8 Jan
- 2026 18:07:12 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::46c9:7f71:993d:8aee]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::46c9:7f71:993d:8aee%8]) with mapi id 15.20.9499.002; Thu, 8 Jan 2026
- 18:07:12 +0000
-Date: Thu, 8 Jan 2026 10:07:06 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Robert Richter <rrichter@amd.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Vishal
- Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, "Dan
- Williams" <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] cxl: Check for invalid addresses returned from
- translation functions on errors
-Message-ID: <aV_ySgCVvEjLoxZ2@aschofie-mobl2.lan>
-References: <20260106172358.350724-1-rrichter@amd.com>
- <aV1XnLrAiONbeA_X@aschofie-mobl2.lan>
- <aV5LdGD8lQm7AYK3@rric.localdomain>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <aV5LdGD8lQm7AYK3@rric.localdomain>
-X-ClientProxiedBy: SJ0PR05CA0142.namprd05.prod.outlook.com
- (2603:10b6:a03:33d::27) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AvpTh8Ti"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-65d132240acso2076750eaf.1
+        for <linux-cxl@vger.kernel.org>; Thu, 08 Jan 2026 10:08:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767895700; x=1768500500; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XI9IhUnsXzT6Xe36mfNiAku0AsRQgr8M/6vd/MAZgJw=;
+        b=AvpTh8Ti9eTwnx/8Z7Id+GQcFPi2XUIdivPHJbCeq7er85RceJINDqeT6xiLokNPZN
+         XfeI5gGu7G/SiDEu441xXgUyQETyV3NfMHWrbeKU7msbE6y11QiKV0tIj/JIjcLbjQHY
+         OYMMPUl753CqH3QbOnAHq9YGnL97Yj4VFXGT6qMd3J3OHcSvC4mpWZo63svSWmqzzrnB
+         8LpxitVdgcubTzuXtnEcTTwFlUJhdlfh8mhOFiSZzcriy4/U1HbgyLvBkYFz/OEGiLvY
+         QRb6neF2zOcWgTxaR3dBwDBfaqStk+7jxJwmvS/bi4zRzG+CINC0KjfrvnIvwD9vt3a9
+         8HBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767895700; x=1768500500;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XI9IhUnsXzT6Xe36mfNiAku0AsRQgr8M/6vd/MAZgJw=;
+        b=Mm0zTrDjtBofZsyQbnlytoANPKC6kvpJoHMEzgClwvU0m8whRCohS8F5BS3j6iwDUy
+         DgSxRMbiWpD8efpd75Pjf9hRjH7UPsKBHh9dcQ1+JEOy/Qa5ndVi/dqt11oc8WEXsYzE
+         P9jFXecl+TPzH5i/yvQel4e7G4D1PACR08DVVGhY+KeL0Tqk1bFkxJbQ5VvWvVfCtJEi
+         j/zhvKFKO9tOWFSO+rN1nD+VfyKbB0YBD2naFdoqFt/gCO2akhNzsc6KbNNwYILQQ2QU
+         RWfjQt/CiHf8Hk9Wo+WCE06jQbN13bP6MEd9y8xcC7Kci2gWJQ5O6sq+LcWmqjHxhXID
+         SD+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXRM8PTIs0aMDP7aL6uJBKammjHRV08H/2ig+84wWNDWl2eb2qzMJFinxVWVqnMj8POE2vLcL8fUPM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw14wAuD5uCSDu6PLSNEXhV8VwqZaMNp5hHtQ9a6fp+BFPFmDbv
+	fX0NGKzBgx8wd6QaOJ9L1Ev8VPDlaLne0vZ7Gd3J796OEDgiC36VB2v0
+X-Gm-Gg: AY/fxX7QlQZasluYKUELlUDzi4TZAT5aGbmVm5FyTLAspVokTztPBlYI1oI86n6vDCV
+	BNMVLRnLwf0HgmgOpJSXcGhYyXOL8ZF7jJDqQy+NlCHpO0/T7shwTO2e5suvN0m5XQrdbM+14cb
+	U7U6FuAHby04/2yVVm93rbkdoP/To5wqliiLJwGWgSECw6jb1PSniRNIqSajfNFiluHD+JLZUC6
+	wzzwuUWZIFXf4C4j9V4UqCgoy46991+zk1FmgSI0yAK3bWY7J39fKNfxVAojHrhzW/SfdnZNwkI
+	uLkTKOKDbNvVBhrh2u1Q2XACepC+RzB2TsezdfmsVTJzhkF2FSo0JmE5p5wnCub7VI4KAbZXE0y
+	t8cTrX6Tz10gRIWMz1R6ppPXlhRyFc2g/XOQ7pD7/60HQAxsXpkiesgt/1qzHF/0T8sDj0ewqjQ
+	4IwC+JVrB/V/ejMGGkD/Zy2ZGSoROV8Q==
+X-Google-Smtp-Source: AGHT+IEjWT5M9/INgbL6wkWLwsvPXOhe1gZQdudmQFnLtNyCh1dUGd0KiFZ98Jj/kb2bsPwekn22xQ==
+X-Received: by 2002:a05:6820:7511:b0:65f:5418:5844 with SMTP id 006d021491bc7-65f54eda3d7mr2172010eaf.20.1767895700283;
+        Thu, 08 Jan 2026 10:08:20 -0800 (PST)
+Received: from groves.net ([2603:8080:1500:3d89:902b:954a:a912:b0f5])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-65f48cb03d4sm3649518eaf.12.2026.01.08.10.08.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jan 2026 10:08:19 -0800 (PST)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Thu, 8 Jan 2026 12:08:16 -0600
+From: John Groves <John@groves.net>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, 
+	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
+	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
+	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, venkataravis@micron.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V3 07/21] dax: prevent driver unbind while filesystem
+ holds device
+Message-ID: <q5ucezwbtvslsbbudo4sfwsnrh2b7jdul56wwg5vubbq7ekwzs@iqdm3ovre5bf>
+References: <20260107153244.64703-1-john@groves.net>
+ <20260107153332.64727-1-john@groves.net>
+ <20260107153332.64727-8-john@groves.net>
+ <20260108123450.00004eac@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|LV8PR11MB8485:EE_
-X-MS-Office365-Filtering-Correlation-Id: aa0b9d86-2501-4e35-ce55-08de4ee0bf7f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?iiXclUqclW6KpqX6YW28+e/ngjqhuIg9fa1CeWR8CBaJKPTmd8QCi97dR3p2?=
- =?us-ascii?Q?MpIGIFhWShX9bGkKoCyL+hudPW+s9IOI7GB4ook8wPlMTADu89fVmIyEL7Z0?=
- =?us-ascii?Q?mvZw1Aa2cXmWFrheTvYs5Neyiz7dQ/P8dqTwuXsHqIl7bs1koMOZIr/qwFBf?=
- =?us-ascii?Q?/Swq6dTx6z6Z8e6tvijUUHRd+eF3FqSlTJKwBh3mIFRt1uEV+y6n0VSLOabj?=
- =?us-ascii?Q?d2SknC3L+Wt0U2lbFIqJSko6O7HcuX62ng8gIFMYIH6egVG4SpCzoD4nUTD4?=
- =?us-ascii?Q?YaRGDNEHz1NW635TmB6E/3xagVMX6ey52y509SwuhN8rcnerKb6F/tnmCsXX?=
- =?us-ascii?Q?t/1LPgOZMG19PwWIbwfmbrCTmquP1b232K7qR7Bm5foUZQIJ+4Up9UubmEZx?=
- =?us-ascii?Q?ONWicPo/3wERoTRMaXLtFLL5sv91K+OYQHu+QXXpFSlu/jf7TH3NAaKtjGBu?=
- =?us-ascii?Q?WXNTKK1Acui6idqoubWYDywAFdK6u2l+PfIco9jUNcQNGukeEUg7LM9Q4rpx?=
- =?us-ascii?Q?PV3gnsoX/0BZMXTAm9pLM99RbRcouuouHxLlK5P4kQ4/rquNE6EQT7V2PKXL?=
- =?us-ascii?Q?f+s3hb6Y/ppcoEKIqd9h0n/aJ8seV0sNEGrPkhKRD5ld04s5xcWx0E9Zetwb?=
- =?us-ascii?Q?/3floekWef7/6yfFTJOweBb64GJKUvZjYiSBiQBwIrfeK/fpT4itYpP+j6dl?=
- =?us-ascii?Q?xLuZpstjGSWolMTODr9WP/lMiZ+XFLd5fgtpPZ0w7rtl9Z3cnLFi52bGJ7Vv?=
- =?us-ascii?Q?YWsp5Kv23xY44NL5Oj09cFExH5JH1/THNlUbEGL3Csk6kjC8FVR6ixrRodoj?=
- =?us-ascii?Q?F4qTQ9nostrIJfpienhXfA+MmYCW7FklaFAZ+ALXDT4RpvP74C224TqVpsPe?=
- =?us-ascii?Q?K0LQWimDvjrJZJBFOJMIb2zjC0lIdzA9HVnpWEpeOrYgPid2hXTa9wnz0EP8?=
- =?us-ascii?Q?DuKp87Jwdgiipb8fd6MmyLd+/ARq6MFvYjQj6SN7wwAXie5DUVsuYyZToOya?=
- =?us-ascii?Q?DwfqoFpreuBJlVM03zuFG5S+omSSWIIhDcPeGNYPnOXCmjdiBV/Te9/IWAK6?=
- =?us-ascii?Q?WaZopTN89arBp6psfAFy5JUgAyKx4vVFyVtEKZDDTFFxtcLMR0l17iS6oXon?=
- =?us-ascii?Q?W/kyxPDnZoSYAjLEkLvCP4qYMIHNU5uiPFfn0IfxT77xvzvHoflgOJAiBxos?=
- =?us-ascii?Q?ha1yiC/aG2Vj71vOTJxpzsY5fkcabZrNfUoA1WtwZTql5N6zXcuMI50jQrKX?=
- =?us-ascii?Q?B8B6o+rWg3E95gWwPeEPu1OuRcatTXX07K+2hZ9sfTgLjbLQMUysbYKgCpDN?=
- =?us-ascii?Q?m5ZF9pmXwYCrkuAayeHI26rTh5ccy8JFnnkzCwxFNu2EIUjAFWOJzpYhe4J7?=
- =?us-ascii?Q?3BieQDJT1bKQQNgZsJ5htgI0v41P+ZtJuu0Ew52xdnWG3Lcqlvmb8CIO/Nj+?=
- =?us-ascii?Q?Rfcfygof7x3PLjHsTgNs8OquT/jpDgec?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?8eKRUvuoD+CCsTOoVCHro4ThNUsajAa4nca1NIxGDfP4u+RNrEPoApRL83Ik?=
- =?us-ascii?Q?cjtkM+jqt44kGLIXfk7uNmf0mH5YxUJcafRcL1T24+zZOP0M9CuSe8IxmHZU?=
- =?us-ascii?Q?M1qgbA6LX8hCCC6CoTYk1XU7zy567+/7oKn02iO152BLLkxjkaua0tezIQvq?=
- =?us-ascii?Q?IrRtnm4GbUaN/XloK9s6TfaY+17w8+wMEI/LrOzdaAAwT4OfGWqtDVqSy4N6?=
- =?us-ascii?Q?I0MZ6DgyHQzAdfislSB1c+z9ZU/8IYfqBBCK6btRlg7yK94KTnV1+Hx2VVRP?=
- =?us-ascii?Q?ZWNR8yMX89cSRWjRoGLyeNl61XXzJyVx2XIOM0GlXlnvQs1OQ+d5MyBvIc9M?=
- =?us-ascii?Q?qq9CKimhMyACPPaTLs2XiXuNNRfiiTeU/LfmDnEFSO1G4FKalDhHFbbYNe9g?=
- =?us-ascii?Q?32f75GQS8JqEzYRN5yX42nZHVSNVIrn9Ui002SIlidV/vLT++uZfpBoCLJwv?=
- =?us-ascii?Q?moeolBDou9jtDhNIKx3kB2Dgcw0w5HJJBAgvfrRfEqfx9K2wZ8eKj3QF8LjG?=
- =?us-ascii?Q?Jx1SYuv1aolNfg9HcvMafQ86lRWf3g7h/frPKPRNn0qQucyJKkYW8m6zKLCt?=
- =?us-ascii?Q?P5T0kNwF3f5nrJ9yzt+pX+YXYgmvblQFjl7glj0zPRkqNK0wh6sOdPdFdkbj?=
- =?us-ascii?Q?B12cN3YwQJ639DCkDbu/Fs354dHzc/mGaTWmB1UfLN+3W/R192gDRweMKHKx?=
- =?us-ascii?Q?BcKp+1zIOE0x3ueOlOQsX8l4+Hac+8RyaqvDUr39l4BZFnCqiUXD5PScPORn?=
- =?us-ascii?Q?xgFAT9A3idQbgNrBVBsCbf/RYX1Nr3YEopv4JW52RvFjAndI12nTAVL03JzN?=
- =?us-ascii?Q?RpJEGzKitWfRzEFot+bJXGaBpCC1X9AEBtkhO7QQ/fUER/oYhM6Ob/2zXS28?=
- =?us-ascii?Q?wNgfMk+qfjSkt3vdBBg5D+RbswnM/CebxyD9qZnNDS7CBqkUFRA2TL9s1995?=
- =?us-ascii?Q?wRvMaqecdHDzklcBsFjlGSzVuMRYiZoLLaMgwz+LyD++NuGD35+VdObi+fM+?=
- =?us-ascii?Q?0OzRapcsN9UZ5Y22yCJmaEgu2BRQxom9b//RaXBLeUZU0jmGkH7jIToJMcXE?=
- =?us-ascii?Q?cxNjmBs3M2RQIURO1pARt79wyiuXoWoBLJZX3x0dU9MjVfsT+Xj9IdfouNnG?=
- =?us-ascii?Q?UAGkdcYprivcadQWEzwugnLd3sqB/HysKzgcaHo4mq5F77XRkkUar3kWDA1R?=
- =?us-ascii?Q?LCFnxB6JYMJ34r168pdwhThGruFFji5knuVw8m4Ny8P52LxF9/HIP/sfBNnM?=
- =?us-ascii?Q?lzRYKBrOc+8A3g2To6rYvZeLwXAdQnwUSXTvxaG1tmzAANCfvSkxBYr74Q+W?=
- =?us-ascii?Q?jqVWDgeXCfxaqoeuOEfsagw6Mcu/vGx7nd1A9GEUPe3WEXNjpJWZzyRREKhH?=
- =?us-ascii?Q?SpnIO096t4WnS3LIp+T0rggcNn9lveCQDmMXFIyvW2qjdt6vEIOkAhV5IeIQ?=
- =?us-ascii?Q?y+a5Zrw4Bi49ooMPri7lxsuVfjxluB+MEH02zakJ65li2PzKDPN585dKUuQp?=
- =?us-ascii?Q?JOiHnx5s+8ZdxZ+B9AYFArpVoEJF7QjjlsKMmiB6w3db4FxdAMc/XFDjzBmG?=
- =?us-ascii?Q?E+z56aXQXOuyZ+93x9+C4CkTtOgX++dlbh4SFT5fIqZLNvr/f98XdxW00HbQ?=
- =?us-ascii?Q?v5KXRI5+WiIHVZJJi1hHnuqWP/kvIZ1/m4EP+r0VDkOJ8HuCcPQPiCwoAG6K?=
- =?us-ascii?Q?+2lDBpMDFT+Q0oV68NcCYIyTMdyiMK5GWfIdowFlcsBQIb0aMyaUPGmWTuEN?=
- =?us-ascii?Q?4k2syhGYHjwd8ibSFhQWMWrUKogOJsw=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: aa0b9d86-2501-4e35-ce55-08de4ee0bf7f
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2026 18:07:12.7573
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XEiWH+v5nU91JxYsaOCyr1c26PARxsmD6qOFlSZ6HhRiWfplkYrzVejSD5jiD+VoiJSm++eqtJp6u+6s+k7gF0at/gWnZz1XQhEm9VX5lF8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8485
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260108123450.00004eac@huawei.com>
 
-On Wed, Jan 07, 2026 at 01:03:00PM +0100, Robert Richter wrote:
-> On 06.01.26 10:42:36, Alison Schofield wrote:
-> > On Tue, Jan 06, 2026 at 06:23:58PM +0100, Robert Richter wrote:
+On 26/01/08 12:34PM, Jonathan Cameron wrote:
+> On Wed,  7 Jan 2026 09:33:16 -0600
+> John Groves <John@Groves.net> wrote:
 > 
-> > > @@ -3207,8 +3220,13 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
-> > >  		cxled = p->targets[i];
-> > >  		if (cxled->pos != pos)
-> > >  			continue;
-> > > +
-> > > +		dpa = cxl_dpa_resource_start(cxled);
+> > From: John Groves <John@Groves.net>
 > > 
-> > We want to return -ENXIO, not 0 in this case.
-> > So jump out here immediately - right?
+> > Add custom bind/unbind sysfs attributes for the dax bus that check
+> > whether a filesystem has registered as a holder (via fs_dax_get())
+> > before allowing driver unbind.
 > > 
-> > 		if (dpa == REsOURCE_SIZE_MAX)
-> > 			return -ENXIO;
+> > When a filesystem like famfs mounts on a dax device, it registers
+> > itself as the holder via dax_holder_ops. Previously, there was no
+> > mechanism to prevent driver unbind while the filesystem was mounted,
+> > which could cause some havoc.
+> > 
+> > The new unbind_store() checks dax_holder() and returns -EBUSY if
+> > a holder is registered, giving userspace proper feedback that the
+> > device is in use.
+> > 
+> > To use our custom bind/unbind handlers instead of the default ones,
+> > set suppress_bind_attrs=true on all dax drivers during registration.
 > 
-> The users of region_offset_to_dpa_result() handle the
-> RESOURCE_SIZE_MAX case. For that reason the dpa is not checked here.
-> I did not want to change the function interface with that fix.
-
-region_offset_to_dpa_result() intends to return an rc when it knows
-it would return a bad result. This is that case. With this proposed
-change, we avoid adding to a RESOURCE_SIZE_MAX, which is defensive,
-but isn't quitting immediately correct? These fixups are all about
-stopping when any ingredient to the calc looks bad. It looks bad,
-let's stop right away.
-
-Seeing that the callsites do this:
-
-	rc = region_offset_to_dpa_result(cxlr, offset, &result);
-        if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
-		...this failed
-
-shows that they do some defensive programming and don't rely only 
-on the rc. But the inverse does not seem right - relying on that.
-
-Staring at it more, I guess you could refactor the function to be
-a void and get rid of the rc entirely.
-
-Is that the real simplification needed here?
-
--- Alison
-
+> Whilst I appreciate that it is painful, so are many other driver unbinds
+> where services are provided to another driver.  Is there any precedence
+> for doing something like this? If not, I'd like to see a review on this
+> from one of the driver core folk. Maybe Greg KH.
 > 
-> Thanks for review.
-> 
-> -Robert
+> Might just be a case of calling it something else to avoid userspace
+> tooling getting a surprise.
+
+I'll do more digging to see if there are other patterns; feedback/ideas
+requested...
+
 > 
 > > 
+> > Signed-off-by: John Groves <john@groves.net>
+> > ---
+> >  drivers/dax/bus.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 53 insertions(+)
 > > 
-> > > +		if (dpa != RESOURCE_SIZE_MAX)
-> > > +			dpa += dpa_offset;
-> > > +
-> > >  		result->cxlmd = cxled_to_memdev(cxled);
-> > > -		result->dpa = cxl_dpa_resource_start(cxled) + dpa_offset;
-> > > +		result->dpa = dpa;
-> > >  
-> > >  		return 0;
-> > >  	}
+> > diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+> > index 6e0e28116edc..ed453442739d 100644
+> > --- a/drivers/dax/bus.c
+> > +++ b/drivers/dax/bus.c
+> > @@ -151,9 +151,61 @@ static ssize_t remove_id_store(struct device_driver *drv, const char *buf,
+> >  }
+> >  static DRIVER_ATTR_WO(remove_id);
+> >  
+> > +static const struct bus_type dax_bus_type;
+> > +
+> > +/*
+> > + * Custom bind/unbind handlers for dax bus.
+> > + * The unbind handler checks if a filesystem holds the dax device and
+> > + * returns -EBUSY if so, preventing driver unbind while in use.
+> > + */
+> > +static ssize_t unbind_store(struct device_driver *drv, const char *buf,
+> > +		size_t count)
+> > +{
+> > +	struct device *dev;
+> > +	int rc = -ENODEV;
+> > +
+> > +	dev = bus_find_device_by_name(&dax_bus_type, NULL, buf);
+> 
+> 	struct device *dev __free(put_device) = bus_find_device_by_name()...
+> 
+> and you can just return on error.
+> 
+> > +	if (dev && dev->driver == drv) {
+> With the __free I'd flip this
+> 	if (!dev || !dev->driver == drv)
+> 		return -ENODEV;
+> 
+> 	...
+> 
+
+I like it; done.
+
+> > +		struct dev_dax *dev_dax = to_dev_dax(dev);
+> > +
+> > +		if (dax_holder(dev_dax->dax_dev)) {
+> > +			dev_dbg(dev,
+> > +				"%s: blocking unbind due to active holder\n",
+> > +				__func__);
+> > +			rc = -EBUSY;
+> > +			goto out;
+> > +		}
+> > +		device_release_driver(dev);
+> > +		rc = count;
+> > +	}
+> > +out:
+> > +	put_device(dev);
+> > +	return rc;
+> > +}
+> > +static DRIVER_ATTR_WO(unbind);
+> > +
+> > +static ssize_t bind_store(struct device_driver *drv, const char *buf,
+> > +		size_t count)
+> > +{
+> > +	struct device *dev;
+> > +	int rc = -ENODEV;
+> > +
+> > +	dev = bus_find_device_by_name(&dax_bus_type, NULL, buf);
+> Use __free magic here as well..
+> > +	if (dev) {
+> > +		rc = device_driver_attach(drv, dev);
+> > +		if (!rc)
+> > +			rc = count;
+> then this can be
+> 		if (rc)
+> 			return rc;
+> 		return count;
+> 
+
+Done
+
+Thanks!
+John
+
