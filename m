@@ -1,65 +1,65 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B8A3314AB
-	for <linux-cxl@vger.kernel.org>; Thu,  8 Jan 2026 20:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF87E3328F0
+	for <linux-cxl@vger.kernel.org>; Thu,  8 Jan 2026 20:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767904747; cv=none; b=LoabbBLerldZD3gvZmx8ZCdeixLhxCS9FmlQuKepN4osNZ46YJpac215CE9KKmKFYAnIeiQg57g1aPCzan19GXlkkMoljqIGjirWIlpYGv6uwqN9k+dMxEr0U6Rpo0j3kRBDRllge7xqkijmumIrnFyzbVe1AexW+7sTJC0kr3c=
+	t=1767904753; cv=none; b=QIKiz1KOfgpWq6KC3Eh2vbmLqAz/S+PriaOf88oz7+3hpizutwLhCS71rozdiTsK/riEdJFJZoW5fzBpeTzvnSjBrhnb2VYPp9o9PJSOT3e5cHzrDPBLEQ1Gq0wdY4G6V5AWlTbqtEzQHFf/LaY1LHJ8D+DGl43+cqxHflZyJLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767904747; c=relaxed/simple;
-	bh=xii4wO1lEnLuXt5FEyh6bs/i4HOiIb27LXChmEfzilo=;
+	s=arc-20240116; t=1767904753; c=relaxed/simple;
+	bh=Q6n6H6pGLwW6lg8o+yJkMzcp5ygcedJTXlkaT5WaISo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TRMhzIwezmltc9ds5N+Ch3XIh0kWW+Bt4nQ5Wsux2/bY7GS4oBDrVNA4R9dXj0Cuqz6ijBWAZWIzYzmw9PSHZ6H33YmsiW6djXsy9uGRr66vLsdgIR2m9wLihuAoLt5oefz5YQebjA20cWekSniX3v9BnfDp0DadvSkrXHVFhCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Bu/wvCUS; arc=none smtp.client-ip=209.85.222.172
+	 MIME-Version; b=ocJICDLo7hNRTDeZmy+7u6Ytp2QVjpcYwuge4L+5/vIBJg01sGZBmrV2Rv7Yko6EQABJbCHU3Ic0NNYOEbPDPyUJewMUWePb7t0W1uKW1IXzK0vBuq4ep31k7EeHZQ7q7sUCjaWpdJf/LdA36SvSszJp8IcXQOJwEAELbPSuN5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=AfZQstJT; arc=none smtp.client-ip=209.85.160.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Bu/wvCUS"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-8b2ed01b95dso388095785a.0
-        for <linux-cxl@vger.kernel.org>; Thu, 08 Jan 2026 12:39:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="AfZQstJT"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4fc42188805so37635851cf.3
+        for <linux-cxl@vger.kernel.org>; Thu, 08 Jan 2026 12:39:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1767904744; x=1768509544; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1767904750; x=1768509550; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mwgM57cBzuIgAiPMK5GxhnYsXF2RBvqFNs+qFbak5h0=;
-        b=Bu/wvCUSzvE1wOrM1YeQH/zu/nTFQkmi/JULxPvAXca4qSjAhWGwiUvRUT89s2X6xE
-         r5CnFWg01qf11wPsRE5OmpeoETNGxmtlwaGcCSH3JyhfX5Vq0LKgn22h7EyHHHUNZxW6
-         RSPDle7YU7Bl0z/G00liKYzEwSq1NCubdSUHrXwAH0y09MNg7bITTrHNoG4j7pq6D4Pl
-         ZYROv9A6/IbC3tu8J4qZNHJa67t8MGPwFGr3cddg9MBn8K84aJNQs+9zb4Kdi6L7YFX7
-         UE+SZ5/9MLwVQgRlC7Ms/PDMzAS1qHCbB9q5Oanrre2bLosixNWZ1jPZDV8TplyyZgKN
-         JK8g==
+        bh=5OTZsz9YEfzZ2R8Vdeqp1RCaOkKgwxKsmSu+J9FA9fQ=;
+        b=AfZQstJTicHT8cU0FpbOpZQ226cG57nxuzO9CXkQR2+q1EpDMkbKf6rUuAVsxrGdTh
+         v6crsNu+AYUpEvyGFd60KQYYnTuKPc9OACtbdGy0jGPVY91zv6lyHAUaabz5uhDce9gt
+         iY7+Aa2Nt4/6bImyHuiist25XkTpKbeWo8KK6FajaQ6+ranNVv4zReewKrjXTfhiu+o0
+         n/wuib40Q1w5he3k9YH0trpvMh7uZy/SavVCwu1PyWvfBoqpOPGa/VuIcJRMGnkO82cM
+         /7oqylfUe9lJIzHM3fNaOzy0rWjLtTtk7dU/bk+cn9qklC4SXwr+6sCGibE8ZCp7ZWeV
+         OrKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767904744; x=1768509544;
+        d=1e100.net; s=20230601; t=1767904750; x=1768509550;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=mwgM57cBzuIgAiPMK5GxhnYsXF2RBvqFNs+qFbak5h0=;
-        b=CAGskv1Y4+9960NOOrRE4o1ftXvGOAmk/CnDhfqrOAojyTc+dv3gNnZNCwd6zcwz4K
-         H51xazryE/hvrFdv81V43cFc9Ej32VuLBpmLLpCTsv34QwDMJUs0CWzd1qyMJAnBz2bt
-         NN7OUwKnUlnypRlbmtJPQYWHi+Qgm9IAeIMs7hFU2Ev3DAV7NY5eyronlDnA5rXCZegU
-         5bIRFbsHdDSDHkmwHb+dPJP8Zzgsmgs4+RE3cZG79xoVYrCYi0tiIGwHIg5xUxMTiWmQ
-         bCIpmjuVF586/gP8L/lYBiq1JfNzqAlts27Gwm6eEUXpxpNlknW4kx4tL8JLD0yMmKtl
-         htyw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYBQCF0+zZorLnhaxxYaN+0kOuBQ0euELAVJaHdvCq39LKCH7IUW9ozBnCYl1IHybxnSChsK4L5IY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyX2I6Qpa6FG7i1lqeh9DY1lsoNTRyEDghOUxGh6DDd8GDNUIKU
-	BDo5nzuEAPrC7IzVYbQpyZxczHp4rNhaaGU6yiTTS54UkkH1HMTOWbx4619zqifKuro=
-X-Gm-Gg: AY/fxX6J//8gpOZYbYz8a9jhYR3kdenIwz57GnbXkTnw0PHBmFZ2DRp5aT1BoMoRf3/
-	9P1FAZwjmspzGnSqlQ3eZpcR195WX3nzenkvceD8hSvRrxxE+aFPg15SHBMEoXSvFfWhU8ATG1g
-	TE/h649C5jfmb544MuzmI/VeoId4LgXTeWaljqo1PadQhE6ydrIsSVUGWHe8bQF53RNqmY2WkEm
-	9osyUO5xBPx4xe21l6FZ7ASJW8Ue7RDiyFahzgtXcwW5cAnrLskfPWxP/sYf/IPl8tXJ9E6zrVT
-	vgob8Zcp0V+qjqXGWoLYXIcepRyxuW6xJAUH0bZC93IEEzCPOg7FjM8JEFH4+Kh/P1CmtZnqNtc
-	11F+gVP7lbe4XReE/VBZlBguoklcxodUVhTFnVdA4g3WXWtJodjcjFiZghcBodArfO2jueofeaF
-	3Ce8LBfRgsIsRsSJUz6fMKu7/tBgyXNmQuZEOIli+8ekIoiiU8sJedAF2Z1G1J8v+g2qQBKbvC3
-	Tw=
-X-Google-Smtp-Source: AGHT+IEohul7eh/tCSXsk4Ov9Y1GsfVyXy+u/Ko/qY44ZfRMGDZ1/y3sswNjUUv0CUGvS9SQKMHaSg==
-X-Received: by 2002:a05:620a:1a9d:b0:8b2:d6eb:8204 with SMTP id af79cd13be357-8c389416dbfmr982794985a.71.1767904744299;
-        Thu, 08 Jan 2026 12:39:04 -0800 (PST)
+        bh=5OTZsz9YEfzZ2R8Vdeqp1RCaOkKgwxKsmSu+J9FA9fQ=;
+        b=fYA0ze8L37RiR/2fBZizm689lUqZXK0yPplXzjFHnqr7xvg3bg3q9H25Bmjts6JkzY
+         hEMyFxluVlACeLDnTy7+JsoOvK6bvAuLHqQxzWl9MYRgy7kNDyR0ZDa8uMeP9EOcWlDY
+         VlMkNzoQCLF7pKHmpjtNMx6sNjmP5oL0tj4IPCOO5g+JUAnF5RXHdYd6GCBbADUMgdOf
+         Ifa6RyaYJ9h+hGehyPuyXGLvn2BQY2TdCnKr61tgOWl1jXZTADosO2oAKT7ri5sLFC/w
+         0c17gM1Km2+CyjTiuFRZDszpQgN1kNAx1OgsXpgvSeArdy5qOwa1wq4l+viWesCKf7iK
+         aKvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGgg6L49IIFmxj28/ASSfIIQxJssOh7nOTRG3C0o0cwRftnQwdpKf5Spj4RZR4vdL1ICs82Mitd+o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMeRWgX6Pncs3sYMyoOxWVkeLQqpELcu1peYlDGo6adoa3VaMF
+	iDfqplj1bNeuRmwXXZ/AFK0/wwTcED/ZXznJhWn6HhPlNYuOm5kv7DfyYKNzVC/qBIs=
+X-Gm-Gg: AY/fxX7yzRU5ohdb1epUGRIGWwPfiH5/+kLdXuAhs8Q5WR53d5Qhflu5rkadb2x8r0u
+	DgfCWGR5a2U17SoaS6X1HyiFIv0h0PVM1krelLWjtR4GSE35b8pA47taVQdPCH7IGpM3zpO3vXF
+	0VBdOkyePcbJOGMb1EIuZzKR4nGNFnYToht0WoHCJpkElSRIacNjn3flLj/C3+4HMd9XcM3OKur
+	pkj+bIPmYC6yjrSwcy16D5EbW2pkWXA6m3KnCMqSexXVMi3Lue/qN0tinO6MGoDvhh56MVW37O0
+	vTiOJhirYHVB5UD+z/5AEyI4/cIgtUzOyjeBUxQQimvApgXEUYfyJ8Cn8Gk8a5JIIN9A7+0awic
+	0nrtphEUCuPvMcpOC4TVRHeR2mcyFA5J8WvyC11MPwB5NzwYYIT1AkUsXxqMi52jEasfGJ+hbRr
+	C7fSJKxqvEHUzoaMJEVosasRu1A18QIyKyMzTdHyhxVyGvgYKaUpeytsdF/Ld+CgIezxQzyAv1+
+	tI=
+X-Google-Smtp-Source: AGHT+IHjrJedObjQLnkqlATuK0iiTd2ReDzXEhDuZpiEE8iScOlIeLDoodxwtlrvEQjvQ0kp+C8/HQ==
+X-Received: by 2002:a05:622a:554:b0:4ee:26bd:13fa with SMTP id d75a77b69052e-4ffb4a38073mr98924131cf.80.1767904749843;
+        Thu, 08 Jan 2026 12:39:09 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-890770e472csm60483886d6.23.2026.01.08.12.39.01
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-890770e472csm60483886d6.23.2026.01.08.12.39.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jan 2026 12:39:03 -0800 (PST)
+        Thu, 08 Jan 2026 12:39:09 -0800 (PST)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org,
 	cgroups@vger.kernel.org,
@@ -121,9 +121,9 @@ Cc: linux-doc@vger.kernel.org,
 	cl@gentwo.org,
 	harry.yoo@oracle.com,
 	zhengqi.arch@bytedance.com
-Subject: [RFC PATCH v3 6/8] drivers/cxl/core/region: add private_region
-Date: Thu,  8 Jan 2026 15:37:53 -0500
-Message-ID: <20260108203755.1163107-7-gourry@gourry.net>
+Subject: [RFC PATCH v3 7/8] mm/zswap: compressed ram direct integration
+Date: Thu,  8 Jan 2026 15:37:54 -0500
+Message-ID: <20260108203755.1163107-8-gourry@gourry.net>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260108203755.1163107-1-gourry@gourry.net>
 References: <20260108203755.1163107-1-gourry@gourry.net>
@@ -135,446 +135,227 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A private_region is just a RAM region which attempts to set the
-target_node to N_PRIVATE before continuing to create a DAX device and
-subsequently hotplugging memory onto the system.
+If a private zswap-node is available, skip the entire software
+compression process and memcpy directly to a compressed memory
+folio, and store the newly allocated compressed memory page as
+the zswap entry->handle.
 
-A CXL device driver would create a private_region with the intent to
-manage how the memory can be used more granuarly than typical SystemRAM.
+On decompress we do the opposite: copy directly from the stored
+page to the destination, and free the compressed memory page.
 
-This patch adds the infrastructure for a private memory region. Added
-as a separate folder to keep private region types organized.
-
-usage:
-    echo regionN > decoderX.Y/create_private_region
-    echo type    > regionN/private_type
+The driver callback is responsible for preventing run-away
+compression ratio failures by checking that the allocated page is
+safe to use (i.e. a compression ratio limit hasn't been crossed).
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- drivers/cxl/core/Makefile                     |   1 +
- drivers/cxl/core/core.h                       |   4 +
- drivers/cxl/core/port.c                       |   4 +
- drivers/cxl/core/private_region/Makefile      |   9 ++
- .../cxl/core/private_region/private_region.c  | 119 ++++++++++++++++++
- .../cxl/core/private_region/private_region.h  |  10 ++
- drivers/cxl/core/region.c                     |  63 ++++++++--
- drivers/cxl/cxl.h                             |  20 +++
- 8 files changed, 219 insertions(+), 11 deletions(-)
- create mode 100644 drivers/cxl/core/private_region/Makefile
- create mode 100644 drivers/cxl/core/private_region/private_region.c
- create mode 100644 drivers/cxl/core/private_region/private_region.h
+ include/linux/zswap.h |   5 ++
+ mm/zswap.c            | 106 +++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 109 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 5ad8fef210b5..2dd882a52609 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -17,6 +17,7 @@ cxl_core-y += cdat.o
- cxl_core-y += ras.o
- cxl_core-$(CONFIG_TRACING) += trace.o
- cxl_core-$(CONFIG_CXL_REGION) += region.o
-+obj-$(CONFIG_CXL_REGION) += private_region/
- cxl_core-$(CONFIG_CXL_MCE) += mce.o
- cxl_core-$(CONFIG_CXL_FEATURES) += features.o
- cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 1fb66132b777..159f92e4bea1 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -21,6 +21,7 @@ enum cxl_detach_mode {
- #ifdef CONFIG_CXL_REGION
- extern struct device_attribute dev_attr_create_pmem_region;
- extern struct device_attribute dev_attr_create_ram_region;
-+extern struct device_attribute dev_attr_create_private_region;
- extern struct device_attribute dev_attr_delete_region;
- extern struct device_attribute dev_attr_region;
- extern const struct device_type cxl_pmem_region_type;
-@@ -30,6 +31,9 @@ extern const struct device_type cxl_region_type;
- int cxl_decoder_detach(struct cxl_region *cxlr,
- 		       struct cxl_endpoint_decoder *cxled, int pos,
- 		       enum cxl_detach_mode mode);
-+int devm_cxl_add_dax_region(struct cxl_region *cxlr);
-+struct cxl_region *to_cxl_region(struct device *dev);
-+extern struct device_attribute dev_attr_private_type;
+diff --git a/include/linux/zswap.h b/include/linux/zswap.h
+index 30c193a1207e..4b52fe447e7e 100644
+--- a/include/linux/zswap.h
++++ b/include/linux/zswap.h
+@@ -35,6 +35,8 @@ void zswap_lruvec_state_init(struct lruvec *lruvec);
+ void zswap_folio_swapin(struct folio *folio);
+ bool zswap_is_enabled(void);
+ bool zswap_never_enabled(void);
++void zswap_add_direct_node(int nid);
++void zswap_remove_direct_node(int nid);
+ #else
  
- #define CXL_REGION_ATTR(x) (&dev_attr_##x.attr)
- #define CXL_REGION_TYPE(x) (&cxl_region_type)
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index fef3aa0c6680..aedecb83e59b 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -333,6 +333,7 @@ static struct attribute *cxl_decoder_root_attrs[] = {
- 	&dev_attr_qos_class.attr,
- 	SET_CXL_REGION_ATTR(create_pmem_region)
- 	SET_CXL_REGION_ATTR(create_ram_region)
-+	SET_CXL_REGION_ATTR(create_private_region)
- 	SET_CXL_REGION_ATTR(delete_region)
- 	NULL,
- };
-@@ -362,6 +363,9 @@ static umode_t cxl_root_decoder_visible(struct kobject *kobj, struct attribute *
- 	if (a == CXL_REGION_ATTR(create_ram_region) && !can_create_ram(cxlrd))
- 		return 0;
- 
-+	if (a == CXL_REGION_ATTR(create_private_region) && !can_create_ram(cxlrd))
-+		return 0;
-+
- 	if (a == CXL_REGION_ATTR(delete_region) &&
- 	    !(can_create_pmem(cxlrd) || can_create_ram(cxlrd)))
- 		return 0;
-diff --git a/drivers/cxl/core/private_region/Makefile b/drivers/cxl/core/private_region/Makefile
-new file mode 100644
-index 000000000000..d17498129ba6
---- /dev/null
-+++ b/drivers/cxl/core/private_region/Makefile
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# CXL Private Region type implementations
-+#
-+
-+ccflags-y += -I$(srctree)/drivers/cxl
-+
-+# Core dispatch and sysfs
-+obj-$(CONFIG_CXL_REGION) += private_region.o
-diff --git a/drivers/cxl/core/private_region/private_region.c b/drivers/cxl/core/private_region/private_region.c
-new file mode 100644
-index 000000000000..ead48abb9fc7
---- /dev/null
-+++ b/drivers/cxl/core/private_region/private_region.c
-@@ -0,0 +1,119 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * CXL Private Region - dispatch and lifecycle management
-+ *
-+ * This file implements the main registration and unregistration dispatch
-+ * for CXL private regions. It handles common initialization and delegates
-+ * to type-specific implementations.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/cleanup.h>
-+#include "../../cxl.h"
-+#include "../core.h"
-+#include "private_region.h"
-+
-+static const char *private_type_to_string(enum cxl_private_region_type type)
-+{
-+	switch (type) {
-+	default:
-+		return "";
-+	}
-+}
-+
-+static enum cxl_private_region_type string_to_private_type(const char *str)
-+{
-+	return CXL_PRIVATE_NONE;
-+}
-+
-+static ssize_t private_type_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_region *cxlr = to_cxl_region(dev);
-+
-+	return sysfs_emit(buf, "%s\n", private_type_to_string(cxlr->private_type));
-+}
-+
-+static ssize_t private_type_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t len)
-+{
-+	struct cxl_region *cxlr = to_cxl_region(dev);
-+	struct cxl_region_params *p = &cxlr->params;
-+	enum cxl_private_region_type type;
-+	ssize_t rc;
-+
-+	type = string_to_private_type(buf);
-+	if (type == CXL_PRIVATE_NONE)
-+		return -EINVAL;
-+
-+	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
-+		return rc;
-+
-+	/* Can only change type before region is committed */
-+	if (p->state >= CXL_CONFIG_COMMIT)
-+		return -EBUSY;
-+
-+	cxlr->private_type = type;
-+
-+	return len;
-+}
-+DEVICE_ATTR_RW(private_type);
-+
-+/*
-+ * Register a private CXL region based on its private_type.
-+ *
-+ * This function is called during commit. It validates the private_type,
-+ * initializes the private_ops, and dispatches to the appropriate
-+ * registration function which handles memtype, callbacks, and node
-+ * registration.
-+ */
-+int cxl_register_private_region(struct cxl_region *cxlr)
-+{
-+	int rc = 0;
-+
-+	if (!cxlr->params.res)
-+		return -EINVAL;
-+
-+	if (cxlr->private_type == CXL_PRIVATE_NONE) {
-+		dev_err(&cxlr->dev, "private_type must be set before commit\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Initialize the private_ops with region info */
-+	cxlr->private_ops.res_start = cxlr->params.res->start;
-+	cxlr->private_ops.res_end = cxlr->params.res->end;
-+	cxlr->private_ops.data = cxlr;
-+
-+	/* Call type-specific registration which sets memtype and callbacks */
-+	switch (cxlr->private_type) {
-+	default:
-+		dev_dbg(&cxlr->dev, "unsupported private_type: %d\n",
-+			cxlr->private_type);
-+		rc = -EINVAL;
-+		break;
-+	}
-+
-+	if (!rc)
-+		set_bit(CXL_REGION_F_PRIVATE_REGISTERED, &cxlr->flags);
-+	return rc;
-+}
-+
-+/*
-+ * Unregister a private CXL region.
-+ *
-+ * This function is called during region reset or device release.
-+ * It dispatches to the appropriate type-specific cleanup function.
-+ */
-+void cxl_unregister_private_region(struct cxl_region *cxlr)
-+{
-+	if (!test_and_clear_bit(CXL_REGION_F_PRIVATE_REGISTERED, &cxlr->flags))
-+		return;
-+
-+	/* Dispatch to type-specific cleanup */
-+	switch (cxlr->private_type) {
-+	default:
-+		break;
-+	}
-+}
-diff --git a/drivers/cxl/core/private_region/private_region.h b/drivers/cxl/core/private_region/private_region.h
-new file mode 100644
-index 000000000000..9b34e51d8df4
---- /dev/null
-+++ b/drivers/cxl/core/private_region/private_region.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __CXL_PRIVATE_REGION_H__
-+#define __CXL_PRIVATE_REGION_H__
-+
-+struct cxl_region;
-+
-+int cxl_register_private_region(struct cxl_region *cxlr);
-+void cxl_unregister_private_region(struct cxl_region *cxlr);
-+
-+#endif /* __CXL_PRIVATE_REGION_H__ */
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index ae899f68551f..c60eef96c0ca 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -15,6 +15,7 @@
- #include <cxlmem.h>
- #include <cxl.h>
- #include "core.h"
-+#include "private_region/private_region.h"
- 
- /**
-  * DOC: cxl core region
-@@ -38,8 +39,6 @@
-  */
- static nodemask_t nodemask_region_seen = NODE_MASK_NONE;
- 
--static struct cxl_region *to_cxl_region(struct device *dev);
--
- #define __ACCESS_ATTR_RO(_level, _name) {				\
- 	.attr	= { .name = __stringify(_name), .mode = 0444 },		\
- 	.show	= _name##_access##_level##_show,			\
-@@ -398,9 +397,6 @@ static int __commit(struct cxl_region *cxlr)
- 		return rc;
- 
- 	rc = cxl_region_decode_commit(cxlr);
--	if (rc)
--		return rc;
--
- 	p->state = CXL_CONFIG_COMMIT;
- 
- 	return 0;
-@@ -615,12 +611,17 @@ static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
- 	struct cxl_region *cxlr = to_cxl_region(dev);
- 	const char *desc;
- 
--	if (cxlr->mode == CXL_PARTMODE_RAM)
--		desc = "ram";
--	else if (cxlr->mode == CXL_PARTMODE_PMEM)
-+	switch (cxlr->mode) {
-+	case CXL_PARTMODE_RAM:
-+		desc = cxlr->private ? "private" : "ram";
-+		break;
-+	case CXL_PARTMODE_PMEM:
- 		desc = "pmem";
--	else
-+		break;
-+	default:
- 		desc = "";
-+		break;
-+	}
- 
- 	return sysfs_emit(buf, "%s\n", desc);
+ struct zswap_lruvec_state {};
+@@ -69,6 +71,9 @@ static inline bool zswap_never_enabled(void)
+ 	return true;
  }
-@@ -772,6 +773,7 @@ static struct attribute *cxl_region_attrs[] = {
- 	&dev_attr_size.attr,
- 	&dev_attr_mode.attr,
- 	&dev_attr_extended_linear_cache_size.attr,
-+	&dev_attr_private_type.attr,
- 	NULL,
- };
  
-@@ -2400,6 +2402,9 @@ static void cxl_region_release(struct device *dev)
- 	struct cxl_region *cxlr = to_cxl_region(dev);
- 	int id = atomic_read(&cxlrd->region_id);
- 
-+	/* Ensure private region is cleaned up if not already done */
-+	cxl_unregister_private_region(cxlr);
++static inline void zswap_add_direct_node(int nid) {}
++static inline void zswap_remove_direct_node(int nid) {}
 +
- 	/*
- 	 * Try to reuse the recently idled id rather than the cached
- 	 * next id to prevent the region id space from increasing
-@@ -2429,7 +2434,7 @@ bool is_cxl_region(struct device *dev)
- }
- EXPORT_SYMBOL_NS_GPL(is_cxl_region, "CXL");
+ #endif
  
--static struct cxl_region *to_cxl_region(struct device *dev)
-+struct cxl_region *to_cxl_region(struct device *dev)
+ #endif /* _LINUX_ZSWAP_H */
+diff --git a/mm/zswap.c b/mm/zswap.c
+index de8858ff1521..aada588c957e 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -35,6 +35,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/list_lru.h>
+ #include <linux/zsmalloc.h>
++#include <linux/node.h>
+ 
+ #include "swap.h"
+ #include "internal.h"
+@@ -190,6 +191,7 @@ struct zswap_entry {
+ 	swp_entry_t swpentry;
+ 	unsigned int length;
+ 	bool referenced;
++	bool direct;
+ 	struct zswap_pool *pool;
+ 	unsigned long handle;
+ 	struct obj_cgroup *objcg;
+@@ -199,6 +201,20 @@ struct zswap_entry {
+ static struct xarray *zswap_trees[MAX_SWAPFILES];
+ static unsigned int nr_zswap_trees[MAX_SWAPFILES];
+ 
++/* Nodemask for compressed RAM nodes used by zswap_compress_direct */
++static nodemask_t zswap_direct_nodes = NODE_MASK_NONE;
++
++void zswap_add_direct_node(int nid)
++{
++	node_set(nid, zswap_direct_nodes);
++}
++
++void zswap_remove_direct_node(int nid)
++{
++	if (!node_online(nid))
++		node_clear(nid, zswap_direct_nodes);
++}
++
+ /* RCU-protected iteration */
+ static LIST_HEAD(zswap_pools);
+ /* protects zswap_pools list modification */
+@@ -716,7 +732,13 @@ static void zswap_entry_cache_free(struct zswap_entry *entry)
+ static void zswap_entry_free(struct zswap_entry *entry)
  {
- 	if (dev_WARN_ONCE(dev, dev->type != &cxl_region_type,
- 			  "not a cxl_region device\n"))
-@@ -2638,6 +2643,13 @@ static ssize_t create_ram_region_show(struct device *dev,
- 	return __create_region_show(to_cxl_root_decoder(dev), buf);
+ 	zswap_lru_del(&zswap_list_lru, entry);
+-	zs_free(entry->pool->zs_pool, entry->handle);
++	if (entry->direct) {
++		struct page *page = (struct page *)entry->handle;
++
++		node_private_freed(page);
++		__free_page(page);
++	} else
++		zs_free(entry->pool->zs_pool, entry->handle);
+ 	zswap_pool_put(entry->pool);
+ 	if (entry->objcg) {
+ 		obj_cgroup_uncharge_zswap(entry->objcg, entry->length);
+@@ -849,6 +871,58 @@ static void acomp_ctx_put_unlock(struct crypto_acomp_ctx *acomp_ctx)
+ 	mutex_unlock(&acomp_ctx->mutex);
  }
  
-+static ssize_t create_private_region_show(struct device *dev,
-+					  struct device_attribute *attr,
-+					  char *buf)
++static struct page *zswap_compress_direct(struct page *src,
++					  struct zswap_entry *entry)
 +{
-+	return __create_region_show(to_cxl_root_decoder(dev), buf);
-+}
++	int nid;
++	struct page *dst;
++	gfp_t gfp;
++	nodemask_t tried_nodes = NODE_MASK_NONE;
 +
- static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
- 					  enum cxl_partition_mode mode, int id)
- {
-@@ -2698,6 +2710,28 @@ static ssize_t create_ram_region_store(struct device *dev,
- }
- DEVICE_ATTR_RW(create_ram_region);
- 
-+static ssize_t create_private_region_store(struct device *dev,
-+					   struct device_attribute *attr,
-+					   const char *buf, size_t len)
-+{
-+	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
-+	struct cxl_region *cxlr;
-+	int rc, id;
++	if (nodes_empty(zswap_direct_nodes))
++		return NULL;
 +
-+	rc = sscanf(buf, "region%d\n", &id);
-+	if (rc != 1)
-+		return -EINVAL;
++	gfp = GFP_NOWAIT | __GFP_NORETRY | __GFP_HIGHMEM | __GFP_MOVABLE |
++	      __GFP_THISNODE;
 +
-+	cxlr = __create_region(cxlrd, CXL_PARTMODE_RAM, id);
-+	if (IS_ERR(cxlr))
-+		return PTR_ERR(cxlr);
++	for_each_node_mask(nid, zswap_direct_nodes) {
++		int ret;
 +
-+	cxlr->private = true;
++		/* Skip nodes we've already tried and failed */
++		if (node_isset(nid, tried_nodes))
++			continue;
 +
-+	return len;
-+}
-+DEVICE_ATTR_RW(create_private_region);
++		dst = __alloc_pages(gfp, 0, nid, &zswap_direct_nodes);
++		if (!dst)
++			continue;
 +
- static ssize_t region_show(struct device *dev, struct device_attribute *attr,
- 			   char *buf)
- {
-@@ -3431,7 +3465,7 @@ static void cxlr_dax_unregister(void *_cxlr_dax)
- 	device_unregister(&cxlr_dax->dev);
- }
- 
--static int devm_cxl_add_dax_region(struct cxl_region *cxlr)
-+int devm_cxl_add_dax_region(struct cxl_region *cxlr)
- {
- 	struct cxl_dax_region *cxlr_dax;
- 	struct device *dev;
-@@ -3974,6 +4008,13 @@ static int cxl_region_probe(struct device *dev)
- 					p->res->start, p->res->end, cxlr,
- 					is_system_ram) > 0)
- 			return 0;
-+
-+
-+		if (cxlr->private) {
-+			rc = cxl_register_private_region(cxlr);
-+			if (rc)
-+				return rc;
++		/*
++		 * Check with the device driver that this page is safe to use.
++		 * If the device reports an error (e.g., compression ratio is
++		 * too low and the page can't safely store data), free the page
++		 * and try another node.
++		 */
++		ret = node_private_allocated(dst);
++		if (ret) {
++			__free_page(dst);
++			node_set(nid, tried_nodes);
++			continue;
 +		}
- 		return devm_cxl_add_dax_region(cxlr);
- 	default:
- 		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index ba17fa86d249..b276956ff88d 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -525,6 +525,20 @@ enum cxl_partition_mode {
-  */
- #define CXL_REGION_F_LOCK 2
- 
-+/*
-+ * Indicate that this region has been registered as a private region.
-+ * Used to track lifecycle and prevent double-unregistration.
-+ */
-+#define CXL_REGION_F_PRIVATE_REGISTERED 3
 +
-+/**
-+ * enum cxl_private_region_type - CXL private region types
-+ * @CXL_PRIVATE_NONE: No private region type set
-+ */
-+enum cxl_private_region_type {
-+	CXL_PRIVATE_NONE,
-+};
++		goto found;
++	}
 +
- /**
-  * struct cxl_region - CXL region
-  * @dev: This region's device
-@@ -534,10 +548,13 @@ enum cxl_partition_mode {
-  * @cxl_nvb: nvdimm bridge for coordinating @cxlr_pmem setup / shutdown
-  * @cxlr_pmem: (for pmem regions) cached copy of the nvdimm bridge
-  * @flags: Region state flags
-+ * @private: Region is private (not exposed to system memory)
-  * @params: active + config params for the region
-  * @coord: QoS access coordinates for the region
-  * @node_notifier: notifier for setting the access coordinates to node
-  * @adist_notifier: notifier for calculating the abstract distance of node
-+ * @private_type: CXL private region type for dispatch (set via sysfs)
-+ * @private_ops: private node operations for callbacks (if mode is PRIVATE)
-  */
- struct cxl_region {
- 	struct device dev;
-@@ -547,10 +564,13 @@ struct cxl_region {
- 	struct cxl_nvdimm_bridge *cxl_nvb;
- 	struct cxl_pmem_region *cxlr_pmem;
- 	unsigned long flags;
-+	bool private;
- 	struct cxl_region_params params;
- 	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
- 	struct notifier_block node_notifier;
- 	struct notifier_block adist_notifier;
-+	enum cxl_private_region_type private_type;
-+	struct private_node_ops private_ops;
- };
++	return NULL;
++
++found:
++	/* If we fail to copy at this point just fallback */
++	if (copy_mc_highpage(dst, src)) {
++		__free_page(dst);
++		dst = NULL;
++	}
++	return dst;
++}
++
+ static bool zswap_compress(struct page *page, struct zswap_entry *entry,
+ 			   struct zswap_pool *pool)
+ {
+@@ -860,6 +934,17 @@ static bool zswap_compress(struct page *page, struct zswap_entry *entry,
+ 	gfp_t gfp;
+ 	u8 *dst;
+ 	bool mapped = false;
++	struct page *zpage;
++
++	/* Try to shunt directly to compressed ram */
++	zpage = zswap_compress_direct(page, entry);
++	if (zpage) {
++		entry->handle = (unsigned long)zpage;
++		entry->length = PAGE_SIZE;
++		entry->direct = true;
++		return true;
++	}
++	/* otherwise fallback to normal zswap */
  
- struct cxl_nvdimm_bridge {
+ 	acomp_ctx = acomp_ctx_get_cpu_lock(pool);
+ 	dst = acomp_ctx->buffer;
+@@ -913,6 +998,7 @@ static bool zswap_compress(struct page *page, struct zswap_entry *entry,
+ 	zs_obj_write(pool->zs_pool, handle, dst, dlen);
+ 	entry->handle = handle;
+ 	entry->length = dlen;
++	entry->direct = false;
+ 
+ unlock:
+ 	if (mapped)
+@@ -936,6 +1022,15 @@ static bool zswap_decompress(struct zswap_entry *entry, struct folio *folio)
+ 	int decomp_ret = 0, dlen = PAGE_SIZE;
+ 	u8 *src, *obj;
+ 
++	/* compressed ram page */
++	if (entry->direct) {
++		struct page *src = (struct page *)entry->handle;
++		struct folio *zfolio = page_folio(src);
++
++		memcpy_folio(folio, 0, zfolio, 0, PAGE_SIZE);
++		goto direct_done;
++	}
++
+ 	acomp_ctx = acomp_ctx_get_cpu_lock(pool);
+ 	obj = zs_obj_read_begin(pool->zs_pool, entry->handle, acomp_ctx->buffer);
+ 
+@@ -969,6 +1064,7 @@ static bool zswap_decompress(struct zswap_entry *entry, struct folio *folio)
+ 	zs_obj_read_end(pool->zs_pool, entry->handle, obj);
+ 	acomp_ctx_put_unlock(acomp_ctx);
+ 
++direct_done:
+ 	if (!decomp_ret && dlen == PAGE_SIZE)
+ 		return true;
+ 
+@@ -1483,7 +1579,13 @@ static bool zswap_store_page(struct page *page,
+ 	return true;
+ 
+ store_failed:
+-	zs_free(pool->zs_pool, entry->handle);
++	if (entry->direct) {
++		struct page *freepage = (struct page *)entry->handle;
++
++		node_private_freed(freepage);
++		__free_page(freepage);
++	} else
++		zs_free(pool->zs_pool, entry->handle);
+ compress_failed:
+ 	zswap_entry_cache_free(entry);
+ 	return false;
 -- 
 2.52.0
 
