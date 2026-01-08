@@ -1,63 +1,65 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9862C33066F
-	for <linux-cxl@vger.kernel.org>; Thu,  8 Jan 2026 20:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC34F33067A
+	for <linux-cxl@vger.kernel.org>; Thu,  8 Jan 2026 20:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767904719; cv=none; b=P/6m4BTG2YxR7q2Ni69zHN1jlLYGdyMZ0z0fzzaoGQ48WEkG1XzwuogKuWpNGwFv/f17+qpr9c622lG8kxhUJwuum83g5T6ZRqskH8r7yVQDKeFi3TSEFzxLna7KgGFmf6guhTv96k2Q0wi7qdVxpE2hFUVPQ316QQTpcPe0/F8=
+	t=1767904724; cv=none; b=EZPmeFfweWapPzEaU49g2LCTTLgQaGHF7ZeA3s2kvksqhwrw9w7cYYuAsGdAmApAakuR9ig9AIqZ9tlwwIAzlodU7lifVxyYPn5qHFZUZ2WP5LCIwh1JSXXWCdltNhX6xKpICrvY2iKXZK8DIl9t6TeyCIEd+tV3n28xxHv4XN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767904719; c=relaxed/simple;
-	bh=c/gsoPA1qi7y8pLF+dvyA8iXUBOT9HWWVXTbFcFFRno=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JDl4IxxkH6IiQkxl7S8zLrl+9jGzdV/KJy7gc3SCfJzY4n4TLOqjdBrkr9TKvEU59fQjP5bl/EPIQL8UVKhhMfuuVN4YM55OhNw3xtUx7fA/FRzdv/tHwXgvEq4XMDXgquSBNAKxld2d4O8drr5Z/ps64p2yf1k5cnCrWHa4y2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=CUBIwEtM; arc=none smtp.client-ip=209.85.160.175
+	s=arc-20240116; t=1767904724; c=relaxed/simple;
+	bh=CQhA3mC1HF2mDq9BwlheTKnKhYcNJHlD3RCOWwoDAu4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cU2/6DWmJPNOOJHSzCffuTi6YlaC/mnObS4hXHeQksht71GHzeag2t6rCaMgraG5JCg0ejujW5e1zdOTSlRNCxHy6Fq6RoKl+5qTNPfGJERsPoc+JOrXN1bkaSiVr7PgwHEFrY9CGS5UWRrSZQ6DlpNgBP0f05ShF3xz/pjL/94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Vc9olPry; arc=none smtp.client-ip=209.85.222.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="CUBIwEtM"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4f1b212ba25so30774431cf.2
-        for <linux-cxl@vger.kernel.org>; Thu, 08 Jan 2026 12:38:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Vc9olPry"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-8bc53dae8c2so496704285a.2
+        for <linux-cxl@vger.kernel.org>; Thu, 08 Jan 2026 12:38:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1767904715; x=1768509515; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=W+FiscnY2dd9CMZcfeOt+saJiVQsfJ0OYuH1fa+Xrtc=;
-        b=CUBIwEtMezAFTsr7nKdE2cQFCpk8+sFgukBxxvy98gOP+Ou9aVyRIk8DtZaZa2auQv
-         IQp62xbbbNyhCKmOwhgrKWVNQiRNwyIUMycw457dSeycl1vACd5fyfG9V1nC761MtleF
-         iaOPjGPXOkkfezn4Ju8F3qsJEByOH6mePQ80qflBR3aXNfc2Xhh+Zc3dFXh1liLpeYyY
-         9ZUj1Tb0m4FldfC643KR+MN0EaZQLIcZ8VY5nYdjOkHejho8vBiPKpl51fCjlfNY3h8+
-         JhV50umCOdRf+N824YmBatKtTlMSgUOKxl2OAsEGu2H72zocV8GUgB9xGSDMxpvB5xS2
-         SR7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767904715; x=1768509515;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gourry.net; s=google; t=1767904721; x=1768509521; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=W+FiscnY2dd9CMZcfeOt+saJiVQsfJ0OYuH1fa+Xrtc=;
-        b=j+GzZnuAso8sMCQwNN1NAwIWW95kA2Tyk3147tmlocKBdmm6rK4m7ZtpEh93W1tioi
-         WJxas2EORjhiP9BJtVvlNU3V3UbfrqYX15vWxPQoj6R0xc1F1DJt9NOoUbCvinprxoQv
-         ijw9+B6TaZGgNrwWiGRlK0zQj3up8kB6GXAkxxmc4RarTLpNqYb7snZVoE8Hcwj1D2I6
-         fGVcH2qssaOWmCjjrEOjeTDEF/wqZpBVCRrNbCVwmH7/CTisKAug5oIyjM31olQHPvF7
-         yELnWO/eAJO/elFesABkpkr7wHGKukL8IryUtWwKigdguyWS00XzS+SMgf2bg6D2mhmw
-         rtbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpTbAOTXXvKx0gJpQN6hXnrrG3cgvi3WMukUQQTu1jGDuTkpTzsO7U+fa0vM0f14SvodTkCtiGMos=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjiDugabC8JpvXlJaG7Ks5ycvSB+zni05LCoIHOzMSxAw/OsFs
-	4NEk5lDao+ROSlBc5k2fF9Z8qd3jWtCWofnhD3Srl1xOb+53D9Qy4m2H2BHScEOe/eg=
-X-Gm-Gg: AY/fxX6Ejdz6Vbuy/ipOwjEa2u8Pq/SE9KpAiEdDAMAV6woOsLl3/HMmcr3AuW8B0fx
-	3aKuanQEtAKv3Lvnmf0qYUYF0EaIQru+KN2DOhHRktHINA+VLB1f8OJw3uMGGJpTJ+yV3UCxORW
-	ZQCG7FIPHkrO9fHGZJR7XqfWknFugGE7fJvdPSof5RIFugDgaqh+0KAjuUGQQcnSFaJA/mF/705
-	tJTvgAc2Oc0s++BdX0quNduD+yp3z8rf7qUFVfeRIOPQw/THvVWIQE/ZdLDD2r52PHnh3ezcJz4
-	AaEyNuyNE55wWljQIj/kn7pm3bd/rQMtQ9vgJIR/+gJNXWrUPIrRaE4HuwqIiJtWIQOiFONztMm
-	e9zdY/YeD3j9j++fuiM2nnAi8hMgnOEgOa9jn11dePuHhzHi/ZqIJV2JhdTtthndhz8Ar2pZUlt
-	tQDwDblXuY8dtFd5nyAHw8n1uzq50RIBEBvt2A8YPFEmFxMNJt0cF3lxvTsRQoT3Ty5xKajYLjW
-	Tw=
-X-Google-Smtp-Source: AGHT+IGgVKMRufuoIwNk6V89uYwrjMlLk/itQMcGhMZDRBQvLjiXAI9ku2u4EWxqz6DDG1P/QUPQlA==
-X-Received: by 2002:a05:622a:181e:b0:4ee:49b8:fb81 with SMTP id d75a77b69052e-4ffb4a26a6dmr88539831cf.61.1767904715304;
-        Thu, 08 Jan 2026 12:38:35 -0800 (PST)
+        bh=yOrL3864bJGfwtl8UioEmR5rhRGdyu2H2uXt3HWEC2Y=;
+        b=Vc9olPryHSrK4DKO+GwbXZOMPYDfRm7YzoSfgtJe6rN6i8gfBNR9tTrqGNbcXaUFWd
+         C9WEL29I5PIp0nOnrW802TWA3kNBNevF9AH3pNznfb4rmwzo+Bv+gQ96J3tYolmltk0o
+         HlcrfHtIsggqzRY7iR5kYp3H6uMdTasBQJNqNKuGoQGDOWklzqB7ZZocvqtqCyloK2hA
+         kHd2g7Xc6tGa++2wYYZB5rmd3E7H3re7TTKNWLluo1Z+xCNkptLtsv71k8UePjFzf95/
+         g2VuHi6dj8VTYlzIGUcEOc1j01CasObHAsrgMFZR1EzcH17OxGSQGTgbWaTH+UestQc6
+         gTBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767904721; x=1768509521;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yOrL3864bJGfwtl8UioEmR5rhRGdyu2H2uXt3HWEC2Y=;
+        b=dPucl0SUVoOrQ6vajasDzFEdmkeVTvxKjCO3aGVkyd3cXOlFgj9bmLFPhd9cPAussS
+         npq0iva/Q84LN0hGdLFod+ij0SkPgIRjs426yv6Kh4wQzwUhl7Pz3BH264baqhXmHGkN
+         nV8zMPGWwrSQhz/vXDGzdidlYYdcU7r2veS1Ok/51S9HPY/IkU16yO9UznQ/Z4BwDY2I
+         S+epn8mv5zgwbpkFPcS1nuayXs/3ThmyOxF3XJdIDpdXluGWgDWu23ehO6k9orre5fsN
+         sg0qyrVdWgERILOX7L8tag69YdO+awe4546PropKRjPq75R1YW4U80QIN10gFDwrnv4Q
+         9X0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWYRIrmbV5h45jBwRXxLhNQEX3DTPpqiFdWTdGHIiWHuaA69dkv8Z9n0FudXrq74KRD6nEBP5OsEE8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTVC3Sujhe/OIS3JAZI0zIHw4zrs1HNXS+HpVhREbhrGlqQX5v
+	Zet0dwEz26LPYwMdYPCb24NTnjST0OC5FXfiGisIF/8O5oeCVRiLTHW8aIeVZ/qL6KI=
+X-Gm-Gg: AY/fxX5FJ8WQo7yffvaqbVT3ZMgpW1+aYMlHZlCdCz7NVAPnDt9zPvaH7caiUuoj7wc
+	pVm33SzO27PtM908jh1HvaXclnFWR8zBhACLUFurRJhT7C2P8e6RUK7zn7Jb4VA7mJfJiiE/L6e
+	6y6PWNyiMLlaQDFg0ovqXaM5qoz60LLlcelG4EjB6RuqeM9IKpe6SR4rDGsQtASklqnsn9/4YS2
+	IHyVZKrH4Fw7cqJ9FsM9Fs/OSg6/KwZz90Ajs1ii6TBoCYsK0tNRxmofwDrrRWf1QDkqlkY13Fr
+	JknIIh6YOao9T5VOAka77+ASRACd9lsR0EvJAq1O0iqaezoig5k1OXXauSDBudrMtCHai85GFz5
+	v/81rrxhIRHlnx2iNQUmM2Zuv/VPnwyAPAyF+JZGql6rwMLO882rHuhjQFXPzyn9tLxI3lLOLis
+	NgKNlUOZCvnXMUoweV0uq/zc3HOLjPsN6pKhCRN8qVvLHbRFpuW1maBF7Iyy/7yM1GPyUQdzIAI
+	r0=
+X-Google-Smtp-Source: AGHT+IErusoCASFUMJ5xblQXCL2hFphAjRCx8AogbVf/OleyczW51nyjXSqkJjk86aDTspqXYukd7w==
+X-Received: by 2002:a05:620a:6ccd:b0:8b2:e17a:37 with SMTP id af79cd13be357-8c3893f239bmr1013342785a.43.1767904720528;
+        Thu, 08 Jan 2026 12:38:40 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-890770e472csm60483886d6.23.2026.01.08.12.38.33
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-890770e472csm60483886d6.23.2026.01.08.12.38.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jan 2026 12:38:34 -0800 (PST)
+        Thu, 08 Jan 2026 12:38:40 -0800 (PST)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org,
 	cgroups@vger.kernel.org,
@@ -118,11 +120,14 @@ Cc: linux-doc@vger.kernel.org,
 	apopple@nvidia.com,
 	cl@gentwo.org,
 	harry.yoo@oracle.com,
-	zhengqi.arch@bytedance.com
-Subject: [RFC PATCH v3 0/8] mm,numa: N_PRIVATE node isolation for device-managed memory
-Date: Thu,  8 Jan 2026 15:37:47 -0500
-Message-ID: <20260108203755.1163107-1-gourry@gourry.net>
+	zhengqi.arch@bytedance.com,
+	Balbir Singh <bsingharora@gmail.com>
+Subject: [RFC PATCH v3 1/8] numa,memory_hotplug: create N_PRIVATE (Private Nodes)
+Date: Thu,  8 Jan 2026 15:37:48 -0500
+Message-ID: <20260108203755.1163107-2-gourry@gourry.net>
 X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260108203755.1163107-1-gourry@gourry.net>
+References: <20260108203755.1163107-1-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -131,291 +136,376 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series introduces N_PRIVATE, a new node state for memory nodes 
-whose memory is not intended for general system consumption.  Today,
-device drivers (CXL, accelerators, etc.) hotplug their memory to access
-mm/ services like page allocation and reclaim, but this exposes general
-workloads to memory with different characteristics and reliability
-guarantees than system RAM.
+N_MEMORY nodes are intended to contain general System RAM.  Today, some
+device drivers hotplug their memory (marked Specific Purpose or Reserved)
+to get access to mm/ services, but don't intend it for general consumption.
 
-N_PRIVATE provides isolation by default while enabling explicit access
-via __GFP_THISNODE for subsystems that understand how to manage these
-specialized memory regions.
+This creates reliability issues as there are no isolation guarantees.
 
-Motivation
-==========
+Create N_PRIVATE for memory nodes whose memory is not intended for
+general consumption.  This state is mutually exclusive with N_MEMORY.
 
-Several emerging memory technologies require kernel memory management
-services but should not be used for general allocations:
+This will allow existing service code (like page_alloc.c) to manage
+N_PRIVATE nodes without exposing N_MEMORY users to that memory.
 
-  - CXL Compressed RAM (CRAM): Hardware-compressed memory where the
-    effective capacity depends on data compressibility.  Uncontrolled
-    use risks capacity exhaustion when compression ratios degrade.
+Add `node_mark_private()` for device drivers to call to mark a node
+as private prior to hotplugging memory.  This fails if the node is
+already online or already has N_MEMORY.
 
-  - Accelerator Memory: GPU/TPU-attached memory optimized for specific
-    access patterns that are not intended for general allocation.
+Private nodes must have a memory types so that multiple drivers
+trying to online private memory onto the same node are warned
+when a conflict occurs.
 
-  - Tiered Memory: Memory intended only as a demotion target, not for
-    initial allocations.
-
-Currently, these devices either avoid hotplugging entirely (losing mm/
-services) or hotplug as regular N_MEMORY (risking reliability issues).
-N_PRIVATE solves this by creating an isolated node class.
-
-Design
-======
-
-The series introduces:
-
-  1. N_PRIVATE node state (mutually exclusive with N_MEMORY)
-  2. private_memtype enum for policy-based access control
-  3. cpuset.mems.sysram for user-visible isolation
-  4. Integration points for subsystems (zswap demonstrated)
-  5. A cxl private_region example to demonstrate full plumbing
-
-Private Memory Types (private_memtype)
-======================================
-
-The private_memtype enum defines policy bits that control how different
-kernel subsystems may access private nodes:
-
-  enum private_memtype {
-      NODE_MEM_NOTYPE,      /* No type assigned (invalid state) */
-      NODE_MEM_ZSWAP,       /* Swap compression target */
-      NODE_MEM_COMPRESSED,  /* General compressed RAM */
-      NODE_MEM_ACCELERATOR, /* Accelerator-attached memory */
-      NODE_MEM_DEMOTE_ONLY, /* Memory-tier demotion target only */
-      NODE_MAX_MEMTYPE,
-  };
-
-These types serve as policy hints for subsystems:
-
-NODE_MEM_ZSWAP
---------------
-Nodes with this type are registered as zswap compression targets.  When
-zswap compresses a page, it can allocate directly from ZSWAP-typed nodes
-using __GFP_THISNODE, bypassing software compression if the device
-provides hardware compression.
-
-Example flow:
-  1. CXL device creates private_region with type=zswap
-  2. Driver calls node_register_private() with NODE_MEM_ZSWAP
-  3. zswap_add_direct_node() registers the node as a compression target
-  4. On swap-out, zswap allocates from the private node
-  5. page_allocated() callback validates compression ratio headroom
-  6. page_freed() callback zeros pages to improve device compression
-
-Prototype Note:
-  This patch set does not actually do compression ratio validation, as
-  this requires an actual device to provide some kind of counter and/or
-  interrupt to denote when allocations are safe.  The callbacks are
-  left as stubs with TODOs for device vendors to pick up the next step
-  (we'll continue with a QEMU example if reception is positive).
-
-  For now, this always succeeds because compressed=real capacity.
-
-NODE_MEM_COMPRESSED (CRAM)
---------------------------
-For general compressed RAM devices.  Unlike ZSWAP nodes, CRAM nodes
-could be exposed to subsystems that understand compression semantics:
-
-  - vmscan: Could prefer demoting pages to CRAM nodes before swap
-  - memory-tiering: Could place CRAM between DRAM and persistent memory
-  - zram: Could use as backing store instead of or alongside zswap
-
-Such a component (mm/cram.c) would differ from zswap or zram by allowing
-the compressed pages to remain mapped Read-Only in the page table.
-
-NODE_MEM_ACCELERATOR
---------------------
-For GPU/TPU/accelerator-attached memory.  Policy implications:
-
-  - Default allocations: Never (isolated from general page_alloc)
-  - GPU drivers: Explicit allocation via __GFP_THISNODE
-  - NUMA balancing: Excluded from automatic migration
-  - Memory tiering: Not a demotion target
-
-Some GPU vendors want management of their memory via NUMA nodes, but
-don't want fallback or migration allocations to occur.  This enables
-that pattern.
-
-mm/mempolicy.c could be used to allow for N_PRIVATE nodes of this type
-if the intent is per-vma access to accelerator memory (e.g. via mbind)
-but this is omitted from this series from now to limit userland
-exposure until first class examples are provided.
-
-NODE_MEM_DEMOTE_ONLY
---------------------
-For memory intended exclusively as a demotion target in memory tiering:
-
-  - page_alloc: Never allocates initially (slab, page faults, etc.)
-  - vmscan/reclaim: Valid demotion target during memory pressure
-  - memory-tiering: Allow hotness monitoring/promotion for this region
-
-This enables "cold storage" tiers using slower/cheaper memory (CXL-
-attached DRAM, persistent memory in volatile mode) without the memory
-appearing in allocation fast paths.
-
-This also adds some additional bonus of enforcing memory placement on
-these nodes to be movable allocations only (with all the normal caveats
-around page pinning).
-
-Subsystem Integration Points
-============================
-
-The private_node_ops structure provides callbacks for integration:
-
-  struct private_node_ops {
-      struct list_head list;
-      resource_size_t res_start;
-      resource_size_t res_end;
-      enum private_memtype memtype;
-      int (*page_allocated)(struct page *page, void *data);
-      void (*page_freed)(struct page *page, void *data);
-      void *data;
-  };
-
-page_allocated(): Called after allocation, returns 0 to accept or
--ENOSPC/-ENODEV to reject (caller retries elsewhere).  Enables:
-  - Compression ratio enforcement for CRAM/zswap
-  - Capacity tracking for accelerator memory
-  - Rate limiting for demotion targets
-
-page_freed(): Called on free, enables:
-  - Zeroing for compression ratio recovery
-  - Capacity accounting updates
-  - Device-specific cleanup
-
-Isolation Enforcement
-=====================
-
-The series modifies core allocators to respect N_PRIVATE isolation:
-
-  - page_alloc: Constrains zone iteration to cpuset.mems.sysram
-  - slub: Allocates only from N_MEMORY nodes
-  - compaction: Skips N_PRIVATE nodes
-  - mempolicy: Uses sysram_nodes for policy evaluation
-
-__GFP_THISNODE bypasses isolation, enabling explicit access:
-
-  page = alloc_pages_node(private_nid, GFP_KERNEL | __GFP_THISNODE, 0);
-
-This pattern is used by zswap, and would be used by other subsystems
-that explicitly opt into private node access.
-
-User-Visible Changes
-====================
-
-cpuset gains cpuset.mems.sysram (read-only), shows N_MEMORY nodes.
-
-ABI: /proc/<pid>/status Mems_allowed shows sysram nodes only.
-
-Drivers create private regions via sysfs:
-  echo region0 > /sys/bus/cxl/.../create_private_region
-  echo zswap > /sys/bus/cxl/.../region0/private_type
-  echo 1 > /sys/bus/cxl/.../region0/commit
-
-Series Organization
-===================
-
-Patch 1: numa,memory_hotplug: create N_PRIVATE (Private Nodes)
-  Core infrastructure: N_PRIVATE node state, node_mark_private(),
-  private_memtype enum, and private_node_ops registration.
-
-Patch 2: mm: constify oom_control, scan_control, and alloc_context 
-nodemask
-  Preparatory cleanup for enforcing that nodemasks don't change.
-
-Patch 3: mm: restrict slub, compaction, and page_alloc to sysram
-  Enforce N_MEMORY-only allocation for general paths.
-
-Patch 4: cpuset: introduce cpuset.mems.sysram
-  User-visible isolation via cpuset interface.
-
-Patch 5: Documentation/admin-guide/cgroups: update docs for mems_allowed
-  Document the new behavior and sysram_nodes.
-
-Patch 6: drivers/cxl/core/region: add private_region
-  CXL infrastructure for private regions.
-
-Patch 7: mm/zswap: compressed ram direct integration
-  Zswap integration demonstrating direct hardware compression.
-
-Patch 8: drivers/cxl: add zswap private_region type
-  Complete example: CXL region as zswap compression target.
-
-Future Work
-===========
-
-This series provides the foundation.  Planned follow-ups include:
-
-  - CRAM integration with vmscan for smart demotion
-  - ACCELERATOR type for GPU memory management
-  - Memory-tiering integration with DEMOTE_ONLY nodes
-
-Testing
-=======
-
-All patches build cleanly.  Tested with:
-  - CXL QEMU emulation with private regions
-  - Zswap stress tests with private compression targets
-  - Cpuset verification of mems.sysram isolation
-
-
-Gregory Price (8):
-  numa,memory_hotplug: create N_PRIVATE (Private Nodes)
-  mm: constify oom_control, scan_control, and alloc_context nodemask
-  mm: restrict slub, compaction, and page_alloc to sysram
-  cpuset: introduce cpuset.mems.sysram
-  Documentation/admin-guide/cgroups: update docs for mems_allowed
-  drivers/cxl/core/region: add private_region
-  mm/zswap: compressed ram direct integration
-  drivers/cxl: add zswap private_region type
-
- .../admin-guide/cgroup-v1/cpusets.rst         |  19 +-
- Documentation/admin-guide/cgroup-v2.rst       |  26 ++-
- Documentation/filesystems/proc.rst            |   2 +-
- drivers/base/node.c                           | 199 ++++++++++++++++++
- drivers/cxl/core/Makefile                     |   1 +
- drivers/cxl/core/core.h                       |   4 +
- drivers/cxl/core/port.c                       |   4 +
- drivers/cxl/core/private_region/Makefile      |  12 ++
- .../cxl/core/private_region/private_region.c  | 129 ++++++++++++
- .../cxl/core/private_region/private_region.h  |  14 ++
- drivers/cxl/core/private_region/zswap.c       | 127 +++++++++++
- drivers/cxl/core/region.c                     |  63 +++++-
- drivers/cxl/cxl.h                             |  22 ++
- include/linux/cpuset.h                        |  24 ++-
- include/linux/gfp.h                           |   6 +
- include/linux/mm.h                            |   4 +-
- include/linux/mmzone.h                        |   6 +-
- include/linux/node.h                          |  60 ++++++
- include/linux/nodemask.h                      |   1 +
- include/linux/oom.h                           |   2 +-
- include/linux/swap.h                          |   2 +-
- include/linux/zswap.h                         |   5 +
- kernel/cgroup/cpuset-internal.h               |   8 +
- kernel/cgroup/cpuset-v1.c                     |   8 +
- kernel/cgroup/cpuset.c                        |  98 ++++++---
- mm/compaction.c                               |   6 +-
- mm/internal.h                                 |   2 +-
- mm/memcontrol.c                               |   2 +-
- mm/memory_hotplug.c                           |   2 +-
- mm/mempolicy.c                                |   6 +-
- mm/migrate.c                                  |   4 +-
- mm/mmzone.c                                   |   5 +-
- mm/page_alloc.c                               |  31 +--
- mm/show_mem.c                                 |   9 +-
- mm/slub.c                                     |   8 +-
- mm/vmscan.c                                   |   6 +-
- mm/zswap.c                                    | 106 +++++++++-
- 37 files changed, 942 insertions(+), 91 deletions(-)
- create mode 100644 drivers/cxl/core/private_region/Makefile
- create mode 100644 drivers/cxl/core/private_region/private_region.c
- create mode 100644 drivers/cxl/core/private_region/private_region.h
- create mode 100644 drivers/cxl/core/private_region/zswap.c
+Suggested-by: David Hildenbrand <david@kernel.org>
+Suggested-by: Balbir Singh <bsingharora@gmail.com>
+Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
-base-commit: 803dd4b1159cf9864be17aab8a17653e6ecbbbb6
+ drivers/base/node.c      | 199 +++++++++++++++++++++++++++++++++++++++
+ include/linux/node.h     |  60 ++++++++++++
+ include/linux/nodemask.h |   1 +
+ mm/memory_hotplug.c      |   2 +-
+ 4 files changed, 261 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index 00cf4532f121..b503782ea109 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -861,6 +861,193 @@ void register_memory_blocks_under_node_hotplug(int nid, unsigned long start_pfn,
+ 			   (void *)&nid, register_mem_block_under_node_hotplug);
+ 	return;
+ }
++
++static enum private_memtype *private_nodes;
++/* Per-node list of private node operations callbacks */
++static struct list_head private_node_ops_list[MAX_NUMNODES];
++static DEFINE_MUTEX(private_node_ops_lock);
++static bool private_node_ops_initialized;
++
++/*
++ * Note: private_node_ops_list is initialized in node_dev_init() before
++ * any calls to node_register_private() can occur.
++ */
++
++/**
++ * node_register_private - Mark a node as private and register ops
++ * @nid: Node identifier
++ * @ops: Callback operations structure (required, but callbacks may be NULL)
++ *
++ * Mark a node as private and register the given ops structure. The ops
++ * structure must have res_start and res_end set to the physical address
++ * range covered by this registration, and memtype set to the private
++ * memory type. Multiple registrations for the same node are allowed as
++ * long as they have the same memtype.
++ *
++ * Returns 0 on success, negative error code on failure.
++ */
++int node_register_private(int nid, struct private_node_ops *ops)
++{
++	int rc = 0;
++	enum private_memtype ctype;
++	enum private_memtype type;
++
++	if (!ops)
++		return -EINVAL;
++
++	type = ops->memtype;
++
++	if (!node_possible(nid) || !private_nodes || type >= NODE_MAX_MEMTYPE)
++		return -EINVAL;
++
++	/* Validate resource bounds */
++	if (ops->res_start > ops->res_end)
++		return -EINVAL;
++
++	mutex_lock(&private_node_ops_lock);
++
++	/* hotplug lock must be held while checking online/node state */
++	mem_hotplug_begin();
++
++	/*
++	 * N_PRIVATE and N_MEMORY are mutually exclusive. Fail if the node
++	 * already has N_MEMORY set, regardless of online state.
++	 */
++	if (node_state(nid, N_MEMORY)) {
++		rc = -EBUSY;
++		goto out;
++	}
++
++	ctype = private_nodes[nid];
++	if (ctype > NODE_MEM_NOTYPE && ctype != type) {
++		rc = -EINVAL;
++		goto out;
++	}
++
++	/* Initialize the ops list entry and add to the node's list */
++	INIT_LIST_HEAD(&ops->list);
++	list_add_tail_rcu(&ops->list, &private_node_ops_list[nid]);
++
++	private_nodes[nid] = type;
++	node_set_state(nid, N_PRIVATE);
++out:
++	mem_hotplug_done();
++	mutex_unlock(&private_node_ops_lock);
++	return rc;
++}
++EXPORT_SYMBOL_GPL(node_register_private);
++
++/**
++ * node_unregister_private - Unregister ops and potentially unmark node as private
++ * @nid: Node identifier
++ * @ops: Callback operations structure to remove
++ *
++ * Remove the given ops structure from the node's ops list. If this is
++ * the last ops structure for the node and the node is offline, the
++ * node is unmarked as private.
++ */
++void node_unregister_private(int nid, struct private_node_ops *ops)
++{
++	if (!node_possible(nid) || !private_nodes || !ops)
++		return;
++
++	mutex_lock(&private_node_ops_lock);
++	mem_hotplug_begin();
++
++	list_del_rcu(&ops->list);
++	/* If list is now empty, clear private state */
++	if (list_empty(&private_node_ops_list[nid])) {
++		private_nodes[nid] = NODE_MEM_NOTYPE;
++		node_clear_state(nid, N_PRIVATE);
++	}
++
++	mem_hotplug_done();
++	mutex_unlock(&private_node_ops_lock);
++	synchronize_rcu();
++}
++EXPORT_SYMBOL_GPL(node_unregister_private);
++
++/**
++ * node_private_allocated - Validate a page allocation from a private node
++ * @page: The allocated page
++ *
++ * Find the ops structure whose region contains the page's physical address
++ * and call its page_allocated callback if one is registered.
++ *
++ * Returns:
++ *   0 if the callback succeeds or no callback is registered for this region
++ *   -ENXIO if the page is not found in any registered region
++ *   Other negative error code if the callback indicates the page is not safe
++ */
++int node_private_allocated(struct page *page)
++{
++	struct private_node_ops *ops;
++	phys_addr_t page_phys;
++	int nid = page_to_nid(page);
++	int ret = -ENXIO;
++
++	if (!node_possible(nid) || nid >= MAX_NUMNODES)
++		return -ENXIO;
++
++	if (!private_node_ops_initialized)
++		return -ENXIO;
++
++	page_phys = page_to_phys(page);
++
++	/*
++	 * Use RCU to safely traverse the list without holding locks.
++	 * Writers use list_add_tail_rcu/list_del_rcu with synchronize_rcu()
++	 * to ensure safe concurrent access.
++	 */
++	rcu_read_lock();
++	list_for_each_entry_rcu(ops, &private_node_ops_list[nid], list) {
++		if (page_phys >= ops->res_start && page_phys <= ops->res_end) {
++			if (ops->page_allocated)
++				ret = ops->page_allocated(page, ops->data);
++			else
++				ret = 0;
++			break;
++		}
++	}
++	rcu_read_unlock();
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(node_private_allocated);
++
++/**
++ * node_private_freed - Notify that a page from a private node is being freed
++ * @page: The page being freed
++ *
++ * Find the ops structure whose region contains the page's physical address
++ * and call its page_freed callback if one is registered.
++ */
++void node_private_freed(struct page *page)
++{
++	struct private_node_ops *ops;
++	phys_addr_t page_phys;
++	int nid = page_to_nid(page);
++
++	if (!node_possible(nid) || nid >= MAX_NUMNODES)
++		return;
++
++	if (!private_node_ops_initialized)
++		return;
++
++	page_phys = page_to_phys(page);
++
++	rcu_read_lock();
++	list_for_each_entry_rcu(ops, &private_node_ops_list[nid], list) {
++		if (page_phys >= ops->res_start && page_phys <= ops->res_end) {
++			if (ops->page_freed)
++				ops->page_freed(page, ops->data);
++			break;
++		}
++	}
++	rcu_read_unlock();
++}
++EXPORT_SYMBOL_GPL(node_private_freed);
++
+ #endif /* CONFIG_MEMORY_HOTPLUG */
+ 
+ /**
+@@ -959,6 +1146,7 @@ static struct node_attr node_state_attr[] = {
+ 	[N_HIGH_MEMORY] = _NODE_ATTR(has_high_memory, N_HIGH_MEMORY),
+ #endif
+ 	[N_MEMORY] = _NODE_ATTR(has_memory, N_MEMORY),
++	[N_PRIVATE] = _NODE_ATTR(has_private_memory, N_PRIVATE),
+ 	[N_CPU] = _NODE_ATTR(has_cpu, N_CPU),
+ 	[N_GENERIC_INITIATOR] = _NODE_ATTR(has_generic_initiator,
+ 					   N_GENERIC_INITIATOR),
+@@ -972,6 +1160,7 @@ static struct attribute *node_state_attrs[] = {
+ 	&node_state_attr[N_HIGH_MEMORY].attr.attr,
+ #endif
+ 	&node_state_attr[N_MEMORY].attr.attr,
++	&node_state_attr[N_PRIVATE].attr.attr,
+ 	&node_state_attr[N_CPU].attr.attr,
+ 	&node_state_attr[N_GENERIC_INITIATOR].attr.attr,
+ 	NULL
+@@ -1007,5 +1196,15 @@ void __init node_dev_init(void)
+ 			panic("%s() failed to add node: %d\n", __func__, ret);
+ 	}
+ 
++	private_nodes = kzalloc(sizeof(enum private_memtype) * MAX_NUMNODES,
++				GFP_KERNEL);
++	if (!private_nodes)
++		pr_warn("Failed to allocate private_nodes, private node support disabled\n");
++
++	/* Initialize private node ops lists */
++	for (i = 0; i < MAX_NUMNODES; i++)
++		INIT_LIST_HEAD(&private_node_ops_list[i]);
++	private_node_ops_initialized = true;
++
+ 	register_memory_blocks_under_nodes();
+ }
+diff --git a/include/linux/node.h b/include/linux/node.h
+index 0269b064ba65..53a9fb63b60e 100644
+--- a/include/linux/node.h
++++ b/include/linux/node.h
+@@ -62,6 +62,47 @@ enum cache_mode {
+ 	NODE_CACHE_ADDR_MODE_EXTENDED_LINEAR,
+ };
+ 
++enum private_memtype {
++	NODE_MEM_NOTYPE,
++	NODE_MEM_ZSWAP,
++	NODE_MEM_COMPRESSED,
++	NODE_MEM_ACCELERATOR,
++	NODE_MEM_DEMOTE_ONLY,
++	NODE_MAX_MEMTYPE,
++};
++
++/**
++ * struct private_node_ops - Callbacks for private node operations
++ * @list: List node for per-node ops list
++ * @res_start: Start physical address of the memory region
++ * @res_end: End physical address of the memory region (inclusive)
++ * @memtype: Private node memory type for this region
++ * @page_allocated: Called after a page is allocated from this region
++ *                  to validate that the page is safe to use. Returns 0
++ *                  on success, negative error code on failure. If this
++ *                  returns an error, the caller should free the page
++ *                  and try another node. May be NULL if no validation
++ *                  is needed.
++ * @page_freed: Called when a page from this region is being freed.
++ *              Allows the driver to update its internal tracking.
++ *              May be NULL if no notification is needed.
++ * @data: Driver-private data passed to callbacks
++ *
++ * Multiple drivers may register ops for a single private node. Each
++ * registration covers a specific physical memory region. When a page
++ * is allocated, the appropriate ops structure is found by matching
++ * the page's physical address against the registered regions.
++ */
++struct private_node_ops {
++	struct list_head list;
++	resource_size_t res_start;
++	resource_size_t res_end;
++	enum private_memtype memtype;
++	int (*page_allocated)(struct page *page, void *data);
++	void (*page_freed)(struct page *page, void *data);
++	void *data;
++};
++
+ /**
+  * struct node_cache_attrs - system memory caching attributes
+  *
+@@ -121,6 +162,10 @@ extern struct node *node_devices[];
+ #if defined(CONFIG_MEMORY_HOTPLUG) && defined(CONFIG_NUMA)
+ void register_memory_blocks_under_node_hotplug(int nid, unsigned long start_pfn,
+ 					       unsigned long end_pfn);
++int node_register_private(int nid, struct private_node_ops *ops);
++void node_unregister_private(int nid, struct private_node_ops *ops);
++int node_private_allocated(struct page *page);
++void node_private_freed(struct page *page);
+ #else
+ static inline void register_memory_blocks_under_node_hotplug(int nid,
+ 							     unsigned long start_pfn,
+@@ -130,6 +175,21 @@ static inline void register_memory_blocks_under_node_hotplug(int nid,
+ static inline void register_memory_blocks_under_nodes(void)
+ {
+ }
++static inline int node_register_private(int nid, struct private_node_ops *ops)
++{
++	return -ENODEV;
++}
++static inline void node_unregister_private(int nid,
++					   struct private_node_ops *ops)
++{
++}
++static inline int node_private_allocated(struct page *page)
++{
++	return -ENXIO;
++}
++static inline void node_private_freed(struct page *page)
++{
++}
+ #endif
+ 
+ struct node_notify {
+diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
+index bd38648c998d..dac250c6f1a9 100644
+--- a/include/linux/nodemask.h
++++ b/include/linux/nodemask.h
+@@ -391,6 +391,7 @@ enum node_states {
+ 	N_HIGH_MEMORY = N_NORMAL_MEMORY,
+ #endif
+ 	N_MEMORY,		/* The node has memory(regular, high, movable) */
++	N_PRIVATE,		/* The node's memory is private */
+ 	N_CPU,		/* The node has one or more cpus */
+ 	N_GENERIC_INITIATOR,	/* The node has one or more Generic Initiators */
+ 	NR_NODE_STATES
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 389989a28abe..57463fcb4021 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1207,7 +1207,7 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
+ 	online_pages_range(pfn, nr_pages);
+ 	adjust_present_page_count(pfn_to_page(pfn), group, nr_pages);
+ 
+-	if (node_arg.nid >= 0)
++	if (node_arg.nid >= 0 && !node_state(nid, N_PRIVATE))
+ 		node_set_state(nid, N_MEMORY);
+ 	if (need_zonelists_rebuild)
+ 		build_all_zonelists(NULL);
 -- 
 2.52.0
+
