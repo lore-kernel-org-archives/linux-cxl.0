@@ -1,71 +1,85 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010050.outbound.protection.outlook.com [52.101.193.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362693B95E1;
-	Thu,  8 Jan 2026 10:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767867249; cv=fail; b=hY06aHwCLtDiAPNwnCc8XrHzcnI/Rt87gdVc+8bGrMv2WFkwINPrCZjIsU0I9DqRLjJPM2IKeKYz1/lQ0SVgL7dqJnkK7YY9G0L2WbJrJt/qd99gOZuuuanvpzQ2MoAIVTOKvqULYjkg7JSPhapmMbNyy++KkE6jTH74jj6JRD4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767867249; c=relaxed/simple;
-	bh=61mEag9CayC3dXJjL5zpdUn5OgG4sjE2y+UPDIriKoQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tXKPCvkFRw205HWd3xXvhsz4bDbturWMmJGEnMJdBrpytSn5NlbIIivC2fR4+OMou8T+5GRloNd4iXhqVBPgvFsUvmaFvf6o/WcVgZ89FwSuzOgVu92YyZ17FIJYwG/2uMQf+Ks/hCCoTbnRqg60n5JoX8d1oWr7tZ3Z7y24WcE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yhrqwoXb; arc=fail smtp.client-ip=52.101.193.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C276045BD69
+	for <linux-cxl@vger.kernel.org>; Thu,  8 Jan 2026 10:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767867379; cv=none; b=EpRJA4hVTuJYOHP7s86MlUjKVKeNU4tN88ZqQqMoU4mzPZ9IMKHey8/6fJqLoBPt01PQE5q6tntmcUjVz26AcZs97MpfshNKPCDPuoRLPeROWVlOmbaDyIu2wittMYhMU/8PaW/IeHqj6z3HY9aOSf1d1X48N5/eCHNL94upfHs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767867379; c=relaxed/simple;
+	bh=C1V3X/dIwbZSU2wcmqaFJRp2n010NQA4JleQOiipEis=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kpSQjPaYv9SaVxqFnT338J43SMR6f/CMxOjPF+KBAy8ePCjvDQN8MUVAq/12to+jnw2kRdYprJ/MauvMgRW8fpvLObssxat6MfPIciiGD2p9DO+93le8bSITa6D1mzeZBcg7MjgWUdE8h9OMK/7ELSJDJ3dkPKUAfmEFwtoG1lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mepr88hG; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yhrqwoXb"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JuQ08M5cs/gKMKmlnIlex7Jz4kIYQyjBGJG3rCOug//P1HNT4Eh7gAu7+MkxdriAJtTdoG+FVCl027F2WF5efr97499RmFfLS5TJJKHON7RgF7CV0DSJPdR/kd+U4fJbZRE6sl0dJKccPhPI9DtGSD3zrv0AQJb1NplcQU/xjkbSb+3lg11ZueVAIsjIpzBSjKJJJJe7styLN1C+qaBBPHsC0hUTdLsb7wPSOqvxYb3id+LVHK+FNfCzmOrf0OYoUMTduGeChumRqETlbk3th5f+g8/UinR50TJZgSWVGcdm85/Oim5mLuuNaVUSX6bPjR1jwoCt+6+JZEdBvVIJ0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nYOCFpe1ATQJS22GjA2HvwXPMy51Ki4rkQKRr9bUtAs=;
- b=JakHatfiU5NBM35rVQmDrBU6ILBsqrQMoxxyOuXeJHVA7Doo+DseTJ/Ohsmiz6GWBLiomgjRlPJ26JgJ06h0TT+nTDa9VWnKTDVQ4AuRwyNMc2bIrTQ0MP4iV/eu0+NOGwuNlhFOnIfoiwCI+bdhDPDbq1xjuxtCZ/0QIBg8cS6Z8B6ZoHoSdKo+QHJyx5FrftKBk7eSxLsSNpmVQtAWqyi2UEvZJPuXKq2fjNiD937y4rpZwsZXqge5bcm9eQqr/kFQLOQvq1I6osJ4nEqO9z9WLO9qVDBWqjsK8hdGWJ9FU1Tl1QuBHVgQfcRXUGgCMQItTC//wmIkDhSOqUmz7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nYOCFpe1ATQJS22GjA2HvwXPMy51Ki4rkQKRr9bUtAs=;
- b=yhrqwoXbYU36HLJ/th1T3vo3oiOPIpLxoHVcZSxet2KFmwVlKfw6UBudVDDj0l95m+PmPXB5XQGbTV91gVyOUt6HPtE5+HaRzEyzFUcFAf/+6HLj+HgJ0IbmhxKqAeSY5VX5AncgZVYQj3fJVVdVwcTP+o8p8BtglykNGGJFniA=
-Received: from SJ0PR05CA0126.namprd05.prod.outlook.com (2603:10b6:a03:33d::11)
- by BY5PR12MB4164.namprd12.prod.outlook.com (2603:10b6:a03:207::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.2; Thu, 8 Jan
- 2026 10:13:59 +0000
-Received: from SJ1PEPF00002317.namprd03.prod.outlook.com
- (2603:10b6:a03:33d:cafe::20) by SJ0PR05CA0126.outlook.office365.com
- (2603:10b6:a03:33d::11) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.0 via Frontend Transport; Thu, 8
- Jan 2026 10:13:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ1PEPF00002317.mail.protection.outlook.com (10.167.242.171) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9520.1 via Frontend Transport; Thu, 8 Jan 2026 10:13:58 +0000
-Received: from rric.localdomain (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 8 Jan
- 2026 04:13:56 -0600
-From: Robert Richter <rrichter@amd.com>
-To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Alison
- Schofield" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: Robert Richter <rrichter@amd.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] cxl/port: Fix target list setup for multiple decoders sharing the same dport
-Date: Thu, 8 Jan 2026 11:13:23 +0100
-Message-ID: <20260108101324.509667-1-rrichter@amd.com>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mepr88hG"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2a0ac29fca1so23495275ad.2
+        for <linux-cxl@vger.kernel.org>; Thu, 08 Jan 2026 02:16:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767867374; x=1768472174; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dfFwLlC3N0TVxIzNvzK+kY/3KKp6vwFx6CZlJtWeVto=;
+        b=Mepr88hGf1kvXfnV9MPvjy+VOB6ANrjyyatRFLEYkSQTsJ69djALQlx6cSPGMnYfAa
+         OBIdVYquXqUDmMb/90m/OAemHJCxqf0Woav5NAfTUNmUJfCYvAp7nWWsy2TLM/V6EMp9
+         bMh5vJbrMUyeVMIMR+MCrbXxRYpTfrankfZtKpQiN/HMM3yNHWjIP/LLxx6nPMaqFgNl
+         pfRdWmDvuygnviOaXulQszp9tPSVj69YUQu1sNks0vCzRi3Cob8j64jOycQRECaCw/0t
+         x8QKcDa64rBCwODwS+yVQM04chtx1rl82CKcaHmauVged95r1L5PpmP3eoOMXS1Dmx5L
+         yHiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767867374; x=1768472174;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dfFwLlC3N0TVxIzNvzK+kY/3KKp6vwFx6CZlJtWeVto=;
+        b=DgwsvPzmfST8eJMXQ+n8/OP6F5hwNVa9UGlLIkL1oUfY+6ZuhrShbh/OXQKkZcD3Au
+         FAWMZJE3vY+tnC0+rAqQH7Fg0BItsNcOuIZqhXAvlpiU4xn+MUw34lEo2ZSYailefGes
+         +OGZLCHRp5NtfGXUyWJiHFs1MvYzHun/OS9G9kJxcqY7nam8zW1EqPPiJJFgeHot5Vad
+         A98qMkMczwGQGqzsQ+Kbpq2KZQXqPu6KdrtTpsKTmoKFHwp65IFG9MOzLbI8QE3Of+ud
+         RRLVcrmvSSab0EHZ6fgnPpzOaThOi+jn2z/KEcpP42RLTeQQVWcVzQtIi0ntlNUs7Wmk
+         tLQg==
+X-Gm-Message-State: AOJu0YwUZc0IeR6yw9I793OZeVHqzX+tHFm0ooogcXRhYN4lD4MCDHsQ
+	KUtdE4ugUzsD9Bd8Ri4c0dzIwZaEafzClNptynXweF5dRsBoSlsa3nB/ksvkbw==
+X-Gm-Gg: AY/fxX79xZsF+cyEPkgXpYMpj+GyPipbKmcTWnidA3Xb6vaEQzt12D9EWijs2wRoNkG
+	GkkAckAuSJlTjBw03w0KNkfiIYVT5s7kzEBUQLnclztP6rsygCtl4QhF0anJawaeOA6gEahDFOi
+	2tvEo5qTU17+xeHP/Stb2OOMdL+wubnSET17JQhAdvxh9cJSdU268XSfwEGUF4+KnlZ6/9+085o
+	zv9B1q8etB90Ccw+i3B5b50Ouik7U069rj0qHM2jB9mqQZ9JXLpjPSKUU/Qct1iSgPrPB9gz4u0
+	QKNnPvEqd5jZBUnRoi6NekCr3EH0GSMBZpT6siw+OACfAjCXnIqCECIi/TMgXXh/umaTWtU/Dcs
+	v7pDPvu2XCwqi64v96h3UhGV1jHNMs72VAIlzCnbUsGW+BP7FJnbdnHS2kEPwrZ9c3AoFPtZQYl
+	F3XC83Qk9tZpDTK712bLuAa17f
+X-Google-Smtp-Source: AGHT+IGox+E55AcnFF0JcQGHkGkBa2XTHv5X/Fo9zj4DPlIf6vmy/GfrU6ehPXT8j2mvIbbMcz5iqA==
+X-Received: by 2002:a17:902:daca:b0:295:8dbb:b3cd with SMTP id d9443c01a7336-2a3ee460c5cmr45231575ad.27.1767867374481;
+        Thu, 08 Jan 2026 02:16:14 -0800 (PST)
+Received: from localhost.localdomain ([240f:34:212d:1:8352:dfa:3b18:eb4e])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3c49299sm73785245ad.42.2026.01.08.02.16.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jan 2026 02:16:13 -0800 (PST)
+From: Akinobu Mita <akinobu.mita@gmail.com>
+To: akinobu.mita@gmail.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	axelrasmussen@google.com,
+	yuanchu@google.com,
+	weixugc@google.com,
+	hannes@cmpxchg.org,
+	david@kernel.org,
+	mhocko@kernel.org,
+	zhengqi.arch@bytedance.com,
+	shakeel.butt@linux.dev,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	bingjiao@google.com
+Subject: [PATCH v3 0/3] mm: fix oom-killer not being invoked when demotion is enabled
+Date: Thu,  8 Jan 2026 19:15:32 +0900
+Message-ID: <20260108101535.50696-1-akinobu.mita@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -73,160 +87,43 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002317:EE_|BY5PR12MB4164:EE_
-X-MS-Office365-Filtering-Correlation-Id: 204a3371-52eb-45f5-4f9c-08de4e9ea394
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?sqcaAeSZSiGWl/zDMybEuBsIvacbfSa3GF5rQ0KAE6nk5Pr2EyvNZjoHALCQ?=
- =?us-ascii?Q?QCt52n0iYYhm9dBgmIzlfBqBPXwiO6cd5Tm5FbUpCoZh5p+O4EKkyUX3qHcc?=
- =?us-ascii?Q?vf4ow7Elq8dMXPBhD9uRGfu+j1nhVvmZ22oYiBtfdoFOv/bIG5vsos4M1lzG?=
- =?us-ascii?Q?YMkMbB4s0nAXfDcC6Nh8onvP/4+rrrBmIbkBD/3uQFuxreyIRh5i1+36kubZ?=
- =?us-ascii?Q?85R5mDwUr4sI0BhBvWOWG7PRnouLlByDbPybz2nspSzFczy3Q3DepLdBcxvq?=
- =?us-ascii?Q?5pbQcm7KG6LMPIabp7cqTwyGe8nDgZysYwVf/AvSOgQmTGvS8lpMGkUqKX1X?=
- =?us-ascii?Q?E4AJqGokpDM0ME/cXMbB9IkHfiV2U7wL4HbnnWfHuDcXsmiTQOuYD7y4JMsQ?=
- =?us-ascii?Q?6j7DzrOf7oS11KOBEEO107S1IZuhuRI6bYC5uDDw950HMkAS2b8gffcu51Bx?=
- =?us-ascii?Q?zP7gFQmaaL33H366j5KX9c7Cwn/lkXbdefw4GcL+piEmN7jtjccfY5aLkZMf?=
- =?us-ascii?Q?fYNvnVNmZSsDOmI6ZFpSCuFsem7qTlbLCAs6g6Fy+0P6ePPi19iNfcSh09F7?=
- =?us-ascii?Q?aS8uBgqQortryC8kqFOAxBVHpmpIjcW46Mw5rR9hxAEtL6GFM032irqrD6R0?=
- =?us-ascii?Q?6Uu3BDJ8L4FL0MmodaESscmzEcsFEehXqhUXGq1qW5NLW9XqapvNpXzWXvEE?=
- =?us-ascii?Q?k4qctvklTpZSIV0biQXOhxCOS3M1cAvFmjDxCmzDGjuSf44su6HzwE7Vzy8t?=
- =?us-ascii?Q?3VwAQmQ0DHaRS6O6RQef36+QqjG+fDR7dAS1B+5y/xQtMKxzGr1kdz/aLgDY?=
- =?us-ascii?Q?Mni16GwcaVv+0uC9EejeZtvQGCXXetdSQAPBrotxlXZPex79vKQ1TYvrN1q2?=
- =?us-ascii?Q?Aq9ueEWJVfBILg/uPPrrbeoolJb/9X7BxvucBs/nusBDBsUEie/UAU/41HW6?=
- =?us-ascii?Q?QW00VhLk8h1uzz/dPdL/N/2NVdeoOhKK5xCnJobBQj6Y3WZmCl6Eqa/1buZm?=
- =?us-ascii?Q?yN3p0WXUOz0ASLkvH3qFBSjg/DWVNbq5uepyIQ0kVrpX709MRdoD4RqZYI31?=
- =?us-ascii?Q?lEG5anngmy22lJe4hcpB/sl2VPCFy1dXeXlw89JclRIzlYDG25+ktKE14TOo?=
- =?us-ascii?Q?S1CJOa6EDAW6tFDKSDAcky3SKJNTajJHcyN9zACZO93pu33Y+CDpyGxkZdBs?=
- =?us-ascii?Q?Wg0hgtiuP7iIPPM5orughxQD6gYXZ73y8KYckEbqwbDRNRi4LOLHIDqIcIke?=
- =?us-ascii?Q?0ktYzMxVgi24LXoOCYWPy40KHls7AUVtVtWksb+rRzDKZ+tM3MDL0pFXhpsB?=
- =?us-ascii?Q?oeawWN7YsGjvtBRIyaHwxWnFB9184nD0ttf6pMTwzxKY0C5c3MHDGbBHS8oB?=
- =?us-ascii?Q?IxmfyCcuYQ97uUlzroD044wxzV/Sas6ea3nOs+BWaCpR3ytpnDaYjeWvyCRe?=
- =?us-ascii?Q?19OoCC9JAsQ9RZNlcV6Bl19efi7EemwD4Pd/UUAfnhrijOicoc3gdBYt05Im?=
- =?us-ascii?Q?XfBjJj9QuFamQtx4YA4BOInYbuKDiJz9BoEDVav79nK9qNdq6W8qhgkTgXpA?=
- =?us-ascii?Q?KJ3YybSgBdILo3QTDgg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2026 10:13:58.8027
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 204a3371-52eb-45f5-4f9c-08de4e9ea394
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002317.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4164
 
-If a switch port has more than one decoder that is using the same
-downstream port, the enumeration of the target lists may fail with:
+On systems with multiple memory-tiers consisting of DRAM and CXL memory,
+the OOM killer is not invoked properly.
 
- # dmesg | grep target.list
- update_decoder_targets: cxl decoder1.0: dport3 found in target list, index 3
- update_decoder_targets: cxl decoder1.0: dport2 found in target list, index 2
- update_decoder_targets: cxl decoder1.0: dport0 found in target list, index 0
- update_decoder_targets: cxl decoder2.0: dport3 found in target list, index 1
- update_decoder_targets: cxl decoder4.0: dport3 found in target list, index 1
- cxl_mem mem6: failed to find endpoint12:0000:00:01.4 in target list of decoder2.1
- cxl_mem mem8: failed to find endpoint13:0000:20:01.4 in target list of decoder4.1
+This patchset includes a fix for the issue and an enhancement that makes
+the issue reproducible with numa emulation.
 
-The case, that the same downstream port can be used in multiple target
-lists, is allowed and possible.
+v3:
+- rebase to linux-next (next-20260108), where demotion target has changed
+  from node id to node mask.
 
-Fix the update of the target list. Enumerate all children of the
-switch port and do not stop the iteration after the first matching
-target was found.
-
-With the fix applied:
-
- # dmesg | grep target.list
- update_decoder_targets: cxl decoder1.0: dport2 found in target list, index 2
- update_decoder_targets: cxl decoder1.0: dport0 found in target list, index 0
- update_decoder_targets: cxl decoder1.0: dport3 found in target list, index 3
- update_decoder_targets: cxl decoder2.0: dport3 found in target list, index 1
- update_decoder_targets: cxl decoder2.1: dport3 found in target list, index 1
- update_decoder_targets: cxl decoder4.0: dport3 found in target list, index 1
- update_decoder_targets: cxl decoder4.1: dport3 found in target list, index 1
-
-Analyzing the conditions when this happens:
-
-1) A dport is shared by multiple decoders.
-
-2) The decoders have interleaving configured (ways > 1).
-
-The configuration above has the following hierarchy details (fixed
-version):
-
- root0
- |_
- | |
- | decoder0.1
- | ways: 2
- | target_list: 0,1
- |_______________________________________
- |                                       |
- | dport0                                | dport1
- |                                       |
- port2                                   port4
- |                                       |
- |___________________                    |_____________________
- | |                 |                   | |                   |
- | decoder2.0        decoder2.1          | decoder4.0          decoder4.1
- | ways: 2           ways: 2             | ways: 2             ways: 2
- | target_list: 2,3  target_list: 2,3    | target_list: 2,3    target_list: 2,3
- |___________________                    |___________________
- |                   |                   |                   |
- | dport2            | dport3            | dport2            | dport3
- |                   |                   |                   |
- endpoint7           endpoint12          endpoint9           endpoint13
- |_                  |_                  |_                  |_
- | |                 | |                 | |                 | |
- | decoder7.0        | decoder12.0       | decoder9.0        | decoder13.0
- | decoder7.2        | decoder12.2       | decoder9.2        | decoder13.2
- |                   |                   |                   |
- mem3                mem5                mem6                mem8
-
-Note: Device numbers vary for every boot.
-
-Current kernel fails to enumerate endpoint12 and endpoint13 as the
-target list is not updated for the second decoder.
-
-Fixes: 4f06d81e7c6a ("cxl: Defer dport allocation for switch ports")
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Signed-off-by: Robert Richter <rrichter@amd.com>
----
 v2:
- * updated sob-chain,
- * added fixes tag (Dave).
----
- drivers/cxl/core/port.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+- fix the explanation about cmdline parameter in the commit log
+- add document for NUMA emulation
+- describe reproducibility with !mglru in the commit log
+- removed unnecessary consideration for scan control when checking demotion_nid watermarks
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index fef3aa0c6680..3310dbfae9d6 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1590,7 +1590,7 @@ static int update_decoder_targets(struct device *dev, void *data)
- 			cxlsd->target[i] = dport;
- 			dev_dbg(dev, "dport%d found in target list, index %d\n",
- 				dport->port_id, i);
--			return 1;
-+			return 0;
- 		}
- 	}
- 
+v1:
+- https://lore.kernel.org/linux-mm/20251208094028.214949-1-akinobu.mita@gmail.com/T/
 
-base-commit: 88c72bab77aaf389beccf762e112828253ca0564
-prerequisite-patch-id: f44102a7b095afa1588a5cac012ec2e0d852c021
+original report:
+- https://lore.kernel.org/lkml/20251022135735.246203-1-akinobu.mita@gmail.com/T
+
+Akinobu Mita (3):
+  mm: memory-tiers, numa_emu: enable to create memory tiers using fake
+    numa nodes
+  mm: numa_emu: add document for NUMA emulation
+  mm/vmscan: don't demote if there is not enough free memory in the
+    lower memory tier
+
+ Documentation/mm/index.rst          |  1 +
+ Documentation/mm/numa_emulation.rst | 30 +++++++++++++++++++++++++++++
+ mm/numa_emulation.c                 | 26 +++++++++++++++++++++++++
+ mm/vmscan.c                         | 16 ++++++++++++++-
+ 4 files changed, 72 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/mm/numa_emulation.rst
+
 -- 
-2.47.3
+2.43.0
 
