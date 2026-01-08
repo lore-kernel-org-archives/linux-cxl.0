@@ -1,119 +1,190 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44573164C2
-	for <linux-cxl@vger.kernel.org>; Thu,  8 Jan 2026 15:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E870C33A71E;
+	Thu,  8 Jan 2026 15:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767885334; cv=none; b=jMFhT11azKr6CWkcErjrusjzIPftFCpDoyaa39aYpdKhCDXH+2XBDR6hSxGmS0ZSe4NsegTruLmSgpPPWlL8/i5kz/fZhSaRZIr6Yt/GWQuw66ZI1uaYzOHioOc9XdNBjo7epQ10J5ltwVEXS5jtuhrYsd/ElJpgxu1UlBN7DcU=
+	t=1767885461; cv=none; b=nwLI927D1RzRg3Tk6jjyjewN7WyJV6S/Dy6PNILntEl2+vYj4ChAVIFknQAlwia2oPxPQ772c0aKrAVYQO/TTURI6rgveAZMjFCRB2adbpfiFC5kMCfuyLK12wnOxh7ponoRFquk3hdeeZg4rjFKZNICYENPK8CPpHNUhymgKOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767885334; c=relaxed/simple;
-	bh=QWFzW8AiryxbX9bHsSDyy6FhwD+iu2OibSf5IcWI1Sg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eggl/cJoVTY5hE992rX6jpE0I2l45eV8My2IvEGvL175lZ+b4b7076AID7JylDzvJCoSw/p6lGSrprFtyH/Hne87u1FfvVOagvG/CdNoxqZnQIK0n+NAIMnQEErfzulGO5+3FjzY3CJaBpLDy1GUh55GHKl342HKaZobV8g8o/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b5lKosHg; arc=none smtp.client-ip=209.85.210.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5lKosHg"
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-7c6d13986f8so1642342a34.0
-        for <linux-cxl@vger.kernel.org>; Thu, 08 Jan 2026 07:15:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767885332; x=1768490132; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vcFV42Btb4Pg72+ADKdt3ZJAxf5GS4JhHeJgrxvwKog=;
-        b=b5lKosHg7+ESgVswffeD5tWTkanPcq3h+ztzV6f/gXXm4nr6yyGM2b09SwLIZENljV
-         NrcxpmR1Ev5aLcBPPP549QNjvWH+ocoWnC3eKnq3/Vo0C5oxpa1kbg8ODT55TM+c20BZ
-         7ONWTknfNA7bkPfyhwpNnaOPHsKRzCNvOKA2gCt+K3NsmkA3elOWkOkNh7eUvlDBOC7p
-         dX0eFSojRFSUXooJMp5DO+aA/6CdBzMHH0GGLpaYnNMFTFvQ8GUcW1oxicBHdzxsYrOD
-         eui1PqmUFwlHvbhAgl3dlCBnive1VWuqBIifQT5oC+SpUnjVYTnnnJbVlkJ97Tariz/Q
-         bYFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767885332; x=1768490132;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vcFV42Btb4Pg72+ADKdt3ZJAxf5GS4JhHeJgrxvwKog=;
-        b=T1L1kBS4d+9zmLqlMx6d6IBhduvn3EpS/HcSki376aqzYv9v0nYspMEkvnuE40HE/G
-         GaGka4+nCBxucwstkvqS+81TZyXDmXNTnLT9Fp0ZRSAP86pJtdZim26F2i1HayoRafkQ
-         jIXj7fJ4Bwn3bQkCasw802uPwceHpFO6fIqNxB+Q7dh5gwZnDUHKeS7UQMBJnEvs8bpA
-         udgrsicTmiJgv533Ma5ssPR88lLE5Jww5tYYyT10xNdP5u3+ZDKtwqAYvXoud5NEaRmD
-         BhI3p/aHPMnfWybND7rGNRkhja8etDQGlfP43dX0gbeGtpxsHiDChrsEc6WTWrQ8K7WJ
-         7QMA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqYIKU01LHu7Ffiu56UslKi8FZDez+BmFiCROvmpgqcN3YYiLgL/kinhNoa4HcePr79CY+2MZICkc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQdH9TmqiY6FeqHghA7QGA3slKvLfYgHsKJjZmEeSlI3t46RY6
-	I7RX9hZY9V3B1/rucpjDgdVUpl24eVC0sVxT8WamFSiYJxYdn/TsriPB
-X-Gm-Gg: AY/fxX5ClM4NdlXtqL2ukR9QSO45AWgA37KhqwLiYA8moh6TXLiyNBvF3huCkpBLC7w
-	M9v7Nwz9ryr5grnQGFcyUcptgPfhyzBWJ13iRU8TiSEP7jDxIG90n4CM1LL8irAlXbnOB+zO+Jj
-	CfAih8MGbE6xhgtww3Yeplg9jzSSJ92yTxSc9WltBPG1HiFNZH7btKbpxM6ngExKSdNgbGTerBo
-	3jIs2yey3uUL5BcfjXSHo8b1Cq//f/YeGYjeCZf0m3PzzdeciVKoczO5ektiHLbiDNt0VRI35uE
-	Vjp1z+3urtf44Y3tfMxRB1qJxdD1LTWeVo8kg28pv+TFg88qeLqHTsp/QBN4ubrJGwU+sT/IV2O
-	jdQBW8LxZ2MBSfOzrV8kRjTfEahNYNIBoDWEasZlHOZZKobxrGcfqRWra+2lNzNip1u4KZX5Iyl
-	+JOM/EF/WNaBBJvw9cQvi1RUvtxZuTgw==
-X-Google-Smtp-Source: AGHT+IEwgFQoT6qI08G95oHchDEjjGEhvVdx57kWehu/9O96BbjgHzcPqrjy1Acp6iwhXUgPqgye5Q==
-X-Received: by 2002:a9d:4c94:0:b0:7ce:5139:301b with SMTP id 46e09a7af769-7ce5139308emr2469509a34.8.1767885331763;
-        Thu, 08 Jan 2026 07:15:31 -0800 (PST)
-Received: from groves.net ([2603:8080:1500:3d89:902b:954a:a912:b0f5])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7ce4781c286sm5799755a34.8.2026.01.08.07.15.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jan 2026 07:15:31 -0800 (PST)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Thu, 8 Jan 2026 09:15:29 -0600
-From: John Groves <John@groves.net>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, venkataravis@micron.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V3 03/21] dax: Save the kva from memremap
-Message-ID: <djiagki7jvoyonnr5ajt43xwasgil6j7sfjhs27gbb6uwckyds@i52ef23dwakh>
+	s=arc-20240116; t=1767885461; c=relaxed/simple;
+	bh=JAMdqyvoBlEJDXg82/7KOufjpCqCeM/HByi3F8wEtLs=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F6rHwWFgn4ft7uA7xrbCy6q26zAedTjksraIJhA37yJwIKTPc/bjkc/DkVV7KfWDeCZJi9YMrAb4TGMf3LaK1fsncnEK79LZ8ZNnpG3iJzZK9ggxaWmQYHEgPSnku88wbCLkPXvaf8v3tfn/7bqiaW6pYkdBWEb7Eh2jsOBKqgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.107])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dn7n90W89zJ46C2;
+	Thu,  8 Jan 2026 23:17:33 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1555040571;
+	Thu,  8 Jan 2026 23:17:38 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 8 Jan
+ 2026 15:17:35 +0000
+Date: Thu, 8 Jan 2026 15:17:33 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: John Groves <John@Groves.net>
+CC: Miklos Szeredi <miklos@szeredi.hu>, Dan Williams
+	<dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, "Alison
+ Schofield" <alison.schofield@intel.com>, John Groves <jgroves@micron.com>,
+	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan
+ Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>, "David
+ Hildenbrand" <david@kernel.org>, Christian Brauner <brauner@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, Stefan
+ Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, Josef
+ Bacik <josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Chen
+ Linxuan <chenlinxuan@uniontech.com>, "James Morse" <james.morse@arm.com>,
+	Fuad Tabba <tabba@google.com>, "Sean Christopherson" <seanjc@google.com>,
+	Shivank Garg <shivankg@amd.com>, Ackerley Tng <ackerleytng@google.com>,
+	Gregory Price <gourry@gourry.net>, Aravind Ramesh <arramesh@micron.com>, Ajay
+ Joshi <ajayjoshi@micron.com>, <venkataravis@micron.com>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V3 18/21] famfs_fuse: Add holder_operations for dax
+ notify_failure()
+Message-ID: <20260108151733.00005f6e@huawei.com>
+In-Reply-To: <20260107153332.64727-19-john@groves.net>
 References: <20260107153244.64703-1-john@groves.net>
- <20260107153332.64727-1-john@groves.net>
- <20260107153332.64727-4-john@groves.net>
- <20260108113251.00004f1c@huawei.com>
+	<20260107153332.64727-1-john@groves.net>
+	<20260107153332.64727-19-john@groves.net>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260108113251.00004f1c@huawei.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-On 26/01/08 11:32AM, Jonathan Cameron wrote:
-> On Wed,  7 Jan 2026 09:33:12 -0600
-> John Groves <John@Groves.net> wrote:
+On Wed,  7 Jan 2026 09:33:27 -0600
+John Groves <John@Groves.net> wrote:
+
+> Memory errors are at least somewhat more likely on disaggregated memory
+> than on-board memory. This commit registers to be notified by fsdev_dax
+> in the event that a memory failure is detected.
 > 
-> > Save the kva from memremap because we need it for iomap rw support.
-> > 
-> > Prior to famfs, there were no iomap users of /dev/dax - so the virtual
-> > address from memremap was not needed.
-> > 
-> > (also fill in missing kerneldoc comment fields for struct dev_dax)
+> When a file access resolves to a daxdev with memory errors, it will fail
+> with an appropriate error.
 > 
-> Do that as a precursor that can be picked up ahead of the rest of the series.
+> If a daxdev failed fs_dax_get(), we set dd->dax_err. If a daxdev called
+> our notify_failure(), set dd->error. When any of the above happens, set
+> (file)->error and stop allowing access.
+> 
+> In general, the recovery from memory errors is to unmount the file
+> system and re-initialize the memory, but there may be usable degraded
+> modes of operation - particularly in the future when famfs supports
+> file systems backed by more than one daxdev. In those cases,
+> accessing data that is on a working daxdev can still work.
+> 
+> For now, return errors for any file that has encountered a memory or dax
+> error.
+> 
+> Signed-off-by: John Groves <john@groves.net>
+> ---
+>  fs/fuse/famfs.c       | 115 +++++++++++++++++++++++++++++++++++++++---
+>  fs/fuse/famfs_kfmap.h |   3 +-
+>  2 files changed, 109 insertions(+), 9 deletions(-)
+> 
+> diff --git a/fs/fuse/famfs.c b/fs/fuse/famfs.c
+> index c02b14789c6e..4eb87c5c628e 100644
+> --- a/fs/fuse/famfs.c
+> +++ b/fs/fuse/famfs.c
 
-Makes sense. Actually, I'll just send it as a separate standalone patch...
+> @@ -254,6 +288,38 @@ famfs_update_daxdev_table(
+>  	return 0;
+>  }
+>  
+> +static void
+> +famfs_set_daxdev_err(
+> +	struct fuse_conn *fc,
+> +	struct dax_device *dax_devp)
+> +{
+> +	int i;
+> +
+> +	/* Gotta search the list by dax_devp;
+> +	 * read lock because we're not adding or removing daxdev entries
+> +	 */
+> +	down_read(&fc->famfs_devlist_sem);
 
-Thanks,
-John
+Use a guard()
 
-[ ... ]
+> +	for (i = 0; i < fc->dax_devlist->nslots; i++) {
+> +		if (fc->dax_devlist->devlist[i].valid) {
+> +			struct famfs_daxdev *dd = &fc->dax_devlist->devlist[i];
+> +
+> +			if (dd->devp != dax_devp)
+> +				continue;
+> +
+> +			dd->error = true;
+> +			up_read(&fc->famfs_devlist_sem);
+> +
+> +			pr_err("%s: memory error on daxdev %s (%d)\n",
+> +			       __func__, dd->name, i);
+> +			goto done;
+> +		}
+> +	}
+> +	up_read(&fc->famfs_devlist_sem);
+> +	pr_err("%s: memory err on unrecognized daxdev\n", __func__);
+> +
+> +done:
+
+If this isn't getting more interesting, just return above.
+
+> +}
+> +
+>  /***************************************************************************/
+>  
+>  void
+> @@ -611,6 +677,26 @@ famfs_file_init_dax(
+>  
+>  static ssize_t famfs_file_bad(struct inode *inode);
+>  
+> +static int famfs_dax_err(struct famfs_daxdev *dd)
+
+I'd introduce this earlier in the series to reduce need
+to refactor below.
+
+> +{
+> +	if (!dd->valid) {
+> +		pr_err("%s: daxdev=%s invalid\n",
+> +		       __func__, dd->name);
+> +		return -EIO;
+> +	}
+> +	if (dd->dax_err) {
+> +		pr_err("%s: daxdev=%s dax_err\n",
+> +		       __func__, dd->name);
+> +		return -EIO;
+> +	}
+> +	if (dd->error) {
+> +		pr_err("%s: daxdev=%s memory error\n",
+> +		       __func__, dd->name);
+> +		return -EHWPOISON;
+> +	}
+> +	return 0;
+> +}
+
+...
+
+> @@ -966,7 +1064,8 @@ famfs_file_bad(struct inode *inode)
+>  		return -EIO;
+>  	}
+>  	if (meta->error) {
+> -		pr_debug("%s: previously detected metadata errors\n", __func__);
+> +		pr_debug("%s: previously detected metadata errors\n",
+> +			 __func__);
+
+Spurious change.
+
+>  		return -EIO;
+>  	}
 
 
