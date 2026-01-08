@@ -1,100 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA912231836;
-	Thu,  8 Jan 2026 02:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7CB92DFA2F
+	for <linux-cxl@vger.kernel.org>; Thu,  8 Jan 2026 05:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767840994; cv=none; b=oSZlZcklT2Xw7eV4fIcOZBSBcMLPXu0mYP92TjFo/FJGviSfCCS6Wf6Q79hwhHV9BosmChLxf592thXEaKvh2nUZReIvdVNoFyHNhg68YhGHEdxOI+Ioc53RjWmuoXgeEFsKsXf6AQvhNj5njVvm9nzoHPkkBqJRfbPZbcM2O2I=
+	t=1767849980; cv=none; b=f/AmMnRJCwFyr14WNAoYwQ1cQdULZeeGGIOj+g23RnW+W5+ROs3fETAj1k1/+1ZbL1O0a3dDxQU/VwEywZfLf11VY3JXXtZr/MjxlMCNMAhcCzfcAuF0AL9/Z+jvZL4NElPN+l5tak7GwCQ8IPkK8Mk7GsiP/ywW6jjREDZtufs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767840994; c=relaxed/simple;
-	bh=bb09VXEHSGVuDvACYJHsjuF/qKdFpVlUXhZlI58yIwU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YWeTggRijzeilZTc/TpfnINLHouXg4/4Hktkegy4gpv3zNeGgnLNOnc8mYDhewttnVvw3un6aZeLoNQUV8vl4/efO1Ee36shzqSB/XBSXm1uy2cTOL3ikrfHYt3k239OIPwvyyrVH55BqfbHWl5KiypCOZiNQG0lLOOlzAgxZBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VO9+Hp/X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767849980; c=relaxed/simple;
+	bh=iMAfquDAsWNysHIibZRWcVXdUCtue/Fes0XTKgCjE5c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hKZUwj40aDommbUnwV04j+YjPt0Fv/89nyNtf+7oLpAfOhelxnEVDxUNL6JNEUz+nNIU8DsnNFzIFvcc5COpejgE+pq6Sd7/hKyZK3sx+dhnqKMtGU9yZZRsht3qMjS1jRbrvUVkqCakvm/0bY5I1g65L44IG9SPq11jZu/YbrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UHQomdAW; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VO9+Hp/X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97908C4CEF1;
-	Thu,  8 Jan 2026 02:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767840993;
-	bh=bb09VXEHSGVuDvACYJHsjuF/qKdFpVlUXhZlI58yIwU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VO9+Hp/XVRs8XQB3IDBstup2R+DaU4I6K4mDp34Wm113uMcakMBKaj2eTx55ExHtE
-	 nBWUzkdaWvlhDxELVvEA3C6puD6nUZG5J+gpcQ61WkLHnhj+M05LSE5AZcHJamwhvc
-	 j/BMfPrbYmdBOqJI5BeEugABP3Mc/vfHCk9GLrpJscoyfLAOJwB+2t8XFPTPsEybag
-	 xGnWNL183qpjfSIH8SOBIaB8sVnhazL4Rw/1WNvWFQdpTNcIdnvnpj/0Brkneg1BPR
-	 7qMuhdE1AoXtCk2F775jaiAkT9nh2gM4h7JiM3GPN+qLCo8vxQs/u1WGbxiPYaxbeg
-	 hV7kgr+lj43kw==
-Message-ID: <dc57f648-524c-4fdc-9fce-73f1bab2fee4@kernel.org>
-Date: Wed, 7 Jan 2026 18:56:29 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UHQomdAW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767849963; x=1799385963;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=iMAfquDAsWNysHIibZRWcVXdUCtue/Fes0XTKgCjE5c=;
+  b=UHQomdAW8AT2+tSDf+V1Mb+59EpDH7MuT4+tetfkLfBCT9ePV558LyAf
+   CG4w70Cx4U8r6kCNyCpuJMO+x3UBj2PDigg8X606YzdQ5A8Ac0KbRb8bk
+   c6HzbFhWXJU0ZhrVddHLEnJmmfr9SzH13G5SzN8pX2N/Qh/xPC9/dqDuo
+   +T7xCG+DV/f6JViqtT+QBEnGvFPr5IFEdOZxxeQtCvL+6sxcLJ223ClRa
+   PFgjIl8R5gzX9E+xrQ/2oX2V+6XTwjR7S4KYvDBbE+17gWLZUkmcFfd5x
+   xsZS2AwVu6YqYh7eRygI1VdFq79YbCq/cko83aSGIE6wRIQwFXy3V0tyB
+   Q==;
+X-CSE-ConnectionGUID: t04x+MgsTkuNRcgwZYZAdA==
+X-CSE-MsgGUID: bEIFFWaYRmKT1jan3MfdCA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11664"; a="86812413"
+X-IronPort-AV: E=Sophos;i="6.21,209,1763452800"; 
+   d="scan'208";a="86812413"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2026 21:25:58 -0800
+X-CSE-ConnectionGUID: bUA527e2R/eNtgOpsBaIUQ==
+X-CSE-MsgGUID: Nvr6DJbdRvWPIfj/gfJ1OQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,209,1763452800"; 
+   d="scan'208";a="202894044"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.193])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2026 21:25:59 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: nvdimm@lists.linux.dev
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH] test/cxl-topology.sh: test switch port target
+Date: Wed,  7 Jan 2026 21:25:48 -0800
+Message-ID: <20260108052552.395896-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/28] arc: introduce arch_zone_limits_init()
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Alex Shi <alexs@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>,
- Andreas Larsson <andreas@gaisler.com>, Borislav Petkov <bp@alien8.de>,
- Brian Cain <bcain@kernel.org>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- "David S. Miller" <davem@davemloft.net>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>,
- Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
- Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Jonathan Corbet <corbet@lwn.net>, "Liam R. Howlett"
- <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>,
- Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Palmer Dabbelt <palmer@dabbelt.com>, Pratyush Yadav <pratyush@kernel.org>,
- Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>,
- Stafford Horne <shorne@gmail.com>, Suren Baghdasaryan <surenb@google.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
- Vineet Gupta <vgupta@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
- Will Deacon <will@kernel.org>, x86@kernel.org, linux-alpha@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-mm@kvack.org, linux-openrisc@vger.kernel.org,
- linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
- sparclinux@vger.kernel.org
-References: <20260102070005.65328-1-rppt@kernel.org>
- <20260102070005.65328-3-rppt@kernel.org>
-Content-Language: en-US
-From: Vineet Gupta <vgupta@kernel.org>
-In-Reply-To: <20260102070005.65328-3-rppt@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Add a test case to validate that all switch port decoders sharing
+downstream ports, dports, have target lists properly enumerated.
 
+This test catches the regression fixed by a recent kernel patch[1]
+where only one decoder per switch port has targets populated while
+others have nr_targets=0, even when dports are available.
 
-On 1/1/26 22:59, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->
-> Move calculations of zone limits to a dedicated arch_zone_limits_init()
-> function.
->
-> Later MM core will use this function as an architecture specific callback
-> during nodes and zones initialization and thus there won't be a need to
-> call free_area_init() from every architecture.
->
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+This test is based on the current cxl_test topology which provides
+multiple switch ports with 8 decoders each. Like other testcases in
+cxl-topology.sh, if the cxl_test topology changes (number of switches,
+decoders per port, or hierarchy), this test will need corresponding
+updates.
 
-Thx !
+This new case is quietly skipped with kernel version 6.18 where it
+is known broken.
 
-Acked-by: Vineet Gupta <vgupta@kernel.org>
+[1] https://lore.kernel.org/linux-cxl/20260107100356.389490-1-rrichter@amd.com/
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+
+ test/common          | 12 +++++++++++
+ test/cxl-topology.sh | 51 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+)
+
+diff --git a/test/common b/test/common
+index 2d076402ef7c..2eb11b7396d0 100644
+--- a/test/common
++++ b/test/common
+@@ -101,6 +101,18 @@ check_min_kver()
+ 	[[ "$ver" == "$(echo -e "$ver\n$KVER" | sort -V | head -1)" ]]
+ }
+ 
++# check_eq_kver
++# $1: Kernel version to match. format: X.Y
++#
++check_eq_kver()
++{
++        local ver="$1"
++        : "${KVER:=$(uname -r)}"
++
++        [ -n "$ver" ] || return 1
++        [[ "$KVER" == "$ver"* ]]
++}
++
+ # do_skip
+ # $1: Skip message
+ #
+diff --git a/test/cxl-topology.sh b/test/cxl-topology.sh
+index b68cb8b262b6..d9475b1bae9c 100644
+--- a/test/cxl-topology.sh
++++ b/test/cxl-topology.sh
+@@ -151,6 +151,57 @@ count=$(jq "map(select(.pmem_size == $pmem_size)) | length" <<< $json)
+ ((bridges == 2 && count == 8 || bridges == 3 && count == 10 ||
+   bridges == 4 && count == 11)) || err "$LINENO"
+ 
++# Test that switch port decoders have complete target list enumeration
++# Validates a fix for multiple decoders sharing the same dport.
++# Based on the cxl_test topology expectation of switch ports at depth 2
++# with 8 decoders each. Adjust if that expectation changes.
++test_switch_decoder_target_enumeration() {
++
++	# Get verbose output to see targets arrays
++	json=$($CXL list -b cxl_test -vvv)
++
++	switch_port_issues=$(jq '
++	# Find all switch ports (depth 2)
++	[.. | objects | select(.depth == 2 and has("decoders:" + .port))] |
++
++	# For each switch port, analyze its decoder target pattern
++	map({
++		port: .port,
++		nr_dports: .nr_dports,
++
++		# Count non-endpoint decoders (no "mode" field)
++		total: ([to_entries[] | select(.key | startswith("decoders:"))
++			| .value[] | select(has("mode") == false)] |
++			length),
++
++		# Count how many have targets
++		with_targets: ([to_entries[] | select(.key |
++			startswith("decoders:")) | .value[] |
++			select(has("mode") == false and .nr_targets > 0)] |
++			length),
++
++		# Count how many explicitly have no targets
++		without_targets: ([to_entries[] | select(.key |
++			startswith("decoders:")) | .value[] |
++			select(has("mode") == false and .nr_targets == 0)] |
++			length)
++		}) |
++
++		# Filter for the expected pattern and count them
++		map(select(.nr_dports > 0 and
++			   .with_targets == 1 and
++			   .without_targets >= 7)) |
++			   length
++	' <<<"$json")
++
++	((switch_port_issues == 0)) || {
++		echo "Found $switch_port_issues switch ports with incomplete target enumeration"
++		echo "Only 1 decoder has targets while 7+ have nr_targets=0"
++		err "$LINENO"
++	}
++}
++# Skip the target enumeration test where known broken
++check_eq_kver 6.18 || test_switch_decoder_target_enumeration
+ 
+ # check that switch ports disappear after all of their memdevs have been
+ # disabled, and return when the memdevs are enabled.
+-- 
+2.37.3
+
