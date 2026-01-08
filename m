@@ -1,380 +1,138 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C233330B00
-	for <linux-cxl@vger.kernel.org>; Thu,  8 Jan 2026 20:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BEA333740
+	for <linux-cxl@vger.kernel.org>; Thu,  8 Jan 2026 21:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767904757; cv=none; b=M2G7JBMaQh+lkzm8+I1EWqHz9ZohJLOGuIoym1bZp1AMMSYI3Yzv4rYYIjGPeG4/+9EsaBYCc4AuimMI8Co1OLLAjsyO+zOAfjLMRQDVKD1x9nbNhtx/pp7cO57m04e13n6A+AsNjK119/+Ext6R03IAvonsppkU+8jW1gMN6Go=
+	t=1767906917; cv=none; b=ecYZOd9Pnmrlh7HsJmD0stpE6A0ET4uUzLDQRcPzMmDKDrFrymHfFWHyoU3SMJ3cnlQB8f0OStf3+RQhY6LBdvRwMriB1sQjB/fU+702/gg/gzw+2ax1JVB28Kl27RbrSjKi6lRWsJPPwd43VdJy4/WuL8dB8aV2tg+iwus3Czk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767904757; c=relaxed/simple;
-	bh=H1aiie8D4svpNDzSmOI68CzAj4t2rzf4KLw2L055t2E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IqRjXE8W+P2+r38b6aJ0iY/4XfPebnouXI9K7ZWZxVXIKVCMsjkBXwWVOt2O185Ao3gcYqLsyQQV1+oMl2dT5D0GAA2r4SRuk/5uI7DTVkrUFOVxZyNeUtEXuvKJIyk6UVsMvNe/xsW4VLwT7pSjevRNvaxVUwP94M5scPJ7sJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=sv4IqeaF; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1767906917; c=relaxed/simple;
+	bh=zyL37NBSU8pN3eAlVPiisOgzpo5IWY8Zuk439n6/CTc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=avdc3c5UUggzxVDqRcBlvi2mpdtdLJ5/uCHpv5It94qIzZWeq883MTwy5GWXmauvbv5+nQPf2tm9JO/+ORoZRPik5rlhMXmjvFV258Dv9cv9Ia55hrh5/jOiC6+NbXywQb4s5VAa4MRckbv5RWEOPvTEpECWa1v7FQLFLaC9Ep0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JUz/QHPg; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="sv4IqeaF"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-88a3d2f3299so40194406d6.2
-        for <linux-cxl@vger.kernel.org>; Thu, 08 Jan 2026 12:39:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JUz/QHPg"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-3ec6c10a295so1595594fac.0
+        for <linux-cxl@vger.kernel.org>; Thu, 08 Jan 2026 13:15:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1767904754; x=1768509554; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hbAJPMgZOoJSjKjyh3GK6UyuoBx+8LBWNLKG00C3DPA=;
-        b=sv4IqeaF1/x3PeHIs+GscpVxUPxX8J3UWJ7TgRxTJec0UV/1R0tuHdwgy/2tmS1kVn
-         CroY5GoHsj8ja2LtiCn8lb56rvpzFCowKGEPTasLH3c6hbFA/K4wQzBrraT0scodrf6B
-         TEMy4f9+7GPxIdFkVU3aw2tC5LBU2sxPDl7uq1HNnByEmr9nZQcFYyaOo5plfhfmE4pg
-         zEgoT4RmyzKJBQ/HeB1poljUX+caNgVaCLbZL6dIds+XD/74CVbL4sGKuaKBIofv2vaQ
-         ferxu6wmqIzgxcluE0XEFkfywnei2mL9AoL+dzS5Cs3uFow5vLs+vgm4goSZbcauAv94
-         nijw==
+        d=gmail.com; s=20230601; t=1767906914; x=1768511714; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tAcE7cKJ6r47wCUmKYPiPBxGZ+Ab7WHLD5tStOo4vtQ=;
+        b=JUz/QHPgQrys22mKysCSeIGCf7c6o5uxeMlwTutwoVy102OwY9Tb4f8ccH7RxP5kRy
+         /3Q0BuigQUrdOZtYAJvhvzV6dSPmGZxQqlBi9a+qnTbew5JJ04h3ETdH862T1Gvkxcr8
+         uSEj2y0oCR0/ZINkE/W4yLde06kRgA4bhBpjOiNAgDf15tXWIBQAvYIrHRL4JTcaQZWu
+         w18bpiKQi6efEjBhanHFjFq5pZr1TJVaGXzB1M3BSfRCaaeN97AqpHqWsRd76FKldcKY
+         r9bbrwoN32qgXVo3SL2huzJYK6wPlnQPPHvVqxCEb0uWLw+OGJck33HpQFVOTaSvx8tH
+         hSzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767904754; x=1768509554;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=hbAJPMgZOoJSjKjyh3GK6UyuoBx+8LBWNLKG00C3DPA=;
-        b=APJel/GqP0Vdim1b6HI4W4VNLCMAG26AFJzzC3raBmYKFlT+oV3iTd0zECWhVVcsB1
-         yD+r2PFxT0hkXmEKYl+tVPYFBJvjf4Dg2pcN7CJP2rTgXG+qMFBN8cRWzCxss00INykE
-         BXMHPD5/7ySZUZysgJ7XLRZpwK/gJmhTkHyprZI8AEaDIq2FcPhweOw2R1mgfGZuYiFH
-         g3Nl0d9qchxWN5BfrwNAR+ZoiafPNoB7mX9T2pdIPIvRhDegwVErx9kfjVnomySDPIUu
-         f5AdzQDUy4HE0+K3EluYhct1h3Bd/VhH6eY8i6iQlej+PpqEJYwrM+FOYk8dk4ZiHbkp
-         Xr8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUIkXhumvdXHrSMysgYzKSniWXYfAz/X7RBQF7w7BzrJx0rQE4C/+SkAMh+T2Y00uGjtRaVeudrxaQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsgaRNAS2IhnK+e4qDI4GFXo9BAac8d13v7saho25pnU5ZH3Nq
-	9m9l6r62BZoliowGBtJIMQYPCnw27zRb2ZOL7R4VLTYhjrvOa2kna4vxysDDeAJfkXyEskqjZxu
-	RV3PV
-X-Gm-Gg: AY/fxX5++IS/UCKoX6Qq7w69WCs/Uu2k4EqXFTpAgwxA7Nojp5lfY/tz+5qih9YlHxb
-	h9goTmWFsh+bop5plcAI8bc6/rK/NKYj6XdixWj0HfRuiO4KD8tKlrWpo9q27CUKR8a4rECTNyB
-	LkLCrwt9yfbOCN02KsZCfRLXIxdUlKWZ7wAthOFWj1guENy5zEoWs5xhYCj1zszY6PKUF45Rwj/
-	rRbBvxcEoTdbp4FmvxhAd9qikDOdYxApJdxp99WZVst+0Nao3w76lVOwDbDWVK6npSvGVTOKQ+e
-	sRkC2Q2vp9eeTAESaoHQ/6r7S+BDGvRQ7kSMYzXLLtogiuxbCfiRp7FWSS5wKbL6+kp7gcgufQQ
-	b5gmkxj+QPBozgmbDy+wGN7CjbR2zA2SnBVD03LRnp+d8ObbrsbxrlIXw4WcT7t2tH/SMNdx6iZ
-	xzC7Wz8LOLvPbunEUwhS0hlQUQgO/6QGXZSDNze3I5/btvtoK4PeJp75adaBKRll2jVwSeHCt8A
-	pk=
-X-Google-Smtp-Source: AGHT+IETJUC85zNJ1zZIUFzv9QwdWQGaYClNK785q5YOPJAvYLx3d5ypHJ/HCEokjoFg0FJKBiPjgg==
-X-Received: by 2002:a05:622a:124f:b0:4ee:24b8:2275 with SMTP id d75a77b69052e-4ffb4913960mr88384181cf.1.1767904754417;
-        Thu, 08 Jan 2026 12:39:14 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-890770e472csm60483886d6.23.2026.01.08.12.39.12
+        d=1e100.net; s=20230601; t=1767906914; x=1768511714;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tAcE7cKJ6r47wCUmKYPiPBxGZ+Ab7WHLD5tStOo4vtQ=;
+        b=gkf2aY5YnVM0F1BzzulxxInub0aLX3asP98ZKvXbDqR3q3b0O+8zA4Xdh1vmBj7j2U
+         aoRqIUGbcR7I04iACtZnUMkGUfmV9RdfrO8AHhvgoVHqyM49+HAIOFzx0hdFzJqOgn78
+         046wX8neABat98/Zaxtb4KGiP+cdMsw2zqu1PbMwU3m07oXlnCdo6Y+uwEJzCHb6QCTJ
+         ZZGh5UnbUqiNqulB28id7cdHxKxFb7N0wLtaNcRBV7wuD4UBoxgy7JNux1C80lrfcvjF
+         QUpaIxtZPNVCeOlOVCx07vpofThsC+cJeMetWQcygGKVu7ju5M3wQb19dk5hcDYRJb1m
+         BghQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWgq3GA5GDQGZuVIpcNxyvEHL2cVhz/zPlncGgqt5VzITmiVqPqtdpnnblU4jQokKVmzeBJM9rcS3o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbNBwP5KYFjOFBksdyiNKde3ObCZEbjhGF2W8wO8p/ljge518x
+	ISJbTtK+VCtA4z8EzQlJHv/iWq/UiMrN+gVM+5YQkR5WY7Q9q+eRXh1Z
+X-Gm-Gg: AY/fxX5XWoYijwvsMP5Tq9Od1cX7TqM2aFwrG6PwdVHeUjNv7p8tHxTEy6jegidfY2R
+	kd2SRqp5DXDTWIO9+Qlw5b9Jf7dxEkuTDvIaqr5hW4gZutKoBI+A8t73JytSaiNm4VzRS2r/EEJ
+	kMWoAiWvqlz8bDgaxdHknPdv4rwSe984CutobNY7NhrNgtril3QB0J+mxkEHAHhNQIVQmzZ5xG5
+	6l7ZW38XuhckzDNIuSCuvI//wKsjm6PnSPhO7k0cW8VwmOzf73TKGk3IEOWqcpqQfs0hq/Xxq7p
+	ZLxgAkTZNWIFdpNx3DHjEsRkgn6FZ0LkaHqn7xX9wlKCe6jMk7Le4eQWV11/N7ZQg3Zx/eKKTUF
+	MMNZ66r8WlAQmCuGgQaIoHhh05FW+57OrlOu/ObbH8p4mikMID9buArowDFu7FAMH54vRQTlDoF
+	EHdODMRgLsXvPrN8/aEJB9cdkFRLB54w==
+X-Google-Smtp-Source: AGHT+IEqQm0iIHbXfFBFh7Rp/Y8kcmmT2Pnrl2hOBonEjMW99uNoChuzt5MPuGUGaUk9Fml8af2DQg==
+X-Received: by 2002:a05:6870:a70f:b0:3ec:4137:47f8 with SMTP id 586e51a60fabf-3ffc0befd70mr3739946fac.46.1767906912603;
+        Thu, 08 Jan 2026 13:15:12 -0800 (PST)
+Received: from groves.net ([2603:8080:1500:3d89:902b:954a:a912:b0f5])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3ffa4e38b60sm5496047fac.6.2026.01.08.13.15.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jan 2026 12:39:13 -0800 (PST)
-From: Gregory Price <gourry@gourry.net>
-To: linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-cxl@vger.kernel.org
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	kernel-team@meta.com,
-	longman@redhat.com,
-	tj@kernel.org,
-	hannes@cmpxchg.org,
-	mkoutny@suse.com,
-	corbet@lwn.net,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	dakr@kernel.org,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	akpm@linux-foundation.org,
-	vbabka@suse.cz,
-	surenb@google.com,
-	mhocko@suse.com,
-	jackmanb@google.com,
-	ziy@nvidia.com,
-	david@kernel.org,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	rppt@kernel.org,
-	axelrasmussen@google.com,
-	yuanchu@google.com,
-	weixugc@google.com,
-	yury.norov@gmail.com,
-	linux@rasmusvillemoes.dk,
-	rientjes@google.com,
-	shakeel.butt@linux.dev,
-	chrisl@kernel.org,
-	kasong@tencent.com,
-	shikemeng@huaweicloud.com,
-	nphamcs@gmail.com,
-	bhe@redhat.com,
-	baohua@kernel.org,
-	yosry.ahmed@linux.dev,
-	chengming.zhou@linux.dev,
-	roman.gushchin@linux.dev,
-	muchun.song@linux.dev,
-	osalvador@suse.de,
-	matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	byungchul@sk.com,
-	gourry@gourry.net,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	cl@gentwo.org,
-	harry.yoo@oracle.com,
-	zhengqi.arch@bytedance.com
-Subject: [RFC PATCH v3 8/8] drivers/cxl: add zswap private_region type
-Date: Thu,  8 Jan 2026 15:37:55 -0500
-Message-ID: <20260108203755.1163107-9-gourry@gourry.net>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260108203755.1163107-1-gourry@gourry.net>
-References: <20260108203755.1163107-1-gourry@gourry.net>
+        Thu, 08 Jan 2026 13:15:12 -0800 (PST)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Thu, 8 Jan 2026 15:15:10 -0600
+From: John Groves <John@groves.net>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, 
+	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
+	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
+	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, venkataravis@micron.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V3 02/21] dax: add fsdev.c driver for fs-dax on character
+ dax
+Message-ID: <5hswaqyoz474uybw33arwtkojxrtyxrvlk57bdwnu2lnpao4aa@4vxygh226knw>
+References: <20260107153244.64703-1-john@groves.net>
+ <20260107153332.64727-1-john@groves.net>
+ <20260107153332.64727-3-john@groves.net>
+ <20260108113134.000040fd@huawei.com>
+ <6ibgx5e2lnzjqln2yrdtdt3vordyoaktn4nhwe3ojxradhattg@eo2pdrlcdrt2>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6ibgx5e2lnzjqln2yrdtdt3vordyoaktn4nhwe3ojxradhattg@eo2pdrlcdrt2>
 
-Add a sample type of a zswap region, which registers itself as a valid
-target node with mm/zswap.  Zswap will callback into the driver on new
-page allocation and free.
+On 26/01/08 09:12AM, John Groves wrote:
+> On 26/01/08 11:31AM, Jonathan Cameron wrote:
+> > On Wed,  7 Jan 2026 09:33:11 -0600
+> > John Groves <John@Groves.net> wrote:
 
-On cxl_zswap_page_allocated(), we would check whether the worst case vs
-current compression ratio is safe to allow new writes.
+[ ... ]
 
-On cxl_zswap_page_freed(), zero the page to adjust the ratio down.
+> > > diff --git a/drivers/dax/Kconfig b/drivers/dax/Kconfig
+> > > index d656e4c0eb84..491325d914a8 100644
+> > > --- a/drivers/dax/Kconfig
+> > > +++ b/drivers/dax/Kconfig
+> > > @@ -78,4 +78,21 @@ config DEV_DAX_KMEM
+> > >  
+> > >  	  Say N if unsure.
+> > >  
+> > > +config DEV_DAX_FS
+> > > +	tristate "FSDEV DAX: fs-dax compatible device driver"
+> > > +	depends on DEV_DAX
+> > > +	default DEV_DAX
+> > 
+> > What's the logic for the default? Generally I'd not expect a
+> > default for something new like this (so default of default == no)
+> 
+> My thinking is that this is harmless unless you use it, but if you
+> need it you need it. So defaulting to include the module seems
+> viable.
+> 
+> [ ... ]
 
-A device driver registering a Zswap private region would need to provide
-an indicator to this component whether to allow new allocations - this
-would probably be done via an interrupt setting a bit which says the
-compression ratio has reached some conservative threshold.
+On further deliberation, I think I'd like to get rid of 
+CONFIG_DEV_DAX_FS, and just include the fsdev_dax driver if DEV_DAX
+and FS_DAX are configured. Then CONFIG_FUSE_FAMFS_DAX (controlling the
+famfs code in fuse) can just depend on DEV_DAX, FS_DAX and FUSE_FS. 
 
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- drivers/cxl/core/private_region/Makefile      |   3 +
- .../cxl/core/private_region/private_region.c  |  10 ++
- .../cxl/core/private_region/private_region.h  |   4 +
- drivers/cxl/core/private_region/zswap.c       | 127 ++++++++++++++++++
- drivers/cxl/cxl.h                             |   2 +
- 5 files changed, 146 insertions(+)
- create mode 100644 drivers/cxl/core/private_region/zswap.c
+That's where I'm leaning for the next rev of the series...
 
-diff --git a/drivers/cxl/core/private_region/Makefile b/drivers/cxl/core/private_region/Makefile
-index d17498129ba6..ba495cd3f89f 100644
---- a/drivers/cxl/core/private_region/Makefile
-+++ b/drivers/cxl/core/private_region/Makefile
-@@ -7,3 +7,6 @@ ccflags-y += -I$(srctree)/drivers/cxl
- 
- # Core dispatch and sysfs
- obj-$(CONFIG_CXL_REGION) += private_region.o
-+
-+# Type-specific implementations
-+obj-$(CONFIG_CXL_REGION) += zswap.o
-diff --git a/drivers/cxl/core/private_region/private_region.c b/drivers/cxl/core/private_region/private_region.c
-index ead48abb9fc7..da5fb3d264e1 100644
---- a/drivers/cxl/core/private_region/private_region.c
-+++ b/drivers/cxl/core/private_region/private_region.c
-@@ -16,6 +16,8 @@
- static const char *private_type_to_string(enum cxl_private_region_type type)
- {
- 	switch (type) {
-+	case CXL_PRIVATE_ZSWAP:
-+		return "zswap";
- 	default:
- 		return "";
- 	}
-@@ -23,6 +25,8 @@ static const char *private_type_to_string(enum cxl_private_region_type type)
- 
- static enum cxl_private_region_type string_to_private_type(const char *str)
- {
-+	if (sysfs_streq(str, "zswap"))
-+		return CXL_PRIVATE_ZSWAP;
- 	return CXL_PRIVATE_NONE;
- }
- 
-@@ -88,6 +92,9 @@ int cxl_register_private_region(struct cxl_region *cxlr)
- 
- 	/* Call type-specific registration which sets memtype and callbacks */
- 	switch (cxlr->private_type) {
-+	case CXL_PRIVATE_ZSWAP:
-+		rc = cxl_register_zswap_region(cxlr);
-+		break;
- 	default:
- 		dev_dbg(&cxlr->dev, "unsupported private_type: %d\n",
- 			cxlr->private_type);
-@@ -113,6 +120,9 @@ void cxl_unregister_private_region(struct cxl_region *cxlr)
- 
- 	/* Dispatch to type-specific cleanup */
- 	switch (cxlr->private_type) {
-+	case CXL_PRIVATE_ZSWAP:
-+		cxl_unregister_zswap_region(cxlr);
-+		break;
- 	default:
- 		break;
- 	}
-diff --git a/drivers/cxl/core/private_region/private_region.h b/drivers/cxl/core/private_region/private_region.h
-index 9b34e51d8df4..84d43238dbe1 100644
---- a/drivers/cxl/core/private_region/private_region.h
-+++ b/drivers/cxl/core/private_region/private_region.h
-@@ -7,4 +7,8 @@ struct cxl_region;
- int cxl_register_private_region(struct cxl_region *cxlr);
- void cxl_unregister_private_region(struct cxl_region *cxlr);
- 
-+/* Type-specific registration functions - called from region.c dispatch */
-+int cxl_register_zswap_region(struct cxl_region *cxlr);
-+void cxl_unregister_zswap_region(struct cxl_region *cxlr);
-+
- #endif /* __CXL_PRIVATE_REGION_H__ */
-diff --git a/drivers/cxl/core/private_region/zswap.c b/drivers/cxl/core/private_region/zswap.c
-new file mode 100644
-index 000000000000..c213abe2fad7
---- /dev/null
-+++ b/drivers/cxl/core/private_region/zswap.c
-@@ -0,0 +1,127 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * CXL Private Region - zswap type implementation
-+ *
-+ * This file implements the zswap private region type for CXL devices.
-+ * It handles registration/unregistration of CXL regions as zswap
-+ * compressed memory targets.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/highmem.h>
-+#include <linux/node.h>
-+#include <linux/zswap.h>
-+#include <linux/memory_hotplug.h>
-+#include "../../cxl.h"
-+#include "../core.h"
-+#include "private_region.h"
-+
-+/*
-+ * CXL zswap region page_allocated callback
-+ *
-+ * This callback is invoked by zswap when a page is allocated from a private
-+ * node to validate that the page is safe to use. For a real compressed memory
-+ * device, this would check the device's compression ratio and return an error
-+ * if the page cannot safely store data.
-+ *
-+ * Currently this is a placeholder that always succeeds. A real implementation
-+ * would query the device hardware to determine if sufficient compression
-+ * headroom exists.
-+ */
-+static int cxl_zswap_page_allocated(struct page *page, void *data)
-+{
-+	struct cxl_region *cxlr = data;
-+
-+	/*
-+	 * TODO: Query the CXL device to check if this page allocation is safe.
-+	 *
-+	 * A real compressed memory device would track its compression ratio
-+	 * and report whether it has headroom to accept new data. If the
-+	 * compression ratio is too low (device is near capacity), this should
-+	 * return -ENOSPC to tell zswap to try another node.
-+	 *
-+	 * For now, always succeed since we're testing with regular memory.
-+	 */
-+	dev_dbg(&cxlr->dev, "page_allocated callback for nid %d\n",
-+		page_to_nid(page));
-+
-+	return 0;
-+}
-+
-+/*
-+ * CXL zswap region page_freed callback
-+ *
-+ * This callback is invoked when a page from a private node is being freed.
-+ * We zero the page before returning it to the allocator so that the compressed
-+ * memory device can reclaim capacity - zeroed pages achieve excellent
-+ * compression ratios.
-+ */
-+static void cxl_zswap_page_freed(struct page *page, void *data)
-+{
-+	struct cxl_region *cxlr = data;
-+
-+	/*
-+	 * Zero the page to improve the device's compression ratio.
-+	 * Zeroed pages compress extremely well, reclaiming device capacity.
-+	 */
-+	clear_highpage(page);
-+
-+	dev_dbg(&cxlr->dev, "page_freed callback for nid %d\n",
-+		page_to_nid(page));
-+}
-+
-+/*
-+ * Unregister a zswap region from the zswap subsystem.
-+ *
-+ * This function removes the node from zswap direct nodes and unregisters
-+ * the private node operations.
-+ */
-+void cxl_unregister_zswap_region(struct cxl_region *cxlr)
-+{
-+	int nid;
-+
-+	if (!cxlr->private ||
-+	    cxlr->private_ops.memtype != NODE_MEM_ZSWAP)
-+		return;
-+
-+	if (!cxlr->params.res)
-+		return;
-+
-+	nid = phys_to_target_node(cxlr->params.res->start);
-+
-+	zswap_remove_direct_node(nid);
-+	node_unregister_private(nid, &cxlr->private_ops);
-+
-+	dev_dbg(&cxlr->dev, "unregistered zswap region for nid %d\n", nid);
-+}
-+
-+/*
-+ * Register a zswap region with the zswap subsystem.
-+ *
-+ * This function sets up the memtype, page_allocated callback, and
-+ * registers the node with zswap as a direct compression target.
-+ * The caller is responsible for adding the dax region after this succeeds.
-+ */
-+int cxl_register_zswap_region(struct cxl_region *cxlr)
-+{
-+	int nid, rc;
-+
-+	if (!cxlr->private || !cxlr->params.res)
-+		return -EINVAL;
-+
-+	nid = phys_to_target_node(cxlr->params.res->start);
-+
-+	/* Register with node subsystem as zswap memory */
-+	cxlr->private_ops.memtype = NODE_MEM_ZSWAP;
-+	cxlr->private_ops.page_allocated = cxl_zswap_page_allocated;
-+	cxlr->private_ops.page_freed = cxl_zswap_page_freed;
-+	rc = node_register_private(nid, &cxlr->private_ops);
-+	if (rc)
-+		return rc;
-+
-+	/* Register this node with zswap as a direct compression target */
-+	zswap_add_direct_node(nid);
-+
-+	dev_dbg(&cxlr->dev, "registered zswap region for nid %d\n", nid);
-+	return 0;
-+}
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index b276956ff88d..89d8ae4e796c 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -534,9 +534,11 @@ enum cxl_partition_mode {
- /**
-  * enum cxl_private_region_type - CXL private region types
-  * @CXL_PRIVATE_NONE: No private region type set
-+ * @CXL_PRIVATE_ZSWAP: Region used for zswap compressed memory
-  */
- enum cxl_private_region_type {
- 	CXL_PRIVATE_NONE,
-+	CXL_PRIVATE_ZSWAP,
- };
- 
- /**
--- 
-2.52.0
+John
 
