@@ -1,258 +1,219 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657EE2777E0
-	for <linux-cxl@vger.kernel.org>; Fri,  9 Jan 2026 02:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9285250096F
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Jan 2026 04:44:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767924752; cv=none; b=rZvXJU6XsGtJdz7qKF16EqFzbqVYlOjuMxc+DrZIqcHt2CrHsHgd5+ZU2iSOWjGhlxT7GRWlKPwab2yZzeIJ4LXxeJZiCTW6IAtfsf0KE/+/p6F0pPQPXE2cF0OtLQrzMr2GV7KqIdzWj73Wxa1Ch8HFuKt396nRRr5p5uIhTj8=
+	t=1767933860; cv=none; b=uxiEBAxD6FYqoIVOGtnFHOrqitSmB5LkMCQ1S2CpQ0j8F+pbon2SPx2OPMETICUF13PjS3rI7ycVFt1AGKhRoWUh0l8sZbs8CuEaUZSVPJ8/gofp3wJOHtElTdLfuXZyFGslAvjuS39xKQKG9FLkAV+g1R2bHL41wEWD/ZcNB0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767924752; c=relaxed/simple;
-	bh=Kv5afgrFaswkFB/JofSHfXQJjDup7xyugon/nrswLug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OwqW3knCJNsQY/rzdNFCAGTAn8LgmhmjF1LUwllwddZS4wiQmSf2OCJUvaVAaunitQZrXeXmb0iA1TabsZOS3M7v5MQ/CBL2LYpYUM7MTB4ty1Rq+riLclL0xPCrdaPjO8NGMthGaWx3IO8OnENa3rw+sHuNfNj9M90iCPYmiyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SVhBvMtw; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767933860; c=relaxed/simple;
+	bh=D0UGfay3dsna+FGkp+Qbtn2m4AUWrP4lzsCEMgm1HfA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oR2ZAt34hTZvEX6dZChbOwJkN6Q1jRkfX8VmQwJkwu0gPmUdB7tWhFmYlwk7FbmOudvBzgD0egBwWzf9ncgGanIAQUbSLHjRdudY1g6CZodRAdrzScb8Ap4mxHlTco8z4B3zNgBYaOc6wwVF8tvAcEWcGKidIM9Ee8WFAJIl9qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=h3D7YraT; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=kqkVsx1t; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVhBvMtw"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-45a84c6746cso320357b6e.1
-        for <linux-cxl@vger.kernel.org>; Thu, 08 Jan 2026 18:12:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="h3D7YraT";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="kqkVsx1t"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 608Hk88r1701990
+	for <linux-cxl@vger.kernel.org>; Fri, 9 Jan 2026 04:44:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	9PMU9ieb1QmCoXo11coZcBcipTvyHbkjE2lSzxbfThY=; b=h3D7YraTfVmsM947
+	ssAm268Ecx0hciT9Z4P/p3YNMwdJ9No2awOjCMsug+ChBVc941iiP7TldxzGPBqa
+	V/JTyEzFcTqAt/HJYh9eGijEQQDJL+pnYzzb/W28YmE68ZBNqijzHFtOTf3rJjvT
+	yY4rryx0RtHnbufPqf1fuu5ZQQCQX7BSwlLdaoUNqfQrH6joIplWawpsULAeOloN
+	FgIdSEn+3IavIxmfYxdal/UJBXhquwNJP6lfsJb1TZZfuOPohHeVVLRaawdjqMfb
+	wB+15Ywi6Usvs4R2Yv6pntwve3M+nZkybOdtMn6YTUAVJojbD+7ImQf8NLT/pOe3
+	zPBMYg==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bjfdaa0ge-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-cxl@vger.kernel.org>; Fri, 09 Jan 2026 04:44:17 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2a090819ed1so28778845ad.2
+        for <linux-cxl@vger.kernel.org>; Thu, 08 Jan 2026 20:44:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767924742; x=1768529542; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=joznU88cqz27crMC+lX8vIj+1sa0vrTXaQ0+XLYGNXc=;
-        b=SVhBvMtw5qF56KpJ3sig35yXNYVUDTys8LHmjgJReRO2DLQq0+VwW8Vsn3/9ItybHY
-         s4ce+ZDKu8rIPac1GxreRYbVEfqx3WQViBDSFTLwbIaryD45/lZs7biaqtaDqPHV/rlo
-         vLjipskiK3gNRPXUVNXfOul52RdjvZ24vKibE6Blcy+BRPQwNTu7aLETiRr9cOzX8zIx
-         4NSoI4wZjISAfUpvA/v1lLAAfG61b/87c/mzOa5EotLRxS6+zHCICspxMmCGjtjMkrc7
-         +D0f0FIAFQrqFJWb8bqbMJPmLvlMONBvFvNQ7cB2u0WH0NZ+UBtEsDB9v8OACs03rDVS
-         Vaag==
+        d=oss.qualcomm.com; s=google; t=1767933856; x=1768538656; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9PMU9ieb1QmCoXo11coZcBcipTvyHbkjE2lSzxbfThY=;
+        b=kqkVsx1trpcyZpjo5TPryavkmSObWjksL2SATronXcw8c1EVkd5weNPFb0pX6MxL83
+         DzWm/cQKz9+DVqbkE+K+hKa/itsJ/w3HU4R3uU17u9/YeHl24yifwNQ7evcTej5IGuH6
+         sxS3AJEjGHkqJN0hiRhsP6SaTmjumW53q4s4bBjNmh3ZWBFGJcz7uA8cElbylkAK2BKh
+         HOkTzKgT2deb0Y49jMx4kFVIIF77uhnMQu3zhm9QfrgV3rDM5TQHK29t4L31b8ynmcGN
+         FgcqHBn+QVTu+2Av2hYnWJ/qtUiwR1/NuQs1Q6fGWyyF6S53SvraZ27JZTCBjh913RyF
+         dQqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767924742; x=1768529542;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=joznU88cqz27crMC+lX8vIj+1sa0vrTXaQ0+XLYGNXc=;
-        b=bfcme4zAiZAZVlRmM7Hdg2Q22FrzFHwd01HY2pc3EwDJ3BKTbJEqp9oZ6BbJNq+4o1
-         2R2toTF3U7TovNgCnDlnK0b4EbF0FloSmIGfoQHevvtGICbGOjf5/FBKpwMSYaDw7S4G
-         8u8ZPUfgiD7HU+tuTm75vDieNERwrizDVR/sh7rw16b6a/v71DedjIWWzbDxmn8jhkOx
-         aeY4ovjBNnXwI++ZmusG63fufZzu/omb01wzyEjHLm/pUPU0F7fyqi6jEJy6/7xzyYYm
-         T0iFFpWDoxw2TUWq72lp7+YGl8JORKkrppja7ROuTM7NCiJtmEaACzLlXqpNT3ULQomZ
-         J8vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU08RkFvMITvhNpOHZsAR1W/72SL16vB6S6vqA0YE9Xu44ObZlz4VXucUm4bbwAOs/CYQWcGlI4tgs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/UwRDWen+19sbPrWYPX5y4uKqqidhz8Gf5hOueSovLVhneDn7
-	a1/RQVi27zXQJMLsKx3A/cQpFMzhmkhhCst8mIMajKGHLC5DJflEw7U4
-X-Gm-Gg: AY/fxX5zfL8Vs2WWqjPZQAsRIOamyczgu+5VnuQu9cFle1GdK7nHPOEJYH2ilpfMFWB
-	SihTkwLpQn6uwU+YenyfpiWs9JLr2RsIegCtW/Opj2Igr6TOC44g7FCA5yn5P7O7Nt+Q5Mv2vX9
-	9Q5+vU5/hWTjF2t5W0Vc6bYPvFYtSQybF9bgK2AXMA1mhRHdS4zuTDdS7ktFpo/X8JpcvPXo+cL
-	2ART9F5RlSbOXFxaG4sSrRqs0BxSfWjoVj+G7zN3/0CVH6DWzXw2wwK2+uXbivZXuxJshOXm5tc
-	gYkZ4LUte6rmDAwSA2RVYikxGKmQER7goVKaM2a1g8Aqs2/RqsXTFKo/B3vKYGu7YnBKVawKB/W
-	AlIEFylh1GpMNNmDZ3hF0xsP9raSxkw9/6HdI7ayaIT6FodflgOLLX/pdKj10snksSQMuMTwDzT
-	pqJL8drmRbeONfp5v4UnrgX+ewLsGTt9BlPzXFqlFQ
-X-Google-Smtp-Source: AGHT+IGYBJk8OIQjEdZM7RE78nO78sf0DfqkbSdJIlNgjxP4hXdS9RBTVkAdVP+l8SF00cVZqqeJEw==
-X-Received: by 2002:a05:6808:23d6:b0:45a:78b:65e1 with SMTP id 5614622812f47-45a6bf113f2mr3395882b6e.48.1767924742171;
-        Thu, 08 Jan 2026 18:12:22 -0800 (PST)
-Received: from groves.net ([2603:8080:1500:3d89:184d:823f:1f40:e229])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-45a5e2e8fb1sm4057261b6e.21.2026.01.08.18.12.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jan 2026 18:12:21 -0800 (PST)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Thu, 8 Jan 2026 20:12:19 -0600
-From: John Groves <John@groves.net>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, venkataravis@micron.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V3 14/21] famfs_fuse: Plumb the GET_FMAP message/response
-Message-ID: <rlxxq64rtt6zxywgorii7oj5dhtzbzl2j7xdrlcjn4h32glo75@2r2f2tihd7l6>
-References: <20260107153244.64703-1-john@groves.net>
- <20260107153332.64727-1-john@groves.net>
- <20260107153332.64727-15-john@groves.net>
- <20260108124956.00000e0e@huawei.com>
+        d=1e100.net; s=20230601; t=1767933856; x=1768538656;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9PMU9ieb1QmCoXo11coZcBcipTvyHbkjE2lSzxbfThY=;
+        b=pcGh75KB/6zwnqZNylLg6gFjLJy3NIiyCa0p7wP+Xf4Zr3cLDNZMRoZkeAaBoe+2Iy
+         O6coX6HiXsJnLInd6Y/6kWyz25FmCPZb8BySuZ0aJHPCSzZD7ic7dxSsmE+dNwRS/U5F
+         p76aRGqfZbKsnMoigFfDnq/nMau4S+T/51HPWY2mnfN3ZpTrdyvGawbq0KP9g9uyd3bp
+         m8qSAeA3TyhxAXutOVzF8KHwwF55d68ONDCwgkW0vgbvq4G+mKT5etTroEEv2eZffAD/
+         kAy2o5tQXrt3pUWxQsDqRYW+ZgA2pZYg0IFculc253btL33HTFpcYiLIXxEbCisF6m4f
+         Z24Q==
+X-Gm-Message-State: AOJu0YzJ50ox87G/2cqI85tJicaYu8AS6q7wWJH6WhlY+jYREk6FBfox
+	Don+A/IpRXQmpQsxIkx7xdtKR9RscvuAGLq+zN4mttebps6j3AtoQkBIpUPNhn6QA7jAndh4sZM
+	T5rixRLyQUt0WiXrrUmaWmx+ZAciwWgaW3kadqS/TXqRtJk3mWk/VQfQauCWgB6I=
+X-Gm-Gg: AY/fxX59Z92J3Df29AVKVJDyOl3UgquVmsBRU3dCosPXfRu3xYaYIHrw3fcyLCOV5Cy
+	Lp+CTW2UZoMw1ZBmuXCEY4T3jkDw+xNhmdAcJvvZU992KHWTWIMy+7xcGjXBMWtd8MR104Zwh4p
+	UdtOKB1VropK5+Bb2TU6iFP8I59ZhrXhMA3xke7TNwiDi61jTE3i84qExbXzkPMNegqrmM6Yp2H
+	51MUjGb4U3uMo2AHBWEQ8i0C3lj/hFUZ7ii6d3hPQz8YxjUiRwoWP1waO7VcQHdi9xsQRVVVUyS
+	YSjOsL9dNiHpJIyklG7DXin6OTx7oNiwzoOca524z8gQaH1HZtyFnWyjgoQzkLdwxF6kb1AWZmJ
+	/rqwaWx8Vc6iBqa2DHh8mdpq5RSzrf4Rp0zsSrmq9Co0=
+X-Received: by 2002:a17:903:a8f:b0:2a1:3e15:380e with SMTP id d9443c01a7336-2a3ee4aae30mr77088425ad.34.1767933856409;
+        Thu, 08 Jan 2026 20:44:16 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFB3u+HKizZWgXaPWyivW/bF/qgEHwpzZILB1cDaAISw9tmf93lNmF0fhBODQ2Q/mtucKddLQ==
+X-Received: by 2002:a17:903:a8f:b0:2a1:3e15:380e with SMTP id d9443c01a7336-2a3ee4aae30mr77088205ad.34.1767933855925;
+        Thu, 08 Jan 2026 20:44:15 -0800 (PST)
+Received: from [192.168.1.9] ([122.171.107.71])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3cd2b3asm91438525ad.88.2026.01.08.20.44.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Jan 2026 20:44:15 -0800 (PST)
+Message-ID: <cb77c9eb-6dab-4147-a0bb-ce488524beb2@oss.qualcomm.com>
+Date: Fri, 9 Jan 2026 10:13:11 +0530
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260108124956.00000e0e@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] mm: memory-tiers, numa_emu: enable to create
+ memory tiers using fake numa nodes
+To: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
+        hannes@cmpxchg.org, david@kernel.org, mhocko@kernel.org,
+        zhengqi.arch@bytedance.com, shakeel.butt@linux.dev,
+        lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+        rppt@kernel.org, surenb@google.com, bingjiao@google.com
+References: <20260108101535.50696-1-akinobu.mita@gmail.com>
+ <20260108101535.50696-2-akinobu.mita@gmail.com>
+Content-Language: en-US
+From: Pratyush Brahma <pratyush.brahma@oss.qualcomm.com>
+In-Reply-To: <20260108101535.50696-2-akinobu.mita@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=Ue1ciaSN c=1 sm=1 tr=0 ts=696087a1 cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=yzROskTkGupuC83a2laO1A==:17
+ a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=pGLkceISAAAA:8 a=gTkrCQ11ykXsVYlltkQA:9
+ a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-ORIG-GUID: uN9wM_7X8qwS0BSkZ-rp6ls4uPGtWUnz
+X-Proofpoint-GUID: uN9wM_7X8qwS0BSkZ-rp6ls4uPGtWUnz
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA5MDAyOSBTYWx0ZWRfX++6Jy1IRqdKi
+ mJJXb874v+XyQguhogLMUq/VlmBnhh+Nm3iI/vfWU6XGbbtRB3g9ivLVNWtYwEzcHJvj34DW+kl
+ eAMutBVknmWRgHqt7r5NDX5yjfZMnU05wz8sVOXzrNL2iA8OiyW4VDImjdUSZF+mHkmdV8zE3W/
+ SxOAQc1HbUewGj1DHIzj6N6gDepSsVEufuCJhBjRbMysJ0lvaDVtJTdUo+rsfP03+kIpQX3GftO
+ qfwQnFVHcSxAV1ac7JTuL3i0TNjPd8wt3tDMccnzcauFN2i/+Hod3+6/0AnLTdWIsDxF8WGUoVd
+ 2w5Qz0iPxnydJ2Z79oi7l5cMSPC+bsHnbcwZaSCfl44YAIX89Hw44z8Ine8ehp3X+dqm+lYGDjH
+ LH/OMV7oNZHR/BcbCTlFTHnfnGbb0U0jNuFkZ7SiNupxR3Kd8/A8qtYpuBQix0r9AKajrxSoWEb
+ 2CdvqvcMaT5SuT5gMxQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-09_01,2026-01-08_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 lowpriorityscore=0 clxscore=1011 priorityscore=1501
+ bulkscore=0 suspectscore=0 phishscore=0 spamscore=0 malwarescore=0
+ adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
+ definitions=main-2601090029
 
-On 26/01/08 12:49PM, Jonathan Cameron wrote:
-> On Wed,  7 Jan 2026 09:33:23 -0600
-> John Groves <John@Groves.net> wrote:
-> 
-> > Upon completion of an OPEN, if we're in famfs-mode we do a GET_FMAP to
-> > retrieve and cache up the file-to-dax map in the kernel. If this
-> > succeeds, read/write/mmap are resolved direct-to-dax with no upcalls.
-> > 
-> > Signed-off-by: John Groves <john@groves.net>
-> A few things inline.
-> 
-> J
-> 
-> > diff --git a/fs/fuse/famfs.c b/fs/fuse/famfs.c
-> > new file mode 100644
-> > index 000000000000..0f7e3f00e1e7
-> > --- /dev/null
-> > +++ b/fs/fuse/famfs.c
-> > @@ -0,0 +1,74 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * famfs - dax file system for shared fabric-attached memory
-> > + *
-> > + * Copyright 2023-2025 Micron Technology, Inc.
-> > + *
-> > + * This file system, originally based on ramfs the dax support from xfs,
-> > + * is intended to allow multiple host systems to mount a common file system
-> > + * view of dax files that map to shared memory.
-> > + */
-> > +
-> > +#include <linux/fs.h>
-> > +#include <linux/mm.h>
-> > +#include <linux/dax.h>
-> > +#include <linux/iomap.h>
-> > +#include <linux/path.h>
-> > +#include <linux/namei.h>
-> > +#include <linux/string.h>
-> > +
-> > +#include "fuse_i.h"
-> > +
-> > +
-> > +#define FMAP_BUFSIZE PAGE_SIZE
-> > +
-> > +int
-> > +fuse_get_fmap(struct fuse_mount *fm, struct inode *inode)
-> > +{
-> > +	struct fuse_inode *fi = get_fuse_inode(inode);
-> > +	size_t fmap_bufsize = FMAP_BUFSIZE;
-> > +	u64 nodeid = get_node_id(inode);
-> > +	ssize_t fmap_size;
-> > +	void *fmap_buf;
-> > +	int rc;
-> > +
-> > +	FUSE_ARGS(args);
-> > +
-> > +	/* Don't retrieve if we already have the famfs metadata */
-> > +	if (fi->famfs_meta)
-> > +		return 0;
-> > +
-> > +	fmap_buf = kcalloc(1, FMAP_BUFSIZE, GFP_KERNEL);
-> 
-> If there is only ever 1, does kcalloc() make sense over kzalloc()?
 
-Muscle memory? Good call, done.
-
-> 
-> > +	if (!fmap_buf)
-> > +		return -EIO;
-> > +
-> > +	args.opcode = FUSE_GET_FMAP;
-> > +	args.nodeid = nodeid;
-> > +
-> > +	/* Variable-sized output buffer
-> > +	 * this causes fuse_simple_request() to return the size of the
-> > +	 * output payload
-> > +	 */
-> > +	args.out_argvar = true;
-> > +	args.out_numargs = 1;
-> > +	args.out_args[0].size = fmap_bufsize;
-> > +	args.out_args[0].value = fmap_buf;
-> > +
-> > +	/* Send GET_FMAP command */
-> > +	rc = fuse_simple_request(fm, &args);
-> > +	if (rc < 0) {
-> > +		pr_err("%s: err=%d from fuse_simple_request()\n",
-> > +		       __func__, rc);
-> 
-> Leaks the fmap_buf?  Maybe use a __free() so no need to keep track of htat.
-
-Another good one - done.
-
-> 
-> 
-> > +		return rc;
-> > +	}
-> > +	fmap_size = rc;
-> > +
-> > +	/* We retrieved the "fmap" (the file's map to memory), but
-> > +	 * we haven't used it yet. A call to famfs_file_init_dax() will be added
-> > +	 * here in a subsequent patch, when we add the ability to attach
-> > +	 * fmaps to files.
-> > +	 */
-> > +
-> > +	kfree(fmap_buf);
-> > +	return 0;
-> > +}
-> 
-> > diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-> > index 84d0ee2a501d..691c7850cf4e 100644
-> > --- a/fs/fuse/fuse_i.h
-> > +++ b/fs/fuse/fuse_i.h
-> > @@ -223,6 +223,14 @@ struct fuse_inode {
-> 
-> >  
-> > +static inline struct fuse_backing *famfs_meta_set(struct fuse_inode *fi,
-> > +						       void *meta)
-> > +{
-> > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
-> > +	return xchg(&fi->famfs_meta, meta);
-> > +#else
-> > +	return NULL;
-> > +#endif
-> > +}
-> > +
-> > +static inline void famfs_meta_free(struct fuse_inode *fi)
-> > +{
-> > +	/* Stub wil be connected in a subsequent commit */
-> > +}
-> > +
-> > +static inline int fuse_file_famfs(struct fuse_inode *fi)
-> > +{
-> > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
-> > +	return (READ_ONCE(fi->famfs_meta) != NULL);
-> > +#else
-> > +	return 0;
-> > +#endif
-> > +}
-> > +
-> > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
-> > +int fuse_get_fmap(struct fuse_mount *fm, struct inode *inode);
-> > +#else
-> > +static inline int
-> > +fuse_get_fmap(struct fuse_mount *fm, struct inode *inode)
-> > +{
-> > +	return 0;
-> > +}
-> > +#endif
-> I'd do a single block under one if IS_ENABLED() and then use an else
-> for the stubs.   Should end up more readable.
-
-OK, this sounds good, but it's rebase hell (oh, the humanity! :D). Multiple 
-additional commits flesh out this stuff, and for now I'm giving up on that
-rebase. I tried the flip, but I don't have all night (tonight), so I'm 
-leaving it alone. 
-
-I'll happily clean this up after the series is complete.
-
-Thanks!
-John
-
+On 1/8/2026 3:45 PM, Akinobu Mita wrote:
+> This makes it possible to create memory tiers using fake numa nodes
+> generated by numa emulation.
+>
+> The "numa_emulation.adistance=" kernel cmdline option allows you to set
+> the abstract distance for each NUMA node.
+>
+> For example, you can create two fake nodes, each in a different memory
+> tier by booting with "numa=fake=2 numa_emulation.adistance=576,704".
+> Here, the abstract distances of node0 and node1 are set to 576 and 706,
+You mention 704 in the cmdline but then mention 706 in the following text.
+Please correct the typo. Btw I am not entirely sure if this example is 
+required
+in the commit text here. The Documentation seems to the right place for 
+this.
+> respectively.
+>
+> Each memory tier covers an abstract distance chunk size of 128. Thus,
+> nodes with abstract distances between 512 and 639 are classified into the
+> same memory tier, and nodes with abstract distances between 640 and 767
+> are classified into the next slower memory tier.
+>
+> The abstract distance of fake nodes not specified in the parameter will
+> be the default DRAM abstract distance of 576.
+>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> ---
+> v2:
+> - fix the explanation about cmdline parameter in the commit log
+>
+>   mm/numa_emulation.c | 26 ++++++++++++++++++++++++++
+>   1 file changed, 26 insertions(+)
+>
+> diff --git a/mm/numa_emulation.c b/mm/numa_emulation.c
+> index 703c8fa05048..a4266da21344 100644
+> --- a/mm/numa_emulation.c
+> +++ b/mm/numa_emulation.c
+> @@ -6,6 +6,9 @@
+>   #include <linux/errno.h>
+>   #include <linux/topology.h>
+>   #include <linux/memblock.h>
+> +#include <linux/memory-tiers.h>
+> +#include <linux/module.h>
+> +#include <linux/node.h>
+>   #include <linux/numa_memblks.h>
+>   #include <asm/numa.h>
+>   #include <acpi/acpi_numa.h>
+> @@ -344,6 +347,27 @@ static int __init setup_emu2phys_nid(int *dfl_phys_nid)
+>   	return max_emu_nid;
+>   }
+>   
+> +static int adistance[MAX_NUMNODES];
+> +module_param_array(adistance, int, NULL, 0400);
+> +MODULE_PARM_DESC(adistance, "Abstract distance values for each NUMA node");
+> +
+> +static int emu_calculate_adistance(struct notifier_block *self,
+> +				unsigned long nid, void *data)
+> +{
+> +	if (adistance[nid]) {
+> +		int *adist = data;
+> +
+> +		*adist = adistance[nid];
+> +		return NOTIFY_STOP;
+> +	}
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static struct notifier_block emu_adist_nb = {
+> +	.notifier_call = emu_calculate_adistance,
+> +	.priority = INT_MIN,
+> +};
+> +
+>   /**
+>    * numa_emulation - Emulate NUMA nodes
+>    * @numa_meminfo: NUMA configuration to massage
+> @@ -532,6 +556,8 @@ void __init numa_emulation(struct numa_meminfo *numa_meminfo, int numa_dist_cnt)
+>   		}
+>   	}
+>   
+> +	register_mt_adistance_algorithm(&emu_adist_nb);
+> +
+>   	/* free the copied physical distance table */
+>   	memblock_free(phys_dist, phys_size);
+>   	return;
+Best Regards
+Pratyush
