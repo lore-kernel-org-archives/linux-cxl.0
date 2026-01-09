@@ -1,531 +1,108 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F772110
-	for <linux-cxl@vger.kernel.org>; Fri,  9 Jan 2026 14:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CC3279908
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Jan 2026 14:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767969048; cv=none; b=dmDHWutruDpEaLQeLXb6hcTupQpOek9BxICaeDcLBLwnGQkAW8ep7nH3m8nMfQgMN6Wr0+nZceCrtCdHpIEe2PyUWZrMb9rbPk70ZZHmzcj7KB1yn/Anm/ePglFdzEk9l/jleMZIXyoOXIk/soyMkb3aRS3WNlBa3C8TD8ao4BY=
+	t=1767969920; cv=none; b=oEARSNJu8KLLnnl0dybUPmph1TxTK8eTALVf7NmETF4+bEkzM2+gVOjW03x29s6W5lsNtKWOHuVSaqA3Y67Jr+QsHVp13DQcPtHWTgY3INVKNd2bdfoCqGSdWrH2TWg9/bsCxSKdZdMWKzlpHCNPYX0I/ka1I2IBg4mZ5nfUDH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767969048; c=relaxed/simple;
-	bh=vSmoqaySVsgpjPHJZa4uQCQy1ps6mpAk+kz/vE/rfQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZSsMvRvzbB6lYDDGnydPSX8i0AdD6sPBqHwSITUij+wnUmrH7RJgWTZR7PnW9EdlKvEe9XXo5fTYgA+kt+u4kJUodYQ3BquW3+QicSkROfJY+2WZmzmD8rHpNYybvEMSGbPbFoTNC+UMFa2/oCXjsUnG5LXz7mv4VNSbK8k3bMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QLG5BDJX; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QLG5BDJX"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-3fe9d6179efso1962099fac.1
-        for <linux-cxl@vger.kernel.org>; Fri, 09 Jan 2026 06:30:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767969044; x=1768573844; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/+b/pbin5O15LPdeXGYj8QlsRQG4OrGA/20XlRHryOQ=;
-        b=QLG5BDJXwek8flAOsEw8Pou1BLmol09y60E1Fttt3oIG2TF+DXego4qjZZBtbgBPGa
-         txh/zKLSHQ8LyovudmIcMNTHBt3QHlQHzojsDRLli/qtV4UGzir2SeGJc8LbR4ddxDh2
-         rZRVXRo3eO+E9PbmpZBBILL7QQOg05YTyeaIkq6IK5mRNMz5bAuzd3jowgAr1qr+vckD
-         OWipEvlt9HIJIK4YAdEX+2KCEqBlsuYHdUvctOsRybgtFvcQ3yzE02ZcbYDHWzljNJJQ
-         xiRgYJ4wfueLXdGac1HOzih5A9Tf8AU1hgsALRGT4oop0j6qjeBl/vPgZhjEn3yJfqR8
-         P1VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767969044; x=1768573844;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/+b/pbin5O15LPdeXGYj8QlsRQG4OrGA/20XlRHryOQ=;
-        b=Grm5Yb8EQ9kJE9GQPEYxLWtHFuqaH5f4bcpRrT6ssXbrMlVe3rjMynZxTr3gzDVPXp
-         5Kb41pAFefS1ckaAkcgGba48pfq6heQB0E9qyOAeYJscZMWTYVZuObSYmLSWdkcR9grz
-         Xg90jYi+6iLrGz2Wji51xxMzGUw/rt0qKJAeamjBQ1voeC1Ihgp+8qGsjulZK6H2nKA1
-         lImpxa3vPin8xCuOo2MMOgddSRkRp35451XL6Xrecafco4P2kcTkJeX5yr+2P9R3QWE2
-         DFa7RdeyKe3ABtyIXeZl2LIiRhErYpQgSiUqk3hQ/lwAiYRfjtBeHTJ2CTBhtX6v68wl
-         /vvA==
-X-Forwarded-Encrypted: i=1; AJvYcCWF5U2ZXt6KW+y8WcqhC7Fv0TAmJ6JBXvyNFJJkO6qsVGY2VodWPpqK1KH4V7GUv8Ndaknp7b2gFzw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytmbF5iHY7LujBBsKhmUvgFlEgdTHpxokmS9/K80/3dQLfrS+7
-	YD4ngJ62qcJhgkuxaHAhHkcAvUm/S6QXaYKta4gnV5st5kKu2H7aEDT6
-X-Gm-Gg: AY/fxX7dVAwkWOQV/UcBvNofH1pW7GdPaPlod5KTc/g3EG0Rot57Ei6zTNVLJ+UKsv4
-	YkZmpx+v9LOGjTi7W3ZFAQtxMeJZwQliJwC1CbChrkecQnOkPOsWptmmHOSk2wCPKKrp9+Q0Ftc
-	xJIUujBq6es+Lnq2abZWUnoraNH1brJXjaBVCk4e79PLBWd/5AGnewIHU8Ex9gS+nI+vEIhTLg8
-	UQ1wQjK/VqeUA12juDC4gXuAOHf3Uf0Ot7JqvSXKM/R9DKt3bHcc7fTqrJOrD6de6/tUx3kVLSh
-	zXL/eO0mEziD+O5wXFDhs8vfsma2TK5ZjfwU1O0lqIDDgmsLDXM1kD94tOSiHvTJ/6UTz+Ujtbz
-	mU1vPvpmjzbCWWU57nx27BEy6NxGO6QxYCnHBCnN8poamdvrqYcu0v1lBh7MaJtlids7bigiI9l
-	AbkkcOtGK+i+/msHcO4TpheA4IT4S7sQ==
-X-Google-Smtp-Source: AGHT+IElG0AH+R/nz4iIoI5x/T09BXi9JWxi51uu3GRk0Q9RVWgdDkzftBBm8jsoFHiLP76eqmw9mw==
-X-Received: by 2002:a05:6870:1753:b0:3e0:c368:e1cb with SMTP id 586e51a60fabf-3ffbf035077mr6307624fac.14.1767969043388;
-        Fri, 09 Jan 2026 06:30:43 -0800 (PST)
-Received: from groves.net ([2603:8080:1500:3d89:184d:823f:1f40:e229])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3ffa4e3e844sm7223039fac.9.2026.01.09.06.30.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jan 2026 06:30:42 -0800 (PST)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Fri, 9 Jan 2026 08:30:39 -0600
-From: John Groves <John@groves.net>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, venkataravis@micron.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V3 15/21] famfs_fuse: Create files with famfs fmaps
-Message-ID: <7jcdlgo7nddrm7phuhj37q2cwgmdal2es6qgswu4fu5sgpgc7v@dt7ltedbjhkq>
-References: <20260107153244.64703-1-john@groves.net>
- <20260107153332.64727-1-john@groves.net>
- <20260107153332.64727-16-john@groves.net>
- <20260108131400.000017f5@huawei.com>
+	s=arc-20240116; t=1767969920; c=relaxed/simple;
+	bh=6BFowv9Sbc+Vk+p/VrzyBlWKyQeZRX143UEgZ7qP7Ck=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aHvs4kVSZzuOi6ZvuEfGbCAEy/GLIUR17MyxvmkVrQxUdwoYNoSI9dkMEOey7M9VpWvtLzo/Q/HUHxYUpqbbAL7JZl2yjY9E3S4iuo0QFf779G+LNLNKnSLc7kRmHLAOUGtTg5MdKQ6pkNpRqWkSvCyNl6An/WQGY1Xmoh6U2Qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dnl1B3tC8zHnH4v;
+	Fri,  9 Jan 2026 22:45:02 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id C659740086;
+	Fri,  9 Jan 2026 22:45:12 +0800 (CST)
+Received: from SecurePC-101-06.huawei.com (10.122.19.247) by
+ dubpeml100005.china.huawei.com (7.214.146.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.36; Fri, 9 Jan 2026 14:45:12 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Michael Tsirkin <mst@redhat.com>, <qemu-devel@nongnu.org>, Davidlohr Bueso
+	<dave@stgolabs.net>
+CC: <linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>, Ravi Shankar
+	<venkataravis@micron.com>, Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
+	Markus Armbruster <armbru@redhat.com>, Michael Roth <michael.roth@amd.com>
+Subject: [PATCH qemu v5 0/7] hw/cxl: Support Back-Invalidate (+ PCIe Flit mode)
+Date: Fri, 9 Jan 2026 14:45:04 +0000
+Message-ID: <20260109144511.557781-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260108131400.000017f5@huawei.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-On 26/01/08 01:14PM, Jonathan Cameron wrote:
-> On Wed,  7 Jan 2026 09:33:24 -0600
-> John Groves <John@Groves.net> wrote:
-> 
-> > On completion of GET_FMAP message/response, setup the full famfs
-> > metadata such that it's possible to handle read/write/mmap directly to
-> > dax. Note that the devdax_iomap plumbing is not in yet...
-> > 
-> > * Add famfs_kfmap.h: in-memory structures for resolving famfs file maps
-> >   (fmaps) to dax.
-> > * famfs.c: allocate, initialize and free fmaps
-> > * inode.c: only allow famfs mode if the fuse server has CAP_SYS_RAWIO
-> > * Update MAINTAINERS for the new files.
-> > 
-> > Signed-off-by: John Groves <john@groves.net>
-> 
-> > diff --git a/fs/fuse/famfs.c b/fs/fuse/famfs.c
-> > index 0f7e3f00e1e7..2aabd1d589fd 100644
-> > --- a/fs/fuse/famfs.c
-> > +++ b/fs/fuse/famfs.c
-> > @@ -17,9 +17,355 @@
-> >  #include <linux/namei.h>
-> >  #include <linux/string.h>
-> >  
-> > +#include "famfs_kfmap.h"
-> >  #include "fuse_i.h"
-> >  
-> >  
-> > +/***************************************************************************/
-> Who doesn't like stars?  Why have them here?
-> 
-> > +
-> > +void
-> > +__famfs_meta_free(void *famfs_meta)
-> 
-> Maybe a local convention, but if not one line.
-> Same for other cases.
+Lightly reworked version of Davidlohr's v4.
+https://lore.kernel.org/qemu-devel/20251103195209.1319917-1-dave@stgolabs.net/
 
-Done
+Whilst I have several other series posted for merge this applies fine
+to upstream, so no dependencies.
 
-> 
-> > +{
-> > +	struct famfs_file_meta *fmap = famfs_meta;
-> > +
-> > +	if (!fmap)
-> > +		return;
-> > +
-> > +	if (fmap) {
-> 
-> Well that's never going to fail given 2 lines above.
+Davidlohr, please check I didn't mess anthing up and perhaps give tags
+for the 3 new patches.
 
-Good eye. Thanks.
+v5 changes:
+- Rebase much earlier in the CXL queue as Davidlohr had it beind some stuff
+  I was carrying that is not ready for upstream just yet.
+- Update the CFMWS flags directly as the patch doing restriction control needs
+  some more thought.
+- Bios tables test data updates.
+- Don't provide flit mode control for gen_pcie_root_port as we don't need it
+  for the rest of the series which is all about CXL.
 
-> 
-> 
-> > +		switch (fmap->fm_extent_type) {
-> > +		case SIMPLE_DAX_EXTENT:
-> > +			kfree(fmap->se);
-> > +			break;
-> > +		case INTERLEAVED_EXTENT:
-> > +			if (fmap->ie)
-> > +				kfree(fmap->ie->ie_strips);
-> > +
-> > +			kfree(fmap->ie);
-> > +			break;
-> > +		default:
-> > +			pr_err("%s: invalid fmap type\n", __func__);
-> > +			break;
-> > +		}
-> > +	}
-> > +	kfree(fmap);
-> > +}
-> 
-> > +/**
-> > + * famfs_fuse_meta_alloc() - Allocate famfs file metadata
-> > + * @metap:       Pointer to an mcache_map_meta pointer
-> > + * @ext_count:  The number of extents needed
-> 
-> run kernel-doc over the file as that's not the parameters...
+The following allows support for component basic back invalidation discovery
+and config, by exposing the BI routing table and decoder registers. Instead
+of going the type2[0] route, this series proposes adding support for type3
+hdm-db, which allows a more direct way of supporting BI in qemu.
 
-Not sure how I managed that; Fixed, thanks!
+As BI is a dependent on the larger flits introduced in PCIe (and CXL 3.0)
+add support for enabling that for CXL components. Negotiation is handled
+via an equivalent of what we do for link speed.
 
-> 
-> > + *
-> > + * Returns: 0=success
-> > + *          -errno=failure
-> > + */
-> > +static int
-> > +famfs_fuse_meta_alloc(
-> > +	void *fmap_buf,
-> > +	size_t fmap_buf_size,
-> > +	struct famfs_file_meta **metap)
-> > +{
-> > +	struct famfs_file_meta *meta = NULL;
-> > +	struct fuse_famfs_fmap_header *fmh;
-> > +	size_t extent_total = 0;
-> > +	size_t next_offset = 0;
-> > +	int errs = 0;
-> > +	int i, j;
-> > +	int rc;
-> > +
-> > +	fmh = (struct fuse_famfs_fmap_header *)fmap_buf;
-> 
-> void * so cast not needed and hence just assign it at the
-> declaration.
+Davidlohr Bueso (3):
+  hw/pcie: Support enabling flit mode
+  hw/cxl: Support type3 HDM-DB
+  hw/cxl: Remove register special_ops->read()
 
-Indeed, thanks.
+Ira Weiny (1):
+  hw/cxl: Refactor component register initialization
 
-> 
-> > +
-> > +	/* Move past fmh in fmap_buf */
-> > +	next_offset += sizeof(*fmh);
-> > +	if (next_offset > fmap_buf_size) {
-> > +		pr_err("%s:%d: fmap_buf underflow offset/size %ld/%ld\n",
-> > +		       __func__, __LINE__, next_offset, fmap_buf_size);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (fmh->nextents < 1) {
-> > +		pr_err("%s: nextents %d < 1\n", __func__, fmh->nextents);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (fmh->nextents > FUSE_FAMFS_MAX_EXTENTS) {
-> > +		pr_err("%s: nextents %d > max (%d) 1\n",
-> > +		       __func__, fmh->nextents, FUSE_FAMFS_MAX_EXTENTS);
-> > +		return -E2BIG;
-> > +	}
-> > +
-> > +	meta = kzalloc(sizeof(*meta), GFP_KERNEL);
-> 
-> Maybe sprinkle some __free magic on this then you can return in
-> all the goto error_out places which to me makes this more readable.
+Jonathan Cameron (3):
+  tests/bios-tables-test: Excluded CEDT.cxl for BI restriction
+    relaxation.
+  hw/cxl: Update CXL Fixed Memory Window ACPI description to include
+    Back Invalidate support.
+  tests/acpi/cxl: Update CEDT.cxl to allow BI in CFWMS
 
+ docs/system/devices/cxl.rst               |  23 +++
+ include/hw/cxl/cxl_component.h            |  87 +++++++--
+ include/hw/cxl/cxl_device.h               |   4 +
+ include/hw/pci-bridge/cxl_upstream_port.h |   1 +
+ include/hw/pci/pcie.h                     |   2 +-
+ include/hw/pci/pcie_port.h                |   1 +
+ hw/acpi/cxl.c                             |   2 +-
+ hw/cxl/cxl-component-utils.c              | 211 ++++++++++++++++------
+ hw/mem/cxl_type3.c                        |  15 +-
+ hw/pci-bridge/cxl_downstream.c            |  10 +-
+ hw/pci-bridge/cxl_root_port.c             |  11 +-
+ hw/pci-bridge/cxl_upstream.c              |  18 +-
+ hw/pci-bridge/pci_expander_bridge.c       |   2 +-
+ hw/pci/pcie.c                             |  23 ++-
+ tests/data/acpi/x86/q35/CEDT.cxl          | Bin 184 -> 184 bytes
+ 15 files changed, 313 insertions(+), 97 deletions(-)
 
-I like it, and I learned how to make __famfs_meta_free() into a
-__free() handler.
+-- 
+2.48.1
 
-Done
-
-> 
-> > +	if (!meta)
-> > +		return -ENOMEM;
-> > +
-> > +	meta->error = false;
-> > +	meta->file_type = fmh->file_type;
-> > +	meta->file_size = fmh->file_size;
-> > +	meta->fm_extent_type = fmh->ext_type;
-> > +
-> > +	switch (fmh->ext_type) {
-> > +	case FUSE_FAMFS_EXT_SIMPLE: {
-> > +		struct fuse_famfs_simple_ext *se_in;
-> > +
-> > +		se_in = (struct fuse_famfs_simple_ext *)(fmap_buf + next_offset);
-> 
-> void * so no need for cast. Though you could keep the cast but apply it to
-> fmh + 1 to take advantage of that type.
-
-done, thanks
-
-> 
-> 
-> > +
-> > +		/* Move past simple extents */
-> > +		next_offset += fmh->nextents * sizeof(*se_in);
-> > +		if (next_offset > fmap_buf_size) {
-> > +			pr_err("%s:%d: fmap_buf underflow offset/size %ld/%ld\n",
-> > +			       __func__, __LINE__, next_offset, fmap_buf_size);
-> > +			rc = -EINVAL;
-> > +			goto errout;
-> > +		}
-> > +
-> > +		meta->fm_nextents = fmh->nextents;
-> > +
-> > +		meta->se = kcalloc(meta->fm_nextents, sizeof(*(meta->se)),
-> > +				   GFP_KERNEL);
-> > +		if (!meta->se) {
-> > +			rc = -ENOMEM;
-> > +			goto errout;
-> > +		}
-> > +
-> > +		if ((meta->fm_nextents > FUSE_FAMFS_MAX_EXTENTS) ||
-> > +		    (meta->fm_nextents < 1)) {
-> > +			rc = -EINVAL;
-> > +			goto errout;
-> > +		}
-> > +
-> > +		for (i = 0; i < fmh->nextents; i++) {
-> > +			meta->se[i].dev_index  = se_in[i].se_devindex;
-> > +			meta->se[i].ext_offset = se_in[i].se_offset;
-> > +			meta->se[i].ext_len    = se_in[i].se_len;
-> > +
-> > +			/* Record bitmap of referenced daxdev indices */
-> > +			meta->dev_bitmap |= (1 << meta->se[i].dev_index);
-> > +
-> > +			errs += famfs_check_ext_alignment(&meta->se[i]);
-> > +
-> > +			extent_total += meta->se[i].ext_len;
-> > +		}
-> > +		break;
-> > +	}
-> > +
-> > +	case FUSE_FAMFS_EXT_INTERLEAVE: {
-> > +		s64 size_remainder = meta->file_size;
-> > +		struct fuse_famfs_iext *ie_in;
-> > +		int niext = fmh->nextents;
-> > +
-> > +		meta->fm_niext = niext;
-> > +
-> > +		/* Allocate interleaved extent */
-> > +		meta->ie = kcalloc(niext, sizeof(*(meta->ie)), GFP_KERNEL);
-> > +		if (!meta->ie) {
-> > +			rc = -ENOMEM;
-> > +			goto errout;
-> > +		}
-> > +
-> > +		/*
-> > +		 * Each interleaved extent has a simple extent list of strips.
-> > +		 * Outer loop is over separate interleaved extents
-> > +		 */
-> > +		for (i = 0; i < niext; i++) {
-> > +			u64 nstrips;
-> > +			struct fuse_famfs_simple_ext *sie_in;
-> > +
-> > +			/* ie_in = one interleaved extent in fmap_buf */
-> > +			ie_in = (struct fuse_famfs_iext *)
-> > +				(fmap_buf + next_offset);
-> 
-> void * so no cast needed.
-
-Right, thanks
-
-> 
-> > +
-> > +			/* Move past one interleaved extent header in fmap_buf */
-> > +			next_offset += sizeof(*ie_in);
-> > +			if (next_offset > fmap_buf_size) {
-> > +				pr_err("%s:%d: fmap_buf underflow offset/size %ld/%ld\n",
-> > +				       __func__, __LINE__, next_offset,
-> > +				       fmap_buf_size);
-> > +				rc = -EINVAL;
-> > +				goto errout;
-> > +			}
-> > +
-> > +			nstrips = ie_in->ie_nstrips;
-> > +			meta->ie[i].fie_chunk_size = ie_in->ie_chunk_size;
-> > +			meta->ie[i].fie_nstrips    = ie_in->ie_nstrips;
-> > +			meta->ie[i].fie_nbytes     = ie_in->ie_nbytes;
-> > +
-> > +			if (!meta->ie[i].fie_nbytes) {
-> > +				pr_err("%s: zero-length interleave!\n",
-> > +				       __func__);
-> > +				rc = -EINVAL;
-> > +				goto errout;
-> > +			}
-> > +
-> > +			/* sie_in = the strip extents in fmap_buf */
-> > +			sie_in = (struct fuse_famfs_simple_ext *)
-> > +				(fmap_buf + next_offset);
-> no cast needed.
-
-Done, thanks
-
-> 
-> > +
-> > +			/* Move past strip extents in fmap_buf */
-> > +			next_offset += nstrips * sizeof(*sie_in);
-> > +			if (next_offset > fmap_buf_size) {
-> > +				pr_err("%s:%d: fmap_buf underflow offset/size %ld/%ld\n",
-> > +				       __func__, __LINE__, next_offset,
-> > +				       fmap_buf_size);
-> > +				rc = -EINVAL;
-> > +				goto errout;
-> > +			}
-> > +
-> > +			if ((nstrips > FUSE_FAMFS_MAX_STRIPS) || (nstrips < 1)) {
-> > +				pr_err("%s: invalid nstrips=%lld (max=%d)\n",
-> > +				       __func__, nstrips,
-> > +				       FUSE_FAMFS_MAX_STRIPS);
-> > +				errs++;
-> > +			}
-> > +
-> > +			/* Allocate strip extent array */
-> > +			meta->ie[i].ie_strips = kcalloc(ie_in->ie_nstrips,
-> > +					sizeof(meta->ie[i].ie_strips[0]),
-> > +							GFP_KERNEL);
-> 
-> Align all lines after 1st one to same point.
-
-Yeah
-
-> 
-> ...
-> 
-> > +
-> > +/**
-> > + * famfs_file_init_dax() - init famfs dax file metadata
-> > + *
-> > + * @fm:        fuse_mount
-> > + * @inode:     the inode
-> > + * @fmap_buf:  fmap response message
-> > + * @fmap_size: Size of the fmap message
-> > + *
-> > + * Initialize famfs metadata for a file, based on the contents of the GET_FMAP
-> > + * response
-> > + *
-> > + * Return: 0=success
-> > + *          -errno=failure
-> > + */
-> > +int
-> > +famfs_file_init_dax(
-> > +	struct fuse_mount *fm,
-> > +	struct inode *inode,
-> > +	void *fmap_buf,
-> > +	size_t fmap_size)
-> > +{
-> > +	struct fuse_inode *fi = get_fuse_inode(inode);
-> > +	struct famfs_file_meta *meta = NULL;
-> > +	int rc = 0;
-> 
-> Always set before use.
-
-Roger that - and it went away with the __free thingy anyway
-
-> 
-> > +
-> > +	if (fi->famfs_meta) {
-> > +		pr_notice("%s: i_no=%ld fmap_size=%ld ALREADY INITIALIZED\n",
-> > +			  __func__,
-> > +			  inode->i_ino, fmap_size);
-> > +		return 0;
-> > +	}
-> > +
-> > +	rc = famfs_fuse_meta_alloc(fmap_buf, fmap_size, &meta);
-> > +	if (rc)
-> > +		goto errout;
-> > +
-> > +	/* Publish the famfs metadata on fi->famfs_meta */
-> > +	inode_lock(inode);
-> > +	if (fi->famfs_meta) {
-> > +		rc = -EEXIST; /* file already has famfs metadata */
-> > +	} else {
-> > +		if (famfs_meta_set(fi, meta) != NULL) {
-> > +			pr_debug("%s: file already had metadata\n", __func__);
-> > +			__famfs_meta_free(meta);
-> > +			/* rc is 0 - the file is valid */
-> > +			goto unlock_out;
-> > +		}
-> > +		i_size_write(inode, meta->file_size);
-> > +		inode->i_flags |= S_DAX;
-> > +	}
-> > + unlock_out:
-> > +	inode_unlock(inode);
-> > +
-> > +errout:
-> > +	if (rc)
-> > +		__famfs_meta_free(meta);
-> 
-> For readability I'd split he good and bad exit paths even it unlock
-> needs to happen in two places.
-
-Done
-
-> 
-> 
-> > +
-> > +	return rc;
-> > +}
-> > +
-> 
-> > diff --git a/fs/fuse/famfs_kfmap.h b/fs/fuse/famfs_kfmap.h
-> > new file mode 100644
-> > index 000000000000..058645cb10a1
-> > --- /dev/null
-> > +++ b/fs/fuse/famfs_kfmap.h
-> > @@ -0,0 +1,67 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * famfs - dax file system for shared fabric-attached memory
-> > + *
-> > + * Copyright 2023-2025 Micron Technology, Inc.
-> > + */
-> > +#ifndef FAMFS_KFMAP_H
-> > +#define FAMFS_KFMAP_H
-> > +
-> > +/*
-> > + * The structures below are the in-memory metadata format for famfs files.
-> > + * Metadata retrieved via the GET_FMAP response is converted to this format
-> > + * for use in  resolving file mapping faults.
-> 
-> bonus space after in
-
-Removed
-
-> 
-> > + *
-> > + * The GET_FMAP response contains the same information, but in a more
-> > + * message-and-versioning-friendly format. Those structs can be found in the
-> > + * famfs section of include/uapi/linux/fuse.h (aka fuse_kernel.h in libfuse)
-> > + */
-> 
-> > +/*
-> > + * Each famfs dax file has this hanging from its fuse_inode->famfs_meta
-> > + */
-> > +struct famfs_file_meta {
-> > +	bool                   error;
-> > +	enum famfs_file_type   file_type;
-> > +	size_t                 file_size;
-> > +	enum famfs_extent_type fm_extent_type;
-> > +	u64 dev_bitmap; /* bitmap of referenced daxdevs by index */
-> > +	union { /* This will make code a bit more readable */
-> 
-> Not sure what the comment is for. I'd drop it.
-
-I'm sure it made sense to me at some point but not now. Gone.
-
-> 
-> 
-> > +		struct {
-> > +			size_t         fm_nextents;
-> > +			struct famfs_meta_simple_ext  *se;
-> > +		};
-> > +		struct {
-> > +			size_t         fm_niext;
-> > +			struct famfs_meta_interleaved_ext *ie;
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +#endif /* FAMFS_KFMAP_H */
-
-Thanks!
-John
