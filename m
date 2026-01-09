@@ -1,221 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88CA24A07C;
-	Sun, 11 Jan 2026 08:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D9433C19C
+	for <linux-cxl@vger.kernel.org>; Sun, 11 Jan 2026 15:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768120122; cv=none; b=JaNsuf1Xmfg5UlhXp5h/NKWRydPymbnU54ZVNjOss8qeOuQjXb41OuRPSxRfjkW5+xTRvkqrUPaD+jQ645CqhTiK93ETFWtAc8YDGWPGhJUjRsDSxKg/VoMhRo+Q4fOjhje9B8GZh2izatrGvYRTjeSSiASuGX2sYyrO6B4FwHM=
+	t=1768145113; cv=none; b=rPHlNfaZbMaqkXKNhga8OGX6Hn6DMXcuwJTm34pwRdpR7KchwqDxMnXwI6FztECzWIb7ANyTF1HMiVeH9rU/66n/uBcutoHDqNY75McnM0bMdE2DsYSVF4RPvyUqagViJ76qtdtiebtIC0lSiEAIOEK3W+2PbWNihRMv6cQaREc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768120122; c=relaxed/simple;
-	bh=HRLMNbJfcIyzccjy/sfTD1k/8iARayV6dPdQfJTMnWo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RZ7c4p0xb6u3pt424oVoQbraGkR6Dl4j3CubewkohlApuDbU/fe7c36Ay+pZaTj/0LQCJAUE3w8MIl5kkyywYhnxl3oLvUiEEOYn/5/sMNaO8JwtQO5pTsCIWIQa6j4SYi2lwtaYy7Yxobr0AbBzxGubfAuFrnW3r5ReW2RlnF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ec2bGwWO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768145113; c=relaxed/simple;
+	bh=ZGvv/jN2mnFSqyIQ6f3FBYUjMfKAEJzesX1oC4GOU4U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=H5evZOcgTa93Gmzo2D3d8XssFd51YHvG9frjLpSqJp4c+IgGkp7/wyPpTuGCur+5ZvoGPE9mJ7tDbLKwvlQffevavcKfp5uTf7aNbuTM1Kufou29c9P2ZskMx0l91WkzMc6XqHxesOMMAN6syon/FHxEhs3oDGZhHRzGOZ2xa4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ULFsvTHz; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ec2bGwWO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 274D1C16AAE;
-	Sun, 11 Jan 2026 08:28:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768120122;
-	bh=HRLMNbJfcIyzccjy/sfTD1k/8iARayV6dPdQfJTMnWo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ec2bGwWOeOjXW+ySUXXKPm6eayFRFkSmbxQ0Yi2N08exR6X1pcnRzRL1jFrEN60gu
-	 EjR2EbdukWQDt0gz83zhTod3BcTK9hToNe52kcKWqr9xEFUT69+VRURPQ8b21IwNRd
-	 rp3gC/u2WEVHsJheESwI5qHhh9E4BZZ1xav9luUXT439xB/CPrZE8H4fLmmGL8QILy
-	 9Yfb6Y/uPZ+yYjsvo1Q90O2WW22H/avuDFr8cB76tUKXJ5Wsc0cale2xr++cTaYOu9
-	 eji+2hoq7YT65edlzcRMhkEPeXUV9Ua93DTgqCtd5AaZJXvzgL4tJVCdJGBVI9moFu
-	 uPmsuMV4ggZaw==
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alex Shi <alexs@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@kernel.org>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Klara Modin <klarasmodin@gmail.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	Matt Turner <mattst88@gmail.com>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Hocko <mhocko@suse.com>,
-	Michal Simek <monstr@monstr.eu>,
-	Mike Rapoport <rppt@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Richard Weinberger <richard@nod.at>,
-	Ritesh Harjani <ritesh.list@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Stafford Horne <shorne@gmail.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Vineet Gupta <vgupta@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Will Deacon <will@kernel.org>,
-	x86@kernel.org,
-	linux-alpha@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org
-Subject: [PATCH v3 29/29] Revert "mm/hugetlb: deal with multiple calls to hugetlb_bootmem_alloc"
-Date: Sun, 11 Jan 2026 10:21:03 +0200
-Message-ID: <20260111082105.290734-30-rppt@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260111082105.290734-1-rppt@kernel.org>
-References: <20260111082105.290734-1-rppt@kernel.org>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ULFsvTHz"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20260111152503epoutp04609cf6664fc8162e3a788f4368076b23~Jtpp3_AmS2564525645epoutp04v
+	for <linux-cxl@vger.kernel.org>; Sun, 11 Jan 2026 15:25:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20260111152503epoutp04609cf6664fc8162e3a788f4368076b23~Jtpp3_AmS2564525645epoutp04v
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1768145103;
+	bh=mGhAxIIgLGqw1GI+bdorgcr2FRMWN12t/i7XuBasFoU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ULFsvTHzmiy59OuGi9mQ8WVcNcmNT/nkqf8nJkMeC5OHsLndnH3MD2sa19PLCzUt3
+	 +LcFB5oWGyg+SmFWHDaG1Rcba8dP543hwrSl0LhOycwEIb+h4k0+y7uLrovve0+eF+
+	 9kCML1II8oIwNcVP40JYvX4XEfANlYKzeG/Ss86w=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20260111152502epcas5p13b1a07595b910799c7083bdc4ca20075~JtppGts601468814688epcas5p15;
+	Sun, 11 Jan 2026 15:25:02 +0000 (GMT)
+Received: from epcpadp1new (unknown [182.195.40.141]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4dpzpQ2xcGz3hhT4; Sun, 11 Jan
+	2026 15:25:02 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20260109114642epcas5p417f8dea12514b41f57ca09160a4814c7~JDYcNZhhn2049120491epcas5p4K;
+	Fri,  9 Jan 2026 11:46:42 +0000 (GMT)
+Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20260109114640epsmtip1f4ec738ce85ceb9ad974eea244e6669d~JDYaolq5M0462104621epsmtip1L;
+	Fri,  9 Jan 2026 11:46:40 +0000 (GMT)
+Date: Fri, 9 Jan 2026 17:16:32 +0530
+From: Neeraj Kumar <s.neeraj@samsung.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, gost.dev@samsung.com,
+	a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
+	cpgs@samsung.com
+Subject: Re: [PATCH V4 03/17] nvdimm/label: Add namespace/region label
+ support as per LSA 2.1
+Message-ID: <1983025922.01768145102396.JavaMail.epsvc@epcpadp1new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <01438ef7-c97b-4a20-9b65-7ae0958db213@intel.com>
+X-CMS-MailID: 20260109114642epcas5p417f8dea12514b41f57ca09160a4814c7
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----uUAw3F.Lk_UAUO08rJsbYBgyLSlm5c8z3L48n3TH2NgWyj3Z=_e544a_"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20251119075311epcas5p1af6f86ca65fd4a8452979e861b87a841
+References: <20251119075255.2637388-1-s.neeraj@samsung.com>
+	<CGME20251119075311epcas5p1af6f86ca65fd4a8452979e861b87a841@epcas5p1.samsung.com>
+	<20251119075255.2637388-4-s.neeraj@samsung.com>
+	<01438ef7-c97b-4a20-9b65-7ae0958db213@intel.com>
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+------uUAw3F.Lk_UAUO08rJsbYBgyLSlm5c8z3L48n3TH2NgWyj3Z=_e544a_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-This reverts commit d58b2498200724e4f8c12d71a5953da03c8c8bdf.
+On 19/11/25 08:51AM, Dave Jiang wrote:
+>
+>
+>On 11/19/25 12:52 AM, Neeraj Kumar wrote:
+>> Modify __pmem_label_update() to update region labels into LSA
+>>
+>> CXL 3.2 Spec mentions CXL LSA 2.1 Namespace Labels at section 9.13.2.5
+>> Modified __pmem_label_update() using setter functions to update
+>> namespace label as per CXL LSA 2.1
+>>
+>> Create export routine nd_region_label_update() used for creating
+>> region label into LSA. It will be used later from CXL subsystem
+>>
+>> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+>
+>A few nits below, otherwise
+>Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>
+>
+>> ---
+>>  drivers/nvdimm/label.c          | 360 ++++++++++++++++++++++++++------
+>>  drivers/nvdimm/label.h          |  17 +-
+>>  drivers/nvdimm/namespace_devs.c |  25 ++-
+>>  drivers/nvdimm/nd.h             |  66 ++++++
+>>  include/linux/libnvdimm.h       |   8 +
+>>  5 files changed, 406 insertions(+), 70 deletions(-)
+>>
+>> +static unsigned long find_slot(struct nvdimm_drvdata *ndd,
+>> +			       unsigned long label)
+>> +{
+>> +	unsigned long base;
+>> +
+>> +	base = (unsigned long) nd_label_base(ndd);
+>
+>No need for space after casting
 
-hugetlb_bootmem_alloc() is called only once, no need to check if it was
-called already at its entry.
+Fixed it in V5
 
-Other checks performed during HVO initialization are also no longer
-necessary because sparse_init() that calls hugetlb_vmemmap_init_early()
-and hugetlb_vmemmap_init_late() is always called after
-hugetlb_bootmem_alloc().
+>
+>> +	return (label - base) / sizeof_namespace_label(ndd);
+>> +}
 
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Acked-by: Muchun Song <muchun.song@linux.dev>
----
- include/linux/hugetlb.h |  6 ------
- mm/hugetlb.c            | 12 ------------
- mm/hugetlb_vmemmap.c    | 11 -----------
- 3 files changed, 29 deletions(-)
+<snip>
 
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 08fc332e88a7..c8b1a6dd2d46 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -175,7 +175,6 @@ extern int sysctl_hugetlb_shm_group __read_mostly;
- extern struct list_head huge_boot_pages[MAX_NUMNODES];
- 
- void hugetlb_bootmem_alloc(void);
--bool hugetlb_bootmem_allocated(void);
- extern nodemask_t hugetlb_bootmem_nodes;
- void hugetlb_bootmem_set_nodes(void);
- 
-@@ -1300,11 +1299,6 @@ static inline bool hugetlbfs_pagecache_present(
- static inline void hugetlb_bootmem_alloc(void)
- {
- }
--
--static inline bool hugetlb_bootmem_allocated(void)
--{
--	return false;
--}
- #endif	/* CONFIG_HUGETLB_PAGE */
- 
- static inline spinlock_t *huge_pte_lock(struct hstate *h,
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 82b322ae3fdc..e5a350c83d75 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -4470,21 +4470,11 @@ void __init hugetlb_bootmem_set_nodes(void)
- 	}
- }
- 
--static bool __hugetlb_bootmem_allocated __initdata;
--
--bool __init hugetlb_bootmem_allocated(void)
--{
--	return __hugetlb_bootmem_allocated;
--}
--
- void __init hugetlb_bootmem_alloc(void)
- {
- 	struct hstate *h;
- 	int i;
- 
--	if (__hugetlb_bootmem_allocated)
--		return;
--
- 	hugetlb_bootmem_set_nodes();
- 
- 	for (i = 0; i < MAX_NUMNODES; i++)
-@@ -4498,8 +4488,6 @@ void __init hugetlb_bootmem_alloc(void)
- 		if (hstate_is_gigantic(h))
- 			hugetlb_hstate_alloc_pages(h);
- 	}
--
--	__hugetlb_bootmem_allocated = true;
- }
- 
- /*
-diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
-index 9d01f883fd71..a9280259e12a 100644
---- a/mm/hugetlb_vmemmap.c
-+++ b/mm/hugetlb_vmemmap.c
-@@ -794,14 +794,6 @@ void __init hugetlb_vmemmap_init_early(int nid)
- 	struct huge_bootmem_page *m = NULL;
- 	void *map;
- 
--	/*
--	 * Noting to do if bootmem pages were not allocated
--	 * early in boot, or if HVO wasn't enabled in the
--	 * first place.
--	 */
--	if (!hugetlb_bootmem_allocated())
--		return;
--
- 	if (!READ_ONCE(vmemmap_optimize_enabled))
- 		return;
- 
-@@ -847,9 +839,6 @@ void __init hugetlb_vmemmap_init_late(int nid)
- 	struct hstate *h;
- 	void *map;
- 
--	if (!hugetlb_bootmem_allocated())
--		return;
--
- 	if (!READ_ONCE(vmemmap_optimize_enabled))
- 		return;
- 
--- 
-2.51.0
+>> +static int __pmem_label_update(struct nd_region *nd_region,
+>> +			       struct nd_mapping *nd_mapping,
+>> +			       struct nd_namespace_pmem *nspm,
+>> +			       int pos, unsigned long flags,
+>> +			       enum label_type ltype)
+>> +{
+>> +	struct nd_interleave_set *nd_set = nd_region->nd_set;
+>> +	struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
+>> +	struct nd_namespace_index *nsindex;
+>> +	struct nd_label_ent *label_ent;
+>> +	union nd_lsa_label *lsa_label;
+>> +	unsigned long *free;
+>> +	struct device *dev;
+>> +	u32 nslot, slot;
+>> +	size_t offset;
+>> +	int rc;
+>> +
+>> -	nd_dbg_dpa(nd_region, ndd, res, "\n");
+>> +	lsa_label = to_lsa_label(ndd, slot);
+>> +	memset(lsa_label, 0, sizeof_namespace_label(ndd));
+>> +
+>> +	switch (ltype) {
+>> +	case NS_LABEL_TYPE:
+>> +		dev = &nspm->nsio.common.dev;
+>> +		rc = namespace_label_update(nd_region, nd_mapping,
+>> +				nspm, pos, flags, &lsa_label->ns_label,
+>> +				nsindex, slot);
+>> +		if (rc)
+>> +			return rc;
+>> +
+>> +		break;
+>> +	case RG_LABEL_TYPE:
+>> +		dev = &nd_region->dev;
+>> +		region_label_update(nd_region, &lsa_label->region_label,
+>> +				    nd_mapping, pos, flags, slot);
+>
+>inconsistent tabbing this one vs the case above. Should pick the one that conforms to the rest of this file. And yeah I get it. The tab formatting under nvdimm is different than CXL and it's a pain going between the two.
+>
+>DJ
+
+Thanks Dave, I have fixed it in V5, Will be sending it soon
+
+
+Regards,
+Neeraj
+
+------uUAw3F.Lk_UAUO08rJsbYBgyLSlm5c8z3L48n3TH2NgWyj3Z=_e544a_
+Content-Type: text/plain; charset="utf-8"
+
+
+------uUAw3F.Lk_UAUO08rJsbYBgyLSlm5c8z3L48n3TH2NgWyj3Z=_e544a_--
 
