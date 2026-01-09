@@ -1,179 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB132500966;
-	Fri,  9 Jan 2026 16:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA373659E2
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Jan 2026 17:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767975968; cv=none; b=XDLvQLfvtwRxY2Hw84mSgOl3pSICNe2B0856uQScSQM26L+c2Hj8Q6+3jaG3jCdi31V77Fd/ufAuoEG04Tc0ona8wEjlULSOR7C6KNNGF3uTmG64VJrKZnTB+L7xDqui7Hok11PDHKLOSX6wtpW7W12lRJQLphytHQUwnVDPoBg=
+	t=1767978233; cv=none; b=jCmPOl14X1ivVWr/mlW1kCf9DFGIFMWS7JfGU42ut7VAxLVcomeGlwjz4gezR0wNqk46Dcf65IUb9gi0syXKQE70HosTiL82SqJBt6QOXzJTQqv0FvMmmy6IVOPRnowlBv+knUNE2FIRDr7TUTCB1EwnKMYiWgdHnS28tn5FL8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767975968; c=relaxed/simple;
-	bh=LrZyutZ8Udr/tTzMlG0q5qUzDCnWOXgWkF/XORpSORE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QxmkNa2wJEw0nHBFsmt7SeeRz+LDaY1kvopmPOIQJT0M6aapI+xOqzUliGgeoLGvamki26N7AOkmypgNfKzZ7nT03G2IjxjRZ+aV1hiDAnaPhc1/L4y/iKPUaWbkijWvE84wQkcWvP2118WQ7iLNP4gbzSFFoX7B9Tu9J37Pixk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XMuWoTJa; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1767978233; c=relaxed/simple;
+	bh=aXxH8KsFvCOcvxGrWrHWB8GtMC6vSUV/Y2dfp44NGeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eyNNr1vyTxI3zmJsT+l8eig3CdBoyMX1KYVzqFK/PaTtwLaYZ9SQifVBxeD8+ItFBy6/0rTkVttmS02Y297S7rk9U8YtE+LSmqq6ucHX1rRaEa3IzCXIgru0+EWXOz2yFcGogSWJJxaVASa8h2eBg4ILPv0CQSqQLH33VEx8Qe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ceboVegt; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XMuWoTJa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767975967; x=1799511967;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=LrZyutZ8Udr/tTzMlG0q5qUzDCnWOXgWkF/XORpSORE=;
-  b=XMuWoTJaJwZKfo/4jVUCZOJ5+gwUHYdW5KtXBF7MsooKaCDZmxkPiuqJ
-   bAII+/B8VE+YPkyDjMD8hYmWI1tJ4bVRN1OGwQ5mk4Z5PjOOeUMI9KUlm
-   L3EdRbP/e9H1NRbG2xZHKx/IGLl4HlhiyUAOj6Pm/y8PO+gSrvkK8id+c
-   pPVMUBS7Y37YwIuiwiw6IHJXXhFO9S3OyRadTsf0+uLXPQxXNGnnQNYvX
-   z9uXJZKlcYb2/i4euDqOSnSNE4TJPcMQS1ox7vuqz+nU3QQlCqtFCPARO
-   ZkcYnpHRnENu1NxAzu0qDvVnyW2j9ipAXN/GMbh6wwEkmMAEmMxPhMlWK
-   Q==;
-X-CSE-ConnectionGUID: Cjsw8m7uSDWZ57A+ENUvYQ==
-X-CSE-MsgGUID: vyOuh88FQZSRaz4krlbbBw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11666"; a="79653511"
-X-IronPort-AV: E=Sophos;i="6.21,214,1763452800"; 
-   d="scan'208";a="79653511"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 08:26:07 -0800
-X-CSE-ConnectionGUID: MNZvt25CQCGBi682Fv3byA==
-X-CSE-MsgGUID: 2fDWcl23SBSzfGDxQO0fuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,214,1763452800"; 
-   d="scan'208";a="202629512"
-Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.110.37]) ([10.125.110.37])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 08:26:06 -0800
-Message-ID: <72565e61-138e-4a17-946b-40f32abffcd2@intel.com>
-Date: Fri, 9 Jan 2026 09:26:04 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ceboVegt"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-78fccbc683bso50740457b3.3
+        for <linux-cxl@vger.kernel.org>; Fri, 09 Jan 2026 09:03:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1767978230; x=1768583030; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oyvnXFALVV85dAj0zPDPAtv4QErhsz/aJNW7Eaaf5yo=;
+        b=ceboVegtXCbOvmnNp2QmNW0oW6yOL+fOvMlu7QSUb5OKOXsY4gmoTlqnOdcyGyFOh3
+         ljn1LyUtiDHlU3YI87wJgJxraydAh3esLo6vpHOxwYpSYVZ59YcaeAAivzmoGdCcAe/H
+         SWqg6sHST3ebJsJblSLiodDIwpcJpflVJLh3gSPSYqqN5y0bYx6WJKiRCWe3F3vxkZi0
+         yJeoThQxo+ls5W5NZtwM+I/2nurnTsH+UzRVh7fV9fFvxbBuvFmhu6eWvQNmi8ShWRBJ
+         UEW5EHDLVmLx/QXv1eP1ru87TF7xf2jfQJzsUb9jNt/sbJvG1ZS3TcGr5XEHlqieR56t
+         C9Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767978230; x=1768583030;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oyvnXFALVV85dAj0zPDPAtv4QErhsz/aJNW7Eaaf5yo=;
+        b=eGRa/EXOlngJVHKurH2vrWR11mRnL2wRCvNeGlFmP0unclDyU8czSSIyUXeOGggEGP
+         ekzwU0SpSjkWjhNSh1uhjgVGqhbo1QXd4p6kIzhEGH/MXhSe/2xzOV4H3KVXWfu/pzLN
+         iPFr06mAZINloWoRMPdUL/Xs5Vp52wh5pMtnjxMZxK49Nty+Tyv2ojSYv1XwfmuZJG/7
+         ICpaZZaYjRbgobYV0AaAnquHY4qpoKhMJ9z4u/D/SV6XFsUB9Aur2I+qVS9nJ/C3Cv4+
+         M+4g6QzAFQ9bJlhVkYmO1sE3oFaAhYVGYpkE98LBDpzbHVtwArYtJhCudOqGxoQBESdd
+         09Yw==
+X-Forwarded-Encrypted: i=1; AJvYcCXh+S+xpC90eq/NFVOKikl5dggpLtyP2Lt9Lx/Hw/qbO3ou4vZpve1SE9hib5OTb4wjWgGFvOMekoQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywj3KUc2ErPkrstBVktAl2uzDPB+pVpkopVXV7w+l36t5Jl5X6p
+	g0raRDuj1G1VEdH6wkJhuewE1yWvpCypbb4guULxlWczL4ReDSau+m+zUxpivLmxv9Y=
+X-Gm-Gg: AY/fxX4jvMAA6oyqNteikgzwppPKrz2TFXMpPD5BySOJRZONcMpvCOhWavHgp4YOp/7
+	2YLa1Kx6mokk8DZ03ANaMbiTlo93I4g5NCcJLBlr9uE7FxECK3peo+xBRyUV/ZEh5ILKxGuNhff
+	skcs5uqoyxSYGKOqoNfwbVPp1ftmDa9TmgVcfgqEArIlmb/O3lI6INV2LOgEmrK8fdKKkg41MVe
+	X0ujEBU2XCb1RW1cSlr66EPYPF7sDSyeaR80JmMkZwx9fqJ2j7/YvSU6amoaip3JszeAsjNU2Yk
+	1C80f4fWRkdzalrIg5tyjsE/8GMMlegJVKNNERB6tghPvFf/+rO/HNmlAiH1ujoWFUmU8nH//14
+	TYVQpyOPlF33FKlgKF82+BA468taqFrS6U24WMzw31l1t3Y/u3bd7pD1wWxrX20fdMPXHm7nvJE
+	4uBdVilpvrHAvRCcSbTz6h0zdtVaDGcFVWOSw8eXhqwpjISBqsZFCmJ9PeuBGZVLbo3SDUKg==
+X-Google-Smtp-Source: AGHT+IG5ur4wn6WRv+wDPnOobb9XgNDN4tAmFs6v5FHNYg3NZYd4D74cNfEP3p2oKp1wSQ0Qs+dvkA==
+X-Received: by 2002:a05:690e:4106:b0:63f:9cef:d5f4 with SMTP id 956f58d0204a3-64716ba363dmr7881450d50.36.1767978229938;
+        Fri, 09 Jan 2026 09:03:49 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8907710632asm77625366d6.24.2026.01.09.09.03.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jan 2026 09:03:49 -0800 (PST)
+Date: Fri, 9 Jan 2026 12:03:14 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: linux-mm@kvack.org, cgroups@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, kernel-team@meta.com,
+	longman@redhat.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, corbet@lwn.net, gregkh@linuxfoundation.org,
+	rafael@kernel.org, dakr@kernel.org, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	akpm@linux-foundation.org, vbabka@suse.cz, surenb@google.com,
+	mhocko@suse.com, jackmanb@google.com, ziy@nvidia.com,
+	david@kernel.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, rppt@kernel.org, axelrasmussen@google.com,
+	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk, rientjes@google.com,
+	shakeel.butt@linux.dev, chrisl@kernel.org, kasong@tencent.com,
+	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
+	baohua@kernel.org, chengming.zhou@linux.dev,
+	roman.gushchin@linux.dev, muchun.song@linux.dev, osalvador@suse.de,
+	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
+	byungchul@sk.com, ying.huang@linux.alibaba.com, apopple@nvidia.com,
+	cl@gentwo.org, harry.yoo@oracle.com, zhengqi.arch@bytedance.com
+Subject: Re: [RFC PATCH v3 7/8] mm/zswap: compressed ram direct integration
+Message-ID: <aWE00tFHjyXnNmtD@gourry-fedora-PF4VCD3F>
+References: <20260108203755.1163107-1-gourry@gourry.net>
+ <20260108203755.1163107-8-gourry@gourry.net>
+ <i6o5k4xumd5i3ehl6ifk3554sowd2qe7yul7vhaqlh2zo6y7is@z2ky4m432wd6>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] cxl/port: Fix target list setup for multiple decoders
- sharing the same dport
-To: Robert Richter <rrichter@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260108101324.509667-1-rrichter@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260108101324.509667-1-rrichter@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <i6o5k4xumd5i3ehl6ifk3554sowd2qe7yul7vhaqlh2zo6y7is@z2ky4m432wd6>
 
+On Fri, Jan 09, 2026 at 04:00:00PM +0000, Yosry Ahmed wrote:
+> On Thu, Jan 08, 2026 at 03:37:54PM -0500, Gregory Price wrote:
+> > If a private zswap-node is available, skip the entire software
+> > compression process and memcpy directly to a compressed memory
+> > folio, and store the newly allocated compressed memory page as
+> > the zswap entry->handle.
+> > 
+> > On decompress we do the opposite: copy directly from the stored
+> > page to the destination, and free the compressed memory page.
+> > 
+> > The driver callback is responsible for preventing run-away
+> > compression ratio failures by checking that the allocated page is
+> > safe to use (i.e. a compression ratio limit hasn't been crossed).
+> > 
+> > Signed-off-by: Gregory Price <gourry@gourry.net>
+> 
+> Hi Gregory,
+> 
+> Thanks for sending this, I have a lot of questions/comments below, but
+> from a high-level I am trying to understand the benefit of using a
+> compressed node for zswap rather than as a second tier.
+>
 
+Don't think to hard about it - this is a stepping stone until we figure
+out the cram.c usage pattern.
 
-On 1/8/26 3:13 AM, Robert Richter wrote:
-> If a switch port has more than one decoder that is using the same
-> downstream port, the enumeration of the target lists may fail with:
-> 
->  # dmesg | grep target.list
->  update_decoder_targets: cxl decoder1.0: dport3 found in target list, index 3
->  update_decoder_targets: cxl decoder1.0: dport2 found in target list, index 2
->  update_decoder_targets: cxl decoder1.0: dport0 found in target list, index 0
->  update_decoder_targets: cxl decoder2.0: dport3 found in target list, index 1
->  update_decoder_targets: cxl decoder4.0: dport3 found in target list, index 1
->  cxl_mem mem6: failed to find endpoint12:0000:00:01.4 in target list of decoder2.1
->  cxl_mem mem8: failed to find endpoint13:0000:20:01.4 in target list of decoder4.1
-> 
-> The case, that the same downstream port can be used in multiple target
-> lists, is allowed and possible.
-> 
-> Fix the update of the target list. Enumerate all children of the
-> switch port and do not stop the iteration after the first matching
-> target was found.
-> 
-> With the fix applied:
-> 
->  # dmesg | grep target.list
->  update_decoder_targets: cxl decoder1.0: dport2 found in target list, index 2
->  update_decoder_targets: cxl decoder1.0: dport0 found in target list, index 0
->  update_decoder_targets: cxl decoder1.0: dport3 found in target list, index 3
->  update_decoder_targets: cxl decoder2.0: dport3 found in target list, index 1
->  update_decoder_targets: cxl decoder2.1: dport3 found in target list, index 1
->  update_decoder_targets: cxl decoder4.0: dport3 found in target list, index 1
->  update_decoder_targets: cxl decoder4.1: dport3 found in target list, index 1
-> 
-> Analyzing the conditions when this happens:
-> 
-> 1) A dport is shared by multiple decoders.
-> 
-> 2) The decoders have interleaving configured (ways > 1).
-> 
-> The configuration above has the following hierarchy details (fixed
-> version):
-> 
->  root0
->  |_
->  | |
->  | decoder0.1
->  | ways: 2
->  | target_list: 0,1
->  |_______________________________________
->  |                                       |
->  | dport0                                | dport1
->  |                                       |
->  port2                                   port4
->  |                                       |
->  |___________________                    |_____________________
->  | |                 |                   | |                   |
->  | decoder2.0        decoder2.1          | decoder4.0          decoder4.1
->  | ways: 2           ways: 2             | ways: 2             ways: 2
->  | target_list: 2,3  target_list: 2,3    | target_list: 2,3    target_list: 2,3
->  |___________________                    |___________________
->  |                   |                   |                   |
->  | dport2            | dport3            | dport2            | dport3
->  |                   |                   |                   |
->  endpoint7           endpoint12          endpoint9           endpoint13
->  |_                  |_                  |_                  |_
->  | |                 | |                 | |                 | |
->  | decoder7.0        | decoder12.0       | decoder9.0        | decoder13.0
->  | decoder7.2        | decoder12.2       | decoder9.2        | decoder13.2
->  |                   |                   |                   |
->  mem3                mem5                mem6                mem8
-> 
-> Note: Device numbers vary for every boot.
-> 
-> Current kernel fails to enumerate endpoint12 and endpoint13 as the
-> target list is not updated for the second decoder.
-> 
-> Fixes: 4f06d81e7c6a ("cxl: Defer dport allocation for switch ports")
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+unrestricted write access to compress-ram a reliability issue, so:
+  - zswap restricts both read and write.
+  - a cram.c service would restrict write but leave pages mapped read
 
-Applied to cxl/fixes
-3e8aaacdad4f66641f87ab441fe644b45f8ebdff
+Have to step away, will come back to the rest of feedback a bit latter,
+thank you for the review.
 
-
-> ---
-> v2:
->  * updated sob-chain,
->  * added fixes tag (Dave).
-> ---
->  drivers/cxl/core/port.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index fef3aa0c6680..3310dbfae9d6 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1590,7 +1590,7 @@ static int update_decoder_targets(struct device *dev, void *data)
->  			cxlsd->target[i] = dport;
->  			dev_dbg(dev, "dport%d found in target list, index %d\n",
->  				dport->port_id, i);
-> -			return 1;
-> +			return 0;
->  		}
->  	}
->  
-> 
-> base-commit: 88c72bab77aaf389beccf762e112828253ca0564
-> prerequisite-patch-id: f44102a7b095afa1588a5cac012ec2e0d852c021
-
+~Gregory
