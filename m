@@ -1,216 +1,265 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B39A22AE65
-	for <linux-cxl@vger.kernel.org>; Fri,  9 Jan 2026 18:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767982631; cv=none; b=GXDstCSDJXxggHwwohU/VKa7ZLFnWEq7+wGiTzfKRUoK/Pu18WLrAwvlHDlhWzsgtumUHwGj5sA7VCTqOROBP0JdPfAvIWVmJIZSn1Ssl6pjWgCQHvO2h6EG3M6UTkuOOp5P5CfmUR89dEugLLfPY11R0k8jaMqeGt+ubC8r0BU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767982631; c=relaxed/simple;
-	bh=wDQz4/9kZDqBRhEduIm0c9MYaFs+Pc7VcoLQiQYsc0Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QM87W9uSdvkQ5M8YUp4fq5xonyTS5zJkZCEh6z1mGMiw9rcGCY1Vk8MKs1B7iCsB/mQYww6MUY+u4eejcw+8TmLMTpp83XJFVe/DcicS3z8GzDVokGQcV7qqZCvqKZg73ccmgOp4Bl2lICnfmz9vTHIVPMG/gHzFaCqINfj/n7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LQ88c9C6; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6AE366557;
+	Fri,  9 Jan 2026 18:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767983203; cv=fail; b=s+7lvuwnYYX4t9+LCPlmOTHNItP1xirwv7wrZIaf7vm9bYyvC3MDUuuIDdA+qI28EaJOqJ0MQGy+H/a2Qq8q8N2xG2FnC8SKA7ubwmCinQbJgz4+KpjNMjDCywAYCyoS+rrHGWMHsm1pdjxtx5dkLcdY8QniNj7BYt+YZK1fVCs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767983203; c=relaxed/simple;
+	bh=NywDssrIOiaDtbjw9j2JeKFheiiZWfjlwzZ7Fd9zJ9A=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=TaguimDC/zcMo2ogsHasw+pIPSIArhITb7AfsHUpvCcLpYYkJEF+PH5tvP+FZ6lpM6hGXq37KK7kf27gFehbnXjlcFNFTFh5dlxg3Jw/TyqOh7HZrMPF9FBuJsrQEkoLH0edpQ3CzPwtIN1Bwp4ZXMJMFG17R9Aw3/BJjGhvhuo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eEi9hsqz; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LQ88c9C6"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4ed9c19248bso41899051cf.1
-        for <linux-cxl@vger.kernel.org>; Fri, 09 Jan 2026 10:17:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767982628; x=1768587428; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=99Bs8S0fdZX8Ye9690VGi/t/MTR/ntJJl67b7rjD20M=;
-        b=LQ88c9C6iNed7Qe8rYo5ZS0ISVDg6u+a0ZLwAUWCSE8jbuEEQDotbZePnKYV37HG+c
-         9/930z9pF7H+duIy+jpqOeftxtzHQt1vZhCV/bevSkz0D6USDSKFPBIum62AMvTAGssM
-         NDFNWzThIZWxwc2jYZUtLHiZAyUIgct09vemMmHbg9xdZpp9WeOKlFRk9D6U87PlnCST
-         r8a8fRxIgD/+1x0IfI3xK4hvC5Kat7wAJaHEylAhYMeo5iOGgLZOwBiKNB79i6emfJl7
-         tLl5ChvhvCu7oowvVlZ/2MPUL6dduoWImXWO54YC6HFTae02kXggro8/3uLRLRX/Z/ai
-         D6jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767982628; x=1768587428;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=99Bs8S0fdZX8Ye9690VGi/t/MTR/ntJJl67b7rjD20M=;
-        b=Arse02dbRfuZRjerwPY1MDkK+BcBJbti7QL6pUCLN0AiWkxc+3DPVzI9sCRl2vce+3
-         5tHT/2FTggJfeDSh75llxdjzuV2TlEATgoEzYYZRq+PHnkS/0jyvOfryswj8svkFqQv9
-         sRHgWbqPk3GvabVGGa9NeJA82HUK/65WTmj/sKW3CAJI1RbbTYPWvPMRLVH2U0u/UxcT
-         UQVNsmbSyZ8HIDW5X00yDcz9DAMvj/DMXU8KEKoLJNENFKminLChOwOr1rHl2cnGh7pS
-         bylWyhIPiEyYG34KG5fZTgd/ryzHsmkfCdui9nCzl5/dZqaI+6h8KpiA78+gkS8hoVjM
-         V0iw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZbm7YHdooS70Jap7UYmhKtWDdWV71Ap1itXKWLTMWj/0GxUTobMEIFvqcYFRgw+reEFq+56gweTM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8cSn5AefSOv/bjerthTiMRBOrZlL4qz95GzFSdQWWZaAia6Sr
-	ZSJBPgzR50lcPL2co1iCinszf0jK+CQgmdAWb3k6XNMDaHUCaqYq2XjGasX4F92NcHZ5S9MHjx5
-	qJFE7VJQA8MGjio9/XaVhlQ3RdzUT8pw=
-X-Gm-Gg: AY/fxX7H+6BySp2+gAAE53gv/DHGn1KAiHIFzyfhDxTWjSF7VG0bZ/kt9JwLvLH3W4/
-	Jebx9+ThUOhXyfD+B22EBSs3JAs6DPx8wty4YME4D/sgkCvrFzs7rAGWnu776Wb7imEsO2EVg9B
-	4bZSMS9M4eUUbaUdbYxiuchXmWTRKCfCHZZPwBotyrBVLqPAeSCDmJ5Vk3Tr06FEHIDIxvFJZgg
-	2C5oyGYMPJRnmSwblHD9Hnm+k9iN+nMbJfR9EeiDj4RBymgHEeaOmCiO3mCBeQ8lT2+sBiv94Ri
-	Pv/W
-X-Google-Smtp-Source: AGHT+IH5+xJnp1a7PuWX1AlKsiRN99ozxNGtRWQ/qZ5RJUifdmvCatdxw6dSXGDWNttKbNDhIKFCmffMgnKYpiFNkIY=
-X-Received: by 2002:a05:622a:1ba9:b0:4f4:ddff:b1b3 with SMTP id
- d75a77b69052e-4ffb494e23dmr156643501cf.22.1767982627972; Fri, 09 Jan 2026
- 10:17:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eEi9hsqz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767983201; x=1799519201;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=NywDssrIOiaDtbjw9j2JeKFheiiZWfjlwzZ7Fd9zJ9A=;
+  b=eEi9hsqzawFO6CiCg4uXIiFDjEWZZNmUmMltTHflUfYPJzJ51uZ/Mtis
+   OXOVNTlvqOhzneE+SdxQmtNdxMcc+KjeGrM0AhWj4d2a8gKgIt6ACzjOk
+   tQzTD4H8ArJbtHY4DPGY6tgY7E27jQSEWFY3vEtpgk3xbLpLIKoqK+Lji
+   TxMyNLr8HgMFK9T15+zSLL9HykKaAKv+dshOQnG6kBYlzdxUywBY1IIqI
+   bp0U4IoIPVr7wE2Nl9fqJk1J/CY21V0jZoIdI4Ws0pfpDilAryAhbUuVn
+   GWQfucg+FKfVwG6hO3U8yxIMlt3+Vuyd9x+Cf5MoYDR9+9aha7kuwKKR4
+   w==;
+X-CSE-ConnectionGUID: WdqHX06IQFSYK4mG+WG9wA==
+X-CSE-MsgGUID: oxb+t4D+SMiQLfWaRvAG/Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11666"; a="80819914"
+X-IronPort-AV: E=Sophos;i="6.21,214,1763452800"; 
+   d="scan'208";a="80819914"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 10:26:41 -0800
+X-CSE-ConnectionGUID: 5djmvjdXRWSN+hNypdqYrw==
+X-CSE-MsgGUID: 7HMJNa8jQCCHO7BTwnkn0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,214,1763452800"; 
+   d="scan'208";a="203326458"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 10:26:41 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Fri, 9 Jan 2026 10:26:40 -0800
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29 via Frontend Transport; Fri, 9 Jan 2026 10:26:40 -0800
+Received: from CY7PR03CU001.outbound.protection.outlook.com (40.93.198.56) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Fri, 9 Jan 2026 10:26:40 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JlLaShTy6D+hz9FeINUmObkUZFa3uNt7yT7Zz2q0X+2d4t3ntbTN0cVNa3LaiipibWLVyGbSTamhwktRcvcNhDasNV5mDgCHasG7pZ67uqyXoOlc9ml1DGSOj/S2suEFovbk0qBoUHH0vvOsVG7L9iMC1wwhrWuP6Ye/8RHu5WbF5wMk2tcUe9/9WYUjcIIbpWtGChMSptZug3w/bi1a3M8IifSSxxwLUU01IY9RtzJLL/NOQMt4FGn61uOlfi5ZjwEQFhOuvf4a/DWYICceSOZAOBjbtS38nHakQ+sIo5GsF2ei1l2ks2j7nDgs43MxPgnEE+1xlxod/2mu93Staw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ov4TlI8JxZKQ/mqwmH29ZLZ4uNJYjYEwkhe50zs/dhw=;
+ b=yLYI7P7VT0pjENLRStUH+roxhwoGu88THaJ/rSZdY8REf/oI619NRke7I28ldSu4YYa4uyYiYfFPQR5Mks8n2AKzJ3XA4dIEB2a7sY0Rv1lDR1sqI4lUVkr8heonaSsybKx3amcAerc5TQokngMmDBF9dL2iZ0uJ5myWCNSHrhtA1IAIV8p03aldJG8SHuocqxQv6gz6LCz3+saEdTFZz2f3Lmcofr6Bzo23rrengy/1IES/mF1bopyV+XQQk++0pozul0yMldxd8c1DmISNLLbiwcwhsugGL8T9MJVbRpAqZVR1kJrl1X8kPd4XioWJqgDF+IQI2TNNL2gtiZb3ag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12)
+ by MW3PR11MB4522.namprd11.prod.outlook.com (2603:10b6:303:2d::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.3; Fri, 9 Jan
+ 2026 18:26:38 +0000
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332]) by PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332%7]) with mapi id 15.20.9456.015; Fri, 9 Jan 2026
+ 18:26:38 +0000
+Date: Fri, 9 Jan 2026 10:26:35 -0800
+From: Matthew Brost <matthew.brost@intel.com>
+To: Zi Yan <ziy@nvidia.com>
+CC: Mika =?iso-8859-1?Q?Penttil=E4?= <mpenttil@redhat.com>, Francois Dugast
+	<francois.dugast@intel.com>, <intel-xe@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, Balbir Singh <balbirs@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>, David Hildenbrand <david@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>, Andrew Morton
+	<akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/7] mm: Split device-private and coherent folios
+ before freeing
+Message-ID: <aWFIW6XCKXPpIinv@lstrano-desk.jf.intel.com>
+References: <20260109085605.443316-1-francois.dugast@intel.com>
+ <20260109085605.443316-4-francois.dugast@intel.com>
+ <d1d80b81-678d-4d28-9ac2-95cb74824e73@redhat.com>
+ <DF5A6B81-7811-4654-855F-8EAB76CCCE51@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DF5A6B81-7811-4654-855F-8EAB76CCCE51@nvidia.com>
+X-ClientProxiedBy: SJ0PR03CA0115.namprd03.prod.outlook.com
+ (2603:10b6:a03:333::30) To PH7PR11MB6522.namprd11.prod.outlook.com
+ (2603:10b6:510:212::12)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260107153244.64703-1-john@groves.net> <20260107153332.64727-1-john@groves.net>
- <20260107153332.64727-12-john@groves.net>
-In-Reply-To: <20260107153332.64727-12-john@groves.net>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Fri, 9 Jan 2026 10:16:57 -0800
-X-Gm-Features: AQt7F2ogZw-Qc2qKqJ80XJE7WwiTnLf-j6OBE6JHVL90Ak-M1koy9qRlA2GGgRc
-Message-ID: <CAJnrk1ZxmryZQJhvesJET12xK8Hemir0uk6wojTty0NDvu1Xng@mail.gmail.com>
-Subject: Re: [PATCH V3 11/21] famfs_fuse: Update macro s/FUSE_IS_DAX/FUSE_IS_VIRTIO_DAX/
-To: John Groves <John@groves.net>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, Dan Williams <dan.j.williams@intel.com>, 
-	Bernd Schubert <bschubert@ddn.com>, Alison Schofield <alison.schofield@intel.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, venkataravis@micron.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB6522:EE_|MW3PR11MB4522:EE_
+X-MS-Office365-Filtering-Correlation-Id: ae8813d5-95dd-4252-d7a5-08de4faca0bc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?OFhsYWx3Qlh1ZzVLK09DR3FvQXVHc1NVQkppbVR4RERaWC9aOHRaTU5YSVdN?=
+ =?utf-8?B?Z0VPdVpsODJlanJheFZMZ05uNk4rUk15OWJUek05cmV3RThmNEo2a1lvTXE5?=
+ =?utf-8?B?Zk1MSk94ZG1qQmZtak5JMC9sK0cxcVdpcGkwMUY0bW8rMUpvRmxCWHJnZDRn?=
+ =?utf-8?B?Tk1OTHJPSkp5WW9uTlJGWUZrdkZ1Q0FJVVdpRmtFYzc2L1ZnVHNPZFdGb1Zw?=
+ =?utf-8?B?V3BybURkUVJSSWJKdUR0VVdZU3Nnd2NkazRTQkFld1QzT090RFpMMWFKWk1O?=
+ =?utf-8?B?Z3lzMnF2YkNVK2Y2WkNUZzdNWTJRdTR2cmowZEZrblFwSjcrNERFZVpSbWx2?=
+ =?utf-8?B?ZU9JMHVWZGRPV25HWlE2QXZIM2xJQUxaMTYzRUM2bmd0bDhjZi9wN21pNzkv?=
+ =?utf-8?B?QzNrd3l1VHJmOWhidGNTaW1nS1h6Y2ZBL29VdmtNUGJiWjRHcG54eWg0djJE?=
+ =?utf-8?B?MWhjL2RkRmRvNWl4VHllam9vdVBFb0RVK3pGb3Z1dlhwTHUyRzQxZW45T1NQ?=
+ =?utf-8?B?dUJ5dTlJSmtQWHQrZDJUY3JCK1UwL3MzWFNLU21nYnExSWp3TDdjanZ2QWh6?=
+ =?utf-8?B?aVhDSGcwZjFzaDNmSTBqTjFNUkVBWkQydko1WVBRT3ByYnJHaWdQZklReW5k?=
+ =?utf-8?B?RjlnaFRJZnhiR1hPdlA2VVZmMXF4dStOdW1vZFBubVRzK1c0YnVGZ21meG1y?=
+ =?utf-8?B?MUdDSmMzanRyS0pnb0R5em5hak85aWZOQThmYnAwRVN4aG1JdHFLditvV1Rn?=
+ =?utf-8?B?aGIwZ3NzbXNhU2VMOEgwWFI2RUlqYng5LzI5L1QwSDFRa1BKK2lHc3hwSkVH?=
+ =?utf-8?B?WDJndUtQY3Y0ZmRmbDduOG9kWHVFMlp5UjZoRndXV2xnNFFJK2tNY09lRk1Q?=
+ =?utf-8?B?dllSR3NsRlZ0QVByZElJb3ltdXRBZmRTOStVMkd0Mkh0ZTlpc0tYTkh0dlM4?=
+ =?utf-8?B?VjhWcGxuVlZHZi91WlZGQ01ZamJaekttRTRJZC9VVytoSjRMK2w1R2RUaTBN?=
+ =?utf-8?B?QVUxdkkxNmdJdWVwL0YyWXY5d1hwaHhWRmpzLzZlR1YyZ3NxMFFDUDVmWnoy?=
+ =?utf-8?B?RERiK1JpK21ZTi9SZDI0cjdSWExpRG5ic1dnU0o5NlFiM2p4ZWg5ZllGYXVV?=
+ =?utf-8?B?d05Pa0l6emMwNWFUZ0xNZFlnQytPVEV6alh4eGlvRWNGQmY3dFErdDFDTkZh?=
+ =?utf-8?B?RzBhRWhLb2cyMTFFNklXUDdrVUpRL1A3NG84RDNJVWs5WURMdzhhYThSdHE1?=
+ =?utf-8?B?WHZkbm51c1phd0lFY1kxYkFtSnZEYWlMN0pxOEs3Q2NTdGh3NVpWTGVaekNv?=
+ =?utf-8?B?ekZJV3c0aXFyUXVTdnM1RjVReWx1ZXQ3VlhBWWxuZFZmUko0R2xVeEx1Nyta?=
+ =?utf-8?B?c293OTJxdjNHRVNQYk1OMTlSTWMwd3JzVUYvTmdjdVJBc2hjdi82OTh0REsw?=
+ =?utf-8?B?UnRQSzNyR2hXQVQzSTFjU2tUT21td2wxdWR1NzNrNTRVYmliZUNndjNGM1ZR?=
+ =?utf-8?B?bFdqSGJPVGtGSGpvUFJlSlN5RXg1RFJQaWxWMm5Hd2hLQTljUDllTVN0Nm9M?=
+ =?utf-8?B?U1kyaXZscE5MajJjQktSMHZTZkIzN1d0eFE4VnpmYk5ZZnZ0QnVSSlBmaFAw?=
+ =?utf-8?B?TnNaRjN1VmpaZlZGYXVlUEt0c3I1SDNXWkNHL0lvMUMrbC9SY0s3Wi9zTnNE?=
+ =?utf-8?B?MWo3QXdqU2kvb1NmTXdMaFpyL3UrN3JnOE5XN3UwWkdDc0FnN1pMdXdmL0Q3?=
+ =?utf-8?B?WEcrSTB4ZG1jdHhLZk1zSmZEK0hnUHg5YU1LWkVZdElTRjVRKzg0TUtYbXhZ?=
+ =?utf-8?B?MnVGUVRWQVhQZmJPVDJTVE82cmo3bXlLd2ZEbDNEWURKL0NZbXR6SGJoWjg1?=
+ =?utf-8?B?WGRURUQ2d25tekhkUzJlSWFSS1JHTTdSMGJ3SUViKzZNektZQmRWcS9YUUZL?=
+ =?utf-8?Q?X08cDVf9KqnT8bZiQuUDMELMESvbjbsi?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6522.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VEszNmFKZ2JWMGpUM083bjNadTJHa3drM0FCM1VTUjhqV3RNbFowTUdycE1P?=
+ =?utf-8?B?b0M0ZWgzZnJoSEhKZEVhWXNPVHh1Y0JoYXNnZ3V0RXcrUmdTOGlWNi84emF2?=
+ =?utf-8?B?eXlyU2xYMVlkcmsrZHpCUUI4RytBTC9GamhjZ3pSR1I1NG1XcHdNMWJieFVm?=
+ =?utf-8?B?ZGRyamU1NTB1aW5xeHVoUkhudGRVVlFxMVNEcmFlVitrcHREWXBpN2pCN2d5?=
+ =?utf-8?B?NXExRGJCbjI5YksxWUR0UXF0TndXbC9aNkxGdUErZkJZRlVMUEZmTE1sSkJT?=
+ =?utf-8?B?azNFQnZUTnB4RDVwK0x4K2VrUnhZVGlXU3E0KzdzNUZ5QWZzNEphU3lwYmxV?=
+ =?utf-8?B?Z1FCNzY0OXFOVnJSYXZyUmM5UFBIOUhvbWlRNE1nZWF2bS9Mbm5ZNUFtWWpO?=
+ =?utf-8?B?RFlDbjI3VEdTSm9Kb2ZtQzR5Y0lWY2pONTdSL2JjcVYrbE15cjBzWUZZcVdk?=
+ =?utf-8?B?ck5TSm9VZ1QxRnN4VzRJKzBxbUozOE0rL1hidTdOc3JGa3RkQkxiWlJwc1Vk?=
+ =?utf-8?B?aUQ0dEp6RHpOYjZNRWFaTi9pZVZhU3ZXUGgycDYySTJTT082cEl6WVZkSWxH?=
+ =?utf-8?B?VWduVys0SDl2S05rdDVyam9oV05JTm45VitPdEk1TWNabEE5aFVKSTRyRXNQ?=
+ =?utf-8?B?dXN5WDZmMFV0WWR1a3dhK1hWQnRzWUFQZlhQNHlqNENjWGVRbVZGMEIyaEV6?=
+ =?utf-8?B?MkdvVnc5NzJOMjcyQmlDc052Z25qYVI5dU41SlpvdEFyYVVOelRRSC9zYTln?=
+ =?utf-8?B?blpUYm1pZnRwbFllSE1TVytlUmFteG1GVUkzU3hGZFd1U0tmdmNTVEJtNWNZ?=
+ =?utf-8?B?T2cybWQybFJ1bW5LT2szN0o0eG1mZVJONTU2NXFGdXpXNFdBc0NHblk2N3Rt?=
+ =?utf-8?B?dnpLUnVnYjdaSzZlVnRuNmFOOWdvT1JhcVY3aWczaytCdU9Lc2Y5UFNpTWVO?=
+ =?utf-8?B?aXN4MHk3MHZKMUpoWG5HaTd4QkVqV3owbWRRQ01YbllCc1ZGbXI3QVlNa04z?=
+ =?utf-8?B?djYraGF0cENuRGdvNXc3N2lrbUpCYi8xVkMwbjgxeThSeHNFc3JoY2VXU1Ew?=
+ =?utf-8?B?UWJQUlp4eXkzYUo3RWxuL3NoRktVLzB4QjZVZ1JscnRCMjl3N3pod2w5bjBp?=
+ =?utf-8?B?ZStadDgrRUJGeDFrcHV4dkxhUnBoZTBveXB4c0pFS2hnNy8vWGxCbEY0aVRq?=
+ =?utf-8?B?WXphVnRnRXN4c0pYVnhNVEYrMDVlRGJYbmdjK2poRkh3STNMMjNxa3J0elFN?=
+ =?utf-8?B?TFV6aThVc205T3F2N1BBdllhQkEwTGFxemVneVphdG5KZ3Z4VGNUQ0wzYy9D?=
+ =?utf-8?B?WXlyMGF0NEhjYkpiSHNvRm5BM2Z0dy84VEJ6MHkxdGRNY3BDYzZsbi8rYXVO?=
+ =?utf-8?B?enBhZGttNlkzZlU5ZnlrZTQ4V2dnc0xsVFRJVjZvdXBNY2NLMU9ZdStYcDVW?=
+ =?utf-8?B?RXRUMC83TXNOd2FDSmYxUkhBbUxMTHhuM3AwcWpoVTVMWk5mWnZqVFJLcUtw?=
+ =?utf-8?B?emhMQnBNR0pJSUdPdnJwd3lPSDVYT1VRdHE2RlZ5dlkxTVdWSVJlVzluL3pY?=
+ =?utf-8?B?cmNZc3BxMUxTLzhtd1N2WkVRMzY1bWx2bk5Ebk1RR3hPMzhsV01MQ3VVanB3?=
+ =?utf-8?B?bmFJKzFRYklRelBVUFdkOThlRTFwbzlaNWd1UXk1NVRaVTlkK2EzN3NnVk5o?=
+ =?utf-8?B?NmhQYng1ZUdyeVU5SER4Zm5NdFZ3WlhkbkxsTEpkWDhsd0I2TjY1MGZNQzhw?=
+ =?utf-8?B?TnVXL29MNUNDUFhQTXhUQkgxdFdEWEZaRTVKdHdFMWs1VDNta2VCSk5uUkc1?=
+ =?utf-8?B?eVNKQ1FySEFvMkRUSjR5ZTBnZU9vZkJEZXhoQ0VOdmkyOVdjSm1xaDNKS1dM?=
+ =?utf-8?B?UlF4ZlFxYXlsT00wSEQrYXZybEhxamd1MTB5WGFuZG5uZ2lqMWVmYlRwdDh4?=
+ =?utf-8?B?WUtKLzhYdDMvUDVjZ1IxQVY1Y2pIY0Q3SVJaY3BJT2J2dG5nd080WFVFb0ps?=
+ =?utf-8?B?bW9XdGVTcUl3Q3lSVll6a1FFa3MyT0w4OVpRRWFyTVhob0JxUnlQcmo5amF4?=
+ =?utf-8?B?c2dkT3k5b3BUTDNMTTA5dmVMQmZyejJ2dlpYY0hORWxrekpJUWpwVDd3QVpJ?=
+ =?utf-8?B?OU81Q2w5YmxLMlArc0llb1JNU1pWTTJheG1ISU1VTzh6OGQ3Q2FIVEdzekI4?=
+ =?utf-8?B?ZlZFSzNiS3JlOHlQMU42RTdQeW9pRkhYUk5LQlpCK2d2WW5uRk90ais5Zk1G?=
+ =?utf-8?B?ZklCMC95b1RTd0tCOWI5d011WExRendTbUpCQ2g5cFlIeElnS2RUbjVjeXFt?=
+ =?utf-8?B?YTluck1CVjRHalFtUDQyVzJTeGVnd29qNlE2eXRjTDZ6N1YvVG5UZHNqYUJY?=
+ =?utf-8?Q?aDUFsI+sRi2RP4rA=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae8813d5-95dd-4252-d7a5-08de4faca0bc
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6522.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2026 18:26:38.4269
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 44cB4V6sfBlzr2O3zAi6mrLAS+hrdSHDWYG8tETAH/sFpivMvfm3zJz0pT1dSKQQNTaRqYbkroYbaj+1yRqz4g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4522
+X-OriginatorOrg: intel.com
 
-On Wed, Jan 7, 2026 at 7:34=E2=80=AFAM John Groves <John@groves.net> wrote:
->
-> Virtio_fs now needs to determine if an inode is DAX && not famfs.
+On Fri, Jan 09, 2026 at 12:28:22PM -0500, Zi Yan wrote:
+> On 9 Jan 2026, at 6:09, Mika Penttilä wrote:
+> 
+> > Hi,
+> >
+> > On 1/9/26 10:54, Francois Dugast wrote:
+> >
+> >> From: Matthew Brost <matthew.brost@intel.com>
+> >>
+> >> Split device-private and coherent folios into individual pages before
+> >> freeing so that any order folio can be formed upon the next use of the
+> >> pages.
+> >>
+> >> Cc: Balbir Singh <balbirs@nvidia.com>
+> >> Cc: Alistair Popple <apopple@nvidia.com>
+> >> Cc: Zi Yan <ziy@nvidia.com>
+> >> Cc: David Hildenbrand <david@kernel.org>
+> >> Cc: Oscar Salvador <osalvador@suse.de>
+> >> Cc: Andrew Morton <akpm@linux-foundation.org>
+> >> Cc: linux-mm@kvack.org
+> >> Cc: linux-cxl@vger.kernel.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Signed-off-by: Matthew Brost <matthew.brost@intel.com>
+> >> Signed-off-by: Francois Dugast <francois.dugast@intel.com>
+> >> ---
+> >>  mm/memremap.c | 2 ++
+> >>  1 file changed, 2 insertions(+)
+> >>
+> >> diff --git a/mm/memremap.c b/mm/memremap.c
+> >> index 63c6ab4fdf08..7289cdd6862f 100644
+> >> --- a/mm/memremap.c
+> >> +++ b/mm/memremap.c
+> >> @@ -453,6 +453,8 @@ void free_zone_device_folio(struct folio *folio)
+> >>  	case MEMORY_DEVICE_COHERENT:
+> >>  		if (WARN_ON_ONCE(!pgmap->ops || !pgmap->ops->folio_free))
+> >>  			break;
+> >> +
+> >> +		folio_split_unref(folio);
+> >>  		pgmap->ops->folio_free(folio);
+> >>  		percpu_ref_put_many(&folio->pgmap->ref, nr);
+> >>  		break;
+> >
+> > This breaks folio_free implementations like nouveau_dmem_folio_free
+> > which checks the folio order and act upon that.
+> > Maybe add an order parameter to folio_free or let the driver handle the split?
 
-nit: it was unclear to me why this patch changed the macro to take in
-a struct fuse_inode until I looked at patch 14. it might be useful
-here to add a line about that
+'let the driver handle the split?' - I had consisder this as an option.
 
->
-> Signed-off-by: John Groves <john@groves.net>
-> ---
->  fs/fuse/dir.c    |  2 +-
->  fs/fuse/file.c   | 13 ++++++++-----
->  fs/fuse/fuse_i.h |  6 +++++-
->  fs/fuse/inode.c  |  4 ++--
->  fs/fuse/iomode.c |  2 +-
->  5 files changed, 17 insertions(+), 10 deletions(-)
->
-> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-> index 4b6b3d2758ff..1400c9d733ba 100644
-> --- a/fs/fuse/dir.c
-> +++ b/fs/fuse/dir.c
-> @@ -2153,7 +2153,7 @@ int fuse_do_setattr(struct mnt_idmap *idmap, struct=
- dentry *dentry,
->                 is_truncate =3D true;
->         }
->
-> -       if (FUSE_IS_DAX(inode) && is_truncate) {
-> +       if (FUSE_IS_VIRTIO_DAX(fi) && is_truncate) {
->                 filemap_invalidate_lock(mapping);
->                 fault_blocked =3D true;
->                 err =3D fuse_dax_break_layouts(inode, 0, -1);
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index 01bc894e9c2b..093569033ed1 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -252,7 +252,7 @@ static int fuse_open(struct inode *inode, struct file=
- *file)
->         int err;
->         bool is_truncate =3D (file->f_flags & O_TRUNC) && fc->atomic_o_tr=
-unc;
->         bool is_wb_truncate =3D is_truncate && fc->writeback_cache;
-> -       bool dax_truncate =3D is_truncate && FUSE_IS_DAX(inode);
-> +       bool dax_truncate =3D is_truncate && FUSE_IS_VIRTIO_DAX(fi);
->
->         if (fuse_is_bad(inode))
->                 return -EIO;
-> @@ -1812,11 +1812,12 @@ static ssize_t fuse_file_read_iter(struct kiocb *=
-iocb, struct iov_iter *to)
->         struct file *file =3D iocb->ki_filp;
->         struct fuse_file *ff =3D file->private_data;
->         struct inode *inode =3D file_inode(file);
-> +       struct fuse_inode *fi =3D get_fuse_inode(inode);
->
->         if (fuse_is_bad(inode))
->                 return -EIO;
->
-> -       if (FUSE_IS_DAX(inode))
-> +       if (FUSE_IS_VIRTIO_DAX(fi))
->                 return fuse_dax_read_iter(iocb, to);
->
->         /* FOPEN_DIRECT_IO overrides FOPEN_PASSTHROUGH */
-> @@ -1833,11 +1834,12 @@ static ssize_t fuse_file_write_iter(struct kiocb =
-*iocb, struct iov_iter *from)
->         struct file *file =3D iocb->ki_filp;
->         struct fuse_file *ff =3D file->private_data;
->         struct inode *inode =3D file_inode(file);
-> +       struct fuse_inode *fi =3D get_fuse_inode(inode);
->
->         if (fuse_is_bad(inode))
->                 return -EIO;
->
-> -       if (FUSE_IS_DAX(inode))
-> +       if (FUSE_IS_VIRTIO_DAX(fi))
->                 return fuse_dax_write_iter(iocb, from);
->
->         /* FOPEN_DIRECT_IO overrides FOPEN_PASSTHROUGH */
-> @@ -2370,10 +2372,11 @@ static int fuse_file_mmap(struct file *file, stru=
-ct vm_area_struct *vma)
->         struct fuse_file *ff =3D file->private_data;
->         struct fuse_conn *fc =3D ff->fm->fc;
->         struct inode *inode =3D file_inode(file);
-> +       struct fuse_inode *fi =3D get_fuse_inode(inode);
->         int rc;
->
->         /* DAX mmap is superior to direct_io mmap */
-> -       if (FUSE_IS_DAX(inode))
-> +       if (FUSE_IS_VIRTIO_DAX(fi))
->                 return fuse_dax_mmap(file, vma);
->
->         /*
-> @@ -2934,7 +2937,7 @@ static long fuse_file_fallocate(struct file *file, =
-int mode, loff_t offset,
->                 .mode =3D mode
->         };
->         int err;
-> -       bool block_faults =3D FUSE_IS_DAX(inode) &&
-> +       bool block_faults =3D FUSE_IS_VIRTIO_DAX(fi) &&
->                 (!(mode & FALLOC_FL_KEEP_SIZE) ||
->                  (mode & (FALLOC_FL_PUNCH_HOLE | FALLOC_FL_ZERO_RANGE)));
->
-> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-> index 7f16049387d1..17736c0a6d2f 100644
-> --- a/fs/fuse/fuse_i.h
-> +++ b/fs/fuse/fuse_i.h
-> @@ -1508,7 +1508,11 @@ void fuse_free_conn(struct fuse_conn *fc);
->
->  /* dax.c */
->
-> -#define FUSE_IS_DAX(inode) (IS_ENABLED(CONFIG_FUSE_DAX) && IS_DAX(inode)=
-)
-> +/* This macro is used by virtio_fs, but now it also needs to filter for
-> + * "not famfs"
-> + */
+> 
+> Passing an order parameter might be better to avoid exposing core MM internals
+> by asking drivers to undo compound pages.
+> 
 
-Did you mean to add this comment to "patch 14/21: famfs_fuse: Plumb
-the GET_FMAP message/response" instead? it seems like that's the patch
-that adds the "&& !fuse_file_famfs(fuse_inode))" part to this.
+It looks like Nouveau tracks free folios and free pages—something Xe’s
+device memory allocator (DRM Buddy) cannot do. I guess this answers my
+earlier question of how Nouveau avoids hitting the same bug as Xe / GPU
+SVM with respect to reusing folios. It appears Nouveau prefers not to
+split the folio, so I’m leaning toward moving this call into the
+driver’s folio_free function.
 
-Reviewed-by: Joanne Koong <joannelkoong@gmail.com>
+Matt
 
-Thanks,
-Joanne
+> Best Regards,
+> Yan, Zi
