@@ -1,141 +1,118 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D2E283FC3;
-	Fri,  9 Jan 2026 15:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767973293; cv=pass; b=HiFGPQGSu9/qCaijlPWqZaLUMm4I09J1yrnD/bfQgF+q7tmdpC7mdnZqtGCKOc5XX3cFSN+o2RABTlc+cQast1gRL1Su5xN7RjPkoWapZqDae+q2Ep+Xo6oztTPV+939zZ2bsGoT35CEymbNItLXCdKvVXsslUacrAFe/DFUq5Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767973293; c=relaxed/simple;
-	bh=/T1bvl4florXPDEx3ri8oMWq1fNrRZrSNR8tvuXAvgM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z8Gt0Msd4sZhTiy/NW+n+H8T+xyjl2HfOR47EFRQmUgZntxKYqfihERbbnLf5g1WCGgp2Dv7/MEkQEX49rIkyIxvpR8DsEvgIIk0mdZDiTKASPJlMxjneqM6jtIxKFj39nr00T5J22VN558c2D04BEV8u5deoB8zINXxU6x/X74=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Pt4K4yFW; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9158727465C
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Jan 2026 15:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767973348; cv=none; b=gvytkS2Bz3sOBLURPXl6ydCRoOsKgVxlJznFaGKWFbXKFv1wswfPG1wxfksaqr2KxBQpDwedz+zyRwYFmkyiwpMlYVgbrLH9SrFnFjD6kogvXLf7LF2v2Jl7+TJArjbg2diedJiBSfd//D56YTZJc/3ibS6RGFAB0VIUobtVNE4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767973348; c=relaxed/simple;
+	bh=9puD84hpyw4F/5uu9OAkxMy9aKmfs1gHa9HuFQ4f5H4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n2ibh4Gr38HnAS50sqJnXr9CNunDPDPgrDlN9rueHntEC/3U9QRjAuP7Q4XP5w+ABUXW+KfnGJ2UXJcjqQ7aIlkc5khoAZnPSG0zj3+mupqVslJ9kA27PlMmRlK2nVFJbSkDTfGgZraBwEPbt0QcuFgWayMdAk1Uw/OgAmy5Q4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TAT3uYt1; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Pt4K4yFW"
-ARC-Seal: i=1; a=rsa-sha256; t=1767973276; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=X4tZz5l2BDj3WXbGIZxNPSn1khhIjsRLjBZdurT0hMPc+M81FybvKjRC5VHjVzgeo9bjZmjXuu4sxtBa1rRqmf3u9G7cDBBkXpycwQghPlJpc/Lr2nmG/00AjO729RbwdI/pOUF4bln6/IEOPStVItI0PJVOhFVMANHwMM6nWA0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1767973276; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=FzvzFp0PqquyJxNLgxalsJCSih3CJKOyC7RufwWtxMw=; 
-	b=RGhw1Qw1vsRvpmkWfnJblFVWTAooJcx7VU3GDRNyKDhIiMAqCLJB+450Nq2k2ao58rWKjUf6G/wAXv06XhRxfs2w4wZ8kCkNvMo9JFuKGTCjJRcNKtGQzl9vc3D2Dt2HzCvSnkYwx/WIslLaahK+p4aOEpKVuIBt0p6ZICP6FM0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1767973276;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=FzvzFp0PqquyJxNLgxalsJCSih3CJKOyC7RufwWtxMw=;
-	b=Pt4K4yFWOx+1UYjlZ35q/N2h7sD2rlLTQF2Qwxq5GVKmynA9KXRDOYMkt/SmDk8d
-	rK933jHFRAOnEGrCZ3/sDwshplwQVw78vaGffak9GmwAD2Y23nKDM2XknEx3bz2mt5t
-	FetCirq86IunpWFX3jgIqHv8RZ1G6gpjQ6QsQyrA=
-Received: by mx.zohomail.com with SMTPS id 1767973274224125.1330695981311;
-	Fri, 9 Jan 2026 07:41:14 -0800 (PST)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH 1/1] cxl/acpi: Remove cxl_acpi_set_cache_size()
-Date: Fri,  9 Jan 2026 23:40:42 +0800
-Message-Id: <20260109154042.331296-1-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TAT3uYt1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767973346; x=1799509346;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9puD84hpyw4F/5uu9OAkxMy9aKmfs1gHa9HuFQ4f5H4=;
+  b=TAT3uYt1OBQ9N/v3Cxl0oFB1W4l1n8O7R1vIirF81fX2d1odFYf0ky9a
+   Ax4AE6wMhjoHJ7zBWi5LhZ3iAvTao76Hmonxsza1DCT0QUezRK9B+gMnv
+   m1hhjI0nww3DpzxYv8CrPBzKnZLYmxXYqltpEkQorLT0lwPO2WOMdQ8bI
+   8yghXukqpWk56QjBi1pCt0Q8EARO4SjWR8O6QUh9UNF0mbbzF3OxmHit+
+   GD0myGzvPaXkFSVM9rAqEwkQLT1YbZptFFa8L2opL8zY1CHVcDTcJQm+H
+   m0KbRPIA8aFQHlLxfXvchMfuEwwxiBPIoZ06GlPZKw30NqS4adSu2xqnF
+   w==;
+X-CSE-ConnectionGUID: kILgmmHUR5i5qK7GYCwF+Q==
+X-CSE-MsgGUID: osirkOHGQ9SGjjbCsdgg5g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11666"; a="68359983"
+X-IronPort-AV: E=Sophos;i="6.21,214,1763452800"; 
+   d="scan'208";a="68359983"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 07:42:26 -0800
+X-CSE-ConnectionGUID: 5xo3/ZdBSzu4e+nay7N+2g==
+X-CSE-MsgGUID: Cvpdm4XBQzqBTafpigid4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,214,1763452800"; 
+   d="scan'208";a="203785319"
+Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.110.37]) ([10.125.110.37])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 07:42:25 -0800
+Message-ID: <1e7cdf36-5297-42d1-8698-693490716bd6@intel.com>
+Date: Fri, 9 Jan 2026 08:42:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011227bbb89f9435c71f79b02cb9a10000d6c68f190e458572bd853f2f219b392d818fbafe139c1397ec:zu08011227910b6a1bdf55c770a6e3dd5f00002f63ff6c4046446619df1f654dc85ae7b9decb3955d6a5ebdb:rf0801122d8bf4a031a4ac9c94daac374c00007a7261f2bb187e3648d7e5da956a84d9198533057ad82295c3fb0f60d037cd:ZohoMail
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/core: Fix cxl_dport debugfs EINJ entries
+To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, Alison Schofield <alison.schofield@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, vishal.l.verma@intel.com,
+ ira.weiny@intel.com
+Cc: linux-cxl@vger.kernel.org
+References: <6e9fb657-8264-4028-92e2-5428e2695bf1@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <6e9fb657-8264-4028-92e2-5428e2695bf1@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-cxl_acpi_set_cache_size() returns an error only when the size of the
-cache range is not matched with the CXL address range. Almost all
-implementation of setting cache size is in cxl_acpi_set_cache_size(),
-cxl_setup_extended_linear_size() does nothing except printing a warning
-in above error case, but cxl_acpi_set_cache_size() also prints a warning
-at the same time. So can consolidates these two functions into one, keep
-the function name as cxl_setup_extended_linear_size().
 
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
- drivers/cxl/acpi.c | 29 +++++------------------------
- 1 file changed, 5 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 77ac940e3013..e65dfae42bde 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -357,7 +357,7 @@ static int add_or_reset_cxl_resource(struct resource *parent, struct resource *r
- 	return rc;
- }
- 
--static int cxl_acpi_set_cache_size(struct cxl_root_decoder *cxlrd)
-+static void cxl_setup_extended_linear_cache(struct cxl_root_decoder *cxlrd)
- {
- 	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
- 	struct range *hpa = &cxld->hpa_range;
-@@ -367,12 +367,14 @@ static int cxl_acpi_set_cache_size(struct cxl_root_decoder *cxlrd)
- 	struct resource res;
- 	int nid, rc;
- 
-+	/* Explicitly initialize cache size to 0 at the beginning */
-+	cxlrd->cache_size = 0;
- 	res = DEFINE_RES_MEM(start, size);
- 	nid = phys_to_target_node(start);
- 
- 	rc = hmat_get_extended_linear_cache_size(&res, nid, &cache_size);
- 	if (rc)
--		return 0;
-+		return;
- 
- 	/*
- 	 * The cache range is expected to be within the CFMWS.
-@@ -384,31 +386,10 @@ static int cxl_acpi_set_cache_size(struct cxl_root_decoder *cxlrd)
- 		dev_warn(&cxld->dev,
- 			 "Extended Linear Cache size %pa != CXL size %pa. No Support!",
- 			 &cache_size, &size);
--		return -ENXIO;
-+		return;
- 	}
- 
- 	cxlrd->cache_size = cache_size;
--
--	return 0;
--}
--
--static void cxl_setup_extended_linear_cache(struct cxl_root_decoder *cxlrd)
--{
--	int rc;
--
--	rc = cxl_acpi_set_cache_size(cxlrd);
--	if (rc) {
--		/*
--		 * Failing to retrieve extended linear cache region resize does not
--		 * prevent the region from functioning. Only causes cxl list showing
--		 * incorrect region size.
--		 */
--		dev_warn(cxlrd->cxlsd.cxld.dev.parent,
--			 "Extended linear cache retrieval failed rc:%d\n", rc);
--
--		/* Ignoring return code */
--		cxlrd->cache_size = 0;
--	}
- }
- 
- DEFINE_FREE(put_cxlrd, struct cxl_root_decoder *,
--- 
-2.34.1
+On 1/9/26 6:57 AM, Cheatham, Benjamin wrote:
+> Protocol error injection is only valid for CXL 2.0+ root ports and CXL
+> 1.1 memory-mapped downstream ports as per the ACPI v6.5 spec (Table
+> 8-31). The core code currently creates an 'einj_inject' file in CXL debugfs
+> for all CXL 1.1 downstream ports and all PCI CXL 2.0+ downstream ports.
+> This results in debugfs EINJ files that won't work due to platform/spec
+> restrictions.
+> 
+> Fix by limiting 'einj_inject' file creation to only CXL 1.1 dports and
+> CXL 2.0+ root ports. Update the comment above the check to more accurately
+> represent the requirements expected by the EINJ module and ACPI spec.
+> 
+> Fixes: 8039804cfa73 ("cxl/core: Add CXL EINJ debugfs files")
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+
+> ---
+>  drivers/cxl/core/port.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index fef3aa0c6680..54f72452fb06 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -822,16 +822,18 @@ DEFINE_DEBUGFS_ATTRIBUTE(cxl_einj_inject_fops, NULL, cxl_einj_inject,
+>  
+>  static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
+>  {
+> +	struct cxl_port *parent = parent_port_of(dport->port);
+>  	struct dentry *dir;
+>  
+>  	if (!einj_cxl_is_initialized())
+>  		return;
+>  
+>  	/*
+> -	 * dport_dev needs to be a PCIe port for CXL 2.0+ ports because
+> -	 * EINJ expects a dport SBDF to be specified for 2.0 error injection.
+> +	 * Protocol error injection is only available for CXL 2.0+ root ports
+> +	 * and CXL 1.1 downstream ports
+>  	 */
+> -	if (!dport->rch && !dev_is_pci(dport->dport_dev))
+> +	if (!dport->rch &&
+> +	    !(dev_is_pci(dport->dport_dev) && parent && is_cxl_root(parent)))
+>  		return;
+>  
+>  	dir = cxl_debugfs_create_dir(dev_name(dport->dport_dev));
 
