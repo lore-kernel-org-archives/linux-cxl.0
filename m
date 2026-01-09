@@ -1,352 +1,224 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012039.outbound.protection.outlook.com [40.93.195.39])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C91B2ECE86;
-	Fri,  9 Jan 2026 22:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.39
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767996703; cv=fail; b=nSYUNUMrvVt4sJ9MrHQs4n0CcLArBGBH+kVfOGdE+jPjWYOrpioQd0XDFYPXXcNip9+bTwjSNEixrfnYWYEWKKKVvlfe4SyCucoHS0AdoWV9ZQ2KSnJFZBqXzO0qBAruIrq/SZEXd535VdQp1ooT6im8Ry6fmkLghOTCi6/zZdQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767996703; c=relaxed/simple;
-	bh=GdC4WcmUAuGIRfcFwC7lZ4BtKGrBbQlmFZEIerfjUkI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=JyY7yuhKOC5r7XXuQ+eIwh0LDXjzinikLtz5ITRRp3HGjCEgcb6oaxxo99Lq2JzutF5xwLmCrreEtKSECw3CiX1qrkpQjF7d7OkPqmQ/MHHRol2vFPqUduIsRknCrCfhVOmZXVRSsZVy7htyTcyGf7Bl/IAL1XgdTE2KnFSHeus=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FAPuOo/R; arc=fail smtp.client-ip=40.93.195.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F4D2ECE86
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Jan 2026 22:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767996779; cv=none; b=H98mKNrgXU7+u4iq3rLPKSta8ITNYTHqsf9kq1ivb04BhvBgmkBoa7HswUCN264/xQKtzywIllHIIIqOHcsD3nCY0ARVtvLJiF7Gv53lasVXiKAndGRqux6mt4SHrKNd63pYJPamTxNqRCBwgdyXKJMyvHRJqqbDTsoM4OxMpaQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767996779; c=relaxed/simple;
+	bh=Hj1sr74OfKnz3wfCACyd/Kfh01zHzBvmk7Fc1z9GDS8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jdDv0sUO16N8k143DhT34X1UFj2rzA0iyivTb7acRZmQPQ2FpnzOXxqNdrAK9qMeWJRI5ZfcmjyvxZV0u8PnWTAldFaKjJR8WnNWGWAAuRDJXNFe50eDKODRIvNW91iyVF1//XLntFREFEirfiJEfhlTRL09hApIWGj/vDAY45o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W/Hmc1UJ; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FAPuOo/R"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YGLfLUEDTia+tXLmJynhs8ioKd9nWlJ9Z/HBMe4XdSa8id7sswlm0+cEi/mtALOiZg2+KGDtyBg8qWJ8ksjEGAAmP9eS9dcKQ6PIA3qYNpYJem3pUXhkfQU8+gQqzsPkrBG1+cVW9b5edOrWyfuXQN/WIsdYKrmflbXtQRYJA6Yw2QZAg/gwUOfWQipkwjpG33RYi23iakVJWwZpBl7EOTz9FNQ8ovm34ga3xzVhOXN8gM8Rcur2pftJRf/DstaCdKeG6XnJEIUmYThcEhoOE4GwyIZFaBn0y/LsgASzTrwO7oxjeTwmhVPZEpTDN7z0BQnhoydLVYUXnky3xjREMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VoDg5vb8nhYPfc7Hyg5Pm7TWZg8oXgf6lUGmqVXvXsQ=;
- b=zB/btfOcMr+4zLCtDVqZ3HbajBLV6lk5RN46IlHK++h4qgeWfYoV0KXNDqbUjQ6jdgB/q9RBUBwNIuElvn1eJ+g7HaWHCy9wBkUnm8rMa8o9RAZ2B8IQPZMYhJ30NHNkACkBpK8wVdV5WyP/euk3VXKGmz/ujo/k3M+VxRNy/zVjV0n8XMYnqBvRQySRMLsluFSFZspdUJU2eO2LM+g7K1Yq0bHGCXkSZlJeQfgIAdcruJvhNSy2oJJbAY3HutqvPCpZy03dORTY6M104tA1h4tprGhRxf2T/kSzgISfHPYihQNnx85iGwLRXs2CUk8/RDS5lr6G87JBuPXyfOt5pQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VoDg5vb8nhYPfc7Hyg5Pm7TWZg8oXgf6lUGmqVXvXsQ=;
- b=FAPuOo/R9tdH6nw3rwljeXBwkNCu2NGIxfixVZaNMZ1zQGkjrkSauKQzNuclN9C+/z384HrfyZE4EevZGDIF0V72N5+HYFzYrNDfFAHiAFxQneMPM+7QMDfgCqQxKHMM7MwMegzVbozstc7O25DGP+yb7uAr3tiKtudPvkvks9n5+XkCQlan1CDEkOZnxZzfqTa635cnD3w7yxGBueB7sfXsgyYBkPeVj1ahshBUS3EvGFcW0TpdDm4trLxqLhZfPh7GUhiq3KA76w91xPeVITV4O2Yox8wb9lL3OF5I54uzKCVu7EAmRlXU2chIIIZZQSApRErImXeuqvNNsUv1vA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH8PR12MB7277.namprd12.prod.outlook.com (2603:10b6:510:223::13)
- by BL3PR12MB6474.namprd12.prod.outlook.com (2603:10b6:208:3ba::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.2; Fri, 9 Jan
- 2026 22:11:38 +0000
-Received: from PH8PR12MB7277.namprd12.prod.outlook.com
- ([fe80::3a4:70ea:ff05:1251]) by PH8PR12MB7277.namprd12.prod.outlook.com
- ([fe80::3a4:70ea:ff05:1251%7]) with mapi id 15.20.9478.004; Fri, 9 Jan 2026
- 22:11:37 +0000
-Message-ID: <5c9f17ce-7174-4e74-92d7-8249f309f756@nvidia.com>
-Date: Sat, 10 Jan 2026 09:11:32 +1100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/7] mm: Split device-private and coherent folios
- before freeing
-To: Zi Yan <ziy@nvidia.com>
-Cc: Matthew Brost <matthew.brost@intel.com>,
- =?UTF-8?Q?Mika_Penttil=C3=A4?= <mpenttil@redhat.com>,
- Francois Dugast <francois.dugast@intel.com>, intel-xe@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Alistair Popple <apopple@nvidia.com>,
- David Hildenbrand <david@kernel.org>, Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260109085605.443316-1-francois.dugast@intel.com>
- <20260109085605.443316-4-francois.dugast@intel.com>
- <d1d80b81-678d-4d28-9ac2-95cb74824e73@redhat.com>
- <DF5A6B81-7811-4654-855F-8EAB76CCCE51@nvidia.com>
- <aWFIW6XCKXPpIinv@lstrano-desk.jf.intel.com>
- <D9ED5F01-E758-4A89-87F2-ABFF5197231D@nvidia.com>
- <aWFSGc7MIUqVsilw@lstrano-desk.jf.intel.com>
- <12A9DCBB-0B59-4D63-9BA8-9F99570AFA80@nvidia.com>
- <aWFe9S2DGwfD2smO@lstrano-desk.jf.intel.com>
- <B8B15539-F97A-4D6B-BF58-FC75397C429F@nvidia.com>
- <4485ba83-a8c7-478f-953f-78d66e84d730@nvidia.com>
- <18E78790-4996-4151-821B-8A1D784A3F7D@nvidia.com>
-Content-Language: en-US
-From: Balbir Singh <balbirs@nvidia.com>
-In-Reply-To: <18E78790-4996-4151-821B-8A1D784A3F7D@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR03CA0028.namprd03.prod.outlook.com
- (2603:10b6:a03:33a::33) To PH8PR12MB7277.namprd12.prod.outlook.com
- (2603:10b6:510:223::13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W/Hmc1UJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767996777; x=1799532777;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Hj1sr74OfKnz3wfCACyd/Kfh01zHzBvmk7Fc1z9GDS8=;
+  b=W/Hmc1UJj1jY5FfTbrxqiFqhRjO21BUyGrei0rQpXlGbhNOFuEmq69KS
+   FRwrIMP7VuPpwtqaZ9aoTwL87gsFQIRYikoNyPnmdN7qKjEdlD6BuMnvO
+   seJTNGRZiK+9zJOKM4VsCdppLv9riXpYP2YzllWi138pIKxpQDH8KXj3N
+   9S86WqjMfpLiliojDQPPgs4+VP2ezRpxPhhnt2AxbbaCPBBHQ6eyKvBVF
+   OR4ZtDIt8aJyO+AmvhDSlqHqnDHIOj3Uz2OpTf72C5vQUl+fnd3q3WU6C
+   FwY+9lzUtXN8Efokl5IY/zhbfqjZwbDM3zL/2f6iofNgODe9zP4mzrawg
+   A==;
+X-CSE-ConnectionGUID: 1z0jI0I9QaSLTkNPa+Q1zw==
+X-CSE-MsgGUID: tyn8c2rFQ42arX7MEfCTMw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11666"; a="69280622"
+X-IronPort-AV: E=Sophos;i="6.21,215,1763452800"; 
+   d="scan'208";a="69280622"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 14:12:57 -0800
+X-CSE-ConnectionGUID: t2wBEM8HSfeMBymOxAT0Xg==
+X-CSE-MsgGUID: oaV+gcFqRHGFAt8BRjoS5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,215,1763452800"; 
+   d="scan'208";a="241074527"
+Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.110.37]) ([10.125.110.37])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 14:12:56 -0800
+Message-ID: <04a8ac94-d100-4417-a347-5a0dfb6e6de2@intel.com>
+Date: Fri, 9 Jan 2026 15:12:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR12MB7277:EE_|BL3PR12MB6474:EE_
-X-MS-Office365-Filtering-Correlation-Id: ffbbb180-d461-49a7-ef9c-08de4fcc0f14
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|10070799003|366016|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SUNvVTMza0EvQjB3Q2k0dFNQKzdTcmkxdlE1TkNpbzE1MWtXOXcycXI1Y3JB?=
- =?utf-8?B?YzJvK3MreEIwaWxQSzlSQ1lOb0V1MGtHWU9VTmlCeno5djk2WVY0c2YvVTBy?=
- =?utf-8?B?ZXVaREVTTW1LTjczUDBydWxVcVBnK1RqUFdjaGkvL2F2T1Vla0VPY01nM01u?=
- =?utf-8?B?WnVhUUcrTzE1NGxla3c2MXpPdUxTSTNvczRDNmhJbGorZGNGTzVoOU9nNlpB?=
- =?utf-8?B?NjVRQTFzeEtpd2xqUWo4akRpbU94SVhjd092ZDN4aVJta3FQRGRyejRGNzdj?=
- =?utf-8?B?TEtvSlhXQlRaZmFiejJuQWE0dUZVRmxiSVl3amI3VUloZnV3VjhEMW8zT2Rr?=
- =?utf-8?B?U2hLSHVPT2dRdFZMczE5bVZjWjVpVEJqQUdBZkthKzY3Skp1dFlrcWZnTld4?=
- =?utf-8?B?YmllL29MVk1MUVZzcmgxdDB1VFBPWHl4LzBlNC8zVllHdmhiK1ZvdGU5VnZH?=
- =?utf-8?B?RVk0NHV6RHJXQitPUTdDZ2pidWRzUU4xRW5BSmJOOGN6QkJDdTd5bll2eFU0?=
- =?utf-8?B?LzVYQWtwL0c2bWdsa3hQSjlqQUl4WXNrd2Q5bmdUS1FlNGl3cU9VNUkxNDRE?=
- =?utf-8?B?aWVBbVR0a1pmTXNBcGR3aHgzMi9qNWFYcDh6TkYzejFUeXFRZ0hhQzRzdS9j?=
- =?utf-8?B?Qjg2Q2F5NXlDRnE1SEp3RXRGZmdFUUJKUlJxK0EwcmdzcGJBdXhmdFEvckcy?=
- =?utf-8?B?UG1BNVNGR1BFNUFtQmZjYS9xRmRoeGVkRjgxaHd3eno0VXJMSjkzemhYSkxZ?=
- =?utf-8?B?UFpYV0JzY2ZrVC90NjZGRmpGNVQ4ZnczUUpQOStHY0FYZjh2NDRybEdvNWRm?=
- =?utf-8?B?MTVWLzE4emRpWHBUdUlSbU9DNnJuMGRZZmh2OExhdUFENkRCc1BhV05YaVds?=
- =?utf-8?B?MmlrYWRJQlZpQzJCaDdNbG9Mekc2em0vQnQyUUI3aXBvSFo5NUxyZENWb0w2?=
- =?utf-8?B?NkVPY3pValh0ZnJWa1NLN0RxdHZwOFR5L0t3S2JXZWpoNHluekQ0NmxZME0y?=
- =?utf-8?B?MnZEMnBtWlE4K1BUWExmWExFZW43WVc0SG5KaThVTk5RckMvS05qamZXQk5W?=
- =?utf-8?B?MzgyOUwwcXBTT21KaUpUNUlTYUVtUXQ4VkZkaENPR0dxeUtobnp6a0ZrT1J1?=
- =?utf-8?B?REZHd0dwZ2FhZHRoV0Z0NE9sanZwTDd4cWM2cDQ3S0tCditNVWg3UGtobG5V?=
- =?utf-8?B?S0Vpb0l4Sm4zdmRiYlhwbkx4TzlkajB2WXliSkpYMlNQcG9jWThwSlgxR3lK?=
- =?utf-8?B?WUtDWkhqd21MN0dERGhyYjRKclhQSTRSOHIvQ2xhTHhYWlh5TzR0REZKdzlo?=
- =?utf-8?B?Um1rS21QQ1RIZ2kvTkFyS1liek9jMk42SEVPakZBUXAzZXlsZnR5Ynh6M2pU?=
- =?utf-8?B?aEM5eHNRK2NPM2dXOEtxRUE4UGVDUDZkVDhDWTJzWlhGblhnMkszdWRVOWtp?=
- =?utf-8?B?QlRnR1FvMGI0aURBKzBjRTViUi9KVkYzdW03cUZBdzBmVThkYVRMMWJjQTBY?=
- =?utf-8?B?WGFZeVE5a3BKbjhLYzhpZW1ZbmM4akVFa3JwQ2NxeWlYN1RTdG5ySXRGZXYz?=
- =?utf-8?B?STNEd2lJb21FTEtsOTAxem4yMXVzSlFQdTcrMTYrUVZqd0lxdXZZNVdEU0lJ?=
- =?utf-8?B?NkJKa1I3Vk5FTDRhRzc4a3AvOXU5OWUvRkdLazQ5OTBOTXR4c0NlS3NlZEM5?=
- =?utf-8?B?eVN0aGJoZGh2b3pDM09JYlRIQm5xME5YVW01Rk1NMWdYaU00NmNBTjJZZlJO?=
- =?utf-8?B?MDZ3K3I0akdqSU1qNGVROXUvd0k3YnFsaCt3OHNKblBFMU9UTXVUTFFza1Zv?=
- =?utf-8?B?OEZoSU9vOEJOTnBoM1ZnbU9UQmgyNU5HN3FyKzlRdkZsbWZQVldTQVZWQm90?=
- =?utf-8?B?NHFuRjlsUVRqODVYTkpObkFGVHJYQ3VEdGhoNkc4eXUvcEptWUl2MXRJNTYy?=
- =?utf-8?Q?ufr6LCZR7z6+XUZkgK1QN9M97vF210Dy?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7277.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QUtkaXhyWTJSY3J3K0plOEdhUm5kTXY0R1JXWmY2bjlaOERIVXNWR2tEaGJK?=
- =?utf-8?B?blhJQlBzeFhzeUxpQ2dQakxickZQcTZuTDRWUit2TlpNSXlPdlJqdHRjbzNS?=
- =?utf-8?B?b2V0NXNRTlZQT1BjQzVzZGVpZEVIUGhiTm9odHU2cnJnRERQRFV6aDdVZ3hD?=
- =?utf-8?B?MkZCcmQ2N1Z3R1R0My9LeFhUQnNkVkw3OG0xM0VPczMzRG5RS0ZObFUvMmZ2?=
- =?utf-8?B?WjVKY21nSmF1d0IwSDVnK2JsT3h6b29Eb3VDNXdOR3p6RmNvLzZMSjFaa0FF?=
- =?utf-8?B?SWRRdmVRQ1hvZHNiL0x6eEd4Tm5tUUdIQ2ZkM2E5amZvTXpnb2N2NkhoYmdV?=
- =?utf-8?B?TDNZVGF4c0ZRQnJQalBHVzFZaTVIN3BENVAxdTNOcE9MT2FjdFl0RWlSRlBv?=
- =?utf-8?B?SmN1aG9BU1I3NU8vanZyM1liejlxelpDTUsrNjlNMWFycldxSDlzUFZybGNQ?=
- =?utf-8?B?dlcveExRNXNaa2J0bGdXUFB0QytaWnJRTnZuOFlUYTByd1ZFQjZwWC9JSHQ5?=
- =?utf-8?B?cFVPQjNYeTVoVGRFTXpXYnpkMlRHYjZlMnlTczRDd3BWLzU2eVBEc01QckVr?=
- =?utf-8?B?akJicHc5SnhoaEZnSnBRWlAvZXpqS1BxZGZKOExNUzBCZTBIN2p2NENsMWVK?=
- =?utf-8?B?alN6cERyUzdxSHh5VHZEYTRkTHhVa3pyN1NUVGs2Q1Zmd1IyYzdLczEwTjVI?=
- =?utf-8?B?SW9sb2owSE5MR3RhYkFYeHRFVXg4aXVwN2dtbzJENGZha0tsYVlIamRiVVF4?=
- =?utf-8?B?VXNnS1FQdzdYR0RJa3dQZGRsT1REZ0YwZ3Z4b2RVcERKZGpjbHpZU094UFVI?=
- =?utf-8?B?VHp0MDdJOTlrc1A4RkxUQmhaejVjM3dGVFNmT3NKSWJqYnZrRjR2VWRob3pt?=
- =?utf-8?B?T2NhbGcrVHc0WFdITHJjeEVVNGl3aDZMUmZDMkpIcElSWUVSWDFqZ1BVREYz?=
- =?utf-8?B?b1lQV2lLWnpWb2M1N0xROFB6N1o2NGVCSU8xR0NuQ05Xc2lsNWJGcWR3QnJz?=
- =?utf-8?B?VzJsUThNcVlSZ1l2YTRGZkhCNjkyTElvUnhjSjR5VCtGQW05aWxucEp4RW1J?=
- =?utf-8?B?UFV6ZC9EVXVHNlg5TVJveTBZRDd6RXlwbS9SYXVVZzJpMHpSMzByMUVuMnJx?=
- =?utf-8?B?SkhxelhjN055WGVXVjQ2SXdiS1Q2Ym1Wd2ZDZzIxUWZEWml2Wms1Qkx0dW90?=
- =?utf-8?B?VHJNeWtOM3JOZjRLeURFVnBUT0NaVUF6WWhjQTFhWFo0OG9lK3MwQjRZRFhv?=
- =?utf-8?B?blhCeVRYakZSQ0tWMklZSE5KbWJRM21aeldJUEJxWUJSTGVhbUtmb0FTdHRn?=
- =?utf-8?B?MU9pcHhJWE1XWUI4TCszUDdzam9STjlnQ0hyQXI4bWJsalArZ0pMNUJMNnFo?=
- =?utf-8?B?NWJxcW02dkpUSkFyYUdqU3ZReVprdFVtSHVvQWlZVjN2SjlsWlFjTk5MSk81?=
- =?utf-8?B?aXM2NGptMGRqN3ZFRzEreWl2b1Q0eEQ2bGJuRnVoakQyY2hDWWFkbk5OTWhU?=
- =?utf-8?B?TTlwSXkzL1podGNibUd1d1FCekFuWTRxWjYyOUFJSmQ5MWVTK1drYXl4WVpC?=
- =?utf-8?B?Ykw1QjQyVEM3U3gxU2VRVTlsR3NRd2RCd0tUTEVlRGV0OW8rUk9GdEVWL00w?=
- =?utf-8?B?TklBY0grVmhrYVhNWTRJci9BOWZBcTFrMm1DbHhOTVhYbC9kNTNVK0xkNkdt?=
- =?utf-8?B?c0o1SnYrQ3BlSW42UTh0ek5lUEVtUVZkcXFvcDJoamE5dmE5MFJlNlJaVE5M?=
- =?utf-8?B?TmJzbUVCV29wN1poVXJJMFJtSDVKOEVzcnlRV2xHMU10a0FlVDVYUWxkV1hK?=
- =?utf-8?B?NUMvSjUrZm9LSmQvUjNlZE9vajFWMjFQcSs0ODlnenQvekVPcWhRdnd3U1Ew?=
- =?utf-8?B?L2MrR1ZvZEtnb0ZIeTNURWtLUHNweVcrdjZTdmtiQkJnY2VQM1B1bEl0dW5X?=
- =?utf-8?B?TU5GSHpTOFVDcHhCZTV6NlhBdi9YV1hHMnMrbllUMkpQUXZYaG9PNFYzcHFo?=
- =?utf-8?B?WUNHa0k3VlV0WDBNRThCNUc2UitmOTRWbFNUZ29NbUJaUHkva01tVU1oWEtG?=
- =?utf-8?B?S2Z1a016RXVkTk5ZYjFQOHp6Mk1qSHBsNWVIUmd6eXFWSFRJWDJac3dhRGp1?=
- =?utf-8?B?cEtXQkQyWEFaRlRiOHJ6c293K2NvUE9OY2ROd0RVbFJoVTZqRDB2c0lZQ2tw?=
- =?utf-8?B?M1pSS1pKY3Vya0JMTjAwM01oampMU0cwRjNjUmJxYWNSNHlRTlExRThsYURi?=
- =?utf-8?B?enFxTWNRS1d1eU5VSWtxc2VuR3lxZ0dZMXN3MzZSZXp3MjhaakJ4R2wrL1Q3?=
- =?utf-8?B?T0JmR3g5ejE4bi9qa3VuUjNoY2lzVyt5anlkVGVNbXBhTUx2ZDAyVVNaeXRX?=
- =?utf-8?Q?opIS5SmvuVjsjj3WH8tT2e1s1BEqc7hS8KtGOwpOETLlq?=
-X-MS-Exchange-AntiSpam-MessageData-1: pg9iwkBxuBLv7g==
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ffbbb180-d461-49a7-ef9c-08de4fcc0f14
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB7277.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2026 22:11:37.8970
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AL5EhAxtdwdxsFdruGABHPcaFrDNFj1QviuWa0ArghUbStD014TkEBngI0E1pWgeXaWRztRVl24DHuuy0sZ2sw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6474
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/7] cxl: Add clear-error command
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>, nvdimm@lists.linux.dev,
+ alison.schofield@intel.com
+Cc: linux-cxl@vger.kernel.org
+References: <20260109160720.1823-1-Benjamin.Cheatham@amd.com>
+ <20260109160720.1823-6-Benjamin.Cheatham@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260109160720.1823-6-Benjamin.Cheatham@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 1/10/26 07:43, Zi Yan wrote:
-> On 9 Jan 2026, at 16:34, Balbir Singh wrote:
+
+
+On 1/9/26 9:07 AM, Ben Cheatham wrote:
+> Add the 'cxl-clear-error' command. This command allows the user to clear
+> device poison from CXL memory devices.
 > 
->> On 1/10/26 06:15, Zi Yan wrote:
->>> On 9 Jan 2026, at 15:03, Matthew Brost wrote:
->>>
->>>> On Fri, Jan 09, 2026 at 02:23:49PM -0500, Zi Yan wrote:
->>>>> On 9 Jan 2026, at 14:08, Matthew Brost wrote:
->>>>>
->>>>>> On Fri, Jan 09, 2026 at 01:53:33PM -0500, Zi Yan wrote:
->>>>>>> On 9 Jan 2026, at 13:26, Matthew Brost wrote:
->>>>>>>
->>>>>>>> On Fri, Jan 09, 2026 at 12:28:22PM -0500, Zi Yan wrote:
->>>>>>>>> On 9 Jan 2026, at 6:09, Mika Penttilä wrote:
->>>>>>>>>
->>>>>>>>>> Hi,
->>>>>>>>>>
->>>>>>>>>> On 1/9/26 10:54, Francois Dugast wrote:
->>>>>>>>>>
->>>>>>>>>>> From: Matthew Brost <matthew.brost@intel.com>
->>>>>>>>>>>
->>>>>>>>>>> Split device-private and coherent folios into individual pages before
->>>>>>>>>>> freeing so that any order folio can be formed upon the next use of the
->>>>>>>>>>> pages.
->>>>>>>>>>>
->>>>>>>>>>> Cc: Balbir Singh <balbirs@nvidia.com>
->>>>>>>>>>> Cc: Alistair Popple <apopple@nvidia.com>
->>>>>>>>>>> Cc: Zi Yan <ziy@nvidia.com>
->>>>>>>>>>> Cc: David Hildenbrand <david@kernel.org>
->>>>>>>>>>> Cc: Oscar Salvador <osalvador@suse.de>
->>>>>>>>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>>>>>>>>> Cc: linux-mm@kvack.org
->>>>>>>>>>> Cc: linux-cxl@vger.kernel.org
->>>>>>>>>>> Cc: linux-kernel@vger.kernel.org
->>>>>>>>>>> Signed-off-by: Matthew Brost <matthew.brost@intel.com>
->>>>>>>>>>> Signed-off-by: Francois Dugast <francois.dugast@intel.com>
->>>>>>>>>>> ---
->>>>>>>>>>>  mm/memremap.c | 2 ++
->>>>>>>>>>>  1 file changed, 2 insertions(+)
->>>>>>>>>>>
->>>>>>>>>>> diff --git a/mm/memremap.c b/mm/memremap.c
->>>>>>>>>>> index 63c6ab4fdf08..7289cdd6862f 100644
->>>>>>>>>>> --- a/mm/memremap.c
->>>>>>>>>>> +++ b/mm/memremap.c
->>>>>>>>>>> @@ -453,6 +453,8 @@ void free_zone_device_folio(struct folio *folio)
->>>>>>>>>>>  	case MEMORY_DEVICE_COHERENT:
->>>>>>>>>>>  		if (WARN_ON_ONCE(!pgmap->ops || !pgmap->ops->folio_free))
->>>>>>>>>>>  			break;
->>>>>>>>>>> +
->>>>>>>>>>> +		folio_split_unref(folio);
->>>>>>>>>>>  		pgmap->ops->folio_free(folio);
->>>>>>>>>>>  		percpu_ref_put_many(&folio->pgmap->ref, nr);
->>>>>>>>>>>  		break;
->>>>>>>>>>
->>>>>>>>>> This breaks folio_free implementations like nouveau_dmem_folio_free
->>>>>>>>>> which checks the folio order and act upon that.
->>>>>>>>>> Maybe add an order parameter to folio_free or let the driver handle the split?
->>>>>>>>
->>>>>>>> 'let the driver handle the split?' - I had consisder this as an option.
->>>>>>>>
->>>>>>>>>
->>>>>>>>> Passing an order parameter might be better to avoid exposing core MM internals
->>>>>>>>> by asking drivers to undo compound pages.
->>>>>>>>>
->>>>>>>>
->>>>>>>> It looks like Nouveau tracks free folios and free pages—something Xe’s
->>>>>>>> device memory allocator (DRM Buddy) cannot do. I guess this answers my
->>>>>>>> earlier question of how Nouveau avoids hitting the same bug as Xe / GPU
->>>>>>>> SVM with respect to reusing folios. It appears Nouveau prefers not to
->>>>>>>> split the folio, so I’m leaning toward moving this call into the
->>>>>>>> driver’s folio_free function.
->>>>>>>
->>>>>>> No, that creates asymmetric page handling and is error prone.
->>>>>>>
->>>>>>
->>>>>> I agree it is asymmetric and symmetric is likely better.
->>>>>>
->>>>>>> In addition, looking at nouveau’s implementation in
->>>>>>> nouveau_dmem_page_alloc_locked(), it gets a folio from drm->dmem->free_folios,
->>>>>>> which is never split, and passes it to zone_device_folio_init(). This
->>>>>>> is wrong, since if the folio is large, it will go through prep_compound_page()
->>>>>>> again. The bug has not manifested because there is only order-9 large folios.
->>>>>>> Once mTHP support is added, how is nouveau going to allocate a order-4 folio
->>>>>>> from a free order-9 folio? Maintain a per-order free folio list and
->>>>>>> reimplement a buddy allocator? Nevertheless, nouveau’s implementation
->>>>>>
->>>>>> The way Nouveau handles memory allocations here looks wrong to me—it
->>>>>> should probably use DRM Buddy and convert a block buddy to pages rather
->>>>>> than tracking a free folio list and free page list. But this is not my
->>>>>> driver.
->>>>>>
->>>>>>> is wrong by calling prep_compound_page() on a folio (already compound page).
->>>>>>>
->>>>>>
->>>>>> I don’t disagree that this implementation is questionable.
->>>>>>
->>>>>> So what’s the suggestion here—add folio order to folio_free just to
->>>>>> accommodate Nouveau’s rather odd memory allocation algorithm? That
->>>>>> doesn’t seem right to me either.
->>>>>
->>>>> Splitting the folio in free_zone_device_folio() and passing folio order
->>>>> to folio_free() make sense to me, since after the split, the folio passed
->>>>
->>>> If this is concensous / direction - I can do this but a tree wide
->>>> change.
->>>>
->>>> I do have another question for everyone here - do we think this spliting
->>>> implementation should be considered a Fixes so this can go into 6.19?
->>>
->>> IMHO, this should be a fix, since it is wrong to call prep_compound_page()
->>> on a large folio. IIUC this seems to only affect nouveau now, I will let
->>> them to decide.
->>>
->>
->> Agreed, free_zone_device_folio() needs to split the folio on put.
->>
->>
->>>>
->>>>> to folio_free() contains no order information, but just the used-to-be
->>>>> head page and the remaining 511 pages are free. How does Intel Xe driver
->>>>> handle it without knowing folio order?
->>>>>
->>>>
->>>> It’s a bit convoluted, but folio/page->zone_device_data points to a
->>>> reference-counted object in GPU SVM. When the object’s reference count
->>>> drops to zero, we callback into the driver layer to release the memory.
->>>> In Xe, this is a TTM BO that resolves to a DRM Buddy allocation, which
->>>> is then released. If it’s not clear, our original allocation size
->>>> determines the granularity at which we free the backing store.
->>>>
->>>>> Do we really need the order info in ->folio_free() if the folio is split
->>>>> in free_zone_device_folio()? free_zone_device_folio() should just call
->>>>> ->folio_free() 2^order times to free individual page.
->>>>>
->>>>
->>>> No. If it’s a higher-order folio—let’s say a 2MB folio—we have one
->>>> reference to our GPU SVM object, so we can free the backing in a single
->>>> ->folio_free call.
->>>>
->>>> Now, if that folio gets split at some point into 4KB pages, then we’d
->>>> have 512 references to this object set up in the ->folio_split calls.
->>>> We’d then expect 512 ->folio_free() calls. Same case here: if, for
->>>> whatever reason, we can’t create a 2MB device page during a 2MB
->>>> migration and need to create 512 4KB pages so we'd have 512 references
->>>> to our GPU SVM object.
->>>
->>
->> I still don't follow why the folio_order does not capture the order of the folio.
->> If the folio is split, we should now have 512 split folios for THP
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+
+> ---
+>  cxl/builtin.h      |  1 +
+>  cxl/cxl.c          |  1 +
+>  cxl/inject-error.c | 70 ++++++++++++++++++++++++++++++++++++++++++----
+>  3 files changed, 67 insertions(+), 5 deletions(-)
 > 
-> folio_order() should return 0 after the folio is split.
-> 
-> In terms of the number of after-split folios, it is 512 for current code base
-> since THP is only 2MB in zone devices, but not future proof if mTHP support
-> is added. It also causes confusion in core MM, where folio can have
-> all kinds of orders.
-> 
-> 
+> diff --git a/cxl/builtin.h b/cxl/builtin.h
+> index e82fcb5..68ed1de 100644
+> --- a/cxl/builtin.h
+> +++ b/cxl/builtin.h
+> @@ -26,6 +26,7 @@ int cmd_enable_region(int argc, const char **argv, struct cxl_ctx *ctx);
+>  int cmd_disable_region(int argc, const char **argv, struct cxl_ctx *ctx);
+>  int cmd_destroy_region(int argc, const char **argv, struct cxl_ctx *ctx);
+>  int cmd_inject_error(int argc, const char **argv, struct cxl_ctx *ctx);
+> +int cmd_clear_error(int argc, const char **argv, struct cxl_ctx *ctx);
+>  #ifdef ENABLE_LIBTRACEFS
+>  int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx);
+>  #else
+> diff --git a/cxl/cxl.c b/cxl/cxl.c
+> index a98bd6b..e1740b5 100644
+> --- a/cxl/cxl.c
+> +++ b/cxl/cxl.c
+> @@ -81,6 +81,7 @@ static struct cmd_struct commands[] = {
+>  	{ "destroy-region", .c_fn = cmd_destroy_region },
+>  	{ "monitor", .c_fn = cmd_monitor },
+>  	{ "inject-error", .c_fn = cmd_inject_error },
+> +	{ "clear-error", .c_fn = cmd_clear_error },
+>  };
+>  
+>  int main(int argc, const char **argv)
+> diff --git a/cxl/inject-error.c b/cxl/inject-error.c
+> index 0ca2e6b..76f9fa9 100644
+> --- a/cxl/inject-error.c
+> +++ b/cxl/inject-error.c
+> @@ -17,6 +17,10 @@ static struct inject_params {
+>  	const char *address;
+>  } inj_param;
+>  
+> +static struct clear_params {
+> +	const char *address;
+> +} clear_param;
+> +
+>  static const struct option inject_options[] = {
+>  	OPT_STRING('t', "type", &inj_param.type, "Error type",
+>  		   "Error type to inject into <device>"),
+> @@ -28,6 +32,15 @@ static const struct option inject_options[] = {
+>  	OPT_END(),
+>  };
+>  
+> +static const struct option clear_options[] = {
+> +	OPT_STRING('a', "address", &clear_param.address, "Address for poison clearing",
+> +		   "Device physical address to clear poison from in hex or decimal"),
+> +#ifdef ENABLE_DEBUG
+> +	OPT_BOOLEAN(0, "debug", &debug, "turn on debug output"),
+> +#endif
+> +	OPT_END(),
+> +};
+> +
+>  static struct log_ctx iel;
+>  
+>  static struct cxl_protocol_error *find_cxl_proto_err(struct cxl_ctx *ctx,
+> @@ -100,7 +113,7 @@ static int inject_proto_err(struct cxl_ctx *ctx, const char *devname,
+>  }
+>  
+>  static int poison_action(struct cxl_ctx *ctx, const char *filter,
+> -			 const char *addr_str)
+> +			 const char *addr_str, bool clear)
+>  {
+>  	struct cxl_memdev *memdev;
+>  	unsigned long long addr;
+> @@ -128,12 +141,18 @@ static int poison_action(struct cxl_ctx *ctx, const char *filter,
+>  		return -EINVAL;
+>  	}
+>  
+> -	rc = cxl_memdev_inject_poison(memdev, addr);
+> +	if (clear)
+> +		rc = cxl_memdev_clear_poison(memdev, addr);
+> +	else
+> +		rc = cxl_memdev_inject_poison(memdev, addr);
+> +
+>  	if (rc)
+> -		log_err(&iel, "failed to inject poison at %s:%s: %s\n",
+> +		log_err(&iel, "failed to %s %s:%s: %s\n",
+> +			clear ? "clear poison at" : "inject poison at",
+>  			cxl_memdev_get_devname(memdev), addr_str, strerror(-rc));
+>  	else
+> -		log_info(&iel, "poison injected at %s:%s\n",
+> +		log_info(&iel,
+> +			 "poison %s at %s:%s\n", clear ? "cleared" : "injected",
+>  			 cxl_memdev_get_devname(memdev), addr_str);
+>  
+>  	return rc;
+> @@ -165,7 +184,7 @@ static int inject_action(int argc, const char **argv, struct cxl_ctx *ctx,
+>  	}
+>  
+>  	if (strcmp(inj_param.type, "poison") == 0) {
+> -		rc = poison_action(ctx, argv[0], inj_param.address);
+> +		rc = poison_action(ctx, argv[0], inj_param.address, false);
+>  		return rc;
+>  	}
+>  
+> @@ -186,3 +205,44 @@ int cmd_inject_error(int argc, const char **argv, struct cxl_ctx *ctx)
+>  
+>  	return rc ? EXIT_FAILURE : EXIT_SUCCESS;
+>  }
+> +
+> +static int clear_action(int argc, const char **argv, struct cxl_ctx *ctx,
+> +			const struct option *options, const char *usage)
+> +{
+> +	const char * const u[] = {
+> +		usage,
+> +		NULL
+> +	};
+> +	int rc = -EINVAL;
+> +
+> +	log_init(&iel, "cxl clear-error", "CXL_CLEAR_LOG");
+> +	argc = parse_options(argc, argv, options, u, 0);
+> +
+> +	if (debug) {
+> +		cxl_set_log_priority(ctx, LOG_DEBUG);
+> +		iel.log_priority = LOG_DEBUG;
+> +	} else {
+> +		iel.log_priority = LOG_INFO;
+> +	}
+> +
+> +	if (argc != 1) {
+> +		usage_with_options(u, options);
+> +		return rc;
+> +	}
+> +
+> +	rc = poison_action(ctx, argv[0], clear_param.address, true);
+> +	if (rc) {
+> +		log_err(&iel, "Failed to clear poison on %s at: %s\n",
+> +			argv[0], strerror(-rc));
+> +		return rc;
+> +	}
+> +
+> +	return rc;
+> +}
+> +
+> +int cmd_clear_error(int argc, const char **argv, struct cxl_ctx *ctx)
+> +{
+> +	int rc = clear_action(argc, argv, ctx, clear_options,
+> +			      "clear-error <device> [<options>]");
+> +	return rc ? EXIT_FAILURE : EXIT_SUCCESS;
+> +}
 
-I see that folio_split_unref() to see that there is no driver
-callback during the split. Patch 3 controls the order of
-
-+		folio_split_unref(folio);
- 		pgmap->ops->folio_free(folio);
-
-@Matthew, is there a reason to do the split prior to free? pgmap->ops->folio_free(folio)
-shouldn't impact the folio itself, the backing memory can be freed and then the
-folio split?
-
-
-Balbir
