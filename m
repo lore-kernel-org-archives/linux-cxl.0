@@ -1,280 +1,100 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013001.outbound.protection.outlook.com [40.93.201.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27269311C09
-	for <linux-cxl@vger.kernel.org>; Fri,  9 Jan 2026 16:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.1
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767974861; cv=fail; b=ZZC6bvsuqjGAanUuG+RTvoL0SgO6By3KlHwiF4ME1UUotzJfb9zBnbnV1RU1G5HDlYUn61aKays0+DdMQXELcWsKVNwBeLVvj/cU7CXbZcX0QKnoXwVngmLMM9aDPBiIbbXsC6NtRvAsTYlnh5bXblRbkIZPzvhV4cqCrkxYdGk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767974861; c=relaxed/simple;
-	bh=Mo7mznKccL5u8ndf392Hf3sglRugGNuX7YxDC/tBMos=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lJZoToB6BFXpvUosElOSWhxMPb8b2B8fzoelzgOwc8F4i3EKINhynI3hPwwy604BP7A0Wei/y5PUwKCRMAyS/O5ySyutTZydhQ8vcrnkIsLt+CDSvUGGkBgGlhOYUXkXffAXBUAeYheRNa/KuzRaHFnZQloiOEzCftK8RP1eL+o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2kDqgaD8; arc=fail smtp.client-ip=40.93.201.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070B450095E
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Jan 2026 16:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767974912; cv=none; b=pOaDat5lL+00qEDdAV0y91PnfIeVXn3MNGIFtwfBnG0orpoD6i09mwDNB6X55yCojyRMKPlXn+OEkbq0Ll2S4yzVvKqx7sr0pQSl0AK85a6EoJQg5YgtM0nM1RmkOzmZfPi+KNX2mNqzobJ7x4a4QEgR/tM83OLWut1q4012Ubw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767974912; c=relaxed/simple;
+	bh=dDdBteoNYUbTfJwW87hxXDzBER4RJ3dbkkyRnQ02yRQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rngNrdqmNxgIz0M/J0DHq5ZHCCxFyStBQ8rZVXlURiOD/4MCeUEpjV7rxhJK5X0/quoLC32UOQl+5WYhwL6FQ9FW6VGjOZ0+E5UML1qiIH80JZzXYGtWFaaLPhxA/Q1Wb6+z/xxfyfgMFyh/thtxUHXWQ0B6sRVhBfBwMLJuULk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=R5ww8e+U; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2kDqgaD8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Rptd2nK1W9nXQDPmTRTa8EfpBaogfQQDH5GykWZ1bmkjY/xcZ8YdTe4ODtpNjKJ3fTYgIBdQpYD0q/SFkaQw7SFIq71CoYZDVctNixCz/N6ZndtwgrDF4XRuH3pqWQraB0aPevWGHKBclDQN/XvJSkYQjGAjelG9CFnjEiPoenI9h/qfi3Lpt1GdYEf2xSFMR3UM1hXx6uGSmwEXCEWF7W4V0/Ul5CH/2fDwwBYQ0Raj1JKUGPOYFxiT5un12IUQFVS8mKAxh9bHcKxe+isiYrN3LkKLlYwXn3fCw3YlSfsYVJFzichLG66itx6ac+/FiTLp4FOsxgmc+W/l0alJsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RuqYm6KVsX73VbmrdnBTbbhnPpH/zf9VMDVCppMJWYM=;
- b=HpbDuhTmFndsLdbkBcpYhJRw1IHQfPCeMdZzNzhAidp7dn9rMYx7LJojco/JqoVxEFBdF4nFNd02yS43ti2+6XW1Rf8S6nuQt9ApU2AyzyyJe1PDyL2gRm1TLT8YuN8rttGNOMUkD1GLfNoZmwwIzX/52CzL9xykUDjZkJdewA5su434f1Nbea/TQVC6bbrfxZGOfrYxfoXPIM1cvxskJu4EYmmYxH+HSVbO4Qq2hNPWT2L7PCdXp6I/mustRRudHbNIbqGQ5eRzCJe+Ml1mfVq0Z6hViYsodw0rjOKV3LTvMY69oJRbm+hiNaT1J61V2RfBBl8wLSAHxQvdppckTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RuqYm6KVsX73VbmrdnBTbbhnPpH/zf9VMDVCppMJWYM=;
- b=2kDqgaD81ri4jlXC2PwqXa5IZAYa4B29NIxNDE7N3ARNLx6AMqeavjwqgd9yFq/ySQW23si7d1vLHRdqHla167xPmkcfsK9wUFMeA8sO8GOn23ifWrtTM9TPZCANOJPgSchSrsES5mw68xE/R3RBOyOe+g+iMAdn9W0ikhoaTgQ=
-Received: from MN2PR13CA0019.namprd13.prod.outlook.com (2603:10b6:208:160::32)
- by PH7PR12MB6905.namprd12.prod.outlook.com (2603:10b6:510:1b7::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.4; Fri, 9 Jan
- 2026 16:07:32 +0000
-Received: from BL6PEPF0002256F.namprd02.prod.outlook.com
- (2603:10b6:208:160:cafe::c2) by MN2PR13CA0019.outlook.office365.com
- (2603:10b6:208:160::32) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.1 via Frontend Transport; Fri, 9
- Jan 2026 16:07:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- BL6PEPF0002256F.mail.protection.outlook.com (10.167.249.37) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9520.1 via Frontend Transport; Fri, 9 Jan 2026 16:07:31 +0000
-Received: from ausbcheatha02.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 9 Jan
- 2026 10:07:28 -0600
-From: Ben Cheatham <Benjamin.Cheatham@amd.com>
-To: <nvdimm@lists.linux.dev>, <alison.schofield@intel.com>,
-	<dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <benjamin.cheatham@amd.com>
-Subject: [PATCH 5/7] cxl: Add clear-error command
-Date: Fri, 9 Jan 2026 10:07:18 -0600
-Message-ID: <20260109160720.1823-6-Benjamin.Cheatham@amd.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260109160720.1823-1-Benjamin.Cheatham@amd.com>
-References: <20260109160720.1823-1-Benjamin.Cheatham@amd.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="R5ww8e+U"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4ee1939e70bso44918801cf.3
+        for <linux-cxl@vger.kernel.org>; Fri, 09 Jan 2026 08:08:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1767974908; x=1768579708; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=V4vHEUNRYMXphH1rfrlOiSS0TJwDxNN0hMRXL63E6jo=;
+        b=R5ww8e+UZ+9lm7KN5g63LME5bLx8Y5/4fUTKwLy+EED6VZhApFnMLxtn9wbi7qzSau
+         EFPBKB3aoPjkF+zNjPsTyl2vaZ7hXh7gObBZZqgEAIoW3XaumXpa525HRGyos07tPEve
+         hbBQTaYhRvcFLEfkOEm7zqoX2EOZBaXFwfnWlwldbT0rwl2NY3TkUYagcWVm0bKvv4i6
+         z7CtBhiGsOKjgMRBy+unfOYQRGLcr7WXuND0Ln4aByAPMRln/8dYogt4SDe266IRf/2p
+         XgswHnnpv2WF03zbzqr558zx6YZEsFcLv/4swSgap2Y1X/aViMxEAYH0zW9Ivod8mbu7
+         w3+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767974908; x=1768579708;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V4vHEUNRYMXphH1rfrlOiSS0TJwDxNN0hMRXL63E6jo=;
+        b=qfW0EEOAfedFt/rU1Su+lWdoYaseE5FT0VnAYktSw1YKWbMWKhAUH8zgcF3hcQkXza
+         42xR1omlLdOpxKaDbVjZu+DQafPf7tSgw5n4wTHm1FFJ2idwZZDg1yzdOc1nN5k/ub+M
+         qffsIYC3F6ROM7tmJe+ERCLTeP079L6KQ2MHQDCFlvF2nitUdqjvnr/t6tdfKIjOxmbR
+         ymkRVrtJ4epAEnkUMZJs1W9NZgc0fGu9w7dwSD6w8/1fYdY1nbtdTLxCGsZZPgCLNlqu
+         s3LTEnlzj7mK5A9QSK2QBHPHZhqxfmyRqNWgCXH+mh7qfkJgGfDIoPUV40fiKGXEBLYG
+         zm9A==
+X-Gm-Message-State: AOJu0Yzs2mQI7kgb8e/5vfMLLLSym9cfKOhSp5Oy2bs5qwErL76Q6o7G
+	eKUSZkmX7X/GxMeK04HRMM/o5lR8UmQCrTOB9NzLQhvcO9wz3cqONT7BKB4DK81SgAc=
+X-Gm-Gg: AY/fxX6OD6+D406cKqZ68onCxlH83jUa+X3vun/Bd6b15Mub4pgH9+7CsQ6ZQTp1Cdt
+	gwYBdORLDyhYE+uXPKSAZF2zvVd1QsdFN1wRPnB969oMhJKrIQVJUOmePXkXkQMuVflCEQOfCyN
+	0aTb3In78bT65peuJu+MSkleiw1WJQUiiaPmCZ7reXpSFAxlZFO8ZC7HKcqS+or8kZCSPDNVgrm
+	s28vvRF18mGVNc5hjWjiMuNn7BZ17AYE1PTnLBrZqa3VV8kD/6opnHnPE+a6KXuCwmQQbOJBlGc
+	v2Jiw9hvuAxKl4xHofkMpoNK6/jBjSwQiszqozACu8MLxNyI1jQkJYMT7jx2umi+GSnDjOC8/31
+	eFjf+QuEo71SGHZOYclH/6sqfIx1lW5jFlM+cs0o45aN4OiOVbKvZhpqYIxPmHauWKYPsBXjZnb
+	2WWEd5Oibom2x61CpwK9zTsY2bb371LrxCDaGMBEZsUMz1VYdtj7j7T6Uh1pTX8SnrPos/ug==
+X-Google-Smtp-Source: AGHT+IEdvXZpwW/0Rj/zKD9Q0FT8JfSOnFbEdErwx/lCsZ0mgwmxjheOk0MqApSu4txhmwbpb7cX6Q==
+X-Received: by 2002:ac8:580f:0:b0:4ee:1db1:a60f with SMTP id d75a77b69052e-4ffb47d6537mr154025831cf.16.1767974908465;
+        Fri, 09 Jan 2026 08:08:28 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ffb75d7916sm57189031cf.7.2026.01.09.08.08.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jan 2026 08:08:27 -0800 (PST)
+Date: Fri, 9 Jan 2026 11:07:52 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, akpm@linux-foundation.org,
+	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
+	hannes@cmpxchg.org, david@kernel.org, mhocko@kernel.org,
+	zhengqi.arch@bytedance.com, shakeel.butt@linux.dev,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, bingjiao@google.com
+Subject: Re: [PATCH v3 3/3] mm/vmscan: don't demote if there is not enough
+ free memory in the lower memory tier
+Message-ID: <aWEn2ODG0gyej0Xr@gourry-fedora-PF4VCD3F>
+References: <20260108101535.50696-1-akinobu.mita@gmail.com>
+ <20260108101535.50696-4-akinobu.mita@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0002256F:EE_|PH7PR12MB6905:EE_
-X-MS-Office365-Filtering-Correlation-Id: ec3025df-404f-446f-856a-08de4f9931c4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?znidFP5Z7m/2Fn/JrGFVkBVojng8DizeoAu6hOESCXa904/bTnDsk2iG0eVx?=
- =?us-ascii?Q?2tFiYblrOhZSBUZBprpv+lNA9U453/RxDxMeKGMgQja1nU3174wnCmU7I11m?=
- =?us-ascii?Q?qvxwoYXPMI/WbU+usrCnQS+P3mTCF5vccB+n3eh1KhV/eHdGbBTlgnjmh6q8?=
- =?us-ascii?Q?P1r2AKF+9APwGGsm1RLwDUuvzmAUZdvM/6LSIPpycstljYBAgaLKrwLaSIlX?=
- =?us-ascii?Q?srHibolR0CmzppCpVRFqI7WDAmrrntNQDVosJNqPbQT2uK12/tprSTRhsXnt?=
- =?us-ascii?Q?txdxlhOEd961eUVHnIFY/YoGHHnLGb6Jd+Be+m0PCaPz2C1kUVmB8x6+Dfpw?=
- =?us-ascii?Q?hc04heHf6lB/Be2NvcCd4SL5EN11sdQenNbBbNRDF9/IgGhHWpXkkBsKE5Pl?=
- =?us-ascii?Q?o36Z2079bHvB37bDc3UoyRT5Q/X6v1ac+Aja8jpvHyfRaAtDEjTmZuBwRVLh?=
- =?us-ascii?Q?jFO9MHSjnoDWJSSKUGW3JSw+/yNF04la/3XkACPw+9ITN3Ja39uTCLL2wyQI?=
- =?us-ascii?Q?GcRr0r+RoQAWdiMehAy1FtUKUsGxHWRUlEvCInzW/nTP/m0KqFQsHp3xmeho?=
- =?us-ascii?Q?TM6DS5SdGuEaP4xu3ObJPP+UuoVJfnp/sL8rXI8BNHlJgoHeImtR0XVLMIOe?=
- =?us-ascii?Q?ZjIK+Y3FGSLZHEtumSUo8grBzxp0IEYWADGalLc76jbuumtUq/NyKIbV811E?=
- =?us-ascii?Q?9hC77kW+ySfWCfevxDGJezuUnBFe/RrM4Omp8o/Bv0B9VtgS5NBY39lZCa1s?=
- =?us-ascii?Q?cItjoytpNlrGEvvSGfU+AboQfJ+LPRLxJEqUF6pkhu7HKcMPE9Az4wEKHbYe?=
- =?us-ascii?Q?UuF5HUiO3ARcOMDjgBtMyn1roHOl6AI2xyuRT2FULNJllXKlxQR7A2Kbt2bn?=
- =?us-ascii?Q?1jVGp8EwHxUkp46Twk8A5YWeVzOXX6sL8iqLpX0N/48JH/FqBUJDA2sViwgI?=
- =?us-ascii?Q?NYfSWIuc4yvKHqUiz9AJaAfTtQrev76MYgy59uG8F7X4xyjH9jNSaB4E58p4?=
- =?us-ascii?Q?r0S4i0wZAJlQvXitdbylX+CD0tIjqjCvi2arXNNUYH8x1zi86k3slft21/zx?=
- =?us-ascii?Q?96CmC8WD7oYVdl2NTAANOLxoYREqL/7ku2w2SYetRTa1/Au46oN2CxK5QsI2?=
- =?us-ascii?Q?k+XUyv9N97lGlQMpiOpnh5TTCL9g0AP62zHhK/XxHY7O8sdM+uNqPsr7o+As?=
- =?us-ascii?Q?EG+8wMtwVhkoQcTaFGqlDxYlL9nUhucUVuEg2h4D4TtTqCwsac0y+WmLN3RJ?=
- =?us-ascii?Q?4KItfTtK21eVab2YMbZDK7aTlIGxGrpcFD4BpS//tgSq/CwHHB/WZnfSIDfz?=
- =?us-ascii?Q?XZzePCz5uK3/VFcaCfR5wf8h6KmrCvv83lhrnVyNVt5T/nIt0+463SbZO1i2?=
- =?us-ascii?Q?fKn7eRVEj64tboWsX2kFzCCZtkzKq1skDxVcSwAvacqkfQVxclwd6I16rUkM?=
- =?us-ascii?Q?5w12imeaEEWwxCS/68Dhu8lAa/h48EP8Mm5oE3KfnbQ1ywLdU/O4KlqiRFd0?=
- =?us-ascii?Q?tphwbYZ7jZ7QeMUPibGr3+hYOXi6nFIfeN+WkYS1UNm+FZH4y+8EuOKTTou9?=
- =?us-ascii?Q?aB09np1Rp/PESA3XUUw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2026 16:07:31.6311
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec3025df-404f-446f-856a-08de4f9931c4
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0002256F.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6905
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260108101535.50696-4-akinobu.mita@gmail.com>
 
-Add the 'cxl-clear-error' command. This command allows the user to clear
-device poison from CXL memory devices.
+> +	for_each_node_mask(nid, allowed_mask) {
+> +		int z;
+> +		struct zone *zone;
+> +		struct pglist_data *pgdat = NODE_DATA(nid);
+> +
+> +		for_each_managed_zone_pgdat(zone, pgdat, z, MAX_NR_ZONES - 1) {
+> +			if (zone_watermark_ok(zone, 0, min_wmark_pages(zone),
+> +						ZONE_MOVABLE, 0))
 
-Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
----
- cxl/builtin.h      |  1 +
- cxl/cxl.c          |  1 +
- cxl/inject-error.c | 70 ++++++++++++++++++++++++++++++++++++++++++----
- 3 files changed, 67 insertions(+), 5 deletions(-)
+Why does this only check zone movable?  
 
-diff --git a/cxl/builtin.h b/cxl/builtin.h
-index e82fcb5..68ed1de 100644
---- a/cxl/builtin.h
-+++ b/cxl/builtin.h
-@@ -26,6 +26,7 @@ int cmd_enable_region(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_disable_region(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_destroy_region(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_inject_error(int argc, const char **argv, struct cxl_ctx *ctx);
-+int cmd_clear_error(int argc, const char **argv, struct cxl_ctx *ctx);
- #ifdef ENABLE_LIBTRACEFS
- int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx);
- #else
-diff --git a/cxl/cxl.c b/cxl/cxl.c
-index a98bd6b..e1740b5 100644
---- a/cxl/cxl.c
-+++ b/cxl/cxl.c
-@@ -81,6 +81,7 @@ static struct cmd_struct commands[] = {
- 	{ "destroy-region", .c_fn = cmd_destroy_region },
- 	{ "monitor", .c_fn = cmd_monitor },
- 	{ "inject-error", .c_fn = cmd_inject_error },
-+	{ "clear-error", .c_fn = cmd_clear_error },
- };
- 
- int main(int argc, const char **argv)
-diff --git a/cxl/inject-error.c b/cxl/inject-error.c
-index 0ca2e6b..76f9fa9 100644
---- a/cxl/inject-error.c
-+++ b/cxl/inject-error.c
-@@ -17,6 +17,10 @@ static struct inject_params {
- 	const char *address;
- } inj_param;
- 
-+static struct clear_params {
-+	const char *address;
-+} clear_param;
-+
- static const struct option inject_options[] = {
- 	OPT_STRING('t', "type", &inj_param.type, "Error type",
- 		   "Error type to inject into <device>"),
-@@ -28,6 +32,15 @@ static const struct option inject_options[] = {
- 	OPT_END(),
- };
- 
-+static const struct option clear_options[] = {
-+	OPT_STRING('a', "address", &clear_param.address, "Address for poison clearing",
-+		   "Device physical address to clear poison from in hex or decimal"),
-+#ifdef ENABLE_DEBUG
-+	OPT_BOOLEAN(0, "debug", &debug, "turn on debug output"),
-+#endif
-+	OPT_END(),
-+};
-+
- static struct log_ctx iel;
- 
- static struct cxl_protocol_error *find_cxl_proto_err(struct cxl_ctx *ctx,
-@@ -100,7 +113,7 @@ static int inject_proto_err(struct cxl_ctx *ctx, const char *devname,
- }
- 
- static int poison_action(struct cxl_ctx *ctx, const char *filter,
--			 const char *addr_str)
-+			 const char *addr_str, bool clear)
- {
- 	struct cxl_memdev *memdev;
- 	unsigned long long addr;
-@@ -128,12 +141,18 @@ static int poison_action(struct cxl_ctx *ctx, const char *filter,
- 		return -EINVAL;
- 	}
- 
--	rc = cxl_memdev_inject_poison(memdev, addr);
-+	if (clear)
-+		rc = cxl_memdev_clear_poison(memdev, addr);
-+	else
-+		rc = cxl_memdev_inject_poison(memdev, addr);
-+
- 	if (rc)
--		log_err(&iel, "failed to inject poison at %s:%s: %s\n",
-+		log_err(&iel, "failed to %s %s:%s: %s\n",
-+			clear ? "clear poison at" : "inject poison at",
- 			cxl_memdev_get_devname(memdev), addr_str, strerror(-rc));
- 	else
--		log_info(&iel, "poison injected at %s:%s\n",
-+		log_info(&iel,
-+			 "poison %s at %s:%s\n", clear ? "cleared" : "injected",
- 			 cxl_memdev_get_devname(memdev), addr_str);
- 
- 	return rc;
-@@ -165,7 +184,7 @@ static int inject_action(int argc, const char **argv, struct cxl_ctx *ctx,
- 	}
- 
- 	if (strcmp(inj_param.type, "poison") == 0) {
--		rc = poison_action(ctx, argv[0], inj_param.address);
-+		rc = poison_action(ctx, argv[0], inj_param.address, false);
- 		return rc;
- 	}
- 
-@@ -186,3 +205,44 @@ int cmd_inject_error(int argc, const char **argv, struct cxl_ctx *ctx)
- 
- 	return rc ? EXIT_FAILURE : EXIT_SUCCESS;
- }
-+
-+static int clear_action(int argc, const char **argv, struct cxl_ctx *ctx,
-+			const struct option *options, const char *usage)
-+{
-+	const char * const u[] = {
-+		usage,
-+		NULL
-+	};
-+	int rc = -EINVAL;
-+
-+	log_init(&iel, "cxl clear-error", "CXL_CLEAR_LOG");
-+	argc = parse_options(argc, argv, options, u, 0);
-+
-+	if (debug) {
-+		cxl_set_log_priority(ctx, LOG_DEBUG);
-+		iel.log_priority = LOG_DEBUG;
-+	} else {
-+		iel.log_priority = LOG_INFO;
-+	}
-+
-+	if (argc != 1) {
-+		usage_with_options(u, options);
-+		return rc;
-+	}
-+
-+	rc = poison_action(ctx, argv[0], clear_param.address, true);
-+	if (rc) {
-+		log_err(&iel, "Failed to clear poison on %s at: %s\n",
-+			argv[0], strerror(-rc));
-+		return rc;
-+	}
-+
-+	return rc;
-+}
-+
-+int cmd_clear_error(int argc, const char **argv, struct cxl_ctx *ctx)
-+{
-+	int rc = clear_action(argc, argv, ctx, clear_options,
-+			      "clear-error <device> [<options>]");
-+	return rc ? EXIT_FAILURE : EXIT_SUCCESS;
-+}
--- 
-2.52.0
+Also, would this also limit pressure-signal to invoke reclaim when
+there is still swap space available?  Should demotion not be a pressure
+source for triggering harder reclaim?
 
+~Gregory
