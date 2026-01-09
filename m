@@ -1,117 +1,215 @@
-Received: from common.ash.relay.mailchannels.net (common.ash.relay.mailchannels.net [23.83.222.38])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010066.outbound.protection.outlook.com [40.93.198.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB8C7262E
-	for <linux-cxl@vger.kernel.org>; Fri,  9 Jan 2026 16:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEC63C2D
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Jan 2026 16:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.66
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767974531; cv=pass; b=HF6KGEQGauEGOeF7PvGVVVre3wQ2Ceo+xssRcuHN48oyU5zsM4mka5VYYHpxNvwqxbCVlMoY67VIj7p7qsFZB7Ny7OJemEhtXRdn4Q3unHCOmxf+Ac6DBEzI/erZqf8z1LbT0Pl2vDed/K1G3dABep3Nir63odjsKYP09heTJ3E=
+	t=1767974853; cv=fail; b=j9sMlJlM3kSH0gz1DTiKQeIa80g8vQoG3s9rg82wc/J2/eH0hsk7IGj7htA7+ST31x22HKR8we+dMj1X0H+GBWJMtVrxVrV6BQpSsG30hBP0FadhRoxcXUxceF0FsukaD0Vw4LhzFFfUHkI6+oPigXDFd26mUM3VkjZkeNK3hV4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767974531; c=relaxed/simple;
-	bh=J0YeUc4uZZA2rzhUqoWGUw/nFVZmcYYQTo66go1yg8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FD3Tr/4oLFUYP0z7YT1xwlZ7bH0g/hinbE7+0uKkd6C8/doq6D7MVD+RhGjRb695MIPpiVZ5cBZiO7qoKbQCvG6/93+keAyrIEksQh7VjFgGzqXfkQamTtfCxeYK7MzEvOaGUfrz1Mghf1sMhPxhnL3k587LyVjKA5QAIOZ4FYE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=HvNRI1i9; arc=pass smtp.client-ip=23.83.222.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1767974853; c=relaxed/simple;
+	bh=hf+Rc/FZOMZFnUSHojfYQJMiKYUu6TANm4R/GXG+MpU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Jls8YeXvduGH8xi3HEIltr0v8Xc8qNJCcGrpe3KI1EyhHtVxq30jveix+UFeFO/JuPh5IutUoeAQbd25Lm7VeSZrsXSEIszz5q8Axn36kpvRnD+FZh3BA3mtuih0tVN+Ies2l9/Gp1AJZ9YMdt6uh0jkHaLmfNqIhYNJz0fxPwI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zFahfmUB; arc=fail smtp.client-ip=40.93.198.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="HvNRI1i9"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id D232916317E;
-	Fri, 09 Jan 2026 15:46:37 +0000 (UTC)
-Received: from pdx1-sub0-mail-a231.dreamhost.com (100-106-231-41.trex-nlb.outbound.svc.cluster.local [100.106.231.41])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 4B960162FD3;
-	Fri, 09 Jan 2026 15:46:37 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1767973597;
-	b=dVMm87EfdDHmgwqh7B3rQBTEIEeHajmcCJTy0oKdY+WAFUm1ZQcFIpTSSPmVnySlecAr6A
-	Fn80G0mHs4OUNwd+fvFGwhLz6cHBVaDfqm7eJG8rv37vyZoXDuc/8QIO4ZcH5M5BCUsfS3
-	XxHnaX0tzXjn3EMlIHnHCCr+B34SOMAxWWH098UeDw7w4fG/zKFsNvUDKOcFpjL0WI4ttX
-	Y156Bno4HKH9qzHCXXgIVKUCFaqyXaanBzgH9BjV7vleluK4Z7DIm3uV2OPRMZTX2d8zZV
-	YuTd/ejBkG02xRcNWX+0JeTTgg1R9vAfveMjbgDH+BImGBjvfgAaGhEPwkk/Aw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1767973597;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=J0YeUc4uZZA2rzhUqoWGUw/nFVZmcYYQTo66go1yg8E=;
-	b=2ZayUipMnHi2VOlMaDMTrp5Y3WN3I7aKUilkg0rsLoxNmxOSAuXNwAmtcCrnYulwR7zbFO
-	UnFihNNFkBhPQAKUHlC5l1PKvbW221i7aq3eLW94mVrW8KeIijTy7OiXK6k6jVtaE35m3Y
-	CSlUNsgiibR5f4U4gNBNIY/uNs8PTqQ93CwxWRmHuiGiBaCevWFZXGXFpnUNHB0oGc+Xbr
-	W7WtooM4nf1hIWfLLUPcxSsBVHrDlT8vpn0Hetz97pIK3BXJH6C9R1pcFh0XjUcpNIyk56
-	NKfH36m1RftrxWN/ucDMtkGQIs2DIPVpy9tROafBwcaI1CmBwcyEGxcDLVzetg==
-ARC-Authentication-Results: i=1;
-	rspamd-79549fd459-rc7kr;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Stupid-Hook: 5c9ef3ea29fb9407_1767973597585_3337697369
-X-MC-Loop-Signature: 1767973597585:308863095
-X-MC-Ingress-Time: 1767973597585
-Received: from pdx1-sub0-mail-a231.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.106.231.41 (trex/7.1.3);
-	Fri, 09 Jan 2026 15:46:37 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a231.dreamhost.com (Postfix) with ESMTPSA id 4dnmND4tnDz1041;
-	Fri,  9 Jan 2026 07:46:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1767973597;
-	bh=J0YeUc4uZZA2rzhUqoWGUw/nFVZmcYYQTo66go1yg8E=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=HvNRI1i9PSYWbvZynYM4yT1TvU2epPqgAx7ysZIyk7Z/25qPbbNE2h1+0CNiZpLmI
-	 AzA4bTHGCSizfLR+IIXOtU+7VrL6dpwbbV6l3tlc+E20BGBMLwntex/+QH2lQ3eJjq
-	 SnN+8JuVe9WPbw1sDpwm1mkXNIF4zkq9tGw1wW2dyNHHKOpImfNZOUZ62R7E/mb0mG
-	 NrkjvVchz4AhmdpJvIvsL86eUFp08M9mqDmDSpTibHtjZ6bIK3rZgb7+AhCrWViaev
-	 xIii4GKXLd4BajDZRv/GrzHAJ+mDwkgiMW32FZG7z2lQnwW9H8TbOVQXyfmol+QYl8
-	 VEyoIlBYI40bA==
-Date: Fri, 9 Jan 2026 07:46:34 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Michael Tsirkin <mst@redhat.com>, qemu-devel@nongnu.org,
-	linuxarm@huawei.com, linux-cxl@vger.kernel.org,
-	Ravi Shankar <venkataravis@micron.com>,
-	Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
-	Markus Armbruster <armbru@redhat.com>,
-	Michael Roth <michael.roth@amd.com>
-Subject: Re: [PATCH qemu v5 4/7] hw/cxl: Update CXL Fixed Memory Window ACPI
- description to include Back Invalidate support.
-Message-ID: <20260109154634.3cgy47ylfqkpupup@offworld>
-References: <20260109144511.557781-1-Jonathan.Cameron@huawei.com>
- <20260109144511.557781-5-Jonathan.Cameron@huawei.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zFahfmUB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NtWdwpFgBJu2Rd7lzvMcqPKYHCH9xyyhiepSZu1MwuVELIyxFN4zaX6vGigJvjfxMZxNpLmXMf3t0hy3lFXK5K3I2nfMg8M8QuEFOET8Iz+9tjMO+OTcC3J0L+phA5T/fHqdblSrWEyNlFikXMsr7XzrK9btv0u2QgwYY0iKdwIxtL7dIf8lMp7PwmicEHX1JHVVNIAFGUy8bBUoUGqhnPJ/iQFaqgJZPwv1lnuMI9MP9EMvgiDhZhV6R+TweORQyEZwkTrUSV6lTu1EkJPyeeyB5DxmUDdPCqT0zT1Q9zjBzQolp1g/Mw//oDcRTbq9Txmj6atm9/ZCIO8BHmXivg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=R8A7bxmign/Uz5nOFEji6TzKTYYleDfX+KnLS7ZfHPI=;
+ b=ygp3EAw4ImfI2XzwJRxMk1WrQjhJVInlx7V0C8GE7EfmqLP9gkNQSPEOnXzRhrdnwfJGdwHCY215ts7ErXVmAdd1/oOgqq53kH7QWfcAJ/ud1Z7gt1Np/LvGzuco58rZY5DfX5ml5k+eZe6RSWfprd6viG6kJpMJJoc2dzlT2Whhoka/r4HLSiCq2t0ruuxnyf/T66yS4A0IYVC/nal2UowD5oFsQ5mcM8pZXeabLEDj/iKhAlK5t8DKYx2zhKI59bI4KDB6oRwSDaUt1qV5QFjSzvQdSkxhZzrsbLqqPGjljwtJ/oA2dCjHIrVlP4GUB7P44DLK9vfT+1s51d5YCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R8A7bxmign/Uz5nOFEji6TzKTYYleDfX+KnLS7ZfHPI=;
+ b=zFahfmUBIioc1+1z1/jevbQoB1ElK9nIHPTMw64w8pGudy2rfDvi5dLkKYchjbCw9t1/Rl7JEC9W4apDvmswaThY5x/gFAyfrtJnIfJN2O9+WRnvP60I6JFYVDnpRv8gXbTCc48zqrem9BBBYMHnHXrIZjQiGC7q7f62hu2pBUs=
+Received: from MN2PR13CA0002.namprd13.prod.outlook.com (2603:10b6:208:160::15)
+ by DS0PR12MB9400.namprd12.prod.outlook.com (2603:10b6:8:1b6::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.2; Fri, 9 Jan
+ 2026 16:07:27 +0000
+Received: from BL6PEPF0002256F.namprd02.prod.outlook.com
+ (2603:10b6:208:160:cafe::1) by MN2PR13CA0002.outlook.office365.com
+ (2603:10b6:208:160::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.1 via Frontend Transport; Fri, 9
+ Jan 2026 16:07:27 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BL6PEPF0002256F.mail.protection.outlook.com (10.167.249.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9520.1 via Frontend Transport; Fri, 9 Jan 2026 16:07:27 +0000
+Received: from ausbcheatha02.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 9 Jan
+ 2026 10:07:25 -0600
+From: Ben Cheatham <Benjamin.Cheatham@amd.com>
+To: <nvdimm@lists.linux.dev>, <alison.schofield@intel.com>,
+	<dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <benjamin.cheatham@amd.com>
+Subject: [ndctl PATCH v6 0/7] Add error injection support
+Date: Fri, 9 Jan 2026 10:07:13 -0600
+Message-ID: <20260109160720.1823-1-Benjamin.Cheatham@amd.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260109144511.557781-5-Jonathan.Cameron@huawei.com>
-User-Agent: NeoMutt/20220429
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0002256F:EE_|DS0PR12MB9400:EE_
+X-MS-Office365-Filtering-Correlation-Id: a9ed58ca-25d0-4e5e-881a-08de4f992f17
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Xz3tEL/bErgTeWUWZjHxIRFe2SuVkr9ZrJ1wpF72KjmP2+BGE+TSIlENpI//?=
+ =?us-ascii?Q?9Gi6rvlt9bC3G25RTthBQIbcZHVbV/T/TLf847RE6kSy6+dunIktGKO47ziS?=
+ =?us-ascii?Q?P6OFmLG4mVWjbPBhzHjBnnPIZ9tJ1jZv9+/nwM6UVGDdFdH0/oIUszvHILFI?=
+ =?us-ascii?Q?KAqU6i7LQMtgJ8hh7KFCoVsE/HxA6VDMu05JV2H72Slxcwnl4DnhGJuGDfgm?=
+ =?us-ascii?Q?lLXVwypooeV6xwiHRnnHky4paAeYULK74dfKTVFZYdRpVWiOT+HBS5aidbiN?=
+ =?us-ascii?Q?beZaO0g+GHw//KRJdG7DhRZ8qDJV/CjvakBiLtCeo0xg3YRco/0w7qryB+iZ?=
+ =?us-ascii?Q?uB8kJaND/M2aQl8W5M7B/4Q+ntZnl16DDOOPi4Z9qFVWFAuN/KBpYFEHj1QL?=
+ =?us-ascii?Q?ho19mclzYtrAMeS+F3wddTI5q9+8CSD8bybI07xR+RF7HfNtR6WnvMNa4yGI?=
+ =?us-ascii?Q?AWnjhYt8VQCtLP/A6togzAqRTiasLKi6PGIzXIXMD8F3UCH9qovxRT69hYqV?=
+ =?us-ascii?Q?9pkmJ9A93xX9XevG9tMWseGa+pBZnOkEt3RMZsT2D2VkKXaKj7BIh7REE+Yw?=
+ =?us-ascii?Q?7gEzW7nmIZIL/tKa/zzkFXwyIVMGsyu+mBQw53ZKB3RTtldR3VSJ8QoqhrST?=
+ =?us-ascii?Q?0h/yCzxGDIPgIjV8fD7btzkGtOY/xi/6HI6/mMB7Uo8qm3UZUuSmFE/XlYf5?=
+ =?us-ascii?Q?bkK6UbLd0nJmH0U+NXCi7pe97N5ZWKKK4h4jZ1uQZta3yGfpg8Xj86x9Wv1x?=
+ =?us-ascii?Q?0Po7oWSsojH5AKlGinWGtKDPGDYv3vTB18wZUAO7dHsqamxlIyE3JMU8o2bk?=
+ =?us-ascii?Q?s3CAx7f1K46+Fyii01H1x+ALmo/YJciOKjAcNUNUflSDAV7ttFG+S/7ThlCw?=
+ =?us-ascii?Q?7R00FCVGFmaDpWtC+FTa/BK39vYu6IqriQEilH4mIxlzP0e7ZCs2bSP6bk/A?=
+ =?us-ascii?Q?hAPD58zSULj8aCjirMRYl8EQodQLoIYOS3fx7+2tVX+KwzxbJvarIriAEKZ9?=
+ =?us-ascii?Q?NM4X3V76IIlLyrrYcMO42ehsE3NICQhZhF9EnJcNPYMzSl38YOreS07gzDUe?=
+ =?us-ascii?Q?TnfNgQTFP5Xak4a0YfYO0sH3M0MK5+zTSttKJNAm+HUiu/eBlDbMsP5Bm6rd?=
+ =?us-ascii?Q?28zA4Ouzy8i19xvw6FtQkxiohLBEgmmHdCA7AlAngjj0hPafIYrGQDFXf90V?=
+ =?us-ascii?Q?xLreF9dMPk4qoQu07SOxE7ZxqA9S4p/Vy7+7Y4W0xnMtqBq+/bwKJRUf6SSt?=
+ =?us-ascii?Q?1xpjz3UeVq1lR0m7B1ltk9KAX/+E4MAnpK6Hk/WNqK+3FoyqGer7e4545oh9?=
+ =?us-ascii?Q?wdFcSwFskNSfAuDlxKE+HneOCYKlEM5rpU3U5hbnOCb11SqQqKDhqhic2L8i?=
+ =?us-ascii?Q?+pcEwL4Otvy15smpWwcnwA4eaSvgNHIP7jkiS8v1Bp3hb/tA8VuAQhphNQrq?=
+ =?us-ascii?Q?g4iBUBzNhQyZQRQwjjaFyIXtNRRbuVTcmf7FWhdSG9GAyzO0dJNE/ho6Chsv?=
+ =?us-ascii?Q?yLDyo8PQMfNxzPaGAq34VEUxKiZX0lZ3/xDJ?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2026 16:07:27.1412
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9ed58ca-25d0-4e5e-881a-08de4f992f17
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0002256F.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9400
 
-On Fri, 09 Jan 2026, Jonathan Cameron wrote:
+v6 Changes:
+	- Rebase to pending branch (Alison)
+	- Drop const for ctx->debugfs (Alison)
+	- Rename get_debugfs_dir() to get_cxl_debugfs_dir() and return cxl directory in debugfs
+	(i.e. "/sys/kernel/debug" -> "/sys/kernel/debug/cxl")
+	- Rename ctx->debugfs to ctx->cxl_debugfs
+	- Fix missing free of einj path (Alison)
+	- Add protocol errors in order to perrors list (Alison)
+	- Use hex constants instead of BIT() for protocol errors (Alison)
+	- Add symbols to LIBCXL_11 instead of LIBCXL_10 (Alison)
+	- Update commit message to reflect util_cxl_dport_filter() behavior (Alison)
+	- Remove EINJ_TYPES_BUF_SIZE #ifdef (Alison)
+	- Fix type mismatch of addr in poison_action() (Alison)
+	- Fix inject_action() to catch missing 'type' option (Alison)
+	- Remove '-N' option and show the information behind that option by default when
+	CXL debugfs is present (Alison)
+	- Add 'protocol_injectable' attribute for dports (Alison)
+	- Update inject-error man page with port injection example (Alison)
+	- Add warning to inject-error man page (Alison)
 
->Defaults for these windows has always been to enable anything QEMU supports.
->With the addition of back invalidate support it is necessary to specify that
->host windows support this.
->
->CXL emulation is currently only suitable for software stack verification.
->The relaxation of the restrictions on this window to include BI have no
->affect on the OS until BI capable devices are added and until now these
->have not existed. As such no backwards compatibility impacts are expected
->from this change.
->
->Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+v5 Changes:
+	- Use setmntent()/getmntent() instead of open-coding getting the
+	  debugfs path (Dave)
+	- Use correct return code for sysfs_read_attr() (Dave)
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+v4 Changes:
+	- Variable renames for clarity (Dave)
+	- Use errno instead of rc for access() calls (Dave)
+	- Check returns for snprintf() (Dave)
+	- Add util_cxl_dport_filter() (Dave)
+	- Replace printf() calls with log_info() (Dave)
+	- Write correct value to debugfs during protocol error injection
+	(BIT(error) vs. error)
+
+v3 Changes:
+	- Rebase on v83 release
+	- Fix whitespace errors (Alison)
+
+v2 Changes:
+	- Make the --clear option of 'inject-error' its own command (Alison)
+	- Debugfs is now found using the /proc/mount entry instead of
+	providing the path using a --debugfs option
+	- Man page added for 'clear-error'
+	- Reword commit descriptions for clarity
+
+This series adds support for injecting CXL protocol (CXL.cache/mem)
+errors[1] into CXL RCH Downstream ports and VH root ports[2] and
+poison into CXL memory devices through the CXL debugfs. Errors are
+injected using a new 'inject-error' command. Device poison can be
+cleared using the 'clear-error' command. The 'inject-error' and
+'clear-error' commands require access to the CXL driver's debugfs.
+
+The documentation for the new cxl-inject-error command shows both usage
+and the possible device/error types, as well as how to retrieve them
+using cxl-list. cxl-list has been updated to include the possible error
+types for protocol error injection (under the "bus" object) and which CXL
+dports and memory devices support injection.
+
+[1]: ACPI v6.5 spec, section 18.6.4
+[2]: ACPI v6.5 spec, table 18.31
+
+Ben Cheatham (7):
+  libcxl: Add debugfs path to CXL context
+  libcxl: Add CXL protocol errors
+  libcxl: Add poison injection support
+  cxl: Add inject-error command
+  cxl: Add clear-error command
+  cxl/list: Add injectable errors in output
+  Documentation: Add docs for inject/clear-error commands
+
+ Documentation/cxl/cxl-clear-error.txt  |  69 ++++++
+ Documentation/cxl/cxl-inject-error.txt | 161 ++++++++++++
+ Documentation/cxl/meson.build          |   2 +
+ cxl/builtin.h                          |   2 +
+ cxl/cxl.c                              |   2 +
+ cxl/filter.c                           |  26 ++
+ cxl/filter.h                           |   2 +
+ cxl/inject-error.c                     | 248 +++++++++++++++++++
+ cxl/json.c                             |  38 +++
+ cxl/lib/libcxl.c                       | 330 +++++++++++++++++++++++++
+ cxl/lib/libcxl.sym                     |  10 +
+ cxl/lib/private.h                      |  14 ++
+ cxl/libcxl.h                           |  18 ++
+ cxl/meson.build                        |   1 +
+ 14 files changed, 923 insertions(+)
+ create mode 100644 Documentation/cxl/cxl-clear-error.txt
+ create mode 100644 Documentation/cxl/cxl-inject-error.txt
+ create mode 100644 cxl/inject-error.c
+
+-- 
+2.52.0
+
