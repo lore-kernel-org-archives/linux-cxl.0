@@ -1,41 +1,44 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4065F54763;
-	Fri,  9 Jan 2026 14:14:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621EB328B47;
+	Fri,  9 Jan 2026 14:19:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767968082; cv=none; b=sjlJ6lUVOujqumexv+jzZrqey7liW3Lrxfa7nYJKH2rJcvdDMoLmSOLh3Wp4z4IUCkdjIL8OTpVmQY1/cynN3Myudb9AetSnHgUNIfFldK5MM3pQzwaghi00vt7Akk/yY3T/JC5xVnsqgwEXruiXeenKi72hXuJRxYR8TQayYZI=
+	t=1767968360; cv=none; b=IB74AvDwIOSz4jhXsNcH/or9uPcxvXhTrE1vvZ4TpU7SO/Hoa96y4NYHePijn04uL31g9tUvfSlOOA5yIYYU5n4O9lXk9oezSJ0BmL9PUYTuoSQhIKY5bLCelOEVn+TzjepZXlUKyJEc+uupyw+J6MRQdtX2jTVV1oQH7EtS4N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767968082; c=relaxed/simple;
-	bh=8e3koJimZyEDxJ5RiW+sQiOJPcEvtrvKpLfQo/AJHeg=;
+	s=arc-20240116; t=1767968360; c=relaxed/simple;
+	bh=/JWENtIa2ovonoQrnpplxQr6BvOzWq5M7Qq+Ox+pkBM=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dG8aNyYBS9bzJ8vT70SgztnuDuoYTmjFZnR2UaVkmgfEnpdd2Dkk2KXMb+UE79wBCfOPKexyCbvmuU4N6mXgR4Xi8BZ0IFipLuaGZSCcYHnHQoSzyacwhHqNGN7zbUu5FXyrsL6c42/h1ytnau53OdqVAN52SszY2R5MWhQX0zo=
+	 MIME-Version:Content-Type; b=te058dcasy5ZMZDl/MJkhB6179s48pRA1rn9vxleNiASAPn5xEvkUKtqYIgy5t2Y0eQirfV7mpxjus93JoAMt3aWcbdE4QC+EibgiLdJyd+/gBa80cQR5tdI0JewV4OLay67/fCCkJUjmCRRm1QgdbziA0ylrf9CGTU1rFvIWrA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dnkKx6VxwzJ46DY;
-	Fri,  9 Jan 2026 22:14:29 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.224.150])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dnkRF5TMnzHnGcV;
+	Fri,  9 Jan 2026 22:19:05 +0800 (CST)
 Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7C5ED40570;
-	Fri,  9 Jan 2026 22:14:36 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id F39AA40563;
+	Fri,  9 Jan 2026 22:19:15 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
  (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Fri, 9 Jan
- 2026 14:14:35 +0000
-Date: Fri, 9 Jan 2026 14:14:34 +0000
+ 2026 14:19:15 +0000
+Date: Fri, 9 Jan 2026 14:19:13 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: Robert Richter <rrichter@amd.com>
 CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
 	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
 	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Ben Widawsky <bwidawsk@kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] cxl/hdm: Fix newline character in dev_err() messages
-Message-ID: <20260109141434.00000b88@huawei.com>
-In-Reply-To: <20260109122952.639231-1-rrichter@amd.com>
-References: <20260109122952.639231-1-rrichter@amd.com>
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] cxl/port: Fix target list setup for multiple
+ decoders sharing the same dport
+Message-ID: <20260109141913.0000523f@huawei.com>
+In-Reply-To: <aWCuOIFIn7ZgBmiW@rric.localdomain>
+References: <20260108101324.509667-1-rrichter@amd.com>
+	<20260108160835.0000092e@huawei.com>
+	<aWCuOIFIn7ZgBmiW@rric.localdomain>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -48,50 +51,140 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
  dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Fri, 9 Jan 2026 13:29:51 +0100
+On Fri, 9 Jan 2026 08:28:56 +0100
 Robert Richter <rrichter@amd.com> wrote:
 
-> The newline character is not placed at the end of the string. This
-> causes unintended line wraps, broken log level and unterminated log
-> messages. Fix that for all messages.
+> On Thu, Jan 08, 2026 at 04:08:35PM +0000, Jonathan Cameron wrote:
+> > On Thu, 8 Jan 2026 11:13:23 +0100
+> > Robert Richter <rrichter@amd.com> wrote:
+> >   
+> > > If a switch port has more than one decoder that is using the same
+> > > downstream port, the enumeration of the target lists may fail with:
+> > > 
+> > >  # dmesg | grep target.list
+> > >  update_decoder_targets: cxl decoder1.0: dport3 found in target list, index 3
+> > >  update_decoder_targets: cxl decoder1.0: dport2 found in target list, index 2
+> > >  update_decoder_targets: cxl decoder1.0: dport0 found in target list, index 0
+> > >  update_decoder_targets: cxl decoder2.0: dport3 found in target list, index 1
+> > >  update_decoder_targets: cxl decoder4.0: dport3 found in target list, index 1
+> > >  cxl_mem mem6: failed to find endpoint12:0000:00:01.4 in target list of decoder2.1
+> > >  cxl_mem mem8: failed to find endpoint13:0000:20:01.4 in target list of decoder4.1
+> > > 
+> > > The case, that the same downstream port can be used in multiple target
+> > > lists, is allowed and possible.
+> > > 
+> > > Fix the update of the target list. Enumerate all children of the
+> > > switch port and do not stop the iteration after the first matching
+> > > target was found.
+> > > 
+> > > With the fix applied:
+> > > 
+> > >  # dmesg | grep target.list
+> > >  update_decoder_targets: cxl decoder1.0: dport2 found in target list, index 2
+> > >  update_decoder_targets: cxl decoder1.0: dport0 found in target list, index 0
+> > >  update_decoder_targets: cxl decoder1.0: dport3 found in target list, index 3
+> > >  update_decoder_targets: cxl decoder2.0: dport3 found in target list, index 1
+> > >  update_decoder_targets: cxl decoder2.1: dport3 found in target list, index 1
+> > >  update_decoder_targets: cxl decoder4.0: dport3 found in target list, index 1
+> > >  update_decoder_targets: cxl decoder4.1: dport3 found in target list, index 1
+> > > 
+> > > Analyzing the conditions when this happens:
+> > > 
+> > > 1) A dport is shared by multiple decoders.
+> > > 
+> > > 2) The decoders have interleaving configured (ways > 1).
+> > > 
+> > > The configuration above has the following hierarchy details (fixed
+> > > version):
+> > > 
+> > >  root0
+> > >  |_
+> > >  | |
+> > >  | decoder0.1  
+> > 
+> > Hi Robert,
+> > 
+> > I'm struggling a bit to align this with the above prints. Where is
+> > decoder1.0 for example?  As it's below the root port, I think it's the
+> > host bridge decoder, which might be this one on your diagram?  
 > 
-> Note that the messages are changed to use colons now instead of
-> parentheses, which is more common use.
+> I only showed the detail of the setup that was failing. There is
+> additional a 4-way config (port1/decoder1.0) and (not visible) some
+> 1-way configs. Function update_decoder_targets() is not called for
+> those.
 > 
-> Fixes: 24b18197184a ("cxl/hdm: Extend DVSEC range register emulation for region enumeration")
-> Fixes: 9c57cde0dcbd ("cxl/hdm: Enumerate allocated DPA")
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+Ah. Ok.
 
 Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-> ---
->  drivers/cxl/core/hdm.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Thanks for review,
 > 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 031672e92b0b..28611b350cf6 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -966,7 +966,7 @@ static int cxl_setup_hdm_decoder_from_dvsec(
->  	rc = devm_cxl_dpa_reserve(cxled, *dpa_base, len, 0);
->  	if (rc) {
->  		dev_err(&port->dev,
-> -			"decoder%d.%d: Failed to reserve DPA range %#llx - %#llx\n (%d)",
-> +			"decoder%d.%d: Failed to reserve DPA range %#llx - %#llx: %d\n",
->  			port->id, cxld->id, *dpa_base, *dpa_base + len - 1, rc);
->  		return rc;
->  	}
-> @@ -1117,7 +1117,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->  	rc = devm_cxl_dpa_reserve(cxled, *dpa_base + skip, dpa_size, skip);
->  	if (rc) {
->  		dev_err(&port->dev,
-> -			"decoder%d.%d: Failed to reserve DPA range %#llx - %#llx\n (%d)",
-> +			"decoder%d.%d: Failed to reserve DPA range %#llx - %#llx: %d\n",
->  			port->id, cxld->id, *dpa_base,
->  			*dpa_base + dpa_size + skip - 1, rc);
->  		return rc;
+> -Robert
 > 
-> base-commit: 88c72bab77aaf389beccf762e112828253ca0564
-> prerequisite-patch-id: f44102a7b095afa1588a5cac012ec2e0d852c021
-> prerequisite-patch-id: c142edda207a3a69ae242182e51e9a8b8d78cf72
+> > 
+> > Fix makes sense to me.
+> > 
+> > Jonathan
+> > 
+> >   
+> > >  | ways: 2
+> > >  | target_list: 0,1
+> > >  |_______________________________________
+> > >  |                                       |
+> > >  | dport0                                | dport1
+> > >  |                                       |
+> > >  port2                                   port4
+> > >  |                                       |
+> > >  |___________________                    |_____________________
+> > >  | |                 |                   | |                   |
+> > >  | decoder2.0        decoder2.1          | decoder4.0          decoder4.1
+> > >  | ways: 2           ways: 2             | ways: 2             ways: 2
+> > >  | target_list: 2,3  target_list: 2,3    | target_list: 2,3    target_list: 2,3
+> > >  |___________________                    |___________________
+> > >  |                   |                   |                   |
+> > >  | dport2            | dport3            | dport2            | dport3
+> > >  |                   |                   |                   |
+> > >  endpoint7           endpoint12          endpoint9           endpoint13
+> > >  |_                  |_                  |_                  |_
+> > >  | |                 | |                 | |                 | |
+> > >  | decoder7.0        | decoder12.0       | decoder9.0        | decoder13.0
+> > >  | decoder7.2        | decoder12.2       | decoder9.2        | decoder13.2
+> > >  |                   |                   |                   |
+> > >  mem3                mem5                mem6                mem8
+> > > 
+> > > Note: Device numbers vary for every boot.
+> > > 
+> > > Current kernel fails to enumerate endpoint12 and endpoint13 as the
+> > > target list is not updated for the second decoder.
+> > > 
+> > > Fixes: 4f06d81e7c6a ("cxl: Defer dport allocation for switch ports")
+> > > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > > Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> > > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > > ---
+> > > v2:
+> > >  * updated sob-chain,
+> > >  * added fixes tag (Dave).
+> > > ---
+> > >  drivers/cxl/core/port.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> > > index fef3aa0c6680..3310dbfae9d6 100644
+> > > --- a/drivers/cxl/core/port.c
+> > > +++ b/drivers/cxl/core/port.c
+> > > @@ -1590,7 +1590,7 @@ static int update_decoder_targets(struct device *dev, void *data)
+> > >  			cxlsd->target[i] = dport;
+> > >  			dev_dbg(dev, "dport%d found in target list, index %d\n",
+> > >  				dport->port_id, i);
+> > > -			return 1;
+> > > +			return 0;
+> > >  		}
+> > >  	}
+> > >  
+> > > 
+> > > base-commit: 88c72bab77aaf389beccf762e112828253ca0564
+> > > prerequisite-patch-id: f44102a7b095afa1588a5cac012ec2e0d852c021  
+> >   
+> 
 
