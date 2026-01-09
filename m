@@ -1,317 +1,233 @@
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010047.outbound.protection.outlook.com [52.101.85.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811242DA75C;
-	Fri,  9 Jan 2026 20:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767989725; cv=fail; b=PKq1KNKmO/HLmdGQ0+dyKBh3h4nniYUC6jq5h2lnkNjrQASEayiQ8sRzhTFA8Rx7ESRRyPmP5hSiXCLQQZK6bbiLAgiziYqFUGxo7n9vIuXT+sQA4i9+Y/M4ZdVt+gu/jhTpTPw10TEi/UMMYqvJalg/hiRNffTou9CQXyGla5s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767989725; c=relaxed/simple;
-	bh=sA1kJdmss56kS4OlQwxkpm6YsqT8lHkrOnwcIP/T9po=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Tw94qkDkUQUYTeKh6R1fiHZN/HMsMH3Zp51Ejypq1hFsqY59mIJVs7GJow1OgHuwKr9muFCjirbI2omSGvqliPo03E/l/+I/rwAeU7zZI93ZwazuA/RkihqqO/CxumvWJ7OjuieghZXhm6pndT/9LBVfDCnGyibCKPCMvohiAjE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ADwrk51p; arc=fail smtp.client-ip=52.101.85.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B44500950
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Jan 2026 21:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767992425; cv=none; b=KX4yT0gUr6eN2TYUeHI7ct7lnwWM4sNkwX0rOOlqdaJAuxXw0ytrkkGX5oYh/bESCU36iFzTLGc0nUuc5f2apbUwFi5dTx/cWQiRlCvMsEHptv2NOsE0h6mOtmAtifTZ4L91wvltCm/u8KHeTmPWJfNo51S9ZaGkDe+FuPxjP4Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767992425; c=relaxed/simple;
+	bh=Lnqx2IsjK6GGMeXoPLfF8Q/0waslPMIHDLq8xmDBOWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vERo6WEfHPO83w8pGn5VZEdbDPqptbT38KK1URxPJsiFLsAzUurAzLEJakz+8a/dbTtfNaZKmn2qRwSvIvMTobvbbwgN8NhbpIQtPjL+gHKN05SVzEyGZe8qDQvHB7jWjyYg6REfCVrcwcgR35AJPyE0lmIpV1/jphYrN35Hlew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OyjCfkll; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ADwrk51p"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bXla5m6sAfAd9CGOJ481uz5NefanjDlCzwCkFPsNcKC/qJsnW1kLw1TnDrNzls7xC8H4ZdbzNVwAv8whnCnDmbNF7PFofDBWJNiQl71N0bX2wL2zbbuCylEboZLqPvFg9mdea4zOMdxhhJy0fJ/i6drFEe9KsVLmjqCsCpV7KxnlxvkS+MENylhns+SQiwHYlRDXjoIzu52pUN8Hyt7XhBTaI33nWCcA50Sg+SFR/QZzZ5AxTE4UKKXVsBbiIccx+zQhQQIiy2q6xJP5wZqB7jI5fWESqFJTCgGBUXmz8yW6ALR1SdeWZShjvCnaGJ9PlFzRwDbodHniHholwdtIXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e4j1IasKNduDsp0BX4CNZcgqjAGISS9CoBCDSAjQBeI=;
- b=T+MslHbofn8iSWzu0ThwARlVtSz1SLsaCOILjxlf5X5feYppG1tm/2D6h2EEthsadjZY8fStSnMG1ZGimI/rvgtMbKgGvWG40wT71KWzFGB1zyrkdh1ejHmGO1bBEY0+XeBkJz/juRxcCEcSxwrvE3yhk5vbxuBy9lo4iz0IKqOz1QNpVL8m/3iEW3bQA333bjaxBv/d3EzkhRzaQ+4qRWn4Yk+zKESPYwY4ykvW1hDIbq4Vmjekylb+1HZwIETFQ4T6HvitZIB3yzjEu8NeYb2L/DPKer7xUI3yfSVKTFKHiPFyTLwZ65xfPUw8XLBV5W41I8AqcWizJ6DBZDXBGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e4j1IasKNduDsp0BX4CNZcgqjAGISS9CoBCDSAjQBeI=;
- b=ADwrk51p3Vgezo8sxV+4BLWaiR2n1stb92bAU7NNsO9jNBc7OFTMReOhGVHjpTie9Jwnv4V0uAI8q/Tu74BzfAdCwz2ktQiClen8hIAPLCAZbbPfzZc4jvHYTzT96WLHREthj/9ohhaLQl5+719YeDHdglCG+0iIkCsNem7TsUO+Mc4l1Oa5ggBAs/5K71Djqbmy/gpPmrER4Hh6eaXN/F4A9jR2J26Cij2DCKRoErVdIoW31qP2KjMeZ0RPomDFLHvEcls00JrJX86snW80YscBL365xEKjTYHd+IQ/pRkT7aYJhpq6tXnEI0lyF1pQ6/TLRNgOSMxoPTMTTr6svg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- DM3PR12MB9416.namprd12.prod.outlook.com (2603:10b6:0:4b::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9499.4; Fri, 9 Jan 2026 20:15:20 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.9499.002; Fri, 9 Jan 2026
- 20:15:20 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Matthew Brost <matthew.brost@intel.com>
-Cc: =?utf-8?q?Mika_Penttil=C3=A4?= <mpenttil@redhat.com>,
- Francois Dugast <francois.dugast@intel.com>, intel-xe@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Balbir Singh <balbirs@nvidia.com>,
- Alistair Popple <apopple@nvidia.com>, David Hildenbrand <david@kernel.org>,
- Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/7] mm: Split device-private and coherent folios
- before freeing
-Date: Fri, 09 Jan 2026 15:15:15 -0500
-X-Mailer: MailMate (2.0r6290)
-Message-ID: <B8B15539-F97A-4D6B-BF58-FC75397C429F@nvidia.com>
-In-Reply-To: <aWFe9S2DGwfD2smO@lstrano-desk.jf.intel.com>
-References: <20260109085605.443316-1-francois.dugast@intel.com>
- <20260109085605.443316-4-francois.dugast@intel.com>
- <d1d80b81-678d-4d28-9ac2-95cb74824e73@redhat.com>
- <DF5A6B81-7811-4654-855F-8EAB76CCCE51@nvidia.com>
- <aWFIW6XCKXPpIinv@lstrano-desk.jf.intel.com>
- <D9ED5F01-E758-4A89-87F2-ABFF5197231D@nvidia.com>
- <aWFSGc7MIUqVsilw@lstrano-desk.jf.intel.com>
- <12A9DCBB-0B59-4D63-9BA8-9F99570AFA80@nvidia.com>
- <aWFe9S2DGwfD2smO@lstrano-desk.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ2PR07CA0013.namprd07.prod.outlook.com
- (2603:10b6:a03:505::15) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyjCfkll"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-45a3145faddso1556868b6e.2
+        for <linux-cxl@vger.kernel.org>; Fri, 09 Jan 2026 13:00:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767992422; x=1768597222; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=v4M8PfdySXBuLCXo+RLzMIyIY7QrHbUdCMkagyIMvnE=;
+        b=OyjCfkllnk+dEHpzz5FgtnAg7Rkugxv9vFlk9Td+hwLC/lC9XD81dUV8Ck/s44Q+F5
+         O67jGoBUxpwFFf1aA1UM6vRAbXBlsFY6upEMpt+oUAM6ydKFLgeBwpbqZaA1Ozk9UGqe
+         ehhsz9V0MqF9pMp68ica4oBkLLp2W3kugI5lxD5dqKX1jxNszCVYiBNET51866YKKbuc
+         mnxUIJq+NAB6J+cFgQenzIOb0U+vt+1FkCgFYaidGJTOUUMKACxjpQh19liPw5wZkJxp
+         OfrEnlrJoyCVLAL0Uvz50jfPZwRR5QlzRQ+CwaEKAKlWy2kbTgc5KBagYVP/MJ88x9+l
+         fqTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767992422; x=1768597222;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=v4M8PfdySXBuLCXo+RLzMIyIY7QrHbUdCMkagyIMvnE=;
+        b=Wd4WrbYVtaHPDNkFL1MxCNHuTT+NsA1XavB8xBrD/3WG/G+eiUxQSZ1TEYuu9LT4rp
+         C90bylUgFoEfD/lCLwnuea0ezPnMhiF7oRKLh8ZlSvPZhYFVZrmyEwjeVyRfwJYvUTg/
+         x3k2eyi7qNksOUtLCVXWENfaKclns9AuLekY5szX6+PBiH+Zv5PjoxjAcTVTUC5tDCan
+         lu5/mRnBtnN5gcWdTJCXxjAA2YyB8epccWzKerE5nmOhPvNbBZ83dxesIKTjUJF7Cc4B
+         e7/hTDCw6tyr/cVKJirJNknvLSFEGF0ECPFN82hOfoXaud6oo+LwONqerTdr9qafIy/u
+         XOPw==
+X-Forwarded-Encrypted: i=1; AJvYcCXpEF304AN+5q4DvFO4gDhTv/o7A2HOEs5FopnxHMSEBhS0SQOr/d9ireNW3OEATc4FlGxRe1l8HAM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPCq78yFCYYAaiMTRlOzH4YD+rMZ1qQ3z/xdzIfogc8XuF5cNk
+	sbrXznbXUyWhjijIZqQLHaBq5A87svT9gVDMAqm8dK1N7G/eJ3x2cXX6
+X-Gm-Gg: AY/fxX6VH4gIdfUEpwyIV/9Q/zKXJcSoZ5cCCY/Iu61SgVF0X30oC3EIsZiGCMXwYp2
+	NWYFZKNQQUEnnENh4SlmtDrUUVcnRWRJBQ8graEkfe7TE0UJPLYgp+QebrsJmviAI7+2YD2DEK5
+	S1VHc0G7nw4VCqxNfKb90vBitLivReVl+Ee6ot54eiWUIUau+nJYfXRbJ4farXLHHi2m0LQ6lWl
+	tDDIDtLCzhZsuc1uFf7sskSCWbpHkiNjZfjjW3ZWDSwDm911nzzz5V0i3ZdlAREs8a6zAKfwddn
+	8VRTnWoeQQZBSdYEwR2yuTgUDUEhZATIV5bnb4FpQXl50x2OXQ+Ft4jUtEcauQxIqIV1r5FZrCB
+	K/CraTpKpCKT9RGLia0Nd/rU6ayM0IaGVGnpfG2Z34XIcedqUunDDSueileMiqeUqIS8uVqBYuz
+	Okz/DFyx5xTq7jSUrcNkaakwTvK3b/Cg==
+X-Google-Smtp-Source: AGHT+IGxLlZof8Jy1wQwdG6wIDxdZkGz6jddwYKP+0ZxEiU+0KGp2+NJH27YNyDn7lRSc6+JT5iBCA==
+X-Received: by 2002:a05:6808:c1a9:b0:442:522:41a3 with SMTP id 5614622812f47-45a6becae03mr5521861b6e.60.1767992422011;
+        Fri, 09 Jan 2026 13:00:22 -0800 (PST)
+Received: from groves.net ([2603:8080:1500:3d89:184d:823f:1f40:e229])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-45a5e288bc7sm5503964b6e.12.2026.01.09.13.00.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jan 2026 13:00:21 -0800 (PST)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Fri, 9 Jan 2026 15:00:19 -0600
+From: John Groves <John@groves.net>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, 
+	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
+	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
+	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, venkataravis@micron.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V3 18/21] famfs_fuse: Add holder_operations for dax
+ notify_failure()
+Message-ID: <bonriy66ocy6plo66nryagupftobhlnzjr235fukdx7d6vdyku@gzmq25kktdrb>
+References: <20260107153244.64703-1-john@groves.net>
+ <20260107153332.64727-1-john@groves.net>
+ <20260107153332.64727-19-john@groves.net>
+ <20260108151733.00005f6e@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|DM3PR12MB9416:EE_
-X-MS-Office365-Filtering-Correlation-Id: e5352e50-763e-4fd6-2656-08de4fbbcff5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dVFPclQ4amFGUFpHYnAycG9PSXVjdjYxMlVSc0dSS3J4clkyNE1OTzJiNGpq?=
- =?utf-8?B?SkovTXI4dEpyd2lzbXNtRFNqL2kyYm9JVkxSc3JCM2tFeHdiMUZ1aDdyTWtk?=
- =?utf-8?B?YVBIdTRoWTgvVzhEeWFvT2dDL3lkTDlsc1J6M284SjBJZmJ0d1puck82bGhJ?=
- =?utf-8?B?OFUxdGJhK3BqY2preGpReEhYYUh6Z0h6UWMvOVNBMTBIRTBCdURSM21pQnJH?=
- =?utf-8?B?L3daUEFvQ0tGSEJ6b3laZG1Kc28yRFNBbjZBOG1MM0d1Y0ZhcjFCQTE3USs2?=
- =?utf-8?B?WTNkQ3ZXY1gvblJTakp4UlVxNFM3d2dwODRSRWovTEZ3OEJ0YXc1QzdhYzU4?=
- =?utf-8?B?M21Xenc5WGxjYzljcFVSMVpVVlF3cG9SK1U1OVA0VU5Zc1ZTaHVoc1BLWWRm?=
- =?utf-8?B?YURNNFVXek9nTGI3TUYrZGNaaDJlRWVqY3VJbDNsWExITmhIaXVVQnBVMDlj?=
- =?utf-8?B?bVI0cFoybTEzR3NrdTNkZFRnMUQ5dExodnF5VkxNaUQ4THJIdlJlV2FPRnBw?=
- =?utf-8?B?aHhFeUE2MElJZWI2aHBYV0Q4TTZSQjNlbGFSRWJRRjdobDNocmlyUFZKbUlv?=
- =?utf-8?B?UGZtckRsajk5TGpwMk9LTlF3SG5zWkk4ekJFSDM3eU83aUZGOTlVUllTUGll?=
- =?utf-8?B?c0F0UzFQbktOWlRFR3VXc2tjaW5EN1l5ZzNYOVJzNnZWMUJ0aTNNU25FMyt3?=
- =?utf-8?B?Z2E5UTRNQmpGWUtRQTJnQzZhN3NZWTJsNzZvZFVmTkVXbHdlKzZHWTF5M3FW?=
- =?utf-8?B?c041cXI4WXR5U0hQc3ljOGdYZ1FwUkIzK3lmdWxMV3NKMkNHQXFUSUtNNkgx?=
- =?utf-8?B?bW1SMnpJcTRwUVI3MmdUT2Z5R3BsSkcreUdITVJ6eFZqeE8wRVFkK0VCcGJH?=
- =?utf-8?B?SHdzaGdxenNSUVg4UzZkaFVlNDZ3OUNoOElmU0JzMUpGSG9sK2ViZnlKaHpV?=
- =?utf-8?B?dWQ1dzc3clRxRHd0OXdWY0JoamYwT0NHZUJtdlVsTkxMaWRYTTgvQmRMak1X?=
- =?utf-8?B?Y2srTXJSOTBtNjNtM3VlTkxhYnE1MTZRbXVWK1FJb3k4Z0Y3VjA1clAyalZF?=
- =?utf-8?B?LzE3a1diMzM4UkVzSHcxR1hkYktYOWdSalRoUVFxYWxKZUZTNVl3UDFqU215?=
- =?utf-8?B?M2oxK0VOWHloNjIzWExTZ1NEUlVxa3BuQjl3d2ZZYml3WjN2OXRDaW1YbkZa?=
- =?utf-8?B?aG5CRVAyeFNMNENUZEt2VDBWUDNXMFQ1dElyZVp0Ni9nMGFTVjZhWWY4N2Yz?=
- =?utf-8?B?VnBqQzMzbkIvZ1ZmN0x2cDQ5eVVheWgvamh2N29iT3FoS1p0dURHWVFBdSty?=
- =?utf-8?B?YWF6NnRPMGNia290dXdMRzM3MFpGemludlM2VjEvQVVKTVFFelM3aDhwSDFP?=
- =?utf-8?B?MWVJMllzbmp3ejJTSWV2ckxRaElxZHlZbE9sV1pxR3oraW5LTktNRHRYTXVR?=
- =?utf-8?B?QW42UE8rU2ZUN1ptQXZ5QWRmWGk2b25xWjFJSlZJMUdoTjdjNUswMEJ1UklW?=
- =?utf-8?B?N3JqM0xNQU01TFIwTkJ2c29zNm5rNnNaNjR3OHhLZUtCNTRTZFlPTzk3eDJs?=
- =?utf-8?B?cnE0QXlTZVZEa0tNODZTRVZVWXhUZXJrVFpkWnVRdG9RYTBGMUwwejNIdUMy?=
- =?utf-8?B?VG9lZlRFRzN3VzhCdzA3TzJwc1VYYTFvbnZ6Q1pRR1N2M3E4SnM1U2FzYkJm?=
- =?utf-8?B?M0FGdXdrd2dmWFRQcjhQbUZXenNsUEZTYW9WTzlUL3h4SXp4TVMwVjZCcXJt?=
- =?utf-8?B?M3R5Rld5WGhkc216bDBNQ3RUSUhzTGU3V05RYU9ZY01BYVlsOEdrSExlZXVp?=
- =?utf-8?B?S2thcDd5RVdwMVIvZlpZV3ArVmZiWXZpQ0oyS1p2U3lVUjBKeVhTUUMyLzFX?=
- =?utf-8?B?cEVMNHA3S3p5dG9HNHEzQ0lrWDU0cVNDTkFXblRuS2JDNnhQTm9wVnFVQXdD?=
- =?utf-8?Q?Bk6oH56PPHPKeuUxogb+yZEtdVCXYBaH?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?K0pCWU0rb0J6WFk0VHk2MkFHTUlaS2t2bERiUTRYSE9Sa3FQeVpFUVArbmZ4?=
- =?utf-8?B?b3F1ZmJCOTdsUXg1UzZYZm9rdDJDTzl4ZjhHR0E2L1lTSHNBdHplcHZlSXVx?=
- =?utf-8?B?S3RabUgvSXNGL0ZGYjloTUMzYVhvMmozckxRSis4RDNjUzZlVmxOY2tUdFg3?=
- =?utf-8?B?aFpMODBCbFhqK1F3a2tMaHBSMVVkZUk2cm1IeVBNU2YwQU42Y0xRVFowSkEz?=
- =?utf-8?B?enBFOEpqT1lOK1BYK0tZSVZRQVJZQ2RpYmVvSGhYbFVHZGV6dSt6bG94WDRQ?=
- =?utf-8?B?RjExcmh6MXVzWGhmWTVCaHJtV0hZc1FLSUFsZEVVWThKandLM2ZQR2VXZHJL?=
- =?utf-8?B?RHlicUN6TUhJM2FiQUJOYUJUNXp0N2tyWmVYSEFUWmcwU0E2Q1FVaTRmSXAy?=
- =?utf-8?B?b1I0cm1KM0VHc0RVSHZNS0dGcWRXZ3dGWWlaMjFjNFA3c1ZVS0w2eHZYSjJJ?=
- =?utf-8?B?Y0tGb3JrR0NMNTVGMDUyc2NjeDJVYUF2a0tvMDFEa0dYSGkxR1Vqa1MrWHFY?=
- =?utf-8?B?ZVhkNjh1aGdsWUIyamhVRG9vS0JGcURqZWxNZlpzMnRmUVRKMUNZU2U4VHFZ?=
- =?utf-8?B?cDZZNmxrMEdna1gxVGF1T0FtcVJZTWo2dW9qUHQxaHptS005Q1E4M0U2UUhi?=
- =?utf-8?B?UVpmQWZaZE93ZU1hbWUyQnVOaVV4S21xa3U1SGNCVUNQRnY3c1lGalNmc1FR?=
- =?utf-8?B?MnhBTDZ2L1kxRVIxMTczb3lKL094MFJrSE90L3pEdU9kMm1vSU1jOE1nN3dK?=
- =?utf-8?B?TXNXWFdPTHBRRWJuQ3pha0V5bVFmczZIaFVjaVV5L1d6dU1qR09aeHBWbGhQ?=
- =?utf-8?B?RkNMajU2U2tkQ21RUzY4UHMreGVsSy9iZ3dKMkJXSHRkeVNLOVUzU1dpdUZp?=
- =?utf-8?B?TlhYUTJOT1E4RmtUMHlmbWM5bjVtVnlLQ0Q2L2VFTExSL3R2MHloR2dRZExv?=
- =?utf-8?B?bG1tWXBjNllvRkthQWdnbzhLelluQUZGOVp4UEhYZ3dIK01TMTZuVm9zL3NI?=
- =?utf-8?B?TE5hK3JUSWN4UEZ2M1hhV2xDSVFLTzN6Zm1OUmNtc1dFQ0JqMUw4cU5ySlo0?=
- =?utf-8?B?WDZKMG5QZXZHYmdpMjBjdDB0akJPQ2RHdXhUd3NIanAwS0ZXOUt1MEZ0L0Uz?=
- =?utf-8?B?QXQ5UlhMdkhqK3lSeDNhYWliRVV0aE5UNFNqdEkyNlZJZVg2YzJxRjNNUzNM?=
- =?utf-8?B?Vi9TYlQ2di9sWkpkOGZDMG83R25ySHdQdHFXR2V3NlUrR1hWcVV3elRBSDg2?=
- =?utf-8?B?TFByWWdZQlBTQk5DNU9zTGk4Z1Y3elZ6ejNFU1ZsTFAxR1lZRGI3YzNzdW5O?=
- =?utf-8?B?QzNkdzE1b093Z2ZOT2lPTWcxR1RRblVabWdQKzZLVTFlQVpDdjZySjd4cDlo?=
- =?utf-8?B?dytHWHMwMmh6cjVOT1R1cW5PVlNzamsrQ1BQQXFETTJDcFdqUUkxV0wweVM0?=
- =?utf-8?B?TU1VcEVvM2RoTjZ3VWZLU1puUmR3dzgydDFUZ0Y0Tmx1S1BGZVJ3YTZtaGd6?=
- =?utf-8?B?dldwN3g2U2ZXaXVmK05wbSsvVFVlUTRYUlVubUVDN2lQSDhSNWZhRzREQXNz?=
- =?utf-8?B?aEo5Ti9kMmdwRGcvNzZvUjJHY2NGdzA2aGtNR1RQdmFxRW01TGpJUndjYnZY?=
- =?utf-8?B?YlZhTzJUbUtoTGtNNS85WERqMDRialYvVmVTMm92MUVPRzliUW90eHVNdlcx?=
- =?utf-8?B?TzZHcVViOGlLNUs0Q2FhMHUvNEREc2hZUGo1VDlaT0VuWTQ3dVprWWZiUHdK?=
- =?utf-8?B?ekdQOExKNW5VREhzVnRFNE1ZMlNkQVZBcFYza1N6bm4zd1hNR25Ed3d1bmNF?=
- =?utf-8?B?SEIwdkozTzZERE80eFkzSXpZd2wvS3dwVUlNYjNGek0wbWdOUzBlTXhHc3pJ?=
- =?utf-8?B?U0pNUWZ6OXo1MTVhOU5rbE1LeVRtUm1Ta2R4aDNoV3BaMkl6cTMybnlwakRQ?=
- =?utf-8?B?TXhUU1dRR0h3c2dLNXhoWm05Z2N4Q0YvN2NRR1NIVXBrclo1RUxKRUliRnhR?=
- =?utf-8?B?RGxuSjhPMy84RXZqanl0UzYrUk41RllsSm1nR3RkT0Y0TVBXM2pOS1F6MXB3?=
- =?utf-8?B?ejRKbEYxVnl4aEx5WnNTSUhMNUZjZ0dVbVRQM1FqZjR2YW91VzNkNHQ0UkFq?=
- =?utf-8?B?TUJ4d2NhVERkZkVJdGdWZEl6c0FTd2dFSUFaalBneENVZ2pTQTBlN0pCekgv?=
- =?utf-8?B?L3NPTVFIRnVkWnp2RjA5TGdZNmgweEZUR05INjJDaEp4WVQ3MDluTWg0MkFa?=
- =?utf-8?B?eVFTQVhuVTkwR2Z5MmZ1N0QyVEVHVCt4Wi9zZTZkQ0RobVFmRkMxYmtOOEFM?=
- =?utf-8?B?NGw0dmw1WVNSOFErQmhPb3liY1ZTOGdEQVg2d0hzeEhPL0ZMOUVVUT09?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5352e50-763e-4fd6-2656-08de4fbbcff5
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2026 20:15:20.1010
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: db0ngft63O0Qtyn9LgN7bjvJuLmqOSgJeGOOqFVj/BN1JHpQTQIrCPCNlbe+AqEA
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9416
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260108151733.00005f6e@huawei.com>
 
-On 9 Jan 2026, at 15:03, Matthew Brost wrote:
+On 26/01/08 03:17PM, Jonathan Cameron wrote:
+> On Wed,  7 Jan 2026 09:33:27 -0600
+> John Groves <John@Groves.net> wrote:
+> 
+> > Memory errors are at least somewhat more likely on disaggregated memory
+> > than on-board memory. This commit registers to be notified by fsdev_dax
+> > in the event that a memory failure is detected.
+> > 
+> > When a file access resolves to a daxdev with memory errors, it will fail
+> > with an appropriate error.
+> > 
+> > If a daxdev failed fs_dax_get(), we set dd->dax_err. If a daxdev called
+> > our notify_failure(), set dd->error. When any of the above happens, set
+> > (file)->error and stop allowing access.
+> > 
+> > In general, the recovery from memory errors is to unmount the file
+> > system and re-initialize the memory, but there may be usable degraded
+> > modes of operation - particularly in the future when famfs supports
+> > file systems backed by more than one daxdev. In those cases,
+> > accessing data that is on a working daxdev can still work.
+> > 
+> > For now, return errors for any file that has encountered a memory or dax
+> > error.
+> > 
+> > Signed-off-by: John Groves <john@groves.net>
+> > ---
+> >  fs/fuse/famfs.c       | 115 +++++++++++++++++++++++++++++++++++++++---
+> >  fs/fuse/famfs_kfmap.h |   3 +-
+> >  2 files changed, 109 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/fs/fuse/famfs.c b/fs/fuse/famfs.c
+> > index c02b14789c6e..4eb87c5c628e 100644
+> > --- a/fs/fuse/famfs.c
+> > +++ b/fs/fuse/famfs.c
+> 
+> > @@ -254,6 +288,38 @@ famfs_update_daxdev_table(
+> >  	return 0;
+> >  }
+> >  
+> > +static void
+> > +famfs_set_daxdev_err(
+> > +	struct fuse_conn *fc,
+> > +	struct dax_device *dax_devp)
+> > +{
+> > +	int i;
+> > +
+> > +	/* Gotta search the list by dax_devp;
+> > +	 * read lock because we're not adding or removing daxdev entries
+> > +	 */
+> > +	down_read(&fc->famfs_devlist_sem);
+> 
+> Use a guard()
 
-> On Fri, Jan 09, 2026 at 02:23:49PM -0500, Zi Yan wrote:
->> On 9 Jan 2026, at 14:08, Matthew Brost wrote:
->>
->>> On Fri, Jan 09, 2026 at 01:53:33PM -0500, Zi Yan wrote:
->>>> On 9 Jan 2026, at 13:26, Matthew Brost wrote:
->>>>
->>>>> On Fri, Jan 09, 2026 at 12:28:22PM -0500, Zi Yan wrote:
->>>>>> On 9 Jan 2026, at 6:09, Mika Penttilä wrote:
->>>>>>
->>>>>>> Hi,
->>>>>>>
->>>>>>> On 1/9/26 10:54, Francois Dugast wrote:
->>>>>>>
->>>>>>>> From: Matthew Brost <matthew.brost@intel.com>
->>>>>>>>
->>>>>>>> Split device-private and coherent folios into individual pages before
->>>>>>>> freeing so that any order folio can be formed upon the next use of the
->>>>>>>> pages.
->>>>>>>>
->>>>>>>> Cc: Balbir Singh <balbirs@nvidia.com>
->>>>>>>> Cc: Alistair Popple <apopple@nvidia.com>
->>>>>>>> Cc: Zi Yan <ziy@nvidia.com>
->>>>>>>> Cc: David Hildenbrand <david@kernel.org>
->>>>>>>> Cc: Oscar Salvador <osalvador@suse.de>
->>>>>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>>>>>> Cc: linux-mm@kvack.org
->>>>>>>> Cc: linux-cxl@vger.kernel.org
->>>>>>>> Cc: linux-kernel@vger.kernel.org
->>>>>>>> Signed-off-by: Matthew Brost <matthew.brost@intel.com>
->>>>>>>> Signed-off-by: Francois Dugast <francois.dugast@intel.com>
->>>>>>>> ---
->>>>>>>>  mm/memremap.c | 2 ++
->>>>>>>>  1 file changed, 2 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/mm/memremap.c b/mm/memremap.c
->>>>>>>> index 63c6ab4fdf08..7289cdd6862f 100644
->>>>>>>> --- a/mm/memremap.c
->>>>>>>> +++ b/mm/memremap.c
->>>>>>>> @@ -453,6 +453,8 @@ void free_zone_device_folio(struct folio *folio)
->>>>>>>>  	case MEMORY_DEVICE_COHERENT:
->>>>>>>>  		if (WARN_ON_ONCE(!pgmap->ops || !pgmap->ops->folio_free))
->>>>>>>>  			break;
->>>>>>>> +
->>>>>>>> +		folio_split_unref(folio);
->>>>>>>>  		pgmap->ops->folio_free(folio);
->>>>>>>>  		percpu_ref_put_many(&folio->pgmap->ref, nr);
->>>>>>>>  		break;
->>>>>>>
->>>>>>> This breaks folio_free implementations like nouveau_dmem_folio_free
->>>>>>> which checks the folio order and act upon that.
->>>>>>> Maybe add an order parameter to folio_free or let the driver handle the split?
->>>>>
->>>>> 'let the driver handle the split?' - I had consisder this as an option.
->>>>>
->>>>>>
->>>>>> Passing an order parameter might be better to avoid exposing core MM internals
->>>>>> by asking drivers to undo compound pages.
->>>>>>
->>>>>
->>>>> It looks like Nouveau tracks free folios and free pages—something Xe’s
->>>>> device memory allocator (DRM Buddy) cannot do. I guess this answers my
->>>>> earlier question of how Nouveau avoids hitting the same bug as Xe / GPU
->>>>> SVM with respect to reusing folios. It appears Nouveau prefers not to
->>>>> split the folio, so I’m leaning toward moving this call into the
->>>>> driver’s folio_free function.
->>>>
->>>> No, that creates asymmetric page handling and is error prone.
->>>>
->>>
->>> I agree it is asymmetric and symmetric is likely better.
->>>
->>>> In addition, looking at nouveau’s implementation in
->>>> nouveau_dmem_page_alloc_locked(), it gets a folio from drm->dmem->free_folios,
->>>> which is never split, and passes it to zone_device_folio_init(). This
->>>> is wrong, since if the folio is large, it will go through prep_compound_page()
->>>> again. The bug has not manifested because there is only order-9 large folios.
->>>> Once mTHP support is added, how is nouveau going to allocate a order-4 folio
->>>> from a free order-9 folio? Maintain a per-order free folio list and
->>>> reimplement a buddy allocator? Nevertheless, nouveau’s implementation
->>>
->>> The way Nouveau handles memory allocations here looks wrong to me—it
->>> should probably use DRM Buddy and convert a block buddy to pages rather
->>> than tracking a free folio list and free page list. But this is not my
->>> driver.
->>>
->>>> is wrong by calling prep_compound_page() on a folio (already compound page).
->>>>
->>>
->>> I don’t disagree that this implementation is questionable.
->>>
->>> So what’s the suggestion here—add folio order to folio_free just to
->>> accommodate Nouveau’s rather odd memory allocation algorithm? That
->>> doesn’t seem right to me either.
->>
->> Splitting the folio in free_zone_device_folio() and passing folio order
->> to folio_free() make sense to me, since after the split, the folio passed
->
-> If this is concensous / direction - I can do this but a tree wide
-> change.
->
-> I do have another question for everyone here - do we think this spliting
-> implementation should be considered a Fixes so this can go into 6.19?
+Done
 
-IMHO, this should be a fix, since it is wrong to call prep_compound_page()
-on a large folio. IIUC this seems to only affect nouveau now, I will let
-them to decide.
+> 
+> > +	for (i = 0; i < fc->dax_devlist->nslots; i++) {
+> > +		if (fc->dax_devlist->devlist[i].valid) {
+> > +			struct famfs_daxdev *dd = &fc->dax_devlist->devlist[i];
+> > +
+> > +			if (dd->devp != dax_devp)
+> > +				continue;
+> > +
+> > +			dd->error = true;
+> > +			up_read(&fc->famfs_devlist_sem);
+> > +
+> > +			pr_err("%s: memory error on daxdev %s (%d)\n",
+> > +			       __func__, dd->name, i);
+> > +			goto done;
+> > +		}
+> > +	}
+> > +	up_read(&fc->famfs_devlist_sem);
+> > +	pr_err("%s: memory err on unrecognized daxdev\n", __func__);
+> > +
+> > +done:
+> 
+> If this isn't getting more interesting, just return above.
 
->
->> to folio_free() contains no order information, but just the used-to-be
->> head page and the remaining 511 pages are free. How does Intel Xe driver
->> handle it without knowing folio order?
->>
->
-> It’s a bit convoluted, but folio/page->zone_device_data points to a
-> reference-counted object in GPU SVM. When the object’s reference count
-> drops to zero, we callback into the driver layer to release the memory.
-> In Xe, this is a TTM BO that resolves to a DRM Buddy allocation, which
-> is then released. If it’s not clear, our original allocation size
-> determines the granularity at which we free the backing store.
->
->> Do we really need the order info in ->folio_free() if the folio is split
->> in free_zone_device_folio()? free_zone_device_folio() should just call
->> ->folio_free() 2^order times to free individual page.
->>
->
-> No. If it’s a higher-order folio—let’s say a 2MB folio—we have one
-> reference to our GPU SVM object, so we can free the backing in a single
-> ->folio_free call.
->
-> Now, if that folio gets split at some point into 4KB pages, then we’d
-> have 512 references to this object set up in the ->folio_split calls.
-> We’d then expect 512 ->folio_free() calls. Same case here: if, for
-> whatever reason, we can’t create a 2MB device page during a 2MB
-> migration and need to create 512 4KB pages so we'd have 512 references
-> to our GPU SVM object.
+Right - simplified.
 
-Thank you for the explanation. Adding folio order to ->folio_free() makes
-sense to me now.
+> 
+> > +}
+> > +
+> >  /***************************************************************************/
+> >  
+> >  void
+> > @@ -611,6 +677,26 @@ famfs_file_init_dax(
+> >  
+> >  static ssize_t famfs_file_bad(struct inode *inode);
+> >  
+> > +static int famfs_dax_err(struct famfs_daxdev *dd)
+> 
+> I'd introduce this earlier in the series to reduce need
+> to refactor below.
 
-Best Regards,
-Yan, Zi
+Will mull that over when I further mull the helpers in fuse_i.h that are
+hard to rebase...
+
+> 
+> > +{
+> > +	if (!dd->valid) {
+> > +		pr_err("%s: daxdev=%s invalid\n",
+> > +		       __func__, dd->name);
+> > +		return -EIO;
+> > +	}
+> > +	if (dd->dax_err) {
+> > +		pr_err("%s: daxdev=%s dax_err\n",
+> > +		       __func__, dd->name);
+> > +		return -EIO;
+> > +	}
+> > +	if (dd->error) {
+> > +		pr_err("%s: daxdev=%s memory error\n",
+> > +		       __func__, dd->name);
+> > +		return -EHWPOISON;
+> > +	}
+> > +	return 0;
+> > +}
+> 
+> ...
+> 
+> > @@ -966,7 +1064,8 @@ famfs_file_bad(struct inode *inode)
+> >  		return -EIO;
+> >  	}
+> >  	if (meta->error) {
+> > -		pr_debug("%s: previously detected metadata errors\n", __func__);
+> > +		pr_debug("%s: previously detected metadata errors\n",
+> > +			 __func__);
+> 
+> Spurious change.
+
+Derp. Reverted out
+
+Thanks Jonathan
+
