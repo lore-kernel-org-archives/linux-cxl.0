@@ -1,116 +1,137 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9682A1BF
-	for <linux-cxl@vger.kernel.org>; Sat, 10 Jan 2026 13:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B14227B32B
+	for <linux-cxl@vger.kernel.org>; Sat, 10 Jan 2026 19:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768053316; cv=none; b=Qlv8XN9w0FW6A5SYwPKe52ArXJoVHXZUxnIBwZOcCbQbjUa+5A5urFQVk24WEeMEQ/B/lqBQxy7NSBxXv7DjxnQHooY3S3NTMqkJuJBXbnlLNas/7UzpuycLxGFFxbugCzbcI3Re+h+McgNGeQ0+nqGCYkSOeV2KLmncdVCzxGY=
+	t=1768072059; cv=none; b=fvkTQTiOXl1F71NlO2IjpYgho46LZmOy9wHNBByCg5+YYIPfCQPtWjtQxaMcQRtPglQ/iVGgdgc32/wDu86RSE6D1XYp3eDvMaQBaq2h+ivQVqf9qg8Us0/EOY6OPMTKAv7UFGryCXpM5fhasNkKaAha8Ia1/EOoGZK/22cTMQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768053316; c=relaxed/simple;
-	bh=vc6aaWF9pdoJ8me4zDwRbhNSsD5hMqWpRBfAPzt/JEA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Oh0giKMCii/qsnut5RweRXzNcCIkCXb1xa/u5rMK/XzIcvLQE0j625qCOoWPHP/rIyISpATOUB7y4qP7yRQxhmiw1eZtYMndCJUcXnmNC/I/G3hb89HYA2GUz8IM3AmdhSUBnuYF5xZZtJackKAnp4xwkrAoZqKl2kyNf8fXAQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VU4eKvBh; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1768072059; c=relaxed/simple;
+	bh=91y8DlsGHvFqSo1YPUhYH5DfNbwDctVaD99uH0fOzzI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eAIjrIaKUcmxJaz4AVTT3Qs498Q3ZYy9QoJK3I11UqKudG7GdvuZuwnFv5CJCi7Uxf+gJc6bl6CAROUGEdz2j96wFc0UR3W6OcnY26SWx/GkxoWysmiwWTS9APfBkmOeTBeK1NuH73aCfFhhKPsyRhU2pT4McR/Utbj9IfNauXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mrRndkCD; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VU4eKvBh"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-8907ec50855so61284926d6.3
-        for <linux-cxl@vger.kernel.org>; Sat, 10 Jan 2026 05:55:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrRndkCD"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-45a815c1cfdso914580b6e.0
+        for <linux-cxl@vger.kernel.org>; Sat, 10 Jan 2026 11:07:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768053314; x=1768658114; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6bF15tgDtFzb7B//rb6r4Znze3ckqkWQR0unvRLAwiw=;
-        b=VU4eKvBhGa8PQtGjwFY92m8wSJkujBI1p7qFLVrH5JXvFnhFtw0eGwNzXXkgGZS8xw
-         CUfWSWq66Ztet9iav0JbhvcsGoFeo/p0M9PUXyiNrliGbjhIwwRTgg5zRkSekM6ZLZY4
-         JzTWM0y44seE6m37WfeAdtrie4Bk+9rlUw4gWoqmDB3vKwaGoBGZPGEn9uI4O7TvBK9H
-         cvDB6uHmKW2Ae8JBEvBWg5OQGIxZjCRZq02J7NAZXsc6rjSo7GX8XOSdYxSVpL0mD0BR
-         8KX1SSl4nrKHcxRoXweHFToYYaaKP8nSd7E3aOenZmn4Nl5mT7qGiydKzmLOMUswOnCP
-         xCKA==
+        d=gmail.com; s=20230601; t=1768072057; x=1768676857; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=1kxXWJvr37TXUuYsr8iBFLGiGmenc+CVNu+9/LLD/pI=;
+        b=mrRndkCDVLD0jLhxlupz9kHoodubm5b2yE0Ju7qMRiBCEQNdYHb2EN7VDrZP619anJ
+         iKxeAb7XbhXrGEEVtw8KyMPML6QoCK1QNiPq77XYnl064FiOohYzrfZY6Y2h1dQfo6Qc
+         chAd19Ikc7KbclzWBCGqEgZImoLmQZ1BO973OjvPVWL3zDFecwmCAYn9sXIrOlYP98Jp
+         XVA3nw1z+ZMqOwi4FDdTOI+88cIt2x0tsb4uVJ7oJu3mdzsfnX/5UM9fEpfrsX6XFbTN
+         rs+G+e8sHu/SVlOIXcU9Gcn9kNvcysNmPlaY3HMf1S/bJskucKovf4hkTCzKfjn5EwBd
+         mngg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768053314; x=1768658114;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6bF15tgDtFzb7B//rb6r4Znze3ckqkWQR0unvRLAwiw=;
-        b=YqkEnCGUvMHqvNF2K5K1QpmcHbVMnfyMWMTWWZ4O6NIGUTypit3KaEUJ+k5IBwuNSd
-         GOQSNN2oLy/Kxy9cBzeGa0Iz3n/E55DTS3NHAq0roBymRI957iMyXSdr4uIOv/ENFuvy
-         LLolwylo9kk3BgoqqNFGQjZ47Ox/q8/gVvH/M1q0RLmdFmvfwXitGRU77q6/ivqj7J4q
-         e6F18eOjLEH4QlbQ0g98PifV91Z7rvJfviojB/nX6Fy5X7dDn/7dxl+ziw8oBZIkXlEj
-         /T1vMUxRn28/bR9WwFiOK+P8rJ8s0LlH/T67Ul+/1DRdB0Ii10xc5sCyGqdvr57OH55K
-         ViJQ==
-X-Gm-Message-State: AOJu0Yx1OXahbP7Owm8lQTMnJ2l9jYZ/fMO1WBlZTFyBKAt4wQBEc9n+
-	bkbCQOzBVSPxexNd5PjOXIq2hc8HyNU2zF+M4AKdjzuXBuBTl/hLsD0EnxzOS1BlrK7+nuSpzI8
-	McQwLiwwg7iA+1o132V3F4194Kg+GzI4=
-X-Gm-Gg: AY/fxX4eeaJryVjbJIYYyaE4LXKYASJaNmMIIvYR9lH8UboAIb3wgKU+EolmGQ8ul5q
-	9R6aeWb3oGrrNBZFN9CZByXREfCmG9aLz4EUZNkbUBfE07z/HXX3pYl78vNwdiAr/H0c3xm2kgM
-	19bjynMYsP97lJI2UUlwII/TKGPe0HQbtfkJGIo6cQ+lrvViQBJBF/jnAIocIfC4ZrvVR6Y1yzP
-	7TW3UcT/OXhMqkKoUVSslqMmmeVC0NqGZZmLWQz0ITFbLky9qT0i0BeQlD9k0FDWGU51K2e+7Rg
-	fvL8zRtW3xOTbGl7vBVHMcMaLJXGXUqDlQ==
-X-Google-Smtp-Source: AGHT+IEDYC3cY6soBRLQg0jrKD+eKmTD2ovAt2yrZmq93YN5K8GrT0NaJGJRys7cFEZm4N+ttZhDuYFIVnybaRJXjUM=
-X-Received: by 2002:a05:6214:27c2:b0:87c:1d24:7b7f with SMTP id
- 6a1803df08f44-890841aa05fmr191022996d6.23.1768053313735; Sat, 10 Jan 2026
- 05:55:13 -0800 (PST)
+        d=1e100.net; s=20230601; t=1768072057; x=1768676857;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1kxXWJvr37TXUuYsr8iBFLGiGmenc+CVNu+9/LLD/pI=;
+        b=lKEfc8z2OmyF1mkPfsoX4vXDVwzIbOs4j+rsPzCs94HjJwFl3V+oN2VXoInFgF/vYe
+         LQ5lL0APosoo6b22VQRYARx/crt2HXFBpTSPSTe7RPrsqwNi6RYgifnkSC4RsT+C4KTr
+         71XX1cVYI9gERUreC9ChGFOEF8sEGLS/Ff9bx6u6TidRvm87zjuL56IU32d5C7R7lerc
+         94Bqgpdfp6EMz8Eybd5r5hjTanDfadwkCz8N9dvkMt4nvzt5+hQECiuNWo1Y/s+riUeb
+         vKWfMOKEJ9Lt7mpUQvAEDwuetrSc1oOgNYu95FL7eWuopSEI+ZZSvQyKBY2053QKns4E
+         B3+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVTTqpH8L8QHNlFlpZ6UnSx4y/RqW3FnRhqGl61inrAQeQnsDVjBZtJBBM3sqg6HI+Qt0ts+2WvfTI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywQQynfeBclWRC8yozbzPFdm3B+BsS3uZXvH6DY4UF37W08K5Q
+	nVd6thkcTcDH4/Rtk9QDEG2wnU/cirC2Kdl0I0YrbelodPxxcXgPDszN
+X-Gm-Gg: AY/fxX70awPBNwCp8FkVYIbzGQYKJO9jLAWqV68t7QroSsa4Ngj1hfF9HANmdYkRJL/
+	MeqOrgh+PhX3uY7IS88KaTThz8TPqTvzBF8nvvYpIuuMR6RUUULBfjXenzMzMU3yNL5H0Ms4uKW
+	G0IfmvwDEh1K+8bUwtyFE2bm4G9JkQRbayswQJbYfdz3KhH7gSIE2K2Rzrjt2hq8YPV04DWcvWf
+	YBxsWjBgvqeupc9sN4uHzDCcqeihLH2PbuRMb6CjjaRq+np4a4yzepGjsP6yd9FGGe2NHJTfSKp
+	nSIphobihQ8YkPD1HupshJs0L24YfwHR+33Pdu+8smLp9S1RgyU170x3ORFVViNDlB6k0kfUcPw
+	th9ysQrCEWACvnlARXqpISm+4GO1twUhPp2BYOBeg1fstYDQ1atLAR3Bh+eTrHp7WBEIc6YtIum
+	0ykY1YYf0VDRyUaHaabi+DTtogX0om6tfypiFx/OzkQOuq
+X-Google-Smtp-Source: AGHT+IHF3kxlvFCYdu1TdAxwzT3/VhpgRW+MaVF+0hexls3iOlpvZgWGzL6a5rAL1q7LEdZ1m6hFrQ==
+X-Received: by 2002:a05:6808:2445:b0:450:b8da:b800 with SMTP id 5614622812f47-45a6bf119c0mr6228889b6e.47.1768072057069;
+        Sat, 10 Jan 2026 11:07:37 -0800 (PST)
+Received: from localhost.localdomain ([2603:8080:1500:3d89:7d36:1b0c:6e77:5735])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3ffa4de55ffsm9254775fac.2.2026.01.10.11.07.35
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sat, 10 Jan 2026 11:07:36 -0800 (PST)
+Sender: John Groves <grovesaustin@gmail.com>
+From: John Groves <John@Groves.net>
+X-Google-Original-From: John Groves <john@groves.net>
+To: John Groves <John@Groves.net>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: John Groves <jgroves@micron.com>,
+	Joao Martins <joao.m.martins@oracle.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	David Hildenbrand <david@kernel.org>,
+	Ying Huang <huang.ying.caritas@gmail.com>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>,
+	venkataravis@micron.com,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	John Groves <john@groves.net>
+Subject: [PATCH] Add some missing kerneldoc comment fields for struct dev_dax
+Date: Sat, 10 Jan 2026 13:07:23 -0600
+Message-ID: <20260110190723.5562-1-john@groves.net>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260108101535.50696-1-akinobu.mita@gmail.com>
- <20260108101535.50696-4-akinobu.mita@gmail.com> <aWEn2ODG0gyej0Xr@gourry-fedora-PF4VCD3F>
-In-Reply-To: <aWEn2ODG0gyej0Xr@gourry-fedora-PF4VCD3F>
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Date: Sat, 10 Jan 2026 22:55:02 +0900
-X-Gm-Features: AZwV_QiB1arM2112x9CFryUSneEVqs_KakkkX2Yd9ULOgdOZCKyZki0KapMs8FI
-Message-ID: <CAC5umyhoMi_J_Ford2M_1fB-qCuPEDopAK1OF=AisZyDZ8duJQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] mm/vmscan: don't demote if there is not enough
- free memory in the lower memory tier
-To: gourry@gourry.net
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, akpm@linux-foundation.org, axelrasmussen@google.com, 
-	yuanchu@google.com, weixugc@google.com, hannes@cmpxchg.org, david@kernel.org, 
-	mhocko@kernel.org, zhengqi.arch@bytedance.com, shakeel.butt@linux.dev, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
-	rppt@kernel.org, surenb@google.com, bingjiao@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-2026=E5=B9=B41=E6=9C=8810=E6=97=A5(=E5=9C=9F) 1:08 Gregory Price <gourry@go=
-urry.net>:
->
-> > +     for_each_node_mask(nid, allowed_mask) {
-> > +             int z;
-> > +             struct zone *zone;
-> > +             struct pglist_data *pgdat =3D NODE_DATA(nid);
-> > +
-> > +             for_each_managed_zone_pgdat(zone, pgdat, z, MAX_NR_ZONES =
-- 1) {
-> > +                     if (zone_watermark_ok(zone, 0, min_wmark_pages(zo=
-ne),
-> > +                                             ZONE_MOVABLE, 0))
->
-> Why does this only check zone movable?
+Add the missing @align and @memmap_on_memory fields to kerneldoc comment
+header for struct dev_dax.
 
-Here, zone_watermark_ok() checks the free memory for all zones from 0 to
-MAX_NR_ZONES - 1.
-There is no strong reason to pass ZONE_MOVABLE as the highest_zoneidx
-argument every time zone_watermark_ok() is called; I can change it if an
-appropriate value is found.
-In v1, highest_zoneidx was "sc ? sc->reclaim_idx : MAX_NR_ZONES - 1"
+Also, some other fields were followed by '-' and others by ':'. Fix all
+to be ':' for actual kerneldoc compliance.
 
-> Also, would this also limit pressure-signal to invoke reclaim when
-> there is still swap space available?  Should demotion not be a pressure
-> source for triggering harder reclaim?
+Fixes: 33cf94d71766 ("device-dax: make align a per-device property")
+Fixes: 4eca0ef49af9 ("dax/kmem: allow kmem to add memory with memmap_on_memory")
+Signed-off-by: John Groves <john@groves.net>
+---
+ drivers/dax/dax-private.h | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-Since can_reclaim_anon_pages() checks whether there is free space on the sw=
-ap
-device before checking with can_demote(), I think the negative impact of th=
-is
-change will be small. However, since I have not been able to confirm the
-behavior when a swap device is available, I would like to correctly underst=
-and
-the impact.
+diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
+index 0867115aeef2..a7c4ff258737 100644
+--- a/drivers/dax/dax-private.h
++++ b/drivers/dax/dax-private.h
+@@ -65,16 +65,17 @@ struct dev_dax_range {
+ };
+ 
+ /**
+- * struct dev_dax - instance data for a subdivision of a dax region, and
+- * data while the device is activated in the driver.
+- * @region - parent region
+- * @dax_dev - core dax functionality
++ * struct dev_dax - instance data for a subdivision of a dax region
++ * @region: parent region
++ * @dax_dev: core dax functionality
++ * @align: alignment of this instance
+  * @target_node: effective numa node if dev_dax memory range is onlined
+  * @dyn_id: is this a dynamic or statically created instance
+  * @id: ida allocated id when the dax_region is not static
+  * @ida: mapping id allocator
+- * @dev - device core
+- * @pgmap - pgmap for memmap setup / lifetime (driver owned)
++ * @dev: device core
++ * @pgmap: pgmap for memmap setup / lifetime (driver owned)
++ * @memmap_on_memory: allow kmem to put the memmap in the memory
+  * @nr_range: size of @ranges
+  * @ranges: range tuples of memory used
+  */
+
+base-commit: 9ace4753a5202b02191d54e9fdf7f9e3d02b85eb
+-- 
+2.52.0
+
