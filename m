@@ -1,96 +1,116 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BF8290DBB
-	for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 23:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36B7296BBB
+	for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 23:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768261605; cv=none; b=meCMSglI1D9GEHVaVo3L3Qo9eAR0R8Um4FjIgAqqsFlgGG22HIY/ulbCe+rKvZBXPAc3TF6MsJXxbk5CvzBNFYny7NXKtgB6OC/O+1JOA8oZCjIUxz+7cv7Q/cSfnEZjCYVnOUHtAtJvrBnlfdILHPRHDv7DGn0ninKNgboafiQ=
+	t=1768261990; cv=none; b=bPvIM0bgKX8cP5XvV/9u7hLqdaRX3vcyQDRw1sSpvR28xsh9w/7UzvbMVGBMWhnrKKCvytTV0NMuMGI3RFxWNEIrH7cLDidSiSSAMHyAaFHtQtr5IGIxegNmYlLLqg93TbrTETd7NzIxqfBar3L57o0z/C6xgPCpFcb2sFWaP7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768261605; c=relaxed/simple;
-	bh=5jG1tPSFDGwVGx2fOLIQipqpQEiX+dEX85OrETf90AA=;
+	s=arc-20240116; t=1768261990; c=relaxed/simple;
+	bh=OsumxHHod6cIwX4b7rdpDcd79fga9ieWIlr7hu71obk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OhZRYkmrhyln2i8rJOTzU1IyU4pQQyPULzzdUpopHuZUJQNfowPHAszqp/ZHya3VgAZ2pzv3Am5WpVruTJC9//mYIl+2PHquQvG/nHa5+rf1oWJ1KP1Bg8uZAypr6LiF02Tm7hCfoVyW6uQRNSsKwt0nViwRdW+3KOfrfc1N5bI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=UqrI3UXZ; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=VNYhIzvJcmpgCd0cvGn0+NglWHoj1olovMDSHADkIDDAh7JWX0377Enege1prq7MAiaMgMeP1RHbdPjYeIXn0vIwcrk0K7JM4cs4g9mSsshdOy+eZy2+LyY0euxWFp4yHcUO08EjDygA2K9buxo1xcCoWRCOESKY98ZLXIO2XgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=KtPItGSB; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="UqrI3UXZ"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4ee1e18fb37so65765381cf.0
-        for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 15:46:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="KtPItGSB"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-8b23b6d9f11so748505285a.3
+        for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 15:53:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1768261602; x=1768866402; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1768261987; x=1768866787; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gt/AVyATGJCjg02bpOukDf7tzsy1q7kJHO83Jx5UbtM=;
-        b=UqrI3UXZq9jAXv6AFYXS1jPHxOz9ewGQA8y/stLlNbNV9iUNJ+mb0ITRzwskUwjQl3
-         zzmhIwF1yzveIyS8MMn6GmV4ARtFZC9rwwX5EtGET03q0MoVw3gNE+6w4xYC8vxfCAaJ
-         a+UYFs6Ckh8iEA7QGPDbkIIY/M7Rqkcbzu4Xb3Q1lhalmBRJa/adzrx+B22XVr8EPk28
-         5SwYZWvDs0LY9mIvF+D79H7buzUESwxckaePaOddHcbxOk1v4A/+5uakVrG/h2WXPjuI
-         lL8Mu+gv83BqBWgIkBfjuKYWlX7fuNYDSpG4qTcCB9x31panvpFGPhLAyiVZh6i2MTsJ
-         QesQ==
+        bh=MFAPVPPrTQcXGzmX4uMQny5ONRwVZsvoYJMZG32QBJM=;
+        b=KtPItGSBQvLvHb6BqDZRMhIZcvxl8SAHN+P7ok/p1aKuAQMtWJhhXrcREM04DDEH/v
+         xpOJYL4tPEFlpIJ6XvEwhuUsWgkVv1Pv0jJAq8pmcmuUSI2SmuZldT+/vPwufztTxt52
+         3P1FICBcMfFbtc64HIW+1ramux3MLbaDIVX/SnLL8rX4ZnTGWekTayWntFXxxLU9UTi8
+         aOCgpbDmI4+N+THurVfFu8XBmuqY+yDiQUlMQ8hhLgqCRWd/RgUbcVnoA0q8aTqyplJd
+         Ahtq7MGMGIAeCpiswjEJOgbIQnm3Xkub+Tak4us3eYoDIAA78DjRTgUHNibTKf2m6vwD
+         oWaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768261602; x=1768866402;
+        d=1e100.net; s=20230601; t=1768261987; x=1768866787;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gt/AVyATGJCjg02bpOukDf7tzsy1q7kJHO83Jx5UbtM=;
-        b=WNYKpfBMBt4DwvieekZ04P+n3SS9bSX10C8ks0fTlmQoX6bv+8KQcNfXWUmfHUS70R
-         i+cDMVTskvAz+JqwzjmaOZt6aOLvRoxDO4fDg1fXHfZ4oAzqrHwkfy7YBMdbcKjfLfEj
-         eIvtEw5fyfZj3CWVzUEN0D0oONveinvYfVfU1Qp3o/D5sRd4ffEoDE3hV3dzp4Ab82wA
-         KHsC0yW1xox7kF/bx46E6Vr/I/rbkU3wcNruhW83H4Lt3jm5jjmRGcvN3+y23mGP6Nqb
-         IwAVgjzrOTTDtazjtfMYbqfQISslJyh1XMFMActshf8D4uqzNG5OtV00kJWzANlNcmYX
-         KKAg==
-X-Forwarded-Encrypted: i=1; AJvYcCW9x1lzV0BoPEwUx1v5ZmXSE+2NydQZZJXzsWIA2zTwaacsfO/Fjb8IqMswgv0i2+rD+9R/gpP2Zu4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYSe724mGsrUF5oJcnvEOiaCbJQFVq96Guozo2QWVmzcfKp8ga
-	9clIgfh0rps1zhewL5Y8IQxpoTtimWJUDWNZhF6BhQAz8V1KsWm87IBurlt8MHz4Znw=
-X-Gm-Gg: AY/fxX5MmOFiRJXTVhIbsAPCfmZQu5Boqs/Z75wWPDGdh0wgvRvNVKf4xy/pyG2e2jf
-	Ar0W3v7xpVRQZaHeiTcJxO0rURQQI4tJ0trl0VnSDKCFWRv1XhBAXKA+mzxpcfuSPsMxnOv0FJC
-	aYqX07hZKnFkVT729wjVPLz57F31/2k8RUIaiW/oqW6S25G9sip+/rynJdoFWWA5+WC/vnE/MJA
-	YmeZlMFCH3tyhbwN+KU92wSSYSSb11UWYBMsEk2dCDQB97+un3CSb673blTKye1QpBLNBY5Hw/0
-	QX5jCmWuH7gt844/gqQP47+Y6XpulalCulFmG8HE29skCFBeFclpbXwoVmmjXHa/fs1j3y9L6t/
-	XAOS7mgfdDG+NZGMDo/0BypmEhHC+Ti2qp4hrk0NwXLk+NvAve1A9nzoROC+ng5kwYt3GqVqlu2
-	Bg7s/O1NkTf0IL6x079kMG3RIXK9Rbd+pM8OGVRHp889RZid0LoPhyNuhpDO7IVuGEFXkGmA==
-X-Google-Smtp-Source: AGHT+IGFud8YvEm7ATsxYNdlgRbfkjm9D9grRrxO3octkolx4kKDFiysT5UJJvHSioxVBl6DqcPzKQ==
-X-Received: by 2002:a05:622a:34b:b0:4f0:5dd:c963 with SMTP id d75a77b69052e-4ffb484a53amr283188541cf.7.1768261602494;
-        Mon, 12 Jan 2026 15:46:42 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ffa8d3d92esm136264811cf.5.2026.01.12.15.46.39
+        bh=MFAPVPPrTQcXGzmX4uMQny5ONRwVZsvoYJMZG32QBJM=;
+        b=tbjnr5WqxzdkVYOPMZeLqgSkWTge1jzyw3s+p10aRetE+5uACXNpgbolnWMw2nXbJS
+         AfIXf/HuvY7zVwSrdb7QHhmkQzHCE82RXKOX+M8jovTXG4pfNVvKZa7vTW2x2oFbN7ju
+         XrM9CCSI5RKrx4ITE530btdmftjJNY8ayebScwonFyT0sYt3j0DdMk0smWACWW+Q/PCo
+         PAcfmlowZcYy5OruWAh/BRU+QfxIrPOzGLU0VLNTihNcKtWgAMLLLujhFBb66hSw8+bw
+         qkCI6ZqyPnuPcqck8IsxqHcFklCGEqoZNHu5uq2DAOmT3e9nT6LmJBMx/plqPkbzasDP
+         yvGw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIMXFE8cavvNqTkNozmpEMX0FSVisd/O7IWwtoj2Vr+S1O/jCS1H94eYhfhwr0A3VlkMiJWM5d20s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwFaOWb40zIHojM7HQGvQehPJ0yxhuQJ6YoTChYDi5hN9hKaPb
+	DYl5jsYG7VLS4qw2sBQkYMIM+WBBgFm/oJmma7ecDZRnBGkKLMFjtXMLiY/8W+n6g5M=
+X-Gm-Gg: AY/fxX5OGrfzW5/v8jzS5WBudSFnqmUki8nPi4R71sA7e9nM7k5388m0sr/EOEA2SIw
+	A4Dq0KlYKWIvjY95gBi68MBX99GJWjJYDWaYWYWuTLUfDRTc4E5TkN9DEwJ+KhQ1zV6sssh5/NT
+	EtFnSh6ocT98t61bwgsqXKxFtjNoH0kr+7RfoXzmMCXkY10M2qyPfzqwAyUjRc3RL4eLTrK8EYP
+	FUkq9F9QPRnSWSpPTEYKJR5Pjz9ilj8Hx+yJne7eJgsDk7Tac78Iv9sOcVrAavF2f+4qI+j2sQX
+	TAyewGdWRzlcErtKfnDNZNdulsL9Xaq4PxVC4m/pp4zD5ZI2mu3JfFrX+pI/zUbZbUz0aNn2ti3
+	a5wu1jK1TRggNoH0BFq5Bf0OW990HV9MuOuOs146qqRy0pQHc+F1/eYoJAlgXIpDR1NV41Po2/2
+	xX3Bf//C3wdtsUMNCOiIBZXsZEfZcf+TJLcNxhi+fULfB8PnyKGOk9fX2iaSEFFKfOkkXfe83Eg
+	tB4nA==
+X-Google-Smtp-Source: AGHT+IECCLtz04Q1g6y58MlK+cu2G+IQ+shlJTLlvJFkV+wtTDGmcQVfka7R8tosUNuc3dGp+UEbDg==
+X-Received: by 2002:a05:620a:4804:b0:8b2:7536:bd2c with SMTP id af79cd13be357-8c3894188a8mr2759937485a.78.1768261987580;
+        Mon, 12 Jan 2026 15:53:07 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c37f530907sm1597443885a.39.2026.01.12.15.53.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 15:46:41 -0800 (PST)
-Date: Mon, 12 Jan 2026 18:46:07 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: linux-mm@kvack.org, cgroups@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, kernel-team@meta.com,
-	longman@redhat.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, corbet@lwn.net, gregkh@linuxfoundation.org,
-	rafael@kernel.org, dakr@kernel.org, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com,
-	akpm@linux-foundation.org, vbabka@suse.cz, surenb@google.com,
-	mhocko@suse.com, jackmanb@google.com, ziy@nvidia.com,
-	david@kernel.org, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, rppt@kernel.org, axelrasmussen@google.com,
-	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
-	linux@rasmusvillemoes.dk, rientjes@google.com,
-	shakeel.butt@linux.dev, chrisl@kernel.org, kasong@tencent.com,
-	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
-	baohua@kernel.org, chengming.zhou@linux.dev,
-	roman.gushchin@linux.dev, muchun.song@linux.dev, osalvador@suse.de,
-	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
-	byungchul@sk.com, ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	cl@gentwo.org, harry.yoo@oracle.com, zhengqi.arch@bytedance.com
-Subject: Re: [RFC PATCH v3 7/8] mm/zswap: compressed ram direct integration
-Message-ID: <aWWHv-G6cZAiQZJY@gourry-fedora-PF4VCD3F>
-References: <20260108203755.1163107-1-gourry@gourry.net>
- <20260108203755.1163107-8-gourry@gourry.net>
- <i6o5k4xumd5i3ehl6ifk3554sowd2qe7yul7vhaqlh2zo6y7is@z2ky4m432wd6>
- <aWF1uDdP75gOCGLm@gourry-fedora-PF4VCD3F>
- <4ftthovin57fi4blr2mardw4elwfsiv6vrkhrjqjsfvvuuugjj@uivjc5uzj5ys>
- <aWWEvAaUmpA_0ERP@gourry-fedora-PF4VCD3F>
+        Mon, 12 Jan 2026 15:53:07 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1vfRic-00000003fUQ-2VnR;
+	Mon, 12 Jan 2026 19:53:06 -0400
+Date: Mon, 12 Jan 2026 19:53:06 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Zi Yan <ziy@nvidia.com>
+Cc: Matthew Wilcox <willy@infradead.org>, Balbir Singh <balbirs@nvidia.com>,
+	Francois Dugast <francois.dugast@intel.com>,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	Matthew Brost <matthew.brost@intel.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Felix Kuehling <Felix.Kuehling@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	David Hildenbrand <david@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Alistair Popple <apopple@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-pci@vger.kernel.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free
+ callback
+Message-ID: <20260112235306.GN745888@ziepe.ca>
+References: <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
+ <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
+ <20260112134510.GC745888@ziepe.ca>
+ <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
+ <20260112165001.GG745888@ziepe.ca>
+ <86D91C8B-C3EA-4836-8DC2-829499477618@nvidia.com>
+ <20260112182500.GI745888@ziepe.ca>
+ <6AFCEB51-8EE1-4AC9-8F39-FCA561BE8CB5@nvidia.com>
+ <20260112192816.GL745888@ziepe.ca>
+ <8DB7DC41-FDBD-4739-AABC-D363A1572ADD@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -99,47 +119,55 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aWWEvAaUmpA_0ERP@gourry-fedora-PF4VCD3F>
+In-Reply-To: <8DB7DC41-FDBD-4739-AABC-D363A1572ADD@nvidia.com>
 
-On Mon, Jan 12, 2026 at 06:33:16PM -0500, Gregory Price wrote:
-> One of the assumptions you have in zswap is that there's some known
-> REAL chunk of memory X-GB, and the compression ratio dictates that you
-> get to cram more than X-GB of data in there.
+On Mon, Jan 12, 2026 at 06:34:06PM -0500, Zi Yan wrote:
+> page[1].flags.f &= ~PAGE_FLAGS_SECOND. It clears folio->order.
 > 
-> This device flips that on its head.  It lies to the system and says
-> there's X-GB, and you can only actually use a fraction of it in the
-> worst case - and in the best case you use all of it.
+> free_tail_page_prepare() clears ->mapping, which is TAIL_MAPPING, and
+> compound_head at the end.
 > 
-> So in that sense, zswap has "infinite upside" (if you're infinitely
-> compressible), whereas this device has "limited upside" (node capacity).
+> page->flags.f &= ~PAGE_FLAGS_CHECK_AT_PREP. It clears PG_head for compound
+> pages.
 > 
-> That changes how you account for things entirely, and that's why
-> entry->length always has to be PAGE_SIZE.  Even if the device can tell
-> us the real size, i'm not sure how useful that is - you still have to
-> charge for an entire `struct page`.
-> 
-> Time for a good long :think:
-> 
+> These three parts undo prep_compound_page().
 
+Well, mm doesn't clear all things on alloc..
 
-hmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+> In current nouveau code, ->free_folios is used holding the freed folio.
+> In nouveau_dmem_page_alloc_locked(), the freed folio is passed to
+> zone_device_folio_init(). If the allocated folio order is different
+> from the freed folio order, I do not know how you are going to keep
+> track of the rest of the freed folio. Of course you can implement a
+> buddy allocator there.
 
-now that i have written this out, I wonder if the answer here is for the
-zswap_node controller (cxl driver or whatever) to detect high memory
-usage and online a new memory block if there is additional capacity
-available.
+nouveau doesn't support high order folios.
 
-This would look like the swap file increasing in size dynamically,
-which is *also* problematic, but it's at least in the same ballpark.
+A simple linked list is not really a suitable data structure to ever
+support high order folios with.. If it were to use such a thing, and
+did want to take a high order folio off the list, and reduce its
+order, then it would have to put the remainder back on the list with a
+revised order value. That's all, nothing hard.
 
-From a CXL perspective, this would look like a dynamic capacity device.
+Again if the driver needs to store information in the struct page to
+manage its free list mechanism (ie linked pointers, order, whatever)
+then it should be doing that directly.
 
-And the catch would be that we would need the opposite interface:
+When it takes the memory range off the free list it should call
+zone_device_page_init() to make it ready to be used again. I think it
+is a poor argument to say that zone_device_page_init() should rely on
+values already in the struct page to work properly :\
 
-  zswap.c or cram.c would need an explicit evict interface to allow
-  capacity to be offlined if the device needs to shrink the "fake"
-  capacity in response to shrinking compression ratios.
+The usable space within the struct page, and what values must be fixed
+for correct system function, should exactly mirror what frozen pages
+require. After free it is effectively now a frozen page owned by the
+device driver.
 
-Time for a much, much longer :think:
+I haven't seen any documentation on that, but I suspect Matthew and
+David have some ideas..
 
-~Gregory
+If there is a reason for order, flags and mapping to be something
+particular then it should flow from the definition of frozen pages,
+and be documented, IMHO.
+
+Jason
