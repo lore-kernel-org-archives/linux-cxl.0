@@ -1,169 +1,379 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0438831B131
-	for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 19:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D1F1D516C;
+	Mon, 12 Jan 2026 20:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768246100; cv=none; b=hhfeT6VzK9RbFH07rnzTpAt/MC5iCSQb+xEJ2ge9jrhWCfAPFN2ozMbIhDmSWW5eNDetN8i4FYGrjItM+OUInus7zmgPL4YbmkUaPbxAPvXvA0sJDV/Blqs7QZZtPx9wBBAUt6pQvReU+B79ruxp7Pd23RA0yxqIBv9JM4T50JI=
+	t=1768248061; cv=none; b=n3F8NP6Dw1R/sPBFGTsBTZI9bQaS8/5ZntXVmADUuw5doEgSwhEDPIl8Z6jZbRsQQ1Pvb7LS4QYnLn9pp/OOgoL4AmPtqjMJ61zeaTOx1iqcZ1nMiRF7jIJOAqVsSZOxlYUlmJEypbjKXjR4eyF1W/0plXXQOtu+YSOxewp6+i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768246100; c=relaxed/simple;
-	bh=shxmX2+HmXmALgYV4I/T+QoVuAHA2Vhig6RTaEDJOds=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dzVu2+UgsfXUzLd9dPtN/znyGGscYZKxmm6Hkqv5C0A4r5AbGMb0M6ZfSYv86rbf7PmSJ+iryAVVMUgu/BJLT/EfQlzDsZ8pfwK5toN5WgBGNKNzHCtSe4+RX3DjsOZ+3rYfx8W+MEWko0/5gj3T5kQ2VRbQtWx+BomvBbiDxlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=pMnuPJ9A; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1768248061; c=relaxed/simple;
+	bh=sbklOWqNGVE2rKFh7cQ1BWi4dGVLww5u/e3o3eCHZ4o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Eus/tbaSsfDzGot2CPELeeXT+pEogacT+PM4bmHYoXJvdscy3ue+VrscmWXooxHsaatQdnS/SaHd+onH+j9A9OfGkrrjiUEZ7T0uDNQ5y+IJQuTZ0vFgnse0BfAvdp3nJNpRnn9Mvc16ruzXrHuUt9DBAV1oC9sxAtd+ly9A4Dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7HBMZxF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="pMnuPJ9A"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-8b2d6df99c5so584942385a.1
-        for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 11:28:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1768246098; x=1768850898; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=a9AdLI7uJUYtOYd89GixDifcE7N5970uW2swaB6ncSw=;
-        b=pMnuPJ9A29sI3cWXfL3AcdhcYCbp5QX64v+VQQdObhNgHqPse++jj/lwWWU4Ot/o0L
-         ptMMa5o08J8HeJp0iuLYJu4C+et1bBsiHqAqFIvCnT2jJ4ZG9Z4HFAZolq40731tJgYR
-         GIJiYA09Jj8QTQMUlYp4dBqT3UbEnz1VhJE/IW8MoT9ueNAASvDJmCKaX408UqP9afJv
-         P0EIWDjjT3k7iv+UTZO9m6KL7XquMEtRxKW/ntn/MMdJXSqV2RdUAWGbi+YrvVYqC2qd
-         kZjwAZMSfUaAUrYobELCqUhcNbVnLfioXz93dU43Wtw28vnTyYawjN7aGDGNPkKi+HZ2
-         c/bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768246098; x=1768850898;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a9AdLI7uJUYtOYd89GixDifcE7N5970uW2swaB6ncSw=;
-        b=ngF9QXefRinkUBG7GOCNwlQgl7FLCl8C7i/J7w+/kjIrUxyBHOwm0/n1tZexaRuUB8
-         5dd9N0udvYiRKYOtmXSYMg4IBPzgfndmZCakHTxghtbT2u2mRhyEt/nd/qJF6yBmKVde
-         HXyjk8GEUIHtiDmfRzz1lS/9LF5MO1zw0yNXo6VpSFSwFRNWQ/P/gGfWykJsvIX8c195
-         Qb/rT2gGARl3ZZOHKRye6bTtt6jqdZwPX1DQG63yEuC4Z+AP6JJj9HM/rTEUO7IWUOx+
-         NMAWFEwIFQDJwxsTuXYx1l9Jt6c0Tca1q4AfBQVetR3Y+95NQXDWwhm7P5VKgGrtO63s
-         mCwA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNo+eV/l8+RfAqWFEKiNVx4LdrSgT6PO9uSCBLHhgvaCSUb4T//6V94vgP1b7Dbt4tC2c4gJrdl88=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJj62SrhpECHukMyncUXP/zLYaIRVnQ+0nIqRgFKtgRYfgw6Y3
-	k78I+zXMkFwqfYSJXTsqzi+zCINUERhqQ1CfXegcPHo5SK3rRcTE2a/RppwsbpXkXEo=
-X-Gm-Gg: AY/fxX6WDvS2lZU7M1A9AnkIxC6YLn6HDKFZx74Au7zADIwlQ6rApX4nxW0EHCe5AGO
-	/IcM7oefUVIzTcjxxPI6puU00BAbS3zKnNoDgBTamHbQqmcj5rsvvY6T6/tYl3dShslLqhCsivP
-	rqNQX1tmK1+8F3OrosOy6F09UDJH1Lj11I370wMOBls/InR55bHZDT1GhQU63g0Qhr3t2pRfkgF
-	nIMHGO3I+uGRDVy0IkPDgnVGVrzORWciDCCokoaA4GNC8J2h4o/xV3adt8XxxkpM6GDLUJcPUR2
-	LdJ4UPVVQxYHSWa7LYg9aOxmHI+3dmxHT1vK5K97f4ZDQLBszMSzIL7lnSjvUbuAUpNPHRQys9B
-	LGOl5e+VN0D0hdSwlpJ4e3O0auU9gQbAPCZya+uC8n2tkvuFUKlIka7jPCZjts39yZjVZwtweCV
-	ceDAJo16PacyBBMnDU+BykX7FzzNcXOQfge6Z306GjAD5rL+418hjrIkpGesLx6De1iVE=
-X-Received: by 2002:a05:620a:1726:b0:8b8:7f8d:c33b with SMTP id af79cd13be357-8c5208f18e3mr71372585a.43.1768246097807;
-        Mon, 12 Jan 2026 11:28:17 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c37f4cd7a3sm1609425185a.24.2026.01.12.11.28.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 11:28:16 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1vfNaK-00000003cxB-192v;
-	Mon, 12 Jan 2026 15:28:16 -0400
-Date: Mon, 12 Jan 2026 15:28:16 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Zi Yan <ziy@nvidia.com>
-Cc: Matthew Wilcox <willy@infradead.org>, Balbir Singh <balbirs@nvidia.com>,
-	Francois Dugast <francois.dugast@intel.com>,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	Matthew Brost <matthew.brost@intel.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Felix Kuehling <Felix.Kuehling@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	David Hildenbrand <david@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Alistair Popple <apopple@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-pci@vger.kernel.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free
- callback
-Message-ID: <20260112192816.GL745888@ziepe.ca>
-References: <20260111205820.830410-2-francois.dugast@intel.com>
- <aWQlsyIVVGpCvB3y@casper.infradead.org>
- <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
- <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
- <20260112134510.GC745888@ziepe.ca>
- <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
- <20260112165001.GG745888@ziepe.ca>
- <86D91C8B-C3EA-4836-8DC2-829499477618@nvidia.com>
- <20260112182500.GI745888@ziepe.ca>
- <6AFCEB51-8EE1-4AC9-8F39-FCA561BE8CB5@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7HBMZxF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BF2CC116D0;
+	Mon, 12 Jan 2026 20:00:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768248060;
+	bh=sbklOWqNGVE2rKFh7cQ1BWi4dGVLww5u/e3o3eCHZ4o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=W7HBMZxFxMdeIQx0IXK2B5jaEpZ18vCNnSRtDj6ebsX1yv9RWpXtq0lqkGq5wGkr+
+	 73PI064/F+SHoyDXRAVsNZheeK2NMLWVIzNRQOD7lA9ocsRi2Kwj8tGVjo1FbxR7CB
+	 2iN/3VgtY9h/0ERlXUmpOiU7mohGHpLzDkbs91ROsbefeHZTjARiMl8YhEOs9NvcjW
+	 A/+shwtXB0SnzJRK62mHP82DnjWd6827SdugOHr6+OjdYOkuxQ7O7rCTVdXTkWOvY1
+	 pkyJG9p1YpA1tAR2JEa89k+roU0Kyz9NRXBjzzyWRkIhWfI7g1zHqpeMi9XcwZzBgc
+	 3WW08c6IaR1Lg==
+Message-ID: <3d5ccbb3-a083-4a5c-8c97-2db2adbc5446@kernel.org>
+Date: Mon, 12 Jan 2026 21:00:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6AFCEB51-8EE1-4AC9-8F39-FCA561BE8CB5@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] cxl: add sysram_region memory controller
+To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com
+References: <20260112163514.2551809-1-gourry@gourry.net>
+ <20260112163514.2551809-3-gourry@gourry.net>
+From: "David Hildenbrand (Red Hat)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAa2VybmVsLm9yZz7CwY0EEwEIADcWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCaKYhwAIbAwUJJlgIpAILCQQVCgkIAhYCAh4FAheAAAoJEE3eEPcA/4Naa5EP/3a1
+ 9sgS9m7oiR0uenlj+C6kkIKlpWKRfGH/WvtFaHr/y06TKnWn6cMOZzJQ+8S39GOteyCCGADh
+ 6ceBx1KPf6/AvMktnGETDTqZ0N9roR4/aEPSMt8kHu/GKR3gtPwzfosX2NgqXNmA7ErU4puf
+ zica1DAmTvx44LOYjvBV24JQG99bZ5Bm2gTDjGXV15/X159CpS6Tc2e3KvYfnfRvezD+alhF
+ XIym8OvvGMeo97BCHpX88pHVIfBg2g2JogR6f0PAJtHGYz6M/9YMxyUShJfo0Df1SOMAbU1Q
+ Op0Ij4PlFCC64rovjH38ly0xfRZH37DZs6kP0jOj4QdExdaXcTILKJFIB3wWXWsqLbtJVgjR
+ YhOrPokd6mDA3gAque7481KkpKM4JraOEELg8pF6eRb3KcAwPRekvf/nYVIbOVyT9lXD5mJn
+ IZUY0LwZsFN0YhGhQJ8xronZy0A59faGBMuVnVb3oy2S0fO1y/r53IeUDTF1wCYF+fM5zo14
+ 5L8mE1GsDJ7FNLj5eSDu/qdZIKqzfY0/l0SAUAAt5yYYejKuii4kfTyLDF/j4LyYZD1QzxLC
+ MjQl36IEcmDTMznLf0/JvCHlxTYZsF0OjWWj1ATRMk41/Q+PX07XQlRCRcE13a8neEz3F6we
+ 08oWh2DnC4AXKbP+kuD9ZP6+5+x1H1zEzsFNBFXLn5EBEADn1959INH2cwYJv0tsxf5MUCgh
+ Cj/CA/lc/LMthqQ773gauB9mN+F1rE9cyyXb6jyOGn+GUjMbnq1o121Vm0+neKHUCBtHyseB
+ fDXHA6m4B3mUTWo13nid0e4AM71r0DS8+KYh6zvweLX/LL5kQS9GQeT+QNroXcC1NzWbitts
+ 6TZ+IrPOwT1hfB4WNC+X2n4AzDqp3+ILiVST2DT4VBc11Gz6jijpC/KI5Al8ZDhRwG47LUiu
+ Qmt3yqrmN63V9wzaPhC+xbwIsNZlLUvuRnmBPkTJwwrFRZvwu5GPHNndBjVpAfaSTOfppyKB
+ Tccu2AXJXWAE1Xjh6GOC8mlFjZwLxWFqdPHR1n2aPVgoiTLk34LR/bXO+e0GpzFXT7enwyvF
+ FFyAS0Nk1q/7EChPcbRbhJqEBpRNZemxmg55zC3GLvgLKd5A09MOM2BrMea+l0FUR+PuTenh
+ 2YmnmLRTro6eZ/qYwWkCu8FFIw4pT0OUDMyLgi+GI1aMpVogTZJ70FgV0pUAlpmrzk/bLbRk
+ F3TwgucpyPtcpmQtTkWSgDS50QG9DR/1As3LLLcNkwJBZzBG6PWbvcOyrwMQUF1nl4SSPV0L
+ LH63+BrrHasfJzxKXzqgrW28CTAE2x8qi7e/6M/+XXhrsMYG+uaViM7n2je3qKe7ofum3s4v
+ q7oFCPsOgwARAQABwsF8BBgBCAAmAhsMFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAmic2qsF
+ CSZYCKEACgkQTd4Q9wD/g1oq0xAAsAnw/OmsERdtdwRfAMpC74/++2wh9RvVQ0x8xXvoGJwZ
+ rk0Jmck1ABIM//5sWDo7eDHk1uEcc95pbP9XGU6ZgeiQeh06+0vRYILwDk8Q/y06TrTb1n4n
+ 7FRwyskKU1UWnNW86lvWUJuGPABXjrkfL41RJttSJHF3M1C0u2BnM5VnDuPFQKzhRRktBMK4
+ GkWBvXlsHFhn8Ev0xvPE/G99RAg9ufNAxyq2lSzbUIwrY918KHlziBKwNyLoPn9kgHD3hRBa
+ Yakz87WKUZd17ZnPMZiXriCWZxwPx7zs6cSAqcfcVucmdPiIlyG1K/HIk2LX63T6oO2Libzz
+ 7/0i4+oIpvpK2X6zZ2cu0k2uNcEYm2xAb+xGmqwnPnHX/ac8lJEyzH3lh+pt2slI4VcPNnz+
+ vzYeBAS1S+VJc1pcJr3l7PRSQ4bv5sObZvezRdqEFB4tUIfSbDdEBCCvvEMBgoisDB8ceYxO
+ cFAM8nBWrEmNU2vvIGJzjJ/NVYYIY0TgOc5bS9wh6jKHL2+chrfDW5neLJjY2x3snF8q7U9G
+ EIbBfNHDlOV8SyhEjtX0DyKxQKioTYPOHcW9gdV5fhSz5tEv+ipqt4kIgWqBgzK8ePtDTqRM
+ qZq457g1/SXSoSQi4jN+gsneqvlTJdzaEu1bJP0iv6ViVf15+qHuY5iojCz8fa0=
+In-Reply-To: <20260112163514.2551809-3-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 12, 2026 at 01:55:18PM -0500, Zi Yan wrote:
-> > That's different, I am talking about reaching 0 because it has been
-> > freed, meaning there are no external pointers to it.
-> >
-> > Further, when a page is frozen page_ref_freeze() takes in the number
-> > of references the caller has ownership over and it doesn't succeed if
-> > there are stray references elsewhere.
-> >
-> > This is very important because the entire operating model of split
-> > only works if it has exclusive locks over all the valid pointers into
-> > that page.
-> >
-> > Spurious refcount failures concurrent with split cannot be allowed.
-> >
-> > I don't see how pointing at __folio_freeze_and_split_unmapped() can
-> > justify this series.
-> >
+On 1/12/26 17:35, Gregory Price wrote:
+> Add a sysram memctrl that directly hotplugs memory without needing to
+> route through DAX.  This simplifies the sysram usecase considerably.
 > 
-> But from anyone looking at the folio state, refcount == 0, compound_head
-> is set, they cannot tell the difference.
-
-This isn't reliable, nothing correct can be doing it :\
-
-> If what you said is true, why is free_pages_prepare() needed? No one
-> should touch these free pages. Why bother resetting these states.
-
-? that function does alot of stuff, thinks like uncharging the cgroup
-should obviously happen at free time.
-
-What part of it are you looking at?
-
-> > You can't refcount a folio out of nothing. It has to come from a
-> > memory location that already is holding a refcount, and then you can
-> > incr it.
+> The sysram memctl adds new sysfs controls when registered:
+> 	region/memctrl/[hotplug, hotunplug, state]
 > 
-> Right. There is also no guarantee that all code is correct and follows
-> this.
+> hotplug:   controller attempts to hotplug the memory region
 
-Let's concretely point at things that have a problem please.
+Why disconnect the hotplug from the online state?
 
-> My point here is that calling prep_compound_page() on a compound page
-> does not follow core MM’s conventions.
+echo online_movable > hotplug ?
 
-Maybe, but that doesn't mean it isn't the right solution..
+Then we can just have something like add_and_online_memory() in the core.
 
-Jason
+> hotunplug: controller attempts to offline and hotunplug the memory region
+> state:     [online,online_normal,offline]
+>     online       : controller onlines blocks in ZONE_MOVABLE
+
+I don't like this incosistency regarding the remainder of common hotplug 
+toggles.
+
+We should use exactly the same values with exactly the same semantics. 
+Yes, user-space tooling should be thaught to pass in online_movable :)
+
+>     online_normal: controller onlines blocks in ZONE_NORMAL
+>     offline      : controller attempts to offline the memory blocks
+
+Why is that required? ideally we'd start with hotplug vs. hotunplug and 
+leave manual onlining/offlining out of this interface for now.
+
+> 
+> Hotplug note - by default the controller will hotplug the blocks, but
+> leave them offline (unless MHP auto-online in Kconfig is enabled).
+> 
+> Setting state to "online_normal" may prevent future hot-unplug of sysram
+> regions, and unbinding a memory region with memory online in ZONE_NORMAL
+> may result in the device being removed but the memory remaining online.
+> 
+> This can result in future management functions failing (such as adding a
+> new region).  This is why "online_normal" is explicit, and the default
+> online zone is ZONE_MOVABLE.
+> 
+> Cc: David Hildenbrand <david@kernel.org>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> ---
+>   drivers/cxl/core/core.h                  |   2 +
+>   drivers/cxl/core/memctrl/Makefile        |   1 +
+>   drivers/cxl/core/memctrl/memctrl.c       |   2 +
+>   drivers/cxl/core/memctrl/sysram_region.c | 358 +++++++++++++++++++++++
+>   drivers/cxl/core/region.c                |   5 +
+>   drivers/cxl/cxl.h                        |   6 +-
+>   6 files changed, 372 insertions(+), 2 deletions(-)
+>   create mode 100644 drivers/cxl/core/memctrl/sysram_region.c
+> 
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 1156a4bd0080..18cb84950500 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -31,6 +31,8 @@ int cxl_decoder_detach(struct cxl_region *cxlr,
+>   		       struct cxl_endpoint_decoder *cxled, int pos,
+>   		       enum cxl_detach_mode mode);
+>   
+> +int devm_cxl_add_sysram_region(struct cxl_region *cxlr);
+> +
+>   #define CXL_REGION_ATTR(x) (&dev_attr_##x.attr)
+>   #define CXL_REGION_TYPE(x) (&cxl_region_type)
+>   #define SET_CXL_REGION_ATTR(x) (&dev_attr_##x.attr),
+> diff --git a/drivers/cxl/core/memctrl/Makefile b/drivers/cxl/core/memctrl/Makefile
+> index 8165aad5a52a..1c52c7d75570 100644
+> --- a/drivers/cxl/core/memctrl/Makefile
+> +++ b/drivers/cxl/core/memctrl/Makefile
+> @@ -2,3 +2,4 @@
+>   
+>   cxl_core-$(CONFIG_CXL_REGION) += memctrl/memctrl.o
+>   cxl_core-$(CONFIG_CXL_REGION) += memctrl/dax_region.o
+> +cxl_core-$(CONFIG_CXL_REGION) += memctrl/sysram_region.o
+> diff --git a/drivers/cxl/core/memctrl/memctrl.c b/drivers/cxl/core/memctrl/memctrl.c
+> index 24e0e14b39c7..40ffb59353bb 100644
+> --- a/drivers/cxl/core/memctrl/memctrl.c
+> +++ b/drivers/cxl/core/memctrl/memctrl.c
+> @@ -34,6 +34,8 @@ int cxl_enable_memctrl(struct cxl_region *cxlr)
+>   		return devm_cxl_add_dax_region(cxlr);
+>   	case CXL_MEMCTRL_DAX:
+>   		return devm_cxl_add_dax_region(cxlr);
+> +	case CXL_MEMCTRL_SYSRAM:
+> +		return devm_cxl_add_sysram_region(cxlr);
+>   	default:
+>   		return -EINVAL;
+>   	}
+> diff --git a/drivers/cxl/core/memctrl/sysram_region.c b/drivers/cxl/core/memctrl/sysram_region.c
+> new file mode 100644
+> index 000000000000..a7570c8a54e1
+> --- /dev/null
+> +++ b/drivers/cxl/core/memctrl/sysram_region.c
+> @@ -0,0 +1,358 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright(c) 2026 Meta Inc. All rights reserved. */
+> +#include <linux/memremap.h>
+> +#include <linux/memory.h>
+> +#include <linux/module.h>
+> +#include <linux/device.h>
+> +#include <linux/slab.h>
+> +#include <linux/mm.h>
+> +#include <linux/memory-tiers.h>
+> +#include <linux/memory_hotplug.h>
+> +#include <linux/string_helpers.h>
+> +#include <linux/sched/signal.h>
+> +#include <cxlmem.h>
+> +#include <cxl.h>
+> +#include "../core.h"
+> +
+> +/* If HMAT was unavailable, assign a default distance. */
+> +#define MEMTIER_DEFAULT_CXL_ADISTANCE	(MEMTIER_ADISTANCE_DRAM * 5)
+> +
+> +static const char *sysram_name = "System RAM (CXL)";
+> +
+> +struct cxl_sysram_data {
+> +	const char *res_name;
+> +	int mgid;
+> +	struct resource *res;
+> +};
+> +
+> +static DEFINE_MUTEX(cxl_memory_type_lock);
+> +static LIST_HEAD(cxl_memory_types);
+> +
+> +static struct cxl_region *to_cxl_region(struct device *dev)
+> +{
+> +	if (dev->type != &cxl_region_type)
+> +		return NULL;
+> +	return container_of(dev, struct cxl_region, dev);
+> +}
+> +
+> +static struct memory_dev_type *cxl_find_alloc_memory_type(int adist)
+> +{
+> +	guard(mutex)(&cxl_memory_type_lock);
+> +	return mt_find_alloc_memory_type(adist, &cxl_memory_types);
+> +}
+> +
+> +static void __maybe_unused cxl_put_memory_types(void)
+> +{
+> +	guard(mutex)(&cxl_memory_type_lock);
+> +	mt_put_memory_types(&cxl_memory_types);
+> +}
+> +
+> +static int cxl_sysram_range(struct cxl_region *cxlr, struct range *r)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +
+> +	if (!p->res)
+> +		return -ENODEV;
+> +
+> +	/* memory-block align the hotplug range */
+> +	r->start = ALIGN(p->res->start, memory_block_size_bytes());
+> +	r->end = ALIGN_DOWN(p->res->end + 1, memory_block_size_bytes()) - 1;
+> +	if (r->start >= r->end) {
+> +		r->start = p->res->start;
+> +		r->end = p->res->end;
+> +		return -ENOSPC;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static ssize_t hotunplug_store(struct device *dev,
+> +			       struct device_attribute *attr,
+> +			       const char *buf, size_t len)
+> +{
+> +	struct cxl_region *cxlr = to_cxl_region(dev);
+> +	struct range range;
+> +	int rc;
+> +
+> +	if (!cxlr)
+> +		return -ENODEV;
+> +
+> +	rc = cxl_sysram_range(cxlr, &range);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = offline_and_remove_memory(range.start, range_len(&range));
+> +
+> +	if (rc)
+> +		return rc;
+> +
+> +	return len;
+> +}
+> +static DEVICE_ATTR_WO(hotunplug);
+> +
+> +struct online_memory_cb_arg {
+> +	int online_type;
+> +	int rc;
+> +};
+> +
+> +static int online_memory_block_cb(struct memory_block *mem, void *arg)
+> +{
+> +	struct online_memory_cb_arg *cb_arg = arg;
+> +
+> +	if (signal_pending(current))
+> +		return -EINTR;
+> +
+> +	cond_resched();
+> +
+> +	if (mem->state == MEM_ONLINE)
+> +		return 0;
+> +
+> +	mem->online_type = cb_arg->online_type;
+> +	cb_arg->rc = device_online(&mem->dev);
+> +
+> +	return cb_arg->rc;
+> +}
+> +
+> +static int offline_memory_block_cb(struct memory_block *mem, void *arg)
+> +{
+> +	int *rc = arg;
+> +
+> +	if (signal_pending(current))
+> +		return -EINTR;
+> +
+> +	cond_resched();
+> +
+> +	if (mem->state == MEM_OFFLINE)
+> +		return 0;
+> +
+> +	*rc = device_offline(&mem->dev);
+> +
+> +	return *rc;
+> +}
+> +
+> +static ssize_t state_store(struct device *dev,
+> +			   struct device_attribute *attr,
+> +			   const char *buf, size_t len)
+> +{
+> +	struct cxl_region *cxlr = to_cxl_region(dev);
+> +	struct online_memory_cb_arg cb_arg;
+> +	struct range range;
+> +	int rc;
+> +
+> +	if (!cxlr)
+> +		return -ENODEV;
+> +
+> +	rc = cxl_sysram_range(cxlr, &range);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = lock_device_hotplug_sysfs();
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (sysfs_streq(buf, "online")) {
+> +		cb_arg.online_type = MMOP_ONLINE_MOVABLE;
+> +		cb_arg.rc = 0;
+> +		rc = walk_memory_blocks(range.start, range_len(&range),
+> +					&cb_arg, online_memory_block_cb);
+> +		if (!rc)
+> +			rc = cb_arg.rc;
+> +	} else if (sysfs_streq(buf, "online_normal")) {
+> +		cb_arg.online_type = MMOP_ONLINE;
+> +		cb_arg.rc = 0;
+> +		rc = walk_memory_blocks(range.start, range_len(&range),
+> +					&cb_arg, online_memory_block_cb);
+> +		if (!rc)
+> +			rc = cb_arg.rc;
+> +	} else if (sysfs_streq(buf, "offline")) {
+> +		int offline_rc = 0;
+> +
+> +		rc = walk_memory_blocks(range.start, range_len(&range),
+> +					&offline_rc, offline_memory_block_cb);
+> +		if (!rc)
+> +			rc = offline_rc;
+
+Let's expose this functionality through some common-code helpers. I 
+really don't want more code doing this non-obvious device_offline() etc 
+dance.
+
+walk_memory_blocks() should become a core-mm helper. Maybe we can also 
+cleanup drivers/acpi/acpi_memhotplug.c in that regard.
+
+Hopefully we can then also reuse these helpers in ppc code (see 
+dlpar_add_lmb() and dlpar_remove_lmb() that do something similar, but 
+grab the device hotplug lock themselves as they want to perform some 
+additional operations).
+
+-- 
+Cheers
+
+David
