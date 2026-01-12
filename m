@@ -1,220 +1,248 @@
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012000.outbound.protection.outlook.com [40.107.209.0])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3ADD30171A;
-	Mon, 12 Jan 2026 12:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.0
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768219680; cv=fail; b=dUE2satkRwzsTYCP+9n+TNOP3d26IL2ewLaBZqkiKr8U5zthI/NACB9A3Y0/5GRFElty4NSa7dWy/LUq1wENAOTvRph+70Y3jSbujsfOUBmAdkHXQhMuBbjyXyryLCHIbEMSd4RCRldjBzF2JCQsB97pcryOjoOxKQqSP+9vxuE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768219680; c=relaxed/simple;
-	bh=sMcjzMbCCKMzooQCZOI7KZvoBMnD0t1NUVGjjMN4cec=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=hR4wAwI1xVnMZAyWTkkbVYT/5gy7z4RCJfwdLMLC1DGnNS/fxE2ejXYR4YmLekfF6F9Gi9WbTvUb50C47+MaCcYGuFzDtEosxdt+Y/RuuID/WBomNbDuxgRmxpGUD+yCewE3XMz7BpIbHeuYWRR+jC5Xc1SiBL/slYGbO1bxs9I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gJV59V9M; arc=fail smtp.client-ip=40.107.209.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148913570AE
+	for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 12:12:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768219965; cv=none; b=MotDqYeozmqaYP70GpgTS5Jqp4fYkT7+i+oq554TJvhN9Fm0i4WqbDCP+2KUbHJJyhUGShdikV2rj9OCfiENGalUCutZPeu91ABm3BjTxU1y7ZwHn3HnQ6Y/bWDk7aJ/o/5CWiXjSSf2pGmed95Dsy1F3+edlDnHPQyfyI+VNxg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768219965; c=relaxed/simple;
+	bh=3XdhG1Loto45yAFU7LjgXG/nX1n8HSv3NwTxgYJHqxg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HYZOAHEOvHYoSs7JOOGqK8vdaI7TTDjHHytBSDRhcB0wTQ9CQb6ZljRvjP9TcIPEhlIQDulxPl8HCN20Qm/Xu62GcIl25TtzdhnuUiQAuY2EIvBd4JYfLAD6KbvlCw59AVjoT1B+R4nERrAS2iu5ks1K6DJRtOzmY2IdH/gFMvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O90TRLsh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gJV59V9M"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sNVhbzKrz/vK5CbrAxDG0NzMBQZrcn6eEp1GfVdZg6WcMR3EqC4hj4t/HchnJMpzRip9yJpvahlAV8lO/irA7O0/+xHkmh/zz/W8iYJvpYdnComdEWGqBDBVvh4PZN0TSPJ/jTAjIoZQIgq3XoinhnjE+bGpk1jQok4Nb2DO5FLaABc/xyF9FZo2DKcLBon05FFkK2lYRPJjaDsrL8nbn7GjxXLk1z+rpDU77OQ5Cgs8VDvB0gufhDyiTkqmudGF5DgLvj+7L9V+ERiUd3TKQR21d3hGyKvdWfHRObI9Lbcbm6uvbttfw6i/r6J7adcR4LvhY/K2ujUdqZ0Ufb6PLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4XhNu8r4DmL9g8+DILCA5cZYQX+tQUlv1w9T8sX87aA=;
- b=DahcpWfzm+BTJYzlD5gh6XXRoF70IPAzHfalov5gthRzj0zKUrfg+/XMBITho4JUVXHi3W2a9E77fMpCiE1E1aYRjw8E9Y9L1x7TlzmrjKu3l2T2e3U4tE66DOQs7L7DwonXQ7C+mAsl4ge3psXEs13Jf0Awg0SmV1Ciy0sFmsjxdU+b8rw8p+j53dhBmj82jNAmQX2BXowG4tPacn+coaiz1AnAcnmMJWyqN/GBzd+n+m8pk7Nvy4o/ZMerV0lrLx5VhSsFLgg4UhHyqtNO4JKrNxiPhjRFj/bHZNJPASud78A73RREXy8/eSvLnwkI1tiUmiPhsu5RddqZgbKRlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4XhNu8r4DmL9g8+DILCA5cZYQX+tQUlv1w9T8sX87aA=;
- b=gJV59V9M13BOpHsCWroQ/8ImVCc2ud+Ao27IntUsmXsixUCU6kc2lg/I4je/0NKDwnQwP/c6dxiH/KSvF1KZQZzfa4wzR7BZcDFO1h0PxXeTL1Exxrgx/fG/qeKBP6gJ2ckRNn1ESfvBoG66roJKDbso5+yVKkC/aA7RGllJPx4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by MN0PR12MB5786.namprd12.prod.outlook.com (2603:10b6:208:375::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Mon, 12 Jan
- 2026 12:07:56 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::488f:318b:ebd1:70f9]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::488f:318b:ebd1:70f9%6]) with mapi id 15.20.9499.005; Mon, 12 Jan 2026
- 12:07:56 +0000
-Date: Mon, 12 Jan 2026 13:07:50 +0100
-From: Robert Richter <rrichter@amd.com>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] cxl: Check for invalid addresses returned from
- translation functions on errors
-Message-ID: <aWTkFpaR_T4eVSsp@rric.localdomain>
-References: <20260106172358.350724-1-rrichter@amd.com>
- <aV1XnLrAiONbeA_X@aschofie-mobl2.lan>
- <aV5LdGD8lQm7AYK3@rric.localdomain>
- <aV_ySgCVvEjLoxZ2@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aV_ySgCVvEjLoxZ2@aschofie-mobl2.lan>
-X-ClientProxiedBy: FR4P281CA0053.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:cc::18) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O90TRLsh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1768219962;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NyKAAVbRiwpUoBFdn3/clJG0F+n4W2Li7tTGkoyMxfw=;
+	b=O90TRLshvBELTqi14tdksYMBrmO9CoYm7AAsnqWDWeeByKQQyRorn9AqoYaaRMEKNdLFkW
+	gYq+3X0Ktkzud/FXGNgZGWL9v2b44JtYKIXpTQ0hc8X5C5DT+vMn4fZHCfi1vkKy4vqr05
+	vGKdxRXrzytvOTAmUCQSMrk7/YPa2q0=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-502---VYPIF4Md-iIJkCiAEzoQ-1; Mon,
+ 12 Jan 2026 07:12:39 -0500
+X-MC-Unique: --VYPIF4Md-iIJkCiAEzoQ-1
+X-Mimecast-MFC-AGG-ID: --VYPIF4Md-iIJkCiAEzoQ_1768219958
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C49ED1954B0B;
+	Mon, 12 Jan 2026 12:12:37 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.45.242.32])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C96DE19560BA;
+	Mon, 12 Jan 2026 12:12:36 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id 7803021E6683; Mon, 12 Jan 2026 13:12:34 +0100 (CET)
+From: Markus Armbruster <armbru@redhat.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Michael Tsirkin <mst@redhat.com>,  <qemu-devel@nongnu.org>,
+  <shiju.jose@huawei.com>,  <linuxarm@huawei.com>,
+  <linux-cxl@vger.kernel.org>,  Ravi Shankar <venkataravis@micron.com>
+Subject: Re: [PATCH qemu v2 1/5] qapi: cxl: Refactor CXL event injection for
+ common commands arguments
+In-Reply-To: <20260102151512.460766-2-Jonathan.Cameron@huawei.com> (Jonathan
+	Cameron's message of "Fri, 2 Jan 2026 15:15:08 +0000")
+References: <20260102151512.460766-1-Jonathan.Cameron@huawei.com>
+	<20260102151512.460766-2-Jonathan.Cameron@huawei.com>
+Date: Mon, 12 Jan 2026 13:12:34 +0100
+Message-ID: <87pl7ff2rx.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|MN0PR12MB5786:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0b819a6-bd3c-4db5-4b9f-08de51d33894
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?OmODIy1Zi24OIhLSFPCR+QO1dsMNibOqpzd2G5K6I2kSwQZKOB1mR7o3FHAA?=
- =?us-ascii?Q?9TpGVuNcUpihiwNlrjSf1KzDM0ydZD3Anfy5G29szFrW9/bV2HcOZ/LYPtc+?=
- =?us-ascii?Q?kL8roGqU7/fjT299G0bFFsJ4Jf65R9eNHsFALs3tfC9v5iDqmHAhHbJotRo6?=
- =?us-ascii?Q?c1qwUPkIkn/d+LrLE+FnDgusZa9SbuwohQy9KpFubBACMBZ5g0xvespzZb53?=
- =?us-ascii?Q?A3I5rVh8IhKFp4/LaMUPtfBeernDJpNMRJclyfbVkoCwsWpzhL7okaFjFxT+?=
- =?us-ascii?Q?UC9m97Nz/5SOJZsrv+oD6eShfD1OZSA27OxDP/5qpdeLvj7iuC96dLKpakqV?=
- =?us-ascii?Q?fHFCdVvBaWvBfcb6VibmR2xyM6UApKYbXpQqN1fj6L1G8wZwyzV3hWXnK98F?=
- =?us-ascii?Q?m2n8ZpCGjUlmHtM6vyWPSB0yZ/K9pC6+HDqfQxc2sJxkU5uoZWoNOE1MukmH?=
- =?us-ascii?Q?7QJx5ZT7xdOGsQpx32x3EyvE4WbhQ0MHaOHkb9GIRYPM8Hyt3IdST0nLLZ9U?=
- =?us-ascii?Q?T0D6JlrpIe6uYXL6QFPkDyLb2Ob3+ulETOj6963HgIY5lLD0bxgfZHX8XISW?=
- =?us-ascii?Q?G0iIGjOGmVAS3Ts9aWcJKDTQabIIAYhozuQZxzctKjaYSXapNgosz/qhHnxz?=
- =?us-ascii?Q?vGK3SYWYx8tFhKqVERf5M+7u2OB6vKHXH3Y+A75u+r7swnMWgGbiSBpEXgVb?=
- =?us-ascii?Q?LRLSejDrRtYTFxpphF2Hfp7UQ+c4+RkfzmTH3h21A+Bz+PETBkyzZX+F4Hck?=
- =?us-ascii?Q?9KNWTnHYfC5PKgGb2HLKE7e5tOVuSeAwlGwIe6gU73BvbwNj/nCiILL83OF/?=
- =?us-ascii?Q?awOrg2LPLUZoLCJXP/vfrtLbXSO30tWTin1gdUsrPUfF5Cv+RgHfYE3vg9p6?=
- =?us-ascii?Q?DB35xpx08ufNV8q9uN8jFulCqS91z1rDRj++qF6RlBtINzCRO4+XOaftGQIX?=
- =?us-ascii?Q?VPSo1e/R1bUJDbI0NaVQyGAOGVtOD/cXYef2Uv/psdAONroAkX5EKPZlwQfZ?=
- =?us-ascii?Q?PkGIWcBxrl4p0+kf8aKrAYi7L+KqnUmFOOyFIZnAKLL3m2bcEF73X4HAALNm?=
- =?us-ascii?Q?WHCAkYmFD+9KxhYG0j+BnsslZafeSSo7XMje71fq/TM8B3HqDETOwz73k4BY?=
- =?us-ascii?Q?ieyMBWGWlWZst+sOZZ0QHPByOqfssplKXc+AxPPtfjR6G6XNieMmA1Y/iBdr?=
- =?us-ascii?Q?WuOQizugXsA8z+V0Y5w6LL/uQcliNJrBzPiyc5iyNIq13NhhY7KLU2isEifY?=
- =?us-ascii?Q?fO60MZa6gSQWljdgb9pc//Q41Hf0KNmlz5bBfQ7yAa2I5g7e5rgsUyF03yHb?=
- =?us-ascii?Q?Oo00flaz21IzkkCGZN3iq4/1LhtlRBZ6+7T9x3Fm8ifE9dOr6kbc5QBCladX?=
- =?us-ascii?Q?oC6vJAxfAtQlXSvcd0klPnxz8rk8kFjWuxo1tMxyXLJ1BXRtZnFYLoHOH9zF?=
- =?us-ascii?Q?pAiiAYHEB1EYpkvVOGDza78/9Nr9qIL4?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eSWA6DIZt/FpbmIqfnZwgAf+39u+eRlSIU0pdNJnp0kBfp6mYnT2y5/p+s9e?=
- =?us-ascii?Q?5wPzBcnPYpof6H6oN4rSbHIy8Mvuh6N9tUy/pil1rMSJCFPjXYgVCkHVXHKQ?=
- =?us-ascii?Q?ovH6GX78RATaHmhzgPZY2TGXSqaVdjG5OAVeEdVE/1GHHWAKED/LIdwA5Tpg?=
- =?us-ascii?Q?yu+19JkDdICrXmzodofYmUxDBLbg/6QSHk4uFpf0rPuvqk37qMHlzUuywn2E?=
- =?us-ascii?Q?joIbU5x6dt7DbG2gcyBXKwm2/7zycuEvAe+BLnKHMwClOU/PsbG7eGHFOE/O?=
- =?us-ascii?Q?PX+J4IjkjSnOqoBZ9aG22JOOB5tEHZmcoaiNBWyBlfOEG+Fcp8OcYSda37jU?=
- =?us-ascii?Q?wINgv4SqPD3U8rRT5NVlMWuNkBIerL7nqP5/EM5wPla1c5nxi5Uh5JwbL2TT?=
- =?us-ascii?Q?KQsIpLB7iyWl2ladLCnqvwNp0I22QSoNa1HjhGRf2AdFmMPgpBTMKBxCpjPt?=
- =?us-ascii?Q?6f5w70ZVboS3j/TY9nJpJqYngwVzh4eNmOtdfUEk72lNk8ogKFjb9mQ4eyVn?=
- =?us-ascii?Q?qqT/l+SbRIUbz97JIQXduPQ740dV3mW1+yYag+Pu6oq4t1KH5mgdc/OmX1V7?=
- =?us-ascii?Q?6RXTWhH6EMuXpN393xNQS4BchikDg+00Oc/FytF2xmopHc8oqFxxxJ9S9hVw?=
- =?us-ascii?Q?/GfiqfkpTVgEBQ/awYBTD73noLsMLd7HjisY1dIpm84YUV/xPKtfThIQiEsy?=
- =?us-ascii?Q?ri3s03sQXrcS2VkawyVJ9fF5KzVJr8AmYIu4D1JNEsMeHQG7IaEdMi1ugpP7?=
- =?us-ascii?Q?xFOMZ+wbjFtu2FHS3AZZiB0/lzKE+gKIErXKYEkz9h+6o57stdngI1ITZop9?=
- =?us-ascii?Q?oKVLWoy99wriOg2/QquMkOmaFrPCTy9LtA/ph8YT2Br6YC0TOlS70/lJsbZL?=
- =?us-ascii?Q?DDmZeyuivVjB5sxe1wONL8f2CjdEnMJGQ65HJUJke3c2Und2VXisfptb0TiE?=
- =?us-ascii?Q?2HffKE+4rPdN83/smYwWFMSzW07X8frXajQzxZxu0EiGrGAFf12yQg/NEISe?=
- =?us-ascii?Q?ko6fDk6A1aAlUR+e92+25s5lyFOXqcUY3ka8sO4Swt5ifaa617Ch681r6KE7?=
- =?us-ascii?Q?h0JWDkhhI8PATCLDKId3obwpX5bogiRmk5hfuiiQftX+1j8Z0tAaZMzMY5x8?=
- =?us-ascii?Q?plWiOCV60pV3gJiAAml+Ax2eQGvMcGXLxn6nVpIy9q66mmQOvHroUN3bpiFz?=
- =?us-ascii?Q?ALnVWLTupshqajfh32JGRhK5FuoKLWXHGH/XuYe7Np3ljlsAFsTzkchuuMY0?=
- =?us-ascii?Q?xZHnmJNjLdAQSfZHgkHXDUM/PYsHV+G2O+6V16DWFcUQwLJebJYA00AeFDuY?=
- =?us-ascii?Q?J/E3gJjzmLmMf2mTAlt049vDHH4R6l3OkZG5Sgc+S+cI14h1FV1GR1luNbb6?=
- =?us-ascii?Q?ulIcduZ1FBL0pMCiV4vef7zpExIkW10LZ7cB6ddd0gegdPBL8oIvT8VC11ln?=
- =?us-ascii?Q?2XYXGONk3S5/RUJiGOT3Ddo196rl2pa6P3J8ssq3OJujEpeC2mVN0DMBz4hr?=
- =?us-ascii?Q?l0dTHPPQZUYqrX54cwE24EgSfbSWQ/HOV50AJ9VFEVOmSdjjCWKv5orgsd/9?=
- =?us-ascii?Q?rdUvO+DNL/nt20xnIn/aSJmJmkmymC3T68sGpmTguv9J6uv6h/2SNj0M6T8G?=
- =?us-ascii?Q?q46lqYYssLEdfqq6QFyTaW1C+vCyH+LjMiTEN3oGAlOWlzPRwYq7E7xZRLyu?=
- =?us-ascii?Q?+Bpo6OdTuBdZxIttglSs4EBxbV47GV2qf9u8Ec3Ac5Asg+1g?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0b819a6-bd3c-4db5-4b9f-08de51d33894
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2026 12:07:56.5781
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: b2qIwNjPkhD25tYyk6AXXZ8s28c3cP4tLoo0lHeBz3psQuNBXAZtYEU9z9xWjQodmfswI6mrQL7AtrEeBQgLug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5786
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Thu, Jan 08, 2026 at 10:07:06AM -0800, Alison Schofield wrote:
-> On Wed, Jan 07, 2026 at 01:03:00PM +0100, Robert Richter wrote:
-> > On 06.01.26 10:42:36, Alison Schofield wrote:
-> > > On Tue, Jan 06, 2026 at 06:23:58PM +0100, Robert Richter wrote:
-> > 
-> > > > @@ -3207,8 +3220,13 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
-> > > >  		cxled = p->targets[i];
-> > > >  		if (cxled->pos != pos)
-> > > >  			continue;
-> > > > +
-> > > > +		dpa = cxl_dpa_resource_start(cxled);
-> > > 
-> > > We want to return -ENXIO, not 0 in this case.
-> > > So jump out here immediately - right?
-> > > 
-> > > 		if (dpa == REsOURCE_SIZE_MAX)
-> > > 			return -ENXIO;
-> > 
-> > The users of region_offset_to_dpa_result() handle the
-> > RESOURCE_SIZE_MAX case. For that reason the dpa is not checked here.
-> > I did not want to change the function interface with that fix.
-> 
-> region_offset_to_dpa_result() intends to return an rc when it knows
-> it would return a bad result. This is that case. With this proposed
-> change, we avoid adding to a RESOURCE_SIZE_MAX, which is defensive,
-> but isn't quitting immediately correct? These fixups are all about
-> stopping when any ingredient to the calc looks bad. It looks bad,
-> let's stop right away.
-> 
-> Seeing that the callsites do this:
-> 
-> 	rc = region_offset_to_dpa_result(cxlr, offset, &result);
->         if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
-> 		...this failed
-> 
-> shows that they do some defensive programming and don't rely only 
-> on the rc. But the inverse does not seem right - relying on that.
+Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
 
-The logic here says that it is not an error to have result.dpa ==
-ULLONG_MAX, e.g. you still could take result.cxlmd.
+> From: Shiju Jose <shiju.jose@huawei.com>
+>
+> Refactor CXL event injection to use struct for common command
+> arguments.
+>
+> Suggested-by: Markus Armbruster <armbru@redhat.com>
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> 
-> Staring at it more, I guess you could refactor the function to be
-> a void and get rid of the rc entirely.
-> 
-> Is that the real simplification needed here?
+I verified this does not change the external interface by comparing
+generated qapi-introspect.c before and after.
 
-This patch aims to only fix the use of bad address values. No rework
-at all.
+> ---
+>  qapi/cxl.json | 89 +++++++++++++++++++++++++++++++++------------------
+>  1 file changed, 58 insertions(+), 31 deletions(-)
+>
+> diff --git a/qapi/cxl.json b/qapi/cxl.json
+> index eeddb58d1d..d5b86159f1 100644
+> --- a/qapi/cxl.json
+> +++ b/qapi/cxl.json
+> @@ -31,11 +31,10 @@
+>   }
+>  
+>  ##
+> -# @cxl-inject-general-media-event:
+> +# @CXLCommonEventBase:
+>  #
+> -# Inject an event record for a General Media Event (CXL r3.0
+> -# 8.2.9.2.1.1).  This event type is reported via one of the event logs
+> -# specified via the log parameter.
+> +# Common event base for a CXL Event (CXL r3.0 8.2.9.2.1
+> +# Table 8-42 Common Event Record Format).
+>  #
+>  # @path: CXL type 3 device canonical QOM path
+>  #
+> @@ -44,6 +43,16 @@
+>  # @flags: Event Record Flags.  See CXL r3.0 Table 8-42 Common Event
+>  #     Record Format, Event Record Flags for subfield definitions.
+>  #
+> +# Since: 8.1
+> +##
+> +{ 'struct': 'CXLCommonEventBase',
+> +  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags': 'uint8' } }
+> +
+> +##
+> +# @CXLGeneralMediaEvent:
+> +#
+> +# Event record for a General Media Event (CXL r3.0 8.2.9.2.1.1).
+> +#
+>  # @dpa: Device Physical Address (relative to @path device).  Note
+>  #     lower bits include some flags.  See CXL r3.0 Table 8-43 General
+>  #     Media Event Record, Physical Address.
+> @@ -74,26 +83,29 @@
+>  #
+>  # Since: 8.1
+>  ##
+> -{ 'command': 'cxl-inject-general-media-event',
+> -  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags': 'uint8',
+> -            'dpa': 'uint64', 'descriptor': 'uint8',
+> +{ 'struct': 'CXLGeneralMediaEvent',
+> +  'base': 'CXLCommonEventBase',
+> +  'data': { 'dpa': 'uint64', 'descriptor': 'uint8',
+>              'type': 'uint8', 'transaction-type': 'uint8',
+>              '*channel': 'uint8', '*rank': 'uint8',
+>              '*device': 'uint32', '*component-id': 'str' } }
+>  
+>  ##
+> -# @cxl-inject-dram-event:
+> -#
+> -# Inject an event record for a DRAM Event (CXL r3.0 8.2.9.2.1.2).
+> -# This event type is reported via one of the event logs specified via
+> -# the log parameter.
+> +# @cxl-inject-general-media-event:
+>  #
+> -# @path: CXL type 3 device canonical QOM path
+> +# Inject an event record for a General Media Event (CXL r3.0
+> +# 8.2.9.2.1.1).  This event type is reported via one of the event
+> +# logs specified via the log parameter.
+>  #
+> -# @log: Event log to add the event to
+> +# Since: 8.1
+> +##
+> +{ 'command': 'cxl-inject-general-media-event',
+> +  'data': 'CXLGeneralMediaEvent' }
+> +
+> +##
+> +# @CXLDRAMEvent:
+>  #
+> -# @flags: Event Record Flags.  See CXL r3.0 Table 8-42 Common Event
+> -#     Record Format, Event Record Flags for subfield definitions.
+> +# Event record for a DRAM Event (CXL r3.0 8.2.9.2.1.2).
+>  #
+>  # @dpa: Device Physical Address (relative to @path device).  Note
+>  #     lower bits include some flags.  See CXL r3.0 Table 8-44 DRAM
+> @@ -133,9 +145,9 @@
+>  #
+>  # Since: 8.1
+>  ##
+> -{ 'command': 'cxl-inject-dram-event',
+> -  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags': 'uint8',
+> -            'dpa': 'uint64', 'descriptor': 'uint8',
+> +{ 'struct': 'CXLDRAMEvent',
+> +  'base': 'CXLCommonEventBase',
+> +  'data': { 'dpa': 'uint64', 'descriptor': 'uint8',
+>              'type': 'uint8', 'transaction-type': 'uint8',
+>              '*channel': 'uint8', '*rank': 'uint8', '*nibble-mask': 'uint32',
+>              '*bank-group': 'uint8', '*bank': 'uint8', '*row': 'uint32',
+> @@ -143,18 +155,21 @@
+>             }}
+>  
+>  ##
+> -# @cxl-inject-memory-module-event:
+> +# @cxl-inject-dram-event:
+>  #
+> -# Inject an event record for a Memory Module Event (CXL r3.0
+> -# 8.2.9.2.1.3).  This event includes a copy of the Device Health info
+> -# at the time of the event.
+> +# Inject an event record for a DRAM Event (CXL r3.0 8.2.9.2.1.2).
+> +# This event type is reported via one of the event logs
+> +# specified via the log parameter.
+>  #
+> -# @path: CXL type 3 device canonical QOM path
+> +# Since: 8.1
+> +##
+> +{ 'command': 'cxl-inject-dram-event',
+> +  'data': 'CXLDRAMEvent' }
+> +
+> +##
+> +# @CXLMemModuleEvent:
+>  #
+> -# @log: Event Log to add the event to
+> -#
+> -# @flags: Event Record Flags.  See CXL r3.0 Table 8-42 Common Event
+> -#     Record Format, Event Record Flags for subfield definitions.
+> +# Event record for a Memory Module Event (CXL r3.0 8.2.9.2.1.3).
+>  #
+>  # @type: Device Event Type.  See CXL r3.0 Table 8-45 Memory Module
+>  #     Event Record for bit definitions for bit definiions.
+> @@ -185,9 +200,9 @@
+>  #
+>  # Since: 8.1
+>  ##
+> -{ 'command': 'cxl-inject-memory-module-event',
+> -  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags' : 'uint8',
+> -            'type': 'uint8', 'health-status': 'uint8',
+> +{ 'struct': 'CXLMemModuleEvent',
+> +  'base': 'CXLCommonEventBase',
+> +  'data': { 'type': 'uint8', 'health-status': 'uint8',
+>              'media-status': 'uint8', 'additional-status': 'uint8',
+>              'life-used': 'uint8', 'temperature' : 'int16',
+>              'dirty-shutdown-count': 'uint32',
+> @@ -195,6 +210,18 @@
+>              'corrected-persistent-error-count': 'uint32'
+>              }}
+>  
+> +##
+> +# @cxl-inject-memory-module-event:
+> +#
+> +# Inject an event record for a DRAM Event (CXL r3.0 8.2.9.2.1.3)
+> +# This event type is reported via one of the event logs
+> +# specified via the log parameter.
 
--Robert
+I believe this should be
 
-> 
-> -- Alison
-> 
-> > 
-> > Thanks for review.
-> > 
-> > -Robert
-> > 
-> > > 
-> > > 
-> > > > +		if (dpa != RESOURCE_SIZE_MAX)
-> > > > +			dpa += dpa_offset;
-> > > > +
-> > > >  		result->cxlmd = cxled_to_memdev(cxled);
-> > > > -		result->dpa = cxl_dpa_resource_start(cxled) + dpa_offset;
-> > > > +		result->dpa = dpa;
-> > > >  
-> > > >  		return 0;
-> > > >  	}
+   # Inject an event record for a Memory Module Event (CXL r3.0
+   # 8.2.9.2.1.3).  This event includes a copy of the Device Health info
+   # at the time of the event.
+
+> +#
+> +# Since: 8.1
+> +##
+> +{ 'command': 'cxl-inject-memory-module-event',
+> +  'data': 'CXLMemModuleEvent' }
+> +
+>  ##
+>  # @cxl-inject-poison:
+>  #
+
