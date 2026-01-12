@@ -1,76 +1,77 @@
-Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD772270EC1
-	for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 22:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192FC223336
+	for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 23:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768258736; cv=none; b=rhEEp6DAvVw6/dzCHoPXH6HeqlO0rC176Vjv15I9SVj3CSe6BdVbgumF0cUqLpfiOiR4uzVXc/u07DSMkXyzcECDK9V5RskLaDQKReQWbY835w2MwDh1OAA7AjOatfSOvOwfnmstfmtZTLu89wevThAqzSWQ8wbjPDfwqhH96rM=
+	t=1768259143; cv=none; b=evvns1JLh3Obe5a1nXqnwefBhUJ3DqvAEhw37gK6bNVtdUkt0wjzDNeg+eOxhYWBKn2dkTqe1B/GBl8Bx03trY1rWaNidpN2ysqo0SdLcxUTx9bkHSetDeKmBsbaCCxJlYpT6bAGxcf0gsZWdLNolBdETMg3DZ0ba5mqzDDeJ/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768258736; c=relaxed/simple;
-	bh=OSvzN76rg+seSFGLS7/iTzPxgoJrSwfFsL1yCV0y0YY=;
+	s=arc-20240116; t=1768259143; c=relaxed/simple;
+	bh=ZoNauLjpKyH3DAShcEsgvFSrJpJqozh6wLl0Ed6u9Nk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XWNU1krqjXAy/t/FDtwdUOKR5XnBdRG/ACBlYWHUp+wIT/PWcchwJFbINJ2ixXI9HZPr6CEUEg9G+iWecJnN28/g5wvSJRNoDjwS104zUSLZpqD60iHP4WR1r36OiBnImK+K2TJHUe9YiEFx2te40IVmClczLAm3nPZOGXS6TW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=HI2b8Qcj; arc=none smtp.client-ip=209.85.222.195
+	 Content-Type:Content-Disposition:In-Reply-To; b=nttI7RZ3R3EXiABfWzj+bhS90jKWYUwnGxeOBvRH/kxF2jB6F1jywmQ3yv6GZeh4lzyknecpuC5gXBRiYeC4C8zIDAF6UWuW/Mn+i7fbaAmTFLdarPZFCRfa9jZ+/C1r316BguGF9wi3BvxtV+IthQHTqOs/37MlHpvxnzDkuzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=t+leLGhn; arc=none smtp.client-ip=209.85.222.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="HI2b8Qcj"
-Received: by mail-qk1-f195.google.com with SMTP id af79cd13be357-8c0d16bb24dso657796585a.0
-        for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 14:58:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="t+leLGhn"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-8c24f867b75so713323485a.2
+        for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 15:05:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1768258735; x=1768863535; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1768259141; x=1768863941; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v+jOrSXuNU+8iYUyXwE2u0G+cRndsCz6SzUMkSsouk8=;
-        b=HI2b8QcjvhSa16UtnnC94P5UOQVULBcHYwCatmUG5mSqYzJt93LlpcLCzihucuX5Ao
-         KwaHyxG77f8k4n2lirVRsXAXwpIJcbR73YVabZYzKOE48dCWY9DfTnFcZNB231h6h8cf
-         +/XcDA/vypgr8jBdoMoaZ2Rag8G9yF62YjXLRERPNFqwA8Pq5g/q6Mc3g1g/J3XbGion
-         0MgOJ4Z4vEv6R8VQGlfDQtAT3BDS1hmlhRkfaSurFq4lX+baoGjgQy5i04FVkTLMRQq8
-         crptODpJHt8ImdnGa4X1GmGz48ihpoi1G0f3Ctqpp2TPy+oxFq902lME8sI6M/4hk18t
-         5Jcw==
+        bh=92L4TdOg/AQugAUIkow3sIKqVPV7itnh+gH/CFEV7/M=;
+        b=t+leLGhnKbvjzVgw+dHEopz9WwJBxLefX6isjRS90lJep1iN3D2qrCSyRaMNnEbTRD
+         Wh+YSrtSG6b0nCDWonQGAe7qzf11SNmoWsZMIMcQbvdp5Y/h1RB+v4td9BttI2CRSBey
+         6qKcHbe5iRGXFjVsaWDsGLPbMRzMmYJetTby3omJB41YYZ7hs7Cg0eB5wAb33SN2xOkp
+         0RclmqVdSEivBpUDqoIFxljHqlWzM30C9jwgvyBFYIAODkW4VGhkQ+kkrUp/QG3EQgm3
+         H7wF5Ta1GAaGp4OQR/0F53IaepQ0DXOmNAYalV5a9tPufxUycvcRyi/wMRJaWDMozaNH
+         GX5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768258735; x=1768863535;
+        d=1e100.net; s=20230601; t=1768259141; x=1768863941;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=v+jOrSXuNU+8iYUyXwE2u0G+cRndsCz6SzUMkSsouk8=;
-        b=DsWyjOR3ggGttQQFhRuOFU3qkop7DWo+0zW3J4xu+7iKIHimK5SVeZ4Z7xNS+ZIFw1
-         6PKsN+GfIi+0jZIjHu37ddm0F8t1G5KI+Ry2xpqZZxAC2cbLrrOz2KkNc6IG1TtNjJsY
-         918HOvzHCvMyBMnulDkZ2GGWZKAbD54f2Hgg4EYgTZJgTaoLP6GTHKLo3cPh82fha8re
-         g1b405xMTZSI8MSQ8ZkoCFhSg7WbEG+43RBiGLbwpqoeM1yUylsgenPvZMldOmTFxIGX
-         4Q2z3Nk+lJ/Wt9fOZsjs2irXVHZjUeoBueUxXn2w8CrWtaSQzd62ORXMspNw70FRAdNa
-         Ejkw==
-X-Gm-Message-State: AOJu0Yx9OCniBq+0vtCaDqAL/NkRpbX/rtanvffs77ErynsE9MfI+4dm
-	Ii9VZUVg66Zl72msavpx47veU8n4swydcV9g4quyRSU5Ick5nmY5ffiCOES1rqhJ6uU=
-X-Gm-Gg: AY/fxX5o3bjPrbaFxyfKHTNT9wZPEJ4cV61Vm1lY9ko1cMOy1K7AfjNPaxqnrlP5I0i
-	dWfy6NghU46XkVApj/Uk6wOvE82qPHSclnnPPux8/YyWbXGb4fP/7css6LlDLMsTXBmLRACFTZs
-	E5kzQEcfPzg52SoVjvGmXtklscJy7jCgTm65m/e+S11Kuctvbx7ZQ0nhdOLnRxPJQ7b+vOKIste
-	f+7qXcpAadrqDBopX/Q3kfztUDnXRQprOulzsp54iqQO1semL6dmwzGT/SrdiCV8AEVNZwaiWWF
-	qnREVU3yTUbWMvjygghhslR4In+ff8og5Bcq5KzyBv2pbV653PpVs2KZUTEQ6G+22YfhcISgftH
-	DJTXgvyeWqNCCVHAgVVZ41Yy9EKmnFJBmURyrZdfdHghGVBvMj9r8/DqrTvXFuD4fHEft9U8SCQ
-	IgEBnzTOwVpuhbZz9MJdodCZ5gyIkImiD8+jSNq5ZmfOqAR6KOqPk7E99JLrE9n3OkRibWYA==
-X-Google-Smtp-Source: AGHT+IGPazFaHUXjrDI8vZD8dC9hZWiv8xk7YlvWeX/nonxL8cgY5K7prBq9qebB0rMTcisWnKhSxA==
-X-Received: by 2002:a05:620a:4143:b0:8b5:8ba0:b312 with SMTP id af79cd13be357-8c3893dca40mr2875894285a.48.1768258734712;
-        Mon, 12 Jan 2026 14:58:54 -0800 (PST)
+        bh=92L4TdOg/AQugAUIkow3sIKqVPV7itnh+gH/CFEV7/M=;
+        b=laLK7J7hv+7H3Mzbqw+9uDK9xUd5gIZQnPu0EYpi6RYrTDUrorOcf5XHOPMBOXZp4a
+         vIZKfI74/Y4JQ6jRDrSZaTDmAspCXcRjaw5NiVUJUr6ku/SEOm4cPpPg0nOoyMEizv34
+         d+YOjy9LRseywIa1H8tAU9Sb6kbSXOEBwVoOW8cAK+wTtSVSQmLnHPqW+PdiCZ65Hdau
+         POtFIFl+o3e+Be9ndeL3F5xNUakaBGW7i3SHCqBCqeigdpSPuNXofu5fOt+ZPXzep6yO
+         yvlT2VbDIXcS8+ZWZglDTT2XjXqBwRPElFnsnC/QDwUoEji4vUkQgxW7E1u4sUa7WYXt
+         zeng==
+X-Gm-Message-State: AOJu0Yxth+kZiIAuG6qs1TfpXn5bXHRfl5BYEgbX9mr1AoqwenEjerdo
+	Orvrf8T6vxzUj839MJRv0aMHNA3ya+ENgpZnRrLwLmRnyy8oknJpoGH3HlpN+LRXjxo=
+X-Gm-Gg: AY/fxX6+LCLdhA8WwPvAYmk7U1HDsLVjez4YKNJMuhNAzFZi8dwF25ULKuwNJJ6e81e
+	5Xo5X+bAkU6hyCixeAGliMtPxPaLiGCTHwJfVgJjWeFddgCYxt56f+95/h63BqJrqq/CEt9A7sL
+	EJwIW8M4CsAsiZ+63U3kEtVTohm4y9ARkhqPgGPHlvei0XeEEjyAVuqqqaO7xliFWCIfPNUiPwJ
+	xYs8By5zDQ21TH30Ytc1v7ltuUBYhkIytF1mRT/+cCepCaC4MVjsQCq43acqS1GuwSCc4HbPivY
+	hBvE4MafBnbaNuE9YIxN9ec7enj+XVaIwT7XTjpaGY09dR/xt+rWMLx2RQBlHAgB8ToCSn3ZFKA
+	GUukfslhPwIlgE7LCgDNAyZ9tV9+zEEZcC9ln1uO4FSTxalgVTDnh2Xjzo3n/tRYQDLFOKFijJM
+	IkcVU4Io8QlfLJQZaPYw4gKhoTKeSHDDZjR3JAmys2xoxteXk1HYux4fPOJjd2/CVsRgjMlaHet
+	qZVS6Te
+X-Google-Smtp-Source: AGHT+IHwlNOUc3Pi8nsZFjFBY+3Up3ZCkjfkv6qwWxdPY/nNO44Sehb/7txzyAuNhDSiI6FwTr0sJQ==
+X-Received: by 2002:a05:622a:2611:b0:4f3:4cde:1660 with SMTP id d75a77b69052e-4ffb4a52a39mr278973801cf.83.1768259140847;
+        Mon, 12 Jan 2026 15:05:40 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c37f4b917dsm1661818585a.17.2026.01.12.14.58.53
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ffc17c2897sm96783981cf.32.2026.01.12.15.05.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 14:58:54 -0800 (PST)
-Date: Mon, 12 Jan 2026 17:58:21 -0500
+        Mon, 12 Jan 2026 15:05:38 -0800 (PST)
+Date: Mon, 12 Jan 2026 18:05:03 -0500
 From: Gregory Price <gourry@gourry.net>
 To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
 Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
 	kernel-team@meta.com, dave@stgolabs.net,
 	jonathan.cameron@huawei.com, dave.jiang@intel.com,
 	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com, s.neeraj@samsung.com
-Subject: Re: [PATCH 3/6] cxl/core/region: move pmem memctrl logic into
- memctrl/pmem_region
-Message-ID: <aWV8jSUoCG5Yxv_v@gourry-fedora-PF4VCD3F>
+	ira.weiny@intel.com, dan.j.williams@intel.com
+Subject: Re: [PATCH 4/6] cxl: add CONFIG_CXL_REGION_CTRL_AUTO_* build config
+ options
+Message-ID: <aWV-H_YbSrmgAZYd@gourry-fedora-PF4VCD3F>
 References: <20260112163514.2551809-1-gourry@gourry.net>
- <20260112163514.2551809-4-gourry@gourry.net>
- <1b9d3e1c-7b8a-4c9d-8788-4f901f985079@amd.com>
+ <20260112163514.2551809-5-gourry@gourry.net>
+ <05591180-c299-42e1-b8a0-ddd74c5f2174@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -79,26 +80,43 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1b9d3e1c-7b8a-4c9d-8788-4f901f985079@amd.com>
+In-Reply-To: <05591180-c299-42e1-b8a0-ddd74c5f2174@amd.com>
 
-On Mon, Jan 12, 2026 at 03:10:47PM -0600, Cheatham, Benjamin wrote:
+On Mon, Jan 12, 2026 at 03:10:55PM -0600, Cheatham, Benjamin wrote:
 > On 1/12/2026 10:35 AM, Gregory Price wrote:
-> > Move the pmem_region logic from region.c into memctrl/pmem_region.c.
-> > Restrict the valid controllers for pmem to the pmem controller.
-> > Simplify the controller selection logic in region probe.
-> > 
-> > Cc: 
+> > +choice
+> > +	prompt "CXL Region Auto Control Mode"
+> > +	depends on CXL_REGION
+> > +	default CXL_REGION_CTRL_AUTO_DAX
+> > +	help
+> > +	  Select the default controller for CXL regions when ctrl mode is
+> > +	  set to 'auto'. This determines how CXL memory regions are exposed
+> > +	  to the system when no explicit control mode is specified.
+> > +
+> > +config CXL_REGION_CTRL_AUTO_DAX
 > 
-> May want to forward this to whoever this Cc tag was meant for :).
+> This should probably be renamed to CXL_REGION_CTRL_DAX since only DAX is mentioned.
+>
+> > +	bool "DAX"
+> > +	help
+> > +	  When a CXL region's control mode is 'auto', create a DAX region
+> > +	  controller. This allows fine-grained control over the memory region
+> > +	  through the DAX subsystem, and the region can later be converted to
+> > +	  System RAM via daxctl.
+> > +
+> > +	  This is the default and recommended option for most use cases.
 > 
-> One nit below, otherwise this looks good to me:
-> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+> If you remove the 'auto' mode earlier on, then you can just drop the first sentence here.
+> I'd also add a note about when a DAX region can be failed to be created (i.e. BIOS already
+> set up and onlined the memory).
 > 
 
-doh, meant to send this to Neeraj at samsung because they've been poking
-at pmem stuff. Thank you.
+I think I'm just going to drop this entirely, probably this was just too
+ambitious trying to create an easy transition from dax to sysram for
+auto regions.
+
+The reality is BIOS-configured decoders "is NOT the way" (TM). If BIOS
+configures it - it's DAX, otherwise the user gets a choice (or they can
+tear it down and rebuild).
 
 ~Gregory
-
-Neeraj:
-Link: https://lore.kernel.org/linux-cxl/20260112163514.2551809-4-gourry@gourry.net/
