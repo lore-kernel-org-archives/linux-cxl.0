@@ -1,180 +1,173 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A700D35B13D
-	for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 13:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BFE2DB78D
+	for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 14:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768225515; cv=none; b=VK23Aiq8OALN0U5O12taXR8jAcarAfwGAovZ2h1aNQrTzojHO0/2ZCM8LJYFfNK7jBWzqC5vRKQ1ho+FHyrCJSGNPdz1il3vh7XdiWtsoCa9G4MX3CJjtchsI2AN7laxIjGPNeYFcEPji+F/JF28DtzFPRfbyA2mM64b+t+/aqI=
+	t=1768228233; cv=none; b=J2djd3Huj5gal+ZKIu0z98U+OHCEW3CmXMYUEZcdIo3vHvbkn4JM/V//m0zinfSpxtVsdHgC/jMToxFWIlm+WKneD9kqi2YtnEAivJvUxbYAgGnY5mnJdPH5sIa3p3tXWrIMSbk7rlwXLPGUnQ1pCVLhotN5Rc83AfS4rsP3oI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768225515; c=relaxed/simple;
-	bh=cUHVEQ4ugeQMuGA4/ocXfnET6Ezlx8k5T0UznoHi1+I=;
+	s=arc-20240116; t=1768228233; c=relaxed/simple;
+	bh=VeWksy66lpkvgMhVOcEq/CQua3k6ndGuRBBIBT86hX0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uo5L6w5dK3yp7z7RjocAl1l2WoHtvOZ7PGWOJKeRMrcHq4xlGdAA4aWWTnjKYyoXtNwgxl9a88de/M3Ud3yHH3L2WPKq69Ns8J2xb3z4lkiEEBXZGNWElm2egF1Nj9YHMFOoQlTtnRat4jbc0hT91yfCScfOlDsiKrgFUysghtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=GICQ5ZAV; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	 Content-Type:Content-Disposition:In-Reply-To; b=FoXOpmXUXXnjcbseVb0hoJoVZq7o000PFkIEwLHyi9HKKREjFufynOvXZHICQCsFJh9tjsCfT8e//WviJOy00NJ9Cksc/iDgsoZY240bx5tD4xjyn2yxYxXlPAOm5iDjwDvzo1cRvp0kfNzktno/HyxxWL0Ctmu5fym1sCbIYKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DbJ85YSe; arc=none smtp.client-ip=209.85.128.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="GICQ5ZAV"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4ee14ba3d9cso71611141cf.1
-        for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 05:45:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DbJ85YSe"
+Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-47d1d8a49f5so41727075e9.3
+        for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 06:30:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1768225513; x=1768830313; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=oQVWjYpPCtwp4dXF89g7hQK6KDriflVp74tvOjx72Jc=;
-        b=GICQ5ZAV2Gr4ghdUMkl1JWB88WIDy84+ElyztjFepUU/xdAmtbj/1y56tkmQmcKRU0
-         X+/y+LWb+C0pRWfeXjaugN3pS/SQy0OQjA5gpSLyoW/JwG6f2Y4+JallvDWBEWAyUxDI
-         RJtTlQjGTDES1c1bzMb6fz/FCDYlpegNB4E8dsOLqxDFLzcHLs6d81Y6DWfaiMVbCTIn
-         WOKI9rJVPkWfvcCMD5ava1G93AXb4Wvauh1gWyOKAPCYz+MKp8jYws7itoO2wH4yMX5T
-         u5aDzBEqC15GTvQOHI0XQP5dWjnY8CkNB6hw9eBrF2G1tPMumuT+R0yvDtvL/CGagMWV
-         Rn6Q==
+        d=suse.com; s=google; t=1768228229; x=1768833029; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ufp0SZFe0MebuLzATEI2/9d5yfpShZoQXYWtR9jnTtQ=;
+        b=DbJ85YSee6JqVyq3jcPhZ7x0S03Ty9JPFZP7J/rcQTAU7p5oMws5b8tP6sdCe4lDWd
+         gthz4pNGruFz5FUvS99CDZUAlif5iJgEk4+MHSQazQyDXyEWa2fytpVjzPrPJ8nHAWBZ
+         rjpOmqyoozwU7ejlGZ92CGnZy1EKx42NXBX2I4z7+28ohYEClym2/2iUjJNYxg9iprZO
+         IVUEiLcUy2g+/J4WQcdJXwA4PT4lyHdO9ufhbXe5aEHmJB5593HAZ8lw6Yzvw+cAbYl8
+         ZZ8aJVv3pwscNc9uuh/QuxuC01S6vvJqcW+kmpGoL/1VCjU01Ilu8+eJEs/jWb+nX823
+         xmQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768225513; x=1768830313;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oQVWjYpPCtwp4dXF89g7hQK6KDriflVp74tvOjx72Jc=;
-        b=h713gi7N5hgNHK3/IQKcC9edq55IJgAP7Qk01MLqS9NOOfR1QYU6SAK9LLiGnRiDEw
-         g/K86mpvyyJXIv71CEc96IgbiQ2eAg391kRUBEWlgh0Aj2hNo9IE4d5M8VH2KALGMOeW
-         V9Aq/1nvpuCMFXAQmk2Agc72emHV4tj18FDjNw8R9Ytp8O3kThzeA2hm1jawo1jQdgYm
-         IJjQskriNZUixi+weT9QYGTKGuRFuKcYd/c4Abgpelym9UrLwD6iK4LQZJ2g1eb1faAv
-         rziWLxazH4YJLpCY8OJ2ZHp2+qLVBw3zbi0K5LBas0opWo6qX02EnSLvYQf8L2Xir5PI
-         hTfA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmfZ2cNz6gTmv3S+67ugXAz0X37vIztlDLzz0ro24LnCAj9W3BBkgLyyxNnah2yDF8cP70GNMuUqQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVlGovvBQIFDQ7RTjklHlvdP0QqunlUq4P+GaFlstnhBQ0hNzQ
-	v8qxAbR7cAvov70P7BgTWYDf3Y3ZX8NlToIV9B4cctaxZjpqeKLNCC0NLESH5vjdedU=
-X-Gm-Gg: AY/fxX5c0k5KmJNkUY1fN5danQVso6q5BTztLEe4mxy0mPzegFXrCxTWaMxf1HlT6Jy
-	nT4OYnPlHxKpmgJRmriImAfmoENyTeIIlgx2x0yYB/lyR5J1KdmBeUr6uAb8TCC4EWtsA68AODY
-	cScbtLXvGRBCctJgHZki86Gal+/8cSUwXzoKpjA9Ozm0Y0awWdtVfyPSGbinXIvcTzpEKqz6Q2i
-	KLBdirgpL4MiwYe7N3z9QY6qdUNz+VMXSC7ceo6sUEI5OTklEbw5IVce9EUwRXNjL+yXXPPS9XX
-	Wp6O/1GNmRY4K0JH4fEDE8Bv/iUGH9uJHdYbo+DwKhJkHlYN2Yb2jUdNDP3Ncj8eP63kXPPOPZA
-	51kD7tNDvpRreCevrZaiWrQAqCOuxbu2cv/j6hjDUhPsr/JRUJcMGjiUSVgHToIgCo1M6dKifLN
-	uClSf/Ojl+JUUaIMkVvKW8IRin687KROBlogsr3o21i/8kz5KR8KEKvJ3QPHjVtXLpn3Ji8yVgt
-	WTxUQ==
-X-Google-Smtp-Source: AGHT+IG20+wZaR0cdbZzmqo1CbORIU0XkpxQP0kdASvCc3hNxGR2kbLwFGbi9bRoyfQYpJE34s/36Q==
-X-Received: by 2002:ac8:7f4e:0:b0:4ed:6803:6189 with SMTP id d75a77b69052e-4ffb49998dfmr285683391cf.53.1768225512643;
-        Mon, 12 Jan 2026 05:45:12 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ffa8e36232sm124159891cf.22.2026.01.12.05.45.11
+        d=1e100.net; s=20230601; t=1768228229; x=1768833029;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ufp0SZFe0MebuLzATEI2/9d5yfpShZoQXYWtR9jnTtQ=;
+        b=Mw94d/sNpCDI6bGJzZsqh9TPmnWAmqQYkytq3MV7NX3yckPHO4rygKc0WMIrNplb+g
+         Z8hd5uXprmOrsxJ8Y91OXC9dFz19k3ESWUf6cRvYay4ZFWAXdwqB0BHgnGJQIf9qlqsD
+         TKSqK+pCCnxQAnciWFcD15BQkABNO88paZC5hLUrlnvBERMK/d1ZzQVFhfKBSYC8QsR+
+         z3XVG/HNdUQ6Wx6gWL/JOMRJnteErcLZLpaWdnmj5WTYHKi1IvmGTLhmRjHGUBhwWnve
+         tT/cgHbBL8+1X7+zlKeiExkD9a2M4t05YGQ009F0qoLB7cNvWuhGNamShQANg8A8wzZe
+         OQXA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVeFyxsnjk4u4SPpRjXb5ZoHPCxkaZDlboMqz93q/fxXKWA9EvRnYJSREqhWOcVCOMKT5X8VHUSt8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc8RXtKMKLVE90PYqHhGeNVejRZKtwlIimH58nFdBxU0sklSg8
+	OuQ5v+Sug55LVNcqPp9hgWFJ3uYfEuoZqJjQ45D+y97mzhbmNyeQ/SEMPCdA67tk5iw=
+X-Gm-Gg: AY/fxX7qPBXmuvivz+3upxiu7/G0rZvAWRcSYGRT/KjxSj8nMClB3XIFqvCAC3cr0sR
+	I5IV9Q5Ra+mn0FK/2FC/kbNaTpNCjyC5qg3frcGv24hnufBKH5BPpwIfcI5pCcKVuw4oaDRgIgu
+	BZTI7GrdoKTsCgNSLJO9sd9XNg5xtETzYD+CiW2I8TWjneyEt98R1DozgjbA3HcApv2ERnDIPHs
+	cGzxDevA7rnpC6wPZMADR3+5TRtn3IkaeB/C59EcWuo/EglfQOlzdOG9YEFnmxNqaww40fbS3Mw
+	fklYbnCSlJBU2PRKk9hc6a5iaOWbwNmTcgrBQ5QSAZyIFWFUgbGS/Y2UjYVtFXl7fH518v5qtJd
+	PhJB9gq10SRXI9DV4vBXHJzuZ7mcka9bQELZTnoJjr8KZfh1LUKko6PvUJaxrjRkzhy4H/Ley75
+	GHOrBa9fSOfNxdInUrjvLBF0zp8IRTaBs=
+X-Google-Smtp-Source: AGHT+IHDVuFl+T/cu+HZzO3h+yAn0G+FdrWgV6XO6swWljps8VItMR+Lttj4fdxMmzgr/HRFuS5nGg==
+X-Received: by 2002:a05:600c:82c3:b0:475:de68:3c30 with SMTP id 5b1f17b1804b1-47d84b21466mr211537245e9.16.1768228229374;
+        Mon, 12 Jan 2026 06:30:29 -0800 (PST)
+Received: from blackdock.suse.cz (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d865f84besm139369365e9.1.2026.01.12.06.30.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 05:45:11 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1vfIEI-00000003Q1m-3fo1;
-	Mon, 12 Jan 2026 09:45:10 -0400
-Date: Mon, 12 Jan 2026 09:45:10 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Zi Yan <ziy@nvidia.com>
-Cc: Matthew Wilcox <willy@infradead.org>, Balbir Singh <balbirs@nvidia.com>,
-	Francois Dugast <francois.dugast@intel.com>,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	Matthew Brost <matthew.brost@intel.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Felix Kuehling <Felix.Kuehling@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	David Hildenbrand <david@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Alistair Popple <apopple@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-pci@vger.kernel.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free
- callback
-Message-ID: <20260112134510.GC745888@ziepe.ca>
-References: <20260111205820.830410-1-francois.dugast@intel.com>
- <20260111205820.830410-2-francois.dugast@intel.com>
- <aWQlsyIVVGpCvB3y@casper.infradead.org>
- <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
- <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
+        Mon, 12 Jan 2026 06:30:28 -0800 (PST)
+Date: Mon, 12 Jan 2026 15:30:26 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-mm@kvack.org, cgroups@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	kernel-team@meta.com, longman@redhat.com, tj@kernel.org, hannes@cmpxchg.org, 
+	corbet@lwn.net, gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, 
+	dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com, 
+	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com, 
+	dan.j.williams@intel.com, akpm@linux-foundation.org, vbabka@suse.cz, surenb@google.com, 
+	mhocko@suse.com, jackmanb@google.com, ziy@nvidia.com, david@kernel.org, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org, 
+	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com, 
+	linux@rasmusvillemoes.dk, rientjes@google.com, shakeel.butt@linux.dev, chrisl@kernel.org, 
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
+	baohua@kernel.org, yosry.ahmed@linux.dev, chengming.zhou@linux.dev, 
+	roman.gushchin@linux.dev, muchun.song@linux.dev, osalvador@suse.de, 
+	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, 
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, cl@gentwo.org, harry.yoo@oracle.com, 
+	zhengqi.arch@bytedance.com
+Subject: Re: [RFC PATCH v3 5/8] Documentation/admin-guide/cgroups: update
+ docs for mems_allowed
+Message-ID: <o6eky3g4jyvtc2cy6lk7rjc6or6tcvwbhdarrlpn4geuibvrul@65fygkf6vg44>
+References: <20260108203755.1163107-1-gourry@gourry.net>
+ <20260108203755.1163107-6-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zsg7ffk6fb5gx5vt"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
+In-Reply-To: <20260108203755.1163107-6-gourry@gourry.net>
 
-On Sun, Jan 11, 2026 at 07:51:01PM -0500, Zi Yan wrote:
-> On 11 Jan 2026, at 19:19, Balbir Singh wrote:
-> 
-> > On 1/12/26 08:35, Matthew Wilcox wrote:
-> >> On Sun, Jan 11, 2026 at 09:55:40PM +0100, Francois Dugast wrote:
-> >>> The core MM splits the folio before calling folio_free, restoring the
-> >>> zone pages associated with the folio to an initialized state (e.g.,
-> >>> non-compound, pgmap valid, etc...). The order argument represents the
-> >>> folio’s order prior to the split which can be used driver side to know
-> >>> how many pages are being freed.
-> >>
-> >> This really feels like the wrong way to fix this problem.
-> >>
-> 
-> Hi Matthew,
-> 
-> I think the wording is confusing, since the actual issue is that:
-> 
-> 1. zone_device_page_init() calls prep_compound_page() to form a large folio,
-> 2. but free_zone_device_folio() never reverse the course,
-> 3. the undo of prep_compound_page() in free_zone_device_folio() needs to
->    be done before driver callback ->folio_free(), since once ->folio_free()
->    is called, the folio can be reallocated immediately,
-> 4. after the undo of prep_compound_page(), folio_order() can no longer provide
->    the original order information, thus, folio_free() needs that for proper
->    device side ref manipulation.
 
-There is something wrong with the driver if the "folio can be
-reallocated immediately".
+--zsg7ffk6fb5gx5vt
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH v3 5/8] Documentation/admin-guide/cgroups: update
+ docs for mems_allowed
+MIME-Version: 1.0
 
-The flow generally expects there to be a driver allocator linked to
-folio_free()
+Hello.
 
-1) Allocator finds free memory
-2) zone_device_page_init() allocates the memory and makes refcount=1
-3) __folio_put() knows the recount 0.
-4) free_zone_device_folio() calls folio_free(), but it doesn't
-   actually need to undo prep_compound_page() because *NOTHING* can
-   use the page pointer at this point.
-5) Driver puts the memory back into the allocator and now #1 can
-   happen. It knows how much memory to put back because folio->order
-   is valid from #2
-6) #1 happens again, then #2 happens again and the folio is in the
-   right state for use. The successor #2 fully undoes the work of the
-   predecessor #2.
+On Thu, Jan 08, 2026 at 03:37:52PM -0500, Gregory Price <gourry@gourry.net>=
+ wrote:
+> --- a/Documentation/admin-guide/cgroup-v2.rst
+> +++ b/Documentation/admin-guide/cgroup-v2.rst
+> @@ -2530,8 +2530,11 @@ Cpuset Interface Files
+>  	cpuset-enabled cgroups.
+> =20
+>  	It lists the onlined memory nodes that are actually granted to
+> -	this cgroup by its parent. These memory nodes are allowed to
+> -	be used by tasks within the current cgroup.
+> +	this cgroup by its parent.  This includes both regular SystemRAM
+> +	nodes (N_MEMORY) and Private Nodes (N_PRIVATE) that provide
+> +	device-specific memory not intended for general consumption.
+> +	Tasks within this cgroup may access Private Nodes using explicit
+> +	__GFP_THISNODE allocations if the node is in this mask.
 
-If you have races where #1 can happen immediately after #3 then the
-driver design is fundamentally broken and passing around order isn't
-going to help anything.
+Notice that these files are exposed for userspace. Hence I'm not sure
+they'd be able to ask for allocations like this (or even need to know
+about this implementation detail).
 
-If the allocator is using the struct page memory then step #5 should
-also clean up the struct page with the allocator data before returning
-it to the allocator.
+> =20
+>  	If "cpuset.mems" is empty, it shows all the memory nodes from the
+>  	parent cgroup that will be available to be used by this cgroup.
+> @@ -2541,6 +2544,25 @@ Cpuset Interface Files
+> =20
+>  	Its value will be affected by memory nodes hotplug events.
+> =20
+> +  cpuset.mems.sysram
+> +	A read-only multiple values file which exists on all
+> +	cpuset-enabled cgroups.
+> +
+> +	It lists the SystemRAM nodes (N_MEMORY) that are available for
+> +	general memory allocation by tasks within this cgroup.  This is
+> +	a subset of "cpuset.mems.effective" that excludes Private Nodes.
+> +
+> +	Normal page allocations are restricted to nodes in this mask.
+> +	The kernel page allocator, slab allocator, and compaction only
+> +	consider SystemRAM nodes when allocating memory for tasks.
+> +
+> +	Private Nodes are excluded from this mask because their memory
+> +	is managed by device drivers for specific purposes (e.g., CXL
+> +	compressed memory, accelerator memory) and should not be used
+> +	for general allocations.
 
-I vaugely remember talking about this before in the context of the Xe
-driver.. You can't just take an existing VRAM allocator and layer it
-on top of the folios and have it broadly ignore the folio_free
-callback.
+So I wonder whether the N_PRIVATE nodes should be included in
+cpuset.mems[.effective] at all.
+(It resembles CPU isolation to me a bit ~ cpuset.cpus.isolated.)
+Maybe you only want to expose it on the root cpuset cg and inverted like
+cpuset.mems.private?
 
-Jsaon
+Thanks,
+Michal
+
+--zsg7ffk6fb5gx5vt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJEEABYKADkWIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaWUFgBsUgAAAAAAEAA5t
+YW51MiwyLjUrMS4xMSwyLDIACgkQfj0C55Tb+AivpwD+JBcYsTGjsYsxubfnEPsa
+ZpJvMAA2jVDEmQNiB588agwBAPoLqRDiK7ZtFi8f8bY/cXcHgh+krN2tOGh2v+x0
+RlAB
+=oogw
+-----END PGP SIGNATURE-----
+
+--zsg7ffk6fb5gx5vt--
