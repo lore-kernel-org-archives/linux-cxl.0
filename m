@@ -1,61 +1,61 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E461386C9
-	for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 12:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BCD50097B
+	for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 12:18:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768220175; cv=none; b=JN3N7do4gXA1k8u3Ba13TOuKRmmkcYsyJu+boq/cTMFMZ2FxA5LsaTBfNBDyOBw/2flUdepgeLJe2IfItCtC3d10Gkn6YOUXcLUuAfoWew5gvgVnYiMHf563hRSxresEHt+4LGmV4rc93NXjLokXWe8GozdaeMhvV+mX9mqicUA=
+	t=1768220291; cv=none; b=FLvPjEQ48MOX7aC7Fm6mjnu42quKebD21/gD7AvXDEoEZKlJD88WpkmSB8gX19PlBsC3qPuntr8+aYFYNFYq1q8po4ezdyoU7A+3ADrHx0fySR8ae8ANfojnj8ZQqhFdU/l6PK8WTDnjlSsyn2fpdkO4/XHrQNvUN2xAwzOb0QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768220175; c=relaxed/simple;
-	bh=TOdwZ49dn42rQCmA+edupiiwBY28ovB0Xh692zLIJ2s=;
+	s=arc-20240116; t=1768220291; c=relaxed/simple;
+	bh=4UFCGk0Fr/q1ZnEvGtDotVggP/JH4RoW05QbBEmDjv8=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=EDbddJo71HlrzO1cXkq2wtbpUbI6XWy9JGd2EGNA+QeX63AY+ZrwsTTzuYZ+tpzNIUgwhfnwe3wD/bHYd8ry30dcTbmTx/Kzgmg8esTTOJUkhjKEB6CEFhtXNQO7x8A1QwFLZ/HV88YKxwEurErZTs9fQbKk4zhcbUWwz4ovhxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DhPc3CGR; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=kCWMIwedPf4YShRUHO1j3u+VyPSgEj+6T33+88PRytWQnupXXr/zDCLPvirlEONsI9fggy4dBTznust492ilQI6EdRDGGEkRB4k48uFtybpMhy6QgLuSQy2hQpcUTyC+7lSPl752Yi4yD64CrOvi6CHSpUtdvWo1WZ28xIDWfmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E/VSIwnn; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DhPc3CGR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E/VSIwnn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768220173;
+	s=mimecast20190719; t=1768220289;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VDFbypgcE0ZzazQGWl9Vn6cHcUC5kVfBbUH42zkwYXA=;
-	b=DhPc3CGRSG5+75K3XBL2bj9n9eRfYLTWYg0Sa5pHQbSkNR4335AvBCYWK6/tklzJXSZSak
-	sBWIPBHIoqiNzVCDNQk7K9+22UGYAV8g0qorpjw3ymgYmoPJjxRytJHCxWdsa4fnCv40R0
-	AWYIZkioWkUZ5Ce2QAoticrJtVbV4jU=
+	bh=40Kf5ms2Kv38t+N1cc4C1QC+G5i0oZ2Ags3s47nY4H0=;
+	b=E/VSIwnnS0PO+vtb6TLdDSBDsGKh+cNNhCTGMmBazPLKaVdjjpVnRJ5YAyIJiI6sRfMqYB
+	NVzM4YQfxxnhZxXqrt5ur27fIwDzCoYO4EUH1CgqTNOg302l207y6A4KRLzKChmqqBHTlc
+	FNRtVdGm50BA8UQE3IzypZuWrkUmAfM=
 Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-358-b8WR5gB_N9mgdW-AGxb17g-1; Mon,
- 12 Jan 2026 07:16:10 -0500
-X-MC-Unique: b8WR5gB_N9mgdW-AGxb17g-1
-X-Mimecast-MFC-AGG-ID: b8WR5gB_N9mgdW-AGxb17g_1768220168
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-343-IcBe6D-OMB2CxNS2R71bUQ-1; Mon,
+ 12 Jan 2026 07:18:06 -0500
+X-MC-Unique: IcBe6D-OMB2CxNS2R71bUQ-1
+X-Mimecast-MFC-AGG-ID: IcBe6D-OMB2CxNS2R71bUQ_1768220285
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 978FA1956046;
-	Mon, 12 Jan 2026 12:16:08 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D96991956050;
+	Mon, 12 Jan 2026 12:18:04 +0000 (UTC)
 Received: from blackfin.pond.sub.org (unknown [10.45.242.32])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 21F3418004D8;
-	Mon, 12 Jan 2026 12:16:08 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 810BC18001D5;
+	Mon, 12 Jan 2026 12:18:04 +0000 (UTC)
 Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
-	id B165421E6683; Mon, 12 Jan 2026 13:16:05 +0100 (CET)
+	id 1CE9621E6742; Mon, 12 Jan 2026 13:18:02 +0100 (CET)
 From: Markus Armbruster <armbru@redhat.com>
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: Michael Tsirkin <mst@redhat.com>,  <qemu-devel@nongnu.org>,
   <shiju.jose@huawei.com>,  <linuxarm@huawei.com>,
   <linux-cxl@vger.kernel.org>,  Ravi Shankar <venkataravis@micron.com>
-Subject: Re: [PATCH qemu v2 2/5] hw/cxl/events: Update for rev3.2 common
- event record format
-In-Reply-To: <20260102151512.460766-3-Jonathan.Cameron@huawei.com> (Jonathan
-	Cameron's message of "Fri, 2 Jan 2026 15:15:09 +0000")
+Subject: Re: [PATCH qemu v2 3/5] hw/cxl/events: Updates for rev3.2 general
+ media event record
+In-Reply-To: <20260102151512.460766-4-Jonathan.Cameron@huawei.com> (Jonathan
+	Cameron's message of "Fri, 2 Jan 2026 15:15:10 +0000")
 References: <20260102151512.460766-1-Jonathan.Cameron@huawei.com>
-	<20260102151512.460766-3-Jonathan.Cameron@huawei.com>
-Date: Mon, 12 Jan 2026 13:16:05 +0100
-Message-ID: <87ldi3f2m2.fsf@pond.sub.org>
+	<20260102151512.460766-4-Jonathan.Cameron@huawei.com>
+Date: Mon, 12 Jan 2026 13:18:02 +0100
+Message-ID: <87h5srf2it.fsf@pond.sub.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -64,78 +64,78 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
 Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
 
 > From: Shiju Jose <shiju.jose@huawei.com>
 >
-> CXL spec 3.2 section 8.2.9.2.1 Table 8-55, Common Event Record
-> format has updated with optional Maintenance Operation Subclass,
-> LD ID and ID of the device head information.
+> CXL spec rev3.2 section 8.2.10.2.1.1 Table 8-57, general media event
+> table has updated with following new fields.
+> 1. Advanced Programmable Corrected Memory Error Threshold Event Flags
+> 2. Corrected Memory Error Count at Event
+> 3. Memory Event Sub-Type
+> 4. Support for component ID in the PLDM format.
 >
-> Add updates for the above optional parameters in the related
-> CXL events reporting and in the QMP commands to inject CXL events.
+> Add updates for the above spec changes in the CXL general media event
+> reporting and QMP command to inject general media event.
 >
 > Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
->  qapi/cxl.json               | 20 ++++++++---
->  include/hw/cxl/cxl_device.h |  7 +++-
->  include/hw/cxl/cxl_events.h | 15 ++++++--
->  hw/cxl/cxl-events.c         |  3 +-
->  hw/cxl/cxl-mailbox-utils.c  |  3 +-
->  hw/mem/cxl_type3.c          | 70 ++++++++++++++++++++++++++++++++-----
->  hw/mem/cxl_type3_stubs.c    | 24 +++++++++++--
->  7 files changed, 121 insertions(+), 21 deletions(-)
+>  qapi/cxl.json               | 15 ++++++++++++++-
+>  include/hw/cxl/cxl_events.h |  7 +++++--
+>  hw/mem/cxl_type3.c          | 29 +++++++++++++++++++++++++++++
+>  hw/mem/cxl_type3_stubs.c    |  6 ++++++
+>  4 files changed, 54 insertions(+), 3 deletions(-)
 >
 > diff --git a/qapi/cxl.json b/qapi/cxl.json
-> index d5b86159f1..b3c2ac9575 100644
+> index b3c2ac9575..c5ecbe9646 100644
 > --- a/qapi/cxl.json
 > +++ b/qapi/cxl.json
-> @@ -33,20 +33,32 @@
->  ##
->  # @CXLCommonEventBase:
+> @@ -93,6 +93,16 @@
+   ##
+   # @CXLGeneralMediaEvent:
+   #
+   # Event record for a General Media Event (CXL r3.0 8.2.9.2.1.1).
+   #
+   # @dpa: Device Physical Address (relative to @path device).  Note
+   #     lower bits include some flags.  See CXL r3.0 Table 8-43 General
+   #     Media Event Record, Physical Address.
+   #
+   [...]
+>  # @component-id: Device specific component identifier for the event.
+>  #     May describe a field replaceable sub-component of the device.
 >  #
-> -# Common event base for a CXL Event (CXL r3.0 8.2.9.2.1
-> -# Table 8-42 Common Event Record Format).
-> +# Common event base for a CXL Event (CXL r3.2 8.2.10.2.1
-> +# Table 8-55 Common Event Record Format).
->  #
->  # @path: CXL type 3 device canonical QOM path
->  #
->  # @log: event log to add the event to
->  #
-> -# @flags: Event Record Flags.  See CXL r3.0 Table 8-42 Common Event
-> +# @flags: Event Record Flags.  See CXL r3.2 Table 8-55 Common Event
->  #     Record Format, Event Record Flags for subfield definitions.
->  #
-> +# @maint-op-class: Maintenance operation class the device requests to
-> +#     initiate.
+> +# @is-comp-id-pldm: This flag specifies whether the device-specific
+> +#     component identifier format follows PLDM.
 > +#
-> +# @maint-op-subclass: Maintenance operation subclass the device
-> +#     requests to initiate.
+> +# @cme-ev-flags: Advanced programmable corrected memory error
+> +#     threshold event flags.
 > +#
-> +# @ld-id: LD ID of LD from where the event originated.
-
-What's an LD?
-
+> +# @cme-count: Corrected memory error count at event.
 > +#
-> +# @head-id: ID of the device head from where the event originated.
-
-Are these identifiers taken from the CXL spec?
-
+> +# @sub-type: Memory event sub-type.
 > +#
+
+You're not updating the reference to the CXL spec from 3.0 to 3.2.
+Intentional?
+
 >  # Since: 8.1
 >  ##
->  { 'struct': 'CXLCommonEventBase',
-> -  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags': 'uint8' } }
-> +  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags': 'uint32',
-> +            '*maint-op-class':'uint8', '*maint-op-subclass':'uint8',
-> +            '*ld-id':'uint16', '*head-id':'uint8' } }
+>  { 'struct': 'CXLGeneralMediaEvent',
+> @@ -100,7 +110,10 @@
+>    'data': { 'dpa': 'uint64', 'descriptor': 'uint8',
+>              'type': 'uint8', 'transaction-type': 'uint8',
+>              '*channel': 'uint8', '*rank': 'uint8',
+> -            '*device': 'uint32', '*component-id': 'str' } }
+> +            '*device': 'uint32', '*component-id': 'str',
+> +            '*is-comp-id-pldm':'bool',
+> +            '*cme-ev-flags':'uint8', '*cme-count':'uint32',
+> +            'sub-type':'uint8' } }
 >  
 >  ##
->  # @CXLGeneralMediaEvent:
+>  # @cxl-inject-general-media-event:
 
 [...]
 
