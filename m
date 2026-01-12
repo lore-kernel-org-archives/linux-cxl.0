@@ -1,128 +1,180 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DA526E719
-	for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 12:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A700D35B13D
+	for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 13:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768220625; cv=none; b=a7wh6CyN2r9wNBqbx7grCguXaQ+Xz/dUukl0TM2Zw90c8WYFx1GHhkMXjIR/6szZd/lys3aORYHCYSinOBU9AlEfACUVAt3GlnyDmHJOuv/Gl7kEjLTBo620Jj0DmsN20F6R2z+ChGtWPEtAvyELYrkfuHrOHo97nFkXPj/XtNc=
+	t=1768225515; cv=none; b=VK23Aiq8OALN0U5O12taXR8jAcarAfwGAovZ2h1aNQrTzojHO0/2ZCM8LJYFfNK7jBWzqC5vRKQ1ho+FHyrCJSGNPdz1il3vh7XdiWtsoCa9G4MX3CJjtchsI2AN7laxIjGPNeYFcEPji+F/JF28DtzFPRfbyA2mM64b+t+/aqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768220625; c=relaxed/simple;
-	bh=FnPU60LMYJDVbHJK9QVPdsCe2N5jkZ/m81hSUkCWeq4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HjH6uPn4KwoTrbNbtpPcy6ilvK3sOgriHOkbJSo/bpqHqQ5NC5epae99yzcXa1n/Z5T49IKmlHG7QtRr973T/bF3or50xt06r5ONc8VE7FNEeR2fXviAkXqdkMAVHSD37zJyOHw4djNG/l/UHS77kJFUHPGDA40gFBam6T5tTyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XvM5mCQf; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1768225515; c=relaxed/simple;
+	bh=cUHVEQ4ugeQMuGA4/ocXfnET6Ezlx8k5T0UznoHi1+I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uo5L6w5dK3yp7z7RjocAl1l2WoHtvOZ7PGWOJKeRMrcHq4xlGdAA4aWWTnjKYyoXtNwgxl9a88de/M3Ud3yHH3L2WPKq69Ns8J2xb3z4lkiEEBXZGNWElm2egF1Nj9YHMFOoQlTtnRat4jbc0hT91yfCScfOlDsiKrgFUysghtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=GICQ5ZAV; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XvM5mCQf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768220614;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bBcbqJ+HaHOXY1qhhR27ENO31OIiH/4ni506XBX8/OI=;
-	b=XvM5mCQfox3qDSb4G0/JC8lqRqD/F8NXl4Xm1cYdBsDMGi1/sRNQSFzlX1rKHReNmILOd3
-	pWtVRejvEUfU4a4z2cSGeE4EiLKqRKvmfQta47g4HCfIIFMdnErxNGo5S6WgqlJwVcmIVN
-	QI05VOJk1wIIZVDgYMiEO6jSJX7g7BU=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-410-h7EH7fDmMaetLCthkVBawQ-1; Mon,
- 12 Jan 2026 07:23:31 -0500
-X-MC-Unique: h7EH7fDmMaetLCthkVBawQ-1
-X-Mimecast-MFC-AGG-ID: h7EH7fDmMaetLCthkVBawQ_1768220610
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3630B19560B2;
-	Mon, 12 Jan 2026 12:23:30 +0000 (UTC)
-Received: from blackfin.pond.sub.org (unknown [10.45.242.32])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B2E9A18004D8;
-	Mon, 12 Jan 2026 12:23:29 +0000 (UTC)
-Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
-	id 3F89821E6742; Mon, 12 Jan 2026 13:23:27 +0100 (CET)
-From: Markus Armbruster <armbru@redhat.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Michael Tsirkin <mst@redhat.com>,  <qemu-devel@nongnu.org>,
-  <shiju.jose@huawei.com>,  <linuxarm@huawei.com>,
-  <linux-cxl@vger.kernel.org>,  Ravi Shankar <venkataravis@micron.com>
-Subject: Re: [PATCH qemu v2 5/5] hw/cxl/events: Updates for rev3.2 memory
- module event record
-In-Reply-To: <20260102151512.460766-6-Jonathan.Cameron@huawei.com> (Jonathan
-	Cameron's message of "Fri, 2 Jan 2026 15:15:12 +0000")
-References: <20260102151512.460766-1-Jonathan.Cameron@huawei.com>
-	<20260102151512.460766-6-Jonathan.Cameron@huawei.com>
-Date: Mon, 12 Jan 2026 13:23:27 +0100
-Message-ID: <87344bf29s.fsf@pond.sub.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="GICQ5ZAV"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4ee14ba3d9cso71611141cf.1
+        for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 05:45:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1768225513; x=1768830313; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=oQVWjYpPCtwp4dXF89g7hQK6KDriflVp74tvOjx72Jc=;
+        b=GICQ5ZAV2Gr4ghdUMkl1JWB88WIDy84+ElyztjFepUU/xdAmtbj/1y56tkmQmcKRU0
+         X+/y+LWb+C0pRWfeXjaugN3pS/SQy0OQjA5gpSLyoW/JwG6f2Y4+JallvDWBEWAyUxDI
+         RJtTlQjGTDES1c1bzMb6fz/FCDYlpegNB4E8dsOLqxDFLzcHLs6d81Y6DWfaiMVbCTIn
+         WOKI9rJVPkWfvcCMD5ava1G93AXb4Wvauh1gWyOKAPCYz+MKp8jYws7itoO2wH4yMX5T
+         u5aDzBEqC15GTvQOHI0XQP5dWjnY8CkNB6hw9eBrF2G1tPMumuT+R0yvDtvL/CGagMWV
+         Rn6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768225513; x=1768830313;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oQVWjYpPCtwp4dXF89g7hQK6KDriflVp74tvOjx72Jc=;
+        b=h713gi7N5hgNHK3/IQKcC9edq55IJgAP7Qk01MLqS9NOOfR1QYU6SAK9LLiGnRiDEw
+         g/K86mpvyyJXIv71CEc96IgbiQ2eAg391kRUBEWlgh0Aj2hNo9IE4d5M8VH2KALGMOeW
+         V9Aq/1nvpuCMFXAQmk2Agc72emHV4tj18FDjNw8R9Ytp8O3kThzeA2hm1jawo1jQdgYm
+         IJjQskriNZUixi+weT9QYGTKGuRFuKcYd/c4Abgpelym9UrLwD6iK4LQZJ2g1eb1faAv
+         rziWLxazH4YJLpCY8OJ2ZHp2+qLVBw3zbi0K5LBas0opWo6qX02EnSLvYQf8L2Xir5PI
+         hTfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmfZ2cNz6gTmv3S+67ugXAz0X37vIztlDLzz0ro24LnCAj9W3BBkgLyyxNnah2yDF8cP70GNMuUqQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVlGovvBQIFDQ7RTjklHlvdP0QqunlUq4P+GaFlstnhBQ0hNzQ
+	v8qxAbR7cAvov70P7BgTWYDf3Y3ZX8NlToIV9B4cctaxZjpqeKLNCC0NLESH5vjdedU=
+X-Gm-Gg: AY/fxX5c0k5KmJNkUY1fN5danQVso6q5BTztLEe4mxy0mPzegFXrCxTWaMxf1HlT6Jy
+	nT4OYnPlHxKpmgJRmriImAfmoENyTeIIlgx2x0yYB/lyR5J1KdmBeUr6uAb8TCC4EWtsA68AODY
+	cScbtLXvGRBCctJgHZki86Gal+/8cSUwXzoKpjA9Ozm0Y0awWdtVfyPSGbinXIvcTzpEKqz6Q2i
+	KLBdirgpL4MiwYe7N3z9QY6qdUNz+VMXSC7ceo6sUEI5OTklEbw5IVce9EUwRXNjL+yXXPPS9XX
+	Wp6O/1GNmRY4K0JH4fEDE8Bv/iUGH9uJHdYbo+DwKhJkHlYN2Yb2jUdNDP3Ncj8eP63kXPPOPZA
+	51kD7tNDvpRreCevrZaiWrQAqCOuxbu2cv/j6hjDUhPsr/JRUJcMGjiUSVgHToIgCo1M6dKifLN
+	uClSf/Ojl+JUUaIMkVvKW8IRin687KROBlogsr3o21i/8kz5KR8KEKvJ3QPHjVtXLpn3Ji8yVgt
+	WTxUQ==
+X-Google-Smtp-Source: AGHT+IG20+wZaR0cdbZzmqo1CbORIU0XkpxQP0kdASvCc3hNxGR2kbLwFGbi9bRoyfQYpJE34s/36Q==
+X-Received: by 2002:ac8:7f4e:0:b0:4ed:6803:6189 with SMTP id d75a77b69052e-4ffb49998dfmr285683391cf.53.1768225512643;
+        Mon, 12 Jan 2026 05:45:12 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ffa8e36232sm124159891cf.22.2026.01.12.05.45.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jan 2026 05:45:11 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1vfIEI-00000003Q1m-3fo1;
+	Mon, 12 Jan 2026 09:45:10 -0400
+Date: Mon, 12 Jan 2026 09:45:10 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Zi Yan <ziy@nvidia.com>
+Cc: Matthew Wilcox <willy@infradead.org>, Balbir Singh <balbirs@nvidia.com>,
+	Francois Dugast <francois.dugast@intel.com>,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	Matthew Brost <matthew.brost@intel.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Felix Kuehling <Felix.Kuehling@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	David Hildenbrand <david@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Alistair Popple <apopple@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-pci@vger.kernel.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free
+ callback
+Message-ID: <20260112134510.GC745888@ziepe.ca>
+References: <20260111205820.830410-1-francois.dugast@intel.com>
+ <20260111205820.830410-2-francois.dugast@intel.com>
+ <aWQlsyIVVGpCvB3y@casper.infradead.org>
+ <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
+ <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
 
-Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
+On Sun, Jan 11, 2026 at 07:51:01PM -0500, Zi Yan wrote:
+> On 11 Jan 2026, at 19:19, Balbir Singh wrote:
+> 
+> > On 1/12/26 08:35, Matthew Wilcox wrote:
+> >> On Sun, Jan 11, 2026 at 09:55:40PM +0100, Francois Dugast wrote:
+> >>> The core MM splits the folio before calling folio_free, restoring the
+> >>> zone pages associated with the folio to an initialized state (e.g.,
+> >>> non-compound, pgmap valid, etc...). The order argument represents the
+> >>> folio’s order prior to the split which can be used driver side to know
+> >>> how many pages are being freed.
+> >>
+> >> This really feels like the wrong way to fix this problem.
+> >>
+> 
+> Hi Matthew,
+> 
+> I think the wording is confusing, since the actual issue is that:
+> 
+> 1. zone_device_page_init() calls prep_compound_page() to form a large folio,
+> 2. but free_zone_device_folio() never reverse the course,
+> 3. the undo of prep_compound_page() in free_zone_device_folio() needs to
+>    be done before driver callback ->folio_free(), since once ->folio_free()
+>    is called, the folio can be reallocated immediately,
+> 4. after the undo of prep_compound_page(), folio_order() can no longer provide
+>    the original order information, thus, folio_free() needs that for proper
+>    device side ref manipulation.
 
-> From: Shiju Jose <shiju.jose@huawei.com>
->
-> CXL spec rev3.2 section 8.2.10.2.1.3 Table 8-50, memory module
-> event record has updated with following new fields.
-> 1. Validity Flags
-> 2. Component Identifier
-> 3. Device Event Sub-Type
->
-> Add updates for the above spec changes in the CXL memory module
-> event reporting and QMP command to inject memory module event.
->
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  qapi/cxl.json               | 12 +++++++++++-
->  include/hw/cxl/cxl_events.h |  7 +++++--
->  hw/mem/cxl_type3.c          | 20 ++++++++++++++++++++
->  hw/mem/cxl_type3_stubs.c    |  4 ++++
->  4 files changed, 40 insertions(+), 3 deletions(-)
->
-> diff --git a/qapi/cxl.json b/qapi/cxl.json
-> index 3e4bad4ad0..752d46cda2 100644
-> --- a/qapi/cxl.json
-> +++ b/qapi/cxl.json
-> @@ -242,6 +242,14 @@
->  # @corrected-persistent-error-count: Total number of correctable
->  #     errors in persistent memory
->  #
-> +# @component-id: Device specific component identifier for the event.
-> +#     May describe a field replaceable sub-component of the device.
-> +#
-> +# @is-comp-id-pldm: This flag specifies whether the device-specific
-> +#     component identifier format follows PLDM.
-> +#
-> +# @sub-type: Device event sub-type.
-> +#
+There is something wrong with the driver if the "folio can be
+reallocated immediately".
 
-These three seem to be the same in CXLGeneralMediaEvent, CXLDRAMEvent,
-and CXLMemModuleEvent.  Should they live in their common base type
-CXLCommonEventBase?
+The flow generally expects there to be a driver allocator linked to
+folio_free()
 
->  # Since: 8.1
->  ##
->  { 'struct': 'CXLMemModuleEvent',
-> @@ -251,7 +259,9 @@
->              'life-used': 'uint8', 'temperature' : 'int16',
->              'dirty-shutdown-count': 'uint32',
->              'corrected-volatile-error-count': 'uint32',
-> -            'corrected-persistent-error-count': 'uint32'
-> +            'corrected-persistent-error-count': 'uint32',
-> +            '*component-id': 'str', '*is-comp-id-pldm':'bool',
-> +            'sub-type':'uint8'
->              }}
->  
->  ##
+1) Allocator finds free memory
+2) zone_device_page_init() allocates the memory and makes refcount=1
+3) __folio_put() knows the recount 0.
+4) free_zone_device_folio() calls folio_free(), but it doesn't
+   actually need to undo prep_compound_page() because *NOTHING* can
+   use the page pointer at this point.
+5) Driver puts the memory back into the allocator and now #1 can
+   happen. It knows how much memory to put back because folio->order
+   is valid from #2
+6) #1 happens again, then #2 happens again and the folio is in the
+   right state for use. The successor #2 fully undoes the work of the
+   predecessor #2.
 
-[...]
+If you have races where #1 can happen immediately after #3 then the
+driver design is fundamentally broken and passing around order isn't
+going to help anything.
 
+If the allocator is using the struct page memory then step #5 should
+also clean up the struct page with the allocator data before returning
+it to the allocator.
+
+I vaugely remember talking about this before in the context of the Xe
+driver.. You can't just take an existing VRAM allocator and layer it
+on top of the folios and have it broadly ignore the folio_free
+callback.
+
+Jsaon
