@@ -1,170 +1,293 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011071.outbound.protection.outlook.com [40.107.208.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC2C36CE03
-	for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 16:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768236606; cv=none; b=arjBRp66bzZSRE+0mDTLma8ig31qrzWLsCYd86Vw0sNh5AgZ4fZlZ+ds5SeDfSK4Feovngu5z/exFl3OGlAvKDcPTa2G/N2LrqIh1Kyw/LS7pA/xJVpssO9ghITyXlRRfYWQHA9CslBhdgoM5VxrkCXclUJrXLUv0eD0Mqhc95c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768236606; c=relaxed/simple;
-	bh=tqjQya8iav+U2F1Y8sTA4RoO8FG8N5ZbxkqeKQhKHMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J13p7BjrMRvDO3DQdZAlo0c/S4z76CZRjezaXBOslMg4f5HtFddZk6D9O5LHKT9I2UCO2UKmP+Z5OwC3tEs7jBRLVcBEcDBeourzmaePKnkHoPyi4cDpqvXtR2keWcucgJiRPu9tKILMSBaJPvAnHctIsVj8bhuavsyAUcohxoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Xh28jBuC; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793AA3793A7;
+	Mon, 12 Jan 2026 17:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768238329; cv=fail; b=q+bjWgP1m6IcaSlo3x+HuTP+KLNWahfZ5Klq/lHDrtGFBluK6pRrRDlhOAeaKm2jUz/rf7JHL+SQYsANlwoguZyHD9db12OCGzTDx75Amd5GcBw8b9+s8T9CczS29umzjnHV4emVc50kt8WrLMHF26pmc1YtNuX/vTTYsTkf7ZA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768238329; c=relaxed/simple;
+	bh=sKEMF09cEIotIm23stxK4CQRPe7OL/GS/gge+/POFVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=N7fWsy2sF54yF+gF9Fnaux61RKU+xZyEObMw9XV6Gm1Fq638mhaw8EyrBclAC8a9iy1g1hPJQlcQEHYldOZJEdh4Yt+rZiad8fRWt43lTzJbFsYQ7w283XwZWiWUznIDpEcW4fNam7neGpJryAFga4Grn0bkIhsLzQRHFeQGNSE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Lop1p3ye; arc=fail smtp.client-ip=40.107.208.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Xh28jBuC"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4f4a88e75a5so64430481cf.0
-        for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 08:50:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1768236603; x=1768841403; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eAxh70JY3ShLNfnDxBWsRZWpalCHcaRfsM5YzKZ+W9w=;
-        b=Xh28jBuCzSmjNImJHPipMhJ0Ay7bk672VmA9OuRlRS5xHW5yOjBQoqGrHp/AwF81rB
-         U4wbU+uoNLx2hWjU7U4zq3tWfLHjExnBD0S2eQKaomwC1k6Re30nBI8pSTT4ZUFwDXtw
-         NB+3sqspu7NHXnhnH1vGI97i4pjAI57Tck8NM8TbREST9HEQAuFfCqITWgCnp0IvR9fK
-         +ZdAosDXqrYrMVZd4ILWmB9i07jlSbP6DyIB9yxkaOjGqB4aGN22b/QWCSygCzJpyPQe
-         W6fEtrLRoKz3QtzuKuqh5mJBRVgPzcZzMRv1SZTKdpfxUsRxAxwrExm1lW+TsFUPDzah
-         L4DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768236603; x=1768841403;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eAxh70JY3ShLNfnDxBWsRZWpalCHcaRfsM5YzKZ+W9w=;
-        b=ZbKBM88nBf37E97VbhinFmmIUVbAMh9KA17SitjoFzc9De8LzljCqHNDJcctxrzJ9m
-         w81GZXrZ3KhadqPEyr08LmXVu6niLF047OEjhRp/xLRkX0iyZ3Lgso0RjFQJcGNnZz81
-         yzkPYy+X8uwMeqER7UVdwla/fjrm55WUHfYf8Wf9MspdxNssetS71u48dJVy+/vnFQcR
-         hTxZMbaL/PfSkJ6M/QNaDeBbkYAqevt+fnyhdcj5OgW5ff7h1KOURWbaQUxKdZ3eiysx
-         moRLC1mGRJyC18RM4j7k/SHGV016FPvYloWFsWr68ut+FaebmNrvGGyLkPj0XLTdNYPS
-         13Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCV3e9UlsYD6WMmm00UFROu+8RLJBKoOkPjpoLIdt1z/9Mor+WXY8nz84QkguIUI4W3xnMgNfZab27c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yykfdjn1urKrtNYYkFv+i+OpVdt6J1wW8L0GerX5dLLWD32OLpK
-	QxJYgU6ha+S92trFnIL85AK49UPXKPpApuLl+Hr7mBdsruubtjGBgy6GI9KaaMWu8fk=
-X-Gm-Gg: AY/fxX4tHlWgOQDjA+9aRDvn/7UQq9RW6XaYmCkjjw4Wae0PxLLv9/32O0JyRHxTXS/
-	tPhZY64JANc3ibUOagwGmJPeETwteLVbchGvFLBgokqj1r6wZ9GgipujYuAK3HIY9U5tM7rIvvT
-	pHd28Q1c1+Y8WyA6ObH3JHUoTyADbKA4i9HcAoZrpJDXQhQ+jwhkt62GcVTcCEd7G9DKDo1ZxEi
-	JUEbt4VS5Sq92sIYAWoo+MXUFb7eErsjUjgyuZylrRxJURdcgqtKC9M+jO5ZdcPMamUJTNPUDyz
-	3U4s0iQG7mKP8+ZFvsa4+nFLKf4E2hsB1S4ZgNYSkK6xwWWt9gSCQ6h6n9pRrNZq7gC66rMItV1
-	PPvCQi6HisEF8l9CHWkBCIcqbNF5jYwHOQ79JVYQZkIOIQmEbkhNKrSPpsh3ybKpCZdC/4BJgKs
-	kgs7FtNF1tA25HGb1WcDCVvl14Cu3EIw2yQUrMfm74tEJziXkasSP5vSufDggdQvdYpLI=
-X-Google-Smtp-Source: AGHT+IE/A98Uf8f6ySXPvh9xamBlLANpUoYS4iXttzp8YDJn905I/7mcjcPxPkNVMXbRPnmf8UaJPg==
-X-Received: by 2002:ac8:6f1a:0:b0:4ee:208a:fbec with SMTP id d75a77b69052e-4ffb4a1ed32mr255276771cf.66.1768236602551;
-        Mon, 12 Jan 2026 08:50:02 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89077253218sm139285396d6.43.2026.01.12.08.50.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 08:50:02 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1vfL7B-00000003RcK-2R9k;
-	Mon, 12 Jan 2026 12:50:01 -0400
-Date: Mon, 12 Jan 2026 12:50:01 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Zi Yan <ziy@nvidia.com>
-Cc: Matthew Wilcox <willy@infradead.org>, Balbir Singh <balbirs@nvidia.com>,
-	Francois Dugast <francois.dugast@intel.com>,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	Matthew Brost <matthew.brost@intel.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Felix Kuehling <Felix.Kuehling@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	David Hildenbrand <david@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Alistair Popple <apopple@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-pci@vger.kernel.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free
- callback
-Message-ID: <20260112165001.GG745888@ziepe.ca>
-References: <20260111205820.830410-1-francois.dugast@intel.com>
- <20260111205820.830410-2-francois.dugast@intel.com>
- <aWQlsyIVVGpCvB3y@casper.infradead.org>
- <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
- <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
- <20260112134510.GC745888@ziepe.ca>
- <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Lop1p3ye"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mHNRVjOPAApMdBhlIHd+/eH3RPsrpzjFzBnmTOEyu7WdVB1T7fUOI7dlaNiQ09UHgProqSewew3ZI5XO2nIz0+Fn9ur2Tf6SLCclLQ4/M8P483DM40BPW31VrOTBRf0mVYxG6wNNqE8Csbbb1s3n7mnscyLD5hSYG0OtPaeAWz9N1DEdtp1YxDYClx+YnBYgPy23/FWkflTg4AcCBUnOhs5n7ZXYJksiRIsQR/Nkh/Uxpa79WUMRsIxnStmf3OpFb/phK61R1bfbvwKY6w55LTaG7KeU0IXLZxIjA+JqM+RFGvXjUf8huWN9xwb9LCYaBkmsDBtX3fxRy7faiNDydw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=v1NonMAyuqhtz5oohgpHzgxpuBooO8UOVfEGv/F1F/M=;
+ b=SJ9YQZe38tGkEDRP0CrBDLHZ6A8fW4fsg00QXdO+kaF8yNJ4z+em1TOTOU+DkgkY70mG6Aq3NR+Wy52dLnNrG0ShslzwE24Fqiwy/WQbHaehwZ8bt6WT2Nm8kbh135v0323jSwPgZMa0lRQ1sgIA70/0SvFT5Hyt7tRZ5K7tKi7A3bwGDwNAH11fDqnpjAEFZIjlFqBe5Fe6VY/f2jJDi4OAvUvvNFeTX1ohmTraKXWmIhPKWdh2vurk4KQeWO8PAq5wRiZrMge48e8m/v8+MWhwljH/sD/gaxT0uzV8s/kRIkNutnNyOVN9N6g1i5UYplSFkVdCWNioG4aHPycvpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v1NonMAyuqhtz5oohgpHzgxpuBooO8UOVfEGv/F1F/M=;
+ b=Lop1p3yesGZ8w3FWfQbfypp7bf2G19LpduwTnjb054HEBjeNxj4VWqxzXqnPzgMcH0GZIC1ILbemu7QspPuD7IRTzdssds4em6NEZAn5a5HoDNdyKuQmos9HiBCFep7ZYCPqgHoC5KVl3mlZlAU4aBs9Tx4h3HuGuco5tklEJxSBVH8aHpW5lqNDBO378VU6gyYdeMcJ4QaOBssBHXxNcDm6y+XeCU97+M0eK8CpPce+AGBq+nc8FQVRWDYjEz21T4hh5zjX8xzJURXRsBz3rox4mj5EwvdWfEPs2pVlrFvn+q/2OWfP2mM+teft4WQVig9lZ8DVm193r0GSCJdDow==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH0PR12MB8800.namprd12.prod.outlook.com (2603:10b6:510:26f::12)
+ by SJ2PR12MB9242.namprd12.prod.outlook.com (2603:10b6:a03:56f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Mon, 12 Jan
+ 2026 17:18:42 +0000
+Received: from PH0PR12MB8800.namprd12.prod.outlook.com
+ ([fe80::bdb6:e12f:18b6:2b77]) by PH0PR12MB8800.namprd12.prod.outlook.com
+ ([fe80::bdb6:e12f:18b6:2b77%5]) with mapi id 15.20.9499.005; Mon, 12 Jan 2026
+ 17:18:42 +0000
+Date: Mon, 12 Jan 2026 12:18:40 -0500
+From: Yury Norov <ynorov@nvidia.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: Balbir Singh <balbirs@nvidia.com>, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, kernel-team@meta.com,
+	longman@redhat.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, corbet@lwn.net, gregkh@linuxfoundation.org,
+	rafael@kernel.org, dakr@kernel.org, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	akpm@linux-foundation.org, vbabka@suse.cz, surenb@google.com,
+	mhocko@suse.com, jackmanb@google.com, ziy@nvidia.com,
+	david@kernel.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, rppt@kernel.org, axelrasmussen@google.com,
+	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk, rientjes@google.com,
+	shakeel.butt@linux.dev, chrisl@kernel.org, kasong@tencent.com,
+	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
+	baohua@kernel.org, yosry.ahmed@linux.dev, chengming.zhou@linux.dev,
+	roman.gushchin@linux.dev, muchun.song@linux.dev, osalvador@suse.de,
+	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
+	byungchul@sk.com, ying.huang@linux.alibaba.com, apopple@nvidia.com,
+	cl@gentwo.org, harry.yoo@oracle.com, zhengqi.arch@bytedance.com
+Subject: Re: [RFC PATCH v3 0/8] mm,numa: N_PRIVATE node isolation for
+ device-managed memory
+Message-ID: <aWUs8Fx2CG07F81e@yury>
+References: <20260108203755.1163107-1-gourry@gourry.net>
+ <6604d787-1744-4acf-80c0-e428fee1677e@nvidia.com>
+ <aWUHAboKw28XepWr@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aWUHAboKw28XepWr@gourry-fedora-PF4VCD3F>
+X-ClientProxiedBy: BN9PR03CA0466.namprd03.prod.outlook.com
+ (2603:10b6:408:139::21) To PH0PR12MB8800.namprd12.prod.outlook.com
+ (2603:10b6:510:26f::12)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR12MB8800:EE_|SJ2PR12MB9242:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6524cf84-b2bc-443d-05e0-08de51fea24e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|10070799003|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?iPi4RVJoJVvms0TKizFAJRN97ukhjYCGHKnQpNa9EcgR36ZpaNHCQTD4eepa?=
+ =?us-ascii?Q?uorWYhkZBnZinRo3bJvkSj6EM6xqsTGe4BHnWaI+7JWDc/WDA6Z/lWBWUn4L?=
+ =?us-ascii?Q?+rfe84HMDpx0ReRPjoQOv5MrS/FJdCxfLB1X2pDgYI/LlqzjyTausup5ITr/?=
+ =?us-ascii?Q?JEzHknYYMaOlYiDSVkM0kkHmigv3upSb72ilGPMnKtxFWR92btHSvp37elh+?=
+ =?us-ascii?Q?5P9WW47HWAhlrai25OJ2cACDetwYbaJG1+4ZUgWqpWUsWaJTzxMp3Oq+HuQQ?=
+ =?us-ascii?Q?HJKzZCFzXLWX9SPHHW8CAfzLDdoDhmmulr9UkhH/Ypq2XLs5KqpxsSOW72lo?=
+ =?us-ascii?Q?32hQkcCguDjXpHl8yW0NupZ3aquQcWNJPFygt1dI0fOe1oUQoUp8oQUx1e/m?=
+ =?us-ascii?Q?Fk6fqN958UB9ecK3+Jrvq5sjFtVVr90wgMvhmVHsKuU9/9VstT8UCrRG+qoP?=
+ =?us-ascii?Q?hU7JLnt+vh/tNy7xlnk7ATeI5l6jaO3TyHgPMrGGLPRGafDFzUyRgUDSHHUx?=
+ =?us-ascii?Q?8BDnEWaVhVCBkkRK7UyQwzz3I75aIh4dMOmMJK2yzK7e5CYPR6GquOgXess4?=
+ =?us-ascii?Q?h01YsPW4/9JMXIDClNIf6EnVbG5rxiX1o9aNO0OZPfHpd1tMr2xUItro3v5r?=
+ =?us-ascii?Q?atRPtprO/tBKzeLj3W2jHLUWO2hoDKyuRM4/fEI4PqStgH89WiD0zsaejp2D?=
+ =?us-ascii?Q?PvEHF3/R/pP9T4a81SiwZ/eSlcE9YMWtHCzN6RmyqdvjRflLP398A35Hnjme?=
+ =?us-ascii?Q?d/eUMZzUClK8MIIRwAVvE1528H6KZxjGLY/xhCs3VxSmfPIpH3N3x7oaDeaD?=
+ =?us-ascii?Q?I/lTGcKZvjCAKsJmFP5BbqCj0Tp0lil/4meARVS4A2oIwIS2s9TEBn87p7o7?=
+ =?us-ascii?Q?EHkD8qRXvWCc2Qfx21+nM6rUCum6/QiAgEYsgzrm+U33T++adosiQWzoc6MG?=
+ =?us-ascii?Q?XxnQGIKoyQ4562bgIY9BuvpLpaFtRp54td2Jmf1AA8899mphEOD++dcxHul9?=
+ =?us-ascii?Q?4v/T2kG7rqPfsqxxwXdlcyKW7t2P9UWRpdD9GET9cl0Tt9APxrtexujKFjIQ?=
+ =?us-ascii?Q?jg8z3aiiwCuvI0WXowRtB7lCMslw7Ms9LTrzEUR3fPXSgpkEOssi9f87xLPb?=
+ =?us-ascii?Q?zw9OhmrYTTGYeKVgg3PL4hmRw2pEE/6XbztsLllQql9Kt8U9QSg3k/VN0Y4H?=
+ =?us-ascii?Q?uBpvSVzyQqgVyFmPIKdHQcdUrBI0VE7KwN/MK4N+Cui0V9FM6htiJvLEGn5u?=
+ =?us-ascii?Q?Hup7pSUrwfEUQ3Ot9mJmQMMmhuo3c6VEaJ8hx8wKg7zZoX1vC5wqdSPWVdyZ?=
+ =?us-ascii?Q?YO7vpGL6SqqbdHb1YMuAZ2U99wvWrm/3hOP+i/4q1askiuYviAo7cMj1EmKb?=
+ =?us-ascii?Q?edRyRAxIj/s/k6WFMMAe0JWa0wa5FUDZ3Ka3vvDTE0rsNQYkTOxjWey/MmRj?=
+ =?us-ascii?Q?ukze9sFpIs/BIzECLQJ8g+KiEOFuLu6L?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB8800.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(10070799003)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?H+v7DFt+mDAobz4bH+HiXu4ad/LfQsfwLahFWvC5UAVIVXPQpX9jF5LryHVm?=
+ =?us-ascii?Q?+b/yzit0A7O8qiwL3gl/YS9ajATOR1X0bkru1LVaYrMcHm12OQNBALOCapDf?=
+ =?us-ascii?Q?KkiKFJd1IdJTgZeeENYPJhi8L04HrpMKmlY8GIPrmD5j5lbXUMrQELlat8a+?=
+ =?us-ascii?Q?WBE2DAHVWm1676Ixn9rqLtMAVuNv0XW+7YcZt7IxZ85pOgRv0ttzftnZjqh0?=
+ =?us-ascii?Q?4fbzwV3X0ZaEPsCewcUVuThz3Oxi1xkXkZrJ2LAnvF4JJvqAMaDi4dpCfJ8R?=
+ =?us-ascii?Q?+ARP6DH+mLOX1zoRBsJs0kGadGJKB3lX7q/8u3odRQBQUhAOfDbNxhyrBku1?=
+ =?us-ascii?Q?loV7qYSlxqlffEU4PfeoQYS9rlukAdXPG4IYi7Q+kHfqT2iMo+SuQqbS72ug?=
+ =?us-ascii?Q?W6poLgXHQX7hXM+9f8ldBYwP0Fov76e+qJErCLTgQrALR4vQdcNf/YIlBwpt?=
+ =?us-ascii?Q?288oR+AWopjocHzRXQweCUCdzDk61zweQDYaSaYTls6Oq0Fd2C1QDgfzeQVT?=
+ =?us-ascii?Q?1a9ZHP0z5VmfXdDsK2fIEeYu9DNiAsOQYgZHRpRGouSiHfJ4V7LhNDeKk6v2?=
+ =?us-ascii?Q?/mfw3pTQH3Qi9dtLkIdWi6ApcVJq/inWGG+hpRGiO2RBrlR++mtwb7metYK8?=
+ =?us-ascii?Q?ze6X7gzMmPsBhqJuFbQaUqAHSUxDIOOT8Uwx/7dTBaMJBrHg3as6zeUtaY7v?=
+ =?us-ascii?Q?asKEEvg5EzmI3P5DcHm0qLq08BWexyxweLZjde8l2KYbfFliecsL+4OLuOQR?=
+ =?us-ascii?Q?F+LpBQ9RgrP6vT7hDvCLAt+tlS8Y5SJOZAOo4brUVCsJlaCuHQjDuY2QJM7k?=
+ =?us-ascii?Q?jlxRmy9LOR4OHVysMHnYHBJtuTSWg8Gjrbke0qv8zO0bTL6usqfZF7h4P9Th?=
+ =?us-ascii?Q?Lsnw+ZFChJZ1ohb861zHsIWcjoxn9MyTtK4Fs8oRcHdKCqAfwZdEwAelTc+t?=
+ =?us-ascii?Q?DcI2zyDhnn1J7+6UvAn0pOTfxD2VNtRZu6dfs6Q3uzgcAaXc2aOeD2N3XCUW?=
+ =?us-ascii?Q?AdMJEbXQMOjjy9maRK+nY5uQuHo6vMQTCyuEnOaiQGBuqqe5P6A8L1DzpUJ0?=
+ =?us-ascii?Q?bj/YiC7V4pn604lm0Nafcb3RxvyVfDCV5gUtsE2B9MzWjly8iaekdq6hMMDu?=
+ =?us-ascii?Q?E43D9g6HC4vcjIILHOx9De7wHN6mSXvopjh+QIK/uMmGiovGbDtTpmoR9BTX?=
+ =?us-ascii?Q?upKbzY48+3j67nDFLr9CitbBm3M5YzlPlND/RTkwkDAaMesQ14Onc2wgn6DM?=
+ =?us-ascii?Q?ONUJAQ/u9mRLLxo87UY9gro54v3E+K81s1mDKeQ9Yk3fbXsXbsUgx9yMmjwK?=
+ =?us-ascii?Q?H1gA4+tEC4Ch+2e3L8oYFBkAGC0VnlGSG3oQSIbnqZM2zujKJPiY3uL8Lg5/?=
+ =?us-ascii?Q?lA5OM6LUj9ee6SSvk2Nu+9x2PjPSAYotX44u/VA7/pLUoNNjg8zLWdPkDbDg?=
+ =?us-ascii?Q?u2YUsLA78E1nTKNHwMhTyvEymjOSZ36laGOTlO0AryDUqCHG1r6xxcMqp37z?=
+ =?us-ascii?Q?GEim1vUGgj0wrRYmsSuwsvC/HYRLWinfNv2gUykgJYxIpK2QkhZt69G6YKyE?=
+ =?us-ascii?Q?FVvSvCPU5OJZ/BKevJyXLcWDnkOC+glTdCwxeGCTrz9etKl9NT7qVg/ETi/H?=
+ =?us-ascii?Q?5HZCYmUU4ECTrBBup3YqV8axETG66X2sDIlYe32h5hVpRncaTp70GDiexVe7?=
+ =?us-ascii?Q?+6e3JXLCatDqhbo7sykBzf1cpuRiD5o3KUJwf8I5dw3dvMVimqkKnqq+Hynu?=
+ =?us-ascii?Q?mU+8Bb45yRcRaLbGvBU4w9MNPAbvcZdvY1STnVZN0jfQ8nSSNMJB?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6524cf84-b2bc-443d-05e0-08de51fea24e
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR12MB8800.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2026 17:18:42.2572
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: reSFBT+GFXGQbFJYkJDNzN0G5uIKvpw3qHJTTCivLpsfvGws4tBiX8bbLkMKyvHif/Nej4LVtj/VRFgzAePdLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9242
 
-On Mon, Jan 12, 2026 at 11:31:04AM -0500, Zi Yan wrote:
-> > folio_free()
+On Mon, Jan 12, 2026 at 09:36:49AM -0500, Gregory Price wrote:
+> On Mon, Jan 12, 2026 at 10:12:23PM +1100, Balbir Singh wrote:
+> > On 1/9/26 06:37, Gregory Price wrote:
+> > > This series introduces N_PRIVATE, a new node state for memory nodes 
+> > > whose memory is not intended for general system consumption.  Today,
+> > > device drivers (CXL, accelerators, etc.) hotplug their memory to access
+> > > mm/ services like page allocation and reclaim, but this exposes general
+> > > workloads to memory with different characteristics and reliability
+> > > guarantees than system RAM.
+> > > 
+> > > N_PRIVATE provides isolation by default while enabling explicit access
+> > > via __GFP_THISNODE for subsystems that understand how to manage these
+> > > specialized memory regions.
+> > > 
+> > 
+> > I assume each class of N_PRIVATE is a separate set of NUMA nodes, these
+> > could be real or virtual memory nodes?
 > >
-> > 1) Allocator finds free memory
-> > 2) zone_device_page_init() allocates the memory and makes refcount=1
-> > 3) __folio_put() knows the recount 0.
-> > 4) free_zone_device_folio() calls folio_free(), but it doesn't
-> >    actually need to undo prep_compound_page() because *NOTHING* can
-> >    use the page pointer at this point.
-> > 5) Driver puts the memory back into the allocator and now #1 can
-> >    happen. It knows how much memory to put back because folio->order
-> >    is valid from #2
-> > 6) #1 happens again, then #2 happens again and the folio is in the
-> >    right state for use. The successor #2 fully undoes the work of the
-> >    predecessor #2.
 > 
-> But how can a successor #2 undo the work if the second #1 only allocates
-> half of the original folio? For example, an order-9 at PFN 0 is
-> allocated and freed, then an order-8 at PFN 0 is allocated and another
-> order-8 at PFN 256 is allocated. How can two #2s undo the same order-9
-> without corrupting each other’s data?
-
-What do you mean? The fundamental rule is you can't read the folio or
-the order outside folio_free once it's refcount reaches 0.
-
-So the successor #2 will write updated heads and order to the order 8
-pages at PFN 0 and the ones starting at PFN 256 will remain with
-garbage.
-
-This is OK because nothing is allowed to read them as their refcount
-is 0.
-
-If later PFN256 is allocated then it will get updated head and order
-at the same time it's refcount becomes 1.
-
-There is corruption and they don't corrupt each other's data.
-
-> > If the allocator is using the struct page memory then step #5 should
-> > also clean up the struct page with the allocator data before returning
-> > it to the allocator.
+> This has the the topic of a long, long discussion on the CXL discord -
+> how do we get extra nodes if we intend to make HPA space flexibly
+> configurable by "intended use".
 > 
-> Do you mean ->folio_free() callback should undo prep_compound_page()
-> instead?
+> tl;dr:  open to discussion.  As of right now, there's no way (that I
+> know of) to allocate additional NUMA nodes at boot without having some
+> indication that one is needed in the ACPI table (srat touches a PXM, or
+> CEDT defines a region not present in SRAT).
+> 
+> Best idea we have right now is to have a build config that reserves some
+> extra nodes which can be used later (they're in N_POSSIBLE but otherwise
+> not used by anything).
+> 
+> > > Design
+> > > ======
+> > > 
+> > > The series introduces:
+> > > 
+> > >   1. N_PRIVATE node state (mutually exclusive with N_MEMORY)
+> > 
+> > We should call it N_PRIVATE_MEMORY
+> >
+> 
+> Dan Williams convinced me to go with N_PRIVATE, but this is really a
+> bikeshed topic
 
-I wouldn't say undo, I was very careful to say it needs to get the
-struct page memory into a state that the allocator algorithm expects,
-whatever that means.
+No it's not. To me (OK, an almost random reader in this discussion),
+N_PRIVATE is a pretty confusing name. It doesn't answer the question:
+private what? N_PRIVATE_MEMORY is better in that department, isn't?
 
-Jason
+But taking into account isolcpus, maybe N_ISOLMEM?
+
+> - we could call it N_BOBERT until we find consensus.
+
+Please give it the right name well describing the scope and purpose of
+the new restriction policy before moving forward.
+ 
+> > >   enum private_memtype {
+> > >       NODE_MEM_NOTYPE,      /* No type assigned (invalid state) */
+> > >       NODE_MEM_ZSWAP,       /* Swap compression target */
+> > >       NODE_MEM_COMPRESSED,  /* General compressed RAM */
+> > >       NODE_MEM_ACCELERATOR, /* Accelerator-attached memory */
+> > >       NODE_MEM_DEMOTE_ONLY, /* Memory-tier demotion target only */
+> > >       NODE_MAX_MEMTYPE,
+> > >   };
+> > > 
+> > > These types serve as policy hints for subsystems:
+> > > 
+> > 
+> > Do these nodes have fallback(s)? Are these nodes prone to OOM when memory is exhausted
+> > in one class of N_PRIVATE node(s)?
+> > 
+> 
+> Right now, these nodes do not have fallbacks, and even if they did the
+> use of __GFP_THISNODE would prevent this.  That's intended.
+> 
+> In theory you could have nodes of similar types fall back to each other,
+> but that feels like increased complexity for questionable value.  The
+> service requested __GFP_THISNODE should be aware that it needs to manage
+> fallback.
+
+Yeah, and most GFP_THISNODE users also pass GFP_NOWARN, which makes it
+looking more like an emergency feature. Maybe add a symmetric GFP_PRIVATE
+flag that would allow for more flexibility, and highlight the intention
+better?
+
+> > What about page cache allocation form these nodes? Since default allocations
+> > never use them, a file system would need to do additional work to allocate
+> > on them, if there was ever a desire to use them. 
+> 
+> Yes, in-fact that is the intent.  Anything requesting memory from these
+> nodes would need to be aware of how to manage them.
+> 
+> Similar to ZONE_DEVICE memory - which is wholly unmanaged by the page
+
+This is quite opposite to what you are saying in the motivation
+section:
+
+  Several emerging memory technologies require kernel memory management
+  services but should not be used for general allocations
+
+So, is it completely unmanaged node, or only general allocation isolated?
+
+Thanks,
+Yury
+
+> allocator.  There's potential for re-using some of the ZONE_DEVICE or
+> HMM callback infrastructure to implement the callbacks for N_PRIVATE
+> instead of re-inventing it.
+> 
+> > Would memory
+> > migration would work between N_PRIVATE and N_MEMORY using move_pages()?
+> > 
+> 
+> N_PRIVATE -> N_MEMORY would probably be easy and trivial, but could also
+> be a controllable bit.
+> 
+> A side-discussion not present in these notes has been whether memtype
+> should be an enum or a bitfield.
+> 
+> N_MEMORY -> N_PRIVATE via migrate.c would probably require some changes
+> to migration_target_control and the alloc callback (in vmscan.c, see
+> alloc_migrate_folio) would need to be N_PRIVATE aware.
+> 
+> 
+> Thanks for taking a look,
+> ~Gregory
