@@ -1,266 +1,127 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010004.outbound.protection.outlook.com [52.101.46.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D4937E316;
-	Mon, 12 Jan 2026 18:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.4
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768244132; cv=fail; b=HNeeYXEOGF3KY7hkv4jTffSAydSfeUXwueassURIN1rYf2PajMoPStoMceA62iqJjmS8hsUpP+dJfTMF1zVFJL57gmmZLSxcDHM7joMPSTsj8u7irBBZFVLrz8RZRi0xuFR7hOxm9xL0UlJHnBBPAmaJkFOCQAiQbdUvMHkem6k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768244132; c=relaxed/simple;
-	bh=AYjKMPusqmp65RoMgETmP3FAOdI30UtIeX9xDEP6UI0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=vAvKD/X4nZsAQbrn8nVL0z65Mj3b7yJ8MR81kh+c0Lh2HDY60e0J3N3/UW2etvhLftEUOF18IgXl7SxhnhzG5M/7UTZAP79PYIpr1FYJcmnNeCJQlYnkZromGKUAuJt62gV5hc0V/QdBS57AqTnH8JNhB3Nuhm1ABAKMsoeX5fA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=erZJyCR4; arc=fail smtp.client-ip=52.101.46.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC22937E316
+	for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 18:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768244156; cv=none; b=g8cqEu00pTpAfIPqTGyiBhclLNqTi1LolEGza+4pZt29y+u8Sg6nmFSGVofMSJXwBVj2o4cr1VtLTeAOANWL7POaWqvg0e99C8Rn2yRu+Z03BBj/mNqGKfnv2E9dEMzRYV0bWNVdOWqJlhVwGvrbOdRMm8S4HInUWgX3ITlslm0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768244156; c=relaxed/simple;
+	bh=UclWX63fGn+76lJOJEAYUq4t4ohSd9HEsKoA1eHOk2Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c0lpEJXUo3KWLjWWgMP3dFZqTTHqi0uCsusCTZQtjQxgt3087GfhPZ6amlh1CM6wDWx9bM/eRd7hh0c0gNqmGhokXwkqvqi2Tk3P174+jlMrblvjkZOt6OxSp9UNlfVRTOWha99O6OtTfjE0YfTOFdXLz21yzuMl+YsRgX+Ooyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kcB8eMKM; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="erZJyCR4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=c1kLXLQUg3od2EB7AmyE2jJ9gp7phze9w18ZTQAExTAgPjXGYdaSBkyxUhYJYDmEO2pLD796gQN3GK/CGVix3JZxEgddhjiGF5gysc6E5TLlU7NdgbTBYYv9tTHpzSuf6kYGwP64UtYjzJnp0ClLK+qcTxwoCEJGvkbvYDdAuOFKWyl8WfzYRi/cD5yTUi9ngvA6HEf1aLXXrotLN0B6vC6JOBVvuBeSnHW9ZGAtMLi8aOgn9YP73nKhDkcjFMzoE9G7qKDd3SaJkeSTyEbj+aIfrl9l52oALZqKsuDRREKKcDpibXIKrBhjsy1YPklbWaS1nw/k9sAZ48kdddOdxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gK8vzHUnwD+6FB+QwLUb0rC0tZs2DwoXrekFMUNXdV0=;
- b=aqdHDvL+L4luhnw/lJliDJX0qXLC9zytOCGAE8D7GzF+hJvv+NElKiR0RqZA92si/wyXCBVbTls4r2HpjpxuAUPzVLzCH9FlifPwVbnYbSkP2AA/1p0yEyGniTfEWKSbCOfOOsH7gpVI3wPE8pIToQYUEXT8N7o5v3w8ED9wYVT2/bbEgkPG+VxiC3UD+QzIE7FrnODGsGG9Ma+mY4v2uA5kBBW9G6XAr4AjodsHxiwo2W9ZqqI1yHfESIo7AT6i9QAD0PRuLOxSnHw7yd3blGbvdir78mfFant+xkUnKNSEulvPy9PkABzhjhFOwCUck1dStaoyrQ8Z8UfXJDlC1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gK8vzHUnwD+6FB+QwLUb0rC0tZs2DwoXrekFMUNXdV0=;
- b=erZJyCR4ZF4r0SDhS3ODmX0+vU1hB2zRv6wOna9PsVP33uoKgof06+KQ6lSW6gBvxL/dN+Jep/KI68LFENg07qlSyFU0uMR/JTkHgVZkcQMSDvtoKZSZM+cHtL43CmCXcSCOJz6IAFcGbm+L6XDSnQcTa6dql1nS3pljotME0fWp/h0JgwrGeJ52s+FfgD+Ow0yk36gbP0UDX/s9+cKIlZcffaQvr91RcTLYPHezG5elCsxqyXV/TDWJL0n8jTRxWxA7BXVZcBBHmAm0sZKtb2PDQAxEinw02NpzJmseDl7LD9gj58gUA+Nz+xpsxPHx8azc3Orvoz4soECbTkL4dg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- PH8PR12MB6939.namprd12.prod.outlook.com (2603:10b6:510:1be::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Mon, 12 Jan
- 2026 18:55:28 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.9499.005; Mon, 12 Jan 2026
- 18:55:27 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Matthew Wilcox <willy@infradead.org>, Balbir Singh <balbirs@nvidia.com>,
- Francois Dugast <francois.dugast@intel.com>, intel-xe@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Matthew Brost <matthew.brost@intel.com>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Felix Kuehling <Felix.Kuehling@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
- David Hildenbrand <david@kernel.org>, Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>, Leon Romanovsky <leon@kernel.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Alistair Popple <apopple@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-pci@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free
- callback
-Date: Mon, 12 Jan 2026 13:55:18 -0500
-X-Mailer: MailMate (2.0r6290)
-Message-ID: <6AFCEB51-8EE1-4AC9-8F39-FCA561BE8CB5@nvidia.com>
-In-Reply-To: <20260112182500.GI745888@ziepe.ca>
-References: <20260111205820.830410-1-francois.dugast@intel.com>
- <20260111205820.830410-2-francois.dugast@intel.com>
- <aWQlsyIVVGpCvB3y@casper.infradead.org>
- <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
- <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
- <20260112134510.GC745888@ziepe.ca>
- <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
- <20260112165001.GG745888@ziepe.ca>
- <86D91C8B-C3EA-4836-8DC2-829499477618@nvidia.com>
- <20260112182500.GI745888@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR05CA0004.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::9) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcB8eMKM"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-7ce2b14202fso2920752a34.3
+        for <linux-cxl@vger.kernel.org>; Mon, 12 Jan 2026 10:55:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768244154; x=1768848954; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FYsHNBbYooeyWKTpHrg47SbkaPnJvaXLI4Q2tRF9T8s=;
+        b=kcB8eMKMLLOZI2zQ8gHDRVfCVvW4r+4CqoO6cJm+j0EASaBXx9QER/19PQj9dqNGNO
+         aYyNz5VwfuZhuASU9Mz4oDouYCLRd+ObBROxHUMFeU6kOQvkSviBLmS5Unu0E5qAYds1
+         v67yot+BhBsJe9TxkPf2UvwAAC8vaOkFCBn/F93tyBiMEHDu8d5aKqgGhuRzTNpXN0d8
+         43m1gOKOknQxNyqNa/Qm5foYOQLmePImEqGownc8d4MLCRAgMrwPT1dxwjX2f87UrqwB
+         P64kc01+GARQe1yUJHkD8AsaLpoiNuleglUQI5v+gIOPe/YUEv4ENk4z3CY9Z0zyTYlq
+         6gjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768244154; x=1768848954;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=FYsHNBbYooeyWKTpHrg47SbkaPnJvaXLI4Q2tRF9T8s=;
+        b=NHjz22dIsQbBeEv4F9DvO1xNRJuki7MA37EkkIoYDtCKdNfTdJeyqq8qHuMNENoilr
+         l6E/1zSW6FaXT47QvU/bZltwLzlUdx12F0mFuMHiLLonlEWUK6+LIjVZCCVlRx9R/cyc
+         TyziKg9nD/XGGPSfQMMa7Sq9UFII1IvT5Ax9hO5t1+Wamh3FnmNrmqZy74kVFTeoa/S0
+         v3AQahGpVh6KfnRnqFZPvwMOyoPTHGTpkX0QuzpsAq/H1N4PvlGE2bU5YoGrrgx9AqL/
+         lk2bV2kGC+gogkMLMHZ85MzoP9r3qQPKpwTNEmjQoszFd+ifQMgGB7DYvFBkL1mfkFth
+         gGUw==
+X-Forwarded-Encrypted: i=1; AJvYcCVAZ8dQOL2aac6/KZGzglzZfK2xmMFGqzbrfcGQZmf7zj8PjSSEFjZf9mAlTfKG2koMFL0tVktbGYk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW2Ne1YjoJpDt/G7XeC2lQxqL6pXM9B2FgKgmLM85/udPFdk7f
+	5UvMD/mBpSu2KezlHIhR9Cnl1CY6nay5YoiA/E11uIQvDqM9XCmNtyIy
+X-Gm-Gg: AY/fxX5rcJEDeicx22mERAOr0VkXhPtXFl53DmFsAIUcaLQTq01gbCnPJJTJa+0AeJ7
+	2xb7DFyPtGjqIzYEi4arBQ4TWHcnzUGdIWgzdodGxYbDowUEkvz9S67mNzB9UfJ+W30IQVcPaBN
+	bbTP1wG6s3X+IvgKnyToYOQIHkf5Kah+p6Ml5i4z+ZqJzj5wixaje0JJoMJtBVUs/W9ZruJbwoa
+	ICKW1eGSNoDEbMMc9OYffNXr9kiene8DhsI+CaTKvfE2IpNhXsfd+rkJj7vpUgi73GXMSfkQ3gC
+	aLqFrmQAQlZa+2cGh2p66DTkQXEA10V3l+QCseXm/v2eqjVlN1d+KghaQiKCz94J8e6EaYTPAID
+	LdA52bV+lJOWJNa5b63osNxTutlQwTCoHXCIpTe3BcS1+ETS2nCvvL+L1k2bivq+fN5raIgmyAz
+	H35N7KzoT+e4dG7QjFvQHgy6Ogk+MUkzoy4LAv3cFa
+X-Google-Smtp-Source: AGHT+IE1iJyYHUxrRRJzQnvZoITdjEtERZksRqGBumj+1tozUwX2FshEuhzALaYG8xEGOVq48wdoFw==
+X-Received: by 2002:a05:6830:448d:b0:7c9:57ff:4cdf with SMTP id 46e09a7af769-7ce50bef39emr8458614a34.25.1768244153635;
+        Mon, 12 Jan 2026 10:55:53 -0800 (PST)
+Received: from groves.net ([2603:8080:1500:3d89:b02d:f13b:7588:7191])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7ce478af6efsm13473549a34.18.2026.01.12.10.55.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jan 2026 10:55:53 -0800 (PST)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Mon, 12 Jan 2026 12:55:49 -0600
+From: John Groves <John@groves.net>
+To: Miklos Szeredi <miklos@szeredi.hu>, 
+	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
+	Alison Schofield <alison.schofield@intel.com>
+Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Chen Linxuan <chenlinxuan@uniontech.com>, James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, venkataravis@micron.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V3 07/21] dax: prevent driver unbind while filesystem
+ holds device
+Message-ID: <fcik72d66pfzk4xvubywt2mzdqr4lqtqjgexrqr3l3acpxc5hv@vp6oueyvzrll>
+References: <20260107153244.64703-1-john@groves.net>
+ <20260107153332.64727-1-john@groves.net>
+ <20260107153332.64727-8-john@groves.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|PH8PR12MB6939:EE_
-X-MS-Office365-Filtering-Correlation-Id: f7b70f56-7404-498e-176a-08de520c26bc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?andJVlVYVEkzZkpLRTJIckk3VHcwLzZpZXQvSC9aempEa3BTQ090cjVTWTZ4?=
- =?utf-8?B?ZEZvbUJuV0ovUm5CV2V0YkV4UjBkTzh0TUVhMHdhVkxlZkhXV05yYVUva3hs?=
- =?utf-8?B?eFBwbWtFRzNpZE1ucVdyRy9JYWk4OXBlcE5oYWJyVURlT3dONDV4M0ZqSGFu?=
- =?utf-8?B?NzA2ZjZ1VEJsd2YwQWhBN0d2ckdKc2h3SG9pQ2w2WHdKdGpROGZxNCtZWHll?=
- =?utf-8?B?cVB3VVd2TFhaSkpobm9PODRaY3JmN3dnc1IzQWptTUNuQzBqK2o2UXdMZlJB?=
- =?utf-8?B?SjBzbTVkRzBpNllFa0RMV3Jra1dCWVFPN09FWm1peWk4RlR6blBEcEFJQU5F?=
- =?utf-8?B?eU5OWnVFOXFtZGtCUWJBOHMvSzlSclpaRmJnS2YyV1EvSG9EcHhuVlNkYnZx?=
- =?utf-8?B?bHFmL0FBWmRoQ29JTTZGbTZwUjNlWEI1c2FxckV5Q0hLZVJuS2dxN1dMcU0w?=
- =?utf-8?B?aGZ4VGo4UUNZblVPVnlWK0VJMXFKMkRSblYrbWhnVUZOSjlhZjVtejB0eFVE?=
- =?utf-8?B?Wk14TTFTZXdFaEJMTWpBTXFITXhLcGpEUnVYYzRNR1VVOWVyVWxyTHlabENw?=
- =?utf-8?B?bFBJbWpyc29BeFpUS1RUWllTTUFVSmNUdE4xeUxTWTZ4OFZaRG0xTkdrdmgy?=
- =?utf-8?B?cjZ6bWJkejhsdkhTV2NiMHA4MlpHU3pjVGhuQkw0YXhRUFVoSlJkYkZxbVkw?=
- =?utf-8?B?bkRpVityckMxbU92Uk0wYU5FdHJGY3JqTXEzcDF6LzJLOS91QmxSYURxVUJZ?=
- =?utf-8?B?ZWx5ZTE5Y3RobTlWZkE4ZU01YU9yNWJjalRWSTRXVituN1hiSTVGY2w0Wkww?=
- =?utf-8?B?OGJ6S0JwN0FMYURNcHZTS1FOZmVvQWo0ZjBMODU0OHdQckxwUUhGL1h3ejFN?=
- =?utf-8?B?RFhkT091OUkrTHd1eXNFUVNURFd3SUoyOUVLbFhPUUgyZzZOTVdvYkZqUjMw?=
- =?utf-8?B?aTBTS2s2Wm9wYzZFTVRsN1Q5WmFyVEdGSkpxWVVlMDIrbGF3Zk9vajlzbi9h?=
- =?utf-8?B?cVNtbjJJQ01iM05BMWNsQ3ZlUUVRM05QY3Q4a1g1SUhGRTBYWVd1OHdSc2Y0?=
- =?utf-8?B?Q0lrdWVaM0ZMZzQvaGVkUGdUN1pId3ZoVVdWYjJneXFxdk9NTXdrK2JtN2lF?=
- =?utf-8?B?cjNSZVM5NklXMjJrc01zbk1yWVVaTVdoMW9uMDhjTkdQM09IYTJQKzVkbUE3?=
- =?utf-8?B?VDgrUjgwVEZUaEhENW1xemcybThvcFZld0F6bkF2dTZldnZ3ajlLT0pDWjMv?=
- =?utf-8?B?cENnNmNjcC9mV0EvL21FWVNENDNwL3g2QzZvakRnaEZsQTBmSnRFOVRSTG52?=
- =?utf-8?B?T0pJZ0lOeXplUjY0Vi8wTTZrT1BPVlB6WEdDSmlsV3l2WVhXNG9zTEVrclNu?=
- =?utf-8?B?TTd2eGN0ZGthRDNMU1Z5V0dXOE1pRVVlbDVsSFQ2V0czcjR3UklLVHU5WW9R?=
- =?utf-8?B?TVZPZkxRRnRRK0lIZFVIZjA2a285SEtxYm42NFRlRXh0ZDFyUkhZMU5oalp1?=
- =?utf-8?B?UUordzh2TEd5dWs4eFhEaFY2b29UV2VwWThlZVBuTDNCVUVxZ2lTbnY4aGZB?=
- =?utf-8?B?UTRZQlNERmlnTkxCTkhyMmVpU2V5WUdlbXRwMkVObXdQRnFuWlphT1BqNTUy?=
- =?utf-8?B?S28zcVpGODBIa0U4dDFKTHBzNjEzRVpQYitENkIxemFLaWx0dldkYUtVdXM5?=
- =?utf-8?B?aUNLdFNUK2l4cmNtUC9VVDdPSHZJVnVhTzRXM0NMUTNUWnd0Vmt2VU8vbnRY?=
- =?utf-8?B?Q0JJU2wzTGFydmlGc2hDeTNUUzVma3dVdjJEY2sxUHp2a05rQ3p5cHphK0dC?=
- =?utf-8?B?cUJ1SVVGSFFMTDhEQ3B0VjQ2WkRWRXJrcEQzdFduZE5Nb2kzWnFDZGRJMVBF?=
- =?utf-8?B?WmpWV3A3MTNXSHVxUzRwU2pscUtBN1QzUEoxNG0zZGI4TjMzbmM2OXdQMVY3?=
- =?utf-8?Q?tlbg2fuDCxa7tXvaATu5EfTUVymZuihS?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VzJRMVNiem9DMEU1L2UyTDRHMHFmaGlCUVNFKytSM3NUU3huTXVla05LTXpZ?=
- =?utf-8?B?WWh1ZElNM3pJOFp5eExPYWY3M1Y1ZWIvNWg5UURVZEN4MFFmSExUOEZzalho?=
- =?utf-8?B?VWZLL2VWcnhxd3ZiMmJXcEVyVHNLdjVJYVU0MmhWRjlpNENVeDBnbkgza1VN?=
- =?utf-8?B?RG5CZllRd3d3RDNTZWNRVVVheXA1a2dEQlpONUpxZkRqdnFkY3U4dkZNcE1S?=
- =?utf-8?B?aVVFS2tNQ3p5ZU5BK2daOHhFRHBWQ0ZtUm5WU3ZhSjRWRHZINURKNWlpNGlE?=
- =?utf-8?B?KzdsQzM1UGxUMlV1K1hJK2p3eHllcnBSaVZUUDdub1FSWkFPZFJHOWFEcEht?=
- =?utf-8?B?c1lLSHNhZXFDcjY2a1JUMWR5bkluREVsTERBS2V5dlRFVE85ajF5V0VzTVBt?=
- =?utf-8?B?Q2MyRGVFdmpvOFFvWHFCWjZTR09BOStLT21EYWdEbkg0amgya1Yyek8xL3pp?=
- =?utf-8?B?b01FeFg0dUlISWNZelBzQVFMa3FTUmc5a2U2bGhWNGJHOEw3OXlVQTZGajRo?=
- =?utf-8?B?ZGRTc1JOY00vcktjWVg5L0hGbmxWN0hGREhmR3YwOWdrNHM4Mm96Umhuc0Mv?=
- =?utf-8?B?aUZPRWVvc1c4cWJOU2Q2cFZHZ3RITEdSTC9JQ2F5UEZIRTFDbXpaanNnSnh4?=
- =?utf-8?B?c01BdTlwVmpMYXEwU2NKbGJlTS9RQzUwQVBXVFhUaWJqSWdhbDl1SWpNM0sy?=
- =?utf-8?B?Q2xiUjI2d2t4YjJyeUhIc2gySTIyZFV2K1lzK0poTERTSTQrK2lsd2JvWlRs?=
- =?utf-8?B?cUx5UGxWVHl6MWVIY21yZG1LK2RxSWxWc1pRYVNmSVh5NXVLTXduUmZZMnlH?=
- =?utf-8?B?MUFTZkIxV2VINmd2b1RleHVBb3FHTTlWZHBOc0VuVEsvTWhnb0o4OHFYTDNv?=
- =?utf-8?B?dng4bXdyT3RWbUlMN0M4ajI3NE1OcUFKdFBGUkFpcmswS21nL2FvbzB2S09I?=
- =?utf-8?B?UUczVUlDUGcxY2FQcVlCd0RLcVlmaHRSWWM2azdCMHN2ZXRoT1grS1JrV0RW?=
- =?utf-8?B?QlpSNndtaDJTRzZDOXhCajJ1UlpVd3FxYzRqVXYyaE9Ca3BmellhRjdXY3lE?=
- =?utf-8?B?Y1VQeHVJRzVwSU1hOVRIdkMyL3dzUUg1ODBFNEMzYzRIanZqLzZpZEhaMlR0?=
- =?utf-8?B?TWdNYzg3NXdDVlpMRCtEbDJjSm0vYTJ6V3Z2WmFYTk96MlM3ZHcyZmNkcHZQ?=
- =?utf-8?B?MGVhL1lqdVlvanc0M0FlMWFsa0JiTmJ1VlhjVTAxMVRXaWRvUDNydU83Y1U5?=
- =?utf-8?B?blpmVENOMGZ0bVZ5QkVFNXpLd21rcDl5NDZwMHFFeUMxSFdVU2hqeWp2SGJx?=
- =?utf-8?B?U2RsdXVHQzhKSWFTcDVsUy9zOVRFVm5EcWFqcGZydlJ5Zit3Q2dkc24wUlZa?=
- =?utf-8?B?cHphbkV0blZEUGVUN0d5bXVQS0N0VmtTRTVkZVppdmRqeHcrbVF1ZUYvNldN?=
- =?utf-8?B?cGhtQitiS1J6eVFGZ0ZVL1RqOGF1NnhUZnQ0d0hmcHczNUhObkxNc3Q2M1Zw?=
- =?utf-8?B?NUFvbWlNRi9LcmxNMm15N2pWUFg0dUpEZW1jMC9wNi90ZXVWNlVQZEJMN3Fa?=
- =?utf-8?B?a0p0MXdjcW9kM2M3N1JHa3ZGOVhoRCs5Rzh2MzZnMlgwMCt5eFF5djBBbS92?=
- =?utf-8?B?cnFSNHFzRDU5Rm9lSTlhL0w1bFRtZ05nMzdhcVZBWE5ic1dYZncwQlpKVXpN?=
- =?utf-8?B?cTNEbmVpUlp0ZlRiMkhLdnFHUFhUc1VkMVByR05OclZxYURVKy9kcXFTSXY4?=
- =?utf-8?B?cUxCWjFLcWhXOHhQVWl6NmpIdjhoMUE2RG9LM3psRnM4cFI5M3hXRWs5U3N2?=
- =?utf-8?B?YzV0UWtpN3hYajl3OEZ3QUNIUUk2Ukx4aEUyR01OMHVJb1lYNjdEaEd2UWZs?=
- =?utf-8?B?TFh0YWZPdnU4NEJxM1J1RlNIMER2dDZuVTRRVlRKTEt5Y0h2WVdHSFRxVk9i?=
- =?utf-8?B?eXBaRVRkai83bkozU3VTRU9BWk1QSWN2TFl6QjAyMkIwSGMxYiswS2I4Ym5F?=
- =?utf-8?B?WGpNOTZLbzRIeFU4SUF3SEZEWkp1VmZwM1RJR2RoRm1tOEYyVTVxakZNK1Bv?=
- =?utf-8?B?Zmc3djZhVTNtNExZWm5YYlFJRGdubzdTZUc1Qmx3bS9QRXBnQUVCQW9XNnVD?=
- =?utf-8?B?TmdKUWREb2s2WmEyS1lvcE9ybzlubWhwZTFaRTZHRGRaaDBSV1NKZDNVemJ2?=
- =?utf-8?B?WWEycmRxcWFqUXZBbVhVbTN5QUNSdW5qQjQwd3hKNlNBeEgvdmZhQ0dQeDFY?=
- =?utf-8?B?TEFRUDhuUzI5bktBUXZuNjFYQUxDSWY3dmtMMDhydWcyV3lEbzBadjJNd1B6?=
- =?utf-8?Q?2+SHQQIbzWl8LDlhs1?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7b70f56-7404-498e-176a-08de520c26bc
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2026 18:55:27.7629
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: m4b0taNI8rzeWYloiVYohOhjjVqU5nlsn/JuxNjI4yXDT/BNbvQTt4Bxk+yGS75i
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6939
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260107153332.64727-8-john@groves.net>
 
-On 12 Jan 2026, at 13:25, Jason Gunthorpe wrote:
+On 26/01/07 09:33AM, John Groves wrote:
+> From: John Groves <John@Groves.net>
+> 
+> Add custom bind/unbind sysfs attributes for the dax bus that check
+> whether a filesystem has registered as a holder (via fs_dax_get())
+> before allowing driver unbind.
+> 
+> When a filesystem like famfs mounts on a dax device, it registers
+> itself as the holder via dax_holder_ops. Previously, there was no
+> mechanism to prevent driver unbind while the filesystem was mounted,
+> which could cause some havoc.
+> 
+> The new unbind_store() checks dax_holder() and returns -EBUSY if
+> a holder is registered, giving userspace proper feedback that the
+> device is in use.
+> 
+> To use our custom bind/unbind handlers instead of the default ones,
+> set suppress_bind_attrs=true on all dax drivers during registration.
+> 
+> Signed-off-by: John Groves <john@groves.net>
 
-> On Mon, Jan 12, 2026 at 12:46:57PM -0500, Zi Yan wrote:
->> On 12 Jan 2026, at 11:50, Jason Gunthorpe wrote:
->>
->>> On Mon, Jan 12, 2026 at 11:31:04AM -0500, Zi Yan wrote:
->>>>> folio_free()
->>>>>
->>>>> 1) Allocator finds free memory
->>>>> 2) zone_device_page_init() allocates the memory and makes refcount=1
->>>>> 3) __folio_put() knows the recount 0.
->>>>> 4) free_zone_device_folio() calls folio_free(), but it doesn't
->>>>>    actually need to undo prep_compound_page() because *NOTHING* can
->>>>>    use the page pointer at this point.
->>>>> 5) Driver puts the memory back into the allocator and now #1 can
->>>>>    happen. It knows how much memory to put back because folio->order
->>>>>    is valid from #2
->>>>> 6) #1 happens again, then #2 happens again and the folio is in the
->>>>>    right state for use. The successor #2 fully undoes the work of the
->>>>>    predecessor #2.
->>>>
->>>> But how can a successor #2 undo the work if the second #1 only allocates
->>>> half of the original folio? For example, an order-9 at PFN 0 is
->>>> allocated and freed, then an order-8 at PFN 0 is allocated and another
->>>> order-8 at PFN 256 is allocated. How can two #2s undo the same order-9
->>>> without corrupting each other’s data?
->>>
->>> What do you mean? The fundamental rule is you can't read the folio or
->>> the order outside folio_free once it's refcount reaches 0.
->>
->> There is no such a rule. In core MM, folio_split(), which splits a high
->> order folio to low order ones, freezes the folio (turning refcount to 0)
->> and manipulates the folio order and all tail pages compound_head to
->> restructure the folio.
->
-> That's different, I am talking about reaching 0 because it has been
-> freed, meaning there are no external pointers to it.
->
-> Further, when a page is frozen page_ref_freeze() takes in the number
-> of references the caller has ownership over and it doesn't succeed if
-> there are stray references elsewhere.
->
-> This is very important because the entire operating model of split
-> only works if it has exclusive locks over all the valid pointers into
-> that page.
->
-> Spurious refcount failures concurrent with split cannot be allowed.
->
-> I don't see how pointing at __folio_freeze_and_split_unmapped() can
-> justify this series.
->
+After a discussion with Dan Williams, I will be dropping this patch
+from the series. If the fsdev-mode driver gets unbound under famfs,
+famfs will just stop working.
 
-But from anyone looking at the folio state, refcount == 0, compound_head
-is set, they cannot tell the difference.
+Based on feedback so far, V4 should be coming in the next few days.
 
-If what you said is true, why is free_pages_prepare() needed? No one
-should touch these free pages. Why bother resetting these states.
-
->> Your fundamental rule breaks this.  Allowing compound information
->> to stay after a folio is freed means you cannot tell whether a folio
->> is under split or freed.
->
-> You can't refcount a folio out of nothing. It has to come from a
-> memory location that already is holding a refcount, and then you can
-> incr it.
-
-Right. There is also no guarantee that all code is correct and follows
-this.
-
-My point here is that calling prep_compound_page() on a compound page
-does not follow core MM’s conventions.
-
-Best Regards,
-Yan, Zi
+Regards,
+John
