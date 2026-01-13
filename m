@@ -1,188 +1,118 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA7F37BE7A
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 08:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A53313550
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 09:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768292143; cv=none; b=QqkmHdAITCTrX6shpBqlVIf0l96hWcDVAkrE4n2hZlt/4pCyUktGirAfaUIE1QmotsDGFMsMD9ZEBIculYSvebf4pLwCoa30RMXhQTyZaq3mNK1rzPAUF4w0nKx/v0NMsrr6zTX70XgY95C+NseBq7JHso5V5JCjyQb7LVOrSYE=
+	t=1768296617; cv=none; b=UkTpP7V0CGpNwWza7HbOwywT3WDke4DdjS5kFt68DOsuU3sDDFPlefqPP9L/SQey/bi3oAiTUGhiMDZ+Fn9xTmmr9IvQYlLqF2jTPk5QDcW4I7g/FBvStEuapIObNyIIapumNJyaRBoRkTSzSDOtvbrmsXAr5D1lYexZGKHYC9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768292143; c=relaxed/simple;
-	bh=fp4REK6J/MVZYC22Z2TU+pzeMJxeOKqpDFyn0zcX3KM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T5HtNEBqQTZqIFoYa6fYs/mLc2hwLtxR9bc+xssSacCHKPNMz2xxUzLeCyTXGsyfr4T+NJfZBh1bMLc2J7wYOdHPA+pmBxOKE9MMd0S+WUCzH6xijVnB4n7nlH7sZ3WcpJFjs/v7537eIbFf3SLZUACnH8KiNvqzyAO6bh8wF3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FKM+7dq5; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768296617; c=relaxed/simple;
+	bh=zVgoSOAS0/2F/Rd+jjakikb46SMD0A85mgpmhFng1sk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=qXg60gqS/2Jf5ljzKv5wYVA5P/Z11L+yWKDrqcBjKCmy7cLzmBFVB4JVlJeRmeDWaRsQ7uRaHYHvlcX9TbHOqgZKZmEYPYTywfrdt/SXWesoF1zyo0bDxt0WHE1Aw8wPGE/D3D/7YJbgTl8BW7JIEJjZLe6pXaHxCSQsoFQ9aWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ITaBrYl9; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FKM+7dq5"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b553412a19bso3276627a12.1
-        for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 00:15:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768292142; x=1768896942; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fn+2HMuW53bWkoRvrsYzvFUGyuuVFRazgaZ3DqLSbig=;
-        b=FKM+7dq5LtVXfWMnkPk9bhrTl9tndOTOTmCsf1pGWsegz+cVsePAPstJpj2U7rbNkC
-         A0bny0Dg6t8vZCl+zkU2vs/wK2JuRbXvpSbOecz1ghIZH1P+OrZg9Lsy3IQeEvv+ba9h
-         F0yjEefvqEQ4nCJMSDoClfwDodNKufWBN6eKN8i8L431T5Mg6/hF8adzQipBIG56ypwu
-         9PrA/zQlIRvHM+fQz4tZHw//PabB3rzLCXxksS+/KXeKlgb/FZkj0odP1ZDsdAtrM/1Z
-         CWLprO6cM4G5RYjnuyjspp0lDXSqq3087KWrii3pxaRx55RiPOerWxHKllKVlUktauwc
-         U+wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768292142; x=1768896942;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=fn+2HMuW53bWkoRvrsYzvFUGyuuVFRazgaZ3DqLSbig=;
-        b=bITUj2fFcm3tvINUQyQm32N7243Qw3njGR8b5c+zQyBYdZkactHRcBvpBKrLSjLCJc
-         rZx87hmv4QJLQWZaiUNRHpYei2ZJVybCJ7EAzc3OlgXA49Luhm7DaD9fdGAc9L89dDet
-         ZKa10cTrZ+FgCKdC6tiQG2RRXgf9HdyI1vtaU8uyZfWoAap/4877KedeDoTzN1bQ3DYW
-         3G1QkkPL+9D5SgNsQLg/B1EvMAwCPncFRKFrGYxSYI1hJWTPSiWX7TSxcqt4oLmR7/YI
-         8VqNG1RWn8raZu41m1DCDDEA5msdby1ZxCDzrWLLlqwn9FbkG/eVfBbY8PPNS17no85w
-         t24g==
-X-Gm-Message-State: AOJu0Yw3PrTR3A4QlpsFLnI3hDt/i8V5STRqFvbof5A2zHYfEo0wOKx/
-	vxgX2YvnUq++O3tgO3j5Y2Rqz9v95sHg3AslborYsfJCpSoC5mQ9CRv5
-X-Gm-Gg: AY/fxX6+HyD3Bicxz302yhc8C3d72ma0um3wNLo+4TCpt9BM1dlFWqFiiQnPZsFqwiB
-	1sDIv8J240N/n3OTmNg9KYzAE3SFwmsWG7MoVG9l5qlJYyoxXfOvxyYlAHxZufTiD0qbuFkD/10
-	NQoH9mJkyXKRqx4sb6hx4ACR5X+Uo3MNzNtmkwKDQaLV4Q2/ZUkOgBbaYDDhCDd0mAxn6+jXL1p
-	rUuYEsoyhtNsFQtVpmnjrO4hb/ajzHdUSC976YcTMxR89jkVWGCb6/c1Qt+mWqyqh9QH63ZvQIS
-	LlwpqTWZIkuHFosMFOiMy9qlYaeNel0rzIemjf6Fgp7a8cyUV//thbvhMTKw79SECLg5H1cCqVr
-	JSyKLWWrkmZXNWqb7ymlWgBpH26ZtqLaqwQqca7NQY7c9xkR1y9wD6n7uM7p5fgxoaE15PeNKzz
-	QwXPL9JyEUA+t6B00RgR8s62zNhg==
-X-Google-Smtp-Source: AGHT+IED9gfPtbQO5QOad8Z+7M8wVwtLncJwWLcyW2QnowsMI6f260Caic2klkdpN/rarjVFLNQLMQ==
-X-Received: by 2002:a17:90b:3852:b0:343:b610:901c with SMTP id 98e67ed59e1d1-34f68cb9036mr19913726a91.26.1768292141715;
-        Tue, 13 Jan 2026 00:15:41 -0800 (PST)
-Received: from localhost.localdomain ([240f:34:212d:1:180a:3788:c683:2f64])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-350ff05492dsm657199a91.3.2026.01.13.00.15.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 00:15:41 -0800 (PST)
-From: Akinobu Mita <akinobu.mita@gmail.com>
-To: akinobu.mita@gmail.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	axelrasmussen@google.com,
-	yuanchu@google.com,
-	weixugc@google.com,
-	hannes@cmpxchg.org,
-	david@kernel.org,
-	mhocko@kernel.org,
-	zhengqi.arch@bytedance.com,
-	shakeel.butt@linux.dev,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	byungchul@sk.com,
-	gourry@gourry.net,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	bingjiao@google.com,
-	jonathan.cameron@huawei.com,
-	pratyush.brahma@oss.qualcomm.com
-Subject: [PATCH v4 3/3] mm/vmscan: don't demote if there is not enough free memory in the lower memory tier
-Date: Tue, 13 Jan 2026 17:14:53 +0900
-Message-ID: <20260113081453.8293-4-akinobu.mita@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260113081453.8293-1-akinobu.mita@gmail.com>
-References: <20260113081453.8293-1-akinobu.mita@gmail.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ITaBrYl9"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20260113093003epoutp0266f3c2dce3edcdc8fedbae102d968c19~KQGRvd90l1279812798epoutp02S
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 09:30:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20260113093003epoutp0266f3c2dce3edcdc8fedbae102d968c19~KQGRvd90l1279812798epoutp02S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1768296603;
+	bh=zVgoSOAS0/2F/Rd+jjakikb46SMD0A85mgpmhFng1sk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ITaBrYl9t/lMVva7WK5CsVczDalVFaSuqW3cwRLRy2zWJ/jlqsFudaBOHj+K4Dyxv
+	 8XznTfVrQOfxKjATFDWk8AdGyzkjSJ/pyEvF3dXzK+NbjR3tQOw6Nr5maRPA3z9v4I
+	 fwSk8PRC8bUnAFp5AFAw8TyLbmsbh594oxDsBfkY=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20260113093003epcas5p30a07b321ce7386f00f6dd3cdfd324ace~KQGRUTjQA1987819878epcas5p3N;
+	Tue, 13 Jan 2026 09:30:03 +0000 (GMT)
+Received: from epcpadp1new (unknown [182.195.40.141]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4dr3qv1ntFz6B9mD; Tue, 13 Jan
+	2026 09:30:03 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20260113091259epcas5p454c34f4e65bfce46b67cadf73e1a8fcb~KP3XjBawe3213732137epcas5p4E;
+	Tue, 13 Jan 2026 09:12:59 +0000 (GMT)
+Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20260113091255epsmtip15b1219d46af612c9a1394666b24a6d72~KP3Ty-Qn60613506135epsmtip14;
+	Tue, 13 Jan 2026 09:12:54 +0000 (GMT)
+Date: Tue, 13 Jan 2026 14:42:42 +0530
+From: Neeraj Kumar <s.neeraj@samsung.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, gost.dev@samsung.com,
+	neeraj.kernel@gmail.com, cpgs@samsung.com
+Subject: Re: [PATCH 3/6] cxl/core/region: move pmem memctrl logic into
+ memctrl/pmem_region
+Message-ID: <664457955.21768296603246.JavaMail.epsvc@epcpadp1new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <aWV8jSUoCG5Yxv_v@gourry-fedora-PF4VCD3F>
+X-CMS-MailID: 20260113091259epcas5p454c34f4e65bfce46b67cadf73e1a8fcb
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----bVwHse4Nykw-L2c5iRRXKf-G.8k0lxUwrpcTFjGaDb9lfltx=_f2702_"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20260113091259epcas5p454c34f4e65bfce46b67cadf73e1a8fcb
+References: <20260112163514.2551809-1-gourry@gourry.net>
+	<20260112163514.2551809-4-gourry@gourry.net>
+	<1b9d3e1c-7b8a-4c9d-8788-4f901f985079@amd.com>
+	<aWV8jSUoCG5Yxv_v@gourry-fedora-PF4VCD3F>
+	<CGME20260113091259epcas5p454c34f4e65bfce46b67cadf73e1a8fcb@epcas5p4.samsung.com>
 
-On systems with multiple memory-tiers consisting of DRAM and CXL memory,
-the OOM killer is not invoked properly.
+------bVwHse4Nykw-L2c5iRRXKf-G.8k0lxUwrpcTFjGaDb9lfltx=_f2702_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-Here's the command to reproduce:
+On 12/01/26 05:58PM, Gregory Price wrote:
+>On Mon, Jan 12, 2026 at 03:10:47PM -0600, Cheatham, Benjamin wrote:
+>> On 1/12/2026 10:35 AM, Gregory Price wrote:
+>> > Move the pmem_region logic from region.c into memctrl/pmem_region.c.
+>> > Restrict the valid controllers for pmem to the pmem controller.
+>> > Simplify the controller selection logic in region probe.
+>> >
+>> > Cc:
+>>
+>> May want to forward this to whoever this Cc tag was meant for :).
+>>
+>> One nit below, otherwise this looks good to me:
+>> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+>>
+>
+>doh, meant to send this to Neeraj at samsung because they've been poking
+>at pmem stuff. Thank you.
+>
+>~Gregory
+>
+>Neeraj:
+>Link: https://lore.kernel.org/linux-cxl/20260112163514.2551809-4-gourry@gourry.net/
 
-$ sudo swapoff -a
-$ stress-ng --oomable -v --memrate 20 --memrate-bytes 10G \
-    --memrate-rd-mbs 1 --memrate-wr-mbs 1
+Hi Gregory,
 
-The memory usage is the number of workers specified with the --memrate
-option multiplied by the buffer size specified with the --memrate-bytes
-option, so please adjust it so that it exceeds the total size of the
-installed DRAM and CXL memory.
+Sure I will use this new infra for LSA 2.1 Support.
 
-If swap is disabled, you can usually expect the OOM killer to terminate
-the stress-ng process when memory usage approaches the installed memory
-size.
 
-However, if multiple memory-tiers exist (multiple
-/sys/devices/virtual/memory_tiering/memory_tier<N> directories exist) and
-/sys/kernel/mm/numa/demotion_enabled is true, the OOM killer will not be
-invoked and the system will become inoperable, regardless of whether MGLRU
-is enabled or not.
+Regards,
+Neeraj
 
-This issue can be reproduced using NUMA emulation even on systems with
-only DRAM.  You can create two-fake memory-tiers by booting a single-node
-system with "numa=fake=2 numa_emulation.adistance=576,704" kernel
-parameters.
+------bVwHse4Nykw-L2c5iRRXKf-G.8k0lxUwrpcTFjGaDb9lfltx=_f2702_
+Content-Type: text/plain; charset="utf-8"
 
-The reason for this issue is that memory allocations do not directly
-trigger the oom-killer, assuming that if the target node has an underlying
-memory tier, it can always be reclaimed by demotion.
 
-So this change avoids this issue by not attempting to demote if the
-underlying node has less free memory than the minimum watermark, and the
-oom-killer will be triggered directly from memory allocations.
-
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-v4:
-- add a code comment in can_demote()
-
-v3:
-- rebase to linux-next (next-20260108), where demotion target has changed
-  from node id to node mask.
-
-v2:
-- describe reproducibility with !mglru in the commit log
-- removed unnecessary consideration for scan control when checking demotion_nid watermarks
-
- mm/vmscan.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index f35afc5093dc..f980c533c778 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -358,7 +358,22 @@ static bool can_demote(int nid, struct scan_control *sc,
- 
- 	/* Filter out nodes that are not in cgroup's mems_allowed. */
- 	mem_cgroup_node_filter_allowed(memcg, &allowed_mask);
--	return !nodes_empty(allowed_mask);
-+	if (nodes_empty(allowed_mask))
-+		return false;
-+
-+	/* Check if there is enough free memory in the demotion target */
-+	for_each_node_mask(nid, allowed_mask) {
-+		int z;
-+		struct zone *zone;
-+		struct pglist_data *pgdat = NODE_DATA(nid);
-+
-+		for_each_managed_zone_pgdat(zone, pgdat, z, MAX_NR_ZONES - 1) {
-+			if (zone_watermark_ok(zone, 0, min_wmark_pages(zone),
-+						ZONE_MOVABLE, 0))
-+				return true;
-+		}
-+	}
-+	return false;
- }
- 
- static inline bool can_reclaim_anon_pages(struct mem_cgroup *memcg,
--- 
-2.43.0
+------bVwHse4Nykw-L2c5iRRXKf-G.8k0lxUwrpcTFjGaDb9lfltx=_f2702_--
 
