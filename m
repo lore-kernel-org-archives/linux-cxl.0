@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAD6632;
-	Tue, 13 Jan 2026 21:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD5D2F363E;
+	Tue, 13 Jan 2026 22:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768339126; cv=none; b=cDA8sGhlhFmnzcqJUW35CUPrzkkuyhbsEWFtEv3XY9XrUNyjYxrYIX9OUtxWLfX7HFUxVvSXnwi4NiqDXiNu2EZdIppEkvCiKX7eSl0RO03VGJG1KotCYKMiCXwmZWO4f736pr1JR6GuVOCi0V1mieVT5BZDPwm6f+k2UW8B/LY=
+	t=1768341813; cv=none; b=OvtUy/5Ne2RK5LgO79dDg0wrd2yy0LOiFH3+hUxIy57tbYAfkjwKiCvMek0zmjPC04HcuhxZWaBgnpNUtevQi7AGWOhGq4VO8izAGGlKjtACkS5TQ0eQJbZJlkOmNkPm58utP04gXYl+m9x/N8LjNtU1wH5KFd/0wB/+XkWbpws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768339126; c=relaxed/simple;
-	bh=RH+iGIEhbflrg/P7TTl38oeWYUTHbiwrLgYRLkwqF6Q=;
+	s=arc-20240116; t=1768341813; c=relaxed/simple;
+	bh=p12yju99auB4KokOND0KnW4C4OL6HoaCj4mKdcicZ7M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qfmn+aX+MFSe8DlYKvOfS7lup8Wzdlzs6MynKTM0raq6z4sPZiaeRB5X7IqqVokoqb2Si+ab2e1Wr5ilIUAIpa8c4QeKozUFiN0Xip7MrCiXrZoujFD92LfG4oBmCn/B4x+RejQ3LVQvEznRVcKrYthSV8s2z6gBhSxShwDGCws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HOSaZR5j; arc=none smtp.client-ip=192.198.163.15
+	 In-Reply-To:Content-Type; b=u/CaoO0M4Sd26CkFWwyz1VHDPlLcBeMBSpbo1crHaJJqETl9gvONTplm5UPmWSFH9mBuPeonGHeCBTtuDTZwJDuCoFSVFuh4InSuk26PIdEOCyRqzOPPmji5rQRbL48/OXL2uDO0AJDMM3vEn1fG0lxaViO+zkEeYLFDucwtm+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h61bkVTg; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HOSaZR5j"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h61bkVTg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768339124; x=1799875124;
+  t=1768341811; x=1799877811;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=RH+iGIEhbflrg/P7TTl38oeWYUTHbiwrLgYRLkwqF6Q=;
-  b=HOSaZR5jiBq+wD2WQSk+Vrffuyqt9reH3WLRAaZHQ8A3wbqfGDfvXSJN
-   +Tpphz7AyoXop0aIz6UzJLQQnl0+nnqjEYrdIIsUI+Pat/dhq7nCpaOia
-   ZAQEXvqa+te7T4Glg4QqSTmf1fdUCJE7CRGJ/hEzz9U/qouQftoEyInxz
-   qU04DdtO9bv5hlXHOiyA12sfhd439t68JFgyJwhrWa9CpiLUDSk9pkq0Z
-   1/uVu4KwfNmmi038EyKNhKRTLteIZUlqJF2NSB7UrPspBnemiUU2vmyT8
-   0Po2NYYbVF+khYMDGAZ5OzRDVuXfyX4wps7aJ+PN6+Qdck0ltcaAvmx91
-   Q==;
-X-CSE-ConnectionGUID: 95YrhwUlS46kW7OFV6y3+Q==
-X-CSE-MsgGUID: QqwBoyqBQEK17ZgvWhWbIQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="69716474"
-X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
-   d="scan'208";a="69716474"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 13:18:44 -0800
-X-CSE-ConnectionGUID: yYB36DfwRH6apMUROqjRMQ==
-X-CSE-MsgGUID: tkxNnEaHSD2+Qs9gl1y7DQ==
+  bh=p12yju99auB4KokOND0KnW4C4OL6HoaCj4mKdcicZ7M=;
+  b=h61bkVTgxZy6vtAFO+Dz0d7d842hZ+2WuHpQGGumjv5zK1m9xODVx5Qb
+   IBHCNu7SAeBoqRESllOsBnVcJoWuAgW38LKFdUvs7AujS/hB/0FzutQHM
+   ms5Dc5mQK/2608DcUwPkuLZQ2KN/yiXbOeICL3NNk4sjwpChSgw8QFO9i
+   UCevgrjRxtl8kInKc6Z+/h8ZY1WCTY7pYFp0LaQvTz6LheVP9sRHxhDJF
+   lwV3eNdvCZVkoYRL4drgiR320UTkI3er14WK+1HMB5P81/3dF/6/bICpg
+   v71ifMRnHnd6YoIveYoI/kvbcmnQOLQFREhCKv5wqhZRIlZRmEErLyCgQ
+   g==;
+X-CSE-ConnectionGUID: q+2Oj1seRiyeehLSh27kgA==
+X-CSE-MsgGUID: 9wxfu7f4SW2Rs1AW2RhvWw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="81002691"
+X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
+   d="scan'208";a="81002691"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 14:03:30 -0800
+X-CSE-ConnectionGUID: wQ415eqoTZCqEu1fHdUHnA==
+X-CSE-MsgGUID: 9MfCsvQISEqvvbGJjHr4Cw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
-   d="scan'208";a="204768845"
+X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
+   d="scan'208";a="208662697"
 Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.189]) ([10.125.110.189])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 13:18:43 -0800
-Message-ID: <b29a73dd-985f-47f9-84d2-b822ed385e4f@intel.com>
-Date: Tue, 13 Jan 2026 14:18:42 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 14:03:28 -0800
+Message-ID: <cc18931c-8c13-486d-bd70-ffb2ebd9ec93@intel.com>
+Date: Tue, 13 Jan 2026 15:03:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,282 +52,281 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] cxl/core/region: move dax region driver logic into
- dax_region
-To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
-References: <20260113202138.3021093-1-gourry@gourry.net>
- <20260113202138.3021093-3-gourry@gourry.net>
+Subject: Re: [PATCH v3 3/3] Documentation/driver-api/cxl: ACPI PRM Address
+ Translation Support and AMD Zen5 enablement
+To: Robert Richter <rrichter@amd.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Corbet <corbet@lwn.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>,
+ linux-doc@vger.kernel.org
+References: <20260112111707.794526-1-rrichter@amd.com>
+ <20260112111707.794526-3-rrichter@amd.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260113202138.3021093-3-gourry@gourry.net>
+In-Reply-To: <20260112111707.794526-3-rrichter@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 1/13/26 1:21 PM, Gregory Price wrote:
-> Move the dax region driver logic from region.c into dax_region.c
+On 1/12/26 4:16 AM, Robert Richter wrote:
+> This adds a convention document for the following patch series:
 > 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
+>  cxl: ACPI PRM Address Translation Support and AMD Zen5 enablement
+> 
+> Version 7 and later:
+> 
+>  https://lore.kernel.org/linux-cxl/20251114213931.30754-1-rrichter@amd.com/
+> 
+> Link: https://lore.kernel.org/linux-cxl/20251114213931.30754-1-rrichter@amd.com/
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-
 > ---
->  drivers/cxl/core/Makefile     |   1 +
->  drivers/cxl/core/core.h       |   1 +
->  drivers/cxl/core/dax_region.c | 106 ++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/region.c     |  99 -------------------------------
->  4 files changed, 108 insertions(+), 99 deletions(-)
->  create mode 100644 drivers/cxl/core/dax_region.c
+> v3:
+>  * updated link in descriptions and add Link: tag (Jonathan Cameron),
+>  * clarified CFMWS and HPA range description (Jonathan Cameron),
+>  * use 80 chars line limit (Jonathan Cameron),
+>  * added block diagram to illustrate the example address mappings (Dave),
+> v2:
+>  * updated sob-chain,
+>  * spell fix in patch description (Randy),
+>  * made small changes as suggested by Randy,
+>  * Removed include:: <isonum.txt> line (Jon).
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+>  Documentation/driver-api/cxl/conventions.rst  |   1 +
+>  .../driver-api/cxl/conventions/cxl-atl.rst    | 205 ++++++++++++++++++
+>  2 files changed, 206 insertions(+)
+>  create mode 100644 Documentation/driver-api/cxl/conventions/cxl-atl.rst
 > 
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index 23269c81fd44..36f284d7c500 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -17,6 +17,7 @@ cxl_core-y += cdat.o
->  cxl_core-y += ras.o
->  cxl_core-$(CONFIG_TRACING) += trace.o
->  cxl_core-$(CONFIG_CXL_REGION) += region.o
-> +cxl_core-$(CONFIG_CXL_REGION) += dax_region.o
->  cxl_core-$(CONFIG_CXL_REGION) += pmem_region.o
->  cxl_core-$(CONFIG_CXL_MCE) += mce.o
->  cxl_core-$(CONFIG_CXL_FEATURES) += features.o
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index cd589e81f55e..3ea850408814 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -42,6 +42,7 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port);
->  struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
->  u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
->  		   u64 dpa);
-> +int devm_cxl_add_dax_region(struct cxl_region *cxlr);
->  int devm_cxl_add_pmem_region(struct cxl_region *cxlr);
+> diff --git a/Documentation/driver-api/cxl/conventions.rst b/Documentation/driver-api/cxl/conventions.rst
+> index 9267a697b2fe..0d2e07279ad9 100644
+> --- a/Documentation/driver-api/cxl/conventions.rst
+> +++ b/Documentation/driver-api/cxl/conventions.rst
+> @@ -14,4 +14,5 @@ same convention.
+>     :caption: Contents
 >  
->  #else
-> diff --git a/drivers/cxl/core/dax_region.c b/drivers/cxl/core/dax_region.c
+>     conventions/cxl-lmh.rst
+> +   conventions/cxl-atl.rst
+>     conventions/template.rst
+> diff --git a/Documentation/driver-api/cxl/conventions/cxl-atl.rst b/Documentation/driver-api/cxl/conventions/cxl-atl.rst
 > new file mode 100644
-> index 000000000000..d7c38447f816
+> index 000000000000..69fed0044b52
 > --- /dev/null
-> +++ b/drivers/cxl/core/dax_region.c
-> @@ -0,0 +1,106 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
-> +#include <linux/device.h>
-> +#include <linux/slab.h>
-> +#include <cxlmem.h>
-> +#include <cxl.h>
-> +#include "core.h"
+> +++ b/Documentation/driver-api/cxl/conventions/cxl-atl.rst
+> @@ -0,0 +1,205 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
-> +static void cxl_dax_region_release(struct device *dev)
-> +{
-> +	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
+> +ACPI PRM CXL Address Translation
+> +================================
 > +
-> +	kfree(cxlr_dax);
-> +}
+> +Document
+> +--------
 > +
-> +static const struct attribute_group *cxl_dax_region_attribute_groups[] = {
-> +	&cxl_base_attribute_group,
-> +	NULL,
-> +};
+> +CXL Revision 3.2, Version 1.0
 > +
-> +const struct device_type cxl_dax_region_type = {
-> +	.name = "cxl_dax_region",
-> +	.release = cxl_dax_region_release,
-> +	.groups = cxl_dax_region_attribute_groups,
-> +};
+> +License
+> +-------
 > +
-> +static bool is_cxl_dax_region(struct device *dev)
-> +{
-> +	return dev->type == &cxl_dax_region_type;
-> +}
+> +SPDX-License Identifier: CC-BY-4.0
 > +
-> +struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
-> +{
-> +	if (dev_WARN_ONCE(dev, !is_cxl_dax_region(dev),
-> +			  "not a cxl_dax_region device\n"))
-> +		return NULL;
-> +	return container_of(dev, struct cxl_dax_region, dev);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(to_cxl_dax_region, "CXL");
+> +Creator/Contributors
+> +--------------------
 > +
-> +static struct lock_class_key cxl_dax_region_key;
+> +- Robert Richter, AMD
 > +
-> +static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
-> +{
-> +	struct cxl_region_params *p = &cxlr->params;
-> +	struct cxl_dax_region *cxlr_dax;
-> +	struct device *dev;
+> +Summary of the Change
+> +---------------------
 > +
-> +	guard(rwsem_read)(&cxl_rwsem.region);
-> +	if (p->state != CXL_CONFIG_COMMIT)
-> +		return ERR_PTR(-ENXIO);
+> +The CXL Fixed Memory Window Structures (CFMWS) describe zero or more Host
+> +Physical Address (HPA) windows associated with one or more CXL Host Bridges.
+> +Each HPA range of a CXL Host Bridge is represented by a CFMWS entry. An HPA
+> +range may include addresses currently assigned to CXL.mem devices, or an OS may
+> +assign ranges from an address window to a device.
 > +
-> +	cxlr_dax = kzalloc(sizeof(*cxlr_dax), GFP_KERNEL);
-> +	if (!cxlr_dax)
-> +		return ERR_PTR(-ENOMEM);
+> +Host-managed Device Memory is Device-attached memory that is mapped to system
+> +coherent address space and accessible to the Host using standard write-back
+> +semantics. The managed address range is configured in the CXL HDM Decoder
+> +registers of the device. An HDM Decoder in a device is responsible for
+> +converting HPA into DPA by stripping off specific address bits.
 > +
-> +	cxlr_dax->hpa_range.start = p->res->start;
-> +	cxlr_dax->hpa_range.end = p->res->end;
+> +CXL devices and CXL bridges use the same HPA space. It is common across all
+> +components that belong to the same host domain. The view of the address region
+> +must be consistent on the CXL.mem path between the Host and the Device.
 > +
-> +	dev = &cxlr_dax->dev;
-> +	cxlr_dax->cxlr = cxlr;
-> +	device_initialize(dev);
-> +	lockdep_set_class(&dev->mutex, &cxl_dax_region_key);
-> +	device_set_pm_not_required(dev);
-> +	dev->parent = &cxlr->dev;
-> +	dev->bus = &cxl_bus_type;
-> +	dev->type = &cxl_dax_region_type;
+> +This is described in the current CXL specification (Table 1-1, 3.3.1, 8.2.4.20,
+> +9.13.1, 9.18.1.3). [#cxl-spec-3.2]_
 > +
-> +	return cxlr_dax;
-> +}
+> +Depending on the interconnect architecture of the platform, components attached
+> +to a host may not share the same host physical address space. Those platforms
+> +need address translation to convert an HPA between the host and the attached
+> +component, such as a CXL device. The translation mechanism is host-specific and
+> +implementation dependent.
 > +
-> +static void cxlr_dax_unregister(void *_cxlr_dax)
-> +{
-> +	struct cxl_dax_region *cxlr_dax = _cxlr_dax;
+> +E.g., x86 AMD platforms use a Data Fabric that manages access to physical
+> +memory. Devices have their own memory space and can be configured to use
+> +'Normalized addresses' different to System Physical Addresses (SPA). Address
+> +translation is needed then. Details are described also under x86 AMD
+> +Documentation/admin-guide/RAS/address-translation.rst.
 > +
-> +	device_unregister(&cxlr_dax->dev);
-> +}
+> +Those AMD platforms provide PRM handlers in firmware to perform various types of
+> +address translation, including for CXL endpoints. AMD Zen5 systems implement the
+> +ACPI PRM CXL Address Translation firmware call. The ACPI PRM handler has a
+> +specific GUID to uniquely identify platforms with support of Normalized
+> +addressing. This is documented in the ACPI v6.5 Porting Guide, Address
+> +Translation - CXL DPA to System Physical Address. [#amd-ppr-58088]_
 > +
-> +int devm_cxl_add_dax_region(struct cxl_region *cxlr)
-> +{
-> +	struct cxl_dax_region *cxlr_dax;
-> +	struct device *dev;
-> +	int rc;
+> +When in Normalized address mode, HDM decoder address ranges must be configured
+> +and handled differently. Hardware addresses used in the HDM decoder
+> +configurations of an endpoint are not SPA and need to be translated from the
+> +endpoint's to its CXL host bridge's address range. This is especially important
+> +to find an endpoint's associated CXL Host Bridge and HPA window described in the
+> +CFMWS. Also, the interleave decoding is done by the Data Fabric and the endpoint
+> +does not perform decoding when converting HPA to DPA. Instead, interleaving is
+> +switched off for the endpoint (1 way). Finally, address translation might also
+> +be needed to inspect the Endpoint's hardware addresses, such as during
+> +profiling, tracing or error handling.
 > +
-> +	cxlr_dax = cxl_dax_region_alloc(cxlr);
-> +	if (IS_ERR(cxlr_dax))
-> +		return PTR_ERR(cxlr_dax);
+> +For example, with Normalized addressing the HDM decoders could look as
+> +following::
 > +
-> +	dev = &cxlr_dax->dev;
-> +	rc = dev_set_name(dev, "dax_region%d", cxlr->id);
-> +	if (rc)
-> +		goto err;
+> +                          -------------------------------
+> +                          | Root Decoder (CFMWS)        |
+> +                          | SPA Range: 0x850000000      |
+> +                          | Size: 0x8000000000 (512 GB) |
+> +                          | Interleave Ways: 1          |
+> +                          -------------------------------
+> +                                        |
+> +                                        v
+> +                          -------------------------------
+> +                          | Host Bridge Decoder (HDM)   |
+> +                          | SPA Range: 0x850000000      |
+> +                          | Size: 0x8000000000 (512 GB) |
+> +                          | Interleave Ways: 4          |
+> +                          | Targets: endpoint5,8,11,13  |
+> +                          | Granularity: 256            |
+> +                          -------------------------------
+> +                                        |
+> +           -----------------------------+------------------------------
+> +           |                  |                   |                   |
+> +           v                  v                   v                   v
+> + ------------------- ------------------- ------------------- -------------------
+> + | endpoint5       | | endpoint8       | | endpoint11      | | endpoint13      |
+> + | decoder5.0      | | decoder8.0      | | decoder11.0     | | decoder13.0     |
+> + | PCIe:           | | PCIe:           | | PCIe:           | | PCIe:           |
+> + |   0000:e2:00.0  | |   0000:e3:00.0  | |   0000:e4:00.0  | |   0000:e1:00.0  |
+> + | DPA:            | | DPA:            | | DPA:            | | DPA:            |
+> + |   Start: 0x0    | |   Start: 0x0    | |   Start: 0x0    | |   Start: 0x0    |
+> + |   Size:         | |   Size:         | |   Size:         | |   Size:         |
+> + |    0x2000000000 | |    0x2000000000 | |    0x2000000000 | |    0x2000000000 |
+> + |    (128 GB)     | |    (128 GB)     | |    (128 GB)     | |    (128 GB)     |
+> + | Interleaving:   | | Interleaving:   | | Interleaving:   | | Interleaving:   |
+> + |   Ways: 1       | |   Ways: 1       | |   Ways: 1       | |   Ways: 1       |
+> + |   Gran: 256     | |   Gran: 256     | |   Gran: 256     | |   Gran: 256     |
+> + ------------------- ------------------- ------------------- -------------------
+> +          |                   |                   |                   |
+> +          v                   v                   v                   v
+> +         DPA                 DPA                 DPA                 DPA
 > +
-> +	rc = device_add(dev);
-> +	if (rc)
-> +		goto err;
+> +This shows the representation in sysfs:
 > +
-> +	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
-> +		dev_name(dev));
+> +.. code-block:: none
 > +
-> +	return devm_add_action_or_reset(&cxlr->dev, cxlr_dax_unregister,
-> +					cxlr_dax);
-> +err:
-> +	put_device(dev);
-> +	return rc;
-> +}
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index a61805542b56..1ca5f5b02b22 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3239,105 +3239,6 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
->  	return -ENXIO;
->  }
->  
-> -static void cxl_dax_region_release(struct device *dev)
-> -{
-> -	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
-> -
-> -	kfree(cxlr_dax);
-> -}
-> -
-> -static const struct attribute_group *cxl_dax_region_attribute_groups[] = {
-> -	&cxl_base_attribute_group,
-> -	NULL,
-> -};
-> -
-> -const struct device_type cxl_dax_region_type = {
-> -	.name = "cxl_dax_region",
-> -	.release = cxl_dax_region_release,
-> -	.groups = cxl_dax_region_attribute_groups,
-> -};
-> -
-> -static bool is_cxl_dax_region(struct device *dev)
-> -{
-> -	return dev->type == &cxl_dax_region_type;
-> -}
-> -
-> -struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
-> -{
-> -	if (dev_WARN_ONCE(dev, !is_cxl_dax_region(dev),
-> -			  "not a cxl_dax_region device\n"))
-> -		return NULL;
-> -	return container_of(dev, struct cxl_dax_region, dev);
-> -}
-> -EXPORT_SYMBOL_NS_GPL(to_cxl_dax_region, "CXL");
-> -
-> -static struct lock_class_key cxl_dax_region_key;
-> -
-> -static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
-> -{
-> -	struct cxl_region_params *p = &cxlr->params;
-> -	struct cxl_dax_region *cxlr_dax;
-> -	struct device *dev;
-> -
-> -	guard(rwsem_read)(&cxl_rwsem.region);
-> -	if (p->state != CXL_CONFIG_COMMIT)
-> -		return ERR_PTR(-ENXIO);
-> -
-> -	cxlr_dax = kzalloc(sizeof(*cxlr_dax), GFP_KERNEL);
-> -	if (!cxlr_dax)
-> -		return ERR_PTR(-ENOMEM);
-> -
-> -	cxlr_dax->hpa_range.start = p->res->start;
-> -	cxlr_dax->hpa_range.end = p->res->end;
-> -
-> -	dev = &cxlr_dax->dev;
-> -	cxlr_dax->cxlr = cxlr;
-> -	device_initialize(dev);
-> -	lockdep_set_class(&dev->mutex, &cxl_dax_region_key);
-> -	device_set_pm_not_required(dev);
-> -	dev->parent = &cxlr->dev;
-> -	dev->bus = &cxl_bus_type;
-> -	dev->type = &cxl_dax_region_type;
-> -
-> -	return cxlr_dax;
-> -}
-> -
-> -static void cxlr_dax_unregister(void *_cxlr_dax)
-> -{
-> -	struct cxl_dax_region *cxlr_dax = _cxlr_dax;
-> -
-> -	device_unregister(&cxlr_dax->dev);
-> -}
-> -
-> -static int devm_cxl_add_dax_region(struct cxl_region *cxlr)
-> -{
-> -	struct cxl_dax_region *cxlr_dax;
-> -	struct device *dev;
-> -	int rc;
-> -
-> -	cxlr_dax = cxl_dax_region_alloc(cxlr);
-> -	if (IS_ERR(cxlr_dax))
-> -		return PTR_ERR(cxlr_dax);
-> -
-> -	dev = &cxlr_dax->dev;
-> -	rc = dev_set_name(dev, "dax_region%d", cxlr->id);
-> -	if (rc)
-> -		goto err;
-> -
-> -	rc = device_add(dev);
-> -	if (rc)
-> -		goto err;
-> -
-> -	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
-> -		dev_name(dev));
-> -
-> -	return devm_add_action_or_reset(&cxlr->dev, cxlr_dax_unregister,
-> -					cxlr_dax);
-> -err:
-> -	put_device(dev);
-> -	return rc;
-> -}
-> -
->  static int match_decoder_by_range(struct device *dev, const void *data)
->  {
->  	const struct range *r1, *r2 = data;
+> + /sys/bus/cxl/devices/endpoint5/decoder5.0/interleave_granularity:256
+> + /sys/bus/cxl/devices/endpoint5/decoder5.0/interleave_ways:1
+> + /sys/bus/cxl/devices/endpoint5/decoder5.0/size:0x2000000000
+> + /sys/bus/cxl/devices/endpoint5/decoder5.0/start:0x0
+> + /sys/bus/cxl/devices/endpoint8/decoder8.0/interleave_granularity:256
+> + /sys/bus/cxl/devices/endpoint8/decoder8.0/interleave_ways:1
+> + /sys/bus/cxl/devices/endpoint8/decoder8.0/size:0x2000000000
+> + /sys/bus/cxl/devices/endpoint8/decoder8.0/start:0x0
+> + /sys/bus/cxl/devices/endpoint11/decoder11.0/interleave_granularity:256
+> + /sys/bus/cxl/devices/endpoint11/decoder11.0/interleave_ways:1
+> + /sys/bus/cxl/devices/endpoint11/decoder11.0/size:0x2000000000
+> + /sys/bus/cxl/devices/endpoint11/decoder11.0/start:0x0
+> + /sys/bus/cxl/devices/endpoint13/decoder13.0/interleave_granularity:256
+> + /sys/bus/cxl/devices/endpoint13/decoder13.0/interleave_ways:1
+> + /sys/bus/cxl/devices/endpoint13/decoder13.0/size:0x2000000000
+> + /sys/bus/cxl/devices/endpoint13/decoder13.0/start:0x0
+> +
+> +Note the endpoint interleaving configurations with a direct mapping (1-way).
+> +
+> +With PRM calls, the kernel can determine the following mappings:
+> +
+> +.. code-block:: none
+> +
+> + cxl decoder5.0: address mapping found for 0000:e2:00.0 (hpa -> spa):
+> +   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
+> + cxl decoder8.0: address mapping found for 0000:e3:00.0 (hpa -> spa):
+> +   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
+> + cxl decoder11.0: address mapping found for 0000:e4:00.0 (hpa -> spa):
+> +   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
+> + cxl decoder13.0: address mapping found for 0000:e1:00.0 (hpa -> spa):
+> +   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
+> +
+> +The corresponding CXL host bridge (HDM) decoders and root decoder (CFMWS) show
+> +and match with the calculated endpoint mappings:
+> +
+> +.. code-block:: none
+> +
+> + /sys/bus/cxl/devices/port1/decoder1.0/interleave_granularity:256
+> + /sys/bus/cxl/devices/port1/decoder1.0/interleave_ways:4
+> + /sys/bus/cxl/devices/port1/decoder1.0/size:0x8000000000
+> + /sys/bus/cxl/devices/port1/decoder1.0/start:0x850000000
+> + /sys/bus/cxl/devices/port1/decoder1.0/target_list:0,1,2,3
+> + /sys/bus/cxl/devices/port1/decoder1.0/target_type:expander
+> + /sys/bus/cxl/devices/root0/decoder0.0/interleave_granularity:256
+> + /sys/bus/cxl/devices/root0/decoder0.0/interleave_ways:1
+> + /sys/bus/cxl/devices/root0/decoder0.0/size:0x8000000000
+> + /sys/bus/cxl/devices/root0/decoder0.0/start:0x850000000
+> + /sys/bus/cxl/devices/root0/decoder0.0/target_list:7
+> +
+> +The following changes of the specification are needed:
+> +
+> +* Allow a CXL device to be in a different HPA space other than the host's space.
+> +
+> +* The platform can use implementation-specific address translation when crossing
+> +  memory domains on the CXL.mem path between the Host and the Device.
+> +
+> +* The kernel (OSPM) determines Endpoint SPA range and interleaving configuration
+> +  using platform-specific address translation methods.
+> +
+> +Benefits of the Change
+> +----------------------
+> +
+> +Without the change, the OSPM may not determine the memory region and Root
+> +Decoder of an Endpoint and its corresponding HDM decoder. Region creation would
+> +fail. Platforms with a different interconnect architecture would fail to setup
+> +and use CXL.
+> +
+> +References
+> +----------
+> +
+> +.. [#cxl-spec-3.2] Compute Express Link Specification, Revision 3.2, Version 1.0,
+> +   https://www.computeexpresslink.org/
+> +
+> +.. [#amd-ppr-58088] AMD Family 1Ah Models 00h–0Fh and Models 10h–1Fh,
+> +   ACPI v6.5 Porting Guide, Publication # 58088,
+> +   https://www.amd.com/en/search/documentation/hub.html
+> +
+> +Detailed Description of the Change
+> +----------------------------------
+> +
+> +Add the following paragraph in 8.2.4.20 CXL HDM Decoder Capability Structure of
+> +the specification [#cxl-spec-3.2]_ to the end:
+> +
+> +"A device may use a different HPA space that is not common to other components
+> +of the host domain. The platform is responsible for address translation when
+> +crossing HPA spaces. The OSPM must determine the interleaving configuration and
+> +perform address translation to HPA ranges of the HDM decoders as needed. The
+> +translation mechanism is host-specific and implementation dependent."
 
