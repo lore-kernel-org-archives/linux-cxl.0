@@ -1,127 +1,124 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289D138BF87
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 12:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F154299949
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 13:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768307611; cv=none; b=leK1s5pRhM3SZlPFAHMSNJO/SqhVzliCevyJXoGyGbqD5Lkb3agSWd+U8KJ/kLCV1poRCbVXrCo+wWfHZVZwbAjdtCUJkLtM8z0L9NmBdQ5as6NW9a3e5uy+onUhzFyNh4yuNu3RorllntM+FOiCp3AqZh9sj3uSGf5E80GOmhQ=
+	t=1768311237; cv=none; b=fSAQnnZuZ1eVFCCZj7L9J8ENEW/byzF6ZSJJDdjIe4/9faHrcRTaIBk4/P0/bkfLjRlyQqICA7iDluy28f9bCaDlyhk2rySNoQj1pZWeogZIt2korzSna7PsK7raoVHpcd0s4dzdq7a6aQDr7i4uWHkzWGgjn+h0usO7TTtAkis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768307611; c=relaxed/simple;
-	bh=c2pQGNsmx4TXSTG4ks/OmiO2LMby6F7I6nhF1Yls93E=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-Version:Content-Type; b=SaSpDAINQi4pLmN/DaBV55SA1IWyeAEMCdOBe6RemLf0b3dLCbGztruYElSmG6kV5QOdt3vR18ELZmJagTUmuelY1iGF8+fzzpn9v6TQ6M1xqfeKLLzzsSmVcnjupLcRbsxqG2dqFVWeW4lKzhODzJ/fbfhdQxgmaPPWoJx2eDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GCrBvpZe; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768311237; c=relaxed/simple;
+	bh=nJn/IgS2fQ4v0logMt+CBQKLENdUOAdE0tT1/1E7ec4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f/vGI7ZltfwhKjUjbTp34ShusgG/bqTE8hSC1MFOyELTKIuhJtfVyo0iAhlv8WCUu2TVbOKcB8qW5bOpmNDkCHOw1fjxPjo/UarTL6LNyld55JgxW2/Uzhi84zHc885UsOPcwIyrRyLUtoXa3Q4Ckf6P7lzIbtsNXHCL0MQh6/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Fjm5kLVE; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCrBvpZe"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-c551edc745eso1782749a12.2
-        for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 04:33:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Fjm5kLVE"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-8b29ff9d18cso804230285a.3
+        for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 05:33:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768307607; x=1768912407; darn=vger.kernel.org;
-        h=mime-version:references:message-id:date:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=j4BCb4tuwUydlXX/lekB/MWAbo5xTWmBY98lhxIZgCk=;
-        b=GCrBvpZeucBOdNpJseUbRKNa77J3jEjSKSr2rQltUiOSzioURb4448Kr9GVdc4A4M6
-         EeRxRTsOfiRVNkUEGN4mkvBWr7+cqibFBBnbNCpse52V2sMsMNI9lEm95Cnlek63otZl
-         syjrb7MRSUA4zfswNNSYnSNoKl7QdqKysebTzPHBsCeNlTTSfvgjmp0e0FuW/B95Alst
-         oe/iuaWn7B8uGt+o/gTqlwZd0wTuqVGIQR6mFwzUCdAVrz2qHLtEl1u3M5lND7sa/YIo
-         WJVxnqKjY+DdRZteDSadMj1yuf/MI2IqhwEjkDmLAD+876PYUwT4dDvY2csrpor9dpk1
-         na4g==
+        d=gourry.net; s=google; t=1768311235; x=1768916035; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=e+TrcPiNJqx+gnXGDZ6bofmiej5uYIiBxFLYJ07vJ3g=;
+        b=Fjm5kLVEoFp9+qyrA+upskKg7lKiuWxhzeaCrMLPFGi3cSB9KGDALfGU7rMGEE1mpa
+         OWEnDXSq08/wPdk0B9mMXhae3D38TAWmuoOr+3TxQk7zo6sWQbv6MHLW4vq4IZOocEPZ
+         N9JGuEZqxpB90gkPZywLR4K+lER+ipPN92ZpgzwqmTd5khOVb6e4lX1v+qcqL6/w1ugO
+         5gCiRKWoPvAITK8d57CrEZ1ZxfJmkI6YQCunVZ6es4hvJvzCzYqiT7xguWe+Hebd2BYq
+         NTy9t3Vssnk+q91zzvhygakKA/lg/ndsEy5bQKGYPw288FWG+K9ybNRgapoZnRvOlnGK
+         pWEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768307607; x=1768912407;
-        h=mime-version:references:message-id:date:in-reply-to:subject:cc:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j4BCb4tuwUydlXX/lekB/MWAbo5xTWmBY98lhxIZgCk=;
-        b=PZ5/m4SOIPBkR2DqqRWpJw/HKwm+K2AWrA4Oz5QV+P1dO/1dEAn6Spmml6I5XYv1kv
-         bsQKLcsEQ+66353+LuGfGEl8a5ZjfEees2PPnMYvD+4Ymts2eE7MTnoJJDQyN+SuvO4s
-         xU5rPjIewQH8cZBB5wQq5bnRubO01czH39RNjuvvnl0+w/H3NFZWaBlUPRRsbPUmcaJ+
-         rYwbv/pdPsVV+hEOyUaBGGlfQaVA8TPQLMHkiXOUklQh3Ba9QHthIa002Uo4NUTU/87s
-         ScqTvgNSwKfxpc0X17JQzc/kX6g/UxMqXjPUmTgw62ffnI2sKlrwx+fJAUCvNS+eVyWG
-         fEqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWfKAJvH2MBWf5So/3ojsn9A0NLbUG8J7DZEplbNpJ7jCk0Q4Sj9fe2vRoX9moTGj5DbU3y7i74PDs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhThF2l3MR9RdPhj+FHW4Uwapyl4boXmGL7JgIOxC0akBFACQJ
-	PBP0yUX7cfdZGCKo5JgEanlqUk6i1Ayb/A4qm7TdbPKK2XhKzdKX0Ebi
-X-Gm-Gg: AY/fxX6aK7W0FyBNq9igVxKkStSkHvzgWsmPRYljNWY33tw7h8Esa01rv4MORWTE53H
-	SAnUhNfqF2BbdAtV6PGsEVOKcXqZ2OybdQJC+/SKuXdcQrIKTDjJXzPMSshK2Yy8P6MjJsQ8h/L
-	fx4Ri2I7hus6ChuiRk6uU9Zvwh5iv4TobiVu++/ixmCbQwK2gbCRo6C5KcwhZuQ6HtSz72SW9TS
-	D7nz56560zJOowpzWfXEwZe6hJ6xy3UeLcvYJtSjtvJlCtqELieY2czmfKOq5g30yi0zBd02N5r
-	FR0pVLjgdZIIF7OthXSRoSdsPmj2WYxAfh+BA0dqM4f/c3qQwKrap5dL8c6W8E8bFKHlMcy8XBn
-	BaOXPBrvK6TXFRQYUTldtqY8OCmS8mATBVMyFj8i/jzd3r+VW59/f1ut5r35LjTL0TdQR3tyQub
-	aANOXQ
-X-Google-Smtp-Source: AGHT+IFw8NQUhXWsNFLNcy9VnhtaeqSccMp4bageDierszWlx1Kxyih6osyfD1+uAcqTN4o2oK4SYQ==
-X-Received: by 2002:a17:90b:3ccc:b0:340:9ba6:8af4 with SMTP id 98e67ed59e1d1-34f68c47f0amr18570023a91.35.1768307607428;
-        Tue, 13 Jan 2026 04:33:27 -0800 (PST)
-Received: from dw-tp ([49.205.216.49])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-350fd6e343bsm1428958a91.1.2026.01.13.04.33.06
+        d=1e100.net; s=20230601; t=1768311235; x=1768916035;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e+TrcPiNJqx+gnXGDZ6bofmiej5uYIiBxFLYJ07vJ3g=;
+        b=RIyvDVqEtsnKtsj6NnkAoQoneqSh8LTqXnzAeAskmX6FQzh0ptDtV9vle4H+G6eqAA
+         djt27aUx6KIEwS7Bd//6zcfGQG/gpvlWgiq/QBNR3Eq3lizMwZiozrpqmCOhPx6Hqun8
+         m76ujUiDgHX70GmIliEDX4S/tw1V7LKHfsLP/htGOJTLddubv4S7ZjzwlPEV8aKkmgBA
+         iWgZgBkDTXwAwur2q8QU1kiA4r2sxZ5Gj38THEJm3JnkALMDelN+ncFvx9eNpxT+rWyD
+         +ALrhfS9jvlRmK3WshpvZcoFU7BsORHJeIYuoFoVuCbqegrSJFyeklf8as+wtS1gr8FC
+         5jAw==
+X-Gm-Message-State: AOJu0Ywj2yYS8VHdr5JBPtsOZVbuYdPDYbSmZTlmxfIrMv+wpAOlODJY
+	dxAF1Ve8J/0xDlaM1pcK0jyth4QgSHau4HJBNbmi6Fa0gQW3XgtQf+am0A0knQdbH8U=
+X-Gm-Gg: AY/fxX402Z6+ieOzInSQh/Wftxsw+1hvMsyYcQdvyW4Ilng38Fqa2RF71UeBIdse72y
+	WfDj93OrydgXehxa8kSqK+kb/xSarhqATfjzgSeWdJW2NC64HDx1h7gSUmS6Es7aa0BJ9Tk4F1n
+	v1+Ieer7f+HvLKcv6LoPZ6hQrTXDvpH9XIcJaUo8sHFrD/n4X2HZ4ELUefPe2mF9RSnYmB4t4qt
+	H7rQtM7PV8JwUg3t9EHVlh6QBZWM860w7PBam5PdIC0T5PfS2LxCWF3Bk2Dx0weMCdj/ET5Rb8J
+	KFkucu7fiNZdsdbb/gm6G6zUjk9Rtj5wx0hplLUGTngFnUmnkVxdlbTv3C3sko0rX6ND5uEvomW
+	HeV7ZKbBEfnmjFminI9bk0OFGVqpBlsFtnqc/485dUiDJVkaEl8ubrRSuT/tfKjSPpkKm9VwdSt
+	pkvc3QuESza34FxTh9ncKbhy5+ug1NrHtdbNCFW+nM2P4SlnF3s17QYUl5RfRLjCoV4a1S2A==
+X-Google-Smtp-Source: AGHT+IG89U0CT8ITbK5rc7fc4hjt8fIdrG81Mm2wdS+7eaGchNv6ND35gsVJ60oW2+UHlaYLTvZRJQ==
+X-Received: by 2002:ad4:5cca:0:b0:882:3f45:c811 with SMTP id 6a1803df08f44-890842dc572mr316656616d6.61.1768311234825;
+        Tue, 13 Jan 2026 05:33:54 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-890770cc7b1sm154860746d6.5.2026.01.13.05.33.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 04:33:26 -0800 (PST)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Alex Shi <alexs@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Andreas Larsson <andreas@gaisler.com>, Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	"David S. Miller" <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonathan Corbet <corbet@lwn.net>, 
-	Klara Modin <klarasmodin@gmail.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Magnus Lindholm <linmag7@gmail.com>, 
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>, 
-	Mike Rapoport <rppt@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Richard Weinberger <richard@nod.at>, 
-	Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, x86@kernel.org, 
-	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
-	linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v3 15/29] powerpc: introduce arch_zone_limits_init()
-In-Reply-To: <20260111082105.290734-16-rppt@kernel.org>
-Date: Tue, 13 Jan 2026 17:59:49 +0530
-Message-ID: <87zf6hu24i.ritesh.list@gmail.com>
-References: <20260111082105.290734-1-rppt@kernel.org> <20260111082105.290734-16-rppt@kernel.org>
+        Tue, 13 Jan 2026 05:33:54 -0800 (PST)
+Date: Tue, 13 Jan 2026 08:33:20 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Neeraj Kumar <s.neeraj@samsung.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, gost.dev@samsung.com,
+	neeraj.kernel@gmail.com, cpgs@samsung.com
+Subject: Re: [PATCH 0/6] CXL: Introduce memory controller abstraction and
+ sysram controller
+Message-ID: <aWZJoBwSLl8ukFZd@gourry-fedora-PF4VCD3F>
+References: <20260112163514.2551809-1-gourry@gourry.net>
+ <CGME20260113093758epcas5p10cc9749a657b8e4d32db75b8b973b67d@epcas5p1.samsung.com>
+ <439928219.101768297204618.JavaMail.epsvc@epcpadp1new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <439928219.101768297204618.JavaMail.epsvc@epcpadp1new>
 
-Mike Rapoport <rppt@kernel.org> writes:
-
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On Tue, Jan 13, 2026 at 03:07:49PM +0530, Neeraj Kumar wrote:
+> Hi Gregory,
+> 
+> I am facing compilation issue with this series using CONFIG_CXL_BUS=m
+> {{{
+> 	  AR      drivers/built-in.a
+> 	  AR      built-in.a
+> 	  AR      vmlinux.a
+> 	  LD      vmlinux.o
+> 	  MODPOST Module.symvers
+> 	ERROR: modpost: "device_offline" [drivers/cxl/core/cxl_core.ko] undefined!
+> 	ERROR: modpost: "lock_device_hotplug_sysfs" [drivers/cxl/core/cxl_core.ko] undefined!
+> 	ERROR: modpost: "unlock_device_hotplug" [drivers/cxl/core/cxl_core.ko] undefined!
+> 	ERROR: modpost: "device_online" [drivers/cxl/core/cxl_core.ko] undefined!
+> 	ERROR: modpost: "walk_memory_blocks" [drivers/cxl/core/cxl_core.ko] undefined!
+> 	make[2]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
+> 	make[1]: *** [/mnt/ssd1/neeraj/dcd/cxl_env/cxl-linux-mainline/Makefile:2004: modpost] Error 2
+> 	make: *** [Makefile:248: __sub-make] Error 2
+> }}}
+> 
+> Above routines are not EXPORT_SYMBOL_GPL(), thats why with
+> "CONFIG_CXL_BUS=m" its breaking.
+> 
+> After adding following EXPORT_SYMBOL_GPL() below their respective
+> routines. This issue is fixed.
+> {{{
+> 	EXPORT_SYMBOL_GPL(unlock_device_hotplug);
+> 	EXPORT_SYMBOL_GPL(lock_device_hotplug_sysfs);
+> 	EXPORT_SYMBOL_GPL(device_offline);
+> 	EXPORT_SYMBOL_GPL(device_online);
+> 	EXPORT_SYMBOL_GPL(walk_memory_blocks);
+> }}}
+> 
+> Can you please have a look?
 >
-> Move calculations of zone limits to a dedicated arch_zone_limits_init()
-> function.
->
-> Later MM core will use this function as an architecture specific callback
-> during nodes and zones initialization and thus there won't be a need to
-> call free_area_init() from every architecture.
->
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  arch/powerpc/mm/mem.c | 22 ++++++++++++----------
->  1 file changed, 12 insertions(+), 10 deletions(-)
 
-This v2 looks good to me. 
-I have also done a basic bootup testing using Linux PPC CI.
+Much appreciated, will fixup!
 
-Please feel free to add:
+~Gregory
 
-Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
