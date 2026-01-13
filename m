@@ -1,203 +1,145 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9301EB5FD
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 09:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250DC30F949
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 09:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768297209; cv=none; b=ngR/i17CcqK7l+aUC47aqygbf3angdBnVhRIcSsIuWn7WGFWWMqtEKzUEYVLfPf8olqCIrfF5hjwbnkUFaArqahhD/I5c1gDjRrjMpFVN7Anc1hR0+Elix1Y2tOejL0QZDWxAbYzHJ/Aes6IAucrqCREW+msvIga1d/fthCxufg=
+	t=1768297638; cv=none; b=Tt4VVvJX3x3BIaRVSm2Oio1FJSCPZOlDO9fkOiIMJmngD74Ta8iaiw5CE6Pa2BwQrfdt8VuRPKEV/gv9Crpq95dzEemHzSi+tMHR3weHSl4xtGvE/Z/2wtG5Or8WhPFGaYxFABNm+K1vNJpeFbRXFThE6fpbeDTB0lrij73Gxd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768297209; c=relaxed/simple;
-	bh=5qxXz5IBJTdc/jsYacpgwTohIzLix9YrYosovOthiz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=kVHbci48gbxVATuZS/OWuOyspPOpSqHxOCgOZPx5aK4c6aFzbo5yu1YEM3YLQe91aVMEyb0b115D0yit/xJSwkZmYIjLpDSxsi8q1GyzzdthcTYA0Vb/U0iMwPY0Kjjk2kajgSUn+cBe2QFb2hqeMuvG2oeN/zbw7XhBVO3GpMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=FMaIz3qF; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1768297638; c=relaxed/simple;
+	bh=GI1lKCop0k3azNeySc9/TU2klwIfVqv3k6MByu3j4RA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YaPjffFAq58Jp29w5nhB3CT8EF9yuiUAE8k193OwAcwU/5OBQgHlrAWz2CeCsRw/gtR16NOVO6eSa+Pq93o0fvLEb/VyeUBKUw/HM83Qjfmbc3bJLoFco0XDAv8gHkQPZ60T+CIJpuM7uCoRAyJ1/Qw89yHmxU1BhZWheHUHP7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kqBpK3HZ; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FMaIz3qF"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20260113094005epoutp01f64164853cadae6911a48f8a20593473~KQPB62_gK2903629036epoutp01I
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 09:40:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20260113094005epoutp01f64164853cadae6911a48f8a20593473~KQPB62_gK2903629036epoutp01I
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1768297205;
-	bh=Z7ab6YNeAN1HurS5UpUjDdbS+gNkGXf3jqS/MKGLWfU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FMaIz3qFvhf10ifPUcpgTGZkq86L2Xlf17NAT6lp+vagjQX+DpVTxl+IBfNrQWLmW
-	 nW2oaRW3EYY/oIENLfnW1BeYoQDcsmXvK0PjhGZCtlhTIHOgF6xsbMz3e/6cc9ccFG
-	 rPLLRN2rF6NTRSDZr2aR/r7QACRd8Za9c8ZYXcsk=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20260113094004epcas5p49671c4e20afc0e84c90c5d271b455ee2~KQPBWD-4x1636116361epcas5p4m;
-	Tue, 13 Jan 2026 09:40:04 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4dr43S4ZBNz3hhTF; Tue, 13 Jan
-	2026 09:40:04 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20260113093758epcas5p10cc9749a657b8e4d32db75b8b973b67d~KQNMSx0xE3161031610epcas5p1J;
-	Tue, 13 Jan 2026 09:37:58 +0000 (GMT)
-Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20260113093757epsmtip133a1896b653eae2f6b25fe21bb66e687~KQNKcPSxI2175321753epsmtip1k;
-	Tue, 13 Jan 2026 09:37:56 +0000 (GMT)
-Date: Tue, 13 Jan 2026 15:07:49 +0530
-From: Neeraj Kumar <s.neeraj@samsung.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com, gost.dev@samsung.com,
-	neeraj.kernel@gmail.com, cpgs@samsung.com
-Subject: Re: [PATCH 0/6] CXL: Introduce memory controller abstraction and
- sysram controller
-Message-ID: <439928219.101768297204618.JavaMail.epsvc@epcpadp1new>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kqBpK3HZ"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4f822b2df7aso99976591cf.2
+        for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 01:47:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768297636; x=1768902436; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=I5kwq28ArtsUeWAWQkRHAJMD/obs9sOzlfds4wEk8PI=;
+        b=kqBpK3HZz9PHStdY1uw2g7vhYyVxcgVK87095AMTS5KDK8q4mlNOWJQA7eTHn++CMZ
+         D91r9zohe8jltpQ5/ZuZTy2R/dPa1am5rC38CZvMiI8qmbXhaohJjf0puhGRULl5JV5w
+         A+p/1Dz1Uf1XXC0/d6K8J9MTj1K5dcW2p1Bo3MTniQ7lFaZiMkfRLvt6Y77Fkcxc1Y89
+         ii2mtT/CE5Q6G2JBqpg0yV9LIU5eoozfsqPhkNHDuUb9QbbuAgeCwPvA9l+r867eD/PP
+         dQWGo1DdO1hGnUkcqUR4T1GVl195gI4eCzr01ovPkKgfedfk8QJEAYtTGOetJ0H/3lMB
+         u5YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768297636; x=1768902436;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I5kwq28ArtsUeWAWQkRHAJMD/obs9sOzlfds4wEk8PI=;
+        b=bcrgL7h+bDmitpFKsk1eB44DTr//ZeiYZYeFdfIoM3sDWgo/vtNjL6aAybtgRCx8cl
+         HB6hXktjObmMhKRM3jLNMYemdmVSwFZ20Mtiy9420mfwpt/Jvw1kixNPgOM6ZM6FJX+g
+         npIkeGgbs0CTfJMX0XW2JIA4dpGIgL3u+BCJY2Jjh64dZAmRYPfwmd2qQabuqRbqOFug
+         /3BxZ29n5trINY39Gbxq2DAnfngd2jHa9Y4/ZZ8iOkrX0uURwcRFJpxdzzu7B+GsxCwR
+         Croi0xwzLpHAzI7zW91n+GzQXFE4OxdjQisPZEdnfx6nFuv//+kg8PWBT/w3ZqZt4d6c
+         ZPZA==
+X-Gm-Message-State: AOJu0Yyga4T2+BKG+1CgFXnphwnZ4kAsPjZWXro2HqGHmfKVHXt4KWEQ
+	Ei8OilStGEH5dhk6aDWu5npLqfmqKU3K5t9OG6F1YAZjKCh9SN/jxOTeoTXiTw==
+X-Gm-Gg: AY/fxX78ymRdwpP/XH4Zew915uTgq1tmEPgeSaWIoKBhtbsNllcxcml59mEGObY8P+X
+	Q0WkVWbKSBDebPNCFC/N+HM5nOhRjJY19N3F1srYCVb2pLZQWzpaKdTdTh9DhT5H+Pin06uFCJ2
+	VV5gzhLQQZ4IyginSCBSVKy2rpdBZii5/n6IqO1lvc0rZjuzn20mw1YuylHT+Hccw27vU15+ltg
+	t8li6H+4CXAl1T74Fp1R/gfOz7MwR401dzOSpuylfD+qHcdr2aq8aTd7D8oeGms+EIffK6vmssF
+	Db7NqGLlLbBtcpM45zsePp5Nq65jszLc0TVajm75dDL2XFjG6ZtoY54iqRZR37hgW8+7veDb0h7
+	YNOU68Bkme6f48ouwaMc9OGw6p+gmkfWKwWV6G9q450Eb7Glt3839RQaa9vL5Ip/xm46o/DretJ
+	Ur4GznUSCopZlxwjsS5iHY2zzBbA==
+X-Google-Smtp-Source: AGHT+IFBVrtk5u4rKzzBFDXzEra8FkgmNs+pG1NptAdeAUj8xnck47+E/LevyB+t2O7vXfNt+W6mJg==
+X-Received: by 2002:a17:90b:528e:b0:349:5b1b:78bf with SMTP id 98e67ed59e1d1-34f68d0bc85mr20289632a91.23.1768292123859;
+        Tue, 13 Jan 2026 00:15:23 -0800 (PST)
+Received: from localhost.localdomain ([240f:34:212d:1:180a:3788:c683:2f64])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-350ff05492dsm657199a91.3.2026.01.13.00.15.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Jan 2026 00:15:23 -0800 (PST)
+From: Akinobu Mita <akinobu.mita@gmail.com>
+To: akinobu.mita@gmail.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	axelrasmussen@google.com,
+	yuanchu@google.com,
+	weixugc@google.com,
+	hannes@cmpxchg.org,
+	david@kernel.org,
+	mhocko@kernel.org,
+	zhengqi.arch@bytedance.com,
+	shakeel.butt@linux.dev,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	byungchul@sk.com,
+	gourry@gourry.net,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	bingjiao@google.com,
+	jonathan.cameron@huawei.com,
+	pratyush.brahma@oss.qualcomm.com
+Subject: [PATCH v4 0/3] mm: fix oom-killer not being invoked when demotion is enabled
+Date: Tue, 13 Jan 2026 17:14:50 +0900
+Message-ID: <20260113081453.8293-1-akinobu.mita@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260112163514.2551809-1-gourry@gourry.net>
-X-CMS-MailID: 20260113093758epcas5p10cc9749a657b8e4d32db75b8b973b67d
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----bVwHse4Nykw-L2c5iRRXKf-G.8k0lxUwrpcTFjGaDb9lfltx=_f289a_"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20260113093758epcas5p10cc9749a657b8e4d32db75b8b973b67d
-References: <20260112163514.2551809-1-gourry@gourry.net>
-	<CGME20260113093758epcas5p10cc9749a657b8e4d32db75b8b973b67d@epcas5p1.samsung.com>
+Content-Transfer-Encoding: 8bit
 
-------bVwHse4Nykw-L2c5iRRXKf-G.8k0lxUwrpcTFjGaDb9lfltx=_f289a_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+On systems with multiple memory-tiers consisting of DRAM and CXL memory,
+the OOM killer is not invoked properly.
 
-On 12/01/26 11:35AM, Gregory Price wrote:
->The CXL driver currently hands policy management over to the DAX
->subsystem for sysram regions.  This makes building policy around
->entire regions clunky and at times difficult - for example, requiring
->multiple actions to reliably offline and hot-unplug memory.
->
->This series introduces a memory controller abstraction for CXL regions
->and adds a "sysram" controller that directly hotplugs memory without
->needing to route through DAX.  This simplifies the sysram use case
->considerably.
->
->This also prepares for future use cases which may require different
->memory controller logic (such as private numa nodes).
->
->We organize the controllers into core/memctrl/*_region.c files.
->
->The series is organized as follows:
->
->Patch 1 introduces the cxl_memctrl_mode enum and region->memctrl field,
->allowing regions to be switched between different memory controllers.
->The supported modes are NONE, AUTO, and DAX initially.  Auto-created
->regions default to AUTO, while manually created regions default to NONE
->(requiring explicit controller selection).
->
->Patch 2 adds the sysram_region memory controller, which provides direct
->memory hotplug without DAX intermediation.  New sysfs controls are
->exposed under region/memctrl/:
->  - hotplug:   trigger memory hotplug
->  - hotunplug: offline and hotunplug memory
->  - state:     online/online_normal/offline
->
->Patch 3 refactors existing pmem memctrl logic out of region.c into the
->new memctrl/pmem_region.c, simplifying controller selection in region
->probe.
->
->Patch 4 adds CONFIG_CXL_REGION_CTRL_AUTO_* options, allowing users to
->configure auto-regions to default to SYSRAM instead of DAX for existing
->simple system configurations (i.e. local memory expansion only).
->
->Patch 5 adds CONFIG_CXL_REGION_SYSRAM_DEFAULT_* options to control the
->default state of sysram blocks (OFFLINE, ONLINE/ZONE_MOVABLE, or
->ONLINE_NORMAL/ZONE_NORMAL).  This provides an alternative to the global
->MHP auto-online setting which may cause issues with other devices.
->
->Online defaults to ZONE_MOVABLE to defend hot-unplug by default.
->This is the opposite of memory blocks "online" and "online_movable".
->
->Patch 6 adds a memory_notify callback that prevents memory blocks from
->being onlined into ZONE_NORMAL when the controller state is set to
->ZONE_MOVABLE.  This protects against administrators accidentally
->breaking hot-unpluggability by writing "offline" then "online" to the
->memory block sysfs.
->
->Gregory Price (6):
->  drivers/cxl: add cxl_memctrl_mode and region->memctrl
->  cxl: add sysram_region memory controller
->  cxl/core/region: move pmem memctrl logic into memctrl/pmem_region
->  cxl: add CONFIG_CXL_REGION_CTRL_AUTO_* build config options
->  cxl: add CXL_REGION_SYSRAM_DEFAULT_* build options
->  cxl/sysram: disallow onlining in ZONE_NORMAL if state is movable only
->
-> drivers/cxl/Kconfig                      |  72 ++++
-> drivers/cxl/core/Makefile                |   1 +
-> drivers/cxl/core/core.h                  |   5 +
-> drivers/cxl/core/memctrl/Makefile        |   6 +
-> drivers/cxl/core/memctrl/dax_region.c    |  79 ++++
-> drivers/cxl/core/memctrl/memctrl.c       |  48 +++
-> drivers/cxl/core/memctrl/pmem_region.c   | 191 +++++++++
-> drivers/cxl/core/memctrl/sysram_region.c | 520 +++++++++++++++++++++++
-> drivers/cxl/core/region.c                | 358 ++++------------
-> drivers/cxl/cxl.h                        |  18 +
-> 10 files changed, 1013 insertions(+), 285 deletions(-)
-> create mode 100644 drivers/cxl/core/memctrl/Makefile
-> create mode 100644 drivers/cxl/core/memctrl/dax_region.c
-> create mode 100644 drivers/cxl/core/memctrl/memctrl.c
-> create mode 100644 drivers/cxl/core/memctrl/pmem_region.c
-> create mode 100644 drivers/cxl/core/memctrl/sysram_region.c
->
->-- 
->2.52.0
->
+This patchset includes a fix for the issue and an enhancement that makes
+the issue reproducible with numa emulation.
 
-Hi Gregory,
+v4:
+- remove unnecessary include of linux/node.h, suggested by Jonathan Cameron
+- include linux/notifier.h for the notifier_block, suggested by Jonathan Cameron
+- typo in abstruct distance value in the commit log and document
+- add information about supported architectures in numa_emulation.rst
+- add a code comment in can_demote()
 
-I am facing compilation issue with this series using CONFIG_CXL_BUS=m
-{{{
-	  AR      drivers/built-in.a
-	  AR      built-in.a
-	  AR      vmlinux.a
-	  LD      vmlinux.o
-	  MODPOST Module.symvers
-	ERROR: modpost: "device_offline" [drivers/cxl/core/cxl_core.ko] undefined!
-	ERROR: modpost: "lock_device_hotplug_sysfs" [drivers/cxl/core/cxl_core.ko] undefined!
-	ERROR: modpost: "unlock_device_hotplug" [drivers/cxl/core/cxl_core.ko] undefined!
-	ERROR: modpost: "device_online" [drivers/cxl/core/cxl_core.ko] undefined!
-	ERROR: modpost: "walk_memory_blocks" [drivers/cxl/core/cxl_core.ko] undefined!
-	make[2]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
-	make[1]: *** [/mnt/ssd1/neeraj/dcd/cxl_env/cxl-linux-mainline/Makefile:2004: modpost] Error 2
-	make: *** [Makefile:248: __sub-make] Error 2
-}}}
+v3: https://lore.kernel.org/linux-mm/20260108101535.50696-1-akinobu.mita@gmail.com/T
+- rebase to linux-next (next-20260108), where demotion target has changed
+  from node id to node mask.
 
-Above routines are not EXPORT_SYMBOL_GPL(), thats why with
-"CONFIG_CXL_BUS=m" its breaking.
+v2: https://lore.kernel.org/linux-mm/20251222004834.10539-1-akinobu.mita@gmail.com/T
+- fix the explanation about cmdline parameter in the commit log
+- add document for NUMA emulation
+- describe reproducibility with !mglru in the commit log
+- removed unnecessary consideration for scan control when checking demotion_nid watermarks
 
-After adding following EXPORT_SYMBOL_GPL() below their respective
-routines. This issue is fixed.
-{{{
-	EXPORT_SYMBOL_GPL(unlock_device_hotplug);
-	EXPORT_SYMBOL_GPL(lock_device_hotplug_sysfs);
-	EXPORT_SYMBOL_GPL(device_offline);
-	EXPORT_SYMBOL_GPL(device_online);
-	EXPORT_SYMBOL_GPL(walk_memory_blocks);
-}}}
+v1: https://lore.kernel.org/linux-mm/20251208094028.214949-1-akinobu.mita@gmail.com/T/
 
-Can you please have a look?
+original report:
+- https://lore.kernel.org/lkml/20251022135735.246203-1-akinobu.mita@gmail.com/T
 
+Akinobu Mita (3):
+  mm: memory-tiers, numa_emu: enable to create memory tiers using fake
+    numa nodes
+  mm: numa_emu: add document for NUMA emulation
+  mm/vmscan: don't demote if there is not enough free memory in the
+    lower memory tier
 
-Regards,
-Neeraj
+ Documentation/mm/index.rst          |  1 +
+ Documentation/mm/numa_emulation.rst | 31 +++++++++++++++++++++++++++++
+ mm/numa_emulation.c                 | 26 ++++++++++++++++++++++++
+ mm/vmscan.c                         | 17 +++++++++++++++-
+ 4 files changed, 74 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/mm/numa_emulation.rst
 
-------bVwHse4Nykw-L2c5iRRXKf-G.8k0lxUwrpcTFjGaDb9lfltx=_f289a_
-Content-Type: text/plain; charset="utf-8"
-
-
-------bVwHse4Nykw-L2c5iRRXKf-G.8k0lxUwrpcTFjGaDb9lfltx=_f289a_--
+-- 
+2.43.0
 
