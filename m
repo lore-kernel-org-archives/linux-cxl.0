@@ -1,81 +1,102 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC24D3921E9
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 13:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D716F27CCF2
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 14:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768312560; cv=none; b=ILJpWCJt0564U+4nVgQ7a8K8en3F3sWJPvZhT9IMvJMXdOZ9FXNhjulFwePFab6zylYlpny4thbwTjrBsR6xovYQBEEjg9PDYuAVsMACsNfaKqTd8VydL6ifvsJjg88+DQplP2TQsM/N0N+Ql5hMe5djo3O21Dicf+NogWGL7mI=
+	t=1768313789; cv=none; b=uix9Tug2WYSzSn9DtpWmWKzQ7pI5dp06/WBNZKVCdB/gqccpj81uXGboj48I9cjOX751a6egiVnxqvdnUfeMD+Xbylq57C+2gr0wn1yGMKAMdEeK6E0U6IlEscX7XlabOV56fYF5SchW5eAO6MU4EvzaSiBijhQ8fUBgE7PIYts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768312560; c=relaxed/simple;
-	bh=xBKJZJaq58dkfEBp5UADogC3I/NHOLgLZ8uI94yH9Qk=;
+	s=arc-20240116; t=1768313789; c=relaxed/simple;
+	bh=L8RKTSgZzn96TggX+YEpwMvvmrSwzzrKlYFGRXKLwfE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ehgJTMUa0vEoXWzxg1kaZkpF5SvZJBNNuN2y0p3AhbxuHvW60Qum50mDR4Jo2R6WoNNnLjLlZJDcjqQYzOJKLR27fFq7aAmZeVaC96CRlUkA1Az+etddRVEoiKbIK4V6hvsYtp4l7LTvvY0DDE+iz0E7S4At+RHH+OF8Tgn2PzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=t0ifdMef; arc=none smtp.client-ip=209.85.160.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=NbyzXcNMl2YcVI4Xsvcimey6H2G8XhcjfEhKT1tZlFnXLf1DhWrUWgYadiED78R8QgcDTmemyYXxUXNMpDMANfhP1CWTiUcGjlogPWMu9fO6maRkWoDXFKZHR6SalZgQhbJJbXnxCyK0idb6LaaAHhbt+Nd1Mu7VfFrgwpL26FY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=SPc2JJKa; arc=none smtp.client-ip=209.85.160.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="t0ifdMef"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4f1b4bb40aaso40934691cf.3
-        for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 05:55:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="SPc2JJKa"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4ee1939e70bso85636681cf.3
+        for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 06:16:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1768312544; x=1768917344; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1768313787; x=1768918587; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7MgVKM12PPuEhN+GtLeIhws/qU0BjDyGSzafJ6+BtXw=;
-        b=t0ifdMefP9ykjBGPRfjjbhG1+5ijyYk/Mmq1w8U2njTzZjgUC2IJJZA2L30eo754Gb
-         WYyQFk8YZYyAkDY/oOqpHVYrshWzIrlRSZ4eYqr+40TjdG5snOfand6+8VrKguIZ8U8m
-         793vfw25VSRH7jcgWcdWepzonGFdyqPaZohn5+n2eVzrHGKynUyz67LjYnBG5ahsulvS
-         ZNqlfeauugOVrrn600O9Lec4XYWPnUz0Nsu+BN/AZ+ydZJsD3DjI9G3fZTutAO9ES8/+
-         GZhXvdROgb0BOCHPm3K9ZG+EFMYViuSWmOJ2vMttd6L/CSxpbEKgsSpsdafpQdHrGPti
-         9PmA==
+        bh=EA4FEA3d8sqza+07mct2btPiz1RY5DfLWXNlCi+Rawg=;
+        b=SPc2JJKaFMa5z9jtGsClwMIJjee1JQTyEBNqKdkrc3uH9J+E/PabY7k7e4RsFS+nNe
+         ygwe9iDzAihYKkBJvwP51qg3ZweUgRj4gW4bHr9bwmQ3xyiId1T0jj94vqPhnFu7fzYo
+         E/FNpnJ2/4VUfRoAmUNf0huLGzScIFipAcrl7sT0TvRn4ISpK6/5heQn89bZ3dEYVpT4
+         0m9JuZdvZf6ofqNhendiguV8rzdZSVy5RCIRDGP8+GaqRrinzSPIXT1QuKQcoxkPSBFV
+         apbkp+Si0LNTWKy5r8+rtrdqWDvwTESHlC2wXBzYDSfNQm00tP9VlQMIy+5+uWW2F8oe
+         5mbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768312544; x=1768917344;
+        d=1e100.net; s=20230601; t=1768313787; x=1768918587;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7MgVKM12PPuEhN+GtLeIhws/qU0BjDyGSzafJ6+BtXw=;
-        b=py2WxWKB6s1uaNzn0SwFaKoKfefsZwKhunsYF218l/vSXzXbav605rkwRFvht7LZS6
-         sPsQ19F5Y4gX8/lVVyW//tNXjc26U+miO34LaapnnuJ6jan4B9ol1Ltgz0puygEr8zA1
-         G5QdO49wSFRKntQZDoRf3SpdeGwle2OP9bSXzqPBx0DxU1PQ4Zr7JNBavD+syZekqfjb
-         1sXALLltiAa4uSxb9SowegqQ8yXSN7WJ0UvCIpRWUzRg6XU+pn3fYXyZ8jJA5HpEtDRd
-         WZMr8gfYNRI2SxxOoubuau+WiP6mNGkXDVYOYlDSz/zuMUOypgnJrVIQV+r5u4g7i8Ak
-         /T9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUdhNQUnIQw9l1wTPlzYeVkXVYTO3J4NwEVljPHCS3b5EXzwGIDGlhIjoCXXLCemq6vPno8S9Iu8oc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7bh8Nfx5wsg51U5HEDqnusXjNjlCeSQWbPixhhTkvVW/Anjwe
-	AfQHcSq0fNuEhRNx8Ll1YeYwY3X3R5rfjFq7vOipRfGpfOkIERw/W5duUdqDdp5C/ow=
-X-Gm-Gg: AY/fxX7Ae4QryFDBRizNvrZxdf0sHwp35rPF0Pl6lWq3o/WzFeV5ENc0JqlpOeGJIRN
-	I/LHwYkitW/jySGLNkI8bMRcDXFAtq5CGP3bSVFzaJHl7nJY+ugvGxo9QAezwrQed/pCPNeg4F6
-	o1bsAkd6caUxHfHpG+YLTtrXBgw2YyypA76bxXAOEr47DkaknMBSK4mfEjg+uTsrHGWU3oBo2gu
-	fAyc0Tsf36OIOLysRANnzzgBKT7Jk0Dh+WEzmD3iW7YYgpsenDVnzc4zTFPKQnogKdaBGsJXVFv
-	N+km7rkrvh5Oe36oKUPpBPJJ1ZszK+3lybaeTrOhkhuJCf7n3VxFKZzxS69NmghD5yMuZTqSEUD
-	ApIRO5xO7diIL7aqWWmWgloPgIaZv1wxyIXmD+LtLpPBWKzReUBtrm7c/ZbetwLB4WX6Yh3uuLW
-	jHtxRYPFIPSj2C2lnQiCPLEYHS6z16lxCXrvZ+sbJLmpzNhQyPIF9n5wVV2VcMf3gPhXjJuOE7+
-	RTkxElt
-X-Google-Smtp-Source: AGHT+IE3kt3s0DLMOPwLiSdVdgOeQtw2p38PZVQ2YGk1VFWgC3l7L3gBOxrJnRu4rRu8OIwLGEfYwQ==
-X-Received: by 2002:a05:622a:244a:b0:4ee:49b8:fb4b with SMTP id d75a77b69052e-4ffb4a9aad2mr295553631cf.66.1768312543593;
-        Tue, 13 Jan 2026 05:55:43 -0800 (PST)
+        bh=EA4FEA3d8sqza+07mct2btPiz1RY5DfLWXNlCi+Rawg=;
+        b=t3f80bhMTDBURbagQecBJXs6ZJjEuLTKurZ/CF71VPMpUIilorMGQd9k1DZxNcBXFu
+         2SRx3CvQgKeeA9VSL5+LvJ5M+jKz96nanhUGPmhAEGx4GO/bmp3chvicHJPc5AZxF+oD
+         fwZmJygkuQgymp8JR/p7TRd89ccZpEJaQjDRIgtmAg0Nn+0mTuCqDD7vMWOTAe9XEl11
+         ePW2+WXNxO/xgHSBB/G+2gS+NYku/Ju0hZLfTLnkR6ycNFAAiTWzEGW2W9GF7bBQvvBt
+         D/F1oL1c+ljXjAYAaAS4y5zREKnwDGxU1Agk8aecUwr//Qmjis+SkbKGMkcV5modqzWt
+         /WAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUTvC32MF4adIb4k3zAys0U8hFR20hG9jTe50G2h9ADbNrO6FPRx97P1RMzWVBUTGTWC+LuzDyT4I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylEIBTR1nM9sCOJxQ+CfLrpUO05assUi68Rmcu7wNiCs+Okjr9
+	3s5E2mNuqdctLSFF+qG+tHAhf+oRyG6D7zyrMjjFWIgm87KJJp7kmpxLKRU9pPXbsdE=
+X-Gm-Gg: AY/fxX7DBvA2uVx5k7/KSOhxuI+zkX2wYcM5BNHQNE7KFRJU7rWE4wgcm4EpAwfDQqF
+	6euu8LZSkY650EatzCelutnbmqIaZHU4/z6hDSMMBUboqm84FkfQquZu0OeTvqvxdwVpW/TO6vR
+	NM+u5nSK+E0aYHo/cigQIvcOzb4wEOq/N/Ukj0BopDC3Xzw3ER2GdyvbMBYo3pkZrwakQzeD/4T
+	wjAr2P2CM73PtvLP2g+dZxNBg/FIOCCAPpNuAB9MHWbjladyHI6CjmHAPJcCXZBy0HQxZWVu4tZ
+	PO45R9qjfe9bPvCUpkFnc9iTg4HArLtGpcDfzJ72wyzsbWuNKL3deo6Fa9socr095uAniFXanlk
+	mZyymB+GbfLibH/NzZJ9Y+rvfrmPk/3Yxx43Glg4M1N8pA8ljqLRmIK2LMLpw0fdtYOoJEFV1tR
+	8AT1fvmlsSEF/DHTLzyagYdKNlkkvU91pVECBVdYIHYjuqZKkygq9rftGtCsy1ZXoG6Z3asQ==
+X-Google-Smtp-Source: AGHT+IENvQu0lA+w8r7eNtBm9WUJ3/lNNLy7qp1W9GClRyOkBrOA+5+QqmRhEmTzN0zeeABQ2fhjWQ==
+X-Received: by 2002:a05:622a:1823:b0:4e8:9704:7c83 with SMTP id d75a77b69052e-4ffb47d759bmr323881271cf.14.1768313786490;
+        Tue, 13 Jan 2026 06:16:26 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-890770cdfb0sm158070046d6.6.2026.01.13.05.55.41
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ffa8d39230sm147458241cf.6.2026.01.13.06.16.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 05:55:42 -0800 (PST)
-Date: Tue, 13 Jan 2026 08:55:07 -0500
+        Tue, 13 Jan 2026 06:16:21 -0800 (PST)
+Date: Tue, 13 Jan 2026 09:15:43 -0500
 From: Gregory Price <gourry@gourry.net>
 To: dan.j.williams@intel.com
-Cc: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com
-Subject: Re: [PATCH 4/6] cxl: add CONFIG_CXL_REGION_CTRL_AUTO_* build config
- options
-Message-ID: <aWZOu-6ML_kd7DFX@gourry-fedora-PF4VCD3F>
-References: <20260112163514.2551809-1-gourry@gourry.net>
- <20260112163514.2551809-5-gourry@gourry.net>
- <05591180-c299-42e1-b8a0-ddd74c5f2174@amd.com>
- <aWV-H_YbSrmgAZYd@gourry-fedora-PF4VCD3F>
- <6965cabc68fda_875d100c0@dwillia2-mobl4.notmuch>
+Cc: Balbir Singh <balbirs@nvidia.com>, Yury Norov <ynorov@nvidia.com>,
+	linux-mm@kvack.org, cgroups@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	kernel-team@meta.com, longman@redhat.com, tj@kernel.org,
+	hannes@cmpxchg.org, mkoutny@suse.com, corbet@lwn.net,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	akpm@linux-foundation.org, vbabka@suse.cz, surenb@google.com,
+	mhocko@suse.com, jackmanb@google.com, ziy@nvidia.com,
+	david@kernel.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, rppt@kernel.org, axelrasmussen@google.com,
+	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk, rientjes@google.com,
+	shakeel.butt@linux.dev, chrisl@kernel.org, kasong@tencent.com,
+	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
+	baohua@kernel.org, yosry.ahmed@linux.dev, chengming.zhou@linux.dev,
+	roman.gushchin@linux.dev, muchun.song@linux.dev, osalvador@suse.de,
+	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
+	byungchul@sk.com, ying.huang@linux.alibaba.com, apopple@nvidia.com,
+	cl@gentwo.org, harry.yoo@oracle.com, zhengqi.arch@bytedance.com
+Subject: Re: [RFC PATCH v3 0/8] mm,numa: N_PRIVATE node isolation for
+ device-managed memory
+Message-ID: <aWZTjzW54LMedKMH@gourry-fedora-PF4VCD3F>
+References: <aWUHAboKw28XepWr@gourry-fedora-PF4VCD3F>
+ <aWUs8Fx2CG07F81e@yury>
+ <696566a1e228d_2071810076@dwillia2-mobl4.notmuch>
+ <e635e534-5aa6-485a-bd5c-7a0bc69f14f2@nvidia.com>
+ <696571507b075_20718100d4@dwillia2-mobl4.notmuch>
+ <966ce77a-c055-4ab8-9c40-d02de7b67895@nvidia.com>
+ <aWWGZVsY84D7YNu1@gourry-fedora-PF4VCD3F>
+ <69659d418650a_207181009a@dwillia2-mobl4.notmuch>
+ <aWWuU8xphCP_g6KI@gourry-fedora-PF4VCD3F>
+ <6965b80a887d5_875d100b5@dwillia2-mobl4.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -84,51 +105,66 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6965cabc68fda_875d100c0@dwillia2-mobl4.notmuch>
+In-Reply-To: <6965b80a887d5_875d100b5@dwillia2-mobl4.notmuch>
 
-On Mon, Jan 12, 2026 at 08:31:56PM -0800, dan.j.williams@intel.com wrote:
+On Mon, Jan 12, 2026 at 07:12:10PM -0800, dan.j.williams@intel.com wrote:
 > Gregory Price wrote:
-> [..]
-> > > If you remove the 'auto' mode earlier on, then you can just drop the first sentence here.
-> > > I'd also add a note about when a DAX region can be failed to be created (i.e. BIOS already
-> > > set up and onlined the memory).
+> > On Mon, Jan 12, 2026 at 05:17:53PM -0800, dan.j.williams@intel.com wrote:
 > > > 
+> > > I think what Balbir is saying is that the _PUBLIC is implied and can be
+> > > omitted. It is true that N_MEMORY[_PUBLIC] already indicates multi-zone
+> > > support. So N_MEMORY_PRIVATE makes sense to me as something that it is
+> > > distinct from N_{HIGH,NORMAL}_MEMORY which are subsets of N_MEMORY.
+> > > Distinct to prompt "go read the documentation to figure out why this
+> > > thing looks not like the others".
 > > 
-> > I think I'm just going to drop this entirely, probably this was just too
-> > ambitious trying to create an easy transition from dax to sysram for
-> > auto regions.
+> > Ah, ack.  Will update for v4 once i give some thought to the compression
+> > stuff and the cgroups notes.
 > > 
-> > The reality is BIOS-configured decoders "is NOT the way" (TM). If BIOS
-> > configures it - it's DAX, otherwise the user gets a choice (or they can
-> > tear it down and rebuild).
+> > I would love if the ZONE_DEVICE folks could also chime in on whether the
+> > callback structures for pgmap and hmm might be re-usable here, but might
+> > take a few more versions to get the attention of everyone.
 > 
-> Is the plan here to "whither struct memory_block"? I can see value in
-> starting the deprecation process given the problems Hannes points out
-> and BIOS alignment causes massive numbers of those things to show up.
->
-> If yes, then even if it is DAX the distro might still want the option to
-> only allows for region-scoped "hotplug" rather than memory_block-scoped
-> "online".
+> page->pgmap clobbers page->lru, i.e. they share the same union, so you
+> could not directly use the current ZONE_DEVICE scheme. That is because
+> current ZONE_DEVICE scheme needs to support ZONE_DEVICE mixed with
+> ZONE_NORMAL + ZONE_MOVABLE in the same node.
+> 
+> However, with N_MEMORY_PRIVATE effectively enabling a "node per device"
+> construct, you could move 'struct dev_pagemap' to node scope. I.e.
+> rather than annotate each page with which device it belongs teach
+> pgmap->ops callers to consider that the dev_pagemap instance may come
+> from the node instead.
 
-This was not an intent, but maybe?  I'm not sure what the larger
-implications of this are - except that maybe poisoned regions of memory
-might take out larger chunks of hotplug memory.
+Hmmmmmmm... this is interesting.
 
-Other things may depend on memory block size in unexpected ways.
+should be able to do that cleanly with page_pgmap() and/or folio_pgmap()
+and update direct accessors.
 
-I think maybe lets tuck that away until after we get region-scoped
-hotplug.  Maybe it would look like this
+probably we'd want mildly different patterns for N_PRIVATE that does
+something like
 
+if (is_private_page(page)) {
+	... send to private router ...
+}
 
-Step 1: Region-scoped hotplug that uses all the blocks
+bool is_private_page(page) {
+	pgdat = NODE_DATA(page_to_nid(page));
+	return pgdat && pgdat->pgmap;
 
-Step 2: memory hotplug callbacks that disallow any hotplugger (except
-	emergency hotplug?) from acting on individual blocks
+	/* or this, but seems less efficient */
+	return node_state(page_to_nid, N_PRIVATE);
+}
 
-	We already want this for online_movable, just defer a bit and
-	make the guarantee stronger.
+Then we can add all the callbacks to pgmap instead of dumping them in
+node.c.  Shouldn't affect any existing users, since this doesn't
+intersect with ZONE_DEVICE.
 
-Step 3: deprecate memory_block for something else?
-	make memory_block variably sized with some base alignment?
+Technically you COULD have ZONE_DEVICE in N_PRIVATE, but that would be
+per-page pgmap, and probably you'd have to have the private router
+handle the is_device_page() pattern like everyone else does.
+
+(Seems pointless though, feels like N_PRIVATE replaces ZONE_DEVICE for
+ some use cases)
 
 ~Gregory
