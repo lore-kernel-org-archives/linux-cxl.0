@@ -1,71 +1,99 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011016.outbound.protection.outlook.com [52.101.62.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABEE22B8B6;
-	Mon, 12 Jan 2026 23:58:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD201F936;
+	Tue, 13 Jan 2026 00:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768262316; cv=fail; b=jYsXuotiz1CNhg+BZ5XnP4uuIExT8D7K0INfNptghj3DlLW0elzSriXekoHC4uKQVQNg4Mhf7NcxcgGSQonmJWitN1Q5Zg7PkLSERJFTSmBG+Krxu0KvCtctJbS23MM2IW2RREhwk68Fwkrtn6QI9lTWFAVW7eZqZr1Q7uMZlBo=
+	t=1768262770; cv=fail; b=tLz3LfphiNJVpOicIGoB1foGd2YmOg/m0lXQK75UkDSQ0/5RvV5v1snS3Vcg55DlTRWygWbVx6b7OUuZMa4m5aIQBF3+SOCuTDqTqPT0uDT6WP/cPyEMVLgvQRm4cO/ne5RcRuiHHYLN8UHxn9aFliKi0dFyf4lYnVi0vpu7F/s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768262316; c=relaxed/simple;
-	bh=lzyVeQIPTQJ6nhY94nG0nKjAqoikiKoYUUr+p6BssIg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=nOmWv+SWT51ggOlGn0xNtfzeE6gGw+2d6GArWRLcSvzUa8j99yvING9rV2+kdjSt1VtueuO4bibfCJcY2PywRlfDxRhGjpBXY2dUXrI0NED6IN7SjMdpeHqSXRTJisDQOxV2vKmDjT7l0DrkQ/rdv6p+dq0RkvT3wV3U/AZ2jWE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=b8tOVokK; arc=fail smtp.client-ip=52.101.62.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1768262770; c=relaxed/simple;
+	bh=HcOwBgotvkA9/t5AImk1IyyaIlFPVcYQeFyRlCd6w50=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=SRGk5QjsVpCD7HA5cIeGlgl0C6v4XsWdGFT6yvYumBpa01qFgUhPWUYCBWW1H3OZ1BceFH+QJCkt9JWk6tlAYAvwzVWNSi+NUtFjUqif92U9a7SCb95YjwoOpLdjTutOPQb4SGenP4SI9RjIOtL6lLYtdIu9cDhfxw8G0odtdHE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cLFXBcay; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="b8tOVokK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cLFXBcay"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768262769; x=1799798769;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=HcOwBgotvkA9/t5AImk1IyyaIlFPVcYQeFyRlCd6w50=;
+  b=cLFXBcaywBbe39vrpVLKXW3G5SMi4fpG16hubiammRPq4MKIqYZmCAM2
+   utKVRVlAC8+AO6kbBj4vxGPpbz4RBnLVp506TrLXPlQS4yIjo4HqBKTAr
+   I7JTxlAuz8i0GC1PqEwNnurZM8q5kn2x5IBozdxHP0gFxaXS3OWyCvtqt
+   lgk84WL6/7+q/q1n1Rc7wq5hF6Zrd+IshZ7yNcEq7Fu7Iiq2DjXlxUXT+
+   nbmw9lLy2boduNpkV+3I84dayxaQrcXAfEpVSkRLaApU/HCk8HiKppcxA
+   qKA4oUJdjdBF75HKffTz8Q61USBdRuLpwYBGEfiQT/Yjsky4ue7QkBUhq
+   A==;
+X-CSE-ConnectionGUID: 5ljZVc53QgWzCjFJYkccqQ==
+X-CSE-MsgGUID: IYu5XRjwRU6ydYf7S6CKGA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="80186394"
+X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
+   d="scan'208";a="80186394"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 16:06:08 -0800
+X-CSE-ConnectionGUID: GVN0BijOQCeZUiT0OmWF7w==
+X-CSE-MsgGUID: BXQO+ex+QWKcMpNHPNaM8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
+   d="scan'208";a="204134295"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 16:06:08 -0800
+Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Mon, 12 Jan 2026 16:06:07 -0800
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29 via Frontend Transport; Mon, 12 Jan 2026 16:06:07 -0800
+Received: from CO1PR03CU002.outbound.protection.outlook.com (52.101.46.23) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Mon, 12 Jan 2026 16:06:07 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E8233PUc23QeL6dMjVqoQAPdopIQJImb84u+msS/t7Jj4UgdTaJ0ENq2YUSbHyuCQkIV5Hxo4b7fvwE1BIlQxOoQSDchtd2a+y5EQJnPWHVFwiaT0Z+K1rAY5IyBrFwg8qpRGVJCeUg4ZdOmyLfMZFgzpqaFTe7VRu4q+8We+oc3Y1RJNNOJeqmIzi8KaPEA15V9Gs6QZjegM/aeaGfKEPDwopVBCexUBvFl2QDpPa7aBYjXRAXxgqa9DEvHB4Y82d/sgRxUgeWhDYky6wOYLgXDm754fxJ8Tj/GNOEGlWlgtJ84HD+V28bOZPRpnQn9X6i/oL0hWeXkiFxT+GZL5g==
+ b=JKCEVGFwAjpRZy7r7RiZqhzen9F7PvL/GSemHwILY1zbQ4dBzkTcP4Svd7q8i4xBP9XOk3EuRkubL6veerAlXAephZ+vwQGHoUY3K4Yw+1ti+JOnn8+tNaIpx8WkQWQY7L3Ub0eTqQNJslA5FfTpJMJoan+ZFHXQTva+RYM4x515Z4yWtaxyOD4rNdOtP0LFkAk0hdaoX4ihUaxkEVU5IofjMnou73WMbaJuu+zRH8Pi7agIL9I41MnP+XBHF7BfCqwdXzVZE1XtcQRQfeDRAG9j8GlLhGx6Xo63uA9DnzYP0vsx26sWNxgvIUJNP5/XT8zuGd37Z6XrRcvt3I+UMA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=quxZRyRQzFWkPnCmpcS69g4I8fXoYpEmxOos3dwpjck=;
- b=R5DiX6nsEXib6FSCWzY6BjBZt4v7lyW0jTNRzc/Kv4Rb3VmV3U8feSxNZSwrIvnktSdAFMneNbwpgCgsLPIVv1dLB43cZxOy67QEVufIu0g4eZmgjZFRI13dPpXVQNbRXanu0TL6XCXVKN3jTpGDcei9zld3Ips5StueagqyD60AJy2plONA4fzY2nMPvbEdqSzXtkIT2KjiZlyjcRwmmKwwqaX2XIIb4mVSt8VPXFsBnnuFZE1sb1PYMGa18ewChWqtkatowCM3ntgpiMMO752YT4DLQJkao6OM56wUbhjzFXQtVDmGe/TTV1XvsYccWwynI73RG24fPyPnX5GvIw==
+ bh=rTRKkxS4XV8Ob9V+gRxOot0rikFoEKKgO8XgFjmaiuI=;
+ b=wAuv1OSTIB0XEKvd/Z5r8OC3e/gLAYR0lEg8i/2vC2KubXbdHdfaZrZQM7wWzaSoQq2l4IYkt+w1jp9+35QFpXzukrODDrvlVi+IXmk5Zl5HtBtT7F0D/xM5BXS3NJj+WTFHm1jNBxlEnR75bA9ZZAX+YU5SZTL6Qm6jZx1/BM5MVP5rKuW3keucxY8wt2BXpkSh7cFRVn+XFzxo/uq2Gl0rUA4AeJZ2yBgetPyWYH/XQ7u3VDIAGLxLEW6+wWCCgoL3lpdWe1oDiuP+E6YYH3NqlDzkICq9tTVNyhlNLofieZp6LdThPVwjKNnjBZPXzrT73CSXVG7fzHzCcYdCiw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=quxZRyRQzFWkPnCmpcS69g4I8fXoYpEmxOos3dwpjck=;
- b=b8tOVokKAPJ60Gmpznn6rQOGPwdleyj1QyN4E/KBL0ruOlZKHClS2Aprym554HB4vfUNozUkRPTf4/nkcPerO4xFiltEG0Bzh3Z+KTEpm5i01JeINAqYG0Xwhy9soBw7W/Wt2RfjZxevd0Ku/n6qKtZgH+DhI6JiaKogCqkGqk1Q8yDLGggZIPFms0GBXwDWB9NIajPMXxvgkFaK84/KbfuFJv0V3KNBamgzzZy9Xt6QJ/6afy/x5Vq8R3X1n92ypK4quUQKk5uHjMBk+66ytxDZXe8jtEweumxePt3TeUJHsCApCSL2c/d+gFvA83o315JiaMrKvlYMLaOveerIig==
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- DS0PR12MB6389.namprd12.prod.outlook.com (2603:10b6:8:cf::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9499.7; Mon, 12 Jan 2026 23:58:31 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%4]) with mapi id 15.20.9499.005; Mon, 12 Jan 2026
- 23:58:31 +0000
-Date: Tue, 13 Jan 2026 10:58:27 +1100
-From: Alistair Popple <apopple@nvidia.com>
-To: Matthew Brost <matthew.brost@intel.com>
-Cc: Balbir Singh <balbirs@nvidia.com>, 
-	Francois Dugast <francois.dugast@intel.com>, intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@kernel.org>, 
-	Oscar Salvador <osalvador@suse.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org, 
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/7] mm/zone_device: Add
- free_zone_device_folio_prepare() helper
-Message-ID: <k25qmqrfmhzkls2ngdaq4wdk3xtl3epv4z3dvukon5yj2cb2hl@yci7xdpvauh7>
-References: <20260111205820.830410-1-francois.dugast@intel.com>
- <20260111205820.830410-3-francois.dugast@intel.com>
- <706ba3a6-5be2-46d7-9e7d-d613f2e061cc@nvidia.com>
- <aWRLeoUJAYAWbLD3@lstrano-desk.jf.intel.com>
-Content-Type: text/plain; charset=utf-8
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by SA2PR11MB5129.namprd11.prod.outlook.com (2603:10b6:806:11f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Tue, 13 Jan
+ 2026 00:06:00 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::46c9:7f71:993d:8aee]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::46c9:7f71:993d:8aee%8]) with mapi id 15.20.9499.005; Tue, 13 Jan 2026
+ 00:06:00 +0000
+Date: Mon, 12 Jan 2026 16:05:52 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Robert Richter <rrichter@amd.com>, Dave Jiang <dave.jiang@intel.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Vishal
+ Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, "Dan
+ Williams" <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] cxl: Check for invalid addresses returned from
+ translation functions on errors
+Message-ID: <aWWMYJSqlmLkYQBP@aschofie-mobl2.lan>
+References: <20260107120544.410993-1-rrichter@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aWRLeoUJAYAWbLD3@lstrano-desk.jf.intel.com>
-X-ClientProxiedBy: SY6PR01CA0118.ausprd01.prod.outlook.com
- (2603:10c6:10:1b8::7) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+In-Reply-To: <20260107120544.410993-1-rrichter@amd.com>
+X-ClientProxiedBy: SJ0PR05CA0049.namprd05.prod.outlook.com
+ (2603:10b6:a03:33f::24) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -73,267 +101,284 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|DS0PR12MB6389:EE_
-X-MS-Office365-Filtering-Correlation-Id: 734a70cb-7a4a-4387-0352-08de52367d09
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SA2PR11MB5129:EE_
+X-MS-Office365-Filtering-Correlation-Id: c718e252-12ed-423e-a520-08de52378883
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eGxIUmFESkdNNDBQcnZNejRrYktvTGZJL3FsLzFZQWlKZk9xTUcxY0tqQ0hh?=
- =?utf-8?B?bzRBSnBHbnJEeDVBVHhlb2YxYUhXSTZETDU3akxwL1hrajVnaXpTMEtFV3pZ?=
- =?utf-8?B?SDFSaWF0c3BzbEtmdXo1VG8wOG9KbG04V2srR3pBdENNVlJSOVhLUHpOenJK?=
- =?utf-8?B?Qmd2azlGSzdYVEFXb2hJZTZNU214TElDVGJZekVTVm9jZTNJTjM3S0trQ1E4?=
- =?utf-8?B?MW5lZ2h2WFVwMXpIbnBrMzJFMFNrNnVaK0NPbGVLdDhNR1FXNnl2OGFCVkdZ?=
- =?utf-8?B?R05MckpOL1Q2WVJQaEUxaS92Y3VvM2h2ZzR1bkVoQzNuK3lmZWZ4cENrcGxG?=
- =?utf-8?B?emxZMGl1S2xTanBUdzg2N2VyVFFkVk51K0cxR0ZkMGtPR3FFQzdtUUZGem12?=
- =?utf-8?B?NkxPVWE4US9sSFpYV1J0bHFWMEE0OGZSZ2pqelJ5eTdmRkhmY1FGa3R6M1I3?=
- =?utf-8?B?QTQrWlJ3OGhFVWozbFQ0bXd4YVgyWi8vVGdVN29iMGtXaXg4NExVejVOSTBl?=
- =?utf-8?B?enZIMWF6VWZya0ROQ09sY0Q2VDRjc3p5S1F0NXR6YmRQUUh3bnV1QlR3eEsy?=
- =?utf-8?B?RVNvdXZyVE0xYjhZWHdmMGZONmc1b2ZtTTZtcWRNNFpCd210dC82Tnl0NmVC?=
- =?utf-8?B?bW9zM2xIOEI4aDNSalZGcm5TNnRJSEc1eUFFcmVhYnRhSmRqTWlnNmIveGpQ?=
- =?utf-8?B?Y3JGamRQS2tjWFI4TmhTNjRWTUJFZVVteEc3aWNaOUk3eG11MStIODVJZDVF?=
- =?utf-8?B?TGxKK3BBWWxwbnpOZFpoWldwclJrTG9MRFAyVU1FSW91NE9MQ3RWVkptVW4r?=
- =?utf-8?B?Zmx0ZEdZZE0rWE00ZmxmQTFJYVNjMFdoLzRiMEtEQktRL211a3AyKzlscm9B?=
- =?utf-8?B?Ti9VM3dEaDQ5L3pBVW5QUlV4bTkvSmpUTzVuTWtBQ2F4eUJjckhEemFRclNK?=
- =?utf-8?B?NEw1S0l3djBvQ2RUWHh4UlM1MjNrS2ZqMHpiM0hKZW16OWtFUGk4Zis1RVM4?=
- =?utf-8?B?bDNrTk5JaXRTWUViY09rWi83RVZRMnVycWpUZS9qa1UwN3kvRmJodjlIYUMv?=
- =?utf-8?B?QjhiMjlHMTR0alpwUXIwOU5mQjUxdWpvSWIzZ1AyTlJ2ZHBEQWlEaEhoY2Qv?=
- =?utf-8?B?dTh1eEJFVTRGWGRaNzJocS9Bb2NSNGJWOEJja1BRRFVZWEpTL0V5VFQyQnRN?=
- =?utf-8?B?Z01DanpKUVljbHZoekFEeHp6OGE1OGl3WFNMTWZ6bWhMTXRkWm1hV1RBR1BS?=
- =?utf-8?B?VDlrNlBQUVNJN0FuZXZxRGxzWVhia2VnampqT1lya29id1ovSHBSM096ZFdZ?=
- =?utf-8?B?cnlleVJHN1lSelorcFZNUVFJSGxtOEJRTlJ1V1hGY0JvNWxWQ05aQmdZaFVm?=
- =?utf-8?B?ZDhPeXJmMUdNakxacUtsOFZZTXV6T1lIV2l1VEZZR29rMjlXMUdjV2orb3oz?=
- =?utf-8?B?MTdqM1ljU21qZnlXMDFUZGMxbXNoK0RvamdNek96WTErdUdPV1BjRjlLTGVo?=
- =?utf-8?B?NlR5elk4QWM4NmcwUTZQTGV4U2VkUVVjNFlhVzZiUlZnVTFiajNrZENhaXhz?=
- =?utf-8?B?MGdtOERDZEMyMzdsYW9VQVE5OE5BQTFqTzdJRVgvRUYrcXJtd2lwemQ1UWNP?=
- =?utf-8?B?cHpDU3RBc0dhNStVc0pkdWxBa1NtNG4raHR3Mko5RC9JOW1KL2pIOWZ0c1Z6?=
- =?utf-8?B?cWFVVUhkeUtET2RVOGQ0VC9jRXZaU28waWFXRThmZ1YrbTRpZnJwLzB0Yi9Q?=
- =?utf-8?B?YzVKL2llZCtVV3dsb3F4aEViZndOWmdvWmYrekJGc3h2VWRyM0hEY2IzNG1u?=
- =?utf-8?B?Y2dHd0J6bVR6anl3V1J1R3FMMnoxMlNzZm9SZ000N1UvbndXZ3kxVXpYSXdR?=
- =?utf-8?B?eitmemo1bjVQOURxMDMxR242cGdGSzR5SVlURDNta29iUk5GYWllWk9DV0Vj?=
- =?utf-8?Q?juMsC2/2j1l//0QZRFKYqXMED5O38TSU?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?n0EA4DUYuzSABUGI324efvRNHIabpG+zD/PKO+PTHP3djx16aAlhOs7+SYau?=
+ =?us-ascii?Q?zYHsRMCCetSyNmzh61flrhafPDA2tHRQgptMG0hSA03ZCctcF/OjTQOKC11M?=
+ =?us-ascii?Q?lhneAFCGc8AA8stOs6TYB9O6keP7/ss6h1/QQ/gk11H3Cj2z25KoqqWqcxyz?=
+ =?us-ascii?Q?raLbltXaiFHf08/wYTVGA/KyIO2eTuzVzeJ8aVrFU47ChAU3PtwX4mn55I42?=
+ =?us-ascii?Q?/C0Vgm6deaUpjJ0c0oEEiojuxL73FV6OoHKDIOWctrACGh4j/SI594f6v0qW?=
+ =?us-ascii?Q?H9QM3exYIPi15d2lzyDVYJ9VI6GkIz4/jA2VcUpYtqQFV29NlfC1SRNSpek+?=
+ =?us-ascii?Q?nez+Lnqn1WjoVsKwHZx1d0qIlU7wwNvYBrnhFRQvWs40tKWKBB0Gu2Lm87o2?=
+ =?us-ascii?Q?F2ah98TTIXUpgXKHR/M5VYrRD9laylSKr7VFHGCWPZQMidrSDeCbR86TJCJs?=
+ =?us-ascii?Q?hq74XGjfOPGy+UPwEZSciSoNrzKrGVAcChLxXa2URhULAtoVHqpJ6t8RauRr?=
+ =?us-ascii?Q?hqM4Y/B6TxPgLCH6xfAX0Dtvizqp7mcqWUCtDNG7UNNac1OY+iGpIfimo8p2?=
+ =?us-ascii?Q?miyib1csCdEzzdZ3YyeyQ2PP6VXfK9WAjGSo8FnNa2SmSm6z1yy86l8akZMS?=
+ =?us-ascii?Q?Xt6niOKCCNqKVjWNJHYHeDhWSbXnOAYju6fO16F2e2snTL2AsZDrJLiIRrcs?=
+ =?us-ascii?Q?Rgi9iTeyRCILagtAasI77wlcIAZCTNR4UDgV6i3AJ10TMAPp1d7OUmaRnnns?=
+ =?us-ascii?Q?YxT9BFHkNpbXFex7TmUspvgLJKhD4y3dgB+S03TZa0AJFrlHdZ2Dne1Mpzkh?=
+ =?us-ascii?Q?CZTkU7zwQMxyvbgTuxSMPCqigU0m1DbVbC7hX7ploBJaj6S6xjJHmuzb8of8?=
+ =?us-ascii?Q?r8HCdbVH5yILs4lgWwdvF+rybD+ioRF/0FFhIfki02PG6Jihk11i00wc62VP?=
+ =?us-ascii?Q?8rNxLriH9aGnA1rPNyyH20s8rAXNujFEceonBnDW42p0DBQueJXssdQZu4bP?=
+ =?us-ascii?Q?qnbydn3AggzK9K7PQSCJnnBYcXMieKd1H7iYgryMKZkzZqkedY2g6Gyp8PE4?=
+ =?us-ascii?Q?Efqk396U0H5YMc5dvmglPkmG9fkvUgwbDDnja5P8vHaWkU+Gy45fytAiwril?=
+ =?us-ascii?Q?M8RLHnpKgRjEbqty7sRMo1VK12O+3r+0jTx5RxRyIbhM6X7T2hnsY+3gx7G1?=
+ =?us-ascii?Q?pzR+OIZTeAQwFa65CbTvmNHQ+1Diset/G4yRWe/Qja4A2O+Aq3h7KdBmoSDR?=
+ =?us-ascii?Q?2rI6zrMDd7LXo0iaiDkThk13OxHHrVLEb7hD6dcqkZ94y9nIjWl/ynpZVSZ5?=
+ =?us-ascii?Q?5cz1xQ2cQVwSBBYIgPol3bQ0H5hbR9m6WuO06q1b0tcPFOVtqo4aPkDyw5iY?=
+ =?us-ascii?Q?QrWC7Yoe80qcHn0+ZB0ld+z0mcA0MDgd1wotytu7x0ALhxQPIx4wy/xJI38Z?=
+ =?us-ascii?Q?8An3xPP91qRGgiQ0D49Zs47UF4MoRpE0?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WFF5c1h2eUtaaUJvdUdma0p2L2lzQmNuMDlnMlRhWWdXMUxGcWVsTUxVdHlh?=
- =?utf-8?B?aCt2aDF3Y0FPSCt6NWV5cW54bTlJckZkODNoTllVcU5UYXovNHNzYlBQOVJq?=
- =?utf-8?B?aHZiY3haaWZxbWhSL2NWNEhhcGU4eXRVbDdKZ3ZWRm5naXkxblV0ME1FY01B?=
- =?utf-8?B?bkxEZHJyNEc1ZGJsb1FsOUhiUmFtOHNnbk16Nk51REpCSmZSVVZvRDg4VWcz?=
- =?utf-8?B?dSs0aUlPOVYwOFFVNVZqa28vMkRIS2FFcmVuUk8vS3I3NmJmT1k1MmV5UEhF?=
- =?utf-8?B?aStjOWdkRm43NUg4WmxPUHhqa3pEd0VyNkE2anFNVlRSTWtNY2tkL05jcmxy?=
- =?utf-8?B?aC9mTzdORXFGWWxDMWVheGk3Yy82UjcrcE44NWhXc3NwWkwrR0FuMk9rM0pU?=
- =?utf-8?B?NWZIL3hOR0R2WXpVZmVPelQrbllnNHA2Tk1ZZkRpaTdiZkRUaWxVUFZVRlI4?=
- =?utf-8?B?cE5pY0lEVlZUSzgvRzBvcmRwaWVOalJ6ak5ra3FGNGFiandzZFVMZlQvQUdl?=
- =?utf-8?B?c3lBUEpHR3hRbUg4eVdpeTVNcHFLUDhDS2YvTXl2cE1pV0cyNk9mOTlBSlIx?=
- =?utf-8?B?SXJLbFRicStIZTJ1YUJ0L2JSOUltY0JBTGhwOS9pdFp2b1BWeS9rdnJ2Uitl?=
- =?utf-8?B?UzRua29xWU9aMzgvM1Z4NDRUVkpFOFVzcnNXK24wcGNkSFRlWlg3Y1R3cjRL?=
- =?utf-8?B?dUVZczNRTnpHVlNyMUtqUDMwYXB4N0ZMZzZsSkdOejV2N0pvQzltc2toZVFE?=
- =?utf-8?B?UlliaDdrNHhKc2hNd21EdnpualIvVWRnOEt4N2hwVnJtN2tiY29aZS9UN0hs?=
- =?utf-8?B?Mko1OGp1anN4alBkZTVOR1d3SUoxbEFCSXoya2M4NlhUV3FmdWpQYnZaandL?=
- =?utf-8?B?SjA3Z2hHQjAwSGZCbEFTb2o0bzNGMGFxWHZnUHpPdkpZd3RlYmZPbXJrOFFK?=
- =?utf-8?B?Ui9iWW5SSEdWcEMra1RMenZHZlZqY2lDZFR4YndzNVAxK2o4M2tQVnFva2h0?=
- =?utf-8?B?SVlZdFRaOXR0WVNBcFZ1Qk9rUkhnYU1pNWVCaXdmTDdGaDRHNUQ2UU4vemdG?=
- =?utf-8?B?cys2RUpkdkxUZXpFYlA0c1cxeGRGbmNKLytMV0N6ZldaWkk1aFNBRithb1RZ?=
- =?utf-8?B?OWduVTFqaDA2cnFMMkkyOE9wc3UwUElIUTV2anl4Nk80dGlHYmJqNWE4RXVP?=
- =?utf-8?B?YU9xYXBiY1JaajFvZFdYdVhydVozMWdpMzF4S29vYjgyOHIrUmFVR3pqZDA4?=
- =?utf-8?B?ZmJNQ3Y2NFF4WGtYcU91QWZpbVVlWU1OcStYRTJkK2ZNV2lvQ2E2K1FLVWVV?=
- =?utf-8?B?UHFnWmMwUGk1d2JuaVRtODVMVXRXK0h4T1VNZjhtWE0xN2JHbjM0Vk5SOEZW?=
- =?utf-8?B?QTFJaXZoQThjbTZMRU4vNTVJRENMNU1NR09JdGZ4QnVkNm43amhNcEo0bnJS?=
- =?utf-8?B?TlRLL0ZpbWZKd1RoVXJLcE5sbW5ia2poNmhsT2UyRzN2aFl0RGtLbm1ab1Fi?=
- =?utf-8?B?U2FIazA0d0pBM2FtSXVqb2l4M1ZlRWU4aDRqRzNPc3NLeWxpNkNGNE5LYXNJ?=
- =?utf-8?B?L05xQnh3TXdrUE9IUE53MGNGY0JmTUZmZDVBOGp1VFp2ZUpITW42K2piUVFs?=
- =?utf-8?B?aFJlSGl2ajkxWUVJTE53NFRoUjFyTkJCblovS2YxV1Rrc0RCMldKd0twYnhL?=
- =?utf-8?B?WXVzTDk1RFhFSTYxWE1LYVExZ09wODFYV1N0S2YvQVJ6d3R4TUU0WWg5Qk5Y?=
- =?utf-8?B?T253MjdVUVdoL2NwdDZDOHJrZEhMcmlOTXl1TDhKMGxzL0IvZjJwUFd3OE0x?=
- =?utf-8?B?L3paaDlRU2NMN3QweEQ5SE12VUcxWG0zT1FNczhEV1Y1OVlxOWdWTkpNUlE4?=
- =?utf-8?B?d2doNU5SeUZMd0t4WWZoWkdKcE04Z0VKY0NPdHNZN2FDalI2ekppQXIwc3Nw?=
- =?utf-8?B?NFZpUktKSDI1b2pqV2hyVlR2NGdaNC9tdlhaRlZYNVZqOWJubDBRWVlVSk1O?=
- =?utf-8?B?dmtNSzZqWU05RFBEY2dNdlcxSFlxOWlnbGJhdWF5NVVaOFhMdXo4UmxoVy9O?=
- =?utf-8?B?ZVhEbVVxZkZwNjR2cnI3bkJVZG9ZUDFrTzJibmZBU09mOXl0TVV3b2U4ei91?=
- =?utf-8?B?NVlXQ29KczVEOTBXVHBjNTBIUFE2U3J3NXBHUEtwMHdnVVZ2WUFuOVAwQVlu?=
- =?utf-8?B?aVQzUzhTL3RBMlJsK2dMQi9INXAyU1lydHo3eUZPV3dsaTVjOVlBVUlDTHZ0?=
- =?utf-8?B?bGtnUFgxdGhTc0NUWldsY3h4djZUR2J5ejdWRldFUHNPUWRSenVVaTJsSFAw?=
- =?utf-8?B?NTJZQlVEcXIveDFDNmdrZFZpZUxvZ1ZBNGFUL0g3VXF1OVI1bWhEdz09?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 734a70cb-7a4a-4387-0352-08de52367d09
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?L+IYONSt3jaVrXDM0qyJmjATtEtps3RcY6Wt4OJAwCMC75QoWa8YG1Jswkd2?=
+ =?us-ascii?Q?qX2uKOccDlWZzcO+rJwzqSREr8Llex4JmwBYmCqvsInPJY7sCdzbDq4DVo3+?=
+ =?us-ascii?Q?TXCmSqByVsy2MsoxF29M5ryWZAWyT2eanx6ZgqSWaeNSWD5iA8r3jDSv671m?=
+ =?us-ascii?Q?n2iFKgBdTXx90bF+3OxGtIvF0wWPIni+wVTwAuNuTl0cNTfXvrZTIRP/xvKl?=
+ =?us-ascii?Q?wsKKk/Ta2mpVsjk04XstbH8YB6RYgxg0fa7emthVZioDaJoqeFciKz8vWy40?=
+ =?us-ascii?Q?nu1lx7KxIrIi1wKdshgcmHqXbaQ11bAjdsaIYU75/c0KUFGjjUcjgO4B1CAd?=
+ =?us-ascii?Q?0j6HbWBLsaiU58+zj81AWbi/J0dMH1OqJ6Zs5Kd3BmUEm9OAkAOEY+YlePB0?=
+ =?us-ascii?Q?T32YRNtMbPIdKRWLYWEmad6nNApUADlzSY1iMssfcohWBeeEw+wZBBtUoWvF?=
+ =?us-ascii?Q?L1YOql91qe7LUJMX82Mtt5IK+bEY2SxRrROUz+hfny3VH+DzU7PZRbD6cWDr?=
+ =?us-ascii?Q?tGwOk5mmDFbMTkOyih7JTYJ9FodhA0cPjY0YdM6s2PxlBKrzDPjEbVsIGxRl?=
+ =?us-ascii?Q?1+E2NVTvjG3VUyqgBGutgS7ndB+o9236/G38dTNuyqomPXGhNbb3zyWu+q7J?=
+ =?us-ascii?Q?S7DTCTGI4N2WYyiJID1e9i1XVid6n44u0xphHD4jD6TzPJUVTKvhXAZIKtDJ?=
+ =?us-ascii?Q?QvUxrD82pKZp9t5j8YTL6MloGA/UGPrIjpO7IAp9Fzj/5JgV6ohx022gcaPG?=
+ =?us-ascii?Q?pZIsX4TJItneFZ8SQ+B72vcH6a4K5iKtvLCSkBTHgxmtO9cfWdgRtbunXI64?=
+ =?us-ascii?Q?s1g85EkVK/Jj3tg8ZC5eslUYBcZ/ct3acmY+NAU9mddMrjU/u+XQR7sljuOy?=
+ =?us-ascii?Q?tH9CBd6TGPhDWH0XThuQ4k+OLTVfFBA2j87Fxa9Kjpz4fVhV/8SGjQRngIeb?=
+ =?us-ascii?Q?jONOC/MDwIA2dw5ExiBTS8ET2LItdoRGXjXXAjMK1cIBNJdekj6pVFQbexz2?=
+ =?us-ascii?Q?smQ4pxjq/tbLsm1WfGlQGHCcxIvoATgUBJVB0+2vgrEocy9KgD0eXhza8wV0?=
+ =?us-ascii?Q?TYKtdnCQHrcmUomS3/gvNhtt+zsCZyQmKKu8XeqsnwhrEhZ2Y5qKfBNy1XZk?=
+ =?us-ascii?Q?DutAy8SpxWMi6Ul6PbtO62zpjXlEoljCyAIOE9CstNDt4Oerle9zAjR03Uez?=
+ =?us-ascii?Q?aa6ofXIqeBkTVTQhth8MXhmjeCBaTERufFcWlH9LKXPBHm+a5CHjXZiOLOsP?=
+ =?us-ascii?Q?fN1tsjngyc/CEm6O73IzKyJ5E79PrcNZJuOg5QOMm5GHxK/N7+UC+SUfZ3Tr?=
+ =?us-ascii?Q?njP1mUN8QJH6QC7AvH21p92gBJ5lZ9g5UU3L/f0JP3BN/eUoVro/SdE2aHED?=
+ =?us-ascii?Q?fGxQ241PH+0YQBSiTa17e2LXH2LWrOgLyzgRLzgr9Nm+M7VYgAlK1baMz3S9?=
+ =?us-ascii?Q?Jw/GNtRLTCRMFI8tl/jXsOUFHaXMJc58W6N6QCxg9rnY6Vn3ORDCUbUM3s2N?=
+ =?us-ascii?Q?AiQf6107tP1xzlq4tx/+gkjXSWuwZNYdgbon+b/drxcws2a2uSahi0FgwLri?=
+ =?us-ascii?Q?YgMtU/T6P3xI2NQKZLoixpS+GW5pbf0SEFG9SVuo/it5x84bPOTPmASki0/D?=
+ =?us-ascii?Q?a1QSnXzk0gQ4yxZt9yVTCGXoiglufH1wwPWef3phHYvHt1jiQiXa7L7ZSKOc?=
+ =?us-ascii?Q?vV1S6ylrEISe2I4kVia39JLNp9fxyEm8B4R7IaHk9sBgCcHkkodEi5SrKll4?=
+ =?us-ascii?Q?nwkqHjDEUZb0lcGLZd3BVAWm/r2QYUk=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c718e252-12ed-423e-a520-08de52378883
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2026 23:58:31.4050
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2026 00:06:00.2801
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IL+aEIiUmK5rjbi7IRW3hINDbX+gWbhWjnv/5OE1oxQ6mCxStrUMoMX/ZEpPPeESbaDewaydibXvkXCjgZOaZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6389
+X-MS-Exchange-CrossTenant-UserPrincipalName: pMrN+sKAwuFoyFROnEYMdGMh3wxG/rT0ux4bzhYNVS373fWz8hKz4fJcBS9XgqYkAjkXQkhCdRx+AtbdtSIlBP5NPURiPvi5wGH6xnngIxE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB5129
+X-OriginatorOrg: intel.com
 
-On 2026-01-12 at 12:16 +1100, Matthew Brost <matthew.brost@intel.com> wrote...
-> On Mon, Jan 12, 2026 at 11:44:15AM +1100, Balbir Singh wrote:
-> > On 1/12/26 06:55, Francois Dugast wrote:
-> > > From: Matthew Brost <matthew.brost@intel.com>
-> > > 
-> > > Add free_zone_device_folio_prepare(), a helper that restores large
-> > > ZONE_DEVICE folios to a sane, initial state before freeing them.
-> > > 
-> > > Compound ZONE_DEVICE folios overwrite per-page state (e.g. pgmap and
-> > > compound metadata). Before returning such pages to the device pgmap
-> > > allocator, each constituent page must be reset to a standalone
-> > > ZONE_DEVICE folio with a valid pgmap and no compound state.
-> > > 
-> > > Use this helper prior to folio_free() for device-private and
-> > > device-coherent folios to ensure consistent device page state for
-> > > subsequent allocations.
-> > > 
-> > > Fixes: d245f9b4ab80 ("mm/zone_device: support large zone device private folios")
-> > > Cc: Zi Yan <ziy@nvidia.com>
-> > > Cc: David Hildenbrand <david@kernel.org>
-> > > Cc: Oscar Salvador <osalvador@suse.de>
-> > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > Cc: Balbir Singh <balbirs@nvidia.com>
-> > > Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > > Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
-> > > Cc: Vlastimil Babka <vbabka@suse.cz>
-> > > Cc: Mike Rapoport <rppt@kernel.org>
-> > > Cc: Suren Baghdasaryan <surenb@google.com>
-> > > Cc: Michal Hocko <mhocko@suse.com>
-> > > Cc: Alistair Popple <apopple@nvidia.com>
-> > > Cc: linux-mm@kvack.org
-> > > Cc: linux-cxl@vger.kernel.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > > Suggested-by: Alistair Popple <apopple@nvidia.com>
-> > > Signed-off-by: Matthew Brost <matthew.brost@intel.com>
-> > > Signed-off-by: Francois Dugast <francois.dugast@intel.com>
-> > > ---
-> > >  include/linux/memremap.h |  1 +
-> > >  mm/memremap.c            | 55 ++++++++++++++++++++++++++++++++++++++++
-> > >  2 files changed, 56 insertions(+)
-> > > 
-> > > diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-> > > index 97fcffeb1c1e..88e1d4707296 100644
-> > > --- a/include/linux/memremap.h
-> > > +++ b/include/linux/memremap.h
-> > > @@ -230,6 +230,7 @@ static inline bool is_fsdax_page(const struct page *page)
-> > >  
-> > >  #ifdef CONFIG_ZONE_DEVICE
-> > >  void zone_device_page_init(struct page *page, unsigned int order);
-> > > +void free_zone_device_folio_prepare(struct folio *folio);
-> > >  void *memremap_pages(struct dev_pagemap *pgmap, int nid);
-> > >  void memunmap_pages(struct dev_pagemap *pgmap);
-> > >  void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap);
-> > > diff --git a/mm/memremap.c b/mm/memremap.c
-> > > index 39dc4bd190d0..375a61e18858 100644
-> > > --- a/mm/memremap.c
-> > > +++ b/mm/memremap.c
-> > > @@ -413,6 +413,60 @@ struct dev_pagemap *get_dev_pagemap(unsigned long pfn)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(get_dev_pagemap);
-> > >  
-> > > +/**
-> > > + * free_zone_device_folio_prepare() - Prepare a ZONE_DEVICE folio for freeing.
-> > > + * @folio: ZONE_DEVICE folio to prepare for release.
-> > > + *
-> > > + * ZONE_DEVICE pages/folios (e.g., device-private memory or fsdax-backed pages)
-> > > + * can be compound. When freeing a compound ZONE_DEVICE folio, the tail pages
-> > > + * must be restored to a sane ZONE_DEVICE state before they are released.
-> > > + *
-> > > + * This helper:
-> > > + *   - Clears @folio->mapping and, for compound folios, clears each page's
-> > > + *     compound-head state (ClearPageHead()/clear_compound_head()).
-> > > + *   - Resets the compound order metadata (folio_reset_order()) and then
-> > > + *     initializes each constituent page as a standalone ZONE_DEVICE folio:
-> > > + *       * clears ->mapping
-> > > + *       * restores ->pgmap (prep_compound_page() overwrites it)
-> > > + *       * clears ->share (only relevant for fsdax; unused for device-private)
-> > > + *
-> > > + * If @folio is order-0, only the mapping is cleared and no further work is
-> > > + * required.
-> > > + */
-> > > +void free_zone_device_folio_prepare(struct folio *folio)
-
-I don't really like the naming here - we're not preparing a folio to be
-freed, from the core-mm perspective the folio is already free. This is just
-reinitialising the folio metadata ready for the driver to reuse it, which may
-actually involve just recreating a compound folio.
-
-So maybe zone_device_folio_reinitialise()? Or would it be possible to
-roll this into a zone_device_folio_init() type function (similar to
-zone_device_page_init()) that just deals with everything at allocation time?
-
-> > > +{
-> > > +	struct dev_pagemap *pgmap = page_pgmap(&folio->page);
-> > > +	int order, i;
-> > > +
-> > > +	VM_WARN_ON_FOLIO(!folio_is_zone_device(folio), folio);
-> > > +
-> > > +	folio->mapping = NULL;
-> > > +	order = folio_order(folio);
-> > > +	if (!order)
-> > > +		return;
-> > > +
-> > > +	folio_reset_order(folio);
-> > > +
-> > > +	for (i = 0; i < (1UL << order); i++) {
-> > > +		struct page *page = folio_page(folio, i);
-> > > +		struct folio *new_folio = (struct folio *)page;
-> > > +
-> > > +		ClearPageHead(page);
-> > > +		clear_compound_head(page);
-> > > +
-> > > +		new_folio->mapping = NULL;
-> > > +		/*
-> > > +		 * Reset pgmap which was over-written by
-> > > +		 * prep_compound_page().
-> > > +		 */
-> > > +		new_folio->pgmap = pgmap;
-> > > +		new_folio->share = 0;	/* fsdax only, unused for device private */
-> > > +		VM_WARN_ON_FOLIO(folio_ref_count(new_folio), new_folio);
-> > > +		VM_WARN_ON_FOLIO(!folio_is_zone_device(new_folio), new_folio);
-> > 
-> > Does calling the free_folio() callback on new_folio solve the issue you are facing, or is
-> > that PMD_ORDER more frees than we'd like?
-> > 
+On Wed, Jan 07, 2026 at 01:05:43PM +0100, Robert Richter wrote:
+> Translation functions may return an invalid address in case of errors.
+> If the address is not checked the further use of the invalid value
+> will cause an address corruption.
 > 
-> No, calling free_folio() more often doesn’t solve anything—in fact, that
-> would make my implementation explode. I explained this in detail here [1]
-> to Zi.
-> 
-> To recap [1], my memory allocator has no visibility into individual
-> pages or folios; it is DRM Buddy layered on top of TTM BO. This design
-> allows VRAM to be allocated or evicted for both traditional GPU
-> allocations (GEMs) and SVM allocations.
-> 
-> Now, to recap the actual issue: if device folios are not split upon free
-> and are later reallocated with a different order in
-> zone_device_page_init, the implementation breaks. This problem is not
-> specific to Xe—Nouveau happens to always allocate at the same order, so
-> it works by coincidence. Reallocating at a different order is valid
-> behavior and must be supported.
+> Consistently check for a valid address returned by translation
+> functions. Use RESOURCE_SIZE_MAX to indicate an invalid address for
+> type resource_size_t. Depending on the type either RESOURCE_SIZE_MAX
+> or ULLONG_MAX is used to indicate an address error.
 
-I agree it's probably by coincidence but it is a perfectly valid design to
-always just (re)allocate at the same order and not worry about having to
-reinitialise things to different orders.
 
- - Alistair
+DaveJ --
 
-> Matt
+Please see if you can get this in as a Fix in 6.19. One of the fixes
+tags points back to 6.18 where we introduced poison by region offset,
+and the other points to 6.19 where we refactored for testability.
+
+Also, please add this user impact statement to the commit log upon applying:
+
+Propagating an invalid address from a failed translation may cause
+userspace to think it has received a valid SPA, when in fact it is
+wrong. The CXL userspace API, using trace events, expects ULLONG_MAX
+to indicate a translation failure. If ULLONG_MAX is not returned
+immediately, subsequent calculations can transform that bad address
+into a different value (!ULLONG_MAX), and an invalid SPA may be 
+returned to userspace. This can lead to incorrect diagnostics and
+erroneous corrective actions.
+
+Fixes: c3dd67681c70 ("cxl/region: Add inject and clear poison by region offset")
+Fixes: b78b9e7b7979 ("cxl/region: Refactor address translation funcs for testing")
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+
 > 
-> [1] https://patchwork.freedesktop.org/patch/697710/?series=159119&rev=3#comment_1282413
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+> v3:
+>  * updated sob-chain,
+>  * changed error handling flow in test/cxl_translate.c (Alison),
 > 
-> > > +	}
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(free_zone_device_folio_prepare);
-> > > +
-> > >  void free_zone_device_folio(struct folio *folio)
-> > >  {
-> > >  	struct dev_pagemap *pgmap = folio->pgmap;
-> > > @@ -454,6 +508,7 @@ void free_zone_device_folio(struct folio *folio)
-> > >  	case MEMORY_DEVICE_COHERENT:
-> > >  		if (WARN_ON_ONCE(!pgmap->ops || !pgmap->ops->folio_free))
-> > >  			break;
-> > > +		free_zone_device_folio_prepare(folio);
-> > >  		pgmap->ops->folio_free(folio, order);
-> > >  		percpu_ref_put_many(&folio->pgmap->ref, nr);
-> > >  		break;
-> > 
-> > Balbir
+> v2:
+>  * separated from this patch series (Alison):
+>    [PATCH v8 00/13] cxl: ACPI PRM Address Translation Support and AMD Zen5 enablement
+>  * improved error handling logic and early return on error in
+>    region_offset_to_dpa_result() (Dave),
+>  * use RESOURCE_SIZE_MAX to indicate an invalid address for
+>    resource_size_t types (Alison, kernel test robot),
+>  * improved patch description (Alison),
+>  * added line wrap for code >80 chars.
+> ---
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+>  drivers/cxl/core/hdm.c                 |  2 +-
+>  drivers/cxl/core/region.c              | 34 ++++++++++++++++++++------
+>  tools/testing/cxl/test/cxl_translate.c | 30 ++++++++++++++---------
+>  3 files changed, 45 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 1c5d2022c87a..031672e92b0b 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -530,7 +530,7 @@ resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled)
+>  
+>  resource_size_t cxl_dpa_resource_start(struct cxl_endpoint_decoder *cxled)
+>  {
+> -	resource_size_t base = -1;
+> +	resource_size_t base = RESOURCE_SIZE_MAX;
+>  
+>  	lockdep_assert_held(&cxl_rwsem.dpa);
+>  	if (cxled->dpa_res)
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index fc36a5413d3f..5bd1213737fa 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3118,7 +3118,7 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+>  	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	struct cxl_endpoint_decoder *cxled = NULL;
+> -	u64 dpa_offset, hpa_offset, hpa;
+> +	u64 base, dpa_offset, hpa_offset, hpa;
+>  	u16 eig = 0;
+>  	u8 eiw = 0;
+>  	int pos;
+> @@ -3136,8 +3136,14 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+>  	ways_to_eiw(p->interleave_ways, &eiw);
+>  	granularity_to_eig(p->interleave_granularity, &eig);
+>  
+> -	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
+> +	base = cxl_dpa_resource_start(cxled);
+> +	if (base == RESOURCE_SIZE_MAX)
+> +		return ULLONG_MAX;
+> +
+> +	dpa_offset = dpa - base;
+>  	hpa_offset = cxl_calculate_hpa_offset(dpa_offset, pos, eiw, eig);
+> +	if (hpa_offset == ULLONG_MAX)
+> +		return ULLONG_MAX;
+>  
+>  	/* Apply the hpa_offset to the region base address */
+>  	hpa = hpa_offset + p->res->start + p->cache_size;
+> @@ -3146,6 +3152,9 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+>  	if (cxlrd->ops.hpa_to_spa)
+>  		hpa = cxlrd->ops.hpa_to_spa(cxlrd, hpa);
+>  
+> +	if (hpa == ULLONG_MAX)
+> +		return ULLONG_MAX;
+> +
+>  	if (!cxl_resource_contains_addr(p->res, hpa)) {
+>  		dev_dbg(&cxlr->dev,
+>  			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
+> @@ -3170,7 +3179,8 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+>  	struct cxl_endpoint_decoder *cxled;
+> -	u64 hpa, hpa_offset, dpa_offset;
+> +	u64 hpa_offset = offset;
+> +	u64 dpa, dpa_offset;
+>  	u16 eig = 0;
+>  	u8 eiw = 0;
+>  	int pos;
+> @@ -3187,10 +3197,13 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+>  	 * CXL HPA is assumed to equal SPA.
+>  	 */
+>  	if (cxlrd->ops.spa_to_hpa) {
+> -		hpa = cxlrd->ops.spa_to_hpa(cxlrd, p->res->start + offset);
+> -		hpa_offset = hpa - p->res->start;
+> -	} else {
+> -		hpa_offset = offset;
+> +		hpa_offset = cxlrd->ops.spa_to_hpa(cxlrd, p->res->start + offset);
+> +		if (hpa_offset == ULLONG_MAX) {
+> +			dev_dbg(&cxlr->dev, "HPA not found for %pr offset %#llx\n",
+> +				p->res, offset);
+> +			return -ENXIO;
+> +		}
+> +		hpa_offset -= p->res->start;
+>  	}
+>  
+>  	pos = cxl_calculate_position(hpa_offset, eiw, eig);
+> @@ -3207,8 +3220,13 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+>  		cxled = p->targets[i];
+>  		if (cxled->pos != pos)
+>  			continue;
+> +
+> +		dpa = cxl_dpa_resource_start(cxled);
+> +		if (dpa != RESOURCE_SIZE_MAX)
+> +			dpa += dpa_offset;
+> +
+>  		result->cxlmd = cxled_to_memdev(cxled);
+> -		result->dpa = cxl_dpa_resource_start(cxled) + dpa_offset;
+> +		result->dpa = dpa;
+>  
+>  		return 0;
+>  	}
+> diff --git a/tools/testing/cxl/test/cxl_translate.c b/tools/testing/cxl/test/cxl_translate.c
+> index 2200ae21795c..2d9b75b30dbc 100644
+> --- a/tools/testing/cxl/test/cxl_translate.c
+> +++ b/tools/testing/cxl/test/cxl_translate.c
+> @@ -68,6 +68,8 @@ static u64 to_hpa(u64 dpa_offset, int pos, u8 r_eiw, u16 r_eig, u8 hb_ways,
+>  
+>  	/* Calculate base HPA offset from DPA and position */
+>  	hpa_offset = cxl_calculate_hpa_offset(dpa_offset, pos, r_eiw, r_eig);
+> +	if (hpa_offset == ULLONG_MAX)
+> +		return ULLONG_MAX;
+>  
+>  	if (math == XOR_MATH) {
+>  		cximsd->nr_maps = hbiw_to_nr_maps[hb_ways];
+> @@ -258,19 +260,23 @@ static int test_random_params(void)
+>  		pos = get_random_u32() % ways;
+>  		dpa = get_random_u64() >> 12;
+>  
+> +		reverse_dpa = ULLONG_MAX;
+> +		reverse_pos = -1;
+> +
+>  		hpa = cxl_calculate_hpa_offset(dpa, pos, eiw, eig);
+> -		reverse_dpa = cxl_calculate_dpa_offset(hpa, eiw, eig);
+> -		reverse_pos = cxl_calculate_position(hpa, eiw, eig);
+> -
+> -		if (reverse_dpa != dpa || reverse_pos != pos) {
+> -			pr_err("test random iter %d FAIL hpa=%llu, dpa=%llu reverse_dpa=%llu, pos=%d reverse_pos=%d eiw=%u eig=%u\n",
+> -			       i, hpa, dpa, reverse_dpa, pos, reverse_pos, eiw,
+> -			       eig);
+> -
+> -			if (failures++ > 10) {
+> -				pr_err("test random too many failures, stop\n");
+> -				break;
+> -			}
+> +		if (hpa != ULLONG_MAX) {
+> +			reverse_dpa = cxl_calculate_dpa_offset(hpa, eiw, eig);
+> +			reverse_pos = cxl_calculate_position(hpa, eiw, eig);
+> +			if (reverse_dpa == dpa && reverse_pos == pos)
+> +				continue;
+> +		}
+> +
+> +		pr_err("test random iter %d FAIL hpa=%llu, dpa=%llu reverse_dpa=%llu, pos=%d reverse_pos=%d eiw=%u eig=%u\n",
+> +			i, hpa, dpa, reverse_dpa, pos, reverse_pos, eiw, eig);
+> +
+> +		if (failures++ > 10) {
+> +			pr_err("test random too many failures, stop\n");
+> +			break;
+>  		}
+>  	}
+>  	pr_info("..... test random: PASS %d FAIL %d\n", i - failures, failures);
+> 
+> base-commit: 88c72bab77aaf389beccf762e112828253ca0564
+> -- 
+> 2.47.3
+> 
