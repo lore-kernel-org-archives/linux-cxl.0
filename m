@@ -1,50 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010045.outbound.protection.outlook.com [52.101.85.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD5D2F363E;
-	Tue, 13 Jan 2026 22:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768341813; cv=none; b=OvtUy/5Ne2RK5LgO79dDg0wrd2yy0LOiFH3+hUxIy57tbYAfkjwKiCvMek0zmjPC04HcuhxZWaBgnpNUtevQi7AGWOhGq4VO8izAGGlKjtACkS5TQ0eQJbZJlkOmNkPm58utP04gXYl+m9x/N8LjNtU1wH5KFd/0wB/+XkWbpws=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768341813; c=relaxed/simple;
-	bh=p12yju99auB4KokOND0KnW4C4OL6HoaCj4mKdcicZ7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u/CaoO0M4Sd26CkFWwyz1VHDPlLcBeMBSpbo1crHaJJqETl9gvONTplm5UPmWSFH9mBuPeonGHeCBTtuDTZwJDuCoFSVFuh4InSuk26PIdEOCyRqzOPPmji5rQRbL48/OXL2uDO0AJDMM3vEn1fG0lxaViO+zkEeYLFDucwtm+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h61bkVTg; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3920163;
+	Tue, 13 Jan 2026 22:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768343707; cv=fail; b=PUBuNf4pSaeI8awx+DW9bLB0ERxguTAoGTiP67lz3CeVZ7yln5BQ8B0uQCz3WNFEqttbCXf+PQMnjuff0j7ukSO0Q7NdbjA4ogsaxN4OI0JD7KTPzn9CAS4GiOf/C9Z+3zXuwusxPJdp72HixMUz13hyPoluNROJAwhkafy/3wQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768343707; c=relaxed/simple;
+	bh=L2c9Jk/l1d4AiyhCzEpq0kjalcFkxazmjA9wvD0eQ3E=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=AI43ie2wgtXd+bmwyZO1dOwJZLA5fqC/nZAvxS8vLwZUy4TVgsBCN7qqL2kDBGfAbPusazn2s38bSn5EZtwGtaJoAIDNQUjphnQ+J4C3ZRe4B8UumuOPKhr2usAhPCMtIJiGezf9gbL4wKA0VlmdYNIctq7/yVatruhH7p2Ojgc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tqKu4L1x; arc=fail smtp.client-ip=52.101.85.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h61bkVTg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768341811; x=1799877811;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=p12yju99auB4KokOND0KnW4C4OL6HoaCj4mKdcicZ7M=;
-  b=h61bkVTgxZy6vtAFO+Dz0d7d842hZ+2WuHpQGGumjv5zK1m9xODVx5Qb
-   IBHCNu7SAeBoqRESllOsBnVcJoWuAgW38LKFdUvs7AujS/hB/0FzutQHM
-   ms5Dc5mQK/2608DcUwPkuLZQ2KN/yiXbOeICL3NNk4sjwpChSgw8QFO9i
-   UCevgrjRxtl8kInKc6Z+/h8ZY1WCTY7pYFp0LaQvTz6LheVP9sRHxhDJF
-   lwV3eNdvCZVkoYRL4drgiR320UTkI3er14WK+1HMB5P81/3dF/6/bICpg
-   v71ifMRnHnd6YoIveYoI/kvbcmnQOLQFREhCKv5wqhZRIlZRmEErLyCgQ
-   g==;
-X-CSE-ConnectionGUID: q+2Oj1seRiyeehLSh27kgA==
-X-CSE-MsgGUID: 9wxfu7f4SW2Rs1AW2RhvWw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="81002691"
-X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="81002691"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 14:03:30 -0800
-X-CSE-ConnectionGUID: wQ415eqoTZCqEu1fHdUHnA==
-X-CSE-MsgGUID: 9MfCsvQISEqvvbGJjHr4Cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="208662697"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.189]) ([10.125.110.189])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 14:03:28 -0800
-Message-ID: <cc18931c-8c13-486d-bd70-ffb2ebd9ec93@intel.com>
-Date: Tue, 13 Jan 2026 15:03:27 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tqKu4L1x"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MornBDN24c+Q+GQHH2OfLnE0ybDi8gxdF3PcrARPql2NosWRwwp7+4qoCxSfOfrUiGUwXK5R1ik96y4eYL9UB+59s2CkdoSJ8mD+yWkHZ0m8QkW1yw3mhV6uuwB0wTSHlBJgSP7W6/WxzyHH1DzqEdRcHtcHj0kuARMb8nu95/E6X9xSHfUvHJYHsKfSSxbUpQ0Gu0Xw4x3iCL3MeE57W5QkteWDMnJKOlmzSKQalgk/rhcchEU/g0KkoTA2xr+fXnfQfFqzRxGKz2wdaP7P94o3AX/yMG+RavjV/Ug6fOdjkx57XCYxAI70aRQJlwTZR0pIhjngoYajuKtmpnQZdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M4oCklMNzac+oyDNPfMitwAzlNjHDTCf9EBamkWUuXo=;
+ b=LFyTgHecOtnxOuodKX/UEDSOXxKls+1pafTWohvbGk8DIYxNtidsioJziKGIMdeQzNYqq32abGN1eumAJE4W/sZGcptFKxHJxOnvXHZUs6fWJKrgON0MPcVSIw2WuMOQJ8mVux1VN2gu9kcaf4JnDGhQJLIiHl/IzBdS2VmEhuc25DvXccNUiQc+kdleMuuw7qHv+p/fULM5ioFlDC1UCB3rocgH3BQRLKol3WGVsPsDsTmuwB3b0MPSgroNYrBXu9cOgT398MD0Kmz9Iz03pssRzphSccqJOfMji7Ss08edfewR1XIHpIikIc5pXRXnqIE6gLea0A6Jc3bZxa8oJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=gourry.net smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M4oCklMNzac+oyDNPfMitwAzlNjHDTCf9EBamkWUuXo=;
+ b=tqKu4L1xFYyK+becm2AsznNplafvFtJLekqPeEwHUFXolCBQ6nf6EUOpzyQrOvmgF5yMso8rTMIahqcdASD3yrw8Ks8dO82Z6YktW6/odT1Mg7bOrJW4ig95URcYLRcMH+7FM9rkcyhQ+rpFGiyhjrvpDqtqTS8i3ksFyYNYy1E=
+Received: from BY3PR10CA0027.namprd10.prod.outlook.com (2603:10b6:a03:255::32)
+ by BL1PR12MB5995.namprd12.prod.outlook.com (2603:10b6:208:39b::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Tue, 13 Jan
+ 2026 22:35:01 +0000
+Received: from SJ1PEPF00002319.namprd03.prod.outlook.com
+ (2603:10b6:a03:255:cafe::75) by BY3PR10CA0027.outlook.office365.com
+ (2603:10b6:a03:255::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9499.7 via Frontend Transport; Tue,
+ 13 Jan 2026 22:34:45 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ SJ1PEPF00002319.mail.protection.outlook.com (10.167.242.229) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9520.1 via Frontend Transport; Tue, 13 Jan 2026 22:35:00 +0000
+Received: from Satlexmb09.amd.com (10.181.42.218) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 13 Jan
+ 2026 16:35:00 -0600
+Received: from [10.236.181.95] (10.180.168.240) by satlexmb09.amd.com
+ (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 13 Jan
+ 2026 14:34:59 -0800
+Message-ID: <c7e02935-ef77-4673-ab1c-6d07768bf02b@amd.com>
+Date: Tue, 13 Jan 2026 16:34:59 -0600
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,281 +68,131 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] Documentation/driver-api/cxl: ACPI PRM Address
- Translation Support and AMD Zen5 enablement
-To: Robert Richter <rrichter@amd.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Gregory Price <gourry@gourry.net>,
- "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>,
- linux-doc@vger.kernel.org
-References: <20260112111707.794526-1-rrichter@amd.com>
- <20260112111707.794526-3-rrichter@amd.com>
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+Subject: Re: [PATCH 2/6] cxl: add sysram_region memory controller
+To: Gregory Price <gourry@gourry.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kernel-team@meta.com>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, David Hildenbrand <david@kernel.org>
+References: <20260112163514.2551809-1-gourry@gourry.net>
+ <20260112163514.2551809-3-gourry@gourry.net>
+ <0233bdab-9b59-4394-9ce4-c3a5df2be06d@amd.com>
+ <aWV78x2NZd0-iNSv@gourry-fedora-PF4VCD3F>
 Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260112111707.794526-3-rrichter@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <aWV78x2NZd0-iNSv@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb09.amd.com
+ (10.181.42.218)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002319:EE_|BL1PR12MB5995:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3625aee5-2a7e-4564-24d6-08de52f3fd01
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|82310400026|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VFdoSVNybFJoUTdqeGtkZ1ZPYlRUSnVWdzM5empoa0FzdmRVUGo1SHR2RVNy?=
+ =?utf-8?B?TFFGWnBzQW42REtiZlRXbTlHdkF1UENBNVFhWlNIRHA5ZVdlNlJ3VHZPSkV3?=
+ =?utf-8?B?YXJsd2dnTTlTeTdKU3hvVFlJUDFncVFDbm9JVGJlanpMVW4xckg0bGlFYzFv?=
+ =?utf-8?B?STkvd3daaWlKRDkwYXBSZWFqNjFQclJQcXU5N3dZQXpnakowS2xlYzUyajUz?=
+ =?utf-8?B?MHpKOFV4L0hhMk51dVZ4aGF2Z0IxUFBralRoZ29EdllPTmdCUTVRdmRZZmdK?=
+ =?utf-8?B?L0YwMlpXQXpSc1RUbHJzbDNSVy9oSndjb0piYVd2cHF2OWEvTHEyQjNieFZr?=
+ =?utf-8?B?ZzhvY0FmY1NqVTNJU3pyOUVQSGF6Rnh6dS9ZVjh4WDVNOE1BN1FRNHhnMXB6?=
+ =?utf-8?B?VEh6OElsalJnTXV1bnVtMlZtVWtJb2tYM211L0RXbXZ3ZXBlYWhlWDB3TTNO?=
+ =?utf-8?B?QVNhdjM4Z0EzcnkycHZzSjhsa3BVeVl1eTNIWkt3Z2V4Umpqa0ZIOVZYZHVK?=
+ =?utf-8?B?Wi9BUFdjRXlzVU9KRzdVMG5qcWxOOFdoSjM5TERwVXVpa3ExUWJpaU1zaXBy?=
+ =?utf-8?B?d25ESDZDaUR1ZGNRWmhQVFphNkxSV1MweUljS0FEbVJEQmFPY0xuVHVoMGQr?=
+ =?utf-8?B?aGxKZW43eEhEUEpzVjVpRHpqRnFNN0hTdXA4NnYrb3MxckhtMUlRUk00OEhy?=
+ =?utf-8?B?bW9KVkR0WG9tVEdkbWhqdzFNSXZXZGYzaDlaR0EvRkEvZDdkUWNXQnkxQVNW?=
+ =?utf-8?B?WXMxVStoRFl3ZkQyTThGa2FwUDVCMFVRSzIvcVNWY1grS3BQb2s0ZWNnMVBU?=
+ =?utf-8?B?QVI0WStLWFp3cGFxb0x2WndreWoxY2RjRThkcUNPRmdZcjVXaTBhTDROK09n?=
+ =?utf-8?B?cGNjTm5PcDNBZmUxOE9xd3VTUFZ5T3Q2SW5aWWVuWTdTcXZ3SFUrNHdCbS9P?=
+ =?utf-8?B?aExNNzNXWmNieEJKM1hHMXhVSksyalM0QlRmYUJ5RzRKMEdlZW5pcWl1MFJp?=
+ =?utf-8?B?d091WFBxQnhpNTdWTHhoZGFXM1k4TTRJdWVlMFhaN3dkZzRZRDQ3V1FuZzEw?=
+ =?utf-8?B?eHRNVGRNRUkvZjZEU2lIbDBvSzU2ME9UQUFQLzVQU1VFZkpWV1RKUHVHVlFU?=
+ =?utf-8?B?aSt2bUhKYUx1Y0FjWUtyRE1JRFFPYVBDakVXRVpmNStEbG1FeWhpWDRGSG9k?=
+ =?utf-8?B?OWFJeHhCVURVTkRwYmRxSisrSHBiT2FtR1IyWWcvREJBSi94dUVodDNxdHM2?=
+ =?utf-8?B?L0FuaVkybmFCS0dpRjZIcVFXQUowcGNwR0Nka0JycGNuWllFTlkxaEVncnAr?=
+ =?utf-8?B?cEhScWdjeStxRURTb0dra08xWWtnTDJMQUl6RGRkajhwM284OWJJZHNzZUNj?=
+ =?utf-8?B?Tk5MeTVwSDBuZWVsV0Y2eXlnU1RtY2FUR3ZlUEE0RXVuUzdVWktiMExVUzNB?=
+ =?utf-8?B?dHErUWJycVhheTZMS1hJUkE0ZUloV1dtcEhBb3JyK2s2d1d6OHI0UE9IRGU3?=
+ =?utf-8?B?cDRyS0dBTjdVKzVYbmJHamJUQk5pazZFS2s5V2pjTnZEa0kxY2szV3R4YzhV?=
+ =?utf-8?B?cUZiaTQrV1JCalJjblg1VzBucjFTZ0E1cHVNOFNEcnJtMDNvbGtLdjJvbWJk?=
+ =?utf-8?B?SGlhTEpzR2R1Y2p6cnY5eHhISlhMUnRXQUE0NjhRRjJ4enE2S2NtcnhCYzRm?=
+ =?utf-8?B?OTE3alJlSUpPajBzaGxzUnU2aklCZ0h5QnBoekh1d2QxODFNc1JRSGxKVXh6?=
+ =?utf-8?B?bzRYR1FzVTZtZzdJTG1qOHZ0SzJROTNhZDRtKzBQNkExdmxVQ0dEQWV3clpW?=
+ =?utf-8?B?RnhsZVU1Q21uRUljOExVY3pWbkdsQUphWEZMR2s2emExVzl4QU15eHRrb3Ew?=
+ =?utf-8?B?MzFMTERUNzN2d0NkTGZQWFZGWllySm00M3dvclVNbXgxcGpobzBncmNCTDZv?=
+ =?utf-8?B?MzRrMFZYUStOSStmSTZSL0wwd0QrR2k1eFl0Um1oQ004MUhTeUlKdzRZTjhF?=
+ =?utf-8?B?Um0xSk9WRG5vQmJ2MGhhNHV0ZE9uaVZHdFhRQnNZMWkxTE9JN1l0VlNFc1kv?=
+ =?utf-8?B?YTM4NEVrMmpsSG44NTdtbkYzVENSellEeEo4RW8ydWdHazNBWHFBSi9ST0di?=
+ =?utf-8?Q?AcSA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2026 22:35:00.7099
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3625aee5-2a7e-4564-24d6-08de52f3fd01
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00002319.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5995
 
+On 1/12/2026 4:55 PM, Gregory Price wrote:
+> On Mon, Jan 12, 2026 at 03:10:41PM -0600, Cheatham, Benjamin wrote:
+>> On 1/12/2026 10:35 AM, Gregory Price wrote:
+>>> Add a sysram memctrl that directly hotplugs memory without needing to
+>>> route through DAX.  This simplifies the sysram usecase considerably.
+>>>
+>>> The sysram memctl adds new sysfs controls when registered:
+>>> 	region/memctrl/[hotplug, hotunplug, state]
+>>>
+>>> hotplug:   controller attempts to hotplug the memory region
+>>> hotunplug: controller attempts to offline and hotunplug the memory region
+>>
+>> Nit: Would it be better to use hotadd/hotremove here instead of hotplug/hotunplug? The terms
+>> are basically synonymous, but I think hotadd and hotremove are more descriptive.
+> 
+> I will defer to David on this.  I think keeping the terminology
+> consistent is better, but also hotplug is overloaded between physical
+> and logical.  It ultimately means the same thing to be honest.
 
+I agree, I'm fine with either here.
 
-On 1/12/26 4:16 AM, Robert Richter wrote:
-> This adds a convention document for the following patch series:
 > 
->  cxl: ACPI PRM Address Translation Support and AMD Zen5 enablement
+>>> state:     [online,online_normal,offline]
+>>>    online       : controller onlines blocks in ZONE_MOVABLE
+>>>    online_normal: controller onlines blocks in ZONE_NORMAL
+>>
+>> The naming for online states could be improved imo. I understand and agree with the motivation
+>> behind the names, but I could see the use of the word "normal" being confusing to less savvy users.
+>> You could change it to include the zone for both (online_movable/online_normal), but I think it may
+>> be easier to mark which one has drawbacks, i.e. change "online_normal" to something like "online_nonremovable".
+>> That way, anyone who doesn't want to go find the documentation for these can understand the user-visible
+>> impact.
+>>
+>> In any case, all of these attributes need ABI documentation as well.
+>>
 > 
-> Version 7 and later:
+> This is what i was getting at originally, I will consider the other
+> feedback and spin a v2 with this simplified a bit.
 > 
->  https://lore.kernel.org/linux-cxl/20251114213931.30754-1-rrichter@amd.com/
+> I'm leaning towards agreeing with Dan and David that probably we just
+> keep online/online_movable since it's consistent with base/memory.c, but
+> we can continue to have this argument.
 > 
-> Link: https://lore.kernel.org/linux-cxl/20251114213931.30754-1-rrichter@amd.com/
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+> I don't think we can reasonable get away from users of this interface
+> understanding the implications of ZONEs, since whatever they choose to
+> do dictates what zone the memory gets added to.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
-> v3:
->  * updated link in descriptions and add Link: tag (Jonathan Cameron),
->  * clarified CFMWS and HPA range description (Jonathan Cameron),
->  * use 80 chars line limit (Jonathan Cameron),
->  * added block diagram to illustrate the example address mappings (Dave),
-> v2:
->  * updated sob-chain,
->  * spell fix in patch description (Randy),
->  * made small changes as suggested by Randy,
->  * Removed include:: <isonum.txt> line (Jon).
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> ---
->  Documentation/driver-api/cxl/conventions.rst  |   1 +
->  .../driver-api/cxl/conventions/cxl-atl.rst    | 205 ++++++++++++++++++
->  2 files changed, 206 insertions(+)
->  create mode 100644 Documentation/driver-api/cxl/conventions/cxl-atl.rst
-> 
-> diff --git a/Documentation/driver-api/cxl/conventions.rst b/Documentation/driver-api/cxl/conventions.rst
-> index 9267a697b2fe..0d2e07279ad9 100644
-> --- a/Documentation/driver-api/cxl/conventions.rst
-> +++ b/Documentation/driver-api/cxl/conventions.rst
-> @@ -14,4 +14,5 @@ same convention.
->     :caption: Contents
->  
->     conventions/cxl-lmh.rst
-> +   conventions/cxl-atl.rst
->     conventions/template.rst
-> diff --git a/Documentation/driver-api/cxl/conventions/cxl-atl.rst b/Documentation/driver-api/cxl/conventions/cxl-atl.rst
-> new file mode 100644
-> index 000000000000..69fed0044b52
-> --- /dev/null
-> +++ b/Documentation/driver-api/cxl/conventions/cxl-atl.rst
-> @@ -0,0 +1,205 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +ACPI PRM CXL Address Translation
-> +================================
-> +
-> +Document
-> +--------
-> +
-> +CXL Revision 3.2, Version 1.0
-> +
-> +License
-> +-------
-> +
-> +SPDX-License Identifier: CC-BY-4.0
-> +
-> +Creator/Contributors
-> +--------------------
-> +
-> +- Robert Richter, AMD
-> +
-> +Summary of the Change
-> +---------------------
-> +
-> +The CXL Fixed Memory Window Structures (CFMWS) describe zero or more Host
-> +Physical Address (HPA) windows associated with one or more CXL Host Bridges.
-> +Each HPA range of a CXL Host Bridge is represented by a CFMWS entry. An HPA
-> +range may include addresses currently assigned to CXL.mem devices, or an OS may
-> +assign ranges from an address window to a device.
-> +
-> +Host-managed Device Memory is Device-attached memory that is mapped to system
-> +coherent address space and accessible to the Host using standard write-back
-> +semantics. The managed address range is configured in the CXL HDM Decoder
-> +registers of the device. An HDM Decoder in a device is responsible for
-> +converting HPA into DPA by stripping off specific address bits.
-> +
-> +CXL devices and CXL bridges use the same HPA space. It is common across all
-> +components that belong to the same host domain. The view of the address region
-> +must be consistent on the CXL.mem path between the Host and the Device.
-> +
-> +This is described in the current CXL specification (Table 1-1, 3.3.1, 8.2.4.20,
-> +9.13.1, 9.18.1.3). [#cxl-spec-3.2]_
-> +
-> +Depending on the interconnect architecture of the platform, components attached
-> +to a host may not share the same host physical address space. Those platforms
-> +need address translation to convert an HPA between the host and the attached
-> +component, such as a CXL device. The translation mechanism is host-specific and
-> +implementation dependent.
-> +
-> +E.g., x86 AMD platforms use a Data Fabric that manages access to physical
-> +memory. Devices have their own memory space and can be configured to use
-> +'Normalized addresses' different to System Physical Addresses (SPA). Address
-> +translation is needed then. Details are described also under x86 AMD
-> +Documentation/admin-guide/RAS/address-translation.rst.
-> +
-> +Those AMD platforms provide PRM handlers in firmware to perform various types of
-> +address translation, including for CXL endpoints. AMD Zen5 systems implement the
-> +ACPI PRM CXL Address Translation firmware call. The ACPI PRM handler has a
-> +specific GUID to uniquely identify platforms with support of Normalized
-> +addressing. This is documented in the ACPI v6.5 Porting Guide, Address
-> +Translation - CXL DPA to System Physical Address. [#amd-ppr-58088]_
-> +
-> +When in Normalized address mode, HDM decoder address ranges must be configured
-> +and handled differently. Hardware addresses used in the HDM decoder
-> +configurations of an endpoint are not SPA and need to be translated from the
-> +endpoint's to its CXL host bridge's address range. This is especially important
-> +to find an endpoint's associated CXL Host Bridge and HPA window described in the
-> +CFMWS. Also, the interleave decoding is done by the Data Fabric and the endpoint
-> +does not perform decoding when converting HPA to DPA. Instead, interleaving is
-> +switched off for the endpoint (1 way). Finally, address translation might also
-> +be needed to inspect the Endpoint's hardware addresses, such as during
-> +profiling, tracing or error handling.
-> +
-> +For example, with Normalized addressing the HDM decoders could look as
-> +following::
-> +
-> +                          -------------------------------
-> +                          | Root Decoder (CFMWS)        |
-> +                          | SPA Range: 0x850000000      |
-> +                          | Size: 0x8000000000 (512 GB) |
-> +                          | Interleave Ways: 1          |
-> +                          -------------------------------
-> +                                        |
-> +                                        v
-> +                          -------------------------------
-> +                          | Host Bridge Decoder (HDM)   |
-> +                          | SPA Range: 0x850000000      |
-> +                          | Size: 0x8000000000 (512 GB) |
-> +                          | Interleave Ways: 4          |
-> +                          | Targets: endpoint5,8,11,13  |
-> +                          | Granularity: 256            |
-> +                          -------------------------------
-> +                                        |
-> +           -----------------------------+------------------------------
-> +           |                  |                   |                   |
-> +           v                  v                   v                   v
-> + ------------------- ------------------- ------------------- -------------------
-> + | endpoint5       | | endpoint8       | | endpoint11      | | endpoint13      |
-> + | decoder5.0      | | decoder8.0      | | decoder11.0     | | decoder13.0     |
-> + | PCIe:           | | PCIe:           | | PCIe:           | | PCIe:           |
-> + |   0000:e2:00.0  | |   0000:e3:00.0  | |   0000:e4:00.0  | |   0000:e1:00.0  |
-> + | DPA:            | | DPA:            | | DPA:            | | DPA:            |
-> + |   Start: 0x0    | |   Start: 0x0    | |   Start: 0x0    | |   Start: 0x0    |
-> + |   Size:         | |   Size:         | |   Size:         | |   Size:         |
-> + |    0x2000000000 | |    0x2000000000 | |    0x2000000000 | |    0x2000000000 |
-> + |    (128 GB)     | |    (128 GB)     | |    (128 GB)     | |    (128 GB)     |
-> + | Interleaving:   | | Interleaving:   | | Interleaving:   | | Interleaving:   |
-> + |   Ways: 1       | |   Ways: 1       | |   Ways: 1       | |   Ways: 1       |
-> + |   Gran: 256     | |   Gran: 256     | |   Gran: 256     | |   Gran: 256     |
-> + ------------------- ------------------- ------------------- -------------------
-> +          |                   |                   |                   |
-> +          v                   v                   v                   v
-> +         DPA                 DPA                 DPA                 DPA
-> +
-> +This shows the representation in sysfs:
-> +
-> +.. code-block:: none
-> +
-> + /sys/bus/cxl/devices/endpoint5/decoder5.0/interleave_granularity:256
-> + /sys/bus/cxl/devices/endpoint5/decoder5.0/interleave_ways:1
-> + /sys/bus/cxl/devices/endpoint5/decoder5.0/size:0x2000000000
-> + /sys/bus/cxl/devices/endpoint5/decoder5.0/start:0x0
-> + /sys/bus/cxl/devices/endpoint8/decoder8.0/interleave_granularity:256
-> + /sys/bus/cxl/devices/endpoint8/decoder8.0/interleave_ways:1
-> + /sys/bus/cxl/devices/endpoint8/decoder8.0/size:0x2000000000
-> + /sys/bus/cxl/devices/endpoint8/decoder8.0/start:0x0
-> + /sys/bus/cxl/devices/endpoint11/decoder11.0/interleave_granularity:256
-> + /sys/bus/cxl/devices/endpoint11/decoder11.0/interleave_ways:1
-> + /sys/bus/cxl/devices/endpoint11/decoder11.0/size:0x2000000000
-> + /sys/bus/cxl/devices/endpoint11/decoder11.0/start:0x0
-> + /sys/bus/cxl/devices/endpoint13/decoder13.0/interleave_granularity:256
-> + /sys/bus/cxl/devices/endpoint13/decoder13.0/interleave_ways:1
-> + /sys/bus/cxl/devices/endpoint13/decoder13.0/size:0x2000000000
-> + /sys/bus/cxl/devices/endpoint13/decoder13.0/start:0x0
-> +
-> +Note the endpoint interleaving configurations with a direct mapping (1-way).
-> +
-> +With PRM calls, the kernel can determine the following mappings:
-> +
-> +.. code-block:: none
-> +
-> + cxl decoder5.0: address mapping found for 0000:e2:00.0 (hpa -> spa):
-> +   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
-> + cxl decoder8.0: address mapping found for 0000:e3:00.0 (hpa -> spa):
-> +   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
-> + cxl decoder11.0: address mapping found for 0000:e4:00.0 (hpa -> spa):
-> +   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
-> + cxl decoder13.0: address mapping found for 0000:e1:00.0 (hpa -> spa):
-> +   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
-> +
-> +The corresponding CXL host bridge (HDM) decoders and root decoder (CFMWS) show
-> +and match with the calculated endpoint mappings:
-> +
-> +.. code-block:: none
-> +
-> + /sys/bus/cxl/devices/port1/decoder1.0/interleave_granularity:256
-> + /sys/bus/cxl/devices/port1/decoder1.0/interleave_ways:4
-> + /sys/bus/cxl/devices/port1/decoder1.0/size:0x8000000000
-> + /sys/bus/cxl/devices/port1/decoder1.0/start:0x850000000
-> + /sys/bus/cxl/devices/port1/decoder1.0/target_list:0,1,2,3
-> + /sys/bus/cxl/devices/port1/decoder1.0/target_type:expander
-> + /sys/bus/cxl/devices/root0/decoder0.0/interleave_granularity:256
-> + /sys/bus/cxl/devices/root0/decoder0.0/interleave_ways:1
-> + /sys/bus/cxl/devices/root0/decoder0.0/size:0x8000000000
-> + /sys/bus/cxl/devices/root0/decoder0.0/start:0x850000000
-> + /sys/bus/cxl/devices/root0/decoder0.0/target_list:7
-> +
-> +The following changes of the specification are needed:
-> +
-> +* Allow a CXL device to be in a different HPA space other than the host's space.
-> +
-> +* The platform can use implementation-specific address translation when crossing
-> +  memory domains on the CXL.mem path between the Host and the Device.
-> +
-> +* The kernel (OSPM) determines Endpoint SPA range and interleaving configuration
-> +  using platform-specific address translation methods.
-> +
-> +Benefits of the Change
-> +----------------------
-> +
-> +Without the change, the OSPM may not determine the memory region and Root
-> +Decoder of an Endpoint and its corresponding HDM decoder. Region creation would
-> +fail. Platforms with a different interconnect architecture would fail to setup
-> +and use CXL.
-> +
-> +References
-> +----------
-> +
-> +.. [#cxl-spec-3.2] Compute Express Link Specification, Revision 3.2, Version 1.0,
-> +   https://www.computeexpresslink.org/
-> +
-> +.. [#amd-ppr-58088] AMD Family 1Ah Models 00h–0Fh and Models 10h–1Fh,
-> +   ACPI v6.5 Porting Guide, Publication # 58088,
-> +   https://www.amd.com/en/search/documentation/hub.html
-> +
-> +Detailed Description of the Change
-> +----------------------------------
-> +
-> +Add the following paragraph in 8.2.4.20 CXL HDM Decoder Capability Structure of
-> +the specification [#cxl-spec-3.2]_ to the end:
-> +
-> +"A device may use a different HPA space that is not common to other components
-> +of the host domain. The platform is responsible for address translation when
-> +crossing HPA spaces. The OSPM must determine the interleaving configuration and
-> +perform address translation to HPA ranges of the HDM decoders as needed. The
-> +translation mechanism is host-specific and implementation dependent."
+That sounds reasonable. I was going under the assumption that someone may come
+along who doesn't know much about zones, which probably isn't very likely. So
+if we want to ditch that assumption it's fine by me.
 
