@@ -1,81 +1,81 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640353803F8
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 13:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC24D3921E9
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 13:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768311661; cv=none; b=MStXiSjirNdYIuBrmMpwE327TQcguE4shcYlrVtArNaWba2HqIEIZguAs2hCuc5xPBSTMMzcAcnpvBd7D549CxFzJlFgCCreCjPk4RXWd7wTcZFn/hn68ttjx65/6biIxSeLRx741Ihcm2uGFTxE2DjX3rlzwyxT6Gs+7HcGFGc=
+	t=1768312560; cv=none; b=ILJpWCJt0564U+4nVgQ7a8K8en3F3sWJPvZhT9IMvJMXdOZ9FXNhjulFwePFab6zylYlpny4thbwTjrBsR6xovYQBEEjg9PDYuAVsMACsNfaKqTd8VydL6ifvsJjg88+DQplP2TQsM/N0N+Ql5hMe5djo3O21Dicf+NogWGL7mI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768311661; c=relaxed/simple;
-	bh=jGzGrD/PbeywSnmSsKK8romCiGJbqWqEAzsE4Ch9YtE=;
+	s=arc-20240116; t=1768312560; c=relaxed/simple;
+	bh=xBKJZJaq58dkfEBp5UADogC3I/NHOLgLZ8uI94yH9Qk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=taTYIH0ggMrZZPdN/bWRystsdGmC1u5CfFWzUo0/xwHr4WRpdB6I+wYMcVyRMBi6pFlWPaO4qxP+watvRb2IY8FhZ5j0Txf12AjIA0FbBZkeLMCrGqd4h1jRdPiYRFZ/87yzPs3uey5f25pLaFn2RT7dCoQ2m7866BQFYxgg1Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dQUGLxkk; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ehgJTMUa0vEoXWzxg1kaZkpF5SvZJBNNuN2y0p3AhbxuHvW60Qum50mDR4Jo2R6WoNNnLjLlZJDcjqQYzOJKLR27fFq7aAmZeVaC96CRlUkA1Az+etddRVEoiKbIK4V6hvsYtp4l7LTvvY0DDE+iz0E7S4At+RHH+OF8Tgn2PzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=t0ifdMef; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dQUGLxkk"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-47ed987d51aso6911715e9.2
-        for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 05:40:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="t0ifdMef"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4f1b4bb40aaso40934691cf.3
+        for <linux-cxl@vger.kernel.org>; Tue, 13 Jan 2026 05:55:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768311657; x=1768916457; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1768312544; x=1768917344; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hOqKXa6v4TuBaNjoDA47lyBnXhGd9ZScrVY1o+qPEe8=;
-        b=dQUGLxkk8IduLU5P1LrHk1dvyAtPJwIhwnOQmC37tgcle7KSCi68M2al6w6mmlnsdI
-         VhMRUXAOxgIpHLAfQFZx4bv/5f/JHifCJhCPHUnwoSuzivmJRbfORkPdU4oEvljuCnNg
-         x++2hzESgmE7dnc3xGJdnncPIeqNMM3c5/He0mE9wXyW6nxLUCUwiPUlvHjnP54xOR8d
-         S5t/sR5jEroHFgpnuQh0ZqPEkX63dswyNlLv+1g9iw+woPpduvu7jWc5o3pvcFmGIf3n
-         jOqYRUqHCWC0PAddYuxuSHLYOWyZvq8e9H+F3iNgBSbX8BbacMYa6r/gEYoH8TA+fSbN
-         EHUw==
+        bh=7MgVKM12PPuEhN+GtLeIhws/qU0BjDyGSzafJ6+BtXw=;
+        b=t0ifdMefP9ykjBGPRfjjbhG1+5ijyYk/Mmq1w8U2njTzZjgUC2IJJZA2L30eo754Gb
+         WYyQFk8YZYyAkDY/oOqpHVYrshWzIrlRSZ4eYqr+40TjdG5snOfand6+8VrKguIZ8U8m
+         793vfw25VSRH7jcgWcdWepzonGFdyqPaZohn5+n2eVzrHGKynUyz67LjYnBG5ahsulvS
+         ZNqlfeauugOVrrn600O9Lec4XYWPnUz0Nsu+BN/AZ+ydZJsD3DjI9G3fZTutAO9ES8/+
+         GZhXvdROgb0BOCHPm3K9ZG+EFMYViuSWmOJ2vMttd6L/CSxpbEKgsSpsdafpQdHrGPti
+         9PmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768311657; x=1768916457;
+        d=1e100.net; s=20230601; t=1768312544; x=1768917344;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hOqKXa6v4TuBaNjoDA47lyBnXhGd9ZScrVY1o+qPEe8=;
-        b=mu0il794dpINV9fJkcfsdd/sRW3EKoZtZM9NpfkZ3idCdi+U7PoxaE4EKfDn9OrcNz
-         PmroTjg+XgfkrU/+mxC5ZUriZYIFohM4VxQpF4hNUHnq27XuBpR1yGfaMZrAxec/67pS
-         7uCyTP/hteL38Wn7JCLcluYZvodB/ujcw+J5jLnt41+YE0QNLvCVwbg4IaLV6lF35Pzz
-         05S93uBJl9b8vKpVbk6RT6NTs1EOwd05qFSUf1JLDbnpnqTAjo2iwcKn0ooZD8QAGXag
-         BlC3hrPYxggRf8iSwL44kG/Acf3Eznk8JDhK84H6lCVUFCIulAKwih2a1yC4V6dAfHwO
-         QpZA==
-X-Gm-Message-State: AOJu0YxKSiqQEKvdQNfN/537vebabkvV88FFBv36DxY7b+ja3AB7gMa3
-	fGX/SZpFsr+XH5iBeKvlx/dR8EGoOUagng7/u2OO1jcpjrp9BIDNqSmU4SUKjvbcjyI=
-X-Gm-Gg: AY/fxX7D4HVCbHt0cKFZ8pCK9GliAYE2KTN1kaNB7SOG4eppqChCzibh1oB7jXvm/dw
-	Hr5GlQmnfb4vwvO3x0kN/+5v3iMcIw6bUKSNZ3VQBV+t5uYFgorRMSj4kqCOdwE1QQyU+vHX+w0
-	KSoJ6h2nsiTmZSfTdcBM6Xk/jdnlbjHfe2sDb1NKeocLlzsAFflKU4Tf1XANDjOw70cz0W+hEIv
-	5MxIMO8pL1EsmjfV+mPQP5jA3ZWmsfNHFl2Bux+uTDHdfcxSHxYhqb9KBzfung/3zXldP9LM1bn
-	gN8hUmM/1vU6dEZiMMvryDETlQnrS5g6E0t57GzqK/SIzXt7yhwvrEZ/H9mcBDcBZlfQQz3v1mp
-	FtCk0L6dm1+ADwhGHAH+cWZngBB2gno2hj+RBmV83o1yuAEeeGw+35cMdiIXGLeRByS4ikyC5HH
-	t8CEvKEHLMXHn3xHvsZSp66gOM
-X-Google-Smtp-Source: AGHT+IF8cxzSR2U/aI/gpis3jn6E94G2h+DlhGUvJnL7EqPj7dinresMd7rQXy64ZZLM/dvYDYNI2g==
-X-Received: by 2002:a05:600c:19cc:b0:47d:264e:b35a with SMTP id 5b1f17b1804b1-47d84b19f69mr245181875e9.13.1768311657513;
-        Tue, 13 Jan 2026 05:40:57 -0800 (PST)
-Received: from localhost (109-81-19-111.rct.o2.cz. [109.81.19.111])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0daa78sm45085370f8f.6.2026.01.13.05.40.56
+        bh=7MgVKM12PPuEhN+GtLeIhws/qU0BjDyGSzafJ6+BtXw=;
+        b=py2WxWKB6s1uaNzn0SwFaKoKfefsZwKhunsYF218l/vSXzXbav605rkwRFvht7LZS6
+         sPsQ19F5Y4gX8/lVVyW//tNXjc26U+miO34LaapnnuJ6jan4B9ol1Ltgz0puygEr8zA1
+         G5QdO49wSFRKntQZDoRf3SpdeGwle2OP9bSXzqPBx0DxU1PQ4Zr7JNBavD+syZekqfjb
+         1sXALLltiAa4uSxb9SowegqQ8yXSN7WJ0UvCIpRWUzRg6XU+pn3fYXyZ8jJA5HpEtDRd
+         WZMr8gfYNRI2SxxOoubuau+WiP6mNGkXDVYOYlDSz/zuMUOypgnJrVIQV+r5u4g7i8Ak
+         /T9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUdhNQUnIQw9l1wTPlzYeVkXVYTO3J4NwEVljPHCS3b5EXzwGIDGlhIjoCXXLCemq6vPno8S9Iu8oc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7bh8Nfx5wsg51U5HEDqnusXjNjlCeSQWbPixhhTkvVW/Anjwe
+	AfQHcSq0fNuEhRNx8Ll1YeYwY3X3R5rfjFq7vOipRfGpfOkIERw/W5duUdqDdp5C/ow=
+X-Gm-Gg: AY/fxX7Ae4QryFDBRizNvrZxdf0sHwp35rPF0Pl6lWq3o/WzFeV5ENc0JqlpOeGJIRN
+	I/LHwYkitW/jySGLNkI8bMRcDXFAtq5CGP3bSVFzaJHl7nJY+ugvGxo9QAezwrQed/pCPNeg4F6
+	o1bsAkd6caUxHfHpG+YLTtrXBgw2YyypA76bxXAOEr47DkaknMBSK4mfEjg+uTsrHGWU3oBo2gu
+	fAyc0Tsf36OIOLysRANnzzgBKT7Jk0Dh+WEzmD3iW7YYgpsenDVnzc4zTFPKQnogKdaBGsJXVFv
+	N+km7rkrvh5Oe36oKUPpBPJJ1ZszK+3lybaeTrOhkhuJCf7n3VxFKZzxS69NmghD5yMuZTqSEUD
+	ApIRO5xO7diIL7aqWWmWgloPgIaZv1wxyIXmD+LtLpPBWKzReUBtrm7c/ZbetwLB4WX6Yh3uuLW
+	jHtxRYPFIPSj2C2lnQiCPLEYHS6z16lxCXrvZ+sbJLmpzNhQyPIF9n5wVV2VcMf3gPhXjJuOE7+
+	RTkxElt
+X-Google-Smtp-Source: AGHT+IE3kt3s0DLMOPwLiSdVdgOeQtw2p38PZVQ2YGk1VFWgC3l7L3gBOxrJnRu4rRu8OIwLGEfYwQ==
+X-Received: by 2002:a05:622a:244a:b0:4ee:49b8:fb4b with SMTP id d75a77b69052e-4ffb4a9aad2mr295553631cf.66.1768312543593;
+        Tue, 13 Jan 2026 05:55:43 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-890770cdfb0sm158070046d6.6.2026.01.13.05.55.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 05:40:57 -0800 (PST)
-Date: Tue, 13 Jan 2026 14:40:55 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, akpm@linux-foundation.org,
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
-	hannes@cmpxchg.org, david@kernel.org, zhengqi.arch@bytedance.com,
-	shakeel.butt@linux.dev, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	gourry@gourry.net, ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	bingjiao@google.com, jonathan.cameron@huawei.com,
-	pratyush.brahma@oss.qualcomm.com
-Subject: Re: [PATCH v4 3/3] mm/vmscan: don't demote if there is not enough
- free memory in the lower memory tier
-Message-ID: <aWZLZzo5Hb1aFZ0j@tiehlicka>
-References: <20260113081453.8293-1-akinobu.mita@gmail.com>
- <20260113081453.8293-4-akinobu.mita@gmail.com>
+        Tue, 13 Jan 2026 05:55:42 -0800 (PST)
+Date: Tue, 13 Jan 2026 08:55:07 -0500
+From: Gregory Price <gourry@gourry.net>
+To: dan.j.williams@intel.com
+Cc: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com
+Subject: Re: [PATCH 4/6] cxl: add CONFIG_CXL_REGION_CTRL_AUTO_* build config
+ options
+Message-ID: <aWZOu-6ML_kd7DFX@gourry-fedora-PF4VCD3F>
+References: <20260112163514.2551809-1-gourry@gourry.net>
+ <20260112163514.2551809-5-gourry@gourry.net>
+ <05591180-c299-42e1-b8a0-ddd74c5f2174@amd.com>
+ <aWV-H_YbSrmgAZYd@gourry-fedora-PF4VCD3F>
+ <6965cabc68fda_875d100c0@dwillia2-mobl4.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -84,72 +84,51 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260113081453.8293-4-akinobu.mita@gmail.com>
+In-Reply-To: <6965cabc68fda_875d100c0@dwillia2-mobl4.notmuch>
 
-On Tue 13-01-26 17:14:53, Akinobu Mita wrote:
-> On systems with multiple memory-tiers consisting of DRAM and CXL memory,
-> the OOM killer is not invoked properly.
+On Mon, Jan 12, 2026 at 08:31:56PM -0800, dan.j.williams@intel.com wrote:
+> Gregory Price wrote:
+> [..]
+> > > If you remove the 'auto' mode earlier on, then you can just drop the first sentence here.
+> > > I'd also add a note about when a DAX region can be failed to be created (i.e. BIOS already
+> > > set up and onlined the memory).
+> > > 
+> > 
+> > I think I'm just going to drop this entirely, probably this was just too
+> > ambitious trying to create an easy transition from dax to sysram for
+> > auto regions.
+> > 
+> > The reality is BIOS-configured decoders "is NOT the way" (TM). If BIOS
+> > configures it - it's DAX, otherwise the user gets a choice (or they can
+> > tear it down and rebuild).
 > 
-> Here's the command to reproduce:
-> 
-> $ sudo swapoff -a
-> $ stress-ng --oomable -v --memrate 20 --memrate-bytes 10G \
->     --memrate-rd-mbs 1 --memrate-wr-mbs 1
-> 
-> The memory usage is the number of workers specified with the --memrate
-> option multiplied by the buffer size specified with the --memrate-bytes
-> option, so please adjust it so that it exceeds the total size of the
-> installed DRAM and CXL memory.
-> 
-> If swap is disabled, you can usually expect the OOM killer to terminate
-> the stress-ng process when memory usage approaches the installed memory
-> size.
-> 
-> However, if multiple memory-tiers exist (multiple
-> /sys/devices/virtual/memory_tiering/memory_tier<N> directories exist) and
-> /sys/kernel/mm/numa/demotion_enabled is true, the OOM killer will not be
-> invoked and the system will become inoperable, regardless of whether MGLRU
-> is enabled or not.
-> 
-> This issue can be reproduced using NUMA emulation even on systems with
-> only DRAM.  You can create two-fake memory-tiers by booting a single-node
-> system with "numa=fake=2 numa_emulation.adistance=576,704" kernel
-> parameters.
-> 
-> The reason for this issue is that memory allocations do not directly
-> trigger the oom-killer, assuming that if the target node has an underlying
-> memory tier, it can always be reclaimed by demotion.
+> Is the plan here to "whither struct memory_block"? I can see value in
+> starting the deprecation process given the problems Hannes points out
+> and BIOS alignment causes massive numbers of those things to show up.
+>
+> If yes, then even if it is DAX the distro might still want the option to
+> only allows for region-scoped "hotplug" rather than memory_block-scoped
+> "online".
 
-Why don't we fall back to no demotion mode in this case? I mean we have 
-shrink_folio_list:
-        if (!list_empty(&demote_folios)) {
-                /* Folios which weren't demoted go back on @folio_list */
-                list_splice_init(&demote_folios, folio_list);
+This was not an intent, but maybe?  I'm not sure what the larger
+implications of this are - except that maybe poisoned regions of memory
+might take out larger chunks of hotplug memory.
 
-                /*
-                 * goto retry to reclaim the undemoted folios in folio_list if
-                 * desired.
-                 *
-                 * Reclaiming directly from top tier nodes is not often desired
-                 * due to it breaking the LRU ordering: in general memory
-                 * should be reclaimed from lower tier nodes and demoted from
-                 * top tier nodes.
-                 *
-                 * However, disabling reclaim from top tier nodes entirely
-                 * would cause ooms in edge scenarios where lower tier memory
-                 * is unreclaimable for whatever reason, eg memory being
-                 * mlocked or too hot to reclaim. We can disable reclaim
-                 * from top tier nodes in proactive reclaim though as that is
-                 * not real memory pressure.
-                 */
-                if (!sc->proactive) {
-                        do_demote_pass = false;
-                        goto retry;
-                }
-        }
+Other things may depend on memory block size in unexpected ways.
 
-to handle this situation no?
+I think maybe lets tuck that away until after we get region-scoped
+hotplug.  Maybe it would look like this
 
--- 
-Michal Hocko
-SUSE Labs
+
+Step 1: Region-scoped hotplug that uses all the blocks
+
+Step 2: memory hotplug callbacks that disallow any hotplugger (except
+	emergency hotplug?) from acting on individual blocks
+
+	We already want this for online_movable, just defer a bit and
+	make the guarantee stronger.
+
+Step 3: deprecate memory_block for something else?
+	make memory_block variably sized with some base alignment?
+
+~Gregory
