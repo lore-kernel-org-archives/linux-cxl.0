@@ -1,586 +1,414 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9153A1D1E;
-	Wed, 14 Jan 2026 21:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE133A35AB
+	for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 21:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768427200; cv=none; b=qfUY/E6bv3FdboNzGZi9BNnIkujOLNgJp6kK3PepAuoSGHpcpOFA1yNTlM1Za86ojk5AeG+tY9L23bBT9xDhxn3BSupxvUhf/WjQMTal2IEQ/7D+yOO1rsTChfsVpg6kPcu5HqMLls9xteOOL194hh8XHCxiQ1+XnNnS90Q7OcM=
+	t=1768427221; cv=none; b=StvuvGOYdF4QrniKSN/hgIeqFei+ycGcHmNEt9uLs4MoAqR/GXZGJPpDHn4b4ueB/0otXtcWf3zpS7Gn2o1kThcyl4x4k6aVxrJR042CjEG5z9mWV2lVf5lf6HGUKM8x+DjdJ3ECL3CVdgLPVdZIEg5CmovCFlpeOjA8VKCtSVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768427200; c=relaxed/simple;
-	bh=EbBdf286FEodTpbXYGYzgJ4EEypXrEmNLqgby+LXs+A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MrzdrR6B1CJM7607QkJWNcnp+71BUA3eM7gyni0TPWoWPeG2UUaqtGkamuDvzgPkYP7QkhSTDvym+YDxYo7rQDmquSbYHh305l/Yb2zKT7Nk+tmTXk4lrmRXZHfmNZ6iQf3pjjTK2w/2nBHXvw5Qej9UDSG84sqdUGyuSSA8VcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bWj9YpVI; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1768427221; c=relaxed/simple;
+	bh=UH7UVmm/ifZMz2a7ctzEVAj9QL1YqJfv9TEsJAmqvl0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=S2GZm4mnKcuGHGjz71DRLKtV8YYnXuMjxtW6KX2FXgxMduVvtQuA8GrMjTAliKzooPCV3aNOyRrfO8oKKCsjbLb1645ybccpAss+UEjwpLKY9Egj7FUaNHvYMdt/ll6MirIAL4p+lxD4BDFY6rUhhNrBtRmMzMEAIq3bSD/8MSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U1x22Y2N; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bWj9YpVI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768427172; x=1799963172;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=EbBdf286FEodTpbXYGYzgJ4EEypXrEmNLqgby+LXs+A=;
-  b=bWj9YpVIXX9Pq2244re+Ir0esrPQr8hShQdnzzx5vcPXnGZ5ZFMwhsUN
-   kD3j5lwSBqMOsw7e175B19UZXe9T7CVBG2iug/dZIxBRvrBIRTpDJ3ffB
-   LHQwI5t6wKpYZ5K3afwDRSXJkfIcy46VK41MoJQM4Ho0tGVPxW1XAv+qA
-   pi5GUxatrGB2E3bE/I4BrWSVsEOkVUCU+LJOelh2f99e7G2EJVo8hy2el
-   vHHwwAkUo+aBZfkwCfgTUrDPDtMpUT5BXvKh+KTNuLyJdn1Lokrm35C2M
-   btLQwxBSPwmoaHLo07qQo6xSuPYxFPjWU2XuLMN50J/hS0fNb8GNqIo/X
-   A==;
-X-CSE-ConnectionGUID: Vn5QF39STAq3SwiA+3HSYA==
-X-CSE-MsgGUID: uQT2X07BR9WhR0jo7R1hIw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="69901671"
-X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
-   d="scan'208";a="69901671"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 13:46:03 -0800
-X-CSE-ConnectionGUID: uZKeXffNSuqSeut1+ibQ/Q==
-X-CSE-MsgGUID: mJs+osODTCq4wbqF7Z3tKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
-   d="scan'208";a="209251337"
-Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.111.5]) ([10.125.111.5])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 13:46:00 -0800
-Message-ID: <0490d2d1-9583-44d6-9a4b-115bdf36f98b@intel.com>
-Date: Wed, 14 Jan 2026 14:45:59 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U1x22Y2N"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7cfcbe7d176so194135a34.3
+        for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 13:46:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768427188; x=1769031988; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ezmCIUYTCpc47N9MRFviC1UdzpKfkRUPsUPtXb573Uk=;
+        b=U1x22Y2NCadasD+0/b0bPw8Jn26D+SpJIsuZ4rfvGJuun0FUtpy0yEVTNC3SEZP49O
+         kQVrOW6VEUFevmJ8Tfwfloc26DmUxyJoZ481dP5SY8Vnr0yaGCBUcA9VTM7MT7dob2CR
+         oiiiZipKAFt6EypCdSmvuGhN7YU6+rNC/Omt2OxUb6Bpqs/brbeXxwniyW2pSoKXlr1j
+         5Nmyyb9fjC0sh1XqduP4U+K+mNhMYvlCQ/YkkA6Ud9AjV5bJHdFrgw5fg/85+1DcnwsH
+         sECOWV2MlG2C9LRm5loBKJOi81lh/7zVpq8T+4On6fvrdPc3x9pbcjsq464wKeTHGJhD
+         hpWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768427188; x=1769031988;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ezmCIUYTCpc47N9MRFviC1UdzpKfkRUPsUPtXb573Uk=;
+        b=Ya7eSD0Hhp2IaHy7wobc4SiJUN3PLawFt0k9kD2lzYsqSluACBR+GNmAOp0+lmzIfa
+         meV0HbKccD1j5qPhwhr25tmgAOirNQDw7lvIC9Ya0V1bG74eHZkQ53yAs2JAewJEAGHj
+         NfA+u322f1mjL+/bm3kl96LmziMEq0raY02exgk2W7dC3onOBPmq+oAkbYrZEU601zOF
+         VYAhYrtTxtCrQSEwu6fYmI8UEJOg4/trSbUIOxQC1aCVtzO5+vYPXDDLaEqx4aZIt6FY
+         83jefTDv1pxw4Eydqk4sgczvKkxyl0hjDLIr1hswpPUIw6GaUtNroXzA5Jk3CHM8/qBt
+         40WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXZs7R9tG7eCGxP8eSoRN4+J/u9xsABaHwLL0p1jaZIBBbiBzbIO736U4rXzgOW1PD4JqWdL1EDjgg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxh9LEPnb2IDfm9QHRR9+CS6iUjvGlvAxhD188qRmTDBkCeXV2p
+	nTOqp8SR42nrblawX3ASSRp2Tlc4DrWxl+FBfgu5LULbycO68aG2ay3T
+X-Gm-Gg: AY/fxX5cuDQfreNenbU7nGY+FAAvHQ+sY6f4cTG9bZOSuqiULOrks6/ee7IEEy5AJo4
+	ezniP+fu86J8FOkD9pznn3LZ071bt/qyX1A2hkhldDw4BG/xw79s5ADyLBrB/rDaYoWsj+bfuv4
+	AMP8nVkDUhgbQ4/lD4l2jwVo6JdYGneZTZMdIGFNjO/SnhFY85XB3khi4GdzgUjAnh0Ox8hkZHI
+	Z+Drd3eLTtn5pRZg9DMaUEu+8cpZxF/eBQTtBy8cHwbQ/wkkPYeutGIL+zxnkkAFhWd9b67Xd9z
+	xa2LaQqQoM/slvMXpOW30OvvvdX/NyV3yTqEjB8oT8mvwUJbRH4sp9USJrpdeFSVzymCGnEa/NK
+	zPCG754oDPw0BFxNnJD1lcZkQJhNuZSs7ZlD4SJ/REEnH+VekMAaWA8Hb+SIq5mE6FVV+YPpnFs
+	UCgVmzB5Tdz6QrRPXPKq3BIqrvwfEVyHWqnvwGf0MlNz7/
+X-Received: by 2002:a05:6830:2541:b0:7cf:cc11:f7cc with SMTP id 46e09a7af769-7cfcc11f982mr2409830a34.36.1768427188084;
+        Wed, 14 Jan 2026 13:46:28 -0800 (PST)
+Received: from localhost.localdomain ([2603:8080:1500:3d89:4c85:2962:e438:72c4])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7cfc3692f3asm3936197a34.10.2026.01.14.13.46.25
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 14 Jan 2026 13:46:27 -0800 (PST)
+Sender: John Groves <grovesaustin@gmail.com>
+From: John Groves <John@Groves.net>
+X-Google-Original-From: John Groves <john@groves.net>
+To: John Groves <John@Groves.net>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Bernd Schubert <bschubert@ddn.com>,
+	Alison Schofield <alison.schofield@intel.com>
+Cc: John Groves <jgroves@micron.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	David Hildenbrand <david@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Stefan Hajnoczi <shajnocz@redhat.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	James Morse <james.morse@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Shivank Garg <shivankg@amd.com>,
+	Ackerley Tng <ackerleytng@google.com>,
+	Gregory Price <gourry@gourry.net>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>,
+	venkataravis@micron.com,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH V2 2/2] Add test/daxctl-famfs.sh to test famfs mode transitions:
+Date: Wed, 14 Jan 2026 15:45:19 -0600
+Message-ID: <20260114214519.29999-3-john@groves.net>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260114214519.29999-1-john@groves.net>
+References: <20260114153133.29420.compound@groves.net>
+ <20260114214519.29999-1-john@groves.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 20/34] cxl/port: Move dport operations to a driver
- event
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
- ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
- rrichter@amd.com, dan.carpenter@linaro.org,
- PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
- Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- linux-cxl@vger.kernel.org, vishal.l.verma@intel.com, alucerop@amd.com,
- ira.weiny@intel.com
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20260114182055.46029-1-terry.bowman@amd.com>
- <20260114182055.46029-21-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260114182055.46029-21-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: John Groves <John@Groves.net>
 
+- devdax <-> famfs mode switches
+- Verify famfs -> system-ram is rejected (must go via devdax)
+- Test JSON output shows correct mode
+- Test error handling for invalid modes
 
-On 1/14/26 11:20 AM, Terry Bowman wrote:
-> From: Dan Williams <dan.j.williams@intel.com>
-> 
-> In preparation for adding more register setup to the cxl_port_add_dport()
-> path (for RAS register mapping), move the dport creation event to a driver
-> callback. This achieves 2 things it puts driver operations logically where
-> they belong, in a driver, and it obviates the gymnastics of
-> DECLARE_TESTABLE() which just makes a mess of grepping for CXL symbols.
-> 
-> In other words, a driver callback is less of an ongoing maintenance burden
-> than this DECLARE_TESTABLE arrangement that does not scale and diminishes
-> the grep-ability of the codebase.
-> 
-> cxl_port_add_dport() moves mostly unmodified from drivers/cxl/core/port.c.
-> The only deliberate change is that it now assumes that the device_lock is
-> held on entry and the driver is attached (just like cxl_port_probe()).
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Terry Bowman <terry.bowman@amd.com>
+The test is added to the destructive test suite since it
+modifies device modes.
 
-Missing sign off
+Signed-off-by: John Groves <john@groves.net>
+---
+ test/daxctl-famfs.sh | 253 +++++++++++++++++++++++++++++++++++++++++++
+ test/meson.build     |   2 +
+ 2 files changed, 255 insertions(+)
+ create mode 100755 test/daxctl-famfs.sh
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> 
-> ---
-> 
-> Changes in v13 -> v14:
-> - New patch
-> ---
->  drivers/cxl/core/hdm.c               |  6 +--
->  drivers/cxl/core/pci.c               |  8 +--
->  drivers/cxl/core/port.c              | 79 ++++++----------------------
->  drivers/cxl/cxl.h                    | 23 ++------
->  drivers/cxl/port.c                   | 71 +++++++++++++++++++++++++
->  tools/testing/cxl/Kbuild             |  2 +
->  tools/testing/cxl/cxl_core_exports.c | 21 --------
->  tools/testing/cxl/exports.h          | 13 -----
->  tools/testing/cxl/test/mock.c        | 23 +++-----
->  9 files changed, 107 insertions(+), 139 deletions(-)
->  delete mode 100644 tools/testing/cxl/exports.h
-> 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 1c5d2022c87a..365b02b7a241 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -1219,12 +1219,12 @@ static int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
->  }
->  
->  /**
-> - * __devm_cxl_switch_port_decoders_setup - allocate and setup switch decoders
-> + * devm_cxl_switch_port_decoders_setup - allocate and setup switch decoders
->   * @port: CXL port context
->   *
->   * Return 0 or -errno on error
->   */
-> -int __devm_cxl_switch_port_decoders_setup(struct cxl_port *port)
-> +int devm_cxl_switch_port_decoders_setup(struct cxl_port *port)
->  {
->  	struct cxl_hdm *cxlhdm;
->  
-> @@ -1248,7 +1248,7 @@ int __devm_cxl_switch_port_decoders_setup(struct cxl_port *port)
->  	dev_err(&port->dev, "HDM decoder capability not found\n");
->  	return -ENXIO;
->  }
-> -EXPORT_SYMBOL_NS_GPL(__devm_cxl_switch_port_decoders_setup, "CXL");
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_switch_port_decoders_setup, "CXL");
->  
->  /**
->   * devm_cxl_endpoint_decoders_setup - allocate and setup endpoint decoders
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 512a3e29a095..8633bfdef38d 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -41,14 +41,14 @@ static int pci_get_port_num(struct pci_dev *pdev)
->  }
->  
->  /**
-> - * __cxl_add_dport_by_dev - allocate a dport by dport device
-> + * cxl_add_dport_by_dev - allocate a dport by dport device
->   * @port: cxl_port that hosts the dport
->   * @dport_dev: 'struct device' of the dport
->   *
->   * Returns the allocated dport on success or ERR_PTR() of -errno on error
->   */
-> -struct cxl_dport *__cxl_add_dport_by_dev(struct cxl_port *port,
-> -					 struct device *dport_dev)
-> +struct cxl_dport *cxl_add_dport_by_dev(struct cxl_port *port,
-> +				       struct device *dport_dev)
->  {
->  	struct cxl_register_map map;
->  	struct pci_dev *pdev;
-> @@ -69,7 +69,7 @@ struct cxl_dport *__cxl_add_dport_by_dev(struct cxl_port *port,
->  	device_lock_assert(&port->dev);
->  	return cxl_add_dport(port, dport_dev, port_num, map.resource);
->  }
-> -EXPORT_SYMBOL_NS_GPL(__cxl_add_dport_by_dev, "CXL");
-> +EXPORT_SYMBOL_NS_GPL(cxl_add_dport_by_dev, "CXL");
->  
->  struct cxl_walk_context {
->  	struct pci_bus *bus;
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index a05a1812bb6e..2184c20af011 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1603,78 +1603,31 @@ static int update_decoder_targets(struct device *dev, void *data)
->  	return 0;
->  }
->  
-> -static struct cxl_port *cxl_port_devres_group(struct cxl_port *port)
-> +void cxl_port_update_decoder_targets(struct cxl_port *port,
-> +				     struct cxl_dport *dport)
->  {
-> -	if (!devres_open_group(&port->dev, port, GFP_KERNEL))
-> -		return ERR_PTR(-ENOMEM);
-> -	return port;
-> +	device_for_each_child(&port->dev, dport, update_decoder_targets);
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_port_update_decoder_targets, "CXL");
-> +
->  DEFINE_FREE(cxl_port_group_free, struct cxl_port *,
->  	if (!IS_ERR_OR_NULL(_T)) devres_release_group(&(_T)->dev, _T))
->  
-> -static void cxl_port_group_close(struct cxl_port *port)
-> -{
-> -	devres_remove_group(&port->dev, port);
-> -}
-> -
-> -static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
-> -					    struct device *dport_dev)
-> +static struct cxl_dport *probe_dport(struct cxl_port *port,
-> +				     struct device *dport_dev)
->  {
-> -	struct cxl_dport *new_dport;
-> -	struct cxl_dport *dport;
-> -	int rc;
-> +	struct cxl_driver *drv;
->  
->  	device_lock_assert(&port->dev);
->  	if (!port->dev.driver)
->  		return ERR_PTR(-ENXIO);
->  
-> -	dport = cxl_find_dport_by_dev(port, dport_dev);
-> -	if (dport) {
-> -		dev_dbg(&port->dev, "dport%d:%s already exists\n",
-> -			dport->port_id, dev_name(dport_dev));
-> -		return ERR_PTR(-EBUSY);
-> -	}
-> -
-> -	/*
-> -	 * With the first dport arrival it is now safe to start looking at
-> -	 * component registers. Be careful to not strand resources if dport
-> -	 * creation ultimately fails.
-> -	 */
-> -	struct cxl_port *port_group __free(cxl_port_group_free) =
-> -		cxl_port_devres_group(port);
-> -	if (IS_ERR(port_group))
-> -		return ERR_CAST(port_group);
-> -
-> -	if (port->nr_dports == 0) {
-> -		rc = devm_cxl_switch_port_decoders_setup(port);
-> -		if (rc)
-> -			return ERR_PTR(rc);
-> -		/*
-> -		 * Note, when nr_dports returns to zero the port is unregistered
-> -		 * and triggers cleanup. I.e. no need for open-coded release
-> -		 * action on dport removal. See cxl_detach_ep() for that logic.
-> -		 */
-> -	}
-> -
-> -	new_dport = cxl_add_dport_by_dev(port, dport_dev);
-> -	if (IS_ERR(new_dport))
-> -		return new_dport;
-> -
-> -	rc = cxl_dport_autoremove(new_dport);
-> -	if (rc)
-> -		return ERR_PTR(rc);
-> -
-> -	cxl_switch_parse_cdat(new_dport);
-> -
-> -	cxl_port_group_close(no_free_ptr(port_group));
-> -
-> -	dev_dbg(&port->dev, "dport[%d] id:%d dport_dev: %s added\n",
-> -		port->nr_dports - 1, new_dport->port_id, dev_name(dport_dev));
-> -
-> -	/* New dport added, update the decoder targets */
-> -	device_for_each_child(&port->dev, new_dport, update_decoder_targets);
-> +	drv = container_of(port->dev.driver, struct cxl_driver, drv);
-> +	if (!drv->add_dport)
-> +		return ERR_PTR(-ENXIO);
->  
-> -	return new_dport;
-> +	/* see cxl_port_add_dport() */
-> +	return drv->add_dport(port, dport_dev);
->  }
->  
->  static struct cxl_dport *devm_cxl_create_port(struct device *ep_dev,
-> @@ -1721,7 +1674,7 @@ static struct cxl_dport *devm_cxl_create_port(struct device *ep_dev,
->  	}
->  
->  	guard(device)(&port->dev);
-> -	return cxl_port_add_dport(port, dport_dev);
-> +	return probe_dport(port, dport_dev);
->  }
->  
->  static int add_port_attach_ep(struct cxl_memdev *cxlmd,
-> @@ -1753,7 +1706,7 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
->  	scoped_guard(device, &parent_port->dev) {
->  		parent_dport = cxl_find_dport_by_dev(parent_port, dparent);
->  		if (!parent_dport) {
-> -			parent_dport = cxl_port_add_dport(parent_port, dparent);
-> +			parent_dport = probe_dport(parent_port, dparent);
->  			if (IS_ERR(parent_dport))
->  				return PTR_ERR(parent_dport);
->  		}
-> @@ -1789,7 +1742,7 @@ static struct cxl_dport *find_or_add_dport(struct cxl_port *port,
->  	device_lock_assert(&port->dev);
->  	dport = cxl_find_dport_by_dev(port, dport_dev);
->  	if (!dport) {
-> -		dport = cxl_port_add_dport(port, dport_dev);
-> +		dport = probe_dport(port, dport_dev);
->  		if (IS_ERR(dport))
->  			return dport;
->  
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 47ee06c95433..46491046f101 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -841,8 +841,9 @@ struct cxl_endpoint_dvsec_info {
->  };
->  
->  int devm_cxl_switch_port_decoders_setup(struct cxl_port *port);
-> -int __devm_cxl_switch_port_decoders_setup(struct cxl_port *port);
->  int devm_cxl_endpoint_decoders_setup(struct cxl_port *port);
-> +void cxl_port_update_decoder_targets(struct cxl_port *port,
-> +				     struct cxl_dport *dport);
->  
->  struct cxl_dev_state;
->  int cxl_dvsec_rr_decode(struct cxl_dev_state *cxlds,
-> @@ -856,6 +857,8 @@ struct cxl_driver {
->  	const char *name;
->  	int (*probe)(struct device *dev);
->  	void (*remove)(struct device *dev);
-> +	struct cxl_dport *(*add_dport)(struct cxl_port *port,
-> +				       struct device *dport_dev);
->  	struct device_driver drv;
->  	int id;
->  };
-> @@ -940,8 +943,6 @@ void cxl_coordinates_combine(struct access_coordinate *out,
->  bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
->  struct cxl_dport *cxl_add_dport_by_dev(struct cxl_port *port,
->  				       struct device *dport_dev);
-> -struct cxl_dport *__cxl_add_dport_by_dev(struct cxl_port *port,
-> -					 struct device *dport_dev);
->  
->  /*
->   * Unit test builds overrides this to __weak, find the 'strong' version
-> @@ -953,20 +954,4 @@ struct cxl_dport *__cxl_add_dport_by_dev(struct cxl_port *port,
->  
->  u16 cxl_gpf_get_dvsec(struct device *dev);
->  
-> -/*
-> - * Declaration for functions that are mocked by cxl_test that are called by
-> - * cxl_core. The respective functions are defined as __foo() and called by
-> - * cxl_core as foo(). The macros below ensures that those functions would
-> - * exist as foo(). See tools/testing/cxl/cxl_core_exports.c and
-> - * tools/testing/cxl/exports.h for setting up the mock functions. The dance
-> - * is done to avoid a circular dependency where cxl_core calls a function that
-> - * ends up being a mock function and goes to * cxl_test where it calls a
-> - * cxl_core function.
-> - */
-> -#ifndef CXL_TEST_ENABLE
-> -#define DECLARE_TESTABLE(x) __##x
-> -#define cxl_add_dport_by_dev DECLARE_TESTABLE(cxl_add_dport_by_dev)
-> -#define devm_cxl_switch_port_decoders_setup DECLARE_TESTABLE(devm_cxl_switch_port_decoders_setup)
-> -#endif
-> -
->  #endif /* __CXL_H__ */
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index 167cc0a87484..2770bc8520d3 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -155,9 +155,80 @@ static const struct attribute_group *cxl_port_attribute_groups[] = {
->  	NULL,
->  };
->  
-> +static struct cxl_port *cxl_port_devres_group(struct cxl_port *port)
-> +{
-> +	if (!devres_open_group(&port->dev, port, GFP_KERNEL))
-> +		return ERR_PTR(-ENOMEM);
-> +	return port;
-> +}
-> +DEFINE_FREE(cxl_port_group_free, struct cxl_port *,
-> +	    if (!IS_ERR_OR_NULL(_T)) devres_release_group(&(_T)->dev, _T))
-> +
-> +static void cxl_port_group_close(struct cxl_port *port)
-> +{
-> +	devres_remove_group(&port->dev, port);
-> +}
-> +
-> +static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
-> +					    struct device *dport_dev)
-> +{
-> +	struct cxl_dport *new_dport;
-> +	struct cxl_dport *dport;
-> +	int rc;
-> +
-> +	dport = cxl_find_dport_by_dev(port, dport_dev);
-> +	if (dport) {
-> +		dev_dbg(&port->dev, "dport%d:%s already exists\n",
-> +			dport->port_id, dev_name(dport_dev));
-> +		return ERR_PTR(-EBUSY);
-> +	}
-> +
-> +	/*
-> +	 * With the first dport arrival it is now safe to start looking at
-> +	 * component registers. Be careful to not strand resources if dport
-> +	 * creation ultimately fails.
-> +	 */
-> +	struct cxl_port *port_group __free(cxl_port_group_free) =
-> +		cxl_port_devres_group(port);
-> +	if (IS_ERR(port_group))
-> +		return ERR_CAST(port_group);
-> +
-> +	if (port->nr_dports == 0) {
-> +		rc = devm_cxl_switch_port_decoders_setup(port);
-> +		if (rc)
-> +			return ERR_PTR(rc);
-> +		/*
-> +		 * Note, when nr_dports returns to zero the port is unregistered
-> +		 * and triggers cleanup. I.e. no need for open-coded release
-> +		 * action on dport removal. See cxl_detach_ep() for that logic.
-> +		 */
-> +	}
-> +
-> +	new_dport = cxl_add_dport_by_dev(port, dport_dev);
-> +	if (IS_ERR(new_dport))
-> +		return new_dport;
-> +
-> +	rc = cxl_dport_autoremove(new_dport);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	cxl_switch_parse_cdat(new_dport);
-> +
-> +	cxl_port_group_close(no_free_ptr(port_group));
-> +
-> +	dev_dbg(&port->dev, "dport[%d] id:%d dport_dev: %s added\n",
-> +		port->nr_dports - 1, new_dport->port_id, dev_name(dport_dev));
-> +
-> +	/* New dport added, update the decoder targets */
-> +	cxl_port_update_decoder_targets(port, new_dport);
-> +
-> +	return new_dport;
-> +}
-> +
->  static struct cxl_driver cxl_port_driver = {
->  	.name = "cxl_port",
->  	.probe = cxl_port_probe,
-> +	.add_dport = cxl_port_add_dport,
->  	.id = CXL_DEVICE_PORT,
->  	.drv = {
->  		.dev_groups = cxl_port_attribute_groups,
-> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-> index 4d740392aac5..25516728535e 100644
-> --- a/tools/testing/cxl/Kbuild
-> +++ b/tools/testing/cxl/Kbuild
-> @@ -11,6 +11,8 @@ ldflags-y += --wrap=cxl_endpoint_parse_cdat
->  ldflags-y += --wrap=cxl_dport_init_ras_reporting
->  ldflags-y += --wrap=devm_cxl_endpoint_decoders_setup
->  ldflags-y += --wrap=hmat_get_extended_linear_cache_size
-> +ldflags-y += --wrap=cxl_add_dport_by_dev
-> +ldflags-y += --wrap=devm_cxl_switch_port_decoders_setup
->  
->  DRIVERS := ../../../drivers
->  CXL_SRC := $(DRIVERS)/cxl
-> diff --git a/tools/testing/cxl/cxl_core_exports.c b/tools/testing/cxl/cxl_core_exports.c
-> index 02d479867a12..f088792a8925 100644
-> --- a/tools/testing/cxl/cxl_core_exports.c
-> +++ b/tools/testing/cxl/cxl_core_exports.c
-> @@ -2,27 +2,6 @@
->  /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
->  
->  #include "cxl.h"
-> -#include "exports.h"
->  
->  /* Exporting of cxl_core symbols that are only used by cxl_test */
->  EXPORT_SYMBOL_NS_GPL(cxl_num_decoders_committed, "CXL");
-> -
-> -cxl_add_dport_by_dev_fn _cxl_add_dport_by_dev = __cxl_add_dport_by_dev;
-> -EXPORT_SYMBOL_NS_GPL(_cxl_add_dport_by_dev, "CXL");
-> -
-> -struct cxl_dport *cxl_add_dport_by_dev(struct cxl_port *port,
-> -				       struct device *dport_dev)
-> -{
-> -	return _cxl_add_dport_by_dev(port, dport_dev);
-> -}
-> -EXPORT_SYMBOL_NS_GPL(cxl_add_dport_by_dev, "CXL");
-> -
-> -cxl_switch_decoders_setup_fn _devm_cxl_switch_port_decoders_setup =
-> -	__devm_cxl_switch_port_decoders_setup;
-> -EXPORT_SYMBOL_NS_GPL(_devm_cxl_switch_port_decoders_setup, "CXL");
-> -
-> -int devm_cxl_switch_port_decoders_setup(struct cxl_port *port)
-> -{
-> -	return _devm_cxl_switch_port_decoders_setup(port);
-> -}
-> -EXPORT_SYMBOL_NS_GPL(devm_cxl_switch_port_decoders_setup, "CXL");
-> diff --git a/tools/testing/cxl/exports.h b/tools/testing/cxl/exports.h
-> deleted file mode 100644
-> index cbb16073be18..000000000000
-> --- a/tools/testing/cxl/exports.h
-> +++ /dev/null
-> @@ -1,13 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> -/* Copyright(c) 2025 Intel Corporation */
-> -#ifndef __MOCK_CXL_EXPORTS_H_
-> -#define __MOCK_CXL_EXPORTS_H_
-> -
-> -typedef struct cxl_dport *(*cxl_add_dport_by_dev_fn)(struct cxl_port *port,
-> -						     struct device *dport_dev);
-> -extern cxl_add_dport_by_dev_fn _cxl_add_dport_by_dev;
-> -
-> -typedef int(*cxl_switch_decoders_setup_fn)(struct cxl_port *port);
-> -extern cxl_switch_decoders_setup_fn _devm_cxl_switch_port_decoders_setup;
-> -
-> -#endif
-> diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
-> index 660e8402189c..10140a4c5fac 100644
-> --- a/tools/testing/cxl/test/mock.c
-> +++ b/tools/testing/cxl/test/mock.c
-> @@ -10,20 +10,12 @@
->  #include <cxlmem.h>
->  #include <cxlpci.h>
->  #include "mock.h"
-> -#include "../exports.h"
->  
->  static LIST_HEAD(mock);
->  
-> -static struct cxl_dport *
-> -redirect_cxl_add_dport_by_dev(struct cxl_port *port, struct device *dport_dev);
-> -static int redirect_devm_cxl_switch_port_decoders_setup(struct cxl_port *port);
-> -
->  void register_cxl_mock_ops(struct cxl_mock_ops *ops)
->  {
->  	list_add_rcu(&ops->list, &mock);
-> -	_cxl_add_dport_by_dev = redirect_cxl_add_dport_by_dev;
-> -	_devm_cxl_switch_port_decoders_setup =
-> -		redirect_devm_cxl_switch_port_decoders_setup;
->  }
->  EXPORT_SYMBOL_GPL(register_cxl_mock_ops);
->  
-> @@ -31,9 +23,6 @@ DEFINE_STATIC_SRCU(cxl_mock_srcu);
->  
->  void unregister_cxl_mock_ops(struct cxl_mock_ops *ops)
->  {
-> -	_devm_cxl_switch_port_decoders_setup =
-> -		__devm_cxl_switch_port_decoders_setup;
-> -	_cxl_add_dport_by_dev = __cxl_add_dport_by_dev;
->  	list_del_rcu(&ops->list);
->  	synchronize_srcu(&cxl_mock_srcu);
->  }
-> @@ -162,7 +151,7 @@ __wrap_nvdimm_bus_register(struct device *dev,
->  }
->  EXPORT_SYMBOL_GPL(__wrap_nvdimm_bus_register);
->  
-> -int redirect_devm_cxl_switch_port_decoders_setup(struct cxl_port *port)
-> +int __wrap_devm_cxl_switch_port_decoders_setup(struct cxl_port *port)
->  {
->  	int rc, index;
->  	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
-> @@ -170,11 +159,12 @@ int redirect_devm_cxl_switch_port_decoders_setup(struct cxl_port *port)
->  	if (ops && ops->is_mock_port(port->uport_dev))
->  		rc = ops->devm_cxl_switch_port_decoders_setup(port);
->  	else
-> -		rc = __devm_cxl_switch_port_decoders_setup(port);
-> +		rc = devm_cxl_switch_port_decoders_setup(port);
->  	put_cxl_mock_ops(index);
->  
->  	return rc;
->  }
-> +EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_switch_port_decoders_setup, "CXL");
->  
->  int __wrap_devm_cxl_endpoint_decoders_setup(struct cxl_port *port)
->  {
-> @@ -256,8 +246,8 @@ void __wrap_cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device
->  }
->  EXPORT_SYMBOL_NS_GPL(__wrap_cxl_dport_init_ras_reporting, "CXL");
->  
-> -struct cxl_dport *redirect_cxl_add_dport_by_dev(struct cxl_port *port,
-> -						struct device *dport_dev)
-> +struct cxl_dport *__wrap_cxl_add_dport_by_dev(struct cxl_port *port,
-> +					      struct device *dport_dev)
->  {
->  	int index;
->  	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
-> @@ -266,11 +256,12 @@ struct cxl_dport *redirect_cxl_add_dport_by_dev(struct cxl_port *port,
->  	if (ops && ops->is_mock_port(port->uport_dev))
->  		dport = ops->cxl_add_dport_by_dev(port, dport_dev);
->  	else
-> -		dport = __cxl_add_dport_by_dev(port, dport_dev);
-> +		dport = cxl_add_dport_by_dev(port, dport_dev);
->  	put_cxl_mock_ops(index);
->  
->  	return dport;
->  }
-> +EXPORT_SYMBOL_NS_GPL(__wrap_cxl_add_dport_by_dev, "CXL");
->  
->  MODULE_LICENSE("GPL v2");
->  MODULE_DESCRIPTION("cxl_test: emulation module");
+diff --git a/test/daxctl-famfs.sh b/test/daxctl-famfs.sh
+new file mode 100755
+index 0000000..12fbfef
+--- /dev/null
++++ b/test/daxctl-famfs.sh
+@@ -0,0 +1,253 @@
++#!/bin/bash -Ex
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2025 Micron Technology, Inc. All rights reserved.
++#
++# Test daxctl famfs mode transitions and mode detection
++
++rc=77
++. $(dirname $0)/common
++
++trap 'cleanup $LINENO' ERR
++
++daxdev=""
++original_mode=""
++
++cleanup()
++{
++	printf "Error at line %d\n" "$1"
++	# Try to restore to original mode if we know it
++	if [[ $daxdev && $original_mode ]]; then
++		"$DAXCTL" reconfigure-device -f -m "$original_mode" "$daxdev" 2>/dev/null || true
++	fi
++	exit $rc
++}
++
++# Check if fsdev_dax module is available
++check_fsdev_dax()
++{
++	if modinfo fsdev_dax &>/dev/null; then
++		return 0
++	fi
++	if grep -qF "fsdev_dax" "/lib/modules/$(uname -r)/modules.builtin" 2>/dev/null; then
++		return 0
++	fi
++	printf "fsdev_dax module not available, skipping\n"
++	exit 77
++}
++
++# Check if kmem module is available (needed for system-ram mode tests)
++check_kmem()
++{
++	if modinfo kmem &>/dev/null; then
++		return 0
++	fi
++	if grep -qF "kmem" "/lib/modules/$(uname -r)/modules.builtin" 2>/dev/null; then
++		return 0
++	fi
++	printf "kmem module not available, skipping system-ram tests\n"
++	return 1
++}
++
++# Find an existing dax device to test with
++find_daxdev()
++{
++	# Look for any available dax device
++	daxdev=$("$DAXCTL" list | jq -er '.[0].chardev // empty' 2>/dev/null) || true
++
++	if [[ ! $daxdev ]]; then
++		printf "No dax device found, skipping\n"
++		exit 77
++	fi
++
++	# Save the original mode so we can restore it
++	original_mode=$("$DAXCTL" list -d "$daxdev" | jq -er '.[].mode')
++
++	printf "Found dax device: %s (current mode: %s)\n" "$daxdev" "$original_mode"
++}
++
++daxctl_get_mode()
++{
++	"$DAXCTL" list -d "$1" | jq -er '.[].mode'
++}
++
++# Ensure device is in devdax mode for testing
++ensure_devdax_mode()
++{
++	local mode
++	mode=$(daxctl_get_mode "$daxdev")
++
++	if [[ "$mode" == "devdax" ]]; then
++		return 0
++	fi
++
++	if [[ "$mode" == "system-ram" ]]; then
++		printf "Device is in system-ram mode, attempting to convert to devdax...\n"
++		"$DAXCTL" reconfigure-device -f -m devdax "$daxdev"
++	elif [[ "$mode" == "famfs" ]]; then
++		printf "Device is in famfs mode, converting to devdax...\n"
++		"$DAXCTL" reconfigure-device -m devdax "$daxdev"
++	else
++		printf "Device is in unknown mode: %s\n" "$mode"
++		return 1
++	fi
++
++	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
++}
++
++#
++# Test basic mode transitions involving famfs
++#
++test_famfs_mode_transitions()
++{
++	printf "\n=== Testing famfs mode transitions ===\n"
++
++	# Ensure starting in devdax mode
++	ensure_devdax_mode
++	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
++	printf "Initial mode: devdax - OK\n"
++
++	# Test: devdax -> famfs
++	printf "Testing devdax -> famfs... "
++	"$DAXCTL" reconfigure-device -m famfs "$daxdev"
++	[[ $(daxctl_get_mode "$daxdev") == "famfs" ]]
++	printf "OK\n"
++
++	# Test: famfs -> famfs (re-enable in same mode)
++	printf "Testing famfs -> famfs (re-enable)... "
++	"$DAXCTL" reconfigure-device -m famfs "$daxdev"
++	[[ $(daxctl_get_mode "$daxdev") == "famfs" ]]
++	printf "OK\n"
++
++	# Test: famfs -> devdax
++	printf "Testing famfs -> devdax... "
++	"$DAXCTL" reconfigure-device -m devdax "$daxdev"
++	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
++	printf "OK\n"
++
++	# Test: devdax -> devdax (re-enable in same mode)
++	printf "Testing devdax -> devdax (re-enable)... "
++	"$DAXCTL" reconfigure-device -m devdax "$daxdev"
++	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
++	printf "OK\n"
++}
++
++#
++# Test mode transitions with system-ram (requires kmem)
++#
++test_system_ram_transitions()
++{
++	printf "\n=== Testing system-ram transitions with famfs ===\n"
++
++	# Ensure we start in devdax mode
++	ensure_devdax_mode
++	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
++
++	# Test: devdax -> system-ram
++	printf "Testing devdax -> system-ram... "
++	"$DAXCTL" reconfigure-device -N -m system-ram "$daxdev"
++	[[ $(daxctl_get_mode "$daxdev") == "system-ram" ]]
++	printf "OK\n"
++
++	# Test: system-ram -> famfs should fail
++	printf "Testing system-ram -> famfs (should fail)... "
++	if "$DAXCTL" reconfigure-device -m famfs "$daxdev" 2>/dev/null; then
++		printf "FAILED - should have been rejected\n"
++		return 1
++	fi
++	printf "OK (correctly rejected)\n"
++
++	# Test: system-ram -> devdax -> famfs (proper path)
++	printf "Testing system-ram -> devdax -> famfs... "
++	"$DAXCTL" reconfigure-device -f -m devdax "$daxdev"
++	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
++	"$DAXCTL" reconfigure-device -m famfs "$daxdev"
++	[[ $(daxctl_get_mode "$daxdev") == "famfs" ]]
++	printf "OK\n"
++
++	# Restore to devdax for subsequent tests
++	"$DAXCTL" reconfigure-device -m devdax "$daxdev"
++}
++
++#
++# Test JSON output shows correct mode
++#
++test_json_output()
++{
++	printf "\n=== Testing JSON output for mode field ===\n"
++
++	# Test devdax mode in JSON
++	ensure_devdax_mode
++	printf "Testing JSON output for devdax mode... "
++	mode=$("$DAXCTL" list -d "$daxdev" | jq -er '.[].mode')
++	[[ "$mode" == "devdax" ]]
++	printf "OK\n"
++
++	# Test famfs mode in JSON
++	"$DAXCTL" reconfigure-device -m famfs "$daxdev"
++	printf "Testing JSON output for famfs mode... "
++	mode=$("$DAXCTL" list -d "$daxdev" | jq -er '.[].mode')
++	[[ "$mode" == "famfs" ]]
++	printf "OK\n"
++
++	# Restore to devdax
++	"$DAXCTL" reconfigure-device -m devdax "$daxdev"
++}
++
++#
++# Test error messages for invalid transitions
++#
++test_error_handling()
++{
++	printf "\n=== Testing error handling ===\n"
++
++	# Ensure we're in famfs mode
++	"$DAXCTL" reconfigure-device -m famfs "$daxdev"
++
++	# Test that invalid mode is rejected
++	printf "Testing invalid mode rejection... "
++	if "$DAXCTL" reconfigure-device -m invalidmode "$daxdev" 2>/dev/null; then
++		printf "FAILED - invalid mode should be rejected\n"
++		return 1
++	fi
++	printf "OK (correctly rejected)\n"
++
++	# Restore to devdax
++	"$DAXCTL" reconfigure-device -m devdax "$daxdev"
++}
++
++#
++# Main test sequence
++#
++main()
++{
++	check_fsdev_dax
++	find_daxdev
++
++	rc=1  # From here on, failures are real failures
++
++	test_famfs_mode_transitions
++	test_json_output
++	test_error_handling
++
++	# System-ram tests require kmem module
++	if check_kmem; then
++		# Save and disable online policy for system-ram tests
++		saved_policy="$(cat /sys/devices/system/memory/auto_online_blocks)"
++		echo "offline" > /sys/devices/system/memory/auto_online_blocks
++
++		test_system_ram_transitions
++
++		# Restore online policy
++		echo "$saved_policy" > /sys/devices/system/memory/auto_online_blocks
++	fi
++
++	# Restore original mode
++	printf "\nRestoring device to original mode: %s\n" "$original_mode"
++	"$DAXCTL" reconfigure-device -f -m "$original_mode" "$daxdev"
++
++	printf "\n=== All famfs tests passed ===\n"
++
++	exit 0
++}
++
++main
+diff --git a/test/meson.build b/test/meson.build
+index 615376e..ad1d393 100644
+--- a/test/meson.build
++++ b/test/meson.build
+@@ -209,6 +209,7 @@ if get_option('destructive').enabled()
+   device_dax_fio = find_program('device-dax-fio.sh')
+   daxctl_devices = find_program('daxctl-devices.sh')
+   daxctl_create = find_program('daxctl-create.sh')
++  daxctl_famfs = find_program('daxctl-famfs.sh')
+   dm = find_program('dm.sh')
+   mmap_test = find_program('mmap.sh')
+ 
+@@ -226,6 +227,7 @@ if get_option('destructive').enabled()
+     [ 'device-dax-fio.sh', device_dax_fio, 'dax'   ],
+     [ 'daxctl-devices.sh', daxctl_devices, 'dax'   ],
+     [ 'daxctl-create.sh',  daxctl_create,  'dax'   ],
++    [ 'daxctl-famfs.sh',   daxctl_famfs,   'dax'   ],
+     [ 'dm.sh',             dm,		   'dax'   ],
+     [ 'mmap.sh',           mmap_test,	   'dax'   ],
+   ]
+-- 
+2.49.0
 
