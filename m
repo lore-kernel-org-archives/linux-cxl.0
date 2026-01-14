@@ -1,133 +1,261 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4081D2EB873
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 17:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAC92D877B;
+	Wed, 14 Jan 2026 17:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768410745; cv=none; b=AEGc77ctAZXi/z26JO/VWPMUO0i5CVhVfT86WSOBrvW0CaJbzhtfVua7xQp9u/TCIreL3lPlag8tbgcEVi3kmdaBJOJpWzVk2xk+NWzMasuBZ8ZgQPBue7i65NX6lFJDIfUWoXmoqOBGvE9bmhRzrYN/qys6bOGUkgna2L1WpZk=
+	t=1768411105; cv=none; b=CWzG40thCAYIFAQgeHq5qk7bQLdKqaL9ria9J8OrX8voWy+K+2OoNziK+6SFysX1IZKEpb8aaQdzgEC4NksqjyKHzsEZzzSnU+/ho30LqneqAtsSemtDwCjsGouu5iP/oQ3AL8XmLrsTgmUR0JDYlLT1pzTKzheZHZUxIAUxsU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768410745; c=relaxed/simple;
-	bh=p77GEG+mB5piIaHLHG+aeaef+IL/MBZBpezD3NGQ3tE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=stewVjQcITxFWQTcbqihK+6n/UQpRRNKXo6hGuTzZzSv2MdWaO53a7hvJYoK5wj0JIa6UJ2SAn/+him/pSkagJ4TfDD5a2bBIv8qB+h29aLXKMKM4fGE5MNJWHOp/gFtkPiJ9SpG3k5nJOQVMhQ3Rqz7PWtuoMpijBkOfNZyOmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=s2jof0uC; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="s2jof0uC"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-8b29ff9d18cso2865485a.3
-        for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 09:12:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1768410743; x=1769015543; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cLZK+PqSn6nIdPCyk8+Al7PM0O31XRvufO9b7gKXcTo=;
-        b=s2jof0uCl1iZ13S42/5fpW0CtM5ymEri39FcjNMund88KbT8hu00kIYh+zLBIqzqnn
-         +4tjMImmWWIy2S1mMnRbFXVBHgdyphuAXMJ7fdnysBq9DuwkkJwFd7JbH2CTQiRLtm37
-         7m7xKy0P7RCzSsHF19q7MeLNfFRN4D9DPmD8XClJosItg/yyi73x1LqR/YBJOtYxMNl8
-         kMoxg/lk2fHrTFmU9EEL9C1IiXWogCnMraHl38L3kfyAefaNSjwGphgwPDNL507W6+cA
-         R9El/Qs8uvqAcv1QlLil33zTXza0vGN2DeQ6Q2YShPwOt/l1YKhGLqRMEttJsY/9qKl3
-         qQfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768410743; x=1769015543;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cLZK+PqSn6nIdPCyk8+Al7PM0O31XRvufO9b7gKXcTo=;
-        b=HLQrD0PXAq8mv8u0T5SZ1/WFTPsfcC9v1uzu/KRTnTB0MN4KO1mN9AW6HS8AydVd1S
-         eer77Icun1biUzYxCFzj+xDh0xKVsnqX7zQDGqcB89GABHJAb/+df93ZIVJr0fr+/By7
-         JUTR3HP0mYPhTQw1cjV8TtnAaxrM+5D5gnVVSod4P6Ur5IDR0zqhp0d4/FuK0g0QxFiY
-         sMM9Sy3EwvlCHGNTvgNeg1UYIx/iZNoJ41T9K1E6beemGlaGlnX6dZGDWr7X72cieL4z
-         rgq+5f1sf8xvLoVDYwAQxJoc0WlAN+1pANa2qVCU35WZXryv6Ia9Ewvcy1C33QLtZ09d
-         KZog==
-X-Forwarded-Encrypted: i=1; AJvYcCV9QHYvRQANXyxtEsj9IysimFg/X5GIIRgLtNJ4ql2M642dLYD+N2xfx0ncVkJKaOAhqtKo0960kPs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1+a0g4U4KM40jCo5Y0860XlI9JxWw8IWWOTpxDgAx/ctYVLrC
-	YSCUO7Ob8E7kN2X6pGO/F4MoPSAo+OaAPyVGql5h3Z8LO3aks/kc934rYpdoIknHXH7xGMaN5fl
-	NP1ods0Y=
-X-Gm-Gg: AY/fxX57AzZJiTUe4MEhwdFK+TiWfwDiW/VLNl/xGIj4Hpq9KPVXWZxdktv4a5rybc1
-	yBdi4Q/rhH7LpwPVrFTpdxN/u+Vzsf/cBOyUp9S7/kDseMvmFUQGS8EEnEEgQyrsqBi+WxhqkVZ
-	Fs2Lc7IZkzAORkGBU8ClbSihzSPOi3lwmQjZCmxrsmtU8gowRnYRqYEmsBmn0Yu3Uix+JnFYDVs
-	TIVEgXrfUyYGwGB6TMfzqpdhxxzuxTXWaaJ0Y7OaM+BL5lKYbDbsRkmt4yufbeeUcI5qI3WpYFC
-	zuFS8rusLFONAFFleoI+WHgkot1u1ecDhkdp69gJsj+WttDA90ydHg69u2yfxqPMj9GaHOfR4rY
-	HlT0xr7fM4QdW/DD5BX3ggSHyLBISIn+a7tMkvdIo9DaPleGsg9YKVkpsOiZ5oHppoHIelcdHd9
-	53VJ2fgZNxf6IeqQhQEwNi2N26Y3Dd+mDuSOx0x4SDbPHdn1PMVBmwKHU65OTRkaxGCrbdes7LJ
-	DG2Ie7H
-X-Received: by 2002:a05:620a:f03:b0:8b2:d6eb:8203 with SMTP id af79cd13be357-8c531808de8mr358190785a.69.1768410743009;
-        Wed, 14 Jan 2026 09:12:23 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c530be76d1sm201549285a.48.2026.01.14.09.12.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 09:12:22 -0800 (PST)
-Date: Wed, 14 Jan 2026 12:11:49 -0500
-From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Red Hat)" <david@kernel.org>
-Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	kernel-team@meta.com, dan.j.williams@intel.com,
-	vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
-	jasowang@redhat.com, xuanzhuo@linux.alibaba.com,
-	eperezma@redhat.com, osalvador@suse.de, akpm@linux-foundation.org
-Subject: Re: [PATCH 2/8] mm/memory_hotplug: extract __add_memory_resource()
- and __offline_memory()
-Message-ID: <aWfOVd3_GGTNHKNt@gourry-fedora-PF4VCD3F>
-References: <20260114085201.3222597-1-gourry@gourry.net>
- <20260114085201.3222597-3-gourry@gourry.net>
- <c4ed9675-269c-4764-86d5-87f4f83fc74d@kernel.org>
+	s=arc-20240116; t=1768411105; c=relaxed/simple;
+	bh=tH0HPekY/K2bAe7C0UN/X1KeIfocXxi/IVIFPZi1xdY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WA3CkxXA61FMkphhu8iNCyqKkthQRbWbdPQLRStXMkRdeLETxEY/ThCGGP6/K+9DxidEW3NZnSXtYvMxVo28/Z+YHWMnLczeFU7hqL4BedeRZbfoJlz4vwRF4ETvqeiCesSXpuyhvCEMpB+iFkiAmggLtC266SpRKj4rDiZ+/hQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.107])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4drt9J6dTXzHnGhr;
+	Thu, 15 Jan 2026 01:17:56 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3C52C40584;
+	Thu, 15 Jan 2026 01:18:17 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 14 Jan
+ 2026 17:18:10 +0000
+Date: Wed, 14 Jan 2026 17:18:08 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Gregory Price <gourry@gourry.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kernel-team@meta.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>
+Subject: Re: [PATCH 1/6] drivers/cxl: add cxl_memctrl_mode and
+ region->memctrl
+Message-ID: <20260114171808.000067e2@huawei.com>
+In-Reply-To: <20260112163514.2551809-2-gourry@gourry.net>
+References: <20260112163514.2551809-1-gourry@gourry.net>
+	<20260112163514.2551809-2-gourry@gourry.net>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c4ed9675-269c-4764-86d5-87f4f83fc74d@kernel.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Wed, Jan 14, 2026 at 11:14:21AM +0100, David Hildenbrand (Red Hat) wrote:
-> On 1/14/26 09:51, Gregory Price wrote:
-> > Extract internal helper functions with explicit parameters to prepare
-> > for adding new APIs that allow explicit online type control:
-> > 
-> >    - __add_memory_resource(): accepts an explicit online_type parameter.
-> >      Add MMOP_SYSTEM_DEFAULT as a new value that instructs the function
-> >      to use mhp_get_default_online_type() for the actual online type.
-> >      The existing add_memory_resource() becomes a thin wrapper that
-> >      passes MMOP_SYSTEM_DEFAULT to preserve existing behavior.
-> > 
-> >    - __offline_memory(): extracted from offline_and_remove_memory() to
-> >      handle the offline operation with rollback support. The caller
-> >      now handles locking and the remove step separately.
+On Mon, 12 Jan 2026 11:35:09 -0500
+Gregory Price <gourry@gourry.net> wrote:
+
+> The CXL driver presently hands policy management over to DAX subsystem
+> for sysram regions, which makes building policy around the entire region
+> clunky and at time difficult (e.g. multiple actions to offline and
+> hot-unplug memory reliably).
 > 
+> To support multiple backend controllers for memory regions (for example
+> dax vs direct hotplug), implement a memctrl field in cxl_region allows
+> switching uncomitted regions between different "memory controllers".
 > 
-> I don't understand why this change is even part of this patch, can you
-> elaborate? You don't add any "explicit parameters to prepare for adding new
-> APIs that allow explicit online type control" there.
+> CXL_CONTROL_NONE: No selected controller, probe will fail.
+> CXL_CONTROL_AUTO: If memory is already online as SysRAM, no controller
+>                   otherwise register a dax_region
+> CXL_CONTROL_DAX : register a dax_region
 > 
-> So likely you squeezed two independent things into a single patch? :)
->
-> Likely you should pair the __add_memory_resource() change with the
-> add_memory_driver_managed() changed and vice versa.
+> Auto regions will either be static sysram (BIOS-onlined) and has no
+> region controller associated with it - or if the SP bit was set a
+> DAX device will be created.
 > 
-
-I tried to keep the refactor work and the new feature work separate.
-
-But yeah that's fair i can just add them to the respective path.
-
-> > +	/* Use system default online type from mhp_get_default_online_type(). */
-> > +	MMOP_SYSTEM_DEFAULT,
+> Rather than default all regions to the auto-controller, only default
+> auto-regions to the auto controller.
 > 
-> I don't like having fake options as part of this interface.
+> Non-auto regions will be defaulted to CXL_CONTROL_NONE, which will cause
+> a failure to probe unless a controller is selected.
 > 
-> Why can't we let selected users use mhp_get_default_online_type() instead?
-> Like add_memory_resource(). We can export that function.
-> 
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+Trivial comments whilst I try to get my head around the series.
 
-Wasn't sure if that was preferred, I can do that.
+...
 
-I think i eventually ended up doing that in DAX anyway, I just never
-came back around to clean it up.
+> diff --git a/drivers/cxl/core/memctrl/Makefile b/drivers/cxl/core/memctrl/Makefile
+> new file mode 100644
+> index 000000000000..8165aad5a52a
+> --- /dev/null
+> +++ b/drivers/cxl/core/memctrl/Makefile
+> @@ -0,0 +1,4 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +cxl_core-$(CONFIG_CXL_REGION) += memctrl/memctrl.o
+> +cxl_core-$(CONFIG_CXL_REGION) += memctrl/dax_region.o
+> diff --git a/drivers/cxl/core/memctrl/dax_region.c b/drivers/cxl/core/memctrl/dax_region.c
+> new file mode 100644
+> index 000000000000..90d7fdb97013
+> --- /dev/null
+> +++ b/drivers/cxl/core/memctrl/dax_region.c
 
-ack.
+Can we break the code move out as a precursor with a bit of explanation of
+why?  I want to be able to spot functional changes more easily.
 
-~Gregory
+
+> @@ -0,0 +1,79 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+> +#include <linux/device.h>
+> +#include <linux/slab.h>
+> +#include <cxlmem.h>
+> +#include <cxl.h>
+> +#include "../core.h"
+> +
+> +static struct lock_class_key cxl_dax_region_key;
+
+> +
+> +/*
+> + * The dax controller is the default controller and simply hands the
+> + * control pattern over to the dax driver.  It does with a dax_region
+> + * built by dax/cxl.c
+> + */
+> +int devm_cxl_add_dax_region(struct cxl_region *cxlr)
+> +{
+> +	struct cxl_dax_region *cxlr_dax;
+> +	struct device *dev;
+> +	int rc;
+> +
+> +	cxlr_dax = cxl_dax_region_alloc(cxlr);
+
+Nice to spinkle __free magic on this one though obviously 
+unrelated to what you are focused on here!
+
+
+> +	if (IS_ERR(cxlr_dax))
+> +		return PTR_ERR(cxlr_dax);
+> +
+> +	dev = &cxlr_dax->dev;
+> +	rc = dev_set_name(dev, "dax_region%d", cxlr->id);
+> +	if (rc)
+> +		goto err;
+> +
+> +	rc = device_add(dev);
+> +	if (rc)
+> +		goto err;
+> +
+> +	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
+> +		dev_name(dev));
+> +
+> +	return devm_add_action_or_reset(&cxlr->dev, cxlr_dax_unregister,
+> +					cxlr_dax);
+> +err:
+> +	put_device(dev);
+> +	return rc;
+> +}
+> diff --git a/drivers/cxl/core/memctrl/memctrl.c b/drivers/cxl/core/memctrl/memctrl.c
+> new file mode 100644
+> index 000000000000..24e0e14b39c7
+> --- /dev/null
+> +++ b/drivers/cxl/core/memctrl/memctrl.c
+...
+
+> +int cxl_enable_memctrl(struct cxl_region *cxlr)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +
+> +	switch (cxlr->memctrl) {
+> +	case CXL_MEMCTRL_AUTO:
+> +		/*
+> +		 * The region can not be manged by CXL if any portion of
+> +		 * it is already online as 'System RAM'
+> +		 */
+> +		if (walk_iomem_res_desc(IORES_DESC_NONE,
+> +					IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+> +					p->res->start, p->res->end, cxlr,
+> +					is_system_ram) > 0)
+> +			return 0;
+> +		return devm_cxl_add_dax_region(cxlr);
+> +	case CXL_MEMCTRL_DAX:
+> +		return devm_cxl_add_dax_region(cxlr);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+I can't resist pointing out the trivial.  One line sufficient.
+
+> +
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index ae899f68551f..02d7d9ae0252 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -626,6 +626,50 @@ static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
+>  }
+>  static DEVICE_ATTR_RO(mode);
+>  
+> +static ssize_t ctrl_show(struct device *dev, struct device_attribute *attr,
+> +			 char *buf)
+> +{
+> +	struct cxl_region *cxlr = to_cxl_region(dev);
+> +	const char *desc;
+> +
+> +	switch (cxlr->memctrl) {
+> +	case CXL_MEMCTRL_AUTO:
+> +		desc = "auto";
+
+If any expectation of non trivial number of these, look up in an array rather
+than a switch statement. I'll scale better.
+
+> +		break;
+> +	case CXL_MEMCTRL_DAX:
+> +		desc = "dax";
+> +		break;
+> +	default:
+
+I'd call this out as NONE simply as then the compiler will point out if you
+missed adding code here when a new type is added.
+
+> +		desc = "";
+> +		break;
+> +	}
+> +
+> +	return sysfs_emit(buf, "%s\n", desc);
+> +}
+
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index ba17fa86d249..b8fabaa77262 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -502,6 +502,19 @@ enum cxl_partition_mode {
+>  	CXL_PARTMODE_PMEM,
+>  };
+>  
+> +
+> +/*
+> + * Memory Controller modes:
+
+Give it kernel-doc. 
+
+> + *   None - No controller selected
+> + *   Auto - either BIOS-configured as SysRAM, or default to DAX
+> + *   DAX  - creates a dax_region controller for the cxl_region
+> + */
+> +enum cxl_memctrl_mode {
+> +	CXL_MEMCTRL_NONE,
+> +	CXL_MEMCTRL_AUTO,
+> +	CXL_MEMCTRL_DAX,
+> +};
+> +
+>  /*
+>   * Indicate whether this region has been assembled by autodetection or
+>   * userspace assembly. Prevent endpoint decoders outside of automatic
+> @@ -543,6 +556,7 @@ struct cxl_region {
+>  	struct device dev;
+>  	int id;
+>  	enum cxl_partition_mode mode;
+> +	enum cxl_memctrl_mode memctrl;
+Needs kernel-doc.
+
+>  	enum cxl_decoder_type type;
+>  	struct cxl_nvdimm_bridge *cxl_nvb;
+>  	struct cxl_pmem_region *cxlr_pmem;
+
