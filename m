@@ -1,424 +1,255 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9419340DA3
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 23:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768434673; cv=none; b=iV/O2C7aJDMN1DKmxWWM7Qx5G4ORiaZ7GoDsRto91TebK9CE6hVhvTL/Qu+5aXOheVNBg7vpccsUhPRXoum76ImYfqt2LL0e/AlBB35OcGaW7/7cRxLK0CChru6aCxu++Da9xZl6lbZhTU6tMfKre4eTefNZsIjQWGI74wkBMQI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768434673; c=relaxed/simple;
-	bh=2HJXstFWbA8JKzmFLrV4EYZca67gOgm6jsl+V+jc43U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E1rdpSOnSl17vZV4lxYs8T9VBLvMpgwkme9npAB9UeibyVdIMk2O92KVmNWCn8rMV8ZTCw6r7EjuGQWyIaEIqustf4gHp2BBUkESzZAr9SSnr/RthpBPx/8rbV/hh4QHg85HVjsHateiSbeM+HT839BDCFnp54oX1sR2H/ORNp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=DXwO1ZbO; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4411C3BEB;
+	Wed, 14 Jan 2026 23:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768434692; cv=fail; b=d13HFTL/MMDV9Kg1UKYUcN0FQevfih2BTuWUVr94jarY5yGWWW1DCFcLqG/RG+lb+0CXEMMeUoJmaimZMHymdNFn0J7MfvGqoeWG6u2rB6W+YUWieoKgCG0kMEoPac6BZWBA7bLmhRkRZtectkrbtE+ZLHTNeSybueTIFkzEap0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768434692; c=relaxed/simple;
+	bh=RSHtL2IVsWfSWQz/HURV6vT7mdg6jKwj7p+aZQCh38g=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=m0XCA4TL+XZ7v4FwFcoHJ0zpaGhBaXENOyxm8HVppCov9dyFmC9kAjAdKmiUyfZDJcpjlED2TtaaybcQrOiMxMW7apepol2ugm4BlDn2IYe3UWDFvDEN6KWg0kdVE3nzgCzGkvgSYW+Qw6g22iPVFOfjos0JfD+gNhu0IsazbbI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cW/iZoeC; arc=fail smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="DXwO1ZbO"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-88888c41a13so3862826d6.3
-        for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 15:51:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1768434666; x=1769039466; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HO1V54BeeL6soGWklBzHc2sknfCRHcpjkYKQEUfGCuc=;
-        b=DXwO1ZbOBlZCeUu1x49jm43ULDpD64hWnui754YMz75mmfUVu7QxxTl8ePr/R+FKVF
-         4ZgE9BY23bWLAZ5RJUeDyScsKqor9beHBipmjTOa+XyItnrLsVFS+25hAoB8Bto4cszY
-         uKtVAB88WdXgqQ/mZqi6kx7Kqn1CQ6fp3T0lxh5xRyiZbdQyfcmNS/iIPt/XWXHR6JbD
-         cwitgPlf15JWMMnfDgNmil5aqdDu2We/mp+Hi17MyoiwyRT+zTMpXlwcMjWwhd+Ghbo2
-         AJDm8uXdGQACaxKo3ZL4zgygx18BR8ZjCFn89sIcpKSUE2NlA57mYlEAmTxYacIgPA93
-         Lbag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768434666; x=1769039466;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=HO1V54BeeL6soGWklBzHc2sknfCRHcpjkYKQEUfGCuc=;
-        b=jt32de2RmKEqVq+nu53DZMSiO5x10rb5GROEkElMHSq7yUz5uJp8VzeKnv37N8KaMB
-         UGqumfLh7AjJF4FYwpCMOfhBajxCUyPgGX9oa/+goGp+x0Uf/G8Yb81tZmVk3aclFK2z
-         X0XnZDWGH1w5eQhJuDrp4dqYqbqWZbWC1FN2wfvF4tZ0OXZMlFEQ7L16zVVMjdQOOfdR
-         AgrA2ewA7HujK7yaGINFgl2KIyfRcnfRFqyVnW1z0QUj6BayjI3esarLsFI1GKCAacpl
-         RFlWMZ6KDSp3sowi1fM8ZrJQpgckgTu+o2Bd8LnmoAblgAbwSn/RkkN/hqv3jCmsqjBU
-         ZgNg==
-X-Gm-Message-State: AOJu0YyrYwr+i3hVcCtH4gSyUg5wpdsNhlEJCTPNfTQKnbsLApTMaOm1
-	Dy1Ad218vMGDC9tIpEi04o6bdhIYpFkt+EgSRV0ggBZGFyH6WBoH93XTJR+J6PKmfts=
-X-Gm-Gg: AY/fxX4Gtc99dBKu9DZgyviAWhwDrJ2Yb5e526HbcvOfax8w9Y30kAFIQOe6zmi+fdL
-	0312AyKtQ67cqJ3myFLInQPZK9bV8YbUwfKmJB2at12O3REAwULpRKtKiXZF8SaeJuWChVY2+ck
-	MrPmHXReLjARp8MYpA4me6n0cKMXGr/Ay2xar7AfZ0jvpqBnNdV1EprHtz4TnV6bv40S+eROblF
-	zcDFuJvQTdj86x3BZuSAq0GOrm/kAWLDwDHeBvCQ0CxaA+ef2juCaN7I19aYMItJO0YiAf7t2UX
-	FonyC9eKKR9rM8hiuEE/vGpGfDhj3bBh2q2hfjg6+4lC99D7BKCJsh26OS38damy9paSi0s6b1t
-	QDhwMcZAt4syyPW2Z/o8CEi3/asPadRg6LeYqrkbWuVAHUelmGtxv3nWxlKEfJpdFMhdMBFIabG
-	V2QGRBK55a0zXKsJQLlC4AlcW9p0ZntPauAKtOhz1hno0GFb1fSxWalu0PExkiPATTH9WEadnui
-	hM=
-X-Received: by 2002:ad4:5aa4:0:b0:880:48e4:198a with SMTP id 6a1803df08f44-89275c0aef3mr46108836d6.32.1768434666420;
-        Wed, 14 Jan 2026 15:51:06 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-890772346f8sm188449106d6.35.2026.01.14.15.51.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 15:51:05 -0800 (PST)
-From: Gregory Price <gourry@gourry.net>
-To: linux-mm@kvack.org
-Cc: linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	kernel-team@meta.com,
-	dan.j.williams@intel.com,
-	vishal.l.verma@intel.com,
-	dave.jiang@intel.com,
-	david@kernel.org,
-	mst@redhat.com,
-	jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com,
-	eperezma@redhat.com,
-	osalvador@suse.de,
-	akpm@linux-foundation.org,
-	Hannes Reinecke <hare@suse.de>
-Subject: [PATCH v2 4/5] dax/kmem: add sysfs interface for runtime hotplug state control
-Date: Wed, 14 Jan 2026 18:50:20 -0500
-Message-ID: <20260114235022.3437787-5-gourry@gourry.net>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260114235022.3437787-1-gourry@gourry.net>
-References: <20260114235022.3437787-1-gourry@gourry.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cW/iZoeC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768434690; x=1799970690;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=RSHtL2IVsWfSWQz/HURV6vT7mdg6jKwj7p+aZQCh38g=;
+  b=cW/iZoeCZKEjW9Oo83qcRr5hegXVxWqSle8f8vr1U6TAERmaej3zf31c
+   t2AUgLkPbje2pKMXxEuS6G/DDeTt8B81t4dGQUXssD1LAV/7OXFIlHOrv
+   tjC1PMzxUwMsg4pZs3bu7se6wQESf40uhJskT8BcT8EdZgnR3zOphmeMt
+   hII6d6WgbmLHwWDlhO7s7yOibMlquA87IoYUNoL7/KBklUZ+woIqC4lVU
+   f0BeYJb/eT4cq5JPHgHsCqmUQkx2Cu6KXCvT0eIs4WNT/hYR/a7fhnzMf
+   /geb8Z1cDxZN6Aw82wrjLbcpA0/LlI2MqKSecK38HXk2tK/43DT2GYH/d
+   g==;
+X-CSE-ConnectionGUID: YQZ0yJ3bSFuK9jmqFPfFOQ==
+X-CSE-MsgGUID: GhaaQzvKQAq54/XH/QH7fw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="68950608"
+X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
+   d="scan'208";a="68950608"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 15:51:29 -0800
+X-CSE-ConnectionGUID: T5JgkYtuQjmoqBByqnj6+g==
+X-CSE-MsgGUID: t9JFJ52qTjuFuGl8wCa5iQ==
+X-ExtLoop1: 1
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 15:51:28 -0800
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Wed, 14 Jan 2026 15:51:27 -0800
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29 via Frontend Transport; Wed, 14 Jan 2026 15:51:27 -0800
+Received: from BYAPR05CU005.outbound.protection.outlook.com (52.101.85.61) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Wed, 14 Jan 2026 15:51:26 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fa1U7u1NYksEim8Cus9r+dGM7rl2YE6ZOtdXpjamA6Wkh/5LfChYImVYSOFY3UVVPltZiB57glKAOqY9NPwf/+ad3XrAwQ0YgbF3wtH7YqPRmSsTOdBKVoBQK8plFleTdUBbgQrwlxuP72zCt8+11+qH9zJSveVaFR1Fi2tyTrxk6NJ/YhX0kbcoSUMeTtaFH4bi/z9HzisnIk46h0BFzZ4WPeBa5FrKWJRLwBf453v9NB5IcpYnyB205KX6jU6bfIQ8RklcujDdE/1+bKOE1VOTv3KDJkJwlAP4ydbL54EBox+oDWBLhIDOFe5aFRohbKrGJ9RCEwoX+2z5v+DJtQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=G7n0GD4vskBV4uZ5XKLmIpS8Wy9noTZ87ZQvr4tng9Y=;
+ b=cH99+FZMMUO3zu3Z6TIV1I7Cx1WSWoDOEH1cNC2ddTqJLxAZ0WTrceLSc8ldm50jMpkqacOpttxFueT+dCXKt80x4zSmjDXKMWwsCogJUIE5T8/dnEeLXAq3k2fu/vZ3WuD6a9nZtWzHb2hyZb3wTdpmkKgUD3azGH1aa+GK/aYSaAdDzI213ERPPA7fuf2mJ/nuau0e9dpeuw0sYzCiEab9Xu/xEco4sky4cWjosx2fgZYpOVY3SV7ePKvmZF3B8aZHDv3tOI9S1B3py1hzsCQJWXQ6FohVSJ1YU3Wei/jY8Wx/lhyi/MvlnLtnoBPrLprdSrXHHvQQZXB5zlMuCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12)
+ by SA2PR11MB4796.namprd11.prod.outlook.com (2603:10b6:806:117::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.4; Wed, 14 Jan
+ 2026 23:51:19 +0000
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332]) by PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332%7]) with mapi id 15.20.9456.015; Wed, 14 Jan 2026
+ 23:51:19 +0000
+Date: Wed, 14 Jan 2026 15:51:16 -0800
+From: Matthew Brost <matthew.brost@intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+CC: Francois Dugast <francois.dugast@intel.com>,
+	<intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>, Zi Yan
+	<ziy@nvidia.com>, Alistair Popple <apopple@nvidia.com>, adhavan Srinivasan
+	<maddy@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman
+	<mpe@ellerman.id.au>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Felix Kuehling <Felix.Kuehling@amd.com>, Alex Deucher
+	<alexander.deucher@amd.com>, Christian =?iso-8859-1?Q?K=F6nig?=
+	<christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter
+	<simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>, "David
+ Hildenbrand" <david@kernel.org>, Oscar Salvador <osalvador@suse.de>, "Jason
+ Gunthorpe" <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Lorenzo Stoakes
+	<lorenzo.stoakes@oracle.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, "Suren
+ Baghdasaryan" <surenb@google.com>, Michal Hocko <mhocko@suse.com>, "Balbir
+ Singh" <balbirs@nvidia.com>, <linuxppc-dev@lists.ozlabs.org>,
+	<kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<amd-gfx@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>,
+	<linux-mm@kvack.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v5 1/5] mm/zone_device: Reinitialize large zone device
+ private folios
+Message-ID: <aWgr9Fp+0AeTu4zL@lstrano-desk.jf.intel.com>
+References: <20260114192111.1267147-1-francois.dugast@intel.com>
+ <20260114192111.1267147-2-francois.dugast@intel.com>
+ <20260114134825.8bf1cb3e897c8e41c73dc8ae@linux-foundation.org>
+ <aWgn/THidvOQf9n2@lstrano-desk.jf.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aWgn/THidvOQf9n2@lstrano-desk.jf.intel.com>
+X-ClientProxiedBy: BY3PR05CA0037.namprd05.prod.outlook.com
+ (2603:10b6:a03:39b::12) To PH7PR11MB6522.namprd11.prod.outlook.com
+ (2603:10b6:510:212::12)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB6522:EE_|SA2PR11MB4796:EE_
+X-MS-Office365-Filtering-Correlation-Id: 82b5003e-13df-436e-8938-08de53c7d069
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7416014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?QmlEWVc2M25wbGhwZFU4U3kzYW9Bc3gwZGhhRVdWSEhVVWcwN3c2R0Z6MlFi?=
+ =?utf-8?B?NTh2dkFnT0s3b0JXWm43S3FsVFZQYS8zN1k2TC9Ndng0a0t1OTUrUnVmUGJQ?=
+ =?utf-8?B?b1hBeGtVcUF1S2hXeEpRVkJHYk1ZdWtMWTkxWWZiM1J2NytudWFSQW5CY1E0?=
+ =?utf-8?B?bFQ1UmVheHVoUXJTcFhvYWk1UnJqdTEyZzdrSGRhc2Y0QzZpcXVESHlvbVgz?=
+ =?utf-8?B?Y0NETnNxdFk0Vzg4NXBFMEcreHBpV3NodXhMSXg3SEpLS3EzY01Edi9OZFE0?=
+ =?utf-8?B?eVNiTTRnR3hTZUhzTk01YVF6QWtOdmQxNUVBazNtT2h6SzVScEJDVmJYOEZw?=
+ =?utf-8?B?c2pvTmg2Uk1mT1ppS1dWS2RlZUJPVSszdENPeE5ZSThuWFRXYmNOODdBN1V1?=
+ =?utf-8?B?dmt2aldTTDdSdXdvcTI1YVVlZDZSZGhUSHlhYXkyU2U1dkszM1RsenA0K2Zx?=
+ =?utf-8?B?ZlBuODN3QVlxeDFDNC9oRk5pNmNiMnZ2Ykh6RGhsQVM0VnRrOXI4eFllb2Rj?=
+ =?utf-8?B?OVlHL21kMEVjR3FtaW5Lc0xFNUE2cnFvVkY0bkFxcGhLUHhXOUl5MisySmdk?=
+ =?utf-8?B?TEpQVVdjVGlPMHZjdUd0NU84MUJJZzI0MUdjcHlsSVMxWWE2b0Z3a2xoWUhj?=
+ =?utf-8?B?QVUvbEtCR1hsTXBoODZSeFRKVjd0MndHbmhKR3Ywdzg0dlJBRjlQOUl6YWtE?=
+ =?utf-8?B?eUI0ZzJqajd6NDhHMWhFUkRmc3RTcGgxcTZMWFRZRURtODhqUjFuSnhTMWFT?=
+ =?utf-8?B?UzQ1STluWFpXOGZBWFdWZGIwdzJ1QzY0Sms5NlIrMmxnWUtRRCt3SDlqRUhR?=
+ =?utf-8?B?bis1MExWOFBKV0tNRWtvcjROcXhKT1JjWk5OWjQwR2NublRCRWFqWWhCbkhG?=
+ =?utf-8?B?c1RHN1Q0ZXNTNUc4N1Yxd2hkN09rS1I0dkoyc0drTWdobnp6b1FJODZhUTND?=
+ =?utf-8?B?NUtvZVJleUxWa2F4WUJJcVhVZmxVR2VBdDJVWE1nZFJpa3NrUWpUZ3g0Tmx2?=
+ =?utf-8?B?RlRBNlpidnM5K2dROHgxS3hJalFSa3ZLWGtCUzhpbEoyMEFITk5XTG5YUWQr?=
+ =?utf-8?B?bC9DVmIvbXFyZW9XNDJmWmQxZDdJZ1gxMnlobXFXTnR2eEZWK0ZRMFNlRkJI?=
+ =?utf-8?B?MHFTa09BU0p2bHpkWkMvQkcxTWtwSkdlU1NaLzZteGlIT2JXdTZrM1dDaFNk?=
+ =?utf-8?B?Z0dPL2VFUWREa2tMK2JtblMzWEVOZlNQeUpyYjZIRktNcjN3N0d5VGtwRzFB?=
+ =?utf-8?B?eEp1R2tGbWVNSE1JY1phRzd0VkJkclVWSHZBNFNLOEhPRSt1UythWDZMVXl3?=
+ =?utf-8?B?TVk0VU92a2ZzWWQxdUZwVm5sc0paTFZqK0p2OWY1Tk45dDZLZUdUTHI3cTVW?=
+ =?utf-8?B?eEViRjllajdib0x1RzI4bHFCaU1BVXpwb3Uvd2QvOGUyYUZzalQzaDdGMzg4?=
+ =?utf-8?B?ZC9EWEJIRzRsN21ZSmhGeTliSXFyYlJ6TVFWeEVzTnM0L2h2L1A1ZEhmbUJ1?=
+ =?utf-8?B?ODNtbFFRWExIblMyUmhzQWE0TE12d2x6eVJsMjdCU2NKUjQvMlA4SkM3OURP?=
+ =?utf-8?B?ejh1MWhmRmZZZGVMemM5SmlRZW05cjRBTitoZUo0YmoweTFLc1R5eVBBaTI0?=
+ =?utf-8?B?bFZvb09uTXJsUnh0azl2NG81OUpQbUtnQ3Nrbi8yRkpIL3pRRW5nNmhWZEFW?=
+ =?utf-8?B?cGpUZmthR2p5UVIycFgwbHpmZmU5clp5Q1FMNjgvZlJ4UmQ3VmplVW9Pd1pm?=
+ =?utf-8?B?VHJiQSt5WVIxQkJsMW5hNmRGT1kybFFzRnAxR1RROUxwcWpDVnQvMFkwTnhQ?=
+ =?utf-8?B?NU50WFlEUWhnelB1N01xUVdrVGRkeUNtMm1XL1dnRXNEdHBQdWJ4MzQ0SWFL?=
+ =?utf-8?B?Tk5yY0JCRFdKNkk2UXl1TStIOUR6M1lYMjFpUVE5UllJblIybkdLTmhYTm45?=
+ =?utf-8?B?SEpybG1md2VqVTZCYnk5YWJNRkU4bHhzWHg5ZXJxaHR6bkFYT05mQWtKS3g2?=
+ =?utf-8?B?ZjFrV0w3cWxyY0RNRDd1eEx5VHdTakQ2TmZkc0ZOc0pYWENtVHgwd1YwT3Zl?=
+ =?utf-8?B?cUJlMVRuV08xRHEvNVBicXBIVEV5bFEzWTRzMThKeXhSNlV3Ti82c1lJOS9T?=
+ =?utf-8?Q?q6Z8=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6522.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WUFIOUdDYW9QdWpMOUxaZHNBajlUK01FajR5cXNmYWdSTHlVWXM1bDBJZEVs?=
+ =?utf-8?B?WWQ3ZTBocnZMU014K2xpejE4ckgveW5UdmVxVi9oS1A2c3VOVHNubUxLZTJ0?=
+ =?utf-8?B?ZFJzaWRzWkZ4M2tLMnhRWmJIYzR1SzVqOEVISzVpOVVKNmovek11eEE2dEs5?=
+ =?utf-8?B?MDIwaU44N3EwZE9DUE52a21rbnBxdFNHMGl0ZkRLRlp2c1FTdnpGejZ6U0ZT?=
+ =?utf-8?B?QlY4YmQ2MWkwamdTRmtmVkEyUW9jNVpUejF3T0lwNVllZWtVR0RleWVJdWJy?=
+ =?utf-8?B?dnczUGZXWVVzNFlvL21uSEhnVHZiOGVHN2VKNTRwcDFxV3laNGlMM3hLV0xN?=
+ =?utf-8?B?cUtLUEtiSk9QT2llK1RxRWhtWkF3anZWakhZUWtERW5pYUFhOGE2VTZZV01H?=
+ =?utf-8?B?MGl5bTlSbHp6TzduNWt5TkV5S01WamJUVWZwMTlEb2Q3N3lmdWVvVndra2pK?=
+ =?utf-8?B?b2pqZERVVjR4QkM2TEtsRjZoN2RoSDd4RGp3SzMxRDdBRFFmc2pNeDlYelRt?=
+ =?utf-8?B?YVJ4NXRnUWVxL1BiTjdGM3lIQkRRWDQ0SnVGR01xNWl2amZUZE55eDRtU3I1?=
+ =?utf-8?B?M1ZzK1dvYzNEUlI4SUQ0RFFvU3Z0TXVRVkRwUUJvaXVVbjZybndLeVhuUVJv?=
+ =?utf-8?B?RlE1K21OWDVhU0I2TDJCNXBqaUQzeU0rNjRsdlNsQjl1OUJSTXFKN0xVa3Nr?=
+ =?utf-8?B?dUw5SWhlNkpLazh3Z2V3dlBHSDJPUzQyQTJsV1hsSWJjUEZDZHFSa1ovMEEw?=
+ =?utf-8?B?YTYzRE53QlVzR0dZd2FrQnpQUmVhTUhQa0p4cTBldW5lZCtsd3RoWStxbGdm?=
+ =?utf-8?B?UFhQN0NGeE5xUVRCUk5xcEFNTnZxRHBtY3o0Q0gzczczc3pJVkt6MkUxTFRL?=
+ =?utf-8?B?QVgxaEJ4ancwRGJqM2dIUTd1NmplNktUUDhLeWs4Z3RqYVRjMnphQmlMSllX?=
+ =?utf-8?B?UVB0bi95V2p1V2I0cHJOYXdFYzRudXFvQ3dKODkzMjJveDg4V01EdUhqRTVC?=
+ =?utf-8?B?M1ZtcmFmQWM5ai9EVnRZd2o0MG0xb0crUlZLT2ZmQ3FWT1J5bllPZlhRbzVC?=
+ =?utf-8?B?cGVSS05henQwVGdXS2REb2FVTm9UcGlKVXBTR1NYQmtpOWZBcGhUQ1JYcmNz?=
+ =?utf-8?B?ZlVBRU1yL1JBSHZ1UitUQU5RaWdRcmk0YXNUcFV5SG01SzlJa2Z5NlF3aWJJ?=
+ =?utf-8?B?MlQ4ZW9YaEZkYkpQWkVmUGR3ZjFaa3ptTG0rVmF5QkZLMkZyRWlBRnd3TGdx?=
+ =?utf-8?B?VUphWlk3TElteTl0K2ZLbGY5VUJwMTBOZEg3Q0hoQmRIbm5mdlprcUVCUE9F?=
+ =?utf-8?B?c29hSk9nZUlLcis0OFF6dUVPMjV5WDJFcjhNWWxPMUJiN1Q2V0FLSmNoaUl6?=
+ =?utf-8?B?OTFBUm9RcWlwUW5EMFZ6VmhNT0ppUEFEWUYySTM2Q2cweEQvM25uSXZTeDJp?=
+ =?utf-8?B?QmJYbEkzekova01pOG11Q1VXL1liWXZVNXcvRzA3UWVvU0ZwMFVES0xzYW5X?=
+ =?utf-8?B?QVZpMUc2RzZIYkxveHRxaUZveUFYalFUc0lpMkt6TGR1WjNrVG1mOENUNkwr?=
+ =?utf-8?B?MU1KanR4VWF2RHB5emVyQlUvQnE4U1N0OTAya1dSRHFkRGQ4YUFBaVhqN0Vo?=
+ =?utf-8?B?K1NxckJkYnZ3TzBqdUdFRWdYQU91LzBxdlVJM2V1b0E5VU54WWY0KzFkSFYx?=
+ =?utf-8?B?b3VvNlhOTHdMREtxRk5VWmJuQkRLUWNHaGE1UjdrK25NeGxSWDJ5bVlxVjBW?=
+ =?utf-8?B?SHJMTndmM21FSDRBYmRXKzh0TzVxVVQvT2dWbk1ncnZSV1BpSk92SkpYczFG?=
+ =?utf-8?B?Zi93cHpXQkY2YmlXYnVZMkdsaWw3S0UzUStzNXBjNzBwY3Bld1ovZW1PQXhD?=
+ =?utf-8?B?WnBRSWZTelZwM1pkbVFtR1VyaWxZV2J4K0U1SzNKY1Z4QTE0Y1hKc2hRQUFE?=
+ =?utf-8?B?Sy8wNmtrTDk0V0wyeEFBcEZWYlRDcUQvVE5NUHBQTWx3Q2ZjRXFQY1pZL0dC?=
+ =?utf-8?B?OXNHMHIwaVgwM2phZVhqenhkd2JMblM2dEUrT0FMdGNLUGJ5bjFiQXRPOTFF?=
+ =?utf-8?B?Q3JQMGRjTWRhSlJMTXVIU0lyeDJxNUdkbEZuTWVZVHEzU0FpdWRKK0lUZ05Q?=
+ =?utf-8?B?VzkxZ2NhYStTVml2MDhDdTlRVmVwTmtCS1U3S0VPaytIOC9SQTB1Mm9SZi9M?=
+ =?utf-8?B?K1NPTlZsNVhsUWpSNE1YVUpCdU9WallPSDFqanFDWjZ6ZXNnZnRnWGNBWktt?=
+ =?utf-8?B?bzRkNjJxK0NxSTNhS21sd2xQRHgyQ3hHdzRkMk9FR2RqL0pMa0tFT0s2Zngv?=
+ =?utf-8?B?dURtUnQ4bDFUNDBpL1hGZmp6YWJjS1BhdEJWMmVTd1dUekRsTWwycDZkd1I4?=
+ =?utf-8?Q?C5028yi6b8vnG9sM=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82b5003e-13df-436e-8938-08de53c7d069
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6522.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 23:51:19.4949
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eIQ194zIB1rI9qRl8zQWVcQUQp6CkhoONlGgmsYQk/nqc03h38d2D8MCfTtKKn9qSfOqAqHGhnsq1iKOXNB5kw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4796
+X-OriginatorOrg: intel.com
 
-The dax kmem driver currently onlines memory automatically during
-probe using the system's default online policy but provides no way
-to control or query the entire region state at runtime.
+On Wed, Jan 14, 2026 at 03:34:21PM -0800, Matthew Brost wrote:
+> On Wed, Jan 14, 2026 at 01:48:25PM -0800, Andrew Morton wrote:
+> > On Wed, 14 Jan 2026 20:19:52 +0100 Francois Dugast <francois.dugast@intel.com> wrote:
+> > 
+> > > Reinitialize metadata for large zone device private folios in
+> > > zone_device_page_init prior to creating a higher-order zone device
+> > > private folio. This step is necessary when the folio’s order changes
+> > > dynamically between zone_device_page_init calls to avoid building a
+> > > corrupt folio. As part of the metadata reinitialization, the dev_pagemap
+> > > must be passed in from the caller because the pgmap stored in the folio
+> > > page may have been overwritten with a compound head.
+> > 
+> > Thanks.  What are the worst-case userspace-visible effects of the bug?
+> 
+> If you reallocate a subset of pages from what was originally a large
+> device folio, the pgmap mapping becomes invalid because it was
+> overwritten by the compound head, and this can crash the kernel.
+> 
+> Alternatively, consider the case where the original folio had an order
+> of 9 and _nr_pages was set. If you then reallocate the folio plus one as
 
-There is no atomic to offline and remove memory blocks together.
+s/_nr_pages/the order was encoded the page flags.
 
-Add a new 'hotplug' sysfs attribute that allows userspace to control
-and query the entire memory region state.
+Not clearing _nr_pages is probably bad too, not sure what the side
+affect of that is, but it can't be good. 
 
-The interface supports the following states:
-  - "unplug": memory is offline and blocks are not present
-  - "online": memory is online as normal system RAM
-  - "online_movable": memory is online in ZONE_MOVABLE
+> an individual page, the flags would still have PG_locked set, causing a
+> hang the next time you try to lock the page.
+> 
+> This is pretty bad if drivers implement a buddy allocator for device
+> pages (Xe does; Nouveau doesn’t, which is why they haven’t hit this
+> issue). Only Nouveau enables large device pages in 6.19 but probably
+> best to have kernel flying around with known issues.
 
-Valid transitions:
-  - unplugged -> online
-  - unplugged -> online_movable
-  - online    -> unplugged
-  - online_movable -> unplugged
+s/best to have kernel/best to not have kernels
 
-"offline" (memory blocks exist but are offline by default) is not
-supported because it's functionally equivalent to "unplugged" and
-entices races between offlining and unplugging.
+Matt
 
-The initial state after probe uses mhp_get_default_online_type() to
-preserve backwards compatibility - existing systems with auto-online
-policies will continue to work as before.
-
-As with any hot-remove mechanism, the removal can fail and if rollback
-fails the system can be left in an inconsistent state.
-
-Unbind Note:
-  We used to call remove_memory() during unbind, which would fire a
-  BUG() if any of the memory blocks were online at that time.  We lift
-  this into a WARN in the cleanup routine and don't attempt hotremove
-  if ->state is not DAX_KMEM_UNPLUGGED.
-
-  The resources are still leaked but this prevents deadlock on unbind
-  if a memory region happens to be impossible to hotremove.
-
-Suggested-by: Hannes Reinecke <hare@suse.de>
-Suggested-by: David Hildenbrand <david@kernel.org>
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- Documentation/ABI/testing/sysfs-bus-dax |  17 +++
- drivers/dax/kmem.c                      | 159 +++++++++++++++++++++---
- 2 files changed, 156 insertions(+), 20 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-dax b/Documentation/ABI/testing/sysfs-bus-dax
-index b34266bfae49..faf6f63a368c 100644
---- a/Documentation/ABI/testing/sysfs-bus-dax
-+++ b/Documentation/ABI/testing/sysfs-bus-dax
-@@ -151,3 +151,20 @@ Description:
- 		memmap_on_memory parameter for memory_hotplug. This is
- 		typically set on the kernel command line -
- 		memory_hotplug.memmap_on_memory set to 'true' or 'force'."
-+
-+What:		/sys/bus/dax/devices/daxX.Y/hotplug
-+Date:		January, 2026
-+KernelVersion:	v6.21
-+Contact:	nvdimm@lists.linux.dev
-+Description:
-+		(RW) Controls what hotplug state of the memory region.
-+		Applies to all memory blocks associated with the device.
-+		Only applies to dax_kmem devices.
-+
-+                States: [unplugged, online, online_movable]
-+                Arguments:
-+		  "unplug": memory is offline and blocks are not present
-+		  "online": memory is online as normal system RAM
-+		  "online_movable": memory is online in ZONE_MOVABLE
-+
-+		Devices must unplug to online into a different state.
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index 3929cb8576de..c222ae9d675d 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -44,9 +44,15 @@ static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r)
- 	return 0;
- }
- 
-+#define DAX_KMEM_UNPLUGGED	(-1)
-+
- struct dax_kmem_data {
- 	const char *res_name;
- 	int mgid;
-+	int numa_node;
-+	struct dev_dax *dev_dax;
-+	int state;
-+	struct mutex lock; /* protects hotplug state transitions */
- 	struct resource *res[];
- };
- 
-@@ -69,8 +75,10 @@ static void kmem_put_memory_types(void)
-  * dax_kmem_do_hotplug - hotplug memory for dax kmem device
-  * @dev_dax: the dev_dax instance
-  * @data: the dax_kmem_data structure with resource tracking
-+ * @online_type: MMOP_ONLINE or MMOP_ONLINE_MOVABLE
-  *
-- * Hotplugs all ranges in the dev_dax region as system memory.
-+ * Hotplugs all ranges in the dev_dax region as system memory using
-+ * the specified online type.
-  *
-  * Returns the number of successfully mapped ranges, or negative error.
-  */
-@@ -82,6 +90,12 @@ static int dax_kmem_do_hotplug(struct dev_dax *dev_dax,
- 	int i, rc, onlined = 0;
- 	mhp_t mhp_flags;
- 
-+	if (data->state == MMOP_ONLINE || data->state == MMOP_ONLINE_MOVABLE)
-+		return -EINVAL;
-+
-+	if (online_type != MMOP_ONLINE && online_type != MMOP_ONLINE_MOVABLE)
-+		return -EINVAL;
-+
- 	for (i = 0; i < dev_dax->nr_range; i++) {
- 		struct range range;
- 
-@@ -174,9 +188,9 @@ static int dax_kmem_init_resources(struct dev_dax *dev_dax,
-  * @dev_dax: the dev_dax instance
-  * @data: the dax_kmem_data structure with resource tracking
-  *
-- * Removes all ranges in the dev_dax region.
-+ * Offlines and removes all ranges in the dev_dax region.
-  *
-- * Returns the number of successfully removed ranges.
-+ * Returns the number of successfully removed ranges, or negative error.
-  */
- static int dax_kmem_do_hotremove(struct dev_dax *dev_dax,
- 				 struct dax_kmem_data *data)
-@@ -196,7 +210,7 @@ static int dax_kmem_do_hotremove(struct dev_dax *dev_dax,
- 		if (!data->res[i])
- 			continue;
- 
--		rc = remove_memory(range.start, range_len(&range));
-+		rc = offline_and_remove_memory(range.start, range_len(&range));
- 		if (rc == 0) {
- 			success++;
- 			continue;
-@@ -228,6 +242,21 @@ static void dax_kmem_cleanup_resources(struct dev_dax *dev_dax,
- {
- 	int i;
- 
-+	/*
-+	 * If the device unbind occurs before memory is hotremoved, we can never
-+	 * remove the memory (requires reboot).  Attempting an offline operation
-+	 * here may cause deadlock and a failure to finish the unbind.
-+	 *
-+	 * This WARN used to be a BUG called by remove_memory().
-+	 *
-+	 * Note: This leaks the resources.
-+	 */
-+	if (data->state != DAX_KMEM_UNPLUGGED) {
-+		WARN(data->state != DAX_KMEM_UNPLUGGED,
-+		     "Hotplug memory regions stuck online until reboot");
-+		return;
-+	}
-+
- 	for (i = 0; i < dev_dax->nr_range; i++) {
- 		if (!data->res[i])
- 			continue;
-@@ -237,6 +266,91 @@ static void dax_kmem_cleanup_resources(struct dev_dax *dev_dax,
- 	}
- }
- 
-+static int dax_kmem_parse_state(const char *buf)
-+{
-+	if (sysfs_streq(buf, "unplug"))
-+		return DAX_KMEM_UNPLUGGED;
-+	if (sysfs_streq(buf, "online"))
-+		return MMOP_ONLINE;
-+	if (sysfs_streq(buf, "online_movable"))
-+		return MMOP_ONLINE_MOVABLE;
-+	return -EINVAL;
-+}
-+
-+static ssize_t hotplug_show(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	struct dax_kmem_data *data = dev_get_drvdata(dev);
-+	const char *state_str;
-+
-+	if (!data)
-+		return -ENXIO;
-+
-+	switch (data->state) {
-+	case DAX_KMEM_UNPLUGGED:
-+		state_str = "unplugged";
-+		break;
-+	case MMOP_ONLINE:
-+		state_str = "online";
-+		break;
-+	case MMOP_ONLINE_MOVABLE:
-+		state_str = "online_movable";
-+		break;
-+	default:
-+		state_str = "unknown";
-+		break;
-+	}
-+
-+	return sysfs_emit(buf, "%s\n", state_str);
-+}
-+
-+static ssize_t hotplug_store(struct device *dev, struct device_attribute *attr,
-+			     const char *buf, size_t len)
-+{
-+	struct dev_dax *dev_dax = to_dev_dax(dev);
-+	struct dax_kmem_data *data = dev_get_drvdata(dev);
-+	int online_type;
-+	int rc;
-+
-+	if (!data)
-+		return -ENXIO;
-+
-+	online_type = dax_kmem_parse_state(buf);
-+	if (online_type < DAX_KMEM_UNPLUGGED)
-+		return online_type;
-+
-+	guard(mutex)(&data->lock);
-+
-+	/* Already in requested state */
-+	if (data->state == online_type)
-+		return len;
-+
-+	if (online_type == DAX_KMEM_UNPLUGGED) {
-+		rc = dax_kmem_do_hotremove(dev_dax, data);
-+		if (rc < 0) {
-+			dev_warn(dev, "hotplug state is inconsistent\n");
-+			return rc;
-+		}
-+		data->state = DAX_KMEM_UNPLUGGED;
-+		return len;
-+	}
-+
-+	/*
-+	 * online_type is MMOP_ONLINE or MMOP_ONLINE_MOVABLE
-+	 * Cannot switch between online types without unplugging first
-+	 */
-+	if (data->state == MMOP_ONLINE || data->state == MMOP_ONLINE_MOVABLE)
-+		return -EBUSY;
-+
-+	rc = dax_kmem_do_hotplug(dev_dax, data, online_type);
-+	if (rc < 0)
-+		return rc;
-+
-+	data->state = online_type;
-+	return len;
-+}
-+static DEVICE_ATTR_RW(hotplug);
-+
- static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
- {
- 	struct device *dev = &dev_dax->dev;
-@@ -246,6 +360,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
- 	int i, rc;
- 	int numa_node;
- 	int adist = MEMTIER_DEFAULT_DAX_ADISTANCE;
-+	int online_type;
- 
- 	/*
- 	 * Ensure good NUMA information for the persistent memory.
-@@ -304,6 +419,10 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
- 	if (rc < 0)
- 		goto err_reg_mgid;
- 	data->mgid = rc;
-+	data->numa_node = numa_node;
-+	data->dev_dax = dev_dax;
-+	data->state = DAX_KMEM_UNPLUGGED;
-+	mutex_init(&data->lock);
- 
- 	dev_set_drvdata(dev, data);
- 
-@@ -315,9 +434,17 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
- 	 * Hotplug using the system default policy - this preserves backwards
- 	 * for existing users who rely on the default auto-online behavior.
- 	 */
--	rc = dax_kmem_do_hotplug(dev_dax, data, mhp_get_default_online_type());
--	if (rc < 0)
--		goto err_hotplug;
-+	online_type = mhp_get_default_online_type();
-+	if (online_type != MMOP_OFFLINE) {
-+		rc = dax_kmem_do_hotplug(dev_dax, data, online_type);
-+		if (rc < 0)
-+			goto err_hotplug;
-+		data->state = online_type;
-+	}
-+
-+	rc = device_create_file(dev, &dev_attr_hotplug);
-+	if (rc)
-+		dev_warn(dev, "failed to create hotplug sysfs entry\n");
- 
- 	return 0;
- 
-@@ -338,23 +465,11 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
- #ifdef CONFIG_MEMORY_HOTREMOVE
- static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
- {
--	int success;
- 	int node = dev_dax->target_node;
- 	struct device *dev = &dev_dax->dev;
- 	struct dax_kmem_data *data = dev_get_drvdata(dev);
- 
--	/*
--	 * We have one shot for removing memory, if some memory blocks were not
--	 * offline prior to calling this function remove_memory() will fail, and
--	 * there is no way to hotremove this memory until reboot because device
--	 * unbind will succeed even if we return failure.
--	 */
--	success = dax_kmem_do_hotremove(dev_dax, data);
--	if (success < dev_dax->nr_range) {
--		dev_err(dev, "Hotplug regions stuck online until reboot\n");
--		return;
--	}
--
-+	device_remove_file(dev, &dev_attr_hotplug);
- 	dax_kmem_cleanup_resources(dev_dax, data);
- 	memory_group_unregister(data->mgid);
- 	kfree(data->res_name);
-@@ -372,6 +487,10 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
- #else
- static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
- {
-+	struct device *dev = &dev_dax->dev;
-+
-+	device_remove_file(dev, &dev_attr_hotplug);
-+
- 	/*
- 	 * Without hotremove purposely leak the request_mem_region() for the
- 	 * device-dax range and return '0' to ->remove() attempts. The removal
--- 
-2.52.0
-
+> 
+> Matt
