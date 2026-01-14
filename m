@@ -1,285 +1,233 @@
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012019.outbound.protection.outlook.com [52.101.48.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881E13358BB;
-	Wed, 14 Jan 2026 18:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768415301; cv=fail; b=uHIEZe5iOWXgoK4+fa5Vp5NnBxCkxqtpXBAmtKqznojlq0o/RC4xu8NQ+XBoWdIx3ghU6oxptf3blbkNp5fEgckyfRMtr6F4Ykmlagi8ABf7Cn6fC1H5tuhQZNbwq/a8S6NwZf//7ji+b0Otsoua5P7IOgrhgcFIb0ZzlnCYjZA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768415301; c=relaxed/simple;
-	bh=pYUYEho6WNQWaSKPyv1JnG8rGy+IqCBhZySxZnFLCzU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tG3Wko7xbV7ro8YAzOg+DZLdtLfMwJ+20xBdIc0shqFaVd4t16xDdc33NiXjj49qeC6fptwUVCpgx92DoJ39Zu6Un7GKGbsMMP6PxIOeHBqgZq+69n34zg+zbFV0EMOiLFkH/VjTujFEipQgAEcItnES9QNb08v6Nu7koRLyj9M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WrvGSlsa; arc=fail smtp.client-ip=52.101.48.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F616335573;
+	Wed, 14 Jan 2026 18:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768415318; cv=none; b=Xo8u3EKabWniboBY8zf8i0/SVM96iMMydFeScoQygJ5BRuvg4ftO1kB4W+6pSvGer3AVYBZvAItPPLg0Al4wG4eUrWQPriZNnvhH/rO92EJNmxTbpo2aimNbQqiZTqsEtH+7LgMGVaMFxLLNPbqc/tknrDQ79WalZoLkA+MphRg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768415318; c=relaxed/simple;
+	bh=B/l+hdSo79efToV/S32HPqIwFRrs6gJDZL0DKV6l+H8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=affmVVeHaBJD/upzq01f+DZVM1K5QL6TlNTj56wXR2YXHH132/vO9sPLoVMEm7bjC+nySTiyYqmYCbcJP1scUl3arKt7Fgvl9aaB2mPVx6KwBgf+6nYgNNBuT9uZzujuiPRh0GwKr8b7GNmGcZ40Kn3RWSqyalDwS63o20vNtt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R9siDhfQ; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WrvGSlsa"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w9SZEy0rSLjlE5Ag1tFf5ev4zjy6GGTR3M7dElF1elh4j8i67OGb+onNMZyydbTRnY9x1Tn0v+P/n9B3kmiftL+LrflkShjfW2vtntEZoVfl4ckxG2wp792BoC3KRju6TBA1yWt6CIIZT1AHO2mRZc/2ECXWTfi5jJURVep6LTXqU7vYLv+0CDIJzHTsi635MacHa+OO6xPeQSs/Q5IQZvL6rB4r+OilsfCWPa0YSYvhswROmRALHXggO3uTX+O92+Afl2f1TPlTXL2dT93y0RZgiBYTIwveCfSjIa2fO9MzIm4uR161spqEVh/2riOGpPRFdqqjC/7aXkag5AcYvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vtie9cGljjtWccWQJ+bcWGJDmVFsOmjbZ2GDh3MYFos=;
- b=Du6WTPMuwXUI9lcxHuK4Mct3FYtmeudvXnrpEnlAlqCtahzydrmK5wUQvsQIlG2wUJWS8FIeqywgicSMscdT3Rl4U1UyOZXmTZSkSFfoOCwISb+9OSDrMnUJBcJsWNN3L1oB2BMl7YcIkG4wmdK44yqr3uE46vUX5S+gUIHlmxhMdDHQSYJlSUdMRCpZRlS9syUUveza1J94GkBBgkb5NX5U3tFFpcl9h5i1rDDnWE34D5hZMUo70XfcDya+1WwObRVBkk2wm7OW4EPZjSsZutUhCyHzgFlAGUhewPECF38ArAUKRmGfIbWsnvvi7hpFqn6bNzmhQH4bSV7To2Dn9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vtie9cGljjtWccWQJ+bcWGJDmVFsOmjbZ2GDh3MYFos=;
- b=WrvGSlsaOa5W+UnT+u9dXLgi3C2V0P+xAyM7b9JqXF6I4Fo52gO8+ART7TjdssHm5KwEMl6kq13jC0WyY0enqDmstlss0IH1gttZd5GkKqBXMaLBpkFfHhDuj33RvzHFVTgZgzU5TxDc3jI7GarX/iPEAevGr8DOcDzqyfatIPg=
-Received: from BY1P220CA0003.NAMP220.PROD.OUTLOOK.COM (2603:10b6:a03:59d::10)
- by PH7PR12MB7233.namprd12.prod.outlook.com (2603:10b6:510:204::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.4; Wed, 14 Jan
- 2026 18:28:14 +0000
-Received: from SJ5PEPF000001F4.namprd05.prod.outlook.com
- (2603:10b6:a03:59d:cafe::9f) by BY1P220CA0003.outlook.office365.com
- (2603:10b6:a03:59d::10) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.5 via Frontend Transport; Wed,
- 14 Jan 2026 18:28:14 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ5PEPF000001F4.mail.protection.outlook.com (10.167.242.72) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9520.1 via Frontend Transport; Wed, 14 Jan 2026 18:28:13 +0000
-Received: from ethanolx7ea3host.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 14 Jan
- 2026 12:28:12 -0600
-From: Terry Bowman <terry.bowman@amd.com>
-To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>, <alucerop@amd.com>,
-	<ira.weiny@intel.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<terry.bowman@amd.com>
-Subject: [PATCH v14 33/34] cxl: Update Endpoint correctable protocol error handling
-Date: Wed, 14 Jan 2026 12:20:54 -0600
-Message-ID: <20260114182055.46029-34-terry.bowman@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260114182055.46029-1-terry.bowman@amd.com>
-References: <20260114182055.46029-1-terry.bowman@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R9siDhfQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768415314; x=1799951314;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=B/l+hdSo79efToV/S32HPqIwFRrs6gJDZL0DKV6l+H8=;
+  b=R9siDhfQNhfOmeNa5juK7bcr1oDHdejYVEHnYvOosCVtDTw52AxXZi25
+   JK0/802Fsulrr9HZySxX1P/FQhTfzilMcSm0IbQ8VeJD8+d216VGwDLGC
+   jBZNu6g885fyPcwUpoNo5NrH/6Sx10Vg7+WGfiTtgWPaGZnXb/05zhhCN
+   4NJZRy89qzdrexiWyM5kLn2U3/bAKD77mlkagC8kjeBeOfIUv6VcLv0uI
+   fN4TzIZ1pgcI2Eln9GRcGQhlGglxoX2urDQJr4AniwZ26aPFbUICNRWEU
+   QBoTBHGY7Mw04vOnhV44YBLjmiOInbOZhC5bZUz43+s9EDmUceyaAO2MO
+   g==;
+X-CSE-ConnectionGUID: uf2QV3KkRtyb3WbYlrDCaw==
+X-CSE-MsgGUID: vg1Is335QfKIDeYQzg0ekA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="68930171"
+X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
+   d="scan'208";a="68930171"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 10:28:33 -0800
+X-CSE-ConnectionGUID: J7cBc3OdSr2TX79N/Cl/Qg==
+X-CSE-MsgGUID: +vxRPwiLTpCL85r57SjVFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
+   d="scan'208";a="205014197"
+Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.111.5]) ([10.125.111.5])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 10:28:32 -0800
+Message-ID: <c3ea841a-a220-438b-84c3-cabb73da94d4@intel.com>
+Date: Wed, 14 Jan 2026 11:28:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 13/13] cxl: Disable HPA/SPA translation handlers for
+ Normalized Addressing
+To: Robert Richter <rrichter@amd.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Davidlohr Bueso <dave@stgolabs.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
+References: <20260114164837.1076338-1-rrichter@amd.com>
+ <20260114164837.1076338-14-rrichter@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260114164837.1076338-14-rrichter@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001F4:EE_|PH7PR12MB7233:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7ef17c50-4e6c-4773-f7d7-08de539aadb2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|36860700013|1800799024|82310400026|376014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?aY/UFErWL0UJw2iZLXotHVTk14KSHBLIQaO6talF+fXlsEALiZp59gFrdBzb?=
- =?us-ascii?Q?d39+0DqxwYoFg9JrPUVh9Onx4dYtqGmiZVQxZVmC7+3DpbzOUYCLSRugJ4Qb?=
- =?us-ascii?Q?sI3zaFO6dNagZ26Krcev0Sy3rJmvLKuXKRfp6YitLp8tzk/CAz3VOGQ5s56G?=
- =?us-ascii?Q?c6v6iE0PZvgUFV6s/mKLvKWnWzTjm2Eh9telzjm2SMWULg3LCxCXQToXfbjO?=
- =?us-ascii?Q?1gjMXvkGOv+gxmw8n+YOTwnSJw6gNIXh8JyMTtzvy4swHquAS9LGa4QOA7Uj?=
- =?us-ascii?Q?QybbnUjzv6XHandvtUxuJeGb2yjDd9e3SidlmcNJq9H4XsFCUpgTIet1cJU/?=
- =?us-ascii?Q?7BZbYhGKw9QFENSFQVU7hwSuWseieNb96mo14pwCflh4dpyFQKoT5BNG8k0N?=
- =?us-ascii?Q?61rfoUJeikxjFVMp0UJcPM7WyxYyYD6RXgIgix1UT1CItgxubJ+VbclPNowP?=
- =?us-ascii?Q?priaNKidg2zrM6+1pmKhY1hn+rah3NSPAP5E9GnnmTU/CBCKO9SfapVJ8XBZ?=
- =?us-ascii?Q?pOqIb7CkqJtM4ItSHUfISE3h274k8z6mTlLuA090FDPNZNEnqKoytsrUf4/A?=
- =?us-ascii?Q?qBgka0BnqeSPf2cX+kaoSp9GfYxuq0zYHqHhaapzDqGzi3O5F6AH6yVgafqO?=
- =?us-ascii?Q?a+PvKmu7z7Y66m8B5/ZsDzW1BRQJUOcfOvH2uOR8YaPj6W592pVkvypXHksx?=
- =?us-ascii?Q?+3ejR7Y6TCsZvkASfLY2HSEsVl1dSLZIHxFazYdzwleBxzTqM8j8LeslA3ES?=
- =?us-ascii?Q?SDpH4PbiK6W07pDdmraMUAqgZ7cayVtxx6tM8M1kxOgsLehkVwUxWtUbxkHX?=
- =?us-ascii?Q?c+F2CXh5wh1Ejtk0LD0MjwWAOjXMPv0zvWMjKNwQ/SBt9ylJsB5Eo8oasxEJ?=
- =?us-ascii?Q?BrJkpqsV3wCjauZAY6d/oN+KcV+4MQRU7XLhbH8XA8RJCVvi/VtKDOBU8KLX?=
- =?us-ascii?Q?5OQFVMsMnnn+K3/XsHfI82PN+OThfOQgormYCm5xyHtK1bpgjrtie7d/pzvt?=
- =?us-ascii?Q?uRgctDNTj3Ep/1Ya9RE2jW0Anw247iGEtgEFr/wHQnOAts/LZ5SnHMN+Tf+P?=
- =?us-ascii?Q?CM+B5jCEGFIaVMGqWUY+VEbfIqjnvk6hX2wvtYIgz20GiMJIRXPRaDWSyMqZ?=
- =?us-ascii?Q?TM8jwQeuYyXhOll+9DrRdumo5NZw3eEkxf12VpI3Yjr2yaI7XhqNbXwoDpFF?=
- =?us-ascii?Q?UnaWtxG2baQqz4AEZUTx3q5eENL/mZ72vvaUoCZP8IJZ/aHTtJn1Ll6c/7AE?=
- =?us-ascii?Q?iuBOt19fwQSptbFsNtrH/o2xAQOv6I0Zv3El4kWIdp0I9rLhrDo6Jj/IUkVB?=
- =?us-ascii?Q?BZPomLdS7tVZVoNvzxVeIxA7UWnt2seKTJg24i4DNNKOPCoSQNIiJQRE/g+H?=
- =?us-ascii?Q?HU0QO2SxDIK6akL6+kUPmJMjOFri/W18b3Wl8zNprzjdpZwuSszMxeSP3/xJ?=
- =?us-ascii?Q?oqoYa2NStXUJJOV0yJJuR9Fl0tdgxxCqQcSFJK2qLytCMFvHE6XY61w8c5hA?=
- =?us-ascii?Q?VPaEqraQo80QRtOUkINMVWxMezuiyRI7YkygEUc+/+JLQICo5svwEBXuAaS8?=
- =?us-ascii?Q?m+cuUgPC8ukzimUpvP/oMvwqPPwSHynNla6NCVPD51G+D010N5oXV8JOVuIy?=
- =?us-ascii?Q?2NbWg7IVCbdbXtXxXko3uyNvnMuxcezqtDP8NegAwl7wgn39uLNWlNj3c1Sb?=
- =?us-ascii?Q?+v62p57rkdmkSS1wQmEWJxGPqk4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(36860700013)(1800799024)(82310400026)(376014)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 18:28:13.6105
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ef17c50-4e6c-4773-f7d7-08de539aadb2
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001F4.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7233
 
-The CXL drivers must support handling Endpoint CXL and PCI correctable
-(CE) protocol errors. Update the driver to support both.
 
-Introduce cxl_pci_cor_error_detected() to handle PCI correctable errors,
-replacing cxl_cor_error_detected(). Implement this new function to call
-the existing CXL correctable handler, cxl_port_cor_error_detected().
 
-Update cxl_port_cor_error_detected() for correct Endpoint handling.
-Take the CXL memory device lock, check for a valid driver, and handle
-Restricted CXL Device (RCD) if needed.
+On 1/14/26 9:48 AM, Robert Richter wrote:
+> The root decoder provides the callbacks hpa_to_spa and spa_to_hpa to
+> perform Host Physical Address (HPA) and System Physical Address
+> translations, respectively. The callbacks are required to convert
+> addresses when HPA != SPA. XOR interleaving depends on this mechanism,
+> and the necessary handlers are implemented.
+> 
+> The translation handlers are used for poison injection
+> (trace_cxl_poison, cxl_poison_inject_fops) and error handling
+> (cxl_event_trace_record).
+> 
+> In AMD Zen5 systems with Normalized Addressing, endpoint addresses are
+> not SPAs, and translation handlers are required for these features to
+> function correctly.
+> 
+> Now, as ACPI PRM translation could be expensive in tracing or error
+> handling code paths, do not yet enable translations to avoid its
+> intensive use. Instead, disable those features which are used only for
+> debugging and enhanced logging.
+> 
+> Introduce the flag CXL_REGION_F_NORM_ADDR that indicates Normalized
+> Addressing for a region and use it to disable poison injection and DPA
+> to HPA conversion.
+> 
+> Note: Dropped unused CXL_DECODER_F_MASK macro.
+> 
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 
-Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+As you mentioned commit log needs updating, otherwise
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
----
 
-Changes in v13->v14:
-- New commit
-- Change cxl_cor_error_detected() parameter to &pdev->dev device from
-  memdev device. (Terry)
-- Updated commit message (Terry)
----
- drivers/cxl/core/ras.c | 52 ++++++++++++++++++++++++++----------------
- drivers/cxl/cxlpci.h   |  6 +++--
- drivers/cxl/pci.c      |  2 +-
- 3 files changed, 37 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-index dc6e02d64821..427009a8a78a 100644
---- a/drivers/cxl/core/ras.c
-+++ b/drivers/cxl/core/ras.c
-@@ -267,8 +267,10 @@ void cxl_handle_cor_ras(struct device *dev, u64 serial, void __iomem *ras_base)
- 	void __iomem *addr;
- 	u32 status;
- 
--	if (!ras_base)
-+	if (!ras_base) {
-+		dev_warn_once(dev, "CXL RAS register block is not mapped");
- 		return;
-+	}
- 
- 	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
- 	status = readl(addr);
-@@ -345,7 +347,30 @@ pci_ers_result_t cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ra
- 
- static void cxl_port_cor_error_detected(struct device *dev)
- {
--	cxl_handle_cor_ras(dev, 0, cxl_get_ras_base(dev));
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct cxl_port *port __free(put_cxl_port) = get_cxl_port(pdev);
-+	u64 serial = 0;
-+
-+	if (is_cxl_endpoint(port)) {
-+		struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
-+		struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+
-+		guard(device)(&cxlmd->dev);
-+
-+		if (!dev->driver) {
-+			dev_warn(&pdev->dev,
-+				 "%s: memdev disabled, abort error handling\n",
-+				 dev_name(dev));
-+			return;
-+		}
-+
-+		if (cxlds->rcd)
-+			cxl_handle_rdport_errors(cxlds);
-+
-+		serial = cxlds->serial;
-+	}
-+
-+	cxl_handle_cor_ras(dev, serial, cxl_get_ras_base(dev));
- }
- 
- static pci_ers_result_t cxl_port_error_detected(struct device *dev)
-@@ -376,28 +401,15 @@ static pci_ers_result_t cxl_port_error_detected(struct device *dev)
- 	return cxl_handle_ras(dev, serial, cxl_get_ras_base(dev));
- }
- 
--void cxl_cor_error_detected(struct pci_dev *pdev)
-+void cxl_pci_cor_error_detected(struct pci_dev *pdev)
- {
--	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
--	struct cxl_memdev *cxlmd = cxlds->cxlmd;
--	struct device *dev = &cxlds->cxlmd->dev;
--
--	guard(device)(dev);
--
--	if (!dev->driver) {
--		dev_warn(&pdev->dev,
--			 "%s: memdev disabled, abort error handling\n",
--			 dev_name(dev));
--		return;
--	}
-+	struct cxl_port *port __free(put_cxl_port) = get_cxl_port(pdev);
- 
--	if (cxlds->rcd)
--		cxl_handle_rdport_errors(cxlds);
-+	guard(device)(&port->dev);
- 
--	cxl_handle_cor_ras(&cxlmd->dev, cxlds->serial,
--			   cxlmd->endpoint->regs.ras);
-+	cxl_port_cor_error_detected(&pdev->dev);
- }
--EXPORT_SYMBOL_NS_GPL(cxl_cor_error_detected, "CXL");
-+EXPORT_SYMBOL_NS_GPL(cxl_pci_cor_error_detected, "CXL");
- 
- pci_ers_result_t cxl_pci_error_detected(struct pci_dev *pdev,
- 					pci_channel_state_t error)
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index f218b343e179..3d70f9b4a193 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -78,7 +78,7 @@ struct cxl_dev_state;
- void read_cdat_data(struct cxl_port *port);
- 
- #ifdef CONFIG_CXL_RAS
--void cxl_cor_error_detected(struct pci_dev *pdev);
-+void cxl_pci_cor_error_detected(struct pci_dev *pdev);
- pci_ers_result_t cxl_pci_error_detected(struct pci_dev *pdev,
- 					pci_channel_state_t error);
- void devm_cxl_dport_ras_setup(struct cxl_dport *dport);
-@@ -90,7 +90,9 @@ int __cxl_await_media_ready(struct cxl_dev_state *cxlds);
- resource_size_t __cxl_rcd_component_reg_phys(struct device *dev,
- 					     struct cxl_dport *dport);
- #else
--static inline void cxl_cor_error_detected(struct pci_dev *pdev) { }
-+static inline void cxl_pci_cor_error_detected(struct pci_dev *pdev)
-+{
-+}
- static inline pci_ers_result_t cxl_pci_error_detected(struct pci_dev *pdev,
- 						      pci_channel_state_t state)
- {
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index ff741adc7c7f..328b4ea8dbc5 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -1055,7 +1055,7 @@ static const struct pci_error_handlers pci_error_handlers = {
- 	.error_detected	= cxl_pci_error_detected,
- 	.slot_reset	= cxl_slot_reset,
- 	.resume		= cxl_error_resume,
--	.cor_error_detected	= cxl_cor_error_detected,
-+	.cor_error_detected	= cxl_pci_cor_error_detected,
- 	.reset_done	= cxl_reset_done,
- };
- 
--- 
-2.34.1
+> ---
+>  drivers/cxl/core/atl.c    |  3 +++
+>  drivers/cxl/core/region.c | 33 +++++++++++++++++++++++++--------
+>  drivers/cxl/cxl.h         |  9 ++++++++-
+>  3 files changed, 36 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/atl.c b/drivers/cxl/core/atl.c
+> index 09d0ea1792d9..310668786189 100644
+> --- a/drivers/cxl/core/atl.c
+> +++ b/drivers/cxl/core/atl.c
+> @@ -169,8 +169,11 @@ static int cxl_prm_setup_root(struct cxl_root *cxl_root, void *data)
+>  	 * decoders in the BIOS would prevent a capable kernel (or
+>  	 * other operating systems) from shutting down auto-generated
+>  	 * regions and managing resources dynamically.
+> +	 *
+> +	 * Indicate that Normalized Addressing is enabled.
+>  	 */
+>  	cxld->flags |= CXL_DECODER_F_LOCK;
+> +	cxld->flags |= CXL_DECODER_F_NORMALIZED_ADDRESSING;
+>  
+>  	ctx->hpa_range = hpa_range;
+>  	ctx->interleave_ways = ways;
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 80cd77f0842e..8e92b491d686 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1097,14 +1097,16 @@ static int cxl_rr_assign_decoder(struct cxl_port *port, struct cxl_region *cxlr,
+>  	return 0;
+>  }
+>  
+> -static void cxl_region_set_lock(struct cxl_region *cxlr,
+> -				struct cxl_decoder *cxld)
+> +static void cxl_region_setup_flags(struct cxl_region *cxlr,
+> +				   struct cxl_decoder *cxld)
+>  {
+> -	if (!test_bit(CXL_DECODER_F_LOCK, &cxld->flags))
+> -		return;
+> +	if (test_bit(CXL_DECODER_F_LOCK, &cxld->flags)) {
+> +		set_bit(CXL_REGION_F_LOCK, &cxlr->flags);
+> +		clear_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags);
+> +	}
+>  
+> -	set_bit(CXL_REGION_F_LOCK, &cxlr->flags);
+> -	clear_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags);
+> +	if (test_bit(CXL_DECODER_F_NORMALIZED_ADDRESSING, &cxld->flags))
+> +		set_bit(CXL_REGION_F_NORMALIZED_ADDRESSING, &cxlr->flags);
+>  }
+>  
+>  /**
+> @@ -1218,7 +1220,7 @@ static int cxl_port_attach_region(struct cxl_port *port,
+>  		}
+>  	}
+>  
+> -	cxl_region_set_lock(cxlr, cxld);
+> +	cxl_region_setup_flags(cxlr, cxld);
+>  
+>  	rc = cxl_rr_ep_add(cxl_rr, cxled);
+>  	if (rc) {
+> @@ -2493,7 +2495,7 @@ static struct cxl_region *cxl_region_alloc(struct cxl_root_decoder *cxlrd, int i
+>  	device_set_pm_not_required(dev);
+>  	dev->bus = &cxl_bus_type;
+>  	dev->type = &cxl_region_type;
+> -	cxl_region_set_lock(cxlr, &cxlrd->cxlsd.cxld);
+> +	cxl_region_setup_flags(cxlr, &cxlrd->cxlsd.cxld);
+>  
+>  	return cxlr;
+>  }
+> @@ -3132,6 +3134,13 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+>  	u8 eiw = 0;
+>  	int pos;
+>  
+> +	/*
+> +	 * Conversion between SPA and DPA is not supported in
+> +	 * Normalized Address mode.
+> +	 */
+> +	if (test_bit(CXL_REGION_F_NORMALIZED_ADDRESSING, &cxlr->flags))
+> +		return ULLONG_MAX;
+> +
+>  	for (int i = 0; i < p->nr_targets; i++) {
+>  		if (cxlmd == cxled_to_memdev(p->targets[i])) {
+>  			cxled = p->targets[i];
+> @@ -3922,6 +3931,14 @@ static int cxl_region_setup_poison(struct cxl_region *cxlr)
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	struct dentry *dentry;
+>  
+> +	/*
+> +	 * Do not enable poison injection in Normalized Address mode.
+> +	 * Conversion between SPA and DPA is required for this, but it is
+> +	 * not supported in this mode.
+> +	 */
+> +	if (test_bit(CXL_REGION_F_NORMALIZED_ADDRESSING, &cxlr->flags))
+> +		return 0;
+> +
+>  	/* Create poison attributes if all memdevs support the capabilities */
+>  	for (int i = 0; i < p->nr_targets; i++) {
+>  		struct cxl_endpoint_decoder *cxled = p->targets[i];
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 20b0fd43fa7b..de30a87600be 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -332,7 +332,7 @@ int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport);
+>  #define CXL_DECODER_F_TYPE3 BIT(3)
+>  #define CXL_DECODER_F_LOCK  BIT(4)
+>  #define CXL_DECODER_F_ENABLE    BIT(5)
+> -#define CXL_DECODER_F_MASK  GENMASK(5, 0)
+> +#define CXL_DECODER_F_NORMALIZED_ADDRESSING BIT(6)
+>  
+>  enum cxl_decoder_type {
+>  	CXL_DECODER_DEVMEM = 2,
+> @@ -525,6 +525,13 @@ enum cxl_partition_mode {
+>   */
+>  #define CXL_REGION_F_LOCK 2
+>  
+> +/*
+> + * Indicate Normalized Addressing. Use it to disable SPA conversion if
+> + * HPA != SPA and an address translation callback handler does not
+> + * exist. Flag is needed by AMD Zen5 platforms.
+> + */
+> +#define CXL_REGION_F_NORMALIZED_ADDRESSING 3
+> +
+>  /**
+>   * struct cxl_region - CXL region
+>   * @dev: This region's device
 
