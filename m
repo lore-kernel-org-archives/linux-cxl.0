@@ -1,63 +1,63 @@
-Received: from mail-oi1-f193.google.com (mail-oi1-f193.google.com [209.85.167.193])
+Received: from mail-ot1-f68.google.com (mail-ot1-f68.google.com [209.85.210.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A70A38736B
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 21:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5893904C8
+	for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 21:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768426948; cv=none; b=ajWmKhrbaIDJgng8L8uDl58m2D7S46TPMCVjA9m8VzV3jioHb5q247Cax0GCfVUuXH7wxigeT36OCCnW2FEGyAa0paq9zSHvFMZProl7wYSLtn1bVZGD0XYAaTj5FIb8yGInM/SYT/Qx6YriasnNYwLYelVxgSj4jr9sgJtSVKU=
+	t=1768426967; cv=none; b=U7dXQlhy5BtvC4b2YWi9cTjJDpXMcrIqaGU25+WY8QeVIr7iiLImeg/SNPNhC59wOiIG0YH910Wh573ZUhXpNdmI5Khk7v/D+Zbongu3fFEeVdydE0orOqQXwWi/69w7FQt0pbb2anUzj/ZRvLybY69+4mV2180f9y4z/z4YL5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768426948; c=relaxed/simple;
-	bh=VL5oOUiKrAPPvKr1vFu621tvVEzPIunWgTzSeWNY/A0=;
+	s=arc-20240116; t=1768426967; c=relaxed/simple;
+	bh=P4J7niyHS51xHp1Q12pZ0X0vf1nlssirOmBCP6cbZ64=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Aj3syZekotgEWU/s/Zg2YIzh1RDN64ijokcrnYOCyRGL+la+Ubz/7bEokm5ij6Kzpx7QCiqcQkZoRz9hw41Gf2RFj+8TIiEPAO9YeCKaH2Q9SqBzwzZIH04GgFyQ6msygyxVublhP2aV7ZHCIjCkUADOumr350+4YMZj3+lOnSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LYz2ovlW; arc=none smtp.client-ip=209.85.167.193
+	 MIME-Version; b=LOuE8MzAW2awQVGTRzjNyAUgMBBmLi+CNGPFKKrRWeEBlOpMuPyGeMwxdabbLdJVpy8eyp9o1cbpJQWKNEtBNKDXwdZNToiPiaDa+4bpFNd4fpf+iwOWMp7pR29RwG+2EG3oy7UwCXQ3LObUNpfbqqj3Ce9FK/rtsPm+9rp1He8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B07gobi4; arc=none smtp.client-ip=209.85.210.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LYz2ovlW"
-Received: by mail-oi1-f193.google.com with SMTP id 5614622812f47-45c87d82bd2so160407b6e.1
-        for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 13:42:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B07gobi4"
+Received: by mail-ot1-f68.google.com with SMTP id 46e09a7af769-7cdae63171aso209707a34.1
+        for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 13:42:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768426925; x=1769031725; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1768426958; x=1769031758; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OAgvwt1OR9TYLgNznZNLzZ51Qby0qHLIemjsJLSQFFs=;
-        b=LYz2ovlWQFptlGWfhp1NtFCWhUw28nQ1K+fgwBgaDZwO0Ms3a5ICdSU97gdn5aYKYi
-         kM9ZUwHrF3kMPXjCs2vqrCfz4I4Xd/8m39x+Id1H6jof5Vsq+E8jTegX1iZ12Gf9uj37
-         icurrqkHP0cQqdmL/XVtmtfEAPs38uIyl9zu2nAJY1TwKNOovK8trm+u2Laic+ulXRJN
-         qkf4oKVkXVM6o7Fn5gMvVjOJ60LMGNUAHUrJFBDQYAWMkpRCCiJ42Du5/4Tvu4PKWTym
-         bmqgYqkrT1xHMFonvp2YWjydP8Uu9JjWJ1dF/IBvHTG4Je/3CeUoO1PhcPwe1vuOsqeG
-         P45A==
+        bh=laJJpvpihQ20m2JOTCcWi2X4Dot3SA9OG2LQvA/I7VM=;
+        b=B07gobi4Py45kfcflPcaBfBuXUqerKnQ1T+2ax11FlxbDl3sTTT0iGO+/xEuwJgUm8
+         FgNWk1SK2tJS1pW7SN6e3XREubW1fdK/BUuR7xRJ/81ETDeLP8C7D6o8ajeUz0OXo7cX
+         8hGIFoXcEeyrzbIM7uYSfqN/wSMDsZ4mjM66SKgIaYJEPjRrLqpuNSH2L8EcnV8cfHUE
+         BodLKPc3bMCJLqEclNfExQxA2NA+sYKKc5f5mto004/ew04Z1OFdUJ+lrNcQogQGIRpf
+         bw3E3eFpPfP88LqsJs5kn4OpoPxRD2fzt2KunUJjRCdFtbW359WDtjc7Mbstqg0eUTV2
+         20dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768426925; x=1769031725;
+        d=1e100.net; s=20230601; t=1768426958; x=1769031758;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OAgvwt1OR9TYLgNznZNLzZ51Qby0qHLIemjsJLSQFFs=;
-        b=dGcDnMyZc4sTkvn5l4rl04gfo+SyhCStiFqmMSc790u5X7vdoIQIG1hjGHo/IcXZo8
-         fHa3oR63mB+Rp5skHqhJuqspmYlte9ddPzkfJJCUoMyYHoxqts9x6Fkj2Dh1vzgkEU2e
-         2XORRvaYGMkYEPy8BXW8rT5MQm/7Ec60+6pUOJn/jjcYLQq+60g3wDjOCqY1NnQ++YhW
-         KGJV84R6RUYnIBuAPrlYbA4tVNekbVHyFiWCyFlW3ECfXro7fQn7SJ+wQjmwocj8K3j1
-         gv4lfYlffOdJtWrXxg02aCG/C7F9xdSMGOx6tPj6QX7Yuoc2y1+z7rZxy3mjJCdBU7Mt
-         kmDA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZOwwxqztCTBxlON3nXQZ1ZBlM+j+m+nFhKyuEAHcmlznxNlKFAZP7nhrlAb3j3dRQ9oE3IC1WdlY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+szEDs9zacVh8zqXFp8fNVxlF43yxUJDYFM3p7hjZjmFBRuzH
-	mwVldBkty9bcmzdgT96fObXpPar3QP7HuHP2jt6lVKKz++iB2prihIUI
-X-Gm-Gg: AY/fxX6pfi6VmjTwNuz7eYO0EskfRkeqzFVFTGUQWG9E3LB8Dn+aypLbC7NGB4YwTiv
-	bF13vJ06Vfp4HtHugo67lxEUhG8TlM6EAug4UHm9EgprgO//gBmubtuWUB0xmsg2oYOFl3vEHhZ
-	UV1co3034JO+d3c9FlVYe4ln2VeyBOh92qyiIgMSh/Qpyq0wBqCbbx0iXb4uaC0XmO1+kk/twj1
-	Wlpa2vfyb3VmxnMYmXzyDMqnzRxm1CPphVroTK8lHxPx1N0v7EJkBLJqquk88s5bbZDhZ9kYp45
-	NXQ1AhlcJstHMihoJ7uQkgAJ31x9rByxTuCTck2JlhE+fFr2Z9c/frRFSNFX8goyfosvnt/grKC
-	pEdSz4vX2fMmZIHyTqZY4X2bM1GB+6RRrjiH2bPZ5y2mJZLgQW4E498/Mn9rYrIief9DvujtodL
-	eito0vjSd6pyY9c0mifnQLxfeS0MhxwyxBszW5gyyMzVEz
-X-Received: by 2002:a05:6808:18a8:b0:44f:94ef:baa1 with SMTP id 5614622812f47-45c73d673c1mr1898228b6e.22.1768426924855;
-        Wed, 14 Jan 2026 13:42:04 -0800 (PST)
+        bh=laJJpvpihQ20m2JOTCcWi2X4Dot3SA9OG2LQvA/I7VM=;
+        b=STpxZnxeoXf+Z/WHKPuAHCUSfO9+2w30sfjBkWvrmkiP6DDP6/YI2p1065+JJNbB+Z
+         vfi7B/+mAHiEraFrv96hJgDciOQUZIA552Ek/oMILRfcHDqxpBS835nLBpYTFj6wZqbO
+         z94Me+RP1Q1u1tZAftLOz6xjArIi8HAaDW/r3tDga4tfV7aSmxxykXPs7v+xJopEEnR5
+         rH58Esitm9mrvAS0f+KvxfS3l7TavlHYbItKetvS6PLf05bKyXjO4wQcTxmm8YJ938AG
+         EQMj0B0L6iiN/nd1tTjfTsoKNuQT+4mMLxmFlCSA7oiEZWuWcdUzW0jnPvayDCo0Yl7N
+         Fl9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUkLolYFxpOazz2NN61wQRpeEVDjh2wU+G9I094d3vXOfURw3s8QA1BsMAn8n45frJOIyJupeBmDdI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRCLfZfEHBvR04GUBBSRUlSqGxJK/ylCbZH6QY4nBpjOynVVxH
+	OiSrTqg1EixKonCkzmRTHEdHMSA1VxvrR9cRGLXGo6quEmyabemyqe5t
+X-Gm-Gg: AY/fxX5nn+N6BB0DPlsezVqe72d0qxiouUgDBWPBTieewreHj6rLYCHdNtn21TPeSYk
+	3nDIwYo5iUwKp+ifuTL7iEcmX4Q+LyS80STFOSqFOuK/po5r19prtNdk24LKW+zUGwaV/wcUxor
+	IBwcUfy+mTjCssdl59Oy0ZEKswHkSExto6FDGTCfzmdHaECKSUtiYBVDEsD6OW9+uve2ZOeV5kg
+	UEgl5DJncTvQUEXK1DhvnLn6rAH6LCk3Y7ZPNjHy0837ZoyphhVK/oqFJS0+LxPf8lfvYyO3bl4
+	AtVN2qoIrq5KO7mgZl7VeVxdliTbOJccx7q1qTkCrCzzo4j4T6JZA8mGR0J41azkE29hswmNnz3
+	H8DJDxrKQG8TVrv4wVawnDL34s3tq+Dbs0l/1HnbqXjv4bv/aERM8WU8mKOEI0275iU+e08BwbM
+	/r7R7U3RSjX/Pwxg/5SfS8Wu2rqvXS0tLijNcsJqsj4lUr
+X-Received: by 2002:a05:6830:4124:b0:7cf:d191:3a76 with SMTP id 46e09a7af769-7cfd1913d41mr1096939a34.2.1768426957561;
+        Wed, 14 Jan 2026 13:42:37 -0800 (PST)
 Received: from localhost.localdomain ([2603:8080:1500:3d89:4c85:2962:e438:72c4])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7ce478ee883sm19819637a34.28.2026.01.14.13.42.02
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7cfcc8428fesm2063248a34.0.2026.01.14.13.42.35
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 14 Jan 2026 13:42:04 -0800 (PST)
+        Wed, 14 Jan 2026 13:42:37 -0800 (PST)
 Sender: John Groves <grovesaustin@gmail.com>
 From: John Groves <John@Groves.net>
 X-Google-Original-From: John Groves <john@groves.net>
@@ -98,9 +98,9 @@ Cc: John Groves <jgroves@micron.com>,
 	nvdimm@lists.linux.dev,
 	linux-cxl@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org
-Subject: [PATCH V4 18/19] famfs_fuse: Add famfs fmap metadata documentation
-Date: Wed, 14 Jan 2026 15:32:05 -0600
-Message-ID: <20260114213209.29453-19-john@groves.net>
+Subject: [PATCH V4 19/19] famfs_fuse: Add documentation
+Date: Wed, 14 Jan 2026 15:32:06 -0600
+Message-ID: <20260114213209.29453-20-john@groves.net>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260114213209.29453-1-john@groves.net>
 References: <20260114153133.29420.compound@groves.net>
@@ -111,102 +111,193 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: John Groves <John@Groves.net>
+Add Documentation/filesystems/famfs.rst and update MAINTAINERS
 
-This describes the fmap metadata - both simple and interleaved
-
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 Signed-off-by: John Groves <john@groves.net>
 ---
- fs/fuse/famfs_kfmap.h | 73 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
+ Documentation/filesystems/famfs.rst | 142 ++++++++++++++++++++++++++++
+ Documentation/filesystems/index.rst |   1 +
+ MAINTAINERS                         |   1 +
+ 3 files changed, 144 insertions(+)
+ create mode 100644 Documentation/filesystems/famfs.rst
 
-diff --git a/fs/fuse/famfs_kfmap.h b/fs/fuse/famfs_kfmap.h
-index 0fff841f5a9e..970ad802b492 100644
---- a/fs/fuse/famfs_kfmap.h
-+++ b/fs/fuse/famfs_kfmap.h
-@@ -7,6 +7,79 @@
- #ifndef FAMFS_KFMAP_H
- #define FAMFS_KFMAP_H
- 
-+/* KABI version 43 (aka v2) fmap structures
-+ *
-+ * The location of the memory backing for a famfs file is described by
-+ * the response to the GET_FMAP fuse message (defined in
-+ * include/uapi/linux/fuse.h
-+ *
-+ * There are currently two extent formats: Simple and Interleaved.
-+ *
-+ * Simple extents are just (devindex, offset, length) tuples, where devindex
-+ * references a devdax device that must be retrievable via the GET_DAXDEV
-+ * message/response.
-+ *
-+ * The extent list size must be >= file_size.
-+ *
-+ * Interleaved extents merit some additional explanation. Interleaved
-+ * extents stripe data across a collection of strips. Each strip is a
-+ * contiguous allocation from a single devdax device - and is described by
-+ * a simple_extent structure.
-+ *
-+ * Interleaved_extent example:
-+ *   ie_nstrips = 4
-+ *   ie_chunk_size = 2MiB
-+ *   ie_nbytes = 24MiB
-+ *
-+ * ┌────────────┐────────────┐────────────┐────────────┐
-+ * │Chunk = 0   │Chunk = 1   │Chunk = 2   │Chunk = 3   │
-+ * │Strip = 0   │Strip = 1   │Strip = 2   │Strip = 3   │
-+ * │Stripe = 0  │Stripe = 0  │Stripe = 0  │Stripe = 0  │
-+ * │            │            │            │            │
-+ * └────────────┘────────────┘────────────┘────────────┘
-+ * │Chunk = 4   │Chunk = 5   │Chunk = 6   │Chunk = 7   │
-+ * │Strip = 0   │Strip = 1   │Strip = 2   │Strip = 3   │
-+ * │Stripe = 1  │Stripe = 1  │Stripe = 1  │Stripe = 1  │
-+ * │            │            │            │            │
-+ * └────────────┘────────────┘────────────┘────────────┘
-+ * │Chunk = 8   │Chunk = 9   │Chunk = 10  │Chunk = 11  │
-+ * │Strip = 0   │Strip = 1   │Strip = 2   │Strip = 3   │
-+ * │Stripe = 2  │Stripe = 2  │Stripe = 2  │Stripe = 2  │
-+ * │            │            │            │            │
-+ * └────────────┘────────────┘────────────┘────────────┘
-+ *
-+ * * Data is laid out across chunks in chunk # order
-+ * * Columns are strips
-+ * * Strips are contiguous devdax extents, normally each coming from a
-+ *   different memory device
-+ * * Rows are stripes
-+ * * The number of chunks is (int)((file_size + chunk_size - 1) / chunk_size)
-+ *   (and obviously the last chunk could be partial)
-+ * * The stripe_size = (nstrips * chunk_size)
-+ * * chunk_num(offset) = offset / chunk_size    //integer division
-+ * * strip_num(offset) = chunk_num(offset) % nchunks
-+ * * stripe_num(offset) = offset / stripe_size  //integer division
-+ * * ...You get the idea - see the code for more details...
-+ *
-+ * Some concrete examples from the layout above:
-+ * * Offset 0 in the file is offset 0 in chunk 0, which is offset 0 in
-+ *   strip 0
-+ * * Offset 4MiB in the file is offset 0 in chunk 2, which is offset 0 in
-+ *   strip 2
-+ * * Offset 15MiB in the file is offset 1MiB in chunk 7, which is offset
-+ *   3MiB in strip 3
-+ *
-+ * Notes about this metadata format:
-+ *
-+ * * For various reasons, chunk_size must be a multiple of the applicable
-+ *   PAGE_SIZE
-+ * * Since chunk_size and nstrips are constant within an interleaved_extent,
-+ *   resolving a file offset to a strip offset within a single
-+ *   interleaved_ext is order 1.
-+ * * If nstrips==1, a list of interleaved_ext structures degenerates to a
-+ *   regular extent list (albeit with some wasted struct space).
-+ */
+diff --git a/Documentation/filesystems/famfs.rst b/Documentation/filesystems/famfs.rst
+new file mode 100644
+index 000000000000..bf0c0e6574bb
+--- /dev/null
++++ b/Documentation/filesystems/famfs.rst
+@@ -0,0 +1,142 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
- /*
-  * The structures below are the in-memory metadata format for famfs files.
-  * Metadata retrieved via the GET_FMAP response is converted to this format
++.. _famfs_index:
++
++==================================================================
++famfs: The fabric-attached memory file system
++==================================================================
++
++- Copyright (C) 2024-2026 Micron Technology, Inc.
++
++Introduction
++============
++Compute Express Link (CXL) provides a mechanism for disaggregated or
++fabric-attached memory (FAM). This creates opportunities for data sharing;
++clustered apps that would otherwise have to shard or replicate data can
++share one copy in disaggregated memory.
++
++Famfs, which is not CXL-specific in any way, provides a mechanism for
++multiple hosts to concurrently access data in shared memory, by giving it
++a file system interface. With famfs, any app that understands files can
++access data sets in shared memory. Although famfs supports read and write,
++the real point is to support mmap, which provides direct (dax) access to
++the memory - either writable or read-only.
++
++Shared memory can pose complex coherency and synchronization issues, but
++there are also simple cases. Two simple and eminently useful patterns that
++occur frequently in data analytics and AI are:
++
++* Serial Sharing - Only one host or process at a time has access to a file
++* Read-only Sharing - Multiple hosts or processes share read-only access
++  to a file
++
++The famfs fuse file system is part of the famfs framework; user space
++components [1] handle metadata allocation and distribution, and provide a
++low-level fuse server to expose files that map directly to [presumably
++shared] memory.
++
++The famfs framework manages coherency of its own metadata and structures,
++but does not attempt to manage coherency for applications.
++
++Famfs also provides data isolation between files. That is, even though
++the host has access to an entire memory "device" (as a devdax device), apps
++cannot write to memory for which the file is read-only, and mapping one
++file provides isolation from the memory of all other files. This is pretty
++basic, but some experimental shared memory usage patterns provide no such
++isolation.
++
++Principles of Operation
++=======================
++
++Famfs is a file system with one or more devdax devices as a first-class
++backing device(s). Metadata maintenance and query operations happen
++entirely in user space.
++
++The famfs low-level fuse server daemon provides file maps (fmaps) and
++devdax device info to the fuse/famfs kernel component so that
++read/write/mapping faults can be handled without up-calls for all active
++files.
++
++The famfs user space is responsible for maintaining and distributing
++consistent metadata. This is currently handled via an append-only
++metadata log within the memory, but this is orthogonal to the fuse/famfs
++kernel code.
++
++Once instantiated, "the same file" on each host points to the same shared
++memory, but in-memory metadata (inodes, etc.) is ephemeral on each host
++that has a famfs instance mounted. Use cases are free to allow or not
++allow mutations to data on a file-by-file basis.
++
++When an app accesses a data object in a famfs file, there is no page cache
++involvement. The CPU cache is loaded directly from the shared memory. In
++some use cases, this is an enormous reduction read amplification compared
++to loading an entire page into the page cache.
++
++
++Famfs is Not a Conventional File System
++---------------------------------------
++
++Famfs files can be accessed by conventional means, but there are
++limitations. The kernel component of fuse/famfs is not involved in the
++allocation of backing memory for files at all; the famfs user space
++creates files and responds as a low-level fuse server with fmaps and
++devdax device info upon request.
++
++Famfs differs in some important ways from conventional file systems:
++
++* Files must be pre-allocated by the famfs framework; allocation is never
++  performed on (or after) write.
++* Any operation that changes a file's size is considered to put the file
++  in an invalid state, disabling access to the data. It may be possible to
++  revisit this in the future. (Typically the famfs user space can restore
++  files to a valid state by replaying the famfs metadata log.)
++
++Famfs exists to apply the existing file system abstractions to shared
++memory so applications and workflows can more easily adapt to an
++environment with disaggregated shared memory.
++
++Memory Error Handling
++=====================
++
++Possible memory errors include timeouts, poison and unexpected
++reconfiguration of an underlying dax device. In all of these cases, famfs
++receives a call from the devdax layer via its iomap_ops->notify_failure()
++function. If any memory errors have been detected, access to the affected
++daxdev is disabled to avoid further errors or corruption.
++
++In all known cases, famfs can be unmounted cleanly. In most cases errors
++can be cleared by re-initializing the memory - at which point a new famfs
++file system can be created.
++
++Key Requirements
++================
++
++The primary requirements for famfs are:
++
++1. Must support a file system abstraction backed by sharable devdax memory
++2. Files must efficiently handle VMA faults
++3. Must support metadata distribution in a sharable way
++4. Must handle clients with a stale copy of metadata
++
++The famfs kernel component takes care of 1-2 above by caching each file's
++mapping metadata in the kernel.
++
++Requirements 3 and 4 are handled by the user space components, and are
++largely orthogonal to the functionality of the famfs kernel module.
++
++Requirements 3 and 4 cannot be met by conventional fs-dax file systems
++(e.g. xfs) because they use write-back metadata; it is not valid to mount
++such a file system on two hosts from the same in-memory image.
++
++
++Famfs Usage
++===========
++
++Famfs usage is documented at [1].
++
++
++References
++==========
++
++- [1] Famfs user space repository and documentation
++      https://github.com/cxl-micron-reskit/famfs
+diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+index f4873197587d..e6fb467c1680 100644
+--- a/Documentation/filesystems/index.rst
++++ b/Documentation/filesystems/index.rst
+@@ -89,6 +89,7 @@ Documentation for filesystem implementations.
+    ext3
+    ext4/index
+    f2fs
++   famfs
+    gfs2/index
+    hfs
+    hfsplus
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6f8a7c813c2f..43141ee4fd4e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10385,6 +10385,7 @@ M:	John Groves <John@Groves.net>
+ L:	linux-cxl@vger.kernel.org
+ L:	linux-fsdevel@vger.kernel.org
+ S:	Supported
++F:	Documentation/filesystems/famfs.rst
+ F:	fs/fuse/famfs.c
+ F:	fs/fuse/famfs_kfmap.h
+ 
 -- 
 2.52.0
 
