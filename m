@@ -1,63 +1,63 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-oi1-f193.google.com (mail-oi1-f193.google.com [209.85.167.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3947C37E30B
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 21:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A70A38736B
+	for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 21:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768426914; cv=none; b=jeURAl7+/KBP3cDPe6WkDoGPE/dNaf/BYlDwHBO4OnEA6poUGFhxyW5MsjL+JbgVNkGssnn3F/cMUeL29HRuLvbl6ak/+PHL1A1HFV8aS7Bey3dR50mB8FgOnkvb0q6IYt4gbG5JyAIoOE9VaiSS62WFSI33kg7WbTNDK931QWM=
+	t=1768426948; cv=none; b=ajWmKhrbaIDJgng8L8uDl58m2D7S46TPMCVjA9m8VzV3jioHb5q247Cax0GCfVUuXH7wxigeT36OCCnW2FEGyAa0paq9zSHvFMZProl7wYSLtn1bVZGD0XYAaTj5FIb8yGInM/SYT/Qx6YriasnNYwLYelVxgSj4jr9sgJtSVKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768426914; c=relaxed/simple;
-	bh=XuywZGj+XDpfZvHURwVbpU2ahP9/m0Z4xu0nAUB//wo=;
+	s=arc-20240116; t=1768426948; c=relaxed/simple;
+	bh=VL5oOUiKrAPPvKr1vFu621tvVEzPIunWgTzSeWNY/A0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sEWlCB8/rBHbi4o8X6hOMvpOEwvu6qx1yw3APw0Aga6SPhpAQoD3VmTBn7XAxrvQkKvIS/4VzRX/QffzBgyouFQXVUiuBf0vM+MmzDrcYj24hz2VwRGIhMVG53eGg2Pf5aovtPhizKb4RSdu7OhXcF88/QETgX/bkfsgvLtMeVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LatlMkST; arc=none smtp.client-ip=209.85.210.54
+	 MIME-Version:Content-Type; b=Aj3syZekotgEWU/s/Zg2YIzh1RDN64ijokcrnYOCyRGL+la+Ubz/7bEokm5ij6Kzpx7QCiqcQkZoRz9hw41Gf2RFj+8TIiEPAO9YeCKaH2Q9SqBzwzZIH04GgFyQ6msygyxVublhP2aV7ZHCIjCkUADOumr350+4YMZj3+lOnSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LYz2ovlW; arc=none smtp.client-ip=209.85.167.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LatlMkST"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7cfd6e0173cso6683a34.3
-        for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 13:41:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LYz2ovlW"
+Received: by mail-oi1-f193.google.com with SMTP id 5614622812f47-45c87d82bd2so160407b6e.1
+        for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 13:42:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768426892; x=1769031692; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1768426925; x=1769031725; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ikg86hLweLFlugyhGYJjhkjBVnchP1h60r6PTv+Ts0E=;
-        b=LatlMkSTsYu/l8/Ja0zhCxdgQWUdY82RbwgAi6ykhvIWH63St5yaK2WQx7RNvztPLG
-         oUyGbTXDlMNiWUKAEh+WqCpiRj0zEYGQi+uBIiGgDJXPFDYOcKbxvJ4ioMkxBfmTnJB3
-         1lbAlpaKoxzad8+wjDMyqf7w2YPLhQj6Vn1WcF3m4nr2jW8779kzpGWAzqnQwHTvTuT2
-         qL1QW3qyBZiiFBjjtFkaE87JWBBHQSbtDZ4B1STythH8Axd1OGO7ST1j+pjRaefJz+ZA
-         I3ArH83uTzCaIT0gu/ddzrUDEXk6J6iVluSOIR3O6jA81hEzpljJDurnOFWlYByC1S7o
-         0vnA==
+        bh=OAgvwt1OR9TYLgNznZNLzZ51Qby0qHLIemjsJLSQFFs=;
+        b=LYz2ovlWQFptlGWfhp1NtFCWhUw28nQ1K+fgwBgaDZwO0Ms3a5ICdSU97gdn5aYKYi
+         kM9ZUwHrF3kMPXjCs2vqrCfz4I4Xd/8m39x+Id1H6jof5Vsq+E8jTegX1iZ12Gf9uj37
+         icurrqkHP0cQqdmL/XVtmtfEAPs38uIyl9zu2nAJY1TwKNOovK8trm+u2Laic+ulXRJN
+         qkf4oKVkXVM6o7Fn5gMvVjOJ60LMGNUAHUrJFBDQYAWMkpRCCiJ42Du5/4Tvu4PKWTym
+         bmqgYqkrT1xHMFonvp2YWjydP8Uu9JjWJ1dF/IBvHTG4Je/3CeUoO1PhcPwe1vuOsqeG
+         P45A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768426892; x=1769031692;
+        d=1e100.net; s=20230601; t=1768426925; x=1769031725;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ikg86hLweLFlugyhGYJjhkjBVnchP1h60r6PTv+Ts0E=;
-        b=KrcpXRiuXNz3usmpl1ttqdc2IKW9dwk/dDeo9iDePVHuf3aLUF8nJHz60KWVJq65kO
-         pIiWuv3slRuOWvZ9Ew0fNQoOLVsmqV55gOWgIhNIez7HmPNIOcXreP303pLS4K4HJ7DN
-         JwvvrfvNK/G+olZHgApQtAOymrfB9ZFrItvf1xOfCgUsQN6ZPqh+w6TOvvZZnBIqtTn+
-         RFanvgPnb5c4bHqALjGYmJeO+b9kAIvNDYtoWlUzMzOWvL5k/GMfAS9H1BegVqe195/R
-         DzbxPcoFtAJvtYcLCjn7W8qiyBKc/LCV+HSPpYNrF6ky5xPmJNs/qcdz+6OW76ERn0RE
-         gAyg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9ecqyNMuR+h5Y6E347QG0kfAwrRRPsyxxeJqd+861CSeky+QmNvowyIJIgWixkJqXq1/KUBToh6E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZHIgC9RoXVrP+FpxKChgTKcI3RuoBRygF9A7wGSeHAxldOrhi
-	qlgWFJjyTh1cWB18eX5wxudjhXtQTdEle3CiVcw6DQW3ovtIqn315dIA
-X-Gm-Gg: AY/fxX6UVsC4CGOEhvUqZRhYmitg/Z1ITzphEKJGuMzXmDy+S4X+AkMFVQGfVl4LX6B
-	KiPOpaX44RyWH0z4VGMxvbSd8CCPP2q4H0d+VKYjGwVlfCv/FctW3flINYCJOjtO/HCbc4LBIN3
-	7CtSD33Fd9JKDHzV54V7cxW8i6t/Hwl/f/Elt3qwsuw4MTf2ds+BwPO4g9NCRyi3UdJ8mCY4qqY
-	4Q85LPdVIFV7/qV3ncd4xnxV8h9jmScPY1tmCf8KbpuPbR/JEgw0tSFMzZl4P/UirMP7qz8FbJb
-	xQshKbnX8BxRIuSHafPQ7gk9g9mHHGo7Tcdqb+eqboo+mKSqZsc0kdNlgbZJJN1c0uOGe1Lz/Kz
-	CCvs9mZRvbnKsehyHWBg6SmpX4jHxguHn0QXq0hqtY0AHmxBNQCdVVOGM908ET9koQMcTeTolGx
-	aLX21xADX+VoT5O6UJYRYuMeSstSDqGYj5O5TGJVT1LSJ8
-X-Received: by 2002:a9d:3e49:0:b0:7c5:3c7d:7e67 with SMTP id 46e09a7af769-7cfc8b5155fmr2043023a34.29.1768426892219;
-        Wed, 14 Jan 2026 13:41:32 -0800 (PST)
+        bh=OAgvwt1OR9TYLgNznZNLzZ51Qby0qHLIemjsJLSQFFs=;
+        b=dGcDnMyZc4sTkvn5l4rl04gfo+SyhCStiFqmMSc790u5X7vdoIQIG1hjGHo/IcXZo8
+         fHa3oR63mB+Rp5skHqhJuqspmYlte9ddPzkfJJCUoMyYHoxqts9x6Fkj2Dh1vzgkEU2e
+         2XORRvaYGMkYEPy8BXW8rT5MQm/7Ec60+6pUOJn/jjcYLQq+60g3wDjOCqY1NnQ++YhW
+         KGJV84R6RUYnIBuAPrlYbA4tVNekbVHyFiWCyFlW3ECfXro7fQn7SJ+wQjmwocj8K3j1
+         gv4lfYlffOdJtWrXxg02aCG/C7F9xdSMGOx6tPj6QX7Yuoc2y1+z7rZxy3mjJCdBU7Mt
+         kmDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZOwwxqztCTBxlON3nXQZ1ZBlM+j+m+nFhKyuEAHcmlznxNlKFAZP7nhrlAb3j3dRQ9oE3IC1WdlY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+szEDs9zacVh8zqXFp8fNVxlF43yxUJDYFM3p7hjZjmFBRuzH
+	mwVldBkty9bcmzdgT96fObXpPar3QP7HuHP2jt6lVKKz++iB2prihIUI
+X-Gm-Gg: AY/fxX6pfi6VmjTwNuz7eYO0EskfRkeqzFVFTGUQWG9E3LB8Dn+aypLbC7NGB4YwTiv
+	bF13vJ06Vfp4HtHugo67lxEUhG8TlM6EAug4UHm9EgprgO//gBmubtuWUB0xmsg2oYOFl3vEHhZ
+	UV1co3034JO+d3c9FlVYe4ln2VeyBOh92qyiIgMSh/Qpyq0wBqCbbx0iXb4uaC0XmO1+kk/twj1
+	Wlpa2vfyb3VmxnMYmXzyDMqnzRxm1CPphVroTK8lHxPx1N0v7EJkBLJqquk88s5bbZDhZ9kYp45
+	NXQ1AhlcJstHMihoJ7uQkgAJ31x9rByxTuCTck2JlhE+fFr2Z9c/frRFSNFX8goyfosvnt/grKC
+	pEdSz4vX2fMmZIHyTqZY4X2bM1GB+6RRrjiH2bPZ5y2mJZLgQW4E498/Mn9rYrIief9DvujtodL
+	eito0vjSd6pyY9c0mifnQLxfeS0MhxwyxBszW5gyyMzVEz
+X-Received: by 2002:a05:6808:18a8:b0:44f:94ef:baa1 with SMTP id 5614622812f47-45c73d673c1mr1898228b6e.22.1768426924855;
+        Wed, 14 Jan 2026 13:42:04 -0800 (PST)
 Received: from localhost.localdomain ([2603:8080:1500:3d89:4c85:2962:e438:72c4])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7ce478ede38sm18802373a34.26.2026.01.14.13.41.29
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7ce478ee883sm19819637a34.28.2026.01.14.13.42.02
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 14 Jan 2026 13:41:31 -0800 (PST)
+        Wed, 14 Jan 2026 13:42:04 -0800 (PST)
 Sender: John Groves <grovesaustin@gmail.com>
 From: John Groves <John@Groves.net>
 X-Google-Original-From: John Groves <john@groves.net>
@@ -98,9 +98,9 @@ Cc: John Groves <jgroves@micron.com>,
 	nvdimm@lists.linux.dev,
 	linux-cxl@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org
-Subject: [PATCH V4 17/19] famfs_fuse: Add DAX address_space_operations with noop_dirty_folio
-Date: Wed, 14 Jan 2026 15:32:04 -0600
-Message-ID: <20260114213209.29453-18-john@groves.net>
+Subject: [PATCH V4 18/19] famfs_fuse: Add famfs fmap metadata documentation
+Date: Wed, 14 Jan 2026 15:32:05 -0600
+Message-ID: <20260114213209.29453-19-john@groves.net>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260114213209.29453-1-john@groves.net>
 References: <20260114153133.29420.compound@groves.net>
@@ -111,54 +111,102 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: John Groves <John@Groves.net>
 
-Famfs is memory-backed; there is no place to write back to, and no
-reason to mark pages dirty at all.
+This describes the fmap metadata - both simple and interleaved
 
 Signed-off-by: John Groves <john@groves.net>
 ---
- fs/fuse/famfs.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ fs/fuse/famfs_kfmap.h | 73 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
 
-diff --git a/fs/fuse/famfs.c b/fs/fuse/famfs.c
-index ee3526175b6b..f98e358ea489 100644
---- a/fs/fuse/famfs.c
-+++ b/fs/fuse/famfs.c
-@@ -14,6 +14,7 @@
- #include <linux/mm.h>
- #include <linux/dax.h>
- #include <linux/iomap.h>
-+#include <linux/pagemap.h>
- #include <linux/path.h>
- #include <linux/namei.h>
- #include <linux/string.h>
-@@ -39,6 +40,15 @@ static const struct dax_holder_operations famfs_fuse_dax_holder_ops = {
- 	.notify_failure		= famfs_dax_notify_failure,
- };
+diff --git a/fs/fuse/famfs_kfmap.h b/fs/fuse/famfs_kfmap.h
+index 0fff841f5a9e..970ad802b492 100644
+--- a/fs/fuse/famfs_kfmap.h
++++ b/fs/fuse/famfs_kfmap.h
+@@ -7,6 +7,79 @@
+ #ifndef FAMFS_KFMAP_H
+ #define FAMFS_KFMAP_H
  
-+/*
-+ * DAX address_space_operations for famfs.
-+ * famfs doesn't need dirty tracking - writes go directly to
-+ * memory with no writeback required.
++/* KABI version 43 (aka v2) fmap structures
++ *
++ * The location of the memory backing for a famfs file is described by
++ * the response to the GET_FMAP fuse message (defined in
++ * include/uapi/linux/fuse.h
++ *
++ * There are currently two extent formats: Simple and Interleaved.
++ *
++ * Simple extents are just (devindex, offset, length) tuples, where devindex
++ * references a devdax device that must be retrievable via the GET_DAXDEV
++ * message/response.
++ *
++ * The extent list size must be >= file_size.
++ *
++ * Interleaved extents merit some additional explanation. Interleaved
++ * extents stripe data across a collection of strips. Each strip is a
++ * contiguous allocation from a single devdax device - and is described by
++ * a simple_extent structure.
++ *
++ * Interleaved_extent example:
++ *   ie_nstrips = 4
++ *   ie_chunk_size = 2MiB
++ *   ie_nbytes = 24MiB
++ *
++ * ┌────────────┐────────────┐────────────┐────────────┐
++ * │Chunk = 0   │Chunk = 1   │Chunk = 2   │Chunk = 3   │
++ * │Strip = 0   │Strip = 1   │Strip = 2   │Strip = 3   │
++ * │Stripe = 0  │Stripe = 0  │Stripe = 0  │Stripe = 0  │
++ * │            │            │            │            │
++ * └────────────┘────────────┘────────────┘────────────┘
++ * │Chunk = 4   │Chunk = 5   │Chunk = 6   │Chunk = 7   │
++ * │Strip = 0   │Strip = 1   │Strip = 2   │Strip = 3   │
++ * │Stripe = 1  │Stripe = 1  │Stripe = 1  │Stripe = 1  │
++ * │            │            │            │            │
++ * └────────────┘────────────┘────────────┘────────────┘
++ * │Chunk = 8   │Chunk = 9   │Chunk = 10  │Chunk = 11  │
++ * │Strip = 0   │Strip = 1   │Strip = 2   │Strip = 3   │
++ * │Stripe = 2  │Stripe = 2  │Stripe = 2  │Stripe = 2  │
++ * │            │            │            │            │
++ * └────────────┘────────────┘────────────┘────────────┘
++ *
++ * * Data is laid out across chunks in chunk # order
++ * * Columns are strips
++ * * Strips are contiguous devdax extents, normally each coming from a
++ *   different memory device
++ * * Rows are stripes
++ * * The number of chunks is (int)((file_size + chunk_size - 1) / chunk_size)
++ *   (and obviously the last chunk could be partial)
++ * * The stripe_size = (nstrips * chunk_size)
++ * * chunk_num(offset) = offset / chunk_size    //integer division
++ * * strip_num(offset) = chunk_num(offset) % nchunks
++ * * stripe_num(offset) = offset / stripe_size  //integer division
++ * * ...You get the idea - see the code for more details...
++ *
++ * Some concrete examples from the layout above:
++ * * Offset 0 in the file is offset 0 in chunk 0, which is offset 0 in
++ *   strip 0
++ * * Offset 4MiB in the file is offset 0 in chunk 2, which is offset 0 in
++ *   strip 2
++ * * Offset 15MiB in the file is offset 1MiB in chunk 7, which is offset
++ *   3MiB in strip 3
++ *
++ * Notes about this metadata format:
++ *
++ * * For various reasons, chunk_size must be a multiple of the applicable
++ *   PAGE_SIZE
++ * * Since chunk_size and nstrips are constant within an interleaved_extent,
++ *   resolving a file offset to a strip offset within a single
++ *   interleaved_ext is order 1.
++ * * If nstrips==1, a list of interleaved_ext structures degenerates to a
++ *   regular extent list (albeit with some wasted struct space).
 + */
-+static const struct address_space_operations famfs_dax_aops = {
-+	.dirty_folio	= noop_dirty_folio,
-+};
 +
- /*****************************************************************************/
- 
  /*
-@@ -625,6 +635,7 @@ famfs_file_init_dax(
- 		}
- 		i_size_write(inode, meta->file_size);
- 		inode->i_flags |= S_DAX;
-+		inode->i_data.a_ops = &famfs_dax_aops;
- 	}
-  unlock_out:
- 	inode_unlock(inode);
+  * The structures below are the in-memory metadata format for famfs files.
+  * Metadata retrieved via the GET_FMAP response is converted to this format
 -- 
 2.52.0
 
