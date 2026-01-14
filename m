@@ -1,170 +1,103 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CF13375C3
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 18:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743712FE060;
+	Wed, 14 Jan 2026 18:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768415634; cv=none; b=elvHk/6IHgnEb3dxd+Yt3BvUT9b2gaBSqXlSBPvSfH2KIVGqBaCfK9tvQTd68qdF24JQ0gGnWWnt67OFqVE2wSqsf12sNZal92VNlX+RcnYor5N0LMZa3NWLYf3P1EdlL3xTwJegMeeoguY64BGzQDIoVtqcjilx2m/Jhb70W98=
+	t=1768415811; cv=none; b=f/2tuYMXlSMSkT36O4ceXLFKYkbx+7ZccN79AxFhorHirmtTMu9vg0T4ScibEExeqvgJPiJc19lFo9wVicZzLcmF6mZAiTW6tUI84qgAgye/SNEi++sJdZttgsCbM17yTuA6KKazpJ23gAe5OTm83x1arX0wh5d5stNfbOOKK1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768415634; c=relaxed/simple;
-	bh=BetuEWsYUuH/1rXSpE3v2Fs0P2rSJYGpA5JI6Znx0yI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=N5yqGeMp6speZ4ezBBc59HFFV5OFX2QMp/S52QCUfuZhS2TuUMPyzh0xRP+2Dj27IYxEwV80afAhEr321+PbiASBvLWUacjs+UtgMSdzlmUXW/yiuXhLJUjIQY5VY6hw2FoO8HTpP/FIjSi+KTnljY7HANWt/fiYAqrRE8rbFRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xw2O/Qx6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xw2O/Qx6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768415627;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TtLuvrn6a4KY4sJu9DGVXcHRxVa+NW6NOmxvH2VUWW4=;
-	b=Xw2O/Qx63Oa9yC8avoK589DTpGLSnTXtYjTRh58FMrf9Z4Puzrq5fim6f41vTykVyE9EEH
-	oFf+Oi2EnMIjICxqqRS+V66dSpb/sTxdxrCU3Y+WNH0JSDvAb40HaMi2nIsWLxxPmvG8QZ
-	SItRLzlI8crAVGm+doW9GNwe/FMOYjw=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-330-LZnIsgYVP5yVJbCMgZapOg-1; Wed,
- 14 Jan 2026 13:33:45 -0500
-X-MC-Unique: LZnIsgYVP5yVJbCMgZapOg-1
-X-Mimecast-MFC-AGG-ID: LZnIsgYVP5yVJbCMgZapOg_1768415624
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4B895195609D;
-	Wed, 14 Jan 2026 18:33:44 +0000 (UTC)
-Received: from blackfin.pond.sub.org (unknown [10.45.242.32])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DFF2A30002DC;
-	Wed, 14 Jan 2026 18:33:43 +0000 (UTC)
-Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
-	id 81A3721E692D; Wed, 14 Jan 2026 19:33:41 +0100 (CET)
-From: Markus Armbruster <armbru@redhat.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Michael Tsirkin <mst@redhat.com>,  <qemu-devel@nongnu.org>,
-  <shiju.jose@huawei.com>,  <armbru@redhat.com>,  <linuxarm@huawei.com>,
-  <linux-cxl@vger.kernel.org>,  Ravi Shankar <venkataravis@micron.com>
-Subject: Re: [PATCH qemu v3 5/5] hw/cxl/events: Updates for rev3.2 memory
- module event record
-In-Reply-To: <20260114142713.617806-6-Jonathan.Cameron@huawei.com> (Jonathan
-	Cameron's message of "Wed, 14 Jan 2026 14:27:13 +0000")
-References: <20260114142713.617806-1-Jonathan.Cameron@huawei.com>
-	<20260114142713.617806-6-Jonathan.Cameron@huawei.com>
-Date: Wed, 14 Jan 2026 19:33:41 +0100
-Message-ID: <87o6mwyrga.fsf@pond.sub.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1768415811; c=relaxed/simple;
+	bh=eJwm6iWn5gnkiFBcwBxw8orXS+a1dc6K++zQ+vA5LjU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jx0baYK4lVrpOWDdhK4IAYDpsWleAavrBPfHvIGGlHX9ddM9tOT13oFj3x1C+HytWQCc1jf7xKJNhGI7dLvBeYXf1B/+wGjron+0Kvy5MVqalIqeP1a4vbi+DJ8c6zF9qwh39TktOuWZIUrG1bPHxI3+i3zKAD0o81a+RFtDLow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4drvvt4ML6zHnGdy;
+	Thu, 15 Jan 2026 02:36:26 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 08F0540573;
+	Thu, 15 Jan 2026 02:36:47 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 14 Jan
+ 2026 18:36:35 +0000
+Date: Wed, 14 Jan 2026 18:36:33 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Gregory Price <gourry@gourry.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kernel-team@meta.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>
+Subject: Re: [PATCH 1/6] drivers/cxl: add cxl_memctrl_mode and
+ region->memctrl
+Message-ID: <20260114183633.0000410f@huawei.com>
+In-Reply-To: <aWffsUbIx2DUefSS@gourry-fedora-PF4VCD3F>
+References: <20260112163514.2551809-1-gourry@gourry.net>
+	<20260112163514.2551809-2-gourry@gourry.net>
+	<20260114171808.000067e2@huawei.com>
+	<aWffsUbIx2DUefSS@gourry-fedora-PF4VCD3F>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
+On Wed, 14 Jan 2026 13:25:53 -0500
+Gregory Price <gourry@gourry.net> wrote:
 
-> From: Shiju Jose <shiju.jose@huawei.com>
->
-> CXL spec rev3.2 section 8.2.10.2.1.3 Table 8-50, memory module
-> event record has updated with following new fields.
-> 1. Validity Flags
-> 2. Component Identifier
-> 3. Device Event Sub-Type
->
-> Add updates for the above spec changes in the CXL memory module
-> event reporting and QMP command to inject memory module event.
->
-> Updated all references for this command to the CXL r3.2
-> specification.
->
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->
-> ---
-> V3: Update spec references for whole command (Markus)
-> ---
->  qapi/cxl.json               | 26 ++++++++++++++++++--------
->  include/hw/cxl/cxl_events.h |  7 +++++--
->  hw/mem/cxl_type3.c          | 20 ++++++++++++++++++++
->  hw/mem/cxl_type3_stubs.c    |  4 ++++
->  4 files changed, 47 insertions(+), 10 deletions(-)
->
-> diff --git a/qapi/cxl.json b/qapi/cxl.json
-> index 630c37d64eed..fc2ff2e080b4 100644
-> --- a/qapi/cxl.json
-> +++ b/qapi/cxl.json
-> @@ -214,20 +214,20 @@
->  ##
->  # @CXLMemModuleEvent:
->  #
-> -# Event record for a Memory Module Event (CXL r3.0 8.2.9.2.1.3).
-> +# Event record for a Memory Module Event (CXL r3.2 8.2.10.2.1.3).
->  #
-> -# @type: Device Event Type.  See CXL r3.0 Table 8-45 Memory Module
-> +# @type: Device Event Type.  See CXL r3.2 Table 8-59 Memory Module
->  #     Event Record for bit definitions for bit definiions.
->  #
-> -# @health-status: Overall health summary bitmap.  See CXL r3.0 Table
-> -#     8-100 Get Health Info Output Payload, Health Status for bit
-> +# @health-status: Overall health summary bitmap.  See CXL r3.2 Table
-> +#     8-148 Get Health Info Output Payload, Health Status for bit
->  #     definitions.
->  #
-> -# @media-status: Overall media health summary.  See CXL r3.0 Table
-> -#     8-100 Get Health Info Output Payload, Media Status for bit
-> +# @media-status: Overall media health summary.  See CXL r3.2 Table
-> +#     8-148 Get Health Info Output Payload, Media Status for bit
->  #     definitions.
->  #
-> -# @additional-status: See CXL r3.0 Table 8-100 Get Health Info Output
-> +# @additional-status: See CXL r3.2 Table 8-148 Get Health Info Output
->  #     Payload, Additional Status for subfield definitions.
->  #
->  # @life-used: Percentage (0-100) of factory expected life span.
-> @@ -243,6 +243,14 @@
->  # @corrected-persistent-error-count: Total number of correctable
->  #     errors in persistent memory
->  #
-> +# @component-id: Device specific component identifier for the event.
-> +#     May describe a field replaceable sub-component of the device.
-> +#
-> +# @is-comp-id-pldm: This flag specifies whether the device-specific
-> +#     component identifier format follows PLDM.
-> +#
-> +# @sub-type: Device event sub-type.
-> +#
->  # Since: 8.1
->  ##
->  { 'struct': 'CXLMemModuleEvent',
-> @@ -252,7 +260,9 @@
->              'life-used': 'uint8', 'temperature' : 'int16',
->              'dirty-shutdown-count': 'uint32',
->              'corrected-volatile-error-count': 'uint32',
-> -            'corrected-persistent-error-count': 'uint32'
-> +            'corrected-persistent-error-count': 'uint32',
-> +            '*component-id': 'str', '*is-comp-id-pldm':'bool',
-> +            'sub-type':'uint8'
->              }}
->  
->  ##
-   # @cxl-inject-memory-module-event:
-   #
-   # Inject an event record for a Memory Module Event (CXL r3.0
-   # 8.2.9.2.1.3).  This event includes a copy of the Device Health info
+> On Wed, Jan 14, 2026 at 05:18:08PM +0000, Jonathan Cameron wrote:
+> > On Mon, 12 Jan 2026 11:35:09 -0500
+> > Gregory Price <gourry@gourry.net> wrote:
+> >   
+> > > The CXL driver presently hands policy management over to DAX subsystem
+> > > for sysram regions, which makes building policy around the entire region
+> > > clunky and at time difficult (e.g. multiple actions to offline and
+> > > hot-unplug memory reliably).
+> > > 
+> > > To support multiple backend controllers for memory regions (for example
+> > > dax vs direct hotplug), implement a memctrl field in cxl_region allows
+> > > switching uncomitted regions between different "memory controllers".
+> > > 
+> > > CXL_CONTROL_NONE: No selected controller, probe will fail.
+> > > CXL_CONTROL_AUTO: If memory is already online as SysRAM, no controller
+> > >                   otherwise register a dax_region
+> > > CXL_CONTROL_DAX : register a dax_region
+> > > 
+> > > Auto regions will either be static sysram (BIOS-onlined) and has no
+> > > region controller associated with it - or if the SP bit was set a
+> > > DAX device will be created.
+> > > 
+> > > Rather than default all regions to the auto-controller, only default
+> > > auto-regions to the auto controller.
+> > > 
+> > > Non-auto regions will be defaulted to CXL_CONTROL_NONE, which will cause
+> > > a failure to probe unless a controller is selected.
+> > > 
+> > > Signed-off-by: Gregory Price <gourry@gourry.net>  
+> > Trivial comments whilst I try to get my head around the series.
+> > 
+> > ...
+> >  
+> 
+> Recommend piviting to v2 which simplifies and addresses some of your
+> notes here already:
+> 
+> https://lore.kernel.org/linux-cxl/aWfe-r7uEV-ajfhX@gourry-fedora-PF4VCD3F/T/#m791301178876f9b1ab55ed4091c674d4f4ceb07c
+> 
+> Still need to add some docs.
+That came cover letter free so I didn't figure out it was this
+until a few patches in!
 
-Should we update this reference as well?
-
-   # at the time of the event.
-   #
-   # Since: 8.1
-   ##
-   { 'command': 'cxl-inject-memory-module-event',
-     'data': 'CXLMemModuleEvent' }
-
-[...]
+J
+> 
+> ~Gregory
 
