@@ -1,63 +1,63 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D887E37E310
-	for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 21:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3947C37E30B
+	for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 21:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768426881; cv=none; b=iUuYTZhFv7V8WhZVQJ4qyVGnEok0nHRvk4N1f+tZA1bksgMUKkXABMYBdDP96/NQcj+iPYPYjjJ787GjHLsmUirj9FqHZ+1dWZ3VUPqXYzeMZSkxhzzBMxrsrvNwJm18eEUafK0kcl5NJLcttl48SzR1YIZw7TeQVRBmgymZZK0=
+	t=1768426914; cv=none; b=jeURAl7+/KBP3cDPe6WkDoGPE/dNaf/BYlDwHBO4OnEA6poUGFhxyW5MsjL+JbgVNkGssnn3F/cMUeL29HRuLvbl6ak/+PHL1A1HFV8aS7Bey3dR50mB8FgOnkvb0q6IYt4gbG5JyAIoOE9VaiSS62WFSI33kg7WbTNDK931QWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768426881; c=relaxed/simple;
-	bh=YrTApsaqoq/8RmqhsSS5NBd3td1SLSnIDUJjr5L7XnM=;
+	s=arc-20240116; t=1768426914; c=relaxed/simple;
+	bh=XuywZGj+XDpfZvHURwVbpU2ahP9/m0Z4xu0nAUB//wo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b58RJ1TJpIMB4cfBtInxD9Pxgutwjdf8QNnHzK4yLyxzU1isPBTJzCbovL6CCZSGZhRunlCSqjciGrbcBbZ2Py0W5Mj8PaAFUkTiswj5OhDH3yGYzxLHe5uvhe8AwvDpVzJUYAgolmq4kcqZrmUnNdcfI27GgBAX/Yk/4aOAvzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AWsW9Bdd; arc=none smtp.client-ip=209.85.160.50
+	 MIME-Version; b=sEWlCB8/rBHbi4o8X6hOMvpOEwvu6qx1yw3APw0Aga6SPhpAQoD3VmTBn7XAxrvQkKvIS/4VzRX/QffzBgyouFQXVUiuBf0vM+MmzDrcYj24hz2VwRGIhMVG53eGg2Pf5aovtPhizKb4RSdu7OhXcF88/QETgX/bkfsgvLtMeVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LatlMkST; arc=none smtp.client-ip=209.85.210.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AWsW9Bdd"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-3ec4d494383so224259fac.3
-        for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 13:41:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LatlMkST"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7cfd6e0173cso6683a34.3
+        for <linux-cxl@vger.kernel.org>; Wed, 14 Jan 2026 13:41:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768426859; x=1769031659; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1768426892; x=1769031692; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RcyLyDaHq6QDAy39EcjDJMRicgWNCaTcNxUYUhPTYH8=;
-        b=AWsW9BddtPcwM3VkTB2qVfuiIQxu7hIudewderNrBFYgdhnhjyaP5maEC1qCtECpYZ
-         6ooftkIa1Sc97gQOQLuGggCSTT8DYr00J3T8Sx5W1QkHXdW6JSKSDpiltvmAG906056J
-         97iU7eCWLvapPSNkgU6dwcvaHOuSb02Izv5lTnxAPpOpoLWvf6dgcZbudQyBIgxY1oev
-         K/1K8PdmkoaT+sVnFgfpxIbEdJ010SlapiMBJpYu9860VTbbTCgDvvWkb2sNXbJt/Yl+
-         roBdKCeyt0qyHQNFOdDKjQZsnFmi6ZqfQkr5wN9pm3FX2ZD6UbTQ35V1vfe3Tn1CnQHR
-         qlZQ==
+        bh=ikg86hLweLFlugyhGYJjhkjBVnchP1h60r6PTv+Ts0E=;
+        b=LatlMkSTsYu/l8/Ja0zhCxdgQWUdY82RbwgAi6ykhvIWH63St5yaK2WQx7RNvztPLG
+         oUyGbTXDlMNiWUKAEh+WqCpiRj0zEYGQi+uBIiGgDJXPFDYOcKbxvJ4ioMkxBfmTnJB3
+         1lbAlpaKoxzad8+wjDMyqf7w2YPLhQj6Vn1WcF3m4nr2jW8779kzpGWAzqnQwHTvTuT2
+         qL1QW3qyBZiiFBjjtFkaE87JWBBHQSbtDZ4B1STythH8Axd1OGO7ST1j+pjRaefJz+ZA
+         I3ArH83uTzCaIT0gu/ddzrUDEXk6J6iVluSOIR3O6jA81hEzpljJDurnOFWlYByC1S7o
+         0vnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768426859; x=1769031659;
+        d=1e100.net; s=20230601; t=1768426892; x=1769031692;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RcyLyDaHq6QDAy39EcjDJMRicgWNCaTcNxUYUhPTYH8=;
-        b=cPLwuEOYRUNOC6uem1mqbxPn7chOnwLqXn79FLc+hBZSXZKSYwgf77mOlBwZOJ0qiM
-         HGNzMMLiloHBFjbWZrswCkMPiyRS+IUyQaw6fSESSrSrO+QJzOaoRXXOm2Dc/X4r4RIF
-         kkN86OZr2meo+r/0QZHG8Xla25kKFKvhXrmF3yu6jzHMLwpWi5hQFCKjVZI3oGSejfqx
-         D+raBerZ2F3MtO1RdHZ2wqmEbBw+sT6J8BdywG4QnwY7QCU63hxSNPwKzTuj24RygQSU
-         vhPG8BX+cJV3MqcKoX2fc3KUw7Zsa+Tc3eDoL1OSMwbGuMDlDk08ZkXK6+7yiV4NGI3m
-         Tfqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUArOye8RwjFcPo8uIwX1EWObt7IThvqlcZ4bUy6nW1FZW76UsTyRf3cF6gJuPLB/6X0n82E6vNadU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxfbn2OR57Z6TUWanx6A8r6gIIFzhXGWyaAzX85nkTcNjuvcN1C
-	d7IB+XArOLSPK9mW9vUbMqlUH9alkADosmfCoK7flAIluEtj/1s8PliZ
-X-Gm-Gg: AY/fxX6NYB6SmSpMd/x4dLCehdeht3YMOqnrxbXRBk+rmWN4WToH1FlC92bYzhY8Kax
-	iSrc9f8A47eUxSzSTMA5cw4TwzEDO/UesKPhUiGW3yH20D1e2+U+6bZBY8etG2BmYQZzWnukAZQ
-	aIM7V0IimfAWLYC2vmA7V457qROeDZ8chtzbI8nFLwbw276VYEfYzw38RNmWrh4sUlxwIB1CGkl
-	36+0mtQ/Lmh+J/z5I6jN31mgJJuklENC7v31A+Un7NSBZ1lihtTl2PTyRiy0SHoyMk8QyqV00Ck
-	7D9mubC+wfKHqVGy0QK8KhAz8Y4XKw6rsLgf7U800/AutkgpGKFCcwSxhH8VkyjLA1ELhJsSq4h
-	xXDxvXhoVPPvY3DRAaOed2vRPydmL6febJAr2sjHTtgfqvu+Ovf4RA3rfCm0iIMBSz/vRZTNBOB
-	y42KEPijOzHONSo2JG7tJLQFAJt7XJxgRKKH5XQHt1nGB5mIrLK1xrM4k=
-X-Received: by 2002:a05:6870:b51f:b0:3e8:4166:4e5e with SMTP id 586e51a60fabf-40406f7d609mr2811717fac.17.1768426859090;
-        Wed, 14 Jan 2026 13:40:59 -0800 (PST)
+        bh=ikg86hLweLFlugyhGYJjhkjBVnchP1h60r6PTv+Ts0E=;
+        b=KrcpXRiuXNz3usmpl1ttqdc2IKW9dwk/dDeo9iDePVHuf3aLUF8nJHz60KWVJq65kO
+         pIiWuv3slRuOWvZ9Ew0fNQoOLVsmqV55gOWgIhNIez7HmPNIOcXreP303pLS4K4HJ7DN
+         JwvvrfvNK/G+olZHgApQtAOymrfB9ZFrItvf1xOfCgUsQN6ZPqh+w6TOvvZZnBIqtTn+
+         RFanvgPnb5c4bHqALjGYmJeO+b9kAIvNDYtoWlUzMzOWvL5k/GMfAS9H1BegVqe195/R
+         DzbxPcoFtAJvtYcLCjn7W8qiyBKc/LCV+HSPpYNrF6ky5xPmJNs/qcdz+6OW76ERn0RE
+         gAyg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9ecqyNMuR+h5Y6E347QG0kfAwrRRPsyxxeJqd+861CSeky+QmNvowyIJIgWixkJqXq1/KUBToh6E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZHIgC9RoXVrP+FpxKChgTKcI3RuoBRygF9A7wGSeHAxldOrhi
+	qlgWFJjyTh1cWB18eX5wxudjhXtQTdEle3CiVcw6DQW3ovtIqn315dIA
+X-Gm-Gg: AY/fxX6UVsC4CGOEhvUqZRhYmitg/Z1ITzphEKJGuMzXmDy+S4X+AkMFVQGfVl4LX6B
+	KiPOpaX44RyWH0z4VGMxvbSd8CCPP2q4H0d+VKYjGwVlfCv/FctW3flINYCJOjtO/HCbc4LBIN3
+	7CtSD33Fd9JKDHzV54V7cxW8i6t/Hwl/f/Elt3qwsuw4MTf2ds+BwPO4g9NCRyi3UdJ8mCY4qqY
+	4Q85LPdVIFV7/qV3ncd4xnxV8h9jmScPY1tmCf8KbpuPbR/JEgw0tSFMzZl4P/UirMP7qz8FbJb
+	xQshKbnX8BxRIuSHafPQ7gk9g9mHHGo7Tcdqb+eqboo+mKSqZsc0kdNlgbZJJN1c0uOGe1Lz/Kz
+	CCvs9mZRvbnKsehyHWBg6SmpX4jHxguHn0QXq0hqtY0AHmxBNQCdVVOGM908ET9koQMcTeTolGx
+	aLX21xADX+VoT5O6UJYRYuMeSstSDqGYj5O5TGJVT1LSJ8
+X-Received: by 2002:a9d:3e49:0:b0:7c5:3c7d:7e67 with SMTP id 46e09a7af769-7cfc8b5155fmr2043023a34.29.1768426892219;
+        Wed, 14 Jan 2026 13:41:32 -0800 (PST)
 Received: from localhost.localdomain ([2603:8080:1500:3d89:4c85:2962:e438:72c4])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3ffa4de8cbfsm17089364fac.3.2026.01.14.13.40.56
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7ce478ede38sm18802373a34.26.2026.01.14.13.41.29
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 14 Jan 2026 13:40:58 -0800 (PST)
+        Wed, 14 Jan 2026 13:41:31 -0800 (PST)
 Sender: John Groves <grovesaustin@gmail.com>
 From: John Groves <John@Groves.net>
 X-Google-Original-From: John Groves <john@groves.net>
@@ -98,9 +98,9 @@ Cc: John Groves <jgroves@micron.com>,
 	nvdimm@lists.linux.dev,
 	linux-cxl@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org
-Subject: [PATCH V4 16/19] famfs_fuse: Add holder_operations for dax notify_failure()
-Date: Wed, 14 Jan 2026 15:32:03 -0600
-Message-ID: <20260114213209.29453-17-john@groves.net>
+Subject: [PATCH V4 17/19] famfs_fuse: Add DAX address_space_operations with noop_dirty_folio
+Date: Wed, 14 Jan 2026 15:32:04 -0600
+Message-ID: <20260114213209.29453-18-john@groves.net>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260114213209.29453-1-john@groves.net>
 References: <20260114153133.29420.compound@groves.net>
@@ -113,231 +113,52 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Memory errors are at least somewhat more likely on disaggregated memory
-than on-board memory. This commit registers to be notified by fsdev_dax
-in the event that a memory failure is detected.
+From: John Groves <John@Groves.net>
 
-When a file access resolves to a daxdev with memory errors, it will fail
-with an appropriate error.
-
-If a daxdev failed fs_dax_get(), we set dd->dax_err. If a daxdev called
-our notify_failure(), set dd->error. When any of the above happens, set
-(file)->error and stop allowing access.
-
-In general, the recovery from memory errors is to unmount the file
-system and re-initialize the memory, but there may be usable degraded
-modes of operation - particularly in the future when famfs supports
-file systems backed by more than one daxdev. In those cases,
-accessing data that is on a working daxdev can still work.
-
-For now, return errors for any file that has encountered a memory or dax
-error.
+Famfs is memory-backed; there is no place to write back to, and no
+reason to mark pages dirty at all.
 
 Signed-off-by: John Groves <john@groves.net>
 ---
- fs/fuse/famfs.c       | 110 +++++++++++++++++++++++++++++++++++++++---
- fs/fuse/famfs_kfmap.h |   3 +-
- 2 files changed, 105 insertions(+), 8 deletions(-)
+ fs/fuse/famfs.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/fs/fuse/famfs.c b/fs/fuse/famfs.c
-index 2de70aef1df8..ee3526175b6b 100644
+index ee3526175b6b..f98e358ea489 100644
 --- a/fs/fuse/famfs.c
 +++ b/fs/fuse/famfs.c
-@@ -21,6 +21,26 @@
- #include "famfs_kfmap.h"
- #include "fuse_i.h"
+@@ -14,6 +14,7 @@
+ #include <linux/mm.h>
+ #include <linux/dax.h>
+ #include <linux/iomap.h>
++#include <linux/pagemap.h>
+ #include <linux/path.h>
+ #include <linux/namei.h>
+ #include <linux/string.h>
+@@ -39,6 +40,15 @@ static const struct dax_holder_operations famfs_fuse_dax_holder_ops = {
+ 	.notify_failure		= famfs_dax_notify_failure,
+ };
  
-+static void famfs_set_daxdev_err(
-+	struct fuse_conn *fc, struct dax_device *dax_devp);
-+
-+static int
-+famfs_dax_notify_failure(struct dax_device *dax_devp, u64 offset,
-+			u64 len, int mf_flags)
-+{
-+	struct fuse_conn *fc = dax_holder(dax_devp);
-+
-+	famfs_set_daxdev_err(fc, dax_devp);
-+
-+	return 0;
-+}
-+
-+static const struct dax_holder_operations famfs_fuse_dax_holder_ops = {
-+	.notify_failure		= famfs_dax_notify_failure,
++/*
++ * DAX address_space_operations for famfs.
++ * famfs doesn't need dirty tracking - writes go directly to
++ * memory with no writeback required.
++ */
++static const struct address_space_operations famfs_dax_aops = {
++	.dirty_folio	= noop_dirty_folio,
 +};
 +
-+/*****************************************************************************/
-+
+ /*****************************************************************************/
+ 
  /*
-  * famfs_teardown()
-  *
-@@ -47,9 +67,12 @@ famfs_teardown(struct fuse_conn *fc)
- 		if (!dd->valid)
- 			continue;
- 
--		/* Release reference from dax_dev_get() */
--		if (dd->devp)
-+		/* Only call fs_put_dax if fs_dax_get succeeded */
-+		if (dd->devp) {
-+			if (!dd->dax_err)
-+				fs_put_dax(dd->devp, fc);
- 			put_dax(dd->devp);
-+		}
- 
- 		kfree(dd->name);
+@@ -625,6 +635,7 @@ famfs_file_init_dax(
+ 		}
+ 		i_size_write(inode, meta->file_size);
+ 		inode->i_flags |= S_DAX;
++		inode->i_data.a_ops = &famfs_dax_aops;
  	}
-@@ -170,6 +193,17 @@ famfs_fuse_get_daxdev(struct fuse_mount *fm, const u64 index)
- 		if (!daxdev->name)
- 			return -ENOMEM;
- 
-+		rc = fs_dax_get(daxdev->devp, fc, &famfs_fuse_dax_holder_ops);
-+		if (rc) {
-+			/* If fs_dax_get() fails, we don't attempt recovery;
-+			 * We mark the daxdev valid with dax_err
-+			 */
-+			daxdev->dax_err = 1;
-+			pr_err("%s: fs_dax_get(%lld) failed\n",
-+			       __func__, (u64)daxdev->devno);
-+			return -EBUSY;
-+		}
-+
- 		wmb(); /* All other fields must be visible before valid */
- 		daxdev->valid = 1;
- 	}
-@@ -245,6 +279,36 @@ famfs_update_daxdev_table(
- 	return 0;
- }
- 
-+static void
-+famfs_set_daxdev_err(
-+	struct fuse_conn *fc,
-+	struct dax_device *dax_devp)
-+{
-+	int i;
-+
-+	/* Gotta search the list by dax_devp;
-+	 * read lock because we're not adding or removing daxdev entries
-+	 */
-+	scoped_guard(rwsem_write, &fc->famfs_devlist_sem) {
-+		for (i = 0; i < fc->dax_devlist->nslots; i++) {
-+			if (fc->dax_devlist->devlist[i].valid) {
-+				struct famfs_daxdev *dd;
-+
-+				dd = &fc->dax_devlist->devlist[i];
-+				if (dd->devp != dax_devp)
-+					continue;
-+
-+				dd->error = true;
-+
-+				pr_err("%s: memory error on daxdev %s (%d)\n",
-+				       __func__, dd->name, i);
-+				return;
-+			}
-+		}
-+	}
-+	pr_err("%s: memory err on unrecognized daxdev\n", __func__);
-+}
-+
- /***************************************************************************/
- 
- void __famfs_meta_free(void *famfs_meta)
-@@ -583,6 +647,26 @@ famfs_file_init_dax(
- 
- static int famfs_file_bad(struct inode *inode);
- 
-+static int famfs_dax_err(struct famfs_daxdev *dd)
-+{
-+	if (!dd->valid) {
-+		pr_err("%s: daxdev=%s invalid\n",
-+		       __func__, dd->name);
-+		return -EIO;
-+	}
-+	if (dd->dax_err) {
-+		pr_err("%s: daxdev=%s dax_err\n",
-+		       __func__, dd->name);
-+		return -EIO;
-+	}
-+	if (dd->error) {
-+		pr_err("%s: daxdev=%s memory error\n",
-+		       __func__, dd->name);
-+		return -EHWPOISON;
-+	}
-+	return 0;
-+}
-+
- static int
- famfs_interleave_fileofs_to_daxofs(struct inode *inode, struct iomap *iomap,
- 			 loff_t file_offset, off_t len, unsigned int flags)
-@@ -617,6 +701,7 @@ famfs_interleave_fileofs_to_daxofs(struct inode *inode, struct iomap *iomap,
- 
- 		/* Is the data is in this striped extent? */
- 		if (local_offset < ext_size) {
-+			struct famfs_daxdev *dd;
- 			u64 chunk_num       = local_offset / chunk_size;
- 			u64 chunk_offset    = local_offset % chunk_size;
- 			u64 chunk_remainder = chunk_size - chunk_offset;
-@@ -625,6 +710,7 @@ famfs_interleave_fileofs_to_daxofs(struct inode *inode, struct iomap *iomap,
- 			u64 strip_offset    = chunk_offset + (stripe_num * chunk_size);
- 			u64 strip_dax_ofs = fei->ie_strips[strip_num].ext_offset;
- 			u64 strip_devidx = fei->ie_strips[strip_num].dev_index;
-+			int rc;
- 
- 			if (strip_devidx >= fc->dax_devlist->nslots) {
- 				pr_err("%s: strip_devidx %llu >= nslots %d\n",
-@@ -639,6 +725,15 @@ famfs_interleave_fileofs_to_daxofs(struct inode *inode, struct iomap *iomap,
- 				goto err_out;
- 			}
- 
-+			dd = &fc->dax_devlist->devlist[strip_devidx];
-+
-+			rc = famfs_dax_err(dd);
-+			if (rc) {
-+				/* Shut down access to this file */
-+				meta->error = true;
-+				return rc;
-+			}
-+
- 			iomap->addr    = strip_dax_ofs + strip_offset;
- 			iomap->offset  = file_offset;
- 			iomap->length  = min_t(loff_t, len, chunk_remainder);
-@@ -736,6 +831,7 @@ famfs_fileofs_to_daxofs(struct inode *inode, struct iomap *iomap,
- 		if (local_offset < dax_ext_len) {
- 			loff_t ext_len_remainder = dax_ext_len - local_offset;
- 			struct famfs_daxdev *dd;
-+			int rc;
- 
- 			if (daxdev_idx >= fc->dax_devlist->nslots) {
- 				pr_err("%s: daxdev_idx %llu >= nslots %d\n",
-@@ -746,11 +842,11 @@ famfs_fileofs_to_daxofs(struct inode *inode, struct iomap *iomap,
- 
- 			dd = &fc->dax_devlist->devlist[daxdev_idx];
- 
--			if (!dd->valid || dd->error) {
--				pr_err("%s: daxdev=%lld %s\n", __func__,
--				       daxdev_idx,
--				       dd->valid ? "error" : "invalid");
--				goto err_out;
-+			rc = famfs_dax_err(dd);
-+			if (rc) {
-+				/* Shut down access to this file */
-+				meta->error = true;
-+				return rc;
- 			}
- 
- 			/*
-diff --git a/fs/fuse/famfs_kfmap.h b/fs/fuse/famfs_kfmap.h
-index eb9f70b5cb81..0fff841f5a9e 100644
---- a/fs/fuse/famfs_kfmap.h
-+++ b/fs/fuse/famfs_kfmap.h
-@@ -73,7 +73,8 @@ struct famfs_file_meta {
- struct famfs_daxdev {
- 	/* Include dev uuid? */
- 	bool valid;
--	bool error;
-+	bool error; /* Dax has reported a memory error (probably poison) */
-+	bool dax_err; /* fs_dax_get() failed */
- 	dev_t devno;
- 	struct dax_device *devp;
- 	char *name;
+  unlock_out:
+ 	inode_unlock(inode);
 -- 
 2.52.0
 
