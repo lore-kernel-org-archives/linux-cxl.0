@@ -1,46 +1,46 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010018.outbound.protection.outlook.com [52.101.46.18])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010006.outbound.protection.outlook.com [40.93.198.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8826E3A4F2B;
-	Wed, 14 Jan 2026 16:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31AE3A641A;
+	Wed, 14 Jan 2026 16:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.6
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768409385; cv=fail; b=QvT/plJIa1PQoPskUqFSxJD5u+BtmUaTcnVMfcReGuVI98TI8T6uuwSuZb+Y+A9fTKPQ7cLHlI02aYngk7FVGlWXDcN7Mgbi56JNv+PgTYlm7HVHGmKWyF6JWK7kQ7q9I1HSVGmnLaD1vXgJgUinrbcupOvP0/3Ee81oHh1JksE=
+	t=1768409394; cv=fail; b=VS368paiqkRVbaxeTrlHDMmSgF6ZCtKqcOeC+pOaxxzI/t6AFQYhEBbCgW1jTcXXIt/GpTStPWMwavEltia2oxMxx2DHW8nVfc1iJ40s/6lVwE4y7vFL+C6oyV7Y3utd6Jky1iKvxYrBOCXHRQDjQ36zDB5EAYFk87Q8fcugbZs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768409385; c=relaxed/simple;
-	bh=PpMzmYNriu+kPjIAZP8pB6tO9TzQKadRlUqAqHVTe8s=;
+	s=arc-20240116; t=1768409394; c=relaxed/simple;
+	bh=NzCf99GYN03DBfAOAcmuubc6tBqWe9SLSB8N9200/z8=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y2smgBUmFMYYv/592rKU3odR3tm0kqqw0BIFIQFBnFsS68rzt9FhWLZBfBRoRUHz9O8fnwFPgT37fj5aPy7SLBZWB74QM8RD/Q/+8Dr5i4v1cVV/efTZO7u5v9chji4rlikF3d9mDmW3LWVJGXHxuYgLu88hy0DPaIOxFzH+0Sk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=coxF0DUa; arc=fail smtp.client-ip=52.101.46.18
+	 MIME-Version:Content-Type; b=CpvfHCKWTBEOO2hvmH4nMB6umgmXlnutLUa+4J/Xsttwhd7n9TPI7Sa7M10t3dpbgqGuCRgyzPezAWemn6xgC1mHJK9V2obP5BG2TKCFIGUInEBteLZSWOcj/JiErWiNVMlDpx2ggXcAlcipe8AdeiCZkHCcU6hBAocBcl0YPXk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rqpopEtn; arc=fail smtp.client-ip=40.93.198.6
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="coxF0DUa"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rqpopEtn"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=luu3a/vtzA9YQl1OsS8jyXMxLhNxxX9sYQ8Z8gPKFiCOFmNnoIaDLZ+OPeanaP04TxSzVuRRXD1dL+v82z0oQG5Juz0lLSFZuNBHvqtYwm8QdUTCRLbgt7s6529lMfBwkJYMwre1I6OHbTsw+AJfdelFxwnTFXs53ezrQqUTitsTJ1FgjaPH8w3nXZcsLHnphXprcNCKvknFjnXJ0xfPGkTO4iS9ntXOWnBQW37i1GXu1opfPzCKTJX4OKg+tBPU3ZrYGMz27zmmRKfal8So7BTqN7FvaDc4eAh7pw4MaDRkLaAbE8pQ350Ah82+jhnI4MsjabgRq31I1mMDnQiqWQ==
+ b=Z8S0/lUuyRvkarLyXX1a3bC0x2Z6xIP68LHFqnEnDQNycBm+e152CPYKB5XUHJ2lnmlGGpyMX2CX5hBmMdG2AUjrR78J435s2GTspb8R/JKL65/AS4vBZFL3bj8oUAhzA4NidYv+n7NxbFE0Ua7et3r+xIm7DrzyEFib8viTNZ5ovbn/3n1wHKpTXR+NLG7SNtJj+Rz5aB2+68rlsGylioEh4FV06Y6mFQlgUZ81/JMi92lhXIU5YNugfPmycOCWoQDCcJud1dWH9L6ko4Fp6Nf2ibkSeqR9zJs/KxX0hU7x12XmKL67pfKDdUI+OL12WaGjBoP/R0wbNxusO9UUzw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=w36FrPzjTCg0lOfwMgs32wGutB/hVoOD3mMkBHCWHOw=;
- b=f5F70WwUad2kMmVrk5jGjNfx+GpZa7ZNPteLbTMvBTgXFEwPf9eoCxIuGJsVoZAvnHdD4+yAoDUupWXiOg1oY0e404eX1ps88xqpJD3Ir7p/SBID/6cxkxGC8K/lHEUKzH4hPzhiYIjkkOByG1+9pbNhzHt3oZVDoJwOl5byWOdYSqCNEhZuHzZwodsMva3Z9ucEtjt6EQVsIYMtQIG2C8iBM5q80q2fyftl1YiOA3B78OJowkbU9gxvn8j98IbMge4HWPue+xtVe/uN2OpogEEqHFR9octSrnuZWcAc3XUn6UFfyc+7aVWUKSOrHrSM0vmKOlkeseZZDqKd+vtQzw==
+ bh=85r4L+xywSogYPdRiKqsvJWd9nfRBG7MiV7bEsM86WA=;
+ b=aRW/nGWnHyPla6AOwzsFDlRf/c7oWPI7oEJk2LhZeyxwe+gyVFjJCTkpvR//R8zSQ+iwhswWWI2DzatuunAvMyqZ6sQgaz4lVmvALhvu/WZpA7ATTHMfCrUFusG79QrFbxNJ3W7vYnZL0NwxCyz5XrmYpIVqUBRUQw3Rd85iED1IwIUhQG41+EsmJkX8RXyxSOrX3oDlhsUah6LazoRnJJYlIAJLf8J6sSWoHKuYPJgBTzb6fYt5RXiEZqdDNnFKrO/zK15PiGbBLFVsNlI5Rq5fMbkZkqM30bEMrCX0jv4Kj3WIXiHGn9dnzLvq7pFQq8fvNHOEAjzhlP5uY9n8OQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w36FrPzjTCg0lOfwMgs32wGutB/hVoOD3mMkBHCWHOw=;
- b=coxF0DUapsjWPPCWj4N7Y6qkrHt7d1CtVKqUdUgOfHbN2brLurpHPwHjNqQ8iI3dnt2+KggSIWnNN3NFqp1pxJh3QqhpdOqdjR487Zfahs4/RDdWuWeKRyTPujoy3DxGnGZ1rNc/R5porYBwpJT3BbG1dH4d+kREE+kGA4l4zkw=
-Received: from PH8P221CA0029.NAMP221.PROD.OUTLOOK.COM (2603:10b6:510:2d8::34)
- by SA5PPFC3F406448.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8e0) with
+ bh=85r4L+xywSogYPdRiKqsvJWd9nfRBG7MiV7bEsM86WA=;
+ b=rqpopEtnIdZFnDf4W/0+P5/On92UVvEOQRx2ZU75lfUD6QryiDV/2k2m3DOcy6m8/Wi43OHkaI06RBx7T+XbReiSkLOqW4a4HcabsixX3RyjQn2ioGCK10djd4mBSm/DTlL3VC3xWBV3Yuhnygh1WTAGSTgse781SUFb/pn2G8Y=
+Received: from PH8P221CA0028.NAMP221.PROD.OUTLOOK.COM (2603:10b6:510:2d8::28)
+ by DS2PR12MB9686.namprd12.prod.outlook.com (2603:10b6:8:27a::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Wed, 14 Jan
- 2026 16:49:41 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.5; Wed, 14 Jan
+ 2026 16:49:38 +0000
 Received: from CY4PEPF0000E9D6.namprd05.prod.outlook.com
- (2603:10b6:510:2d8:cafe::db) by PH8P221CA0029.outlook.office365.com
- (2603:10b6:510:2d8::34) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:510:2d8:cafe::8e) by PH8P221CA0028.outlook.office365.com
+ (2603:10b6:510:2d8::28) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.5 via Frontend Transport; Wed,
- 14 Jan 2026 16:49:41 +0000
+ 14 Jan 2026 16:49:38 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,11 +50,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from satlexmb07.amd.com (165.204.84.17) by
  CY4PEPF0000E9D6.mail.protection.outlook.com (10.167.241.69) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9520.1 via Frontend Transport; Wed, 14 Jan 2026 16:49:41 +0000
+ 15.20.9520.1 via Frontend Transport; Wed, 14 Jan 2026 16:49:37 +0000
 Received: from rric.localdomain (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 14 Jan
- 2026 10:49:37 -0600
+ 2026 10:49:34 -0600
 From: Robert Richter <rrichter@amd.com>
 To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
 	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
@@ -64,9 +64,9 @@ CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
 	<gourry@gourry.net>, "Fabio M. De Francesco"
 	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
 	Joshua Hahn <joshua.hahnjy@gmail.com>, Robert Richter <rrichter@amd.com>
-Subject: [PATCH v10 11/13] cxl/atl: Lock decoders that need address translation
-Date: Wed, 14 Jan 2026 17:48:27 +0100
-Message-ID: <20260114164837.1076338-12-rrichter@amd.com>
+Subject: [PATCH v10 10/13] cxl: Enable AMD Zen5 address translation using ACPI PRMT
+Date: Wed, 14 Jan 2026 17:48:26 +0100
+Message-ID: <20260114164837.1076338-11-rrichter@amd.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260114164837.1076338-1-rrichter@amd.com>
 References: <20260114164837.1076338-1-rrichter@amd.com>
@@ -76,113 +76,385 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D6:EE_|SA5PPFC3F406448:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0deec6ef-351d-43c5-8c05-08de538ce977
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D6:EE_|DS2PR12MB9686:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9d65e501-e166-4b4f-2415-08de538ce7a8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700013|1800799024;
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|7416014|82310400026|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?apLf/9qnJ2hIdarNiU85SY2ECCUl4QuMQ3zGgIdC7jweK7GfkcmSXqmRuQyL?=
- =?us-ascii?Q?GjJeDejhKFSMyyoJou8/+5Hp7hXCY/ieznYlKQF4LzhFngN3LlljGZSgZRV3?=
- =?us-ascii?Q?E5gR/foNtyPgM1B6GHOmYWTCVb/i6Ms+1isf8i15nzZNSz+oIhD1ircB2WJI?=
- =?us-ascii?Q?f1zWMQRHrN/88tYvyfCCjV05xzuMs+WB9PQ3d8Ptgorbdk80IcB847OgNsJf?=
- =?us-ascii?Q?rNOT8cAOy/elmgoz8lTnnLJyanrffeFx3pHIJiGJV5vgRzmt3x9SEqpZB1nA?=
- =?us-ascii?Q?7oi1905OVjXbg/apO5U+bMYGadGItlQDZvha59wpm1yF4C/jZn+m80lfKbSX?=
- =?us-ascii?Q?47iTq9YdZnRMe0y2ZwNZqJV+YFgfpxdL3aaSkisrgJnftccbU/7qBhRpeFqj?=
- =?us-ascii?Q?r2wccxlNtNsEXYtjmjMJLYhYULFs0MqMvrd6pTvjZ15AXI9OECS0LLNfDbNi?=
- =?us-ascii?Q?F+HNXXL0zc1qCKJxlbzBQNLTSwJmmgjnMBBCJ+Q/RtvAXyk0U1X0DcXjMZf7?=
- =?us-ascii?Q?AEbgEx3XrPv1mwN0QBZmSDGLko/WW5/h/TgSdG6Z49J6ZBHpBmuD/WCLJhcj?=
- =?us-ascii?Q?BwFnT50a3rqkOBTI3C8+0lAm5I0mPHrETYjDYFZ9QQVKY6a2y4JEmpZ7L0dF?=
- =?us-ascii?Q?UZ6pyQBM+QIkDjMLjV1LjpE94PyJX8qLP7SWapY8Ia+FepajNn35p2P8gH2G?=
- =?us-ascii?Q?hR2IRJ2fZT3TrzyoV4WHenkJVpOym2iaN7e/IWvWf9Cn+YnM2sjP1ZRvjMUT?=
- =?us-ascii?Q?lvV0hHz1tqavvEDV5qf/Ltw1U73GDLLVMh4brjuxVOl6puTdQThvBWl8FiXs?=
- =?us-ascii?Q?6kdIInsaPGAq+JJqga81wcVvX5jVeewiES+HOLHRqpw0N0/q5RTeHbifzT18?=
- =?us-ascii?Q?zbX0mb2DDW7pREOTVAHNgcuJWF8yMinZqisNc/UVfX4orkI84blg5oKcaE4A?=
- =?us-ascii?Q?+/G/VmLHDfuaxphMg3/MqL636KZpSytS9HNUEc27tJWrdJG1PIIR9AkzEcJm?=
- =?us-ascii?Q?GiA+upLZeqbvqBhRMjP7Yv84+Ym/q5V1GgrMnweQFUzaXzGw6joV0lNvPfS4?=
- =?us-ascii?Q?dW4/MqzqxU7Ge6yXFpjn+Ar07HPL7af3vktXCD3tsrrmR0xz0y0dmHnTVn32?=
- =?us-ascii?Q?9ygj2XweIv6SJSLP/NZsTU3mtBjn/XauKflPeM4U1ROvkAG4I0STftLBBjjq?=
- =?us-ascii?Q?1x+1RoayAkSDmihg7oSSR5s4GOXw2jZGapLgfmST+fPjCOEwBCRrjq3Jkzti?=
- =?us-ascii?Q?GtNPuMcQFzxQE+pyDqi6/Sm8iIz8R3zsI8zGoOqN8MtUNRUHFyfnLae1EbQE?=
- =?us-ascii?Q?yxhSqSFhhVkVOd0L9jFIMKeS6x2GDsnq+4BTWPlEJ3LhhPvRybUjKV292kEV?=
- =?us-ascii?Q?rb2qbATN+8AENSkAPspE8j/0orhSXWVWMKWQPeQklnFyZNwrCKVPFH6drnCa?=
- =?us-ascii?Q?/G1vvSybxVX2ANfFuMy7dEOsY8pOp/ZrRCfORfQsM2zse2AlzqOOFFs10NAi?=
- =?us-ascii?Q?ZT/yUI2u2QGdQeR5KiZwm2kl6xhkZiAZI3kVZGvVUwCn1ELoTV9kWMYfJ23R?=
- =?us-ascii?Q?GrE2ibHi3qE/jiLnCLtLuRAbs/n6eAwRzm4jYPqB6d3i4GN1Pkrw50qVDalU?=
- =?us-ascii?Q?nY/CIWtR5eKaL3vNMhkLzayJW/SFqnxNAi9GCbujLfeOWvnvi3VA0hwsIMvG?=
- =?us-ascii?Q?BVU2XA=3D=3D?=
+	=?utf-8?B?dWVRYlJoRldDL0syd21XTE13WkF2cm1ldjRQUmduQzZHcEF3QjhzUC9HSTJ1?=
+ =?utf-8?B?ajZpZVhaeklQYkhMOEtHTEF3ZlJ1THIrYkhJVnZXV25MTmpiSkxBQVA0S01j?=
+ =?utf-8?B?YVVwZFF1SE4rZ0dZeGpqRytJbUtpNWt0bGtQUkx0MThxVVNZd0tQdm5iN3Fs?=
+ =?utf-8?B?TUdaZ0xCeVRtR2Q4a2dHZmVweFpSRE4zc3hZR1MxMnFWejdab1pmRVlCMFBy?=
+ =?utf-8?B?d3YyQ2xzK2JlRWMvaHAzRm9jRHVNRkVFMmNEclRKUmlwd3FicXZ0S2VDeU1n?=
+ =?utf-8?B?amp5SGZLTDBnOWpreDJTOGE3RzI1Q2dtNHc0MEppR2FDTmphOUhtSGJTVDRw?=
+ =?utf-8?B?ZUdkT3BtM0tMeTl3dkRaRUJPa1ZLRWF5SkFpKy9pT041R01qTWxlNWoyNUR4?=
+ =?utf-8?B?ZklmOUxEMVRuNGI0VnprVWltU3VKYi9Vby9hb3ZFbWdWeVdVc0w4QzR0UUM1?=
+ =?utf-8?B?Y3E5TW5kK1h3OUQ4R3ZUMXkrNHJoSWVRTzdKSmk3LytVcEgrVTVOVDlJQzIx?=
+ =?utf-8?B?Qk5wV0NyUWVpa1RJblZuaFdLVjIzQU9ScE9JdlFiVXJGQkZGZ3l1TzhVMWRY?=
+ =?utf-8?B?T3g1Nk1nS0p3VWZ6alJqZ2ZGZjkvSnBPbm12OXR4dGNiQldrY2dna0czUERr?=
+ =?utf-8?B?dG5LS0lMZFNmYytiSVFwQS9BNnRGMkFVTWFQVVJ2MUpEN2c0K0pmbTg5em9I?=
+ =?utf-8?B?MGtHWXFScjM0RDlpZlFoclpIWDAzNmVaMUVnWTVZOGphczZ5dlBSNHlEVWNy?=
+ =?utf-8?B?eThIdmd4Q29laXlYQzA0VUZpYUdCR0ZuU2s0ZmNvaHA1TWVkV0kxa25IQ1Vs?=
+ =?utf-8?B?eWpkNGlibHcvVkNKYlI0UDJkQVp6aEFwK1VCRHR0ZkZsZWhHSk84NHpUZUpl?=
+ =?utf-8?B?dkU5NStQSnhDZ2FVeWhlQncrNkVpZkJ4OTdJZUFpNmxiNkZHSTdTWnJDR09J?=
+ =?utf-8?B?NjA1RloxeFZsaDF3UzZVZU4yQVhSTEtVcXNlYWhEMTVzckk4allDM1ZqTW1i?=
+ =?utf-8?B?TE9wMkR6VGN1NWptOUhMT2pqdXEwM2NvVU1FWFI2ZjZMKzVjbUR0OGxMeXdi?=
+ =?utf-8?B?ZlhrRHhjejZqS1FBb1VOMlRMaVVldllxcXhheEtIQXZrb3cwM1pvQ1M0cDk5?=
+ =?utf-8?B?NkxMdy9nSU4zbmI4SG1BTW5pZkFFeDh1dmJ1L0xEUXdxU0h1dGhZRVFPbUha?=
+ =?utf-8?B?NXRlcHQ0alBVc3VSTWFJZGUwVDBTclFlV2xIM3VsKzhPU2l4RkJTZ0ZKeDNY?=
+ =?utf-8?B?VUl2c0tPQjlMK2YydGlwVkxBNGpyOUNGM0RlcmxLSVNVSWJUVjlocU93djc1?=
+ =?utf-8?B?NW9JYVg2OGl1OWlBU2tqMmZLRUhSYzVFcE1wSmpXK0p0emJzMUlJRUNLbFBP?=
+ =?utf-8?B?VWNxQnVaT3ZHMVVqc1g1RTI3bjlEbm03WklsbmNDUUk0dGwvMFV1NythdzNE?=
+ =?utf-8?B?L05NYjZJNy9BMU53TVZrbjBSdVRzemZldGFvN3lYYWxKQlRiaUJhTnhHVmxE?=
+ =?utf-8?B?ZlZIL3JtSHhkQlNGZzhkZzRtRFU1QjJlc1RvanZNOGJieXBCQlF3UWZnaUdo?=
+ =?utf-8?B?V3V1WndqV3JxVTRMNnJZelRxdFRQRlRyZnhHTmg1dTVhNnhtYnVYRVB2R2Zn?=
+ =?utf-8?B?QXRHR0dwaFNQd3pYdVZOdm9vRXgyNmE0U1k3OWZwT2ZvSjNrUy9idlVoT3Np?=
+ =?utf-8?B?cXZjbWV1SW9aVWQyak5rbWxlZWhPNUMxUm1keXF1eUl3VE5OWCtFRlY0Z3Ey?=
+ =?utf-8?B?cTJyRkplYjBRKzBDZ210TzB3RkJKSW9OV1VmOUJHQlhtRWlnUVN4Mm5qbWpP?=
+ =?utf-8?B?OFNmbEVPVTRRMFBjZkpnbE1YbTB1bjF5ZHR1S1JQNEpLMVVVUGxuNG1hK1ht?=
+ =?utf-8?B?bVVyTHQ3Wm9LTjNrbmp4cjQyMXJLRlR6NkVLdUpZMG9DVmthSHllb2ZqT1FI?=
+ =?utf-8?B?TlA4dEU5Rmw0ZUdWMHJ5RUhEMTNGdVF2cDQ1RUJWUEZOeXJHeW9PQlB4QlBL?=
+ =?utf-8?B?VTBWd0JaWWlmTXIrdmo2Zmoxd2pLOXcyN3JWUzVYaG5yZUh4Z2dKdExDSFFu?=
+ =?utf-8?B?QVpQL0k1UVZ6MTVRMU9EZDBsUnRtMkFITlZ1dm5xY2JSdlZnbVphWjdXc0Qx?=
+ =?utf-8?B?R0lDb2RVRFcvNGc2MzhtSVllVDQxQWdrKythMGdPNEFYTit5TTZoMlJlNUY0?=
+ =?utf-8?B?TVNidFVYWmsvTEZMVUNrQS82cHFObTZ2WStOdE05ZnlXTmk2M0F4UEQvTmdy?=
+ =?utf-8?B?cFNRSHhkZWdDOG9DR2xWcXlmcGRnPT0=?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(7416014)(82310400026)(13003099007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 16:49:41.0021
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 16:49:37.9406
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0deec6ef-351d-43c5-8c05-08de538ce977
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d65e501-e166-4b4f-2415-08de538ce7a8
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	CY4PEPF0000E9D6.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPFC3F406448
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS2PR12MB9686
 
-The current kernel implementation does not support endpoint setup with
-Normalized Addressing. It only translates an endpoint's DPA to the SPA
-range of the host bridge. Therefore, the endpoint address range cannot
-be determined, making a non-auto setup impossible. If a decoder
-requires address translation, reprogramming should be disabled and the
-decoder locked.
+Add AMD Zen5 support for address translation.
 
-The BIOS, however, provides all the necessary address translation
-data, which the kernel can use to reconfigure endpoint decoders with
-normalized addresses. Locking the decoders in the BIOS would prevent a
-capable kernel (or other operating systems) from shutting down
-auto-generated regions and managing resources dynamically.
+Zen5 systems may be configured to use 'Normalized addresses'. Then,
+host physical addresses (HPA) are different from their system physical
+addresses (SPA). The endpoint has its own physical address space and
+an incoming HPA is already converted to the device's physical address
+(DPA). Thus it has interleaving disabled and CXL endpoints are
+programmed passthrough (DPA == HPA).
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Host Physical Addresses (HPAs) need to be translated from the endpoint
+to its CXL host bridge, esp. to identify the endpoint's root decoder
+and region's address range. ACPI Platform Runtime Mechanism (PRM)
+provides a handler to translate the DPA to its SPA. This is documented
+in:
+
+ AMD Family 1Ah Models 00h–0Fh and Models 10h–1Fh
+ ACPI v6.5 Porting Guide, Publication # 58088
+ https://www.amd.com/en/search/documentation/hub.html
+
+With Normalized Addressing this PRM handler must be used to translate
+an HPA of an endpoint to its SPA.
+
+Do the following to implement AMD Zen5 address translation:
+
+Introduce a new file core/atl.c to handle ACPI PRM specific address
+translation code. Naming is loosely related to the kernel's AMD
+Address Translation Library (CONFIG_AMD_ATL) but implementation does
+not depend on it, nor it is vendor specific. Use Kbuild and Kconfig
+options respectively to enable the code depending on architecture and
+platform options.
+
+AMD Zen5 systems support the ACPI PRM CXL Address Translation firmware
+call (see ACPI v6.5 Porting Guide, Address Translation - CXL DPA to
+System Physical Address). Firmware enables the PRM handler if the
+platform has address translation implemented. Check firmware and
+kernel support of ACPI PRM using the specific GUID. On success enable
+address translation by setting up the earlier introduced root port
+callback, see function cxl_prm_setup_translation(). Setup is done in
+cxl_setup_prm_address_translation(), it is the only function that
+needs to be exported. For low level PRM firmware calls, use the ACPI
+framework.
+
+Identify the region's interleaving ways by inspecting the address
+ranges. Also determine the interleaving granularity using the address
+translation callback. Note that the position of the chunk from one
+interleaving block to the next may vary and thus cannot be considered
+constant. Address offsets larger than the interleaving block size
+cannot be used to calculate the granularity. Thus, probe the
+granularity using address translation for various HPAs in the same
+interleaving block.
+
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 Tested-by: Gregory Price <gourry@gourry.net>
 Signed-off-by: Robert Richter <rrichter@amd.com>
 ---
- drivers/cxl/core/atl.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/cxl/Kconfig       |   5 +
+ drivers/cxl/acpi.c        |   2 +
+ drivers/cxl/core/Makefile |   1 +
+ drivers/cxl/core/atl.c    | 190 ++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h         |   7 ++
+ 5 files changed, 205 insertions(+)
+ create mode 100644 drivers/cxl/core/atl.c
 
-diff --git a/drivers/cxl/core/atl.c b/drivers/cxl/core/atl.c
-index c36984686fb0..09d0ea1792d9 100644
---- a/drivers/cxl/core/atl.c
-+++ b/drivers/cxl/core/atl.c
-@@ -154,6 +154,24 @@ static int cxl_prm_setup_root(struct cxl_root *cxl_root, void *data)
- 		return -ENXIO;
- 	}
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index 48b7314afdb8..103950a9b73e 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -233,4 +233,9 @@ config CXL_MCE
+ 	def_bool y
+ 	depends on X86_MCE && MEMORY_FAILURE
  
-+	/*
-+	 * The current kernel implementation does not support endpoint
-+	 * setup with Normalized Addressing. It only translates an
-+	 * endpoint's DPA to the SPA range of the host bridge.
-+	 * Therefore, the endpoint address range cannot be determined,
-+	 * making a non-auto setup impossible. If a decoder requires
-+	 * address translation, reprogramming should be disabled and
-+	 * the decoder locked.
-+	 *
-+	 * The BIOS, however, provides all the necessary address
-+	 * translation data, which the kernel can use to reconfigure
-+	 * endpoint decoders with normalized addresses. Locking the
-+	 * decoders in the BIOS would prevent a capable kernel (or
-+	 * other operating systems) from shutting down auto-generated
-+	 * regions and managing resources dynamically.
-+	 */
-+	cxld->flags |= CXL_DECODER_F_LOCK;
++config CXL_ATL
++	def_bool y
++	depends on CXL_REGION
++	depends on ACPI_PRMT && AMD_NB
 +
- 	ctx->hpa_range = hpa_range;
- 	ctx->interleave_ways = ways;
- 	ctx->interleave_granularity = gran;
+ endif
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index a31d0f97f916..50c2987e0459 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -925,6 +925,8 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+ 	cxl_root->ops.qos_class = cxl_acpi_qos_class;
+ 	root_port = &cxl_root->port;
+ 
++	cxl_setup_prm_address_translation(cxl_root);
++
+ 	rc = bus_for_each_dev(adev->dev.bus, NULL, root_port,
+ 			      add_host_bridge_dport);
+ 	if (rc < 0)
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index 5ad8fef210b5..11fe272a6e29 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -20,3 +20,4 @@ cxl_core-$(CONFIG_CXL_REGION) += region.o
+ cxl_core-$(CONFIG_CXL_MCE) += mce.o
+ cxl_core-$(CONFIG_CXL_FEATURES) += features.o
+ cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
++cxl_core-$(CONFIG_CXL_ATL) += atl.o
+diff --git a/drivers/cxl/core/atl.c b/drivers/cxl/core/atl.c
+new file mode 100644
+index 000000000000..c36984686fb0
+--- /dev/null
++++ b/drivers/cxl/core/atl.c
+@@ -0,0 +1,190 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2025 Advanced Micro Devices, Inc.
++ */
++
++#include <linux/prmt.h>
++#include <linux/pci.h>
++#include <linux/acpi.h>
++
++#include <cxlmem.h>
++#include "core.h"
++
++/*
++ * PRM Address Translation - CXL DPA to System Physical Address
++ *
++ * Reference:
++ *
++ * AMD Family 1Ah Models 00h–0Fh and Models 10h–1Fh
++ * ACPI v6.5 Porting Guide, Publication # 58088
++ */
++
++static const guid_t prm_cxl_dpa_spa_guid =
++	GUID_INIT(0xee41b397, 0x25d4, 0x452c, 0xad, 0x54, 0x48, 0xc6, 0xe3,
++		  0x48, 0x0b, 0x94);
++
++struct prm_cxl_dpa_spa_data {
++	u64 dpa;
++	u8 reserved;
++	u8 devfn;
++	u8 bus;
++	u8 segment;
++	u64 *spa;
++} __packed;
++
++static u64 prm_cxl_dpa_spa(struct pci_dev *pci_dev, u64 dpa)
++{
++	struct prm_cxl_dpa_spa_data data;
++	u64 spa;
++	int rc;
++
++	data = (struct prm_cxl_dpa_spa_data) {
++		.dpa     = dpa,
++		.devfn   = pci_dev->devfn,
++		.bus     = pci_dev->bus->number,
++		.segment = pci_domain_nr(pci_dev->bus),
++		.spa     = &spa,
++	};
++
++	rc = acpi_call_prm_handler(prm_cxl_dpa_spa_guid, &data);
++	if (rc) {
++		pci_dbg(pci_dev, "failed to get SPA for %#llx: %d\n", dpa, rc);
++		return ULLONG_MAX;
++	}
++
++	pci_dbg(pci_dev, "PRM address translation: DPA -> SPA: %#llx -> %#llx\n", dpa, spa);
++
++	return spa;
++}
++
++static int cxl_prm_setup_root(struct cxl_root *cxl_root, void *data)
++{
++	struct cxl_region_context *ctx = data;
++	struct cxl_endpoint_decoder *cxled = ctx->cxled;
++	struct cxl_decoder *cxld = &cxled->cxld;
++	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
++	struct range hpa_range = ctx->hpa_range;
++	struct pci_dev *pci_dev;
++	u64 spa_len, len;
++	u64 addr, base_spa, base;
++	int ways, gran;
++
++	/*
++	 * When Normalized Addressing is enabled, the endpoint maintains a 1:1
++	 * mapping between HPA and DPA. If disabled, skip address translation
++	 * and perform only a range check.
++	 */
++	if (hpa_range.start != cxled->dpa_res->start)
++		return 0;
++
++	/*
++	 * Endpoints are programmed passthrough in Normalized Addressing mode.
++	 */
++	if (ctx->interleave_ways != 1) {
++		dev_dbg(&cxld->dev, "unexpected interleaving config: ways: %d granularity: %d\n",
++			ctx->interleave_ways, ctx->interleave_granularity);
++		return -ENXIO;
++	}
++
++	if (!cxlmd || !dev_is_pci(cxlmd->dev.parent)) {
++		dev_dbg(&cxld->dev, "No endpoint found: %s, range %#llx-%#llx\n",
++			dev_name(cxld->dev.parent), hpa_range.start,
++			hpa_range.end);
++		return -ENXIO;
++	}
++
++	pci_dev = to_pci_dev(cxlmd->dev.parent);
++
++	/* Translate HPA range to SPA. */
++	base = hpa_range.start;
++	hpa_range.start = prm_cxl_dpa_spa(pci_dev, hpa_range.start);
++	hpa_range.end = prm_cxl_dpa_spa(pci_dev, hpa_range.end);
++	base_spa = hpa_range.start;
++
++	if (hpa_range.start == ULLONG_MAX || hpa_range.end == ULLONG_MAX) {
++		dev_dbg(cxld->dev.parent,
++			"CXL address translation: Failed to translate HPA range: %#llx-%#llx:%#llx-%#llx(%s)\n",
++			hpa_range.start, hpa_range.end, ctx->hpa_range.start,
++			ctx->hpa_range.end, dev_name(&cxld->dev));
++		return -ENXIO;
++	}
++
++	/*
++	 * Since translated addresses include the interleaving offsets, align
++	 * the range to 256 MB.
++	 */
++	hpa_range.start = ALIGN_DOWN(hpa_range.start, SZ_256M);
++	hpa_range.end = ALIGN(hpa_range.end, SZ_256M) - 1;
++
++	len = range_len(&ctx->hpa_range);
++	spa_len = range_len(&hpa_range);
++	if (!len || !spa_len || spa_len % len) {
++		dev_dbg(cxld->dev.parent,
++			"CXL address translation: HPA range not contiguous: %#llx-%#llx:%#llx-%#llx(%s)\n",
++			hpa_range.start, hpa_range.end, ctx->hpa_range.start,
++			ctx->hpa_range.end, dev_name(&cxld->dev));
++		return -ENXIO;
++	}
++
++	ways = spa_len / len;
++	gran = SZ_256;
++
++	/*
++	 * Determine interleave granularity
++	 *
++	 * Note: The position of the chunk from one interleaving block to the
++	 * next may vary and thus cannot be considered constant. Address offsets
++	 * larger than the interleaving block size cannot be used to calculate
++	 * the granularity.
++	 */
++	if (ways > 1) {
++		while (gran <= SZ_16M) {
++			addr = prm_cxl_dpa_spa(pci_dev, base + gran);
++			if (addr != base_spa + gran)
++				break;
++			gran <<= 1;
++		}
++	}
++
++	if (gran > SZ_16M) {
++		dev_dbg(cxld->dev.parent,
++			"CXL address translation: Cannot determine granularity: %#llx-%#llx:%#llx-%#llx(%s)\n",
++			hpa_range.start, hpa_range.end, ctx->hpa_range.start,
++			ctx->hpa_range.end, dev_name(&cxld->dev));
++		return -ENXIO;
++	}
++
++	ctx->hpa_range = hpa_range;
++	ctx->interleave_ways = ways;
++	ctx->interleave_granularity = gran;
++
++	dev_dbg(&cxld->dev,
++		"address mapping found for %s (hpa -> spa): %#llx+%#llx -> %#llx+%#llx ways:%d granularity:%d\n",
++		dev_name(cxlmd->dev.parent), base, len, hpa_range.start,
++		spa_len, ways, gran);
++
++	return 0;
++}
++
++void cxl_setup_prm_address_translation(struct cxl_root *cxl_root)
++{
++	struct device *host = cxl_root->port.uport_dev;
++	u64 spa;
++	struct prm_cxl_dpa_spa_data data = { .spa = &spa };
++	int rc;
++
++	/*
++	 * Applies only to PCIe Host Bridges which are children of the CXL Root
++	 * Device (HID=“ACPI0017”). Check this and drop cxl_test instances.
++	 */
++	if (!acpi_match_device(host->driver->acpi_match_table, host))
++		return;
++
++	/* Check kernel (-EOPNOTSUPP) and firmware support (-ENODEV) */
++	rc = acpi_call_prm_handler(prm_cxl_dpa_spa_guid, &data);
++	if (rc == -EOPNOTSUPP || rc == -ENODEV)
++		return;
++
++	cxl_root->ops.translation_setup_root = cxl_prm_setup_root;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_setup_prm_address_translation, "CXL");
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 8ea334d81edf..20b0fd43fa7b 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -817,6 +817,13 @@ static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport,
+ 						struct device *host) { }
+ #endif
+ 
++#ifdef CONFIG_CXL_ATL
++void cxl_setup_prm_address_translation(struct cxl_root *cxl_root);
++#else
++static inline
++void cxl_setup_prm_address_translation(struct cxl_root *cxl_root) {}
++#endif
++
+ struct cxl_decoder *to_cxl_decoder(struct device *dev);
+ struct cxl_root_decoder *to_cxl_root_decoder(struct device *dev);
+ struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev);
 -- 
 2.47.3
 
