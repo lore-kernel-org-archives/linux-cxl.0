@@ -1,206 +1,327 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5836A318EE4;
-	Wed, 14 Jan 2026 10:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6751A38A280;
+	Wed, 14 Jan 2026 10:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768385789; cv=none; b=spuGYDyY0Hy1EMOpzNClYYaYYioWDUYKgnANr0YltMr7JHCKayM0JG7DRAsbdfgnRNdSPghTCes7Jhg42vMi2zXwGlNRG6f0dZfGfx29nDp1/bJz7LmW3gTfmnnHv2H9gLSzgg6a8WbtjUKQr8q820C0m844xvgpXBQ0/HLrelk=
+	t=1768386100; cv=none; b=qtLlIH+mlq83afE+emJzgC+PD/vQnWT1FhlBq/mMdIf4Aw3oOE5kjhtR9i2Se9tdWh7ocFS78fUyZoEgAcPlGm7vJsn5/uzP4GVqPfiWPxQwmIBFfhKUownXCNzHEBXWLVR3c5YpmAyTuGAHzwIUp3/hvcXNPYCognAUVlyRUjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768385789; c=relaxed/simple;
-	bh=YiVlGQCr+FTIJ4B2/AoJNeziKA/MhUEzfyR0foaLu2g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bQ+EmadTqleQIAXSIHd9LvJfAffuZ5I8TI7tw8PAkQIxGub71kz31s3pjxlPZYZVkKMLl+8OTJHpuZKqZqWOkTqt9TPP6PC0jAGVIPpP1+JMzYzrYWhld942+WDinWw7B99J4Pz0QN+AsGW4YtVGGAv3eq07MPS8ayq6aIfEpvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I1dcJPuz; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1768386100; c=relaxed/simple;
+	bh=dR3qY5H03vmCPmwiWE/Ol6xHu9f+QHLOlM/lwC6MVSw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z3g1PVgE2nMRmDKXfGTZaJbNeQCHDsW/buhmtP55VJvQDjkF53mcCMLuhklyPcosiNMDkbUJ9pV2553MusRiXnfYxbzgGJMq9nQxe2QxCRHgvSFkcV/SbabUapmzFxVrROwSJiR/1qCozPBm/TY3f4oQlaUCRUvFnLJXo1Amu1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lBWjGqhc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I1dcJPuz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768385788; x=1799921788;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=YiVlGQCr+FTIJ4B2/AoJNeziKA/MhUEzfyR0foaLu2g=;
-  b=I1dcJPuz2nYoNPnUjjbunl0lpVOeCWszrEtND11i/0/66Rvj9vi9jg5z
-   axN+IOMi9hjIS1eYbYwspIcP1Bz9pt9CsVvcPoAgB7wAgnhED71dIIfef
-   RTnafNGOkDKGDPrnpMZFvqb8zDHEdEALcvOf2KumHDJmo+3OXqKNwewsV
-   HpO54hoaWHOe+ZwPF04iPFjF0zQHDrQRutRJxqVoIIj2pSCpOoFt081Z5
-   eEOC2KISldjxNuugJxmxqLoPgWvbgIqJgcybpxuOcsU3vuwaMrHOlQfEZ
-   DvcRoCBVKt3z9xkTtQGVWUQDaXAhsCHoGtksp0MbKReAjR9QCN8vc6cIA
-   g==;
-X-CSE-ConnectionGUID: 5gERZoZ8TCqpUooTsb59Bw==
-X-CSE-MsgGUID: yM7n2W+DQGydcuidfHgZyA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="69765868"
-X-IronPort-AV: E=Sophos;i="6.21,225,1763452800"; 
-   d="scan'208";a="69765868"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 02:16:25 -0800
-X-CSE-ConnectionGUID: rE2LwQp9T36u45hrhdgfxg==
-X-CSE-MsgGUID: dKpe5iEjRW2dDBf+x62EXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,225,1763452800"; 
-   d="scan'208";a="208792833"
-Received: from unknown (HELO fdefranc-mobl3.igk.intel.com) ([10.237.142.167])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 02:16:20 -0800
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: Rafael J Wysocki <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: [PATCH 5/5 v9] ACPI: extlog: Trace CPER CXL Protocol Error Section
-Date: Wed, 14 Jan 2026 11:14:25 +0100
-Message-ID: <20260114101543.85926-6-fabio.m.de.francesco@linux.intel.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260114101543.85926-1-fabio.m.de.francesco@linux.intel.com>
-References: <20260114101543.85926-1-fabio.m.de.francesco@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lBWjGqhc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AAE5C4CEF7;
+	Wed, 14 Jan 2026 10:21:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768386099;
+	bh=dR3qY5H03vmCPmwiWE/Ol6xHu9f+QHLOlM/lwC6MVSw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lBWjGqhcI2v+Rn3qGOPRNBALX+51iuz8W8YJNFc90uM3aPZshbIie02KuJWSA2oGB
+	 Is0zvPkwo2J3M7UYLFRXNe4q0G58tZfXYe0L9rX7bUl7bLSqmznfN56M1Tmrk+Yetv
+	 Z3lE8U/OoDJTx00QFYbUn0vMO5nDJdztPSUu2zeoX/Fsx8OMPvbk5myKZBg3ceZ/+b
+	 rlrwUI+PcC5qrHrmS9NhshWtDwYWL1OZR0WvNLqxB/rCUmN/+dhYkkFazWGxSoXmFE
+	 iS09g6BTh78dc9qKzDLmnHs+EATo5eHtifNt2SWKYkSyIH33Dtpg0w/TAOLXBdTxk9
+	 Pj0H9dWO4SnCQ==
+Message-ID: <b3d435d2-643f-4dad-9928-bc7fb5080181@kernel.org>
+Date: Wed, 14 Jan 2026 11:21:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] mm/memory_hotplug: add APIs for explicit online type
+ control
+To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ kernel-team@meta.com, dan.j.williams@intel.com, vishal.l.verma@intel.com,
+ dave.jiang@intel.com, mst@redhat.com, jasowang@redhat.com,
+ xuanzhuo@linux.alibaba.com, eperezma@redhat.com, osalvador@suse.de,
+ akpm@linux-foundation.org
+References: <20260114085201.3222597-1-gourry@gourry.net>
+ <20260114085201.3222597-4-gourry@gourry.net>
+From: "David Hildenbrand (Red Hat)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+In-Reply-To: <20260114085201.3222597-4-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When Firmware First is enabled, BIOS handles errors first and then it
-makes them available to the kernel via the Common Platform Error Record
-(CPER) sections (UEFI 2.11 Appendix N.2.13). Linux parses the CPER
-sections via one of two similar paths, either ELOG or GHES. The errors
-managed by ELOG are signaled to the BIOS by the I/O Machine Check
-Architecture (I/O MCA).
+On 1/14/26 09:51, Gregory Price wrote:
+> Add new memory hotplug APIs that allow callers to explicitly control
+> the online type when adding or managing memory:
+> 
+>    - Extend add_memory_driver_managed() with an online_type parameter:
+>      Callers can now specify MMOP_ONLINE, MMOP_ONLINE_KERNEL, or
+>      MMOP_ONLINE_MOVABLE to online with that type, MMOP_OFFLINE to leave
+>      memory offline, or MMOP_SYSTEM_DEFAULT to use the system default
+>      policy. Update virtio_mem to pass MMOP_SYSTEM_DEFAULT to maintain
+>      existing behavior.
 
-Currently, ELOG and GHES show some inconsistencies in how they report to
-userspace via trace events.
+I wonder if we rather want to add a new interface 
+(add_and_online_memory_driver_managed()) where we can restrict it to 
+known kernel modules that do not violate user-space onlining policies.
 
-Therefore, make the two mentioned paths act similarly by tracing the CPER
-CXL Protocol Error Section.
+For dax we know that user space will define the policy.
 
-Cc: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
----
- drivers/acpi/Kconfig       |  2 ++
- drivers/acpi/acpi_extlog.c | 24 ++++++++++++++++++++++++
- drivers/cxl/core/ras.c     |  3 ++-
- include/cxl/event.h        |  2 ++
- 4 files changed, 30 insertions(+), 1 deletion(-)
+> 
+>    - online_memory_range(): online a previously-added memory range with
+>      a specified online type (MMOP_ONLINE, MMOP_ONLINE_KERNEL, or
+>      MMOP_ONLINE_MOVABLE). Validates that the type is valid for onlining.
 
-diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-index ca00a5dbcf750..df0ff0764d0d5 100644
---- a/drivers/acpi/Kconfig
-+++ b/drivers/acpi/Kconfig
-@@ -494,6 +494,8 @@ config ACPI_EXTLOG
- 	tristate "Extended Error Log support"
- 	depends on X86_MCE && X86_LOCAL_APIC && EDAC
- 	select UEFI_CPER
-+	select ACPI_APEI
-+	select ACPI_APEI_GHES
- 	help
- 	  Certain usages such as Predictive Failure Analysis (PFA) require
- 	  more information about the error than what can be described in
-diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-index 88a2237772c26..7ad3b36013cc6 100644
---- a/drivers/acpi/acpi_extlog.c
-+++ b/drivers/acpi/acpi_extlog.c
-@@ -12,6 +12,7 @@
- #include <linux/ratelimit.h>
- #include <linux/edac.h>
- #include <linux/ras.h>
-+#include <cxl/event.h>
- #include <acpi/ghes.h>
- #include <asm/cpu.h>
- #include <asm/mce.h>
-@@ -162,6 +163,23 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
- #endif
- }
- 
-+static void
-+extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-+				int severity)
-+{
-+#ifdef ACPI_APEI_PCIEAER
-+	struct cxl_cper_prot_err_work_data wd;
-+
-+	if (cxl_cper_sec_prot_err_valid(prot_err))
-+		return;
-+
-+	if (cxl_cper_setup_prot_err_work_data(&wd, prot_err, severity))
-+		return;
-+
-+	cxl_cper_handle_prot_err(&wd);
-+#endif
-+}
-+
- static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			void *data)
- {
-@@ -213,6 +231,12 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			if (gdata->error_data_length >= sizeof(*mem))
- 				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
- 						       (u8)gdata->error_severity);
-+		} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
-+			struct cxl_cper_sec_prot_err *prot_err =
-+				acpi_hest_get_payload(gdata);
-+
-+			extlog_cxl_cper_handle_prot_err(prot_err,
-+							gdata->error_severity);
- 		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
- 			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
- 
-diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-index 2731ba3a07993..a90480d07c878 100644
---- a/drivers/cxl/core/ras.c
-+++ b/drivers/cxl/core/ras.c
-@@ -63,7 +63,7 @@ static int match_memdev_by_parent(struct device *dev, const void *uport)
- 	return 0;
- }
- 
--static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
-+void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
- {
- 	unsigned int devfn = PCI_DEVFN(data->prot_err.agent_addr.device,
- 				       data->prot_err.agent_addr.function);
-@@ -104,6 +104,7 @@ static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
- 	else
- 		cxl_cper_trace_uncorr_prot_err(cxlmd, data->ras_cap);
- }
-+EXPORT_SYMBOL_GPL(cxl_cper_handle_prot_err);
- 
- static void cxl_cper_prot_err_work_fn(struct work_struct *work)
- {
-diff --git a/include/cxl/event.h b/include/cxl/event.h
-index 94081aec597ae..ff97fea718d2c 100644
---- a/include/cxl/event.h
-+++ b/include/cxl/event.h
-@@ -340,4 +340,6 @@ cxl_cper_setup_prot_err_work_data(struct cxl_cper_prot_err_work_data *wd,
- }
- #endif
- 
-+void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *wd);
-+
- #endif /* _LINUX_CXL_EVENT_H */
+Why not simply online_memory() and offline_memory() ?
+
+> 
+>    - offline_memory(): offline a memory range without removing it. This
+>      is a wrapper around the internal __offline_memory() that handles
+>      locking. Useful for drivers that want to offline memory blocks
+>      before performing other operations.
+> 
+
+These two should be not exported to arbitrary kernel modules. Use 
+EXPORT_SYMBOL_FOR_MODULES() if required, or do not export them at all.
+
+> These APIs enable drivers like dax_kmem to implement sophisticated
+> memory management policies, such as adding memory offline and deferring
+> the online decision to userspace.
+> 
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> ---
+>   drivers/dax/kmem.c             |  3 +-
+>   drivers/virtio/virtio_mem.c    |  3 +-
+>   include/linux/memory_hotplug.h |  4 ++-
+>   mm/memory_hotplug.c            | 63 ++++++++++++++++++++++++++++++++--
+>   4 files changed, 68 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> index c036e4d0b610..5e0cf94a9620 100644
+> --- a/drivers/dax/kmem.c
+> +++ b/drivers/dax/kmem.c
+> @@ -175,7 +175,8 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+>   		 * this as RAM automatically.
+>   		 */
+>   		rc = add_memory_driver_managed(data->mgid, range.start,
+> -				range_len(&range), kmem_name, mhp_flags);
+> +				range_len(&range), kmem_name, mhp_flags,
+> +				MMOP_SYSTEM_DEFAULT);
+>   
+>   		if (rc) {
+>   			dev_warn(dev, "mapping%d: %#llx-%#llx memory add failed\n",
+> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+> index 1688ecd69a04..b1ec8f2b9e31 100644
+> --- a/drivers/virtio/virtio_mem.c
+> +++ b/drivers/virtio/virtio_mem.c
+> @@ -654,7 +654,8 @@ static int virtio_mem_add_memory(struct virtio_mem *vm, uint64_t addr,
+>   	/* Memory might get onlined immediately. */
+>   	atomic64_add(size, &vm->offline_size);
+>   	rc = add_memory_driver_managed(vm->mgid, addr, size, vm->resource_name,
+> -				       MHP_MERGE_RESOURCE | MHP_NID_IS_MGID);
+> +				       MHP_MERGE_RESOURCE | MHP_NID_IS_MGID,
+> +				       MMOP_SYSTEM_DEFAULT);
+>   	if (rc) {
+>   		atomic64_sub(size, &vm->offline_size);
+>   		dev_warn(&vm->vdev->dev, "adding memory failed: %d\n", rc);
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index d5407264d72a..0f98bea6da65 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -265,6 +265,7 @@ static inline void pgdat_resize_init(struct pglist_data *pgdat) {}
+>   extern void try_offline_node(int nid);
+>   extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
+>   			 struct zone *zone, struct memory_group *group);
+> +extern int offline_memory(u64 start, u64 size);
+
+No new "extern" for functions.
+
+>   extern int remove_memory(u64 start, u64 size);
+>   extern void __remove_memory(u64 start, u64 size);
+>   extern int offline_and_remove_memory(u64 start, u64 size);
+> @@ -297,7 +298,8 @@ extern int add_memory_resource(int nid, struct resource *resource,
+>   			       mhp_t mhp_flags);
+>   extern int add_memory_driver_managed(int nid, u64 start, u64 size,
+>   				     const char *resource_name,
+> -				     mhp_t mhp_flags);
+> +				     mhp_t mhp_flags, int online_type);
+> +extern int online_memory_range(u64 start, u64 size, int online_type);
+>   extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
+>   				   unsigned long nr_pages,
+>   				   struct vmem_altmap *altmap, int migratetype,
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index ab73c8fcc0f1..515ff9d18039 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1343,6 +1343,34 @@ static int online_memory_block(struct memory_block *mem, void *arg)
+>   	return device_online(&mem->dev);
+>   }
+>   
+> +/**
+> + * online_memory_range - online memory blocks in a range
+> + * @start: physical start address of memory region
+> + * @size: size of memory region
+> + * @online_type: MMOP_ONLINE, MMOP_ONLINE_KERNEL, or MMOP_ONLINE_MOVABLE
+
+I wonder if we instead want something that consumes all parameters like
+
+int online_or_offline_memory(int online_type)
+
+Then it's easier to use and we don't really have to document the 
+"online_type" that much to hand-select some values.
+
+(I'm sure there are better nameing suggestions :) )
+
+
+Should we document what happens if the memory is already online, but was 
+onlined to a different zone?
+
+> + *
+> + * Online all memory blocks in the specified range with the given online type.
+> + * The memory must have already been added to the system.
+> + *
+> + * Returns 0 on success, negative error code on failure.
+> + */
+> +int online_memory_range(u64 start, u64 size, int online_type)
+> +{
+> +	int rc;
+> +
+> +	if (online_type == MMOP_OFFLINE ||
+> +	    online_type > MMOP_ONLINE_MOVABLE)
+> +		return -EINVAL;
+> +
+> +	lock_device_hotplug();
+> +	rc = walk_memory_blocks(start, size, &online_type,
+> +				online_memory_block);
+> +	unlock_device_hotplug();
+> +
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_GPL(online_memory_range);
+> +
+>   #ifndef arch_supports_memmap_on_memory
+>   static inline bool arch_supports_memmap_on_memory(unsigned long vmemmap_size)
+>   {
+> @@ -1656,9 +1684,16 @@ EXPORT_SYMBOL_GPL(add_memory);
+>    *
+>    * The resource_name (visible via /proc/iomem) has to have the format
+>    * "System RAM ($DRIVER)".
+> + *
+> + * @online_type specifies the online behavior: MMOP_ONLINE, MMOP_ONLINE_KERNEL,
+> + * MMOP_ONLINE_MOVABLE to online with that type, MMOP_OFFLINE to leave offline,
+> + * or MMOP_SYSTEM_DEFAULT to use the system default policy.
+> + *
+
+I think we can simplify this documentation. Especially, one 
+MMOP_SYSTEM_DEFAULT is gone.
+
+> + * Returns 0 on success, negative error code on failure.
+>    */
+>   int add_memory_driver_managed(int nid, u64 start, u64 size,
+> -			      const char *resource_name, mhp_t mhp_flags)
+> +			      const char *resource_name, mhp_t mhp_flags,
+> +			      int online_type)
+>   {
+>   	struct resource *res;
+>   	int rc;
+> @@ -1668,6 +1703,13 @@ int add_memory_driver_managed(int nid, u64 start, u64 size,
+>   	    resource_name[strlen(resource_name) - 1] != ')')
+>   		return -EINVAL;
+>   
+> +	/* Convert system default to actual online type */
+> +	if (online_type == MMOP_SYSTEM_DEFAULT)
+> +		online_type = mhp_get_default_online_type();
+> +
+> +	if (online_type < 0 || online_type > MMOP_ONLINE_MOVABLE)
+> +		return -EINVAL;
+> +
+>   	lock_device_hotplug();
+>   
+>   	res = register_memory_resource(start, size, resource_name);
+> @@ -1676,7 +1718,7 @@ int add_memory_driver_managed(int nid, u64 start, u64 size,
+>   		goto out_unlock;
+>   	}
+>   
+> -	rc = add_memory_resource(nid, res, mhp_flags);
+> +	rc = __add_memory_resource(nid, res, mhp_flags, online_type);
+>   	if (rc < 0)
+>   		release_memory_resource(res);
+>   
+> @@ -2412,6 +2454,23 @@ static int __offline_memory(u64 start, u64 size)
+>   	return rc;
+>   }
+>   
+> +/*
+> + * Try to offline a memory range. Might take a long time to finish in case
+> + * memory is still in use. In case of failure, already offlined memory blocks
+> + * will be re-onlined.
+> + */
+
+Proper kerneldoc? :)
+
+> +int offline_memory(u64 start, u64 size)
+> +{
+> +	int rc;
+> +
+> +	lock_device_hotplug();
+> +	rc = __offline_memory(start, size);
+> +	unlock_device_hotplug();
+> +
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_GPL(offline_memory);
+> +
+>   /*
+>    * Try to offline and remove memory. Might take a long time to finish in case
+>    * memory is still in use. Primarily useful for memory devices that logically
+
+
 -- 
-2.52.0
+Cheers
 
+David
