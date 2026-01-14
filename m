@@ -1,231 +1,246 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012041.outbound.protection.outlook.com [52.101.43.41])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27BA3191C4;
-	Wed, 14 Jan 2026 16:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768409395; cv=fail; b=q5tWuod5JwMDaCreuGbNotZV2b6uQhmRcl7HackvBxHldndbkEQ818vN9T9dV7P5QPDCb3zLfaXPHS9eysHYJOBmqpYgE4FDVa/RnYLL8vYQraKxwaSXDY/C1wF6SqJrOxEgrDQrkog8JFq3/nMnSKF/E+cd45wMj5o2fxVYSSg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768409395; c=relaxed/simple;
-	bh=xiwJAIUuh9AVDho+Gih/u77kTjCpeApAR4lYGw6KEmA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IaDuHQHnnD2jc75bag4ySs9/6k0LBMugPXgsTbxk+FYrtcci/R0VAbHXWYbUBFuFIbGztSdSz3hlcw7VoViKSwJif61CDVMOdNlKknS3otN32Pnm2a6taBZSck0H+IMEmNmIcwBuzjiJgy1LWnM6iWD8k5HoPg53ZO/ySmhaehY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5BvKpnzV; arc=fail smtp.client-ip=52.101.43.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8642927E06C;
+	Wed, 14 Jan 2026 17:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768410022; cv=none; b=sVHaF7hnCvlbZZXfRO0G+FMmECDJtKaOPLxRZ7epMBI3YBIYmRhW0CzpRTLBwr114T5vk265rKXkpNmnnoc0uqnBVjW4HWbmVWFZkt5+ql1Jt7YRZLe8mRCKsyE8QKXQJT6DDbW4qFCthffmAbs7z4Mnc885635CfEgwCDjhQ6c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768410022; c=relaxed/simple;
+	bh=vTR2WjDJvhe+7h1j1hjb/aW0zWgYQj2nYJiAwGoxxJQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z4MJtFBqmyYt9JyHniKdrQmCoNm9rnluyN+tX1T0WzJFU9YCTCqlbrK149lr6ffLvhPCdBPzUGjiGrXZL3tCPPyNmxNDLONIyduR09M70CD0kPfuD5iUyPsIGbyc0Xg3vpKKhuY5UjeLOfNz829Y8nyOzoU41XhmHaaY2AbU+9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X4M4L6VQ; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5BvKpnzV"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mJgKXSSnp4PPjWJvNwGM4YXWdJ2CAJrOFS4L+4vcR3UcyyruXJn4C6zExlfhIAkHuhHmerS3yzPBdwk/aiYA+Xcjkh6Yi7RQRtAQ7wzmsOs8+VOFlrm7nCSziVMAKY2zgOhkgd4p0IVcTsJWR0yODpi8PZaeJENPDAtWpl7CAhh8DwKIc9kTpm9Ks513A8KwkFmTofrB/1hstM8ETvJth9ZKctgLkffJYIQ7q5xIAYHnu5dJOAfgOyIdu7S/FlPA3OJ1L6swLi8DZouQi9LZj/q2H2fQQgWtafmrOwbtGFDOUHbVRCmNqxCk+Xi9bSF4zhoZAhsVrEV6LsaCb00pfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=trp5Yw8f165Rl/oFd2YnsS4tfmH9XWPzMgehjItzdeY=;
- b=w+3bdWuvbgebaiCg13CP+RtouJ5sX3mhI765JrHth9rGKsrb5rH3mnJVmJkeB3Etk5nGbrySHnC7RQtfqV5Z7bFCzfHp5epdpyMptbya6Vrs+4/ldLmTQ5SPPqs3lFZhQiJr/v0YAjYRm8Js5nkoAKKI036d3fKM1aOqQOp9w9rnbX6ZlCu8C1Tc+7KGaMwvHG5Bpforqd72cGuGMM7K3rgiIVNqSVWXQ44O9NvroqvPkrrnwfh1AkHW43sDio46RuXBSVC4VEPFv+WVmhcsb6b4iiTBH9UPZl4sVAj5WhHSfEBZZFY1w6kRRnYIc4o+IqZOzUS6YH2XL+4tSIABAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=trp5Yw8f165Rl/oFd2YnsS4tfmH9XWPzMgehjItzdeY=;
- b=5BvKpnzV2fQBP10/uSkUr0whAYEtTy2dunilFsDusRKiAl5Cqk9xilyhLfAeBrb8J44zmuFKGdzzSEciw3yRUwGxdjicr9WPnGYeE7VnDvVHuYpBxshPkRlxbJHw263Wcme6UnDJpXc4warAUiQH65xQjoDNAWOhmPnBoZPQLsA=
-Received: from DS7PR03CA0039.namprd03.prod.outlook.com (2603:10b6:5:3b5::14)
- by PH7PR12MB7967.namprd12.prod.outlook.com (2603:10b6:510:273::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Wed, 14 Jan
- 2026 16:49:47 +0000
-Received: from CY4PEPF0000E9D5.namprd05.prod.outlook.com
- (2603:10b6:5:3b5:cafe::68) by DS7PR03CA0039.outlook.office365.com
- (2603:10b6:5:3b5::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.5 via Frontend Transport; Wed,
- 14 Jan 2026 16:49:46 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- CY4PEPF0000E9D5.mail.protection.outlook.com (10.167.241.68) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9520.1 via Frontend Transport; Wed, 14 Jan 2026 16:49:46 +0000
-Received: from rric.localdomain (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 14 Jan
- 2026 10:49:41 -0600
-From: Robert Richter <rrichter@amd.com>
-To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
-	<gourry@gourry.net>, "Fabio M. De Francesco"
-	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Robert Richter <rrichter@amd.com>
-Subject: [PATCH v10 12/13] cxl/region: Factor out code into cxl_region_setup_poison()
-Date: Wed, 14 Jan 2026 17:48:28 +0100
-Message-ID: <20260114164837.1076338-13-rrichter@amd.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260114164837.1076338-1-rrichter@amd.com>
-References: <20260114164837.1076338-1-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X4M4L6VQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768410020; x=1799946020;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vTR2WjDJvhe+7h1j1hjb/aW0zWgYQj2nYJiAwGoxxJQ=;
+  b=X4M4L6VQ7e8FmPHZtqZxJX1NzkDGaP2HHJutpMzdRhTHR+j5iRpHH8o/
+   h9FOJlu2i2sQt0HU7xBmzzlrNd0dL6aoXeaFxniO/R2bcaEcpHJHoJWn9
+   xolsB/OcI6fYQ5pcAAh3WKegiyrlx/pXsdeVSmxSwQeuBUdgpqm4A7wWF
+   OJ9CJD0OOPJTG59X70LOO7zphuZrwIDSlFzgnmEmj9pJqGWP5CQdZJOve
+   UkEUoRtEQ66bcSj9NCwDRWtsvdmM+eqfZSsE5mkeYq+A7052qUDUloemk
+   r4HOgF8bT5eJWNitOa31EGpQ2dcsMwK6T2TCioYUuGziZ5iB7YEV39WY1
+   Q==;
+X-CSE-ConnectionGUID: dp2JpHn6S5Kje3PGYmZduQ==
+X-CSE-MsgGUID: hiBBhRUbRWy7DB39h5WyXQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="73565606"
+X-IronPort-AV: E=Sophos;i="6.21,225,1763452800"; 
+   d="scan'208";a="73565606"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 09:00:20 -0800
+X-CSE-ConnectionGUID: PgOX7idHTDWwc7ZojVrV9g==
+X-CSE-MsgGUID: VgOf81JcSxW9vnd9u7YQew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,225,1763452800"; 
+   d="scan'208";a="205000287"
+Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.111.5]) ([10.125.111.5])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 09:00:19 -0800
+Message-ID: <c47b0eda-b3fe-442d-be11-f9fa02400915@intel.com>
+Date: Wed, 14 Jan 2026 10:00:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D5:EE_|PH7PR12MB7967:EE_
-X-MS-Office365-Filtering-Correlation-Id: 27a79dbd-7e24-44a7-805c-08de538ced05
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|1800799024|7416014|82310400026|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cJCEeYfar3nzyEYQJxjC+Q+IflT8ClLK3zQVgBHW69ta0odboh2ZiBUoAyPg?=
- =?us-ascii?Q?QqSjCijWjS6QJsaDCYOojyXQqx8MShw6XwEZ90F6VG/+r6A+pRDcP52YDnQx?=
- =?us-ascii?Q?5VpqCvMkBmc3pQm81VFOpe8ExJuLzpjKgL6GWoqsChDVbZz1uQfn5zVmDK5p?=
- =?us-ascii?Q?0Z8V+CsuTU2ZabPomxqFAeO0zgC3q+bADRpBVkKaJiSRfVT4uJ8/aScutwy/?=
- =?us-ascii?Q?QTQhOKIHWDm4vo9ez+et4CgWMFv1cX09dOvVizB1QHCbDC8TxSYLRW8vq/pV?=
- =?us-ascii?Q?KM+UxlE3YJxcp6BYqQC2wbE+Indj19PqzYnFVG8FvL9VTVSMPgdfUj0lqE9+?=
- =?us-ascii?Q?pLBof1feEqUXBUAT91lWI/GbDhIrzClKRMKrAckgHrAKYlujaAU0TuvurUVx?=
- =?us-ascii?Q?FPJfdG+lUzkxEONmbqLrIJclcQg+gqM3WyL/m6zMuUZtlWmFmPPhYfjzYuib?=
- =?us-ascii?Q?lVGps9SyJozlodKJKdMzvZbybn7V5XGihLI3vMJD2KmAg+jRk+iEDJZClBwr?=
- =?us-ascii?Q?zSrv3fX8NM/YnSe6xzrsVv/Vl6MmZ5oCfhTOEg8BYsT6+Yne3u5nBdusWjxD?=
- =?us-ascii?Q?B733sD8hZXuB3ts71qAV1fpkAenKAH9RLuGawGKTO9krZRONm6vNw7b7xKK0?=
- =?us-ascii?Q?Xad5PgJCgxM72QM6eaOc6/MxqG9m0gTQv+Lmeoq1jaXXPeIJvyGZ3OJkLyig?=
- =?us-ascii?Q?KW7yCY+KycXtafEDr79SdaVs5DlHNn1WD7trH3VgaUgAAFmrd3XLThtwbs5M?=
- =?us-ascii?Q?8ppFpQ5bVKofMzOKO1I0PN6K97R7ABDFREF3h2XAk2fVqaZdmYXKxc2qZ56V?=
- =?us-ascii?Q?wlYy7RmtKbVdHHzkHVzlenmgvNIIkrpO9+geqaI0ye3mkQaJ9x0JRVjvtiOQ?=
- =?us-ascii?Q?IbpUExoaegVWijftAcZhVXegk+N6IvGE+9yDjfF0pfpmlcBPFW4YGlJ0pebj?=
- =?us-ascii?Q?iaZ5kG1MmE5hzdDODNXCqO/mFk8WYAnIFRxeiB0h+ipZUgciCoYr8RAZJS1g?=
- =?us-ascii?Q?regLaDEmmbS2cDmkuchcgqwwaOwSGyxQQ8vYy2FSGNMw4RR/IsV55xrcdGs9?=
- =?us-ascii?Q?QnaWMrljg70Xvf7rYbkgGcFWpYgAQbLyapr9KbolLReHzrnoYxa5Z022I/pZ?=
- =?us-ascii?Q?zlOIr2tPoOQtQA5WH8GzLMBeSc3G24F2Q1gxl/RGdGa9KUxfcdZKtWsGmkGf?=
- =?us-ascii?Q?e9xgoX5rALvIFpDHO8ZtOAf4VbFBS5Hy5EU5lLLeO08z8ZOmazdiNiXE08Oi?=
- =?us-ascii?Q?yX51uokmBhBljspxe505/scW6f0/CrtSLYXYKm+lOYsQLa/GJT1C0RHqshXR?=
- =?us-ascii?Q?2BNpG8AyWdrFx90w9KJXAXcDvjr2p7dOxjfHenjfL2au7Sociz1W2A9JDDgZ?=
- =?us-ascii?Q?07YiWI5QfmTwbBqvbFwaGq4SiWqlbAEoj1nMhiT3u8tWLVMXDS/iwpeBW1Ee?=
- =?us-ascii?Q?vLM/gtSbbHvFNRR4dmc49e/Cpt0/PZyrjKTppggXa4Va3D7XiX7n3pLF8Lfw?=
- =?us-ascii?Q?71bt11XdVjlwdMozEFyK+T4t336kXGdMN7WPTOl837fgwy20vLvfWu3FZVxy?=
- =?us-ascii?Q?hi1bobzRwyj/3xztYx+S7UvNY3AI+NQisuy9fBpUf/60PUDy/Nagy39mHaQJ?=
- =?us-ascii?Q?LHGm46fI/A1Cu1gr2XEdwkovvy4EmD9arw06Vxv4MzxvjnvZQXTc+DKuVgV3?=
- =?us-ascii?Q?SCFuqQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(7416014)(82310400026)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 16:49:46.9375
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27a79dbd-7e24-44a7-805c-08de538ced05
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D5.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7967
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5 15/17] cxl/pmem_region: Add sysfs attribute cxl region
+ label updation/deletion
+To: Neeraj Kumar <s.neeraj@samsung.com>, linux-cxl@vger.kernel.org,
+ nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org, gost.dev@samsung.com
+Cc: a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com
+References: <20260109124437.4025893-1-s.neeraj@samsung.com>
+ <CGME20260109124531epcas5p118e7306860bcd57a0106948375df5c9c@epcas5p1.samsung.com>
+ <20260109124437.4025893-16-s.neeraj@samsung.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260109124437.4025893-16-s.neeraj@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Poison injection setup code is embedded in cxl_region_probe(). For
-improved encapsulation, readability, and maintainability, factor out
-code into function cxl_region_setup_poison().
 
-This patch is a prerequisite to disable poison by region offset for
-Normalized Addressing.
 
-No functional changes.
+On 1/9/26 5:44 AM, Neeraj Kumar wrote:
+> Using these attributes region label is added/deleted into LSA. These
+> attributes are called from userspace (ndctl) after region creation.
+> 
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Signed-off-by: Robert Richter <rrichter@amd.com>
----
- drivers/cxl/core/region.c | 53 +++++++++++++++++++++------------------
- 1 file changed, 28 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index ed8469fa55a9..80cd77f0842e 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3916,6 +3916,31 @@ static int cxl_region_debugfs_poison_clear(void *data, u64 offset)
- DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
- 			 cxl_region_debugfs_poison_clear, "%llx\n");
- 
-+static int cxl_region_setup_poison(struct cxl_region *cxlr)
-+{
-+	struct device *dev = &cxlr->dev;
-+	struct cxl_region_params *p = &cxlr->params;
-+	struct dentry *dentry;
-+
-+	/* Create poison attributes if all memdevs support the capabilities */
-+	for (int i = 0; i < p->nr_targets; i++) {
-+		struct cxl_endpoint_decoder *cxled = p->targets[i];
-+		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+
-+		if (!cxl_memdev_has_poison_cmd(cxlmd, CXL_POISON_ENABLED_INJECT) ||
-+		    !cxl_memdev_has_poison_cmd(cxlmd, CXL_POISON_ENABLED_CLEAR))
-+			return 0;
-+	}
-+
-+	dentry = cxl_debugfs_create_dir(dev_name(dev));
-+	debugfs_create_file("inject_poison", 0200, dentry, cxlr,
-+			    &cxl_poison_inject_fops);
-+	debugfs_create_file("clear_poison", 0200, dentry, cxlr,
-+			    &cxl_poison_clear_fops);
-+
-+	return devm_add_action_or_reset(dev, remove_debugfs, dentry);
-+}
-+
- static int cxl_region_can_probe(struct cxl_region *cxlr)
- {
- 	struct cxl_region_params *p = &cxlr->params;
-@@ -3945,7 +3970,6 @@ static int cxl_region_probe(struct device *dev)
- {
- 	struct cxl_region *cxlr = to_cxl_region(dev);
- 	struct cxl_region_params *p = &cxlr->params;
--	bool poison_supported = true;
- 	int rc;
- 
- 	rc = cxl_region_can_probe(cxlr);
-@@ -3969,30 +3993,9 @@ static int cxl_region_probe(struct device *dev)
- 	if (rc)
- 		return rc;
- 
--	/* Create poison attributes if all memdevs support the capabilities */
--	for (int i = 0; i < p->nr_targets; i++) {
--		struct cxl_endpoint_decoder *cxled = p->targets[i];
--		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
--
--		if (!cxl_memdev_has_poison_cmd(cxlmd, CXL_POISON_ENABLED_INJECT) ||
--		    !cxl_memdev_has_poison_cmd(cxlmd, CXL_POISON_ENABLED_CLEAR)) {
--			poison_supported = false;
--			break;
--		}
--	}
--
--	if (poison_supported) {
--		struct dentry *dentry;
--
--		dentry = cxl_debugfs_create_dir(dev_name(dev));
--		debugfs_create_file("inject_poison", 0200, dentry, cxlr,
--				    &cxl_poison_inject_fops);
--		debugfs_create_file("clear_poison", 0200, dentry, cxlr,
--				    &cxl_poison_clear_fops);
--		rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
--		if (rc)
--			return rc;
--	}
-+	rc = cxl_region_setup_poison(cxlr);
-+	if (rc)
-+		return rc;
- 
- 	switch (cxlr->mode) {
- 	case CXL_PARTMODE_PMEM:
--- 
-2.47.3
+You'll need to update the KernelVersion to v7.0.
+
+> ---
+>  Documentation/ABI/testing/sysfs-bus-cxl | 22 +++++++
+>  drivers/cxl/core/pmem_region.c          | 88 +++++++++++++++++++++++++
+>  drivers/cxl/cxl.h                       |  7 ++
+>  3 files changed, 117 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index c80a1b5a03db..011a5e8d354f 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -624,3 +624,25 @@ Description:
+>  		The count is persistent across power loss and wraps back to 0
+>  		upon overflow. If this file is not present, the device does not
+>  		have the necessary support for dirty tracking.
+> +
+> +
+> +What:		/sys/bus/cxl/devices/regionZ/pmem_regionZ/region_label_update
+> +Date:		Jan, 2026
+> +KernelVersion:	v6.19
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(RW) Write a boolean 'true' string value to this attribute to
+> +		update cxl region information into LSA as region label. It is
+> +		used to update cxl region information saved during cxl region
+> +		creation into LSA. This attribute must be written last during
+> +		cxl region creation. Reading this attribute indicates whether
+> +		the region label is active or not.
+> +
+> +
+> +What:		/sys/bus/cxl/devices/regionZ/pmem_regionZ/region_label_delete
+> +Date:		Jan, 2026
+> +KernelVersion:	v6.19
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(WO) When a boolean 'true' is written to this attribute then
+> +		pmem_region driver deletes cxl region label from LSA.
+> diff --git a/drivers/cxl/core/pmem_region.c b/drivers/cxl/core/pmem_region.c
+> index dcaab59108fd..53d3d81e9676 100644
+> --- a/drivers/cxl/core/pmem_region.c
+> +++ b/drivers/cxl/core/pmem_region.c
+> @@ -29,8 +29,96 @@ static void cxl_pmem_region_release(struct device *dev)
+>  	kfree(cxlr_pmem);
+>  }
+>  
+> +static ssize_t region_label_update_store(struct device *dev,
+> +					 struct device_attribute *attr,
+> +					 const char *buf, size_t len)
+> +{
+> +	struct cxl_pmem_region *cxlr_pmem = to_cxl_pmem_region(dev);
+> +	struct cxl_region *cxlr = cxlr_pmem->cxlr;
+> +	ssize_t rc;
+> +	bool update;
+> +
+> +	rc = kstrtobool(buf, &update);
+> +	if (rc)
+> +		return rc;
+> +
+> +	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
+> +	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
+> +		return rc;
+> +
+> +	/* Region not yet committed */
+> +	if (update && cxlr && cxlr->params.state != CXL_CONFIG_COMMIT) {
+> +		dev_dbg(dev, "region not committed, can't update into LSA\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	if (!cxlr || !cxlr->cxlr_pmem || !cxlr->cxlr_pmem->nd_region)
+> +		return 0;
+> +
+> +	rc = nd_region_label_update(cxlr->cxlr_pmem->nd_region);
+> +	if (rc)
+> +		return rc;
+> +
+> +	cxlr->params.state_region_label = CXL_REGION_LABEL_ACTIVE;
+> +
+> +	return len;
+> +}
+> +
+> +static ssize_t region_label_update_show(struct device *dev,
+> +					struct device_attribute *attr,
+> +					char *buf)
+> +{
+> +	struct cxl_pmem_region *cxlr_pmem = to_cxl_pmem_region(dev);
+> +	struct cxl_region *cxlr = cxlr_pmem->cxlr;
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	ssize_t rc;
+> +
+> +	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
+> +	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
+> +		return rc;
+> +
+> +	return sysfs_emit(buf, "%d\n", p->state_region_label);
+> +}
+> +static DEVICE_ATTR_RW(region_label_update);
+> +
+> +static ssize_t region_label_delete_store(struct device *dev,
+> +					 struct device_attribute *attr,
+> +					 const char *buf, size_t len)
+> +{
+> +	struct cxl_pmem_region *cxlr_pmem = to_cxl_pmem_region(dev);
+> +	struct cxl_region *cxlr = cxlr_pmem->cxlr;
+> +	ssize_t rc;
+> +
+> +	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
+> +	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
+> +		return rc;
+> +
+> +	if (!cxlr && !cxlr->cxlr_pmem && !cxlr->cxlr_pmem->nd_region)
+> +		return 0;
+> +
+> +	rc = nd_region_label_delete(cxlr->cxlr_pmem->nd_region);
+> +	if (rc)
+> +		return rc;
+> +
+> +	cxlr->params.state_region_label = CXL_REGION_LABEL_INACTIVE;
+> +
+> +	return len;
+> +}
+> +static DEVICE_ATTR_WO(region_label_delete);
+> +
+> +static struct attribute *cxl_pmem_region_attrs[] = {
+> +	&dev_attr_region_label_update.attr,
+> +	&dev_attr_region_label_delete.attr,
+> +	NULL
+> +};
+> +
+> +static struct attribute_group cxl_pmem_region_group = {
+> +	.attrs = cxl_pmem_region_attrs,
+> +};
+> +
+>  static const struct attribute_group *cxl_pmem_region_attribute_groups[] = {
+>  	&cxl_base_attribute_group,
+> +	&cxl_pmem_region_group,
+>  	NULL
+>  };
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 6ac3b40cb5ff..8c76c4a981bf 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -473,9 +473,15 @@ enum cxl_config_state {
+>  	CXL_CONFIG_COMMIT,
+>  };
+>  
+> +enum region_label_state {
+> +	CXL_REGION_LABEL_INACTIVE,
+> +	CXL_REGION_LABEL_ACTIVE,
+> +};
+> +
+>  /**
+>   * struct cxl_region_params - region settings
+>   * @state: allow the driver to lockdown further parameter changes
+> + * @state: region label state
+>   * @uuid: unique id for persistent regions
+>   * @interleave_ways: number of endpoints in the region
+>   * @interleave_granularity: capacity each endpoint contributes to a stripe
+> @@ -488,6 +494,7 @@ enum cxl_config_state {
+>   */
+>  struct cxl_region_params {
+>  	enum cxl_config_state state;
+> +	enum region_label_state state_region_label;
+>  	uuid_t uuid;
+>  	int interleave_ways;
+>  	int interleave_granularity;
 
