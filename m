@@ -1,186 +1,103 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4013A7DFD;
-	Thu, 15 Jan 2026 16:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862CD313E2C;
+	Thu, 15 Jan 2026 16:12:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768493554; cv=none; b=rXKp3OBv3Wr2tiJ4eMPklGVmdQq06L1EbExyZKVWXCWgA8Relt/7OgD7YRp6zAbMsd4wYyXohxa0s74hvhvScxqIdTZVhKZIUy+ipDsHL3mVdtHAtHQySWc4xt8d9Li9/tJpRfgOezGJroj79qg96wF5P1TcvuQ0uFIFkmeZBgQ=
+	t=1768493563; cv=none; b=WUHsGWdN+0WF63pOjkmRzHxIUKvcrtv4AMH6NYhHcKflNEK/QY3f1ZTHzGAW7kID4vDIJIOACe5DQ0Awpc9+nOCEoA9peYPY9XqskBUDKGAO8scYfeUNJgN4n1iTyeLdGyB/Orfk4FRvkmo0jg6FDNExTJmy2aPjyp4LxZtojac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768493554; c=relaxed/simple;
-	bh=hNov5F2LTdlNWayImHLF8ZGBkOaoIozgFIDUq31gNfo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iFshxzzEJgIMokvvg0ZmCDLRNoMrnKibLeX6oBQFh3OhskAv7TrekD+Hd/V1ggK5Rhe2/5PMdqXZiiD2pcc42U/8m4wDiizRF5t/mPg6lAFH4GGocCNuuLB1ETx7b7MNHpAceidVoWB2c2vKt713SdOMm06nSMLIDWtw+OOrMvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dsSft16LszHnGfT;
-	Fri, 16 Jan 2026 00:12:06 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5598140563;
-	Fri, 16 Jan 2026 00:12:28 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 15 Jan
- 2026 16:12:27 +0000
-Date: Thu, 15 Jan 2026 16:12:26 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: Terry Bowman <terry.bowman@amd.com>, <dave@stgolabs.net>,
-	<alison.schofield@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <shiju.jose@huawei.com>, <ming.li@zohomail.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <rrichter@amd.com>,
-	<dan.carpenter@linaro.org>, <PradeepVineshReddy.Kodamati@amd.com>,
-	<lukas@wunner.de>, <Benjamin.Cheatham@amd.com>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
-	<vishal.l.verma@intel.com>, <alucerop@amd.com>, <ira.weiny@intel.com>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v14 31/34] PCI: Introduce CXL Port protocol error
- handlers
-Message-ID: <20260115161226.00004845@huawei.com>
-In-Reply-To: <e3fd4ada-bcbe-4d7c-9ffe-4518b68292be@intel.com>
-References: <20260114182055.46029-1-terry.bowman@amd.com>
-	<20260114182055.46029-32-terry.bowman@amd.com>
-	<e3fd4ada-bcbe-4d7c-9ffe-4518b68292be@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1768493563; c=relaxed/simple;
+	bh=k1vo75jVuw3W/CvVqErXlrD9M4YyYaMrI8MAoGB/z9A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aVb+HzSrVBm7/4XoeIKFQjU/fg7iOOSa7BcIz6Z+uB8NaqKVhqN2P0z86TOEf6OavRG5ITd1I9dlmzNOGzevVR0fDcJbJNFh3ewnKej5pTO0kdFmiDnkUpuQKO5ZNzIMcimVwS4RDNpKLfNH0ldlpl2NLnqkrg2Rp+ZUnJGqNmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JX0IKVxf; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JX0IKVxf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768493563; x=1800029563;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=k1vo75jVuw3W/CvVqErXlrD9M4YyYaMrI8MAoGB/z9A=;
+  b=JX0IKVxfuYfeWnzspEBFkgKSOIY6q1Qbt63yKjbOGwoZ8JueWmL68c22
+   n36Hzn8HAVOMSc98I+gV9wYfh3YSujsRxC3JjtdEMTqQBcOZ9zp0AADET
+   setrgP4l0Cza9K4o+k7k6539NZfCDjJafcuvOTiAIgtH41Dep1LvtSC1N
+   C/bU0arNY25WJk1ftZo8fP8vcOe4csYUQgH+NdVBEqMdN6V9EW+gopDYb
+   nXK132HRw1dYuyHp5ek1Gz1R/eAwt+xLHCoUM56WGGVQVJ099JgLbJrC/
+   8U8z2I8xYhTGoCSdqCvL7QTxhPHEdPzaa9QZMVGHi+pjF7LC9y1rnr3Xx
+   w==;
+X-CSE-ConnectionGUID: M9Vgz4i3SJuf+zW4DfrI1Q==
+X-CSE-MsgGUID: nJWr2RiJSt6GJA95xM0+UA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="69782910"
+X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
+   d="scan'208";a="69782910"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 08:12:42 -0800
+X-CSE-ConnectionGUID: w1JcEND9T0avEvF0TMc2sQ==
+X-CSE-MsgGUID: DGAiYxToQkKO0uTcXKZUwQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
+   d="scan'208";a="205269711"
+Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.111.80]) ([10.125.111.80])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 08:12:41 -0800
+Message-ID: <8bda319a-967a-4f90-906c-438ac3719346@intel.com>
+Date: Thu, 15 Jan 2026 09:12:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] cxl/acpi: Fix using extra xormaps for address
+ translation
+To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260115131648.620177-1-ming.li@zohomail.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260115131648.620177-1-ming.li@zohomail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
- dubpeml100005.china.huawei.com (7.214.146.113)
 
 
-> > diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> > index 0c640b84ad70..96ce85cc0a46 100644
-> > --- a/drivers/cxl/core/ras.c
-> > +++ b/drivers/cxl/core/ras.c
 
-> > +
-> > +static pci_ers_result_t cxl_port_error_detected(struct device *dev);
-> > +
-> > +static void cxl_do_recovery(struct pci_dev *pdev)
-> > +{
-> > +	struct cxl_port *port __free(put_cxl_port) = get_cxl_port(pdev);  
-> To minimize errors, move this line to right above when you check !port. It's acceptable to do inline declaration when it comes cleanup macros. 
+On 1/15/26 6:16 AM, Li Ming wrote:
+> CXL r3.1 Table 9-22 defines a fixed number of XOR maps for interleave
+> arithmetic based on the number of interleave ways, as reflected by
+> hbiw_to_nr_maps[].
 > 
-> DJ
-> > +	pci_ers_result_t status;
-> > +
-> > +	if (!port) {
-> > +		pci_err(pdev, "Failed to find the CXL device\n");
-> > +		return;
-> > +	}
-> > +
-> > +	status = cxl_port_error_detected(&pdev->dev);
-> > +	if (status == PCI_ERS_RESULT_PANIC)
-> > +		panic("CXL cachemem error.");
-> > +
-> > +	/*
-> > +	 * If we have native control of AER, clear error status in the device
-> > +	 * that detected the error.  If the platform retained control of AER,
-> > +	 * it is responsible for clearing this status.  In that case, the
-> > +	 * signaling device may not even be visible to the OS.
-> > +	 */
-> > +	if (pcie_aer_is_native(pdev)) {
-> > +		pcie_clear_device_status(pdev);
-> > +		pci_aer_clear_nonfatal_status(pdev);
-> > +		pci_aer_clear_fatal_status(pdev);
-> > +	}
-> > +}
+> The current implementation applies all XOR maps during address
+> translation, but it should use the spec-defined number of XOR maps
+> derived from the number of interleave ways.
 
-> > +
-> >  void cxl_cor_error_detected(struct pci_dev *pdev)
-> >  {
-> >  	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> > @@ -346,6 +425,24 @@ EXPORT_SYMBOL_NS_GPL(cxl_error_detected, "CXL");
-> >  
-> >  static void cxl_handle_proto_error(struct cxl_proto_err_work_data *err_info)
-> >  {
-> > +	struct pci_dev *pdev = err_info->pdev;
-> > +
-> > +	if (err_info->severity == AER_CORRECTABLE) {
-> > +
-> > +		if (!pcie_aer_is_native(pdev))
-> > +			return;
-> > +
-> > +		if (pdev->aer_cap)
-> > +			pci_clear_and_set_config_dword(pdev,
-> > +						       pdev->aer_cap + PCI_ERR_COR_STATUS,
-> > +						       0, PCI_ERR_COR_INTERNAL);
-> > +
-> > +		cxl_port_cor_error_detected(&pdev->dev);
-> > +
-> > +		pcie_clear_device_status(pdev);
-> > +	} else {
-> > +		cxl_do_recovery(pdev);
-> > +	}
+Can you add what is the current impact without applying the fix pls?
 
-Could flip logic to get out of here quickly in one case.
+DJ
 
-	if (err_info->severity != AER_CORRECTABLE) {
-		cxl_do_recovery(pdev);
-		return;
-	}
-
-	if (!pci...
-
-just to reduce indent we don't need.  Up to you though.
-> >  }
-> >  
-> >  static void cxl_proto_err_work_fn(struct work_struct *work)
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 13dbb405dc31..b7bfefdaf990 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -2248,6 +2248,7 @@ void pcie_clear_device_status(struct pci_dev *dev)
-> >  	pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &sta);
-> >  	pcie_capability_write_word(dev, PCI_EXP_DEVSTA, sta);
-> >  }
-> > +EXPORT_SYMBOL_GPL(pcie_clear_device_status);
-To me it's a little odd that we restrict this to AER
-given it's not in AER specific registers or anything like that.
-
-It only happens to be used in that code right now so I guess
-it is ok to do this anyway.
-
-> >  #endif
-
-> > diff --git a/drivers/pci/pcie/aer_cxl_vh.c b/drivers/pci/pcie/aer_cxl_vh.c
-> > index 0f616f5fafcf..aa69e504302f 100644
-> > --- a/drivers/pci/pcie/aer_cxl_vh.c
-> > +++ b/drivers/pci/pcie/aer_cxl_vh.c
-> > @@ -34,7 +34,10 @@ bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info)
-> >  	if (!info || !info->is_cxl)
-> >  		return false;
-> >  
-> > -	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT)
-> > +	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
-> > +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT) &&
-> > +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_UPSTREAM) &&
-> > +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM))
-> >  		return false;
-
-Ah.  This fixes the earlier comment.  Maybe add a temp comment
-or similar there to say you'll handle others later.
-Also, maybe this is cleaner as a switch to avoid all those pci_pcie_type(pdev)
-(or a local variable might also work).
-
-	switch (pci_pcie_type(pdev)) {
-	case PCI_EXP_TYPE_ENDPOINT:
-	case PCI_EXP_TYPE_ROOT_PORT:
-	case PCI_EXP_TYPE_UPSTREAM:
-	case PCI_EXP_TYPE_DOWNSTREAM:
-		return is_aer_internal_error(info);
-	default:
-		return false;
-	}
-> >  
-> >  	return is_aer_internal_error(info);
-
+> 
+> Fixes: 3b2fedcd75e3 ("cxl: Restore XOR'd position bits during address translation")
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
+> ---
+>  drivers/cxl/acpi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 77ac940e3013..5f84d01e7d39 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -61,7 +61,7 @@ u64 cxl_do_xormap_calc(struct cxl_cxims_data *cximsd, u64 addr, int hbiw)
+>  	 * bits results in val==0, if odd the XOR result is val==1.
+>  	 */
+>  
+> -	for (int i = 0; i < cximsd->nr_maps; i++) {
+> +	for (int i = 0; i < nr_maps_to_apply; i++) {
+>  		if (!cximsd->xormaps[i])
+>  			continue;
+>  		pos = __ffs(cximsd->xormaps[i]);
 
