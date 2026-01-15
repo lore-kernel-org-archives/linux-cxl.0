@@ -1,229 +1,92 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from sender4-pp-o90.zoho.com (sender4-pp-o90.zoho.com [136.143.188.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A3A36C0B1;
-	Thu, 15 Jan 2026 11:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768478267; cv=none; b=bXXVCwMUGsiUZC867S7JK5QQOaVKRGCSHmA4zxs8X0rriDvByjRIKwo1FJ6j/r3IC2cloPQQ3RJ8IJAuj13cwU3A4l0qzptT22XDx6Vxk58a1OHbYdUjbqRZAUrDO8nVAn5wNWM58PO+a7czg+HeAyB4mbhUzE/6uHtCGdRtbP8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768478267; c=relaxed/simple;
-	bh=3yFNVx2OS+NPUw/CNGRe/9X+3quSzefgUSkG3mHbtlA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=db1uf/2o46+CNIHpN4tC/iXKjmUpfL+hztDvQ2b4oQP0wijKkQuf8/i3tX2jO0d0ahsLmwCN6EE45wD/WC2BSr5F7If43ZQGrG+3C2DKhoeKaAEb1sWn1/D2XnRg9movBxh1iizlZfp4ZVd5A01QM781z03DkEVLDOYIKLQAGiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dsM0v6KZczHnGk9;
-	Thu, 15 Jan 2026 19:57:19 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id B38134056A;
-	Thu, 15 Jan 2026 19:57:41 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 15 Jan
- 2026 11:57:40 +0000
-Date: Thu, 15 Jan 2026 11:57:39 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: "David Hildenbrand (Red Hat)" <david@kernel.org>
-CC: Li Zhe <lizhe.67@bytedance.com>, <akpm@linux-foundation.org>,
-	<ankur.a.arora@oracle.com>, <fvdl@google.com>, <joao.m.martins@oracle.com>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <mhocko@suse.com>,
-	<mjguzik@gmail.com>, <muchun.song@linux.dev>, <osalvador@suse.de>,
-	<raghavendra.kt@amd.com>, <linux-cxl@vger.kernel.org>, Davidlohr Bueso
-	<dave@stgolabs.net>, Gregory Price <gourry@gourry.net>, Dan Williams
-	<dan.j.williams@intel.com>, <zhanjie9@hisilicon.com>,
-	<wangzhou1@hisilicon.com>
-Subject: Re: [PATCH v2 0/8] Introduce a huge-page pre-zeroing mechanism
-Message-ID: <20260115115739.00007cf6@huawei.com>
-In-Reply-To: <83798495-915b-4a5d-9638-f5b3de913b71@kernel.org>
-References: <9daa39e6-9653-45cc-8c00-abf5f3bae974@kernel.org>
-	<20260115093641.44404-1-lizhe.67@bytedance.com>
-	<83798495-915b-4a5d-9638-f5b3de913b71@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0980394485;
+	Thu, 15 Jan 2026 13:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.90
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768483041; cv=pass; b=EcNShXND4FB1nzc9Fo+GHmusnomC//uQAbTESVh5EJYcF+7Wp/bOCGJvDCph770UGsUsVh2oTQpBT4HYfxCDkhzJkIaA956OSltnDdgkbZ6iERIgi2XxDGTiNoCQBjwGGj6iyW+WQ3awXXu1ObTv1kNsxoDGM7p8z/sifrwNOJQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768483041; c=relaxed/simple;
+	bh=uo0E8NTPDuIPqMdIbGTQgfSYZXi7cMWWCypWJvO9ptQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=vCIoYOh/TqWOjgzTpFOmBR+80PBYloOQD5mmZw0J2dHsGWq/uBlYAMGQTNoSUyZF45Qz4CwXgjFpdDJa1pvb/bPr3UukYhG2UDTJ/Xe52R3DpwU8q6dH7txLA2sni8ONG1BCIiZxSIJp8aB5vC9axQLSzXXHbeiJkvkaYppcjxY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=R4rrHBYm; arc=pass smtp.client-ip=136.143.188.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="R4rrHBYm"
+ARC-Seal: i=1; a=rsa-sha256; t=1768483024; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=bSOS7lduxkAXiFGn91PGYGwyHqR2yjXEC1haArzxFae/AcpcHpI5rgh/RYyqt3a6viTGiFx/1BFsaCC0sKVifv5A7hrVOU7JA3i0tH7FzXvkAnCK/76eH2yIRSfk2gulpkCiP6s1FEIQLjCMWdWnJlG3QoULUb70q7B7dLJjYyw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1768483024; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=CJ1WMc3dyzJouq5sMhGv5Z9QnE6jU6+19x4kxM2x4OE=; 
+	b=hGA49I3+evQ9vUe4fzkHP1PHASDNn12C8k3qayxOeXI2GEtRxswJhjiPVhptkTK3qrnEOJY7VYvgaUYh7EoHjU5alIMWXZQlT2lRQ1XlP5nqB6+VUvdBSpji8J3wXeUvRKw9AbpjOYkUYdFu3elJmqYmOtAKCrlGoFi171rGPBk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1768483024;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=CJ1WMc3dyzJouq5sMhGv5Z9QnE6jU6+19x4kxM2x4OE=;
+	b=R4rrHBYmoUvp6fBLMi0pUj6r1PrrFuJeg7+Ws3y4RaHgufYyMRirkJsGenpoqzpG
+	Pf8E8VmSsfxbg6r0R2UB9iE0Fynfv81pSazI+vFmTVyNJY8eC1FeXUATG6AvHbxhMlG
+	D+TxBKraD4v1OIC1odLQijFwB5VyURBMpHWEhrHA=
+Received: by mx.zohomail.com with SMTPS id 1768483022120102.75584545377808;
+	Thu, 15 Jan 2026 05:17:02 -0800 (PST)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH 1/1] cxl/acpi: Fix using extra xormaps for address translation
+Date: Thu, 15 Jan 2026 21:16:48 +0800
+Message-Id: <20260115131648.620177-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr08011227a1f9db935305e97c6e019c29000030614be54cbdd5c7a962f6cb315842989a38a6ef12f2f3bcc8:zu08011227b7ef7a68f556d6af9a5d96d90000095368a0ad08830ef3818df6206e24c11b5b883d10c22d2573:rf0801123203b4b1403a52f86e7113690e000030caa7b3ddac5a9bb847a501b581a98147732c3524919235d8c51f5d1876da0fb6200bb3:ZohoMail
+X-ZohoMailClient: External
 
-On Thu, 15 Jan 2026 12:08:03 +0100
-"David Hildenbrand (Red Hat)" <david@kernel.org> wrote:
+CXL r3.1 Table 9-22 defines a fixed number of XOR maps for interleave
+arithmetic based on the number of interleave ways, as reflected by
+hbiw_to_nr_maps[].
 
-> On 1/15/26 10:36, Li Zhe wrote:
-> > On Wed, 14 Jan 2026 18:21:08 +0100, david@kernel.org wrote:
-> >      
-> >>>> But again, I think the main motivation here is "increase application
-> >>>> startup", not optimize that the zeroing happens at specific points in
-> >>>> time during system operation (e.g., when idle etc).
-> >>>>  
-> >>>
-> >>> Framing this as "increase application startup" and merely shifting the
-> >>> overhead to shutdown seems like gaming the problem statement to me.
-> >>> The real problem is total real time spent on it while pages are
-> >>> needed.
-> >>>
-> >>> Support for background zeroing can give you more usable pages provided
-> >>> it has the cpu + ram to do it. If it does not, you are in the worst
-> >>> case in the same spot as with zeroing on free.
-> >>>
-> >>> Let's take a look at some examples.
-> >>>
-> >>> Say there are no free huge pages and you kill a vm + start a new one.
-> >>> On top of that all CPUs are pegged as is. In this case total time is
-> >>> the same for "zero on free" as it is for background zeroing.  
-> >>
-> >> Right. If the pages get freed to immediately get allocated again, it
-> >> doesn't really matter who does the freeing. There might be some details,
-> >> of course.
-> >>  
-> >>>
-> >>> Say the system is freshly booted and you start up a vm. There are no
-> >>> pre-zeroed pages available so it suffers at start time no matter what.
-> >>> However, with some support for background zeroing, the machinery could
-> >>> respond to demand and do it in parallel in some capacity, shortening
-> >>> the real time needed.  
-> >>
-> >> Just like for init_on_free, I would start with zeroing these pages
-> >> during boot.
-> >>
-> >> init_on_free assures that all pages in the buddy were zeroed out. Which
-> >> greatly simplifies the implementation, because there is no need to track
-> >> what was initialized and what was not.
-> >>
-> >> It's a good question if initialization during that should be done in
-> >> parallel, possibly asynchronously during boot. Reminds me a bit of
-> >> deferred page initialization during boot. But that is rather an
-> >> extension that could be added somewhat transparently on top later.
-> >>
-> >> If ever required we could dynamically enable this setting for a running
-> >> system. Whoever would enable it (flips the magic toggle) would zero out
-> >> all hugetlb pages that are already in the hugetlb allocator as free, but
-> >> not initialized yet.
-> >>
-> >> But again, these are extensions on top of the basic design of having all
-> >> free hugetlb folios be zeroed.
-> >>  
-> >>>
-> >>> Say a little bit of real time passes and you start another vm. With
-> >>> merely zeroing on free there are still no pre-zeroed pages available
-> >>> so it again suffers the overhead. With background zeroing some of the
-> >>> that memory would be already sorted out, speeding up said startup.  
-> >>
-> >> The moment they end up in the hugetlb allocator as free folios they
-> >> would have to get initialized.
-> >>
-> >> Now, I am sure there are downsides to this approach (how to speedup
-> >> process exit by parallelizing zeroing, if ever required)? But it sounds
-> >> like being a bit ... simpler without user space changes required. In
-> >> theory :)  
-> > 
-> > I strongly agree that init_on_free strategy effectively eliminates the
-> > latency incurred during VM creation. However, it appears to introduce
-> > two new issues.
-> > 
-> > First, the process that later allocates a page may not be the one that
-> > freed it, raising the question of which process should bear the cost
-> > of zeroing.  
-> 
-> Right now the cost is payed by the process that allocates a page. If you
-> shift that to the freeing path, it's still the same process, just at a
-> different point in time.
-> 
-> Of course, there are exceptions to that: if you have a hugetlb file that
-> is shared by multiple processes (-> process that essentially truncates
-> the file). Or if someone (GUP-pin) holds a reference to a file even after
-> it was truncated (not common but possible).
-> 
-> With CoW it would be the process that last unmaps the folio. CoW with
-> hugetlb is fortunately something that is rare (and rather shaky :) ).
-> 
-> > 
-> > Second, put_page() is executed atomically, making it inappropriate to
-> > invoke clear_page() within that context; off-loading the zeroing to a
-> > workqueue merely reopens the same accounting problem.  
-> 
-> I thought about this as well. For init_on_free we always invoke it for
-> up to 4MiB folios during put_page() on x86-64.
-> 
-> See __folio_put()->__free_frozen_pages()->free_pages_prepare()
-> 
-> Where we call kernel_init_pages(page, 1 << order);
-> 
-> So surely, for 2 MiB folios (hugetlb) this is not a problem.
-> 
-> ... but then, on arm64 with 64k base pages we have 512 MiB folios
-> (managed by the buddy!) where this is apparently not a problem? Or is
-> it and should be fixed?
-> 
-> So I would expect once we go up to 1 GiB, we might only reveal more
-> areas where we should have optimized in the first case by dropping
-> the reference outside the spin lock ... and these optimizations would
-> obviously (unless in hugetlb specific code ...) benefit init_on_free
-> setups as well (and page poisoning).
+The current implementation applies all XOR maps during address
+translation, but it should use the spec-defined number of XOR maps
+derived from the number of interleave ways.
 
-FWIW I'd be interesting in seeing if we can do the zeroing async and allow
-for hardware offloading. If it happens to be in CXL (and someone
-built the fancy bits) we can ask the device to zero ranges of memory
-for us.  If they built the HDM-DB stuff it's coherent too (came up
-in the Davidlohr's LPC Device-mem talk on HDM-DB + back invalidate
-support)
-+CC linux-cxl and Davidlohr + a few others.
+Fixes: 3b2fedcd75e3 ("cxl: Restore XOR'd position bits during address translation")
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+ drivers/cxl/acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-More locally this sounds like fun for DMA engines, though they are going
-to rapidly eat bandwidth up and so we'll need QoS stuff in place
-to stop them perturbing other workloads.
-
-Give me a list of 1Gig pages and this stuff becomes much more efficient
-than anything the CPU can do.
-
-Jonathan
-
-> 
-> 
-> Looking at __unmap_hugepage_range(), for example, we already make sure
-> to not drop the reference while holding the PTL (spinlock).
-> 
-> In general, I think when using MMU gather we drop folio references out
-> of the PTL, because we know that it can hurt performance badly.
-> 
-> I documented some of the nasty things that can happen with MMU gather in
-> 
-> commit e61abd4490684de379b4a2ef1be2dbde39ac1ced
-> Author: David Hildenbrand <david@kernel.org>
-> Date:   Wed Feb 14 21:44:34 2024 +0100
-> 
->      mm/mmu_gather: improve cond_resched() handling with large folios and expensive page freeing
->      
->      In tlb_batch_pages_flush(), we can end up freeing up to 512 pages or now
->      up to 256 folio fragments that span more than one page, before we
->      conditionally reschedule.
->      
->      It's a pain that we have to handle cond_resched() in
->      tlb_batch_pages_flush() manually and cannot simply handle it in
->      release_pages() -- release_pages() can be called from atomic context.
->      Well, in a perfect world we wouldn't have to make our code more
->      complicated at all.
->      
->      With page poisoning and init_on_free, we might now run into soft lockups
->      when we free a lot of rather large folio fragments, because page freeing
->      time then depends on the actual memory size we are freeing instead of on
->      the number of folios that are involved.
->      
->      In the absolute (unlikely) worst case, on arm64 with 64k we will be able
->      to free up to 256 folio fragments that each span 512 MiB: zeroing out 128
->      GiB does sound like it might take a while.  But instead of ignoring this
->      unlikely case, let's just handle it.
-> 
-> 
-> But more general, when dealing with the PTL we try to put folio references outside
-> the lock (there are some cases in mm/memory.c where we apparently don't do it yet),
-> because freeing memory can take a while.
-> 
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 77ac940e3013..5f84d01e7d39 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -61,7 +61,7 @@ u64 cxl_do_xormap_calc(struct cxl_cxims_data *cximsd, u64 addr, int hbiw)
+ 	 * bits results in val==0, if odd the XOR result is val==1.
+ 	 */
+ 
+-	for (int i = 0; i < cximsd->nr_maps; i++) {
++	for (int i = 0; i < nr_maps_to_apply; i++) {
+ 		if (!cximsd->xormaps[i])
+ 			continue;
+ 		pos = __ffs(cximsd->xormaps[i]);
+-- 
+2.34.1
 
