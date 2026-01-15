@@ -1,124 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11BD399011;
-	Thu, 15 Jan 2026 17:26:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB2D3C1FCD
+	for <linux-cxl@vger.kernel.org>; Thu, 15 Jan 2026 17:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768497988; cv=none; b=lonCgsxUW+9KlXdongPC7wqbmuBEWyL2mEQQrMYGtg6EukU++Ein8zKuBIgIjbbIMKieYL2ZwrSyMV5x00gvXMGLRoSaXWIk+p4gfQ/kpehAvJSSIMPHAm5CibEAyMooFK896SACxljJGZXLtt7AASpBqAwdjkwdoLfsFIsDF4s=
+	t=1768498039; cv=none; b=cU8bHwPTLqViMjRQoZ9+UqpezLOvy0JZ/adxUXhsRJwKcmmuDxl5LVXftx2TPVkfsGyh19CAqwusiFF5831fqMVzfuBLVCTV9wpFz7t2UGDP2jDiaRU72jmy8xq4qTcWVDlps+4cpqyTH7d8m5iaOLNa8vNqo1VxBi5+3Llxa5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768497988; c=relaxed/simple;
-	bh=3kMg3+tU6CStGaP/2jSc6EBS4YSAzWA1eqL/7/QkxAU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M5RngiJAjS905/kM+kFp13idASOikjgVjfOiN47PkAoCHOVWIRNoPe2V+pEBVOktxNIysP/olYBMZuOY2NGNbqI5P2P9YIPjDhL5M++apU/SUXymmIi4qHTqR3DlVObNBhXKx+VmtY+ST3kujie8AA+xB+ttKHUTF7N1Kdhygk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERo6pPRP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768498039; c=relaxed/simple;
+	bh=3UGXrZkeYXLx8IoVJrtniFV8BFbMiKk7p6uPdTyK/0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lo19aIWQneKj97EPXTWG/CrQU4flGeM+VPgnP1fIJs4UsAejhJWiHA2LJT+Wdjlfsgc3D0ysPsaM5Wq+vmkMjoex2UKPxGj1IwqoqPMJIxK7mTGhhu4Zm90lD5Ln8rpIhLASH+CDIWrpXIj3YmXMujWMOxuDMVmCOB6GKe0vBWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=YEhU+4Ug; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERo6pPRP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33C4EC19422;
-	Thu, 15 Jan 2026 17:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768497987;
-	bh=3kMg3+tU6CStGaP/2jSc6EBS4YSAzWA1eqL/7/QkxAU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ERo6pPRPc9N7MiF0CC5Ky920nNhr7uR3t/RZtcVc8WK7Ihzyq0keU29lB42a7yKlw
-	 HtTmJBYUpV15tthGIpOjiWPn438FBi1t2CXbnnOgKAoQmnpyqrpMikuWnkhtbNKxIc
-	 swl78vFHVCxCLJC62JT153qN6bFQi8nGdaA5ymtRwnVkCeH7B5lpErjGNvFcegPAyj
-	 +oI/PiEvMAnam5dgCyFJ483ZCQtF0O1ODBfz2qaoYa/Pe/KauGBc0oNK9XrWbBAKr6
-	 RpB9m9+bLwQ+tuHAZRACbND4oN4AA0PFYgAZLY569VsXsMyt/8+YPmpPS1RzerggB0
-	 MtDke8z/QK6wg==
-Message-ID: <eb3e6ae9-d296-465f-a5a9-963da4d8ce6a@kernel.org>
-Date: Thu, 15 Jan 2026 18:26:21 +0100
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="YEhU+4Ug"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-88a3bba9fd4so13055976d6.2
+        for <linux-cxl@vger.kernel.org>; Thu, 15 Jan 2026 09:27:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1768498037; x=1769102837; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9FK61OSEd0UmY2wqnN+WlOD2t6xQO8MJ1jOlEc9XBMg=;
+        b=YEhU+4UglXlQQlfuFffLzOxZF1W221ljq75jkYmrgBTttcp18/A9wRTucjN8uHZtlg
+         ECvh9hd6KBcOEx5heMRX5nNm9jvWUip0I/pctmUUaMroCrdAqRq5x6SccwevxqlziUcX
+         +/H3LgzsFU/oXZERrYrlk9fp5ZgtSrDK7Q00NJ/t2elprpDeGFR6002oruyaRiElcG5d
+         sUAF/nbeMvK1ehey4jpZKskRdfYrstJtw2//Isjg4oQ2OxNVZwAyWwQEvJPHttBKAazQ
+         AW4x6bPH1/49pR8zfHAOhwzWWvy5zr4cmG3+34Ds4SsQxIP76DcO9Ic4xLpCdBW617IF
+         5soQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768498037; x=1769102837;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9FK61OSEd0UmY2wqnN+WlOD2t6xQO8MJ1jOlEc9XBMg=;
+        b=Y8hORjlqzz7GqKcE+NxjA35+4lN2t1dp/o5krJ0JfKb+32mGJIODdBE5JmOX1LLftY
+         uktd2vSGd5+rMS+RSAsz+2vFQHFl09vvLFoRU71jFTaeiC5uMOtwFNC6hYpaqRsbcZCu
+         Xjhyu+2yTgbYwnaOb2aS1K7ZgmR08O4nw9DL0a0apyYS/+Uwvvn+Qf/XmRtbBHNMBUWF
+         K8nGcGdBSiDDXaKkvhAT3+LOoAc1F01i5qAC4lnHOTkNwFDWwSFnSoQGye/gExHRI9Id
+         qKOc7i9TRZgnaGRl5TlFUWxc4B877lXDamYfN6IPE5/KLDuS9YEFZGFjnUr3gNZqC0uM
+         Cgbg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZt9UqCM3MaDvekEaNqk/Ru6a0IIU+/eQNzkLiWY+KksRQp3iPv8TgF7fenNZ49ujAxlshbPPaF8c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY+JJXmtfx1xsarw5o30VxB4qtkvbKWvLLjPaLr7rFyA52uvTq
+	s9KAHy5LQo92Q+gYY1XOvqNKFshXlHRjWSgd8rTluE8GVn0dq8l61twFdrdRzSuVcfw=
+X-Gm-Gg: AY/fxX7oZCtKi6fPvLiz1QBQJNkuyWj1MKpCkzNa7oviddzST4/YPD+5IjO/R5ySod7
+	V8/aJ3XowFY3I8200aktjXlMRW+mZO5n/ZjebatYYmceJSzMAv68gziOtLBk9/V6Ndd69ORviqZ
+	bOVwVDgQFwFyLTgqgWuIemKA6wSdJyzGx284Z6dMjGzKXbv+B+/XkTRwt3WerKcSa85DL/FnbMp
+	Jgzwuk87D7merFKz6A4P28AhPAL6ZF0Rce8iZt4akXy9o1pqDZc3awa20oX0PD3OfbFartehc+O
+	2gc3S+qpFic6wGRRU/9YunulzvkP0WUTgdXrR7xCHlG27nrH8M3QJpWt20KEC1F5yFwdDM7Xjh5
+	NE6W5WWhNonCN6vUC3grySwYXMUd182u7E2R9pbqnizj4Oyacp+gLUAZXTi87JiOr3jUIwh3gqs
+	BktRSimF87f3gCskXstI4K/MJimdiz46AODiM4EBWFWzRPy/2auh0gawXQrebxnhRVIMUNyA==
+X-Received: by 2002:a05:6214:4007:b0:889:b6f1:1f30 with SMTP id 6a1803df08f44-8942dbf5199mr2798016d6.18.1768498036628;
+        Thu, 15 Jan 2026 09:27:16 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89077253305sm219364246d6.41.2026.01.15.09.27.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jan 2026 09:27:14 -0800 (PST)
+Date: Thu, 15 Jan 2026 12:26:41 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: linux-mm@kvack.org, cgroups@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, kernel-team@meta.com,
+	longman@redhat.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, corbet@lwn.net, gregkh@linuxfoundation.org,
+	rafael@kernel.org, dakr@kernel.org, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	akpm@linux-foundation.org, vbabka@suse.cz, surenb@google.com,
+	mhocko@suse.com, jackmanb@google.com, ziy@nvidia.com,
+	david@kernel.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, rppt@kernel.org, axelrasmussen@google.com,
+	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk, rientjes@google.com,
+	shakeel.butt@linux.dev, chrisl@kernel.org, kasong@tencent.com,
+	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
+	baohua@kernel.org, chengming.zhou@linux.dev,
+	roman.gushchin@linux.dev, muchun.song@linux.dev, osalvador@suse.de,
+	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
+	byungchul@sk.com, ying.huang@linux.alibaba.com, apopple@nvidia.com,
+	cl@gentwo.org, harry.yoo@oracle.com, zhengqi.arch@bytedance.com
+Subject: Re: [RFC PATCH v3 7/8] mm/zswap: compressed ram direct integration
+Message-ID: <aWkjUXpyLEJyc-C0@gourry-fedora-PF4VCD3F>
+References: <20260108203755.1163107-1-gourry@gourry.net>
+ <20260108203755.1163107-8-gourry@gourry.net>
+ <i6o5k4xumd5i3ehl6ifk3554sowd2qe7yul7vhaqlh2zo6y7is@z2ky4m432wd6>
+ <aWF1uDdP75gOCGLm@gourry-fedora-PF4VCD3F>
+ <4ftthovin57fi4blr2mardw4elwfsiv6vrkhrjqjsfvvuuugjj@uivjc5uzj5ys>
+ <aWWEvAaUmpA_0ERP@gourry-fedora-PF4VCD3F>
+ <fkxcxh4eilncsbtwt7jmuiaxrfvuidlnbovesa6m7eoif5tmxc@r34c5zy4nr4y>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] add runtime hotplug state control
-To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
- kernel-team@meta.com, dan.j.williams@intel.com, vishal.l.verma@intel.com,
- dave.jiang@intel.com, mst@redhat.com, jasowang@redhat.com,
- xuanzhuo@linux.alibaba.com, eperezma@redhat.com, osalvador@suse.de,
- akpm@linux-foundation.org
-References: <20260114235022.3437787-1-gourry@gourry.net>
-From: "David Hildenbrand (Red Hat)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
-In-Reply-To: <20260114235022.3437787-1-gourry@gourry.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fkxcxh4eilncsbtwt7jmuiaxrfvuidlnbovesa6m7eoif5tmxc@r34c5zy4nr4y>
 
-On 1/15/26 00:50, Gregory Price wrote:
-> The dax kmem driver currently onlines memory automatically during
-> probe using the system's default online policy but provides no way
-> to control or query the entire region state at runtime.
+> > For the first go, yeah.  A cram.c would need special page table handling
+> > bits that will take a while to get right.  We can make use of the
+> > hardware differently in the meantime.
 > 
-> This series adds a sysfs interface to control DAX kmem memory
-> hotplug state, and refactors the memory_hotplug paths to make it
-> possible for drivers to request an online type at hotplug time.
+> Makes sense.
+> 
+> I just want to point out that using compressed memory with zswap doesn't
+> buy us much in terms of reclaim latency, so the main goal here is just
+> saving memory on the top tier, not improving performance, right?
+>
 
-Gregory, slow down a bit please. I haven't even had the chance to go 
-through your replies on v1.
+Yeah first goal is to just demonstrate such an accelerator can even work
+as a top-tier memory saving mechanism.  But hard to say whether reclaim
+latency will be affected appreciably - won't know until we get there :]
 
-I'm currently on PTO and don't have the full day to review stuff :) And 
-boy oh boy, do I have a lot of stuff in my inbox.
+I'm totally prepared for this to be a science experiment that gets
+thrown away.
 
-Maybe given this is the second time the patch subject is suboptimal is 
-another sign to slow down a bit? :P
+> > 
+> > I will probably need some help to get the accounting right if I'm being
+> > honest.  I can't say I fully understanding the implications here, but
+> > what you describe makes sense.
+> > 
+> 
+> Yeah it's counter-intuitive. Zswap needs to charge less than PAGE_SIZE
+> so that memcg tracking continues to make sense with reclaim (i.e. usage
+> goes down), but if zswap consumed a full page from the system
+> perspective, the math won't math.
+> 
+> Separate limits *could* be the answer, but it's harder to configure and
+> existing configuration won't "just work" with compressed memory.
+>
 
+I think you are right. I am also inquiring whether individual page
+compression data is retrievable.  If so, then this actually should be a
+trivial integration.
 
-* Subject: [PATCH 0/8] dax/kmem: add runtime hotplug state control
-* [PATCH v2 0/5] add runtime hotplug state control
+If not then this is probably ending up on the cutting room floor and
+going straight to a full cram.c implementation.
 
-I guess it should be "[PATCH v2 0/5] dax/kmem:add runtime hotplug state 
-control"
-
--- 
-Cheers
-
-David
+~Gregory
