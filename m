@@ -1,108 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E1833A9F8
-	for <linux-cxl@vger.kernel.org>; Thu, 15 Jan 2026 08:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AF08356A29;
+	Thu, 15 Jan 2026 09:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768465823; cv=none; b=dGvf4iGPz0EXxO/V/Rulio2Jpzs2SZSbRd0lPTQwwMFE2/CsCSmofESEI5d6neGoqq/QM8/JzKArTOsc0LGDqICqknN0h6PZoRu0Gsw6qABT6qHyOaTq6pG0lnHfac9eQJbgXFTniUyubZvzka6bxr9GOM6gHRG5gXhWBR/qo7k=
+	t=1768470205; cv=none; b=aS32CfIxou3n9JsVlokvWysZhYsH9OQDwsgPv9L78lCxAOGA7Y9wdwcDw2TTzCzRtP/QpS5wW/aFlNV3s06wgiOUgKhFtnxRKIIxlE9wImfoSuBpgV7EJSzuKP45XkyZoEOAv9xesPXLA02CJcVehZrPLIKUNDqlwYIpA8Fc7fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768465823; c=relaxed/simple;
-	bh=yuBh8Ro8tvjLy1L4hvyFN3vMCfyqtskBpuYFLofd/VE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YcbbKinZ0yI83vTq2nGyC5sxcn83P97y2hHibpNZkOIFs0hBG5lVFYQfjuqY9jSPlHuQuj7wshCL+WUoynXWtdq9gffgiYtplzZ0gZJjgq9GuQRW53CN6j53IM1e+Q/rBPbQk8VB+Rjj6k4LC/sz7Z6MSWTy9Es1FCjkVB5NP4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Faf4SKtr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Faf4SKtr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92EC2C19424
-	for <linux-cxl@vger.kernel.org>; Thu, 15 Jan 2026 08:30:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768465822;
-	bh=yuBh8Ro8tvjLy1L4hvyFN3vMCfyqtskBpuYFLofd/VE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Faf4SKtry0MHYQLXb/cYVjcByQ5K7hokp8xFFBshG/AjD2NnZW5X9hWsv1m66tDNW
-	 VVUwCe6AIZ0BCbsgybP3trX7bDds4lFFkgH5HbW3bj2MD4CobwhWXR9oM71fO+cixh
-	 uaQOGCDcFUYd4Bp8AczIEFkW9exz8YHAGhxMjVNs0YmFgzZ2NJRUcxzxLpWoMwAHd4
-	 Xb1eceBxho/Q9Y6e/x6mUCLojC9BhlR3+mul2njpqaS2Oh5LPhE2DJsN1vXvFYukpr
-	 oQD6T4eZqeGIlaR2mCpBs3oio0oLY4S+kAvAf7fSGa/stbbMK3g+W+vhTRKG31/fZq
-	 r+fq1Cv3+/2Nw==
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-bbf2c3eccc9so688762a12.0
-        for <linux-cxl@vger.kernel.org>; Thu, 15 Jan 2026 00:30:22 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW8SI5ncMKWYt1w1bMMz4popr5L92vWv0e/Gy0o+rvhf4KbEXxFUHj4MJtPSqxwYqFq85yOx287UZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzA6+5oobfagr21p9D9sCpt3lKdQqzvrCw/Q0ihqPcwcjZcZK6v
-	C/tavzRk6wI2HYapRZR/7tt7GBuRvfcqTBUDSmd5YRLdTg3EUsMmj0FVFhIJDiQGYb1gWzGNuOx
-	hVxa4W4utZlBvNMxRZMUF5JJOjujtTlM=
-X-Received: by 2002:a17:90b:1b08:b0:32e:8ff9:d124 with SMTP id
- 98e67ed59e1d1-3526788e074mr2160235a91.15.1768465822006; Thu, 15 Jan 2026
- 00:30:22 -0800 (PST)
+	s=arc-20240116; t=1768470205; c=relaxed/simple;
+	bh=nlE16eKxYb4COhihT92H911dWTK02thlUlvWENCa9CE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mMvX99Z7s7k10c27mPH1yhqQsfMzUlPmk9v2TfkMFrIyLEm8BCatU+R5RNJLeVIVCegZmrCBCTqcBk8QpCqlsOPxeh0WnxmNibJNjHuATO7KC3jlWcyaFI4fWPeRqAPw7Di4mYjBJF7t2WJ561v8OytNgUEyi1hh6sT8xeTCq+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=162.243.164.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwDn7ZmutmhpJtXUBQ--.777S2;
+	Thu, 15 Jan 2026 17:43:10 +0800 (CST)
+Received: from [10.22.77.56] (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwBXruuntmhpi9oTAA--.20716S2;
+	Thu, 15 Jan 2026 17:43:03 +0800 (CST)
+Message-ID: <9132054c-3017-4af0-84e0-e4359b0794a6@phytium.com.cn>
+Date: Thu, 15 Jan 2026 17:43:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260110114705.681676-1-rrichter@amd.com> <20260110114705.681676-11-rrichter@amd.com>
- <CAMj1kXHYTyxBcO3Jt97pukZiOTqL8U=zL5iari82sqMOen1cEQ@mail.gmail.com>
- <aWehZwXsK1IXRNU2@rric.localdomain> <CAMj1kXFhBdCPW_+xPR-TmU4M46Jr6DGwtjUtjDQ0EbgPGmL7vQ@mail.gmail.com>
- <20260114180859.00004623@huawei.com> <20260115080444.GD830755@noisy.programming.kicks-ass.net>
-In-Reply-To: <20260115080444.GD830755@noisy.programming.kicks-ass.net>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 15 Jan 2026 09:30:10 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXENYZq-UkCup6FSH_4tmpRe4xJN1_veuSWs-hxxAo=1Ew@mail.gmail.com>
-X-Gm-Features: AZwV_Qin7nQ06adxmNME2NfXhXjExfmuxZiydWrCccnZYzRg_Gr24NBpLGMXqME
-Message-ID: <CAMj1kXENYZq-UkCup6FSH_4tmpRe4xJN1_veuSWs-hxxAo=1Ew@mail.gmail.com>
-Subject: Re: [PATCH v9 10/13] cxl: Enable AMD Zen5 address translation using
- ACPI PRMT
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>, Robert Richter <rrichter@amd.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>, 
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] mm: numa_memblks: Identify the accurate NUMA ID of
+ CFMW
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Mike Rapoport <rppt@kernel.org>, Wang Yinfeng <wangyinfeng@phytium.com.cn>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20260106031042.1606729-1-cuichao1753@phytium.com.cn>
+ <20260106031042.1606729-2-cuichao1753@phytium.com.cn>
+ <20260108094812.8757ce3ad8370668eaafb29c@linux-foundation.org>
+From: Cui Chao <cuichao1753@phytium.com.cn>
+In-Reply-To: <20260108094812.8757ce3ad8370668eaafb29c@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAfwBXruuntmhpi9oTAA--.20716S2
+X-CM-SenderInfo: pfxlux1drrlkut6sx5pwlxzhxfrphubq/1tbiAQAQAGln+JMEtAAAsE
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=cuichao175
+	3@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoW7CF1Duw1DCr4DKw45GF1DAwb_yoW8AF47pF
+	4SqFWvgF4kJF1xGFs2vw1kX3WIqF409a17JrW7CFnrur4F9w18Jr4ayr1F9Fs7t34kGF1r
+	XF4Dta4jqw1DXaUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-On Thu, 15 Jan 2026 at 09:04, Peter Zijlstra <peterz@infradead.org> wrote:
+When a CXL RAM region is created in userspace, the memory capacity of 
+the newly created region is not added to the CFMW-dedicated NUMA node. 
+Instead, it is accumulated into an existing NUMA node (e.g., NUMA0 
+containing RAM). This makes it impossible to clearly distinguish between 
+the two types of memory, which may affect memory-tiering applications.
+
+On 1/9/2026 1:48 AM, Andrew Morton wrote:
+> On Tue,  6 Jan 2026 11:10:42 +0800 Cui Chao <cuichao1753@phytium.com.cn> wrote:
 >
-> On Wed, Jan 14, 2026 at 06:08:59PM +0000, Jonathan Cameron wrote:
+>> In some physical memory layout designs, the address space of CFMW
+>> resides between multiple segments of system memory belonging to
+>> the same NUMA node. In numa_cleanup_meminfo, these multiple segments
+>> of system memory are merged into a larger numa_memblk. When
+>> identifying which NUMA node the CFMW belongs to, it may be incorrectly
+>> assigned to the NUMA node of the merged system memory.
+>>
+>> Example memory layout:
+>>
+>> Physical address space:
+>>      0x00000000 - 0x1FFFFFFF  System RAM (node0)
+>>      0x20000000 - 0x2FFFFFFF  CXL CFMW (node2)
+>>      0x40000000 - 0x5FFFFFFF  System RAM (node0)
+>>      0x60000000 - 0x7FFFFFFF  System RAM (node1)
+>>
+>> After numa_cleanup_meminfo, the two node0 segments are merged into one:
+>>      0x00000000 - 0x5FFFFFFF  System RAM (node0) // CFMW is inside the range
+>>      0x60000000 - 0x7FFFFFFF  System RAM (node1)
+>>
+>> So the CFMW (0x20000000-0x2FFFFFFF) will be incorrectly assigned to node0.
+>>
+>> To address this scenario, accurately identifying the correct NUMA node
+>> can be achieved by checking whether the region belongs to both
+>> numa_meminfo and numa_reserved_meminfo.
+> Thanks.
 >
-> > Do we have a potential issue wrt to merging this as it stands and improving
-> > on it later?  i.e. Is this a blocking issue for this patch set?
->
-> Well, why do you *have* to use PRMT at all? And this is a serious
-> question; PRMT is basically injecting unaudited magic code into the
-> kernel, and that is a security risk.
->
-> Worse, in order to run this shit, we have to lower or disable various
-> security measures.
->
+> Can you please help us understand the userspace-visible runtime effects
+> of this incorrect assignment?
 
-Only if we decide to keep running it privileged, which the PRM spec no
-longer requires (as you have confirmed yourself when we last discussed
-this, right?)
+-- 
+Best regards,
+Cui Chao.
 
-> If I had my way, we would WARN and TAINT the kernel whenever such
-> garbage got used.
-
-These are things that used to live in SMM, requiring all CPUs to
-disappear into SMM mode in a way that was completely opaque to the OS.
-
-PRM runs under the control of the OS, does not require privileges and
-only needs MMIO access to the regions it describes in its manifest
-(which the OS can inspect, if desired). So if there are security
-concerns with PRM today, it is because we were lazy and did not
-implement PRM securely from the beginning.
-
-In my defense, I wasn't aware of the unprivileged requirement until
-you spotted it recently: it was something I had asked for when the PRM
-spec was put up for "review" by the Intel and MS authors, and they
-told me they couldn't possibly make any changes at that point, because
-it had already gone into production. But as it turns out, the change
-was made after all.
-
-I am a total noob when it comes to how x86 does its ring0/ring3
-switching, but with some help, I should be able to prototype something
-to call into the PRM service unprivileged, running under the efi_mm.
-
-Would that allay your concerns?
