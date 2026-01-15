@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42052D5C9B;
-	Thu, 15 Jan 2026 17:08:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11BD399011;
+	Thu, 15 Jan 2026 17:26:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768496912; cv=none; b=mQnqChpIKlc6UJ6yxwZ//pXKRqx+ATWZuS0966tnc7em4XHvhS292EAqUl1tn9SYBGHsc/TNzJzD7KFWCJwcOwJvEmLj8iEO8veDcXAiVVfqPC7JOkyVJHtB+To6UtFUYv9Zjv968L4KwNfi8kexmSmFUORg9U3lwwTaAwMLIp4=
+	t=1768497988; cv=none; b=lonCgsxUW+9KlXdongPC7wqbmuBEWyL2mEQQrMYGtg6EukU++Ein8zKuBIgIjbbIMKieYL2ZwrSyMV5x00gvXMGLRoSaXWIk+p4gfQ/kpehAvJSSIMPHAm5CibEAyMooFK896SACxljJGZXLtt7AASpBqAwdjkwdoLfsFIsDF4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768496912; c=relaxed/simple;
-	bh=kvpBW7s0Yb0ZTvEDTbYEW7WxU/aDUyVVdbOh0HJvglc=;
+	s=arc-20240116; t=1768497988; c=relaxed/simple;
+	bh=3kMg3+tU6CStGaP/2jSc6EBS4YSAzWA1eqL/7/QkxAU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SwmxcKhM8GeZ+Lt8LD2Kfk3sJ66nF+rKD6Os9axrs6k0R4zZq9JI9tM9IWO8JZPDhhe7TVlTKOyQa3PGAwjcFZKz9E89s6z5ZeSvvJRnqR3ncN1Vd0qoBLUPWW1O1SkxYa/ubuCpbD+YD9Q1IUGBh7aan1AKK2gyn8sbW2gqN6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDbjxPX0; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=M5RngiJAjS905/kM+kFp13idASOikjgVjfOiN47PkAoCHOVWIRNoPe2V+pEBVOktxNIysP/olYBMZuOY2NGNbqI5P2P9YIPjDhL5M++apU/SUXymmIi4qHTqR3DlVObNBhXKx+VmtY+ST3kujie8AA+xB+ttKHUTF7N1Kdhygk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERo6pPRP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDbjxPX0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBD29C116D0;
-	Thu, 15 Jan 2026 17:08:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERo6pPRP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33C4EC19422;
+	Thu, 15 Jan 2026 17:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768496912;
-	bh=kvpBW7s0Yb0ZTvEDTbYEW7WxU/aDUyVVdbOh0HJvglc=;
+	s=k20201202; t=1768497987;
+	bh=3kMg3+tU6CStGaP/2jSc6EBS4YSAzWA1eqL/7/QkxAU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cDbjxPX0VtD0nup8atPzlwsQUwUnkJfkve2dnlCuTBVOPVOkLFgzKxAf/yXeo+tqN
-	 /2zR6/pOMiMkPk5wfdmpnLZylfriuOS0J1MWyiToIlWQxBzDS5HstJHk6tTaxx01gp
-	 fudAmlCqeYkJgKf4thwN5kokcbYKGC0sMarjwgg4f6yPFZ4QFq/+NPd0YR48lX9nSo
-	 edA19w75C/pUjkvmF0SETET2Ri3BdmEeFPyf87OgaBOUa90TT0oQtNNu6gm8seQds2
-	 THTVNxg0Bg3sdACwwf9WY+JHJWrefCGAtlHmbrDvYUrlFODNOZuDkOR8Pi4rup6OfA
-	 mqCgKP0i26s9g==
-Message-ID: <23513e86-0769-4f3f-b90b-22273343a03c@kernel.org>
-Date: Thu, 15 Jan 2026 18:08:25 +0100
+	b=ERo6pPRPc9N7MiF0CC5Ky920nNhr7uR3t/RZtcVc8WK7Ihzyq0keU29lB42a7yKlw
+	 HtTmJBYUpV15tthGIpOjiWPn438FBi1t2CXbnnOgKAoQmnpyqrpMikuWnkhtbNKxIc
+	 swl78vFHVCxCLJC62JT153qN6bFQi8nGdaA5ymtRwnVkCeH7B5lpErjGNvFcegPAyj
+	 +oI/PiEvMAnam5dgCyFJ483ZCQtF0O1ODBfz2qaoYa/Pe/KauGBc0oNK9XrWbBAKr6
+	 RpB9m9+bLwQ+tuHAZRACbND4oN4AA0PFYgAZLY569VsXsMyt/8+YPmpPS1RzerggB0
+	 MtDke8z/QK6wg==
+Message-ID: <eb3e6ae9-d296-465f-a5a9-963da4d8ce6a@kernel.org>
+Date: Thu, 15 Jan 2026 18:26:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,20 +35,15 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/8] Introduce a huge-page pre-zeroing mechanism
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Li Zhe <lizhe.67@bytedance.com>, akpm@linux-foundation.org,
- ankur.a.arora@oracle.com, fvdl@google.com, joao.m.martins@oracle.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
- mjguzik@gmail.com, muchun.song@linux.dev, osalvador@suse.de,
- raghavendra.kt@amd.com, linux-cxl@vger.kernel.org,
- Davidlohr Bueso <dave@stgolabs.net>, Gregory Price <gourry@gourry.net>,
- Dan Williams <dan.j.williams@intel.com>, zhanjie9@hisilicon.com,
- wangzhou1@hisilicon.com
-References: <9daa39e6-9653-45cc-8c00-abf5f3bae974@kernel.org>
- <20260115093641.44404-1-lizhe.67@bytedance.com>
- <83798495-915b-4a5d-9638-f5b3de913b71@kernel.org>
- <20260115115739.00007cf6@huawei.com>
+Subject: Re: [PATCH v2 0/5] add runtime hotplug state control
+To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ kernel-team@meta.com, dan.j.williams@intel.com, vishal.l.verma@intel.com,
+ dave.jiang@intel.com, mst@redhat.com, jasowang@redhat.com,
+ xuanzhuo@linux.alibaba.com, eperezma@redhat.com, osalvador@suse.de,
+ akpm@linux-foundation.org
+References: <20260114235022.3437787-1-gourry@gourry.net>
 From: "David Hildenbrand (Red Hat)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -94,144 +89,34 @@ Autocrypt: addr=david@kernel.org; keydata=
  cFAM8nBWrEmNU2vvIGJzjJ/NVYYIY0TgOc5bS9wh6jKHL2+chrfDW5neLJjY2x3snF8q7U9G
  EIbBfNHDlOV8SyhEjtX0DyKxQKioTYPOHcW9gdV5fhSz5tEv+ipqt4kIgWqBgzK8ePtDTqRM
  qZq457g1/SXSoSQi4jN+gsneqvlTJdzaEu1bJP0iv6ViVf15+qHuY5iojCz8fa0=
-In-Reply-To: <20260115115739.00007cf6@huawei.com>
+In-Reply-To: <20260114235022.3437787-1-gourry@gourry.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 1/15/26 12:57, Jonathan Cameron wrote:
-> On Thu, 15 Jan 2026 12:08:03 +0100
-> "David Hildenbrand (Red Hat)" <david@kernel.org> wrote:
+On 1/15/26 00:50, Gregory Price wrote:
+> The dax kmem driver currently onlines memory automatically during
+> probe using the system's default online policy but provides no way
+> to control or query the entire region state at runtime.
 > 
->> On 1/15/26 10:36, Li Zhe wrote:
->>> On Wed, 14 Jan 2026 18:21:08 +0100, david@kernel.org wrote:
->>>       
->>>>>> But again, I think the main motivation here is "increase application
->>>>>> startup", not optimize that the zeroing happens at specific points in
->>>>>> time during system operation (e.g., when idle etc).
->>>>>>   
->>>>>
->>>>> Framing this as "increase application startup" and merely shifting the
->>>>> overhead to shutdown seems like gaming the problem statement to me.
->>>>> The real problem is total real time spent on it while pages are
->>>>> needed.
->>>>>
->>>>> Support for background zeroing can give you more usable pages provided
->>>>> it has the cpu + ram to do it. If it does not, you are in the worst
->>>>> case in the same spot as with zeroing on free.
->>>>>
->>>>> Let's take a look at some examples.
->>>>>
->>>>> Say there are no free huge pages and you kill a vm + start a new one.
->>>>> On top of that all CPUs are pegged as is. In this case total time is
->>>>> the same for "zero on free" as it is for background zeroing.
->>>>
->>>> Right. If the pages get freed to immediately get allocated again, it
->>>> doesn't really matter who does the freeing. There might be some details,
->>>> of course.
->>>>   
->>>>>
->>>>> Say the system is freshly booted and you start up a vm. There are no
->>>>> pre-zeroed pages available so it suffers at start time no matter what.
->>>>> However, with some support for background zeroing, the machinery could
->>>>> respond to demand and do it in parallel in some capacity, shortening
->>>>> the real time needed.
->>>>
->>>> Just like for init_on_free, I would start with zeroing these pages
->>>> during boot.
->>>>
->>>> init_on_free assures that all pages in the buddy were zeroed out. Which
->>>> greatly simplifies the implementation, because there is no need to track
->>>> what was initialized and what was not.
->>>>
->>>> It's a good question if initialization during that should be done in
->>>> parallel, possibly asynchronously during boot. Reminds me a bit of
->>>> deferred page initialization during boot. But that is rather an
->>>> extension that could be added somewhat transparently on top later.
->>>>
->>>> If ever required we could dynamically enable this setting for a running
->>>> system. Whoever would enable it (flips the magic toggle) would zero out
->>>> all hugetlb pages that are already in the hugetlb allocator as free, but
->>>> not initialized yet.
->>>>
->>>> But again, these are extensions on top of the basic design of having all
->>>> free hugetlb folios be zeroed.
->>>>   
->>>>>
->>>>> Say a little bit of real time passes and you start another vm. With
->>>>> merely zeroing on free there are still no pre-zeroed pages available
->>>>> so it again suffers the overhead. With background zeroing some of the
->>>>> that memory would be already sorted out, speeding up said startup.
->>>>
->>>> The moment they end up in the hugetlb allocator as free folios they
->>>> would have to get initialized.
->>>>
->>>> Now, I am sure there are downsides to this approach (how to speedup
->>>> process exit by parallelizing zeroing, if ever required)? But it sounds
->>>> like being a bit ... simpler without user space changes required. In
->>>> theory :)
->>>
->>> I strongly agree that init_on_free strategy effectively eliminates the
->>> latency incurred during VM creation. However, it appears to introduce
->>> two new issues.
->>>
->>> First, the process that later allocates a page may not be the one that
->>> freed it, raising the question of which process should bear the cost
->>> of zeroing.
->>
->> Right now the cost is payed by the process that allocates a page. If you
->> shift that to the freeing path, it's still the same process, just at a
->> different point in time.
->>
->> Of course, there are exceptions to that: if you have a hugetlb file that
->> is shared by multiple processes (-> process that essentially truncates
->> the file). Or if someone (GUP-pin) holds a reference to a file even after
->> it was truncated (not common but possible).
->>
->> With CoW it would be the process that last unmaps the folio. CoW with
->> hugetlb is fortunately something that is rare (and rather shaky :) ).
->>
->>>
->>> Second, put_page() is executed atomically, making it inappropriate to
->>> invoke clear_page() within that context; off-loading the zeroing to a
->>> workqueue merely reopens the same accounting problem.
->>
->> I thought about this as well. For init_on_free we always invoke it for
->> up to 4MiB folios during put_page() on x86-64.
->>
->> See __folio_put()->__free_frozen_pages()->free_pages_prepare()
->>
->> Where we call kernel_init_pages(page, 1 << order);
->>
->> So surely, for 2 MiB folios (hugetlb) this is not a problem.
->>
->> ... but then, on arm64 with 64k base pages we have 512 MiB folios
->> (managed by the buddy!) where this is apparently not a problem? Or is
->> it and should be fixed?
->>
->> So I would expect once we go up to 1 GiB, we might only reveal more
->> areas where we should have optimized in the first case by dropping
->> the reference outside the spin lock ... and these optimizations would
->> obviously (unless in hugetlb specific code ...) benefit init_on_free
->> setups as well (and page poisoning).
-> 
-> FWIW I'd be interesting in seeing if we can do the zeroing async and allow
-> for hardware offloading. If it happens to be in CXL (and someone
-> built the fancy bits) we can ask the device to zero ranges of memory
-> for us.  If they built the HDM-DB stuff it's coherent too (came up
-> in the Davidlohr's LPC Device-mem talk on HDM-DB + back invalidate
-> support)
-> +CC linux-cxl and Davidlohr + a few others.
-> 
-> More locally this sounds like fun for DMA engines, though they are going
-> to rapidly eat bandwidth up and so we'll need QoS stuff in place
-> to stop them perturbing other workloads.
-> 
-> Give me a list of 1Gig pages and this stuff becomes much more efficient
-> than anything the CPU can do.
+> This series adds a sysfs interface to control DAX kmem memory
+> hotplug state, and refactors the memory_hotplug paths to make it
+> possible for drivers to request an online type at hotplug time.
 
-Right, and ideally we'd implement any such mechanisms in a way that more 
-parts of the kernel can benefit, and not just an unloved in-memory 
-file-system that most people just want to get rid of as soon as we can :)
+Gregory, slow down a bit please. I haven't even had the chance to go 
+through your replies on v1.
+
+I'm currently on PTO and don't have the full day to review stuff :) And 
+boy oh boy, do I have a lot of stuff in my inbox.
+
+Maybe given this is the second time the patch subject is suboptimal is 
+another sign to slow down a bit? :P
+
+
+* Subject: [PATCH 0/8] dax/kmem: add runtime hotplug state control
+* [PATCH v2 0/5] add runtime hotplug state control
+
+I guess it should be "[PATCH v2 0/5] dax/kmem:add runtime hotplug state 
+control"
 
 -- 
 Cheers
