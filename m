@@ -1,128 +1,150 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54A1D30E828;
-	Thu, 15 Jan 2026 10:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D95E3128CD
+	for <linux-cxl@vger.kernel.org>; Thu, 15 Jan 2026 10:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768471633; cv=none; b=o13JstyIN0AM269lye41vbjmoHN5QHVIZph2aK7q3M446i8rKX9pjKLlMMU6WovdmdEZRlSkucsf/Qdbjh/cIZcdGkK9JVo6VvWbmvG+Exvw9PCEZgw4toNPPT7JZ5Z9TJepl5bQJXGnpkklipbSS8RVI4Q/wQekuOqB64Rf1Tg=
+	t=1768472910; cv=none; b=lwFTP+mq+lwWSR/7cjMI5MkMJyk1Ky11DW2BEC1ynf8elkeTYwcgYNXMl2oLWHsHDgAxo0s5JGdTSdBZVNTc05spihAfNpm5XOryJNnsx/oY5khRIEtll5SfvyZvRZDlYqW2vpK+hIV8B1CpEHtBL7mDqRgR2312rdqRcOBpi6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768471633; c=relaxed/simple;
-	bh=UpflQX4vP7lE2J666JiCo/LobwdUEbc5WPF9bwD7e0M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pMrduXIRCTOE/peubBWx4z0r/3jYyPs7mjIY6uaBXrGywCj+urKTpgqIphA83WKqu8gs6/QB8KGQBHDAmT40+werXVdO1rwXDUKeoAvnYhJfuiowjxdy+y/XHvmhjrDPaLIpIDB6FpDVAfKIRRO0wybSvwh3Z82yeOkEP+FcHJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwAnCSY5vGhp01wiAw--.43130S2;
-	Thu, 15 Jan 2026 18:06:49 +0800 (CST)
-Received: from [10.22.77.56] (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwCH3us1vGhpfdsTAA--.20387S2;
-	Thu, 15 Jan 2026 18:06:46 +0800 (CST)
-Message-ID: <0e1e1b5f-df0c-459d-9cba-5bde5ad56ba3@phytium.com.cn>
-Date: Thu, 15 Jan 2026 18:06:45 +0800
+	s=arc-20240116; t=1768472910; c=relaxed/simple;
+	bh=JInTYXtV5AUCCz6g+gaWJcphWCPdNKv9iVI2oZBYVF0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=B+ywWvqgCYkU8oxBlfhm2QF6MyBYY9Q3zDznqv41V+RhHIVxjST09slY90NuA/KWKB9hVaQFmcjS5iQx6IE08AsV6yKvFRDIJLlS3t6t08DPMzECFqu5/giNzPbWKXT2geO4k8g2lqtLB0Benj0EC9F5WOBJd3kovdqkvEfoMU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.107])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dsK1v1TgRzHnH5b;
+	Thu, 15 Jan 2026 18:28:03 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id E570140584;
+	Thu, 15 Jan 2026 18:28:24 +0800 (CST)
+Received: from localhost (10.203.177.99) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 15 Jan
+ 2026 10:28:24 +0000
+Date: Thu, 15 Jan 2026 10:28:19 +0000
+From: Alireza Sanaee <alireza.sanaee@huawei.com>
+To: Anisa Su <anisa.su887@gmail.com>
+CC: Ira Weiny <ira.weiny@intel.com>, <dan.j.williams@intel.com>,
+	<dave@stgolabs.net>, <linux-cxl@vger.kernel.org>, <nifan.cxl@gmail.com>,
+	<dongjoo.seo1@samsung.com>
+Subject: Re: [RFC PATCH 0/3] Add Support for Multiple DC Regions
+Message-ID: <20260115102819.00006d55.alireza.sanaee@huawei.com>
+In-Reply-To: <aWV0e03pP4hfqkLo@4470NRD-ASU.ssi.samsung.com>
+References: <20251203203540.1091827-1-anisa.su887@gmail.com>
+	<6931c4c85a526_43de3100bb@iweiny-mobl.notmuch>
+	<aTsyJXKnL0SA1hl-@deb-101020-bm01.eng.stellus.in>
+	<693c922448bbc_c04a9100eb@iweiny-mobl.notmuch>
+	<aWV0e03pP4hfqkLo@4470NRD-ASU.ssi.samsung.com>
+Organization: Huawei
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] mm: numa_memblks: Identify the accurate NUMA ID of
- CFMW
-To: Pratyush Brahma <pratyush.brahma@oss.qualcomm.com>
-Cc: Wang Yinfeng <wangyinfeng@phytium.com.cn>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Mike Rapoport <rppt@kernel.org>
-References: <20260106031042.1606729-2-cuichao1753@phytium.com.cn>
- <CALzOmR2z0noh74aCAd=QVUBgdn7Q+Hbevs-cr1EtV_zXCuQ=PA@mail.gmail.com>
-From: Cui Chao <cuichao1753@phytium.com.cn>
-In-Reply-To: <CALzOmR2z0noh74aCAd=QVUBgdn7Q+Hbevs-cr1EtV_zXCuQ=PA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwCH3us1vGhpfdsTAA--.20387S2
-X-CM-SenderInfo: pfxlux1drrlkut6sx5pwlxzhxfrphubq/1tbiAQAQAGln+JMEtAABsF
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=cuichao175
-	3@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxuryfJrW8tFW5try5tr4fXwb_yoW5XF47pF
-	1aqa9YgF4kJr1xGFs293WUAw1IqFsa9F45XFZrCrnxZa1Ygr15Zryaqr1F9F1ktrWrCF1F
-	qF4Dt3WYvw1UZaDanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
+On Mon, 12 Jan 2026 14:23:55 -0800
+Anisa Su <anisa.su887@gmail.com> wrote:
 
-On 1/9/2026 5:35 PM, Pratyush Brahma wrote:
-> On Fri, Jan 9, 2026 at 12:44 PM Cui Chao <cuichao1753@phytium.com.cn> wrote:
->> In some physical memory layout designs, the address space of CFMW
->> resides between multiple segments of system memory belonging to
->> the same NUMA node. In numa_cleanup_meminfo, these multiple segments
->> of system memory are merged into a larger numa_memblk. When
->> identifying which NUMA node the CFMW belongs to, it may be incorrectly
->> assigned to the NUMA node of the merged system memory.
->>
->> Example memory layout:
->>
->> Physical address space:
->>      0x00000000 - 0x1FFFFFFF  System RAM (node0)
->>      0x20000000 - 0x2FFFFFFF  CXL CFMW (node2)
->>      0x40000000 - 0x5FFFFFFF  System RAM (node0)
->>      0x60000000 - 0x7FFFFFFF  System RAM (node1)
->>
->> After numa_cleanup_meminfo, the two node0 segments are merged into one:
->>      0x00000000 - 0x5FFFFFFF  System RAM (node0) // CFMW is inside the range
->>      0x60000000 - 0x7FFFFFFF  System RAM (node1)
->>
->> So the CFMW (0x20000000-0x2FFFFFFF) will be incorrectly assigned to node0.
->>
->> To address this scenario, accurately identifying the correct NUMA node
->> can be achieved by checking whether the region belongs to both
->> numa_meminfo and numa_reserved_meminfo.
->>
->> Signed-off-by: Cui Chao <cuichao1753@phytium.com.cn>
->> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
->> ---
->>   mm/numa_memblks.c | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
->> index 5b009a9cd8b4..e91908ed8661 100644
->> --- a/mm/numa_memblks.c
->> +++ b/mm/numa_memblks.c
->> @@ -568,15 +568,16 @@ static int meminfo_to_nid(struct numa_meminfo *mi, u64 start)
->>   int phys_to_target_node(u64 start)
->>   {
->>          int nid = meminfo_to_nid(&numa_meminfo, start);
->> +       int reserved_nid = meminfo_to_nid(&numa_reserved_meminfo, start);
->>
->>          /*
->>           * Prefer online nodes, but if reserved memory might be
->>           * hot-added continue the search with reserved ranges.
-> It would be good to change this comment as well. With the new logic
-> you’re not just "continuing the search", you’re explicitly preferring
-> reserved on overlap.
-> Probably something like "Prefer numa_meminfo unless the address is
-> also described by reserved ranges, in which case use the reserved
-> nid."
+Hi Anisa,
 
-Thanks.
-
-I will revise the next version according to your suggestion.
-
->>           */
->> -       if (nid != NUMA_NO_NODE)
->> +       if (nid != NUMA_NO_NODE && reserved_nid == NUMA_NO_NODE)
->>                  return nid;
->>
->> -       return meminfo_to_nid(&numa_reserved_meminfo, start);
->> +       return reserved_nid;
->>   }
->>   EXPORT_SYMBOL_GPL(phys_to_target_node);
->>
->> --
->> 2.33.0
->>
--- 
-Best regards,
-Cui Chao.
+> On Fri, Dec 12, 2025 at 04:07:32PM -0600, Ira Weiny wrote:
+> > Anisa Su wrote:  
+> > > On Thu, Dec 04, 2025 at 11:28:40AM -0600, Ira Weiny wrote:  
+> > > > anisa.su887@ wrote:  
+> > > > > From: Anisa Su <anisa.su@samsung.com>
+> > > > >   
+> [snip] 
+> > > > Unfortunately none of the details presented in this cover letter really
+> > > > show why the kernel needs this additional complexity.
+> > > > 
+> > > > Can you go into more details on the use cases of multiple partitions?
+> > > >   
+> > > From what I understand, the motivation for DCD as a whole has always been a
+> > > blocker for the entire series. However, this year we've seen multiple vendors
+> > > demo memory pooling/sharing at SC,25[1], as well as the development of a 
+> > > controller that supports "memory pooling and sharing across 
+> > > multiple hosts" from Montage[2].  
+> > 
+> > That is great!  Do we know if they used the patches which have been
+> > submitted?  Do we know if the user interfaces were sufficient?  
+> 
+> Sorry for the delay! While I don't know the details of the software
+> stack used in those demos, I think the root of the question "Do we know
+> if the user interfaces were sufficient" goes back to the missing use
+> case for DCD.
+> 
+> So then, can I ask: how can I demonstrate a reasonable use case?
+> Ex: bringing up Kubernetes pods using this patchset on real hw?
+> Or something else?
+> ^ This is also a question for the community, so everyone please chime in :)
+> >  
+> > How will this memory be presented with the new DAX changes being proposed?
+> >  
+> From the call today, there seemed to be general agreement that the changes
+> proposed by Gregory's patches are a promising direction for DCD, bc it
+> allows hotplug/unplug capabilities without needing to route it through
+> the DAX subsystem.
+> I haven't looked at those patches yet, but from what was
+> discussed today, plan to move forward based on that. Are those the changes
+> you were referring to? Or the special famfs dax type you mentioned
+> below?
+> > > 
+> > > The flexibility and control provided by multiple partitions is
+> > > an important capability of DCD for enabling composable memory 
+> > > infrastructures. IMO, adding multi-partition support back in from v8 or
+> > > picking up this patchset would strengthen the series.
+> > > 
+> > > Let me know if this proposal sounds fair? Otherwise I can
+> > > separate out the 2 patches that are bug fixes.  
+> > 
+> > After RC1 could you rebase the series and fold the bug fixes in?
+> >   
+> Yep, working on rebasing the series now and will send RC2 with the bug
+> fixes.
+> > Before we get to multiple DCD partitions the interface for DAX devices
+> > needs to be settled.  In the last community call we were discussing a
+> > special famfs dax type I believe.  Has any work been done on that?
+> >  
+> That makes sense to me; I missed that call, so I'm not familiar with the
+> famfs dax type, but as I mentioned above, it sounds like Gregory's
+> patch set is a good solution to this, so I'll explore how to integrate
+> with that first.
+> 
+> > For multi-partitions we need some review on the partition (region) names
+> > because you made a change which would be incompatible with the base
+> > series.  But it would be good to get single partitions landed and then
+> > multiple partitions as you have added.
+> >   
+> Sounds good. For RC2, I'll keep it simple and just rebase + bug fixes.
+Thanks Anisa. I was also about to look into the rebasing as well.
+> > > Also, apologies if these points have already been discussed. I've not been
+> > > following this series for very long, so forgive the ignorance as I try to
+> > > catch up. If you can think of any materials/documentation outside of the
+> > > mailing list or open collab sync notes that would help fill in the gaps,
+> > > please let me know :)  
+> > 
+> > NP this has been a while.  I've been looking for someone to take the
+> > series who is more familiar with the use cases.
+> > 
+> > I look forward to you posting a new series with the support you feel you
+> > need.
+> > 
+> > Ira
+> >   
+> Thanks Ira, I will definitely have to keep bothering you, though I'll
+> try to keep it to a minimum.
+> 
+> Thanks,
+> Anisa
+> 
+> [snip]
 
