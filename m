@@ -1,150 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E7E3C1974;
-	Thu, 15 Jan 2026 17:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1123C1FE2;
+	Thu, 15 Jan 2026 17:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768499904; cv=none; b=gv5L+M6EHNFjS4/8zqDkOENKgNR2YbzitF3tlMnECwrmOBNBohNY8ZA6YyhvRDG1a64vaCkRlVuukGkL2iK4Zdy8itzJ7hohYFnvWXS+ZeF1c5+RsV5VWdMujFiAAvWi2RZBaYzJfEwnBD6OSr1qBp6LLm6YGEqul+ll586fVNk=
+	t=1768499994; cv=none; b=giAkXvfHedEluatnwfkwv+sf4qTEAFrSFdUnjjIAzZFs72n0/KG4MfOOncCvIybHqeA7u+qAzhn8L1tfOjsX6NI9n20TftAsmD2Z+l3wmjPTzeStSdJx/Oi4KNJu9Z1Nb2qTLmFeXhNBWsDMqeH3WJLmxXAuq9oXCuSeJLPkQQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768499904; c=relaxed/simple;
-	bh=65GD8xi/IxjR27B+rk/Owu31NA5ArG+n7jXk9yRwmuE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e1oC96gs5A663PFMQcKza7zCqzeXWlFaUQqLBiH09ygEr6o3+lEBcV7p/ORZHzgwwf8FREUTXcC0JBHfRrYW7PdY4Fgpue7lQXY0mPjBIrT4s9i4izTOfDalfaxJneLu+MgcQjqrDcasjY7ouZt2DlOPSM7NKgemXCodLlHa/NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cB6FG0PI; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cB6FG0PI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768499903; x=1800035903;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=65GD8xi/IxjR27B+rk/Owu31NA5ArG+n7jXk9yRwmuE=;
-  b=cB6FG0PI4ThKeHIRUUYD09LvG8wKMIUB5AFuLXxaS0taoxjAvi36OtkW
-   bLomp5Bj6jFexDymyKipc/KO/Au5yssMCoD90t8Dth8bzRs/sfVD/TTxb
-   HKmH6S+3nYTpUxz4Y70EUVPxqZDGXh2/D1u5Q08AR9NthCMHPMloKioAD
-   wYtlDzYVYhwz2+HEJJeMhUPXbTShCf0Cyvx6bMY9il/JWWSEN1QQuSWem
-   Hyhh3C8g9if0Pi/5mdyPkXGbACupA3lEeRQizvR3ysrJjvET+ijWinZdw
-   uxReSsPmSRPcUgMSHEj/v5ZFJR8SWMQrr6g+QTetHP/l4E7nxA19f30bD
-   A==;
-X-CSE-ConnectionGUID: 3NdEHdi3ST6I8bKwmt1Trw==
-X-CSE-MsgGUID: qOYQVfK4TY+FtxtXB1V7hA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="81258110"
-X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
-   d="scan'208";a="81258110"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 09:58:23 -0800
-X-CSE-ConnectionGUID: ivvjGdewQ1GrrQkH0h4cnw==
-X-CSE-MsgGUID: B51Ne39nTG+xBEWzZHmlPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
-   d="scan'208";a="235719396"
-Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.111.80]) ([10.125.111.80])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 09:58:22 -0800
-Message-ID: <ac0bc413-10c5-42a5-8630-53c02f2d3fe6@intel.com>
-Date: Thu, 15 Jan 2026 10:58:21 -0700
+	s=arc-20240116; t=1768499994; c=relaxed/simple;
+	bh=+hDLbP90AzI314WKsiiqsnOn1PwlDIrnSBmCv99Yugw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q4SnYcox9DLF+vQYX0K1baA5WD+XOmRvLu+dybivwhPQBKzZ4MRoK8/nhDKHEH606racOciowf/ORNqfo6Bz95RCwoimGCoaWiIMM3kqtvV4GgmcOxDdPcWAEDn6wmO09245dHlgcF/CiVc9El+oDSI+FT9IibphfPJUQlVhUP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.107])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dsW2m2lpnzHnGd0;
+	Fri, 16 Jan 2026 01:59:28 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id B173C40570;
+	Fri, 16 Jan 2026 01:59:50 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 15 Jan
+ 2026 17:59:49 +0000
+Date: Thu, 15 Jan 2026 17:59:48 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>
+CC: <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <gost.dev@samsung.com>,
+	<a.manzanares@samsung.com>, <vishak.g@samsung.com>, <neeraj.kernel@gmail.com>
+Subject: Re: [PATCH V5 06/17] nvdimm/label: Preserve region label during
+ namespace creation
+Message-ID: <20260115175948.00007597@huawei.com>
+In-Reply-To: <20260109124437.4025893-7-s.neeraj@samsung.com>
+References: <20260109124437.4025893-1-s.neeraj@samsung.com>
+	<CGME20260109124518epcas5p26832d0b4ae4017cb3afbd613bf58eabd@epcas5p2.samsung.com>
+	<20260109124437.4025893-7-s.neeraj@samsung.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] cxl/acpi: Remove cxl_acpi_set_cache_size()
-To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260109154042.331296-1-ming.li@zohomail.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260109154042.331296-1-ming.li@zohomail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
+On Fri,  9 Jan 2026 18:14:26 +0530
+Neeraj Kumar <s.neeraj@samsung.com> wrote:
 
-
-On 1/9/26 8:40 AM, Li Ming wrote:
-> cxl_acpi_set_cache_size() returns an error only when the size of the
-> cache range is not matched with the CXL address range. Almost all
-> implementation of setting cache size is in cxl_acpi_set_cache_size(),
-> cxl_setup_extended_linear_size() does nothing except printing a warning
-> in above error case, but cxl_acpi_set_cache_size() also prints a warning
-> at the same time. So can consolidates these two functions into one, keep
-> the function name as cxl_setup_extended_linear_size().
+> During namespace creation we scan labels present in LSA using
+> scan_labels(). Currently scan_labels() is only preserving
+> namespace labels into label_ent list.
 > 
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-
-Applied to cxl/next
-b4692385bb68b75c808a5b428ec9a5e8c5c9679f
-
-> ---
->  drivers/cxl/acpi.c | 29 +++++------------------------
->  1 file changed, 5 insertions(+), 24 deletions(-)
+> In this patch we also preserve region label into label_ent list
 > 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 77ac940e3013..e65dfae42bde 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -357,7 +357,7 @@ static int add_or_reset_cxl_resource(struct resource *parent, struct resource *r
->  	return rc;
->  }
->  
-> -static int cxl_acpi_set_cache_size(struct cxl_root_decoder *cxlrd)
-> +static void cxl_setup_extended_linear_cache(struct cxl_root_decoder *cxlrd)
->  {
->  	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
->  	struct range *hpa = &cxld->hpa_range;
-> @@ -367,12 +367,14 @@ static int cxl_acpi_set_cache_size(struct cxl_root_decoder *cxlrd)
->  	struct resource res;
->  	int nid, rc;
->  
-> +	/* Explicitly initialize cache size to 0 at the beginning */
-> +	cxlrd->cache_size = 0;
->  	res = DEFINE_RES_MEM(start, size);
->  	nid = phys_to_target_node(start);
->  
->  	rc = hmat_get_extended_linear_cache_size(&res, nid, &cache_size);
->  	if (rc)
-> -		return 0;
-> +		return;
->  
->  	/*
->  	 * The cache range is expected to be within the CFMWS.
-> @@ -384,31 +386,10 @@ static int cxl_acpi_set_cache_size(struct cxl_root_decoder *cxlrd)
->  		dev_warn(&cxld->dev,
->  			 "Extended Linear Cache size %pa != CXL size %pa. No Support!",
->  			 &cache_size, &size);
-> -		return -ENXIO;
-> +		return;
->  	}
->  
->  	cxlrd->cache_size = cache_size;
-> -
-> -	return 0;
-> -}
-> -
-> -static void cxl_setup_extended_linear_cache(struct cxl_root_decoder *cxlrd)
-> -{
-> -	int rc;
-> -
-> -	rc = cxl_acpi_set_cache_size(cxlrd);
-> -	if (rc) {
-> -		/*
-> -		 * Failing to retrieve extended linear cache region resize does not
-> -		 * prevent the region from functioning. Only causes cxl list showing
-> -		 * incorrect region size.
-> -		 */
-> -		dev_warn(cxlrd->cxlsd.cxld.dev.parent,
-> -			 "Extended linear cache retrieval failed rc:%d\n", rc);
-> -
-> -		/* Ignoring return code */
-> -		cxlrd->cache_size = 0;
-> -	}
->  }
->  
->  DEFINE_FREE(put_cxlrd, struct cxl_root_decoder *,
-
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
