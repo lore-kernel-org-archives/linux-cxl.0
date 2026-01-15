@@ -1,92 +1,320 @@
-Received: from sender4-pp-o90.zoho.com (sender4-pp-o90.zoho.com [136.143.188.90])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0980394485;
-	Thu, 15 Jan 2026 13:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.90
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768483041; cv=pass; b=EcNShXND4FB1nzc9Fo+GHmusnomC//uQAbTESVh5EJYcF+7Wp/bOCGJvDCph770UGsUsVh2oTQpBT4HYfxCDkhzJkIaA956OSltnDdgkbZ6iERIgi2XxDGTiNoCQBjwGGj6iyW+WQ3awXXu1ObTv1kNsxoDGM7p8z/sifrwNOJQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768483041; c=relaxed/simple;
-	bh=uo0E8NTPDuIPqMdIbGTQgfSYZXi7cMWWCypWJvO9ptQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=vCIoYOh/TqWOjgzTpFOmBR+80PBYloOQD5mmZw0J2dHsGWq/uBlYAMGQTNoSUyZF45Qz4CwXgjFpdDJa1pvb/bPr3UukYhG2UDTJ/Xe52R3DpwU8q6dH7txLA2sni8ONG1BCIiZxSIJp8aB5vC9axQLSzXXHbeiJkvkaYppcjxY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=R4rrHBYm; arc=pass smtp.client-ip=136.143.188.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="R4rrHBYm"
-ARC-Seal: i=1; a=rsa-sha256; t=1768483024; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=bSOS7lduxkAXiFGn91PGYGwyHqR2yjXEC1haArzxFae/AcpcHpI5rgh/RYyqt3a6viTGiFx/1BFsaCC0sKVifv5A7hrVOU7JA3i0tH7FzXvkAnCK/76eH2yIRSfk2gulpkCiP6s1FEIQLjCMWdWnJlG3QoULUb70q7B7dLJjYyw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1768483024; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=CJ1WMc3dyzJouq5sMhGv5Z9QnE6jU6+19x4kxM2x4OE=; 
-	b=hGA49I3+evQ9vUe4fzkHP1PHASDNn12C8k3qayxOeXI2GEtRxswJhjiPVhptkTK3qrnEOJY7VYvgaUYh7EoHjU5alIMWXZQlT2lRQ1XlP5nqB6+VUvdBSpji8J3wXeUvRKw9AbpjOYkUYdFu3elJmqYmOtAKCrlGoFi171rGPBk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1768483024;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=CJ1WMc3dyzJouq5sMhGv5Z9QnE6jU6+19x4kxM2x4OE=;
-	b=R4rrHBYmoUvp6fBLMi0pUj6r1PrrFuJeg7+Ws3y4RaHgufYyMRirkJsGenpoqzpG
-	Pf8E8VmSsfxbg6r0R2UB9iE0Fynfv81pSazI+vFmTVyNJY8eC1FeXUATG6AvHbxhMlG
-	D+TxBKraD4v1OIC1odLQijFwB5VyURBMpHWEhrHA=
-Received: by mx.zohomail.com with SMTPS id 1768483022120102.75584545377808;
-	Thu, 15 Jan 2026 05:17:02 -0800 (PST)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH 1/1] cxl/acpi: Fix using extra xormaps for address translation
-Date: Thu, 15 Jan 2026 21:16:48 +0800
-Message-Id: <20260115131648.620177-1-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E73430E824;
+	Thu, 15 Jan 2026 14:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768488384; cv=none; b=CkwMcppMrh8kXYo+AKLqOaY10ty2qbTcKa2ZT4lvSlH0ks5S4EScIn7Cp3mO5PPoGNKNx0SldyZue58mrSiUSADVTi2Lbt078jNgtSxltbYy/NnxFjSQBS9kvYsDvevVEUFuCn+cipJEE6GJe8I7XFwP4mtXyas76c/spNt7m/0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768488384; c=relaxed/simple;
+	bh=fjSf15uCtdSH7MOgSSj/phoZdS/nHJ2Ms1DSWSQa6CU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QN4/TjeAtxkjwPgoPpX6FOifaOxC3FVp6jFFxRFqjz5k2yFrxhvMxbmf8e5IPBGuAWdc1jFTI8oUGjLqbDueGHxX/hS8QajOrV20/WIkR1w7d/s4v8KU744FFad9pyZ/9yEwxu0G8epnDe7MTCaIetFABg8+B87SnYmo7v3Bxpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.107])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dsQlF1GbpzHnH56;
+	Thu, 15 Jan 2026 22:45:45 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3DBE040584;
+	Thu, 15 Jan 2026 22:46:07 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 15 Jan
+ 2026 14:46:06 +0000
+Date: Thu, 15 Jan 2026 14:46:05 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
+	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
+	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	<linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>, <alucerop@amd.com>,
+	<ira.weiny@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v14 19/34] cxl/port: Fix devm resource leaks around with
+ dport management
+Message-ID: <20260115144605.00000666@huawei.com>
+In-Reply-To: <20260114182055.46029-20-terry.bowman@amd.com>
+References: <20260114182055.46029-1-terry.bowman@amd.com>
+	<20260114182055.46029-20-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011227a1f9db935305e97c6e019c29000030614be54cbdd5c7a962f6cb315842989a38a6ef12f2f3bcc8:zu08011227b7ef7a68f556d6af9a5d96d90000095368a0ad08830ef3818df6206e24c11b5b883d10c22d2573:rf0801123203b4b1403a52f86e7113690e000030caa7b3ddac5a9bb847a501b581a98147732c3524919235d8c51f5d1876da0fb6200bb3:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-CXL r3.1 Table 9-22 defines a fixed number of XOR maps for interleave
-arithmetic based on the number of interleave ways, as reflected by
-hbiw_to_nr_maps[].
+On Wed, 14 Jan 2026 12:20:40 -0600
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-The current implementation applies all XOR maps during address
-translation, but it should use the spec-defined number of XOR maps
-derived from the number of interleave ways.
+> From: Dan Williams <dan.j.williams@intel.com>
+> 
+> With dport addition moving out of cxl_switch_port_probe() it is no longer
+> the case that a single dport-add failure will cause all dport resources
+> to be automatically unwound.
+> 
+> devm still helps all dport resources get cleaned up when the port is
+> detached, but setup now needs to avoid leaking resources if an early exit
+> occurs during setup.
+> 
+> Convert from a "devm add" model, to an "auto remove" model that makes the
+> caller responsible for registering devm reclaim after the object is fully
+> instantiated.
+> 
+> As a side of effect of this reorganization port->nr_dports is now always
+> consistent with the number of entries in the port->dports xarray, and this
+> can stop playing games with ida_is_empty() which is unreliable as a
+> detector of whether decoders are setup. I.e. consider how
+> CONFIG_DEBUG_KOBJECT_RELEASE might wreak havoc with this approach.
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Terry Bowman <terry.bowman@amd.com>
+> 
+> ---
+> 
+> Changes in v13 -> v14:
+> - New patch
+Hi Dan, Terry,
 
-Fixes: 3b2fedcd75e3 ("cxl: Restore XOR'd position bits during address translation")
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
- drivers/cxl/acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think this needs a little reorganization to ensure we don't have
+dport and dport_add both being the same pointer for different free
+reasons.  Adding a helper and we can combine them with a clear
+hand over of ownership.
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 77ac940e3013..5f84d01e7d39 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -61,7 +61,7 @@ u64 cxl_do_xormap_calc(struct cxl_cxims_data *cximsd, u64 addr, int hbiw)
- 	 * bits results in val==0, if odd the XOR result is val==1.
- 	 */
- 
--	for (int i = 0; i < cximsd->nr_maps; i++) {
-+	for (int i = 0; i < nr_maps_to_apply; i++) {
- 		if (!cximsd->xormaps[i])
- 			continue;
- 		pos = __ffs(cximsd->xormaps[i]);
--- 
-2.34.1
+Wrapping devres_remove_group() in a function that is called close_group()
+rings alarm bells.
+
+Jonathan
+
+
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index fef3aa0c6680..a05a1812bb6e 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+
+> -static struct cxl_dport *
+> -__devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+> -		     int port_id, resource_size_t component_reg_phys,
+> -		     resource_size_t rcrb)
+> +static struct cxl_dport *__cxl_add_dport(struct cxl_port *port,
+> +					 struct device *dport_dev, int port_id,
+> +					 resource_size_t component_reg_phys,
+> +					 resource_size_t rcrb)
+>  {
+>  	char link_name[CXL_TARGET_STRLEN];
+> -	struct cxl_dport *dport;
+> -	struct device *host;
+>  	int rc;
+>  
+> -	if (is_cxl_root(port))
+> -		host = port->uport_dev;
+> -	else
+> -		host = &port->dev;
+> -
+> -	if (!host->driver) {
+> -		dev_WARN_ONCE(&port->dev, 1, "dport:%s bad devm context\n",
+> -			      dev_name(dport_dev));
+> -		return ERR_PTR(-ENXIO);
+> -	}
+> -
+>  	if (snprintf(link_name, CXL_TARGET_STRLEN, "dport%d", port_id) >=
+>  	    CXL_TARGET_STRLEN)
+>  		return ERR_PTR(-EINVAL);
+>  
+> -	dport = devm_kzalloc(host, sizeof(*dport), GFP_KERNEL);
+> +	struct cxl_dport *dport __free(kfree) =
+> +		kzalloc(sizeof(*dport), GFP_KERNEL);
+>  	if (!dport)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> @@ -1176,48 +1175,27 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>  			&component_reg_phys);
+>  
+>  	cond_cxl_root_lock(port);
+> -	rc = add_dport(port, dport);
+> +	struct cxl_dport *dport_add __free(remove_dport) =
+> +		add_dport(port, dport);
+
+This pattern of having both dport and dport_add effectively
+pointing to the same pointer concerns me from a readability / maintainability
+point of view. We've often made use of helper functions to avoid doing
+this and I think that would make sense here as well.
+
+Take everything down to and including dport_add() as a helper called
+something like (naming needs work!)
+	struct dport_dev *dport __free(remove_and_free_dport) =
+		add_dport_wrapper();
+
+With the __free doing the kfree as well as remove.
+
+
+>  	cond_cxl_root_unlock(port);
+> -	if (rc)
+> -		return ERR_PTR(rc);
+> -
+> -	/*
+> -	 * Setup port register if this is the first dport showed up. Having
+> -	 * a dport also means that there is at least 1 active link.
+> -	 */
+> -	if (port->nr_dports == 1 &&
+> -	    port->component_reg_phys != CXL_RESOURCE_NONE) {
+> -		rc = cxl_port_setup_regs(port, port->component_reg_phys);
+> -		if (rc) {
+> -			xa_erase(&port->dports, (unsigned long)dport->dport_dev);
+> -			return ERR_PTR(rc);
+> -		}
+> -		port->component_reg_phys = CXL_RESOURCE_NONE;
+> -	}
+> +	if (IS_ERR(dport_add))
+> +		return dport_add;
+>  
+> -	get_device(dport_dev);
+> -	rc = devm_add_action_or_reset(host, cxl_dport_remove, dport);
+> -	if (rc)
+> -		return ERR_PTR(rc);
+> +	if (dev_is_pci(dport_dev))
+> +		dport->link_latency = cxl_pci_get_latency(to_pci_dev(dport_dev));
+>  
+>  	rc = sysfs_create_link(&port->dev.kobj, &dport_dev->kobj, link_name);
+>  	if (rc)
+>  		return ERR_PTR(rc);
+>  
+> -	rc = devm_add_action_or_reset(host, cxl_dport_unlink, dport);
+> -	if (rc)
+> -		return ERR_PTR(rc);
+> -
+> -	if (dev_is_pci(dport_dev))
+> -		dport->link_latency = cxl_pci_get_latency(to_pci_dev(dport_dev));
+> -
+>  	cxl_debugfs_create_dport_dir(dport);
+>  
+> -	return dport;
+> +	retain_and_null_ptr(dport_add);
+> +	return no_free_ptr(dport);
+>  }
+
+
+
+> +
+> +/*
+> + * Note: this only services dynamic removal of mid-level ports, root ports are
+> + * always removed by the platform driver (e.g. cxl_acpi). @host can be
+> + * hard-coded to &port->dev.
+> + */
+>  static void del_dport(struct cxl_dport *dport)
+>  {
+>  	struct cxl_port *port = dport->port;
+>  
+> -	devm_release_action(&port->dev, cxl_dport_unlink, dport);
+> -	devm_release_action(&port->dev, cxl_dport_remove, dport);
+> -	devm_kfree(&port->dev, dport);
+> +	devm_release_action(&port->dev, unlink_dport, dport);
+>  }
+>  
+>  static void del_dports(struct cxl_port *port)
+> @@ -1597,10 +1603,24 @@ static int update_decoder_targets(struct device *dev, void *data)
+>  	return 0;
+>  }
+>  
+> -DEFINE_FREE(del_cxl_dport, struct cxl_dport *, if (!IS_ERR_OR_NULL(_T)) del_dport(_T))
+> +static struct cxl_port *cxl_port_devres_group(struct cxl_port *port)
+> +{
+> +	if (!devres_open_group(&port->dev, port, GFP_KERNEL))
+> +		return ERR_PTR(-ENOMEM);
+> +	return port;
+> +}
+> +DEFINE_FREE(cxl_port_group_free, struct cxl_port *,
+> +	if (!IS_ERR_OR_NULL(_T)) devres_release_group(&(_T)->dev, _T))
+> +
+> +static void cxl_port_group_close(struct cxl_port *port)
+
+This feels like misleading naming and I'm not sure what intent is. 
+Would have expected it to call devres_close_group()
+
+> +{
+> +	devres_remove_group(&port->dev, port);
+> +}
+> +
+>  static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
+>  					    struct device *dport_dev)
+>  {
+> +	struct cxl_dport *new_dport;
+>  	struct cxl_dport *dport;
+>  	int rc;
+>  
+> @@ -1615,29 +1635,46 @@ static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
+>  		return ERR_PTR(-EBUSY);
+>  	}
+>  
+> -	struct cxl_dport *new_dport __free(del_cxl_dport) =
+> -		devm_cxl_add_dport_by_dev(port, dport_dev);
+> -	if (IS_ERR(new_dport))
+> -		return new_dport;
+> -
+> -	cxl_switch_parse_cdat(new_dport);
+> +	/*
+> +	 * With the first dport arrival it is now safe to start looking at
+> +	 * component registers. Be careful to not strand resources if dport
+> +	 * creation ultimately fails.
+> +	 */
+> +	struct cxl_port *port_group __free(cxl_port_group_free) =
+> +		cxl_port_devres_group(port);
+> +	if (IS_ERR(port_group))
+> +		return ERR_CAST(port_group);
+>  
+> -	if (ida_is_empty(&port->decoder_ida)) {
+> +	if (port->nr_dports == 0) {
+>  		rc = devm_cxl_switch_port_decoders_setup(port);
+>  		if (rc)
+>  			return ERR_PTR(rc);
+> -		dev_dbg(&port->dev, "first dport%d:%s added with decoders\n",
+> -			new_dport->port_id, dev_name(dport_dev));
+> -		return no_free_ptr(new_dport);
+> +		/*
+> +		 * Note, when nr_dports returns to zero the port is unregistered
+> +		 * and triggers cleanup. I.e. no need for open-coded release
+> +		 * action on dport removal. See cxl_detach_ep() for that logic.
+> +		 */
+>  	}
+>  
+> +	new_dport = cxl_add_dport_by_dev(port, dport_dev);
+> +	if (IS_ERR(new_dport))
+> +		return new_dport;
+> +
+> +	rc = cxl_dport_autoremove(new_dport);
+> +	if (rc)
+> +		return ERR_PTR(rc);
+> +
+> +	cxl_switch_parse_cdat(new_dport);
+> +
+> +	cxl_port_group_close(no_free_ptr(port_group));
+
+Give name vs what it does I'm not sure how this currently works.
+
+> +
+> +	dev_dbg(&port->dev, "dport[%d] id:%d dport_dev: %s added\n",
+> +		port->nr_dports - 1, new_dport->port_id, dev_name(dport_dev));
+> +
+>  	/* New dport added, update the decoder targets */
+>  	device_for_each_child(&port->dev, new_dport, update_decoder_targets);
+>  
+> -	dev_dbg(&port->dev, "dport%d:%s added\n", new_dport->port_id,
+> -		dev_name(dport_dev));
+> -
+> -	return no_free_ptr(new_dport);
+> +	return new_dport;
+>  }
+>  
+>  static struct cxl_dport *devm_cxl_create_port(struct device *ep_dev,
+
 
