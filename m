@@ -1,69 +1,126 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1573D34B7;
-	Thu, 15 Jan 2026 17:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF49D2D595B
+	for <linux-cxl@vger.kernel.org>; Thu, 15 Jan 2026 17:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768498298; cv=none; b=ss2pfjmxMGhtGpW6cY3HsZ5czOQn78QmQZrtqdY3hx17/q7M5wrLpOh9U1X7qQKQiCZNpSeZ5rFFALFzzyDedHAjnHnqfdZUHuRrl/qJeoxNjjCXIEiGjylo/lwcZ+UGbdCRu5tvNRcKQoVQ5UMMy+/oZ2wThtXko1Sj3oI+Lfo=
+	t=1768498400; cv=none; b=m/g5D2bJn3r2jYp0YHnmTvUlMc6ipmXfNoGD0IbUrfqj4fAhd3Y2MIee+Idj88ntTeNTXZumzfJbqY50kQ5CwS+LTyFswcnOvbm1+DWVLsfynJ1TLMSuaAhV81eOwNDQQw7akwEZuHnhjNWEYL6He8wCDS+2wHRLDW6iPd0XMSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768498298; c=relaxed/simple;
-	bh=AmrGom/q9paYcpt7rNJtSxlkLBlgnJ35hGHkTDAsJKU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iFVbZQY/bEbOiU3boGe0fhKn2WJ7A1n6SgR1RT7HgLuA62Y/RwX2BRPx1nEEBv4EHqKW10dceZZlQ03dqun3se9bBlP02THnosKVlNMbpPyehY2KjDiZRctcqPYCrp/mKLYO6ANocvQB81nigX0i41qcVfSKx9x3tuKp0nXL4rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dsVQF166jzJ4674;
-	Fri, 16 Jan 2026 01:31:17 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id BCCBA40539;
-	Fri, 16 Jan 2026 01:31:33 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 15 Jan
- 2026 17:31:33 +0000
-Date: Thu, 15 Jan 2026 17:31:31 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: Li Ming <ming.li@zohomail.com>, <dave@stgolabs.net>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, <shiju.jose@huawei.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] cxl/acpi: Remove cxl_acpi_set_cache_size()
-Message-ID: <20260115173131.0000500b@huawei.com>
-In-Reply-To: <eb8b98b7-1c56-415b-b0d7-a87f7a33701d@intel.com>
-References: <20260109154042.331296-1-ming.li@zohomail.com>
-	<eb8b98b7-1c56-415b-b0d7-a87f7a33701d@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1768498400; c=relaxed/simple;
+	bh=gmWxAy5uTUT/UhmfH7kZ4VlAnV5ZizQ7PRjs0zDcgrw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sOHOa+53J9VEczZtZ+azuvYnZ8/oA/q2GkohMyf+yWIZPKNlmCS+YR+d/bDE3ALWTgSbB4c8neNzC0q1s5sGY24jZDssHDZ7T1iBGamymL3OHed7AqKdmO8lyJfGiYhn9Ivv/NCdiAEnbzdb6k/QpVT7V1zX2dkwhbM0gW0p6Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=DDIQUtMP; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="DDIQUtMP"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-88888c41a13so16289256d6.3
+        for <linux-cxl@vger.kernel.org>; Thu, 15 Jan 2026 09:33:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1768498398; x=1769103198; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HELVBq+JbyCXR2ZFI5M9lAV4vG/kM2Ay1hf/o0jB9SU=;
+        b=DDIQUtMPS6qsYgGC4olHxdA2og7hiboMmzlbdkYOPfrQTvla0yrc0UEt7U0a7jUvpL
+         JlUSmDECkpRXSGxaapxEyApW/eTYlXf4e/RhQI/ueH/vC9vHEO8TpXRK/JmOaEsxk/8V
+         dRqvb1+sPOCkYfume+xdaF9zZhDuHyQWmWLiS9Az9jd7JyjO5JFgNYzWGR0YR0vq6p7g
+         L+yqOpuYCyesOqFnbRg5Rea+bHmHwOtJzfIHA7Qv9WGVy9Z9KyVt4H5Yz2vZKQrQkAeU
+         ntn7bxStqacS+ix2hXl/3p8oeI5HZd5zJY+6+h6ZsHN0WPWWT0R99Dx8z2+bKie+e4VL
+         Zc0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768498398; x=1769103198;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HELVBq+JbyCXR2ZFI5M9lAV4vG/kM2Ay1hf/o0jB9SU=;
+        b=cJRgnLiwRkY3W3CICg8Gtxwd5fIWCTKZAiKrK/eT7H83QNrvAH6n014JWZqif5NsPw
+         gjgp3P0ynS2OHRDH16gk28wQi0VTNMx6bM3a1VRqTh91cMVa6fx5lAMDS/jFw7B5VxiC
+         pp/cePy1u4JxLXeFHfPfnU4OE89VPJfQ+icoTz3O+gNuJiCf4sIjeSO/5raD98bdOgoL
+         5wpvcm4YeuV+OXAE3GZKQ7sg28u/FbbYy5Izob8kc8H4M+FsMTkqCsSDhO01lJVgvW3Y
+         Z+2TBpj5jRooOPOWDXcLOIVtjSSkWRCoii17eNGMSnpYXetEv42Z2Liv3z+h/pU0W+j1
+         4F5A==
+X-Forwarded-Encrypted: i=1; AJvYcCViaAIpbK4IwB4LF1owbEbN4iDZtSNniFy1+4CX3Evg0/8mVAXAGaC/srnPXBOalxyp6ANuKP8UoXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCjr9C2pvSDWs8BFj/lxq260ub8Ma+YiKAvBdrThHSsCLN+ePL
+	kFRAiMxNw7QWzZijsD7o3+UCXnc1jWa706KJxmZ86TYZf414l/UkeblyhqKOi9X6WUM=
+X-Gm-Gg: AY/fxX7TNQ58z7DtV6ZbBpshw/XTVTXMSzSAX4kyYrMa+ENDF7LUOTLkVyJZGrO/fuG
+	asdHyyl+fPn3wgTKh9HS50UX1xdwJpoCam2seOV52iqHXj/uQQBsm8wqEWN13a5UVzZTkpTS9XJ
+	aptRUzTGrlAPCl8ca0qwPXlA3j7siZSukHY3kd1HjJ8wWLQGWmoLxmRRgYVPQxgJ8jKC+2WWnwa
+	hVCI+Sd3Ak5muoQcYMOsHseX71KLF6JVUx0U/AyT/LosPGJgoicyQeT80njyhsxvOxnkuU9izAR
+	jmHocRLC6TgWx5Xg8sNbUSqvt09vdNuNEoRItQbWwWh1YIBhPHQdYcZQL0FTBraOQgP/onVj80B
+	+1w8QhZmT0nsXOuwZegqeMt1M6F7CG+QDnwgTfOb9DLG3butwuSZUVIcntGuQiNFeIZAOYX6KZq
+	+Hz+sewP9rqSRDDEyjuOzkPCS9Bm0Mmh/paKTVcJWYExo6jGUWIpAx6KFO3zHk5Nmo5x7LCA==
+X-Received: by 2002:ad4:5f8e:0:b0:880:541c:8243 with SMTP id 6a1803df08f44-8942dd060f8mr2986496d6.1.1768498397481;
+        Thu, 15 Jan 2026 09:33:17 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8942e47d897sm548586d6.0.2026.01.15.09.33.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jan 2026 09:33:15 -0800 (PST)
+Date: Thu, 15 Jan 2026 12:32:41 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, kernel-team@meta.com,
+	longman@redhat.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, corbet@lwn.net, gregkh@linuxfoundation.org,
+	rafael@kernel.org, dakr@kernel.org, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	akpm@linux-foundation.org, vbabka@suse.cz, surenb@google.com,
+	mhocko@suse.com, jackmanb@google.com, ziy@nvidia.com,
+	david@kernel.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, rppt@kernel.org, axelrasmussen@google.com,
+	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk, rientjes@google.com,
+	shakeel.butt@linux.dev, chrisl@kernel.org, kasong@tencent.com,
+	shikemeng@huaweicloud.com, bhe@redhat.com, baohua@kernel.org,
+	chengming.zhou@linux.dev, roman.gushchin@linux.dev,
+	muchun.song@linux.dev, osalvador@suse.de, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, cl@gentwo.org,
+	harry.yoo@oracle.com, zhengqi.arch@bytedance.com
+Subject: Re: [RFC PATCH v3 7/8] mm/zswap: compressed ram direct integration
+Message-ID: <aWkkuaYt0cEyvbGj@gourry-fedora-PF4VCD3F>
+References: <20260108203755.1163107-1-gourry@gourry.net>
+ <20260108203755.1163107-8-gourry@gourry.net>
+ <i6o5k4xumd5i3ehl6ifk3554sowd2qe7yul7vhaqlh2zo6y7is@z2ky4m432wd6>
+ <aWF1uDdP75gOCGLm@gourry-fedora-PF4VCD3F>
+ <4ftthovin57fi4blr2mardw4elwfsiv6vrkhrjqjsfvvuuugjj@uivjc5uzj5ys>
+ <CAKEwX=MftJXOE8H=m1C=_RVL8cu516efixTwcaQMBB9pdj=K+g@mail.gmail.com>
+ <CAKEwX=M8=vDO_pg5EJWiaNnJQpob8=NWvbZzssKKPpzs24wj+A@mail.gmail.com>
+ <e6eydzdvuiktmalhcmoiwsgzjbw5v7t4532fkbroylwr5cqetx@v6pgjaoxgmyz>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e6eydzdvuiktmalhcmoiwsgzjbw5v7t4532fkbroylwr5cqetx@v6pgjaoxgmyz>
 
-On Fri, 9 Jan 2026 08:53:06 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
-
-> On 1/9/26 8:40 AM, Li Ming wrote:
-> > cxl_acpi_set_cache_size() returns an error only when the size of the
-> > cache range is not matched with the CXL address range. Almost all
-> > implementation of setting cache size is in cxl_acpi_set_cache_size(),
-> > cxl_setup_extended_linear_size() does nothing except printing a warning
-> > in above error case, but cxl_acpi_set_cache_size() also prints a warning
-> > at the same time. So can consolidates these two functions into one, keep
-> > the function name as cxl_setup_extended_linear_size().
+On Thu, Jan 15, 2026 at 05:00:04PM +0000, Yosry Ahmed wrote:
 > > 
-> > Signed-off-by: Li Ming <ming.li@zohomail.com>  
+> > 2. Just enable zswap shrinker and have memory reclaim move these pages
+> > into disk swap. This will have a much more drastic performance
+> > implications though :)
 > 
-> Thanks for the cleanup. Should've happened when I moved it from core to acpi.
+> I think what you're getting it as that we can still make forward
+> progress after memory lands in compressed cxl. But moving memory to
+> compressed cxl is already forward progress that reclaim won't capture if
+> we charge memory as a full page. I think this is the crux of the issue.
 > 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> We need to figure out how to make accounting work such that moving
+> memory to compressed cxl is forward progress, but make sure we don't
+> break the overall accounting consisteny. If we only charge the actual
+> compressed size, then from the system perspective there is a page that
+> is only partially charged and the rest of it is more-or-less leaked.
+
+Which is comically fine - because the actual capacity of the node is
+functionally a lie anyway :D
+
+~Gregory
