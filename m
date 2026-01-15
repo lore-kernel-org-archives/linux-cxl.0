@@ -1,61 +1,75 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F15B4C81;
-	Thu, 15 Jan 2026 18:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E3F1EF09B;
+	Thu, 15 Jan 2026 18:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768501093; cv=none; b=VHSsYh0AfUkDfH86Hajk/KMaf5NiMmwjyAK7r+L2jYl/OkQ0kMuw01moR49qu/D89+JHKB42WLnfWwwenbTesG4PWBbc3psd83m4UAaB2kRunSxukUyAuCaugSfRyf0me2yjdFaQTaJ+FZN4L9YTVPp+FJ/Pu7H922Fe/P48R2g=
+	t=1768501139; cv=none; b=Ykmk9jOl7va7Ru+eZWndSebJcD17gyje5zUNJWS5v+BsjGTH1eZG5rkKye1Ap2RRGX8CYBto6tTuO+IgTyxypKr4b8OYimn98NWDjCaPbPzCALmy4JsTOHDjGJARt8NNQeVj8c3Z6bJqoGSsKfygG6F3GEfy5KDlb9AdRx6pjxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768501093; c=relaxed/simple;
-	bh=mQm/J2aUPzeYOj+D0A/H+qDnR+eEdU5S3JQeMefsf+I=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UHriDTi6MI294m5dhc2R3Unm0qqiCIdTi3YdGp/5jRObn2Q95Ow4GoHnoKEhIm+ZbWMmjm2QqkFIphPpgCLUX0fmNWVmntV2LwSlMhnlwosQw84dfOm4nZiE6vl2InnA+oRSDejeAlp+o9xsl6gzYAew76UG0zHTZEYCxpDDyOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dsWRv5xmvzHnGdW;
-	Fri, 16 Jan 2026 02:17:47 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3129A4056A;
-	Fri, 16 Jan 2026 02:18:10 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 15 Jan
- 2026 18:18:09 +0000
-Date: Thu, 15 Jan 2026 18:18:08 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Neeraj Kumar <s.neeraj@samsung.com>
-CC: <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <gost.dev@samsung.com>,
-	<a.manzanares@samsung.com>, <vishak.g@samsung.com>, <neeraj.kernel@gmail.com>
-Subject: Re: [PATCH V5 12/17] cxl/pmem: Preserve region information into
- nd_set
-Message-ID: <20260115181808.000054e9@huawei.com>
-In-Reply-To: <20260109124437.4025893-13-s.neeraj@samsung.com>
-References: <20260109124437.4025893-1-s.neeraj@samsung.com>
-	<CGME20260109124527epcas5p1bd7390304b8b6c99a75b0cf4e74b6c12@epcas5p1.samsung.com>
-	<20260109124437.4025893-13-s.neeraj@samsung.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1768501139; c=relaxed/simple;
+	bh=OoxN+wiYLUXA84AAEzLFYI4Crg2HGDqLMAG7AyG/Wk0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=p0dYQKRwDQ4+gbUgSfmfOH77iDNmBrHU5H3o6j791kgAeeHJGivaP6uRWr9wGT0lbTEjsb96BYgmbDlOWslH7SkeVHvJmLMtUfa0wR32qtHTZcEEXXMSeiFcNmTmydLJA+GoumIkmqz8oxMr7fTW6v74IEBGEIFSFVBwpertqqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=e814AiMP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="e814AiMP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA2EDC116D0;
+	Thu, 15 Jan 2026 18:18:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1768501139;
+	bh=OoxN+wiYLUXA84AAEzLFYI4Crg2HGDqLMAG7AyG/Wk0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=e814AiMP04MGQQdvcF/eHiGR3mf/DMRLiaDPWrPEkG74cX3rRLhEga06ol//9OChC
+	 vkULXBUpl0DbaS8P8n8lV4PmH+yaM1LyzgRYvkc1THr/VqmymRuJ47mo/jn4h8uQVB
+	 1kwCMTpAMOChF+x4dKZrsq1Dv3Akpd17X8oldoso=
+Date: Thu, 15 Jan 2026 10:18:58 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Cui Chao <cuichao1753@phytium.com.cn>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Mike Rapoport
+ <rppt@kernel.org>, Wang Yinfeng <wangyinfeng@phytium.com.cn>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2 1/1] mm: numa_memblks: Identify the accurate NUMA ID
+ of CFMW
+Message-Id: <20260115101858.85fd7b8e837c1c92a4fdc5f0@linux-foundation.org>
+In-Reply-To: <9132054c-3017-4af0-84e0-e4359b0794a6@phytium.com.cn>
+References: <20260106031042.1606729-1-cuichao1753@phytium.com.cn>
+	<20260106031042.1606729-2-cuichao1753@phytium.com.cn>
+	<20260108094812.8757ce3ad8370668eaafb29c@linux-foundation.org>
+	<9132054c-3017-4af0-84e0-e4359b0794a6@phytium.com.cn>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Fri,  9 Jan 2026 18:14:32 +0530
-Neeraj Kumar <s.neeraj@samsung.com> wrote:
+On Thu, 15 Jan 2026 17:43:02 +0800 Cui Chao <cuichao1753@phytium.com.cn> wrote:
 
-> Save region information stored in cxlr to nd_set during
-> cxl_pmem_region_probe in nd_set. This saved region information is being
-> stored into LSA, which will be used for cxl region persistence
+> When a CXL RAM region is created in userspace, the memory capacity of 
+> the newly created region is not added to the CFMW-dedicated NUMA node. 
+> Instead, it is accumulated into an existing NUMA node (e.g., NUMA0 
+> containing RAM). This makes it impossible to clearly distinguish between 
+> the two types of memory, which may affect memory-tiering applications.
 > 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+
+OK, thanks, I added this to the changelog.  Please retain it when
+sending v3.
+
+What I'm actually looking for here are answers to the questions
+
+  Should we backport this into -stable kernels and if so, why?
+  And if not, why not?
+
+So a very complete description of the runtime effects really helps
+myself and others to decide which kernels to patch.  And it helps
+people to understand *why* we made that decision.
+
+And sorry, but "may affect memory-tiering applications" isn't very
+complete!
+
+So please, tell us how much our users are hurting from this and please
+make a recommendation on the backporting decision.
