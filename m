@@ -1,317 +1,263 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010016.outbound.protection.outlook.com [52.101.46.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFAC2E7165;
-	Fri, 16 Jan 2026 01:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FE93385BE;
+	Fri, 16 Jan 2026 03:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768527764; cv=fail; b=k4nDTQMO8dLrIxDPr6fL94Z7/JQsG68pZ1Lae0ltiUcRRXfmVyA5LTn5Aqh/Ok4xdSO+Ksy++Rp3I1eeY2wT4pQm0EOzFBRXXEpxHEe2zge0wbmEJ7CbvmNdo5jIcnGJCkbQilGFr2p9CX9IgpW1G5SOyqaXzEbkMGgsUbTIuJ4=
+	t=1768532881; cv=fail; b=T2HdWR4x96drGeI/WECP4NX4yoVO8uKFXA84uZ0dPMlnQbefbhaPSDd38M8xwNLYx8wtHrYf5pgbJiG+p6MTsQlJRMq3bpZRi/CWSFYM8QdMQ4p0ExuV/ADohn48CV3P35CREN+WCobHqxXlWk2Awy7fDw1EFUisI2Jeh0lUK+o=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768527764; c=relaxed/simple;
-	bh=mMipAnSDDgpfEoNMSjQesXgB2SJqfb/6Qv8CYjFq36o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JgpKrV4jnkYQMo41nKRq15Nj0l9pvxc0IF9/Vk+IYpMx7/Iz0cc4kHcjIqcVAo+uXnTd61J35XRNHKhXYoN1McbH4fI5y7S2SwWSPAxkt2bJiLlmNdDm1ShjctWTzOx17zALLgqD7YfjNdVOyf3UVa7qPyCvqKOwCt6Kljx+PqI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=n7RJeChA; arc=fail smtp.client-ip=52.101.46.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1768532881; c=relaxed/simple;
+	bh=OGIx6CK0WvIpJwARReD7R6ZaWyfR29TR7P4Hw0vFB1I=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=D7nKZqGWlfqZIKibOKDrUuQvHj/t9M6kioL9l//hmF+/Jt3qI4vR0T+OmhQV/0WNGIp4JdBdJCFRxIMUz9Rg57WM4BF7piw74og4eZSD/fGat54cLM/cg2IJCjIp89RD82cglyf7ZNZdxZHRd8koXRd74LALiRG+UV+2kd3Aksk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A3+WpZWY; arc=fail smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="n7RJeChA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A3+WpZWY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768532879; x=1800068879;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=OGIx6CK0WvIpJwARReD7R6ZaWyfR29TR7P4Hw0vFB1I=;
+  b=A3+WpZWYQAKJPG+gZZANkLIVppn0nWH1iCWclDtwrHtowAIlSR7Wy7Tc
+   0inKp6dILjjPnUU+0235PqD54HaJplPqw1JO0P9AJuSS7HoY48jWUMN7w
+   JHXko/iW6xPVQAn1qbe1b0BNg0LrNtAy1vyOlgqEvJGjZU2tjJh7uSAYq
+   lERFTkRKCG2v7jnSEbdgVwi0OPtQHRadThNXwEcy85RTSszut3T5j4C6X
+   GtCcUARrQ24rjMpyIZmWDis6q6VYTecxxytgR/TRzWAe/InpcEHE6TIWT
+   e5QjjUc6r65778cUTmH66tMMaR878MRYAOcB28I+M27GAdHGl8jrF34o8
+   g==;
+X-CSE-ConnectionGUID: ucUv1m3kRS6M58nQg8uS9g==
+X-CSE-MsgGUID: gmGMmXWcTAuF2DqQ91Wqbw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="80153329"
+X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
+   d="scan'208";a="80153329"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 19:07:59 -0800
+X-CSE-ConnectionGUID: qtH0Wfo4TR21rmCPR4zijA==
+X-CSE-MsgGUID: GZBNCzPzSweElXCKKufJVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
+   d="scan'208";a="209612452"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 19:07:58 -0800
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Thu, 15 Jan 2026 19:07:57 -0800
+Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29 via Frontend Transport; Thu, 15 Jan 2026 19:07:57 -0800
+Received: from MW6PR02CU001.outbound.protection.outlook.com (52.101.48.43) by
+ edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Thu, 15 Jan 2026 19:07:55 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WK5RSj0JdireOJSvdWvtZt/euKWt/ngV9k8w6QR6yNgSwU1SxbyhvVwdYoObIg8+2yyQCLwAawntbBHXJYBtGrcJpaHG8w5NizT9HhxE/xR2bQDapUdqcJt/mlqKyPxCJ5J8BCfq9E0+xruXkX7JJo1pBRRIC1PXEntE7YL4916JuyuoRt8pgsBIVOPwJhNtvsPeDsv3WKH2iXY72UcIjaABROEqL5FZeupnMKni2yoq2OXNA/h34Yzm9s+UGleOswol9tOKmsaDHoQ5p1+YPQsJi9JMbFz5WcS65WbjZYri10WM6I1ZvPkM/3dqJGug5vpE3+dadCuNsbPPkdgB9A==
+ b=knQm9tIbv2Yn5+f1c3/ijX1fK0HI3MbQutrCVWeMHMdPd9gsO9vxoT42s1VmDC6H8+1DfjXHSXG+M5RfxlUdqrokurbfIgldhjn3fc7ii1hjY57kOEvK/1vd6PAqRKeWk14/3Y0+k3PX1r0r3m1uvGQxeEFXSNG5xsuFvRD4nJUKCiwc0cQiI1Lc8pYm9tdsuaj21znItGAoM8cpRx0FyxDZkKKGS78NJ3dlaMNx7+xAixzdu4ov4WWG9g6dmxwCsQyurLgEsWNwhDNcFEbD+qMYnTBzbX2VzR0uty9l6gE4wLUzOfngQh2ypl83oHsX0be9FsjSqiojrfM7UyiPxw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4LuohYvOkUSFUMrUNeBMr6Cj3pYE2raZUMfLCmpd/hc=;
- b=nBaYYAj1QE/oSPIoQRqOQwGBR5mn3S/A3J5o502ADrf0kCPmyK2qBYUPD0oYh5CMEp2kd4qQ7UXFpFeR71bz6sawpqOy+JoElB5VwPqttBsk+fanocHMQX0Y0ZC6IpAC8KIho1Wz7oPXm3GAiKo+JTkOT3vJnxi8w3nH8OZ9iRZGJ60QIPQlY9FWr4zYLIHjo2tcnVVB9/ij8t/4N14JJ2Y6YwyBrm4wUDQpA1akGEcAoegGtMu7OPwVUBNBJdIIpFfGluc+92+KWUYXisGuYuXZT6nKaZzdUFJmowSRqzXHSk7OGArND/gvNl0X3nAQyZIPclGfTKkaYZb9fdIVGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4LuohYvOkUSFUMrUNeBMr6Cj3pYE2raZUMfLCmpd/hc=;
- b=n7RJeChAQqRFoTkICHrzCk6E0LHnAKvaHayiB8BMt2J3ubeRPmNL5IYuwa+9oEjyZregXFmv/nd27xh9nkRWdj5bmomwfq4xWzRnFc+rGek5SvOyoktbFgUm9qSWxoqcyDaN6RomQL6Tu9JaKAwRnMETLLIa7HrP5l68qOEqtHD3f5fjeoICPWtg9zJsmyanAb+UWXeyfFfv61cEH9ZJdnHTdYqYadd7geYV2QBsj9MEKtBeI/UffkpF4hIERg0qH+g4RHZ4ARSCLze9+rfqIOg6yvbfRUrAjE+1PIBoviJwQ+aMiaW2hNZnXAdngN7boM21ENIckD3ZYCMYRxo9Aw==
-Received: from BLAPR03CA0179.namprd03.prod.outlook.com (2603:10b6:208:32f::33)
- by LV2PR12MB5894.namprd12.prod.outlook.com (2603:10b6:408:174::14) with
+ bh=roGkH/SB9ZSeQhhKLPbuOqSlz0miGSV5ddDIeJCtajA=;
+ b=O+2g8tWaK6iQUryFYba5QpZTwi5DtEVhREYH4SE0WD0nYBZsazNagprLoGFhX2FcYAop7V1xYDkDA1d0CgQq8tP9NGFhm5DsijkTbKt6mAgQS5/Scegd1HVNwnT8iCPoyxW346kjvbrnNbuPY1HvkIi16H86Jh9bbaCHM4K6jHPYzp1ZFPurr0TbVfup3qZRhefZJN/GMww3yFzaqwdwUyUNAF5rvUiGORUddBFPYY115NiRzLPCpMGObvtbnhrmYfcEqzkE8LEDI1F7dStC3rVzeZhruFQUSn1dwaEYccs+fDcZNEAgi0Pg4lUrkicHOFVxc1XgcOGKcgE1AO4p5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA3PR11MB8118.namprd11.prod.outlook.com (2603:10b6:806:2f1::13)
+ by PH0PR11MB4808.namprd11.prod.outlook.com (2603:10b6:510:39::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.5; Fri, 16 Jan
- 2026 01:42:25 +0000
-Received: from MN1PEPF0000F0E2.namprd04.prod.outlook.com
- (2603:10b6:208:32f:cafe::e0) by BLAPR03CA0179.outlook.office365.com
- (2603:10b6:208:32f::33) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.7 via Frontend Transport; Fri,
- 16 Jan 2026 01:42:25 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- MN1PEPF0000F0E2.mail.protection.outlook.com (10.167.242.40) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9542.4 via Frontend Transport; Fri, 16 Jan 2026 01:42:24 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 15 Jan
- 2026 17:42:07 -0800
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 15 Jan
- 2026 17:42:07 -0800
-Received: from build-smadhavan-jammy-20251112.internal (10.127.8.10) by
- mail.nvidia.com (10.129.68.10) with Microsoft SMTP Server id 15.2.2562.20 via
- Frontend Transport; Thu, 15 Jan 2026 17:42:06 -0800
-From: <smadhavan@nvidia.com>
-To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <ming.li@zohomail.com>,
-	<rrichter@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<huaisheng.ye@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-CC: <smadhavan@nvidia.com>, <vaslot@nvidia.com>, <vsethi@nvidia.com>,
-	<sdonthineni@nvidia.com>, <vidyas@nvidia.com>, <mochs@nvidia.com>,
-	<jsequeira@nvidia.com>
-Subject: [PATCH v3 8/10] cxl: add DVSEC config save/restore
-Date: Fri, 16 Jan 2026 01:41:44 +0000
-Message-ID: <20260116014146.2149236-9-smadhavan@nvidia.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260116014146.2149236-1-smadhavan@nvidia.com>
-References: <20260116014146.2149236-1-smadhavan@nvidia.com>
+ 2026 03:07:47 +0000
+Received: from SA3PR11MB8118.namprd11.prod.outlook.com
+ ([fe80::b2e3:da3f:6ad8:e9a5]) by SA3PR11MB8118.namprd11.prod.outlook.com
+ ([fe80::b2e3:da3f:6ad8:e9a5%2]) with mapi id 15.20.9520.005; Fri, 16 Jan 2026
+ 03:07:47 +0000
+From: <dan.j.williams@intel.com>
+Date: Thu, 15 Jan 2026 19:07:46 -0800
+To: Dave Jiang <dave.jiang@intel.com>, Terry Bowman <terry.bowman@amd.com>,
+	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<alison.schofield@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <shiju.jose@huawei.com>, <ming.li@zohomail.com>,
+	<Smita.KoralahalliChannabasappa@amd.com>, <rrichter@amd.com>,
+	<dan.carpenter@linaro.org>, <PradeepVineshReddy.Kodamati@amd.com>,
+	<lukas@wunner.de>, <Benjamin.Cheatham@amd.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+	<vishal.l.verma@intel.com>, <alucerop@amd.com>, <ira.weiny@intel.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Message-ID: <6969ab82253a5_34d2a10048@dwillia2-mobl4.notmuch>
+In-Reply-To: <7a02a650-cbd6-46a8-a6b1-b0d816dd6376@intel.com>
+References: <20260114182055.46029-1-terry.bowman@amd.com>
+ <20260114182055.46029-17-terry.bowman@amd.com>
+ <7a02a650-cbd6-46a8-a6b1-b0d816dd6376@intel.com>
+Subject: Re: [PATCH v14 16/34] cxl/mem: Clarify @host for
+ devm_cxl_add_nvdimm()
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR11CA0054.namprd11.prod.outlook.com
+ (2603:10b6:a03:80::31) To SA3PR11MB8118.namprd11.prod.outlook.com
+ (2603:10b6:806:2f1::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E2:EE_|LV2PR12MB5894:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7698e4d1-5495-4421-6ae0-08de54a07fee
+X-MS-TrafficTypeDiagnostic: SA3PR11MB8118:EE_|PH0PR11MB4808:EE_
+X-MS-Office365-Filtering-Correlation-Id: 78f8794c-8b2a-4f14-ef31-08de54ac6d31
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?sWFYfcCvurdDhnL0eU8HV072Le8xpOJ2gb+9WU6qchVB2uIDiFgd9SVIFWds?=
- =?us-ascii?Q?+UTHejwZAQAfBqL5mpfC0VlaOEWW+Wv3Erchg5gpqZyKqKtbrt6qVHx8Zpgk?=
- =?us-ascii?Q?xEalO4ujpH75g0pmJxfY+LFP2g0ozAL1jmUTAr3J9DP0IzrqY6T3G1QZ5NqO?=
- =?us-ascii?Q?cF9sQ9opwQhrkEYq5WZcyh2E4COQpRmgpFoSXN+tlq967aOEN7BLDLUASlgb?=
- =?us-ascii?Q?HAc+gRFV7BQNvBL+LVk83IZXVFB8TbUBHSw5XyKeS9TB817V23JENptlxeDb?=
- =?us-ascii?Q?tLEr61KEwZDoSZMNheTpSrFwmvU2Rj049o3jQbDFpnvdEGWbAk48wbHrkCIQ?=
- =?us-ascii?Q?mmcY2egNcZPjVv8xk1aqT0ppjU0IN0vmdvHSIsHauF5g++EQ/8U8+tiD+QJQ?=
- =?us-ascii?Q?aj8Hnq3dxhm2UtNwRgQDBd9fAxslAwMsXjRKdLVyWFuxlJKRFkolvgcjhtJu?=
- =?us-ascii?Q?vGKGh26rGEfpY2c8nj9WEt6O9sULU0G64a0IItcZFhWhZWOvkvkl6oZrCDUe?=
- =?us-ascii?Q?E6WhN9x5bfmuxTqSDMIH+V1Z2J5/O0q85xeRNa+EFBiZm5LTZc7i6J9OqYX3?=
- =?us-ascii?Q?LZANIg+ECFtor9dmlmGMkEtr7NqZBJAQun47p6K1WqphzYksYd0XPNJumghs?=
- =?us-ascii?Q?OySya0xRuVUK9mdY5FdKpmGtHzlSKCBce6zD8VjqoaaDFcdDj0noT6vU7b7d?=
- =?us-ascii?Q?siHfFcBBnT/XlQfGUUXbSMdWdN6WEZm9+457PlI1MBk5At7+Fwtm2JQO0znA?=
- =?us-ascii?Q?KxFkOApQzizKGTP6gS++lKHOzsBgJno8ONveJqR2ST01INBc9gyKT8Sc19Us?=
- =?us-ascii?Q?xjLwR5nNxrttRMGpp4PCgZrf7VUlVZ/JkEHBm1w8JpqU8X6FV0kqjKSR6V+8?=
- =?us-ascii?Q?G0/ir7WEFobU1RXehwBIE6HHcrMfG1z/7NzC6UaTRI1KIDFXcD/7baX68LyC?=
- =?us-ascii?Q?QgZOjojR9fYjjWK6om4eJuPHtxljqqerqHdoeZblpqG5CulhpiCMgjk8Cv0n?=
- =?us-ascii?Q?lT/siegHliF3aZFYX9177KZz+23eUR61NbiFhXxsYqvKIPLeCiK30bmBH9FW?=
- =?us-ascii?Q?nYkuo1SJg4shPnAZM7ERCv+lOeuW2WMPOGCATzZBh4lkMDzjvZVFH0dAiOYh?=
- =?us-ascii?Q?P6TH6x3fvHhNZ1slpCQwDRTAqzr/lbmiYOUCmWEtu0jR78kx7DVXeWV00Dxi?=
- =?us-ascii?Q?KZzpOaQsq8aZkq7aJ31sDTAWFqZye6RSsf1f1dMN/EGH0W2tir5t0oTRKOZG?=
- =?us-ascii?Q?KODVzihpjkmNjLqJDfECrXwFpcM67LCfra+/HzYiSF15JjuvxRJvrb4r2myp?=
- =?us-ascii?Q?kl2IKgDtuurzt2VQFtgY6YRekGSvfWTJ9cUkhIOMRlqgPFBNMMKWy/tb0jBz?=
- =?us-ascii?Q?Y8qbdgzsgHxd3ty40oyVMYGETBoFTIt2CFUv6Ryua9+9BlSozz82zXz1iX+J?=
- =?us-ascii?Q?bCfbNs9v0HGaRl3JJc20irXVBwtLC8m5tCHAkJEK1Eu8kbpfZHJGbEXSBGr9?=
- =?us-ascii?Q?b/kb0Fm+UARpjNiFeP2YUHpUs4FHzqLP0Dp5chwHFCQQ6lLVwjvpv/uomxQT?=
- =?us-ascii?Q?xbW7ANostZyTlolYE1fptMaRfwl9CRzyfDAjhe61RDrsyPtB3GFF86EeIJca?=
- =?us-ascii?Q?8rfdcfDC18suzg2V3KtP0VZd2lFvauBUQVV1y2gxFsQ8wOvyRk3W59cRj92f?=
- =?us-ascii?Q?yNMnGpm0cyLbqHB9+5STe03ErA0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013)(7416014)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2026 01:42:24.9213
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007|921020;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?enc1VjZYeGs0b2tKZzJxWEFDcUVTUTFWNmxQeVkzWXB5a0Y4YitaWDlxbWhB?=
+ =?utf-8?B?bTkrMHJpdkhRcjc1UzMvMTAveExYZEpJdXZiRC9GdENMSkdOdFpmRnJvaU1k?=
+ =?utf-8?B?ejBnbmdDcldLeEE5TnlmbG1EbndPOFRPQlgrWTZMU3plaFFNc0lMQWpqMjc4?=
+ =?utf-8?B?eEQvSllHN0ZVMUsrM2FGb3pYVUIrOXJPdUJwdXFBZys3OHd4K3VHNW84UmZJ?=
+ =?utf-8?B?dFlxTXFVa0xLVDluZXZleW5CUjVZajZPcGJKZU9ZZlJUenRhT1Fpc00ycHlG?=
+ =?utf-8?B?Rm01WjhNMHZIakJnQ2ZVOUFzeWYrdy9zSkZnUXhYZ2orR0tOS0lJdzA4Vm9k?=
+ =?utf-8?B?eDd6SVM4Y1Q4UjRNVzZjQXIzNGxTaDlkYTlvWDZURnBPTWNENjlVMlRUT0V6?=
+ =?utf-8?B?YncrNWtPQnhYRWZUM0VEVlpQQTdldTA4b0hxOHVxU3FGWnRxNkM0cFQwZUJt?=
+ =?utf-8?B?MUlldmdOczlXcTZORm10UDNJU041WEhUZWRNM1ZJQ3V0NHlKOHJrZk5zNjRp?=
+ =?utf-8?B?cDk5dTVwTCtlWEtyNEZYS3VCSTdabit0KzJNeUpCaHdObXFobGtWL05oVEZy?=
+ =?utf-8?B?MUFkZUs2d2FMQ0MzUWNQTXpSaTFHTVI3K3BnRXpRTHhSQUJXSHYyWFBnczBl?=
+ =?utf-8?B?OWJ1cUxyOVJHaW1PT001VUxiYmhLM3ZxM3NjWlpxRUFMZWtzZ21RV09GQXVw?=
+ =?utf-8?B?bG0vL1Y5Qi8zOWtiY3lHdEM3VlR0cmszaGN5RHczVmV2SUdTZnRUN0YyazdM?=
+ =?utf-8?B?QjdlOWVkaXB5T2FVNFhkeGJFb2ZQNmQ3UFlVODQvNGgyd0NUNzdRQXB4LzJz?=
+ =?utf-8?B?WGJJdHYzVlo4Z2lMZ2Y0OU1iZFVxWkFIVGl0aGoxbDRwTW5scHNWc0NkUGRT?=
+ =?utf-8?B?Mm5RUmlXb3VRWXBJaEpuK29ZUW8xZ1hmZEN1V1A3RFpQdDZFdm9zQlZlTnU4?=
+ =?utf-8?B?c0NIcjhSaFlZSEllNUNKbmFIY1NBUWwySFMxRi9DcS83U1RZSVlrdkZ1Qjlr?=
+ =?utf-8?B?NFdvN0FJdnBIYnR3bjZ6SkJFS0FrUVVOcENaaEY2dW9PKytqSDdQSEx6YjNI?=
+ =?utf-8?B?U0RjMDJqa1JnbEUrOHQvbmRMSHB1cE5CT1RUNzh0dkM4eGNZWVFzUXZTWTI3?=
+ =?utf-8?B?dmJ6QTYwTy9rdXJRdzk0eVRsdzVmL2ZtWEhMZkYzZDRKaEcyUy9xWXloaDdz?=
+ =?utf-8?B?Qy90SWV1OFdScFAzNjJjN1VmQUphbkd0djdOYXViYmhsOUhLR1h2Q010NmIy?=
+ =?utf-8?B?czkySEFHSTNMTGRZd1l4Z2RhYmRpa0xCK2FNeUFiNEhodjUvUmZ1U1lXVXpV?=
+ =?utf-8?B?d0NncEhiTG1XUHczTmUzWGxjUUdqQUo0c3luVklONWlEODVOeDZTZndHdURw?=
+ =?utf-8?B?VGkwUEoyMU5DSmlnYWozdUhMUmhSM0FWUVBVSGRyRXhzVVhkUjBmbGxSYys5?=
+ =?utf-8?B?N3ZhQUsxN0JNODNPZ25rTW9KMUZxUGQyWVRoWHJlMXBuUmJzOGIrTGdqS3cy?=
+ =?utf-8?B?N0doZnF4UHpzb3FxMXRNREY3NGFkUlQ5TEhPRk5uclJsUFFLbDJLNzRKOHBY?=
+ =?utf-8?B?Szc3cmdJL2M0SGJBMEZwbTJLaE5lM1RSb2dVeG83bGhNZGVjK1doZEx0V1U5?=
+ =?utf-8?B?a1NycW1nNFRCRVBjYkdsZXBad2J5VnJFNllZZ005dFYyTWRmQ3RqZ1NkbEM2?=
+ =?utf-8?B?c0lSdGlLTEsyR3JrSDM3dEd2cGtac1J2WWhISHk5aFZGcUJsbnBEUEJlRFBl?=
+ =?utf-8?B?RHRGZmJ5K2prclltVHZIQjZyRGViczMwNmVONE9TRnJqLzVuZ0RNNmFVSVBr?=
+ =?utf-8?B?ZkxJU09kdTJSRUF0bnBFWll1WjB0RjQ2dXYrYWJtbTNzRE4xSEpiZEVaWTJ1?=
+ =?utf-8?B?RWJDTEl3TStwaXBoYnlXaW55dzZFVlN4UzFIbkREeFBGTXBJRGpkaUh6MFBo?=
+ =?utf-8?B?TVJaK1pMblNaLzNaUE44dlJqb3ZHV0NieWU3Y2VJTEhHMHR3Sm96ckZtRERC?=
+ =?utf-8?B?T3dRL2U5Q2JHT0pRd0FiWW9mQTFCRDhPYm1BK213VWhVZ1F6MTRDK3N6dXhD?=
+ =?utf-8?B?SmtXeXRRN0lybENBVEJDOEM4ZzVVZGhvTlF6a2VGUHIyYk1NRVg1NFQzYkdw?=
+ =?utf-8?B?WmtSck9rdG1nQ0Z1Wms5cVpBWjNuV3o5NmNCcXZ0dUpKek1MWnV4N0FlZ1RP?=
+ =?utf-8?B?WkE9PQ==?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB8118.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dWdWUlZSbnViUFQ5SGc2SE5iU2hKZlRoQzgxdytYSEcvcXpmYWcxbUNWUTlo?=
+ =?utf-8?B?ejJ6bDhjVzB6bFErQWk0akNxMEQvZGt1UGVYVFFxVldUQThYMDhDdmdHN3E0?=
+ =?utf-8?B?R0FRY2ZqQkE5THMrVTZzR1dUV0d1S2dvN1dUL0hqTXpseVNCM1BLNzlZMzZP?=
+ =?utf-8?B?ankxOHQ4S3VNRDlSTWRhSE9uZ1V6M1NyWTR6SURBM2VQV0k2cXdTMmhKOHZR?=
+ =?utf-8?B?WjRBY0dyTFlmTUxURHNuZVlBUUlZaWlEc2NodFd5REd6eDlZMkFCeXN6QjdN?=
+ =?utf-8?B?N1o3VWlhUTQ3NVhJWmtiY05HWS9qeUZBVXQ4dkI4WmFRRGdnR0lWc1laT1FE?=
+ =?utf-8?B?a3VLTlJLLzJTMVgwSzdqci9QWWVNVUFNbDFsNmtYeVEzUTRManZhRzU3TENi?=
+ =?utf-8?B?WXFqRmw1ckpSVWJjdXhYYnltcVA4ZjR0RTFrMU1yaVo4c0lQZ2UwYXlvWlpj?=
+ =?utf-8?B?UzRsSGVQYytXYjRnbG93MzVvYXRBMkRJcG5DbGtEME5wMjlYMGJGMWlVeTcr?=
+ =?utf-8?B?eC9kY0E4aUdXSnl2NjVoa2hoTGc3WVhvYjhQWjhnbEdjejFkMmF4QTh3Vkw2?=
+ =?utf-8?B?SlRRZUhvbmxrUmJOVkwrRGV1dlN5NnFZd2M2WDJlZThPT3ZjczhtMmlZWExs?=
+ =?utf-8?B?NGd6OFFtQXBxbFp6RHVLT2lTVnRibEtEZ24xQlJzYlBRQnk5dVowaFgxY21H?=
+ =?utf-8?B?TXNhK25WVnhZaU5rRWVRTVc2V2YrMG9PL3o4a0YzTkorTFR3OTV4UTVWQVlS?=
+ =?utf-8?B?RGh5QkNJRWMwV2NwRFdTZVRMRktMNGJjRFJTNE9qZWxqZDZoMm5mSWNJcW5K?=
+ =?utf-8?B?ZVNRa3ZkRW5MY0NhUjhBd1NlUFNucmo0WU1xZ0FkN1hHdExzT2FRekIyd3lF?=
+ =?utf-8?B?OXhjTDNNdWQva0syZEZOV2JnSDFvU3ZGdms1RWwzaVZKQk11eDFzV3d5U2cx?=
+ =?utf-8?B?UGFTamc4bFhpd3RSRjJMRjJmR3JzbEtQRmJpOWZQSVB4eHlTTWhBSWZwQWJ1?=
+ =?utf-8?B?cWNiKzd4b2RKRmYzQkFBbWtQKzRtTVBzdlpZRGlzS2tWNTJyeWg0eGJ0MVBq?=
+ =?utf-8?B?UHU5cmVOUTVxNjZBV0RyTi85cExPNDBPMUgrcDA4TzVYRitobGc5NVZHZUp0?=
+ =?utf-8?B?MDJFelFadFBHQkQxR0QxWEFxalJ4QWVMSmtUMG5sRWYzeUJsMG81U0dCbWhY?=
+ =?utf-8?B?MDM5ZDlzWHowNFQwRVovQWwweHZEdFdkMU1Oa1gwOE5IM3l6OVMrdE5ydFFz?=
+ =?utf-8?B?NFQ4RDRsYzUxam1uTmNrNGl2QkdDOWE1ZTRBS29HdENmYkU1U1pUSFBWOUJ1?=
+ =?utf-8?B?Ylg2Z0Q1Y3psc255WHB1THpBWUxiUm1wV2cyd0JzNVFsQ0NYNDdzUk04MW5N?=
+ =?utf-8?B?NlhNazRLZGtETDdNdHF5Uk1mdGdiZldHTU00ZVRuYXBTTG9DUHlEbzRmV0J1?=
+ =?utf-8?B?T1lpTUtsbWRydGFEbTk5eDdhQXh0bkJzbGhvSGVMS3JEQUZieVNtMFlRaVQw?=
+ =?utf-8?B?OUtEOG16b1ZIZTRWQktLT3FKMlEvcm9HK2FkckFKbzhjblhnd3IrZTFXcFFt?=
+ =?utf-8?B?NjdyMWgzaGQ5alVCT1BSTmQydlh3akw1OUJsaWZkL2ZSalB0NjNNMjU5VjZC?=
+ =?utf-8?B?NWxvZHhheUhKVUJ6QUh0Mk9aK0dubEtRanhSQ1djYVBPT3NuY3VsVTV3UFps?=
+ =?utf-8?B?NThOeDdWeEFOU0QvRXBpVmE3WlUxaVZmd2JjKzA2SzVTM0pkL0dVUUU5Zlg2?=
+ =?utf-8?B?djk4aUhic1JPOW4zN3hRbzdmZUpuZmNzSzRxT0UzMGRxeVp6akMzVnh1WnRX?=
+ =?utf-8?B?VU1uRHU1VnM2Q0xIaUE5QUhhdWxkaFFoRmFsOWdBUEV5Nm9QMC9hbDBKRi9Q?=
+ =?utf-8?B?NUpDR215Ym93UFRtSnkwMHd6S3dGUWJ5UU1zMGJNQ2svREYrOGkyclZ0V2M4?=
+ =?utf-8?B?dDFPdUNLc0doK0wzcmloaElCZmdVNVNtYmFyYWhNQTdhM1duVVBpUk9manFJ?=
+ =?utf-8?B?dHdnTE9DWWhsY0RDTGh3TGRVVkxhWUZuUUg5MGpNaXZtTlVjb3dLSWM0eVdQ?=
+ =?utf-8?B?TzJIY2o1VGJ0cktDUk1UUlZXNlMwZ2gwOUxOcFhNMCtsb3NGYTdYbjZwNklt?=
+ =?utf-8?B?Rk9Dd2pWWWEyMmtCYk9OUEZ3SDJqRHpyeWs4SVNGZkd0R2tFMEtoWFpmSzlQ?=
+ =?utf-8?B?dVZGRGxZamc3dVFBcUU0bDBrS3BjTitjMVBvTWJvSkdPOUloYy9TSnA5cVph?=
+ =?utf-8?B?Tzd3NHEzdDl4TGttOXBDcG5PZ3ZwRGRSdG1mdGx0dnVoaTdDcXdScjRzMGVi?=
+ =?utf-8?B?UXlxVUJaeXBEQWdmK1BHUk1haEI4MDJxMXZDVDB6VVN1U1lCbG1HSkw1dXVU?=
+ =?utf-8?Q?xGQjO1I8c/RBFF54=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78f8794c-8b2a-4f14-ef31-08de54ac6d31
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB8118.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2026 03:07:47.7437
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7698e4d1-5495-4421-6ae0-08de54a07fee
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000F0E2.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5894
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nKF3EWfuAz+zpfI3ycYqt2blku1VGAn3q6RmPWZCa+FIQXhKAIo4iWKM4hyTwJ+YJV29lLZq+6sk9k3zFDALL12xuy7S9Gg6aFNDfLHv0zs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4808
+X-OriginatorOrg: intel.com
 
-From: Srirangan Madhavan <smadhavan@nvidia.com>
+Dave Jiang wrote:
+> 
+> 
+> On 1/14/26 11:20 AM, Terry Bowman wrote:
+> > From: Dan Williams <dan.j.williams@intel.com>
+> > 
+> > The convention for devm_ helpers in the CXL driver is that the first
+> > argument is the @host for the operation (locked driver::probe() context).
+> > 
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > Reviewed-by: Terry Bowman <terry.bowman@amd.com>
+> 
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> 
+> A nit below
+> 
+> > 
+> > ---
+> > 
+> > Changes in v13 -> v14:
+> > - New patch
+> > ---
+> >  drivers/cxl/core/pmem.c | 13 +++++++------
+> >  drivers/cxl/cxl.h       |  3 ++-
+> >  drivers/cxl/mem.c       |  2 +-
+> >  3 files changed, 10 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
+> > index 8853415c106a..e7b1e6fa0ea0 100644
+> > --- a/drivers/cxl/core/pmem.c
+> > +++ b/drivers/cxl/core/pmem.c
+> > @@ -237,12 +237,13 @@ static void cxlmd_release_nvdimm(void *_cxlmd)
+> >  
+> >  /**
+> >   * devm_cxl_add_nvdimm() - add a bridge between a cxl_memdev and an nvdimm
+> > - * @parent_port: parent port for the (to be added) @cxlmd endpoint port
+> > - * @cxlmd: cxl_memdev instance that will perform LIBNVDIMM operations
+> > + * @host: host device for devm operations
+> > + * @port: any port in the CXL topology to find the nvdimm-bridge device
+> > + * @cxlmd: parent of the to be created cxl_nvdimm device
+> >   *
+> >   * Return: 0 on success negative error code on failure.
+> >   */
+> > -int devm_cxl_add_nvdimm(struct cxl_port *parent_port,
+> > +int devm_cxl_add_nvdimm(struct device *host, struct cxl_port *port,
+> 
+> s/port/parent_port/ to maintain clarity of the port
 
-Save and restore CXL DVSEC control registers across reset with
-CONFIG_LOCK handling so RWL fields are preserved when locked. This
-maintains device policy and capability state across cxl_reset while
-avoiding writes to locked fields.
+...but it is not used as a "parent" port in this function. Any port in
+the topology will do. The reason a port argument is needed is
+disambiguate when there are multiple CXL root devices. That currently
+only happens when cxl_test is loaded.
 
-Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
----
- drivers/cxl/pci.c | 107 ++++++++++++++++++++++++++++++++++++++++++++++
- include/cxl/pci.h |  15 +++++++
- 2 files changed, 122 insertions(+)
+However, after writing that, it may make more sense to make that
+semantic explicit and just have the caller responsible for passing in an
+@cxl_root argument.
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 5d2bb4431de3..9a9fab60f1e8 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -1161,6 +1161,113 @@ static int cxl_region_flush_host_cpu_caches(struct device *dev, void *data)
- 	return 0;
- }
-
-+/*
-+ * CXL DVSEC register save/restore
-+ */
-+static int cxl_save_dvsec_state(struct pci_dev *pdev,
-+				struct cxl_type2_saved_state *state, int dvsec)
-+{
-+	int rc;
-+
-+	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_CTRL_OFFSET,
-+				  &state->dvsec_ctrl);
-+	if (rc)
-+		return rc;
-+
-+	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_CTRL2_OFFSET,
-+				  &state->dvsec_ctrl2);
-+	return rc;
-+}
-+
-+static int cxl_restore_dvsec_state(struct pci_dev *pdev,
-+				   const struct cxl_type2_saved_state *state,
-+				   int dvsec, bool config_locked)
-+{
-+	int rc;
-+	u16 val_to_restore;
-+
-+	if (config_locked) {
-+		u16 current_val;
-+
-+		rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_CTRL_OFFSET,
-+					  &current_val);
-+		if (rc)
-+			return rc;
-+
-+		val_to_restore = (current_val & CXL_DVSEC_CTRL_RWL_MASK) |
-+				 (state->dvsec_ctrl & ~CXL_DVSEC_CTRL_RWL_MASK);
-+	} else {
-+		val_to_restore = state->dvsec_ctrl;
-+	}
-+
-+	rc = pci_write_config_word(pdev, dvsec + CXL_DVSEC_CTRL_OFFSET,
-+				   val_to_restore);
-+	if (rc)
-+		return rc;
-+
-+	rc = pci_write_config_word(pdev, dvsec + CXL_DVSEC_CTRL2_OFFSET,
-+				   state->dvsec_ctrl2);
-+	return rc;
-+}
-+
-+/**
-+ * cxl_config_save_state - Save CXL configuration state
-+ * @pdev: PCI device
-+ * @state: Structure to store saved state
-+ *
-+ * Saves CXL DVSEC state before reset.
-+ */
-+int cxl_config_save_state(struct pci_dev *pdev,
-+			  struct cxl_type2_saved_state *state)
-+{
-+	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-+	int dvsec;
-+
-+	if (!cxlds || !state)
-+		return -EINVAL;
-+
-+	memset(state, 0, sizeof(*state));
-+
-+	dvsec = cxlds->cxl_dvsec;
-+	if (!dvsec)
-+		return -ENODEV;
-+
-+	return cxl_save_dvsec_state(pdev, state, dvsec);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_config_save_state, "CXL");
-+
-+/**
-+ * cxl_config_restore_state - Restore CXL configuration state
-+ * @pdev: PCI device
-+ * @state: Previously saved state
-+ *
-+ * Restores CXL DVSEC state after reset.
-+ */
-+int cxl_config_restore_state(struct pci_dev *pdev,
-+			     const struct cxl_type2_saved_state *state)
-+{
-+	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-+	bool config_locked;
-+	int rc, dvsec;
-+	u16 lock_reg;
-+
-+	if (!cxlds || !state)
-+		return -EINVAL;
-+
-+	dvsec = cxlds->cxl_dvsec;
-+	if (!dvsec)
-+		return -ENODEV;
-+
-+	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_LOCK_OFFSET, &lock_reg);
-+	if (rc)
-+		return rc;
-+
-+	config_locked = !!(lock_reg & CXL_DVSEC_LOCK_CONFIG_LOCK);
-+
-+	return cxl_restore_dvsec_state(pdev, state, dvsec, config_locked);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_config_restore_state, "CXL");
-+
- static int cxl_check_region_driver_bound(struct device *dev, void *data)
- {
- 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-diff --git a/include/cxl/pci.h b/include/cxl/pci.h
-index 71d8de5de948..2c629ded73cc 100644
---- a/include/cxl/pci.h
-+++ b/include/cxl/pci.h
-@@ -4,6 +4,18 @@
- #ifndef __CXL_ACCEL_PCI_H
- #define __CXL_ACCEL_PCI_H
-
-+/* CXL Type 2 device state for save/restore across reset */
-+struct cxl_type2_saved_state {
-+	/* DVSEC registers */
-+	u16 dvsec_ctrl;
-+	u16 dvsec_ctrl2;
-+};
-+
-+int cxl_config_save_state(struct pci_dev *pdev,
-+			  struct cxl_type2_saved_state *state);
-+int cxl_config_restore_state(struct pci_dev *pdev,
-+			     const struct cxl_type2_saved_state *state);
-+
- /*
-  * See section 8.1 Configuration Space Registers in the CXL 2.0
-  * Specification. Names are taken straight from the specification with "CXL" and
-@@ -23,6 +35,7 @@
- #define     CXL_DVSEC_CXL_RST_MEM_CLR_CAPABLE	BIT(11)
- #define   CXL_DVSEC_CTRL_OFFSET		0xC
- #define     CXL_DVSEC_MEM_ENABLE	BIT(2)
-+#define     CXL_DVSEC_CTRL_RWL_MASK	0x5FED
- #define   CXL_DVSEC_CTRL2_OFFSET	0x10
- #define     CXL_DVSEC_DISABLE_CACHING	BIT(0)
- #define     CXL_DVSEC_INIT_CACHE_WBI	BIT(1)
-@@ -32,6 +45,8 @@
- #define     CXL_DVSEC_CACHE_INVALID	BIT(0)
- #define     CXL_DVSEC_CXL_RST_COMPLETE	BIT(1)
- #define     CXL_DVSEC_CXL_RESET_ERR	BIT(2)
-+#define   CXL_DVSEC_LOCK_OFFSET		0x14
-+#define     CXL_DVSEC_LOCK_CONFIG_LOCK	BIT(0)
- #define   CXL_DVSEC_RANGE_SIZE_HIGH(i)	(0x18 + ((i) * 0x10))
- #define   CXL_DVSEC_RANGE_SIZE_LOW(i)	(0x1C + ((i) * 0x10))
- #define     CXL_DVSEC_MEM_INFO_VALID	BIT(0)
---
-2.34.1
-
+A change for not this series.
