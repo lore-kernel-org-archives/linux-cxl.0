@@ -1,362 +1,212 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03EF2940D
-	for <linux-cxl@vger.kernel.org>; Fri, 16 Jan 2026 10:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4103F3195E8;
+	Fri, 16 Jan 2026 11:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768560058; cv=none; b=dVv7tFv15Ze/TOPKLWOaPBZAjYoQjuGawizZiQKjMqNa7cFdSuFJ5jNkF39yNY/mT9N9UU4jLDjq5EUaD5KLZyBgj2r9hI1dlzV7EGlDfkiGyL4EVgNDWWuE4i0TmDpdDdEd1TCKmvXofZkxD+SWFesZQA6BSX0ZpTJ3GXhEkT0=
+	t=1768562041; cv=none; b=Kl7pQvdYFPEd3pmG43abQ3hPhOUCzNAMl6az8wT7AhlpJKsAfpJWLf0LwffFr6G0pz1rqVUXS6YEKwJu0DaiduJVNyLVyxGdFDM0Qet2chBOwi/AwCZQVgvDD9jiSy2uLLHJQ4iDwykRD+t/q7597U/DXZ8FBN1a6Lq8iuuI0b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768560058; c=relaxed/simple;
-	bh=xtxYUzkmjOkvDNr0SJukPDua+KoX6vx0jCvqkAKTYmk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=XfNW8hVT5I4HCUWN2lyS0NaplMxtrWgf8HhuPTVdv2PtK/pa7vromWIS7X8wH5SfzpBTEbfeHeK7SorxtdQcx6/72vEs7M9d3rEs01bhDts7rvwuq1pNC7fbvURZd2gtfDBZB5SAPinWNgojmNWvSWiY07Tq46lIC5cE45o0qew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UULNY15o; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1768562041; c=relaxed/simple;
+	bh=7m7TLs5ms8SsBuRtmgorzV61ohfwt2E3J/DzXKAkq0s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ohpglvC1nIkj5eQTxslNNHpBhUYIV6qESx/jYOLPUk9pafLyh3xITshySB7lsRT2xXA8W9N9T/OiPo6dLP1Ouf86/mCE/xhT2v5aQVRMXRzZQessF1rRMpqwF9Bhcm4/VtKbvZxJEZquxJVqmw1n0LWiKQJfWxIvsdazhP+Zjb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BAX1SSy+; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UULNY15o"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BAX1SSy+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768560058; x=1800096058;
-  h=date:from:to:cc:subject:message-id;
-  bh=xtxYUzkmjOkvDNr0SJukPDua+KoX6vx0jCvqkAKTYmk=;
-  b=UULNY15oFSPp5PnjT6Mui+rWkaxzrt2tF2MTnbVbZDjdXUQvZuny9M88
-   xRi9evOcMFqtpmwhVUTzR8o/VoBbb55azepZcrYqKmHbwFC/pbS5QwvhA
-   83+J6QA7UF4kFRNaQ1RB1eTv5XzvY5UOMlBMKjER7d7OXBm0cWGRavKLn
-   zbhMA3Lgah+WGkxqG7/F5X6c1JLNxyKpo1f7amQtbVBhLla0IlS2stW0Z
-   nkRsjPhgceswtvptesZ9/f7mjDusGJEje8Gp/b5iYUbI8m4H5X2FINfgC
-   PEAHsqIi/q7C/13K3XLf4l9deuvQ1SS0sF7oy+uTdDR2ZhuKuLCBVCeh2
-   Q==;
-X-CSE-ConnectionGUID: 1rFYW8bFRb+nucs6RwcDZA==
-X-CSE-MsgGUID: yBwM/pCVSXqsRa2wf/LIAA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="87292780"
+  t=1768562040; x=1800098040;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7m7TLs5ms8SsBuRtmgorzV61ohfwt2E3J/DzXKAkq0s=;
+  b=BAX1SSy+zUHYIhkwai28utCCptRsNXOiw3G+3C6VPXfzGyKnZPerG//G
+   K9wgFn9zyjH/ziYSfo/1S/NNlFH/7cneMxGye0o1gd60OsPUc+9Skgr+s
+   3Tzn1B1fK8L5wzKbLuBI+c7DxGLujt5z6bKcC3C767DUMd8lrOt3dFMkp
+   tIHeP27sm+DgqC//TvJVQjZVWyS2LBqeDfDhBV6dOYwbgTgsVC/HbCvU1
+   PIFMmcFM71HgkWX9uDQGKb+dnfXINoGdrqC0SqCsF9LLkOgbZM51HPX5v
+   WKRHFkgQkXv3oLTyreDehQEypjZ8a+DmFKU1V1CfKnjmcAZIxQMVZmGbH
+   w==;
+X-CSE-ConnectionGUID: jbo5ZEEBSqKUgBNM2Fv9aA==
+X-CSE-MsgGUID: /XfkoD1IQjCAZYX60wbtSA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="69930619"
 X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
-   d="scan'208";a="87292780"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 02:40:57 -0800
-X-CSE-ConnectionGUID: s/O97p/RSeOBYUXnvTxcow==
-X-CSE-MsgGUID: 9Rkc3k+nQ/G8aBZ637HkgA==
+   d="scan'208";a="69930619"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 03:13:59 -0800
+X-CSE-ConnectionGUID: uIPeeNCuTXKTNMh3SaLJKw==
+X-CSE-MsgGUID: 0lzYBIZ5TcqNem+zWWjj8g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
-   d="scan'208";a="205493526"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 16 Jan 2026 02:40:54 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vghG8-00000000KjD-08PE;
-	Fri, 16 Jan 2026 10:40:52 +0000
-Date: Fri, 16 Jan 2026 18:40:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD REGRESSION
- 9582b6a47ef87168a3a57084f75fd7239a6c56f6
-Message-ID: <202601161821.VLvqVmH5-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+   d="scan'208";a="209713339"
+Received: from fpallare-mobl4.ger.corp.intel.com (HELO fdugast-desk.home) ([10.245.245.100])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 03:13:48 -0800
+From: Francois Dugast <francois.dugast@intel.com>
+To: intel-xe@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org,
+	Francois Dugast <francois.dugast@intel.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Felix Kuehling <Felix.Kuehling@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	David Hildenbrand <david@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Balbir Singh <balbirs@nvidia.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	=?UTF-8?q?Mika=20Penttil=C3=A4?= <mpenttil@redhat.com>,
+	linuxppc-dev@lists.ozlabs.org,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	linux-pci@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH v6 0/5] Enable THP support in drm_pagemap
+Date: Fri, 16 Jan 2026 12:10:15 +0100
+Message-ID: <20260116111325.1736137-1-francois.dugast@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 9582b6a47ef87168a3a57084f75fd7239a6c56f6  cxl/region: Translate HPA to DPA and memdev in unaligned regions
+Use Balbir Singh's series for device-private THP support [1] and previous
+preparation work in drm_pagemap [2] to add 2MB/THP support in xe. This leads
+to significant performance improvements when using SVM with 2MB pages.
 
-Error/Warning (recently discovered and may have been fixed):
+[1] https://lore.kernel.org/linux-mm/20251001065707.920170-1-balbirs@nvidia.com/
+[2] https://patchwork.freedesktop.org/series/151754/
 
-    https://lore.kernel.org/oe-kbuild-all/202601161359.cnyZgr4S-lkp@intel.com
+v2:
+- rebase on top of multi-device SVM
+- add drm_pagemap_cpages() with temporary patch
+- address other feedback from Matt Brost on v1
 
-    ERROR: modpost: "__udivdi3" [drivers/cxl/core/cxl_core.ko] undefined!
-    ERROR: modpost: "__umoddi3" [drivers/cxl/core/cxl_core.ko] undefined!
+v3:
+The major change is to remove the dependency to the mm/huge_memory
+helper migrate_device_split_page() that was called explicitely when
+a 2M buddy allocation backed by a large folio would be later reused
+for a smaller allocation (4K or 64K). Instead, the first 3 patches
+provided by Matthew Brost ensure large folios are split at the time
+of freeing.
 
-Error/Warning ids grouped by kconfigs:
+v4:
+- add order argument to folio_free callback
+- send complete series to linux-mm and MM folks as requested (Zi Yan
+  and Andrew Morton) and cover letter to anyone receiving at least
+  one of the patches (Liam R. Howlett)
 
-recent_errors
-`-- i386-buildonly-randconfig-004-20260116
-    |-- ERROR:__udivdi3-drivers-cxl-core-cxl_core.ko-undefined
-    `-- ERROR:__umoddi3-drivers-cxl-core-cxl_core.ko-undefined
+v5:
+- update zone_device_page_init() in patch #1 to reinitialize large
+  zone device private folios
 
-elapsed time: 807m
+v6:
+- fix drm_pagemap change in patch #1 to allow applying to 6.19 and
+  add some comments
 
-configs tested: 271
-configs skipped: 6
+Cc: Zi Yan <ziy@nvidia.com>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Alistair Popple <apopple@nvidia.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: Felix Kuehling <Felix.Kuehling@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Simona Vetter <simona@ffwll.ch>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Danilo Krummrich <dakr@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: David Hildenbrand <david@kernel.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: Balbir Singh <balbirs@nvidia.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Mika Penttilä <mpenttil@redhat.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: kvm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: amd-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: nouveau@lists.freedesktop.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-cxl@vger.kernel.org
+Cc: nvdimm@lists.linux.dev
+Cc: linux-fsdevel@vger.kernel.org
 
-tested configs:
-alpha                             allnoconfig    gcc-15.2.0
-alpha                            allyesconfig    gcc-15.2.0
-alpha                               defconfig    gcc-15.2.0
-arc                              allmodconfig    clang-16
-arc                              allmodconfig    gcc-15.2.0
-arc                               allnoconfig    gcc-15.2.0
-arc                              allyesconfig    clang-22
-arc                              allyesconfig    gcc-15.2.0
-arc                                 defconfig    gcc-15.2.0
-arc                   randconfig-001-20260116    gcc-13.4.0
-arc                   randconfig-001-20260116    gcc-8.5.0
-arc                   randconfig-002-20260116    gcc-8.5.0
-arc                   randconfig-002-20260116    gcc-9.5.0
-arm                               allnoconfig    clang-22
-arm                               allnoconfig    gcc-15.2.0
-arm                              allyesconfig    clang-16
-arm                              allyesconfig    gcc-15.2.0
-arm                                 defconfig    clang-22
-arm                                 defconfig    gcc-15.2.0
-arm                            dove_defconfig    gcc-15.2.0
-arm                       imx_v4_v5_defconfig    clang-22
-arm                             mxs_defconfig    gcc-15.2.0
-arm                         nhk8815_defconfig    clang-22
-arm                   randconfig-001-20260116    gcc-15.2.0
-arm                   randconfig-001-20260116    gcc-8.5.0
-arm                   randconfig-002-20260116    gcc-8.5.0
-arm                   randconfig-003-20260116    clang-22
-arm                   randconfig-003-20260116    gcc-8.5.0
-arm                   randconfig-004-20260116    gcc-8.5.0
-arm                       spear13xx_defconfig    clang-22
-arm                    vt8500_v6_v7_defconfig    gcc-15.2.0
-arm64                            allmodconfig    clang-19
-arm64                            allmodconfig    clang-22
-arm64                             allnoconfig    gcc-15.2.0
-arm64                               defconfig    gcc-15.2.0
-arm64                 randconfig-001-20260116    clang-22
-arm64                 randconfig-002-20260116    clang-22
-arm64                 randconfig-003-20260116    clang-17
-arm64                 randconfig-003-20260116    clang-22
-arm64                 randconfig-004-20260116    clang-22
-csky                             allmodconfig    gcc-15.2.0
-csky                              allnoconfig    gcc-15.2.0
-csky                                defconfig    gcc-15.2.0
-csky                  randconfig-001-20260116    clang-22
-csky                  randconfig-001-20260116    gcc-15.2.0
-csky                  randconfig-002-20260116    clang-22
-csky                  randconfig-002-20260116    gcc-15.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    gcc-15.2.0
-hexagon                           allnoconfig    clang-22
-hexagon                           allnoconfig    gcc-15.2.0
-hexagon                             defconfig    clang-22
-hexagon                             defconfig    gcc-15.2.0
-hexagon               randconfig-001-20260116    clang-20
-hexagon               randconfig-002-20260116    clang-19
-hexagon               randconfig-002-20260116    clang-20
-i386                             allmodconfig    clang-20
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                              allnoconfig    gcc-15.2.0
-i386                             allyesconfig    clang-20
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20260116    gcc-12
-i386        buildonly-randconfig-001-20260116    gcc-14
-i386        buildonly-randconfig-002-20260116    clang-20
-i386        buildonly-randconfig-002-20260116    gcc-12
-i386        buildonly-randconfig-003-20260116    gcc-12
-i386        buildonly-randconfig-004-20260116    clang-20
-i386        buildonly-randconfig-004-20260116    gcc-12
-i386        buildonly-randconfig-005-20260116    clang-20
-i386        buildonly-randconfig-005-20260116    gcc-12
-i386        buildonly-randconfig-006-20260116    gcc-12
-i386        buildonly-randconfig-006-20260116    gcc-14
-i386                                defconfig    clang-20
-i386                                defconfig    gcc-15.2.0
-i386                  randconfig-001-20260116    clang-20
-i386                  randconfig-001-20260116    gcc-14
-i386                  randconfig-002-20260116    clang-20
-i386                  randconfig-003-20260116    clang-20
-i386                  randconfig-004-20260116    clang-20
-i386                  randconfig-004-20260116    gcc-14
-i386                  randconfig-005-20260116    clang-20
-i386                  randconfig-005-20260116    gcc-14
-i386                  randconfig-006-20260116    clang-20
-i386                  randconfig-007-20260116    clang-20
-i386                  randconfig-007-20260116    gcc-14
-i386                  randconfig-011-20260116    clang-20
-i386                  randconfig-012-20260116    clang-20
-i386                  randconfig-013-20260116    clang-20
-i386                  randconfig-014-20260116    clang-20
-i386                  randconfig-015-20260116    clang-20
-i386                  randconfig-016-20260116    clang-20
-i386                  randconfig-017-20260116    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                        allmodconfig    clang-22
-loongarch                         allnoconfig    clang-22
-loongarch                         allnoconfig    gcc-15.2.0
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20260116    clang-20
-loongarch             randconfig-001-20260116    gcc-15.2.0
-loongarch             randconfig-002-20260116    clang-20
-loongarch             randconfig-002-20260116    gcc-15.2.0
-m68k                             allmodconfig    gcc-15.2.0
-m68k                              allnoconfig    gcc-15.2.0
-m68k                             allyesconfig    clang-16
-m68k                             allyesconfig    gcc-15.2.0
-m68k                                defconfig    clang-19
-m68k                                defconfig    gcc-15.2.0
-microblaze                        allnoconfig    gcc-15.2.0
-microblaze                       allyesconfig    gcc-15.2.0
-microblaze                          defconfig    clang-19
-microblaze                          defconfig    gcc-15.2.0
-mips                             allmodconfig    gcc-15.2.0
-mips                              allnoconfig    gcc-15.2.0
-mips                             allyesconfig    gcc-15.2.0
-mips                          eyeq5_defconfig    clang-22
-mips                           ip28_defconfig    clang-22
-mips                           ip28_defconfig    gcc-15.2.0
-nios2                            allmodconfig    clang-22
-nios2                            allmodconfig    gcc-11.5.0
-nios2                             allnoconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    clang-19
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20260116    clang-20
-nios2                 randconfig-001-20260116    gcc-11.5.0
-nios2                 randconfig-002-20260116    clang-20
-nios2                 randconfig-002-20260116    gcc-11.5.0
-openrisc                         alldefconfig    clang-22
-openrisc                         allmodconfig    clang-22
-openrisc                         allmodconfig    gcc-15.2.0
-openrisc                          allnoconfig    clang-22
-openrisc                          allnoconfig    gcc-15.2.0
-openrisc                            defconfig    gcc-15.2.0
-parisc                           allmodconfig    gcc-15.2.0
-parisc                            allnoconfig    clang-22
-parisc                            allnoconfig    gcc-15.2.0
-parisc                           allyesconfig    clang-19
-parisc                           allyesconfig    gcc-15.2.0
-parisc                              defconfig    gcc-15.2.0
-parisc                randconfig-001-20260116    clang-22
-parisc                randconfig-002-20260116    clang-22
-parisc64                            defconfig    clang-19
-parisc64                            defconfig    gcc-15.2.0
-powerpc                          allmodconfig    gcc-15.2.0
-powerpc                           allnoconfig    clang-22
-powerpc                           allnoconfig    gcc-15.2.0
-powerpc                      cm5200_defconfig    clang-22
-powerpc                      cm5200_defconfig    gcc-15.2.0
-powerpc                  iss476-smp_defconfig    gcc-15.2.0
-powerpc                      katmai_defconfig    clang-22
-powerpc                 mpc837x_rdb_defconfig    clang-22
-powerpc                  mpc866_ads_defconfig    gcc-15.2.0
-powerpc                    mvme5100_defconfig    gcc-15.2.0
-powerpc                     powernv_defconfig    clang-22
-powerpc                      ppc44x_defconfig    clang-22
-powerpc                      ppc44x_defconfig    gcc-15.2.0
-powerpc               randconfig-001-20260116    clang-22
-powerpc               randconfig-002-20260116    clang-22
-powerpc                         wii_defconfig    clang-22
-powerpc                 xes_mpc85xx_defconfig    clang-22
-powerpc64             randconfig-001-20260116    clang-22
-powerpc64             randconfig-002-20260116    clang-22
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    clang-22
-riscv                             allnoconfig    gcc-15.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                               defconfig    gcc-15.2.0
-riscv                 randconfig-001-20260116    clang-22
-riscv                 randconfig-002-20260116    clang-22
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.2.0
-s390                                defconfig    clang-22
-s390                                defconfig    gcc-15.2.0
-s390                  randconfig-001-20260116    clang-22
-s390                  randconfig-002-20260116    gcc-8.5.0
-sh                               allmodconfig    gcc-15.2.0
-sh                                allnoconfig    clang-22
-sh                                allnoconfig    gcc-15.2.0
-sh                               allyesconfig    clang-19
-sh                               allyesconfig    gcc-15.2.0
-sh                        apsh4ad0a_defconfig    clang-22
-sh                                  defconfig    gcc-14
-sh                                  defconfig    gcc-15.2.0
-sh                         ecovec24_defconfig    gcc-15.2.0
-sh                    randconfig-001-20260116    gcc-15.2.0
-sh                    randconfig-002-20260116    gcc-14.3.0
-sh                          rsk7269_defconfig    clang-22
-sh                             shx3_defconfig    gcc-15.2.0
-sparc                            alldefconfig    gcc-15.2.0
-sparc                             allnoconfig    clang-22
-sparc                             allnoconfig    gcc-15.2.0
-sparc                               defconfig    gcc-15.2.0
-sparc                 randconfig-001-20260116    gcc-10.5.0
-sparc                 randconfig-001-20260116    gcc-15.2.0
-sparc                 randconfig-002-20260116    gcc-10.5.0
-sparc                 randconfig-002-20260116    gcc-13.4.0
-sparc64                          allmodconfig    clang-22
-sparc64                             defconfig    clang-20
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20260116    gcc-10.5.0
-sparc64               randconfig-002-20260116    gcc-10.5.0
-sparc64               randconfig-002-20260116    gcc-8.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                               allyesconfig    gcc-15.2.0
-um                                  defconfig    clang-22
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20260116    gcc-10.5.0
-um                    randconfig-001-20260116    gcc-14
-um                    randconfig-002-20260116    gcc-10.5.0
-um                    randconfig-002-20260116    gcc-14
-um                           x86_64_defconfig    clang-22
-um                           x86_64_defconfig    gcc-14
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                            allnoconfig    clang-22
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20260116    gcc-14
-x86_64      buildonly-randconfig-002-20260116    clang-20
-x86_64      buildonly-randconfig-002-20260116    gcc-14
-x86_64      buildonly-randconfig-003-20260116    clang-20
-x86_64      buildonly-randconfig-003-20260116    gcc-14
-x86_64      buildonly-randconfig-004-20260116    clang-20
-x86_64      buildonly-randconfig-004-20260116    gcc-14
-x86_64      buildonly-randconfig-005-20260116    clang-20
-x86_64      buildonly-randconfig-005-20260116    gcc-14
-x86_64      buildonly-randconfig-006-20260116    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20260116    clang-20
-x86_64                randconfig-002-20260116    clang-20
-x86_64                randconfig-002-20260116    gcc-14
-x86_64                randconfig-003-20260116    clang-20
-x86_64                randconfig-004-20260116    clang-20
-x86_64                randconfig-005-20260116    clang-20
-x86_64                randconfig-005-20260116    gcc-14
-x86_64                randconfig-006-20260116    clang-20
-x86_64                randconfig-011-20260116    clang-20
-x86_64                randconfig-012-20260116    clang-20
-x86_64                randconfig-013-20260116    clang-20
-x86_64                randconfig-014-20260116    clang-20
-x86_64                randconfig-015-20260116    clang-20
-x86_64                randconfig-015-20260116    gcc-12
-x86_64                randconfig-016-20260116    clang-20
-x86_64                randconfig-071-20260116    clang-20
-x86_64                randconfig-072-20260116    clang-20
-x86_64                randconfig-073-20260116    clang-20
-x86_64                randconfig-074-20260116    clang-20
-x86_64                randconfig-075-20260116    clang-20
-x86_64                randconfig-076-20260116    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                           alldefconfig    clang-22
-xtensa                            allnoconfig    clang-22
-xtensa                            allnoconfig    gcc-15.2.0
-xtensa                           allyesconfig    clang-22
-xtensa                randconfig-001-20260116    gcc-10.5.0
-xtensa                randconfig-001-20260116    gcc-11.5.0
-xtensa                randconfig-002-20260116    gcc-10.5.0
-xtensa                randconfig-002-20260116    gcc-15.2.0
+Francois Dugast (3):
+  drm/pagemap: Unlock and put folios when possible
+  drm/pagemap: Add helper to access zone_device_data
+  drm/pagemap: Enable THP support for GPU memory migration
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Matthew Brost (2):
+  mm/zone_device: Reinitialize large zone device private folios
+  drm/pagemap: Correct cpages calculation for migrate_vma_setup
+
+ arch/powerpc/kvm/book3s_hv_uvmem.c       |   2 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_migrate.c |   2 +-
+ drivers/gpu/drm/drm_gpusvm.c             |   7 +-
+ drivers/gpu/drm/drm_pagemap.c            | 158 ++++++++++++++++++-----
+ drivers/gpu/drm/nouveau/nouveau_dmem.c   |   2 +-
+ include/drm/drm_pagemap.h                |  15 +++
+ include/linux/memremap.h                 |   9 +-
+ lib/test_hmm.c                           |   4 +-
+ mm/memremap.c                            |  35 ++++-
+ 9 files changed, 195 insertions(+), 39 deletions(-)
+
+-- 
+2.43.0
+
