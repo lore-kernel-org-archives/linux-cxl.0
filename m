@@ -1,50 +1,39 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2431533ADB2
-	for <linux-cxl@vger.kernel.org>; Fri, 16 Jan 2026 15:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4437E33BBCF
+	for <linux-cxl@vger.kernel.org>; Fri, 16 Jan 2026 16:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768579180; cv=none; b=XwQwS71D9Zy9HpClW/I295xbc+/S51PvHPuSYJ8Tf17T5a9budhZT2p9HEKFDQ4acrQLgYZpqYjnNESEvuHLzgJSvh1jjcpAKk4wpl9pTMGUHoiIY0Fo8c7RTCa5Jr2ly43YrbUWh24bcYZWfAhksJhEOf9PhVzN3xhjNcNkEOY=
+	t=1768579635; cv=none; b=oUDLxOoR8jdIdhLxkCTjxVSIUFv4eC0X43wb5lDJ7OBzoqyGvpeM176f1uuDFWj3s/6AWN25GZlP/wD49c7n09AOkM4fHcV+u0DJPojOjvnN6fyiSAd1oaNAWEg/tPK4QbTEw5gPm+xGw9jfHLhh7oFZZ1WVqqNbqYhLrekKVjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768579180; c=relaxed/simple;
-	bh=mV1SSNisYv2X2fCKVonZQk8Bt0JGbccCeWYbH8f9m1g=;
+	s=arc-20240116; t=1768579635; c=relaxed/simple;
+	bh=4GCC2Jffc8B92hOWWnGUTnJ2OVtIM5SbTV45FlVVyvU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XigSB9TEuBtl6VWriTaL6PgbTMudlSmZ+WKSf35JoCgttvTSidy01L52Z4X6NP7r2JfT2/5RLatc4AvIyeLmB+OY0FCTqkAkFMxVwIKdxTBkv3IJoGFPyZPfrtK9drwYK+9vxy8OhtqonMjiO0UbPxE9DIWcWrzGKtfXEERDhdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OReK3jmN; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OReK3jmN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768579179; x=1800115179;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=mV1SSNisYv2X2fCKVonZQk8Bt0JGbccCeWYbH8f9m1g=;
-  b=OReK3jmNo1hvhxJVzun9n1DJpU1BIgMuKqV9X8pzusJDQ5HKX8sGCY1M
-   8CnbuHYAZKYPtHmrQGiRj/HR9NxbndapaYN8v5XQOZtIvruNcX8n+OCVd
-   3ztuC4+6MSGIkuPFS3DwHV46lFUxd0Lmsc2H8l9zI2QejOuuAkMBTdYYM
-   6IMVo1jWiHDY/E+5Fsqr/hg9znZRFngVMbz/TQRbBQhgbXtCp/IhL8IuK
-   dFzQZL12DMVTkW0WUMe9eh73lGsJ480Sst43udx06jBqYZRTFGg5HyuXg
-   h5TNAMpe/wvrTuJom8sJcoRJQwyn31myHy+MkDnTRYwW8YpyyMnwga4aa
-   A==;
-X-CSE-ConnectionGUID: 8IgkARW1RdicED81lVP4hQ==
-X-CSE-MsgGUID: 9mV9/QdARqWh9kkl809Nsg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11673"; a="69096634"
-X-IronPort-AV: E=Sophos;i="6.21,231,1763452800"; 
-   d="scan'208";a="69096634"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 07:59:38 -0800
-X-CSE-ConnectionGUID: bDgbdEMTQw6b2QqinEE3mg==
-X-CSE-MsgGUID: 9BxtXjRtTumMUJG4NZE//w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,231,1763452800"; 
-   d="scan'208";a="204883081"
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.111.140]) ([10.125.111.140])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 07:59:38 -0800
-Message-ID: <d5009511-496f-4e82-8692-5307f468ca88@intel.com>
-Date: Fri, 16 Jan 2026 08:59:36 -0700
+	 In-Reply-To:Content-Type; b=THFdASAJV0fSSLsc/nvO0UeOeWHuFefFfG5PC4a3wt+OZYxcgjL/u3uW5S0lh9deue8Q3gAf219eakMsqGj43x4TjfJlyOOVYpTohzPAqbiOBdEVmnaK88NpgcHZY+EnfBBLHdQNgx2sYlTb2cJhYoecUsnYtXv1Im2M4cEC8Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B10535BE17;
+	Fri, 16 Jan 2026 16:07:10 +0000 (UTC)
+Authentication-Results: smtp-out2.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 53CDC3EA63;
+	Fri, 16 Jan 2026 16:07:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ympjEi5iamn6TgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 16 Jan 2026 16:07:10 +0000
+Message-ID: <ed6ca250-67ee-4f7a-bc3b-66169494549a@suse.cz>
+Date: Fri, 16 Jan 2026 17:07:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,86 +41,147 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/2] cxl/region: Support unaligned address translations
-To: Alison Schofield <alison.schofield@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-References: <cover.1768538962.git.alison.schofield@intel.com>
+Subject: Re: [PATCH v6 1/5] mm/zone_device: Reinitialize large zone device
+ private folios
 Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <cover.1768538962.git.alison.schofield@intel.com>
+To: Francois Dugast <francois.dugast@intel.com>,
+ intel-xe@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org, Matthew Brost <matthew.brost@intel.com>,
+ Zi Yan <ziy@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+ adhavan Srinivasan <maddy@linux.ibm.com>, Nicholas Piggin
+ <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+ Felix Kuehling <Felix.Kuehling@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+ David Hildenbrand <david@kernel.org>, Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Leon Romanovsky <leon@kernel.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Balbir Singh <balbirs@nvidia.com>,
+ linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ nouveau@lists.freedesktop.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org
+References: <20260116111325.1736137-1-francois.dugast@intel.com>
+ <20260116111325.1736137-2-francois.dugast@intel.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <20260116111325.1736137-2-francois.dugast@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spam-Score: -4.00
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: B10535BE17
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Spam-Flag: NO
 
+On 1/16/26 12:10, Francois Dugast wrote:
+> From: Matthew Brost <matthew.brost@intel.com>
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index 63c6ab4fdf08..ac7be07e3361 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -477,10 +477,43 @@ void free_zone_device_folio(struct folio *folio)
+>  	}
+>  }
+>  
+> -void zone_device_page_init(struct page *page, unsigned int order)
+> +void zone_device_page_init(struct page *page, struct dev_pagemap *pgmap,
+> +			   unsigned int order)
+>  {
+> +	struct page *new_page = page;
+> +	unsigned int i;
+> +
+>  	VM_WARN_ON_ONCE(order > MAX_ORDER_NR_PAGES);
+>  
+> +	for (i = 0; i < (1UL << order); ++i, ++new_page) {
+> +		struct folio *new_folio = (struct folio *)new_page;
+> +
+> +		/*
+> +		 * new_page could have been part of previous higher order folio
+> +		 * which encodes the order, in page + 1, in the flags bits. We
+> +		 * blindly clear bits which could have set my order field here,
+> +		 * including page head.
+> +		 */
+> +		new_page->flags.f &= ~0xffUL;	/* Clear possible order, page head */
+> +
+> +#ifdef NR_PAGES_IN_LARGE_FOLIO
+> +		/*
+> +		 * This pointer math looks odd, but new_page could have been
+> +		 * part of a previous higher order folio, which sets _nr_pages
+> +		 * in page + 1 (new_page). Therefore, we use pointer casting to
+> +		 * correctly locate the _nr_pages bits within new_page which
+> +		 * could have modified by previous higher order folio.
+> +		 */
+> +		((struct folio *)(new_page - 1))->_nr_pages = 0;
+> +#endif
+> +
+> +		new_folio->mapping = NULL;
+> +		new_folio->pgmap = pgmap;	/* Also clear compound head */
+> +		new_folio->share = 0;   /* fsdax only, unused for device private */
+> +		VM_WARN_ON_FOLIO(folio_ref_count(new_folio), new_folio);
+> +		VM_WARN_ON_FOLIO(!folio_is_zone_device(new_folio), new_folio);
+> +	}
+> +
+>  	/*
+>  	 * Drivers shouldn't be allocating pages after calling
+>  	 * memunmap_pages().
 
-
-On 1/15/26 9:58 PM, Alison Schofield wrote:
-> Changes in v6: 
-> - Replace 64-bit division operators with div64_u64() helpers (lkp)
-> 
-> Changes in v5:
-> - s/reg_ways/region_ways in decode_pos (DaveJ)
-> - Add comments in decode_pos
-> - Update the CXL spec references to 4.0
-> 
-> Changes in v4:
-> - Rebased Patch 1 onto 6.19-rc4 with minimal conflict.
-> - Added Patch 2 because 6.19 introduced poison by region offset
->   meaning that too needed support for unaligned regions.
-> 
-> Changes in v3:
-> - Add bracketing to avert possibly uninitialized usage (lkp)
-> - Remove excessive narration in decode_pos()  (Jonathan)
-> - Calculate devices_per_hb only once after switch in decode_pos() (Jonathan)
-> - Reduce scope of hpa and shifted in unaligned_dpa_to_hpa() (Jonathan)
-> - Unmix non- and assignment declarations in unaligned_dpa_to_hpa()  (Jonathan)
-> - Add blank line after return ULLONG_MAX in unaligned_dpa_to_hpa() (Jonathan)
-> - s/index/position in for loop in unaligned_dpa_to_hpa() (Jonathan)
-> - Initialize bool aligned true
-> - Comment that restore_parent() math relies on power-of-2 granularity
-> - Tidy-up the restore_parent() comment block
-> 
-> Changes in v2:
-> - Add 6 and 12 Host Bridge interleaves to decode_pos() (Jonathan)
-> - Limit the unalignment check to MOD3 regions
-> - Move the cache_size increment to a single place 
-> - Updated some in code comments
-> - Rebase on v6.18-rc1 
-> 
-> Changes in v1 (was RFC):
-> - Replace "/" with do_div() to quiet i386 build warning (lkp)
-> - Replace 'cxld->interleave_ways' with 'hbiw' for clarity
-> - Use div64_u64_rem() for alignment alignment
-> - Fix up a printk format specifier (lkp)
-> - Update code comments and commit log
-> - Rebase on v6.17-rc7
-> 
-> 
-> Begin Cover Letter: 
-> With the introduction of MOD3 interleave way support, platforms may
-> create regions at starting addresses that are not power-of-2 aligned.
-> This allows platforms to avoid gaps in the memory map, but addresses
-> within those regions cannot be translated using the existing bit
-> manipulation method.
-> 
-> Introduce support for translating these unaligned addresses.
-> 
-> 
-> Alison Schofield (2):
->   cxl/region: Translate DPA->HPA in unaligned MOD3 regions
->   cxl/region: Translate HPA to DPA and memdev in unaligned regions
-> 
->  drivers/cxl/core/region.c | 212 ++++++++++++++++++++++++++++++++++++--
->  1 file changed, 204 insertions(+), 8 deletions(-)
-> 
-> 
-> base-commit: 9ace4753a5202b02191d54e9fdf7f9e3d02b85eb
-
-Reapplied to cxl/next
-19885bd10755b9f737742fef8a14cbf554cd84e8
-78b50b5984629d362f826e9615ce4599f429716e
-
+Can't say I'm a fan of this. It probably works now (so I'm not nacking) but
+seems rather fragile. It seems likely to me somebody will try to change some
+implementation detail in the page allocator and not notice it breaks this,
+for example. I hope we can eventually get to something more robust.
 
