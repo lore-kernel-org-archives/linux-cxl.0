@@ -1,236 +1,250 @@
-Received: from a48-179.smtp-out.amazonses.com (a48-179.smtp-out.amazonses.com [54.240.48.179])
-	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3F1306B02;
-	Fri, 16 Jan 2026 19:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.48.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B802D780A
+	for <linux-cxl@vger.kernel.org>; Fri, 16 Jan 2026 19:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768590850; cv=none; b=m88uNXMx3bIvLYvBtxG4f9xb+j5jcQGXMkBmFVFmuqve3d/q+YdDZBI3jM9jcbYyZaEiAcB+QgZox/slgOIlWPFN9BSWt0qUJCZ+R60TfRDAwHvCj7TC8K37idtmKyKLcTSgz/cOtGHOUSv1VYgzTVbTn9j1AWIfnC8JxQm7GNA=
+	t=1768591048; cv=none; b=A+ySvO6yQ9dLsKoDmfaprKCS3dr9cJUvSIWAs+KdnO2GhtCjaNorC8ZbN+Pz/sEXXrxwXKH8n2ZACAaEHxdjNGJ8mlpCruLM+ms4Re6zhmTk6lrCbtDczSqAleh95vxQnqZ4YX9utJ/jmh2eodA3KikDfn5GubhyQlbh2Twxp+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768590850; c=relaxed/simple;
-	bh=JllOgEM7aQKk+PtcWXrB+BYsUOTL+sv45IkCgmrJnLk=;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:In-Reply-To:
-	 References:Message-ID; b=oYvlTeWkNqenM3BM4TLRVWEjyzclKMhb52C0porj6pKmuENxed0ENcLtbavSikacgPNXgKoEGkJPdApIbw9MpAGY8kPxAudzWEb+bojH9t1YU3gNZUVt1ue0mQSeX8s3MtdxbFpUf0quPrs91JYs8YMEIqiTh+T/sgsAY2rqanM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=RLPPtBtH; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=AjEq9hZ0; arc=none smtp.client-ip=54.240.48.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
+	s=arc-20240116; t=1768591048; c=relaxed/simple;
+	bh=NULDvRtM4/XPKlGdqzV6HUiI/wqDbY0FOz1JTr5gkCA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CmrNaPYRARkZMJGNg7Av+QKc9MFiB8SI785FUiUX9Zu65GVSED44ZllypSzGmUN7MwsNjiGtPIo2fn6h5LqCU6albB9n0MxREGG9kXpb9wzfLdWfCyDhfwoSwOmkiXO+2Pv9SPA9Hn2WCXZ505I3/CCnZsnx14c9hhb9+H5D98Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Mo+68MVr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Oj286jig; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=rTK0cGo1; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fZ6A3sjl; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="RLPPtBtH";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="AjEq9hZ0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1768590847;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id;
-	bh=JllOgEM7aQKk+PtcWXrB+BYsUOTL+sv45IkCgmrJnLk=;
-	b=RLPPtBtHKchKd1ZGbpIgdnL2Bu01ppfsu/cIEE9CBZ/ACnLfP8a+Z+bnezbVKJh5
-	TZ0kpkTxBeaiHHJ9FsW/oD2SSuix4PNI2HadJFivDhSzIO7S99VgKWrO4WgkWjOMB9s
-	0kLtZ/UrMBNP7XnyEvmyIsgGj4YLBbosYbZTW79g=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1768590847;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id:Feedback-ID;
-	bh=JllOgEM7aQKk+PtcWXrB+BYsUOTL+sv45IkCgmrJnLk=;
-	b=AjEq9hZ0TYguMv9aam6OkZRRZNstQZREIfiUF7G26KQq+3UtnW6upspWQoJaL0nb
-	E8/BK85Y96L+uDKhDuaG5emCmpUJol/5tRcRsOsiupS8bUXhff6khkydMWmcYeZwFQc
-	/ov+/zWG6gQdctB9S1C3MYDBd+0n8mqe8XgnIO/s=
-Subject: [PATCH V3 2/2] Add test/daxctl-famfs.sh to test famfs mode
- transitions:
-From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
-To: =?UTF-8?Q?John_Groves?= <John@Groves.net>, 
-	=?UTF-8?Q?Miklos_Szeredi?= <miklos@szeredi.hu>, 
-	=?UTF-8?Q?Dan_Williams?= <dan.j.williams@intel.com>, 
-	=?UTF-8?Q?Bernd_Schubert?= <bschubert@ddn.com>, 
-	=?UTF-8?Q?Alison_Schofiel?= =?UTF-8?Q?d?= <alison.schofield@intel.com>
-Cc: =?UTF-8?Q?John_Groves?= <jgroves@micron.com>, 
-	=?UTF-8?Q?John_Groves?= <jgroves@fastmail.com>, 
-	=?UTF-8?Q?Jonathan_Corbet?= <corbet@lwn.net>, 
-	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
-	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
-	=?UTF-8?Q?Matthew_Wilcox?= <willy@infradead.org>, 
-	=?UTF-8?Q?Jan_Kara?= <jack@suse.cz>, 
-	=?UTF-8?Q?Alexander_Viro?= <viro@zeniv.linux.org.uk>, 
-	=?UTF-8?Q?David_Hildenbrand?= <david@kernel.org>, 
-	=?UTF-8?Q?Christian_Bra?= =?UTF-8?Q?uner?= <brauner@kernel.org>, 
-	=?UTF-8?Q?Darrick_J_=2E_Wong?= <djwong@kernel.org>, 
-	=?UTF-8?Q?Randy_Dunlap?= <rdunlap@infradead.org>, 
-	=?UTF-8?Q?Jeff_Layton?= <jlayton@kernel.org>, 
-	=?UTF-8?Q?Amir_Goldstein?= <amir73il@gmail.com>, 
-	=?UTF-8?Q?Jonathan_Cameron?= <Jonathan.Cameron@huawei.com>, 
-	=?UTF-8?Q?Stefan_Hajnoczi?= <shajnocz@redhat.com>, 
-	=?UTF-8?Q?Joanne_Koong?= <joannelkoong@gmail.com>, 
-	=?UTF-8?Q?Josef_Bacik?= <josef@toxicpanda.com>, 
-	=?UTF-8?Q?Bagas_Sanjaya?= <bagasdotme@gmail.com>, 
-	=?UTF-8?Q?James_Morse?= <james.morse@arm.com>, 
-	=?UTF-8?Q?Fuad_Tabba?= <tabba@google.com>, 
-	=?UTF-8?Q?Sean_Christopherson?= <seanjc@google.com>, 
-	=?UTF-8?Q?Shivank_Garg?= <shivankg@amd.com>, 
-	=?UTF-8?Q?Ackerley_Tng?= <ackerleytng@google.com>, 
-	=?UTF-8?Q?Gregory_Pric?= =?UTF-8?Q?e?= <gourry@gourry.net>, 
-	=?UTF-8?Q?Aravind_Ramesh?= <arramesh@micron.com>, 
-	=?UTF-8?Q?Ajay_Joshi?= <ajayjoshi@micron.com>, 
-	=?UTF-8?Q?venkataravis=40micron=2Ecom?= <venkataravis@micron.com>, 
-	=?UTF-8?Q?linux-doc=40vger=2Ekernel=2Eorg?= <linux-doc@vger.kernel.org>, 
-	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
-	=?UTF-8?Q?nvdimm=40lists=2Elinux=2Edev?= <nvdimm@lists.linux.dev>, 
-	=?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
-	=?UTF-8?Q?linux-fsdevel=40vger=2Ekernel=2Eorg?= <linux-fsdevel@vger.kernel.org>
-Date: Fri, 16 Jan 2026 19:14:07 +0000
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Mo+68MVr";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Oj286jig";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rTK0cGo1";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fZ6A3sjl"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8084C33699;
+	Fri, 16 Jan 2026 19:17:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1768591044; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bisbCLm02jmO7kyrUXkvEcJg6kYp00MTdd1BdKawzFo=;
+	b=Mo+68MVrcphyHUMmUlW76Ea+IsmX87ibhv7WIG7yqlPQbMBV6bacUF1uDNdefDYPXE5LtZ
+	NWFrlDlvXLchecXoIBohgRX0CtpRYvHwENNvD/NQ5JLxx+H89GoDT9MJHrJHbp75Kwv7yV
+	s8DTUjmNPC47SAG3Go3HG11sGVtN+p0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1768591044;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bisbCLm02jmO7kyrUXkvEcJg6kYp00MTdd1BdKawzFo=;
+	b=Oj286jigOR0MEqC+M/Sg6/yRSSNYgmTKItEDIVykS1qj8qDWAvzuxdd2jgg22+SAUnUt+F
+	xVlgq40gtnt/FgAw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1768591043; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bisbCLm02jmO7kyrUXkvEcJg6kYp00MTdd1BdKawzFo=;
+	b=rTK0cGo13Lnb3UHlVksaG/Tvwtp5cVmYRGk3/NxeEipVJk2HKo4DGENgtF6P4ohfHFgl24
+	nYqzuIJ3uepxhLKDkkgtMRvMC0YHa9qtv+6mlENtQODsN5FnNoA91JEZNKv33hagRw9MwM
+	8hIdlBl7xl4h98om58DpHaZA/tSZsAM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1768591043;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bisbCLm02jmO7kyrUXkvEcJg6kYp00MTdd1BdKawzFo=;
+	b=fZ6A3sjlOuoCcXiAId99hN+SdJvIBtJ9iF/7w7p/MGNiuyOUn2LXgyzUpzyrH/OhgGVRSa
+	Y4+YVjsFVyGZfZAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 334C03EA63;
+	Fri, 16 Jan 2026 19:17:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id cWpiCsOOamnQBgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 16 Jan 2026 19:17:23 +0000
+Message-ID: <8006ea5f-8845-436a-a2d7-125399428762@suse.cz>
+Date: Fri, 16 Jan 2026 20:17:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/5] mm/zone_device: Reinitialize large zone device
+ private folios
+Content-Language: en-US
+To: Jason Gunthorpe <jgg@nvidia.com>,
+ Francois Dugast <francois.dugast@intel.com>
+Cc: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ Matthew Brost <matthew.brost@intel.com>, Zi Yan <ziy@nvidia.com>,
+ Alistair Popple <apopple@nvidia.com>,
+ adhavan Srinivasan <maddy@linux.ibm.com>, Nicholas Piggin
+ <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+ Felix Kuehling <Felix.Kuehling@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+ David Hildenbrand <david@kernel.org>, Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>, Leon Romanovsky
+ <leon@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Balbir Singh <balbirs@nvidia.com>,
+ linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ nouveau@lists.freedesktop.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org
+References: <20260116111325.1736137-1-francois.dugast@intel.com>
+ <20260116111325.1736137-2-francois.dugast@intel.com>
+ <20260116174947.GA1134434@nvidia.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
+ KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
+ 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
+ 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
+ tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
+ Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
+ 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
+ LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
+ 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
+ BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABzSBWbGFzdGltaWwg
+ QmFia2EgPHZiYWJrYUBzdXNlLmN6PsLBlAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
+ AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJnyBr8BQka0IFQAAoJECJPp+fMgqZkqmMQ
+ AIbGN95ptUMUvo6aAdhxaOCHXp1DfIBuIOK/zpx8ylY4pOwu3GRe4dQ8u4XS9gaZ96Gj4bC+
+ jwWcSmn+TjtKW3rH1dRKopvC07tSJIGGVyw7ieV/5cbFffA8NL0ILowzVg8w1ipnz1VTkWDr
+ 2zcfslxJsJ6vhXw5/npcY0ldeC1E8f6UUoa4eyoskd70vO0wOAoGd02ZkJoox3F5ODM0kjHu
+ Y97VLOa3GG66lh+ZEelVZEujHfKceCw9G3PMvEzyLFbXvSOigZQMdKzQ8D/OChwqig8wFBmV
+ QCPS4yDdmZP3oeDHRjJ9jvMUKoYODiNKsl2F+xXwyRM2qoKRqFlhCn4usVd1+wmv9iLV8nPs
+ 2Db1ZIa49fJet3Sk3PN4bV1rAPuWvtbuTBN39Q/6MgkLTYHb84HyFKw14Rqe5YorrBLbF3rl
+ M51Dpf6Egu1yTJDHCTEwePWug4XI11FT8lK0LNnHNpbhTCYRjX73iWOnFraJNcURld1jL1nV
+ r/LRD+/e2gNtSTPK0Qkon6HcOBZnxRoqtazTU6YQRmGlT0v+rukj/cn5sToYibWLn+RoV1CE
+ Qj6tApOiHBkpEsCzHGu+iDQ1WT0Idtdynst738f/uCeCMkdRu4WMZjteQaqvARFwCy3P/jpK
+ uvzMtves5HvZw33ZwOtMCgbpce00DaET4y/UzsBNBFsZNTUBCACfQfpSsWJZyi+SHoRdVyX5
+ J6rI7okc4+b571a7RXD5UhS9dlVRVVAtrU9ANSLqPTQKGVxHrqD39XSw8hxK61pw8p90pg4G
+ /N3iuWEvyt+t0SxDDkClnGsDyRhlUyEWYFEoBrrCizbmahOUwqkJbNMfzj5Y7n7OIJOxNRkB
+ IBOjPdF26dMP69BwePQao1M8Acrrex9sAHYjQGyVmReRjVEtv9iG4DoTsnIR3amKVk6si4Ea
+ X/mrapJqSCcBUVYUFH8M7bsm4CSxier5ofy8jTEa/CfvkqpKThTMCQPNZKY7hke5qEq1CBk2
+ wxhX48ZrJEFf1v3NuV3OimgsF2odzieNABEBAAHCwXwEGAEKACYCGwwWIQSpQNQ0mSwujpkQ
+ PVAiT6fnzIKmZAUCZ8gcVAUJFhTonwAKCRAiT6fnzIKmZLY8D/9uo3Ut9yi2YCuASWxr7QQZ
+ lJCViArjymbxYB5NdOeC50/0gnhK4pgdHlE2MdwF6o34x7TPFGpjNFvycZqccSQPJ/gibwNA
+ zx3q9vJT4Vw+YbiyS53iSBLXMweeVV1Jd9IjAoL+EqB0cbxoFXvnjkvP1foiiF5r73jCd4PR
+ rD+GoX5BZ7AZmFYmuJYBm28STM2NA6LhT0X+2su16f/HtummENKcMwom0hNu3MBNPUOrujtW
+ khQrWcJNAAsy4yMoJ2Lw51T/5X5Hc7jQ9da9fyqu+phqlVtn70qpPvgWy4HRhr25fCAEXZDp
+ xG4RNmTm+pqorHOqhBkI7wA7P/nyPo7ZEc3L+ZkQ37u0nlOyrjbNUniPGxPxv1imVq8IyycG
+ AN5FaFxtiELK22gvudghLJaDiRBhn8/AhXc642/Z/yIpizE2xG4KU4AXzb6C+o7LX/WmmsWP
+ Ly6jamSg6tvrdo4/e87lUedEqCtrp2o1xpn5zongf6cQkaLZKQcBQnPmgHO5OG8+50u88D9I
+ rywqgzTUhHFKKF6/9L/lYtrNcHU8Z6Y4Ju/MLUiNYkmtrGIMnkjKCiRqlRrZE/v5YFHbayRD
+ dJKXobXTtCBYpLJM4ZYRpGZXne/FAtWNe4KbNJJqxMvrTOrnIatPj8NhBVI0RSJRsbilh6TE
+ m6M14QORSWTLRg==
+In-Reply-To: <20260116174947.GA1134434@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20260116191253.1559-1-john@jagalactic.com>
-References: <20260116125831.953.compound@groves.net> 
- <20260116191253.1559-1-john@jagalactic.com> 
- <20260116191253.1559-3-john@jagalactic.com>
-X-Mailer: Amazon WorkMail
-Thread-Index: AQHchxoe1VAe00deR0Sw2d725QhurgAAgGyVAACKljg=
-Thread-Topic: [PATCH V3 2/2] Add test/daxctl-famfs.sh to test famfs mode
- transitions:
-X-Wm-Sent-Timestamp: 1768590846
-X-Original-Mailer: git-send-email 2.52.0
-Message-ID: <0100019bc83aadfc-2ad270c8-4e1e-4ab1-bda4-febf8d5ee4fc-000000@email.amazonses.com>
-Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
-X-SES-Outgoing: 2026.01.16-54.240.48.179
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.997];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[38];
+	RCVD_TLS_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[lists.freedesktop.org,intel.com,nvidia.com,linux.ibm.com,gmail.com,ellerman.id.au,kernel.org,amd.com,ffwll.ch,linux.intel.com,suse.de,redhat.com,linux-foundation.org,oracle.com,google.com,suse.com,lists.ozlabs.org,vger.kernel.org,kvack.org];
+	R_RATELIMIT(0.00)[to_ip_from(RLzhxcfrrwnfnqtbioy5kgo5ee)];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid]
+X-Spam-Level: 
+X-Spam-Flag: NO
 
-From: John Groves <John@Groves.net>=0D=0A=0D=0A- devdax <-> famfs mode sw=
-itches=0D=0A- Verify famfs -> system-ram is rejected (must go via devdax)=
-=0D=0A- Test JSON output shows correct mode=0D=0A- Test error handling fo=
-r invalid modes=0D=0A=0D=0AThe test is added to the destructive test suit=
-e since it=0D=0Amodifies device modes.=0D=0A=0D=0ASigned-off-by: John Gro=
-ves <john@groves.net>=0D=0A---=0D=0A test/daxctl-famfs.sh | 253 +++++++++=
-++++++++++++++++++++++++++++++++++=0D=0A test/meson.build     |   2 +=0D=0A=
- 2 files changed, 255 insertions(+)=0D=0A create mode 100755 test/daxctl-=
-famfs.sh=0D=0A=0D=0Adiff --git a/test/daxctl-famfs.sh b/test/daxctl-famfs=
-=2Esh=0D=0Anew file mode 100755=0D=0Aindex 0000000..12fbfef=0D=0A--- /dev=
-/null=0D=0A+++ b/test/daxctl-famfs.sh=0D=0A@@ -0,0 +1,253 @@=0D=0A+#!/bin=
-/bash -Ex=0D=0A+# SPDX-License-Identifier: GPL-2.0=0D=0A+# Copyright (C) =
-2025 Micron Technology, Inc. All rights reserved.=0D=0A+#=0D=0A+# Test da=
-xctl famfs mode transitions and mode detection=0D=0A+=0D=0A+rc=3D77=0D=0A=
-+. $(dirname $0)/common=0D=0A+=0D=0A+trap 'cleanup $LINENO' ERR=0D=0A+=0D=
-=0A+daxdev=3D""=0D=0A+original_mode=3D""=0D=0A+=0D=0A+cleanup()=0D=0A+{=0D=
-=0A+=09printf "Error at line %d\n" "$1"=0D=0A+=09# Try to restore to orig=
-inal mode if we know it=0D=0A+=09if [[ $daxdev && $original_mode ]]; then=
-=0D=0A+=09=09"$DAXCTL" reconfigure-device -f -m "$original_mode" "$daxdev=
-" 2>/dev/null || true=0D=0A+=09fi=0D=0A+=09exit $rc=0D=0A+}=0D=0A+=0D=0A+=
-# Check if fsdev_dax module is available=0D=0A+check_fsdev_dax()=0D=0A+{=0D=
-=0A+=09if modinfo fsdev_dax &>/dev/null; then=0D=0A+=09=09return 0=0D=0A+=
-=09fi=0D=0A+=09if grep -qF "fsdev_dax" "/lib/modules/$(uname -r)/modules.=
-builtin" 2>/dev/null; then=0D=0A+=09=09return 0=0D=0A+=09fi=0D=0A+=09prin=
-tf "fsdev_dax module not available, skipping\n"=0D=0A+=09exit 77=0D=0A+}=0D=
-=0A+=0D=0A+# Check if kmem module is available (needed for system-ram mod=
-e tests)=0D=0A+check_kmem()=0D=0A+{=0D=0A+=09if modinfo kmem &>/dev/null;=
- then=0D=0A+=09=09return 0=0D=0A+=09fi=0D=0A+=09if grep -qF "kmem" "/lib/=
-modules/$(uname -r)/modules.builtin" 2>/dev/null; then=0D=0A+=09=09return=
- 0=0D=0A+=09fi=0D=0A+=09printf "kmem module not available, skipping syste=
-m-ram tests\n"=0D=0A+=09return 1=0D=0A+}=0D=0A+=0D=0A+# Find an existing =
-dax device to test with=0D=0A+find_daxdev()=0D=0A+{=0D=0A+=09# Look for a=
-ny available dax device=0D=0A+=09daxdev=3D$("$DAXCTL" list | jq -er '.[0]=
-=2Echardev // empty' 2>/dev/null) || true=0D=0A+=0D=0A+=09if [[ ! $daxdev=
- ]]; then=0D=0A+=09=09printf "No dax device found, skipping\n"=0D=0A+=09=09=
-exit 77=0D=0A+=09fi=0D=0A+=0D=0A+=09# Save the original mode so we can re=
-store it=0D=0A+=09original_mode=3D$("$DAXCTL" list -d "$daxdev" | jq -er =
-'.[].mode')=0D=0A+=0D=0A+=09printf "Found dax device: %s (current mode: %=
-s)\n" "$daxdev" "$original_mode"=0D=0A+}=0D=0A+=0D=0A+daxctl_get_mode()=0D=
-=0A+{=0D=0A+=09"$DAXCTL" list -d "$1" | jq -er '.[].mode'=0D=0A+}=0D=0A+=0D=
-=0A+# Ensure device is in devdax mode for testing=0D=0A+ensure_devdax_mod=
-e()=0D=0A+{=0D=0A+=09local mode=0D=0A+=09mode=3D$(daxctl_get_mode "$daxde=
-v")=0D=0A+=0D=0A+=09if [[ "$mode" =3D=3D "devdax" ]]; then=0D=0A+=09=09re=
-turn 0=0D=0A+=09fi=0D=0A+=0D=0A+=09if [[ "$mode" =3D=3D "system-ram" ]]; =
-then=0D=0A+=09=09printf "Device is in system-ram mode, attempting to conv=
-ert to devdax...\n"=0D=0A+=09=09"$DAXCTL" reconfigure-device -f -m devdax=
- "$daxdev"=0D=0A+=09elif [[ "$mode" =3D=3D "famfs" ]]; then=0D=0A+=09=09p=
-rintf "Device is in famfs mode, converting to devdax...\n"=0D=0A+=09=09"$=
-DAXCTL" reconfigure-device -m devdax "$daxdev"=0D=0A+=09else=0D=0A+=09=09=
-printf "Device is in unknown mode: %s\n" "$mode"=0D=0A+=09=09return 1=0D=0A=
-+=09fi=0D=0A+=0D=0A+=09[[ $(daxctl_get_mode "$daxdev") =3D=3D "devdax" ]]=
-=0D=0A+}=0D=0A+=0D=0A+#=0D=0A+# Test basic mode transitions involving fam=
-fs=0D=0A+#=0D=0A+test_famfs_mode_transitions()=0D=0A+{=0D=0A+=09printf "\=
-n=3D=3D=3D Testing famfs mode transitions =3D=3D=3D\n"=0D=0A+=0D=0A+=09# =
-Ensure starting in devdax mode=0D=0A+=09ensure_devdax_mode=0D=0A+=09[[ $(=
-daxctl_get_mode "$daxdev") =3D=3D "devdax" ]]=0D=0A+=09printf "Initial mo=
-de: devdax - OK\n"=0D=0A+=0D=0A+=09# Test: devdax -> famfs=0D=0A+=09print=
-f "Testing devdax -> famfs... "=0D=0A+=09"$DAXCTL" reconfigure-device -m =
-famfs "$daxdev"=0D=0A+=09[[ $(daxctl_get_mode "$daxdev") =3D=3D "famfs" ]=
-]=0D=0A+=09printf "OK\n"=0D=0A+=0D=0A+=09# Test: famfs -> famfs (re-enabl=
-e in same mode)=0D=0A+=09printf "Testing famfs -> famfs (re-enable)... "=0D=
-=0A+=09"$DAXCTL" reconfigure-device -m famfs "$daxdev"=0D=0A+=09[[ $(daxc=
-tl_get_mode "$daxdev") =3D=3D "famfs" ]]=0D=0A+=09printf "OK\n"=0D=0A+=0D=
-=0A+=09# Test: famfs -> devdax=0D=0A+=09printf "Testing famfs -> devdax..=
-=2E "=0D=0A+=09"$DAXCTL" reconfigure-device -m devdax "$daxdev"=0D=0A+=09=
-[[ $(daxctl_get_mode "$daxdev") =3D=3D "devdax" ]]=0D=0A+=09printf "OK\n"=
-=0D=0A+=0D=0A+=09# Test: devdax -> devdax (re-enable in same mode)=0D=0A+=
-=09printf "Testing devdax -> devdax (re-enable)... "=0D=0A+=09"$DAXCTL" r=
-econfigure-device -m devdax "$daxdev"=0D=0A+=09[[ $(daxctl_get_mode "$dax=
-dev") =3D=3D "devdax" ]]=0D=0A+=09printf "OK\n"=0D=0A+}=0D=0A+=0D=0A+#=0D=
-=0A+# Test mode transitions with system-ram (requires kmem)=0D=0A+#=0D=0A=
-+test_system_ram_transitions()=0D=0A+{=0D=0A+=09printf "\n=3D=3D=3D Testi=
-ng system-ram transitions with famfs =3D=3D=3D\n"=0D=0A+=0D=0A+=09# Ensur=
-e we start in devdax mode=0D=0A+=09ensure_devdax_mode=0D=0A+=09[[ $(daxct=
-l_get_mode "$daxdev") =3D=3D "devdax" ]]=0D=0A+=0D=0A+=09# Test: devdax -=
-> system-ram=0D=0A+=09printf "Testing devdax -> system-ram... "=0D=0A+=09=
-"$DAXCTL" reconfigure-device -N -m system-ram "$daxdev"=0D=0A+=09[[ $(dax=
-ctl_get_mode "$daxdev") =3D=3D "system-ram" ]]=0D=0A+=09printf "OK\n"=0D=0A=
-+=0D=0A+=09# Test: system-ram -> famfs should fail=0D=0A+=09printf "Testi=
-ng system-ram -> famfs (should fail)... "=0D=0A+=09if "$DAXCTL" reconfigu=
-re-device -m famfs "$daxdev" 2>/dev/null; then=0D=0A+=09=09printf "FAILED=
- - should have been rejected\n"=0D=0A+=09=09return 1=0D=0A+=09fi=0D=0A+=09=
-printf "OK (correctly rejected)\n"=0D=0A+=0D=0A+=09# Test: system-ram -> =
-devdax -> famfs (proper path)=0D=0A+=09printf "Testing system-ram -> devd=
-ax -> famfs... "=0D=0A+=09"$DAXCTL" reconfigure-device -f -m devdax "$dax=
-dev"=0D=0A+=09[[ $(daxctl_get_mode "$daxdev") =3D=3D "devdax" ]]=0D=0A+=09=
-"$DAXCTL" reconfigure-device -m famfs "$daxdev"=0D=0A+=09[[ $(daxctl_get_=
-mode "$daxdev") =3D=3D "famfs" ]]=0D=0A+=09printf "OK\n"=0D=0A+=0D=0A+=09=
-# Restore to devdax for subsequent tests=0D=0A+=09"$DAXCTL" reconfigure-d=
-evice -m devdax "$daxdev"=0D=0A+}=0D=0A+=0D=0A+#=0D=0A+# Test JSON output=
- shows correct mode=0D=0A+#=0D=0A+test_json_output()=0D=0A+{=0D=0A+=09pri=
-ntf "\n=3D=3D=3D Testing JSON output for mode field =3D=3D=3D\n"=0D=0A+=0D=
-=0A+=09# Test devdax mode in JSON=0D=0A+=09ensure_devdax_mode=0D=0A+=09pr=
-intf "Testing JSON output for devdax mode... "=0D=0A+=09mode=3D$("$DAXCTL=
-" list -d "$daxdev" | jq -er '.[].mode')=0D=0A+=09[[ "$mode" =3D=3D "devd=
-ax" ]]=0D=0A+=09printf "OK\n"=0D=0A+=0D=0A+=09# Test famfs mode in JSON=0D=
-=0A+=09"$DAXCTL" reconfigure-device -m famfs "$daxdev"=0D=0A+=09printf "T=
-esting JSON output for famfs mode... "=0D=0A+=09mode=3D$("$DAXCTL" list -=
-d "$daxdev" | jq -er '.[].mode')=0D=0A+=09[[ "$mode" =3D=3D "famfs" ]]=0D=
-=0A+=09printf "OK\n"=0D=0A+=0D=0A+=09# Restore to devdax=0D=0A+=09"$DAXCT=
-L" reconfigure-device -m devdax "$daxdev"=0D=0A+}=0D=0A+=0D=0A+#=0D=0A+# =
-Test error messages for invalid transitions=0D=0A+#=0D=0A+test_error_hand=
-ling()=0D=0A+{=0D=0A+=09printf "\n=3D=3D=3D Testing error handling =3D=3D=
-=3D\n"=0D=0A+=0D=0A+=09# Ensure we're in famfs mode=0D=0A+=09"$DAXCTL" re=
-configure-device -m famfs "$daxdev"=0D=0A+=0D=0A+=09# Test that invalid m=
-ode is rejected=0D=0A+=09printf "Testing invalid mode rejection... "=0D=0A=
-+=09if "$DAXCTL" reconfigure-device -m invalidmode "$daxdev" 2>/dev/null;=
- then=0D=0A+=09=09printf "FAILED - invalid mode should be rejected\n"=0D=0A=
-+=09=09return 1=0D=0A+=09fi=0D=0A+=09printf "OK (correctly rejected)\n"=0D=
-=0A+=0D=0A+=09# Restore to devdax=0D=0A+=09"$DAXCTL" reconfigure-device -=
-m devdax "$daxdev"=0D=0A+}=0D=0A+=0D=0A+#=0D=0A+# Main test sequence=0D=0A=
-+#=0D=0A+main()=0D=0A+{=0D=0A+=09check_fsdev_dax=0D=0A+=09find_daxdev=0D=0A=
-+=0D=0A+=09rc=3D1  # From here on, failures are real failures=0D=0A+=0D=0A=
-+=09test_famfs_mode_transitions=0D=0A+=09test_json_output=0D=0A+=09test_e=
-rror_handling=0D=0A+=0D=0A+=09# System-ram tests require kmem module=0D=0A=
-+=09if check_kmem; then=0D=0A+=09=09# Save and disable online policy for =
-system-ram tests=0D=0A+=09=09saved_policy=3D"$(cat /sys/devices/system/me=
-mory/auto_online_blocks)"=0D=0A+=09=09echo "offline" > /sys/devices/syste=
-m/memory/auto_online_blocks=0D=0A+=0D=0A+=09=09test_system_ram_transition=
-s=0D=0A+=0D=0A+=09=09# Restore online policy=0D=0A+=09=09echo "$saved_pol=
-icy" > /sys/devices/system/memory/auto_online_blocks=0D=0A+=09fi=0D=0A+=0D=
-=0A+=09# Restore original mode=0D=0A+=09printf "\nRestoring device to ori=
-ginal mode: %s\n" "$original_mode"=0D=0A+=09"$DAXCTL" reconfigure-device =
--f -m "$original_mode" "$daxdev"=0D=0A+=0D=0A+=09printf "\n=3D=3D=3D All =
-famfs tests passed =3D=3D=3D\n"=0D=0A+=0D=0A+=09exit 0=0D=0A+}=0D=0A+=0D=0A=
-+main=0D=0Adiff --git a/test/meson.build b/test/meson.build=0D=0Aindex 61=
-5376e..ad1d393 100644=0D=0A--- a/test/meson.build=0D=0A+++ b/test/meson.b=
-uild=0D=0A@@ -209,6 +209,7 @@ if get_option('destructive').enabled()=0D=0A=
-   device_dax_fio =3D find_program('device-dax-fio.sh')=0D=0A   daxctl_de=
-vices =3D find_program('daxctl-devices.sh')=0D=0A   daxctl_create =3D fin=
-d_program('daxctl-create.sh')=0D=0A+  daxctl_famfs =3D find_program('daxc=
-tl-famfs.sh')=0D=0A   dm =3D find_program('dm.sh')=0D=0A   mmap_test =3D =
-find_program('mmap.sh')=0D=0A=20=0D=0A@@ -226,6 +227,7 @@ if get_option('=
-destructive').enabled()=0D=0A     [ 'device-dax-fio.sh', device_dax_fio, =
-'dax'   ],=0D=0A     [ 'daxctl-devices.sh', daxctl_devices, 'dax'   ],=0D=
-=0A     [ 'daxctl-create.sh',  daxctl_create,  'dax'   ],=0D=0A+    [ 'da=
-xctl-famfs.sh',   daxctl_famfs,   'dax'   ],=0D=0A     [ 'dm.sh',        =
-     dm,=09=09   'dax'   ],=0D=0A     [ 'mmap.sh',           mmap_test,=09=
-   'dax'   ],=0D=0A   ]=0D=0A--=20=0D=0A2.49.0=0D=0A=0D=0A
+On 1/16/26 18:49, Jason Gunthorpe wrote:
+> On Fri, Jan 16, 2026 at 12:10:16PM +0100, Francois Dugast wrote:
+>> -void zone_device_page_init(struct page *page, unsigned int order)
+>> +void zone_device_page_init(struct page *page, struct dev_pagemap *pgmap,
+>> +			   unsigned int order)
+>>  {
+>> +	struct page *new_page = page;
+>> +	unsigned int i;
+>> +
+>>  	VM_WARN_ON_ONCE(order > MAX_ORDER_NR_PAGES);
+>>  
+>> +	for (i = 0; i < (1UL << order); ++i, ++new_page) {
+>> +		struct folio *new_folio = (struct folio *)new_page;
+>> +
+>> +		/*
+>> +		 * new_page could have been part of previous higher order folio
+>> +		 * which encodes the order, in page + 1, in the flags bits. We
+>> +		 * blindly clear bits which could have set my order field here,
+>> +		 * including page head.
+>> +		 */
+>> +		new_page->flags.f &= ~0xffUL;	/* Clear possible order, page head */
+>> +
+>> +#ifdef NR_PAGES_IN_LARGE_FOLIO
+>> +		/*
+>> +		 * This pointer math looks odd, but new_page could have been
+>> +		 * part of a previous higher order folio, which sets _nr_pages
+>> +		 * in page + 1 (new_page). Therefore, we use pointer casting to
+>> +		 * correctly locate the _nr_pages bits within new_page which
+>> +		 * could have modified by previous higher order folio.
+>> +		 */
+>> +		((struct folio *)(new_page - 1))->_nr_pages = 0;
+>> +#endif
+> 
+> This seems too weird, why is it in the loop?  There is only one
+> _nr_pages per folio.
+
+I suppose we could be getting say an order-9 folio that was previously used
+as two order-8 folios? And each of them had their _nr_pages in their head
+and we can't know that at this point so we have to reset everything?
+
+AFAIU this would not be a problem if the clearing of the previous state was
+done upon freeing, as e.g. v4 did, but I think you also argued it meant
+processing the pages when freeing and then again at reallocation, so it's
+now like this instead?
+
+Or maybe you mean that stray _nr_pages in some tail page from previous
+lifetimes can't affect the current lifetime in a wrong way for something
+looking at said page? I don't know immediately.
+
+> This is mostly zeroing some memory in the tail pages? Why?
+> 
+> Why can't this use the normal helpers, like memmap_init_compound()?
+> 
+>  struct folio *new_folio = page
+> 
+>  /* First 4 tail pages are part of struct folio */
+>  for (i = 4; i < (1UL << order); i++) {
+>      prep_compound_tail(..)
+>  }
+> 
+>  prep_comound_head(page, order)
+>  new_folio->_nr_pages = 0
+> 
+> ??
+> 
+> Jason
+
