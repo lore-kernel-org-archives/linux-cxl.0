@@ -1,197 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from a11-124.smtp-out.amazonses.com (a11-124.smtp-out.amazonses.com [54.240.11.124])
+	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E572A30C345;
-	Sun, 18 Jan 2026 22:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768775358; cv=fail; b=o9xokcnFcpRMFEvdXmL3d+jTbie41kRfkI40hjA3Ff/CprJPS63PbtMizO70r11fE/vk3CDBmR4X3mXz14PAMvU/HEc4+cbvzy0ERkVNoQ0TdYASEoULiUw2YtM8f9gX+d+OTdQ9uze2LGUJNLcbjUda65xlp/lMfWm2coSU/dc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768775358; c=relaxed/simple;
-	bh=1H2HOrtQo4UU6+GWlIp2xbZPvPvCHPfytcliotxmDaU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ihYiDL26OorlKMJbRE6BbcEx+Fzj5wnPc3gR7WfdZdjEJbYlmkRJ/pOoaxNrNKU0mEiBg+AiZSSUEOxDsfEqdggLw9VUr51cjj14lm94+DKMmum/zH3G1YpoccJ5lrQnIF0kqwYUmMNQ0rT0DCAcMdyzvvGiGiitnAKkTo2HifQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oBmXo+Xn; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418CF30C345;
+	Sun, 18 Jan 2026 22:29:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.11.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768775360; cv=none; b=Bo4G4EKK5yiDcrRYsG0Sqr4OuH5X0J+VT3dc0yFIm9P/kSZ6OQgvLa6H4W6iJgHr5OHD2pnhY785jF68QnCm98KJU0g/trH5X894Lk77tGCSd0Oy7sj8mePaRg671K5yNjF621g1K/BdN/gAodrVOSODJrvT15k1SjiumNEMDCQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768775360; c=relaxed/simple;
+	bh=yKHfUeZ7rs6sbyWVsDWPsIJqM94R8Uy96Q9wQ2otEC8=;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:References:
+	 Message-ID; b=kkzRm3FB9zkBf+kQBSCgJ+mOfBQC4aqKrq/UVFtBJ55P7OkjIY/o04s0/v4E2JuG6Za9zI3szT6uMofPOjhb/20Nyvymq2tRdbliXSObs1JuPSPwcH7+vPDaijH6nEwrRdM4Snvw+imr8UdhaaCsmooFcfpD5HkJ6tk3bZ1TRBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=qZcO2pTb; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=N51dnn1M; arc=none smtp.client-ip=54.240.11.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oBmXo+Xn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768775356; x=1800311356;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=1H2HOrtQo4UU6+GWlIp2xbZPvPvCHPfytcliotxmDaU=;
-  b=oBmXo+Xn2Lja3CrrofHUzNy8aSE82Qdz/hLShJR1nxTZk2WDtD/drQjX
-   CKkci6nsI2HL2EkBFtjr7xJ0hfISD2CrIIbsfSjlDkU0lNdgEowxwfu31
-   lcSi6TkK6pM3/Rj47Td7C+WvOPADlQHSim86dcCZVcFvB5p0SiQZUdcK5
-   sIv4ISE912W52J5fg32faiAZsK2dTicxbYmqCAlAoJz/AMvv7Gbd3A8Om
-   z4Yfk0PDFgFq6cKtYLqQNyhHsZj93O+VAsiE1tHI4BfVCRCE109NpnS9x
-   mz1sWg9Ubok/w5HGF4kEA7Tvdpy8K9+ssuYJ+BwaOVmmHQdRt7bXN+RyK
-   Q==;
-X-CSE-ConnectionGUID: KJe+lIY7RD6XSbeWNng8bg==
-X-CSE-MsgGUID: 8GUXUX3nRxeTAW5ZTPRjZg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11675"; a="87407437"
-X-IronPort-AV: E=Sophos;i="6.21,236,1763452800"; 
-   d="scan'208";a="87407437"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2026 14:29:16 -0800
-X-CSE-ConnectionGUID: WQgpRToSQ4Wci/R3gPIxGg==
-X-CSE-MsgGUID: HHmFJzryRQG2DnwOoSv8qA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,236,1763452800"; 
-   d="scan'208";a="210570579"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2026 14:29:14 -0800
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Sun, 18 Jan 2026 14:29:13 -0800
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29 via Frontend Transport; Sun, 18 Jan 2026 14:29:13 -0800
-Received: from PH8PR06CU001.outbound.protection.outlook.com (40.107.209.27) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Sun, 18 Jan 2026 14:29:13 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=THpNmLwYjNlVfDRY/UjzXE0EkJXgKph0cGnQQxwT1CQbFvv1m+dxdN8vlrEcA3NfvgcoMCfzRAI1CSsJVwkA1fuQ81LDr/0smCb9guSOJboEZlKWqkLv0c/gq6ZoIn9cL9cPAUJ9rRCCtR787inftNVvgo0rY6YYmk/A1fcreLImlMeNQ1SvBPRIPUHXi9DvN5BZ43ZVGXbdSHXmwchm51CiQcYRZffux4GlY68yj49QIo576jkDPlBq8Xnn4w9SDWGM8QZQX5/6eyjQA/OaIBNyyoIHGT3egQuChBFLETD+XCtd0d79wC0UfVs1kkoUmVKVyyoqOWINeDULg7OcJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=c+t04eEGAHyuZ9lPztZOWSN78h9sTUUmaEfhc6tQDno=;
- b=Mu1B7YO6g9uMD9HFouFTLoQMwCbCDbt62LA2rPEjOS65ZgsvcHVjS5jzdrUYNWnFg528i7Snxa666fQhZiyQDklPabI6y5rBDYE2LiXFm+QMsCQsA1l+cKO4WIvHpyrcIvqlKGr1Q+4yJN+SqR3mQv9SwGiIgfLkk3VX11ZVciUUe8HvII8XwHP6I5+dpE39IFSqWubWIqsaJOZNE8e295JogJXHK6BiIbmSmsNNIkOP/JbXo4x8aLHRm9VoISD9WJAUdCZELxJrDgScQa8p092IMVhWFtkxwoQ8C3VowhVaS4REuDnXC022PIY9pWzF6Fbmmq2OogqGPLwTbCfg9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by DS0PR11MB7969.namprd11.prod.outlook.com (2603:10b6:8:120::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.11; Sun, 18 Jan
- 2026 22:29:07 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::46c9:7f71:993d:8aee]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::46c9:7f71:993d:8aee%8]) with mapi id 15.20.9520.010; Sun, 18 Jan 2026
- 22:29:06 +0000
-Date: Sun, 18 Jan 2026 14:29:01 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: <smadhavan@nvidia.com>
-CC: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<dave.jiang@intel.com>, <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <ming.li@zohomail.com>,
-	<rrichter@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<huaisheng.ye@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <vaslot@nvidia.com>, <vsethi@nvidia.com>,
-	<sdonthineni@nvidia.com>, <vidyas@nvidia.com>, <mochs@nvidia.com>,
-	<jsequeira@nvidia.com>
-Subject: Re: [PATCH v3 0/10] CXL reset support for Type 2 devices
-Message-ID: <aW1ercZMyqh2Ej5F@aschofie-mobl2.lan>
-References: <20260116014146.2149236-1-smadhavan@nvidia.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260116014146.2149236-1-smadhavan@nvidia.com>
-X-ClientProxiedBy: BYAPR08CA0044.namprd08.prod.outlook.com
- (2603:10b6:a03:117::21) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="qZcO2pTb";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="N51dnn1M"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1768775358;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id;
+	bh=yKHfUeZ7rs6sbyWVsDWPsIJqM94R8Uy96Q9wQ2otEC8=;
+	b=qZcO2pTbh4f8Hn1yFa/hBEyNCIJxfD+rueU3mXfqeg09GtALjuvRC/Nki7ntcXEi
+	Zpy92SY0gtvIJpdA/sfMYfiq8yXn598c2FD5AKE87gCH8rT+r/YJXEN1LlKQOlRTPfs
+	GNcf9UnrnrGg17i6ojcpX+A3QpdHP5y7VGmK7JDI=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1768775358;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id:Feedback-ID;
+	bh=yKHfUeZ7rs6sbyWVsDWPsIJqM94R8Uy96Q9wQ2otEC8=;
+	b=N51dnn1MjvuHmJPh6t5XDRX8jsBPW7oq/2qpJB4eKvqSRQLNctWCssTYzCWuKw/z
+	HAs55cTwiM25Bjw2xGoCB4n+LA83KzyWyhZ+J21D9xZ7YZY6LU5ywXP5Af7JGP6/wbR
+	ouN8FYifrvVD0lNGC165tnpQAdTLUuBxAKqMm9t0=
+Subject: [PATCH BUNDLE v7] famfs: Fabric-Attached Memory File System
+From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
+To: =?UTF-8?Q?John_Groves?= <John@Groves.net>, 
+	=?UTF-8?Q?Miklos_Szeredi?= <miklos@szeredi.hu>, 
+	=?UTF-8?Q?Dan_Williams?= <dan.j.williams@intel.com>, 
+	=?UTF-8?Q?Bernd_Schubert?= <bschubert@ddn.com>, 
+	=?UTF-8?Q?Alison_Schofiel?= =?UTF-8?Q?d?= <alison.schofield@intel.com>
+Cc: =?UTF-8?Q?John_Groves?= <jgroves@micron.com>, 
+	=?UTF-8?Q?John_Groves?= <jgroves@fastmail.com>, 
+	=?UTF-8?Q?Jonathan_Corbet?= <corbet@lwn.net>, 
+	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
+	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
+	=?UTF-8?Q?Matthew_Wilcox?= <willy@infradead.org>, 
+	=?UTF-8?Q?Jan_Kara?= <jack@suse.cz>, 
+	=?UTF-8?Q?Alexander_Viro?= <viro@zeniv.linux.org.uk>, 
+	=?UTF-8?Q?David_Hildenbrand?= <david@kernel.org>, 
+	=?UTF-8?Q?Christian_Bra?= =?UTF-8?Q?uner?= <brauner@kernel.org>, 
+	=?UTF-8?Q?Darrick_J_=2E_Wong?= <djwong@kernel.org>, 
+	=?UTF-8?Q?Randy_Dunlap?= <rdunlap@infradead.org>, 
+	=?UTF-8?Q?Jeff_Layton?= <jlayton@kernel.org>, 
+	=?UTF-8?Q?Amir_Goldstein?= <amir73il@gmail.com>, 
+	=?UTF-8?Q?Jonathan_Cameron?= <Jonathan.Cameron@huawei.com>, 
+	=?UTF-8?Q?Stefan_Hajnoczi?= <shajnocz@redhat.com>, 
+	=?UTF-8?Q?Joanne_Koong?= <joannelkoong@gmail.com>, 
+	=?UTF-8?Q?Josef_Bacik?= <josef@toxicpanda.com>, 
+	=?UTF-8?Q?Bagas_Sanjaya?= <bagasdotme@gmail.com>, 
+	=?UTF-8?Q?James_Morse?= <james.morse@arm.com>, 
+	=?UTF-8?Q?Fuad_Tabba?= <tabba@google.com>, 
+	=?UTF-8?Q?Sean_Christopherson?= <seanjc@google.com>, 
+	=?UTF-8?Q?Shivank_Garg?= <shivankg@amd.com>, 
+	=?UTF-8?Q?Ackerley_Tng?= <ackerleytng@google.com>, 
+	=?UTF-8?Q?Gregory_Pric?= =?UTF-8?Q?e?= <gourry@gourry.net>, 
+	=?UTF-8?Q?Aravind_Ramesh?= <arramesh@micron.com>, 
+	=?UTF-8?Q?Ajay_Joshi?= <ajayjoshi@micron.com>, 
+	=?UTF-8?Q?venkataravis=40micron=2Ecom?= <venkataravis@micron.com>, 
+	=?UTF-8?Q?linux-doc=40vger=2Ekernel=2Eorg?= <linux-doc@vger.kernel.org>, 
+	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?nvdimm=40lists=2Elinux=2Edev?= <nvdimm@lists.linux.dev>, 
+	=?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
+	=?UTF-8?Q?linux-fsdevel=40vger=2Ekernel=2Eorg?= <linux-fsdevel@vger.kernel.org>
+Date: Sun, 18 Jan 2026 22:29:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DS0PR11MB7969:EE_
-X-MS-Office365-Filtering-Correlation-Id: eaca5b39-7422-4e3f-ce02-08de56e0fdda
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?VPvCJHquCLDhf0cxv4PziDPwibWTO1G89INRaUUOL0r4yS/uXbJgfeZZJcOq?=
- =?us-ascii?Q?e5NAoDk3xXBtnOpqQnryPMG9/xaYYPFuG7vdzxY21imipQtuXOz5+Yo8VdbI?=
- =?us-ascii?Q?sD/K6DJFrOFv0KyVBwsTrz8mpvv6n8RRajRpkTIZSwdaJQGh9JiNrn8EsUAI?=
- =?us-ascii?Q?v1yyxdOo1krAUCkT/NX1U7tNg4VcYxzPAx9nlwe5jONiUmM7xKUkViz9Tb2L?=
- =?us-ascii?Q?rI5wVmEdZddKXBIiNxCWFlAKlGN7NZGyOn4d2J3TYY+anMG/69JuNjhlpRXw?=
- =?us-ascii?Q?IRCuudPAfKush5XA2HbHra8DDltVXjTLV1gMW4wqUwovt87pM2Q1DVSqQsOk?=
- =?us-ascii?Q?4DKp1RIAWKoAmx4iPCoJQ1bM2KiQbI2cCP0QQ1UJdVHyTZyqZq2hBdzqDI5I?=
- =?us-ascii?Q?nsdhYP9mD8lR/5GapUnNUD6qypEgYSxZT6NwFw+LQrb5SUcJcBgxZcWYeH3m?=
- =?us-ascii?Q?x7goFvlkycxG0mm91BR0Md0pdtFAw4AtInaN46dR3elakfVhjWPdBWp2MYzv?=
- =?us-ascii?Q?iVNHCeeKq5m6yYYxaHujCX7CUBL95E5dZS98MJmd54WhdHLyNu2nFl9QYFUZ?=
- =?us-ascii?Q?oEDYz5N74X62U0au7aDYfKZeKSXbKGHNBpQy2j8EWsulUEn0AEUgaRfSH86M?=
- =?us-ascii?Q?5WFsMfyeoRzfCCviaTiKygW4cKL1JPX8c6l3b6LkZTiGmdMqIVXHrmjj+dib?=
- =?us-ascii?Q?xwo64ken9k8hWrYPY1CQnYnYLhsnhhKLcGNPn8fdBb6Sl16XJDSkEZGmVi/B?=
- =?us-ascii?Q?5xtEO4+d8cOE07VMWi6G6qzAh9+nWkhreEVaI65HQoz/FjQkKsANBAdIKP//?=
- =?us-ascii?Q?tKxbRZUpcsfXY38H0PKUSiC8U79X9HhxLba0Cn6LvZvWrIyZxnRCcnp02y6X?=
- =?us-ascii?Q?ELu9rHrXdtMXOBwKSxOasabAKZJI+27GFUvnEkbtMt47Yz26gJF8bL5qNgwM?=
- =?us-ascii?Q?hQUwGJtUbifxvT0HTnWeH/FkC7YkCisE4E86OzqkCDVSDB9O0EzlWNMKHsYJ?=
- =?us-ascii?Q?7UxY+iO3ZZ/shDdANvG7R5/wTyoNiyYztiz4PM1AkDRBYadrBXzWUcrGVrex?=
- =?us-ascii?Q?8ct7J4doB1UIGWr5CH+np598pASZtEeNMcSpBDzmG6wIOcIEwsAkwPjIcGnH?=
- =?us-ascii?Q?IG60lGlcGsis1fdjcc4L8WngBHZMb6tpSdUZSflsLJ+aBtS5hkFXCAROYO0H?=
- =?us-ascii?Q?vmR2Qf/x9ikSTFJYzUIHQma2T5qo61xINOizeHzjFOip22mqbj9NDbOaEVUN?=
- =?us-ascii?Q?s26Pw8uIjqOYaRG8d6efz9KpYneo5xCp224CTwdfuyXVlSt6WmVwINJfGJEy?=
- =?us-ascii?Q?yOyPvEWzLA89IMa3TMGUi+LGfsArP5HMH0FYq4Iw7JaCPsqWNd0SqdePoMcd?=
- =?us-ascii?Q?OsxS7Rk9m67Mfb4c0U8CzPpczZ7oQFdhSDeoEhqdfiBYzfOOXyv8XxEMPcmI?=
- =?us-ascii?Q?A7+bWC7asZEecAYdiLKudde+ecEpw6fP4vHhRwCS3wqOO2SGIRdOTmIV9q2D?=
- =?us-ascii?Q?rqbaHMY5RrSou8/7MbMOX0iiZDyNAcqOtmg5s64MR1QL5O1f/zWdqel2fboy?=
- =?us-ascii?Q?ZxrrxUXoRWFz39SNb3Q=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DDvGaGTIwwuHGS4VeSj++0cc1kz0A8SgzHpAlUP9ZUL+xMrERYsJKueoWGuq?=
- =?us-ascii?Q?tILhc0xXgkUM2QF6vT+ox/V8n1UlajtNA1RiZDnvfkMWZG6plU1rBEJAD34O?=
- =?us-ascii?Q?9re2KWhwnxz8yeR+1RfBDeovbdkNJqFWTwfVnyozq5GjiRVcE45/ddPG8LK7?=
- =?us-ascii?Q?JEMY/NSRJEVZylB8JJxlJ99/t8yiLvMzECbQbHHzK4oWN/v9+G7Pd3iWh/f/?=
- =?us-ascii?Q?9q7yw0jIHXSLL3+tgRQ58lt5yWLUm/4DxaIII2TC66qP6VQPYsvZB3j0gw4O?=
- =?us-ascii?Q?02OuREF/miuPuj2G69+dyoiK5Pmy7k/UqJBB7PfHH114XVA/yWr1YUt+Gnnu?=
- =?us-ascii?Q?+aMo7y80pmo9qDkrMNPn6H/HvbaBRNNbT3+pDcokz+QV6hUQAz7G3pur/w39?=
- =?us-ascii?Q?ae0C7dlLxP7bJeFbdTIEpnWA0GWC/kqAYnyq+ZEA7q9EtFrhUF99WajxF9lO?=
- =?us-ascii?Q?aE/qf8FBghf4jn6YY58M668g023DsQP6d8LoibSGHuWuaks1LNA+CzS4SyB/?=
- =?us-ascii?Q?x0/kreMOC+YY9wSjRD/xUZPi3HJbeyfgABlJgQ8ipG/Ut8c8tnRliv25jHH9?=
- =?us-ascii?Q?MC+CajiULM6hDFfUTgeEPJJ8WMBuiYoPoKL/fQS6mhoz7q+I0d4pNNeShQQH?=
- =?us-ascii?Q?8p8LNnoJsu3xTWKFeWcn0g2NVwJBN+2LajNQlqamGnywycEJ2fhlgcEmRQkp?=
- =?us-ascii?Q?5PpRVR84eBS8MS7LZKELOAxdsyFSE8SNh5UuJp02KJO7cnpzHKcxCkvWswGQ?=
- =?us-ascii?Q?qTz3pw/vWqp6CWpRpAiomf5xpQOF4TZRKJHcjHEjTMHtYHDwbL9TLuDP8aD5?=
- =?us-ascii?Q?kE/1P5wNZpNFRLpHYiA93w64j9lXpajyjpJdX8T0aLQzfqgO//Z8AC+N4lkP?=
- =?us-ascii?Q?22suNBXxMtPr96b2gmsUOaT7T7KewNKbIzZ/nUXaS+nohFRMdM5BBeUbeQnT?=
- =?us-ascii?Q?sL9m/PHMuf9kt6wpSpQB/gqRJQrZmQ8Sx0XOabWvFWwK9wCxwYPTu8+Ff3nX?=
- =?us-ascii?Q?GKZ9AzXhNo4XBQAo8U0Dr3WTh/qJRejeH8aBb+JjWAVkYzg7jtfGzD/cLRLi?=
- =?us-ascii?Q?1YkaDDZgisRYyyaRwVtrVZrzp/RtCEcRCgUbZjPK6SXxhyKi+Qxwn6WA0Bmq?=
- =?us-ascii?Q?bPBcBoI4+12xA7TkpiMXRkDUfT8v4glghs3Dy4dqmRshajTBYt6I3qCBUwb0?=
- =?us-ascii?Q?R+RReyPp8BNpyfHVMNySYigl07cAbInu7ln0jg43+oq9jMXobsoUDaPxzxbm?=
- =?us-ascii?Q?lhkndsMyiWwLb7NGHzIrvmElvrF3RLITEf2ULoSGSAkqGfgmbdwKExpo7JIc?=
- =?us-ascii?Q?abbNVf7tPdJpIKRw/PcJDhZPgsNGTEaVmz+iLPpOZMqI3MojnH5pGDcNNEBn?=
- =?us-ascii?Q?QLn9k+Iv8AwzGMwP7Dij4sahY1fJtfOFG7CX4dyOLjq+8XtWkNTku00/EBR4?=
- =?us-ascii?Q?M3WiEv0ZGN+3e1Gb0B8N1TRrLpZbxKoGfWBZQMVWzEwZ9Zwr+D96Yzl1uKcp?=
- =?us-ascii?Q?n7s3Nu/osTdOXuSJuY+6v0GMOWsu3ZoqemuMwUnxhyrWZWkOcgZY1yUHJue3?=
- =?us-ascii?Q?kDC+ArhDj6bmpQ7js5hzfcmE9K0IXlCXYS13wyb6sd8K6gD+ylt6hXvsbkzJ?=
- =?us-ascii?Q?z1RZvJ6E15xyLTWfDVMO22cs1Z9GhC/jlYRdKJIP4nhJN1lCBRiEBD1X4dpA?=
- =?us-ascii?Q?DF5ptpK0x43HMtfNrck28u2CYYgKeyjzeQ0ExrebDcZAH76vAjDJ7jf8HC3P?=
- =?us-ascii?Q?PLbNteZ1ShTMGb08QvxcI8z637d6Js0=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: eaca5b39-7422-4e3f-ce02-08de56e0fdda
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jan 2026 22:29:06.8776
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kCDN+jP1Jl/EUhbLbaTvTjos+bsALfgIi4VsJRe29spZlJLub7EQ2Pg/mON/WvfJLNnS7m4d0ghdc6ojVTVQiH1FvlndCA/XyqacFxAlOcc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7969
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <20260118222911.92214-1-john@jagalactic.com>
+X-Mailer: Amazon WorkMail
+Thread-Index: AQHciMnhcFkpAz6WTSKstYDfyF/cJQ==
+Thread-Topic: [PATCH BUNDLE v7] famfs: Fabric-Attached Memory File System
+X-Wm-Sent-Timestamp: 1768775357
+X-Original-Mailer: git-send-email 2.52.0
+Message-ID: <0100019bd33a16b4-6da11a99-d883-4cfc-b561-97973253bc4a-000000@email.amazonses.com>
+Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
+X-SES-Outgoing: 2026.01.18-54.240.11.124
 
-On Fri, Jan 16, 2026 at 01:41:36AM +0000, smadhavan@nvidia.com wrote:
-> From: Srirangan Madhavan <smadhavan@nvidia.com>
-> 
-> Hi folks!
-> 
-> This patch series introduces support for the CXL Reset method for CXL
-> devices, implementing the reset procedure outlined in CXL Spec [1] v3.2,
-> Sections 9.6 and 9.7.
-
-Hi,
-
-Seems something is missing from the set or a dependency not noted.
-It stops compiling at Patch 8 cxl: add reset prepare and region teardown
-
--- Alison
+This is a coordinated patch submission for famfs (Fabric-Attached Memory=0D=
+=0AFile System) across three repositories:=0D=0A=0D=0A  1. Linux kernel (=
+cover + 19 patches) - dax fsdev driver + fuse/famfs=20=0D=0A     integrat=
+ion=0D=0A  2. libfuse (cover + 3 patches) - famfs protocol support for fu=
+se servers=0D=0A  3. ndctl/daxctl (cover + 2 patches) - support for the n=
+ew "famfs" devdax=0D=0A     mode=0D=0A=0D=0AEach series is posted as a re=
+ply to this cover message, with individual=0D=0Apatches replying to their=
+ respective series cover.=0D=0A=0D=0AOverview=0D=0A--------=0D=0AFamfs ex=
+poses shared memory as a file system. It consumes shared memory=0D=0Afrom=
+ dax devices and provides memory-mappable files that map directly to=0D=0A=
+the memory with no page cache involvement. Famfs differs from conventiona=
+l=0D=0Afile systems in fs-dax mode in that it handles in-memory metadata =
+in a=0D=0Asharable way (which begins with never caching dirty shared meta=
+data).=0D=0A=0D=0AFamfs started as a standalone file system [1,2], but th=
+e consensus at=0D=0ALSFMM 2024 and 2025 [3,4] was that it should be porte=
+d into fuse.=0D=0A=0D=0AThe key performance requirement is that famfs mus=
+t resolve mapping faults=0D=0Awithout upcalls. This is achieved by fully =
+caching the file-to-devdax=0D=0Ametadata for all active files via two fus=
+e client/server message/response=0D=0Apairs: GET_FMAP and GET_DAXDEV.=0D=0A=
+=0D=0APatch Series Summary=0D=0A--------------------=0D=0A=0D=0ALinux Ker=
+nel (V7, 19 patches):=0D=0A  - dax: New fsdev driver (drivers/dax/fsdev.c=
+) providing a devdax mode=0D=0A    compatible with fs-dax. Devices can be=
+ switched among 'devdax', 'fsdev'=0D=0A    and 'system-ram' modes via dax=
+ctl or sysfs.=0D=0A  - fuse: Famfs integration adding GET_FMAP and GET_DA=
+XDEV messages for=0D=0A    caching file-to-dax mappings in the kernel.=0D=
+=0A=0D=0Alibfuse (V7, 3 patches):=0D=0A  - Updates fuse_kernel.h to kerne=
+l 6.19 baseline=0D=0A  - Adds famfs DAX fmap protocol definitions=0D=0A  =
+- Implements famfs DAX fmap support for fuse servers=0D=0A=0D=0Andctl/dax=
+ctl (V4, 2 patches):=0D=0A  - Adds daxctl support for the new "famfs" mod=
+e of devdax=0D=0A  - Adds test/daxctl-famfs.sh for testing mode transitio=
+ns=0D=0A=0D=0AChanges Since V2 (kernel)=0D=0A-------------------------=0D=
+=0A- Dax: Completely new fsdev driver replaces the dev_dax_iomap modifica=
+tions.=0D=0A  Uses MEMORY_DEVICE_FS_DAX type with order-0 folios for fs-d=
+ax compatibility.=0D=0A- Dax: The "poisoned page" problem is properly fix=
+ed via fsdev_clear_folio_state()=0D=0A  which clears stale mapping/compou=
+nd state when fsdev binds.=0D=0A- Dax: Added dax_set_ops() and driver unb=
+ind protection while filesystem mounted.=0D=0A- Fuse: Famfs mounts requir=
+e CAP_SYS_RAWIO (exposing raw memory devices).=0D=0A- Fuse: Added DAX add=
+ress_space_operations with noop_dirty_folio.=0D=0A- Rebased to latest ker=
+nels, compatible with recent dax refactoring.=0D=0A=0D=0ATesting=0D=0A---=
+----=0D=0AThe famfs user space [5] includes comprehensive smoke and unit =
+tests that=0D=0Aexercise all three components together. The ndctl series =
+includes a=0D=0Adedicated test for famfs mode transitions.=0D=0A=0D=0ARef=
+erences=0D=0A----------=0D=0A[1] https://lore.kernel.org/linux-cxl/cover.=
+1708709155.git.john@groves.net/=0D=0A[2] https://lore.kernel.org/linux-cx=
+l/cover.1714409084.git.john@groves.net/=0D=0A[3] https://lwn.net/Articles=
+/983105/ (LSFMM 2024)=0D=0A[4] https://lwn.net/Articles/1020170/ (LSFMM 2=
+025)=0D=0A[5] https://famfs.org (famfs user space)=0D=0A[6] https://lore.=
+kernel.org/linux-cxl/20250703185032.46568-1-john@groves.net/ (V2)=0D=0A[7=
+] https://lore.kernel.org/linux-fsdevel/20260107153244.64703-1-john@grove=
+s.net/T/#m0000d8c00290f48c086b8b176c7525e410f8508c (related ndctl series)=
+=0D=0A--=0D=0AJohn Groves=0D=0A
