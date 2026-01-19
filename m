@@ -1,238 +1,212 @@
-Received: from a11-78.smtp-out.amazonses.com (a11-78.smtp-out.amazonses.com [54.240.11.78])
-	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E884329BD8E;
-	Sun, 18 Jan 2026 22:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.11.78
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768775811; cv=none; b=q/w1niUgXc+Ms+r/8aBTgvFJbW09xmYMffcM4J6HsDHop8CGP2TrplVp9aOPGObHpXIvbVeqVvdBfKX96aDowLSlpAPph67cB8WZRDPQcIRNxXOZt4zcqGJxAly0VyvKnhuGp/DhIlLPrNJ7KcZzr/Za3NbyNHfyYVTqUd4OB0w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768775811; c=relaxed/simple;
-	bh=JllOgEM7aQKk+PtcWXrB+BYsUOTL+sv45IkCgmrJnLk=;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:In-Reply-To:
-	 References:Message-ID; b=qZpNFu4ofK1yD4T/wJ1T45NzllN16yd//QMsY9tDbCAylVl+Z8ub/jYdSH43woLsP8EBSM0KVgDirIBf0f+h/m8Re6SlOM4TEAO+zfezQ8M6ZaUNgQgFjqQyZPgPl88A1NEZkusTg85ssWGa/5X7dccgDczSCdVBsYjnE+2+5XU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=lkBa2wR0; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=rx+4lLV/; arc=none smtp.client-ip=54.240.11.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1DC18B0A;
+	Mon, 19 Jan 2026 02:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768790939; cv=fail; b=Fa4Gva1VrfW0hdMhnSib+/NXmZC+z4rlC0oMOm/UYCsJ8DhcK34QJb4LDcr3D7wTGjoYlPHLDC+fx3SewbP3lQFbTe78r/LxWzmV82wKYMeCq/hhp7Abmt8R8OZhhevRtIC8bFel3I4ybtEor/LVKyJQNVJI0YpHlo7wU2NK664=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768790939; c=relaxed/simple;
+	bh=4jUb9WFn42XV4qlJrEoxaH443LaYeB2vhI083qpUCUU=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=fyBhf6dCjr6zben6vJGfoh9dUqRJAJplTDXtWmfnNAltesuBAkmMHi+9D1Ar8LefIkrE8wXB7/W2uGLvq0ArpGBPolakoOaSqsYhk28AVaP+03BNX55Y5JfE83XJdpjYdKnReLhs3mlYGSrqHGQtybP5MymrSZLO6DQywnxYdH0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bCenex10; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="lkBa2wR0";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="rx+4lLV/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1768775809;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id;
-	bh=JllOgEM7aQKk+PtcWXrB+BYsUOTL+sv45IkCgmrJnLk=;
-	b=lkBa2wR0c1KJ6tYMBmA4O7tNVXthnwHBN0IYp9/mbdT6jkOOT97okdIqgaN4i5mh
-	yBnVJl7SemZSlBerfWeLaevsIyBSUk5L0WB8FOsn5Zw9gDmGMm1CPWEQuSvpoJmvWg8
-	iHGs5dSCOY6ZcKVgxFDPwimczokf65LtqaV5QH5o=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1768775809;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id:Feedback-ID;
-	bh=JllOgEM7aQKk+PtcWXrB+BYsUOTL+sv45IkCgmrJnLk=;
-	b=rx+4lLV//cYIJdtTI61sCGwwf3jnZ9eDLG2dC2cEa+gE59duLovbxQ9/NV9Ir6fb
-	+Ddqw7xfJSJCe6e0XBA8SJsBnKlD8rA1YRTWKEm0FrZL3CfJoBd+k2p/0pRjLATzgqW
-	+Yw/NBgRGIYxJh8j/RbuTlatPlbU26rH3uyV1Ufs=
-Subject: [PATCH V4 2/2] Add test/daxctl-famfs.sh to test famfs mode
- transitions:
-From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
-To: =?UTF-8?Q?John_Groves?= <John@Groves.net>, 
-	=?UTF-8?Q?Miklos_Szeredi?= <miklos@szeredi.hu>, 
-	=?UTF-8?Q?Dan_Williams?= <dan.j.williams@intel.com>, 
-	=?UTF-8?Q?Bernd_Schubert?= <bschubert@ddn.com>, 
-	=?UTF-8?Q?Alison_Schofiel?= =?UTF-8?Q?d?= <alison.schofield@intel.com>
-Cc: =?UTF-8?Q?John_Groves?= <jgroves@micron.com>, 
-	=?UTF-8?Q?John_Groves?= <jgroves@fastmail.com>, 
-	=?UTF-8?Q?Jonathan_Corbet?= <corbet@lwn.net>, 
-	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
-	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
-	=?UTF-8?Q?Matthew_Wilcox?= <willy@infradead.org>, 
-	=?UTF-8?Q?Jan_Kara?= <jack@suse.cz>, 
-	=?UTF-8?Q?Alexander_Viro?= <viro@zeniv.linux.org.uk>, 
-	=?UTF-8?Q?David_Hildenbrand?= <david@kernel.org>, 
-	=?UTF-8?Q?Christian_Bra?= =?UTF-8?Q?uner?= <brauner@kernel.org>, 
-	=?UTF-8?Q?Darrick_J_=2E_Wong?= <djwong@kernel.org>, 
-	=?UTF-8?Q?Randy_Dunlap?= <rdunlap@infradead.org>, 
-	=?UTF-8?Q?Jeff_Layton?= <jlayton@kernel.org>, 
-	=?UTF-8?Q?Amir_Goldstein?= <amir73il@gmail.com>, 
-	=?UTF-8?Q?Jonathan_Cameron?= <Jonathan.Cameron@huawei.com>, 
-	=?UTF-8?Q?Stefan_Hajnoczi?= <shajnocz@redhat.com>, 
-	=?UTF-8?Q?Joanne_Koong?= <joannelkoong@gmail.com>, 
-	=?UTF-8?Q?Josef_Bacik?= <josef@toxicpanda.com>, 
-	=?UTF-8?Q?Bagas_Sanjaya?= <bagasdotme@gmail.com>, 
-	=?UTF-8?Q?James_Morse?= <james.morse@arm.com>, 
-	=?UTF-8?Q?Fuad_Tabba?= <tabba@google.com>, 
-	=?UTF-8?Q?Sean_Christopherson?= <seanjc@google.com>, 
-	=?UTF-8?Q?Shivank_Garg?= <shivankg@amd.com>, 
-	=?UTF-8?Q?Ackerley_Tng?= <ackerleytng@google.com>, 
-	=?UTF-8?Q?Gregory_Pric?= =?UTF-8?Q?e?= <gourry@gourry.net>, 
-	=?UTF-8?Q?Aravind_Ramesh?= <arramesh@micron.com>, 
-	=?UTF-8?Q?Ajay_Joshi?= <ajayjoshi@micron.com>, 
-	=?UTF-8?Q?venkataravis=40micron=2Ecom?= <venkataravis@micron.com>, 
-	=?UTF-8?Q?linux-doc=40vger=2Ekernel=2Eorg?= <linux-doc@vger.kernel.org>, 
-	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
-	=?UTF-8?Q?nvdimm=40lists=2Elinux=2Edev?= <nvdimm@lists.linux.dev>, 
-	=?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
-	=?UTF-8?Q?linux-fsdevel=40vger=2Ekernel=2Eorg?= <linux-fsdevel@vger.kernel.org>, 
-	=?UTF-8?Q?John_Groves?= <john@groves.net>
-Date: Sun, 18 Jan 2026 22:36:48 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bCenex10"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768790938; x=1800326938;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=4jUb9WFn42XV4qlJrEoxaH443LaYeB2vhI083qpUCUU=;
+  b=bCenex10ZvmC8Edfo7Z32Nkpzt9yOtjOLpsdpsCL0ZgWc33rTsUUDvM9
+   SIFbZHO6Mnwe0MTE0SOq2Y/yi3EWLYylp7E+m7GQyZWejEX3/ZhKWCpyA
+   +sR7RpB+F3G3WdDpP+3XJ1c/R/E0SHM/lJjE4fFN97Z19VAHsIe4U8xT6
+   Gp58G/8WiOk021dpt9iYKOVCcovWnCtm1UecBdOje3ONegrV73m9x609g
+   HCIgoUA0jR67Jp6vzEjMNyaCI6E0ro+CPMH+CRqjwBZU2bS+/MNyr7Vfc
+   rM4NMvAec76ombBfai7k020EMRXx6AHQjLpxG3yNXb95z0zTW3BQsMHH4
+   A==;
+X-CSE-ConnectionGUID: uHS1R9zCRrObtPrSw6w6/g==
+X-CSE-MsgGUID: RBk4KVxKRmmAygU0bWHbsg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11675"; a="70051068"
+X-IronPort-AV: E=Sophos;i="6.21,237,1763452800"; 
+   d="scan'208";a="70051068"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2026 18:48:57 -0800
+X-CSE-ConnectionGUID: 6Hthdn7zTU2ol5zExoYxQQ==
+X-CSE-MsgGUID: 1rt/WCA7Qk6SVZwW2H8sQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,237,1763452800"; 
+   d="scan'208";a="205807417"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2026 18:48:56 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Sun, 18 Jan 2026 18:48:55 -0800
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29 via Frontend Transport; Sun, 18 Jan 2026 18:48:55 -0800
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (40.93.194.21)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Sun, 18 Jan 2026 18:48:55 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UhCQJjgnZV90R9BNgXtpgF6ZoD2Z0xlZFBVNr+jrk0YvZJkdPpWbhjeIrZ9ep/fpQq9aadEu6frf5c6YvA404NyIPREOAZVn4CmOeY8fOTqWdK9DgasDJdGMWRUEBDadYKtG4FALa+szTkee1S5jQSQKqXvH4sz8+fqMRq9NF/Nx76BFErLIimPq0vH7/zWOWm0zJJij0Kw1koDqODpU3h9O8wWyp1VUIIx0H+/4IRC4TSpf8aDJxFadaQ7pBzwvE7fz9Bh387/nY9ir6ARpv7/+J5kyYAPltXajl9fukgxMLuvAfTxfnlTSA9OuBPhLeFwwY6BWyS0HTDtYEtaQ+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4jUb9WFn42XV4qlJrEoxaH443LaYeB2vhI083qpUCUU=;
+ b=cEBPTlresW6dkj+jLNSRJVRt9DdC6hL0qb1s27E32lFx+zlaNXU3yuuCF83yRVxsvpriKVnq0AGvGXzwvbYCFPdqNjlc8Oe6ZRaknlxAfJMgmgRhks54DSg2wpiVYhjciiFDOJoPQmqxKwEWjckRJMuAoYHND6Pra4yC6Iv7MPSr6qaRzW+oGph1NQrVylcfmNtoVeabc/zTCFOZoaMeM5FdVuT3BR4swgOm5We91idBkaA6AtbjAGRKEhkqFCkNSAJo6WuVrCS5VetSQbcUEbM3FIPvWP6dD9rYmruBCd8ruKuDGMA+Dpqtka4strYxkYGHUozBomZ+Ef3TTexkMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SN7PR11MB6749.namprd11.prod.outlook.com (2603:10b6:806:267::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.10; Mon, 19 Jan
+ 2026 02:48:53 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff%6]) with mapi id 15.20.9520.005; Mon, 19 Jan 2026
+ 02:48:53 +0000
+From: <dan.j.williams@intel.com>
+Date: Sun, 18 Jan 2026 18:48:51 -0800
+To: Jonathan Cameron <jonathan.cameron@huawei.com>, <dan.j.williams@intel.com>
+CC: Terry Bowman <terry.bowman@amd.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>, <bhelgaas@google.com>,
+	<shiju.jose@huawei.com>, <ming.li@zohomail.com>,
+	<Smita.KoralahalliChannabasappa@amd.com>, <rrichter@amd.com>,
+	<dan.carpenter@linaro.org>, <PradeepVineshReddy.Kodamati@amd.com>,
+	<lukas@wunner.de>, <Benjamin.Cheatham@amd.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+	<vishal.l.verma@intel.com>, <alucerop@amd.com>, <ira.weiny@intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Message-ID: <696d9b932dc68_875d100cf@dwillia2-mobl4.notmuch>
+In-Reply-To: <20260116150119.00003bbd@huawei.com>
+References: <20260114182055.46029-1-terry.bowman@amd.com>
+ <20260114182055.46029-20-terry.bowman@amd.com>
+ <20260115144605.00000666@huawei.com>
+ <6969c260b7998_34d2a100f6@dwillia2-mobl4.notmuch>
+ <20260116150119.00003bbd@huawei.com>
+Subject: Re: [PATCH v14 19/34] cxl/port: Fix devm resource leaks around with
+ dport management
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0123.namprd03.prod.outlook.com
+ (2603:10b6:a03:33c::8) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: 
- <0100019bd34040d9-0b6e9e4c-ecd4-464d-ab9d-88a251215442-000000@email.amazonses.com>
-References: 
- <0100019bd34040d9-0b6e9e4c-ecd4-464d-ab9d-88a251215442-000000@email.amazonses.com> 
- <20260118223640.92878-1-john@jagalactic.com>
-X-Mailer: Amazon WorkMail
-Thread-Index: AQHciMrtvo3ZFLchSiSa1LQKlwQxpg==
-Thread-Topic: [PATCH V4 2/2] Add test/daxctl-famfs.sh to test famfs mode
- transitions:
-X-Wm-Sent-Timestamp: 1768775807
-X-Original-Mailer: git-send-email 2.52.0
-Message-ID: <0100019bd340f73c-90b0fafb-786e-4368-85f0-149ffa1d637a-000000@email.amazonses.com>
-Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
-X-SES-Outgoing: 2026.01.18-54.240.11.78
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SN7PR11MB6749:EE_
+X-MS-Office365-Filtering-Correlation-Id: 69d5fa49-4e38-456f-01e0-08de57054805
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?T3cxbDJULytYQ2RWR3dmMW8ycmxSa3M5NkVYVWFQaXNCcWplZjlJZWVCVTRt?=
+ =?utf-8?B?MkY4K0VoK0ZnRG12d0RCTmlSKzYzWTlkVi9IQm0wNkVHdEl1MkVMaytDc0xz?=
+ =?utf-8?B?V1hBWnpJOVZudVFIQWRTYjdzK3hma1hYcVlNOHlpTzYrbnBWVWlVM3FwKzMz?=
+ =?utf-8?B?MVZCNE90b3BwL1FkSU04MnRicW5kQkF5MGhpeTNxQVphdjZRL2IyaElQbEZx?=
+ =?utf-8?B?MmQ3Q293YUlFR1BiTFA1Tk5sS0xFcktXQ1BkSm1IbjFMUXRvTUsyM1NqdDVX?=
+ =?utf-8?B?c240YkVNMmNaQ09ONEE1YktJNDVkckJZeW5CVkhWenpiRlhOS1hERFEvOU9I?=
+ =?utf-8?B?dElzanlzWXF6RC9iMmNGR0xXMG5EY3dqY0M4RlJRSTJnVVd0TDZWSmVBL0x1?=
+ =?utf-8?B?Z01nekg2RU40WEt0KzVrTkR3YTdXVzZ1UklzcElQSlUwSUtObGdIRHBQaFhX?=
+ =?utf-8?B?ZTNUTUlzU0ViUjFsT24rVlkwQnRTNWhHK1k0c3FxYVpwL01la0ZFS2tyZHdL?=
+ =?utf-8?B?TlRNUTNFQ1VCYkdxd2lzUS9ydytYK09RRWJYR3c2dU56T0lBaWYwbmxHSmFR?=
+ =?utf-8?B?QlZlYzJLR0VacXZpN3hqOGdUYktNY1FvMkRXZ3lmMmNOeVVheDgzdkR5Ny83?=
+ =?utf-8?B?ZFVESmllOGpHYVo3ekFJNGdvTXdlSXAvNjB4akQ0YVZBRElxaG9sbzVOTlFG?=
+ =?utf-8?B?ZnpiWjlHRzFlbWRKNEphYStKNGFEb1NiUUlvU2xIRTc3bFY0N0ZuWmlmM05m?=
+ =?utf-8?B?SUFzL3RnbmoxOWhUK2Z5ejNXYmVmREtRUU90a05kak05UFVwd20wVmZWSEJr?=
+ =?utf-8?B?ZWN6STErMHlSK0VxMDVUVmRNWDNHWC83aWN4bEt4SzBEc0ZEUDcxSWlIbTBG?=
+ =?utf-8?B?MjJheEVDVGIzSlNMRTh1Vms2Y3lxUXU4OUExSHArOTFOc3B3bVFwcEd5OWR5?=
+ =?utf-8?B?VzVuQWdBVDRxK2FoRUxjalV0dEZuaVUyQVNwV2JxaEl3YWxNS1B1TFhTcEE1?=
+ =?utf-8?B?Z2p5UDNpTTBhNnlPWkNHZmZEY1ZjcGdzNXVkSlVzSDVuakFkOGU0cWFyMFNu?=
+ =?utf-8?B?UnBhZmpCUW5WL3JBMFo5SVI3RUJ6M0srZ2doTWFyMDVnRjZRaGIxdUdjb2Fu?=
+ =?utf-8?B?cFZFTmVxQnVVZFY4ZWdJOUJHOGt0Q1dnQzV3RmJCMXA4c2wzNk9XL2ROTm5G?=
+ =?utf-8?B?M1RXY2lvdGx5eEZ3YlJOQ2o3TitJSFVRRmR2L1FpYTFobEtNWmpkRmpUTzlE?=
+ =?utf-8?B?dmZGaVNLaHhMeWk1Qk00VG1CTjhXOUViRVRONDh5dTZwdENFOUlBWUxIQ0xV?=
+ =?utf-8?B?SnBmVEdURmF0VHkwby8wVllham1MeGhNTGErV2dvSURhQnIzdmJhU3hMclNS?=
+ =?utf-8?B?NnZJaW5HSWthdzNQcUNuVUZkRVA4NFM4eitRQktTeXVUM1FBcEZGR1oyaGRQ?=
+ =?utf-8?B?eHpNR2l5eVc1M1dqNnBTM1BpQ3E3RTM1K3pzT0E5T1dhSGowMW5zcUNIejR5?=
+ =?utf-8?B?Y2FsaS9mdXlXaVREamNDOUQ2eDcxaEtTUHkrSkw0OS9VUWV6NGc2ajNXRkJF?=
+ =?utf-8?B?RUxUZVZNTjl4N2c5RlRwbi9RTWtjRjc1MkRLaXdWZUZyc21OajlyZHJwNFNC?=
+ =?utf-8?B?OU5ldTdLL0d3MThnZjBwczI2VHdkazFBZThTM1dYMVRlVDNUSFdwdVMrMUdv?=
+ =?utf-8?B?WWdWVDFiaXIxZW56RCtyMFFyRGNVdnY5aUhtaU54eGRTcmZyZklJcDZWanJp?=
+ =?utf-8?B?dnE4Zk4vMVZ3NUlPT2VEeXk5RjBpakFuNmFndEFWV2U0VWJJb2d5cFFrYzJN?=
+ =?utf-8?B?bjdKMUhESXc3SVIwU1VZbHkvQk5qeHFQbWFKU3lIVjY2eHFFaFlTTHRmbWhs?=
+ =?utf-8?B?dXBCSnI0SDNFVXBDb3BNazZIYk8xL0VzTWpFZDErbVorSElNaHFQdTZYaEh6?=
+ =?utf-8?B?UGs4Umw5MjZqOUZsL2tTaGY5RXRYVndWNnB4VWJuUG9UL09nNnRJY1hDMzV0?=
+ =?utf-8?B?MGw4SGV0WXB2L29SNGt2SThDc1gzOGhMakl0b2ZBZHVmOHUwOVlMRkNaUGF1?=
+ =?utf-8?B?VUU3VlcxZ1lkajBJQW1WQkVPWC9BS2pxcG8rVnBMWUtVVlRWMkFHbVVRdFo1?=
+ =?utf-8?Q?wweQ=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QjJHSFJnUTNkS1NLbnRpUzc0L3F6b1RmTTlLc085aTl4TGRUbDZSbGF0aURW?=
+ =?utf-8?B?T1pWNzNDeGZYa1U1aUVHUEFJN0NIaEpoYWdkQmJDNTZXangrMVZkc0NndlU3?=
+ =?utf-8?B?VGxSeThnTXZvdkN4TWFKS2hPNGxzQm05d1NKamNRbXlTZk03SU8vMzJGbVlX?=
+ =?utf-8?B?cEc4V1BsSW82cXkwaVp3bmZzZ3BJQTROWHBKRTVscUt3SHB2QU8xYTBreDFm?=
+ =?utf-8?B?aGY2VE5xNGh2YWNVNXhkY2Z3MkNZN1hJWEZIUHVLR20zVk9RNStaU1djMG9y?=
+ =?utf-8?B?WUxxMWdaVTBZc1drYkFmbXJabjNnbFBTV3ViU3haK0p3YTh4Z01WV0pmYlpk?=
+ =?utf-8?B?VUtxYTBXQVVjVWtOWFFxVStZOE00ZzV1OStyRzFQb2s4RXJkY2x6LzJ3endT?=
+ =?utf-8?B?UmdUUzdpcmxVUGw2MjNpTTNTb2Rmb0FURmU4ZnBvS0cyNk9vK2hUZGpsNzFk?=
+ =?utf-8?B?M0NNd01jTmdhR1N0ZUR0S0NNdHJ3WFpHQUxKak10akRaY2NzTnc3WTdjcm9Y?=
+ =?utf-8?B?K0NOTUxUSi8xdGtzUFdjemVpd3Z0Mm5WVXR0TDlCZEtzR0NlUkFMbS9RS0x0?=
+ =?utf-8?B?VUdJWHhKVENnbmZjZFlCZjY3Q2R4c1RMYnB3UkRIQjVmdHEyblJKaEZpRkEx?=
+ =?utf-8?B?ekxCb3orMDdQOCs4MHdJbkpnYXhmT3RxajJnUjU0WEpFd3EwTGwwNVk3YzBk?=
+ =?utf-8?B?VEV2cmVjYjNlU1Raa2o3ZWpnR0txdnFodTBDT1BrMzZldFhrL0JRZ05iNkZx?=
+ =?utf-8?B?a3BPdmwrU1VwdXBtdThZd0N6K3J3NEZod1oyZGU1d0lObSs4UDBIMnRwWXds?=
+ =?utf-8?B?OXRSNWg3WnQvVlIrZituaENyekZmV1RSN1dFUFR6bnZDZHhTK3RLeHJmc1dj?=
+ =?utf-8?B?WTJlZmRKU0IrTjdoV0wzNDZ2U05PaHJ6QXlkRnkxT2Fpa3MyRnlTSXNFN0lj?=
+ =?utf-8?B?NHJnNjRYVGQxb0V0ZkRiSXB5VU9nb201YTM0UE1oMHpZYnRJeXZQb05RMXc2?=
+ =?utf-8?B?L0tvSS9oaG1UM09nbGpjRldXZ2JrTXkyZVB2dERYa2hDZ1o4VG5UWCtQa3RN?=
+ =?utf-8?B?NFIzZ1VjTHNrMmZEV2pwQXZaVjVuSnF6YTNVZGU0WjZTcVFCZkRQSExBYjNw?=
+ =?utf-8?B?cnBrQ01LRWFkQWwyRlVqK0Irb0F5Q2E0b3k0Z1hNNnVQa2UvM1dvU050cnpk?=
+ =?utf-8?B?eUlQNWZuRWRxY0lqa1VVVWtQWnNad1Z5TXppUGovZW5FNXc3MUJIUkZDNHdL?=
+ =?utf-8?B?cW9BVFVCVXRXOUY1ZG1FcHVZdnQvMUlsZ240SGc4QVdOSStYeHlncFozR0x4?=
+ =?utf-8?B?VUtEeXpkOEUrMzRFeWRGS2FLZDUxSDNpVllnTUZ1aUFtMENmV2hNUU1VbTlY?=
+ =?utf-8?B?eStiZkhhdnBSVVViUC95U1hYYnVBRkJ1ck1DRWN6d2NaWk83QkplZFJ1T0px?=
+ =?utf-8?B?NHg0WStHQlhZNEdnc0FZYkdzdWxrRnNiSkJzMk84ZUZRMWpuR29DbVNWL1RX?=
+ =?utf-8?B?RXNOUEhva3ZNWDQ4c0ZUVDlYRjhmK1M0dEpTZ1VzRmVMOWdBcTd2anpkQTZs?=
+ =?utf-8?B?eUV2RC9HaEdHSXpOY1EyWXBMZ3owWjhFbHNyb2d6TVp4aUNVNE5MYUswMjlC?=
+ =?utf-8?B?cjBUMWk5eUZvYUZONEpEU1dFdDNXaUo1Y0FtNG90NGlhZUlySkdlakxvbUpq?=
+ =?utf-8?B?bjVvSUREdndyUGZaa09sQWtsRjV4QXBpNCtiNUZLK1U1YWJ3YkI3U2tacGdD?=
+ =?utf-8?B?MFhBWEI3UHhOejZseS9yRm9vVStCVUZUSFNXUXRIY1pIdnJnZHJQci9FN0k3?=
+ =?utf-8?B?NTVQcjhJZWo4RHdCb0FsOElIMmg4UHM3YXoyZjkydUxDVlFScy8rMERHc0xY?=
+ =?utf-8?B?ZUplNFZzblE0NFlaUFFJTkJKTndjbndZOHBPZWRBRDNVcVBRcW5lTzh0anhy?=
+ =?utf-8?B?OTFGeUlQMWlmWW92SmptYUxJSVU3ckdibEdXdkxONnA2T2YwQ29xYi9MZ25J?=
+ =?utf-8?B?d0x3bGp1aVNkdFVoUi9nalU5Y0JNOGE4UVljVWVoeDVtVzdURWl0WDk4SDVq?=
+ =?utf-8?B?MkpDMWNmRFFhTXY2YVlUc092cDNzVVFvWDZSYlRERGJxazIzbEJzdnptVDZU?=
+ =?utf-8?B?S0Iyd2dUL2dtR2dLQ25wMlNiVm9XL2tIbUJSM1U2eFlnVW93WnUrQVZrdjZp?=
+ =?utf-8?B?aVcyMDZFNkxLTmRtSTNhOW13MU1ETTNoYUFWZmpzYndrOXFtNlVyV1VIZkYy?=
+ =?utf-8?B?T0w3WVhTc0ZmaEZuVTNPU091T09FRThMcVA0SU9VeThtTC9sanp1YnNYVVV3?=
+ =?utf-8?B?ajA1MlUzUlQ4T1IrZ0J5bWQ3bkE5YW1xb2lYTHdBWEc4NXI0R3h3T2ZTWUpw?=
+ =?utf-8?Q?rnCoYE5D63j/h8IY=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69d5fa49-4e38-456f-01e0-08de57054805
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 02:48:52.9978
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ACWroO5Bw+tbgncS/EN0496wT5lkRKYEaOVnVNReANlTqMsh6+8kRt2stzE/4BeYb3GFGjYIoIOqbupuM4fJoDeBee/Pcl+LeKotmf5rPyU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6749
+X-OriginatorOrg: intel.com
 
-From: John Groves <John@Groves.net>=0D=0A=0D=0A- devdax <-> famfs mode sw=
-itches=0D=0A- Verify famfs -> system-ram is rejected (must go via devdax)=
-=0D=0A- Test JSON output shows correct mode=0D=0A- Test error handling fo=
-r invalid modes=0D=0A=0D=0AThe test is added to the destructive test suit=
-e since it=0D=0Amodifies device modes.=0D=0A=0D=0ASigned-off-by: John Gro=
-ves <john@groves.net>=0D=0A---=0D=0A test/daxctl-famfs.sh | 253 +++++++++=
-++++++++++++++++++++++++++++++++++=0D=0A test/meson.build     |   2 +=0D=0A=
- 2 files changed, 255 insertions(+)=0D=0A create mode 100755 test/daxctl-=
-famfs.sh=0D=0A=0D=0Adiff --git a/test/daxctl-famfs.sh b/test/daxctl-famfs=
-=2Esh=0D=0Anew file mode 100755=0D=0Aindex 0000000..12fbfef=0D=0A--- /dev=
-/null=0D=0A+++ b/test/daxctl-famfs.sh=0D=0A@@ -0,0 +1,253 @@=0D=0A+#!/bin=
-/bash -Ex=0D=0A+# SPDX-License-Identifier: GPL-2.0=0D=0A+# Copyright (C) =
-2025 Micron Technology, Inc. All rights reserved.=0D=0A+#=0D=0A+# Test da=
-xctl famfs mode transitions and mode detection=0D=0A+=0D=0A+rc=3D77=0D=0A=
-+. $(dirname $0)/common=0D=0A+=0D=0A+trap 'cleanup $LINENO' ERR=0D=0A+=0D=
-=0A+daxdev=3D""=0D=0A+original_mode=3D""=0D=0A+=0D=0A+cleanup()=0D=0A+{=0D=
-=0A+=09printf "Error at line %d\n" "$1"=0D=0A+=09# Try to restore to orig=
-inal mode if we know it=0D=0A+=09if [[ $daxdev && $original_mode ]]; then=
-=0D=0A+=09=09"$DAXCTL" reconfigure-device -f -m "$original_mode" "$daxdev=
-" 2>/dev/null || true=0D=0A+=09fi=0D=0A+=09exit $rc=0D=0A+}=0D=0A+=0D=0A+=
-# Check if fsdev_dax module is available=0D=0A+check_fsdev_dax()=0D=0A+{=0D=
-=0A+=09if modinfo fsdev_dax &>/dev/null; then=0D=0A+=09=09return 0=0D=0A+=
-=09fi=0D=0A+=09if grep -qF "fsdev_dax" "/lib/modules/$(uname -r)/modules.=
-builtin" 2>/dev/null; then=0D=0A+=09=09return 0=0D=0A+=09fi=0D=0A+=09prin=
-tf "fsdev_dax module not available, skipping\n"=0D=0A+=09exit 77=0D=0A+}=0D=
-=0A+=0D=0A+# Check if kmem module is available (needed for system-ram mod=
-e tests)=0D=0A+check_kmem()=0D=0A+{=0D=0A+=09if modinfo kmem &>/dev/null;=
- then=0D=0A+=09=09return 0=0D=0A+=09fi=0D=0A+=09if grep -qF "kmem" "/lib/=
-modules/$(uname -r)/modules.builtin" 2>/dev/null; then=0D=0A+=09=09return=
- 0=0D=0A+=09fi=0D=0A+=09printf "kmem module not available, skipping syste=
-m-ram tests\n"=0D=0A+=09return 1=0D=0A+}=0D=0A+=0D=0A+# Find an existing =
-dax device to test with=0D=0A+find_daxdev()=0D=0A+{=0D=0A+=09# Look for a=
-ny available dax device=0D=0A+=09daxdev=3D$("$DAXCTL" list | jq -er '.[0]=
-=2Echardev // empty' 2>/dev/null) || true=0D=0A+=0D=0A+=09if [[ ! $daxdev=
- ]]; then=0D=0A+=09=09printf "No dax device found, skipping\n"=0D=0A+=09=09=
-exit 77=0D=0A+=09fi=0D=0A+=0D=0A+=09# Save the original mode so we can re=
-store it=0D=0A+=09original_mode=3D$("$DAXCTL" list -d "$daxdev" | jq -er =
-'.[].mode')=0D=0A+=0D=0A+=09printf "Found dax device: %s (current mode: %=
-s)\n" "$daxdev" "$original_mode"=0D=0A+}=0D=0A+=0D=0A+daxctl_get_mode()=0D=
-=0A+{=0D=0A+=09"$DAXCTL" list -d "$1" | jq -er '.[].mode'=0D=0A+}=0D=0A+=0D=
-=0A+# Ensure device is in devdax mode for testing=0D=0A+ensure_devdax_mod=
-e()=0D=0A+{=0D=0A+=09local mode=0D=0A+=09mode=3D$(daxctl_get_mode "$daxde=
-v")=0D=0A+=0D=0A+=09if [[ "$mode" =3D=3D "devdax" ]]; then=0D=0A+=09=09re=
-turn 0=0D=0A+=09fi=0D=0A+=0D=0A+=09if [[ "$mode" =3D=3D "system-ram" ]]; =
-then=0D=0A+=09=09printf "Device is in system-ram mode, attempting to conv=
-ert to devdax...\n"=0D=0A+=09=09"$DAXCTL" reconfigure-device -f -m devdax=
- "$daxdev"=0D=0A+=09elif [[ "$mode" =3D=3D "famfs" ]]; then=0D=0A+=09=09p=
-rintf "Device is in famfs mode, converting to devdax...\n"=0D=0A+=09=09"$=
-DAXCTL" reconfigure-device -m devdax "$daxdev"=0D=0A+=09else=0D=0A+=09=09=
-printf "Device is in unknown mode: %s\n" "$mode"=0D=0A+=09=09return 1=0D=0A=
-+=09fi=0D=0A+=0D=0A+=09[[ $(daxctl_get_mode "$daxdev") =3D=3D "devdax" ]]=
-=0D=0A+}=0D=0A+=0D=0A+#=0D=0A+# Test basic mode transitions involving fam=
-fs=0D=0A+#=0D=0A+test_famfs_mode_transitions()=0D=0A+{=0D=0A+=09printf "\=
-n=3D=3D=3D Testing famfs mode transitions =3D=3D=3D\n"=0D=0A+=0D=0A+=09# =
-Ensure starting in devdax mode=0D=0A+=09ensure_devdax_mode=0D=0A+=09[[ $(=
-daxctl_get_mode "$daxdev") =3D=3D "devdax" ]]=0D=0A+=09printf "Initial mo=
-de: devdax - OK\n"=0D=0A+=0D=0A+=09# Test: devdax -> famfs=0D=0A+=09print=
-f "Testing devdax -> famfs... "=0D=0A+=09"$DAXCTL" reconfigure-device -m =
-famfs "$daxdev"=0D=0A+=09[[ $(daxctl_get_mode "$daxdev") =3D=3D "famfs" ]=
-]=0D=0A+=09printf "OK\n"=0D=0A+=0D=0A+=09# Test: famfs -> famfs (re-enabl=
-e in same mode)=0D=0A+=09printf "Testing famfs -> famfs (re-enable)... "=0D=
-=0A+=09"$DAXCTL" reconfigure-device -m famfs "$daxdev"=0D=0A+=09[[ $(daxc=
-tl_get_mode "$daxdev") =3D=3D "famfs" ]]=0D=0A+=09printf "OK\n"=0D=0A+=0D=
-=0A+=09# Test: famfs -> devdax=0D=0A+=09printf "Testing famfs -> devdax..=
-=2E "=0D=0A+=09"$DAXCTL" reconfigure-device -m devdax "$daxdev"=0D=0A+=09=
-[[ $(daxctl_get_mode "$daxdev") =3D=3D "devdax" ]]=0D=0A+=09printf "OK\n"=
-=0D=0A+=0D=0A+=09# Test: devdax -> devdax (re-enable in same mode)=0D=0A+=
-=09printf "Testing devdax -> devdax (re-enable)... "=0D=0A+=09"$DAXCTL" r=
-econfigure-device -m devdax "$daxdev"=0D=0A+=09[[ $(daxctl_get_mode "$dax=
-dev") =3D=3D "devdax" ]]=0D=0A+=09printf "OK\n"=0D=0A+}=0D=0A+=0D=0A+#=0D=
-=0A+# Test mode transitions with system-ram (requires kmem)=0D=0A+#=0D=0A=
-+test_system_ram_transitions()=0D=0A+{=0D=0A+=09printf "\n=3D=3D=3D Testi=
-ng system-ram transitions with famfs =3D=3D=3D\n"=0D=0A+=0D=0A+=09# Ensur=
-e we start in devdax mode=0D=0A+=09ensure_devdax_mode=0D=0A+=09[[ $(daxct=
-l_get_mode "$daxdev") =3D=3D "devdax" ]]=0D=0A+=0D=0A+=09# Test: devdax -=
-> system-ram=0D=0A+=09printf "Testing devdax -> system-ram... "=0D=0A+=09=
-"$DAXCTL" reconfigure-device -N -m system-ram "$daxdev"=0D=0A+=09[[ $(dax=
-ctl_get_mode "$daxdev") =3D=3D "system-ram" ]]=0D=0A+=09printf "OK\n"=0D=0A=
-+=0D=0A+=09# Test: system-ram -> famfs should fail=0D=0A+=09printf "Testi=
-ng system-ram -> famfs (should fail)... "=0D=0A+=09if "$DAXCTL" reconfigu=
-re-device -m famfs "$daxdev" 2>/dev/null; then=0D=0A+=09=09printf "FAILED=
- - should have been rejected\n"=0D=0A+=09=09return 1=0D=0A+=09fi=0D=0A+=09=
-printf "OK (correctly rejected)\n"=0D=0A+=0D=0A+=09# Test: system-ram -> =
-devdax -> famfs (proper path)=0D=0A+=09printf "Testing system-ram -> devd=
-ax -> famfs... "=0D=0A+=09"$DAXCTL" reconfigure-device -f -m devdax "$dax=
-dev"=0D=0A+=09[[ $(daxctl_get_mode "$daxdev") =3D=3D "devdax" ]]=0D=0A+=09=
-"$DAXCTL" reconfigure-device -m famfs "$daxdev"=0D=0A+=09[[ $(daxctl_get_=
-mode "$daxdev") =3D=3D "famfs" ]]=0D=0A+=09printf "OK\n"=0D=0A+=0D=0A+=09=
-# Restore to devdax for subsequent tests=0D=0A+=09"$DAXCTL" reconfigure-d=
-evice -m devdax "$daxdev"=0D=0A+}=0D=0A+=0D=0A+#=0D=0A+# Test JSON output=
- shows correct mode=0D=0A+#=0D=0A+test_json_output()=0D=0A+{=0D=0A+=09pri=
-ntf "\n=3D=3D=3D Testing JSON output for mode field =3D=3D=3D\n"=0D=0A+=0D=
-=0A+=09# Test devdax mode in JSON=0D=0A+=09ensure_devdax_mode=0D=0A+=09pr=
-intf "Testing JSON output for devdax mode... "=0D=0A+=09mode=3D$("$DAXCTL=
-" list -d "$daxdev" | jq -er '.[].mode')=0D=0A+=09[[ "$mode" =3D=3D "devd=
-ax" ]]=0D=0A+=09printf "OK\n"=0D=0A+=0D=0A+=09# Test famfs mode in JSON=0D=
-=0A+=09"$DAXCTL" reconfigure-device -m famfs "$daxdev"=0D=0A+=09printf "T=
-esting JSON output for famfs mode... "=0D=0A+=09mode=3D$("$DAXCTL" list -=
-d "$daxdev" | jq -er '.[].mode')=0D=0A+=09[[ "$mode" =3D=3D "famfs" ]]=0D=
-=0A+=09printf "OK\n"=0D=0A+=0D=0A+=09# Restore to devdax=0D=0A+=09"$DAXCT=
-L" reconfigure-device -m devdax "$daxdev"=0D=0A+}=0D=0A+=0D=0A+#=0D=0A+# =
-Test error messages for invalid transitions=0D=0A+#=0D=0A+test_error_hand=
-ling()=0D=0A+{=0D=0A+=09printf "\n=3D=3D=3D Testing error handling =3D=3D=
-=3D\n"=0D=0A+=0D=0A+=09# Ensure we're in famfs mode=0D=0A+=09"$DAXCTL" re=
-configure-device -m famfs "$daxdev"=0D=0A+=0D=0A+=09# Test that invalid m=
-ode is rejected=0D=0A+=09printf "Testing invalid mode rejection... "=0D=0A=
-+=09if "$DAXCTL" reconfigure-device -m invalidmode "$daxdev" 2>/dev/null;=
- then=0D=0A+=09=09printf "FAILED - invalid mode should be rejected\n"=0D=0A=
-+=09=09return 1=0D=0A+=09fi=0D=0A+=09printf "OK (correctly rejected)\n"=0D=
-=0A+=0D=0A+=09# Restore to devdax=0D=0A+=09"$DAXCTL" reconfigure-device -=
-m devdax "$daxdev"=0D=0A+}=0D=0A+=0D=0A+#=0D=0A+# Main test sequence=0D=0A=
-+#=0D=0A+main()=0D=0A+{=0D=0A+=09check_fsdev_dax=0D=0A+=09find_daxdev=0D=0A=
-+=0D=0A+=09rc=3D1  # From here on, failures are real failures=0D=0A+=0D=0A=
-+=09test_famfs_mode_transitions=0D=0A+=09test_json_output=0D=0A+=09test_e=
-rror_handling=0D=0A+=0D=0A+=09# System-ram tests require kmem module=0D=0A=
-+=09if check_kmem; then=0D=0A+=09=09# Save and disable online policy for =
-system-ram tests=0D=0A+=09=09saved_policy=3D"$(cat /sys/devices/system/me=
-mory/auto_online_blocks)"=0D=0A+=09=09echo "offline" > /sys/devices/syste=
-m/memory/auto_online_blocks=0D=0A+=0D=0A+=09=09test_system_ram_transition=
-s=0D=0A+=0D=0A+=09=09# Restore online policy=0D=0A+=09=09echo "$saved_pol=
-icy" > /sys/devices/system/memory/auto_online_blocks=0D=0A+=09fi=0D=0A+=0D=
-=0A+=09# Restore original mode=0D=0A+=09printf "\nRestoring device to ori=
-ginal mode: %s\n" "$original_mode"=0D=0A+=09"$DAXCTL" reconfigure-device =
--f -m "$original_mode" "$daxdev"=0D=0A+=0D=0A+=09printf "\n=3D=3D=3D All =
-famfs tests passed =3D=3D=3D\n"=0D=0A+=0D=0A+=09exit 0=0D=0A+}=0D=0A+=0D=0A=
-+main=0D=0Adiff --git a/test/meson.build b/test/meson.build=0D=0Aindex 61=
-5376e..ad1d393 100644=0D=0A--- a/test/meson.build=0D=0A+++ b/test/meson.b=
-uild=0D=0A@@ -209,6 +209,7 @@ if get_option('destructive').enabled()=0D=0A=
-   device_dax_fio =3D find_program('device-dax-fio.sh')=0D=0A   daxctl_de=
-vices =3D find_program('daxctl-devices.sh')=0D=0A   daxctl_create =3D fin=
-d_program('daxctl-create.sh')=0D=0A+  daxctl_famfs =3D find_program('daxc=
-tl-famfs.sh')=0D=0A   dm =3D find_program('dm.sh')=0D=0A   mmap_test =3D =
-find_program('mmap.sh')=0D=0A=20=0D=0A@@ -226,6 +227,7 @@ if get_option('=
-destructive').enabled()=0D=0A     [ 'device-dax-fio.sh', device_dax_fio, =
-'dax'   ],=0D=0A     [ 'daxctl-devices.sh', daxctl_devices, 'dax'   ],=0D=
-=0A     [ 'daxctl-create.sh',  daxctl_create,  'dax'   ],=0D=0A+    [ 'da=
-xctl-famfs.sh',   daxctl_famfs,   'dax'   ],=0D=0A     [ 'dm.sh',        =
-     dm,=09=09   'dax'   ],=0D=0A     [ 'mmap.sh',           mmap_test,=09=
-   'dax'   ],=0D=0A   ]=0D=0A--=20=0D=0A2.49.0=0D=0A=0D=0A
+Jonathan Cameron wrote:
+[..]
+> This might the hardest to review patch I've looked at in a while...
+
+Well, that *is* fatal feedback. I think this simply needs to be broken
+up into smaller to digest pieces. Will send that shortly.
