@@ -1,83 +1,146 @@
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010046.outbound.protection.outlook.com [52.101.85.46])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B685D37FF77;
-	Mon, 19 Jan 2026 14:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733A84C92;
+	Mon, 19 Jan 2026 14:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768833225; cv=fail; b=LU9lC4yKEkI6cfWBcquOlSGmisuWDBPRPUYNQdj2w4mfXbuxHAHiSHbbtIbWgngKw20Y4iJ//aolqaFYvvpBYfgidDsMqWEMLfrlADuGqB7Fpo3D2TkGl3d8+KVudJKsurYwc08MczFJMMo7A0BGCpK+PVdPOA3pKtSs7Eor1HQ=
+	t=1768834354; cv=fail; b=o4HDyhRH9jHg3l8hh0aEhF8apKWvda0cls4h2KY725PHmunxzhzqnHjmw9HfyFDAT8NCxlc6Gw5Oi7a7lB++zcoYJ7OeIWV+wx6ZFt/D+8b+ObLeE4wZedRLGoHXSHYi+xvWGbmgkiseDMcsWT90LJON8rmtPMOszvgXqlzGVJ0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768833225; c=relaxed/simple;
-	bh=zPvaNu0nyOaTsop5p3xCzgnjg1DZpR3UUwJhdZCIAHw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Q94E7sSy03zKx+y1b/b6audYE1ZFV928EeHlU3tpjVWgz6ezDFtwMLMGu8babZg+bITgSTHui7Qjd5U6GMw0yv8v6ZoIWr4Xg8LMXERsyiXrF+knIaxkmrbXHIBJc7RdaUeBpocdUNMEXuWZoSPY5zHLEX5FppIuqEAeal2b+jg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pC7hCl7x; arc=fail smtp.client-ip=52.101.85.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1768834354; c=relaxed/simple;
+	bh=LbZzpM0Y1OhR3q3e7sDcdKT6nLGOnWI2QvyODOkI2Kk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=J3QwX0jf/el9eiD1zBzMoGojdJ5xPris3DBcmp6qgFYj/heLWM53mXydPlAAxqP6cJDmQqiJmuWsyxkVfPpfccrWd2lzIxBSIpffc17FdUtTMz43NGJVKRuOfqD4z6eaV79YMMdbidfBpLRLsluVC7kwsqcpt61W7fcsaxVm+o8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=pwawHgwY; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ZsDFlXHz; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pC7hCl7x"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pwawHgwY";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ZsDFlXHz"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60JBEMIr2085070;
+	Mon, 19 Jan 2026 14:51:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=9NB/xNpGGorG6uLTe47zCLELvNAMhUaEudNabs9pE4A=; b=
+	pwawHgwYSu0rsOHRXylk6TGnlUXwgPsRey5kyR4PiAXWa1lE380x8zsS8KS3NDLO
+	F42k/oBSvJvkk2fxn05s9RWDTo63QXcvNF0Z1NWTymuq6lLpJmptJIVSubE9pCSR
+	Wu4EM6grYu8ahm9yK7pyXjPHBWfxzn0K6CMCR0S42vqZ2pGbLR/J6moXTHOUa8Dw
+	F6zvOTfgkmXdG3EDHuDEUnK6Gd73TmLMiXsff1ht5T+qUS0iVXbsZX1iL3VuI5x1
+	5fjzdo/yrsz0xjh7Ktm00WcOhaemcHY6CiuDUd7G6SPz5XcPFLx5+LXBPhKwF1fZ
+	kDnnBieJ+hl6Ujd478Ergw==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4br2fa2d58-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 Jan 2026 14:51:36 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 60JE1tPS000505;
+	Mon, 19 Jan 2026 14:51:36 GMT
+Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azon11010062.outbound.protection.outlook.com [52.101.56.62])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4br0vc84x5-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 Jan 2026 14:51:36 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UqlF1SZvsRBCoMmrIr0eni1ye2ZTRJMACSl+B0eYUyIc29sdahLJ25tLhbwPUYDpqwg46rycuML/djyJE2T5XhhYZgJHEJQoOUyLeHfAxlnjvXWUTeZbuuYDzIFAdid3shcg3gXMIcSKyPv87sk4VCcKEVlkH7TaJxwzgCfQf+deI4Obb5rzvRE3Z2PKMBc1dosbexlbPE5Y5l2/DzXqICua2pNXn2tLASc6ZqS1mX8j2f7jC+jyAZC1jNPWAr+aoexggKedFuIIUJ1FKjI8Jvf/EplIubQMEV1v5K3SMXmYWHC2VAHrL1s63/nHH/sxuc3niVSpxZpHxZvRlLUMwg==
+ b=luPQT3W0fFC+OpYv8u+F0LQT6+uGVs4l2XY+/E5gdDA2UnecjKKcWocg9ahDUtYmU4BVYdMa8JPugIcj6egJvvezJRtdZkIADWExtr+4gJw62rlLMeYtOZPbG1h7JzibJeLRaMtV0Hjx2PxJKUWX/U5K6DK77XGeH6isT05CvZFHTE2ANj62lI8iAeK2vAnuGYjar4ZevqZQo6BAhviEDTcA5ponNqZTMrKY2UguKoL2P7hjeNxA0iY13izKhK1NZa7DvQm8evgnaylHU1bDbwz0aH8bdbkmhUxDqXO37MqVMe8r+yj8do+z7qgoWy6xpNULBo8HJAb14ZMiBQ7q5A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wKZhd1yjNkC2FUrrZJPEJGKgQ4AmDWXav3lRd72l+b0=;
- b=QLSg7XJtRFrecIpBOV/j3JYhnsGq686d2hHWomKN7q18eu6+DQ4ZxfrNmQbo47fw7SbEyjM8QrUrZ2fH4R/QbPGezNHLMJSpLBhN0sc89BTfRzSACuu8uyDX3i1V1apDJT0LefcXONmx8mAGWLf0Owt8SLj7zlQ+V/9XgNajFqXECannVIjwYe9/21AUH9rqvOqVQ/aWp8PnhfW/zYc5KwHiNDbfXOYCVfh1kHhS90nD4gJirXnWZmQ+ja65wyhPpfuOG1kAeRjFVPLKsWrk8nQSfeKZmZbggF0lZVdjc7XQDUTqzK3vn242wekWybBjP5D3pBaCwV1oQFQwToi3fw==
+ bh=9NB/xNpGGorG6uLTe47zCLELvNAMhUaEudNabs9pE4A=;
+ b=sQNer/4a2jnbgfiCV/muIYQxBhTcfw6S2bs6JnRzwg+wrs4mwsfGu4MH/CHeRNhCK+i5s3NT/jXRRylRHYlozhFqOAXcLYDKEx5KD0fV1+UbhWNVMJp3cvvBT+8vytFd3CLe48keCCIQ0hAfpWtrgBelpb6muxDm/HEhx+Jnu7RMtPT49aB1SkZOGsFjNv6bkG6l0rY3DiEAmjMagYb+3k8tjaDmMZ3Eybj0ks/PezYPZ2wmw+JvcL8uRUF7nmwSCWgf8FhcOv97S9qkeyZd/BxiilzC4HlJVXq6uHRI/SROs/5oZ3rEw6dWhE0wd4t3QqrVCZ9g9vcYSccMoGOYDw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wKZhd1yjNkC2FUrrZJPEJGKgQ4AmDWXav3lRd72l+b0=;
- b=pC7hCl7x4TVrJ3Vepr26ybwwnKfp2GBb2ey0Hw9me7Ugc4ATKcXMtzQOs8rcQynCWUQTRfEveY5EAhWvK8cG1y+5F/WUGp8wOUjV8wfmm+v+iKvMGuUHi1mPYq9ijw+DaZ8nApOriePvC4l53S2fQIikYH0hogFvHTorxeiS4Xc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by SJ2PR12MB7797.namprd12.prod.outlook.com (2603:10b6:a03:4c5::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.12; Mon, 19 Jan
- 2026 14:33:40 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::488f:318b:ebd1:70f9]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::488f:318b:ebd1:70f9%6]) with mapi id 15.20.9520.006; Mon, 19 Jan 2026
- 14:33:40 +0000
-Date: Mon, 19 Jan 2026 15:33:33 +0100
-From: Robert Richter <rrichter@amd.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	John Allen <john.allen@amd.com>
-Subject: Re: [PATCH v9 10/13] cxl: Enable AMD Zen5 address translation using
- ACPI PRMT
-Message-ID: <aW5AvfcjLkSP2j42@rric.localdomain>
-References: <20260110114705.681676-1-rrichter@amd.com>
- <20260110114705.681676-11-rrichter@amd.com>
- <CAMj1kXHYTyxBcO3Jt97pukZiOTqL8U=zL5iari82sqMOen1cEQ@mail.gmail.com>
- <aWehZwXsK1IXRNU2@rric.localdomain>
- <CAMj1kXFhBdCPW_+xPR-TmU4M46Jr6DGwtjUtjDQ0EbgPGmL7vQ@mail.gmail.com>
- <20260114180859.00004623@huawei.com>
- <20260115080444.GD830755@noisy.programming.kicks-ass.net>
- <CAMj1kXENYZq-UkCup6FSH_4tmpRe4xJN1_veuSWs-hxxAo=1Ew@mail.gmail.com>
- <20260116143838.GC1890602@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260116143838.GC1890602@noisy.programming.kicks-ass.net>
-X-ClientProxiedBy: FR4P281CA0288.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:e7::19) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+ bh=9NB/xNpGGorG6uLTe47zCLELvNAMhUaEudNabs9pE4A=;
+ b=ZsDFlXHzeHf+nL87xtU/FCGwdSaFSkTHUH5AeFnjnXXtsUN6AyAj1v+HCuN4+Bf/O64J9df6HnNQ451Q5bJQriB/4KcnEfW6M1L88ZdtrUMI/+xmguxGLF15LhEbC2RmRASMeXOt4fJsnvCBcmGg8HLF0O4UMkoiO5ynJi/xI90=
+Received: from BL4PR10MB8229.namprd10.prod.outlook.com (2603:10b6:208:4e6::14)
+ by DS7PR10MB7300.namprd10.prod.outlook.com (2603:10b6:8:e3::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9520.12; Mon, 19 Jan 2026 14:51:31 +0000
+Received: from BL4PR10MB8229.namprd10.prod.outlook.com
+ ([fe80::552b:16d2:af:c582]) by BL4PR10MB8229.namprd10.prod.outlook.com
+ ([fe80::552b:16d2:af:c582%6]) with mapi id 15.20.9520.005; Mon, 19 Jan 2026
+ 14:51:31 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tursulin@ursulin.net>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,
+        Matthew Brost <matthew.brost@intel.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Benjamin LaHaise <bcrl@kvack.org>, Gao Xiang <xiang@kernel.org>,
+        Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Sandeep Dhavale <dhavale@google.com>,
+        Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@kernel.org>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
+        Babu Moger <babu.moger@amd.com>, Carlos Maiolino <cem@kernel.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>, Zi Yan <ziy@nvidia.com>,
+        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+        Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+        Lance Yang <lance.yang@linux.dev>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, David Howells <dhowells@redhat.com>,
+        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+        linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
+        linux-aio@kvack.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org, ntfs3@lists.linux.dev,
+        devel@lists.orangefs.org, linux-xfs@vger.kernel.org,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Jason Gunthorpe <jgg@nvidia.com>
+Subject: [PATCH 03/12] tools: bitmap: add missing bitmap_[subset(), andnot()]
+Date: Mon, 19 Jan 2026 14:48:54 +0000
+Message-ID: <179ad7e5f62e87a8887807ecc7217899429ad24d.1768834061.git.lorenzo.stoakes@oracle.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <cover.1768834061.git.lorenzo.stoakes@oracle.com>
+References: <cover.1768834061.git.lorenzo.stoakes@oracle.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO4P123CA0488.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1ab::7) To BL4PR10MB8229.namprd10.prod.outlook.com
+ (2603:10b6:208:4e6::14)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -85,197 +148,207 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|SJ2PR12MB7797:EE_
-X-MS-Office365-Filtering-Correlation-Id: 107de4f6-7374-4adf-fc9b-08de5767bd47
+X-MS-TrafficTypeDiagnostic: BL4PR10MB8229:EE_|DS7PR10MB7300:EE_
+X-MS-Office365-Filtering-Correlation-Id: b1d4ae65-3221-4dc1-54e1-08de576a3bd4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?haWeVgMfK1wZmeeF/qdFdWqOsbDF7Oc+bVWzxSfFgQBfI1/aOEVBociAJggO?=
- =?us-ascii?Q?cJc3lrr15rEjTKx058LmaWrCj8IC0ydpiVEn7Xtc2n9Y/1qrtlowWaMWR9+U?=
- =?us-ascii?Q?lpbJjaPqRFpsPT2avpkjKDM4mUrgNQ+o407hbW/CMVl9WdVjZCoZjqOjCVBj?=
- =?us-ascii?Q?l5/IdNdMVt09P3+W8MVL9lFDxvfgAAD99CCJUxqIrj15qRR7PZygS7SDrDxg?=
- =?us-ascii?Q?bZSBHUU353jzWdcqZ6aSvmB/vgOvRXLoYNa99QnXMgf1OM7eK+cs4JtgqM5l?=
- =?us-ascii?Q?w4UrSrYhHUT0504jV4UBe+LS8mszC4R2GPGRzhpTLddySeRISsI8+hZNQrxB?=
- =?us-ascii?Q?KM2xzvxuAN5BfPZerdUtgA45jzuXNwpxFfCIQ+jS+nl7vltSfmR7P6r3Zb7e?=
- =?us-ascii?Q?qqhf4MEyOBSdNeUw9uUa106yWW5CQppHxUvYcrsuQt5uM6AcAFosJz6Tf2yQ?=
- =?us-ascii?Q?dLic4qHsoYL+yCdRQf0o/O33s/ImBxdybTw7/E7OkGftutwohxfkEKtLHAXg?=
- =?us-ascii?Q?6HDT+Zl3jT0RDv1H70cqo+iiA4UaNEE1D5CI0kWJXLCY+2d+a6BEv40f6hQR?=
- =?us-ascii?Q?E43aPu23BC8WMyJWbsdY+7IDq4ICu1HiB6zfBJdiP97Yx6D5wQhUBNX1LNhO?=
- =?us-ascii?Q?VffiQ9+9RiqggGPYrfsUbySl38Ka3m6UOzL5IsE3AETDrlnDoaPb0jh58eaI?=
- =?us-ascii?Q?681ulZdLy3H5qMHdr8vp/qtFVhA2wMdtoM0oYUC7sGSK9m5pyQOuFjfB1Xbs?=
- =?us-ascii?Q?A+LjWhPngO9dDcJvTUp5eqZtPXY6c4UfchbAm2GbhuFVDbPAmBbzr6pQ8p0t?=
- =?us-ascii?Q?J7H+nJVW+x7BK2YT6pdsRM01Hs/uyZ4BoTctMhXGYWQPYCWf+9ZJL7VGf27W?=
- =?us-ascii?Q?M41WE81HwSYh+oKtPphZl3SKX6rcnWAKv4JhpB98GPZr227CWKzzHxvtb+4h?=
- =?us-ascii?Q?GRsIbDzbBoffdS9gIkAqW4+nQ2a6QF+r5vE5iIrCcsz86nletVrgNsgPEvKy?=
- =?us-ascii?Q?OyeVuyQEKii7pa09p+wLEu9mH5Se1wYKY+ELjUk8Z1qSPLmcGc4XNkMWoqXJ?=
- =?us-ascii?Q?RCUm5daiSol3ldPj4XaL6TpkOrxsh0/c8aI9Cv46rsrLr70iUyOtLepQLtcm?=
- =?us-ascii?Q?N+5u/p7wxNz6w6kT9K2tvWKFnRqYm1sGRrlxEH/IGvsJEBCK/+2/Y0cMg+Oc?=
- =?us-ascii?Q?x25e2Cqg6uliRbsZ3jPaNR+LiAdGy6H0Lww8kZP58ftSf5fG4lER/DWmsEC9?=
- =?us-ascii?Q?CekUGhXrxW0nRGLBy4FZg45go4sCBswim7VGsLmzHcaex6wFPDPdgsKUmROq?=
- =?us-ascii?Q?6g/KVYGySuYuW97bz/5cayRowWzGoGhXzGHi3k0/it197P4Q2XRty+fxfrrF?=
- =?us-ascii?Q?l96bYp0LHUMuuZ5Yov1E0zmh4cyuaznvg/YRZO9Ju7ObGHsM/ytQrwqwd1Nm?=
- =?us-ascii?Q?lLLc1CVMeDwHLa90XtcwIU2Am1n2VKrEBkMb9CmZGvXGHoknalE+10FBOYWX?=
- =?us-ascii?Q?t8Gzfj5fHSEuHcUPV8lIOingwm1uLPAX40H3k2Cvtzr3HkudbJAhF48XOq0N?=
- =?us-ascii?Q?pNIVd0wfKfcT+INAwS7VqtZ6Cja0Rr3ZKJFI7P/r?=
+	=?us-ascii?Q?EkkzWNA1inb07EENEOe5fiJSPJ2YN/hVP8S5UPTSOwZj7xGVIKf2BCv7Nm4G?=
+ =?us-ascii?Q?L2odMW2q6Av86dwf5xyTVjnfJEIXxmFql3HgJ7qIdqA/tqvZf1/nGQhpVBXO?=
+ =?us-ascii?Q?z/I+u4vaR0EXs/cLklaApjPu8MYnZ19OKrbyZ/P6jIjR3x5l4+qrfXmS0er+?=
+ =?us-ascii?Q?f89RvR1FzgfqrvawNSsoAHnVTlKNYzO/GNB7JaGOnDoqKJKJYOtDols0HOca?=
+ =?us-ascii?Q?qP24YxVqky2Uf1Ks+hoRvxom68e8izpjvEnWYuGvzRdbsHil5npC/02LEu59?=
+ =?us-ascii?Q?t/tgv5bVcHfmDOqaH31wImUfHextGAsaMsBUre3sKsSlctWxTTyTX264z7HD?=
+ =?us-ascii?Q?fJTepcY4AM+FqNdydYFzE6CHG3yXd8nftmHF05evC99OnYuuhJnvP6zu6U0E?=
+ =?us-ascii?Q?PYUGwMpAqm2TvApbBwxOTroz9mYtIek7GIGLRcJvz4Hiyld8iINEx0ihw87E?=
+ =?us-ascii?Q?1jvNE1biWmUHvDZtvfuJtsOaP5x7x6Y//XpZPy4bj/p24MHeU1/TwGPz5DM7?=
+ =?us-ascii?Q?XzqPLZZPXl54FF+ltDjuubt5YwmB03l4lvxOICPcACveHNrKk1dUhjqCBL0z?=
+ =?us-ascii?Q?WdigaW/ItmycSTP7978X7JKTG7oFxf0iiCkOEmFa8vWvGiXxZd8EkTrb2esH?=
+ =?us-ascii?Q?nLcBetljr3sRmAmgkp2nWkp9mb6tseWFkzeWuScVtQ+BM8EJibRXa93fnm/R?=
+ =?us-ascii?Q?nL2PaqCN2XiFOtAQLxMX8izdilfhvuI15yxQNeIN/c0qI0ZhMGDl4ZWlOMO6?=
+ =?us-ascii?Q?sP58eMJHmAO96irLxIXsBnddQDdKBqKs7Na3ezn3gZv/z+TM3hpuy5akNE1n?=
+ =?us-ascii?Q?yKZwfpFyjjm/rZXarmWwJ7aG0V69+dse63MFCnj/deturr6EDVZI1s0SAUaQ?=
+ =?us-ascii?Q?BC/p66yHa057PsFBeduNE2tBW1B52jnSYeRbr/JbUHGMcM3Ui/ZPoofT6CxC?=
+ =?us-ascii?Q?ye/OPpvznQSNobqIZzH9tuQdYE8U+mBxAtlTIAx4TRp6bk8cldlWq0TrGcGU?=
+ =?us-ascii?Q?Ef4kOWHrTfek1vQWDqLoemtw6/eFIuHtwCZHsExvAqi+tozgst06tjN705+p?=
+ =?us-ascii?Q?ToRPEJyBD6CZL/M/EFBlHQlbYyU66SCwIKwg2w/Y/3YpEZEIm7cndW4+A5x1?=
+ =?us-ascii?Q?7tX+549d3XSBiiAftcbVSB8CEv3sSLJPWshjPZgVTlxynJ6QJIgMlLh753IV?=
+ =?us-ascii?Q?8bnqXXaU0Zfzd4k+BQK6IyOunJF1fs0uwM0xThby9y+10SUxOaRhDk+D3U8f?=
+ =?us-ascii?Q?rIOdFioxHCkFDHEh3RLGaY6d7Cao/6e8mU2EELqAIiIbt7ilDfU38WfZ+ItT?=
+ =?us-ascii?Q?emEYVZugosVnhGIe+PE2SW/6a32KhttdWPWTEKpyVADhxjRaiTTGe6feD/ku?=
+ =?us-ascii?Q?j4oDdGimwGeFEtbusNoUkUOW6hnEErDcogKiMv6OQ6wGjkIwRo9mXoIEORME?=
+ =?us-ascii?Q?fD4jgY0jPiCk+hUuGTDzFZt5yo6PkKdfF71j/ST8i6s/6LWS6L7JTqcRemGB?=
+ =?us-ascii?Q?dr/MNQIavHapOMLbfs7A1SICOUuNI3tApXF+aml7WCrBsN6oC3vwdRLWnX57?=
+ =?us-ascii?Q?5cCo8KJvCB/D9Ig3Yqw=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL4PR10MB8229.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?BujB+R1yzXC0pPK11WwQc6f/umhpJAIzDdug/9Uw4Qblnu9sfTrKK4vvkJFK?=
- =?us-ascii?Q?JEeK5kOKMZR0YXmcwxKvxQipZfSiZkfyPiWsilQ6E/eVGICy5BWpXKBiBn1T?=
- =?us-ascii?Q?2ulcGXaOK596yxtEG3+/6Wx4Sp4VlwUO1mjq7KXONs6FL1SM/iHMrZLxkwQo?=
- =?us-ascii?Q?V52mw5Jx4/jApEEsHIc1JSXaiIiQDO0cloi/XNn+gRdbGNDtOZs5F3pdIyXs?=
- =?us-ascii?Q?rdyHBFVU48m6DXowAkKNafwb2UHF/ZuOWu26QsnVvTic2jUjmcNfllDeMK/B?=
- =?us-ascii?Q?PA5Nu2MG713VV6c+7V64TG0sSU9mfcVFnEMtPElmsA4HTTmUZofGLNKeUxtU?=
- =?us-ascii?Q?D27AWwgi2DEa9MSUe5yPT5Wk0wrf8BVt/56eBs+ZUBkrAszeup2Ph+PNtgTG?=
- =?us-ascii?Q?CM+Fsy3JRLIF8LPvfAcz2tg4BxY2iTNWIp4GnoBN0tOAycYjWafYUkUiDqPr?=
- =?us-ascii?Q?+uF/dMyS5S3937+vhB/GsxBlA5OQRDdx9tjVr5v51m/eorCVrW5UgnoT8+fu?=
- =?us-ascii?Q?6/HC7hwUZpa4z8brXPOmriB+Odmc/HNNigAIJE36VfFab4oo4gfdAYHJ7DIC?=
- =?us-ascii?Q?brzLH7ys3+z7AolYfGRJSj9ymMoH7xA2Ad4TifaHE+ZuhTCDz/3+VvhnzYV2?=
- =?us-ascii?Q?Mi3bvC2crtO/dY6YXoltfRguqZdpgRXff5fruXOa5iNc8/wnytgG02PqDWNc?=
- =?us-ascii?Q?HBQQDMYzHolC3A6fIFEGvGuq0OmNSVQ4l5sOAocG7qALJrHznDHHMJ1XyV0L?=
- =?us-ascii?Q?S7LsQMADe/xCujUhIIKfMPnz7euHFImZ01bGzT0ZRjzNO+QPrinPAJVeQePr?=
- =?us-ascii?Q?GvTP9VMDbXs1o0Z5TpK2UvpLHDekNCYvgxUHJTo9UoelJPaHsac3y/lYIzyE?=
- =?us-ascii?Q?XuxjbtmxwMOfMJjMT775uLyB58klCJ+RhulgWHZQCL80osI+JAf2GnB3bF4y?=
- =?us-ascii?Q?Ya7b4nWpBTQT390TPitUBr/6MiRSvMJqqke3OGCuDrRinZiGpQT9bvhVNZt1?=
- =?us-ascii?Q?kFcSNsPjK1u30kLCkLqfFc7aAQvdQJSBl3jSanN+D4PsAgHOmDlnXP+TdLUd?=
- =?us-ascii?Q?EY/53RSslVtiE25m5eCdkhIWLtctiYbkvPKG8OeUGX5EhpYniwaV/VT1azxD?=
- =?us-ascii?Q?UrUmQUT5U8ZO3P6tULzYwtQ6WVQ0s6zPitWBO2D0rmpqeMzFsrcabOFWgSeK?=
- =?us-ascii?Q?rDRMdPnP+RsIj50BH49exyeyD7Togl16ewcSEok6/EBcdkLAO75E7k1cNTSK?=
- =?us-ascii?Q?NwZH1ExVSc645bZbyJc/L/D/dwK5aGVU/cRgeBtQbzG33GQoSLsDIW+VxpHY?=
- =?us-ascii?Q?uWz+FUrw7BmBTtzzkhtjMBJ2FiPUzzVY7zn8T6PP7wsMk8nRdgZWLxqI5Agm?=
- =?us-ascii?Q?RLaiZrPkkalKpaDndX1Sf5PqMiIUmebzZjT5ibuD+bxOl4MR3ieF4yI32qGs?=
- =?us-ascii?Q?aBWXZgsLZuPzefxlzzsCMqdZU0CTE+rLQ0lA4Gxs1CPfVN+zp+C5VyBAh2MM?=
- =?us-ascii?Q?I+v1vIhRrl18hXuGzXoFMEYapKstviMJTGWNgeMvOqo0ilZOIIrb5dhN9Yuq?=
- =?us-ascii?Q?Ag/8STH6FuWv3mM4nsi3BAtrp3X5uSJcSQ2tegi/MmAemT9yMHl4LYdXySHX?=
- =?us-ascii?Q?a3TjSVuqqxYrD9gpVl3eA36VPLo6zUEGfyS05HJJazxa9wYj7Esk2sfQc7Sl?=
- =?us-ascii?Q?kxkieeu6kLKzOWLrcEO4hqWCi3ogoyQGIPwL4X+JvyxFeYY7?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 107de4f6-7374-4adf-fc9b-08de5767bd47
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
+	=?us-ascii?Q?3iiIh5n9hwyEQDo9n2eVrwIxcGg68NRceabbFYwEDJGgaIk1Tn8EifoHCk+G?=
+ =?us-ascii?Q?o4d+HGLyZcjKQEm7znhFCc97gjIG9CQ+RhhA4quRn1leSS7aeT71Z1aOCP7R?=
+ =?us-ascii?Q?MCnHw2W8Hm70+ywlo3+J8ip9IQs6kWTG3Z130fA1RkSd/5ov5EkvBlrnQH2t?=
+ =?us-ascii?Q?DqocAfXstkMDtoRuBGPhzD2WE26jymdqUgBFEOZp/DPPrZt8Oa+IjKcgEnk6?=
+ =?us-ascii?Q?bqZBsTLKv3dUZTzRNvIJmVmTCkmyR3gYzCO6wA0A4VLfE79Nre23+6ywUjAK?=
+ =?us-ascii?Q?LYs7pHKyYIVRuFo3wOLOSGdsL5ak9PL0VO/ekglj2eTz2a8JG7PJqbRhUyTN?=
+ =?us-ascii?Q?SACRkdayWlTTWhYEmyduBvdMf/4OIElnmvYowPlFullfuvJQjXXNtSkFHnpC?=
+ =?us-ascii?Q?htYvfqgv0RgJCgMXkQq82aqkeKg6pZvBdmuOAzl0d/u6O7Gf9LAyBC+J9f+v?=
+ =?us-ascii?Q?k0AQRPj/DAEPzhtQj99XJyVUhNOoPAZC626cDaBu8wcd89hb9z5/Fw+ASSo6?=
+ =?us-ascii?Q?kdjte27SMs/RuoLM/Hq4Y/LO041kgFKaU5VSwc+Pgt7TToNNdgbqHehto7If?=
+ =?us-ascii?Q?BkENxR+C6QTj5GWiVsx12nKRclPLbdT0P3zKZbRwp5YB86HRRjMCabVQGFCD?=
+ =?us-ascii?Q?Zi1OHbJ+8AGpyu9ZKFPG0vQgF0RL4EnPxoIArz+pByHlS9uf230TaP9hbkgH?=
+ =?us-ascii?Q?OAwzZqUsBDqg0C2kkISqArkIZR3MvJbyHkFR+irpLhyxTew/kRBKDrwocBr7?=
+ =?us-ascii?Q?1fVxJWMKbTEburHE2TYsBMQe75Qp6mW2cDMf0mt9+jleXVGvQTopiyjRt86o?=
+ =?us-ascii?Q?cqBs78fmNfDNVGBrKasC4wohAegA2JCqEOBFQH/FibxFEF1HUtXvLRR7qQzS?=
+ =?us-ascii?Q?WMpR3pn/5KDtfkKC4cpsyreUI+wmHMf7dDrVK8qz3+B/aY4ev9wji3hYypng?=
+ =?us-ascii?Q?qzT6GM5ZBLT94hhDqKSAlOjLgIfZEVxzVxuDK5IedqgbQ/oey6bGyV3EO7XX?=
+ =?us-ascii?Q?6KK/0CReCPtKOh5MzvXG2eVyjXJA5enlU5V6GdIMse5M91BhheTJv2xBWcl1?=
+ =?us-ascii?Q?VQpJbGuH9rKRNO3aDxzJQgoybwsQ00oRaKaabQUDrrkyc5PsQN0PCxHbg/Z1?=
+ =?us-ascii?Q?GcZoashNGdhFg5EEFA518puNoL6X56I+b35Zy83eszd0+4mkCqVc8AucTSvA?=
+ =?us-ascii?Q?A3we04nfAlVmJbP7MdNJPAVNuBZNoB+cwkcbpfVBOdrWNw+ZJKHfUX3Y54aP?=
+ =?us-ascii?Q?xei5tekMD6wrmqd7Iyi10BVaEUWYWIeR+kNukKceqHKbTm/m9K/zFIUJKcA0?=
+ =?us-ascii?Q?b3sSDwVAXfzpGUBjrjJOc9hHIwcDZ4oOjN7Zl8KlHWYrAArVsuqP5AiZwibA?=
+ =?us-ascii?Q?ZBeIDA1bL2HC4RvMrD6LO5GMEG8AKn3Ucr6pxnBJFAV8NZc+k6BGyQPpUabN?=
+ =?us-ascii?Q?qYBsmLKBgPw7AZ6jPPIfnE+CWthR6wKcaYgSMQmlIWOgGY3O2fCjStHYREQV?=
+ =?us-ascii?Q?UbVp+AYvusCR4kUiqz4Cy0NK3HFQ50kgA7uYIfWbuXIPtaAFKO80+t86iHeC?=
+ =?us-ascii?Q?Df8gCxiXl9pzhi5N9a4nHX3Cya8nRWLDz8PXfGQdVh20tsidlMjluQEKm41l?=
+ =?us-ascii?Q?6aK7itYVNATMeTbMJberyCYP0J6A47Hs65tvPQOsg5bqjhovkzb+3wSEtkzo?=
+ =?us-ascii?Q?3e2aJ1PXCEke1CJkeotFRKtcHmu8xlJnm4yJU2umsgraCWwACNLoQDiQFLWZ?=
+ =?us-ascii?Q?3ootOfSm+ihP8jVmQDKxLnpGqkGw6EA=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	AJtMkyYlmZDwkKd8ryzsJQbjQcuET+V+DlqchslSEx+zVrU1fIopev7tIqBITXTnRiGomClSA6eZuWJcXzRSHPDWF859BLvQg/03l9UAwtw3dCvTXgve6ZqPXIWYBTG+34o2eDlliiDsSDn967zRNb6J6oNcEE1DyK2RM439ZJTuqDfHMX68WNqtF8bjDygyd8s+ZfTHGZhhQCe2bZiyNvnMmWP4ZvXaoaDyP62adosjXwa3g97QVvSnDZmT/byyYoTmhZI8p/i0H+zgUdH/QChcvjl5/WkQv41XwWnmyvkFK43xDihUXvcfdJw0oiUM7CSr797x1QeSOMzTI8O//LgynhJY9Eu0FLkNk4BBe6xagsI4WhZLUzVyjh+uTBzsbEbFWcfkpk6GfHqGfjMzySRDVpn7odtvCyF3/CUlr5Y0ubz8TpG6o4ZMb1VHQxXuE//jJ2aIv4lXFX0ra7slJ2KW3/3QPAyQTsZ7VxlmSASEQG1Dk5sflLnB0xnn4rgcfqrg2IlLAvIJEeYnn0yfIhY3OpgDz9eFh5vEzz6YyCFksLBvAbjijDwBVYK1ZrbjzGuBXPEKuhpqvnOuUDsfqcTI5ALVJrmSYCzD7dvIzwI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1d4ae65-3221-4dc1-54e1-08de576a3bd4
+X-MS-Exchange-CrossTenant-AuthSource: BL4PR10MB8229.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 14:33:40.3900
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 14:51:31.8479
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hYu5lL/p76ON0n4qRW4mNZKCkxLgFqOxKbg9uwWoI3nTLp70KxNtfK0cr6FAj2IJfE9OmSpmvMzqp9ULbsAZTQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7797
+X-MS-Exchange-CrossTenant-UserPrincipalName: sen/q2hF12IBBXtVZ6iKhOjaElASn1m2hv4shqrTZTLFFkoITO7W0UWeZkJdkh/M5onx4GRL8IqhbV+p+kWyQha31coauQ408kKQG490jbY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB7300
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-19_03,2026-01-19_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 phishscore=0
+ mlxscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2601150000
+ definitions=main-2601190124
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTE5MDEyNCBTYWx0ZWRfX/lYNAjm8RiIK
+ BgdGo7+A6HmNDsAjTXlF2/y5ZwM4tbficwFbVjz4q7ICsAtitDfOmL0YmeREoxw1PhoVc9UexD6
+ iKf4aPuFHbN4h27nB30nrQFDwQ9vaMsmLM7OH+glDj0f/KwCSG5zORaQ48d43d4OCQ4muIaDcv+
+ 9w3oixc5iDvWE07MzpSvJIUO4PBntovW6iwrIppMw1XUo1eXAt3ecTDDJIY1uU0KD/rxFYf7EsB
+ +O4Qi86T4ZqbY8rkRmj6GawacGU/68afZ0ZFg+ae5VDEj3hVyFKgrn1pg1fV42ua2vgtYqd7BRt
+ OkfycAbVDU8RGM0LGyh6jZsj+7lgF0moC8D8erq84ZEYdw1prY7rLCU0pZDZ4ADhMu8w9TrjIF1
+ 77tnj1cqbQbJWAUQlJziqODxOQfqkFknQLWyK9ZzBaXIfi6XAYZEBnGP+SIjna127CoySpUrGFl
+ y+LDMRGApoP9yhyGvEiy7ToZinlcnf9f61A0gS4I=
+X-Authority-Analysis: v=2.4 cv=HvB72kTS c=1 sm=1 tr=0 ts=696e44f9 b=1 cx=c_pps
+ a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=vUbySO9Y5rIA:10
+ a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8
+ a=a5eeGpJJMrXOYBdyZXoA:9 cc=ntf awl=host:12110
+X-Proofpoint-ORIG-GUID: zbbtgE9MC5Fc7L0uksmJ3GOkpD2zMQ-Z
+X-Proofpoint-GUID: zbbtgE9MC5Fc7L0uksmJ3GOkpD2zMQ-Z
 
-(+Rafael and some AMD folks)
+The bitmap_subset() and bitmap_andnot() functions are not present in the
+tools version of include/linux/bitmap.h, so add them as subsequent patches
+implement test code that requires them.
 
-Hi Peter,
+We also add the missing __bitmap_subset() to tools/lib/bitmap.c.
 
-On Fri, Jan 16, 2026 at 03:38:38PM +0100, Peter Zijlstra wrote:
-> On Thu, Jan 15, 2026 at 09:30:10AM +0100, Ard Biesheuvel wrote:
-> > On Thu, 15 Jan 2026 at 09:04, Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > On Wed, Jan 14, 2026 at 06:08:59PM +0000, Jonathan Cameron wrote:
-> > >
-> > > > Do we have a potential issue wrt to merging this as it stands and improving
-> > > > on it later?  i.e. Is this a blocking issue for this patch set?
-> > >
-> > > Well, why do you *have* to use PRMT at all? And this is a serious
-> > > question; PRMT is basically injecting unaudited magic code into the
-> > > kernel, and that is a security risk.
-> > >
-> > > Worse, in order to run this shit, we have to lower or disable various
-> > > security measures.
-> > >
-> > 
-> > Only if we decide to keep running it privileged, which the PRM spec no
-> > longer requires (as you have confirmed yourself when we last discussed
-> > this, right?)
-> 
-> Indeed. But those very constraints also make me wonder why we would ever
-> bother with PRM at all, and not simply require a native driver. Then you
-> actually *know* what the thing does and can debug/fix it without having
-> to rely on BIOS updates and whatnot.
+Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+---
+ tools/include/linux/bitmap.h | 22 ++++++++++++++++++++++
+ tools/lib/bitmap.c           | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+)
 
-an address translation driver needs the configuration data from the
-Data Fabric, which is only known to firmware but not to the kernel.
-Other ways would be necessary to expose and calculate that data, if it
-is even feasible to make this information available.
+diff --git a/tools/include/linux/bitmap.h b/tools/include/linux/bitmap.h
+index 0d992245c600..250883090a5d 100644
+--- a/tools/include/linux/bitmap.h
++++ b/tools/include/linux/bitmap.h
+@@ -24,6 +24,10 @@ void __bitmap_set(unsigned long *map, unsigned int start, int len);
+ void __bitmap_clear(unsigned long *map, unsigned int start, int len);
+ bool __bitmap_intersects(const unsigned long *bitmap1,
+ 			 const unsigned long *bitmap2, unsigned int bits);
++bool __bitmap_subset(const unsigned long *bitmap1,
++		     const unsigned long *bitmap2, unsigned int nbits);
++bool __bitmap_andnot(unsigned long *dst, const unsigned long *bitmap1,
++		    const unsigned long *bitmap2, unsigned int nbits);
+ 
+ #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
+ #define BITMAP_LAST_WORD_MASK(nbits) (~0UL >> (-(nbits) & (BITS_PER_LONG - 1)))
+@@ -81,6 +85,15 @@ static inline void bitmap_or(unsigned long *dst, const unsigned long *src1,
+ 		__bitmap_or(dst, src1, src2, nbits);
+ }
+ 
++static __always_inline
++bool bitmap_andnot(unsigned long *dst, const unsigned long *src1,
++		   const unsigned long *src2, unsigned int nbits)
++{
++	if (small_const_nbits(nbits))
++		return (*dst = *src1 & ~(*src2) & BITMAP_LAST_WORD_MASK(nbits)) != 0;
++	return __bitmap_andnot(dst, src1, src2, nbits);
++}
++
+ static inline unsigned long *bitmap_alloc(unsigned int nbits, gfp_t flags __maybe_unused)
+ {
+ 	return malloc(bitmap_size(nbits));
+@@ -157,6 +170,15 @@ static inline bool bitmap_intersects(const unsigned long *src1,
+ 		return __bitmap_intersects(src1, src2, nbits);
+ }
+ 
++static __always_inline
++bool bitmap_subset(const unsigned long *src1, const unsigned long *src2, unsigned int nbits)
++{
++	if (small_const_nbits(nbits))
++		return ! ((*src1 & ~(*src2)) & BITMAP_LAST_WORD_MASK(nbits));
++	else
++		return __bitmap_subset(src1, src2, nbits);
++}
++
+ static inline void bitmap_set(unsigned long *map, unsigned int start, unsigned int nbits)
+ {
+ 	if (__builtin_constant_p(nbits) && nbits == 1)
+diff --git a/tools/lib/bitmap.c b/tools/lib/bitmap.c
+index 51255c69754d..aa83d22c45e3 100644
+--- a/tools/lib/bitmap.c
++++ b/tools/lib/bitmap.c
+@@ -140,3 +140,32 @@ void __bitmap_clear(unsigned long *map, unsigned int start, int len)
+ 		*p &= ~mask_to_clear;
+ 	}
+ }
++
++bool __bitmap_andnot(unsigned long *dst, const unsigned long *bitmap1,
++				const unsigned long *bitmap2, unsigned int bits)
++{
++	unsigned int k;
++	unsigned int lim = bits/BITS_PER_LONG;
++	unsigned long result = 0;
++
++	for (k = 0; k < lim; k++)
++		result |= (dst[k] = bitmap1[k] & ~bitmap2[k]);
++	if (bits % BITS_PER_LONG)
++		result |= (dst[k] = bitmap1[k] & ~bitmap2[k] &
++			   BITMAP_LAST_WORD_MASK(bits));
++	return result != 0;
++}
++
++bool __bitmap_subset(const unsigned long *bitmap1,
++		     const unsigned long *bitmap2, unsigned int bits)
++{
++	unsigned int k, lim = bits/BITS_PER_LONG;
++	for (k = 0; k < lim; ++k)
++		if (bitmap1[k] & ~bitmap2[k])
++			return false;
++
++	if (bits % BITS_PER_LONG)
++		if ((bitmap1[k] & ~bitmap2[k]) & BITMAP_LAST_WORD_MASK(bits))
++			return false;
++	return true;
++}
+-- 
+2.52.0
 
-So using PRM looks reasonable to me as this abstracts the logic and
-data behind a method, same as doing a library call. Of course, you
-don't want to trust that, but that could be addressed running it
-unprivileged.
-
-> Worse, you might have to deal with various incompatible buggy PRM
-> versions because BIOS :/
-
-The address translation functions are straight forward. I haven't
-experienced any issues here. If there would be any, this will be
-solvable, e.g. by requiring a specific minimum version or uuid to run
-PRM.
-
-> 
-> > > If I had my way, we would WARN and TAINT the kernel whenever such
-> > > garbage got used.
-> > 
-> > These are things that used to live in SMM, requiring all CPUs to
-> > disappear into SMM mode in a way that was completely opaque to the OS.
-> > 
-> > PRM runs under the control of the OS, does not require privileges and
-> > only needs MMIO access to the regions it describes in its manifest
-> > (which the OS can inspect, if desired). So if there are security
-> > concerns with PRM today, it is because we were lazy and did not
-> > implement PRM securely from the beginning.
-> > 
-> > In my defense, I wasn't aware of the unprivileged requirement until
-> > you spotted it recently: it was something I had asked for when the PRM
-> > spec was put up for "review" by the Intel and MS authors, and they
-> > told me they couldn't possibly make any changes at that point, because
-> > it had already gone into production. But as it turns out, the change
-> > was made after all.
-> > 
-> > I am a total noob when it comes to how x86 does its ring0/ring3
-> > switching, but with some help, I should be able to prototype something
-> > to call into the PRM service unprivileged, running under the efi_mm.
-> 
-> The ring transition itself is done using IRET; create a iret frame with
-> userspace CS and the right IP (and flag etc.) and off you go. The
-> problem is getting back in the kernel I suppose. All the 'normal' kernel
-> entry points assume the kernel stack is empty and all that.
-> 
-> The whole usermodehelper stuff creates a whole extra thread, sets
-> everything up and drops into userspace. Perhaps that is the easiest
-> solution. Basically you set the thread's mm to efi_mm, populate
-> task_pt_regs() with the right bits and simply drop into 'userspace'.
-> 
-> Then it can complete by terminating itself (sys_exit()) and the calling
-> context reaps the thing and continues.
-
-I can help with testing and also work on securing the PRM calls.
-Thanks Ard for also looking into this.
-
-> 
-> > Would that allay your concerns?
-> 
-> Yeah, running it as userspace would be fine; we don't trust that.
-> 
-> But again; a native driver is ever so much better than relying on PRM.
-> 
-> In this case it is AMD doing a driver for their own chips, they know how
-> they work, they should be able to write this natively.
-
-Since a native driver introduces additional issues, as explained
-above, I would prefer to use PRM for address translation and instead
-ensure the PRM call is secure.
-
-Dan, Dave, regarding this series, the cxl driver just uses existing
-PRM kernel code and does not implement anything new here. Is there
-anything that would prevent this series from being accepted? We are
-already at v10 and review is complete:
-
-https://patchwork.kernel.org/project/cxl/list/?series=1042412
-
-I will follow up with working on unprivileged PRM calls. I think, that
-will be the best solution here.
-
-Thanks,
-
--Robert
