@@ -1,300 +1,238 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013052.outbound.protection.outlook.com [40.93.201.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0F236BCCE;
-	Tue, 20 Jan 2026 12:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768911941; cv=none; b=Q7rjl49N+Amb/9beIuXZThF6IAkSnIgRs90DvhD8QPf+ZRhPyVz1s8wUPDyGCExE/Sksf/uoFEcHbhzKCyn7zHAfzggaF80jzgakD5ymBvKANiCp9TfvPFPsQFIOngMfC69hS6bGH6DFYUbC/fb+HNcYziaVTHhC9PZnIBhwEGI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768911941; c=relaxed/simple;
-	bh=zOWFyiV9G8Y96lNCKDdy3PRg3H3aNeGAD+Zwtx8cS5g=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oby4dME72P9gzCDbXMrnlbTtG7AcolxDnes7RCa5du5bdNKLYi9F4OQApsDWbv8C6HHXppe3hCu+AcgxfpxRPyPK+RShzu9PUK+FKbgXVaghhXdB2EAIyul71NNtqEph2VOiuntwQZ0L7L4jBqnu6ilEeeZS5nJqC/PUyeMdJnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dwRNd4YGTzJ46Cf;
-	Tue, 20 Jan 2026 20:25:05 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 125AB40571;
-	Tue, 20 Jan 2026 20:25:30 +0800 (CST)
-Received: from localhost (10.122.19.247) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 20 Jan
- 2026 12:25:29 +0000
-Date: Tue, 20 Jan 2026 12:25:27 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <dan.j.williams@intel.com>
-CC: Terry Bowman <terry.bowman@amd.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>, <bhelgaas@google.com>,
-	<shiju.jose@huawei.com>, <ming.li@zohomail.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <rrichter@amd.com>,
-	<dan.carpenter@linaro.org>, <PradeepVineshReddy.Kodamati@amd.com>,
-	<lukas@wunner.de>, <Benjamin.Cheatham@amd.com>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
-	<vishal.l.verma@intel.com>, <alucerop@amd.com>, <ira.weiny@intel.com>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v14 19/34] cxl/port: Fix devm resource leaks around with
- dport management
-Message-ID: <20260120122527.0000680a@huawei.com>
-In-Reply-To: <696eb7f160bbb_875d10053@dwillia2-mobl4.notmuch>
-References: <20260114182055.46029-1-terry.bowman@amd.com>
-	<20260114182055.46029-20-terry.bowman@amd.com>
-	<20260115144605.00000666@huawei.com>
-	<6969c260b7998_34d2a100f6@dwillia2-mobl4.notmuch>
-	<20260116150119.00003bbd@huawei.com>
-	<20260116161607.00005588@huawei.com>
-	<696eb7f160bbb_875d10053@dwillia2-mobl4.notmuch>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538FC42E01F;
+	Tue, 20 Jan 2026 13:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768916187; cv=fail; b=a5l8PoLX+BeUzGGL4dYUPCzNoihkcPRzpycoO4kPRTqb4mJyNV+xbLOhSQkG8gg0JoxMk9ga4YXnlavBUkHc5RJX63moNYYnWQA/hWK0zUci1tHZLFKi4SlLwanKBIkNj3352QgsDa0ZwULTCsLjQjb3oxWhfZslc8T7koYErmw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768916187; c=relaxed/simple;
+	bh=XvwzMZkGe/n0UL1aaJ3ZdJSxXFpiKJtQnlfvndIjmG0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=fC0sCyq2IAuSNIl3kYASR7uTZpkaHKiVgODl3mnZy5XoiRVuAfsmlbA+tPO0YzyGQbi/hsJQSucmoCEEJyI0UWd/gkEkR1yVkhwueazdKC5wtbpmeVk6foFj1nVWVJigCIOlg305VoP4NZVYOs46i/6vaQI/9hzHOutTfL+/taA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OmdL07S2; arc=fail smtp.client-ip=40.93.201.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OmdL07S2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ydu/8Oyl4Iy3uOpiod1zyRzc4y65SMkJTH8JfiaaLl7OkWHEhlg5vVZL6Is7THiOS8GGmv0c+R5DEJPK6mrXrvzMlxEefZGPS7QwBNkXs7acInCC47WZGRcuwsbnJOvUT+BsOPzRe1SgT052DGJkIP0cnaf5vLLlpBYevobDF+VgEfpCIMS45hnWSEpqscZE7cnxXoUqld0qJpXhSe4A1ftuK3eRL05Jvc9njkspdvdRkr3JAqZz2Qs16x6Jvt/OBY3NLZ3DJt7PnnHivd5CA4l/qfYLiKFgP7fPjqDvQtN2M9AdGLT00GJBZikDtrPey3Lmp3CkI9nepjNdJt+hAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Y8bhZ2TY5MB2RIJ6VVn8JzCqH6a45q423RYsFqJFb6o=;
+ b=Cxu8eYnESzVuDjVs7FFRlwlkw3KEPEwgETl6yvyWmn0o6Y9VyH09+CW6fXPRS/whorhydjOSpyPO8UnrZ40qY6BcJaZfsoj+JM1FPL920l0M5WNyiM7jPnxY+72C+6x3hIDyoDep1aGcs1TNNp+PjRIzSwp83J1Jih+3ExboNDXMrrbidQu9PiSPYjmfAGFCweks8AJCk48JVAepwX3hQrm4TGqElZ8LlpDO6wAkl6cfBIm1nrWYS/CIrhDkGp0mU3es1GNVgmgQrEQlBCmZqT3Iu8059zFSSHRea7VO5t0qqrzTBu97DAw8ci7INuGmYexJYmKZye+BkkKusG5DpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y8bhZ2TY5MB2RIJ6VVn8JzCqH6a45q423RYsFqJFb6o=;
+ b=OmdL07S2LoYka+3cSRZDRtQEx87Jr+Jui5GuRDKB9IGbQq2coWU9vV61i6kRCqYJ8l2GzeF3c9Wvb2XiD5GDC6pLsGGx2DCCZpQqI2IkV24/cSu0a6lwIiRpM/Gg4wNGPvz3oQGAjotk8htrfEPwq5JdyXYaV45avaGwdnyYrwqFe311VoinxLQnzg934whXEcCkxFhExg3KO9s8MFLeQYiObVFC9KRq8HLRaCFvMh3njuWbWioiT4LaKos1A317voBPRPuM5GxAcrcraOIzLjZLiQYo0ji2vTbC6hJZIb5K88AjclhYyxNRdqipWwgLJ/nSvv3TsW23qjZkwpBBsQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by IA0PR12MB8325.namprd12.prod.outlook.com (2603:10b6:208:407::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.6; Tue, 20 Jan
+ 2026 13:36:21 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c%3]) with mapi id 15.20.9542.008; Tue, 20 Jan 2026
+ 13:36:20 +0000
+Date: Tue, 20 Jan 2026 09:36:19 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Christian Koenig <christian.koenig@amd.com>,
+	Huang Rui <ray.huang@amd.com>,
+	Matthew Auld <matthew.auld@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Benjamin LaHaise <bcrl@kvack.org>, Gao Xiang <xiang@kernel.org>,
+	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Chunhai Guo <guochunhai@vivo.com>, Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Carlos Maiolino <cem@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	Johannes Thumshirn <jth@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Zi Yan <ziy@nvidia.com>, Nico Pache <npache@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
+	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E . Hallyn" <serge@hallyn.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+	linux-mm@kvack.org, ntfs3@lists.linux.dev, devel@lists.orangefs.org,
+	linux-xfs@vger.kernel.org, keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH RESEND 09/12] mm: make vm_area_desc utilise vma_flags_t
+ only
+Message-ID: <20260120133619.GZ1134360@nvidia.com>
+References: <cover.1768857200.git.lorenzo.stoakes@oracle.com>
+ <baac396f309264c6b3ff30465dba0fbd63f8479c.1768857200.git.lorenzo.stoakes@oracle.com>
+ <20260119231403.GS1134360@nvidia.com>
+ <36abc616-471b-4c7b-82f5-db87f324d708@lucifer.local>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <36abc616-471b-4c7b-82f5-db87f324d708@lucifer.local>
+X-ClientProxiedBy: BLAPR03CA0176.namprd03.prod.outlook.com
+ (2603:10b6:208:32f::26) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|IA0PR12MB8325:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2d561cbc-87a7-4e6a-629c-08de5828e547
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?tR00MSgEePWhswZdJ6toMpEhZniVQXHhtdWm78ydLOqeQGwQvonxXp2AcMSV?=
+ =?us-ascii?Q?H/t1vewyvMQK9+yJUi605OIneO3DBi3wLz8lFO6EpdRd1TxXari29yvwIbML?=
+ =?us-ascii?Q?NFpVRBfrrnK3h1PbNmJZ+bJ2E9Fw9a5Zy6PNswOsDIU4OJq/7OXpj0T6kRo0?=
+ =?us-ascii?Q?n+0bQM7lMdqJ7SszZKJ1nbHX+xmrinouykK8OLFSeTog8hY0sZll2ndh2f4/?=
+ =?us-ascii?Q?jI3RrO4ASavEHe1dE5w1052wJnBj+d1GvtLFv58njWu8VzldY9DQeCG4v0sE?=
+ =?us-ascii?Q?WO33tT5D/5mn6KI/ee2OibhkEpP1wkFWrAS0YHCA75xW9wdkuO+n64AUVsOf?=
+ =?us-ascii?Q?t63BOajl5pfbFUJnT/3QfBF6rZpv6DS9e33CFrJDFwtZuWgwF5UCrDZWdaJj?=
+ =?us-ascii?Q?bI96MH7aC6AMhm2/C/9KZ0uEWIjW8X3KuZHahg4DiCzpzBtJZw0a2xphMX2W?=
+ =?us-ascii?Q?fh5GmROc5e1GYoDof3kltBGHDoFhNy2QsACxahH0u5d9wgkI4vud584nkP5N?=
+ =?us-ascii?Q?oldIHo+yNp8FwdsoQhEVTN63Adm66MtjfoK83apPVUR0HlqTd6tQN0ou07dn?=
+ =?us-ascii?Q?tReysDRxkFxah/H6RNjgJ6m4eTkEA6hn1NsvW5ZAsKDbpZLTO2+nK3kWMWlR?=
+ =?us-ascii?Q?CErsfl887+5i5x9yqOzRNV219ytZ2iEx8t719wkUKYdeh1pp5t5kWMDq6qt4?=
+ =?us-ascii?Q?NLsxLR8+H8Nhh1SPWQ4kLYeh6JkWJqgRCExWqbXh0bQzxgGT+jZFbLlNt4Cs?=
+ =?us-ascii?Q?RHXsvPq5TtxPnvpaBOGD8/HN4r5rygEQKYBU84G8082L6TCBfbWQCfyI/4uh?=
+ =?us-ascii?Q?tOxAYs4QIlVAjjmMDqNnDDbvwZrrO+HbkV0VFumQ0RmRhdCT2pbjaYIPWw7Y?=
+ =?us-ascii?Q?aI5nFsKxVVQX7I/kCkXSx4J/fzU6fUicZpuKIod51yXLxwYj0H2SRlPHwWu9?=
+ =?us-ascii?Q?e2tLT6gMgQQhSRkv7MpxfIOUxjTATjRLkA+0dY2JrIUb9nZ2UUxYQgEap0q2?=
+ =?us-ascii?Q?b31ky2l31z14UZ6TaIG1aN57UXoKamXzjZ1ErlqL4pRRv15ZgneyCnkgywRf?=
+ =?us-ascii?Q?nhyH7Q9y9Z94QgqrPCcYfH+G1GoFejwUqlsPs6SBAO6uXjynTSlqaUyQpC9I?=
+ =?us-ascii?Q?csu1s75Wog3zM8Mv5cWOjcFGCHS0zuKgoXc3LKBNmDjyKl1x7SQ0dS67YOWa?=
+ =?us-ascii?Q?Qs4cqpH1rfe0dlSD+OOES2U7mtWej/9NAHh5XtOzvENq4hJPMSx2UNJEZG7K?=
+ =?us-ascii?Q?35KTLNNpxyUio/JJpCT5oFd9pbS0ZLYZ/mrczkDwu5sbJDmLo7GCanNFuHlL?=
+ =?us-ascii?Q?FueV+le3TIMmlrkDfXy3A8P5VTvCvd/LRReIWoGx9QnI9uy6GDVcahzviCqF?=
+ =?us-ascii?Q?IWJGv+MGt7uCwVVyQ/jEGj5PB72i2f/CpLdQgcc3oQweTep9iZK/B6YJcLaQ?=
+ =?us-ascii?Q?4c1+qLZ/s8IiL8HzYsfwi5fvRdLEB6UQcYdIrR0brQ3ppm5HMMh2fy2YBi83?=
+ =?us-ascii?Q?nR7hYZ56ajUZSXhUFdjcCYfD5ijfo+C+nS1/WfyLOIoZdQq32L+2RndUGU4U?=
+ =?us-ascii?Q?oXhaoorce781IwgHuNc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?F7eARISiupqxZHbfFU25XMkL/EuKaE+t8qCsY+xUmbHqiZKtH4gYOqxPR5NW?=
+ =?us-ascii?Q?cO56OFsoX6pICHljPjA4BW/cSoOTs64iD2ibwA5azB96BcGBRgeJS6syAXGu?=
+ =?us-ascii?Q?jb18Ym3TtUKqdJNmbfpvaPvyDNEI48nGfjK11dUg53iNnFEpDWPYVF13gs19?=
+ =?us-ascii?Q?x59S3WoyT4Jjho3+XGvrT42SUl8luIbFXxgB/3RruxUqj4WHv+qW2gLeLibX?=
+ =?us-ascii?Q?tVaRIofhK1CvXCAJX2Pr2t/70vfUkMgr7+jli+Dg/bX3vKJi4RUnN4/P2DNG?=
+ =?us-ascii?Q?bz1OgelWsAAMscXKALOXWRjqqheDOtF80MWXiZCIywudJnA8RTWZMbH2o5hi?=
+ =?us-ascii?Q?DXRnv+qcNiLvZhcdH1sQ3h+HOivds1fBrDUPoAL569/huAnXie2NbdTjeW16?=
+ =?us-ascii?Q?P32JtHNzlUxZzvi1x5RIl76UySAaO4Q7/kV00ghErBol7B2SFigBDRFftLeJ?=
+ =?us-ascii?Q?uoJ0tRLXJJ5kQQP3LMokWk6hVym5kznGtycIgxEUs5O4cbrAtEDivyroKm5y?=
+ =?us-ascii?Q?PnSV5qAVXPXzvDJSr1BpX2ImgM9nCMVHxisJ0jk5x8tk8FYL0e9NUVE/A1le?=
+ =?us-ascii?Q?g9QjWU+XmUgRo1MA1k+2fs6CiWZdD51znnU6n9qURUypVufyVImOANDdk7rD?=
+ =?us-ascii?Q?rkQaqH8RmnkQlRAuis/3zcMRBwxKEoQiu+Wy2orOD8Ta2Lwac4sSMjG1naFU?=
+ =?us-ascii?Q?6wx9DQ3U/IutJIAmj4XzxUE6iODjErh1Rd52cZHswThcb3BKVsw/5bXRlJKO?=
+ =?us-ascii?Q?171MEBhO2ih1WCnNuYueQ46IRdxCb1Oq0vlTW9fyNoLdscQp4R199ocP+ZBx?=
+ =?us-ascii?Q?aEJ7nCPc2hy4HUFqk/ai/g75JxZjh9uKW1m+sIFNDvQpv3PR9rUorzlo7JSm?=
+ =?us-ascii?Q?my3oued9QzxV5g5CtEVBxS/905F/kbQfbtZyeXAyIggy9mAql72d4O7iGVy/?=
+ =?us-ascii?Q?/JPTqXCoE13Rcv4+YACwkEhpxUVqJ+jedzL/B7+jQmrSDyaWtx5Xbe+WNlo0?=
+ =?us-ascii?Q?yqul1FB0Nu8XB6W0h4yeWskYqP3BOyH6rUD1xMKC3k4IG5CUe/P6AXPOlfIW?=
+ =?us-ascii?Q?YJ2J/9a1yJmkr1UpPfyda9/YS5lvbsEyEMA2LVoRXmfb6o8wxXngFGrh5W+H?=
+ =?us-ascii?Q?7awE10ch2CGz3Y5R5oBPAYN3STWtjD7tSD4wSulDILh2iynb8/L9pWHuSclN?=
+ =?us-ascii?Q?WUuQpqW5qkhjUryiE5cI8WNpLIHitq7Eclo1YpxZ6UUfDDj+ic+DtX/2zDA1?=
+ =?us-ascii?Q?cfGhNnmIRCCTUulKupGckYCcv7o0FzSGBdqt59YwIFFB/yV0G06LZlpgrQqB?=
+ =?us-ascii?Q?1Wr6Frgr6ltKXviui7BrKVvuBPBxDZrRWEu4xuAP9rFxaytI/bQBm65XaAhB?=
+ =?us-ascii?Q?LQh7QA6PyxN9zzB3ANKsI8jqLhURmWOa/uG9MGpxam5CVrYMeGqyy0Jsc2/X?=
+ =?us-ascii?Q?G08Wcdb+e/JDW1IQ6yQ5N2LNadKANgOax3Fq5k2Nf454VVQ2CnAA0JL1pIgb?=
+ =?us-ascii?Q?aKd507RgJTe8xIFa7/lRDQocuydhqACQ+pF8phxPJJQE0vlVtRT+LnZ0nSM1?=
+ =?us-ascii?Q?VfoJN0nsEohlfr8K800Ns+DUWGSn2w95TEcFNCyjFWPYCQaS6dplEJ7Z4THK?=
+ =?us-ascii?Q?kXRlO+lcyLkXsawV4WNQX/jqhcAY8hjS+1GOVkqw+4cfFh3XkxjflqJdfh4p?=
+ =?us-ascii?Q?7/RT4EZQRW3MQjqzbkfviZkdbLI72izNJYSymcKq8y8pjQzYQj+qk+n0MPHl?=
+ =?us-ascii?Q?fVG3yOsKPA=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d561cbc-87a7-4e6a-629c-08de5828e547
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jan 2026 13:36:20.5906
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kZDJVJy7rE5qJjX7RsXV5oPHAhLc3o2RL/L2RSxJLf61h5Anj7OnsP0QpJNPWadl
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8325
 
-On Mon, 19 Jan 2026 15:02:09 -0800
-dan.j.williams@intel.com wrote:
+On Tue, Jan 20, 2026 at 09:46:05AM +0000, Lorenzo Stoakes wrote:
+> On Mon, Jan 19, 2026 at 07:14:03PM -0400, Jason Gunthorpe wrote:
+> > On Mon, Jan 19, 2026 at 09:19:11PM +0000, Lorenzo Stoakes wrote:
+> > > +static inline bool is_shared_maywrite(vma_flags_t flags)
+> > > +{
+> >
+> > I'm not sure it is ideal to pass this array by value? Seems like it
+> > might invite some negative optimizations since now the compiler has to
+> > optimze away a copy too.
+> 
+> I really don't think so? This is inlined and thus collapses to a totally
+> standard vma_flags_test_all() which passes by value anyway.
 
-> Jonathan Cameron wrote:
-> [..]
-> > Any thoughts on what I'm missing? =20
->=20
-> Probably:
->=20
->    cxl/port: Map Port component registers before switchport init
->=20
-> ...which really should not be a distinct patch from the one that changes
-> the ordering. I will send out a more patient series to settle this so
-> Terry does not need to keep carrying it.
->=20
-Ah. I stopped looking when I got to this patch :) Spot on - thanks!
+> Do you have specific examples or evidence the compiler will optimise poorly here
+> on that basis as compared to pass by reference? And pass by reference would
+> necessitate:
 
-Below is my suggestion of another approach. I think it ends up
-a fair bit simpler, but you know this code a lot better than I do, so I may
-be missing some problems! I like the simpler reaping. That approach looks
-like it can be used elsewhere in this file.
-Testing so far is one representative config only.
+I've recently seen enough cases of older compilers and other arches
+making weird choices to be a little concerened. In the above case
+there is no reason not to use a const pointer (and indeed that would
+be the expected idomatic kernel style), so why take chances is my
+thinking.
 
-The patch you highlight above is squashed into this. At least one comment
-I made on your patch applies here too (naughty me :)
-
-=46rom a95567d9e2e3809ca1953a9aec24324ae13f6145 Mon Sep 17 00:00:00 2001
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Date: Tue, 20 Jan 2026 10:53:14 +0000
-Subject: [PATCH] Alternative to Dan's approach for managing dport resources.
-
-Create a devres group to manage a subset of resources.
-On success, close the devres group, but also stash a copy in
-struct cxl_dport so we can use it for dport reaping.
-
-On error, when group open release it.
-
-Somewhat tested, but not what I'd consider exhaustive yet!
-Used a 2 port switch, 2 EP test config.
-
-1. Unbind endpoints, checked reap happened.
-2. Unbind port1, check tear down happened.
-3. Add some errors so some calls fail (stepping through each
-   group that was created) Some cases get setup by
-   it having another try based on a different downstream device
-   arrival triggering the flow, but it seems fine.
-
-  =20
----
- drivers/cxl/core/port.c       | 76 ++++++++++++++++++++---------------
- drivers/cxl/cxl.h             |  2 +
- drivers/cxl/cxlpci.h          |  4 ++
- tools/testing/cxl/test/mock.c |  1 +
- 4 files changed, 51 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index fef3aa0c6680..e3c53b2fc78f 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -778,7 +778,7 @@ static int cxl_setup_comp_regs(struct device *host, str=
-uct cxl_register_map *map
- 	return cxl_setup_regs(map);
- }
-=20
--static int cxl_port_setup_regs(struct cxl_port *port,
-+int cxl_port_setup_regs(struct cxl_port *port,
- 			resource_size_t component_reg_phys)
- {
- 	if (dev_is_platform(port->uport_dev))
-@@ -786,6 +786,7 @@ static int cxl_port_setup_regs(struct cxl_port *port,
- 	return cxl_setup_comp_regs(&port->dev, &port->reg_map,
- 				   component_reg_phys);
- }
-+EXPORT_SYMBOL_NS_GPL(cxl_port_setup_regs, "CXL");
-=20
- static int cxl_dport_setup_regs(struct device *host, struct cxl_dport *dpo=
-rt,
- 				resource_size_t component_reg_phys)
-@@ -1065,7 +1066,12 @@ static int add_dport(struct cxl_port *port, struct c=
-xl_dport *dport)
- 			dev_name(dup->dport_dev));
- 		return -EBUSY;
- 	}
--
-+	//comment from original patch here.
-+	if (!port->nr_dports) {
-+		rc =3D cxl_port_setup_regs(port, port->component_reg_phys);
-+		if (rc)
-+			return rc;
-+	}
- 	rc =3D xa_insert(&port->dports, (unsigned long)dport->dport_dev, dport,
- 		       GFP_KERNEL);
- 	if (rc)
-@@ -1181,20 +1187,6 @@ __devm_cxl_add_dport(struct cxl_port *port, struct d=
-evice *dport_dev,
- 	if (rc)
- 		return ERR_PTR(rc);
-=20
--	/*
--	 * Setup port register if this is the first dport showed up. Having
--	 * a dport also means that there is at least 1 active link.
--	 */
--	if (port->nr_dports =3D=3D 1 &&
--	    port->component_reg_phys !=3D CXL_RESOURCE_NONE) {
--		rc =3D cxl_port_setup_regs(port, port->component_reg_phys);
--		if (rc) {
--			xa_erase(&port->dports, (unsigned long)dport->dport_dev);
--			return ERR_PTR(rc);
--		}
--		port->component_reg_phys =3D CXL_RESOURCE_NONE;
--	}
--
- 	get_device(dport_dev);
- 	rc =3D devm_add_action_or_reset(host, cxl_dport_remove, dport);
- 	if (rc)
-@@ -1441,11 +1433,7 @@ static void delete_switch_port(struct cxl_port *port)
-=20
- static void del_dport(struct cxl_dport *dport)
- {
--	struct cxl_port *port =3D dport->port;
--
--	devm_release_action(&port->dev, cxl_dport_unlink, dport);
--	devm_release_action(&port->dev, cxl_dport_remove, dport);
--	devm_kfree(&port->dev, dport);
-+	devres_release_group(&dport->port->dev, dport->devres_group);
- }
-=20
- static void del_dports(struct cxl_port *port)
-@@ -1602,6 +1590,9 @@ static struct cxl_dport *cxl_port_add_dport(struct cx=
-l_port *port,
- 					    struct device *dport_dev)
- {
- 	struct cxl_dport *dport;
-+	struct cxl_dport *new_dport;
-+	struct device *host;
-+	void *devres_group;
- 	int rc;
-=20
- 	device_lock_assert(&port->dev);
-@@ -1615,21 +1606,31 @@ static struct cxl_dport *cxl_port_add_dport(struct =
-cxl_port *port,
- 		return ERR_PTR(-EBUSY);
- 	}
-=20
--	struct cxl_dport *new_dport __free(del_cxl_dport) =3D
--		devm_cxl_add_dport_by_dev(port, dport_dev);
--	if (IS_ERR(new_dport))
--		return new_dport;
-+	if (is_cxl_root(port))
-+		host =3D port->uport_dev;
-+	else
-+		host =3D &port->dev;
-+
-+	devres_group =3D devres_open_group(host, NULL, GFP_KERNEL);
-+	if (!devres_group)
-+		return ERR_PTR(-ENOMEM);
-=20
--	cxl_switch_parse_cdat(new_dport);
-+	if (port->nr_dports =3D=3D 0) {
-+		rc =3D cxl_port_setup_regs(port, port->component_reg_phys);
-+		if (rc)
-+			goto release_group;
-=20
--	if (ida_is_empty(&port->decoder_ida)) {
- 		rc =3D devm_cxl_switch_port_decoders_setup(port);
- 		if (rc)
--			return ERR_PTR(rc);
--		dev_dbg(&port->dev, "first dport%d:%s added with decoders\n",
--			new_dport->port_id, dev_name(dport_dev));
--		return no_free_ptr(new_dport);
-+			goto release_group;
-+	}
-+
-+	new_dport =3D devm_cxl_add_dport_by_dev(port, dport_dev);
-+	if (IS_ERR(new_dport)) {
-+		rc =3D PTR_ERR(new_dport);
-+		goto release_group;
- 	}
-+	cxl_switch_parse_cdat(new_dport);
-=20
- 	/* New dport added, update the decoder targets */
- 	device_for_each_child(&port->dev, new_dport, update_decoder_targets);
-@@ -1637,7 +1638,18 @@ static struct cxl_dport *cxl_port_add_dport(struct c=
-xl_port *port,
- 	dev_dbg(&port->dev, "dport%d:%s added\n", new_dport->port_id,
- 		dev_name(dport_dev));
-=20
--	return no_free_ptr(new_dport);
-+	/*
-+	 * Stash the group for use during reaping when all downstream devices
-+	 * go away.
-+	 */
-+	new_dport->devres_group =3D devres_group;
-+	devres_close_group(host, devres_group);
-+
-+	return new_dport;
-+
-+release_group:
-+	devres_release_group(host, devres_group);
-+	return ERR_PTR(rc);
- }
-=20
- static struct cxl_dport *devm_cxl_create_port(struct device *ep_dev,
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index c796c3db36e0..855f7629f5c4 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -688,6 +688,7 @@ struct cxl_rcrb_info {
-  * @coord: access coordinates (bandwidth and latency performance attribute=
-s)
-  * @link_latency: calculated PCIe downstream latency
-  * @gpf_dvsec: Cached GPF port DVSEC
-+ * @devres_group: Used to simplify reaping ports.
-  */
- struct cxl_dport {
- 	struct device *dport_dev;
-@@ -700,6 +701,7 @@ struct cxl_dport {
- 	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
- 	long link_latency;
- 	int gpf_dvsec;
-+	void *devres_group;
- };
-=20
- /**
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index 1d526bea8431..a3fbedb66dbb 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -132,4 +132,8 @@ void read_cdat_data(struct cxl_port *port);
- void cxl_cor_error_detected(struct pci_dev *pdev);
- pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
- 				    pci_channel_state_t state);
-+
-+int cxl_port_setup_regs(struct cxl_port *port,
-+			resource_size_t component_reg_phys);
-+
- #endif /* __CXL_PCI_H__ */
-
-
+Jason
