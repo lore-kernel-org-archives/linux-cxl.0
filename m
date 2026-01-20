@@ -1,65 +1,63 @@
 Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6CD44DB9E
-	for <linux-cxl@vger.kernel.org>; Tue, 20 Jan 2026 18:18:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDFD43E9D2
+	for <linux-cxl@vger.kernel.org>; Tue, 20 Jan 2026 18:38:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768933135; cv=none; b=es+5WwE+FI5Tg5Pl3g74zyKw/Arp7W0BR3HO2T3Mm+/r5NWvySLW3kAAbji0tFvan57MF9CChCk1rwAMHeoLkmvtGQSTcI4TXjEAB+VwMdioVrdHX3R5qPUEMwNXn90seUqAr/bBiHANvHcyzs5B7CpiZAVkDPEwXbHE1WQUSCc=
+	t=1768934323; cv=none; b=iDGI4pOpMw7nQlSfeezJGbeE72clq4k5TlwZKUptsfkpyyMtY2Cvs3n/z6tmhFsCZO+EAFfr390F0c06q6ZRAbx9fS0X9b6Z+NrwEvjtiRJtNyjTQljMZXn3fY+L/I65HQg/zG828Bk+4FTkRrI4iFvONl2a4lA1zjSaH9Qhb8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768933135; c=relaxed/simple;
-	bh=XEUWYxPei4NEkgDam7A7un1qS7q4dsbYFTPlbpjhsk4=;
+	s=arc-20240116; t=1768934323; c=relaxed/simple;
+	bh=YmhekH3BtLWUqg6+5Ty3aH1uKKxcFx123EWvmahHQL0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ewlCjPtrswes84uknUX/s6PJ8oqlRq7VjvHdRa+6OmATlzp8zIFTLMOHIwNBHpJDd8askMMEniElHTD2kVrX71xMjNTgGODtBjloch7dm/yuZ2V8Nn6JG16QQ97ILxD37rOEuVg3MvwsaBszA1M0YnbVhE1+vrH7xBu10HczrGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=QYPy29cg; arc=none smtp.client-ip=209.85.160.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=QtC409wOpl59umw/bdyERKxUsyfqGbLxOyEbTgLfrtWtvl9MgP3ntrlTIhpLiFdFkDB8fLLQFrJ+1xXwbwp4beOiJwPNirMSAyCEdP57OjPAd6lG6fmWKZ8fBekS6TSzZG8GyK6cAWNNILnpiPCu0DldMBcbjAJU4k7YvJz0r+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=jCp42yeE; arc=none smtp.client-ip=209.85.160.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="QYPy29cg"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-5014d4ddb54so60598371cf.1
-        for <linux-cxl@vger.kernel.org>; Tue, 20 Jan 2026 10:18:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="jCp42yeE"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-5014e8a42aeso61252221cf.2
+        for <linux-cxl@vger.kernel.org>; Tue, 20 Jan 2026 10:38:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1768933132; x=1769537932; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=UtgC14b32AkerxxtW7iTRCLeOq1ZZH1b7K2qfFqW7v4=;
-        b=QYPy29cgzGhNOhwVxsQB7qyLliEa8lwjDch/wP9i+quS0k/hiP4F/aLENpvpEqG0Jk
-         /IevR3umxfRc1BmJS6+D81camWZv/b3yFy/6DAi3vEdhNlvyuv9RMyg3YK/8HvwDmFly
-         ysKJ4uSrBmnAVcu5RyoFNZSoSNxFvSV3Ng1lvk8OVzENH6cCDto+3K/C6zQ0Y+0fSE/q
-         mvBOEgzzQQqyBzeYcl2kDSm0HMoC5eI7F1Y1A677ICp5zmIhaXiAwdbKGyp9qpfuTaTa
-         4N2MTE1ezm4kmKm9dVmjP02NfPqw73DwC8r+UWQB49mKu+n8UTvNclf11GTEoKerflTt
-         L2+w==
+        d=gourry.net; s=google; t=1768934320; x=1769539120; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iOV934DYRc9ERWmoCuXpOFxaUel0buwbS4A/jVjuySc=;
+        b=jCp42yeE+qfiGMUfLqVlxCb/4aF1LniQxlCgbIBs/+HG9prS8N8Z+kIj0TGK2BJVAh
+         eEd7EyCT3SFfo8Ku1HrUzcDrfdIRq7oRUi8XYM+9CpsrOEaOwn5Of7It5rhFZ8dHaFZ7
+         dvS59pmFwMCMBKOsX5pS2OVAYB0JEltjJWHTZ9uZ7Mko7SCauveD1/H8LWHa2UW0V3QL
+         u/mMehgWeG2KuBhyv7LXdO/v5t3WzBGO4uLRE84zIjwuojYTUyLKCh1SuvPt5m0JRrJA
+         Zwjge3uO++RJblexiBQPlbIzVxvzmO67VGPhL8QpaZ/Tj1VOr/3EOQeRdh1/kVfORknv
+         LMpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768933132; x=1769537932;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UtgC14b32AkerxxtW7iTRCLeOq1ZZH1b7K2qfFqW7v4=;
-        b=U6D4zaomHzV+DR1ZzH7PMAktPMI6T3R7rp7BtD5bEb/ByOfzq3t6WuiHdQVPqyYvC+
-         b2MBjmkV/zOLT6QVw8Z1GQ1xZkYaV694OhhHb4QK2ep+XZIyohVxS5UOr2TWKuQgKzUI
-         ziG3CxlK7Eblc1oCQ+lrR4nhG3O6RG4giTYzNB9xfrFiIrw6Mj/SS8s1pOZe6kw4OmUy
-         trrHiLN/CNPVCIVSaxbNfDHZf/3vxSZLxhOWEyFi68Z/3yF70eNjsVwElRqxt6AZQ6RH
-         jg6ebGd5gh05dQKihaZrpn8KoURjvrmDlRD7S2jZ6k+N8uPuMDWUtHdKlbdJgKbTAtZZ
-         SL9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWBlxWEayykRO/Se6mr+ZqW3UNxR3zqgsMKDXAMzLB+OaSbasTtet+yHhcyP2wDRXWovCAMs+tnp4k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxL/6SnVL7K4urXul+SoVwEXbaoUbMGnkgulFgt7YjwlgVz3/Ja
-	HEE7ifY7jWer1amIte4bb3Q4YPIrDKR2kJKdyNoef1J79MDfiUiWlHopZuInAgxMBj8=
-X-Gm-Gg: AY/fxX5kLwHixJ21Wqj9DsQTz8VhRhOwHYxuqLoF/p3wmeVxt0ozXKJiG2LymVYV3cG
-	sabLNljZUZD98pudBEsQnFKHB3Yn3Boqp/7A+lqoHHHmhQ+W5fWAdzSn5ZBzFWNVdj2bROLf3xH
-	rqBuu+Ff3ckxDT1rRsnizGeadVPY/3Uhz2L67dIiBSfhsgU4VaUoVN4mk0IBIycF+I+11KA81We
-	Gop7qExxYjbdTotTJZ+ilPFoBAf0MnPJI0vkv2YvCw+crD6PR0UtEDT1mN0oWaXwpN3JfF7RNfl
-	Rd1awuCx7vCtNtyvjU1yXwUK9CFVekXLHordplO7VYyEMLUWeEFQGUu0PsbOcaYNGffXWgv4T/Y
-	ghMfmKktMT1ssGvT3/+eNXJ2rEtHYd7Jos+Mxgt34qr96X7HWsH7RQm9DrQpL3f6ebATxpRILu5
-	mNX2qPV5V9CrzeI8t5+rHheplxk6JFzaBxjtLft6J3YUEdJQBSmNMhvpnG4dRTyGpV3xE3VnvJ3
-	pVZl8tz
-X-Received: by 2002:ac8:7d93:0:b0:501:459b:6138 with SMTP id d75a77b69052e-502a179c71emr233059251cf.65.1768933132218;
-        Tue, 20 Jan 2026 10:18:52 -0800 (PST)
+        d=1e100.net; s=20230601; t=1768934320; x=1769539120;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iOV934DYRc9ERWmoCuXpOFxaUel0buwbS4A/jVjuySc=;
+        b=hxxB+E0daBASe0cYkRqddBTRsKXAJCrj/ZKageqp1m0LONZPj+k0zwLq2xqsy09fUn
+         W+jDb/+Q99gN28uIVKW2vshtl2jKK8Wfqq/MI+twkuiKyj5km/1sLJ8O3Vp5I7/03j3i
+         GeKtrwq6A4wXNrl1o2QmuVW3NyRSmlTTR5yIiZk2Gno2YDrLHiS2Twd264BHRjlFhao3
+         QsOoTjgO1DH026Q2/H4E7AiRW+/aMKZcIu+9sWMz0jzjAllAMliwDMifhVPqh62nkXD/
+         YmZ5pt/Hd7bFkpTwPM4jdEvfjVbTF4e+TURDDAGqqEfY1mQkPSsvTe1I18Fl67KKpAgE
+         /XNA==
+X-Forwarded-Encrypted: i=1; AJvYcCVcA1wbcCmijlEgAOA1+2uMM/ZY4wBjacz7dZcjcBBXaKhNxmN1cwnguEm+OKKc/W2sZjTRAu9LFns=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw20KG6ILCCQTv/rZyXazzIr6dtx4jZ92R2DqUSnn3QZHr2poPw
+	LNLDVM5yr8CETgQ6g3KHbSEW0v5BCSRUnUq3oBX7z5j6a2jhMCABEC94EZHGmsup+vg=
+X-Gm-Gg: AY/fxX5iPByUhlMvvlqyvfeI3P5Lx/bVGWaT+sKDFrq/fK5/kBPmuJlmUdeGO72RECM
+	qG+NCxXSfD3KXLyfSTnLkyeSbVD+RoJwNVoUcPGlSOPClJNGFFbL4wA5XeHxzijPfQfIBaxCQgU
+	cp8YMLJ2r/ofrqz7sbZ5CcbtvTA1B9dW1zHwSGNt/YX9uX25GxJxfp7B6HBGr/93pxJUdKfbav5
+	LvJ2RPkfW1hassz1GecaUiGxEFfzYguN8i6pT9pm0m8IMH7XVIJvJoS8HU17HjY06srylowH9uS
+	mxunTCesNCF6L4HU4U5/EN/r3A9XWMo6BDaZ0emcYlnWpvg94iMr5bJ43S0qDy6DhElB4dl3PlU
+	eiiOTQ9xxWGXEkIQkcc5IKlDZYOCMT3XxnPV7Wmxe4D51MrqhrxMsok0lz7WRppbhAuMTq3Zi8y
+	kWFIHk7cmUTSkR3w99/QEh7Zm2U/hV116J6AXLuugB9umbAjm5m5G8K857qlX8Ce1K+l5uRw==
+X-Received: by 2002:ac8:7dc2:0:b0:502:9c4f:e284 with SMTP id d75a77b69052e-502d84dee8fmr37431281cf.30.1768934320230;
+        Tue, 20 Jan 2026 10:38:40 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-502a1d6e67csm94446971cf.7.2026.01.20.10.18.51
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-502a1d9f296sm105269001cf.12.2026.01.20.10.38.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jan 2026 10:18:51 -0800 (PST)
-Date: Tue, 20 Jan 2026 13:18:19 -0500
+        Tue, 20 Jan 2026 10:38:39 -0800 (PST)
+Date: Tue, 20 Jan 2026 13:38:07 -0500
 From: Gregory Price <gourry@gourry.net>
 To: Li Zhe <lizhe.67@bytedance.com>
 Cc: david.laight.linux@gmail.com, akpm@linux-foundation.org,
@@ -71,90 +69,53 @@ Cc: david.laight.linux@gmail.com, akpm@linux-foundation.org,
 	muchun.song@linux.dev, osalvador@suse.de, raghavendra.kt@amd.com,
 	wangzhou1@hisilicon.com, zhanjie9@hisilicon.com
 Subject: Re: [PATCH v2 0/8] Introduce a huge-page pre-zeroing mechanism
-Message-ID: <aW_G66HeWLbyiPHs@gourry-fedora-PF4VCD3F>
+Message-ID: <aW_Lj0q6swLVR8SY@gourry-fedora-PF4VCD3F>
 References: <20260120094744.5d92e34a@pumpkin>
  <20260120103949.7673-1-lizhe.67@bytedance.com>
+ <aW_G66HeWLbyiPHs@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260120103949.7673-1-lizhe.67@bytedance.com>
+In-Reply-To: <aW_G66HeWLbyiPHs@gourry-fedora-PF4VCD3F>
 
-On Tue, Jan 20, 2026 at 06:39:48PM +0800, Li Zhe wrote:
-> On Tue, 20 Jan 2026 09:47:44 +0000, david.laight.linux@gmail.com wrote:
+On Tue, Jan 20, 2026 at 01:18:19PM -0500, Gregory Price wrote:
+> This is a trivial example, but it's unclear zero_on_free actually
+> provides a benefit.  You have to know ahead of time what the runtime
+> behavior, pre-zeroed count, and allocation pattern (0->10->5->...) would
+> be to determine whether there's an actual reduction in startup time.
 > 
-> > On Tue, 20 Jan 2026 14:27:06 +0800
-> > "Li Zhe" <lizhe.67@bytedance.com> wrote:
-> > 
-> > > In light of the preceding discussion, we appear to have reached the
-> > > following understanding:
-> > > 
-> > > (1) At present we prefer to mitigate slow application startup (e.g.,
-> > > VM creation) by zeroing huge pages at the moment they are freed
-> > > (init_on_free). The principal benefit is that user space gains the
-> > > performance improvement without deploying any additional user space
-> > > daemon.
-> > 
-> > Am I missing something?
-> > If userspace does:
-> > $ program_a; program_b
-> > and pages used by program_a are zeroed when it exits you get the delay
-> > for zeroing all the pages it used before program_b starts.
-> > OTOH if the zeroing is deferred program_b only needs to zero the pages
-> > it needs to start (and there may be some lurking).
+> But just trivially, starting from the base case of no pages being
+> zeroed, you're just injecting an additional zero(X) cost if program_a()
+> consumes more hugepages than program_b().
 > 
-> Under the init_on-free approach, improving the speed of zeroing may
-> indeed prove necessary.
-> 
-> However, I believe we should first reach consensus on adopting
-> “init_on_free” as the solution to slow application startup before
-> turning to performance tuning.
+> Long way of saying the shift from alloc to free seems heuristic-y and
+> you need stronger analysis / better data to show this change is actually
+> beneficial in the general case.
 > 
 
-His point was init_on_free may not actually reduce any delays on serial
-applications, and can actually introduce additional delays.
+As an addendum to this:  Maybe this is an indication that a global
+switch (per-node sysfs entry) is not the best decision, and that maybe
+there's a better way to accomplish this with a reduced scope.
 
-Example
--------
-program_a:  alloc_hugepages(10);
-            exit();
+hugetlb-only sysfs knob
+	- same issue as current proposal, but better placed
+	  why would you only apply this on one node?
 
-program b:  alloc_hugepages(5);
-	    exit();
+prctl thingy
+	- limits effects to just those opting into alloc-on-free
+	- probably still needs hugetlb-internal zeroed-pages tracking
+	  but doesn't require the rest of the machinery
 
-/* Run programs in serial */
-sh:  program_a && program_b
+do it entirely in userland
+	- modify the software to zero before exit
+	- use MAP_UNINITIALIZED
+	- useful and simple if your hugetlb use case is homogenous
 
-in zero_on_alloc():
-	program_a eats zero(10) cost on startup
-	program_b eats zero(5) cost on startup
-	Overall zero(15) cost to start program_b
-
-in zero_on_free()
-	program_a eats zero(10) cost on startup
-	program_a eats zero(10) cost on exit
-	program_b eats zero(0) cost on startup
-	Overall zero(20) cost to start program_b
-
-zero_on_free is worse by zero(5)
--------
-
-This is a trivial example, but it's unclear zero_on_free actually
-provides a benefit.  You have to know ahead of time what the runtime
-behavior, pre-zeroed count, and allocation pattern (0->10->5->...) would
-be to determine whether there's an actual reduction in startup time.
-
-But just trivially, starting from the base case of no pages being
-zeroed, you're just injecting an additional zero(X) cost if program_a()
-consumes more hugepages than program_b().
-
-Long way of saying the shift from alloc to free seems heuristic-y and
-you need stronger analysis / better data to show this change is actually
-beneficial in the general case.
+there's probably more oprtions
 
 ~Gregory
