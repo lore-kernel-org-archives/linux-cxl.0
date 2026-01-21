@@ -1,241 +1,484 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375FD34CFA1;
-	Wed, 21 Jan 2026 18:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769021151; cv=fail; b=RQUJFrOZuV9dE2Zw+C/Mjc8KkZphODM/CvTw9ufbJru+U9BpS23Y7wKVltIeik9TBg6vxfqzz3zYh5vLjxpuO2DbBBBnTJGHMONSMqfGvTa8koMCLA5YvCiFYPTSzeHuvcMJreW26Dsu7itlrV6D4lueVHKBkiOGU9mEDqfUDG0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769021151; c=relaxed/simple;
-	bh=N5PSeXCrCB8zSGDdxL/U1nqUnJIIQSyNSqbS1+BLyV4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=cGVILKQvY6awj4WxEHlcZrK9gnC2ukB6Fu7BpEtLgEMOJb9xgUBVzYDvrdito/zMj3nDSzqjObGaqfsZW1b8u4LonIV0JkqVMkGyEwSQ00xI3lUoRvRe0+NuxqbQAgeFMmUckIbmwv+BiX329BM3JGLqUIzn772T4lOIjHzwuxg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gpRSzHUt; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C5F3BBA14
+	for <linux-cxl@vger.kernel.org>; Wed, 21 Jan 2026 19:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769024366; cv=none; b=KMkbJ4kj6H86oVlyAYL4UsWAI6st+wgZAc+9vKiQZNaP7xJlXBOSeoTW6fnn/Q0NsGNNTpjZcYctDIej8vvMBpw4jFZu1O7o16kHkoBCSmUSEK1jjs+m6TR9Bvw+2y8Zeshwv382tX2hpY9LYTRE3vjjEKDTEKMmWwEZfFBK5CE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769024366; c=relaxed/simple;
+	bh=+z0M6TjzAaFxroJ82pTYE4olWLYHnuO2bDXqopI77Dg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=sG1aUo5f1Wqjw5sdnLQS0H+RTDw9P1+S304BPHTOYBXXkVI79h+H6Wddqcz5mDHK2N72OoOdmLgihQzQATy/EpyPMBp/yZUrVMYKW6aNxIQCmDnSwLrRK3JpuvXJ6s3mSS2kIWtzLScdPwVzCrJqiNbr1UUBtsuoS0RwlRL4GjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=miquUrcO; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gpRSzHUt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769021149; x=1800557149;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=N5PSeXCrCB8zSGDdxL/U1nqUnJIIQSyNSqbS1+BLyV4=;
-  b=gpRSzHUt1n4K7ZwsVyuFoRLyK7vHM0ssvI3gRVs7BmUiM0Vk4pqfEIvd
-   tVRWS+99Klxgh/TrkMF60jx4Jo62Qhk6Prpaaify6pWsi34j/WhJQYWsS
-   9FTstmIpEX07Hq8QihZoxi368CstBX8jLSRN7/uWY8IJZ59eoOfaIic8K
-   uyYpvcgPysJOgBXt1qyPbDSn0yIHxO7PuGSeLTO16S8YrZHpgvKtfMkDP
-   A3f7JRcyc8jEESQ7GB9zlQuCPAL0DBlNSZk7n3xqrEOrto384jpjLTUPB
-   17g6FwI/te2Zj8W3X4PRQgFq4IGb3lEcZcrADaOWgivWNVhYO8t4IAQpq
-   w==;
-X-CSE-ConnectionGUID: CbXBBL+RSry/Fra9nGAnuw==
-X-CSE-MsgGUID: 3x/cSmAPSUO96nSsGqxBSA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11678"; a="70169115"
-X-IronPort-AV: E=Sophos;i="6.21,244,1763452800"; 
-   d="scan'208";a="70169115"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 10:45:49 -0800
-X-CSE-ConnectionGUID: QGGaAu1/R8OTSowkpFwLTg==
-X-CSE-MsgGUID: VWl4u8sSRvWpz9nEPnjbbg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,244,1763452800"; 
-   d="scan'208";a="206127986"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 10:45:48 -0800
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Wed, 21 Jan 2026 10:45:47 -0800
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35 via Frontend Transport; Wed, 21 Jan 2026 10:45:47 -0800
-Received: from CH5PR02CU005.outbound.protection.outlook.com (40.107.200.11) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Wed, 21 Jan 2026 10:45:47 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TwqhTC2Wmx2rCfTSkJlm+gAcV8y3J5DpYsifq5rF1Q09+8VE7F7DT9pS6Lvujlnf4U/75+wMuZr9tuarrK9MIUcHTzjirFYc5Ps1itD9+sAsJQja4Wi1lrWaT7NyEsc+U/uN1xIzm6GDiFQQ0ffOnDq+EjFwqBjnCp3vBTC/3+EPTmjWpXBGQpQjutKyywOi1/EVzN1Y7WEN2yK7z9nwVweT7VsnNIdpj/4HEQMsh417Y5+6AJ9mEGHH7q7ujxxPFfFNFvmlgp0BxJKTZySZPNeXUufCROOTvQc6OhMx4PA+lKtL8gjEMZAG+8Dp4Ux0xqYXnMClBwODTgZ8dy5twQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NefA4SD/W/bfgILGPDxKWij0D9a/XW3TXPYlLpURKA4=;
- b=Ziu+943PEgPT2qHXajRGa0FForVKZ4fL3u+Vl/aNeNFe44euTGq+KGMnWz8ichUB5cJ7E+AuDa1xErA4LOdVUWDSE9LKYxA96bDdsEf3Zkt87puSxxwlLpnuL9BDC3LgzzxMDl+g1FZuyvHIDHYg63esKeGnpNiuma1EoaQSOyMOnsf+YfXfUbxxyn/Bkm5XDMNp2T7VcSS14lHosDeOm0MaA+avZtv6ALu+hDg7M+vf0TLqVTuTEY5IpUfdFitmtdgGkGIkGrGFIks91y9xUelECvRbHrIJIf3eNjKhi6JI8+K7wT1QCKPnBPj6uqeTUdVlLgFL4kpBlkSV3KVmjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by MN0PR11MB6205.namprd11.prod.outlook.com (2603:10b6:208:3c7::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.9; Wed, 21 Jan
- 2026 18:45:44 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::46c9:7f71:993d:8aee]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::46c9:7f71:993d:8aee%8]) with mapi id 15.20.9542.008; Wed, 21 Jan 2026
- 18:45:44 +0000
-Date: Wed, 21 Jan 2026 10:45:41 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
-CC: <dan.j.williams@intel.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>
-Subject: Re: [PATCH v2 0/1] cxl/cli: HPA-ordered destroy-region teardown
-Message-ID: <aXEe1XPDZ8eGPOU6@aschofie-mobl2.lan>
-References: <20251125143826.282312-1-pawel.mielimonka@fujitsu.com>
- <20260120143212.3006273-1-pawel.mielimonka@fujitsu.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260120143212.3006273-1-pawel.mielimonka@fujitsu.com>
-X-ClientProxiedBy: SJ0PR05CA0008.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::13) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="miquUrcO"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-8887ac841e2so1947596d6.2
+        for <linux-cxl@vger.kernel.org>; Wed, 21 Jan 2026 11:39:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1769024361; x=1769629161; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=X1V80Sn6RZwt6JK+nRNVlhds6ePvblgqL7ccSLBJdPQ=;
+        b=miquUrcOFIuJvBEk3t6qHbWWZAcb/Be8hKh31xfXgw/OyCD68Tx0OSL3G+GlAVBsOl
+         LiMZ8gFexerJhKZXmyLx3X8ZJH78jMc2HRaH1wocDnkQ15L9pFg9LncPK8qaqxL95wHu
+         TmTjdprpn0VLhk/5YTP/LBo589u03pg/OMk0KdEUktdcNa3XlJGeQFIW8BFDh+sPksW/
+         tQUj74nEOfX2DQweFEQXnfEwcbzY+fOsiPv43GmgSAlQhtwKqCw02wPB4IQ2iqehH0V3
+         hfv67shScIB8BjBtilEWzp3q+dhuxZpoHxOpnGVJ1sSFPKVhCYu7YYftL6eQt6y73ouA
+         BMAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769024361; x=1769629161;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X1V80Sn6RZwt6JK+nRNVlhds6ePvblgqL7ccSLBJdPQ=;
+        b=woZXHKRFNUBmMGgpZph4GUUlWloTyxrcYeZ/TLds20nsc9lqfOSCNPcoEqhXirMKbM
+         E2wJ9Xx47TymLHPuJqO+qE2nKx1XAdwos9IuveWrsbFnFpVwXHDt/+9AMGK3uDdF3Val
+         kswIMfbjlTtNysHjBKo7EBIbNh7m2jrTTBg9IY6wkQxPiasoooF0WKLCjWAfsH8pMRED
+         Z17v4SaUtXfO7ZwGZCkTbqHxKgN8DOK82qsyNF7YJkcz4IKDU0kO3jtXrrvQgB9vDUqG
+         ZtK3gSkTxrNsIkSwBQUTXf+FRdRXyGkjHcxmo9BigoAlpLxVVh3Z+eTJr6BGEpPlQhq8
+         4Sdg==
+X-Gm-Message-State: AOJu0YyQgm/jZUSXE6KuS5IPG4iuCT8fO3Xxw8aejevW2NxAUtVdwSMj
+	Hd0gu7rvM7igzd/+xD5G8Es5ji7hcqJ3fNULK5bKhyqmWsNXXFRabYps3o3LxXw8XQ5bO9MrebF
+	5qTQrLM4=
+X-Gm-Gg: AZuq6aJIpBZqEV0zeRbKXmFqzxmBwVBQYOjn03FiDq3/PTZ7cRA+OwQP7sNNvBEkqGl
+	ounJZnJpwAHn0TSkp/yVfCyacCaUto37/hjiODNCFRbFxXTJ2ymgar8Mik8rq25oDvZWXkcTK8C
+	dt+37k6IyRGyY/R8jQqXGSOUAyuD/Exry7mZd9B5xctwjFMB4jKkgNI543IeRRjnHYR5LSF6BWS
+	z1SRAb2HLlwXW3BWZrOm1Wf0pLmL9TgXZMVTl3OOsuR70UMt9gf8B9mg4jMKwwcMOCafx0AGts4
+	nzzcWc4EdgV/T5a6okG7Rff7lJdrRc5lsXB77TdzGZqSlIqgzrWf9unFrQ6y7DWB7PEcfCa2JvC
+	9EibSPn1vRxNgeBbraqyiKrPAUXdlN/gl4q/nAyi3vUnLmWe+MoZmPGoN+wxNs8lxI6D209tCDh
+	zAwrMeFZU2kAu7Yocya4V1LXvSBA6Xzag1smxVmDxT0te+wz2bZzmtMoc6AFoxjQcF5DZaGg==
+X-Received: by 2002:ad4:4eaa:0:b0:894:76f1:b6f7 with SMTP id 6a1803df08f44-89476f1b7a0mr34031996d6.14.1769024361169;
+        Wed, 21 Jan 2026 11:39:21 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8942e6ad8b0sm135412426d6.28.2026.01.21.11.39.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Jan 2026 11:39:20 -0800 (PST)
+Date: Wed, 21 Jan 2026 14:38:48 -0500
+From: Gregory Price <gourry@gourry.net>
+To: linux-cxl@vger.kernel.org
+Cc: dan.j.williams@intel.com, dave.jiang@intel.com,
+	jonathan.cameron@huawei.com, alison.schofield@intel.com,
+	ira.weiny@intel.com, dave@stgolabs.net,
+	linux-kernel@vger.kernel.org, gourry@gourry.net,
+	kernel-team@meta.com, vishal.l.verma@intel.com, david@kernel.org,
+	benjamin.cheatham@amd.com
+Subject: cxl/region.c improvements and DAX/Hotplug plumbing
+Message-ID: <aXErSP1zKnv4koKG@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|MN0PR11MB6205:EE_
-X-MS-Office365-Filtering-Correlation-Id: 553e7120-b1ff-4630-0629-08de591d48e4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?ZGFuQ0Y3YzJGR3dzQ1pGenpueUJiRk92SFdYWFhHbUtmcDZGZndtTGI3K2lI?=
- =?utf-8?B?WWdaU3FXNW16OGNtWGNadnhvdmFkUDMvMjJQcFh1TEwxWXN6MStKYUFUeU5a?=
- =?utf-8?B?OG1rSDBsK1J1anhiQWx4TnZobit5VC9DbEo4ZkR4V28vQ0pXejY1S2ZHaUdQ?=
- =?utf-8?B?UzlxWHhrbkdNaXdMYS9rOGNtNzVLL0FNNStGUnBadWZDb0twYUZRYXpjcW9v?=
- =?utf-8?B?cy9RQVQwSmJESnJxWW5hcWh6eFZJV3pZWDNLWW5pWVN5dlh1d1R4Uzljc2Qy?=
- =?utf-8?B?T0V1TEY2dEdGV094SkgySmdrWGh4c3hwT1FES1FlVGRBN1l2NWJqUUJ3NklI?=
- =?utf-8?B?Zm5WQmpUZWU5bzB1MStYdElRK1cwZlNwOTVhbURQbUczWkk2aXJSSmpDYkZa?=
- =?utf-8?B?K0VWMFlSSWpIQzJPcXhzYnF4ZzZHbEZwVmJacVRJNmpxWUFOOWlYMFZtWko3?=
- =?utf-8?B?SjJQOGpOTjBaRkxGbVJWQ3NuUzBpYkNqSDhWSnErWmhaWG5lNlJqWW5sdTlu?=
- =?utf-8?B?OE5RWlJWS2YwWG5TTW9pbFlXZG5oZjlpOU01WTMwRXZTQ2hybkoycnJ1NHYy?=
- =?utf-8?B?OGNraGlOemtGcmhXUVI2UEEyWnVvTlRzcjVJSnQ0bVpoUVdQbDIvZVNPRzBV?=
- =?utf-8?B?eWRhcmEzMElzMEUwdk5HMzhzZzIyUURDclBpSnVqdFVYMzBUZzVnYTVjWXJR?=
- =?utf-8?B?Nm02WGFOYlhpRXYzdGdmaE5SajZsVWljSDlGRklEOFNMV1dvRkUxZXlrTzZC?=
- =?utf-8?B?S1NQL2pWRjljQ2IySFc4VlNRUXhzbis4NEllbGsxQjhIQWFaV3VVc0ViVU1o?=
- =?utf-8?B?YXQ0L2g2MFgvRkF3MlBJVnBjRnRZdWVYMHc0Sk45em56b0Y2YUxja0R4dkRi?=
- =?utf-8?B?NHF0Ky9lNEdDQTJiOERYNW4zL0xFcWcyTE9IRURFZ29paFBubzFibUJ5THA5?=
- =?utf-8?B?bTNqTW5IMzI3b2lNOEtDcjdidjM2aGpMemZCYnRXWkJYZStKVzh5VnJCd0NW?=
- =?utf-8?B?MW1rVVdjVG5zL0tYY21VeDhZZkZrQ1RnOUc0UFFxeTNLZWtUazdHeFF0RTly?=
- =?utf-8?B?WWZIbkJnK3dYT3QydFVBd3NoMnYrK08ydzBuNzRTRmRBMDIydk52blBPSUpv?=
- =?utf-8?B?cExUMFk1ZGxIYm1vT1dWbVNiZ1g0RmRvT2RhR2k3Smc5V3FpbUhNTUxOcTlN?=
- =?utf-8?B?b204VG9IZ3JnMmxRcXNQdmJiN0grdnB5b1JUaDZTV2FFRW9zUTlRWjAyT1Vi?=
- =?utf-8?B?QnVkOWppSzRPNGVyMUl6R3dnOG5EZ0EvNE52ZjB0NjFZSVpoOGJ5R01UVXUx?=
- =?utf-8?B?c3J4UC9GVDZSR0k1MmdrR3QvbVhPK1JCb2M1MDNjeExzcllMSC8wczlYcXFu?=
- =?utf-8?B?Njcvc29NenVNU0hPUGlwR2hrdW1iTXB2V3R4ZTVlL01VN2orbVlmYWE3N2RR?=
- =?utf-8?B?NUo1QlpzVEp2VUpvb3pGUzZ3dWNtOUdMWm05V3F2NlI1MUhHS1NTd2ExQSsz?=
- =?utf-8?B?SzhDdE5HbWpSWlZmcDcwdVgzZlhNM3M5N2Q2Z2dyeGlzNk9CaXBOcWJUMXFm?=
- =?utf-8?B?V0lwc2NuODlFN1ZWT3ZxZEt2eHBKWkRjVGFTQmlPVGxtN0hKWXNpMGlWZEh5?=
- =?utf-8?B?RGRXYm9rWTBkT3Arc3pFYkdTV1AzM1pQZHRnYjBVeWNVT3YxYzNJQnRWdkFD?=
- =?utf-8?B?bDNBMXQxeXNQZHU3R3d6ZjdrR2piNk13QnM3eVRLS2RCcUhnR2RiZENiUmNv?=
- =?utf-8?B?NTZ4ZUQvWVNtVVptRjlFVzRncm5UQ241WnhiTS9NVGROMC9FRko3UFJrTVRs?=
- =?utf-8?B?bE9oWUVhbHlDMkRLazNYeEwxZlpzbkpkb24xTXFNSFBSVXNyZ2NSN2U1VHZG?=
- =?utf-8?B?QTd5NXl1ekhtc1MzRzJ5eUdPa1k5d3VsU0pMQUNoc1VLV243ZThra0xKZThT?=
- =?utf-8?B?cFh6cDZWRFNJOGFpMmZCdk9UcVQvK1h4YmdGNHNJNGJvSzNJSXBqNUpWTGgw?=
- =?utf-8?B?THZwSjNXYVdyUGduVG00OGlySGVQSHdyZjcrM293MGRBdHdxemw5ZmU3U2lV?=
- =?utf-8?B?ZG5PUW0vclJPOWZicW4vNEJ1VWwxcTlMTWVCSzk2NW1maHlWS0hodE9lRFdk?=
- =?utf-8?Q?HU+I=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?M05zVTZHOTl6Rld3c25TbGdlRVlsbzlzQ3A1bmV5SFFtYXlwSnlRdmpXUldU?=
- =?utf-8?B?SGcyYUgzclltYm9RdVRLSVFYSFhqZ2M5N0J6b0dDbDdMODd2VVdrK2pZR3A0?=
- =?utf-8?B?QXRRMGRoWFNzSDliWXZNSHA3MWoycnJ1YTVkdXErOWZPUDVxZkMybnR0NXVi?=
- =?utf-8?B?ZklFa0J3T3N4NlZ4N0dtMWNGeUVXOGc4TnNaVllpeVFLY1RIbUNFR1pBbmdH?=
- =?utf-8?B?YW1JM0dYZ0gyQkEyRkQrWmRzWlgzTXRPMWtCTHFCWnNvSzV2WWZ0cU15T2Yr?=
- =?utf-8?B?WFowWWoxbXZhMzFDN1pnNXpCU2xVN1FzZmlPa0Z4MTBNdW5oWG9DVDQ0R3NE?=
- =?utf-8?B?T1NaTUc5NVp3ZE44VTNsQlk4dGFRYXVsYTBGeHI4U2czTXNCcGp4L1EvVzBY?=
- =?utf-8?B?STdlMm1jRTRYUFVCT1RibVhLUlJtRDlDWWZwQlAvdVVHb1V3R25TcjFVMURF?=
- =?utf-8?B?S3o2eDAvQllsS21vdVBWVE8waTBpUCt4VVZkRlVXUWdDd3AwYllHR1lKY3dI?=
- =?utf-8?B?Z3lQejRabVNMNlBMcy9BdjhlS01iSmFsZnRTcUprVGtlV2lZU3lLa3ozNElz?=
- =?utf-8?B?TmxDQW1LN2FhbzdZSGo1SG5POXovZ3Z2TGFIZ3BCN3ordDZDaUxBR2xDaWVY?=
- =?utf-8?B?ZGluZUNtYk5xR3JuRjZKOHB2R042RjNrT05kNWhMMUgreHRtTnpFeEtoQTN4?=
- =?utf-8?B?cWp5Q0VBWklUMi9JMmtqY0VwVGFyZXhOcVpqWkpzOS94SzJRempnOXA3ZWph?=
- =?utf-8?B?aEhrcmV2WFl3OUw4Q09DSy9LTU1oV3E0NUpURExJUHJDMGcyMWdMSDVkRWZ5?=
- =?utf-8?B?OTFuSzZMc0pVOFc0eTVYTmIxbDUvQUgrY1VsaldMeHVDaVRiR2dFUW8rM2F6?=
- =?utf-8?B?Z1NIbDRFclBGN3BGbTV0ZDhRY0NCdkl4Nk13dHR4bG5mT2E2bDVBVi9KdUEv?=
- =?utf-8?B?UzhQZkxBbi8zRGZBamt1THJ3RVlDdkZjZHFQM1NPMHBVU0x3UHVWZkc1VXNt?=
- =?utf-8?B?dDcvNk1WMHA0QlEwcXdlM1ViMEM2ZDczWmticFViS3JIazFac1pod25DQUVn?=
- =?utf-8?B?NGtEckNyL3MrbUp2MTVlOG56VXFLOXBHTzJFRnIwYlp0dUJLSnc4SzJsbG9I?=
- =?utf-8?B?Qm52ajVsNmN4MWVObmRkQ09NSGQrbTZvQk5nVXhpSVh5VnpVT2NReVRVUVdk?=
- =?utf-8?B?RDJYYXVTUDJUMVovWDdmWFgyaHFWQkZyQlVwMGFqdVg1Ym5QSzlRY0xOUlE4?=
- =?utf-8?B?ckh2WWhBbENmU2lncTQwZDRWRDNSTHVqNHNuUXZZbTJCQVdMOThnL1JlK2Mv?=
- =?utf-8?B?TEM2TC9mNHZobTBHVTdpWVU4Z1dGM3hvc2Q5RVBIeTFjYVZqeER3VTAyN2NZ?=
- =?utf-8?B?VnNmSklWNTNzRWltNHBJZXVSRklVa0U1L2h0cG5tYTJLZDZBNnFjOE5TMXhH?=
- =?utf-8?B?WXNYdHpRWm14OUNwRG96dm5ZWFpnQURuaWhlNFBaTG5PemFYUDhDcWdhYTRN?=
- =?utf-8?B?RDBnUUpGODNjdEZGdHNKK2FTSlErb210WDZwdklxaVlVV25hbFZwZUpWSHFC?=
- =?utf-8?B?bzBsVy96eUNIN2NoN255SmZvOXBZbzU0U0NQKzdabDJFL2lINTk1VVRIK2Nr?=
- =?utf-8?B?QVA0VHVvOTMvZi93UUcreHdZVnVlZ0tYdEJqKytwWHpmNjdiNzV6NGlsL3Nz?=
- =?utf-8?B?aVBaVklNMVl3a2MrM290VXdvNW5leG1rcHNsNTE3RXhRdVJYVVpOWHhKVjVk?=
- =?utf-8?B?a2RENGlCc0Z4dGQyMzU2WEQ5Vm90OFg3dlhtWmhBSVptODdxKzFEOUVuZS9t?=
- =?utf-8?B?VkFURi9PSEZIM2pKZjlLSjJ1YVJXS1diMGtjbXFnUFZSUDBZdGpjQlBuMDN6?=
- =?utf-8?B?c1lFRWV1Z2xUVGY2cTNZSW5tQVpBRDJTNVR4YUxHbkV5MXJKMk5pS2dRQW9H?=
- =?utf-8?B?Z1p5WnlEbG5wTGRYNXdEUjZJT21LVU9lWkRhcHBieDczZWZKWlYrYS8wM0Iv?=
- =?utf-8?B?ZDUxRFh4cWl1eGorQ041VXJZeDRRNHZyZWNzMGlaYUxHMVM3UEN4ZU05ejJI?=
- =?utf-8?B?TXhJaEZLVU5SbFZ3NXArTHExdmZRRjVQdTd3Nk5tN0JCaGJXSS9ZM0pHeU5U?=
- =?utf-8?B?aHhtU2ppenVTV0wwbFpIeCtScU9FWDB5NlViRFB4c2ZtNis5b0oyYVpUTzJJ?=
- =?utf-8?B?YWo5MlFuczU1c1MyREM2c1JHMyt4TWFKbWJQeVlGNE52R0ZqVmVJa3hsVTZz?=
- =?utf-8?B?bFA1WlB5TnQxRnRFVHh1eFpqTGpuT1RUUkUvZC9vMVowVkNpWWJFV2FKK2FF?=
- =?utf-8?B?TjlCazJQMkRwUnVqSHdvVmpOQ05WYkozYnVEWlVKR2ZBVG45UzdWQ3hpKzU4?=
- =?utf-8?Q?MbM/DJSMp/c2MuD4=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 553e7120-b1ff-4630-0629-08de591d48e4
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2026 18:45:44.6031
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: icitkwfn7lEkGnXPHCQ13U/EM06k2OmUFigUz9X/uS52lkiVutdf7OlpKnzeG9IvcxKlPogIdRFsGNXoVTAV0YaI51dQlixY7zeV4XZBkbg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6205
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Jan 20, 2026 at 11:32:11PM +0900, Pawel Mielimonka wrote:
-> This is v2 of the series.
-> 
-> Changes since v1:
->  - Rework teardown ordering to account endpoint decoders shared across
->    regions under the same bus/port
->  - This addresses scenario described by Alison when a memdev is
->    targeted by regions under multiple root decoders.
-> 
-> Alison, if you have a chance, could you please retest this version
-> against your multi-root-decoder configuration to confim that the
-> teardown now behaves correctly in that scenario?
+Jonathan asked me to summarize my roadmap/thoughts, so below is the
+gist of it: observations, high level design details, some patches.
 
-Hi Pawel,
+@David (Hildrenbrand): I CC'd you due to DAX and MHP discussion.
 
-Patch isn't compiling - first error:
-../cxl/region.c:854:48: error: ‘decoder’ undeclared (first use in this function); did you mean ‘cxl_decoder’?
-  854 |                 cxl_decoder_foreach(root_port, decoder) {
-      |                                                ^~~~~~~
 
-For v3, please send the patch as a new thread, not in response to
-previous. See here [1] for some ndctl patch sending guidelines, like
-labelling as [ndctl PATCH v3] and sending to the nvdimm mailing list.
+My larger motivation is identifying and solving friction between
+different use-cases trying to leverage a single backend: DAX
 
-I think rolling into one patch is fine, and would like to see the
-entire previous cover letter info in the commit log of the one
-patch. It set this work up very well.
+My personal motivation is to drive towards a defensible abstraction
+for CXL-backed N_PRIVATE_MEMORY nodes.
 
-[1] https://github.com/pmem/ndctl?tab=contributing-ov-file#readme
+~Gregory
 
-Thanks,
-Alison
+<great wall of text> 
+=================================================================
+TL;DR: 
 
-> 
-> Pawel Mielimonka (1):
->   cxl/cli: enforce HPA-descening teardown order for destroy-region
-> 
->  cxl/region.c | 110 ++++++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 108 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.45.1.windows.1
-> 
+   The current CXL-DAX glue is not flexible enough for everyone.
+
+   Lets treat dax_region as a specific mode of operation, and
+   offer additional x_region modes as "region drivers" with
+   their own policies on how to handle the memory capacity.
+
+=================================================================
+
+Overview
+========
+
+To me - this appears to all intersect at drivers/cxl/core/region.c
+
+Today: regionN/ has a static "backend interface" when it's created.
+       for ram_region  - DAX     (or NONE for BIOS config SysRAM)
+       for pmem_region - NVDIMM
+       for dc_region   - DAX?    (not upstream/settled)
+
+The DAX plumbing (as-is) lacks some flexibility to handle multiple
+use-cases - especially DCD and some accelerator features.
+
+For current-use, the DAX glue (dax_region) has some rough edges:
+ - per-region dax-driver preference not plumbed (kmem, devdax, fsdax)
+ - per-region auto online preference not plumbed (kmem)
+ - per-region hotplug protection not plumbed (memblock races)
+ - DCD implied sparseness (runtime allocations) - but no sparse-DAX.
+ - DCD Tags may be needed by user software, but no ABI (dax/uuid?).
+ - DCD Tags imply consumption policy, but no infrastructure.
+ - Onlining as NUMA is all or nothing:
+   Whole system gets access or driver has to write own mm services
+
+Some policy above can be mutually exclusive.
+
+Example: Can't have driver-wide auto-probe() auto-online policy on
+         systems with multiple devices using the dax glue.
+
+	 This drives userland complexity - tools have to understand
+	 multiple subsystems.
+
+Example: Tag-consumption policies may differ between use cases.
+         sysram - might ignore
+         famfs  - might use as filesystem information
+         virtio - might use as routing info for target VM
+
+So putting auto-configured regions aside (tl;dr: BIOS people pls no),
+the core proposal is to formalize:
+
+   cxl_region.region_driver
+
+that encodes some of this common policy.
+
+Some of the simple backends might be userland exposed, for example:
+
+   cxl create-region --driver=sysram --auto-online=online_movable
+   cxl create-region --driver=dax --daxdev=fsdax
+
+Some of these backends might be intended for building device drivers
+
+my_famfs_driver.c
+   cxl_create_dcd_region(..., my_dcd_hotplug_callbacks);
+   /* May use tags as filesystem information */
+   (Don't worry John - just an example, not prescriptive)
+
+my_virtio_driver.c
+   cxl_create_dcd_region(..., my_dcd_hotplug_callbacks);
+   /* May use tags for routing capacity to VMs */ 
+
+my_accelerator_driver.c
+   cxl_create_private_region(..., my_callbacks, NODE_TYPE_ACCEL);
+   /* Wants memory as a NUMA node, but isolated from allocations */
+
+This also encourages some amount of code re-use:
+    the core sysram driver can be the same for static-regions and
+    dcd, but dcd calls hotplug()/unplug() functions at runtime.
+
+It also encourages upstreaming/specification of some operations.
+
+My list of current discrete steps (some serial, some parallel):
+
+   1) Internally formalize cxl_region.region_driver (no ABI exposure)
+
+   3) Plumb additional information through to DAX based on driver
+      - dax-driver mode preference
+      - uuid for tagged capacity
+
+   2) Create explicit sysram_driver
+      - Write in terms of DCD
+      - Tagged Extents:   use DAX glue to manage set of tagged extents
+      - Untagged Extents: Hotplug and manage directly
+      - new ABI: `region0/region_driver` - switch between [dax,sysram]
+
+   4) Plumb additional hotplug policy from CXL into DAX and MHP
+      - dax0.0/hotplug  (atomic operation on all blocks)
+      - cxl region auto-online policy (region0/rctl/auto-online)
+      - block-protection policy? (memory_notifier controls)
+      - hiding memory blocks? (discussed in last meeting)
+      - ABI: `region0/rctl/*` controls
+
+   5) Formalize DCD dax_region driver use
+      - each extent list = new dax device in devdax mode
+      - tags enforced to be globally unique
+      - dax_region.add_extents(tag, extent_list)
+          -> create new daxN.0
+          -> expose daxN.0/uuid
+      - dax_region.remove_extents(extent_list)
+      - dax_region.remove_tagged_extents(tag)
+
+   6) Formalize DCD sysram_region driver use
+      - sysram_region.add_extents(tag, extent_list)
+          -> untagged capacity managed as individual memory blocks
+          -> tagged capacity managed with DAX glue
+      - sysram_region.remove_extents(extent_list) (untagged)
+      - sysram_region.remove_tagged_extents(tag)  (tagged)
+
+   7) Add private_region infrastructure
+      - private_region driver design
+      - N_PRIVATE_MEMORY infrastructure
+      - derivative driver (in my case compressed memory)
+      - Probably wants memory_blocks hiding and/or retricted operations
+
+
+========================================================
+Specific problem descriptions and ABI/NDCTL implications
+========================================================
+--------------------------------
+Problem: Per-region usage policy
+--------------------------------
+  Use-case-driven requirements are testing the limits of the existing
+  region driver and dax integration designs, and encoding the policies
+  related to them in region.c is going to get cumbersome.
+
+  Use-case 1: Static Volatile RAM   (none, dax_region w/ single dax dev)
+  Use-case 2: Static PMEM           (pmem_region/NVDIMM)
+  Use-case 3: DCD SysRAM            (sysram_region w/ hotplug)
+  Use-case 4: SP Anon Memory        (compressed_region - private_region)
+  Use-case 5: Static FAMFS Region   (dax_region w/ single daxdev)
+  Use-case 6: DCD FAMFS Region      (dax_region w/ multi-daxdev)
+  Use-case 7: Accelerator Memory    (private_region)
+
+  "Private" here means exposure to rest of the system is driver-defined
+  but there may be re-usable infrastructure.
+
+  The CXL driver is the right place to expose the region driver choice.
+  - Users use common memory region types (sysram, dax) from ABI/CLI.
+  - Device drivers can register a region types w/ default operations.
+  - Special devices implement advanced usage policy w/ private region.
+
+  Solution:  Discrete regionN backend drivers, I list some above.
+             (none)  - Static SYSRAM Region setup by BIOS
+             DAX     - has multiple modes (devdax, kmem, fsdax)
+             sysram  - Dynamic SYSRAM region w/ more functionality
+             private - integrate w/ N_PRIVATE_MEMORY infrastructure
+  
+  Region drivers re-used for multiple region types (e.g. ram vs dcd).
+  - ram_region w/ sysram driver calls add()/remove() at setup/teardown.
+  - dc_region w/ sysram driver calls add()/remove() at runtime.
+
+  ABI:  (RW) regionN/region_driver
+        Read: Displays what region driver is assigned
+        Write: Changing an uncommitted region's underlying driver
+
+  ABI:  regionN/rctl/*
+        Exposes region_driver specific controls / information
+        example: auto-online policy for sysram_region
+  
+  ndctl extesion:
+      cxl create-region --driver=_____
+
+Starting Patch Link:
+https://lore.kernel.org/linux-cxl/20260113202138.3021093-1-gourry@gourry.net/
+
+---------------------------------------------------------
+Problem: SysRAM Auto-Hotplug policy is too broadly scoped
+---------------------------------------------------------
+  Hotplug SYSRAM indirection through DAX leads to complex auto-online
+  interactions and/or current policy options are too broad in scope.
+  (e.g. MHP_AUTO_ONLINE build option is bad cross-platform)
+
+  Solution 1: Plumb auto-online policy from cxl_region into dax_kmem
+
+    Build Options:
+       Default auto-online policy for auto-regions?
+       Moves scope from MHP-Global to CXL-local
+
+    ABI: dax_region - regionN/rctl/auto-online
+       Gives the region creator a chance to define before probe()
+
+  Solution 2:  Make a dedicated sysram_region with policy
+
+  May want both solutions longer term (for tagged DCD capacity)
+
+  ndctl extension:
+       cxl create-region --driver=sysram --auto-online=movable ?
+
+---------------------------------------------
+Annoyance: DAX driver binding could be easier
+---------------------------------------------
+  dax_region encodes a default dax device type
+  - RAM wants kmem
+  - other users might want fsdax, devdax
+  - Other tools can bind the wrong driver
+
+  If your DAX use-case is not the default, more setup steps required.
+
+  Solution:
+    Plumb dax driver default / restriction from cxl_region through to
+    DAX. Disallow bind-operation (-ENOSUPP) based on that policy.
+
+  We can't prevent unbind, but we can prevent bad-bind.
+
+  ndctl extension:
+     cxl create-region --driver=dax --daxmode=[devdax,kmem,...]
+
+  Backward Compatibility:
+     The current ndctl w/o new args would essentially be
+
+       cxl create-region --driver=dax --daxmode=devdax
+
+     And all the follow up operations would work as-is.
+
+---------------------------------------------------------------
+Problem/Annoyance: DAX kmem per-block operation race conditions
+---------------------------------------------------------------
+  DAX exposes SYSRAM regions as individual memory blocks, which
+  creates race conditions when trying to manage a set of blocks.
+
+  Example: udev can have an auto-onlining policy that twiddles
+           memory_block bits while cxl driver is trying to unplug.
+
+  Affects: DCD, SysRAM, potentially N_PRIVATE_MEMORY
+
+  Solution 1: [unplug, online, online_movable] > dax0.0/hotplug
+              Does operation on all blocks under the hotplug lock.
+
+  Solution 2: dedicated sysram_region driver w/ or w/o DAX.
+              Can support sparseness w/o DAX (see DCD problem)
+	      Could use DAX for tagged DCD regions.
+              Tradeoff: May duplicate some DAX logic.
+
+  Solution 3: Hide nodeN/memory_block's w/ MHP Flag.
+              Issue: Possibly userland breaking.
+
+  Solution 4: Prevent non-driver actions from changing state.
+              Also solves hotplug protection problem (see next)
+
+Patch: Implements solution 1
+https://lore.kernel.org/linux-cxl/20260114235022.3437787-5-gourry@gourry.net/
+
+--------------------------------------------------------------
+Problem: SYSRAM or N_PRIVATE want memory_block policy controls
+--------------------------------------------------------------
+  A SYSRAM or N_PRIVATE region may have an implied zone-policy to
+  protect - or N_PRIVATE blocks may want to restrict any operation.
+
+  Privileged userspace action could do this:
+    cat memoryN/state              => online_movable
+    cat memoryN/valid_zones        => movable
+    echo offline > memoryN/state   => offline
+    echo online > memoryN/state    => online
+    cat memoryN/valid_zones        => normal
+
+  - A DCD driver wants to try to protect hotpluggability.
+  - userspace has no business twiddling private_region blocks.
+
+  Solution: Prevent non-driver actions from changing state.
+
+      Essentially, add memory_notifier to region_driver or DAX
+      that rejects operations according to driver-defined policy.
+
+  May not require explicit, could be encoded in default region
+  driver policy (e.g. dcd implies protection).
+
+Example Patch:
+https://lore.kernel.org/linux-cxl/20260114235022.3437787-6-gourry@gourry.net/
+
+-----------------------------------------------------
+Problem: DCD Tags are confusing and make people angry
+-----------------------------------------------------
+  DCD untagged extent sets are confusing and make people angry.
+  DCD tagged extent sets are confusing and make people angry.
+
+  Solution:  Per region_driver policy
+
+  Example 1: SysRAM
+     Linux cares about memory-block aligned contiguous chunks.
+
+     Everything else is basically an opini... policy.
+
+     My opinion
+     ----------
+     Untagged extents:
+        Managed individually, and doesn't need a DAX device to
+        online (hotplug directly from sysram_region.c).
+
+	May be sparse.
+	Even if arrive together, may be released separate.
+
+     Tagged extents have two options:
+       Manage set of extents as a collective block: dax0.0/hotplug
+
+  Example 2: DAX  (FAMFS)
+     Tags may actually mean something.
+
+     Linux should enforce globally unique tags per set of extents.
+         Each tagged set of extents comes/goes collectively.
+         Sparseness not allowed
+             set(A) and set(B) have unique tags
+             set(N) arrives together w/ MORE=1 set in logs.
+         Each tagged set is exposed as a separate dax device.
+             
+     DAX likely requires a dax0.0/uuid to provide consumers info.
+
+
+  Example 3: virtio
+     Tags may imply destination VM capacity
+
+     In this case, a tag is essentially just routing data.
+
+TL;DR:
+    Implementing region_drivers lets us break up the tag debates
+    into discrete use-case silos.
+
+---------------------------------------------
+Problem: "Special" Device memory usage policy
+---------------------------------------------
+   Memory devices may have special features that dictate use patterns.
+   They may also prefer using core mm/ services for basic operation.
+   (page_alloc, reclaim, migration, etc)
+   
+   But: This memory shouldn't be exposed as "Normal System RAM".
+
+   Solution: N_PRIVATE_MEMORY node_state
+
+   CXL Driver Piece: private_region driver
+       These drivers would know how to register N_PRIVATE_MEMORY
+       Would also allow device-specific usage behavior to be written.
+       Would likely be used by upper layer drivers rather than uapi.
+
+   Example:  Compressed Memory
+
+     general service can use page_alloc() for get_page_from_freelist()
+     region_driver registers memory on a compressed memory node
+     vmscan.c/memory-tiers.c calls back to driver to handle migration
+
+   Example:  Accelerator Memory Region
+
+      Accel library/drive does node-based allocs.
+      Driver callbacks might include write-faults (ZONE_DEVICE-esque
+        pattern that passes page ownership between CPU/GPU)
+
+      Either way, driver applies mapping policy w/o accounting cargo
+
+   Example:  Slow(er) memory
+      Some memory is "just memory", but might be particularly slow and
+      intended for use as a filesystem backend or as only a demotion
+      target.  Otherwise its allocated / mapped like any other memory,
+      but it still required isolation so isolated to the demotion path
+      and not a fallback allocation target 
+
+      Driver basically say: kernel should prefer reclaim over fallback.
+
+
+   Benefits:
+      Simplifies driver design.
+      Encourages upstreaming common operations as new spec extentions.
+      Keeps device policy out of mm/
+
+   ABI:  region/rdrv/*    (maybe?)
+
+   More likely something like vendors just build derivative drivers:
+
+   driver/[common_use]/[vendor]/my_driver.c
+      #include linux/cxl.h
+    
+   If cxl decoders involved, common driver can programs and make the
+   private_memory region, device-driver provides relevant callbacks
+   for the N_PRIVATE_MEMORY infrastructure.
+
+   If decoders programming not involved, device can call private node
+   infrastructure directly and omit cxl-patterns.
+
+RFC:
+https://lore.kernel.org/linux-cxl/20260108203755.1163107-1-gourry@gourry.net/
+
+================================================
+</great wall of text>
+
