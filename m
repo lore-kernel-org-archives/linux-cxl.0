@@ -1,146 +1,211 @@
-Received: from sg-1-101.ptr.blmpb.com (sg-1-101.ptr.blmpb.com [118.26.132.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6970C2E62B4
-	for <linux-cxl@vger.kernel.org>; Wed, 21 Jan 2026 08:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22003D3486;
+	Wed, 21 Jan 2026 10:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768982661; cv=none; b=DHYsckJ9rFtn8+taUe1lGJtgrZd18PYNj13D2DLhi0CSD3MiFV9H3dtXiE8W/3/aC3gzb9sYhvFltg7KfCLfOl0nyi+TdCnVJ3OjUanG6CFLopl+j1siZZUnRwKZCi+9qmnRoFthyCS+ANrAFfVBNTSk7lIhGOVIL7+zDdjudT4=
+	t=1768989796; cv=none; b=Fck3q7qcVr1hGLjosYRJgDkKPNKfZfbmIT3PkPbq87D4hDqwceYn0+Zj9wD5PhTbL1YB0Omak3oTowDvipEQsdUD+uiD3b+e2mmemCF7thb4BtU85MEgu6+ovCJJSCJujn3IOoZop5yYco9SmfNwMPSNrGRms6i+eFSmv+IfQfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768982661; c=relaxed/simple;
-	bh=qpxKQwj1NtWt2avroM2YiKQEVpeTglqmLprek0br27c=;
-	h=Message-Id:Mime-Version:References:Subject:Date:Content-Type:Cc:
-	 From:In-Reply-To:To; b=IYr8dfHmcwjjMYKMJZiTqf3pA894s+UgD3Jz2FqpuUidSFMGtc42awJzagNLNor4k1IBpuD+dwngBCw2h41DkObqoTlfg8dbMmTuOViRHR7crsycCYqcaEl1XNBty7Nz2Q9GbVXvJu8bI8/pNoZk52/d6nN2ZjiwAUyk91aLrUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=qEpyZWS4; arc=none smtp.client-ip=118.26.132.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="qEpyZWS4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1768982652; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=0PWmmDBVohTXWkCnlTUXIXQ/PjrEDMfnhQhp/O6etgA=;
- b=qEpyZWS4/r1zPQmiX3Uz1fpnIj0U8uebFpC+zeU81bmWXkTAaN1nobHjk0YAutVikC6sR9
- GTMBwp8/qPx019aybJLYt2+8pAKjodGGgkpi/QBGXd2tXS/vt/B+2QXX/KbWx13xBnDyaG
- HbPM11wP1XCn41oTUWuuBlFSyzROw+7wXlCTmdm9hhzuO47N4yeKYWB7LmSRpSF09EY7F7
- +Z0WqW9Qa/8SmhMkKzBZlV1A8ZVGlIhOgVPLDpOP7YMizfatPNl4ZVn9zO6yvUIdyJndH2
- ijpG5NWdYPFDWCQwZxUG8uNkeoH4z5qvtWhEUBuy+olHxcw2F9roVxa/cF8JSA==
-X-Mailer: git-send-email 2.45.2
-X-Lms-Return-Path: <lba+26970887a+1367a6+vger.kernel.org+lizhe.67@bytedance.com>
-Message-Id: <20260121080348.36253-1-lizhe.67@bytedance.com>
+	s=arc-20240116; t=1768989796; c=relaxed/simple;
+	bh=SJDG0zKTxQAYGuRzI2QN/I/f6dS+vRmyBTh9Gqbke2k=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jVaOwA6MbEvwPKFdYsB4tzH6mG6R/tprMsnESCXPm11jIF1ilblCs9oa7D+SlH43H0LQbNI1MWbGs8qIznRrbjrkngiM8FEUI+7nZuBJsQBCCEsRwKkINE1XW/IY0+21juXn5FFjtRbX/kzG0wTJyfUTuBFUKoz+63gPLITsfzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.107])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dx09m32w0zHnHCX;
+	Wed, 21 Jan 2026 18:02:36 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id E48EE40570;
+	Wed, 21 Jan 2026 18:03:09 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 21 Jan
+ 2026 10:03:09 +0000
+Date: Wed, 21 Jan 2026 10:03:07 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+CC: Nicolin Chen <nicolinc@nvidia.com>, "jgg@nvidia.com" <jgg@nvidia.com>,
+	"will@kernel.org" <will@kernel.org>, "robin.murphy@arm.com"
+	<robin.murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	"Williams, Dan J" <dan.j.williams@intel.com>, "joro@8bytes.org"
+	<joro@8bytes.org>, "praan@google.com" <praan@google.com>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+	"miko.lenczewski@arm.com" <miko.lenczewski@arm.com>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH RFCv1 1/3] PCI: Allow ATS to be always on for CXL.cache
+ capable devices
+Message-ID: <20260121100307.00004e60@huawei.com>
+In-Reply-To: <BL1PR11MB5271F0BDC68C2D7F172122E98C96A@BL1PR11MB5271.namprd11.prod.outlook.com>
+References: <cover.1768624180.git.nicolinc@nvidia.com>
+	<d1768bb6384050a23769f20ca28216f520f77e26.1768624181.git.nicolinc@nvidia.com>
+	<BL1PR11MB5271F0BDC68C2D7F172122E98C96A@BL1PR11MB5271.namprd11.prod.outlook.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <aW_G66HeWLbyiPHs@gourry-fedora-PF4VCD3F>
-Subject: Re: [PATCH v2 0/8] Introduce a huge-page pre-zeroing mechanism
-Date: Wed, 21 Jan 2026 16:03:48 +0800
-X-Original-From: Li Zhe <lizhe.67@bytedance.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset=UTF-8
-Cc: <akpm@linux-foundation.org>, <ankur.a.arora@oracle.com>, 
-	<dan.j.williams@intel.com>, <dave@stgolabs.net>, 
-	<david.laight.linux@gmail.com>, <david@kernel.org>, <fvdl@google.com>, 
-	<joao.m.martins@oracle.com>, <jonathan.cameron@huawei.com>, 
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
-	<linux-mm@kvack.org>, <lizhe.67@bytedance.com>, <mhocko@suse.com>, 
-	<mjguzik@gmail.com>, <muchun.song@linux.dev>, <osalvador@suse.de>, 
-	<raghavendra.kt@amd.com>, <wangzhou1@hisilicon.com>, 
-	<zhanjie9@hisilicon.com>
-From: "Li Zhe" <lizhe.67@bytedance.com>
-In-Reply-To: <aW_G66HeWLbyiPHs@gourry-fedora-PF4VCD3F>
-To: <gourry@gourry.net>
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Tue, 20 Jan 2026 13:18:19 -0500, gourry@gourry.net wrote:
+On Wed, 21 Jan 2026 08:01:36 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-> On Tue, Jan 20, 2026 at 06:39:48PM +0800, Li Zhe wrote:
-> > On Tue, 20 Jan 2026 09:47:44 +0000, david.laight.linux@gmail.com wrote:
+> +Dan. I recalled an offline discussion in which he raised concern on
+> having the kernel blindly enable ATS for cxl.cache device instead of
+> creating a knob for admin to configure from userspace (in case
+> security is viewed more important than functionality, upon allowing
+> DMA to read data out of CPU caches)...
+> 
+
++CC Linux-cxl
+
+Jonathan
+
+
+> > From: Nicolin Chen <nicolinc@nvidia.com>
+> > Sent: Saturday, January 17, 2026 12:57 PM
 > > 
-> > > On Tue, 20 Jan 2026 14:27:06 +0800
-> > > "Li Zhe" <lizhe.67@bytedance.com> wrote:
-> > > 
-> > > > In light of the preceding discussion, we appear to have reached the
-> > > > following understanding:
-> > > > 
-> > > > (1) At present we prefer to mitigate slow application startup (e.g.,
-> > > > VM creation) by zeroing huge pages at the moment they are freed
-> > > > (init_on_free). The principal benefit is that user space gains the
-> > > > performance improvement without deploying any additional user space
-> > > > daemon.
-> > > 
-> > > Am I missing something?
-> > > If userspace does:
-> > > $ program_a; program_b
-> > > and pages used by program_a are zeroed when it exits you get the delay
-> > > for zeroing all the pages it used before program_b starts.
-> > > OTOH if the zeroing is deferred program_b only needs to zero the pages
-> > > it needs to start (and there may be some lurking).
+> > Controlled by the IOMMU driver, ATS is usually enabled "on demand", when
+> > a
+> > device requests a translation service from its associated IOMMU HW running
+> > on the channel of a given PASID. This is working even when a device has no
+> > translation on its RID, i.e. RID is IOMMU bypassed.
 > > 
-> > Under the init_on-free approach, improving the speed of zeroing may
-> > indeed prove necessary.
+> > On the other hand, certain PCIe device requires non-PASID ATS, when its RID
+> > stream is IOMMU bypassed. Call this "always on".
 > > 
-> > However, I believe we should first reach consensus on adopting
-> > "init_on_free" as the solution to slow application startup before
-> > turning to performance tuning.
+> > For instance, the CXL spec notes in "3.2.5.13 Memory Type on CXL.cache":
+> > "To source requests on CXL.cache, devices need to get the Host Physical
+> >  Address (HPA) from the Host by means of an ATS request on CXL.io."
+> > In other word, the CXL.cache capability relies on ATS. Otherwise, it won't
+> > have access to the host physical memory.
 > > 
+> > Introduce a new pci_ats_always_on() for IOMMU driver to scan a PCI device,
+> > to shift ATS policies between "on demand" and "always on".
+> > 
+> > Add the support for CXL.cache devices first. Non-CXL devices will be added
+> > in quirks.c file.
+> > 
+> > Suggested-by: Vikram Sethi <vsethi@nvidia.com>
+> > Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> > Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> > ---
+> >  include/linux/pci-ats.h       |  3 +++
+> >  include/uapi/linux/pci_regs.h |  5 ++++
+> >  drivers/pci/ats.c             | 44 +++++++++++++++++++++++++++++++++++
+> >  3 files changed, 52 insertions(+)
+> > 
+> > diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> > index 75c6c86cf09d..d14ba727d38b 100644
+> > --- a/include/linux/pci-ats.h
+> > +++ b/include/linux/pci-ats.h
+> > @@ -12,6 +12,7 @@ int pci_prepare_ats(struct pci_dev *dev, int ps);
+> >  void pci_disable_ats(struct pci_dev *dev);
+> >  int pci_ats_queue_depth(struct pci_dev *dev);
+> >  int pci_ats_page_aligned(struct pci_dev *dev);
+> > +bool pci_ats_always_on(struct pci_dev *dev);
+> >  #else /* CONFIG_PCI_ATS */
+> >  static inline bool pci_ats_supported(struct pci_dev *d)
+> >  { return false; }
+> > @@ -24,6 +25,8 @@ static inline int pci_ats_queue_depth(struct pci_dev *d)
+> >  { return -ENODEV; }
+> >  static inline int pci_ats_page_aligned(struct pci_dev *dev)
+> >  { return 0; }
+> > +static inline bool pci_ats_always_on(struct pci_dev *dev)
+> > +{ return false; }
+> >  #endif /* CONFIG_PCI_ATS */
+> > 
+> >  #ifdef CONFIG_PCI_PRI
+> > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> > index 3add74ae2594..84da6d7645a3 100644
+> > --- a/include/uapi/linux/pci_regs.h
+> > +++ b/include/uapi/linux/pci_regs.h
+> > @@ -1258,6 +1258,11 @@
+> >  #define PCI_DVSEC_CXL_PORT_CTL				0x0c
+> >  #define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
+> > 
+> > +/* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
+> > +#define CXL_DVSEC_PCIE_DEVICE				0
+> > +#define   CXL_DVSEC_CAP_OFFSET				0xA
+> > +#define     CXL_DVSEC_CACHE_CAPABLE			BIT(0)
+> > +
+> >  /* Integrity and Data Encryption Extended Capability */
+> >  #define PCI_IDE_CAP			0x04
+> >  #define  PCI_IDE_CAP_LINK		0x1  /* Link IDE Stream Supported */
+> > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> > index ec6c8dbdc5e9..1795131f0697 100644
+> > --- a/drivers/pci/ats.c
+> > +++ b/drivers/pci/ats.c
+> > @@ -205,6 +205,50 @@ int pci_ats_page_aligned(struct pci_dev *pdev)
+> >  	return 0;
+> >  }
+> > 
+> > +/*
+> > + * CXL r4.0, sec 3.2.5.13 Memory Type on CXL.cache notes: to source
+> > requests on
+> > + * CXL.cache, devices need to get the Host Physical Address (HPA) from the
+> > Host
+> > + * by means of an ATS request on CXL.io.
+> > + *
+> > + * In other world, CXL.cache devices cannot access physical memory
+> > without ATS.
+> > + */
+> > +static bool pci_cxl_ats_always_on(struct pci_dev *pdev)
+> > +{
+> > +	int offset;
+> > +	u16 cap;
+> > +
+> > +	offset = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+> > +					   CXL_DVSEC_PCIE_DEVICE);
+> > +	if (!offset)
+> > +		return false;
+> > +
+> > +	pci_read_config_word(pdev, offset + CXL_DVSEC_CAP_OFFSET,
+> > &cap);
+> > +	if (cap & CXL_DVSEC_CACHE_CAPABLE)
+> > +		return true;
+> > +
+> > +	return false;
+> > +}
+> > +
+> > +/**
+> > + * pci_ats_always_on - Whether the PCI device requires ATS to be always
+> > enabled
+> > + * @pdev: the PCI device
+> > + *
+> > + * Returns true, if the PCI device requires non-PASID ATS function on an
+> > IOMMU
+> > + * bypassed configuration.
+> > + */
+> > +bool pci_ats_always_on(struct pci_dev *pdev)
+> > +{
+> > +	if (pci_ats_disabled() || !pci_ats_supported(pdev))
+> > +		return false;
+> > +
+> > +	/* A VF inherits its PF's requirement for ATS function */
+> > +	if (pdev->is_virtfn)
+> > +		pdev = pci_physfn(pdev);
+> > +
+> > +	return pci_cxl_ats_always_on(pdev);
+> > +}
+> > +EXPORT_SYMBOL_GPL(pci_ats_always_on);
+> > +
+> >  #ifdef CONFIG_PCI_PRI
+> >  void pci_pri_init(struct pci_dev *pdev)
+> >  {
+> > --
+> > 2.43.0  
 > 
-> His point was init_on_free may not actually reduce any delays on serial
-> applications, and can actually introduce additional delays.
 > 
-> Example
-> -------
-> program_a:  alloc_hugepages(10);
->             exit();
-> 
-> program b:  alloc_hugepages(5);
-> 	    exit();
-> 
-> /* Run programs in serial */
-> sh:  program_a && program_b
-> 
-> in zero_on_alloc():
-> 	program_a eats zero(10) cost on startup
-> 	program_b eats zero(5) cost on startup
-> 	Overall zero(15) cost to start program_b
-> 
-> in zero_on_free()
-> 	program_a eats zero(10) cost on startup
-> 	program_a eats zero(10) cost on exit
-> 	program_b eats zero(0) cost on startup
-> 	Overall zero(20) cost to start program_b
-> 
-> zero_on_free is worse by zero(5)
-> -------
-> 
-> This is a trivial example, but it's unclear zero_on_free actually
-> provides a benefit.  You have to know ahead of time what the runtime
-> behavior, pre-zeroed count, and allocation pattern (0->10->5->...) would
-> be to determine whether there's an actual reduction in startup time.
-> 
-> But just trivially, starting from the base case of no pages being
-> zeroed, you're just injecting an additional zero(X) cost if program_a()
-> consumes more hugepages than program_b().
-> 
-> Long way of saying the shift from alloc to free seems heuristic-y and
-> you need stronger analysis / better data to show this change is actually
-> beneficial in the general case.
 
-I understand your concern. At some point some process must pay the
-cost of zeroing, and the optimal strategy is inevitably
-workload-dependent.
-
-Our "zero-on-free for huge pages" draws on the existing kernel
-init_on_free mechanism. Of course, it may prove sub-optimal in certain
-scenarios.
-
-Consistent with "provide tools, not policy", perhaps the decision is
-better left to user space. And that is exactly what this patchset
-does. Requiring a userspace daemon to decide when to zero pages
-certainly adds complexity, but it also gives administrators a single,
-flexible knob that can be tuned for any workload.
-
-Thanks,
-Zhe
