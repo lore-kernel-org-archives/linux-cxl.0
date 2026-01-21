@@ -1,45 +1,40 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C9531771B;
-	Wed, 21 Jan 2026 11:42:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D002C48032D
+	for <linux-cxl@vger.kernel.org>; Wed, 21 Jan 2026 12:26:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768995733; cv=none; b=dN7NLkuDZMNycCUzvuQrvdb9jv3EgKRxpLtZ8DMg0lG+FAuq3T3ASkbP+17XeMuNR5RgWsMhvZjWrpI1/x1wFKPivLivHfK/29/yWXM+BAonpXDsf2PBid2FgONqCbDFuZtb2vCK5IrS3Y0cY6bHvrFvW+S7P+6qqYwCSGE2YM8=
+	t=1768998378; cv=none; b=H4ZJmL6YR9KlTZrtlbMFdjw/8XVluIoIqqsRditYdA4/uT6ZsnoMv+LhCYQDPzMUXgWypY1lor6a0wi+likAMaRW21rdssjnNH7oyrh/3DDCZ+kJ9rLFGHcPUq2mLBDLOOspqNxzMJtbRuVSEMI6dlSP303wNDWKVYEtnqP4knM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768995733; c=relaxed/simple;
-	bh=R5h/qe7C9ZhpNVB0wnfJezOgTApyDNovbHytOlk6nds=;
+	s=arc-20240116; t=1768998378; c=relaxed/simple;
+	bh=ccYzoNpHC+MmuDi6xgCOWyO+JWJ2tjHcyaWvvSv9YQ4=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nhwJ3iRo6UaMowNkidtnMDD8YHy5qV/v+ZmDedAAtd8ARpXdBwywTiU2fBlnVvkRmuKa+msf4H0fGL2zw7upFLoHz+irImlWbzHbnzgbli+kk12fbp6AAtCTgYshjeO8OZHH3xq/Oatk3CoblLsZtsNnsR+oZQQWFoOa81UG7Kg=
+	 MIME-Version:Content-Type; b=tqZFFmLCuzEfyE/a4H9DLgJEQkRE3M/6oDIOApKYMNLl3oiZdF91g6aX/Jlvz6J59tltm21EfFy5igfaoBjcnauNL5vxLVfPhm0NdH2xG/YcQI77aaAQFETwu9wnY19oXUyXo9FLTJ5slUN0Cb6Sm+eq9e7Dj+5uMEojaIy9u+4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dx2N51bJ2zJ46Bs;
-	Wed, 21 Jan 2026 19:41:41 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.224.107])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dx3Lj27QjzHnGjB;
+	Wed, 21 Jan 2026 20:25:33 +0800 (CST)
 Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3C37D40563;
-	Wed, 21 Jan 2026 19:42:07 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 0213F40571;
+	Wed, 21 Jan 2026 20:26:07 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
  (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 21 Jan
- 2026 11:42:06 +0000
-Date: Wed, 21 Jan 2026 11:42:04 +0000
+ 2026 12:26:06 +0000
+Date: Wed, 21 Jan 2026 12:26:04 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: <smadhavan@nvidia.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <ming.li@zohomail.com>,
-	<rrichter@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<huaisheng.ye@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <vaslot@nvidia.com>, <vsethi@nvidia.com>,
-	<sdonthineni@nvidia.com>, <vidyas@nvidia.com>, <mochs@nvidia.com>,
-	<jsequeira@nvidia.com>
-Subject: Re: [PATCH v4 10/10] cxl: add HDM decoder and IDE save/restore
-Message-ID: <20260121114204.00005d4f@huawei.com>
-In-Reply-To: <20260120222610.2227109-11-smadhavan@nvidia.com>
-References: <20260120222610.2227109-1-smadhavan@nvidia.com>
-	<20260120222610.2227109-11-smadhavan@nvidia.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+CC: Michael S Tsirkin <mst@redhat.com>, Shiju Jose <shiju.jose@huawei.com>,
+	<qemu-devel@nongnu.org>, Igor Mammedov <imammedo@redhat.com>, Cleber Rosa
+	<crosa@redhat.com>, John Snow <jsnow@redhat.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 02/13] scripts/qmp_helper: add missing CXL UEFI GUID
+Message-ID: <20260121122604.00001609@huawei.com>
+In-Reply-To: <f229d756fe76c34e6dfa48a98f1ee46f4325fc76.1768993993.git.mchehab+huawei@kernel.org>
+References: <cover.1768993993.git.mchehab+huawei@kernel.org>
+	<f229d756fe76c34e6dfa48a98f1ee46f4325fc76.1768993993.git.mchehab+huawei@kernel.org>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -48,113 +43,98 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
  dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Tue, 20 Jan 2026 22:26:10 +0000
-smadhavan@nvidia.com wrote:
+On Wed, 21 Jan 2026 12:25:10 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-> From: Srirangan Madhavan <smadhavan@nvidia.com>
-> 
-> Extend state save/restore to HDM decoder and IDE registers for Type 2
-> devices. The HDM/IDE blocks are located via the component register map,
-> then preserved across reset to retain decoder configuration and IDE
-> policy. This avoids losing HDM/IDE programming when cxl_reset is issued.
-> 
-> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+> The UEFI 2.11 - N.2.14. CXL Component Events Section states that
+> XL events are described at CXL specification 3.2:
+CXL
 
-Split the two up. One patch for HDM, one for IDE.
+>         8.2.10.2.1 Event Records
+>=20
+> Add the GUIDs defined here to fuzzy logic error injection code.
 
-Been a while since I read the IDE stuff.
++CC linux-cxl as more folk there who will be familiar with this
+stuff.
 
-Isn't reset going to trip up the encryption to the extent that we need
-to redo the key exchange etc?
+Some of these won't be seen on a host. The same event
+infrastructure is used for reporting on out of band interfaces
+and some in band ones, but not ones that will turn up on the
+mailboxes that firmware will be using to get info.
 
+>=20
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  drivers/cxl/core/regs.c |   7 ++
->  drivers/cxl/cxl.h       |   4 ++
->  drivers/cxl/pci.c       | 153 ++++++++++++++++++++++++++++++++++++++--
->  include/cxl/pci.h       |  43 +++++++++++
->  4 files changed, 201 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index ecdb22ae6952..76d6869d82ea 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -93,6 +93,12 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
->  			length = CXL_RAS_CAPABILITY_LENGTH;
->  			rmap = &map->ras;
->  			break;
-> +		case CXL_CM_CAP_CAP_ID_IDE:
-> +			dev_dbg(dev, "found IDE capability (0x%x)\n",
-> +				offset);
-
-Trivial: Fits on one line under 80 chars.
-
-> +			length = CXL_IDE_CAPABILITY_LENGTH;
-> +			rmap = &map->ide;
-> +			break;
-
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 7d6a0ef70b2d..eb735d0ae175 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-
-> +/*
-> + * CXL HDM Decoder register save/restore
-> + */
-> +static int cxl_save_hdm_state(struct cxl_dev_state *cxlds,
-> +			      struct cxl_type2_saved_state *state)
-> +{
-> +	void __iomem *hdm = cxlds->regs.hdm_decoder;
-> +	u32 cap, ctrl;
-> +	int i, count;
+>  scripts/qmp_helper.py | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>=20
+> diff --git a/scripts/qmp_helper.py b/scripts/qmp_helper.py
+> index 249a8c7187d1..7e786c4adfd9 100755
+> --- a/scripts/qmp_helper.py
+> +++ b/scripts/qmp_helper.py
+> @@ -711,3 +711,28 @@ class cper_guid:
+>      CPER_CXL_PROT_ERR =3D guid(0x80B9EFB4, 0x52B5, 0x4DE3,
+>                               [0xA7, 0x77, 0x68, 0x78,
+>                                0x4B, 0x77, 0x10, 0x48])
 > +
-> +	if (!hdm)
-> +		return 0;
-> +
-> +	cap = readl(hdm + CXL_HDM_DECODER_CAP_OFFSET);
-> +	count = cap & CXL_HDM_DECODER_COUNT_MASK;
+> +    CPER_CXL_EVT_GEN_MEDIA =3D guid(0xFBCD0A77, 0xC260, 0x417F,
+> +                                  [0x85, 0xA9, 0x08, 0x8B,
+> +                                   0x16, 0x21, 0xEB, 0xA6])
+> +    CPER_CXL_EVT_DRAM =3D guid(0x601DCBB3, 0x9C06, 0x4EAB,
+> +                             [0xB8, 0xAF, 0x4E, 0x9B,
+> +                              0xFB, 0x5C, 0x96, 0x24])
+> +    CPER_CXL_EVT_MEM_MODULE =3D guid(0xFE927475, 0xDD59, 0x4339,
+> +                                   [0xA5, 0x86, 0x79, 0xBA,
+> +                                    0xB1, 0x13, 0xBC, 0x74])
+> +    CPER_CXL_EVT_MEM_SPARING =3D guid(0xE71F3A40, 0x2D29, 0x4092,
+> +                                    [0x8A, 0x39, 0x4D, 0x1C,
+> +                                     0x96, 0x6C, 0x7C, 0x65])
 
-Use FIELD_GET() for this so we don't need to go check the definition to be
-sure there isn't a shift.
+The above are all fine I think.
 
-> +	count = min(count, CXL_MAX_DECODERS);
-> +
-> +	state->hdm_decoder_count = count;
-> +	state->hdm_global_ctrl = readl(hdm + CXL_HDM_DECODER_GLOBAL_CTRL_OFFSET);
-> +
-> +	for (i = 0; i < count; i++) {
-> +		struct cxl_hdm_decoder_state *d = &state->decoders[i];
-> +		u32 base_low, base_high, size_low, size_high;
-> +		u32 dpa_skip_low, dpa_skip_high;
-> +
-> +		base_low = readl(hdm + CXL_HDM_DECODER_BASE_LOW(i));
-> +		base_high = readl(hdm + CXL_HDM_DECODER_BASE_HIGH(i));
-> +		size_low = readl(hdm + CXL_HDM_DECODER_SIZE_LOW(i));
-> +		size_high = readl(hdm + CXL_HDM_DECODER_SIZE_HIGH(i));
-> +		ctrl = readl(hdm + CXL_HDM_DECODER_CTRL(i));
-> +		dpa_skip_low = readl(hdm + CXL_HDM_DECODER_DPA_SKIP_LOW(i));
-> +		dpa_skip_high = readl(hdm + CXL_HDM_DECODER_DPA_SKIP_HIGH(i));
-> +
-> +		d->base = ((u64)base_high << 32) | base_low;
-> +		d->size = ((u64)size_high << 32) | size_low;
-> +		d->ctrl = ctrl;
-> +		d->dpa_skip = ((u64)dpa_skip_high << 32) | dpa_skip_low;
-> +		d->enabled = !!(ctrl & CXL_HDM_DECODER_ENABLE);
+=46rom here on I think they will never come via a CPER record.
 
-I'm lazy. Why not just stash the register values as a raw block and
-put them back? Do we want to put them back if they aren't locked?
-We ripped down the region so I'd be kind of expecting the type 2
-driver for the specific hardware to need to put this stuff back
-as part of it's own reinit.
+> +    CPER_CXL_EVT_PHY_SW =3D guid(0x77CF9271, 0x9C02, 0x470B,
+> +                               [0x9F, 0xE4, 0xBC, 0x7B,
+> +                                0x75, 0xF2, 0xDA, 0x97])
+
+This is only going to surface over either out of band or switch CCI
+I'd be very surprised to see a firmware anywhere near these.
+More specifically they are only defined in the Fabric management
+section of the spec, which strongly hints we'd not expect host firmware
+to know anything about them.=20
+The events reported may well span bits of the topology currently
+assigned to different hosts.
+
+> +    CPER_CXL_EVT_VIRT_SW =3D guid(0x40D26425, 0x3396, 0x4C4D,
+> +                                [0xA5, 0xDA, 0x3D, 0x47,
+> +                                  0x2A, 0x63, 0xAF, 0x25])
+
+Also a fabric management event.
+
+> +    CPER_CXL_EVT_MLD_PORT =3D guid(0x8DC44363, 0x0C96, 0x4710,
+> +                                 [0xB7, 0xBF, 0x04, 0xBB,
+> +                                  0x99, 0x53, 0x4C, 0x3F])
+
+Also a fabric management event.
+
+> +    CPER_CXL_EVT_DYNA_CAP =3D guid(0xCA95AFA7, 0xF183, 0x4018,
+> +                                 [0x8C, 0x2F, 0x95, 0x26,
+> +                                  0x8E, 0x10, 0x1A, 0x2A])
+These are never routed to firmware. They are part of the OS only
+managed flows for dynamic capacity.
+They have their own event log on the hardware and for this particular
+set most relevant thing is in
+CXL 4.0 Table 8-235 Set Event Interrupt Policy Input Payload
+which controls whether a firmware interrupt or MSIX is used signal
+the Dynamic Capacity Event Log Interrupt Settings only allows
+for MSI/MSI-X, not FW interrupt (EFN VDM) like the other logs.
 
 
-> +	}
-> +
-> +	return 0;
-> +}
-
+Jonathan
 
 
