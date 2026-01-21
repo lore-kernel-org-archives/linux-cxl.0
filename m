@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7B248166D;
-	Wed, 21 Jan 2026 12:32:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E86E3ACA6B;
+	Wed, 21 Jan 2026 12:41:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768998756; cv=none; b=qXLNkT38hQgJqhsDuW9xoyUM01RSCURaxVIzYg5Fq/tYsy8fPRI2t0owKuS53H01FpMx0MrytjWN6YHgrwMqfjAi9XRouIdOBBLr7DiuE3sCW7KAbFg/m2ErczzwJL9nveMfd07AYmfd0uYB12Ffdp0QMDlAGw+uC6UNgjJdVI4=
+	t=1768999301; cv=none; b=ONwq85hJjviJGNYU01ywuqKzBTFjnqkiNjC6mxzoPIDKSemp/Fhn0WfAAeXLNb1cWmmAk9MiAgTn1zTxaBaTfFLrIE0/WU7IPKITrwMPzl7AIrByRrHtK4CIbQB3q2mesiYepwUmRUKx1+a1cWbv+9aPHyjuWrpyryT4fx3HXMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768998756; c=relaxed/simple;
-	bh=Urvd/N57mhTCzV1hIjinqqtH/SRw4kq7Kx76LANoLZw=;
+	s=arc-20240116; t=1768999301; c=relaxed/simple;
+	bh=Ot3wmRSgdlWXr/1d0aAM7xF9/+7KOTMVUro5hxmpKgM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q2GRbrfaeJQ54viyny4KpfNwZG0mCm/pDeE8E4LGpXF/U39bA79oTCifuUpvwCigX263UpXRy5tCOpgNF/I0zHzHNE3QE/a43HIPFaMwW3AkvZJyfJZw4DDA9e/VDYixOpyQ5g0uG1H8IJ5aHGj78Q3FiXyM/B+k5ubnyj2tdLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3kvy/nr; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=cVAlD0EN9eOAKgVHqeMPAnHrflv9Kj/1bGJBgpB/sgF8rsEGjFrDsxdFkOzKkiQQGqLOpvd8vg28eaa2MkjB33IiTG+DC79csgN5sXaVPS5ojpv7ZTYZIGZrSczqOJyfLpnmnQmwcdZkohP1ABxmfuTR57WeH/A8ft5v6auaMPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gLIaRQRb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3kvy/nr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACF1BC116D0;
-	Wed, 21 Jan 2026 12:32:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gLIaRQRb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D00C8C116D0;
+	Wed, 21 Jan 2026 12:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768998756;
-	bh=Urvd/N57mhTCzV1hIjinqqtH/SRw4kq7Kx76LANoLZw=;
+	s=k20201202; t=1768999300;
+	bh=Ot3wmRSgdlWXr/1d0aAM7xF9/+7KOTMVUro5hxmpKgM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Z3kvy/nrtc1ODOdK9vKo/8F+DqtLW8vS+My2lkW4TBV/LV9AqWY20lPS+4Kwd7sKu
-	 peVDMJsmgI/nDfqRZw+JKl4cxiyWX+uR1cUh2TtbbKI+C//BubJ30civbuNnWaIQx3
-	 IKjUDwqf7ZA+26d2GK/zjj0DVhoZeeLpEs+eIQTDN7q6VqaauCWLIXiJILerttyumA
-	 UhT/nB7R7pLcxh6RuIxudUFVc79gyTia1AysbtMswNY6me1dELYKK8M2hiR+mgCBz1
-	 +rMrHS5id45rCl1uNxMoG4KaNuNc38uGNf4szzh9FP1u9wbc8o9qMPWmQYjQdvg/s8
-	 l8X3BFRa2qWIQ==
-Message-ID: <54a7e6ff-b3bc-4de4-af26-03fa1400d5f9@kernel.org>
-Date: Wed, 21 Jan 2026 13:32:29 +0100
+	b=gLIaRQRbO6LryUYKvEmAUETKOf0vwtVnf0ldAn+WKo4GaSz1NR17nXwyJy3XnYd+p
+	 jRUUeCx1mrGMBIPWBfGIMI7QrhbLOkOmODLW+AcD2vo12V4D6fKU3kQ+g7x0tr6jtq
+	 IoAaXYSE/Sfmp3l4NoseWo1dZRt8egy6wrB9jAtmQyVb5OcChkKxCxnD21CGx1nYrB
+	 GTv5aN2AaMsHb3YnfahXNoQeTkd6KbdndK4baa352eAsfPlaK73XVwluA0NJAQ00EP
+	 4R9WGvGtEb6vC3qn9LHhxhiKb/FtQDO+5rON3uxQFZFZzjS3ip+c5AkR/sfgmyu+jT
+	 Jav6nRjgFfIcg==
+Message-ID: <871f2a76-8ccb-4870-8a87-417371feb0b0@kernel.org>
+Date: Wed, 21 Jan 2026 13:41:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -36,18 +36,17 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 0/8] Introduce a huge-page pre-zeroing mechanism
-To: David Laight <david.laight.linux@gmail.com>,
- Li Zhe <lizhe.67@bytedance.com>
-Cc: akpm@linux-foundation.org, dan.j.williams@intel.com, dave@stgolabs.net,
- ankur.a.arora@oracle.com, fvdl@google.com, gourry@gourry.net,
- joao.m.martins@oracle.com, jonathan.cameron@huawei.com,
+To: Gregory Price <gourry@gourry.net>, Li Zhe <lizhe.67@bytedance.com>
+Cc: david.laight.linux@gmail.com, akpm@linux-foundation.org,
+ ankur.a.arora@oracle.com, dan.j.williams@intel.com, dave@stgolabs.net,
+ fvdl@google.com, joao.m.martins@oracle.com, jonathan.cameron@huawei.com,
  linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  mhocko@suse.com, mjguzik@gmail.com, muchun.song@linux.dev,
  osalvador@suse.de, raghavendra.kt@amd.com, wangzhou1@hisilicon.com,
  zhanjie9@hisilicon.com
-References: <87wm1ih5kb.fsf@oracle.com>
- <20260120062706.91078-1-lizhe.67@bytedance.com>
- <20260120094744.5d92e34a@pumpkin>
+References: <20260120094744.5d92e34a@pumpkin>
+ <20260120103949.7673-1-lizhe.67@bytedance.com>
+ <aW_G66HeWLbyiPHs@gourry-fedora-PF4VCD3F>
 From: "David Hildenbrand (Red Hat)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -93,40 +92,99 @@ Autocrypt: addr=david@kernel.org; keydata=
  cFAM8nBWrEmNU2vvIGJzjJ/NVYYIY0TgOc5bS9wh6jKHL2+chrfDW5neLJjY2x3snF8q7U9G
  EIbBfNHDlOV8SyhEjtX0DyKxQKioTYPOHcW9gdV5fhSz5tEv+ipqt4kIgWqBgzK8ePtDTqRM
  qZq457g1/SXSoSQi4jN+gsneqvlTJdzaEu1bJP0iv6ViVf15+qHuY5iojCz8fa0=
-In-Reply-To: <20260120094744.5d92e34a@pumpkin>
+In-Reply-To: <aW_G66HeWLbyiPHs@gourry-fedora-PF4VCD3F>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/20/26 10:47, David Laight wrote:
-> On Tue, 20 Jan 2026 14:27:06 +0800
-> "Li Zhe" <lizhe.67@bytedance.com> wrote:
-> 
->> In light of the preceding discussion, we appear to have reached the
->> following understanding:
+On 1/20/26 19:18, Gregory Price wrote:
+> On Tue, Jan 20, 2026 at 06:39:48PM +0800, Li Zhe wrote:
+>> On Tue, 20 Jan 2026 09:47:44 +0000, david.laight.linux@gmail.com wrote:
 >>
->> (1) At present we prefer to mitigate slow application startup (e.g.,
->> VM creation) by zeroing huge pages at the moment they are freed
->> (init_on_free). The principal benefit is that user space gains the
->> performance improvement without deploying any additional user space
->> daemon.
+>>> On Tue, 20 Jan 2026 14:27:06 +0800
+>>> "Li Zhe" <lizhe.67@bytedance.com> wrote:
+>>>
+>>>
+>>> Am I missing something?
+>>> If userspace does:
+>>> $ program_a; program_b
+>>> and pages used by program_a are zeroed when it exits you get the delay
+>>> for zeroing all the pages it used before program_b starts.
+>>> OTOH if the zeroing is deferred program_b only needs to zero the pages
+>>> it needs to start (and there may be some lurking).
+>>
+>> Under the init_on-free approach, improving the speed of zeroing may
+>> indeed prove necessary.
+>>
+>> However, I believe we should first reach consensus on adopting
+>> “init_on_free” as the solution to slow application startup before
+>> turning to performance tuning.
+>>
 > 
-> Am I missing something?
-> If userspace does:
-> $ program_a; program_b
-> and pages used by program_a are zeroed when it exits you get the delay
-> for zeroing all the pages it used before program_b starts.
-> OTOH if the zeroing is deferred program_b only needs to zero the pages
-> it needs to start (and there may be some lurking).
+> His point was init_on_free may not actually reduce any delays on serial
+> applications, and can actually introduce additional delays.
+> 
+> Example
+> -------
+> program_a:  alloc_hugepages(10);
+>              exit();
+> 
+> program b:  alloc_hugepages(5);
+> 	    exit();
+> 
+> /* Run programs in serial */
+> sh:  program_a && program_b
+> 
+> in zero_on_alloc():
+> 	program_a eats zero(10) cost on startup
+> 	program_b eats zero(5) cost on startup
+> 	Overall zero(15) cost to start program_b
+> 
+> in zero_on_free()
+> 	program_a eats zero(10) cost on startup
+> 	program_a eats zero(10) cost on exit
+> 	program_b eats zero(0) cost on startup
+> 	Overall zero(20) cost to start program_b
+> 
+> zero_on_free is worse by zero(5)
+> -------
+> 
+> This is a trivial example, but it's unclear zero_on_free actually
+> provides a benefit.  You have to know ahead of time what the runtime
+> behavior, pre-zeroed count, and allocation pattern (0->10->5->...) would
+> be to determine whether there's an actual reduction in startup time.
 
-Can you point me to where was that spelled out as a requirement?
+For VMs with hugetlb people usually have some spare pages lying around. 
+VM startup time is more important for cloud providers than VM shutdown time.
+
+I'm sure there are examples where it is the other way around, but having 
+mixed workloads on the system is likely not the highest priority right now.
 
 > 
-> The only real gain has to come from zeroing pages when the system is idle.
-> That will give plenty of zeroed pages needed for starting a web browser
-> from the desktop and also speed up single-threaded things like 'make -j1'.
+> But just trivially, starting from the base case of no pages being
+> zeroed, you're just injecting an additional zero(X) cost if program_a()
+> consumes more hugepages than program_b().
 
-I am strictly against over-engineering any features that hugetlb 
-benefits from only.
+
+And whatever you do,
+
+program_a()
+program_b()
+
+will have to zero the pages.
+
+No asynchronous mechanism will really help.
+
+> 
+> Long way of saying the shift from alloc to free seems heuristic-y and
+> you need stronger analysis / better data to show this change is actually
+> beneficial in the general case.
+
+I think the principle of "the allocator already contains zeroed pages" 
+is quite universal and simple.
+
+Whether you want to zero the pages actually when the last reference is 
+gone (like we do in the buddy), or have that happen from some 
+asynchonrous context is an rather an internal optimization.
 
 -- 
 Cheers
