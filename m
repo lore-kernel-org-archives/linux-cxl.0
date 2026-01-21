@@ -1,51 +1,45 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22003D3486;
-	Wed, 21 Jan 2026 10:03:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA3D481221;
+	Wed, 21 Jan 2026 10:31:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768989796; cv=none; b=Fck3q7qcVr1hGLjosYRJgDkKPNKfZfbmIT3PkPbq87D4hDqwceYn0+Zj9wD5PhTbL1YB0Omak3oTowDvipEQsdUD+uiD3b+e2mmemCF7thb4BtU85MEgu6+ovCJJSCJujn3IOoZop5yYco9SmfNwMPSNrGRms6i+eFSmv+IfQfY=
+	t=1768991514; cv=none; b=hGPezr1hI0ezSkfwWuAzjdlnzhI9IKNciqMIa/tH8w6eJZ48oCLeViRiOvrOk/PrkBBxSavu86tZ58xJQMX/KDG5vsFWboFAtVBCzJZp3QRywzz0yWBvuF572vltol4S7FhOjux+0LwkjQFDYpoZmMHKq0W6NvLOT4e//cg3D90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768989796; c=relaxed/simple;
-	bh=SJDG0zKTxQAYGuRzI2QN/I/f6dS+vRmyBTh9Gqbke2k=;
+	s=arc-20240116; t=1768991514; c=relaxed/simple;
+	bh=p1LFy6guL2aPbNSNGNxriJr6L7InPVl55N/BDO1fymY=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jVaOwA6MbEvwPKFdYsB4tzH6mG6R/tprMsnESCXPm11jIF1ilblCs9oa7D+SlH43H0LQbNI1MWbGs8qIznRrbjrkngiM8FEUI+7nZuBJsQBCCEsRwKkINE1XW/IY0+21juXn5FFjtRbX/kzG0wTJyfUTuBFUKoz+63gPLITsfzM=
+	 MIME-Version:Content-Type; b=DY0wGMxcAtnqeAicvdnDR5bXAsq6W18RvrOxSar+8+IBiHn5p6g7e5uXqGAwQMAJmzBv/dWFcXVp0bjWyZJ7HbYXZrJTRQ1CWFtZ+Cq8s8KlTRig3CdSaHG5HK429pQJKu7f8PbPX1ngO5e+ecOKjrRwoIepvRdPdFCrCtiLczI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dx09m32w0zHnHCX;
-	Wed, 21 Jan 2026 18:02:36 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dx0pw5SqkzJ46C8;
+	Wed, 21 Jan 2026 18:31:20 +0800 (CST)
 Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id E48EE40570;
-	Wed, 21 Jan 2026 18:03:09 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id ACBF740571;
+	Wed, 21 Jan 2026 18:31:46 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
  (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 21 Jan
- 2026 10:03:09 +0000
-Date: Wed, 21 Jan 2026 10:03:07 +0000
+ 2026 10:31:45 +0000
+Date: Wed, 21 Jan 2026 10:31:44 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-CC: Nicolin Chen <nicolinc@nvidia.com>, "jgg@nvidia.com" <jgg@nvidia.com>,
-	"will@kernel.org" <will@kernel.org>, "robin.murphy@arm.com"
-	<robin.murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>,
-	"Williams, Dan J" <dan.j.williams@intel.com>, "joro@8bytes.org"
-	<joro@8bytes.org>, "praan@google.com" <praan@google.com>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"miko.lenczewski@arm.com" <miko.lenczewski@arm.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
-	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH RFCv1 1/3] PCI: Allow ATS to be always on for CXL.cache
- capable devices
-Message-ID: <20260121100307.00004e60@huawei.com>
-In-Reply-To: <BL1PR11MB5271F0BDC68C2D7F172122E98C96A@BL1PR11MB5271.namprd11.prod.outlook.com>
-References: <cover.1768624180.git.nicolinc@nvidia.com>
-	<d1768bb6384050a23769f20ca28216f520f77e26.1768624181.git.nicolinc@nvidia.com>
-	<BL1PR11MB5271F0BDC68C2D7F172122E98C96A@BL1PR11MB5271.namprd11.prod.outlook.com>
+To: <smadhavan@nvidia.com>
+CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <ming.li@zohomail.com>,
+	<rrichter@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<huaisheng.ye@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <vaslot@nvidia.com>, <vsethi@nvidia.com>,
+	<sdonthineni@nvidia.com>, <vidyas@nvidia.com>, <mochs@nvidia.com>,
+	<jsequeira@nvidia.com>
+Subject: Re: [PATCH v4 01/10] cxl: move DVSEC defines to cxl pci header
+Message-ID: <20260121103144.000073a3@huawei.com>
+In-Reply-To: <20260120222610.2227109-2-smadhavan@nvidia.com>
+References: <20260120222610.2227109-1-smadhavan@nvidia.com>
+	<20260120222610.2227109-2-smadhavan@nvidia.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -55,157 +49,208 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
  dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Wed, 21 Jan 2026 08:01:36 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+On Tue, 20 Jan 2026 22:26:01 +0000
+smadhavan@nvidia.com wrote:
 
-> +Dan. I recalled an offline discussion in which he raised concern on
-> having the kernel blindly enable ATS for cxl.cache device instead of
-> creating a knob for admin to configure from userspace (in case
-> security is viewed more important than functionality, upon allowing
-> DMA to read data out of CPU caches)...
+> From: Srirangan Madhavan <smadhavan@nvidia.com>
 > 
+> CXL DVSEC definitions are shared across PCI core and CXL drivers, so
+> move the register macros into the common CXL PCI header. This keeps
+> the DVSEC surface in one place and avoids duplication as the reset and
+> config helpers build on these offsets and bitfields.
+> 
+> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
 
-+CC Linux-cxl
+These are moving in:
+https://lore.kernel.org/all/20260114182055.46029-2-terry.bowman@amd.com/
+However it is to the main uapi/linux/pci_regs.h file.
+
+*fingers crossed* that should land this cycle and simplify your set a little.
 
 Jonathan
 
-
-> > From: Nicolin Chen <nicolinc@nvidia.com>
-> > Sent: Saturday, January 17, 2026 12:57 PM
-> > 
-> > Controlled by the IOMMU driver, ATS is usually enabled "on demand", when
-> > a
-> > device requests a translation service from its associated IOMMU HW running
-> > on the channel of a given PASID. This is working even when a device has no
-> > translation on its RID, i.e. RID is IOMMU bypassed.
-> > 
-> > On the other hand, certain PCIe device requires non-PASID ATS, when its RID
-> > stream is IOMMU bypassed. Call this "always on".
-> > 
-> > For instance, the CXL spec notes in "3.2.5.13 Memory Type on CXL.cache":
-> > "To source requests on CXL.cache, devices need to get the Host Physical
-> >  Address (HPA) from the Host by means of an ATS request on CXL.io."
-> > In other word, the CXL.cache capability relies on ATS. Otherwise, it won't
-> > have access to the host physical memory.
-> > 
-> > Introduce a new pci_ats_always_on() for IOMMU driver to scan a PCI device,
-> > to shift ATS policies between "on demand" and "always on".
-> > 
-> > Add the support for CXL.cache devices first. Non-CXL devices will be added
-> > in quirks.c file.
-> > 
-> > Suggested-by: Vikram Sethi <vsethi@nvidia.com>
-> > Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> > Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> > ---
-> >  include/linux/pci-ats.h       |  3 +++
-> >  include/uapi/linux/pci_regs.h |  5 ++++
-> >  drivers/pci/ats.c             | 44 +++++++++++++++++++++++++++++++++++
-> >  3 files changed, 52 insertions(+)
-> > 
-> > diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> > index 75c6c86cf09d..d14ba727d38b 100644
-> > --- a/include/linux/pci-ats.h
-> > +++ b/include/linux/pci-ats.h
-> > @@ -12,6 +12,7 @@ int pci_prepare_ats(struct pci_dev *dev, int ps);
-> >  void pci_disable_ats(struct pci_dev *dev);
-> >  int pci_ats_queue_depth(struct pci_dev *dev);
-> >  int pci_ats_page_aligned(struct pci_dev *dev);
-> > +bool pci_ats_always_on(struct pci_dev *dev);
-> >  #else /* CONFIG_PCI_ATS */
-> >  static inline bool pci_ats_supported(struct pci_dev *d)
-> >  { return false; }
-> > @@ -24,6 +25,8 @@ static inline int pci_ats_queue_depth(struct pci_dev *d)
-> >  { return -ENODEV; }
-> >  static inline int pci_ats_page_aligned(struct pci_dev *dev)
-> >  { return 0; }
-> > +static inline bool pci_ats_always_on(struct pci_dev *dev)
-> > +{ return false; }
-> >  #endif /* CONFIG_PCI_ATS */
-> > 
-> >  #ifdef CONFIG_PCI_PRI
-> > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> > index 3add74ae2594..84da6d7645a3 100644
-> > --- a/include/uapi/linux/pci_regs.h
-> > +++ b/include/uapi/linux/pci_regs.h
-> > @@ -1258,6 +1258,11 @@
-> >  #define PCI_DVSEC_CXL_PORT_CTL				0x0c
-> >  #define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
-> > 
-> > +/* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
-> > +#define CXL_DVSEC_PCIE_DEVICE				0
-> > +#define   CXL_DVSEC_CAP_OFFSET				0xA
-> > +#define     CXL_DVSEC_CACHE_CAPABLE			BIT(0)
-> > +
-> >  /* Integrity and Data Encryption Extended Capability */
-> >  #define PCI_IDE_CAP			0x04
-> >  #define  PCI_IDE_CAP_LINK		0x1  /* Link IDE Stream Supported */
-> > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> > index ec6c8dbdc5e9..1795131f0697 100644
-> > --- a/drivers/pci/ats.c
-> > +++ b/drivers/pci/ats.c
-> > @@ -205,6 +205,50 @@ int pci_ats_page_aligned(struct pci_dev *pdev)
-> >  	return 0;
-> >  }
-> > 
-> > +/*
-> > + * CXL r4.0, sec 3.2.5.13 Memory Type on CXL.cache notes: to source
-> > requests on
-> > + * CXL.cache, devices need to get the Host Physical Address (HPA) from the
-> > Host
-> > + * by means of an ATS request on CXL.io.
-> > + *
-> > + * In other world, CXL.cache devices cannot access physical memory
-> > without ATS.
-> > + */
-> > +static bool pci_cxl_ats_always_on(struct pci_dev *pdev)
-> > +{
-> > +	int offset;
-> > +	u16 cap;
-> > +
-> > +	offset = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-> > +					   CXL_DVSEC_PCIE_DEVICE);
-> > +	if (!offset)
-> > +		return false;
-> > +
-> > +	pci_read_config_word(pdev, offset + CXL_DVSEC_CAP_OFFSET,
-> > &cap);
-> > +	if (cap & CXL_DVSEC_CACHE_CAPABLE)
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
-> > +
-> > +/**
-> > + * pci_ats_always_on - Whether the PCI device requires ATS to be always
-> > enabled
-> > + * @pdev: the PCI device
-> > + *
-> > + * Returns true, if the PCI device requires non-PASID ATS function on an
-> > IOMMU
-> > + * bypassed configuration.
-> > + */
-> > +bool pci_ats_always_on(struct pci_dev *pdev)
-> > +{
-> > +	if (pci_ats_disabled() || !pci_ats_supported(pdev))
-> > +		return false;
-> > +
-> > +	/* A VF inherits its PF's requirement for ATS function */
-> > +	if (pdev->is_virtfn)
-> > +		pdev = pci_physfn(pdev);
-> > +
-> > +	return pci_cxl_ats_always_on(pdev);
-> > +}
-> > +EXPORT_SYMBOL_GPL(pci_ats_always_on);
-> > +
-> >  #ifdef CONFIG_PCI_PRI
-> >  void pci_pri_init(struct pci_dev *pdev)
-> >  {
-> > --
-> > 2.43.0  
+> ---
+>  drivers/cxl/core/pci.c  |  1 +
+>  drivers/cxl/core/regs.c |  1 +
+>  drivers/cxl/cxlpci.h    | 53 -----------------------------------
+>  drivers/cxl/pci.c       |  1 +
+>  include/cxl/pci.h       | 62 +++++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 65 insertions(+), 53 deletions(-)
+>  create mode 100644 include/cxl/pci.h
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 5b023a0178a4..968babcc09a2 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/pci-doe.h>
+>  #include <linux/aer.h>
+> +#include <cxl/pci.h>
+>  #include <cxlpci.h>
+>  #include <cxlmem.h>
+>  #include <cxl.h>
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 5ca7b0eed568..ecdb22ae6952 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -4,6 +4,7 @@
+>  #include <linux/device.h>
+>  #include <linux/slab.h>
+>  #include <linux/pci.h>
+> +#include <cxl/pci.h>
+>  #include <cxlmem.h>
+>  #include <cxlpci.h>
+>  #include <pmu.h>
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 1d526bea8431..cdb7cf3dbcb4 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -7,59 +7,6 @@
+> 
+>  #define CXL_MEMORY_PROGIF	0x10
+> 
+> -/*
+> - * See section 8.1 Configuration Space Registers in the CXL 2.0
+> - * Specification. Names are taken straight from the specification with "CXL" and
+> - * "DVSEC" redundancies removed. When obvious, abbreviations may be used.
+> - */
+> -#define PCI_DVSEC_HEADER1_LENGTH_MASK	GENMASK(31, 20)
+> -
+> -/* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
+> -#define CXL_DVSEC_PCIE_DEVICE					0
+> -#define   CXL_DVSEC_CAP_OFFSET		0xA
+> -#define     CXL_DVSEC_MEM_CAPABLE	BIT(2)
+> -#define     CXL_DVSEC_HDM_COUNT_MASK	GENMASK(5, 4)
+> -#define   CXL_DVSEC_CTRL_OFFSET		0xC
+> -#define     CXL_DVSEC_MEM_ENABLE	BIT(2)
+> -#define   CXL_DVSEC_RANGE_SIZE_HIGH(i)	(0x18 + (i * 0x10))
+> -#define   CXL_DVSEC_RANGE_SIZE_LOW(i)	(0x1C + (i * 0x10))
+> -#define     CXL_DVSEC_MEM_INFO_VALID	BIT(0)
+> -#define     CXL_DVSEC_MEM_ACTIVE	BIT(1)
+> -#define     CXL_DVSEC_MEM_SIZE_LOW_MASK	GENMASK(31, 28)
+> -#define   CXL_DVSEC_RANGE_BASE_HIGH(i)	(0x20 + (i * 0x10))
+> -#define   CXL_DVSEC_RANGE_BASE_LOW(i)	(0x24 + (i * 0x10))
+> -#define     CXL_DVSEC_MEM_BASE_LOW_MASK	GENMASK(31, 28)
+> -
+> -#define CXL_DVSEC_RANGE_MAX		2
+> -
+> -/* CXL 2.0 8.1.4: Non-CXL Function Map DVSEC */
+> -#define CXL_DVSEC_FUNCTION_MAP					2
+> -
+> -/* CXL 2.0 8.1.5: CXL 2.0 Extensions DVSEC for Ports */
+> -#define CXL_DVSEC_PORT_EXTENSIONS				3
+> -
+> -/* CXL 2.0 8.1.6: GPF DVSEC for CXL Port */
+> -#define CXL_DVSEC_PORT_GPF					4
+> -#define   CXL_DVSEC_PORT_GPF_PHASE_1_CONTROL_OFFSET		0x0C
+> -#define     CXL_DVSEC_PORT_GPF_PHASE_1_TMO_BASE_MASK		GENMASK(3, 0)
+> -#define     CXL_DVSEC_PORT_GPF_PHASE_1_TMO_SCALE_MASK		GENMASK(11, 8)
+> -#define   CXL_DVSEC_PORT_GPF_PHASE_2_CONTROL_OFFSET		0xE
+> -#define     CXL_DVSEC_PORT_GPF_PHASE_2_TMO_BASE_MASK		GENMASK(3, 0)
+> -#define     CXL_DVSEC_PORT_GPF_PHASE_2_TMO_SCALE_MASK		GENMASK(11, 8)
+> -
+> -/* CXL 2.0 8.1.7: GPF DVSEC for CXL Device */
+> -#define CXL_DVSEC_DEVICE_GPF					5
+> -
+> -/* CXL 2.0 8.1.8: PCIe DVSEC for Flex Bus Port */
+> -#define CXL_DVSEC_PCIE_FLEXBUS_PORT				7
+> -
+> -/* CXL 2.0 8.1.9: Register Locator DVSEC */
+> -#define CXL_DVSEC_REG_LOCATOR					8
+> -#define   CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET			0xC
+> -#define     CXL_DVSEC_REG_LOCATOR_BIR_MASK			GENMASK(2, 0)
+> -#define	    CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK			GENMASK(15, 8)
+> -#define     CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK		GENMASK(31, 16)
+> -
+>  /*
+>   * NOTE: Currently all the functions which are enabled for CXL require their
+>   * vectors to be in the first 16.  Use this as the default max.
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 3b2293dffb3f..55c767df4543 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/aer.h>
+>  #include <linux/io.h>
+>  #include <cxl/mailbox.h>
+> +#include <cxl/pci.h>
+>  #include "cxlmem.h"
+>  #include "cxlpci.h"
+>  #include "cxl.h"
+> diff --git a/include/cxl/pci.h b/include/cxl/pci.h
+> new file mode 100644
+> index 000000000000..728ba0cdd289
+> --- /dev/null
+> +++ b/include/cxl/pci.h
+> @@ -0,0 +1,62 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+> +
+> +#ifndef __CXL_ACCEL_PCI_H
+> +#define __CXL_ACCEL_PCI_H
+> +
+> +/*
+> + * See section 8.1 Configuration Space Registers in the CXL 2.0
+> + * Specification. Names are taken straight from the specification with "CXL" and
+> + * "DVSEC" redundancies removed. When obvious, abbreviations may be used.
+> + */
+> +#define PCI_DVSEC_HEADER1_LENGTH_MASK  GENMASK(31, 20)
+> +
+> +/* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
+> +#define CXL_DVSEC_PCIE_DEVICE					0
+> +#define   CXL_DVSEC_CAP_OFFSET		0xA
+> +#define     CXL_DVSEC_MEM_CAPABLE	BIT(2)
+> +#define     CXL_DVSEC_HDM_COUNT_MASK	GENMASK(5, 4)
+> +#define   CXL_DVSEC_CTRL_OFFSET		0xC
+> +#define     CXL_DVSEC_MEM_ENABLE	BIT(2)
+> +#define   CXL_DVSEC_RANGE_SIZE_HIGH(i)	(0x18 + ((i) * 0x10))
+> +#define   CXL_DVSEC_RANGE_SIZE_LOW(i)	(0x1C + ((i) * 0x10))
+> +#define     CXL_DVSEC_MEM_INFO_VALID	BIT(0)
+> +#define     CXL_DVSEC_MEM_ACTIVE	BIT(1)
+> +#define     CXL_DVSEC_MEM_SIZE_LOW_MASK	GENMASK(31, 28)
+> +#define   CXL_DVSEC_RANGE_BASE_HIGH(i)	(0x20 + ((i) * 0x10))
+> +#define   CXL_DVSEC_RANGE_BASE_LOW(i)	(0x24 + ((i) * 0x10))
+> +#define     CXL_DVSEC_MEM_BASE_LOW_MASK	GENMASK(31, 28)
+> +
+> +#define CXL_DVSEC_RANGE_MAX		2
+> +
+> +/* CXL 2.0 8.1.4: Non-CXL Function Map DVSEC */
+> +#define CXL_DVSEC_FUNCTION_MAP					2
+> +
+> +/* CXL 2.0 8.1.5: CXL 2.0 Extensions DVSEC for Ports */
+> +#define CXL_DVSEC_PORT_EXTENSIONS				3
+> +#define   CXL_DVSEC_PORT_CTL		0xC
+> +#define     CXL_DVSEC_UNMASK_SBR		BIT(0)
+> +
+> +/* CXL 2.0 8.1.6: GPF DVSEC for CXL Port */
+> +#define CXL_DVSEC_PORT_GPF					4
+> +#define   CXL_DVSEC_PORT_GPF_PHASE_1_CONTROL_OFFSET		0x0C
+> +#define     CXL_DVSEC_PORT_GPF_PHASE_1_TMO_BASE_MASK		GENMASK(3, 0)
+> +#define     CXL_DVSEC_PORT_GPF_PHASE_1_TMO_SCALE_MASK		GENMASK(11, 8)
+> +#define   CXL_DVSEC_PORT_GPF_PHASE_2_CONTROL_OFFSET		0xE
+> +#define     CXL_DVSEC_PORT_GPF_PHASE_2_TMO_BASE_MASK		GENMASK(3, 0)
+> +#define     CXL_DVSEC_PORT_GPF_PHASE_2_TMO_SCALE_MASK		GENMASK(11, 8)
+> +
+> +/* CXL 2.0 8.1.7: GPF DVSEC for CXL Device */
+> +#define CXL_DVSEC_DEVICE_GPF					5
+> +
+> +/* CXL 2.0 8.1.8: PCIe DVSEC for Flex Bus Port */
+> +#define CXL_DVSEC_PCIE_FLEXBUS_PORT				7
+> +
+> +/* CXL 2.0 8.1.9: Register Locator DVSEC */
+> +#define CXL_DVSEC_REG_LOCATOR					8
+> +#define   CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET			0xC
+> +#define     CXL_DVSEC_REG_LOCATOR_BIR_MASK			GENMASK(2, 0)
+> +#define	    CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK			GENMASK(15, 8)
+> +#define     CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK		GENMASK(31, 16)
+> +
+> +#endif
+> --
+> 2.34.1
 > 
 > 
 
