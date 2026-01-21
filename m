@@ -1,275 +1,228 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010006.outbound.protection.outlook.com [52.101.193.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37F13D332D;
-	Wed, 21 Jan 2026 14:58:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.6
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769007514; cv=fail; b=Tcg7ZvMh307dHGjnYTvQKliYvGqQClqv2Kcm4u+Sbe4lrIWkErFEcHJtz+gVGpTH+hMNCbtm+F0zd+qEgNOa0xiSH30YMJJC2wxgFF5h4PzIjkWC54h/5kmExvn2SL6InvdNjR3diKkr+3vUNVO5riY2SbVN//tcgcnlPiG9XpU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769007514; c=relaxed/simple;
-	bh=zk1Slr/FYGfrwOajJpkWtfasesPOWDeLF5uaNXEJhnU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=nQCV/umz2I0tX+iu7YFy3FlmeRIf8U9PGlNQKfZpLq+j+ztkIJGNatZ40kk+NidH52EmmQoH9e9k10RXq8d7XeNrkJm90epd9NS2PWbFatAdmrcH9CfmJiLrfnMiiZ6OLqPaotHiPIGEUbR2CaAdQ7iODcpI7Y2en1qW4X8vFg8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bjtR4sUc; arc=fail smtp.client-ip=52.101.193.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bjtR4sUc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Qzdli/qiVDRLkGGK5wTVikzsLJIhwlBn7XTXIZMh5JGOXxTWZFGXCUM5hoWfg+R8+59IOYLdez1Xu7o6Mi5KWOHo9tnhe7MVGMa4P4/ppI27KcgntZvFyCKJwRuIl7Qq3UBYa8mDylrqTqdwFuU5Y6cvA52TQSXWNIFv791Kxl/+Sfbu9ewyuKCJxXpD0MYKUFVgjdf6x4osO1pEUI9R2XighZBNcn6br80lRhFcTazlZ97OGIGyYf1jEKlT20h5NjYPbd05O2IgomGn7sHgUYJRV7imOOusMq7YFuSNhCKWynoIhkK+/jpn9yrnVdeBPYK3egMkUUJnNWBtd0iBJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vIBtzNpbWkK1Njg9RYuubGlUyyISTbSFp/jyEXe0RrI=;
- b=hZcPFe6553oldiMSirkaqRdK4kg55ppLzOXzMoV6x5zVsu/X4VAwspGGLu7QUmyXFfwUDWHMNrDziCkNxH5f0QD7Sg5phVsR1lAwKxny9YJOkHOwRqfVb/MHNSdj5vYh0vrXopEN2yk6c+DYztBpvdMt+/yMlbNsXGIpcA9ECrbrg4yZNaaf2zPHF3vBObelor9WA6ztcsbQD6czWWcbcd5pZ9zQbpTWL05OQ0d08UT5TF0Gp/UaRZUbmL/GFzfp+EBYlMpk9teY8ushrsk9d8Jye70W+Pf9MigpUaT0V6ZTVFKfNa5kFo79kLuC87q15YPeSzG0VrpwF741qORCcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vIBtzNpbWkK1Njg9RYuubGlUyyISTbSFp/jyEXe0RrI=;
- b=bjtR4sUcp7juPqlblKzVrpkvCY4M2vnWd1f1bnC83hZ8inOiAQY+r4wa7UyMT0Juigu3O+V1BbZprmvPjlBYhDoShI3nmd2Sa0iedpi6Jt59cwusAgNiiZkfz5iq0uaT4cF4tuNcUXUICg+TTzUOE8ucfyf9v+orUg+2x0I04cs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- SJ2PR12MB9114.namprd12.prod.outlook.com (2603:10b6:a03:567::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.9; Wed, 21 Jan
- 2026 14:58:28 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%6]) with mapi id 15.20.9542.008; Wed, 21 Jan 2026
- 14:58:28 +0000
-Date: Wed, 21 Jan 2026 09:58:17 -0500
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: dan.j.williams@intel.com
-Cc: Robert Richter <rrichter@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dave Jiang <dave.jiang@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	John Allen <john.allen@amd.com>
-Subject: Re: [PATCH v9 10/13] cxl: Enable AMD Zen5 address translation using
- ACPI PRMT
-Message-ID: <20260121145817.GB1784626@yaz-khff2.amd.com>
-References: <CAMj1kXHYTyxBcO3Jt97pukZiOTqL8U=zL5iari82sqMOen1cEQ@mail.gmail.com>
- <aWehZwXsK1IXRNU2@rric.localdomain>
- <CAMj1kXFhBdCPW_+xPR-TmU4M46Jr6DGwtjUtjDQ0EbgPGmL7vQ@mail.gmail.com>
- <20260114180859.00004623@huawei.com>
- <20260115080444.GD830755@noisy.programming.kicks-ass.net>
- <CAMj1kXENYZq-UkCup6FSH_4tmpRe4xJN1_veuSWs-hxxAo=1Ew@mail.gmail.com>
- <20260116143838.GC1890602@noisy.programming.kicks-ass.net>
- <aW5AvfcjLkSP2j42@rric.localdomain>
- <20260119160342.GA659351@yaz-khff2.amd.com>
- <69701f6de978_1d6f1001e@dwillia2-mobl4.notmuch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69701f6de978_1d6f1001e@dwillia2-mobl4.notmuch>
-X-ClientProxiedBy: BL0PR1501CA0007.namprd15.prod.outlook.com
- (2603:10b6:207:17::20) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6358B4ADDA2
+	for <linux-cxl@vger.kernel.org>; Wed, 21 Jan 2026 15:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769007727; cv=none; b=AZtHqqHpYS5YanO03JSn7A4jnUN6OyHkfqkER3kBH4jVFriSb2dLsL4+MfPvuavID6cV/n8g7wwE336Pqe1dXfB7JSTrpm4saiK0NHDLkBySo+umHS0pwbRidA4ow/rAjYvpKGdxKGZ8sA/v1GTpsrNss2M624rX1eqZ1lyJGbc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769007727; c=relaxed/simple;
+	bh=VpzSOPPipZ7Wk3DVhXqnmZFKnblqi6knYh6FEjxvsEg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NJsPvdEIRfWptA3GAmeqFc2pWEuXEpxLgBX9ZgvA7E1fbJraeCr4EkeFZu8Rm26OAwLid4GNydD8pkxWcc/AKMEFmj7j6OBOnIgJgU9MO+PkwH/hehi4lZmIQF46L6H7a7I/tesXnZrVRQM8mGObaEEJtP+gFU021K7sb/4qI+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-8c6a822068eso693587285a.3
+        for <linux-cxl@vger.kernel.org>; Wed, 21 Jan 2026 07:02:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769007724; x=1769612524;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=AF6Iy9dgsc5sPND1gabv+P1umCdITLLVFz5zc76lNNw=;
+        b=qN5r8+UTRlJUYicXLPyxu4OeRZ06/AzmVFh6S4I3DXivJYr2763EuiXJE/wUtHLvpm
+         34KxcZHwOmulDxJU2oIzV4908JH2j55qRJTceG1vVfgIRQNJ6MVaTAOKjtgsXtsXppiV
+         2BTWjmxtKqfRJh8cO2eiz1b7e/2MuNJFj5EZ/uxDECVlDfVYtsLkwwqwMPcdtZ9estIG
+         Io5rKDTKKhPeRym1//ro7C+8zOMotyXgcLas74cwByRDIrKj3Yx/hgNwLT1KIqsCgRcj
+         LMPzad3KEc3Fn/azxwLLTX0yo8nOQmqLYV5W0B9CshCWndlp/LJ5jgChhZDhGBj3cuqz
+         iMeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWfZ+VMKit79ZlMbAPIkz70oMlwklVNXOPkeUiepNBvqj+xaSbUF2/xG0ZXCe8fzhMGL1wbSRFQ9EA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3BHkOar66NUoxdK9emtOBBP2iufR5UgEUXYw5H0jqKyrdqP+G
+	mF0owIeogDvkp7WiPdssNgjVFmEu0NeaHLYEqWgpkhvbHgH9FRNFi1ldGiB8kFNV
+X-Gm-Gg: AZuq6aL9/V9dw2iz9scd5A1ydrVSghPFlGylJtS0cZFes88ZjTC6UPN8ESDyK04asZ2
+	aRK6KZeBgRvQRrpRJxl5Eb97DHtA0bHAhLEmpiS/QtLy/O7Vr2nyopRP4tdsCzypIdaboZI6lST
+	QOawsbeUSWHQPFqrqxD4cTOHBNyUapqmLU+VhJy/RZi50580nDxyglj731KAcYcx846pCbfdI+4
+	oj3kQ+WQvREt507/w0qnzMRrJCFWeAFWAeNDYBam6eS3pq7g7YjGS+x5NdGsARq8+sPM3+e19NU
+	fvOCGme3IVJdi8YMgUIb/AIZctenL/3KalUrYNfluSynaLVYcw4hBU0S7m/630z6rMPfOgYMwtS
+	cy4zPPNlVldcwwGmbvxWa5XFTpsOG9LU4x7pkEhJQ91MfExOtJlZ8pKqFSbPfcpn8uTb5QnlNWG
+	QvNCyF0Uem8KfzkYzamz0Psf28gAKHdU+cGtnxHNkoc9QodgRjp00y
+X-Received: by 2002:ac8:5f54:0:b0:4ee:1e82:e3f4 with SMTP id d75a77b69052e-502a1f89bcdmr261493731cf.64.1769000779189;
+        Wed, 21 Jan 2026 05:06:19 -0800 (PST)
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com. [209.85.222.175])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-502a1ed3256sm107823091cf.16.2026.01.21.05.06.18
+        for <linux-cxl@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Jan 2026 05:06:19 -0800 (PST)
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-8c6a822068eso678853285a.3
+        for <linux-cxl@vger.kernel.org>; Wed, 21 Jan 2026 05:06:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW2ZcTGgxII8qVBRHe9sMWZmqIsrlVyVBMLKexwzOm/YPzIDt8BRxxMaHnsg1KpQp0iSB+PodlsT2M=@vger.kernel.org
+X-Received: by 2002:a05:6102:3053:b0:5e5:66c6:d23e with SMTP id
+ ada2fe7eead31-5f1a6fd7b8amr5292858137.1.1769000378213; Wed, 21 Jan 2026
+ 04:59:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|SJ2PR12MB9114:EE_
-X-MS-Office365-Filtering-Correlation-Id: 100cff00-3b18-494b-6231-08de58fd88db
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?a6Dlajg17GDCRCVPMpuLw1n6Fm1GpecBdF8z/AshLjy/wJSfLkrF7N1kHnhg?=
- =?us-ascii?Q?X2H962QClks5AbURUP7MphJLERgW8eNbb1LnR9hpevcsTYGQ6jCCfJFlvAUY?=
- =?us-ascii?Q?B2RW5Ch3xMjuTONpCuT1T7BIPI07AvqK03xvHIMcVwv7KHYUvIzl3lDkQBzc?=
- =?us-ascii?Q?an497PyuNrY+HZfNOljtL5DHukqztrwx5lhi8jUubSxkBY4rgC2ETcnuk43P?=
- =?us-ascii?Q?Ux5TbRbkf37FymLrOnlmWWQUru+4kN0AbGUZKQALNnK7ujjzGfYwreU0/KvE?=
- =?us-ascii?Q?XqD+nKZz/wVkpchPuAi/RWA6MKHyWcok9Snsgi9vhicHU+53EnBdnFotpAam?=
- =?us-ascii?Q?mPdWYw2jQcwNhxvWywdICbMb4fd23+W4Wy32SUgc5tkMcqEh2xKd8BN9w6+u?=
- =?us-ascii?Q?9oXefSq1bfzTKxDoJZSkhAZm02t7jrvHKFwkN7NdFJQTcTT5ZNRjMlqUXO0v?=
- =?us-ascii?Q?li2TyFxyNSUkJz2TFWFSS0jORGULEJo3s/Uqd46LcVqvmqZTcKsWSnmrD9Fi?=
- =?us-ascii?Q?nqiqK1DDIqtDgyyh6MqQcLcc0t/94nD8GbYyEm6Fk8zJxwc7n6NifqdpKLmG?=
- =?us-ascii?Q?oyhtGcpwnpFX13G2WhiC1Z0loN5XdQjAHOPBz2FvV6uk9vSjGc1ix5DOOnfQ?=
- =?us-ascii?Q?IWQCqw2g9HuOhqjI5BM6AwRClelT5F7riQAZlOKZ4Rxn0/hwTpH7z+uNHCTd?=
- =?us-ascii?Q?YpLi7mj1hVm2neTa1C4iNU/gSaKa2UN94cRWb7taGAA16UZTbk4HpuhNmxsj?=
- =?us-ascii?Q?VuvK3TJZsKDJs6Oca6U2vlJLOjTijVwoN/xdxeL12VPhCufrzLGt2iaHjglW?=
- =?us-ascii?Q?/pIzY/VaGgo2Oo6SSwtcsMS3eD4LdL99PNPGZskwDpivblgW/u50Nw6xSxi+?=
- =?us-ascii?Q?DJ1UbL/va+1g/IfbkCndWrNhzy8KAwVdT/xepVmoTtqDlqui+MOk+JklzV2j?=
- =?us-ascii?Q?BWQg2Nb+X0NRg87//7wMHvfie1+sj95NqyAXSiXhU0VTzzrl/SHdoEMAcygL?=
- =?us-ascii?Q?Nfl6cmi9opO740m6fpsUZulio7aaIQbi1DK/pWlRwIlnT+aICu63+YxpWUxL?=
- =?us-ascii?Q?tWTwyLBaE4P45ASZJ2g/Yg86frexTxkvjb/8Ntkhd4mgm9oI5kaWwPDJy9BI?=
- =?us-ascii?Q?4eOHNMiZkh+XXH6LjGH/LB+xXbMjeo51l10qE0n+HjPIY/VBKCIOEc9uXI7T?=
- =?us-ascii?Q?4sAZK7BFzmkpvWm1obq1AmrnOq3V0SXtr97CeB+Z1sFu+TGmkFUCXjx/gr/y?=
- =?us-ascii?Q?N4zJ/mhLQLFIu96ywnb7sNHoeYzdEFTq55iLSLXEj17LgZYJChl5sDRJL+HS?=
- =?us-ascii?Q?2nkRzcnkrwuIUHdOhGquxD+gnG9HQ+215xZma1S56P12C2wNd0fwafouKUJW?=
- =?us-ascii?Q?MkfKlZf8ziydZ1FBszIbc31y7VBYePLJxMJ1RrHBzj8/9mbnpbkGTiBelge8?=
- =?us-ascii?Q?V9NoNtXshMcrSkNTGCNgWyxzNkl+5CEjeBuCBBzkXms+JUp90d9WAMug0rNR?=
- =?us-ascii?Q?gq/Dl2WweIXc+eMHYLmgaIcHxF301HVoR6l6u3/pLyoYxzXSbgBjAp2Rhn0+?=
- =?us-ascii?Q?POz3LJrX5NIz0lajswg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?wCfH6KX3Lq1stIr6JIIiOhz9ltWa9KFiwDJrUaBZBabGs8MuBno5BIUf4hDy?=
- =?us-ascii?Q?1JFX+AapsaWcjbfvmc+8/P9hV8dciTG/GjWDk59k/fwKM8xoUYJSUzy+7AyP?=
- =?us-ascii?Q?zITp41YS9iSk+5IbyFBwoF0hLIpk5MVLEOZ4APHknWbIQfXTQj3f4CKLgf5h?=
- =?us-ascii?Q?0LlDDtpCrYS8uf3TnQ+aiwpY/B76gdS9JCsaTvchwHzFkgqU1g8SYdOhJIU/?=
- =?us-ascii?Q?3NUsCIVFuqjvum69gOf3ejBFZceN82TJmlhBUwz9EIwG04LS7yLDDR1qhas9?=
- =?us-ascii?Q?Wys7yp7Uw1186Bb9XYHoDB8wjEwxkDXypAeKYGn294qb/LCKr8nUWAHXV5zN?=
- =?us-ascii?Q?N4K103607QNTpEaCay9R1wZgUSK3sHqW2RvS/q8LoTFmh0tBSojYQhMCVvtd?=
- =?us-ascii?Q?5XP1705z+tRSvgUph5Ac+sbp94NyVOZVGW7b7PQgqo8CPNNzMevkNhrwqOzc?=
- =?us-ascii?Q?G3Km5YnSpDavPyksqiVf+rARhfx39P8gugT/d0FZI/YUFWaMmLzM57QWOdiG?=
- =?us-ascii?Q?DeA8B0ru2seXAed1myHiJ4MK4W20uMnxTHrRXCtNnWxSgaCByJIY2xPKvaqQ?=
- =?us-ascii?Q?KvIVygw3oZsRPXGFE2ZIzPxnoLQ7ztu9oNc8QzzeiTk4jOdQRDj9Oy5dXzQu?=
- =?us-ascii?Q?32aATKqujBvAz8ryFYndfBwk5iS3mQtt8JG3ONZBjn1fiPUmrCr6R0tz0XQ2?=
- =?us-ascii?Q?3XyfaGQlrdu1lbsi2A0CTtDQvkXTsMisnJYEK3iNMeguXYMqb7JigwA4R+Ez?=
- =?us-ascii?Q?T+5V2Na0tnxs7z1IlFHV9DCnvpYzuD7LI14WUoHI2+pG7nNYo+RNrKvsTZLp?=
- =?us-ascii?Q?L4loQD1UnA5BI371IaJjXBys/Dz+MmALcu1nakPCxhXPQmIii5vi621odHfx?=
- =?us-ascii?Q?FcjAEVu7aAzEQgzcCkALlepYKyMTlUSo8taZvQRxIMoDTb9PWPh3S8SU/Bd0?=
- =?us-ascii?Q?BcziHNY73B4uA9/2TgXqU1iAcxYp4DE732mUrXHoRybqdYWCMvx3Hc87bhM2?=
- =?us-ascii?Q?1ezychJRxZM566sMt6ipbR1fTfJvUr++fVFsA3A/Nc+fEg2BIStqgCgU8/rC?=
- =?us-ascii?Q?8pGzWqh4Ucu+CVtbVmhcs5xJtJq5Gogxu2kMzt/w8xqf7Ipj2CublTxKARAY?=
- =?us-ascii?Q?6PxUlmT4aWQP9fpw52hyO/nmsw9xqNY1yLkZavD9lQ2ayfi/J36NDwjFNalk?=
- =?us-ascii?Q?SjblmEb8CXRtgey1J2Sku4qYkBmslH0mkebc+OEIGF6B0qHeR3NfpYo+ty5v?=
- =?us-ascii?Q?H9cEp/PYKfxcGRdYkANwdo+c8Rv2hm1Wwg/8GVZtZOHD7PqCtzdPmkLjEtG+?=
- =?us-ascii?Q?VpRowaykE6IOCaIyO0tzf4SpPujB+0d7o/ZS9JsFpOkv+giUZvVqP6H3nHzN?=
- =?us-ascii?Q?IzVFcw+yG93+NcR8L11utFgJsB2s1gHlMK6z/cGfi7sRonpmLtHRF9tUqt9W?=
- =?us-ascii?Q?/8bndHJ5wPdZFK2OPbXAXJGL6Y01cqK9P+X+50Itl+2LdcJNKDXjNfrdLEtq?=
- =?us-ascii?Q?oqplLffkKejCqL2ZM0lCS7l/Ny7RZaNOp9V/FMP3977HM3djBfsIyZASYDit?=
- =?us-ascii?Q?OtsIBXffPUwsd9PTZb43T5+S56txsn+/owUklXmKXUIqaHqNbb19isR1pWC9?=
- =?us-ascii?Q?qaRILWb73Jy1K4uh1PD1kXuHZAVwVSIZ857F07pjvEWU3TTanQGtHKPE8nNV?=
- =?us-ascii?Q?oAFtG+XkDLejY6njBSphZJF5cN37CVLxR9HKedP1+E5Glmy98S6t3CNVDsjQ?=
- =?us-ascii?Q?l/iX742rmw=3D=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 100cff00-3b18-494b-6231-08de58fd88db
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2026 14:58:28.1509
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QOVhUleaIBHH/b8QK6LjWZz9EokG3ywDbzOWA08kqzkx6RUCjVGSKwVPOHptGiLzjlWaPRXYvlq3OHiRNwE32Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9114
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+ <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com> <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
+ <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com> <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
+ <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com> <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
+ <55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com> <20251202102619.5cd971cc@bootlin.com>
+ <088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com> <20251202175836.747593c0@bootlin.com>
+ <dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com> <20251204083839.4fb8a4b1@bootlin.com>
+ <CAMuHMdXdwf7La1EYBWTJadsTAJG3nKQVW6wtBn-bUqshA=XHRw@mail.gmail.com>
+ <20251210132140.32dbc3d7@bootlin.com> <c50c40cc-69f6-436c-a94e-94a3a10f6727@gmail.com>
+ <20251211132044.10f5b1ea@bootlin.com> <1b9fa77b-d74a-4fa7-b2e7-8b389d59a5a0@gmail.com>
+ <20251211161902.11ef4248@bootlin.com>
+In-Reply-To: <20251211161902.11ef4248@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 21 Jan 2026 13:59:26 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWGk5ig3v9tGy1cMOg1LmKu3KrxQq2HO1vcQeZPuRxWBQ@mail.gmail.com>
+X-Gm-Features: AZwV_QgoZry7Ux_LWaq66D8-Sle9_xFUD1BP9eHkYs41xWjINnCZsHwmSX1GiNQ
+Message-ID: <CAMuHMdWGk5ig3v9tGy1cMOg1LmKu3KrxQq2HO1vcQeZPuRxWBQ@mail.gmail.com>
+Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT overlays"
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Rob Herring <robh@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Kalle Niemi <kaleposti@gmail.com>, linux-arm-kernel@lists.infradead.org, 
+	Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev, linux-clk@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
+	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Saravana Kannan <saravanak@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 20, 2026 at 04:35:57PM -0800, dan.j.williams@intel.com wrote:
-> Yazen Ghannam wrote:
-> [..]
-> > Additionally, the same translation code can be used in multiple places
-> > (tools, FW, kernel, etc.). Most consumers treat the code like a library
-> > that they include. It's coded once and bugs can be fixed in one place.
-> > 
-> > However, with a native kernel driver, we have to re-write everything to
-> > match coding style, licensing, etc.
-> > 
-> > Also, new hardware may need changes to the code (sometimes major). So
-> > there's upstream work, backporting (more testing), and so on.
-> > 
-> > See the AMD Address Translation Library at drivers/ras/amd/atl/.
-> 
-> There is more nuance here.
-> 
-> There are indeed cases where there are high degrees of non-architectural
-> details in flux from one product to the next. For example, the details
-> that EDAC no longer needs to chase because the ADXL DSM exists are a
-> solution to the problem of shifting and complicated memory topology
-> details.
-> 
+Hi Herv=C3=A9,
 
-Right, this is the intended use case. 
+Revisiting his old thread (sorry for the delay)...
 
-> CXL is a standard that this architecture at issue decided to inject
-> software-model-destroying artificats like CXL-endpoint-HPA to
-> CXL-Host-Bridge-SPA (Normalized Addressing) translation.
-> 
-> A Normalized Address looks like a static offset per host bridge, not a
-> method call round trip to a runtime firmware service.
-> 
-> Note that there are other platforms that break basic HPA-to-SPA
-> assumptions, but those have been handled with native driver support via
-> XOR interleave, and non-CXL-Host-Bridge target updates to the
-> ACPI.CEDT.CFMWS table.
-> 
+On Thu, 11 Dec 2025 at 16:19, Herve Codina <herve.codina@bootlin.com> wrote=
+:
+> On Thu, 11 Dec 2025 15:52:28 +0200
+> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> > On 11/12/2025 14:20, Herve Codina wrote:
+> > > On Thu, 11 Dec 2025 10:34:46 +0200
+> > > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> > > Do you see the same trace with:
+> > > - "pinctrl-0 =3D <&i2c1_pins>;" in your overlay
+> > > - fragment0 removed from the overlay (i2c1_pins definition removed fr=
+om
+> > >    the overlay.
+> > > - i2c1_pins node defined in your base DT.
+> >
+> > Just tested. The i2c1 appears and the test-overlay probe gets called,
+> > when the i2c1_pins is in the base-dt and not in the overlay.
+>
+> Geert, do you expirement same results?
 
-I see. So the concern is including model-specific methods that would
-modify the CXL standard flow, correct?
+Yes, after moving the pin control subnode from the overlay[1] to the
+base DTS, the SPI bus and FLASH work after loading the overlay for
+the first time.
 
-Or, more specifically, is it reliance on external/system-specific
-information?
+> > > In other word, is the issues related to adding a pinctrl sub-node (pi=
+nctrl
+> > > pins definition) in the overlay or is it something else?
+> >
+> > Seems to be related to the pinctrl.
+>
+> I don't think that the issue is related to pinctrl itself.
+>
+> IMHO, I think the issue is related to overlays and fw_devlink.
+> The distinction between "a new node is going to lead to a device" vs "a n=
+ew
+> node is just data and will never been attached to a new device" when an
+> overlay is applied is broken.
+>
+> This is broken with the upstream "treewide: Fix probing of devices in DT
+> overlays" commit I've tried to revert. Indeed, on the LAN966x PCI device
+> use case devlinks created are not correct with this commit applied.
+>
+> I am not sure also that devlinks created with a more complex overlay will=
+ be
+> correct. For instance, Matti, with your overlay not sure that a phandle f=
+rom
+> the oscillator node referencing the pmic node will lead to a correct
+> provider/consumer devlink between the pmic device and the oscillator devi=
+ce.
+>
+> On the other hand, this is broken with "of: dynamic: Fix overlayed device=
+s
+> not probing because of fw_devlink" works for the LAN966x PCI device use c=
+ase
+> an lead to correct devlinks but breaks your use cases.
 
-Or the time spent on a round trip call to another service?
+Loading my overlay[1] causes the following changes under
+/sys/class/devlink/:
 
-> > > > Worse, you might have to deal with various incompatible buggy PRM
-> > > > versions because BIOS :/
-> > > 
-> > > The address translation functions are straight forward. I haven't
-> > > experienced any issues here. If there would be any, this will be
-> > > solvable, e.g. by requiring a specific minimum version or uuid to run
-> > > PRM.
-> > > 
-> > 
-> > This is a good point, and I've brought this up with some of my
-> > colleagues.
-> 
-> The more that software bugs leak into this interface requiring
-> consideration of versions and the like, the louder the requests for
-> "please move this to a driver" will become.
-> 
+    + genpd_provider:ca53-cpu0--platform:e6e90000.spi ->
+../../devices/virtual/devlink/genpd_provider:ca53-cpu0--platform:e6e90000.s=
+pi
+    + platform:e6055000.gpio--platform:e6e90000.spi ->
+../../devices/virtual/devlink/platform:e6055000.gpio--platform:e6e90000.spi
+    + platform:e6060000.pinctrl--platform:e6e90000.spi ->
+../../devices/virtual/devlink/platform:e6060000.pinctrl--platform:e6e90000.=
+spi
+    - platform:e6060000.pinctrl--platform:keys ->
+../../devices/virtual/devlink/platform:e6060000.pinctrl--platform:keys
+    + platform:e6150000.clock-controller--platform:e6e90000.spi ->
+../../devices/virtual/devlink/platform:e6150000.clock-controller--platform:=
+e6e90000.spi
+    + platform:soc--platform:e6e90000.spi ->
+../../devices/virtual/devlink/platform:soc--platform:e6e90000.spi
 
-Yes, ack.
+Note that these changes are exactly the same in the working and the
+non-working case.
 
-> > The PRM methods are supposed to be able to be updated at runtime by the
-> > OS. We could think of this as a similar flow to microcode.
-> 
-> No, at the point where runtime updates are needed outside of a BIOS
-> update we have crossed the threshold into Linux actively taking on new
-> maintenance burden to enable hardware platforms to avoid the discipline
-> of architectural solutions.
-> 
-> Microcode is a confined solution space. PRM is unbounded.
-> 
-> Now, stepping back, this specific Zen5 support has been a long time
-> coming. Specifically, there are shipping platforms where Linux is unable
-> to use any of its CXL RAS support because it gets tripped up on this
-> fundamental step. I would like to see exact details on what this PRM
-> handler is doing so that we, linux-cxl community, can make a
-> determination about:
-> 
->     "yes this algorithm is so tiny and static, PRM not indicated"
-> 
->     "no, this is complicated and guaranteed to keep shifting product to
->      product, Linux is better off with a PRM helper"
-> 
-> ...but still merge this PRM call, regardless of the determination. Put
-> the next potential use of PRM on notice that native drivers are required
-> outside of meeting the "complicated + shifting" criteria that indicate
-> PRM.
+Removing the overlay again removes all added links, but does not
+restore the keys link:
 
-I can give a general overview. The AMD CXL address translation flows are
-an extension of the AMD Data Fabric address translation flows.
-Specifically for Zen5, it would be "DF v4.5" with adjustments for CXL.
+    - genpd_provider:ca53-cpu0--platform:e6e90000.spi ->
+../../devices/virtual/devlink/genpd_provider:ca53-cpu0--platform:e6e90000.s=
+pi
+    - platform:e6055000.gpio--platform:e6e90000.spi ->
+../../devices/virtual/devlink/platform:e6055000.gpio--platform:e6e90000.spi
+    - platform:e6060000.pinctrl--platform:e6e90000.spi ->
+../../devices/virtual/devlink/platform:e6060000.pinctrl--platform:e6e90000.=
+spi
+    - platform:e6150000.clock-controller--platform:e6e90000.spi ->
+../../devices/virtual/devlink/platform:e6150000.clock-controller--platform:=
+e6e90000.spi
+    - platform:soc--platform:e6e90000.spi ->
+../../devices/virtual/devlink/platform:soc--platform:e6e90000.spi
 
-The "DF 4.5" translation is upstream in the AMD Address Translation
-Library. See code examples with "git grep -i df4p5".
+Loading the overlay again causes no changes in the links, but the SPI
+bus and FLASH always work.
 
-I would consider this "complicated + shifting". This is true for general
-memory errors reported through MCA/EDAC.
+[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drive=
+rs.git/commit/?h=3Dtopic/renesas-overlays&id=3D383285b905a20d6734bfcbf7bcf7=
+15c1c2b45395
 
-I defer to my CXL colleagues if the "shifting" criteria applies to
-future CXL systems.
+Gr{oetje,eeting}s,
 
-Thanks,
-Yazen
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
