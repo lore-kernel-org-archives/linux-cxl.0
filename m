@@ -1,194 +1,188 @@
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D413D1CC1;
-	Thu, 22 Jan 2026 11:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880143AE6FF
+	for <linux-cxl@vger.kernel.org>; Thu, 22 Jan 2026 11:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769082103; cv=none; b=EiJmlUlpZxHuVARh19hK0meJ/VN1No/S8lkniZ652/UZCl3LHCIyBFS27Nrwrp3bpKCc1kFldFvhka+7LdOrBr4OvvBsLuc4Z/HvEZLHe438xWZvQ5HIGz6GEpRtILOjdzf/mCwHz6BBlmevJ0h2JS6df/o6kpepYquAbJDr+7E=
+	t=1769083195; cv=none; b=t3Kj5YfvWi94UJ3nZPJJt5E1021zSd+5OIpEJfr40J+sCCCJNQ92wzTc7qI40sFiy9BCRsT7cR73qJ5IlZuDDSUrLVftGfSaRVR4cyJ63Hx40VcBfaS1CRv1xPXwATayx1cCOUcdXrJzBJD04qIKNCGSrodN3XcbZiBi96nMa+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769082103; c=relaxed/simple;
-	bh=NqQtXUERc3v4NzNZ99SDCcNfgBv7D/bmH0cyLocfDQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ul6cWuiCd23bPKmADpeCXysr8QJCQMbn1PfsbJgGfT69ncBuwDVxZwk5A0qeMndfbRpYSybHfQma7BIjBxnTQsHHujPLrcIrVbl9ESyEZOaogiUuVGNPhKm+rFOHTufL9clbWijnpWAe4rQy7KnAtsjrsFcovhmywXog2FbQNyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UEFpYXOg; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UEFpYXOg"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 1D6934E421EE;
-	Thu, 22 Jan 2026 11:41:38 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id D41D760740;
-	Thu, 22 Jan 2026 11:41:37 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B0CD5119B0105;
-	Thu, 22 Jan 2026 12:41:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1769082094; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=Fl2SnsCgDRhlccmCWpsQ4CBlDuamahnW5kxpsohCwvo=;
-	b=UEFpYXOgJL+WIY89Mx/EpOyceBBILQiL0TxFQWpW01yiEySAJH2g1HcWGNeQm8jHeKv+xN
-	O2csc+HhLdo2gWFITsAzh6mTWYo9h+2QnQHxO2GdqZlsPvpTAG/XFqvOefokUsJca73PWu
-	919NjC9kftG/xECA0iNKY+BT7G6XeddTLl+YrGq6EFQ7innqv2Qzt9u7ZQzupbkT37WFhV
-	mgEsWUeGSzIj/19gb+Tq8BosxVfyi4TFbwa3Kmjo2kuM+uE7HxnX7idMvi9PAvs7Wiw+OR
-	Jl3h0x9NzvUaJ7inKLTNk1kZu+isqj/tgMXHTzscOm2flBtD/RFBursuZs9FuQ==
-Date: Thu, 22 Jan 2026 12:41:14 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Rob Herring
- <robh@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Ulf Hansson
- <ulf.hansson@linaro.org>, Kalle Niemi <kaleposti@gmail.com>,
- linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
- Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, Charles
- Keepax <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
- <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
- Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally
- <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
- <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Alison
- Schofield <alison.schofield@intel.com>, Vishal Verma
- <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
- <dan.j.williams@intel.com>, Wolfram Sang <wsa@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Saravana Kannan
- <saravanak@kernel.org>
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
- overlays"
-Message-ID: <20260122124114.44812cc7@bootlin.com>
-In-Reply-To: <CAMuHMdWGk5ig3v9tGy1cMOg1LmKu3KrxQq2HO1vcQeZPuRxWBQ@mail.gmail.com>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
-	<5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
-	<CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
-	<072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
-	<CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
-	<55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
-	<20251202102619.5cd971cc@bootlin.com>
-	<088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com>
-	<20251202175836.747593c0@bootlin.com>
-	<dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com>
-	<20251204083839.4fb8a4b1@bootlin.com>
-	<CAMuHMdXdwf7La1EYBWTJadsTAJG3nKQVW6wtBn-bUqshA=XHRw@mail.gmail.com>
-	<20251210132140.32dbc3d7@bootlin.com>
-	<c50c40cc-69f6-436c-a94e-94a3a10f6727@gmail.com>
-	<20251211132044.10f5b1ea@bootlin.com>
-	<1b9fa77b-d74a-4fa7-b2e7-8b389d59a5a0@gmail.com>
-	<20251211161902.11ef4248@bootlin.com>
-	<CAMuHMdWGk5ig3v9tGy1cMOg1LmKu3KrxQq2HO1vcQeZPuRxWBQ@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1769083195; c=relaxed/simple;
+	bh=BFEpzDhXdboORR01Ro1/wQ6BeSXRtf3i6/3IZK/Etfc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ICGiAjubLPt5ZXQkDof4xHdRDWUKBr9O+JFFVikMfFGmJ9CLBp2uITtv0fEHnJ21ktnxLp/hA23hYqGvOE8OCmPEQgZrxOKmPeeMtn0cJZ3C9dU1ia11h8R79ZQuXFBivtGaPXBFMPwwV38fuLsHn1qIMR5vl5heJWYH3oTWA7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.107])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dxfjr5ZJWzHnGk0;
+	Thu, 22 Jan 2026 19:59:12 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6795240584;
+	Thu, 22 Jan 2026 19:59:48 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 22 Jan
+ 2026 11:59:47 +0000
+Date: Thu, 22 Jan 2026 11:59:45 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <ira.weiny@intel.com>, <terry.bowman@amd.com>
+Subject: Re: [PATCH 3/9] cxl/port: Cleanup dport removal with a devres group
+Message-ID: <20260122115945.000062e6@huawei.com>
+In-Reply-To: <20260122033330.1622168-4-dan.j.williams@intel.com>
+References: <20260122033330.1622168-1-dan.j.williams@intel.com>
+	<20260122033330.1622168-4-dan.j.williams@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-Hi Geert,
+On Wed, 21 Jan 2026 19:33:24 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-On Wed, 21 Jan 2026 13:59:26 +0100
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> In preparation for adding more setup actions like RAS register mapping,
+> introduce a devres group to collect all the dport creation / registration
+> actions. This replaces the maintenance tedium of open coding several
+> devm_release_action() calls in del_dport().
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Whilst nice, there is some logic buried deep enough that it might surprise
+anyone trying to grasp flow in __devm_cxl_add_dport.
 
-> Hi Hervé,
-> 
-> Revisiting his old thread (sorry for the delay)...
-> 
-> On Thu, 11 Dec 2025 at 16:19, Herve Codina <herve.codina@bootlin.com> wrote:
-> > On Thu, 11 Dec 2025 15:52:28 +0200
-> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:  
-> > > On 11/12/2025 14:20, Herve Codina wrote:  
-> > > > On Thu, 11 Dec 2025 10:34:46 +0200
-> > > > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> > > > Do you see the same trace with:
-> > > > - "pinctrl-0 = <&i2c1_pins>;" in your overlay
-> > > > - fragment0 removed from the overlay (i2c1_pins definition removed from
-> > > >    the overlay.
-> > > > - i2c1_pins node defined in your base DT.  
-> > >
-> > > Just tested. The i2c1 appears and the test-overlay probe gets called,
-> > > when the i2c1_pins is in the base-dt and not in the overlay.  
-> >
-> > Geert, do you expirement same results?  
-> 
-> Yes, after moving the pin control subnode from the overlay[1] to the
-> base DTS, the SPI bus and FLASH work after loading the overlay for
-> the first time.
+I like the cleanup.h stuff but here I'm wondering if it is appropriate.
+Maybe just use a goto in __devm_cxl_add_dport()
 
-Ok. What I said for Matti's use-case is also valid for your use-case.
+Minimum I think is we need a breadcrumb in the function naming that
+it has anything to do with devres.  _dr_ is used in a few places where
+devres naming is too long. 
 
-> 
-> > > > In other word, is the issues related to adding a pinctrl sub-node (pinctrl
-> > > > pins definition) in the overlay or is it something else?  
-> > >
-> > > Seems to be related to the pinctrl.  
-> >
-> > I don't think that the issue is related to pinctrl itself.
-> >
-> > IMHO, I think the issue is related to overlays and fw_devlink.
-> > The distinction between "a new node is going to lead to a device" vs "a new
-> > node is just data and will never been attached to a new device" when an
-> > overlay is applied is broken.
-> >
-> > This is broken with the upstream "treewide: Fix probing of devices in DT
-> > overlays" commit I've tried to revert. Indeed, on the LAN966x PCI device
-> > use case devlinks created are not correct with this commit applied.
-> >
-> > I am not sure also that devlinks created with a more complex overlay will be
-> > correct. For instance, Matti, with your overlay not sure that a phandle from
-> > the oscillator node referencing the pmic node will lead to a correct
-> > provider/consumer devlink between the pmic device and the oscillator device.
-> >
-> > On the other hand, this is broken with "of: dynamic: Fix overlayed devices
-> > not probing because of fw_devlink" works for the LAN966x PCI device use case
-> > an lead to correct devlinks but breaks your use cases.  
-> 
-> Loading my overlay[1] causes the following changes under
-> /sys/class/devlink/:
-> 
->     + genpd_provider:ca53-cpu0--platform:e6e90000.spi ->
-> ../../devices/virtual/devlink/genpd_provider:ca53-cpu0--platform:e6e90000.spi
->     + platform:e6055000.gpio--platform:e6e90000.spi ->
-> ../../devices/virtual/devlink/platform:e6055000.gpio--platform:e6e90000.spi
->     + platform:e6060000.pinctrl--platform:e6e90000.spi ->
-> ../../devices/virtual/devlink/platform:e6060000.pinctrl--platform:e6e90000.spi
->     - platform:e6060000.pinctrl--platform:keys ->
-> ../../devices/virtual/devlink/platform:e6060000.pinctrl--platform:keys
->     + platform:e6150000.clock-controller--platform:e6e90000.spi ->
-> ../../devices/virtual/devlink/platform:e6150000.clock-controller--platform:e6e90000.spi
->     + platform:soc--platform:e6e90000.spi ->
-> ../../devices/virtual/devlink/platform:soc--platform:e6e90000.spi
-> 
-> Note that these changes are exactly the same in the working and the
-> non-working case.
-> 
-> Removing the overlay again removes all added links, but does not
-> restore the keys link:
+Otherwise one minor thing inline around reusing del_dport in
+the DEFINE_FREE()
+If we can't because the diverge later, maybe add a comment (or just
+ignore this feedback).
 
-I think you should have the exact same behavior with and without my
-modification.
 
-Can you confirm?
+> ---
+>  drivers/cxl/core/port.c | 62 +++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 56 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 1637e97f6805..f2723bf948e2 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1118,6 +1118,51 @@ static void cxl_dport_unlink(void *data)
+>  	sysfs_remove_link(&port->dev.kobj, link_name);
+>  }
+>  
+> +static struct device *dport_to_host(struct cxl_dport *dport)
+> +{
+> +	if (is_cxl_root(dport->port))
+> +		return dport->port->uport_dev;
+> +	return &dport->port->dev;
+> +}
+> +
+> +static void free_dport(void *dport)
+> +{
+> +	kfree(dport);
+> +}
+> +
+> +/*
+> + * Upon return either a group is established with one action (free_dport()), or
+> + * no group established and @dport is freed.
+> + */
+> +static void *cxl_dport_open_group_or_free(struct cxl_dport *dport)
 
-Best regards,
-Hervé
+Can we put something in the name to hint this is devres stuff?
+Group could mean too many things :( Even
+cxl_dport_open_dr_group_or_free() avoids sounding too generic.
+
+
+> +{
+> +	int rc;
+> +	struct device *host = dport_to_host(dport);
+> +	void *group = devres_open_group(host, dport, GFP_KERNEL);
+> +
+> +	if (!group) {
+> +		kfree(dport);
+> +		return NULL;
+> +	}
+> +
+> +	rc = devm_add_action_or_reset(host, free_dport, dport);
+> +	if (rc) {
+> +		devres_release_group(host, group);
+> +		return NULL;
+> +	}
+> +
+> +	return group;
+> +}
+> +
+> +static void cxl_dport_close_group(struct cxl_dport *dport, void *group)
+> +{
+> +	devres_close_group(dport_to_host(dport), group);
+> +}
+> +
+> +/* The dport group id is the dport */
+> +DEFINE_FREE(cxl_dport_release_group, void *,
+> +	    if (_T) devres_release_group(dport_to_host(_T), _T))
+
+Reorder so this can use the typed del_dport()?
+
+> +
+>  static struct cxl_dport *
+>  __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>  		     int port_id, resource_size_t component_reg_phys,
+> @@ -1143,14 +1188,20 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>  	    CXL_TARGET_STRLEN)
+>  		return ERR_PTR(-EINVAL);
+>  
+> -	dport = devm_kzalloc(host, sizeof(*dport), GFP_KERNEL);
+> +	dport = kzalloc(sizeof(*dport), GFP_KERNEL);
+>  	if (!dport)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> +	/* Just enough init to manage the devres group */
+>  	dport->dport_dev = dport_dev;
+>  	dport->port_id = port_id;
+>  	dport->port = port;
+>  
+> +	void *dport_group __free(cxl_dport_release_group) =
+> +		cxl_dport_open_group_or_free(dport);
+> +	if (!dport_group)
+> +		return ERR_PTR(-ENOMEM);
+> +
+>  	if (rcrb == CXL_RESOURCE_NONE) {
+>  		rc = cxl_dport_setup_regs(&port->dev, dport,
+>  					  component_reg_phys);
+> @@ -1203,6 +1254,9 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>  
+>  	cxl_debugfs_create_dport_dir(dport);
+>  
+> +	/* keep the group, and mark the end of devm actions */
+> +	cxl_dport_close_group(dport, no_free_ptr(dport_group));
+> +
+>  	return dport;
+>  }
+>  
+> @@ -1431,11 +1485,7 @@ static void delete_switch_port(struct cxl_port *port)
+>  
+>  static void del_dport(struct cxl_dport *dport)
+>  {
+> -	struct cxl_port *port = dport->port;
+> -
+> -	devm_release_action(&port->dev, cxl_dport_unlink, dport);
+> -	devm_release_action(&port->dev, cxl_dport_remove, dport);
+> -	devm_kfree(&port->dev, dport);
+> +	devres_release_group(dport_to_host(dport), dport);
+>  }
+>  
+>  static void del_dports(struct cxl_port *port)
+
