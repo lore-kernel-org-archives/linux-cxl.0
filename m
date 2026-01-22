@@ -1,70 +1,112 @@
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013068.outbound.protection.outlook.com [40.107.201.68])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E559438886E;
-	Thu, 22 Jan 2026 19:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF94337B9A;
+	Thu, 22 Jan 2026 19:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769111060; cv=fail; b=TUoyvR8lNqgX7b43+G+ZbFBml45+NSB/TJO9zrAxD4y79WMduswC1mC1+ZxYKMccbuz1vStGXKJVAaRQpT0mwsOHCItio3vj3bsFnpzhysmj9AbBTcdvVKvghOgvQBBhGXRfCvNckeS7PyiemrNLGhXsq8ClvK8HC9BbZZf2YQc=
+	t=1769111192; cv=fail; b=NGsftG6k4esOyvMbBJHXCPtarNz7+huCy3rsxmI+QC/5cl4Kz/TPTq8e7nd/4ssMnej1qY75p1iqVWqsGAsTDLKvH2TR4hJwjOuBlFlAoDvA5vyusX7rYtdNsbSGYt5bTtfsQiE1pz/DRTC2RdUeUTvLvabC5KwneiRyrzvVe+g=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769111060; c=relaxed/simple;
-	bh=HmLK4b1LugfydVaxj3JTVHcjRjBQ0r6rRYJ5d0dGbY0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Y046Sd1r9CNe/JWHK1UPRJ5aJA/lS+al/WJM+MFwTQMQQmmJjOfBw4Oqgl3+ZP4r0fMHGSA9QHm6qwd4c08uKMZL79lJtDnf5CIk1zAA80K8jP0PU9pxYuV9+j/i+jHDCzfNeMmnGoxS4TXPch9gCv5SzUs7rWdlVMEqRqVB8bU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TULA89xv; arc=fail smtp.client-ip=40.107.201.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1769111192; c=relaxed/simple;
+	bh=owF4gU4elaCKD7lupaMRi1+ifVl5cFP0igirvVkcK5M=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=tNhh+RmGSLuYx2HoQ4fqCOqbN8iUUNwasOxtfE3fW2ERyW0qagRdRm4h5puQYpOAoEBZotUg3GcdmAKz0wRTX+74D/bv6M88SrGrHeyDZMMeFuAkEk6DhH6gPYa4UwhxIFIXeBzNpLCnh3WLX7HO5wbUYykQtOoc68007IpoWG4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IUDNwf/K; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TULA89xv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IUDNwf/K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769111186; x=1800647186;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=owF4gU4elaCKD7lupaMRi1+ifVl5cFP0igirvVkcK5M=;
+  b=IUDNwf/KQ3DTq3doitfz+Hhx1b4oFq0mPkkmraZ6jtDrChwnV/FmhOx1
+   yT7mqAAk5TjGQFflVBzx6TutPVH7acA8ZxoP4WkxkGazGZWQsltYsNotg
+   vHSh0sjWL7hT0MDIE/1wu1IPZF/3unawrQl7udrEcWBlFRv1L/vQQQIgJ
+   g2a86/JXfZUXApDSaEzwuZEYN46inC2sy11Bxd9soJpShGwJm4TKuSZ0D
+   01REj9c3pduVDVuwyx4HsCswXdmUyaAoqAXe2l0q3dhZr5oTm6H9igX0d
+   VzTtMahmwqZ9l6K8aWpis7YjTeixXVjz/UfIlrodQ1/ctEq3DnaG7BWtI
+   Q==;
+X-CSE-ConnectionGUID: ShGNo7UaQ06K4exUILavlA==
+X-CSE-MsgGUID: RavwJ/6DRSW33KyzeQFL9g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11679"; a="80990337"
+X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
+   d="scan'208";a="80990337"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 11:46:20 -0800
+X-CSE-ConnectionGUID: Jscm2n4BTM6ZpCH7V6MHFg==
+X-CSE-MsgGUID: prGllr40TK2RjzoWgr3W1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
+   d="scan'208";a="207080130"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 11:46:20 -0800
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Thu, 22 Jan 2026 11:46:19 -0800
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35 via Frontend Transport; Thu, 22 Jan 2026 11:46:19 -0800
+Received: from BL2PR02CU003.outbound.protection.outlook.com (52.101.52.26) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Thu, 22 Jan 2026 11:46:18 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YLJUcu6mJXTdTymmBG8r1hFP6eEveOfAjrOQCNyc8rJuLqBITIoTonzZFg6r3rpMbQYl/xtw62uUI/ACc+1VTlCUuTjiYfc+rQwZPP+x1dS2EdUJPGUDGucmdEHwoKqjrTucr3LlPxeeqG9IABanKoRt3eNSRh1a9dDtVtq5utj5hX+zUBOGZ175jIT+Qo80utu/JjspU4RYEZLxW2deLZmQRbF4rGVfQDoFalHcx/G/4ToNCgvT5gPdqJfJPoiwd0sfY3eEV4gLhObXRMM71MifpmIhcgea1a7WdhKAvNmw87MHBABIwtktQXyaMzDglJjXocVqIJMyCLcP1L8/4g==
+ b=cv8nqhO0o8/OFm55Vso1KideXnSuwW2TJYf7W2zJ34khBu8sqSn53VPUyOt/SWliNKYK6RyR6W5jxZ7rqZb2hsMXz23At8DI3xIQreGJCP5EzbiCWEAh5/5hlenKs8+vSdB0OOHSABPpk9LvKOefzCze2WGz1GtZejLBcCPNygR968No32vKV3PguD7aFtfPqBeKTPuWU/9jRMd5Mw0uBSI0bvT2rIGy9bJekZ0BGGdxclntjGMSoofLIxcd8s0GvjOwpTWzGxAYPQPztrNRs66w5Np/E0E7KHOensjc5McC390SpF4eauO5aLpv/jkqmojBRPlgQtRFn+akJCBoUQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C3tUgyKHjzNuW9Tn+rGRVrsfWlA9avLRKhBckncfBh4=;
- b=xA458CvNkBK5vLpLwoq654J6deXIX4n9C6w4ULtLkHoGbAAnMLMbFqTvvU88H40cx6sELqdtntF3wcFITHDOSxmXTTHJUKoe85G/WyUpy9MQ0K4y040MFEfFXpqlRmJQG7cJIF1kSgSI7+CmcxXDb5cTpxo0dGZT8XeDPHZZHYLAztuDirauIU5cU6lDruuDeP2mMxu3JtJ4FeGZz47as21RGdxD52h5Xx7S4SvhOpMENMNltaYcQ1Ae6h6YfRsolzwEK0M2ZkCYxaRiYbbPcPXSOhM9zYpylYQCOBnKHyfX2Akl+qx3JzDQ8FPQrtl/hUcTMGIM4faPFX0VJwv5RQ==
+ bh=KpxL4jASNYd7ROdFDAU8TdZT8uvMJWPVA+klQo2FTzg=;
+ b=ZDDjLmpmrhuFJaLzRnVhoiiOuafo3BUo66srgS57Zf0iaQ7kG+x8g0aqfPQeOV316++g6G+5yP5ewUH5Y43cb17OTPqSbmZKxZ+NUMX/q6QGaWkqdntCXOXh/iChX/bo35GLR6Re6GJ1oIj7hSjNUjWvstO+km9K14UxFIlF03b23R1iqNVS/Ql+Xe84irJgBxN8v5SJln0zrZYZvPkqMD94EGtpyOTFcysvtzipS4Sst/XVyNOlpVbyyEadgTIQ79LE793moeEOvyDeRoHevnxx+GdFdEH2W6EgLNh2olAZmI1Xt5KAmb/Vwk7U4UiTVPi64U4oafK2+hWpXJKVLA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C3tUgyKHjzNuW9Tn+rGRVrsfWlA9avLRKhBckncfBh4=;
- b=TULA89xvgyVnhfaBhoJAkSgwqP9ekzWUjczX70JItIO7BvqVADVno2ZgaY0GwJHFBicoI2N9gYubYOAgmtwaHghhzaAEBumknB49EujXmAeV4Xi0U/xpv3qcSjtPNeRroCbkvOS6teWCOiuyiv0/0ISn2sz0vundZADymAN+jzw=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH8PR12MB9766.namprd12.prod.outlook.com (2603:10b6:610:2b6::10)
- by DM6PR12MB4314.namprd12.prod.outlook.com (2603:10b6:5:211::22) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CYXPR11MB8755.namprd11.prod.outlook.com (2603:10b6:930:e3::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.11; Thu, 22 Jan
- 2026 19:44:02 +0000
-Received: from CH8PR12MB9766.namprd12.prod.outlook.com
- ([fe80::499:541e:a7d8:8c14]) by CH8PR12MB9766.namprd12.prod.outlook.com
- ([fe80::499:541e:a7d8:8c14%5]) with mapi id 15.20.9542.009; Thu, 22 Jan 2026
- 19:44:02 +0000
-Message-ID: <2bf71813-0e9b-4cb2-bf2c-44081b000bb5@amd.com>
-Date: Thu, 22 Jan 2026 13:43:11 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 01/34] PCI: Move CXL DVSEC definitions into
- uapi/linux/pci_regs.h
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
- shiju.jose@huawei.com, ming.li@zohomail.com,
- Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
- dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
- lukas@wunner.de, Benjamin.Cheatham@amd.com,
- sathyanarayanan.kuppuswamy@linux.intel.com, linux-cxl@vger.kernel.org,
- vishal.l.verma@intel.com, alucerop@amd.com, ira.weiny@intel.com,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20260122185847.GA36294@bhelgaas>
-Content-Language: en-US
-From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <20260122185847.GA36294@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.10; Thu, 22 Jan
+ 2026 19:46:10 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff%6]) with mapi id 15.20.9542.008; Thu, 22 Jan 2026
+ 19:46:07 +0000
+From: <dan.j.williams@intel.com>
+Date: Thu, 22 Jan 2026 11:46:05 -0800
+To: Jason Gunthorpe <jgg@nvidia.com>, <dan.j.williams@intel.com>
+CC: Jonathan Cameron <jonathan.cameron@huawei.com>, "Tian, Kevin"
+	<kevin.tian@intel.com>, Nicolin Chen <nicolinc@nvidia.com>, "will@kernel.org"
+	<will@kernel.org>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "joro@8bytes.org"
+	<joro@8bytes.org>, "praan@google.com" <praan@google.com>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+	"miko.lenczewski@arm.com" <miko.lenczewski@arm.com>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Message-ID: <69727e7ded712_3095100ab@dwillia2-mobl4.notmuch>
+In-Reply-To: <20260122131432.GJ1134360@nvidia.com>
+References: <cover.1768624180.git.nicolinc@nvidia.com>
+ <d1768bb6384050a23769f20ca28216f520f77e26.1768624181.git.nicolinc@nvidia.com>
+ <BL1PR11MB5271F0BDC68C2D7F172122E98C96A@BL1PR11MB5271.namprd11.prod.outlook.com>
+ <20260121100307.00004e60@huawei.com>
+ <20260121130315.GE1134360@nvidia.com>
+ <6971b9406d069_1d33100df@dwillia2-mobl4.notmuch>
+ <20260122131432.GJ1134360@nvidia.com>
+Subject: Re: [PATCH RFCv1 1/3] PCI: Allow ATS to be always on for CXL.cache
+ capable devices
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0079.namprd13.prod.outlook.com
- (2603:10b6:806:23::24) To CH8PR12MB9766.namprd12.prod.outlook.com
- (2603:10b6:610:2b6::10)
+X-ClientProxiedBy: SJ0PR05CA0131.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d::16) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -72,306 +114,176 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH8PR12MB9766:EE_|DM6PR12MB4314:EE_
-X-MS-Office365-Filtering-Correlation-Id: 91efd03a-a421-4d0b-3047-08de59ee97f3
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CYXPR11MB8755:EE_
+X-MS-Office365-Filtering-Correlation-Id: ce3af05c-4a19-407d-780b-08de59eee2d9
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SU9ORG9icTd6VWZMVTlIMGxvNFFiYTZic09HbHE3a0liSzh0NmVFM2RkYjBo?=
- =?utf-8?B?R3RXd0o5TkFXWkJjK1FwNHVDME5SZE5LbDdTNUlrME1iQmw4UjE2RWJOTkx4?=
- =?utf-8?B?RFpWRlpWYnVRZ2wzcGNpRkovUkdlVDhuNjFFSDBuMHRucnBuaUR0OXdnSW1u?=
- =?utf-8?B?OS9Zdy9KeGttRW5lRGx0V0dhNWdlNU1aUWlEeEpiMWN1TEJudGxjUUJtczB6?=
- =?utf-8?B?M2dYWll5UmIzSW5Idi81cHpua1AyN3lKc3FJcGNXUHNEZDlVMFg3c3IvNFl2?=
- =?utf-8?B?WDJ4Vy9TekFLRFhEMjRWQUpaSEtWd2tQU3hVR2t5aTJOdk43YmVVUEM3RG1L?=
- =?utf-8?B?N3BUU2JpelhqK0VGa2JvR0daWEU0Vm1pZkxxL3plZkJuMzl5N09CMVpyTUN5?=
- =?utf-8?B?N0JvNUpHWG8rS1RGTVZqL0ZibEludlJnSU9iY0ZHYnZwTXF5Uml2bFp3Qjh6?=
- =?utf-8?B?bjdvMlpXV2wxMFkvRytzeVNKa09sRDk0WHZXcUY4eUpsSGxXcU82ZUZmUDAx?=
- =?utf-8?B?MHNibFdXaHo0VlhScG0vUlFKa1RCWTByNENRc0lZOXF3OCtTSEt5T1hNSkZV?=
- =?utf-8?B?V1JaWVQ1WlUzWktFKzF0ekxIZTg4MUtMTHZjOFNKK1lKUjRVZWllNEREb2lu?=
- =?utf-8?B?bEczU3hlaXAybFE2TkNIako3NkhOUW1jK29Sc3lrMDhzVG8rb3JobmZaazdE?=
- =?utf-8?B?R0FFeGxvV1RuSGQrUFJaSXdxM2tGY3ZrOVJBd2NjQktBUVFYZDRTTUxnMUZt?=
- =?utf-8?B?NVhzcHdvYjhUY3AwUzl5aFZxTnJCaGV6YnQ5dkpBL21vM3VKTEpHdzM2Wnlq?=
- =?utf-8?B?TjZtTmdDRXFYWThTZVZpRURUcUg2dWt2RFU5bFA5a2M0VUxHUjZOc0RjbHFr?=
- =?utf-8?B?WkV0a2hvMWVpL3YwZjF6clZoSm9KN0tHcFNUK1RlVXJaMkR3bHJSWSt5M2lv?=
- =?utf-8?B?RGtLcnlJTC9lT1psUFJvK1pvbjlPT0oyUm1BT1dJK2wxOHhoMkpPM2lSY2VO?=
- =?utf-8?B?YVpUSmZBR3loTzE0aDRtWXdJbnp6OWdnQUVUYnMxbE9LOEdKbTUxZi82WDdq?=
- =?utf-8?B?ejJ5YWhCVTF0a3NRSFZacHpCTGZBRkc3bXVpZy9sZVBNMytTejQ4MWMySW1I?=
- =?utf-8?B?dGhkbWxoeUR2TW8xQ3YrUDB3R2RoNFFTTkhEU2xpOGZIUlBNemY5eU1xTzJx?=
- =?utf-8?B?akxuNm5QL2NlQnVBSkY0dzhlc3JaMGVWOXBtWGJLR3NxRVg5UXNhUkNKT2Nx?=
- =?utf-8?B?OW5GR1I4NGJzN0sxR1VFb1RDMGFic1dTa2ROWFFYTmZZWkZqMTZ0T1FMeFg2?=
- =?utf-8?B?Q1Z6bzFqbi90cExHNGNKYy9RbThtcFVnWHFsRmx2SHBPYmM1Ty9CNktYQ3FI?=
- =?utf-8?B?ZTUydEtXTWZuNHNQMjBwWi9obmY5NkxQRDNhb3BISDdNUElwcnJ3REFQeEFq?=
- =?utf-8?B?L0dFNWFzSGRndjBCTWRTbFFWL0c5MXpkNEFYcXVia2tnTXRpWllkTkxzbFhZ?=
- =?utf-8?B?V2taYkkrdzBDcWRONGtqazNRazBoSmJZUUptbDB5YXc3eDZJeTNPcVRkMkJh?=
- =?utf-8?B?SUZBZHV6RzRIY1NPand1WHl6MWp0ek52RE5zNktzMUhQU2lkMWJqclpUeUJH?=
- =?utf-8?B?bXF1eDlsZThLM2ZIWkhPZm0xOFpHVlp2cDQvRW9ZVTBMSDc2MFNoVnl1dXdw?=
- =?utf-8?B?eERnWmV1TWpCQkhPcDFRM2FLWTZRQ1FNeEExdVNlN3cya29MTlZoYkQyMlEv?=
- =?utf-8?B?MWlITEN4Qms0eWJNL1hreWpCVEFLbi8wQUFRaVdLcEYvWWYwa010VTkxTm00?=
- =?utf-8?B?Ynkwc3IxcC9UcE5oNVJ0bUthTCsrdms1NGpBeHpBaG1XeUdwSFFDbkI1REFo?=
- =?utf-8?B?Y0YxU3FheWdnaGRhSjhTcG1zTlhteTRBM0ZmYS9wdDZqOTdyUmN6Mmo0cUt2?=
- =?utf-8?B?SGhtMTZjTjZ3RE1SeHNtc2R1a0NRcDg3aTV4aU9mNEpXZ3FPNXF3bmZ3YTc1?=
- =?utf-8?B?SklsV3lpSjVLRFNta2EyUk8vcGpVMkhpWk9uWFFUSXBUUmlqQi9LcFZaOGJO?=
- =?utf-8?B?VVFaSUZTVXpERnlxTm4zcTdTYnF0UENtQTFMcEdUUTB2NDAwNWttaUZ6TDJP?=
- =?utf-8?Q?oW/A=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH8PR12MB9766.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?S3I1ejR4eUcwck5vTm1ENkw5VnBPMXJXTTE5aGI4ejkzN1ZtK3Jlc2xaM0dH?=
+ =?utf-8?B?V3U0b3ZCRmNqT1N3dmlvZEsybmlxTDFDMzRhZ1dmcHJqYWxMTHJaaVFVcnh3?=
+ =?utf-8?B?M1o1UU10aVhrUlBYb0p0VlZCYzZBc0V0Z0ErMEgwOEtiNCtSUEhFSklMcTZ5?=
+ =?utf-8?B?VGNJaWk2WnJXK0ZmZHJ1SGd4R1lDNkhrVGRXTDFRT2NmK04waTBOdzIvQVIx?=
+ =?utf-8?B?UnA0M0hMSXE1U2RtMWVlK3MvZTFSNlM3Z1gvZjl6dThqK1VOdkp0eis2eHIv?=
+ =?utf-8?B?b3JBbHQ0TkZIVExoM1RIMlgyUmNqWGNWOEQ0WTZtelU1bWlISFhQVkZwS2JV?=
+ =?utf-8?B?MnJrazVLNWtBRG5wdVVyUVB6ZTJ5MllUdHNxcXQrUWVVRDVua1k2V0orN0N6?=
+ =?utf-8?B?cDJNdENvUUJuZkIwN0h2THR0Sy9DQncxaE8xYU83RHMzNVU3Rms1MWFrU2dO?=
+ =?utf-8?B?UWVzeW1OZHVacXZ5TGxCOXVFMFBmRlJ4N0N5Z0s4N0pPNzVWREY2TUhEcGlN?=
+ =?utf-8?B?VzZvOHo3STVvd3RKV09VUUZtRlBIVkM4Rk9PWVd0cU9xa25xcDZHYjM0RUVj?=
+ =?utf-8?B?OFFKRkhhOXVSYkY3cHhVMDk2MkRoOUYzclhuaFNEeFRCSXpUeDcwZlZOd3BE?=
+ =?utf-8?B?UlIyTUFFWDcxd1EvUlNjc2M2VVNuWFRYWVhSSTBEdmg3aVlETkV0VXprZ2pG?=
+ =?utf-8?B?V2NBRWRNQ1BZZWh0Q3RsUUFVZzlaY3NHN2pYWTIxRnRveDN0cVZkbklpbCs3?=
+ =?utf-8?B?aE9KNjVOR1JKM3BTdU8zcHZUUG1aRUFIMm1nUlBNeUp1T2hwbUJaMFBxenNo?=
+ =?utf-8?B?Q0VyZHJqVzNLbDlWdlFITnRFaEY3SnM4RTdmSWNhcFZrVXJnS2dEN2tjdlVM?=
+ =?utf-8?B?cms1VkIrLzNpWTZXdWFBU2RBWU9WNjQ4d3NrRUs3dFFxTnJ4UEY4T2w2b3pq?=
+ =?utf-8?B?U0MzeWhFZUVXOW5Iamc2czFIY0crcC8rRnAxTmFNZzFFWXFvRmlxNkNTOTJw?=
+ =?utf-8?B?ckJsalpTR1JyZUpNbHQ3Zm5LT2VhYmlTdmZhb1E4R1pqU1ZMbCtJaXdKaVRl?=
+ =?utf-8?B?K2hhVFU1aWJEdk9zSUYwVmc3bjRKY1lYaFVUUlNoRjBrS2wyZWxSV2lyK0Ny?=
+ =?utf-8?B?c0FwREFHQVJuQ0xMOEdiVDA0SjNJL2xybGpJdHV1MEU5U0pETXFrSFVNenpo?=
+ =?utf-8?B?SkZrbDR4WklCR3QybG8xc2M2N0NJeGdkM2hmZU84Mkk3RU1XUUVTMExESXp5?=
+ =?utf-8?B?ckZyZEpUOC9lUUpTZWVVYWRTdnpGdmZlSHlmZW56VXdwMXVqVzdjbEM2U1k0?=
+ =?utf-8?B?MlJnVEVNS0dMcVlvSEVtYUxxbGlMZVpLcFFQU2orM1MrMXg5YXFYYUNFcXh3?=
+ =?utf-8?B?NGtOUTg1S0RXWjJ5R0pOdGxNeVE4d0pUWjJmU0NQUy8ydlltQzNKT24ybmUw?=
+ =?utf-8?B?VlhuSVlOZHNKcHp5YjZpOEtnUkFldDZqMTVDMklRUHNkcVZEYW80djdmNDRH?=
+ =?utf-8?B?UnpPQmUyZ2RYN3A5NHlhdXBRYkpRVUl2VElrRHMyOWx1bUI4bGQwV2JtNXZ2?=
+ =?utf-8?B?T2grLzRqZWRaa1pPQzdGSUpaSzB4Y1M1Q2l5bHg0TnpDa3pMSWNNQkFBSko0?=
+ =?utf-8?B?OEtJZ0kzeWpYZkhINUF1b3EwdWcrNVJFc0pyZmkzcGVta1NsOGFPOERaMWNx?=
+ =?utf-8?B?SE83MzBFS0h4UENXOTM2eHFWdHhTVHlGKzNaZ1hxdklLUU95eTM3Z1JaaU1G?=
+ =?utf-8?B?T2hUUTJOYWtxenQ0S1VBUlllK0dwTkZWWnErUkUrcFVycU1CMzRGMTVxZVhL?=
+ =?utf-8?B?dFp6K2dNbEQ4MWxFYjJNS3RiZDdXN0MzSE9wTFRiM09OVnlMcFVjcjFpbG11?=
+ =?utf-8?B?SUV3Mmx2aHVoTEtrazE3di80QzB2RmpvZS9SVWFJQWxuL2t3L1ltUFluVSta?=
+ =?utf-8?B?b2U2ZEhCUkxyR0JaZlpSRG9wK2hyTkJpWXJXR3djb3dSTUpwZ2sxVHV2ZFNv?=
+ =?utf-8?B?clFhdU5DZkhuSnhRZFpia1gvUjJDc084SUxzMndIS0ZYVW56c3Rwb2RBcWcv?=
+ =?utf-8?B?cnQ2aVIxQmZoNzlFdEs1U3ZZa0FHb0VVT1J2Mmk5NzNsZStSbG1lUW84TjBq?=
+ =?utf-8?Q?45T4=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?N0V3MmJPMTJCVUZFVUhLTWxuNk1IYk9VSnRKbHZKVW5iYVFybWNxOUtDRHRK?=
- =?utf-8?B?dXprNUMxU2tkVWJDajJteTg5ZUI1Z0gzNTNROU1jVGpLZlN6WXhWUG8vZWhI?=
- =?utf-8?B?UkdKT2QycjloRUdSQ1lTQWZrQnRWSHJScGp1T05VMDkwS2FCRDNaZU43c1By?=
- =?utf-8?B?MERqT1ppeGpJdUxDeC9sK0FQZENFRGZTUFh1QUtDTHRYczJMSHEza3NmcHJE?=
- =?utf-8?B?azdZblVWZTVvS0p0MU9vb0UxRFJ5NjdrYXl1dzdOV0w4dmlXVFYxUUJQYnZI?=
- =?utf-8?B?VWNCbjcvT05lQVVxNFhCTkRkQzQzYVhyNEo1Q1YrRE9VcUZBS1BTZGFQd1dB?=
- =?utf-8?B?dHpkc2pCU0JJWThlNlBZbUNmNWpRWlg5aG0vdG14Q3pjbmF1d3VJaVBVQjVt?=
- =?utf-8?B?OGwzTSsvL3JKejN4SlU1bnlEQ05FN1Eva045aDFjT0kvUVZZSllKaVVwMk45?=
- =?utf-8?B?d0hjb3BXcmFqNWdHNUw4c0VWQVUyMklBYkI5ZDdGUU1OcVdhQ0kyNGh6UXZW?=
- =?utf-8?B?SklQV056bjU2Y2pMSDBrTHl0VWxseTMxWGtMRThGN0JVR3M3OTBRWUZqUk8x?=
- =?utf-8?B?VG5FVENDZHk3R3ZnbTE1RWVYalZnN0pEaTkyVXZKUkVOL21VaWF5a1BXc200?=
- =?utf-8?B?aGhJYjRiaDVkWU0yME1NS1pQN0Vrazd6VFZtUDJlbS9WUG5kd2ViOHR1ZE1Y?=
- =?utf-8?B?anFPaHFzRVphWi9UaG5WQ3lxcFBiMlE0dWl1QnB6elNNaUFmODFld25Namcz?=
- =?utf-8?B?elIvZXB4Qkdzd2RzVS90a1dTOW9HRjlMZFpHd3QwcXlIRlJvTDF3c1ErUkFS?=
- =?utf-8?B?TjV0SmhiMXVuTHZmVFo4ckMzWmV6ZHVkbWJzMmNTM0IyWFEzR1MveHdHVXp4?=
- =?utf-8?B?V2dhYXAvVUFReHY4NWpUUldkdzErZjcreHdBQ2xVRFB4SkppdG5uSTFDZFVC?=
- =?utf-8?B?WFpBSCtHVDNvUWwvcFNENExTTGNIelkzOEc5ZC90aDQrMUpyQkNGMEIvRVhS?=
- =?utf-8?B?YlJVWEtpOE9ZbVg2citsUFo0aVl3TzdFWllWNExTNE44WTRCMTg3NXdFeVpX?=
- =?utf-8?B?Uk00ajEwRG01R0JTUUdpMUMxUCtYa3l2L0c0OUJUNlAvODA0dUd5SWthTU9q?=
- =?utf-8?B?OXZqRUpkS2w0M1ZvYXNkN2Y1T2RWcjVtR3dQVktvNENXYVBqZjZJQWY4aEk1?=
- =?utf-8?B?RkVycGdoMUkzVVpIalU0SFhyby93SGhxS2g5Vm4wNEJNcnoxbGNHM3ViMmtJ?=
- =?utf-8?B?UmNkYlR3ZU1xcXBZOVA4eU1lSDNZdG9DTTM2T2c3YkluRDhEc0svbkw5Y0NN?=
- =?utf-8?B?RENGelpGWk1jOXhaZVFXOFZrbmplS28wdHhidnB5aytBdkhWOXZYQklUWE9I?=
- =?utf-8?B?VFAwaE5iOE5iY09kcWoxSGkwVHNqRTR5QnpiNStDbmY5RUx2T01xVHdXZ2dG?=
- =?utf-8?B?RTFGY0RCRExkcm42Zk1JcXYxVHlXNUdCRUhmeXNSWEdpak5Remo0QWFWaWxj?=
- =?utf-8?B?UHFxODEzdC9FenN5bzFmZm5Dc0kzdWtzTDhvZ1BJOTNXanNaSHFGandCZlVD?=
- =?utf-8?B?NkdNYnltQTRHUmRkakp4UTJiM0ZEUnc5UE9aMVNzVkxCU2JtTnhSOXlqQlpq?=
- =?utf-8?B?UlRWeWdrOThzYUpjeS9YeUZ1QkJTOVovMEFjUGw0NUVVMFhwN0g5ZWNDc3VK?=
- =?utf-8?B?THM2a3FveHNCSEt5ZEpSbzVub1NMaU41TUpTb1JlVklmZ3dpNUNrVlQwYXh6?=
- =?utf-8?B?MUY4b25DV0tOZWd4NGtxbFA0b2pZcEpTQjNkREJhMjJLNnhyQy9mZHhQZkF2?=
- =?utf-8?B?ejRPMGhWMThmN1lCci9iUy94Nk5pTFFyVnRwaDZGSTlaclpITHRvL0tsVEcr?=
- =?utf-8?B?eWNWQWJ2aEJBUmNJU0VobXFYek9oK0xmeldvT3ZtM2NPZVdrYU52N3dTVzcx?=
- =?utf-8?B?M2VvSXVXK2lISFN3MGVrZXZ6eGlXTzRCNm4rM2NBdXRqTlhJYXlRcWthQnpj?=
- =?utf-8?B?Tm9tdEVnM3ZJUnRqRTd5Sk1pS2pVT2IrMUxFcnRUdzQ3RU8yL2pJaWR2eVZy?=
- =?utf-8?B?R2dDUTVBVmJBOU9YZVNhT3JiUnM3VUt0MGdTUFR1WUJrTFI0NlZybUtUMWdG?=
- =?utf-8?B?WjlHNk1KVVBHdC9ibDJ1eGxRRlA2VDcxcmtxMXBaUW9HNm1tSUV6dFdzUndG?=
- =?utf-8?B?Q3BTdnoweEtVbjBXeHk5WG1GVkJnbTBHUEIwV3JTY0RTeDFlQjdIRzZjZGMv?=
- =?utf-8?B?aUhCeEdjcitGSXJXZDhMcmVraG9SY3NkZTZySzV3OGQ5MklpNldrYlNoaHJY?=
- =?utf-8?B?djBCOWpBN21IcDAyaThTejBOWERmWkQ4eEZnQkRNVGdQSHkwU2Ftdz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91efd03a-a421-4d0b-3047-08de59ee97f3
-X-MS-Exchange-CrossTenant-AuthSource: CH8PR12MB9766.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WFhRejdIbmFPUmRWVjdTSG5lL0VTM2N2ekJ2MWVzNko0TUZIUnpORXJwdmFB?=
+ =?utf-8?B?UmNXb01BZHFtSW96WVRBS2dwbWR3SnpIQW5FS1B6TG00dWdZQ2dteEtsNjAy?=
+ =?utf-8?B?OXo1THIvOFpKdE1BWloxaWxCVmFhL2Q3aTlkWUhhRmcvNndFWFEyT2ZCVnFw?=
+ =?utf-8?B?SUNIYk5GM2lwWkhXRm5wT1lhRTF2RC9OSVJCYWh0Q0NpTHd5UU92bGl3Tmd6?=
+ =?utf-8?B?UlBsbVlaa2plUHZ1UGJRbFYraTVKSHpCblVPREhmNDhLc2dMUnRON3VmSVE2?=
+ =?utf-8?B?MmNtNURrN0FCZUg0WXBhN2krTytIYWZDY0dGUXNhTXNQV2NZeUQ4SnJYbkt5?=
+ =?utf-8?B?eGQvVEx0SHVUVnFEay9XNFZyRmo4ZTZYZHFZUzlFNnVGWFNYVVlDV2hseERl?=
+ =?utf-8?B?V3Z5S1d4dzM4SWYzWVhrQUs4RFVreWIzRll6OHJRckt5eTQwKzNVMzdPWXJR?=
+ =?utf-8?B?blY1Rk1tY3pydTlQSWNlVjRiM2xBMlJNajFSZEFTOU00aXJza3BHRVdhZW0z?=
+ =?utf-8?B?OStqNWcvMXVhVitwdmRwOUJYWjN6L3hpc0ttYW4yVGdWb0dDWEorbUJqc0l3?=
+ =?utf-8?B?UHh2c0dnMUFrMms1cnJpaUdBRVFMNmZKM0lxL3c0bE9UT2xLeHZnWW03akNi?=
+ =?utf-8?B?Qm9QSGozRHlBSlhJNG9EL045VjFJbnAyYjg1Y0lBdFpNb0V0NVVQT0dLQXBN?=
+ =?utf-8?B?QzJTQUR1SlZRc25NcElpM2hteFB4bFRXZENBa244OHErSTA0cXdWalRIZmkx?=
+ =?utf-8?B?RkRmcVB0WVJEYnRZMFpNYW1FSUxSRGIycnMrVzlTbWxRK01OaStvM1d1TjEy?=
+ =?utf-8?B?cWQwOHNRKzV5RkhXcHZGbUJRSEZtK3A4Q0dvb3A1Q2ZuWlVKK2pYVXhrdnp3?=
+ =?utf-8?B?aEFFWDN6SVdaUmt5cUpnUDcwUVRxbmsxQVpSMzVMejJ1amlOWFJhZ1Z4REVN?=
+ =?utf-8?B?ZFpDTFMrSHdmdEVxcGxKT0MyZDNtdDhNZGpkMzFnTHdsSDhOY3Bvc0x3VHFB?=
+ =?utf-8?B?MTdYWEhSMi8xZ1g4amVoMWZZYU9HYTlwNHBmalpBQVd2QUJQNlJHUGpBUnBr?=
+ =?utf-8?B?MGpYcVZ5SnZkSnNvUWpMOUVKMHdRUDJjTmZ6VkRSbFRvUlk3MnAycW5UbVRJ?=
+ =?utf-8?B?RWtOZFhrNENlUjltbCtqQTRSNmFEdWFsYzZUNUlCM2tKNUFCdm1qWEExSUJF?=
+ =?utf-8?B?cUwzZ21vdkprQVNkZldVMnFXQ1FlanJSeXZOekdkc0IwL1h0L3VhTW9kS0lR?=
+ =?utf-8?B?K2FaamFsaUZYbE9aY1dtODEzTFBxT2JGeDltN3lWcUdOc0tWWVpTNlkxTFY0?=
+ =?utf-8?B?eEtFMXVkakNLU05KemdrS3EvRFlSak9uNmxybFdweUQ0NEthSmJ6RWk5Tm1H?=
+ =?utf-8?B?Y0NNcjVoTHZtcGNiNmR2dVltY2FRT3BMa3RISFptbU5kQy9TWmNpaTVQUWFY?=
+ =?utf-8?B?Q1JaRmRhRWZGSEsyN3IzT09pY084bGpaQzJHL2lockV6cEFYVzdFV0Z1eVc3?=
+ =?utf-8?B?NnlmR3dFRWJ0VTJydkpFNmVEa0sveUJvN1UwRldZT1FJTTh2R2R2U245Q2Rl?=
+ =?utf-8?B?eXJpVUxsSE5xaE1wRjZaOTZ5KzZUdG0rTEYzV3RMSU5vTUo0RVhWMzRwNnF2?=
+ =?utf-8?B?MVhwVWpDVXJCK2hGQTN1U1g4S05Zd0RvbFhvNjdpanFmazB0Um1qbDRBTVM3?=
+ =?utf-8?B?aTFxWWR5RUg3TE9GRjVsSWo5UFVGVWt1ZHdMUjZqRWcwY1dncUo0OEkvWUZp?=
+ =?utf-8?B?MUJ3TGU3R0Z6RHNsZE5sbm5uTlljU0lBcDVPWVVTenEyZjdDYjFjS1NuQVY1?=
+ =?utf-8?B?bmdaUlNPQXEzSUR1N2pBZWk4OFRHWDRoekM0RXpBZmZ2bDdtWkM0U05ybzU4?=
+ =?utf-8?B?aWdRVnY3eDV5MTg2MnA1c1V1dEtCUkR0NWpnM3o0bkZQcC8xRVJKWTR1T0Fh?=
+ =?utf-8?B?SCtDWUpLRm5EcVN2VFZOWW91UENiYWxtcy96eXlPaU1Vb2llcitVRXhxd21t?=
+ =?utf-8?B?eTRsUVV3M0FCaS90Nm1mS2RLdEtkRTk3ck80eTFua2MzQlJuWE43SkNJM0xv?=
+ =?utf-8?B?TGxJYnN1WVNyUDM1ajFid00ydkd6VjRvZ0xuL050YXhaT2ZYUmMxdmVlNzAy?=
+ =?utf-8?B?RVpqdGxZTkxTNDF3RlloVkIyRWxPWExqVlRVR2F0eUxvOVc0eXMxdjRmMks0?=
+ =?utf-8?B?S2FLMUt5aG8xdDZmKzBYNHJkTmZWZ3hXeVI5R05TaVoyVTFCOXdXdGl4c21v?=
+ =?utf-8?B?R1lMWk1WeXFDZzlnU241azgxUyszNmM4cXJGTTlrVU1PTXBPdURrRjVnK0sr?=
+ =?utf-8?B?T2R3Si93UUltU2JGMHVHMjVMUlJKVGVqUUlzcWQzbldRcVhWRG8zTkp3cHRN?=
+ =?utf-8?Q?7EbRVqC7QNn0XHfQ=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce3af05c-4a19-407d-780b-08de59eee2d9
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2026 19:44:02.0876
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2026 19:46:07.7460
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KMLuM3uWpo+X0myP85sAp+fp7CK0ZbBZGfrbEonnj905YBRC7N+O8D+xL6mBgCJNiaW3X0llSzhD+m/WOsNCrg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4314
+X-MS-Exchange-CrossTenant-UserPrincipalName: lv9pN4RIlZajdGMmZ6/KgcKokuynJkMv0NCoXfLMLLU6u3216w/OqFFq+lC2Z6feyefl7PPE6ySi894EHdwHnsAv5UrJGHID/BT0dL8veJk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR11MB8755
+X-OriginatorOrg: intel.com
 
-On 1/22/2026 12:58 PM, Bjorn Helgaas wrote:
-> On Wed, Jan 14, 2026 at 12:20:22PM -0600, Terry Bowman wrote:
->> The CXL DVSECs are currently defined in cxl/core/cxlpci.h. These are not
->> accessible to other subsystems. Move these to uapi/linux/pci_regs.h.
+Jason Gunthorpe wrote:
+> On Wed, Jan 21, 2026 at 09:44:32PM -0800, dan.j.williams@intel.com wrote:
+> > Jason Gunthorpe wrote:
+> > > On Wed, Jan 21, 2026 at 10:03:07AM +0000, Jonathan Cameron wrote:
+> > > > On Wed, 21 Jan 2026 08:01:36 +0000
+> > > > "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> > > > 
+> > > > > +Dan. I recalled an offline discussion in which he raised concern on
+> > > > > having the kernel blindly enable ATS for cxl.cache device instead of
+> > > > > creating a knob for admin to configure from userspace (in case
+> > > > > security is viewed more important than functionality, upon allowing
+> > > > > DMA to read data out of CPU caches)...
+> > > > > 
+> > > > 
+> > > > +CC Linux-cxl
+> > > 
+> > > A cxl.cache device supporting ATS will automatically enable ATS today
+> > > if the kernel option to enable translation is set.
+> > > 
+> > > Even if the device is marked untrusted by the PCI layer (eg an
+> > > external port).
+> > > 
+> > > Yes this is effectively a security issue, but it is not really a CXL
+> > > specific problem.
+> > 
+> > My contention is that it is a worse or at least different problem in the
+> > CXL case because now you have a new toolkit in an attack that wants to
+> > exfiltrate data from CPU caches.
 > 
-> I'm looking a little bit askance at adding things to
-> uapi/linux/pci_regs.h and then renaming them.  I know it's OCD to
-> worry about that momentary blip, but changes in uapi potentially break
-> userspace.
+> ?? I don't see CXL as meaningfully different than PCI in terms of what
+> data can be accessed with Translated requests. If the IOMMU doesn't
+> block Translated requests the whole systems is open. CXL doesn't make
+> it more open.
+
+Right, the game is mostly over in the current case, but CXL.cache still
+deserves to be treated carefully. Consider a world where we do have limitations
+against requests to HPAs that were never translated for the device.  In that
+scenario the device can help side channel the contents of HPAs it does not
+otherwise have access by messing with aliased lines it does have access.
+
+At a minimum CXL.cache is not improving the security story, so no time like the
+present to put a policy mechanism in place that improves upon the PCI untrusted
+flag.
+
+> > "We have a less than perfect legacy way (PCI untrusted flag) to nod at
+> >  ATS security problems. Let us ignore even that for a new class of
+> >  devices that advertise they can trigger all the old security problems
+> >  plus new ones."
 > 
-> Maybe we could rename them first, then move them to pci_regs.h?
+> Ah, I missed that we are already force disabling ATS in this untrusted
+> case, so we should ensure that continues to be the case here
+> too. Nicolin does it need a change?
 > 
-> Either way:
+> > I do not immediately see what is wrong with requiring userspace policy
+> > opt-in. That naturally gets replaced by installing the device's
+> > certificate (for native PCI CMA), authenticating the device with the
+> > TSM (for PCI IDE), or obviated by secure-ATS if that arrives.
 > 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> I think that goes back to the discussion about not loading drivers
+> before validating the device.
 > 
+> It would also make alot of sense to leave the IOMMU blocking until the
+> driver is loaded for these secure situations. The blocking translation
+> should block ATS too.
+> 
+> Then the flow you are describing will work well:
+> 
+> 1) At pre-boot the IOMMU will block all DMA including Translated.
+> 2) The OS activates the IOMMU driver and keeps blocking.
+> 3) Instead of immediately binding a default domain the IOMMU core
+>    leaves the translation blocking.
+> 4) The OS defers loading the driver to userspace.
+> 5) Userspace measures the device and "accepts" it by loading the
+>    driver
+> 6) IOMMU core attaches a non-blocking default domain and activates ATS
 
-Ok, I'll update the naming before moving.
-
-Thanks for reviewing.
-
--Terry
-
->> The CXL DVSEC definitions will be renamed and reformatted to fit better
->> with existing defines.
->>
->> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
->> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->>
->> ----
->>
->> Changes in v13->v14:
->> - Add Jonathan's and Dan's review-by
->> - Update commit title prefix (Bjorn)
->> - Revert format fix for cxl_sbr_masked() (Jonathan)
->> - Update 'Compute Express Link' comment block (Jonathan)
->> - Move PCI_DVSEC_CXL_FLEXBUS definitions to later patch where
->>   used (Jonathan)
->> - Removed stray change (Bjorn)
->>
->> Changes in v12->v13:
->> - Add Dave Jiang's reviewed-by
->> - Remove changes to existing PCI_DVSEC_CXL_PORT* defines. Update commit
->>   message. (Jonathan)
->>
->> Changes in v11 -> v12:
->> - Change formatting to be same as existing definitions
->> - Change GENMASK() -> __GENMASK() and BIT() to _BITUL()
->>
->> Changes in v10 -> v11:
->> - New commit
->> ---
->>  drivers/cxl/cxlpci.h          | 53 -----------------------------
->>  include/uapi/linux/pci_regs.h | 64 ++++++++++++++++++++++++++++++++---
->>  2 files changed, 59 insertions(+), 58 deletions(-)
->>
->> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
->> index 1d526bea8431..cdb7cf3dbcb4 100644
->> --- a/drivers/cxl/cxlpci.h
->> +++ b/drivers/cxl/cxlpci.h
->> @@ -7,59 +7,6 @@
->>  
->>  #define CXL_MEMORY_PROGIF	0x10
->>  
->> -/*
->> - * See section 8.1 Configuration Space Registers in the CXL 2.0
->> - * Specification. Names are taken straight from the specification with "CXL" and
->> - * "DVSEC" redundancies removed. When obvious, abbreviations may be used.
->> - */
->> -#define PCI_DVSEC_HEADER1_LENGTH_MASK	GENMASK(31, 20)
->> -
->> -/* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
->> -#define CXL_DVSEC_PCIE_DEVICE					0
->> -#define   CXL_DVSEC_CAP_OFFSET		0xA
->> -#define     CXL_DVSEC_MEM_CAPABLE	BIT(2)
->> -#define     CXL_DVSEC_HDM_COUNT_MASK	GENMASK(5, 4)
->> -#define   CXL_DVSEC_CTRL_OFFSET		0xC
->> -#define     CXL_DVSEC_MEM_ENABLE	BIT(2)
->> -#define   CXL_DVSEC_RANGE_SIZE_HIGH(i)	(0x18 + (i * 0x10))
->> -#define   CXL_DVSEC_RANGE_SIZE_LOW(i)	(0x1C + (i * 0x10))
->> -#define     CXL_DVSEC_MEM_INFO_VALID	BIT(0)
->> -#define     CXL_DVSEC_MEM_ACTIVE	BIT(1)
->> -#define     CXL_DVSEC_MEM_SIZE_LOW_MASK	GENMASK(31, 28)
->> -#define   CXL_DVSEC_RANGE_BASE_HIGH(i)	(0x20 + (i * 0x10))
->> -#define   CXL_DVSEC_RANGE_BASE_LOW(i)	(0x24 + (i * 0x10))
->> -#define     CXL_DVSEC_MEM_BASE_LOW_MASK	GENMASK(31, 28)
->> -
->> -#define CXL_DVSEC_RANGE_MAX		2
->> -
->> -/* CXL 2.0 8.1.4: Non-CXL Function Map DVSEC */
->> -#define CXL_DVSEC_FUNCTION_MAP					2
->> -
->> -/* CXL 2.0 8.1.5: CXL 2.0 Extensions DVSEC for Ports */
->> -#define CXL_DVSEC_PORT_EXTENSIONS				3
->> -
->> -/* CXL 2.0 8.1.6: GPF DVSEC for CXL Port */
->> -#define CXL_DVSEC_PORT_GPF					4
->> -#define   CXL_DVSEC_PORT_GPF_PHASE_1_CONTROL_OFFSET		0x0C
->> -#define     CXL_DVSEC_PORT_GPF_PHASE_1_TMO_BASE_MASK		GENMASK(3, 0)
->> -#define     CXL_DVSEC_PORT_GPF_PHASE_1_TMO_SCALE_MASK		GENMASK(11, 8)
->> -#define   CXL_DVSEC_PORT_GPF_PHASE_2_CONTROL_OFFSET		0xE
->> -#define     CXL_DVSEC_PORT_GPF_PHASE_2_TMO_BASE_MASK		GENMASK(3, 0)
->> -#define     CXL_DVSEC_PORT_GPF_PHASE_2_TMO_SCALE_MASK		GENMASK(11, 8)
->> -
->> -/* CXL 2.0 8.1.7: GPF DVSEC for CXL Device */
->> -#define CXL_DVSEC_DEVICE_GPF					5
->> -
->> -/* CXL 2.0 8.1.8: PCIe DVSEC for Flex Bus Port */
->> -#define CXL_DVSEC_PCIE_FLEXBUS_PORT				7
->> -
->> -/* CXL 2.0 8.1.9: Register Locator DVSEC */
->> -#define CXL_DVSEC_REG_LOCATOR					8
->> -#define   CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET			0xC
->> -#define     CXL_DVSEC_REG_LOCATOR_BIR_MASK			GENMASK(2, 0)
->> -#define	    CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK			GENMASK(15, 8)
->> -#define     CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK		GENMASK(31, 16)
->> -
->>  /*
->>   * NOTE: Currently all the functions which are enabled for CXL require their
->>   * vectors to be in the first 16.  Use this as the default max.
->> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
->> index 3add74ae2594..6c4b6f19b18e 100644
->> --- a/include/uapi/linux/pci_regs.h
->> +++ b/include/uapi/linux/pci_regs.h
->> @@ -1253,11 +1253,6 @@
->>  #define PCI_DEV3_STA		0x0c	/* Device 3 Status Register */
->>  #define  PCI_DEV3_STA_SEGMENT	0x8	/* Segment Captured (end-to-end flit-mode detected) */
->>  
->> -/* Compute Express Link (CXL r3.1, sec 8.1.5) */
->> -#define PCI_DVSEC_CXL_PORT				3
->> -#define PCI_DVSEC_CXL_PORT_CTL				0x0c
->> -#define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
->> -
->>  /* Integrity and Data Encryption Extended Capability */
->>  #define PCI_IDE_CAP			0x04
->>  #define  PCI_IDE_CAP_LINK		0x1  /* Link IDE Stream Supported */
->> @@ -1338,4 +1333,63 @@
->>  #define  PCI_IDE_SEL_ADDR_3(x)		(28 + (x) * PCI_IDE_SEL_ADDR_BLOCK_SIZE)
->>  #define PCI_IDE_SEL_BLOCK_SIZE(nr_assoc)  (20 + PCI_IDE_SEL_ADDR_BLOCK_SIZE * (nr_assoc))
->>  
->> +/* Compute Express Link (CXL r3.1, sec 8.1.5) */
->> +#define PCI_DVSEC_CXL_PORT				3
->> +#define PCI_DVSEC_CXL_PORT_CTL				0x0c
->> +#define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
->> +
->> +/*
->> + * Compute Express Link (CXL r3.2, sec 8.1)
->> + *
->> + * Note that CXL DVSEC id 3 and 7 to be ignored when the CXL link state
->> + * is "disconnected" (CXL r3.2, sec 9.12.3). Re-enumerate these
->> + * registers on downstream link-up events.
->> + */
->> +#define PCI_DVSEC_HEADER1_LENGTH_MASK  __GENMASK(31, 20)
->> +
->> +/* CXL 3.2 8.1.3: PCIe DVSEC for CXL Device */
->> +#define CXL_DVSEC_PCIE_DEVICE				0
->> +#define  CXL_DVSEC_CAP_OFFSET				0xA
->> +#define   CXL_DVSEC_MEM_CAPABLE				_BITUL(2)
->> +#define   CXL_DVSEC_HDM_COUNT_MASK			__GENMASK(5, 4)
->> +#define  CXL_DVSEC_CTRL_OFFSET				0xC
->> +#define   CXL_DVSEC_MEM_ENABLE				_BITUL(2)
->> +#define  CXL_DVSEC_RANGE_SIZE_HIGH(i)			(0x18 + (i * 0x10))
->> +#define  CXL_DVSEC_RANGE_SIZE_LOW(i)			(0x1C + (i * 0x10))
->> +#define   CXL_DVSEC_MEM_INFO_VALID			_BITUL(0)
->> +#define   CXL_DVSEC_MEM_ACTIVE				_BITUL(1)
->> +#define   CXL_DVSEC_MEM_SIZE_LOW_MASK			__GENMASK(31, 28)
->> +#define  CXL_DVSEC_RANGE_BASE_HIGH(i)			(0x20 + (i * 0x10))
->> +#define  CXL_DVSEC_RANGE_BASE_LOW(i)			(0x24 + (i * 0x10))
->> +#define   CXL_DVSEC_MEM_BASE_LOW_MASK			__GENMASK(31, 28)
->> +
->> +#define CXL_DVSEC_RANGE_MAX				2
->> +
->> +/* CXL 3.2 8.1.4: Non-CXL Function Map DVSEC */
->> +#define CXL_DVSEC_FUNCTION_MAP				2
->> +
->> +/* CXL 3.2 8.1.5: Extensions DVSEC for Ports */
->> +#define CXL_DVSEC_PORT					3
->> +#define   CXL_DVSEC_PORT_CTL				0x0c
->> +#define    CXL_DVSEC_PORT_CTL_UNMASK_SBR		0x00000001
->> +
->> +/* CXL 3.2 8.1.6: GPF DVSEC for CXL Port */
->> +#define CXL_DVSEC_PORT_GPF				4
->> +#define  CXL_DVSEC_PORT_GPF_PHASE_1_CONTROL_OFFSET	0x0C
->> +#define   CXL_DVSEC_PORT_GPF_PHASE_1_TMO_BASE_MASK	__GENMASK(3, 0)
->> +#define   CXL_DVSEC_PORT_GPF_PHASE_1_TMO_SCALE_MASK	__GENMASK(11, 8)
->> +#define  CXL_DVSEC_PORT_GPF_PHASE_2_CONTROL_OFFSET	0xE
->> +#define   CXL_DVSEC_PORT_GPF_PHASE_2_TMO_BASE_MASK	__GENMASK(3, 0)
->> +#define   CXL_DVSEC_PORT_GPF_PHASE_2_TMO_SCALE_MASK	__GENMASK(11, 8)
->> +
->> +/* CXL 3.2 8.1.7: GPF DVSEC for CXL Device */
->> +#define CXL_DVSEC_DEVICE_GPF				5
->> +
->> +/* CXL 3.2 8.1.9: Register Locator DVSEC */
->> +#define CXL_DVSEC_REG_LOCATOR				8
->> +#define  CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET		0xC
->> +#define   CXL_DVSEC_REG_LOCATOR_BIR_MASK		__GENMASK(2, 0)
->> +#define   CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK		__GENMASK(15, 8)
->> +#define   CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK	__GENMASK(31, 16)
->> +
->>  #endif /* LINUX_PCI_REGS_H */
->> -- 
->> 2.34.1
->>
-
+That works for me. Give the paranoid the ability to have a point where they can
+be assured that the shields were not lowered prematurely.
