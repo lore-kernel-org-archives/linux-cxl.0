@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39C33EFD22
-	for <linux-cxl@vger.kernel.org>; Thu, 22 Jan 2026 03:32:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC41D38A29E
+	for <linux-cxl@vger.kernel.org>; Thu, 22 Jan 2026 03:32:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769052743; cv=none; b=r9oCuAbnab+dlWXV8kKgWfn3fq4wZEzpOxAK2mNk/pWr41kdrJCi1p3sdzLgF+fL4DQLtNqvdfVeOW6sIx/rXKSz6anUcvKOsqGfsB6/5xXhdFrpzba/wN6VLLcrrK9p2m8BqYlmSoGULFsxMJewQO3/OjNzl4/jUIKMrt5W2KU=
+	t=1769052744; cv=none; b=ntHEwoRDU891inzcU5vm7UsmO5aBlDNthdMWfjHp0IL4AwcrKfB3DJTqAYqt6UmNuZlRD/+0l3NDCxLRzoVDWvWeAEMGncjEtmOTZdqAa+8EdqPe2JeX1vJcS5rblOAmhkgK5h+ygLFQaTV6yAApiHS/weq0g7z4M7fffPBme0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769052743; c=relaxed/simple;
-	bh=QYWNd+F4svJhcvWBc+xpx0OyeQ9fa4IUPXSDCihBBoU=;
+	s=arc-20240116; t=1769052744; c=relaxed/simple;
+	bh=8b72ipoMIKD74GuZI8suXpzuKlq/i4o9b7nPPUo2QT4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uSfVEo3IfCHDK51CSnxW9JDyjDx4bcxAd8j+m6VUm/yODFQDRDZGI7iI8JEIu9cUhbpYLaHWrUC3MBImsbzPtMTmIuWFOMs1NwxHPzGx0LssM6Skk1iEPr9oW3IunMfoqg/fcGqbhq+/ZdO+ol0Pf6eb8nA2WTl1UI87U0OqqPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NqGvAOOm; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version; b=fQNcUVym4wd1q8qAVnZUG3ffXNcl3h2R4hj7B2sNMuW+nC2XyhDPLewUj+eHFVKuQz+EiWBPEAA10geTLW6bNn+3w/AmFKcjXOxBoFPse3o9903hPF9jeHLkj3xp9YFV7mzLREDjieg1V5oO7Vca1qdiUrn0ynTlPet9PfAEimE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AEXWLy6O; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NqGvAOOm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AEXWLy6O"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1769052742; x=1800588742;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=QYWNd+F4svJhcvWBc+xpx0OyeQ9fa4IUPXSDCihBBoU=;
-  b=NqGvAOOmrgTxmaYJVcm0/1c/SqBtQ+TgBhmGlcaGXz4arFgmvxlaNC9H
-   7gBTi2cd7j0BYg/ImT9DciEV5VK9Vj2L0197uLRDg6RxPA80JV4xrhJev
-   rEZ2nHSINZ4w/uMSHHpnJzHuw74k1DjqAP11ahpAs/am82wuByLY2+3hf
-   3X032yqsqNANkKgpzS4c97sYxmhR2no7cuRWVrv/W5nyiQ/oKZyGiSEA+
-   soE7O4PeI+PN8Wwcc4/ED3NO5tn0Oy4+zYVsl67hBvwUSNLy0lamOcwF3
-   gcDX/NZjEmpnwGy37jgNVna7evsovRHhg5KvOohcWk4Ab+JhuYAaRL+I9
-   w==;
-X-CSE-ConnectionGUID: HHUfUjbaQX+Dfr/TMzLmwA==
-X-CSE-MsgGUID: VxkXMfxOTSWnEvNH0sIHIQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11678"; a="81734438"
+  bh=8b72ipoMIKD74GuZI8suXpzuKlq/i4o9b7nPPUo2QT4=;
+  b=AEXWLy6OJaE8YMm0Y0h48YdFTwPgPKPzoeocBouLT9uvjyKUiIsDzhUh
+   6ektDm5ib7H7vqzhEwBmS9Rw4JKmLlDcMp/RtKIj14hPrHCkHoIr7+et7
+   m+WGdt+ZqEF2AtbhrhUm2E6AYGLFysA1piVvkySGolSf1MfovaDwOsEWW
+   kdDKsQryd4hGPVByavtQ/RKaz/gRDsqDOcggRpgAAoPocA+7beOxyVi15
+   GmxK0aNEbUrLiGO4SwIXRFWyXOSZmuK8wrzXYBgRyhO/whBU84CUMV5ow
+   4YPE3wzE9M5QxjArY2YQuKPTY90h4g8zO3qiE/mOonFFqdVmIR9H/CR4R
+   Q==;
+X-CSE-ConnectionGUID: iMnEmLr6RV2kW+o1Gl940Q==
+X-CSE-MsgGUID: 2jGv+43NTjuI8C77U3sCfA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11678"; a="81734442"
 X-IronPort-AV: E=Sophos;i="6.21,245,1763452800"; 
-   d="scan'208";a="81734438"
+   d="scan'208";a="81734442"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
   by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 19:32:18 -0800
-X-CSE-ConnectionGUID: CVFZ60L5T128yOoc9LvN5g==
-X-CSE-MsgGUID: 1JakXNLSTQ2IhLg8t6qgeg==
+X-CSE-ConnectionGUID: 4mAA2lI7StKInDH8nHv7pg==
+X-CSE-MsgGUID: sPMVZWpGQSaO5yj559CS3Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,245,1763452800"; 
-   d="scan'208";a="211064085"
+   d="scan'208";a="211064092"
 Received: from dwillia2-desk.jf.intel.com ([10.88.27.145])
   by fmviesa005.fm.intel.com with ESMTP; 21 Jan 2026 19:32:18 -0800
 From: Dan Williams <dan.j.williams@intel.com>
@@ -51,9 +51,9 @@ Cc: jonathan.cameron@huawei.com,
 	alison.schofield@intel.com,
 	ira.weiny@intel.com,
 	terry.bowman@amd.com
-Subject: [PATCH 3/9] cxl/port: Cleanup dport removal with a devres group
-Date: Wed, 21 Jan 2026 19:33:24 -0800
-Message-ID: <20260122033330.1622168-4-dan.j.williams@intel.com>
+Subject: [PATCH 4/9] cxl/port: Move decoder setup before dport creation
+Date: Wed, 21 Jan 2026 19:33:25 -0800
+Message-ID: <20260122033330.1622168-5-dan.j.williams@intel.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260122033330.1622168-1-dan.j.williams@intel.com>
 References: <20260122033330.1622168-1-dan.j.williams@intel.com>
@@ -65,117 +65,110 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In preparation for adding more setup actions like RAS register mapping,
-introduce a devres group to collect all the dport creation / registration
-actions. This replaces the maintenance tedium of open coding several
-devm_release_action() calls in del_dport().
+There are port setup actions that run on first dport arrival, and there are
+setup actions that run per dport.
+
+RAS register setup is a future additional setup action to run per-port
+(once the first dport arrives), and each dport also has RAS registers to
+map.
+
+Before adding that, flip the order of "first dport" and "per-dport"
+actions. This makes allocation symmetric with teardown, "first dport"
+actions unwind after last dport removed. It also allows for using a devres
+group to collect the unrelated decoder, RAS, and dport setup actions into
+one group release action.
+
+The new cxl_port_open_group() collects "first dport" and "per-dport" into
+one group that can be released on any failure. This group's lifetime only
+needs to span the short duration of cxl_port_add_dport() to cleanup all
+potential damage from failing to add a dport. Contrast that to the "dport"
+devres group that is called upon to destruct fully formed dport objects.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/port.c | 62 +++++++++++++++++++++++++++++++++++++----
- 1 file changed, 56 insertions(+), 6 deletions(-)
+ drivers/cxl/core/port.c | 43 +++++++++++++++++++++++++++++------------
+ 1 file changed, 31 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 1637e97f6805..f2723bf948e2 100644
+index f2723bf948e2..f69395ea0c14 100644
 --- a/drivers/cxl/core/port.c
 +++ b/drivers/cxl/core/port.c
-@@ -1118,6 +1118,51 @@ static void cxl_dport_unlink(void *data)
- 	sysfs_remove_link(&port->dev.kobj, link_name);
+@@ -1650,10 +1650,24 @@ static bool dport_exists(struct cxl_port *port, struct device *dport_dev)
+ 	return false;
  }
  
-+static struct device *dport_to_host(struct cxl_dport *dport)
+-DEFINE_FREE(del_cxl_dport, struct cxl_dport *, if (!IS_ERR_OR_NULL(_T)) del_dport(_T))
++static void *cxl_port_open_group(struct cxl_port *port)
 +{
-+	if (is_cxl_root(dport->port))
-+		return dport->port->uport_dev;
-+	return &dport->port->dev;
++	return devres_open_group(&port->dev, port, GFP_KERNEL);
 +}
 +
-+static void free_dport(void *dport)
++/* note this implicitly casts @port_group back to its @port */
++DEFINE_FREE(cxl_port_release_group, struct cxl_port *,
++	    if (_T) devres_release_group(&_T->dev, _T))
++
++static void cxl_port_remove_group(struct cxl_port *port, void *port_group)
 +{
-+	kfree(dport);
++	devres_remove_group(&port->dev, port_group);
 +}
 +
-+/*
-+ * Upon return either a group is established with one action (free_dport()), or
-+ * no group established and @dport is freed.
-+ */
-+static void *cxl_dport_open_group_or_free(struct cxl_dport *dport)
-+{
-+	int rc;
-+	struct device *host = dport_to_host(dport);
-+	void *group = devres_open_group(host, dport, GFP_KERNEL);
-+
-+	if (!group) {
-+		kfree(dport);
-+		return NULL;
-+	}
-+
-+	rc = devm_add_action_or_reset(host, free_dport, dport);
-+	if (rc) {
-+		devres_release_group(host, group);
-+		return NULL;
-+	}
-+
-+	return group;
-+}
-+
-+static void cxl_dport_close_group(struct cxl_dport *dport, void *group)
-+{
-+	devres_close_group(dport_to_host(dport), group);
-+}
-+
-+/* The dport group id is the dport */
-+DEFINE_FREE(cxl_dport_release_group, void *,
-+	    if (_T) devres_release_group(dport_to_host(_T), _T))
-+
- static struct cxl_dport *
- __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
- 		     int port_id, resource_size_t component_reg_phys,
-@@ -1143,14 +1188,20 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
- 	    CXL_TARGET_STRLEN)
- 		return ERR_PTR(-EINVAL);
- 
--	dport = devm_kzalloc(host, sizeof(*dport), GFP_KERNEL);
-+	dport = kzalloc(sizeof(*dport), GFP_KERNEL);
- 	if (!dport)
- 		return ERR_PTR(-ENOMEM);
- 
-+	/* Just enough init to manage the devres group */
- 	dport->dport_dev = dport_dev;
- 	dport->port_id = port_id;
- 	dport->port = port;
- 
-+	void *dport_group __free(cxl_dport_release_group) =
-+		cxl_dport_open_group_or_free(dport);
-+	if (!dport_group)
-+		return ERR_PTR(-ENOMEM);
-+
- 	if (rcrb == CXL_RESOURCE_NONE) {
- 		rc = cxl_dport_setup_regs(&port->dev, dport,
- 					  component_reg_phys);
-@@ -1203,6 +1254,9 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
- 
- 	cxl_debugfs_create_dport_dir(dport);
- 
-+	/* keep the group, and mark the end of devm actions */
-+	cxl_dport_close_group(dport, no_free_ptr(dport_group));
-+
- 	return dport;
- }
- 
-@@ -1431,11 +1485,7 @@ static void delete_switch_port(struct cxl_port *port)
- 
- static void del_dport(struct cxl_dport *dport)
+ static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
+ 					    struct device *dport_dev)
  {
--	struct cxl_port *port = dport->port;
++	struct cxl_dport *dport;
+ 	int rc;
+ 
+ 	device_lock_assert(&port->dev);
+@@ -1664,14 +1678,13 @@ static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
+ 	if (!port->dev.driver)
+ 		return ERR_PTR(-ENXIO);
+ 
+-	struct cxl_dport *dport __free(del_cxl_dport) =
+-		devm_cxl_add_dport_by_dev(port, dport_dev);
+-	if (IS_ERR(dport))
+-		return dport;
 -
--	devm_release_action(&port->dev, cxl_dport_unlink, dport);
--	devm_release_action(&port->dev, cxl_dport_remove, dport);
--	devm_kfree(&port->dev, dport);
-+	devres_release_group(dport_to_host(dport), dport);
+-	cxl_switch_parse_cdat(dport);
++	/* Temp group for all "first dport" and "per dport" setup actions */
++	void *port_group __free(cxl_port_release_group) =
++		cxl_port_open_group(port);
++	if (!port_group)
++		return ERR_PTR(-ENOMEM);
+ 
+-	if (port->nr_dports == 1) {
++	if (port->nr_dports == 0) {
+ 		/*
+ 		 * Some host bridges are known to not have component regsisters
+ 		 * available until a root port has trained CXL. Perform that
+@@ -1684,18 +1697,24 @@ static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
+ 		rc = devm_cxl_switch_port_decoders_setup(port);
+ 		if (rc)
+ 			return ERR_PTR(rc);
+-		dev_dbg(&port->dev, "first dport%d:%s added with decoders\n",
+-			dport->port_id, dev_name(dport_dev));
+-		return no_free_ptr(dport);
+ 	}
+ 
++	dport = devm_cxl_add_dport_by_dev(port, dport_dev);
++	if (IS_ERR(dport))
++		return dport;
++
++	/* This group was only needed for early exit above */
++	cxl_port_remove_group(port, no_free_ptr(port_group));
++
++	cxl_switch_parse_cdat(dport);
++
+ 	/* New dport added, update the decoder targets */
+ 	device_for_each_child(&port->dev, dport, update_decoder_targets);
+ 
+ 	dev_dbg(&port->dev, "dport%d:%s added\n", dport->port_id,
+ 		dev_name(dport_dev));
+ 
+-	return no_free_ptr(dport);
++	return dport;
  }
  
- static void del_dports(struct cxl_port *port)
+ static struct cxl_dport *devm_cxl_create_port(struct device *ep_dev,
 -- 
 2.52.0
 
