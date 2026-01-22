@@ -1,307 +1,283 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010047.outbound.protection.outlook.com [52.101.61.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65A7389465;
-	Thu, 22 Jan 2026 22:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769120062; cv=none; b=eynfjsZn9NFrK+C+he0qEHnxOC0EAWL+4cCLr9dZNo2WKzw5KinrHppO+RfnKVF82MUsTL5gLNXE7YWtWw6lfzZOBUdM+x5H3+35KbJ3n8yUyq98fCRAVQVTGFoYZRU9wTa39R63ERQr8+PiuMeuYZWBijRhS5+ReQ9MHoci53c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769120062; c=relaxed/simple;
-	bh=15s8hCm/sckjqd3FTQ4S5gHgqFVlvwgL/Ya1WvOKtuE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eDQwDjjPd+0Iox7mB78ciUewfAnrv1gm9Wnt0FfUO3EoN9bwwwubdLd8do8fpFGUpTG4ScNuDoGh4DkTpxrDqD87deEooNqNO3YuBOGTmXlv6ig4qibyCUCdtMc02tuz2u/y4hgUY2qNKUi0Z1gHHGPMCvreSTVRbX1Cv9hgj2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GW94mGBN; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6F63A89C0
+	for <linux-cxl@vger.kernel.org>; Thu, 22 Jan 2026 22:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769120077; cv=fail; b=tAR1RtpXnBUKlI3KL2wqf03GPG/Ec+BnZ1vn17F6qpGzDomK6jwyJpk7XbiaCNIhOkz4OjQ4W1+hh/sJYSZPVEn9rLlHkeeaLhqRYAQU+rd5I94rJTE+JV7REarUrMp6ppas8b6Xe9sxda5IIkgBN9jrgPwyEw34/cgsNvoe5VA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769120077; c=relaxed/simple;
+	bh=IIDwwEOac05Ogkwm/3oIN7KZnCfzjump9c3rTssj6p8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SzsJhDOroTcs8y7sHwROiRUAH0tCWC8eind8nCRZPWFyfDDLP3+PBE5H/h5DxapoGayZWE1dYhJV76wCmeWaKeNKXMsJgD0Flq6pPvcVCEsP0kJzmsR2t8tpKlXKUeTvZ7EtCnSRJw289jIZ/TndobwL2za2PEsrtmumvpIl73c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hc1S+lHI; arc=fail smtp.client-ip=52.101.61.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GW94mGBN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EC6EC116C6;
-	Thu, 22 Jan 2026 22:14:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769120061;
-	bh=15s8hCm/sckjqd3FTQ4S5gHgqFVlvwgL/Ya1WvOKtuE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GW94mGBNRj+3ZJKB3shZ+k1PaXZ4somyIsQvvQdYSHHE5or5lNqMnB59+evENwb2r
-	 Mgokgr76fbFoJSSsFu/siS+hzD7E54krNABbDWGeWhs3RnQ1QeJ44F/OfcMMHGuSQQ
-	 FHF4nNC/aHmmSwS4UwbRiTxMXEqq/HmOgxPcaFc69szMqLxQrsK9secgt5yuuL1CZ6
-	 xpNdStLdXtqRXs+96VQEtxlKjp8JeinQHMXe40JUA/830wsmYbeHDP4e4hsAHPylKP
-	 pCVvWP0j1GPZuwhAl9b9euDmMQMmV1q3/VYYzQXLOa4cXCKjqWXJBEUGjW2dljHoUi
-	 Lq49/ui2DKS/Q==
-Message-ID: <4d66eac3-1a2b-4d9d-8a9a-529a19758439@kernel.org>
-Date: Thu, 22 Jan 2026 23:14:15 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hc1S+lHI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sHMJUbyni+Y0oWEc8LIaDWxrkhQBFsvzUK4+dO0Q8/HP8ShCBAKNpSXhXUY44pX6bOGB15lVTeVDdUNMgIU2BInnKZG3xvaDi+qLnA37PRDIZR607cVsUo63pM05KTjKSEj637eBuE0Z3WvRVraC76lcVbfKmfwy9+M9tbR1YHW8dVkn7Ex2u6tkf4VJRBmQQKRGZIrcaReUV+T/W4G0oCwSjJgBpaqyLJ4N+iBQ/gYH4m7XT9mmLp40sLt/m06YAcWKWf1JD6JuE0gKlp2xP2f3rbaZDD7/yPIErwh06nj7PsRxC08c+lAkxuXkS3Mc/MxVgfltVdEvRixfKM1EOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cj4hWY7XKTtdHnKbGaMu57lxL0a4kACDUJEt4/Gf2GQ=;
+ b=OSZ2ShbcctmbW2yl1cLQjNr0l6qIl5OTpUdSRexjx1N5WrFqRLB3aqg6KjAHXdUa1JweoLqueFVRJPE/+pjsR6Pq8VHj2uF2bhn7mfb6vz8s6AH8eF2ySF3QeOvBgcFNOWjpyQxI5tzwGTFbaVdCLdtCCiIWhhIl+QzACgikU7nR9R+AOHFQ77D6j3OXCFU32jGeOdkZjJLN5rhTseuhDW48Wg7KDY6nM7lu/HB3IZQ5+TjEIanzLweZ2+WJEgsfUf4N4VhvqzHlYrVdIIvzGW9Uf+a9Lzr69sTsZb8flK6kKiGjoDnrm/jJqflRJndKbOobpKo8JYHYoXWfGuB+QQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cj4hWY7XKTtdHnKbGaMu57lxL0a4kACDUJEt4/Gf2GQ=;
+ b=hc1S+lHIDYL7sqXEjSH13AwoQoqQUWEePu5lBiX5Zj2Tp16iIxSLPkJdwg+3G1r7nSFz0ahSoMWQ6+Ca/hORP7os++J+wVAwbPXZINAxOYOmqGl/DtMJu8sLDm4jbMgfWh0SG/OcB0cxBHvKISGI7wudyvHDNqXPwCKFpHe34K0=
+Received: from SJ0PR05CA0012.namprd05.prod.outlook.com (2603:10b6:a03:33b::17)
+ by BY5PR12MB4067.namprd12.prod.outlook.com (2603:10b6:a03:212::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.11; Thu, 22 Jan
+ 2026 22:14:27 +0000
+Received: from CO1PEPF000066E8.namprd05.prod.outlook.com
+ (2603:10b6:a03:33b:cafe::f3) by SJ0PR05CA0012.outlook.office365.com
+ (2603:10b6:a03:33b::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9564.3 via Frontend Transport; Thu,
+ 22 Jan 2026 22:14:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CO1PEPF000066E8.mail.protection.outlook.com (10.167.249.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9564.3 via Frontend Transport; Thu, 22 Jan 2026 22:14:26 +0000
+Received: from ausbcheatha02.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 22 Jan
+ 2026 14:37:37 -0600
+From: Ben Cheatham <Benjamin.Cheatham@amd.com>
+To: <nvdimm@lists.linux.dev>, <alison.schofield@intel.com>,
+	<dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <benjamin.cheatham@amd.com>
+Subject: [PATCH 5/7] cxl: Add clear-error command
+Date: Thu, 22 Jan 2026 14:37:26 -0600
+Message-ID: <20260122203728.622-6-Benjamin.Cheatham@amd.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260122203728.622-1-Benjamin.Cheatham@amd.com>
+References: <20260122203728.622-1-Benjamin.Cheatham@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: cxl/region.c improvements and DAX/Hotplug plumbing
-To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com, dave.jiang@intel.com,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- ira.weiny@intel.com, dave@stgolabs.net, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, vishal.l.verma@intel.com, benjamin.cheatham@amd.com,
- David Rientjes <rientjes@google.com>
-References: <aXErSP1zKnv4koKG@gourry-fedora-PF4VCD3F>
-From: "David Hildenbrand (Red Hat)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAa2VybmVsLm9yZz7CwY0EEwEIADcWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCaKYhwAIbAwUJJlgIpAILCQQVCgkIAhYCAh4FAheAAAoJEE3eEPcA/4Naa5EP/3a1
- 9sgS9m7oiR0uenlj+C6kkIKlpWKRfGH/WvtFaHr/y06TKnWn6cMOZzJQ+8S39GOteyCCGADh
- 6ceBx1KPf6/AvMktnGETDTqZ0N9roR4/aEPSMt8kHu/GKR3gtPwzfosX2NgqXNmA7ErU4puf
- zica1DAmTvx44LOYjvBV24JQG99bZ5Bm2gTDjGXV15/X159CpS6Tc2e3KvYfnfRvezD+alhF
- XIym8OvvGMeo97BCHpX88pHVIfBg2g2JogR6f0PAJtHGYz6M/9YMxyUShJfo0Df1SOMAbU1Q
- Op0Ij4PlFCC64rovjH38ly0xfRZH37DZs6kP0jOj4QdExdaXcTILKJFIB3wWXWsqLbtJVgjR
- YhOrPokd6mDA3gAque7481KkpKM4JraOEELg8pF6eRb3KcAwPRekvf/nYVIbOVyT9lXD5mJn
- IZUY0LwZsFN0YhGhQJ8xronZy0A59faGBMuVnVb3oy2S0fO1y/r53IeUDTF1wCYF+fM5zo14
- 5L8mE1GsDJ7FNLj5eSDu/qdZIKqzfY0/l0SAUAAt5yYYejKuii4kfTyLDF/j4LyYZD1QzxLC
- MjQl36IEcmDTMznLf0/JvCHlxTYZsF0OjWWj1ATRMk41/Q+PX07XQlRCRcE13a8neEz3F6we
- 08oWh2DnC4AXKbP+kuD9ZP6+5+x1H1zEzsFNBFXLn5EBEADn1959INH2cwYJv0tsxf5MUCgh
- Cj/CA/lc/LMthqQ773gauB9mN+F1rE9cyyXb6jyOGn+GUjMbnq1o121Vm0+neKHUCBtHyseB
- fDXHA6m4B3mUTWo13nid0e4AM71r0DS8+KYh6zvweLX/LL5kQS9GQeT+QNroXcC1NzWbitts
- 6TZ+IrPOwT1hfB4WNC+X2n4AzDqp3+ILiVST2DT4VBc11Gz6jijpC/KI5Al8ZDhRwG47LUiu
- Qmt3yqrmN63V9wzaPhC+xbwIsNZlLUvuRnmBPkTJwwrFRZvwu5GPHNndBjVpAfaSTOfppyKB
- Tccu2AXJXWAE1Xjh6GOC8mlFjZwLxWFqdPHR1n2aPVgoiTLk34LR/bXO+e0GpzFXT7enwyvF
- FFyAS0Nk1q/7EChPcbRbhJqEBpRNZemxmg55zC3GLvgLKd5A09MOM2BrMea+l0FUR+PuTenh
- 2YmnmLRTro6eZ/qYwWkCu8FFIw4pT0OUDMyLgi+GI1aMpVogTZJ70FgV0pUAlpmrzk/bLbRk
- F3TwgucpyPtcpmQtTkWSgDS50QG9DR/1As3LLLcNkwJBZzBG6PWbvcOyrwMQUF1nl4SSPV0L
- LH63+BrrHasfJzxKXzqgrW28CTAE2x8qi7e/6M/+XXhrsMYG+uaViM7n2je3qKe7ofum3s4v
- q7oFCPsOgwARAQABwsF8BBgBCAAmAhsMFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAmic2qsF
- CSZYCKEACgkQTd4Q9wD/g1oq0xAAsAnw/OmsERdtdwRfAMpC74/++2wh9RvVQ0x8xXvoGJwZ
- rk0Jmck1ABIM//5sWDo7eDHk1uEcc95pbP9XGU6ZgeiQeh06+0vRYILwDk8Q/y06TrTb1n4n
- 7FRwyskKU1UWnNW86lvWUJuGPABXjrkfL41RJttSJHF3M1C0u2BnM5VnDuPFQKzhRRktBMK4
- GkWBvXlsHFhn8Ev0xvPE/G99RAg9ufNAxyq2lSzbUIwrY918KHlziBKwNyLoPn9kgHD3hRBa
- Yakz87WKUZd17ZnPMZiXriCWZxwPx7zs6cSAqcfcVucmdPiIlyG1K/HIk2LX63T6oO2Libzz
- 7/0i4+oIpvpK2X6zZ2cu0k2uNcEYm2xAb+xGmqwnPnHX/ac8lJEyzH3lh+pt2slI4VcPNnz+
- vzYeBAS1S+VJc1pcJr3l7PRSQ4bv5sObZvezRdqEFB4tUIfSbDdEBCCvvEMBgoisDB8ceYxO
- cFAM8nBWrEmNU2vvIGJzjJ/NVYYIY0TgOc5bS9wh6jKHL2+chrfDW5neLJjY2x3snF8q7U9G
- EIbBfNHDlOV8SyhEjtX0DyKxQKioTYPOHcW9gdV5fhSz5tEv+ipqt4kIgWqBgzK8ePtDTqRM
- qZq457g1/SXSoSQi4jN+gsneqvlTJdzaEu1bJP0iv6ViVf15+qHuY5iojCz8fa0=
-In-Reply-To: <aXErSP1zKnv4koKG@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000066E8:EE_|BY5PR12MB4067:EE_
+X-MS-Office365-Filtering-Correlation-Id: bd112cd0-c0e2-4f18-0b02-08de5a039aff
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?5GHs2lAMoNYqib7fbv+B/Dti7G9RirfROIc+x5eMnwdvFZCbrIEkWdCHIUr4?=
+ =?us-ascii?Q?doMf4cw79Rr3HDhh+DKScBG03qjOaUAIP+5s4wEAvMJEZLXhim31ThidAY8M?=
+ =?us-ascii?Q?DzylXtL896nHdjrDTzvIFSE3mHQVv4Q3ZjknEgEBZB9pdGHCAk30XmBZkxYG?=
+ =?us-ascii?Q?ia5lY7F7Lfsb58aJ8wNIDHif4qTdD28TXNG/Q+rUBJ3c/or8hNEONDK/A3yh?=
+ =?us-ascii?Q?yBzxmNN+zeVVa0MpoJgERkZgBLI4WqAjeTa8uXTzZkLVNWl3RatrVJuts+/T?=
+ =?us-ascii?Q?mqVHxY64+1QaCz58PaImbhxEOq8YMnyiKGab1GkfHJ2Tnq8Vavyzqi69bDdf?=
+ =?us-ascii?Q?7A1fHnwx+xCIlw3xR8BqjOcowQrV/b58RZiDaw/eX64um1qzNa8X2T6YFaFj?=
+ =?us-ascii?Q?bWMcXGiwvMevcugwyBwh9VYmX1mG4Li9BDDTL7ys9/hatiDBvgEIymEaqi89?=
+ =?us-ascii?Q?6KmoQXR7RhvO+oSXkZ1/zzw9XE6REIUqt/hg0IYIeg8AKn9rZM790PcsfLgT?=
+ =?us-ascii?Q?zBokqLHe635lGMfVu94WrIkSwrDAqKMpZuOxVbIYNd4j8CpAMx1eo5/glLt1?=
+ =?us-ascii?Q?RfR9hD+KAN3vjT7Zk6eIQJSwAFmU6OauD+/OmF42sEk82BIBOXrkqYrWsIhH?=
+ =?us-ascii?Q?n/2Zu3jOAxXb+82IaVx4dN3UhV2oh2J6FNrLQ30XRxK5zJ4XcKj6NnexMjhn?=
+ =?us-ascii?Q?3hpulodXInXFNAXqNybvWVbXYFzuVSkiV2yhc5Cin/Rof5qHHiYuVRn26sLL?=
+ =?us-ascii?Q?HZfoPPPnrkZ4kRqBULj0MrXxeODa+CcalN7uJEoRsX4CQd4G49GNYeznPJgT?=
+ =?us-ascii?Q?jRvBCeiluHhQ/yDmPvBF5XNrem9gAP42qGwlPlGYNCHHrDCOvcVl2Ae6qFtF?=
+ =?us-ascii?Q?pgvmWMVWTW+srvagERZO0BfeJrgPXjf9PQv+cxW8EYmleyGa4Ij5j378abFY?=
+ =?us-ascii?Q?bzA04F0kRns7YvTLgwYAEbhInlkwKGWSiNIdpdBHFUarr2ojbuOp9oUmyAs3?=
+ =?us-ascii?Q?b5pMh5Q7YGUKZX9rhM0VtuLIE1oobJDyd2SOvdZqzrDnH8K90iEMFaN1vJT/?=
+ =?us-ascii?Q?AwM/yfTAebNHQSUKIHkMV2FSyZr+cUuNUpOiAJGndaGw//GB1KqlWYEbV8nC?=
+ =?us-ascii?Q?LMcSEvmriVjIIo0uUOmisdMbAKkGVHjN3ShVXjT/pXxFScCoaLedVEtP02Wl?=
+ =?us-ascii?Q?miaqWTtBrSLKh6BXv9aZ2n9esoVHEkjdY/VQn2+M+lEfjroB8jUyVAlkjere?=
+ =?us-ascii?Q?JKpZqrZPgX1JIfttuzkw+Vvgw7+e4WU2kY6uSG7LDKD/ZBpzCW0laPGfMc0q?=
+ =?us-ascii?Q?0vaV5Iy5G03cRjdG3oQM2X+1Y05vAs9bRWEtSwGLuCTnk+NbZ1bJrQJg2J2U?=
+ =?us-ascii?Q?MPFFO6VdfvkU1pyPmb0Z138bThX+s6rdTCVlP3LQYN5l19GK1Wephin1v4NF?=
+ =?us-ascii?Q?LurmV63NWmw4PqecepTv090uI9U6CBKLGufgGNn0zc3cndo5ybRjQZQSHSSu?=
+ =?us-ascii?Q?OWqjXSNS3hL0m3e1y9RkdwX0pUw4WlYFbPfkSAsfz1RDhj8/hcWhMceYo0kH?=
+ =?us-ascii?Q?iVcBJOOm3QZtJIR8fNFNjgzyMvUORY2ZFYAlIHXkPgNwnbGoKWXa+B3ANYHd?=
+ =?us-ascii?Q?w/DPEiGVWkFeUioq7jZjnOcnp4KH2bKQpyv6+l+z3r73gfsoqZYXb77uKMYs?=
+ =?us-ascii?Q?giVTOw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2026 22:14:26.3651
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd112cd0-c0e2-4f18-0b02-08de5a039aff
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000066E8.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4067
 
-This is a lot of stuff. In which meeting would you usually discuss these 
-things?
+Add the 'cxl-clear-error' command. This command allows the user to clear
+device poison from CXL memory devices.
 
-Some of that (especially the interaction with core-mm) feels like it 
-would be a good fit to discuss with he wider MM community in one of the 
-bi-weekly mm meeting. (CCing David R.)
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+---
+ cxl/builtin.h      |  1 +
+ cxl/cxl.c          |  1 +
+ cxl/inject-error.c | 70 ++++++++++++++++++++++++++++++++++++++++++----
+ 3 files changed, 67 insertions(+), 5 deletions(-)
 
-> My list of current discrete steps (some serial, some parallel):
-> 
->     1) Internally formalize cxl_region.region_driver (no ABI exposure)
-> 
->     3) Plumb additional information through to DAX based on driver
->        - dax-driver mode preference
->        - uuid for tagged capacity
-> 
->     2) Create explicit sysram_driver
->        - Write in terms of DCD
->        - Tagged Extents:   use DAX glue to manage set of tagged extents
->        - Untagged Extents: Hotplug and manage directly
->        - new ABI: `region0/region_driver` - switch between [dax,sysram]
-> 
->     4) Plumb additional hotplug policy from CXL into DAX and MHP
->        - dax0.0/hotplug  (atomic operation on all blocks)
->        - cxl region auto-online policy (region0/rctl/auto-online)
->        - block-protection policy? (memory_notifier controls)
->        - hiding memory blocks? (discussed in last meeting)
-
-What is that about and what was the result of that discussion? :)
-
->        - ABI: `region0/rctl/*` controls
-> 
->     5) Formalize DCD dax_region driver use
->        - each extent list = new dax device in devdax mode
->        - tags enforced to be globally unique
->        - dax_region.add_extents(tag, extent_list)
->            -> create new daxN.0
->            -> expose daxN.0/uuid
->        - dax_region.remove_extents(extent_list)
->        - dax_region.remove_tagged_extents(tag)
-> 
->     6) Formalize DCD sysram_region driver use
->        - sysram_region.add_extents(tag, extent_list)
->            -> untagged capacity managed as individual memory blocks
->            -> tagged capacity managed with DAX glue
->        - sysram_region.remove_extents(extent_list) (untagged)
->        - sysram_region.remove_tagged_extents(tag)  (tagged)
-> 
->     7) Add private_region infrastructure
->        - private_region driver design
->        - N_PRIVATE_MEMORY infrastructure
->        - derivative driver (in my case compressed memory)
->        - Probably wants memory_blocks hiding and/or retricted operations
-> 
-
-[...]
-
-> ---------------------------------------------------------
-> Problem: SysRAM Auto-Hotplug policy is too broadly scoped
-> ---------------------------------------------------------
->    Hotplug SYSRAM indirection through DAX leads to complex auto-online
->    interactions and/or current policy options are too broad in scope.
->    (e.g. MHP_AUTO_ONLINE build option is bad cross-platform)
-> 
->    Solution 1: Plumb auto-online policy from cxl_region into dax_kmem
-> 
->      Build Options:
->         Default auto-online policy for auto-regions?
->         Moves scope from MHP-Global to CXL-local
-> 
->      ABI: dax_region - regionN/rctl/auto-online
->         Gives the region creator a chance to define before probe()
-> 
->    Solution 2:  Make a dedicated sysram_region with policy
-
-What kind of region would that be?
-
-> 
->    May want both solutions longer term (for tagged DCD capacity)
-> 
->    ndctl extension:
->         cxl create-region --driver=sysram --auto-online=movable ?
-> 
-
-
-[...]
-
-> ---------------------------------------------------------------
-> Problem/Annoyance: DAX kmem per-block operation race conditions
-> ---------------------------------------------------------------
->    DAX exposes SYSRAM regions as individual memory blocks, which
->    creates race conditions when trying to manage a set of blocks.
-> 
->    Example: udev can have an auto-onlining policy that twiddles
->             memory_block bits while cxl driver is trying to unplug.
-> 
->    Affects: DCD, SysRAM, potentially N_PRIVATE_MEMORY
-> 
->    Solution 1: [unplug, online, online_movable] > dax0.0/hotplug
->                Does operation on all blocks under the hotplug lock.
-> 
->    Solution 2: dedicated sysram_region driver w/ or w/o DAX.
->                Can support sparseness w/o DAX (see DCD problem)
-> 	      Could use DAX for tagged DCD regions.
->                Tradeoff: May duplicate some DAX logic.
-
-How would that look like?
-
-> 
->    Solution 3: Hide nodeN/memory_block's w/ MHP Flag.
->                Issue: Possibly userland breaking.
-
-Hacky. :)
-
-> 
->    Solution 4: Prevent non-driver actions from changing state.
->                Also solves hotplug protection problem (see next)
-
-The crucial part is solving what you spelled out in the description: 
-"race conditions". Forbidding someone to re-configure system RAM sounds 
-unnecessary.
-
-For example, I use it a lot for testing issues with page migration while 
-offlining memory from ZONE_MOVABLE.
-
-> 
-> Patch: Implements solution 1
-> https://lore.kernel.org/linux-cxl/20260114235022.3437787-5-gourry@gourry.net/
-> 
-> --------------------------------------------------------------
-> Problem: SYSRAM or N_PRIVATE want memory_block policy controls
-> --------------------------------------------------------------
->    A SYSRAM or N_PRIVATE region may have an implied zone-policy to
->    protect - or N_PRIVATE blocks may want to restrict any operation.
-
-Why is N_PRIVATE special here?
-
-> 
->    Privileged userspace action could do this:
->      cat memoryN/state              => online_movable
->      cat memoryN/valid_zones        => movable
->      echo offline > memoryN/state   => offline
->      echo online > memoryN/state    => online
->      cat memoryN/valid_zones        => normal
-> 
->    - A DCD driver wants to try to protect hotpluggability.
->    - userspace has no business twiddling private_region blocks.
-
-Why?
-
-> 
->    Solution: Prevent non-driver actions from changing state.
-
-If you can handle race conditions properly, why disallow offline + 
-re-online, for example? Sure, you could restrict the zone.
-
-> 
->        Essentially, add memory_notifier to region_driver or DAX
->        that rejects operations according to driver-defined policy.
-> 
->    May not require explicit, could be encoded in default region
->    driver policy (e.g. dcd implies protection).
-> 
-> Example Patch:
-> https://lore.kernel.org/linux-cxl/20260114235022.3437787-6-gourry@gourry.net/
-
-
-[...]
-
-> ---------------------------------------------
-> Problem: "Special" Device memory usage policy
-> ---------------------------------------------
->     Memory devices may have special features that dictate use patterns.
->     They may also prefer using core mm/ services for basic operation.
->     (page_alloc, reclaim, migration, etc)
->     
->     But: This memory shouldn't be exposed as "Normal System RAM".
-> 
->     Solution: N_PRIVATE_MEMORY node_state
-> 
->     CXL Driver Piece: private_region driver
->         These drivers would know how to register N_PRIVATE_MEMORY
->         Would also allow device-specific usage behavior to be written.
->         Would likely be used by upper layer drivers rather than uapi.
-> 
->     Example:  Compressed Memory
-> 
->       general service can use page_alloc() for get_page_from_freelist()
->       region_driver registers memory on a compressed memory node
->       vmscan.c/memory-tiers.c calls back to driver to handle migration
-> 
->     Example:  Accelerator Memory Region
-> 
->        Accel library/drive does node-based allocs.
->        Driver callbacks might include write-faults (ZONE_DEVICE-esque
->          pattern that passes page ownership between CPU/GPU)
-> 
->        Either way, driver applies mapping policy w/o accounting cargo
-> 
->     Example:  Slow(er) memory
->        Some memory is "just memory", but might be particularly slow and
->        intended for use as a filesystem backend or as only a demotion
->        target.  Otherwise its allocated / mapped like any other memory,
->        but it still required isolation so isolated to the demotion path
->        and not a fallback allocation target
-
-That doesn't quite fit the description of N_PRIVATE_MEMORY, though. Or 
-what am I missing?
-
-
+diff --git a/cxl/builtin.h b/cxl/builtin.h
+index e82fcb5..68ed1de 100644
+--- a/cxl/builtin.h
++++ b/cxl/builtin.h
+@@ -26,6 +26,7 @@ int cmd_enable_region(int argc, const char **argv, struct cxl_ctx *ctx);
+ int cmd_disable_region(int argc, const char **argv, struct cxl_ctx *ctx);
+ int cmd_destroy_region(int argc, const char **argv, struct cxl_ctx *ctx);
+ int cmd_inject_error(int argc, const char **argv, struct cxl_ctx *ctx);
++int cmd_clear_error(int argc, const char **argv, struct cxl_ctx *ctx);
+ #ifdef ENABLE_LIBTRACEFS
+ int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx);
+ #else
+diff --git a/cxl/cxl.c b/cxl/cxl.c
+index a98bd6b..e1740b5 100644
+--- a/cxl/cxl.c
++++ b/cxl/cxl.c
+@@ -81,6 +81,7 @@ static struct cmd_struct commands[] = {
+ 	{ "destroy-region", .c_fn = cmd_destroy_region },
+ 	{ "monitor", .c_fn = cmd_monitor },
+ 	{ "inject-error", .c_fn = cmd_inject_error },
++	{ "clear-error", .c_fn = cmd_clear_error },
+ };
+ 
+ int main(int argc, const char **argv)
+diff --git a/cxl/inject-error.c b/cxl/inject-error.c
+index 0ca2e6b..76f9fa9 100644
+--- a/cxl/inject-error.c
++++ b/cxl/inject-error.c
+@@ -17,6 +17,10 @@ static struct inject_params {
+ 	const char *address;
+ } inj_param;
+ 
++static struct clear_params {
++	const char *address;
++} clear_param;
++
+ static const struct option inject_options[] = {
+ 	OPT_STRING('t', "type", &inj_param.type, "Error type",
+ 		   "Error type to inject into <device>"),
+@@ -28,6 +32,15 @@ static const struct option inject_options[] = {
+ 	OPT_END(),
+ };
+ 
++static const struct option clear_options[] = {
++	OPT_STRING('a', "address", &clear_param.address, "Address for poison clearing",
++		   "Device physical address to clear poison from in hex or decimal"),
++#ifdef ENABLE_DEBUG
++	OPT_BOOLEAN(0, "debug", &debug, "turn on debug output"),
++#endif
++	OPT_END(),
++};
++
+ static struct log_ctx iel;
+ 
+ static struct cxl_protocol_error *find_cxl_proto_err(struct cxl_ctx *ctx,
+@@ -100,7 +113,7 @@ static int inject_proto_err(struct cxl_ctx *ctx, const char *devname,
+ }
+ 
+ static int poison_action(struct cxl_ctx *ctx, const char *filter,
+-			 const char *addr_str)
++			 const char *addr_str, bool clear)
+ {
+ 	struct cxl_memdev *memdev;
+ 	unsigned long long addr;
+@@ -128,12 +141,18 @@ static int poison_action(struct cxl_ctx *ctx, const char *filter,
+ 		return -EINVAL;
+ 	}
+ 
+-	rc = cxl_memdev_inject_poison(memdev, addr);
++	if (clear)
++		rc = cxl_memdev_clear_poison(memdev, addr);
++	else
++		rc = cxl_memdev_inject_poison(memdev, addr);
++
+ 	if (rc)
+-		log_err(&iel, "failed to inject poison at %s:%s: %s\n",
++		log_err(&iel, "failed to %s %s:%s: %s\n",
++			clear ? "clear poison at" : "inject poison at",
+ 			cxl_memdev_get_devname(memdev), addr_str, strerror(-rc));
+ 	else
+-		log_info(&iel, "poison injected at %s:%s\n",
++		log_info(&iel,
++			 "poison %s at %s:%s\n", clear ? "cleared" : "injected",
+ 			 cxl_memdev_get_devname(memdev), addr_str);
+ 
+ 	return rc;
+@@ -165,7 +184,7 @@ static int inject_action(int argc, const char **argv, struct cxl_ctx *ctx,
+ 	}
+ 
+ 	if (strcmp(inj_param.type, "poison") == 0) {
+-		rc = poison_action(ctx, argv[0], inj_param.address);
++		rc = poison_action(ctx, argv[0], inj_param.address, false);
+ 		return rc;
+ 	}
+ 
+@@ -186,3 +205,44 @@ int cmd_inject_error(int argc, const char **argv, struct cxl_ctx *ctx)
+ 
+ 	return rc ? EXIT_FAILURE : EXIT_SUCCESS;
+ }
++
++static int clear_action(int argc, const char **argv, struct cxl_ctx *ctx,
++			const struct option *options, const char *usage)
++{
++	const char * const u[] = {
++		usage,
++		NULL
++	};
++	int rc = -EINVAL;
++
++	log_init(&iel, "cxl clear-error", "CXL_CLEAR_LOG");
++	argc = parse_options(argc, argv, options, u, 0);
++
++	if (debug) {
++		cxl_set_log_priority(ctx, LOG_DEBUG);
++		iel.log_priority = LOG_DEBUG;
++	} else {
++		iel.log_priority = LOG_INFO;
++	}
++
++	if (argc != 1) {
++		usage_with_options(u, options);
++		return rc;
++	}
++
++	rc = poison_action(ctx, argv[0], clear_param.address, true);
++	if (rc) {
++		log_err(&iel, "Failed to clear poison on %s at: %s\n",
++			argv[0], strerror(-rc));
++		return rc;
++	}
++
++	return rc;
++}
++
++int cmd_clear_error(int argc, const char **argv, struct cxl_ctx *ctx)
++{
++	int rc = clear_action(argc, argv, ctx, clear_options,
++			      "clear-error <device> [<options>]");
++	return rc ? EXIT_FAILURE : EXIT_SUCCESS;
++}
 -- 
-Cheers
+2.52.0
 
-David
