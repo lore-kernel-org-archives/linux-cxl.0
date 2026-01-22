@@ -1,114 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1BE35DCE0
-	for <linux-cxl@vger.kernel.org>; Thu, 22 Jan 2026 21:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C274392808;
+	Thu, 22 Jan 2026 21:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769117093; cv=none; b=Mkj0/adqMC5PkbcGKSUgvbugfS6JqqpTedNDGjRZL+kdfsnJvhanCncaAs8qxHaHOEeOtQxCdNdiJeP4J7I5QtWnodXUuaAYwTFxiC1lpX/6yhY1Qab3oB1WAHOa9agzHxiyHC9Zxvxd74ygkapYjHRw8tdTMB1VlTfNnSYlncQ=
+	t=1769117289; cv=none; b=M49jS+IqlnnizKHB4Yo2KrGovdbUuprdLB88imFv/0ZX5SUCvx/O0v0tnWGGLA/PGn4FsZon9Yub8zK6TBpXHg/oGJMDQX66Aw9B91wDB2RkgGKRLh7IcpmO85JoPFlcyv39A6zbcz5JU6XcrcRog+sLAwH3vYdMTfNDfT6w1yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769117093; c=relaxed/simple;
-	bh=349GCh+xrQ8yYCLiVE/uJbxSEtU21JZt37TOkvDRBFU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kA14fe6vr08CcEKLJT5bSR5ajOLA5GwnWyaDmAfE2ag3tL8hPhsnoR/3y8mUt+50ZEBRGc9Om9YS02+foByLeyYRm5qjbEmg/pbSx8qoOjwx0HRx7t6t4mqHAkZAYevF96UhHsmDGuHRAalp8kYEnvnYTpphAN9/vGhLpYyBsKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PaX0qoXo; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1769117289; c=relaxed/simple;
+	bh=knqv3YaYhXLjzVaLE6iKL0LxzIm/k75UNIsgiKoIlIU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=QWmAb47HN/1LHQgvLKydxiTG+iuNdhWhRd/Vxxp7lqU6BA5vFY5KPxIX1m9Xy1HEBunuwKcdSDoQ7DsghdN1A/DYZm7WUEa69Mj3mjfzPsWh51DCuqOZEdlcRncERfhMnQVyYvQV5L44A2wjQC8Vj3xg3OprC8VofOKfNClSv8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=13YXjGm8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PaX0qoXo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769117089; x=1800653089;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=349GCh+xrQ8yYCLiVE/uJbxSEtU21JZt37TOkvDRBFU=;
-  b=PaX0qoXoGRkRtGCbo9nRmR4HJbZcXWAq4z9AnbdoP/99r9Rr05Yf5f1h
-   H66zhK/8QWWwWEoVhTMH/FJXUSuJ8cDzNgCNzwDXkPu14BMsXNlrhpRLX
-   2XcpCJvjeg+FZQhxTLmyG6yWZBbR4XWDe7/91f3tfBN/JexM8/B7dhD9h
-   t+F+PpCMQGDpRkpSNc6fmBwwodfNNGAXxvtl+3z9Ed5MqEq4QmuRaeehK
-   AnpKFMwkgDqTVCSZqtIEEXoht8Y4krPNz50KI4cRvJwboklBnys0ElBvt
-   27gcXM7ObvHEH0iUuOfT9+bCbcWoDp5oghvU8dx88f97HGE3n4gGGZOwB
-   w==;
-X-CSE-ConnectionGUID: Y4mTfW2ET/SxmgMHd3FOdg==
-X-CSE-MsgGUID: YKyDy1kvQiy0AyLIv9c9Cw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11679"; a="87947830"
-X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
-   d="scan'208";a="87947830"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 13:24:44 -0800
-X-CSE-ConnectionGUID: 4k+LtMuqSE+KHbYreHKmhw==
-X-CSE-MsgGUID: noE+y2k2TQOqneYEO6qyEg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
-   d="scan'208";a="211346250"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.108.186]) ([10.125.108.186])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 13:24:43 -0800
-Message-ID: <d52bfcaa-3b6c-47ff-8277-94324d4f8a78@intel.com>
-Date: Thu, 22 Jan 2026 14:24:42 -0700
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="13YXjGm8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36606C116C6;
+	Thu, 22 Jan 2026 21:28:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1769117288;
+	bh=knqv3YaYhXLjzVaLE6iKL0LxzIm/k75UNIsgiKoIlIU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=13YXjGm8umxmJamt0Zl1nKi6FNc3yziP/vjSEGG91+vsNi4OogHLRxY7Os18riT6j
+	 xSB1wtQTgLsp2E+D4CjtXNYBRWoJb6FbDoLA75BqLwuEZ73BxJni5ECzExUPT4C57K
+	 NjFDS57rLQ2ZgcD+FsaZEXwed9MX9I3E9DrRSicA=
+Date: Thu, 22 Jan 2026 13:28:07 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Cui Chao <cuichao1753@phytium.com.cn>
+Cc: dan.j.williams@intel.com, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Mike Rapoport <rppt@kernel.org>, Wang
+ Yinfeng <wangyinfeng@phytium.com.cn>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2 1/1] mm: numa_memblks: Identify the accurate NUMA ID
+ of CFMW
+Message-Id: <20260122132807.7204b83e97e33290f6eb7d82@linux-foundation.org>
+In-Reply-To: <2d1e23ad-7ec1-483b-88b3-70ce19b69106@phytium.com.cn>
+References: <20260106031042.1606729-1-cuichao1753@phytium.com.cn>
+	<20260106031042.1606729-2-cuichao1753@phytium.com.cn>
+	<20260108094812.8757ce3ad8370668eaafb29c@linux-foundation.org>
+	<9132054c-3017-4af0-84e0-e4359b0794a6@phytium.com.cn>
+	<20260115101858.85fd7b8e837c1c92a4fdc5f0@linux-foundation.org>
+	<696944eca1837_34d2a10056@dwillia2-mobl4.notmuch>
+	<2d1e23ad-7ec1-483b-88b3-70ce19b69106@phytium.com.cn>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 9/9] cxl/port: Unify endpoint and switch port lookup
-To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc: jonathan.cameron@huawei.com, dave@stgolabs.net,
- alison.schofield@intel.com, ira.weiny@intel.com, terry.bowman@amd.com
-References: <20260122033330.1622168-1-dan.j.williams@intel.com>
- <20260122033330.1622168-10-dan.j.williams@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260122033330.1622168-10-dan.j.williams@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Thu, 22 Jan 2026 16:03:49 +0800 Cui Chao <cuichao1753@phytium.com.cn> wrote:
 
-
-On 1/21/26 8:33 PM, Dan Williams wrote:
-> In support of generic CXL protocol error handling across various 'struct
-> cxl_port' types, update find_cxl_port_by_uport() to retrieve endpoint CXL
-> port companions from endpoint PCIe device instances.
 > 
-> The end result is that upstream switch ports and endpoint ports can share
-> error handling and eventually delete the misplaced cxl_error_handlers from
-> the cxl_pci class driver.
+> >> So please, tell us how much our users are hurting from this and please
+> >> make a recommendation on the backporting decision.
+> >>
+> > To add on here, Cui, please describe which shipping hardware platforms
+> > in the wild create physical address maps like this. For example, if this
+> > is something that only occurs in QEMU configurations or similar, then
+> > the urgency is low and it is debatable if Linux should even worry about
+> > fixing it.
+> >
+> > I know that x86 platforms typically do not do this. It is also
+> > within the realm of possibility for platform firmware to fix. So in
+> > addition to platform impact please also clarify why folks can not just
+> > ask for a firmware update to get this fixed without updating their
+> > kernel.
 > 
-> Reviewed-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-
-> ---
->  drivers/cxl/core/port.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
+> Andrew, Dan, thank you for your review.
 > 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 436d9f8f65cb..446a97d48423 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1591,10 +1591,20 @@ static int match_port_by_uport(struct device *dev, const void *data)
->  		return 0;
->  
->  	port = to_cxl_port(dev);
-> +	/* Endpoint ports are hosted by memdevs */
-> +	if (is_cxl_memdev(port->uport_dev))
-> +		return uport_dev == port->uport_dev->parent;
->  	return uport_dev == port->uport_dev;
->  }
->  
-> -/*
-> +/**
-> + * find_cxl_port_by_uport - Find a CXL port device companion
-> + * @uport_dev: Device that acts as a switch or endpoint in the CXL hierarchy
-> + *
-> + * In the case of endpoint ports recall that port->uport_dev points to a 'struct
-> + * cxl_memdev' device. So, the @uport_dev argument is the parent device of the
-> + * 'struct cxl_memdev' in that case.
-> + *
->   * Function takes a device reference on the port device. Caller should do a
->   * put_device() when done.
->   */
+> 1.Issue Impact and Backport Recommendation:
+>
+> ...
+>
+> Thus, I believe a kernel fix is necessary.
+
+Thanks, I posted all that into the changelog.
+
+> Therefore, I recommend backporting this patch to all stable kernel 
+> series that support dynamic CXL region creation.
+
+It's helpful if we can tell -stable maintainers which kernel versions
+"support dynamic CXL region creation".  We communicate that by
+providing a Fixes: tag in the changelog.  Are you able to help identify
+a suitable commit for this?
 
