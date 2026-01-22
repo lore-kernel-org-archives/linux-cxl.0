@@ -1,164 +1,194 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608ED37C0E9
-	for <linux-cxl@vger.kernel.org>; Thu, 22 Jan 2026 11:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D413D1CC1;
+	Thu, 22 Jan 2026 11:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769081954; cv=none; b=li/sM2uEMc3J7YkNqzkN+e5l/25zXlH4VA/RAa1IHTQO8WkpLEP8KR3hDcgmvDApQ/3jot5cYegVk3fTz+whhib5jitik/qaipXfTDGLGZ2hxTX/RmdLeqyGoLXLWpaqylLPgcF9eAu4SEJSZ2yM4lfZgcREaX+1kLpuW+DeZsg=
+	t=1769082103; cv=none; b=EiJmlUlpZxHuVARh19hK0meJ/VN1No/S8lkniZ652/UZCl3LHCIyBFS27Nrwrp3bpKCc1kFldFvhka+7LdOrBr4OvvBsLuc4Z/HvEZLHe438xWZvQ5HIGz6GEpRtILOjdzf/mCwHz6BBlmevJ0h2JS6df/o6kpepYquAbJDr+7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769081954; c=relaxed/simple;
-	bh=thmxlGjmaO+nwhRVCf64tWTUeLN00gG4Y6pKdp0094w=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YiVRtm8KvaVgZITO36WSG1Sjne4pz0vRVbPGcQE1Uznta4EbSP/z9JdTdjhLZDQuNaARsQQXTqv4Qln5lPRDid01yUNzFy70y8v6z+h5bZVZM13YtIUF8MBzWoGk05Y312cedYo6E2yfrIh7m7Be9/LC2dV0t519cM1CXfKzPl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dxfG856smzJ46dc;
-	Thu, 22 Jan 2026 19:38:40 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5E84440569;
-	Thu, 22 Jan 2026 19:39:08 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 22 Jan
- 2026 11:39:07 +0000
-Date: Thu, 22 Jan 2026 11:39:06 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <ira.weiny@intel.com>, <terry.bowman@amd.com>
-Subject: Re: [PATCH 2/9] cxl/port: Reduce number of @dport variables in
- cxl_port_add_dport()
-Message-ID: <20260122113906.000028d2@huawei.com>
-In-Reply-To: <20260122033330.1622168-3-dan.j.williams@intel.com>
-References: <20260122033330.1622168-1-dan.j.williams@intel.com>
-	<20260122033330.1622168-3-dan.j.williams@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1769082103; c=relaxed/simple;
+	bh=NqQtXUERc3v4NzNZ99SDCcNfgBv7D/bmH0cyLocfDQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ul6cWuiCd23bPKmADpeCXysr8QJCQMbn1PfsbJgGfT69ncBuwDVxZwk5A0qeMndfbRpYSybHfQma7BIjBxnTQsHHujPLrcIrVbl9ESyEZOaogiUuVGNPhKm+rFOHTufL9clbWijnpWAe4rQy7KnAtsjrsFcovhmywXog2FbQNyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UEFpYXOg; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UEFpYXOg"
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 1D6934E421EE;
+	Thu, 22 Jan 2026 11:41:38 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id D41D760740;
+	Thu, 22 Jan 2026 11:41:37 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B0CD5119B0105;
+	Thu, 22 Jan 2026 12:41:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1769082094; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=Fl2SnsCgDRhlccmCWpsQ4CBlDuamahnW5kxpsohCwvo=;
+	b=UEFpYXOgJL+WIY89Mx/EpOyceBBILQiL0TxFQWpW01yiEySAJH2g1HcWGNeQm8jHeKv+xN
+	O2csc+HhLdo2gWFITsAzh6mTWYo9h+2QnQHxO2GdqZlsPvpTAG/XFqvOefokUsJca73PWu
+	919NjC9kftG/xECA0iNKY+BT7G6XeddTLl+YrGq6EFQ7innqv2Qzt9u7ZQzupbkT37WFhV
+	mgEsWUeGSzIj/19gb+Tq8BosxVfyi4TFbwa3Kmjo2kuM+uE7HxnX7idMvi9PAvs7Wiw+OR
+	Jl3h0x9NzvUaJ7inKLTNk1kZu+isqj/tgMXHTzscOm2flBtD/RFBursuZs9FuQ==
+Date: Thu, 22 Jan 2026 12:41:14 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Rob Herring
+ <robh@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Ulf Hansson
+ <ulf.hansson@linaro.org>, Kalle Niemi <kaleposti@gmail.com>,
+ linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
+ Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
+ Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, Charles
+ Keepax <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
+ <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Andy
+ Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally
+ <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+ <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Alison
+ Schofield <alison.schofield@intel.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+ <dan.j.williams@intel.com>, Wolfram Sang <wsa@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Saravana Kannan
+ <saravanak@kernel.org>
+Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
+ overlays"
+Message-ID: <20260122124114.44812cc7@bootlin.com>
+In-Reply-To: <CAMuHMdWGk5ig3v9tGy1cMOg1LmKu3KrxQq2HO1vcQeZPuRxWBQ@mail.gmail.com>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+	<5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
+	<CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
+	<072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
+	<CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
+	<55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
+	<20251202102619.5cd971cc@bootlin.com>
+	<088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com>
+	<20251202175836.747593c0@bootlin.com>
+	<dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com>
+	<20251204083839.4fb8a4b1@bootlin.com>
+	<CAMuHMdXdwf7La1EYBWTJadsTAJG3nKQVW6wtBn-bUqshA=XHRw@mail.gmail.com>
+	<20251210132140.32dbc3d7@bootlin.com>
+	<c50c40cc-69f6-436c-a94e-94a3a10f6727@gmail.com>
+	<20251211132044.10f5b1ea@bootlin.com>
+	<1b9fa77b-d74a-4fa7-b2e7-8b389d59a5a0@gmail.com>
+	<20251211161902.11ef4248@bootlin.com>
+	<CAMuHMdWGk5ig3v9tGy1cMOg1LmKu3KrxQq2HO1vcQeZPuRxWBQ@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Wed, 21 Jan 2026 19:33:23 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+Hi Geert,
 
-> In preparation for refactoring cxl_port_add_dport() to add RAS register
-> setup, cleanup the number of dport variables with a dport_exists() helper.
-Maybe mention why the driver check is now after the duplicate check.
-If there isn't a reason for that, I'd put them back to reduce churn a tiny
-bit.
+On Wed, 21 Jan 2026 13:59:26 +0100
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+
+> Hi Hervé,
+> 
+> Revisiting his old thread (sorry for the delay)...
+> 
+> On Thu, 11 Dec 2025 at 16:19, Herve Codina <herve.codina@bootlin.com> wrote:
+> > On Thu, 11 Dec 2025 15:52:28 +0200
+> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:  
+> > > On 11/12/2025 14:20, Herve Codina wrote:  
+> > > > On Thu, 11 Dec 2025 10:34:46 +0200
+> > > > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> > > > Do you see the same trace with:
+> > > > - "pinctrl-0 = <&i2c1_pins>;" in your overlay
+> > > > - fragment0 removed from the overlay (i2c1_pins definition removed from
+> > > >    the overlay.
+> > > > - i2c1_pins node defined in your base DT.  
+> > >
+> > > Just tested. The i2c1 appears and the test-overlay probe gets called,
+> > > when the i2c1_pins is in the base-dt and not in the overlay.  
+> >
+> > Geert, do you expirement same results?  
+> 
+> Yes, after moving the pin control subnode from the overlay[1] to the
+> base DTS, the SPI bus and FLASH work after loading the overlay for
+> the first time.
+
+Ok. What I said for Matti's use-case is also valid for your use-case.
 
 > 
-> Kill the @dport needed to check for duplicates, rename @new_dport to
-> @dport.
-In ideal world I think the helper introduction and the rename
-would be two patches. Still real world, this is fine.
-
-Assuming you'll address the reorder of checks by comment or
-putting them back,
-
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-
-
+> > > > In other word, is the issues related to adding a pinctrl sub-node (pinctrl
+> > > > pins definition) in the overlay or is it something else?  
+> > >
+> > > Seems to be related to the pinctrl.  
+> >
+> > I don't think that the issue is related to pinctrl itself.
+> >
+> > IMHO, I think the issue is related to overlays and fw_devlink.
+> > The distinction between "a new node is going to lead to a device" vs "a new
+> > node is just data and will never been attached to a new device" when an
+> > overlay is applied is broken.
+> >
+> > This is broken with the upstream "treewide: Fix probing of devices in DT
+> > overlays" commit I've tried to revert. Indeed, on the LAN966x PCI device
+> > use case devlinks created are not correct with this commit applied.
+> >
+> > I am not sure also that devlinks created with a more complex overlay will be
+> > correct. For instance, Matti, with your overlay not sure that a phandle from
+> > the oscillator node referencing the pmic node will lead to a correct
+> > provider/consumer devlink between the pmic device and the oscillator device.
+> >
+> > On the other hand, this is broken with "of: dynamic: Fix overlayed devices
+> > not probing because of fw_devlink" works for the LAN966x PCI device use case
+> > an lead to correct devlinks but breaks your use cases.  
 > 
-> Reported-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Closes: http://lore.kernel.org/20260116150119.00003bbd@huawei.com
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/cxl/core/port.c | 43 +++++++++++++++++++++++++----------------
->  1 file changed, 26 insertions(+), 17 deletions(-)
+> Loading my overlay[1] causes the following changes under
+> /sys/class/devlink/:
 > 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index ff899c690d85..1637e97f6805 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1587,30 +1587,39 @@ static int update_decoder_targets(struct device *dev, void *data)
->  	return 0;
->  }
->  
-> +static bool dport_exists(struct cxl_port *port, struct device *dport_dev)
-> +{
-> +	struct cxl_dport *dport = cxl_find_dport_by_dev(port, dport_dev);
-> +
-> +	if (dport) {
-> +		dev_dbg(&port->dev, "dport%d:%s already exists\n",
-> +			dport->port_id, dev_name(dport_dev));
-> +		return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  DEFINE_FREE(del_cxl_dport, struct cxl_dport *, if (!IS_ERR_OR_NULL(_T)) del_dport(_T))
->  static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
->  					    struct device *dport_dev)
->  {
-> -	struct cxl_dport *dport;
->  	int rc;
->  
->  	device_lock_assert(&port->dev);
-> -	if (!port->dev.driver)
-> -		return ERR_PTR(-ENXIO);
+>     + genpd_provider:ca53-cpu0--platform:e6e90000.spi ->
+> ../../devices/virtual/devlink/genpd_provider:ca53-cpu0--platform:e6e90000.spi
+>     + platform:e6055000.gpio--platform:e6e90000.spi ->
+> ../../devices/virtual/devlink/platform:e6055000.gpio--platform:e6e90000.spi
+>     + platform:e6060000.pinctrl--platform:e6e90000.spi ->
+> ../../devices/virtual/devlink/platform:e6060000.pinctrl--platform:e6e90000.spi
+>     - platform:e6060000.pinctrl--platform:keys ->
+> ../../devices/virtual/devlink/platform:e6060000.pinctrl--platform:keys
+>     + platform:e6150000.clock-controller--platform:e6e90000.spi ->
+> ../../devices/virtual/devlink/platform:e6150000.clock-controller--platform:e6e90000.spi
+>     + platform:soc--platform:e6e90000.spi ->
+> ../../devices/virtual/devlink/platform:soc--platform:e6e90000.spi
+> 
+> Note that these changes are exactly the same in the working and the
+> non-working case.
+> 
+> Removing the overlay again removes all added links, but does not
+> restore the keys link:
 
-Diff is a bit of a mess due to the checks (originally driver bind
-then duplicate test) being swapped.
-Is there a reason to do that?
+I think you should have the exact same behavior with and without my
+modification.
 
+Can you confirm?
 
->  
-> -	dport = cxl_find_dport_by_dev(port, dport_dev);
-> -	if (dport) {
-> -		dev_dbg(&port->dev, "dport%d:%s already exists\n",
-> -			dport->port_id, dev_name(dport_dev));
-> +	if (dport_exists(port, dport_dev))
->  		return ERR_PTR(-EBUSY);
-> -	}
->  
-> -	struct cxl_dport *new_dport __free(del_cxl_dport) =
-> +	if (!port->dev.driver)
-> +		return ERR_PTR(-ENXIO);
-> +
-> +	struct cxl_dport *dport __free(del_cxl_dport) =
->  		devm_cxl_add_dport_by_dev(port, dport_dev);
-> -	if (IS_ERR(new_dport))
-> -		return new_dport;
-> +	if (IS_ERR(dport))
-> +		return dport;
->  
-> -	cxl_switch_parse_cdat(new_dport);
-> +	cxl_switch_parse_cdat(dport);
->  
->  	if (port->nr_dports == 1) {
->  		/*
-> @@ -1626,17 +1635,17 @@ static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
->  		if (rc)
->  			return ERR_PTR(rc);
->  		dev_dbg(&port->dev, "first dport%d:%s added with decoders\n",
-> -			new_dport->port_id, dev_name(dport_dev));
-> -		return no_free_ptr(new_dport);
-> +			dport->port_id, dev_name(dport_dev));
-> +		return no_free_ptr(dport);
->  	}
->  
->  	/* New dport added, update the decoder targets */
-> -	device_for_each_child(&port->dev, new_dport, update_decoder_targets);
-> +	device_for_each_child(&port->dev, dport, update_decoder_targets);
->  
-> -	dev_dbg(&port->dev, "dport%d:%s added\n", new_dport->port_id,
-> +	dev_dbg(&port->dev, "dport%d:%s added\n", dport->port_id,
->  		dev_name(dport_dev));
->  
-> -	return no_free_ptr(new_dport);
-> +	return no_free_ptr(dport);
->  }
->  
->  static struct cxl_dport *devm_cxl_create_port(struct device *ep_dev,
-
+Best regards,
+Hervé
