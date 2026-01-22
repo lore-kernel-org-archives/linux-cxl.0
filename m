@@ -1,119 +1,84 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593833F23CB;
-	Thu, 22 Jan 2026 09:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70FE33644A5;
+	Thu, 22 Jan 2026 10:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769075591; cv=none; b=rIcf44H6OQ8kxLki1QKHChLzqYUquHIaELuwwSJgN2WZITT+xPBpEzLX+i792QWhOkjmYeY20LVjwpRefgB4P/VDq/AcnurkQsm4dNx56i2fYl3GUAlKCQN83t2m9njkcg1lEyA+H4krsi0WeRJXnMy30QLSJG4Lu/qheCqnosg=
+	t=1769076571; cv=none; b=EjCosRkKtsRYuaCshmaarXfwbTDO+SNd56CY7pD2rnARviMvsmRuxZcprWQF2P+ful0Bg3gKJyglPTpUYPaxm4CtkHmr8KC05ahkBRvOiNYpWAEFacMGRF+6OWBsnM4Zt7CEVUHYmHiaKuaQw1s5Bph8HgO492qLxRymY/6Jfn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769075591; c=relaxed/simple;
-	bh=PeL3aWqI5qi+xFGChJE7V0mcmXL80+eoyqdi2OohyF0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KSphyz2UWacIkcWUdZUbedlT7m1HhXMXc3pM64R9tgjH8RAU4Xg7m4dhIWognmYYmgHAnC3oFh+2Db7BMo2WQ6jEzq9qvjI9Hn34GuHYT7WIfum9uluI4ucKlDzmfWE748qBZFBuiE6yyKAKtV1tCFkJYFFLYxmJPaLlhdhR8U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dxbvm4FyfzJ46t6;
-	Thu, 22 Jan 2026 17:52:36 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 207EB40573;
-	Thu, 22 Jan 2026 17:53:04 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 22 Jan
- 2026 09:53:03 +0000
-Date: Thu, 22 Jan 2026 09:53:01 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-CC: <smadhavan@nvidia.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, <bhelgaas@google.com>,
-	<ming.li@zohomail.com>, <rrichter@amd.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <huaisheng.ye@intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<vaslot@nvidia.com>, <vsethi@nvidia.com>, <sdonthineni@nvidia.com>,
-	<vidyas@nvidia.com>, <mochs@nvidia.com>, <jsequeira@nvidia.com>
-Subject: Re: [PATCH v4 07/10] cxl: add host cache flush and multi-function
- reset
-Message-ID: <20260122095301.00001ebd@huawei.com>
-In-Reply-To: <20260121202755.kwbpzjxuevnah6so@offworld>
+	s=arc-20240116; t=1769076571; c=relaxed/simple;
+	bh=OE5G/iNMCoqwXls/6lkvnsoui1mMms/Cv7bI2ZgQDDU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CGeooBzSouFzJeMXrYK3efo+D1Xh4ec6rUMQQit1/hQP86BAD7Sp9EVeZa+YylUhCmr87F1kgVsHelK7/cY2kSfMk0v2haiANAwHi4RE4JWQX8c7o/539/eOvhlYYUHelyh7jF03ttqaZbNm4xrtxZbxEWeyiipglJTzx5Kv+1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384
+	 client-signature ECDSA (secp384r1) client-digest SHA384)
+	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 5B2872C06AA1;
+	Thu, 22 Jan 2026 11:01:57 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 464F02D331; Thu, 22 Jan 2026 11:01:57 +0100 (CET)
+Date: Thu, 22 Jan 2026 11:01:57 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: smadhavan@nvidia.com
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
+	ming.li@zohomail.com, rrichter@amd.com,
+	Smita.KoralahalliChannabasappa@amd.com, huaisheng.ye@intel.com,
+	linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+	vaslot@nvidia.com, vsethi@nvidia.com, sdonthineni@nvidia.com,
+	vidyas@nvidia.com, mochs@nvidia.com, jsequeira@nvidia.com,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v4 09/10] PCI: save/restore CXL config around reset
+Message-ID: <aXH1lfR8g1q--oJc@wunner.de>
 References: <20260120222610.2227109-1-smadhavan@nvidia.com>
-	<20260120222610.2227109-8-smadhavan@nvidia.com>
-	<20260121112005.00001e80@huawei.com>
-	<20260121202755.kwbpzjxuevnah6so@offworld>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+ <20260120222610.2227109-10-smadhavan@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260120222610.2227109-10-smadhavan@nvidia.com>
 
-On Wed, 21 Jan 2026 12:27:55 -0800
-Davidlohr Bueso <dave@stgolabs.net> wrote:
-
-> On Wed, 21 Jan 2026, Jonathan Cameron wrote:
+On Tue, Jan 20, 2026 at 10:26:09PM +0000, smadhavan@nvidia.com wrote:
+> +++ b/drivers/pci/pci.c
+> @@ -4989,6 +4990,11 @@ static int cxl_reset(struct pci_dev *dev, bool probe)
+>  	if (probe)
+>  		return 0;
 > 
-> >On Tue, 20 Jan 2026 22:26:07 +0000
-> >smadhavan@nvidia.com wrote:
-> >  
-> >> From: Srirangan Madhavan <smadhavan@nvidia.com>
-> >>
-> >> Flush host CPU caches for mapped HDM ranges after teardown and prepare
-> >> sibling Type 2 functions on multi-function devices. The host cache
-> >> maintenance uses wbinvd_on_all_cpus() on x86 and VA-based PoC clean+  
-> >
-> >That's not sufficient in general on arm64.  It might flush far enough
-> >or there might be buffers beyond the point of coherence that are not
-> >flushed.  
-> 
-> ... and quite slow for large regions without firmware assistance
-> (CLEAN_INV_MEMREGION from PSCI 1.3).
+> +	pci_save_state(dev);
+> +	rc = cxl_config_save_state(dev, &cxl_state);
+> +	if (rc)
+> +		pci_warn(dev, "Failed to save CXL config state: %d\n", rc);
+> +
 
-Just for completeness in case anyone takes this comment out of context.
+Hm, shouldn't the call to cxl_config_save_state() be moved to
+pci_save_state() (and likewise, cxl_config_restore_state() moved to
+pci_restore_state())?
 
-CLEAN_INV_MEMREGION was dropped after that spec when beyond alpha. See F.b release.
-https://developer.arm.com/documentation/den0022/fb/?lang=en
-Talk to you to your favorite Arm architecture person for why
-(I'll just say it was a good reason).
+E.g. when a DPC event occurs, I assume CXL registers need to
+be restored as well on recovery, right?
 
-Also there is no guarantee that firmware interface does it any faster.
-Implementation defined and all that.
+Note that since v6.19-rc1, state is saved on enumeration and
+thus always available for recovery, see a2f1e22390ac.
 
-No one jumped on my proposal to write an ACPI AML wrapper spec
-so for now only option is to write a specific driver if you have
-a hardware agent that offloads these operations (like the hisi_hha does).
+As a general remark on this series, it seems to have considerable
+overlap with Terry's work on AER support for CXL, particularly in
+patch [01/10], as Jonathan has remarked.  Please cc Terry on future
+submissions and coordinate with him on conflicting parts of your
+patches:
 
+https://lore.kernel.org/all/20260114182055.46029-1-terry.bowman@amd.com/
 
+Thanks,
 
-
-> 
-> >Until there are clarifications from Arm we need something like the
-> >agents in drivers/cache to do equivalent of wbinvd_on_all_cpus()
-> >(be it on a PA range to making a tiny bit less horrible)
-> >
-> >Or we need an opt in list for platforms where a flush to PoC is enough.
-> >
-> >Needs to some sort of arch_ call as well, not hidden in the cxl driver.  
-> 
-> Reset should just be using cpu_cache_invalidate_memregion().
-> 
-> ... now, in addition to DCD, we have two users that are beyond the
-> "just once at boot time" use case.
-
-or Back-Invalidate to do this from the device side. If anyone has built that yet...
-Beware physical address based prefetchers though as there be monsters.
-
-Jonathan
-
-> 
-> Thanks,
-> Davidlohr
-> 
-
+Lukas
