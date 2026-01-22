@@ -1,167 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F764325729
-	for <linux-cxl@vger.kernel.org>; Thu, 22 Jan 2026 16:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D871436073C;
+	Thu, 22 Jan 2026 16:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769100857; cv=none; b=Z/WCBFGeEHo4dsGMwGyP0xs7u8XZu1+2ruZDVV2De88M7PPbRbe5JuIPMTveVESWsTQAJ7zP2hz4gyQkSFeS5x0U/xc2RFrQ92OUQn7TFwqpLpokVfctr2540VRlZ62Fcf0suhQ+Z3uC3HM6RC7fT9EMijwYAHCy/XHhiFkBtsk=
+	t=1769100966; cv=none; b=Hjqrm83FR62NlVnhmnf4StemeeqodUFEzJ16Sc5siy+bUf6+ye1kTB6FkpOPelBjr3xJ4n36VkR+BveN+PAekaWfD2AGN5z1de5AFSwBplPornlOlfiZG7YGiBlf/rnK+NtCB1IIyKqBRPcHgr328ku3s3UkcgkVAFi3nLJy8/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769100857; c=relaxed/simple;
-	bh=mk8kp0zf27/DlIWuu8/XjqVUVP3ieqcQE2eljpVFITA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YYhBGumhX8Esbh8hpGOURFx3JIRrYALXVVEsLj1MHytNblrHys7+iJ10ZBs4og+ugXh+u9MPYJkL1epuarxd96TRBEDh6j9fyz5RTCx6tePJR0UMsnlm3r/rgH2y91VRXyM58BJ5s7A1CQO+6e3mWkYvnb3gOWHdogAvyBTYEEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QMZHU7lp; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1769100966; c=relaxed/simple;
+	bh=jrjPF0WwvPZPRM6P6o/2VJJe4697MQWP7qZdUYFxSHY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=FfzVpXMoC1VYD/UNUbYAS6OqiLIDmX2LDiqZ0fsF03BsaZfj4t6gidVSSOWQCaGMjucs4bvtbuSI2bj9cysB/eWfHaOByX5f5l+cxW186bh3a/fNgej54N1LBh0bZjRFmpfNB1weuUUOuUhSAVDcaiWQs8xfQArP5ddXJo0HE7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UTEaHcdr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QMZHU7lp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769100848; x=1800636848;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=mk8kp0zf27/DlIWuu8/XjqVUVP3ieqcQE2eljpVFITA=;
-  b=QMZHU7lpzZ5KFEQOS40e6yOBzOYcEmFZ+/S8RafReXVDm0bdjPgt6nYf
-   6Y9vtmZWlfXbIpVOZ6x6ILVJK4T/5Twwes455sOELMdxPSDaiN1ODCWWk
-   snZQK5Sq3r8Yl5ASschHexDnwFvWXPaK6QvfV7pFK6MzKAMFZpW3Bs2Ss
-   SBcbbI+07P5HU9qinfVQL/CFgulQ930x+AeHfJrgliWoDhfiP6q409n9w
-   Xkjk82m365El2SFD1TKMPavV45dzvxGnp6V1LDw9v8ChEXixeUZ428atY
-   WohZ4n4aE3RPVZpIxocZSbLCC2VOIiwZtaXliFwu0oAePVCYUwoIPmEw0
-   g==;
-X-CSE-ConnectionGUID: cdoQZPTGQcStUq7tOGBdKQ==
-X-CSE-MsgGUID: C6GoJ94eQACdZ/000E0P7w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11679"; a="70322242"
-X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
-   d="scan'208";a="70322242"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 08:54:03 -0800
-X-CSE-ConnectionGUID: zexLLND9RTCS9MIQw07o/Q==
-X-CSE-MsgGUID: mBm05ZInR46r+gnwTH30ow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
-   d="scan'208";a="229743138"
-Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.108.157]) ([10.125.108.157])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 08:54:03 -0800
-Message-ID: <6190d2f9-d0fc-4051-96eb-87099587b5f4@intel.com>
-Date: Thu, 22 Jan 2026 09:54:01 -0700
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UTEaHcdr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C451BC116C6;
+	Thu, 22 Jan 2026 16:56:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1769100964;
+	bh=jrjPF0WwvPZPRM6P6o/2VJJe4697MQWP7qZdUYFxSHY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UTEaHcdr42aH4+na9j15KfpiqbAYafbC0X2iMUD6k4y/YtdzCCZ1DycwTLHJx0PPt
+	 +CS99+ai15VAAJyTlXJod09HI5BHg9DqD+81D8WgglFvTzCgDavAE+Qd9mUxEIoEfe
+	 6FnS53cyUDclSITvSvJ4wllykWndkBImnZdCxvZI=
+Date: Thu, 22 Jan 2026 08:56:01 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+ "H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Dan Williams
+ <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Dave
+ Jiang <dave.jiang@intel.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi
+ <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, Christian
+ Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Matthew
+ Auld <matthew.auld@intel.com>, Matthew Brost <matthew.brost@intel.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Benjamin LaHaise
+ <bcrl@kvack.org>, Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+ Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+ Sandeep Dhavale <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>,
+ Chunhai Guo <guochunhai@vivo.com>, Theodore Ts'o <tytso@mit.edu>, Andreas
+ Dilger <adilger.kernel@dilger.ca>, Muchun Song <muchun.song@linux.dev>,
+ Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>,
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Mike
+ Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>,
+ Tony Luck <tony.luck@intel.com>, Reinette Chatre
+ <reinette.chatre@intel.com>, Dave Martin <Dave.Martin@arm.com>, James Morse
+ <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>, Carlos Maiolino
+ <cem@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, Naohiro Aota
+ <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, Matthew Wilcox
+ <willy@infradead.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren
+ Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Hugh
+ Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, Zi
+ Yan <ziy@nvidia.com>, Nico Pache <npache@redhat.com>, Ryan Roberts
+ <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
+ <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, Jann Horn
+ <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, David Howells
+ <dhowells@redhat.com>, Paul Moore <paul@paul-moore.com>, James Morris
+ <jmorris@namei.org>, "Serge E . Hallyn" <serge@hallyn.com>, Yury Norov
+ <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+ linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+ linux-mm@kvack.org, ntfs3@lists.linux.dev, devel@lists.orangefs.org,
+ linux-xfs@vger.kernel.org, keyrings@vger.kernel.org,
+ linux-security-module@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v2 00/13] mm: add bitmap VMA flag helpers and convert
+ all mmap_prepare to use them
+Message-Id: <20260122085601.4d40447ca2f9a060d3140212@linux-foundation.org>
+In-Reply-To: <cover.1769097829.git.lorenzo.stoakes@oracle.com>
+References: <cover.1769097829.git.lorenzo.stoakes@oracle.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/9] cxl/port: Reduce number of @dport variables in
- cxl_port_add_dport()
-To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc: jonathan.cameron@huawei.com, dave@stgolabs.net,
- alison.schofield@intel.com, ira.weiny@intel.com, terry.bowman@amd.com
-References: <20260122033330.1622168-1-dan.j.williams@intel.com>
- <20260122033330.1622168-3-dan.j.williams@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260122033330.1622168-3-dan.j.williams@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Thu, 22 Jan 2026 16:06:09 +0000 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-
-On 1/21/26 8:33 PM, Dan Williams wrote:
-> In preparation for refactoring cxl_port_add_dport() to add RAS register
-> setup, cleanup the number of dport variables with a dport_exists() helper.
+> We introduced the bitmap VMA type vma_flags_t in the aptly named commit
+> 9ea35a25d51b ("mm: introduce VMA flags bitmap type") in order to permit
+> future growth in VMA flags and to prevent the asinine requirement that VMA
+> flags be available to 64-bit kernels only if they happened to use a bit
+> number about 32-bits.
 > 
-> Kill the @dport needed to check for duplicates, rename @new_dport to
-> @dport.
+> This is a long-term project as there are very many users of VMA flags
+> within the kernel that need to be updated in order to utilise this new
+> type.
 > 
-> Reported-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Closes: http://lore.kernel.org/20260116150119.00003bbd@huawei.com
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> In order to further this aim, this series adds a number of helper functions
+> to enable ordinary interactions with VMA flags - that is testing, setting
+> and clearing them.
 
+Thanks, I updated mm.git to this version.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+I dropped the memfd_luo.c hunk due to today's inclusion of
+https://lkml.kernel.org/r/20260122151842.4069702-3-pratyush@kernel.org
 
-> ---
->  drivers/cxl/core/port.c | 43 +++++++++++++++++++++++++----------------
->  1 file changed, 26 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index ff899c690d85..1637e97f6805 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1587,30 +1587,39 @@ static int update_decoder_targets(struct device *dev, void *data)
->  	return 0;
->  }
->  
-> +static bool dport_exists(struct cxl_port *port, struct device *dport_dev)
-> +{
-> +	struct cxl_dport *dport = cxl_find_dport_by_dev(port, dport_dev);
-> +
-> +	if (dport) {
-> +		dev_dbg(&port->dev, "dport%d:%s already exists\n",
-> +			dport->port_id, dev_name(dport_dev));
-> +		return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  DEFINE_FREE(del_cxl_dport, struct cxl_dport *, if (!IS_ERR_OR_NULL(_T)) del_dport(_T))
->  static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
->  					    struct device *dport_dev)
->  {
-> -	struct cxl_dport *dport;
->  	int rc;
->  
->  	device_lock_assert(&port->dev);
-> -	if (!port->dev.driver)
-> -		return ERR_PTR(-ENXIO);
->  
-> -	dport = cxl_find_dport_by_dev(port, dport_dev);
-> -	if (dport) {
-> -		dev_dbg(&port->dev, "dport%d:%s already exists\n",
-> -			dport->port_id, dev_name(dport_dev));
-> +	if (dport_exists(port, dport_dev))
->  		return ERR_PTR(-EBUSY);
-> -	}
->  
-> -	struct cxl_dport *new_dport __free(del_cxl_dport) =
-> +	if (!port->dev.driver)
-> +		return ERR_PTR(-ENXIO);
-> +
-> +	struct cxl_dport *dport __free(del_cxl_dport) =
->  		devm_cxl_add_dport_by_dev(port, dport_dev);
-> -	if (IS_ERR(new_dport))
-> -		return new_dport;
-> +	if (IS_ERR(dport))
-> +		return dport;
->  
-> -	cxl_switch_parse_cdat(new_dport);
-> +	cxl_switch_parse_cdat(dport);
->  
->  	if (port->nr_dports == 1) {
->  		/*
-> @@ -1626,17 +1635,17 @@ static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
->  		if (rc)
->  			return ERR_PTR(rc);
->  		dev_dbg(&port->dev, "first dport%d:%s added with decoders\n",
-> -			new_dport->port_id, dev_name(dport_dev));
-> -		return no_free_ptr(new_dport);
-> +			dport->port_id, dev_name(dport_dev));
-> +		return no_free_ptr(dport);
->  	}
->  
->  	/* New dport added, update the decoder targets */
-> -	device_for_each_child(&port->dev, new_dport, update_decoder_targets);
-> +	device_for_each_child(&port->dev, dport, update_decoder_targets);
->  
-> -	dev_dbg(&port->dev, "dport%d:%s added\n", new_dport->port_id,
-> +	dev_dbg(&port->dev, "dport%d:%s added\n", dport->port_id,
->  		dev_name(dport_dev));
->  
-> -	return no_free_ptr(new_dport);
-> +	return no_free_ptr(dport);
->  }
->  
->  static struct cxl_dport *devm_cxl_create_port(struct device *ep_dev,
-
+`get_maintainer --nogit' wants me to cc 72 people on this patchset.  I
+didn't ;)
