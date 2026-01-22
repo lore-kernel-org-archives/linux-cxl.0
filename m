@@ -1,108 +1,110 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [144.76.133.112])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09B43D3014;
-	Thu, 22 Jan 2026 10:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.133.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EAE3D410B;
+	Thu, 22 Jan 2026 10:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769077895; cv=none; b=PlSmHpR3GQI1mNAGZt6/FPHpvO7qdYpMWIsUEGtK8NevY4kUv4D+2Zwp5BESy4ToxX1wgmkDkOSPW41m5oP9trdAZ1Vy2YxRI19fq3NpOtf5I0hhkIwGQiM9siJzseAp9MzuCkABQd2Zr3kiOJKuRzlNX8GyMpJi3g+lspe1Gmw=
+	t=1769078874; cv=none; b=kEW/imjQ5OzjqdezXxPmVTRkMRF2Ug8lLWb6aFHGOG9hlPzd709/vQGZ1VThvrBydjkMdPuXEWDukhWcgAbEcD6qiYL3lx7XELH8V5HmBvjikQ6y6pRcuCRgaz9h9O6fNMZBi4jVpS/dDQnslyTiMtoOm+6MMxF73LnuKvDiNMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769077895; c=relaxed/simple;
-	bh=4EtH7hgxFQxwB8dNqfax5hmG2v8XYm6j1tjLgSAX50I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LMreXW/yKakuM7V7jac65IT/FXXeIP5PqkAdAXNLkRs+aQTH9OAxyN8Wm6dQDtAy0+6vfaiGsPEbyqtYHKt4G94cDhCZwdOePSovudlpku41qGgnKWQq+0UqAmIErt6SQF0W7oRMlnhzuR4JQCNNtzaivimuuPu3Xxy2AaV62yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=144.76.133.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 63E732C03E89;
-	Thu, 22 Jan 2026 11:31:28 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 232682D3DE; Thu, 22 Jan 2026 11:31:28 +0100 (CET)
-Date: Thu, 22 Jan 2026 11:31:28 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: dan.j.williams@intel.com
-Cc: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, bhelgaas@google.com,
-	shiju.jose@huawei.com, ming.li@zohomail.com,
-	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
-	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
-	Benjamin.Cheatham@amd.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	linux-cxl@vger.kernel.org, vishal.l.verma@intel.com,
-	alucerop@amd.com, ira.weiny@intel.com, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v14 09/34] PCI/AER: Export
- pci_aer_unmask_internal_errors()
-Message-ID: <aXH8gMf3zcaw8FF4@wunner.de>
-References: <20260114182055.46029-1-terry.bowman@amd.com>
- <20260114182055.46029-10-terry.bowman@amd.com>
- <696ee3e34f2d9_875d1004f@dwillia2-mobl4.notmuch>
+	s=arc-20240116; t=1769078874; c=relaxed/simple;
+	bh=l7jVi52ioWfWY9WDGWpQ38Gn+k0Kvx/HI3I3BWo3NEg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JT4ctHNeRUsbM2HtAAlms36rAUWGd22uGJk0yDgTRLLup2IJqaLbPlsKGyylBR54R5pglMVxFq0ZZsyl8bP4VBIXh+QbW3Fqoc/x09f6GveYIl1Ddj2jhQu51q4Ey/ZQ5sKdwXj95zXwxdmqm0l0TjYODJYaFNAeeG0TMbkZZ4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dxd6m5kB5zHnHGk;
+	Thu, 22 Jan 2026 18:47:12 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5447F40086;
+	Thu, 22 Jan 2026 18:47:48 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 22 Jan
+ 2026 10:47:47 +0000
+Date: Thu, 22 Jan 2026 10:47:45 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Lukas Wunner <lukas@wunner.de>
+CC: <smadhavan@nvidia.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, <bhelgaas@google.com>,
+	<ming.li@zohomail.com>, <rrichter@amd.com>,
+	<Smita.KoralahalliChannabasappa@amd.com>, <huaisheng.ye@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<vaslot@nvidia.com>, <vsethi@nvidia.com>, <sdonthineni@nvidia.com>,
+	<vidyas@nvidia.com>, <mochs@nvidia.com>, <jsequeira@nvidia.com>, "Terry
+ Bowman" <terry.bowman@amd.com>
+Subject: Re: [PATCH v4 09/10] PCI: save/restore CXL config around reset
+Message-ID: <20260122104745.00001fea@huawei.com>
+In-Reply-To: <aXH1lfR8g1q--oJc@wunner.de>
+References: <20260120222610.2227109-1-smadhavan@nvidia.com>
+	<20260120222610.2227109-10-smadhavan@nvidia.com>
+	<aXH1lfR8g1q--oJc@wunner.de>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <696ee3e34f2d9_875d1004f@dwillia2-mobl4.notmuch>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Mon, Jan 19, 2026 at 06:09:39PM -0800, dan.j.williams@intel.com wrote:
-> Terry Bowman wrote:
-> > Internal PCIe errors are not enabled by default during initialization. This
-> > creates a problem for CXL drivers, which rely on PCIe Correctable and
-> > Uncorrectable Internal Errors to receive CXL protocol error notifications.
+On Thu, 22 Jan 2026 11:01:57 +0100
+Lukas Wunner <lukas@wunner.de> wrote:
+
+> On Tue, Jan 20, 2026 at 10:26:09PM +0000, smadhavan@nvidia.com wrote:
+> > +++ b/drivers/pci/pci.c
+> > @@ -4989,6 +4990,11 @@ static int cxl_reset(struct pci_dev *dev, bool probe)
+> >  	if (probe)
+> >  		return 0;
 > > 
-> > Export pci_aer_unmask_internal_errors() so CXL and other drivers can
-> > enable internal PCIe errors.
+> > +	pci_save_state(dev);
+> > +	rc = cxl_config_save_state(dev, &cxl_state);
+> > +	if (rc)
+> > +		pci_warn(dev, "Failed to save CXL config state: %d\n", rc);
+> > +  
 > 
-> I folded in the following to this patch because opening up internal
-> errors for PCIe drivers in general is not a goal.
+> Hm, shouldn't the call to cxl_config_save_state() be moved to
+> pci_save_state() (and likewise, cxl_config_restore_state() moved to
+> pci_restore_state())?
+> 
+> E.g. when a DPC event occurs, I assume CXL registers need to
+> be restored as well on recovery, right?
+The CXL spec has some comic language around DPC that basically says
+"use with care, DPC trigger will bring down physical link, reset devicestate,
+disrupt CXL.cache and CXL.mem traffic".
+or in shorter words
+'Good luck'
 
-As said, the "xe" driver needs to unmask Internal Errors and could
-take advantage of this helper, so I'd call opening this up for PCI
-drivers if not a goal then at least a "desirable side effect". ;)
+If a CXL device undergoes DPC high chance you'll either trigger CXL isolation
+which we aren't handing yet in Linux because we aren't convinced software
+can really recover form it, or stall a CPU and end up rebooting.
 
-https://lore.kernel.org/all/aR1_M_i3yIygd8v-@wunner.de/
+Maybe we'll one day we'll figure this out. Today turn off DPC on CXL ports! :)
 
->     +    Internal PCIe errors are not enabled by default during initialization
->     +    because their behavior is too device-specific and there is no standard way
->     +    to reason about them.
 
-Well, they're not enabled by default because per the spec they're
-masked in the Uncorrectable Error Mask and Correctable Error Mask
-Registers.  It's up to drivers to unmask them if they know the
-hardware signals them.  CXL just happens be one of those drivers.
+J
 
->      @@ drivers/pci/pcie/aer.c: static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
->     -   mask &= ~PCI_ERR_COR_INTERNAL;
->         pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
->       }
 
-Unexplained change vis-à-vis Terry's submission.  It seems you're
-reading the Correctable Error Mask Register and writing the same
-value back.  That's doesn't seem to make sense.
+> 
+> Note that since v6.19-rc1, state is saved on enumeration and
+> thus always available for recovery, see a2f1e22390ac.
+> 
+> As a general remark on this series, it seems to have considerable
+> overlap with Terry's work on AER support for CXL, particularly in
+> patch [01/10], as Jonathan has remarked.  Please cc Terry on future
+> submissions and coordinate with him on conflicting parts of your
+> patches:
+> 
+> https://lore.kernel.org/all/20260114182055.46029-1-terry.bowman@amd.com/
+> 
+> Thanks,
+> 
+> Lukas
+> 
 
->     -+EXPORT_SYMBOL_GPL(pci_aer_unmask_internal_errors);
->       
->     ++/*
->     ++ * Internal errors are too device-specific to enable generally, however for CXL
->     ++ * their behavior is standardized for conveying CXL protocol errors.
->     ++ */
->     ++EXPORT_SYMBOL_FOR_MODULES(pci_aer_unmask_internal_errors, "cxl_core");
->     ++
-
-This change will require touching aer.c every time a driver
-(such as xe) has the need to unmask Internal Errors.
-Not sure if that's such a good idea...
-
-Thanks,
-
-Lukas
