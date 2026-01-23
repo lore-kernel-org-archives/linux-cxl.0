@@ -1,224 +1,242 @@
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013045.outbound.protection.outlook.com [40.93.196.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213ED377579;
-	Thu, 22 Jan 2026 22:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769122413; cv=fail; b=SnE9cUzKI8HSMuobWuciRpjU876EKlZN28U9UgQ63CohVsfDQky6F/pkTPy19TMvuuKpcJZOYXkMU9Pus0Z1X/kMfYAQFTXOQV87JYz1PclADj9NlF7sfmVM59meadOlHGtXV10ghKBDMl9foHRdqBKBTF7b50Hg8/Zs0wDaXRI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769122413; c=relaxed/simple;
-	bh=b29m261ulC64hEhyzhDQt8oYuQdRO9uDPVTiyi9dQxU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=bss3N59XKrExN6ciLbJxdbzHyRIW7dFFznb+dtyVmUe9m91Q0tohiZtVODVfKOegZsv0Mc6l4UZjYtajm8GdyMdRTmTjW2SeRV+wI9RuR5uNj1mM+iR7t1G6si0W1DVpbIMDcRzyY/FKzwdM9v48RKPxINb1BKHYRjn8m+sI2vg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=samZ9UDc; arc=fail smtp.client-ip=40.93.196.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE99305066
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Jan 2026 00:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769128126; cv=none; b=SxfMlysYt3T/KKIgHR8x19HRyxuykYfNP4ICaS8G7MVN4E9yOjOSSEOiH1mZ5R0zV4dBzBgxNVkoTDB6NgcfDLe+Lo7G7rRW8+PeRXt20iGmyeOo5bbnVcpsJ2b30twl/dIuqOUw6+blTBv9FYSk6wof2zeQHsFRh+Sxmo8HLHQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769128126; c=relaxed/simple;
+	bh=CLu2Yq17aYmqM4LkqoKcf2RIYC2R/DknVeOLtc0bZGU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=idb5YLlkixvoK5rA1r9bXLkIRIRK1xaH+LydaDVN7GrF2k17XgOvSoXt5cfsKGsoyrHbB/kMVBULrxA3WV5EnJk7mKU74zzQk2zyy2R4OETE7xnaFcjtvDWg1KoaGZxUNkja5jfXkiK8pcCQCFensQevJ7MVOB2voRcFuFFUrYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=sTex8HEQ; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="samZ9UDc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xVHhEMQLOhFUwVjWzrXUNbpI1JRjNJG8ev+1vr18cUAtUtmObjOn9ifLi52CTNG2bsH7uWhxwOJlhxuUIiTcXpTDEhkXpc27sGthsPq3FVkZ/+GGECKgyrtpO3vQGwfpgM8I45sTPdW75Q3iW+31BszBcGCyyvDKGjbPkIQjTJMPot4M47uNvEZ/G+tjOYjwx4UVXGVFDaVm4GU2f7L5PzNbuPSuJKyQe3EKjFbTNyoJqRdnEOeWufdxq4AYW4cgb0LhD8Wg33SGrK1muSzy91BhfnEDimn2wtDgYL61KGyCjb6L4OOXcRCGNACVGqvB8ohCNk0zlxeqBzt92klbqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UQ/B5chrXQRSVDl8N1B3xzK9dWTnqFStA60oy2WXxpg=;
- b=TT1Vj7qPkPplQVZjJgZ8yuC3NsAPOmAftYG/V7ZTMBp/HrQCUSPnunj9zLjlmNMc5x3Zu699eyOGmyNp+sQ1jFufNAe+ZiK/LjO1IeQTjV9zz7DW+5KyfTaESN9vdYPg/s+ST0RKa40Y+kDzWHGFvedRPSTdEZnwd+MmxBI2GwPx7PVSKFguJx28BfbmVN/fNvjYv3nV1HbQ/E11NNfTUwoPV5J8y2DW6lged4xiPy2edz51Ou/MzRvyYYfzCWT7k3/ucMSDEne0+IIw4cj/HJua7zFfENdTu84Q4ChCXUayqMDUp7xnysu01/rnSmGy7U5GNqi4Qj9GIQ7tocjtOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UQ/B5chrXQRSVDl8N1B3xzK9dWTnqFStA60oy2WXxpg=;
- b=samZ9UDcNqsSHv3/gce0iNP6dmiwEUu8cSGYS3wbGyNrT0cYF6paVkmWljEDn47ymGUQHYX4FMwqNMq0NJbYzaGr6gWcEkns4yn+KAMzk3B9yRR5NliKl2xMWx0lR4ItdjUl7FaZFe0c/DQ05h6yGyGk14aZQL/SSB0FinUWuFrnG3FKOS4WZYOrjCXaVkVoaUSRsz59KgCVHF2hRotqMD0bPdhn7AnkXQsEZY9/ndpVSmgavP67uzvwNTU2Un6g/ed46q8idwOPsqlAIk6Pr+AtPvg9jVadehdc+aeD7ElNlhthgtYhuvVs7hfWByG9h470SeIqz8yaFG66ABbBog==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- PH0PR12MB5647.namprd12.prod.outlook.com (2603:10b6:510:144::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9542.10; Thu, 22 Jan 2026 22:53:14 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%4]) with mapi id 15.20.9542.009; Thu, 22 Jan 2026
- 22:53:14 +0000
-Date: Fri, 23 Jan 2026 09:53:09 +1100
-From: Alistair Popple <apopple@nvidia.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Balbir Singh <balbirs@nvidia.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Matthew Brost <matthew.brost@intel.com>, Zi Yan <ziy@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>, 
-	Matthew Wilcox <willy@infradead.org>, Francois Dugast <francois.dugast@intel.com>, 
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	adhavan Srinivasan <maddy@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
-	Felix Kuehling <Felix.Kuehling@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>, 
-	David Hildenbrand <david@kernel.org>, Oscar Salvador <osalvador@suse.de>, 
-	Leon Romanovsky <leon@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, linuxppc-dev@lists.ozlabs.org, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
-	nouveau@lists.freedesktop.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v6 1/5] mm/zone_device: Reinitialize large zone device
- private folios
-Message-ID: <w37swembg3m2ruxrlbm4xpx4eccvp3fsd7e4shfdxcpmpisk3x@dqsxzkyabjc6>
-References: <96926697-070C-45DE-AD26-559652625859@nvidia.com>
- <20260119203551.GQ1134360@nvidia.com>
- <ef6ef1e2-25f1-4f1b-a8d4-98c0d7b4ad0c@nvidia.com>
- <EE2956E3-CCEA-4EF9-A1A4-A483245091FC@nvidia.com>
- <20260120135340.GA1134360@nvidia.com>
- <F7E3DF24-A37B-40A0-A507-CEF4AB76C44D@nvidia.com>
- <aXHPkQfwhMHU/oP6@lstrano-desk.jf.intel.com>
- <9077ab5b-f2c8-4c8d-8441-631e7c2cf384@suse.cz>
- <626c34fc-34df-4629-baf3-fbebc9abafbb@nvidia.com>
- <20260122134114.a04ddf4c34a4b926d057032f@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260122134114.a04ddf4c34a4b926d057032f@linux-foundation.org>
-X-ClientProxiedBy: SY6PR01CA0159.ausprd01.prod.outlook.com
- (2603:10c6:10:1ba::17) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="sTex8HEQ"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-89461ccc46eso32352426d6.2
+        for <linux-cxl@vger.kernel.org>; Thu, 22 Jan 2026 16:28:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1769128120; x=1769732920; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=IFYgKhU8JAGQuJjWFIbGQPMHdR9zMmvtXkRE/aex1U0=;
+        b=sTex8HEQQp3vah89i8+O7hh84DidLZQtBHw1mCl+K6YTYOgiMe3InmUiS2/IzfP+fU
+         L3DIThXVCm5i6E/yxU+KnBuhY8sU3/dhTheD0NEpvnoXZIKCePc7OSsj4oy6YQljzd98
+         wAAA1CNbjE8RULaWUsbwBWnS25/Bt7+Z5ZJLNf3vf0spHictHhkjqBLq1ptWrfgoKqLD
+         Ws6PblsTysFIclW1IOe8Ayht3r/5rUGU/WfRQIJVBP5/Td5xHkRwKtyNW1hf+KhEQVo9
+         noHe8heq8xhdHoyvk4EiAdrZochL4HbAIZXfvtM+uY43CRPSnwVKtzEUNCUmDauIc+mv
+         0VyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769128120; x=1769732920;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IFYgKhU8JAGQuJjWFIbGQPMHdR9zMmvtXkRE/aex1U0=;
+        b=Fa8tOw5/vac0ccFMcTZ9aLqaFttgtpXsMRU1xoMO4OcU8Yd1Eo0mwF/LnZdhVgCjyY
+         4DUZG6FY+0uXfalFuchviOl23/oLYk3RcBCoDvWOs3FshdjVVWuZHzJsPR4hTNvYo5Hb
+         uP8d8KlzT/7lpAXUN0801P7QNbVGUvp3PEul7DTMRSYDrYkRLY4H0KWURC0sfaUUiZN/
+         0mqFIXtnLe93vS+qCUkk+D6JT0h6oUBxQIzYM00vXefeIUjJeKiaAuMvXpBc6e5wVhMH
+         R207mWc247bgk3ovYPCaQq9xhc9dmgND8x0ci428q+pjMP+c7ORIjrJ6asMjbJZ9Fgr2
+         +HLQ==
+X-Gm-Message-State: AOJu0YyIJSCygqqEgQ7HXx8jWETDxgKQVvOeku1LzgML7bogxD+yTN9C
+	pvYtx/9SFOzM4DEeFL2ACCneosdmEqC4rl1JtNjQvdtPs6itbUk3PFGBQ0DlQKApgWM=
+X-Gm-Gg: AZuq6aIwp8du6XQ86Ztf4gnkXOWVw3MS3NieAY74pQmg4h0plh96uvy3PuVKaRGK870
+	dawbiRWdRUY2/ENKfjqic0W4JrtrR3m7O3T/huwJcIj4zImL24q8so1s4bSM3yl9a76R5Up6wWM
+	e7zYZgxvM/iRSK5Iv8JxtymA4r7K2g3enWuBKXGl06jljdp5qFCvT0Y2t8PsjbYPwb97BD1/3WX
+	gmGK6g7szzUFME0aDMmdLXntsDAPRkdZ0rMXBTSbGVttpQ3LUF7F1XqoNMGrODlw15Lsh631lmG
+	9gGxzAkIA8bn4cxFh2C1pKX6N9l3xNj0l15ZZKtJD9Mte+zhFXc0udEwSOOf+WmG4doCGG6HLGg
+	uaVmQNNh9pmHGXeN+SYMfC5xV/HBHmL1AZ9B51a2qOz6Ep1MviukqM7b9I0Gfmdi+JqnBDdcDeB
+	ZNnUmtPc8vKwF5yBgNJxSZou6eeLgzW6+/ZvYjtiunenJy6TwAi/Zbm0PAZ4aJAqitNZfOCg==
+X-Received: by 2002:a05:6214:1315:b0:894:7d25:d6ba with SMTP id 6a1803df08f44-89490187df0mr21475356d6.6.1769128119741;
+        Thu, 22 Jan 2026 16:28:39 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-894918c99c0sm5137846d6.32.2026.01.22.16.28.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jan 2026 16:28:39 -0800 (PST)
+Date: Thu, 22 Jan 2026 19:28:37 -0500
+From: Gregory Price <gourry@gourry.net>
+To: "David Hildenbrand (Red Hat)" <david@kernel.org>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+	dave.jiang@intel.com, jonathan.cameron@huawei.com,
+	alison.schofield@intel.com, ira.weiny@intel.com, dave@stgolabs.net,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	vishal.l.verma@intel.com, benjamin.cheatham@amd.com,
+	David Rientjes <rientjes@google.com>
+Subject: Re: cxl/region.c improvements and DAX/Hotplug plumbing
+Message-ID: <aXLAtVZ_bVwF9nBG@gourry-fedora-PF4VCD3F>
+References: <aXErSP1zKnv4koKG@gourry-fedora-PF4VCD3F>
+ <4d66eac3-1a2b-4d9d-8a9a-529a19758439@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|PH0PR12MB5647:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0539c5d3-3a10-41ad-039c-08de5a09066b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dk94VXZGWU5TSXQ3cG96dkhld2drTzRXWmV4RDNrYTBFemE2Rys5RWQ3dzVw?=
- =?utf-8?B?SHhQS3R4QUUzbjBLZGg5aTFCSysvSDNPSjBWNHRjTE1CYWpPZys4UUs2UUtR?=
- =?utf-8?B?b2l4amc5SklRTTJxV0ZJaHJZTmFsd0k0dHpXQzNsUXpLOGxlZ3dnRUJ0YkRK?=
- =?utf-8?B?Q3VjYk1wSzlJU2VpSkVFV2E1Vy9SSnJQNVdQRHhrcDNtOU5EZnZYc0FFakdh?=
- =?utf-8?B?QXNSbFBGZVIwMVhUQWVNREZYc2RsZDRzWnlsSy93Rmxzd29JR1VJQ0xSVFFj?=
- =?utf-8?B?Ymp2QkREVU83Y2IyQzQvRHR5OU5sTmhaUDlWQW05dzU2RjBZVTBNTjhpK1Vu?=
- =?utf-8?B?TmtKSktPUDM4eXQ0RWtEUjJEYjRwU2JhWElsTkQwQUdFNmZCQXl2Ly90SXhj?=
- =?utf-8?B?NU1IWDhacStnbm9VUXhGaENjQWZXSXNZUngzcmtkb0pmOHJHZGluc1F1WE95?=
- =?utf-8?B?c05ZMi81aEZzY3FNamkrSTRCdnBGMnErbWdXTUJjVWNLVWpGOGRGT2hkT0Vq?=
- =?utf-8?B?NXk2TDMyM05uckZBOHNHTEtCM3REOTdxYXBsVDh5LzNZSm1VdENuN2ZIWGxh?=
- =?utf-8?B?WmJhbXFZMlpzWTFXSUxaeHphdDM5NUxGWGhTa0tTUlVxdGtpaFdXME9IQ1c2?=
- =?utf-8?B?N2hRbEswbHhGUWVEWWdmS0M1UUppa051eldCcnhYY2dqT1Rta3UxNVg0dWdT?=
- =?utf-8?B?MFNpemR3RnJ4YVhWVHFFcU9PTlF2SHhBMkVpUk1Id1RDQjJNUk5VMWJ1dTBE?=
- =?utf-8?B?L29CZVVyQTNVUnVQOUpKL2xhNEJ0UFYwaVYwZTJKSldNbUhPQlRMMGgxdWVz?=
- =?utf-8?B?aCsvZk1RMlJEc3cwMVhQeUNuRW92VHAzcG9NVHRSYnFITGtoc0p4NDdmTWsx?=
- =?utf-8?B?NTdsVUY2V1dISTJxbDViWVd5QUR1eXl6VFh3djBEL1IwUVpWbHk3eTcrTjRE?=
- =?utf-8?B?VElyTUFrM0N2SnhidXpVY3J6N2tPaTY0ZnFaeW43c0ZLUUJ3ZG9ENmsxRGxT?=
- =?utf-8?B?MGVHVnZzU1RuTmpweDJIVnZuWk1JMThqTlRHOStKcnFwdHpaQ2xQODdIZnUy?=
- =?utf-8?B?R05Zd24yV2JyeHpsYkIyVFJqemVQRHBjNXYySHdlcStWaWlUdHhZNjVYS2JV?=
- =?utf-8?B?aXljb2IvcFRZT2crRnlaLzJnQ0RzbTZwZ0Ura0hoWERXeERhZC91UE1MVDRS?=
- =?utf-8?B?UzhEamNJbUp2Wkl2TDVYdEFSUkdncWNUV291NWxUdXkxeGpjMUUxY2RtelJ4?=
- =?utf-8?B?SU1kSTMvTU5DN0didFNPdUJRQStPQ3RyTENRR3VMRTlzeDRCSHlQZnVDc1Jk?=
- =?utf-8?B?Z0RUcXdNZFFRdmlLYmlKL2xmUkhGUkNTQ1pxZGhEeHlHSEptclpUTlArd2NV?=
- =?utf-8?B?djhhTUdWRXNkRUJwb0hheXZJMWlBZmxMVEVDSDBJZ21wMEJNUjFTRmcxZDZN?=
- =?utf-8?B?a2hWcTlFeXhJVm1CL1pIZ0o2akFqeDRzRkZqQlQrY041YVZVMC9VVHJiRDJh?=
- =?utf-8?B?TFliRjF2NDE4Tk9hRTFGbzB3dFh6eWVFcGpwVGFVZW5qWGlGNUplZTFXVHdP?=
- =?utf-8?B?dzZMa0dZRXlhaGI5QnkzVVhCZHYyUXB1MVdrWGdRcnE5YUs4azJObUFiV2lV?=
- =?utf-8?B?RnRhNFpnb3BYa1VUd2lETDlvemgxeUdUb1hnM0pRVHJzazFmVXpJQVZoSFhi?=
- =?utf-8?B?L1hRZ0gxVGI3U2EvSnN5TzRZZEQ3SGNockMrVkw0dWlzcGxOalFjQjg0bS9t?=
- =?utf-8?B?c3dycUNqSnRqNmJOd25jUytFR0tXT3JzVndxS2lVa25iaGtWTTIvZGpWNHRt?=
- =?utf-8?B?UksweCtCWG9jcVFBVWxYbVg5ekdsVGhsaWlrWlQ3QVd2N2xGT2U1QUxUYzI2?=
- =?utf-8?B?NGhET2psVFNpQmxDRGkwU2F2ckxuL1BhN0FaYlg4eXZzTVlSSWJPMnFCN1cy?=
- =?utf-8?B?UmdXczl3QXN0Q0RTTlFoVEg1UHlyNS9vd1dmU3hxZ3diV3NmL0pBSWRRd0tS?=
- =?utf-8?B?Y3llaWoxOVBrRXE2c2dhZm9Xb1plblFNWFVjaFdzaFM0emwwVkdEOHBFdkto?=
- =?utf-8?B?N3RIQyt5QTQrT1ROUUdoNHZHbnVlcXEzaGY4NUdITEtsbEhBSks2R29zMXJn?=
- =?utf-8?Q?7IzE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RDlhN1hYZ2E4Y0xjMGZqc3pKUm9lK05uUy9QUWZYcDRxTG50WlpjUTdmbXlT?=
- =?utf-8?B?dVl4OE1zM1o0c0piQkt4aVlZbXZWcEhsK1Q4bjg5RmlRNTlHUzlMOFNONzdq?=
- =?utf-8?B?OUpZV3BianVUMko3S3F3VmJrMi9VZC9aYVZnSEZ4VHRTM2hOb1pTcHJFTDlP?=
- =?utf-8?B?RytRQTBoLzVZcmxYK2YrWFZqc091KzRIVHpYb2UrVzhYOGY1WEs0cDFBeElR?=
- =?utf-8?B?SHZmc045eWRWMnJIWnV4R3BSQ085NnlLMFg1Z3lyemNmZngvRVNCa3Bjd3My?=
- =?utf-8?B?eElNZ0Rvb0VZcEtXcU5CQjliL0htNllHSUVORUR5M2xkZGN1ZFFuOXg5dzRW?=
- =?utf-8?B?L3VpRC9BVG96ZGIzZkUvNFhrN0Vtd01kK3RBSG92Q0dOczBydTdhNHoyYjBD?=
- =?utf-8?B?a09zYnI2WnJHcXp1ZGtIWnoxVXQ1N1BrQXdidWxJV0VSN2gvdlJWWjdENVVw?=
- =?utf-8?B?VGorNElnelhrVnpNVHM1YWZJZk1ONFhEL0FVRThGanNaV0J5QnpNYUNkZzM4?=
- =?utf-8?B?TC8yT0hlS3JnTStuRUY2QkxRLzc1WkxXQVJ2VUlRRTk1SHkvMDg0LzdXMzk4?=
- =?utf-8?B?QWF1dUNkVFNJRmRuUlQrQ090UHJWTStYN090MmNaSStlSkpFZ3J4dFZuM0Vu?=
- =?utf-8?B?clVDbTFSeG5EbUhBS3JiQm02NVRnSnl1eTNORHhPUStjOER6UHhmVmxZV0Jh?=
- =?utf-8?B?ekpKTURuWG5RVFlTRTdsTTZuWHU0ZlRqdHpqVE5nRWxyK1ZKTzRDUE4vR3JX?=
- =?utf-8?B?bXphS1JDNmxtMHFOb3E4N3Y5MFd0bFVyZlROd1cvRFpQeXErQ1VkM3hXUDJz?=
- =?utf-8?B?S1B2MWtRSHJNeDhpdFpUclNoVzRuSkhsd3ZHYWJTNTlvYnhHaDZwY3B1K3E4?=
- =?utf-8?B?V084c3V1dThQbEdrdUprL2F2RTZ4MHZ0Uk5wdTVPSnNlcDZUN0EvQ095emsz?=
- =?utf-8?B?UWpJZnZEVkVjWW42MVpjODE2RzllTno1cDBLNG1NZWI1MDF1ODUvd3dQQ1N0?=
- =?utf-8?B?bW5GcWJTempsY00vaENPRDNsRURrdGFpd3BNNVNZMm4xTlBuZ005QXc5T1FR?=
- =?utf-8?B?U0RpcFFVaGxMZGdncUdYb3dwL0g1ZnFKMzF0Q2VDS1l5RmZuQXk1ZDhwQVJI?=
- =?utf-8?B?NWhPdXBrVHMrcXdCalJRWDV5TXpJZTR3VGU1NXRlUDUrTDJmc2dHMkNLclJG?=
- =?utf-8?B?UTZwQ3hIb3JMdWZKZ2FMNm5SeG1haGMxRkFCSUhBNElKWEEvOWlqaUM4Tm5w?=
- =?utf-8?B?TVR2cVFRRkRiL3lXM2xtSmpwb1FKZ2pyYWtFWXNNTk5VdFBjbWJrTE9pN1pm?=
- =?utf-8?B?eFFSNGEyZWVyeFF1aExya2xyUStVTnI1VkpHeVRaOFo2M1dOVWJjOGFTb2FP?=
- =?utf-8?B?WkVRaWxoKzFiNE1Yd2MzQjJOaHIzdlZWckNaRUY5cTBxTk05NktURVFhZk8x?=
- =?utf-8?B?TEFYb3FxbzlmYzhqMFhUTFc4ZVBwc2dSUjhPeDMvZFpqTnd2bStyODlibjlJ?=
- =?utf-8?B?Zll6R2dvM0RUQitaQmozZ3hGMXZqOGg2V0VPZVhBcXJ6WGU2b0pLNVp6SFIz?=
- =?utf-8?B?T1QyaVNWOCtFTWNuSElsY1poazNvZkp3Y250dFVqNCtuT1B5cUV0clBzczNX?=
- =?utf-8?B?RFJwRWlZNXZtN1k1b2FrTUIrV0ZkeWowUGRDKy82dVg4SlY0OHVNRk8xNWZx?=
- =?utf-8?B?KzJxV1VtL3NWUHY5VWZBUGRxWXZHTWtGQWhzNG9mdUR6MWNZdlFKTW81QXkz?=
- =?utf-8?B?Tk9XNVM1NHVzd2JSSHd6UVQ3WnFBSnFaNHdIazc4RGh6dXhZYTUrY1IwNFoy?=
- =?utf-8?B?eDNWenVTZFp0SGNMSFlabXlmQmdRZkxSOVdEY2dqbGpjWWZyZFpTaEczdUJh?=
- =?utf-8?B?QkovQ2tWWnRYcGhoSm5oOFJGNTQvTUxHT3JVUVJvYUpNaVlGYnVycUZiQkFn?=
- =?utf-8?B?c1BJZFZPdU1uYk9ibXY5cjJMVDFEMnhsRE0xZjZMUjNMK1RlVW9nOWNVcHlL?=
- =?utf-8?B?Uk01SzI1V1RBOWhaaXcvMWh5eGxJRVBCOGtKY2MvMEUyeUlZaVVoZVN4N2RM?=
- =?utf-8?B?dG1zNDJJVlFLT2hvRzY5czNUaDJQVUdhZFh2SDJLbWJlUWIwdDlDMVpucnpW?=
- =?utf-8?B?aHczTGZRbmtoRzBxQzRtVDh5RHhmRVA1ZWRqSEZXSC9rL0JpWXkwejA4YkpM?=
- =?utf-8?B?cWxydUFZSXk4SjFQMm5oT0xQaWM3UTlqdFFaQU00YUZUbUs5WGRIbHpubUly?=
- =?utf-8?B?cFZxNWFpcHVhMUdSSjdmTjVJYXhqdjJSZ0R2VndOa2U5YUhuMy9HVDRLdTNz?=
- =?utf-8?B?V21aV1dubGRxUkZGQ1JiV1lRM3kycFYxclNwYzhNTWFNUS82a3J3UT09?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0539c5d3-3a10-41ad-039c-08de5a09066b
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2026 22:53:14.3973
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZHeEW4HH0f9kDMOX+mBI7IlQW8rQqvNRvgbQrS3N5MbQ3yLy1eE8iBzSg/WbfwOjO4cMC3Kjh5QUhT0mglaeoA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5647
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4d66eac3-1a2b-4d9d-8a9a-529a19758439@kernel.org>
 
-On 2026-01-23 at 08:41 +1100, Andrew Morton <akpm@linux-foundation.org> wrote...
-> On Thu, 22 Jan 2026 20:10:44 +1100 Balbir Singh <balbirs@nvidia.com> wrote:
+On Thu, Jan 22, 2026 at 11:14:15PM +0100, David Hildenbrand (Red Hat) wrote:
+> Some of that (especially the interaction with core-mm) feels like it would
+> be a good fit to discuss with he wider MM community in one of the bi-weekly
+> mm meeting. (CCing David R.)
 > 
-> > >> - Intel has demonstrated that this works and is still getting blocked.
-> > >>
-> > >> - This entire thread is about a fixes patch for large device pages.
-> > >>   Changing prep_compound_page is completely out of scope for a fixes
-> > >>   patch, and honestly so is most of the rest of what’s being proposed.
-> > > 
-> > > FWIW I'm ok if this lands as a fix patch, and perceived the discussion to be
-> > > about how refactor things more properly afterwards, going forward.
-> > > 
+
+There is a Monthly Linux-DAX meeting, and a Monthly Linux-CXL meeting,
+obviously this is a lot of cross-attendance.
+
+Happy to attend additional discussion.  I was trying to shore up some of
+the cxl-region plumbing aspects before going wider.
+
+> >        - hiding memory blocks? (discussed in last meeting)
+> 
+> What is that about and what was the result of that discussion? :)
+> 
+
+It was just a question as to whether memory blocks are still useful
+if the intent is to provide a collective hotplug interface. I don't
+think there are any real proposals for this, just making note of it.
+
+> >    Solution 2:  Make a dedicated sysram_region with policy
+> 
+> What kind of region would that be?
+
+plumbing between regionN and dax_region kobjects
+
+right now the kobject relationship is:
+
+region0           <- cxl driver created kobject
+  └dax_region0    <- default selects IORESOURCE_DAX_KMEM
+  	└dax0.0   <- auto-probes on discovery
+
+But there is baggage in the existing plumbing:
+
+1) dax/cxl.c =>  hard-coded IORESOURCE_DAX_KMEM for dax_region
+2) dax/bus.c =>  devdax is probed on discovery w/o manual bind step
+3) cxl/core/region.c => BIOS-configured CXL regions automatically
+   generate a dax_region, and this auto-creates a dax_kmem device
+   which is subject to system-wide MHP policy.
+
+This creates a backwards compatibility headache.
+
+The same auto-plumbing is used in the manual creation path, so:
+
+   echo regionN > cxl/decoder0.0/create_ram_region
+   /* program decoders */
+   echo regionN > cxl/drivers/region/bind
+
+will pump the whole thing directly into dax_kmem and auto-online
+according to system default MHP policy.  There's no intermediate
+step in which the user can define preferences (unless you add
+them as attributes to regionN - which is another option).
+
+Adding the intermediate object:
+
+regionN
+  └sysram_region      <- encodes policy like hotplug and dax drv
+  	└dax_regionN  <- which would be passed here on creation
+		└dax0.0
+
+lets the cxl-cli command to be more expressive:
+   `cxl-cli create-region -t ram --driver=sysram` => kmem
+   `cxl-cli create-region -t ram --driver=dax`    => device_dax
+
+and would change the sysfs pattern to
+	echo regionN > cxl/decoder0.0/create_ram_region
+	echo regionN > cxl/drivers/sysram_region/bind
+	echo online_movable > cxl/devices/dax_regionN/hotplug
+        echo dax_regionN > cxl/drivers/dax_region/bind
+
+and gives the user a chance to configure a policy before the region
+is pumped all the way through to the endpoint dax driver.
+
+
+(Much of the rest of this doc is QoL stuff that could be ignored)
+
+> >    Solution 2: dedicated sysram_region driver w/ or w/o DAX.
+> >                Can support sparseness w/o DAX (see DCD problem)
+> > 	      Could use DAX for tagged DCD regions.
+> >                Tradeoff: May duplicate some DAX logic.
+> 
+> How would that look like?
+
+For untagged extents w/o dax:
+
+    sysram_region->nr_range
+    sysram_region->ranges[0 : nr_range-1]
+
+    Extents in this list would be hotpluggable individually and
+    could be returned to the DCD device individually
+
+    sysram_region.c code would call hotplug directly, not via dax.
+       - hence, this duplicates some DAX logic
+
+The above just prevents needlessly creating dax-indirection for sysram
+extents with only one destination:  add_memory_driver_managed()
+
+
+For tagged extents:
+    sysram_region->nr_regions
+    sysram_region->dax_regions[0 : nr_regions]
+
+    A set of tagged extents would only be hotpluggable as a group
+    and could only be returned to the DCD as a group.
+
+    it would also expose:  dax0.0/uuid  <- contains the tag
+
+
+from this you get a cli command like
+
+    cxl release-extents regionN [--id=X] [--tag=Y]
+
+         translates to something like
+
+    echo "release" > regionN/sysram_region/extents/[X,Y]
+
+Something like this.
+
 > > 
-> > I've said the same thing and I concur, we can use the patch as-is and
-> > change this to set the relevant identified fields after 6.19
+> >    Solution 4: Prevent non-driver actions from changing state.
+> >                Also solves hotplug protection problem (see next)
 > 
-> So the plan is to add this patch to 6.19-rc and take another look at
-> patches [2-5] during next -rc cycle?
+> The crucial part is solving what you spelled out in the description: "race
+> conditions". Forbidding someone to re-configure system RAM sounds
+> unnecessary.
+> 
+> For example, I use it a lot for testing issues with page migration while
+> offlining memory from ZONE_MOVABLE.
+> 
 
-I'm ok with this as a a quick fix, and happy to take a look at cleaning this up
-in the next cycle or two as it's been on my TODO list for a while anyway.
+For most use-cases yes.  For something like FAMFS (distributed shared
+memory), one system onlining a block as kmem could be potentially
+destructive to an entirely separate physical server.
 
-> I think the plan is to take Matthew's work via the DRM tree?  But if people
-> want me to patchbunny this fix then please lmk.
+A small guardrail to prevent silly mistakes, but certainly not required
+
+Probably not needed for sysram and normal dax regions.
+
+But fair, I can drop this. If an actual issue shows up, this can be
+restricted with memory_notifier pretty trivially.
+
+> >     Example:  Slow(er) memory
+> >        Some memory is "just memory", but might be particularly slow and
+> >        intended for use as a filesystem backend or as only a demotion
+> >        target.  Otherwise its allocated / mapped like any other memory,
+> >        but it still required isolation so isolated to the demotion path
+> >        and not a fallback allocation target
 > 
-> I presently have
-> 
-> Signed-off-by: Matthew Brost <matthew.brost@intel.com>
-> Signed-off-by: Francois Dugast <francois.dugast@intel.com>
-> Acked-by: Felix Kuehling <felix.kuehling@amd.com>
-> Reviewed-by: Balbir Singh <balbirs@nvidia.com>
-> 
-> If people wish to add to this then please do so.
-> 
-> I'll restore this patch into mm.git's hotfix branch (and hence
-> linux-next) because testing.
+> That doesn't quite fit the description of N_PRIVATE_MEMORY, though. Or what
+> am I missing?
+
+I suppose we could also explore a per-node fallback policy to accomplish
+this - but there was also the LPC talk about trying to deprecate that
+entirely.
+
+For the filesystem piece, you're probably right.
+
+~Gregory
