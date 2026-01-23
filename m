@@ -1,139 +1,140 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFCF3093C9
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Jan 2026 11:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54AAE7261D
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Jan 2026 11:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769167087; cv=none; b=VWVi24eQIRRxnZLcwT47h34tXyOXXUZ0NBPtJg8L8THk1Zp0ZrtrTDSipaznl0BFm4C53odVsHiushUyx0Rm6Oh0KSLU43fDbX1Rz8I6waIaoheD8VBcH5L5OMuVLE2NfVNMMoVMRmr2vr/rXOzqakTJiOlK29NEYRaei9dLZAc=
+	t=1769167558; cv=none; b=jEigUeqdlO9cIaJ+gSMUXWLbXGGXzf7KXLs6id1ybROwAFgz2rO2NT4kxo5+WyQroqfgKl8MLmYBZyp+TENEnv/2uXKyRj8HdCk/GgayRmWHC+zLyoGi97rY/epBg9lC7KsesxVIfiJJysmGmBedheKPhlzwcIxz+JicefCd460=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769167087; c=relaxed/simple;
-	bh=FIBKskftsw1KQLtuNPlmWJzgjvQI69Zg7HK2NBu36t8=;
+	s=arc-20240116; t=1769167558; c=relaxed/simple;
+	bh=a1ECuho7MxudhQw/1YZtdClJjzjXQgxB8FqE6MYSFdc=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=JBlqAu8vqJYC33T2xNvlmdEwiUH1X0C9qq+sJOBVqw3AOATMhQ86Y9OirLIZNE209lSsu6MSl/ZYVnoXmAL2EQP1WzvcP2ki69MI+/g0B2Pti997ie92k+UKdz/dMPY0Y77bkBrzpRVNJTg0dDhRkQDTam4PnoSXLQDa37BwPpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=hFgUzsLJ; arc=none smtp.client-ip=203.254.224.33
+	 Content-Type:References; b=ihW3+lsYrUNp3dRZ6TnNTH8sTg6BgSMUJDGGWWZPjS3zko+PhmJoIAgAiWQvnB3lZ9f2cxpTTSQjYFrTFMQbNcwTpidwpAJOp0+C8IirV9L9EfRtqF6kLCqvNtJx58V/kW34aN1Lxlb9kQh2ClcJBmiHPhP5GVJIv5Q9uf4hMS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=FxiYD6Hn; arc=none smtp.client-ip=203.254.224.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hFgUzsLJ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FxiYD6Hn"
 Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20260123111803epoutp0397a63078f8bcc2d3689396be4bf8008b~NWBa3dLBN1105411054epoutp03w
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Jan 2026 11:18:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20260123111803epoutp0397a63078f8bcc2d3689396be4bf8008b~NWBa3dLBN1105411054epoutp03w
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20260123112553epoutp02f263819f226a0638eb7e230ae6f63770~NWIQ1O9NU2792527925epoutp02R
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Jan 2026 11:25:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20260123112553epoutp02f263819f226a0638eb7e230ae6f63770~NWIQ1O9NU2792527925epoutp02R
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1769167083;
-	bh=0teDD1TQn0537TGVE88rA8r8HxAQhHnUZagpELXroYk=;
+	s=mail20170921; t=1769167553;
+	bh=6m7c9/I/VAPM6ZEeaMrVLjmL2ha3ONPuyWLb96GiYVI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hFgUzsLJScjfIa+MDaWqrPU5y4cUpz2AHD/xIW6Kl39YwklWHTinXmEFm1smQimva
-	 a8H1bewpgWCIfEXzY63OSssxZJ7AavTw4eop4OSIIt32WcwVOGOPn1O7AyeKvCLh+r
-	 R8tz2FxxmRKGXSwQwcA5vCIn24cqWivzzI/gZQb8=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20260123111802epcas5p4c0bc08c2828d3bb59d4cdf9b175ce2f6~NWBaIm4Cw0751707517epcas5p4w;
-	Fri, 23 Jan 2026 11:18:02 +0000 (GMT)
-Received: from epcpadp2new (unknown [182.195.40.142]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4dyFlt2qPRz2SSKX; Fri, 23 Jan
-	2026 11:18:02 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	b=FxiYD6HnXRQc58SuFAAk/Puz0qo3FxdzcpspAvoSRFhbu2qhjeWPyNhD9/kW2XOuO
+	 UevvwlxfRkP2nrG64t+zcbnn/J2DaSl9vYz5NLjGsk+PoyZ/RVxAh+sX1PMp7O4U4S
+	 EMJZzDthMwmHBL8Qchhlizo7piOeRM70AcN4KJns=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20260123112553epcas5p1bd3fefef7aaaf626a3d41083f498d91d~NWIQkvSxP3013530135epcas5p1t;
+	Fri, 23 Jan 2026 11:25:53 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.95]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4dyFww3jFyz6B9m5; Fri, 23 Jan
+	2026 11:25:52 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
 	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20260123110544epcas5p2d764024e614940d46829d86cc153b6d1~NV2rV47NM0461004610epcas5p2P;
-	Fri, 23 Jan 2026 11:05:44 +0000 (GMT)
+	20260123112552epcas5p20bdb1fdd98f5508df7de6d06bdf7e9b0~NWIPi8jtm2766527665epcas5p2V;
+	Fri, 23 Jan 2026 11:25:52 +0000 (GMT)
 Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20260123110543epsmtip1c4ef553a89411eab677b4b277cb7862c~NV2p9vnSf0205302053epsmtip12;
-	Fri, 23 Jan 2026 11:05:43 +0000 (GMT)
-Date: Fri, 23 Jan 2026 16:35:37 +0530
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20260123112550epsmtip2eaf93bbcd0da9c8ae141e5d36ebbb056~NWIOWnCkT2169221692epsmtip27;
+	Fri, 23 Jan 2026 11:25:50 +0000 (GMT)
+Date: Fri, 23 Jan 2026 16:55:46 +0530
 From: Neeraj Kumar <s.neeraj@samsung.com>
-To: Ira Weiny <ira.weiny@intel.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
 Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
 	linux-kernel@vger.kernel.org, gost.dev@samsung.com,
 	a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
 	cpgs@samsung.com
-Subject: Re: [PATCH V5 05/17] nvdimm/label: Skip region label during ns
- label DPA reservation
-Message-ID: <1296674576.21769167082389.JavaMail.epsvc@epcpadp2new>
+Subject: Re: [PATCH V5 15/17] cxl/pmem_region: Add sysfs attribute cxl
+ region label updation/deletion
+Message-ID: <20260123112546.izfi4e5lcbjdikmy@test-PowerEdge-R740xd>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <697020c95d699_1a50d4100e9@iweiny-mobl.notmuch>
-X-CMS-MailID: 20260123110544epcas5p2d764024e614940d46829d86cc153b6d1
+In-Reply-To: <20260115182116.000057b9@huawei.com>
+X-CMS-MailID: 20260123112552epcas5p20bdb1fdd98f5508df7de6d06bdf7e9b0
 X-Msg-Generator: CA
 Content-Type: multipart/mixed;
-	boundary="----on9-joxjuqL8vLZJsXK9p6vuNy0FCcc_Bo-VMubfWYorGk78=_11ed47_"
+	boundary="----HKC0oM6l2X7jDELFNxUL3gr1rNZobpnU9ZVzK0VPY15yFScq=_11f8d9_"
 CMS-TYPE: 105P
 X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20260109124517epcas5p3d11e7d0941bcf34c74a789917c8aa0d0
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20260109124531epcas5p118e7306860bcd57a0106948375df5c9c
 References: <20260109124437.4025893-1-s.neeraj@samsung.com>
-	<CGME20260109124517epcas5p3d11e7d0941bcf34c74a789917c8aa0d0@epcas5p3.samsung.com>
-	<20260109124437.4025893-6-s.neeraj@samsung.com>
-	<697020c95d699_1a50d4100e9@iweiny-mobl.notmuch>
+	<CGME20260109124531epcas5p118e7306860bcd57a0106948375df5c9c@epcas5p1.samsung.com>
+	<20260109124437.4025893-16-s.neeraj@samsung.com>
+	<20260115182116.000057b9@huawei.com>
 
-------on9-joxjuqL8vLZJsXK9p6vuNy0FCcc_Bo-VMubfWYorGk78=_11ed47_
+------HKC0oM6l2X7jDELFNxUL3gr1rNZobpnU9ZVzK0VPY15yFScq=_11f8d9_
 Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Disposition: inline
 
-On 20/01/26 06:41PM, Ira Weiny wrote:
->Neeraj Kumar wrote:
->> CXL 3.2 Spec mentions CXL LSA 2.1 Namespace Labels at section
->> 9.13.2.5. If Namespace label is present in LSA during
->> nvdimm_probe() then dimm-physical-address(DPA) reservation is
->> required. But this reservation is not required by cxl region
->> label. Therefore if LSA scanning finds any region label, skip it.
+On 15/01/26 06:21PM, Jonathan Cameron wrote:
+>On Fri,  9 Jan 2026 18:14:35 +0530
+>Neeraj Kumar <s.neeraj@samsung.com> wrote:
+>
+>> Using these attributes region label is added/deleted into LSA. These
+>> attributes are called from userspace (ndctl) after region creation.
 >>
->> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 >> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
->> ---
->>  drivers/nvdimm/label.c | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->>
->> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
->> index 9854cb45fb62..169692dfa12c 100644
->> --- a/drivers/nvdimm/label.c
->> +++ b/drivers/nvdimm/label.c
->> @@ -469,6 +469,14 @@ int nd_label_reserve_dpa(struct nvdimm_drvdata *ndd)
->>  		lsa_label = to_lsa_label(ndd, slot);
->>  		nd_label = &lsa_label->ns_label;
->>
->> +		/*
->> +		 * Skip region label. If LSA label is region label
->                   ^^^^^^^^^^^^^^^^^^
->		   This is redundant
->> +		 * then it don't require dimm-physical-address(DPA)
->                           ^^^^^
->			   doesn't
+>One wrong field name.
 >
->> +		 * reservation. Whereas its required for namespace label
->                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->				This is somewhat confusing and redundant
->				as well.
->
->Simply say.
->
->	/*
->	 * If the LSA label is a region label then it doesn't require a
->	 * dimm-physical-address(DPA) reservation.
->	 */
->
->With that.
+>With that and the version number updated as Dave pointed out
+>Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-Fixed it accordingly in V6
+Thanks Jonathan for RB tag.
 
 >
->Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+>
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 6ac3b40cb5ff..8c76c4a981bf 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>
+>>  /**
+>>   * struct cxl_region_params - region settings
+>>   * @state: allow the driver to lockdown further parameter changes
+>> + * @state: region label state
+>
+>wrong name.
 
-Thanks Ira.
+Fixed it in V6
+
+>
+>Run scripts/kernel-doc over files you add documentation to and it'll
+>tell you when you get anything like this wrong.
+
+I ran it but its not showing any error and displaying the wrong name
+only.
 
 
 Regards,
 Neeraj
 
-------on9-joxjuqL8vLZJsXK9p6vuNy0FCcc_Bo-VMubfWYorGk78=_11ed47_
+>
+>>   * @uuid: unique id for persistent regions
+>>   * @interleave_ways: number of endpoints in the region
+>>   * @interleave_granularity: capacity each endpoint contributes to a stripe
+>> @@ -488,6 +494,7 @@ enum cxl_config_state {
+>>   */
+>>  struct cxl_region_params {
+>>  	enum cxl_config_state state;
+>> +	enum region_label_state state_region_label;
+>>  	uuid_t uuid;
+>>  	int interleave_ways;
+>>  	int interleave_granularity;
+>
+
+------HKC0oM6l2X7jDELFNxUL3gr1rNZobpnU9ZVzK0VPY15yFScq=_11f8d9_
 Content-Type: text/plain; charset="utf-8"
 
 
-------on9-joxjuqL8vLZJsXK9p6vuNy0FCcc_Bo-VMubfWYorGk78=_11ed47_--
-
+------HKC0oM6l2X7jDELFNxUL3gr1rNZobpnU9ZVzK0VPY15yFScq=_11f8d9_--
