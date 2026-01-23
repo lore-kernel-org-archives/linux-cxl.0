@@ -1,126 +1,247 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010005.outbound.protection.outlook.com [52.101.61.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74443286A7;
-	Fri, 23 Jan 2026 13:55:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769176505; cv=none; b=rZas7PLFGku7Vc514B8BeA8dfEE06645TKX2N9PhTmeVOp/RLxaLY7BT1vPmxss7sDgrTPjk3A1/7cyX4PuQU+eYwL+nKQ8nvwwjKy3eMRhtuVEDms2Tevfzqd7pcYfanyxCl1O5Lbt7JugjCiJfrQd36ycjCSSHLBz6EHz00+0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769176505; c=relaxed/simple;
-	bh=0pgF0pbLibHfPkijHatzQ2gp7eE59gKjVslQpkFcBf4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DxoLYfPjT75AFxtaJUZ7X45zPoA+I6YAGL5eGYv3e3ufgeq1REH7K1uplZpcXUbzPPDRf4c7bqnQDhfGg2lJ7YOW6nwZELMNoDDd2j3jOvqbu3L1VixmWk2Nk54nVXFRA0KCaI7dwbcHDIdEVPv94jIohW1WdfVDZeH4+E7QGH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QaulnBsD; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742D1301493;
+	Fri, 23 Jan 2026 14:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.5
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769178006; cv=fail; b=Mb2yr3sunOI/pYuRwJBVNG+s+b+w8u3FVUftpbk0xFk90zUxQiEsvSbevXpHASn9zkBzvBfXxsJhKrB0rrba5sby4R+EEmP+4h7ICLZbEIQS3k6N22W2QlLMirpOGoFBr0sTD7diX3VJURp2l6FA+Br7odixwro7rY2OnHATSiY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769178006; c=relaxed/simple;
+	bh=oAxfwFoZ7/2gzeWJKX6DSq9N495qOfRHXG3J6NcA9+E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=iIj1LuhOSTIzTggggZZIBL/dOKrodqK0E7ChpJ+o2Rk6iRH/PsNtfzN4UfCt23C6l/zmNIYh+M48zeLfa2egTyMi09uYr+AhOEQK8cFDJWXqryGAvXgmyS+0MrNKBYcxdCnI6Ua/UMNIqVarfS+TzLOqHbYsJE+37DWo8hzy364=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=el7vGzH0; arc=fail smtp.client-ip=52.101.61.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QaulnBsD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769176504; x=1800712504;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0pgF0pbLibHfPkijHatzQ2gp7eE59gKjVslQpkFcBf4=;
-  b=QaulnBsDNQLzOh303ZIJcTpBAVMpgPymYywyeJbAkUY2gsNrSV6G9F07
-   8yOCtS54yiNzbvZJ4jKgxu9xDNTHXSOSMUX24XB+dz2yof1kq/lXr1IUa
-   XLl+xFl9/7z6iCCw2Vg9HSgD0e/uYgNJBwRXOs7+gb0oyhnZiIdd3be5c
-   C9abgWy96LK4FjqCKep7COsCYnnE1utwwv5/57zoZdfngWJvlGHYK5iq8
-   eIYT/at+II61efvnBx3H5GcWRPQzzflwwlutgFzSZvD9QDUnoBizZG82v
-   FNkXl1OYj4bnoIPi0UJd8hKTjeKWsnY/OEk8MTObUhm6eyz0yMTzCWDbM
-   Q==;
-X-CSE-ConnectionGUID: R6thWyd5TY6pRN4H71t+/g==
-X-CSE-MsgGUID: X1p3O3UyThK49Kvxprhtjw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11680"; a="81146429"
-X-IronPort-AV: E=Sophos;i="6.21,248,1763452800"; 
-   d="scan'208";a="81146429"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2026 05:55:03 -0800
-X-CSE-ConnectionGUID: Emh/K4QUTkeV6CigTQXAOg==
-X-CSE-MsgGUID: HCITQHeMQieupCXSbQeVOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,248,1763452800"; 
-   d="scan'208";a="237683224"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 23 Jan 2026 05:54:57 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vjHck-00000000Tza-3qjZ;
-	Fri, 23 Jan 2026 13:54:54 +0000
-Date: Fri, 23 Jan 2026 21:54:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: smadhavan@nvidia.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, bhelgaas@google.com, ming.li@zohomail.com,
-	rrichter@amd.com, Smita.KoralahalliChannabasappa@amd.com,
-	linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, smadhavan@nvidia.com, vaslot@nvidia.com,
-	vsethi@nvidia.com, sdonthineni@nvidia.com, vidyas@nvidia.com,
-	mochs@nvidia.com, jsequeira@nvidia.com,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v4 04/10] PCI: add CXL reset method
-Message-ID: <202601232148.jndyojSY-lkp@intel.com>
-References: <20260120222610.2227109-5-smadhavan@nvidia.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="el7vGzH0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=p8SO+JMQwEqTjgmDXJFNi5nW4kAIjY8jCG5P2YqmLgqJtGPSwmQ97KEhq1smDrxbnfkytcqAumb7fet+uzf0bLzymVRudDYNILai0Oo21EDpXjWjcUGNMHTBxrcx0cdC8abjmHvfItou0wn+IuuOvqFnrmQ8CqaefbzzIWazYIZRHgcgBS1s/KtbvXeb+/jIbBPGdpBF7vWoYe0J1g+XZi7RDztgEy0hsE6BnI3jNXKJV4CJlAx3ntAPp2Ufw+dUA3ZfXZ7o/Z8CjVpTfXI9jiJcY2GFu6H8YYg0NMQaMXNSbSnyqCAZdxd+Y139M0MuM+NAvzNtQcSVZzAkqfcJnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8JTaNeQL/J3Ep2HYkEXMoLwLL3wNRp+4crnhYhLek/Y=;
+ b=WWI9TKBqw+QuSVFM6cFcAeat8S9kEBp8qIwozYnVCf3x8MuVBfvN+QcSPwxXLAX0B0HgXEZKj1wYWRfOCCJus+6xNZq3I0jzt13TeD4B2GxBxUtkA7KC1TijfJHlJ8HGYj9iG0lLC1aNcPQOCZwHU2iFfvo36ezvb4Zr8X8ih2CwcIxWuPKWhn5wxsiYjJDWO0sML3QiSrS2ndE7gZQXVviT6lEXKcukCdVgqVoHkTVhBjS2XfddnRxGYMoFJJAVCq7lU94aa4tsC+LNgAiDTM8IRLhuNw3p38Ba2Q9YfoopU8PZOL+hgl5vtKAcbhNO5porG2ZPD08VeQLkEr3VQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8JTaNeQL/J3Ep2HYkEXMoLwLL3wNRp+4crnhYhLek/Y=;
+ b=el7vGzH0seoDPX5Tseb3Y+Y5unxv8q9f7dXRrgQhQw/B4IPvWeX102ztEeH6hBk7/Nk2ULkUVW40DjMCnBaLYq6iBZPQemb8MbDHPnh4dLQkNSLAMCBRFk4ZOQYvH9wZqteBvYFHurH7z9Q2GX5ZGZbZ3BYgBmeaI+7czXnUr3f2xnyTd1wDAWeNqO1ZxUI+p37Qt2hQzmFUUyKqyjcEGCyEGgqIQYJ+PiDDw12M6ZNd7lW1I5toQuckiSySBNFBEhIZ0g8GKp9EbX1cb4NhcQwzq00acVO8Y1R4/mo8olflCqQaJSvWtHtP1tZbCHhZQmKRylxM+dBFjWmadu0Cbw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by BL4PR12MB9481.namprd12.prod.outlook.com (2603:10b6:208:591::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.11; Fri, 23 Jan
+ 2026 14:19:57 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c%3]) with mapi id 15.20.9542.010; Fri, 23 Jan 2026
+ 14:19:57 +0000
+Date: Fri, 23 Jan 2026 10:19:56 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Zi Yan <ziy@nvidia.com>
+Cc: Balbir Singh <balbirs@nvidia.com>, Matthew Wilcox <willy@infradead.org>,
+	Alistair Popple <apopple@nvidia.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Francois Dugast <francois.dugast@intel.com>,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	adhavan Srinivasan <maddy@linux.ibm.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Felix Kuehling <Felix.Kuehling@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, linuxppc-dev@lists.ozlabs.org,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-mm@kvack.org, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v6 1/5] mm/zone_device: Reinitialize large zone device
+ private folios
+Message-ID: <20260123141956.GZ1134360@nvidia.com>
+References: <4k72r4n5poss2glrof5fsapczkpcrnpokposeikw5wjvtodbto@wpqsxoxzpvy6>
+ <20260119142019.GG1134360@nvidia.com>
+ <96926697-070C-45DE-AD26-559652625859@nvidia.com>
+ <20260119203551.GQ1134360@nvidia.com>
+ <ef6ef1e2-25f1-4f1b-a8d4-98c0d7b4ad0c@nvidia.com>
+ <EE2956E3-CCEA-4EF9-A1A4-A483245091FC@nvidia.com>
+ <20260120135340.GA1134360@nvidia.com>
+ <F7E3DF24-A37B-40A0-A507-CEF4AB76C44D@nvidia.com>
+ <20260122154646.GQ1134360@nvidia.com>
+ <1EA077E1-DDF1-4356-B8F8-CB13F0D6D8B5@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1EA077E1-DDF1-4356-B8F8-CB13F0D6D8B5@nvidia.com>
+X-ClientProxiedBy: MN2PR15CA0064.namprd15.prod.outlook.com
+ (2603:10b6:208:237::33) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260120222610.2227109-5-smadhavan@nvidia.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|BL4PR12MB9481:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6790f142-049b-4a0b-522c-08de5a8a7c95
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?XfBziRKFhuczKRhhH1F43GrarGdbnQ8CbriBGShPP3aaqfOFTq86iS/kqfmk?=
+ =?us-ascii?Q?dU77II+Q7PPlwQdir7YxXwlNSVQeSMJFcsKuyUUiDi251J3btSOubaqIP01N?=
+ =?us-ascii?Q?nr0FZwOWq7+TUOyxvX3CyLJr/jF4oCMLuRNKkjBzT1zKr+g3vKs7nHbrbARe?=
+ =?us-ascii?Q?VyWyg/w+h5fea4fgwg0ReNn3/cqVEitlAgBcUJfZo/Aubhy0OCPXYZkbd7Ln?=
+ =?us-ascii?Q?km0mMbTxA/agzIuVEjWWtxusUzGdgmxg575Sa93ZxaTSKPIRDf+XsYy3cssy?=
+ =?us-ascii?Q?ynSfAHdt76Wa9T26ZRCtbl4/kcLRvYmHRYDg9YZB8V63K0cjWJBchX8IOYtB?=
+ =?us-ascii?Q?gG2APC0B4lKJrvmi8v/AnHoiRgZvgL/NBwBL+DcDfFtL0fJAD4qoLI4tQNX+?=
+ =?us-ascii?Q?GNYdaOiABCG8kkShjIaKg90rED5KGeEgFymzqBGmuyUoemwcIoDPo420a1Fv?=
+ =?us-ascii?Q?WvCyhMxk0Am5w18G6KBdg2t5iIrP5U/ilKBhXOSpGtm/ljBZ2mW6uq8z4baI?=
+ =?us-ascii?Q?JgNba3Ig1Lck2fea1iib83mUaXlIc5Djc0FUCJa5m9GfhdZFywLOdxj0uIHY?=
+ =?us-ascii?Q?wt+bKvRiMgs3UD/P3HoFw6Rs2Kd7WtFR4GR2tGdl8H/EfkhMfe5BrEsRGPuu?=
+ =?us-ascii?Q?9g+ky4S3Ghz+lnz9edIPao10It3CfnC/SI/ScXhDuIf33F8b7aLGKZCHQJxH?=
+ =?us-ascii?Q?6R2a+MqR7RFgMDzeqKuaV7KbfLlpomVXIhTo4YYLgMwlbQuiBJ2Lt2WNWZsg?=
+ =?us-ascii?Q?7CYBrGGbJ20+r7FM4vLCr3cMjQ3msOYmrTub7AOjqurKBFRcpEZT1BKiZ9kP?=
+ =?us-ascii?Q?XK6vxoHoxkrrmfdj5gXASOQdx5OyEKShLYsqsUoPq4Ha6YJmob01hgnZgO5k?=
+ =?us-ascii?Q?yQeLodpOIghNI3q4BfphZqgKKKwmNj6bnJr310LEmNaPrjE64bZsD9WAx6pK?=
+ =?us-ascii?Q?QBVLGeDYdj3KDV3JXBHZz2Mf1t9J+M+iSl3KCEsG1KDyIahPXNcqW47XgoP7?=
+ =?us-ascii?Q?mGlIWUagkpJ+VHUdWSFBEIQXxfSYIuBHdAh7JO3sQH5oo2kJmjW79TSP0H5e?=
+ =?us-ascii?Q?GvvZn3JvrfkAkWOu0weSljQfUyflvmpCj3uW2JwBYBo8AwrbdJXShBuOIaIU?=
+ =?us-ascii?Q?RanVes5lUXk8qM+998/vsi/Hub2YVt5blAyw3AHPzZzDXHsSWveHj5wZzZWA?=
+ =?us-ascii?Q?3BHDhIMrH8U3cEcpe1coArAf0/WVX/qkTmr3HUsEEsNYaL7oZoCYikdSzik+?=
+ =?us-ascii?Q?l3EzjqMScWwQIB/ZJQnRKej+uQo12tQ3LmivopnPKSXj3j06l+ff6AHv/UZM?=
+ =?us-ascii?Q?I6xu9B8rBDyPq31VSC2tGLmQQ/GvvXZYFVhq1mFhQT0qa8Rit9qnNGEJrR9g?=
+ =?us-ascii?Q?f2yYvp0jJWoFX1j9AGz9IkncYf6NDfhmYndmOB8po22N5rlU4ms/CPIfD/H/?=
+ =?us-ascii?Q?duNe0wR7R+Zw9j2irsNDpMJ67e9JFohLPkVeA8P66F/1EL1WktwdAxi8duf/?=
+ =?us-ascii?Q?dgfuL3wkm2JSiAXg2LptzsTJa2SQTI4hAG1SjwptdmpGyF3/4NaAn3amBUBo?=
+ =?us-ascii?Q?uBnhl46UVJFgb7kdAnE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?/ECCzDQIfPEf/trEg2ai9Iy+ukyqfClFGgWoTJJmVq8s/pawJsDpT0H3MQns?=
+ =?us-ascii?Q?D2sccYTbhBrEFPvvNpNno8YzvO5uKrRkJBytKZKT+5RQ8mjGz2j2jlAlpsJ+?=
+ =?us-ascii?Q?mt5uL91tzKDnNSWClx0lO0UXSRFY9SiTomzRnY3Tdub6numocR9Dbsgy4SNi?=
+ =?us-ascii?Q?OMzQw+cC2lC+31/JO6d5sV+Y1VyAoqjStxfxnr35P0+v9csImst3H6Oq+e+j?=
+ =?us-ascii?Q?OuCyjwO8+wD8TK9fRYjbc4tYy4P17Mhz0fL/2bQq57KX8CAcP2VezN/rVE4U?=
+ =?us-ascii?Q?e0gDxktG4lEnO1fjoKRsL3GKQc8eCXlAZB6H+bBdtXl4cFbJEkXPRKPn+XeW?=
+ =?us-ascii?Q?2UOjsK7iQwrJ0fAb1hcCxVDMC1OfsF4lLtqlYn86vIZ/Uoc5RF5YxCC0MqW1?=
+ =?us-ascii?Q?6c+VN8ps6fHK1bkhHl4NP9orjIUYf8S7hiajtAmUwSPNqAzt5CxZCk5cJsYN?=
+ =?us-ascii?Q?3MHZe4RqmbvW13AXsl2Ip4618W83hgOFcgTieRgBC/JM+wiAPUxHcP1ZwwoI?=
+ =?us-ascii?Q?19YT1p3MGRJsZf5o1Nkbs2GSF+FG9vQQVaoSCHZPD+wBChZ3qyxaAY70YE8r?=
+ =?us-ascii?Q?uOAVu2DJ3pPbABRHrKXmGPX6DIYoLP5ZBnSn+A3D3ilugvUtZOtHCzYNUHz5?=
+ =?us-ascii?Q?2BEhh5vcdW6scd69X27CyeDWar8pCD3fy8WqQRQFmzM1ClFPJiauJdsRbIYz?=
+ =?us-ascii?Q?cnAIuYvtvToQjuCyOPDPrOaE89ZHMkFw1FFLAgQepCMENuEJnfxezYZ7CQhp?=
+ =?us-ascii?Q?o9YXfHvp5LWKK1xKBSXFEgEj6DKyfoHf4575UByNVwlzB8dVGXDQpH7iBvf3?=
+ =?us-ascii?Q?KZ22l7M7M2zQOTJFwhrp+FUIvlOVpx5z/4vJTm70U3yTegFsIkt+DJX1A4sC?=
+ =?us-ascii?Q?aXa9yNnkBETDZwhcWcd8pxUXwsA2aUQVFUDAHA2JtBTxqO2OHm4ZOjZUWKiW?=
+ =?us-ascii?Q?2/XicguuG2HD/DORs1XY2Jl4KoaY/UuZCWWgCrYsL8lM7rjRaMYtgcYHPPKd?=
+ =?us-ascii?Q?p5+Z6QD0pmHbzqlZdV9GgS8WNf1fsR20t+YR9GGr90rFC9ZohtSlMXyirvcb?=
+ =?us-ascii?Q?2If4IeNU9aFUCszZYEA7yKflIeHrAnPCIEhiZB9WWCzpR+enPOYRNldeOaXp?=
+ =?us-ascii?Q?4UGi/mfRTRTuKAAOEc/CXRuR1ljWNXiDeRgIUpUbpz0rOoLNLrJ6DnUm5MtP?=
+ =?us-ascii?Q?TSWmdM850XS9FfNu13HUi/uPQCtcIoty8z5noOI6Aj58y+PSXVLf0OwNmART?=
+ =?us-ascii?Q?ZiNCce6fePR7WGuAAgvlMZjTBCxQOtQ2gUypfrqIKqhWfjVhZTo1q5D/ZjjB?=
+ =?us-ascii?Q?lhBVnAghj4pZRxRi/VGw8FTr271/n3nZc+OmozCOa/Fh2H84VNUt3901ZH2C?=
+ =?us-ascii?Q?ZY6vLuwwXNTHwzCL1YgYWr+WEC1qhaEKrSLErQWZOhhkvWEmvHAC1aZIyZNj?=
+ =?us-ascii?Q?H7NHMfq9g8RJ8oQeF84Xv5Du6Z/J9ueJmoIQWkGLqk/laRoHankHQNjj64fO?=
+ =?us-ascii?Q?3gXhodTx5q1XzweWqjnbuyAYWvXsb5lEqeo6sTnLnNZXlIvO1dIbA4Unh3WR?=
+ =?us-ascii?Q?Wq4LSpez09xiWUNbyLt8dfKKUe/F/XZBdQkLZ99Mp76dBZPccPY/6aYaNDGx?=
+ =?us-ascii?Q?caDAKxXAnULgVC5sVBRLdq7lc6kJfTIOU7iXLqVKiwPB87oawCIypEO7fMmn?=
+ =?us-ascii?Q?8OTQC27vo0IBVraZAc7Z9UGpMeRB9bAEwFPY4rXK1U7bgKmOHzX1bECF1ZGM?=
+ =?us-ascii?Q?AP3FubL0tg=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6790f142-049b-4a0b-522c-08de5a8a7c95
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2026 14:19:57.6850
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ytA8cwVr6uqEbBQxOXFHPRG6mHdoLzdJt57p1SQNj8L17g9G6amd5O6EYhkKe2pe
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR12MB9481
 
-Hi,
+On Thu, Jan 22, 2026 at 09:41:03PM -0500, Zi Yan wrote:
+> > Now that we have frozen pages where the frozen owner can use some of
+> > the struct page memory however it likes that memory needs to be reset
+> > before the page is thawed and converted back to a folio.
+> 
+> Based on my understanding, a frozen folio cannot be changed however the
+> owner wants, since the modification needs to prevent parallel scanner
+> from misusing the folio. For example, PFN scanners like memory compaction
+> needs to know this is a frozen folio with a certain order, so that it
+> will skip it as a whole. But if you change the frozen folio in a way
+> that a parallel scanner cannot recognize the right order (e.g., the frozen
+> folio order becomes lower) and finds some of the subpages have non-zero
+> refcount, it can cause issues.
 
-kernel test robot noticed the following build errors:
+Yes, and this is part of the rules of what bits in the struct page
+memory you can use for frozen pages. I've never seen it clearly
+written unfortunately.
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus linus/master v6.19-rc6]
-[cannot apply to next-20260122]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> But I assume device private pages do not have such a parallel scanner
+> looking at each struct page one by one and examining their state.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/smadhavan-nvidia-com/cxl-move-DVSEC-defines-to-cxl-pci-header/20260121-071852
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20260120222610.2227109-5-smadhavan%40nvidia.com
-patch subject: [PATCH v4 04/10] PCI: add CXL reset method
-config: openrisc-allmodconfig (https://download.01.org/0day-ci/archive/20260123/202601232148.jndyojSY-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 15.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260123/202601232148.jndyojSY-lkp@intel.com/reproduce)
+I hope not!
+ 
+> BTW, it seems that you treat frozen folio and free folio interchangeable
+> in this device private folio discussion. To me, they are different,
+> since frozen folio is transient to prevent others from touching the folio,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601232148.jndyojSY-lkp@intel.com/
+Yes, but really it is the same issue. Once the folio is frozen either
+for free or any other use case it must follow a certain set of rules
+to be compatible with the parallel scanners and things that may still
+inspect the page without taking any refcounts.
 
-All errors (new ones prefixed by >>):
+The scanner can't tell if the refcount is 0 because it is frozen or
+because it is free.
 
->> drivers/cxl/pci.c:1085:6: error: redefinition of 'cxl_is_type2_device'
-    1085 | bool cxl_is_type2_device(struct pci_dev *pdev)
-         |      ^~~~~~~~~~~~~~~~~~~
-   In file included from drivers/cxl/pci.c:11:
-   include/linux/pci.h:1474:20: note: previous definition of 'cxl_is_type2_device' with type 'bool(struct pci_dev *)' {aka '_Bool(struct pci_dev *)'}
-    1474 | static inline bool cxl_is_type2_device(struct pci_dev *dev)
-         |                    ^~~~~~~~~~~~~~~~~~~
+> >>>>>> I don't think so. It should do the above job efficiently and iterate
+> >>>>>> over the page list exactly once.
+> >>>>
+> >>>> folio initialization should not iterate over any page list, since folio is
+> >>>> supposed to be treated as a whole instead of individual pages.
+> >>>
+> >>> The tail pages need to have the right data in them or compound_head
+> >>> won't work.
+> >>
+> >> That is done by set_compound_head() in prep_compound_tail().
+> >
+> > Inside a page loop :)
+> >
+> > 	__SetPageHead(page);
+> > 	for (i = 1; i < nr_pages; i++)
+> > 		prep_compound_tail(page, i);
+> 
+> Yes, but to a folio, the fields of tail page 1 and 2 are used because
+> we do not want to inflate struct folio for high order folios. In this
+> loop, all tail pages are processed in the same way. To follow your method,
+> there will be some ifs for tail page 1 to clear _nr_pages and tail page 2
+> to clear other fields. It feels to me that we are clearly mixing
+> struct page and struct folio.
 
+I'm not saying mixing, I'm just pointing out we have to clean up the
+tail pages by writing to every one. This can also adjust the flags and
+order if required on tail pages. Initing the folio is a seperate step,
+and you already showed the right way to code that.
 
-vim +/cxl_is_type2_device +1085 drivers/cxl/pci.c
-
-2905cb5236cba6 Dan Williams       2022-11-29  1084  
-b345d117d51557 Srirangan Madhavan 2026-01-20 @1085  bool cxl_is_type2_device(struct pci_dev *pdev)
-b345d117d51557 Srirangan Madhavan 2026-01-20  1086  {
-b345d117d51557 Srirangan Madhavan 2026-01-20  1087  	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-b345d117d51557 Srirangan Madhavan 2026-01-20  1088  
-b345d117d51557 Srirangan Madhavan 2026-01-20  1089  	if (!cxlds)
-b345d117d51557 Srirangan Madhavan 2026-01-20  1090  		return false;
-b345d117d51557 Srirangan Madhavan 2026-01-20  1091  
-b345d117d51557 Srirangan Madhavan 2026-01-20  1092  	return cxlds->type == CXL_DEVTYPE_DEVMEM;
-b345d117d51557 Srirangan Madhavan 2026-01-20  1093  }
-b345d117d51557 Srirangan Madhavan 2026-01-20  1094  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Jason
