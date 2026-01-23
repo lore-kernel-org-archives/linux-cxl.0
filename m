@@ -1,56 +1,55 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275BF37883C
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Jan 2026 11:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5441F34B1AD
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Jan 2026 11:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769167907; cv=none; b=mUKFEYZSCDAZweIqXmPjAWPdnLFSJn3Rpxjf1pVaCuoHQmDCmmpXnT2zME+Sf083IV9VFZRv/ugdexMEq5/KXy8AOxAs0jECAJzFif2w8/l5hPFUR+157BJzUkCeRLBIclQdnCDRYtQA2FNiOKsS78uJGPF0IdnnkUWHTuzmr6c=
+	t=1769167912; cv=none; b=oH8SHyHvJC9YqkW1k2LZyGmaV0h763wJSe8IOExZj6i6Y9l6FSx18bWAawrpyTi8KDTxpLHIiR3ym6nSguZiKtBtr04uHTQ4YonSvCmJNKVscYCJG1uCshyYZS+W0JxltIuVa89qbEyzAHaJEHiF8nXSjyqMvt5zrGg6fGU5VJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769167907; c=relaxed/simple;
-	bh=oHBj1cPJz8cQ+pkC2U1P21/5vYsZOUJH1jFiM4pjtnk=;
+	s=arc-20240116; t=1769167912; c=relaxed/simple;
+	bh=ACjr2okpiFzwOb4tqPK7mla9DKYQFdfGvBOMtuUJ9s8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=D/y+v5zo1H5rFlDl3fhwU4OlaCqi6ImmX1Z5gDBTAzfP+Q68sC/aLBX5W++ZcNvZw4A0xbZ85w3cqnDPvxxFfy6v9Yx6iphZsxHI9Zghjv8Q/6yIliL9rXxT6eGUIFp8UhO+8iw9eHzaH3ZLQHplDp2f06evhw8LgFkd1NVzSEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=N6dphHs7; arc=none smtp.client-ip=203.254.224.34
+	 Content-Type:References; b=Kb9PcTH9ezk8Sjz7SvGvvxPBCXTnGwji9iPpIRKE0rVrvV6By6lcN5GcDbmV53zB5q6D6DJ58M7RjCBNtg2iW1qBvjCklmnhye0BFtVPEkPhhsL3pUKLpmIQPJ3pBDVqGJw4Sv1C8LS/GCOJA+qSAdwX7WHweIU/C6KbUPnzxaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=c6AP/Fp5; arc=none smtp.client-ip=203.254.224.24
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="N6dphHs7"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="c6AP/Fp5"
 Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20260123113143epoutp04e58a222a41272a298e4eca72fb950340~NWNW3AxHi0116901169epoutp04s
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Jan 2026 11:31:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20260123113143epoutp04e58a222a41272a298e4eca72fb950340~NWNW3AxHi0116901169epoutp04s
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20260123113145epoutp01668cc38dbac9f9f39b2ab9df065d2891~NWNYfcsyP1498214982epoutp01i
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Jan 2026 11:31:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20260123113145epoutp01668cc38dbac9f9f39b2ab9df065d2891~NWNYfcsyP1498214982epoutp01i
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1769167903;
-	bh=P48pOT0TYblMck0fUkubQe5/ucz9763CSDBG1sAPzuA=;
+	s=mail20170921; t=1769167905;
+	bh=4SmBPbCv6RQLjMURvQxmA1uVIrUH8weGaJhrbxLOigc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=N6dphHs7QO27SwEgkG1aosTB2ZGbtIPRLgvVAFr/4Li9dBewH0tQikH4TQ+Rf7x/c
-	 4mXU9s+tZ30piQ+n79VEQyRYHJsgaoLLD8fvGdXp/h3zst8rOGhFEkpgwh+5i9uRyI
-	 I5VHWQoCwvO8o7mVznnwe4VHfN8cgI3bHQ9lcNho=
+	b=c6AP/Fp5JoVzaCRLcr3xzL7nTdy0n9ZZxEAZzrlqtbMDN4P//1ko1HlMuPnkVhOko
+	 7FiAS9JRhLD8j4aJlLOgX2yc92QwexeRYwl7om/Gyu6Xrow4qZktCshJwc0fpw4DUX
+	 Vg7DUihxLLXDJ4a+u7ZHAGVif70ey4+yY7TS88Pg=
 Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20260123113142epcas5p309a54180492f21217e4204c39ca39272~NWNWBVxvY2653226532epcas5p3n;
-	Fri, 23 Jan 2026 11:31:42 +0000 (GMT)
-Received: from epcas5p2.samsung.com (unknown [182.195.38.91]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4dyG3d6m6Cz6B9m5; Fri, 23 Jan
-	2026 11:31:41 +0000 (GMT)
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20260123113144epcas5p1cb548210263df17c4109796db61e8291~NWNXn_byA0266802668epcas5p1p;
+	Fri, 23 Jan 2026 11:31:44 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.86]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4dyG3g4rclz6B9m7; Fri, 23 Jan
+	2026 11:31:43 +0000 (GMT)
 Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20260123113141epcas5p49a1eebff4401a7fc98381358162fde2b~NWNU7bEbS1479614796epcas5p4q;
-	Fri, 23 Jan 2026 11:31:41 +0000 (GMT)
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20260123113143epcas5p1f056205feaa11092be91be6f74ccc0be~NWNWhUEH72762827628epcas5p1F;
+	Fri, 23 Jan 2026 11:31:43 +0000 (GMT)
 Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
 	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260123113140epsmtip2aa6180409cc0d8dfaeced5e29aca429e~NWNTp7mcc2685626856epsmtip2U;
-	Fri, 23 Jan 2026 11:31:39 +0000 (GMT)
+	20260123113141epsmtip24c4b7c5badb0981613dfb74aa1bfc660~NWNVO2xE32685626856epsmtip2V;
+	Fri, 23 Jan 2026 11:31:41 +0000 (GMT)
 From: Neeraj Kumar <s.neeraj@samsung.com>
 To: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
 	linux-kernel@vger.kernel.org, gost.dev@samsung.com
 Cc: a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
 	Neeraj Kumar <s.neeraj@samsung.com>
-Subject: [PATCH V6 12/18] cxl/region: Add devm_cxl_pmem_add_region() for
- pmem region creation
-Date: Fri, 23 Jan 2026 17:01:06 +0530
-Message-Id: <20260123113112.3488381-13-s.neeraj@samsung.com>
+Subject: [PATCH V6 13/18] cxl/pmem: Preserve region information into nd_set
+Date: Fri, 23 Jan 2026 17:01:07 +0530
+Message-Id: <20260123113112.3488381-14-s.neeraj@samsung.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260123113112.3488381-1-s.neeraj@samsung.com>
 Precedence: bulk
@@ -60,169 +59,58 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20260123113141epcas5p49a1eebff4401a7fc98381358162fde2b
+X-CMS-MailID: 20260123113143epcas5p1f056205feaa11092be91be6f74ccc0be
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 105P
 cpgsPolicy: CPGSC10-542,Y
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20260123113141epcas5p49a1eebff4401a7fc98381358162fde2b
+X-CMS-RootMailID: 20260123113143epcas5p1f056205feaa11092be91be6f74ccc0be
 References: <20260123113112.3488381-1-s.neeraj@samsung.com>
-	<CGME20260123113141epcas5p49a1eebff4401a7fc98381358162fde2b@epcas5p4.samsung.com>
+	<CGME20260123113143epcas5p1f056205feaa11092be91be6f74ccc0be@epcas5p1.samsung.com>
 
-devm_cxl_pmem_add_region() is used to create cxl region based on region
-information scanned from LSA.
+Save region information stored in cxlr to nd_set during
+cxl_pmem_region_probe in nd_set. This saved region information is being
+stored into LSA, which will be used for cxl region persistence
 
-devm_cxl_add_region() is used to just allocate cxlr and its fields are
-filled later by userspace tool using device attributes (*_store()).
-
-Inspiration for devm_cxl_pmem_add_region() is taken from these device
-attributes (_store*) calls. It allocates cxlr and fills information
-parsed from LSA and calls device_add(&cxlr->dev) to initiate further
-region creation porbes
-
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
 ---
- drivers/cxl/core/region.c | 118 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 118 insertions(+)
+ drivers/cxl/pmem.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 2e60e5e72551..e384eacc46ae 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2621,6 +2621,121 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
- 	return ERR_PTR(rc);
- }
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index e197883690ef..a6eba3572090 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -377,6 +377,7 @@ static int cxl_pmem_region_probe(struct device *dev)
+ 	struct nd_mapping_desc mappings[CXL_DECODER_MAX_INTERLEAVE];
+ 	struct cxl_pmem_region *cxlr_pmem = to_cxl_pmem_region(dev);
+ 	struct cxl_region *cxlr = cxlr_pmem->cxlr;
++	struct cxl_region_params *p = &cxlr->params;
+ 	struct cxl_nvdimm_bridge *cxl_nvb = cxlr->cxl_nvb;
+ 	struct cxl_pmem_region_info *info = NULL;
+ 	struct nd_interleave_set *nd_set;
+@@ -465,12 +466,12 @@ static int cxl_pmem_region_probe(struct device *dev)
+ 	ndr_desc.num_mappings = cxlr_pmem->nr_mappings;
+ 	ndr_desc.mapping = mappings;
  
-+static ssize_t alloc_region_hpa(struct cxl_region *cxlr, u64 size)
-+{
-+	int rc;
+-	/*
+-	 * TODO enable CXL labels which skip the need for 'interleave-set cookie'
+-	 */
+-	nd_set->cookie1 =
+-		nd_fletcher64(info, sizeof(*info) * cxlr_pmem->nr_mappings, 0);
+-	nd_set->cookie2 = nd_set->cookie1;
++	nd_set->uuid = p->uuid;
++	nd_set->interleave_ways = p->interleave_ways;
++	nd_set->interleave_granularity = p->interleave_granularity;
++	nd_set->res = p->res;
++	nd_set->nr_targets = p->nr_targets;
 +
-+	if (!size)
-+		return -EINVAL;
-+
-+	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
-+		return rc;
-+
-+	return alloc_hpa(cxlr, size);
-+}
-+
-+static ssize_t alloc_region_dpa(struct cxl_endpoint_decoder *cxled, u64 size)
-+{
-+	if (!size)
-+		return -EINVAL;
-+
-+	if (!IS_ALIGNED(size, SZ_256M))
-+		return -EINVAL;
-+
-+	return cxl_dpa_alloc(cxled, size);
-+}
-+
-+static struct cxl_region *
-+cxl_pmem_region_prep(struct cxl_root_decoder *cxlrd, int id,
-+		     struct cxl_pmem_region_params *params,
-+		     struct cxl_endpoint_decoder *cxled,
-+		     enum cxl_decoder_type type)
-+{
-+	struct cxl_region_params *p;
-+	struct device *dev;
-+	int rc;
-+
-+	struct cxl_region *cxlr __free(put_cxl_region) =
-+		cxl_region_alloc(cxlrd, id);
-+	if (IS_ERR(cxlr))
-+		return cxlr;
-+
-+	dev = &cxlr->dev;
-+	rc = dev_set_name(dev, "region%d", id);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	cxlr->mode = CXL_PARTMODE_PMEM;
-+	cxlr->type = type;
-+
-+	p = &cxlr->params;
-+	p->uuid = params->uuid;
-+	p->interleave_ways = params->nlabel;
-+	p->interleave_granularity = params->ig;
-+
-+	rc = alloc_region_hpa(cxlr, params->rawsize);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	rc = cxl_dpa_set_part(cxled, CXL_PARTMODE_PMEM);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	rc = alloc_region_dpa(cxled, params->rawsize);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	/*
-+	 * TODO: Currently we have support of interleave_way == 1, where
-+	 * we can only have one region per mem device. It means mem device
-+	 * position (params->position) will always be 0. It is therefore
-+	 * attaching only one target at params->position
-+	 */
-+	if (params->position)
-+		return ERR_PTR(-EOPNOTSUPP);
-+
-+	rc = attach_target(cxlr, cxled, params->position, TASK_INTERRUPTIBLE);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	rc = __commit(cxlr);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	rc = device_add(dev);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	return no_free_ptr(cxlr);
-+}
-+
-+static struct cxl_region *
-+devm_cxl_pmem_add_region(struct cxl_root_decoder *cxlrd, int id,
-+			 struct cxl_pmem_region_params *params,
-+			 struct cxl_endpoint_decoder *cxled,
-+			 enum cxl_decoder_type type)
-+{
-+	struct cxl_port *root_port;
-+	struct cxl_region *cxlr;
-+	int rc;
-+
-+	cxlr = cxl_pmem_region_prep(cxlrd, id, params, cxled, type);
-+	if (IS_ERR(cxlr))
-+		return cxlr;
-+
-+	root_port = to_cxl_port(cxlrd->cxlsd.cxld.dev.parent);
-+	rc = devm_add_action_or_reset(root_port->uport_dev,
-+				      unregister_region, cxlr);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	dev_dbg(root_port->uport_dev, "%s: created %s\n",
-+		dev_name(&cxlrd->cxlsd.cxld.dev), dev_name(&cxlr->dev));
-+
-+	return cxlr;
-+}
-+
- static ssize_t __create_region_show(struct cxl_root_decoder *cxlrd, char *buf)
- {
- 	return sysfs_emit(buf, "region%u\n", atomic_read(&cxlrd->region_id));
-@@ -2663,6 +2778,9 @@ struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
- 		return ERR_PTR(-EBUSY);
- 	}
+ 	ndr_desc.nd_set = nd_set;
  
-+	if (pmem_params)
-+		return devm_cxl_pmem_add_region(cxlrd, id, pmem_params, cxled,
-+						CXL_DECODER_HOSTONLYMEM);
- 	return devm_cxl_add_region(cxlrd, id, mode, CXL_DECODER_HOSTONLYMEM);
- }
- 
+ 	cxlr_pmem->nd_region =
 -- 
 2.34.1
 
