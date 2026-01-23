@@ -1,119 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964873921C9;
-	Fri, 23 Jan 2026 05:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775C4387569;
+	Fri, 23 Jan 2026 06:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769146313; cv=none; b=Vah9Bzb+lWlU1pHQiSsq33oO0SZVf+ntayltynL01xfVImUiMpKiXBeIVOhNrGyoQGfmm++VX2XNhnqAkqll+Yp2oc0XpcA+XqckQvgYIEljWD5crm7YabVFjKA3fZLu0Nt00VT3QTG08253jG2lYzw6rn0NYMPZyb8GMl9gu/o=
+	t=1769149268; cv=none; b=Da/s+gEbIx6vvO1sBo1FUIvQJlWpOysEX/ASgQP+x1Ly/hi8HKEfKxYv78eMmzS1+/v6oDOUryvoF8wLT7G2swJ9oAczyOSGeAb8py1t9EuciBIs+ckbjUysXoFDDE/YnrBZZCX+LFeSUMpnUeMxG6608OdCbWgeJ5XvKlKIc8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769146313; c=relaxed/simple;
-	bh=6555LqyRbicDS9IM3bg1O2TIluGcJj7F11rI8vrsCQM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mvbNUOkfyYCCY+8VL9XlDJLPQuxZE4w1QSRHj38k6x0RykZ2uHboOd9K85Y5grkaFucAsA9dO7+f/hp5y6WvvM2KKPJZDTkwYhYwJYpYxVqJoveZghgAOV3j1xgaJo2X8yHflUD0FMIn9TbvHakENwJkeCViVv/oxjbQPAlLMyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mYAxJKwI; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1769149268; c=relaxed/simple;
+	bh=4qLfl1EKnef/GzUW0bVZNp7SUilauqiMWE77LRDXaXQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ai3eoYiNavdZGugg2TZIWLm2AqVzGXwwY0RVp/Ou2OoUtE5dI6HrVvxo0DOD3HfxKavJ3hoRqdSRNoltajtwQezr/WA8ADAJ+z0FJKIgpjxL9RYVRGxKqSCZMgoUnESG40TvnbC5+DdCjhLBxAjHyLE9ikWPFV1Dk+jd9VCKVdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=OONc+Hz4; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mYAxJKwI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769146309; x=1800682309;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6555LqyRbicDS9IM3bg1O2TIluGcJj7F11rI8vrsCQM=;
-  b=mYAxJKwImCzUDf6pd4V/8DHWvf9fWqWFC9GBaqBWBzVTci1o3SggquVp
-   ZLvVuhB/RAriym3+2sVfZ3ReD+2ohVhaoqPf647EwggjKyeh85KKfR+jR
-   05HN4ddbeR+TZ6bOcYQxC2mwiamYG4/hlteI0PTmy2Jyu6wPoLvg/uJHq
-   cvevWIRhcRIzGKGQx8kCBmy3HGCzw15/x6xn6nvmPyC2cpIaM4Zbyt+J9
-   yUCpfTaGOhrA6I3aum5i1T52w3mOaxvbNAZ1YFl3h5rtiQIHGF19+5StN
-   KQnEdspnaOWxkMP5Q7Kaq/xQCbG97vvBr2t88hiIl2AtZWkurbC3NuGI1
-   Q==;
-X-CSE-ConnectionGUID: eGvhxV8NTEyzZpcoNWK1qg==
-X-CSE-MsgGUID: IFsa0+yDQ6WHscuaM8jZEg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11679"; a="70563177"
-X-IronPort-AV: E=Sophos;i="6.21,247,1763452800"; 
-   d="scan'208";a="70563177"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 21:31:43 -0800
-X-CSE-ConnectionGUID: Ug8nxIJAT4Oi7W/VLkzx9g==
-X-CSE-MsgGUID: RtUbWqjbTrq4IGkLyP1MDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,247,1763452800"; 
-   d="scan'208";a="211443441"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 22 Jan 2026 21:31:34 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vj9lc-00000000TYU-0Cg4;
-	Fri, 23 Jan 2026 05:31:32 +0000
-Date: Fri, 23 Jan 2026 13:30:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@kernel.org>,
-	Li Ming <ming.li@zohomail.com>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Ying Huang <huang.ying.caritas@gmail.com>,
-	Yao Xingtao <yaoxt.fnst@fujitsu.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nathan Fontenot <nathan.fontenot@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Robert Richter <rrichter@amd.com>,
-	Benjamin Cheatham <benjamin.cheatham@amd.com>,
-	Zhijian Li <lizhijian@fujitsu.com>
-Subject: Re: [PATCH v5 6/7] dax/hmem, cxl: Defer and resolve ownership of
- Soft Reserved memory ranges
-Message-ID: <202601231309.JYIKhk2G-lkp@intel.com>
-References: <20260122045543.218194-7-Smita.KoralahalliChannabasappa@amd.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="OONc+Hz4"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1769149255; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=1870OwY7Yt3wtHMS4Kw5+Uzzq7JdVz48VXgwCaXXTJw=;
+	b=OONc+Hz4lqc1HP74NtQusaU9uk/dcEZsCk52r2ESR4HBF9cIXsmU0KMm8jv1P0jB5096JAHEtML2Qgaqa+XP+adb6qIZpbtghlWD/Iu80rKb5FeQV2HR2YKl8Cp3S9Nn/aRLUSxCWnIp17SLWzv5twcC/C9IC25lv1ZbLsGjZr4=
+Received: from 30.74.144.120(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WxemimV_1769149254 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 23 Jan 2026 14:20:54 +0800
+Message-ID: <7ccc3447-3a39-4206-95c5-a6cd00e2bda6@linux.alibaba.com>
+Date: Fri, 23 Jan 2026 14:20:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260122045543.218194-7-Smita.KoralahalliChannabasappa@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 08/13] mm: update shmem_[kernel]_file_*() functions to
+ use vma_flags_t
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: x86@kernel.org, linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+ linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+ linux-mm@kvack.org, ntfs3@lists.linux.dev, devel@lists.orangefs.org,
+ linux-xfs@vger.kernel.org, keyrings@vger.kernel.org,
+ linux-security-module@vger.kernel.org
+References: <cover.1769097829.git.lorenzo.stoakes@oracle.com>
+ <736febd280eb484d79cef5cf55b8a6f79ad832d2.1769097829.git.lorenzo.stoakes@oracle.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <736febd280eb484d79cef5cf55b8a6f79ad832d2.1769097829.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Smita,
 
-kernel test robot noticed the following build errors:
 
-[auto build test ERROR on bc62f5b308cbdedf29132fe96e9d591e526527e1]
+On 1/23/26 12:06 AM, Lorenzo Stoakes wrote:
+> In order to be able to use only vma_flags_t in vm_area_desc we must adjust
+> shmem file setup functions to operate in terms of vma_flags_t rather than
+> vm_flags_t.
+> 
+> This patch makes this change and updates all callers to use the new
+> functions.
+> 
+> No functional changes intended.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Smita-Koralahalli/dax-hmem-Request-cxl_acpi-and-cxl_pci-before-walking-Soft-Reserved-ranges/20260122-130032
-base:   bc62f5b308cbdedf29132fe96e9d591e526527e1
-patch link:    https://lore.kernel.org/r/20260122045543.218194-7-Smita.KoralahalliChannabasappa%40amd.com
-patch subject: [PATCH v5 6/7] dax/hmem, cxl: Defer and resolve ownership of Soft Reserved memory ranges
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260123/202601231309.JYIKhk2G-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260123/202601231309.JYIKhk2G-lkp@intel.com/reproduce)
+(reduced distribution list too)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601231309.JYIKhk2G-lkp@intel.com/
+Thanks. The shmem part looks good to me with some nits below.
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
->> ERROR: modpost: "cxl_bus_type" [drivers/dax/hmem/dax_hmem.ko] undefined!
+> ---
+>   arch/x86/kernel/cpu/sgx/ioctl.c           |  2 +-
+>   drivers/gpu/drm/drm_gem.c                 |  5 +-
+>   drivers/gpu/drm/i915/gem/i915_gem_shmem.c |  2 +-
+>   drivers/gpu/drm/i915/gem/i915_gem_ttm.c   |  3 +-
+>   drivers/gpu/drm/i915/gt/shmem_utils.c     |  3 +-
+>   drivers/gpu/drm/ttm/tests/ttm_tt_test.c   |  2 +-
+>   drivers/gpu/drm/ttm/ttm_backup.c          |  3 +-
+>   drivers/gpu/drm/ttm/ttm_tt.c              |  2 +-
+>   fs/xfs/scrub/xfile.c                      |  3 +-
+>   fs/xfs/xfs_buf_mem.c                      |  2 +-
+>   include/linux/shmem_fs.h                  |  8 ++-
+>   ipc/shm.c                                 |  6 +--
+>   mm/memfd.c                                |  2 +-
+>   mm/memfd_luo.c                            |  2 +-
+>   mm/shmem.c                                | 59 +++++++++++++----------
+>   security/keys/big_key.c                   |  2 +-
+>   16 files changed, 57 insertions(+), 49 deletions(-)
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+[snip]
+
+>   	inode->i_flags |= i_flags;
+> @@ -5864,9 +5869,10 @@ static struct file *__shmem_file_setup(struct vfsmount *mnt, const char *name,
+>    *	checks are provided at the key or shm level rather than the inode.
+>    * @name: name for dentry (to be seen in /proc/<pid>/maps)
+>    * @size: size to be set for the file
+> - * @flags: VM_NORESERVE suppresses pre-accounting of the entire object size
+> + * @vma_flags: VMA_NORESERVE_BIT suppresses pre-accounting of the entire object size
+
+nit: s/vma_flags/flags
+
+>    */
+> -struct file *shmem_kernel_file_setup(const char *name, loff_t size, unsigned long flags)
+> +struct file *shmem_kernel_file_setup(const char *name, loff_t size,
+> +				     vma_flags_t flags)
+>   {
+>   	return __shmem_file_setup(shm_mnt, name, size, flags, S_PRIVATE);
+>   }
+> @@ -5878,7 +5884,7 @@ EXPORT_SYMBOL_GPL(shmem_kernel_file_setup);
+>    * @size: size to be set for the file
+>    * @flags: VM_NORESERVE suppresses pre-accounting of the entire object size
+
+nit: s/VM_NORESERVE/VMA_NORESERVE_BIT
+
+>    */
+> -struct file *shmem_file_setup(const char *name, loff_t size, unsigned long flags)
+> +struct file *shmem_file_setup(const char *name, loff_t size, vma_flags_t flags)
+>   {
+>   	return __shmem_file_setup(shm_mnt, name, size, flags, 0);
+>   }
+> @@ -5889,16 +5895,17 @@ EXPORT_SYMBOL_GPL(shmem_file_setup);
+>    * @mnt: the tmpfs mount where the file will be created
+>    * @name: name for dentry (to be seen in /proc/<pid>/maps)
+>    * @size: size to be set for the file
+> - * @flags: VM_NORESERVE suppresses pre-accounting of the entire object size
+> + * @flags: VMA_NORESERVE_BIT suppresses pre-accounting of the entire object size
+>    */
+>   struct file *shmem_file_setup_with_mnt(struct vfsmount *mnt, const char *name,
+> -				       loff_t size, unsigned long flags)
+> +				       loff_t size, vma_flags_t flags)
+>   {
+>   	return __shmem_file_setup(mnt, name, size, flags, 0);
+>   }
+>   EXPORT_SYMBOL_GPL(shmem_file_setup_with_mnt);
+>   
+> -static struct file *__shmem_zero_setup(unsigned long start, unsigned long end, vm_flags_t vm_flags)
+> +static struct file *__shmem_zero_setup(unsigned long start, unsigned long end,
+> +		vma_flags_t flags)
+>   {
+>   	loff_t size = end - start;
+>   
+> @@ -5908,7 +5915,7 @@ static struct file *__shmem_zero_setup(unsigned long start, unsigned long end, v
+>   	 * accessible to the user through its mapping, use S_PRIVATE flag to
+>   	 * bypass file security, in the same way as shmem_kernel_file_setup().
+>   	 */
+> -	return shmem_kernel_file_setup("dev/zero", size, vm_flags);
+> +	return shmem_kernel_file_setup("dev/zero", size, flags);
+>   }
+>   
+>   /**
+> @@ -5918,7 +5925,7 @@ static struct file *__shmem_zero_setup(unsigned long start, unsigned long end, v
+>    */
+>   int shmem_zero_setup(struct vm_area_struct *vma)
+>   {
+> -	struct file *file = __shmem_zero_setup(vma->vm_start, vma->vm_end, vma->vm_flags);
+> +	struct file *file = __shmem_zero_setup(vma->vm_start, vma->vm_end, vma->flags);
+>   
+>   	if (IS_ERR(file))
+>   		return PTR_ERR(file);
+> @@ -5939,7 +5946,7 @@ int shmem_zero_setup(struct vm_area_struct *vma)
+>    */
+>   int shmem_zero_setup_desc(struct vm_area_desc *desc)
+>   {
+> -	struct file *file = __shmem_zero_setup(desc->start, desc->end, desc->vm_flags);
+> +	struct file *file = __shmem_zero_setup(desc->start, desc->end, desc->vma_flags);
+>   
+>   	if (IS_ERR(file))
+>   		return PTR_ERR(file);
+> diff --git a/security/keys/big_key.c b/security/keys/big_key.c
+> index d46862ab90d6..268f702df380 100644
+> --- a/security/keys/big_key.c
+> +++ b/security/keys/big_key.c
+> @@ -103,7 +103,7 @@ int big_key_preparse(struct key_preparsed_payload *prep)
+>   					 0, enckey);
+>   
+>   		/* save aligned data to file */
+> -		file = shmem_kernel_file_setup("", enclen, 0);
+> +		file = shmem_kernel_file_setup("", enclen, EMPTY_VMA_FLAGS);
+>   		if (IS_ERR(file)) {
+>   			ret = PTR_ERR(file);
+>   			goto err_enckey;
+
