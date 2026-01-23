@@ -1,127 +1,275 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010055.outbound.protection.outlook.com [40.93.198.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18F52E0904
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Jan 2026 00:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769129029; cv=none; b=QAFhq4N/NeCMvSXqbiBO0zkKrLFrZz72gxSuRopODEd5whOLhT8jPMuKBuitpJCtuRyTn0USRTwv6JqIgGAU/+SxkBafLjOCYRJfqj+thKRYIp7Bsse5SIPVFwn8g0qhzTMmzpNX2WoZfotMuxraxasNvcUDGLgj4tW4be5rfxM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769129029; c=relaxed/simple;
-	bh=XGJ8do6DqiSNmZPIr9zz3bcxbAKjbH/slyEIBawIwRc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gYfhcYtTZw8OdobAz7O1qMeYrExYCLLLnkFgMqG1sTSybPYIZsthF/ibnxKd/7wny9/P5u7glPNPf8TfRDbPTmQV4T2KFQP0GksVS1hmxJgauUsT0Ci8QglQD+nOzl9OtK4sp25bFGSQiPZXqc1EO0hly8ft6KUF+mt5cAArC1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=hFjTiAmA; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0495036403D;
+	Fri, 23 Jan 2026 02:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769136088; cv=fail; b=gs93eohHe/8L9eGxIfuEanK8RZWXBzp8KAzl+F7jm4UQvsulr0vtscS5HmoNzhjRMRmHHGkbk3k+tYYRrmDxvrE2I9AqGdL+8ddmMfbGgpV38HFHcVM7vi5rxP6yevZ2wSJF0yZe26fPTwQnsijnX9PU+u59HxEHLjE4zUsHpAo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769136088; c=relaxed/simple;
+	bh=1M0Cr3wbpl5hK1Qy/TGRps8tKF6hppuTep8Y8WjCTF0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=u5QeRQTBl1Q5UcSdAwLy5v2v84CZcIQzc3GXIinl774cBmzyvdsKIycyAyOFnXbQm2qatoW1RKEPpfF5f19NLPwMKL9dyHnYa9RUBVY3NH7EPhuVZWNSzSM5m7uLha82obYynTRvUKc3Mrh62lYNsolYXnT0lyRqQh6QFS+jHrM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=DyTWzRNN; arc=fail smtp.client-ip=40.93.198.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="hFjTiAmA"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-89473dca8aaso24514256d6.0
-        for <linux-cxl@vger.kernel.org>; Thu, 22 Jan 2026 16:43:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1769129021; x=1769733821; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UfDbc/em5bjOki5V5/p4q24wfcBoeK7m+V9bweSJP5A=;
-        b=hFjTiAmAxYF12xnXQduZ5Rq8uiqpAkF/48v7Vrt/m4ZO7CoKwMFV0ojQfo0+2MzNwB
-         gTFQ+6Zf6JI0N+1XHbW9T4hRvPQBZ7o94iPA05I8CgnAQbi610Ghc8bLmubbRsW2dF5e
-         uHRwkT/ZOF9s+wtHyxfcFD5RTeXr2bMWGsBfvNm2zVZX3tpERTRj0mnDwWIq9tZV7xMC
-         tEvUWVqVFaW7+j1QoDzOlQj+EEag8YktREfiXcrBU7Bj0/G5GyIiOmD+eEaMAI2A2TLM
-         S+SyI0lNVN32xGE/orw4ulE89BhNW0Dl0sUoOtJEO6nCPUOFL1SViSlOlDlzMhYvlhSl
-         KwgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769129021; x=1769733821;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UfDbc/em5bjOki5V5/p4q24wfcBoeK7m+V9bweSJP5A=;
-        b=ssJsXxNC6QnznCe9X7ERf7FZFEsgO33RiirmiHrNAOibuOtZr5+lu/2OSU+1uTtNzU
-         SNPNOgZz1StKPmGdTzdy8x5BlYhx0cabzl2Xty3OE8KdOyXoKuOXOOPJQufqInbHLP5q
-         JJAkzKEfiGqbU2+DH8qmjb2s51PmyVW34ZDJuNZYNSu1xRmrfP0bNfm0nET4DlQ5fTix
-         KALEth/0ya3LCd3oUiJOpm2bdFWpxwEgqwV1FFFzPZFOc/Pa5m3iK7KdwY45JIbk2hgU
-         i2UeIwR7j8AZ+1iECOZsR43vsaPoG0HM2R66Hap38XazPGBosAlOkh6IyB5JHzcmKfbX
-         7WNg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7R0plYsHLj+G+NxJfroGStEwwZGVsD1fo7yYIWOb+cj8xKO4260Kx95Hrw1X3yEewNHKA4aObwlQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykbCnFAH4IaBPZsMnVeiPpik+SVY+W4bpX3Vc8AKziRF9u5d+k
-	SIarhJWYo2M/6sHh2O6MlASTxEj45v51raOGPfW0X/Uc6t6uR0HlgpNcmrC9k/yWvDg=
-X-Gm-Gg: AZuq6aIqSmeN4U8FWUXXjAm0CGvn6/D1a/gmqR7Du2s2J1lKrpGk8v66vwG2wsLUJ27
-	ClnwZevTQSkWOF+KTdDf7GGaupOnAml3sTcTAisJ57qU8b1A71e4Q1tTfLOmotsy06LtelKZjrB
-	kvUWDD4awILLC/rfgGxLwtTLB6Ov30ke/bvAxKDGEGCuM2RfqdKb4r0tucRa/AkOWUzZPlQtaFv
-	xabEZKR3ohxx5k5hgH9/8FDwchVq6KEOhHdOt0psjK8YoUn9uEVRW7aUHKA8ElW7hqomhKQ2eMZ
-	VD4uUzhcZ9PggKw4jkO+tbd2+Fp7dRLcd1OYYcLcD9wMH5eRctFlLDmeZb8vuMb+inoD+Ik8VLZ
-	CsL0l8Hih6niE0bgn89aX8yG3T9KJ/7OwqjyRS6nAxck5CftO2RzspdsIasuSppEOJfs6jrsih1
-	o1MJjk+rS1Pmx1soWZJuyxo//Y0bpWGT5odpoJvn0jMU1cF1K+wrKNy7vt7bC3k0eTRQ3DtA==
-X-Received: by 2002:a05:6214:f2a:b0:88f:d4b1:4c2d with SMTP id 6a1803df08f44-894902209a0mr21597136d6.60.1769129020746;
-        Thu, 22 Jan 2026 16:43:40 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89491853478sm5521546d6.25.2026.01.22.16.43.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jan 2026 16:43:40 -0800 (PST)
-Date: Thu, 22 Jan 2026 19:43:38 -0500
-From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Red Hat)" <david@kernel.org>
-Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	kernel-team@meta.com, dan.j.williams@intel.com,
-	vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
-	jasowang@redhat.com, xuanzhuo@linux.alibaba.com,
-	eperezma@redhat.com, osalvador@suse.de, akpm@linux-foundation.org
-Subject: Re: [PATCH 7/8] dax/kmem: add sysfs interface for runtime hotplug
- state control
-Message-ID: <aXLEOjgVyGYAU_zk@gourry-fedora-PF4VCD3F>
-References: <20260114085201.3222597-1-gourry@gourry.net>
- <20260114085201.3222597-8-gourry@gourry.net>
- <3555385d-23de-492c-8192-a991f91d4343@kernel.org>
- <aWfcYjZVrROHfGyh@gourry-fedora-PF4VCD3F>
- <57c5f44f-3921-478b-843b-877fae536591@kernel.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DyTWzRNN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cnvoc1qSLOi5/7S2q1sEGAXZsQrnvhTAv3yqwfcpj/iOCardBjn74QK1KmEx7EA8yoWdRpocey3ZfylV74PrcOgaD19JE+GSXhB5+qlIzhEe9ofIYSvZA9MBvY/4OS5rkhiq8oZmZqdKzGziDgkMIQJ6rIVdyX8Hl9t3I5hewnjdoYuTeS8ScC4MHpY1PtQgCwiREyFpxLK4MM30DhecacRzrqwapXUQEgeFUl0ABqlzWCFWITLHSzTE7TklrD7HAyYu6IEfqRytejL0VSHDGHMwPyg8rMVwqIE07ZxmVSUC1IPOGoej9CVgL07XtoGPdfnwAst0vsWHKEabxSDZGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Mo2AmB4afUWo/G7gmKZODhTGxv3RD904UrIdf/DZLhw=;
+ b=MmHbE528xTUwFtA41nj3fD/9uZvDP8xtr4Qnecw7AWqhG7j5VPYTV8aJh6pXtJG5g0dmeiw+y86M6XkHiHHgH+zSSRnwCPWzpU+SkZ8vBCfak62A5Y6TaEPge1LFbBUbUtMoDdorwrRTD+5oj4wvU0cUHG5UjfGr45iLdd+8sPIe//l69+lWwGOyuLjWdcc2nN9/vHjBljFUr+9Uzl/h9NbHNuwx68KB3sntiAXhH2691VW3Dmdnkhi0g7WXyx0NhbEXZCb48LQ52p8E7WJGM4nyACtHL08l5No6AJk8rBc8k5Jy3UZ5zFOesH1e3e/9vBfJNd4VBJscMYiT6sC7Lw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mo2AmB4afUWo/G7gmKZODhTGxv3RD904UrIdf/DZLhw=;
+ b=DyTWzRNNQBmDpc4CJszvYtPNbXilUHLVvKW8uPhmDrJzWXThRhWBSI15VGmmXShhgzj6j+ShuMfoeqqBAG7ls1QKm3kFuYrKse2AwVYIp/Ox59e+6UccIg7fuXvyykEJN7qrXn9tH4op1HNsadDo10+cpxuw51egHYC+1/0jTEXeXUOo2qSnK7ctdbz2lUwsQCVytH0exuyV4j5kYMD6GLqKcoSJGa1O0uhsy48QsC8iM0KsHw0ZxQU5NbMM3csYSKdZC50Mr8iHaS/K2kSt4hwp8FG+pqIacsf/nE3fncsXSzopR1e0Vwzp5WypN4JWqCKM1XToDo2ltzr9bEku4Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ IA0PR12MB8983.namprd12.prod.outlook.com (2603:10b6:208:490::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.9; Fri, 23 Jan
+ 2026 02:41:14 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::f01d:73d2:2dda:c7b2]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::f01d:73d2:2dda:c7b2%4]) with mapi id 15.20.9542.010; Fri, 23 Jan 2026
+ 02:41:13 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Balbir Singh <balbirs@nvidia.com>, Matthew Wilcox <willy@infradead.org>,
+ Alistair Popple <apopple@nvidia.com>,
+ Matthew Brost <matthew.brost@intel.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Francois Dugast <francois.dugast@intel.com>, intel-xe@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, adhavan Srinivasan <maddy@linux.ibm.com>,
+ Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+ Felix Kuehling <Felix.Kuehling@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+ David Hildenbrand <david@kernel.org>, Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>, Leon Romanovsky <leon@kernel.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, linuxppc-dev@lists.ozlabs.org,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-mm@kvack.org, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v6 1/5] mm/zone_device: Reinitialize large zone device
+ private folios
+Date: Thu, 22 Jan 2026 21:41:03 -0500
+X-Mailer: MailMate (2.0r6290)
+Message-ID: <1EA077E1-DDF1-4356-B8F8-CB13F0D6D8B5@nvidia.com>
+In-Reply-To: <20260122154646.GQ1134360@nvidia.com>
+References: <eb94d115-18a6-455b-b020-f18f372e283a@nvidia.com>
+ <aWsdv6dX2RgqajFQ@lstrano-desk.jf.intel.com>
+ <4k72r4n5poss2glrof5fsapczkpcrnpokposeikw5wjvtodbto@wpqsxoxzpvy6>
+ <20260119142019.GG1134360@nvidia.com>
+ <96926697-070C-45DE-AD26-559652625859@nvidia.com>
+ <20260119203551.GQ1134360@nvidia.com>
+ <ef6ef1e2-25f1-4f1b-a8d4-98c0d7b4ad0c@nvidia.com>
+ <EE2956E3-CCEA-4EF9-A1A4-A483245091FC@nvidia.com>
+ <20260120135340.GA1134360@nvidia.com>
+ <F7E3DF24-A37B-40A0-A507-CEF4AB76C44D@nvidia.com>
+ <20260122154646.GQ1134360@nvidia.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SJ2PR07CA0006.namprd07.prod.outlook.com
+ (2603:10b6:a03:505::18) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <57c5f44f-3921-478b-843b-877fae536591@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|IA0PR12MB8983:EE_
+X-MS-Office365-Filtering-Correlation-Id: afa10e68-391e-44e5-b48f-08de5a28dfd8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?WJjctPhWk2mmDUM9U48o8ulRry5sg1PngC8HnnnrRpi9Wn+2MrAKkLxu48Sq?=
+ =?us-ascii?Q?/L6drXpHvokwP/dNVHtEpT9qTAnseXwu4Y08jODeaBM+T49fNn/h3KVzLOpV?=
+ =?us-ascii?Q?mnVmDoP9V+iJoq2wG0D07pLr1pbDZbbmBcb9nYrDfej/+BpatDnmZFh7m8ec?=
+ =?us-ascii?Q?5Z+/QGWouhdpEOG2fwx52pc12YTobZFel/kj4b1SMmNrwi1fB63JJgNYDOP7?=
+ =?us-ascii?Q?GbTayT/UO1jkGynFUe5quD5dwWJlBbvuKtNXrNBZpOJ8HFmEXkKIH1CL1zfP?=
+ =?us-ascii?Q?CycyVSOIJCHbUSddILvrAH326N0BfUNLpm8isS7q38/hoi8s9N/461pQwOvn?=
+ =?us-ascii?Q?HuiUOYyZXmaHDb/yNU/caLv9JlOb2dB3pw9Nn47qlHr67efAmR0dJbab/6XF?=
+ =?us-ascii?Q?6VhwULCqKHbW7rfMUJSnSLGKsiMO32EGoWFC5nD1XVLSyfHtisoabDM3upF1?=
+ =?us-ascii?Q?55hVVIEPmpkUscfSJh+IyyJzxSth7XQTN3JxvmMtEB6Q/MEtB/Km4qSWAImx?=
+ =?us-ascii?Q?b7oRJZiVMCyzaxpf4cDx89ldHqDuyTMwvrH+NVoqOa8DlK2wTVtBbiNa1CHP?=
+ =?us-ascii?Q?EWH+e73us9M0vQlMJEz8Jne9UgWppkXLeErEBf92F/i+wTZN20F3514e61S4?=
+ =?us-ascii?Q?cy0MewRk5BEYYAtqMHci1bxkhzUjxjaGIil4+55BWUiT0tQ6+Cgrr//4WYcK?=
+ =?us-ascii?Q?6nZcDj2U02u4RIBVKPJ9DDs/DS+/LEar88snio0D6VDdEn/rKmQbpAzH71u6?=
+ =?us-ascii?Q?ONq87zVdxJ+Lgt25FxjDDowQuCk7DZmd3Z0sjOOUJnKO8mey8UIyy/MOjeG4?=
+ =?us-ascii?Q?cTdmeVdyUbeWsNNcLMPk8CogjPtiJfiO++YszX7o6IVefzkOLcoR6wNBalJN?=
+ =?us-ascii?Q?OgtijBj/65pPxfHhH2USrxIOncocwF8v9F7hWxJnONp4JgDv8ydmU02rbPnU?=
+ =?us-ascii?Q?Pl5+HJ+MfMpqURya7t3snEkFsTsl8jtjGeMqLhLfIsVEV5UPm0TGjvqLEZHx?=
+ =?us-ascii?Q?ZZ1rAuWsl1IHztGL78F0NYCX2L/1AFpbkmMd6Q4uWlXNS0TQX2M/af6uxntm?=
+ =?us-ascii?Q?fCZPdrnR6+U8Tt2brn51qfeb4EyiZ9vX/fsdSBrJ6Oq99GW3S8BJ50htnaRT?=
+ =?us-ascii?Q?N1JaYH0cfLTFGBt3aAJKAqe9dhl7VeZoRf0AAFKkrx5gfIyWftyjGXWQW3ss?=
+ =?us-ascii?Q?qmQiwEl6Ss+ay2XeqzLqxbY/6Ho2c0z0IrA+OvKqk6qdkh1sE92NHwmxc13c?=
+ =?us-ascii?Q?hXkKQjRpNTkPmOuhKJDOR8Z27dfPSOK38HxJK1NUj17mOgLKXqsSc+DeKIMQ?=
+ =?us-ascii?Q?gtcfBY+m2dsIqVJt4ygQpKMqStbf8RtuIlER39q0wPwknOOe7PKAEjWUHAz6?=
+ =?us-ascii?Q?DQ3a7g8fHM1HufR8DSqurSnJCbm6rZK56Yx0m4A7oxouIFbrNLfZvsrsOe0z?=
+ =?us-ascii?Q?1Z0R7D1nnG9qrnIkJ8zRxnJEFFVfm4UZGjF9OnxFjAdMkLyTIH1dnayBObGP?=
+ =?us-ascii?Q?k3dQQfnoSQAKvvdNI6A/82NUzzIEeziMdvCup8QFnInFYcwj3Fgm+LMecYy+?=
+ =?us-ascii?Q?mhDzOLpj5E4UKFLqw78=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?3SMTR6h1cbjcOjkKFp2umxl5mAdSwEcWJrHp7FK4e3C7OdHU1vOtsbS6442z?=
+ =?us-ascii?Q?rTs2Ekj1TgMnnrboS6x4dtsr4hmCXZMJFo81oh+nJZ/xZJJpo4HNGRWUlYsM?=
+ =?us-ascii?Q?qDhD7XWCJwSSCO2ADlxRPYzTyqisWxfALyittrFnRFFzGMVmoaL8i3paVExu?=
+ =?us-ascii?Q?Cx71q4H1hPStgXSRUibXn8f+CeWd7yZjInL307UrfzK3k/DY1ZuBThR0x5iK?=
+ =?us-ascii?Q?9AAjo9VBBaLZtrnLvqX8L8g6G2dJ3aeNE8kp+7bBLlWlZw1iL/6ABk1FG3LW?=
+ =?us-ascii?Q?rwzRhwYvueG3huHOTKIWVjPT3BiR0Ypi5qtw9rTJE4BUJsl8zb4GmgfLl2x7?=
+ =?us-ascii?Q?KImu5xD4hvM+HBc2ooZ/USFjh2C2mgIJwtxQWSSAGNlFMLIFeTH9TSwT3Eyk?=
+ =?us-ascii?Q?UGV5rN6XKwPCvkNUPJsU4PW0eLnKY+ng97ZXtfLtobTsPH83ehpHyOETl4Wd?=
+ =?us-ascii?Q?HUAlZxDtqkzmQpu96aDQ+aShvk8nTzE4cb56Oy3q7Dh5SDj6WoVnN9D9fQpE?=
+ =?us-ascii?Q?fZ1t5Lllx0nTQUVLNN0k2B/IuXErDqLPb9FIxDBhkMp9j2lxoMPkEa91Yskz?=
+ =?us-ascii?Q?eza30E4RdheFgp5zVsEp+d7x99taMjAkucA+p4nfH5YSo5WUjEpnjQXaTFci?=
+ =?us-ascii?Q?lQb3UVN+XZZndgoXhtDK9Njqn5XkD4JvsW0bR56dKsRHpv4SqZUT1Ir2k6Ki?=
+ =?us-ascii?Q?0j6mNOgePUStY/vf3QNudiMXyb/j91hFfEgT0+47811bfhdVfGBnDTQq1QKe?=
+ =?us-ascii?Q?AHlWEm0s1/WEnlQoDbahczPaO4x8JDgDh3mCs5H6FcNzQ52s7GKN23sDki0K?=
+ =?us-ascii?Q?JgXULxo7P1/5aGSqn6HYNXBTf5O3QkpKDPGopn9Gq4RXeNf9xnFsGTQvJhj2?=
+ =?us-ascii?Q?eUyuZmv1OoXvhb3i62oeOe72jLlTRugIbTO5GXNgaEAIuVOZKb3mhDiahYoA?=
+ =?us-ascii?Q?z4iHpOqpkyJx1hX29po6QmEsSoslqGfB4d9WBw1ybXOZUQZgjMAwpvJzPjar?=
+ =?us-ascii?Q?Zrr/3Qkwzk1UkmaEDNUTH8XgzqwdwLONW++zJwaVxYWhNPdLW21PxfrhhGOl?=
+ =?us-ascii?Q?9fTdiB9fRAHegY99WsQ5/Wh6cAIjW3+QR/22FMk/FF44yjSkjbqjMSaEa+o4?=
+ =?us-ascii?Q?ccViiiSivCzb/EgGaxZ7/3kSPcIwRVP5PC5IJteSOgCieg3xN8ov5yGc7WAA?=
+ =?us-ascii?Q?3j7H4EAtiRgxqYlsPXFVQKnGR6UqMJzm2HIrdb5Peh0FRx3u/7SbiwXNIVJX?=
+ =?us-ascii?Q?nJNSlyofqHPsokugdq+1JNoWEwzjcet+GZYmag4phJmnQ7cAtONQXH/mRPyL?=
+ =?us-ascii?Q?Ddt7o3htvuPUhs1VrcNaeQij2ri0vKWtLiL4hUZgm1Yl41h2WagJ1Jx1F+rJ?=
+ =?us-ascii?Q?xbYmdCG/THWCQRjtvrtAA0FtleOVsEX6He3SbpvsefzF2yUX82NX0UL/LIHn?=
+ =?us-ascii?Q?4A+2LZjM7FQJ8n9dXJ0fFaYtJOx0h2a81UPZitnDYpoGwBFYzFX96ksSGgZG?=
+ =?us-ascii?Q?6dlsMeMeq4CFhHclpcLGVWwp1HeNsId9hz67jO1VpMADec/U8GE16KJOyolJ?=
+ =?us-ascii?Q?d1tI5Jw84v5R99fdNRGpz7s7nRfiOph26cXiVBvcVjd7wmSdERxvqa+0+qKJ?=
+ =?us-ascii?Q?JZo8gG21gC75KLAK6MGnIbB35z/7/XiQlNGoVUKBWdekLgD2VCnN0tzu1aM3?=
+ =?us-ascii?Q?q9su/juE/LVjnfLWoOBVycNY6UNw50JiasF01UrefDKT+3mf?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: afa10e68-391e-44e5-b48f-08de5a28dfd8
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2026 02:41:13.7282
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jKFd8R8EOmiZotSEsVAgDUuadz3WRrToTAh/QWvlcBmKa15BihQH856/QSLn74ZV
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8983
 
-On Thu, Jan 22, 2026 at 11:49:48PM +0100, David Hildenbrand (Red Hat) wrote:
-> 
-> I'm merely wondering why, in the new world, you would even want the offline
-> state.
-> 
-> So what are the use cases for that?
-> 
+On 22 Jan 2026, at 10:46, Jason Gunthorpe wrote:
 
-I don't have one, and in the 5-patch series I killed it.  You are right,
-it makes no sense.
+> On Tue, Jan 20, 2026 at 10:01:18PM -0500, Zi Yan wrote:
+>> On 20 Jan 2026, at 8:53, Jason Gunthorpe wrote:
+>>
+>>> On Mon, Jan 19, 2026 at 09:50:16PM -0500, Zi Yan wrote:
+>>>>>> I suppose we want some prep_single_page(page) and some reorg to share
+>>>>>> code with the other prep function.
+>>>>
+>>>> This is just an unnecessary need due to lack of knowledge of/do not want
+>>>> to investigate core MM page and folio initialization code.
+>>>
+>>> It will be better to keep this related code together, not spread all
+>>> around.
+>>
+>> Or clarify what code is for preparing pages, which would go away at memdesc
+>> time, and what code is for preparing folios, which would stay.
+>
+> That comes back to the question of 'what are the rules for frozen
+> pages'
+>
+> Now that we have frozen pages where the frozen owner can use some of
+> the struct page memory however it likes that memory needs to be reset
+> before the page is thawed and converted back to a folio.
 
-However:
+Based on my understanding, a frozen folio cannot be changed however the
+owner wants, since the modification needs to prevent parallel scanner
+from misusing the folio. For example, PFN scanners like memory compaction
+needs to know this is a frozen folio with a certain order, so that it
+will skip it as a whole. But if you change the frozen folio in a way
+that a parallel scanner cannot recognize the right order (e.g., the frozen
+folio order becomes lower) and finds some of the subpages have non-zero
+refcount, it can cause issues.
 
-> Why would user space possibly want that? [plugged-in offline blocks]
-> 
+But I assume device private pages do not have such a parallel scanner
+looking at each struct page one by one and examining their state.
 
-I don't think anyone does.
+>
+> memdesc time is only useful for memory that is not writable by frozen
+> owners - basically must be constant forever.
 
-This is baggage.
+Bits 0-3 of memdesc are a type field, so the owner should be able to
+set it, so that others will stay away.
 
-The CXL driver auto-creates dax_kmem w/ offline memory blocks
+BTW, it seems that you treat frozen folio and free folio interchangeable
+in this device private folio discussion. To me, they are different,
+since frozen folio is transient to prevent others from touching the folio,
+e.g., a free page is taken from buddy and allocator is setting up its
+state, or a folio is split. You do not want memory compaction code
+to touch these transient folios/pages. In terms of free folio, they
+are stable before next allocation and others can recognize it and perform
+reasonable operations. For example, memory compaction code can take
+a free page out of buddy and use it as a migration destination.
+That is why I want to remove all device private folio states when it
+is freed. But memory compaction code never scans device private folios
+and there is no other similar scanners, so that requirement might not
+be needed.
 
-Changing this behavior breaks existing systems :[
+>
+>>>
+>>>>>> I don't think so. It should do the above job efficiently and iterate
+>>>>>> over the page list exactly once.
+>>>>
+>>>> folio initialization should not iterate over any page list, since folio is
+>>>> supposed to be treated as a whole instead of individual pages.
+>>>
+>>> The tail pages need to have the right data in them or compound_head
+>>> won't work.
+>>
+>> That is done by set_compound_head() in prep_compound_tail().
+>
+> Inside a page loop :)
+>
+> 	__SetPageHead(page);
+> 	for (i = 1; i < nr_pages; i++)
+> 		prep_compound_tail(page, i);
 
-> Can't ndctl just use the old (existing) interface if such an operation is
-> requested, and the new one (you want to add) when we want to do something
-> reasonable (actually use system ram? :) ).
+Yes, but to a folio, the fields of tail page 1 and 2 are used because
+we do not want to inflate struct folio for high order folios. In this
+loop, all tail pages are processed in the same way. To follow your method,
+there will be some ifs for tail page 1 to clear _nr_pages and tail page 2
+to clear other fields. It feels to me that we are clearly mixing
+struct page and struct folio.
 
-I think we're in agreement, I think I'm doing a poor job of explaining
-the interconnected issues.
+>
+>> Yes. One of the issues is that device private code used to only handles
+>> order-0 pages and was converted to use high order folio directly without
+>> using high order page (namely compound page) as an intermediate step.
+>> This two-step-in-one caused confusion. But the key thing to avoid the
+>> confusion is that to form a high order folio, a list of contiguous pages
+>> would become a compound page by calling prep_compound_page(), then
+>> the compound page becomes a folio by calling folio_set_large_rmappable().
+>
+> That seems logical to me.
+>
+> Jason
 
-summarizing the long email:
 
-   cxl/region + dax/cxl.c + dax/bus.c auto-probe baggage for
-   BIOS-configured regions prevents any userland policy from
-   from being plumbed from cxl to dax.  There's no interposition step.
-
-So yes - new interfaces would resolve this and the old interfaces
-could be left for compat.
-
-~Gregory
+Best Regards,
+Yan, Zi
