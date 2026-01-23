@@ -1,56 +1,56 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0491C3816F6
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Jan 2026 11:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B83352C21
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Jan 2026 11:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769167913; cv=none; b=O6ulFQxBoFm1LtXlDLb1DPOoYc7ZUI01JXDDujyQBdJC0Z874b3thzTi8I1D300IPyLFDdnmqBq535EQzA1qKadzzRdKBxBGd6/58vk6FsMRC+LudloaHyDANmFG9ZU7YHUsY1SABTvLBYl5xHy8M45Qo4v5F6Guun5/J0uxG24=
+	t=1769167915; cv=none; b=Cn9nS7iIqljeU0cqdMiEAP/2ezXJtKromZBI9wv5GLiL9r7M7Hcg+KjbnE9LPQgfhH02+WP07+CxnGho5X817PSqz9JJU7Es4gu5a/SVC9R/icfuyyM7PUOn261BPJHgPinhcl57IjRudPSQi7TdMqaFjElDg1GBZVTnaNN0z44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769167913; c=relaxed/simple;
-	bh=5tAtMy4WfvhEstME0Y+aQ2zHX5jFXZ6f7SDfuW8BbLg=;
+	s=arc-20240116; t=1769167915; c=relaxed/simple;
+	bh=EWyTHIXRjnxuz5bMEmopbPulR+K5y7vgs2pkq5uFWKU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=e7UAI6aylpLrR2GFIe1uzPH8nCGVx9ltl2D5vB0UG9DJo/p9AmEQ+sQPH/lNXFH0GXueHOwxAxHyR0dVvjbuiF8vuKfkGx/ZhxkFEeuNQrkdStHB+sjR83OOlS04oTfYtsoy/t7GcebEHpkcs5yLehLDzjZYnNBjPKOW7JpNUlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=bosZZADq; arc=none smtp.client-ip=203.254.224.24
+	 Content-Type:References; b=LUfIFJ9ges2bi3HtIZXULjSbREeLdAzRYtBLAvZP0pjy53kbaYNQWBK3t84Uogj3QgcIyqUU0GICCHs/OBIh1uDAa6IL4itxQN5k2r0XgaMYBKgcrmJ27wKkYRzzSBddN6iQQXy75CKSd4kY9au+XXvEua+XNHyufEAKvyUbBXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=b3/2YtWV; arc=none smtp.client-ip=203.254.224.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bosZZADq"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="b3/2YtWV"
 Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20260123113147epoutp01f986a77b8f05132926b355790ef98c69~NWNa7_L2Q1471314713epoutp01f
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Jan 2026 11:31:47 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20260123113147epoutp01f986a77b8f05132926b355790ef98c69~NWNa7_L2Q1471314713epoutp01f
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20260123113150epoutp03f5861562d223d9ee155e77e91585892a~NWNdy-Yg82123021230epoutp03B
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Jan 2026 11:31:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20260123113150epoutp03f5861562d223d9ee155e77e91585892a~NWNdy-Yg82123021230epoutp03B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1769167907;
-	bh=x3MHNOcogxwkLb4okjjYI9s7EwXA49nWVIp97O0VH3c=;
+	s=mail20170921; t=1769167911;
+	bh=oYoasi3H98eaABmP5XK/+MqgF3n0XTF/ldFpMP/hfUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bosZZADqVV4EGQu5vQDchSjVAdt+xyqlh/id5X2OXYxFsKSHaqb9vJliZkiK3Pjr6
-	 lLqRWE0o85OC57/ttM0S6Ia5Cgj2thHUxtJZI/JQGqvDfQPHMzaGsVc72CrdY5fwYt
-	 q25jzTPW11sZJImxOe/j2z/xoc+UZT20xCZnctlk=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20260123113147epcas5p131ff346215f8925b2aa0c81a53b3cee0~NWNasnvCz0962609626epcas5p1H;
-	Fri, 23 Jan 2026 11:31:47 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.92]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4dyG3j0w4lz6B9mB; Fri, 23 Jan
-	2026 11:31:45 +0000 (GMT)
+	b=b3/2YtWVbesOxUIXkzF8HvWOvjN5lZvkvkW/boUOn+xVx37LXkJcGK4trYZX1X4Dr
+	 PojEGPe8qZlEhorvWPMbRZ6rXwgQMVAtIDpnKRKJzMaD9no6EvFEQeopGpdblV65mP
+	 cXM4yTpLzw87VUs2uUumOElgY9LWtoPEm29ldQro=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20260123113150epcas5p26fb3bfbd2b99e86dcfa93b37d1da6c46~NWNdiK0PV2197121971epcas5p2f;
+	Fri, 23 Jan 2026 11:31:50 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.38.86]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4dyG3p08N7z6B9m5; Fri, 23 Jan
+	2026 11:31:50 +0000 (GMT)
 Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
 	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20260123113144epcas5p18477c68ede07c17a6c8461cf034eb3d1~NWNX90uV40266802668epcas5p1r;
-	Fri, 23 Jan 2026 11:31:44 +0000 (GMT)
+	20260123113149epcas5p1884531875d9676391e7ccc66a0f314d4~NWNcWmWly2520225202epcas5p1l;
+	Fri, 23 Jan 2026 11:31:49 +0000 (GMT)
 Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
 	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260123113143epsmtip2b0cdf0fc901eb6c7757ec22782273dd6~NWNWyfCit2685626856epsmtip2W;
-	Fri, 23 Jan 2026 11:31:43 +0000 (GMT)
+	20260123113148epsmtip2d45ba503047a434d45d85eb073c9865a~NWNbI8bRF2681126811epsmtip2o;
+	Fri, 23 Jan 2026 11:31:48 +0000 (GMT)
 From: Neeraj Kumar <s.neeraj@samsung.com>
 To: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
 	linux-kernel@vger.kernel.org, gost.dev@samsung.com
 Cc: a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
 	Neeraj Kumar <s.neeraj@samsung.com>
-Subject: [PATCH V6 14/18] cxl/pmem_region: Prep patch to accommodate
- pmem_region attributes
-Date: Fri, 23 Jan 2026 17:01:08 +0530
-Message-Id: <20260123113112.3488381-15-s.neeraj@samsung.com>
+Subject: [PATCH V6 17/18] cxl/pmem_region: Create pmem region using
+ information parsed from LSA
+Date: Fri, 23 Jan 2026 17:01:11 +0530
+Message-Id: <20260123113112.3488381-18-s.neeraj@samsung.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260123113112.3488381-1-s.neeraj@samsung.com>
 Precedence: bulk
@@ -60,524 +60,277 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20260123113144epcas5p18477c68ede07c17a6c8461cf034eb3d1
+X-CMS-MailID: 20260123113149epcas5p1884531875d9676391e7ccc66a0f314d4
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 105P
 cpgsPolicy: CPGSC10-542,Y
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20260123113144epcas5p18477c68ede07c17a6c8461cf034eb3d1
+X-CMS-RootMailID: 20260123113149epcas5p1884531875d9676391e7ccc66a0f314d4
 References: <20260123113112.3488381-1-s.neeraj@samsung.com>
-	<CGME20260123113144epcas5p18477c68ede07c17a6c8461cf034eb3d1@epcas5p1.samsung.com>
+	<CGME20260123113149epcas5p1884531875d9676391e7ccc66a0f314d4@epcas5p1.samsung.com>
 
-For region label update, need to create device attribute, which calls
-nvdimm exported routine thus making pmem_region dependent on libnvdimm.
-Because of this dependency of pmem region on libnvdimm, segregate pmem
-region related code from core/region.c to core/pmem_region.c
+create_pmem_region() creates CXL region based on region information
+parsed from the Label Storage Area (LSA). This routine requires cxl
+endpoint decoder and root decoder. Add cxl_find_root_decoder_by_port()
+and cxl_find_free_ep_decoder() to find the root decoder and a free
+endpoint decoder respectively.
 
-This patch has no functionality change. Its just code movement from
-core/region.c to core/pmem_region.c
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
 ---
- drivers/cxl/core/Makefile      |   2 +-
- drivers/cxl/core/core.h        |  10 ++
- drivers/cxl/core/pmem_region.c | 201 +++++++++++++++++++++++++++++++++
- drivers/cxl/core/region.c      | 188 +-----------------------------
- tools/testing/cxl/Kbuild       |   2 +-
- 5 files changed, 214 insertions(+), 189 deletions(-)
- create mode 100644 drivers/cxl/core/pmem_region.c
+ drivers/cxl/core/core.h        |   5 ++
+ drivers/cxl/core/pmem_region.c | 133 +++++++++++++++++++++++++++++++++
+ drivers/cxl/core/region.c      |  21 ++++--
+ drivers/cxl/cxl.h              |   5 ++
+ 4 files changed, 156 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 5ad8fef210b5..fe0fcab6d730 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -16,7 +16,7 @@ cxl_core-y += pmu.o
- cxl_core-y += cdat.o
- cxl_core-y += ras.o
- cxl_core-$(CONFIG_TRACING) += trace.o
--cxl_core-$(CONFIG_CXL_REGION) += region.o
-+cxl_core-$(CONFIG_CXL_REGION) += region.o pmem_region.o
- cxl_core-$(CONFIG_CXL_MCE) += mce.o
- cxl_core-$(CONFIG_CXL_FEATURES) += features.o
- cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
 diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 268f6d19ab9d..4eed243c0d7d 100644
+index 5ae693269771..8421ea0ef834 100644
 --- a/drivers/cxl/core/core.h
 +++ b/drivers/cxl/core/core.h
-@@ -46,6 +46,8 @@ struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
- 				     enum cxl_partition_mode mode, int id,
+@@ -46,6 +46,7 @@ struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
  				     struct cxl_pmem_region_params *pmem_params,
  				     struct cxl_endpoint_decoder *cxled);
-+struct cxl_region *to_cxl_region(struct device *dev);
-+int devm_cxl_add_pmem_region(struct cxl_region *cxlr);
+ struct cxl_region *to_cxl_region(struct device *dev);
++bool is_free_decoder(struct device *dev);
  
  #else
  static inline u64 cxl_dpa_to_hpa(struct cxl_region *cxlr,
-@@ -83,6 +85,14 @@ cxl_create_region(struct cxl_root_decoder *cxlrd,
+@@ -87,6 +88,10 @@ static inline struct cxl_region *to_cxl_region(struct device *dev)
  {
- 	return ERR_PTR(-EOPNOTSUPP);
+ 	return NULL;
  }
-+static inline struct cxl_region *to_cxl_region(struct device *dev)
++static inline bool is_free_decoder(struct device *dev)
 +{
-+	return NULL;
-+}
-+static inline int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
-+{
-+	return 0;
++	return false;
 +}
  #define CXL_REGION_ATTR(x) NULL
  #define CXL_REGION_TYPE(x) NULL
  #define SET_CXL_REGION_ATTR(x)
 diff --git a/drivers/cxl/core/pmem_region.c b/drivers/cxl/core/pmem_region.c
-new file mode 100644
-index 000000000000..dcaab59108fd
---- /dev/null
+index 53d3d81e9676..cdee2788fad8 100644
+--- a/drivers/cxl/core/pmem_region.c
 +++ b/drivers/cxl/core/pmem_region.c
-@@ -0,0 +1,201 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2020 Intel Corporation. */
-+#include <linux/device.h>
-+#include <linux/memregion.h>
-+#include <cxlmem.h>
-+#include <cxl.h>
-+#include "core.h"
+@@ -287,3 +287,136 @@ int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
+ 	cxlr->cxl_nvb = NULL;
+ 	return rc;
+ }
 +
-+/**
-+ * DOC: cxl pmem region
-+ *
-+ * The core CXL PMEM region infrastructure supports persistent memory
-+ * region creation using LIBNVDIMM subsystem. It has dependency on
-+ * LIBNVDIMM, pmem region needs to update the cxl region information
-+ * in the LSA.
-+ */
-+
-+static void cxl_pmem_region_release(struct device *dev)
++static int match_root_decoder_by_dport(struct device *dev, const void *data)
 +{
-+	struct cxl_pmem_region *cxlr_pmem = to_cxl_pmem_region(dev);
++	const struct cxl_port *ep_port = data;
++	struct cxl_root_decoder *cxlrd;
++	struct cxl_port *root_port;
++	struct cxl_decoder *cxld;
++	struct cxl_dport *dport;
 +	int i;
 +
-+	for (i = 0; i < cxlr_pmem->nr_mappings; i++) {
-+		struct cxl_memdev *cxlmd = cxlr_pmem->mapping[i].cxlmd;
++	if (!is_root_decoder(dev))
++		return 0;
 +
-+		put_device(&cxlmd->dev);
-+	}
++	cxld = to_cxl_decoder(dev);
++	if (!(cxld->flags & CXL_DECODER_F_PMEM))
++		return 0;
 +
-+	kfree(cxlr_pmem);
++	cxlrd = to_cxl_root_decoder(dev);
++
++	root_port = cxlrd_to_port(cxlrd);
++	dport = cxl_find_dport_by_dev(root_port, ep_port->host_bridge);
++	if (!dport)
++		return 0;
++
++	for (i = 0; i < cxlrd->cxlsd.nr_targets; i++)
++		if (dport == cxlrd->cxlsd.target[i])
++			break;
++
++	if (i == cxlrd->cxlsd.nr_targets)
++		return 0;
++
++	return is_root_decoder(dev);
 +}
 +
-+static const struct attribute_group *cxl_pmem_region_attribute_groups[] = {
-+	&cxl_base_attribute_group,
-+	NULL
-+};
-+
-+const struct device_type cxl_pmem_region_type = {
-+	.name = "cxl_pmem_region",
-+	.release = cxl_pmem_region_release,
-+	.groups = cxl_pmem_region_attribute_groups,
-+};
-+
-+bool is_cxl_pmem_region(struct device *dev)
++/**
++ * cxl_find_root_decoder_by_port() - find a cxl root decoder on cxl bus
++ * @port: any descendant port in CXL port topology
++ * @cxled: endpoint decoder
++ *
++ * Caller of this function must call put_device() when done as a device ref
++ * is taken via device_find_child()
++ */
++static struct cxl_root_decoder *
++cxl_find_root_decoder_by_port(struct cxl_port *port,
++			      struct cxl_endpoint_decoder *cxled)
 +{
-+	return dev->type == &cxl_pmem_region_type;
-+}
-+EXPORT_SYMBOL_NS_GPL(is_cxl_pmem_region, "CXL");
++	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
++	struct cxl_port *ep_port = cxled_to_port(cxled);
++	struct device *dev;
 +
-+struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
-+{
-+	if (dev_WARN_ONCE(dev, !is_cxl_pmem_region(dev),
-+			  "not a cxl_pmem_region device\n"))
++	if (!cxl_root)
 +		return NULL;
-+	return container_of(dev, struct cxl_pmem_region, dev);
-+}
-+EXPORT_SYMBOL_NS_GPL(to_cxl_pmem_region, "CXL");
 +
-+static struct lock_class_key cxl_pmem_region_key;
++	dev = device_find_child(&cxl_root->port.dev, ep_port,
++				match_root_decoder_by_dport);
++	if (!dev)
++		return NULL;
 +
-+static int cxl_pmem_region_alloc(struct cxl_region *cxlr)
-+{
-+	struct cxl_region_params *p = &cxlr->params;
-+	struct cxl_nvdimm_bridge *cxl_nvb;
-+	struct device *dev;
-+	int i;
-+
-+	guard(rwsem_read)(&cxl_rwsem.region);
-+	if (p->state != CXL_CONFIG_COMMIT)
-+		return -ENXIO;
-+
-+	struct cxl_pmem_region *cxlr_pmem __free(kfree) =
-+		kzalloc(struct_size(cxlr_pmem, mapping, p->nr_targets),
-+			GFP_KERNEL);
-+	if (!cxlr_pmem)
-+		return -ENOMEM;
-+
-+	cxlr_pmem->hpa_range.start = p->res->start;
-+	cxlr_pmem->hpa_range.end = p->res->end;
-+
-+	/* Snapshot the region configuration underneath the cxl_region_rwsem */
-+	cxlr_pmem->nr_mappings = p->nr_targets;
-+	for (i = 0; i < p->nr_targets; i++) {
-+		struct cxl_endpoint_decoder *cxled = p->targets[i];
-+		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+		struct cxl_pmem_region_mapping *m = &cxlr_pmem->mapping[i];
-+
-+		/*
-+		 * Regions never span CXL root devices, so by definition the
-+		 * bridge for one device is the same for all.
-+		 */
-+		if (i == 0) {
-+			cxl_nvb = cxl_find_nvdimm_bridge(cxlmd->endpoint);
-+			if (!cxl_nvb)
-+				return -ENODEV;
-+			cxlr->cxl_nvb = cxl_nvb;
-+		}
-+		m->cxlmd = cxlmd;
-+		get_device(&cxlmd->dev);
-+		m->start = cxled->dpa_res->start;
-+		m->size = resource_size(cxled->dpa_res);
-+		m->position = i;
-+	}
-+
-+	dev = &cxlr_pmem->dev;
-+	device_initialize(dev);
-+	lockdep_set_class(&dev->mutex, &cxl_pmem_region_key);
-+	device_set_pm_not_required(dev);
-+	dev->parent = &cxlr->dev;
-+	dev->bus = &cxl_bus_type;
-+	dev->type = &cxl_pmem_region_type;
-+	cxlr_pmem->cxlr = cxlr;
-+	cxlr->cxlr_pmem = no_free_ptr(cxlr_pmem);
-+
-+	return 0;
++	return to_cxl_root_decoder(dev);
 +}
 +
-+static void cxlr_pmem_unregister(void *_cxlr_pmem)
++static int match_free_ep_decoder(struct device *dev, const void *data)
 +{
-+	struct cxl_pmem_region *cxlr_pmem = _cxlr_pmem;
-+	struct cxl_region *cxlr = cxlr_pmem->cxlr;
-+	struct cxl_nvdimm_bridge *cxl_nvb = cxlr->cxl_nvb;
++	if (!is_endpoint_decoder(dev))
++		return 0;
 +
-+	/*
-+	 * Either the bridge is in ->remove() context under the device_lock(),
-+	 * or cxlr_release_nvdimm() is cancelling the bridge's release action
-+	 * for @cxlr_pmem and doing it itself (while manually holding the bridge
-+	 * lock).
-+	 */
-+	device_lock_assert(&cxl_nvb->dev);
-+	cxlr->cxlr_pmem = NULL;
-+	cxlr_pmem->cxlr = NULL;
-+	device_unregister(&cxlr_pmem->dev);
-+}
-+
-+static void cxlr_release_nvdimm(void *_cxlr)
-+{
-+	struct cxl_region *cxlr = _cxlr;
-+	struct cxl_nvdimm_bridge *cxl_nvb = cxlr->cxl_nvb;
-+
-+	scoped_guard(device, &cxl_nvb->dev) {
-+		if (cxlr->cxlr_pmem)
-+			devm_release_action(&cxl_nvb->dev, cxlr_pmem_unregister,
-+					    cxlr->cxlr_pmem);
-+	}
-+	cxlr->cxl_nvb = NULL;
-+	put_device(&cxl_nvb->dev);
++	return is_free_decoder(dev);
 +}
 +
 +/**
-+ * devm_cxl_add_pmem_region() - add a cxl_region-to-nd_region bridge
-+ * @cxlr: parent CXL region for this pmem region bridge device
++ * cxl_find_free_ep_decoder() - find a cxl endpoint decoder using cxl port
++ * @port: any descendant port in CXL port topology
 + *
-+ * Return: 0 on success negative error code on failure.
++ * Caller of this function must call put_device() when done as a device ref
++ * is taken via device_find_child()
 + */
-+int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
++static struct cxl_decoder *cxl_find_free_ep_decoder(struct cxl_port *port)
 +{
-+	struct cxl_pmem_region *cxlr_pmem;
-+	struct cxl_nvdimm_bridge *cxl_nvb;
 +	struct device *dev;
-+	int rc;
 +
-+	rc = cxl_pmem_region_alloc(cxlr);
-+	if (rc)
-+		return rc;
-+	cxlr_pmem = cxlr->cxlr_pmem;
-+	cxl_nvb = cxlr->cxl_nvb;
++	dev = device_find_child(&port->dev, NULL, match_free_ep_decoder);
++	if (!dev)
++		return NULL;
 +
-+	dev = &cxlr_pmem->dev;
-+	rc = dev_set_name(dev, "pmem_region%d", cxlr->id);
-+	if (rc)
-+		goto err;
++	return to_cxl_decoder(dev);
++}
 +
-+	rc = device_add(dev);
-+	if (rc)
-+		goto err;
++void create_pmem_region(struct nvdimm *nvdimm)
++{
++	struct cxl_pmem_region_params *params;
++	struct cxl_endpoint_decoder *cxled;
++	struct cxl_nvdimm *cxl_nvd;
++	struct cxl_memdev *cxlmd;
++	struct cxl_region *cxlr;
 +
-+	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
-+		dev_name(dev));
++	if (!nvdimm_has_cxl_region(nvdimm))
++		return;
 +
-+	scoped_guard(device, &cxl_nvb->dev) {
-+		if (cxl_nvb->dev.driver)
-+			rc = devm_add_action_or_reset(&cxl_nvb->dev,
-+						      cxlr_pmem_unregister,
-+						      cxlr_pmem);
-+		else
-+			rc = -ENXIO;
++	lockdep_assert_held(&cxl_rwsem.region);
++	cxl_nvd = nvdimm_provider_data(nvdimm);
++	params = nvdimm_get_cxl_region_param(nvdimm);
++	cxlmd = cxl_nvd->cxlmd;
++
++	/* TODO: Region creation support only for interleave way == 1 */
++	if (!(params->nlabel == 1)) {
++		dev_dbg(&cxlmd->dev,
++				"Region Creation is not supported with iw > 1\n");
++		return;
 +	}
 +
-+	if (rc)
-+		goto err_bridge;
++	struct cxl_decoder *cxld __free(put_cxl_decoder) =
++		cxl_find_free_ep_decoder(cxlmd->endpoint);
++	if (!cxld) {
++		dev_err(&cxlmd->dev, "CXL endpoint decoder not found\n");
++		return;
++	}
 +
-+	/* @cxlr carries a reference on @cxl_nvb until cxlr_release_nvdimm */
-+	return devm_add_action_or_reset(&cxlr->dev, cxlr_release_nvdimm, cxlr);
++	cxled = to_cxl_endpoint_decoder(&cxld->dev);
 +
-+err:
-+	put_device(dev);
-+err_bridge:
-+	put_device(&cxl_nvb->dev);
-+	cxlr->cxl_nvb = NULL;
-+	return rc;
++	struct cxl_root_decoder *cxlrd __free(put_cxl_root_decoder) =
++		cxl_find_root_decoder_by_port(cxlmd->endpoint, cxled);
++	if (!cxlrd) {
++		dev_err(&cxlmd->dev, "CXL root decoder not found\n");
++		return;
++	}
++
++	cxlr = cxl_create_region(cxlrd, CXL_PARTMODE_PMEM,
++				 atomic_read(&cxlrd->region_id),
++				 params, cxled);
++	if (IS_ERR(cxlr))
++		dev_warn(&cxlmd->dev, "Region Creation failed\n");
 +}
++EXPORT_SYMBOL_NS_GPL(create_pmem_region, "CXL");
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index e384eacc46ae..f9b3dd6cee50 100644
+index f9b3dd6cee50..37b88641b818 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -38,8 +38,6 @@
-  */
- static nodemask_t nodemask_region_seen = NODE_MASK_NONE;
- 
--static struct cxl_region *to_cxl_region(struct device *dev);
--
- #define __ACCESS_ATTR_RO(_level, _name) {				\
- 	.attr	= { .name = __stringify(_name), .mode = 0444 },		\
- 	.show	= _name##_access##_level##_show,			\
-@@ -2429,7 +2427,7 @@ bool is_cxl_region(struct device *dev)
+@@ -838,25 +838,22 @@ static int check_commit_order(struct device *dev, void *data)
+ 	return 0;
  }
- EXPORT_SYMBOL_NS_GPL(is_cxl_region, "CXL");
  
--static struct cxl_region *to_cxl_region(struct device *dev)
-+struct cxl_region *to_cxl_region(struct device *dev)
+-static int match_free_decoder(struct device *dev, const void *data)
++bool is_free_decoder(struct device *dev)
  {
- 	if (dev_WARN_ONCE(dev, dev->type != &cxl_region_type,
- 			  "not a cxl_region device\n"))
-@@ -2866,46 +2864,6 @@ static ssize_t delete_region_store(struct device *dev,
- }
- DEVICE_ATTR_WO(delete_region);
+ 	struct cxl_port *port = to_cxl_port(dev->parent);
+ 	struct cxl_decoder *cxld;
+ 	int rc;
  
--static void cxl_pmem_region_release(struct device *dev)
--{
--	struct cxl_pmem_region *cxlr_pmem = to_cxl_pmem_region(dev);
--	int i;
+-	if (!is_switch_decoder(dev))
+-		return 0;
 -
--	for (i = 0; i < cxlr_pmem->nr_mappings; i++) {
--		struct cxl_memdev *cxlmd = cxlr_pmem->mapping[i].cxlmd;
--
--		put_device(&cxlmd->dev);
--	}
--
--	kfree(cxlr_pmem);
--}
--
--static const struct attribute_group *cxl_pmem_region_attribute_groups[] = {
--	&cxl_base_attribute_group,
--	NULL,
--};
--
--const struct device_type cxl_pmem_region_type = {
--	.name = "cxl_pmem_region",
--	.release = cxl_pmem_region_release,
--	.groups = cxl_pmem_region_attribute_groups,
--};
--
--bool is_cxl_pmem_region(struct device *dev)
--{
--	return dev->type == &cxl_pmem_region_type;
--}
--EXPORT_SYMBOL_NS_GPL(is_cxl_pmem_region, "CXL");
--
--struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
--{
--	if (dev_WARN_ONCE(dev, !is_cxl_pmem_region(dev),
--			  "not a cxl_pmem_region device\n"))
--		return NULL;
--	return container_of(dev, struct cxl_pmem_region, dev);
--}
--EXPORT_SYMBOL_NS_GPL(to_cxl_pmem_region, "CXL");
--
- struct cxl_poison_context {
- 	struct cxl_port *port;
- 	int part;
-@@ -3337,64 +3295,6 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
- 	return -ENXIO;
+ 	cxld = to_cxl_decoder(dev);
+ 
+ 	if (cxld->id != port->commit_end + 1)
+-		return 0;
++		return false;
+ 
+ 	if (cxld->region) {
+ 		dev_dbg(dev->parent,
+ 			"next decoder to commit (%s) is already reserved (%s)\n",
+ 			dev_name(dev), dev_name(&cxld->region->dev));
+-		return 0;
++		return false;
+ 	}
+ 
+ 	rc = device_for_each_child_reverse_from(dev->parent, dev, NULL,
+@@ -865,9 +862,17 @@ static int match_free_decoder(struct device *dev, const void *data)
+ 		dev_dbg(dev->parent,
+ 			"unable to allocate %s due to out of order shutdown\n",
+ 			dev_name(dev));
+-		return 0;
++		return false;
+ 	}
+-	return 1;
++	return true;
++}
++
++static int match_free_decoder(struct device *dev, const void *data)
++{
++	if (!is_switch_decoder(dev))
++		return 0;
++
++	return is_free_decoder(dev);
  }
  
--static struct lock_class_key cxl_pmem_region_key;
--
--static int cxl_pmem_region_alloc(struct cxl_region *cxlr)
--{
--	struct cxl_region_params *p = &cxlr->params;
--	struct cxl_nvdimm_bridge *cxl_nvb;
--	struct device *dev;
--	int i;
--
--	guard(rwsem_read)(&cxl_rwsem.region);
--	if (p->state != CXL_CONFIG_COMMIT)
--		return -ENXIO;
--
--	struct cxl_pmem_region *cxlr_pmem __free(kfree) =
--		kzalloc(struct_size(cxlr_pmem, mapping, p->nr_targets), GFP_KERNEL);
--	if (!cxlr_pmem)
--		return -ENOMEM;
--
--	cxlr_pmem->hpa_range.start = p->res->start;
--	cxlr_pmem->hpa_range.end = p->res->end;
--
--	/* Snapshot the region configuration underneath the cxl_rwsem.region */
--	cxlr_pmem->nr_mappings = p->nr_targets;
--	for (i = 0; i < p->nr_targets; i++) {
--		struct cxl_endpoint_decoder *cxled = p->targets[i];
--		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
--		struct cxl_pmem_region_mapping *m = &cxlr_pmem->mapping[i];
--
--		/*
--		 * Regions never span CXL root devices, so by definition the
--		 * bridge for one device is the same for all.
--		 */
--		if (i == 0) {
--			cxl_nvb = cxl_find_nvdimm_bridge(cxlmd->endpoint);
--			if (!cxl_nvb)
--				return -ENODEV;
--			cxlr->cxl_nvb = cxl_nvb;
--		}
--		m->cxlmd = cxlmd;
--		get_device(&cxlmd->dev);
--		m->start = cxled->dpa_res->start;
--		m->size = resource_size(cxled->dpa_res);
--		m->position = i;
--	}
--
--	dev = &cxlr_pmem->dev;
--	device_initialize(dev);
--	lockdep_set_class(&dev->mutex, &cxl_pmem_region_key);
--	device_set_pm_not_required(dev);
--	dev->parent = &cxlr->dev;
--	dev->bus = &cxl_bus_type;
--	dev->type = &cxl_pmem_region_type;
--	cxlr_pmem->cxlr = cxlr;
--	cxlr->cxlr_pmem = no_free_ptr(cxlr_pmem);
--
--	return 0;
--}
--
- static void cxl_dax_region_release(struct device *dev)
+ static bool spa_maps_hpa(const struct cxl_region_params *p,
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 32a8296a833a..1fc3e6260a00 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -794,6 +794,7 @@ struct cxl_root *find_cxl_root(struct cxl_port *port);
+ DEFINE_FREE(put_cxl_root, struct cxl_root *, if (_T) put_device(&_T->port.dev))
+ DEFINE_FREE(put_cxl_port, struct cxl_port *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
+ DEFINE_FREE(put_cxl_root_decoder, struct cxl_root_decoder *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->cxlsd.cxld.dev))
++DEFINE_FREE(put_cxl_decoder, struct cxl_decoder *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
+ DEFINE_FREE(put_cxl_region, struct cxl_region *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
+ 
+ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
+@@ -935,6 +936,7 @@ static inline int cxl_region_discovery(struct cxl_memdev *cxlmd)
+ #ifdef CONFIG_CXL_PMEM_REGION
+ bool is_cxl_pmem_region(struct device *dev);
+ struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
++void create_pmem_region(struct nvdimm *nvdimm);
+ #else
+ static inline bool is_cxl_pmem_region(struct device *dev)
  {
- 	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
-@@ -3458,92 +3358,6 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
- 	return cxlr_dax;
- }
- 
--static void cxlr_pmem_unregister(void *_cxlr_pmem)
--{
--	struct cxl_pmem_region *cxlr_pmem = _cxlr_pmem;
--	struct cxl_region *cxlr = cxlr_pmem->cxlr;
--	struct cxl_nvdimm_bridge *cxl_nvb = cxlr->cxl_nvb;
--
--	/*
--	 * Either the bridge is in ->remove() context under the device_lock(),
--	 * or cxlr_release_nvdimm() is cancelling the bridge's release action
--	 * for @cxlr_pmem and doing it itself (while manually holding the bridge
--	 * lock).
--	 */
--	device_lock_assert(&cxl_nvb->dev);
--	cxlr->cxlr_pmem = NULL;
--	cxlr_pmem->cxlr = NULL;
--	device_unregister(&cxlr_pmem->dev);
--}
--
--static void cxlr_release_nvdimm(void *_cxlr)
--{
--	struct cxl_region *cxlr = _cxlr;
--	struct cxl_nvdimm_bridge *cxl_nvb = cxlr->cxl_nvb;
--
--	scoped_guard(device, &cxl_nvb->dev) {
--		if (cxlr->cxlr_pmem)
--			devm_release_action(&cxl_nvb->dev, cxlr_pmem_unregister,
--					    cxlr->cxlr_pmem);
--	}
--	cxlr->cxl_nvb = NULL;
--	put_device(&cxl_nvb->dev);
--}
--
--/**
-- * devm_cxl_add_pmem_region() - add a cxl_region-to-nd_region bridge
-- * @cxlr: parent CXL region for this pmem region bridge device
-- *
-- * Return: 0 on success negative error code on failure.
-- */
--static int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
--{
--	struct cxl_pmem_region *cxlr_pmem;
--	struct cxl_nvdimm_bridge *cxl_nvb;
--	struct device *dev;
--	int rc;
--
--	rc = cxl_pmem_region_alloc(cxlr);
--	if (rc)
--		return rc;
--	cxlr_pmem = cxlr->cxlr_pmem;
--	cxl_nvb = cxlr->cxl_nvb;
--
--	dev = &cxlr_pmem->dev;
--	rc = dev_set_name(dev, "pmem_region%d", cxlr->id);
--	if (rc)
--		goto err;
--
--	rc = device_add(dev);
--	if (rc)
--		goto err;
--
--	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
--		dev_name(dev));
--
--	scoped_guard(device, &cxl_nvb->dev) {
--		if (cxl_nvb->dev.driver)
--			rc = devm_add_action_or_reset(&cxl_nvb->dev,
--						      cxlr_pmem_unregister,
--						      cxlr_pmem);
--		else
--			rc = -ENXIO;
--	}
--
--	if (rc)
--		goto err_bridge;
--
--	/* @cxlr carries a reference on @cxl_nvb until cxlr_release_nvdimm */
--	return devm_add_action_or_reset(&cxlr->dev, cxlr_release_nvdimm, cxlr);
--
--err:
--	put_device(dev);
--err_bridge:
--	put_device(&cxl_nvb->dev);
--	cxlr->cxl_nvb = NULL;
--	return rc;
--}
--
- static void cxlr_dax_unregister(void *_cxlr_dax)
+@@ -944,6 +946,9 @@ static inline struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
  {
- 	struct cxl_dax_region *cxlr_dax = _cxlr_dax;
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 0e151d0572d1..ad2496b38fdd 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -59,7 +59,7 @@ cxl_core-y += $(CXL_CORE_SRC)/pmu.o
- cxl_core-y += $(CXL_CORE_SRC)/cdat.o
- cxl_core-y += $(CXL_CORE_SRC)/ras.o
- cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
--cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
-+cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o $(CXL_CORE_SRC)/pmem_region.o
- cxl_core-$(CONFIG_CXL_MCE) += $(CXL_CORE_SRC)/mce.o
- cxl_core-$(CONFIG_CXL_FEATURES) += $(CXL_CORE_SRC)/features.o
- cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += $(CXL_CORE_SRC)/edac.o
+ 	return NULL;
+ }
++static inline void create_pmem_region(struct nvdimm *nvdimm)
++{
++}
+ #endif
+ 
+ void cxl_endpoint_parse_cdat(struct cxl_port *port);
 -- 
 2.34.1
 
