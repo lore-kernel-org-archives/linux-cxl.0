@@ -1,181 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD76308F2E;
-	Fri, 23 Jan 2026 07:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BED0298CC4;
+	Fri, 23 Jan 2026 08:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769154469; cv=none; b=htKTN3wJW7iqRpx6j5+C5e/jKOjwpkXfZT0CxpMgQ3wCeDbt3RaP7ecKfYFY+DPadVvpDuSCoL/JuvTJdlDa9nPOaAPGs1bhccm0B20luWseEh1kwMXjnpT1xqX0OzJ9MTfH3K/hfnnwbwV/UjVRHvwi622Iz7ZqAE9cRfHqj4M=
+	t=1769158785; cv=none; b=DBgu1lGgBFuiiDWpksGRsOkE5kMl/6TVopA30hh5gOXFkKkQF9c9YhZKfMACSKQAwkH5x/6Fh+Qr8dzVDJXOtMHZdVNtTvV/tcLyFn6bkVHtZYEbTYqTihe+xOYLeLS7ONlRauCFYSZhMnaT3bT3cTswoHYO9PkG1bsC/fcVpf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769154469; c=relaxed/simple;
-	bh=qZcCh8YaN75BaHxJI3n8DUClBttDVVefL2TarE8x2cs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lJsHFDrNLxQcn9mmJ0cV3XPS2T4Vd3l92YJIpk9Pgkk0W0skCQlV4my1lzyoeGCr3b4Vn8SIRgWnYA8xbLmPWo/jwFGpGzbe9AnuxVIlkkpSC4U3+yHF9xzJgLhJh8rFTXVaWu3oT0xOIExg6wiI4RkJBcW9/VO8yq2StIYGNKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dhz6ArAn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dhz6ArAn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D6FAC2BC86;
-	Fri, 23 Jan 2026 07:47:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769154469;
-	bh=qZcCh8YaN75BaHxJI3n8DUClBttDVVefL2TarE8x2cs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dhz6ArAnF4mrMgD2V9gaW0IOdAyt0UWHdcwmUQgrPBIWvnoaDzJtzmzMJxVck5gv+
-	 zEZgJOeFD/IJQzx2Up99SCKmemnDSbXrWZlm1SAK7ny61M8KuplDc84jbfdlgQwQR6
-	 +8Rb9fJ2j1Dh4UnsHETHjtBawHKcytU2E3ai7JjVMGK0KGDMhhcMz8n/3MAGSNlsTJ
-	 lel+3wVzQK3+jEYSZdvY/T5wo14jtYZ5i4jErLaZOvUngMzlLTTOeS1t4am1xi1tfP
-	 GskVtQYN+cTM93xV5bjb1azN9mPAsYErt+ynoEzLMYagl5talCo4C2ogUWa2ojcK07
-	 lGuDTmdB4UMCw==
-Date: Thu, 22 Jan 2026 23:47:48 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Christian Koenig <christian.koenig@amd.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Benjamin LaHaise <bcrl@kvack.org>, Gao Xiang <xiang@kernel.org>,
-	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>,
-	Hongbo Li <lihongbo22@huawei.com>,
-	Chunhai Guo <guochunhai@vivo.com>, Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Carlos Maiolino <cem@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	Johannes Thumshirn <jth@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Zi Yan <ziy@nvidia.com>, Nico Pache <npache@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
-	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
-	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
-	David Howells <dhowells@redhat.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E . Hallyn" <serge@hallyn.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-	linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-	linux-mm@kvack.org, ntfs3@lists.linux.dev, devel@lists.orangefs.org,
-	linux-xfs@vger.kernel.org, keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v2 09/13] mm: update all remaining mmap_prepare users to
- use vma_flags_t
-Message-ID: <20260123074748.GX5945@frogsfrogsfrogs>
-References: <cover.1769097829.git.lorenzo.stoakes@oracle.com>
- <fb1f55323799f09fe6a36865b31550c9ec67c225.1769097829.git.lorenzo.stoakes@oracle.com>
+	s=arc-20240116; t=1769158785; c=relaxed/simple;
+	bh=zchr6X0y2CZwRw9NmuLVIsYX92oNSGIkS84wr0zMJRk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JN1RFwm3mvcoS9UJsSkrqJW5Y9JxRERdpqo+nzksUIlt5E1vCYmshiMBJMrwB1nW9YQqnDJbV9TuFQ1Qk6+YBuUa1xm5TMLXA4oXBjMrJeOMmHB9JJRjqXPiN3+VVuEv3pp11euxBXHNAZMzObuAoYFlg0TBRC1N29Hi0zx8Ir8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwDX3pppOHNpwsQ7Bg--.567S2;
+	Fri, 23 Jan 2026 16:59:21 +0800 (CST)
+Received: from [10.22.77.56] (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwCH3eplOHNpQ_cVAA--.23981S2;
+	Fri, 23 Jan 2026 16:59:17 +0800 (CST)
+Message-ID: <7b3e1f2d-7a6b-43c4-bab8-cb34d2d57991@phytium.com.cn>
+Date: Fri, 23 Jan 2026 16:59:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fb1f55323799f09fe6a36865b31550c9ec67c225.1769097829.git.lorenzo.stoakes@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] mm: numa_memblks: Identify the accurate NUMA ID of
+ CFMW
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: dan.j.williams@intel.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Mike Rapoport <rppt@kernel.org>, Wang Yinfeng <wangyinfeng@phytium.com.cn>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20260106031042.1606729-1-cuichao1753@phytium.com.cn>
+ <20260106031042.1606729-2-cuichao1753@phytium.com.cn>
+ <20260108094812.8757ce3ad8370668eaafb29c@linux-foundation.org>
+ <9132054c-3017-4af0-84e0-e4359b0794a6@phytium.com.cn>
+ <20260115101858.85fd7b8e837c1c92a4fdc5f0@linux-foundation.org>
+ <696944eca1837_34d2a10056@dwillia2-mobl4.notmuch>
+ <2d1e23ad-7ec1-483b-88b3-70ce19b69106@phytium.com.cn>
+ <20260122132807.7204b83e97e33290f6eb7d82@linux-foundation.org>
+From: Cui Chao <cuichao1753@phytium.com.cn>
+In-Reply-To: <20260122132807.7204b83e97e33290f6eb7d82@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAfwCH3eplOHNpQ_cVAA--.23981S2
+X-CM-SenderInfo: pfxlux1drrlkut6sx5pwlxzhxfrphubq/1tbiAQAEAGlyhIsEfwAAsq
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=cuichao175
+	3@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw1kWr45Xw47CFy5uw1UGFg_yoW8Aw13pa
+	y8Ka9YkFW5Gr1Syws2vw40qrWj9rs7GFyrXw15GryfA3s8Zr1ftr4xKFZ093WDWw4fJ342
+	q3WUXrW5tFW5ZaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-On Thu, Jan 22, 2026 at 04:06:18PM +0000, Lorenzo Stoakes wrote:
-> We will be shortly removing the vm_flags_t field from vm_area_desc so we
-> need to update all mmap_prepare users to only use the dessc->vma_flags
-> field.
-> 
-> This patch achieves that and makes all ancillary changes required to make
-> this possible.
-> 
-> This lays the groundwork for future work to eliminate the use of vm_flags_t
-> in vm_area_desc altogether and more broadly throughout the kernel.
-> 
-> While we're here, we take the opportunity to replace VM_REMAP_FLAGS with
-> VMA_REMAP_FLAGS, the vma_flags_t equivalent.
-> 
-> No functional changes intended.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> ---
->  drivers/char/mem.c       |  6 +++---
->  drivers/dax/device.c     | 10 +++++-----
->  fs/aio.c                 |  2 +-
->  fs/erofs/data.c          |  5 +++--
->  fs/ext4/file.c           |  4 ++--
->  fs/ntfs3/file.c          |  2 +-
->  fs/orangefs/file.c       |  4 ++--
->  fs/ramfs/file-nommu.c    |  2 +-
->  fs/resctrl/pseudo_lock.c |  2 +-
->  fs/romfs/mmap-nommu.c    |  2 +-
->  fs/xfs/xfs_file.c        |  4 ++--
->  fs/zonefs/file.c         |  3 ++-
->  include/linux/dax.h      |  8 ++++----
->  include/linux/mm.h       | 24 +++++++++++++++++++-----
->  kernel/relay.c           |  2 +-
->  mm/memory.c              | 17 ++++++++---------
->  16 files changed, 56 insertions(+), 41 deletions(-)
-> 
 
-<snip to xfs>
+On 1/23/2026 5:28 AM, Andrew Morton wrote:
+> On Thu, 22 Jan 2026 16:03:49 +0800 Cui Chao <cuichao1753@phytium.com.cn> wrote:
+>
+>>>> So please, tell us how much our users are hurting from this and please
+>>>> make a recommendation on the backporting decision.
+>>>>
+>>> To add on here, Cui, please describe which shipping hardware platforms
+>>> in the wild create physical address maps like this. For example, if this
+>>> is something that only occurs in QEMU configurations or similar, then
+>>> the urgency is low and it is debatable if Linux should even worry about
+>>> fixing it.
+>>>
+>>> I know that x86 platforms typically do not do this. It is also
+>>> within the realm of possibility for platform firmware to fix. So in
+>>> addition to platform impact please also clarify why folks can not just
+>>> ask for a firmware update to get this fixed without updating their
+>>> kernel.
+>> Andrew, Dan, thank you for your review.
+>>
+>> 1.Issue Impact and Backport Recommendation:
+>>
+>> ...
+>>
+>> Thus, I believe a kernel fix is necessary.
+> Thanks, I posted all that into the changelog.
+>
+>> Therefore, I recommend backporting this patch to all stable kernel
+>> series that support dynamic CXL region creation.
+> It's helpful if we can tell -stable maintainers which kernel versions
+> "support dynamic CXL region creation".  We communicate that by
+> providing a Fixes: tag in the changelog.  Are you able to help identify
+> a suitable commit for this?
+Although the modified code is not in this commit, it is possible that 
+since the beginning of support for dynamically creating CXL memory 
+regions, this physical address layout and the issue of incorrect NUMA ID 
+assignment needed to be considered and resolved.
 
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index 7874cf745af3..1238ec018bc7 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -1974,14 +1974,14 @@ xfs_file_mmap_prepare(
->  	 * We don't support synchronous mappings for non-DAX files and
->  	 * for DAX files if underneath dax_device is not synchronous.
->  	 */
-> -	if (!daxdev_mapping_supported(desc->vm_flags, file_inode(file),
-> +	if (!daxdev_mapping_supported(desc, file_inode(file),
->  				      target->bt_daxdev))
->  		return -EOPNOTSUPP;
->  
->  	file_accessed(file);
->  	desc->vm_ops = &xfs_file_vm_ops;
->  	if (IS_DAX(inode))
-> -		desc->vm_flags |= VM_HUGEPAGE;
-> +		vma_desc_set_flags(desc, VMA_HUGEPAGE_BIT);
+Fixes: 779dd20cfb56 ("cxl/region: Add region creation support")
 
-Looks good to me,
-Acked-by: "Darrick J. Wong" <djwong@kernel.org>
+-- 
+Best regards,
+Cui Chao.
 
---D
-
->  	return 0;
->  }
->  
