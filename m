@@ -1,42 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07D9280A3B;
-	Fri, 23 Jan 2026 12:05:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB56D310777
+	for <linux-cxl@vger.kernel.org>; Fri, 23 Jan 2026 12:14:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769169925; cv=none; b=nf2TLfFfSwVDTvvmIXC/rRP7XPvNIR6Av4rOxtxLgAhi/F/Me2xHtRXium0obmjQrn8MlUoXlt5DHlzrPyaYyDdLqpCI28nGp4NcgvWjUHk+rtlvPEe0C4zuG1KVhCOT9QCz/5v4o7p0sPe0KwK87AJffDxa5RcqEVcaZobv6zs=
+	t=1769170488; cv=none; b=Qhwvz4Zu8YHAd1uak+J4QbN9hBkIhDwMsHXcKyfxnRgA/JglG1pIibvV72rE1jKMZERHntk6zZPWyYugyxILp1IfxPinfbYI34NnWpzldJTz+yZw1yyGYCkNkR6KW15dJs2B1824H3gNinPnAddHYer1mx5AW5CNRh/FTDwXww4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769169925; c=relaxed/simple;
-	bh=E2pNtyuE74iPSd0Y58IC2wqLbM2xBKGdvDOp7nlICEc=;
+	s=arc-20240116; t=1769170488; c=relaxed/simple;
+	bh=P8BIrpOZRSHfgPdYwd1D+F874t21rhgAzkEzD7pmrKY=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YWZl5x8WByC927/taTMYcspnHplFqiItnrEB0LyjI2IBxfvHRY2r8+YFkaHvjW6fjqkbaVHWYDVzu2QSI4HEOjwSrdDzWpX3I1KnM+BXclGlNpT6/ZqKT/Qh33LgkHYyAgW6SD/bh63m4Zqa4kouaKfM+DDO+abUly1cDXLpJ1k=
+	 MIME-Version:Content-Type; b=aaf3sLfQO6DK2Of+QOloLRZLUominLpIlmuQqtGlXQPahAPGe3pGOQA5OlLVqXa7fVNT6tc5JO1UkASbReODhgLku3qcFd6mu2SuedacfCEr/FpDaD9ztabLPArcrHy8bBKIt1jJkhU5Qsk3hNIKBspCKcapwC22hU08fE/d72M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dyGnt0143zJ46gg;
-	Fri, 23 Jan 2026 20:04:50 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dyH0k4LYmzJ473X;
+	Fri, 23 Jan 2026 20:14:14 +0800 (CST)
 Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 513AB40570;
-	Fri, 23 Jan 2026 20:05:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id E831D40086;
+	Fri, 23 Jan 2026 20:14:43 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
  (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 23 Jan
- 2026 12:05:18 +0000
-Date: Fri, 23 Jan 2026 12:05:17 +0000
+ 2026 12:14:43 +0000
+Date: Fri, 23 Jan 2026 12:14:41 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-CC: <linux-kernel@vger.kernel.org>, <linux-rt-devel@lists.linux.dev>, "Thomas
- Gleixner" <tglx@kernel.org>, Will Deacon <will@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, <linux-cxl@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 16/21] perf/cxlpmu: Replace IRQF_ONESHOT with
- IRQF_NO_THREAD
-Message-ID: <20260123120517.00000d58@huawei.com>
-In-Reply-To: <20260123113708.416727-17-bigeasy@linutronix.de>
-References: <20260123113708.416727-1-bigeasy@linutronix.de>
-	<20260123113708.416727-17-bigeasy@linutronix.de>
+To: <dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <ira.weiny@intel.com>, <terry.bowman@amd.com>
+Subject: Re: [PATCH 3/9] cxl/port: Cleanup dport removal with a devres group
+Message-ID: <20260123121441.0000240b@huawei.com>
+In-Reply-To: <69728bf84936_309510070@dwillia2-mobl4.notmuch>
+References: <20260122033330.1622168-1-dan.j.williams@intel.com>
+	<20260122033330.1622168-4-dan.j.williams@intel.com>
+	<20260122115945.000062e6@huawei.com>
+	<69728bf84936_309510070@dwillia2-mobl4.notmuch>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -49,46 +48,99 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
  dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Fri, 23 Jan 2026 12:37:02 +0100
-Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+On Thu, 22 Jan 2026 12:43:36 -0800
+dan.j.williams@intel.com wrote:
 
-> Passing IRQF_ONESHOT ensures that the interrupt source is masked until
-> the secondary (threaded) handler is done. If only a primary handler is
-> used then the flag makes no sense because the interrupt can not fire
-> (again) while its handler is running.
-> The flag also disallows force-threading of the primary handler and the
-> irq-core will warn about this.
+> Jonathan Cameron wrote:
+> > On Wed, 21 Jan 2026 19:33:24 -0800
+> > Dan Williams <dan.j.williams@intel.com> wrote:
+> >   
+> > > In preparation for adding more setup actions like RAS register mapping,
+> > > introduce a devres group to collect all the dport creation / registration
+> > > actions. This replaces the maintenance tedium of open coding several
+> > > devm_release_action() calls in del_dport().
+> > > 
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>  
+> > Whilst nice, there is some logic buried deep enough that it might surprise
+> > anyone trying to grasp flow in __devm_cxl_add_dport.
+> > 
+> > I like the cleanup.h stuff but here I'm wondering if it is appropriate.
+> > Maybe just use a goto in __devm_cxl_add_dport()
+> >   
 > 
-> The intention here was probably not allowing forced-threading.
+> It is several gotos, I have a hard time ever writing goto again.
 > 
-> Replace IRQF_ONESHOT with IRQF_NO_THREAD.
-> 
-I don't think we are that likely to see force-threading on CXL
-systems (I could be wrong!), but still good to correct this.
+> Maybe if you can clarify your "inappropriate" feeling. To be clear I
+> have heard this from other maintainers that are not ready to let go of
+> goto, but I feel this is rapidly approaching the reverse-xmas-tree level
+> of local maintainer preferences.
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+I'm an enthusiast for the cleanup.h stuff. This was very much specific
+to this case. I thought I wrote more on this in original mail, but seems
+I deleted the comments before sending!  Sorry about that.
 
-> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-cxl@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  drivers/perf/cxl_pmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Main thing I was a bit dubious about in this very specific case was about
+overlapping semantic meaning of the group and the the dport (which are
+the same address, but we only pretend that in some paths).
+
+That is necessary so there is 'one' thing for:
+
+DEFINE_FREE(cxl_dport_release_group, void *,
+	    if (_T) devres_release_group(dport_to_host(_T), _T))
+
+Which is fine but then the meaning is broken out in
+static void cxl_dport_close_group(struct cxl_dport *dport, void *group)
+
++ I'd have preferred we were explicit in the group being temporary and
+hence passed NULL as ID which we can't do if group and dport need
+to be the same pointer.
+
+That in combination made me think perhaps it wasn't worth applying here.
+
 > 
-> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> index d094030220bf2..68a54d97d2a8a 100644
-> --- a/drivers/perf/cxl_pmu.c
-> +++ b/drivers/perf/cxl_pmu.c
-> @@ -877,7 +877,7 @@ static int cxl_pmu_probe(struct device *dev)
->  	if (!irq_name)
->  		return -ENOMEM;
->  
-> -	rc = devm_request_irq(dev, irq, cxl_pmu_irq, IRQF_SHARED | IRQF_ONESHOT,
-> +	rc = devm_request_irq(dev, irq, cxl_pmu_irq, IRQF_SHARED | IRQF_NO_THREAD,
->  			      irq_name, info);
->  	if (rc)
->  		return rc;
+> [..]
+> > > + * Upon return either a group is established with one action (free_dport()), or
+> > > + * no group established and @dport is freed.
+> > > + */
+> > > +static void *cxl_dport_open_group_or_free(struct cxl_dport *dport)  
+> > 
+> > Can we put something in the name to hint this is devres stuff?
+> > Group could mean too many things :( Even
+> > cxl_dport_open_dr_group_or_free() avoids sounding too generic.  
+> 
+> I was on the fence with making it more clear it was devres, was just
+> waiting for a tie breaking shove. Shove received, "dr_group" it is.
+> 
+> > > +{
+> > > +	int rc;
+> > > +	struct device *host = dport_to_host(dport);
+> > > +	void *group = devres_open_group(host, dport, GFP_KERNEL);
+> > > +
+> > > +	if (!group) {
+> > > +		kfree(dport);
+> > > +		return NULL;
+> > > +	}
+> > > +
+> > > +	rc = devm_add_action_or_reset(host, free_dport, dport);
+> > > +	if (rc) {
+> > > +		devres_release_group(host, group);
+> > > +		return NULL;
+> > > +	}
+> > > +
+> > > +	return group;
+> > > +}
+> > > +
+> > > +static void cxl_dport_close_group(struct cxl_dport *dport, void *group)
+> > > +{
+> > > +	devres_close_group(dport_to_host(dport), group);
+> > > +}
+> > > +
+> > > +/* The dport group id is the dport */
+> > > +DEFINE_FREE(cxl_dport_release_group, void *,
+> > > +	    if (_T) devres_release_group(dport_to_host(_T), _T))  
+> > 
+> > Reorder so this can use the typed del_dport()?  
+> 
+> Yeah, that is cleaner.
+> 
 
