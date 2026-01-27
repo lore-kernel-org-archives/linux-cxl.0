@@ -1,148 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E462E9EC7;
-	Tue, 27 Jan 2026 23:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484492F3C12
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Jan 2026 23:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769555223; cv=none; b=B5BaFXBZegHKpZ13Q4tl7MPKTWLoBiwbT5oy1kcddmHq/A6jHBREWcJ7O0MO59D0LJZkRw/UogfKJs9918ES0ALVoOEz60ik/k4Dz9g6neTYw0va7AKsYRi1lYMICWfu7x8zYGD3e6B3CzHAIEsskWS/Tjf1R7cwgSpsrD2a35U=
+	t=1769556547; cv=none; b=KT7jI8ZJUi27yNpuu+PTCYi4a+raGgEMp8zB3EZBYqxpwfnTqCkyAclhLVhA6r1VL+1FRYe9GsJk8jok4mjVdgGhaGPxkJCaQXWArXDdSZpy3TSWf09O1F+pdOJpgCDDDIbuUuRkhmhRUQ3bXB2D54Gd0YOYR7LM0Qv40QJkuzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769555223; c=relaxed/simple;
-	bh=JySjp5riAZLd6mmNMgHnUjqyKf0qlSv7WXkRBVPO1CI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CffSeS/NyjgePlyoC7RdUhk6UgGLiHH22lo/hrp/aRhUKzF4SA5rcBlWb8HCWppFjfzhey7xMjoM/G9FAQitgxG5mjs4J+xPidDdZT5dlIpq79Qb75cdtu1GXX9b2VTaum0mwuGimijWr0sEPndlMud/IdGwBpTqW/BZA8c2eU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vr9Fpvs6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769556547; c=relaxed/simple;
+	bh=ofHckpHSK4mfHbe6L1ZVH+h1/SSvRemGaI9zfgs1u/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hiPw4ODlGQDcKZbrDvuMNisx2uTDlwA0wzTdgoqElI/KX5V0tYchO8rtrOdWJmmOgkTkD0u5y5nNhqAHoCG3h9OQ1FKrVXKvfScM/LcG85B47p76C0JSpK6DD+6Q5ex94KC3miqRi/fSeL1A6oVUIMc8zjXm1HOtjOMzMfiFKj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I8U7TuRd; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vr9Fpvs6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96402C116C6;
-	Tue, 27 Jan 2026 23:06:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769555223;
-	bh=JySjp5riAZLd6mmNMgHnUjqyKf0qlSv7WXkRBVPO1CI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Vr9Fpvs6d0EEFlm4bRch6d4FLbnrB3uR9XUZB+6kxeIh5Gyst9s6dSw4NXLPzopYt
-	 XqwJV7Wnspg5pXLZXLnpM8u4tvMBkIHTJQ0Aa3TC6l4+NEAAe1TuLq2A/SZ5fW4hAk
-	 WOU1kcDPd8jgY+iJMdpEDFzhp/MyYRYBHKb4IRwaBLT+kDwRFKonaMqzzJQKkF9bnJ
-	 APJREuhAfnpqpBlGU+Rkz97qWBM2pG6xxczmOQoPtRgLSjvvmt5sCjqKuowoH188gw
-	 rNcWsvHbSVi1cMu6+i1La2I3jhMb8sceN1rhUwVuotOIbsT7MpMCO0oKxYQesQrl6P
-	 qIrKq5h/E13Ag==
-Message-ID: <684f11a3-1958-4562-880c-7e0afd3ae3b5@kernel.org>
-Date: Wed, 28 Jan 2026 00:06:56 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I8U7TuRd"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2a1462573caso15265ad.0
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Jan 2026 15:29:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1769556546; x=1770161346; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ggQbKrh8ZyuooMxE9NUhGxSmgLEA7sxK0OqhmRkzBEY=;
+        b=I8U7TuRdmnddLr13hly0xpTKB1bih6vDDfJua9/HxozplYZJNrKzumg2lFqIpk1aDn
+         3Em+5RWvTUGigBDzBWfUqoc+/oD6ZXVzTRenNkSncT9cC7i+k1707dW1mlo7Hj/XhK8q
+         K+mxmaYOj6XmwH9TjtTs74SYEi1q8C93GRGIk9mfM3cJa9Q+x/bbAPE0lKwXLDHDrucz
+         wOANeE1FvjNKEki48xF1hge14wXNJBNG5M/t/zCYrG8pLHpGjDRhxFC4yJ022Sf45pgH
+         DFmh9KByH/aASZLtQEACOrqTc/jRh0lzTZoU2u2YcIdtEtvaAe1orUY/LEHZzj+uhaPb
+         N2OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769556546; x=1770161346;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ggQbKrh8ZyuooMxE9NUhGxSmgLEA7sxK0OqhmRkzBEY=;
+        b=Fq5+jEUGAfdtnuU2jjXG1/k5c0xy/KPerXrcw46e0yrU4N7BpKYYIGXiQJm3IbCIZJ
+         Rb1T4C/L1WJgLusiub8Rn7pY01f/9ePtrvzp937y/g62Y5h3QzqMsbuXa7b21SvuGNvg
+         M19ooMSqa6+x5Ubw2O+TZ8JkAZYtmhvXhdM+EOe1Re2ACko2PEhIOEcQ99eHKXG17BpY
+         9oQj1ULC18f8a5BxCV707TPIdz21UFGj5Bb31m/As7tPV3vF4y+hHuV4GLT2yx8AEoIH
+         7L3viVWGSiHjyDr7+YUEfrvlsGR4hs0jXWzPhL3DXPwnO8rvuKqCE36Qkae9cdaMlTwl
+         nExQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXYBcL17rmPomqJ7bgy5P4dvWvZdT//iCmwl7Oo/3bZDBF6x8PjNavSlsR+iDDjmW28cGq6SpyDH48=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywiQVsorhqXC1BZ6l4wtueDmDTNxTblcTyB1BxyfuxgVkx8meM
+	1yrMykbCM0xJLOKMdSCezB0d8gaME1sO9K/266e3JbUKuiDQ+coD72HXAlQYu8BkQtqzjIH9nXF
+	RZmP5AQ==
+X-Gm-Gg: AZuq6aIaX/ZYN2+r0OI8fF5s7DKW2GuSO4wrRGHkoh22nwFuZcG98DPwpWyatOvxe5D
+	kLzuU4kpMstCsVHfgyEM44xgRhR3NczBl5+nTb+fPdL5R2A7omJTHoguKKTu7OZMLmKTVCI3yiV
+	kB+XCSM5IjUfaWIw6e+Hna/j9meMEbhA+HlGQyYxAQEQOm7GLPR0qi2Cf0ZAa23OvgOJL8GbJUC
+	boRwkoK1ukW/kGmOwUv7AkNn8DXwfp2BsCV6i7jmLfO/dm3ZxAtWGiiqt2Sx/y0f4CGbqRBMyMn
+	aY6BuQ8CLR7CkLGCHhHXsuYRPXkIvvG7KAsujwB43SAsIqhS8RhpsO9WmXOy7ROhy8Foprq8JB0
+	P1IPWcQzThcw5IlzY5Um0fcq5380TGUefJda7BCaF6CfareZ27NuRz7HDaNSYhMpSLA4v8PZtHQ
+	EjvqoHhy1HC6MFXrOTNC6F4H/sc6L9+r5B6Chs9/SVhPeCxbwCVw==
+X-Received: by 2002:a17:902:fc4c:b0:2a1:3cdc:771f with SMTP id d9443c01a7336-2a870b97452mr3881485ad.20.1769556545254;
+        Tue, 27 Jan 2026 15:29:05 -0800 (PST)
+Received: from google.com (130.15.125.34.bc.googleusercontent.com. [34.125.15.130])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a88b417394sm4031265ad.42.2026.01.27.15.29.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Jan 2026 15:29:04 -0800 (PST)
+Date: Tue, 27 Jan 2026 23:28:59 +0000
+From: Bing Jiao <bingjiao@google.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	akpm@linux-foundation.org, axelrasmussen@google.com,
+	yuanchu@google.com, weixugc@google.com, hannes@cmpxchg.org,
+	david@kernel.org, mhocko@kernel.org, zhengqi.arch@bytedance.com,
+	shakeel.butt@linux.dev, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com
+Subject: Re: [PATCH v3 3/3] mm/vmscan: don't demote if there is not enough
+ free memory in the lower memory tier
+Message-ID: <aXlKOxGGI9zne8sl@google.com>
+References: <20260108101535.50696-1-akinobu.mita@gmail.com>
+ <20260108101535.50696-4-akinobu.mita@gmail.com>
+ <aWEn2ODG0gyej0Xr@gourry-fedora-PF4VCD3F>
+ <CAC5umyhoMi_J_Ford2M_1fB-qCuPEDopAK1OF=AisZyDZ8duJQ@mail.gmail.com>
+ <aXkfBF5bdnTZ7t7e@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/8] dax/kmem: add sysfs interface for runtime hotplug
- state control
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
- kernel-team@meta.com, dan.j.williams@intel.com, vishal.l.verma@intel.com,
- dave.jiang@intel.com, mst@redhat.com, jasowang@redhat.com,
- xuanzhuo@linux.alibaba.com, eperezma@redhat.com, osalvador@suse.de,
- akpm@linux-foundation.org
-References: <20260114085201.3222597-1-gourry@gourry.net>
- <20260114085201.3222597-8-gourry@gourry.net>
- <3555385d-23de-492c-8192-a991f91d4343@kernel.org>
- <aWfcYjZVrROHfGyh@gourry-fedora-PF4VCD3F>
- <57c5f44f-3921-478b-843b-877fae536591@kernel.org>
- <aXLEOjgVyGYAU_zk@gourry-fedora-PF4VCD3F>
-From: "David Hildenbrand (Red Hat)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
-In-Reply-To: <aXLEOjgVyGYAU_zk@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aXkfBF5bdnTZ7t7e@gourry-fedora-PF4VCD3F>
 
-On 1/23/26 01:43, Gregory Price wrote:
-> On Thu, Jan 22, 2026 at 11:49:48PM +0100, David Hildenbrand (Red Hat) wrote:
->>
->> I'm merely wondering why, in the new world, you would even want the offline
->> state.
->>
->> So what are the use cases for that?
->>
-> 
-> I don't have one, and in the 5-patch series I killed it.  You are right,
-> it makes no sense.
-> 
-> However:
-> 
->> Why would user space possibly want that? [plugged-in offline blocks]
->>
-> 
-> I don't think anyone does.
-> 
-> This is baggage.
-> 
-> The CXL driver auto-creates dax_kmem w/ offline memory blocks
-> 
-> Changing this behavior breaks existing systems :[
-> 
->> Can't ndctl just use the old (existing) interface if such an operation is
->> requested, and the new one (you want to add) when we want to do something
->> reasonable (actually use system ram? :) ).
-> 
-> I think we're in agreement, I think I'm doing a poor job of explaining
-> the interconnected issues.
-> 
-> summarizing the long email:
-> 
->     cxl/region + dax/cxl.c + dax/bus.c auto-probe baggage for
->     BIOS-configured regions prevents any userland policy from
->     from being plumbed from cxl to dax.  There's no interposition step.
-> 
-> So yes - new interfaces would resolve this and the old interfaces
-> could be left for compat.
+On Tue, Jan 27, 2026 at 03:24:36PM -0500, Gregory Price wrote:
+> On Sat, Jan 10, 2026 at 10:55:02PM +0900, Akinobu Mita wrote:
+> > Since can_reclaim_anon_pages() checks whether there is free space on the swap
+> > device before checking with can_demote(), I think the negative impact of this
+> > change will be small. However, since I have not been able to confirm the
+> > behavior when a swap device is available, I would like to correctly understand
+> > the impact.
+>
+> Something else is going on here
+>
+> See demote_folio_list and alloc_demote_folio
+>
+> static unsigned int demote_folio_list(struct list_head *demote_folios,
+>                                       struct pglist_data *pgdat,
+>                                       struct mem_cgroup *memcg)
+> {
+>         struct migration_target_control mtc = {
+>                  */
+>                 .gfp_mask = (GFP_HIGHUSER_MOVABLE & ~__GFP_RECLAIM) |
+>                         __GFP_NOMEMALLOC | GFP_NOWAIT,
+>         };
+> }
+>
+> static struct folio *alloc_demote_folio(struct folio *src,
+>                 unsigned long private)
+> {
+> 	/* Only attempt to demote to the preferred node */
+>         mtc->nmask = NULL;
+>         mtc->gfp_mask |= __GFP_THISNODE;
+>         dst = alloc_migration_target(src, (unsigned long)mtc);
+>         if (dst)
+>                 return dst;
+>
+> 	/* Now attempt to demote to any node in the lower tier */
+>         mtc->gfp_mask &= ~__GFP_THISNODE;
+>         mtc->nmask = allowed_mask;
+>         return alloc_migration_target(src, (unsigned long)mtc);
+> }
+>
+>
+> /*
+> * %__GFP_RECLAIM is shorthand to allow/forbid both direct and kswapd reclaim.
+> */
+>
+>
+> You basically shouldn't be hitting any reclaim behavior at all, and if
+> the target nodes are actually under various watermarks, you should be
+> getting allocation failures and quick-outs from the demotion logic.
 
-Great!
+Hi, Gregory, hope you are doing well.
 
--- 
-Cheers
+I observed that during the allocation of a large folio,
+alloc_migration_target() cleans __GFP_RECLAIM but subsequently applies
+GFP_TRANSHUGE. Given that GFP_TRANSHUGE includes __GFP_DIRECT_RECLAIM,
+I am wondering if this triggers a form of reclamation that should be
+avoided during demotion.
 
-David
+struct folio *alloc_migration_target(struct folio *src, unsigned long private)
+...
+	if (folio_test_large(src)) {
+		/*
+		 * clear __GFP_RECLAIM to make the migration callback
+		 * consistent with regular THP allocations.
+		 */
+		gfp_mask &= ~__GFP_RECLAIM;
+		gfp_mask |= GFP_TRANSHUGE;
+		order = folio_order(src);
+	}
+
+#define GFP_TRANSHUGE	(GFP_TRANSHUGE_LIGHT | __GFP_DIRECT_RECLAIM)
+
+Best,
+Bing
