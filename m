@@ -1,149 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706CC24BBF0;
-	Tue, 27 Jan 2026 16:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FD027A477;
+	Tue, 27 Jan 2026 16:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769529803; cv=none; b=E29BPxg4MdYhrtCrs+n++obIlykV4h38Ncy3gN6IeSydewFmSOxpXbcCWDlif8iLTyulmc6hld9BYyCXOdDcHtOO7jRXbkwuZab1vRiK4tiVrO0+lxWFX6I1LV6r64rEZ3afrml2w625FzEEJz4GIVrI7CerT7UGgqZVuz+iQ/8=
+	t=1769531632; cv=none; b=gNO6qOTXSRUrbsi7/YYXisknGc7zT1n2WuhnzYnmo1G7epbjE6e0FuKOdWLO6ZsGWkC45V9vF4idNVzLn66fdxDURICfXinQp70f8Sf/vrvWO8OmG4KYrIux2/CN22guE/TK58RuPys6j9mjsYDGmo5mhLbtiblkl8SSLkNkaNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769529803; c=relaxed/simple;
-	bh=OGLE7nKn6iQIzNpyiWMppK5i4mFCCDl+Lo+QbkH29Mk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WZQCHAQ086/tMV6IUS7JKUc10JCIWjGyQAxOJNkiPnw9Y4LA7G1UHz+yqH1TTIKe/DhF8OXbpKK11i/dj1XPONru2f2RDW5j/mFQJaapqCIYP/eXqpKMvBs8hu4R+b3Cj+5hS9204d+6xcQsI1P2175z0a0EJIjx4qciK+Ght28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SuacYaAd; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1769531632; c=relaxed/simple;
+	bh=JTqXH1Qqifjmcyrgctdw4sq45vF/LGfLBF2aO/b8q6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f3gJzDRbfinwDvaSElfgjAqUZ/7dQwU1DZZcItv2n5DoxICp/Y55TtqZMf+s3d3+RZ8WcyPOJD5iyPMGVTdK3Eh20F1xAS0ArLET4nmkNq8VxNnzAiPucOX95dox1NAjty2TpRFqIbiKaH0hUe9gqPSgTo0XPynVSEknAU8SmQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=cNZI6HH7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AF0/PoV8; arc=none smtp.client-ip=202.12.124.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SuacYaAd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769529802; x=1801065802;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=OGLE7nKn6iQIzNpyiWMppK5i4mFCCDl+Lo+QbkH29Mk=;
-  b=SuacYaAd4zXtF0t3AiU0Mbns5PK5d7g00+hY+ZgcusZmpgfBDUQRZyE0
-   T2rFWCa46W6bvlI/KBF4oNcUgxpoX9mtEudsIqfsFYh6HllItD0zcPdvd
-   R/AtjlrKbd8aBwO0GVwtoI5npp05MkjxR+abubzY2503/ISE16X0tYhhC
-   XgLtOLWVxHPqbc0/XCckJIn+We33GzFnPfJbC7gTgapIlk1kdzDfhTLeK
-   L86sbN/uAgvw2fKOSoMpNqi4WxJ7hoOOj9BM5IACrK73nJg5ZqrAOB5gb
-   Z/5pYaZuZxpPQW8vmZql0s6pPKQxr9ieB275gQwd/QqAtKfQfDBrgDhEB
-   Q==;
-X-CSE-ConnectionGUID: JRnnGrdIQRezHZXod9zOPQ==
-X-CSE-MsgGUID: 33G+v+cdQRiN4oY8bbHXUw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11684"; a="70630036"
-X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
-   d="scan'208";a="70630036"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 08:03:21 -0800
-X-CSE-ConnectionGUID: Y53KRha7QkisTLoghmbYtg==
-X-CSE-MsgGUID: knP+VnwTScybgVlADZg7Rw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
-   d="scan'208";a="207620096"
-Received: from jmaxwel1-mobl.amr.corp.intel.com (HELO [10.125.109.136]) ([10.125.109.136])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 08:03:19 -0800
-Message-ID: <13989dff-7d3c-4bdb-9768-8b3c935a003e@intel.com>
-Date: Tue, 27 Jan 2026 09:03:17 -0700
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="cNZI6HH7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AF0/PoV8"
+Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 818DB7A0085;
+	Tue, 27 Jan 2026 11:33:47 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-08.internal (MEProxy); Tue, 27 Jan 2026 11:33:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1769531627;
+	 x=1769618027; bh=CSqp62/l1kyI9dkhKEQ8AI9Ns0bdUvTJ+dJ8IA5aSEw=; b=
+	cNZI6HH7/JGrCPpzljH8eyycnsA4vw/cnsJEjQXRjWSFzntZp6PNo3uWS4sQ+tAZ
+	svW3CV9+yNuijp0IUAVAG+ZMt7Hmun83KwqTGK6HJ1GVsvy2JSiu7XKPIpZl8IKW
+	nVwPDgiY0N3ap2KGxS2cH92/r6tPpYNtaGVShYHpsQhKq31So+dbeKv2teB9bu58
+	I23KvyY/we8WENs8e4Xodp0W0UGtao6XuViLq1zntRBCwAfocjzZU2pcuqn8/P2v
+	PnTBbNa6yn45Q5Wn7AZnbi73CdjlZV+pL8JWILMXoqrRpgxK+hed+Bipjdl/u4aO
+	+kaCng08kQAIdoKu22z5hQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1769531627; x=
+	1769618027; bh=CSqp62/l1kyI9dkhKEQ8AI9Ns0bdUvTJ+dJ8IA5aSEw=; b=A
+	F0/PoV8NoOpa5VfNN2ShjAtymtSni8djNBWPFJhZMhPfcWP1xS6r2msksAlWgZ7D
+	GV/Gfu2nB+GlO80cleiYvsjd/evy5suroOY7/3FHRy7DMeft8EAR9H546p+W97v6
+	CjQ1D/GlHUoVkql8G3+s8eGo0hZZEKVh1cIokBKENsyWl5hVyj++e9Z4hJasPWXF
+	DZCu6YWxE5bNDVT937AHZEEUpxNbHh9C1Hh8hwsekSXx88DNQ7khmFi8gS3jOyJS
+	o8GcOWV3kFC5+9jyrVIj3H+EQYftWN6YKJvI0T46r3g8yrWKFoAek8glGjSgJRm3
+	lap5nFQYShOg9MIRM5mqA==
+X-ME-Sender: <xms:6uh4abrce_KZOmkngK1zTIel-H0MjkrtxkvFiTKdxjCMCovGcjbDaQ>
+    <xme:6uh4aUAB96FGopPEv_uiRemGCwVIaCkriNGQBdq1kZWPk1H3D94JU5m9os7ojeDnf
+    AoRpyB5X_rZ7qGOMLSd07dWVcn25VQSDgmP9eltk_bGMPX10qV92w>
+X-ME-Received: <xmr:6uh4aUPBtgN0Ppd8I_QzFW-TMiLpMb0HAhFXa8Ah3QwglZjZhaHsjO7QvrA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduiedtleekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfgjfhfogggtgfesthejre
+    dtredtvdenucfhrhhomheptehlvgigucghihhllhhirghmshhonhcuoegrlhgvgiesshhh
+    rgiisghothdrohhrgheqnecuggftrfgrthhtvghrnhepvdekfeejkedvudfhudfhteekud
+    fgudeiteetvdeukedvheetvdekgfdugeevueeunecuvehluhhsthgvrhfuihiivgeptden
+    ucfrrghrrghmpehmrghilhhfrhhomheprghlvgigsehshhgriigsohhtrdhorhhgpdhnsg
+    gprhgtphhtthhopedvuddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepshhmrggu
+    hhgrvhgrnhesnhhvihguihgrrdgtohhmpdhrtghpthhtohepuggrvhgvsehsthhgohhlrg
+    gsshdrnhgvthdprhgtphhtthhopehjohhnrghthhgrnhdrtggrmhgvrhhonheshhhurgif
+    vghirdgtohhmpdhrtghpthhtohepuggrvhgvrdhjihgrnhhgsehinhhtvghlrdgtohhmpd
+    hrtghpthhtoheprghlihhsohhnrdhstghhohhfihgvlhgusehinhhtvghlrdgtohhmpdhr
+    tghpthhtohepvhhishhhrghlrdhlrdhvvghrmhgrsehinhhtvghlrdgtohhmpdhrtghpth
+    htohepihhrrgdrfigvihhnhiesihhnthgvlhdrtghomhdprhgtphhtthhopegurghnrdhj
+    rdifihhllhhirghmshesihhnthgvlhdrtghomhdprhgtphhtthhopegshhgvlhhgrggrsh
+    esghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:6uh4aSASkspPOXc0bSHtC_mpD3LbBqUVRpOPQVVwLi7m9pMtO4pYgw>
+    <xmx:6uh4aS-ZxPtHe4J7opzXKOfnOXNaCxAP92F7WmR7-P_p6rrBi-Qqug>
+    <xmx:6uh4aTEnuJdJniQ6oHJS858Tx9zChFbQ_h8z7fJkluVCfhaZ_3hNsg>
+    <xmx:6uh4aZLDhCpczLpBmZFvfVrHLhk8wBrW5e1BS1gI-5vc5OJdwBRRwQ>
+    <xmx:6-h4aQShcjzlnNNzPdiXw_rOJbrSkJ6V7SBaHuj3QwIZV367rD5dwwo1>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 27 Jan 2026 11:33:45 -0500 (EST)
+Date: Tue, 27 Jan 2026 09:33:43 -0700
+From: Alex Williamson <alex@shazbot.org>
+To: <smadhavan@nvidia.com>
+Cc: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+ <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+ <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+ <dan.j.williams@intel.com>, <bhelgaas@google.com>, <ming.li@zohomail.com>,
+ <rrichter@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+ <huaisheng.ye@intel.com>, <linux-cxl@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>, <vaslot@nvidia.com>, <vsethi@nvidia.com>,
+ <sdonthineni@nvidia.com>, <vidyas@nvidia.com>, <mochs@nvidia.com>,
+ <jsequeira@nvidia.com>
+Subject: Re: [PATCH v4 0/10] CXL Reset support for Type 2 devices
+Message-ID: <20260127093343.67715d5e@shazbot.org>
+In-Reply-To: <20260120222610.2227109-1-smadhavan@nvidia.com>
+References: <20260120222610.2227109-1-smadhavan@nvidia.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 00/13] cxl: ACPI PRM Address Translation Support and
- AMD Zen5 enablement
-To: Robert Richter <rrichter@amd.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Gregory Price <gourry@gourry.net>,
- "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
-References: <20260114164837.1076338-1-rrichter@amd.com>
- <aXibR6DjiWSzsd6l@rric.localdomain>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <aXibR6DjiWSzsd6l@rric.localdomain>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Tue, 20 Jan 2026 22:26:00 +0000
+<smadhavan@nvidia.com> wrote:
+> Motivation:
+> -----------
+> This change is broadly useful for reasons including but not limited to the
+> following:
+> 
+> - As support for Type 2 devices [4] is being introduced, more devices will
+>   require finer-grained reset mechanisms beyond bus-wide reset methods.
+> 
+> - FLR does not affect CXL.cache or CXL.mem protocols, making CXL Reset
+>   the preferred method in some cases.
 
+This proposal adds cxl_reset to the pci_reset_fn_methods[] array, so
+while the above suggests there are some use cases that would prefer CXL
+reset, we're interleaving the capability into the default function for
+PCI function scoped reset.
 
-On 1/27/26 4:02 AM, Robert Richter wrote:
-> Dave,
-> 
-> On 14.01.26 17:48:16, Robert Richter wrote:
->> This patch set adds support for address translation using ACPI PRM and
->> enables this for AMD Zen5 platforms. The current approach bases on v4
->> and is in response to earlier attempts to implement CXL address
->> translation:
->>
->>  * v1: [1] and the comments on it, esp. Dan's [2],
->>  * v2: [3] and comments on [4], esp. Dave's [5],
->>  * v3: [6] and comments on it, esp. Dave's [7],
->>  * v4: [8].
->>
->> In this version there are a view minor but no major changes. See the
->> changelog for details. Thank you all for your reviews and testing.
->>
->> Documentation of CXL Address Translation Support will be added to the
->> Kernel's "Compute Express Link: Linux Conventions". This patch
->> submission will be the base for a documentation patch that describes CXL
->> Address Translation support accordingly.
->>
->> The CXL driver currently does not implement address translation which
->> assumes the host physical addresses (HPA) and system physical
->> addresses (SPA) are equal.
->>
->> Systems with different HPA and SPA addresses need address translation.
->> If this is the case, the hardware addresses esp. used in the HDM
->> decoder configurations are different to the system's or parent port
->> address ranges. E.g. AMD Zen5 systems may be configured to use
->> 'Normalized addresses'. Then, CXL endpoints have their own physical
->> address base which is not the same as the SPA used by the CXL host
->> bridge. Thus, addresses need to be translated from the endpoint's to
->> its CXL host bridge's address range.
->>
->> To enable address translation, the endpoint's HPA range must be
->> translated to the CXL host bridge's address range. A callback is
->> introduced to translate a decoder's HPA to the CXL host bridge's
->> address range. The callback is then used to determine the region
->> parameters which includes the SPA translated address range of the
->> endpoint decoder and the interleaving configuration. This is stored in
->> struct cxl_region which allows an endpoint decoder to determine that
->> parameters based on its assigned region.
->>
->> Note that only auto-discovery of decoders is supported. Thus, decoders
->> are locked and cannot be configured manually.
->>
->> Finally, Zen5 address translation is enabled using ACPI PRMT.
->>
->> This series bases on v6.19-rc1.
->>
->> V10:
->>  * updated sob-chains,
->>  * renamed flags to CXL_*_F_NORMALIZED_ADDRESSING (Dave),
->>  * fixed spelling in 07/13 patch description (Alison),
->>  * be more precise on poison support in 12/13 patch description (Alison),
-> 
-> are you fine with the series? I have also submitted the documentation
-> update with the changes Dan requested, see this one:
-> 
->  [PATCH v4 3/3] Documentation/driver-api/cxl: ACPI PRM Address Translation Support and AMD Zen5 enablement
-> 
-> I don't see any open items. Should I resend a v11 with all remaining
-> reviewed-by tags and the small update in the description of 13/13?
-> Please let me know.
+I'm concerned about use cases like vfio-pci emulation of FLR, where we
+currently call through the pci_reset_function() interfaces to take
+advantage of device specific quirks.  Such a use case (guest directed
+FLR) might reasonably expect the scope of the reset is limited to CXL.io
+without affecting CXL.cache or CXL.mem, therefore it's not clear that
+pci_reset_function() necessarily has the correct scope.
 
-Hi Robert, I have both the doc and the code series locally queued and was waiting to see if there are any additional discussion or objections around PRM usage. I plan to merge it with cxl/next this week. Thanks for the reminder of the small update for 13/13.
+OTOH, we also expose a reset ioctl through vfio-pci that could
+reasonably reset the full state of the device, PCI and CXL.  cxl_reset
+would be appropriate here, however cxl_reset is prioritized below FLR
+reset in the default reset_methods array, so pci_reset_function()
+doesn't have the correct scope here either.
 
-> 
-> Thanks,
-> 
-> -Robert
+Is it really appropriate to consider cxl_reset as just another PCI reset
+method given the scope difference?  Does there need to be a way to
+specify the scope when calling pci_reset_function() for drivers aware
+of CXL.mem/cache?  Thanks,
 
+Alex
