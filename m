@@ -1,218 +1,117 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708681FDE31
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Jan 2026 20:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5F22848A7;
+	Tue, 27 Jan 2026 20:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769545482; cv=none; b=ZGWjkmPzPk2rylvAIzPEz2CWoWLK2+lcg21b2GhcxjDmfcUfvtz1X71v45TKmYItFqzAp2fT8tTQnFnCOWFl37/AobWdI+zcQ6DJplBKeNlLkXKa0tkczEwRmyS5JEaGteQmd/0DOZdGk7Iu13wV/mV1Y0vs71sqdd3hNybOWB8=
+	t=1769546833; cv=none; b=AdNDZLGxmb4MVLhWnHoljgHs7ebm0hBqA7D4TogbeMEwNheE8WCem5nvo2yPho+Lvouy17waRQnbHO2df8p4VC1Mk1CiR8Ag69KrGSe0QLXOTY2BbUYQEBdcVyZrwR/mFEp7/b4TNcp34F8tr9zg2e/DQd8KJ+6Wm7TnCH9sbnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769545482; c=relaxed/simple;
-	bh=bkUBlovj45Q2VasAOYSzsnX97gHpU2v2Ow2IKixM1Fs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qo/OvJA+n1xeTU5iSo3+ymSwNkgKG/q5Fku/hcAGLSBhNDWrRvxDOgTJVtOJzOEHRGK30Fn2VnMaqBLORLfT/V13sZV2ob8HgPUGFszDG+pXNJpROB4tgHKllcF0JGfUZg3fg/CHWBKmZBV8zlx6hbBaY899hRUVC5eATpaHmsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=HoyjArTk; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1769546833; c=relaxed/simple;
+	bh=d0MXaxKLKrXpq8JUClectJZLB+ingvdenunr1sxm5mU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qzwIDR/aGSgmX4lKNwLnamM8fJ/DM4ZzE/ffB2SykUon+6TLvIL+ZhoEQ07rJ3BHUXeekDhAHqy/IRhOiR4nrsaRcX9/t8yAhvgBcu+n3zN7hRejJEB/ZJFp5h835T2VJ9ctxY0wOZG62rdLTManbFGjxa3QYz/LoNXLjjrMaK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aEM/kx8E; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="HoyjArTk"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-8c531473fdcso813919285a.3
-        for <linux-cxl@vger.kernel.org>; Tue, 27 Jan 2026 12:24:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1769545479; x=1770150279; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=A5LxVPVBoG+UMcNxikNez0XKmCy+fMwCwEoTyhq3Vgg=;
-        b=HoyjArTk+Rgihg4YR6jbLaJ08KX3dms1L1NonvyYO6aXm3MErDWnK5PHsObh3H44zM
-         GmS/p2uOR0P2kz06lj0IIgyCQEFG643/izyf4LHGO+3CHY7HsFKMDIL8/nMp/K+kbCLV
-         eHQC04vFD/qvh1obt1/W/YHStUROy5GgDGusmRr+BUUCkHAq08oeF/6SMWBM/tjEtDGS
-         yHh2703AzosigXbJ91fyvuzd3ZelPm0ZSsheLlBaJx4TWNAoMkekim/RXLChfWzc2k/y
-         /hbm4mGrgEYqr6Y8bllILmHPCJOp7mNDmXu9OqMnHEwHLbw5ZH3D0GnX4pXZOLyL1NUn
-         lCng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769545479; x=1770150279;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A5LxVPVBoG+UMcNxikNez0XKmCy+fMwCwEoTyhq3Vgg=;
-        b=NsMwhpmY13isJcv2veCbqAhVHstDVqpI5lyC8nAvtIjP90rVrxkbZ6adKTFs7HRx2Y
-         7KQUEZ4lCS79mDfPnomy31AkukAgpPJwq0YyEXOy3/mYggUpkbPgVCce91itjKA6nXnb
-         s4LNCNQfGZeYSTHP1Sl2/FdY9dbixFCuBV4aIp21xBOvQW8trJmofyZlO1NpSQi7NQdK
-         hZ6OyKPw2tYRgzjd7eYNpvN7HLBHVKcrhmYtlAbumOf7KjzxyPJ/4LMH/HY1hQEcRLRu
-         eXiTBuylkjjX1V/EEdjXbHrlM5TUCKSH7sQfAQfwv5VQhGC9CjXq7XaARvN+YkLqAqPx
-         tl0w==
-X-Gm-Message-State: AOJu0YxP3eDDHLyol35cIQjXo+v6kqiNo92wMSE927DqEEN5ehTzR/Pd
-	M7nbuYwSm+YH5z3sto7RaKIbLUPaqTkYHRUfgDLrq6FQSyJHfYAEgLJDyhEJ2gZIAe0=
-X-Gm-Gg: AZuq6aK8azIQaN5DjDyz+Vu9QDN9u75wH7pZdmiNmlNk5+V6frfHiFtimPqe3Alkx/s
-	mD8ui1KKfmuSlBENH7LvBKsNQ1DpGLqqJooBwKQt1CtoV97pe8mq20mLfxPpukCidC7dPMgZlEb
-	UnctxkiuSQEZc5lrUv/aaDA9mk2eBmDsotKERRbPbBrhhGrx0iL/6+YIt2o61TCsPhUauOd4L8u
-	q6VjfLa7AYBZCIElLQ+iPWZZF9reGa0MFfIYYs0gSX6rNla28iF6ymqdUxEIEVIik1psfhJqmy4
-	UfLfirGtYrOqw5+Uo6cWlw+hD/7D6OQtjwQZ1kKumSmjg4WqKdeZnyiRSr7IYzkIq09u+1HMAhe
-	dbMQVelQVBkE9i96hTMmT0YuFheKUtaJLCJorPavlEUpICw4k3zFzCLUxeRySOJ2pzwQ12xFg4J
-	oxFLOLVDk7srl6wvfNd7wkkgLo7sCGKQpAnQztbyNc6IbjerGWLcFc92Cc168c0qSl9nPERKE/j
-	OY9k4Fi
-X-Received: by 2002:a05:620a:404f:b0:8b2:edc8:13d0 with SMTP id af79cd13be357-8c70b85bc20mr389358885a.17.1769545479306;
-        Tue, 27 Jan 2026 12:24:39 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c711d29aa2sm41365985a.35.2026.01.27.12.24.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jan 2026 12:24:38 -0800 (PST)
-Date: Tue, 27 Jan 2026 15:24:36 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, akpm@linux-foundation.org,
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
-	hannes@cmpxchg.org, david@kernel.org, mhocko@kernel.org,
-	zhengqi.arch@bytedance.com, shakeel.butt@linux.dev,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, bingjiao@google.com
-Subject: Re: [PATCH v3 3/3] mm/vmscan: don't demote if there is not enough
- free memory in the lower memory tier
-Message-ID: <aXkfBF5bdnTZ7t7e@gourry-fedora-PF4VCD3F>
-References: <20260108101535.50696-1-akinobu.mita@gmail.com>
- <20260108101535.50696-4-akinobu.mita@gmail.com>
- <aWEn2ODG0gyej0Xr@gourry-fedora-PF4VCD3F>
- <CAC5umyhoMi_J_Ford2M_1fB-qCuPEDopAK1OF=AisZyDZ8duJQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aEM/kx8E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769546831; x=1801082831;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=d0MXaxKLKrXpq8JUClectJZLB+ingvdenunr1sxm5mU=;
+  b=aEM/kx8EL0tFHJEcktvgD5AcVuN3ADbJc6pfL0dVSbnlLbTxoTQEGLML
+   OxO4zZBKPv6FBLfU9ow0SybQu0e84NJrU1Y3PlWYktS0fiL5glAWRwta4
+   m0ZdTt9HzemUlCR7apbogbg0LPv3kmEP+BfOYbf2yrULcIPHUDx9aga+c
+   UR4ah9DZpMU6RxP/A6ArRtRKo6f8wOLxNVT4icLJmdaITmvKeuXThx2yq
+   wocH76RAaQA1RwKVVfY8ZfgIc6PFsJkd6tWc90CgrtN1gViINsytUYQhb
+   etguwoKAw0dFnILXsIspNYltXiK/8sXBNbdOJezwJ6EX0ewod9EKKaT6Q
+   Q==;
+X-CSE-ConnectionGUID: ubaPL9pJSWC2W3KaB25Rag==
+X-CSE-MsgGUID: WglJhKfPSaOIGaq3XhHK0Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11684"; a="73343177"
+X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
+   d="scan'208";a="73343177"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 12:47:10 -0800
+X-CSE-ConnectionGUID: pWr3k2DaTLuO0yPYHQ7s3A==
+X-CSE-MsgGUID: S8BD75qzQvKDhS4aNcy9sw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
+   d="scan'208";a="212539700"
+Received: from jmaxwel1-mobl.amr.corp.intel.com (HELO [10.125.109.136]) ([10.125.109.136])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 12:47:09 -0800
+Message-ID: <421d75a1-75be-49d4-b7bc-6db16cc8fb7f@intel.com>
+Date: Tue, 27 Jan 2026 13:47:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAC5umyhoMi_J_Ford2M_1fB-qCuPEDopAK1OF=AisZyDZ8duJQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] cxl: Fix premature commit_end increment on decoder
+ commit failure
+To: Yuxiong Wang <yuxiong.wang@linux.alibaba.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+Cc: ming.li@zohomail.com, rrichter@amd.com, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Huang Ying <ying.huang@linux.alibaba.com>
+References: <20260127084855.66916-1-yuxiong.wang@linux.alibaba.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260127084855.66916-1-yuxiong.wang@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jan 10, 2026 at 10:55:02PM +0900, Akinobu Mita wrote:
-> 2026年1月10日(土) 1:08 Gregory Price <gourry@gourry.net>:
-> >
-> > > +     for_each_node_mask(nid, allowed_mask) {
-> > > +             int z;
-> > > +             struct zone *zone;
-> > > +             struct pglist_data *pgdat = NODE_DATA(nid);
-> > > +
-> > > +             for_each_managed_zone_pgdat(zone, pgdat, z, MAX_NR_ZONES - 1) {
-> > > +                     if (zone_watermark_ok(zone, 0, min_wmark_pages(zone),
-> > > +                                             ZONE_MOVABLE, 0))
-> >
-> > Why does this only check zone movable?
+
+
+On 1/27/26 1:48 AM, Yuxiong Wang wrote:
+> In cxl_decoder_commit(), commit_end is incremented before verifying whether the
+> commit succeeded, and the CXL_DECODER_F_ENABLE bit in cxld->flags is only set
+> after a successful commit. As a result, if the commit fails, commit_end has been
+> incremented and cxld->reset() has no effect since the flag is not set, so commit_end
+> remains incorrectly incremented. The inconsistency between commit_end and
+> CXL_DECODER_F_ENABLE causes failure during subsequent either commit or reset
+> operations.
 > 
-> Here, zone_watermark_ok() checks the free memory for all zones from 0 to
-> MAX_NR_ZONES - 1.
-> There is no strong reason to pass ZONE_MOVABLE as the highest_zoneidx
-> argument every time zone_watermark_ok() is called; I can change it if an
-> appropriate value is found.
-> In v1, highest_zoneidx was "sc ? sc->reclaim_idx : MAX_NR_ZONES - 1"
+> Fix this by incrementing commit_end only after confirming the commit succeeded.
+> Since cxld_await_commit() clears the decoder commit bit on failure, no additional
+> reset is required. Remove the ineffective cxld->reset() call in this case.
 > 
-> > Also, would this also limit pressure-signal to invoke reclaim when
-> > there is still swap space available?  Should demotion not be a pressure
-> > source for triggering harder reclaim?
+> Fixes: 176baef ("cxl/hdm: Commit decoder state to hardware")
+> Signed-off-by: Yuxiong Wang <yuxiong.wang@linux.alibaba.com>
+> Acked-by: Huang Ying <ying.huang@linux.alibaba.com>
+
+Looks the correct fix to me.
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+
+> ---
+>  drivers/cxl/core/hdm.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> Since can_reclaim_anon_pages() checks whether there is free space on the swap
-> device before checking with can_demote(), I think the negative impact of this
-> change will be small. However, since I have not been able to confirm the
-> behavior when a swap device is available, I would like to correctly understand
-> the impact.
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index eb5a3a7640c6..912f648a6b7a 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -844,14 +844,13 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
+>  	scoped_guard(rwsem_read, &cxl_rwsem.dpa)
+>  		setup_hw_decoder(cxld, hdm);
+>  
+> -	port->commit_end++;
+>  	rc = cxld_await_commit(hdm, cxld->id);
+>  	if (rc) {
+>  		dev_dbg(&port->dev, "%s: error %d committing decoder\n",
+>  			dev_name(&cxld->dev), rc);
+> -		cxld->reset(cxld);
+>  		return rc;
+>  	}
+> +	port->commit_end++;
+>  	cxld->flags |= CXL_DECODER_F_ENABLE;
+>  
+>  	return 0;
 
-Something else is going on here
-
-See demote_folio_list and alloc_demote_folio
-
-static unsigned int demote_folio_list(struct list_head *demote_folios,
-                                      struct pglist_data *pgdat,
-                                      struct mem_cgroup *memcg)
-{
-        struct migration_target_control mtc = {
-                 */
-                .gfp_mask = (GFP_HIGHUSER_MOVABLE & ~__GFP_RECLAIM) |
-                        __GFP_NOMEMALLOC | GFP_NOWAIT,
-        };
-}
-
-static struct folio *alloc_demote_folio(struct folio *src,
-                unsigned long private)
-{
-	/* Only attempt to demote to the preferred node */
-        mtc->nmask = NULL;
-        mtc->gfp_mask |= __GFP_THISNODE;
-        dst = alloc_migration_target(src, (unsigned long)mtc);
-        if (dst)
-                return dst;
-
-	/* Now attempt to demote to any node in the lower tier */
-        mtc->gfp_mask &= ~__GFP_THISNODE;
-        mtc->nmask = allowed_mask;
-        return alloc_migration_target(src, (unsigned long)mtc);
-}
-
-
-/*
-* %__GFP_RECLAIM is shorthand to allow/forbid both direct and kswapd reclaim.
-*/
-
-
-You basically shouldn't be hitting any reclaim behavior at all, and if
-the target nodes are actually under various watermarks, you should be
-getting allocation failures and quick-outs from the demotion logic.
-
-i.e. you should be seeing OOM happen
-
-When I dug in far enough I found this:
-
-static struct folio *alloc_demote_folio(struct folio *src,
-                unsigned long private)
-{
-...
-        dst = alloc_migration_target(src, (unsigned long)mtc);
-}
-
-struct folio *alloc_migration_target(struct folio *src, unsigned long private)
-{
-        
-...
-        if (folio_test_hugetlb(src)) {
-                struct hstate *h = folio_hstate(src);
-
-                gfp_mask = htlb_modify_alloc_mask(h, gfp_mask);
-                return alloc_hugetlb_folio_nodemask(h, nid, ...)
-	}
-}
-
-static inline gfp_t htlb_modify_alloc_mask(struct hstate *h, gfp_t gfp_mask)
-{
-        gfp_t modified_mask = htlb_alloc_mask(h);
-
-        /* Some callers might want to enforce node */
-        modified_mask |= (gfp_mask & __GFP_THISNODE);
-
-        modified_mask |= (gfp_mask & __GFP_NOWARN);
-
-        return modified_mask;
-}
-
-/* Movability of hugepages depends on migration support. */
-static inline gfp_t htlb_alloc_mask(struct hstate *h)
-{
-        gfp_t gfp = __GFP_COMP | __GFP_NOWARN;
-
-        gfp |= hugepage_movable_supported(h) ? GFP_HIGHUSER_MOVABLE : GFP_HIGHUSER;
-
-        return gfp;
-}
-
-#define GFP_USER        (__GFP_RECLAIM | __GFP_IO | __GFP_FS | __GFP_HARDWALL)
-#define GFP_HIGHUSER    (GFP_USER | __GFP_HIGHMEM)
-#define GFP_HIGHUSER_MOVABLE    (GFP_HIGHUSER | __GFP_MOVABLE | __GFP_SKIP_KASAN)
-
-
-If we try to move a hugepage, we start including __GFP_RECLAIM again -
-regardless of whether HIGHUSER_MOVABLE or HIGHUSER is used.
-
-
-Any chance you are using hugetlb on this system?  This looks like a
-clear bug, but it may not be what you're experiencing.
-
-~Gregory
