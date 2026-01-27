@@ -1,120 +1,336 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717E12F0C76
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Jan 2026 23:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4844823DD;
+	Tue, 27 Jan 2026 23:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769557444; cv=none; b=AJ3EIPxUwwL1nDeEty9fMpkJ7vvFEO76G1iPpmIuwQIISO/ojyhAnXIDzRw2uMGtI+gtPshmnhjuUqn2mvqJZPiuEvcGJwAJFr9UuYGd+q8cGyoHgJOGbplCNJ7xKDxlJEMVYkB1nibBswmoPm5bHAt7TfyzVSi/klZzcB1gmww=
+	t=1769557534; cv=none; b=ohV4QE5jxnpRospd6yr53f/161DbIooq+bGsGg6Z65hkCgXIEg9DvFhU9xbd9uJNywtKmElGQvfW7kc0c5FC32sRvHD9UoTO02ypAYRgfuYcSi2GW9lVcPVAhhVkw2ZhWiwU/HABF4G5rxeI6eeN2LYUzgaF6BPYkOgP4EDSwcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769557444; c=relaxed/simple;
-	bh=mZxrKfWzsH+HpL912CxymP7zKV/HmFcJyYKcV/OWayg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WumtVZe+cJ/d8kmWL7n1hH2/w0OLDIdktc1D1u8lTwHTRUNs1XxGwaR5c6yy8GCsaOa9TgHIpALdhzxYplbSyW95PQVSQPtgs0Ikxl6XWBDIuMZYUG66gQNU9SrWnD3PatxTFjbj7Ih9/JF2XKhZbRZWd3oGpcoane5Nhp10blY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ZCd/VEAF; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1769557534; c=relaxed/simple;
+	bh=Da5AJDHaUPRqT/LVmB2NdmQ3WLfMz3+o2Qfb/QMFfcM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=SNsuvS8PE+PcBoPitCtpBCC0zpMuq9TBkiKZFlBAprBW8zuGMZvEA2cWtCtXLpLg2rRflS+V1GRYZjHAi+5TV6WINMK2KoB2d/mDW4wjd7L2zVYRmOPEhJ0fSbEWifwezBVtEclLUS9QZOC5LYmtqWgAr5f4dA0qv1aixMHNAq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q4PAfXwX; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ZCd/VEAF"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-501488a12cbso82023561cf.3
-        for <linux-cxl@vger.kernel.org>; Tue, 27 Jan 2026 15:44:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1769557442; x=1770162242; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v1qRlmFFKOqQW1uayanhd5aQp7S6yFTJSXPtSSKOmMM=;
-        b=ZCd/VEAF6jMbYiDECWICPFJ2WMVNzv+fMt3gFm2vpSpJ+TEWFbowgVn5ic5i/3OqB7
-         /w3L1BB5Kd5EH9pzPa6aPBlZB7HtXo/yAFjY83/iCVFzV3Sm26jpNOY62ELsjrJRNJyF
-         IMlY05ZC8r9wL+DsrVZAgUyK327dLHFMMMn4TkbI+9eIlIjgtP2mBXktBHMBnxes/eRj
-         2reCNfhLGrZLBBMzsY3QupRXCusSgAPlEQDsQ2khkrMHCmbdz4VyHld6FW+07P9g109E
-         O5l2iUpyIdmtjU5gMYuoV7T6G6QOLsLVAuy4u6naAewNtU0IyjIczuiBnK3TfCuiUlp1
-         J36A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769557442; x=1770162242;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v1qRlmFFKOqQW1uayanhd5aQp7S6yFTJSXPtSSKOmMM=;
-        b=JOlxhprQBYbk/T6FbKQx8rwrT2z1ySQNQoKhaUXDZrg+h/BIpmpVI3n1g4tWX5WR+Z
-         LBYnNaY5cWjgYkgN1/axc0LwZOxC4F1ri9H3dUkByzieaKpgto9v5dab/TP6D44foUse
-         5P8RUsLOhn4sj4LNd0g9Yu9q86T3BDm4bb5wx4vNvi68rJhze8QhdYtd/f4qRntkZg8I
-         XtH45GJzTCYnOXefja9NtZtCO/e9pNk6WRygpDqnfW5SekCQi3x1kV86jN287gkJ3e/R
-         ktqCwvdeJKnFDK231iuiLG3ezFgJK2mopSjecDdrRP5MVIhqO+36incp2ohoq5UtMlRN
-         jXjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWt+bcHkNN+a3Wg0MwmAKZGJe3be/ZhHq8RIQ59frKw1e8bSXAZw8fbS8rQ+fqX6qoeMbdg2Q9N+Q0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZmKKCSnkdC7ZUYq3unugRERt4SIHTCW4QrS+sbCgSUOhJw6dO
-	ZRk5k45/yWPsnWp+dMrEhFh9yNFmWhOKM2wLPgVqUK6T+c/2hUHQTLhzmGiy/IXxWfE=
-X-Gm-Gg: AZuq6aJyc6zpG6LmEHt2OBoUhxWsVFS9V+Z1SR57sUuUvQvbXx8bmqd5rPOhKBsPDyx
-	fEgl9bYgfMav0G0lgUjS8tBCU39niEt9IqluMpJhR2OxN8ZhDxsTbqMCxeQlXymuSQby2R40zqy
-	sdECmDUtmfnxPX/MXJd+3gtNHzCjxq6c/vwu2jxivhx7hXs/moK6wKBnf9DE2PCHXgGXpxdE3IZ
-	y+uK8h3vqWNoXuXXQhY9EbmO8iHw+CgAwv5tskFGGRxN/uvQeYucVXZYZNbYk8FnK1yn4OaJl1d
-	TgHOb/pxFBwDbVyxmf9YJdvQ9XVThB+pLsSQzAcK717KV9RSk/7dWxk78AoUpVejFP2iM8xu/DA
-	n3IqXvFbMJCRAIePUCviwXURfeT5Q/8EGaj2dkCZmGFNxXYe7idz+ENCfHBUC+ddLtQkpW/j1zn
-	PGjmqnHLL0q95cy6ZST9Q1xO2Rm7ZGKuM0DPHxS81pgUSyZvIGHy0igGy4qenNfp6cqResi+N/t
-	38tIP4A
-X-Received: by 2002:ac8:5902:0:b0:4ee:2074:4b6e with SMTP id d75a77b69052e-5032fa034e6mr45336511cf.45.1769557442464;
-        Tue, 27 Jan 2026 15:44:02 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-894d36a9bdbsm6298466d6.11.2026.01.27.15.44.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jan 2026 15:44:01 -0800 (PST)
-Date: Tue, 27 Jan 2026 18:43:58 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Bing Jiao <bingjiao@google.com>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	akpm@linux-foundation.org, axelrasmussen@google.com,
-	yuanchu@google.com, weixugc@google.com, hannes@cmpxchg.org,
-	david@kernel.org, mhocko@kernel.org, zhengqi.arch@bytedance.com,
-	shakeel.butt@linux.dev, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com
-Subject: Re: [PATCH v3 3/3] mm/vmscan: don't demote if there is not enough
- free memory in the lower memory tier
-Message-ID: <aXlNvgS1CsU0JoE_@gourry-fedora-PF4VCD3F>
-References: <20260108101535.50696-1-akinobu.mita@gmail.com>
- <20260108101535.50696-4-akinobu.mita@gmail.com>
- <aWEn2ODG0gyej0Xr@gourry-fedora-PF4VCD3F>
- <CAC5umyhoMi_J_Ford2M_1fB-qCuPEDopAK1OF=AisZyDZ8duJQ@mail.gmail.com>
- <aXkfBF5bdnTZ7t7e@gourry-fedora-PF4VCD3F>
- <aXlKOxGGI9zne8sl@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q4PAfXwX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769557532; x=1801093532;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=Da5AJDHaUPRqT/LVmB2NdmQ3WLfMz3+o2Qfb/QMFfcM=;
+  b=Q4PAfXwX8s5zV393QeTVdaQpyyKEqUEfGLBzg1JRdIk1lrcoYEuWK6Fp
+   prxOUUSqfPzfRX1My/6qv6ieUuR3T9dIwGHWuDy0HYsTKFYhybUGAj7+V
+   hXRgmBzLrTEfZghM9x7uWFJJp8/IAV0TLMvTyHut5o83vDZI5GLEVSqVv
+   xoMBJAlnV/hwSVRb5kX0Q6JFec5XBL6B65K5bp6B8fRJAzUQ0wrMr114Z
+   NXXzci0b1xkq4+aK/kVvZdAEQYegzsJnhwme8pbYDKrccilmWqwqGXWfE
+   q7h193E6lG4DQX9eIAGuvdoB7RNGhd1oZivw7gYvk8Qp1A+xw82z3NHNJ
+   g==;
+X-CSE-ConnectionGUID: bBZOEb6KRMK3TJCuE+Lrcg==
+X-CSE-MsgGUID: iBt3OYz1Tr+kWdvLaYqNpQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11684"; a="88185228"
+X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
+   d="scan'208";a="88185228"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 15:45:32 -0800
+X-CSE-ConnectionGUID: O4X8VnrXRreg7WyOJCCdLw==
+X-CSE-MsgGUID: IlLGXMt7RqG7mVESw8qzHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
+   d="scan'208";a="207725630"
+Received: from jmaxwel1-mobl.amr.corp.intel.com (HELO [10.125.109.136]) ([10.125.109.136])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 15:45:31 -0800
+Message-ID: <1b67c345-1594-4221-b699-e26a00d17bfc@intel.com>
+Date: Tue, 27 Jan 2026 16:45:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aXlKOxGGI9zne8sl@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V6 10/18] cxl/mem: Refactor cxl pmem region
+ auto-assembling
+From: Dave Jiang <dave.jiang@intel.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>, linux-cxl@vger.kernel.org,
+ nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org, gost.dev@samsung.com
+Cc: a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com
+References: <20260123113112.3488381-1-s.neeraj@samsung.com>
+ <CGME20260123113138epcas5p4bc54ae41192dbc9c958c43ad8a80b5c6@epcas5p4.samsung.com>
+ <20260123113112.3488381-11-s.neeraj@samsung.com>
+ <ff946a84-11bb-4956-beba-bf7bfbfecd7a@intel.com>
+Content-Language: en-US
+In-Reply-To: <ff946a84-11bb-4956-beba-bf7bfbfecd7a@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 27, 2026 at 11:28:59PM +0000, Bing Jiao wrote:
-> Hi, Gregory, hope you are doing well.
+
+
+On 1/26/26 3:48 PM, Dave Jiang wrote:
 > 
-> I observed that during the allocation of a large folio,
-> alloc_migration_target() cleans __GFP_RECLAIM but subsequently applies
-> GFP_TRANSHUGE. Given that GFP_TRANSHUGE includes __GFP_DIRECT_RECLAIM,
-> I am wondering if this triggers a form of reclamation that should be
-> avoided during demotion.
 > 
-> struct folio *alloc_migration_target(struct folio *src, unsigned long private)
-> ...
-> 	if (folio_test_large(src)) {
-> 		/*
-> 		 * clear __GFP_RECLAIM to make the migration callback
-> 		 * consistent with regular THP allocations.
-> 		 */
-> 		gfp_mask &= ~__GFP_RECLAIM;
-> 		gfp_mask |= GFP_TRANSHUGE;
-> 		order = folio_order(src);
-> 	}
+> On 1/23/26 4:31 AM, Neeraj Kumar wrote:
+>> In 84ec985944ef3, devm_cxl_add_nvdimm() sequence was changed and called
+>> before devm_cxl_add_endpoint(). It's because cxl pmem region auto-assembly
+>> used to get called at last in cxl_endpoint_port_probe(), which requires
+>> cxl_nvd presence.
+>>
+>> For cxl region persistency, region creation happens during nvdimm_probe
+>> which need the completion of endpoint probe.
+>>
+>> In order to accommodate both cxl pmem region auto-assembly and cxl region
+>> persistency, refactored following
+>>
+>> 1. Re-Sequence devm_cxl_add_nvdimm() after devm_cxl_add_endpoint(). This
+>>    will be called only after successful completion of endpoint probe.
+>>
+>> 2. Create cxl_region_discovery() which performs pmem region
+>>    auto-assembly and remove cxl pmem region auto-assembly from
+>>    cxl_endpoint_port_probe()
+>>
+>> 3. Register cxl_region_discovery() with devm_cxl_add_memdev() which gets
+>>    called during cxl_pci_probe() in context of cxl_mem_probe()
+>>
+>> 4. As cxlmd->attach->probe() calls registered cxl_region_discovery(), so
+>>    move devm_cxl_add_nvdimm() before cxlmd->attach->probe(). It guarantees
+>>    both the completion of endpoint probe and cxl_nvd presence before
+>>    calling cxlmd->attach->probe().
+>>
+>> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
 > 
-> #define GFP_TRANSHUGE	(GFP_TRANSHUGE_LIGHT | __GFP_DIRECT_RECLAIM)
+> Hi Neeraj,
+> Just FYI this is the patch that breaks the auto-region assemble in cxl_test.
+
+So it's missing this part in cxl_test. cxl_test auto region is now showing up. But now I'm hitting some lockdep issues. 
+
+---
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index cb87e8c0e63c..03af15edd988 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -1686,6 +1686,7 @@ static void cxl_mock_test_feat_init(struct cxl_mockmem_data *mdata)
+
+ static int cxl_mock_mem_probe(struct platform_device *pdev)
+ {
++       struct cxl_memdev_attach memdev_attach = { 0 };
+        struct device *dev = &pdev->dev;
+        struct cxl_memdev *cxlmd;
+        struct cxl_memdev_state *mds;
+@@ -1767,7 +1768,8 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+
+        cxl_mock_add_event_logs(&mdata->mes);
+
+-       cxlmd = devm_cxl_add_memdev(cxlds, NULL);
++       memdev_attach.probe = cxl_region_discovery;
++       cxlmd = devm_cxl_add_memdev(cxlds, &memdev_attach);
+        if (IS_ERR(cxlmd))
+                return PTR_ERR(cxlmd);
+
+---
+
+
+> 
+> DJ
+> 
+>> ---
+>>  drivers/cxl/core/region.c | 37 +++++++++++++++++++++++++++++++++++++
+>>  drivers/cxl/cxl.h         |  5 +++++
+>>  drivers/cxl/mem.c         | 18 +++++++++---------
+>>  drivers/cxl/pci.c         |  4 +++-
+>>  drivers/cxl/port.c        | 39 +--------------------------------------
+>>  5 files changed, 55 insertions(+), 48 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index ae899f68551f..26238fb5e8cf 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -3727,6 +3727,43 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, "CXL");
+>>  
+>> +static int discover_region(struct device *dev, void *unused)
+>> +{
+>> +	struct cxl_endpoint_decoder *cxled;
+>> +	int rc;
+>> +
+>> +	if (!is_endpoint_decoder(dev))
+>> +		return 0;
+>> +
+>> +	cxled = to_cxl_endpoint_decoder(dev);
+>> +	if ((cxled->cxld.flags & CXL_DECODER_F_ENABLE) == 0)
+>> +		return 0;
+>> +
+>> +	if (cxled->state != CXL_DECODER_STATE_AUTO)
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * Region enumeration is opportunistic, if this add-event fails,
+>> +	 * continue to the next endpoint decoder.
+>> +	 */
+>> +	rc = cxl_add_to_region(cxled);
+>> +	if (rc)
+>> +		dev_dbg(dev, "failed to add to region: %#llx-%#llx\n",
+>> +			cxled->cxld.hpa_range.start, cxled->cxld.hpa_range.end);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int cxl_region_discovery(struct cxl_memdev *cxlmd)
+>> +{
+>> +	struct cxl_port *port = cxlmd->endpoint;
+>> +
+>> +	device_for_each_child(&port->dev, NULL, discover_region);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_region_discovery, "CXL");
+>> +
+>>  u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
+>>  {
+>>  	struct cxl_region_ref *iter;
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index c796c3db36e0..86efcc4fb963 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -906,6 +906,7 @@ struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
+>>  int cxl_add_to_region(struct cxl_endpoint_decoder *cxled);
+>>  struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
+>>  u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa);
+>> +int cxl_region_discovery(struct cxl_memdev *cxlmd);
+>>  #else
+>>  static inline bool is_cxl_pmem_region(struct device *dev)
+>>  {
+>> @@ -928,6 +929,10 @@ static inline u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint,
+>>  {
+>>  	return 0;
+>>  }
+>> +static inline int cxl_region_discovery(struct cxl_memdev *cxlmd)
+>> +{
+>> +	return 0;
+>> +}
+>>  #endif
+>>  
+>>  void cxl_endpoint_parse_cdat(struct cxl_port *port);
+>> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+>> index 333c366b69e7..7d19528d9b55 100644
+>> --- a/drivers/cxl/mem.c
+>> +++ b/drivers/cxl/mem.c
+>> @@ -114,15 +114,6 @@ static int cxl_mem_probe(struct device *dev)
+>>  		return -ENXIO;
+>>  	}
+>>  
+>> -	if (cxl_pmem_size(cxlds) && IS_ENABLED(CONFIG_CXL_PMEM)) {
+>> -		rc = devm_cxl_add_nvdimm(parent_port, cxlmd);
+>> -		if (rc) {
+>> -			if (rc == -ENODEV)
+>> -				dev_info(dev, "PMEM disabled by platform\n");
+>> -			return rc;
+>> -		}
+>> -	}
+>> -
+>>  	if (dport->rch)
+>>  		endpoint_parent = parent_port->uport_dev;
+>>  	else
+>> @@ -142,6 +133,15 @@ static int cxl_mem_probe(struct device *dev)
+>>  			return rc;
+>>  	}
+>>  
+>> +	if (cxl_pmem_size(cxlds) && IS_ENABLED(CONFIG_CXL_PMEM)) {
+>> +		rc = devm_cxl_add_nvdimm(parent_port, cxlmd);
+>> +		if (rc) {
+>> +			if (rc == -ENODEV)
+>> +				dev_info(dev, "PMEM disabled by platform\n");
+>> +			return rc;
+>> +		}
+>> +	}
+>> +
+>>  	if (cxlmd->attach) {
+>>  		rc = cxlmd->attach->probe(cxlmd);
+>>  		if (rc)
+>> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+>> index 549368a9c868..70b40a10be7a 100644
+>> --- a/drivers/cxl/pci.c
+>> +++ b/drivers/cxl/pci.c
+>> @@ -903,6 +903,7 @@ __ATTRIBUTE_GROUPS(cxl_rcd);
+>>  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>>  {
+>>  	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+>> +	struct cxl_memdev_attach memdev_attach = { 0 };
+>>  	struct cxl_dpa_info range_info = { 0 };
+>>  	struct cxl_memdev_state *mds;
+>>  	struct cxl_dev_state *cxlds;
+>> @@ -1006,7 +1007,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>>  	if (rc)
+>>  		dev_dbg(&pdev->dev, "No CXL Features discovered\n");
+>>  
+>> -	cxlmd = devm_cxl_add_memdev(cxlds, NULL);
+>> +	memdev_attach.probe = cxl_region_discovery;
+>> +	cxlmd = devm_cxl_add_memdev(cxlds, &memdev_attach);
+>>  	if (IS_ERR(cxlmd))
+>>  		return PTR_ERR(cxlmd);
+>>  
+>> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+>> index 7937e7e53797..fbeff1978bfb 100644
+>> --- a/drivers/cxl/port.c
+>> +++ b/drivers/cxl/port.c
+>> @@ -30,33 +30,6 @@ static void schedule_detach(void *cxlmd)
+>>  	schedule_cxl_memdev_detach(cxlmd);
+>>  }
+>>  
+>> -static int discover_region(struct device *dev, void *unused)
+>> -{
+>> -	struct cxl_endpoint_decoder *cxled;
+>> -	int rc;
+>> -
+>> -	if (!is_endpoint_decoder(dev))
+>> -		return 0;
+>> -
+>> -	cxled = to_cxl_endpoint_decoder(dev);
+>> -	if ((cxled->cxld.flags & CXL_DECODER_F_ENABLE) == 0)
+>> -		return 0;
+>> -
+>> -	if (cxled->state != CXL_DECODER_STATE_AUTO)
+>> -		return 0;
+>> -
+>> -	/*
+>> -	 * Region enumeration is opportunistic, if this add-event fails,
+>> -	 * continue to the next endpoint decoder.
+>> -	 */
+>> -	rc = cxl_add_to_region(cxled);
+>> -	if (rc)
+>> -		dev_dbg(dev, "failed to add to region: %#llx-%#llx\n",
+>> -			cxled->cxld.hpa_range.start, cxled->cxld.hpa_range.end);
+>> -
+>> -	return 0;
+>> -}
+>> -
+>>  static int cxl_switch_port_probe(struct cxl_port *port)
+>>  {
+>>  	/* Reset nr_dports for rebind of driver */
+>> @@ -82,17 +55,7 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+>>  	if (rc)
+>>  		return rc;
+>>  
+>> -	rc = devm_cxl_endpoint_decoders_setup(port);
+>> -	if (rc)
+>> -		return rc;
+>> -
+>> -	/*
+>> -	 * Now that all endpoint decoders are successfully enumerated, try to
+>> -	 * assemble regions from committed decoders
+>> -	 */
+>> -	device_for_each_child(&port->dev, NULL, discover_region);
+>> -
+>> -	return 0;
+>> +	return devm_cxl_endpoint_decoders_setup(port);
+>>  }
+>>  
+>>  static int cxl_port_probe(struct device *dev)
+> 
 > 
 
-I think the answer is that the demotion code is a mess and no one
-actually knows what it's doing.  We probably need to rework this
-entirely because we've now found at least 2 paths which clean and then
-add reclaim.
-
-~Gregory
