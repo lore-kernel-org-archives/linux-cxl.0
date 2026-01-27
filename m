@@ -1,82 +1,84 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484492F3C12
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Jan 2026 23:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68FAB2D46D6
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Jan 2026 23:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769556547; cv=none; b=KT7jI8ZJUi27yNpuu+PTCYi4a+raGgEMp8zB3EZBYqxpwfnTqCkyAclhLVhA6r1VL+1FRYe9GsJk8jok4mjVdgGhaGPxkJCaQXWArXDdSZpy3TSWf09O1F+pdOJpgCDDDIbuUuRkhmhRUQ3bXB2D54Gd0YOYR7LM0Qv40QJkuzs=
+	t=1769556723; cv=none; b=dnA3qDeDdzTNQ9aHrovfqV0iKTBBd82vVpAaT9s3XIcZ5ChOZ0lD8W7PwOR0moDED9ss3PnsQCULzpqHdmVwHxU0VFzEKwoNcM4/OECej/HYfqvp6KUraQhdpHOE++ppGDfy4dKaZEqh0VUzHsF2iD6KgeNOYdvDS4RFcQJ4yOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769556547; c=relaxed/simple;
-	bh=ofHckpHSK4mfHbe6L1ZVH+h1/SSvRemGaI9zfgs1u/8=;
+	s=arc-20240116; t=1769556723; c=relaxed/simple;
+	bh=llUOrd6g/HLx5FAhx+SUViFFF+wpjL4tX6AinX9dVkI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hiPw4ODlGQDcKZbrDvuMNisx2uTDlwA0wzTdgoqElI/KX5V0tYchO8rtrOdWJmmOgkTkD0u5y5nNhqAHoCG3h9OQ1FKrVXKvfScM/LcG85B47p76C0JSpK6DD+6Q5ex94KC3miqRi/fSeL1A6oVUIMc8zjXm1HOtjOMzMfiFKj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I8U7TuRd; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=PjpbLdNbGJHESzIgR00iahI/fDjPvm5h85vBiKhc5Q1tTpgZ/1pnaMM2dcI/sdzv0/lqWAmi+8aOmuwxv54tB3BhxdNjTdnAO9iiJBp7vClx3hxFw3TXtTNJKu60X4+VDXcP6D4ZhfZabnyoEMp2BVvZlmGEJDI8T3wafpTATWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=mmxbiW0R; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I8U7TuRd"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2a1462573caso15265ad.0
-        for <linux-cxl@vger.kernel.org>; Tue, 27 Jan 2026 15:29:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="mmxbiW0R"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-8c6b16bd040so696895885a.1
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Jan 2026 15:32:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769556546; x=1770161346; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1769556721; x=1770161521; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ggQbKrh8ZyuooMxE9NUhGxSmgLEA7sxK0OqhmRkzBEY=;
-        b=I8U7TuRdmnddLr13hly0xpTKB1bih6vDDfJua9/HxozplYZJNrKzumg2lFqIpk1aDn
-         3Em+5RWvTUGigBDzBWfUqoc+/oD6ZXVzTRenNkSncT9cC7i+k1707dW1mlo7Hj/XhK8q
-         K+mxmaYOj6XmwH9TjtTs74SYEi1q8C93GRGIk9mfM3cJa9Q+x/bbAPE0lKwXLDHDrucz
-         wOANeE1FvjNKEki48xF1hge14wXNJBNG5M/t/zCYrG8pLHpGjDRhxFC4yJ022Sf45pgH
-         DFmh9KByH/aASZLtQEACOrqTc/jRh0lzTZoU2u2YcIdtEtvaAe1orUY/LEHZzj+uhaPb
-         N2OQ==
+        bh=y8ffCxgqfPNNOI1L/bqqAX6TLyKV0Tim54t2cjmn71o=;
+        b=mmxbiW0R5WwkhQikr/sm4nX1B09uwDjLzkqFa0f9nqOqzLmc2w9cJLdqFfJcAy66IW
+         dvujy/UN9B9lrN4+aPfdR6It9Uja0JluTwRVqHzvjs615LcncFIn4tX3lrv+uIwsi70U
+         7MEC2ir8MHqhhNEudBn1PqC59PdBGckli7yfOEFWkLJpwWe8n8mFA6g39v/rvBYEMRS5
+         4YdN0pgIa2szcBlj8EdOG4UNtODY6Wr6NhPGmJc4txVQPYGLV2Ayyfu6wUInHRbVIwFs
+         QlsxmHgBP1l9pUTKQBDyzsGgP7+gcneyDVhCadnNCZ61fyaI++a/lxmLQjpjE4TRRb/z
+         q7UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769556546; x=1770161346;
+        d=1e100.net; s=20230601; t=1769556721; x=1770161521;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ggQbKrh8ZyuooMxE9NUhGxSmgLEA7sxK0OqhmRkzBEY=;
-        b=Fq5+jEUGAfdtnuU2jjXG1/k5c0xy/KPerXrcw46e0yrU4N7BpKYYIGXiQJm3IbCIZJ
-         Rb1T4C/L1WJgLusiub8Rn7pY01f/9ePtrvzp937y/g62Y5h3QzqMsbuXa7b21SvuGNvg
-         M19ooMSqa6+x5Ubw2O+TZ8JkAZYtmhvXhdM+EOe1Re2ACko2PEhIOEcQ99eHKXG17BpY
-         9oQj1ULC18f8a5BxCV707TPIdz21UFGj5Bb31m/As7tPV3vF4y+hHuV4GLT2yx8AEoIH
-         7L3viVWGSiHjyDr7+YUEfrvlsGR4hs0jXWzPhL3DXPwnO8rvuKqCE36Qkae9cdaMlTwl
-         nExQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXYBcL17rmPomqJ7bgy5P4dvWvZdT//iCmwl7Oo/3bZDBF6x8PjNavSlsR+iDDjmW28cGq6SpyDH48=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywiQVsorhqXC1BZ6l4wtueDmDTNxTblcTyB1BxyfuxgVkx8meM
-	1yrMykbCM0xJLOKMdSCezB0d8gaME1sO9K/266e3JbUKuiDQ+coD72HXAlQYu8BkQtqzjIH9nXF
-	RZmP5AQ==
-X-Gm-Gg: AZuq6aIaX/ZYN2+r0OI8fF5s7DKW2GuSO4wrRGHkoh22nwFuZcG98DPwpWyatOvxe5D
-	kLzuU4kpMstCsVHfgyEM44xgRhR3NczBl5+nTb+fPdL5R2A7omJTHoguKKTu7OZMLmKTVCI3yiV
-	kB+XCSM5IjUfaWIw6e+Hna/j9meMEbhA+HlGQyYxAQEQOm7GLPR0qi2Cf0ZAa23OvgOJL8GbJUC
-	boRwkoK1ukW/kGmOwUv7AkNn8DXwfp2BsCV6i7jmLfO/dm3ZxAtWGiiqt2Sx/y0f4CGbqRBMyMn
-	aY6BuQ8CLR7CkLGCHhHXsuYRPXkIvvG7KAsujwB43SAsIqhS8RhpsO9WmXOy7ROhy8Foprq8JB0
-	P1IPWcQzThcw5IlzY5Um0fcq5380TGUefJda7BCaF6CfareZ27NuRz7HDaNSYhMpSLA4v8PZtHQ
-	EjvqoHhy1HC6MFXrOTNC6F4H/sc6L9+r5B6Chs9/SVhPeCxbwCVw==
-X-Received: by 2002:a17:902:fc4c:b0:2a1:3cdc:771f with SMTP id d9443c01a7336-2a870b97452mr3881485ad.20.1769556545254;
-        Tue, 27 Jan 2026 15:29:05 -0800 (PST)
-Received: from google.com (130.15.125.34.bc.googleusercontent.com. [34.125.15.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a88b417394sm4031265ad.42.2026.01.27.15.29.03
+        bh=y8ffCxgqfPNNOI1L/bqqAX6TLyKV0Tim54t2cjmn71o=;
+        b=sqgKv/i8vM31veAw1kh45ANaklYeOC5TToVay57eLyuCTXiG68J54xO1Te3io78rKA
+         G8b96IrcuqP2xs408G3ESTVQVTl//91M/1AfDa8hU/82WCkGskji8Fr4SfDUhefoT5z7
+         ee1p/VHRGcDK3zqt2k64ldjtASImxR4SmlEDw8JJd4PjZymbvMItMofkqSRZesNHI04y
+         SgU1cqmsS+KQmIcXlJZdSaF8HkJPYQUFoFZv7c6L1h0HAL+0Imd/mmiliZQTOi8lVTVp
+         hL6PHklXyN4sSjtL9/KXZyS8eDbZP4ckX1xjeWhsDCRvkd8xBssa4dbRPuv86yNw3Rsf
+         Hqeg==
+X-Forwarded-Encrypted: i=1; AJvYcCWdX1ZOaNsMbKEg4zGvsJmgX1P7HMeU1BbF6tNbg7TpEoVQcVw7T65xABeHtXgAb7+KN6+DUGmPWec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPE1IVjhLKSKbFC1kJRfxyVbFX4qQKqiYp9DG3OVNb4jjMVPhN
+	bjrKu58wYhe3RbkSaoQUzZUViLYzP7D+xtBp6LJfMEoxABkxDEWe6tSvLrdQAXDpqiw=
+X-Gm-Gg: AZuq6aJnaqxviK5vsrkHjieQdD3cQTfOIDlCJB46M5xJR6Ff/TXw/kzoHfEMlB5F5sI
+	9+qqBSzfQX6PfjZ30Xyu4JP714JuJhWFCG3FS066h30Sl+egKR7aObtE4C4h3XGG9QghREzLwAQ
+	xJzHYwhuecxFtjdAh9LMVnUm+zV9kfTewQugEzvDlCcXrttgKa+A8XA/B7R5B4pf3D1wgVmcibP
+	ajkPOXLOVtyPvj3iPHiDVmYaeG7TogIqeQFtCJsRu5YrVic0hmPyVxdKqh2yAxPOkWyAeyRuzTk
+	ICD+ra55zpY79JoNwJ2g0CiAsY3kyeW/N2DZ53wU6X7f8HxiKvJnD/4gk/VIT8HruFxpLhF4mHW
+	6ZH1n0nUuDYx5WV+BXxePMTslISjGhPxet8wXuPUvvdWEfYKyxWzeSUzV7XsWqNhImnyg5SmWBw
+	IWuU8OeoiSHzY3MXl7bvMzGS1gWraHslDXP5JwoG5Q7q6xIz4/Yu1EcB14mdFD2uEfaQctFg==
+X-Received: by 2002:a05:620a:1908:b0:8c5:2f70:c62b with SMTP id af79cd13be357-8c70b92d7cdmr423216285a.85.1769556721349;
+        Tue, 27 Jan 2026 15:32:01 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c711b98539sm71997685a.20.2026.01.27.15.32.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jan 2026 15:29:04 -0800 (PST)
-Date: Tue, 27 Jan 2026 23:28:59 +0000
-From: Bing Jiao <bingjiao@google.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	akpm@linux-foundation.org, axelrasmussen@google.com,
-	yuanchu@google.com, weixugc@google.com, hannes@cmpxchg.org,
-	david@kernel.org, mhocko@kernel.org, zhengqi.arch@bytedance.com,
-	shakeel.butt@linux.dev, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com
-Subject: Re: [PATCH v3 3/3] mm/vmscan: don't demote if there is not enough
- free memory in the lower memory tier
-Message-ID: <aXlKOxGGI9zne8sl@google.com>
-References: <20260108101535.50696-1-akinobu.mita@gmail.com>
- <20260108101535.50696-4-akinobu.mita@gmail.com>
- <aWEn2ODG0gyej0Xr@gourry-fedora-PF4VCD3F>
- <CAC5umyhoMi_J_Ford2M_1fB-qCuPEDopAK1OF=AisZyDZ8duJQ@mail.gmail.com>
- <aXkfBF5bdnTZ7t7e@gourry-fedora-PF4VCD3F>
+        Tue, 27 Jan 2026 15:32:00 -0800 (PST)
+Date: Tue, 27 Jan 2026 18:31:59 -0500
+From: Gregory Price <gourry@gourry.net>
+To: "David Hildenbrand (Red Hat)" <david@kernel.org>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	kernel-team@meta.com, dan.j.williams@intel.com,
+	vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
+	jasowang@redhat.com, xuanzhuo@linux.alibaba.com,
+	eperezma@redhat.com, osalvador@suse.de, akpm@linux-foundation.org
+Subject: Re: [PATCH 3/8] mm/memory_hotplug: add APIs for explicit online type
+ control
+Message-ID: <aXlK74ZlUf76nBE_@gourry-fedora-PF4VCD3F>
+References: <20260114085201.3222597-1-gourry@gourry.net>
+ <20260114085201.3222597-4-gourry@gourry.net>
+ <b3d435d2-643f-4dad-9928-bc7fb5080181@kernel.org>
+ <aWfR86RIKEvyZsh6@gourry-fedora-PF4VCD3F>
+ <4520e7b0-8218-404d-8ede-e62d95c50825@kernel.org>
+ <aXLCAtwMkSMH3DNj@gourry-fedora-PF4VCD3F>
+ <20260123182526.00005ee8@huawei.com>
+ <aXPIGMVAvVEBgFhJ@gourry-fedora-PF4VCD3F>
+ <793fb531-1fda-4de4-b73f-fb46444ca613@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -85,78 +87,29 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aXkfBF5bdnTZ7t7e@gourry-fedora-PF4VCD3F>
+In-Reply-To: <793fb531-1fda-4de4-b73f-fb46444ca613@kernel.org>
 
-On Tue, Jan 27, 2026 at 03:24:36PM -0500, Gregory Price wrote:
-> On Sat, Jan 10, 2026 at 10:55:02PM +0900, Akinobu Mita wrote:
-> > Since can_reclaim_anon_pages() checks whether there is free space on the swap
-> > device before checking with can_demote(), I think the negative impact of this
-> > change will be small. However, since I have not been able to confirm the
-> > behavior when a swap device is available, I would like to correctly understand
-> > the impact.
->
-> Something else is going on here
->
-> See demote_folio_list and alloc_demote_folio
->
-> static unsigned int demote_folio_list(struct list_head *demote_folios,
->                                       struct pglist_data *pgdat,
->                                       struct mem_cgroup *memcg)
-> {
->         struct migration_target_control mtc = {
->                  */
->                 .gfp_mask = (GFP_HIGHUSER_MOVABLE & ~__GFP_RECLAIM) |
->                         __GFP_NOMEMALLOC | GFP_NOWAIT,
->         };
-> }
->
-> static struct folio *alloc_demote_folio(struct folio *src,
->                 unsigned long private)
-> {
-> 	/* Only attempt to demote to the preferred node */
->         mtc->nmask = NULL;
->         mtc->gfp_mask |= __GFP_THISNODE;
->         dst = alloc_migration_target(src, (unsigned long)mtc);
->         if (dst)
->                 return dst;
->
-> 	/* Now attempt to demote to any node in the lower tier */
->         mtc->gfp_mask &= ~__GFP_THISNODE;
->         mtc->nmask = allowed_mask;
->         return alloc_migration_target(src, (unsigned long)mtc);
-> }
->
->
-> /*
-> * %__GFP_RECLAIM is shorthand to allow/forbid both direct and kswapd reclaim.
-> */
->
->
-> You basically shouldn't be hitting any reclaim behavior at all, and if
-> the target nodes are actually under various watermarks, you should be
-> getting allocation failures and quick-outs from the demotion logic.
+On Wed, Jan 28, 2026 at 12:06:01AM +0100, David Hildenbrand (Red Hat) wrote:
+> I'd go for
+> 
+> 	EXPORT_SYMBOL_FOR_MODULES(__add_memory_driver_managed, "dax")
+> 
+> (or would it be the kmem module?)
+> 
 
-Hi, Gregory, hope you are doing well.
+it would be kmem.
 
-I observed that during the allocation of a large folio,
-alloc_migration_target() cleans __GFP_RECLAIM but subsequently applies
-GFP_TRANSHUGE. Given that GFP_TRANSHUGE includes __GFP_DIRECT_RECLAIM,
-I am wondering if this triggers a form of reclamation that should be
-avoided during demotion.
+I'll let the accelerator folks argue for loosening the restriction for
+OOT modules, for me I think this is sufficient.
 
-struct folio *alloc_migration_target(struct folio *src, unsigned long private)
-...
-	if (folio_test_large(src)) {
-		/*
-		 * clear __GFP_RECLAIM to make the migration callback
-		 * consistent with regular THP allocations.
-		 */
-		gfp_mask &= ~__GFP_RECLAIM;
-		gfp_mask |= GFP_TRANSHUGE;
-		order = folio_order(src);
-	}
+In the long term, for the private-node set, i think this might also be
+ok, as the intent is to only allow "enlightened users" access to private
+nodes anyway - zones are less important since the driver still has
+a say in how memory gets moved there.
 
-#define GFP_TRANSHUGE	(GFP_TRANSHUGE_LIGHT | __GFP_DIRECT_RECLAIM)
+(e.g. compressed-memory is a demotion-only target, which implies only
+ only movable allocations can occur there... so zones are mostly
+ pointless and the whole policy setup can be ignored and the original
+ interface can just be used)
 
-Best,
-Bing
+~Gregory
