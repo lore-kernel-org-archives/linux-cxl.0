@@ -1,239 +1,146 @@
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D028B34C83C;
-	Wed, 28 Jan 2026 12:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363D234EEEF;
+	Wed, 28 Jan 2026 12:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769602376; cv=none; b=O9+BMWXt+aYRbdu96leKu/rv9Br5OFmlxd2mOJdKJiIk/QY/os6ISYgPQcRvK5feF5rSVBO9cSL4aC0F0qZfQy/b6eQwgSX0liYC3Sqv4JHrIKS18EdyuB+umnBYyj0aYQdxW4QcQAFnQNnfpVT6QJ1CdbRvbRnScHwxhVK2qXA=
+	t=1769603822; cv=none; b=nzQ8VSc/MH26EqBKapkjHrP3PoOCk8qBQSwFHzfCQa8N3K3elBx6J4BUi21fYZFaB6aj4TfWsFwZ4ZMOTXFTtfnt0KshAv3Go3SsaFcpCyl8/SFAo2rVnXlRrJuiO9b3uBtmMkrEGaqZX6Y7FMOZSsxWV+l7fUbS9UDI9Z85JBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769602376; c=relaxed/simple;
-	bh=brJyfqTrpOAwu9gN1Gk9OR3qAejoMh9naiSI6qk19dE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lxVuaFmuuUh0sDBV+NL9Y9SAgZOWd5nTawLoWFalr0nLGkx/PS6mAKegIfp3e2jYv3t7QJN7S12N7EcTtzYrn1Bql5+bP5dTzze2ymjuYIAvCC9K6ZlpwJ+dqDLxD76OEGp7UFrfab4GqrLFonPypAErm+6WDzdxFG9IbolxYig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=gTRY/WK5; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="gTRY/WK5"
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60SB138M1478460;
-	Wed, 28 Jan 2026 04:12:23 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=Sd3tTNC9Qi1NraZ3FKZVjxKypYrlKrXHxdzsRn97YZE=; b=gTRY/WK5dlMJ
-	+w33bnXlRn1cCiq77T2CcMcXQkZLDeCgVL96iSn62FmkkrRxzBM9MIvA0/cb+Yqp
-	7K2voFCBRv+61xwztZqJKWxwspJ55PsOpC1EDOp9KTPbF6BIJWuk9ijNdT5ye3hN
-	2qFlu8Baf7zOiO2sS+AFcRFjCj8EIQBI+FWjL8w8MnzADaoEJNxQSdivlV6UW3he
-	/wb0Y/R32ZcnznUNp/NThA2xnL9bV+ILuQu5yUUX8YQKP21FSmcApEMpZ5O3AuC3
-	/zWNiD+9HEYCHz+k7PzzpBd2lBlTxy8vvfv8sVuLDoGyHUQax4GHXHh1oNeRoIln
-	Y1F/zIHK8w==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4bycg226fm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 28 Jan 2026 04:12:23 -0800 (PST)
-Received: from devbig003.atn7.facebook.com (2620:10d:c085:108::150d) by
- mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.35; Wed, 28 Jan 2026 12:12:18 +0000
-From: Chris Mason <clm@meta.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-CC: Andrew Morton <akpm@linux-foundation.org>,
-        Jarkko Sakkinen
-	<jarkko@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas
- Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov
-	<bp@alien8.de>, <x86@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Arnd
- Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma
-	<vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Jani Nikula
-	<jani.nikula@linux.intel.com>,
-        Joonas Lahtinen
-	<joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tursulin@ursulin.net>,
-        Christian Koenig
-	<christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>, Matthew Auld
-	<matthew.auld@intel.com>,
-        Matthew Brost <matthew.brost@intel.com>,
-        Alexander
- Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan
- Kara <jack@suse.cz>,
-        Benjamin LaHaise <bcrl@kvack.org>, Gao Xiang
-	<xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Sandeep Dhavale <dhavale@google.com>,
-        Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Muchun Song <muchun.song@linux.dev>,
-        Oscar Salvador <osalvador@suse.de>,
-        David Hildenbrand <david@kernel.org>,
-        Konstantin Komarov
-	<almaz.alexandrovich@paragon-software.com>,
-        Mike Marshall
-	<hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Tony Luck
-	<tony.luck@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Dave
- Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
-        Babu Moger
-	<babu.moger@amd.com>, Carlos Maiolino <cem@kernel.org>,
-        Damien Le Moal
-	<dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Johannes Thumshirn
-	<jth@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Liam R . Howlett"
-	<Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport
-	<rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Michal Hocko
-	<mhocko@suse.com>, Hugh Dickins <hughd@google.com>,
-        Baolin Wang
-	<baolin.wang@linux.alibaba.com>, Zi Yan <ziy@nvidia.com>,
-        Nico Pache
-	<npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-        Dev Jain
-	<dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-        Lance Yang
-	<lance.yang@linux.dev>, Jann Horn <jannh@google.com>,
-        Pedro Falcato
-	<pfalcato@suse.de>, David Howells <dhowells@redhat.com>,
-        Paul Moore
-	<paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn"
-	<serge@hallyn.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes
-	<linux@rasmusvillemoes.dk>,
-        <linux-sgx@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <intel-gfx@lists.freedesktop.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-aio@kvack.org>,
-        <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>,
-        <linux-mm@kvack.org>, <ntfs3@lists.linux.dev>,
-        <devel@lists.orangefs.org>, <linux-xfs@vger.kernel.org>,
-        <keyrings@vger.kernel.org>, <linux-security-module@vger.kernel.org>,
-        Jason
- Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v2 07/13] mm: update secretmem to use VMA flags on mmap_prepare
-Date: Wed, 28 Jan 2026 04:08:36 -0800
-Message-ID: <20260128121200.283932-1-clm@meta.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <a243a09b0a5d0581e963d696de1735f61f5b2075.1769097829.git.lorenzo.stoakes@oracle.com>
-References: <cover.1769097829.git.lorenzo.stoakes@oracle.com> <a243a09b0a5d0581e963d696de1735f61f5b2075.1769097829.git.lorenzo.stoakes@oracle.com>
+	s=arc-20240116; t=1769603822; c=relaxed/simple;
+	bh=kNaws1xCzyQVOVgfLs5bTUmNdvu/jmnMakEwKN4/ads=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EUI5MGyK9h2fQc8X9WVOyQjU75w9lCZSvFteIq1KP7AJqJSV/OrVrbgoirwOOBzNN11bzHow37Vkbl/i9dDKKRDMMMgXJl5sp7dI4O0FLa+IhTxeWqiDMX7PJP8oPJNFNeQPmH4j/cgfbtikH/PJIyyfmlNpZoLMRvDWMldmlF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4f1MFZ4Vt1zHnGdR;
+	Wed, 28 Jan 2026 20:36:02 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id 253FE40569;
+	Wed, 28 Jan 2026 20:36:50 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 28 Jan
+ 2026 12:36:48 +0000
+Date: Wed, 28 Jan 2026 12:36:47 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: <dan.j.williams@intel.com>
+CC: Vikram Sethi <vsethi@nvidia.com>, Alex Williamson <alex@shazbot.org>,
+	Srirangan Madhavan <smadhavan@nvidia.com>, "dave@stgolabs.net"
+	<dave@stgolabs.net>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
+	<ira.weiny@intel.com>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	"ming.li@zohomail.com" <ming.li@zohomail.com>, "rrichter@amd.com"
+	<rrichter@amd.com>, "Smita.KoralahalliChannabasappa@amd.com"
+	<Smita.KoralahalliChannabasappa@amd.com>, "huaisheng.ye@intel.com"
+	<huaisheng.ye@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, Vishal Aslot <vaslot@nvidia.com>, "Shanker
+ Donthineni" <sdonthineni@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>, "Jason
+ Gunthorpe" <jgg@nvidia.com>, Matt Ochs <mochs@nvidia.com>, Jason Sequeira
+	<jsequeira@nvidia.com>
+Subject: Re: [PATCH v4 0/10] CXL Reset support for Type 2 devices
+Message-ID: <20260128123647.0000602f@huawei.com>
+In-Reply-To: <697985c2c622_1d33100a2@dwillia2-mobl4.notmuch>
+References: <20260120222610.2227109-1-smadhavan@nvidia.com>
+	<20260127093343.67715d5e@shazbot.org>
+	<6978ef9919421_1d3310036@dwillia2-mobl4.notmuch>
+	<LV8PR12MB9182DEE18D9F83194A6E0034BD90A@LV8PR12MB9182.namprd12.prod.outlook.com>
+	<697985c2c622_1d33100a2@dwillia2-mobl4.notmuch>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI4MDA5OCBTYWx0ZWRfX/YMdvd0IEW+M
- mfJ/bYR9k4eRvDbs9QGzO+ygu2VSotJCKMMxUusrpYkrvYdQaFJRWVvBv2EkD12mCpCYEvw+XB/
- DwyN2M8BBbTeyqqZ9/i9fDyEPE0MOIwU1pNj8r3a1/SGXN38+xZGlcMtDVhwJA1iofmGT+NTjsa
- 3wJFzmew6yuj81cYLEWiubhhxDZMBD6hVVMuqCOVg+bB7Gz9bEYCH56KvIcfJ13/7NnDlwWy1ay
- rut+pW91VzKqtLFjeZDFQXQuymj3+pWlazUmuuQXtfS+yB5rh8eIrZb/ZGDSDilJLhwKOSnwEsm
- tXIPQzyp+XE21UBIWU7JysVYMwhm9BUIbA4gV+4NNGJrteyEtklAhziLQl5fV0j0MzIV6sri7hz
- h9QDQw7JEBl4y5dfKeMuesm0LqUNBE+g04KLVmq1Y9FiJcFdRQVCoCh0B4S6SthUPRAGT0RWyAc
- Vh/HaT4eUcQ+KnB1bbQ==
-X-Proofpoint-GUID: 6cECoo2vZpz-_Y4sX-WfJbWu0BG9k_53
-X-Authority-Analysis: v=2.4 cv=Q63fIo2a c=1 sm=1 tr=0 ts=6979fd27 cx=c_pps
- a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
- a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8
- a=VZ3cX_PGfQEInpbj4y4A:9
-X-Proofpoint-ORIG-GUID: 6cECoo2vZpz-_Y4sX-WfJbWu0BG9k_53
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-01-28_02,2026-01-28_01,2025-10-01_01
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
-> This patch updates secretmem to use the new vma_flags_t type which will
-> soon supersede vm_flags_t altogether.
+On Tue, 27 Jan 2026 19:42:58 -0800
+dan.j.williams@intel.com wrote:
+
+> Vikram Sethi wrote:
+> > Hi Dan,
+> >   
+> > >Once the protocol error handling series has landed there is a potential
+> > >to extend that with CXL Reset recovery. However, that needs a clear
+> > >error model defined as to which resets have a chance of recovering
+> > >*system* operation when CXL.cache/mem fails. In Terry's series, panic /
+> > >reboot is the recovery, not reset.  
+> > 
+> > It's not just about CXL protocol error handling though. Type2 Device
+> > passthrough will be a common usecase for CXL reset (entire device is
+> > assigned to VM) across different VM assignment.  
 > 
-> In order to make this change we also have to update mlock_future_ok(), we
-> replace the vm_flags_t parameter with a simple boolean is_vma_locked one,
-> which also simplifies the invocation here.
+> I understand. The point about CXL Protocol Error handling series is that
+> it at least enlightens the PCIe core about the presence of active CXL
+> links.
 > 
-> This is laying the groundwork for eliminating the vm_flags_t in
-> vm_area_desc and more broadly throughout the kernel.
+> It is also the case that it much closer to being upstream than this set
+> which still has fundamental questions.
 > 
+> > The cache and mem of the device must be cleared via CXL reset for full
+> > device passthrough in addition to the PCIe/CXL.IO reset. Another
+> > usecase is when the device is reconfigured either in baremetal or in
+> > VM for passthrough usecase. Such usecases often require a reset of the
+> > device, and it's cache, mem and not a narrow "memregion" reset, so I'm
+> > not in favor of exposing it via CXL.mem sysfs entries. IMO, device
+> > sysfs attribute reset method is appropriate for type2 devices.  
+> 
+> That case is already handled today with secondary bus reset to
+> completely reset an entire device. That path is problematic for CXL
+> because PCI reset has no idea about how to manage caches or handle
+> memory unplug.
+> 
+> Administrator is responsible for making sure that event is not a
+> surprise memory removal or cache protocol corruption event. That is a
+> level of explosiveness that PCI reset has never needed to consider.
+> 
+> CXL Reset wants to be more surgical than secondary bus reset. The only
+> way to be more surgical is to cooperate with the CXL core that knows
+> whether the explosives have been rendered inert.
+> 
+> > Finally, there is the error usecase, which in the common case is as
+> > simple as an uncorrected ECC error in the HDM. While not strictly
+> > necessary, it is common practice to reset the device in such cases, to
+> > recover the bad page/row via PPR on device reset. You want reset of
+> > the memory controller as part of the CXL reset here, FLR is not
+> > enough.  
+> 
+> ??
+> 
+> CXL memory repair is already upstream without CXL Reset, see
+> CONFIG_CXL_EDAC_MEM_REPAIR.
 
-Hi everyone,
+To actually do it we rely on tear down of all access to the device
+(if it it's disruptive).
+There is new spec stuff covering asking a device to just do it next reset
+that would fit more closely with this flow. No support yet I think.
 
-Running mm-new through AI review flagged this one:
+Mind you we are talking type 2, so who knows what people will implement.
+Nice if they used that part of the spec but I doubt we can rely on it!
 
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -225,12 +225,12 @@ static inline unsigned long round_hint_to_min(unsigned long hint)
->  	return hint;
->  }
->
-> -bool mlock_future_ok(const struct mm_struct *mm, vm_flags_t vm_flags,
-> -			unsigned long bytes)
-> +bool mlock_future_ok(const struct mm_struct *mm, bool is_vma_locked,
-> +		     unsigned long bytes)
->  {
->  	unsigned long locked_pages, limit_pages;
->
-> -	if (!(vm_flags & VM_LOCKED) || capable(CAP_IPC_LOCK))
-> +	if (!is_vma_locked || capable(CAP_IPC_LOCK))
->  		return true;
+Jonathan
 
-[ ... ]
 
-> @@ -416,7 +416,7 @@
->  		if (!can_do_mlock())
->  			return -EPERM;
->
-> -	if (!mlock_future_ok(mm, vm_flags, len))
-> +	if (!mlock_future_ok(mm, vm_flags & VM_LOCKED, len))
->  		return -EAGAIN;
-
-This looks correct - do_mmap() now extracts the VM_LOCKED bit from
-vm_flags and passes that to mlock_future_ok().
-
-However, it appears check_brk_limits() was not updated when
-mlock_future_ok() changed its signature. The function at mm/mmap.c:111
-still passes the raw def_flags value:
-
-    return mlock_future_ok(current->mm, current->mm->def_flags, len)
-        ? 0 : -EAGAIN;
-
-When def_flags has any bit set, this converts to true, incorrectly
-triggering mlock limit checks even when VM_LOCKED is not set. Should
-this be passing (current->mm->def_flags & VM_LOCKED) instead?
-
-[ ... ]
-
-Additionally, the test stub at tools/testing/vma/vma_internal.h:1627
-still has the old signature (mm, vm_flags_t vm_flags, bytes) while the
-production code now uses (mm, bool is_vma_locked, bytes). This could
-cause compilation issues or mask bugs in the test suite.
-
+> 
+> > Regarding scope, and "recoverability", we have significant experience
+> > with recovering "pre-CXL" coherent GB200 devices for device errors:
+> > memory ECC or other, by killing the application using device memory,
+> > unloading driver, resetting the device, and reloading driver. The CXL
+> > protocol error series can use CXL reset series, but I don't see that
+> > this series needs to wait for protocol error handling to be merged.    
+> 
+> I do want to get to the point where device memory error recovery is a
+> first class citizen. CXL Protocol Error handling just happens to be at
+> the top of the review queue and safe to assume it can be a foundation
+> for further RAS features.
+> 
+> 
 
