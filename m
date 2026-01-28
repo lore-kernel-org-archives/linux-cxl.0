@@ -1,231 +1,239 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96ED329A9E9
-	for <linux-cxl@vger.kernel.org>; Wed, 28 Jan 2026 09:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D028B34C83C;
+	Wed, 28 Jan 2026 12:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769594209; cv=none; b=BJCunJUjuPpN8MOFizxkTcux4a3gyiz28teiUNWyTZ+ivGJucQuyl4yRnTORZSFso8vKqWp8OywlYRDIUgK6Dl6rgnOVuQDGpQdNW5ebFFIk1mLuGaxs3cprfyukoqMVSJM8cKuKQ/cXvEtilCzYaH1Zf/lHi9hlrYNiVElMHiY=
+	t=1769602376; cv=none; b=O9+BMWXt+aYRbdu96leKu/rv9Br5OFmlxd2mOJdKJiIk/QY/os6ISYgPQcRvK5feF5rSVBO9cSL4aC0F0qZfQy/b6eQwgSX0liYC3Sqv4JHrIKS18EdyuB+umnBYyj0aYQdxW4QcQAFnQNnfpVT6QJ1CdbRvbRnScHwxhVK2qXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769594209; c=relaxed/simple;
-	bh=B35P+VFD288c6IomJGtjlDvW2ZFwLeHxQS6eBwvBvGk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dSr60L5Ikug/hCafxTbbi0dXd7kkEHi7a6jmZwoVQVGs83dXIK+CsgdaZ7YU652dbcl8uzMVk44APtbFh151oz8z8URjUZWt7doaoj4ctIQWh4OO9oW89ILxb4+aCNcahtETRGr5A/Dh85Wni4uf9OkkRkOOpFmJ0+6b5AK/CQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IlcYVyFW; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1769602376; c=relaxed/simple;
+	bh=brJyfqTrpOAwu9gN1Gk9OR3qAejoMh9naiSI6qk19dE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lxVuaFmuuUh0sDBV+NL9Y9SAgZOWd5nTawLoWFalr0nLGkx/PS6mAKegIfp3e2jYv3t7QJN7S12N7EcTtzYrn1Bql5+bP5dTzze2ymjuYIAvCC9K6ZlpwJ+dqDLxD76OEGp7UFrfab4GqrLFonPypAErm+6WDzdxFG9IbolxYig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=gTRY/WK5; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IlcYVyFW"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-47ee0291921so57465375e9.3
-        for <linux-cxl@vger.kernel.org>; Wed, 28 Jan 2026 01:56:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1769594206; x=1770199006; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=kxRg4wzZcesj+93lNqvgnZRj7Qw2sb28l6iopF01T5s=;
-        b=IlcYVyFWs/n1sTVZ3cTXp8v7t4u8RPxIiODIyoGa3sTtx7SsJAIS8HLAHoIcFbkvTB
-         0VOobNW3eirYEXjchNXUrtkQOt7d/mXXHvzILL2VRMciCn9Xl5mMf3Lxhd1DIVJrIRGx
-         pT+epmXMsIsOypnSxwRAiPmqTz6Q8uJqmH9fSTeic98EJ3iOehh6euONkg2nqi4oArXJ
-         KE9Twp+DTJEVz2pHt3IRZTkvfolidPL2ucfx3/C2xkq4gabpo4BUE/e9nqUQ7sl3cFV9
-         t9W4PdVN+HWWOqVDvHrUJcl0K2umxaw8cq1VvTB0jCKwowGlFiY9HDZNe0n6MvaIkVNB
-         4nXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769594206; x=1770199006;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kxRg4wzZcesj+93lNqvgnZRj7Qw2sb28l6iopF01T5s=;
-        b=Sn7hU1cTuPGu2gWfmnr5y6aTk0ezB2ex/yFm9ATbcgPDDech+kxjPtW5Npgs6gy68u
-         9tS+2ffIcIe9xDs1pKlDJm5WndJWYd2+xX7b4vypkGblrUgH8h775wFlVU2gEdEBhZQM
-         WsI5ijmOPZ+vGSWXfS3i9KEhcyUw+6vjc+akgxDTuQeziebZqXf63m1rJksh+r0FLsLV
-         RHe12ySb/oJVCCh1c52eXIpvULHE7hDO0HSodYNLC5fBBCzpVIjmtOhdA1cfQQGV93px
-         PXroqIC9zSrY9WWicZvwwGIs5fseGVcovfCuKVsEliCg29Ww8wqmOQSigcpa/kERetJk
-         nZNA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZj0aZiiLcFJPOhnRYrQOmMNE7BaQgJicpS5H8iFhiQMEpteR6GLgQOoOQLuZIG7RUEFKTMdjJNRs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6mT+RYCIX6IRX5xg4yaZKGNmWpSMv7jL9l/nD8Jzf+1QNISyE
-	MmNwpa/lJkbIuDPgrE3fEK3+GmmpAgilaB8o5it/t3j2u8qt/F+TWK/9J4zOemrr/WY=
-X-Gm-Gg: AZuq6aJvuewuZy+BH59bobI/arcc/G4AEYvGrUYPXcWo1PtYA7+IQVVZ2cfgvx5206B
-	st6sjIvQdMAKa/oKU78+ziSMJGYMBg3Jdd1UAaOviYX+JSiMSwUx4DswdQy74lKQGKhuB2qtw2J
-	fyykdVjiA3m0RGt5JL2nl5dXurK3km+svccQ/IO6cYHVxvMYnHe2LjuESlPT1NGWV1b5POSWs/+
-	pCXN72eGr1kIOwq99bGSog43MP4pE3ly8UAhb3LPSjoGINUudGdpYnAG1hKAnMZYenvjqgvmKmo
-	uIkOOxnPYBbJHhlPTcsJRWBLzM1Vd7zlIkUjXUWbqkcoQQltZHr16SufS3/qWrK5m+7O8FN/GRT
-	8k9Bum1AW6iVp2glXN6FRB7Wo9CrJVjqn0dfS25r85R2SI+gsYfc7OwO8ErKMXDXzc6SllFxqd2
-	ERLHKjlH5J84sRGYiv1kYpz6WQrtcTgUVXEuE=
-X-Received: by 2002:a05:600c:5489:b0:47e:de23:dd6f with SMTP id 5b1f17b1804b1-48069c4a7fbmr55983155e9.12.1769594206010;
-        Wed, 28 Jan 2026 01:56:46 -0800 (PST)
-Received: from localhost (109-81-26-156.rct.o2.cz. [109.81.26.156])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435e10e48a6sm5741401f8f.8.2026.01.28.01.56.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jan 2026 01:56:45 -0800 (PST)
-Date: Wed, 28 Jan 2026 10:56:44 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	akpm@linux-foundation.org, axelrasmussen@google.com,
-	yuanchu@google.com, weixugc@google.com, hannes@cmpxchg.org,
-	david@kernel.org, zhengqi.arch@bytedance.com,
-	shakeel.butt@linux.dev, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, bingjiao@google.com
-Subject: Re: [PATCH v3 3/3] mm/vmscan: don't demote if there is not enough
- free memory in the lower memory tier
-Message-ID: <aXndXPMFK2fhLA4p@tiehlicka>
-References: <20260108101535.50696-1-akinobu.mita@gmail.com>
- <20260108101535.50696-4-akinobu.mita@gmail.com>
- <aWEn2ODG0gyej0Xr@gourry-fedora-PF4VCD3F>
- <CAC5umyhoMi_J_Ford2M_1fB-qCuPEDopAK1OF=AisZyDZ8duJQ@mail.gmail.com>
- <aXkfBF5bdnTZ7t7e@gourry-fedora-PF4VCD3F>
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="gTRY/WK5"
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60SB138M1478460;
+	Wed, 28 Jan 2026 04:12:23 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
+	 bh=Sd3tTNC9Qi1NraZ3FKZVjxKypYrlKrXHxdzsRn97YZE=; b=gTRY/WK5dlMJ
+	+w33bnXlRn1cCiq77T2CcMcXQkZLDeCgVL96iSn62FmkkrRxzBM9MIvA0/cb+Yqp
+	7K2voFCBRv+61xwztZqJKWxwspJ55PsOpC1EDOp9KTPbF6BIJWuk9ijNdT5ye3hN
+	2qFlu8Baf7zOiO2sS+AFcRFjCj8EIQBI+FWjL8w8MnzADaoEJNxQSdivlV6UW3he
+	/wb0Y/R32ZcnznUNp/NThA2xnL9bV+ILuQu5yUUX8YQKP21FSmcApEMpZ5O3AuC3
+	/zWNiD+9HEYCHz+k7PzzpBd2lBlTxy8vvfv8sVuLDoGyHUQax4GHXHh1oNeRoIln
+	Y1F/zIHK8w==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4bycg226fm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 28 Jan 2026 04:12:23 -0800 (PST)
+Received: from devbig003.atn7.facebook.com (2620:10d:c085:108::150d) by
+ mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.35; Wed, 28 Jan 2026 12:12:18 +0000
+From: Chris Mason <clm@meta.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+CC: Andrew Morton <akpm@linux-foundation.org>,
+        Jarkko Sakkinen
+	<jarkko@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Thomas
+ Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov
+	<bp@alien8.de>, <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Arnd
+ Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma
+	<vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Jani Nikula
+	<jani.nikula@linux.intel.com>,
+        Joonas Lahtinen
+	<joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tursulin@ursulin.net>,
+        Christian Koenig
+	<christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>, Matthew Auld
+	<matthew.auld@intel.com>,
+        Matthew Brost <matthew.brost@intel.com>,
+        Alexander
+ Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan
+ Kara <jack@suse.cz>,
+        Benjamin LaHaise <bcrl@kvack.org>, Gao Xiang
+	<xiang@kernel.org>,
+        Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Sandeep Dhavale <dhavale@google.com>,
+        Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@kernel.org>,
+        Konstantin Komarov
+	<almaz.alexandrovich@paragon-software.com>,
+        Mike Marshall
+	<hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Tony Luck
+	<tony.luck@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Dave
+ Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
+        Babu Moger
+	<babu.moger@amd.com>, Carlos Maiolino <cem@kernel.org>,
+        Damien Le Moal
+	<dlemoal@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Johannes Thumshirn
+	<jth@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Liam R . Howlett"
+	<Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport
+	<rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Michal Hocko
+	<mhocko@suse.com>, Hugh Dickins <hughd@google.com>,
+        Baolin Wang
+	<baolin.wang@linux.alibaba.com>, Zi Yan <ziy@nvidia.com>,
+        Nico Pache
+	<npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+        Dev Jain
+	<dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+        Lance Yang
+	<lance.yang@linux.dev>, Jann Horn <jannh@google.com>,
+        Pedro Falcato
+	<pfalcato@suse.de>, David Howells <dhowells@redhat.com>,
+        Paul Moore
+	<paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn"
+	<serge@hallyn.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Rasmus Villemoes
+	<linux@rasmusvillemoes.dk>,
+        <linux-sgx@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <intel-gfx@lists.freedesktop.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-aio@kvack.org>,
+        <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>,
+        <linux-mm@kvack.org>, <ntfs3@lists.linux.dev>,
+        <devel@lists.orangefs.org>, <linux-xfs@vger.kernel.org>,
+        <keyrings@vger.kernel.org>, <linux-security-module@vger.kernel.org>,
+        Jason
+ Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v2 07/13] mm: update secretmem to use VMA flags on mmap_prepare
+Date: Wed, 28 Jan 2026 04:08:36 -0800
+Message-ID: <20260128121200.283932-1-clm@meta.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <a243a09b0a5d0581e963d696de1735f61f5b2075.1769097829.git.lorenzo.stoakes@oracle.com>
+References: <cover.1769097829.git.lorenzo.stoakes@oracle.com> <a243a09b0a5d0581e963d696de1735f61f5b2075.1769097829.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aXkfBF5bdnTZ7t7e@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI4MDA5OCBTYWx0ZWRfX/YMdvd0IEW+M
+ mfJ/bYR9k4eRvDbs9QGzO+ygu2VSotJCKMMxUusrpYkrvYdQaFJRWVvBv2EkD12mCpCYEvw+XB/
+ DwyN2M8BBbTeyqqZ9/i9fDyEPE0MOIwU1pNj8r3a1/SGXN38+xZGlcMtDVhwJA1iofmGT+NTjsa
+ 3wJFzmew6yuj81cYLEWiubhhxDZMBD6hVVMuqCOVg+bB7Gz9bEYCH56KvIcfJ13/7NnDlwWy1ay
+ rut+pW91VzKqtLFjeZDFQXQuymj3+pWlazUmuuQXtfS+yB5rh8eIrZb/ZGDSDilJLhwKOSnwEsm
+ tXIPQzyp+XE21UBIWU7JysVYMwhm9BUIbA4gV+4NNGJrteyEtklAhziLQl5fV0j0MzIV6sri7hz
+ h9QDQw7JEBl4y5dfKeMuesm0LqUNBE+g04KLVmq1Y9FiJcFdRQVCoCh0B4S6SthUPRAGT0RWyAc
+ Vh/HaT4eUcQ+KnB1bbQ==
+X-Proofpoint-GUID: 6cECoo2vZpz-_Y4sX-WfJbWu0BG9k_53
+X-Authority-Analysis: v=2.4 cv=Q63fIo2a c=1 sm=1 tr=0 ts=6979fd27 cx=c_pps
+ a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+ a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8
+ a=VZ3cX_PGfQEInpbj4y4A:9
+X-Proofpoint-ORIG-GUID: 6cECoo2vZpz-_Y4sX-WfJbWu0BG9k_53
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-01-28_02,2026-01-28_01,2025-10-01_01
 
-On Tue 27-01-26 15:24:36, Gregory Price wrote:
-> On Sat, Jan 10, 2026 at 10:55:02PM +0900, Akinobu Mita wrote:
-> > 2026年1月10日(土) 1:08 Gregory Price <gourry@gourry.net>:
-> > >
-> > > > +     for_each_node_mask(nid, allowed_mask) {
-> > > > +             int z;
-> > > > +             struct zone *zone;
-> > > > +             struct pglist_data *pgdat = NODE_DATA(nid);
-> > > > +
-> > > > +             for_each_managed_zone_pgdat(zone, pgdat, z, MAX_NR_ZONES - 1) {
-> > > > +                     if (zone_watermark_ok(zone, 0, min_wmark_pages(zone),
-> > > > +                                             ZONE_MOVABLE, 0))
-> > >
-> > > Why does this only check zone movable?
-> > 
-> > Here, zone_watermark_ok() checks the free memory for all zones from 0 to
-> > MAX_NR_ZONES - 1.
-> > There is no strong reason to pass ZONE_MOVABLE as the highest_zoneidx
-> > argument every time zone_watermark_ok() is called; I can change it if an
-> > appropriate value is found.
-> > In v1, highest_zoneidx was "sc ? sc->reclaim_idx : MAX_NR_ZONES - 1"
-> > 
-> > > Also, would this also limit pressure-signal to invoke reclaim when
-> > > there is still swap space available?  Should demotion not be a pressure
-> > > source for triggering harder reclaim?
-> > 
-> > Since can_reclaim_anon_pages() checks whether there is free space on the swap
-> > device before checking with can_demote(), I think the negative impact of this
-> > change will be small. However, since I have not been able to confirm the
-> > behavior when a swap device is available, I would like to correctly understand
-> > the impact.
+Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+> This patch updates secretmem to use the new vma_flags_t type which will
+> soon supersede vm_flags_t altogether.
 > 
-> Something else is going on here
+> In order to make this change we also have to update mlock_future_ok(), we
+> replace the vm_flags_t parameter with a simple boolean is_vma_locked one,
+> which also simplifies the invocation here.
 > 
-> See demote_folio_list and alloc_demote_folio
+> This is laying the groundwork for eliminating the vm_flags_t in
+> vm_area_desc and more broadly throughout the kernel.
 > 
-> static unsigned int demote_folio_list(struct list_head *demote_folios,
->                                       struct pglist_data *pgdat,
->                                       struct mem_cgroup *memcg)
-> {
->         struct migration_target_control mtc = {
->                  */
->                 .gfp_mask = (GFP_HIGHUSER_MOVABLE & ~__GFP_RECLAIM) |
->                         __GFP_NOMEMALLOC | GFP_NOWAIT,
->         };
-> }
-> 
-> static struct folio *alloc_demote_folio(struct folio *src,
->                 unsigned long private)
-> {
-> 	/* Only attempt to demote to the preferred node */
->         mtc->nmask = NULL;
->         mtc->gfp_mask |= __GFP_THISNODE;
->         dst = alloc_migration_target(src, (unsigned long)mtc);
->         if (dst)
->                 return dst;
-> 
-> 	/* Now attempt to demote to any node in the lower tier */
->         mtc->gfp_mask &= ~__GFP_THISNODE;
->         mtc->nmask = allowed_mask;
->         return alloc_migration_target(src, (unsigned long)mtc);
-> }
-> 
-> 
-> /*
-> * %__GFP_RECLAIM is shorthand to allow/forbid both direct and kswapd reclaim.
-> */
-> 
-> 
-> You basically shouldn't be hitting any reclaim behavior at all, and if
 
-This will trigger kswapd so there will be background reclaim demoting
-from those lower tiers.
+Hi everyone,
 
-> the target nodes are actually under various watermarks, you should be
-> getting allocation failures and quick-outs from the demotion logic.
-> 
-> i.e. you should be seeing OOM happen
-> 
-> When I dug in far enough I found this:
-> 
-> static struct folio *alloc_demote_folio(struct folio *src,
->                 unsigned long private)
-> {
-> ...
->         dst = alloc_migration_target(src, (unsigned long)mtc);
-> }
-> 
-> struct folio *alloc_migration_target(struct folio *src, unsigned long private)
-> {
->         
-> ...
->         if (folio_test_hugetlb(src)) {
->                 struct hstate *h = folio_hstate(src);
-> 
->                 gfp_mask = htlb_modify_alloc_mask(h, gfp_mask);
->                 return alloc_hugetlb_folio_nodemask(h, nid, ...)
-> 	}
-> }
-> 
-> static inline gfp_t htlb_modify_alloc_mask(struct hstate *h, gfp_t gfp_mask)
-> {
->         gfp_t modified_mask = htlb_alloc_mask(h);
-> 
->         /* Some callers might want to enforce node */
->         modified_mask |= (gfp_mask & __GFP_THISNODE);
-> 
->         modified_mask |= (gfp_mask & __GFP_NOWARN);
-> 
->         return modified_mask;
-> }
-> 
-> /* Movability of hugepages depends on migration support. */
-> static inline gfp_t htlb_alloc_mask(struct hstate *h)
-> {
->         gfp_t gfp = __GFP_COMP | __GFP_NOWARN;
-> 
->         gfp |= hugepage_movable_supported(h) ? GFP_HIGHUSER_MOVABLE : GFP_HIGHUSER;
-> 
->         return gfp;
-> }
-> 
-> #define GFP_USER        (__GFP_RECLAIM | __GFP_IO | __GFP_FS | __GFP_HARDWALL)
-> #define GFP_HIGHUSER    (GFP_USER | __GFP_HIGHMEM)
-> #define GFP_HIGHUSER_MOVABLE    (GFP_HIGHUSER | __GFP_MOVABLE | __GFP_SKIP_KASAN)
-> 
-> 
-> If we try to move a hugepage, we start including __GFP_RECLAIM again -
-> regardless of whether HIGHUSER_MOVABLE or HIGHUSER is used.
-> 
-> 
-> Any chance you are using hugetlb on this system?  This looks like a
-> clear bug, but it may not be what you're experiencing.
+Running mm-new through AI review flagged this one:
 
-Hugetlb pages are not sitting on LRU lists so they are not participating
-in the demotion.
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -225,12 +225,12 @@ static inline unsigned long round_hint_to_min(unsigned long hint)
+>  	return hint;
+>  }
+>
+> -bool mlock_future_ok(const struct mm_struct *mm, vm_flags_t vm_flags,
+> -			unsigned long bytes)
+> +bool mlock_future_ok(const struct mm_struct *mm, bool is_vma_locked,
+> +		     unsigned long bytes)
+>  {
+>  	unsigned long locked_pages, limit_pages;
+>
+> -	if (!(vm_flags & VM_LOCKED) || capable(CAP_IPC_LOCK))
+> +	if (!is_vma_locked || capable(CAP_IPC_LOCK))
+>  		return true;
 
-Or maybe I missed your point.
--- 
-Michal Hocko
-SUSE Labs
+[ ... ]
+
+> @@ -416,7 +416,7 @@
+>  		if (!can_do_mlock())
+>  			return -EPERM;
+>
+> -	if (!mlock_future_ok(mm, vm_flags, len))
+> +	if (!mlock_future_ok(mm, vm_flags & VM_LOCKED, len))
+>  		return -EAGAIN;
+
+This looks correct - do_mmap() now extracts the VM_LOCKED bit from
+vm_flags and passes that to mlock_future_ok().
+
+However, it appears check_brk_limits() was not updated when
+mlock_future_ok() changed its signature. The function at mm/mmap.c:111
+still passes the raw def_flags value:
+
+    return mlock_future_ok(current->mm, current->mm->def_flags, len)
+        ? 0 : -EAGAIN;
+
+When def_flags has any bit set, this converts to true, incorrectly
+triggering mlock limit checks even when VM_LOCKED is not set. Should
+this be passing (current->mm->def_flags & VM_LOCKED) instead?
+
+[ ... ]
+
+Additionally, the test stub at tools/testing/vma/vma_internal.h:1627
+still has the old signature (mm, vm_flags_t vm_flags, bytes) while the
+production code now uses (mm, bool is_vma_locked, bytes). This could
+cause compilation issues or mask bugs in the test suite.
+
+
