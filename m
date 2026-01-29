@@ -1,221 +1,255 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB9F221F1F
-	for <linux-cxl@vger.kernel.org>; Thu, 29 Jan 2026 00:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA5C2580D7
+	for <linux-cxl@vger.kernel.org>; Thu, 29 Jan 2026 00:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.47
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769647231; cv=pass; b=Mww/tt2mHitbg9XE868KrMzv54dAEvvoVGKNXWb6ypCqxzaItRzaUF0vePcVZU/CRc/tkNcTFhsH9KAuHGjEmyN0lVS24emhATs1mTEpCfaPW9S3xmOJMWihgWjHTDaP/uqRapTlUk2EcPi8AcuTUepxQZZydOyN4uip6djTjXg=
+	t=1769647480; cv=pass; b=b+SbrQZdT4rRjsnn4LJAEcN4R7Sj9D41TfbFmY1hPpC3HOPMXZunrZ/jKsJmZWpijC7Dn34rfUnNl4lOt6lMytAOS26aDHlX7ezmT8gVm2Ynu6HcXivyAtoMmTPPjCO2lpDZSeSrVsN2cL5s+9Y54Zm+YkNZaf5pdmym1dFGlRg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769647231; c=relaxed/simple;
-	bh=eFSljOmycAzGBIj6l7hbhOEz4RoKi+i4IrqpEvzU9IU=;
+	s=arc-20240116; t=1769647480; c=relaxed/simple;
+	bh=EAsIf0B7RnvS9exHl9xP6Rho8qjOZRMDuTv/cnx/7mg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mcgwCx/u7Jl8PiHVjZZn4+3HJIiOs799RdjTN5g6eTlMGo9HdqCrTxomazTeWu9KEULOV9mkRnjE12SmMwhpZphDnGPSheAIznnbczp4bO4wC6lKaDGInaXB7ct7YuheZCLHutuiHeCtuJ8Ctk/ujhaUr464c+ehHeEIzpVn2nY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KqcuQFpZ; arc=pass smtp.client-ip=209.85.160.170
+	 To:Cc:Content-Type; b=aNcsNeT4xKNwYdIzWiu2C4UcbDiKFazxeFo/aPMPpokGf/SkSvZWVWA0VIX0QNeCzTpkIiHOdTWJi7L9zAvwfTlNIz4pBZZn8aDypYtsjzHzHEKeUbkzyd6rdRVeMd3SGVl/PUPHxuwca2u0ZsEeS8La7TmWJw7iPsEsp6WZZSU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UVzXLpN7; arc=pass smtp.client-ip=209.85.219.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KqcuQFpZ"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-502a789834fso3109341cf.2
-        for <linux-cxl@vger.kernel.org>; Wed, 28 Jan 2026 16:40:29 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769647229; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVzXLpN7"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-89461ccc46eso7573816d6.2
+        for <linux-cxl@vger.kernel.org>; Wed, 28 Jan 2026 16:44:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769647478; cv=none;
         d=google.com; s=arc-20240605;
-        b=HTeMrexrK24S5bAKK6g7tIw3Liyr+yuQY6NtxleQzZ9Ux9jxRZC5+O/cmypNP82BVt
-         QXIOukixnhUEWoeOw1x+EsB6ykOrErUoywTGNcDgf+EUqNWtEy0mlvlPoA8hHvoK2SQ0
-         r+YtGH4DdPlFuFVkn5Pmk9TePcko4vZ8B7JmiS+o8z3CXsSo8uHKD3Sva4Chm4TYnpIp
-         I0YfeFQDipoZaBThq0D3E9g5nR6/sqEfsAgCdLbZb/8P2D+gG19k+2LKq21MpazMu5bO
-         jyfJTwUQkKppnu72QGZ8WE9spRukMCyP7aVn2aM0kAs+6+Ws73Jean5+zoYF0/3XhsyE
-         HVmw==
+        b=GxpP7hqHQHVxFAphekHIjOg4sbMfFgvbYi+Dd7bOeWlmQXY/OAqGjQDjdAe/Sigtxc
+         DHnhXhMGIRDQT4qbMJqlHVnYKZqit0OPDJAHlGd59QEht5pDyml6BPtHdtByug8sRmjo
+         M7m1MODKBL9UNnCR6IQvzk/OXCXP6YKvOFtOthMMbnfteYbxDxsYZQUGOVuOaoKE1KuT
+         Z+Yj/M7OKzNrcvvKavMsoWVYGzNuBue41323OgD06SFQ3YqvrcTsz3CeaszgtThhNQV9
+         8uH6yMdsC5YRJfC5HWQ9EY49y9PFj+4wZTdIuiYPwQydoMWZ22eK3jiJSoRIbKvRQ8MV
+         yidA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=mwNqkQIHtdixZxJdXARWDpGYyi08Np4wXzrAxbn40Ig=;
-        fh=25P0tNe+QCWYUPr2npuzVWeBhxvZgkG+XwzoOKFiLe4=;
-        b=B0vlWbWkWZ0O9CchICPRFlHpk/tYNXpFHgVw20AN+DoLXK1iDvJsAB5zRxvzdywojL
-         brCUF2CmSSg2MwmFEIXWUJhos2LEoxlFDIMOVe2TjMQE5PawLrHPSWhdwG4Kh0n1DczN
-         Ii5xJePheIFtO6NXYMyeihXFLyssjXGp4HXzcHLgOFqiljG2FmqYrLoz4/wm2gcKPURI
-         cvzAa9n0bOTBAMffwWkg4MO+VwAHsgLnZYB4X9pG/tB7mVZjSOpco7KYOyLlhNbiTBmI
-         QZ5Qa8+tAUSlPz3vw5LAmMlApIMcnRlk2hzhRpTYlibWC6mgJJzHMB8+CV5cxhdJsVyW
-         bk8g==;
+        bh=XwM3zfTFqHE5kmjZguuH0nYrlQY8HFwC7+d1W+Ezm88=;
+        fh=VJ56IdzFdJ2jwD+LVZxJq+rINfhF2BwJam9vTyBwDyU=;
+        b=JyJT5JpO1cJIlFQ3+TjuS01+UZ8aZh/aV9sYzP9MAjR5o+ftRLhLiwSZ4qvFe/EDY2
+         AgHhtNCMoElevl+aaps1/2/TK1tWo4YY/mInvW7ENFQXKdH42paRihT5zDwMdPsBUPID
+         jfEJSGb0PFAc7K+tlfaMUukJvrZa0KNKReV4fbotd7NcHMKbUlJhlnwvywzPlGVKRU6Z
+         Daf18cq1+AhT265qcmN4eoxjN8gurMpxJUxDjv3L3y/3b96XaylOZpvhnnan3/deUCMi
+         q2KN/hs5IgccQnHg9701z6SkFXYeWVH9rzhlVlbdQt6fbx6y5D10O8+yLhARdVZIF7QZ
+         sCOQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769647229; x=1770252029; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1769647478; x=1770252278; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mwNqkQIHtdixZxJdXARWDpGYyi08Np4wXzrAxbn40Ig=;
-        b=KqcuQFpZ3z8Q8pXo69cLoZJnWHLbZBifJaVYc7xM0nOY6eDLCkG2M9sp9Lib3ka8sy
-         Pq3tY5bmMhI8/1kYfo11vZlnQPpJEquUqAH3+9YfSe0eieXnOfj5AICiUaZQp8C5ft9Z
-         tOwtxKht3w7uqU6PwqQFI2/q7kG7Q05x2LJwU7bM1WOzemD+yhYLwJV2e9s+5G4RO4E1
-         qaTzOVqfi/lZq8+5d9ugAIjDYPc7qpsxcSgoNuiEGL/wtbBad8W1z51vgdyfdM9Kq1uK
-         bYWgsK4UpYRUbm7OYAnHcNjYG6HzXmi9l35nchSs6NeIldncdPAhVBDN1c9BZ/Ra0Qa2
-         JPJw==
+        bh=XwM3zfTFqHE5kmjZguuH0nYrlQY8HFwC7+d1W+Ezm88=;
+        b=UVzXLpN7h0HXjdyFAkkJfckPvwbN/Jdv1qiu2J6ASeKnXj0i8+Xy6IxYGGXV1qgqjQ
+         alG5E90lnq/II+ZGh5mou0XOtM3VgIKy76Ei7eTWnklYJXzFNMCPqxTHF8PIQWqETXxL
+         wqLtWkHh+dEhMUBuNTTh6GnALYsABa76llC7mvAf4/jr5DITNqdLQ3f+Sp2znfTZFJfi
+         uUCGB+ZHkGCLU868fCu97rzxbpXKm3DsqdFA7XAeoK2pcH4nxMqJV3JAl0oFCVBHNbOK
+         ghtBii+lj/xb5YzuiMuyL34szcGl0MPXuqQ6MSDKyt4vGk+KsSrEt8gWzLIQhVCUm9Yl
+         HCkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769647229; x=1770252029;
+        d=1e100.net; s=20230601; t=1769647478; x=1770252278;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=mwNqkQIHtdixZxJdXARWDpGYyi08Np4wXzrAxbn40Ig=;
-        b=qJ6hZ8USjSIjVngBvGRxTuXYwsnJA81LUs7LpPgQi0Z6ie4i44WhqUyRxgsv5RK7cI
-         pkVcMqrne9ywqk/0gg/4QtOCDybYc5pFeuvNFvv51l5cBOZB6B1EnP+i1X9ry4xhb/Of
-         xe/I3CrPDDzNgUbWWm6rOAM95j02IX9bJWy5wpd+9F6jRaAAoFdAFKQvP+1BPEOqxESB
-         hP0+EwkzBuqo6du+iT8cTnTU2VCjU+OrZpz6BmnR9Pk8N51YAiZTKAM1fDsIVyhL1uEz
-         s7EIFyhBSH1HSjt7g9R0Vz4nw0ePS0O1aT7RaCRTDUvtN0P/FIbje57wwKhv3kRazAMg
-         1J0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXEbH9KhXKuZEnpaxot+sSJ/Nd8qORc4uknnqDyNl65zEd4uMuJGor1sKHe/hXlULN3AzodU+DPlbE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx29FI0HVFyIbpHsl0g9sKFKZxZflKftXOhv60XnEjVJ29KWNco
-	XNSVglEiiI4CDgzaoNDqoe3vlYJ3kkDA8WnBMj62vhBGTirCvwzniV+8qoVKAuRNBwwGi+AJ2lL
-	LbFlZvFqMI8+Q97DYZBS/DF0ZZ4lGIYU=
-X-Gm-Gg: AZuq6aL3UbI+sTlwr0CJWElTU56Kj7Vqs8Q0HUjFNYlMIluTcZwzOItFLzt9o9dx5kv
-	/UNs9iV11gRWDYNQjXPqSFVXrmUcQs3CMFoq4ZwoQ89FhZ2eV/FuzqC9FhgmMDNBVvdg/pQnJtt
-	QHXas+/zl1dnq2MWQDMf79bRUN30ykSa133iTjNg605+wpp53GLeMi6gEv0b4LZMALOO3XdoOMF
-	/ZBoraPJkqNp0C3gm55MV/DTwI9zn7QFT0xV8HZW1uRgCrmZnKWArHOTwyGZW7t/jtYAr8LCMzv
-	y96cBNzheyg5ttyr/tDvoqs=
-X-Received: by 2002:a05:622a:189f:b0:4f3:5658:5428 with SMTP id
- d75a77b69052e-5032fa093ccmr96242771cf.38.1769647228685; Wed, 28 Jan 2026
- 16:40:28 -0800 (PST)
+        bh=XwM3zfTFqHE5kmjZguuH0nYrlQY8HFwC7+d1W+Ezm88=;
+        b=vWoE6BUv2ukEst4KLUIxx5ua7rsUvRpyw+ERGvqA/0Kkb/QuXI2ilU9o8tg7MrsYhw
+         67tel9CFVGkx3iF7Pmps83d/BqnSk2Gv8LB2AvOOBaJkAtEHsT90dYTqOeDLusmEbukE
+         HSaugozAUNooWCMZjoFN62RRNxS4cnn5FHvVTtcJY6tQEcvH1fPakCGmVrb5OfoRNkc2
+         v0qArMXbshdotHYCS/om+ZjmJyWKaR/FKhc72ooAaYUtPQJslf7hnFfZ9ROlbsWSd+Cm
+         DwRiHZESUVfXfIDrTMmIAmVAdG6/6QT/w0ygGOkwh0pIEJNQgUTz1Jxs4g6Y54g305/3
+         UjgQ==
+X-Gm-Message-State: AOJu0Yx2ICEdwh1eum8EEDlgG5U/BhMcXW8N8ReeuEs9zjJEGM9KG8hM
+	Y58iIBg4/6DlFZg7gTmlsE7vtO0dx03IGFi94vmvW3v1ASteFd56d3Qyb9tlytprHVrtEk6DoWW
+	GG2hlTFRjFjCtnGf21KVcwFWNyUFVexs=
+X-Gm-Gg: AZuq6aKFUv0KaMLvCLxoqDPZhcUUn5HmKerdTFwcUY0AbKmwUyz3gVfMMACQkqIX+0n
+	cJuZ5kRAnZRCGF8moucyZYEC1qdREDSiyeSCfrAMdol6c0YlOaFlI+yXT/cpnQpiCx7C+R7Kpmo
+	FobHS+f5GiPMUy6HEllP5lQQ/hyxzzGp50ijQNVKvzGqQqLMoHvM5rfXQ3cLTAx6j9L2HsYFXgt
+	UIkHzomRVKcOhRilE21dHbjcFXz6HW9+ZiNVCltoHdtnC3LgLfcvALeM5kV/AxgR7OTEBZaAt9l
+	6W20IzY3BNELKJTezzRg+2M=
+X-Received: by 2002:a05:6214:d85:b0:894:7fd1:923a with SMTP id
+ 6a1803df08f44-894cc835eacmr95525106d6.24.1769647477989; Wed, 28 Jan 2026
+ 16:44:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAC5umygEq6xvpDFnVnDLYLyqJV7qChEsJ_+W-KCBJ+EXj1948g@mail.gmail.com>
- <20260127220003.3993576-1-joshua.hahnjy@gmail.com>
-In-Reply-To: <20260127220003.3993576-1-joshua.hahnjy@gmail.com>
+References: <20260108101535.50696-1-akinobu.mita@gmail.com>
+ <20260108101535.50696-4-akinobu.mita@gmail.com> <aWEn2ODG0gyej0Xr@gourry-fedora-PF4VCD3F>
+ <CAC5umyhoMi_J_Ford2M_1fB-qCuPEDopAK1OF=AisZyDZ8duJQ@mail.gmail.com> <aXkfBF5bdnTZ7t7e@gourry-fedora-PF4VCD3F>
+In-Reply-To: <aXkfBF5bdnTZ7t7e@gourry-fedora-PF4VCD3F>
 From: Akinobu Mita <akinobu.mita@gmail.com>
-Date: Thu, 29 Jan 2026 09:40:17 +0900
-X-Gm-Features: AZwV_Qj__I4vHnFSmY5jPXjrwbiwV_xAA-Q71O08pEvAwMhpfmf9VHUOS0TQ9-U
-Message-ID: <CAC5umyhqbW_qXaApO8OGg1wo706GfVPuak5JwdBfBgS751Ka5Q@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] mm/vmscan: don't demote if there is not enough
+Date: Thu, 29 Jan 2026 09:44:27 +0900
+X-Gm-Features: AZwV_QgUyHkG-WUI7iNcz5xWCWhbTMOceR-EUzNXVnt7j2TJLEh0eaXRurf4hjo
+Message-ID: <CAC5umyieqMyasC=nZNtpP0jrO-YEYEZ1KyGeX=E=ZtWrYyDpMg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] mm/vmscan: don't demote if there is not enough
  free memory in the lower memory tier
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-Cc: Michal Hocko <mhocko@suse.com>, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, 
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, 
-	hannes@cmpxchg.org, david@kernel.org, zhengqi.arch@bytedance.com, 
-	shakeel.butt@linux.dev, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, 
-	vbabka@suse.cz, rppt@kernel.org, surenb@google.com, ziy@nvidia.com, 
-	matthew.brost@intel.com, rakie.kim@sk.com, byungchul@sk.com, 
-	gourry@gourry.net, ying.huang@linux.alibaba.com, apopple@nvidia.com, 
-	bingjiao@google.com, jonathan.cameron@huawei.com, 
-	pratyush.brahma@oss.qualcomm.com
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, akpm@linux-foundation.org, axelrasmussen@google.com, 
+	yuanchu@google.com, weixugc@google.com, hannes@cmpxchg.org, david@kernel.org, 
+	mhocko@kernel.org, zhengqi.arch@bytedance.com, shakeel.butt@linux.dev, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
+	rppt@kernel.org, surenb@google.com, bingjiao@google.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-2026=E5=B9=B41=E6=9C=8828=E6=97=A5(=E6=B0=B4) 7:00 Joshua Hahn <joshua.hahn=
-jy@gmail.com>:
+2026=E5=B9=B41=E6=9C=8828=E6=97=A5(=E6=B0=B4) 5:24 Gregory Price <gourry@go=
+urry.net>:
 >
-> > > > Therefore, it appears that the behavior of get_swappiness() is impo=
-rtant
-> > > > in this issue.
+> On Sat, Jan 10, 2026 at 10:55:02PM +0900, Akinobu Mita wrote:
+> > 2026=E5=B9=B41=E6=9C=8810=E6=97=A5(=E5=9C=9F) 1:08 Gregory Price <gourr=
+y@gourry.net>:
 > > >
-> > > This is quite mysterious.
+> > > > +     for_each_node_mask(nid, allowed_mask) {
+> > > > +             int z;
+> > > > +             struct zone *zone;
+> > > > +             struct pglist_data *pgdat =3D NODE_DATA(nid);
+> > > > +
+> > > > +             for_each_managed_zone_pgdat(zone, pgdat, z, MAX_NR_ZO=
+NES - 1) {
+> > > > +                     if (zone_watermark_ok(zone, 0, min_wmark_page=
+s(zone),
+> > > > +                                             ZONE_MOVABLE, 0))
 > > >
-> > > Especially because get_swappiness() is an MGLRU exclusive function, I=
- find
-> > > it quite strange that the issue you mention above occurs regardless o=
-f whether
-> > > MGLRU is enabled or disabled. With MGLRU disabled, did you see the sa=
-me hangs
-> > > as before? Were these hangs similarly fixed by modifying the callsite=
- in
-> > > get_swappiness?
+> > > Why does this only check zone movable?
 > >
-> > Good point.
-> > When MGLRU is disabled, changing only the behavior of can_demote()
-> > called by get_swappiness() did not solve the problem.
+> > Here, zone_watermark_ok() checks the free memory for all zones from 0 t=
+o
+> > MAX_NR_ZONES - 1.
+> > There is no strong reason to pass ZONE_MOVABLE as the highest_zoneidx
+> > argument every time zone_watermark_ok() is called; I can change it if a=
+n
+> > appropriate value is found.
+> > In v1, highest_zoneidx was "sc ? sc->reclaim_idx : MAX_NR_ZONES - 1"
 > >
-> > Instead, the problem was avoided by changing only the behavior of
-> > can_demote() called by can_reclaim_anon_page(), without changing the
-> > behavior of can_demote() called from other places.
+> > > Also, would this also limit pressure-signal to invoke reclaim when
+> > > there is still swap space available?  Should demotion not be a pressu=
+re
+> > > source for triggering harder reclaim?
 > >
-> > > On a separate note, I feel a bit uncomfortable for making this the de=
-fault
-> > > setting, regardless of whether there is swap space or not. Just as it=
- is
-> > > easy to create a degenerate scenario where all memory is unreclaimabl=
+> > Since can_reclaim_anon_pages() checks whether there is free space on th=
+e swap
+> > device before checking with can_demote(), I think the negative impact o=
+f this
+> > change will be small. However, since I have not been able to confirm th=
 e
-> > > and the system starts going into (wasteful) reclaim on the lower tier=
-s,
-> > > it is equally easy to create a scenario where all memory is very easi=
-ly
-> > > reclaimable (say, clean pagecache) and we OOM without making any atte=
-mpt to
-> > > free up memory on the lower tiers.
-> > >
-> > > Reality is likely somewhere in between. And from my perspective, as l=
-ong as
-> > > we have some amount of easily reclaimable memory, I don't think immed=
-iately
-> > > OOMing will be helpful for the system (and even if none of the memory=
- is
-> > > easily reclaimable, we should still try doing something before killin=
-g).
-> > >
-> > > > > > The reason for this issue is that memory allocations do not dir=
-ectly
-> > > > > > trigger the oom-killer, assuming that if the target node has an=
- underlying
-> > > > > > memory tier, it can always be reclaimed by demotion.
-> > >
-> > > This patch enforces that the opposite of this assumption is true; tha=
-t even
-> > > if a target node has an underlying memory tier, it can never be recla=
-imed by
-> > > demotion.
-> > >
-> > > Certainly for systems with swap and some compression methods (z{ram, =
-swap}),
-> > > this new enforcement could be harmful to the system. What do you thin=
-k?
-> >
-> > Thank you for the detailed explanation.
-> >
-> > I understand the concern regarding the current patch, which only
-> > checks the free memory of the demotion target node.
-> > I will explore a solution.
+> > behavior when a swap device is available, I would like to correctly und=
+erstand
+> > the impact.
 >
-> Hello Akinobu, I hope you had a great weekend!
+> Something else is going on here
 >
-> I noticed something that I thought was worth flagging. It seems like the
-> primary addition of this patch, which is to check for zone_watermark_ok
-> across the zones, is already a part of should_reclaim_retry():
+> See demote_folio_list and alloc_demote_folio
 >
->     /*
->      * Keep reclaiming pages while there is a chance this will lead
->      * somewhere.  If none of the target zones can satisfy our allocation
->      * request even if all reclaimable pages are considered then we are
->      * screwed and have to go OOM.
->      */
->     for_each_zone_zonelist_nodemask(zone, z, ac->zonelist,
->                 ac->highest_zoneidx, ac->nodemask) {
+> static unsigned int demote_folio_list(struct list_head *demote_folios,
+>                                       struct pglist_data *pgdat,
+>                                       struct mem_cgroup *memcg)
+> {
+>         struct migration_target_control mtc =3D {
+>                  */
+>                 .gfp_mask =3D (GFP_HIGHUSER_MOVABLE & ~__GFP_RECLAIM) |
+>                         __GFP_NOMEMALLOC | GFP_NOWAIT,
+>         };
+> }
 >
->         [...snip...]
+> static struct folio *alloc_demote_folio(struct folio *src,
+>                 unsigned long private)
+> {
+>         /* Only attempt to demote to the preferred node */
+>         mtc->nmask =3D NULL;
+>         mtc->gfp_mask |=3D __GFP_THISNODE;
+>         dst =3D alloc_migration_target(src, (unsigned long)mtc);
+>         if (dst)
+>                 return dst;
 >
->         /*
->          * Would the allocation succeed if we reclaimed all
->          * reclaimable pages?
->          */
->         wmark =3D __zone_watermark_ok(zone, order, min_wmark,
->                 ac->highest_zoneidx, alloc_flags, available);
+>         /* Now attempt to demote to any node in the lower tier */
+>         mtc->gfp_mask &=3D ~__GFP_THISNODE;
+>         mtc->nmask =3D allowed_mask;
+>         return alloc_migration_target(src, (unsigned long)mtc);
+> }
 >
->         if (wmark) {
->             ret =3D true;
->             break;
+>
+> /*
+> * %__GFP_RECLAIM is shorthand to allow/forbid both direct and kswapd recl=
+aim.
+> */
+>
+>
+> You basically shouldn't be hitting any reclaim behavior at all, and if
+> the target nodes are actually under various watermarks, you should be
+> getting allocation failures and quick-outs from the demotion logic.
+>
+> i.e. you should be seeing OOM happen
+>
+> When I dug in far enough I found this:
+>
+> static struct folio *alloc_demote_folio(struct folio *src,
+>                 unsigned long private)
+> {
+> ...
+>         dst =3D alloc_migration_target(src, (unsigned long)mtc);
+> }
+>
+> struct folio *alloc_migration_target(struct folio *src, unsigned long pri=
+vate)
+> {
+>
+> ...
+>         if (folio_test_hugetlb(src)) {
+>                 struct hstate *h =3D folio_hstate(src);
+>
+>                 gfp_mask =3D htlb_modify_alloc_mask(h, gfp_mask);
+>                 return alloc_hugetlb_folio_nodemask(h, nid, ...)
 >         }
->     }
+> }
 >
-> ... which is called in __alloc_pages_slowpath. I wonder why we don't alre=
-ady
-> hit this. It seems to do the same thing your patch is doing?
+> static inline gfp_t htlb_modify_alloc_mask(struct hstate *h, gfp_t gfp_ma=
+sk)
+> {
+>         gfp_t modified_mask =3D htlb_alloc_mask(h);
+>
+>         /* Some callers might want to enforce node */
+>         modified_mask |=3D (gfp_mask & __GFP_THISNODE);
+>
+>         modified_mask |=3D (gfp_mask & __GFP_NOWARN);
+>
+>         return modified_mask;
+> }
+>
+> /* Movability of hugepages depends on migration support. */
+> static inline gfp_t htlb_alloc_mask(struct hstate *h)
+> {
+>         gfp_t gfp =3D __GFP_COMP | __GFP_NOWARN;
+>
+>         gfp |=3D hugepage_movable_supported(h) ? GFP_HIGHUSER_MOVABLE : G=
+FP_HIGHUSER;
+>
+>         return gfp;
+> }
+>
+> #define GFP_USER        (__GFP_RECLAIM | __GFP_IO | __GFP_FS | __GFP_HARD=
+WALL)
+> #define GFP_HIGHUSER    (GFP_USER | __GFP_HIGHMEM)
+> #define GFP_HIGHUSER_MOVABLE    (GFP_HIGHUSER | __GFP_MOVABLE | __GFP_SKI=
+P_KASAN)
+>
+>
+> If we try to move a hugepage, we start including __GFP_RECLAIM again -
+> regardless of whether HIGHUSER_MOVABLE or HIGHUSER is used.
+>
+>
+> Any chance you are using hugetlb on this system?  This looks like a
+> clear bug, but it may not be what you're experiencing.
 
-I checked the number of calls and the time spent for several functions
-called by __alloc_pages_slowpath(), and found that time is spent in
-__alloc_pages_direct_reclaim() before reaching the first should_reclaim_ret=
-ry().
-
-After a few minutes have passed and the debug code that automatically
-resets numa_demotion_enabled to false is executed, it appears that
-__alloc_pages_direct_reclaim() immediately exits.
+In my case where the issue was reproduced, alloc_demote_folio() failed almo=
+st
+every time, but the folio passed to alloc_migration_target() was always fal=
+se
+for both folio_test_hugetlb() and folio_test_large().
