@@ -1,81 +1,81 @@
-Received: from glass.ash.relay.mailchannels.net (glass.ash.relay.mailchannels.net [23.83.222.70])
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803597080E;
-	Thu, 29 Jan 2026 19:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2362EFD91;
+	Thu, 29 Jan 2026 19:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769714167; cv=pass; b=DkLbe9CgCQqJ1jh3wUpWpvL1ETz9dmYmgvugwivI/LpDRXKXurAnvIeLP+uShv9EemNDiy2ddazNqWshtXbFF7ZFU1LcOsG3OeAPSudemK22preMaNGxTn4Cn9Lv+LIn0BFzmjpK10NcMgU+hx5TiOlSyQVM+cZbKnw1AVnUsTo=
+	t=1769714180; cv=pass; b=gZ8seFpjIWm8ZCcKJX1tAU1uBvCI0jpdm+3geCo6IlLuecqz1+XhMy2Ri4/IcKT+YjQM+Tb7JU3QF/rz9EJb7fI43VFBG5FAOflIfCBePeNyVB0Plom0aDlC24gH+pTk5hBEblh+0p9SmImtxVCArAD/n6pLC1IaRxG44JeanZE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769714167; c=relaxed/simple;
-	bh=wb4ij8yJBB4sMVQK75jd7WJbgtdClEC8DGRswtM/TE4=;
+	s=arc-20240116; t=1769714180; c=relaxed/simple;
+	bh=e1h/wQew/ko6TA68Zes6S17UxhPEdV6T5UMPDM7FBSU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ngY4n4Q3jz3PM2INNV31VkHEPrsjOKmm3/ortHGTAxzgLCh1dHiVHymvSzZyTVuq4TjuFHAuWKhg18lEl6uF5l3ufIzYrrcFdq6DC9Mvw96CqRgtlwLNkz83i+QOkSwc45gWE4rNr6hE507YPX6GNgGVjadjcfqrxE+cbeD/M8E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=eT++y+jf; arc=pass smtp.client-ip=23.83.222.70
+	 Content-Type:Content-Disposition:In-Reply-To; b=QrRaMqEbGPOQQ7faKYpuJLVU3YKLz8CrZ8xmvvOyGGDgXP13DCN9FblmY2sJ8wqvi4f+oACc1ma5BSlU0d5BzVk/SCBZgOj9D1k3Nmus82lTDDdus7frQo2bfPzNjyrQm3k8wthcDEbAAnJk+3I4h6Nt/cRd46aztklSmce+WOU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=ORSlzrQt; arc=pass smtp.client-ip=23.83.212.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="eT++y+jf"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="ORSlzrQt"
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 9A34F762DF2;
-	Thu, 29 Jan 2026 19:10:44 +0000 (UTC)
-Received: from pdx1-sub0-mail-a208.dreamhost.com (100-123-102-161.trex-nlb.outbound.svc.cluster.local [100.123.102.161])
+	by relay.mailchannels.net (Postfix) with ESMTP id 32234162B6C;
+	Thu, 29 Jan 2026 19:16:12 +0000 (UTC)
+Received: from pdx1-sub0-mail-a208.dreamhost.com (trex-green-7.trex.outbound.svc.cluster.local [100.96.80.125])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 3CF2F7630DB;
-	Thu, 29 Jan 2026 19:10:43 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 9DAC316324B;
+	Thu, 29 Jan 2026 19:16:11 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1769713843;
-	b=mtBq8eKZFrsymvnoIhddc7EN1ZseqYAVHwS6kZIBPJw8PDVHS0+ho8/UN3QNilSCI69hTS
-	p+d3AouT72WC1yI5VySGuDluyCQKJkjpeipWu9gIMHTxhc1XPSLPH4n+ySF2Z7u9xll+g3
-	5nCNdTQvGlhif/Xz4ru93UUkeNZoEkEmU8/gxJ3tivTpHb8AUaDA8JVknumqREt/2cPgcY
-	QA9+9h1ih/I7T9RQV2TbOHuZzLVkRVh9DzLKRai384gbKg/PhcnFeNSJE7AydVxEkk4+K7
-	4q219cZKBlR49RK848WIoYH7OaCvoM52xAcDTaKLdFmPxgQm/Jh+wjXKuFU1LQ==
+	t=1769714171;
+	b=NTGlf5c3zSwO0JufUKgPPIoI2ZtZRFZ4E1PkL7Foe9ueEbGTWFrI8YT7ENGTZnjf1SJTJx
+	xi4m635RQ6nWbyucsUtcxk+5I/hRjSnJ1isWgjnEiwclm/G8ZpWi3rEw/U0Im5ukAkdEQE
+	PUUGvqdiUG5EzIaEMUoDPNwymtdROD7pgnX2bA4bLokr/Vlg3/1dGMiqfhNT9VSyx/ZBGz
+	F3pOYFUHkV7xuzyfOVVFVfIJ+uYQ9HkN0emBFRU3Vjm/v1NDj09pSZ1eU4REO0iB0BFvW2
+	GhD7zE7kG7ozVuRfNK+E++mXTUyaEE7CoFAkOrYzH0rykxhmlPFkJExSuQJDFg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-	s=arc-2022; t=1769713843;
+	s=arc-2022; t=1769714171;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=drza7C4nb+5XU0DQB9t0KUG8UgYZ0/ViKC2FCYijLw8=;
-	b=hSLvpCyJtx+WkmcYqQs2IjVcC7hQuA/nnMUDHTf56F6Pd898ZAwcuB/QebfvKWiWhuW0cv
-	/Dy2JS6T3hDmCXfazsc6+wRB1x3VzzjezNZOxFoUunzwvJB2EFHwQ8ON8QhVI1P6EVWXpK
-	X4wrO13+UJLp8t+XHYowL+0FiGHpF+wWY/XDlYYl3jCxms//+D5RxTSCeHUGpJu80PHkzI
-	e88HJsfWsXVPPbanpMtRwO9rdlvC80fLTiTeqQvAHD7gGzvEgspAwIHfz8fXhZ1ZaR6OzH
-	ht6i95eXIZp//VPg9LGBFjLS8qf8U1ld7T78HvgcdhYisdmUu0hgKO7ZWYX9Ng==
+	bh=HBNlxMgZ8B9PiQIkHqPX3fRQN4053VxRRf7Q+7qacb8=;
+	b=vEi42jlqYx8U+1dNVH98u0fXr/GkOUK86C3AAx4wYawjAh1dfxX/cVtu6k6YvC4sLcGOMN
+	bBlM1CJGmZj4NJmP+MjNIHTj4xuLPAeI4mt1L034duGYG2ZJYLg5izeC7JUumY8/ZUcYS3
+	ETLI12YmOLFklY4HzITYhDwl3X1WG1aCDEIR8O2UTlGKc+yz7RD8tTUkB8Gsfb3VuEc+zI
+	U/kGifUORM4el6KmM3+vtZhYlx7EFNDkUwAFnsVHBznnKVGbUPAisNPMDBR5eH4/4RhWi2
+	wT7J+4l3mkgIeooRMQL8IvO7dUy6GRfCEK+WYr6X2gVQ/UVk2C5w47ZBTl5zdg==
 ARC-Authentication-Results: i=1;
-	rspamd-5b979ccf89-jkm92;
+	rspamd-c758cdf4d-bz5pc;
 	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Lettuce-Trail: 4d7c94845e31709d_1769713844474_3466359837
-X-MC-Loop-Signature: 1769713844474:2659033444
-X-MC-Ingress-Time: 1769713844474
+X-Skirt-Tangy: 5ea4e8713d6ec99a_1769714171959_1796030681
+X-MC-Loop-Signature: 1769714171959:3783861741
+X-MC-Ingress-Time: 1769714171959
 Received: from pdx1-sub0-mail-a208.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.123.102.161 (trex/7.1.3);
-	Thu, 29 Jan 2026 19:10:44 +0000
+	by 100.96.80.125 (trex/7.1.3);
+	Thu, 29 Jan 2026 19:16:11 +0000
 Received: from offworld (unknown [76.167.199.67])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a208.dreamhost.com (Postfix) with ESMTPSA id 4f27yV2xgZz1P3;
-	Thu, 29 Jan 2026 11:10:42 -0800 (PST)
+	by pdx1-sub0-mail-a208.dreamhost.com (Postfix) with ESMTPSA id 4f284p5qYyz1cp;
+	Thu, 29 Jan 2026 11:16:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1769713843;
-	bh=drza7C4nb+5XU0DQB9t0KUG8UgYZ0/ViKC2FCYijLw8=;
+	s=dreamhost; t=1769714171;
+	bh=HBNlxMgZ8B9PiQIkHqPX3fRQN4053VxRRf7Q+7qacb8=;
 	h=Date:From:To:Cc:Subject:Content-Type;
-	b=eT++y+jfHt/N6Kj5JjPiOBV3UJvGrrxvTqblkrVVwpbckl0I4VUz3YnfPq7RAEl9B
-	 P3pTh/rkzxYHCAP1Us7vRaogBsI3CjwH0QDo+dW6mIDWrYBFBjuLE4uNdDbsphKRJb
-	 a7hrS3hiY4Qs35MvkFbgFDxhwxCzyYEoFePlWvHMBW2NMHN7dHrsTsJJzPBZT794wX
-	 w78waFmVLLS+UqsTPUiwO2ccw3Px1bPXAsjT1O1XEpFQNADQaW5P0yTsCgcjWKg2Mf
-	 LGUFb773hdHb1XTp5SzAdqDXMf4bGcEeekGGwcLFqSb0EfzqP2FV+hsA/yuS69A9fe
-	 Ypx+PEnQgpOQQ==
-Date: Thu, 29 Jan 2026 11:10:39 -0800
+	b=ORSlzrQtn7X8lkhfjQSdYLSkRQE62U2yzhNWBoK7INIZm3R1Z6nwAtLXmjyhDnps4
+	 QPePAkmPbYai4T39kRLc5Qs7xtZtrtOm+/InJGYkSq1Xi60HPnwp9HBM+br0nBB/zn
+	 YTfMSc3fBbQsmyDCxg+j5cWPkdJF2VGVrBvLRxkLPdi6ZM56BaO+3mv/0C1TryAOJV
+	 hnZ6e5Ld8V16qhz84IRlBDXelsVg8UrKu7O6ATsQCptNvtZNBVZZrtzcthMyXfPnKb
+	 nEKanBA+PO9E2omvgVuEtDVtBn+e0DkzcVh/uP6k0KTz3UIy6a/maX9GV6ZKjVT3Zz
+	 Ns5BCRjI3eB3Q==
+Date: Thu, 29 Jan 2026 11:16:07 -0800
 From: Davidlohr Bueso <dave@stgolabs.net>
 To: Gregory Price <gourry@gourry.net>
 Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -84,10 +84,11 @@ Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
 	vishal.l.verma@intel.com, ira.weiny@intel.com,
 	dan.j.williams@intel.com, anisa.su@samsung.com,
 	dongjoo.seo1@samsung.com, s.neeraj@samsung.com
-Subject: Re: [PATCH v2 1/3] drivers/cxl: introduce cxl_region_driver field
- for cxl_region
-Message-ID: <20260129191039.kodgkum445ws5rhs@offworld>
+Subject: Re: [PATCH v2 3/3] cxl/core/region: move dax region driver logic
+ into dax_region
+Message-ID: <20260129191607.axkkrion3zakb7pg@offworld>
 References: <20260113202138.3021093-1-gourry@gourry.net>
+ <20260113202138.3021093-3-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -96,229 +97,271 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20260113202138.3021093-1-gourry@gourry.net>
+In-Reply-To: <20260113202138.3021093-3-gourry@gourry.net>
 User-Agent: NeoMutt/20220429
 
 On Tue, 13 Jan 2026, Gregory Price wrote:
 
->The CXL driver presently has 3 modes of managing a cxl_region:
->  - no specific driver (bios-onlined SystemRAM)
->  - dax_region (all other RAM regions, for now)
->  - pmem_region (all PMEM regions)
->
->Formalize these into specific "region drivers".
-
-I think your overall idea of these region driver backends to isolate use
-cases makes a lot of sense and helps untangle things. This series is a good
-step and nicely moves ad-hoc complexity out of region.c.
-
->
->enum cxl_region_driver {
->	CXL_REGION_DRIVER_NONE,
->	CXL_REGION_DRIVER_DAX,
->	CXL_REGION_DRIVER_PMEM
->};
->
->$cat regionN/region_driver
->[none,dax,pmem]
->
->The intent is to clarify how to to add additional drivers (sysram,
->dynamic_capacity, etc) in the future, and to allow switching the
->driver selection via a sysfs entry `regionN/region_driver`.
->
->All RAM regions will be defaulted to CXL_CONTROL_DAX.
-
-s/CXL_CONTROL_DAX/CXL_REGION_DRIVER_DAX?
-
->
->Auto-regions will either be static sysram (BIOS-onlined) and has no
->region controller associated with it - or if the SP bit was set a
->DAX device will be created.  This will be discovered at probe time.
+>Move the dax region driver logic from region.c into dax_region.c
 >
 >Signed-off-by: Gregory Price <gourry@gourry.net>
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Acked-by: Davidlohr Bueso <dave@stgolabs.net>
 
 >---
-> drivers/cxl/core/region.c | 113 ++++++++++++++++++++++++++++++--------
-> drivers/cxl/cxl.h         |   8 +++
-> 2 files changed, 98 insertions(+), 23 deletions(-)
+> drivers/cxl/core/Makefile     |   1 +
+> drivers/cxl/core/core.h       |   1 +
+> drivers/cxl/core/dax_region.c | 106 ++++++++++++++++++++++++++++++++++
+> drivers/cxl/core/region.c     |  99 -------------------------------
+> 4 files changed, 108 insertions(+), 99 deletions(-)
+> create mode 100644 drivers/cxl/core/dax_region.c
 >
->diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->index ae899f68551f..f8262d2169ea 100644
->--- a/drivers/cxl/core/region.c
->+++ b/drivers/cxl/core/region.c
->@@ -626,6 +626,57 @@ static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
-> }
-> static DEVICE_ATTR_RO(mode);
+>diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+>index 23269c81fd44..36f284d7c500 100644
+>--- a/drivers/cxl/core/Makefile
+>+++ b/drivers/cxl/core/Makefile
+>@@ -17,6 +17,7 @@ cxl_core-y += cdat.o
+> cxl_core-y += ras.o
+> cxl_core-$(CONFIG_TRACING) += trace.o
+> cxl_core-$(CONFIG_CXL_REGION) += region.o
+>+cxl_core-$(CONFIG_CXL_REGION) += dax_region.o
+> cxl_core-$(CONFIG_CXL_REGION) += pmem_region.o
+> cxl_core-$(CONFIG_CXL_MCE) += mce.o
+> cxl_core-$(CONFIG_CXL_FEATURES) += features.o
+>diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+>index cd589e81f55e..3ea850408814 100644
+>--- a/drivers/cxl/core/core.h
+>+++ b/drivers/cxl/core/core.h
+>@@ -42,6 +42,7 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port);
+> struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
+> u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+> 		   u64 dpa);
+>+int devm_cxl_add_dax_region(struct cxl_region *cxlr);
+> int devm_cxl_add_pmem_region(struct cxl_region *cxlr);
 >
->+static ssize_t region_driver_show(struct device *dev,
->+				  struct device_attribute *attr,
->+				  char *buf)
+> #else
+>diff --git a/drivers/cxl/core/dax_region.c b/drivers/cxl/core/dax_region.c
+>new file mode 100644
+>index 000000000000..d7c38447f816
+>--- /dev/null
+>+++ b/drivers/cxl/core/dax_region.c
+>@@ -0,0 +1,106 @@
+>+// SPDX-License-Identifier: GPL-2.0-only
+>+/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+>+#include <linux/device.h>
+>+#include <linux/slab.h>
+>+#include <cxlmem.h>
+>+#include <cxl.h>
+>+#include "core.h"
+>+
+>+static void cxl_dax_region_release(struct device *dev)
 >+{
->+	struct cxl_region *cxlr = to_cxl_region(dev);
->+	const char *desc;
+>+	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
 >+
->+	switch (cxlr->driver) {
->+	case CXL_REGION_DRIVER_NONE:
->+		desc = "none";
->+		break;
->+	case CXL_REGION_DRIVER_DAX:
->+		desc = "dax";
->+		break;
->+	case CXL_REGION_DRIVER_PMEM:
->+		desc = "pmem";
->+		break;
->+	}
->+
->+	return sysfs_emit(buf, "%s\n", desc);
+>+	kfree(cxlr_dax);
 >+}
 >+
->+static ssize_t region_driver_store(struct device *dev,
->+				   struct device_attribute *attr,
->+				   const char *buf, size_t len)
->+{
->+	struct cxl_region *cxlr = to_cxl_region(dev);
->+	struct cxl_region_params *p = &cxlr->params;
->+	int rc;
->+
->+	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
->+	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
->+		return rc;
->+
->+	if (p->state >= CXL_CONFIG_COMMIT)
->+		return -EBUSY;
->+
->+	/* PMEM drivers cannot be changed */
->+	if (cxlr->mode == CXL_PARTMODE_PMEM)
->+		return -EBUSY;
->+
->+	/* NONE type is not a valid selection for manually probed regions */
->+	if (sysfs_streq(buf, "dax"))
->+		cxlr->driver = CXL_REGION_DRIVER_DAX;
->+	else
->+		return -EINVAL;
->+
->+	return len;
->+}
->+static DEVICE_ATTR_RW(region_driver);
->+
-> static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
-> {
-> 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
->@@ -772,6 +823,7 @@ static struct attribute *cxl_region_attrs[] = {
-> 	&dev_attr_size.attr,
-> 	&dev_attr_mode.attr,
-> 	&dev_attr_extended_linear_cache_size.attr,
->+	&dev_attr_region_driver.attr,
-> 	NULL,
-> };
->
->@@ -2599,6 +2651,16 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
-> 	cxlr->mode = mode;
-> 	cxlr->type = type;
->
->+	/*
->+	 * PMEM regions only have 1 driver: pmem_region
->+	 * RAM regions default to DAX, but if the memory is already onlined by
->+	 * BIOS as 'System-RAM', the DAX driver will be dropped during probe.
->+	 */
->+	if (mode == CXL_PARTMODE_PMEM)
->+		cxlr->driver = CXL_REGION_DRIVER_PMEM;
->+	else
->+		cxlr->driver = CXL_REGION_DRIVER_DAX;
->+
-> 	dev = &cxlr->dev;
-> 	rc = dev_set_name(dev, "region%d", id);
-> 	if (rc)
->@@ -3951,33 +4013,38 @@ static int cxl_region_probe(struct device *dev)
-> 			return rc;
-> 	}
->
->-	switch (cxlr->mode) {
->-	case CXL_PARTMODE_PMEM:
->-		rc = devm_cxl_region_edac_register(cxlr);
->-		if (rc)
->-			dev_dbg(&cxlr->dev, "CXL EDAC registration for region_id=%d failed\n",
->-				cxlr->id);
->+	if (cxlr->mode > CXL_PARTMODE_PMEM) {
->+		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
->+			cxlr->mode);
->+		return -ENXIO;
->+	}
->
->-		return devm_cxl_add_pmem_region(cxlr);
->-	case CXL_PARTMODE_RAM:
->-		rc = devm_cxl_region_edac_register(cxlr);
->-		if (rc)
->-			dev_dbg(&cxlr->dev, "CXL EDAC registration for region_id=%d failed\n",
->-				cxlr->id);
->+	/*
->+	 * The region can not be managed by CXL if any portion of
->+	 * it is already online as 'System RAM'.
->+	 */
->+	if (walk_iomem_res_desc(IORES_DESC_NONE,
->+				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
->+				p->res->start, p->res->end, cxlr,
->+					is_system_ram) > 0) {
->+		cxlr->driver = CXL_REGION_DRIVER_NONE;
->+		return 0;
->+	}
->
->-		/*
->-		 * The region can not be manged by CXL if any portion of
->-		 * it is already online as 'System RAM'
->-		 */
->-		if (walk_iomem_res_desc(IORES_DESC_NONE,
->-					IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
->-					p->res->start, p->res->end, cxlr,
->-					is_system_ram) > 0)
->-			return 0;
->+	rc = devm_cxl_region_edac_register(cxlr);
->+	dev_dbg(&cxlr->dev, "CXL EDAC registration for region_id=%d %s\n",
->+			cxlr->id, rc ? "failed" : "succeeded");
->+
->+	switch (cxlr->driver) {
->+	case CXL_REGION_DRIVER_NONE:
->+		return 0;
->+	case CXL_REGION_DRIVER_DAX:
-> 		return devm_cxl_add_dax_region(cxlr);
->+	case CXL_REGION_DRIVER_PMEM:
->+		return devm_cxl_add_pmem_region(cxlr);
-> 	default:
->-		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
->-			cxlr->mode);
->+		dev_dbg(&cxlr->dev, "unsupported region driver: %d\n",
->+			cxlr->driver);
-> 		return -ENXIO;
-> 	}
-> }
->diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->index ba17fa86d249..e8256099de29 100644
->--- a/drivers/cxl/cxl.h
->+++ b/drivers/cxl/cxl.h
->@@ -502,6 +502,13 @@ enum cxl_partition_mode {
-> 	CXL_PARTMODE_PMEM,
-> };
->
->+
->+enum cxl_region_driver {
->+	CXL_REGION_DRIVER_NONE,
->+	CXL_REGION_DRIVER_DAX,
->+	CXL_REGION_DRIVER_PMEM,
+>+static const struct attribute_group *cxl_dax_region_attribute_groups[] = {
+>+	&cxl_base_attribute_group,
+>+	NULL,
 >+};
 >+
-> /*
->  * Indicate whether this region has been assembled by autodetection or
->  * userspace assembly. Prevent endpoint decoders outside of automatic
->@@ -543,6 +550,7 @@ struct cxl_region {
-> 	struct device dev;
-> 	int id;
-> 	enum cxl_partition_mode mode;
->+	enum cxl_region_driver driver;
-> 	enum cxl_decoder_type type;
-> 	struct cxl_nvdimm_bridge *cxl_nvb;
-> 	struct cxl_pmem_region *cxlr_pmem;
+>+const struct device_type cxl_dax_region_type = {
+>+	.name = "cxl_dax_region",
+>+	.release = cxl_dax_region_release,
+>+	.groups = cxl_dax_region_attribute_groups,
+>+};
+>+
+>+static bool is_cxl_dax_region(struct device *dev)
+>+{
+>+	return dev->type == &cxl_dax_region_type;
+>+}
+>+
+>+struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
+>+{
+>+	if (dev_WARN_ONCE(dev, !is_cxl_dax_region(dev),
+>+			  "not a cxl_dax_region device\n"))
+>+		return NULL;
+>+	return container_of(dev, struct cxl_dax_region, dev);
+>+}
+>+EXPORT_SYMBOL_NS_GPL(to_cxl_dax_region, "CXL");
+>+
+>+static struct lock_class_key cxl_dax_region_key;
+>+
+>+static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
+>+{
+>+	struct cxl_region_params *p = &cxlr->params;
+>+	struct cxl_dax_region *cxlr_dax;
+>+	struct device *dev;
+>+
+>+	guard(rwsem_read)(&cxl_rwsem.region);
+>+	if (p->state != CXL_CONFIG_COMMIT)
+>+		return ERR_PTR(-ENXIO);
+>+
+>+	cxlr_dax = kzalloc(sizeof(*cxlr_dax), GFP_KERNEL);
+>+	if (!cxlr_dax)
+>+		return ERR_PTR(-ENOMEM);
+>+
+>+	cxlr_dax->hpa_range.start = p->res->start;
+>+	cxlr_dax->hpa_range.end = p->res->end;
+>+
+>+	dev = &cxlr_dax->dev;
+>+	cxlr_dax->cxlr = cxlr;
+>+	device_initialize(dev);
+>+	lockdep_set_class(&dev->mutex, &cxl_dax_region_key);
+>+	device_set_pm_not_required(dev);
+>+	dev->parent = &cxlr->dev;
+>+	dev->bus = &cxl_bus_type;
+>+	dev->type = &cxl_dax_region_type;
+>+
+>+	return cxlr_dax;
+>+}
+>+
+>+static void cxlr_dax_unregister(void *_cxlr_dax)
+>+{
+>+	struct cxl_dax_region *cxlr_dax = _cxlr_dax;
+>+
+>+	device_unregister(&cxlr_dax->dev);
+>+}
+>+
+>+int devm_cxl_add_dax_region(struct cxl_region *cxlr)
+>+{
+>+	struct cxl_dax_region *cxlr_dax;
+>+	struct device *dev;
+>+	int rc;
+>+
+>+	cxlr_dax = cxl_dax_region_alloc(cxlr);
+>+	if (IS_ERR(cxlr_dax))
+>+		return PTR_ERR(cxlr_dax);
+>+
+>+	dev = &cxlr_dax->dev;
+>+	rc = dev_set_name(dev, "dax_region%d", cxlr->id);
+>+	if (rc)
+>+		goto err;
+>+
+>+	rc = device_add(dev);
+>+	if (rc)
+>+		goto err;
+>+
+>+	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
+>+		dev_name(dev));
+>+
+>+	return devm_add_action_or_reset(&cxlr->dev, cxlr_dax_unregister,
+>+					cxlr_dax);
+>+err:
+>+	put_device(dev);
+>+	return rc;
+>+}
+>diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>index a61805542b56..1ca5f5b02b22 100644
+>--- a/drivers/cxl/core/region.c
+>+++ b/drivers/cxl/core/region.c
+>@@ -3239,105 +3239,6 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+> 	return -ENXIO;
+> }
+>
+>-static void cxl_dax_region_release(struct device *dev)
+>-{
+>-	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
+>-
+>-	kfree(cxlr_dax);
+>-}
+>-
+>-static const struct attribute_group *cxl_dax_region_attribute_groups[] = {
+>-	&cxl_base_attribute_group,
+>-	NULL,
+>-};
+>-
+>-const struct device_type cxl_dax_region_type = {
+>-	.name = "cxl_dax_region",
+>-	.release = cxl_dax_region_release,
+>-	.groups = cxl_dax_region_attribute_groups,
+>-};
+>-
+>-static bool is_cxl_dax_region(struct device *dev)
+>-{
+>-	return dev->type == &cxl_dax_region_type;
+>-}
+>-
+>-struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
+>-{
+>-	if (dev_WARN_ONCE(dev, !is_cxl_dax_region(dev),
+>-			  "not a cxl_dax_region device\n"))
+>-		return NULL;
+>-	return container_of(dev, struct cxl_dax_region, dev);
+>-}
+>-EXPORT_SYMBOL_NS_GPL(to_cxl_dax_region, "CXL");
+>-
+>-static struct lock_class_key cxl_dax_region_key;
+>-
+>-static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
+>-{
+>-	struct cxl_region_params *p = &cxlr->params;
+>-	struct cxl_dax_region *cxlr_dax;
+>-	struct device *dev;
+>-
+>-	guard(rwsem_read)(&cxl_rwsem.region);
+>-	if (p->state != CXL_CONFIG_COMMIT)
+>-		return ERR_PTR(-ENXIO);
+>-
+>-	cxlr_dax = kzalloc(sizeof(*cxlr_dax), GFP_KERNEL);
+>-	if (!cxlr_dax)
+>-		return ERR_PTR(-ENOMEM);
+>-
+>-	cxlr_dax->hpa_range.start = p->res->start;
+>-	cxlr_dax->hpa_range.end = p->res->end;
+>-
+>-	dev = &cxlr_dax->dev;
+>-	cxlr_dax->cxlr = cxlr;
+>-	device_initialize(dev);
+>-	lockdep_set_class(&dev->mutex, &cxl_dax_region_key);
+>-	device_set_pm_not_required(dev);
+>-	dev->parent = &cxlr->dev;
+>-	dev->bus = &cxl_bus_type;
+>-	dev->type = &cxl_dax_region_type;
+>-
+>-	return cxlr_dax;
+>-}
+>-
+>-static void cxlr_dax_unregister(void *_cxlr_dax)
+>-{
+>-	struct cxl_dax_region *cxlr_dax = _cxlr_dax;
+>-
+>-	device_unregister(&cxlr_dax->dev);
+>-}
+>-
+>-static int devm_cxl_add_dax_region(struct cxl_region *cxlr)
+>-{
+>-	struct cxl_dax_region *cxlr_dax;
+>-	struct device *dev;
+>-	int rc;
+>-
+>-	cxlr_dax = cxl_dax_region_alloc(cxlr);
+>-	if (IS_ERR(cxlr_dax))
+>-		return PTR_ERR(cxlr_dax);
+>-
+>-	dev = &cxlr_dax->dev;
+>-	rc = dev_set_name(dev, "dax_region%d", cxlr->id);
+>-	if (rc)
+>-		goto err;
+>-
+>-	rc = device_add(dev);
+>-	if (rc)
+>-		goto err;
+>-
+>-	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
+>-		dev_name(dev));
+>-
+>-	return devm_add_action_or_reset(&cxlr->dev, cxlr_dax_unregister,
+>-					cxlr_dax);
+>-err:
+>-	put_device(dev);
+>-	return rc;
+>-}
+>-
+> static int match_decoder_by_range(struct device *dev, const void *data)
+> {
+> 	const struct range *r1, *r2 = data;
 >-- 
 >2.52.0
 >
