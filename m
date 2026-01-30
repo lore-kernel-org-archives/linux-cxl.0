@@ -1,233 +1,734 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DD8329E49
-	for <linux-cxl@vger.kernel.org>; Fri, 30 Jan 2026 04:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769749097; cv=fail; b=SNd86KJMgUtP3vIbHvP/UdfdvZuuoudFCjZbE2eCHxA7wPAm6Dl+ep4k9DxeT1Kt7ubfX1EARV4ZprFP3A2PXOqnFw6n+lxfZRsSo51/HAcr0SYX5lU+JXbMIgYtPmRzwDniqvbb4Etk2WuyFLm2ycaMFTDuQhp3g2R6VTd5hBs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769749097; c=relaxed/simple;
-	bh=/rPT6CliZNn/YIIw5hsiFCVAG8loP2COyo2xpti2qlM=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=VdSCz74p0Hf37ycr8lajkMRsbgYcgZDrTAbQADgyruUfghrg5VR+uHk5dqwLGsDDDV7WiOFIRw1gJK8tBWklznZwYiFmWTL76B+A1mwuXe0fgu1RSQpqlj34Ht/jrybVLFhZvCNVDFN0IZyeQ3SSJ+CipkOgROiSVIPyD2OnNTc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gSW8u8Zn; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0D130FF3A
+	for <linux-cxl@vger.kernel.org>; Fri, 30 Jan 2026 12:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769774647; cv=none; b=FzfQRAgW/ddfD8jKzTGzEaIYKTFs202kH6y+rXTAUP9+jQcOoi4+as3e8Pra3wyJ/KLIYtvNJM+oHee2Ay1ZzDQ8OARm3v/Top9qE8E1ga6LIPcPjNslmg2tE+RPVMYDBKZP7E0ntSgVNCwN5osvY20vsJbbJfzkRus94HcYbT0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769774647; c=relaxed/simple;
+	bh=g4T7fPHQnsJV2H2eie5bx4toG9QcmzLfBe/aQLLd6lI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=eD3wxEJ5oAH+D3oHmr4H+vtma2bSQ5ZDqQnbftipffWydv6e5Rq+b7JOAbKjGr4pnd9bndTJ5SZAzqfAOoGDITx9d7+cmKmy4KGgEIFLMqVCZ4d2oLO8cKiEuIK9jlrEoDMa/Z/nC9dfwe3rYhfLY++P339FP8XrTiVz2wFllT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=kd1dx7J9; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gSW8u8Zn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769749095; x=1801285095;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=/rPT6CliZNn/YIIw5hsiFCVAG8loP2COyo2xpti2qlM=;
-  b=gSW8u8Zn7zo7pAd5sWDwmu/YfnjZtwrYM8lt2kjM+deukov0zxRJJLZ3
-   rKrTg8MjN92mk98XnMPYlDx/dXlBI2IKZU0zcTlAkKyybp9AwcUYWFxht
-   M1ycc/yd38fVssRJkt9lX+G4UZwHY0VU3Sesy/tnsakTFfllhqhF8TdPP
-   91IEqKcML5RINWqHHqbZ4ht4ywNz5e6WqocqD6b+t7g7dZPdBO0E3TPU/
-   W4F2DuQ25btwoWMhQ5PjSovaaoQqIuCxhEqwFH8B8nVl+19tSwTfdiZbr
-   2H0srBUPkAABEIGDZHaw6IRcofp372e/5OimLJ/CGGcUpgmSuWQdmaUcV
-   g==;
-X-CSE-ConnectionGUID: asyL1oFTRS6Mje/avLjORQ==
-X-CSE-MsgGUID: RZY7evRcSpulUhNjrV7s9Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11686"; a="70898288"
-X-IronPort-AV: E=Sophos;i="6.21,262,1763452800"; 
-   d="scan'208";a="70898288"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2026 20:58:14 -0800
-X-CSE-ConnectionGUID: hXHVi1S+TpG3IlaCb7aM/g==
-X-CSE-MsgGUID: XBum5fTQQbKS/Jbvezpo6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,262,1763452800"; 
-   d="scan'208";a="208867384"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2026 20:58:14 -0800
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Thu, 29 Jan 2026 20:58:13 -0800
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35 via Frontend Transport; Thu, 29 Jan 2026 20:58:13 -0800
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (52.101.43.28) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Thu, 29 Jan 2026 20:58:13 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kTJElQG/9C3gAnInjnhHMNIL/p6PcZElZ/ybUQ9QUOEdzXpNh3ftEl7hTiLv675iaHJvE7hRQSkVXXb4qEadTwu0sHQOPQwQE630ciw4nQZ60ZE4IG+LhKXsffGhyV7KDw/59A8MHLyZ6qV5GM1MZpLJJ0N8KApCY52Qrt9N0oJdpUGV/KcO6eLlzQigMBcJ3X0fZa5Apy+HQ0fg4A6tggfiuAN+JrWc2dNHfiKrINPLjLYNbirE9PLnYGdafTZ0sXzUWLSabC8Nvs4ZvuUwN6gl3REdnKV0n4I5oP0bxZIMFJNYLurHOlGc4KTuSXnV9/f4Xu60JT8Z+gN70Dt65A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/rPT6CliZNn/YIIw5hsiFCVAG8loP2COyo2xpti2qlM=;
- b=bnL3ZH/cMNP+rZpPrps2bKYNyrsMtZOkZZnUGuCycEiWMmRdtoKQ6i+I72ppw5kC7hN81s8ULuEiEMsajFr0wn1EYPeGGvdEyVnqDgA1qjQ3HfYknv6BB1bCz+9uuVrCKCPI0NJ2qaCPHbB5o/xxse9ypwbIvz7Gmwf7R8uRxDeXXG4R3whJBdVTt2X0b9wk+iLwGSroH0L0d708S5pjZexwc/ahC1YdKlF5CLr11RphspRg5Ly/H9Har27exmcVjjusBb13OkcWhzl8vOshAVWKi0TMpD5zyhiig42pxqGMqze3Rx/9nALCGEDPq3e+sIIskP6KXWtFwdufFgCq6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CYYPR11MB8407.namprd11.prod.outlook.com (2603:10b6:930:c1::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.7; Fri, 30 Jan
- 2026 04:58:11 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff%6]) with mapi id 15.20.9564.006; Fri, 30 Jan 2026
- 04:58:11 +0000
-From: <dan.j.williams@intel.com>
-Date: Thu, 29 Jan 2026 20:58:09 -0800
-To: Alison Schofield <alison.schofield@intel.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, "Dave
- Jiang" <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	"Dan Williams" <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>
-Message-ID: <697c3a6155b46_1d6f100e1@dwillia2-mobl4.notmuch>
-In-Reply-To: <3bcc5143777acc6d45675d78dd8c57079406bc53.1769746294.git.alison.schofield@intel.com>
-References: <3bcc5143777acc6d45675d78dd8c57079406bc53.1769746294.git.alison.schofield@intel.com>
-Subject: Re: [PATCH 1/2] cxl/region: Timeout auto region assembly waiting for
- endpoints
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR05CA0101.namprd05.prod.outlook.com
- (2603:10b6:a03:334::16) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kd1dx7J9"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20260130120401epoutp02a5aa646abdc8d4ed4998e7866eea85ce~PgKjx_ioM1249812498epoutp02Y
+	for <linux-cxl@vger.kernel.org>; Fri, 30 Jan 2026 12:04:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20260130120401epoutp02a5aa646abdc8d4ed4998e7866eea85ce~PgKjx_ioM1249812498epoutp02Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1769774641;
+	bh=MKrBUGbeKRATPluPj1AkGiFEVONs0F6ddzMBHBgA+KY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kd1dx7J9TVZ0hj1+Skj5hrwDfullf/TaOnf2KVAemE7yoEygf2RedmhrNRL0FkVdm
+	 iytoibgydQyRH0zY7AHZhVW6Wqg14WIWKLFQCnwWcB7l6dC3za3ibBZ2+p0Yj1/D9t
+	 yOSvicG/FmsL00LhXnHDl1iOB8nJdg4VW13mAp18=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
+	20260130120401epcas5p430c865ce35f3c376b7be8c1f484693c1~PgKjXr4nd2155821558epcas5p47;
+	Fri, 30 Jan 2026 12:04:01 +0000 (GMT)
+Received: from epcas5p3.samsung.com (unknown [182.195.38.91]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4f2ZRh24zmz3hhT4; Fri, 30 Jan
+	2026 12:04:00 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20260130120358epcas5p4622fdf1162ebb644c172176217386995~PgKhHsApb1821218212epcas5p4Y;
+	Fri, 30 Jan 2026 12:03:58 +0000 (GMT)
+Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20260130120357epsmtip27510a9eb5f5890a2c6b27cec832ef1e1~PgKfnAJN70909909099epsmtip2V;
+	Fri, 30 Jan 2026 12:03:57 +0000 (GMT)
+Date: Fri, 30 Jan 2026 17:33:50 +0530
+From: Arpit Kumar <arpit1.kumar@samsung.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: qemu-devel@nongnu.org, gost.dev@samsung.com, linux-cxl@vger.kernel.org,
+	dave@stgolabs.net, vishak.g@samsung.com, krish.reddy@samsung.com,
+	a.manzanares@samsung.com, alok.rathore@samsung.com, arpit.sysdev@gmail.com,
+	cpgs@samsung.com
+Subject: Re: [PATCH v4 0/2] FM-API Physical Switch Command Set Support
+Message-ID: <20260130120350.n7ngrvla5mfkwllo@test-PowerEdge-R740xd>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CYYPR11MB8407:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8ec887bd-7ddb-4bf7-b49f-08de5fbc2ab6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?aTdmQTJiRkJqbUJybGF4RjRmOEJOZHppcmcxOHdVRG1Jd0RjN3IrZE9xMHZs?=
- =?utf-8?B?R0VLMEpXTkFYTmZiSTY3aGJqZU5VeXBpbjlpWXNQZTJ2UmM2L01QeFpVc2lQ?=
- =?utf-8?B?RHZ6VlhRRG5rdjBXZldXRzQ0b1hlRFdPa2FkUzB6UldPaGYwc3V4WndyVnZn?=
- =?utf-8?B?QlNhRWJCTlczS2dxL2l3Y25CL0pqUjdzV2RpZlVYV2t0SHhhd0Eydll2TUx4?=
- =?utf-8?B?NHduNFVETTU4Zk5VVjVjMFlRMFBGc0xmTitJVFcrUHdTbEQwcWdzdEY1Ry8z?=
- =?utf-8?B?U0ZqVFVnWXFZSDREL0lWT0Jia2hBUXlDb0I5QUZvVlVjenpmb0tWRU9wekU4?=
- =?utf-8?B?SXBZWlorOEdBRjBFbU5UZnJmc1Eyc25Hcit6R1ExM0RDaXNGTUFGOEZuTkVN?=
- =?utf-8?B?VEoxRFBOU09FTE4yMWVmM2xoNHQ2K1NFcVlPVXlTc0Jtdk1IaXdRNEV4Q05o?=
- =?utf-8?B?eGZnMm1DbEFUR1R0ZjErS1ZBQ0VXNTh4N3N6dUVxbmluVEZmQi8rTE5UVXBD?=
- =?utf-8?B?SHhTVUcyOXRSeTVBdDZjRzZaV0hMbXBNSUNkdmxFTTdJanBqTWZvUkx6NGtP?=
- =?utf-8?B?WUlMSFFNL2l6MENrcVlBVDdIMWVaaE1TNUlYc2hwUXJjaW9WNTc0L0h2VnZx?=
- =?utf-8?B?YlhIMjFwa1VhY21hQjdCY04wUjVZekxsNCsxTjZBa3pRb3NldTErb1lpR28y?=
- =?utf-8?B?VHZLRXlMbUZLYUlnR3JNQU1RTElPUVRaWnlPS0J1ZXJKTkpROFdyUitzZkZO?=
- =?utf-8?B?ZEIvMTZsWkxPS1AzNXhsb0tnZTBXblBGRTZrekVsVENCS2ZVR1RtWFk3cTNI?=
- =?utf-8?B?T3dxa0g4dzRGOVBXemp6YzF6VVo3QS9mSEdrMnVNdGhXOHhMbkdKTTRHL3Mz?=
- =?utf-8?B?OUFldjJGSFp2aVpjZXZEWklOTmpPUWZzRFZvQU13M21nbVVnSnZCWTFwMFNx?=
- =?utf-8?B?aVhPa05NSCs2cEhZQjRuNmozdGx5d0pQYTIwaXQrUXoyek1scDNJYjZrVGFs?=
- =?utf-8?B?NnpZQVF1TmE5MEJSTkxmQnlhL3lOUGFxQnR1Y1NCbUt6TENGeUhSY2N4cFJK?=
- =?utf-8?B?SHNiOFJ0SGdZYmhhQk9wSm1SMkF1ajBaVUFTWjhWVSthMFRGY0VyWWI4TFNO?=
- =?utf-8?B?aE4rVXJENnUwa1dSRHA4Y2QwMEtmakxta2dINTNSWk5sS2xmS2lYRG9tQ0I4?=
- =?utf-8?B?WVc5NkVKUjRiNWQ2U0pSUTdlZ1I0SnozMVNjV3ZyenRDZWMrbzl0WjQraDNo?=
- =?utf-8?B?a2xMZTVLOXhyQTB0azZZYjlLVmV5WDA1bnMzU2lyMFp2REgxOGZJemYzQTIz?=
- =?utf-8?B?dmxPdGNOQUJZaVJ4YjZDZDUwNlhFM0Y5Z2d4cFQ2blhIcXZrSUpJSm9WQ1Jt?=
- =?utf-8?B?RmYwSm1WZzBSbCtWV09LcldPeTRvR2dSemIvRVI5eHNVK2RtMTBNUmlPOUtF?=
- =?utf-8?B?TEtEazhac1pvMThEbmw1Y3RrRFpPaFdVWmU0MWp1Ulc1dEpkdDhyT3pSZGhm?=
- =?utf-8?B?MXVwQmxvaE1nNWx2OVZHeFdPdWVEVUIxcGMyYllUMDNYZ2ZnNWFPTFc3RTd6?=
- =?utf-8?B?aXBYTm4zQUxZUmZ5REgvSGt5UDBYU1pPeldEYVFod0dRUUh0THRQcUYzUnR3?=
- =?utf-8?B?R20yckYzd0xEc2dBbDU3cTByaW1FQkZZamdVS0xTY0ZuR0dQNUN1SXhBRzZU?=
- =?utf-8?B?czh5ZjR5MmNrb2VDNG95TEpDblh0bWFjaWlQS092RjhkQzVVSWVRNG1LVHhh?=
- =?utf-8?B?VkFLNzJnWGJ2UDN2Ty9MM09QOFp1NGNoZUN2d1hoSnUyMkwwOG5YRTNpN2pF?=
- =?utf-8?B?WDlzMnY4MDU4UUJVSHhDWXIyZGZ3VXlXcjRCaFJYSGR2SHhKUUMzZ2hNYk00?=
- =?utf-8?B?MW5GcDIwRU9kSS9rampRZG8vb0U0cEJrZnNVNkR6dmN1YjZ2bnNCRTl0ZmtN?=
- =?utf-8?B?bEF2dlBxVk90UTBCVnUvSVIyeXVTazhiQWpCMEJZV2RNTFFpblBJR3JJT0Q3?=
- =?utf-8?B?NDJ6S0lhSHVMWGVQcTl6dk9IbUt5MDVJdjJOVjUvMU1zeEtKdUxGeHBNQnRO?=
- =?utf-8?B?eE90MU82TXJJaEZRMnBPc1laVWsraHNaL1pPT1JGNk11RXQ0bmZGN0tPV1RD?=
- =?utf-8?Q?MN3I=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NVRmbUlaSm5iSXplVjlFTUF6cyt1YnAyTWExWlBxSGNEaWJSV0NscFgyTlFi?=
- =?utf-8?B?QW50VDcwMDB1ZlVBbHFkdG91YXhqTFc0Z3JGMzVHMkU3Z2dmZ2U3ZzZhYmRO?=
- =?utf-8?B?bVN6TVlybG1BSlQwZmJKZXRRRy9YVFY3TXJXb3NtODc3SnE2K0QxeThoWmJO?=
- =?utf-8?B?RzFxYXR0VGJjcW96UFpZZkhUUlZaOXo0VXhPSHp3M2RXRXpHMFhKNm1vRVZx?=
- =?utf-8?B?NmY4RTlWQjlBTmU5MERDVWhPejhJR3VkUEFnN2NZSTk4WTVZbG81RVlzMmpu?=
- =?utf-8?B?OXpUTEFQRGdKZGg4Ui9ISTdiNGpBdzlWbFV1VERxUDVBd3RJeW9kYnBJV29T?=
- =?utf-8?B?YTE1WHQ0ZWpsS1hZRldCM1dHc3VlTWo1cE40aUhKZm5Gdy9BSnc5Zkx3cVF5?=
- =?utf-8?B?S3dnalpUODJQQzNNUEIveXhudTFoMlo2VTVzamRacytRWU1Pa2h5QmRRSTBh?=
- =?utf-8?B?S0JCVE1FdTduUkxSVmorK2p5TWZ2ZkNlWGNQYm92WVdaRHB0L2N1WWViMlZ5?=
- =?utf-8?B?SkFBMWZjM1FaQ2xaL1VFeWNSay90TkZwR1pzVnU5WXVMamhuTk9Zdi9xZkFB?=
- =?utf-8?B?c1VZUnhKMXRVWXdjZk5QYW1Na3lnQ090eTlyL1prS1lHWDE0ZkdUa0MzRVY2?=
- =?utf-8?B?NkorZ1JBNFZobnRsRkZIendEV0dqSTRRdEZiYmtQb1ZVQVpRNTUzOWxxV2I3?=
- =?utf-8?B?VGVCcGEvUGI3VG1YZ0JRNHNuSW41MkFJZWhDcWEyM3hRTmRjWEJlK2J3VC8r?=
- =?utf-8?B?R0Vkc2cweHp5MGpXT2NMclBTQ0J2WlV2RjdyUW5IcnNMcE5SRit2MFMwT3U4?=
- =?utf-8?B?bHkzNnUyMGdqaUw2eGR1UE5JQmFjbWk4SWlkZTZnZEswNitzc3ZUcXpUd3Jo?=
- =?utf-8?B?OTJHTTYwN3A0NGN3Z04yaFk5WlJTendUZy91MGRVM2dMQ3MvN0ZKZllHWGFq?=
- =?utf-8?B?SzBRWFF6QkZ3OHUvNzVFMkJiQXpmT2ZGQm9lcnZFVjlSM080NmY1QTMrWW14?=
- =?utf-8?B?dS9uWkFhNnd0ZFlLallzT0s4c1lacDhpWUJwUkppWEdrcStBU2lYcHVEM2l0?=
- =?utf-8?B?WldHSU1lZEZkZ240NkJvYU0wY2VXY1lXcVdkNk1Ienk5ODgzc1B0KzRRdC9U?=
- =?utf-8?B?b1M4QVJMeWxLbStBTStUQi9qc2dEUWlHMzVENmY0bVlidDY0RVhyTTd0Nks0?=
- =?utf-8?B?SlB3YlJJZFpjRmdsYXZQSkRDWEhOeUwrcFVJZFVIK2xZTVJQNXllY0owQjR1?=
- =?utf-8?B?ZVNmS29pN21JWkxsUTdoV1VxQ2VINTdjdGsyWGNXZGkzbVFONUZRQ1lEd0Ry?=
- =?utf-8?B?a2VpZkFhcDNabzlJeFgyTEpqMlZ0SnFwM004RlpPSDlBakY4djFPNzZHY0p6?=
- =?utf-8?B?dmNPdzAwR3lMWmhBbWpnVUJSLy9PS2R2NUkzV01XODNuSjhFN25tajJKWFVU?=
- =?utf-8?B?ZHBzaFg1UXFqNHZ2UmcrKzlEUy9ueGxRdVNDWnJoMWhKeG9DeFo5Rm5KU0Nq?=
- =?utf-8?B?MU9iUjNTSyt1cGxJdlNGcG14QlA4YWNjcldwOTVJUGVpQ1Vla3lJbjhPVTBw?=
- =?utf-8?B?RWFkaVJvOFFBRWg4VXRXakY3bUliM2ZvWmdVZHlUbXVQNmJrdGwvVC9TSS9s?=
- =?utf-8?B?OTV0WHovRFdTVVF3cFhnTDhEQ1d2NSs3RkV0WVEvQ0NDc2MzMFlQeDdkT1Nt?=
- =?utf-8?B?TkI0SFU2eGp4NGdPRGp6RjE5SVQrYWxwWHFZY2UwWW5sQTgxb2oxNXJJZ0Ji?=
- =?utf-8?B?UXRIQ0x0MGtNNU0xZGRiMVN2NXliMVByNG11Ym9LOEtRc0ZyM0h2L2ZyZDVl?=
- =?utf-8?B?N2FzcVpaSGFtMTJ1UmUvL2RQUzRBSDJjUytXem1uREQ2cXpjaGtwUGNaKzBN?=
- =?utf-8?B?bHRiQ25CR1p0UXdBa05vZEFxMXhEVXRlWmZWeWowTmI4M1dwMDMrQ2JKem5q?=
- =?utf-8?B?RndIanVjZGtCbXlLN0NPb2o3NEpkNTBrTEdHM2VWRk52am94VVBCeStJMkds?=
- =?utf-8?B?djIzKzVlYjlEWHZHc293YmdvSXBqVTczdDRCc0Uyc1NkYm5VMVUxMGRsL1Ay?=
- =?utf-8?B?MDlSbThnZHNNVTNCL2tyQmlhMkQzd3J4VytIdVNnTHR1SzRqLzZycERpZ0xD?=
- =?utf-8?B?MGxSUU54S1NaVVMzR0FTWStXS0ZtY0pyaElUTUl5M2lZUjVPeW12WXl5YTJq?=
- =?utf-8?B?T0NWR0FrajlhWjNNaE5nQ3c0ZE1BSkF6L053UDVPSUxteUZKVk41WUt5V1BF?=
- =?utf-8?B?UU52Tys2UjloYkhIS1VLMmlSckFtMklncTM5MUN3amFQMlJYTFZPSFdtdHNQ?=
- =?utf-8?B?emlYUHBza0lxZFB1KzhvTmhGT04vSEZRdUhMQ24xY004QTJvaFJ1TEE3UUQv?=
- =?utf-8?Q?XDUnORwjPLZVjkJI=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ec887bd-7ddb-4bf7-b49f-08de5fbc2ab6
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2026 04:58:10.9452
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NNdzvacyo6zCz9+ASZ4nr4mTWOyBxF/0JCES4O4I6t8CYxuxDoWrAnQOApxp46Eft0OQglfkAL8UJSJvojh5hSYgSG0czQD1fI2N/nlXo9Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR11MB8407
-X-OriginatorOrg: intel.com
+In-Reply-To: <20260127152350.00006447@huawei.com>
+X-CMS-MailID: 20260130120358epcas5p4622fdf1162ebb644c172176217386995
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----HKC0oM6l2X7jDELFNxUL3gr1rNZobpnU9ZVzK0VPY15yFScq=_13d05c_"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250916080757epcas5p2db403c9648f7818b22413d90acb4fdd4
+References: <CGME20250916080757epcas5p2db403c9648f7818b22413d90acb4fdd4@epcas5p2.samsung.com>
+	<20250916080736.1266083-1-arpit1.kumar@samsung.com>
+	<20260127152350.00006447@huawei.com>
 
-Alison Schofield wrote:
-> Currently, if not all expected endpoints arrive for an auto-created
-> region, the region remains registered but disabled indefinitely. The
-> region continues to reserve its memory resource, preventing DAX from
-> registering the memory, and provides no indication that endpoints
-> failed to arrive (useful for non-DAX configurations).
+------HKC0oM6l2X7jDELFNxUL3gr1rNZobpnU9ZVzK0VPY15yFScq=_13d05c_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-Does it block DAX? The HPA reservation does not mark the resource busy,
-so DAX should still be able to operate. It might make a mess of resource
-tree, but not block unless we are in this case of the boundaries
-misaligning. I would rather rethink the insert_resource() in
-__construct_region() if it is indeed a blocking problem. It is already
-the case that an insert_resource() failure is not fatal to region
-creation.
+On 27/01/26 03:23PM, Jonathan Cameron wrote:
+>On Tue, 16 Sep 2025 13:37:34 +0530
+>Arpit Kumar <arpit1.kumar@samsung.com> wrote:
+>
+>> This patch series refactor existing support for Identify Switch Device
+>> and Get Physical Port State by utilizing physical ports (USP & DSP)
+>> information stored during enumeration.
+>
+>Hi Arpit.
+>
+>So I came back to this series to try and tweak it into being in a state
+>for upstreaming.  I made some fairly heavy changes (to push the
+>data down to the individual ports where to me it more logically sits)
+>but it became apparent to me during this that there is a fundamental
+>problem.  This stuff isn't static because it needs to reflect port
+>retraining and hotplug events etc.  If we want to store cached
+>data we are going to have to deal with updating it from a significant
+>number of different places. The perst one you have covered in patch 2
+>is an example but there are others.
+>
+>Now we definitely can do the generation in a neater way, but I've
+>come to the conclusion that caching it really doesn't make sense.
+>
+>Maybe we can do that for the USP, but definitely not DSPs.
+>
+>Given I did a bunch of refactoring I might as well share it even though
+>I'm currently thinking it might not be worth doing:
+>
+>From 40a8a36f22a6eb053c965231a698c8054d417049 Mon Sep 17 00:00:00 2001
+>From: Arpit Kumar <arpit1.kumar@samsung.com>
+>Date: Tue, 16 Sep 2025 13:37:35 +0530
+>Subject: [PATCH] hw/cxl: Refactored Identify Switch Device & Get Physical Port
+> State
+>
+>Store the physical port info for the USP on reset but refresh
+>it on demand for the DSPs as they are hotplug capable.
+>
+>Enables common data to be used for both of:
+>* Identify Switch Device (Opcode 5100h)
+>* Get Physical Port State (Opcode 5101h) physical switch FM-API command set.
+>
+>Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
+>Co-developed: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>
+>---
+>Added a Co-dev as I have modified this a lot from Arpit's v4.
+>v5:
+>- Create a new header to avoid importing all of cxl_device.h into
+>the upstream port emulation.
+>- Move the call that caches state to the cxl_upstream_port reset
+>  to ensure downstream ports are in place before it is called.
+>  Also will make it available from whatever CCI.  If we ever support
+>  multiple VCS switches this will need to move an appropriate structure
+>  representing whole switch information. With only one USP that is
+>  a reasonable place to put full switch info.
+>- Downstream ports have more dynamic state (as devices can be
+>  hotplugged below them).  As such, only fill in the data at time
+>  of request.
 
-> Start a 30 second timeout when the first endpoint attaches. If the
-> remaining endpoints have not attached before the timeout expires,
-> abort region assembly and unregister the region.
+Hi Jonathan,
+Thanks for the update! The changes look good to me. I do concede that
+it requires more dynamic approach. This would help in future command 
+support like multiple VCS, MLD etc. I intially refrained from making changes
+to individual ports but it does logically fits there and would
+optimize the command support.
 
-The time to give up on regions present at boot should be at the end of
-wait_for_device_probe(). There is no point waiting any longer for a
-device that was alive a few seconds ago according to the BIOS.
+>---
+> include/hw/cxl/cxl_port.h                   |  87 ++++++++
+> include/hw/pci-bridge/cxl_downstream_port.h |  11 +
+> include/hw/pci-bridge/cxl_upstream_port.h   |   5 +
+> hw/cxl/cxl-mailbox-utils.c                  | 210 ++++++++++----------
+> hw/pci-bridge/cxl_downstream.c              |  27 +++
+> hw/pci-bridge/cxl_upstream.c                |   5 +
+> 6 files changed, 245 insertions(+), 100 deletions(-)
+> create mode 100644 include/hw/cxl/cxl_port.h
+> create mode 100644 include/hw/pci-bridge/cxl_downstream_port.h
+>
+>diff --git a/include/hw/cxl/cxl_port.h b/include/hw/cxl/cxl_port.h
+>new file mode 100644
+>index 000000000000..15960f8b5778
+>--- /dev/null
+>+++ b/include/hw/cxl/cxl_port.h
+>@@ -0,0 +1,87 @@
+>+/* SPDX-License-Identifier: GPL-2.0-or-later */
+>+
+>+#ifndef CXL_PORT_H
+>+#define CXL_PORT_H
+>+
+>+#include "hw/pci/pci.h"
+>+
+>+/* Port related commands */
+>+#define CXL_MAX_PHY_PORTS 256
+>+
+>+/* CXL r3.2 Table 7-19: Get Physical Port State Port Information Block Format */
+>+#define CXL_PORT_CONFIG_STATE_DISABLED           0x0
+>+#define CXL_PORT_CONFIG_STATE_BIND_IN_PROGRESS   0x1
+>+#define CXL_PORT_CONFIG_STATE_UNBIND_IN_PROGRESS 0x2
+>+#define CXL_PORT_CONFIG_STATE_DSP                0x3
+>+#define CXL_PORT_CONFIG_STATE_USP                0x4
+>+#define CXL_PORT_CONFIG_STATE_FABRIC_PORT        0x5
+>+#define CXL_PORT_CONFIG_STATE_INVALID_PORT_ID    0xF
+>+
+>+#define CXL_PORT_CONNECTED_DEV_MODE_NOT_CXL_OR_DISCONN 0x00
+>+#define CXL_PORT_CONNECTED_DEV_MODE_RCD                0x01
+>+#define CXL_PORT_CONNECTED_DEV_MODE_68B_VH             0x02
+>+#define CXL_PORT_CONNECTED_DEV_MODE_256B               0x03
+>+#define CXL_PORT_CONNECTED_DEV_MODE_LO_256B            0x04
+>+#define CXL_PORT_CONNECTED_DEV_MODE_PBR                0x05
+>+
+>+#define CXL_PORT_CONNECTED_DEV_TYPE_NONE            0x00
+>+#define CXL_PORT_CONNECTED_DEV_TYPE_PCIE            0x01
+>+#define CXL_PORT_CONNECTED_DEV_TYPE_1               0x02
+>+#define CXL_PORT_CONNECTED_DEV_TYPE_2_OR_HBR_SWITCH 0x03
+>+#define CXL_PORT_CONNECTED_DEV_TYPE_3_SLD           0x04
+>+#define CXL_PORT_CONNECTED_DEV_TYPE_3_MLD           0x05
+>+#define CXL_PORT_CONNECTED_DEV_PBR_COMPONENT        0x06
+>+
+>+#define CXL_PORT_SUPPORTS_RCD        BIT(0)
+>+#define CXL_PORT_SUPPORTS_68B_VH     BIT(1)
+>+#define CXL_PORT_SUPPORTS_256B       BIT(2)
+>+#define CXL_PORT_SUPPORTS_LO_256B    BIT(3)
+>+#define CXL_PORT_SUPPORTS_PBR        BIT(4)
+>+
+>+#define CXL_PORT_LTSSM_DETECT        0x00
+>+#define CXL_PORT_LTSSM_POLLING       0x01
+>+#define CXL_PORT_LTSSM_CONFIGURATION 0x02
+>+#define CXL_PORT_LTSSM_RECOVERY      0x03
+>+#define CXL_PORT_LTSSM_L0            0x04
+>+#define CXL_PORT_LTSSM_L0S           0x05
+>+#define CXL_PORT_LTSSM_L1            0x06
+>+#define CXL_PORT_LTSSM_L2            0x07
+>+#define CXL_PORT_LTSSM_DISABLED      0x08
+>+#define CXL_PORT_LTSSM_LOOPBACK      0x09
+>+#define CXL_PORT_LTSSM_HOT_RESET     0x0A
+>+
+>+#define CXL_PORT_LINK_STATE_FLAG_LANE_REVERSED    BIT(0)
+>+#define CXL_PORT_LINK_STATE_FLAG_PERST_ASSERTED   BIT(1)
+>+#define CXL_PORT_LINK_STATE_FLAG_PRSNT            BIT(2)
+>+#define CXL_PORT_LINK_STATE_FLAG_POWER_OFF        BIT(3)
+>+
+>+typedef struct CXLPhyPortInfo {
+>+    uint8_t port_id;
+>+    uint8_t current_port_config_state;
+>+    uint8_t connected_device_mode;
+>+    uint8_t rsv1;
+>+    uint8_t connected_device_type;
+>+    uint8_t supported_cxl_modes;
+>+    uint8_t max_link_width;
+>+    uint8_t negotiated_link_width;
+>+    uint8_t supported_link_speeds_vector;
+>+    uint8_t max_link_speed;
+>+    uint8_t current_link_speed;
+>+    uint8_t ltssm_state;
+>+    uint8_t first_negotiated_lane_num;
+>+    uint16_t link_state_flags;
+>+    uint8_t supported_ld_count;
+>+} QEMU_PACKED CXLPhyPortInfo;
+>+
+>+void cxl_init_physical_port_info(PCIDevice *port_dev, CXLPhyPortInfo *info,
+>+                                 uint8_t pn,
+>+                                 uint8_t current_port_config_state,
+>+                                 uint8_t connected_device_type,
+>+                                 uint8_t supported_ld_count);
+>+
+>+/* Common data for CXL USP and DSP */
+>+typedef struct CXLSwitchPortData {
+>+    CXLPhyPortInfo info;
+>+} CXLSwitchPortData;
+>+
+>+#endif /* CXL_PORT_H */
+>diff --git a/include/hw/pci-bridge/cxl_downstream_port.h b/include/hw/pci-bridge/cxl_downstream_port.h
+>new file mode 100644
+>index 000000000000..c3f058365283
+>--- /dev/null
+>+++ b/include/hw/pci-bridge/cxl_downstream_port.h
+>@@ -0,0 +1,11 @@
+>+#ifndef CXL_DOWNSTREAM_PORT_H
+>+#define CXL_DOWNSTREAM_PORT_H
+>+#include "hw/pci/pcie.h"
+>+#include "hw/pci/pcie_port.h"
+>+#include "hw/cxl/cxl.h"
+>+#include "include/hw/cxl/cxl_port.h"
+>+
+>+typedef struct CXLDownstreamPort CXLDownstreamPort;
+>+CXLPhyPortInfo *cxl_dsp_get_physical_port_info(CXLDownstreamPort *dsp);
+>+
+>+#endif
+>diff --git a/include/hw/pci-bridge/cxl_upstream_port.h b/include/hw/pci-bridge/cxl_upstream_port.h
+>index e3d6a27acc86..fe367fb66f0c 100644
+>--- a/include/hw/pci-bridge/cxl_upstream_port.h
+>+++ b/include/hw/pci-bridge/cxl_upstream_port.h
+>@@ -4,6 +4,7 @@
+> #include "hw/pci/pcie.h"
+> #include "hw/pci/pcie_port.h"
+> #include "hw/cxl/cxl.h"
+>+#include "include/hw/cxl/cxl_port.h"
+>
+> typedef struct CXLUpstreamPort {
+>     /*< private >*/
+>@@ -19,6 +20,10 @@ typedef struct CXLUpstreamPort {
+>
+>     DOECap doe_cdat;
+>     uint64_t sn;
+>+
+>+    CXLSwitchPortData swport_data;
+> } CXLUpstreamPort;
+>
+>+void cxl_set_physical_port_info(CXLUpstreamPort *cxl_usp);
+>+
+> #endif /* CXL_SUP_H */
+>diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+>index 2f449980cdc0..f7aa56b0d385 100644
+>--- a/hw/cxl/cxl-mailbox-utils.c
+>+++ b/hw/cxl/cxl-mailbox-utils.c
+>@@ -13,9 +13,11 @@
+> #include "hw/pci/msi.h"
+> #include "hw/pci/msix.h"
+> #include "hw/cxl/cxl.h"
+>+#include "hw/cxl/cxl_port.h"
+> #include "hw/cxl/cxl_events.h"
+> #include "hw/cxl/cxl_mailbox.h"
+> #include "hw/pci/pci.h"
+>+#include "hw/pci-bridge/cxl_downstream_port.h"
+> #include "hw/pci-bridge/cxl_upstream_port.h"
+> #include "qemu/cutils.h"
+> #include "qemu/host-utils.h"
+>@@ -488,13 +490,21 @@ static CXLRetCode cmd_set_response_msg_limit(const struct cxl_cmd *cmd,
+>     return CXL_MBOX_SUCCESS;
+> }
+>
+>-static void cxl_set_dsp_active_bm(PCIBus *b, PCIDevice *d,
+>-                                  void *private)
+>+static uint8_t cxl_num_switch_ports(CXLUpstreamPort *usp)
+> {
+>-    uint8_t *bm = private;
+>-    if (object_dynamic_cast(OBJECT(d), TYPE_CXL_DSP)) {
+>-        uint8_t port = PCIE_PORT(d)->port;
+>-        bm[port / 8] |= 1 << (port % 8);
+>+    PCIBus *bus = &PCI_BRIDGE(usp)->sec_bus;
+>+
+>+    return pcie_count_ds_ports(bus) + 1;
+>+}
+>+
+>+static void cxl_mark_dsp_active(PCIBus *bus, PCIDevice *dev, void *opaque)
+>+{
+>+    uint8_t *bitmask = opaque;
+>+
+>+    if (object_dynamic_cast(OBJECT(dev), TYPE_CXL_DSP)) {
+>+        uint8_t pn = PCIE_PORT(dev)->port;
+>+
+>+        bitmask[pn / 8] |= (1 << (pn % 8));
+>     }
+> }
+>
+>@@ -506,9 +516,9 @@ static CXLRetCode cmd_identify_switch_device(const struct cxl_cmd *cmd,
+>                                              size_t *len_out,
+>                                              CXLCCI *cci)
+> {
+>-    PCIEPort *usp = PCIE_PORT(cci->d);
+>-    PCIBus *bus = &PCI_BRIDGE(cci->d)->sec_bus;
+>-    int num_phys_ports = pcie_count_ds_ports(bus);
+>+    CXLUpstreamPort *pp = CXL_USP(cci->d);
+>+    uint8_t num_phys_ports = cxl_num_switch_ports(pp);
+>+    uint8_t pn;
+>
+>     struct cxl_fmapi_ident_switch_dev_resp_pl {
+>         uint8_t ingress_port_id;
+>@@ -525,11 +535,11 @@ static CXLRetCode cmd_identify_switch_device(const struct cxl_cmd *cmd,
+>
+>     out = (struct cxl_fmapi_ident_switch_dev_resp_pl *)payload_out;
+>     *out = (struct cxl_fmapi_ident_switch_dev_resp_pl) {
+>-        .num_physical_ports = num_phys_ports + 1, /* 1 USP */
+>+        .num_physical_ports = num_phys_ports,
+>         .num_vcss = 1, /* Not yet support multiple VCS - potentially tricky */
+>         .active_vcs_bitmask[0] = 0x1,
+>-        .total_vppbs = num_phys_ports + 1,
+>-        .bound_vppbs = num_phys_ports + 1,
+>+        .total_vppbs = num_phys_ports,
+>+        .bound_vppbs = num_phys_ports,
+>         .num_hdm_decoders_per_usp = 4,
+>     };
+>
+>@@ -541,16 +551,46 @@ static CXLRetCode cmd_identify_switch_device(const struct cxl_cmd *cmd,
+>         out->ingress_port_id = 0;
+>     }
+>
+>-    pci_for_each_device_under_bus(bus, cxl_set_dsp_active_bm,
+>+    pn = PCIE_PORT(pp)->port;
+>+    out->active_port_bitmask[pn / 8] |= (1 << pn % 8);
+>+    pci_for_each_device_under_bus(&PCI_BRIDGE(pp)->sec_bus,
+>+                                  cxl_mark_dsp_active,
+>                                   out->active_port_bitmask);
+>-    out->active_port_bitmask[usp->port / 8] |= (1 << usp->port % 8);
+>
+>     *len_out = sizeof(*out);
+>
+>     return CXL_MBOX_SUCCESS;
+> }
+>
+>-/* CXL r3.1 Section 7.6.7.1.2: Get Physical Port State (Opcode 5101h) */
+>+static CXLDownstreamPort *cxl_find_dsp_on_bus(PCIBus *bus, uint8_t pn)
+>+{
+>+
+>+    PCIDevice *port_dev = pcie_find_port_by_pn(bus, pn);
+>+
+>+    if (object_dynamic_cast(OBJECT(port_dev), TYPE_CXL_DSP)) {
+>+        return CXL_DSP(port_dev);
+>+    }
+>+
+>+    return NULL;
+>+}
+>+
+>+static CXLPhyPortInfo *cxl_get_phyport_info(CXLUpstreamPort *usp, uint8_t pn)
+>+{
+>+    CXLDownstreamPort *dsp;
+>+
+>+    if (usp->swport_data.info.port_id == pn) {
+>+        return &usp->swport_data.info;
+>+    }
+>+
+>+    dsp = cxl_find_dsp_on_bus(&PCI_BRIDGE(usp)->sec_bus, pn);
+>+    if (dsp) {
+>+        return cxl_dsp_get_physical_port_info(dsp);
+>+    }
+>+
+>+    return NULL;
+>+}
+>+
+>+/* CXL r3.2 Section 7.6.7.1.2: Get Physical Port State (Opcode 5101h) */
+> static CXLRetCode cmd_get_physical_port_state(const struct cxl_cmd *cmd,
+>                                               uint8_t *payload_in,
+>                                               size_t len_in,
+>@@ -558,44 +598,22 @@ static CXLRetCode cmd_get_physical_port_state(const struct cxl_cmd *cmd,
+>                                               size_t *len_out,
+>                                               CXLCCI *cci)
+> {
+>-    /* CXL r3.1 Table 7-17: Get Physical Port State Request Payload */
+>+    CXLUpstreamPort *pp = CXL_USP(cci->d);
+>+    size_t pl_size;
+>+    int i;
+>+
+>+    /* CXL r3.2 Table 7-17: Get Physical Port State Request Payload */
+>     struct cxl_fmapi_get_phys_port_state_req_pl {
+>         uint8_t num_ports;
+>         uint8_t ports[];
+>     } QEMU_PACKED *in;
+>
+>-    /*
+>-     * CXL r3.1 Table 7-19: Get Physical Port State Port Information Block
+>-     * Format
+>-     */
+>-    struct cxl_fmapi_port_state_info_block {
+>-        uint8_t port_id;
+>-        uint8_t config_state;
+>-        uint8_t connected_device_cxl_version;
+>-        uint8_t rsv1;
+>-        uint8_t connected_device_type;
+>-        uint8_t port_cxl_version_bitmask;
+>-        uint8_t max_link_width;
+>-        uint8_t negotiated_link_width;
+>-        uint8_t supported_link_speeds_vector;
+>-        uint8_t max_link_speed;
+>-        uint8_t current_link_speed;
+>-        uint8_t ltssm_state;
+>-        uint8_t first_lane_num;
+>-        uint16_t link_state;
+>-        uint8_t supported_ld_count;
+>-    } QEMU_PACKED;
+>-
+>-    /* CXL r3.1 Table 7-18: Get Physical Port State Response Payload */
+>+    /* CXL r3.2 Table 7-18: Get Physical Port State Response Payload */
+>     struct cxl_fmapi_get_phys_port_state_resp_pl {
+>         uint8_t num_ports;
+>         uint8_t rsv1[3];
+>-        struct cxl_fmapi_port_state_info_block ports[];
+>+        CXLPhyPortInfo ports[];
+>     } QEMU_PACKED *out;
+>-    PCIBus *bus = &PCI_BRIDGE(cci->d)->sec_bus;
+>-    PCIEPort *usp = PCIE_PORT(cci->d);
+>-    size_t pl_size;
+>-    int i;
+>
+>     in = (struct cxl_fmapi_get_phys_port_state_req_pl *)payload_in;
+>     out = (struct cxl_fmapi_get_phys_port_state_resp_pl *)payload_out;
+>@@ -608,69 +626,22 @@ static CXLRetCode cmd_get_physical_port_state(const struct cxl_cmd *cmd,
+>         return CXL_MBOX_INVALID_INPUT;
+>     }
+>
+>-    /* For success there should be a match for each requested */
+>-    out->num_ports = in->num_ports;
+>+    if (in->num_ports > cxl_num_switch_ports(pp)) {
+>+        return CXL_MBOX_INVALID_INPUT;
+>+    }
+>
+>     for (i = 0; i < in->num_ports; i++) {
+>-        struct cxl_fmapi_port_state_info_block *port;
+>-        /* First try to match on downstream port */
+>-        PCIDevice *port_dev;
+>-        uint16_t lnkcap, lnkcap2, lnksta;
+>-
+>-        port = &out->ports[i];
+>-
+>-        port_dev = pcie_find_port_by_pn(bus, in->ports[i]);
+>-        if (port_dev) { /* DSP */
+>-            PCIDevice *ds_dev = pci_bridge_get_sec_bus(PCI_BRIDGE(port_dev))
+>-                ->devices[0];
+>-            port->config_state = 3;
+>-            if (ds_dev) {
+>-                if (object_dynamic_cast(OBJECT(ds_dev), TYPE_CXL_TYPE3)) {
+>-                    port->connected_device_type = 5; /* Assume MLD for now */
+>-                } else {
+>-                    port->connected_device_type = 1;
+>-                }
+>-            } else {
+>-                port->connected_device_type = 0;
+>-            }
+>-            port->supported_ld_count = 3;
+>-        } else if (usp->port == in->ports[i]) { /* USP */
+>-            port_dev = PCI_DEVICE(usp);
+>-            port->config_state = 4;
+>-            port->connected_device_type = 0;
+>-        } else {
+>+        int pn = in->ports[i];
+>+        CXLPhyPortInfo *info = cxl_get_phyport_info(pp, pn);
+>+
+>+        if (!info) {
+>             return CXL_MBOX_INVALID_INPUT;
+>         }
+>
+>-        port->port_id = in->ports[i];
+>-        /* Information on status of this port in lnksta, lnkcap */
+>-        if (!port_dev->exp.exp_cap) {
+>-            return CXL_MBOX_INTERNAL_ERROR;
+>-        }
+>-        lnksta = port_dev->config_read(port_dev,
+>-                                       port_dev->exp.exp_cap + PCI_EXP_LNKSTA,
+>-                                       sizeof(lnksta));
+>-        lnkcap = port_dev->config_read(port_dev,
+>-                                       port_dev->exp.exp_cap + PCI_EXP_LNKCAP,
+>-                                       sizeof(lnkcap));
+>-        lnkcap2 = port_dev->config_read(port_dev,
+>-                                        port_dev->exp.exp_cap + PCI_EXP_LNKCAP2,
+>-                                        sizeof(lnkcap2));
+>-
+>-        port->max_link_width = (lnkcap & PCI_EXP_LNKCAP_MLW) >> 4;
+>-        port->negotiated_link_width = (lnksta & PCI_EXP_LNKSTA_NLW) >> 4;
+>-        /* No definition for SLS field in linux/pci_regs.h */
+>-        port->supported_link_speeds_vector = (lnkcap2 & 0xFE) >> 1;
+>-        port->max_link_speed = lnkcap & PCI_EXP_LNKCAP_SLS;
+>-        port->current_link_speed = lnksta & PCI_EXP_LNKSTA_CLS;
+>-        /* TODO: Track down if we can get the rest of the info */
+>-        port->ltssm_state = 0x7;
+>-        port->first_lane_num = 0;
+>-        port->link_state = 0;
+>-        port->port_cxl_version_bitmask = 0x2;
+>-        port->connected_device_cxl_version = 0x2;
+>+        memcpy(&out->ports[i], info, sizeof(*info));
+>     }
+>
+>+    out->num_ports = in->num_ports;
+>     pl_size = sizeof(*out) + sizeof(*out->ports) * in->num_ports;
+>     *len_out = pl_size;
+>
+>@@ -4633,6 +4604,45 @@ void cxl_add_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmd_set)[256],
+>     cxl_rebuild_cel(cci);
+> }
+>
+>+void cxl_init_physical_port_info(PCIDevice *port_dev, CXLPhyPortInfo *info,
+>+                                 uint8_t pn,
+>+                                 uint8_t current_port_config_state,
+>+                                 uint8_t connected_device_type,
+>+                                 uint8_t supported_ld_count)
+>+{
+>+    uint16_t lnkcap, lnkcap2, lnksta;
+>+
+>+    if (!port_dev->exp.exp_cap) {
+>+        return;
+>+    }
+>+    lnksta = port_dev->config_read(port_dev,
+>+                                   port_dev->exp.exp_cap + PCI_EXP_LNKSTA,
+>+                                   sizeof(lnksta));
+>+    lnkcap = port_dev->config_read(port_dev,
+>+                                   port_dev->exp.exp_cap + PCI_EXP_LNKCAP,
+>+                                   sizeof(lnkcap));
+>+    lnkcap2 = port_dev->config_read(port_dev,
+>+                                    port_dev->exp.exp_cap + PCI_EXP_LNKCAP2,
+>+                                    sizeof(lnkcap2));
+>+
+>+    *info = (CXLPhyPortInfo) {
+>+        .port_id = pn,
+>+        .current_port_config_state = current_port_config_state,
+>+        .connected_device_mode = CXL_PORT_CONNECTED_DEV_MODE_256B,
+>+        .connected_device_type = connected_device_type,
+>+        .supported_cxl_modes = CXL_PORT_SUPPORTS_256B,
+>+        .max_link_width = (lnkcap & PCI_EXP_LNKCAP_MLW) >> 4,
+>+        .negotiated_link_width = (lnksta & PCI_EXP_LNKSTA_NLW) >> 4,
+>+        .supported_link_speeds_vector = (lnkcap2 & 0xFE) >> 1,
+>+        .max_link_speed = lnkcap & PCI_EXP_LNKCAP_SLS,
+>+        .current_link_speed = lnksta & PCI_EXP_LNKSTA_CLS,
+>+        .ltssm_state = CXL_PORT_LTSSM_L2,
+>+        .first_negotiated_lane_num = 0,
+>+        .link_state_flags = 0,
+>+        .supported_ld_count = supported_ld_count,
+>+    };
+>+}
+>+
+> void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
+>                                   DeviceState *d, size_t payload_max)
+> {
+>diff --git a/hw/pci-bridge/cxl_downstream.c b/hw/pci-bridge/cxl_downstream.c
+>index 320818a8f1ce..8611f54ebd0c 100644
+>--- a/hw/pci-bridge/cxl_downstream.c
+>+++ b/hw/pci-bridge/cxl_downstream.c
+>@@ -13,6 +13,7 @@
+> #include "hw/pci/msi.h"
+> #include "hw/pci/pcie.h"
+> #include "hw/pci/pcie_port.h"
+>+#include "hw/pci-bridge/cxl_downstream_port.h"
+> #include "hw/core/qdev-properties.h"
+> #include "hw/core/qdev-properties-system.h"
+> #include "hw/cxl/cxl.h"
+>@@ -24,6 +25,7 @@ typedef struct CXLDownstreamPort {
+>
+>     /*< public >*/
+>     CXLComponentState cxl_cstate;
+>+    CXLSwitchPortData swport_data;
+> } CXLDownstreamPort;
+>
+> #define CXL_DOWNSTREAM_PORT_MSI_OFFSET 0x70
+>@@ -81,6 +83,31 @@ static void cxl_dsp_config_write(PCIDevice *d, uint32_t address,
+>     cxl_dsp_dvsec_write_config(d, address, val, len);
+> }
+>
+>+CXLPhyPortInfo *cxl_dsp_get_physical_port_info(CXLDownstreamPort *dsp)
+>+{
+>+    CXLPhyPortInfo *info = &dsp->swport_data.info;
+>+    uint8_t connected_device_type;
+>+    PCIDevice *port_dev = PCI_DEVICE(dsp);
+>+    PCIDevice *ds_dev = pci_bridge_get_sec_bus(PCI_BRIDGE(dsp))
+>+        ->devices[0];
+>+
+>+    if (ds_dev) {
+>+        if (object_dynamic_cast(OBJECT(ds_dev), TYPE_CXL_TYPE3)) {
+>+            connected_device_type = CXL_PORT_CONNECTED_DEV_TYPE_3_SLD;
+>+        } else {
+>+            connected_device_type = CXL_PORT_CONNECTED_DEV_TYPE_PCIE;
+>+        }
+>+    } else {
+>+        connected_device_type = CXL_PORT_CONNECTED_DEV_TYPE_NONE;
+>+    }
+>+
+>+    cxl_init_physical_port_info(port_dev, info, PCIE_PORT(dsp)->port,
+>+                                CXL_PORT_CONFIG_STATE_DSP,
+>+                                connected_device_type, 3);
+>+
+>+    return info;
+>+}
+>+
+> static void cxl_dsp_reset(DeviceState *qdev)
+> {
+>     PCIDevice *d = PCI_DEVICE(qdev);
+>diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
+>index fb8d19539c9f..64f31110ff2c 100644
+>--- a/hw/pci-bridge/cxl_upstream.c
+>+++ b/hw/pci-bridge/cxl_upstream.c
+>@@ -103,6 +103,11 @@ static void cxl_usp_reset(DeviceState *qdev)
+>     pcie_cap_deverr_reset(d);
+>     pcie_cap_fill_link_ep_usp(d, usp->width, usp->speed, usp->flitmode);
+>     latch_registers(usp);
+>+
+>+    /* Assume that the info about the upstream link only changes on reset. */
+>+    cxl_init_physical_port_info(PCI_DEVICE(usp), &usp->swport_data.info,
+>+                                PCIE_PORT(usp)->port, CXL_PORT_CONFIG_STATE_USP,
+>+                                CXL_PORT_CONNECTED_DEV_TYPE_NONE, 0);
+> }
+>
+> static void build_dvsecs(CXLUpstreamPort *usp)
+>-- 
+>2.48.1
+>
+>
+>
+>>
+>> Additionally, it introduces new support for Physical Port Control
+>> of Physical Switch Command Set as per CXL spec r3.2 Section 7.6.7.1.3.
+>> It primarily constitutes two logic:
+>>     -Assert-Deassert PERST: Assert PERST involves physical port to be in
+>>      hold reset phase for minimum 100ms. No other physical port control
+>>      request are entertained until Deassert PERST command for the given
+>>      port is issued.
+>>     -Reset PPB: cold reset of physical port (completing enter->hold->exit
+>>      phases).
+>>
+>> Tested using libcxl-mi interface[1]:
+>> All active ports and all opcodes per active port is tested. Also, tested
+>> against possible edge cases manually since the interface currently dosen't
+>> support run time input.
+>>
+>> Typical Qemu topology
+>> (1 USP + 3 DSP's in a switch with 2 CXLType3 devices connected to the 2 DSP's):
+>> FM="-object memory-backend-file,id=cxl-mem1,mem-path=$TMP_DIR/t3_cxl1.raw,size=256M \
+>>     -object memory-backend-file,id=cxl-lsa1,mem-path=$TMP_DIR/t3_lsa1.raw,size=1M \
+>>     -object memory-backend-file,id=cxl-mem2,mem-path=$TMP_DIR/t3_cxl2.raw,size=512M \
+>>     -object memory-backend-file,id=cxl-lsa2,mem-path=$TMP_DIR/t3_lsa2.raw,size=512M \
+>>     -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
+>>     -device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
+>>     -device cxl-upstream,port=2,sn=1234,bus=cxl_rp_port0,id=us0,addr=0.0,multifunction=on, \
+>>     -device cxl-switch-mailbox-cci,bus=cxl_rp_port0,addr=0.1,target=us0 \
+>>     -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
+>>     -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
+>>     -device cxl-downstream,port=3,bus=us0,id=swport2,chassis=0,slot=6 \
+>>     -device cxl-type3,bus=swport0,memdev=cxl-mem1,id=cxl-pmem1,lsa=cxl-lsa1,sn=3 \
+>>     -device cxl-type3,bus=swport2,memdev=cxl-mem2,id=cxl-pmem2,lsa=cxl-lsa2,sn=4 \
+>>     -machine cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=1k \
+>>     -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=4,target=us0 \
+>>     -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=5,target=cxl-pmem1 \
+>>     -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=6,target=cxl-pmem2 \
+>>     -device virtio-rng-pci,bus=swport1"
+>>
+>> Tested multiple Qemu topologies:
+>>         -without any devices connected to downstream ports.
+>>         -with virtio-rng-pci devices connected to downstream ports.
+>>         -with CXLType3 devices connected to downstream ports.
+>>         -with different unique values of ports (both upstream and downstream).
+>>
+>> Changes from v3 (https://lore.kernel.org/qemu-devel/20250909160316.00000190@huawei.com/T/):
+>>         -Namespaced the defines with cleaner prefix for Get Physical Port State
+>>          Port Information Block members.
+>>         -switch CCI implementation instead of switch FM interface as per
+>>          Jonathan's review comments, hence moved perst members initializations
+>>          from: cxl_initialize_usp_mctpcci() -> cxl_initialize_mailbox_swcci().
+>>
+>> [1] https://github.com/computexpresslink/libcxlmi/commit/35fe68bd9a31469f832a87694d7b18d2d50be5b8
+>>
+>> The patches are generated against the Johnathan's tree
+>> https://gitlab.com/jic23/qemu.git and branch cxl-2025-07-03.
+>>
+>> Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
+>>
+>> Arpit Kumar (2):
+>>   hw/cxl: Refactored Identify Switch Device & Get Physical Port State
+>>   hw/cxl: Add Physical Port Control (Opcode 5102h)
+>>
+>>  hw/cxl/cxl-mailbox-utils.c                | 368 +++++++++++++++-------
+>>  include/hw/cxl/cxl_device.h               |  76 +++++
+>>  include/hw/cxl/cxl_mailbox.h              |   1 +
+>>  include/hw/pci-bridge/cxl_upstream_port.h |   9 +
+>>  4 files changed, 348 insertions(+), 106 deletions(-)
+>>
+>
 
-> Cancel the timeout when all expected endpoints attach or the region is
-> unregistered for any reason.
+------HKC0oM6l2X7jDELFNxUL3gr1rNZobpnU9ZVzK0VPY15yFScq=_13d05c_
+Content-Type: text/plain; charset="utf-8"
 
-Setting aside the above, this looks like policy, and every time I see
-policy the first question is "can userspace do it?". It would be
-straightforward for userspace to kick a 30 second watchdog upon each
-region KOBJ_ADD event. Each time that fires go cleanup partially
-assembled regions.
 
-For example there is no automatic cleanup of partially assembled RAID
-arrays. So, precedent leans towards letting userspace decide what
-happens when composite devices fail assembly.
+------HKC0oM6l2X7jDELFNxUL3gr1rNZobpnU9ZVzK0VPY15yFScq=_13d05c_--
