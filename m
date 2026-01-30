@@ -1,164 +1,225 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011067.outbound.protection.outlook.com [40.107.208.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB1E30275E
-	for <linux-cxl@vger.kernel.org>; Fri, 30 Jan 2026 21:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769808657; cv=none; b=attpUf8rWKATI6dkvSWAQHu9Y9fuvLCxfB/ILSAMlmi+PKK5oG+mnNslmawx1ox0Ym/plM2hf3Cv7ULq5wXYpNmoZ8eE0kc7XHAXo7T2K0mW7Kt7DpQfZ81YqlcpLSC0VTcA9uK6N6/wE1ACqkzZAJNF4JRAeDQz063uS6bw9TE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769808657; c=relaxed/simple;
-	bh=bBumb4wOVmbLHldIa2T2tL7+pqn5rzbhzytHwH/bXOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OTdInjW8J1krkI/uI1Bf4DddzIUoVRIbc+76X+vGzFbcG3HbV7O3ruvCDU0QCgNG7peppd5UEWTbF30xRw+6fZ/Q2BJNsKE5Sx5jK+Nx8U9APCJz0lLWM+WDauAlRFIQUBjb0mgrPUSzMtYbvf+LpZXImq3MVrw1gdyjI7G2JB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=CsA4HBTI; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F2C346A00
+	for <linux-cxl@vger.kernel.org>; Fri, 30 Jan 2026 21:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769809520; cv=fail; b=lBGxSXc63eWOQG37EWg21RzFbu8jhb2eoEgSMRvmJirpEYMcNYMDLluMEDGTTxNS/EOq8oJI2/0Glm/80UpoCmQY/jt1Ts6+QFV+4EeahQNn4TkFtqRSGi13/+BDRowJRxHeL9EbSYwIpn+thT8iT9mffZH5tsw8lRJJLAcVbxY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769809520; c=relaxed/simple;
+	bh=a9V32aOccTPfYcCnm9vFMBYrcJfk0HvmLjT2QE372iQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=J849E6hRLJA0gPPS5/NzkP2iAzU1iyc0rfoGi+So73Lo/KdgXDPlPO8j8pbJoQNiFHuoaqq4jf7kXaFOtzbjrQgGtM2apxveO7PdmkdeoztKqURfMNpI3yh9E7jbraaQHDbDTAshSj2e27Dj+o2Pj+jyiPqVi+nRYJK+WLZ0BTg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=C46cHSL7; arc=fail smtp.client-ip=40.107.208.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="CsA4HBTI"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-8c7199e7f79so395940685a.0
-        for <linux-cxl@vger.kernel.org>; Fri, 30 Jan 2026 13:30:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1769808654; x=1770413454; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Myo8BlVbIEmhmbpuUhZTyWcAan7tiuqku2w7KxqWRXI=;
-        b=CsA4HBTIqU0nuIsMk709RQNBtXsbWFBhu7yNMgsJdmFDVcjgl5+6zeYGLbBLay4995
-         DjA3Q+buZ6Wkz+yCvlulhMGF3D58wD2mIivO/hqcHIG5sL7Q1QS2pU5a9RAM/JpjVzGn
-         VNiJQh7yG8O6Sv25tk/q3rZztTk7YcU0ZPVHw5OGhv5YHx5XdvjvvKJCg8fvkdQN0tId
-         ombNikskk45fu4pbbnlvrzobFT8bmfdbIn0br07m6stg8J7G5wKuxLAMTm9jMCF/++dF
-         4MZibwx0dK/a0bqQ4vy3zrqJomw+XqJZQheOPoSjWI3j/2g/PaAHjceCXc6/aEMUCnv0
-         qVnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769808654; x=1770413454;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Myo8BlVbIEmhmbpuUhZTyWcAan7tiuqku2w7KxqWRXI=;
-        b=vjrBG+DmI3yZdyyP2cctrZwhb5pCMETKzFadh40kxc5/CRHWYRVPVef2XKPc90+uNO
-         HAI4tHnorUgH3LTsqsfHRjQwrAdcGUxk3E6cbKZLOFsQY+vBuehPf9J+mG/p7cqUN2Fn
-         dJltuvWsanEgJnXliV8HJywaLuSZd3/jM6sYCPCszLd7vzF8eF2Pc7Ht1ql8Q+Qips+6
-         Ajswlx6HXFpuVXq9MqtZy16VpYVG8fsSYwwjD+Q01SLCAkd9TX7rtnflo5vPHpopt43p
-         SATAX64CFD4rWeaM4W8Qd9sc9IewBrHmtafeYJD8JdIbtQ6y7sXer3BK1DQ1WuwbmrwV
-         fngQ==
-X-Gm-Message-State: AOJu0YwzGa01TygBxrDyNibALNR0EdULheotuLFxt0x8hdCKUOLVnHMK
-	SLLhO3m4Ps0xxH7f0bCtQZM2BG/M/3iI/1myr2wJlAzmcFSnaqDohtZNjATtahkjdb+WAOPhPAv
-	4+quMAhQ=
-X-Gm-Gg: AZuq6aIvi0ylgjUiGOIDbiGacz3zQyaunllnNX/ev3QzlopRZQxsYP5V4bM4Qq09oTn
-	/2K8CVDU2398wYHGzTSGyKjkdcFwq3KJf6UQ/YQCBf45XSNuWIxtSkWv5J5bjqmAhaeiv560u5l
-	iKRcXIlH3a3HquyLqllvz2FWdte3pxN0P+nfDVE009nmJGYpFw9ujkbCkegRthkliwBxPUTwaQ4
-	vm5Dt31ECj4No5S/G+WBDLRQ+OVzWyPBzqEvSJF9hncLoDvgdQ9OA2fxiECJnzT7vwLIBP9AbNE
-	PFoVv42YjFwOhbvFsP/0if7w121JX4C8MRF21el2gPvi7n1TFZJyuwDL7SyXJ1kYvcZfbDcRSbn
-	d7m/zYR3uwfTxNsCkFmtilzncKWldZul0aLJIIDvV4oTmhaDevNOoxFnh1t007AKMjexPUJF5d3
-	pm8nHTUKvQZ4WU/g3IdfwzynTY+EKdGKZn2udGfrd9PonePFXnkBvzZs/Fp2qdiWWS9G5pLQ==
-X-Received: by 2002:a05:620a:ac1c:b0:8c9:fac8:c256 with SMTP id af79cd13be357-8c9fac8c30emr132485285a.77.1769808654253;
-        Fri, 30 Jan 2026 13:30:54 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c711d28c71sm730869885a.33.2026.01.30.13.30.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jan 2026 13:30:53 -0800 (PST)
-Date: Fri, 30 Jan 2026 16:30:51 -0500
-From: Gregory Price <gourry@gourry.net>
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: Re: RFC: CXL Isolation Support
-Message-ID: <aX0jC3DEqcnyrg7x@gourry-fedora-PF4VCD3F>
-References: <b4f7a760-5cf4-4343-8f7e-9698ba435fa4@amd.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="C46cHSL7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=effWFvmfs1iBWdU5GHI/GjDwSnZF7Plz/KSKo+e2QcAH5gcBvU8RHS2kHFh1CWaks3dB33wIDb1R5HcX1Y5jDZngr4drLOF4/gLN6kPtEMC1L2P+T6KGgHF8gKADqt25NL13DyWnSRlS8caE5xq+A6/IDJp7UFGBz2wDq5NIzd/miRtSZHB87kjSlwWEMHK1PbOCk5PUeIOJYI0jf+KhLoV1Wnfly9OlAb/bkeLmAmpPn9kM96nGwNuIEj2UxZQWc6yDivJUrA/qSBrmVa79ZCarXctJq+KqZSjyKnwLZo4cOl912ZRdVj9+fq2ESuSCxcCOZoGDFOgOeOCYnm6RSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gBbRwqrKKLCHPWaD4my+42vE+P+PcgIuOBEITKEAtu8=;
+ b=x4w/sxbwAyJiBrC3eihbYWTr84E6S1//VhxhlCLdyRTM5lsy5Q7Lja8Enhk7qBQ9YhcW3/RVwiX3I4zkkXbZPIDhuTVie1hdBUW+feAfKd/rTEXrUWGUoOmp2AZ3DE17uwNq96ecTYq9Kqk6R4960vl55AWRw7bateEUGz1Nw0/7zKWjXMcj6Zz29DAaLsGbr3vK19dOJsDc5nIyZZLRv/XpYxUnXQpEn1BWy4DmH0qdjdsMZyoY0EWFwNYtlHaaLVxRUbx39cWsIirRW4VAyMa/oivzbBlwJ54AfSQueWUvRdRSYu33Mkq+wudNPHktvuseQUSP5i2ptyHuSJPPXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gBbRwqrKKLCHPWaD4my+42vE+P+PcgIuOBEITKEAtu8=;
+ b=C46cHSL7rhO+biKQMSxkqBY2nfYqmkdsldpmgqBJiNIp2vkHy8amddfv20fe2emdFcke8PYORTgRrwKOlpke3UOw9bKmUYNtNblhTypOcoI4yAcpsg+RyIvo4ty33cQ1RSuYBpPi4k83YK0TsyZFF0/n6YT6L4oMl6KvTTLs7Kk=
+Received: from MW4PR04CA0285.namprd04.prod.outlook.com (2603:10b6:303:89::20)
+ by PH0PR12MB999113.namprd12.prod.outlook.com (2603:10b6:510:38f::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.7; Fri, 30 Jan
+ 2026 21:45:16 +0000
+Received: from MWH0EPF000989E9.namprd02.prod.outlook.com
+ (2603:10b6:303:89:cafe::2a) by MW4PR04CA0285.outlook.office365.com
+ (2603:10b6:303:89::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9564.11 via Frontend Transport; Fri,
+ 30 Jan 2026 21:44:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ MWH0EPF000989E9.mail.protection.outlook.com (10.167.241.136) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9564.3 via Frontend Transport; Fri, 30 Jan 2026 21:45:15 +0000
+Received: from [172.31.131.86] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 30 Jan
+ 2026 15:45:14 -0600
+Message-ID: <ff553d4a-a1cd-4d23-b0a2-baf4d7aa72a6@amd.com>
+Date: Fri, 30 Jan 2026 15:45:09 -0600
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4f7a760-5cf4-4343-8f7e-9698ba435fa4@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7/7] Documentation: Add docs for inject/clear-error
+ commands
+To: "Verma, Vishal L" <vishal.l.verma@intel.com>, "nvdimm@lists.linux.dev"
+	<nvdimm@lists.linux.dev>
+CC: "Schofield, Alison" <alison.schofield@intel.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "Jiang, Dave"
+	<dave.jiang@intel.com>
+References: <20260122203728.622-1-Benjamin.Cheatham@amd.com>
+ <20260122203728.622-8-Benjamin.Cheatham@amd.com>
+ <4e3cf71a568f98a8349416874a7f08a5e5099799.camel@intel.com>
+ <dead69ac-86ee-46ff-ab38-c964935cda13@amd.com>
+ <34210a8339035800430a9d4084154e17c285ee86.camel@intel.com>
+Content-Language: en-US
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+In-Reply-To: <34210a8339035800430a9d4084154e17c285ee86.camel@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989E9:EE_|PH0PR12MB999113:EE_
+X-MS-Office365-Filtering-Correlation-Id: ca7238c3-880c-43c2-bde1-08de6048dab8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?blIrOFllR3hrMU8ya0NieUF2Z3RXT1V3K3RJazIvNzU2dXdHbjJTZDhBWFlP?=
+ =?utf-8?B?U0hiTUVoNTRDaUt6d1gyeE55SHBwdlZweWdWc240bjltRTc0K2pZUjNGY0J3?=
+ =?utf-8?B?djVyZGZldS82dHVFSkFHaEw4L212NVdaMityNkpneDFROVM5eGphZUQ1Snhw?=
+ =?utf-8?B?RW03OUpRMTJ5c3R6aFhlbEFMdFlieEJUYURIRVJKdkpKbDJZdnY2ZHRnMWxH?=
+ =?utf-8?B?UlFsT3A5M2NXL0NDbFRSamNNOFZNT3hWKzduZUZaTkdsVEtXQlplZTdnMndV?=
+ =?utf-8?B?M082Y2xGSUdjenB1eWZTUzRWdkowV2kxdXZtNUJiaXpOTXRCdVBSaXdXdDNz?=
+ =?utf-8?B?SnRiZHhxSkJSR0hnM0xud2ZpQ2M1bmQ0TkcyMlk4RFpqSkFDWWJOWkhneE84?=
+ =?utf-8?B?RW9pQ09oZWlveGhjTVM5dWt6UHlzZHRVdjRzRDMwblNubVVUWThWaHUvdHNK?=
+ =?utf-8?B?WnR2L3lMYSsrK1RrVk5OV3dlcUxTN0JjcUxhclhMVmRPa2pRYlF1NW54Z253?=
+ =?utf-8?B?RC9GejBobjF4K1dJQzRzRlEyM0RZZDF0bzhDWEFjcHprRGJkOEJIVmo0RGtD?=
+ =?utf-8?B?NHk0dGdMWFR6U0Z1RjNJLzBUWm5jdU9QVmRhS1prbFFRZCtJbnAxSlZLZFhK?=
+ =?utf-8?B?NEdzTUFvY21jSURyYWdWVWtPVVJUemFIbUYybkJIZEp5RFl5c1UrZVdmOFJP?=
+ =?utf-8?B?cGNsNmlZMFFVaEdrQVYyQ2tab3RzbkFpTzZKQmhPZEUwYkx5NkRHTm5yclEx?=
+ =?utf-8?B?ZGtxalNZRHVJRDZoM0FOc3JqbkFjZXlvQlJZWktsN25uYU1HYWpha0tIVzJ1?=
+ =?utf-8?B?Uzd6YVFlZ0lYclVBTERnKy9ZclJCeVU1bWxDOW9VK0h6elhFRHlvRDVkb0dy?=
+ =?utf-8?B?Vm1uMlV4V3JWVmUrci8wMnY2MUw1SUkzM2lDdHZxaXV0eFRaMWV0RlV1VWRP?=
+ =?utf-8?B?dGJaRFpYd0hSSmhLaEVldWpiMTNOT1MxQ0ZZd1pIT1AwMkI2NlZXQ3ZnUW93?=
+ =?utf-8?B?bFVWcTJMRm5SUU9SSU1XVFVTRndHVzY4QVdqa05FQXFUZXIxMzJ5bDhVWWhh?=
+ =?utf-8?B?UCtqcHE5WjhXWm4zNzhHMUxwZTc0RGZvSGUya1RBVHc2VWNIY3VrZFNYRWVF?=
+ =?utf-8?B?aHhkblBzZ0Z5cG1DYVBvc3dNZmRiZCt0UHhPVEZBKzN1aVNhbDdZZ3pUaWUy?=
+ =?utf-8?B?aFFSd2U2Y0pKVjh2d3NvWTYrUWF3bnhiSUpaRjRkbXBaa2hGc1liaGd0b0Q3?=
+ =?utf-8?B?OUl6cnREekh3NkZGbG90NGt3R3hDNGtFWW05cXRrNXZPM1VCTWZjNmdzbmdh?=
+ =?utf-8?B?aFpzams0cVg3aXE4bUh2Zjl5d05vTTNNT0oyMldwZXVOR04rV1RvSmpJbWQ4?=
+ =?utf-8?B?V0lYb3lYeVp3MWpPcFNOa1lDdXRPZFQzRUFVenVlcTlxMVA1RXNpNnIwbisr?=
+ =?utf-8?B?QWRuVlVwK3RUTTV0U2lJZUtCS1ZFTzBxd3ZyZ3NQTGJKYldCU1BXUU03Rktw?=
+ =?utf-8?B?bnV4dHorMWgzS0JRbkJiQk1UUTJVNFpmcE8zVlY4eTZtMFZQUkE2Z0lqNndw?=
+ =?utf-8?B?c1hranFBQTQxaDA2ZWJIMWxtRUlRRDZ3c0UxTGdId2YxNG1UR3ZpWkRSRHJD?=
+ =?utf-8?B?ekNNa28ycGtWYzlqVTAwM1IrVjBwckJEQWZPWWtzVWZISmphWTlydENjNisw?=
+ =?utf-8?B?K1M3NEQyMjdjcjVJRTNtUEpDSFhiR0tHSGRSU0Zpd1ExdmpSTGJkVkE3M1Jt?=
+ =?utf-8?B?ZUcwTjI4REtUdTRiUThuOS9iUWQrZllmUUN2ZW0zMEl6YWNTY0E3aFcvZDVt?=
+ =?utf-8?B?Zy9kOXM4alR4NG44algzUEl0UmpIQ2Npa3Z6Z2pvclgxRVo5TlNxeW9ONXVw?=
+ =?utf-8?B?SHQ3ZGdFYVpnTE5BaWFJc1V1ZmJsS1NuQ29tSjY0cGVXb3FFRm1oMFV2L0VG?=
+ =?utf-8?B?bVBER3h1eStpMkoxRXU5OEFlYy8yQWducWpGWFRPWXk0a041UjUxdkduYzNq?=
+ =?utf-8?B?NW9tblA4R2cvbFk5N09yM1Zkc1NwU3I1UVRJTVh5YTBBRzArN1dIUVV0L2hq?=
+ =?utf-8?B?QnkzRStDQjJtZG94bGM1RTZNLzM0STU1eWVtd1lLeHhNVGF3SnMxc1NLRWR4?=
+ =?utf-8?B?Y0VOYmRqcDRaakRtRWc4d2s0bndKTjNSL2hOdXRnVmhEaHZzWkNYcHliY0VI?=
+ =?utf-8?B?dUZWblBBYmFob0VUbXBkVVBBcktHTml6SU5GWUIyM00wNGtwcVdYWndocDIz?=
+ =?utf-8?B?RW1CaWFwakJNQUVGM2V0ZWM2RjlBPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	sBURg1I7HSjpwBUOfRyiuM6WUlAt/kg8SkdWYK7+DJ0X7FG6wu3+/rXQzAmS8gCL4KzoXS6ihsT02cnh4vcpmYNNZolSDLHSLaE5qB9Rz0JeYCX0TPO9bfR3QvWA2FUcieBBzM35THTfF3nm7o+O2y7XK4Lj5mBZFWjpbfE3BCLYzTrot+MShmKq1DAV4ak4D6WbIHUcxoZTo6Bgfpap3SqZiVG5kjDXG2XbczjZ7AukOd7bM9mJjj+NjxbiZJ2HAp5AErhIgYiTzEa7T+A3POkDKUSoYYq1R4uEIHXb2A+KaBYXwauh5NKnBpzNEm2JrpG4rqjP1H23XlGTil9gZJAgrSQKSwbyqu5KAKURD03aGAZErWJxalQcEAZAEwNgks0lkHAaDLJvn0G0n0TL1BR71E+6fp7YKi3YuS8GEJItb8CyIt9Z/45raGhYO3bP
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2026 21:45:15.5329
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca7238c3-880c-43c2-bde1-08de6048dab8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989E9.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB999113
 
-On Fri, Jan 30, 2026 at 01:47:08PM -0600, Cheatham, Benjamin wrote:
-> Technical Details
-> =================
+On 1/30/2026 2:58 PM, Verma, Vishal L wrote:
+> On Fri, 2026-01-30 at 13:59 -0600, Cheatham, Benjamin wrote:
+>>>
+>>> It feels to me like the two injection 'modes' should really be two
+>>> separate commands, especially since they act on different classes of
+>>> targets.
+>>>
+>>> So essentially, split both the injection and clear commands into:
+>>>
+>>> inject-protocol-error
+>>> inject-media-error
+>>> clear-protocol-error
+>>> clear-media-error.
+>>
+>> This seems reasonable but I should clarify it would only be 3 commands,
+>> clear-protocol-error wouldn't be a thing since there's only an injection
+>> action for protocol errors.
 > 
-> 1. CXL memory may be used for kernel allocations
+> Ah I see, makes sense on 3 commands. I assume the clear command would
+> still be clear-media-error for symmetry.
 > 
-> Kernel allocations in CXL aren't a problem at the moment because if the CXL.mem
-> link goes down the hardware resets. When isolation is enabled, this isn't the case.
-> The kernel can keep chugging along until it eventually errors out trying to access
-> the now inaccessible memory (possibly causing data corruption until then).
+>>
+>> Should I keep this all in one file or split into two separate files
+>> on protocol/media error lines? Could also do inject/clear files if that
+>> seems more logical.
 > 
+> For the code - a single inject.c file probably seems fine. There's
+> precedent of implementing multiple related commands in one file, and it
+> makes sense to me here.
 
-Two points:
-
-1) isolating the normal native sysram usecase (N_MEMORY node) buys you
-   less reliability than you think. It only buys you kernel safety.
-
-Keeping kernel memory out of CXL only helps the kernel report problems,
-it doesn't necessarily guarantee any particular system state in
-userland after that occurs.
-
-It's entirely possible (and altogether likely) that a large swath of
-userland will become inoperable if the entire link goes down and a bunch
-of that memory was used.
-
-So if the goal is to have the system fully recover, this would require
-much more isolation policy than just keeping the kernel out of CXL - you
-would need most of the baseline distro to set cpuset.mem policies for
-core services that ensure the userspace environment doesn't completely
-blow up.
-
-But even then, you have bigger issues for shared file-backed VMAs.
-
-e.g. imagine libc gets demoted and comes back poisoned: kabloooey
-
-But, you can at least get data from the system that the link went
-down and even have a chance to investigate before nicely blowing up.
-
-Which is at least much more helpful.
-
-
-
-2) if N_MEMORY_PRIVATE nodes become accepted, this is a different story
-
-In this case, the nodes are *completely* isolated except for *explicit*
-use cases.  So a distro can in theory build a policy that dictates what
-types of memory actually land on a particular device and how they can
-get there.
-
-The example would be using mempolicy to opt VMAs into private nodes,
-while defaulting any given VMA to N_MEMORY nodes only.  This would be a
-more reliable way to enforce isolation of critical components.
-
----
-
-From a reliability perspective, my opinion has always been that kernel
-isolation is a way for the kernel to deliver higher quality debugging
-signal when an issue does happen, because when you're trying to figure
-out why a million machines with CXL blow up - that little bit of signal
-can save you many weeks of trouble.
+Ok, sounds good.
 
 > 
-> Gregory Price has submitted a set that changes the second part of this flow to instead
-> use sysfs [3]. With that, the need for udev rules is removed and users (or their tooling)
-> can set their CXL memory to devdax mode before it's added to the system. At that point,
-> all that needs to be done is restrict enabling isolation to CXL devices in devdax-mapped
-> regions and make sure the memory mode doesn't change (i.e. devdax -> sysram).
+>>>
+>>> That way the target operands for them are well defined - i.e. port
+>>> objects for protocol errors and memdevs for media errors.
+>>>
+>>>
+>>> Another thing - and I'm not too attached to either way for this -
+>>>
+>>> The -t 'long-string' feels a bit awkward. Could it be split into
+>>> something like:
+>>>
+>>>   --target={mem,cache} --type={correctable,uncorrectable,fatal}
+>>>
+>>> And then 'compose' the actual thing being injected from those options?
+>>> Or is that unnecessary gymnastics?
+>>>
+>>
+>> No, I like that idea. I do think the argument names could be better though.
+>> What about:
+>>
+>> 	# inject-protocol-error <port> --protocol={mem,cache} --severity={correctable,uncorrectable,fatal}
+>>
+>> with the short flags for --protocol and --severity being -p and -s, respectively?
 > 
+> Yes, I like those better!
+> 
+>>
+>> For inject/clear-media-error it could stay as-is, i.e.:
+>>
+>> 	# inject-media-error <memdev> -t={poison} -a=<device physical address>
+>>
+>> or I could update it to be something like:
+>>
+>> 	# inject-media-error <memdev> --poison -a=<device physical address>
+> 
+> Either of those seems reasonable to me. What's the possibility of a
+> /lot/ of types getting added? Probably small? If so, maybe --poison is
+> cleanest, no string parsing needed.
 
-Just a clarifying point - the sysfs entries are representations of
-kernel objects.
+I'm not sure, but I doubt it's many. I'll look into it and if it's less than ~5 or
+so I'll change it to --poison.
 
-You can still do what you describe with a UDEV rule, just now the
-sysram_region provides a step in which you can set the ZONE_MOVABLE
-rule *before* the dax_kmem driver is engaged.
-
-UDEV still possible, but now cleaner.
-
-detects(region0)
-    probe(sysram_region) <-- or cxl_devdax_region for device-dax instead
-
-detects(sysram_region0)
-    write(online_type="online_movable")
-    probe(cxl_dev_kmem_Region)
-
-tl;dr: Now you don't need a weird unbind step.
-
-~Gregory
+Thanks,
+Ben
