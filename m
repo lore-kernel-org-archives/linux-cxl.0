@@ -1,93 +1,94 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE6535A958
-	for <linux-cxl@vger.kernel.org>; Fri, 30 Jan 2026 22:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C549B36654A
+	for <linux-cxl@vger.kernel.org>; Fri, 30 Jan 2026 23:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.42
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769813606; cv=pass; b=R23udmM/AHoq8CPGNgXL8AwjARPhf0Z9Z5bicAEHtBgqk2ps9U68Q0buBFkUCI0YbyBwhhi/vVMx1SU8pNMNdDKst7yjajlJzsaLZM/9ZnZJgT6n7cM+7wm40g+oNSa2iJ3izQaCYZlwfqatZEziOHQYITuMNTDE8uBsasxG1ig=
+	t=1769814815; cv=pass; b=JpGIGCz2F5HU2WreebXDNvooplogL6sLpLMXtNsdBISI33FW54XUirh7zrS+hkFixsawRjd+cEsmwaGTq0OGbUshXxqgetMuOLvrZIahRHqpf8HGPCfVOMlTfyICP8ZiZWOlLW0VyvAfVuXOllFu41jOrrycW6x4c6ObWBPgeEU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769813606; c=relaxed/simple;
-	bh=I6AA9LJQkjtH8pRVXBRtk0eb0kKxzR2imNiewT90hbk=;
+	s=arc-20240116; t=1769814815; c=relaxed/simple;
+	bh=c34Quq+eQsW819C0KqCK2tzNAvjf7UPjPYiue9c5K38=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fo+WM7TpjwU+gWhpVnpzo7kXxT2z3qTlZVqDDvjm90TlIygoua6uq3h9bUrtdmFKwSbhLk3H227tHpXqKWU9P+fc1JhxsgSVdRQrlN5RvzeRUsSFN+bfwRgqYoWrrymQdELmZjv9JBt6RY3b/VSlq6Gx29pplqi9gRR9pHskhsg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FuX4Sh3x; arc=pass smtp.client-ip=209.85.160.171
+	 To:Cc:Content-Type; b=Gs9o0JKyaAoNJhuFn8h+hJzhlAJInRmVaB9OsRPyzu1RYaeWfxBhGXmXQRMzSf8z7tx5M2cvnhoxYkIOf3N7yzYe8GPYZlfwss4FAjZP7P6oVEl39hgs+ooHB8aThIl68R0MdvNC9/P+E2Yne5otYC1j0JiOAl/L/lj2e8H6aAI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NlKSw3ey; arc=pass smtp.client-ip=209.85.219.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FuX4Sh3x"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-50146483bf9so29049211cf.3
-        for <linux-cxl@vger.kernel.org>; Fri, 30 Jan 2026 14:53:25 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769813604; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NlKSw3ey"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-894703956b8so43543116d6.1
+        for <linux-cxl@vger.kernel.org>; Fri, 30 Jan 2026 15:13:32 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769814812; cv=none;
         d=google.com; s=arc-20240605;
-        b=gxD2KDdhLkdpabGSXETRfqgiqMSPCudTfDP4c9zUy/MESpBYY79TYrlSXTN0+Eg7KO
-         5byyxpnp3zqAPUVxs/8KMDzNYqx+6FDTKHT8BgW+r8CQk/UBx+CmENfFbQvibCMzPfm+
-         8gdx9E3MSC4hlV/kpuE2kqY6knqhNFZ2RrB1VNdXuNKuAy+SG6rRUsKLt3qh4eOwTHoV
-         V0N0ipalDvdHiqPJ1TBO39c7+R1zpAOqdH+PB1in3XJDrZ0djfvcW+Ap1fh7FcytEj3N
-         JKLJhYzLzWHiJwtRq/ON0sIxLi30C7aeVgAW4gQs6M7eHyDfHX2+xuYSooC5BzRcqXvZ
-         VJmg==
+        b=GVXF5tkkeXmYYbcpeZpq0wL4Y7QodC8wfK4c5dhYxfFZmkdoBD+2nwjZA9FdZM9p/K
+         7FuW22+JmazX1k7dkQfToXKlxd1KNaBQpctXcgD8kcLRs6fkcOR3XAmwSd09lVYP1l9r
+         zPcRuFmo/BE4grym5RFFNYijWlMljwKalc10IXYUcmkDqmsvHjtZZ1BzithDNgXbnbBa
+         anUVx3NB2Y24Oh74n88F+ugtc50YvE/YDNUspM526QG8b3TIpKfw53t9APwD/H/Iebl4
+         fOTFdrDlHxY+EDarvmcLtdPxZs09K+bqsXVAotnzNw7ZUht1T3zDAdn9XcaULpoIFzuS
+         k9Hg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=RvpDJGr4SwO80ntJbbklM7U7D7aCaEah0HNbCRkVHSs=;
-        fh=rUsporxcgVKFMOqdsTCUzWddihi6dvGsL5CjAJOanig=;
-        b=eX9m7ehUqRTAJRzHB6rfqe551auUfrsMnu3yE6iDXTaxMnLQG9Z5yignOBks8/iGcV
-         zvq3pJGbl//ldIH5YUu4btPeImxi2+q4BRngGc8cTgZFyfjlKnFOLKrlVmRTftMVa2ru
-         XsiBCnf3axP8YYMpqCiNwvPXlvd1Tl4vHNQ6Gfz6AFBDVNalTTeLVMEKdytgpoUFKAIj
-         j4t8p2BcNsSfIDtZ8vfUgnxpyAao1YrZIvFxp/ya2qTsqlXCYq8Ueig5Rd2+oDvD+aD9
-         QRR9CSsrRpdn7pXypXUwd8QH6r9uZ9qE7ZGiP3B2YV61tb7t1POcI/uygBjWezBVkaOf
-         Nd6A==;
+        bh=mCpt40N6zxEp6+nDSQMAaK5Vngq+apunb1ikLDPBcPI=;
+        fh=Oczxse4lCfSZZaszX1SBPrjAKyfkvXJjfltIPVeckcE=;
+        b=BBY63Ain6cWcA0akBWvpPPY9tG6GY/faFcw3RekaTIe5yA+dyumOjOgnt+5yu1mK3N
+         1mJn1tKzE+atYSXlYijvWvDeK9iEt2Ymnd2ZPREtjZUbcnToCOJkCvdkkcnpwK/KyiSG
+         NDyeHG21xoi1z/qT9ck12pEVGQNmVFA6GGDeapUOFYgKXHbh1uBmoVAV5fSzMXI0Y/RT
+         hiFi8JeOhpU6/k3cipgnuZUVU/CaTw8FHXciXsDFhCm1H1O00Jk4k/OxOCL10qqFPvCw
+         HOygT1qiFunQmvgnAqk9b+xRp854O9PNDhDHujWDeQ4qEfuxIcNu2Ee+DAuVQZbPx+b/
+         xyKA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769813604; x=1770418404; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1769814812; x=1770419612; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RvpDJGr4SwO80ntJbbklM7U7D7aCaEah0HNbCRkVHSs=;
-        b=FuX4Sh3xtBiDnHAg9EFEEZ2NvuXwTyuY5kH5yeju3QvvNNpRwES0yiHLoqFqYCEzM/
-         erqkzG8/DUskaWzzQur0Z5aWpXSXuzDpNUpc9MsRR1GDIS9QKij2f8A3hPSiC/IkpuEw
-         ltrMleIWg+zQSK8wVnGP5P4RVf1jv3GorwW9ObvyRVB1A80qEviOSF+GUDHIenpm5U+i
-         PT3DhhATtxe6fYVpEf1U9qiN5Ckh26v87FKM4gybE412l43MPoKrsy7k6bUa3rjv2Abc
-         5ToqgZmyRng2xg6qMNxdyjcWzow4ld3hwb1N6SfWwpclON182bdqNIfjaiy1lNmVXAG8
-         J/Lw==
+        bh=mCpt40N6zxEp6+nDSQMAaK5Vngq+apunb1ikLDPBcPI=;
+        b=NlKSw3eyc1tyXmspzsAwqjEg0L5qtn8VEtydTsA1k/t5kIJxOhrN2xKKdm8BWLN4zz
+         rHri9/V/4RaC+06llGtYHBEbstcKr3C2GEYlv+T0zCAcKgW5DwWdrG4GOhekhIpSKNbz
+         I4JR2O3IP1Dm1IvYTvX34MyT2FHLc1MS/K0DZp+HKPt3/k3BxZDOXv4U4ca6cPB7X49/
+         DzaO0WmFUwSH/KlH3p1SVDNYEkd+OihCUPLw4RbFD24BnLOm47UrWhuqo9VaIefTFdlY
+         AutTs27CmaoB8IgK8gsy4HdDweucvKjr0i0a7uD8fogWRB6mEthY6FbUf3gZJSknQ+dF
+         rBzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769813604; x=1770418404;
+        d=1e100.net; s=20230601; t=1769814812; x=1770419612;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=RvpDJGr4SwO80ntJbbklM7U7D7aCaEah0HNbCRkVHSs=;
-        b=XynpLAMS+jS1KVNefDhsamuCRazUAqJ0FQbgylCfdlabLofWc7KfbvREASHcEYYyJn
-         zS5UjEzFp9ligFbqhYNJR8sg55PGhxK9qOOpwdP9WYKhXsTnCR914E4WEsS5Y8GknTfO
-         zWp65tMTT5hz7mjIy8ccRBAwLtxFLIP52vqsQ03sUfs7WCVsQEjFQkbFkDIy62308X3C
-         B8aaCF4livfoVIRuXP1hhEMpWRc4/QBdYtfBaQZAqT7Q3Z+8KqWpYShyBz4gIxCn1sRF
-         Q+bldd+Z0Rqr3Z4j4ksw0tjLprHgrOVB6sgofKUVWlWurXtOOIU6oxoQGH24Irqfl8FK
-         6drA==
-X-Forwarded-Encrypted: i=1; AJvYcCWTP85PUnUKl2J0pY4i7GsWrcJVy3GHvXs62HQJIKChn1kfi9jfZwEkIPSXDbT/8E/JN/T9y5I31R4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRpPScnHUVtDx6Qg4D662v6tL+5AluKazQS0M/XyTgRyEQHaqz
-	Kq1Z0vX0YEXlv/Ya9XBN8N0bqMcLoIapQ60zG7hn+T3oTylgABDrayp/mgPP/3OAPPICGUEeU2y
-	CNOblL3OfogcwmpTEF+/CH0ArNbBCtLk=
-X-Gm-Gg: AZuq6aJU8rhO3rn2SEg2NcDiplE0o38VqGxXiyTZy2Gx1fKr9xMlehmCMhpywUZ4JEI
-	u61JxKkiploIH44ZENv364OtMgAbc5uSdOrLlMc7/8ofp5KW94Jrb/CZWQbusmJUWFpUL7q9tp/
-	qouz48UW/r742lQMdfea4MttGENQmleZAH8WvAudxCBvCaZ7pkfFqj0jsLaJsyFlXJ3tNAgt9GB
-	2GLpxeGel9op3Jz/a8zIytj9izxnLGdHmhu1W400gQ8H9KsX/eav64H6y0CuIq3tvHAbw==
-X-Received: by 2002:ac8:5ac1:0:b0:502:9f71:6458 with SMTP id
- d75a77b69052e-505d223e5afmr53898871cf.44.1769813604047; Fri, 30 Jan 2026
- 14:53:24 -0800 (PST)
+        bh=mCpt40N6zxEp6+nDSQMAaK5Vngq+apunb1ikLDPBcPI=;
+        b=d68pszezwqbhuizoLW+jCz8eKRr4479UI/kYzP770teITppUrEYPmB6w0Gxg7TjGE9
+         GOXL+1yR9Wxu/xSQ1XiewnuRGNt42edNQsrF3wGKX/vlHAvWv1nyhYvG8CUEKH8K6VOK
+         6Fsh61Lk6QrqTWzgeUiUeJ/YodEveuwYCwogkGE9h4PeR/Nhip0gu+NoEZPy3wfgFNzi
+         X/sIeWSAM1aEjGkecviBTHT3SShYnu9Dph502MoqxeKybHfg3KcRGoU56OnGwNrjptlE
+         UHKWl/e62Onponsj8EQZgosG3EtRS+y2Yic+d8iiD2SegkmZmkU2b6sQGanrk2g0qbrc
+         hKzw==
+X-Forwarded-Encrypted: i=1; AJvYcCV79wcXSrCNPWgmtNEx6t5Fx+qgwGZw783Tfu+YXpGCK2yifNqqDky2GaegisCXikSpy2pErEKAFoE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxO1y3Fb1XpmpMT0TaMA7xufEPEdMz8H6+X/tQA4lTlboPOqqBv
+	8DWZoE5ND1APQfOwzcInNTMt2kFt+YIWQxtNpV5ouDD9WmdZBlwwSbMFgE30Ti78jF+OxH6utIP
+	ejIih5ZfZM9Oe3G5/p46nNoKBNLaY0yU=
+X-Gm-Gg: AZuq6aIEk5JPT6oVp50krBgnkHnUKKyvt79nnxTQn1D06wvcJSV7Fd4hux8lr0l0XDW
+	/a9Q4kh/QV4svkxsFbQEqx6P1GMhVeXXOPQeaqx/YlcwfreXkYXaT1auPHEEG8IHuT0hIDPGSBG
+	vHN2dyhS3sRwzi9hnPxs19M1Bb0CghIFVNdLrTx7AzAGGNX7so7XqB2QUuvy5T3N46ddfmcd+8D
+	LqATEIcLtsxU2DhW9MAC4hxgv6nyClbRDyvy5dBxvBJgLbZbXb8q/++Ypqzjc8r4XI2WQ==
+X-Received: by 2002:a05:622a:c8:b0:501:502b:8c6b with SMTP id
+ d75a77b69052e-505d217b5a5mr58752171cf.9.1769814811697; Fri, 30 Jan 2026
+ 15:13:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260118223516.92753-1-john@jagalactic.com> <0100019bd33f2761-af1fb233-73d0-4b99-a0c0-d239266aec91-000000@email.amazonses.com>
- <0100019bd33fb644-94215a33-24d2-4474-b9eb-ddae39b29bd8-000000@email.amazonses.com>
-In-Reply-To: <0100019bd33fb644-94215a33-24d2-4474-b9eb-ddae39b29bd8-000000@email.amazonses.com>
+References: <20260118223344.92651-1-john@jagalactic.com> <0100019bd33b1f66-b835e86a-e8ae-443f-a474-02db88f7e6db-000000@email.amazonses.com>
+ <0100019bd33e43bf-bb49e98f-284c-475b-a027-13c7271f67bf-000000@email.amazonses.com>
+In-Reply-To: <0100019bd33e43bf-bb49e98f-284c-475b-a027-13c7271f67bf-000000@email.amazonses.com>
 From: Joanne Koong <joannelkoong@gmail.com>
-Date: Fri, 30 Jan 2026 14:53:13 -0800
-X-Gm-Features: AZwV_QgH1KMH2vlFTNGo85feW4dv-AHS4Ad-yDU5HTglx7x3SJ0Y27UEufrkPHc
-Message-ID: <CAJnrk1Z9BuCLZv576Ro9iYUPRDpW=1euG0rQ2wC_19sBcR18pw@mail.gmail.com>
-Subject: Re: [PATCH V7 1/3] fuse_kernel.h: bring up to baseline 6.19
+Date: Fri, 30 Jan 2026 15:13:20 -0800
+X-Gm-Features: AZwV_QhZcPdEqRRUkE10n-Q1UjWagCWtvDsztQQ9CRVvisVS-xKBB72jFQNvlFU
+Message-ID: <CAJnrk1YNRNRrXVydX6=5NAic3fu6QggbA5xV2fwywP27yZu2ZA@mail.gmail.com>
+Subject: Re: [PATCH V7 17/19] famfs_fuse: Add DAX address_space_operations
+ with noop_dirty_folio
 To: John Groves <john@jagalactic.com>
 Cc: John Groves <John@groves.net>, Miklos Szeredi <miklos@szeredi.hu>, 
 	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
@@ -113,67 +114,60 @@ Cc: John Groves <John@groves.net>, Miklos Szeredi <miklos@szeredi.hu>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 18, 2026 at 2:35=E2=80=AFPM John Groves <john@jagalactic.com> w=
+On Sun, Jan 18, 2026 at 2:33=E2=80=AFPM John Groves <john@jagalactic.com> w=
 rote:
 >
-> From: John Groves <john@groves.net>
+> From: John Groves <John@Groves.net>
 >
-> This is copied from include/uapi/linux/fuse.h in 6.19 with no changes.
+> Famfs is memory-backed; there is no place to write back to, and no
+> reason to mark pages dirty at all.
 >
 > Signed-off-by: John Groves <john@groves.net>
 
-This LGTM. We could probably just merge this in already.
-
 Reviewed-by: Joanne Koong <joannelkoong@gmail.com>
-
 > ---
->  include/fuse_kernel.h | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+>  fs/fuse/famfs.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 >
-> diff --git a/include/fuse_kernel.h b/include/fuse_kernel.h
-> index 94621f6..c13e1f9 100644
-> --- a/include/fuse_kernel.h
-> +++ b/include/fuse_kernel.h
-> @@ -239,6 +239,7 @@
->   *  7.45
->   *  - add FUSE_COPY_FILE_RANGE_64
->   *  - add struct fuse_copy_file_range_out
-> + *  - add FUSE_NOTIFY_PRUNE
->   */
->
->  #ifndef _LINUX_FUSE_H
-> @@ -680,7 +681,7 @@ enum fuse_notify_code {
->         FUSE_NOTIFY_DELETE =3D 6,
->         FUSE_NOTIFY_RESEND =3D 7,
->         FUSE_NOTIFY_INC_EPOCH =3D 8,
-> -       FUSE_NOTIFY_CODE_MAX,
-> +       FUSE_NOTIFY_PRUNE =3D 9,
+> diff --git a/fs/fuse/famfs.c b/fs/fuse/famfs.c
+> index b38e92d8f381..90325bd14354 100644
+> --- a/fs/fuse/famfs.c
+> +++ b/fs/fuse/famfs.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/dax.h>
+>  #include <linux/iomap.h>
+> +#include <linux/pagemap.h>
+>  #include <linux/path.h>
+>  #include <linux/namei.h>
+>  #include <linux/string.h>
+> @@ -39,6 +40,15 @@ static const struct dax_holder_operations famfs_fuse_d=
+ax_holder_ops =3D {
+>         .notify_failure         =3D famfs_dax_notify_failure,
 >  };
 >
->  /* The read buffer is required to be at least 8k, but may be much larger=
- */
-> @@ -1119,6 +1120,12 @@ struct fuse_notify_retrieve_in {
->         uint64_t        dummy4;
->  };
->
-> +struct fuse_notify_prune_out {
-> +       uint32_t        count;
-> +       uint32_t        padding;
-> +       uint64_t        spare;
+> +/*
+> + * DAX address_space_operations for famfs.
+> + * famfs doesn't need dirty tracking - writes go directly to
+> + * memory with no writeback required.
+> + */
+> +static const struct address_space_operations famfs_dax_aops =3D {
+> +       .dirty_folio    =3D noop_dirty_folio,
 > +};
 > +
->  struct fuse_backing_map {
->         int32_t         fd;
->         uint32_t        flags;
-> @@ -1131,6 +1138,7 @@ struct fuse_backing_map {
->  #define FUSE_DEV_IOC_BACKING_OPEN      _IOW(FUSE_DEV_IOC_MAGIC, 1, \
->                                              struct fuse_backing_map)
->  #define FUSE_DEV_IOC_BACKING_CLOSE     _IOW(FUSE_DEV_IOC_MAGIC, 2, uint3=
-2_t)
-> +#define FUSE_DEV_IOC_SYNC_INIT         _IO(FUSE_DEV_IOC_MAGIC, 3)
+>  /***********************************************************************=
+******/
 >
->  struct fuse_lseek_in {
->         uint64_t        fh;
+>  /*
+> @@ -627,6 +637,7 @@ famfs_file_init_dax(
+>         if (famfs_meta_set(fi, meta) =3D=3D NULL) {
+>                 i_size_write(inode, meta->file_size);
+>                 inode->i_flags |=3D S_DAX;
+> +               inode->i_data.a_ops =3D &famfs_dax_aops;
+>         } else {
+>                 pr_debug("%s: file already had metadata\n", __func__);
+>                 __famfs_meta_free(meta);
 > --
 > 2.52.0
+>
 >
