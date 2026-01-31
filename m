@@ -1,113 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A0043ABC
-	for <linux-cxl@vger.kernel.org>; Sat, 31 Jan 2026 00:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D295A30148B;
+	Sat, 31 Jan 2026 00:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769817777; cv=none; b=XKih2jv5+Sog5RDrlAUgCyqunQId2oJs/4JJCYE7tZtmv6I2R1odCXgOGY2QI33+Tzp5fyahm0dBy5ufhVMFr8WLZLKOxgWmjo4qdV5tswizAfte2hAYk8U8FpMQRjwHnaMV45888E9+YrFrvYudnL+jedMloWyble9u0Dl6DHw=
+	t=1769820083; cv=none; b=IA3cLipRk+Fcu8KNcNl08eC5lfbFcdgby9yQyvSm/+PvfsPgVs+ThHG+dQ7UI8IVF5gmGPfZA8cjdEWNHxKahEDGOAug8C84DzY/UxYiAA3IzM0fYnJwLUPzGwWpSownH34WUvegtqTpWNi72X7TrcsfM1MZnIPgqwiy7PORD9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769817777; c=relaxed/simple;
-	bh=K3kIFLpnL2RTtOKikosZpO/EnZJCXrrazJIfwMK5fmk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S3FDCDOzqqrTm7mq5KHPJl5EZN8BsS/jgbPeOah/27bIixE1yR6WL6vGUgXrP62xX5Kqw0VpPZI3RGsfCTSYoYz4zOfLMvAOGCcXKSu/49VwyOb3BCeKaS7eS20UmQ3SxdvWAGZrkavtMkDy1RcVhk9OYRISElj8AuIMtlUqN4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NMP2lI2o; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1769820083; c=relaxed/simple;
+	bh=l9n3mLPGeUos34mQWVNVH+sXbJpO8kREK6u0HCyRDH8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hMFDwndD8uTwhsIP825L2ifXAQVpF2gt8g4uLDVsQIFcJGgBUE5GRh8KZUUK7Yh9k5sxhmx9yCJygW8tfCLnffdZ2tubo+CxJLKR0gGsaykhGF8z4zND689wxqNrkQVSX/ImSgFoME+zjOuD1xleFtmU/nhmID+lzh8Bemc1xEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mMsEdPnp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NMP2lI2o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769817776; x=1801353776;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=K3kIFLpnL2RTtOKikosZpO/EnZJCXrrazJIfwMK5fmk=;
-  b=NMP2lI2oYBS9eLmTd2hqzTIPHolVe2jmmNOlvjVVZUFBuxh4e7PLHL9u
-   8apYzEUGO3dqCl9REMvD1iEuinshvTLx+XV8EsD9A3cHZZzAQX+MBvIim
-   mhKMD45b2hR0pGVCQOI6hjK75gijnTJnJoDowwrGE5NTWlFOg48y9FITW
-   MrEEIuYzCdbrFNWci7RJr9xBrg1I7PI/PaNezAhbF9xbfC+BGfoall7QO
-   Ji3X36o0Rw10MnOGYlYqlSblNakanjhySJruio88X6I0RFKjU1gxx/dRf
-   Q4oVqFESh/9/fC3O5VsCQtwnyW7yHVUasCIs4W7QF6MwOo6XCU/g76RCc
-   Q==;
-X-CSE-ConnectionGUID: V2JV0nwpQj+H+BS2/NAgdQ==
-X-CSE-MsgGUID: /TOZyKVgQja0yOUnQsFvdQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11687"; a="71156924"
-X-IronPort-AV: E=Sophos;i="6.21,264,1763452800"; 
-   d="scan'208";a="71156924"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2026 16:02:50 -0800
-X-CSE-ConnectionGUID: MsekvHEDRKyRp8sIOifMGw==
-X-CSE-MsgGUID: 7DqsNQFTSICknimESL9Kqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,264,1763452800"; 
-   d="scan'208";a="208093736"
-Received: from dwillia2-desk.jf.intel.com ([10.88.27.145])
-  by orviesa006.jf.intel.com with ESMTP; 30 Jan 2026 16:02:50 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net,
-	alison.schofield@intel.com,
-	dave.jiang@intel.com,
-	terry.bowman@amd.com,
-	Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: [PATCH v2 9/9] cxl/port: Unify endpoint and switch port lookup
-Date: Fri, 30 Jan 2026 16:04:03 -0800
-Message-ID: <20260131000403.2135324-10-dan.j.williams@intel.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260131000403.2135324-1-dan.j.williams@intel.com>
-References: <20260131000403.2135324-1-dan.j.williams@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mMsEdPnp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98317C4CEF7;
+	Sat, 31 Jan 2026 00:41:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769820080;
+	bh=l9n3mLPGeUos34mQWVNVH+sXbJpO8kREK6u0HCyRDH8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mMsEdPnphkANsAifUMsiluDLCuBvGpxyU9AkKFfAhE5w7P+4XiRBIGwLGCcG7vifN
+	 0e5p5LSgUKdB09L0ZyZhZChMFIzkCf00rqD59kagFHbfCn7wkTc52LAGUyeLSJGWBA
+	 yb4Ai5GXz21SJx8SZUJMKZ3ZzoB3S9OlVTLS1R10L76gz/7wOfQToSe1gSAta7OOf5
+	 WLAe+9fQctgmRaFwIgr93AITzPyS48CtiZw/r9Lzc6c3ipNrkft3YxD7STpkxA6pim
+	 QtWzkdJU5Opa6KH72Xryi4R8MZHvoI52TB8z0UnAKk5ts5h73CFk1W1Vd+H6RFlE+K
+	 f6BUC/CZP/9cA==
+Date: Fri, 30 Jan 2026 16:41:19 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Joanne Koong <joannelkoong@gmail.com>
+Cc: John Groves <john@jagalactic.com>, John Groves <John@groves.net>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Bernd Schubert <bschubert@ddn.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	John Groves <jgroves@micron.com>,
+	John Groves <jgroves@fastmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	David Hildenbrand <david@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Stefan Hajnoczi <shajnocz@redhat.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Shivank Garg <shivankg@amd.com>,
+	Ackerley Tng <ackerleytng@google.com>,
+	Gregory Price <gourry@gourry.net>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>,
+	"venkataravis@micron.com" <venkataravis@micron.com>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V7 1/3] fuse_kernel.h: bring up to baseline 6.19
+Message-ID: <20260131004119.GA104658@frogsfrogsfrogs>
+References: <20260118223516.92753-1-john@jagalactic.com>
+ <0100019bd33f2761-af1fb233-73d0-4b99-a0c0-d239266aec91-000000@email.amazonses.com>
+ <0100019bd33fb644-94215a33-24d2-4474-b9eb-ddae39b29bd8-000000@email.amazonses.com>
+ <CAJnrk1Z9BuCLZv576Ro9iYUPRDpW=1euG0rQ2wC_19sBcR18pw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJnrk1Z9BuCLZv576Ro9iYUPRDpW=1euG0rQ2wC_19sBcR18pw@mail.gmail.com>
 
-In support of generic CXL protocol error handling across various 'struct
-cxl_port' types, update find_cxl_port_by_uport() to retrieve endpoint CXL
-port companions from endpoint PCIe device instances.
+On Fri, Jan 30, 2026 at 02:53:13PM -0800, Joanne Koong wrote:
+> On Sun, Jan 18, 2026 at 2:35 PM John Groves <john@jagalactic.com> wrote:
+> >
+> > From: John Groves <john@groves.net>
+> >
+> > This is copied from include/uapi/linux/fuse.h in 6.19 with no changes.
+> >
+> > Signed-off-by: John Groves <john@groves.net>
+> 
+> This LGTM. We could probably just merge this in already.
+> 
+> Reviewed-by: Joanne Koong <joannelkoong@gmail.com>
+> 
+> > ---
+> >  include/fuse_kernel.h | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/fuse_kernel.h b/include/fuse_kernel.h
+> > index 94621f6..c13e1f9 100644
+> > --- a/include/fuse_kernel.h
+> > +++ b/include/fuse_kernel.h
+> > @@ -239,6 +239,7 @@
+> >   *  7.45
+> >   *  - add FUSE_COPY_FILE_RANGE_64
+> >   *  - add struct fuse_copy_file_range_out
+> > + *  - add FUSE_NOTIFY_PRUNE
+> >   */
+> >
+> >  #ifndef _LINUX_FUSE_H
+> > @@ -680,7 +681,7 @@ enum fuse_notify_code {
+> >         FUSE_NOTIFY_DELETE = 6,
+> >         FUSE_NOTIFY_RESEND = 7,
+> >         FUSE_NOTIFY_INC_EPOCH = 8,
+> > -       FUSE_NOTIFY_CODE_MAX,
+> > +       FUSE_NOTIFY_PRUNE = 9,
 
-The end result is that upstream switch ports and endpoint ports can share
-error handling and eventually delete the misplaced cxl_error_handlers from
-the cxl_pci class driver.
+This insertion ought to preserve FUSE_NOTIFY_CODE_MAX, right?
 
-Reviewed-by: Terry Bowman <terry.bowman@amd.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Tested-by: Terry Bowman <terry.bowman@amd.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/cxl/core/port.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+--D
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 9f56f7e75e81..ee7d14528867 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1590,10 +1590,20 @@ static int match_port_by_uport(struct device *dev, const void *data)
- 		return 0;
- 
- 	port = to_cxl_port(dev);
-+	/* Endpoint ports are hosted by memdevs */
-+	if (is_cxl_memdev(port->uport_dev))
-+		return uport_dev == port->uport_dev->parent;
- 	return uport_dev == port->uport_dev;
- }
- 
--/*
-+/**
-+ * find_cxl_port_by_uport - Find a CXL port device companion
-+ * @uport_dev: Device that acts as a switch or endpoint in the CXL hierarchy
-+ *
-+ * In the case of endpoint ports recall that port->uport_dev points to a 'struct
-+ * cxl_memdev' device. So, the @uport_dev argument is the parent device of the
-+ * 'struct cxl_memdev' in that case.
-+ *
-  * Function takes a device reference on the port device. Caller should do a
-  * put_device() when done.
-  */
--- 
-2.52.0
-
+> >  };
+> >
+> >  /* The read buffer is required to be at least 8k, but may be much larger */
+> > @@ -1119,6 +1120,12 @@ struct fuse_notify_retrieve_in {
+> >         uint64_t        dummy4;
+> >  };
+> >
+> > +struct fuse_notify_prune_out {
+> > +       uint32_t        count;
+> > +       uint32_t        padding;
+> > +       uint64_t        spare;
+> > +};
+> > +
+> >  struct fuse_backing_map {
+> >         int32_t         fd;
+> >         uint32_t        flags;
+> > @@ -1131,6 +1138,7 @@ struct fuse_backing_map {
+> >  #define FUSE_DEV_IOC_BACKING_OPEN      _IOW(FUSE_DEV_IOC_MAGIC, 1, \
+> >                                              struct fuse_backing_map)
+> >  #define FUSE_DEV_IOC_BACKING_CLOSE     _IOW(FUSE_DEV_IOC_MAGIC, 2, uint32_t)
+> > +#define FUSE_DEV_IOC_SYNC_INIT         _IO(FUSE_DEV_IOC_MAGIC, 3)
+> >
+> >  struct fuse_lseek_in {
+> >         uint64_t        fh;
+> > --
+> > 2.52.0
+> >
