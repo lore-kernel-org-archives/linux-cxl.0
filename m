@@ -1,106 +1,128 @@
-Received: from mail-qt1-f194.google.com (mail-qt1-f194.google.com [209.85.160.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o90.zoho.com (sender4-pp-o90.zoho.com [136.143.188.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8F676026
-	for <linux-cxl@vger.kernel.org>; Sat, 31 Jan 2026 15:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769874557; cv=none; b=gyLeDivax517m73pNmP6VOA2LAHBmgMovBZfHvJuJnCb1d3Mq2fzoyfF9Ute49F+U5tBu1s7pjEqkA3n1yEN9qtZUKyvhmAWPmmNe32vVh6m0tZWRN51ZqAEUJ4oLA9056zeO75EkEjZLHnavQEfjAS+ogZ87Ub6GUtuJImqk+4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769874557; c=relaxed/simple;
-	bh=e+sxkpcgy/UPsU5yHQm62w8F2taYB4oVjMWquEjSD2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qdo5Vlf8SImYA6vwiWH4YIXLpeOwkrlJ/MFw2359VEfAXBXUdvHHDelsBjtzo/nrzJx3g9b4djNfBXtlV+PQEqnqxmhlr5FJLPdVI8CyVGQo16uUpuqTG8GsjzK7R1sNaYUs7mOGczR+3dUJj6hvvK5A3ifQIeFCeplK9TKA5ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=aAM9CsXu; arc=none smtp.client-ip=209.85.160.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E8542A96;
+	Sun,  1 Feb 2026 09:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.90
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769938268; cv=pass; b=WJG5Xer0wsUz8MhafegcygtJC69hBazf3R74/tcPqTrvnI+gJ1qfXEDXL8MyvxmIEfeaBno9oiXYIvS7W/gAYGuS2PIgyd4BlSg+QJl+IaLSHd4rUS2pwUl6yBnzlRjjNXu1mYC/iSS1HQHKrrTGHxRvNKgx1LVsfVLaDeJu9k4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769938268; c=relaxed/simple;
+	bh=NhLr32hX3L2uUlQ5n9aRosqttmkbYsTbkzI3lAr4D0E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UQ7hB6DlgKViL4xvfD7Ce4R+2QkkZJfWpgllOc0OI2NpBjtGm7iFVth89J1XpZqGjePX6160l2eWzrkcWe5pJsqBXs5LaVraS43rWppVFuKzPONMt3cYWb3V/aknsWaZSTCvNniWx0YBVus2vr5i0lxX6wlfTh2kyG8w5czMhQ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=C5gkD3Ka; arc=pass smtp.client-ip=136.143.188.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="aAM9CsXu"
-Received: by mail-qt1-f194.google.com with SMTP id d75a77b69052e-5029901389dso23679161cf.2
-        for <linux-cxl@vger.kernel.org>; Sat, 31 Jan 2026 07:49:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1769874555; x=1770479355; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bPF4ycLGC9KPEPRyh9m491Nfyeff7N7K51LyrOvrdH8=;
-        b=aAM9CsXuXKJWgqH2KFVFfkzDl9lr/1lV7RjRpUmruQBRyvuDP8MdDwOrZCWYbB6tgh
-         4dJCuEydAKhgmmcDCClephCme6ywtIBoLZlqDunFrGyrsyZFsyqKsahro99TATVKebT7
-         LVoOI1ax9XqgzKS0P+K0QRq22UXvY3GSFr0qKF642uLVyu4Q0hJVV/wW0LuhxBLmkMv7
-         aNnSRCpVQNuzs3vWzTu9d2KWBs/o51Ur97PWfdfe0XpAUeeP1zNU5s4UMJhCmwzQrXgW
-         EE7DKGXbaqrtpo0usf7PZBmtqukEhXo5ITNaDk8hT4Hzr4rMBdLQIlCWVS3Zgl0pOCN/
-         ADgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769874555; x=1770479355;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bPF4ycLGC9KPEPRyh9m491Nfyeff7N7K51LyrOvrdH8=;
-        b=EpLw9tsMVmVVf8sktUGPmLKO0WlIMVMYRx90f0CyhWed+bmvlU7MpPP9mWfyzI8GB3
-         zUig9CYuJrD9YNe3KLRFFFWGJ8aysLN3Teko/sSV5TViAHaw1GCHY1yXx9wLadwHhHjk
-         QrvsGiOPdcvRmEbhsT7YVitFKhq8at7ZIRU18Ff7reZd6zgAGYsaveSZ1n8BhE2pKME0
-         JF0CaTFqCfOqgRG8LHKF1mhh0SgFV/3hOL2C+6iXxdrMo0PI0dyowujJHVyGcONTe8Pi
-         Do1kcK7wwc0QIMnrEg30ajUCTvUcbdw91qxOnsFISVvqE/zLEMTWe7TkWcOzL7RR52EI
-         2CSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX/50Xx5hD0/s/qELE1ZSiOGVG5Fb6lSpQZOlRhpCgq4EnwcDju80EN/V4/hEtNjN+GufbaEsSBOpA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHTJ9plIqF1Wp0FsyQRyRw3PUDdVranvHPlTNeL9U3khDOOnUt
-	RFGyV8Xl4JfBRQfCvqbIEkZRQ8bJEMlKlPdczP6eBLjflzNA8bbZ/o/lyxG3zvuM+053rmQGJhH
-	sFKc+s0TElw==
-X-Gm-Gg: AZuq6aLY2m9xYLLQUIrn6CBiyVAfsbZpW5mQrUBJJTc9awtPdKVcaXeXmS5y94F1H6u
-	hvBSDSkGp9j0tLmAaRj2HSSqG2wZzNhfLr5PITUN+XWE5yuof3n9SHtgLvmQenztfKdOD76IToz
-	9X570EcO6cePj9RnissMLz7asB/xzWX8R87Ohgj1S3iMSVAMJmV3uEQeRM8c0K/Nh/afRS3Vyh/
-	LsXbVvHSJfilwjOBvY+BI4i41bKZ3ia/4rTV/yF1zIOFpuMWZS2C3S9MQVxKw8LcXkYcC/ZdmBt
-	LSLzpBCpwMpHfaFumScRkrlLpP/ej9NstYGwkJeLuyGBC3fKVVvXnTeBjA3AXT/XRslgX8lW/F7
-	SFZQtDtuldpxXLhpW9KzhoaE14ikpJTvAeAchynnVta66oiK7pnKQQCuBE2IRAroYHYClmWoQpi
-	uAGRMIGpft4PMQRPxPM94y2yOs4XlrGvgrt0PFmU3kR3AbaK7DwEYu0Q34hvKnTW1Xj9nVMg==
-X-Received: by 2002:ac8:5889:0:b0:502:e07b:2f0e with SMTP id d75a77b69052e-505d22ddd15mr74609341cf.84.1769874554641;
-        Sat, 31 Jan 2026 07:49:14 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-894d36a9bdbsm77372056d6.11.2026.01.31.07.49.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Jan 2026 07:49:14 -0800 (PST)
-Date: Sat, 31 Jan 2026 10:49:11 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: dan.j.williams@intel.com, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 2/2] cxl/region: Unregister auto-created region when
- assembly fails
-Message-ID: <aX4kd-S3PQTTWfol@gourry-fedora-PF4VCD3F>
-References: <3bcc5143777acc6d45675d78dd8c57079406bc53.1769746294.git.alison.schofield@intel.com>
- <2a613604c0cdda6d9f838ae9b47ea6d936c5e4ce.1769746294.git.alison.schofield@intel.com>
- <697cee39ed313_1d6f100bd@dwillia2-mobl4.notmuch>
- <aX1VMDh9IY4eg1h_@aschofie-mobl2.lan>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="C5gkD3Ka"
+ARC-Seal: i=1; a=rsa-sha256; t=1769938253; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=kGRF75a1swnqtkm/Z6J9cCJJa4OKO63pHD+dcrQrZ2jvjaZm6ssc6RxO5xUZx9mqXNpv19TLT8eLg+whH6NVD9aa187fgVE38ntG/6DnREu8c+vUa4Imw9T9vmq26c9yiE40GNXJ8jORcYKncfwj9nlZTN10w1blXFc1vnGW7WM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1769938253; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=mjfAjFMMBXz2zHNwg2Tsi66wHudi7CzmRy1Y/zVKZM0=; 
+	b=RgvTSX5NGY/0WDSY5BJzhn/mOF17NL47gOaZAtSZ9Zpvx6nVsprg8bkaKslRiPmWwpTAlUjY8CFF5WIAd/TcreY4EgjsxRUschifairBu2BWh7GiGKU84KICzWUp7LBzutCXStkR7AayP9HAs8jWfNGXTPWFHiRymwGNTcf/2l4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1769938253;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=mjfAjFMMBXz2zHNwg2Tsi66wHudi7CzmRy1Y/zVKZM0=;
+	b=C5gkD3KaU/IOHDmdxfJQ790eGEXzds0IP6Q2BFK6HMcUSS0Z0pjA3zyppFayEXHL
+	GNftMbkxlgPOMnkTszSulRCu12d6lGOxewdPH3XBbVI9e48BgOuPIi8agr/n7+T+Un7
+	TKjpFGbUFpQ8A2+KzMw29nkH38F4FLRKDzrW+ZQ4=
+Received: by mx.zohomail.com with SMTPS id 1769938250832826.2215305264092;
+	Sun, 1 Feb 2026 01:30:50 -0800 (PST)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH 0/2] Fix port enumeration failure and NULL endpoint issue
+Date: Sun,  1 Feb 2026 17:30:00 +0800
+Message-ID: <20260201093002.1281858-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aX1VMDh9IY4eg1h_@aschofie-mobl2.lan>
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr0801122c586d6077cda4e12d99624fc10000e4fc3bfd6807928eed555efe68d6bd0e10996ecbca1553c1bd6bf2e845f4:zu0801122797e650e13af913b4e6d1cd76000096f133e681833e1b8d15d0375e07262769bf3513400c269931:rf080112324775ed7f2f665361f8f5b23e0000d8137605a4dbb61994c03c1fc5f5d96fe4b80ab1b44941eb4ab472baebd78f11b0afb508:ZohoMail
 
-On Fri, Jan 30, 2026 at 05:04:48PM -0800, Alison Schofield wrote:
-> 
-... snip ...
-Logging in on a saturday, will respond fully on monday just wanted to
-inject a question for the masses here
+I ran CXL mock testing with next branch, I usually hit the following
+call trace.
 
-> When auto-created region assembly fails, 
+ Oops: general protection fault, probably for non-canonical address 0xdffffc0000000092: 0000 [#1] SMP KASAN NOPTI
+ KASAN: null-ptr-deref in range [0x0000000000000490-0x0000000000000497]
+ CPU: 3 UID: 0 PID: 42 Comm: kworker/u16:1 Tainted: G           O      J 6.19.0-rc5-cxl+ #4 PREEMPT(voluntary) 
+ Tainted: [O]=OOT_MODULE, [J]=FWCTL
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+ Workqueue: async async_run_entry_fn
+ RIP: 0010:cxl_dpa_to_region+0x105/0x1f0 [cxl_core]
+ Call Trace:
+  <TASK>
+  cxl_event_trace_record+0xd1/0xa70 [cxl_core]
+  __cxl_event_trace_record+0x12f/0x1e0 [cxl_core]
+  cxl_mem_get_records_log+0x261/0x500 [cxl_core]
+  cxl_mem_get_event_records+0x7c/0xc0 [cxl_core]
+  cxl_mock_mem_probe+0xd38/0x1c60 [cxl_mock_mem]
+  platform_probe+0x9d/0x130
+  really_probe+0x1c8/0x960
+  driver_probe_device+0x45/0x120
+  __device_attach_driver+0x15d/0x280
+  bus_for_each_drv+0x100/0x180
+  __device_attach_async_helper+0x199/0x250
+  async_run_entry_fn+0x95/0x430
+  process_one_work+0x7db/0x1940
 
-I wonder how many work we want to do to try to make the auto-region
-path more reliable for complex setups (interleaving being one example).
+After detailed debugging, I identified two independent issues that
+together leads to the problem.
 
-In other paths, in particular when there is some implied use-case for
-the device, we already take the opinion the BIOS should do nothing.
-Should we draw a hard line on when that should be the official opinion?
+Issue 1:
+cxlmd->endpoint is initialized to ERR_PTR(-ENXIO) during cxlmd creation,
+but cxl subsystem usually checks endpoint availability by checking
+whether it is NULL. As a result, if endpoint port creation fails, some
+code paths may incorrectly treat the endpoint as available. In the
+call trace above, endpoint port creation fails but cxl_dpa_to_region()
+still considers that is available.
+Patch #1 is used to fix it, the solution is initializing cxlmd->endpoint
+to NULL by default.
 
-i.e. auto-decoders should be intended for trivial SysRAM regions only
+Issue 2:
+The second issue is why CXL port enumeration could be failure. What I
+observed is when two memdev were trying to enumerate a same port, the
+first memdev was responsible for port creation and attaching. However,
+there is a small window between the point where the new port becomes
+visible(after being added to the device list of cxl bus) and when it is
+bound to the port driver. During this window, the second memdev may
+discover the port and acquire its lock while attempting to add its
+dport, which blocks bus_probe_device() inside device_add(). As a result,
+the second memdev observes the port as unbound and fails to add its
+dport.
+Patch #2 fixes this race by holding the grandparent port lock during
+dport addition, preventing premature access before driver binding
+completed.
 
-(especially given that a user can't even select zone-isolation except
- via a global kernel build option that affects all hotplug memory)
+base-commit: 63050be0bfe0b280cce5d701b31940fd84858609 cxl/next
 
-~Gregory
+Li Ming (2):
+  cxl/core: Set cxlmd->endpoint to NULL by default
+  cxl/core: Hold grandparent port lock for dport adding.
+
+ drivers/cxl/core/memdev.c | 2 +-
+ drivers/cxl/core/port.c   | 6 +++++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+-- 
+2.43.0
+
