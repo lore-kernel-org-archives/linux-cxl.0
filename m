@@ -1,40 +1,41 @@
 Received: from sender4-pp-o90.zoho.com (sender4-pp-o90.zoho.com [136.143.188.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E8542A96;
-	Sun,  1 Feb 2026 09:31:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF13F42A96;
+	Sun,  1 Feb 2026 09:31:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.90
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769938268; cv=pass; b=WJG5Xer0wsUz8MhafegcygtJC69hBazf3R74/tcPqTrvnI+gJ1qfXEDXL8MyvxmIEfeaBno9oiXYIvS7W/gAYGuS2PIgyd4BlSg+QJl+IaLSHd4rUS2pwUl6yBnzlRjjNXu1mYC/iSS1HQHKrrTGHxRvNKgx1LVsfVLaDeJu9k4=
+	t=1769938275; cv=pass; b=n+Ge5XBmW7/Aq0eOMdIf/z4aEsYIQVvo+9WbeW5HdolF7IqXSJY773ZM7C6QJw/k1UFashCL3JTwYz0K+UqoEUpD1HatuSodscZBIuq2QJP3D3qJgqCG/VRoboxoorv8haY5UFymKFeAEGQ4PIy8gP/ZrkL1SZStOhSXYQBnIQ4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769938268; c=relaxed/simple;
-	bh=NhLr32hX3L2uUlQ5n9aRosqttmkbYsTbkzI3lAr4D0E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UQ7hB6DlgKViL4xvfD7Ce4R+2QkkZJfWpgllOc0OI2NpBjtGm7iFVth89J1XpZqGjePX6160l2eWzrkcWe5pJsqBXs5LaVraS43rWppVFuKzPONMt3cYWb3V/aknsWaZSTCvNniWx0YBVus2vr5i0lxX6wlfTh2kyG8w5czMhQ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=C5gkD3Ka; arc=pass smtp.client-ip=136.143.188.90
+	s=arc-20240116; t=1769938275; c=relaxed/simple;
+	bh=hsKZ9DzJafLyDdRycM2Ee6tppkb6X9Sas8yeTi5vc74=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RlPQpbW3PWgsGfh3QYPIfD+mdBlg0jsxceHJfOhDmCJQDTPKtOpTOVNyntwKYhzneEHE5LF2HImXN9fSSWcS2BYubNH+VwS/Ag9qhKuqQYblta61LI/mEef8m9rng+nUaXYruTpRJ3Tz+hI1OD2SIo4pmoGJXbiudVZMQskM6q8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Jkp5uhae; arc=pass smtp.client-ip=136.143.188.90
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="C5gkD3Ka"
-ARC-Seal: i=1; a=rsa-sha256; t=1769938253; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Jkp5uhae"
+ARC-Seal: i=1; a=rsa-sha256; t=1769938261; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=kGRF75a1swnqtkm/Z6J9cCJJa4OKO63pHD+dcrQrZ2jvjaZm6ssc6RxO5xUZx9mqXNpv19TLT8eLg+whH6NVD9aa187fgVE38ntG/6DnREu8c+vUa4Imw9T9vmq26c9yiE40GNXJ8jORcYKncfwj9nlZTN10w1blXFc1vnGW7WM=
+	b=lunWI9eMu7IOTsWRUIbxA4qnKtLadokPrvzx8xXEMrAeJzXnszLvJbczyPHlV2lDcRItrW86306+hGtQm5ucuzbbQdScGcI9QaAGrD/hVayY6EsKuC1sxd/LafmuHxseNZA8/X8dAJL1i/ZQQ7yCLAeGFmLrWKKmFYeMK49M0KU=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1769938253; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=mjfAjFMMBXz2zHNwg2Tsi66wHudi7CzmRy1Y/zVKZM0=; 
-	b=RgvTSX5NGY/0WDSY5BJzhn/mOF17NL47gOaZAtSZ9Zpvx6nVsprg8bkaKslRiPmWwpTAlUjY8CFF5WIAd/TcreY4EgjsxRUschifairBu2BWh7GiGKU84KICzWUp7LBzutCXStkR7AayP9HAs8jWfNGXTPWFHiRymwGNTcf/2l4=
+	t=1769938261; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=hibxExN37Y2J4xiEbPjvTudzX+CS65krB5RcbciB+5E=; 
+	b=Vgz1QY8Y5OAz6r5PgfeZj3BSshtHo7fXvmYZIuexbIm1zKpSQRld9EWqlX8g4y7lQZZsghDuqi0ct3U9wvHtRuG0OfkV5wB31TU5jox3YkEiV7F7kb3/izrdqFjbTWQi7aAouSBekWhhr83c1EseW1vJk59CoVGTIBxPxe0LCNI=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1769938253;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1769938261;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=mjfAjFMMBXz2zHNwg2Tsi66wHudi7CzmRy1Y/zVKZM0=;
-	b=C5gkD3KaU/IOHDmdxfJQ790eGEXzds0IP6Q2BFK6HMcUSS0Z0pjA3zyppFayEXHL
-	GNftMbkxlgPOMnkTszSulRCu12d6lGOxewdPH3XBbVI9e48BgOuPIi8agr/n7+T+Un7
-	TKjpFGbUFpQ8A2+KzMw29nkH38F4FLRKDzrW+ZQ4=
-Received: by mx.zohomail.com with SMTPS id 1769938250832826.2215305264092;
-	Sun, 1 Feb 2026 01:30:50 -0800 (PST)
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=hibxExN37Y2J4xiEbPjvTudzX+CS65krB5RcbciB+5E=;
+	b=Jkp5uhaeIVXqTeMRgIGH49U8G0Bexr89hAcQftQd3oak3n4+gvAGBZmwooToGVKW
+	hejQsmA0rQ2gGTEIkGQFSlC51NdYjFR84DclY1aydhgYillnJMgnU2eo4A3oszF8mCH
+	k0h18rLWMw5NuoQ/5NA2eO0yDlO7vOKcI9+f38+0=
+Received: by mx.zohomail.com with SMTPS id 1769938259821602.5139285541802;
+	Sun, 1 Feb 2026 01:30:59 -0800 (PST)
 From: Li Ming <ming.li@zohomail.com>
 To: dave@stgolabs.net,
 	jonathan.cameron@huawei.com,
@@ -46,10 +47,12 @@ To: dave@stgolabs.net,
 Cc: linux-cxl@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH 0/2] Fix port enumeration failure and NULL endpoint issue
-Date: Sun,  1 Feb 2026 17:30:00 +0800
-Message-ID: <20260201093002.1281858-1-ming.li@zohomail.com>
+Subject: [PATCH 1/2] cxl/core: Set cxlmd->endpoint to NULL by default
+Date: Sun,  1 Feb 2026 17:30:01 +0800
+Message-ID: <20260201093002.1281858-2-ming.li@zohomail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260201093002.1281858-1-ming.li@zohomail.com>
+References: <20260201093002.1281858-1-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -57,17 +60,12 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr0801122c586d6077cda4e12d99624fc10000e4fc3bfd6807928eed555efe68d6bd0e10996ecbca1553c1bd6bf2e845f4:zu0801122797e650e13af913b4e6d1cd76000096f133e681833e1b8d15d0375e07262769bf3513400c269931:rf080112324775ed7f2f665361f8f5b23e0000d8137605a4dbb61994c03c1fc5f5d96fe4b80ab1b44941eb4ab472baebd78f11b0afb508:ZohoMail
+Feedback-ID: rr0801122c411b09ef1fb4ee7f94413acf0000697a04a5620573b12ff06473ac3f0749b459dabb256658c55281bd1da3d1:zu080112278b7c9ab791961eb52563e3df000009965e6129cfe0e78302f79844d85cd3d086d36e310bb6d965:rf0801123270ba928561fc2df255162c670000405606c646f0593a246365c2696a558240fd345629d0887fc304483a33240de7e222a9ea:ZohoMail
 
-I ran CXL mock testing with next branch, I usually hit the following
-call trace.
+CXL testing environment can trigger following trace
 
  Oops: general protection fault, probably for non-canonical address 0xdffffc0000000092: 0000 [#1] SMP KASAN NOPTI
  KASAN: null-ptr-deref in range [0x0000000000000490-0x0000000000000497]
- CPU: 3 UID: 0 PID: 42 Comm: kworker/u16:1 Tainted: G           O      J 6.19.0-rc5-cxl+ #4 PREEMPT(voluntary) 
- Tainted: [O]=OOT_MODULE, [J]=FWCTL
- Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
- Workqueue: async async_run_entry_fn
  RIP: 0010:cxl_dpa_to_region+0x105/0x1f0 [cxl_core]
  Call Trace:
   <TASK>
@@ -78,51 +76,38 @@ call trace.
   cxl_mock_mem_probe+0xd38/0x1c60 [cxl_mock_mem]
   platform_probe+0x9d/0x130
   really_probe+0x1c8/0x960
+  __driver_probe_device+0x187/0x3e0
   driver_probe_device+0x45/0x120
   __device_attach_driver+0x15d/0x280
-  bus_for_each_drv+0x100/0x180
-  __device_attach_async_helper+0x199/0x250
-  async_run_entry_fn+0x95/0x430
-  process_one_work+0x7db/0x1940
 
-After detailed debugging, I identified two independent issues that
-together leads to the problem.
+commit 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
+initializes cxlmd->endpoint to ERR_PTR(-ENXIO) in cxl_memdev_alloc().
+However, cxl_dpa_to_region() treats a non-NULL cxlmd->endpoint as a
+valid endpoint.
 
-Issue 1:
-cxlmd->endpoint is initialized to ERR_PTR(-ENXIO) during cxlmd creation,
-but cxl subsystem usually checks endpoint availability by checking
-whether it is NULL. As a result, if endpoint port creation fails, some
-code paths may incorrectly treat the endpoint as available. In the
-call trace above, endpoint port creation fails but cxl_dpa_to_region()
-still considers that is available.
-Patch #1 is used to fix it, the solution is initializing cxlmd->endpoint
-to NULL by default.
+Across the CXL core, endpoint availability is generally determined by
+checking whether it is NULL. Align with this convention by initializing
+cxlmd->endpoint to NULL by default.
 
-Issue 2:
-The second issue is why CXL port enumeration could be failure. What I
-observed is when two memdev were trying to enumerate a same port, the
-first memdev was responsible for port creation and attaching. However,
-there is a small window between the point where the new port becomes
-visible(after being added to the device list of cxl bus) and when it is
-bound to the port driver. During this window, the second memdev may
-discover the port and acquire its lock while attempting to add its
-dport, which blocks bus_probe_device() inside device_add(). As a result,
-the second memdev observes the port as unbound and fails to add its
-dport.
-Patch #2 fixes this race by holding the grandparent port lock during
-dport addition, preventing premature access before driver binding
-completed.
-
-base-commit: 63050be0bfe0b280cce5d701b31940fd84858609 cxl/next
-
-Li Ming (2):
-  cxl/core: Set cxlmd->endpoint to NULL by default
-  cxl/core: Hold grandparent port lock for dport adding.
-
+Fixes: 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
  drivers/cxl/core/memdev.c | 2 +-
- drivers/cxl/core/port.c   | 6 +++++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index af3d0cc65138..41a507b5daa4 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -675,7 +675,7 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+ 	cxlmd->id = rc;
+ 	cxlmd->depth = -1;
+ 	cxlmd->attach = attach;
+-	cxlmd->endpoint = ERR_PTR(-ENXIO);
++	cxlmd->endpoint = NULL;
+ 
+ 	dev = &cxlmd->dev;
+ 	device_initialize(dev);
 -- 
 2.43.0
 
