@@ -1,159 +1,180 @@
-Received: from toucan.tulip.relay.mailchannels.net (toucan.tulip.relay.mailchannels.net [23.83.218.254])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA990212548;
-	Mon,  2 Feb 2026 20:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.254
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770062434; cv=pass; b=MzHSfBYbHt8ZQFKzBnIIeZT1BylDnwhGQRUKpesqN8WDsyS8I2ms9nK07m+0tcgkcLf+/zMKnrp9cTLKoF6iGa0M5q3nTGJj6swyx2YBR3P2pPzKW5NvMPgR1Ta6iJAmKRScErtC1hp1JbNlcf2iFJLw/2MkYLbD4r/DXMTBs2I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770062434; c=relaxed/simple;
-	bh=zNnjzhBFi1tGHAZPFKr3IpG4jkjHIuxvSu01c9+xkAU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VvxjlEOpuZ3km3v0Ig/xCPIuW60Gf863enxa8ifaJ/WwmXAXUJANXfYuL3Vu4e+l/slZf5W0WWVwWvdjKCs0Nqc+TqfseL3FZgbRzUUJbW16uDG6THR9GIOCXMRKlFxBgBSn7q7PYp8aqEUO4PVgpSkhUL/vhgDpygNQJXTQgvs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=Rv2iz45I; arc=pass smtp.client-ip=23.83.218.254
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A227261C
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Feb 2026 20:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770062474; cv=none; b=R+nW7d5L0jPCmCQWKjpod6sv1k6h2O64MXHlMaeZfpxZB4HCpo2vkQCNXd6rTXjtcOfcIjjExhG8OSyNVi6tA/77FUCI2E0lSZayL2RNZdMH9NN2EBeByTMb2eJgJbqS6gHARgY60oOM9xtPWadZHI/2qEbmaeXX1v2hROq59WU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770062474; c=relaxed/simple;
+	bh=ixTQq4nUfvOpjDXKb5OkveJjRFKaZw3E0ulDvFbpw88=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B7HNxHLQ2BVWKInkqSwDtnz1XwACJIGIgP8iN2ejX5tMXnzO5TcU8OjpdzXPRHkNk+xJlGcs7KHwUa1XZ0TFacfus/p0twwl8rHHTWTY1MyX9hWU4tEwK3oLH7mbQU4MHG0Obk/Xm7qVvpJsK7+/RxA3NeO4nzWJMwZQIUOARxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XUlS1toU; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="Rv2iz45I"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 58D287628A3;
-	Mon, 02 Feb 2026 20:00:26 +0000 (UTC)
-Received: from pdx1-sub0-mail-a252.dreamhost.com (100-123-122-168.trex-nlb.outbound.svc.cluster.local [100.123.122.168])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id A2994762A89;
-	Mon, 02 Feb 2026 20:00:25 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1770062425;
-	b=buBFaY0Iic7xkUVBdrTwcM6WDn0lzO1c3Tjiy4aYQ3KdfS8bmJ0Qk01Yif6x5xIMMi8Peu
-	pvdJh1N3TmctJFaQabb6K5iAoq1lX7ABc0qkB/cdktWYgKZ4nqK+GbLeKBWFVO5PLT+8pB
-	732mzKaKiguTh5HNrLcl7NAClL2NN1hRNpzO6m53NJk4+0KDklmvKjQjW+rq7MNL2yYj62
-	ck0Q6XOlcmqidUx8KMFRyhPZ2kchE1OGktAVilsbEaK9ayRusBxhW+y9XqpmSwFjtQJrdk
-	ajQ2wMS0ABhhjRVj/H/5SseZUks+ff2B24o1/AhMrewLJe/u1NeeRnabP2Caeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1770062425;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=2TGN7ccQVSBL3zXRq2zaj0oD2hNGEzmLxxzO6Rb+LSs=;
-	b=XORwvSiJxxIdS40yshMiqivS+Jn5v5VdVj3g2Rq4I/6TKhG9ehj19Ze0kiW6vXU8McnyLk
-	vxpcVJaaerE+dCf4naqqhsRUICwXL0TEc/5jfD0CVOU0T7x6tCrt+8AXGkxp0wZ1nslZLA
-	BNiD3fJr/kiUlapoXq+V7m6iWI+4ogZIJ6ohbB+X8whvbTpMpDS0LK2ofS6ekEyMHZGVXz
-	An3O2IzZ0rVDeROy1l3TzuC8FUtpznzE5ZrnI1Z7QavSgEjmaDf7wBCZvv7ubvQghhDSbl
-	mGLUPKwg9wSok70jJQMweXVBmrt3Xvu19LKCpewQbkEXbQdhxlXm1jDZ+kajLQ==
-ARC-Authentication-Results: i=1;
-	rspamd-5b979ccf89-rd6mt;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Supply-Abiding: 242d3e9e5583ac84_1770062426113_2035063146
-X-MC-Loop-Signature: 1770062426113:356498927
-X-MC-Ingress-Time: 1770062426113
-Received: from pdx1-sub0-mail-a252.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.123.122.168 (trex/7.1.3);
-	Mon, 02 Feb 2026 20:00:26 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a252.dreamhost.com (Postfix) with ESMTPSA id 4f4ct06PzxzyrC;
-	Mon,  2 Feb 2026 12:00:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1770062425;
-	bh=2TGN7ccQVSBL3zXRq2zaj0oD2hNGEzmLxxzO6Rb+LSs=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=Rv2iz45Idk+B96pM881dT/5x9esMS+FNhGHCokgJouotgjehS8mbVAdVKa95LP+c/
-	 CbuxuH69qP57Fay88O6YnVZbUTDm29zmTvXEV5Bkgw0RtSwyquW0mquXxSEcgCBgeI
-	 SPvv94t1au5YlwPJYbshgLMQmEBPbxxufleDu6s0x906q9e/rlvDx9lAQAeWDxPVat
-	 9gRwiZ8hHbSj53jHxDSgI+Oma/x5axymGVfsOXJ4+Llx5lb3WeWF+1cScgAnTjTCRJ
-	 3tZ42acKG14rS5f8Bbk6HhLo3flI3AyjMjGsLQLW0vBw+R/dMrxDzcSNxUTvAdNOSq
-	 qG1aXEQlNpmjg==
-Date: Mon, 2 Feb 2026 12:00:22 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: Re: [PATCH v9 12/19] cxl/extent: Process dynamic partition events
- and realize region extents
-Message-ID: <20260202200022.zkowzjzrmogwmt4u@offworld>
-References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
- <20250413-dcd-type2-upstream-v9-12-1d4911a0b365@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XUlS1toU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770062472; x=1801598472;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ixTQq4nUfvOpjDXKb5OkveJjRFKaZw3E0ulDvFbpw88=;
+  b=XUlS1toUqP9hIRUL8WByCuzHVNkmov08x0Lu3qRUXMT3s5gPHrgB2mdF
+   osiLYsC/4ovYD4F1Laq5fy8IrLAGqGwVY3K4pggMWIrGCNIwCDY39GVCx
+   mDlDbB4entitdDq56xcYYBSzx73pV4iiEPZ/PA2d/PQHUDWQHfZxS5lEm
+   qus3LOr0lAKlbEjkaehSbiJUJKbRsDka7CLC+ZryKGz1l79h7g2hsyEn/
+   dyVwRJWesYV2vzvZGHM3L3F4CPvWCKmqJRUPwZU40/tsGTlZpFPY+v1TL
+   tEDejN17g1OnVd4lGRUGBzcvGIaQlccAQfsGT3hkN0dmVnX1FPeeR+IsV
+   A==;
+X-CSE-ConnectionGUID: 6RjNaPwtTkOgxwpDfdnsuQ==
+X-CSE-MsgGUID: 3aHp8XOdTg2zJm+AcMjVfg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="71125796"
+X-IronPort-AV: E=Sophos;i="6.21,269,1763452800"; 
+   d="scan'208";a="71125796"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 12:01:11 -0800
+X-CSE-ConnectionGUID: HJq1zMMvQ8essJYNb7M/jQ==
+X-CSE-MsgGUID: JU22kzCDRCedDgliiA6mYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,269,1763452800"; 
+   d="scan'208";a="209846226"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.110.162]) ([10.125.110.162])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 12:01:10 -0800
+Message-ID: <d70a77f5-33ab-4d68-8427-dde5ce3f8486@intel.com>
+Date: Mon, 2 Feb 2026 13:01:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250413-dcd-type2-upstream-v9-12-1d4911a0b365@intel.com>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/9] cxl/port: Unify RAS setup across port types
+To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc: Jonathan.Cameron@huawei.com, dave@stgolabs.net,
+ alison.schofield@intel.com, terry.bowman@amd.com
+References: <20260131000403.2135324-1-dan.j.williams@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260131000403.2135324-1-dan.j.williams@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, 13 Apr 2025, Ira Weiny wrote:
 
->+static int cxlr_add_extent(struct cxl_dax_region *cxlr_dax,
->+			   struct cxl_endpoint_decoder *cxled,
->+			   struct cxled_extent *ed_extent)
->+{
->+	struct region_extent *region_extent;
->+	struct range hpa_range;
->+	int rc;
->+
->+	calc_hpa_range(cxled, cxlr_dax, &ed_extent->dpa_range, &hpa_range);
->+
->+	region_extent = alloc_region_extent(cxlr_dax, &hpa_range, &ed_extent->uuid);
->+	if (IS_ERR(region_extent))
->+		return PTR_ERR(region_extent);
->+
 
-afaict the ed_extent can leak in this error path
+On 1/30/26 5:03 PM, Dan Williams wrote:
+> Changes since v1 [1]:
+> - Cleanup the diff by keeping the order of dport_exists() relative to
+>   the dev->driver check in cxl_port_add_dport() (Jonathan)
+> - Drop some repetitive de-referencing with a local @port variable in
+>   dport_to_host() (Jonathan)
+> - s/group/dr_group/ throughout to clarify "devres group" (Jonathan)
+> - Reuse del_dport() for cxl_dport_release_dr_group() (Jonathan)
+> - Drop the thin wrappers for devres_{open,close}_group() for the port
+>   group.
+> - Add a comment and a cleanup TODO for the 'add_dport()' operation in
+>   'struct cxl_driver'. (Jonathan)
+> - Change patch 7 subject to just: "cxl/port: Map Port RAS registers"
+>   since it is only introducing a helper that is later used in the
+>   endpoint case. (Jonathan)
+> 
+> [1]: http://lore.kernel.org/20260122033330.1622168-1-dan.j.williams@intel.com
 
->+	rc = xa_insert(&region_extent->decoder_extents, (unsigned long)ed_extent,
->+		       ed_extent, GFP_KERNEL);
->+	if (rc) {
->+		free_region_extent(region_extent);
->+		return rc;
->+	}
+Applied to cxl/next
+0da3050bdded5f121aaca6b5247ea50681d7129e
 
-.. and this one (not in the xarray).
+> 
+> Original cover letter:
+> 
+> ---
+> 
+> The CXL Port Protocol error handling series grew to be over 30 patches
+> which is too much to handle at once given the various topics involved.
+> One of the sub-threads of the v14 review was confusion about the new
+> devres groups to manage port setup unwind failures [2].
+> 
+> [2]: http://lore.kernel.org/20260115144605.00000666@huawei.com
+> 
+> Given that review indicated a need to break up and better explain the
+> conversion, do that in a separate patch set. Build on top of the first
+> 18 patches of that series [3] that are ready to merge.
+> 
+> [3]: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=for-7.0/cxl-aer-prep
+> 
+> The wider goals of the port protocol handling series are:
+> 
+> 1/ Be minimally invasive to the ongoing maintenance burden of PCIe error
+>    handling. Just do the minimal enlightenment to forward "internal"
+>    errors for device with active CXL links to the CXL core.
+> 
+> 2/ Build a framework for any driver that registers a 'struct cxl_memdev'
+>    (or in the future a 'struct cxl_cachedev') gets protocol error
+>    handling support.
+> 
+> This "Unify RAS setup across port types" set supports goal 2/. It
+> enables a model where all CXL error handling is relative to the common
+> 'struct cxl_port' and 'struct cxl_dport' objects and is agnostic to
+> whether those objects are in support of the memory expansion class
+> device (driven by cxl_pci) or any other CXL endpoint in the system that
+> supports CXL.cachemem operation.
+> 
+> In support of that unification, the setup of RAS registers needs to be
+> centralized. That in turn requires new handling for early exit setup
+> failures and additional teardown support for resources optionally
+> acquired at port / dport creation time.
+> 
+> The devres group mechanism is deployed to cleanup some open coded
+> devm_release_action() calls. The devres group facility also comes in
+> handy for unwinding conditional setup steps in the port creation
+> process. Recall that ports defer probing their CXL resources until after
+> they are known to have a downstream CXL connection. So, early exit during
+> setup of a new dport may have more or less work to do depending on
+> whether the first or subsequent dport is being added.
+> 
+> Given probing port resources is a 'probe' action it fits more naturally
+> as a driver operation. If cxl_port_add_dport() then moves to cxl_port
+> driver operation alongside ->probe(), it enables a cxl_test cleanup. The
+> cxl_test approach has a hard time mocking interfaces that are internal
+> to the cxl_core.
+> 
+> The rest of the patches in this set finish off the conversion of 'struct
+> cxl_port' and 'struct cxl_dport' to be the only CXL objects that
+> interact with the CXL RAS.
+> 
+> Dan Williams (8):
+>   cxl/port: Cleanup handling of the nr_dports 0 -> 1 transition
+>   cxl/port: Reduce number of @dport variables in cxl_port_add_dport()
+>   cxl/port: Cleanup dport removal with a devres group
+>   cxl/port: Move decoder setup before dport creation
+>   cxl/port: Move dport probe operations to a driver event
+>   cxl/port: Move dport RAS setup to dport add time
+>   cxl/port: Move endpoint component register management to cxl_port
+>   cxl/port: Unify endpoint and switch port lookup
+> 
+> Terry Bowman (1):
+>   cxl/port: Map Port RAS registers
+> 
+>  drivers/cxl/core/core.h              |  10 ++
+>  drivers/cxl/cxl.h                    |  33 +++---
+>  drivers/cxl/cxlmem.h                 |   4 +-
+>  drivers/cxl/cxlpci.h                 |  12 +-
+>  tools/testing/cxl/exports.h          |  13 ---
+>  drivers/cxl/core/hdm.c               |   6 +-
+>  drivers/cxl/core/pci.c               |   8 +-
+>  drivers/cxl/core/port.c              | 159 +++++++++++++++++----------
+>  drivers/cxl/core/ras.c               |  50 ++++++---
+>  drivers/cxl/mem.c                    |   2 -
+>  drivers/cxl/pci.c                    |  63 +----------
+>  drivers/cxl/port.c                   | 122 ++++++++++++++++++++
+>  tools/testing/cxl/cxl_core_exports.c |  22 ----
+>  tools/testing/cxl/test/mock.c        |  36 ++----
+>  tools/testing/cxl/Kbuild             |   3 +-
+>  15 files changed, 310 insertions(+), 233 deletions(-)
+>  delete mode 100644 tools/testing/cxl/exports.h
+> 
+> 
+> base-commit: 9a8920ca8ebfb99604f639e7fbc681d0d04518a0
 
->+
->+	/* device model handles freeing region_extent */
->+	return online_region_extent(region_extent);
->+}
-
-...
-
-> static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
->				    enum cxl_event_log_type type)
-> {
->@@ -1100,9 +1369,13 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
->		if (!nr_rec)
->			break;
->
->-		for (i = 0; i < nr_rec; i++)
->+		for (i = 0; i < nr_rec; i++) {
->			__cxl_event_trace_record(cxlmd, type,
->						 &payload->records[i]);
->+			if (type == CXL_EVENT_TYPE_DCD)
->+				cxl_handle_dcd_event_records(mds,
->+							&payload->records[i]);
->+		}
->
->		if (payload->flags & CXL_GET_EVENT_FLAG_OVERFLOW)
->			trace_cxl_overflow(cxlmd, type, payload);
-
-With DCD the extent list needs resync'd in the overflow case; cxl_process_extent_list() needs
-called.
