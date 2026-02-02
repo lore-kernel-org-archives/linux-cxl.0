@@ -1,81 +1,82 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45AE7385EE0
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Feb 2026 17:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62D52638BC
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Feb 2026 17:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770054096; cv=none; b=HAJMuLZ75Nf297s4931wFwcHBxnaC9A4o3+3bjLriL5obFNmUMxd/7thLjRWIHtwZO0VhtsXyYKKX7BG3PFAoZEdj4P/WVAm5R4N5gx2c/Fz1RGs5FGi+jHxra6ON7084q6X4EEIbGVk0+B31AjlZrgNEh4F5OH0Wf6rsiUVz/A=
+	t=1770054390; cv=none; b=c/mDB/EexG7peJrAbmei3iiKDz1BAK4j3T7Oqvmz7xxReMm7md/iQNYRA4V/uF90BjCJ6wUi4DiewUdh7IHBPvzV4KsWNYjsyTsSaUOErE7qFLec4fImq07t6iedUnNzf/1J5F7a0NRK2puSJQG59CQgSCT9YbkdBz2R809b38M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770054096; c=relaxed/simple;
-	bh=NvSchrP/3iqVAPZQcFrmz3WZ5MlQLRFV2NZ/1rw7880=;
+	s=arc-20240116; t=1770054390; c=relaxed/simple;
+	bh=gL8uCUJiJhHkiRNkyf53CfWI8RBSbR1NS4lJMuLRlY0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TBUscuQKW34Wrabq0mza6nHm824D1QcnztTGQk+3rDyPZHOTCNiPywZhnu9N4NUjYd4v/mT7iZ8318+7uS73YZDmkMB6837iQjDbCE1eutbGpS++97ypDu0Ma3Jx2jU/gKbqR1OeSIH8qeiiTCjfaj5WM2ZFDH8QcJg7t/HI8Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Sx5Ofipm; arc=none smtp.client-ip=209.85.219.49
+	 Content-Type:Content-Disposition:In-Reply-To; b=df7QNUjI4FuKJffbZbHRk0BwOZr4lHAJ/w7ydRl0xWFSL26k5Mp4h1LF54UN9q8jl86s4kVLK5m7MrnUfsdA0x/W889cvNg0wlyx5cEQUZCI4z5AH2DYYCSMoYKToXOgyLRQ/0cFpb1kf4uClO9EDbTbQvmtuA/wKkg88mE5pjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=FhaemJHj; arc=none smtp.client-ip=209.85.222.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Sx5Ofipm"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-894638da330so48166966d6.1
-        for <linux-cxl@vger.kernel.org>; Mon, 02 Feb 2026 09:41:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="FhaemJHj"
+Received: by mail-qk1-f196.google.com with SMTP id af79cd13be357-8c7199e7f79so742438885a.0
+        for <linux-cxl@vger.kernel.org>; Mon, 02 Feb 2026 09:46:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1770054094; x=1770658894; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1770054388; x=1770659188; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6OBDEWLEmHCzYPUVrTciErMQbNpqUwuoibpvHtq101E=;
-        b=Sx5OfipmZy6VSguN3UfYogDNou/OpbG+PH0pl1nyOXT/V88T3HqakBgwdFYC+dChwy
-         KrfUKFMnK+VPp7SscQaJqHz4Y1qi1pb+EvNbv1A1I5UJQHVApan8h2NlPs3kwrOopt7r
-         y4Lw6oGg2jS1pmfG6ekVvTRmo1L8kOib4WH3udiGLUpqz4qCYg1VIrNNkZTKubhK3gpn
-         Gqb3MfSjSna1InoYN45/s0i9wis222PsHOK/zHXWJ/1KC87XnaGFrbkvmpO9/P7YEWQp
-         YWEWbmhF3jHygOmg1Fc0fuEVSOIRe+4Brv/7e6Hn1ooqZ8FZV4enITWnxGAtd7lEOO37
-         04dg==
+        bh=P1wm0NexTqa+iJZbv1CobgpMNsP/JgzOw/JXCIX3sf8=;
+        b=FhaemJHj8nP4Xz0vsAeScEVMy7SHVg4mSlhJ59pasSiPnQ5mddAFKvsyV+d2mDoBZA
+         eGJbg4Z9pOFim4xE85y0R5Di6iXbDAMFGcf+R2zIIby0Ygf1Owvs8u2+/HW7ILjsxF9g
+         G1NeQO4b1NF9FmTXTX9W5w6Dlm7u266be99eQYKILV+t//GFuw2QT1fjyrrItMU44720
+         8+SVPhMn522jFPRb8ew86WTIa6NUkmZf1cThnHp78YLtdVMoAsnGnjxrQWugfuPtgMLJ
+         79IClZ+ie0w4kg5umbGLa13+m/pBRbCg+muFlFv3iRy9jT1PpVVy83NsQu+xd8IrBgzr
+         4IdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770054094; x=1770658894;
+        d=1e100.net; s=20230601; t=1770054388; x=1770659188;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6OBDEWLEmHCzYPUVrTciErMQbNpqUwuoibpvHtq101E=;
-        b=at0zd091uOFbfvj2AQ9dNbZf+FXQbmZ6ECwbaVqkbMtm5fmvJngUNysPXZrx6VTfvr
-         rblzzQmzD0L7jpGUpoiuzQlG8x0MMoFnjACQyCoF3U077KRcUruYC7VYWIab3z+zRDmk
-         3qDkA6CJa2/noRpy7wrZTSQk0BO9c+KZzI5/zY+u5xaFGyf0HHlhdQaZeKoqjj6aa2CN
-         5CvVvV8ipQkAIroosPqJj+86MD/F5fURA/u8E0wzRrX0ESNoIPhs8kUJrWpYyYq1Dv+E
-         Tyme6eOdRIJ4OPI1NUro1p6IObEQNJJg7mGfHJzVMHRlUBeV5wFQDBBnE6XpZuqvpD1c
-         kE7A==
-X-Forwarded-Encrypted: i=1; AJvYcCW4Tq+0X2+v070d0gZoLjlTSPrbMp41XuObruMzGnceeLHhCyaje/himHRpdSa+kPZ50NzejlBUOM8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzEB6/Axt047zDD7mcbLG2tS4X2uv0d044VJirJ7fpBSTV3G4v
-	gj+UptUBEZBO7f4kGOE0D8qxS/mpgVwxGKCJ+3JDvcXNqd574Q1kp0hEXqMdsOoWu6E=
-X-Gm-Gg: AZuq6aITy8ME9oCAGGN49LzLl5PCOF06RjcPNDk0MgaqCIJvSntMh2WZJjIsP+Qvmoe
-	ePqgH8qWr4kywNHvybaecLQ20hxHXRhq7geaOTStyJPl52o11hlGlJe0QXw02ovKl8hyx2wzb8V
-	Tv6t+ftzrx97+KZaBGvbag0zPN0yp5C7/539mUOnpC5KpDr7UyhJjCDZt87c96uWR4bI/5SfHWS
-	bEAQwMpTSYJQLbjrSQ1YX/252vIMFPKteaMkiHMe5Rl1xrTyKgMHeIm9jq7C3gE0U3BYPFbDAvR
-	TV0HTnyffYbnpGRtAjeX3AVlGhft64lO0/L8YyH/eywsYlbLWm6RRIGdqDgRlvHD2TDH38ZfL23
-	BxfiUGMfccJEvSSc1SCTeWmANMwIoqnUOxzAsdIVts2U4PKv6irOxRi0fIe6aLPhYyDw5/DuEiO
-	vWg3yBzDQIK2dR3+hGSvN5s/NpN7kSvjNPwBxTGeRR/GvxyaPqgULOqlediGd5WyWlkPTNgu7Px
-	uQcNdXk
-X-Received: by 2002:a05:6214:20ae:b0:894:7fa3:7a32 with SMTP id 6a1803df08f44-894ea0f90c0mr191291886d6.68.1770054094267;
-        Mon, 02 Feb 2026 09:41:34 -0800 (PST)
+        bh=P1wm0NexTqa+iJZbv1CobgpMNsP/JgzOw/JXCIX3sf8=;
+        b=l0ETSq4ilWHGon+ppR8cSSjTvFTunNJy445r10pBSBC3W6oJv25DMLLDkDqJVs5cep
+         bxlFZ2Kixo+JmLPodWCFhP70FpX5j6iSURqUxEfr5r6e4gGd513wK5Gctexobc81SloC
+         k9ygy6+ilGToMcRllrcqT9xwsYZI5n0RA+OcC4n8kc+aFqV7Ebdyr2zaHO2twiIcAoYV
+         C/lLOUNN8QWTL99IMEIgq/ssRXcKyTn2ecrCPp4Gn24ErLBZc5VJ9RXnFfBvNDEeojxX
+         rREsV1Ev1BYvJrXddaZuOi8fOiH/UdwIrToP08i5SRhyDWh4z/8lEKitjTGYpkaFukT0
+         Gihg==
+X-Forwarded-Encrypted: i=1; AJvYcCWkjalFMU5KcU4Uj4KXGwDONtJs6arQI68rMv+EsXFZv76isAhq16A55rSJCRLMliowpcMObHukfcU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfRG3e6hXtGd5avTyfIcgGdHk8n0ZKYVy3ccFlS3AHHZ9UxNZa
+	SIhLc8Q6s1a8HktKwvc4RJvVmONFcbc8W8Znic5M0ajhSZBUaA3RT8dfaesC0hHo0Dk=
+X-Gm-Gg: AZuq6aJwnSu0kFSHiwJpqhSwrlq1PBv6ewRTWEGKBB+Cq1ifRGJ8LZWbMEgB0Nl8Ubp
+	iAUI3FEUzJyAy2Iwv+Mq8k5KzZ0fmwEb/ZniJ4aAJPxjFgq6x2F0F07b3lvPMeEmMAeaEKgTbWK
+	NFFVhffNJ7HZ5IlxnxCJ3WnTxW2c1hvU2M36PiAZ77XfWonou0z3IABof1sneGQQcQLb7BzVse0
+	V0LONNtMfvOirBNqc38l9oWB8CuAANeTjNmln98TPT2Lrv+Ux0LsVNzFGZqm5wK/KTu3B3CFy4L
+	+fBVx3TWm7rKjYFnwaTmTRJUORz4GrJoxVJD2n7OB805NT/2wbqfllI9RRO9DtcmWHAfIyneolQ
+	P81wJjr7/sCpm8RW9I4b5oac+qK+aSgTKqvIqFKOI013y2EB8MMp/ynCL4rIFpwEg8x8mu1iB6X
+	vayB0udUIXpfQr903UXkHfj1jGvUmTQiE+l1//eZpK0Gg0XwzvFJRK10lOIZg+RzmJ13t7wzVk5
+	jE7vR8n
+X-Received: by 2002:a05:6214:c8f:b0:888:4930:82aa with SMTP id 6a1803df08f44-894ea166512mr179211126d6.70.1770054387847;
+        Mon, 02 Feb 2026 09:46:27 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c711b7c789sm1274632885a.7.2026.02.02.09.41.33
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c711d47e13sm1267680485a.45.2026.02.02.09.46.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Feb 2026 09:41:33 -0800 (PST)
-Date: Mon, 2 Feb 2026 12:41:31 -0500
+        Mon, 02 Feb 2026 09:46:27 -0800 (PST)
+Date: Mon, 2 Feb 2026 12:46:25 -0500
 From: Gregory Price <gourry@gourry.net>
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
 Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
 	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org, kernel-team@meta.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com, willy@infradead.org,
-	jack@suse.cz, terry.bowman@amd.com, john@jagalactic.com
-Subject: Re: [PATCH 8/9] cxl/core: Add dax_kmem_region and sysram_region
- drivers
-Message-ID: <aYDhyxjzKtbqFWdM@gourry-fedora-PF4VCD3F>
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, willy@infradead.org, jack@suse.cz,
+	terry.bowman@amd.com, john@jagalactic.com,
+	Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"David Hildenbrand (Red Hat)" <david@kernel.org>
+Subject: Re: [PATCH 1/9] mm/memory_hotplug: pass online_type to
+ online_memory_block() via arg
+Message-ID: <aYDi8bhxFnvMWl11@gourry-fedora-PF4VCD3F>
 References: <20260129210442.3951412-1-gourry@gourry.net>
- <20260129210442.3951412-9-gourry@gourry.net>
- <c1d7d137-b7c2-4713-8ca4-33b6bc2bea2b@amd.com>
- <aX0s4i5OqFhHkEUp@gourry-fedora-PF4VCD3F>
- <9652a424-6eb1-462f-8cbd-181af880f98b@amd.com>
+ <20260129210442.3951412-2-gourry@gourry.net>
+ <20260202171029.00005e80@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -84,70 +85,42 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9652a424-6eb1-462f-8cbd-181af880f98b@amd.com>
+In-Reply-To: <20260202171029.00005e80@huawei.com>
 
-On Mon, Feb 02, 2026 at 11:02:37AM -0600, Cheatham, Benjamin wrote:
+On Mon, Feb 02, 2026 at 05:10:29PM +0000, Jonathan Cameron wrote:
+> On Thu, 29 Jan 2026 16:04:34 -0500
+> Gregory Price <gourry@gourry.net> wrote:
+> 
+> > Modify online_memory_block() to accept the online type through its arg
+> > parameter rather than calling mhp_get_default_online_type() internally.
+> > This prepares for allowing callers to specify explicit online types.
 > > 
-> > For auto-regions:
-> >    region_probe() eats it and you get the default behavior.
+> > Update the caller in add_memory_resource() to pass the default online
+> > type via a local variable.
 > > 
-> > For non-auto regions:
-> >    create_x_region generates an un-configured region and fails to probe
-> >    until the user commits it and probes it.
+> > No functional change.
+> > 
+> > Cc: Oscar Salvador <osalvador@suse.de>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Acked-by: David Hildenbrand (Red Hat) <david@kernel.org>
+> > Signed-off-by: Gregory Price <gourry@gourry.net>
 > 
-> I think this was the source of my misunderstanding. I was trying to understand how it
-> works for auto regions when it's never meant to apply to them.
+> Trivial comment inline. I don't really care either way.
+> Pushing the policy up to the caller and ensuring it's explicitly constant
+> for all the memory blocks (as opposed to relying on locks) seems sensible to me
+> even without anything else.
 > 
-> Sorry if this is a stupid question, but what stops auto regions from binding to the
-> sysram/dax region drivers? They all bind to region devices, so I assume there's something
-> keeping them from binding before the core region driver gets a chance.
+> >  
+> >  	/* online pages if requested */
+> > -	if (mhp_get_default_online_type() != MMOP_OFFLINE)
+> > -		walk_memory_blocks(start, size, NULL, online_memory_block);
+> > +	if (mhp_get_default_online_type() != MMOP_OFFLINE) {
+> > +		int online_type = mhp_get_default_online_type();
+> 
+> Maybe move the local variable outside the loop to avoid the double call.
 > 
 
-Auto regions explicitly use the dax_kmem path (all existing code,
-unchanged)- which auto-plugs into dax/hotplug.
+ack.  will update for next version w/ Ben's notes and the build fix.
 
-I do get what you're saying that everything binds on a region type,
-I will look a little closer at this and see if there's something more
-reasonable we can do.
-
-I think i can update `region/bind` to use the sysram driver with
-   online_type=mhp_default_online_type
-
-so you'd end up with effective the auto-region logic:
-
-cxlcli create-region -m ram ... existing argument set
-------
-    echo region0 > create_ram_region
-    /* program decoders */
-    echo region0 > region/bind
-    /* 
-     * region_bind():
-     *    1) alloc sysram_region object
-     *    2) sysram_regionN->online_type=mhp_default_online_type()
-     *    3) add device to bus
-     *    4) device auto-probes all the way down to dax
-     *    5) dax auto-onlines with system default setting
-     */
-------
-
-and Non-auto-region logic (approximation)
-
-cxlcli creation-region -m ram --type sysram --online-type=movable
------
-   echo region0 > create_ram_region
-   /* program decoders */
-   echo region0 > sysram/bind
-   echo online_movable > sysram_region0/online_type
-   echo sysram_region0 > dax_kmem/bind
------
-
-
-I want to retain the dax_kmem driver because there may be multiple users
-other than sysram.   For example, a compressed memory region wants to
-utilize dax_kmem, but has its own complex policy (via N_MEMORY_PRIVATE)
-so it doesn't want to abstract through sysram_region, but it does want
-to abstract through dax_kmem.
-
-weeeee "software defined memory" weeeee
-
+Thanks!
 ~Gregory
