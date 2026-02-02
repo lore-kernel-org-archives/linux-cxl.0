@@ -1,81 +1,81 @@
-Received: from crocodile.elm.relay.mailchannels.net (crocodile.elm.relay.mailchannels.net [23.83.212.45])
+Received: from toucan.tulip.relay.mailchannels.net (toucan.tulip.relay.mailchannels.net [23.83.218.254])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67972F0C45;
-	Mon,  2 Feb 2026 19:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA990212548;
+	Mon,  2 Feb 2026 20:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.254
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770062043; cv=pass; b=Gj/GN+NGwsMH9r6/gI+oW+kufEBHE2dejMPbXMUqmcCNidSuXC+CXHUjB6/zNlPnjK9gGK7Ir5W4Cr7TLk/MYs+tUVNNsoO5nCNr/dmI+FnuPLc3597es0pNsR8J/yLJ8DisuQH/VWyDYkGh0KaWbwRrtoa+jnlQhq5tiIG7Fgw=
+	t=1770062434; cv=pass; b=MzHSfBYbHt8ZQFKzBnIIeZT1BylDnwhGQRUKpesqN8WDsyS8I2ms9nK07m+0tcgkcLf+/zMKnrp9cTLKoF6iGa0M5q3nTGJj6swyx2YBR3P2pPzKW5NvMPgR1Ta6iJAmKRScErtC1hp1JbNlcf2iFJLw/2MkYLbD4r/DXMTBs2I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770062043; c=relaxed/simple;
-	bh=YHKtglFHDamBYDDFQ0jDQUBbPnWpJcD/jGIdZvIcccU=;
+	s=arc-20240116; t=1770062434; c=relaxed/simple;
+	bh=zNnjzhBFi1tGHAZPFKr3IpG4jkjHIuxvSu01c9+xkAU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J9dTuk7NddBhSETfTfI/We99X93TTQDDhevcyuapRAUppIEIx/2sf06ZEj4NJjxEW054zijVS0mAGUiprP6/6mT2NYm8j1RyIC9rffEcalS2/6QfAte/wu9wBM7KMHPouhpfCHc1VwZ0ItyJorUFR6K/lbNOkl2+A4LKDinnRhI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=YkQYVUvO; arc=pass smtp.client-ip=23.83.212.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=VvxjlEOpuZ3km3v0Ig/xCPIuW60Gf863enxa8ifaJ/WwmXAXUJANXfYuL3Vu4e+l/slZf5W0WWVwWvdjKCs0Nqc+TqfseL3FZgbRzUUJbW16uDG6THR9GIOCXMRKlFxBgBSn7q7PYp8aqEUO4PVgpSkhUL/vhgDpygNQJXTQgvs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=Rv2iz45I; arc=pass smtp.client-ip=23.83.218.254
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="YkQYVUvO"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="Rv2iz45I"
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 782A3721B84;
-	Mon, 02 Feb 2026 19:29:04 +0000 (UTC)
-Received: from pdx1-sub0-mail-a252.dreamhost.com (trex-green-9.trex.outbound.svc.cluster.local [100.97.7.16])
+	by relay.mailchannels.net (Postfix) with ESMTP id 58D287628A3;
+	Mon, 02 Feb 2026 20:00:26 +0000 (UTC)
+Received: from pdx1-sub0-mail-a252.dreamhost.com (100-123-122-168.trex-nlb.outbound.svc.cluster.local [100.123.122.168])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id B0D3A721997;
-	Mon, 02 Feb 2026 19:29:02 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTPA id A2994762A89;
+	Mon, 02 Feb 2026 20:00:25 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1770060542;
-	b=xMIOFNBmsiQMHIvE21EM6aMVTrM6xVJl4cgPo7E1xmeMD10LQiJidLeoTl9KAUlM9PgIVk
-	mfhi9jW4Guo987k5Mcy2qcIzsIkFj5VCkYYsNwCctPclib7oRjGe1zKjmQ2HHrtopdKPJX
-	22qxTkn+SWP/AshPdkFgbfUZguVtuXbC9nL7rl4AP5soboBxud+PPuxyQctJpC/e8ArKkE
-	Iw0aJ5EFjGV/oyNnvSAXapah2w06Lbk6jVXn+Fqem70KiCSPhIrS4VIdwqMqqq/JiyVT4q
-	2kwmpXvUQIYYe+hJ5hqIEe2TdIQyPGWOYxjrABihcoRGgagAbkGGPIWsNKnAIA==
+	t=1770062425;
+	b=buBFaY0Iic7xkUVBdrTwcM6WDn0lzO1c3Tjiy4aYQ3KdfS8bmJ0Qk01Yif6x5xIMMi8Peu
+	pvdJh1N3TmctJFaQabb6K5iAoq1lX7ABc0qkB/cdktWYgKZ4nqK+GbLeKBWFVO5PLT+8pB
+	732mzKaKiguTh5HNrLcl7NAClL2NN1hRNpzO6m53NJk4+0KDklmvKjQjW+rq7MNL2yYj62
+	ck0Q6XOlcmqidUx8KMFRyhPZ2kchE1OGktAVilsbEaK9ayRusBxhW+y9XqpmSwFjtQJrdk
+	ajQ2wMS0ABhhjRVj/H/5SseZUks+ff2B24o1/AhMrewLJe/u1NeeRnabP2Caeg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-	s=arc-2022; t=1770060542;
+	s=arc-2022; t=1770062425;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=ASnVhIsRwWOBQxGZ3Q5oBKC1xxHnmRG4tjDjPykve94=;
-	b=WE390HXXKLmEj64dxKMR4kY8kh+o/L+ujM0o6smPZbGt+oYqEk7AAp5a5zkjbtia9+n2JX
-	kjLg5dXo7jO/Awq45gtDh2Vdbhej0axU1SVIa8NV680jSElnAELu+2k4nDUNr5xX1x9Ud+
-	pYnYPW39UnGi5Fh548vlQdwbTEnxuN3Mgc4l4l9pSTIr111df5gKit/jYtIZbS8N3wlcYr
-	erSwMkM4bww2fSLOJIIk4ZRZbqXhwwBVkmOsrRmaICzvVD7bUkELmU7/nRB0ODX/Wveu+I
-	stSeI2lJHOA0lI3ybdw9I3MAWzo/hWA46xqc85l2oHiQR70ee1S3SNQyWg4ofA==
+	bh=2TGN7ccQVSBL3zXRq2zaj0oD2hNGEzmLxxzO6Rb+LSs=;
+	b=XORwvSiJxxIdS40yshMiqivS+Jn5v5VdVj3g2Rq4I/6TKhG9ehj19Ze0kiW6vXU8McnyLk
+	vxpcVJaaerE+dCf4naqqhsRUICwXL0TEc/5jfD0CVOU0T7x6tCrt+8AXGkxp0wZ1nslZLA
+	BNiD3fJr/kiUlapoXq+V7m6iWI+4ogZIJ6ohbB+X8whvbTpMpDS0LK2ofS6ekEyMHZGVXz
+	An3O2IzZ0rVDeROy1l3TzuC8FUtpznzE5ZrnI1Z7QavSgEjmaDf7wBCZvv7ubvQghhDSbl
+	mGLUPKwg9wSok70jJQMweXVBmrt3Xvu19LKCpewQbkEXbQdhxlXm1jDZ+kajLQ==
 ARC-Authentication-Results: i=1;
-	rspamd-c758cdf4d-7vvhm;
+	rspamd-5b979ccf89-rd6mt;
 	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Stretch-Gusty: 0d8465a10bf6f2ff_1770060543010_238767819
-X-MC-Loop-Signature: 1770060543010:235294649
-X-MC-Ingress-Time: 1770060543009
+X-Supply-Abiding: 242d3e9e5583ac84_1770062426113_2035063146
+X-MC-Loop-Signature: 1770062426113:356498927
+X-MC-Ingress-Time: 1770062426113
 Received: from pdx1-sub0-mail-a252.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.97.7.16 (trex/7.1.3);
-	Mon, 02 Feb 2026 19:29:03 +0000
+	by 100.123.122.168 (trex/7.1.3);
+	Mon, 02 Feb 2026 20:00:26 +0000
 Received: from offworld (unknown [76.167.199.67])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a252.dreamhost.com (Postfix) with ESMTPSA id 4f4c9p0SwXz105C;
-	Mon,  2 Feb 2026 11:29:02 -0800 (PST)
+	by pdx1-sub0-mail-a252.dreamhost.com (Postfix) with ESMTPSA id 4f4ct06PzxzyrC;
+	Mon,  2 Feb 2026 12:00:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1770060542;
-	bh=ASnVhIsRwWOBQxGZ3Q5oBKC1xxHnmRG4tjDjPykve94=;
+	s=dreamhost; t=1770062425;
+	bh=2TGN7ccQVSBL3zXRq2zaj0oD2hNGEzmLxxzO6Rb+LSs=;
 	h=Date:From:To:Cc:Subject:Content-Type;
-	b=YkQYVUvO18tn8j6sr2zIPOpZtzIpBRw/OHjUFHT6n874wePAQZndjZJlSqJ4lZZ7i
-	 jY+rujN1wDzzaGqyqI2F03IW/SpQVVgsuvOIXYft+IkGuJ8+MEEBXrgspknulDSUg3
-	 fxxkyqhIiFm0WYma0a1PXODaPYGLY0pkgdhcdVbkn59NPgI1BgqtYXnJL7bR486Ncm
-	 f/33E1RrIV2sLXpEInvNSw2fi4npM3qlr1SYHGV6V8usych3WJOmMDWqYMflkZj0Mh
-	 uIW9SekA08sD7E1TIDPWpq0oKVLE0wUSgFa0wdFPFEmyG11oaGZ/ggO4T/CoYeOm4X
-	 mA1TM7Hes6bTg==
-Date: Mon, 2 Feb 2026 11:28:59 -0800
+	b=Rv2iz45Idk+B96pM881dT/5x9esMS+FNhGHCokgJouotgjehS8mbVAdVKa95LP+c/
+	 CbuxuH69qP57Fay88O6YnVZbUTDm29zmTvXEV5Bkgw0RtSwyquW0mquXxSEcgCBgeI
+	 SPvv94t1au5YlwPJYbshgLMQmEBPbxxufleDu6s0x906q9e/rlvDx9lAQAeWDxPVat
+	 9gRwiZ8hHbSj53jHxDSgI+Oma/x5axymGVfsOXJ4+Llx5lb3WeWF+1cScgAnTjTCRJ
+	 3tZ42acKG14rS5f8Bbk6HhLo3flI3AyjMjGsLQLW0vBw+R/dMrxDzcSNxUTvAdNOSq
+	 qG1aXEQlNpmjg==
+Date: Mon, 2 Feb 2026 12:00:22 -0800
 From: Davidlohr Bueso <dave@stgolabs.net>
 To: Ira Weiny <ira.weiny@intel.com>
 Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
@@ -83,11 +83,13 @@ Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
 	Dan Williams <dan.j.williams@intel.com>,
 	Alison Schofield <alison.schofield@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 05/19] cxl/mem: Expose dynamic ram A partition in sysfs
-Message-ID: <20260202192826.otyhqkhqskcgvzui@offworld>
+	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: Re: [PATCH v9 12/19] cxl/extent: Process dynamic partition events
+ and realize region extents
+Message-ID: <20260202200022.zkowzjzrmogwmt4u@offworld>
 References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
- <20250413-dcd-type2-upstream-v9-5-1d4911a0b365@intel.com>
+ <20250413-dcd-type2-upstream-v9-12-1d4911a0b365@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -96,57 +98,62 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20250413-dcd-type2-upstream-v9-5-1d4911a0b365@intel.com>
+In-Reply-To: <20250413-dcd-type2-upstream-v9-12-1d4911a0b365@intel.com>
 User-Agent: NeoMutt/20220429
 
 On Sun, 13 Apr 2025, Ira Weiny wrote:
 
->To properly configure CXL regions user space will need to know the
->details of the dynamic ram partition.
->
->Expose the first dynamic ram partition through sysfs.
->
->Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->
->---
->Changes:
->[iweiny: Complete rewrite of the old patch.]
->---
-> Documentation/ABI/testing/sysfs-bus-cxl | 24 ++++++++++++++
-> drivers/cxl/core/memdev.c               | 57 +++++++++++++++++++++++++++++++++
-> 2 files changed, 81 insertions(+)
->
->diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
->index 99bb3faf7a0e..2b59041bb410 100644
->--- a/Documentation/ABI/testing/sysfs-bus-cxl
->+++ b/Documentation/ABI/testing/sysfs-bus-cxl
->@@ -89,6 +89,30 @@ Description:
->		and there are platform specific performance related
->		side-effects that may result. First class-id is displayed.
->
->+What:		/sys/bus/cxl/devices/memX/dynamic_ram_a/size
->+Date:		May, 2025
->+KernelVersion:	v6.16
->+Contact:	linux-cxl@vger.kernel.org
->+Description:
->+		(RO) The first Dynamic RAM partition capacity as bytes.
+>+static int cxlr_add_extent(struct cxl_dax_region *cxlr_dax,
+>+			   struct cxl_endpoint_decoder *cxled,
+>+			   struct cxled_extent *ed_extent)
+>+{
+>+	struct region_extent *region_extent;
+>+	struct range hpa_range;
+>+	int rc;
 >+
+>+	calc_hpa_range(cxled, cxlr_dax, &ed_extent->dpa_range, &hpa_range);
 >+
->+What:		/sys/bus/cxl/devices/memX/dynamic_ram_a/qos_class
->+Date:		May, 2025
->+KernelVersion:	v6.16
->+Contact:	linux-cxl@vger.kernel.org
->+Description:
->+		(RO) For CXL host platforms that support "QoS Telemmetry"
->+		this attribute conveys a comma delimited list of platform
->+		specific cookies that identifies a QoS performance class
->+		for the persistent partition of the CXL mem device. These
-			^^ 'persistent' should be dropped
+>+	region_extent = alloc_region_extent(cxlr_dax, &hpa_range, &ed_extent->uuid);
+>+	if (IS_ERR(region_extent))
+>+		return PTR_ERR(region_extent);
+>+
 
->+		class-ids can be compared against a similar "qos_class"
->+		published for a root decoder. While it is not required
->+		that the endpoints map their local memory-class to a
->+		matching platform class, mismatches are not recommended
->+		and there are platform specific performance related
->+		side-effects that may result. First class-id is displayed.
+afaict the ed_extent can leak in this error path
+
+>+	rc = xa_insert(&region_extent->decoder_extents, (unsigned long)ed_extent,
+>+		       ed_extent, GFP_KERNEL);
+>+	if (rc) {
+>+		free_region_extent(region_extent);
+>+		return rc;
+>+	}
+
+.. and this one (not in the xarray).
+
 >+
+>+	/* device model handles freeing region_extent */
+>+	return online_region_extent(region_extent);
+>+}
+
+...
+
+> static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+>				    enum cxl_event_log_type type)
+> {
+>@@ -1100,9 +1369,13 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+>		if (!nr_rec)
+>			break;
+>
+>-		for (i = 0; i < nr_rec; i++)
+>+		for (i = 0; i < nr_rec; i++) {
+>			__cxl_event_trace_record(cxlmd, type,
+>						 &payload->records[i]);
+>+			if (type == CXL_EVENT_TYPE_DCD)
+>+				cxl_handle_dcd_event_records(mds,
+>+							&payload->records[i]);
+>+		}
+>
+>		if (payload->flags & CXL_GET_EVENT_FLAG_OVERFLOW)
+>			trace_cxl_overflow(cxlmd, type, payload);
+
+With DCD the extent list needs resync'd in the overflow case; cxl_process_extent_list() needs
+called.
