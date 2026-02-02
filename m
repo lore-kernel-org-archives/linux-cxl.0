@@ -1,130 +1,100 @@
-Received: from quail.birch.relay.mailchannels.net (quail.birch.relay.mailchannels.net [23.83.209.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA74921D5BC
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Feb 2026 19:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.151
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770059829; cv=pass; b=mWX+4V6q7XhDgx5XD3GJa3sB5vwKIOGtaU8LsIrrpPzI6weDptVXWPiNiiuGfoTVSP7qiaXuuZqmk4m9f/RIRXsU32+VM+N5b1yep17iguSeqHEABZRc1l/km3L14r+Bixnv3mnyxzW4JDEii0cqIbaIXhZKCFYy4POGn0k4RrU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770059829; c=relaxed/simple;
-	bh=lfg0YvH4Pqw1bWO+M24RcXwafAYwB8/hI/w2hpKmz9g=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8A42FF664
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Feb 2026 19:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770059955; cv=none; b=UPYxVIZINAbPxVD4Oy2S+c/NPO9Eo3Jt+pOHh7qG+WFtIGf/6wZZRrSrpvqW4b+tH8jM5OYAWCmShyqb2DDVb/oJwjeiT4Oz6OqEmKumvjubMQTQDhRY5dORB41nLAjSlUpRZOpnR/9b6ONlUxNN1cXetWrQc+F8Yluuwboga98=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770059955; c=relaxed/simple;
+	bh=0x7jvlrx5XFJyx/jKqbZh9Z1RPvxu1cgo/tyO/MM6oY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ltYdzcywjVUwFRc4uTyWEjWfgQ0jni4D72KEJ9CsvjbSmSCt8EpoHxHbiqLhLf7cbobk84JUKy1YNBwXlOnOUmL1NkcC5hRbmLotx5/x4+G5saibPtoH4JtDzqo/jIEH2i+LzyA71GiabQYwUmXiBGzZjGus2ZdyPcVQFanTe9g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=KeX4fP23; arc=pass smtp.client-ip=23.83.209.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=R15/n+nF7hkcuI9vygesnmCfi4cw4HVE5t6dE6GNhWcOOVA3+XK3IpEJm0Sad1VwxsQwPtfWMl9EYtl/jvr97ee7w3TijO4RbjTbxfG9skwWUIOmLmwSks/9hgSHZ3QkDT1MO4lG6Uq6h1Q/015aLmIi3z2Zv1qqLmDe+iFHKCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=U2qNsPFN; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="KeX4fP23"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 211B944174C;
-	Mon, 02 Feb 2026 19:17:01 +0000 (UTC)
-Received: from pdx1-sub0-mail-a252.dreamhost.com (100-122-8-2.trex-nlb.outbound.svc.cluster.local [100.122.8.2])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id A79924424AE;
-	Mon, 02 Feb 2026 19:17:00 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1770059820;
-	b=XUsEp55eWbCSrhyG8LfF8mcV3jDsp+Msfm+npL9FGn3Cpxb+W0aopYqj7nh4KV+tRokNKy
-	vmCQwfyO38cyKpDGrH9/hWk9yNGbX5VMNVtia3mQN3Uff0Fc9A2v0+vnHq+0KGIiqERGYQ
-	nnM26gd9iGbG6eLGgTbmdBpnuOTA71AlDfw8iclp17kwInAuRimcR0Zf4Zm2F9PLdHr+KM
-	t/8xg59OEJFaqfGK+OrCn+oUIRJAYyfcD5NNq3EeNKEosba1VPz51Qp8LBzbQFAznvFujs
-	nHZCWtv/tqN83Toc6hlPGxGxZNXMZ99CqlhgqauO/tMsb3jgjdJU7pGGbQuCbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1770059820;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=dUNPF7wqc36qBdAIjyFvl6BaZHqkAFDsj29fQacl8SA=;
-	b=HZB4nl8OFhoWmLySB6ppxtqcUjc3tHJ5F6ZVYnQb3/eKu9RYrhpUubVpJlbxO4TvGnTLa/
-	j1Y3j/pvPDJ2wVNF5lLGzlGDLQ7ulDlKFtvSYCdptwQHtX0WDo5oLYUhFDCWfSaGASQ1iE
-	N2/0eS2kyuBklrpqkb3752rC5AWM11bOGklYntZmGtVXIOc8UdjCPP50d1eq66632ebrea
-	/YSDQb0wh6BBa4Ai0RSTX6489AcP4wX6GpIwPs+JVNQJ1/V6ZnsNyk+jzc6pap+WaMLo2L
-	QhPhgU21dK7NSsIRLFVKMNbqb3sf0/WNi3d01TxLKx1S8EWW7u0MWUSqNJYXHA==
-ARC-Authentication-Results: i=1;
-	rspamd-5b979ccf89-bd98r;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Wide-Eyed-Abortive: 68dd21f85c64a455_1770059820942_228613891
-X-MC-Loop-Signature: 1770059820942:4278327489
-X-MC-Ingress-Time: 1770059820942
-Received: from pdx1-sub0-mail-a252.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.122.8.2 (trex/7.1.3);
-	Mon, 02 Feb 2026 19:17:00 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a252.dreamhost.com (Postfix) with ESMTPSA id 4f4bvw15VPzyrC;
-	Mon,  2 Feb 2026 11:17:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1770059820;
-	bh=dUNPF7wqc36qBdAIjyFvl6BaZHqkAFDsj29fQacl8SA=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=KeX4fP2339ypseDzfGZwRm/t4LXsDEtmNwDWrAxUHECHuU/KK7fNwgJdd0gpK+3bg
-	 mLk6ZjZmYfHHBwIitDyu7oKEVBxlIEMi2whyiP4sZJ7Hrx0sHVrUgAeBdBhPvNpvf+
-	 YwznsJOge32qHgFxNOie47vfYlJnFtVsNhzmy2vqo2+hlQuBOf3giEsQ/O5jLURux6
-	 744vzYb+vj5f29Xc/nxsjHgytQY3sUbwKyvR99TxFD608zK7qEHCZQzFhW/qamO4we
-	 avm2EK8Vs+jeEmHpbTVA0dVuuWxcHBnhlLiSEdIFuZ/dvfnIQnbbFPYcec7tUs6TO1
-	 lzquSnfBC5tEg==
-Date: Mon, 2 Feb 2026 11:16:57 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dave.jiang@intel.com
-Cc: jonathan.cameron@huawei.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] cxl/region: Fix leakage in __construct_region()
-Message-ID: <20260202191657.a5xksgklaw6o6iib@offworld>
-References: <20260202191330.245608-1-dave@stgolabs.net>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="U2qNsPFN"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-88a288811a4so47350106d6.3
+        for <linux-cxl@vger.kernel.org>; Mon, 02 Feb 2026 11:19:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1770059953; x=1770664753; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=asmdN+eKpioswtzM18Womc5lL+dXDrk6p42YTES7X6Y=;
+        b=U2qNsPFNBQhv24mlITltEayI08i1maVSDm8ByplOD+la0RGDSjY8Mv2H9n2daDnKOl
+         xFGqK6Nb/SYf/KFQV9g5T0gvLgrWXOj0rxnNJHB5sOxcIP+uYUeTjRn/gdAeb7GLnWwn
+         7HycReeNfTp2wqqE/Tfi3ogmFcyzVfMfWgVOyj/zWwFEN7elO76wfdRDZdPfhnnsMaXr
+         FiWQpHKejx40v20H5vZ12+Z5NhinnT3aCZeXMaWsoQnruq6PiIKMdLczMmxPpszpCTxj
+         KQfbsDGCEIgB0R96PatMSsngQ6AxnEQ0DmeIQ6Z5vAXVdsJHEoMaBEQ/SbsWFlsDrIeC
+         6INQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770059953; x=1770664753;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=asmdN+eKpioswtzM18Womc5lL+dXDrk6p42YTES7X6Y=;
+        b=qL2T+Dr/RCMvzcER2YLugSRt2hDiLvRaYc5wnf2M4V8GqOl7x6y4v8DnUjqOq0FUjH
+         LNz5lGL1IaBKbGtzB/CR6NLRHGZs0na19LTLEopnmvCpDIy5zSTC3tTnNu8bZ1OR+07v
+         jjXQtMFJeoiwg2vaOt1ZOK8N3iiuslv1mauLAjLhUdACFDjfm9Xali5tnU+7xEeyE50f
+         yy4UBBI9e55fNgPQU/IeK5ugKLNc0hL4CcaNlwlq+lR3PkMoxKmN7nS0Ae4liiBlrXOT
+         RRncQik9g1UlrwG6qMAO5ujZI94tjOjiV9Ju1DtOY5BI6hl5/ansbxHNOD4ITTF424o9
+         3K7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVt48ptMtuZYOokj2wGqFQNAJges1JwvN4MAkxqrGQg3WralveaTk3K0qS0xXN6i3KPcsXvHdr49yM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzX1hzjaPCE/zrEQ9b18xnToIKdbuNJzfq6oTJzq26FB9SmS2n3
+	IdYDUnLPSRtnRcM70ZK1vjaLekieXYDc8+2VPleYq4KPer/D8sP/ZfRSLFM92gztiNI=
+X-Gm-Gg: AZuq6aKnCHYc2/Nkh0LSmLrX6owsr89UvPX6czEivm9ada9zWb0L3tz5yMTygvueJIp
+	hk8Z/ftpKzORbAKM7dl8DW45d+jl9byqzsxMbiXZTmqg9mAShl1HtvlTGn7RSVqf6hhxBNj04q7
+	L3plFK7lkdhbzD6onjgjRPavLJn0E8SuqyvP+BIRCgNHdt5/s6I+k862RyNh/BeFufph0BgrFVp
+	LoaGwItPUYh7TQ7uHFRVYPhoI1FtGUZu3GRSYQPI085huRa6tvdSkAJb8tpi3+gU+3WV4dVTvht
+	0y/6rYkiiBcxfqkM12bdvLCm5+7a8bHsm+Hx9KZYAkIPpgc2yyNsHXH4RBXhH0/YID8STmg9JBR
+	LoGaKHxZz7IeVUqhaAvbahVbqqr7X1MaDHtaTpf9rilwAi/RVTGjCX55yuz5njvg8P/dPgRlUiM
+	8wrgy5sEX/dPHY4oWV79u9h/D6T2adL7HCcjNOmtwrJKNrf7NwnUueTlRldaVx/rhhNbCw8g==
+X-Received: by 2002:a05:6214:1311:b0:87d:c7ab:e5d0 with SMTP id 6a1803df08f44-894ea096c06mr178827036d6.55.1770059953093;
+        Mon, 02 Feb 2026 11:19:13 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c711d2889asm1253553485a.27.2026.02.02.11.19.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Feb 2026 11:19:12 -0800 (PST)
+Date: Mon, 2 Feb 2026 14:19:10 -0500
+From: Gregory Price <gourry@gourry.net>
+To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kernel-team@meta.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, willy@infradead.org,
+	jack@suse.cz, terry.bowman@amd.com, john@jagalactic.com
+Subject: Re: [PATCH 8/9] cxl/core: Add dax_kmem_region and sysram_region
+ drivers
+Message-ID: <aYD4roMbjyBkK9l5@gourry-fedora-PF4VCD3F>
+References: <20260129210442.3951412-1-gourry@gourry.net>
+ <20260129210442.3951412-9-gourry@gourry.net>
+ <c1d7d137-b7c2-4713-8ca4-33b6bc2bea2b@amd.com>
+ <aX0s4i5OqFhHkEUp@gourry-fedora-PF4VCD3F>
+ <9652a424-6eb1-462f-8cbd-181af880f98b@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260202191330.245608-1-dave@stgolabs.net>
-User-Agent: NeoMutt/20220429
+In-Reply-To: <9652a424-6eb1-462f-8cbd-181af880f98b@amd.com>
 
-On Mon, 02 Feb 2026, Davidlohr Bueso wrote:
+On Mon, Feb 02, 2026 at 11:02:37AM -0600, Cheatham, Benjamin wrote:
+> Sorry if this is a stupid question, but what stops auto regions from binding to the
+> sysram/dax region drivers? They all bind to region devices, so I assume there's something
+> keeping them from binding before the core region driver gets a chance.
+> 
 
->Failing the first sysfs_update_group() needs to explicitly
->kfree the resource as it is too early for cxl_region_iomem_release()
->to do so.
->
+I just grok'd the implications of this question.
 
-Fixes: d6602e25819d (cxl/region: Add support to indicate region has extended linear cache)
+I *think* the answer is "probe order" - which is bad.
 
->Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
->---
-> drivers/cxl/core/region.c | 4 +++-
-> 1 file changed, 3 insertions(+), 1 deletion(-)
->
->diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->index 96888d87a8df..28d70497283d 100644
->--- a/drivers/cxl/core/region.c
->+++ b/drivers/cxl/core/region.c
->@@ -3795,8 +3795,10 @@ static int __construct_region(struct cxl_region *cxlr,
-> 	}
->
-> 	rc = sysfs_update_group(&cxlr->dev.kobj, &cxl_region_group);
->-	if (rc)
->+	if (rc) {
->+		kfree(res);
-> 		return rc;
->+	}
->
-> 	rc = insert_resource(cxlrd->res, res);
-> 	if (rc) {
->-- 
->2.39.5
->
+I need to think about this a bit more and get a more definitive answer.
+
+~Gregory
