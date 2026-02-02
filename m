@@ -1,165 +1,122 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8EC2BE7C3
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Feb 2026 20:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F543101C8;
+	Mon,  2 Feb 2026 21:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770063777; cv=none; b=B9q29aR5mkAuBxBkMq0UpC2Onf63pF93H1JNlTO/2EBa+D75UUvW5cAcs1BN3ZgmN2wsG2ag2Z0+268b450+UPiL9f/q51sqLVaL2SbO9pHKU7Ei4D8KXFlzS5eDeI8Z8dybdmcvDyeon3dRphaw0rLkim7X/dYjB+o2eWsbB68=
+	t=1770066294; cv=none; b=cTW3I0dBUi/KBzr2aBCtuRlYc/o6l8Hsaac4hVY+oKGMqlLY58OrapDP5OoKIdkU+oWpWwpoAENs8vQyV0kQKBQZuRRkQoI8Scl/6kmeo9GXx9FMkjXbr1eKrxoW95GkuPjQBZ3lh+mw1U+8RMJ4EfjvVq1udmaPPQhvKLj5YF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770063777; c=relaxed/simple;
-	bh=JQfcfUUd8XuDiRHFdF+25+0jAwh/fTTxY7PfkjJ42ug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TkUtOFqbgk9vkSLpwzl2Eh39uPDTsjFX8Br9AEdaWxSdogm/TasreEtcNguLEE84YFdpPpv6Vh2F5ME179W87k2Bw71zvR412a1Ex/HmEGP+amANccVkA1WDlZ2RNYH05JhNDqBKjalFnQueGu1CQWdivDCGIXICzs7JZVlCnXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ty27rvxr; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1770066294; c=relaxed/simple;
+	bh=NH7M5AJhrWHuXu1rMJ0asRpHua7M5f2QKVNLE7wx2Cc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HI/71zH7pcAOby/yi7IewYVsO54XB8zbedEIi6zh7lVfbfQtgrShH4LjFaL+GEUjet5fwUPMr+Gx50W1g1qRFXkCbS1C0aE78FLUKf034syxa6trwwdxIt8kAslz6xYcDndXWkwb+PPIEgMwD5wtipBWugJL625V6ayqAp8yPhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PLD1/yET; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ty27rvxr"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-5033a2c4b81so58117201cf.0
-        for <linux-cxl@vger.kernel.org>; Mon, 02 Feb 2026 12:22:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1770063773; x=1770668573; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=A5DQQ/80oIeISv/l0flaFn2oFu98ezlgiuT9SahjHUQ=;
-        b=ty27rvxryVFRGBJA/Yy0yu81oPFF8k7qCodFW2YdzKrJ8/y1Lp5ZvQX670mPn3qQO5
-         4ZHjGqP0nqTIyzla1VOssS6JFPj2lGjrykRj0RHD3w2MZuQBvbbDkx5Sv3FnHks6vkfb
-         rLUjKE10ArykJ9WEiyxPiprRx7p7YNNxklbbxp3bmwSW1P2Sja1o7sborq1YwVkwg53L
-         /iojLnYQEeYtp/o9uFo9j8qtA7W39n0HT/fAEwt33CyDBIZZalcho1y+Z+8N3k6c3xSd
-         um72gi+qYcfeaTokXnfe+F8v37JAf2DpFGfwkBYgtgft7CnGkzyuGmAqH7OL0v5j5COC
-         EzLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770063773; x=1770668573;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A5DQQ/80oIeISv/l0flaFn2oFu98ezlgiuT9SahjHUQ=;
-        b=RcTjdBKgNFfWagJhq3POjKXZJ6tTWTdp1w329QOmMpr3O5m3yKD/yuOkgmNf4vgN+H
-         Fq2nIXsi9UWw6XiOQDwoQWjPT+KxIUgc1WoULw/mMkyZDcJmKAVpgV3CWZtGKt4Y4clv
-         r2V9TrpFjvHK5czybdWJSuOs5vrqePjIESumsXSH3qmDyu7YLZSbKfQ+WmaMPU1LpWL/
-         0ZvR+4tpWb0KLUldWws4DoRRGPudyd/lNyw3RfqTK6oeW9sSAXy/GVlycUuVCLpIInO9
-         1EDwTZG3TMVfqprhuklF0cjLOYlQm5ANxISDlDDdt5Jb1RlmNLeL3jA4L1nAcBHsXHIK
-         HyZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZohuXFxAWjv1xtevdZW3m/Ya3fPHeVlLKng0NYadZ7IN4V0pk5tIkpwzY4a+nGdhsrDN6nnQncHk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynjHyFPhC+FWurAgciSLbhsOzzWFpnXA/Ki8t2vKTpbJqsamTx
-	inoZXnMGFpx6dqaMDtYhWIWCAy3lErSfZU0Xk/i8WjkSkXLRawmYoFd8X3FUAs18Utk=
-X-Gm-Gg: AZuq6aJBprMOIt1BxYYPIEmzVK9RL8vgxDbVesa4FXTq0iMsjg6Vu6/q59GZAjT4aJw
-	hMZCf8lsBG5kqf2F68rOrDg7OzbovVtENXKbUGvvik5LCt5DL32IGutY4UIyJkqVCQ1WcRRUm4K
-	v0TSIuA2Yc9rogUzlWR2RihOJ8DTSQja5UGQqZmhnpSidLk1Olm+pnLFMdSKhNxDhkazBGsr+nP
-	Ioad5owW2Bl/zabtew189n8MiFzY7ZE8M2RCp5y42pe+o8A5/Qhqg7rPqyuokTK85uBGwr4wMzr
-	vSYbc+t4tcH+N2SnrK4Z5j1mp2c33mZ26hLUHsxyszx5dP7uAnxUVsnu+DYSLjFvZRNnsYKHeWD
-	OXzEpRyuKe63SzTCB39Clof8l9r38mYX3UfUTcQbCIWMaImPqWotDAbTu9pd7sBkW1rMgIZaCeo
-	sv0tIo+r7VAZvGIj5GwEkBQyGjS4rmz4aRsnWlXdR1k5Km0jEZ75E0Z3zk/ABCq9H8qRJwkw==
-X-Received: by 2002:ac8:7d86:0:b0:4ee:c1a:f11f with SMTP id d75a77b69052e-505d22fa7ccmr153965971cf.84.1770063772904;
-        Mon, 02 Feb 2026 12:22:52 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50337ba3981sm112708281cf.16.2026.02.02.12.22.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Feb 2026 12:22:52 -0800 (PST)
-Date: Mon, 2 Feb 2026 15:22:50 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: Re: [PATCH v9 00/19] DCD: Add support for Dynamic Capacity Devices
- (DCD)
-Message-ID: <aYEHmjmv-Z_WyrqV@gourry-fedora-PF4VCD3F>
-References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PLD1/yET"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770066287; x=1801602287;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=NH7M5AJhrWHuXu1rMJ0asRpHua7M5f2QKVNLE7wx2Cc=;
+  b=PLD1/yETtnPYFtnmeuLrZd+LEtgslm6eUKAfm2pdwI2yEQ9uBwKdxMKq
+   vzKEHHBbsyEbuUueOXkHS5XkmtEAcCNzpGBW4KFYYuWwQHuKDcS13X6z5
+   ubOhlKyZXtPvv6M8UUT9/+R8eAoKnkCxrXuZiGg4iByVYUiu5sCZxnju1
+   n9I5bK72JAy38cSj0g0nOKmHTw6Xfs2qjuTfzArY0A/U4Osb+QY53X7X0
+   DyvzFYjmzoHjpHnvnWecNL8yleC7Pybt7FSaXOhANicAcuyZqN8CBnBQ6
+   PZhUEsStdaMOizK/cb570dKsk+vVYAcYoBJjz2aOXWpnFKxKZtFll2NeI
+   w==;
+X-CSE-ConnectionGUID: Z4e3ERwgRb23nehhkjsApA==
+X-CSE-MsgGUID: EAP8xEDNT+G/SR715ASZcg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="93886434"
+X-IronPort-AV: E=Sophos;i="6.21,269,1763452800"; 
+   d="scan'208";a="93886434"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 13:04:46 -0800
+X-CSE-ConnectionGUID: JGOpS9ECRP+cVaCoIE2FWQ==
+X-CSE-MsgGUID: wbs5KFfsQ7S4w5cUTn3/9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,269,1763452800"; 
+   d="scan'208";a="209857579"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.110.162]) ([10.125.110.162])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 13:04:45 -0800
+Message-ID: <f7bae850-b9de-4d6c-bd8d-914cae90e7cc@intel.com>
+Date: Mon, 2 Feb 2026 14:04:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] cxl/core: Set cxlmd->endpoint to NULL by default
+To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260201093002.1281858-1-ming.li@zohomail.com>
+ <20260201093002.1281858-2-ming.li@zohomail.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260201093002.1281858-2-ming.li@zohomail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Apr 13, 2025 at 05:52:08PM -0500, Ira Weiny wrote:
-> A git tree of this series can be found here:
+
+
+On 2/1/26 2:30 AM, Li Ming wrote:
+> CXL testing environment can trigger following trace
 > 
-> 	https://github.com/weiny2/linux-kernel/tree/dcd-v6-2025-04-13
+>  Oops: general protection fault, probably for non-canonical address 0xdffffc0000000092: 0000 [#1] SMP KASAN NOPTI
+>  KASAN: null-ptr-deref in range [0x0000000000000490-0x0000000000000497]
+>  RIP: 0010:cxl_dpa_to_region+0x105/0x1f0 [cxl_core]
+>  Call Trace:
+>   <TASK>
+>   cxl_event_trace_record+0xd1/0xa70 [cxl_core]
+>   __cxl_event_trace_record+0x12f/0x1e0 [cxl_core]
+>   cxl_mem_get_records_log+0x261/0x500 [cxl_core]
+>   cxl_mem_get_event_records+0x7c/0xc0 [cxl_core]
+>   cxl_mock_mem_probe+0xd38/0x1c60 [cxl_mock_mem]
+>   platform_probe+0x9d/0x130
+>   really_probe+0x1c8/0x960
+>   __driver_probe_device+0x187/0x3e0
+>   driver_probe_device+0x45/0x120
+>   __device_attach_driver+0x15d/0x280
+
+So I talked to Dan and the assigning of ERR_PTR(-ENXIO) is from a previous revision of implementation and isn't intended to be there. So removing the line entirely (which would mean endpoint == NULL from kzalloc) is probably the right change. However, I'm not able to reproduce the error. How is it triggered? Also, by setting it to NULL, are we covering up a different issue? Are you able to determine whether cxlmd->endpoint at that point is unexpected and perhaps triggered by a different bug?
+
+DJ
+
 > 
-> This is now based on 6.15-rc2.
+> commit 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
+> initializes cxlmd->endpoint to ERR_PTR(-ENXIO) in cxl_memdev_alloc().
+> However, cxl_dpa_to_region() treats a non-NULL cxlmd->endpoint as a
+> valid endpoint.
 > 
+> Across the CXL core, endpoint availability is generally determined by
+> checking whether it is NULL. Align with this convention by initializing
+> cxlmd->endpoint to NULL by default.
+> 
+> Fixes: 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
+> ---
+>  drivers/cxl/core/memdev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index af3d0cc65138..41a507b5daa4 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -675,7 +675,7 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+>  	cxlmd->id = rc;
+>  	cxlmd->depth = -1;
+>  	cxlmd->attach = attach;
+> -	cxlmd->endpoint = ERR_PTR(-ENXIO);
+> +	cxlmd->endpoint = NULL;
+>  
+>  	dev = &cxlmd->dev;
+>  	device_initialize(dev);
 
-Extreme necro-bump for this set, but i wonder what folks opinion is on
-DCD support if we expose a new region control pattern ala:
-
-https://lore.kernel.org/linux-cxl/20260129210442.3951412-1-gourry@gourry.net/
-
-The major difference would be elimination of sparse-DAX, which i know
-has been a concern, in favor of a per-region-driver policy on how to
-manage hot-add/remove events.
-
-Things I've discussed with folks in different private contexts
-
-sysram usecase:
-----
-  echo regionN > decoder0.0/create_dc_region
-  /* configure decoders */
-  echo regionN > cxl/drivers/sysram/bind
-
-tagged extents arrive and leave as a group, no sparseness
-    extents cannot share a tag unless they arrive together
-    e.g. set(A) & set(B) must have different tags
-    add and expose daxN.M/uuid as the tag for collective management
-
-Can decide whether linux wants to support untagged extents
-    cxl_sysram could choose to track and hotplug untagged extents
-    directly without going through DAX. Partial release would be
-    possible on a per-extent granularity in this case.
-----
-
-
-virtio usecase:  (making some stuff up here)
-----
-  echo regionN > decoder0.0/create_dc_region
-  /* configure decoders */
-  echo regionN > cxl/drivers/virtio/bind
-
-tags are required and may imply specific VM routing
-    may or may not use DAX under the hood
-
-extents may be tracked individually and add/removed individually
-    if using DAX, this implies 1 device per extent.
-    This probably requires a minimum extent size to be reasonable.
-
-Does not expose the memory as SysRAM, instead builds new interface
-    to handle memory management message routing to/from the VMM
-    (N_MEMORY_PRIVATE?)
-----
-
-
-devdax usecase (FAMFS?)
----- 
-  echo regionN > decoder0.0/create_dc_region
-  /* configure decoders */
-  echo regionN > cxl/drivers/devdax/bind
-
-All sets of extents appear as new DAX devices
-Tags are exposed via daxN.M/uuid
-Tags are required
-   otherwise you can't make sense of what that devdax represents
----
-
-Begs the question:
-   Do we require tags as a baseline feature for all modes?
-   No tag - no service.
-   Heavily implied:  Tags are globally unique (uuid)
-
-But I think this resolves a lot of the disparate disagreements on "what
-to do with tags" and how to manage sparseness - just split the policy
-into each individual use-case's respective driver.
-
-If a sufficiently unique use-case comes along that doesn't fit the
-existing categories - a new region-driver may be warranted.
-
-~Gregory
