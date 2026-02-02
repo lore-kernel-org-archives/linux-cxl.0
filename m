@@ -1,48 +1,48 @@
-Received: from zebra.cherry.relay.mailchannels.net (zebra.cherry.relay.mailchannels.net [23.83.223.195])
+Received: from tiger.tulip.relay.mailchannels.net (tiger.tulip.relay.mailchannels.net [23.83.218.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86667293C44;
-	Mon,  2 Feb 2026 19:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505D73093D1;
+	Mon,  2 Feb 2026 19:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.248
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770060842; cv=pass; b=m+uzvUOKpQcg8BQqgWoWxOEeodGynXgQV9hZdWGyRgpEUGek8ej/fgNRTe6H146YKbMsCAQCHgWSoaA8PCPpY2qXigz0+obDnikamY7cHjAuyj7TwF2I8+yJPEHfKDEhShKXH3h8P5e+Xug+fdW8cdAMUbN0zg6P8zntpIUKZLM=
+	t=1770061371; cv=pass; b=OwjIYZ1HW9Uvu+WLfh6Lpxb7vIZoLWr0Eoxg+CBwe6jJSeQC4cI97WK1Qia0p7RQn/idBvpi93pVFxIrI8DZRhqCk4c7OcqqEbh3FvBAAYxamLbRMS4zjDxrmQsMvyqLfqFfbFPx1AozA+2XWm5B62oZwx6VeSClWi32cwaazV0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770060842; c=relaxed/simple;
-	bh=lwXrTCEx1szCdIt8hXNJEHNBNImULcDwFuLV7vI4p5E=;
+	s=arc-20240116; t=1770061371; c=relaxed/simple;
+	bh=tkv+TSxtw3V3RnH03tIV1G8/siCL5dmJerasomPzC0o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=idKIm7URic0FZ9LeUE45RAY3j0zxTyyaynW1wkUP5Xj+Hm77agFAQeq2+X5Q18wacwwUn+lvGXTImW0e1KRCU26vkxxLl8e2r+nWL20OuoRDrWYx3IN9zb56neWVrqRFTW7UD+CuMcX6Mh5IOKRLCJwyHM0Gn7Pf07dphWYKcl8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=WCO4JCRW; arc=pass smtp.client-ip=23.83.223.195
+	 Content-Type:Content-Disposition:In-Reply-To; b=kuJXhiJt/DXDIaj0nLfQzK9qpgorTcjgbPvF+ATAgIkkyVpZFDd3w7r4FsNUAq7ihtPGsJOFZZE86wr2QQBTeWHKGv90IdONiv9i0saSR6XHhu/xDSw9dN+rNDJrEBCtylnz3wyhi8xqlICGF0wR746FWyTNy2G4lzf5oguufY4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=GlzuQ1c4; arc=pass smtp.client-ip=23.83.218.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="WCO4JCRW"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="GlzuQ1c4"
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id A4678722065;
-	Mon, 02 Feb 2026 19:25:49 +0000 (UTC)
-Received: from pdx1-sub0-mail-a252.dreamhost.com (100-97-34-107.trex-nlb.outbound.svc.cluster.local [100.97.34.107])
+	by relay.mailchannels.net (Postfix) with ESMTP id BD794461C5E;
+	Mon, 02 Feb 2026 19:42:49 +0000 (UTC)
+Received: from pdx1-sub0-mail-a252.dreamhost.com (trex-green-1.trex.outbound.svc.cluster.local [100.96.255.91])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id E3FB4722597;
-	Mon, 02 Feb 2026 19:25:48 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 3A555461896;
+	Mon, 02 Feb 2026 19:42:49 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1770060349;
-	b=BCqI3JHFkEQmzYm/OJv8dbksvoaFLeCYtqg8LVo3mgey1JGkPGjZONNAyC5UOWuKKChGWy
-	6IopRUzXxOZZfeTDM0yUy8eoU/7ZnyUMur7GLSvqGvpIqQcMXFUxuaWCpUnVNI3hxm5M6B
-	XH/2oskXMz5BzBfk0BOtUMBB7zG7NALv6OSU80EPlCH1a1mnd/59sjpqFQktLKinifoj6W
-	LKfDV42nmOuiqbYVOBpOjk4ESqSI1N14y0jgowC7sFTkAqNooX0aqvvNtzTPoR+cny97yA
-	MeeqhAsvcWi7MOXxjYTxb6ZtmvD0wz525bFIseXqnrAyKPvhlZZRUOQpazUGSA==
+	t=1770061369;
+	b=WyuFiSSmHt/XpOj2SEFlUeAmeR/4WPuz49XIdZRz0nlN76cC6rNsGBFihBrljR0J1cGzfs
+	OeLwIFar1FZOz0lYwsYFkNVVST6nMWIYvtCkEmfE6IVJJiudkRq4xnD3zzGRut0doNTT4h
+	fr2nXSkBvAPzNb4SDuPvK9clrUhfdkPC3uozAweFPpO400mkMEQ6x1FZxL1f3GMZThQnQ4
+	E30k3lr65ObbuKB7ZTkRkh3h6ghaAsDKL7xtlpM35nsxwjQs5+GAUM8FjjC8NIYurpKRhS
+	H1MPKXayFdkrivQ+6aC9PpI7aC5SoNCeTea4g2J7GAGHTRhfCb7cEnfwX12q6g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-	s=arc-2022; t=1770060349;
+	s=arc-2022; t=1770061369;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=6efM5ioHVxaPcmDXBceIc6/l9+DmGPStmA0f8wvROMw=;
-	b=C+jbJvey5GOHlk9QArAcGHVmzokl95LTFr4aaR48WVEFmrlA/Gc/ZtV3KJToYmMckl8ave
-	KqZoZ7fvR8MhAFd17J5uPIcvriqMUVujqWJMw7qadX4x2hNLqgwv+7CvBVGg4AzVM7yjEY
-	waHh9En6JH4iwjCH0r37o2659zlmSINUd9hFqgeKgBhOlETsYOfWhvNn5ovw1Gs0gI9hHR
-	kDFmr7Rz03y88iwzU18tM86Z+fAFmGdhXWBb9HXzu2hHxrRX83hJ7yMotBZKclY671Eeep
-	BTWwZZxaLnc1pZOzyUkAensUiI5tdu5r6IAs5XJ+7wSINcRkA/mqHopSDOrBuw==
+	bh=vCFzkOutSNXY9dKZ7WhTdiEKcb0HoBLR+6Jq3naTmZg=;
+	b=lECwkE8irxF0JLh4KpcNt4yRpTm8EQHIcNrTwza/B1vlkXZisVKcuohA2HY/r/Nt0Ay4lv
+	R/80LAM6qVccEj8bAQvLO9lCcbyq2SDLWbSd9UFAEUzVhwu4ptcEPnGI0lmhOZIvl3OAox
+	Dwpb6xaVaRt17IgtnTQV+AYiwgygwMt/nHfxgdn7P0CEGu4F5BlNB0QGkVaOVRIoIx0dUC
+	0qbLnNfJhGrBWLWcF/079P5RF3+Yi7S34sRkZufLpwKgNw83WVf9jdrmK7/X8tJxyQxfI+
+	00YT9PtKR9XvWgLC4L1QcnSjfyE/gq7t8kTw6u9yhVbVo8PRCvy/VMNuVIIw8A==
 ARC-Authentication-Results: i=1;
 	rspamd-c758cdf4d-snh2h;
 	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
@@ -50,32 +50,32 @@ X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Unite-Duck: 530efc1923798ccb_1770060349388_4224958092
-X-MC-Loop-Signature: 1770060349388:1589015351
-X-MC-Ingress-Time: 1770060349388
+X-Towering-Name: 54c5c7cd5464e1e0_1770061369514_705110241
+X-MC-Loop-Signature: 1770061369514:616656904
+X-MC-Ingress-Time: 1770061369514
 Received: from pdx1-sub0-mail-a252.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.97.34.107 (trex/7.1.3);
-	Mon, 02 Feb 2026 19:25:49 +0000
+	by 100.96.255.91 (trex/7.1.3);
+	Mon, 02 Feb 2026 19:42:49 +0000
 Received: from offworld (unknown [76.167.199.67])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a252.dreamhost.com (Postfix) with ESMTPSA id 4f4c641pgXz105C;
-	Mon,  2 Feb 2026 11:25:48 -0800 (PST)
+	by pdx1-sub0-mail-a252.dreamhost.com (Postfix) with ESMTPSA id 4f4cTh3gHMz105C;
+	Mon,  2 Feb 2026 11:42:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1770060348;
-	bh=6efM5ioHVxaPcmDXBceIc6/l9+DmGPStmA0f8wvROMw=;
+	s=dreamhost; t=1770061369;
+	bh=vCFzkOutSNXY9dKZ7WhTdiEKcb0HoBLR+6Jq3naTmZg=;
 	h=Date:From:To:Cc:Subject:Content-Type;
-	b=WCO4JCRWjfsi22lnrM050ugqbUu1iYENQpgZRXeskDTYroGdPe/45byqPFIeEDvCL
-	 Uw4/UtlU31wu0EAlnjQ4Y0rK7aozlm3blsDK6IaNMOfDdq/OhCa5lLODGce9OuneSj
-	 WWMqXdJaGVS3GLQECvvYufwaOEUHtzU4GeKyf27zvETMvHdfzqszJC6egFpv1wIV08
-	 ukpwigRGh2B2X2wAdNWhA9CVIfB83PpCraT6GGc+car46tDPOWho1tHMZW0xmoxiK7
-	 Qa1oPGgKhPvqHMsYSgDFMsHw13u0DNt+UrPqFVNX3I0KQ2bbjoy0ijZzWqSg8hToLX
-	 jEZjacqFfgR+w==
-Date: Mon, 2 Feb 2026 11:25:45 -0800
+	b=GlzuQ1c43JcO9dAIywLppS/EiOLlPcMVBgFifkc2NkWPO8Zx3jb9CXywiMAMoqpGx
+	 LOi0lYT8sta9m8/hSBOp7QnGMrVzdVojjQ8YcwLlbJKlXQAzMjBQ9DV05NvGEuSPs0
+	 cK6dowNzZ4jQz2nNdvq7RK0meK8t/ApcSrStBPGmTuWsH19a5QnqLVYwCH+JeKJAal
+	 QTY7he1LsJwYJtfy/dEqOODoSn5GmuUksaPhMdmrzc/lE4WsPRtu9KqKV61faeZ33Z
+	 uy0UT8tQcMi6pvdT9nLkbVU2nVGQs/IXX2ZNDzSbiP9VskuElFQJoZ6uPV1ii4aser
+	 CqoYi5mmRUNqg==
+Date: Mon, 2 Feb 2026 11:42:45 -0800
 From: Davidlohr Bueso <dave@stgolabs.net>
 To: Ira Weiny <ira.weiny@intel.com>
 Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
@@ -84,11 +84,11 @@ Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
 	Alison Schofield <alison.schofield@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
 	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 04/19] cxl/core: Enforce partition order/simplify
- partition calls
-Message-ID: <20260202192545.3ld5nmk5jou4lnpx@offworld>
+Subject: Re: [PATCH v9 16/19] cxl/region: Read existing extents on region
+ creation
+Message-ID: <20260202194245.7wmk64v4l4pdf2hc@offworld>
 References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
- <20250413-dcd-type2-upstream-v9-4-1d4911a0b365@intel.com>
+ <20250413-dcd-type2-upstream-v9-16-1d4911a0b365@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -97,58 +97,107 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20250413-dcd-type2-upstream-v9-4-1d4911a0b365@intel.com>
+In-Reply-To: <20250413-dcd-type2-upstream-v9-16-1d4911a0b365@intel.com>
 User-Agent: NeoMutt/20220429
 
 On Sun, 13 Apr 2025, Ira Weiny wrote:
 
->Device partitions have an implied order which is made more complex by
->the addition of a dynamic partition.
+>Dynamic capacity device extents may be left in an accepted state on a
+>device due to an unexpected host crash.  In this case it is expected
+>that the creation of a new region on top of a DC partition can read
+>those extents and surface them for continued use.
 >
->Remove the ram special case information calls in favor of generic calls
->with a check ahead of time to ensure the preservation of the implied
->partition order.
+>Once all endpoint decoders are part of a region and the region is being
+>realized, a read of the 'devices extent list' can reveal these
+>previously accepted extents.
 >
+>CXL r3.1 specifies the mailbox call Get Dynamic Capacity Extent List for
+>this purpose.  The call returns all the extents for all dynamic capacity
+>partitions.  If the fabric manager is adding extents to any DCD
+>partition, the extent list for the recovered region may change.  In this
+>case the query must retry.  Upon retry the query could encounter extents
+>which were accepted on a previous list query.  Adding such extents is
+>ignored without error because they are entirely within a previous
+>accepted extent.  Instead warn on this case to allow for differentiating
+>bad devices from this normal condition.
+>
+>Latch any errors to be bubbled up to ensure notification to the user
+>even if individual errors are rate limited or otherwise ignored.
+>
+>The scan for existing extents races with the dax_cxl driver.  This is
+>synchronized through the region device lock.  Extents which are found
+>after the driver has loaded will surface through the normal notification
+>path while extents seen prior to the driver are read during driver load.
+>
+>Based on an original patch by Navneet Singh.
+>
+>Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>Reviewed-by: Fan Ni <fan.ni@samsung.com>
 >Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+>
 >---
-> drivers/cxl/core/hdm.c    | 11 ++++++++++-
-> drivers/cxl/core/memdev.c | 32 +++++++++-----------------------
-> drivers/cxl/cxl.h         |  1 +
-> drivers/cxl/cxlmem.h      |  9 +++------
-> drivers/cxl/mem.c         |  2 +-
-> 5 files changed, 24 insertions(+), 31 deletions(-)
+>Changes:
+>[0day: fix extent count in GetExtent input payload]
+>[iweiny: minor clean ups]
+>[iweiny: Adjust for partition arch]
+>---
+> drivers/cxl/core/core.h   |   1 +
+> drivers/cxl/core/mbox.c   | 109 ++++++++++++++++++++++++++++++++++++++++++++++
+> drivers/cxl/core/region.c |  25 +++++++++++
+> drivers/cxl/cxlmem.h      |  21 +++++++++
+> 4 files changed, 156 insertions(+)
 >
->diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
->index c5f8a17d00f1..92e1a24e2109 100644
->--- a/drivers/cxl/core/hdm.c
->+++ b/drivers/cxl/core/hdm.c
->@@ -470,6 +470,7 @@ static const char *cxl_mode_name(enum cxl_partition_mode mode)
-> int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
-> {
-> 	struct device *dev = cxlds->dev;
->+	int i;
+>diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+>index 027dd1504d77..e06a46fec217 100644
+>--- a/drivers/cxl/core/core.h
+>+++ b/drivers/cxl/core/core.h
+>@@ -22,6 +22,7 @@ cxled_to_mds(struct cxl_endpoint_decoder *cxled)
+>	return container_of(cxlds, struct cxl_memdev_state, cxlds);
+> }
 >
-> 	guard(rwsem_write)(&cxl_dpa_rwsem);
+>+int cxl_process_extent_list(struct cxl_endpoint_decoder *cxled);
+> int cxl_region_invalidate_memregion(struct cxl_region *cxlr);
 >
->@@ -482,9 +483,17 @@ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
-> 		return 0;
-> 	}
+> #ifdef CONFIG_CXL_REGION
+>diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>index de01c6684530..8af3a4173b99 100644
+>--- a/drivers/cxl/core/mbox.c
+>+++ b/drivers/cxl/core/mbox.c
+>@@ -1737,6 +1737,115 @@ int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
+> }
+> EXPORT_SYMBOL_NS_GPL(cxl_dev_dc_identify, "CXL");
 >
->+	/* Verify partitions are in expected order. */
->+	for (i = 1; i < info->nr_partitions; i++) {
->+		if (cxlds->part[i].mode < cxlds->part[i-1].mode) {
->+			dev_err(dev, "Partition order mismatch\n");
->+			return 0;
-
-return -EINVAL?
-
->+		}
->+	}
+>+/* Return -EAGAIN if the extent list changes while reading */
+>+static int __cxl_process_extent_list(struct cxl_endpoint_decoder *cxled)
+>+{
+>+	u32 current_index, total_read, total_expected, initial_gen_num;
+>+	struct cxl_memdev_state *mds = cxled_to_mds(cxled);
+>+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+>+	struct device *dev = mds->cxlds.dev;
+>+	struct cxl_mbox_cmd mbox_cmd;
+>+	u32 max_extent_count;
+>+	int latched_rc = 0;
+>+	bool first = true;
 >+
-> 	cxlds->dpa_res = DEFINE_RES_MEM(0, info->size);
->
->-	for (int i = 0; i < info->nr_partitions; i++) {
->+	for (i = 0; i < info->nr_partitions; i++) {
-> 		const struct cxl_dpa_part_info *part = &info->part[i];
-> 		int rc;
->
+>+	struct cxl_mbox_get_extent_out *extents __free(kvfree) =
+>+				kvmalloc(cxl_mbox->payload_size, GFP_KERNEL);
+>+	if (!extents)
+>+		return -ENOMEM;
+>+
+>+	total_read = 0;
+>+	current_index = 0;
+>+	total_expected = 0;
+>+	max_extent_count = (cxl_mbox->payload_size - sizeof(*extents)) /
+>+				sizeof(struct cxl_extent);
+>+	do {
+>+		u32 nr_returned, current_total, current_gen_num;
+>+		struct cxl_mbox_get_extent_in get_extent;
+>+		int rc;
+>+
+>+		get_extent = (struct cxl_mbox_get_extent_in) {
+>+			.extent_cnt = cpu_to_le32(max(max_extent_count,
+>+						  total_expected - current_index)),
+
+s/max/min().
+
+>+			.start_extent_index = cpu_to_le32(current_index),
