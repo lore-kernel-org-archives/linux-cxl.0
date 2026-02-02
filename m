@@ -1,139 +1,127 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0393238150;
-	Mon,  2 Feb 2026 15:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E901DDC28
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Feb 2026 15:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770046773; cv=none; b=ldzu80dWTiH7Yuor8Dm1oqQ87qlMYFEghUojFhMx5V1fHPSwxs/8ZalTR1CQeS/LKwcS8G8GgU89gQmO3xP9glKUHLq6xkI2fjnrJYzq8S7dFhWYGuvNILde+Xefe/moJ+NKR9gycTzcTipPVg60OABq+5RkEDeJFikGiX0joeA=
+	t=1770047299; cv=none; b=XPVQALG7ss0ep5ksc4faCJFLPNqUwqr3oKV2qag4Hu/tEl7iiPO8gen4kzPKv63lZvQDM9u6Np+JqixTln6OIQIghml3tKCfD1Bik2tOhGffPPSXGs87+Xz4jcom4vRemhXkc9UHGQnp2wS0Vkk4Fj5Fpx5JdEBFlcZLICDZ7qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770046773; c=relaxed/simple;
-	bh=DDvI3Itu5ETLUupo6QCibVrid68Z4c/droYoOexXb60=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YejZ7RxoY6H5gC7YDXYWownd+4FgR+uCqSJQBJL/XOm6H3XcCqPc5++WgX44ZqvqxZhcJ8DeVxTOnv76mQvQ+wntwHiJWiPPZQsUnYuKCvcJn95CMaU5DRrL/PleyHMrhnbHEfkTuKZoNXXvguxcieTINVf1CH+Zaxy0QNkosDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4f4W3n2YwVzHnH6q;
-	Mon,  2 Feb 2026 23:38:29 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id F1B8240539;
-	Mon,  2 Feb 2026 23:39:26 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 2 Feb
- 2026 15:39:26 +0000
-Date: Mon, 2 Feb 2026 15:39:24 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Li Ming <ming.li@zohomail.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] cxl/core: Hold grandparent port lock while dport
- adding
-Message-ID: <20260202153924.00002396@huawei.com>
-In-Reply-To: <20260201093002.1281858-3-ming.li@zohomail.com>
+	s=arc-20240116; t=1770047299; c=relaxed/simple;
+	bh=Afj17x91EXbt8Deh0bJOcz5m3G+WX3CU1VA7oRQAHDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A8NWSGLGOqUWSVJF3HuSfXvVzWySTQERnJN+jq1SAxeSAqEUojUU0PIgMusXgj0h0mrvn2RX9HWNv4TV7689pxo464Y5xJCsY0HUg1fWU9hy0FUUw5f0BIHvQuXL8PIXbNRshs1of7ye9EDHH1Ns5ZlRQqg73tdVhoq7b87uYN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=NPtfqoEs; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="NPtfqoEs"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-5032e15525aso48219831cf.3
+        for <linux-cxl@vger.kernel.org>; Mon, 02 Feb 2026 07:48:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1770047297; x=1770652097; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8lZnq3PJuhpE/1cANdV/zFSL+6ANg7Z+AIOF3gGB5qA=;
+        b=NPtfqoEs4DDq+ywwZLt5DS2h2iLv0IqPwXJvq8tw/8ty2OLPZj9JA5Ai0NM8JX/z70
+         ekZINBlJ4YkqOrdKJ/ll4EECdSastaOfTPaeXiQWVsJvXELKnb8IfU8WnbN1l9YwP3pO
+         2aBL9pOLKKM9Hrk2nHL94O41NhK9mIsyD48k5StsWF+REQHb72FvVy+GzpqjMSTf/nW3
+         bNhLN3UqUWwXzgFamyqDh97SHsdEiLtmhlD/1vuNU5i2reM/YQZUgKI2irxT8BzQoYIH
+         0em/3ZyXxJCfw78H38Eb7B2EdkblU+60VZjbNfmiqoCymV+zkh+JR33+PcLFQb2lpOAC
+         urFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770047297; x=1770652097;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8lZnq3PJuhpE/1cANdV/zFSL+6ANg7Z+AIOF3gGB5qA=;
+        b=IBuHR08MlL9/J19QJLXh0pWoIp2YiFygPNlfPFDB/+qRaFsuyx2BXOrDvH3NCjvCHC
+         b4s/z9YkU6COuSsAUJAzDyIlY/3Piy+lP8jm4IYUSTCp0mh6soDLjnR/Dd54eZL2GRxr
+         +23b2rGZdDBsv0NZtL5yCQjJNKMk6uVSiC2udxhTjUtBb2bjqAr3SrppY8A6KiAxeXiJ
+         u2JUUVu8Ih1+Z/vOI6WWq0sCeCZ9Qx7GWkcg5gPBtGqeVbv1enxFUuH1jC4THTIJi6uv
+         plzw6kv95e3+Z9YQI0sdAUdak2vLqLThzpVer+57qgnmjJ/45cct4uUZxCunokY0PkIJ
+         c2SA==
+X-Forwarded-Encrypted: i=1; AJvYcCW5xv1paPVkXNeC2R+vuBU5y7+8rKlS4rQJe5y6f0hCt/c6zGgYQc4IY6VdG9ZulI22dlbWFzkqgHM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx172FO29kn3q+g61rqMXaouqnNj5O8s75zfpG2atlbH7UUlDSd
+	Rf1SnKWBS5SYf24oz/mdJRqp4XfaqnFOnlasl9mjCMQqlf7xM2tCEmp8pSKifAeZQEA=
+X-Gm-Gg: AZuq6aLGLqtsVFeG8xgPe3MpZxSMenEjia9i1gLwhaGTKbreG4OvhggtyKJ7OGkCEYr
+	UE0tCqF0KrHFnlFiYM9UdFhIUxKLgz8Ar3E9ADpYtQiAd3pS2DX6ib8l551kGT55Mlifh0BJIdV
+	BIyugvdCffIKXdS8Lxp8Z9TojlHKSGDSK8nWxTr6yD9Jblqt1jdGTmsmQS7w5yYP4ghEr8ViO0G
+	IKrMhaVUUg79DeiAcAZDKejI2/bWZYcQg20qtFblPt24T0BaWLPI5ZyFD3ClFKbB1WpM5UBJyvo
+	UBo4toaxJfBmWMmIGFwvgTRnV1o4cp/vZKCD3i45B/Tt5fgRB151XHa9Jr8ns1iAOo2cS03xOgm
+	oGSBsGzkXQsI1UvT0NVOdHTJfQw1ocbohPUH3vzv+LBBIWCSkeGc+KzV3yfM0XaeQkX6HLzcjr7
+	wD0JbKWRYLH3II/iDvUd0X3T6IYc7rvBDkYRusj/Qoq/I33oi0Ab9eP22foGbMbBIGUcXl4A==
+X-Received: by 2002:ac8:5950:0:b0:4f1:de1c:dfa8 with SMTP id d75a77b69052e-505d2190592mr188572491cf.19.1770047297079;
+        Mon, 02 Feb 2026 07:48:17 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50337cbdc24sm112264261cf.32.2026.02.02.07.48.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Feb 2026 07:48:16 -0800 (PST)
+Date: Mon, 2 Feb 2026 10:48:14 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] cxl/core: Set cxlmd->endpoint to NULL by default
+Message-ID: <aYDHPhun61wkw7Fi@gourry-fedora-PF4VCD3F>
 References: <20260201093002.1281858-1-ming.li@zohomail.com>
-	<20260201093002.1281858-3-ming.li@zohomail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+ <20260201093002.1281858-2-ming.li@zohomail.com>
+ <20260202144103.000016cb@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260202144103.000016cb@huawei.com>
 
-On Sun,  1 Feb 2026 17:30:02 +0800
-Li Ming <ming.li@zohomail.com> wrote:
-
-> When CXL subsystem adds a cxl port to a hierarchy, there is a small
-> window where the new port becomes visible before it is bound to a
-> driver. This happens because device_add() adds a device to bus device
-> list before bus_probe_device() binds it to a driver.
-> So if two cxl memdevs are trying to add a dport to a same port via
-> devm_cxl_enumerate_ports(), the second cxl memdev may observe the port
-> and attempt to add a dport, but fails because the port has not yet been
-> attached to cxl port driver.
-> the sequence is like:
+On Mon, Feb 02, 2026 at 02:41:03PM +0000, Jonathan Cameron wrote:
+> On Sun,  1 Feb 2026 17:30:01 +0800
+> Li Ming <ming.li@zohomail.com> wrote:
 > 
-> CPU 0					CPU 1
-> devm_cxl_enumerate_ports()
->   # port not found, add it
->   add_port_attach_ep()
->     # hold the parent port lock
->     # to add the new port
->     devm_cxl_create_port()
->       device_add()
-> 	# Add dev to bus devs list
-> 	bus_add_device()
-> 					devm_cxl_enumerate_ports()
-> 					# found the port
-
-Indenting not consistent here as this call is in devm_cxl_enumerate_ports()
-
-> 					find_cxl_port_by_uport()
-> 					# hold port lock to add a dport
-> 					device_lock(the port)
-> 					find_or_add_dport()
-> 					  cxl_port_add_dport()
-> 					    return -ENXIO because port->dev.driver is NULL
-> 					device_unlock(the port)
-> 	bus_probe_device()
-> 	  # hold the port lock
-> 	  # for attaching
-> 	  device_lock(the port)
-> 	    attaching the new port
-> 	  device_unlock(the port)
+> > CXL testing environment can trigger following trace
+> > 
+> >  Oops: general protection fault, probably for non-canonical address 0xdffffc0000000092: 0000 [#1] SMP KASAN NOPTI
+> >  KASAN: null-ptr-deref in range [0x0000000000000490-0x0000000000000497]
+> >  RIP: 0010:cxl_dpa_to_region+0x105/0x1f0 [cxl_core]
+> >  Call Trace:
+> >   <TASK>
+> >   cxl_event_trace_record+0xd1/0xa70 [cxl_core]
+> >   __cxl_event_trace_record+0x12f/0x1e0 [cxl_core]
+> >   cxl_mem_get_records_log+0x261/0x500 [cxl_core]
+> >   cxl_mem_get_event_records+0x7c/0xc0 [cxl_core]
+> >   cxl_mock_mem_probe+0xd38/0x1c60 [cxl_mock_mem]
+> >   platform_probe+0x9d/0x130
+> >   really_probe+0x1c8/0x960
+> >   __driver_probe_device+0x187/0x3e0
+> >   driver_probe_device+0x45/0x120
+> >   __device_attach_driver+0x15d/0x280
+> > 
+> > commit 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
+> > initializes cxlmd->endpoint to ERR_PTR(-ENXIO) in cxl_memdev_alloc().
+> > However, cxl_dpa_to_region() treats a non-NULL cxlmd->endpoint as a
+> > valid endpoint.
+> > 
+> > Across the CXL core, endpoint availability is generally determined by
+> > checking whether it is NULL. Align with this convention by initializing
+> > cxlmd->endpoint to NULL by default.
 > 
-> To fix this race, require that dport addition holds the parent port lock
-> of the target port. The CXL subsystem already requires holding the
-> parent port lock while attaching a new port. Therefore, successfully
-> acquiring the parent port lock ganrantees that port attaching has
-
-Spell check. Guarantees
-
-> completed.
+> I had a look at whether it made sense to use use IS_ERR_OR_NULL() to check
+> for validity of the endpoint, but it would be somewhat fiddly and I think
+> you are correct that convention here seems to be NULL means not set.
+> We don't need the error code.  One comment inline.
 > 
-> Fixes: 4f06d81e7c6a ("cxl: Defer dport allocation for switch ports")
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
 
-Analysis looks reasonable to me, but I'm not hugely confident on this
-one so would like others to take a close look as well.
-Question inline.
+doing validity checks on pointers by checking for null is a pretty
+common convention kernel-wide, I would consider setting some structure's
+value to an ERR_PTR to be the aberration.
 
+So yeah, good catch
 
-> ---
->  drivers/cxl/core/port.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 54f72452fb06..fef2fe913e1f 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1817,8 +1817,12 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
->  			/*
->  			 * RP port enumerated by cxl_acpi without dport will
->  			 * have the dport added here.
-> +			 *
-> +			 * Hold the parent port lock here to in case that the
-> +			 * port can be observed but has not been attached yet.
->  			 */
-> -			scoped_guard(device, &port->dev) {
-> +			scoped_guard(device, &parent_port_of(port)->dev) {
-I'm nervous about whether this is the right lock. For unregister_port()
-(which is easier to track down that the add path locking) the lock
-taken depends on where the port is that is being unregistered.
-Specifically root ports are unregistered under parent->uport_dev, not
-parent->dev.
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
-> +				guard(device)(&port->dev);
->  				dport = find_or_add_dport(port, dport_dev);
->  				if (IS_ERR(dport)) {
->  					if (PTR_ERR(dport) == -EAGAIN)
-
+~Gregory
