@@ -1,203 +1,104 @@
-Received: from tiger.tulip.relay.mailchannels.net (tiger.tulip.relay.mailchannels.net [23.83.218.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505D73093D1;
-	Mon,  2 Feb 2026 19:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.248
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770061371; cv=pass; b=OwjIYZ1HW9Uvu+WLfh6Lpxb7vIZoLWr0Eoxg+CBwe6jJSeQC4cI97WK1Qia0p7RQn/idBvpi93pVFxIrI8DZRhqCk4c7OcqqEbh3FvBAAYxamLbRMS4zjDxrmQsMvyqLfqFfbFPx1AozA+2XWm5B62oZwx6VeSClWi32cwaazV0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770061371; c=relaxed/simple;
-	bh=tkv+TSxtw3V3RnH03tIV1G8/siCL5dmJerasomPzC0o=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81EB2303C86
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Feb 2026 19:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770061939; cv=none; b=tC45FSkCXaAvWh3HAjlF5R6FlnoVuwPGK5Yy7FC1+jb+yEs0uSwArgmRcNzCMicS3udy4Ne9QQtI5neADWeo87dw7iAFvJUkcI2G3zH0ARQ2iQiQYZDdFTydq4nwk0Hqt4BeyUaLnc4IjagMtsR39diCeLDlirQ3wYA8ATNPfa8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770061939; c=relaxed/simple;
+	bh=iHwVM/IQCYrdRxSOrhIOx7Y1Q48Fm2ITli5IFwO+PLA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kuJXhiJt/DXDIaj0nLfQzK9qpgorTcjgbPvF+ATAgIkkyVpZFDd3w7r4FsNUAq7ihtPGsJOFZZE86wr2QQBTeWHKGv90IdONiv9i0saSR6XHhu/xDSw9dN+rNDJrEBCtylnz3wyhi8xqlICGF0wR746FWyTNy2G4lzf5oguufY4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=GlzuQ1c4; arc=pass smtp.client-ip=23.83.218.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=M7KauA2ETUNW8PHlfrt7IfZZQiAwa0xH/qTZWlFCkkRIhXBvZtP6Jw2urKqsSWdPwGDzMHNQQyNSY0/o2Dinmwjeq/YxwSNswayVgOQ/G/gbXEueZxmwcqmlUNUqCwdF+w8ZVRulGdNI/py/qetvXQTj1XfaLszLOgsEqc/Ys5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=sij4A4ak; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="GlzuQ1c4"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id BD794461C5E;
-	Mon, 02 Feb 2026 19:42:49 +0000 (UTC)
-Received: from pdx1-sub0-mail-a252.dreamhost.com (trex-green-1.trex.outbound.svc.cluster.local [100.96.255.91])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 3A555461896;
-	Mon, 02 Feb 2026 19:42:49 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1770061369;
-	b=WyuFiSSmHt/XpOj2SEFlUeAmeR/4WPuz49XIdZRz0nlN76cC6rNsGBFihBrljR0J1cGzfs
-	OeLwIFar1FZOz0lYwsYFkNVVST6nMWIYvtCkEmfE6IVJJiudkRq4xnD3zzGRut0doNTT4h
-	fr2nXSkBvAPzNb4SDuPvK9clrUhfdkPC3uozAweFPpO400mkMEQ6x1FZxL1f3GMZThQnQ4
-	E30k3lr65ObbuKB7ZTkRkh3h6ghaAsDKL7xtlpM35nsxwjQs5+GAUM8FjjC8NIYurpKRhS
-	H1MPKXayFdkrivQ+6aC9PpI7aC5SoNCeTea4g2J7GAGHTRhfCb7cEnfwX12q6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1770061369;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=vCFzkOutSNXY9dKZ7WhTdiEKcb0HoBLR+6Jq3naTmZg=;
-	b=lECwkE8irxF0JLh4KpcNt4yRpTm8EQHIcNrTwza/B1vlkXZisVKcuohA2HY/r/Nt0Ay4lv
-	R/80LAM6qVccEj8bAQvLO9lCcbyq2SDLWbSd9UFAEUzVhwu4ptcEPnGI0lmhOZIvl3OAox
-	Dwpb6xaVaRt17IgtnTQV+AYiwgygwMt/nHfxgdn7P0CEGu4F5BlNB0QGkVaOVRIoIx0dUC
-	0qbLnNfJhGrBWLWcF/079P5RF3+Yi7S34sRkZufLpwKgNw83WVf9jdrmK7/X8tJxyQxfI+
-	00YT9PtKR9XvWgLC4L1QcnSjfyE/gq7t8kTw6u9yhVbVo8PRCvy/VMNuVIIw8A==
-ARC-Authentication-Results: i=1;
-	rspamd-c758cdf4d-snh2h;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Towering-Name: 54c5c7cd5464e1e0_1770061369514_705110241
-X-MC-Loop-Signature: 1770061369514:616656904
-X-MC-Ingress-Time: 1770061369514
-Received: from pdx1-sub0-mail-a252.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.255.91 (trex/7.1.3);
-	Mon, 02 Feb 2026 19:42:49 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a252.dreamhost.com (Postfix) with ESMTPSA id 4f4cTh3gHMz105C;
-	Mon,  2 Feb 2026 11:42:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1770061369;
-	bh=vCFzkOutSNXY9dKZ7WhTdiEKcb0HoBLR+6Jq3naTmZg=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=GlzuQ1c43JcO9dAIywLppS/EiOLlPcMVBgFifkc2NkWPO8Zx3jb9CXywiMAMoqpGx
-	 LOi0lYT8sta9m8/hSBOp7QnGMrVzdVojjQ8YcwLlbJKlXQAzMjBQ9DV05NvGEuSPs0
-	 cK6dowNzZ4jQz2nNdvq7RK0meK8t/ApcSrStBPGmTuWsH19a5QnqLVYwCH+JeKJAal
-	 QTY7he1LsJwYJtfy/dEqOODoSn5GmuUksaPhMdmrzc/lE4WsPRtu9KqKV61faeZ33Z
-	 uy0UT8tQcMi6pvdT9nLkbVU2nVGQs/IXX2ZNDzSbiP9VskuElFQJoZ6uPV1ii4aser
-	 CqoYi5mmRUNqg==
-Date: Mon, 2 Feb 2026 11:42:45 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 16/19] cxl/region: Read existing extents on region
- creation
-Message-ID: <20260202194245.7wmk64v4l4pdf2hc@offworld>
-References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
- <20250413-dcd-type2-upstream-v9-16-1d4911a0b365@intel.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="sij4A4ak"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-502a789834fso44655931cf.2
+        for <linux-cxl@vger.kernel.org>; Mon, 02 Feb 2026 11:52:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1770061936; x=1770666736; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6vWYyRi38ay7knCeZnmEa05emjEEY8IjE/qthmXHUHk=;
+        b=sij4A4akkt2yJnwqnv03pZ+8H4SYlwqDDvV07U26IHi9t7LCM9mc7e+vBt531NYgiH
+         eXf4DPTOh7NF3sYDkKWfuFI2eiu6uQJE/Sc0MpkgOGWfA+oNKibxZh//BxjOYde/yHV5
+         LpsE9osHfUxFNOE+Sbtf+G4BExvfa16Pn+psAzhJnhVxu+3mNlvvdKswI/KqmVQbBhNl
+         MtdZxwMCMtnwYtYo9zOMR8y6L1XJf9htI04ZCAv96PJYCsJ3cCLZjXaY6G/5NCTqIIIF
+         5Fon75gHmzCdrsDEImLgCk6TZydwh99of/3LlWLjl5eNaRMZiJwaqPgx4XZn/mdaFBYa
+         zPgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770061936; x=1770666736;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6vWYyRi38ay7knCeZnmEa05emjEEY8IjE/qthmXHUHk=;
+        b=pfQtl+xSFRJrua86V4Jpxcx5pXaEvfW5CKvmWJwEJbV/80sNZjkvN9hizFPry/akKJ
+         AAqRtpNLPprp/SQuJ+t9hXgNUxs1gNHLjRW4E4KHMmrM2X9QPo81Sc2ijaz6AtEFDRop
+         7owLVj83TZ8DW/kOsWkqaU9Tb6ZY8sJXpnKGll+56R9TQ2ahSgPDmg2edJ31vwX5wph1
+         cc1ElNUgTCqjsTRKdG0+bb8m1XwCS44DijBHEkqXwZuT9pHQ3mIpvC2rdV+SLnlF9PGj
+         p8UlZ21m1JsPzDiQodeXtJuyM6pQG8gUGYoyabpe4EzV6Qyv6nBmkyAQPdHO7NZyLm7l
+         Lz0g==
+X-Gm-Message-State: AOJu0YyxFRA5rx2cs6LCxYp3NQ/v5zf5hKj/dlebuIA6Vw02qO37NsPj
+	qiVcKlq8TEg3wnxHQ8kiA8EIVluj0y2TzRgNNKIu2t8LhpFcyX9Ke/xt+hy39axP40U=
+X-Gm-Gg: AZuq6aJMrfAcC9N+KwSY+oNU2KFTVj1NDXKTE/BXeRsoXnWjRn5YvIZfoX3aMBx0gzf
+	J5dSBV/yOotWKAkxUDvbcjMGiCXUZLjBmGqM4N4XO+gq/ER6nBls8xviprmwMXqxfiiYJpl3u+i
+	I8L06ONi3iDFOwdu7O2rFVUencrvUsrnvULPiVFJ3fyDgXXtImyTalF890VjJPsY71j81uK8Mpa
+	V9bZy52+fKLbfVeSfHT7K5LGzyZLw40cEC3t0ugCKzbBKjm37rqlQDRFkOP69GzUo8ma0Kc9rHQ
+	edrAaNpGF7IhWwU1/UZQeHYs1EHa/fEGbJOnebe47Pk0fTUthJ2CcVM4791A1FvAmxQtLG7XLpg
+	OxznK466bJ2NHo4wCzo08uXOurMLKcHMYKnHrNLoPn1c7FyG8ig5rRJPcQNaOlgRxIpN4+KRPQO
+	MA1wYPmVcmXjy8QjVVobn2e89BfMK47E1Fp8pPrOovyOhE3bV7VxcbckRxWc6VwoNC2Cy1bg==
+X-Received: by 2002:a05:622a:1ba3:b0:4e2:e58a:57e1 with SMTP id d75a77b69052e-505d21d7100mr175542631cf.37.1770061936249;
+        Mon, 02 Feb 2026 11:52:16 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5033ca9d5b9sm103647231cf.13.2026.02.02.11.52.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Feb 2026 11:52:15 -0800 (PST)
+Date: Mon, 2 Feb 2026 14:52:14 -0500
+From: Gregory Price <gourry@gourry.net>
+To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: Re: RFC: CXL Isolation Support
+Message-ID: <aYEAbq6UkQD7mqGM@gourry-fedora-PF4VCD3F>
+References: <b4f7a760-5cf4-4343-8f7e-9698ba435fa4@amd.com>
+ <aX0jC3DEqcnyrg7x@gourry-fedora-PF4VCD3F>
+ <df6bd8d3-f11a-4b19-af56-1593e5c87298@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250413-dcd-type2-upstream-v9-16-1d4911a0b365@intel.com>
-User-Agent: NeoMutt/20220429
+In-Reply-To: <df6bd8d3-f11a-4b19-af56-1593e5c87298@amd.com>
 
-On Sun, 13 Apr 2025, Ira Weiny wrote:
+On Mon, Feb 02, 2026 at 11:30:58AM -0600, Cheatham, Benjamin wrote:
+> 
+> 
+> On 1/30/2026 3:30 PM, Gregory Price wrote:
+> > But, you can at least get data from the system that the link went
+> > down and even have a chance to investigate before nicely blowing up.
+> > 
+> > Which is at least much more helpful.
+> 
+> Recovery is the end goal, but not the immediate one. AMD platforms don't support
+> recovery from isolation at the moment so the goal is to just keep the system
+> from immediately resetting when a CXL link goes down. All that let's you
+> do is a) choose when you reset the system for a repair and b) get more debugging
+> info, which you already highlighted.
+> 
 
->Dynamic capacity device extents may be left in an accepted state on a
->device due to an unexpected host crash.  In this case it is expected
->that the creation of a new region on top of a DC partition can read
->those extents and surface them for continued use.
->
->Once all endpoint decoders are part of a region and the region is being
->realized, a read of the 'devices extent list' can reveal these
->previously accepted extents.
->
->CXL r3.1 specifies the mailbox call Get Dynamic Capacity Extent List for
->this purpose.  The call returns all the extents for all dynamic capacity
->partitions.  If the fabric manager is adding extents to any DCD
->partition, the extent list for the recovered region may change.  In this
->case the query must retry.  Upon retry the query could encounter extents
->which were accepted on a previous list query.  Adding such extents is
->ignored without error because they are entirely within a previous
->accepted extent.  Instead warn on this case to allow for differentiating
->bad devices from this normal condition.
->
->Latch any errors to be bubbled up to ensure notification to the user
->even if individual errors are rate limited or otherwise ignored.
->
->The scan for existing extents races with the dax_cxl driver.  This is
->synchronized through the region device lock.  Extents which are found
->after the driver has loaded will surface through the normal notification
->path while extents seen prior to the driver are read during driver load.
->
->Based on an original patch by Navneet Singh.
->
->Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->Reviewed-by: Fan Ni <fan.ni@samsung.com>
->Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->
->---
->Changes:
->[0day: fix extent count in GetExtent input payload]
->[iweiny: minor clean ups]
->[iweiny: Adjust for partition arch]
->---
-> drivers/cxl/core/core.h   |   1 +
-> drivers/cxl/core/mbox.c   | 109 ++++++++++++++++++++++++++++++++++++++++++++++
-> drivers/cxl/core/region.c |  25 +++++++++++
-> drivers/cxl/cxlmem.h      |  21 +++++++++
-> 4 files changed, 156 insertions(+)
->
->diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
->index 027dd1504d77..e06a46fec217 100644
->--- a/drivers/cxl/core/core.h
->+++ b/drivers/cxl/core/core.h
->@@ -22,6 +22,7 @@ cxled_to_mds(struct cxl_endpoint_decoder *cxled)
->	return container_of(cxlds, struct cxl_memdev_state, cxlds);
-> }
->
->+int cxl_process_extent_list(struct cxl_endpoint_decoder *cxled);
-> int cxl_region_invalidate_memregion(struct cxl_region *cxlr);
->
-> #ifdef CONFIG_CXL_REGION
->diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->index de01c6684530..8af3a4173b99 100644
->--- a/drivers/cxl/core/mbox.c
->+++ b/drivers/cxl/core/mbox.c
->@@ -1737,6 +1737,115 @@ int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
-> }
-> EXPORT_SYMBOL_NS_GPL(cxl_dev_dc_identify, "CXL");
->
->+/* Return -EAGAIN if the extent list changes while reading */
->+static int __cxl_process_extent_list(struct cxl_endpoint_decoder *cxled)
->+{
->+	u32 current_index, total_read, total_expected, initial_gen_num;
->+	struct cxl_memdev_state *mds = cxled_to_mds(cxled);
->+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
->+	struct device *dev = mds->cxlds.dev;
->+	struct cxl_mbox_cmd mbox_cmd;
->+	u32 max_extent_count;
->+	int latched_rc = 0;
->+	bool first = true;
->+
->+	struct cxl_mbox_get_extent_out *extents __free(kvfree) =
->+				kvmalloc(cxl_mbox->payload_size, GFP_KERNEL);
->+	if (!extents)
->+		return -ENOMEM;
->+
->+	total_read = 0;
->+	current_index = 0;
->+	total_expected = 0;
->+	max_extent_count = (cxl_mbox->payload_size - sizeof(*extents)) /
->+				sizeof(struct cxl_extent);
->+	do {
->+		u32 nr_returned, current_total, current_gen_num;
->+		struct cxl_mbox_get_extent_in get_extent;
->+		int rc;
->+
->+		get_extent = (struct cxl_mbox_get_extent_in) {
->+			.extent_cnt = cpu_to_le32(max(max_extent_count,
->+						  total_expected - current_index)),
+Ah, another issue for type-3 devices is where the `struct page` are
+hosted.  if you want true isolation, you cannot allow memmap_on_mem=true
+for CXL devices, otherwise you can't even guarantee kernel safety.
 
-s/max/min().
+This has implications for maximum capacity of the CXL device (must have
+sufficient non-isolated capacity to host isolated capacity memory map).
 
->+			.start_extent_index = cpu_to_le32(current_index),
+This policy is not plumbed from CXL into DAX at the moment, so whatever
+the default for dax users is being used. (should be =false, i think)
+
+~Gregory
