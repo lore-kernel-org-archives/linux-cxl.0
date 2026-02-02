@@ -1,152 +1,125 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from serval.cherry.relay.mailchannels.net (serval.cherry.relay.mailchannels.net [23.83.223.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CB82DF144;
-	Mon,  2 Feb 2026 18:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770057977; cv=none; b=aLMuRsHmyRRFwoOkSxYTRiTsQMGPXBdHA8WKTGMextu0iPIUJZ4I+2TbKxqdix7XbU4R3Fu7Pn9D8VLJDUXcIiSOjBnovDzqe8TUon8hK02OsU5ILV1sHkmq0lpBwbmMKrg8kc4caohmnG+dMmt7yf4uJs9+w/nO+bTlWYtOFlc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770057977; c=relaxed/simple;
-	bh=3Bb3GA58D7DLWusn0/jAKceagn2uKDar4xbNlnWV1tE=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d/f2Mt9n905YjPRSHDS7ZaG+ZY/HldPPA5KO3F3fpytX0EnZDoXLWln2GudQiKL7Vqg9a3SGkFbQRnv/Ah9l+Ku6DI54JbjC1UxZ9DrgPOnB3lljRAAGQHYPVLCebyUpd0XFrU4ecg4YLwM2qS8Q/P8AV0iX/yo/2/eg3oBxwIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4f4bCV0H9xzJ467X;
-	Tue,  3 Feb 2026 02:45:26 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 30AC040565;
-	Tue,  3 Feb 2026 02:46:12 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 2 Feb
- 2026 18:46:11 +0000
-Date: Mon, 2 Feb 2026 18:46:09 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Gregory Price <gourry@gourry.net>
-CC: <linux-mm@kvack.org>, <linux-cxl@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<kernel-team@meta.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, <willy@infradead.org>,
-	<jack@suse.cz>, <terry.bowman@amd.com>, <john@jagalactic.com>, David
- Hildenbrand <david@kernel.org>, Oscar Salvador <osalvador@suse.de>, Andrew
- Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 2/9] mm/memory_hotplug: add
- __add_memory_driver_managed() with online_type arg
-Message-ID: <20260202184609.00004a02@huawei.com>
-In-Reply-To: <aYDmor_ruasxaZ-7@gourry-fedora-PF4VCD3F>
-References: <20260129210442.3951412-1-gourry@gourry.net>
-	<20260129210442.3951412-3-gourry@gourry.net>
-	<20260202172524.00000c6d@huawei.com>
-	<aYDmor_ruasxaZ-7@gourry-fedora-PF4VCD3F>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98812F25F4
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Feb 2026 19:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.163
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770059625; cv=pass; b=bLy2JGvV8VW/6j3yFQV1kA8PHPRxxoiZYNoeweGY4LtBNK0skexB+4I2kp0DTSOtkBBJIEO40mWQOUorXGL9JhWn9IqqixHALMWgknl72tt3ozpdfyByQSYEg2U2V07hCccgD0LGNONB+vMvbobs6p+icQDKBV+jNKkVSVhfwN8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770059625; c=relaxed/simple;
+	bh=GfHFW4IC8M6FrPpmvZaMu9frRH8maXbIIQaSkf81+as=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P97WMh0hKloB9SwGjttvzEDwuG4jDp2fGwqPOMFnFBsNIsQELlgXJZfwWVrb+2wuA/vlQFYR1EGZL5Ro2QUyG7JjVeuHWK91JlFoEReG4B1TVDMSzxifUeq7nPS7K6dENYTpEAH+U6NrQI3MVrLX7J1SnQTm/FRGrHuBDqszRyk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=PTN7hJ7x; arc=pass smtp.client-ip=23.83.223.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="PTN7hJ7x"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 95E06182770;
+	Mon, 02 Feb 2026 19:13:37 +0000 (UTC)
+Received: from pdx1-sub0-mail-a252.dreamhost.com (100-123-122-168.trex-nlb.outbound.svc.cluster.local [100.123.122.168])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 24A3C1826A7;
+	Mon, 02 Feb 2026 19:13:37 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1770059617;
+	b=3SwRG/LY0nkSCTFJh/w6UcNbBvtPYHCm+CoiGl0gLSIEI289WYAVTjmfnKCNtR9LUKLf++
+	8hgcO377Us/vUigI4+6xUBW7t3nVP8raWc/4musNRGr2os46/dmPrCS2TTxYBpKP+XE43H
+	to7B28JZvzHS7saJCgBL060XuYtfvOlBASivx3+DbZO8fBoLKjKQWb2KSrLyuqXux2axY0
+	HEyhfPzX25oCO7L3xFnGCz85/Jnp2eNo/Id2VhTZtzIGR7zibqPM22vHJ+ACw7ffof9uAS
+	ttfMot8i8syJC2e91GNaVtH59GW0xUuBEfsypwcMlZErrYKJhC+I5DkCk3XxSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1770059617;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
+	bh=aoXhQjSW3EvO6oX64PkRMGBX0VMzW2JjGFbRgk9a5vc=;
+	b=AIGN206Hk3jsAbtReHsT1XTTGhrccADFY9d24Cn06AOqHrbaBnc/Qt4UzM6pFj+bqaR/0S
+	tNbClfWXm5Ot/GzBlRi4XKXbm56semzjY5H5kkUSUp1pTy59f7fvwDOHFW6WAGFtUMW5fO
+	NL+UuXkWWPa3F2I5pec6abb5QejkcIC9uU3sVNzGui1bgIBAUG5o65DVTqKqFixdi5OQwL
+	VXki8/QXoXoeKaLg7a2upWwssoDwiFvg1b5Sp2emnJEHq+6Ak4oeCn1VL3cDxfGisYxMwt
+	3cpLLfSvisJrSXE+4lhUhbY9IMOtW5DJvgv6IVMUbLxPZOAFrQvdlQ7jU/zwzg==
+ARC-Authentication-Results: i=1;
+	rspamd-5b979ccf89-87p2z;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Squirrel-Illustrious: 5c501f83464b5ab3_1770059617401_160547041
+X-MC-Loop-Signature: 1770059617401:1360243272
+X-MC-Ingress-Time: 1770059617401
+Received: from pdx1-sub0-mail-a252.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.123.122.168 (trex/7.1.3);
+	Mon, 02 Feb 2026 19:13:37 +0000
+Received: from offworld.lan (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a252.dreamhost.com (Postfix) with ESMTPSA id 4f4br03TyTz105C;
+	Mon,  2 Feb 2026 11:13:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1770059616;
+	bh=aoXhQjSW3EvO6oX64PkRMGBX0VMzW2JjGFbRgk9a5vc=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=PTN7hJ7xSJlTJ9uHMTExEPY7Bes/CpY0pMu7rjMbdJgiWAxgMpXEldTkrjgxZezVq
+	 J4hlnckB8Oq+yDB20p/wJy0tr2tZRl+iCW4IXjZGjIugLFm/m7IFrjSYPLMP4MyQ47
+	 2Fw1QvOtfzykfu3aJcFKOSmurpZCllbOxxWKgLqE9Of+fOtPiqXRMRchs4fAwvJ7g/
+	 rQWYuvNsMSIDZe7Z7tbMsDSqDSYywtOcV/5MqYZY9lCxgERAyOhv3s56fvo8QtHpVs
+	 HO7FojIKZqZH3dLHCXLTH4+zDhs/aCXv3LRMNB/blE2PSTGydHfaOXcmHC0DbS8GwQ
+	 hhOpV8Drlup7Q==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dave.jiang@intel.com
+Cc: jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	linux-cxl@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>
+Subject: [PATCH] cxl/region: Fix leakage in __construct_region()
+Date: Mon,  2 Feb 2026 11:13:30 -0800
+Message-Id: <20260202191330.245608-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2 Feb 2026 13:02:10 -0500
-Gregory Price <gourry@gourry.net> wrote:
+Failing the first sysfs_update_group() needs to explicitly
+kfree the resource as it is too early for cxl_region_iomem_release()
+to do so.
 
-> On Mon, Feb 02, 2026 at 05:25:24PM +0000, Jonathan Cameron wrote:
-> > On Thu, 29 Jan 2026 16:04:35 -0500
-> > Gregory Price <gourry@gourry.net> wrote:
-> >   
-> > > Enable dax kmem driver to select how to online the memory rather than
-> > > implicitly depending on the system default.  This will allow users of
-> > > dax to plumb through a preferred auto-online policy for their region.
-> > > 
-> > > Refactor and new interface:
-> > > Add __add_memory_driver_managed() which accepts an explicit online_type
-> > > and export mhp_get_default_online_type() so callers can pass it when
-> > > they want the default behavior.  
-> > 
-> > Hi Gregory,
-> > 
-> > I think maybe I'd have left the export for the first user outside of
-> > memory_hotplug.c. Not particularly important however.
-> > 
-> > Maybe talk about why a caller of __add_memory_driver_managed() might want
-> > the default?  Feels like that's for the people who don't...
-> >  
-> 
-> Less about why they want the default, more about maintaining backward
-> compatibility.
-> 
-> In the cxl driver, Ben pointed out something that made me realize we can
-> change `region/bind()` to actually use the new `sysram/bind` path by
-> just adding a one line `sysram_regionN->online_type = default()`
-> 
-> I can add this detail to the changelog.
-> 
-> > 
-> > Other comments are mostly about using a named enum. I'm not sure
-> > if there is some existing reason why that doesn't work?  -Errno pushed through
-> > this variable or anything like that?
-> >   
-> 
-> I can add a cleanup-patch prior to use the enum, but i don't think this
-> actually enables the compiler to do anything new at the moment?
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ drivers/cxl/core/region.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Good point. More coffee needed (or sleep)
-
-It lets sparse do some checking, but sadly only for wrong enum assignment.
-(Gcc has -Wenum-conversion as well which I think is effectively the same)
-I.e. you can't assign a value from a different enum without casting.
-
-It can't do anything if people just pass in an out of range int.
-
-> 
-> An enum just resolves to an int, and setting `enum thing val = -1` when
-> the enum definition doesn't include -1 doesn't actually fire any errors
-> (at least IIRC - maybe i'm just wrong). Same with
-> 
->    function(enum) -> function(-1) wouldn't fire a compilation error
-> 
-> It might actually be worth adding `MMOP_NOT_CONFIGURED = -1` so that the
-> cxl-sysram driver can set this explicitly rather than just setting -1
-> as an implicit version of this - but then why would memory_hotplug.c
-> ever want to expose a NOT_CONFIGURED option lol.
-> 
-> So, yeah, the enum looks nicer, but not sure how much it buys us beyond
-> that.
-> 
-> > It's a little odd to add nice kernel-doc formatted documentation
-> > when the non __ variant has free form docs.  Maybe tidy that up first
-> > if we want to go kernel-doc in this file?  (I'm in favor, but no idea
-> > on general feelings...)
-> >  
-> 
-> ack.  Can add some more cleanups early in the series.
-> 
-> > > +	if (online_type < 0 || online_type > MMOP_ONLINE_MOVABLE)  
-> > 
-> > This is where using an enum would help compiler know what is going on
-> > and maybe warn if anyone writes something that isn't defined.
-> >  
-> 
-> I think you still have to sanity check this, but maybe the code looks
-> cleaner, so will do. 
-
-I'm in two minds about this. If it's an enum and someone writes an int
-I take take the view it's not our problem that they shot themselves in
-the foot.  Maybe we should be paranoid...
-
-J
-
-
-> 
-> ~Gregory
-> 
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 96888d87a8df..28d70497283d 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -3795,8 +3795,10 @@ static int __construct_region(struct cxl_region *cxlr,
+ 	}
+ 
+ 	rc = sysfs_update_group(&cxlr->dev.kobj, &cxl_region_group);
+-	if (rc)
++	if (rc) {
++		kfree(res);
+ 		return rc;
++	}
+ 
+ 	rc = insert_resource(cxlrd->res, res);
+ 	if (rc) {
+-- 
+2.39.5
 
