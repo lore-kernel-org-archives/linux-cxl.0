@@ -1,199 +1,284 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010022.outbound.protection.outlook.com [52.101.46.22])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DF21386DA;
-	Tue,  3 Feb 2026 18:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.22
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770144679; cv=fail; b=JjVYkSwPdG9cuLjUOXWRLOcTFtSAZhD2ZTlOzZet9NThWueTKE3v155I5vxDGQe7nxPPQxwRUkDuWsiktb6eQH7f8lk8tlJPEXYo/bc50YGGOBkYS1wqnPqNTBu+EnekNWZmVklbVW5j89ZazBNaqF4fEfjU7Rv/FubOKIiJEW8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770144679; c=relaxed/simple;
-	bh=jRfsAtiqY/vLP87MQx55MLzAlNS0mBHwC6MtOFciLzk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dUa+E/JmMT6Fg73i98eBl+rCF9bZ1V2aJPXs9Sn8Q9rl1LSSqWGxuaEVNCTCPOEJeVVohTCeyKJqkVwLimWWuAbEXzl+XXmntu7iq8mZb1QzxQZP4J2vzVi+EiAOCPfnaNEKcCIIN+RFEkh9Dg5NGLtZ7hAl1vmnFtD07Ak79rs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZBQN70Vo; arc=fail smtp.client-ip=52.101.46.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6887117B425;
+	Tue,  3 Feb 2026 18:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770144726; cv=none; b=lvoKNYQaWTFH63Xlg+uQGIh+p7Y4o2Lw5UTMgCSJoooGhRErsZx28RGURMqykZtNo74RXdtqlySF37URt+4DKsa4CwhCnp8K62FASQR7UUfHGVFqjlM6NotpgnPuoz/+HdyD0sceE32b0iYhQdHL5JLsrBshSWLUJdFj9iO3kR8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770144726; c=relaxed/simple;
+	bh=5Mub8vAZ41NctLsgFyNFEaYOee+N2rNLS61xndkCRDE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rNAM+Gm08lzVpTkye80vOqlF9ouG0ovU6tOeT38WywK2mLOg6XX2aHKwOfCu2fCoBVpB32jAs/lf33Reo1Kd+qilFDi8C5QddLcb0aHvSWqKeKgdTZxqASLiqriBuiwoQ/yAyW3SFLnj8ol2C9rmiMXvw36XAP1IFU/VfP/+hu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I4Aay7n8; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZBQN70Vo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fdBQuWV1Gvhkp7PefKkKMJfrITdYCVSXMvPFauyyWRA0zJw3gko6b31EdZFTl3LykQ56YtDYnyRnv4c7nDCd2it8GlH+JArsBixcEdCk5DEx/YcvfJ8TZhFLfX9nmxaFJ8URnoJNjlEOFg3b+yOjm9WDkLARyQFM0SwQybEkBzHNTjCAdjkOgRVlTEOlJ/Ty7iRvmAgLJiasZwNjTHxo3JY9yxylSjVDZmRAH+I1fVDj3N5qQm8lUdXfDzNXZyvpzA+MiwIlGcZqhPmUem02fo85wdwBYp2dXi45DB+1r6xEleNyxGuszr3TeSVVGooYwgpvwjwTkzvdfbvM7IsRqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ObWah1YM2G1xy4glIQbuq+tn7Uk7SDhGHxuCwn3gMSg=;
- b=Uaw7LBV1lGEan7gLxfz4zhl8tkC9U7O+Pp9rVuInnQIQ1y9/4ukmixkiP9egHdh4nwRml/C+cKNY+sgKrUsLNKzIhKUoFPDjYHY+5L0z+FwOpTUOU4DRVUOLG6NyjVI0NW5VBpUlcLrHR2Ij0JvZO9fjMWDDy6j6j4492IeXBi30sNrTxHMyR8ntOrdw6pQf19D+OZa3KmFSO2nl9yLN07JSO28vaHZJs/EoWDH1CvgXX9txtSrTwvqiZLFShDjibbhx5FYbaSTLFoS9ioLfBPq1CFunT8gR7jUDbtvL05/QHGgKXoZKDF8yTdifiK53uhXPJ6zPHp7SktOAgI8Irg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ObWah1YM2G1xy4glIQbuq+tn7Uk7SDhGHxuCwn3gMSg=;
- b=ZBQN70Vogwb83lbMjnpvAvgYWAzCUCqX0BjEFSoXGT8Em4JFQYC2+s7mFmcxMKbSC2t1fAY6ZnlT+8sG9fstV+pBcoVJ2GlvEUo8DZxT3sCN6WnqgoXYo2umRkqEU7nNFn8RD5yc9qrxbIcJUfnrzb2y051KqM6WynXXVVtMVNtO776Pb1+3BO4Av6IP0ZuJV447rdU/7+mytqn62hg59DX4zs3R1doGu5nGynixsGirSzWWXjsYrdr7N2eojLK1LBHpOr7K0JJyHjf8M+QFzvt46BY7AUl2LcBRy+08Q3gIijAnRcAPdbvWqcQZp+skv+EdwtRrnGxb8Gz2C7L6Eg==
-Received: from SJ0PR13CA0077.namprd13.prod.outlook.com (2603:10b6:a03:2c4::22)
- by LV8PR12MB9714.namprd12.prod.outlook.com (2603:10b6:408:2a0::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.12; Tue, 3 Feb
- 2026 18:51:10 +0000
-Received: from SJ5PEPF00000207.namprd05.prod.outlook.com
- (2603:10b6:a03:2c4:cafe::39) by SJ0PR13CA0077.outlook.office365.com
- (2603:10b6:a03:2c4::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9587.12 via Frontend Transport; Tue,
- 3 Feb 2026 18:51:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SJ5PEPF00000207.mail.protection.outlook.com (10.167.244.40) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9587.10 via Frontend Transport; Tue, 3 Feb 2026 18:51:08 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 3 Feb
- 2026 10:50:42 -0800
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 3 Feb
- 2026 10:50:41 -0800
-Received: from Asurada-Nvidia (10.127.8.13) by mail.nvidia.com (10.129.68.9)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Tue, 3 Feb 2026 10:50:40 -0800
-Date: Tue, 3 Feb 2026 10:50:39 -0800
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: <dan.j.williams@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "will@kernel.org"
-	<will@kernel.org>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>, "joro@8bytes.org"
-	<joro@8bytes.org>, "praan@google.com" <praan@google.com>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"miko.lenczewski@arm.com" <miko.lenczewski@arm.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
-	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH RFCv1 1/3] PCI: Allow ATS to be always on for CXL.cache
- capable devices
-Message-ID: <aYJDf7fWIxH1017J@Asurada-Nvidia>
-References: <20260122131432.GJ1134360@nvidia.com>
- <69727e7ded712_3095100ab@dwillia2-mobl4.notmuch>
- <BN9PR11MB527649A0049CA195E7BCF9218C90A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20260127150440.GF1134360@nvidia.com>
- <69795d0366a9_1d33100d3@dwillia2-mobl4.notmuch>
- <20260128130520.GV1134360@nvidia.com>
- <aYGEDv86r4a6l2Dv@Asurada-Nvidia>
- <20260203143348.GA3931454@nvidia.com>
- <aYI0LUdXqrjmRcMo@Asurada-Nvidia>
- <20260203175540.GC3931454@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I4Aay7n8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770144724; x=1801680724;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5Mub8vAZ41NctLsgFyNFEaYOee+N2rNLS61xndkCRDE=;
+  b=I4Aay7n8eF1t+zUuMb0acf3itutpJjTBycgRc3kp+sJwnCtl67jzQC0I
+   TDMLx1rv/s7ggHs+/rF8q5O8Y6kiv1gUplbpXAoz5Hp+lnE+Flp2S2d2l
+   6kUJSFyrvv0ZPmblrlXx+5x/1Uuvo7uBRSCpPcaHcKpdJau3bdGNkvBM0
+   FvrWEEy2jY3yi4VlNgpqU46fMKVL5HB53uIo1BNVEe+AJubZ9uEL5/1jK
+   QC//HmXUnVm68/zMidvlYr4sBXupLGMpJOk9P9jIQFb7FxTJ6t0z8ddk1
+   7g1VAAoGNFtp/2qfbYUaaYLI4XwVexN2bym5qdBjf9swn6Sp1GVZvPVzL
+   g==;
+X-CSE-ConnectionGUID: NZZLmSzhS0SlACQHMuybCA==
+X-CSE-MsgGUID: UBd9B4XlQk2W4uhn0mKYkQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="96780151"
+X-IronPort-AV: E=Sophos;i="6.21,271,1763452800"; 
+   d="scan'208";a="96780151"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 10:52:03 -0800
+X-CSE-ConnectionGUID: YVMFVfyvRK6+TEC6EMT5Ng==
+X-CSE-MsgGUID: 2QpH+cbHRO6g47XQVz+zSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,271,1763452800"; 
+   d="scan'208";a="247529808"
+Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.110.221]) ([10.125.110.221])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 10:52:02 -0800
+Message-ID: <125a0a77-b966-410c-b9e4-a7d81e462576@intel.com>
+Date: Tue, 3 Feb 2026 11:52:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260203175540.GC3931454@nvidia.com>
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF00000207:EE_|LV8PR12MB9714:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7d1e868b-8736-4e32-d7ec-08de6355314b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|36860700013|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9hMZqGYH3MycTXbsT9NSu+zwok9VX4z12pA1Dc+uEkft18/3jtgbvEm8tD5I?=
- =?us-ascii?Q?C6+dRu1YKjrZX0YBNeF2VjptcefVB3axHgh2ohBvK7rejuFBAClqOWO7Z2Xi?=
- =?us-ascii?Q?/C3OCdNYaBX1yZ/9Q6O4Xq4hhgbxHLFjZI0AFi3vaslEmsgnjAeBsYHp94wq?=
- =?us-ascii?Q?Wxj9CsXvad5Gikd5vwzsFd1zJ5oGMuukTN69fsEHn+9SNAw+3MG4DVCwy5dB?=
- =?us-ascii?Q?ddXHsblQI9mFAfyjaEGR4VGwxSAEnW+W65t9npA3vXOlLrsIxib/Ertp7G3F?=
- =?us-ascii?Q?cMMlS5AMb+2x1+8xH5u5FjJziCCAfk1WeGm0gxdmxllQLC7haeNZGqKWH5SM?=
- =?us-ascii?Q?P3D6RGLbBRjflSfZ3gROIjSlln4p7QnLfBbY/5ZdmiSG7MwY6CdoCqOkm3wx?=
- =?us-ascii?Q?RlhOA3raUj5E87n25K37lplbaPkvbP2Uk1dNGMDL+GgyjUpIJ3JmrVQYNfm5?=
- =?us-ascii?Q?tspZA6+M467v6cnaUIpiyLzXf3OIY2zf1Y2n0Q1xZEumfHUmWlJQrPE98KlR?=
- =?us-ascii?Q?TjQRj1nKKW8QqRAVWJTeoUcSbjgYXL2z27L2G5MxKC6NfNIK1+wqiyzKfOE+?=
- =?us-ascii?Q?LdzJnLhja9tIuJE+ZBODu6056kPn7OvNH3t6lZ8rdgnlabZYdwfMJ9GeSVyh?=
- =?us-ascii?Q?JJmhCbE1mpoDyEOCDczfiLp1d8iRDVC0J2BJG3RKMWLJWK4cuPRQ0WLUcf3y?=
- =?us-ascii?Q?Bcq7RRLSBQvqZgevkk56dRxLLsbibUWAHDlQpt/rn7K8smakpPOhQVo3NrCD?=
- =?us-ascii?Q?sQualDS0mJ3y44bQDF2krgb/213jL0HUSctjwMNp5oFzhLL/OjGUhV5qr/yw?=
- =?us-ascii?Q?oIpVsYELCD4Jp9AfyvcDJja03yTgPeOqRDE1PS1e5Yi2iXC5kgXO/plcMdFy?=
- =?us-ascii?Q?J4qPIKmIrhO0GmZLqlMT6dUG62/RWtlrZe9ZR4hVvDzWrDpqKiWYcF6M1Umd?=
- =?us-ascii?Q?K8hWPj75YU2kW1S3GK2KJl0knnhFNj7u/b/oj9f60cOh0Iq8S0MLOvt5+lQX?=
- =?us-ascii?Q?5OEtu4vEg6WKI5IGUvKrvE53KW1PZ5CqlZ1Rkr4w9wOhnlOMOoLpgJCMvJW5?=
- =?us-ascii?Q?1KnL8Pr/w6crujUGbpBqpyT1MmfGX95OFdLC+mrBE/efTY9H7Kw+xfZCgUXc?=
- =?us-ascii?Q?EEMVjZKx2wkzcr0W8n7c+aR5grvQF17zDTXpNdyYHCL3xmU+gaa6jPSSDsLr?=
- =?us-ascii?Q?6HthcJy6rPejYio9hhDQPazWILxa2M6PqjAmDOroFRZBNUXgmEo95LgQe6Qc?=
- =?us-ascii?Q?+r1xdXrEqjaJ4c5u7+1rlCMkEplO5MbHWo7Rzyk0tWgxfHePm5yDOkrjt6Vw?=
- =?us-ascii?Q?xo4ZhHKOv80kbLGlE979XUBdFwZk5L2KmITS52cmuPx+LSplBCSMpIPAWGNw?=
- =?us-ascii?Q?F+nSl312AQ/wENBdJjhIL8wfzCoLrkFFntQJlP54oa6F6iK8/KUXWvOBmKY9?=
- =?us-ascii?Q?pvK4P9QGP0I6ANr2MTc81qOEvs0PvObAW7viKecjcK2A6XlrzfKChmcWc0CP?=
- =?us-ascii?Q?mFPN3SS/XrJ+qqR6G9+7oB2bHUzJZbOGfaCrRjFerXNrXkXaaOdbY9fE4w/p?=
- =?us-ascii?Q?N2+2Da0QhT2a4KnxaMUhMpCaIAGhC865dezIDullnZedmZzd1q0D3Jz/Edxa?=
- =?us-ascii?Q?ExmPTeb3RB8qcF6/2K3sHQAiobkxVWMi/qwMzDRxMce/UWoE794mMcsqjboi?=
- =?us-ascii?Q?0wV62Q=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	braLlzD/w8iR9Op5nktOP9IOYi9Gn0OjqCMTIA/exRdFgeaGex03f5brt5hWNxbHxDBIzEaN5ojKhPzToWw6T8e1eaEO8lSVbdGZ99zBFbl9QCyESaCtOD5DkktFD9RhmY5+ZzJOS9uzbxdYOjyt8AXPHxc/ZhAeidCF/LVvbeHivzT31F2yweg568i6fPHePn/QE9Kafb8S4ERGLJjfZr91M4p+xTSTfexN0wOU+Cuy2q+I0OYmhrXnzYd2kk1OWzquI2vMOsnOUHFDhA/Y/t8SxfumEndaK7zmhJWiVuWkX/XvjPGbAbR2WRDXqJoEk91UP5n91IvIWMCRLMT2yHsfNCpmFw9DhqpEj0JkM5S3sE//OFzP1y4U2uVHSewRu8079ntPB7JxmQOTWOjRuMrXuYT1Y4Ir0ANvtRMx/qnqYT4PKHHtxGgiLOIUA8e2
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2026 18:51:08.2269
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d1e868b-8736-4e32-d7ec-08de6355314b
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF00000207.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9714
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 00/13] cxl: ACPI PRM Address Translation Support and
+ AMD Zen5 enablement
+To: Robert Richter <rrichter@amd.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Davidlohr Bueso <dave@stgolabs.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Terry Bowman <terry.bowman@amd.com>, Joshua Hahn <joshua.hahnjy@gmail.com>
+References: <20260110114705.681676-1-rrichter@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260110114705.681676-1-rrichter@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 03, 2026 at 01:55:40PM -0400, Jason Gunthorpe wrote:
-> On Tue, Feb 03, 2026 at 09:45:17AM -0800, Nicolin Chen wrote:
-> > Btw, attaching to IOMMU_DOMAIN_BLOCKED/group->blocking_domain is not
-> > allowed in general if require_direct=true. I assume this case can be
-> > an exception since there's no point in allowing a device that has no
-> > driver yet to access any reserved region?
+
+
+On 1/10/26 4:46 AM, Robert Richter wrote:
+> This patch set adds support for address translation using ACPI PRM and
+> enables this for AMD Zen5 platforms. The current approach bases on v4
+> and is in response to earlier attempts to implement CXL address
+> translation:
 > 
-> If require_direct is set then we have to disable this mechanism..
+>  * v1: [1] and the comments on it, esp. Dan's [2],
+>  * v2: [3] and comments on [4], esp. Dave's [5],
+>  * v3: [6] and comments on it, esp. Dave's [7],
+>  * v4: [8].
 > 
-> I'm not sure exactly what to do about this as the require_direct comes
-> from the hypervisor in a CC VM and we probably don't want to give the
-> hypervisor this kind of escape hatch.
+> This version addresses Alison's review comments to change the
+> implementation to disable HPA/SPA translation handler. There are a
+> view minor but no major changes otherwise. See the changelog for
+> details. Thank you all for your reviews and testing.
 > 
-> Perhaps we need to lock off to failure on CC VMs if this ever
-> happens..
+> Documentation of CXL Address Translation Support will be added to the
+> Kernel's "Compute Express Link: Linux Conventions". This patch
+> submission will be the base for a documentation patch that describes CXL
+> Address Translation support accordingly.
 > 
-> But baremetal should just keep working how it always worked in this
-> case..
+> The CXL driver currently does not implement address translation which
+> assumes the host physical addresses (HPA) and system physical
+> addresses (SPA) are equal.
+> 
+> Systems with different HPA and SPA addresses need address translation.
+> If this is the case, the hardware addresses esp. used in the HDM
+> decoder configurations are different to the system's or parent port
+> address ranges. E.g. AMD Zen5 systems may be configured to use
+> 'Normalized addresses'. Then, CXL endpoints have their own physical
+> address base which is not the same as the SPA used by the CXL host
+> bridge. Thus, addresses need to be translated from the endpoint's to
+> its CXL host bridge's address range.
+> 
+> To enable address translation, the endpoint's HPA range must be
+> translated to the CXL host bridge's address range. A callback is
+> introduced to translate a decoder's HPA to the CXL host bridge's
+> address range. The callback is then used to determine the region
+> parameters which includes the SPA translated address range of the
+> endpoint decoder and the interleaving configuration. This is stored in
+> struct cxl_region which allows an endpoint decoder to determine that
+> parameters based on its assigned region.
+> 
+> Note that only auto-discovery of decoders is supported. Thus, decoders
+> are locked and cannot be configured manually.
+> 
+> Finally, Zen5 address translation is enabled using ACPI PRMT.
+> 
+> This series bases on v6.19-rc1.
 
-OK. I will put a note in the patch, since it would literally skip
-any VM case at this moment.
+Applied to cxl/next. Including the conventions doc.
+00bc604c96bb762f0f050460e25de2729edb1699
 
-I just realized a corner case, as iommu_probe_device() may attach
-the device to group->domain if it's set:
-https://lore.kernel.org/all/9-v5-1b99ae392328+44574-iommu_err_unwind_jgg@nvidia.com/
+> 
+> V9:
+>  * rebased onto v6.19-rc1,
+>  * updated sob-chains,
+>  * removed alignment check in cxl_prm_setup_root() for DPA ranges,
+>  * moved assignment to variable len in cxl_prm_setup_root() closer to user,
+>  * removed patch from series (Alison):
+>    [PATCH v8 12/13] cxl: Check if ULLONG_MAX was returned from translation functions
+>  * added patch to factor out poison setup code,
+>  * changed implementation to disable HPA/SPA translation handlers (Alison),
+> 
+> V8:
+>  * rebased onto cxl-for-6.19,
+>  * updated sob-chains,
+>  * renamed cxl_root callback to translation_setup_root,
+>  * renamed functions to cxl_root_setup_translation and cxl_prm_setup_root,
+>  * added comment around cxl_root_setup_translation(),
+>  * added check for ULLONG_MAX of return value of translation functions,
+>  * added callback to setup translation for regions
+>    (cxl_region_setup_translation, cxl_prm_setup_region),
+>  * add HPA/SPA callback handlers that return ULLONG_MAX (Alison),
+> 
+> V7:
+>  * rebased onto cxl/for-6.19/cxl-prm,
+>  * reworded comment and description of 11/11 (decoder lock),
+> 
+> V6:
+>  * rebased onto v6.18-rc5 and CXL updates for v6.19,
+>  * note: applies on top of: [PATCH v3 0/3] CXL updates for v6.19,
+> 
+> V5:
+>  * fixed build error with !CXL_REGION (kbot),
+>  * updated sob-chains,
+>  * added note to get_cxl_root_decoder() to drop reference after use
+>    (Dave),
+>  * moved initialization of base* variables in
+>    cxl_prm_translate_hpa_range() (Dave, Jonathan),
+>  * fixed initialization of cxlr->hpa_range for the non-auto case
+>    (Alison),
+>  * added description of the @hpa_range arg to
+>    cxl_calc_interleave_pos() (kbot),
+>  * removed optional patches 12-14 to send them separately (Alison,
+>    Dave),
+>  * reordered patches 1-6 to reduce dependencies between them and give
+>    way for early pick up candidates,
+>  * rebased onto cxl/next (c692f5a947ad),
+>  * added commas in comment in cxl_add_to_region() (Jonathan),
+>  * removed cxlmd from struct cxl_region_context (Dave, Jonathan),
+>  * removed use of PTR_ERR_OR_ZERO() (Jonathan),
+>  * increased wrap width to 80 chars for comments in cxl_atl.c (Jonathan),
+>  * moved (ways > 1) check out of while loop in cxl_prm_translate_hpa_range()
+>    (Jonathan),
+>  * removed trailing comma in struct prm_cxl_dpa_spa_data initializer (Jonathan),
+>  * updated patch description on locking the decoders (Dave, Jonathan),
+>  * spell fix in patch description (Jonathan),
+> 
+> V4:
+>  * rebased onto v6.18-rc2 (cxl/next),
+>  * updated sob-chain,
+>  * reworked and simplified code to use an address translation callback
+>    bound to the root port,
+>  * moved all address translation code to core/atl.c,
+>  * cxlr->cxlrd change, updated patch description (Alison),
+>  * use DEFINE_RANGE() (Jonathan),
+>  * change name to @hpa_range (Dave, Jonathan),
+>  * updated patch description if there is a no-op (Gregory),
+>  * use Designated initializers for struct cxl_region_context (Dave),
+>  * move callback handler to struct cxl_root_ops (Dave),
+>  * move handler initialization to acpi_probe() (Dave),
+>  * updated comment where Normalized Addressing is checked (Dave),
+>  * limit PRM enablement only to AMD supported kernel configs (AMD_NB)
+>    (Jonathan),
+>  * added 3 related optional cleanup patches at the end of the series,
+> 
+> V3:
+>  * rebased onto cxl/next,
+>  * complete rework to reduce number of required changes/patches and to
+>    remove platform specific code (Dan and Dave),
+>  * changed implementation allowing to add address translation to the
+>    CXL specification (documention patch in preparation),
+>  * simplified and generalized determination of interleaving
+>    parameters using the address translation callback,
+>  * depend only on the existence of the ACPI PRM GUID for CXL Address
+>    Translation enablement, removed platform checks,
+>  * small changes to region code only which does not require a full
+>    rework and refactoring of the code, just separating region
+>    parameter setup and region construction,
+>  * moved code to new core/atl.c file,
+>  * fixed subsys_initcall order dependency of EFI runtime services
+>    (Gregory and Joshua),
+> 
+> V2:
+>  * rebased onto cxl/next,
+>  * split of v1 in two parts:
+>    * removed cleanups and updates from this series to post them as a
+>      separate series (Dave),
+>    * this part 2 applies on top of part 1, v3,
+>  * added tags to SOB chain,
+>  * reworked architecture, vendor and platform setup (Jonathan):
+>    * added patch "cxl/x86: Prepare for architectural platform setup",
+>    * added function arch_cxl_port_platform_setup() plus a __weak
+>      versions for archs other than x86,
+>    * moved code to core/x86,
+>  * added comment to cxl_to_hpa_fn (Ben),
+>  * updated year in copyright statement (Ben),
+>  * cxl_port_calc_hpa(): Removed HPA check for zero (Jonathan), return
+>    1 if modified,
+>  * cxl_port_calc_pos(): Updated description and wording (Ben),
+>  * added several patches around interleaving and SPA calculation in
+>    cxl_endpoint_decoder_initialize(),
+>  * reworked iterator in cxl_endpoint_decoder_initialize() (Gregory),
+>  * fixed region interleaving parameters() (Alison),
+>  * fixed check in cxl_region_attach() (Alison),
+>  * Clarified in coverletter that not all ports in a system must
+>    implement the to_hpa() callback (Terry).
+> 
+> [1] https://lore.kernel.org/linux-cxl/20240701174754.967954-1-rrichter@amd.com/
+> [2] https://lore.kernel.org/linux-cxl/669086821f136_5fffa29473@dwillia2-xfh.jf.intel.com.notmuch/
+> [3] https://patchwork.kernel.org/project/cxl/cover/20250218132356.1809075-1-rrichter@amd.com/
+> [4] https://patchwork.kernel.org/project/cxl/cover/20250715191143.1023512-1-rrichter@amd.com/
+> [5] https://lore.kernel.org/all/78284b12-3e0b-4758-af18-397f32136c3f@intel.com/
+> [6] https://patchwork.kernel.org/project/cxl/cover/20250912144514.526441-1-rrichter@amd.com/
+> [7] https://lore.kernel.org/all/20250912144514.526441-8-rrichter@amd.com/T/#m23c2adb9d1e20770ccd5d11475288bda382b0af5
+> [8] https://patchwork.kernel.org/project/cxl/cover/20251103184804.509762-1-rrichter@amd.com/
+> 
+> Robert Richter (13):
+>   cxl/region: Rename misleading variable name @hpa to @hpa_range
+>   cxl/region: Store root decoder in struct cxl_region
+>   cxl/region: Store HPA range in struct cxl_region
+>   cxl: Simplify cxl_root_ops allocation and handling
+>   cxl/region: Separate region parameter setup and region construction
+>   cxl/region: Add @hpa_range argument to function
+>     cxl_calc_interleave_pos()
+>   cxl/region: Use region data to get the root decoder
+>   cxl: Introduce callback for HPA address ranges translation
+>   cxl/acpi: Prepare use of EFI runtime services
+>   cxl: Enable AMD Zen5 address translation using ACPI PRMT
+>   cxl/atl: Lock decoders that need address translation
+>   cxl/region: Factor out code into cxl_region_setup_poison()
+>   cxl: Disable HPA/SPA translation handlers for Normalized Addressing
+> 
+>  drivers/cxl/Kconfig       |   5 +
+>  drivers/cxl/acpi.c        |  17 +--
+>  drivers/cxl/core/Makefile |   1 +
+>  drivers/cxl/core/atl.c    | 211 ++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/cdat.c   |   8 +-
+>  drivers/cxl/core/core.h   |   8 ++
+>  drivers/cxl/core/port.c   |   8 +-
+>  drivers/cxl/core/region.c | 247 ++++++++++++++++++++++++--------------
+>  drivers/cxl/cxl.h         |  40 ++++--
+>  9 files changed, 426 insertions(+), 119 deletions(-)
+>  create mode 100644 drivers/cxl/core/atl.c
+> 
+> 
+> base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
 
-I am not sure about the use case, but I assume we should skip the
-blocking_domain as well in this case?
-
-Then, this makes the condition be:
-+	if (!dev->driver && !group->domain && !dev->iommu->require_direct) {
-+               ret = __iommu_group_alloc_blocking_domain(group);
-+               if (ret)
-+                       goto err_remove_gdev;
-+               group->domain = group->blocking_domain;
-+	}
-
-Thanks
-Nicolin
