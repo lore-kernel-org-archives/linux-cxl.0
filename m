@@ -1,312 +1,355 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011022.outbound.protection.outlook.com [40.107.208.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331283BB57
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Feb 2026 03:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1255735D5E1;
+	Tue,  3 Feb 2026 05:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.22
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770088084; cv=fail; b=FMTBZOZi6Sh6OUMr9M7WVt2eNMw3ixukG8qUSkkOUS/zsWRLPNM33H9N/xhwKfSA6xPfoK/In5+e0k0DVPq+v3QHi/+JQu0gY7PMjUhAFaMjD8j9JbQtsYDZVpzZzbViIPgJNlXUIf4nfspBqFWOIwICgh0nsZ1MHubuaS9q9NA=
+	t=1770095658; cv=fail; b=OsEQdAYiP7UUdkDWdgcPZBzXny6IqPPbYPQYP+zlQBteqnrpNSOjwPderbt3pA+gOmXIGUlhuU+ipzx6btYp7SDqP7RVPzNwUKnHzyqYUwwKJ87w1jr+NmMd/gDi2FjfadVmqOgRachjoBT391AoIZpjJUe1OE5sgqnjljoJPh0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770088084; c=relaxed/simple;
-	bh=c75DuNB2XLG5s6RyeGe6EIluPXNZrvQssRMfGct/w9g=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=D/D1XKmZtvBwN7HpjcVm33AnHPtf2wp7jyKEkHDEZvvUeW73yMXBViAga/3bSboznik4UOM9S0J4dxw+4iBx/u+6G1PKX4h4IWtOsnvf6WiE2Npq3WKujIIP+yUVT8FWiO7e21bybu4zK8mPE6jLSur/n/kbfaWYqH5c195vGFk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hkNV+vXw; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1770095658; c=relaxed/simple;
+	bh=/4VfjKG5EriOgQCcrOQHDyrGVv4RaYy5hCkumyVM7rw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UL1vdVVTJ4eaxjVW3cEqJ4W8ZVE4+ed3LMltG1dYLLC96ahBS+hNQhgMDa5Ct+YMLy46YprdzUPw1vwVFEqD3CsyaLbG5tdLnyKkggXIEZ6dvKdXZcV7Qp06NGK3zeG3B3vv2yx5fbAD6TLTVL6RbOKMb5xtEalPLTX1+rmuw/Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ns0uI43z; arc=fail smtp.client-ip=40.107.208.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hkNV+vXw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770088082; x=1801624082;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=c75DuNB2XLG5s6RyeGe6EIluPXNZrvQssRMfGct/w9g=;
-  b=hkNV+vXwKdQ4SL5HjEcgHmaTgaIaDoomJv8WtzLUxMxLCvLMWaD0qWZc
-   Xv8XjiDVcMhmDog3u/5TDkb6DBv+91uAPrGxhLGac0TQvJ8Jqu97XjEA7
-   DH4KrovLMQZYOaA0AlQ8SGMq5XDp1U+v4od2NdoNFTYIUApuA3MtmeHQM
-   +LjAEQw+etG+1LjZiHwP4zK005QhSMJu/Fdir06DfSRoPg2QgpjYh80sW
-   2e4SKXDtoSIU4gIiR4yhAyUb7iBw0TniftZLv660Vwixxrfwws5r7EHKz
-   5Dl8y5fP45LUwfbR2IaWWe21Bq/2O7sveyOfN0E19ahKXZEqlfkA2vzQB
-   w==;
-X-CSE-ConnectionGUID: wPlwWTN8T5aYYlTAYie2kg==
-X-CSE-MsgGUID: jsV8yE2TSZiROzSImDE2RQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="81881959"
-X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
-   d="scan'208";a="81881959"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 19:08:02 -0800
-X-CSE-ConnectionGUID: Tg6PfgjuQ9CJYj7ctCOYQw==
-X-CSE-MsgGUID: BrWRziwjTSmcxFHgor7rkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
-   d="scan'208";a="214479838"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 19:08:01 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Mon, 2 Feb 2026 19:08:00 -0800
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35 via Frontend Transport; Mon, 2 Feb 2026 19:08:00 -0800
-Received: from BYAPR05CU005.outbound.protection.outlook.com (52.101.85.32) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Mon, 2 Feb 2026 19:08:00 -0800
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ns0uI43z"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yOrIRlI4x8Fie2zY7zRt5OcPkR2kpK1lp1zMTS0957HStG87+5F9WdHSSTY387m1pxLkxl2399bEJJGavyNgOAtMgIqEmkwLcBG0PTxKveFAHu0dL6T8EB+tp/kScgjM6C2v9+Cf4b1+cM3BYFYfEoAW345VG+WFx8roziOp9SM30Prl1ppMZonWZIACk+CGQ/lzlnEfVMJnqvIa8kM1/Qrvmsu2n50SIm+xCxXLj88sCsgto7Ie5DHwlVAQv3BL5kre5eDGyTV1LHFHAUbPhpQ7D7NmcCJ7JGmgSI4whjb8WltJslzkMLpGRG6hogNyURrBkZoYeO/p8LaxzORUKQ==
+ b=KSn0dTw3rDdm361WLMFWfOSWkkAVnmylvKGhIEK0sJr39icCDGYFwt9V7bL22897FnJ7fSNaI+5dFGPyZ8pb1QkhMptPzIfpdZhqQ83c9/z9KdihK/lVpAPpON0sDrFIOG1gfsTR7bSt4ldGU9l70HueJAbMbNH+/QYTKxI85MbosCc24eaUeUbovcyXHmPksmDq0kikvkAZ1063nHibrOEKsAsC6Vd7pC5ZgpcETiiiHLNQNUW2Ioxc9CYxlfkhiu8mGOlmrOL51kBm+wOA2SNFyRugk/KVUczTBy+TxVdRzI37w5mqIaCbBmXRPBbcIW8tGPGLddwD42NyC8QUbw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EAlir+ig7AQwUkP7Ad2hkOOZv3FS6XE233SVIDuT4M4=;
- b=pyvDxxh6vtpdQ3MCsQXTEbs2+EkGJqFhPXftIXjVm/kJhuTSacqh+sn0sXW4bX8nhmOgHnBC37ROWtbWA4m7iBK5AZ8a/bjLWO963ZEydJg5N5/+6MoXvNHft8RyULU8AUFHbZBPhiAG04EDwCLmj747UGfwan7+SMdNnNJp8WOXW4DBzOXL8WYr5Qics311onokCL2eFfaFslNHlsuladYQyFFBp+LBlnRJMDwSscciAmUgqexNXhbVz5GlS1uf7TWVgAUQ9N2KotScsSp6ryyEuhH0Kw0n9MfgIdI0msj5ovR9RTiVr4fTN/wOsD5DXntuGQlaX820jkIWPwfJGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by IA3PR11MB9397.namprd11.prod.outlook.com (2603:10b6:208:573::5) with
+ bh=54tebQSuSAV5xmKJTTtq+UnKGS7GmY6XA5MnuGaJBMM=;
+ b=U+eVE6fYSEfZrblhPzq+koJxekMaYjjnOhg71u7F/6idYbbQpCpoe+uANOjgkmjgatR1H0tzH3fgwS0Q9jVFOO8+6tV6YaAWyTi1lX28bfpaNXPFbyF7qI3rdZWGbjtkQGCXjC7gSK4BTr3WbOpFOMkQdGhCvFMvgXM2KpJNWPE3QNCNJo+2P82xyOHTiXvNhDTggPy0NXG0F/TVncuCddnV6tOeDNFDb2JmAtG/IBdY9+1m/H5ShzUb+tEejohuU2R+SpsvZZygwo8xZCKry5a6HscpT0swHGLurL/7lPQVJZ6takXelQnun3nilDHPFbCVTMgaAZtCVLjMNloSzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=54tebQSuSAV5xmKJTTtq+UnKGS7GmY6XA5MnuGaJBMM=;
+ b=ns0uI43z8fD6PFn6T6DREBCdj40JDl8rb5VAK5D7aVofpdL8jskq4meeC3LObZcIiVwWzF9g26UdDb+NH8AmHZHhyUtwPL/zd8FxaZPt4JHPa7ou2ZBT1j12CEHv/rlj/ZcJpnk2i3Vk1XdVbKRLREVC7MoFosY/q8Xv12UED8Ye5qALhmdo+x9E+mG81eLnrhKNDxaR776ahX9pVNB2WYrQCCYCFQ1YFBlS961OIT8QXOgEQkIzcBQvmI+bHqZJ91LS434jMYa8H8SZE5960rDtxOlM6fPnR1ax6NeDPQm83vIfYq6wtwc0kBu8qmpZEqML+zF3sEm9yCIgNbKdjA==
+Received: from BL1PR13CA0009.namprd13.prod.outlook.com (2603:10b6:208:256::14)
+ by PH7PR12MB9201.namprd12.prod.outlook.com (2603:10b6:510:2e8::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.15; Tue, 3 Feb
- 2026 03:07:58 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff%6]) with mapi id 15.20.9564.006; Tue, 3 Feb 2026
- 03:07:58 +0000
-From: <dan.j.williams@intel.com>
-Date: Mon, 2 Feb 2026 19:07:57 -0800
-To: Alison Schofield <alison.schofield@intel.com>, <dan.j.williams@intel.com>,
-	<gourry@gourry.net>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Vishal
- Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.15; Tue, 3 Feb
+ 2026 05:14:11 +0000
+Received: from BN3PEPF0000B071.namprd04.prod.outlook.com
+ (2603:10b6:208:256:cafe::6e) by BL1PR13CA0009.outlook.office365.com
+ (2603:10b6:208:256::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9587.12 via Frontend Transport; Tue,
+ 3 Feb 2026 05:14:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BN3PEPF0000B071.mail.protection.outlook.com (10.167.243.116) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9587.10 via Frontend Transport; Tue, 3 Feb 2026 05:14:11 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 2 Feb
+ 2026 21:13:53 -0800
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 2 Feb
+ 2026 21:13:53 -0800
+Received: from Asurada-Nvidia (10.127.8.13) by mail.nvidia.com (10.129.68.6)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
+ Transport; Mon, 2 Feb 2026 21:13:51 -0800
+Date: Mon, 2 Feb 2026 21:13:50 -0800
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: <dan.j.williams@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "will@kernel.org"
+	<will@kernel.org>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "joro@8bytes.org"
+	<joro@8bytes.org>, "praan@google.com" <praan@google.com>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+	"miko.lenczewski@arm.com" <miko.lenczewski@arm.com>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-cxl@vger.kernel.org"
 	<linux-cxl@vger.kernel.org>
-Message-ID: <6981668d2182_55fa10024@dwillia2-mobl4.notmuch>
-In-Reply-To: <aX1VMDh9IY4eg1h_@aschofie-mobl2.lan>
-References: <3bcc5143777acc6d45675d78dd8c57079406bc53.1769746294.git.alison.schofield@intel.com>
- <2a613604c0cdda6d9f838ae9b47ea6d936c5e4ce.1769746294.git.alison.schofield@intel.com>
- <697cee39ed313_1d6f100bd@dwillia2-mobl4.notmuch>
- <aX1VMDh9IY4eg1h_@aschofie-mobl2.lan>
-Subject: Re: [PATCH 2/2] cxl/region: Unregister auto-created region when
- assembly fails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: SJ0PR05CA0084.namprd05.prod.outlook.com
- (2603:10b6:a03:332::29) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+Subject: Re: [PATCH RFCv1 1/3] PCI: Allow ATS to be always on for CXL.cache
+ capable devices
+Message-ID: <aYGEDv86r4a6l2Dv@Asurada-Nvidia>
+References: <BL1PR11MB5271F0BDC68C2D7F172122E98C96A@BL1PR11MB5271.namprd11.prod.outlook.com>
+ <20260121100307.00004e60@huawei.com>
+ <20260121130315.GE1134360@nvidia.com>
+ <6971b9406d069_1d33100df@dwillia2-mobl4.notmuch>
+ <20260122131432.GJ1134360@nvidia.com>
+ <69727e7ded712_3095100ab@dwillia2-mobl4.notmuch>
+ <BN9PR11MB527649A0049CA195E7BCF9218C90A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20260127150440.GF1134360@nvidia.com>
+ <69795d0366a9_1d33100d3@dwillia2-mobl4.notmuch>
+ <20260128130520.GV1134360@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20260128130520.GV1134360@nvidia.com>
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA3PR11MB9397:EE_
-X-MS-Office365-Filtering-Correlation-Id: b1194e1f-3d9d-4b61-f9af-08de62d16f1b
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B071:EE_|PH7PR12MB9201:EE_
+X-MS-Office365-Filtering-Correlation-Id: a5cfb1b7-2c57-43c3-2959-08de62e31120
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?QWlBSXVyczRWV3hEWTFiMmdRMEt4SWNHMU1WL29uQld6UXc3NWtmWGtIZjJa?=
- =?utf-8?B?Titkem96QnhzR0dKRUZBU1liNm9xcTJnZm1nU3YzSzNvWTBUajEzTXVBc0Nm?=
- =?utf-8?B?MHVyNlNKOE03Myt6Zmw1dVFBUm52TUR3RERtaERVWC9lYjYvRW15TUpTektP?=
- =?utf-8?B?eENDNE0vWkFoMENEL0dQR1k5STVBbGJ4eExhbVdqLzlSTEE5dmVDamlueFNG?=
- =?utf-8?B?bnl1NkR6WGJTQkl2WVFTc2NaR0d4eWVNVEVZd3B2cjlmSFg0L2phbEsySUhN?=
- =?utf-8?B?Zm05ZjRGVjVleXA4Tm4yWmhhT21CSXRKdmY2Z3Jlc0dvUWpRK0V4UHJZcVgy?=
- =?utf-8?B?eFJmRzFIVW9rZXJqWUZZNEhmVUJKRCswQ1Vnbm92YURtYU1uaGZEc3hjT1NZ?=
- =?utf-8?B?TFFKZjZ4WG9NRTlGamN6Ky9TdndicVdwZ09Yb0o1dEZUekNFZVhwU0N6em5Y?=
- =?utf-8?B?L0tVUjBlRTk2L0l1UFlXTEZiKzkvWmlGV3ZNNSttNTBuTVBvV3R0Zk9ma0FK?=
- =?utf-8?B?SHNpeTVNaW85WWlGUjlCc254WU1MUE04d1dFMHB1REpDV2ZiR3c3cjZvMWxo?=
- =?utf-8?B?QTBQK083SmtVV3VVOHBJbGtKZXcrdStBUUFwRkt0UW5sRnVCanJEOERIaWNP?=
- =?utf-8?B?c0xpQ0U1c0pQUStRNjBFWnE0ekpXalY2TjdwbWNXclp3Y1ViK3Bsdm5oTTBD?=
- =?utf-8?B?ZFRiK0RucHJjT0ZYSjVydDdvTWVTNlRZaUl4eFY5V0U3T25zSi94RnYvc21O?=
- =?utf-8?B?NG1QRExtRGN5MlgvUXZ2bFpXM2MwV0w1RWNBYVZ4NkJJcE1VYjdSbkhFQmR6?=
- =?utf-8?B?YWVoWGhKQXZENlJVUEtqVzZtY1FiZWp2VzZBejEyS0VzU1N5VFRqSDJJTFlW?=
- =?utf-8?B?WmxCMzAzeWY0Z2IzWW5COHVSRFZRY0FybnluL21Kd2YvK3gzdmRxTWxURWkx?=
- =?utf-8?B?K01JYnVqUi9yUm5RQ203Z0drV3pFR0cwNUs1bzNvazM1UmhqSlVieGVrR1JZ?=
- =?utf-8?B?ME9iMkNkMmF6N3RUR1lUdWIwRW9nOVhqdmtoNi92c25PRk10V3FLaVFoZlpl?=
- =?utf-8?B?TG52SXBPcEhFcWxCOHNKb2dhaCs2K1VuNHdHVzladTcxbGF5c3pBSytMUHZ2?=
- =?utf-8?B?VUNFZUNSLzExeGFUZnV6MHRsc3JjUDA1bXQva1ZzWXR5UVBlei8zQnJqeTVV?=
- =?utf-8?B?eFNMSFdod0tKSXlxRzM3MC9yd1NaMFZnQXBFUTg3UzRieTVrYUFUU0dTaTFu?=
- =?utf-8?B?RExWaUh5S1N3cU44dzBGbHlINEtzOW1iR3VSQmNCc2htbzRya0RKdEcwK05X?=
- =?utf-8?B?a3BtbEdMZUdmaEdRR0NkZXI4Yk01QXNJMDFsY2tvZFUzUEsxUUFQL2dCTGoy?=
- =?utf-8?B?ZVR4OXNYVzFrYm9wS2QzOHphNUZKeFJkWDh2K1lnSXpObjg1OWtrbkQ0VE1l?=
- =?utf-8?B?dE5WNkhOTmYxYlpxTU9XUFYrV2pON1hYb0pwNFFnbWZZdG5LSEJsVkdDUGNk?=
- =?utf-8?B?MU1EWDNmWFhlSE9EYXVtLytGd2s2UEhrKzk5bXV6S2w3czY2UHFJbFU4dnNV?=
- =?utf-8?B?dHdhY25HSm9tYW1yK2x1bk9VdjRRSmtFRTE1QnBuNHpxejVsR242NXhFZVZC?=
- =?utf-8?B?Q1V0STd5Zzhpb3JmNkk2M3JQVnFFcmJDRG45djM0SWg2YzZIRVBzL1oxSFo5?=
- =?utf-8?B?OThQYTdXTmwxK1dVNjlZQUd3cm5IbjA3bmUvbDFzQTU3bjBwbFpKQnNTaW56?=
- =?utf-8?B?d285UXNzbEtxZHBReElvU3FVSlYxdjhXRkVvR0lVT3d4bFRDc2lBS3RYK052?=
- =?utf-8?B?V01kTkJNbkNFNllYTUlXWW9odi92L0lhTTRkSlhyTHlVTjZCcXJWYVhoU29l?=
- =?utf-8?B?WmR2ZzFsU2ZjUm5aS0VvUXlONHBKbXFXMkNlRllzcnc3Vldpa2tKbzdDSHhQ?=
- =?utf-8?B?amlCOTMxQW1UdWpBYURqQ0JXdXRLSDEzUHVVby9XTGhvcURWSlN3MUxvNEY4?=
- =?utf-8?B?L01yekxBR2hrUVBFYlFST2Q1S3FvSWhGSkhGWFJmRWQ5OG52WklENmZ3UGFQ?=
- =?utf-8?B?dWE1M3dhL1pKUFVDMGhkVzNCUmhpZHpmQXRBbUtPbEVwMC9wR1RQbktMeGFB?=
- =?utf-8?Q?b9ww=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Qa/FIu2EwzPmyEpYAwr4rSVQsuQ33c++F7///2HRwEyg48CTXmHbsGZQBOhZ?=
+ =?us-ascii?Q?0rb/FMF48ioZfxzKi6VNAk5G3W+qCJNxxwgXsFvWFUJrt6j3djz/MBFcrTkE?=
+ =?us-ascii?Q?9raaJG1mxR1Rlkaku1AGG+70wbPDP6dfLQM7gZPmscjC1/e9vEDLVNOWn38d?=
+ =?us-ascii?Q?7ugWgfxJ1D+Zr3zMaNnS6Qrc4b6puQ2SRjDSKAD8ByGXYpjNZ/3/rQEt5zk3?=
+ =?us-ascii?Q?E5pvyZ7NIFOgry5cHXn2QUcY7qBZ5wBOaq6t1jWaWb6XKgIg8Llhirw3DcDb?=
+ =?us-ascii?Q?2dACewruXEhmh9l0OTieZyHKPJv8ySSkrLkXhdhfoUpbravvB/dClVZmelZ7?=
+ =?us-ascii?Q?7lNe+8jGbnIzqLndM/oPfFGWZD+4SjGlJ2pKybWbHUhsUy8BRUmrGpPuKYyH?=
+ =?us-ascii?Q?5stpmMBFCaOLplnpS579O8XGol6tPq80dEYCLs3Evz38yJwor/6IAoABOP28?=
+ =?us-ascii?Q?dh/RbfKTiBwWuYWMJuoPGljpM6+UjHmmV1MM1YbvLkXanEMxlFwyyYMwamMU?=
+ =?us-ascii?Q?ma+IoB6L9x/au1F7BHQtBRGxcKTkfwuVW+qgRIBmEfdM0hn7L9ZwUg5i97IU?=
+ =?us-ascii?Q?9JCTyoW5BpWDEXGUUujer+dVd+PY2UwG2AwDrHUmAJmneSJ8gMi8BuSY1VGd?=
+ =?us-ascii?Q?EBRFkBXYQtKyJpsiKxqNqwpv8UwG0I0tkuQFOzeIJDhmntIxSUKHwbXfXTPF?=
+ =?us-ascii?Q?Ah/x4GENqbUjkYNaqZkIz2S555ZBXAKRMLqfI7ic6Mh0uqXBPO37SVU2BQB4?=
+ =?us-ascii?Q?6aYg+0bsGsyGGegBgh1ehtXV2cURO3Ndsd5xcD2aV9TJUVeksKhm32AjKZrT?=
+ =?us-ascii?Q?3axjR/eD9W2zMrYrhndXwBUgeWd277a9KkDDHAIduFuEa+F/EVHmudQwbIoZ?=
+ =?us-ascii?Q?GATOEPClR8H2a1F13g+1EogIp128KlKcy/6ygJ0hV8mpHBGHVmW4gBcoIMgg?=
+ =?us-ascii?Q?dFtB/eGz08UvZE/OP4jobcFfBIuvXIFIRXCxG1FwBmwR8VdhpTADXSQVe0ab?=
+ =?us-ascii?Q?kYQ6RLlipLtgxZhIvX3jbFzmn6N1ElJiP2Bz/Xh0kHpFyzsQYBMFcA3QDvx+?=
+ =?us-ascii?Q?EttzOt6O18KPE7Pzr5K7mcToyH/fqrKtr/B6RSvdiFabGwbPUjp3zCgI2gPN?=
+ =?us-ascii?Q?95XNposZr3obQav1o0NhEwqARETo1drrkmpgUu9ssUN3utGRctpR1iMS9PL5?=
+ =?us-ascii?Q?yTEr8K1HSajIjynTVrzkjBCzIcBZXwEFnKjtZUcZYITplIVeH8dP0czup9AF?=
+ =?us-ascii?Q?wAEGav5ZROgWTOGE5Zr+Q8i2/xokoKE3mUHyYEANPBNEGKsD1arzJJ8kCS+5?=
+ =?us-ascii?Q?gL5QkcVVtIdp4voX7VHhqOxb2HzQ/dcwx1Q6kUbdlFYmYmqKqHE/oWyonArp?=
+ =?us-ascii?Q?2gTlQDz1wd7dDw5hJaDHbYUQpBVSvrxmbWxUoZ2TFy6ldeEUvn1UVPWDzkLo?=
+ =?us-ascii?Q?aR+zKmDRTlIyMvZqQxf58NyYPa6ePqOT/MIQjHBtONfLT03qydAm3azIMjhn?=
+ =?us-ascii?Q?otKp/1uD7mtmxN2nq/DxWZG3Sn/rFho8Bfb3Oo2/9kfXqIV3yS5dK8zOxEtA?=
+ =?us-ascii?Q?q9gCe2SkXZIx/diCk1NGaiS2Sr/MVfALYxv3oImu4HA8jzj0YH9QhipMIG65?=
+ =?us-ascii?Q?qwIeWxI7OFTf0KteXuZNX0qlcCajKEDKg5W8tBMTh9C4dvfZyOvXSfYRYF5J?=
+ =?us-ascii?Q?W3YfHw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(1800799024)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?M3prdnZGaXU5WVBPRm9LNTRpYmIySzR1TVJSV3Erc2JEN3FSSTFDOFA2ZTVZ?=
- =?utf-8?B?K0NQM3V3cHNBczZrMEplbW5rczNaeUk3eU5KS0pSd3NKSElEMkd2MkZkSmd0?=
- =?utf-8?B?VDJlejRCMFRkWmhVeW9ZbjdFcCtlV2t5R1drVVJWUncxN2NpV2RGMHFkZlM0?=
- =?utf-8?B?YmpHSld6OEpqVHZZd00wb0VUM3JjaEhGTnJXUEtQd3hCMTA5eHV0ZzcvL01V?=
- =?utf-8?B?WTR0TWt0R2NMTjRROVRHcCtuaXV3THJXQTlYUW9uQkRjTFljTGE0bmZWSzNw?=
- =?utf-8?B?UkxhQU1meWhmUW5ObEFQUHhXYzNZM3Z6T0dKRHFIbDlCZ3VQQk1qcUh1U0dK?=
- =?utf-8?B?ZWpBSFV2a0VYODc3OWJndFJnbmNCN0plT09jazYvU1M3ZDB2SVpmYSsxSmFL?=
- =?utf-8?B?Z1B0TFgzcWpTSERMWXdVcWloaGQvSkxWQ3VPeDZiZXZ3L0VzWU54RWtlZVlj?=
- =?utf-8?B?Sk9lZVJwUHhwOTR4anh1MkYvSmRZNlJHL2VOZ2JQUEsxSDBCZHY3dFMvV1BQ?=
- =?utf-8?B?M0FJTy9FSFVYUWNrWlFTNHNCVWI3bjJxdE5lbWVFYkZWOUdYc3hyS2ZmQ0ZI?=
- =?utf-8?B?M1pkTVFaY21jdTdnUnNQOWpvSlFqalFFR08yTkVGeEFRekZVaUo2QzlXaDIw?=
- =?utf-8?B?Qm9IZEFFRnlIKzRkd05pT2E4QlkxM1hES1hPQmFYaXg0VFFYSllrZkNsMFo0?=
- =?utf-8?B?Y2dmaUoybW9hMDBBOXJ0djdwTjdVOEl6aHJiTDFmYTJ5TXhBRTU5dXVKY0Nz?=
- =?utf-8?B?TzQ4cTl4OVhlVTU1YkxHT2Jidlo3SlYxRGtJeVJQbE9rb0pHWldqREIxYzJN?=
- =?utf-8?B?bHp2RlpXdzZ4M2R2bU5ESDhSd1Qzdmd3TGwwQUZ0Q1VnN3lwRTZuRE53dncz?=
- =?utf-8?B?R0FBeVAzOE4yMTRnZy9EOFp6Z09hY3dlRXFhM3prTmhKTmtUQm01bTVTVGpE?=
- =?utf-8?B?WC9xUGk3NW5DT3lGVUwxN0lVUnUxWmJRelZJTVlHMkRrY3NyRzFkZkQxS2Zh?=
- =?utf-8?B?b2toc3BtdksvblFDQ3psL2dxVDhKc0p1L3pEVGZNWnNSMzlFUTZibXErMVdJ?=
- =?utf-8?B?L2tWaldDSUwyL1Qra2VrcWVkSmFqTEsrNzRlempEdG5tQUtjV0V1L2NNMmR0?=
- =?utf-8?B?dll1UmhuWkNjbzlySjlJcVl0SEM1eHVOZlNYdEpld0EySDlVdEtWdW5oNFZ5?=
- =?utf-8?B?U1NuWGJkZHhQUzg5VTQ2U3VSR2tPUUdrNjRMaUNNd3pkbmJQUGFNYm5tYW1l?=
- =?utf-8?B?STlKdUoyUWMzZ3ZSZ2h0ZVBiMUtHelhaMHAzbEE5RUM1bGJMOUovS2thZ0hz?=
- =?utf-8?B?ZXBDT2oyR3RyTklMT3hXTWI3TXVCTEhHSUVVZThaTVRsMTlZR1RHYktDMDZh?=
- =?utf-8?B?RzJ1NGVRV0k1dTdkOUFvUlJia3VSQzhHWDYvbW9ZdUhyemxjUFg1NWNwc2RU?=
- =?utf-8?B?dlFWT2NlbFdMSlM3WE91UlRLenE0a1ptQUFid0laVk1XVnZGTXJVbzJHYkp4?=
- =?utf-8?B?eGlLQlhncUR2cjIwbjJnM1I3Vlh6U1kyNXU1TkIvUE1UZEVqZFRnWGtzSXpT?=
- =?utf-8?B?V3l4Q2dZNUZwN0xOM3RDSm00QUtORURsbXpjQXcxdm5Udmg1dTZWbCtlQmk4?=
- =?utf-8?B?cTAvdUNHbjM4RnJhaHJobHZib2xWeFlWdE9Rb1owQldQci9HUUN5MVBmMzk5?=
- =?utf-8?B?dXBOazhndlV4SUxpdG5iK1ZTSXQvWkgrU1pycGtYQVBsbEJmUzhFaWFMejUz?=
- =?utf-8?B?QkNsKzZLblBZZDloZzJZY2oraDNYMTEzRHJPRzltVldJaktpT2ZLcnJnZ2wz?=
- =?utf-8?B?czJLRkIxbDIycWZzd1hHYVA5eXVyNEN5dTYwZEtzOWljemIvSzRnYStNMHpK?=
- =?utf-8?B?ZmNHM1lWNkFrbjU5ZUZpRW5vTW9JdU9yYkJQVHdZeWpuZkJVWGc4VHp1WlZn?=
- =?utf-8?B?MnVLaUQ4OHAzU1RTMnBNaGN3bFd2ZGVoNUNDbDB6QzBBMHlhRlBjd0o0T2F5?=
- =?utf-8?B?bERDRklvSHkveW91RWFNcUREQmUzQUVoMEoyaTFXUmlPQUQvSFRHa1p5RW1t?=
- =?utf-8?B?WlhvV1M3OWdGUC9IVDJFWlo5aEw5eFNGdlNiRHVtZk1XL3R5L3BLZ1A0WXVP?=
- =?utf-8?B?ek4rZFlNQUJpYlNLTWJET05sVWhad3MyMXhlZk1KV1RGMTg3L1VpR2hVNk5Q?=
- =?utf-8?B?YnNrOWFGVDlWeElWY1U3aS9EaGRxL1RGd1F5Zzl2aVpiaklWU0pjbm1sbmli?=
- =?utf-8?B?ajk4VXB1SlBpWmtMaUs4dnc0dFM3a3BkS0JqUVFJZ0Fjd080eTE0Z2owS3Bo?=
- =?utf-8?B?ZkxaQlFZWEl4MnVNc3lXdXh6cjVoQ0hwck9KWWJFUXJQVmZ1MVJBWVBVSWE4?=
- =?utf-8?Q?1AweWhIvsuHqlf+w=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1194e1f-3d9d-4b61-f9af-08de62d16f1b
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2026 03:07:58.6842
+X-MS-Exchange-AntiSpam-MessageData-0:
+	OFOIVskXnTIOm4/fdPXaUTuM8/doQBg/91gfDE+24scNMvoSfuIzhBKoGt4gDa/5RV/G91QbftEKFcQQJdavpKeyiTb3sWwwHASk8U5+puQwCVkzrKlgkxi67eeukZmaMmUGNoJsJIdTwcq59CiUYASliLEnWhXOkhP15JoR01YlE7+blvJUDZ++qQJTL2TiD6wu8iNubcvQYbOnBenzWsPlyPLIpiPhMGxPpRJ4v2HjlwOatPsNkRxmQeaTtlzxlaoRMUFfrNdJhxUh/0Qxh2haBNl6RDTq7OFcfDPVIFMU0souCAQthAMNbrOz2qPBzOOTA4aIwPlmW778ejIxZatpWaigBbvLvR8iltLpNrBt0XnP9bE4IqTigcUr5BsMjZeve4Q22094Vxz928oFeu2nWyBD/Hq0VPlrsBTJxRffT+GXB7vXTey7n68Ip+3d
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2026 05:14:11.5803
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3K6Fpm9hZSRoGN6y9LCQUk9at8XYNYA8lZxO8U6W8yFobSCyn3kAqr2WnVTzvAKBg9cjQ3kz1MTkmY2Ip2RD+TkK8FJAafclcVcI1R83y3Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR11MB9397
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5cfb1b7-2c57-43c3-2959-08de62e31120
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B071.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9201
 
-Alison Schofield wrote:
-> On Fri, Jan 30, 2026 at 09:45:29AM -0800, Dan Williams wrote:
-> > Alison Schofield wrote:
-> > > When auto-created region assembly fails the region remains registered
-> > > but disabled.
-> >=20
-> > Right, that is good forensics, administrator action is needed to figure
-> > out what to do next.
-> >=20
-> > > The region continues to reserve its memory resource, preventing DAX
-> > > from registering the memory.
-> >=20
-> > I would rather have the partially assemebled region to continue to
-> > exist. It can help debug the expected catastrophic error reports from
-> > DAX enabling access to a memory range that the CXL side can see has
-> > completely failed (lost an interleave member). If the failure is more
-> > benign and DAX side access is viable, then the forensics matter and
-> > userspace can cleanup.
->=20
-> Thanks for all the feedback, Dan & Greg -
->=20
-> I'm responding here because this is the overriding topic of do we want to
-> behave better upon region assembly failures. If there is a path here to
-> becoming a better region driver then I'll take a look at the implementati=
-on
-> comments, like if or how to timeout.
->=20
-> One point I should have led with: while we are focused on failover to DAX=
-,
-> the issue here is more general. It is about the region driver leaving beh=
-ind
-> an unrecoverable partial configuration on assembly failure, independent o=
-f
-> consumers.
+On Wed, Jan 28, 2026 at 09:05:20AM -0400, Jason Gunthorpe wrote:
+> On Tue, Jan 27, 2026 at 04:49:07PM -0800, dan.j.williams@intel.com wrote:
+> > > Yes, ARM took the position that ATS should be left disabled for
+> > > IDENTITY both because of SMMU constraints and also because it made
+> > > some sense that you wouldn't want ATS overhead just to get a 1:1
+> > > translation.
+> > 
+> > Does this mean that ARM already today does not enable ATS until driver
+> > attach, or is incremental work needed for that capability?
+> 
+> All of the iommu drivers setup an iommu translation and enable ATS
+> before any driver is bound.
+> 
+> We would need to do more work in the core to leave the translation
+> blocked when there is no driver. I don't think it is that difficult
 
-This gets to the heart of the question of what practical problem is
-being solved with this and is the solution suitable? Outside of the
-"platform is doing something strange" case like "Normalized Addressing"
-or "Non-CXL Interleave Target" I am struggling to imagine an end user
-benefiting from this automatic cleanup. A system which is so flaky that
-it can not arrange for BIOS configured interleave to stay alive through
-Linux boot. At that point I expect the end user to decommission that
-system, and flag it for remediation, not recover it and keep running.
+Hmm, not sure if we could use group->domain=NULL as "blocked..
 
-> Neither of these failures are recoverable from userspace today. If they
-> should be recoverable from userspace, prove me wrong, but I'm doubtful
-> that we are just one smart admin or one good cxl-cli update away from han=
-dling
-> this in userspace.
+Otherwise, I made a draft:
+-----------------------------------------------------------------
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index 349f31bedfa17..8ed15d5ea1f51 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -437,8 +437,6 @@ static int driver_sysfs_add(struct device *dev)
+ {
+ 	int ret;
+ 
+-	bus_notify(dev, BUS_NOTIFY_BIND_DRIVER);
+-
+ 	ret = sysfs_create_link(&dev->driver->p->kobj, &dev->kobj,
+ 				kobject_name(&dev->kobj));
+ 	if (ret)
+@@ -638,10 +636,12 @@ static int really_probe(struct device *dev, const struct device_driver *drv)
+ 	if (ret)
+ 		goto pinctrl_bind_failed;
+ 
++	bus_notify(dev, BUS_NOTIFY_BIND_DRIVER);
++
+ 	if (dev->bus->dma_configure) {
+ 		ret = dev->bus->dma_configure(dev);
+ 		if (ret)
+-			goto pinctrl_bind_failed;
++			goto bus_notify_bind_failed;
+ 	}
+ 
+ 	ret = driver_sysfs_add(dev);
+@@ -717,9 +717,10 @@ static int really_probe(struct device *dev, const struct device_driver *drv)
+ probe_failed:
+ 	driver_sysfs_remove(dev);
+ sysfs_failed:
+-	bus_notify(dev, BUS_NOTIFY_DRIVER_NOT_BOUND);
+ 	if (dev->bus && dev->bus->dma_cleanup)
+ 		dev->bus->dma_cleanup(dev);
++bus_notify_bind_failed:
++	bus_notify(dev, BUS_NOTIFY_DRIVER_NOT_BOUND);
+ pinctrl_bind_failed:
+ 	device_links_no_driver(dev);
+ 	device_unbind_cleanup(dev);
+@@ -1275,8 +1276,6 @@ static void __device_release_driver(struct device *dev, struct device *parent)
+ 
+ 		driver_sysfs_remove(dev);
+ 
+-		bus_notify(dev, BUS_NOTIFY_UNBIND_DRIVER);
+-
+ 		pm_runtime_put_sync(dev);
+ 
+ 		device_remove(dev);
+@@ -1284,6 +1283,8 @@ static void __device_release_driver(struct device *dev, struct device *parent)
+ 		if (dev->bus && dev->bus->dma_cleanup)
+ 			dev->bus->dma_cleanup(dev);
+ 
++		bus_notify(dev, BUS_NOTIFY_UNBIND_DRIVER);
++
+ 		device_unbind_cleanup(dev);
+ 		device_links_driver_cleanup(dev);
+ 
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 2ca990dfbb884..af53dce00e29b 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -106,6 +106,7 @@ static int __iommu_attach_group(struct iommu_domain *domain,
+ static struct iommu_domain *__iommu_paging_domain_alloc_flags(struct device *dev,
+ 						       unsigned int type,
+ 						       unsigned int flags);
++static int __iommu_group_alloc_blocking_domain(struct iommu_group *group);
+ 
+ enum {
+ 	IOMMU_SET_DOMAIN_MUST_SUCCEED = 1 << 0,
+@@ -618,12 +619,6 @@ static int __iommu_probe_device(struct device *dev, struct list_head *group_list
+ 	ret = iommu_init_device(dev);
+ 	if (ret)
+ 		return ret;
+-	/*
+-	 * And if we do now see any replay calls, they would indicate someone
+-	 * misusing the dma_configure path outside bus code.
+-	 */
+-	if (dev->driver)
+-		dev_WARN(dev, "late IOMMU probe at driver bind, something fishy here!\n");
+ 
+ 	group = dev->iommu_group;
+ 	gdev = iommu_group_alloc_device(group, dev);
+@@ -641,6 +636,15 @@ static int __iommu_probe_device(struct device *dev, struct list_head *group_list
+ 	WARN_ON(group->default_domain && !group->domain);
+ 	if (group->default_domain)
+ 		iommu_create_device_direct_mappings(group->default_domain, dev);
++
++	/* Block translation requests from a device without driver */
++	if (!dev->driver) {
++		ret = __iommu_group_alloc_blocking_domain(group);
++		if (ret)
++			goto err_remove_gdev;
++		group->domain = group->blocking_domain;
++	}
++
+ 	if (group->domain) {
+ 		ret = __iommu_device_set_domain(group, dev, group->domain, NULL,
+ 						0);
+@@ -1781,19 +1785,70 @@ static int probe_iommu_group(struct device *dev, void *data)
+ 	return ret;
+ }
+ 
++static int iommu_attach_default_domain(struct device *dev)
++{
++	struct iommu_group *group = iommu_group_get(dev);
++	int ret = 0;
++
++	if (!group)
++		return 0;
++
++	mutex_lock(&group->mutex);
++
++	if (group->blocking_domain) {
++		if (!group->default_domain) {
++			ret = iommu_setup_default_domain(group, 0);
++			if (!ret)
++				iommu_setup_dma_ops(dev);
++		} else if (group->domain == group->blocking_domain) {
++			ret = __iommu_group_set_domain(
++				group, group->default_domain);
++		}
++	}
++
++	mutex_unlock(&group->mutex);
++	iommu_group_put(group);
++	return ret;
++}
++
++static void iommu_detach_default_domain(struct device *dev)
++{
++	struct iommu_group *group = iommu_group_get(dev);
++
++	if (!group)
++		return;
++
++	mutex_lock(&group->mutex);
++
++	if (group->blocking_domain && group->domain != group->blocking_domain) {
++		__iommu_attach_device(group->blocking_domain, dev,
++				      group->domain);
++		group->domain = group->blocking_domain;
++	}
++
++	mutex_unlock(&group->mutex);
++	iommu_group_put(group);
++}
++
+ static int iommu_bus_notifier(struct notifier_block *nb,
+ 			      unsigned long action, void *data)
+ {
+ 	struct device *dev = data;
++	int ret;
+ 
+ 	if (action == BUS_NOTIFY_ADD_DEVICE) {
+-		int ret;
+-
+ 		ret = iommu_probe_device(dev);
+ 		return (ret) ? NOTIFY_DONE : NOTIFY_OK;
+ 	} else if (action == BUS_NOTIFY_REMOVED_DEVICE) {
+ 		iommu_release_device(dev);
+ 		return NOTIFY_OK;
++	} else if (action == BUS_NOTIFY_BIND_DRIVER) {
++		ret = iommu_attach_default_domain(dev);
++		return ret ? NOTIFY_DONE : NOTIFY_OK;
++	} else if (action == BUS_NOTIFY_UNBOUND_DRIVER ||
++		   action == BUS_NOTIFY_DRIVER_NOT_BOUND) {
++		iommu_detach_default_domain(dev);
++		return NOTIFY_OK;
+ 	}
+ 
+ 	return 0;
+-----------------------------------------------------------------
 
-That is my bad. I mixed some unverified wishes in with my replies, but
-the end goal for me remains the same. Userspace should be able to undo
-every step that auto-region assembly performs.
-
-> That's why these patches make the region driver fail gracefully. And I
-> do think it is the region driver=E2=80=99s job to fail gracefully.
-
-This where you lose me. It fails gracefully today. It stops in a safe
-configuration same as if userspace stopped short of fully configuring a
-region. I keep coming back to the RAID example because CXL region
-assembly is roughly patterned after RAID assembly. In that example a
-RAID0 array does not disappear after 30 seconds if auto-assembly fails,
-it waits for administrator action.
-
-The potential conflict with a DAX takeover is a separate problem that
-also might not need full teardown if we can make it work with
-incremental fixes.
-
-> When auto-created region assembly fails, the region remains registered
-> with decoders still enabled. In that state, userspace does not have a
-> supported way to unwind the configuration. cxl destroy-region fails becau=
-se
-> the decoders are still enabled (--force fails). So while =E2=80=9Cadminis=
-trator action
-> is needed=E2=80=9D is true in principle, the admin has no effective actio=
-n available.
-> Leaving the region behind does not provide a viable recovery path because
-> it leaves all the things related to this region stuck. All the things bei=
-ng
-> the HPA resource, the DPA resources, and the decoders.
-
-Right, I think that is a gap worth fixing to have all the same tools
-available for partial creation recovery available to partial assembly
-recovery. A "gap" and not a "bug" because only a unit test might care
-about this presently.
-
-> On the forensics point, the most actionable diagnostic information is not=
- in
-> cxl-list output. cxl-list can show the existence of a disabled region, bu=
-t
-> it does not show why assembly failed, which endpoint is missing, or what
-> happened at the time of failure.
-
-cxl list -RDi -r $region
-
-...shows the region, the number of expected targets, and the ones that
-have arrived.
-
-> The forensic info is in the kernel log, because that=E2=80=99s where the
-> assembly failure is detected and where the relevant context exists.
-> With the changes here, the kernel messaging is improved so that the
-> failure is explicit rather than requiring the admin to infer the
-> situation from a disabled region in cxl-list.
-
-The kernel log does not know the device that was meant to arrive.  . The
-kernel log likely has debug disabled by default. This situation should
-be debuggable without the kernel log.
-
-Likely the first notification of something wrong is operations tooling
-noticing that serverX came up with less memory than expected, not a
-kernel log message.=
+Thanks
+Nicolin
