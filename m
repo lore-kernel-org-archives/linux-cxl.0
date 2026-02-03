@@ -1,46 +1,46 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011028.outbound.protection.outlook.com [52.101.62.28])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011043.outbound.protection.outlook.com [40.107.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56AAE325711;
-	Tue,  3 Feb 2026 17:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156643469E7;
+	Tue,  3 Feb 2026 17:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.43
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770140218; cv=fail; b=k5CSfz8eEOVFi4SqcjfRZ12vPsUMW6CbKkY9nfMEYPOyuSCQ6dCujfg9mDCnw+7qJk3njkwPslxWAOuczeWYGjI3mDIg0Tq8gqTiOMyspoghTumJnGKbW2Z6Y84ibqqbIL8QsOwvtsFCziTXeZWjoGXkR9/9NVFRaSrvYDaK5BQ=
+	t=1770140223; cv=fail; b=GcgQtMGNNLzf3qzM7M3m3vWEi3CM1r2YhM4Jp/QNdIEcHfiGYuvUukfBcsHhrMRzhXBsVUkNwLDXEHI7/Mld800HhVlPgZB8W6l/eUm/v4z0SwMbNeNd2huyjicr17AU9sOWqF9KPai0SJE3r8NGWY+1QCBoJARt9l2O64nYylQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770140218; c=relaxed/simple;
-	bh=loKctYcgkaOolNq7Vs9Z4BMN8884fTjffQoBTFIXusI=;
+	s=arc-20240116; t=1770140223; c=relaxed/simple;
+	bh=C2+X06bKhtiJLa09NQ0gkMWJamkp/S9drFQxOdJyl3M=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ond9otGEwUlmGxbVdFfs6r9GTk7b6wPxCoB2devsGq+OQ8QxEhpozWagc/BTQzbsvrBziAoQxyF186G+Vb1XdOTtnGle3ER/MQR382LhNapYug9Wul6hMfGkIoQNbhXdXWuHkalvYMFBcb48XRsTXtv7EJ9UW8x/ZhwR4F1d8xE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DaMTCD24; arc=fail smtp.client-ip=52.101.62.28
+	 MIME-Version:Content-Type; b=r279GgSobmq5NfcFol0iDCQFItyVqlJW8twPTQlTzFGcfmM9W2JTWiCq0TtDdtdtZXHgnMkXMuzgZ6TJRMbSdMe41Z7flP03ozxWGXLmM0nNqyEI3Zs5pP0aPDUherH/IJu5R35YhiWZyEVQaMvXk7m2j7cj2kqilMj4aY4uAWg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=sEaVv8CZ; arc=fail smtp.client-ip=40.107.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DaMTCD24"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="sEaVv8CZ"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TgTEQop0Po3ulWtn7Zp8PwfpuXYl5e8wE/Ix+X4kSeY6c7dDYVq1QuV1L/MBxOOdXs41UT+YkIjQEVoyXQCB0a1xtf22Cyx+G3DXag4cr0+OVcdo7XcILCm2IEeTZuGRBBiDCH/y0Dla7rod9OlhX2vkL9m3npUADaX8XVyCagpVHdOAjM11HNtVBy0R+XHAW22X3mSLIOcIOpTR5pCPguKI5QIml1v2cL/LA2pBhyDqeJtWytpBdGeuI1epRPtenXiUBZxjR1yy68Y1QqQrO4MUM788r8x/Ae+w9puo2SODx3x2/DLWfdR5YEbWVf2USBmxxfUdSRaLalx5mpAPcQ==
+ b=Q7Secn+4Vwmn4bMMAD1smY4yAQlhY2vYANmnVpYwA+CZl/X2l4a4WeBGjG6IiCBXFjbYXgUBtFpIpkXRl4+uncu8VAi68y3N0xztZv1Iw98XywwuYWEAbbh5w12/mQA2v35E9tEBPGwMvnPZU/f6mtlxPuUTj4+/n59ohOwnVVLs6mJLnhAb66TJHtWXvnZ0850phg5OJcb5ArENeWPpAhXnVIKgkPsoe8HpEiqS/L9oPvgee+drb+irTdMOoaLVnd5xLWTg9SuceCRCVlhp5ln1aVB1W13jgl6jfvLTYU9wOfN7LRnl+OOJyi3kJ+aupHeLn3+/a3Y348pjW4Ihqg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i1IMnAkkRipu+p7nZaIhlLNlwllEr063M6Qnd6io+ms=;
- b=cxAwGC29n85+V3aEXjcTyprYmsP2uKPsxATP45YmG1OWMIYftZb5DdBpe9w34hWfDOV+l54WPBpR0Vs4OfeBYB3ugS8Ya0PhZbBZDJhsBx9mFReNqXi1Ff55Ue+MBuBRePHtklsDA+O0U/NbME7Ii1hpQfrPmeVMmy4qn9WS58/tmE3xTiBuAC6dsJGTV/6LLcvnyptOZYHczIgAYkBfwJiHmXY2F+OVgag6UdsWf2jHvl1xfegalpaCfWMBDo801ucPd+ufFGqdfWjK50uFX4Hb4PUASmVDrsM/rTUlj+2wc+R9Y4hfVlmgdsxKLeBr2WyNUYPHnwXa+kTMupMGeg==
+ bh=a9Ty0J1hoFYBcC0DBh3ByWCJ39K/czv/j+59ttBrwwY=;
+ b=vSM8x1Oc9sdRRVzIEzIBID2nbrph3sR6Gq9UgArMSn24fS3LQmQKCeTke6rXQBIaRXaVh4MKwriQcPfLVCW+rSght33aHcUAW18wlfLd61WbRbc9K3LMcaf0rflAGtqwftxB1jFp8VXtBxSmX8uyZV18YRDJYNgsBqr7QnFoZuUTQG6ygDQ/uWVAyGw/t7PBxhvm8PW+zmSNpxlLYlPds7ms3GOi/7hwGO2Kd1nzpveFJmC4Ykf2etW2nA88udAxecsIAk1TNcA7keRq+1fiVV6bKXOSJZhnPD29LVkHXtucBbpZ4xbYm2x5cpYSsKKEFq/8yS2j98BknHB0sahR3A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i1IMnAkkRipu+p7nZaIhlLNlwllEr063M6Qnd6io+ms=;
- b=DaMTCD24O6rrwMtEAVC9Q3SyqgDxcS7zlbu0N/8n1jrDHKmRADGkbkg+XoYSGX9LKf4MsURSsHBlqml7CN3FxRDQsVgcMHPzfJhFXSOzBypEY3l5NAqcPSnLcn3oTGXVQm/uzWzsLX+18kiy0ahJlxEPMVVelS6moLNuj5xDx7U=
-Received: from BN9P221CA0004.NAMP221.PROD.OUTLOOK.COM (2603:10b6:408:10a::12)
- by PH7PR12MB7354.namprd12.prod.outlook.com (2603:10b6:510:20d::13) with
+ bh=a9Ty0J1hoFYBcC0DBh3ByWCJ39K/czv/j+59ttBrwwY=;
+ b=sEaVv8CZ3zTAPlv3/ozHG+8OzDs+kV6g0tZe4OPzLFInmCg0PLTnuMQiWWOVfdqzKQMfSU2vb/T2Ru0ww016bPETygpU6uck3pdPS0noS3f0Xb0K7XqsZyHYZcFQPyP37+C8gCNiljjVoQGk/K74E2mJIayDcxliJ4ICyIT4z3Y=
+Received: from BN9PR03CA0291.namprd03.prod.outlook.com (2603:10b6:408:f5::26)
+ by BY5PR12MB4276.namprd12.prod.outlook.com (2603:10b6:a03:20f::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.11; Tue, 3 Feb
- 2026 17:36:48 +0000
-Received: from BN3PEPF0000B36F.namprd21.prod.outlook.com
- (2603:10b6:408:10a:cafe::b2) by BN9P221CA0004.outlook.office365.com
- (2603:10b6:408:10a::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9587.12 via Frontend Transport; Tue,
- 3 Feb 2026 17:36:48 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.12; Tue, 3 Feb
+ 2026 17:36:53 +0000
+Received: from BN3PEPF0000B374.namprd21.prod.outlook.com
+ (2603:10b6:408:f5:cafe::c2) by BN9PR03CA0291.outlook.office365.com
+ (2603:10b6:408:f5::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9564.16 via Frontend Transport; Tue,
+ 3 Feb 2026 17:36:51 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- BN3PEPF0000B36F.mail.protection.outlook.com (10.167.243.166) with Microsoft
+ BN3PEPF0000B374.mail.protection.outlook.com (10.167.243.171) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9587.0 via Frontend Transport; Tue, 3 Feb 2026 17:36:48 +0000
+ 15.20.9587.0 via Frontend Transport; Tue, 3 Feb 2026 17:36:52 +0000
 Received: from rric.localdomain (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 3 Feb
- 2026 11:36:44 -0600
+ 2026 11:36:48 -0600
 From: Robert Richter <rrichter@amd.com>
 To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
 	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
@@ -66,9 +66,9 @@ CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
 	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
 	Joshua Hahn <joshua.hahnjy@gmail.com>, Robert Richter <rrichter@amd.com>,
 	<linux-doc@vger.kernel.org>
-Subject: [PATCH v5 2/3] cxl, doc: Moving conventions in separate files
-Date: Tue, 3 Feb 2026 18:35:59 +0100
-Message-ID: <20260203173604.1440334-2-rrichter@amd.com>
+Subject: [PATCH v5 3/3] Documentation/driver-api/cxl: ACPI PRM Address Translation Support and AMD Zen5 enablement
+Date: Tue, 3 Feb 2026 18:36:00 +0100
+Message-ID: <20260203173604.1440334-3-rrichter@amd.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260203173604.1440334-1-rrichter@amd.com>
 References: <20260203173604.1440334-1-rrichter@amd.com>
@@ -84,294 +84,135 @@ X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B36F:EE_|PH7PR12MB7354:EE_
-X-MS-Office365-Filtering-Correlation-Id: cb99473f-8725-4550-95d0-08de634acf06
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B374:EE_|BY5PR12MB4276:EE_
+X-MS-Office365-Filtering-Correlation-Id: e14ca0c4-8081-403d-404f-08de634ad1ad
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|7416014|1800799024|82310400026|13003099007|7053199007;
+	BCL:0;ARA:13230040|376014|7416014|1800799024|36860700013|82310400026|13003099007|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZEdxQ3IyejQyRGtWaks1bU9iUjRzU0ZnVnU3VjRFcjVvQnVNRzFCTkY1bStL?=
- =?utf-8?B?bGpsRGdmdEJDZms3RUpKY09obGhHQUNFK0hPdE5ybE1keTRzWklVUGY5MCs2?=
- =?utf-8?B?dk9NZzljV2tWTExsTkpHellNMzc1WHF0S3dBbE9KSGpsZWhZRUFRZW1vVXRh?=
- =?utf-8?B?YUVIdGVUS3VSeVU1VnBrV2N0ZmFyZ2FIRkwxQlEzUW11cWpoTHo3MHZETUkw?=
- =?utf-8?B?L0NQbVhwTW1vL0VFam9UcmpORVEvOUZ5dkdzQzlRanlMUEp0MTlOYjJhRGt1?=
- =?utf-8?B?NGp2VzBOaHQzNU9YMnIvdXJPZnNETjY1bUtPRDFuR0lLUm5rSGtDSnU4UVlB?=
- =?utf-8?B?cmJldVNlMzdxSlZ5dGVneWFHMVVHN21PY0xLaG9BRzhpSlo2MVlBaXhManVt?=
- =?utf-8?B?Tkl1aDFyUUtXT1N5NGwxQXFZY0ZhZlkvOHB4d1pLK1ltcE5sc1dtbTRSRkZj?=
- =?utf-8?B?djVHS1VVRHZPWGQxa0hNZVVTYnMvd0pJbjhNbUY4U3lLc0gzSHF6Rm15Q0Vy?=
- =?utf-8?B?SldhcjVkYUY4anh1UEpDZVl0am91OFN2dzV6WHVHbWZZaTI2OFZhMk9ORW5D?=
- =?utf-8?B?a0F2cUhTdllueDFabDN3WE5DTi84NTZXMjdDL2NyRld0U2hwSVZ5QzE2SE9Q?=
- =?utf-8?B?VmhRVEVuWjdZd0RLeGZtSkJ6UWowTllIM1hTM0hhQjRhSURLNUp0Rk9vQjI4?=
- =?utf-8?B?UjRqUUkzK0Eyb0VwZlBaY3JlUGk3cFQrclBpcWdSZGcxWWdqZCttZEdUaVl6?=
- =?utf-8?B?bVFhM0llcGxMU0l0OS94aXloeWhBRDRFcEd6ZmxnMUNsajhLRnpyOCtqQ203?=
- =?utf-8?B?bTRUNFh2RGZNYVprSGVFcDB4ZVk3NlNSMk1hY2k2ZmlUbWhKdEhtVGJ2NzR2?=
- =?utf-8?B?bVpoSG40Vmc0WjU2b3NIK2cvK3RDSWEvaldEaHQyTGZ3Rkh0dGpyVjFOOHYr?=
- =?utf-8?B?cTVQZjhpSHNuQlJ3cUNHV2VXems1algxSlhSTHYzU1Z2TjllVFFTQlQ5Tys1?=
- =?utf-8?B?WWt4VW5sYXhMYThMS1BONEhRQnQ3WU1NaWlSZGhOMHlpcE9UT2I2VHhDazJs?=
- =?utf-8?B?aG04cUZ2ZWgvOFNaUS81MEtOYVVYdHV1S2grdVV6TTlwR0lZZk5HQUxkSkV1?=
- =?utf-8?B?ZGxCQ2JWR1lwQkV3RURMdjIwYkhoRmx0U2pwMlpmSU0xaXhiYWwwTDZLbDZP?=
- =?utf-8?B?L2tKMVFuUFlqeVhCRjlkZlJTeXF3Nkg0ejNDTEpkM3JKY2MrMjQ2NG42ckx1?=
- =?utf-8?B?aW9paVphbVdmUWlHZzhsSEl4d1JwcENyVVBiOVZ2Z0hZVlVoMVVUQ3V6MnF4?=
- =?utf-8?B?NkJoUEpwTUY5a3lSVXlpYUNWOEFPOUQ1WVlGWmwvc1BHL3JHY3BnMitESEtl?=
- =?utf-8?B?T2p3UURUNnF5Mm5WZW4raytqZ00zL0pYU2Z3b3o0TWhheHdRVE5JdGdZZVcr?=
- =?utf-8?B?MjZYNlhaZjZWakJVUU1IWWhLTlF3Rm1EdFFGZitVeXRUYWNjRFJtcUtiaCta?=
- =?utf-8?B?MkZTYU96dm9taWxZbXRoalJEUkdQZnNvTVdIZVEwSWJGY0tjdGY3NlZLcE1P?=
- =?utf-8?B?TDYrQTVZTFRqbElhQ3llOHJKY25qYVdrcmQ0M0FVV1RUMzAyUCtFNnZ3ZTAv?=
- =?utf-8?B?a3pOd0RaKzN6ZnNCTzdpTTk4dUM2dFdBVUlhQmgxY1NnNVBGVkF1OXEzWEF0?=
- =?utf-8?B?MnR1WnRiQ1F4T3hQK2xtTmhscmpyTGVIdmlZYmpCV0dCT2lrbmlFRzBiR29o?=
- =?utf-8?B?eVJQelcrUjVYS3JrSDg1aHBIZXUxVGo2VU5JOUY1ek8rcDFDUzM5VHdCWkxO?=
- =?utf-8?B?RGZYUEJlelNlcGZYUnJGYVFUWVhaakJCWjNEaEx1TnFVbG5Ha0lSWVc2RXZ6?=
- =?utf-8?B?WS9ZMkFoNG9NTlo1cEx2NFJ5dTY0N0VDN0EwaU5HSHUxN2NMQW5yUGJyRmJu?=
- =?utf-8?B?YUQ3alRkUGZxSENaVnRXb0NWcStxS0lVV1FoQ1FJa3RsK0htNXR1bnk1N3Az?=
- =?utf-8?B?QUJoMVovOGVzOHFMM1kvdU9DUUtZNDJTSXp3OHNMN2JXdHJ1ODNtT09Qbjhx?=
- =?utf-8?B?aWpVc2xZRDNDWGJkQ0d0UnlkcUxRWWJLbEJmY2pzeFhxN3E0bDllVWF3NVFW?=
- =?utf-8?B?WjdmN2NUaDJrRkxUL3J6QWhOQ0IwSUNrN3poQzBnTDVkNE11d1hEMWhmbC85?=
- =?utf-8?B?VHc9PQ==?=
+	=?utf-8?B?aHhLY3RIRk9LREUyTGJ6bW9qTmxlbUtpRmFTUGlFMzZKanhkZFU2Qll5aGlM?=
+ =?utf-8?B?Ti9kdGJCUU5vL2hGSmdwWjNnV0J1S2ZKZkVqMFdvTGZtTWhwOXd3eXVqekNi?=
+ =?utf-8?B?RXlWWnNhMmFRR01oam5xRDRoNTI5eCtWb2UwcGFKWTY2TW5NRXRqd3NuTkVl?=
+ =?utf-8?B?eEMrREZtL2Z6ZmU5aldhVzdjbzhqUWJPWDN1VFZlRXgrSjZSRm1MS2JpMVNl?=
+ =?utf-8?B?M0VlNS9VeUlXME04V2d4bGtvZVBIbE9ZcitVV3VBb09vOWVQNWhvbFZGU092?=
+ =?utf-8?B?eVRrazBYUUl4MXRSWXJ2YzRockNBNXV3dTRCcDVaVmdIOUpKaGlUdFpReXll?=
+ =?utf-8?B?SlRjQWd3bWJFei9Yb0lDdS9valhqaFZ3R0IzdHJTR3VVM1dSUEtsMTZkNThu?=
+ =?utf-8?B?NGx3dkllWEFOWkpDRHV1ZlV4TjBONzRPaDNybHRNS1V1RXZBbmgxRXc2VnVF?=
+ =?utf-8?B?WlRpTjF3bFBVaFg1bGxJbURkdVZWeW9jWmhuMUUxVTdxOUFLMDJsYlI5NzRx?=
+ =?utf-8?B?THBiVmZQSXR0eHhIeVFEN00veVFXTXo5YjFaSmZDM0cxSDk4MmVueER3RitC?=
+ =?utf-8?B?TlRBb1llSnh4dFhvMk9mdEE1eWEzSHFEVWFDVkp0LzVDelkxelBIT2ZoQmpu?=
+ =?utf-8?B?OGNHK1psVVRhYnQxYmdoTE9MbzBtNU5jWkNKd1dvck5JMUlwWkx1MTBwc1cr?=
+ =?utf-8?B?UFJQQjcwaHQwWFp3K0h0WUViN2FRam9vajdwdVdXa0xabVkxdEY0blBXY0NV?=
+ =?utf-8?B?MVlKWHQ3SEludXBUeEM1WHdMMVJ0NDM2b1hyUWJvRDg5VEpoT1JnZEE1d2Zk?=
+ =?utf-8?B?enFFTW56dy93d0VYbEVOVkRNT0hGYTNaM0k0TWJzd2o4YTdHSU5KRmxqNkpO?=
+ =?utf-8?B?cGhKalM3RUROZDVNYllnZnRiT2toN3dCWjVTa0g4ZHZmTTQ5NEk2RVROZkgv?=
+ =?utf-8?B?UnVEcDdla0lDTGxOUC90R3dYQzFuMVc3NDhxVHpxcXZJampGbm5lT08xWjZy?=
+ =?utf-8?B?MUViQkhGZ0lGWEVLRnBEVTFQTEVnbWlDMTR3N0tyREs2endNYWpPdnF4T0FP?=
+ =?utf-8?B?SWhNZE42alRnWUlYMGRXamVYc3J0OW1sMmRSU3c3VWYxeW5tdmpteWhPM1FP?=
+ =?utf-8?B?RDYxR1daajdYZDVQQUdtaTVjVGNlQzRpd1dCWURTd09yY0R3dXNaN3hMV0pp?=
+ =?utf-8?B?bGpTWUsybXAyQkp4bWgzQkNBQ0FZcmdqSE9PYURDa3NVQU1KMlBHams4ZFph?=
+ =?utf-8?B?dFlISHdQOGw2Q1RieHRoM2FhVDc4R1RwUmkvUjV4YldrYTdQWkZ5RVhHMHBj?=
+ =?utf-8?B?M3RRWm11Y0hKS012OFFJaXZSVURvTFRaaHR0Vm02cDdrVUVPdnEvd2J2bzkx?=
+ =?utf-8?B?YXdHU05sTFBoc1lhTUIzb2pwMEFQNFlscVluMjRDbUg2cTIxTFpCdVhiajNk?=
+ =?utf-8?B?Zjljd2ZzeTVsTlhOTm55aUM1YngrN3JMdHpiYjYrVWY3bWU4YWVoM2RtckpO?=
+ =?utf-8?B?eXdoaFVPc3BDVk9tNHpjZjUxMXZpOHVKM2tNalRheU5BdWlCMEJBV1ZiM1hh?=
+ =?utf-8?B?b2ptRVU2aG92S0NsNFFaY0pEOG51RmIyOFliNzJuMHlFY0h1V3BYVHN3MFp2?=
+ =?utf-8?B?WnV4V2lVT1MwdlB5YXJUbFprbWhDVUttQ1VVRGl0NnVESk1rOW8ydVRJVzdJ?=
+ =?utf-8?B?UWJVQUNQSEQ0YU43QVp3aEduRTN1RkJSUHdKS1FOcTlWOGxkdVFLL2xiczVU?=
+ =?utf-8?B?WGc2TktmVVo3SnBnWllLQ3lHa0lPZWliVnpMU0tBdVFKZ1Z3ZTVzZnVRQ2tC?=
+ =?utf-8?B?YXhYVld5U3dnbjBKZWs2VldvZzR0NFNwU3hWWkJ1aG9SWDJXSFRKbmwyZ29E?=
+ =?utf-8?B?c0czSWs1b0dsOURJZkE3djVTTzlvaWgyWmR0NUIwK21TMnFObzZUUC95WHRN?=
+ =?utf-8?B?cVRoK2ZUWVlwbEptVkgzY0VtVU1oeTE3cDNiUGFwU1o2SCs5SDg5S0RWOXd2?=
+ =?utf-8?B?M2Nucm03Y0hzRGFyVmtmSTU2QkR6TjFtV2VKU2F3V0E5cVJwZHNjcHc5Z0sx?=
+ =?utf-8?B?VzdJaUdZdDREcE9VQ1haeEpicmdmSFh6cXZQV2xQS3F6cHl6VTZQRFBub2ZI?=
+ =?utf-8?B?WE1sM0pPejdaeWpBL0xqbjRrTXdtRVZ6V05hSjlPb2VMUjdPenZwc0F6NEo1?=
+ =?utf-8?Q?fSqbMjMXwkxtO9ujzk2p7yM=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(1800799024)(82310400026)(13003099007)(7053199007);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(36860700013)(82310400026)(13003099007)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	sEwSNDTi2vPQO2G4dmMUi7L055K6lopTxdLeCJLjzLpKHzLrmhO07mRT0q56tSQwEdW5dxW95yiyyz67gwogSL4kelG3FhI5szpXO0/kiPxLP8ZxLuMreuEgp7EvJaPkD/LzXcKCVeentPu9An3aU145naNK3SKe0s9tKVUJ4GtwUHNp6pQ0FCHOQhFjm41B1RCd+PzbmMg1Xjf77URGHYEOt6wK3Hc8Sd4krkXGCQzVXWiTLIInGswDUh4Df+MT999Nlcv/K4yp94HxaTFObF1uf9br1uh1kNVr1EoGlZcnOtIXXYqQIeGCeCQxK3G5YZjVvkI+p3HtWFIRxyd20w2UkmlsWSOFn4mwAP7t4qZhF227rxwaRfFbGMOZ0Zz5oswjj6pYmRTl+abTyxqn83j2gEq5skgpdrizPcrBn3Xzcy1/SDhpkU7QvjL4ZZKj
+	YkZ2KbZc4xjeUXgIyW6ki90zXMumcnplseLLw3PmH0cVsNfuo1tXnMpeTkZ/ASJC4OPIDTiI93v4M4TttX+GskAduxVoBGL/Hq42x+xYhrkBtxtwwuGNnbNRa2Wn+qt7Xpz9eJbv+Q0dg8ctRlSuxr2bUnFEZksmRFNMcxFZZTnKueuiewxkXw0RyIYd4Qd4Od33zY2MEts6qT6dNdRMC6JX51mtzJ9+2QG/d4g7spA94qfcOJbBknA1T1DQvjxviw7w5RvvRl1wWf6cGrIsVVqgbyjamHxfpXZ43Cipd+5nDw6zod9GTT1SflCg/+iTGu/ClYK8hyzFgrotM8Wlj369oa2WlUbnaqK0BCMyywKOHZXttgfNwfTtWZ3Zj5Uk/snI9D4XjShFLf5VXxYdhdMHC/VYT7wCrkYE4+L2jT3nrG7SoOjfZzTODrwG6fwA
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2026 17:36:48.4804
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2026 17:36:52.9290
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb99473f-8725-4550-95d0-08de634acf06
+X-MS-Exchange-CrossTenant-Network-Message-Id: e14ca0c4-8081-403d-404f-08de634ad1ad
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B36F.namprd21.prod.outlook.com
+	BN3PEPF0000B374.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7354
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4276
 
-Moving conventions in separate files.
+This adds a convention document for the following patch series:
 
-Cc: Jonathan Corbet <corbet@lwn.net>
+ cxl: ACPI PRM Address Translation Support and AMD Zen5 enablement
+
+Version 7 and later:
+
+ https://lore.kernel.org/linux-cxl/20251114213931.30754-1-rrichter@amd.com/
+
+Link: https://lore.kernel.org/linux-cxl/20251114213931.30754-1-rrichter@amd.com/
+Reviewed-by: Gregory Price <gourry@gourry.net>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Acked-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Robert Richter <rrichter@amd.com>
 ---
+v5:
+ * updated sob-chain (Dan),
+ * removed specification of _DSM,
+ * added PRM handler definition to the specification,
+ * made PRM handler mandatory including the GUID handler id to be used,
+ * added references to PRM spec
+ * revised the entire doc and made small format and grammar fixups and
+   wording improvements,
 v4:
- * updated sob-chain,
+ * updated sob-chain (Dave, Alison, Jonathan, Dan),
+ * added additional spec change for Normalized addressing and _DSM
+   definition for address translation (Dan),
+ * revised the entire doc and made small format and grammar fixups and
+   wording improvements,
 v3:
- * updated sob-chain,
- * move isonum.txt removal to separate patch (Jonathan Cameron),
- * kept intro in conventions.rst (Jonathan Cameron),
- * removed additional blank line in template (Jonathan Cameron),
+ * updated link in descriptions and add Link: tag (Jonathan Cameron),
+ * clarified CFMWS and HPA range description (Jonathan Cameron),
+ * use 80 chars line limit (Jonathan Cameron),
+ * added block diagram to illustrate the example address mappings (Dave),
 v2:
- * removed include:: <isonum.txt> line (Jonathan Corbet).
+ * updated sob-chain,
+ * spell fix in patch description (Randy),
+ * made small changes as suggested by Randy,
+ * Removed include:: <isonum.txt> line (Jon).
+Signed-off-by: Robert Richter <rrichter@amd.com>
 ---
- Documentation/driver-api/cxl/conventions.rst  | 176 +-----------------
- .../driver-api/cxl/conventions/cxl-lmh.rst    | 135 ++++++++++++++
- .../driver-api/cxl/conventions/template.rst   |  37 ++++
- 3 files changed, 178 insertions(+), 170 deletions(-)
- create mode 100644 Documentation/driver-api/cxl/conventions/cxl-lmh.rst
- create mode 100644 Documentation/driver-api/cxl/conventions/template.rst
+ Documentation/driver-api/cxl/conventions.rst  |   1 +
+ .../driver-api/cxl/conventions/cxl-atl.rst    | 304 ++++++++++++++++++
+ 2 files changed, 305 insertions(+)
+ create mode 100644 Documentation/driver-api/cxl/conventions/cxl-atl.rst
 
 diff --git a/Documentation/driver-api/cxl/conventions.rst b/Documentation/driver-api/cxl/conventions.rst
-index ed4237583d36..9267a697b2fe 100644
+index 9267a697b2fe..0d2e07279ad9 100644
 --- a/Documentation/driver-api/cxl/conventions.rst
 +++ b/Documentation/driver-api/cxl/conventions.rst
-@@ -1,8 +1,7 @@
- .. SPDX-License-Identifier: GPL-2.0
+@@ -14,4 +14,5 @@ same convention.
+    :caption: Contents
  
--=======================================
- Compute Express Link: Linux Conventions
--=======================================
-+#######################################
- 
- There exists shipping platforms that bend or break CXL specification
- expectations. Record the details and the rationale for those deviations.
-@@ -10,172 +9,9 @@ Borrow the ACPI Code First template format to capture the assumptions
- and tradeoffs such that multiple platform implementations can follow the
- same convention.
- 
--<(template) Title>
--==================
-+.. toctree::
-+   :maxdepth: 1
-+   :caption: Contents
- 
--Document
----------
--CXL Revision <rev>, Version <ver>
--
--License
---------
--SPDX-License Identifier: CC-BY-4.0
--
--Creator/Contributors
----------------------
--
--Summary of the Change
-----------------------
--
--<Detail the conflict with the specification and where available the
--assumptions and tradeoffs taken by the hardware platform.>
--
--
--Benefits of the Change
------------------------
--
--<Detail what happens if platforms and Linux do not adopt this
--convention.>
--
--References
------------
--
--Detailed Description of the Change
------------------------------------
--
--<Propose spec language that corrects the conflict.>
--
--
--Resolve conflict between CFMWS, Platform Memory Holes, and Endpoint Decoders
--============================================================================
--
--Document
----------
--
--CXL Revision 3.2, Version 1.0
--
--License
---------
--
--SPDX-License Identifier: CC-BY-4.0
--
--Creator/Contributors
----------------------
--
--- Fabio M. De Francesco, Intel
--- Dan J. Williams, Intel
--- Mahesh Natu, Intel
--
--Summary of the Change
-----------------------
--
--According to the current Compute Express Link (CXL) Specifications (Revision
--3.2, Version 1.0), the CXL Fixed Memory Window Structure (CFMWS) describes zero
--or more Host Physical Address (HPA) windows associated with each CXL Host
--Bridge. Each window represents a contiguous HPA range that may be interleaved
--across one or more targets, including CXL Host Bridges. Each window has a set
--of restrictions that govern its usage. It is the Operating System-directed
--configuration and Power Management (OSPM) responsibility to utilize each window
--for the specified use.
--
--Table 9-22 of the current CXL Specifications states that the Window Size field
--contains the total number of consecutive bytes of HPA this window describes.
--This value must be a multiple of the Number of Interleave Ways (NIW) * 256 MB.
--
--Platform Firmware (BIOS) might reserve physical addresses below 4 GB where a
--memory gap such as the Low Memory Hole for PCIe MMIO may exist. In such cases,
--the CFMWS Range Size may not adhere to the NIW * 256 MB rule.
--
--The HPA represents the actual physical memory address space that the CXL devices
--can decode and respond to, while the System Physical Address (SPA), a related
--but distinct concept, represents the system-visible address space that users can
--direct transaction to and so it excludes reserved regions.
--
--BIOS publishes CFMWS to communicate the active SPA ranges that, on platforms
--with LMH's, map to a strict subset of the HPA. The SPA range trims out the hole,
--resulting in lost capacity in the Endpoints with no SPA to map to that part of
--the HPA range that intersects the hole.
--
--E.g, an x86 platform with two CFMWS and an LMH starting at 2 GB:
--
-- +--------+------------+-------------------+------------------+-------------------+------+
-- | Window | CFMWS Base |    CFMWS Size     | HDM Decoder Base |  HDM Decoder Size | Ways |
-- +========+============+===================+==================+===================+======+
-- |   0    |   0 GB     |       2 GB        |      0 GB        |       3 GB        |  12  |
-- +--------+------------+-------------------+------------------+-------------------+------+
-- |   1    |   4 GB     | NIW*256MB Aligned |      4 GB        | NIW*256MB Aligned |  12  |
-- +--------+------------+-------------------+------------------+-------------------+------+
--
--HDM decoder base and HDM decoder size represent all the 12 Endpoint Decoders of
--a 12 ways region and all the intermediate Switch Decoders. They are configured
--by the BIOS according to the NIW * 256MB rule, resulting in a HPA range size of
--3GB. Instead, the CFMWS Base and CFMWS Size are used to configure the Root
--Decoder HPA range that results smaller (2GB) than that of the Switch and
--Endpoint Decoders in the hierarchy (3GB).
--
--This creates 2 issues which lead to a failure to construct a region:
--
--1) A mismatch in region size between root and any HDM decoder. The root decoders
--   will always be smaller due to the trim.
--
--2) The trim causes the root decoder to violate the (NIW * 256MB) rule.
--
--This change allows a region with a base address of 0GB to bypass these checks to
--allow for region creation with the trimmed root decoder address range.
--
--This change does not allow for any other arbitrary region to violate these
--checks - it is intended exclusively to enable x86 platforms which map CXL memory
--under 4GB.
--
--Despite the HDM decoders covering the PCIE hole HPA region, it is expected that
--the platform will never route address accesses to the CXL complex because the
--root decoder only covers the trimmed region (which excludes this). This is
--outside the ability of Linux to enforce.
--
--On the example platform, only the first 2GB will be potentially usable, but
--Linux, aiming to adhere to the current specifications, fails to construct
--Regions and attach Endpoint and intermediate Switch Decoders to them.
--
--There are several points of failure that due to the expectation that the Root
--Decoder HPA size, that is equal to the CFMWS from which it is configured, has
--to be greater or equal to the matching Switch and Endpoint HDM Decoders.
--
--In order to succeed with construction and attachment, Linux must construct a
--Region with Root Decoder HPA range size, and then attach to that all the
--intermediate Switch Decoders and Endpoint Decoders that belong to the hierarchy
--regardless of their range sizes.
--
--Benefits of the Change
------------------------
--
--Without the change, the OSPM wouldn't match intermediate Switch and Endpoint
--Decoders with Root Decoders configured with CFMWS HPA sizes that don't align
--with the NIW * 256MB constraint, and so it leads to lost memdev capacity.
--
--This change allows the OSPM to construct Regions and attach intermediate Switch
--and Endpoint Decoders to them, so that the addressable part of the memory
--devices total capacity is made available to the users.
--
--References
------------
--
--Compute Express Link Specification Revision 3.2, Version 1.0
--<https://www.computeexpresslink.org/>
--
--Detailed Description of the Change
------------------------------------
--
--The description of the Window Size field in table 9-22 needs to account for
--platforms with Low Memory Holes, where SPA ranges might be subsets of the
--endpoints HPA. Therefore, it has to be changed to the following:
--
--"The total number of consecutive bytes of HPA this window represents. This value
--shall be a multiple of NIW * 256 MB.
--
--On platforms that reserve physical addresses below 4 GB, such as the Low Memory
--Hole for PCIe MMIO on x86, an instance of CFMWS whose Base HPA range is 0 might
--have a size that doesn't align with the NIW * 256 MB constraint.
--
--Note that the matching intermediate Switch Decoders and the Endpoint Decoders
--HPA range sizes must still align to the above-mentioned rule, but the memory
--capacity that exceeds the CFMWS window size won't be accessible.".
-+   conventions/cxl-lmh.rst
-+   conventions/template.rst
-diff --git a/Documentation/driver-api/cxl/conventions/cxl-lmh.rst b/Documentation/driver-api/cxl/conventions/cxl-lmh.rst
+    conventions/cxl-lmh.rst
++   conventions/cxl-atl.rst
+    conventions/template.rst
+diff --git a/Documentation/driver-api/cxl/conventions/cxl-atl.rst b/Documentation/driver-api/cxl/conventions/cxl-atl.rst
 new file mode 100644
-index 000000000000..baece5c35345
+index 000000000000..3a36a84743d0
 --- /dev/null
-+++ b/Documentation/driver-api/cxl/conventions/cxl-lmh.rst
-@@ -0,0 +1,135 @@
++++ b/Documentation/driver-api/cxl/conventions/cxl-atl.rst
+@@ -0,0 +1,304 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+Resolve conflict between CFMWS, Platform Memory Holes, and Endpoint Decoders
-+============================================================================
++ACPI PRM CXL Address Translation
++================================
 +
 +Document
 +--------
@@ -386,166 +227,292 @@ index 000000000000..baece5c35345
 +Creator/Contributors
 +--------------------
 +
-+- Fabio M. De Francesco, Intel
-+- Dan J. Williams, Intel
-+- Mahesh Natu, Intel
++- Robert Richter, AMD et al.
 +
 +Summary of the Change
 +---------------------
 +
-+According to the current Compute Express Link (CXL) Specifications (Revision
-+3.2, Version 1.0), the CXL Fixed Memory Window Structure (CFMWS) describes zero
-+or more Host Physical Address (HPA) windows associated with each CXL Host
-+Bridge. Each window represents a contiguous HPA range that may be interleaved
-+across one or more targets, including CXL Host Bridges. Each window has a set
-+of restrictions that govern its usage. It is the Operating System-directed
-+configuration and Power Management (OSPM) responsibility to utilize each window
-+for the specified use.
++The CXL Fixed Memory Window Structures (CFMWS) describe zero or more Host
++Physical Address (HPA) windows associated with one or more CXL Host Bridges.
++Each HPA range of a CXL Host Bridge is represented by a CFMWS entry. An HPA
++range may include addresses currently assigned to CXL.mem devices, or an OS may
++assign ranges from an address window to a device.
 +
-+Table 9-22 of the current CXL Specifications states that the Window Size field
-+contains the total number of consecutive bytes of HPA this window describes.
-+This value must be a multiple of the Number of Interleave Ways (NIW) * 256 MB.
++Host-managed Device Memory is Device-attached memory that is mapped to system
++coherent address space and accessible to the Host using standard write-back
++semantics. The managed address range is configured in the CXL HDM Decoder
++registers of the device. An HDM Decoder in a device is responsible for
++converting HPA into DPA by stripping off specific address bits.
 +
-+Platform Firmware (BIOS) might reserve physical addresses below 4 GB where a
-+memory gap such as the Low Memory Hole for PCIe MMIO may exist. In such cases,
-+the CFMWS Range Size may not adhere to the NIW * 256 MB rule.
++CXL devices and CXL bridges use the same HPA space. It is common across all
++components that belong to the same host domain. The view of the address region
++must be consistent on the CXL.mem path between the Host and the Device.
 +
-+The HPA represents the actual physical memory address space that the CXL devices
-+can decode and respond to, while the System Physical Address (SPA), a related
-+but distinct concept, represents the system-visible address space that users can
-+direct transaction to and so it excludes reserved regions.
++This is described in the *CXL 3.2 specification* (Table 1-1, 3.3.1,
++8.2.4.20, 9.13.1, 9.18.1.3). [#cxl-spec-3.2]_
 +
-+BIOS publishes CFMWS to communicate the active SPA ranges that, on platforms
-+with LMH's, map to a strict subset of the HPA. The SPA range trims out the hole,
-+resulting in lost capacity in the Endpoints with no SPA to map to that part of
-+the HPA range that intersects the hole.
++Depending on the interconnect architecture of the platform, components attached
++to a host may not share the same host physical address space. Those platforms
++need address translation to convert an HPA between the host and the attached
++component, such as a CXL device. The translation mechanism is host-specific and
++implementation dependent.
 +
-+E.g, an x86 platform with two CFMWS and an LMH starting at 2 GB:
++For example, x86 AMD platforms use a Data Fabric that manages access to physical
++memory. Devices have their own memory space and can be configured to use
++'Normalized addresses' different from System Physical Addresses (SPA). Address
++translation is then needed. For details, see
++:doc:`x86 AMD Address Translation </admin-guide/RAS/address-translation>`.
 +
-+ +--------+------------+-------------------+------------------+-------------------+------+
-+ | Window | CFMWS Base |    CFMWS Size     | HDM Decoder Base |  HDM Decoder Size | Ways |
-+ +========+============+===================+==================+===================+======+
-+ |   0    |   0 GB     |       2 GB        |      0 GB        |       3 GB        |  12  |
-+ +--------+------------+-------------------+------------------+-------------------+------+
-+ |   1    |   4 GB     | NIW*256MB Aligned |      4 GB        | NIW*256MB Aligned |  12  |
-+ +--------+------------+-------------------+------------------+-------------------+------+
++Those AMD platforms provide PRM [#prm-spec]_ handlers in firmware to perform
++various types of address translation, including for CXL endpoints. AMD Zen5
++systems implement the ACPI PRM CXL Address Translation firmware call. The ACPI
++PRM handler has a specific GUID to uniquely identify platforms with support for
++Normalized addressing. This is documented in the *ACPI v6.5 Porting Guide*
++(Address Translation - CXL DPA to System Physical Address). [#amd-ppr-58088]_
 +
-+HDM decoder base and HDM decoder size represent all the 12 Endpoint Decoders of
-+a 12 ways region and all the intermediate Switch Decoders. They are configured
-+by the BIOS according to the NIW * 256MB rule, resulting in a HPA range size of
-+3GB. Instead, the CFMWS Base and CFMWS Size are used to configure the Root
-+Decoder HPA range that results smaller (2GB) than that of the Switch and
-+Endpoint Decoders in the hierarchy (3GB).
++When in Normalized address mode, HDM decoder address ranges must be configured
++and handled differently. Hardware addresses used in the HDM decoder
++configurations of an endpoint are not SPA and need to be translated from the
++address range of the endpoint to that of the CXL host bridge. This is especially
++important for finding an endpoint's associated CXL Host Bridge and HPA window
++described in the CFMWS. Additionally, the interleave decoding is done by the
++Data Fabric and the endpoint does not perform decoding when converting HPA to
++DPA. Instead, interleaving is switched off for the endpoint (1-way). Finally,
++address translation might also be needed to inspect the endpoint's hardware
++addresses, such as during profiling, tracing, or error handling.
 +
-+This creates 2 issues which lead to a failure to construct a region:
++For example, with Normalized addressing the HDM decoders could look as follows::
 +
-+1) A mismatch in region size between root and any HDM decoder. The root decoders
-+   will always be smaller due to the trim.
++                          -------------------------------
++                          | Root Decoder (CFMWS)        |
++                          | SPA Range: 0x850000000      |
++                          | Size: 0x8000000000 (512 GB) |
++                          | Interleave Ways: 1          |
++                          -------------------------------
++                                        |
++                                        v
++                          -------------------------------
++                          | Host Bridge Decoder (HDM)   |
++                          | SPA Range: 0x850000000      |
++                          | Size: 0x8000000000 (512 GB) |
++                          | Interleave Ways: 4          |
++                          | Targets: endpoint5,8,11,13  |
++                          | Granularity: 256            |
++                          -------------------------------
++                                        |
++           -----------------------------+------------------------------
++           |                  |                   |                   |
++           v                  v                   v                   v
++ ------------------- ------------------- ------------------- -------------------
++ | endpoint5       | | endpoint8       | | endpoint11      | | endpoint13      |
++ | decoder5.0      | | decoder8.0      | | decoder11.0     | | decoder13.0     |
++ | PCIe:           | | PCIe:           | | PCIe:           | | PCIe:           |
++ |   0000:e2:00.0  | |   0000:e3:00.0  | |   0000:e4:00.0  | |   0000:e1:00.0  |
++ | DPA:            | | DPA:            | | DPA:            | | DPA:            |
++ |   Start: 0x0    | |   Start: 0x0    | |   Start: 0x0    | |   Start: 0x0    |
++ |   Size:         | |   Size:         | |   Size:         | |   Size:         |
++ |    0x2000000000 | |    0x2000000000 | |    0x2000000000 | |    0x2000000000 |
++ |    (128 GB)     | |    (128 GB)     | |    (128 GB)     | |    (128 GB)     |
++ | Interleaving:   | | Interleaving:   | | Interleaving:   | | Interleaving:   |
++ |   Ways: 1       | |   Ways: 1       | |   Ways: 1       | |   Ways: 1       |
++ |   Gran: 256     | |   Gran: 256     | |   Gran: 256     | |   Gran: 256     |
++ ------------------- ------------------- ------------------- -------------------
++          |                   |                   |                   |
++          v                   v                   v                   v
++         DPA                 DPA                 DPA                 DPA
 +
-+2) The trim causes the root decoder to violate the (NIW * 256MB) rule.
++This shows the representation in sysfs:
 +
-+This change allows a region with a base address of 0GB to bypass these checks to
-+allow for region creation with the trimmed root decoder address range.
++.. code-block:: none
 +
-+This change does not allow for any other arbitrary region to violate these
-+checks - it is intended exclusively to enable x86 platforms which map CXL memory
-+under 4GB.
++ /sys/bus/cxl/devices/endpoint5/decoder5.0/interleave_granularity:256
++ /sys/bus/cxl/devices/endpoint5/decoder5.0/interleave_ways:1
++ /sys/bus/cxl/devices/endpoint5/decoder5.0/size:0x2000000000
++ /sys/bus/cxl/devices/endpoint5/decoder5.0/start:0x0
++ /sys/bus/cxl/devices/endpoint8/decoder8.0/interleave_granularity:256
++ /sys/bus/cxl/devices/endpoint8/decoder8.0/interleave_ways:1
++ /sys/bus/cxl/devices/endpoint8/decoder8.0/size:0x2000000000
++ /sys/bus/cxl/devices/endpoint8/decoder8.0/start:0x0
++ /sys/bus/cxl/devices/endpoint11/decoder11.0/interleave_granularity:256
++ /sys/bus/cxl/devices/endpoint11/decoder11.0/interleave_ways:1
++ /sys/bus/cxl/devices/endpoint11/decoder11.0/size:0x2000000000
++ /sys/bus/cxl/devices/endpoint11/decoder11.0/start:0x0
++ /sys/bus/cxl/devices/endpoint13/decoder13.0/interleave_granularity:256
++ /sys/bus/cxl/devices/endpoint13/decoder13.0/interleave_ways:1
++ /sys/bus/cxl/devices/endpoint13/decoder13.0/size:0x2000000000
++ /sys/bus/cxl/devices/endpoint13/decoder13.0/start:0x0
 +
-+Despite the HDM decoders covering the PCIE hole HPA region, it is expected that
-+the platform will never route address accesses to the CXL complex because the
-+root decoder only covers the trimmed region (which excludes this). This is
-+outside the ability of Linux to enforce.
++Note that the endpoint interleaving configurations use direct mapping (1-way).
 +
-+On the example platform, only the first 2GB will be potentially usable, but
-+Linux, aiming to adhere to the current specifications, fails to construct
-+Regions and attach Endpoint and intermediate Switch Decoders to them.
++With PRM calls, the kernel can determine the following mappings:
 +
-+There are several points of failure that due to the expectation that the Root
-+Decoder HPA size, that is equal to the CFMWS from which it is configured, has
-+to be greater or equal to the matching Switch and Endpoint HDM Decoders.
++.. code-block:: none
 +
-+In order to succeed with construction and attachment, Linux must construct a
-+Region with Root Decoder HPA range size, and then attach to that all the
-+intermediate Switch Decoders and Endpoint Decoders that belong to the hierarchy
-+regardless of their range sizes.
++ cxl decoder5.0: address mapping found for 0000:e2:00.0 (hpa -> spa):
++   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
++ cxl decoder8.0: address mapping found for 0000:e3:00.0 (hpa -> spa):
++   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
++ cxl decoder11.0: address mapping found for 0000:e4:00.0 (hpa -> spa):
++   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
++ cxl decoder13.0: address mapping found for 0000:e1:00.0 (hpa -> spa):
++   0x0+0x2000000000 -> 0x850000000+0x8000000000 ways:4 granularity:256
++
++The corresponding CXL host bridge (HDM) decoders and root decoder (CFMWS) match
++the calculated endpoint mappings shown:
++
++.. code-block:: none
++
++ /sys/bus/cxl/devices/port1/decoder1.0/interleave_granularity:256
++ /sys/bus/cxl/devices/port1/decoder1.0/interleave_ways:4
++ /sys/bus/cxl/devices/port1/decoder1.0/size:0x8000000000
++ /sys/bus/cxl/devices/port1/decoder1.0/start:0x850000000
++ /sys/bus/cxl/devices/port1/decoder1.0/target_list:0,1,2,3
++ /sys/bus/cxl/devices/port1/decoder1.0/target_type:expander
++ /sys/bus/cxl/devices/root0/decoder0.0/interleave_granularity:256
++ /sys/bus/cxl/devices/root0/decoder0.0/interleave_ways:1
++ /sys/bus/cxl/devices/root0/decoder0.0/size:0x8000000000
++ /sys/bus/cxl/devices/root0/decoder0.0/start:0x850000000
++ /sys/bus/cxl/devices/root0/decoder0.0/target_list:7
++
++The following changes to the specification are needed:
++
++* Allow a CXL device to be in an HPA space other than the host's address space.
++
++* Allow the platform to use implementation-specific address translation when
++  crossing memory domains on the CXL.mem path between the host and the device.
++
++* Define a PRM handler method for converting device addresses to SPAs.
++
++* Specify that the platform shall provide the PRM handler method to the
++  Operating System to detect Normalized addressing and for determining Endpoint
++  SPA ranges and interleaving configurations.
++
++* Add reference to:
++
++  | Platform Runtime Mechanism Specification, Version 1.1 – November 2020
++  | https://uefi.org/sites/default/files/resources/PRM_Platform_Runtime_Mechanism_1_1_release_candidate.pdf
 +
 +Benefits of the Change
 +----------------------
 +
-+Without the change, the OSPM wouldn't match intermediate Switch and Endpoint
-+Decoders with Root Decoders configured with CFMWS HPA sizes that don't align
-+with the NIW * 256MB constraint, and so it leads to lost memdev capacity.
-+
-+This change allows the OSPM to construct Regions and attach intermediate Switch
-+and Endpoint Decoders to them, so that the addressable part of the memory
-+devices total capacity is made available to the users.
++Without the change, the Operating System may be unable to determine the memory
++region and Root Decoder for an Endpoint and its corresponding HDM decoder.
++Region creation would fail. Platforms with a different interconnect architecture
++would fail to set up and use CXL.
 +
 +References
 +----------
 +
-+Compute Express Link Specification Revision 3.2, Version 1.0
-+<https://www.computeexpresslink.org/>
++.. [#cxl-spec-3.2] Compute Express Link Specification, Revision 3.2, Version 1.0,
++   https://www.computeexpresslink.org/
++
++.. [#amd-ppr-58088] AMD Family 1Ah Models 00h–0Fh and Models 10h–1Fh,
++   ACPI v6.5 Porting Guide, Publication # 58088,
++   https://www.amd.com/en/search/documentation/hub.html
++
++.. [#prm-spec] Platform Runtime Mechanism, Version: 1.1,
++   https://uefi.org/sites/default/files/resources/PRM_Platform_Runtime_Mechanism_1_1_release_candidate.pdf
 +
 +Detailed Description of the Change
 +----------------------------------
 +
-+The description of the Window Size field in table 9-22 needs to account for
-+platforms with Low Memory Holes, where SPA ranges might be subsets of the
-+endpoints HPA. Therefore, it has to be changed to the following:
++The following describes the necessary changes to the *CXL 3.2 specification*
++[#cxl-spec-3.2]_:
 +
-+"The total number of consecutive bytes of HPA this window represents. This value
-+shall be a multiple of NIW * 256 MB.
++Add the following reference to the table:
 +
-+On platforms that reserve physical addresses below 4 GB, such as the Low Memory
-+Hole for PCIe MMIO on x86, an instance of CFMWS whose Base HPA range is 0 might
-+have a size that doesn't align with the NIW * 256 MB constraint.
++Table 1-2. Reference Documents
 +
-+Note that the matching intermediate Switch Decoders and the Endpoint Decoders
-+HPA range sizes must still align to the above-mentioned rule, but the memory
-+capacity that exceeds the CFMWS window size won't be accessible.".
-diff --git a/Documentation/driver-api/cxl/conventions/template.rst b/Documentation/driver-api/cxl/conventions/template.rst
-new file mode 100644
-index 000000000000..ff2fcf1b5e24
---- /dev/null
-+++ b/Documentation/driver-api/cxl/conventions/template.rst
-@@ -0,0 +1,37 @@
-+.. SPDX-License-Identifier: GPL-2.0
+++----------------------------+-------------------+---------------------------+
++| Document                   | Chapter Reference | Document No./Location     |
+++============================+===================+===========================+
++| Platform Runtime Mechanism | Chapter 8, 9      | https://www.uefi.org/acpi |
++| Version: 1.1               |                   |                           |
+++----------------------------+-------------------+---------------------------+
 +
-+.. :: Template Title here:
++Add the following paragraphs to the end of the section:
 +
-+Template File
-+=============
++**8.2.4.20 CXL HDM Decoder Capability Structure**
 +
-+Document
-+--------
-+CXL Revision <rev>, Version <ver>
++"A device may use an HPA space that is not common to other components of the
++host domain. The platform is responsible for address translation when crossing
++HPA spaces. The Operating System must determine the interleaving configuration
++and perform address translation to the HPA ranges of the HDM decoders as needed.
++The translation mechanism is host-specific and implementation dependent.
 +
-+License
-+-------
-+SPDX-License Identifier: CC-BY-4.0
++The platform indicates support of independent HPA spaces and the need for
++address translation by providing a Platform Runtime Mechanism (PRM) handler. The
++OS shall use that handler to perform the necessary translations from the DPA
++space to the HPA space. The handler is defined in Section 9.18.4 *PRM Handler
++for CXL DPA to System Physical Address Translation*."
 +
-+Creator/Contributors
-+--------------------
++Add the following section and sub-section including tables:
 +
-+Summary of the Change
-+---------------------
++**9.18.4 PRM Handler for CXL DPA to System Physical Address Translation**
 +
-+<Detail the conflict with the specification and where available the
-+assumptions and tradeoffs taken by the hardware platform.>
++"A platform may be configured to use 'Normalized addresses'. Host physical
++address (HPA) spaces are component-specific and differ from system physical
++addresses (SPAs). The endpoint has its own physical address space. All requests
++presented to the device already use Device Physical Addresses (DPAs). The CXL
++endpoint decoders have interleaving disabled (1-way interleaving) and the device
++does not perform HPA decoding to determine a DPA.
 +
-+Benefits of the Change
-+----------------------
++The platform provides a PRM handler for CXL DPA to System Physical Address
++Translation. The PRM handler translates a Device Physical Address (DPA) to a
++System Physical Address (SPA) for a specified CXL endpoint. In the address space
++of the host, SPA and HPA are equivalent, and the OS shall use this handler to
++determine the HPA that corresponds to a device address, for example when
++configuring HDM decoders on platforms with Normalized addressing. The GUID and
++the parameter buffer format of the handler are specified in section 9.18.4.1. If
++the OS identifies the PRM handler, the platform supports Normalized addressing
++and the OS must perform DPA address translation as needed."
 +
-+<Detail what happens if platforms and Linux do not adopt this
-+convention.>
++**9.18.4.1 PRM Handler Invocation**
 +
-+References
-+----------
++"The OS calls the PRM handler for CXL DPA to System Physical Address Translation
++using the direct invocation mechanism. Details of calling a PRM handler are
++described in the Platform Runtime Mechanism (PRM) specification.
 +
-+Detailed Description of the Change
-+----------------------------------
++The PRM handler is identified by the following GUID:
 +
-+<Propose spec language that corrects the conflict.>
++ EE41B397-25D4-452C-AD54-48C6E3480B94
++
++The caller allocates and prepares a Parameter Buffer, then passes the PRM
++handler GUID and a pointer to the Parameter Buffer to invoke the handler. The
++Parameter Buffer is described in Table 9-32."
++
++**Table 9-32. PRM Parameter Buffer used for CXL DPA to System Physical Address Translation**
++
+++-------------+-----------+------------------------------------------------------------------------+
++| Byte Offset | Length in | Description                                                            |
++|             |   Bytes   |                                                                        |
+++=============+===========+========================================================================+
++| 00h         | 8         | **CXL Device Physical Address (DPA)**: CXL DPA (e.g., from             |
++|             |           | CXL Component Event Log)                                               |
+++-------------+-----------+------------------------------------------------------------------------+
++| 08h         | 4         | **CXL Endpoint SBDF**:                                                 |
++|             |           |                                                                        |
++|             |           | - Byte 3 - PCIe Segment                                                |
++|             |           | - Byte 2 - Bus Number                                                  |
++|             |           | - Byte 1:                                                              |
++|             |           |          - Device Number Bits[7:3]                                     |
++|             |           |          - Function Number Bits[2:0]                                   |
++|             |           | - Byte 0 - RESERVED (MBZ)                                              |
++|             |           |                                                                        |
+++-------------+-----------+------------------------------------------------------------------------+
++| 0Ch         | 8         | **Output Buffer**: Virtual Address Pointer to the buffer,              |
++|             |           | as defined in Table 9-33.                                              |
+++-------------+-----------+------------------------------------------------------------------------+
++
++**Table 9-33. PRM Output Buffer used for CXL DPA to System Physical Address Translation**
++
+++-------------+-----------+------------------------------------------------------------------------+
++| Byte Offset | Length in | Description                                                            |
++|             |   Bytes   |                                                                        |
+++=============+===========+========================================================================+
++| 00h         | 8         | **System Physical Address (SPA)**: The SPA converted                   |
++|             |           | from the CXL DPA.                                                      |
+++-------------+-----------+------------------------------------------------------------------------+
 -- 
 2.47.3
 
