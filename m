@@ -1,44 +1,44 @@
 Received: from sender4-pp-o90.zoho.com (sender4-pp-o90.zoho.com [136.143.188.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD27D3A784E;
-	Tue,  3 Feb 2026 14:17:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69CC38E5CB;
+	Tue,  3 Feb 2026 14:23:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.90
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770128241; cv=pass; b=LYaZBIUoDbYgHZCcdkqc4ZfSckt/1ZmdYZOe57LKnsvdTX8mEXRx4ty+yaygU9n5JcUH+/JmV8WaIsXg7giUSRdeC4ri3Kg23rRVHz79bvCk+sK239xVB+Sy0TExZClmSt/86rdQuKfSr9cdwCCw1YlIo+IBpoPeOsQpvm8EO2s=
+	t=1770128636; cv=pass; b=SMcU3IwPmWK2lRVF+BDJzcT1ihGo3MeKsXskgaNGLwVMpsMBBXqhqpNt+Cz5hO0VdCRdiEszTdfojvQjNRWTpdCFbQxCxnlD5t85tww81qy8jiJdl1VuNadCI52yF1LTePwWTI5BvY3Cin/jCfDQXbR2vCC9czwQbTIs7+skAKo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770128241; c=relaxed/simple;
-	bh=bXLPOV0fSnDUf9brwCKKCL5ARd4uF3dT49m1RcBbBxk=;
+	s=arc-20240116; t=1770128636; c=relaxed/simple;
+	bh=wvkrZIgXGoSl/zKcvpbuPOlsKpHUxf1VXqJTMoQDJJQ=;
 	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=sfElpidgF9SO3BCwCDcboJT52toLBQfSKyvADCjgWplaPn9f/CrUWeEMwIoGMAVeNladuCpgmVv4OoonCQdytUFv2o21r+TTDqwO4kcQTsCSBt6GLEPZ5ja0dmkbXP4rnMXEn0Qv4CsmbkXO4MHmEel1CRtTYq/CuIY9t64u6jQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Lx87f4B4; arc=pass smtp.client-ip=136.143.188.90
+	 MIME-Version:Content-Type; b=A1edGLrWbb8zqMuAKIBSATl6PZwAs6ObJLljTlEf2Fbl6PhSz//dCwmAO28x1eA81eGn6CCqgsKkqSLxmf++NpO2TQ+8Pt2fmp2B6uhk9FpSXyV0d7fpcrlHjC0NAalHoJHlh4tkgLKJgOKmX0tZUxDdwg95XN1GpOxJL20Wpjk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=CXbKGW8B; arc=pass smtp.client-ip=136.143.188.90
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Lx87f4B4"
-ARC-Seal: i=1; a=rsa-sha256; t=1770128105; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="CXbKGW8B"
+ARC-Seal: i=1; a=rsa-sha256; t=1770128619; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=JbtdkOwY/ak1/ORF/C/zpHV0e8YSXVAey56hbInF+4U+PykrG5mKlpSkoXpefg/E9KiGSeGRNAtroEAubijTrTwzI7ZXLr4IZoX42o6RLzzd3sS4wvVFPNENSq+g857JTiBjGKZqoV/S5AfnEWxYHGhHzLjE7b8ms3NfE33RdH0=
+	b=aJiJ1YOxSocrD7K5XhotZabc3EEfcudFTLLH8PkvUA38NMQJAgDFLFW7iyg+kzxhroPehVqiP0pdjPZAUBx8Ks1YI2JM8Tq5icqVrzm5r34Ds24gW9F6oXbv8rJJJZwodXoFMkJ2Zs49WfWv4RqjpwPX9ruCYn1TI8RNpufXgQs=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1770128105; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=8NS/EN06yl9lW7f2UEWT2XTxQNCTe4hJh78q7ioi4S4=; 
-	b=WhzxShJqTmqoiCa1bvbnozz97RtEjqv8pruDVwFAIG4yKSf64i7igwp9sPfW7pFdA1LdVtOiNjLEaRPy2kb73bFzHcZKXb4KNs4PwbQhcV+RLmLmTnQSdzkpf3iOfQJ8MMBEuXueHZhnVyV4NTmwTffVZ76CIwu47tkLbW4igys=
+	t=1770128619; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=xJbJfSAfgc8tdOJIaDn21wthOF6/Fyv3TK3bifzkQSM=; 
+	b=aVtFhh4pF4vnQ+tfU+ApARiPHuu7/rH/B8gdKHu++tNAjwY7VDymAUpty7ZIS4yFAjchsa/7cGqN5g99c+LA48lBLo7OQ9/r0e9W6eO91rB8GBV0xjQUObTIBDQzRz/j2/M1pUETm8jeUVrEXRdTDhnCfddL7j+CAF5rq8B5kWU=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770128105;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770128619;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
 	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=8NS/EN06yl9lW7f2UEWT2XTxQNCTe4hJh78q7ioi4S4=;
-	b=Lx87f4B4zzxDdoKjk6d8ciEVU1vofgs7nE0lvXdC6EOPQ5lQTGGcdZ14Mj9HKx6c
-	G75N04QZCIenB+3RsCHazuH2wwJzWvq16+TBE4IQqDgOSgPUhc5B14C1c0pZPM4Pugg
-	cIb24gejGv9MoGJUtaTrAxNLTkwFUWYgRP86w3y4=
+	bh=xJbJfSAfgc8tdOJIaDn21wthOF6/Fyv3TK3bifzkQSM=;
+	b=CXbKGW8BYlDLm95IjLCU3/sDRdK56KCArs7/kymJbGjmmNj/OuwsCgDWai98exGV
+	OU6D4K+DCnkCOXAEK8fDtDARLeIgLNE1eEJ28BcbfgutOLsQD4s6DhqT4E96euKdrR4
+	0SSxxv7CH1wKhr3ETYN1ciOJre0KXyXk/1DoWY2Y=
 Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1770128103434286.315767033842; Tue, 3 Feb 2026 06:15:03 -0800 (PST)
+	with SMTP id 1770128618286653.5565535544064; Tue, 3 Feb 2026 06:23:38 -0800 (PST)
 Received: from  [188.253.115.11] by mail.zoho.com
-	with HTTP;Tue, 3 Feb 2026 06:15:03 -0800 (PST)
-Date: Tue, 03 Feb 2026 22:15:03 +0800
+	with HTTP;Tue, 3 Feb 2026 06:23:38 -0800 (PST)
+Date: Tue, 03 Feb 2026 22:23:38 +0800
 From: Li Ming <ming.li@zohomail.com>
 To: "Jonathan Cameron" <jonathan.cameron@huawei.com>
 Cc: "dave" <dave@stgolabs.net>, "dave.jiang" <dave.jiang@intel.com>,
@@ -48,11 +48,12 @@ Cc: "dave" <dave@stgolabs.net>, "dave.jiang" <dave.jiang@intel.com>,
 	"dan.j.williams" <dan.j.williams@intel.com>,
 	"linux-cxl" <linux-cxl@vger.kernel.org>,
 	"linux-kernel" <linux-kernel@vger.kernel.org>
-Message-ID: <19c23db57fd.ece515507178.5495973139177331106@zohomail.com>
-In-Reply-To: <20260202144103.000016cb@huawei.com>
+Message-ID: <19c23e33320.c78951ef7300.3027465952765956716@zohomail.com>
+In-Reply-To: <20260202153924.00002396@huawei.com>
 References: <20260201093002.1281858-1-ming.li@zohomail.com>
-	<20260201093002.1281858-2-ming.li@zohomail.com> <20260202144103.000016cb@huawei.com>
-Subject: Re: [PATCH 1/2] cxl/core: Set cxlmd->endpoint to NULL by default
+	<20260201093002.1281858-3-ming.li@zohomail.com> <20260202153924.00002396@huawei.com>
+Subject: Re: [PATCH 2/2] cxl/core: Hold grandparent port lock while dport
+ adding
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -64,7 +65,7 @@ Content-Transfer-Encoding: 7bit
 Importance: Medium
 User-Agent: Zoho Mail
 X-Mailer: Zoho Mail
-Feedback-ID: rr0801122cfa02f362062f21d4ed0b57390000cdbea1993dd94d7d5f49044c8ebb51e50ac2564025ce983a1d74b236f9c6:zu080112273b64f5feda0d02db74db1a060000ebc62b8771cfeb26ffff0ecdb2cf451e75a0daa7e57ff9f316:rf0801123230820a2204f9f625d78eb9070000e0fb45e8ff257e425b8e65aaff8fd018c777ce69a873a4c2bb19361e5fc63e98dfe3617f:ZohoMail
+Feedback-ID: rr0801122c4edc738e26565353fd5228af00008fbb5b760634f91d945a8f89be2fb5cd4f0a08a1a28e99c9c991da9bcd26:zu08011227875f40eeb898f4c1665609690000424f3dda523e7a5bdc5f171218593f8b9e2066469863c9cf51:rf080112320902cc147cd1caf34454c09c0000817064c62cecee544a40aa7e83f52dd71e188633557c86907b0a8c5d527ae90bed91c805:ZohoMail
 
 
 
@@ -72,76 +73,108 @@ Feedback-ID: rr0801122cfa02f362062f21d4ed0b57390000cdbea1993dd94d7d5f49044c8ebb5
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: "Li Ming"<ming.li@zohomail.com>
 Cc: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>, <vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Date: Mon, 02 Feb 2026 22:41:03 +0800
-Subject: Re: [PATCH 1/2] cxl/core: Set cxlmd->endpoint to NULL by default
+Date: Mon, 02 Feb 2026 23:39:24 +0800
+Subject: Re: [PATCH 2/2] cxl/core: Hold grandparent port lock while dport adding
 
- > On Sun,  1 Feb 2026 17:30:01 +0800
+ > On Sun,  1 Feb 2026 17:30:02 +0800
  > Li Ming <ming.li@zohomail.com> wrote:
  > 
- > > CXL testing environment can trigger following trace
+ > > When CXL subsystem adds a cxl port to a hierarchy, there is a small
+ > > window where the new port becomes visible before it is bound to a
+ > > driver. This happens because device_add() adds a device to bus device
+ > > list before bus_probe_device() binds it to a driver.
+ > > So if two cxl memdevs are trying to add a dport to a same port via
+ > > devm_cxl_enumerate_ports(), the second cxl memdev may observe the port
+ > > and attempt to add a dport, but fails because the port has not yet been
+ > > attached to cxl port driver.
+ > > the sequence is like:
  > > 
- > >  Oops: general protection fault, probably for non-canonical address 0xdffffc0000000092: 0000 [#1] SMP KASAN NOPTI
- > >  KASAN: null-ptr-deref in range [0x0000000000000490-0x0000000000000497]
- > >  RIP: 0010:cxl_dpa_to_region+0x105/0x1f0 [cxl_core]
- > >  Call Trace:
- > >   <TASK>
- > >   cxl_event_trace_record+0xd1/0xa70 [cxl_core]
- > >   __cxl_event_trace_record+0x12f/0x1e0 [cxl_core]
- > >   cxl_mem_get_records_log+0x261/0x500 [cxl_core]
- > >   cxl_mem_get_event_records+0x7c/0xc0 [cxl_core]
- > >   cxl_mock_mem_probe+0xd38/0x1c60 [cxl_mock_mem]
- > >   platform_probe+0x9d/0x130
- > >   really_probe+0x1c8/0x960
- > >   __driver_probe_device+0x187/0x3e0
- > >   driver_probe_device+0x45/0x120
- > >   __device_attach_driver+0x15d/0x280
- > > 
- > > commit 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
- > > initializes cxlmd->endpoint to ERR_PTR(-ENXIO) in cxl_memdev_alloc().
- > > However, cxl_dpa_to_region() treats a non-NULL cxlmd->endpoint as a
- > > valid endpoint.
- > > 
- > > Across the CXL core, endpoint availability is generally determined by
- > > checking whether it is NULL. Align with this convention by initializing
- > > cxlmd->endpoint to NULL by default.
+ > > CPU 0                    CPU 1
+ > > devm_cxl_enumerate_ports()
+ > >   # port not found, add it
+ > >   add_port_attach_ep()
+ > >     # hold the parent port lock
+ > >     # to add the new port
+ > >     devm_cxl_create_port()
+ > >       device_add()
+ > >     # Add dev to bus devs list
+ > >     bus_add_device()
+ > >                     devm_cxl_enumerate_ports()
+ > >                     # found the port
  > 
- > I had a look at whether it made sense to use use IS_ERR_OR_NULL() to check
- > for validity of the endpoint, but it would be somewhat fiddly and I think
- > you are correct that convention here seems to be NULL means not set.
- > We don't need the error code.  One comment inline.
- > 
- > Either way nice catch
- > Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Thanks for the review.
+ > Indenting not consistent here as this call is in devm_cxl_enumerate_ports()
+Thanks for that, will fix it in next version.
 
  > 
+ > >                     find_cxl_port_by_uport()
+ > >                     # hold port lock to add a dport
+ > >                     device_lock(the port)
+ > >                     find_or_add_dport()
+ > >                       cxl_port_add_dport()
+ > >                         return -ENXIO because port->dev.driver is NULL
+ > >                     device_unlock(the port)
+ > >     bus_probe_device()
+ > >       # hold the port lock
+ > >       # for attaching
+ > >       device_lock(the port)
+ > >         attaching the new port
+ > >       device_unlock(the port)
+ > > 
+ > > To fix this race, require that dport addition holds the parent port lock
+ > > of the target port. The CXL subsystem already requires holding the
+ > > parent port lock while attaching a new port. Therefore, successfully
+ > > acquiring the parent port lock ganrantees that port attaching has
  > 
+ > Spell check. Guarantees
+Got it.
+
+ > 
+ > > completed.
  > > 
- > > Fixes: 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
+ > > Fixes: 4f06d81e7c6a ("cxl: Defer dport allocation for switch ports")
  > > Signed-off-by: Li Ming <ming.li@zohomail.com>
+ > 
+ > Analysis looks reasonable to me, but I'm not hugely confident on this
+ > one so would like others to take a close look as well.
+ > Question inline.
+ > 
+ > 
  > > ---
- > >  drivers/cxl/core/memdev.c | 2 +-
- > >  1 file changed, 1 insertion(+), 1 deletion(-)
+ > >  drivers/cxl/core/port.c | 6 +++++-
+ > >  1 file changed, 5 insertions(+), 1 deletion(-)
  > > 
- > > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
- > > index af3d0cc65138..41a507b5daa4 100644
- > > --- a/drivers/cxl/core/memdev.c
- > > +++ b/drivers/cxl/core/memdev.c
- > > @@ -675,7 +675,7 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
- > >      cxlmd->id = rc;
- > >      cxlmd->depth = -1;
- > >      cxlmd->attach = attach;
- > > -    cxlmd->endpoint = ERR_PTR(-ENXIO);
- > > +    cxlmd->endpoint = NULL;
- > cxlmd has just been allocated with kzalloc so I'd argue we don't need this to be explicitly
- > set at all.  Seems like a natural and safe default.
-Yes, I forgot it. Thanks for pointing it out.
+ > > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+ > > index 54f72452fb06..fef2fe913e1f 100644
+ > > --- a/drivers/cxl/core/port.c
+ > > +++ b/drivers/cxl/core/port.c
+ > > @@ -1817,8 +1817,12 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+ > >              /*
+ > >               * RP port enumerated by cxl_acpi without dport will
+ > >               * have the dport added here.
+ > > +             *
+ > > +             * Hold the parent port lock here to in case that the
+ > > +             * port can be observed but has not been attached yet.
+ > >               */
+ > > -            scoped_guard(device, &port->dev) {
+ > > +            scoped_guard(device, &parent_port_of(port)->dev) {
+ > I'm nervous about whether this is the right lock. For unregister_port()
+ > (which is easier to track down that the add path locking) the lock
+ > taken depends on where the port is that is being unregistered.
+ > Specifically root ports are unregistered under parent->uport_dev, not
+ > parent->dev.
+You are right.
+When cxl acpi driver attempts to add a cxl host bridge port, it will hold cxl_root->uport_dev.
+Otherwide, hold parent_port->dev lock for the new port addition.
+So I think it is possible that memdev can observe a cxl host bridge port but it has not been attach yet.
+Maybe I should hold the lock of the new port's host.
+Let's see if other reviewers have more comments on that.
 
 Ming
  > 
- > >  
- > >      dev = &cxlmd->dev;
- > >      device_initialize(dev);
+ > > +                guard(device)(&port->dev);
+ > >                  dport = find_or_add_dport(port, dport_dev);
+ > >                  if (IS_ERR(dport)) {
+ > >                      if (PTR_ERR(dport) == -EAGAIN)
  > 
  > 
 
