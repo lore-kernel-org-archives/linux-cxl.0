@@ -1,141 +1,116 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F962BD5A7
-	for <linux-cxl@vger.kernel.org>; Wed,  4 Feb 2026 11:50:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E1D359FB8
+	for <linux-cxl@vger.kernel.org>; Wed,  4 Feb 2026 12:12:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770205849; cv=none; b=Ju0FUoJAxrr9YGTGTpGECAsAf46EfQVSziNoY35LkoEANwhcJakr6Qj4AWiU/KiTwLWgBgpWPCGZ44alJAZbSLQ6kl6BkLNtjCbsu13SKO5jQguc8WNozKPuryTsiyvzIHt9tVNr9j2dIRea3kKPsNQDI9GNVkxE8fcNZWtgQ7s=
+	t=1770207143; cv=none; b=oFlUKPUcFpTjX5yvxeuIQEgXlZnrTmZ9W8fN76sG+8jRLlIU5TD0+P1B5WrNhnhEPl1OVkyg2kTbu9hTShI/2YkSCApA0Rs9JiCHBswV3rlNMXLs8++3WFFrMKpjJd4uSfQaV85zSXhxV2sFMb0tcur1pZUjmYkosYGoQsl+lE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770205849; c=relaxed/simple;
-	bh=4ktMZD2edvxDYZXIxn1NGKo9OFWVpRsSL4kkShtj3Es=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KGVthf/0APJD5HlUSupIyBEJ32TF56vWe91NNy/rj4Rd79OWWYVjpEqRNoodkMZR09NCH2JJXVouF/gzzWvjNhW4GETMd02SZDUSHFDLADamRHSwrFij0a2I5OfRTrKEjSupKmIxkplHytqFlJ1hrIBAS4Fw5E4yY2D4Heeft+s=
+	s=arc-20240116; t=1770207143; c=relaxed/simple;
+	bh=I+Yk2AlZDXWM8zEA5qsmO0llOYaDm1Hahw9KBVoBznw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V/06enPM0hR86vIajMThmg9ZvFIHYrYSHuKyjYRaslc4f2ybgYJ29x1FgJcxkJzwcS/klvR7fXsSYOpnuy8pjVQhh68q5WxtiZrSO1/cGc14FP608M77TNEDOGSRkKGXvvs5lDRLTwGtOsYofdftAaZ9eDQgQByb1VoRModRos4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4f5dv91nv0zJ46cP;
-	Wed,  4 Feb 2026 19:49:57 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.224.107])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4f5fMp4nfSzHnHM9;
+	Wed,  4 Feb 2026 20:11:18 +0800 (CST)
 Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 381924056A;
-	Wed,  4 Feb 2026 19:50:46 +0800 (CST)
-Received: from localhost (10.122.19.247) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 4 Feb
- 2026 11:50:44 +0000
-Date: Wed, 4 Feb 2026 11:50:41 +0000
+	by mail.maildlp.com (Postfix) with ESMTPS id EBCE040584;
+	Wed,  4 Feb 2026 20:12:19 +0800 (CST)
+Received: from SecurePC-101-06.huawei.com (10.122.19.247) by
+ dubpeml500005.china.huawei.com (7.214.145.207) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 4 Feb 2026 12:12:17 +0000
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-CC: <qemu-devel@nongnu.org>, Davidlohr Bueso <dave@stgolabs.net>,
-	<linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>, Ravi Shankar
+To: Michael Tsirkin <mst@redhat.com>, <qemu-devel@nongnu.org>, Davidlohr Bueso
+	<dave@stgolabs.net>
+CC: <linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>, Ravi Shankar
 	<venkataravis@micron.com>, Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
 	Markus Armbruster <armbru@redhat.com>, Michael Roth <michael.roth@amd.com>
-Subject: Re: [PATCH qemu v5 6/7] hw/cxl: Support type3 HDM-DB
-Message-ID: <20260204115041.00001755@huawei.com>
-In-Reply-To: <20260203144122-mutt-send-email-mst@kernel.org>
-References: <20260109144511.557781-1-Jonathan.Cameron@huawei.com>
-	<20260109144511.557781-7-Jonathan.Cameron@huawei.com>
-	<20260203144122-mutt-send-email-mst@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+Subject: [PATCH qemu v6 0/7] hw/cxl: Support Back-Invalidate (+ PCIe Flit mode)
+Date: Wed, 4 Feb 2026 12:12:08 +0000
+Message-ID: <20260204121215.68897-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
  dubpeml500005.china.huawei.com (7.214.145.207)
 
+v6:
+- Initialize a variable that causing a false warning with some versions of gcc.
+- Rebase.
+- Tag from Davidlohr for the ACPI change.
 
-> > +        }
-> > +
-> > +        return cregs->cache_mem_registers[offset / 4];
-> >      case 8:
-> >          qemu_log_mask(LOG_UNIMP,
-> >                        "CXL 8 byte cache mem registers not implemented\=
-n");
-> > @@ -118,6 +148,47 @@ static void dumb_hdm_handler(CXLComponentState *cx=
-l_cstate, hwaddr offset,
-> >      stl_le_p((uint8_t *)cache_mem + offset, value);
-> >  }
-> > =20
-> > +static void bi_handler(CXLComponentState *cxl_cstate, hwaddr offset,
-> > +                            uint32_t value)
-> > +{
-> > +    ComponentRegisters *cregs =3D &cxl_cstate->crb;
-> > +    uint32_t sts, *cache_mem =3D cregs->cache_mem_registers;
-> > +    bool to_commit =3D false;
-> > +    int type; =20
->=20
-> type is declared here...
->=20
-> > +
-> > +    switch (offset) {
-> > +    case A_CXL_BI_RT_CTRL:
-> > +        to_commit =3D FIELD_EX32(value, CXL_BI_RT_CTRL, COMMIT);
-> > +        if (to_commit) {
-> > +            sts =3D cxl_cache_mem_read_reg(cxl_cstate,
-> > +                                         R_CXL_BI_RT_STATUS, 4);
-> > +            sts =3D FIELD_DP32(sts, CXL_BI_RT_STATUS, COMMITTED, 0);
-> > +            stl_le_p((uint8_t *)cache_mem + R_CXL_BI_RT_STATUS, sts);
-> > +            type =3D CXL_BISTATE_RT; =20
->=20
-> and initialized here
->=20
-> > +        }
-> > +        break;
-> > +    case A_CXL_BI_DECODER_CTRL:
-> > +        to_commit =3D FIELD_EX32(value, CXL_BI_DECODER_CTRL, COMMIT);
-> > +        if (to_commit) {
-> > +            sts =3D cxl_cache_mem_read_reg(cxl_cstate,
-> > +                                         R_CXL_BI_DECODER_STATUS, 4);
-> > +            sts =3D FIELD_DP32(sts, CXL_BI_DECODER_STATUS, COMMITTED, =
-0);
-> > +            stl_le_p((uint8_t *)cache_mem + R_CXL_BI_DECODER_STATUS, s=
-ts);
-> > +            type =3D CXL_BISTATE_DECODER; =20
->=20
-> and here
->=20
-> > +        }
-> > +        break;
-> > +    default:
-> > +        break;
-> > +    }
-> > +
-> > +    if (to_commit) {
-> > +        cxl_cstate->bi_state[type].last_commit =3D
-> > +                qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL); =20
->=20
-> so there is no way for it to be used uninitialized.
->=20
->=20
-> However some gcc versions are not smart enough to see that
-> and they warn:
->=20
-> https://gitlab.com/mstredhat/qemu/-/jobs/12972572228
->=20
->=20
-> ../hw/cxl/cxl-component-utils.c: In function =E2=80=98cxl_cache_mem_write=
-_reg=E2=80=99:
-> ../hw/cxl/cxl-component-utils.c:181:48: error: =E2=80=98type=E2=80=99 may=
- be used uninitialized in this function [-Werror=3Dmaybe-uninitialized]
->   181 |         cxl_cstate->bi_state[type].last_commit =3D
->       |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
->   182 |                 qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
->       |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ../hw/cxl/cxl-component-utils.c:153:9: note: =E2=80=98type=E2=80=99 was d=
-eclared here
->   153 |     int type;
->       |         ^~~~
-> cc1: all warnings being treated as errors
->=20
-Thanks. I'll set it to 0 at declaration with a comment that it's there to r=
-esolve
-a compiler warning (so no one deletes it as a cleanup!)
+Based on - due to fuzz + context changes.
 
-Jonathan
+1. [PATCH qemu v4 0/5] cxl: r3.2 specification event updates.
+https://lore.kernel.org/qemu-devel/20260119111542.788389-1-Jonathan.Cameron@huawei.com/
+
+2. [PATCH qemu for 10.2 0/3] cxl: Additional RAS features support.
+https://lore.kernel.org/qemu-devel/20250917143330.294698-1-Jonathan.Cameron@huawei.com/
+
+3. [PATCH qemu 0/2] hw/cxl: Two media operations related fixes.
+https://lore.kernel.org/qemu-devel/20260102154731.474859-1-Jonathan.Cameron@huawei.com/
+(most likely will apply fine with out this one)
+
+v5 changes:
+- Rebase much earlier in the CXL queue as Davidlohr had it beind some stuff
+  I was carrying that is not ready for upstream just yet.
+- Update the CFMWS flags directly as the patch doing restriction control needs
+  some more thought.
+- Bios tables test data updates.
+- Don't provide flit mode control for gen_pcie_root_port as we don't need it
+  for the rest of the series which is all about CXL.
+
+The following allows support for component basic back invalidation discovery
+and config, by exposing the BI routing table and decoder registers. Instead
+of going the type2[0] route, this series proposes adding support for type3
+hdm-db, which allows a more direct way of supporting BI in qemu.
+
+As BI is a dependent on the larger flits introduced in PCIe (and CXL 3.0)
+add support for enabling that for CXL components. Negotiation is handled
+via an equivalent of what we do for link speed.
+
+Davidlohr Bueso (3):
+  hw/pcie: Support enabling flit mode
+  hw/cxl: Support type3 HDM-DB
+  hw/cxl: Remove register special_ops->read()
+
+Ira Weiny (1):
+  hw/cxl: Refactor component register initialization
+
+Jonathan Cameron (3):
+  tests/bios-tables-test: Excluded CEDT.cxl for BI restriction
+    relaxation.
+  hw/cxl: Update CXL Fixed Memory Window ACPI description to include
+    Back Invalidate support.
+  tests/acpi/cxl: Update CEDT.cxl to allow BI in CFWMS
+
+ docs/system/devices/cxl.rst               |  23 +++
+ include/hw/cxl/cxl_component.h            |  87 +++++++--
+ include/hw/cxl/cxl_device.h               |   4 +
+ include/hw/pci-bridge/cxl_upstream_port.h |   1 +
+ include/hw/pci/pcie.h                     |   2 +-
+ include/hw/pci/pcie_port.h                |   1 +
+ hw/acpi/cxl.c                             |   2 +-
+ hw/cxl/cxl-component-utils.c              | 211 ++++++++++++++++------
+ hw/mem/cxl_type3.c                        |  15 +-
+ hw/pci-bridge/cxl_downstream.c            |  10 +-
+ hw/pci-bridge/cxl_root_port.c             |  11 +-
+ hw/pci-bridge/cxl_upstream.c              |  18 +-
+ hw/pci-bridge/pci_expander_bridge.c       |   2 +-
+ hw/pci/pcie.c                             |  23 ++-
+ tests/data/acpi/x86/q35/CEDT.cxl          | Bin 184 -> 184 bytes
+ 15 files changed, 313 insertions(+), 97 deletions(-)
+
+-- 
+2.51.0
 
