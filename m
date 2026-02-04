@@ -1,304 +1,263 @@
-Received: from mail-dl1-f68.google.com (mail-dl1-f68.google.com [74.125.82.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail1.bemta45.messagelabs.com (mail1.bemta45.messagelabs.com [85.158.142.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB1724676D
-	for <linux-cxl@vger.kernel.org>; Wed,  4 Feb 2026 21:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770241622; cv=pass; b=qVLuzxVwc95E44r4r+TCmjShPU6HVGv8bAQ2jybY6btj5aTiAB2nexMwSSB/wxtDZRmTBJZ/Me/FdfKC2myuIqMXi6YFFY5Flx7+DVEMCqsZMLjkFSTlS3WqawlJa6OEvCyNvIOo9vvVBlcv/HyFYFhYqgUNi6Hj1hkVi7JShQ8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770241622; c=relaxed/simple;
-	bh=ejQcmQT+8NkkyFW8yOjv/8bR+a/8570tym7VjUaZh3g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E1ub7QFtWqSTSvTMGFkM+zUaTPMBOVr5kU2yuXGjLN2NpCOadz7KZPKY5QCtBUQ6Zpgf9btOzGWyWJrv84WUif2Co+t0rMvVteIogpILY8KJCmH6Gd/O4afYGN0EQiJAisOfve3RbrXYztuVgp0p1bhHWYwS/YBfwIqFFzaB67s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KQCUSXBs; arc=pass smtp.client-ip=74.125.82.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A761039E6CB;
+	Wed,  4 Feb 2026 23:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.158.142.112
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770247687; cv=none; b=rqDbAhLvX8IX9pssrQ+ipEGI4kww2H9nhg4hwa+/7t43TJe7vIoKgmFrVfiqPY/Sih9w9jXZQX4G7lv+6WDIUiIhs5A6RJ0sJXD4LuKhiOxilXeT2c/GHv7xkI+VMkrUXn+frw+AYUHsuPNI8q012iw7M6WqN9axDyonmyRRyKI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770247687; c=relaxed/simple;
+	bh=RTgoh1URLzesQ/bDDWsOSGNKKatiPoxeEWWxVFDR/R4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YpDj1kDJvxxIchcFJrp9eu5xutMHoXWEDtp2QFZ+MKFiI0yqBTteu3GrAfvzlCQPgoP5EvwmOUBkZ/m7Rq+1uDB1JGb345R1UbyjgoYBMl16lIK+1V3RV2UcOXi5IGFvinfjxPewSe7lAqN/TwLpJEK81TbavLKW8Tb/1YMInpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=kppxTa81; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=eRLn0W4C; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=eRLn0W4C; arc=none smtp.client-ip=85.158.142.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQCUSXBs"
-Received: by mail-dl1-f68.google.com with SMTP id a92af1059eb24-124a635476fso570823c88.0
-        for <linux-cxl@vger.kernel.org>; Wed, 04 Feb 2026 13:47:02 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770241621; cv=none;
-        d=google.com; s=arc-20240605;
-        b=a0gkh68lAYgXxuKPMDCeeOympRdphuisjOUFBkaYD0lw8+xN1xjtQ9ccvrlGpX89Cx
-         JnkBXyRpwemnYyZdyUwKU3hMIHtky/TZ9vXuhaK9GSbUvNRYpKruR0Bc9Z7ectTiWuak
-         cKCvy7lczvrPs7Bi3pxWEJEapWds9tzoodkV4zI4MpOsjwkSVgKYCLrAv7ykoa5OB5aH
-         mrFpTUX++bzn98KAarWPx+zlukjmDcNjcf9chc1dw/MzKCFrU97yM0pkSxVVnSEyNzlI
-         XRFDRBW2craTQRLBFTDj/SBPXERQJCabAACswAqpGeuh3ld+sSfQdlUhgs2jO+gi2b9M
-         uoEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=NAnGPKUaTJbrlcxFs0fhKTBs0MXjGFWJLTU73DFyTrE=;
-        fh=9LqRUBjV12akQYkvE0B8L0fe+it4dWY2G3YCcua8U54=;
-        b=GSv+eRHXoOGlgvSczOksJY+MfkVq0TVhMrlwsPZdrF6ASSxQIAoxT/6UT6Gyql7h7K
-         qVeeaMiZLwwf1rdKFdm8ric13hZyruDKeHpJKIbfKrk+OtlqG8bwF0LKKbQZba4Agkkr
-         z/kIzJhDStEfuLBsrLeCR4Y31aGefyDMd26XobEvdDqe9WAB+1FM0Q5bj9TPlhBBklt9
-         HcKLUke814ZY+zkLXp9Z5of2CDngHS3m6eVQuzxOMOgB8rT2UJMkWADdEp42ifnZwxx6
-         /xPcsDbqtofGzeD8o9zuzWx5D65uY+0YQefqGpBz308v2LqLbT1AIakbPmn5Xv5p+HOq
-         sjxg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770241621; x=1770846421; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NAnGPKUaTJbrlcxFs0fhKTBs0MXjGFWJLTU73DFyTrE=;
-        b=KQCUSXBs4EZeQCNTLLKhMvMgRIY5n67ysGIFZMe4iTYJz3nM0Ctbe058zLVAgm6ZaL
-         WHfoQ1HPjX3Ow/kaTNioRcgLzRXaV1yVymFYAUpb7Jm6hNhIDY24ZkavJvLkTEDKOd5z
-         xY42y6P/sLi8IpYk7pAXf6RgLzGzemY55AfPMJHbSuiGVXWj+qmS9D1jiW6WZa+eHc8G
-         rNEFIq8/V98LeK/tUt+RoJV57/s2z8xx7ATT1DaMAVw2LdjTo4q0yc6WKdHG6HiU8pwr
-         PlR+z64yLMaly+ISDMxrvXeVquyhWyyQN8aw5hf99WUnuv/uEJmRqlnpdr/Bqd05P4Wx
-         zhSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770241621; x=1770846421;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=NAnGPKUaTJbrlcxFs0fhKTBs0MXjGFWJLTU73DFyTrE=;
-        b=YiMrkG/BWPMRQBMxli75LdIfXEzjb3j11zgwUPs4xpt2zJXafIDp092DyhFu5G4+lm
-         PJljl5r2KxWXK0HyjFDHUUs3Co0G/8rtqSEosLyXmANJSDaTTv2V7VqjvyD3bi6alZ9V
-         8rpX5Mb7wcnRkTOVC1VQMPrfw4YvWxSJ7sCsw5B3UAm13KbDiG1UrrbXs7CD2CGAn2oC
-         CoMJ21eWxKIi2864qldMMypgFrprr8Yj4THqijYXUy9NXevB8IyQqcSs3P1xajXgGmgE
-         h+/YvMwfW9tHpedD20jYAg6UA7kk23IL+CoyO28WqPKBWy510nJnc0ZEUBN+1CrHnn7j
-         vipA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/zT9qexvIqvCo3C/S8ZIzxeqGWT83LzVD1Mwr69/ZjBs6j91aTCBl8Xu8neNbjSMIZf6FJYvZgow=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBlDFmUgMXrkv/v/woSbe79LlYTvXb2mUGNlz7orFstRBMmLYl
-	gyOJc6YmOJ3WwgJ4Cmjg1Bt8aSbN5zlHJZGcDX8Gye+IU3NRjaxYSbujUhiIHC/l595TmHTRwqN
-	CdQ4yFbIJF3y3Mjvs3qNfohzp17wxgQ==
-X-Gm-Gg: AZuq6aJMy+OhNyTom/LCi27oZkiNWmR/+Adw1r/ExZAIFFL99nchpfzXuCvIwpPgoWN
-	cfvYSfD67PlXPpVdiWZ8PGc5eqzPlUDAc97JwUXqkSXq2dnLPIxJS2GKB8pt0ZjYTKPnw8t++aX
-	BhGeoUDoCzIxYWrArcaU1KK+8CLgpg5TqqGGPhVL3J4cQv3fOGNaX+FugVTDTogkvefupy5LUme
-	0HeW0YuZRQZERV+UCFqTjSzxOJQsozgvI5aKl7w+lFNbhOMz/8dmv9rnZj84DI55PiBH2Q=
-X-Received: by 2002:a05:7022:6a1:b0:119:e55a:9bf6 with SMTP id
- a92af1059eb24-126f478e3c5mr1796566c88.18.1770241621438; Wed, 04 Feb 2026
- 13:47:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="kppxTa81";
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="eRLn0W4C";
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="eRLn0W4C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
+	s=170520fj; t=1770247684; i=@fujitsu.com;
+	bh=/wcBbpG/fe1WA2GpRprGItWbDS58o1LvjODQUxOXBgs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	b=kppxTa81axupJRTu6pYoMis4a8zkzfiSGsueKAhmGvkKitYjES1WF8IeQj0R8FpaI
+	 GDTIBFxvRlDG9eiCsozX88YEpbcBgxKWNuLiB9qaZlJgSqfw3y+J/Yq9Gbb3H9rIWZ
+	 YY4hdqyfSNgVryJwgAIEuYEVijvt8JfhUBfQ/B3DrdHLtIGQBGv9zUOD9DpHi9/7SZ
+	 cozBjWP0k8nOIjh3sg8PtgtWPgrgmHCGnp8a8W5/QNJRCsxQwu8d/w6+uEtUQj/Cae
+	 46wEifpQ57t9UZxqwJaebA8afWUDfr4Yxq+n0cV7ViAYqO2zzKlHmQedNUA85822ac
+	 GNudX8IJodxwA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA22Se0xTZxjG+51bDx0lh4LpJ6IkFXXRUJFd8rk
+  xNl1mTsYC2x+QRUe2Uzy01VJqWwyYTHGlTmGC6CpruajxMmGoXJWqCBLCbWbcyRCZsIHDOgIM
+  MrpRdKcQ1CX77837/J7nff54aVw2QgXRfJqZN+o5nYKSEFGR9MkwUb9FG/7MrUBDv3VS6O/ZS
+  YDyiv/C0Ez5Uwrl2zoBah04TKEfBsoAspy/RqGOKg+F6sd+J1BBvgVDJ2v7cFR6rp9Cjm/rMN
+  ThaCfQ7bo2AvXcLKTQzPEmgKzFEwAdHbNhqMTtIdHRyQwctRxvwFDRrA1HD05fAih/fIFEZbP
+  TOBps7SDR/RPNGJp3CwF3mh4S74Wwc9YcgrV2L1Cs0zEkZjObJki26vJG9vztxxhbWXqMYuuL
+  ysTseJUdsA2uBcDaCg6x9842idmZyjXsfEEz+NhvJ6nVq1LSviA19zJzgKEqLC0zN4PMAL2hW
+  UBCy5hqALtanOIs4EMTTCz8tXyK8goEc52AD+pqwBL1NQbdRy6Ty5TT5Sb/hyoCsPqRdZGimM
+  3w51OFwDsHMsGw/NkN3AvhTA0FM7tvLEIBDA+HZ3Kwpdh1sL21iPDOUuYdWOkcXTRDJgSesbU
+  t8j5MJLzl6cW9s4x5Gz4auUIu8f6wzT4qeGnhwAZ4rVjmXeOC1VJTgC/FrId9P1XiJ0Cg4yWH
+  44XD8ZLjLMBLwVYTb9zPG8MilCqjVq0xJ3NanZI7EMYp+VRjioEP06cYzZotSnWiQcmbTEpTe
+  nKibrdSz5srgfBnkil/shbMLVg3N4KVNKZYIcW1Fq3MT5WyO13DmTSfG1N1vKkRBNO0Akoreg
+  TN38ir+bQkrU741mUZ0r6KQGlJryBLTQYu2aRVL0nt4DX6WH1WA05PP7bdxWWEPkXPB8mlU10
+  CynhRTar+edDy53eD1UEBUiASiWS+Bt6YrDX/V3cBOQ0UAdJ4bx9frd78/J5LqIIJVfovHvZW
+  MXMvpKAMLMEW3Tee2ii7XrXNM5k1dOFgzOon8jguAg2Gfja86r54pGLA9kl2dO7A3h/VR+5M/
+  bHrXXeLepdPuCXR05S9Vhwv/qdE0v4hEbi948L2u6+K7M6guOj96wpfORBxrvRq10dcZBSXtC
+  Z2X9Ims/ngG80lO54upD7se3+iLkF16Tv13p21e3bEndp0dSw2r2JFq/9wiAT2FB/C9rS2faW
+  J18uzPQU+TGfom18abr1ulzXTmSNv9Ralb033u3mmNmtl/bw86lN/sj2KUCSczl9lz50O/+aX
+  70cNNqcse+22wSsxCXYPyp5QWYKdH+RV9EvyhlTVMa4Nc1Nj1fI/e/bFKGiMe6IgTBpuy0bca
+  OL+BUGOxLR0BAAA
+X-Env-Sender: tomasz.wolski@fujitsu.com
+X-Msg-Ref: server-3.tower-838.messagelabs.com!1770247679!32445!1
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received:
+X-StarScan-Version: 9.120.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 12431 invoked from network); 4 Feb 2026 23:28:00 -0000
+Received: from unknown (HELO n03ukasimr02.n03.fujitsu.local) (62.60.8.146)
+  by server-3.tower-838.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 4 Feb 2026 23:28:00 -0000
+Received: from n03ukasimr02.n03.fujitsu.local (localhost [127.0.0.1])
+	by n03ukasimr02.n03.fujitsu.local (Postfix) with ESMTP id 49B18100614;
+	Wed,  4 Feb 2026 23:27:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 n03ukasimr02.n03.fujitsu.local 49B18100614
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
+	s=dspueurope; t=1770247679;
+	bh=/wcBbpG/fe1WA2GpRprGItWbDS58o1LvjODQUxOXBgs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=eRLn0W4CelTHDfI+I8ssjb0yJQMPREvqo/AvbhrJ7HvlffkpW5+foyRXvXddoP40X
+	 7uFZdN5whb6wyO4st63AVh7+uk41Hw4cI/6l+giT9ejVgjRjgi5sZbiDvzzZ7QwtBh
+	 +U0yYsVpYZ3HpB+GnFHFSjWvveedRvykCWmp21gq54OnU9YwunGf82FYtQoB1gsEEs
+	 ncFVAvImjyBQqg1RQpdE+aLKZPgnNO8WnQHjSpXHrKOTuA6OkGAtObgZSGao+kjV4/
+	 ePnA2rHtS2/ALu9gd9Pbv/I2RhbFSjG1Ze3HWZSZUyd7yvf6+RSPFskiBu7FrvonBA
+	 lGA+/GTUFt7Tg==
+Received: from ubuntudhcp (unknown [10.172.107.4])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by n03ukasimr02.n03.fujitsu.local (Postfix) with ESMTPS id 1CCB51005E1;
+	Wed,  4 Feb 2026 23:27:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 n03ukasimr02.n03.fujitsu.local 1CCB51005E1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
+	s=dspueurope; t=1770247679;
+	bh=/wcBbpG/fe1WA2GpRprGItWbDS58o1LvjODQUxOXBgs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=eRLn0W4CelTHDfI+I8ssjb0yJQMPREvqo/AvbhrJ7HvlffkpW5+foyRXvXddoP40X
+	 7uFZdN5whb6wyO4st63AVh7+uk41Hw4cI/6l+giT9ejVgjRjgi5sZbiDvzzZ7QwtBh
+	 +U0yYsVpYZ3HpB+GnFHFSjWvveedRvykCWmp21gq54OnU9YwunGf82FYtQoB1gsEEs
+	 ncFVAvImjyBQqg1RQpdE+aLKZPgnNO8WnQHjSpXHrKOTuA6OkGAtObgZSGao+kjV4/
+	 ePnA2rHtS2/ALu9gd9Pbv/I2RhbFSjG1Ze3HWZSZUyd7yvf6+RSPFskiBu7FrvonBA
+	 lGA+/GTUFt7Tg==
+Received: from isar2.ecs00.fujitsu.local (unknown [10.172.183.27])
+	by ubuntudhcp (Postfix) with ESMTP id 326B122045F;
+	Wed,  4 Feb 2026 23:28:41 +0000 (UTC)
+From: Tomasz Wolski <tomasz.wolski@fujitsu.com>
+To: dan.j.williams@intel.com
+Cc: Smita.KoralahalliChannabasappa@amd.com,
+	alison.schofield@intel.com,
+	ardb@kernel.org,
+	benjamin.cheatham@amd.com,
+	bp@alien8.de,
+	dave.jiang@intel.com,
+	dave@stgolabs.net,
+	gregkh@linuxfoundation.org,
+	huang.ying.caritas@gmail.com,
+	ira.weiny@intel.com,
+	jack@suse.cz,
+	jeff.johnson@oss.qualcomm.com,
+	jonathan.cameron@huawei.com,
+	len.brown@intel.com,
+	linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	lizhijian@fujitsu.com,
+	ming.li@zohomail.com,
+	nathan.fontenot@amd.com,
+	nvdimm@lists.linux.dev,
+	pavel@kernel.org,
+	peterz@infradead.org,
+	rafael@kernel.org,
+	rrichter@amd.com,
+	skoralah@amd.com,
+	terry.bowman@amd.com,
+	tomasz.wolski@fujitsu.com,
+	vishal.l.verma@intel.com,
+	willy@infradead.org,
+	yaoxt.fnst@fujitsu.com,
+	yazen.ghannam@amd.com
+Subject: Re: [PATCH v5 6/7] dax/hmem, cxl: Defer and resolve ownership of Soft Reserved memory ranges
+Date: Thu,  5 Feb 2026 00:27:54 +0100
+Message-Id: <20260204232754.9531-1-tomasz.wolski@fujitsu.com>
+X-Mailer: git-send-email 2.35.3
+In-Reply-To: <697bd8b7fb6f_1d6f100e9@dwillia2-mobl4.notmuch>
+References: <697bd8b7fb6f_1d6f100e9@dwillia2-mobl4.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260119111542.788389-1-Jonathan.Cameron@huawei.com> <20260119111542.788389-6-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20260119111542.788389-6-Jonathan.Cameron@huawei.com>
-From: Ravi Jonnalagadda <ravis.opensrc@gmail.com>
-Date: Wed, 4 Feb 2026 13:46:50 -0800
-X-Gm-Features: AZwV_Qh3pdu43vYRi40T8RcKXzsoqh7kT818XSaxbGAsCpHsx5vB6kaswYq2rz8
-Message-ID: <CALa+Y15qZgpNg+y2iujVN6zeYPB1JNXi0C4fbwWieGWtQ3UpbQ@mail.gmail.com>
-Subject: Re: [PATCH qemu v4 5/5] hw/cxl/events: Updates for rev3.2 memory
- module event record
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Michael Tsirkin <mst@redhat.com>, qemu-devel@nongnu.org, shiju.jose@huawei.com, 
-	armbru@redhat.com, linuxarm@huawei.com, linux-cxl@vger.kernel.org, 
-	Ravi Shankar <venkataravis@micron.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-On Mon, Jan 19, 2026 at 3:18=E2=80=AFAM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
+>> > I was thinking through what Alison asked about what to do later in boot
+>> > when other regions are being dynamically created. It made me wonder if
+>> > this safety can be achieved more easily by just making sure that the
+>> > alloc_dax_region() call fails.
+>> 
+>> Agreed with all the points above, including making alloc_dax_region() 
+>> fail as the safety mechanism. This also cleanly avoids the no Soft 
+>> Reserved case Alison pointed out, where dax_cxl_mode can remain stuck in 
+>> DEFER and return -EPROBE_DEFER.
+>> 
+>> What I’m still trying to understand is the case of “other regions being 
+>> dynamically created.” Once HMEM has claimed the relevant HPA range, any 
+>> later userspace attempts to create regions (via cxl create-region) 
+>> should naturally fail due to the existing HPA allocation. This already 
+>> shows up as an HPA allocation failure currently.
+>> 
+>> #cxl create-region -d decoder0.0 -m mem2 -w 1 -g256
+>> cxl region: create_region: region0: set_size failed: Numerical result 
+>> out of range
+>> cxl region: cmd_create_region: created 0 regions
+>> 
+>> And in the dmesg:
+>> [  466.819353] alloc_hpa: cxl region0: HPA allocation error (-34) for 
+>> size:0x0000002000000000 in CXL Window 0 [mem 0x850000000-0x284fffffff 
+>> flags 0x200]
+>> 
+>> Also, at this point, with the probe-ordering fixes and the use of 
+>> wait_for_device_probe(), region probing should have fully completed.
+>> 
+>> Am I missing any other scenario where regions could still be created 
+>> dynamically beyond this?
 >
-> From: Shiju Jose <shiju.jose@huawei.com>
->
-> CXL spec rev3.2 section 8.2.10.2.1.3 Table 8-50, memory module
-> event record has updated with following new fields.
-> 1. Validity Flags
-> 2. Component Identifier
-> 3. Device Event Sub-Type
->
-> Add updates for the above spec changes in the CXL memory module
-> event reporting and QMP command to inject memory module event.
->
-> Updated all references for this command to the CXL r3.2
-> specification.
->
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->
-> ---
-> v4: Update spec reference in the actual command as well (Markus)
-> V3: Update spec references for whole command (Markus)
-> ---
->  qapi/cxl.json               | 30 ++++++++++++++++++++----------
->  include/hw/cxl/cxl_events.h |  7 +++++--
->  hw/mem/cxl_type3.c          | 20 ++++++++++++++++++++
->  hw/mem/cxl_type3_stubs.c    |  4 ++++
->  4 files changed, 49 insertions(+), 12 deletions(-)
->
-> diff --git a/qapi/cxl.json b/qapi/cxl.json
-> index 1dc8b08ca301..81d6198ba030 100644
-> --- a/qapi/cxl.json
-> +++ b/qapi/cxl.json
-> @@ -214,20 +214,20 @@
->  ##
->  # @CXLMemModuleEvent:
->  #
-> -# Event record for a Memory Module Event (CXL r3.0 8.2.9.2.1.3).
-> +# Event record for a Memory Module Event (CXL r3.2 8.2.10.2.1.3).
->  #
-> -# @type: Device Event Type.  See CXL r3.0 Table 8-45 Memory Module
-> +# @type: Device Event Type.  See CXL r3.2 Table 8-59 Memory Module
->  #     Event Record for bit definitions for bit definiions.
->  #
-> -# @health-status: Overall health summary bitmap.  See CXL r3.0 Table
-> -#     8-100 Get Health Info Output Payload, Health Status for bit
-> +# @health-status: Overall health summary bitmap.  See CXL r3.2 Table
-> +#     8-148 Get Health Info Output Payload, Health Status for bit
->  #     definitions.
->  #
-> -# @media-status: Overall media health summary.  See CXL r3.0 Table
-> -#     8-100 Get Health Info Output Payload, Media Status for bit
-> +# @media-status: Overall media health summary.  See CXL r3.2 Table
-> +#     8-148 Get Health Info Output Payload, Media Status for bit
->  #     definitions.
->  #
-> -# @additional-status: See CXL r3.0 Table 8-100 Get Health Info Output
-> +# @additional-status: See CXL r3.2 Table 8-148 Get Health Info Output
->  #     Payload, Additional Status for subfield definitions.
->  #
->  # @life-used: Percentage (0-100) of factory expected life span.
-> @@ -243,6 +243,14 @@
->  # @corrected-persistent-error-count: Total number of correctable
->  #     errors in persistent memory
->  #
-> +# @component-id: Device specific component identifier for the event.
-> +#     May describe a field replaceable sub-component of the device.
-> +#
-> +# @is-comp-id-pldm: This flag specifies whether the device-specific
-> +#     component identifier format follows PLDM.
-> +#
-> +# @sub-type: Device event sub-type.
-> +#
->  # Since: 8.1
->  ##
->  { 'struct': 'CXLMemModuleEvent',
-> @@ -252,14 +260,16 @@
->              'life-used': 'uint8', 'temperature' : 'int16',
->              'dirty-shutdown-count': 'uint32',
->              'corrected-volatile-error-count': 'uint32',
-> -            'corrected-persistent-error-count': 'uint32'
-> +            'corrected-persistent-error-count': 'uint32',
-> +            '*component-id': 'str', '*is-comp-id-pldm':'bool',
-> +            'sub-type':'uint8'
->              }}
->
->  ##
->  # @cxl-inject-memory-module-event:
->  #
-> -# Inject an event record for a Memory Module Event (CXL r3.0
-> -# 8.2.9.2.1.3).  This event includes a copy of the Device Health info
-> +# Inject an event record for a Memory Module Event (CXL r3.2
-> +# 8.2.10.2.1.3).  This event includes a copy of the Device Health info
->  # at the time of the event.
->  #
->  # Since: 8.1
-> diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
-> index a3c5f2ec20e6..4a7836ad7227 100644
-> --- a/include/hw/cxl/cxl_events.h
-> +++ b/include/hw/cxl/cxl_events.h
-> @@ -166,7 +166,7 @@ typedef struct CXLEventDram {
->
->  /*
->   * Memory Module Event Record
-> - * CXL r3.1 Section 8.2.9.2.1.3: Table 8-47
-> + * CXL r3.2 Section 8.2.10.2.1.3: Table 8-59
+>The concern is what to do about regions and memory devices that are
+>completely innocent. So, for example imagine deviceA is handled by BIOS
+>and deviceB is ignored by BIOS. If deviceB was ignored by BIOS then it
+>would be rude to tear down any regions that might be established for
+>deviceB. So if alloc_dax_region() exclusion and HPA space reservation
+>prevent future collisions while not disturbing innocent devices, then I
+>think userspace can pick up the pieces from there.
 
-Minor Nitpick : Table reference in commit message should match code
-reference of Table 8-59
+I'm trying to follow the idea of "deviceB being ignored by BIOS" 
+Do you consider hot-plug devices and user creating reqions manually? 
+Could you please describe such scenario?
 
->   * All fields little endian.
->   */
->  typedef struct CXLEventMemoryModule {
-> @@ -180,7 +180,10 @@ typedef struct CXLEventMemoryModule {
->      uint32_t dirty_shutdown_count;
->      uint32_t corrected_volatile_error_count;
->      uint32_t corrected_persistent_error_count;
-> -    uint8_t reserved[0x3d];
-> +    uint16_t validity_flags;
-> +    uint8_t component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
-> +    uint8_t sub_type;
-> +    uint8_t reserved[0x2a];
->  } QEMU_PACKED CXLEventMemoryModule;
+>> > Something like (untested / incomplete, needs cleanup handling!)
+>> > 
+>> > diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+>> > index fde29e0ad68b..fd18343e0538 100644
+>> > --- a/drivers/dax/bus.c
+>> > +++ b/drivers/dax/bus.c
+>> > @@ -10,6 +10,7 @@
+>> >   #include "dax-private.h"
+>> >   #include "bus.h"
+>> >   
+>> > +static struct resource dax_regions = DEFINE_RES_MEM_NAMED(0, -1, "DAX Regions");
+>> >   static DEFINE_MUTEX(dax_bus_lock);
+>> >   
+>> >   /*
+>> > @@ -661,11 +662,7 @@ struct dax_region *alloc_dax_region(struct device *parent, int region_id,
+>> >          dax_region->dev = parent;
+>> >          dax_region->target_node = target_node;
+>> >          ida_init(&dax_region->ida);
+>> > -       dax_region->res = (struct resource) {
+>> > -               .start = range->start,
+>> > -               .end = range->end,
+>> > -               .flags = IORESOURCE_MEM | flags,
+>> > -       };
+>> > +       dax_region->res = __request_region(&dax_regions, range->start, range->end, flags);
+>> >   
+>> >          if (sysfs_create_groups(&parent->kobj, dax_region_attribute_groups)) {
+>> >                  kfree(dax_region);
+>> > 
+>> > ...which will result in enforcing only one of dax_hmem or dax_cxl being
+>> > able to register a dax_region.
+>> > 
+>> > Yes, this would leave a mess of disabled cxl_dax_region devices lying
+>> > around, but it would leave more breadcrumbs for debug, and reduce the
+>> > number of races you need to worry about.
+>> > 
+>> > In other words, I thought total teardown would be simpler, but as the
+>> > feedback keeps coming in, I think that brings a different set of
+>> > complexity. So just inject failures for dax_cxl to trip over and then we
+>> > can go further later to effect total teardown if that proves to not be
+>> > enough.
+>> 
+>> One concern with the approach of not tearing down CXL regions is the 
+>> state it leaves behind in /proc/iomem. Soft Reserved ranges are 
+>> REGISTERed to HMEM while CXL regions remain present. The resulting 
+>> nesting (dax under region, region under window and window under SR) 
+>> visually suggests a coherent CXL hierarchy, even though ownership has 
+>> effectively moved to HMEM. When users, then attempt to tear regions down 
+>> and recreate them from userspace, they hit the same HPA allocation 
+>> failures described above.
 >
->  /*
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index 3da538bafb64..4dc9b223f476 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -1937,6 +1937,9 @@ void qmp_cxl_inject_dram_event(const char *path, Cx=
-lEventLog log,
->      }
->  }
+>So this gets back to a question of do we really need "Soft Reserved" to
+>show up in /proc/iomem? It is an ABI change to stop publishing it
+>altogether, so at a minimum we need to be prepared to keep publishing it
+>if it causes someone's working setup to regress.
 >
-> +#define CXL_MMER_VALID_COMPONENT                        BIT(0)
-> +#define CXL_MMER_VALID_COMPONENT_ID_FORMAT              BIT(1)
-> +
->  void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog lo=
-g,
->                                          uint32_t flags, bool has_maint_o=
-p_class,
->                                          uint8_t maint_op_class,
-> @@ -1953,11 +1956,16 @@ void qmp_cxl_inject_memory_module_event(const cha=
-r *path, CxlEventLog log,
->                                          uint32_t dirty_shutdown_count,
->                                          uint32_t corrected_volatile_erro=
-r_count,
->                                          uint32_t corrected_persist_error=
-_count,
-> +                                        const char *component_id,
-> +                                        bool has_comp_id_pldm,
-> +                                        bool is_comp_id_pldm,
-> +                                        uint8_t sub_type,
->                                          Error **errp)
->  {
->      Object *obj =3D object_resolve_path(path, NULL);
->      CXLEventMemoryModule module;
->      CXLEventRecordHdr *hdr =3D &module.hdr;
-> +    uint16_t valid_flags =3D 0;
->      CXLDeviceState *cxlds;
->      CXLType3Dev *ct3d;
->      uint8_t enc_log;
-> @@ -2000,6 +2008,18 @@ void qmp_cxl_inject_memory_module_event(const char=
- *path, CxlEventLog log,
->      stl_le_p(&module.corrected_persistent_error_count,
->               corrected_persist_error_count);
+>The current state of the for-7.0/cxl-init branch drops publishing "Soft
+>Reserved". I am cautiously optimistic no one notices as long as DAX
+>devices keep appearing, but at the first sign of regression we need a
+>plan B.
 >
-> +    if (component_id) {
-> +        strncpy((char *)module.component_id, component_id,
-> +                sizeof(module.component_id) - 1);
-> +        valid_flags |=3D CXL_MMER_VALID_COMPONENT;
-> +        if (has_comp_id_pldm && is_comp_id_pldm) {
-> +            valid_flags |=3D CXL_MMER_VALID_COMPONENT_ID_FORMAT;
-> +        }
-> +    }
-> +    module.sub_type =3D sub_type;
-> +
-> +    stw_le_p(&module.validity_flags, valid_flags);
-> +
->      if (cxl_event_insert(cxlds, enc_log, (CXLEventRecordRaw *)&module)) =
-{
->          cxl_event_irq_assert(ct3d);
->      }
-> diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
-> index 231dda263fa4..98292a931c16 100644
-> --- a/hw/mem/cxl_type3_stubs.c
-> +++ b/hw/mem/cxl_type3_stubs.c
-> @@ -78,6 +78,10 @@ void qmp_cxl_inject_memory_module_event(const char *pa=
-th, CxlEventLog log,
->                                          uint32_t dirty_shutdown_count,
->                                          uint32_t corrected_volatile_erro=
-r_count,
->                                          uint32_t corrected_persist_error=
-_count,
-> +                                        const char *component_id,
-> +                                        bool has_comp_id_pldm,
-> +                                        bool is_comp_id_pldm,
-> +                                        uint8_t sub_type,
->                                          Error **errp) {}
+>> If we decide not to tear down regions in the REGISTER case, should we 
+>> gate decoder resets during user initiated region teardown? Today, 
+>> decoders are reset when regions are torn down dynamically, and 
+>> subsequent attempts to recreate regions can trigger a large amount of 
+>> mailbox traffic. Much of what shows up as repeated “Reading event logs/ 
+>> Clearing …” messages which ends up interleaved with the HPA allocation 
+>> failure, which can be confusing.
 >
->  void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t le=
-ngth,
-> --
-> 2.48.1
+>One of the nice side effects of installing the "Soft Reserved" entries
+>late, when HMEM takes over, is that they are easier to remove.
 >
+>So the flow would be, if you know what you are doing, is to disable the
+>HMEM device which uninstalls the "Soft Reserved" entries, before trying
+>to decommit the region and reclaim the HPA space.
 >
