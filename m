@@ -1,350 +1,281 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399B838BF70
-	for <linux-cxl@vger.kernel.org>; Wed,  4 Feb 2026 07:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB6C3A4F3F
+	for <linux-cxl@vger.kernel.org>; Wed,  4 Feb 2026 09:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770190033; cv=none; b=gZG6sKs3/gUEn+jC/UvDudNXCrRDo1G0/Vd09N9DYCauC2bZ2dsNeUe1XV9IJOAmrQRi8pa3I0aYwB/+wHRufO0HEgFBfcIvRsV30CojePggvfxYEXHfoyWcztln8347USchN3SxRJ4Zvhz8MIgCbDzDMpX6wCc9XB0k1ywwmVQ=
+	t=1770197107; cv=none; b=ZE0y8/E5ga5g/cva3DaYIzp9fYZQMEB6Y9XZKsNSwzPGTY1bNwbiRiXmhyeOVTa27Nwsnpd/A0uR57/seUaHxLctiWTOOqRId7+S05+TlbvdQ95IpSP1FaXMLbk0pPqKOcN5Xdsh7aYRvsJcITMhKnaBUi6AdEyiyfhpXJTfiMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770190033; c=relaxed/simple;
-	bh=d6aso6VMAdgiuwV6QKD7e4bvWIfp374k/aAM8DxksnU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Oo6RPrktFcQdGwuX3KWZL/A6HihktHT/i/AcurYmcuvprHiu9MLDqXJfdI8UpjH87JouvqoOtbJN6JtXBIIV9mS7K/1weWtDa8WZS8AvDTBc2GwarRYtRS8biMZZYY5TSATi3pdqJpXud+dbrLOJeBv7GgBFpk743f5wQBT3aGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CtlThwTP; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1770197107; c=relaxed/simple;
+	bh=+9818JSt9C3kokZYpk+ZlyehQz3c1kWbUkWKL2tOaxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LorFI61Jc/e0LzCUC9SofEv4AYvnmMYeueVU/+5l0iR+1BM5DdeTvQ7/Abnlya19cRSNE+xcQoTL8+SE/WkTPGpjt3+vPzqAFlAzrM86XqCrW+P3ayQwSHP7iPtkd4wnQLfH3LH6rOtCwgDiGOklbaf3Q+jRXr+j9er4Ve14QSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=d6EaRsvZ; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CtlThwTP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770190033; x=1801726033;
-  h=date:from:to:cc:subject:message-id;
-  bh=d6aso6VMAdgiuwV6QKD7e4bvWIfp374k/aAM8DxksnU=;
-  b=CtlThwTPNV3q9hs7OYypCtD2T1KLfEGDAo7qZJ1/+AcMz6JyTwedWfjr
-   Ca7vSvCthzD69bcwcVHlw/pJ4OHQNxyTO6XIEJOTTPoHkKqHw7Xazcejb
-   dPvkhFuXQvVbPqq2jgvapioYHLNOpLw7UwU7RSDgANlF9jFk/aQd3ASjg
-   G8aJtTPg6iEH9avLrQhmGMBOAk/SvTXLWCMCF42GXjtF9eAGw3uyeJueg
-   QmQiD1jcTlO0IiJ3JTViHucUdM5Gl4hETk1SvY6KYZuYn97pEaI4XZ2TM
-   0p2j17RQPVrKCM0dPvZRIkcbPvaZDoI7VN1dlEfOLe12smZN8W8OGl51g
-   w==;
-X-CSE-ConnectionGUID: 7M56HCJ3TzepGh180rC/iA==
-X-CSE-MsgGUID: b/4WktlJTPmLV8LwJLY02A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="88947179"
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="88947179"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 23:27:12 -0800
-X-CSE-ConnectionGUID: lwXTw+s9QB2ml7ukMEb0mg==
-X-CSE-MsgGUID: N5tc09szRoSoX/YqoEOnmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="214780307"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 03 Feb 2026 23:27:10 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vnXI4-00000000hYG-2bNK;
-	Wed, 04 Feb 2026 07:27:08 +0000
-Date: Wed, 04 Feb 2026 15:26:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- 00bc604c96bb762f0f050460e25de2729edb1699
-Message-ID: <202602041543.e3jWVpzQ-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="d6EaRsvZ"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-47edd9024b1so53043265e9.3
+        for <linux-cxl@vger.kernel.org>; Wed, 04 Feb 2026 01:25:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1770197105; x=1770801905; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5vRCdO0bXpcykxF+oz49o7od5GWLyt8pzJaSR709p2I=;
+        b=d6EaRsvZakGpIyn9AvmMwiyV+TE0rVzjnczCyQot7Aq6JstraKmEoPsOQrTfYmUwxL
+         S1Jz70QzdL7jdE3GKxqK5E4ipfDD1kdpqy2lXJUgC1ztdAhfKJv3E3J+T0Sljk3woXLg
+         AZkChBXyAcuLwkii4draf6lsl/zMez2BeZcKezjhG25Rvv0njpg9gxQbis+Ppo9jA+iO
+         ODLKy9jXN3qJ/pJ1uKL77uuGoom4zJDUkpsU32BWB7ts6stwhoe9RUDj2N9EB/2yQVYY
+         KQLNa99lSlr7A3Tw6Rtf77o8lgBbmW/tvuNJ4M8XMPAGMKh/LPfWivBAA+h87lIXeDA0
+         KY3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770197105; x=1770801905;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5vRCdO0bXpcykxF+oz49o7od5GWLyt8pzJaSR709p2I=;
+        b=Ld2uqmpZnPJq1YSyha5RYwxgIbJIgxzAR1CycFmQB0lRNfVmSZc4eqaN3DntSLotFn
+         KXB559NCaLHkIgRwUOJ5XKA6IL4ZQQ29Ll9aC5ba+fmNCQGeTYGJbl/j7IRn7vJj5bzd
+         o/DlFYmL+OueBFNPhCHGUYMaoLIgmDB/gCkX4mJ7EPlwtoNkPR6zqsLy2P44eEbNiYMH
+         LIqW8ynmKWhXxqu1TM/OfRroQasNyah3wElIvLZVV5vHh9DznI+7ULp0Y8YMcfpgeyN+
+         4D0QDmrpg4DOISjFXWENEm4RA7XPmYAX/U1eGUXAL30qC7zqnhGgId5WvOEq+Rxe/fXy
+         xByw==
+X-Forwarded-Encrypted: i=1; AJvYcCVghQDNukgIoCdEMeiHWeY3C8gobd1ylGAuiYFUhiokSgu519I4zjgS7Bc0o5qurYbj9JEJPTNaX6U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6YVrChpAtDVvPi+cMt6FGm20BZjOI3Zw0cahmE5IfCPsAG4tB
+	29G3Q7PUODl2A2nkZgLNPF2/QXeOz07ZA9m6gYzdPcFYMZSpnXxASiG+xpx1eWT9E04=
+X-Gm-Gg: AZuq6aKqEiK5FiJnfM/hHD+dixOKeqtzRWXs+SsAAaj9yXi8ZuyWGtrraN4VYuNc3ir
+	OxI/TuKdZXpHFQXYEZPYg0xIpKtTm1EAjiVOVo/EyML6LTAMKBlhWSp/LN3CHZ/NJKhZJaIxnLq
+	JtLHUHxyp2SIXn9CbFsDh5hGoOog/7fykgyivgRPNF9/YStCFi7bchfRGMr867DuFMkagFlm7ZV
+	oZRPfAn3iZs3lqxCK+8p8sJ5X7OIIrOVIcVIOvZfxBFJeLhD6VlvNsVlbmzrbAVL9U3Ze2oD5t2
+	2NC0H1467+YawU8SNQjKxC/3WwUoLUiLcc7gdIgW8dXEi42Ywe0OekKmgb3fL05/WuRSBGa4+8b
+	U5MpPicckJOA+fsO+aPhlecBvesA52x1GvTCWAeOIG3zjFm6lHcI6JHt8jw4Lfvd6kccnYOj0iq
+	yySuIp+bsuGJ/WyaBrv6vQzGzH
+X-Received: by 2002:a05:600c:c48f:b0:477:214f:bd95 with SMTP id 5b1f17b1804b1-4830e987c1dmr26960685e9.23.1770197104984;
+        Wed, 04 Feb 2026 01:25:04 -0800 (PST)
+Received: from localhost (109-81-26-156.rct.o2.cz. [109.81.26.156])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4831088d318sm51779665e9.10.2026.02.04.01.25.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Feb 2026 01:25:04 -0800 (PST)
+Date: Wed, 4 Feb 2026 10:25:03 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: Joshua Hahn <joshua.hahnjy@gmail.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	akpm@linux-foundation.org, axelrasmussen@google.com,
+	yuanchu@google.com, weixugc@google.com, hannes@cmpxchg.org,
+	david@kernel.org, zhengqi.arch@bytedance.com,
+	shakeel.butt@linux.dev, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, ziy@nvidia.com, matthew.brost@intel.com,
+	rakie.kim@sk.com, byungchul@sk.com, gourry@gourry.net,
+	ying.huang@linux.alibaba.com, apopple@nvidia.com,
+	bingjiao@google.com, jonathan.cameron@huawei.com,
+	pratyush.brahma@oss.qualcomm.com
+Subject: Re: [PATCH v4 3/3] mm/vmscan: don't demote if there is not enough
+ free memory in the lower memory tier
+Message-ID: <aYMQb9JTPXTutgvH@tiehlicka>
+References: <CAC5umygEq6xvpDFnVnDLYLyqJV7qChEsJ_+W-KCBJ+EXj1948g@mail.gmail.com>
+ <20260127220003.3993576-1-joshua.hahnjy@gmail.com>
+ <CAC5umyhqbW_qXaApO8OGg1wo706GfVPuak5JwdBfBgS751Ka5Q@mail.gmail.com>
+ <aYCiboGiXO2lQC0W@tiehlicka>
+ <CAC5umygW8PXnS5tix-DfujhPjrRjBaEKe8ojW=y5FmqhqBfurg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAC5umygW8PXnS5tix-DfujhPjrRjBaEKe8ojW=y5FmqhqBfurg@mail.gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 00bc604c96bb762f0f050460e25de2729edb1699  Merge branch 'for-7.0/cxl-prm-translation' into cxl-for-next
+On Wed 04-02-26 11:07:03, Akinobu Mita wrote:
+> 2026年2月2日(月) 22:11 Michal Hocko <mhocko@suse.com>:
+> >
+> > On Thu 29-01-26 09:40:17, Akinobu Mita wrote:
+> > > 2026年1月28日(水) 7:00 Joshua Hahn <joshua.hahnjy@gmail.com>:
+> > > >
+> > > > > > > Therefore, it appears that the behavior of get_swappiness() is important
+> > > > > > > in this issue.
+> > > > > >
+> > > > > > This is quite mysterious.
+> > > > > >
+> > > > > > Especially because get_swappiness() is an MGLRU exclusive function, I find
+> > > > > > it quite strange that the issue you mention above occurs regardless of whether
+> > > > > > MGLRU is enabled or disabled. With MGLRU disabled, did you see the same hangs
+> > > > > > as before? Were these hangs similarly fixed by modifying the callsite in
+> > > > > > get_swappiness?
+> > > > >
+> > > > > Good point.
+> > > > > When MGLRU is disabled, changing only the behavior of can_demote()
+> > > > > called by get_swappiness() did not solve the problem.
+> > > > >
+> > > > > Instead, the problem was avoided by changing only the behavior of
+> > > > > can_demote() called by can_reclaim_anon_page(), without changing the
+> > > > > behavior of can_demote() called from other places.
+> > > > >
+> > > > > > On a separate note, I feel a bit uncomfortable for making this the default
+> > > > > > setting, regardless of whether there is swap space or not. Just as it is
+> > > > > > easy to create a degenerate scenario where all memory is unreclaimable
+> > > > > > and the system starts going into (wasteful) reclaim on the lower tiers,
+> > > > > > it is equally easy to create a scenario where all memory is very easily
+> > > > > > reclaimable (say, clean pagecache) and we OOM without making any attempt to
+> > > > > > free up memory on the lower tiers.
+> > > > > >
+> > > > > > Reality is likely somewhere in between. And from my perspective, as long as
+> > > > > > we have some amount of easily reclaimable memory, I don't think immediately
+> > > > > > OOMing will be helpful for the system (and even if none of the memory is
+> > > > > > easily reclaimable, we should still try doing something before killing).
+> > > > > >
+> > > > > > > > > The reason for this issue is that memory allocations do not directly
+> > > > > > > > > trigger the oom-killer, assuming that if the target node has an underlying
+> > > > > > > > > memory tier, it can always be reclaimed by demotion.
+> > > > > >
+> > > > > > This patch enforces that the opposite of this assumption is true; that even
+> > > > > > if a target node has an underlying memory tier, it can never be reclaimed by
+> > > > > > demotion.
+> > > > > >
+> > > > > > Certainly for systems with swap and some compression methods (z{ram, swap}),
+> > > > > > this new enforcement could be harmful to the system. What do you think?
+> > > > >
+> > > > > Thank you for the detailed explanation.
+> > > > >
+> > > > > I understand the concern regarding the current patch, which only
+> > > > > checks the free memory of the demotion target node.
+> > > > > I will explore a solution.
+> > > >
+> > > > Hello Akinobu, I hope you had a great weekend!
+> > > >
+> > > > I noticed something that I thought was worth flagging. It seems like the
+> > > > primary addition of this patch, which is to check for zone_watermark_ok
+> > > > across the zones, is already a part of should_reclaim_retry():
+> > > >
+> > > >     /*
+> > > >      * Keep reclaiming pages while there is a chance this will lead
+> > > >      * somewhere.  If none of the target zones can satisfy our allocation
+> > > >      * request even if all reclaimable pages are considered then we are
+> > > >      * screwed and have to go OOM.
+> > > >      */
+> > > >     for_each_zone_zonelist_nodemask(zone, z, ac->zonelist,
+> > > >                 ac->highest_zoneidx, ac->nodemask) {
+> > > >
+> > > >         [...snip...]
+> > > >
+> > > >         /*
+> > > >          * Would the allocation succeed if we reclaimed all
+> > > >          * reclaimable pages?
+> > > >          */
+> > > >         wmark = __zone_watermark_ok(zone, order, min_wmark,
+> > > >                 ac->highest_zoneidx, alloc_flags, available);
+> > > >
+> > > >         if (wmark) {
+> > > >             ret = true;
+> > > >             break;
+> > > >         }
+> > > >     }
+> > > >
+> > > > ... which is called in __alloc_pages_slowpath. I wonder why we don't already
+> > > > hit this. It seems to do the same thing your patch is doing?
+> > >
+> > > I checked the number of calls and the time spent for several functions
+> > > called by __alloc_pages_slowpath(), and found that time is spent in
+> > > __alloc_pages_direct_reclaim() before reaching the first should_reclaim_retry().
+> > >
+> > > After a few minutes have passed and the debug code that automatically
+> > > resets numa_demotion_enabled to false is executed, it appears that
+> > > __alloc_pages_direct_reclaim() immediately exits.
+> >
+> > First of all is this MGLRU or traditional reclaim? Or both?
+> 
+> The behavior is almost the same whether MGLRU is enabled or not.
+> However, one difference is that __alloc_pages_direct_reclaim() may be
+> called multiple times when __alloc_pages_slowpath() is called, and
+> should_reclaim_retry() also returns true several times.
+> 
+> This is probably because the watermark check in should_reclaim_retry()
+> considers not only NR_FREE_PAGES but also NR_ZONE_INACTIVE_ANON and
+> NR_ZONE_ACTIVE_ANON as potential free memory. (zone_reclaimable_pages())
 
-elapsed time: 756m
+Yes, seems like the same problem as with get_scan_count.
 
-configs tested: 270
-configs skipped: 7
+> The following is the increment of stats in /proc/vmstat from the start
+> of the reproduction test until the problem occurred and
+> numa_demotion_enabled was automatically reset by the debug code and
+> OOM occurred a few minutes later:
+> 
+> workingset_nodes 578
+> workingset_refault_anon 5054381
+> workingset_refault_file 41502
+> workingset_activate_anon 3003283
+> workingset_activate_file 33232
+> workingset_restore_anon 2556549
+> workingset_restore_file 27139
+> workingset_nodereclaim 3472
+> pgdemote_kswapd 121684
+> pgdemote_direct 23977
+> pgdemote_khugepaged 0
+> pgdemote_proactive 0
+> pgsteal_kswapd 3480404
+> pgsteal_direct 2602011
+> pgsteal_khugepaged 74
+> pgsteal_proactive 0
+> pgscan_kswapd 93334262
+> pgscan_direct 227649302
+> pgscan_khugepaged 1232161
+> pgscan_proactive 0
+> pgscan_direct_throttle 18
+> pgscan_anon 320480379
+> pgscan_file 1735346
+> pgsteal_anon 5828270
+> pgsteal_file 254219
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+You can clearly see that the order of magnitute of pages scanned is
+completely disproportional to pages actually reclaimed. So there is a
+lot of scanning without any progress at all.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.2.0
-alpha                            allyesconfig    gcc-15.2.0
-alpha                               defconfig    gcc-15.2.0
-arc                              allmodconfig    clang-16
-arc                              allmodconfig    gcc-15.2.0
-arc                               allnoconfig    gcc-15.2.0
-arc                              allyesconfig    clang-22
-arc                              allyesconfig    gcc-15.2.0
-arc                          axs101_defconfig    gcc-15.2.0
-arc                                 defconfig    gcc-15.2.0
-arc                   randconfig-001-20260204    gcc-8.5.0
-arc                   randconfig-001-20260204    gcc-9.5.0
-arc                   randconfig-002-20260204    gcc-8.5.0
-arm                              alldefconfig    gcc-15.2.0
-arm                               allnoconfig    gcc-15.2.0
-arm                              allyesconfig    clang-16
-arm                              allyesconfig    gcc-15.2.0
-arm                         axm55xx_defconfig    clang-22
-arm                                 defconfig    gcc-15.2.0
-arm                        mvebu_v5_defconfig    gcc-15.2.0
-arm                           omap1_defconfig    gcc-15.2.0
-arm                            qcom_defconfig    gcc-15.2.0
-arm                   randconfig-001-20260204    clang-22
-arm                   randconfig-001-20260204    gcc-8.5.0
-arm                   randconfig-002-20260204    gcc-11.5.0
-arm                   randconfig-002-20260204    gcc-8.5.0
-arm                   randconfig-003-20260204    clang-22
-arm                   randconfig-003-20260204    gcc-8.5.0
-arm                   randconfig-004-20260204    gcc-8.5.0
-arm                         socfpga_defconfig    gcc-15.2.0
-arm                        spear3xx_defconfig    gcc-15.2.0
-arm                       versatile_defconfig    gcc-15.2.0
-arm64                            allmodconfig    clang-19
-arm64                            allmodconfig    clang-22
-arm64                             allnoconfig    gcc-15.2.0
-arm64                               defconfig    gcc-15.2.0
-arm64                 randconfig-001-20260204    gcc-11.5.0
-arm64                 randconfig-001-20260204    gcc-8.5.0
-arm64                 randconfig-002-20260204    clang-22
-arm64                 randconfig-002-20260204    gcc-11.5.0
-arm64                 randconfig-003-20260204    clang-22
-arm64                 randconfig-003-20260204    gcc-11.5.0
-arm64                 randconfig-004-20260204    gcc-11.5.0
-arm64                 randconfig-004-20260204    gcc-14.3.0
-csky                             allmodconfig    gcc-15.2.0
-csky                              allnoconfig    gcc-15.2.0
-csky                                defconfig    gcc-15.2.0
-csky                  randconfig-001-20260204    gcc-11.5.0
-csky                  randconfig-002-20260204    gcc-11.5.0
-hexagon                          alldefconfig    gcc-15.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    gcc-15.2.0
-hexagon                           allnoconfig    clang-22
-hexagon                           allnoconfig    gcc-15.2.0
-hexagon                             defconfig    gcc-15.2.0
-hexagon               randconfig-001-20260204    clang-19
-hexagon               randconfig-001-20260204    gcc-15.2.0
-hexagon               randconfig-002-20260204    clang-18
-hexagon               randconfig-002-20260204    gcc-15.2.0
-i386                             allmodconfig    clang-20
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                              allnoconfig    gcc-15.2.0
-i386                             allyesconfig    clang-20
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20260204    clang-20
-i386        buildonly-randconfig-001-20260204    gcc-14
-i386        buildonly-randconfig-002-20260204    gcc-14
-i386        buildonly-randconfig-003-20260204    gcc-14
-i386        buildonly-randconfig-004-20260204    gcc-14
-i386        buildonly-randconfig-005-20260204    gcc-14
-i386        buildonly-randconfig-006-20260204    gcc-14
-i386                                defconfig    gcc-15.2.0
-i386                  randconfig-001-20260204    gcc-14
-i386                  randconfig-002-20260204    gcc-14
-i386                  randconfig-003-20260204    clang-20
-i386                  randconfig-003-20260204    gcc-14
-i386                  randconfig-004-20260204    gcc-12
-i386                  randconfig-004-20260204    gcc-14
-i386                  randconfig-005-20260204    gcc-14
-i386                  randconfig-006-20260204    gcc-14
-i386                  randconfig-007-20260204    gcc-14
-i386                  randconfig-011-20260204    clang-20
-i386                  randconfig-012-20260204    clang-20
-i386                  randconfig-012-20260204    gcc-14
-i386                  randconfig-013-20260204    clang-20
-i386                  randconfig-014-20260204    clang-20
-i386                  randconfig-015-20260204    clang-20
-i386                  randconfig-015-20260204    gcc-13
-i386                  randconfig-016-20260204    clang-20
-i386                  randconfig-017-20260204    clang-20
-loongarch                        allmodconfig    clang-22
-loongarch                         allnoconfig    clang-22
-loongarch                         allnoconfig    gcc-15.2.0
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20260204    gcc-15.2.0
-loongarch             randconfig-002-20260204    gcc-15.2.0
-m68k                             allmodconfig    gcc-15.2.0
-m68k                              allnoconfig    gcc-15.2.0
-m68k                             allyesconfig    clang-16
-m68k                             allyesconfig    gcc-15.2.0
-m68k                                defconfig    clang-19
-m68k                                defconfig    gcc-15.2.0
-m68k                          multi_defconfig    gcc-15.2.0
-microblaze                        allnoconfig    gcc-15.2.0
-microblaze                       allyesconfig    gcc-15.2.0
-microblaze                          defconfig    clang-19
-microblaze                          defconfig    gcc-15.2.0
-mips                             allmodconfig    gcc-15.2.0
-mips                              allnoconfig    gcc-15.2.0
-mips                             allyesconfig    gcc-15.2.0
-mips                          ath79_defconfig    gcc-15.2.0
-mips                          eyeq5_defconfig    gcc-15.2.0
-nios2                            allmodconfig    clang-22
-nios2                            allmodconfig    gcc-11.5.0
-nios2                             allnoconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    clang-19
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20260204    gcc-11.5.0
-nios2                 randconfig-001-20260204    gcc-15.2.0
-nios2                 randconfig-002-20260204    gcc-11.5.0
-nios2                 randconfig-002-20260204    gcc-15.2.0
-openrisc                         allmodconfig    clang-22
-openrisc                         allmodconfig    gcc-15.2.0
-openrisc                          allnoconfig    clang-22
-openrisc                          allnoconfig    gcc-15.2.0
-openrisc                            defconfig    gcc-15.2.0
-openrisc                    or1ksim_defconfig    gcc-15.2.0
-parisc                           allmodconfig    gcc-15.2.0
-parisc                            allnoconfig    clang-22
-parisc                            allnoconfig    gcc-15.2.0
-parisc                           allyesconfig    clang-19
-parisc                           allyesconfig    gcc-15.2.0
-parisc                              defconfig    gcc-15.2.0
-parisc                randconfig-001-20260204    gcc-8.5.0
-parisc                randconfig-002-20260204    gcc-10.5.0
-parisc                randconfig-002-20260204    gcc-8.5.0
-parisc64                            defconfig    clang-19
-parisc64                            defconfig    gcc-15.2.0
-powerpc                          allmodconfig    gcc-15.2.0
-powerpc                           allnoconfig    clang-22
-powerpc                           allnoconfig    gcc-15.2.0
-powerpc                      bamboo_defconfig    gcc-15.2.0
-powerpc                   currituck_defconfig    clang-22
-powerpc                 linkstation_defconfig    clang-20
-powerpc                   motionpro_defconfig    clang-22
-powerpc               randconfig-001-20260204    clang-22
-powerpc               randconfig-001-20260204    gcc-8.5.0
-powerpc               randconfig-002-20260204    gcc-14.3.0
-powerpc               randconfig-002-20260204    gcc-8.5.0
-powerpc64             randconfig-001-20260204    clang-19
-powerpc64             randconfig-001-20260204    gcc-8.5.0
-powerpc64             randconfig-002-20260204    gcc-11.5.0
-powerpc64             randconfig-002-20260204    gcc-8.5.0
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    clang-22
-riscv                             allnoconfig    gcc-15.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                               defconfig    gcc-15.2.0
-riscv                 randconfig-001-20260204    gcc-8.5.0
-riscv                 randconfig-002-20260204    clang-22
-riscv                 randconfig-002-20260204    gcc-8.5.0
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.2.0
-s390                                defconfig    clang-22
-s390                                defconfig    gcc-15.2.0
-s390                  randconfig-001-20260204    clang-19
-s390                  randconfig-001-20260204    gcc-8.5.0
-s390                  randconfig-002-20260204    gcc-8.5.0
-s390                  randconfig-002-20260204    gcc-9.5.0
-sh                               allmodconfig    gcc-15.2.0
-sh                                allnoconfig    clang-22
-sh                                allnoconfig    gcc-15.2.0
-sh                               allyesconfig    clang-19
-sh                               allyesconfig    gcc-15.2.0
-sh                                  defconfig    gcc-14
-sh                                  defconfig    gcc-15.2.0
-sh                            hp6xx_defconfig    gcc-15.2.0
-sh                          lboxre2_defconfig    gcc-15.2.0
-sh                    randconfig-001-20260204    gcc-14.3.0
-sh                    randconfig-001-20260204    gcc-8.5.0
-sh                    randconfig-002-20260204    gcc-12.5.0
-sh                    randconfig-002-20260204    gcc-8.5.0
-sh                          rsk7269_defconfig    gcc-15.2.0
-sh                           se7721_defconfig    gcc-15.2.0
-sh                     sh7710voipgw_defconfig    gcc-15.2.0
-sparc                             allnoconfig    clang-22
-sparc                             allnoconfig    gcc-15.2.0
-sparc                               defconfig    gcc-15.2.0
-sparc                 randconfig-001-20260204    gcc-8.5.0
-sparc                 randconfig-002-20260204    gcc-8.5.0
-sparc64                          allmodconfig    clang-22
-sparc64                             defconfig    clang-20
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20260204    clang-22
-sparc64               randconfig-001-20260204    gcc-8.5.0
-sparc64               randconfig-002-20260204    gcc-8.5.0
-sparc64               randconfig-002-20260204    gcc-9.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                               allyesconfig    gcc-15.2.0
-um                                  defconfig    clang-22
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20260204    gcc-14
-um                    randconfig-001-20260204    gcc-8.5.0
-um                    randconfig-002-20260204    gcc-14
-um                    randconfig-002-20260204    gcc-8.5.0
-um                           x86_64_defconfig    clang-22
-um                           x86_64_defconfig    gcc-14
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                            allnoconfig    clang-22
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20260204    clang-20
-x86_64      buildonly-randconfig-001-20260204    gcc-12
-x86_64      buildonly-randconfig-002-20260204    clang-20
-x86_64      buildonly-randconfig-002-20260204    gcc-14
-x86_64      buildonly-randconfig-003-20260204    clang-20
-x86_64      buildonly-randconfig-004-20260204    clang-20
-x86_64      buildonly-randconfig-004-20260204    gcc-14
-x86_64      buildonly-randconfig-005-20260204    clang-20
-x86_64      buildonly-randconfig-006-20260204    clang-20
-x86_64      buildonly-randconfig-006-20260204    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20260204    gcc-13
-x86_64                randconfig-001-20260204    gcc-14
-x86_64                randconfig-002-20260204    gcc-14
-x86_64                randconfig-003-20260204    gcc-14
-x86_64                randconfig-004-20260204    gcc-14
-x86_64                randconfig-005-20260204    clang-20
-x86_64                randconfig-005-20260204    gcc-14
-x86_64                randconfig-006-20260204    clang-20
-x86_64                randconfig-006-20260204    gcc-14
-x86_64                randconfig-011-20260204    clang-20
-x86_64                randconfig-012-20260204    clang-20
-x86_64                randconfig-012-20260204    gcc-14
-x86_64                randconfig-013-20260204    clang-20
-x86_64                randconfig-014-20260204    clang-20
-x86_64                randconfig-014-20260204    gcc-14
-x86_64                randconfig-015-20260204    clang-20
-x86_64                randconfig-015-20260204    gcc-14
-x86_64                randconfig-016-20260204    clang-20
-x86_64                randconfig-016-20260204    gcc-14
-x86_64                randconfig-071-20260204    gcc-14
-x86_64                randconfig-072-20260204    gcc-14
-x86_64                randconfig-073-20260204    gcc-14
-x86_64                randconfig-074-20260204    gcc-14
-x86_64                randconfig-075-20260204    gcc-14
-x86_64                randconfig-076-20260204    gcc-14
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    clang-22
-xtensa                            allnoconfig    gcc-15.2.0
-xtensa                           allyesconfig    clang-22
-xtensa                randconfig-001-20260204    gcc-8.5.0
-xtensa                randconfig-001-20260204    gcc-9.5.0
-xtensa                randconfig-002-20260204    gcc-12.5.0
-xtensa                randconfig-002-20260204    gcc-8.5.0
+> > Then another thing I've noticed only now. There seems to be a layering
+> > discrepancy (for traditional LRU reclaim) when get_scan_count which
+> > controls the to-be-reclaimed lrus always relies on can_reclaim_anon_pages
+> > while down the reclaim path shrink_folio_list tries to be more clever
+> > and avoid demotion if it turns out to be inefficient.
+> >
+> > I wouldn't be surprised if get_scan_count predominantly (or even
+> > exclusively) scanned anon LRUs only while increasing the reclaim
+> > priority  (so essentially just checked all anon pages on the LRU list)
+> > before concluding that it makes no sense. This can take quite some time
+> > and in the worst case you could be recycling couple of page cache pages
+> > remaining on the list to make small but sufficient progress to loop
+> > around.
+> >
+> > So I think the first step is to make the demotion behavior consistent.
+> > If demotion fails then it would probably makes sense to set sc->no_demotion
+> > so that get_scan_count can learn from the reclaim feedback that
+> > anonymous pages are not a good reclaim target in this situation. But the
+> > whole reclaim path needs a careful review I am afraid.
+> 
+> If migrate_pages() in demote_folio_list() detects that it cannot
+> migrate any folios and all calls to alloc_demote_folio() also fail
+> (this is made possible by adding a few fields to migration_target_control),
+> it sets sc->no_demotion to true, which also resolves the issue.
+> 
+>         migrate_pages(demote_folios, alloc_demote_folio, NULL,
+>                       (unsigned long)&mtc, MIGRATE_ASYNC, MR_DEMOTION,
+>                       &nr_succeeded);
+>         if (!nr_succeeded && mtc.nr_alloc_tried > 0 &&
+>                         (mtc.nr_alloc_tried == mtc.nr_alloc_failed)) {
+>                 sc->no_demotion = 1;
+>         }
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+This seems to low level place to make such a decision. Keep in mind that
+shrink_list operates on SWAP_CLUSTER_MAX batches so the backoff could be
+pre-mature. shrink_lruvec seems like a better place to make such a
+decision but this really requires a deeper evaluation.
+
+Anyway, it is good that we have a better understanding what is going on.
+Thanks for confirming the theory.
+-- 
+Michal Hocko
+SUSE Labs
