@@ -1,79 +1,85 @@
-Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652312E8E16
-	for <linux-cxl@vger.kernel.org>; Thu,  5 Feb 2026 04:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6B12E888C
+	for <linux-cxl@vger.kernel.org>; Thu,  5 Feb 2026 04:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770265358; cv=none; b=d5t+r2qzmDu+fPxOXq+aHFNYnuTPwWvjgmMcIOk9+DXiN+d3bAhuTkBSbnvoPAuDooP9+euqsPqYWfWqERKJP8Rnruek7BmW+PjvCgD0zJ2/6K80uJiZ4zz1GIIjBiShoyWnl9bZbu3IhvDJukHPJUI8M7J17iWwZ322zDrudFM=
+	t=1770265424; cv=none; b=Qxd7rFC/CUXNTxZKosLCiylltJBovHTXJdWdX9AThvRclulNIY49pgff4TP4GxA4NfV/QO/dAGrQ9Z/GlcSuBvbX73HE4KKUbDXd/SdgxMX+DhIBmV17GtZ/9Ixe60D8W33aGUzsQxRpY/yUa/kcZq4SzmSMr2bVSHUcxv/JIs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770265358; c=relaxed/simple;
-	bh=7X6iSq+okoJqC18iKBvSKc+ah+w6FLqVhxtEp1ERUCQ=;
+	s=arc-20240116; t=1770265424; c=relaxed/simple;
+	bh=L03384jtDexDfzkRHHtzPIVJ4BKFBQWzJGNmJuCR4wU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l0u2CNnWkXLPxOF13F9BbCFrdJEvyKAJbmq5+cWATTrA5UKHbKOKEsLERu7rqspgf9mbugdPmZJUQ3z0OI1CpKyMQIwnl2hMrc8uHIZvmRyCThq/wtxMQwUeuBAADwUCBVaeFEGVZMMQiaN0t0ZIW9ZIKG0ySzGbbibWDtTwpw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=TVObVj03; arc=none smtp.client-ip=209.85.160.193
+	 Content-Type:Content-Disposition:In-Reply-To; b=j/DQ87ZEdqGY/2/bderNZBzf6JT2n9IcEmHTd2DjUUYiNML33VOn5N0ARbs67Si9xZx2cFGqV70OpLpAQNMFBFYbdzPqFpXLECYyLoPDfIU1JMRx/6aKZW0CZMUvBH9LaTaSMWqb80WalJtrPpMHd5oxN9Q7bSxbwowbHrwp+ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=MLDTEQO6; arc=none smtp.client-ip=209.85.222.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="TVObVj03"
-Received: by mail-qt1-f193.google.com with SMTP id d75a77b69052e-5036d7d14easo6352251cf.1
-        for <linux-cxl@vger.kernel.org>; Wed, 04 Feb 2026 20:22:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="MLDTEQO6"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-8c532d8be8cso40796185a.2
+        for <linux-cxl@vger.kernel.org>; Wed, 04 Feb 2026 20:23:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1770265357; x=1770870157; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1770265423; x=1770870223; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rz9Ec2apNbNYW2q/PDMmmhy+ztswSTKTIfNaoVdcFSM=;
-        b=TVObVj03kNglCmCQQzQLVKtfziRu0F99on7FGMyq33XqkoHlIbjGMA+N11zDqafKBg
-         81fTiS0e5Kc2y2M41gkKEFOC4zIauUOSFUk1P3o+6lKo81QREl32F1ctwRwqlCQOvsk/
-         +jJeqYJkJL2XnWMWrU0HksJQEgJXFClrpFtzYba0kilCVrhNRpE4uDUVyCJnntEdJtZM
-         aLIP9K0BguptIrRKZNd9njTRPdTro6GaiO5lgu1PK4jVwFp9dNwwk5kOJm1oP0Av/gTm
-         yfIkBOab+jANeDIWFLUSVjrykLd6Mhobuu2XiavePLpmZRprQvmH4p1M0wlxZmtQYY/u
-         j40w==
+        bh=qW0+moZctApASOdwQkaNncsGOVFnNExxcEZS6yJkS4M=;
+        b=MLDTEQO6exn21nK7WldrR1aIYxSKV0SetMJnEH6Pq9GFGudIeAuYOU2mKG4qNXd77p
+         njiQp3vvn/XwQGj8U/pVscEkN7VUqTj/4rs6WF2nJh7NVgxPJOUGQ65Wpllt+WITmwjp
+         L4Kd/7cFByLsMZuqVWlCALtotsWYWhVqrhtPsk97ZKxM60Fx+PuD440tbELBKDsFEN72
+         fujBWqAsGz2bl14GxXX0stTlfIAFczr+vIq6muJQpN0ZtMa3P4RF2TiteF1IFNrsYK9q
+         YTEQxJGJSJPn+21BExh4UjvWTHw4NwtQp5EX21CrP/UolEeBumKNm9SaUOFpUdNo3amE
+         aUXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770265357; x=1770870157;
+        d=1e100.net; s=20230601; t=1770265423; x=1770870223;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rz9Ec2apNbNYW2q/PDMmmhy+ztswSTKTIfNaoVdcFSM=;
-        b=rhWsg0Dn+7BVG+x1OSJpl9IuKrZQYHcLmqhLKohNl6tFSJF7CC6O+C8xp2mga7jzgQ
-         PBqE3QF7rHY+EbA9FIntjVMfcU/t2aurlF2bhghbtscC67t4+M004h1+yc/2u2b/fRbW
-         hqhRzGjnA2r1hMcYIlDsh7/dnJtsL+Nbco221Dy3Aww7a2HoXYzv5CmPNgngYgu61+56
-         JeMqbrBULpHtNe33JqmdRDg6Vy5xEl59TpfUNOEm3xYA/NGMuX7bse/8HnkSN64aAM4P
-         H53VQS0qGjCg3JbbX06Prt2J5TClqPrQYfqJSPKY+D7B/KiH5ZveT9GwNI5YxWSl9qEI
-         S+Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCUufIipRgKUEFMHVXywJrF9i41epDYK9ek5f+7rZed4FU1dkpUqzlWgz3Kyl0oY2FqWcSdmQ8S/A7M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywp2/XjsqGKLrKng2mOh7CeBBIaKmXoOknG3PHRTgwy3lPwugFZ
-	ZaEEEF4nQwd0zM4rGh7wAcaddg+Nq8GkumebsKSLS4UZ/LvFvG+So72fGCnIrTEwO1Y=
-X-Gm-Gg: AZuq6aI0tpms/VM/SIaRSaDrc0PUZZhRGE61IWeMRMcq/ARXudC+vAK5B6sd9ZocGcg
-	7A3QPlriW09x24Visncj04L/3JvAB768AgSApPEGvWShChDfxE17IzxDpCijGUhUEGcEXSm7rDs
-	DCB73INmgOGORvfJe6G3egqgqAraITWuToO1Nsk8dOXcXbhBXivX5DAHyR/dK16yvgnEDBCSpYl
-	KzJcyKyj2iEhcvNiZ8advVTzxLfNVQkk/OSKKgvNVswf7/o+ruB7oqmg1vBcDuseYCNnsRSklVJ
-	ZT9i6STwfJhAtbob392YyL0XW+hvHSuBb2CztSC6gdHyikw6yoOEJOfPghc9vSz0Gp5pHbHAXCW
-	d+urLMI7DJqaSJ3IZuSczlSqSjSUrg/f8g9PR6oQRpQT2ulwKBDLpJFT3qGf4xDVTXRwOtzmF6m
-	Tc1ZDLGytL+xyVASUD5ULwXcRk26Oe/0DaDsNtWcdMXrT7x1tsUKmMwUWnsmFK1x+n1fohMQ==
-X-Received: by 2002:ac8:7f15:0:b0:502:9be1:7227 with SMTP id d75a77b69052e-5061c0d1c84mr76634971cf.5.1770265357017;
-        Wed, 04 Feb 2026 20:22:37 -0800 (PST)
+        bh=qW0+moZctApASOdwQkaNncsGOVFnNExxcEZS6yJkS4M=;
+        b=Krn+tVeB4Zr8tWJKgFCkR6Dnp6YN6LzTVIRA4riE1kr1OesVwOqb1zg5iAwRu9Wf4M
+         nq8x8B6vI+gu8s5MDAKBlO3V9K1Se3PtMDZYlVdI7eugmzEGEbaNqAc2d7/3ClftJgqY
+         nvNugHfFllS7UnIdPy9AMliF6WAulqeQY898ttw+vtZlf5ZtaAVqFvstYXoU9P2MAC1C
+         nSPoXIbtR5hkvx4tqRaawTSWilHx4YxwsFKNW18LuogmceavdRgn9+HE9xjfSolxwKJr
+         epBOneQrLNlp0TqexK4vy4+nFaK3dQo+rsU1Dylln2csJ1RiwytFvUmWxZuIHnVnDSmW
+         kwyA==
+X-Forwarded-Encrypted: i=1; AJvYcCVN0VR3k7jWssqMbHngSHAzBJiSCbds8+RBcP7MXVDKslQMJxR7gQQdM1CPLvea5HH1TCk9vj0jBAg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycsUacUMP8qkTQzwD8tvVjd76OIB/iLfhbU8Sl2J2eRnjNewmZ
+	GXPyXrhFFQ825CY2CnZQMSfa1pZZZFfJDhljQvAvmdtGUM9S/lfGMqu1WC+OUO9jHRk=
+X-Gm-Gg: AZuq6aKrOjZANfT6H1PrxJseEBoOZg3+Q4OlbRue+qnQ7R6GEXmqnzJEnEpJ5cwLf76
+	U/7V8bfWmcc8dBDYcWk3TY6aLcECeDdBQqfpAW0s6MkUDmRA7+fn9zpcFf2bMRKvlENt+n2Nwwl
+	cQuLQ+j4URDEzORsiWDge9e5l207drMYMlrm78gXZFES+xwOhySJakUNNfSR1pKhVJckiZ0SxtZ
+	E59V961sdTStMaYeUyS6zKUGLCJmx9e6+bh3F5t+HaUlVrZ+sfTJLbusHsS9rYquSjz0aaBgTcf
+	nG0ooQYTrXsibEdTWw1tJ6C3A0LtZxtoYqa+/a9f8T/INV6WplSXjlp+KqS6Ukx188LzBH34Y/l
+	r8MU90Zg0msEIo8VzL70SgLZao5CnQqBldNHRqfSfApvHPGIroZIC0QxU0Tt0NbjYnaMP7hgziW
+	KzoZ9P1HsHMLHazPbhHJbRSg91Yz7apGbrHfUWvAnVH+QY80PRmSP0X2ahy153NoNxRvChgA==
+X-Received: by 2002:a05:620a:c4d:b0:8c6:f74f:9b69 with SMTP id af79cd13be357-8ca2fa5e50cmr701545185a.83.1770265422854;
+        Wed, 04 Feb 2026 20:23:42 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5061c1f975bsm29957261cf.26.2026.02.04.20.22.35
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89521cf8619sm34240906d6.32.2026.02.04.20.23.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Feb 2026 20:22:36 -0800 (PST)
-Date: Wed, 4 Feb 2026 23:22:34 -0500
+        Wed, 04 Feb 2026 20:23:42 -0800 (PST)
+Date: Wed, 4 Feb 2026 23:23:40 -0500
 From: Gregory Price <gourry@gourry.net>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: dan.j.williams@intel.com, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 2/2] cxl/region: Unregister auto-created region when
- assembly fails
-Message-ID: <aYQbCsOiFzyZHI6R@gourry-fedora-PF4VCD3F>
-References: <3bcc5143777acc6d45675d78dd8c57079406bc53.1769746294.git.alison.schofield@intel.com>
- <2a613604c0cdda6d9f838ae9b47ea6d936c5e4ce.1769746294.git.alison.schofield@intel.com>
- <697cee39ed313_1d6f100bd@dwillia2-mobl4.notmuch>
- <aX1VMDh9IY4eg1h_@aschofie-mobl2.lan>
- <aX4kd-S3PQTTWfol@gourry-fedora-PF4VCD3F>
- <aYPlJ2PRv-FaFKFT@aschofie-mobl2.lan>
+To: "David Hildenbrand (arm)" <david@kernel.org>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kernel-team@meta.com, dave@stgolabs.net,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, willy@infradead.org, jack@suse.cz,
+	terry.bowman@amd.com, john@jagalactic.com,
+	Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 2/9] mm/memory_hotplug: add __add_memory_driver_managed()
+ with online_type arg
+Message-ID: <aYQbTFLTRHiAnrKr@gourry-fedora-PF4VCD3F>
+References: <20260129210442.3951412-1-gourry@gourry.net>
+ <20260129210442.3951412-3-gourry@gourry.net>
+ <20260202172524.00000c6d@huawei.com>
+ <aYDmor_ruasxaZ-7@gourry-fedora-PF4VCD3F>
+ <20260202184609.00004a02@huawei.com>
+ <aYEZAUJMLWvaug50@gourry-fedora-PF4VCD3F>
+ <3424eba7-523b-4351-abd0-3a888a3e5e61@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -82,35 +88,20 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aYPlJ2PRv-FaFKFT@aschofie-mobl2.lan>
+In-Reply-To: <3424eba7-523b-4351-abd0-3a888a3e5e61@kernel.org>
 
-On Wed, Feb 04, 2026 at 04:32:39PM -0800, Alison Schofield wrote:
-> On Sat, Jan 31, 2026 at 10:49:11AM -0500, Gregory Price wrote:
-> > i.e. auto-decoders should be intended for trivial SysRAM regions only
+On Wed, Feb 04, 2026 at 10:08:45PM +0100, David Hildenbrand (arm) wrote:
+> > 
+> > David do you have thoughts here?
 > 
-> It has not been my impression that we have that much control over what
-> BIOS may present. ie. If it is CXL Spec legal they may build it. I
-> recall you wrote a doc of Linux Expectations of BIOS. Did you actually
-> try to limit what BIOS does?
+> I guess we should clean that all up where easily possible, but I don't
+> expect you to do that.
 > 
+> For online_types I used it, obviously, to save memory. So I'd expect it to
+> stay at least there, but cast it to the proper type once we take it out the
+> array.
 > 
 
-I should rephrase - barring any new specification updates that actually
-allow the BIOS to say what a region may be used for, the only two
-reasonable endpoints are sysram and dax - and realistically only sysram
-unless you build kmem out of the dax driver (kmem is the auto
-destination).
-
-But for non-trivial setups, recovery might not actually get you
-anything.  If a device fails to actually come up after having been
-programmed by bios, it may not even be feasible to tear-down and recreate
-what the BIOS tried to do because of platform specifics (Zen5).
-
-So while you can time out and clean up, I'm not sure you can actually do
-anything after that reliably in the general case - and i'm not sure how
-much effort we should put into fighting those fires.
-
-I suppose you could leave the driver in a state that allows a user to
-see it's broken.
+I can do it pretty easily and pull it out ahead.
 
 ~Gregory
