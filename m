@@ -1,265 +1,223 @@
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012047.outbound.protection.outlook.com [40.107.200.47])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7057139FD4;
-	Thu,  5 Feb 2026 16:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770307665; cv=fail; b=R2NAVUR2ekjJkCTUxu/igMLnF35wZuiVNjzIGt6BzNZBvWTSb45oKOdyZTk+W/6sL593etWL+910ZQKodiH+NUB8XPbeqkZYuLemgIEdJcgArRff/SuatFvQThuHIq2+hOc4u5ERaG+BhXklD/8i0ySWaVI5Sy4kgi/NmYqJ4WU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770307665; c=relaxed/simple;
-	bh=zUlZRPQZpPB7HwdQgR1wAJT4QHVnRHmgBDQhOJ21JYo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=GH21ZTatmM5V++0hrjjfScfTLGtpX4dgaGOnD7XfdIdBz2Y4iUPKlmaXK8PBh3E+Rnh/kMvIYuyrSHmKPY3pCxmQ0Beyy4qkQ2/xflUp9SeEmZiihq3nsXCPWY9j5cSXR0K6EjVt4a6bZwHUYpjiNGOCsO7X2Z+B7e/lqrX+vxs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IdA09E/t; arc=fail smtp.client-ip=40.107.200.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IdA09E/t"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YyrrQuoH5jIHX5tQfoaYLnLnb18M6BVGZ4FZNy9Vg7eH7i7pp5sp9ZKq+pI1VOZAIDjdbA+RcVSj+4x3HVtpt5lwXD4kYwfPe5a5DmhfHXu82052bbjYRCnAaSjzxiHvUYAWQK3+Y9yi3x1kvWL2w5l7BrdZ6ZtIbgwJZoi1YjDck8nD83lsT+8upRnjc1Q7Z005sThXb+oarMACcymL7qNvqUoO7YcwleWvn1p3brYDttMd1SrNPiDmdCCpaaRMYQx3o/1hQLaFJLOgZp774F+ebItbpGtOsM0DN/tmDidxHRkX7VMGZUTPnaxBjl8SAj70GExAIwjUyjxuOgBdow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fqYT7GfIu29Xl0Ho3pKvnRo5faTcn4HiglYXDvBpaBk=;
- b=jZZbsxlZVIXP+LrEthrnOWCr01NQc71GCmFwzp+LBS/MBWAAeoT4sVMJTB9jSRlg1lWThFWoQB8WJoQLqCZk5F/GTfoNeOOj4FiclmZrQdXrA6KLmx90GviAqrVCpz0pT2F78mb+hYax/w9NrXTRwkqS2gY1x5fTuFgNL8n0dp9S8A7NYK0E0DT2FMkbCfavlsPEaBnCd6//ITO2Sv4C/dP/Yuis2UQgT+c2ABxWH7Ru6kalUPw2gA/S/YwIpG571RFDbq3lsf6SkgrV6QFIdS50mLoXojqnvcvo68+FLcqHbMNp9ejUtXqu++MFHDt1E9sYzy4s+6lqMS/tuTbLCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fqYT7GfIu29Xl0Ho3pKvnRo5faTcn4HiglYXDvBpaBk=;
- b=IdA09E/tawUrm0oWRJJ4upT6xR32NFz42hqK+FJt7Plm6w1Ey/T0LMG9Sy6oN25bhLvW8Od8oSZdNiOE9ULbTQMAI3qIGnzlALr78VpuxumzavEYkclm9VGh6m91cmvDDMYuzLDlRahTttKQIMsqof3o3dpwaFiDWadHmtVeL00=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH8PR12MB9766.namprd12.prod.outlook.com (2603:10b6:610:2b6::10)
- by PH7PR12MB7137.namprd12.prod.outlook.com (2603:10b6:510:1ed::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.13; Thu, 5 Feb
- 2026 16:07:41 +0000
-Received: from CH8PR12MB9766.namprd12.prod.outlook.com
- ([fe80::be0f:431f:5f27:96d9]) by CH8PR12MB9766.namprd12.prod.outlook.com
- ([fe80::be0f:431f:5f27:96d9%4]) with mapi id 15.20.9587.010; Thu, 5 Feb 2026
- 16:07:41 +0000
-Message-ID: <bba0a5e2-c4a2-429c-9577-c1b87ef04267@amd.com>
-Date: Thu, 5 Feb 2026 10:07:36 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 5/9] PCI: Establish common CXL Port protocol error
- flow
-To: dan.j.williams@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- dave.jiang@intel.com, alison.schofield@intel.com, bhelgaas@google.com,
- shiju.jose@huawei.com, ming.li@zohomail.com,
- Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
- dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
- lukas@wunner.de, Benjamin.Cheatham@amd.com,
- sathyanarayanan.kuppuswamy@linux.intel.com, linux-cxl@vger.kernel.org,
- vishal.l.verma@intel.com, alucerop@amd.com, ira.weiny@intel.com
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DD02727FA;
+	Thu,  5 Feb 2026 17:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770311632; cv=none; b=GK2Ey9FPX1Cr15I70hdB43H7EsubeWQiXl1CPoJXT9jut/Jr9nE3ej+h6yXyTpGOTf3OVZE3yQX+KjTC4Q4u7O9II2PU2k6CN1+EKrrym0AGYhT4A1XxqCtreYw8Q1onXPxLT2dnpyj4tahcxwIu+odomXQegcwnMECAwG4WD54=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770311632; c=relaxed/simple;
+	bh=7ZkXvkRhbvIImVLNVrlIGYVo9YAutyavgCoFsinUTe8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Wnz43/11Cvw++1p1TfAwdt+qR1QyMV0l+auL79Y8rlp4OTfjm8tOir6BxY/FO1RVTatK5Y384pGuwytSFHL42wthPyn/p2DBHo84vpcrNQXvI4qh2MDmiKvdAXzisgZr/PflTeGZ+gs8wN4+qsGiBMT39Bd4KBPnud4oUih8HTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.107])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4f6P2L2qYSzHnGj5;
+	Fri,  6 Feb 2026 01:13:46 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3518D40570;
+	Fri,  6 Feb 2026 01:13:49 +0800 (CST)
+Received: from localhost (10.48.151.164) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 5 Feb
+ 2026 17:13:47 +0000
+Date: Thu, 5 Feb 2026 17:13:46 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: "Bowman, Terry" <terry.bowman@amd.com>
+CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
+	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
+	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	<linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>, <alucerop@amd.com>,
+	<ira.weiny@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v15 4/9] PCI/AER: Dequeue forwarded CXL error
+Message-ID: <20260205171346.00001e6b@huawei.com>
+In-Reply-To: <59fb1a00-a9cb-482a-b8be-3982c515cd85@amd.com>
 References: <20260203025244.3093805-1-terry.bowman@amd.com>
- <20260203025244.3093805-6-terry.bowman@amd.com>
- <6982d468e42eb_55fa1002b@dwillia2-mobl4.notmuch>
- <e6de891c-e1e0-40de-978b-15f60acea92d@amd.com>
- <6983b885a31cc_55fa1002d@dwillia2-mobl4.notmuch>
-Content-Language: en-US
-From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <6983b885a31cc_55fa1002d@dwillia2-mobl4.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA9PR13CA0104.namprd13.prod.outlook.com
- (2603:10b6:806:24::19) To CH8PR12MB9766.namprd12.prod.outlook.com
- (2603:10b6:610:2b6::10)
+	<20260203025244.3093805-5-terry.bowman@amd.com>
+	<20260203152609.00004b41@huawei.com>
+	<59fb1a00-a9cb-482a-b8be-3982c515cd85@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH8PR12MB9766:EE_|PH7PR12MB7137:EE_
-X-MS-Office365-Filtering-Correlation-Id: 17cb4cb0-be30-427a-9024-08de64d0b07f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?U1hXbDF6cGQ1T1h3a1llRnF5RFBsTGVHUlpSSlZCeGFhWGtoYUlrWmYxV0pO?=
- =?utf-8?B?RjRDK3JIWU5wMWQ5clpDeEpoZnA2TzlqaUpNSGJhbmpleGxzQ0FtQXpiaENh?=
- =?utf-8?B?azRKYU1VNm9nMnFIaHhkUzgyRnRHN0RxSVMrcDZheHVTL2FhejliQnhyQytG?=
- =?utf-8?B?eDJJVms1dmVMRDYzVWVTdU5zSVVQSldZckNiM2IzSG9NMmtrbzJUdVF5b1Bs?=
- =?utf-8?B?V2NGSGtlbTBJOGQvMEZMMHExb1ovUlhaZ3UxYUM2VlQ1MFUwQkVtakhhNi9G?=
- =?utf-8?B?M2kwK2NaNWdhU1poQXNQWlM4Ui95M2tFREdTVmJTaTUyOGZ6aDd5dTFKNHhK?=
- =?utf-8?B?S1IzbWdmbHd5ZVg1dVhFTEtGWUQxT0sxbENQZWFKQTRRSGhTdGZYRmN5WE5y?=
- =?utf-8?B?YlB4dTZ1elFrOUxGQ3EwaUNybm85cU5vRTdBaVNqek1meVlVdWlyTFBJMWR3?=
- =?utf-8?B?Q0hacmRpUGhsbmxncDFqUjh4ZXdWNElDY0J2T2t4Y3lCZDZXaGliTS9PMmRC?=
- =?utf-8?B?UE91REZLbTh4QkVGeTIvUlQxajJtbFhWRDZ1eEEyVURFS1d1WDcvQ1hSRmRt?=
- =?utf-8?B?R3o5cWJRRU00Tk9LaFBOTTlxRXZ3UllycGRhVFMrYjF1RkljOTVteHFKbGNZ?=
- =?utf-8?B?ajFXcE5lbjI3cWdWWnF5N1hsU2dqdGw3MHhhMVREVTBGTHVwaDZHOTFIM2dt?=
- =?utf-8?B?Sk1xaExmY2NUYjIzR0QzVDFhV1c2bmxONW0wem82dC9lUyttZjNXc0RDWHVD?=
- =?utf-8?B?UmtDZHdOWTJsZHNjM0RjbVY0MzV2ck1kT05VZzI3QVpNWlF3VzlHOXB2Nzhy?=
- =?utf-8?B?VGIwNXJMdFI5WHNFdUZKTHV1K0Z4OEZjU1hzTlpuQ1pvaHMwSG5GT0VBVVpY?=
- =?utf-8?B?R1I3T2JIREVIUmdmTWpxMlI0RUpsWitQeU9STDRRNGNZN0grVE1rY1NYbjk0?=
- =?utf-8?B?NVhjZ2NSSWdoZUFkckJrSmV6K25LVXdVU2U4MU5FdnRtdDdaTUd2b21ielJu?=
- =?utf-8?B?ZE5aN2ZNdURMZkQycUE3ZVJ6cE5ucUlmdEFRdUN3TUNkYS91Mk9QbE1TTGVN?=
- =?utf-8?B?ZzF1ZzZISy9XWEpjK3dKNm81Z2REbDJTQW1nKzNIZHdFWTNicnZ0ZHV6UThJ?=
- =?utf-8?B?bURjdTVqT0ZMRllOWGRjUXdGVUovNFJqajRuVVdxa3pZa1J4RHoyTWYvczZJ?=
- =?utf-8?B?c0ZqTXQwN3o5cEFsNVBMaWF5Q3gzMnFYV01jbmx3Y3dJbytTUkl2eWJIQ0t3?=
- =?utf-8?B?NVZvWW9CYS9BQXFpUTJUWTdSSGlKZnozVys5emVGYjU4Y0N5SzY3dVlyQ2lK?=
- =?utf-8?B?YU5HUmdVakNJZmxiamp5dkx3NjhpczRQOG45REVjSnVleEI5MDhzWnFtdjY1?=
- =?utf-8?B?Nm9UcmVDZEhjQVV4MmhXRHJhVGduVW9ydDl0RjZHeDkvWVlDNm5ZakxHZDVo?=
- =?utf-8?B?OGFPeThnalM2UGVrM0dUVDN4ZGtqQ2lsK1RRaHY5a0RTYlVTRkdiUjZZMzNC?=
- =?utf-8?B?V1RKYVpUM0JmY1ZkbWowbldvUDJlUDVPRmVVV3ZvVlFDSTEvVVZ0K2lkTHpl?=
- =?utf-8?B?NkNvSmVWZjJnREFyTTJyYnlTZ1VhWDN5L1g1OXh0L0ZvMW11UDlzZnVVY1NB?=
- =?utf-8?B?MmU1RUNHalBUTFlqVkVSNkFCUExIQUNqUmVrLzNzMW1IQW1SN2FGRDMyYnRk?=
- =?utf-8?B?cWtLR3hGRzg4TXpOZjM0bXRGNms3U3ZUWlp6ZlBYL1VkYW5sUHVDK3RTTEk1?=
- =?utf-8?B?U2JaM3BGcDlGKzR1dVdJbTc1NzdZMkZsSDJ5L00zRThuK0RadExLUzQ1dlUr?=
- =?utf-8?B?RHJrSlhWdXJxN0d0dm1SMVR1N2wwanBIVFluQlo3VkZDTmYxU3FaR0FiRUNT?=
- =?utf-8?B?MTVIcDdJdjQ0Z2lHZDhTNVVkazVqdER5QkhIUnJwRTBXQjlvd1YwVG5MU1Er?=
- =?utf-8?B?WjFLT3phZzgwZ2pidXFjcVZXTEl6K1plREVZRlVKYlZqdlU5aEp2dFk3V1Jh?=
- =?utf-8?B?QmxpMlJvL2pMMjdOdHhWeU5SMnFUcWNJSEFicHFSbE9pakVCYkVMYWNHdVpq?=
- =?utf-8?B?eGUwZE9LQXNSQTV1SUt6SnpDKy83MWNoL2tlTXNyYVRvVEUzejFBN3VyNnhI?=
- =?utf-8?B?ZVprOGtCNHNobkN1TW1aSUp1SUNjUnRsc1BCa2ZSTmdaR2NZL21JZkFkSjBU?=
- =?utf-8?B?S2c9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH8PR12MB9766.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VjdhRXd6TFF1NXBBNnM2aHZPYS9FeWx2akdEWFN2Rm9YTXBMS2Uva0J0MHNt?=
- =?utf-8?B?RlU5L2ZHL3Y4UlFSTExhZzVNRjB5eGFCQXgyY1pYT09QU29pMVZQQ2dVTDlz?=
- =?utf-8?B?RVJDNDlYc1ZMOE9FZjQrUlVTY3BkWXh5YUI0czQ0Z0hkVUVUVm91YjRJRGtx?=
- =?utf-8?B?NWYyUkYwQUVXOUNUcFMvWHdlQmxCNXBWb1VtQjZSWFhGTWQwU3RjVHVyUE1k?=
- =?utf-8?B?aWUzL3IrbVh6N3ZyQ3psQkJZaE9scE0vSU9DSlJiVWVrWXpEdGtLcGduNnZO?=
- =?utf-8?B?dWNJV1l2MGlzcjJKUEFVaXFFc2lTQUdzSEVnekt6TDZFLzJORmNtcWJkb3pU?=
- =?utf-8?B?OWVGTW9CS1VqZmhmT2p6dmM4MzBBSEFMUTFjbmhsaEQ1OXVWV1hoVXA4M0w5?=
- =?utf-8?B?UUVxaWhYQmVOZHpmTlp4cmZUckZFdEZnaWptRTlaclpINEt6bmlybWkzTWlB?=
- =?utf-8?B?WGRRWHZaZnBhNnU5b2hSZTVOMHdNZGlCc1lLWEdHdm1ydGNkU3ExS0JaeTZI?=
- =?utf-8?B?Y24yVy9QUHFNSm85REpua0hsYTJnaFN5L29qSVVzbWRvck5FaVJ3STRpSzNp?=
- =?utf-8?B?ZHNvRTZidTgvUU5aTUNZUkNLQmExVnJ4bnlXMDd3T1dybGxzUEx3cGMrNGZz?=
- =?utf-8?B?YVdPcFBrbkRodm1iWWVCUldnQWlXMWwvaml6YndkbHlrNjlucmR6MllRT1Bq?=
- =?utf-8?B?RG03M0pzMXdtYkJaajdsdTE4bE9XNWUvRnI4V2JTWUFISEV6b3ltTnFuSm10?=
- =?utf-8?B?UTFNSVBzMU5udzc1NDJZWUlOSmRnQkVFdmJzZCtSOVdTV0xXYUI5ZVZnTTFC?=
- =?utf-8?B?eGZyWWliQVFveUdvSU1UeVhFbmFVMUdsVERGZEJvR2xLblB2eEU0SUp1QWNX?=
- =?utf-8?B?OGpFSGtDMWdTR2lRZm5QSjJCamJzbVFsZXYvSWw0MDQ4K05mQlJ4SEhVNG9J?=
- =?utf-8?B?SkZoNWdEWDlZS1c2SjlCaUR2T1VTK1ZtaWN3NzNJVFNhUjZjSkNvSVoxWmc3?=
- =?utf-8?B?eVdaUFB6VlcxK1p6RG4wRWdRbzZLZHk5SjhmTGpodFJlQmlaYnpXVU5NT3Ux?=
- =?utf-8?B?WGVWcWVLdU9aUkVrOHhaU25WVFVNQzJvM0NoZ0dpdVJzUm9KK3VUd2hKc0or?=
- =?utf-8?B?Q3l1RnYzR2tnRlJXNXg5cGxzM2pScXdIOXhjL0VPVWRJR2xhdUgyaWJNRmtQ?=
- =?utf-8?B?Wi8vdFV3dkVFbGh6QlFKOFdjdnBveEZYaGZjVEhVQWdadzNYZEk2RHhyUUZt?=
- =?utf-8?B?Vjg5VUsxQ1Q2UlNiQXlmSGE1a3ozdXBCVjlwcjQ4ai9NM3Q4ejlKYkZBWXY3?=
- =?utf-8?B?VFU0TTRHTEJXTGNHUTEram1Vd0VaYWk2dUVqREorVGM0TzJOSHcxR3ArZTRq?=
- =?utf-8?B?RTZteEc4REFTbkNsNmQrRHdjeDhPVXZyc1VDRUJKYmJpdTZhVDJOcU1ZUlM4?=
- =?utf-8?B?aGtoYzh1OTV4VTN4a0wyb2NzU3JGMVk0WEhTTU5ncWVzd3BnYzVCZlpBOXVl?=
- =?utf-8?B?RDNTQXlOMEFJT2c4U2xHSENLWUFSa2RtVzdZN1Y3Sk1sWG1LWktoYVlYa0Fs?=
- =?utf-8?B?bndXWnlhT2l2R3dDMVhMTXI5VjlubzEySjd5Um9pU0tUWVpmZ0I0SzVWRnVF?=
- =?utf-8?B?WDd6RDUyMHhaOHdqNTVpU2JpdmFPdDNOOXhiTElaQUNQNVU0TGwwYmcrK3lD?=
- =?utf-8?B?MnZiR3NlUHhjMWN2UDF5ZFA5RG9QRnZmWVEzRFNuSGVFSEdZT0lSY2RUN1Ew?=
- =?utf-8?B?bWw1VmR3ajQxM2ZmY0tDQ2lmVWJJTlprWUlWSDdrdXhkdkZWTW9iL0pzRHVF?=
- =?utf-8?B?a1YxeG95NU1XSUJXWXF3SU10ZmdmWkF2cXM3VURuTnJRTDQ0YVNyZlFwN1Qx?=
- =?utf-8?B?RXRCdFlrc3FSWUN5OVN4T2llRUs5eGYrT3ptam90TzhuUkRuSlNEemNHYU54?=
- =?utf-8?B?TUFJQ0VYNy9EdnFtREFSaG5HREtBUWJGVGdCdWlVNHUwMzg4V0d0WTdFOWlQ?=
- =?utf-8?B?WDRCY0QybEFqdFo1QUc2dFpTMUpwRnNrejd2MFJVbTNhaUd0UUt3OHQvMlhM?=
- =?utf-8?B?Zng5ZW8rN0xSMUlDYjZjaFBhekRWdjNEeng0a1BOZkhuRFVlbjhkSExCSWVV?=
- =?utf-8?B?RWtSZ0FhNGY2OUpTWGhwc0FJMitJN0JkQjhpOTBrOENWMXNzMllhZklzUFRH?=
- =?utf-8?B?SytKZjRoMVh1WEpqU2d3d2tFSDVOSDJaRjNyVzVJOHE3UGhDZ0J0Q0FvdDNX?=
- =?utf-8?B?Uld3M2hEZUQ3MEpFcDlNMVZEcmVGL2h4aGl2eUc5WEo3eHk1WE92S2FXSGk5?=
- =?utf-8?B?TUx3T3lvYnZrRllvK2lFc0ZVUHF2MnFLajRmWlpFeE0vdEY3S0NaUT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17cb4cb0-be30-427a-9024-08de64d0b07f
-X-MS-Exchange-CrossTenant-AuthSource: CH8PR12MB9766.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2026 16:07:41.1988
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qDW3QKWeDRwkVWRdm6Wm96qi0SODZ+oMRW20WHr6+FiuHYPGHH/RrX+R6ZVk9Ln7FtS8wsNFky1ld9WZgWtjzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7137
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-On 2/4/2026 3:22 PM, dan.j.williams@intel.com wrote:
-> Bowman, Terry wrote:
-> [..]
->>>> +static void __iomem *cxl_get_ras_base(struct device *dev)
->>>> +{
->>>> +	struct pci_dev *pdev = to_pci_dev(dev);
->>>> +
->>>> +	switch (pci_pcie_type(pdev)) {
->>>> +	case PCI_EXP_TYPE_ROOT_PORT:
->>>> +	case PCI_EXP_TYPE_DOWNSTREAM:
->>>> +	{
->>>
->>> Nit, clang-format puts that { on the same line because coding style says
->>> only functions get newlines for open brackets.
->>>
->>
->> Hi Dan,
->>
->> Thanks for the note. Would you like every switch-case to be upodated
->> to match the clang recommended format?
+On Tue, 3 Feb 2026 11:00:40 -0600
+"Bowman, Terry" <terry.bowman@amd.com> wrote:
+
+> On 2/3/2026 9:26 AM, Jonathan Cameron wrote:
+> > On Mon, 2 Feb 2026 20:52:39 -0600
+> > Terry Bowman <terry.bowman@amd.com> wrote:
+> >   
+> >> The AER driver now forwards CXL protocol errors to the CXL driver via a
+> >> kfifo. The CXL driver must consume these work items and initiate protocol
+> >> error handling while ensuring the device's RAS mappings remain valid
+> >> throughout processing.
+> >>
+> >> Implement cxl_proto_err_work_fn() to dequeue work items forwarded by the
+> >> AER service driver. Lock the parent CXL Port device to ensure the CXL
+> >> device's RAS registers are accessible during handling. Add pdev reference-put
+> >> to match reference-get in AER driver. This will ensure pdev access after
+> >> kfifo dequeue. These changes apply to CXL Ports and CXL Endpoints.
+> >>
+> >> Update is_cxl_error() to recognize CXL Port devices with errors.
+> >>
+> >> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> >> Acked-by: Bjorn Helgaas <bhelgaas@google.com>  
+> > 
+> > There are some small functional changes to existing paths (maybe)
+> > that I think need explanations in this commit message.
+> > 
+> > Otherwise, one suggests small simplification.
+> >   
+> >> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> >> index 74df561ed32e..a6c0bc6d7203 100644
+> >> --- a/drivers/cxl/core/ras.c
+> >> +++ b/drivers/cxl/core/ras.c
+> >> @@ -118,17 +118,6 @@ static void cxl_cper_prot_err_work_fn(struct work_struct *work)
+> >>  }
+> >>  static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
+> >>  
+> >> -int cxl_ras_init(void)
+> >> -{
+> >> -	return cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+> >> -}
+> >> -
+> >> -void cxl_ras_exit(void)
+> >> -{
+> >> -	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
+> >> -	cancel_work_sync(&cxl_cper_prot_err_work);
+> >> -}
+> >> -
+> >>  static void cxl_dport_map_ras(struct cxl_dport *dport)
+> >>  {
+> >>  	struct cxl_register_map *map = &dport->reg_map;
+> >> @@ -185,6 +174,50 @@ void devm_cxl_port_ras_setup(struct cxl_port *port)
+> >>  }
+> >>  EXPORT_SYMBOL_NS_GPL(devm_cxl_port_ras_setup, "CXL");
+> >>  
+> >> +/*
+> >> + * get_cxl_port - Return the parent CXL Port of a PCI device
+> >> + * @pdev: PCI device whose parent CXL Port is being queried
+> >> + *
+> >> + * Looks up and returns the parent CXL Port associated with @pdev. On
+> >> + * success, the returned port has its reference count incremented and must
+> >> + * be released by the caller. Returns NULL if no associated CXL port is
+> >> + * found.
+> >> + *
+> >> + * Return: Pointer to the parent &struct cxl_port or NULL on failure
+> >> + */
+> >> +static struct cxl_port *get_cxl_port(struct pci_dev *pdev)
+> >> +{
+> >> +	switch (pci_pcie_type(pdev)) {
+> >> +	case PCI_EXP_TYPE_ROOT_PORT:
+> >> +	case PCI_EXP_TYPE_DOWNSTREAM:
+> >> +	{
+> >> +		struct cxl_dport *dport;
+> >> +		struct cxl_port *port = find_cxl_port(&pdev->dev, &dport);  
+> > 
+> > Can you pass NULL for dport?  Looks like it to me as that ultimately ends
+> > up in match_port_by_dport() and 
+> > if (ctx->dport)
+> > 	*ctx->dport = dport;
+> > 
+> > where with this as null means ctx->dport == NULL.
+> >   
 > 
-> Yes, please. See "git grep case.*:\ {" for all the other examples.
+> Yes.
 > 
-> [..]
->>> Isn't this dead code? Only VH topologies will ever get a forwarded CXL
->>> error, right? I realize it gets deleted in a future patch, but then why
->>> leave dead code in the git history?
->>>
->>                             
->> Yes, agreed - I'll remove. Correct, only VH is forwarded. My
->> understanding is the cxl_memdev guard and driver check are no longer
->> required here. The memdev is only used to source the serial number, so
->> I’ll refactor accordingly. Please correct me if Im wrong.
 > 
-> You do not need the memdev to get the serial number, and I note that the
-> serial number is only mandated for CXL memory class devices. I would
-> rather stop worrying about serial / pass 0 then add endpoint special
-> casing. The consumer of the tracepoint can always get the serial number
-> from sysfs, or this can call "pci_get_dsn(pdev)".
+> >> +
+> >> +		if (!port) {
+> >> +			pci_err(pdev, "Failed to find the CXL device");
+> >> +			return NULL;
+> >> +		}
+> >> +		return port;
+> >> +	}
+> >> +	case PCI_EXP_TYPE_UPSTREAM:
+> >> +	case PCI_EXP_TYPE_ENDPOINT:
+> >> +	{
+> >> +		struct cxl_port *port = find_cxl_port_by_uport(&pdev->dev);
+> >> +
+> >> +		if (!port) {
+> >> +			pci_err(pdev, "Failed to find the CXL device");
+> >> +			return NULL;
+> >> +		}
+> >> +		return port;
+> >> +	}
+> >> +	}
+> >> +
+> >> +	pr_err_ratelimited("%s: Error - Unsupported device type (%#x)",
+> >> +			   pci_name(pdev), pci_pcie_type(pdev));
+> >> +	return NULL;
+> >> +}  
+> > 
+> >   
+> >> +int cxl_ras_init(void)
+> >> +{
+> >> +	if (cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work))
+> >> +		pr_err("Failed to initialize CXL RAS CPER\n");  
+> > 
+> > Why introduce a new error print?  I don't particularly mind
+> > but wasn't obvious to me why one has become appropriate and why only
+> > for the first call here.
+> >   
 > 
-> Overall, I expect that this generic error handling is device-type
-> indepdendent. The aim is it does not need to be touched again when/if
-> Linux ever sees CXL.cache devices without CXL.mem or the "serial is
-> mandated" edict for memory class devices.
+> This was introduced before v10. 
 > 
->> I see an additional fix needed: cxl_rch_handle_error_iter() in pci/pcie/aer.c
->> also needs its callbacks updated. The RCH/RCD path previously invoked the EP
->> PCIe handlers, but with RAS now handled at the port level, those callbacks no
->> longer reach the correct logic.
->>
->> I had a coupled ideas. One options is for the CXL logic to make a
->> callback into a cxl_core exported function such as
->> cxl_handle_rdport_errors(). BTW, the CXL logic in AER and the CXL
->> driver's RAS are both built with the CONFIG_CXL_RAS config.
+> RAS initialization failure should not fail cxl_core probe.
 > 
-> That destroys the modularity of cxl_core.ko.
+> OSfirst AER support was added in this series in this file next to CPER. 
+> CPER initialization can fail and OSFirst can not is the reason for only 
+> one log. 
 > 
->> Another option is updating the CXL PCIe callbacks. The cxl_pci PCI
->> error callbacks currently support only AER and could be updated to
->> also support RCH/RCD (no VH) with something along the lines of below?
-> 
-> This continues the abuse of PCI error handlers for what is an odd CXL
-> aberration.
-> 
-> The answer that feels consistent with unburdening the PCI core with the
-> vagaries CXL is to include RCH errors in the class of notifications that
-> get forwarded. Arrange for cxl_proto_err_work_data to carry whether it
-> is an RCH or VH error and then dispatch either
-> cxl_handle_rdport_errors() or cxl_handle_proto_error().
+> When I look at this block of code I'm drawn to the return value. It looks 
+> like it should be a void function. Thoughts?
+
+I'd return an error code, then at caller decide to not treat that
+as a failure case. That gives a clear place to add a print + maybe
+a comment that says - yes it's an error, but for 'reasons' we carry on
+anyway
+
+Jonathan
 
 
-That approach makes sense to me.
+> 
+> - Terry
+> 
+> 
+> > More importantly - if this failed it would previously have resulted
+> > in cxl_core_init() failing and things getting torn down.
+> >   
+> >> +
+> >> +	cxl_register_proto_err_work(&cxl_proto_err_work);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +void cxl_ras_exit(void)
+> >> +{
+> >> +	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
+> >> +	cancel_work_sync(&cxl_cper_prot_err_work);
+> >> +
+> >> +	cxl_unregister_proto_err_work();
+> >> +	cancel_work_sync(&cxl_proto_err_work);
+> >> +}  
+> > 
+> >   
+> 
+> 
 
-Would you like to keep the RCH's RCiEP traversal in the AER driver for now? In
-that model, the RCiEP PCI device ID would be passed via cxl_proto_err_work_data. 
-This would be a relatively small change — updating cxl_rch_handle_error_iter() 
-and pcie/aer_cxl_rch.c to call cxl_forward_error().
-
-A cleaner long-term approach would be to move all of the logic in aer_cxl_rch.c 
-into cxl/core/rch_ras.c. In that case, an RCEC (reporting on behalf of the RCH 
-error) would be passed in cxl_proto_err_work_data, and RCiEP iteration would be 
-handled by the CXL driver after the work item surfaces from the kfifo.
-
-The second approach improves PCI/CXL separation, but it may be harder to land 
-late in the series. Would it be acceptable to proceed with the first approach 
-initially, followed immediately by a cleanup series moving pcie/aer_cxl_rch.c 
-into cxl/core/rch_ras.c?
-
-- Terry
