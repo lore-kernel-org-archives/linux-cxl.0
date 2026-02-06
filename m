@@ -1,42 +1,42 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CEC308F3B
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Feb 2026 12:30:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76B83A9D9F
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Feb 2026 12:33:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770381055; cv=none; b=EUkZ2Wh7Ibm3CzFZSuCC6NmmRtg4MmKxxVgYIS6wJJYBJe0kFiX3Hsr1hvM9ALtJwIXld+2hJbhCXD8ABpwsZSNhRLBRseeMmqw0zBebSky5KeUJDPWhMvNDbEHFa51vUu+rFXai6BeT8/zjnoHjKgZcXjOuePlePvhGDR3iz4Q=
+	t=1770381240; cv=none; b=gNCzQSYkbws/RnMmyk6AjfbbGQqhRNYDgUb1kg2vAb0dR5MhvRn3+P5oFykT0h+UDs/wbmoqz+FgCJNVNIvhbAxTCdguGXLqBpaLkksbvJbuZ7fUQT5Uj3/TaBSfTNjeN3HR+mMcpsKpzIgD1De/MHFg8KSLNhjbzqyx+KJoV1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770381055; c=relaxed/simple;
-	bh=lq47P17PiHQBXadN4pd3sq6Da8cVCmoeKeFqC9ibOQQ=;
+	s=arc-20240116; t=1770381240; c=relaxed/simple;
+	bh=NnnlrCYQqhW7qt0Dgx8zn9GkFTB65Z+kXY2UeigI1H0=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i2nh6Ru6ktBAEDqav7txx42XsI0jDDQ57aqxbA3r5m9aTDq9YWK3vhSwVxIIKaYgDw5t2rb2TYX5Yb0HZlXPXqiqG54DnvpcdDeZwDc2FKRQt3ZrpUJzLLUi4tCSig0SQW+wp9bgFz+HWuqq9hkQiqFsz5rzXvBBxTNsePwygU8=
+	 MIME-Version:Content-Type; b=Fz0vcjPfgpJIGg6vUwR3fPauitmdb0khRR/IqQteOqssY+/KGMqb6+icM9UM/RIvqhn3hp5SQxiTxZnIjtZfjDlpfYZZRZuxH4IhRJnerq4gTpQxw3TjYswcQkQBJreEnAGQEO0Ey8ZHTQew+kSXSoDy6EkCO5C3iifDrLNaYNo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4f6thS4ZblzJ46Cf;
-	Fri,  6 Feb 2026 20:30:00 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4f6tm11NF6zJ46ZL;
+	Fri,  6 Feb 2026 20:33:05 +0800 (CST)
 Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id E633240584;
-	Fri,  6 Feb 2026 20:30:52 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 78A4D40570;
+	Fri,  6 Feb 2026 20:33:57 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
  (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 6 Feb
- 2026 12:30:51 +0000
-Date: Fri, 6 Feb 2026 12:30:50 +0000
+ 2026 12:33:56 +0000
+Date: Fri, 6 Feb 2026 12:33:55 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: Alireza Sanaee <alireza.sanaee@huawei.com>
 CC: <qemu-devel@nongnu.org>, <linuxarm@huawei.com>, <eblake@redhat.com>,
 	<armbru@redhat.com>, <berrange@redhat.com>, <pbonzini@redhat.com>,
 	<mst@redhat.com>, <lizhijian@fujitsu.com>, <anisa.su@samsung.com>,
 	<linux-cxl@vger.kernel.org>
-Subject: Re: [RFC PATCH 3/7] hw/cxl: Change Extent add/remove APIs for lazy
- memory backend.
-Message-ID: <20260206123050.00000ddb@huawei.com>
-In-Reply-To: <20251127225526.700-4-alireza.sanaee@huawei.com>
+Subject: Re: [RFC PATCH 4/7] hw/cxl: Map lazy memory backend after host
+ acceptance
+Message-ID: <20260206123355.00006698@huawei.com>
+In-Reply-To: <20251127225526.700-5-alireza.sanaee@huawei.com>
 References: <20251127225526.700-1-alireza.sanaee@huawei.com>
-	<20251127225526.700-4-alireza.sanaee@huawei.com>
+	<20251127225526.700-5-alireza.sanaee@huawei.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -49,61 +49,127 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
  dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Thu, 27 Nov 2025 22:55:21 +0000
+On Thu, 27 Nov 2025 22:55:22 +0000
 Alireza Sanaee <alireza.sanaee@huawei.com> wrote:
 
-> Add extra information in each extent about fix memory window and
+> Map relevant memory backend when host accepted an extent.
 
-fixed
+Explain what works at this point.  Does the old non performant
+read / write land in this memory after this patch?
 
-> memory backend, because extent might be backed by different memory
-because each extent might be backed by a different memory backend
+We could decide not to support that, but key is the patch
+should explain where we are at this point.
 
-(under new scheme they are one to one)
+No comments inline.
 
-> backends, thus such information must be stored in the extent object.
-> Consequently, APIs should be changes to support extra members.
 > 
 > Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
 > ---
->  hw/cxl/cxl-host.c           |  2 ++
->  hw/cxl/cxl-mailbox-utils.c  | 42 ++++++++++++++++++++++++-------------
->  hw/mem/cxl_type3.c          | 23 +++++++++++++++-----
->  include/hw/cxl/cxl_device.h | 17 ++++++++++++---
->  4 files changed, 61 insertions(+), 23 deletions(-)
+>  hw/cxl/cxl-mailbox-utils.c | 74 ++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 71 insertions(+), 3 deletions(-)
 > 
-> diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
-> index 3a563af3bc..7c8fde4646 100644
-> --- a/hw/cxl/cxl-host.c
-> +++ b/hw/cxl/cxl-host.c
-> @@ -365,6 +365,8 @@ static int cxl_fmws_direct_passthrough(Object *obj, void *opaque)
->          return 0;
->      }
->  
-> +    ct3d->dc.fw = fw;
-> +
->      if (state->commit) {
->          MemoryRegion *mr = NULL;
->          uint64_t vmr_size = 0, pmr_size = 0;
 > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 68c7cc9891..ae723c03ec 100644
+> index ae723c03ec..b785553225 100644
 > --- a/hw/cxl/cxl-mailbox-utils.c
 > +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -2840,10 +2840,13 @@ CXLDCRegion *cxl_find_dc_region(CXLType3Dev *ct3d, uint64_t dpa, uint64_t len)
+> @@ -2979,6 +2979,30 @@ static CXLRetCode cxl_detect_malformed_extent_list(CXLType3Dev *ct3d,
+>      return CXL_MBOX_SUCCESS;
 >  }
 >  
->  void cxl_insert_extent_to_extent_list(CXLDCExtentList *list,
-> +                                             HostMemoryBackend *host_mem,
-> +                                             struct CXLFixedWindow *fw,
->                                               uint64_t dpa,
->                                               uint64_t len,
->                                               uint8_t *tag,
-> -                                             uint16_t shared_seq)
-> +                                             uint16_t shared_seq,
-> +                                             int rid)
-
-I'm not sure what rid is...  Maybe there is a better name?
-The dynamic capacity region index?
-
-
+> +static bool cxl_extent_find_extent_detail(CXLDCExtentGroupList *list,
+> +                                          uint64_t start_dpa,
+> +                                          uint64_t len,
+> +                                          uint8_t *tag,
+> +                                          HostMemoryBackend **hmb,
+> +                                          struct CXLFixedWindow **fw,
+> +                                          int *rid)
+> +{
+> +    CXLDCExtent *ent, *ent_next;
+> +    CXLDCExtentGroup *group = QTAILQ_FIRST(list);
+> +
+> +    QTAILQ_FOREACH_SAFE(ent, &group->list, node, ent_next) {
+> +        if (ent->start_dpa == start_dpa && ent->len == len) {
+> +            *fw = ent->fw;
+> +            *hmb = ent->hm;
+> +            memcpy(tag, ent->tag, 0x10);
+> +            *rid = ent->rid;
+> +            return true;
+> +        }
+> +    }
+> +
+> +    return false;
+> +}
+> +
+>  static CXLRetCode cxl_dcd_add_dyn_cap_rsp_dry_run(CXLType3Dev *ct3d,
+>          const CXLUpdateDCExtentListInPl *in)
+>  {
+> @@ -3029,8 +3053,12 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
+>      CXLUpdateDCExtentListInPl *in = (void *)payload_in;
+>      CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+>      CXLDCExtentList *extent_list = &ct3d->dc.extents;
+> +    struct CXLFixedWindow *fw;
+> +    HostMemoryBackend *hmb_dc;
+> +    uint8_t tag[0x10];
+>      uint32_t i, num;
+>      uint64_t dpa, len;
+> +    int rid;
+>      CXLRetCode ret;
+>  
+>      if (len_in < sizeof(*in)) {
+> @@ -3065,12 +3093,52 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
+>      }
+>  
+>      for (i = 0; i < in->num_entries_updated; i++) {
+> +        bool found;
+> +        MemoryRegion *mr;
+> +
+>          dpa = in->updated_entries[i].start_dpa;
+>          len = in->updated_entries[i].len;
+>  
+> -        cxl_insert_extent_to_extent_list(extent_list, NULL,
+> -                                         NULL, dpa, len,
+> -                                         NULL, 0, 0);
+> +        if (ct3d->dc.total_capacity_cmd) {
+> +            found = cxl_extent_find_extent_detail(
+> +                &ct3d->dc.extents_pending, dpa, len, tag, &hmb_dc, &fw, &rid);
+> +
+> +            /*
+> +             * This only occurs when host accepts an extent where device does
+> +             * not know anything about it.
+> +             */
+> +            if (!found) {
+> +                qemu_log("Could not find the extent detail for DPA 0x%" PRIx64
+> +                         " LEN 0x%" PRIx64 "\n",
+> +                         dpa, len);
+> +                return CXL_MBOX_INVALID_PA;
+> +            }
+> +
+> +            /* The host memory backend should not be already mapped */
+> +            if (host_memory_backend_is_mapped(hmb_dc)) {
+> +                qemu_log("The host memory backend for DPA 0x%" PRIx64
+> +                         " LEN 0x%" PRIx64 " is already mapped\n",
+> +                         dpa, len);
+> +                return CXL_MBOX_INVALID_PA;
+> +            }
+> +
+> +            mr = host_memory_backend_get_memory(hmb_dc);
+> +            if (!mr) {
+> +                qemu_log("Could not get memory region from host memory "
+> +                         "backend\n");
+> +                return CXL_MBOX_INVALID_PA;
+> +            }
+> +
+> +            memory_region_set_nonvolatile(mr, false);
+> +            memory_region_set_enabled(mr, true);
+> +            host_memory_backend_set_mapped(hmb_dc, true);
+> +            cxl_insert_extent_to_extent_list(extent_list, hmb_dc, fw, dpa, len,
+> +                                             NULL, 0, rid);
+> +        } else {
+> +            cxl_insert_extent_to_extent_list(extent_list, NULL, NULL, dpa, len,
+> +                                             NULL, 0, -1);
+> +        }
+> +
+>          ct3d->dc.total_extent_count += 1;
+>          ct3d->dc.nr_extents_accepted += 1;
+>          ct3_set_region_block_backed(ct3d, dpa, len);
 
