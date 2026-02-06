@@ -1,132 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBDA426D1F
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Feb 2026 18:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59F42F7440;
+	Fri,  6 Feb 2026 19:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770401648; cv=none; b=iemYxP6sbwk6YGBR7zuC4ywjQ5k0Dc5RduEzNOz1o8TdFnyttTlsT/Qk3v47FPi8rNqRpvnOyx5/tb4QhmUpJw8le9EZLxS7tZ4qAEV6UFXy4nkV+D07A+Zo07WTUnjNGDoI/8rDagEWJKoAPUfFVlOF0Ln1Bu+QytLg3BFx77E=
+	t=1770406318; cv=none; b=OyMitjvO2kQ8DJYG4ARW2vsdOOgNzjJTFC/Ii6IOu1oj7462kJsqNPyMFP0SillOP2u35PcUI2NKKRLdu/d6Ondxx7pmUPOfpvZOAbJjpVxseLvIxI0g05HrHQVfGUjOrsvBO48qvIyG84w7niAnO0eao103TzsMOoAlJmocKLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770401648; c=relaxed/simple;
-	bh=ZV4yJEhygvxQYpdz+FJkxqS3F7rbplhyWBC6ulV8QaI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rRe84Bw3hi2KOocc17bZwN3Gu3DkqzFGhLtwgixpNmn2M7cH53LLMh/oJGoau4NV5yteaelYVyhKoaPIoeN2gG+mtiPYHzds3Hqs43s3Tvp0C7S+mt8hTJrRdOmtagTV9z1iOlY59t8MDci3+NPw/jrFAllX69YMBuQ9wfBsbRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f+GBcsrh; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1770406318; c=relaxed/simple;
+	bh=sFmOLogLTpCWkUOE9qlbNa3u0BVXHcuyge59i+fnUfg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=FHhuCkNtDe0Q5kJWYxlSCmlwfTZePwYnXZV/F4JBUxIK/P+B6yuwoVTO+0ev/RVHhJi4rvDPxlgkeB6XAjZSL8Pyz/nZGEEwFhxBMj0YjR2knZsz4UvT75QpdsAGXtyyrmrl5donob6z0NqXl1oPig79CkZl91zRIf5AOjC/i1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=P0//Ycw7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f+GBcsrh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770401648; x=1801937648;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ZV4yJEhygvxQYpdz+FJkxqS3F7rbplhyWBC6ulV8QaI=;
-  b=f+GBcsrhEc9fZdJfV+3l5mBg8p8eWsTlUtXkDdVbdfmGhhxj7RWsmBAZ
-   cZLpKor6PsetE3bqAHEgPgXLYh+mCOmCfwVTvPrhkPhUC4Pj11PxXdZMB
-   RJDr8JFQARmqFN+x9H2WwFO+AujxkR3frNJ+JZ41zpwJL1E2RGfjgrtG7
-   z9JobGG/mw2WkRJp9wnNwZhTliM4JwjyyK3BvbRh6J5ccxtovlsnJUMZj
-   ErxseX1qnwvKXpmMJTrAqGCoLT/7BzVCnjDajoLA+0AJkk8rLUDuuE8Dy
-   GfDqT3IJEVv/2lqqrFRxTVy/X+LYKvGseAuNaywN1MbsqtDkLDwyOyPoN
-   g==;
-X-CSE-ConnectionGUID: 1LrxP6JXQxK/vuZ7PnpSjA==
-X-CSE-MsgGUID: ZkKNQRRTQ+aStJYaxU+34A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11693"; a="75234650"
-X-IronPort-AV: E=Sophos;i="6.21,276,1763452800"; 
-   d="scan'208";a="75234650"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 10:14:08 -0800
-X-CSE-ConnectionGUID: Ewkr+Y40RoeDIUoCRj4AnA==
-X-CSE-MsgGUID: 34IdQXGsSHy80eceWefgwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,276,1763452800"; 
-   d="scan'208";a="210725871"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.184])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 10:14:07 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH] cxl: Test decoder flags as bitmasks
-Date: Fri,  6 Feb 2026 10:14:02 -0800
-Message-ID: <20260206181404.1025991-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="P0//Ycw7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E60FC116C6;
+	Fri,  6 Feb 2026 19:31:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1770406317;
+	bh=sFmOLogLTpCWkUOE9qlbNa3u0BVXHcuyge59i+fnUfg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=P0//Ycw7MamL01hmVUxrX954cfCW9uQM9dRODdcU5KIQuuE0qEyY1JS9AxdM8F96v
+	 5DofCLn88Bu4sHg6rPYalTvwkPcSbj6PjOltDumckh7j2RRU87blAz/W8ZmpRFjy+T
+	 5AbBbYyJ/4/G1l/2aQ5CJCldkjuxifDVAKZKSGfM=
+Date: Fri, 6 Feb 2026 11:31:53 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Pedro Falcato <pfalcato@suse.de>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Jarkko Sakkinen
+ <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Thomas
+ Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, Arnd
+ Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Dan Williams <dan.j.williams@intel.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Jani Nikula
+ <jani.nikula@linux.intel.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, Christian Koenig
+ <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Matthew Auld
+ <matthew.auld@intel.com>, Matthew Brost <matthew.brost@intel.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Benjamin LaHaise
+ <bcrl@kvack.org>, Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+ Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+ Sandeep Dhavale <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>,
+ Chunhai Guo <guochunhai@vivo.com>, Theodore Ts'o <tytso@mit.edu>, Andreas
+ Dilger <adilger.kernel@dilger.ca>, Muchun Song <muchun.song@linux.dev>,
+ Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>,
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Mike
+ Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>,
+ Tony Luck <tony.luck@intel.com>, Reinette Chatre
+ <reinette.chatre@intel.com>, Dave Martin <Dave.Martin@arm.com>, James Morse
+ <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>, Carlos Maiolino
+ <cem@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, Naohiro Aota
+ <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, Matthew Wilcox
+ <willy@infradead.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren
+ Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Hugh
+ Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, Zi
+ Yan <ziy@nvidia.com>, Nico Pache <npache@redhat.com>, Ryan Roberts
+ <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
+ <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, Jann Horn
+ <jannh@google.com>, David Howells <dhowells@redhat.com>, Paul Moore
+ <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E . Hallyn"
+ <serge@hallyn.com>, Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes
+ <linux@rasmusvillemoes.dk>, linux-sgx@vger.kernel.org,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
+ linux-aio@kvack.org, linux-erofs@lists.ozlabs.org,
+ linux-ext4@vger.kernel.org, linux-mm@kvack.org, ntfs3@lists.linux.dev,
+ devel@lists.orangefs.org, linux-xfs@vger.kernel.org,
+ keyrings@vger.kernel.org, linux-security-module@vger.kernel.org, Jason
+ Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v2 09/13] mm: update all remaining mmap_prepare users to
+ use vma_flags_t
+Message-Id: <20260206113153.c443545459474cdef6dfd7ea@linux-foundation.org>
+In-Reply-To: <hmc2or77xnhrdlncfzjsljljwljnp6zztqsvmgxspfilmzkyty@czxpjpdm66ov>
+References: <cover.1769097829.git.lorenzo.stoakes@oracle.com>
+	<fb1f55323799f09fe6a36865b31550c9ec67c225.1769097829.git.lorenzo.stoakes@oracle.com>
+	<hmc2or77xnhrdlncfzjsljljwljnp6zztqsvmgxspfilmzkyty@czxpjpdm66ov>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The CXL decoder flags are defined as bitmasks, not bit indices.
-Using test_bit() to check them interprets the mask value as a bit
-index, which is the wrong test.
+On Fri, 6 Feb 2026 17:46:36 +0000 Pedro Falcato <pfalcato@suse.de> wrote:
 
-For CXL_DECODER_F_NORMALIZED_ADDRESSING the test reads beyond the
-flags word, making the flag sometimes appear set and blocking creation
-of CXL region debugfs attributes that support poison operations.
+> > -#define VM_REMAP_FLAGS (VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP)
+> > +#define VMA_REMAP_FLAGS mk_vma_flags(VMA_IO_BIT, VMA_PFNMAP_BIT,	\
+> > +				     VMA_DONTEXPAND_BIT, VMA_DONTDUMP_BIT)
+> 
+> as a sidenote, these flags are no longer constant expressions and thus
+> 
+> static vma_flags_t flags = VMA_REMAP_FLAGS;
+> 
+> can't compile.
 
-For CXL_DECODER_F_LOCK the test reads beyond the defined bits, causing
-the test to always return false and allowing resets that should have
-been blocked.
+Yup, that isn't nice.  An all-caps thing with no () is a compile-time
+constant.
 
-Replace test_bit() with a bitmask check.
+It looks like we can make this a nice inlined (commented!) lower-cased
+C function as a little low-priority cleanup.
 
-Found with cxl-test.
+> Rest LGTM though.
+> 
+> Acked-by: Pedro Falcato <pfalcato@suse.de>
 
-Fixes: 208f432406b7 ("cxl: Disable HPA/SPA translation handlers for Normalized Addressing")
-Fixes: 2230c4bdc412 ("cxl: Add handling of locked CXL decoder")
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
-
-Obsoletes prior patch that only fixed up one test:
-cxl/region: Test CXL_DECODER_F_NORMALIZED_ADDRESSING as a bitmask
-https://lore.kernel.org/linux-cxl/20260206013135.1012375-1-alison.schofield@intel.com/
-
-
- drivers/cxl/core/hdm.c    | 2 +-
- drivers/cxl/core/region.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index e3f0c39e6812..c222e98ae736 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -904,7 +904,7 @@ static void cxl_decoder_reset(struct cxl_decoder *cxld)
- 	if ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)
- 		return;
- 
--	if (test_bit(CXL_DECODER_F_LOCK, &cxld->flags))
-+	if (cxld->flags & CXL_DECODER_F_LOCK)
- 		return;
- 
- 	if (port->commit_end == id)
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 08fa3deef70a..befa2a7b81c2 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1100,12 +1100,12 @@ static int cxl_rr_assign_decoder(struct cxl_port *port, struct cxl_region *cxlr,
- static void cxl_region_setup_flags(struct cxl_region *cxlr,
- 				   struct cxl_decoder *cxld)
- {
--	if (test_bit(CXL_DECODER_F_LOCK, &cxld->flags)) {
-+	if (cxld->flags & CXL_DECODER_F_LOCK) {
- 		set_bit(CXL_REGION_F_LOCK, &cxlr->flags);
- 		clear_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags);
- 	}
- 
--	if (test_bit(CXL_DECODER_F_NORMALIZED_ADDRESSING, &cxld->flags))
-+	if (cxld->flags & CXL_DECODER_F_NORMALIZED_ADDRESSING)
- 		set_bit(CXL_REGION_F_NORMALIZED_ADDRESSING, &cxlr->flags);
- }
- 
-
-base-commit: 9845cf73f7db6094c0d8419d6adb848028f4a921
--- 
-2.37.3
-
+Great, thanks.
