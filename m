@@ -1,115 +1,103 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1E9331230
-	for <linux-cxl@vger.kernel.org>; Thu,  5 Feb 2026 23:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589E23EBF07
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Feb 2026 01:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770333058; cv=none; b=Y6iSAdaHMJPJ0yYH4s3XFgxkMUkrVCOk2tANFDqqmf1Pzd0ETCAMukLJXWhZ5DAm/vk3k+InSz7+mnWPSmZ+ygqAFT0EUIZsuNSnYhOqx86A900jOUMWDTbCfFjEK6ASfq6pVjPfsA1OnLy3biX3mwD7RrxVxyvgLinfQ4g7Ec4=
+	t=1770341501; cv=none; b=uk0Iq887bsvFi8i26WCvGhHDwYGMm1L5qEXXyQZmqQqKgza3g1OvgnASn53DyiqBpaGXCv+1+rr+W5DRTQNnjsIpx5v151w4WNv7q86KNqxQwKBCxDA4FCGmDlbj0h4Js4A5WvHcM99UFBDbNdE5bHBUSXTy7nmmH5tBiwSLeXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770333058; c=relaxed/simple;
-	bh=hEJQDGKxyIJ+94KmbuaUj6NmaDaCsYqJuOznZ6cuIew=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QnuXJCS3ppFfa0E8KwNBcAn9UVQPwBmqnOCmjiHFJxMSK086sCr+oFwguQj4KYQHfw+J/Vew94ekd5BL218o6vh80VSHTlLryhleKoOhxRBMygMWxwkVpsgxkYD9rY8bMahoChwVKtbnFGpCM1tm4FQpVJRU94s9Ftd3VBGq2ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=DWWjhZ4M; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1770341501; c=relaxed/simple;
+	bh=3Uej2NeTQOEvB63a0n338vkGFi9Ter5aRK+IFq+uKQM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uPt55IXwC+RnbOdA/IHQhan/vU+/L5ntq9xfwsKLaFRQJLDzvfkyudXNRga9SSM9dfdSn/erOuxZkUhFoleyaD+B26hMF/HyT4BZPsyOM+4iehjjNsOdLGzs1ZyE18dYfZ3w8FfB5kgFfRuV04b0Pq9PkVurnZpVEmLrCVJsnb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cqJQ7JHC; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="DWWjhZ4M"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-8946e0884afso1808856d6.1
-        for <linux-cxl@vger.kernel.org>; Thu, 05 Feb 2026 15:10:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1770333057; x=1770937857; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wNQbtNTj5xONF/FlzgjMO0/Jn5YLGFU3yCoER5lhWcI=;
-        b=DWWjhZ4MMTlLuOREiTulZ7lPWaiOOSNbw19TKbDY3XeII6XAAbVwOlACQ7+pDM638q
-         dIR0w/BZDjt5EdS+wKS4p9RkzB8vHr145vz2F+TfkAfSBXpL/cGghXLyaGvRc3jbKKK2
-         CpygNMlHjRhB2BGmF1CwuHRQTyr4TqFJSCuf9zuKiUzM4n+lP7AqKOM9JxsRVeUECCqp
-         e4FcjWEB2tEMbxpDlElWhdtIxWDCFxshSBs2SUkcatNfMGkwPI2MDX4a5XjTEVNKzZhJ
-         Gtx9q1fawEzeMmjFW7SoGwPpJc5g/01lEW3swokpeAJ41+CclOGcOw4Tuc+Atg4ZEVJ3
-         YpCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770333057; x=1770937857;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wNQbtNTj5xONF/FlzgjMO0/Jn5YLGFU3yCoER5lhWcI=;
-        b=DH1t1PSXngPAzC/+SKCGZxF/aau/DkOh/lcMWAHTYFr5QiAw5nEG2KKiLKqjFdqNtj
-         V92xDFN51nuYl3lp7Q750qqlm3rLLrYCwTtRa6SUslkbzzxObGSvHrZs2NUw4EqI6EGg
-         B0Sat9DAo49u6LHa60YfxQbJAGeF+FnXbPxr8O+BE2l0f8W8Q331cCVBW6YSd6122Pzj
-         /bDKTfoD7urRv6Piq7Bpdy8vP/RaVGs+sBWetT4RJlxwOKcgDaDRdozx7ivIIteUD3bH
-         xAj+CNE3t0h66jUugJKCwqFmZa/plVic4zD9hhIsF+2JHM8cgcASBNJwb9K3aakZvkTN
-         4o+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUJinsgkJT1XgOzQ9O9NBrDYo1Z0KrosWh/i4VKJGY35hgqTRmTAKjgZnNxwvXITTQcwYzBBY3PGCc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAJswSQPwngf0KiqhvBCDjU7ucP6ck51wbvmTYTcgnAeFerZJR
-	DI96MwuBskwWsvkypU+jRSK8Qtr5tjVGxo5ftA8BiuVPYDjHg03VnxIkbLKzUoU88kE=
-X-Gm-Gg: AZuq6aLH10mNsJL8Ivxvn8rKgy+7jqzHXZ6krhNPlVYGS0oI5mM69ps0r2Ga8IQRonS
-	SkduwblQfyppQMKjOinOIGb8Hum+vQbsloCH8QGMYCcQ0OEuismnS6hdfH4neapyctN6K4UsRzW
-	HYc2AA8FcDLTDV+3MqTL6VZsyjxS+OJdQgWWry9gVbQakW+isWUGD7DNgTjP1lK9o56CTrL/gjf
-	6p48dcZPkaM6DHU0yjeaRMfOZvWohMow70CvSIASsj+8WrJ590U6IQOgdZJTcRyQwMpuUBWuYc8
-	EqLlQeDGeqrvKI0qItuaOFoLfJSQNHI4BEeBAp81cLhNJJM8VKoWYr1DxM/4AGe4kPJT5Fr7Yr7
-	RumJywizjFZiQazJpeTzflumt7dy7JVauqOUwNyj1uLP50IHl3ZQyE9S8gBqAKlz4ddH5aeZ0P3
-	4/kM/bh3tYCfUw2+SBrwnqRRBRCvNLC72+wAlfIi4ABfekqf4WMNsz2NqQRfDxb7ZiRT1fyw==
-X-Received: by 2002:a05:620a:bc5:b0:8bb:26db:e22f with SMTP id af79cd13be357-8caef7e1ca2mr107313385a.30.1770333057461;
-        Thu, 05 Feb 2026 15:10:57 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8953c075fc3sm5353626d6.51.2026.02.05.15.10.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Feb 2026 15:10:57 -0800 (PST)
-Date: Thu, 5 Feb 2026 18:10:55 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Cui Chao <cuichao1753@phytium.com.cn>, dan.j.williams@intel.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Wang Yinfeng <wangyinfeng@phytium.com.cn>,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v2 1/1] mm: numa_memblks: Identify the accurate NUMA ID
- of CFMW
-Message-ID: <aYUjf0OrD8f_bJCy@gourry-fedora-PF4VCD3F>
-References: <20260106031042.1606729-1-cuichao1753@phytium.com.cn>
- <20260106031042.1606729-2-cuichao1753@phytium.com.cn>
- <20260108094812.8757ce3ad8370668eaafb29c@linux-foundation.org>
- <9132054c-3017-4af0-84e0-e4359b0794a6@phytium.com.cn>
- <20260115101858.85fd7b8e837c1c92a4fdc5f0@linux-foundation.org>
- <696944eca1837_34d2a10056@dwillia2-mobl4.notmuch>
- <2d1e23ad-7ec1-483b-88b3-70ce19b69106@phytium.com.cn>
- <aXOl9CN_66HywIjZ@gourry-fedora-PF4VCD3F>
- <a90bc6f2-105c-4ffc-99d9-4fa5eaa79c45@phytium.com.cn>
- <20260205145842.efb90572a902ae4c481e6ef6@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cqJQ7JHC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770341500; x=1801877500;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3Uej2NeTQOEvB63a0n338vkGFi9Ter5aRK+IFq+uKQM=;
+  b=cqJQ7JHCna4YkNAuo3YkaNiVzBqFnRk3se0nYPZkcxcW4pRhLls+yHZh
+   mIpCtwgLeG7+XdNYBAJbcPynmOm+0U4WW+TKhvAG4p+vEDEtiQfHJj9PS
+   9GQPhKxEl5jZxKhJyzz98m2hU3MVAzGX6H72BYAbOP6FDPNKhrO4a4nJ5
+   5mAO88pQP3RL1mzuMW6DYwR2bKxXjC/ek7k1AyJP/weV9Zd9UUGxHM93W
+   ysCtJHyxzwq4dvwCiGl9pKML8nZf5mU3+fVco+dnBLmFmlHbwyAeCf1n9
+   3bYteM2pqoyWh7RjLGkuzEvvBczvHz/pD9wXZ8yXhcW7KOr1GStPFP0O1
+   A==;
+X-CSE-ConnectionGUID: kda57fnHREScH6+9Eo1JoA==
+X-CSE-MsgGUID: Or2XAkJERUmFC4TFJTvyaQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11692"; a="82183605"
+X-IronPort-AV: E=Sophos;i="6.21,275,1763452800"; 
+   d="scan'208";a="82183605"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2026 17:31:39 -0800
+X-CSE-ConnectionGUID: 4rccm6HgSd+zo2j6vBJ6TQ==
+X-CSE-MsgGUID: s/41cAQHTyKZdvyy/b6/Ng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,275,1763452800"; 
+   d="scan'208";a="241402747"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.106])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2026 17:31:39 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH] cxl/region: Test CXL_DECODER_F_NORMALIZED_ADDRESSING as a bitmask
+Date: Thu,  5 Feb 2026 17:31:33 -0800
+Message-ID: <20260206013135.1012375-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260205145842.efb90572a902ae4c481e6ef6@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 05, 2026 at 02:58:42PM -0800, Andrew Morton wrote:
-> On Mon, 26 Jan 2026 17:06:52 +0800 Cui Chao <cuichao1753@phytium.com.cn> wrote:
-> 
-> > > All that said, this does look harmless, and seems reasonable - but the
-> > > changelog should reflect what the hardware is doing above.
-> > This issue was discovered on the QEMU platform. I need to apologize for 
-> > my earlier imprecise statement (claiming it was hardware instead of 
-> > QEMU). My core point at the time was to emphasize that this is a problem 
-> > in the general code path when facing this scenario, not a QEMU-specific 
-> > emulation issue, and therefore it could theoretically affect real 
-> > hardware as well. I apologize for any confusion this may have caused.
-> 
-> This patch doesn't sounds very urgent.  Perhaps we should do a v3 with
-> updated changelog and handle that in the next -rc cycle?
+CXL_DECODER_F_NORMALIZED_ADDRESSING is a bitmask, not a bit index.
+Using test_bit() to check it caused undefined behavior making the
+flag sometimes appear set. This prevented creation of CXL region
+debugfs attributes that support poison actions.
 
-Mostly QEMU just needs to add SRAT entries associated with the
-CEDT/CFMWS it adds.
+Replace test_bit() with a bitmask check.
 
-A system providing a CEDT/CFMWS entry without an SRAT entry is arguably
-bad BIOS.
+Found with cxl-test.
 
-But yeah, this is not urgent.
+Fixes: 208f432406b7 ("cxl: Disable HPA/SPA translation handlers for Normalized Addressing")
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
 
-~Gregory
+DaveJ: The base commit tag is linux-next today. I figure it's closest to what
+we'll see w 7.0-rc1. 
+
+
+ drivers/cxl/core/region.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 08fa3deef70a..00a9b57cdd80 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -1105,7 +1105,7 @@ static void cxl_region_setup_flags(struct cxl_region *cxlr,
+ 		clear_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags);
+ 	}
+ 
+-	if (test_bit(CXL_DECODER_F_NORMALIZED_ADDRESSING, &cxld->flags))
++	if (cxld->flags & CXL_DECODER_F_NORMALIZED_ADDRESSING)
+ 		set_bit(CXL_REGION_F_NORMALIZED_ADDRESSING, &cxlr->flags);
+ }
+ 
+
+base-commit: 9845cf73f7db6094c0d8419d6adb848028f4a921
+-- 
+2.37.3
+
