@@ -1,158 +1,200 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2622DA742
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Feb 2026 15:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099F22D7D3A;
+	Fri,  6 Feb 2026 15:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770393195; cv=none; b=gXBJt2291a5EdUmYL+sPEoqaiQ1WhMzYa+YoPWoss3te1l3pxqfS+dXC+ZcluFqUBUMK6z/HyUXq8FZ52yZHyi1MoUWFQ0ZoqacqCbv6UQdUe1PYcMtrDfheixjtQJJ1Iv0+A10sUlQLj+mqWqlKBe2vrCPayUQ8oPEFwjy4590=
+	t=1770393431; cv=none; b=sxK/zbrS3DiBvCg9N3FxBCyME8TGhs5mnKx+l8YEeaqZdaXlMJ9ydEjDwaBZtWbIjq/NSIupEn33rX3x4ditBiwGi39mDkPFDN8bwq8veOzb2ussVcTp65ihko91B+vf+O/Am3GU4OBI49hWFk5VcKvdGJZ/Kn0ICUVdY99o6JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770393195; c=relaxed/simple;
-	bh=4wWjMagyUrHFa6ykvR013drrWBoFX5wJB108jihgH2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LA5nYUKUGUrtCQINECms2V9P7MU5hZ8gvFjQOJp416YJjtzwqtQz7ZwAsjoC0oSUTSquJykP6SDZ+Q8VHEBiwRjdZY0ytfF64hLOHQ9U4ONAKmrsZF+9wY2y5iY2Hha8TycVZGG4CfaL4utGpfFEUCSF46krqnih39yqa70h3Xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Af6TyqE6; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1770393431; c=relaxed/simple;
+	bh=5yR2oXGuhV43ittUT6jpCwyyLEiU3bwv/gLoZQxn+1o=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=mLC/AbVXszuzlhH4ttStxPHIOxzKP16jd/i7msx2fJ7ELwr/90WJz+ldQ57kt93Fz0CcrvBfZjHyXi/cZ21upiBafA2yAUmz8jJu6FQ8eBKA3qKuui+Gu3TNQRce/1biTrcP8NNn9FZj9DmjogCmFH0mrjLlm6n4MzsaA17U/+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DdJZ/IUa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Af6TyqE6"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-8c70daf9c94so80471385a.0
-        for <linux-cxl@vger.kernel.org>; Fri, 06 Feb 2026 07:53:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1770393194; x=1770997994; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7podOaUCjU/O3I21k18RXk2UZLq1mKBY8Ro47wlihIQ=;
-        b=Af6TyqE67CUBGVHxevIzSz+gmT1txQK41kf+3haMSoQ1HwC/tmtFGiW5EGT3AziPxo
-         ovuO0PZpRATsVOQeLrK3tvNQm31yrepj789o+bvH9o3/d+DDrj/HUzkTXAvqEUffxYFi
-         Xs1vp9T1osOFSuMtXXgfuf+8uC+eWZB1R6hbtKDl2sljMUEU9C6m1GBR4C2NmyoZpzmZ
-         6gUCGeH3CxJ9NDQYIcA+FsppWo4N3gCTq1jRhLXIlgY9BKQ/1ResZNfIcqBFFsRMZ60r
-         z3KwJiSmW9SqDIc/S8OPT5N7yZZWPnjlPblwSvgsPww6BUvSNKDRJrdnzjBAxG64skyJ
-         UFgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770393194; x=1770997994;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7podOaUCjU/O3I21k18RXk2UZLq1mKBY8Ro47wlihIQ=;
-        b=GT57K4AQGQ5tSLxJshrG/YyTT8Bm0c8PHnlt0VWLwanZ2piok28Hjxbk3MBu0FoXfS
-         B9PH0XpdB+GlLxB3Ok4xTgQf9GXc8Co+EWnO6UHdeCs3QyprnlPwJdJOU/5pDiQJZtIw
-         fKTLlSrLnTdyiFImz691d/X/dJuWo8mTfbOgoMPT4/L49HPmn24LRTcYduS7SfGgYosl
-         Q582JbIGlvOuz+DzK5zoGfcKYIMOQdE1+pEUNpqPk3fP2rG+3iFGvJioTmbVXKS8wi0J
-         BpiHgVaA6YFTu/XKzAFdJ3Wr1dRQoiUIXhuAhk8bg2Ro3T6xUIW4PVyyFBcPAk3QxuD/
-         oaLA==
-X-Forwarded-Encrypted: i=1; AJvYcCWc7fciOq2xCA5QGt6jVI/0NPupTzVpEl7PzbivuiFeDJtKJZAB3I5RDlq+MbrhjivUaP4NsRvQmAI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzokdjrO1/22RgeQtwjDnjrBrY9LBYbkq6Zl+WbO112SUn5bJOA
-	HhBRI9NKmAGX3DOWbp4R3NpVm4+jK15utiGRx2gkIWe/mC337bnBi8hjQFaiFZq5Ouo=
-X-Gm-Gg: AZuq6aKwnDoT5u8GUx9TNSczIhPZl1BhwxobAtxiNIZHlRge1PpNXUi2kd6CSVQWpjd
-	Y1fh5Z7fGOn57IY8800/HR6CqRYLBa8Aj73lOckxsEkWSEhRY1GZGFuoUcPU3YmRX/QuHyPmUCl
-	sziRcLnoAjCytNawqtbyeaH4nkuuym6zXraxtjC94wN+PFOMIAqETbTT+ygpMeSR9EK5vV/hCM2
-	MWi3A/rO5TFl2vcYi7HT0m7jjElruhuCUeHASB/fPyvtYkFKfXlEgg3ER88cMHbOZGni9nyH0Kl
-	3Mi0iP73i9vmcLzlKDiwa/jLnLsqu+cpxoRA9M7VPpluJurgem2VTRbLBo6KRQRVwgnpoK2WHPs
-	0TPvJ03/Tujqyp1/eASqa036JzKS866hSSTxUt9mbk2IED38Q4lJdXnyr8TPdE4V655LPMEe/3D
-	XRGoSMkJiz5yE8jVgNSBpr758aRzCgpaCuk6Jx4ZnFZR64QrEsXY1z5mrOzHT1U9qo2wygik/KB
-	tQNxKKfNA==
-X-Received: by 2002:a05:620a:44cf:b0:8c6:a1d5:47e1 with SMTP id af79cd13be357-8caeeb4e117mr380491485a.9.1770393193829;
-        Fri, 06 Feb 2026 07:53:13 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8caf9fdf739sm176815485a.41.2026.02.06.07.53.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Feb 2026 07:53:13 -0800 (PST)
-Date: Fri, 6 Feb 2026 10:53:11 -0500
-From: Gregory Price <gourry@gourry.net>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DdJZ/IUa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39B93C116C6;
+	Fri,  6 Feb 2026 15:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1770393430;
+	bh=5yR2oXGuhV43ittUT6jpCwyyLEiU3bwv/gLoZQxn+1o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DdJZ/IUaKRT5oCG+okPUCt+1gPuCN14/rOSTrRAZpFXZIvK5xnRhrII4KhApFNFSH
+	 31wpjF9PH6QjTFVP3fSzoe60mk+qo/1fDwTayK7yuee3INfoZYlVoBJhXVcaB9i/1O
+	 vbqyvtVEM4DnkPV7cSYnY1oogKmh6bCT+gyN4WZU=
+Date: Fri, 6 Feb 2026 07:57:09 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
 To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Cui Chao <cuichao1753@phytium.com.cn>, dan.j.williams@intel.com,
-	Mike Rapoport <rppt@kernel.org>,
-	Wang Yinfeng <wangyinfeng@phytium.com.cn>,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, qemu-devel@nongnu.org,
-	"David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Gregory Price <gourry@gourry.net>, Cui Chao
+ <cuichao1753@phytium.com.cn>, <dan.j.williams@intel.com>, Mike Rapoport
+ <rppt@kernel.org>, Wang Yinfeng <wangyinfeng@phytium.com.cn>,
+ <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-mm@kvack.org>, <qemu-devel@nongnu.org>, "David Hildenbrand (Arm)"
+ <david@kernel.org>
 Subject: Re: [PATCH v2 1/1] mm: numa_memblks: Identify the accurate NUMA ID
  of CFMW
-Message-ID: <aYYOZ1TK5dpX_h_Q@gourry-fedora-PF4VCD3F>
-References: <20260115101858.85fd7b8e837c1c92a4fdc5f0@linux-foundation.org>
- <696944eca1837_34d2a10056@dwillia2-mobl4.notmuch>
- <2d1e23ad-7ec1-483b-88b3-70ce19b69106@phytium.com.cn>
- <aXOl9CN_66HywIjZ@gourry-fedora-PF4VCD3F>
- <a90bc6f2-105c-4ffc-99d9-4fa5eaa79c45@phytium.com.cn>
- <20260205145842.efb90572a902ae4c481e6ef6@linux-foundation.org>
- <aYUjf0OrD8f_bJCy@gourry-fedora-PF4VCD3F>
- <20260206110305.00001fbb@huawei.com>
- <aYXtHa4Y2y_5xgcS@gourry-fedora-PF4VCD3F>
- <20260206150941.000028ae@huawei.com>
+Message-Id: <20260206075709.0f4b60dd5dd664894cbd15c7@linux-foundation.org>
+In-Reply-To: <20260206150941.000028ae@huawei.com>
+References: <20260108094812.8757ce3ad8370668eaafb29c@linux-foundation.org>
+	<9132054c-3017-4af0-84e0-e4359b0794a6@phytium.com.cn>
+	<20260115101858.85fd7b8e837c1c92a4fdc5f0@linux-foundation.org>
+	<696944eca1837_34d2a10056@dwillia2-mobl4.notmuch>
+	<2d1e23ad-7ec1-483b-88b3-70ce19b69106@phytium.com.cn>
+	<aXOl9CN_66HywIjZ@gourry-fedora-PF4VCD3F>
+	<a90bc6f2-105c-4ffc-99d9-4fa5eaa79c45@phytium.com.cn>
+	<20260205145842.efb90572a902ae4c481e6ef6@linux-foundation.org>
+	<aYUjf0OrD8f_bJCy@gourry-fedora-PF4VCD3F>
+	<20260206110305.00001fbb@huawei.com>
+	<aYXtHa4Y2y_5xgcS@gourry-fedora-PF4VCD3F>
+	<20260206150941.000028ae@huawei.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260206150941.000028ae@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 06, 2026 at 03:09:41PM +0000, Jonathan Cameron wrote:
-> On Fri, 6 Feb 2026 08:31:09 -0500
-> Gregory Price <gourry@gourry.net> wrote:
+On Fri, 6 Feb 2026 15:09:41 +0000 Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
+
+> > Andrew if Jonathan is good with it then with changelog updates this can
+> > go in, otherwise I don't think this warrants a backport or anything.
 > 
-> Now a fun corner is that a node isn't created unless there is something
-> in it - the whole SRAT is the source of truth for what nodes exist
-> - so we need 'something' in it - a cpu will do, or a GI, probably a GP.
-> Otherwise memory ends up in node0.  However, fallback lists etc happen
-> as normal when first mem in a node is added.
-> 
-...
-> For now I 'suspect' we could hack things to provide lots of waiting numa nodes
-> and merrily assign HPA into them as we like whatever SRAT provides
-> in the way of 'hints' :) 
-> 
+> Wait and see if anyone hits it on a real machine (or even non creative QEMU
+> setup!)  So for now no need to backport.
 
-look at ACPI MSCT - "Maximum Proximity Domain Information Structure" ;]
+Thanks, all.
 
-I don't remember reading anything in the ACPI spec that says something
-has to be ON any of these PXMs for it to be accounted for in the MSCT.
+Below is the current state of this patch.  Is the changelog suitable?
 
-Platforms can just say "Reserve that many Nodes".
 
-(Linux does not read this value, and on my existing systems, this number
-always reflects the number of actually present PXMs)
+From: Cui Chao <cuichao1753@phytium.com.cn>
+Subject: mm: numa_memblks: identify the accurate NUMA ID of CFMW
+Date: Tue, 6 Jan 2026 11:10:42 +0800
 
+In some physical memory layout designs, the address space of CFMW (CXL
+Fixed Memory Window) resides between multiple segments of system memory
+belonging to the same NUMA node.  In numa_cleanup_meminfo, these multiple
+segments of system memory are merged into a larger numa_memblk.  When
+identifying which NUMA node the CFMW belongs to, it may be incorrectly
+assigned to the NUMA node of the merged system memory.
+
+When a CXL RAM region is created in userspace, the memory capacity of
+the newly created region is not added to the CFMW-dedicated NUMA node. 
+Instead, it is accumulated into an existing NUMA node (e.g., NUMA0
+containing RAM).  This makes it impossible to clearly distinguish
+between the two types of memory, which may affect memory-tiering
+applications.
+
+Example memory layout:
+
+Physical address space:
+    0x00000000 - 0x1FFFFFFF  System RAM (node0)
+    0x20000000 - 0x2FFFFFFF  CXL CFMW (node2)
+    0x40000000 - 0x5FFFFFFF  System RAM (node0)
+    0x60000000 - 0x7FFFFFFF  System RAM (node1)
+
+After numa_cleanup_meminfo, the two node0 segments are merged into one:
+    0x00000000 - 0x5FFFFFFF  System RAM (node0) // CFMW is inside the range
+    0x60000000 - 0x7FFFFFFF  System RAM (node1)
+
+So the CFMW (0x20000000-0x2FFFFFFF) will be incorrectly assigned to node0.
+
+To address this scenario, accurately identifying the correct NUMA node
+can be achieved by checking whether the region belongs to both
+numa_meminfo and numa_reserved_meminfo.
+
+
+1. Issue Impact and Backport Recommendation:
+
+This patch fixes an issue on hardware platforms (not QEMU emulation)
+where, during the dynamic creation of a CXL RAM region, the memory
+capacity is not assigned to the correct CFMW-dedicated NUMA node.  This
+issue leads to:
+
+    Failure of the memory tiering mechanism: The system is designed to
+    treat System RAM as fast memory and CXL memory as slow memory. For
+    performance optimization, hot pages may be migrated to fast memory
+    while cold pages are migrated to slow memory. The system uses NUMA
+    IDs as an index to identify different tiers of memory. If the NUMA
+    ID for CXL memory is calculated incorrectly and its capacity is
+    aggregated into the NUMA node containing System RAM (i.e., the node
+    for fast memory), the CXL memory cannot be correctly identified. It
+    may be misjudged as fast memory, thereby affecting performance
+    optimization strategies.
+
+    Inability to distinguish between System RAM and CXL memory even for
+    simple manual binding: Tools like |numactl|and other NUMA policy
+    utilities cannot differentiate between System RAM and CXL memory,
+    making it impossible to perform reasonable memory binding.
+
+    Inaccurate system reporting: Tools like |numactl -H|would display
+    memory capacities that do not match the actual physical hardware
+    layout, impacting operations and monitoring.
+
+This issue affects all users utilizing the CXL RAM functionality who
+rely on memory tiering or NUMA-aware scheduling.  Such configurations
+are becoming increasingly common in data centers, cloud computing, and
+high-performance computing scenarios.
+
+Therefore, I recommend backporting this patch to all stable kernel 
+series that support dynamic CXL region creation.
+
+2. Why a Kernel Update is Recommended Over a Firmware Update:
+
+In the scenario of dynamic CXL region creation, the association between
+the memory's HPA range and its corresponding NUMA node is established
+when the kernel driver performs the commit operation.  This is a
+runtime, OS-managed operation where the platform firmware cannot
+intervene to provide a fix.
+
+Considering factors like hardware platform architecture, memory
+resources, and others, such a physical address layout can indeed occur.
+This patch does not introduce risk; it simply correctly handles the
+NUMA node assignment for CXL RAM regions within such a physical address
+layout.
+
+Thus, I believe a kernel fix is necessary.
+
+Link: https://lkml.kernel.org/r/20260106031042.1606729-2-cuichao1753@phytium.com.cn
+Fixes: 779dd20cfb56 ("cxl/region: Add region creation support")
+Signed-off-by: Cui Chao <cuichao1753@phytium.com.cn>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Wang Yinfeng <wangyinfeng@phytium.com.cn>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Gregory Price <gourry@gourry.net>
+Cc: Joanthan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Wang Yinfeng <wangyinfeng@phytium.com.cn>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 ---
 
-We probably want to ignore that and just add this:
+ mm/numa_memblks.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-CONFIG_ACPI_NUMA_NODES_PER_CFMWS
-    int
-    range 1 4
-    help
-        This option determines the number of NUMA nodes that will be
-	added for each CEDT CFMWS entry.
+--- a/mm/numa_memblks.c~mm-numa_memblks-identify-the-accurate-numa-id-of-cfmw
++++ a/mm/numa_memblks.c
+@@ -570,15 +570,16 @@ static int meminfo_to_nid(struct numa_me
+ int phys_to_target_node(u64 start)
+ {
+ 	int nid = meminfo_to_nid(&numa_meminfo, start);
++	int reserved_nid = meminfo_to_nid(&numa_reserved_meminfo, start);
+ 
+ 	/*
+ 	 * Prefer online nodes, but if reserved memory might be
+ 	 * hot-added continue the search with reserved ranges.
+ 	 */
+-	if (nid != NUMA_NO_NODE)
++	if (nid != NUMA_NO_NODE && reserved_nid == NUMA_NO_NODE)
+ 		return nid;
+ 
+-	return meminfo_to_nid(&numa_reserved_meminfo, start);
++	return reserved_nid;
+ }
+ EXPORT_SYMBOL_GPL(phys_to_target_node);
+ 
+_
 
-	By default ACPI reserves 1 per unique PXM entry in the SRAT,
-	or 1 for a CXL Fixed Memory Window without SRAT mappings.
-
-	This will reserve up to N nodes per CEDT entry, even if that
-	CEDT has one or more SRAT entries.
-
-then in the acpi/numa/srat.c code that parses srat/cedt, just track
-the number of nodes over a CEDT range.
-
-for each srat:
-   account_unique_pxm(pxm, srat_range)
-
-for each cedt:
-   nr_nodes = unique_pxms(cedt_range)
-   while (nr_nodes < CONFIG_ACPI_NUMA_NODES_PER_CFMWS)
-      node = acpi_map_pxm_to_node(*fake_pxm++);
-      if (node == NUMA_NO_NODE):
-      	err("Unable to reserve additional nodes for CXL windows")
-	break;
-      node_set(node, numa_nodes_parsed);
-      nr_nodes++
-
-This should fall out cleanly.
-
-The additional nodes won't be associated with anything, but could be
-used for hotplug - I imagine.
-
-~Gregory
