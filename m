@@ -1,40 +1,41 @@
 Received: from sender4-pp-o90.zoho.com (sender4-pp-o90.zoho.com [136.143.188.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26215256C84;
-	Sat,  7 Feb 2026 13:35:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4E7256C84;
+	Sat,  7 Feb 2026 13:35:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.90
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770471342; cv=pass; b=MxG2nkhQuqD88TWHJzbx733L7I9fNRPtfhRLOqEIiUMchN1uuYyTP3pEuSGM6LAtJgBHVPEDUyYh45U/qj2YHppGAeF98zDtRzxN8HQwufpr16rTJTj4MMTX1eMfKOfJD4fbQQ44E02FxLs/tJw+XE6hVQHaVLdPD1hBBd22vNc=
+	t=1770471348; cv=pass; b=FQnlyPlbcIQLYIIqk6UA575m1ebEwE7RU/NsI5NeOMgztMJDmqzFG9pY7g13DLy2qK0vWsy0E3C/ZzXV2jmdhcL4s8Ex/IBh3a6S49zPGEheN5rtDDovLbc1AiPO4Z//vJ1U80l7womHTYTWKgy3BCOsbkfv5s/V3DHGLaw02L0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770471342; c=relaxed/simple;
-	bh=t0c5Ci/ys0Ag+Xaoiwif2Ub32QXoyCpnsQEmn5ymMeM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rpIPEZkCma0VsOghly9BJ0254kAejF6jy4vXdQ5ia/IY0F1maAce/b8wFkXnz99vlis3Bu7Xsx3DF+/zbMHptu39DCy7v1wc6ZbF/gxYp0GwpPLRjMYBzRd6KJPBA5oFfr2OGP3DtBncfax68zA1AOWi6Pw8GQM9IvGx7xHeKqQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=HRU2TLdJ; arc=pass smtp.client-ip=136.143.188.90
+	s=arc-20240116; t=1770471348; c=relaxed/simple;
+	bh=oRGDdJ4io6kARgehs1YmTM1pWiyiDSJDRWkNDXjlGOk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=R0sX2haSO0HCkaKIAhepzejMvW35yFv31aKkf8bhW32IToYuPMo6rQaAu2o5iJBYwzar/zLikAJvL6rV/jwYXIKW2IhfLXpN86NoeGMj5/VLEqhYtgxFXqdvwYQHxe7INrDiSZ+oY6kYyXGKB81WrPEU7Iw4gC8RZH167cCsoUE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Qk25gKLV; arc=pass smtp.client-ip=136.143.188.90
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="HRU2TLdJ"
-ARC-Seal: i=1; a=rsa-sha256; t=1770471323; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Qk25gKLV"
+ARC-Seal: i=1; a=rsa-sha256; t=1770471331; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=kJGn4pnr9WijK7afeTzigaim2MR9JBsQ8fGMH4YP1v3G9gMPPpDn0JJ6vgg4riXKXkPHDNHapdc1r72fBGqJbNB2lvxpvUolugcs+ItOfGN0f1En/3YPqQzRYQXy5fKEphmLqN3SPvk3R16J7HKMakRfcJ4NLD9oqWvWgf+bhcE=
+	b=GGzRoJmxyrceXT3ViZhP4RyC6Ku3YuLGksAUE2BdJa6ZzMC9YqQQcYJea0/U9b6fz0T2JbjgQn3Mg0q+ITTNQxDJ0yYAEsCL1ZJOEFwReKzTOEqXp1rDDdU7iYlzvkr/f0iBWWNjcf0gSJAvRrCsYukoqpp6DW5Lr7/RiCOGe3c=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1770471323; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=mXvUl3f3Z/VgCCkTh7nfnSI+91lFQA5kSQ4q44w86dw=; 
-	b=ENR6tBJHjX8uGmgeVVgkZfJpS+3PcBl5KnleiZZ4Rlp1fVAd24VQ0LuJRVmpbeBS7Fkw/UjJXy11qTWr9mD8KHgphvTSPVfvtaIPYcjCwA1qqIdtd6/+OqVA53HvqB9PlD2/EAnh43XHDmXoVvOLyUWuekOO7/0z4a65AMmSCJI=
+	t=1770471331; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ycv8A4SaufoJcgg3Lf8vJqaVtwNtXOJQGSzINvUeC0A=; 
+	b=Euw+xEHin5S9WCFxR765mZat7h9IY0YvOG01VOc7UoA2Fnu1NmFvTz8Iukg9vyc+3t6270yCkAKIBvKsf81zERJMx3AgNRUiXmG6KjBOOTMgHe3S5nZDsax1ThwzRT1uhB0S8Ko5mPSr5LqGVyqyFzGmy784yVsZeJmnADFanKE=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770471322;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770471330;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=mXvUl3f3Z/VgCCkTh7nfnSI+91lFQA5kSQ4q44w86dw=;
-	b=HRU2TLdJ0WsOyQl2FP8k6pCNaRqVCBjBxLsmq0BuVhwHBs7ld8QF5dvnQ7o2XMh3
-	wlkcKDswuxM6n3msMjYBa1nPno3YZdhPmVPunf/NlMLpcZjW75pTx1Zyp9CJjwbAo4N
-	SKTiunHtCjpSD85l8CqQBshNffw/WIMFHDddjUfM=
-Received: by mx.zohomail.com with SMTPS id 1770471319775149.56130381161086;
-	Sat, 7 Feb 2026 05:35:19 -0800 (PST)
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=ycv8A4SaufoJcgg3Lf8vJqaVtwNtXOJQGSzINvUeC0A=;
+	b=Qk25gKLVtOWNbveNkP6RXvpfzregFjBC/XW0w8U3HkcDmE2UjT/op3MBM3oTxzYX
+	XDc55mOa/mFs3Np1c4E4CIBpHaz1MHrYizjnIxID6gdfzBHKiEfQoP0mzIH9UiNsWNZ
+	QluAooT+seai/OWtTKk9j+7KHaetoB9F3iubtXtg=
+Received: by mx.zohomail.com with SMTPS id 1770471328274873.0278604737067;
+	Sat, 7 Feb 2026 05:35:28 -0800 (PST)
 From: Li Ming <ming.li@zohomail.com>
 To: dave@stgolabs.net,
 	jonathan.cameron@huawei.com,
@@ -45,10 +46,12 @@ To: dave@stgolabs.net,
 	dan.j.williams@intel.com
 Cc: linux-cxl@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] Fix port enumeration failure
-Date: Sat,  7 Feb 2026 21:35:10 +0800
-Message-ID: <20260207133512.306128-1-ming.li@zohomail.com>
+Subject: [PATCH v2 1/2] cxl/port: Hold port host lock while dport adding.
+Date: Sat,  7 Feb 2026 21:35:11 +0800
+Message-ID: <20260207133512.306128-2-ming.li@zohomail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260207133512.306128-1-ming.li@zohomail.com>
+References: <20260207133512.306128-1-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -56,18 +59,12 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr0801122c2923813afb2c9ec786a684cf0000e8ce0d0bb4e3680edff6af54f303836e738b819a5dce1460e0929654bae9:zu08011227d76460f6ae5540ce384c32cb0000feff6030798eadacf07828752f85dd6afa73385d68f152e72d:rf08011232f1c8bc3cbcb698d6caf259fe0000085f0c97ff9ca2362166453c2308b80cf6240831dc3c846a8f24dd163ffb59ebda14c9af:ZohoMail
+Feedback-ID: rr0801122ce844a0697d9f5ea25590ab420000f12d21705be2ed355d8321db212e9c6f9047bc3a84a2d7aedc02f5454a19:zu08011227f37690ea5be74c8581c4551000004f70f74d8894ea9783d97462b87733f875cb9e81ec45155d26:rf08011232b9de95fa384e4456c76e9b3200001344a1ecbc3028621463c3426a362e9a850620959e6f0ea8b0dd0952bdc331b67d2d5426:ZohoMail
 X-ZohoMailClient: External
 
-I ran CXL mock testing with next branch, I usually hit the following
-call trace.
-
+CXL testing environment can trigger following trace
  Oops: general protection fault, probably for non-canonical address 0xdffffc0000000092: 0000 [#1] SMP KASAN NOPTI
  KASAN: null-ptr-deref in range [0x0000000000000490-0x0000000000000497]
- CPU: 3 UID: 0 PID: 42 Comm: kworker/u16:1 Tainted: G           O      J 6.19.0-rc5-cxl+ #4 PREEMPT(voluntary)
- Tainted: [O]=OOT_MODULE, [J]=FWCTL
- Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
- Workqueue: async async_run_entry_fn
  RIP: 0010:cxl_dpa_to_region+0x105/0x1f0 [cxl_core]
  Call Trace:
   <TASK>
@@ -78,45 +75,126 @@ call trace.
   cxl_mock_mem_probe+0xd38/0x1c60 [cxl_mock_mem]
   platform_probe+0x9d/0x130
   really_probe+0x1c8/0x960
+  __driver_probe_device+0x187/0x3e0
   driver_probe_device+0x45/0x120
   __device_attach_driver+0x15d/0x280
-  bus_for_each_drv+0x100/0x180
-  __device_attach_async_helper+0x199/0x250
-  async_run_entry_fn+0x95/0x430
-  process_one_work+0x7db/0x1940
 
-After detailed debugging, I identified adding dport failure leads to the
-problem.
-What I observed is when two memdev were trying to enumerate a same port,
-the first memdev was responsible for port creation and bind it to the
-cxl port driver. However, there is a small window between the point
-where the new port becomes visible(after being added to the device list
-of cxl bus) and when it is bound to the port driver. During this window,
-the second memdev may discover the port and acquire its lock while
-attempting to add its dport, which blocks bus_probe_device() inside
-device_add(). As a result, the second memdev observes the port as
-unbound and fails to add its dport. The second memdev->endpoint would
-not be updated because of that, then trigger above trace.
+When CXL subsystem adds a cxl port to a hierarchy, there is a small
+window where the new port becomes visible before it is bound to a
+driver. This happens because device_add() adds a device to bus device
+list before bus_probe_device() binds it to a driver.
+So if two cxl memdevs are trying to add a dport to a same port via
+devm_cxl_enumerate_ports(), the second cxl memdev may observe the port
+and attempt to add a dport, but fails because the port has not yet been
+attached to cxl port driver. That causes the memdev->endpoint can not be
+updated.
 
-The solution is to fix this race by holding the host lock of the target
-port during dport addition, preventing premature access before driver
-binding completed.
+The sequence is like:
 
-base-commit: 63fbf275fa9f18f7020fb8acf54fa107e51d0f23 cxl/next
+CPU 0					CPU 1
+devm_cxl_enumerate_ports()
+  # port not found, add it
+  add_port_attach_ep()
+    # hold the parent port lock
+    # to add the new port
+    devm_cxl_create_port()
+      device_add()
+	# Add dev to bus devs list
+	bus_add_device()
+					devm_cxl_enumerate_ports()
+					  # found the port
+					  find_cxl_port_by_uport()
+					  # hold port lock to add a dport
+					  device_lock(the port)
+					  find_or_add_dport()
+					    cxl_port_add_dport()
+					      return -ENXIO because port->dev.driver is NULL
+					  device_unlock(the port)
+	bus_probe_device()
+	  # hold the port lock
+	  # for attaching
+	  device_lock(the port)
+	    attaching the new port
+	  device_unlock(the port)
 
-Changes from V1:
-- Remove the patch of initializing memdev->endpoint to NULL. (Dan)
-- Fixes typo errors. (Jonathan)
-- Introduce a helper called to_port_host().
-- unregister_port() cleanup.
+To fix this race, require that dport addition holds the host lock
+of the target port(the host of CXL root and all cxl host bridge ports is
+the platform firmware device, the host of all other ports is their
+parent port). The CXL subsystem already requires holding the host lock
+while attaching a new port. Therefore, successfully acquiring the host
+lock guarantees that port attaching has completed.
 
-Li Ming (2):
-  cxl/port: Hold port host lock while dport adding.
-  cxl/port: unregister_port() cleanup
+Fixes: 4f06d81e7c6a ("cxl: Defer dport allocation for switch ports")
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+ drivers/cxl/core/port.c | 40 ++++++++++++++++++++++++++++++++--------
+ 1 file changed, 32 insertions(+), 8 deletions(-)
 
- drivers/cxl/core/port.c | 47 +++++++++++++++++++++++++----------------
- 1 file changed, 29 insertions(+), 18 deletions(-)
-
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 5c82e6f32572..6f0d9fe439db 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -612,6 +612,23 @@ struct cxl_port *parent_port_of(struct cxl_port *port)
+ 	return port->parent_dport->port;
+ }
+ 
++static struct device *to_port_host(struct cxl_port *port)
++{
++	struct cxl_port *parent = parent_port_of(port);
++
++	/*
++	 * The host of CXL root port and the first level of ports is
++	 * the platform firmware device, the host of all other ports
++	 * is their parent port.
++	 */
++	if (!parent)
++		return port->uport_dev;
++	else if (is_cxl_root(parent))
++		return parent->uport_dev;
++	else
++		return &parent->dev;
++}
++
+ static void unregister_port(void *_port)
+ {
+ 	struct cxl_port *port = _port;
+@@ -1790,7 +1807,16 @@ static struct cxl_dport *find_or_add_dport(struct cxl_port *port,
+ {
+ 	struct cxl_dport *dport;
+ 
+-	device_lock_assert(&port->dev);
++	/*
++	 * The port is already visible in CXL hierarchy, but it may still
++	 * be in the process of binding to the CXL port driver at this point.
++	 *
++	 * port creation and driver binding are protected by the port's host
++	 * lock, so acquire the host lock here to ensure the port has completed
++	 * driver binding before proceeding with dport addition.
++	 */
++	guard(device)(to_port_host(port));
++	guard(device)(&port->dev);
+ 	dport = cxl_find_dport_by_dev(port, dport_dev);
+ 	if (!dport) {
+ 		dport = probe_dport(port, dport_dev);
+@@ -1857,13 +1883,11 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+ 			 * RP port enumerated by cxl_acpi without dport will
+ 			 * have the dport added here.
+ 			 */
+-			scoped_guard(device, &port->dev) {
+-				dport = find_or_add_dport(port, dport_dev);
+-				if (IS_ERR(dport)) {
+-					if (PTR_ERR(dport) == -EAGAIN)
+-						goto retry;
+-					return PTR_ERR(dport);
+-				}
++			dport = find_or_add_dport(port, dport_dev);
++			if (IS_ERR(dport)) {
++				if (PTR_ERR(dport) == -EAGAIN)
++					goto retry;
++				return PTR_ERR(dport);
+ 			}
+ 
+ 			rc = cxl_add_ep(dport, &cxlmd->dev);
 -- 
 2.43.0
 
