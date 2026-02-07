@@ -1,103 +1,118 @@
-Received: from sender4-pp-o90.zoho.com (sender4-pp-o90.zoho.com [136.143.188.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19159256C84;
-	Sat,  7 Feb 2026 13:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.90
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770471362; cv=pass; b=toXslKrX2auiq4y/LKZwzo9VQT6WH1wfFVCzRspki4gic5MRFUYAX5mc3462HK1upomjzbhqiJlI4CEIBvbHsFOtgOJS2LMKLH6tgj3G90BQ1AnCxJ99JGCT4xf2zQmfRI/8QrvrB26MMWmDcuqWpWJurbPdXLIF5JJ2cFT9vxw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770471362; c=relaxed/simple;
-	bh=Wj+Edtse/Lq3KveIVEuMg/iVoXInkhtSSqk5bsZ7TOY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dT+nxtS5qAyM+kBfmuuEa7lAb59ArWRVFbOaldbrQQLyZvm9GZ29ELjLOswOdSTfdTTqwoyIUKB23RWytYj9WReWg20EiLxNEnFnaxK/WY8y9TtFy+vHzOnxeQPW85GKrQXw+u4UlbMOgre6U/+d0ettEgXjRZiHlZd/SxBcbE8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=EePkxq1M; arc=pass smtp.client-ip=136.143.188.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF64C125A0
+	for <linux-cxl@vger.kernel.org>; Sat,  7 Feb 2026 16:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770481091; cv=none; b=aDVAqXNp7edVbvRuRQrOiziOSa1l5emPbzDM0r1LBbtAJJg3fXx76j3/dCCzTsoGfedVIV73GKRgMO9LEc99/UENj2GdevfKEdAB5d99CXqlN8HExMgzkIez2JUWEOd97MZVKz49iJEwW5E8zuyYBVagEbJSbn2vrWT3X9+YD7Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770481091; c=relaxed/simple;
+	bh=3brC2JW2rL04COO6JIl/tf2e0T5RhhUokK6ms1eV5Mw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ovzr3Q2cfCdvkolBSOZJktIegqXpDlK1zFWI3u6FCHO0P4ujfh428hGUNmBPCXkWJJtVKhaB23OCMgIgmRV5VgbFFKNlewPb99yIvb8LXne12Bh5Uz1Sfxgl+xhA1Mpe337N3QDBoo4Ogvnn/kAiomNLkwShH0Y5jz1p2VqQK9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=MKRs1GL8; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="EePkxq1M"
-ARC-Seal: i=1; a=rsa-sha256; t=1770471337; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=SOmFF5jz2LY1uXfEscXS1Jzjc/9QPgehUAiFmQyxDHU/oBgcvZTFg67yrtyAx1stuH/60SZF+xiZZpIq5fzqg7oX4XPb9ZtpEF2XRRh6xkjkB5ZVA9c9yiAtTJApRuI2vWGIP+p4K+rtcDeGLUqt10jpeSR7k+aN+gy/TBrtgHA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1770471337; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ZmhajZZv4+w4HGyHDMoQMi5/3D+hEo5GfuUZivO6pYU=; 
-	b=j83/4gqor5t6qsxambhuWnAismU4ekcc2R7jMFQNUwkK/0noLue73litqMigwhYWiCGm3ImRMmy6Urbwq3BOblXPl3g8JlxJtQ3JdoMtpJ6+cqjeitYCVnWwh52S3LF5zkvjK1r/7U0VvYTlu+J3x0xJ4lSrF/pfNlHiLvWT8gk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770471337;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=ZmhajZZv4+w4HGyHDMoQMi5/3D+hEo5GfuUZivO6pYU=;
-	b=EePkxq1MCp9nAn/BaL1yluKymgaQsixSYn1jwG6eYKhqClYKJziYegn+ust/Ig5j
-	ByEuVMrSUSEwmEA8jJEt0dbluRIMO7LAPNEcyYBujKZAytA5nOGQPH8YbeNbkmJFevT
-	S/Hsa/TDw1EZZPcYtJdyuCV6dSu7O03xsqGjZRjM=
-Received: by mx.zohomail.com with SMTPS id 1770471334015567.5376710576885;
-	Sat, 7 Feb 2026 05:35:34 -0800 (PST)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] cxl/port: unregister_port() cleanup
-Date: Sat,  7 Feb 2026 21:35:12 +0800
-Message-ID: <20260207133512.306128-3-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260207133512.306128-1-ming.li@zohomail.com>
-References: <20260207133512.306128-1-ming.li@zohomail.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="MKRs1GL8"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-501469b598fso13131421cf.3
+        for <linux-cxl@vger.kernel.org>; Sat, 07 Feb 2026 08:18:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1770481090; x=1771085890; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eOaLMQHVXZHY1yGIh1+JUpApTTW+sDPhpoNVySUsBtM=;
+        b=MKRs1GL8dO0zx0hU9Ih9Bcu29zndDerioiI0nCZKtNnWxBBw3TIAmPiMPxS7HhR4oZ
+         23OlDyeqYQzwLderECK7tBQAKsAETsctej+l1NAU/zCBBqIGRxCbcpDdsweYzjl5OQZ3
+         KU1tShP5zrnPatyVUb2KwWZmCkvykkoi1oCNAjcF9Dlzv3i1nI3IrWwkVoZ6RMrwxy/v
+         Q22O8+9WsDc9ToLiHDoxYA85Uirb42/j7U0fVZQ2ch+7IFVQrV6QIAl6v0x/f5sg1csT
+         TSQxRKbrSP3MqzJa+e5TXt8eEh9gRtfPFT3JaDqcCeYR1hFsLzKa67CUIq+umAz9emfx
+         DcIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770481090; x=1771085890;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eOaLMQHVXZHY1yGIh1+JUpApTTW+sDPhpoNVySUsBtM=;
+        b=Qy3CPjWKyr7OULld9fV2gaHL9Sw9PMAxgCCkVOf3WTCTgZEWa7RcZyNHbGO+GEEkhp
+         Im28vVkyUEBxu1BTzj88050ZZA+3TNEw7t/xsKiHqPMhHRZzoKWapvTHAKw1yBUtU/yt
+         t6I9DHZUriPEthroBcT7MmV5i3NrebL3Ux+c2SrMR9AXeb7frxVUji1kRA9zO6zmfScR
+         B1FvIW1dmIj5Cb2zdQ2qa7xmDXYWnwvKB8S2monSaQoPaeN2trMB/ebW/ZYuQjWi297W
+         vCbEjLLlXWhJD8wUrj+DkM1ocvIs4+evYeRdicguJNtCY/U5UEWhXadOwk5cCKnDYn09
+         X7JA==
+X-Gm-Message-State: AOJu0YwEgzpo2I+PiP2noKdb6zNddxHhtpUCF7xfbW5NpRlwT8F5RXCa
+	iVg2C5y+z50zlAyY2x4NWeORb1mkEjD7/aUlSUai5rgmRsLBiIS39VUH7XtzFjWq9BbUz+fR6PJ
+	b3jB1DJk=
+X-Gm-Gg: AZuq6aJhYwWwDdI/MHu8dj7r9WEjogoZVs9RkQyXbp2nh1ZvBXp9FiDrRssgMkzGNxR
+	8bl2Twi2RluX01gUI6XATH/idgP9gDYGMRnoX1kqeM/vDNX/U7QUF4jo0ODhV8FtAqccY6J3AiO
+	BEi+4FFHKyJ25GWBhj9lFu+091ztS5I6Y7XrWrjcG13W3umF2xHU9pb1ktg4XN7gsG4LPzW4HnS
+	zeGenN+J+JdEpQqLByiOhcCE7pAoxdFeLZA2Ma8pNA1qC3XaExwahXBr6Rw1n9GLvsKOq0eDlYm
+	e9MQElhdW7BkscmWgipWXiErFRvBklkKRYYmSCtwnNfpi+RbXboFDMurTBPuzU1BpI8/I9MCdoy
+	DOIdkl0mgP8xabkcCI+3ZjylEy4jXHzARuNFEzEOCdiJyuvMBVvLkza/LMeq1Hrm9Kao3hLqaXU
+	nFDDdPCnKLV46ULk24L2DOiAMphpCPAYzqFd2PItOqF2zdHWoOQn0cGJKN0YyR4EzE8gkaAw==
+X-Received: by 2002:a05:622a:1890:b0:502:9b1f:ca3d with SMTP id d75a77b69052e-50639a2cd04mr91314571cf.78.1770481089562;
+        Sat, 07 Feb 2026 08:18:09 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-506484ca043sm20447501cf.1.2026.02.07.08.18.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Feb 2026 08:18:09 -0800 (PST)
+Date: Sat, 7 Feb 2026 11:18:07 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Hongjian Fan <hongjian.fan@seagate.com>
+Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: Re: cgroup support for DCD
+Message-ID: <aYdlv6Q8h3g2BHrn@gourry-fedora-PF4VCD3F>
+References: <CY5PR20MB47474A4D5CFA5E7284328F6A9066A@CY5PR20MB4747.namprd20.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr0801122c6464dbb94a293f1f6af484c300007f2f9cfbd066e422cbcb7381ad3ab4ae85cce04fb0fd836d3a19bc92204a:zu0801122728b2e2a134c68d7ea1ff6fae00001c8e897e9c58e34661863593b5066d2cd9c68b05d8738d63a9:rf080112326660016915cfc0bc554fe3c10000d463fc9790ab552adc09aaf623cfc23cfe6bd0a90bb1c94c568b1d08e37e37ce62a14c87:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CY5PR20MB47474A4D5CFA5E7284328F6A9066A@CY5PR20MB4747.namprd20.prod.outlook.com>
 
-to_port_host() has been introduced, use to_port_host() in
-unregister_port() to get the host device of the target port.
+On Fri, Feb 06, 2026 at 06:00:38PM +0000, Hongjian Fan wrote:
+> Hello,
+> 
+> I would like to check if there is existing methods or any plan to support allocating DCD extent through cgroup, which could enable DCD to the user applications without code change. This would also be a good way to use DCD in container environment ( for example docker ) or other software already useing cgroup for resource management. 
+> 
+> Use cases:
+> 
+> 1) Expand the memory capacity 
+> 	Creates a new cgroup
+> 	Add DCD extent(s) as system-ram private node(s) for this cgroup
+> 	Bind cgroup memory to dram nodes and DCD private nodes
+> 	Set memory capacity limit/tiering/numa balance policy/etc
+> 	Start the application as normal / launch container with this cgroup
+> 	Release DCD region
+> 	Remove cgroup
+> 
+> 
+> 2) Increase system bandwidth
+> 	Creates a new cgroup
+> 	Add DCD extent(s) as system-ram private node(s) for this cgroup
+> 	Bind cgroup memory to dram nodes and DCD private nodes
+> 	Set weighted interleave numa bind policy and interleave ratio
+> 	Start the application as normal / launch container with this cgroup
+> 	Release DCD region
+> 	Remove cgroup
+> 
+> 
 
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
- drivers/cxl/core/port.c | 16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
+What you're describing is using private nodes as non-private system-ram.
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 6f0d9fe439db..5754cffe6b8e 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -632,22 +632,8 @@ static struct device *to_port_host(struct cxl_port *port)
- static void unregister_port(void *_port)
- {
- 	struct cxl_port *port = _port;
--	struct cxl_port *parent = parent_port_of(port);
--	struct device *lock_dev;
--
--	/*
--	 * CXL root port's and the first level of ports are unregistered
--	 * under the platform firmware device lock, all other ports are
--	 * unregistered while holding their parent port lock.
--	 */
--	if (!parent)
--		lock_dev = port->uport_dev;
--	else if (is_cxl_root(parent))
--		lock_dev = parent->uport_dev;
--	else
--		lock_dev = &parent->dev;
- 
--	device_lock_assert(lock_dev);
-+	device_lock_assert(to_port_host(port));
- 	port->dead = true;
- 	device_unregister(&port->dev);
- }
--- 
-2.43.0
+Private nodes are intended for enlightened *kernel* services to provide
+discrete interfaces to isolated memory, not for userland to build on top
+of directly.
 
+You might, for example, provide memfd access to a private node, and
+expose the file descriptor to a particular cgroup.
+
+What you're describing is just producing more normal sysram numa nodes
+and providing them to isolated cgroups.  This can, almost, already be
+done with existing infrastructure.
+
+~Gregory
