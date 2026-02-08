@@ -1,43 +1,43 @@
 Received: from sender4-pp-o90.zoho.com (sender4-pp-o90.zoho.com [136.143.188.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796993161A8;
-	Sun,  8 Feb 2026 12:07:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113362BD59C;
+	Sun,  8 Feb 2026 12:21:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.90
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770552426; cv=pass; b=hMzeVRpNsUyq73jeVL0cGia9PkG9O8ME11k384Aj1VJacZiEoY3w874nWaohqzaRcNQbiZ9dNkXsrzAKpEyBG1++YEN/Swz9zrEjnROPd2+dYQuvcApm/04R0uJNuE9K3btr//03/zpxxPrR4V31X9h2nOZh7fSIj6mOYoKM6J8=
+	t=1770553281; cv=pass; b=rvhYCDJLQczFM3IBBzLQudutSfuEhYDzCC+ey6bkwKkCrvu8ViAbLHgzpL5TcTHQbieItprofaBW/pCcL5jz5PkRMX9Ptt59uSGK5duizHS2H2y6GaZVI7lutLltQatBX9sb2PZrAth0Ja/zO7zlSSpvyqnHhveIxBjhKigQe5M=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770552426; c=relaxed/simple;
-	bh=oAndgAbQlMEGIFsqd6mz+pqzEySKWdglpbygOIj1JQM=;
+	s=arc-20240116; t=1770553281; c=relaxed/simple;
+	bh=6r6DAEN/39KnqCDskzMPUi4wTxPK3YY25B1anzgDru0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lh9AjnzSe/YxGlgDaMyIyFeWLJaYOlgV89HoCCowMAGAjfkppKer3rJk/klUeaopocVtbermYvl8PjS+SawYeYovq2OLf9NBD0ijMW1Onl2BE2CTcWDcUkaPvqPnSXo+BNGQeQJnXbNwcpk15+/V/dTZwtFQTSBVv9Nmt+D7CFM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=EhsU7D2w; arc=pass smtp.client-ip=136.143.188.90
+	 In-Reply-To:Content-Type; b=BQx+a4DJouqoQt9frL0NaQ6e3xkscQFa//Xxt2gf1VMlJj8N6e7IatnaqwBVJPlk2nGoEX3kdHnZHrOaoGlNV0ZB0wqTRw0AQIdAW8MPftR6ixC6iEHcUZbIvy2krfChyLCUc48GnJkGoL+2ZsBoxiH4jo4kHogWgHNt4jSOScw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=a66U0l6o; arc=pass smtp.client-ip=136.143.188.90
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="EhsU7D2w"
-ARC-Seal: i=1; a=rsa-sha256; t=1770552411; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="a66U0l6o"
+ARC-Seal: i=1; a=rsa-sha256; t=1770553263; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=hgZrDZSu+bSFPXzkEblrhblnP3K6zia71UaJXOKuSprQDYJtot5pcOddB/fXqxJoJTLJq6FSDW4oZpToKqor2B3gNeQZwxnuPMZ8gsWuAdatU8XKm6UgkXZvoAkXmxHtFy4UwVnSPqE+klMwcFXNCQk6E/zLdt2TGZ7ebws1gNY=
+	b=a8qvF/leuNRa/BLf8AkwjA+AJnODx04iDadKG5d9EE3pY8x32zCKEMDLpjOkZvsr8LdSyACZqt085sI1KGpCBnc83QMWm8lHsy9HXHUEsJjezqA3ybs8gxrvCpY66L7LYT7aNKrpP9BjxwCOokB4jSM8mA4WvmxFlQY4RFN1BOQ=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1770552411; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Kl+S+AOOVZrjfGAitK//x+Hf39M/SB5LdTO49ElMZQs=; 
-	b=VO36a6WAK8siWfDkYRlpMxcHmzjS5bwG+qg7K9a1LGZNWBW2xJheNXP5GGteoVuieGi2iTZT9rau90UxMf93KIAO0xeRexQ1p3sDfSMBWrqTfI1lbMbHU/BTXlm1N9QSBtY9jqm5fW+hK5eRV/q8JqmmdAiFz0fsYFmJ/6AS4kM=
+	t=1770553263; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=iz6FxdXJRThUCNfOaoMuz5IxWuRtBLYncqDIig2O9uo=; 
+	b=YywNGr56kG9jpuFwWlvnZPXPy/YACkJHa4H7tQarYrpsFPk8B+/XJQO7rQPoXSdvMYNWtPUPzgbKc68Mjw/K1YfAsNUDtz21un1Ija1aMxEiaw2GhfabO/DndYjmKiMlkURdje2xIudnvT9H6onXo935Rzy3gUjnZ124cPUfmdA=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770552411;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770553263;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
 	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=Kl+S+AOOVZrjfGAitK//x+Hf39M/SB5LdTO49ElMZQs=;
-	b=EhsU7D2wYfD5pfIg+EJVukBKDejMoD1EW81KZ22u/QnoiOPYsTLGrbFrHwEDZu1a
-	38eDhvFnvQnQD9hMH5IXVXRJcTP+treQgUGEGj/hmoCy+DpphCtnRL6hNm0xKUFVVpg
-	gHYy9UO0MaWT/KxzdCxVKFJhYgFt8hcvlECbjy3Q=
-Received: by mx.zohomail.com with SMTPS id 1770552409089915.8820504421028;
-	Sun, 8 Feb 2026 04:06:49 -0800 (PST)
-Message-ID: <4adcfebd-3489-4b41-b5b2-09ed89d6e0d7@zohomail.com>
-Date: Sun, 8 Feb 2026 20:05:29 +0800
+	bh=iz6FxdXJRThUCNfOaoMuz5IxWuRtBLYncqDIig2O9uo=;
+	b=a66U0l6o5zTyFUZPpdYcuKNbCuR6h0T05gSRlkNAhmsnPrspxokM+4K8iygzNkQN
+	UbCcCI8iPK8ATPU3XQC+idnKT3DzXY2fezfygNAup2PT4y7e6sm2NR3bb9VKBZzhBGf
+	z1k8TVb31ZSeq3AQZpwAaKWr34Pgn0Dalw7rWQEA=
+Received: by mx.zohomail.com with SMTPS id 177055326154671.29381060272215;
+	Sun, 8 Feb 2026 04:21:01 -0800 (PST)
+Message-ID: <dd172105-e152-4973-ad7f-0ed37ed0b18e@zohomail.com>
+Date: Sun, 8 Feb 2026 20:20:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -57,53 +57,45 @@ From: Li Ming <ming.li@zohomail.com>
 In-Reply-To: <6987763fea2ab_125f100f5@dwillia2-mobl4.notmuch>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr0801122822a4b01a898e49d062257b300000ca2dbc7cba69d8f98eeb46b02d67cf43e10f799320d5a94adce0:zu080112279b0795e60c2240316d926bb00000869c7d8c627d4a0ad066158c9d90a08fa2109d62e087c8e293:rf08011232d4f6ecf791ba4a0a1f4c35f400003c4fbfabd4e543d6bc565e2546a1c8fde2ef1f3a5c3c9697259f93b637eb27e8bc2b2e2a:ZohoMail
+Feedback-ID: rr08011228b16293364ffde8ef799b1ae70000474c061db90f8767328263e1fa270ab3ecfdf54dba6d0978b286:zu08011227d709f3d184f2fc86c51e55b10000d06a8bf1f9a8457dd1861a32279c91c84b40b8a796e8a54a15:rf080112324718cfc837197b6c76e0b5c40000a62d993432a96987d7817093afba4719c49763ad652aaf80c88d1128b2d2521dc2eea548:ZohoMail
 X-ZohoMailClient: External
 
 
 在 2026/2/8 01:28, dan.j.williams@intel.com 写道:
 > Li Ming wrote:
 [...]
->>
->> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->> index 5c82e6f32572..6f0d9fe439db 100644
->> --- a/drivers/cxl/core/port.c
->> +++ b/drivers/cxl/core/port.c
->> @@ -612,6 +612,23 @@ struct cxl_port *parent_port_of(struct cxl_port *port)
->>   	return port->parent_dport->port;
->>   }
->>   
->> +static struct device *to_port_host(struct cxl_port *port)
->> +{
->> +	struct cxl_port *parent = parent_port_of(port);
->> +
->> +	/*
->> +	 * The host of CXL root port and the first level of ports is
->> +	 * the platform firmware device, the host of all other ports
->> +	 * is their parent port.
->> +	 */
->> +	if (!parent)
->> +		return port->uport_dev;
+> +static struct device *to_port_host(struct cxl_port *port)
+> +{
+> +	struct cxl_port *parent = parent_port_of(port);
+> +
+> +	/*
+> +	 * The host of CXL root port and the first level of ports is
+> +	 * the platform firmware device, the host of all other ports
+> +	 * is their parent port.
+> +	 */
+> +	if (!parent)
+> +		return port->uport_dev;
 > This helper looks good and this case is theoretically correct, but I
 > assume that find_or_add_dport() never hits this case, right?
-
-Right.  This case is only for finding cxl root's host, 
-find_or_add_dport() is
-
-only used for cxl host bridge ports and cxl switch ports.
-
+>
 > How about move the introduction of this helper to its own lead-in patch
 > and use it to replace the open coded version of this pattern in
 > unregister_port(), __devm_cxl_add_dport(), and endpoint_host().
 
-Sure, will do it in next version, thanks for that.
+BTW, after taking a look into __devm_cxl_add_dport(), this helper is not 
+suitable for this case,
+
+the host in __devm_cxl_add_dport() means the new dport's host, it is the 
+device of the cxl port which
+
+the cxl port belongs(or the uport_dev of the cxl port if the port is cxl 
+root).
+
+So I will update unregister_port() and endpoint_host(), and check if 
+there are other
+
+places needed to be cleanup.
 
 
 Ming
 
-> I do notice you caught the one in unregister_port(), but there are more.
->
-> With that change you can add:
->
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->
