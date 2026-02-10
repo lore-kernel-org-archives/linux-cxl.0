@@ -1,127 +1,136 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from caracal.birch.relay.mailchannels.net (caracal.birch.relay.mailchannels.net [23.83.209.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A612288CB
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Feb 2026 22:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770763576; cv=none; b=Sa62imttabFqxl34sOmUvCVt6omFeV+Jp2bFnXYgLFD8A/t5KtBtPvyJv7RLQM5poWdQjeqvGZG8zS4hdqfebRvb9b80PWqbWWxLjX86Wh30imktZ4fEqI7fwgkqwraRAyKCpexBBAeIaItc1MUxW+nmhhmw4y08bXwcfTaOcbw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770763576; c=relaxed/simple;
-	bh=CPGQPaje8gblTWNJtq5gtGeBe1bPwkPz8bv/h0t2vSE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k7Ll1Q/u2XciiRxCPP7HQlC+7aipV/AvFSePThknitKptqyUeKRplrD78IklrCXCVkPPYNpKQ/kT6fG1dB4Ia0dQbSL7I4DAGZQGpy8oKASfwaGqqvD0GDxh5i4Lg+kmfrHiCimXVRZUCeNstV4c6KxrYWbt4+XsWcHOySkRi3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=iU/G+Gb4; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD94248F7C
+	for <linux-cxl@vger.kernel.org>; Tue, 10 Feb 2026 22:48:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.30
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770763699; cv=pass; b=c7P2u8Jx7gY0IiOANxIe8xITsCezCYvLqiBEbq1NltGhL7+l4T9Vcl4lLbldAPJjDJw8Ha2H23mWAfCj32uiTyTqe0SvzeD4abHs89X8G0lxe08YzFsvCi3xTRNYIQOx/TITsJ/dTiJbzdiNjMm9PE0/igNJpVAIMkfiIALzLzU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770763699; c=relaxed/simple;
+	bh=6l4ckHX/6pVGrqDqsmBqTOEevkOHKvnrl2h+xvBK0Mk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lat5dZSzIMXrGT49CRNbb2OYT9LTP3ybUAQM2hPNfu+XGVq2jqMDqNBZwZaP6MSohw+H74QVUOGw1GvRIDWSDv07xDNVA+ekaxSRwcZ5gbYsJY0D4XPY2V3DeH8+BUem3/329v2NFTOsOAYwVGoTkZR62YqINxYLU7QWRYsBY90=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=DHRPgEDd; arc=pass smtp.client-ip=23.83.209.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="iU/G+Gb4"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-8c7146b0854so639446185a.2
-        for <linux-cxl@vger.kernel.org>; Tue, 10 Feb 2026 14:46:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1770763573; x=1771368373; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a5vzF0xMlrc4ZBcBHeJiM1IhDw4s5yfnZKGmLV7zXEg=;
-        b=iU/G+Gb4q05u77c6OENIJg6LbRiF5k7D87rCxJs5DLrKpXSDwQaxh2exYM0xG7foDk
-         VAV7ubL10TXloLFgsPwwNGJAGb0vUtEnH1R4pGl5mrXqbtTf0aEU6AdJNHCbR1ch8jux
-         DkVh2AKgTS+Nq8hXwCtFJepzqqdXSSMyV7kOSvTLSNGFOSnPe8M1J+MwReF86XeS7Akr
-         mLMVIc0PBB1SqzYVRXS/CVXFQaaxEGnKPGDMJ4mIZvdqXGryVgJ9tJvv2yKRWZRVjqu0
-         /W9ScFrbrQ4pvNAEoK2h0LWcY+KR7bDIKxQwKOV3pDS0mL6V1xM6QVmpCGegxW+yYK67
-         noWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770763573; x=1771368373;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a5vzF0xMlrc4ZBcBHeJiM1IhDw4s5yfnZKGmLV7zXEg=;
-        b=uYIgn/RACbwy62JPEVi89e7SVGzvNVPpe/AJRbW80F9qrbA88z5KltSylduoZx3VqD
-         1pCNNuL7cq3Sl1x+JttgOJf5N44QNDKWBzrLnQ9x2SHdZzN7orBQyWJzLXbxcOpfpwKY
-         RcMFW6IYWaZSQnrTiR0vPX2jraPTNOWiWqDsuugvOSOd1O0dgOm4tmwxIla2vRIxWBO2
-         9jliy49wEaH0xYz/6UAFmNc1ngKCPhsYWQ/4eXyvY+StRUh+USptU654qifi/HpKGGZV
-         Jb2DfMHlr68PnUY0ACgypd0jUAjjTQs/LxRTNl7yxE+HVjx5umnzOpkSYorXL8Id4rDW
-         f+uQ==
-X-Gm-Message-State: AOJu0YzV5mdXjzc0cfJS3Mqw104ee1yzyCvH6jS2LINk+AmmyOYBRDoM
-	xp9fZEu2iMtERNigumiRaPk3xbzz59EPzW5OYROEICQKrNp4ZF5hVkcDgnrVXfbezXc=
-X-Gm-Gg: AZuq6aItzNljFxrnppEpu+a6zWwoFc0bgWa1ghNaq4xUg6M+0x6Dq6+99NTdTJTRpLr
-	ACvrne8Nk2MLyIVdRhYJOvtUYxnFx1Y3Jxi5aDWj1uFt8l68uk3p3cwv8TWWMg7B9qCQbsWbEds
-	IMnsPYbBk+93muI0UuOfjL6BBEzas1WzRPlb8UL+USPQ2edibdX5RtevFP9WjE2huYogxCkZeZS
-	pMjCe2Qj18Y5BxqUq9XujGLiiKSvvsjYWps4Y9LLTg5Ka6/jTM03kmTytNShxo3cgppY4EppPtw
-	Q2Jm/ZRcnjb5VATK+OmLHrqvkGgcEvtEmjlMCUNvT4ABjvFu6ZJuTo9sP+XxRf5L4KeKp8GBipw
-	ivTaOI6tTDNt7mnDeeQQt9nnA+jSN4jXJ6XWVImYNf8UQdkcKm6t72bvT9s2VQYR+BcdggqOJDZ
-	oIJgs0AvmFSSTq16MOdyQsSPIFlyxGaqd7ndttxPo28dM2GZ4djK8lTamez5fOOWnBZtmuEpFlx
-	mfKWKz2FA==
-X-Received: by 2002:a05:620a:d88:b0:8b2:1ee9:dcfb with SMTP id af79cd13be357-8cb1f6b3433mr508026385a.8.1770763573426;
-        Tue, 10 Feb 2026 14:46:13 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8971cc7ff1csm311656d6.3.2026.02.10.14.46.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Feb 2026 14:46:12 -0800 (PST)
-Date: Tue, 10 Feb 2026 17:46:11 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	dan.j.williams@intel.com
-Subject: Re: [PATCH] cxl/memdev: fix deadlock in cxl_memdev_autoremove() on
- attach failure
-Message-ID: <aYu1M75-tV8-TLAC@gourry-fedora-PF4VCD3F>
-References: <20260210154320.1748223-1-gourry@gourry.net>
- <698b8a8620f2a_dce1110074@iweiny-mobl.notmuch>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="DHRPgEDd"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 7102A762B8D;
+	Tue, 10 Feb 2026 22:48:12 +0000 (UTC)
+Received: from pdx1-sub0-mail-a229.dreamhost.com (100-123-63-54.trex-nlb.outbound.svc.cluster.local [100.123.63.54])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 054CD7631D0;
+	Tue, 10 Feb 2026 22:48:12 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1770763692;
+	b=MuBlO3s3B6onNvCtZARBaGVptJSjl1E3tA1ZhKcPnQRQeTjGOtmEnxGuUUt5uJJvF9eb+I
+	qg1V5ihOr0AkqWuqLiHZJouo2j2PvDiU9RZqTGbzNIlhlQa2hHk9FMksyQgkLCLjES4bEJ
+	rU4doXwCSYfjv7J7DTCFQDnNPWhr/ZMLX3tKxlH+IzJMLyrX4E251LVrbIK3vDfBm/j7qx
+	U8AVoUDOJdtIdU05UGZCMvz1TSWv+AOV1czuIqfh3Rbwfdwwo8cyacEsS7Z8D4lnaGIwuF
+	0Pq2bOewYRScYLNo6bOqsDlzX2eqHlXsr9uuYNnE+ynOGNxC67Do67dPsS4+Uw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1770763692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
+	bh=e7tx4DaSBWq1kHYaIfHT/Hj8UuDrWdqdFS7PfNEl+mY=;
+	b=TElViKMpYuZVSYsv/5c6Vwr/Ph2YIZn3aqMrVZDAoIX4kc1i3bGwu0Jj6mC/SZGbeerkr5
+	6gByCQaGNrRVBj5xle8+2VlH4uy8bPSpqpTkrbxNcVnennlUhi12dwU9HbJ2vT9RTJ24q6
+	FwuaCipAAbM/WWJlpIjosXmpyqfzSXJ8vbTHS+f2R31YGXanYFXXPuteRoy5rGQsNaypki
+	sYKtlQGdC6sw5U7co8/OxvVhY39CEh3LSSAdDQxwpjg6gV9uj5bFkW//fBiSKPd+GG4T4Q
+	qSm9AfRZGWhdACSL1ZCZGqOR3g7QYrXNJa2HFPOBHjz/IrVpAh1pWHP6Vzc9OA==
+ARC-Authentication-Results: i=1;
+	rspamd-79bdc9947c-d9xz4;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Lyrical-Tangy: 0156ed4356ee5136_1770763692267_2372659078
+X-MC-Loop-Signature: 1770763692267:1177476638
+X-MC-Ingress-Time: 1770763692267
+Received: from pdx1-sub0-mail-a229.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.123.63.54 (trex/7.1.3);
+	Tue, 10 Feb 2026 22:48:12 +0000
+Received: from offworld.lan (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a229.dreamhost.com (Postfix) with ESMTPSA id 4f9cCv3bf1zSr;
+	Tue, 10 Feb 2026 14:48:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1770763691;
+	bh=e7tx4DaSBWq1kHYaIfHT/Hj8UuDrWdqdFS7PfNEl+mY=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=DHRPgEDdSX5gYSj/Ai1nRFoi15lrpQ0sbtJdysdmhobAs4gzMjTq6P4ChFa8eHEsv
+	 kymwDelALLq46LDxQP6+XCon8r4Vgi2mf9vdD0R7C8G/DDeaVfZsYOp2XteAkdFYjC
+	 vdgQIS9n884yZVrvkzDIvvJgBsJ7pB6+TNFTjgNpMLtCwRM81+sDcHB0xZGUlYHQrz
+	 fUgt/c+LOhGatogrKPp/NUcdSR88Q4jGgJ0h3Vt5Re1LCSSPJAwL/Ia8TjB+1+eEsK
+	 6jXgBUOJkIlUS73zVn6wiHRmS2sjnRjk3JX6F0gamCLFEkrdt8+5dSzNGoPYfyncO7
+	 nurGFeBoTud9w==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dan.j.williams@intel.com,
+	vishal.l.verma@intel.com,
+	dave.jiang@intel.com
+Cc: nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>
+Subject: [PATCH] dax/kmem: account for partial dis-contiguous resource upon removal
+Date: Tue, 10 Feb 2026 14:46:09 -0800
+Message-Id: <20260210224609.150112-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <698b8a8620f2a_dce1110074@iweiny-mobl.notmuch>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 10, 2026 at 01:44:06PM -0600, Ira Weiny wrote:
-> Gregory Price wrote:
-> > 
-> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> > index af3d0cc65138..c0de767b24fb 100644
-> > --- a/drivers/cxl/core/memdev.c
-> > +++ b/drivers/cxl/core/memdev.c
-> > @@ -1098,19 +1098,22 @@ static struct cxl_memdev *cxl_memdev_autoremove(struct cxl_memdev *cxlmd)
-> >  	 * return. Note that failure here could be the result of a race to
-> >  	 * teardown the CXL port topology. I.e. cxl_mem_probe() could have
-> >  	 * succeeded and then cxl_mem unbound before the lock is acquired.
-> > +	 *
-> > +	 * Check under device_lock but unregister outside of it, as
-> > +	 * cxl_memdev_unregister() will also take the device lock.
-> >  	 */
-> > -	guard(device)(&cxlmd->dev);
-> > -	if (cxlmd->attach && !cxlmd->dev.driver) {
-> > -		cxl_memdev_unregister(cxlmd);
-> > -		return ERR_PTR(-ENXIO);
-> > +	scoped_guard(device, &cxlmd->dev) {
-> > +		if (cxlmd->attach && !cxlmd->dev.driver)
-> > +			break;
-> > +
-> > +		rc = devm_add_action_or_reset(cxlmd->cxlds->dev,
-> > +					      cxl_memdev_unregister, cxlmd);
-> 
-> This kind of threw me...  Won't this deadlock if
-> devm_add_action_or_reset() fails as well?
-> 
-> Need to use devm_add_action() and drop out of the guard on failure.
-> 
+When dev_dax_kmem_probe() partially succeeds (at least one range
+is mapped) but a subsequent range fails request_mem_region()
+or add_memory_driver_managed(), the probe silently continues,
+ultimately returning success.
 
-lol i pointed out that this patch was a claude recommendation on the
-initial report - didn't look to hard because it fixed this specific
-deadlock with:
+However, dev_dax_kmem_remove() iterates care free on all ranges
+where that remove_memory() returns 0 for "never added memory";
+as walk_memory_blocks() will never see it in the memory_blocks
+xarray. So ultimately passing a nil pointer to remove_resource(),
+which can go boom.
 
-	if (cxlmd->attach && !cxlmd->dev.driver)
-		break;
+Fix this by skipping these ranges altogether, with the consideration
+that these are considered success, such that the cleanup is still
+reached when all actually-added ranges are successfully removed.
 
-so yeah, easy enough to fixup.
+Fixes: 60e93dc097f7 ("device-dax: add dis-contiguous resource support")
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ drivers/dax/kmem.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I can either v2 or Dave if you want to just make the oneline change
-before pull let me know
+diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+index c036e4d0b610..edd62e68ffb7 100644
+--- a/drivers/dax/kmem.c
++++ b/drivers/dax/kmem.c
+@@ -227,6 +227,12 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
+ 		if (rc)
+ 			continue;
+ 
++		/* range was never added during probe */
++		if (!data->res[i]) {
++			success++;
++			continue;
++		}
++
+ 		rc = remove_memory(range.start, range_len(&range));
+ 		if (rc == 0) {
+ 			remove_resource(data->res[i]);
+-- 
+2.39.5
 
-~Gregory
