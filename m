@@ -1,293 +1,214 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED9B194AD7;
-	Wed, 11 Feb 2026 12:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770813137; cv=none; b=aWI97xQlX8FWkPuo5VMEwcPTh9dNYm/p2hNppM0CfFo88royFZ43nry8Xq5eX8bcRFMHg+0DV5DI7BW8A5t3DdVruWEUoWRnQOuGstgyZmgpGL8V6BQ33sZteY/6KelV9WIbi758ZUcheNd475DlE8PlaTw1/81X/wGeLBpKKy8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770813137; c=relaxed/simple;
-	bh=MqWL7t5U8J2aPpBZafPdls2RGoEtAeN85Xsz9fAz/Ng=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QvoRSgU3JvewRfCCSbSFjlZwaC3gm89qi7CCTV4KUP/we2qOUbTK7UXNFuAMJznhnIuV/ujkYN2927NW5//L8V+XMyaJzbRYzmGGYh5L0L+5lp9K6g0XyAqONx8py4lzlwPgaqeX1M2rb7sbpGVC3/muRjzbQ5MlRuOCBfc2OFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A8eXsKd7; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1705B1DF748;
+	Wed, 11 Feb 2026 14:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770819617; cv=fail; b=ItQhx3QHvMwNL+Fq4UWRaTi9Nvc/XqvWngtY7MtKg+SUyVOi61TFOPg8JbWTBV0IyLT3TIDYtGZ5yQAgA/9kRTCnbSuhyROz3dXDMds2bYGxycYXla42EWHWKLKXIUT5pc28lE8UKS7bGKGgxOtwx8Wurmf7c4uLghCj4kPJlUA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770819617; c=relaxed/simple;
+	bh=LQgTarkPvQjml3SxEgK1tb6oHiKuI7gptC0L/Axwzzs=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=QnsueNSykdGq3spJjj/R/tbktA5ccOpbALFtZ/zdGSx4Dp/sY3WtSC8Pw1lC1KUrKjO0Ju0WNJBjhtpsSL38RgKPQdvqp8YG01Dd/LMsQau0Y46h1oL8wxaWhL0dqqGwPne4eUSXXcRRpK6h7EVNL4IIXLVaG5zJHCJHwRYO58E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AtdXKwqH; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A8eXsKd7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ECDEC4CEF7;
-	Wed, 11 Feb 2026 12:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770813137;
-	bh=MqWL7t5U8J2aPpBZafPdls2RGoEtAeN85Xsz9fAz/Ng=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A8eXsKd7BMZwVepQZb5bzYlVKc3wQPpws7vOlIDFfJYoUdEE7B08QhHeWZTB5L/Vx
-	 D4w3e15ioabQX19z4ureovNypkHsHHAwTWjOOqyglj7yn8ARsKXZ8ZlaSkyzhcT6pf
-	 8ImNgL8KMrdkkXIsnlquMLmi5feJG5ip5M8OM4MjfL6EuSlXew980l7gqutTOAZu/y
-	 xDWvW/znIAmevnGIHqGbkjZav2Nx6vDrNLeLj0FaINXxCV8RE0Tq4az5bNmg4Po5c/
-	 k3jwP55VCMGDQMpbCa9hHef0nbJb5IXjG5vr5see16M3OYj8tTBKGD8kL+GNe946kY
-	 Q6Xg9AiPooJ4Q==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Will Deacon <will@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	mark.rutland@arm.com,
-	clrkwllms@kernel.org,
-	rostedt@goodmis.org,
-	linux-cxl@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.19-6.6] perf/cxlpmu: Replace IRQF_ONESHOT with IRQF_NO_THREAD
-Date: Wed, 11 Feb 2026 07:30:41 -0500
-Message-ID: <20260211123112.1330287-31-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260211123112.1330287-1-sashal@kernel.org>
-References: <20260211123112.1330287-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AtdXKwqH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770819615; x=1802355615;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=LQgTarkPvQjml3SxEgK1tb6oHiKuI7gptC0L/Axwzzs=;
+  b=AtdXKwqHDjp+Vmx4S0LquZRwCr+hmf6S+lLvoUFbypZX9HiT/1bZslQm
+   /+T4uTA1OWd49YePPPao8ZvhQc6QRNUUctLXwrBz9Y6lkM3Yf6A4KkD7j
+   E0Yk9N1vQzfcxdqNBIAe/UZxfgqyNHX4VBmgtnr/Y/F1PzyOE7O0rDONM
+   7Si/d38tj3SkJFvrT+h4Oz8McN0Y8XAXaOnRL92+hxLLZelHFWcKaFKWB
+   z/BgbrYF+Z0A0vB6RmUXlJqHSTIyhYUedJgQV4bJt5oPQgaOlME4/o3EG
+   1/Jkd0ZDn3tcf2fPoJ+wsbVN2ItHzjwU94kSQSbP878T/h4lsA9/DoG6P
+   Q==;
+X-CSE-ConnectionGUID: oT5dpAMSTZq9OTQ+I4QJuA==
+X-CSE-MsgGUID: JH4xfgpvR1aIQRVCQNJcfQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11698"; a="71866593"
+X-IronPort-AV: E=Sophos;i="6.21,283,1763452800"; 
+   d="scan'208";a="71866593"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2026 06:20:14 -0800
+X-CSE-ConnectionGUID: C4SAf7NWRv29yQgnzp/AfQ==
+X-CSE-MsgGUID: j7JVz5HBSoqCUC538bso6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,283,1763452800"; 
+   d="scan'208";a="212364337"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2026 06:20:14 -0800
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Wed, 11 Feb 2026 06:20:13 -0800
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35 via Frontend Transport; Wed, 11 Feb 2026 06:20:13 -0800
+Received: from BL2PR02CU003.outbound.protection.outlook.com (52.101.52.30) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Wed, 11 Feb 2026 06:20:13 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YEdpth6C0jhVOD3zPHsMVtZrE6CHZY00XVZQlkcgAwE2nYgMgMR2Nx03r93/2Fs5Z28qQEON2pl42bVLiK8cMsuu3yhheNKME+GgITTkzkHzqzsHczMHble5GP04S2Qwki1yQTUDTAYYEPTnmQFAt78fjs/X4F6flKd2WIMmO5DfRZKQLbdBC4Kr0/KibZ2YDOK3HQbWGdbiGwdFg1sraf1s9kzWCdB9fVbFAcFpTPSP3IEkgSZbjH8sXbfTR/GtaYyCculZuZCwNkNT2AVHdSNE9z8X/Ct2dSRRWhaRZAIrdsjQx/0NJtwp5kCu0gjjjkv852ZtILIfN2I1ELdr5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JjvspPbZGUijBSu5PH6sr/oTu/q2Hw3ui1zkGPzDxq4=;
+ b=H/ldzg35CKrvxcKheqB81JmHhqpfYvbj65/cA8c2kSEsgRd/wTa/+gvuGFlgHmYtpYG9ty6fwlPYjf7YPhY4oLilgWKKJ0IuUlODJOPE5pGGgNtCdjN1mXLwAQ4Ms5khY2lWpZVtBCnZN3NBTf+TtV2YUFgW2vf1z/tq7HeN5p6kO9uQkYv0/TTd6q2r2DJ99i0hl7CaHQO3hSky83bkDOcx8/FWKeeCugesSK5omM9KOXPW4na+dbJwfOOcLZYfDry3umSGqCfI+rlVPbBbqa9XsmBJbZIyccS0jq0Us2yO/QvAhXJQhfZCDrEhVxlyFx4TXBVZ4nP4wadpZ4dNNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
+ (2603:10b6:518:1::d3c) by DM4PR11MB8226.namprd11.prod.outlook.com
+ (2603:10b6:8:182::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.19; Wed, 11 Feb
+ 2026 14:20:08 +0000
+Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
+ ([fe80::1340:c8fe:cf51:9aa2]) by PH3PPF9E162731D.namprd11.prod.outlook.com
+ ([fe80::1340:c8fe:cf51:9aa2%2]) with mapi id 15.20.9587.017; Wed, 11 Feb 2026
+ 14:20:06 +0000
+Date: Wed, 11 Feb 2026 08:23:28 -0600
+From: Ira Weiny <ira.weiny@intel.com>
+To: John Groves <john@jagalactic.com>, John Groves <John@groves.net>, "Miklos
+ Szeredi" <miklos@szeredi.hu>, Dan Williams <dan.j.williams@intel.com>, "Bernd
+ Schubert" <bschubert@ddn.com>, Alison Schofield <alison.schofield@intel.com>
+CC: John Groves <jgroves@micron.com>, John Groves <jgroves@fastmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, "Jan
+ Kara" <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>, "David
+ Hildenbrand" <david@kernel.org>, Christian Brauner <brauner@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi
+	<shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, Josef Bacik
+	<josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, James Morse
+	<james.morse@arm.com>, Fuad Tabba <tabba@google.com>, Sean Christopherson
+	<seanjc@google.com>, Shivank Garg <shivankg@amd.com>, Ackerley Tng
+	<ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, Aravind Ramesh
+	<arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>,
+	"venkataravis@micron.com" <venkataravis@micron.com>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, John Groves
+	<john@groves.net>
+Subject: Re: [PATCH V7 01/19] dax: move dax_pgoff_to_phys from [drivers/dax/]
+ device.c to bus.c
+Message-ID: <698c90e02cec2_bcb8910026@iweiny-mobl.notmuch>
+References: <0100019bd33b1f66-b835e86a-e8ae-443f-a474-02db88f7e6db-000000@email.amazonses.com>
+ <20260118223100.92299-1-john@jagalactic.com>
+ <0100019bd33bc40a-12130f8b-289d-4a38-ab4b-7dfedf614d34-000000@email.amazonses.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <0100019bd33bc40a-12130f8b-289d-4a38-ab4b-7dfedf614d34-000000@email.amazonses.com>
+X-ClientProxiedBy: BYAPR05CA0108.namprd05.prod.outlook.com
+ (2603:10b6:a03:e0::49) To PH3PPF9E162731D.namprd11.prod.outlook.com
+ (2603:10b6:518:1::d3c)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.19
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH3PPF9E162731D:EE_|DM4PR11MB8226:EE_
+X-MS-Office365-Filtering-Correlation-Id: f7322fd3-c440-42bf-dacd-08de6978a7cc
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?z71uKl46P4UzzsuggDFY2Iug111w5EJa1Evd+BlvapuVkMXuljpY8bsMUlOR?=
+ =?us-ascii?Q?QGyMwIGPozJahPDGIJ+n9ETGMNUa61XVrW57f6Tp6U+Do11gGXBT/lNPZXvi?=
+ =?us-ascii?Q?RwbmTIqTpv5eP+oiXWV+HMd/Mv30pLdQ8hBfIqC9qymgs/wArQLvWN7KoOjP?=
+ =?us-ascii?Q?eQsMJkeUCcsVj3Zw+2wunimGp1TuhFH/VwHbAa1WiVItOo+0duWqXnXOIipx?=
+ =?us-ascii?Q?1wSb5miB9ySWmviv42qj507Y9qNHV2hCh/m6PJ0q/xacskDEVBFqMC+hDLKa?=
+ =?us-ascii?Q?QvTUVSgOkO4hnXa9U0VdpOKWcilu9rJFtwKoMV6BWa2TdwVswuaWgrNR62yc?=
+ =?us-ascii?Q?TNrHdZZSgHBqQkM1Acqzdl4ws+gMKnJsXAz7j51gO44/LGjTG6alZ87aMRNj?=
+ =?us-ascii?Q?7e3Yk0e2dJNO+0QS8kyambdRWQhecFHPVN3VsDYaFL/5le+ts8aqYMZO4ZGg?=
+ =?us-ascii?Q?pu2ru3zJrPpBRPdCo952sCnFJTjT04lrZu3sgWosJnez/zlok0JJioXUo4At?=
+ =?us-ascii?Q?Ax69sTqvqPlGENdgc1v9/xGLUmTkInP/x/Hll1F3gVTI1T43mTnus7GtqBKt?=
+ =?us-ascii?Q?LrBVt/ENBykpKkcsJzfoHZgpfDKpf9eJWd5j9lhGnLWfMFdWTsIfaIhPoFQd?=
+ =?us-ascii?Q?4Te7koYH6piLwiL0cDCBfUIYvdVbQNmcCk1dfypp85/1pYSGYvLbPTZIL7Yu?=
+ =?us-ascii?Q?joOFZzNMpDjKDGGa/Yq5K+EkwMm8EH+xWW0pbsdGiBY3f77xyVa289RNk9Xy?=
+ =?us-ascii?Q?4bXIkYcKTLeC55XYnan6DKo/KB8cSSx0HoIf1wNHqkuA9kUjUh5XI+QCZ/Qw?=
+ =?us-ascii?Q?yfUWz9sPgVt/SpbxZNRpJ2HKXq046sBe9u7ysHyP1nUu2OC+98AdXAaEPIbJ?=
+ =?us-ascii?Q?yX0J5hdwPSWhtzGfaV0NFQ7ofxa0GsTMHeaIbpvTZvg7vMTGUxtpxE9zSHNK?=
+ =?us-ascii?Q?+zIiTUHrw/iCyOuJde7oDT8FFnhYHWEjrto8ubWZ/oQwuyvXcaxf5oP4LUbe?=
+ =?us-ascii?Q?BGe97H4RtiVJdx08ArG4l6cJHTj2lRN9pI5Z4QFh6/PG7IRJpM6+b1aaNIE2?=
+ =?us-ascii?Q?jqGjbliINUjrGKr7MAhnyLZDLu27+poJnFzSG5dtCkOmQb9PlpC/4AYtlMgV?=
+ =?us-ascii?Q?2cGBIqRRKKjq9UsNy5Y5i5A6NVrjLrPUr/mx7pUooZvNYMsHx+8u8pHbWsH/?=
+ =?us-ascii?Q?ovrdfe71UAQp4YQK6+IFORXg4AivZ6IOiKuKY4DCkwLo6tGi9qm7duRuM5J0?=
+ =?us-ascii?Q?5dgFhiKzLdSL10eG8xTOmzwn+z5hEYXyKBa552PKB8sKT3wXV3SxNPI7qp90?=
+ =?us-ascii?Q?grqAqJdnBhpGFHMoxXskv/i7Ctf2lUavF10mFmodRuaZ38X2Q8TbiLD0VeD1?=
+ =?us-ascii?Q?RDLmIvuDdzDQbimN0bHdXljbuGvl4qNDbxj469tp8z7C+RLOIIB35QsEgpVN?=
+ =?us-ascii?Q?T+f/3jbi6mKTtHyVCA1UEHPTwHnYalH5SuK1pgea9VlSdbZkXkWDMkwo5OVJ?=
+ =?us-ascii?Q?WVQM3VOtws6ROSGb+fYQwvexXuT+PjYg04ggYiU1JwQENt0+I7w5PNbS60up?=
+ =?us-ascii?Q?nlila+yPxwgu/UxzeYU=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH3PPF9E162731D.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?18Gbje4njs0AYqN6RPJS6vZUWbq0b6DnwD2lxgA69StRGOUSXUY5Kkxc2rBR?=
+ =?us-ascii?Q?6ED48i08WaPYQWrSs3PIgDMaYbFj1Zhf3IDl3we1pAw6c9IoFz6tjPDeEeFZ?=
+ =?us-ascii?Q?DJvC7swstztZDQEmmGizCRAi/4hV1p7MH1/mZuM6vgH9xBBQXXvfNkAvYcRC?=
+ =?us-ascii?Q?StZqPuuC8P0esEqRdK7ukqtLwbXuBfn0fEzFQprMqsIcE4rXREc1YXrFPKtK?=
+ =?us-ascii?Q?T0eOV9w9SHNstDPNOUs54xu4Yj43mo0Gg2OeVqggXwaPV3Jk2vFcpXNz5KZM?=
+ =?us-ascii?Q?xdQtNlrJ3cVKVMrFX0fPniafi5fLbpUjmDsGVdsEQXU0YrUBstjNUJjwn5L3?=
+ =?us-ascii?Q?UzRYW3iJ/Od3QLb1W9pgYFH0AnLvVv1KqdFSa6A3zhhq1Q0XgEpm6kap/f2r?=
+ =?us-ascii?Q?p9GgtSJAPpaFaKDh8mvJp4vkbqUZFgV2bqWIAtLTP/7GHAmMXRaA9bNGHqPR?=
+ =?us-ascii?Q?8b2imQDNMMhfWePM/Iaf9iUT+eVdD/oMcACgSrGfzmbqQIS0VMdpuVZxY6DS?=
+ =?us-ascii?Q?BZF9aJgYjAkjGEkeEpy26O+kDduptpUmKMPhx4Tq22qXOgeVKB5tsZN6r5eM?=
+ =?us-ascii?Q?B7hZ91QQyXDzYIWy8Q1sNH9aBATwSg5GDjGjXyILAWMD0ucgYTnEC3JtDg9l?=
+ =?us-ascii?Q?mvuQ7TMK7pYST3qHb24HoNnOMWUQq9+WFWn0CBnrigEPZpkPht+dEdBmuGYK?=
+ =?us-ascii?Q?QXHc+rw7HkxjF0XfsX/0Shp6xODkArezfDtCHXglcb+1xSIcfDf+u+suUaRL?=
+ =?us-ascii?Q?a7fJ6KXFhRJAp6Ygn2Cw87N4SS6M/etKYJSHmcB9rescjtk+o0/IHcbvm+rf?=
+ =?us-ascii?Q?Z007By7DWHOBD1OK4OsmmGvTKIoYs3pAkdVITMxDXqJ/RWwm21jKza6BLXY9?=
+ =?us-ascii?Q?Ar66QOEpVRGWzGxFi5fAPzq1+jMS0trjSYLna3KjBK5wc1ftZV3q/juSC1KU?=
+ =?us-ascii?Q?CXtNR2JWegpsDstweTMfwKFRSgWBxu+dg1J1Tg3ewhwl5aw2i6AxRehmm7hC?=
+ =?us-ascii?Q?BnIdRobQ2XdbzwSdUe0z/aIq9xaMZMcfI2vZfw5CHBMW2uwV8CHrI41F5r1f?=
+ =?us-ascii?Q?DIFAgMn/HIUCdBj8hXz4S0nFNAud/iNgN+3G+OpcnFqL2aLv/352UAtOSrOK?=
+ =?us-ascii?Q?CwL3AaH/0bQFakZlrYMutRtowcl0DlZch2SKULVrgVpZ9Dy0iFJM9BZhxiEq?=
+ =?us-ascii?Q?GybpfqUxd0G2j6fCv6DZoP6KEhEz7verMMNnpWaKd2IoFzJu0kkmlNqFgzp2?=
+ =?us-ascii?Q?78p7Y7U2vs6qkNQMoVpSSpUiCoXi0+jdaPibYH8jhKjgIwrVvZBooVYEe2/E?=
+ =?us-ascii?Q?QLv2/9DZNz5i9WMcUkfN7Cs3P2QMbkIclMnlOuCWwsKneTRgjwDt0uwrJZgx?=
+ =?us-ascii?Q?CbgfCZF/eWmMVeZ4NoqzgAUwZtn7guMTy6yd0jsWVF6Qup4u1bA4W1xYDoEH?=
+ =?us-ascii?Q?7scF8x3Iop+ydFNYesAsJPiKXliQ/P7CGrAAOfWsMHwbDZ0rzgWT9HD4qEwi?=
+ =?us-ascii?Q?ulNXbiAaRwKMAY6zpHC4vHl/j0+M+lRhDuRNpL7xyFA0o0OUMfYYYwz5dKoE?=
+ =?us-ascii?Q?ZbQd7hlZxI0ZRgWoEgGt0dkWzx20OWfAq4uWZZXvWRtGq2NcwPvHunD3Uc/W?=
+ =?us-ascii?Q?+m0T08szyllYRGv67E3Pg3tgBzBunTfygDKeLj4SRRa+Pfj4uUHQQWZRnUfA?=
+ =?us-ascii?Q?OOeBDjnZNa7g86Tu9dIB8BakHvBVwsv1ojF9flI7O6d7YfcXkZjKrmuKSjo1?=
+ =?us-ascii?Q?RmMpkpj+7g=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7322fd3-c440-42bf-dacd-08de6978a7cc
+X-MS-Exchange-CrossTenant-AuthSource: PH3PPF9E162731D.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2026 14:20:06.7007
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 23aBkCfqt8IDPzbybX8/JKGUU4xxY21v0s4WpFFOuPnAglX8pQGOP3WcDXw7Fam+X0BMH4KwYPIvdvnZ7HVC8g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB8226
+X-OriginatorOrg: intel.com
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+John Groves wrote:
+> From: John Groves <john@groves.net>
+> 
+> This function will be used by both device.c and fsdev.c, but both are
+> loadable modules. Moving to bus.c puts it in core and makes it available
+> to both.
+> 
+> No code changes - just relocated.
+> 
+> Signed-off-by: John Groves <john@groves.net>
 
-[ Upstream commit ab26d9c85554c4ff1d95ca8341522880ed9219d6 ]
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-Passing IRQF_ONESHOT ensures that the interrupt source is masked until
-the secondary (threaded) handler is done. If only a primary handler is
-used then the flag makes no sense because the interrupt can not fire
-(again) while its handler is running.
-The flag also disallows force-threading of the primary handler and the
-irq-core will warn about this.
-
-The intention here was probably not allowing forced-threading.
-
-Replace IRQF_ONESHOT with IRQF_NO_THREAD.
-
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-LLM Generated explanations, may be completely bogus:
-
-Now I have gathered all the information I need for a thorough analysis.
-Let me compile my findings.
-
----
-
-## Complete Analysis: `perf/cxlpmu: Replace IRQF_ONESHOT with
-IRQF_NO_THREAD`
-
-### 1. COMMIT MESSAGE ANALYSIS
-
-The commit, authored by Sebastian Andrzej Siewior
-(bigeasy@linutronix.de) — one of the PREEMPT_RT core maintainers —
-replaces `IRQF_ONESHOT` with `IRQF_NO_THREAD` in the CXL PMU driver's
-interrupt registration. The commit message explains:
-
-- `IRQF_ONESHOT` ensures the interrupt source is masked until the
-  threaded (secondary) handler finishes
-- This driver only has a **primary** handler (`cxl_pmu_irq`) and no
-  threaded handler
-- Therefore `IRQF_ONESHOT` makes no sense here — the interrupt can't
-  fire while its hardirq handler is running anyway
-- The flag also **disables force-threading** of the primary handler
-- The "irq-core will warn about this" (via lockdep assertions)
-- The **intended** semantics were to prevent forced-threading, so
-  `IRQF_NO_THREAD` is the correct replacement
-
-### 2. CODE CHANGE ANALYSIS
-
-The change is a **single flag swap** on one line:
-
-```880:881:drivers/perf/cxl_pmu.c
-        rc = devm_request_irq(dev, irq, cxl_pmu_irq, IRQF_SHARED |
-IRQF_ONESHOT,
-                              irq_name, info);
-```
-
-becomes:
-
-```880:881:drivers/perf/cxl_pmu.c
-        rc = devm_request_irq(dev, irq, cxl_pmu_irq, IRQF_SHARED |
-IRQF_NO_THREAD,
-                              irq_name, info);
-```
-
-#### What `IRQF_ONESHOT` does here (incorrectly):
-Looking at `irq_setup_forced_threading()` in `kernel/irq/manage.c`:
-
-```1291:1296:kernel/irq/manage.c
-static int irq_setup_forced_threading(struct irqaction *new)
-{
-        if (!force_irqthreads())
-                return 0;
-        if (new->flags & (IRQF_NO_THREAD | IRQF_PERCPU | IRQF_ONESHOT))
-                return 0;
-```
-
-Both `IRQF_NO_THREAD` and `IRQF_ONESHOT` cause
-`irq_setup_forced_threading()` to bail out early, preventing the
-interrupt from being force-threaded. However, `IRQF_ONESHOT` has an
-**additional side effect**: it tells the IRQ core to mask the interrupt
-line until a threaded handler completes. Since there is no threaded
-handler here, this masking behavior is semantically wrong.
-
-#### Why `IRQF_NO_THREAD` is the correct flag:
-The `cxl_pmu_irq` handler is a PMU overflow interrupt handler that:
-1. Reads the overflow register via `readq()`
-2. Processes each overflowed counter via `__cxl_pmu_read()`
-3. Clears the overflow status via `writeq()`
-
-This handler interacts with perf core internals. As the arm-ccn PMU fix
-(commit `0811ef7e2f54`) established, **PMU interrupt handlers must not
-be force-threaded** because the perf core relies on strict CPU affinity
-and interrupt disabling for mutual exclusion. Force-threading a PMU
-interrupt handler would break these synchronization guarantees.
-
-#### The actual bugs:
-
-**Bug 1 — PREEMPT_RT / `threadirqs` warning:** When the kernel is booted
-with `threadirqs` command-line parameter or PREEMPT_RT is enabled, the
-IRQ core's lockdep infrastructure marks handlers as `hardirq_threaded`
-if they can be force-threaded. In `kernel/irq/handle.c`:
-
-```199:201:kernel/irq/handle.c
-                if (irq_settings_can_thread(desc) &&
-                    !(action->flags & (IRQF_NO_THREAD | IRQF_PERCPU |
-IRQF_ONESHOT)))
-                        lockdep_hardirq_threaded();
-```
-
-Because `IRQF_ONESHOT` is already set, this particular path won't
-trigger the threaded annotation, but the **masking semantics** of
-ONESHOT are incorrect for a primary-only handler. In the `IRQF_ONESHOT`
-path, the IRQ core does:
-
-```1726:1727:kernel/irq/manage.c
-                if (new->flags & IRQF_ONESHOT)
-                        desc->istate |= IRQS_ONESHOT;
-```
-
-This causes the interrupt line to be masked during the handler and
-unmask logic depends on `desc->threads_oneshot` — but there's no thread
-to clear this mask, so it depends on the
-`cond_unmask_irq`/`cond_unmask_eoi_irq` fallback path.
-
-**Bug 2 — IRQF_SHARED conflict potential:** The interrupt uses
-`IRQF_SHARED`. When sharing interrupts, all handlers on the same line
-must agree on `IRQF_ONESHOT`. If another driver on the shared line
-doesn't use `IRQF_ONESHOT`, `request_threaded_irq()` will fail with
-`-EINVAL` at the mismatch check:
-
-```1606:1607:kernel/irq/manage.c
-                else if ((old->flags ^ new->flags) & IRQF_ONESHOT)
-                        goto mismatch;
-```
-
-This is a real failure mode for shared interrupts — CXL PMU's incorrect
-use of `IRQF_ONESHOT` could prevent other handlers from sharing the same
-IRQ line.
-
-### 3. CLASSIFICATION
-
-This is a **bug fix** — it corrects incorrect IRQ flag usage that:
-1. Applies semantically wrong masking behavior (ONESHOT without a
-   thread)
-2. Can trigger warnings/assertions under PREEMPT_RT or `threadirqs`
-3. Could cause shared IRQ registration failures
-4. Prevents force-threading in the wrong way (the intention is correct,
-   but the mechanism is wrong)
-
-### 4. SCOPE AND RISK ASSESSMENT
-
-- **Lines changed:** 1 line (single flag change)
-- **Files touched:** 1 (`drivers/perf/cxl_pmu.c`)
-- **Complexity:** Minimal — straightforward flag replacement
-- **Risk:** Extremely low. `IRQF_NO_THREAD` is the semantically correct
-  flag for the intended purpose. The interrupt handler is a hardirq-only
-  handler that performs only register I/O and atomic operations — it
-  should never be threaded.
-- **Subsystem:** CXL PMU performance monitoring driver (PCI-based)
-
-### 5. USER IMPACT
-
-- **PREEMPT_RT users:** On PREEMPT_RT kernels, `IRQF_ONESHOT` without a
-  thread handler causes the interrupt line to be masked with incorrect
-  oneshot semantics. This could lead to lockdep warnings or subtle
-  interrupt masking issues.
-- **Shared IRQ users:** CXL devices sharing PCI MSI/MSI-X vectors with
-  other devices could experience IRQ registration failures due to
-  ONESHOT flag mismatch.
-- **General users:** The CXL PMU driver is used for performance
-  monitoring on CXL 3.0 memory devices — an increasingly important
-  hardware platform for servers and data centers.
-
-### 6. STABILITY INDICATORS
-
-- **Author:** Sebastian Andrzej Siewior — PREEMPT_RT core maintainer,
-  expert on IRQ threading
-- **Reviewer:** Jonathan Cameron — CXL maintainer
-- **Signed-off-by:** Will Deacon — ARM architecture and perf subsystem
-  maintainer
-- **Pattern:** This is the same fix Sebastian has applied to multiple
-  drivers (i2c-exynos5, i2c-hix5hd2) with proven track record
-- **Precedent:** The arm-ccn PMU used exactly this fix
-  (`IRQF_NO_THREAD`) for the same class of issue
-
-### 7. DEPENDENCY CHECK
-
-- No dependencies on other commits
-- The driver exists in stable kernels 6.6.y and later (introduced in
-  v6.5-rc1)
-- The change is self-contained — just a flag change in
-  `devm_request_irq()`
-
-### 8. CONCLUSION
-
-This is a small, surgical, well-understood bug fix that corrects
-incorrect IRQ flag usage in the CXL PMU driver. The `IRQF_ONESHOT` flag
-was semantically wrong for a primary-only interrupt handler and could
-cause:
-- Incorrect interrupt line masking behavior
-- Shared IRQ registration failures
-- Issues on PREEMPT_RT kernels
-
-The replacement with `IRQF_NO_THREAD` correctly expresses the intended
-behavior (prevent force-threading of this PMU interrupt handler) without
-the incorrect side effects. The fix is trivial, low-risk, authored by a
-world-class IRQ threading expert, and reviewed by CXL and ARM
-maintainers.
-
-**YES**
-
- drivers/perf/cxl_pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index d094030220bf2..68a54d97d2a8a 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -877,7 +877,7 @@ static int cxl_pmu_probe(struct device *dev)
- 	if (!irq_name)
- 		return -ENOMEM;
- 
--	rc = devm_request_irq(dev, irq, cxl_pmu_irq, IRQF_SHARED | IRQF_ONESHOT,
-+	rc = devm_request_irq(dev, irq, cxl_pmu_irq, IRQF_SHARED | IRQF_NO_THREAD,
- 			      irq_name, info);
- 	if (rc)
- 		return rc;
--- 
-2.51.0
-
+[snip]
