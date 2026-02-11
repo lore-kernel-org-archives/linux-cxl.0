@@ -1,52 +1,84 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA03927AC4C;
-	Wed, 11 Feb 2026 14:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B1E1A5B9E
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Feb 2026 15:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770820303; cv=none; b=ux9GgmGzzqQsCyvJAcfO997OXzp231L415+fQIxu947m6EHUOxOdN1K4OXb78w9HsAV5FnRae9ImzQ2FDPpsXst9g9eKdFGyU/2CUJG4dFZYl1HbYz2VVEOm0fkpQO2EhsYfE0UuTY+qusMblyag7GoTgslAYmG2chgEP0ENYwA=
+	t=1770822288; cv=none; b=Bqhy37NEg38sYvLws8qxpB3ZEC1v1aePqSbwiVUa5dsIfgnhC93z1o9BiEncWu95HsU3MIsiLtyE3npYdMrfbqVcf+Vs63ib+585BqxW3vObmD9Hqrvv43RVrJeNBgkDIAsp0Lbrt4+bU3KYDM7ylLdWYW0RxiUx/xpbxDTD9LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770820303; c=relaxed/simple;
-	bh=OBwfBDOtRxOg+R3bb3Yi0+4D8h91T4cO9da6oMYbtC8=;
+	s=arc-20240116; t=1770822288; c=relaxed/simple;
+	bh=9ynvU7rPH2rQeYJAmZiupmPoo+/r92CyhmXEOK8Dw4I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZctLl344uSuhYO2BWxn8z7mj6W7SYTz43L0Q1C8TuSUo78kfnbqZUYmFDw7ZmFhEkNjMe06bXlNPTMz3IlPJ11MrJM153lFD+9LxHZ0qpE8HY1gxbblYhwD6Ap6IwOAwc7eqs215Sa/VIEL4ka4BYKsbp5F3hKqXKSBimc88CUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 487E758C7D;
-	Wed, 11 Feb 2026 14:31:30 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf10.hostedemail.com (Postfix) with ESMTPA id E436132;
-	Wed, 11 Feb 2026 14:31:19 +0000 (UTC)
-Date: Wed, 11 Feb 2026 08:31:18 -0600
-From: John Groves <John@groves.net>
+	 Content-Type:Content-Disposition:In-Reply-To; b=WFiwLRBWFhKIApOdxPXYfrC/86m/Yy2EdFaxlOQslKADfAXDjAkmIPWJortIuYS02Uvb3GXC4IHElsmTvZsKBmf/IabhlN6FuY6iN5vfX2hVnkiJ/9Ef7MyNFXHmhHUE8IvWN2l2wcI4h7Zob7+58QZNoVxnYSwmGjzcJNvkasA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=FfQvdvjD; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="FfQvdvjD"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-8c70b5594f4so112074085a.1
+        for <linux-cxl@vger.kernel.org>; Wed, 11 Feb 2026 07:04:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1770822286; x=1771427086; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ieMJcsroJBLEY8F2stYQNl2yn5l58s+hOlrdnQy3zyw=;
+        b=FfQvdvjDtK1RGomSUzD5n/KBkm71nk3TTToQJBvGwv+9zITPWeRYuzdmV0NtO4mce7
+         Wi1LEEeMWxetz7gd1d76vBwNpO/yIDKdmy6jGpAK7yi9wG8kjDRF5MHr09YNSstt7Rkv
+         r2O4QCBxlgAzGBfpDk9kKysFyI+cLgOIz+/yEpxgB/KDWvL580QiBv/LwfEd6O5/Zqnk
+         apEsxLVbkBOs6xXHT40MPoNMJvl9FpyROjkDjafMKRfwu4ShpoxJtLTblkjfx4BEc4tt
+         CitnjrvQfJ6QxYTnQTuQDJut3F72zBG1Q2zcvtY6EYorElPo3Uc3m0tyVdC2YnZSC/3L
+         sCZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770822286; x=1771427086;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ieMJcsroJBLEY8F2stYQNl2yn5l58s+hOlrdnQy3zyw=;
+        b=PT+4PfuKk0vRawu21m/5xbx0LMyveP3qcwjKWxOdCLrCzfOgjMOw5EYFutGcFo7kCt
+         mmtMgGGzILNRqWPYTJtUPlhU/G/LeYMIvKNR/gT8mLPoQWhfRIuLZozLYH+Z2cNx4AwY
+         bs17ZpHFLSY1FASpPbvVZnf6tANC5wAG+2ROPUuZmyiS60MpwxaTkX3+Lg3bdfTOuxbS
+         EkzfF1vKKfflC1ZPtGl/jtrJ0X1xE+ljBfVg4AUEweNXKHC6uQJKYM0rQN2ESaawSqMu
+         jbqLVujtwe6hp8X8rzxza3KH2WGR7HNtobshT+5nMYYqkNbgLMXCcuBviZdh6NQXN4Nw
+         wQPw==
+X-Forwarded-Encrypted: i=1; AJvYcCWSw1Pg4wV6Ff3kbqt/3CHPZcNJJ/5s++IkCMt9wIazGPTsUC5oYVZRk3gIFq9xLGkYqXY6xTSay2Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYqRz/uqCB563nYlYYTODeROn/7Zn5ldXYAledMowqAmOdo4ak
+	DHAXNI35x0420kLjjoxQZG9Ni8zdI/b+e2H+YkERvY8aqHvgkKDVR+xYMJQI2x70L18=
+X-Gm-Gg: AZuq6aIA4z/PWAw3WUtPNNvZZDf8TCsKOuLKyTPnmVZzJATmugSWab5eDV1nSk9OfQ4
+	B2pAUuLXYy4/AbqIp61J11LE7jnUUhyAVkEAVGVhZiOhtkuI78UfS052Jrl6MiUjmEWH5mI+B5f
+	FaNoyI1TNXOlP8M9gVV6Ypy6X/LytbeMm+VmoqcmxgXy5nXbDHdoEc8Ofhe8YrULbVKIm5ShPtA
+	JcPJsHTnQifhe5kEHbHaq7Bbm7ZCQXn7H3WkryC/cLAOiycbfWxcT8fw3gqS3/7QiliBymcGelP
+	Qr9rsXf92QQXvmIPw1UDMpRS84qlRkiefWtEn4BVycJLZaYQlRlc6rn0AgDI3Jx/nizVe760Oqh
+	r6zsn/xc64JqYTSwwuYWTuLNpUTWQUT8ERRaWFrBChIWgjXikP4XAsQ6mSqgS8cQjmDPd7l0NMl
+	S4W9h60SEebLrPY6lzGupd+GQMXYx+Uv5iUEXvzfhemwJ3rjK49M0GYK9u9X9iIavdTdvzGLfSh
+	NLJ/uL4ew==
+X-Received: by 2002:a05:620a:470a:b0:8c7:1316:b0eb with SMTP id af79cd13be357-8cb1eeeb94bmr743050485a.8.1770822285705;
+        Wed, 11 Feb 2026 07:04:45 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cb2b2346dasm125436385a.48.2026.02.11.07.04.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Feb 2026 07:04:44 -0800 (PST)
+Date: Wed, 11 Feb 2026 10:04:41 -0500
+From: Gregory Price <gourry@gourry.net>
 To: Alison Schofield <alison.schofield@intel.com>
-Cc: John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	John Groves <jgroves@micron.com>, John Groves <jgroves@fastmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH V4 0/2] ndctl: Add daxctl support for the new "famfs"
- mode of devdax
-Message-ID: <aYyRBy5rBjTLSJQ6@groves.net>
-References: <0100019bd33a16b4-6da11a99-d883-4cfc-b561-97973253bc4a-000000@email.amazonses.com>
- <20260118223548.92823-1-john@jagalactic.com>
- <0100019bd34040d9-0b6e9e4c-ecd4-464d-ab9d-88a251215442-000000@email.amazonses.com>
- <aYpp_ShERlNvt4T_@aschofie-mobl2.lan>
+Cc: Vishal Aslot <vaslot@nvidia.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Li Ming <ming.li@zohomail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"open list:COMPUTE EXPRESS LINK (CXL)" <linux-cxl@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/2] cxl_test: enable zero sized decoders under hb0
+Message-ID: <aYyaicFMzfsd8eSq@gourry-fedora-PF4VCD3F>
+References: <20251015024019.1189713-1-vaslot@nvidia.com>
+ <20251015024019.1189713-2-vaslot@nvidia.com>
+ <aPXgLp1Em6wKlx0t@aschofie-mobl2.lan>
+ <aPZE3Spas-IvHmfd@gourry-fedora-PF4VCD3F>
+ <aPaNzeGqUHf6gGIu@aschofie-mobl2.lan>
+ <aPeSqjqU6BH9gvcw@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -55,77 +87,27 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aYpp_ShERlNvt4T_@aschofie-mobl2.lan>
-X-Stat-Signature: bz6hwcxgps4omkj531ayzua3gwddyxmw
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: E436132
-X-Session-Marker: 6A6F686E4067726F7665732E6E6574
-X-Session-ID: U2FsdGVkX1+hsuGVOzSoRmhG2uC2cMlG3mLFFMoUNX0=
-X-HE-Tag: 1770820279-956788
-X-HE-Meta: U2FsdGVkX1/48tJ62rULMSB9K53/6K/1QehgF1yV9X74ahT4djs79150XoNYT9tLpZ+HpETC+WgoG/+rw+TvfcABVoQERj6emgHLLpO26wBrInhGj5bdC+1T3lVP5KKb48pfb5KTtBc4olxUi9NSS0f2cwo6BDjr7I+hNooZsy+yDYFZXSLnXpR4rhHRWP20kd0CybImaKcTcuGAyfNUOnGOf0zhGiWPTrZaHa6JUWPefJSpVNnXEqOnmez5o1oFvNv9Rw0AAk+ks7ICUARcoqPLcRLY/Cu+kwdgj9cl10LYHIzyPtmLXg8+r0g7hit4FTehOcoMnU8c9Wl0MzfpfskKIegTIeZhgBQvHA5ufkzFwTUpHk8A61I28+ymnJ1K
+In-Reply-To: <aPeSqjqU6BH9gvcw@gourry-fedora-PF4VCD3F>
 
-On 26/02/09 03:13PM, Alison Schofield wrote:
-> On Sun, Jan 18, 2026 at 10:36:02PM +0000, John Groves wrote:
-> > From: John Groves <john@groves.net>
-> > 
-> > No change since V2 - re-sending due to technical challenges.
-> > 
-> > No change since V1 - reposting as V2 to keep this with the related
-> > kernel (dax and fuse) patches and libfuse patches.
-> > 
-> > This short series adds support and tests to daxctl for famfs[1]. The
-> > famfs kernel patch series, under the same "compound cover" as this
-> > series, adds a new 'fsdev_dax' driver for devdax. When that driver
-> > is bound (instead of device_dax), the device is in 'famfs' mode rather
-> > than 'devdax' mode.
-> > 
+On Tue, Oct 21, 2025 at 10:03:22AM -0400, Gregory Price wrote:
 > 
-> Hi John, 
+> Re commit order - Vishal said they do post-lock order
+> https://lore.kernel.org/linux-cxl/aOP3Kr3jHLWOydRp@gourry-fedora-PF4VCD3F/
 > 
-> I fired this all up and ran it. It got through all but it's last test
-> case before failing.
+> Post-lock order
+> [programmable] [zero-lock] [zero-lock] ... [zero-lock]
 > 
-> Three things appended:
-> 1) the diff I applied to daxctl-famfs.sh to run the test
-> 2) testlog.txt output of the test
-> 3) RIP: 0010:is_free_buddy_page+0x39/0x60 kernel log
+> Pre-lock order:
+> [zero-lock] [zero-lock] ... [zero-lock] [programmable]
 > 
+> My reading of the spec suggests that Post-lock ordering is *not legal*,
+> and would suggest the software has deviated from the spec - which does
+> not allow for size-zero decoders to ignore commit order.
 > 
-> 1) Diff I applied to execute the test:
-> 
-> diff --git a/test/daxctl-famfs.sh b/test/daxctl-famfs.sh
-> index 12fbfefa3144..a4e8d87b9762 100755
-> --- a/test/daxctl-famfs.sh
-> +++ b/test/daxctl-famfs.sh
-> @@ -9,6 +9,17 @@ rc=77
->  
->  trap 'cleanup $LINENO' ERR
->  
-> +# Use cxl-test module to get the DAX device of the CXL auto region,
-> +# which also makes this test NON destructive.
-> +#
-> +# The $CXL list below is a delay because find_daxdev() was not
-> +# finding the DAX region without it.
-> +#
-> +modprobe -r cxl-test
-> +modprobe cxl-test
-> +$CXL list
-> +
-> +
->  daxdev=""
->  original_mode=""
 
-[snip]
+Revisiting this - it might be reasonable to allow post-lock ordering if
+*all* decoders in beyond the programmable one are zero-locked.
 
-Thank you Allison! I'm still working to reproduce the BUG you found (and 
-cover this in my jenkins automation), but I think I have the fix already: 
-when existing famfs mode (unbinding drivers/dax/fsdev.c), a
-fsdev_clear_folio_state() call is needed. I've added that for v8 as a devm
-action...
+Seems ok? Thoughts?
 
-I'm not 100% up to speed on how to use the test infrastructure, and may
-ping you with questions later...
-
-Regards,
-John
-
+~Gregory
