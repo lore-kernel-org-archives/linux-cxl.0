@@ -1,179 +1,140 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747F7313552;
-	Wed, 11 Feb 2026 18:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4881A0B15
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Feb 2026 19:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770834431; cv=none; b=Zl3a1wP6W6qLZyOp+x9YJL/HPwQ/z1+4vx8qdZ6KN4WmDG0qr04UR8WsSC/6tzeR1yocOEMUwp2ne7W+cWMUt1jkcXs0yPlJ+zRR9nU4kAy2vklVmBiJMceKcCoDyQs5zwfI7NLkO79ocayQoP5ST5+BtrjhNut0fheLjQYaO6s=
+	t=1770837753; cv=none; b=VsZuUMd3DKgeU0gSrGGxZ5LlAdK88bIHrMo7GyoIoIjGPJVE9txAk3Nr9f7IY3ZK6nU2ldNxtQL5qH8FXbaIAHkpjF+x1guKUN8LXd8PjEvwrbqT9WshaRmolKKCvVC17cUdphvHcQp0kSKC0aXNoERvIGg9wP3zezGRKoOCJbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770834431; c=relaxed/simple;
-	bh=DA75yQkDj/Z2tNiQKbeA1QvuEo25JclknMPaMA/g9jI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CGQuJCq5cLG+rikkW46mZvO80tncFRinJowFnLZ4K7HrlqltWutA2CQvp3L2NiaFyAIrl1lqS7tlZPIB3V8o4CerOiNwWS9l+yo68up0n4Hzr4X1tP1TjsFHGvlXPyToTXnQ+JnZK+Ois/JgjRA8TwhkMw6rkmlBJyoIGFn1kEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 953B559211;
-	Wed, 11 Feb 2026 18:26:58 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf03.hostedemail.com (Postfix) with ESMTPA id DE05260010;
-	Wed, 11 Feb 2026 18:26:48 +0000 (UTC)
-Date: Wed, 11 Feb 2026 12:26:47 -0600
-From: John Groves <john@groves.net>
-To: Joanne Koong <joannelkoong@gmail.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	John Groves <jgroves@fastmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH V5 09/19] famfs_fuse: magic.h: Add famfs magic numbers
-Message-ID: <aYy_c3Wh6RbJflvs@groves.net>
-References: <20260116125831.953.compound@groves.net>
- <20260116185911.1005-10-john@jagalactic.com>
- <20260116185911.1005-1-john@jagalactic.com>
- <0100019bc831c807-bc90f4c0-d112-4c14-be08-d16839a7bcb6-000000@email.amazonses.com>
- <aXoarMgfbL6rh6xi@groves.net>
- <CAJnrk1bvomN7_MZOO8hwf85qLztZys4LfCjfcs_ZUq8+YBk5Wg@mail.gmail.com>
- <0100019c05067b3b-b9ab2963-ace5-481f-8969-c11f80a74423-000000@email.amazonses.com>
- <CAJnrk1Y6HayeS-C3sOEOc_CgaS_K=SedZNpHASAXAkgZyp3Xsg@mail.gmail.com>
+	s=arc-20240116; t=1770837753; c=relaxed/simple;
+	bh=9Te3tVF8EbHZIAqK6h0Dj+48LpQELfN2CsN7MrfrtdM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qc8zRBJnn++uYEVgOp9EcLil8MOOfkx2volJmsikKlvRCDnncGI2cAHJ6d7FmGOJJ9JIV2YHmn1ZjKWof1Zxr9WM5lWVq5TzIFPT9Fudvw23keAHe7K4XMMgRIUxZHcXbURm+aE7fzAr9G97im+fXCqp/0gOMGUABIJQ0I292Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=r+3G/rjr; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="r+3G/rjr"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-8c6aaf3cd62so242920985a.3
+        for <linux-cxl@vger.kernel.org>; Wed, 11 Feb 2026 11:22:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1770837751; x=1771442551; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Qrkm0xHZfdh5m7EEO8P+Gmz0n24Ql08TrziBspIQ1s=;
+        b=r+3G/rjraVUl1n7Gu3qVXxhvre7+yZas/DRVhtaItTQ8QE1bRlbAoWuqHHqtHrj/YF
+         l9IM/+lkwNfnPLnKXpD8DkfCKjDctWMysZ8uCew9fBI7TSucAbXaKQDeFpLZZ3wOBSlg
+         s0NA18O6IbanEX9QjnISWrtA9g5R6cDCNU8YcrAlxcwK9sk3bXs1naFFknI607IlIFXp
+         EiwWyKDK6x2vZUYj/tkfVDaTWt6UCtWVX+zJ12oTnxfntDyoGuYEeQnl7VgH5ufZDqYm
+         aXeF2jr/y6Y6aAlWATI969B3TmQxb4TJn8y2c8MiCyytbOXOmmG8/cgns+oXIKXA7xhb
+         Dofg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770837751; x=1771442551;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2Qrkm0xHZfdh5m7EEO8P+Gmz0n24Ql08TrziBspIQ1s=;
+        b=QKkthz4CHZWeHPk/ZZrZaLZkOQHklGeSLgxqGh7P1QgoIuKE7HcOkT60lj0N1l+NaW
+         i66pjNtaHuJJgbtIZBWC3LinSPpAXI3xuuS2fGuWxwI3+H+Lv3c5ZOQRl3wt1N1LCnJS
+         sT3sEcbQEVps0pU0j5K+KJVvwjo6r4/JCV5cnb/ioJyDyHj8fVFTjYV5Mt/tSY0/9YNx
+         vp34TXSkQk5ClGEAcMbmT0NbI15CRqskFeNbYa99D0YVLwAAiBN9pXXyAKORnyzMiyw4
+         P7VSGePuYJSEoWBNFsXy9//kXWU+lNbGSE2M/rkQVA2A7hBfBwyUNXn6PTjf3E3xIxzY
+         COEg==
+X-Gm-Message-State: AOJu0YzP43Kiv1YGByBjvvjpDBhPmKCC8bBdW4Bfy8ybIRhkPogeWCNh
+	uBb7RnRr6B0DWY4edp3E/oqFmBa6JSt7VkPurx58wvsFIrVAoZh3U1DplYcYsAc7O+AqzXGXpAZ
+	dgV4m
+X-Gm-Gg: AZuq6aKrmUtYkf4DekZoppSUBeOFV8CnX8EZ3jnLjrBFlGS5nH2CCO8mnXLbzPkCrhj
+	HXNpKKMOttbz4qr5jXsoz9LbkdHBLUdAGDACSNYLgtX9PciIvo6L+9UpRUTQnIK7A/8u0hwMiQ8
+	HznmTA+Wl3ZLYW0mttMcQJjjo/8kMCVsHGW7vIGY/7FjaNJGEumEKkMy3pugnAfm+mPZ8xaGpjA
+	QiWeA0WSiEsoE/nFD3Gmw6xnYsCC6sC4wFjI+ukuyfpRxtvMdx997zNZYzprsKJ3SvUK+Gj9TVX
+	Mt/YC9si4MdtnhpYmCyLeRofxBoWpt7N4/dZjgxd7GYkzCSBWK5hLkfrb+lOn+53q7BFDOXZ7uR
+	rnfAj3EmArVtmCKtJk24xQ4BIwItO8FGmEXwt9Zv8v35jAf3xxhkIXCUIyy9B61SsmfY+ILnl5+
+	VwepcuoHz8m1eZ7dILMOZ205S/BfVo3n1MQofugMawrnrx1+CatGTkEaX9LPJK7u7hxIsEQTNE5
+	v7AmUSEn6BZrRNdCpiNHp+tzA==
+X-Received: by 2002:a05:620a:40d0:b0:8c9:fb14:1ab8 with SMTP id af79cd13be357-8cb3303e2cbmr49394085a.8.1770837750605;
+        Wed, 11 Feb 2026 11:22:30 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8971cdb19b6sm21897376d6.40.2026.02.11.11.22.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Feb 2026 11:22:29 -0800 (PST)
+From: Gregory Price <gourry@gourry.net>
+To: linux-cxl@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Subject: [PATCH v3] cxl/memdev: fix deadlock in cxl_memdev_autoremove() on attach failure
+Date: Wed, 11 Feb 2026 14:22:27 -0500
+Message-ID: <20260211192228.2148713-1-gourry@gourry.net>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJnrk1Y6HayeS-C3sOEOc_CgaS_K=SedZNpHASAXAkgZyp3Xsg@mail.gmail.com>
-X-Stat-Signature: mszmxb1niyybftty888ayigfeewrxk5w
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: DE05260010
-X-Session-Marker: 6A6F686E4067726F7665732E6E6574
-X-Session-ID: U2FsdGVkX1+KXnzzANVxzbiGeTDo5d+sSgfjIkuJfLM=
-X-HE-Tag: 1770834408-954054
-X-HE-Meta: U2FsdGVkX1+7bvXhDhZh4y00uxQaD/gK/MyNUYhY/zCkfqrEwHZLdWxm68ym0hX2uElF0aWR0ZllEr9HXUvIpxr8eTG+soW3z5OCPe9+awVkjGXTDYdJQ/xjeO3619mAysxgE+e9wNmSh75m3d2KYJrRUs4yoxY3gktZ3P49RQJI/g9mo56oFQahnU4YpJk7jWSqezC4s5hI1dey4atCG/eYyw8PxoPpAA3qHrapHVqGa8LK0Uo/VE3l7taAmp11vyWefYpdB4+XSJDFZ5KrnKAnpqYgaaBjNuua16PBQCbPiI+yZOoeGlewPsB+Qjg6TNbNXDqZuvVLAHOsf2/9Odc/in2wB7D7i4V/DocTXH5lQjIUfeCaR4wlOjfMEGJHHX5lC4IB+/3NpUdp50DTyQmWf9WKQ5ft8PnsnB0Jo4OiMfcBQLzNQp2g4P1nKFeGubd3IZl6786MDF1/5WWDjA==
 
-On 26/01/28 10:54AM, Joanne Koong wrote:
-> On Wed, Jan 28, 2026 at 6:33 AM John Groves <john@jagalactic.com> wrote:
-> >
-> > On 26/01/27 01:55PM, Joanne Koong wrote:
-> > > On Fri, Jan 16, 2026 at 11:52 AM John Groves <john@jagalactic.com> wrote:
-> > > >
-> > > > From: John Groves <john@groves.net>
-> > > >
-> > > > Famfs distinguishes between its on-media and in-memory superblocks. This
-> > > > reserves the numbers, but they are only used by the user space
-> > > > components of famfs.
-> > > >
-> > > > Signed-off-by: John Groves <john@groves.net>
-> > > > ---
-> > > >  include/uapi/linux/magic.h | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >
-> > > > diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
-> > > > index 638ca21b7a90..712b097bf2a5 100644
-> > > > --- a/include/uapi/linux/magic.h
-> > > > +++ b/include/uapi/linux/magic.h
-> > > > @@ -38,6 +38,8 @@
-> > > >  #define OVERLAYFS_SUPER_MAGIC  0x794c7630
-> > > >  #define FUSE_SUPER_MAGIC       0x65735546
-> > > >  #define BCACHEFS_SUPER_MAGIC   0xca451a4e
-> > > > +#define FAMFS_SUPER_MAGIC      0x87b282ff
-> > > > +#define FAMFS_STATFS_MAGIC      0x87b282fd
-> > >
-> > > Could you explain why this needs to be added to uapi? If they are used
-> > > only by userspace, does it make more sense for these constants to live
-> > > in the userspace code instead?
-> > >
-> > > Thanks,
-> > > Joanne
-> >
-> > Hi Joanne,
-> >
-> > I think this is where it belongs; one function of uapi/linux/magic.h is as
-> > a "registry" of magic numbers, which do need to be unique because they're
-> > the first step of recognizing what is on a device.
-> >
-> > This is a well-established ecosystem with block devices. Blkid / libblkid
-> > scan block devices and keep a database of what devices exist and what
-> > appears to be on them. When one adds a magic number that applies to block
-> > devices, one sends a patch to util-linux (where blkid lives) to add ability
-> > to recognize your media format (which IIRC includes the second recognition
-> > step - if the magic # matches, verify the superblock checksum).
-> >
-> > For character dax devices the ecosystem isn't really there yet, but the
-> > pattern is the same - and still makes sense.
-> >
-> > Also, 2 years ago in the very first public famfs patch set (pre-fuse),
-> > Christian Brauner told me they belong here [1].
+cxl_memdev_autoremove() takes device_lock(&cxlmd->dev) via guard(device)
+and then calls cxl_memdev_unregister() when the attach callback was
+provided but cxl_mem_probe() failed to bind.
 
-Apologies for not responding to this sooner.
+cxl_memdev_unregister() calls
+  cdev_device_del()
+    device_del()
+      bus_remove_device()
+        device_release_driver()
 
-First, FAMFS_STATFS_MAGIC will be dropped for sure. At one point I thought
-I'd be able to override FUSE_SUPER_MAGIC in the output from statfs, but
-that's not currently true. I've had to take a different approach in the 
-famfs user space for definitively identifying whether a path falls in a 
-famfs file system...
+This path is reached when a driver uses the @attach parameter to
+devm_cxl_add_memdev() and the CXL topology fails to enumerate (e.g.
+DVSEC range registers decode outside platform-defined CXL ranges,
+causing the endpoint port probe to fail).
 
-> 
-> Hi John,
-> 
-> Thanks for the context. I was under the impression include/uapi/ was
-> only for constants the kernel exposes as part of its ABI. If I'm
-> understanding it correctly, FAMFS_SUPER_MAGIC is used purely as an
-> on-disk format marker for identification by userspace tools. Why
-> doesn't having the magic number defined in the equivalent of
-> blkid/libblkid for dax devices and defined/used in the famfs
-> server-side implementation suffice for that purpose? I'm asking in
-> part because it seems like a slippery slope to me where any fuse
-> server could make the same argument in the future that their magic
-> constant should be added to uapi.
+Add cxl_memdev_attach_failed() to set the scope of the check correctly.
 
-Right now there is no equivalent of util-linux/blkid for character device
-superblock identification. Therefore this seems better than nothing to
-record FAMFS_SUPER_MAGIC, since keeping it unique is a public good and
-it is an actual on-media magic number. Although it's not currently used
-on block devices, there is a very real possibility of famfs on block
-devices in the future (pmem is block, and fs-dax, supporting that with
-famfs would be straightforward, and there are problems for which it's a
-good solution...)
+Fixes: 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
+Signed-off-by: Gregory Price <gourry@gourry.net>
+---
+ drivers/cxl/core/memdev.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-There doesn't seem to be an explicit maintainer of magic.h; if somebody
-can speak for the intent, or the rules etc., that would be helpful. I don't
-want to abandon this based on general uapi guidelines alone. Is there
-anybody in particular who should make a ruling here?
-
-I don't really see a slippery slope; this isn't an arbitrary constant, 
-it's an actual on-media magic number. 
-
-> 
-> For Christian's comment, my understanding was that with the pre-fuse
-> patchset, it did need to be in uapi because the kernel explicitly set
-> sb->s_magic to it, but with famfs now going through fuse, sb->s_magic
-> uses FUSE_SUPER_MAGIC.
-
-Even in the before-times with standalone famfs, on media (in-memory)
-metadata was not accessed directly from the kernel module. So that didn't 
-change with the fuse port (though it's possible that detail of the prior
-implementation wasn't broadly understood...).
-
-Would anybody like to weigh in to swing consensus here?
-
-Thanks,
-John
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index af3d0cc65138..25ca4443e4f7 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -1089,10 +1089,8 @@ static int cxlmd_add(struct cxl_memdev *cxlmd, struct cxl_dev_state *cxlds)
+ DEFINE_FREE(put_cxlmd, struct cxl_memdev *,
+ 	    if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
+ 
+-static struct cxl_memdev *cxl_memdev_autoremove(struct cxl_memdev *cxlmd)
++static bool cxl_memdev_attach_failed(struct cxl_memdev *cxlmd)
+ {
+-	int rc;
+-
+ 	/*
+ 	 * If @attach is provided fail if the driver is not attached upon
+ 	 * return. Note that failure here could be the result of a race to
+@@ -1100,7 +1098,14 @@ static struct cxl_memdev *cxl_memdev_autoremove(struct cxl_memdev *cxlmd)
+ 	 * succeeded and then cxl_mem unbound before the lock is acquired.
+ 	 */
+ 	guard(device)(&cxlmd->dev);
+-	if (cxlmd->attach && !cxlmd->dev.driver) {
++	return (cxlmd->attach && !cxlmd->dev.driver);
++}
++
++static struct cxl_memdev *cxl_memdev_autoremove(struct cxl_memdev *cxlmd)
++{
++	int rc;
++
++	if (cxl_memdev_attach_failed(cxlmd)) {
+ 		cxl_memdev_unregister(cxlmd);
+ 		return ERR_PTR(-ENXIO);
+ 	}
+-- 
+2.53.0
 
