@@ -1,77 +1,65 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68512951B3
-	for <linux-cxl@vger.kernel.org>; Wed, 11 Feb 2026 15:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330A92BDC1C;
+	Wed, 11 Feb 2026 15:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770822969; cv=none; b=eaISePCQP6D6IpLXHtaSLe3Mtzmnjf4FpblUd3eQEwqvfS/331Q8Mu3TlK81htk2eN1Tj+QekPfUkeOJoGWJpe7q7kXzpPhKfGUSg0tJoEMRDwxxuOGzDZix1EJWdiMNH0lcMhCHV/PKg9Q9mV6YEjNCjhKabx97ByZS/qRaKqQ=
+	t=1770823411; cv=none; b=LIKnNJuX7Km5t0J587WC6q9mrUKIU62sU0WxK0Iem18lBhVDOIjj3/tg6LQmCf6u4LcHHxm0SmbugN68yLIPWukoR313ly1X8xmulDyL2sdv2Hq6bG54r/pezeALiKBY/yLb3NDAWO8hQcb6TSt0CARsfKTvtfeOMhZzMQMzkCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770822969; c=relaxed/simple;
-	bh=Y5dQk5BCO0oicRdymA3ybVZWSVfSTw8FG/SUsw6RP/I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=khNPaxDUDi/O6b1Qz4W1RlNAi/IDC3QRok9I3feVxlHF1kAaB90jCbcBCF0CTAwTZq/2hXOMw4RjMfDV8JKS+6qvmDbG7wEUHZFkErrqZZi8GX48dfrj/W3GjLSE2HylRHsdJP1q/UoTFGdDtGaC0vrlIDp0gWlrVose2hA+q9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=uEGfPTf3; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1770823411; c=relaxed/simple;
+	bh=8GKR5up6VqUGWg79EckUAlM++p8psGHHDeQJZ7gMZRg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RnC9OPh3GZ2CADZa/ud7boTcHJy4CMKTwzJVPppt7xsXJM4SEqt8QZCpLhPoMek8GcpsXt/F0TYFDMaqiuIvWK9WllJTt8DTTDDOCPAj1bzhJM6Pcq6YNFAUJB+aFMqnea5NVJfpiHYYgXRVFFZNcer4WLuK7sT0wQiCnIrYAio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=GCLbBzEz; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="uEGfPTf3"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-8c5384ee23fso584411385a.1
-        for <linux-cxl@vger.kernel.org>; Wed, 11 Feb 2026 07:16:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1770822966; x=1771427766; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TUOtkVcbwA3CulfDewyA7u2Auwst15RXQbVOCJbTEV4=;
-        b=uEGfPTf3UYkgA6f9XgBGVm27bILVWDTRjx+NzAed55r47MQDhkSRH12lrGOLfi3nZt
-         fBhXhE5gOwSQk62P5lMM6T2lJZ84SRKABWSp/SnHxo7NGEHVlT/VSHCd5aO2IOq3JLAf
-         ohDr3yrvO8MMPRPYKoLvPo1aJ4SnlRKpqjlF71zv1nQYPl/1mGprtaP6Vbgdm1wXfTSM
-         kCsJV042gZBqDNDM+7auNlIFpG83Wv3C1H4IT1ALV+qsWBP3/KfMhyRq5EonQIHHSXjC
-         NMJszsBbVGJY8R11jRQubKrE4i15EWrKHWSAS19SvrO03T/NVFCmETMsfx2m2jwppRC7
-         QGZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770822966; x=1771427766;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TUOtkVcbwA3CulfDewyA7u2Auwst15RXQbVOCJbTEV4=;
-        b=Gbe8a8vsOR3S+ChJHr0yv1BePLqtIEhXC3FyHNPxLmwLF6R2H/B06PKkmp4d3jUwk2
-         sWzHMmxJcJ3+60NUWDxk/vvG3EhbQdAjBqXkUZcyzVJCt+zByWARzTMXSF28lqruitm9
-         CIpuLDCcXVxTeoexp3b8JKq2cLqlIBi60n5xF20zYyfvEIPThIe2bHHuzQp3AfVnFviC
-         usZBLGwNa8TpOU2rbD2OP6QwhqFL0e/RsT1FulAJPVy4aFtCqUxeKwEftpg8cnljP3VK
-         wbLOO7YJ0nQsY/Dm6KRAHWmgAVSKR7oQMS5AC4ud0pzV25eXcevX8oWM5SwZ2RbqSMUk
-         V4HA==
-X-Gm-Message-State: AOJu0Yz/1n5h55iKPim+4yzKnhYG9zGUTCGcNJJlhZd2lmYgLdc6OlcO
-	mEEX0IR2UGo9y5tmy0ngDgreDbx94LRlAmiSPsFACZ1hjWoDZmFp/iU/XaJQp8No1dVxsFxTf3f
-	McpC0
-X-Gm-Gg: AZuq6aKHWPJPB8VtDtZvoq+oP5+noVK3IRg4B/OCY3ZrScU+W7W3OnmHV0jYCCH7cY6
-	0g+WdXS9GZhJVjkBIVQikhtuDRAqY2OW2fTCzFx30m1g1NNg3eht3jA+4kDfurtuxUs97SJ5ORo
-	KBg8GbGurKWQWbg2XctoAa8Wbmov/9j6jxy/yKegH6jbst4FqyH5Q3UUGNXCkrF4XNQtTOCtZG6
-	163zaP8oEnR5C6RfahAZ1j9iD/jqOriIc2qiw8euF88zb7ubC75CZ+K92c+Xa4EL2+ttmt4RFsE
-	lW/d0GI8gHfm4SNtRb1d8rpO19jBWxh76jcNytISdC8Qe2PVavmZ534TGEADcgy5IGL/3XsBo5Z
-	RIU4Ny8CAQ3Ukv9FJ4nNq1eLxdyM8DXNQSMqcHhRPAvyVPioElnVjmvnFCph7wHNRBnlXf3C/gX
-	eKlHiOiQdhmhfEeM4IQL5fYYKcVrlPYIlD+ZsP6xsNCUz6YVeMXRR3od3Cm9WSmsqEkw9j1zSXd
-	/uuNWLkbmNAugo=
-X-Received: by 2002:a05:620a:7084:b0:8ca:2e39:4b62 with SMTP id af79cd13be357-8cb2807ac64mr419055285a.73.1770822966347;
-        Wed, 11 Feb 2026 07:16:06 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cb2b0ce72fsm149707185a.13.2026.02.11.07.16.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Feb 2026 07:16:05 -0800 (PST)
-From: Gregory Price <gourry@gourry.net>
-To: linux-cxl@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="GCLbBzEz"
+Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id 6FB4BB2584;
+	Wed, 11 Feb 2026 15:23:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1770823402;
+	bh=f7pIPpettLlSQoHWOm1p7EtiixS7ksKzCY9xzpT+daI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=GCLbBzEzvvGcC4OQoQw1NLDJPOjkUC9s49rkNbr3+0EBeQ/ebAoZISWZYAH26SABB
+	 zNgugPQOVRqWsGvT2sCt0sPPbgBF2aDPBgr01xMqS6Uh+tQbaiPKT67mNAQfDjt5I8
+	 kIlZIYZbLAZM/q6GyZeSwLgnIcp+EujkPX5YdpEo=
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Zi Yan <ziy@nvidia.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>
 Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
 	kernel-team@meta.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Subject: [PATCH v2] cxl/memdev: fix deadlock in cxl_memdev_autoremove() on attach failure
-Date: Wed, 11 Feb 2026 10:16:01 -0500
-Message-ID: <20260211151601.2082584-1-gourry@gourry.net>
+	Dmitry Ilvokhin <d@ilvokhin.com>
+Subject: [PATCH 1/4] mm: introduce zone lock wrappers
+Date: Wed, 11 Feb 2026 15:22:13 +0000
+Message-ID: <3826dd6dc55a9c5721ec3de85f019764a6cf3222.1770821420.git.d@ilvokhin.com>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <cover.1770821420.git.d@ilvokhin.com>
+References: <cover.1770821420.git.d@ilvokhin.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -80,59 +68,80 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cxl_memdev_autoremove() takes device_lock(&cxlmd->dev) via guard(device)
-and then calls cxl_memdev_unregister() when the attach callback was
-provided but cxl_mem_probe() failed to bind.
+Add thin wrappers around zone lock acquire/release operations. This
+prepares the code for future tracepoint instrumentation without
+modifying individual call sites.
 
-cxl_memdev_unregister() calls
-  cdev_device_del()
-    device_del()
-      bus_remove_device()
-        device_release_driver()
+Centralizing zone lock operations behind wrappers allows future
+instrumentation or debugging hooks to be added without touching
+all users.
 
-This path is reached when a driver uses the @attach parameter to
-devm_cxl_add_memdev() and the CXL topology fails to enumerate (e.g.
-DVSEC range registers decode outside platform-defined CXL ranges,
-causing the endpoint port probe to fail).
+No functional change intended. The wrappers are introduced in
+preparation for subsequent patches and are not yet used.
 
-Fixes: 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
-Signed-off-by: Gregory Price <gourry@gourry.net>
+Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
 ---
- drivers/cxl/core/memdev.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ MAINTAINERS               |  1 +
+ include/linux/zone_lock.h | 38 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
+ create mode 100644 include/linux/zone_lock.h
 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index af3d0cc65138..281acb3b9abe 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -1089,10 +1089,8 @@ static int cxlmd_add(struct cxl_memdev *cxlmd, struct cxl_dev_state *cxlds)
- DEFINE_FREE(put_cxlmd, struct cxl_memdev *,
- 	    if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
- 
--static struct cxl_memdev *cxl_memdev_autoremove(struct cxl_memdev *cxlmd)
-+static bool cxl_memdev_did_attach(struct cxl_memdev *cxlmd)
- {
--	int rc;
--
- 	/*
- 	 * If @attach is provided fail if the driver is not attached upon
- 	 * return. Note that failure here could be the result of a race to
-@@ -1100,7 +1098,14 @@ static struct cxl_memdev *cxl_memdev_autoremove(struct cxl_memdev *cxlmd)
- 	 * succeeded and then cxl_mem unbound before the lock is acquired.
- 	 */
- 	guard(device)(&cxlmd->dev);
--	if (cxlmd->attach && !cxlmd->dev.driver) {
-+	return (cxlmd->attach && !cxlmd->dev.driver);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b4088f7290be..680c9ae02d7e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16498,6 +16498,7 @@ F:	include/linux/pgtable.h
+ F:	include/linux/ptdump.h
+ F:	include/linux/vmpressure.h
+ F:	include/linux/vmstat.h
++F:	include/linux/zone_lock.h
+ F:	kernel/fork.c
+ F:	mm/Kconfig
+ F:	mm/debug.c
+diff --git a/include/linux/zone_lock.h b/include/linux/zone_lock.h
+new file mode 100644
+index 000000000000..c531e26280e6
+--- /dev/null
++++ b/include/linux/zone_lock.h
+@@ -0,0 +1,38 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_ZONE_LOCK_H
++#define _LINUX_ZONE_LOCK_H
++
++#include <linux/mmzone.h>
++#include <linux/spinlock.h>
++
++static inline void zone_lock_init(struct zone *zone)
++{
++	spin_lock_init(&zone->lock);
 +}
 +
-+static struct cxl_memdev *cxl_memdev_autoremove(struct cxl_memdev *cxlmd)
-+{
-+	int rc;
++#define zone_lock_irqsave(zone, flags)				\
++do {								\
++	spin_lock_irqsave(&(zone)->lock, flags);		\
++} while (0)
 +
-+	if (cxl_memdev_did_attach(cxlmd)) {
- 		cxl_memdev_unregister(cxlmd);
- 		return ERR_PTR(-ENXIO);
- 	}
++#define zone_trylock_irqsave(zone, flags)			\
++({								\
++	spin_trylock_irqsave(&(zone)->lock, flags);		\
++})
++
++static inline void zone_unlock_irqrestore(struct zone *zone, unsigned long flags)
++{
++	spin_unlock_irqrestore(&zone->lock, flags);
++}
++
++static inline void zone_lock_irq(struct zone *zone)
++{
++	spin_lock_irq(&zone->lock);
++}
++
++static inline void zone_unlock_irq(struct zone *zone)
++{
++	spin_unlock_irq(&zone->lock);
++}
++
++#endif /* _LINUX_ZONE_LOCK_H */
 -- 
 2.47.3
 
