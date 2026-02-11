@@ -1,174 +1,91 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A60FC324B1C;
-	Wed, 11 Feb 2026 10:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770806027; cv=none; b=GZQfbBiadi8jwOVZ2sopjUSbH2pdro8D5ZEBzOE2P0iwF0C499sQ8FIWHINc+a1CXsvC5EXeM7xHfQ+zN9C/wvRY3FszqvO0wQIseIMlBmUg7PWN771oCw7LzmtLXX60+z7JBLysXAJwNgviHLN3E+VZMYbXylcdJVRLWDeEoeQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770806027; c=relaxed/simple;
-	bh=3H6ElMaFash6DA7CLjt3lGG5qn/56rrByQeE5s2cp+M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=c6H57hAYu7XcNed+G5cYPcX92hCMW/WW/hDLuuhf1+Uc1bAT5gsQWFWHCMm3Pif9bFHyAxib2v9euKFljXVeg8bmp1IR0oavCkLt9OIPM5M+gYdIAuxEA5ZAbmNqnmLiZKQmynfxQxP9q/O/8c3jbtuFIJ/jqDnfVyAIQwKQqbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwA3Ppr2WoxpguYHBw--.323S2;
-	Wed, 11 Feb 2026 18:33:26 +0800 (CST)
-Received: from localhost.localdomain (unknown [218.76.62.144])
-	by mail (Coremail) with SMTP id AQAAfwDXMO7yWoxptIgaAA--.31566S3;
-	Wed, 11 Feb 2026 18:33:23 +0800 (CST)
-From: Cui Chao <cuichao1753@phytium.com.cn>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Wang Yinfeng <wangyinfeng@phytium.com.cn>,
-	dan.j.williams@intel.com,
-	Pratyush Brahma <pratyush.brahma@oss.qualcomm.com>,
-	Gregory Price <gourry@gourry.net>,
-	David Hildenbrand <david@kernel.org>,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	qemu-devel@nongnu.org,
-	Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: [PATCH v3 1/1] mm: numa_memblks: Identify the accurate NUMA ID of CFMW
-Date: Wed, 11 Feb 2026 18:33:20 +0800
-Message-Id: <20260211103320.2064211-2-cuichao1753@phytium.com.cn>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20260211103320.2064211-1-cuichao1753@phytium.com.cn>
-References: <20260211103320.2064211-1-cuichao1753@phytium.com.cn>
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6713C281525;
+	Wed, 11 Feb 2026 11:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770810611; cv=pass; b=iSeuO+UEy7jhpv7q7RbSJlSbZI1HSGqkZPzjcI1zXzTe6zCzxsvYae2tPjNolhpKBR2T8w1gI9ykWd/GV19neRlPEz01CDYXQCSewbev23Sb14xDwIZFfVUgUQDLnwvvamXZKuv4MTSV8s51ZXrV8CQyenzYeQ5Vdt26+iExr3k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770810611; c=relaxed/simple;
+	bh=xaysXfZ121u+cHr29mBJUmbld0EDFJk7ZMcYI1XAj7o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CDzAWfJV7TcylpxKR0xJSZwa3RdF9kkQTrNP2k91WdR4yYOzfjVNbCT1QXjpmKM90xU+MCVsNNFN53IbzL4OwpikUPFrx5+xNKTbzoEqTh/Bx5ASCduEz3aj2+LIFYNMKquBLnFjSkpCfpYkcnSHbAhdxy+Em/Slaxc0QtVZdwo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Q37JNKVt; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Q37JNKVt"
+ARC-Seal: i=1; a=rsa-sha256; t=1770810594; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=gJWI32xSXYzPbvVfYhWFNA5smOyy/zmvcBeN32bPWKnq82I149eddVmi9PMGVXqbSUIIvVqnYjFSbdttc/W5Vo1gJgXaB5fCjyFzg08pMq/9cfMHZEmUmnOUq2pAWyoTLxVSwaL3sjqTRY3i02o3U4vn3A51k29ZGD1itJo7QtY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1770810594; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=xaysXfZ121u+cHr29mBJUmbld0EDFJk7ZMcYI1XAj7o=; 
+	b=agk69Q4Y3lgAcwdLRmae/Pg6M/UffgsBpPUpNqXRaVS6FpNZEPPD8QyrThiMR4rom9uiUGNnvXbvdTHD3IQzafGjTKLI0oysIwx53JT/7Oop+g+ofDv8Sax8o5HVsfEzM4Nw8i0x8QJiPk7F8z4FRG8eM39OpdfxYsAX0Not4No=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770810594;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=xaysXfZ121u+cHr29mBJUmbld0EDFJk7ZMcYI1XAj7o=;
+	b=Q37JNKVt40a0TUkWIEdnMD3DQMl6H6jFuakxD9V2OVoA5J6gTuay4mmTl4fhVo2C
+	Bdz1KSmPYUlRtEX59M24bDHZG8CBMqxWvIZrp3V5NQHNPaCRD2K14MdC5GovD+nKtJ9
+	omIhMmTa4qrWg4mhAKl7kbXDAYti1cvyGiI56oes=
+Received: by mx.zohomail.com with SMTPS id 1770810591238295.5868504651447;
+	Wed, 11 Feb 2026 03:49:51 -0800 (PST)
+Message-ID: <f2cba5b0-9f87-4787-b2fb-6a4756abad99@zohomail.com>
+Date: Wed, 11 Feb 2026 19:49:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] Fix port enumeration failure
+To: Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com, dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260207133512.306128-1-ming.li@zohomail.com>
+ <aYqgQ3QgaedMhNny@aschofie-mobl2.lan>
+ <4eefdae3-125e-4c80-9968-8d20648f33bd@zohomail.com>
+ <6cc9d925-0aea-4104-b58c-984f455b157f@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <6cc9d925-0aea-4104-b58c-984f455b157f@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwDXMO7yWoxptIgaAA--.31566S3
-X-CM-SenderInfo: pfxlux1drrlkut6sx5pwlxzhxfrphubq/1tbiAQADAGmLkQQCTwAEs8
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=cuichao175
-	3@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxKw4kGF4fJw17Kr1kXw1rtFb_yoW7GFy7pa
-	1IqrZYgF4kGry7GF4kZa1DJr1Sv3ZakF43GFW7CrnxuFn0gr18ur4Sqw1YvFWkGryfC3Wr
-	XF4Dtw1Yv3WDZaDanT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+Feedback-ID: rr08011228e687024fb06d9ebad2454fb5000002a456dd00930f424f7a5edf43113672f4c52c9eba634698eb51:zu08011227a0eb23bfc66184bf790e619b00006f9a97d7125b8265169e0ed679b8ebc0623b688334b76be61d:rf0801122d2157d3b8ce4c7a82c69cc2fe0000e0330558e60a3421b662275881a37a0088201be0674269c17e265e977a92d4:ZohoMail
+X-ZohoMailClient: External
 
-In some physical memory layout designs, the address space of CFMW (CXL
-Fixed Memory Window) resides between multiple segments of system memory
-belonging to the same NUMA node. In numa_cleanup_meminfo, these multiple
-segments of system memory are merged into a larger numa_memblk. When
-identifying which NUMA node the CFMW belongs to, it may be incorrectly
-assigned to the NUMA node of the merged system memory.
 
-When a CXL RAM region is created in userspace, the memory capacity of
-the newly created region is not added to the CFMW-dedicated NUMA node.
-Instead, it is accumulated into an existing NUMA node (e.g., NUMA0
-containing RAM). This makes it impossible to clearly distinguish
-between the two types of memory, which may affect memory-tiering
-applications.
+在 2026/2/10 23:00, Dave Jiang 写道:
+>
+> On 2/10/26 4:56 AM, Li Ming wrote:
+>> 在 2026/2/10 11:04, Alison Schofield 写道:
+>>> On Sat, Feb 07, 2026 at 09:35:10PM +0800, Li Ming wrote:
+>>>> I ran CXL mock testing with next branch, I usually hit the following
+>>>> call trace.
+>>> Hi Ming,
+>>> I started hitting this after you first posted, however it takes me a
+>>> long time to hit it. Do you have a method to reproduce that is better
+>>> than running on repeat as I do? Thanks!
+>>> -- Alison
+>>>
+>>> snip
+>> Hi Alison,
+>>
+>> My environment is a VM with 2 CPUs, maybe you can try it.
+>>
+>> I use a script to run "meson test --suite=cxl" again and again in the VM.
+> The other day Alison showed me the --repeat=N parameter for meson test. You can use that instead of script unless it does something special.
+>
+Good to know that, thanks. I tried it and it can also hit the issue.
 
-Example memory layout:
 
-Physical address space:
-    0x00000000 - 0x1FFFFFFF  System RAM (node0)
-    0x20000000 - 0x2FFFFFFF  CXL CFMW (node2)
-    0x40000000 - 0x5FFFFFFF  System RAM (node0)
-    0x60000000 - 0x7FFFFFFF  System RAM (node1)
-
-After numa_cleanup_meminfo, the two node0 segments are merged into one:
-    0x00000000 - 0x5FFFFFFF  System RAM (node0) // CFMW is inside the range
-    0x60000000 - 0x7FFFFFFF  System RAM (node1)
-
-So the CFMW (0x20000000-0x2FFFFFFF) will be incorrectly assigned to node0.
-
-To address this scenario, accurately identifying the correct NUMA node
-can be achieved by checking whether the region belongs to both
-numa_meminfo and numa_reserved_meminfo.
-
-1. Issue Impact and Backport Recommendation:
-
-This patch fixes an issue observed in QEMU emulation where, during the
-dynamic creation of a CXL RAM region, the memory capacity is not assigned
-to the correct CFMW-dedicated NUMA node. While hardware platforms could
-potentially have such memory configurations, we are not currently aware
-of any such hardware. This issue leads to:
-
-    Failure of the memory tiering mechanism: The system is designed to
-    treat System RAM as fast memory and CXL memory as slow memory. For
-    performance optimization, hot pages may be migrated to fast memory
-    while cold pages are migrated to slow memory. The system uses NUMA
-    IDs as an index to identify different tiers of memory. If the NUMA
-    ID for CXL memory is calculated incorrectly and its capacity is
-    aggregated into the NUMA node containing System RAM (i.e., the node
-    for fast memory), the CXL memory cannot be correctly identified. It
-    may be misjudged as fast memory, thereby affecting performance
-    optimization strategies.
-
-    Inability to distinguish between System RAM and CXL memory even for
-    simple manual binding: Tools like |numactl|and other NUMA policy
-    utilities cannot differentiate between System RAM and CXL memory,
-    making it impossible to perform reasonable memory binding.
-
-    Inaccurate system reporting: Tools like |numactl -H|would display
-    memory capacities that do not match the actual physical hardware
-    layout, impacting operations and monitoring.
-
-This issue affects all users utilizing the CXL RAM functionality who
-rely on memory tiering or NUMA-aware scheduling.
-
-Therefore, I recommend backporting this patch to all stable kernel
-series that support dynamic CXL region creation.
-
-2. Why a Kernel Update is Recommended Over a Firmware Update:
-
-In the scenario of dynamic CXL region creation, the association between
-the memory's HPA range and its corresponding NUMA node is established
-when the kernel driver performs the commit operation. This is a runtime,
-OS-managed operation where the platform firmware cannot intervene to
-provide a fix.
-
-Considering factors like hardware platform architecture, memory
-resources, and others, such a physical address layout can indeed occur.
-This patch does not introduce risk; it simply correctly handles the
-NUMA node assignment for CXL RAM regions within such a physical address
-layout.
-
-Thus, I believe a kernel fix is necessary.
-
-Fixes: 779dd20cfb56 ("cxl/region: Add region creation support")
-Signed-off-by: Cui Chao <cuichao1753@phytium.com.cn>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
----
- mm/numa_memblks.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
-index 5b009a9cd8b4..0892d532908c 100644
---- a/mm/numa_memblks.c
-+++ b/mm/numa_memblks.c
-@@ -568,15 +568,16 @@ static int meminfo_to_nid(struct numa_meminfo *mi, u64 start)
- int phys_to_target_node(u64 start)
- {
- 	int nid = meminfo_to_nid(&numa_meminfo, start);
-+	int reserved_nid = meminfo_to_nid(&numa_reserved_meminfo, start);
- 
- 	/*
--	 * Prefer online nodes, but if reserved memory might be
--	 * hot-added continue the search with reserved ranges.
-+	 * Prefer online nodes unless the address is also described
-+	 * by reserved ranges, in which case use the reserved nid.
- 	 */
--	if (nid != NUMA_NO_NODE)
-+	if (nid != NUMA_NO_NODE && reserved_nid == NUMA_NO_NODE)
- 		return nid;
- 
--	return meminfo_to_nid(&numa_reserved_meminfo, start);
-+	return reserved_nid;
- }
- EXPORT_SYMBOL_GPL(phys_to_target_node);
- 
--- 
-2.33.0
+Ming
 
