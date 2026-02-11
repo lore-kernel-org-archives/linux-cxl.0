@@ -1,252 +1,186 @@
-Received: from mail-qv1-f68.google.com (mail-qv1-f68.google.com [209.85.219.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012064.outbound.protection.outlook.com [52.101.48.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48332366DA2
-	for <linux-cxl@vger.kernel.org>; Wed, 11 Feb 2026 21:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.68
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770846899; cv=none; b=LyVVBBMNeilC5CZ6SpFQaN19KC+/KT+Ylu+jCoofrV9ED78QKlTs3s9nyL3E1BnT7zEq4AfnGn6ki8ziyMlcmNfXoempWgzLyWIhDzu9vmetWkK3gfnEOoaePrBewqzmVVcGCWmbNRtOBp+gYa+Wk4vwCYt3TYI+kRBpOGN03Io=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770846899; c=relaxed/simple;
-	bh=KjN2am+60FyqL6Aw8fMJuBlsvtKu+gSJQr1kSgmtVPQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=roM14rV54C0vOV4YwTZMSu3s6l9ijwKUXTMiSR9K5pd3M2t0oIvR52klr/UdGAYsPoARNfg/NIAdkG5EHDGqvtA+IPhzFjNU7NYZQjYDo840MB9dnskAfJAFFncxvbcTtNtlkeDvuK4n0RyQkHVTqGro29QQidZxQJ3MYDUGwM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Gc2PyINH; arc=none smtp.client-ip=209.85.219.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B37632860E;
+	Wed, 11 Feb 2026 22:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770847842; cv=fail; b=WZVQL/Te/KBA9JBLunQgsw7+pV0RlvxQiPJOI/xlNkK3F22bpJuq8et4E/2M/OKjNzrye58/W6fUsy+2/SzDHIeWIWnfPcTb0h2TdZCotqhPYyPaWhf8xiDZuenCNLRihtPOm2ryU1HfVLl2wJx3i7jeHiP1AZyy3tn5Zg7hE7E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770847842; c=relaxed/simple;
+	bh=tZj0y1FXCssP8wF9TyT6ZAkLE1IXbHi24w3nEWTXtN4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=t+7+bMNvFFMrGSyBT2h3hWBIs6NZg/GsGxlsN45JiAkmlfgpr1zpfCxqx0OcvjAQyrfQdEOp1s2mePcRF6nOPBde6UyGZpRaIBCi73+nI5553d3KmubMvj3PdWbz5670EWrSy0AVmm6Q0uqXnPOoGyM4jHnKMvn63ZAY/R5Cl2s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NdKAYlIN; arc=fail smtp.client-ip=52.101.48.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Gc2PyINH"
-Received: by mail-qv1-f68.google.com with SMTP id 6a1803df08f44-89545bd3324so72148266d6.1
-        for <linux-cxl@vger.kernel.org>; Wed, 11 Feb 2026 13:54:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1770846895; x=1771451695; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wY7FoCoT6W3h+FhLeVYQDgJWzgS3oWiQlGuojbJGq/I=;
-        b=Gc2PyINHKvcQribH74dAptXxwn9ixQmCAALKf+1qt7Tr4UkiyzrCYjDanjcdXUa5gB
-         kbPqXjMDJqdQmE29oKu17r1K4OmJFDfbm+Lvzr2b0p1+B74kIAqhiZsV8FbxG3jIEphh
-         UEO9L7ZCmVYTf8ehJtjVjSGRKEPitvhOXnM5thj5q+tZH6e06m6wtyDEQvg3cUXxZ5ex
-         x0EoH7/1zWVBltBuJOf6LQhq10I4vJMQzXAmED3g1TEVaE9P7fYaiQOdNi1FyR/F1fFN
-         FYikpMgy7pKIXxYTQkZRTxDVzI912KoBaGwJwF1dsDey6xN3ROrkhwbVdQX27vqbEfyS
-         2gjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770846895; x=1771451695;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wY7FoCoT6W3h+FhLeVYQDgJWzgS3oWiQlGuojbJGq/I=;
-        b=BhMbd2bA//i0CqytvAB51k2DUD4/Dv69tHRRn2px+ecJlvltHweRPNClmwjmIho9s+
-         0FWumGBNv4mFbljzNaF0dHVaJdqNf//fyim6UbmKgPd6X4wqFJD9ojVA5R75YcCu0DCc
-         wspMtBmy3tlgxdVyWIKO1TNr51BSGguzzWWnGp1xOvPXbMCxcU0l9ik3dYKzHeAiafW3
-         YOSMQJWv5aL92c6IRu30s08LVmAKKQzpf6t1UPGtQg1GNveqvB7fS2Uh/sXrxYxzEvpJ
-         ErrrHV1Rvluyw5oEQ5pJDs3zTHEbpT9C9eVnKRcHLWhl7wymTa/x7scQGHUE3qRFb18j
-         2UIg==
-X-Gm-Message-State: AOJu0YygBzzSmSSqtppFd/Vi+593aFUYigiuKW7fEKQ7Ro+k2p1oYcmg
-	ub7Ms3qKQ32hsgB+pvhuf+9Lft+icNCALNoBUaRbxE8UCDPBcFX2Yj9gNgIFxhRQw3g=
-X-Gm-Gg: AZuq6aLk7jr55V3C0m+5qvATCtf06D3lO6F3uJMF219JCe0dXkXt4JM0iTegoYlte1B
-	zb+mCVcKqBH5YeFAQXA2b0vGsog2QQ33Njk2DFPuG4IWMIk7YmEgFlZCwytm7iDlOCjeFDrzWZy
-	I5d99qHh7GIuJuB3qCD9B8Yt0irAnCC8Uz53TJYngz2EW/Wj45GoIP+frE6KWjjDMAMeItt/wh5
-	cp41OJHokoGRU/wTQ7S2Vlr+tf7he5rAW8pDKYwJlfJLOONH48thXqh/zvm4oYOcMG9rQG7vi8u
-	1tQ6lRKabxGxzAtRXVQ1eVY37zaxJAPvxkl3vv76K2bSjavsNHVdA1j2svgfp/9O8Ukf0o8ICx/
-	2axxLKFtamu2Im40KWcOVKoJrN9ekEMRBcSTxiueh6ujhSqO7gZYILb5gSwHVGRwjMUq4yfEdZM
-	XWy6BxIHU1GxKVzs8cDBjAN49A12HcVPyXTcxn8o4Kmdgq7yxRLGYKjo0Z9tSbLph0bPkXg9NF+
-	Mnxeyp7Mv9C2/Q=
-X-Received: by 2002:a05:6214:258a:b0:893:42f1:ebb with SMTP id 6a1803df08f44-897279b27a6mr15748206d6.24.1770846894943;
-        Wed, 11 Feb 2026 13:54:54 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8971cdb5f26sm23742686d6.42.2026.02.11.13.54.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Feb 2026 13:54:54 -0800 (PST)
-From: Gregory Price <gourry@gourry.net>
-To: linux-mm@kvack.org
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	david@kernel.org,
-	osalvador@suse.de,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	dakr@kernel.org,
-	akpm@linux-foundation.org,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: [PATCH] mm: name the anonymous MMOP enum as enum mmop
-Date: Wed, 11 Feb 2026 16:54:47 -0500
-Message-ID: <20260211215447.2194189-1-gourry@gourry.net>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NdKAYlIN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=AfE1hMWbEHlNVgqbiAbeSW1PWZ3kCTPI7AAmK/YwOaKkaEdGkI0N/m/bpnv1L/OlB8+f0FNeME7yOLDGkGt9Pvmed8sU/7WWQpuQFfA/J4BlbZJI/vR5P57v9JTiywaFAqXgurJm8IwdeqTzmBFyKuVrVEBqyZQfjSIw+DuCmljRbQ6fSzS8yysiydsJMlgBz+RpaX3iN1mFxf+/ulJHo94hOlGFL7ZteSAYai63vGVnqlCFgpURc3PZR8mS0DZN6Pn0tl4aqBA1tI/eBm5ZGVLc2SzGYAdkf1vmlxYry85gJ+cLSeq/99JDz45kZRN/CWsyMdwA5XWFDu3V2N4ytw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+YnuuA/Gzr+YhD2hsndzHXkv6UY3epHYMkD4XD6G14g=;
+ b=GlKq7sNsZbHL8yS5UpeBygyWudHqbtQI2feCQcrE+73HEvbVjdIuX8ohEnt285nmv2YL3soT4VFT1y0MvDGM+5tggG4SB3Cb8hfXSIAo3JVJ1wwdGFos1g6sF/DIK2NMAU0J96erncZqrkX9p67Eajx+Q5VSrbmyd68S3WEycwfyKTpNgCridKynABvE+1WnpWY/8CzROcXoxLe9Zay0zCx4QV7allTwP2dixqhbhDauCerdR+K+7JBjniFGIANblUeuvXI/uYTL3SUTzuiPk7ThGHW852fTAhpAiOuI/6ppK8wK3s7IVl+T0i+xaTprzNZwGks6edVtDVHTVkloqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+YnuuA/Gzr+YhD2hsndzHXkv6UY3epHYMkD4XD6G14g=;
+ b=NdKAYlIN9O/qHkJMGj+hjGF8IqP5CQTFEmYbbUvUfXcvtf/4f6BdRrCLHa0AxMd9lmJnUDjRLYrs6AS9xxYtlK1CKFGgkukJQLBHUvn6eC+tj5jqbz2xwe8n1riALuMVBx8xjT0g7iF8t+XiFZE/gQr8X+DpXjf6cE330CUlp4A=
+Received: from SJ0PR03CA0261.namprd03.prod.outlook.com (2603:10b6:a03:3a0::26)
+ by DS7PR12MB5909.namprd12.prod.outlook.com (2603:10b6:8:7a::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9611.10; Wed, 11 Feb
+ 2026 22:10:37 +0000
+Received: from CO1PEPF000075ED.namprd03.prod.outlook.com
+ (2603:10b6:a03:3a0:cafe::43) by SJ0PR03CA0261.outlook.office365.com
+ (2603:10b6:a03:3a0::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9611.10 via Frontend Transport; Wed,
+ 11 Feb 2026 22:10:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CO1PEPF000075ED.mail.protection.outlook.com (10.167.249.36) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9611.8 via Frontend Transport; Wed, 11 Feb 2026 22:10:35 +0000
+Received: from [10.31.203.44] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 11 Feb
+ 2026 16:10:34 -0600
+Message-ID: <76556d1b-646c-477c-a315-33c3bb3cd981@amd.com>
+Date: Wed, 11 Feb 2026 16:10:28 -0600
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+Subject: Re: [PATCH v23 20/22] cxl: Avoid dax creation for accelerators
+To: <alejandro.lucero-palau@amd.com>
+CC: Alejandro Lucero <alucerop@amd.com>, Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>, Davidlohr Bueso <daves@stgolabs.net>,
+	<linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
+	<dave.jiang@intel.com>
+References: <20260201155438.2664640-1-alejandro.lucero-palau@amd.com>
+ <20260201155438.2664640-21-alejandro.lucero-palau@amd.com>
+Content-Language: en-US
+In-Reply-To: <20260201155438.2664640-21-alejandro.lucero-palau@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000075ED:EE_|DS7PR12MB5909:EE_
+X-MS-Office365-Filtering-Correlation-Id: 553423ad-35c4-485a-4b71-08de69ba619a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|7416014|82310400026|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?U2dIRk9EWXZ0SGFTSDNscXVyZGl3Sm40bEhXSDZSZFpJSFFhRmJmd3dNNVYw?=
+ =?utf-8?B?TGw5dXBPa25oY3NXRVVXUWpaNHUvWmlYMko5UTZIZHdIb3dQK0t4TnRxVU0v?=
+ =?utf-8?B?cmdTT1hpMmxxRFZqOFJTR21qUjVRTU1lWGlHMjZDOWwyeGNVMVBCcFRZTkto?=
+ =?utf-8?B?OHF4MzZ4SFVZMnFBNkhFSnJTSlFiUmJ4dkVzcFdyTGt2amFSVmpyb0dNU2dT?=
+ =?utf-8?B?REhaZko2QzNXOCtQNUp6UlpEVWROaklBQVRSU0p0NE0yMmtXN0J5MTRpb3Ja?=
+ =?utf-8?B?Z3I0dUpsRmF1dWEvRkg5bFJGNlo0WTdZdGFXYzM4d3dPV1hyejJNNnRaRVJ6?=
+ =?utf-8?B?M3k5QjYyYVQrTThFU2k2OEJMM0Ridld6bjBMVlBiZlpaYUJheDgrNjVLWlRl?=
+ =?utf-8?B?RHpITEZhVFU3bUUxTkpwNlFhT0x5RGFCaXJac3dYMlRNdzBTUWpuQ2ZFbThW?=
+ =?utf-8?B?dGRFNmhvN0hOT1htQ0FwU21EOHNyN1hIaW1SM3ZkbVl5cm01emMwb1RRN1pW?=
+ =?utf-8?B?UW84WVE5Nk9haGt3Q3BFYlkzWmRFQTA1V2I3T0Nod2xMTHp4bVY5cXNIb0NH?=
+ =?utf-8?B?UzFEVnRDVEFLUUkvRUM5eDhjS3lmMFJwU3hHZCtSNytwdzFHMngvaGJhcHc3?=
+ =?utf-8?B?RVlqVWhIVWxhenJtSUFFZ292d2FSTXF3K1p5TmJoT2VLcE5McHlTLytSYjZE?=
+ =?utf-8?B?SlpvYUNCd0d2REMzN2dnYlc3Q3MzbTNXRGY2eVRnbktib2RrZDY2d1BjU2hz?=
+ =?utf-8?B?dVpDd0RKVGJaV3FNdTdaK2dEdUlBMXNOZUxGT0FsMTAza0RLU0RaNWkwbGlE?=
+ =?utf-8?B?Y2JHNGNLV3A0TVdnaWZNbm82MHRqcW1QQWIrZmYyZFNCcXl5YUh6ZnNKaGda?=
+ =?utf-8?B?OFUwR0l2QnNYR2owc0FVc1JFbHlyQmR5dnZDM1JMb2JWSm1DNGtCZjBZM2hE?=
+ =?utf-8?B?MXhLUzcvVDlnVjlQSTVHYkh1Q3J3bGNwNGlaaXFoMkNOQ0ZCRzFYeEdlRTNE?=
+ =?utf-8?B?UzNWMWJUM2JNY2tySkd2cjNpWVI5OFFVVE1COTM1NHM1Q2hFdnl1WnNzZHhz?=
+ =?utf-8?B?by9JSXJIZzJENzBoeDZ2eWhFdXZEeGs5QkVkQnZyNEVlWjUyK3JWRzVXNC9I?=
+ =?utf-8?B?SzRoRTUyLzNoL2R6ZE16SVp2b0s1MHh6cjRXQzhUVTY4dWVXQysyTndlY0oz?=
+ =?utf-8?B?N2ZMWTdyeldHdjR6dnZMeEJBWHRxMWVrYzEwN3A3UjJ5TE5SR0xjME9RTDA1?=
+ =?utf-8?B?NlRkeGpQbzh4T2hNOFNpK2VHdG5tV29HTC9BVzllajRXNS9YZnZhcHFzdlRQ?=
+ =?utf-8?B?T3dIMjU5NWZlZWlzbGlwYXFtc3R4Um93aUhJS1BPL3FOa1JoVUV5OUhDdi9m?=
+ =?utf-8?B?dzNVelZTNVF2MC93WkxKMTh2ekpTZHRQbVY0bXNHUkdaNEd4b054dy9IRU1S?=
+ =?utf-8?B?RGlTUVI4QnhqSlQwZUFaZ1lzZXc0WFp0WFoxOWFsajRPV3NwRkk5MDFXNWdV?=
+ =?utf-8?B?T3kxTENLWjFjRm5RUStIb3Rja3Z5ZTNtOXRyUlVYcUF1dlJTcEM4c0toMUVs?=
+ =?utf-8?B?VkdhNkNqTjNDVHM1ZjZJL0srcW1JZEs2M3FQSEV5a0Vjc1ptZjhIQUdlZk9S?=
+ =?utf-8?B?ZDhKODZZSUJhUk1QaG5rUTl6akpOQmdsNEF2MjZBdnJaNzRrY3BhekROVGh1?=
+ =?utf-8?B?RHN6cDhtd3MvdzdUOFUxUjB2RFRGQlI5OHVHVmRRMlRic0pETnRTdnJVbnN6?=
+ =?utf-8?B?dThaV0E3b3IxaXZ0V2kyNDR6aURjUFYzenMrS085aGJDZzhzQlVqeDAvL1k4?=
+ =?utf-8?B?Y01xSWVxdkVMVTlGSjRUM211SDlxcndEeGNIaHJuSWFtUXdLdFJVYVNrcENk?=
+ =?utf-8?B?YnR5VEVjYnRKQ3UxdUY1SzcyZVUxUVE1T2tmRTdoaHhpM2JSL2NleXQvelcr?=
+ =?utf-8?B?emFFZWtuY053ZU4rSVZySzJWczMzWDdvaG9WTEZYek1uWk84R1VIcXZCeVVi?=
+ =?utf-8?B?dFNoZWJ2d29qUHJzOWV5dStsaWQ4YWdLTHZ3ZGF1QXpZM0VuMGlTazczaEU1?=
+ =?utf-8?B?cVdiaHJBVWRaUEpNVkNtbXQ1b05WdGtISjI5QUFDVDBKUFoybHVId240MUNa?=
+ =?utf-8?B?V09wWFR2RGlqemVYcU43QzMrODdxL3lET1pwMGZKY2dXdG56dUk0YXdCcW04?=
+ =?utf-8?B?dnNJNjROY2tCQnVEWGYrZjBnMUdVOEFld0tkMzNGK1pVOVpneXBjZUU3cVVP?=
+ =?utf-8?B?QWpJa2xjL2RMQnBMN0RJcDNQVmF3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(82310400026)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	jsR6u93FGngLVl/oqom2U2K4AUZA/6Mr7EvAGKON7ukheZQ4BNitv8zzGd84jOrDOKQcrzNgpZxtrNl5rlf5G0qn061Ye49zvngbZcTSvVZB3nv2/fPU0WqLVFQxWu38wyXIGzYWHyJ03FPHHU3uVuSM8CFCYQ5L3a3R8v7jNLh3y+pVU9TiVBEkXoZHMnJxqAso4zlRYfJMBQd6H7uja72i7AjqtCN/c7D+czOlECsyGeq37pqUCOkw/Jd7R/8TTJM8GZNvWuhgZgjsSS1V+s3nLp7zZf6MyjXMOIEUr+GnmajPjKPotXPp2acoCu1A74NCBwMp3pPfVaHEeNor/QssUw2mYBAM+tXwB4eqL9GjcqqnAda5wJTqRx3JcmxrEHPRYT6ambj2No+YVdVbgMrL/NScLxMGRRmGqQZizkTDzkKsC01CKarFrIbYn2t5
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2026 22:10:35.4219
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 553423ad-35c4-485a-4b71-08de69ba619a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000075ED.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5909
 
-Give the MMOP enum (MMOP_OFFLINE, MMOP_ONLINE, etc) a proper type
-name so the compiler can help catch invalid values being assigned to
-variables of this type.
+On 2/1/2026 9:54 AM, alejandro.lucero-palau@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
+> 
+> By definition a type2 cxl device will use the host managed memory for
+> specific functionality, therefore it should not be available to other
+> uses.
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Davidlohr Bueso <daves@stgolabs.net>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+> ---
+>  drivers/cxl/core/region.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 293e63dfef22..12df717cc881 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -4441,6 +4441,13 @@ static int cxl_region_probe(struct device *dev)
+>  	if (rc)
+>  		return rc;
+>  
+> +	/*
+> +	 * HDM-D[B] (device-memory) regions have accelerator specific usage.
+> +	 * Skip device-dax registration.
+> +	 */
+> +	if (cxlr->type == CXL_DECODER_DEVMEM)
+> +		return 0;
 
-Leave the existing functions returning int alone to allow for
-value-or-error pattern to remain unchanged without churn.
-
-mmop_default_online_type is left as int because it uses the -1
-sentinal value to signal it hasn't been initialized yet.
-
-Keep the uint8_t buffer in offline_and_remove_memory() as-is for
-space efficiency, with an explicit cast when we consume the value.
-
-Move the enum definition before the CONFIG_MEMORY_HOTPLUG guard so
-it is unconditionally available for struct memory_block in memory.h.
-
-No functional change.
-
-Link: https://lore.kernel.org/linux-mm/3424eba7-523b-4351-abd0-3a888a3e5e61@kernel.org/
-Suggested-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Suggested-by: "David Hildenbrand (arm)" <david@kernel.org>
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- drivers/base/memory.c          |  2 +-
- include/linux/memory.h         |  3 ++-
- include/linux/memory_hotplug.h | 16 ++++++++--------
- mm/memory_hotplug.c            | 10 +++++-----
- 4 files changed, 16 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 751f248ca4a8..3753ca80069d 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -452,7 +452,7 @@ static ssize_t phys_device_show(struct device *dev,
- static int print_allowed_zone(char *buf, int len, int nid,
- 			      struct memory_group *group,
- 			      unsigned long start_pfn, unsigned long nr_pages,
--			      int online_type, struct zone *default_zone)
-+			      enum mmop online_type, struct zone *default_zone)
- {
- 	struct zone *zone;
- 
-diff --git a/include/linux/memory.h b/include/linux/memory.h
-index faeaa921e55b..5bb5599c6b2b 100644
---- a/include/linux/memory.h
-+++ b/include/linux/memory.h
-@@ -19,6 +19,7 @@
- #include <linux/node.h>
- #include <linux/compiler.h>
- #include <linux/mutex.h>
-+#include <linux/memory_hotplug.h>
- 
- #define MIN_MEMORY_BLOCK_SIZE     (1UL << SECTION_SIZE_BITS)
- 
-@@ -77,7 +78,7 @@ enum memory_block_state {
- struct memory_block {
- 	unsigned long start_section_nr;
- 	enum memory_block_state state;	/* serialized by the dev->lock */
--	int online_type;		/* for passing data to online routine */
-+	enum mmop online_type;	/* for passing data to online routine */
- 	int nid;			/* NID for this memory block */
- 	/*
- 	 * The single zone of this memory block if all PFNs of this memory block
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index f2f16cdd73ee..e77ef3d7ff73 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -16,11 +16,8 @@ struct resource;
- struct vmem_altmap;
- struct dev_pagemap;
- 
--#ifdef CONFIG_MEMORY_HOTPLUG
--struct page *pfn_to_online_page(unsigned long pfn);
--
- /* Types for control the zone type of onlined and offlined memory */
--enum {
-+enum mmop {
- 	/* Offline the memory. */
- 	MMOP_OFFLINE = 0,
- 	/* Online the memory. Zone depends, see default_zone_for_pfn(). */
-@@ -31,6 +28,9 @@ enum {
- 	MMOP_ONLINE_MOVABLE,
- };
- 
-+#ifdef CONFIG_MEMORY_HOTPLUG
-+struct page *pfn_to_online_page(unsigned long pfn);
-+
- /* Flags for add_memory() and friends to specify memory hotplug details. */
- typedef int __bitwise mhp_t;
- 
-@@ -286,8 +286,8 @@ static inline void __remove_memory(u64 start, u64 size) {}
- 
- #ifdef CONFIG_MEMORY_HOTPLUG
- /* Default online_type (MMOP_*) when new memory blocks are added. */
--extern int mhp_get_default_online_type(void);
--extern void mhp_set_default_online_type(int online_type);
-+extern enum mmop mhp_get_default_online_type(void);
-+extern void mhp_set_default_online_type(enum mmop online_type);
- extern void __ref free_area_init_core_hotplug(struct pglist_data *pgdat);
- extern int __add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags);
- extern int add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags);
-@@ -310,8 +310,8 @@ extern void sparse_remove_section(unsigned long pfn, unsigned long nr_pages,
- 				  struct vmem_altmap *altmap);
- extern struct page *sparse_decode_mem_map(unsigned long coded_mem_map,
- 					  unsigned long pnum);
--extern struct zone *zone_for_pfn_range(int online_type, int nid,
--		struct memory_group *group, unsigned long start_pfn,
-+extern struct zone *zone_for_pfn_range(enum mmop online_type,
-+		int nid, struct memory_group *group, unsigned long start_pfn,
- 		unsigned long nr_pages);
- extern int arch_create_linear_mapping(int nid, u64 start, u64 size,
- 				      struct mhp_params *params);
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index a63ec679d861..41f48f493b8e 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -221,7 +221,7 @@ void put_online_mems(void)
- bool movable_node_enabled = false;
- 
- static int mhp_default_online_type = -1;
--int mhp_get_default_online_type(void)
-+enum mmop mhp_get_default_online_type(void)
- {
- 	if (mhp_default_online_type >= 0)
- 		return mhp_default_online_type;
-@@ -240,7 +240,7 @@ int mhp_get_default_online_type(void)
- 	return mhp_default_online_type;
- }
- 
--void mhp_set_default_online_type(int online_type)
-+void mhp_set_default_online_type(enum mmop online_type)
- {
- 	mhp_default_online_type = online_type;
- }
-@@ -1046,7 +1046,7 @@ static inline struct zone *default_zone_for_pfn(int nid, unsigned long start_pfn
- 	return movable_node_enabled ? movable_zone : kernel_zone;
- }
- 
--struct zone *zone_for_pfn_range(int online_type, int nid,
-+struct zone *zone_for_pfn_range(enum mmop online_type, int nid,
- 		struct memory_group *group, unsigned long start_pfn,
- 		unsigned long nr_pages)
- {
-@@ -2305,7 +2305,7 @@ EXPORT_SYMBOL_GPL(remove_memory);
- 
- static int try_offline_memory_block(struct memory_block *mem, void *arg)
- {
--	uint8_t online_type = MMOP_ONLINE_KERNEL;
-+	enum mmop online_type = MMOP_ONLINE_KERNEL;
- 	uint8_t **online_types = arg;
- 	struct page *page;
- 	int rc;
-@@ -2338,7 +2338,7 @@ static int try_reonline_memory_block(struct memory_block *mem, void *arg)
- 	int rc;
- 
- 	if (**online_types != MMOP_OFFLINE) {
--		mem->online_type = **online_types;
-+		mem->online_type = (enum mmop)**online_types;
- 		rc = device_online(&mem->dev);
- 		if (rc < 0)
- 			pr_warn("%s: Failed to re-online memory: %d",
--- 
-2.47.3
+Minor nit: Should probably move this to be the first thing in the function. It would save
+having to acquire a lock in cxl_region_can_probe() above. Keep my reviewed-by either way,
+it's really just a minor optimization.
+> +
+>  	/*
+>  	 * From this point on any path that changes the region's state away from
+>  	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
 
