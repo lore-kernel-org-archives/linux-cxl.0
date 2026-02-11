@@ -1,335 +1,174 @@
-Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0409928003A;
-	Wed, 11 Feb 2026 15:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621B52DB7AD
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Feb 2026 15:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770823412; cv=none; b=sdmW/zWdPd+sKcRcYZnptpq16alB1D+Qrd7sB83TNWHM7QOPnvUoUBexwYFZVkPmuryX9iATn8nF54H0n8G01m5xxa7Eet5fd1wI2sMqq+HQAd1cB3VZjltJ4Rnw+ccsCRdzC6y4nocwujJoyRDZeUA6OoJOybpmBqnmPKArENc=
+	t=1770825567; cv=none; b=TD4B8xCBY27FHcIgku4IpE4SNCP7WYSA7MKRkAP9UFhDSngO3isCX9XfP77JlXEP7Vn1uEzOJA+QYSzLss8xA39cWCCSRn3tEg2OG37HeKfLCqYWF40FqNPNBl6wkTeaBwS7qhBcOPiC9QTRKgU7TxKd/Bg+G/1xPUTxU8V08vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770823412; c=relaxed/simple;
-	bh=Wg+tozHMNvvqYzCeEMnnMMz2oiyvzq2d+LAvxIuEgpw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uxZ1gtG1+msDSm3yuY/ACtgR2cpqA/99sLF7gWv0kv4PYDiTh6F+C+jJEC04mN7xkj4gyvPzZpJBn0IDL2lybgZPEQyjcycCvgn6Lx+y6LXL+VB5HnEMolOFGL2o5LlAS/0xCC/QZhgHcqVkvyUVmZb99FX7qsBpf2cIMhrD3Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=EnNKT7M3; arc=none smtp.client-ip=178.62.254.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+	s=arc-20240116; t=1770825567; c=relaxed/simple;
+	bh=IKUNIkEymglVf4BArYHDRxPhT6lG79lU/pszt7Itru4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iI8stdJ3yr9Q57tYke1RjVXm1Ma8GLI7+i1siWqDxf/00VJ0aetKEYIOAm0MmiTk6ZbR7EUTjrSyvqUWmKveGoen20ZqorFFFAo7yfX/mGiCeUFzzk2AdJw3tb5Q4rlDm2otV1JM3LGmF4gr3yVG+msGJlPg/B2ORidHQk0rUEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Gz9k/tQ5; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="EnNKT7M3"
-Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
-	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id B6507B2591;
-	Wed, 11 Feb 2026 15:23:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
-	s=mail; t=1770823404;
-	bh=WI9HzWB33RHOS7x2iM4is6SHnBj+us5QajX97yLBu8U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=EnNKT7M3TS3ryf7KVT447cgDcaIceytqYXzKU1+bD221uVnfKF5m7bpAMnXDRHx79
-	 7pvy+2IjemivNf4Iu5+zUFr0aAZ1nDn2Yx8vgl6Ew9riIW67mirzm3v/bMBLk1fhh0
-	 1nqXinwuEJ6IksxPU61gSyVI39gCQxtp+yEpEsF0=
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Zi Yan <ziy@nvidia.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>,
-	Wei Xu <weixugc@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	kernel-team@meta.com,
-	Dmitry Ilvokhin <d@ilvokhin.com>
-Subject: [PATCH 4/4] mm: add tracepoints for zone lock
-Date: Wed, 11 Feb 2026 15:22:16 +0000
-Message-ID: <1d2a7778aeee03abf8a11528ce8d4926ca78e9b4.1770821420.git.d@ilvokhin.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1770821420.git.d@ilvokhin.com>
-References: <cover.1770821420.git.d@ilvokhin.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Gz9k/tQ5"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-8c532d8be8cso651598985a.2
+        for <linux-cxl@vger.kernel.org>; Wed, 11 Feb 2026 07:59:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1770825565; x=1771430365; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=d6RAzUSXpBXql+F9ay58cLMbqKb0I7SnNahqduMaG0U=;
+        b=Gz9k/tQ5DXjaqatbqgzegv2A7jxsoqQbbhQV1PWY4ZxSLD2kCu51X9GIvl3NgIPqdb
+         AQzXPlSHzq78UlEXtPm5EmvJc3jFM8cGxYExpvcKpAzPTxTv7HGekTFIbGV8ml7PKdaY
+         nZ8bSpgFiKkAztAc1F0Lrj/zl0MCfMyuj7Spa4Tgl4i974sSkJPkq8hYCSfjvlpRce5S
+         xwiMuoIsq4nqkllXaaPU4EfglXVcl1Bj69eO52YCUms9S5Cbm7cUi9+SB71o4KyjnJIk
+         yj439usJWaW0m6AInf5KkKPQ8/ucBjygsEiL6HT91srd373LvCzk+NZJzcvCqK0Xxg5D
+         7yAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770825565; x=1771430365;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d6RAzUSXpBXql+F9ay58cLMbqKb0I7SnNahqduMaG0U=;
+        b=v3JeAWmhyrYSo8pL2RLoCnEpp3MC9wjM+6os1zgOGtlDK+9CZX4VNGRBBKq8HdI7ia
+         mduiRZwRB8eDS5zjum4ZSuwTrcffvnqRAXSlsQuhjC/pQi0fIa+J0qIu6Y3aZTT/0ISG
+         84UKBJAsLluyEVjlVxk7wy/wMbieg3EHoFMG7t0Oa/CK5WUmLITfUAV/ubHwx0Sxcn3W
+         FrcDtJOANeYhvPxX9Bc9Xa3G1BM/P6Nh63SPfZ4W9lOpgOGfA7dUF2bpZwBUS/+p1tmC
+         3RQSBYFSg4uh+dr95/EVl1a6FKuRDYFjm0Fg+DfTZCU9tIAjkZ/CVLiZyTZ7BS60CFSh
+         DxTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW9+EIw2tW7KjnSKrkoCUXgQ0FUCniX2CQsqj0oOz81Td35Ld8sjbZ1SJ0unUghz797tKpVpAXoxTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLKXg8Tqtikl3IFraRagzco9aq2N0DxZL4oGAGMLcGgKj/3sLC
+	Djp5CPhoH/5lVY5m5bb95McasOcdXd29xtfFMnWeLTjgohW8b100PivFGFg7G70B2w8=
+X-Gm-Gg: AZuq6aL8CNM6wZDa4u4KMRhmGXd8AT+T6TkY/5bxIwS3g+InRENvnVeE5cnaOBH+6w6
+	Yqs86KqSUnXysryyAiSwxhDlxg0zIxKwIsuUxlyOBFFUCFHhn/8S5epTj6BIGEYlQKJ2qn2vPsb
+	KuGllZ7jM2OXCZb4ikTm9PUtdKLcU7ffBYTp5jX67s3TSpZJ1ykLsNsN19JF5eFmfdJm4b3h2P4
+	Tu4Zk6mgphMGgZkfSMwtr9lpI4fecUtMK747FGlKtLdR03h0Bzr3J6lnOeRN3gpgCShZnVKZJrM
+	7iolEoa7DVVt+AeG3eieQ/R2/M0t1Lmv2HtVHId8XRcGhaNfi9D5EyptpB6IiUFvgjmWogHQCvl
+	VdUzjA2I/MGKxmSnJeENYO2ldCvZiAe88oBnGxP43wrWZo4cDARF7Frlx0yg3MNfh/SbO/5+Lzx
+	0fa8rhO8X3EqLc2kXWxGU07nll7jxLrBdognEvWY+QpGMMDPcT5ThnqBNqR0BWip3l3BJ/M5ecZ
+	+IaasYZVw==
+X-Received: by 2002:a05:620a:3184:b0:8a2:3be9:1d79 with SMTP id af79cd13be357-8cb2a2bf77emr255258885a.18.1770825565157;
+        Wed, 11 Feb 2026 07:59:25 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cb2b20f240sm139552185a.40.2026.02.11.07.59.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Feb 2026 07:59:24 -0800 (PST)
+Date: Wed, 11 Feb 2026 10:59:22 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Vishal Aslot <vaslot@nvidia.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Li Ming <ming.li@zohomail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"open list:COMPUTE EXPRESS LINK (CXL)" <linux-cxl@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/2] cxl_test: enable zero sized decoders under hb0
+Message-ID: <aYynWqJ7u-v-6WsZ@gourry-fedora-PF4VCD3F>
+References: <20251015024019.1189713-1-vaslot@nvidia.com>
+ <20251015024019.1189713-2-vaslot@nvidia.com>
+ <aPXgLp1Em6wKlx0t@aschofie-mobl2.lan>
+ <aPZE3Spas-IvHmfd@gourry-fedora-PF4VCD3F>
+ <aPaNzeGqUHf6gGIu@aschofie-mobl2.lan>
+ <aPeSqjqU6BH9gvcw@gourry-fedora-PF4VCD3F>
+ <aYyaicFMzfsd8eSq@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aYyaicFMzfsd8eSq@gourry-fedora-PF4VCD3F>
 
-Add tracepoint instrumentation to zone lock acquire/release operations
-via the previously introduced wrappers.
+On Wed, Feb 11, 2026 at 10:04:41AM -0500, Gregory Price wrote:
+> Revisiting this - it might be reasonable to allow post-lock ordering if
+> *all* decoders in beyond the programmable one are zero-locked.
+> 
+> Seems ok? Thoughts?
+> 
 
-The implementation follows the mmap_lock tracepoint pattern: a
-lightweight inline helper checks whether the tracepoint is enabled and
-calls into an out-of-line helper when tracing is active. When
-CONFIG_TRACING is disabled, helpers compile to empty inline stubs.
+Sorry, got myself a bit mixed up, lets me a bit more precise, there are
+annoying corner conditions here that make reasoning about this
+difficult, and the mild ambiguity in the spec doesn't imbue confidence.
 
-The fast path is unaffected when tracing is disabled.
+[open] = programmable
+[programmed] = usually auto-decoder, but some cases may allow runtime
+               programming, i haven't logic'd that out.
 
-Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
----
- MAINTAINERS                      |  2 +
- include/linux/zone_lock.h        | 64 +++++++++++++++++++++++++++++++-
- include/trace/events/zone_lock.h | 64 ++++++++++++++++++++++++++++++++
- mm/Makefile                      |  2 +-
- mm/zone_lock.c                   | 31 ++++++++++++++++
- 5 files changed, 161 insertions(+), 2 deletions(-)
- create mode 100644 include/trace/events/zone_lock.h
- create mode 100644 mm/zone_lock.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 680c9ae02d7e..711ffa15f4c3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16499,6 +16499,7 @@ F:	include/linux/ptdump.h
- F:	include/linux/vmpressure.h
- F:	include/linux/vmstat.h
- F:	include/linux/zone_lock.h
-+F:	include/trace/events/zone_lock.h
- F:	kernel/fork.c
- F:	mm/Kconfig
- F:	mm/debug.c
-@@ -16518,6 +16519,7 @@ F:	mm/sparse.c
- F:	mm/util.c
- F:	mm/vmpressure.c
- F:	mm/vmstat.c
-+F:	mm/zone_lock.c
- N:	include/linux/page[-_]*
- 
- MEMORY MANAGEMENT - EXECMEM
-diff --git a/include/linux/zone_lock.h b/include/linux/zone_lock.h
-index c531e26280e6..cea41dd56324 100644
---- a/include/linux/zone_lock.h
-+++ b/include/linux/zone_lock.h
-@@ -4,6 +4,53 @@
- 
- #include <linux/mmzone.h>
- #include <linux/spinlock.h>
-+#include <linux/tracepoint-defs.h>
-+
-+DECLARE_TRACEPOINT(zone_lock_start_locking);
-+DECLARE_TRACEPOINT(zone_lock_acquire_returned);
-+DECLARE_TRACEPOINT(zone_lock_released);
-+
-+#ifdef CONFIG_TRACING
-+
-+void __zone_lock_do_trace_start_locking(struct zone *zone);
-+void __zone_lock_do_trace_acquire_returned(struct zone *zone, bool success);
-+void __zone_lock_do_trace_released(struct zone *zone);
-+
-+static inline void __zone_lock_trace_start_locking(struct zone *zone)
-+{
-+	if (tracepoint_enabled(zone_lock_start_locking))
-+		__zone_lock_do_trace_start_locking(zone);
-+}
-+
-+static inline void __zone_lock_trace_acquire_returned(struct zone *zone,
-+						      bool success)
-+{
-+	if (tracepoint_enabled(zone_lock_acquire_returned))
-+		__zone_lock_do_trace_acquire_returned(zone, success);
-+}
-+
-+static inline void __zone_lock_trace_released(struct zone *zone)
-+{
-+	if (tracepoint_enabled(zone_lock_released))
-+		__zone_lock_do_trace_released(zone);
-+}
-+
-+#else /* !CONFIG_TRACING */
-+
-+static inline void __zone_lock_trace_start_locking(struct zone *zone)
-+{
-+}
-+
-+static inline void __zone_lock_trace_acquire_returned(struct zone *zone,
-+						      bool success)
-+{
-+}
-+
-+static inline void __zone_lock_trace_released(struct zone *zone)
-+{
-+}
-+
-+#endif /* CONFIG_TRACING */
- 
- static inline void zone_lock_init(struct zone *zone)
- {
-@@ -12,26 +59,41 @@ static inline void zone_lock_init(struct zone *zone)
- 
- #define zone_lock_irqsave(zone, flags)				\
- do {								\
-+	bool success = true;					\
-+								\
-+	__zone_lock_trace_start_locking(zone);			\
- 	spin_lock_irqsave(&(zone)->lock, flags);		\
-+	__zone_lock_trace_acquire_returned(zone, success);	\
- } while (0)
- 
- #define zone_trylock_irqsave(zone, flags)			\
- ({								\
--	spin_trylock_irqsave(&(zone)->lock, flags);		\
-+	bool success;						\
-+								\
-+	__zone_lock_trace_start_locking(zone);			\
-+	success = spin_trylock_irqsave(&(zone)->lock, flags);	\
-+	__zone_lock_trace_acquire_returned(zone, success);	\
-+	success;						\
- })
- 
- static inline void zone_unlock_irqrestore(struct zone *zone, unsigned long flags)
- {
-+	__zone_lock_trace_released(zone);
- 	spin_unlock_irqrestore(&zone->lock, flags);
- }
- 
- static inline void zone_lock_irq(struct zone *zone)
- {
-+	bool success = true;
-+
-+	__zone_lock_trace_start_locking(zone);
- 	spin_lock_irq(&zone->lock);
-+	__zone_lock_trace_acquire_returned(zone, success);
- }
- 
- static inline void zone_unlock_irq(struct zone *zone)
- {
-+	__zone_lock_trace_released(zone);
- 	spin_unlock_irq(&zone->lock);
- }
- 
-diff --git a/include/trace/events/zone_lock.h b/include/trace/events/zone_lock.h
-new file mode 100644
-index 000000000000..3df82a8c0160
---- /dev/null
-+++ b/include/trace/events/zone_lock.h
-@@ -0,0 +1,64 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM zone_lock
-+
-+#if !defined(_TRACE_ZONE_LOCK_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_ZONE_LOCK_H
-+
-+#include <linux/tracepoint.h>
-+#include <linux/types.h>
-+
-+struct zone;
-+
-+DECLARE_EVENT_CLASS(zone_lock,
-+
-+	TP_PROTO(struct zone *zone),
-+
-+	TP_ARGS(zone),
-+
-+	TP_STRUCT__entry(
-+		__field(struct zone *, zone)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->zone = zone;
-+	),
-+
-+	TP_printk("zone=%p", __entry->zone)
-+);
-+
-+#define DEFINE_ZONE_LOCK_EVENT(name)			\
-+	DEFINE_EVENT(zone_lock, name,			\
-+		TP_PROTO(struct zone *zone),		\
-+		TP_ARGS(zone))
-+
-+DEFINE_ZONE_LOCK_EVENT(zone_lock_start_locking);
-+DEFINE_ZONE_LOCK_EVENT(zone_lock_released);
-+
-+TRACE_EVENT(zone_lock_acquire_returned,
-+
-+	TP_PROTO(struct zone *zone, bool success),
-+
-+	TP_ARGS(zone, success),
-+
-+	TP_STRUCT__entry(
-+		__field(struct zone *, zone)
-+		__field(bool, success)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->zone = zone;
-+		__entry->success = success;
-+	),
-+
-+	TP_printk(
-+		"zone=%p success=%s",
-+		__entry->zone,
-+		__entry->success ? "true" : "false"
-+	)
-+);
-+
-+#endif /* _TRACE_ZONE_LOCK_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/mm/Makefile b/mm/Makefile
-index 0d85b10dbdde..fd891710c696 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -55,7 +55,7 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
- 			   mm_init.o percpu.o slab_common.o \
- 			   compaction.o show_mem.o \
- 			   interval_tree.o list_lru.o workingset.o \
--			   debug.o gup.o mmap_lock.o vma_init.o $(mmu-y)
-+			   debug.o gup.o mmap_lock.o zone_lock.o vma_init.o $(mmu-y)
- 
- # Give 'page_alloc' its own module-parameter namespace
- page-alloc-y := page_alloc.o
-diff --git a/mm/zone_lock.c b/mm/zone_lock.c
-new file mode 100644
-index 000000000000..f647fd2aca48
---- /dev/null
-+++ b/mm/zone_lock.c
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/zone_lock.h>
-+
-+#include <linux/zone_lock.h>
-+
-+EXPORT_TRACEPOINT_SYMBOL(zone_lock_start_locking);
-+EXPORT_TRACEPOINT_SYMBOL(zone_lock_acquire_returned);
-+EXPORT_TRACEPOINT_SYMBOL(zone_lock_released);
-+
-+#ifdef CONFIG_TRACING
-+
-+void __zone_lock_do_trace_start_locking(struct zone *zone)
-+{
-+	trace_zone_lock_start_locking(zone);
-+}
-+EXPORT_SYMBOL(__zone_lock_do_trace_start_locking);
-+
-+void __zone_lock_do_trace_acquire_returned(struct zone *zone, bool success)
-+{
-+	trace_zone_lock_acquire_returned(zone, success);
-+}
-+EXPORT_SYMBOL(__zone_lock_do_trace_acquire_returned);
-+
-+void __zone_lock_do_trace_released(struct zone *zone)
-+{
-+	trace_zone_lock_released(zone);
-+}
-+EXPORT_SYMBOL(__zone_lock_do_trace_released);
-+
-+#endif /* CONFIG_TRACING */
--- 
-2.47.3
+                    Post-lock   Legal
+decoder        0             1             2     ...     N
+------------------------------------------------------------------
+            [open]       [zero-lock]  [zero-lock]   [zero-lock]
+	    [open]         [open]     [zero-lock]   [zero-lock]
+	  [programmed]     [open]     [zero-lock]   [zero-lock]
+	  [programmed]  [programmed]  [zero-lock]   [zero-lock]
 
+
+In these cases you basically act as-if the zero-locked decoders
+essentially don't exist.
+
+
+
+                   Pre-lock    Legal
+decoder        0             1             2     ...     N
+------------------------------------------------------------------
+	  [zero-lock]    [zero-lock]  [zero-lock]      [open]
+	  [zero-lock]    [zero-lock]  [zero-lock]    [programmed]
+	  [zero-lock]    [zero-lock]  [programmed]     [open]
+	  [zero-lock]    [zero-lock]  [programmed]   [programmed]
+
+Again, in these causes you just act like the decoders don't exist.
+
+
+                           Illegal
+decoder        0              1             2      ...     N
+------------------------------------------------------------------
+            [open]       [zero-lock]      [open]      [zero-lock]
+          [programmed]   [zero-lock]      [open]      [zero-lock]
+            [open]       [zero-lock]   [programmed]   [zero-lock]
+          [zero-lock]       [open]      [zero-lock]   [zero-lock]
+          [zero-lock]       [open]      [zero-lock]     [open]
+          [zero-lock]       [open]      [zero-lock]     [open]
+          [zero-lock]       [open]      [zero-lock]   [programmed]
+
+These cases are all illegal because there is always some form of
+decoder committed out-of-order in the presence of at least one locked
+decoder (the zero-locks).
+
+
+                           Questionable
+decoder        0              1             2      ...     N
+------------------------------------------------------------------
+	  [zero-lock]    [programmed]   [zero-lock]    [zero-lock]
+          [programmed]   [zero-lock]    [programmed]   [zero-lock]
+	  [zero-lock]    [programmed]   [zero-lock]    [programmed]
+******    [zero-lock]    [programmed]   [zero-lock]  [open]...[open]
+
+
+In these cases, it's only really legal IFF the programmed decoder(s) are
+auto-decoders, because it means an out-of-order condition is impossible.
+
+I think you can validate this on probe, but it's annoying
+
+if zero-lock decoder is present
+	a) all decoders prior to the zero-lock are locked (zero | auto)
+	b) all decoders after the zero-lock are locked*
+
+* if an open decoder appears after a zero-lock, all decoders after
+  the open decoder must also be open. (supports corner case above)
+
+
+I... think that works?  It's annoying though lol.
+
+~Gregory
