@@ -1,337 +1,211 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011004.outbound.protection.outlook.com [52.101.62.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE932E6CD0
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Feb 2026 22:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770935031; cv=none; b=gf6qVQyrnylBh5Lb1fIasbUZ7EOBsKqsYuVzy79pt5jdT1ZzR562MPASZKLSTU3IdVLxZJvxYpdzGibfst0dkUBpNhnypIfXqvcMbaANaYjfCZV+rsexQk1oiDQ7cy8kZfeN7nctcuktWUfYqvy97/fP7xOaMmvIcea8MOyQ4s4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770935031; c=relaxed/simple;
-	bh=3pe2lXq+OsQThJZsB0tXLVGGIMomY7KPAFKXUjdSSwU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=GZMlgjxH2bc1CvVFjB8BnxGJsEWjDx/2T+y7Ai4Lk0yIdFaz/sOspZGtkvl5zHEFyFWJjbJaX/bGnr8p4QmMsYlWzDL4WSbOhP6llwBA2AYjG1sPuG4RicexNCFNmrnJtnF5Oou16QO0DY0RdJTDEHgUCyundKFqXx2ASs6sB2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lfyA6hU+; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18786330B07;
+	Thu, 12 Feb 2026 22:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.4
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770935907; cv=fail; b=FAh41GgqS8Tt5/bM0eAF7lHnN6O7s0nSHJD01MTZXm6+S5IRRcqQNrxlsGA0lnOQnqzEtgY9y+esoAWDZPAWtupNKVBeMzHg2sK/LrWtY3w+0Q4QaoAjOPNSngVr2dhIj+o2rradxPxAHMBT0YTuTi5vJJGe2/fZQ4UmcwUj7k4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770935907; c=relaxed/simple;
+	bh=xJpHE/qoF6LpIYKWBdkw9htjIHy0CWjyZhYrf1l0pn8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Rz0CQD8tle5/TWLybRB5ILtfOOKw5GBEVZTTxl2qSU5uR7AlBtEv8KRWFAl9QkW98ugLSDPXedQFIrZbHSFUYLd9az1zo9GZpqfOvKOTFQiOmRlNAr1L8JDf4vJXGLUzcK5qq5i6JUaMg3guxXYyobP5YIfhZei0MAI3QQJ7y10=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=J6si4uOF; arc=fail smtp.client-ip=52.101.62.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lfyA6hU+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770935029; x=1802471029;
-  h=message-id:date:mime-version:from:subject:to:cc:
-   content-transfer-encoding;
-  bh=3pe2lXq+OsQThJZsB0tXLVGGIMomY7KPAFKXUjdSSwU=;
-  b=lfyA6hU+kFtPI4ybwNwB6xUID+QGqo+WRuvZmu30S3cctAYdCOcWKFxJ
-   689U/bHpF/2RYqHSNk1GsMl0RAgsfvqj4haAQyyOFfFWA5VXFyj7vbpyK
-   Zn/8Mp5kNTktQzAttiPEZYKKY8YmC9WaDW9DHZSRaUPRbL9HCZwdlxxxT
-   HrfR+seNA3z6UrLL9NpAZknPEOCUDYY+/f3Jd5mdA780MREQ6V2FCAXHz
-   RlXWJMZGr9/gaDOtd1tZJbpfTA/+Xr2wrtvmR9MHDXcqCm6SzAbYVzEJs
-   4GN0XkinSnkFft+FH88dIkny/8lc6rRpz45sLPJBXwZZ5+46BMNCoyXnH
-   A==;
-X-CSE-ConnectionGUID: Newsg9UwTJKR9xg5Wu+4NA==
-X-CSE-MsgGUID: eR2UQswlQZmrW7S5gXPsqg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11699"; a="72025843"
-X-IronPort-AV: E=Sophos;i="6.21,287,1763452800"; 
-   d="scan'208";a="72025843"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2026 14:23:48 -0800
-X-CSE-ConnectionGUID: G0RVxuUlQi+4g3Dko5wbZg==
-X-CSE-MsgGUID: e+1gWhV9S+y+qnfteC+YLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,287,1763452800"; 
-   d="scan'208";a="216888158"
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.108.204]) ([10.125.108.204])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2026 14:23:48 -0800
-Message-ID: <a7496d42-eb0a-412e-b5c7-66b45f9e5258@intel.com>
-Date: Thu, 12 Feb 2026 15:23:46 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="J6si4uOF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=s8KqBa0BcmwtegCF0xyNIWRm4sAGO1+ggZqzo98OBWn5oOedyHq8xrmi2VykZx+rNfx4JlAC8Jcml+LUg/ayOHSkxgCSreP8gbX+ebUmENWQly926N14pYVb5vsi1dUJXYXZGhynmy6b698qL5Sk6b/M3pBHB8WC6y4ow1fqHdb210FM1HSetdm4S6yx9f1WVsovdWLsZ82oRAQIjkZOlKTBEZ6aPQlsu6MGUd5ovAugUgTSRdH5D8Hc3sDRtchY9qzzE2T8QlIVjH0vFwqgYwUGI4mQ6kDwK6dctKH5lx0Rco2D5zn/K8EM5RaKIY8bYVPGa4RugeNQK1BAl9PhUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X+scsZHnwcAdE81a3CTl+13YVPqRk1QF41KpgYvio0s=;
+ b=LAruU5zVYExWAytGecKRHV5k68HU7J59wxXCeh92AOXE93ihsnqb8qTFECzSWEc5/0CRPaW4tlHYNZF0T9bGEj2IOv7j3RZHQna/vpfbGwaXyjoQwT61dQHYU8ne1u35kz+bqiiJyuF60x0aW8VF6IbWvMHAk643bbWYZUEQJ+K+GfzoRmfAgJAqQtWNfB8DBBY7UetBwAgFgb9Pf56x9eGgTx9ohwEIeNOdymolaHKOWO2IEkGnpE4KfNP//rcQAB96KjhxaBZHbIiRNJmBI3TjzBZqjKKgwkH0ySE/IKV9Q21ejsgJm8zHnxB+0pcv0yq8wh4nEfa0brk+CdjPQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X+scsZHnwcAdE81a3CTl+13YVPqRk1QF41KpgYvio0s=;
+ b=J6si4uOFoZQsETVzfbsgW//3Yei9cArGH4mzAhMJIITK7jwLzhHUJ0XwZxOcZDSCWFeviSlaSZiFUWYZQBZUE6WNYGgwn4JgfWb2E8CDQs4dJr8UF0Pmff7HLKeHP6wEwnn+8QveyOzmk2HVwUzKrOutjs5Vjtn7x4dkMSf2zpQ=
+Received: from MN0PR05CA0027.namprd05.prod.outlook.com (2603:10b6:208:52c::24)
+ by SJ2PR12MB9189.namprd12.prod.outlook.com (2603:10b6:a03:55b::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9611.12; Thu, 12 Feb
+ 2026 22:38:18 +0000
+Received: from BN2PEPF000044A6.namprd04.prod.outlook.com
+ (2603:10b6:208:52c:cafe::59) by MN0PR05CA0027.outlook.office365.com
+ (2603:10b6:208:52c::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9611.12 via Frontend Transport; Thu,
+ 12 Feb 2026 22:38:06 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BN2PEPF000044A6.mail.protection.outlook.com (10.167.243.100) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9611.8 via Frontend Transport; Thu, 12 Feb 2026 22:38:16 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 12 Feb
+ 2026 16:38:14 -0600
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>, Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, Terry Bowman <terry.bowman@amd.com>,
+	Robert Richter <rrichter@amd.com>, Benjamin Cheatham
+	<benjamin.cheatham@amd.com>, Smita Koralahalli
+	<Smita.KoralahalliChannabasappa@amd.com>
+Subject: [PATCH] cxl/hdm: Avoid DVSEC fallback after region teardown
+Date: Thu, 12 Feb 2026 22:38:00 +0000
+Message-ID: <20260212223800.23624-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-Subject: [GIT PULL] Compute Express Link (CXL) changes for 7.0
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- Dan Williams <dan.j.williams@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Ira Weiny <ira.weiny@intel.com>, Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A6:EE_|SJ2PR12MB9189:EE_
+X-MS-Office365-Filtering-Correlation-Id: 79c585f1-d3f2-4bce-19b1-08de6a876a2b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?396nkLoq7kt2JjpsVzsBOD9kUo6crbnftw57dHpDffxE4MJYXQdfjcZtpgr/?=
+ =?us-ascii?Q?DTESXMlVNpok7Hg3+MbNrmaoH9w6LEfsyGA5eEkN/A5PUdJRqfl/HlWknPhc?=
+ =?us-ascii?Q?hktLK7e9+tPf5lYlTJaeESyJZInD82H14or1O8yHA2gIn3IRSnxpskSlW4Ae?=
+ =?us-ascii?Q?4IRqRn3DTUGneQN7wkAFwCKEHmY6GssWoJ3Jq+N0sPKPysd4uGFLIeCknemq?=
+ =?us-ascii?Q?dquPF2SpOsiMFy8/JXWJlWkQoU7NMeoZ6ffiqaBn0Whglk34KYAQIA4rd92R?=
+ =?us-ascii?Q?5xEQmdN35bE7mtAnmoEp57JNOWUM+Am0KUJcsrUAzaZVRgNaDNgjkzwfHwKN?=
+ =?us-ascii?Q?JvcRxkyAjR04U/9v5VLEjPzaZjFzCmKixGz327l4rkZF5VK8mgea5Mmm06qw?=
+ =?us-ascii?Q?llXgMXYuNwbO5Xb5jpZFBybWvuYKp5jsg1RcD4Wc7o7kw0mx7pu3x0SY1JyL?=
+ =?us-ascii?Q?pMT6PE7W6BEaH7c3mCE8E0rGw+nbmiK/t/AVLTyDB/jzaZrvGF/Jm8mqZDAN?=
+ =?us-ascii?Q?r4Th+FW1zvP3/YEldqRGkFgxns1Dkq/L8/aNJ1+QViP8pU6JM2jFxNDUktgq?=
+ =?us-ascii?Q?zGd3s3tpWGErmrNr5vDTk+i6Fzi03cBN8PZ9PSbaB63ucjzGvfuUTdlW2xyH?=
+ =?us-ascii?Q?66Jnt+RnzAVOBRR+fpTk71JnWqKYbQUu/o7KSIC9nZm5bjQWlGOvThSDB5lg?=
+ =?us-ascii?Q?xQn5mPDgor7GvkqK2GTvX9pfP/HiVEry/4NNBh5das1KI430Jgyc0SpmfbFr?=
+ =?us-ascii?Q?adYsgjg+dWkv1zng4wLB5tt18g+tVA+QRNfNw6IAVzGZ8b9wRzMNyw1S0MHE?=
+ =?us-ascii?Q?IYMd2YNsUhZtCPkkSNRFVdh3Yq7hOB8fPiGdrW4E/mQe64QhWWMJN3d7Fspo?=
+ =?us-ascii?Q?MhMbSKPkhd8prGdDNWK417qsIA6dx0VgQjWDz31AMX6nsGxHgYKQRVijp4rm?=
+ =?us-ascii?Q?dvofWfBQSikoSxXn5K46kq+pWyHlhVYCGyH3Cqjwpat+vWU8kw4TiDvhltyB?=
+ =?us-ascii?Q?qj2pH506cscaRujTSFlW9wqdhUoAHN3j8IK5R1eeqKBDhnH7dnLjD1S/hWmJ?=
+ =?us-ascii?Q?z95h3mqrSsKnux9Mzpdg1ltkzA/a3MA0/lzqoTU9oMgCLPXh0REzGyBsKaOd?=
+ =?us-ascii?Q?rsUM/zJpnv/YEiFQXML5ciURBy4CIso3WGybKC3OlTrNqcNvEZ8kn72Ef3Ky?=
+ =?us-ascii?Q?9V3w5jojCHyQeg42LKJs+MBRBH4/67H+JpTQvPlT0u2EAixcxFx+Rue/j6vH?=
+ =?us-ascii?Q?h9tG9Z/0R6ARXyK+/C/WvUQgQnQWwhauKiCX9EuB94/NJQq1Bs5fFL3K4kXC?=
+ =?us-ascii?Q?WRCb+p8gfKOyJUI+zno+UkmZEv3naP9hz2ZtZIhSnexFBLqxruS+PYEjnLAY?=
+ =?us-ascii?Q?WHyJ/PcCRPmoHSEEt0H0+BkAKx16+OeoDQcLCg5w4knNEIHFwlBeSdCoiCaA?=
+ =?us-ascii?Q?8L3kLNQ9O7HVwtANaUB99WlLc60sWR3/LEHR6gndujzzGN8U9X406S0JUgRb?=
+ =?us-ascii?Q?CKPZ5pXrdhOao2qMMhs52HEVo33fbU2bw0Si8uUMwxsrNnBXzYybY3/oO9ZU?=
+ =?us-ascii?Q?RfmVBVD9kMDnhLCz8cNL6/Yh06iXexeW+0Tz1p4d8UXTxZsgwLTKmO3vr/R7?=
+ =?us-ascii?Q?t3lb1I/b8t0D5BJGJzihhrZlZSH+3DW+9KKHMm80XH3eiHRP5BirouY53O1r?=
+ =?us-ascii?Q?shZN9w=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	tAOlVCTQDYk2apZhdvM3rDmEbkoM67fDj2ji/wOH8Xfb7PfPqZ3DpEsevgcBvwV1JGVpi+v56YyE/GadD2WK4ZMXRL1Gh2L+zO1AWwE6LFQclx/dCmnCYMXV5rrZyzXSeISBC7a/fCT3IDHVxQh3qv5mMc+tM7XtdGhlTzQwwmKxVQHegJedYeRNcnwGUidd2cB9IxHVJk7HsU5556Trd+lGbvZoabKZWVi4f+kjzsTtW91ycxEMgFq7CvExDWnzUzHkLavKlkIQPdc67A0AI92/FT0m/v1lrgqE31kGWQC1dtgRgK+K9gQjhSiaiHwkhy1LxEQK6nMHvnWnHI436f4w9+vs2pjrQg9o2l/hHr9TSfXYyTWT5tKPEUIHvrOCGqJaTT8mpmujeHqYVZsECvA+ZdCXl4cD8dgXP0kqf5lPIpocm8ZHGexogo4IkuIR
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2026 22:38:16.7133
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79c585f1-d3f2-4bce-19b1-08de6a876a2b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044A6.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9189
 
-Hi Linus, please pull from:
+After destroy-region, cxl_region_decode_reset() clears the HDM decoder
+registers (base/size/commit). If the memdev is subsequently bounced
+(disable/enable), port probe re-evaluates decoder capability via
+should_emulate_decoders().
 
-git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-for-7.0
+The existing logic checks each decoder's COMMITTED bit. Since those bits
+are cleared by region teardown, should_emulate_decoders() incorrectly
+falls back to DVSEC range emulation, even though HDM capability is still
+present.
 
-...to receive a collection of CXL changes. 
+DVSEC fallback marks the endpoint decoder as AUTO, which triggers
+cxl_add_to_region() -> construct_region(). That path copies the default
+interleave_granularity (4096) into the region parameters. The resulting
+spurious autodiscovered region consumes the CFMWS HPA space and causes a
+subsequent create-region to fail in hpa_alloc().
 
-There is a merge conflict that has been resolved [1] by the -next tree and I
-agree with the resolution. I also did a test merge [2] of cxl/next with
-upstream.
+Use the global CXL_HDM_DECODER_ENABLE bit instead of per-decoder COMMITTED
+bits to detect HDM capability. If the HDM decoder block is enabled, zeroed
+registers indicate teardown, not absence of HDM support. This prevents the
+unintended DVSEC fallback and subsequent region creation failure.
 
-Main changes in this pull request includes a set of patches that are going
-ahead to prepare for CXL type2 accelerator enabling series and Soft
-Reserved labeled memory handling series for CXL that are aimed for the next
-kernel merge window, part of a set of patches to enable CXL port error handling
-through PCIe AER that is aiming to be wrapped up in the next kernel merge window,
-a series to enable AMD Zen5 platform address translation for CXL, and a small
-number of updates and fixes for the CXL subsystem. The patches touching the PCI
-sub-system have ACKs from Bjorn.
+Based on cxl/fixes.
+base-commit: 8441c7d3bd6c5a52ab2ecf77e43a5bf262004f5c
 
-These all have appeared in -next for about a week with no reported issues.
-
-[1]: https://lore.kernel.org/linux-next/aWo3Xj3WU6Rqav5m@sirena.org.uk/
-[2]: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/?h=7.0-merge-test
-
+Fixes: 52cc48ad2a76 ("cxl/hdm: Limit emulation to the number of range registers")
+Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 ---
+ drivers/cxl/core/hdm.c | 25 +++++++++----------------
+ 1 file changed, 9 insertions(+), 16 deletions(-)
 
-The following changes since commit 0f61b1860cc3f52aef9036d7235ed1f017632193:
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index eb5a3a7640c6..a0718cbcc355 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -94,7 +94,6 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+ 	struct cxl_hdm *cxlhdm;
+ 	void __iomem *hdm;
+ 	u32 ctrl;
+-	int i;
+ 
+ 	if (!info)
+ 		return false;
+@@ -113,22 +112,16 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+ 		return false;
+ 
+ 	/*
+-	 * If any decoders are committed already, there should not be any
+-	 * emulated DVSEC decoders.
++	 * If HDM decoders are globally enabled, do not fall back to DVSEC
++	 * range emulation. Zeroed decoder registers after region teardown
++	 * do not imply absence of HDM capability.
++	 *
++	 * Falling back to DVSEC here would treat the decoder as AUTO and
++	 * may incorrectly latch default interleave settings.
+ 	 */
+-	for (i = 0; i < cxlhdm->decoder_count; i++) {
+-		ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(i));
+-		dev_dbg(&info->port->dev,
+-			"decoder%d.%d: committed: %ld base: %#x_%.8x size: %#x_%.8x\n",
+-			info->port->id, i,
+-			FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl),
+-			readl(hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(i)),
+-			readl(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(i)),
+-			readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(i)),
+-			readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(i)));
+-		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
+-			return false;
+-	}
++	ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
++	if (ctrl & CXL_HDM_DECODER_ENABLE)
++		return false;
+ 
+ 	return true;
+ }
+-- 
+2.17.1
 
-  Linux 6.19-rc5 (2026-01-11 17:03:14 -1000)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-for-7.0
-
-for you to fetch changes up to 63fbf275fa9f18f7020fb8acf54fa107e51d0f23:
-
-  Merge branch 'for-7.0/cxl-prm-translation' into cxl-for-next (2026-02-04 10:53:33 -0700)
-
-----------------------------------------------------------------
-cxl changes for v7.0
-
-- A set of commits that introduces cxl_memdev_attach and pave way for
-  soft reserved handling, type2 accelerator enabling, and LSA 2.0
-  enabling. All these series require the endpoint driver to settle
-  before continuing the memdev driver probe.
-
-dax/hmem, e820, resource: Defer Soft Reserved insertion until hmem is ready
-cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation
-cxl/mem: Drop @host argument to devm_cxl_add_memdev()
-cxl/mem: Convert devm_cxl_add_memdev() to scope-based-cleanup
-cxl/port: Arrange for always synchronous endpoint attach
-cxl/mem: Arrange for always-synchronous memdev attach
-cxl/mem: Fix devm_cxl_memdev_edac_release() confusion
-
-- A set to address CXL port error protocol handling and reporting. The
-  large patch series was split into 3 parts. Part 1 and 2 are included
-  here with part 3 coming later. Part 1 consists of a series of code
-  refactoring to PCI AER sub-system that addresses CXL and also CXL
-  RAS code to prepare for port error handling. Part 2 refactors the
-  CXL code to move management of component registers to cxl_port
-  objects to allow all CXL AER errors to be handled through the
-  cxl_port hierarchy.
-
-Part 2:
-cxl/port: Move endpoint component register management to cxl_port
-cxl/port: Map Port RAS registers
-cxl/port: Move dport RAS setup to dport add time
-cxl/port: Move dport probe operations to a driver event
-cxl/port: Move decoder setup before dport creation
-cxl/port: Cleanup dport removal with a devres group
-cxl/port: Reduce number of @dport variables in cxl_port_add_dport()
-cxl/port: Cleanup handling of the nr_dports 0 -> 1 transition
-
-Part 1:
-cxl: Update RAS handler interfaces to also support CXL Ports
-cxl/mem: Clarify @host for devm_cxl_add_nvdimm()
-PCI/AER: Update struct aer_err_info with kernel-doc formatting
-PCI/AER: Report CXL or PCIe bus type in AER trace logging
-PCI/AER: Use guard() in cxl_rch_handle_error_iter()
-PCI/AER: Move CXL RCH error handling to aer_cxl_rch.c
-PCI/AER: Update is_internal_error() to be non-static is_aer_internal_error()
-PCI/AER: Export pci_aer_unmask_internal_errors()
-cxl/pci: Move CXL driver's RCH error handling into core/ras_rch.c
-PCI/AER: Replace PCIEAER_CXL symbol with CXL_RAS
-cxl/pci: Remove CXL VH handling in CONFIG_PCIEAER_CXL conditional blocks from core/pci.c
-PCI: Replace cxl_error_is_native() with pcie_aer_is_native()
-cxl/pci: Remove unnecessary CXL RCH handling helper functions
-cxl/pci: Remove unnecessary CXL Endpoint handling helper functions
-PCI: Introduce pcie_is_cxl()
-PCI: Update CXL DVSEC definitions
-PCI: Move CXL DVSEC definitions into uapi/linux/pci_regs.h
-
-- A set of patches to provide AMD Zen5 platform address translation for
-  CXL using ACPI PRMT. Set includes a conventions document to explain
-  why this is needed and how it's implemented.
-
-cxl: Disable HPA/SPA translation handlers for Normalized Addressing
-cxl/region: Factor out code into cxl_region_setup_poison()
-cxl/atl: Lock decoders that need address translation
-cxl: Enable AMD Zen5 address translation using ACPI PRMT
-cxl/acpi: Prepare use of EFI runtime services
-cxl: Introduce callback for HPA address ranges translation
-cxl/region: Use region data to get the root decoder
-cxl/region: Add @hpa_range argument to function cxl_calc_interleave_pos()
-cxl/region: Separate region parameter setup and region construction
-cxl: Simplify cxl_root_ops allocation and handling
-cxl/region: Store HPA range in struct cxl_region
-cxl/region: Store root decoder in struct cxl_region
-cxl/region: Rename misleading variable name @hpa to @hpa_range
-Documentation/driver-api/cxl: ACPI PRM Address Translation Support and AMD Zen5 enablement
-cxl, doc: Moving conventions in separate files
-cxl, doc: Remove isonum.txt inclusion
-
-- A set of misc CXL patches of fixes, cleanups, and updates. Including
-  CXL address translation for unaligned MOD3 regions.
-
-cxl: Fix premature commit_end increment on decoder commit failure
-cxl/region: Use do_div() for 64-bit modulo operation
-cxl/region: Translate HPA to DPA and memdev in unaligned regions
-cxl/region: Translate DPA->HPA in unaligned MOD3 regions
-cxl/core: Fix cxl_dport debugfs EINJ entries
-cxl/acpi: Remove cxl_acpi_set_cache_size()
-cxl/hdm: Fix newline character in dev_err() messages
-cxl/pci: Remove outdated FIXME comment and BUILD_BUG_ON
-Documentation/driver-api/cxl: device hotplug section
-Documentation/driver-api/cxl: BIOS/EFI expectation update
-
-----------------------------------------------------------------
-Alison Schofield (3):
-      cxl/region: Translate DPA->HPA in unaligned MOD3 regions
-      cxl/region: Translate HPA to DPA and memdev in unaligned regions
-      cxl/region: Use do_div() for 64-bit modulo operation
-
-Cheatham, Benjamin (1):
-      cxl/core: Fix cxl_dport debugfs EINJ entries
-
-Dan Williams (17):
-      cxl/mem: Fix devm_cxl_memdev_edac_release() confusion
-      cxl/mem: Arrange for always-synchronous memdev attach
-      cxl/port: Arrange for always synchronous endpoint attach
-      cxl/mem: Convert devm_cxl_add_memdev() to scope-based-cleanup
-      cxl/mem: Drop @host argument to devm_cxl_add_memdev()
-      cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation
-      dax/hmem, e820, resource: Defer Soft Reserved insertion until hmem is ready
-      PCI/AER: Replace PCIEAER_CXL symbol with CXL_RAS
-      cxl/mem: Clarify @host for devm_cxl_add_nvdimm()
-      cxl/port: Cleanup handling of the nr_dports 0 -> 1 transition
-      cxl/port: Reduce number of @dport variables in cxl_port_add_dport()
-      cxl/port: Cleanup dport removal with a devres group
-      cxl/port: Move decoder setup before dport creation
-      cxl/port: Move dport probe operations to a driver event
-      cxl/port: Move dport RAS setup to dport add time
-      cxl/port: Move endpoint component register management to cxl_port
-      cxl/port: Unify endpoint and switch port lookup
-
-Dave Jiang (6):
-      cxl/pci: Remove CXL VH handling in CONFIG_PCIEAER_CXL conditional blocks from core/pci.c
-      Merge branch 'for-7.0/cxl-aer-prep' into cxl-for-next
-      Merge branch 'for-7.0/cxl-init' into cxl-for-next
-      Merge branch 'for-7.0/cxl-misc' into cxl-for-next
-      Merge branch 'for-7.0/cxl-aer-prep' into cxl-for-next
-      Merge branch 'for-7.0/cxl-prm-translation' into cxl-for-next
-
-Gregory Price (2):
-      Documentation/driver-api/cxl: BIOS/EFI expectation update
-      Documentation/driver-api/cxl: device hotplug section
-
-Li Ming (1):
-      cxl/acpi: Remove cxl_acpi_set_cache_size()
-
-Robert Richter (17):
-      cxl/hdm: Fix newline character in dev_err() messages
-      cxl, doc: Remove isonum.txt inclusion
-      cxl, doc: Moving conventions in separate files
-      Documentation/driver-api/cxl: ACPI PRM Address Translation Support and AMD Zen5 enablement
-      cxl/region: Rename misleading variable name @hpa to @hpa_range
-      cxl/region: Store root decoder in struct cxl_region
-      cxl/region: Store HPA range in struct cxl_region
-      cxl: Simplify cxl_root_ops allocation and handling
-      cxl/region: Separate region parameter setup and region construction
-      cxl/region: Add @hpa_range argument to function cxl_calc_interleave_pos()
-      cxl/region: Use region data to get the root decoder
-      cxl: Introduce callback for HPA address ranges translation
-      cxl/acpi: Prepare use of EFI runtime services
-      cxl: Enable AMD Zen5 address translation using ACPI PRMT
-      cxl/atl: Lock decoders that need address translation
-      cxl/region: Factor out code into cxl_region_setup_poison()
-      cxl: Disable HPA/SPA translation handlers for Normalized Addressing
-
-Samasth Norway Ananda (1):
-      cxl/pci: Remove outdated FIXME comment and BUILD_BUG_ON
-
-Terry Bowman (15):
-      PCI: Move CXL DVSEC definitions into uapi/linux/pci_regs.h
-      PCI: Update CXL DVSEC definitions
-      PCI: Introduce pcie_is_cxl()
-      cxl/pci: Remove unnecessary CXL Endpoint handling helper functions
-      cxl/pci: Remove unnecessary CXL RCH handling helper functions
-      PCI: Replace cxl_error_is_native() with pcie_aer_is_native()
-      cxl/pci: Move CXL driver's RCH error handling into core/ras_rch.c
-      PCI/AER: Export pci_aer_unmask_internal_errors()
-      PCI/AER: Update is_internal_error() to be non-static is_aer_internal_error()
-      PCI/AER: Move CXL RCH error handling to aer_cxl_rch.c
-      PCI/AER: Use guard() in cxl_rch_handle_error_iter()
-      PCI/AER: Report CXL or PCIe bus type in AER trace logging
-      PCI/AER: Update struct aer_err_info with kernel-doc formatting
-      cxl: Update RAS handler interfaces to also support CXL Ports
-      cxl/port: Map Port RAS registers
-
-Yuxiong Wang (1):
-      cxl: Fix premature commit_end increment on decoder commit failure
-
- Documentation/driver-api/cxl/conventions.rst       | 178 +-------
- .../driver-api/cxl/conventions/cxl-atl.rst         | 304 ++++++++++++++
- .../driver-api/cxl/conventions/cxl-lmh.rst         | 135 ++++++
- .../driver-api/cxl/conventions/template.rst        |  37 ++
- Documentation/driver-api/cxl/index.rst             |   1 +
- .../driver-api/cxl/platform/bios-and-efi.rst       |  23 +
- .../driver-api/cxl/platform/device-hotplug.rst     | 130 ++++++
- arch/x86/kernel/e820.c                             |  15 +-
- drivers/cxl/Kconfig                                |  11 +-
- drivers/cxl/acpi.c                                 |  46 +-
- drivers/cxl/core/Makefile                          |   4 +-
- drivers/cxl/core/atl.c                             | 211 ++++++++++
- drivers/cxl/core/cdat.c                            |   8 +-
- drivers/cxl/core/core.h                            |  40 ++
- drivers/cxl/core/edac.c                            |  64 +--
- drivers/cxl/core/hdm.c                             |  13 +-
- drivers/cxl/core/memdev.c                          | 109 +++--
- drivers/cxl/core/pci.c                             | 384 ++---------------
- drivers/cxl/core/pmem.c                            |  13 +-
- drivers/cxl/core/port.c                            | 183 ++++----
- drivers/cxl/core/ras.c                             | 198 +++++++++
- drivers/cxl/core/ras_rch.c                         | 121 ++++++
- drivers/cxl/core/region.c                          | 464 ++++++++++++++++-----
- drivers/cxl/core/regs.c                            |  14 +-
- drivers/cxl/cxl.h                                  |  80 ++--
- drivers/cxl/cxlmem.h                               |  21 +-
- drivers/cxl/cxlpci.h                               |  75 +---
- drivers/cxl/mem.c                                  |  77 ++--
- drivers/cxl/pci.c                                  |  67 +--
- drivers/cxl/port.c                                 | 162 +++++++
- drivers/dax/hmem/device.c                          |   3 +-
- drivers/dax/hmem/hmem.c                            |   5 +-
- drivers/pci/pci.h                                  |  39 +-
- drivers/pci/pcie/Kconfig                           |   9 -
- drivers/pci/pcie/Makefile                          |   1 +
- drivers/pci/pcie/aer.c                             | 137 +-----
- drivers/pci/pcie/aer_cxl_rch.c                     | 104 +++++
- drivers/pci/pcie/portdrv.h                         |  12 +
- drivers/pci/probe.c                                |  31 ++
- include/linux/aer.h                                |   2 +
- include/linux/ioport.h                             |   5 +
- include/linux/pci.h                                |   6 +
- include/ras/ras_event.h                            |  12 +-
- include/uapi/linux/pci_regs.h                      |  64 ++-
- kernel/resource.c                                  |  87 +++-
- tools/testing/cxl/Kbuild                           |   7 +-
- tools/testing/cxl/cxl_core_exports.c               |  22 -
- tools/testing/cxl/exports.h                        |  13 -
- tools/testing/cxl/test/mem.c                       |   2 +-
- tools/testing/cxl/test/mock.c                      |  36 +-
- 50 files changed, 2534 insertions(+), 1251 deletions(-)
- create mode 100644 Documentation/driver-api/cxl/conventions/cxl-atl.rst
- create mode 100644 Documentation/driver-api/cxl/conventions/cxl-lmh.rst
- create mode 100644 Documentation/driver-api/cxl/conventions/template.rst
- create mode 100644 Documentation/driver-api/cxl/platform/device-hotplug.rst
- create mode 100644 drivers/cxl/core/atl.c
- create mode 100644 drivers/cxl/core/ras_rch.c
- create mode 100644 drivers/pci/pcie/aer_cxl_rch.c
- delete mode 100644 tools/testing/cxl/exports.h
