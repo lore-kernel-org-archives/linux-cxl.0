@@ -1,162 +1,237 @@
-Received: from mail1.bemta41.messagelabs.com (mail1.bemta41.messagelabs.com [195.245.230.66])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDD135CBA8;
-	Thu, 12 Feb 2026 14:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.245.230.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2072EA731;
+	Thu, 12 Feb 2026 16:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770907475; cv=none; b=pHcEVEEK7rbfjkU9B6T2SjSPos+m+lvUoS5OHq0Wrj7NNw3NSPwQDeGt8veYlLOJx4pmcl2tdaC0jGBbmA4ty5xSZXZtMLrjEI1C8pO1eiW2jPB+F9HKcCRtsxnTMFt2b1S/mIkxuj6Km7dw07IQ1qniGZbGlDnU4qWvLjLEzLQ=
+	t=1770912210; cv=none; b=At6b4Was8S1z5f7JW9GZYBimy+5F8OwbPuad5BZzSGbU/ORLFnR4DNVxADS96YmJFpIcxD2SMBd2wU59AlIgb43i0dhq5gdpXD04ArwLrCUJrlQRz0BL/uSB7LyisxmQBcP8J1D/+ymT8AkVUlboHQwvHZAKhoIp5sO7+NqUc/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770907475; c=relaxed/simple;
-	bh=0qI2wDlRiVDjHJSxny5kDsk2/uU/zB905Nc28yYvU60=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dGjgT4QRGQPJPrElNuV8b3WXK6nHXlDOgDfPw84prx9vu8gkfqojiGrjG2MTt9PN3U8K/UwHw9Zhylue2gf1NXcrapw7S76nmQtcPgdwem9RshBkFYXcMKxvdG/pk166++o/tEHVh49zjtn0a/NLqkt3FJGlEug7wijExO99Jjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=gapSrQNC; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=O0FA7yBS; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=O0FA7yBS; arc=none smtp.client-ip=195.245.230.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1770912210; c=relaxed/simple;
+	bh=4fNG3CvKr4wbi0rfYGfQ4Cqr/mMgMiKPkb2OL6y6uAM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pGPErEiK314XfqMmiiZ/OiW1dEsnujJutCigqgZNnxJ6nx/hcMW7ss1ParosL7UjsawsvnDizU8beh9RkO0ilS3/ctWVu2oOSGwmPEl56ftJLDjOqbFJ5wNWJK4+D+FdXssrFIRenYN31K0LewNF8wjzE4ZFX4NCzrIq3PK70xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XIM+yHLJ; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="gapSrQNC";
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="O0FA7yBS";
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="O0FA7yBS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
-	s=170520fj; t=1770907472; i=@fujitsu.com;
-	bh=0qI2wDlRiVDjHJSxny5kDsk2/uU/zB905Nc28yYvU60=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	b=gapSrQNCYUSJp3fqFiQCE86ujRDUD+6ty1OGTYVW33ERCA30BA8E3AcT2XN+21dW2
-	 Pgw7grWZMs9OVS/hxSPCxJBICgkvGjx5OROZDb5zyltAjdfCiGWRvtIjnt8rBD1oqG
-	 GRfNq3l9ehcyIfQZX8FPrJpaXIf95fkUEDfG5ojpuDsfCS4BtdpB1vobaucQYksBkz
-	 h7YkciNjSmx+ub99jchz0zT8tYuMSK/2Hg7IWa70CWvBNbuYDeeMGmwreUgROzsx92
-	 0XmsZ8QMtzh+sHvhrn5D4cx7bMgmqVlt551X8sD3kvmM9rLARcKJv5weVkAElkuGLv
-	 JaWAethgQnJgQ==
-X-Brightmail-Tracker: H4sIAAAAAAAAA22Sf0wTZxjHee+u14O05CggJypzVUkkoYCL7s3
-  CHNmW5eI0gEZgRrcVuNFm/bVe2crGYlltBGYHY1ZCocDGhlDYmGWIMJSCjYMGgaHoQFCDdmoJ
-  Q0JXIYhbC8O5ZP89yefz/T7PHw+BCi7ikQSj1TBqhVgmxIOw3YmEOHbvPaM0vmcwHk7eGcbho
-  mcWwC+rvQic//EJDstNwwD2jRXgsGmsGUB9XQsOh1of47DbdQ+DleV6BJadG0Wh9etrODSfPI
-  /AIbMTg13n+zF4pbMKh/NGB4CG6hkAC10mBDYuPObAwlkdCn8x2hFo8ZhQOHGqHsBmzxwKb/Q
-  NceB46SUELi34shcct7CkKPqR4QuMNows43SHeZJLH3PMcOjWhhi6rusBQtusRTjdbWnm0vdb
-  KwBtdy8D2lR5lB6odXDpeVsUvVR5CaQEH+JIFZlK7bscybHOE1yVjqPt9NzCdaAIKwZBhID8C
-  VBnRu+DYhBIYGQyVTzSjPsBRp7FqJLTVzl+ICCPI5RhOmhNWvpjEPyPZAGUe+xl/4yTcdRvX1
-  WttIaRUdT1ls85/gBK1uKUa+Ih1w9Cybcpx+kC7mrrNupReRnun/nkbqrNMLYSpsjnqBpT/8q
-  CQHIHtWSZ+WdZAjXuPMtZ9UOo/oq7mH9Gfb6+rRJdzUZTo4M2tBSEmp/RzM9otQCxAsgy6g8Z
-  dWyCKFMtzZFo5GKpTCT+ODZLxOSqlSom9iOG1SSIcrJUIoZlRWyePEuWLVIwGhvwfVLQw+cTz
-  4HZZUNcL1hPIMJw/pVSo1QQnKnMzpOIWck76lwZw/aCjQQhpPh/3vWxEDWTw2jfk8p8/7iGKY
-  InDOPHu3yYz6rEclaas4qc4AWiqLvYjhJzD0w9qABTKBVMZAT/rymfSvpVSa7iadHab4+ATZG
-  hfBAQECDgqRi1XKr5L3eDCAIIQ/lJv/taeFKF5uk+t+8UxHfKDf3KKRrxvyhShxyKOxz3Zkth
-  Rpvx03WLaXvn57ae2vnSZuHt7dqFbciRxtDjWebwkxHXgwWaAxElgQGaqhJr9WdJNdMZU1PD9
-  gGloD91IX3/Yurt6e6fX6tP59zMy5an7ch835F/rfhyyoXDPWmD31pq+sJ3cS39Hm8u74eB9m
-  SMF5NSvjlleN9Fwrvu1dj2phcLwuwfyAOebJFtuik50pA/1BXSqJtJfqtFW3EgcahOMrlrZ8N
-  3Tds7dNY3+M6Bb7JfAQdTpftESu/rd9wJZ1zmObelnrIdvRzdfrWsabahI2ND2Ce/IlEbvg/U
-  Ne4HiVbRxEba4Dyxhxhn0reY9uSvj/bq3XUjRQ62lyfEWIk4IQZVs+K/AS4+BA9WBAAA
-X-Env-Sender: tomasz.wolski@fujitsu.com
-X-Msg-Ref: server-5.tower-859.messagelabs.com!1770907468!228754!1
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received:
-X-StarScan-Version: 9.121.0; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 29395 invoked from network); 12 Feb 2026 14:44:28 -0000
-Received: from unknown (HELO n03ukasimr01.n03.fujitsu.local) (62.60.8.97)
-  by server-5.tower-859.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 12 Feb 2026 14:44:28 -0000
-Received: from n03ukasimr01.n03.fujitsu.local (localhost [127.0.0.1])
-	by n03ukasimr01.n03.fujitsu.local (Postfix) with ESMTP id 177F5100351;
-	Thu, 12 Feb 2026 14:44:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 n03ukasimr01.n03.fujitsu.local 177F5100351
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
-	s=dspueurope; t=1770907468;
-	bh=0qI2wDlRiVDjHJSxny5kDsk2/uU/zB905Nc28yYvU60=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O0FA7yBSbJnF/0bttTalPSo7FkQmYeyYXpsypiDQ8dpNYAx3BiPML7oFM4TAhXY42
-	 xnoGWcayNAp2rDsU0Kljoz/tax5vOML7hSw8GNlkWHdc70MUUGT4gZpEerqEia4mnB
-	 N9LGD6B6tLXbgUXFtlVY/KOp1qXtDmTO4myN+NLh5QkOShRQhTYm6M+kITs9zaN0J0
-	 GrdDiNpaMn8E8U6GN5htZwjbzcHZjuGG/b++Btj/PZFmNrNQiQYah2+pjh9NNMfS6F
-	 AWFWM65KN/AmdmYXc04oEriVWJIddzd721JtfkqzpVRWETITjT2SpHhl3Fgpup1kNS
-	 3jc9uJPoKVNbQ==
-Received: from ubuntudhcp (unknown [10.172.107.4])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by n03ukasimr01.n03.fujitsu.local (Postfix) with ESMTPS id E89BC10034D;
-	Thu, 12 Feb 2026 14:44:27 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 n03ukasimr01.n03.fujitsu.local E89BC10034D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
-	s=dspueurope; t=1770907468;
-	bh=0qI2wDlRiVDjHJSxny5kDsk2/uU/zB905Nc28yYvU60=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O0FA7yBSbJnF/0bttTalPSo7FkQmYeyYXpsypiDQ8dpNYAx3BiPML7oFM4TAhXY42
-	 xnoGWcayNAp2rDsU0Kljoz/tax5vOML7hSw8GNlkWHdc70MUUGT4gZpEerqEia4mnB
-	 N9LGD6B6tLXbgUXFtlVY/KOp1qXtDmTO4myN+NLh5QkOShRQhTYm6M+kITs9zaN0J0
-	 GrdDiNpaMn8E8U6GN5htZwjbzcHZjuGG/b++Btj/PZFmNrNQiQYah2+pjh9NNMfS6F
-	 AWFWM65KN/AmdmYXc04oEriVWJIddzd721JtfkqzpVRWETITjT2SpHhl3Fgpup1kNS
-	 3jc9uJPoKVNbQ==
-Received: from isar2.ecs00.fujitsu.local (unknown [10.172.183.27])
-	by ubuntudhcp (Postfix) with ESMTP id 8338C2204EA;
-	Thu, 12 Feb 2026 14:44:27 +0000 (UTC)
-From: Tomasz Wolski <tomasz.wolski@fujitsu.com>
-To: alison.schofield@intel.com
-Cc: Smita.KoralahalliChannabasappa@amd.com,
-	ardb@kernel.org,
-	benjamin.cheatham@amd.com,
-	bp@alien8.de,
-	dan.j.williams@intel.com,
-	dave.jiang@intel.com,
-	dave@stgolabs.net,
-	gregkh@linuxfoundation.org,
-	huang.ying.caritas@gmail.com,
-	ira.weiny@intel.com,
-	jack@suse.cz,
-	jeff.johnson@oss.qualcomm.com,
-	jonathan.cameron@huawei.com,
-	len.brown@intel.com,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	lizhijian@fujitsu.com,
-	ming.li@zohomail.com,
-	nathan.fontenot@amd.com,
-	nvdimm@lists.linux.dev,
-	pavel@kernel.org,
-	peterz@infradead.org,
-	rafael@kernel.org,
-	rrichter@amd.com,
-	terry.bowman@amd.com,
-	tomasz.wolski@fujitsu.com,
-	vishal.l.verma@intel.com,
-	willy@infradead.org,
-	yaoxt.fnst@fujitsu.com,
-	yazen.ghannam@amd.com
-Subject: Re: [PATCH v6 0/9] dax/hmem, cxl: Coordinate Soft Reserved handling with CXL and HMEM
-Date: Thu, 12 Feb 2026 15:44:15 +0100
-Message-Id: <20260212144415.10418-1-tomasz.wolski@fujitsu.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <aYuEIRabA954iSfR@aschofie-mobl2.lan>
-References: <aYuEIRabA954iSfR@aschofie-mobl2.lan>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XIM+yHLJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770912209; x=1802448209;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4fNG3CvKr4wbi0rfYGfQ4Cqr/mMgMiKPkb2OL6y6uAM=;
+  b=XIM+yHLJOW28/mCfelHyIoHiVw1B6hzQcZvSadiolgn60mIpFkcTcbx9
+   in2X+1AuMiyCZW8m2SYUBXx1ycUqdSSS2nmEQJQ7M2cL8kRm2r4Pxd8tr
+   yUpjt6m4N4Z8LkkRiqQSg28VI4ED+EzHkIuMoVzkfX1eXe4Scf2F3tyl1
+   PnXM40eoQ14EXGZ1TQZSe9WX+EjQChaoZi+048Xu3a2upLZ37COKFHW/O
+   5weQPvdZpERVssNBXBqBAlyR+tttUbZAskSyqK+RLTvujYt4FEqDKUfxT
+   0eUBoxM5Kvd4MmhI032cZ4LA6yAvLLYgwpkQehV3pXIIXXHg65Xn3Wdyj
+   w==;
+X-CSE-ConnectionGUID: hfwCY7tPT36EK69D9PdeVQ==
+X-CSE-MsgGUID: yjmRcUkjRpuutldzBU3gsA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11699"; a="82813823"
+X-IronPort-AV: E=Sophos;i="6.21,286,1763452800"; 
+   d="scan'208";a="82813823"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2026 08:03:28 -0800
+X-CSE-ConnectionGUID: dnElJ8ayQoicUF6JOOrR1w==
+X-CSE-MsgGUID: IpkXjC5sRe6ez8ntWDGTVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,286,1763452800"; 
+   d="scan'208";a="217167749"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.108.204]) ([10.125.108.204])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2026 08:03:27 -0800
+Message-ID: <82bf721a-6e22-4e73-ad19-7a4744f9d145@intel.com>
+Date: Thu, 12 Feb 2026 09:03:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: name the anonymous MMOP enum as enum mmop
+To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, david@kernel.org, osalvador@suse.de,
+ gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+ akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, Jonathan Cameron <jonathan.cameron@huawei.com>
+References: <20260211215447.2194189-1-gourry@gourry.net>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260211215447.2194189-1-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
->
->FYI - I am able to confirm the dax regions are back for no-soft-reserved
->case, and my basic hotplug flow works with v6.
->
->-- Alison
 
-Hello Alison,
 
-I wanted to ask about this scenario.
-Is my understanding correct that this fix is needed for cases without Soft Reserve and:
-1) CXL memory is installed in the server (no hotplug) and OS is started
-2) CXL memory is hot-plugged after the OS starts
-3) Tests with cxl-test driver
+On 2/11/26 2:54 PM, Gregory Price wrote:
+> Give the MMOP enum (MMOP_OFFLINE, MMOP_ONLINE, etc) a proper type
+> name so the compiler can help catch invalid values being assigned to
+> variables of this type.
+> 
+> Leave the existing functions returning int alone to allow for
+> value-or-error pattern to remain unchanged without churn.
+> 
+> mmop_default_online_type is left as int because it uses the -1
+> sentinal value to signal it hasn't been initialized yet.
+> 
+> Keep the uint8_t buffer in offline_and_remove_memory() as-is for
+> space efficiency, with an explicit cast when we consume the value.
+> 
+> Move the enum definition before the CONFIG_MEMORY_HOTPLUG guard so
+> it is unconditionally available for struct memory_block in memory.h.
+> 
+> No functional change.
+> 
+> Link: https://lore.kernel.org/linux-mm/3424eba7-523b-4351-abd0-3a888a3e5e61@kernel.org/
+> Suggested-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Suggested-by: "David Hildenbrand (arm)" <david@kernel.org>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
 
-In such case either the admin fails to manually create region via cxl cli (if there
-was no auto-regions) or regions fails to be created automatically during driver probe
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Is this correct?
+> ---
+>  drivers/base/memory.c          |  2 +-
+>  include/linux/memory.h         |  3 ++-
+>  include/linux/memory_hotplug.h | 16 ++++++++--------
+>  mm/memory_hotplug.c            | 10 +++++-----
+>  4 files changed, 16 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 751f248ca4a8..3753ca80069d 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -452,7 +452,7 @@ static ssize_t phys_device_show(struct device *dev,
+>  static int print_allowed_zone(char *buf, int len, int nid,
+>  			      struct memory_group *group,
+>  			      unsigned long start_pfn, unsigned long nr_pages,
+> -			      int online_type, struct zone *default_zone)
+> +			      enum mmop online_type, struct zone *default_zone)
+>  {
+>  	struct zone *zone;
+>  
+> diff --git a/include/linux/memory.h b/include/linux/memory.h
+> index faeaa921e55b..5bb5599c6b2b 100644
+> --- a/include/linux/memory.h
+> +++ b/include/linux/memory.h
+> @@ -19,6 +19,7 @@
+>  #include <linux/node.h>
+>  #include <linux/compiler.h>
+>  #include <linux/mutex.h>
+> +#include <linux/memory_hotplug.h>
+>  
+>  #define MIN_MEMORY_BLOCK_SIZE     (1UL << SECTION_SIZE_BITS)
+>  
+> @@ -77,7 +78,7 @@ enum memory_block_state {
+>  struct memory_block {
+>  	unsigned long start_section_nr;
+>  	enum memory_block_state state;	/* serialized by the dev->lock */
+> -	int online_type;		/* for passing data to online routine */
+> +	enum mmop online_type;	/* for passing data to online routine */
+>  	int nid;			/* NID for this memory block */
+>  	/*
+>  	 * The single zone of this memory block if all PFNs of this memory block
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index f2f16cdd73ee..e77ef3d7ff73 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -16,11 +16,8 @@ struct resource;
+>  struct vmem_altmap;
+>  struct dev_pagemap;
+>  
+> -#ifdef CONFIG_MEMORY_HOTPLUG
+> -struct page *pfn_to_online_page(unsigned long pfn);
+> -
+>  /* Types for control the zone type of onlined and offlined memory */
+> -enum {
+> +enum mmop {
+>  	/* Offline the memory. */
+>  	MMOP_OFFLINE = 0,
+>  	/* Online the memory. Zone depends, see default_zone_for_pfn(). */
+> @@ -31,6 +28,9 @@ enum {
+>  	MMOP_ONLINE_MOVABLE,
+>  };
+>  
+> +#ifdef CONFIG_MEMORY_HOTPLUG
+> +struct page *pfn_to_online_page(unsigned long pfn);
+> +
+>  /* Flags for add_memory() and friends to specify memory hotplug details. */
+>  typedef int __bitwise mhp_t;
+>  
+> @@ -286,8 +286,8 @@ static inline void __remove_memory(u64 start, u64 size) {}
+>  
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+>  /* Default online_type (MMOP_*) when new memory blocks are added. */
+> -extern int mhp_get_default_online_type(void);
+> -extern void mhp_set_default_online_type(int online_type);
+> +extern enum mmop mhp_get_default_online_type(void);
+> +extern void mhp_set_default_online_type(enum mmop online_type);
+>  extern void __ref free_area_init_core_hotplug(struct pglist_data *pgdat);
+>  extern int __add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags);
+>  extern int add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags);
+> @@ -310,8 +310,8 @@ extern void sparse_remove_section(unsigned long pfn, unsigned long nr_pages,
+>  				  struct vmem_altmap *altmap);
+>  extern struct page *sparse_decode_mem_map(unsigned long coded_mem_map,
+>  					  unsigned long pnum);
+> -extern struct zone *zone_for_pfn_range(int online_type, int nid,
+> -		struct memory_group *group, unsigned long start_pfn,
+> +extern struct zone *zone_for_pfn_range(enum mmop online_type,
+> +		int nid, struct memory_group *group, unsigned long start_pfn,
+>  		unsigned long nr_pages);
+>  extern int arch_create_linear_mapping(int nid, u64 start, u64 size,
+>  				      struct mhp_params *params);
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index a63ec679d861..41f48f493b8e 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -221,7 +221,7 @@ void put_online_mems(void)
+>  bool movable_node_enabled = false;
+>  
+>  static int mhp_default_online_type = -1;
+> -int mhp_get_default_online_type(void)
+> +enum mmop mhp_get_default_online_type(void)
+>  {
+>  	if (mhp_default_online_type >= 0)
+>  		return mhp_default_online_type;
+> @@ -240,7 +240,7 @@ int mhp_get_default_online_type(void)
+>  	return mhp_default_online_type;
+>  }
+>  
+> -void mhp_set_default_online_type(int online_type)
+> +void mhp_set_default_online_type(enum mmop online_type)
+>  {
+>  	mhp_default_online_type = online_type;
+>  }
+> @@ -1046,7 +1046,7 @@ static inline struct zone *default_zone_for_pfn(int nid, unsigned long start_pfn
+>  	return movable_node_enabled ? movable_zone : kernel_zone;
+>  }
+>  
+> -struct zone *zone_for_pfn_range(int online_type, int nid,
+> +struct zone *zone_for_pfn_range(enum mmop online_type, int nid,
+>  		struct memory_group *group, unsigned long start_pfn,
+>  		unsigned long nr_pages)
+>  {
+> @@ -2305,7 +2305,7 @@ EXPORT_SYMBOL_GPL(remove_memory);
+>  
+>  static int try_offline_memory_block(struct memory_block *mem, void *arg)
+>  {
+> -	uint8_t online_type = MMOP_ONLINE_KERNEL;
+> +	enum mmop online_type = MMOP_ONLINE_KERNEL;
+>  	uint8_t **online_types = arg;
+>  	struct page *page;
+>  	int rc;
+> @@ -2338,7 +2338,7 @@ static int try_reonline_memory_block(struct memory_block *mem, void *arg)
+>  	int rc;
+>  
+>  	if (**online_types != MMOP_OFFLINE) {
+> -		mem->online_type = **online_types;
+> +		mem->online_type = (enum mmop)**online_types;
+>  		rc = device_online(&mem->dev);
+>  		if (rc < 0)
+>  			pr_warn("%s: Failed to re-online memory: %d",
 
-Best regards,
-Tomasz
