@@ -1,22 +1,23 @@
 Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ABC719CC14;
-	Fri, 13 Feb 2026 06:04:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA5542770A;
+	Fri, 13 Feb 2026 06:04:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770962650; cv=none; b=LAn60x7coktN/G4KspR7+HV1e9BRdbtQc4f1vV9exmvKwkX2ESaZpkGwVrayF+52NLswmS8XJDUR6GsPJRYi+xZXwVeLOs08B/stSpCamt3jsWW6Pi6Y0WPrFBdzJB2DELKZy7rAoejiVrtp3wS6KgGshZqq7eU4z5cw+C+v/uc=
+	t=1770962650; cv=none; b=sVzAJLS8tcBoOLgWev4x+bwuyV9TKsV0ITYGmG+K06W40JySaq2NQi4Co7V2PPtj8fLNWFw1jg1HJaxyHSBDvRX1WyZuN1ykDKSyvkswPeiAO4okqqPb0o1UjkQkGC+EtGTgqF3FXvbJpYCdlgBQrXpcQgEXslwvUyPynMcHdLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1770962650; c=relaxed/simple;
-	bh=LcfB9C2cJQllXs2RhviVjjwhtsUdvU69/itZZqTT8UA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZO8d/X8us+qXVzRTDeLPtW7d9pIQAzr4fHDA+wi4rTy4xfakb1NWKghdoOYP90Njsr/6n6kzyzN0vyEPZAG3OY/TWWSyQl/evE7pqpERM1S4ZzjmFbAnVkg6eI/GDk+T2x2h2f7xlVeMmhxaR4S8f/soHGEtlcQl9n18H9z//Rc=
+	bh=jsdlg2Ynwh2r9K78xMh03EfD8NoasnFnvJCqCdLLk4A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CmKMi4uhTP3QW/tHe3qYAiUylMLxGzfS/B7MeY3ae/N3dIppae5MJoioOU458EVv8nDfQfSWP3zJ5UavlWpsxuLq75+76M4QBoabr+N7Ay/L8QiqLZBHdixqEDfjBucG1PJ9ndzaiHr0g9vVcWB45QBJaY73WaDj/YJ4SuWDBc4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
 Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwB3kqjMvo5ptsgZBw--.1469S2;
-	Fri, 13 Feb 2026 14:03:56 +0800 (CST)
+	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwC3jUXOvo5pvFZNAA--.57062S2;
+	Fri, 13 Feb 2026 14:03:58 +0800 (CST)
 Received: from localhost.localdomain (unknown [218.76.62.144])
-	by mail (Coremail) with SMTP id AQAAfwAHXuvEvo5pWw0bAA--.32545S2;
-	Fri, 13 Feb 2026 14:03:48 +0800 (CST)
+	by mail (Coremail) with SMTP id AQAAfwAHXuvEvo5pWw0bAA--.32545S3;
+	Fri, 13 Feb 2026 14:03:49 +0800 (CST)
 From: Cui Chao <cuichao1753@phytium.com.cn>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
@@ -29,11 +30,15 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	linux-cxl@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
-	qemu-devel@nongnu.org
-Subject: [PATCH v4 0/1] Identify the accurate NUMA ID of CFMW
-Date: Fri, 13 Feb 2026 14:03:46 +0800
-Message-Id: <20260213060347.2389818-1-cuichao1753@phytium.com.cn>
+	qemu-devel@nongnu.org,
+	stable@vger.kernel.org,
+	Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: [PATCH v4 1/1] mm: numa_memblks: Identify the accurate NUMA ID of CFMW
+Date: Fri, 13 Feb 2026 14:03:47 +0800
+Message-Id: <20260213060347.2389818-2-cuichao1753@phytium.com.cn>
 X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20260213060347.2389818-1-cuichao1753@phytium.com.cn>
+References: <20260213060347.2389818-1-cuichao1753@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -41,26 +46,89 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwAHXuvEvo5pWw0bAA--.32545S2
-X-CM-SenderInfo: pfxlux1drrlkut6sx5pwlxzhxfrphubq/1tbiAQAFAGmONAkAtAADsp
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=cuichao175
+X-CM-TRANSID:AQAAfwAHXuvEvo5pWw0bAA--.32545S3
+X-CM-SenderInfo: pfxlux1drrlkut6sx5pwlxzhxfrphubq/1tbiAQAFAGmONAkAtAAEsu
+Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=cuichao175
 	3@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU8nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-Coremail-Antispam: 1Uk129KBjvJXoWxCr4rGryDtrWxuFyDAw43ZFb_yoW5CFW5pa
+	1agFZYgF4kJryxGFs7u3WUAw1IqFnYkF45GFZrCwnxZa1Ygw1Uuryavr1FvFn7tryfCF1r
+	XF4qy3WYvw1UZaDanT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-Changes in v4:
-- Condensed the impact description in changelog.
-- Added Gregory's Reviewed-by tag.
-- Added Dan's Reviewed-by tag.
-- Added Cc: <stable@vger.kernel.org> tag
+In some physical memory layout designs, the address space of CFMW (CXL
+Fixed Memory Window) resides between multiple segments of system memory
+belonging to the same NUMA node. In numa_cleanup_meminfo, these multiple
+segments of system memory are merged into a larger numa_memblk. When
+identifying which NUMA node the CFMW belongs to, it may be incorrectly
+assigned to the NUMA node of the merged system memory.
 
-Cui Chao (1):
-  mm: numa_memblks: Identify the accurate NUMA ID of CFMW
+When a CXL RAM region is created in userspace, the memory capacity of
+the newly created region is not added to the CFMW-dedicated NUMA node.
+Instead, it is accumulated into an existing NUMA node (e.g., NUMA0
+containing RAM). This makes it impossible to clearly distinguish
+between the two types of memory, which may affect memory-tiering
+applications.
 
+Example memory layout:
+
+Physical address space:
+    0x00000000 - 0x1FFFFFFF  System RAM (node0)
+    0x20000000 - 0x2FFFFFFF  CXL CFMW (node2)
+    0x40000000 - 0x5FFFFFFF  System RAM (node0)
+    0x60000000 - 0x7FFFFFFF  System RAM (node1)
+
+After numa_cleanup_meminfo, the two node0 segments are merged into one:
+    0x00000000 - 0x5FFFFFFF  System RAM (node0) // CFMW is inside the range
+    0x60000000 - 0x7FFFFFFF  System RAM (node1)
+
+So the CFMW (0x20000000-0x2FFFFFFF) will be incorrectly assigned to node0.
+
+To address this scenario, accurately identifying the correct NUMA node
+can be achieved by checking whether the region belongs to both
+numa_meminfo and numa_reserved_meminfo.
+
+While this issue is only observed in a QEMU configuration, and no known
+end users are impacted by this problem, it is likely that some firmware
+implementation is leaving memory map holes in a CXL Fixed Memory Window.
+CXL hotplug depends on mapping free window capacity, and it seems to be
+only a coincidence to have not hit this problem yet.
+
+Fixes: 779dd20cfb56 ("cxl/region: Add region creation support")
+Signed-off-by: Cui Chao <cuichao1753@phytium.com.cn>
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Reviewed-by: Gregory Price <gourry@gourry.net>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+---
  mm/numa_memblks.c | 9 +++++----
  1 file changed, 5 insertions(+), 4 deletions(-)
 
+diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
+index 5b009a9cd8b4..0892d532908c 100644
+--- a/mm/numa_memblks.c
++++ b/mm/numa_memblks.c
+@@ -568,15 +568,16 @@ static int meminfo_to_nid(struct numa_meminfo *mi, u64 start)
+ int phys_to_target_node(u64 start)
+ {
+ 	int nid = meminfo_to_nid(&numa_meminfo, start);
++	int reserved_nid = meminfo_to_nid(&numa_reserved_meminfo, start);
+ 
+ 	/*
+-	 * Prefer online nodes, but if reserved memory might be
+-	 * hot-added continue the search with reserved ranges.
++	 * Prefer online nodes unless the address is also described
++	 * by reserved ranges, in which case use the reserved nid.
+ 	 */
+-	if (nid != NUMA_NO_NODE)
++	if (nid != NUMA_NO_NODE && reserved_nid == NUMA_NO_NODE)
+ 		return nid;
+ 
+-	return meminfo_to_nid(&numa_reserved_meminfo, start);
++	return reserved_nid;
+ }
+ EXPORT_SYMBOL_GPL(phys_to_target_node);
+ 
 -- 
 2.33.0
 
