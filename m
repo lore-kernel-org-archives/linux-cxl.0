@@ -1,61 +1,61 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC1535F8A6
-	for <linux-cxl@vger.kernel.org>; Fri, 13 Feb 2026 16:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57973164DF
+	for <linux-cxl@vger.kernel.org>; Fri, 13 Feb 2026 16:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770999253; cv=none; b=JgDlXDGDrj2PUt1C1RBB81zqDfqj6a43As8sQOlMfXIknsGGcKpXFFkpouMSGOOJwElgIUY4VvASaCLDxipludwW0QB/bxJAmoJUUIN+5Q0r1mqk8/LWHs+9WRGmLQGpvUS6uEHVG0NjE3pOmw7amUTne11xEb5pCmoW6hYyRro=
+	t=1770999255; cv=none; b=cG6pJn6ViwmhbE8IHo8vUSgaVg9IdQeJGzcrcwldLusD17lPs11R1CLjJwUUA8TtRxKUZon81tLBzoPm3EFVPGRqKOXCthLQokkQlNLEu19chZz2DIfTx4jQABJO8CiGKEpOodr978zVaW+fYYQO7YdUySYZ3d8Ni2tyOFbI9tY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770999253; c=relaxed/simple;
-	bh=V51ablEssrNSfKuX1Hq5OtUiYKCcf8X5hv6UEk8jGlA=;
+	s=arc-20240116; t=1770999255; c=relaxed/simple;
+	bh=k0+aRJ3IUuarB2zMZblbi3T0axeHfpnV60kS0VoDgF0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N9rHX8XToHid0mVJxaD8fTDUNL6ZJaYq0+KhXgbIgJstVEIcWcLocKnIniJnres2B8BNBSweqqYmugAPBWbSMAFI4aEYmtwRol9jzQM7jro+ZJ8nfHwWgSpDndPmYxNT2NiBVIGDmFmeHoU1v5/099ckHuZB6NGj6MiamR5LWJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=htQ3ydDf; arc=none smtp.client-ip=209.85.222.182
+	 MIME-Version; b=RXbaJGsmaUxP0PgjahJpseVDi3N9MpCPP56M6tdlJW8uDYr51LCwAmVZF9dEz9a2Pyv1eRQERFs21WQhd25zXYhblcAi46VZRPkY2yYUhmnxNriU/ef9Jd/K58m5YC7kH/GPMhC/FHn++QNBGmQNPPyy0gR0FkLSZ3eu44fp1ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=I0XoICng; arc=none smtp.client-ip=209.85.222.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="htQ3ydDf"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-8c6f21c2d81so124552085a.2
-        for <linux-cxl@vger.kernel.org>; Fri, 13 Feb 2026 08:14:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="I0XoICng"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-8c9f6b78ca4so145628085a.0
+        for <linux-cxl@vger.kernel.org>; Fri, 13 Feb 2026 08:14:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1770999252; x=1771604052; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1770999253; x=1771604053; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=thDqtYQ9svVncr7vS9+e+A5WECJReTFglHn4jfgM4PU=;
-        b=htQ3ydDfBsUQ8o5IcIz7d8e0mIrmgh/YE104UM9pf528zXXMgtlsySDb+SXM5apGXq
-         3ZW+M2d28jLP+KUxxSSILcC2GORDOrpvP+82bPw8vwxcc4X2Ax/GozqGfxzzxzY8E2a3
-         SYLhRapxSr3QRdnJ/QCBSPxyQchGWX32jDFrZ9jYPCIFHe0wGYDM6N77YF6nvilVVfN5
-         KB//suc54zTPKxVM8Uo4Zpp5UgR0mAaApcHgAqLEJKu3m8uOug9qKZrz9+JfheimKbI7
-         6fzKANZwXl8xGgfzlrJfELvGPwq/2iKXfMj+mfzTCaPx8IS4HUzsUQKqN8+c/BjX0d0N
-         iczQ==
+        bh=1ohzmGcjlqDye0brlPb+kXwsuRqWVNcPe4L1+AfQUaY=;
+        b=I0XoICngKzupTlLR2OPZ7xDnbt+M6NUCk6snFjnAc/Znx7TPkMLNSntK5mJfHMQru6
+         E4W/HPsxsKxIaF8nQFLEL8Jlcv05SDnS6i+H8rilrXwEax2hw2RasmkEc2FEPDlsOe22
+         wGndE4mk3Ho+0dzvfqHAVP3EP+QaqrsfGFa1q6cf0qhNpRq0YNIjowajPPiNo5jJ2fw7
+         +n3F7sWXzeSNFc/B4kmLRmVy8kp8jgZyhBvrpdYB+V9uKul73ovjKYhd/0QYzWqtCmn0
+         SdfbBRmVAq5FWSvGdyMJJrII0yuvmd6FN5dn94lihNFqJqdHCG5bTAW2PpgE99GX7iiu
+         Amow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770999252; x=1771604052;
+        d=1e100.net; s=20230601; t=1770999253; x=1771604053;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=thDqtYQ9svVncr7vS9+e+A5WECJReTFglHn4jfgM4PU=;
-        b=sq77VUfLUuAZFEKE+Ps866dIQwBUUEappR3J2w9TvlsPJoahNfO2KVVyhL7UmNwfGM
-         Jk/anxGBLrpVrgIv0MX4n+xJdtcK7MM0VGwT6Q9NpFpf5NkyuU0uXd4UrpLtaAFXKXwq
-         RH19QOQoM9lvflYXssdOkMPZsSsXsgaCg+K4TyK+PZTgLLzICrlft7fubOmc9gPHxXwO
-         cQ8ms103vwid/ckU9agbV0G6uUrXTwDaLhV+JnIB3+5dXd5deshKDvBSMtZM3I1dl6FV
-         I3aqc1GoYB/k+vrkslAyzGrT1KKgDn1Hvav+eL0aChMNyaYMg1CgiuCKlFtwjR+0cX6c
-         X+pg==
-X-Gm-Message-State: AOJu0Yw4cMPC3BgLlEFu+68FOKd4QRYd/26Jc49vuny9ZHQJJEL1LViF
-	YZvoJbeC3AEKxb9M8NmfXnuQU5WU931QlzB5BxlNWwIHyZ6AGLnG2BKjNAePUmaKZeI=
-X-Gm-Gg: AZuq6aI7eNKE9fAZpOCpdUAl2thN0uIisfwGtbwNDMs6gvScX+6TWpobuWPoNP+8n58
-	UpN5buMHxrGR8Z8I7OJtwu3pn8hs7B3I14S7nq1bX6E+uHcrUZwoJo1gCSme5dQ7TFLrfr0tGvU
-	tS1BsJeSkbYSiLwlFZSR+ZpI4Qp7McYtLeMwzR7lSr/GK2mywY+HNYpXS0uPqNb5pid3GwoleDW
-	fMtM+ZLZBO3QeJFT87NRRY8H54B/DZ//lUS+e+U4zB8GzZWWWPh3BofqotzV24apoqEpm96O3jr
-	Ox8BCE526jI7N7ek1KLv6rJmXf2hLjNzFqk9uL3Nkz9BGm5GtR3oXDrPRsYKB+cMwVRI8V3lmUh
-	3JzjzB/pYm3ngpKrqlyz8e0zNC/EPh5vTmfFa3VWPd5Fe9Rf3Xh6wbiQwJTMz/WIO+58cZVY2A4
-	el6DIH+3UKnSUK5BKnUp5/BUuXks4w/xHp7vEx6IQ7JtJwIDMH3L9iVOrWvl0xhS/+TdA8lrgAD
-	Jje54OSRFE5+v1y9hN/XIadpw==
-X-Received: by 2002:a05:620a:46a4:b0:8b2:d72d:e41c with SMTP id af79cd13be357-8cb422549c1mr296857685a.5.1770999251629;
-        Fri, 13 Feb 2026 08:14:11 -0800 (PST)
+        bh=1ohzmGcjlqDye0brlPb+kXwsuRqWVNcPe4L1+AfQUaY=;
+        b=NAxa/fz3Eq+FPNBce5lzqI9yRM0UkqXshnaVrYo3X+qfti+t2dED7T4ds1F5paTv3Z
+         Sng+vAcVgP+Yu3mP3C4MxhIwluUb7KrciwdqBHCfqx/WoKev1gkG1cnXgmE/y5mN17Zv
+         +PHTKYqGoehcLeLGAKmHW2VFO6+wIeQRZBSKmE0QSfXfqJ68Wuc2a6eYAPGojX6dN54t
+         yEy9u1GyOMSnHhUY6E97qgL58ef/AqGt/mbCLRH3qjnle4ag5sGBMnszN75d95q2yJDi
+         MDORDncSE2jg4ILziiatZPkGj6Ow8PdjSiZRqrB7rYvdtzTuA/m4t67Sjcr66umxVOv6
+         7PTw==
+X-Gm-Message-State: AOJu0Yx1gmoyeG2x1bTwkccBvuUCdj3U6ZrCZ3AqjW4dj1CtpmBT/Hh4
+	nVMzC2AqlPm2YgQVOpnEfQol21ny+GdjPqxr9HtRKHoNdWaDy/RUi0DDWqRk5napAFg=
+X-Gm-Gg: AZuq6aJ01oZMufGY/DoK91rHmXyV+cQ5yDy4D6/mh+nQjt/9rQvJaeT5ThZDiEU5Ep/
+	IDqgoo6y/QCmSeCcXW1at8blq3tyuTPWYOF0nJBaSYd1stTX2XSrDyVTtiV1EHAyBr8yKpyqJBf
+	eh7Fd3lJsFicwPKf2PwWESQFc6XobM+txK/6nvvfhmBWOliuwSUr4Q8R3xqKZt1PMriaGSdK19M
+	bcI2+Yx2z/cblINHqiDLhIfG24MkYloiwn8oKMkIBwehpk4HKBAdh8AhensTvWJHl5vwi1n/F2T
+	lixXxKK+QssC03xQWw8lykNUOCz/CEbJUbicCcgezqt7z8ADvNIhjWpn9jvbY+UdQohm3Bi5xXR
+	ABBqciNzGILlQ5jErIQUZmmtY5eE9MsGIHE5wzFv96Nwltw2L9xLUM0emboGlS++MjyDJItTHIS
+	I2xI7yXFqrBBqR+yRnRWlSQrzWMnmhSfu+iQbnrFz+ldl6to4wJxIlNI3PWcl81NM1HlajqmZOF
+	TikoCOOcMoVlDE=
+X-Received: by 2002:a05:620a:4444:b0:8ca:fe7f:7324 with SMTP id af79cd13be357-8cb4c014375mr1237185a.53.1770999252828;
+        Fri, 13 Feb 2026 08:14:12 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cb39da3dc6sm401861185a.51.2026.02.13.08.14.10
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cb39da3dc6sm401861185a.51.2026.02.13.08.14.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 13 Feb 2026 08:14:11 -0800 (PST)
 From: Gregory Price <gourry@gourry.net>
@@ -63,12 +63,12 @@ To: Alejandro Lucero <alucerop@amd.com>
 Cc: linux-cxl@vger.kernel.org,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 14/22] cxl: Define a driver interface for DPA allocation
-Date: Fri, 13 Feb 2026 11:14:05 -0500
-Message-ID: <20260213161410.2945294-1-gourry@gourry.net>
+Subject: Re: [PATCH 21/22] sfc: create cxl region
+Date: Fri, 13 Feb 2026 11:14:06 -0500
+Message-ID: <20260213161410.2945294-2-gourry@gourry.net>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260201155438.2664640-15-alejandro.lucero-palau@amd.com>
-References: <20260201155438.2664640-1-alejandro.lucero-palau@amd.com> <20260201155438.2664640-15-alejandro.lucero-palau@amd.com>
+In-Reply-To: <20260201155438.2664640-22-alejandro.lucero-palau@amd.com>
+References: <20260201155438.2664640-1-alejandro.lucero-palau@amd.com> <20260201155438.2664640-22-alejandro.lucero-palau@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -83,83 +83,57 @@ This is not an automated email, the reviewer though this report=0D
 looked valid enough to consider discussion.=0D
 =0D
 ----=0D
-=0D
-Cursory browse, this does look like a legitimate reference leak.=0D
+sfc code so won't speak to the internals, but ordering question seems=0D
+legit.=0D
 =0D
 ~Gregory=0D
-=0D
 ----=0D
 =0D
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c=0D
-> index a172ce4e9b19..d60a697f12cc 100644=0D
-> --- a/drivers/cxl/core/hdm.c=0D
-> +++ b/drivers/cxl/core/hdm.c=0D
+On Sat, Feb 01, 2026, Alejandro Lucero wrote:=0D
+=0D
+> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sf=
+c/efx_cxl.c=0D
+> index 2cfd0a46225f..4d5f3974e51d 100644=0D
+> --- a/drivers/net/ethernet/sfc/efx_cxl.c=0D
+> +++ b/drivers/net/ethernet/sfc/efx_cxl.c=0D
 =0D
 [ ... ]=0D
 =0D
-> +static struct cxl_endpoint_decoder *=0D
-> +cxl_find_free_decoder(struct cxl_memdev *cxlmd)=0D
-> +{=0D
-> +	struct cxl_port *endpoint =3D cxlmd->endpoint;=0D
-> +	struct device *dev;=0D
-> +=0D
-> +	guard(rwsem_read)(&cxl_rwsem.dpa);=0D
-> +	dev =3D device_find_child(&endpoint->dev, NULL,=0D
-> +				find_free_decoder);=0D
-> +	if (!dev)=0D
-> +		return NULL;=0D
-> +=0D
-> +	return to_cxl_endpoint_decoder(dev);=0D
-> +}=0D
+> @@ -147,11 +155,11 @@ void efx_cxl_exit(struct efx_probe_data *probe_data=
+)=0D
+>=0D
+>  	if (probe_data->cxl->hdm_was_committed) {=0D
+>  		iounmap(probe_data->cxl->ctpio_cxl);=0D
+> -		cxl_unregister_region(probe_data->cxl->efx_region);=0D
+>  	} else {=0D
+>  		cxl_dpa_free(probe_data->cxl->cxled);=0D
+>  		cxl_put_root_decoder(probe_data->cxl->cxlrd);=0D
+>  	}=0D
+> +	cxl_unregister_region(probe_data->cxl->efx_region);=0D
 =0D
-[ ... ]=0D
+In the non-committed path, cxl_dpa_free() is called while the=0D
+endpoint decoder is still attached to the region.  Looking at=0D
+cxl_dpa_free() in drivers/cxl/core/hdm.c:=0D
 =0D
-> +struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_memdev *cxlmd,=0D
-> +					     enum cxl_partition_mode mode,=0D
-> +					     resource_size_t alloc)=0D
-> +{=0D
-> +	int rc;=0D
-> +=0D
-> +	if (!IS_ALIGNED(alloc, SZ_256M))=0D
-> +		return ERR_PTR(-EINVAL);=0D
-> +=0D
-> +	struct cxl_endpoint_decoder *cxled __free(put_cxled) =3D=0D
-> +		cxl_find_free_decoder(cxlmd);=0D
-> +=0D
-> +	if (!cxled)=0D
-> +		return ERR_PTR(-ENODEV);=0D
-> +=0D
-> +	rc =3D cxl_dpa_set_part(cxled, mode);=0D
-> +	if (rc)=0D
-> +		return ERR_PTR(rc);=0D
-> +=0D
-> +	rc =3D cxl_dpa_alloc(cxled, alloc);=0D
-> +	if (rc)=0D
-> +		return ERR_PTR(rc);=0D
-> +=0D
-> +	return no_free_ptr(cxled);=0D
-> +}=0D
-> +EXPORT_SYMBOL_NS_GPL(cxl_request_dpa, "CXL");=0D
+    if (cxled->cxld.region) {=0D
+        dev_dbg(dev, "decoder assigned to: %s\n",=0D
+            dev_name(&cxled->cxld.region->dev));=0D
+        return -EBUSY;=0D
+    }=0D
 =0D
-Does this leak the device reference obtained by device_find_child()=0D
-in cxl_find_free_decoder()?=0D
+Since cxl_unregister_region() has not run yet, cxled->cxld.region=0D
+is still set, and cxl_dpa_free() returns -EBUSY without freeing=0D
+the DPA.  The return value is not checked.=0D
 =0D
-device_find_child() increments the device refcount (reference A).=0D
-Then cxl_dpa_alloc() -> __cxl_dpa_reserve() calls get_device() on=0D
-the same device (reference B).=0D
+Should cxl_unregister_region() be called before cxl_dpa_free()=0D
+and cxl_put_root_decoder() in the else branch, matching the=0D
+reverse order of allocation in efx_cxl_init()?=0D
 =0D
-On the success path, no_free_ptr() inhibits the put_cxled cleanup,=0D
-so reference A is transferred to the caller.  The matching cleanup=0D
-function cxl_dpa_free() calls __cxl_dpa_release(), which drops=0D
-reference B via put_device(), but reference A is never released:=0D
+The cover letter notes that v23 expects committed decoders as the=0D
+primary flow, and uncommitted decoder support is deferred to=0D
+follow-up work, so this else branch may not be reachable in=0D
+practice today.  Still worth fixing the ordering now so it=0D
+doesn't bite when the uncommitted path is enabled later.=0D
 =0D
-    cxl_dpa_free()=0D
-      -> devm_cxl_dpa_release()=0D
-        -> __cxl_dpa_release()=0D
-          -> put_device()     /* drops reference B only */=0D
-=0D
-    /* reference A from device_find_child() is still held */=0D
-=0D
-The only caller in this series (sfc efx_cxl_init/efx_cxl_exit)=0D
-never calls put_device() on the returned cxled either, so the=0D
-endpoint decoder device refcount remains permanently elevated.=0D
+This issue is not fixed by the remaining commits in the series=0D
+(through 10fe989f9e85).=0D
