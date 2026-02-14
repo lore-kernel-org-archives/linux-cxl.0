@@ -1,230 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C7B63CB
-	for <linux-cxl@vger.kernel.org>; Sat, 14 Feb 2026 02:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0C12E62B5
+	for <linux-cxl@vger.kernel.org>; Sat, 14 Feb 2026 04:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771036365; cv=none; b=TVJBlAZzD905rtVQxBfDp2SvJ/GH+5qeTE4+lwRAQltghO4EMnGfz648EHN7yjrc8v+Upcut8G6AGcTjEfoc8RnTmPzdRMs7H+rTt7QWWl/Z1nAZ5Xtkt2RrPJiGO2nwA3gg0X02vPXFv7efyW4ZRBDVzDa3EF+pHjIN/5rfH9E=
+	t=1771043657; cv=none; b=gFcGgRZSruixpBr/Di6jllZhk3gfzTj9h7Kszd9qP9bfjQTKdZq3m4dg3ZWcwED/WUBrfzS7HA+BvjexP8TbYcmkewj2Iy2OEkoxEorIdTwGGocbU+VDCjaSX2Nuo3ewfygt6tQRuCNCaHE6/yc8xy3TkEngX6jkk3rF3WP+I04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771036365; c=relaxed/simple;
-	bh=7DRgXnhuE57KLANHRIp3C9Q+B05mbXGLHxWHi/nTtGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=op+bLcpUkkuBB99ozKtMoS770qsdyI/8Aicau2O40FwulOxyXo1bFhCT0ibLXEukmHXt2GxJsiPGpVKpYdP4d2Oxb/q9VY2P8r1vR4S84CxV9hUg/vPbYUqPsM9+X0v1ldWv2ajwKouXT94NWJP6RY5iqCSNce6/tChk7qZK6ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q9AA+btt; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1771043657; c=relaxed/simple;
+	bh=aiUZzn44P7TsJTdKDUDcfUm2UCHqM/TussKifHEIUEo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SJ092hq6cYUPZ3VFUlZR28VF5MCYmkp0tSgx69aJp2TxiCU+epNvCv8rJ/F5IY6wIkJMPD7zyTX8NhHfD1PPeMxFg9anh/13wZRfWAaHVPYyLL9jfnR5QeF/GqdOkGOFy3Z4Zb67xWF43heJYQAA/BJT69CGjDl74ms+k4feAZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cRPviRny; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q9AA+btt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cRPviRny"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771036364; x=1802572364;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7DRgXnhuE57KLANHRIp3C9Q+B05mbXGLHxWHi/nTtGQ=;
-  b=Q9AA+bttltf1METXSG9uvJHsQhE/sSba+OXaZPlXrg2twmUqtgDoFKuz
-   1TD5rc4sZEXR9RnQ67WHUzVmS2invTDXE+MMwQhIAXrsfhAADoJBamlUM
-   r7ivhzxpGtLm/eMlNWkFLUEpABUdwMEfjkDmiYn9j1uj55wFapcZAssme
-   9ZCohkuyCagZdg6QZH8JwO2nCp0yhfjizp3KZ5sK0uwqtfClH6YGlmLA/
-   OElyjJV4oGEV5RLKDoOnHP9MtI2ER8lwWnbd00KvsG2ERjNPWKzceQhVb
-   M6j7KFmzZH6YgdbmyhRpGGqgSzni9ofCCTTW8tuPXxDaZ0wQFEGiHrQQg
-   Q==;
-X-CSE-ConnectionGUID: LT9DAhT3T0KOdVbCkiK+NA==
-X-CSE-MsgGUID: 22wIz2WaRLG018AvhvgzJw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11700"; a="71418938"
+  t=1771043653; x=1802579653;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aiUZzn44P7TsJTdKDUDcfUm2UCHqM/TussKifHEIUEo=;
+  b=cRPviRnyF3LysNllN5QVxzwFiyvpVKgiGCyZ8EXqW46qJ91IyoGDw2dD
+   dOWI1InY9+kq/JLCZBBVAvXU3mXl0/NtDm/Ea4mSJPIwxbXjxngMtSu9O
+   EqCawiL18GswoA48z/sgY1N5bX/xa8CUDnsLWxrURQXtWrUaQUTgYb31f
+   D4S97o2iaRAaQAg8m/N3IhCAGyeSpLlzmEa3NaY1TsaiHHLNsbRd/YtYU
+   xhxuiK9gxqHBAcoYAxYrrEHjo1132cAXQPABRTMXJMcaZIkELcoNyPB98
+   m/HxXZO57tXv3AcKfHT08GzQFynblDp2DXSVpOk9sFYz4U8o0pXKOU9Dn
+   A==;
+X-CSE-ConnectionGUID: 83SFGpQtS6yeS7pgshWpeA==
+X-CSE-MsgGUID: 7Xgk5eb7Q1yu1WkdsGCWhA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11700"; a="72128180"
 X-IronPort-AV: E=Sophos;i="6.21,289,1763452800"; 
-   d="scan'208";a="71418938"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2026 18:32:43 -0800
-X-CSE-ConnectionGUID: QPyhWp7+SP6jX0BoOlNx/A==
-X-CSE-MsgGUID: TL5GxHuJSCi3vi53/N5dCw==
+   d="scan'208";a="72128180"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2026 20:34:12 -0800
+X-CSE-ConnectionGUID: OBzX8pdZRoaYiQ6W1GROvA==
+X-CSE-MsgGUID: XVpvDw/qRjaWeOh0OBdGcA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,289,1763452800"; 
-   d="scan'208";a="213096194"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.220.134])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2026 18:32:42 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Ben Cheatham <Benjamin.Cheatham@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org
-Subject: [ndctl PATCH v2] test/cxl-poison.sh: replace sysfs usage with cxl-cli cmds
-Date: Fri, 13 Feb 2026 18:32:37 -0800
-Message-ID: <20260214023239.1352245-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
+   d="scan'208";a="217215968"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 13 Feb 2026 20:34:10 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vr7M8-00000000wDg-0RY8;
+	Sat, 14 Feb 2026 04:34:08 +0000
+Date: Sat, 14 Feb 2026 12:33:44 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Subject: Re: [PATCH v3 1/2] cxl: Move devm_cxl_add_nvdimm_bridge() to
+ cxl_pmem.ko
+Message-ID: <202602141202.umHQ46td-lkp@intel.com>
+References: <20260213224038.549798-2-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260213224038.549798-2-dave.jiang@intel.com>
 
-cxl-cli commands were recently added for poison inject and clear
-operations by memdev. Replace the writes to sysfs with the new
-commands in the cxl-poison unit test.
+Hi Dave,
 
-Continue to use the sysfs writes for inject and clear poison
-by region offset until that support arrives in cxl-cli.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
+[auto build test WARNING on 63fbf275fa9f18f7020fb8acf54fa107e51d0f23]
 
-Hi Ben - This is updated to use the naming we are about to
-merge. Please review and add any more testing you'd like to
-see covered for the media poison cmds.
+url:    https://github.com/intel-lab-lkp/linux/commits/Dave-Jiang/cxl-Move-devm_cxl_add_nvdimm_bridge-to-cxl_pmem-ko/20260214-064242
+base:   63fbf275fa9f18f7020fb8acf54fa107e51d0f23
+patch link:    https://lore.kernel.org/r/20260213224038.549798-2-dave.jiang%40intel.com
+patch subject: [PATCH v3 1/2] cxl: Move devm_cxl_add_nvdimm_bridge() to cxl_pmem.ko
+config: powerpc64-randconfig-002-20260214 (https://download.01.org/0day-ci/archive/20260214/202602141202.umHQ46td-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 9b8addffa70cee5b2acc5454712d9cf78ce45710)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260214/202602141202.umHQ46td-lkp@intel.com/reproduce)
 
-Change in v2: use final format of new cxl-cli cmds
-	inject-media-poison and clear-media-poison
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602141202.umHQ46td-lkp@intel.com/
 
+All warnings (new ones prefixed by >>):
 
- test/cxl-poison.sh | 79 ++++++++++++++++++++++++----------------------
- 1 file changed, 42 insertions(+), 37 deletions(-)
+>> Warning: drivers/cxl/pmem.c:24 expecting prototype for __devm_cxl_add_nvdimm_bridge(). Prototype was for devm_cxl_add_nvdimm_bridge() instead
 
-diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
-index 59e807ece932..05ab7bc1fc6a 100644
---- a/test/cxl-poison.sh
-+++ b/test/cxl-poison.sh
-@@ -41,32 +41,37 @@ find_auto_region()
- 	echo "$region"
- }
- 
--# When cxl-cli support for inject and clear arrives, replace
--# the writes to /sys/kernel/debug with the new cxl commands.
--
--_do_poison_sysfs()
-+_do_poison()
- {
- 	local action="$1" dev="$2" addr="$3"
- 	local expect_fail=${4:-false}
- 
--	if "$expect_fail"; then
--		if echo "$addr" > "/sys/kernel/debug/cxl/$dev/${action}_poison"; then
--			echo "Expected ${action}_poison to fail for $addr"
--			err "$LINENO"
--		fi
--	else
--		echo "$addr" > "/sys/kernel/debug/cxl/$dev/${action}_poison"
-+	# Regions use sysfs, memdevs use cxl-cli commands
-+	if [[ "$dev" =~ ^region ]]; then
-+		local sysfs_path="/sys/kernel/debug/cxl/$dev/${action}_poison"
-+		"$expect_fail" && echo "$addr" > "$sysfs_path" && err "$LINENO"
-+		"$expect_fail" || echo "$addr" > "$sysfs_path"
-+		return
- 	fi
-+
-+	case "$action" in
-+	inject) local cmd=("$CXL" inject-media-poison "$dev" -a "$addr") ;;
-+	clear)	local cmd=("$CXL" clear-media-poison "$dev" -a "$addr") ;;
-+	*)	err "$LINENO" ;;
-+	esac
-+
-+	"$expect_fail" && "${cmd[@]}" && err "$LINENO"
-+	"$expect_fail" || "${cmd[@]}"
- }
- 
--inject_poison_sysfs()
-+inject_poison()
- {
--	_do_poison_sysfs 'inject' "$@"
-+	_do_poison 'inject' "$@"
- }
- 
--clear_poison_sysfs()
-+clear_poison()
- {
--	_do_poison_sysfs 'clear' "$@"
-+	_do_poison 'clear' "$@"
- }
- 
- check_trace_entry()
-@@ -119,27 +124,27 @@ validate_poison_found()
- test_poison_by_memdev_by_dpa()
- {
- 	find_memdev
--	inject_poison_sysfs "$memdev" "0x40000000"
--	inject_poison_sysfs "$memdev" "0x40001000"
--	inject_poison_sysfs "$memdev" "0x600"
--	inject_poison_sysfs "$memdev" "0x0"
-+	inject_poison "$memdev" "0x40000000"
-+	inject_poison "$memdev" "0x40001000"
-+	inject_poison "$memdev" "0x600"
-+	inject_poison "$memdev" "0x0"
- 	validate_poison_found "-m $memdev" 4
- 
--	clear_poison_sysfs "$memdev" "0x40000000"
--	clear_poison_sysfs "$memdev" "0x40001000"
--	clear_poison_sysfs "$memdev" "0x600"
--	clear_poison_sysfs "$memdev" "0x0"
-+	clear_poison "$memdev" "0x40000000"
-+	clear_poison "$memdev" "0x40001000"
-+	clear_poison "$memdev" "0x600"
-+	clear_poison "$memdev" "0x0"
- 	validate_poison_found "-m $memdev" 0
- }
- 
- test_poison_by_region_by_dpa()
- {
--	inject_poison_sysfs "$mem0" "0"
--	inject_poison_sysfs "$mem1" "0"
-+	inject_poison "$mem0" "0"
-+	inject_poison "$mem1" "0"
- 	validate_poison_found "-r $region" 2
- 
--	clear_poison_sysfs "$mem0" "0"
--	clear_poison_sysfs "$mem1" "0"
-+	clear_poison "$mem0" "0"
-+	clear_poison "$mem1" "0"
- 	validate_poison_found "-r $region" 0
- }
- 
-@@ -166,15 +171,15 @@ test_poison_by_region_offset()
- 	# Inject at the offset and check result using the hpa
- 	# ABI takes an offset, but recall the hpa to check trace event
- 
--	inject_poison_sysfs "$region" "$cache_size"
-+	inject_poison "$region" "$cache_size"
- 	check_trace_entry "$region" "$hpa1"
--	inject_poison_sysfs "$region" "$((gran + cache_size))"
-+	inject_poison "$region" "$((gran + cache_size))"
- 	check_trace_entry "$region" "$hpa2"
- 	validate_poison_found "-r $region" 2
- 
--	clear_poison_sysfs "$region" "$cache_size"
-+	clear_poison "$region" "$cache_size"
- 	check_trace_entry "$region" "$hpa1"
--	clear_poison_sysfs "$region" "$((gran + cache_size))"
-+	clear_poison "$region" "$((gran + cache_size))"
- 	check_trace_entry "$region" "$hpa2"
- 	validate_poison_found "-r $region" 0
- }
-@@ -194,21 +199,21 @@ test_poison_by_region_offset_negative()
- 	if [[ $cache_size -gt 0 ]]; then
- 		cache_offset=$((cache_size - 1))
- 		echo "Testing offset within cache: $cache_offset (cache_size: $cache_size)"
--		inject_poison_sysfs "$region" "$cache_offset" true
--		clear_poison_sysfs "$region" "$cache_offset" true
-+		inject_poison "$region" "$cache_offset" true
-+		clear_poison "$region" "$cache_offset" true
- 	else
- 		echo "Skipping cache test - cache_size is 0"
- 	fi
- 
- 	# Offset exceeds region size
- 	exceed_offset=$((region_size))
--	inject_poison_sysfs "$region" "$exceed_offset" true
--	clear_poison_sysfs "$region" "$exceed_offset" true
-+	inject_poison "$region" "$exceed_offset" true
-+	clear_poison "$region" "$exceed_offset" true
- 
- 	# Offset exceeds region size by a lot
- 	large_offset=$((region_size * 2))
--	inject_poison_sysfs "$region" "$large_offset" true
--	clear_poison_sysfs "$region" "$large_offset" true
-+	inject_poison "$region" "$large_offset" true
-+	clear_poison "$region" "$large_offset" true
- }
- 
- run_poison_test()
 -- 
-2.37.3
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
