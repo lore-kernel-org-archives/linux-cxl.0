@@ -1,121 +1,154 @@
-Received: from dwarf.ash.relay.mailchannels.net (dwarf.ash.relay.mailchannels.net [23.83.222.53])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE583168F6
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Feb 2026 22:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771367117; cv=pass; b=u3cGKjLdP4SlfLx1H2YTjVH/diyukhRODDqBvsPYF8emoxe9Kz+UvI2ftbwYsGsuSqpj7Fk1oD61SzJZBKB6sBKFN8ay+iElNTkfhGZbxFQwpMtWXZ4O6sSOTeF/AxrCct3/mgDXZ+TgIHaJgiReXx8oS6+ILFvviIeHtvxeCeg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771367117; c=relaxed/simple;
-	bh=hwzXTERe/Gz1NXM88vOPhJzyPyJWCimzaD/H2X3aTKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T/ikoo4F5ihQP6JJVJdYWQ8j/6U51SfdC81GAt6QvRilHrHqniuP+kzFUIkLHrS6YEDSo5BWePQMZJDqTsVIRkY7fBgDqqIK7x6C4cO9SaPo8KyJtGzeQuLidfU+DizkdmgEbRy1cVpzyrMw9O2wz9Lx39k+k+JSmnXT59ykEOY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=SmzHFiX9; arc=pass smtp.client-ip=23.83.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C79318B95;
+	Tue, 17 Feb 2026 22:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771367367; cv=none; b=nOxqwtnZv8LVWcKpzpUm5k9+jtAJ3wuakI09EtvbhC+R4pEWVIPYCEoV9zuhvrw455Lk07yAfJRTgKZy0Cgojz3TNuxHlbcyvrWSN9fhQVCKiEHA5fZBme4qfC4/RI2EnaN8fmRVgNrdwNup50ZDlSadcAdcA5mGiqKnpfnO+Zg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771367367; c=relaxed/simple;
+	bh=9vocwgJYiIdXWTL9liabZjq9k/+fVs1e8SLReE5gZuI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Yltkgu/BSmBFSEueiNA6S9eHwNRBQAZByQc57O4DYdsN4CSYNcWMFM8iliSHd/rPWVpQvmCC7gH4YFrCyqjcG3C6O1xSnCjo9osdlu7PsLXJwRwj/C+BKyjqeXqifD5PAyKwkFHhaySI3KL3ZgZXJzfe37e5QtjD4Yn+R2Gph7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LDmShwH1; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="SmzHFiX9"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 11D3D7E0A34;
-	Tue, 17 Feb 2026 22:25:09 +0000 (UTC)
-Received: from pdx1-sub0-mail-a249.dreamhost.com (100-97-23-78.trex-nlb.outbound.svc.cluster.local [100.97.23.78])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id AAAF87E150B;
-	Tue, 17 Feb 2026 22:25:08 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1771367108;
-	b=lGbEuGmzb0Wh+/r23hFeHvKkzsGnH21O37pM5UR5teXIM4UY5VuMEotr/ETa/dafrLgvfX
-	5UGEVPsi6JEjbEFYeRIL6JofFzyTWAuVe+1sBeG6d75pQRdcD+nJu04LWUD4im0om0R/jH
-	cIP/lxATqJrkxYC0FfyZBb/qhGoNoSxsupCaqp9bLH5JORg38SUvhgSvyWtozZNTEsOYTJ
-	ikCXjWti+Kiy1N8xnGu7MSr1ocjPceZwvhZVDGueEdhi62vFmolihMYSCfCYjygXFaW/p5
-	QYlOHlvqFWnl81VONFVB5w1Exr/Kpc6DQ+RvHSqQP17YArHAEwqBge2eQJiF2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1771367108;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=hwzXTERe/Gz1NXM88vOPhJzyPyJWCimzaD/H2X3aTKQ=;
-	b=ACzSV3VEIf609YwmjJt6DzE64Stu0HUQzqay5fgpjuRA8Blxd9UobeU8/TlBKUDyxdeMxS
-	ZWDIC7QFHC6XBRV9V35RQeImvDgtjla9VtzPCVZEg3tUK0fch1mdngk5yc1riNiEOt/ACv
-	+cyzAQbNhYdfJ4I3JGvrQd45PF1hmd+PfCWl8/WxGYV7KzCbdqGktv3y/MIz/TcOyWdMIl
-	6/MwmlgHHFPcgc64t1x9SqeTqOaN8psnz0iJ6MdbRigN1eDB+3XeyKOuNhXWmZvOi22O7U
-	X2DMZVNlIYDwt/QKbjHe+r/LDXlgrcI5Q69JewQf4M3sEtnwlqxvqvTswvBLQA==
-ARC-Authentication-Results: i=1;
-	rspamd-659f7bc6cc-q7dr7;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Society-Stretch: 715bfa6e42421df6_1771367108950_2003071276
-X-MC-Loop-Signature: 1771367108950:1848218416
-X-MC-Ingress-Time: 1771367108950
-Received: from pdx1-sub0-mail-a249.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.97.23.78 (trex/7.1.3);
-	Tue, 17 Feb 2026 22:25:08 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a249.dreamhost.com (Postfix) with ESMTPSA id 4fFvN415Knz103y;
-	Tue, 17 Feb 2026 14:25:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1771367108;
-	bh=hwzXTERe/Gz1NXM88vOPhJzyPyJWCimzaD/H2X3aTKQ=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=SmzHFiX9D09Pef1d6eCvlmL4wZwfBIZuWpE6RJDhkbyfdcEfwvHkhUBPK5HWYGlgs
-	 XfVChBiCf8A8cjyrPoMwMPTOz0u0XV4kEywMVoQmdKf3LE7Yq6GzxuwRoFBHQismJd
-	 UqmqI/hTbykWmy9PSKlbkcenSf3w8zWdRGhWQO/a2kslk6tKyutzAy7KOyzJ2ibFEL
-	 3fdoFekZ2nknxHCIrDuTSFSFYB+32S+wtWQf7BCaKEyB2jfelp9MmcW9wzH1EB4Y9s
-	 dqXd3ePAjMEBIENZeyNy/jkdfzGHVrgzK3cxnrswtCcIkGPB9j9UCPIN+paB5xa7hI
-	 +G3J72Oymvf9w==
-Date: Tue, 17 Feb 2026 14:25:05 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] cxl: Test decoder flags as bitmasks
-Message-ID: <20260217222505.p4wguawtfmdlrokg@offworld>
-References: <20260206181404.1025991-1-alison.schofield@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LDmShwH1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771367365; x=1802903365;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9vocwgJYiIdXWTL9liabZjq9k/+fVs1e8SLReE5gZuI=;
+  b=LDmShwH1eL6i9JjMkFG/EPLSBuJT8A992p/HPR2tDxRY5YAx6K5LKpbK
+   dra+5e8qJ+VDK2JqfRt0GFby6dmII/vqV4SFLgnChqLnbcpldg4+3Oc2D
+   714utdPDgGxyNykU8/unPN/cLkpfL/3yKUbY7h67qs5bZIkYFu3kFWqzL
+   /o2iet1iLPMbZpJUPjdU6v3JFedMKawkmr8Y22fzHAJNCrEf4y9EzhmRv
+   xaYbzso+jDW4EDyaMdJiXZcez9/H+kXEwzLN6U8Qwg3jbM/nGd6zR4cAi
+   aXdS5IXQkdBHEV1R55UT9ljzpY7I8BLAekAQMA5lvGbAfVoDY3CFnKxcu
+   Q==;
+X-CSE-ConnectionGUID: Kla/LaBDQROOxFEBtXndQQ==
+X-CSE-MsgGUID: afF4kZivTvWSyKMc/xOeYw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11704"; a="75046093"
+X-IronPort-AV: E=Sophos;i="6.21,297,1763452800"; 
+   d="scan'208";a="75046093"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2026 14:29:25 -0800
+X-CSE-ConnectionGUID: 4psb9NDtQcCidMbOp7G7KA==
+X-CSE-MsgGUID: WpuqMONpS1iL11abx9cAhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,297,1763452800"; 
+   d="scan'208";a="218154517"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.109.138]) ([10.125.109.138])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2026 14:29:24 -0800
+Message-ID: <24dad014-2f0e-4b1f-9307-94f59b201e06@intel.com>
+Date: Tue, 17 Feb 2026 15:29:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260206181404.1025991-1-alison.schofield@intel.com>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/hdm: Avoid DVSEC fallback after region teardown
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
+ Benjamin Cheatham <benjamin.cheatham@amd.com>
+References: <20260212223800.23624-1-Smita.KoralahalliChannabasappa@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260212223800.23624-1-Smita.KoralahalliChannabasappa@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 06 Feb 2026, Alison Schofield wrote:
 
->The CXL decoder flags are defined as bitmasks, not bit indices.
->Using test_bit() to check them interprets the mask value as a bit
->index, which is the wrong test.
->
->For CXL_DECODER_F_NORMALIZED_ADDRESSING the test reads beyond the
->flags word, making the flag sometimes appear set and blocking creation
->of CXL region debugfs attributes that support poison operations.
->
->For CXL_DECODER_F_LOCK the test reads beyond the defined bits, causing
->the test to always return false and allowing resets that should have
->been blocked.
->
->Replace test_bit() with a bitmask check.
->
->Found with cxl-test.
->
 
-Nice find. Other than splitting the fixes as suggested by Dave:
+On 2/12/26 3:38 PM, Smita Koralahalli wrote:
+> After destroy-region, cxl_region_decode_reset() clears the HDM decoder
+> registers (base/size/commit). If the memdev is subsequently bounced
+> (disable/enable), port probe re-evaluates decoder capability via
+> should_emulate_decoders().
+> 
+> The existing logic checks each decoder's COMMITTED bit. Since those bits
+> are cleared by region teardown, should_emulate_decoders() incorrectly
+> falls back to DVSEC range emulation, even though HDM capability is still
+> present.
+> 
+> DVSEC fallback marks the endpoint decoder as AUTO, which triggers
+> cxl_add_to_region() -> construct_region(). That path copies the default
+> interleave_granularity (4096) into the region parameters. The resulting
+> spurious autodiscovered region consumes the CFMWS HPA space and causes a
+> subsequent create-region to fail in hpa_alloc().
+> 
+> Use the global CXL_HDM_DECODER_ENABLE bit instead of per-decoder COMMITTED
+> bits to detect HDM capability. If the HDM decoder block is enabled, zeroed
+> registers indicate teardown, not absence of HDM support. This prevents the
+> unintended DVSEC fallback and subsequent region creation failure.
+> 
+> Based on cxl/fixes.
+> base-commit: 8441c7d3bd6c5a52ab2ecf77e43a5bf262004f5c
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+This block should go under the '---'
+
+DJ
+
+> 
+> Fixes: 52cc48ad2a76 ("cxl/hdm: Limit emulation to the number of range registers")
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> ---
+>  drivers/cxl/core/hdm.c | 25 +++++++++----------------
+>  1 file changed, 9 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index eb5a3a7640c6..a0718cbcc355 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -94,7 +94,6 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+>  	struct cxl_hdm *cxlhdm;
+>  	void __iomem *hdm;
+>  	u32 ctrl;
+> -	int i;
+>  
+>  	if (!info)
+>  		return false;
+> @@ -113,22 +112,16 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+>  		return false;
+>  
+>  	/*
+> -	 * If any decoders are committed already, there should not be any
+> -	 * emulated DVSEC decoders.
+> +	 * If HDM decoders are globally enabled, do not fall back to DVSEC
+> +	 * range emulation. Zeroed decoder registers after region teardown
+> +	 * do not imply absence of HDM capability.
+> +	 *
+> +	 * Falling back to DVSEC here would treat the decoder as AUTO and
+> +	 * may incorrectly latch default interleave settings.
+>  	 */
+> -	for (i = 0; i < cxlhdm->decoder_count; i++) {
+> -		ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(i));
+> -		dev_dbg(&info->port->dev,
+> -			"decoder%d.%d: committed: %ld base: %#x_%.8x size: %#x_%.8x\n",
+> -			info->port->id, i,
+> -			FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl),
+> -			readl(hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(i)),
+> -			readl(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(i)),
+> -			readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(i)),
+> -			readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(i)));
+> -		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
+> -			return false;
+> -	}
+> +	ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
+> +	if (ctrl & CXL_HDM_DECODER_ENABLE)
+> +		return false;
+>  
+>  	return true;
+>  }
+
