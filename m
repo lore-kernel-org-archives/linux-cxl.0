@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C79318B95;
-	Tue, 17 Feb 2026 22:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F190A18A6CF;
+	Tue, 17 Feb 2026 23:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771367367; cv=none; b=nOxqwtnZv8LVWcKpzpUm5k9+jtAJ3wuakI09EtvbhC+R4pEWVIPYCEoV9zuhvrw455Lk07yAfJRTgKZy0Cgojz3TNuxHlbcyvrWSN9fhQVCKiEHA5fZBme4qfC4/RI2EnaN8fmRVgNrdwNup50ZDlSadcAdcA5mGiqKnpfnO+Zg=
+	t=1771372518; cv=none; b=KWuHiMYi4/wMIDj6qD1QtJbcYxS6m0e5tswPgiy0MKIzT0AQBw4K7th1vpjn9X1CihcZ4qB6qY5bvT0iGYUJ/X4Z+IFxKqjUrvf6TRx26RC7xA/vQRQTR6DfZIsuz+i4id2E+qSK387fn7Vx1rsTesDdGHIXYGYU+oYPJKBzMrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771367367; c=relaxed/simple;
-	bh=9vocwgJYiIdXWTL9liabZjq9k/+fVs1e8SLReE5gZuI=;
+	s=arc-20240116; t=1771372518; c=relaxed/simple;
+	bh=qVr7Lgf/QMeO5NyqsXSmtq8W6gPpy4WGbJ5JL2Ob7Kg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yltkgu/BSmBFSEueiNA6S9eHwNRBQAZByQc57O4DYdsN4CSYNcWMFM8iliSHd/rPWVpQvmCC7gH4YFrCyqjcG3C6O1xSnCjo9osdlu7PsLXJwRwj/C+BKyjqeXqifD5PAyKwkFHhaySI3KL3ZgZXJzfe37e5QtjD4Yn+R2Gph7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LDmShwH1; arc=none smtp.client-ip=192.198.163.13
+	 In-Reply-To:Content-Type; b=DSbFvwzW1iECgaughokV8r+JflWQr2yZNqjT2Gyo2DxkDJ4dqRUGzeUWDkHexuiga/5HWFnibq6xQ/GPuYGKHl7ZY09Cw/xpzFn3SCU2tK4sawnIicMq9pJSpF7GdYmzv98/6W8ECOSh3nu9vBY8UDzUGbzJTpKnLb8tjLsxbX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j0qwNZ96; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LDmShwH1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j0qwNZ96"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771367365; x=1802903365;
+  t=1771372517; x=1802908517;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=9vocwgJYiIdXWTL9liabZjq9k/+fVs1e8SLReE5gZuI=;
-  b=LDmShwH1eL6i9JjMkFG/EPLSBuJT8A992p/HPR2tDxRY5YAx6K5LKpbK
-   dra+5e8qJ+VDK2JqfRt0GFby6dmII/vqV4SFLgnChqLnbcpldg4+3Oc2D
-   714utdPDgGxyNykU8/unPN/cLkpfL/3yKUbY7h67qs5bZIkYFu3kFWqzL
-   /o2iet1iLPMbZpJUPjdU6v3JFedMKawkmr8Y22fzHAJNCrEf4y9EzhmRv
-   xaYbzso+jDW4EDyaMdJiXZcez9/H+kXEwzLN6U8Qwg3jbM/nGd6zR4cAi
-   aXdS5IXQkdBHEV1R55UT9ljzpY7I8BLAekAQMA5lvGbAfVoDY3CFnKxcu
-   Q==;
-X-CSE-ConnectionGUID: Kla/LaBDQROOxFEBtXndQQ==
-X-CSE-MsgGUID: afF4kZivTvWSyKMc/xOeYw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11704"; a="75046093"
+  bh=qVr7Lgf/QMeO5NyqsXSmtq8W6gPpy4WGbJ5JL2Ob7Kg=;
+  b=j0qwNZ96DaL/NQHeVEKhaS0snknBf4GVGulLwZag6J3IBOIOhbVi5G6o
+   3cs4S7c9h7KaTII8n9ZCH/D/1LZLSlDZB76wlnVu9R1yEm4zlkSyMX/ry
+   wfFe8G2TbBdIkr9gOwvFoZ4715CYtDG+Q+e/4qOfVaN3qdfFWX4ucvq8A
+   z13RcxVm2w+Couyl7ZHC86uot+MGnIWi+kPlO21f37We9r346CCFiTZ26
+   XGRM0YyEhYkyZTypLXGESm9+wJmoAUZKvMd1BrhVDZCVJapKnjIFJPk3A
+   2kdaEVWlVOXxBaVhPL6To7zmTjWljKqj9FxK2Pvd21jbJ66Ez/sy60jns
+   w==;
+X-CSE-ConnectionGUID: hVYYZMsySlmFuPeaDbVYDQ==
+X-CSE-MsgGUID: 7SG3d6sYSxmUwj2tJ0LA/Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11704"; a="72164525"
 X-IronPort-AV: E=Sophos;i="6.21,297,1763452800"; 
-   d="scan'208";a="75046093"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2026 14:29:25 -0800
-X-CSE-ConnectionGUID: 4psb9NDtQcCidMbOp7G7KA==
-X-CSE-MsgGUID: WpuqMONpS1iL11abx9cAhw==
+   d="scan'208";a="72164525"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2026 15:55:16 -0800
+X-CSE-ConnectionGUID: B8pQ8v2ISaSAusr8adkDUQ==
+X-CSE-MsgGUID: 5XOW4gWPQ5mH7Sv6W1kOxw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,297,1763452800"; 
-   d="scan'208";a="218154517"
+   d="scan'208";a="212448079"
 Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.109.138]) ([10.125.109.138])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2026 14:29:24 -0800
-Message-ID: <24dad014-2f0e-4b1f-9307-94f59b201e06@intel.com>
-Date: Tue, 17 Feb 2026 15:29:22 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2026 15:55:15 -0800
+Message-ID: <68d44fc4-55fe-42df-85ea-cffc60454325@intel.com>
+Date: Tue, 17 Feb 2026 16:55:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,103 +52,93 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/hdm: Avoid DVSEC fallback after region teardown
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
- Benjamin Cheatham <benjamin.cheatham@amd.com>
-References: <20260212223800.23624-1-Smita.KoralahalliChannabasappa@amd.com>
+Subject: Re: [PATCH v3 3/3] cxl/core: use cleanup.h for
+ devm_cxl_add_dax_region
+To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+References: <20260211204206.2171525-1-gourry@gourry.net>
+ <20260211204206.2171525-4-gourry@gourry.net>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260212223800.23624-1-Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <20260211204206.2171525-4-gourry@gourry.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 2/12/26 3:38 PM, Smita Koralahalli wrote:
-> After destroy-region, cxl_region_decode_reset() clears the HDM decoder
-> registers (base/size/commit). If the memdev is subsequently bounced
-> (disable/enable), port probe re-evaluates decoder capability via
-> should_emulate_decoders().
+On 2/11/26 1:42 PM, Gregory Price wrote:
+> Cleanup the gotos in the function.
 > 
-> The existing logic checks each decoder's COMMITTED bit. Since those bits
-> are cleared by region teardown, should_emulate_decoders() incorrectly
-> falls back to DVSEC range emulation, even though HDM capability is still
-> present.
+> No functional change intended.
 > 
-> DVSEC fallback marks the endpoint decoder as AUTO, which triggers
-> cxl_add_to_region() -> construct_region(). That path copies the default
-> interleave_granularity (4096) into the region parameters. The resulting
-> spurious autodiscovered region consumes the CFMWS HPA space and causes a
-> subsequent create-region to fail in hpa_alloc().
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> ---
+>  drivers/cxl/core/region_dax.c | 21 ++++++++-------------
+>  drivers/cxl/cxl.h             |  1 +
+>  2 files changed, 9 insertions(+), 13 deletions(-)
 > 
-> Use the global CXL_HDM_DECODER_ENABLE bit instead of per-decoder COMMITTED
-> bits to detect HDM capability. If the HDM decoder block is enabled, zeroed
-> registers indicate teardown, not absence of HDM support. This prevents the
-> unintended DVSEC fallback and subsequent region creation failure.
-> 
-> Based on cxl/fixes.
-> base-commit: 8441c7d3bd6c5a52ab2ecf77e43a5bf262004f5c
+> diff --git a/drivers/cxl/core/region_dax.c b/drivers/cxl/core/region_dax.c
+> index c8dd2bd1d9b9..49907c6c7620 100644
+> --- a/drivers/cxl/core/region_dax.c
+> +++ b/drivers/cxl/core/region_dax.c
+> @@ -81,29 +81,24 @@ static void cxlr_dax_unregister(void *_cxlr_dax)
+>  
+>  int devm_cxl_add_dax_region(struct cxl_region *cxlr)
+>  {
+> -	struct cxl_dax_region *cxlr_dax;
+> -	struct device *dev;
+> +	struct cxl_dax_region *cxlr_dax __free(put_cxl_dax_region) = NULL;
+>  	int rc;
+>  
+>  	cxlr_dax = cxl_dax_region_alloc(cxlr);
 
-This block should go under the '---'
+The typical __cleanup() pattern is to move the variable declaration here in order to minimize unintended issues between declare and check.
+
+>  	if (IS_ERR(cxlr_dax))
+>  		return PTR_ERR(cxlr_dax);
+>  
+> -	dev = &cxlr_dax->dev;
+
+Given that this local var is used multiple times, maybe we should keep it?
 
 DJ
 
-> 
-> Fixes: 52cc48ad2a76 ("cxl/hdm: Limit emulation to the number of range registers")
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> ---
->  drivers/cxl/core/hdm.c | 25 +++++++++----------------
->  1 file changed, 9 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index eb5a3a7640c6..a0718cbcc355 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -94,7 +94,6 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
->  	struct cxl_hdm *cxlhdm;
->  	void __iomem *hdm;
->  	u32 ctrl;
-> -	int i;
+> -	rc = dev_set_name(dev, "dax_region%d", cxlr->id);
+> +	rc = dev_set_name(&cxlr_dax->dev, "dax_region%d", cxlr->id);
+>  	if (rc)
+> -		goto err;
+> +		return rc;
 >  
->  	if (!info)
->  		return false;
-> @@ -113,22 +112,16 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
->  		return false;
+> -	rc = device_add(dev);
+> +	rc = device_add(&cxlr_dax->dev);
+>  	if (rc)
+> -		goto err;
+> +		return rc;
 >  
->  	/*
-> -	 * If any decoders are committed already, there should not be any
-> -	 * emulated DVSEC decoders.
-> +	 * If HDM decoders are globally enabled, do not fall back to DVSEC
-> +	 * range emulation. Zeroed decoder registers after region teardown
-> +	 * do not imply absence of HDM capability.
-> +	 *
-> +	 * Falling back to DVSEC here would treat the decoder as AUTO and
-> +	 * may incorrectly latch default interleave settings.
->  	 */
-> -	for (i = 0; i < cxlhdm->decoder_count; i++) {
-> -		ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(i));
-> -		dev_dbg(&info->port->dev,
-> -			"decoder%d.%d: committed: %ld base: %#x_%.8x size: %#x_%.8x\n",
-> -			info->port->id, i,
-> -			FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl),
-> -			readl(hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(i)),
-> -			readl(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(i)),
-> -			readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(i)),
-> -			readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(i)));
-> -		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
-> -			return false;
-> -	}
-> +	ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-> +	if (ctrl & CXL_HDM_DECODER_ENABLE)
-> +		return false;
+> -	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
+> -		dev_name(dev));
+> +	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(cxlr_dax->dev.parent),
+> +		dev_name(&cxlr_dax->dev));
 >  
->  	return true;
+>  	return devm_add_action_or_reset(&cxlr->dev, cxlr_dax_unregister,
+> -					cxlr_dax);
+> -err:
+> -	put_device(dev);
+> -	return rc;
+> +					no_free_ptr(cxlr_dax));
 >  }
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 04c673e7cdb0..0b59008ea45a 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -803,6 +803,7 @@ DEFINE_FREE(put_cxl_root, struct cxl_root *, if (_T) put_device(&_T->port.dev))
+>  DEFINE_FREE(put_cxl_port, struct cxl_port *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
+>  DEFINE_FREE(put_cxl_root_decoder, struct cxl_root_decoder *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->cxlsd.cxld.dev))
+>  DEFINE_FREE(put_cxl_region, struct cxl_region *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
+> +DEFINE_FREE(put_cxl_dax_region, struct cxl_dax_region *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
+>  
+>  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
+>  void cxl_bus_rescan(void);
 
