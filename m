@@ -1,211 +1,285 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012000.outbound.protection.outlook.com [40.93.195.0])
+Received: from esa1.hc1455-7.c3s2.iphmx.com (esa1.hc1455-7.c3s2.iphmx.com [207.54.90.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D4D309EF2
-	for <linux-cxl@vger.kernel.org>; Mon, 16 Feb 2026 14:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.0
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771252116; cv=fail; b=ToY48Ym1wkIcGMSKg5BrWBFEY4LBkkBmelEko+Yy/fuOzeUGMKgoItaayfYZi05mV6XZa1ItPa+EEFGis49lBjc+SJVV6fwVTHaUgQRzaoOSxGei3yDu29YpZtIMYL9Ew/H50QuhtzVyNsIMknxfNgTu2GZ/vzbMNB1A0ZYV+rE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771252116; c=relaxed/simple;
-	bh=y79lF+FJYD19sTOBZgZLsAcLiO43ZbboJf1fVVm/w2k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=V74wsFXRpFzd4C7/Gm9IhPdON65k14YSLWrGAh94c9O3hP0i1OXtZmD8NuodQrKTUJsfFH3OwbDWdJygM67HJ7jGx7HZkOA4OO2Q5vkvcEzUSu7FhRm6n0GaaNWrI8OTATBNyus0IwuGGA4J7j9OLU9nsbvjASJKpDhV+gySGrE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=b4N7frkX; arc=fail smtp.client-ip=40.93.195.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17AB829E11D;
+	Tue, 17 Feb 2026 08:23:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771316599; cv=none; b=Wf2QkHhdGtRay7lGtb18pa0QrYlW3J2r/8isW4JY2uXO6XcRB5J7W6ysFvHjIyAh57ulgNvpjMeoEgNhp4lY69lRh1EMSEnLr3OOmLsuBKptfi/VrSD+gqgSXZ6rQ1K2MEEbJlXhX3hTL9b3NwIp5M2+MHFP+mhhbSTZc7VYhIo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771316599; c=relaxed/simple;
+	bh=6wnzGCKSbQfqEcVtpMTsLA+gaV/Yj5LOg0rzyqo9Dyk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LwjOCmSYlWILZwJ10oKzHKXXHkZGKFxkr6rSd6NHy050goVPBI+26SAU6OcGcyH36PifrbZ7wV1x3jWr8MapKOrRgfrpcp3NICRxCuz3Zmsi26M2K3SFurgwcpfU6EPL6Bm/kaNb8YWm1UvbaOEoX2lxUyA8BdC2lZTF1WT3lHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=j9985v9e; arc=none smtp.client-ip=207.54.90.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="b4N7frkX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=smdSEKz3vtKVMCxZRpLD32VDtfMKW2W+GCWigRbX11vYT2XN3RfPpwRcthZUOpGbQdaUrCFH0NQPP+OPqp4RVKDFRorXZWlw1OXS3zea6TAhbbewQvfJAJUCufSttKvm3eURZK3VeDGyffmliKdpe52SC6ECTn75KpMmGqNwpgZnRvEI0dKONaft7fMZF8qpbMHd4xcT7yCgOpcTtzGGotL52E3O6t2qKux5u2PrDcH6xqfr2wdQvp5VbMOWSqG8jrkRqlwEF2kvn4ocszMhdTzo/5sE5TpbqVXLGfXtJCRYDy1lsrKeuLxM6k5bqA1dwEJkmZeyBbIrrVnPTQVGlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=npZGWGaOnskeOzrYc1/1mgWhmrUlxv/HdhxIK+jH/yM=;
- b=bxXrPMfXWMxb/m3aeBAr9qcWOVU9jBD4i373DnRw8oKcpnEAviDwmi0LqiemHXAmPFvPLbmAP2yTICxDvGdmNvacflc31lh1LdRLd8LvvMayeUxFlYUbbEGXQYY4GuvwMi6UZIJcPOlbrVRFSpcv1fTDXvUIxEVUwdYl2OwS29uh73LmRFsTDRNl4ZAVqZJJSy+T6uKRQEy4eXGlslxAwT+wCqR4RCmEtxEN5zG7vO/OqUdDuilvKeFIC2+DedjrhVlV8t0G2Y0FnoRhC9z+wTKbqY+ozs+v8JhxE+AwVvOGJuOoyMVkfcBqEp/sjc2/2MEdw3Mwi/8WJs6zdCbaXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=npZGWGaOnskeOzrYc1/1mgWhmrUlxv/HdhxIK+jH/yM=;
- b=b4N7frkXy686jtai59ai5WAwWbJag9PMF5WPhEsehV05sTBzfU5A61PB3Gsu7Q+KooBDVKTcHmft2XqAn3wmCsrc7LO1jGeCa6np8ouBsNLVhnZzyCper4vQhTMD6MDTU+KfpqjfoUAFWpB6YOrO9e1AC74vXV1I6PYlmX7EQuY=
-Received: from MN2PR06CA0007.namprd06.prod.outlook.com (2603:10b6:208:23d::12)
- by IA1PR12MB6209.namprd12.prod.outlook.com (2603:10b6:208:3e7::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9611.16; Mon, 16 Feb
- 2026 14:28:29 +0000
-Received: from BL02EPF0002992B.namprd02.prod.outlook.com
- (2603:10b6:208:23d:cafe::8a) by MN2PR06CA0007.outlook.office365.com
- (2603:10b6:208:23d::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9611.16 via Frontend Transport; Mon,
- 16 Feb 2026 14:28:26 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- BL02EPF0002992B.mail.protection.outlook.com (10.167.249.56) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9632.12 via Frontend Transport; Mon, 16 Feb 2026 14:28:29 +0000
-Received: from [10.31.195.139] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 16 Feb
- 2026 08:28:29 -0600
-Message-ID: <32ad3973-57e1-4fee-8afe-5bc82f6d3d5f@amd.com>
-Date: Mon, 16 Feb 2026 08:28:30 -0600
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="j9985v9e"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1771316596; x=1802852596;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6wnzGCKSbQfqEcVtpMTsLA+gaV/Yj5LOg0rzyqo9Dyk=;
+  b=j9985v9ek0ZAgCQLkxnm7fw/LBU9X7OaZjdySSj8nCUdMwURGufA66mr
+   wKLr7KE1bHxIMu5uHl4hJDB6yRN70TTCSJWWc937XScIXltzes+iuWvZx
+   gUvbjU7OBIu1o2e8bKoe1KVQOloxeEAgHiaIy1+L1Vgch6227iMOZKmaT
+   MBubK41aGe/6ymFXxKeBYIQFlIU2o02eXjaingAoK/wnKeAISJ4yaKXXZ
+   mKuJ7T542Qg2qKdniAgmudrxP4GHsksbNl5M8PlfOiNijPGZwFZfyx8h1
+   pUVTVHyPs23a2l27JSKOILeMtLH+Wmet1/3Z9KFPPruX+WcWs5cQJXPvS
+   g==;
+X-CSE-ConnectionGUID: bCNCFR9/TdaHHPev3e8gTQ==
+X-CSE-MsgGUID: dloR9RS3S9GHCkKmTjOqZg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11703"; a="229968514"
+X-IronPort-AV: E=Sophos;i="6.21,295,1763391600"; 
+   d="scan'208";a="229968514"
+Received: from az2uksmgm3.o.css.fujitsu.com (unknown [10.151.22.200])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by az2nlsmgr3.fujitsu.com (Postfix) with ESMTPS id 9862D1000377;
+	Tue, 17 Feb 2026 08:22:06 +0000 (UTC)
+Received: from m3002.s.css.fujitsu.com (msm3.b.css.fujitsu.com [10.128.233.104])
+	by az2uksmgm3.o.css.fujitsu.com (Postfix) with ESMTP id F3CBAC02F38;
+	Tue, 17 Feb 2026 08:22:05 +0000 (UTC)
+Received: from nezuko.soft.fujitsu.com (unknown [10.118.236.61])
+	by m3002.s.css.fujitsu.com (Postfix) with ESMTP id 4063D203ED42;
+	Tue, 17 Feb 2026 17:22:04 +0900 (JST)
+From: Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
+To: dan.j.williams@intel.com,
+	alison.schofield@intel.com
+Cc: Smita.KoralahalliChannabasappa@amd.com,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	lizhijian@fujitsu.com,
+	Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
+Subject: [ndctl PATCH v4 RESEND] cxl/cli: enforce HPA-descending teardown
+Date: Tue, 17 Feb 2026 17:27:05 +0900
+Message-ID: <20260217082705.2475753-1-pawel.mielimonka@fujitsu.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ndctl PATCH v8 0/7] Add error injection support
-To: Alison Schofield <alison.schofield@intel.com>
-CC: <nvdimm@lists.linux.dev>, <dave.jiang@intel.com>,
-	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>
-References: <20260206215008.8810-1-Benjamin.Cheatham@amd.com>
- <aY5saAx5BOJ5jSyw@aschofie-mobl2.lan>
-Content-Language: en-US
-From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-In-Reply-To: <aY5saAx5BOJ5jSyw@aschofie-mobl2.lan>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0002992B:EE_|IA1PR12MB6209:EE_
-X-MS-Office365-Filtering-Correlation-Id: 64cf6afb-bcb3-4f1f-3758-08de6d67a7d7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?azV5aUlpZzQ4UmJ3K3QrMDBiSkJCejUwaURGaDcxOFRYcGdOWnJ4U0Vsdmxs?=
- =?utf-8?B?MUJkbjVPZmYva2IzZGZUck5KR3ZMK0R2dkdOYW9vL0pvVnBzSTFTQTJtbHNs?=
- =?utf-8?B?aHoreW53cTBkMG5ySVJoTlpLZ3RDQXRFM2hKUURBUVdMNDQ5ZjQxaUVXbGVz?=
- =?utf-8?B?NzVzQW9ycVk1YzFMOCt0RTdrVmZVaFFDTVNXZUlvcEFhZlZqenJiTXNwWG9E?=
- =?utf-8?B?dzNCNTBNeDR6eUNsb0VUMmxjZ3VDN2Q1ekJUQ1QzR3lYU2JlSGxpczAvci9X?=
- =?utf-8?B?NFFlOVJWcTNPd2lHNFI0SEVqUlQySXUxV0Yzb1ZUdVVjTi9nT1JXMDZadis1?=
- =?utf-8?B?a0tSWnBrUE8yVVJSYlJybnhiR3JmVDBVUWs4Nmt3MHE3ZXdhb29LcFZrRDNx?=
- =?utf-8?B?WlloaGxpOFlIVkk1YzVYMEppakd6VUNhNlE3ZkhQZUQyN1VCV0dnRkh5OS9j?=
- =?utf-8?B?cnlZMHZyWFdSWGZiMFh3V1dDS1psbDJYS1B4R212aWVtSDlQZzNESU1QYnEz?=
- =?utf-8?B?S1RYcU50ZVlyNjFVbVVIWkd4dUQ2S2FXTHk4Tm1IRkZuRG9kV0d3YXBmWjdG?=
- =?utf-8?B?bzhtV2s2eFVoTWZBT3dGOWpUSFZ0Qnk0eHdzaFpWL2o5RGl6MEVhR2J3ZUdr?=
- =?utf-8?B?c1c5SXlWQmI5NG4yakIvZkhGT2E3bVRRQ2M0a2dvQzc0eUMyenMwbWJGNDFw?=
- =?utf-8?B?VEs4QVV0TjNnOHRZVjdtNGJrb0h3NWczc3VHT0liRnd5c0dEUkpqbTU4V3ln?=
- =?utf-8?B?SkU5YVJSbjZud0FIKzAySkVPa1VLKzFybHo3SWltWHFpNm5nVitxQ1Vidkcv?=
- =?utf-8?B?SFFUNHpZSklqZ3UzaGszdmo4NUdrNmFQdittemo2YTZCLzMvSUhEVU1ZR3Mv?=
- =?utf-8?B?eGsxQnpraEpBNUhVYUxKS05mRlV3MFRQUkRjMGxCUjZFTHBjb2ZUa09YSHB2?=
- =?utf-8?B?RkJFZ2dPanR2L1pvRDJEUkdWcnh4emVoWk0wZUJ2T2JCK0RFVVFwVGJSN0dJ?=
- =?utf-8?B?MCtNT3JydjNIMkYzUzJoOUl6WTdlMlF5MzJoYkJRQnh0TVoyWUhUQ3BhQ1Ba?=
- =?utf-8?B?WFNPTTdSTWJtRGZ4d2RLcmxCa1VpbjVKYmR4ckc3dys3RHNxenpNTTlHNGtz?=
- =?utf-8?B?N1VYb2NvaldMeU11RzVueHNweFhtTUZERitLYWd0aW0zdnZ6bis1NFYxV0U3?=
- =?utf-8?B?MXN4UUQvSVdOQkhxV1JmZTZWTVArV083T0hFNjFoKytWOUVpcUlzbFFhQlUr?=
- =?utf-8?B?ZWMzZ0xWNWJadzQ5NzNKYzRCYlJWN2piMEU0dVp6UWdFdmc2RTVESXI1Z1Ex?=
- =?utf-8?B?cnhDTWFVNE5FUTRSbjB4Zy9mNElSTzAxb0VpVXREZWpYcXcybE4wQXEraUxJ?=
- =?utf-8?B?SE5iRDNXTm5RQlpFbDMyRjlvQkhTb0hRVjVvWGhieTI0MGRmaEhxZ0I5N3Mz?=
- =?utf-8?B?YlBjUkdjU2haL3JRWXlyQTdmMlRZRWR6WmNzRjBRZW1yUDJOc2lHcmV1cDNr?=
- =?utf-8?B?YWg1UGpNTFBENTVERTU5VHNuc1U5RHlMenJZTWNZV0hsdWdHNWRrYlR3RkFK?=
- =?utf-8?B?ZGFLaTlBWDY3QkdVUStUOHBxaDJVU1NpdndHRHRqYXRhZlEyQzEvSmtnMjNw?=
- =?utf-8?B?WUJRVGhraFdKR3E0TXVrTTFTOG5ZaktIWGN5eEwvd2xMZW1LaC9VbCtFbW1i?=
- =?utf-8?B?ZnhmV3BJZHQ4d3dyU1dmZXpBZ05rZ3F1TFhRK2NBNWpMSURrUm9TdzV4WDJP?=
- =?utf-8?B?ck91SGdUaUNUb1Q1Y0RGN1liRlNob0RFQWczYUY0RGdGNVBFQ0tpNlNFWG52?=
- =?utf-8?B?a2pnR3BFeituL0tKKy9FM2wvOFB6aGFyZUJURmtJeStMTTgzSVpkbWZNZldQ?=
- =?utf-8?B?VTc5YlVGcGJETzZycVN1d0VRUFZrdU9FRkUwajVqUlY4ZU9mRXcwZzJGSTJn?=
- =?utf-8?B?NmlUUmcrcSs4ZVJJOGxwZEtkSTY5V0MvUGNIVnJ6N0xCaXdaMzBrVEQranVU?=
- =?utf-8?B?NGdadzZ2QzRuM1lxRDVOSjJZdWpyUy9FWTgrNTcrNk0zaUJNUG9qeFgwY3pB?=
- =?utf-8?B?S3dtck5OcHpUSm1TeURjVEpTSHBpVHI3cDVtWnIxVmlRWlhVT25EV3NpSXJK?=
- =?utf-8?B?UjZYS3o0UGh4VmgrQmpZUm9Ic2hMOExGbTBkRGZmbktRcmtORWxYNkVXd2JR?=
- =?utf-8?Q?63dwDljUBnRoEzU4nqmjFEt7L0HwHI9qXp10MGzQOoBY?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	FXaqvN+/aPDMXOLisCOotrmzSXY6RpfsjuNE5Ryy2B8LwDF+BsWbvnKsZ4J7TcEpTSHIMV5XX/s2w6X4iv6LiKMAFwQ08UZsVUOWZv/Y2bg0xoZRZztcyzBhLRcA6m6N1CQt36/NZaCGFilp4fSNU08n3ALceCJf6CH6XjyNyqD8KyWe4jxnyv4iAdCcPxAJ6TtWoRnkW6eyZKbIxkcSP+XgxwQzhqlzhf4twIcNOMIC8fBzYl2YjGy5NmW1LHhM4UT+mUbQiMoSELLLTCpYikb/QUUo4rtZchP1a9HHOjrqERhil+/XfYtGBc6RKRO/v6QBhKEL8SOSZfCtoe3/lsDDuPl/scRTIBMTMh+LPSYTZiEw/1/El7DOBc37xzvyuoTzLuKjMTZFICSLr3OkfCqOwEGgjFoCjo8mFN7xMV4Ysvw4c/MoGtMeoE4mPecl
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2026 14:28:29.7700
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64cf6afb-bcb3-4f1f-3758-08de6d67a7d7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0002992B.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6209
+Content-Transfer-Encoding: 8bit
 
+When destroying CXL regions, users may observe failures such as
+"set_dpa_size failed: Device or resource busy" even when targeting
+valid regions. Afer such failures, subsequent destroy/create cycles may
+become impossible without a full system reset.
 
+The current logic does not guarantee descenting HPA order across
+regions, even when each region is mapped to a single endpoint decoder.
+As a result, a region can only be destroyed if it is the last one in
+HPA order.
 
-On 2/12/2026 6:12 PM, Alison Schofield wrote:
-> On Fri, Feb 06, 2026 at 03:50:01PM -0600, Ben Cheatham wrote:
-> 
-> snip
->>
->> Ben Cheatham (7):
->>   libcxl: Add debugfs path to CXL context
->>   libcxl: Add CXL protocol errors
->>   libcxl: Add poison injection support
->>   cxl: Add inject-protocol-error command
->>   cxl: Add poison injection/clear commands
->>   cxl/list: Add injectable errors in output
->>   Documentation: Add docs for protocol and poison injection commands
-> 
-> Hi Ben,
-> 
-> Same concern touches 2 patches, so commenting here:
-> 	libcxl: Add CXL protocol errors
-> 	cxl/list: Add injectable errors in output
-> 
-> I'm seeing some unwanted complaining with cxl list when protocol inject
-> is not supported. Here is a sample:
-> 
-> # cxl list -P -v
-> libcxl: cxl_add_protocol_errors: failed to access /sys/kernel/debug/cxl/einj_types: No such file or directory
-> libcxl: cxl_dport_get_einj_path: failed to access /sys/kernel/debug/cxl/cxl_host_bridge.0/einj_inject: No such file or directory
-> libcxl: cxl_dport_get_einj_path: failed to access /sys/kernel/debug/cxl/cxl_root_port.0/einj_inject: No such file or directory
-> libcxl: cxl_dport_get_einj_path: failed to access /sys/kernel/debug/cxl/cxl_switch_dport.0/einj_inject: No such file or directory
-> 
-> I believe it is not an error for the path not to exist. With the device poison,
-> you already treat search for debugfs file as an existence test and no
-> error is emitted on failure to find. 
-> 
-> If the diff below works for you, and nothing else comes up, I can fix it up
-> when merging. Let me know -
-> 
+Alison observed that the issue extends when a region's mappings reach
+endpoint decoders under different root decoders. In such cases, the HPA
+descending order must be considered across all endpoint decoders that
+share any of the root decoders involved - effectively covering the
+entire bus/port. Without this global ordering destroy operations may
+fail unpredictably, and followng create operations can also be blocked.
 
-Sorry about that, below looks good to me!
+This change does not alter the underlying kernel behaior or decoder
+programming rules. Instead, it enforces the existing ordering
+constraints at the CLI level, preventing users from issuing destroy
+oprtation that would violate HPA continuity required by specification
+(section 8.2.4.20.12).
 
-Thanks,
-Ben
-> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-> index d86884bc2de1..5e8deb6e297b 100644
-> --- a/cxl/lib/libcxl.c
-> +++ b/cxl/lib/libcxl.c
-> @@ -3496,10 +3496,8 @@ static void cxl_add_protocol_errors(struct cxl_ctx *ctx)
->         }
->  
->         rc = access(path, F_OK);
-> -       if (rc) {
-> -               err(ctx, "failed to access %s: %s\n", path, strerror(errno));
-> +       if (rc)
->                 goto err;
-> -       }
->  
->         rc = sysfs_read_attr(ctx, path, buf);
->         if (rc) {
-> @@ -3593,7 +3591,6 @@ CXL_EXPORT char *cxl_dport_get_einj_path(struct cxl_dport *dport)
->  
->         rc = access(path, F_OK);
->         if (rc) {
-> -               err(ctx, "failed to access %s: %s\n", path, strerror(errno));
->                 free(path);
->                 return NULL;
->         }
-> 
+Link to v2 - Alison's findings:
+https://lore.kernel.org/linux-cxl/aTTKRCUmbNC9jIrG@aschofie-mobl2.lan/
+
+base-commit: 4f7a1c63b3305c97013d3c46daa6c0f76feff10d
+
+v4 updates:
+ - expand the commit message to include detailed description
+ - add references to prior discussion and failure scenarions
+ - follow guidelines for subject and formatting
+ - no functional changes compared to v3
+
+v3 updates:
+ - fix iteration to cover all endpoint decoders under a common bus/port
+ - collapse series into a single patch   
+
+v2 updates:
+ - sent by mistake from wrong local branch, does not compile, should
+   be ignored
+
+v1:
+https://lore.kernel.org/linux-cxl/20251125143826.282312-1-pawel.mielimonka@fujitsu.com/
+
+Signed-off-by: Pawel Mielimonka <pawel.mielimonka@fujitsu.com>
+---
+ cxl/region.c | 128 +++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 125 insertions(+), 3 deletions(-)
+
+diff --git a/cxl/region.c b/cxl/region.c
+index 207cf2d..d86e45f 100644
+--- a/cxl/region.c
++++ b/cxl/region.c
+@@ -831,6 +831,72 @@ out:
+ 	return cxl_region_disable(region);
+ }
+ 
++/*
++ * cmp_region_hpa() - Compare CXL regions by their HPA.
++ * @l: pointer to the first element (const struct cxl_region **).
++ * @r: pointer to the second element (const struct cxl_region **).
++ *
++ * Comparison function for CXL regions based on the Host Physical Address
++ * returned by cxl_region_get_resource().
++ *
++ * Return:
++ *   < 0 if the HPA of the region pointed to by @l is less than that of @r
++ *   = 0 if both regions have te same HPA (not expected)
++ *   > 0 if the HPA of the region pointed to by @l is greater than that of @r
++ */
++static int cmp_region_hpa(const void *l, const void *r)
++{
++	const struct cxl_region *const *left = l;
++	const struct cxl_region *const *right = r;
++	u64 hpa1 = cxl_region_get_resource((struct cxl_region *) *left);
++	u64 hpa2 = cxl_region_get_resource((struct cxl_region *) *right);
++
++	return (hpa1 > hpa2) - (hpa1 < hpa2);
++}
++
++static int collect_regions_sorted(struct cxl_decoder *root,
++	struct cxl_region ***out, int *out_nr)
++{
++	struct cxl_region *region;
++	struct cxl_region **list = NULL;
++	int nr = 0, alloc = 0;
++
++	struct cxl_port *port = cxl_decoder_get_port(root);
++	struct cxl_decoder *decoder;
++
++	cxl_decoder_foreach(port, decoder) {
++		if (!cxl_port_is_root(port))
++			continue;
++		cxl_region_foreach(decoder, region) {
++			if (nr == alloc) {
++				int new_alloc = alloc ? alloc * 2 : 8;
++				size_t new_size = (size_t)new_alloc * sizeof(*list);
++				struct cxl_region **tmp;
++
++				tmp = realloc(list, new_size);
++				if (!tmp) {
++					free(list);
++					return -ENOMEM;
++				}
++				list = tmp;
++				alloc = new_alloc;
++			}
++			list[nr++] = region;
++		}
++
++		if (!nr) {
++			free(list);
++			*out = NULL;
++			*out_nr = 0;
++			return 0;
++		}
++	}
++	qsort(list, nr, sizeof(*list), cmp_region_hpa);
++	*out = list;
++	*out_nr = nr;
++	return 0;
++}
++
+ static int destroy_region(struct cxl_region *region)
+ {
+ 	const char *devname = cxl_region_get_devname(region);
+@@ -895,6 +961,59 @@ static int destroy_region(struct cxl_region *region)
+ 	return cxl_region_delete(region);
+ }
+ 
++static int destroy_multiple_regions(
++	struct parsed_params *p,
++	struct cxl_decoder *decoder,
++	int *count)
++{
++	struct cxl_region **list;
++	int nr, rc, i;
++	bool skipped = false;
++
++	rc = collect_regions_sorted(decoder, &list, &nr);
++	if (rc) {
++		log_err(&rl, "failed to allocate region list: %s\n", strerror(-rc));
++		return rc;
++	}
++
++	for (i = nr - 1; i >= 0; --i) {
++		struct cxl_region *region = NULL;
++
++		for (int j = 0; j < p->argc; j++) {
++			region = util_cxl_region_filter(list[i], p->argv[j]);
++			if (region)
++				break;
++		}
++
++		if (!region) {
++			skipped = true;
++			continue;
++		}
++
++		/*
++		 * If current region matches filter, but previous didn't, destroying would
++		 * result in breaking HPA continuity
++		 */
++		if (skipped) {
++			log_err(&rl, "failed to destroy %s: out of order %s reset\n",
++				cxl_region_get_devname(region),
++				cxl_decoder_get_devname(decoder));
++			rc = -EINVAL;
++			break;
++		}
++
++		rc = destroy_region(region);
++		if (rc) {
++			log_err(&rl, "%s: failed: %s\n",
++				cxl_region_get_devname(region), strerror(-rc));
++			break;
++		}
++		++(*count);
++	}
++	free(list);
++	return rc;
++}
++
+ static int do_region_xable(struct cxl_region *region, enum region_actions action)
+ {
+ 	switch (action) {
+@@ -902,8 +1021,6 @@ static int do_region_xable(struct cxl_region *region, enum region_actions action
+ 		return cxl_region_enable(region);
+ 	case ACTION_DISABLE:
+ 		return disable_region(region);
+-	case ACTION_DESTROY:
+-		return destroy_region(region);
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -971,7 +1088,12 @@ static int region_action(int argc, const char **argv, struct cxl_ctx *ctx,
+ 			if (!util_cxl_decoder_filter(decoder,
+ 						     param.root_decoder))
+ 				continue;
+-			rc = decoder_region_action(p, decoder, action, count);
++
++			if (action == ACTION_DESTROY)
++				rc = destroy_multiple_regions(p, decoder, count);
++			else
++				rc = decoder_region_action(p, decoder, action, count);
++
+ 			if (rc)
+ 				err_rc = rc;
+ 		}
+-- 
+2.47.3
 
