@@ -1,169 +1,170 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71A119D071
-	for <linux-cxl@vger.kernel.org>; Wed, 18 Feb 2026 02:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771381103; cv=pass; b=TzYAl0q71yvW/7vR8Fwc9KKWa5/dDxVWatCnjkvzwAKmbd/4mflBT1SdzdD22+oQzj3FcK02C3Fm1obfWYPYf+JMNHPmaxKF0z94zre4p6+hTR7Mcvzhc6Ko6lBIWpPDwUhLRlhVlmk1M71gnCBuEvq3qSHUY/DwPU9lrsZXv60=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771381103; c=relaxed/simple;
-	bh=oisk5RNGpe9X3B4rnNrrpIM/YAw2CyQ7pCGjtBnp3LE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=askaL9mFaUz+TmmAxTO/AkEpkLW8W70GRmN87HomY2nvAJeCXxxcV+Y89ibcekmAUaD7zkQIX6s/qjx7XxP74YpHEPLJOA0JVicMrtrlL2KuccmKzfEg/kP9Wxby7zyWvQn5AuNFB5mJlGKezGXApUabynymEcIYbzATrUN65Wk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jpByvxaA; arc=pass smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BEE224FA
+	for <linux-cxl@vger.kernel.org>; Wed, 18 Feb 2026 06:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771395338; cv=none; b=UQo7tKGOeR9v8lX5OEeEdfo5ftuTKBxEg5HFqUrgUMgr/vWug0pn74by/hzrn4CIEuKMcFCzHMh3OOx/uyRLmRJakvGk5scGqV6DyoQjaxet6vyU8g1o32M1gA54/VpR3FD1Ar3P9+P9rs/FfMMhPygUFq11nCLjP7ghfN2YTz8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771395338; c=relaxed/simple;
+	bh=3Ijgr3qcBpLVz5vSWoCWruNhIkVcDgJV5WLh0ZdYkLk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HqfJuQOOfv/ML+WGlqnszR++UO+q737fTz/+5FuFb3ChQiv8rQqDgFXIThqCtoYSLFOGJTx+U0swMqQGfHaTJOp7dnKkA7F03GHxBXsERW1iXK/qyh+gUIqya5w/ZwdPxMzuQ1mGbWD73pKkQBjOkiCnGmjZhOMSY3iyP1iTr4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dVclQb8C; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jpByvxaA"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b8fbb24a9a9so61287566b.0
-        for <linux-cxl@vger.kernel.org>; Tue, 17 Feb 2026 18:18:21 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771381100; cv=none;
-        d=google.com; s=arc-20240605;
-        b=aczF/NQQ1UA2kzOEypDfcLOUvsxCSbJaCtj0WiIEajtbDp79+l10M32KtypRnRm2d0
-         yKwOudacbCiG/w7tHe9pqSoRLtWPTXPHl37/1i2vTAl7GpyScFjDtDDRPyds3URg3a51
-         N+2q5iXWXoGfmIULbZjy3LZrPiHr6bEFxSFINK+Nvu5cFlarL2WUJdSmlVN15aLckJZ2
-         pVY7qRNItOQkaoCT+FO0T/mqnJZ+DuUa8+6sq/0TU9vQ1ejkr8DL2mL7vUI4CniFlxL5
-         AdnS0tBwiqMDzcO2EBjsHjTVtUW3g7aSV1GJ7pDjuXUdFi2H+LlPwG+J89EF01IXzgf3
-         1CEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=oisk5RNGpe9X3B4rnNrrpIM/YAw2CyQ7pCGjtBnp3LE=;
-        fh=TdoJnGKyzBs85/4wUuyknI4sD3IDkQKAc+pvdEgvVoo=;
-        b=eLtWVOtmTWtYiocdzVspeJUl99JWWdI3jDm7waYiDBYgqDmLOVD1k2lgkVAR7Z26wT
-         zWr+pRqMh2e5Oi0rll04IEoEdKuGemC4sVNMqVmMkc9npPV+bI8x6K8REKxSY7+H/N0H
-         M0D8dM6ikEKZQQYcEwpqO/agWwHWp0vnFWndazj+ZN4pLS3KQUxc/QLeVtTLTmyChVmo
-         EtriW7Ezaf06sgSnzxBZo6SFSpTJNLFmEZwSL8iIqoUh9/IU4921cqpfnUYKozBteSlB
-         9aUmChXCSPXjViiDRpo+IDIbCV/4iuFFeatcvu/9x9bNu8VeITfjLF7kF5ohFtwJNX4i
-         VoNg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771381100; x=1771985900; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oisk5RNGpe9X3B4rnNrrpIM/YAw2CyQ7pCGjtBnp3LE=;
-        b=jpByvxaAdfjRsOfPiOQAodpAVVLRxR2MeIWdlW005xLzXoPH5BcC7s2D1ShgO5j5Jn
-         /y5Wkpb99qJui36tSejkvEPumsE+akubQsBud21XznDpcTLook5pCeIQPhODlaJFxxhJ
-         r+EVvQc1hq30dbFr5ox/aoFhrKZNckRT9SpUEfjdQ1mJo6+AJhoE5TS1144JAAAukZI+
-         iz32grPxYgG1OY79JknQBUr7T3ctEPqWcfhq/0IzYo2KauXMC2J7oo/ULaWvjzoEhpdI
-         lAvEiCrzw0hCw+IGQgqSqV8b4plqrYbBdblU8axZlfnmaIRASpTgkIw3hDesAIMOytlV
-         WCpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771381100; x=1771985900;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=oisk5RNGpe9X3B4rnNrrpIM/YAw2CyQ7pCGjtBnp3LE=;
-        b=sIzm0AdC4Huew+F4vX9D1Pz0QunQMowDL5xh99RNPa6Lpoti6VgOq2kbNlzWGDHKJt
-         2217qzVZp9f7C9X1HT06K/0ZwIFDA+/bc4+ozIMLuMN7KZXvYwWT3MUQU7BbXvn+Q80G
-         VB4iijaeWvqR7utX1AVCpDEMioVz1MqdwsdI55LCykMlvmJnsu1r0gaXrCM2/s+nHN2F
-         w74Bq5dqab+lNTdkUwO+OradoTlKxSK2rs1Fmv/ASPQo8W13UyqpveOqzA3LRZR7gt36
-         QOIQmm0SCMO2rQuCMhrd8LFXX7K1E3N3DXwEe8Y+7ri3Bg6FqeLUb/zkgYdbh0CBLLNQ
-         apOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWSCjhT0fR1Kek57Dnt+a0tl2BtHYrhLVDSiZ5iDIj5NolaLc2CpqkMUuuyUBu6koXiTEplOQMn3mA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUfQpT+IWFxJoht7dW0lmF7KmmqCwMFAbNkZb5UUZicF0sSQ2d
-	8grgsI+EWm/icvetxFOpr1qYSyiRo9upk2251gcRUGTucCHD6P8bnThmXzSnPn4i4MDT0SHOvWx
-	ZsyzYdmp16Rj0x6D9DP52EsLyKjRpdnw=
-X-Gm-Gg: AZuq6aJmw8Q9f2CUv0iLhEbOS30CunrmjOAF0aSvq1IA4nEvdaCWAuSM/op5vmKp0MO
-	r+/Yq4Lqjs9ec+gF2yGUYwF75CNGSUtmnqvKgc269eYBQMhA9E2G1niEGJRSDQu7KIZY9bmh9V5
-	GHebihklf8hx/K0H1gDx8TB1iYi/BK7kg5SVOdJCz9IKg/+AlwOJ026/DeVqnv1MUVZPUWpTUkB
-	1ZTgIxsXzf426q7kYFyqXaTI1sXRcRhMaWWxBJebe6aIfu/nqGJZ5Tfj3C06FPRHjN6kpUvsYgI
-	icCQhdRN5i3LdW075GflAyg3M4nv9Z4BV7zpWw==
-X-Received: by 2002:a17:907:8e95:b0:b88:50ea:f64f with SMTP id
- a640c23a62f3a-b903ce412bemr23014066b.11.1771381099947; Tue, 17 Feb 2026
- 18:18:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dVclQb8C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771395336; x=1802931336;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3Ijgr3qcBpLVz5vSWoCWruNhIkVcDgJV5WLh0ZdYkLk=;
+  b=dVclQb8C2M2WAty2DU/nPYEDXGgMyjtsXlbqaXb7lkD+kqan4i21rvKC
+   POWg/GRTNR44Mw8wqap3Dzr5x4kRNhpcHvJNzFSC9qxeNw6X77ETR4dR0
+   ESAWMVhFyEpxZiQEjGuAdZvMM2GEUb9vnOj0qyGhNArxgTwXgehpwXIEl
+   U73vyJ3oyg5q7aZH/lmdhieUKW5RdLjxnnYE6DHdcQGMgiajtfUWS0I/9
+   0qyH7qjw5C7LSdeat/UkcH730OWLR0iZ7RWjdh0M/Nd38mWYG6TmMyHaq
+   09NSdBd16f+qWHDyNAcJNzzrWlxlCQUpJ8nR4H29+rhWNFwtz19/1GYH2
+   Q==;
+X-CSE-ConnectionGUID: dzBwzLePS5OA7VoU7R58sg==
+X-CSE-MsgGUID: seTZOqT2QPSc85UYjf6GkA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11704"; a="72359274"
+X-IronPort-AV: E=Sophos;i="6.21,297,1763452800"; 
+   d="scan'208";a="72359274"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2026 22:15:35 -0800
+X-CSE-ConnectionGUID: sCDfG6yZTiaiVRRikknOcw==
+X-CSE-MsgGUID: P+42h+VISLqvPs0EbiRLGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,297,1763452800"; 
+   d="scan'208";a="212495007"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.24])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2026 22:15:35 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH] cxl/port: Fix use after free of parent_port in cxl_detach_ep()
+Date: Tue, 17 Feb 2026 22:15:30 -0800
+Message-ID: <20260218061532.1461436-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260211032935.2705841-1-alistair.francis@wdc.com> <20260217235604.GA1595019@nvidia.com>
-In-Reply-To: <20260217235604.GA1595019@nvidia.com>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Wed, 18 Feb 2026 12:17:53 +1000
-X-Gm-Features: AaiRm51IyO5p1ZFm7PemT4PZZF2gD_mhc5e0kBVSJ5OU9yRJy4LX-SjwiRKMPKk
-Message-ID: <CAKmqyKNeyEN-h9tAnfM9j0GWiFU9idXheGQ1COCqT9MVZgsZYw@mail.gmail.com>
-Subject: Re: [RFC v3 00/27] lib: Rust implementation of SPDM
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: bhelgaas@google.com, lukas@wunner.de, rust-for-linux@vger.kernel.org, 
-	akpm@linux-foundation.org, linux-pci@vger.kernel.org, 
-	Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, alex.gaynor@gmail.com, benno.lossin@proton.me, 
-	boqun.feng@gmail.com, a.hindborg@kernel.org, gary@garyguo.net, 
-	bjorn3_gh@protonmail.com, tmgross@umich.edu, ojeda@kernel.org, 
-	wilfred.mallawa@wdc.com, aliceryhl@google.com, 
-	Alistair Francis <alistair.francis@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 18, 2026 at 9:56=E2=80=AFAM Jason Gunthorpe <jgg@nvidia.com> wr=
-ote:
->
-> On Wed, Feb 11, 2026 at 01:29:07PM +1000, alistair23@gmail.com wrote:
-> > From: Alistair Francis <alistair.francis@wdc.com>
-> >
-> > Security Protocols and Data Models (SPDM) [1] is used for authenticatio=
-n,
-> > attestation and key exchange. SPDM is generally used over a range of
-> > transports, such as PCIe, MCTP/SMBus/I3C, ATA, SCSI, NVMe or TCP.
-> >
-> > >From the kernels perspective SPDM is used to authenticate and attest d=
-evices.
-> > In this threat model a device is considered untrusted until it can be v=
-erified
-> > by the kernel and userspace using SPDM. As such SPDM data is untrusted =
-data
-> > that can be mallicious.
-> >
-> > The SPDM specification is also complex, with the 1.2.1 spec being almos=
-t 200
-> > pages and the 1.3.0 spec being almost 250 pages long.
-> >
-> > As such we have the kernel parsing untrusted responses from a complex
-> > specification, which sounds like a possible exploit vector. This is the=
- type
-> > of place where Rust excels!
->
-> I was arguing for exactly this at a recent conference, so I'm glad to
-> see it. It is a great meaningful usecase for rust in the kernel.
+cxl_detach_ep() is called during bottom-up removal when all CXL memory
+devices beneath a switch port have been removed. For each port in the
+hierarchy it locks both the port and its parent, removes the endpoint,
+and if the port is now empty, marks it dead and unregisters the port
+by calling delete_switch_port(). There are two places during this work
+where the parent_port may be used after freeing:
 
-Woo, someone is on board!
+First, a concurrent detach may have already processed a port by the
+time a second worker finds it via bus_find_device(). Without pinning
+parent_port, it may already be freed when we discover port->dead and
+attempt to unlock the parent_port. In a production kernel that's a
+silent memory corruption, with lock debug, it looks like this:
 
->
-> IIRC the netlink was my suggestion too, it really needs a careful
-> look on its own. It is much better than sysfs, but comes with its own
-> pitfalls.
+[]DEBUG_LOCKS_WARN_ON(__owner_task(owner) != get_current())
+[]WARNING: kernel/locking/mutex.c:949 at __mutex_unlock_slowpath+0x1ee/0x310
+[]Call Trace:
+[]mutex_unlock+0xd/0x20
+[]cxl_detach_ep+0x180/0x400 [cxl_core]
+[]devm_action_release+0x10/0x20
+[]devres_release_all+0xa8/0xe0
+[]device_unbind_cleanup+0xd/0xa0
+[]really_probe+0x1a6/0x3e0
 
-It was!
+Fix this first case by adding a check for port->dead after acquiring
+both locks. Unlock and release the parent reference before continuing.
 
->
-> You might want to try to break this up into two parts, one just dumps
-> a large text file in debugfs where there are not uAPI rules. This
-> would let the rust work proceed.
+Second, delete_switch_port() releases three devm actions registered
+against parent_port. The last of those is unregister_port() and it
+calls device_unregister() on the child port, which can cascade. If
+parent_port is now also empty the device core may unregister and free
+it too. So by the time delete_switch_port() returns, parent_port may
+be free, and the subsequent device_unlock(&parent_port->dev) operates
+on freed memory. The kernel log looks same as above, with a different
+offset in cxl_detach_ep().
 
-I'm currently thinking of splitting this in 3 parts. One for the
-ground work patches (crypto), one for SPDM (without netlink) and then
-a final one for netlink support.
+Fix this second issue by taking an extra reference on parent_port
+before locking it, preventing the memory from being freed across
+delete_switch_port(). Release it after device_unlock().
 
-I feel that this RFC proves netlink can work, which is important. For
-SPDM the authenticated syfs attribute is enough to provide usefulness
-to userspace to merge that while sending the netlink later.
+These easily reproduce with a reload of cxl_acpi in QEMU environment
+with CXL devices present.
 
-That way hopefully everything is a little more self contained, but
-still has users and value to justify being merged.
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
 
-That's a good idea about debugfs though, I'll keep that in mind
 
-Alistair
+This was found while trying out unit test cases to backstop DaveJ's
+latest finding where QEMU devices with CXL unit tests exposed an
+nvdimm bus race. I post this with a bit of skepticism of the
+likelihood it appears in the wild. Maybe it would but just not in the
+way my test invokes it. A Fixes tag was not obvious, but I can find
+the best tag, if any, in a v2.
 
->
-> And another to introduce a proper uAPI for the data.
->
-> It will be easier to get the right people interested in both parts if
-> it is split up I think, given the size.
->
-> Jason
+
+ drivers/cxl/core/port.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index fea8d5f5f331..94cf6b248e0d 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -1533,8 +1533,18 @@ static void cxl_detach_ep(void *data)
+ 		port = to_cxl_port(dev);
+ 
+ 		parent_port = to_cxl_port(port->dev.parent);
++		get_device(&parent_port->dev);
+ 		device_lock(&parent_port->dev);
+ 		device_lock(&port->dev);
++
++		/* A concurrent detach may have already removed this port */
++		if (port->dead) {
++			device_unlock(&port->dev);
++			device_unlock(&parent_port->dev);
++			put_device(&parent_port->dev);
++			continue;
++		}
++
+ 		ep = cxl_ep_load(port, cxlmd);
+ 		dev_dbg(&cxlmd->dev, "disconnect %s from %s\n",
+ 			ep ? dev_name(ep->ep) : "", dev_name(&port->dev));
+@@ -1553,11 +1563,19 @@ static void cxl_detach_ep(void *data)
+ 		device_unlock(&port->dev);
+ 
+ 		if (died) {
++			/*
++			 * Hold an extra reference to parent_port across
++			 * delete_switch_port() since unregister_port(port)
++			 * may cascade and unregister parent_port, freeing
++			 * it before the call to device_unlock().
++			 */
+ 			dev_dbg(&cxlmd->dev, "delete %s\n",
+ 				dev_name(&port->dev));
+ 			delete_switch_port(port);
+ 		}
++
+ 		device_unlock(&parent_port->dev);
++		put_device(&parent_port->dev);
+ 	}
+ }
+ 
+
+base-commit: 49d273f81f3dad288b7748c6cfb973705ae026d2
+-- 
+2.37.3
+
