@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0240341063
-	for <linux-cxl@vger.kernel.org>; Wed, 18 Feb 2026 15:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EBA7342503;
+	Wed, 18 Feb 2026 15:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771428616; cv=none; b=i0xmq3bjPWz58U4KTX7CdqQIZQkI2AieBI2gxW+21khmE9dRUCDuqLhaiK9EBJfZvzdvUegZBkrlgYqa1MRSO4Ew4Ua9ACeFWp83Ve452q36ey292azDvTUiLvF4+vgl7Yi2+AdyAiBq4pW17T8jZNmZqEZNbQ384RP8ePad3WY=
+	t=1771430096; cv=none; b=uC1DDBJkNR/pXJJR+E5Pf8SQOFZQ/UoMtR64WLBalox+dRf9/nFTLyUu5aw7aHdnDi1s54xWbD0MNI6fHBXEUPRpsiaxQWsLhSrsqXBwv8azG+qxflgT7M4Zz1mtZ7l+kmMaSwUdm7hk2TsTk9SxpLDUUk/r0QeHUUACbESkBZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771428616; c=relaxed/simple;
-	bh=4yi99t5DYNY9mwKM9ThR5qLNcAlbOvLDjnf7ET/Rz88=;
+	s=arc-20240116; t=1771430096; c=relaxed/simple;
+	bh=kTv3K3ud2hLhI5t3kyCmZBewgwlDVTPQUj5rUJN56eU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nYpZSFf2YNS1ccfjKGYcCHe5tw9ohbS7D+t2ET2DmDGdtxbeaGu90RRa5hRK3T5v/qzNFtmM81EVUGBOyOGZZtKeHAhqb2iZxAdzpTvYxxmLrDrKol4/DPNjr08RTEGD5hKLsMycHBAVbA2SnRXzSp+1kl3Asu5lRClJB4u/bfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hsoIB2BM; arc=none smtp.client-ip=198.175.65.17
+	 In-Reply-To:Content-Type; b=EEZDKqJdUgEZUmulovTVDuBajFgYhgKN45DkapjEVJTho0Hvjf1T8cjY9IKbL1RuoBlkzSv4cZcYpqww+8ImGLnsBj3yVSHsLhtPpY3BkpeaO+pyDXJo0rRwzQUOeDT5REI/XqeZ06K2SsOvhHeFd0NPnC7D3WnkrhIny/FgcjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ub9SIhN5; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hsoIB2BM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ub9SIhN5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771428612; x=1802964612;
+  t=1771430095; x=1802966095;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=4yi99t5DYNY9mwKM9ThR5qLNcAlbOvLDjnf7ET/Rz88=;
-  b=hsoIB2BME4AKO+w12Df1MBR6I85lmu0oVV8xkiSr3vFP2S4KzVr5u3qS
-   jbVQKEgLdmy6LYVPEtrqT7EbuRfzpHkHrYlkVQU/z5TLj4wgL6zyuAbJb
-   lzylnllJQV9MUgzLdXqDDeQOUsIMdtQMWDihRSMvhXXlGfRd7wgw4xfTS
-   qWBDC7/Fh93FOEFqW/62Gowednc7A2bS20qX6xNynT5zYzBNxa/OqZlZ2
-   JNgwMxMR3WH0J++E3rTCNi6bDoNujfgTU27jNB/Nlyc5DCZ0GqPTXl4Rt
-   R1qA/lr4nyPLouR8dDSU+Pb3T5RqFLGcS1UMpzCGdheNUa5cZ9SdP7143
+  bh=kTv3K3ud2hLhI5t3kyCmZBewgwlDVTPQUj5rUJN56eU=;
+  b=Ub9SIhN5deUsNbQY5qLbHJLGhStuHfTFInaOmevelw29XHfn7dTKlBiE
+   LQ8rJYTjZcYRV8MEVFf7t0R3SCgYCx4Se4Bah2JVrBRE2F2IVWEdXYLST
+   QViImn6XIxD03LYwaedcQ7aAEuSt6tptVtAN6YfN3CgamJ6ql5azikecS
+   i2ooQTx8xtk01CW0pLwJNdfsRvYEhclBDuMXwI4a1EZhz5ZltjhJMHxu1
+   rPI1xGJJH8zllZJnE19MGcCEPppcLgtIa40JzEGR0N/vgdi7DjqLbm/O7
+   CGDjj6J22qDxKitFl8/GfY1P7U2Ol7cwMpawVvd2rJfCeyUX5snAcv0HP
    Q==;
-X-CSE-ConnectionGUID: KgbTTUr5R8uzt/NqYfuqMA==
-X-CSE-MsgGUID: mcEgqMlPS7mT/+5VCsCuCQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11705"; a="72495584"
+X-CSE-ConnectionGUID: McjdlSYlRxWvRXMxhAG9EA==
+X-CSE-MsgGUID: cZOCraYeTuW4JbXPCKZZTw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11705"; a="76343955"
 X-IronPort-AV: E=Sophos;i="6.21,298,1763452800"; 
-   d="scan'208";a="72495584"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2026 07:30:12 -0800
-X-CSE-ConnectionGUID: VcYITW/MSZ6HRRTv/zgtBg==
-X-CSE-MsgGUID: SRveEf2vSzyEAgB//AVDJA==
+   d="scan'208";a="76343955"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2026 07:54:54 -0800
+X-CSE-ConnectionGUID: 9CQtLE12Rja5b/SwPKnC+g==
+X-CSE-MsgGUID: dbkJ0sNaRkWA4L+dD2eDpQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,298,1763452800"; 
-   d="scan'208";a="213303225"
+   d="scan'208";a="212312601"
 Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.109.212]) ([10.125.109.212])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2026 07:30:10 -0800
-Message-ID: <f796c5b1-5149-4a51-b939-d278e5f7fd35@intel.com>
-Date: Wed, 18 Feb 2026 08:30:08 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2026 07:54:51 -0800
+Message-ID: <d2f6eb24-e320-4a90-9af3-dd637fa5ab7b@intel.com>
+Date: Wed, 18 Feb 2026 08:54:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,134 +52,121 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/port: Fix use after free of parent_port in
- cxl_detach_ep()
-To: Alison Schofield <alison.schofield@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
+Subject: Re: [PATCH v6 4/9] dax/cxl, hmem: Initialize hmem early and defer
+ dax_cxl binding
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-pm@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-References: <20260218061532.1461436-1-alison.schofield@intel.com>
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+ Pavel Machek <pavel@kernel.org>, Li Ming <ming.li@zohomail.com>,
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+ Ying Huang <huang.ying.caritas@gmail.com>,
+ Yao Xingtao <yaoxt.fnst@fujitsu.com>, Peter Zijlstra <peterz@infradead.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Nathan Fontenot <nathan.fontenot@amd.com>,
+ Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
+ Benjamin Cheatham <benjamin.cheatham@amd.com>,
+ Zhijian Li <lizhijian@fujitsu.com>, Borislav Petkov <bp@alien8.de>,
+ Tomasz Wolski <tomasz.wolski@fujitsu.com>
+References: <20260210064501.157591-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20260210064501.157591-5-Smita.KoralahalliChannabasappa@amd.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260218061532.1461436-1-alison.schofield@intel.com>
+In-Reply-To: <20260210064501.157591-5-Smita.KoralahalliChannabasappa@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 2/17/26 11:15 PM, Alison Schofield wrote:
-> cxl_detach_ep() is called during bottom-up removal when all CXL memory
-> devices beneath a switch port have been removed. For each port in the
-> hierarchy it locks both the port and its parent, removes the endpoint,
-> and if the port is now empty, marks it dead and unregisters the port
-> by calling delete_switch_port(). There are two places during this work
-> where the parent_port may be used after freeing:
+On 2/9/26 11:44 PM, Smita Koralahalli wrote:
+> From: Dan Williams <dan.j.williams@intel.com>
 > 
-> First, a concurrent detach may have already processed a port by the
-> time a second worker finds it via bus_find_device(). Without pinning
-> parent_port, it may already be freed when we discover port->dead and
-> attempt to unlock the parent_port. In a production kernel that's a
-> silent memory corruption, with lock debug, it looks like this:
+> Move hmem/ earlier in the dax Makefile so that hmem_init() runs before
+> dax_cxl.
 > 
-> []DEBUG_LOCKS_WARN_ON(__owner_task(owner) != get_current())
-> []WARNING: kernel/locking/mutex.c:949 at __mutex_unlock_slowpath+0x1ee/0x310
-> []Call Trace:
-> []mutex_unlock+0xd/0x20
-> []cxl_detach_ep+0x180/0x400 [cxl_core]
-> []devm_action_release+0x10/0x20
-> []devres_release_all+0xa8/0xe0
-> []device_unbind_cleanup+0xd/0xa0
-> []really_probe+0x1a6/0x3e0
+> In addition, defer registration of the dax_cxl driver to a workqueue
+> instead of using module_cxl_driver(). This ensures that dax_hmem has
+> an opportunity to initialize and register its deferred callback and make
+> ownership decisions before dax_cxl begins probing and claiming Soft
+> Reserved ranges.
 > 
-> Fix this first case by adding a check for port->dead after acquiring
-> both locks. Unlock and release the parent reference before continuing.
+> Mark the dax_cxl driver as PROBE_PREFER_ASYNCHRONOUS so its probe runs
+> out of line from other synchronous probing avoiding ordering
+> dependencies while coordinating ownership decisions with dax_hmem.
 > 
-> Second, delete_switch_port() releases three devm actions registered
-> against parent_port. The last of those is unregister_port() and it
-> calls device_unregister() on the child port, which can cascade. If
-> parent_port is now also empty the device core may unregister and free
-> it too. So by the time delete_switch_port() returns, parent_port may
-> be free, and the subsequent device_unlock(&parent_port->dev) operates
-> on freed memory. The kernel log looks same as above, with a different
-> offset in cxl_detach_ep().
-> 
-> Fix this second issue by taking an extra reference on parent_port
-> before locking it, preventing the memory from being freed across
-> delete_switch_port(). Release it after device_unlock().
-> 
-> These easily reproduce with a reload of cxl_acpi in QEMU environment
-> with CXL devices present.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 
-Fixes tag?
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 > ---
+>  drivers/dax/Makefile |  3 +--
+>  drivers/dax/cxl.c    | 27 ++++++++++++++++++++++++++-
+>  2 files changed, 27 insertions(+), 3 deletions(-)
 > 
-> 
-> This was found while trying out unit test cases to backstop DaveJ's
-> latest finding where QEMU devices with CXL unit tests exposed an
-> nvdimm bus race. I post this with a bit of skepticism of the
-> likelihood it appears in the wild. Maybe it would but just not in the
-> way my test invokes it. A Fixes tag was not obvious, but I can find
-> the best tag, if any, in a v2.
-> 
-> 
->  drivers/cxl/core/port.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index fea8d5f5f331..94cf6b248e0d 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1533,8 +1533,18 @@ static void cxl_detach_ep(void *data)
->  		port = to_cxl_port(dev);
+> diff --git a/drivers/dax/Makefile b/drivers/dax/Makefile
+> index 5ed5c39857c8..70e996bf1526 100644
+> --- a/drivers/dax/Makefile
+> +++ b/drivers/dax/Makefile
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +obj-y += hmem/
+>  obj-$(CONFIG_DAX) += dax.o
+>  obj-$(CONFIG_DEV_DAX) += device_dax.o
+>  obj-$(CONFIG_DEV_DAX_KMEM) += kmem.o
+> @@ -10,5 +11,3 @@ dax-y += bus.o
+>  device_dax-y := device.o
+>  dax_pmem-y := pmem.o
+>  dax_cxl-y := cxl.o
+> -
+> -obj-y += hmem/
+> diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
+> index 13cd94d32ff7..a2136adfa186 100644
+> --- a/drivers/dax/cxl.c
+> +++ b/drivers/dax/cxl.c
+> @@ -38,10 +38,35 @@ static struct cxl_driver cxl_dax_region_driver = {
+>  	.id = CXL_DEVICE_DAX_REGION,
+>  	.drv = {
+>  		.suppress_bind_attrs = true,
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>  	},
+>  };
 >  
->  		parent_port = to_cxl_port(port->dev.parent);
-> +		get_device(&parent_port->dev);
->  		device_lock(&parent_port->dev);
->  		device_lock(&port->dev);
+> -module_cxl_driver(cxl_dax_region_driver);
+> +static void cxl_dax_region_driver_register(struct work_struct *work)
+> +{
+> +	cxl_driver_register(&cxl_dax_region_driver);
+> +}
 > +
-> +		/* A concurrent detach may have already removed this port */
-> +		if (port->dead) {
-> +			device_unlock(&port->dev);
-> +			device_unlock(&parent_port->dev);
-> +			put_device(&parent_port->dev);
-> +			continue;
-> +		}
+> +static DECLARE_WORK(cxl_dax_region_driver_work, cxl_dax_region_driver_register);
 > +
->  		ep = cxl_ep_load(port, cxlmd);
->  		dev_dbg(&cxlmd->dev, "disconnect %s from %s\n",
->  			ep ? dev_name(ep->ep) : "", dev_name(&port->dev));
-> @@ -1553,11 +1563,19 @@ static void cxl_detach_ep(void *data)
->  		device_unlock(&port->dev);
->  
->  		if (died) {
-> +			/*
-> +			 * Hold an extra reference to parent_port across
-s/Hold/Holding/
-
-Or at least that makes more sense to me reading it. 
-
-> +			 * delete_switch_port() since unregister_port(port)
-> +			 * may cascade and unregister parent_port, freeing
-> +			 * it before the call to device_unlock().
-> +			 */
-
->  			dev_dbg(&cxlmd->dev, "delete %s\n",
->  				dev_name(&port->dev));
->  			delete_switch_port(port);
->  		}
+> +static int __init cxl_dax_region_init(void)
+> +{
+> +	/*
+> +	 * Need to resolve a race with dax_hmem wanting to drive regions
+> +	 * instead of CXL
+> +	 */
+> +	queue_work(system_long_wq, &cxl_dax_region_driver_work);
+> +	return 0;
+> +}
+> +module_init(cxl_dax_region_init);
 > +
-
-Stray blank line
->  		device_unlock(&parent_port->dev);
-> +		put_device(&parent_port->dev);
->  	}
->  }
->  
-> 
-> base-commit: 49d273f81f3dad288b7748c6cfb973705ae026d2
+> +static void __exit cxl_dax_region_exit(void)
+> +{
+> +	flush_work(&cxl_dax_region_driver_work);
+> +	cxl_driver_unregister(&cxl_dax_region_driver);
+> +}
+> +module_exit(cxl_dax_region_exit);
+> +
+>  MODULE_ALIAS_CXL(CXL_DEVICE_DAX_REGION);
+>  MODULE_DESCRIPTION("CXL DAX: direct access to CXL regions");
+>  MODULE_LICENSE("GPL");
 
