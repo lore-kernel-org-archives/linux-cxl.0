@@ -1,50 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013040.outbound.protection.outlook.com [40.93.196.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1496334A3DA;
-	Thu, 19 Feb 2026 17:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771521146; cv=none; b=gyvTrRWQm9VdKKn4wF/QxvCkuo7LQ8SxTRXwR0dxtwFHP2UmQ/4Qbq2VqAnYQ6V+q2w/TwaIbtJCCkAueZ72+8Tbekhs41ZX8s9w/rtAVSIzPgX6Zeto8JLpX8s1mNDCSgKdqDjRe3qCfLRoHdUxLtx7V5mRHz2qhdHqJ+AIbNo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771521146; c=relaxed/simple;
-	bh=j+bBJdGxslnhOQvbE4Qpk62+ae5bZlMHiWrTGW376pI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iDGZQh68Xcv1dSZvPCXW2Ty7MbQZXjBBq+yQTsvdT+KZ8ShyYPkKMGDSUZf86GVGvOJ6aZArP258yYTfyQXzL/cito8yV7NhMESoS+0ktOdkhgwesgxhOWtMDoXm799Ocm6V8nUrdhqT4/lw0m0aMLSHwyHEMDIJv3pWWTIAvJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j1plIJiA; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9A2284898;
+	Thu, 19 Feb 2026 17:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771522162; cv=fail; b=uz7CPVX2vjLKavrX1MYctGLq9x0D+QCNCGfxgubJnbwVtBEeuunrwqHRKqihk6ZdDC93ZMW4XYuY3LN/n+e3tbDdkbRPI6fdtEGANGcd7AKR/cL2GDCV7N0NfJWLPuWF1Jo9Insp4YEK4/AbaXmL+Lcf3c7Cc/B8yoUu+hIXEF4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771522162; c=relaxed/simple;
+	bh=0FlRSijC8JxuYh9jr1B93S1K62g/L4BuEhVu7NS7dlM=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=M/etNCemnk1bu8Oew2ewLeV1zQFOb5fQ2t7pLZGa1VjvEVxhEEGXLhbcKREozDx+YXp1TtdGfmGuYjFwEUEzFX3VBfMo73Hg6xQ/W3WHXZlzhW3A9RSHBTzE+1034m9fNNcpJolymMnHNmkcLzQMs9lR2A7jUjF3tlDXNfNEMAw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=w6DGI+CQ; arc=fail smtp.client-ip=40.93.196.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j1plIJiA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771521144; x=1803057144;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=j+bBJdGxslnhOQvbE4Qpk62+ae5bZlMHiWrTGW376pI=;
-  b=j1plIJiADdtH1272KY66r538RXjtH6iaSzmXq7nuk4VcUp/wXRd7XHfh
-   +ke+NtwbzWmsaxmVI7Gf0je/5StoPUvmErkEuK7iLF6yGm4a62lZoAln7
-   osZpoBu3/65SAA5+BGlXDiAAEo+LhojNfeShuxyLvz5GXVdDzUB8CaEW5
-   CFi9K1SSuweQEpY8vhBf+9AMcUNPcFdOMJAu2EcvFxCoUpNrhwAE6BfKq
-   Xopm+uVIdbjIrtBIlKQi1boqMlBqw9XEO4/qSXnmP+lV7mTaZGqR09TWj
-   vgXrArPjph4DRhoQ5R0d/JkPEfHUBQBm7BHrl1OAJuFPzuOEM6vuqdPNd
-   Q==;
-X-CSE-ConnectionGUID: EE793CKHQmaSzdJaX2Nqqg==
-X-CSE-MsgGUID: 3Im6oYJ7TY6lAuUqAKKQTQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11706"; a="71819322"
-X-IronPort-AV: E=Sophos;i="6.21,300,1763452800"; 
-   d="scan'208";a="71819322"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2026 09:12:21 -0800
-X-CSE-ConnectionGUID: SCfhtgPlR0qt4pIIlJ9hSQ==
-X-CSE-MsgGUID: ysB3y6DvSK+wOoAeUfeg+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,300,1763452800"; 
-   d="scan'208";a="219099046"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.20]) ([10.125.110.20])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2026 09:12:19 -0800
-Message-ID: <489212dc-7f99-4748-b631-218bf78737a7@intel.com>
-Date: Thu, 19 Feb 2026 10:12:18 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="w6DGI+CQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nbYREFDnkVPRQHwlQqEB8lKddCjsY069Tafg3x8sISw+0R0EwmhbLGI3kqSoF59fS6PiVZpDgvyH+K5v51zbZuWiJYKzrGYbIYwRAjKmzN8HH6Io8uWqmuWz058pA3xuoslpSPzKMMZ2sXiNif+muWe1Q6FrlfFllXy0OPC6Z1cuX6ZlT3UgniWobdBP6rAzahAX+XtxJf0aMRGxB3ethRmLUKIi6qeOlY2OWuuxJpgmVbA3bsc3LVhqFtMS8hiGYXeib9SmwRT/vCdY8nEZMGReGIax2EO8AZh82HH8T2ESGKMv4q3Kv3ObSpP85o5stbwmKJJfSaxwLuGwcCQyQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kawfu07bsqI97EPtrHBZenCTlkwVI+pUOxbytA/uTnY=;
+ b=OtiQH5TMufbquVaV853+Br5VXb3IL8FdUzo8+PaIu+x0Ou51gQalNRdL4Fg8VCUOW38hG3S5XU7iRblVz8CExgxXHlVga2FsuF5c9yWwrSuBRdqZq9M3r7l2R/ZrwnZfJiO3TCspdazr6MRCdh95spuPFTAbrL/izWqCeMxYA2D7Gq+F3Wd/nTFJ7h5qGoFYojQrhDBNI7AfUaznGRyyPvfd03vKGzCr+cCUwcBf66LDEtg5ANA/vhcqXPsTCAENAq3tt3JbG9uYZpPRIT0r9ab6j+E7VdNQIKckKdCKCvsPO8fKZmOyGqFKzN9sjW1wSIKSLWXbyi40p4J4fxrE2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=nvidia.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kawfu07bsqI97EPtrHBZenCTlkwVI+pUOxbytA/uTnY=;
+ b=w6DGI+CQRIN9cZWJOx3IkEzFStR8d4+spMZMnGQckn+/efsTSp72xtTnYx5UDurjbUHfP+ZAVFnduh4oHeSxUdTQDUilFrH/OSjPbAgkrHGv3KoLy+p4Lo3HVdmWkyraG1Wk/Y441SUAU6dLQkuDsc3/6zhtusoXDlkSkCGa0zc=
+Received: from SJ0PR13CA0189.namprd13.prod.outlook.com (2603:10b6:a03:2c3::14)
+ by PH7PR12MB7116.namprd12.prod.outlook.com (2603:10b6:510:1ef::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.13; Thu, 19 Feb
+ 2026 17:29:13 +0000
+Received: from SJ1PEPF00002317.namprd03.prod.outlook.com
+ (2603:10b6:a03:2c3:cafe::8e) by SJ0PR13CA0189.outlook.office365.com
+ (2603:10b6:a03:2c3::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.15 via Frontend Transport; Thu,
+ 19 Feb 2026 17:29:12 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ1PEPF00002317.mail.protection.outlook.com (10.167.242.171) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9632.12 via Frontend Transport; Thu, 19 Feb 2026 17:29:13 +0000
+Received: from [10.31.194.67] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 19 Feb
+ 2026 11:29:05 -0600
+Message-ID: <80cbdf15-24d2-4b37-aafb-b26c22feb53a@amd.com>
+Date: Thu, 19 Feb 2026 11:29:04 -0600
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,381 +64,201 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V7 12/19] famfs_fuse: Plumb the GET_FMAP message/response
-To: John Groves <john@jagalactic.com>, John Groves <John@Groves.net>,
- Miklos Szeredi <miklos@szeredi.hu>, Dan Williams <dan.j.williams@intel.com>,
- Bernd Schubert <bschubert@ddn.com>,
- Alison Schofield <alison.schofield@intel.com>
-Cc: John Groves <jgroves@micron.com>, John Groves <jgroves@fastmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>,
- Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- David Hildenbrand <david@kernel.org>, Christian Brauner
- <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>,
- Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>,
- Amir Goldstein <amir73il@gmail.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong
- <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>, James Morse <james.morse@arm.com>,
- Fuad Tabba <tabba@google.com>, Sean Christopherson <seanjc@google.com>,
- Shivank Garg <shivankg@amd.com>, Ackerley Tng <ackerleytng@google.com>,
- Gregory Price <gourry@gourry.net>, Aravind Ramesh <arramesh@micron.com>,
- Ajay Joshi <ajayjoshi@micron.com>,
- "venkataravis@micron.com" <venkataravis@micron.com>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-References: <0100019bd33b1f66-b835e86a-e8ae-443f-a474-02db88f7e6db-000000@email.amazonses.com>
- <20260118223257.92539-1-john@jagalactic.com>
- <0100019bd33d8b0a-05af2fc2-66c2-45e7-9091-42ca2efa6780-000000@email.amazonses.com>
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+Subject: Re: [PATCH v23 17/22] cxl/region: Factor out interleave ways setup
+To: Alejandro Lucero Palau <alucerop@amd.com>,
+	<alejandro.lucero-palau@amd.com>
+CC: Zhi Wang <zhiw@nvidia.com>, Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>, Alison Schofield <alison.schofield@intel.com>,
+	<linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
+	<dave.jiang@intel.com>
+References: <20260201155438.2664640-1-alejandro.lucero-palau@amd.com>
+ <20260201155438.2664640-18-alejandro.lucero-palau@amd.com>
+ <383d7089-d7ca-43ab-8284-694e60729770@amd.com>
+ <62be78b6-1d5d-4b5f-aaf7-62996536c97d@amd.com>
 Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <0100019bd33d8b0a-05af2fc2-66c2-45e7-9091-42ca2efa6780-000000@email.amazonses.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <62be78b6-1d5d-4b5f-aaf7-62996536c97d@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002317:EE_|PH7PR12MB7116:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1eb2c3aa-7ca8-4285-2780-08de6fdc6659
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|7416014|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RytiK0JmUVBBQURhUktmWGlVZFQyTGI3TWdMUEZLSU5NRXZLNzB2bUdqdlhN?=
+ =?utf-8?B?c1hyaHpKM3NyVThZWlNFeGtodUw2M0FCbzdOb1lpMkdRZkY0RUFpa1hPSUd1?=
+ =?utf-8?B?OTdGZ29DZzVFYkJacldxdVBYRTV2Y1NGNytuZmFGSUVhSXpWcWNJUjZ6Wllu?=
+ =?utf-8?B?NUN1ZVp6NEV0Si9Wd242M1l4TzJHWmVvc3BVYjNzK09nN0VDWEgrMEw4ZElB?=
+ =?utf-8?B?TDl2U3JXNzQ5Nm1YdGd5amM1YlZYeEZPaWJSMWI4MitVS2NOY2laMjF1eHlr?=
+ =?utf-8?B?N0NtRmlDRElqU2x3eWZmaFdkUzQ0NCsxNjNubzRuWDducXQyb1dUKzdDYys2?=
+ =?utf-8?B?T1hoQ21qR1NOOEI1S01GSDltT3lSUW5IbzNVWk9VZkVvMWMrRmd2MUV0NE5J?=
+ =?utf-8?B?VlQrODdFQk5vM0V0YU9jdmkxazRmNEYwNUxiRFRUVk1TM3NMcXhWTndWK2xa?=
+ =?utf-8?B?Sm12NjA3N2hMTldYZ21sYUVhQzUrcHNjeG10S3llZWtiTkkxVFZZVytMVVc1?=
+ =?utf-8?B?aDVHRXBHenR3WnA0aEt3WHU1SlZXR1V3NnRZS2M1KzA0dEhZbE1yeGl3SFhT?=
+ =?utf-8?B?ZHBSbis2T3cvUjdvcS90ZXNYczh1YkJBZUI1OS9vRzBIWjNJdjJpakY3c3hx?=
+ =?utf-8?B?OFZXS3ZxSFljdndya3lHMW5WdDl1NWM4WDdFVDNyQ2xrK3NWRUlJd3RaemNj?=
+ =?utf-8?B?M3g3RTQ4WU1tNG0wTXlkRkdyZnFMNFREZWRhc0tOMVl1VENDRENVZlhHVnpC?=
+ =?utf-8?B?ZlpGSDJmOHhJVG54MFhjc3RDNENJNlNtM2RwWkdZM2JnVDZLNnV4R213YWdU?=
+ =?utf-8?B?ZVFiK3JaOWNsMVhhbkkxMUxQcG9GeC9FeE5Wai9UL04wdmxheUV0b0owSnU0?=
+ =?utf-8?B?M3VZYk1kb1JYWUc2SkVNQWdkcTVhUXZnRFJsWGRvMkR3ZUlRVEtlMTNNVFJj?=
+ =?utf-8?B?Q0ljUC9YWnZDdnBjWXkzbThXbWh3MUNGODNkd09YZkJxTzZuQnhDOWRDb0xh?=
+ =?utf-8?B?SmNlWUlwVFBWRGhWY2tVZHBib2NUWmljdnFQbXBUK3ZvcmZFMFQ4aDhrVUtn?=
+ =?utf-8?B?cWc5UFU3TFRGYlhsdm5aNVBybzZFdkdmV2dLWTl5WTlZazdsdEptM1BrbklW?=
+ =?utf-8?B?Q0RudW9HK0VkblQ1WjdCZlU5MXlPd3cwK2pCZTNOeTJlRUp6WnBjckhXbkJl?=
+ =?utf-8?B?S0FMTkdzL0F3VE5obVRtZzBFMVcrN0VTd29iOVdhZnZYK3hWTFhDOVdWdURG?=
+ =?utf-8?B?cVA1c2NvWEFzY0hMYXl3c0ZLS1VCWCtPS0E1NnhRT1NqdWVyd041YXUvTTlw?=
+ =?utf-8?B?UENIY0RwOUxhWHdobTByUXhOOUpoTU8vM2ZWbmNsZjk3cExPY284N1FBN0hv?=
+ =?utf-8?B?cHNkUXkzKzRCc1MwU0NHbW51ejZJSmVrbnBKeG0zcUJJTUVmSWlYb2NVNzhO?=
+ =?utf-8?B?dFNIVjN3RWExU0lGQVBrYTVyaWdEZ3IxQ1JpTmFkL0l4RHh2T0hPR2M5Q0ZC?=
+ =?utf-8?B?OVczb1podzVCUHhVeDR3MzR2eEZmdS9tMkpIdTY0VUVEV3pDbVRCcVczOGZq?=
+ =?utf-8?B?K0Y0RlRETlMydDJ3c2MrMXo0TW1tS1d0RXNxV3B2Z0l0VS9tdFp3K1Jnb013?=
+ =?utf-8?B?NnlZbkVLWEpmYVd0OXRUZlJ4N1hZeGJNRXBDZVhWbCtTR2NxVkFqY1lkV0hX?=
+ =?utf-8?B?bUp1eFBXdHJTWkxoaUZSKzgwRjhFcHc2cStYK0JzdnRYS0NhMXo0RklqVERU?=
+ =?utf-8?B?SHJ6cnpWUUpyMUJSdkZ0TjNOY1BKdDlkbU52bWdiNUdPOXQ5enlCTU1WSG1D?=
+ =?utf-8?B?bFhCRmtBalEvNjBKK0xyRlFzZHVuRmlVUysxUmFhTndZTnJ0T3lZdmRhVjhJ?=
+ =?utf-8?B?V2J1NnY2Q1p5c3ZQb0pueUdBak1RWUM0RWJrcmVreC94TkdZYWx6VDFDaGQx?=
+ =?utf-8?B?Z2p0SHpDT2xCSDFjMDU0SHJLVzJXdkZKcllvczBjNDNOcTArNU5UdU9qVlFl?=
+ =?utf-8?B?VGlBaGkrVUFxdnZKYk4vb0xzTVVLaWVhZ3BZMlRvTm13R1dkMVFDbUd4c1pu?=
+ =?utf-8?B?djl5enEyQlJmU3o4VXlZOFJsWndNTWRNTUxITmtWWEVkQUNTU09vQnd6YlJN?=
+ =?utf-8?B?WUkvY2gxSmhCTE5YejNVZzBCc205Q0ZMUFB3T1dQZU5rUFJRQ0IzSE1HSUs4?=
+ =?utf-8?B?Q0xPU2o5R1owOE1vb1RXUGJla1E3aFdOdktnMVl6ZlRjL09SOXJsSHF3Tmow?=
+ =?utf-8?B?V2NOZDhHTGJ0QTM0d3ZkaSt5SDJ3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	unRKRlZU0qVkm4b/zqJH9gPnJgSOX/tX0xya2dr7cD114fmydrtg5OkYc5+qHjVbtRIjWF/h6Z19BKZdpw8350Toq9sdDbKeY9n3YeHTfPO/XlYtN9LG38TZgyNRsiChaHNKleavI81PvSW/XYDcxDgviLH4Dfywyhvgq1ulTMsjKrzdnk4HGYpGtr2FJB4zxPjWqQoDznXFWznJnAlYF7gqXXZvGdqFSg6+/eZQRWs3gvNgqdxhYZ/7qBzT7SfdsmZMPbJ7KUYMSPgBwXjVzqiRCvP6oAz5dfGuRHdZoYRFXQIp6nqXH5Q1+1eHHlGH2a+oSNkj1shHDkHQApL2KAI/m6/irrGfeYSMeWUqKUq9ngpbNON4sPTbYZz5coXZiA6DDdZocvRwgnNeXX8V0wjNh7F6lPjKuvqXP1JgyLCsE08pqYLlNkfIXY10pWnK
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2026 17:29:13.2649
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1eb2c3aa-7ca8-4285-2780-08de6fdc6659
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00002317.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7116
 
 
 
-On 1/18/26 3:33 PM, John Groves wrote:
-> From: John Groves <john@groves.net>
+On 2/19/2026 4:40 AM, Alejandro Lucero Palau wrote:
 > 
-> Upon completion of an OPEN, if we're in famfs-mode we do a GET_FMAP to
-> retrieve and cache up the file-to-dax map in the kernel. If this
-> succeeds, read/write/mmap are resolved direct-to-dax with no upcalls.
+> On 2/11/26 22:11, Cheatham, Benjamin wrote:
+>> On 2/1/2026 9:54 AM, alejandro.lucero-palau@amd.com wrote:
+>>> From: Alejandro Lucero <alucerop@amd.com>
+>>>
+>>> Region creation based on Type3 devices is triggered from user space
+>>> allowing memory combination through interleaving.
+>>>
+>>> In preparation for kernel driven region creation, that is Type2 drivers
+>>> triggering region creation backed with its advertised CXL memory, factor
+>>> out a common helper from the user-sysfs region setup for interleave ways.
+>>>
+>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>>> Reviewed-by: Zhi Wang <zhiw@nvidia.com>
+>>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+>>> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+>>> ---
+>>>   drivers/cxl/core/region.c | 43 ++++++++++++++++++++++++---------------
+>>>   1 file changed, 27 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>>> index f53b2e9fd9e6..ece1d3df7cf1 100644
+>>> --- a/drivers/cxl/core/region.c
+>>> +++ b/drivers/cxl/core/region.c
+>>> @@ -485,22 +485,14 @@ static ssize_t interleave_ways_show(struct device *dev,
+>>>     static const struct attribute_group *get_cxl_region_target_group(void);
+>>>   -static ssize_t interleave_ways_store(struct device *dev,
+>>> -                     struct device_attribute *attr,
+>>> -                     const char *buf, size_t len)
+>>> +static int set_interleave_ways(struct cxl_region *cxlr, int val)
+>> @val should probably stay an unsigned int. You pass an unsigned int in the sysfs function, and the
+>> function was originally coded with that in mind (same with @save below).
 > 
-> Signed-off-by: John Groves <john@groves.net>
-> ---
->  MAINTAINERS               |  8 +++++
->  fs/fuse/Makefile          |  1 +
->  fs/fuse/famfs.c           | 74 +++++++++++++++++++++++++++++++++++++++
->  fs/fuse/file.c            | 14 +++++++-
->  fs/fuse/fuse_i.h          | 70 +++++++++++++++++++++++++++++++++---
->  fs/fuse/inode.c           |  8 ++++-
->  fs/fuse/iomode.c          |  2 +-
->  include/uapi/linux/fuse.h |  7 ++++
->  8 files changed, 176 insertions(+), 8 deletions(-)
->  create mode 100644 fs/fuse/famfs.c
+> Good catch. I wonder if I should just change the way the value is obtained, using kstrtoint instead  of kstrtouint, as those values are used for cxl_region_params fields defined as int. In other words, it seems doing that simpler than changing all the other places you mention and the structs involved. I can not see a reason for using unsigned int so I think I will follow that approach. Tell me if you think otherwise.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 10aa5120d93f..e3d0aa5eb361 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10379,6 +10379,14 @@ F:	fs/fuse/
->  F:	include/uapi/linux/fuse.h
->  F:	tools/testing/selftests/filesystems/fuse/
->  
-> +FUSE [FAMFS Fabric-Attached Memory File System]
-> +M:	John Groves <jgroves@micron.com>
-> +M:	John Groves <John@Groves.net>
-> +L:	linux-cxl@vger.kernel.org
-> +L:	linux-fsdevel@vger.kernel.org
-> +S:	Supported
-> +F:	fs/fuse/famfs.c
-> +
->  FUTEX SUBSYSTEM
->  M:	Thomas Gleixner <tglx@kernel.org>
->  M:	Ingo Molnar <mingo@redhat.com>
-> diff --git a/fs/fuse/Makefile b/fs/fuse/Makefile
-> index 22ad9538dfc4..3f8dcc8cbbd0 100644
-> --- a/fs/fuse/Makefile
-> +++ b/fs/fuse/Makefile
-> @@ -17,5 +17,6 @@ fuse-$(CONFIG_FUSE_DAX) += dax.o
->  fuse-$(CONFIG_FUSE_PASSTHROUGH) += passthrough.o backing.o
->  fuse-$(CONFIG_SYSCTL) += sysctl.o
->  fuse-$(CONFIG_FUSE_IO_URING) += dev_uring.o
-> +fuse-$(CONFIG_FUSE_FAMFS_DAX) += famfs.o
->  
->  virtiofs-y := virtio_fs.o
-> diff --git a/fs/fuse/famfs.c b/fs/fuse/famfs.c
-> new file mode 100644
-> index 000000000000..615819cc922d
-> --- /dev/null
-> +++ b/fs/fuse/famfs.c
-> @@ -0,0 +1,74 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * famfs - dax file system for shared fabric-attached memory
-> + *
-> + * Copyright 2023-2026 Micron Technology, Inc.
-> + *
-> + * This file system, originally based on ramfs the dax support from xfs,
-> + * is intended to allow multiple host systems to mount a common file system
-> + * view of dax files that map to shared memory.
-> + */
-> +
-> +#include <linux/cleanup.h>
-> +#include <linux/fs.h>
-> +#include <linux/mm.h>
-> +#include <linux/dax.h>
-> +#include <linux/iomap.h>
-> +#include <linux/path.h>
-> +#include <linux/namei.h>
-> +#include <linux/string.h>
-> +
-> +#include "fuse_i.h"
-> +
-> +
-> +#define FMAP_BUFSIZE PAGE_SIZE
-> +
-> +int
-> +fuse_get_fmap(struct fuse_mount *fm, struct inode *inode)
 
-keep the return int on the same line?
+If I had to guess unsigned int was used because a negative interleave granularity/ways makes no sense. I think your suggestion is fine though since no one
+in their right mind would give anything but a (relatively) small and positive value for these.
 
-> +{
-> +	void *fmap_buf __free(kfree) = NULL;
+Thanks,
+Ben
 
-Should do the variable declaration when you do the kzalloc(). That way you can avoid any potential use before check issues.
-
-> +	struct fuse_inode *fi = get_fuse_inode(inode);
-> +	size_t fmap_bufsize = FMAP_BUFSIZE;
-> +	u64 nodeid = get_node_id(inode);
-> +	ssize_t fmap_size;
-> +	int rc;
-> +
-> +	FUSE_ARGS(args);
-> +
-> +	/* Don't retrieve if we already have the famfs metadata */
-> +	if (fi->famfs_meta)
-> +		return 0;
-> +
-> +	fmap_buf = kzalloc(FMAP_BUFSIZE, GFP_KERNEL);
-> +	if (!fmap_buf)
-> +		return -EIO;
-
--ENOMEM?
-
-DJ
-> +
-> +	args.opcode = FUSE_GET_FMAP;
-> +	args.nodeid = nodeid;
-> +
-> +	/* Variable-sized output buffer
-> +	 * this causes fuse_simple_request() to return the size of the
-> +	 * output payload
-> +	 */
-> +	args.out_argvar = true;
-> +	args.out_numargs = 1;
-> +	args.out_args[0].size = fmap_bufsize;
-> +	args.out_args[0].value = fmap_buf;
-> +
-> +	/* Send GET_FMAP command */
-> +	rc = fuse_simple_request(fm, &args);
-> +	if (rc < 0) {
-> +		pr_err("%s: err=%d from fuse_simple_request()\n",
-> +		       __func__, rc);
-> +		return rc;
-> +	}
-> +	fmap_size = rc;
-> +
-> +	/* We retrieved the "fmap" (the file's map to memory), but
-> +	 * we haven't used it yet. A call to famfs_file_init_dax() will be added
-> +	 * here in a subsequent patch, when we add the ability to attach
-> +	 * fmaps to files.
-> +	 */
-> +
-> +	return 0;
-> +}
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index 093569033ed1..1f64bf68b5ee 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -277,6 +277,16 @@ static int fuse_open(struct inode *inode, struct file *file)
->  	err = fuse_do_open(fm, get_node_id(inode), file, false);
->  	if (!err) {
->  		ff = file->private_data;
-> +
-> +		if ((fm->fc->famfs_iomap) && (S_ISREG(inode->i_mode))) {
-> +			/* Get the famfs fmap - failure is fatal */
-> +			err = fuse_get_fmap(fm, inode);
-> +			if (err) {
-> +				fuse_sync_release(fi, ff, file->f_flags);
-> +				goto out_nowrite;
-> +			}
-> +		}
-> +
->  		err = fuse_finish_open(inode, file);
->  		if (err)
->  			fuse_sync_release(fi, ff, file->f_flags);
-> @@ -284,12 +294,14 @@ static int fuse_open(struct inode *inode, struct file *file)
->  			fuse_truncate_update_attr(inode, file);
->  	}
->  
-> +out_nowrite:
->  	if (is_wb_truncate || dax_truncate)
->  		fuse_release_nowrite(inode);
->  	if (!err) {
->  		if (is_truncate)
->  			truncate_pagecache(inode, 0);
-> -		else if (!(ff->open_flags & FOPEN_KEEP_CACHE))
-> +		else if (!(ff->open_flags & FOPEN_KEEP_CACHE) &&
-> +			 !fuse_file_famfs(fi))
->  			invalidate_inode_pages2(inode->i_mapping);
->  	}
->  	if (dax_truncate)
-> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-> index 2839efb219a9..b66b5ca0bc11 100644
-> --- a/fs/fuse/fuse_i.h
-> +++ b/fs/fuse/fuse_i.h
-> @@ -223,6 +223,14 @@ struct fuse_inode {
->  	 * so preserve the blocksize specified by the server.
->  	 */
->  	u8 cached_i_blkbits;
-> +
-> +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
-> +	/* Pointer to the file's famfs metadata. Primary content is the
-> +	 * in-memory version of the fmap - the map from file's offset range
-> +	 * to DAX memory
-> +	 */
-> +	void *famfs_meta;
-> +#endif
->  };
->  
->  /** FUSE inode state bits */
-> @@ -1511,11 +1519,8 @@ void fuse_free_conn(struct fuse_conn *fc);
->  
->  /* dax.c */
->  
-> -static inline bool fuse_file_famfs(struct fuse_inode *fuse_inode) /* Will be superseded */
-> -{
-> -	(void)fuse_inode;
-> -	return false;
-> -}
-> +static inline int fuse_file_famfs(struct fuse_inode *fi); /* forward */
-> +
->  #define FUSE_IS_VIRTIO_DAX(fuse_inode) (IS_ENABLED(CONFIG_FUSE_DAX)	\
->  					&& IS_DAX(&fuse_inode->inode)  \
->  					&& !fuse_file_famfs(fuse_inode))
-> @@ -1634,4 +1639,59 @@ extern void fuse_sysctl_unregister(void);
->  #define fuse_sysctl_unregister()	do { } while (0)
->  #endif /* CONFIG_SYSCTL */
->  
-> +/* famfs.c */
-> +
-> +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
-> +void __famfs_meta_free(void *map);
-> +
-> +/* Set fi->famfs_meta = NULL regardless of prior value */
-> +static inline void famfs_meta_init(struct fuse_inode *fi)
-> +{
-> +	fi->famfs_meta = NULL;
-> +}
-> +
-> +/* Set fi->famfs_meta iff the current value is NULL */
-> +static inline struct fuse_backing *famfs_meta_set(struct fuse_inode *fi,
-> +						  void *meta)
-> +{
-> +	return cmpxchg(&fi->famfs_meta, NULL, meta);
-> +}
-> +
-> +static inline void famfs_meta_free(struct fuse_inode *fi)
-> +{
-> +	famfs_meta_set(fi, NULL);
-> +}
-> +
-> +static inline int fuse_file_famfs(struct fuse_inode *fi)
-> +{
-> +	return (READ_ONCE(fi->famfs_meta) != NULL);
-> +}
-> +
-> +int fuse_get_fmap(struct fuse_mount *fm, struct inode *inode);
-> +
-> +#else /* !CONFIG_FUSE_FAMFS_DAX */
-> +
-> +static inline struct fuse_backing *famfs_meta_set(struct fuse_inode *fi,
-> +						  void *meta)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline void famfs_meta_free(struct fuse_inode *fi)
-> +{
-> +}
-> +
-> +static inline int fuse_file_famfs(struct fuse_inode *fi)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline int
-> +fuse_get_fmap(struct fuse_mount *fm, struct inode *inode)
-> +{
-> +	return 0;
-> +}
-> +
-> +#endif /* CONFIG_FUSE_FAMFS_DAX */
-> +
->  #endif /* _FS_FUSE_I_H */
-> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> index acabf92a11f8..f2d742d723dc 100644
-> --- a/fs/fuse/inode.c
-> +++ b/fs/fuse/inode.c
-> @@ -120,6 +120,9 @@ static struct inode *fuse_alloc_inode(struct super_block *sb)
->  	if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
->  		fuse_inode_backing_set(fi, NULL);
->  
-> +	if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX))
-> +		famfs_meta_set(fi, NULL);
-> +
->  	return &fi->inode;
->  
->  out_free_forget:
-> @@ -141,6 +144,9 @@ static void fuse_free_inode(struct inode *inode)
->  	if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
->  		fuse_backing_put(fuse_inode_backing(fi));
->  
-> +	if (S_ISREG(inode->i_mode) && fuse_file_famfs(fi))
-> +		famfs_meta_free(fi);
-> +
->  	kmem_cache_free(fuse_inode_cachep, fi);
->  }
->  
-> @@ -162,7 +168,7 @@ static void fuse_evict_inode(struct inode *inode)
->  	/* Will write inode on close/munmap and in all other dirtiers */
->  	WARN_ON(inode_state_read_once(inode) & I_DIRTY_INODE);
->  
-> -	if (FUSE_IS_VIRTIO_DAX(fi))
-> +	if (FUSE_IS_VIRTIO_DAX(fi) || fuse_file_famfs(fi))
->  		dax_break_layout_final(inode);
->  
->  	truncate_inode_pages_final(&inode->i_data);
-> diff --git a/fs/fuse/iomode.c b/fs/fuse/iomode.c
-> index 31ee7f3304c6..948148316ef0 100644
-> --- a/fs/fuse/iomode.c
-> +++ b/fs/fuse/iomode.c
-> @@ -203,7 +203,7 @@ int fuse_file_io_open(struct file *file, struct inode *inode)
->  	 * io modes are not relevant with DAX and with server that does not
->  	 * implement open.
->  	 */
-> -	if (FUSE_IS_VIRTIO_DAX(fi) || !ff->args)
-> +	if (FUSE_IS_VIRTIO_DAX(fi) || fuse_file_famfs(fi) || !ff->args)
->  		return 0;
->  
->  	/*
-> diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-> index 25686f088e6a..9eff9083d3b5 100644
-> --- a/include/uapi/linux/fuse.h
-> +++ b/include/uapi/linux/fuse.h
-> @@ -669,6 +669,9 @@ enum fuse_opcode {
->  	FUSE_STATX		= 52,
->  	FUSE_COPY_FILE_RANGE_64	= 53,
->  
-> +	/* Famfs / devdax opcodes */
-> +	FUSE_GET_FMAP           = 54,
-> +
->  	/* CUSE specific operations */
->  	CUSE_INIT		= 4096,
->  
-> @@ -1313,4 +1316,8 @@ struct fuse_uring_cmd_req {
->  	uint8_t padding[6];
->  };
->  
-> +/* Famfs fmap message components */
-> +
-> +#define FAMFS_FMAP_MAX 32768 /* Largest supported fmap message */
-> +
->  #endif /* _LINUX_FUSE_H */
+> 
+> Thank you
+> 
+> 
+>> With that cleaned up:
+>> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+>>
+>>>   {
+>>> -    struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev->parent);
+>>> +    struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+>>>       struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+>>> -    struct cxl_region *cxlr = to_cxl_region(dev);
+>>>       struct cxl_region_params *p = &cxlr->params;
+>>> -    unsigned int val, save;
+>>> -    int rc;
+>>> +    int save, rc;
+>>>       u8 iw;
+>>>   -    rc = kstrtouint(buf, 0, &val);
+>>> -    if (rc)
+>>> -        return rc;
+>>> -
+>>>       rc = ways_to_eiw(val, &iw);
+>>>       if (rc)
+>>>           return rc;
+>>> @@ -515,9 +507,7 @@ static ssize_t interleave_ways_store(struct device *dev,
+>>>           return -EINVAL;
+>>>       }
+>>>   -    ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
+>>> -    if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
+>>> -        return rc;
+>>> +    lockdep_assert_held_write(&cxl_rwsem.region);
+>>>         if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE)
+>>>           return -EBUSY;
+>>> @@ -525,10 +515,31 @@ static ssize_t interleave_ways_store(struct device *dev,
+>>>       save = p->interleave_ways;
+>>>       p->interleave_ways = val;
+>>>       rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
+>>> -    if (rc) {
+>>> +    if (rc)
+>>>           p->interleave_ways = save;
+>>> +
+>>> +    return rc;
+>>> +}
+>>> +
+>>> +static ssize_t interleave_ways_store(struct device *dev,
+>>> +                     struct device_attribute *attr,
+>>> +                     const char *buf, size_t len)
+>>> +{
+>>> +    struct cxl_region *cxlr = to_cxl_region(dev);
+>>> +    unsigned int val;
+>>> +    int rc;
+>>> +
+>>> +    rc = kstrtouint(buf, 0, &val);
+>>> +    if (rc)
+>>> +        return rc;
+>>> +
+>>> +    ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
+>>> +    if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
+>>> +        return rc;
+>>> +
+>>> +    rc = set_interleave_ways(cxlr, val);
+>>> +    if (rc)
+>>>           return rc;
+>>> -    }
+>>>         return len;
+>>>   }
 
