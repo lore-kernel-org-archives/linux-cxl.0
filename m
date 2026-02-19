@@ -1,329 +1,264 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010069.outbound.protection.outlook.com [52.101.193.69])
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013021.outbound.protection.outlook.com [40.93.201.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A8B34F250
-	for <linux-cxl@vger.kernel.org>; Thu, 19 Feb 2026 17:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85A5350283;
+	Thu, 19 Feb 2026 17:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.21
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771522270; cv=fail; b=qMPO4yLH44P0E2wiU78SuSVYAVz40Oxs04YaByyXAvclAv2TpgoDdeKJ7Xs5aCLyiGgEWZtKOB0ZzpnzxoE0L7LzLNTOvf5lkAh9p9Fz47f6qbyHDKaZxnSFbs43Pki+Ty8I8yiTnfpuY5acS3sHQYUDvOiqHaUpcgI8KdzPrSU=
+	t=1771522785; cv=fail; b=D06+3+y2quvVvD+BttrACXjkcX9EAsdlihcjDQ+YwjQeYhnQRt6XVT/7lpFbaOxfTmb8u/ltpQ43hV2w4bcSSgqYXEwVoHHOdb0H4eYK5z8GF8Xx9t8hAF5Vv+sO9SkINYKJ5FhIOsG8hFKEOOWQ2vsUrGcv18vSqNyMDG1UeAI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771522270; c=relaxed/simple;
-	bh=BkCsOBSyJVFAF71dU2v35ocRVJHmggLrAwRdFqU7Kvk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GSOe5cNW1YpM39r61TL8Ms62nZd49F/FV/8bt5hOdwLlP5jxnpL8lGv904M/EpBYZIX5eDp8VQcHcpzbWh/w3oDSxvuy+pBNCc/3LsKqlVCHB7oFvRxJZarLEO8r8DCnk7GBYI8cKDbhsFzgo2g730ZRYDkhr6x0uU4idEJ3jKs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=alxdeFWx; arc=fail smtp.client-ip=52.101.193.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1771522785; c=relaxed/simple;
+	bh=RalknU25WRukIPrisWRfQnsomsCcHJRXlPzsmZtyXxE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=PjGPzPrguhTPzgMrYVBH//ucFWOMDn24Vu7tnn5kWecqy3twH0DEZsoANkxRj/dVdr/+ghBVN6aTFcJf/wUZuOLq8llVicOB0d74L/R8VyL/fL80OLAOz2lUA507U/13Yc/UhW0aHxzKmVp0tcHreG43CWgYZhE2gAeCvlTppEU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=N0P6HPba; arc=fail smtp.client-ip=40.93.201.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="alxdeFWx"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="N0P6HPba"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=c8u+IljVzA+onNWo7JSvS5iPr1oTs793hUBXRXLCxC9jSlhfOf6NgfSNgoXcfwOIF7haZrZyAhKEonX3QQDvsv+kD5a0UuFF0wFt2H6RIG89VtemRwNJvmlWkLVzVYo+5n19OYE/4fjOjkuWZ/gZSlZjjgWmMbT8wJ3LlFXO9qtEjRy4SvLEud4GKRmeQzNLnZgXuzgDrHhr4jw2MJTE24pMnRBfRu7v4ypcKjigmXXvZi5g3NFss+ii6rO0q1K3UbKSeRMvBPT8+MstSPRW4TmCnwyQZxrOdQuykO1uglegrkp3d4xNCFwRqb9TBewKw8Riml1KDtAvr0CwhgG+LA==
+ b=julMC2v9SRgUsEsy00BDOaOisiZjhy8d03ESXUEWsqVGRuAmApaBVEMs+nfNk1vIvVTd5zgCGL2TBe5FImQI/AnqmXFQR0ZnR7fgdP+FAI/bvgz2OImqXIPMccSxFFb8qeXCfySdpFqbvgE6Ytp6wBNPPH4Wdnd8gIxYq7qYmEGeTZpY/fd4JYSDvRVTkPyZzJ3xO8rR633t3FD3KaUzMzIAeb8wgACg7vsQw/nJPTRqiTY4f+b4uXEi0Mm8KwQyMuHaFsPd+WeV11RzLXsu6Z2ZZDqBk5jVFXz83Wy22Gj3vzZ2ojjx/fFbSGYuKZRaFsTMr+uCaFfYS1Dif0Pq3g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sALx5UQX17zDDoZIKXezo3InRTtmPKEKB9ttgIjQqwo=;
- b=bj63oYSxm4FaNlfX79lgw/kebaBZ0j+oNA48NdL2X+g0sBIyXbUU1DVzTMCezu1lPmpzDAdDIEKw/un1ipW2fAvkJQEfiKYIw0Jy6feXzUv0mCHvtxeF7/8Mxv2bA2rseDvVaHLnVU3268d+7Krz6Y6aHf45YiosyVIgwWCDPjAii05sU0K5AZe4MlK2/t6XnGJ8AlTnIO9mnXVF/6w4k0VESQG6hpKz8PXd3lli0pR9kpte2F5eDEQD01kXVEvCRZBvNJIZ3+N3tj6xtPBr1ZSPKNniOzmx1HzncEW8vYOcQABtX+RA/WbEp/Y1MUmpvOl7Pb97yEXNdPqLufp6Hg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=Fw2+9OXab1k6SkQ263awoFtTgp2pv4/zABtFdW5EQgI=;
+ b=NI4oXnA/X1JEOnl97B+Qyb7+v1v7SItiK/7R6DnWwxYE0qX0BTzhPWwMFaVmMKiI7LH6PS3YmLkY8idlAlHJ72/XpIvSrKofVOThVXIRHKfLZVF+BmkOVcaQg0N2xajZFPbsB911Fv1WQed8XSPmxCoBBvTIofTBsJU9EKrJ6GVhd1GRUVXPjl9vtTLi2kgnEu8Lg64DpVGGO/KCY1A6xuwULAYPGTmKv3PSgVMmrcJpp/eqvgMucn0m9OUbmlxXcQM6Stmjr4JSFaFExGmhtV2RiEA6KY+KPgHMpp4peD/veel80p1uF7RraVcXfIrLssVEEhBAv5M3jXZZpEiamA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sALx5UQX17zDDoZIKXezo3InRTtmPKEKB9ttgIjQqwo=;
- b=alxdeFWxMOnVbqWyKSwUUeuheuLjZfGISOzGIiJ367hvN51xiS7as76O3+AlHbzd2WePDz0LOv4CMSdNMs6JP2D+sGGU0D5cY+VIHL/1qDsHtiBjxwTJFt1JD8W0bRV9gsNCAW6kii/3wIwALZ7il7+PMrIZ92Vd34Q/8KB77Xk=
-Received: from BY1P220CA0001.NAMP220.PROD.OUTLOOK.COM (2603:10b6:a03:59d::14)
- by PH7PR12MB7793.namprd12.prod.outlook.com (2603:10b6:510:270::19) with
+ bh=Fw2+9OXab1k6SkQ263awoFtTgp2pv4/zABtFdW5EQgI=;
+ b=N0P6HPbaP/Roq5OE88oybE0l26CUTjef9QISBM/pcstJSiYb0k+4uxi8yYotNIptE56QZ6bazz51fJ3cc2OXqPEQ+vNbHzcue6s+NUkfPXA1xwEloshhse9XXcHc+ycxs+lMh/AYQ4vkpEQe33GZVKs9LiNIqfp1S5YYgUpXXYSCpZPHu/23WyY6FqnzajEp3ilyw1vCYfDT7Yr6m6g1xP9GrguE6+UMAnrlE54kpe9w88ERNEk2deho0y+yJsFYin/mV5Vxe+sRh+d00FMZDOSnsoIU91Lf2hwWAHqzqmuxW6INPttzI6beroRBQLwyXHRtx7x/oEgBWQ7PwZBSsQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by PH7PR12MB5760.namprd12.prod.outlook.com (2603:10b6:510:1d3::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.14; Thu, 19 Feb
- 2026 17:31:04 +0000
-Received: from SJ1PEPF00002312.namprd03.prod.outlook.com
- (2603:10b6:a03:59d:cafe::fb) by BY1P220CA0001.outlook.office365.com
- (2603:10b6:a03:59d::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.16 via Frontend Transport; Thu,
- 19 Feb 2026 17:31:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ1PEPF00002312.mail.protection.outlook.com (10.167.242.166) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9632.12 via Frontend Transport; Thu, 19 Feb 2026 17:31:00 +0000
-Received: from [10.31.194.67] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 19 Feb
- 2026 11:30:59 -0600
-Message-ID: <eb296e95-e121-41e2-bb49-8d91cfb9ecf6@amd.com>
-Date: Thu, 19 Feb 2026 11:30:58 -0600
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.13; Thu, 19 Feb
+ 2026 17:39:39 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528%5]) with mapi id 15.20.9632.015; Thu, 19 Feb 2026
+ 17:39:39 +0000
+Date: Thu, 19 Feb 2026 13:39:37 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: dan.j.williams@intel.com, Alistair Francis <alistair23@gmail.com>,
+	bhelgaas@google.com, rust-for-linux@vger.kernel.org,
+	akpm@linux-foundation.org, linux-pci@vger.kernel.org,
+	Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, alex.gaynor@gmail.com,
+	benno.lossin@proton.me, boqun.feng@gmail.com, a.hindborg@kernel.org,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, tmgross@umich.edu,
+	ojeda@kernel.org, wilfred.mallawa@wdc.com, aliceryhl@google.com,
+	Alistair Francis <alistair.francis@wdc.com>,
+	aneesh.kumar@kernel.org, yilun.xu@linux.intel.com, aik@amd.com
+Subject: Re: [RFC v3 00/27] lib: Rust implementation of SPDM
+Message-ID: <20260219173937.GH723117@nvidia.com>
+References: <20260219124313.GE723117@nvidia.com>
+ <20260219124119.GD723117@nvidia.com>
+ <aZcbBt7OmNeH3oA0@wunner.de>
+ <20260219143129.GF723117@nvidia.com>
+ <aZcnTnYJ61Kma0yd@wunner.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aZcnTnYJ61Kma0yd@wunner.de>
+X-ClientProxiedBy: BL0PR05CA0009.namprd05.prod.outlook.com
+ (2603:10b6:208:91::19) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ndctl PATCH v3] test/cxl-poison.sh: replace sysfs usage with
- cxl-cli cmds
-To: Alison Schofield <alison.schofield@intel.com>
-CC: <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>
-References: <20260218191108.1471718-1-alison.schofield@intel.com>
-Content-Language: en-US
-From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-In-Reply-To: <20260218191108.1471718-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002312:EE_|PH7PR12MB7793:EE_
-X-MS-Office365-Filtering-Correlation-Id: fc498a05-57be-453b-2951-08de6fdca659
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|PH7PR12MB5760:EE_
+X-MS-Office365-Filtering-Correlation-Id: a12c75ef-bb8d-40f5-5836-08de6fdddb5c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|7053199007;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UmVZb0YwNTUvUk0ybXZJOEI1SVQ1Sk5pbUVHeTVZMFBiTWlOMXc5c2dDY083?=
- =?utf-8?B?VVJHRjM2Qlk5TFROVDZWZTZmTUlydDhUQzU5M1NrUDJRNmF1enJ4U3R4cHJS?=
- =?utf-8?B?b3hDamNJVkJtekIxTnZoREw5SnFmbmRPcEZEdnhzTytpbHc3MXdjUVV3dkJ3?=
- =?utf-8?B?d2w5cDE3Vk9KalpWOEMrWkF3UGVwQW5Va1N0M2J6MDBsM1lnTzM0TlczaG82?=
- =?utf-8?B?MmFMNXFJSFdYcmkyK1FQYWM0VmM2b3NJa2duamV5bExmS29Nbmhqai9JYWFZ?=
- =?utf-8?B?ME0vQnBuc1F5QXU0RmtHMXBjU1NnZ2xHNFZMS01UVFdWVUR2N0hMQnprcmJE?=
- =?utf-8?B?RkNOWjA5QityQ0hZUmNQRTM3M1RTOWI3TGdNM1g4V0ZaajIvUmpINGc1NFYz?=
- =?utf-8?B?VEtmSnJIcTVnN0JoNHo4ZFNLUzdRUTUrS2t0WVJZWHlUWm9kNElOUTI4V21z?=
- =?utf-8?B?ZXBYNzNma0tMNVlGSG9SVHRqOC9NaXcvb2drbmdyanZUVjNIMklXdHZETHdE?=
- =?utf-8?B?b0hmYzJMMHVuL2FITDNRZzZ1a1JDdDVRa2Z4cG9WazFmZ1hrL29qVDZlaFNv?=
- =?utf-8?B?SllqRFRKblp2dUFwRHA1d2dxMk9QNXhOd08xR21jN0FTa1kxcXllRVROOXo5?=
- =?utf-8?B?ZTJ1c3dzV1hBRjJjc2hJN1FLZTVzS0ZMcFFlNnJNbFNQc1FkM1hTVkZSbzQ1?=
- =?utf-8?B?djZQNFRzeVlueXBtUGk3c09KdnRDVEY0blMwd0hwUFNONkN1dHNwV09JUWZa?=
- =?utf-8?B?VW1SNEVwcWdxS1NtWGlacVhid0xEOTdvdzJtdk5kS0ZBK1JQcWtXRi9XaGxH?=
- =?utf-8?B?RmVISE4vK25Tb2Q1eWdYdVkwZTVDNEs4Z0l6b3YzRlJDQWlCMWs1UlN4dWVG?=
- =?utf-8?B?dk5FQ09Hd3pwc0RzVzVhMjVNWkpwNFBLbEFqR25TNFEyUVBqSG1YYWU4NFlH?=
- =?utf-8?B?T2pBcFluOFhwbk5qRG84Zk9Na3BzeUhqaW51NnNhL2RHOHNkNmtBRTlrOFYw?=
- =?utf-8?B?Vm9USVJudTJxSnJGZjNSMUYvK0lmRHB1QlpPRElJQWZKcTcwYllMTWhneklZ?=
- =?utf-8?B?aXdWZUo0Q3FjMW9qczc0TDZ1RFl0eWJRZm9SV1YzUXp5cjRiZ1N1VWx4MlFV?=
- =?utf-8?B?Y1N4V1EvUjhCMkp2bEZuWmMreERCbVhSa0UvM294c3pRMVo3S3p0RnFDSGtk?=
- =?utf-8?B?MkNRWms3aXRGcm94dGhFODJwY0oxaG0wRHpCZnZoY2JDbmZwOGdKQ2dNWHZ2?=
- =?utf-8?B?M0VvSDdtMURaVkdBbmVob3JuR0NabFoxNnlaaFFCT2locUF2SFhxRFZSamdv?=
- =?utf-8?B?TGRJUFBwdmo3cVNkZjhEQ0R0UjhuVnhROFVNTDNZeWNjcklrTVZkVHpzcTRa?=
- =?utf-8?B?THpVaHZpZTVnZndNN2YwRDdzTE9UajdZZlpFb3cvMmVRaXI2Q3k3WGZnVm44?=
- =?utf-8?B?MEJvVTZTZGo0NlpkRkhRd2s4ZmtWdGh5RE5uVWVYU2NURGJuQlo1TXFtaExL?=
- =?utf-8?B?WFlBU08vTTNJa2cydjZydGxOazdXQm13b05YYXVOVWJlRURFSmtXUTJZMGwx?=
- =?utf-8?B?Z1I0WkRFWnhUTzdZY1RDWDYyM1hQTGMvaU9VTFFlYzh3azlzS1JPbW83MndO?=
- =?utf-8?B?dzROb285YVY0NzFEWVB0aWNTQ0lHYlNmT0xkYnZJTTlYOUs4WmdXNTNRek1B?=
- =?utf-8?B?UytISmNtejVOcnQyZVlZNzBYTFVJQU5PWmRNajRGdXZ1dm9GVGo2bTNlZm44?=
- =?utf-8?B?bnNRanBsTVdyVmZUWU1ZcjMzeVVNamYrck1aSUt2a1RUbGFwL0FpMVV0d09Q?=
- =?utf-8?B?MHFyQWxNdUh3YWRDMExPM04vT3lkVHpFRFFxRE1sdVlMZ2FXeGkrMWNvUTBw?=
- =?utf-8?B?djVSa1p3NEVhM3pnTkNOL0wzaGppUW9SQ1V0UG5Kd2M1WVpYeDJFNi9xK1Zt?=
- =?utf-8?B?NERXdmtSczlCQW1IK05vZmhrV0lEa1Y5dzQ0OVhDMnBXWjFxY3FZMmpDNm1n?=
- =?utf-8?B?T2JVZitVbEM3alN5L0l5RzlncUViZVRDcTNWdEh6UUdZZ0hNbmg5bHpjU29L?=
- =?utf-8?B?ZWNHSmlFdHZxdTlmSEp2ckRSTlZVQ1RsQVcwMDBkTlZYOE9SMFkvOCtpSGlp?=
- =?utf-8?B?R0ZWNFFvOXRzbVk4MjhrSDc0NVNGZCtSbzFLTXVJbzd6ZW54M2FMWXZNM1lX?=
- =?utf-8?B?TGxnK2JrZURtTkNvaUVvTmZGOGZxeVQ3eTlnaDIrSm5XcFJrQ1NFZjlBTlpq?=
- =?utf-8?B?UmZJd0lKODJyeFF5WFF1UDFGV0t3PT0=?=
+	=?us-ascii?Q?toTeM+quzU1LX/cQbjbPG42yDXB2y2+359FTTW4dnb4JPodApJ7jaKM7Ie8q?=
+ =?us-ascii?Q?83nkiA1a5vWagNyYvOjEKKWvOwlhOIzNTojf8UdhW5/rplsRtLzmevngIdye?=
+ =?us-ascii?Q?RJ7+9JrGlzPvnaJxfWShEBmWV/LpREO0MHqteKK/B4x0Viwwts/r0EuJzpBz?=
+ =?us-ascii?Q?x/+62RvOdrQZU3+wza4XFL18p38PV53TWqLD5RywHOKzJkvU2eSSZp0rFrV4?=
+ =?us-ascii?Q?2xOLdAXuo/uGA8H6XVJyUeNCOYxFHaOgqFJnUxNafzSDeSMvHZvgpzmmXVfW?=
+ =?us-ascii?Q?nnhwsERnFF6kw8KNQHRhSHf+1W1t8lFItxxeyfmimetN3i3uUz4vs+ZhRRyu?=
+ =?us-ascii?Q?bBgTW9R055f0S8CJ0AOXnjz3wH0eF8ADN4CoS5wIt+etsRxlsTh6As0WEZ6F?=
+ =?us-ascii?Q?25jgvvhsI5QZR9LFZS9D7Bn4lnkJBKYU3O3XOq1dBO2QxmFqFPPDnPr3G0dR?=
+ =?us-ascii?Q?oGffu3xRTYPdhMwitbLIdpR6NWBZird/w8AUdZxPx5CpEB2mjI7CsZ2p3MEd?=
+ =?us-ascii?Q?ViUvQKZhHBNftntCdaQSn25qWhQKPerz2BZvlYGzClM2pxHm/E+BeJF8Ue6y?=
+ =?us-ascii?Q?Yz3Pi/k4Zq6iR6eMPHXJmtJGTjKm1FTPLeIRHjo+d5XMFaO+yLYykXKqD184?=
+ =?us-ascii?Q?t0VpahViYKANmz3rp7iBxa+XbTMFcvHT7eCKYBrFObIt2+lOOX5rcZGRV2Rc?=
+ =?us-ascii?Q?1nuCBjrpbvHBblVTLVLWgmDT8YhmPgdOcATSyPcjypTW45cmtW8Ui0ueMYc1?=
+ =?us-ascii?Q?WHv3Am2Dyi5FjHxYIAnrxHVeopjWsJPd66QEQwmoTyR9Nngd21TN30MQfcyH?=
+ =?us-ascii?Q?17RA92P+BBGmtIn+5QUtjuLPXptJFCoTMETMVcaRgFV0ysgOpYv6vHeD0qL9?=
+ =?us-ascii?Q?tnxMy4C3K+Bv9ZbhdKFsr6RdPv2q6D67Q2T/bGDKQKS4KoxfHa7YSW1vDzet?=
+ =?us-ascii?Q?XoVrg4UJO4NV9GpRVgUC1Lo+s3NQXpbdGSC14lGSwIL6ENgekaJWG0Z/Naec?=
+ =?us-ascii?Q?XTRg7pkS3MMnqhXgnA10RATtYAb25cTsfrq0BywpJkDngs8L+oWlsVDCVOvJ?=
+ =?us-ascii?Q?tDQZF5rz0eQAE++TTSPCk5zoCoM9AGayH76HxN+nP3gUFdSsrHWeHrB1x8Ih?=
+ =?us-ascii?Q?V2Kom06kLpr6/Im5NgDWWH3CY2VSSX2/Sneyv7PvMvIpn37E//anieglWINV?=
+ =?us-ascii?Q?6VmbzZ2tt9FmdgnCekbyGGE+uXfVJqf/CiTk/TbCY4A3KkJAbXWHQ/ddhYcs?=
+ =?us-ascii?Q?XSxsXg6KZNPs/uMzk6DN2z/KgHABLgaRJMk1EJvwjoxBniYJQsrIqLg1yz+1?=
+ =?us-ascii?Q?xLvDbasoW+7y0ZlntQvAjpLkye3DrTWBctFfUN+6vp2vZF8kZWP1xFMBikZF?=
+ =?us-ascii?Q?OngwXOwuOGs7/dmlJMcQSkFuopulvfBCyBfFqIzQUAZq3D03vqXeb5toENqh?=
+ =?us-ascii?Q?PmsIeovDIbtqALdrYQJO53KjvkFjlIzIrUU7nw3lrizjVf6N8+954GBAWoCF?=
+ =?us-ascii?Q?rVZVMF+B2t6HImJyIH2ONdBu7+uMCYJjb+tu3BpaeBNK+GpvQQBnl9KYw62p?=
+ =?us-ascii?Q?DC4qAR/z/1M8EbY9j+c=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	zRiUG6FpDQ/A503vCK0rWEiKfICGeTNWYAtRVPO3GJQv2o+hZivwKtLFgc15MgKj8bS9+50uzMyYL0ebZzPPKlN14czdqpMRzwonrqo+JboOj8O9hcUig9Ro83qelSHeWFSU8H3wVD4iMBQJoKfHjy3Q9KuJk3EbCEFd2jtPNhEvtB5bvR23Bt8Tlr3sYsgi0Ioe0fWpqlnK4GCXhMlcvyU3Sdq2bjT2mq8UzG7Fzdc+bPz+kOc6MSQGBsUReTERbVA/tlEbAzkLCIelMJnAl1OlyFmYowTYhrh3Z42DbTZvRD3ra23La0VzMxrhf8cf/G5j2wxO898am+Xe6XBTx8aV13NDwokHJFAG3qg7uM9CmyVLgUJr5OwueN4/qSSc5Bgj/lZWlJBZ1S88ufN4tfwGdb9YxnSyD0M/xhmGdmiFajTw3k8wcLhfKBEYU4N1
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2026 17:31:00.6205
+	=?us-ascii?Q?PlcJ7Jc3ygWfxI3zlFYiR0h5GfskmkWx9Y5EdG80RoE2yIWZ/QLsYuJGf2sb?=
+ =?us-ascii?Q?B59w+EYlfdfJrDPUqCY/VUV051o1DMvF4llSaEUKcL/qvwAIxshcsV+1a9PY?=
+ =?us-ascii?Q?ZJJezxng9+6lyR4mtK4+fw4Tev90yAAq8k8DAZ7FtY0+xRqUPh5B7NhCzdha?=
+ =?us-ascii?Q?1Vgo+6lUtExTSuYCcSj7tKR9IjUrQIgk9cxPkxkDgryODLqFdzKhYNlLsHGg?=
+ =?us-ascii?Q?wJJlOSUvA9G1Iko9bAns/igqn5jbF9p9dDPYSM9dm4+zBTv03jxfB9pNWsnA?=
+ =?us-ascii?Q?36ZHsLrTNJokzxULLYEb378/Wmw/kUB2zUCIZJjLBHbPWc9aR9fTH8cu+5dW?=
+ =?us-ascii?Q?mojV1/bJKuMthpG224L64ujcEUA/++EWwCKJm7swbI8NIYvR2SCFCGyxF7Oy?=
+ =?us-ascii?Q?JcD4QInzZTC82uzJpdj6raE6cGKb0IKvAUXZI70j5yjOSY4PPXRGN/93Mz5r?=
+ =?us-ascii?Q?S4JMYdBkSMz35cGUZY0i9/Xl5QwC/bKYeJjwN+ZnzAAC0NncJsYj0s3OetGQ?=
+ =?us-ascii?Q?rUvuD0pS/w0JAyB+xiawHEycVbe5cuko1qBDMw2W0EZnhhsWeqCWoCLJmi+d?=
+ =?us-ascii?Q?33CaJM9V5BI00Q+665HnCjhiyM6VkrbS5vH0BousJJ/+dFkdjbYSwhunuzjb?=
+ =?us-ascii?Q?390ehmjZsCc6/9Tm9KAGtQ5BDZ9rmmfTfo416RUu/k6f7KwpDgxkljW0nuRv?=
+ =?us-ascii?Q?mrmg/5iho0q8mSr/zGankW+BRhP7jjq4c0vfu7gMsvBCaOr1Jmo5bcysYcV4?=
+ =?us-ascii?Q?EMB+KO1rGAgP0RwRGc+Ks+2zeZ5EqSBAnRe+H+KO4cGv5wdUqmnxV/DS96fK?=
+ =?us-ascii?Q?jyX6z+KSOHzBsYF9dt8UUVfa9ckms59ZGQfeHDgj2+2W88WqvV5xwfDRJB0k?=
+ =?us-ascii?Q?ahVdIgsGRIuArhf+Cg3jk3S59WVToCdqZ0XYcvl88msCEzxtdz18l0zDk41R?=
+ =?us-ascii?Q?5GG8IwODhHFrG1xOLIBUiSM/G6ylF7jTAR0FCBsMf/UJlt35ZMC2qg5cvPS4?=
+ =?us-ascii?Q?tSXxNF0oVlzOA1r5HyD3HYyl07iJALB98CPEUU8ZDnG+adrzS94cS+QFMYzk?=
+ =?us-ascii?Q?7XEv9937V1dFRZspWoSTfJvn0PUt3XgRndLD7pIZJvvJzMK+9euYDuwihv9D?=
+ =?us-ascii?Q?NRlnbc/ojk/k0LLxRrkahKhYaJmsqQ86JtIVEcC8P755vjHwEYMSBP+B2ZBk?=
+ =?us-ascii?Q?DnUob7otE/hHZgPsMUtQpZkHLGqpf0JygP4eW1NgfUYKFE2zyBH8nLzvr4Qr?=
+ =?us-ascii?Q?7zLzqdYAJlRpkh4A8hWJz+GNWn4jP3mU2KO/I1xABPhTtuwb/YvLlRxTLi/A?=
+ =?us-ascii?Q?2U+cxNnSZ6FYyuemFuiTlm8GyNnpUyApO3weWzLPy6A5PTVNUBav07uHLcCI?=
+ =?us-ascii?Q?nCK7W3LYZdCAlavOlcz+Xqhr02zQh4rL4AVbRGIueXRK5aKTgwpsNYiBilu5?=
+ =?us-ascii?Q?C2x4BMyNhlHlPn2vHjlXpy7qGYmg0aAGlNNnCWlChRJ9ygg4mKDR8TLEf719?=
+ =?us-ascii?Q?n94/tRnw/3TT6rfmAJdym1qx3iCkppKVsOp8QnsXdE5sMtmfEMVCrQ2jAV6Y?=
+ =?us-ascii?Q?gg1AXUyhGoxf3KieWN/PkknVxnrsk67d+C86zkbFlg42Erun+o5UJOd8PpSC?=
+ =?us-ascii?Q?w8b2NF1Ceg01XusRuH+DYz5OjarYpJFKlyJ0dtk04eZ0yulitYtoZrAGxYTc?=
+ =?us-ascii?Q?GBA2Uyn3Pkl8ZqmnmG8NQNydyBlXw1exU/TU+eP1rziU9UghRXNIh8giix02?=
+ =?us-ascii?Q?93fqog/WFg=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a12c75ef-bb8d-40f5-5836-08de6fdddb5c
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2026 17:39:39.3927
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc498a05-57be-453b-2951-08de6fdca659
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002312.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7793
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: daYF6Gfg6KnnEQAEOAV4VZVlf9DRaolw4XiwjO3+Hgci5ewwM+ShqJ/JLHCnyHYF
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5760
 
-On 2/18/2026 1:11 PM, Alison Schofield wrote:
-> cxl-cli commands were recently added for poison inject and clear
-> operations by memdev. Replace the writes to sysfs with the new
-> commands in the cxl-poison unit test.
+On Thu, Feb 19, 2026 at 04:07:58PM +0100, Lukas Wunner wrote:
+> On Thu, Feb 19, 2026 at 10:31:29AM -0400, Jason Gunthorpe wrote:
+> > On Thu, Feb 19, 2026 at 03:15:34PM +0100, Lukas Wunner wrote:
+> > > The way this works in my series (and I presume Alistair's) is that
+> > > trusted root certificates for devices need to be added to the .cma
+> > > keyring.
+> > > 
+> > > This can be done from user space using keyctl(1) or some other utility
+> > > that can talk to the kernel's existing keyctl ABI.
+> > 
+> > I really don't like this from a verification perspective. We don't
+> > want the kernel checking signatures, that is the verifier's job.
 > 
-> All cxl-test memdevs are created as poison_injectable, so just
-> confirm that the new poison_injectable field is indeed 'true'.
+> On resume from system sleep, the device is put into D0 already in the
+> ->resume_noirq() phase and drivers are free to access it already at
+> that point.  However a verifier in user space cannot be queried
+> at that point because user space is still frozen.
 > 
-> Continue to use the sysfs writes for inject and clear poison
-> by region offset until that support arrives in cxl-cli.
+> Likewise after recovery from DPC or AER, the device has been reset
+> and needs to be reauthenticated, yet user space may be unavailable
+> because the device that has been reset may contain the root partition
+> or may be the NIC that you need to query your remote attestation service.
 > 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> There is no way around some form of in-kernel device authentication
+> to accommodate such use cases.
 
-LGTM
+I'm arguing there are two very different steps here that must be kept
+separate. Verification is done when the device is first seen and the
+kernel is told it is OK to use the device.
 
-Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+A same-device check is performed if an already verified and accepted
+device resumes or RAS's in some way.
 
-> ---
-> 
-> Change in v3:
-> Use new field 'poison_injectable' in memdev selection (BenC)
-> Update commit log to include poison_injectable check.
-> 
-> Change in v2:
-> Use final format of new cxl-cli cmds:
-> 	inject-media-poison and clear-media-poison
-> 
-> 
->  test/cxl-poison.sh | 82 +++++++++++++++++++++++++---------------------
->  1 file changed, 44 insertions(+), 38 deletions(-)
-> 
-> diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
-> index 58cf132b613b..bbd147c85a77 100644
-> --- a/test/cxl-poison.sh
-> +++ b/test/cxl-poison.sh
-> @@ -20,7 +20,8 @@ find_memdev()
->  {
->  	readarray -t capable_mems < <("$CXL" list -b "$CXL_TEST_BUS" -M |
->  		jq -r ".[] | select(.pmem_size != null) |
-> -		select(.ram_size != null) | .memdev")
-> +		select(.ram_size != null) |
-> +		select(.poison_injectable == true) | .memdev")
->  
->  	if [ ${#capable_mems[@]} == 0 ]; then
->  		echo "no memdevs found for test"
-> @@ -41,32 +42,37 @@ find_auto_region()
->  	echo "$region"
->  }
->  
-> -# When cxl-cli support for inject and clear arrives, replace
-> -# the writes to /sys/kernel/debug with the new cxl commands.
-> -
-> -_do_poison_sysfs()
-> +_do_poison()
->  {
->  	local action="$1" dev="$2" addr="$3"
->  	local expect_fail=${4:-false}
->  
-> -	if "$expect_fail"; then
-> -		if echo "$addr" > "/sys/kernel/debug/cxl/$dev/${action}_poison"; then
-> -			echo "Expected ${action}_poison to fail for $addr"
-> -			err "$LINENO"
-> -		fi
-> -	else
-> -		echo "$addr" > "/sys/kernel/debug/cxl/$dev/${action}_poison"
-> +	# Regions use sysfs, memdevs use cxl-cli commands
-> +	if [[ "$dev" =~ ^region ]]; then
-> +		local sysfs_path="/sys/kernel/debug/cxl/$dev/${action}_poison"
-> +		"$expect_fail" && echo "$addr" > "$sysfs_path" && err "$LINENO"
-> +		"$expect_fail" || echo "$addr" > "$sysfs_path"
-> +		return
->  	fi
-> +
-> +	case "$action" in
-> +	inject) local cmd=("$CXL" inject-media-poison "$dev" -a "$addr") ;;
-> +	clear)	local cmd=("$CXL" clear-media-poison "$dev" -a "$addr") ;;
-> +	*)	err "$LINENO" ;;
-> +	esac
-> +
-> +	"$expect_fail" && "${cmd[@]}" && err "$LINENO"
-> +	"$expect_fail" || "${cmd[@]}"
->  }
->  
-> -inject_poison_sysfs()
-> +inject_poison()
->  {
-> -	_do_poison_sysfs 'inject' "$@"
-> +	_do_poison 'inject' "$@"
->  }
->  
-> -clear_poison_sysfs()
-> +clear_poison()
->  {
-> -	_do_poison_sysfs 'clear' "$@"
-> +	_do_poison 'clear' "$@"
->  }
->  
->  check_trace_entry()
-> @@ -121,27 +127,27 @@ validate_poison_found()
->  test_poison_by_memdev_by_dpa()
->  {
->  	find_memdev
-> -	inject_poison_sysfs "$memdev" "0x40000000"
-> -	inject_poison_sysfs "$memdev" "0x40001000"
-> -	inject_poison_sysfs "$memdev" "0x600"
-> -	inject_poison_sysfs "$memdev" "0x0"
-> +	inject_poison "$memdev" "0x40000000"
-> +	inject_poison "$memdev" "0x40001000"
-> +	inject_poison "$memdev" "0x600"
-> +	inject_poison "$memdev" "0x0"
->  	validate_poison_found "-m $memdev" 4
->  
-> -	clear_poison_sysfs "$memdev" "0x40000000"
-> -	clear_poison_sysfs "$memdev" "0x40001000"
-> -	clear_poison_sysfs "$memdev" "0x600"
-> -	clear_poison_sysfs "$memdev" "0x0"
-> +	clear_poison "$memdev" "0x40000000"
-> +	clear_poison "$memdev" "0x40001000"
-> +	clear_poison "$memdev" "0x600"
-> +	clear_poison "$memdev" "0x0"
->  	validate_poison_found "-m $memdev" 0
->  }
->  
->  test_poison_by_region_by_dpa()
->  {
-> -	inject_poison_sysfs "$mem0" "0"
-> -	inject_poison_sysfs "$mem1" "0"
-> +	inject_poison "$mem0" "0"
-> +	inject_poison "$mem1" "0"
->  	validate_poison_found "-r $region" 2
->  
-> -	clear_poison_sysfs "$mem0" "0"
-> -	clear_poison_sysfs "$mem1" "0"
-> +	clear_poison "$mem0" "0"
-> +	clear_poison "$mem1" "0"
->  	validate_poison_found "-r $region" 0
->  }
->  
-> @@ -168,15 +174,15 @@ test_poison_by_region_offset()
->  	# Inject at the offset and check result using the hpa
->  	# ABI takes an offset, but recall the hpa to check trace event
->  
-> -	inject_poison_sysfs "$region" "$cache_size"
-> +	inject_poison "$region" "$cache_size"
->  	check_trace_entry "$region" "$hpa1"
-> -	inject_poison_sysfs "$region" "$((gran + cache_size))"
-> +	inject_poison "$region" "$((gran + cache_size))"
->  	check_trace_entry "$region" "$hpa2"
->  	validate_poison_found "-r $region" 2
->  
-> -	clear_poison_sysfs "$region" "$cache_size"
-> +	clear_poison "$region" "$cache_size"
->  	check_trace_entry "$region" "$hpa1"
-> -	clear_poison_sysfs "$region" "$((gran + cache_size))"
-> +	clear_poison "$region" "$((gran + cache_size))"
->  	check_trace_entry "$region" "$hpa2"
->  	validate_poison_found "-r $region" 0
->  }
-> @@ -196,21 +202,21 @@ test_poison_by_region_offset_negative()
->  	if [[ $cache_size -gt 0 ]]; then
->  		cache_offset=$((cache_size - 1))
->  		echo "Testing offset within cache: $cache_offset (cache_size: $cache_size)"
-> -		inject_poison_sysfs "$region" "$cache_offset" true
-> -		clear_poison_sysfs "$region" "$cache_offset" true
-> +		inject_poison "$region" "$cache_offset" true
-> +		clear_poison "$region" "$cache_offset" true
->  	else
->  		echo "Skipping cache test - cache_size is 0"
->  	fi
->  
->  	# Offset exceeds region size
->  	exceed_offset=$((region_size))
-> -	inject_poison_sysfs "$region" "$exceed_offset" true
-> -	clear_poison_sysfs "$region" "$exceed_offset" true
-> +	inject_poison "$region" "$exceed_offset" true
-> +	clear_poison "$region" "$exceed_offset" true
->  
->  	# Offset exceeds region size by a lot
->  	large_offset=$((region_size * 2))
-> -	inject_poison_sysfs "$region" "$large_offset" true
-> -	clear_poison_sysfs "$region" "$large_offset" true
-> +	inject_poison "$region" "$large_offset" true
-> +	clear_poison "$region" "$large_offset" true
->  }
->  
->  is_unaligned() {
+same-device does not mean run a kernel verification against the kernel
+keyring, as a second verification could be tricked into accepting
+something that has changed and defeat the userspace verifier.
 
+Instead the implementation should capture information when the device
+is accepted by the verifier and on resume/RAS it should compare the
+device against that captured information and determine if it is still
+the same device.
+
+The key north star must be that the userspace verifier alone decides
+if the device is acceptable and if the kernel is configured to
+auto-re-accept the device later on RAS/resume it must not permit a
+device that is different from what userspace approved. In other words
+it is not a verification on resume, it is just a kernel side
+confirmation the device hasn't been changed.
+
+Hence no keyring should be involved in resume.
+
+I understand the tempatation to just run a kernel verification twice,
+and it is OK if your use cases are limited to a kernel verifier, but
+it doesn't compose very well with a userspace verfier at all and gives
+us two very different frameworks.
+
+> > And a general keyring based proeprty is not at all the same as 'this
+> > device must present exactly the same certification and attesation
+> > after resume'
+> 
+> Well please be constructive and propose something better.
+
+I have said what I'd like in a few ways now.
+
+> We can discuss a way for user space to force the kernel into
+> considering a device authenticated.  E.g. writing "force" to
+> the "authenticated" attribute may tell the kernel that it's
+> a trustworthy device irrespective of the .cma keyring.
+> So you'd perform remote attestation and if successful,
+> tell the kernel to consider the device trusted.
+
+We definitely need to ensure we build something where userspace is in
+fully in charge.
+
+I don't have an objection to an optional, useful for embedded, kernel
+side verifier that uses the cma ring.
+
+What I'm focusing on is that it be coherent with the whole complex
+verifier flows we need, not just its own seperate different thing. So
+replacing the userspace verifier with a kernel verifier is no
+issue. Making it so you HAVE to use the kernel verifier to get certain
+functionality like RAS is objectionable.
+
+> > >   # What's the certificate chain in slot0?
+> > >   openssl storeutl -text /sys/bus/pci/devices/0000:03:00.0/certificates/slot0
+> > > 
+> > >   # Fingerprint of root cert in slot0, does it match what vendor claims?
+> > >   openssl x509 -fingerprint -in /sys/bus/pci/devices/0000:03:00.0/certificates/slot0
+> > > 
+> > >   # Looks good, let's trust it:
+> > >   keyctl padd asymmetric "" %:.cma < /sys/bus/pci/devices/0000:03:00.0/certificates/slot0
+> > 
+> > That's exactly the baroque I'm talking about, no server admin is going
+> > to want to grapple with that..
+> 
+> I used to be an admin for 2 decades and my experience is that
+> openssl usage has just become muscle memory, but YMMV. :)
+
+This is also not a very realistic scenario, there is no point to copy
+a certificate from a device into the cma key ring. If you want to
+trust the device as is without any verification then just accept it as
+is with a trivial userspace "verifier".
+
+If you want a kernel side verifier the realistic scenario is to bake
+the permitted certificates into the image or kernel and/or have
+busybox load them into the keyring at boot.
+
+Jaason
