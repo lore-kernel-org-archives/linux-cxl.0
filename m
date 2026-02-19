@@ -1,46 +1,46 @@
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012038.outbound.protection.outlook.com [52.101.48.38])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010069.outbound.protection.outlook.com [52.101.193.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE8134DB74;
-	Thu, 19 Feb 2026 17:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A8B34F250
+	for <linux-cxl@vger.kernel.org>; Thu, 19 Feb 2026 17:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.69
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771522173; cv=fail; b=tkHqXjI1EKsmIbXAtDXL0VdCA501pEfr4aL5e176qC+MvZZaiiMnQoXBcS9qgDZoE44XFXkJ0sT5837WQyV+ieF/3AZita6HkHa5kMtWfiRPHvp2Y/uIyXPYeyKLp76/3vni67rxSLKMjwfgZqU8LrtkQzTK47L9b4Kq7eURsEk=
+	t=1771522270; cv=fail; b=qMPO4yLH44P0E2wiU78SuSVYAVz40Oxs04YaByyXAvclAv2TpgoDdeKJ7Xs5aCLyiGgEWZtKOB0ZzpnzxoE0L7LzLNTOvf5lkAh9p9Fz47f6qbyHDKaZxnSFbs43Pki+Ty8I8yiTnfpuY5acS3sHQYUDvOiqHaUpcgI8KdzPrSU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771522173; c=relaxed/simple;
-	bh=QJMpDPeQweoeVNYoSlLBwBK1w30KnxlXTHY4jxoeqOQ=;
+	s=arc-20240116; t=1771522270; c=relaxed/simple;
+	bh=BkCsOBSyJVFAF71dU2v35ocRVJHmggLrAwRdFqU7Kvk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Uc2ZnDQe1qQZSDnzT+M44T7awAvPD1m5FGLf8urI2nUQGzHM9hLs3DTkCeKB1CmTnIIMXkMDynaGij1+1NFS1rJGYAcLekE/OfWwSyLcT9ECYZq1G5mMLDj+db4pLr48F/KQFrkh+uSRcCFzTT9sCMm5cfB1gEaZHK7owSLzysI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rOS4lvtA; arc=fail smtp.client-ip=52.101.48.38
+	 In-Reply-To:Content-Type; b=GSOe5cNW1YpM39r61TL8Ms62nZd49F/FV/8bt5hOdwLlP5jxnpL8lGv904M/EpBYZIX5eDp8VQcHcpzbWh/w3oDSxvuy+pBNCc/3LsKqlVCHB7oFvRxJZarLEO8r8DCnk7GBYI8cKDbhsFzgo2g730ZRYDkhr6x0uU4idEJ3jKs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=alxdeFWx; arc=fail smtp.client-ip=52.101.193.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rOS4lvtA"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="alxdeFWx"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TrdD2mUz6Zu7QctK1yX2blopOhRREGDYtoA2EK1LKd7o/Pd+4hdwh7PikLhpi+deM5sP06kJwqS0FBzS2JN9YG7o4HzIemLG4g62nox3UVvP6Jtqr8PFPzlqGvjWGy2Pw6vTZh1CZa40DuZLPZDwd8I3QTmy2zJXRp1g/CFaHLYD7MUxCzPY3YYloEdXaFBFTO6WxWxuvA29LmE4TWNhuF3pnpyiylL/9Fd4k57GUPL6wvA/w7V7gSk3qDWF0Lz/14hNHNbi2on0XWm+XB5raLPfMd0MbEZpPuMvLwP8hBG+oIsFG8C7IuZRJ8ix2RQTgb/ascSfYhOwJCb5kK5RKQ==
+ b=c8u+IljVzA+onNWo7JSvS5iPr1oTs793hUBXRXLCxC9jSlhfOf6NgfSNgoXcfwOIF7haZrZyAhKEonX3QQDvsv+kD5a0UuFF0wFt2H6RIG89VtemRwNJvmlWkLVzVYo+5n19OYE/4fjOjkuWZ/gZSlZjjgWmMbT8wJ3LlFXO9qtEjRy4SvLEud4GKRmeQzNLnZgXuzgDrHhr4jw2MJTE24pMnRBfRu7v4ypcKjigmXXvZi5g3NFss+ii6rO0q1K3UbKSeRMvBPT8+MstSPRW4TmCnwyQZxrOdQuykO1uglegrkp3d4xNCFwRqb9TBewKw8Riml1KDtAvr0CwhgG+LA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i7ORYj21d3ErELfTMfXygQJq6+55cnzsz7NSgXyUDWY=;
- b=Sdsa74nxXIG6BYPsy2iK5GhaGU4wTiHJZW76kC/A+2mao9hFoNTX1atF4SHAfI1tZOXKJ5rc7P9C5c7AvMXSZUWmhqIFC2pmz3O3i6W/bQ1snN/e3Xr0h46VmS75d4/+S3udbXl7TB84smB7b3k+nsB+dZUOcmRVa10mvYAwqfydXmwrnismtW6/gJ5BaUBprjEikfP0o3z5TXaiybWJvlAK0Ot/yRXBWrijn8cOhRWNK2/M0VpHhxt/9wXlXX4m7Q7HlgNuDmi0hfNhTQSh3dc7fuM87yDgX7WdK5w4/2eqWLoILyLmb/B83rhDBc3ThyOblvaMLtam0lMlQyilbA==
+ bh=sALx5UQX17zDDoZIKXezo3InRTtmPKEKB9ttgIjQqwo=;
+ b=bj63oYSxm4FaNlfX79lgw/kebaBZ0j+oNA48NdL2X+g0sBIyXbUU1DVzTMCezu1lPmpzDAdDIEKw/un1ipW2fAvkJQEfiKYIw0Jy6feXzUv0mCHvtxeF7/8Mxv2bA2rseDvVaHLnVU3268d+7Krz6Y6aHf45YiosyVIgwWCDPjAii05sU0K5AZe4MlK2/t6XnGJ8AlTnIO9mnXVF/6w4k0VESQG6hpKz8PXd3lli0pR9kpte2F5eDEQD01kXVEvCRZBvNJIZ3+N3tj6xtPBr1ZSPKNniOzmx1HzncEW8vYOcQABtX+RA/WbEp/Y1MUmpvOl7Pb97yEXNdPqLufp6Hg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i7ORYj21d3ErELfTMfXygQJq6+55cnzsz7NSgXyUDWY=;
- b=rOS4lvtA/5ns8jrlwBsDwbVhybFAruYpYpxC1EpJv/2wNWdo+FYCtshrdYi5YYf4+guEmQmWr+x7QCIrvWi98GsMkqrh0IIIJgr/IC1YmjQ2wjFHeepTmCIoZLtmefi7+jih/2AVRUPyQpuvuB4aF8CGk8liGX1GCApGuYyi1Eg=
-Received: from SJ0PR13CA0210.namprd13.prod.outlook.com (2603:10b6:a03:2c3::35)
- by CY3PR12MB9704.namprd12.prod.outlook.com (2603:10b6:930:102::13) with
+ bh=sALx5UQX17zDDoZIKXezo3InRTtmPKEKB9ttgIjQqwo=;
+ b=alxdeFWxMOnVbqWyKSwUUeuheuLjZfGISOzGIiJ367hvN51xiS7as76O3+AlHbzd2WePDz0LOv4CMSdNMs6JP2D+sGGU0D5cY+VIHL/1qDsHtiBjxwTJFt1JD8W0bRV9gsNCAW6kii/3wIwALZ7il7+PMrIZ92Vd34Q/8KB77Xk=
+Received: from BY1P220CA0001.NAMP220.PROD.OUTLOOK.COM (2603:10b6:a03:59d::14)
+ by PH7PR12MB7793.namprd12.prod.outlook.com (2603:10b6:510:270::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.15; Thu, 19 Feb
- 2026 17:29:26 +0000
-Received: from SJ1PEPF00002317.namprd03.prod.outlook.com
- (2603:10b6:a03:2c3:cafe::1f) by SJ0PR13CA0210.outlook.office365.com
- (2603:10b6:a03:2c3::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.15 via Frontend Transport; Thu,
- 19 Feb 2026 17:29:18 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.14; Thu, 19 Feb
+ 2026 17:31:04 +0000
+Received: from SJ1PEPF00002312.namprd03.prod.outlook.com
+ (2603:10b6:a03:59d:cafe::fb) by BY1P220CA0001.outlook.office365.com
+ (2603:10b6:a03:59d::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.16 via Frontend Transport; Thu,
+ 19 Feb 2026 17:31:10 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,15 +48,15 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ1PEPF00002317.mail.protection.outlook.com (10.167.242.171) with Microsoft
+ SJ1PEPF00002312.mail.protection.outlook.com (10.167.242.166) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9632.12 via Frontend Transport; Thu, 19 Feb 2026 17:29:25 +0000
+ 15.20.9632.12 via Frontend Transport; Thu, 19 Feb 2026 17:31:00 +0000
 Received: from [10.31.194.67] (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 19 Feb
- 2026 11:29:09 -0600
-Message-ID: <d2b4e4a6-52a6-44a2-aa07-8027d1b90c40@amd.com>
-Date: Thu, 19 Feb 2026 11:29:09 -0600
+ 2026 11:30:59 -0600
+Message-ID: <eb296e95-e121-41e2-bb49-8d91cfb9ecf6@amd.com>
+Date: Thu, 19 Feb 2026 11:30:58 -0600
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -64,364 +64,266 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v23 12/22] cxl: Define a driver interface for HPA free
- space enumeration
-To: Alejandro Lucero Palau <alucerop@amd.com>,
-	<alejandro.lucero-palau@amd.com>
-CC: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	<linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
-	<dave.jiang@intel.com>
-References: <20260201155438.2664640-1-alejandro.lucero-palau@amd.com>
- <20260201155438.2664640-13-alejandro.lucero-palau@amd.com>
- <ea32b5ee-52f8-4d8c-9d82-903d21dc1335@amd.com>
- <10e631df-6a2c-45ff-aa90-71d2ad073e76@amd.com>
+Subject: Re: [ndctl PATCH v3] test/cxl-poison.sh: replace sysfs usage with
+ cxl-cli cmds
+To: Alison Schofield <alison.schofield@intel.com>
+CC: <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>
+References: <20260218191108.1471718-1-alison.schofield@intel.com>
 Content-Language: en-US
 From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-In-Reply-To: <10e631df-6a2c-45ff-aa90-71d2ad073e76@amd.com>
+In-Reply-To: <20260218191108.1471718-1-alison.schofield@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002317:EE_|CY3PR12MB9704:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3ba0fe83-8ef0-4197-c15c-08de6fdc6dc4
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002312:EE_|PH7PR12MB7793:EE_
+X-MS-Office365-Filtering-Correlation-Id: fc498a05-57be-453b-2951-08de6fdca659
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZmZSMmI3YWR2YmFLUEFDaUhYRVBvR1FZaTdjMGZVZHhUR3JOZi82VWU2bXlT?=
- =?utf-8?B?Z0FZWnNRNjhlM2VnZW9YYThiVFQ2R0lubC9VbGpyckF4WWJ2MDU4SHYxQTFv?=
- =?utf-8?B?aE1YZzdBZGJobE12NDVxbExjd0kwWFMwTTJaei9KS0loK3FNUjRmMXBVdlNn?=
- =?utf-8?B?SnI1NFVCN3p3WVhGeWUwQ3ZCUzJQaG55WmZhTHA2eE9LZjJrSXU1ZGtXbUxO?=
- =?utf-8?B?ZCtRaU9pcm1nOEFMcFA4UGkxUFZMaVFHTWtlQmp1ZmtkNlFGUXJ0cVlmQTA3?=
- =?utf-8?B?b3FhTEl6bC83bjZjQTJ1V2dUdmVjdUF5aEc4L2VCamplYnhDVHZrdWk5enIv?=
- =?utf-8?B?NkxsaWtkcFNQL0x6cUVqd2d2My9HRkIzQ2s3QnhpQTlmM21RVytRaFM3bVBh?=
- =?utf-8?B?Vm05eC9ycUNEV0treXB5eERBT0tMVkNDeGt3eGljYy9IeGxqOVZrM29qTjdD?=
- =?utf-8?B?ZUJuWGlUcExtcCtvTHZHRllSRERlWnUvNFYzbjFrSHV1ZVhjWXpuakNDbFhw?=
- =?utf-8?B?aGo5c1pRU1lSa204NFFQNERTcmMxeStqV1JSRjRtaUdhRkxmOXFzSlExbmI0?=
- =?utf-8?B?NmFqL2Y5U2pROEwzdTI3M2xiTmVoTkR4eTFxMm4zWStmMVNnMldjakFtQXVm?=
- =?utf-8?B?QmVJNHlzb0lqYWs2eUxoWEpFTjIreEh5c2lVc3l0OVJuK2RJS21makZsRFpL?=
- =?utf-8?B?WDJVWVZXS0M5WFNzU0RaRnJMTThXL2kwUnpKRWRuUllXWjg3RGVSV1lxNjB2?=
- =?utf-8?B?ZkxhWktrSzdQTldySkFYVUtQZTRDRTlwOUN6enJNdjhUT2hXSHVtbVE5M25i?=
- =?utf-8?B?V2d6NGZTK0ZYWkM3Rk5nandBUngyMkkvWnYyUHUxckxjZDJWUGFYdXNRMXR3?=
- =?utf-8?B?WjdHQThBY1QvTHF5Tk4yTjcyY3JUU1RjcDdtU1Q3cmVnaHdmQVlLSmF0aEdJ?=
- =?utf-8?B?MHU1QWpPSWRzNFFxMHhVS083QWZMRHdaT2pKQjZVRWhkL3ZhU2xXV0xFdDlI?=
- =?utf-8?B?ejhVaGduRVVUZ2taUW5EUUY0RWVZZkpIYWwrZEtIZG9ycXl4VkZrSWp5WUsv?=
- =?utf-8?B?a1AzbzdmOHJ6d0IxYXZ1UGgxaGlwODBJeG1hVGplblJXeUF0aFlPT1JDMnhw?=
- =?utf-8?B?R1N2SHV6WE11SWd5aG9pWk84dUdabHpjVGxCYkJJVnZVQldzTGVvc2tNVlUx?=
- =?utf-8?B?b2ttMmhOeXVEWkdnT2xjUUY4VDZNbUlIcHVvZU01UGhaT3cySkttaUkrVDY2?=
- =?utf-8?B?Y3FYM2QvOFlVSjhpekIxVUNWVFZxanZQTHlyNExqY1J1RXNQVnloeTV3bHhZ?=
- =?utf-8?B?d1V2YXBteTV6UWlFdDN3RWsxeDczRE9jd3kxUjBhc25wcGsvVUxRNm9nQWZS?=
- =?utf-8?B?cE1pV1lwbHZUVWVXNWw4OGppVGFvYmVKcnEySGVMN21qSGJ3M2VoMGt3Wjli?=
- =?utf-8?B?TjJTdElESUdLVGVVVmJPYmVxeUt0ZVJmcThHa05SOFcyaU9QUVJCMU9tWFp0?=
- =?utf-8?B?LzFUeHNmczI3TUtJeTNkbENyZnNlZEdXZWg2NGhGY0xDVlQ0bm45cFZsTjJX?=
- =?utf-8?B?cHZXbXJ0U3IrcUpxcnF0NFB1V1hub1M3ek1XTXE3ZkJMbFlFdDYxWjRrREJH?=
- =?utf-8?B?L3IxM1lIUDI3YjJGampLZTZwZTBqaFJ3cGwvMXJSMWI1akVZa05xdGI0NU02?=
- =?utf-8?B?WUJmeWM0eHAwWFhQUVE0NE9mTm9yTW5sc1lzajB0eE9JbzFOaStuZm5OWXlp?=
- =?utf-8?B?cEY5dkZQdGJEZHZIN3VOOXg5eTdRMWdObmtTVjVSQVgrWGtvaE5ZYlIybkRs?=
- =?utf-8?B?aXE3RkU5NURwNWhVNVRhZDJGU3BuZ250dG96SmxTQUFvN2ptZVlVdmZ3QUhn?=
- =?utf-8?B?eUJPQk5FSEVDVVhiejBiTUcva3NBWUpIeDJzTndGZ3dzd3dib010MDVyelJE?=
- =?utf-8?B?bkNaSWdNSDYzVjhXd1lYM0YyY1c5RC9VeTRhQTgvOEl4SHIxcmtnYjduUE1F?=
- =?utf-8?B?WFZCQ0lraU5SYW8vaEN0V21yUTNpaFliSGNwazZSaUczc1UyTVkzckhvbi9N?=
- =?utf-8?B?N01uRHdUK2Q2NkNIa2crYStRVkxObmlISElSQ05OR0VEOGY4VDhXZEQyNkRH?=
- =?utf-8?B?dGRmZW9tRnZhUWZ3N2hnaDkybWdKV2thMHp1UXI0RHpranpkMG81cXN1Tkla?=
- =?utf-8?B?TkxDb3FHQnNWM25lMzhnZmVyZkZTRUR0TStVYkowVFZWNFFpWTdGNStZam9E?=
- =?utf-8?Q?QhcSjDGop72+VkuCVhEgzUZHBvzY593jzcF7RRhYJc=3D?=
+	=?utf-8?B?UmVZb0YwNTUvUk0ybXZJOEI1SVQ1Sk5pbUVHeTVZMFBiTWlOMXc5c2dDY083?=
+ =?utf-8?B?VVJHRjM2Qlk5TFROVDZWZTZmTUlydDhUQzU5M1NrUDJRNmF1enJ4U3R4cHJS?=
+ =?utf-8?B?b3hDamNJVkJtekIxTnZoREw5SnFmbmRPcEZEdnhzTytpbHc3MXdjUVV3dkJ3?=
+ =?utf-8?B?d2w5cDE3Vk9KalpWOEMrWkF3UGVwQW5Va1N0M2J6MDBsM1lnTzM0TlczaG82?=
+ =?utf-8?B?MmFMNXFJSFdYcmkyK1FQYWM0VmM2b3NJa2duamV5bExmS29Nbmhqai9JYWFZ?=
+ =?utf-8?B?ME0vQnBuc1F5QXU0RmtHMXBjU1NnZ2xHNFZMS01UVFdWVUR2N0hMQnprcmJE?=
+ =?utf-8?B?RkNOWjA5QityQ0hZUmNQRTM3M1RTOWI3TGdNM1g4V0ZaajIvUmpINGc1NFYz?=
+ =?utf-8?B?VEtmSnJIcTVnN0JoNHo4ZFNLUzdRUTUrS2t0WVJZWHlUWm9kNElOUTI4V21z?=
+ =?utf-8?B?ZXBYNzNma0tMNVlGSG9SVHRqOC9NaXcvb2drbmdyanZUVjNIMklXdHZETHdE?=
+ =?utf-8?B?b0hmYzJMMHVuL2FITDNRZzZ1a1JDdDVRa2Z4cG9WazFmZ1hrL29qVDZlaFNv?=
+ =?utf-8?B?SllqRFRKblp2dUFwRHA1d2dxMk9QNXhOd08xR21jN0FTa1kxcXllRVROOXo5?=
+ =?utf-8?B?ZTJ1c3dzV1hBRjJjc2hJN1FLZTVzS0ZMcFFlNnJNbFNQc1FkM1hTVkZSbzQ1?=
+ =?utf-8?B?djZQNFRzeVlueXBtUGk3c09KdnRDVEY0blMwd0hwUFNONkN1dHNwV09JUWZa?=
+ =?utf-8?B?VW1SNEVwcWdxS1NtWGlacVhid0xEOTdvdzJtdk5kS0ZBK1JQcWtXRi9XaGxH?=
+ =?utf-8?B?RmVISE4vK25Tb2Q1eWdYdVkwZTVDNEs4Z0l6b3YzRlJDQWlCMWs1UlN4dWVG?=
+ =?utf-8?B?dk5FQ09Hd3pwc0RzVzVhMjVNWkpwNFBLbEFqR25TNFEyUVBqSG1YYWU4NFlH?=
+ =?utf-8?B?T2pBcFluOFhwbk5qRG84Zk9Na3BzeUhqaW51NnNhL2RHOHNkNmtBRTlrOFYw?=
+ =?utf-8?B?Vm9USVJudTJxSnJGZjNSMUYvK0lmRHB1QlpPRElJQWZKcTcwYllMTWhneklZ?=
+ =?utf-8?B?aXdWZUo0Q3FjMW9qczc0TDZ1RFl0eWJRZm9SV1YzUXp5cjRiZ1N1VWx4MlFV?=
+ =?utf-8?B?Y1N4V1EvUjhCMkp2bEZuWmMreERCbVhSa0UvM294c3pRMVo3S3p0RnFDSGtk?=
+ =?utf-8?B?MkNRWms3aXRGcm94dGhFODJwY0oxaG0wRHpCZnZoY2JDbmZwOGdKQ2dNWHZ2?=
+ =?utf-8?B?M0VvSDdtMURaVkdBbmVob3JuR0NabFoxNnlaaFFCT2locUF2SFhxRFZSamdv?=
+ =?utf-8?B?TGRJUFBwdmo3cVNkZjhEQ0R0UjhuVnhROFVNTDNZeWNjcklrTVZkVHpzcTRa?=
+ =?utf-8?B?THpVaHZpZTVnZndNN2YwRDdzTE9UajdZZlpFb3cvMmVRaXI2Q3k3WGZnVm44?=
+ =?utf-8?B?MEJvVTZTZGo0NlpkRkhRd2s4ZmtWdGh5RE5uVWVYU2NURGJuQlo1TXFtaExL?=
+ =?utf-8?B?WFlBU08vTTNJa2cydjZydGxOazdXQm13b05YYXVOVWJlRURFSmtXUTJZMGwx?=
+ =?utf-8?B?Z1I0WkRFWnhUTzdZY1RDWDYyM1hQTGMvaU9VTFFlYzh3azlzS1JPbW83MndO?=
+ =?utf-8?B?dzROb285YVY0NzFEWVB0aWNTQ0lHYlNmT0xkYnZJTTlYOUs4WmdXNTNRek1B?=
+ =?utf-8?B?UytISmNtejVOcnQyZVlZNzBYTFVJQU5PWmRNajRGdXZ1dm9GVGo2bTNlZm44?=
+ =?utf-8?B?bnNRanBsTVdyVmZUWU1ZcjMzeVVNamYrck1aSUt2a1RUbGFwL0FpMVV0d09Q?=
+ =?utf-8?B?MHFyQWxNdUh3YWRDMExPM04vT3lkVHpFRFFxRE1sdVlMZ2FXeGkrMWNvUTBw?=
+ =?utf-8?B?djVSa1p3NEVhM3pnTkNOL0wzaGppUW9SQ1V0UG5Kd2M1WVpYeDJFNi9xK1Zt?=
+ =?utf-8?B?NERXdmtSczlCQW1IK05vZmhrV0lEa1Y5dzQ0OVhDMnBXWjFxY3FZMmpDNm1n?=
+ =?utf-8?B?T2JVZitVbEM3alN5L0l5RzlncUViZVRDcTNWdEh6UUdZZ0hNbmg5bHpjU29L?=
+ =?utf-8?B?ZWNHSmlFdHZxdTlmSEp2ckRSTlZVQ1RsQVcwMDBkTlZYOE9SMFkvOCtpSGlp?=
+ =?utf-8?B?R0ZWNFFvOXRzbVk4MjhrSDc0NVNGZCtSbzFLTXVJbzd6ZW54M2FMWXZNM1lX?=
+ =?utf-8?B?TGxnK2JrZURtTkNvaUVvTmZGOGZxeVQ3eTlnaDIrSm5XcFJrQ1NFZjlBTlpq?=
+ =?utf-8?B?UmZJd0lKODJyeFF5WFF1UDFGV0t3PT0=?=
 X-Forefront-Antispam-Report:
 	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	jascLZ9Tcj/wlIO2PxIAVIR775VkJtbH6Xtmgp/znTsibi6x0VdzJW9UkzV/hEbw6oX0uALTQ/lB1PfC8gRwPeh7fE2ov1CqtZnZb04EWSWTEgmDyv3sZUbn0FulgKqsSBUnUqzzojVO9FsIxyMaEOjKM0QVSI3IvM7Khck74FCWY5UZaTWwJI7kXIUbpQMvvtBa7Ro+rky1FoY2heZ/qxxqU/5AjGBzLTh+P0LMAph8Zu8mTCOPhMplUR0SI5JGPuXd/yvzIn/0u0YTkaAOlUlm4v/XNOvJteU+pxoD8SOaEof/aBrmbB8ynSQ+n+2q4h/EBtTvc/k9JDIVjolAJ+xshXKTdJYkc8Xbp5CXzCZ04IhmaIpLg0/WsgjcrvfBnj4qM9H465PA8jSv9g+0wVoXcDH8psnVL8iObwPehttsOZkAx6nr6p1AhOjEc5O1
+	zRiUG6FpDQ/A503vCK0rWEiKfICGeTNWYAtRVPO3GJQv2o+hZivwKtLFgc15MgKj8bS9+50uzMyYL0ebZzPPKlN14czdqpMRzwonrqo+JboOj8O9hcUig9Ro83qelSHeWFSU8H3wVD4iMBQJoKfHjy3Q9KuJk3EbCEFd2jtPNhEvtB5bvR23Bt8Tlr3sYsgi0Ioe0fWpqlnK4GCXhMlcvyU3Sdq2bjT2mq8UzG7Fzdc+bPz+kOc6MSQGBsUReTERbVA/tlEbAzkLCIelMJnAl1OlyFmYowTYhrh3Z42DbTZvRD3ra23La0VzMxrhf8cf/G5j2wxO898am+Xe6XBTx8aV13NDwokHJFAG3qg7uM9CmyVLgUJr5OwueN4/qSSc5Bgj/lZWlJBZ1S88ufN4tfwGdb9YxnSyD0M/xhmGdmiFajTw3k8wcLhfKBEYU4N1
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2026 17:29:25.6902
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2026 17:31:00.6205
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ba0fe83-8ef0-4197-c15c-08de6fdc6dc4
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc498a05-57be-453b-2951-08de6fdca659
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002317.namprd03.prod.outlook.com
+	SJ1PEPF00002312.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR12MB9704
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7793
 
-On 2/19/2026 3:58 AM, Alejandro Lucero Palau wrote:
+On 2/18/2026 1:11 PM, Alison Schofield wrote:
+> cxl-cli commands were recently added for poison inject and clear
+> operations by memdev. Replace the writes to sysfs with the new
+> commands in the cxl-poison unit test.
 > 
-> On 2/11/26 22:10, Cheatham, Benjamin wrote:
->> On 2/1/2026 9:54 AM, alejandro.lucero-palau@amd.com wrote:
->>> From: Alejandro Lucero <alucerop@amd.com>
->>>
->>> CXL region creation involves allocating capacity from Device Physical
->>> Address (DPA) and assigning it to decode a given Host Physical Address
->>> (HPA). Before determining how much DPA to allocate the amount of available
->>> HPA must be determined. Also, not all HPA is created equal, some HPA
->>> targets RAM, some targets PMEM, some is prepared for device-memory flows
->>> like HDM-D and HDM-DB, and some is HDM-H (host-only).
->>>
->>> In order to support Type2 CXL devices, wrap all of those concerns into
->>> an API that retrieves a root decoder (platform CXL window) that fits the
->>> specified constraints and the capacity available for a new region.
->>>
->>> Add a complementary function for releasing the reference to such root
->>> decoder.
->>>
->>> Based on https://lore.kernel.org/linux-cxl/168592159290.1948938.13522227102445462976.stgit@dwillia2-xfh.jf.intel.com/
->>>
->>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>> ---
->>>   drivers/cxl/core/region.c | 164 ++++++++++++++++++++++++++++++++++++++
->>>   drivers/cxl/cxl.h         |   3 +
->>>   include/cxl/cxl.h         |   6 ++
->>>   3 files changed, 173 insertions(+)
->>>
->>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>> index 954b8fcdbac6..bdefd088f5f1 100644
->>> --- a/drivers/cxl/core/region.c
->>> +++ b/drivers/cxl/core/region.c
->>> @@ -705,6 +705,170 @@ static int free_hpa(struct cxl_region *cxlr)
->>>       return 0;
->>>   }
->>>   +struct cxlrd_max_context {
->>> +    struct device * const *host_bridges;
->>> +    int interleave_ways;
->>> +    unsigned long flags;
->>> +    resource_size_t max_hpa;
->>> +    struct cxl_root_decoder *cxlrd;
->>> +};
->>> +
->>> +static int find_max_hpa(struct device *dev, void *data)
->>> +{
->>> +    struct cxlrd_max_context *ctx = data;
->>> +    struct cxl_switch_decoder *cxlsd;
->>> +    struct cxl_root_decoder *cxlrd;
->>> +    struct resource *res, *prev;
->>> +    struct cxl_decoder *cxld;
->>> +    resource_size_t free = 0;
->>> +    resource_size_t max;
->>> +    int found = 0;
->>> +
->>> +    if (!is_root_decoder(dev))
->>> +        return 0;
->>> +
->>> +    cxlrd = to_cxl_root_decoder(dev);
->>> +    cxlsd = &cxlrd->cxlsd;
->>> +    cxld = &cxlsd->cxld;
->>> +
->>> +    if ((cxld->flags & ctx->flags) != ctx->flags) {
->>> +        dev_dbg(dev, "flags not matching: %08lx vs %08lx\n",
->>> +            cxld->flags, ctx->flags);
->>> +        return 0;
->>> +    }
->>> +
->>> +    for (int i = 0; i < ctx->interleave_ways; i++) {
->>> +        for (int j = 0; j < ctx->interleave_ways; j++) {
->>> +            if (ctx->host_bridges[i] == cxlsd->target[j]->dport_dev) {
->>> +                found++;
->>> +                break;
->>> +            }
->>> +        }
->>> +    }
->> This may be over complicated. I'm not quite sure how it works (I'm just slow today I guess), but I understand
->> what the intention is based on the debug print below. My issue is that ctx->host_bridges is only set to 1 host
->> bridge (endpoint->host_bridge) in cxl_get_hpa_freespace(), which is the only caller of this function. At that
->> point, why have the outer loop at all? At that point, you could also simplify ctx->host_bridges to only
->> be a struct device * const.
->>
->> Maybe this gets called elsewhere later on in the series? I haven't looked at the rest yet. If I'm wrong, then
->> I'd probably add a comment saying what the cxlsd->target[] entries are supposed to be pointing at.
+> All cxl-test memdevs are created as poison_injectable, so just
+> confirm that the new poison_injectable field is indeed 'true'.
 > 
+> Continue to use the sysfs writes for inject and clear poison
+> by region offset until that support arrives in cxl-cli.
 > 
-> Hi Ben,
-> 
-> 
-> I do remember this one.
-> 
-> 
-> Dan's original patches had this support for interleaving, then I removed it as the case for Type2 and interleaving is quite unlikely, at least right now and likely in the near future. But I was told why do not support it as it was trivial to do so. FWIW, If I think only about the use case coming with the patchset, I agree with you, but because those previous discussions, I think I have to leave it.
-> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-I'm fine with that, but I would at least do the fix with the decoder position in 19/22 and make a note that the
-interleave_ways parameter in cxl_get_hpa_freespace() below is currently unused (unless I'm misunderstanding
-the endpoint->host_bridge member).
+LGTM
 
-That way, the support is mostly there and just requires a small, previously noted, addition to enable. If you're
-fine with that then feel free to add my Reviewed-by after implementing in v24.
+Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
 
-Thanks,
-Ben
-
+> ---
 > 
-> Thank you
+> Change in v3:
+> Use new field 'poison_injectable' in memdev selection (BenC)
+> Update commit log to include poison_injectable check.
+> 
+> Change in v2:
+> Use final format of new cxl-cli cmds:
+> 	inject-media-poison and clear-media-poison
 > 
 > 
->>> +
->>> +    if (found != ctx->interleave_ways) {
->>> +        dev_dbg(dev,
->>> +            "Not enough host bridges. Found %d for %d interleave ways requested\n",
->>> +            found, ctx->interleave_ways);
->>> +        return 0;
->>> +    }
->>> +
->>> +    /*
->>> +     * Walk the root decoder resource range relying on cxl_rwsem.region to
->>> +     * preclude sibling arrival/departure and find the largest free space
->>> +     * gap.
->>> +     */
->>> +    lockdep_assert_held_read(&cxl_rwsem.region);
->>> +    res = cxlrd->res->child;
->>> +
->>> +    /* With no resource child the whole parent resource is available */
->>> +    if (!res)
->>> +        max = resource_size(cxlrd->res);
->>> +    else
->>> +        max = 0;
->>> +
->>> +    for (prev = NULL; res; prev = res, res = res->sibling) {
->>> +        if (!prev && res->start == cxlrd->res->start &&
->>> +            res->end == cxlrd->res->end) {
->>> +            max = resource_size(cxlrd->res);
->>> +            break;
->>> +        }
->>> +        /*
->>> +         * Sanity check for preventing arithmetic problems below as a
->>> +         * resource with size 0 could imply using the end field below
->>> +         * when set to unsigned zero - 1 or all f in hex.
->>> +         */
->>> +        if (prev && !resource_size(prev))
->>> +            continue;
->>> +
->>> +        if (!prev && res->start > cxlrd->res->start) {
->>> +            free = res->start - cxlrd->res->start;
->>> +            max = max(free, max);
->>> +        }
->>> +        if (prev && res->start > prev->end + 1) {
->>> +            free = res->start - prev->end + 1;
->>> +            max = max(free, max);
->>> +        }
->>> +    }
->>> +
->>> +    if (prev && prev->end + 1 < cxlrd->res->end + 1) {
->>> +        free = cxlrd->res->end + 1 - prev->end + 1;
->>> +        max = max(free, max);
->>> +    }
->>> +
->>> +    dev_dbg(cxlrd_dev(cxlrd), "found %pa bytes of free space\n", &max);
->>> +    if (max > ctx->max_hpa) {
->>> +        if (ctx->cxlrd)
->>> +            put_device(cxlrd_dev(ctx->cxlrd));
->>> +        get_device(cxlrd_dev(cxlrd));
->>> +        ctx->cxlrd = cxlrd;
->>> +        ctx->max_hpa = max;
->>> +    }
->>> +    return 0;
->>> +}
->>> +
->>> +/**
->>> + * cxl_get_hpa_freespace - find a root decoder with free capacity per constraints
->>> + * @cxlmd: the mem device requiring the HPA
->>> + * @interleave_ways: number of entries in @host_bridges
->>> + * @flags: CXL_DECODER_F flags for selecting RAM vs PMEM, and Type2 device
->>> + * @max_avail_contig: output parameter of max contiguous bytes available in the
->>> + *              returned decoder
->>> + *
->>> + * Returns a pointer to a struct cxl_root_decoder
->>> + *
->>> + * The return tuple of a 'struct cxl_root_decoder' and 'bytes available given
->>> + * in (@max_avail_contig))' is a point in time snapshot. If by the time the
->>> + * caller goes to use this decoder and its capacity is reduced then caller needs
->>> + * to loop and retry.
->>> + *
->>> + * The returned root decoder has an elevated reference count that needs to be
->>> + * put with cxl_put_root_decoder(cxlrd).
->>> + */
->>> +struct cxl_root_decoder *cxl_get_hpa_freespace(struct cxl_memdev *cxlmd,
->>> +                           int interleave_ways,
->>> +                           unsigned long flags,
->>> +                           resource_size_t *max_avail_contig)
->>> +{
->>> +    struct cxlrd_max_context ctx = {
->>> +        .flags = flags,
->>> +        .interleave_ways = interleave_ways,
->>> +    };
->>> +    struct cxl_port *root_port;
->>> +    struct cxl_port *endpoint;
->>> +
->>> +    endpoint = cxlmd->endpoint;
->>> +    if (!endpoint) {
->>> +        dev_dbg(&cxlmd->dev, "endpoint not linked to memdev\n");
->>> +        return ERR_PTR(-ENXIO);
->>> +    }
->>> +
->>> +    ctx.host_bridges = &endpoint->host_bridge;
->> Mentioned earlier, interleave_ways is effectively hardcoded to 1 (unless I'm misunderstanding
->> something). I think what you want here is to go to the CXL root and pass in the children (i.e. host bridges)?
->> I'm not sure of what the fix is to get the intended behavior.
->>
->> It may be worth getting rid of the interleave_ways portion of this function and
->> add it later when someone needs it. You could also explain it's hard coded to 1/unused
->> in the doc comment if you know of an immediate need for it.
->>
->>> +
->>> +    struct cxl_root *root __free(put_cxl_root) = find_cxl_root(endpoint);
->>> +    if (!root) {
->>> +        dev_dbg(&endpoint->dev, "endpoint is not related to a root port\n");
->>> +        return ERR_PTR(-ENXIO);
->>> +    }
->>> +
->>> +    root_port = &root->port;
->>> +    scoped_guard(rwsem_read, &cxl_rwsem.region)
->>> +        device_for_each_child(&root_port->dev, &ctx, find_max_hpa);
->> Can just use a guard() here.
->>
->>> +
->>> +    if (!ctx.cxlrd)
->>> +        return ERR_PTR(-ENOMEM);
->>> +
->>> +    *max_avail_contig = ctx.max_hpa;
->>> +    return ctx.cxlrd;
->>> +}
->>> +EXPORT_SYMBOL_NS_GPL(cxl_get_hpa_freespace, "CXL");
->>> +
->>> +void cxl_put_root_decoder(struct cxl_root_decoder *cxlrd)
->>> +{
->>> +    put_device(cxlrd_dev(cxlrd));
->>> +}
->>> +EXPORT_SYMBOL_NS_GPL(cxl_put_root_decoder, "CXL");
->>> +
->>>   static ssize_t size_store(struct device *dev, struct device_attribute *attr,
->>>                 const char *buf, size_t len)
->>>   {
->>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->>> index 944c5d1ccceb..c7d9b2c2908f 100644
->>> --- a/drivers/cxl/cxl.h
->>> +++ b/drivers/cxl/cxl.h
->>> @@ -706,6 +706,9 @@ struct cxl_root_decoder *to_cxl_root_decoder(struct device *dev);
->>>   struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev);
->>>   struct cxl_endpoint_decoder *to_cxl_endpoint_decoder(struct device *dev);
->>>   bool is_root_decoder(struct device *dev);
->>> +
->>> +#define cxlrd_dev(cxlrd) (&(cxlrd)->cxlsd.cxld.dev)
->>> +
->>>   bool is_switch_decoder(struct device *dev);
->>>   bool is_endpoint_decoder(struct device *dev);
->>>   struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
->>> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
->>> index 92880c26b2d5..834dc7e78934 100644
->>> --- a/include/cxl/cxl.h
->>> +++ b/include/cxl/cxl.h
->>> @@ -255,4 +255,10 @@ struct cxl_endpoint_decoder *cxl_get_committed_decoder(struct cxl_memdev *cxlmd,
->>>   struct range;
->>>   int cxl_get_region_range(struct cxl_region *region, struct range *range);
->>>   void cxl_unregister_region(struct cxl_region *cxlr);
->>> +struct cxl_port;
->>> +struct cxl_root_decoder *cxl_get_hpa_freespace(struct cxl_memdev *cxlmd,
->>> +                           int interleave_ways,
->>> +                           unsigned long flags,
->>> +                           resource_size_t *max);
->>> +void cxl_put_root_decoder(struct cxl_root_decoder *cxlrd);
->>>   #endif /* __CXL_CXL_H__ */
+>  test/cxl-poison.sh | 82 +++++++++++++++++++++++++---------------------
+>  1 file changed, 44 insertions(+), 38 deletions(-)
+> 
+> diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
+> index 58cf132b613b..bbd147c85a77 100644
+> --- a/test/cxl-poison.sh
+> +++ b/test/cxl-poison.sh
+> @@ -20,7 +20,8 @@ find_memdev()
+>  {
+>  	readarray -t capable_mems < <("$CXL" list -b "$CXL_TEST_BUS" -M |
+>  		jq -r ".[] | select(.pmem_size != null) |
+> -		select(.ram_size != null) | .memdev")
+> +		select(.ram_size != null) |
+> +		select(.poison_injectable == true) | .memdev")
+>  
+>  	if [ ${#capable_mems[@]} == 0 ]; then
+>  		echo "no memdevs found for test"
+> @@ -41,32 +42,37 @@ find_auto_region()
+>  	echo "$region"
+>  }
+>  
+> -# When cxl-cli support for inject and clear arrives, replace
+> -# the writes to /sys/kernel/debug with the new cxl commands.
+> -
+> -_do_poison_sysfs()
+> +_do_poison()
+>  {
+>  	local action="$1" dev="$2" addr="$3"
+>  	local expect_fail=${4:-false}
+>  
+> -	if "$expect_fail"; then
+> -		if echo "$addr" > "/sys/kernel/debug/cxl/$dev/${action}_poison"; then
+> -			echo "Expected ${action}_poison to fail for $addr"
+> -			err "$LINENO"
+> -		fi
+> -	else
+> -		echo "$addr" > "/sys/kernel/debug/cxl/$dev/${action}_poison"
+> +	# Regions use sysfs, memdevs use cxl-cli commands
+> +	if [[ "$dev" =~ ^region ]]; then
+> +		local sysfs_path="/sys/kernel/debug/cxl/$dev/${action}_poison"
+> +		"$expect_fail" && echo "$addr" > "$sysfs_path" && err "$LINENO"
+> +		"$expect_fail" || echo "$addr" > "$sysfs_path"
+> +		return
+>  	fi
+> +
+> +	case "$action" in
+> +	inject) local cmd=("$CXL" inject-media-poison "$dev" -a "$addr") ;;
+> +	clear)	local cmd=("$CXL" clear-media-poison "$dev" -a "$addr") ;;
+> +	*)	err "$LINENO" ;;
+> +	esac
+> +
+> +	"$expect_fail" && "${cmd[@]}" && err "$LINENO"
+> +	"$expect_fail" || "${cmd[@]}"
+>  }
+>  
+> -inject_poison_sysfs()
+> +inject_poison()
+>  {
+> -	_do_poison_sysfs 'inject' "$@"
+> +	_do_poison 'inject' "$@"
+>  }
+>  
+> -clear_poison_sysfs()
+> +clear_poison()
+>  {
+> -	_do_poison_sysfs 'clear' "$@"
+> +	_do_poison 'clear' "$@"
+>  }
+>  
+>  check_trace_entry()
+> @@ -121,27 +127,27 @@ validate_poison_found()
+>  test_poison_by_memdev_by_dpa()
+>  {
+>  	find_memdev
+> -	inject_poison_sysfs "$memdev" "0x40000000"
+> -	inject_poison_sysfs "$memdev" "0x40001000"
+> -	inject_poison_sysfs "$memdev" "0x600"
+> -	inject_poison_sysfs "$memdev" "0x0"
+> +	inject_poison "$memdev" "0x40000000"
+> +	inject_poison "$memdev" "0x40001000"
+> +	inject_poison "$memdev" "0x600"
+> +	inject_poison "$memdev" "0x0"
+>  	validate_poison_found "-m $memdev" 4
+>  
+> -	clear_poison_sysfs "$memdev" "0x40000000"
+> -	clear_poison_sysfs "$memdev" "0x40001000"
+> -	clear_poison_sysfs "$memdev" "0x600"
+> -	clear_poison_sysfs "$memdev" "0x0"
+> +	clear_poison "$memdev" "0x40000000"
+> +	clear_poison "$memdev" "0x40001000"
+> +	clear_poison "$memdev" "0x600"
+> +	clear_poison "$memdev" "0x0"
+>  	validate_poison_found "-m $memdev" 0
+>  }
+>  
+>  test_poison_by_region_by_dpa()
+>  {
+> -	inject_poison_sysfs "$mem0" "0"
+> -	inject_poison_sysfs "$mem1" "0"
+> +	inject_poison "$mem0" "0"
+> +	inject_poison "$mem1" "0"
+>  	validate_poison_found "-r $region" 2
+>  
+> -	clear_poison_sysfs "$mem0" "0"
+> -	clear_poison_sysfs "$mem1" "0"
+> +	clear_poison "$mem0" "0"
+> +	clear_poison "$mem1" "0"
+>  	validate_poison_found "-r $region" 0
+>  }
+>  
+> @@ -168,15 +174,15 @@ test_poison_by_region_offset()
+>  	# Inject at the offset and check result using the hpa
+>  	# ABI takes an offset, but recall the hpa to check trace event
+>  
+> -	inject_poison_sysfs "$region" "$cache_size"
+> +	inject_poison "$region" "$cache_size"
+>  	check_trace_entry "$region" "$hpa1"
+> -	inject_poison_sysfs "$region" "$((gran + cache_size))"
+> +	inject_poison "$region" "$((gran + cache_size))"
+>  	check_trace_entry "$region" "$hpa2"
+>  	validate_poison_found "-r $region" 2
+>  
+> -	clear_poison_sysfs "$region" "$cache_size"
+> +	clear_poison "$region" "$cache_size"
+>  	check_trace_entry "$region" "$hpa1"
+> -	clear_poison_sysfs "$region" "$((gran + cache_size))"
+> +	clear_poison "$region" "$((gran + cache_size))"
+>  	check_trace_entry "$region" "$hpa2"
+>  	validate_poison_found "-r $region" 0
+>  }
+> @@ -196,21 +202,21 @@ test_poison_by_region_offset_negative()
+>  	if [[ $cache_size -gt 0 ]]; then
+>  		cache_offset=$((cache_size - 1))
+>  		echo "Testing offset within cache: $cache_offset (cache_size: $cache_size)"
+> -		inject_poison_sysfs "$region" "$cache_offset" true
+> -		clear_poison_sysfs "$region" "$cache_offset" true
+> +		inject_poison "$region" "$cache_offset" true
+> +		clear_poison "$region" "$cache_offset" true
+>  	else
+>  		echo "Skipping cache test - cache_size is 0"
+>  	fi
+>  
+>  	# Offset exceeds region size
+>  	exceed_offset=$((region_size))
+> -	inject_poison_sysfs "$region" "$exceed_offset" true
+> -	clear_poison_sysfs "$region" "$exceed_offset" true
+> +	inject_poison "$region" "$exceed_offset" true
+> +	clear_poison "$region" "$exceed_offset" true
+>  
+>  	# Offset exceeds region size by a lot
+>  	large_offset=$((region_size * 2))
+> -	inject_poison_sysfs "$region" "$large_offset" true
+> -	clear_poison_sysfs "$region" "$large_offset" true
+> +	inject_poison "$region" "$large_offset" true
+> +	clear_poison "$region" "$large_offset" true
+>  }
+>  
+>  is_unaligned() {
 
