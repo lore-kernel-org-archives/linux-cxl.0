@@ -1,98 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail1.bemta41.messagelabs.com (mail1.bemta41.messagelabs.com [195.245.230.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F29F3EBF28;
-	Fri, 20 Feb 2026 09:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD0432A3DE;
+	Fri, 20 Feb 2026 09:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.245.230.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771578900; cv=none; b=jRvtWmN4foKpjZkRWjrZFu2seiHWuCyU6p6ZWsFzvZRzbyavzf2mIcQImakXcjxUJsyzhE3prjb/BN2wo/lf/B59GGgG6p15ma7dzi86Ue7fa50XHjFjT13Tm/6O9Phq7iHjJbHtWarXa+MShdwAchUJukV1Rj7x0CKQa1ypD7g=
+	t=1771580728; cv=none; b=UoBLZgx/UZf8JT07mzYRVqrhI1U4aIkC3ZrvEFpijwGm1YfyE76rRisqMoY3EdmFJ7UN3UZOT6Bix4VF+ve/daOdnxBL8eWsPZcDsvdY/tXU1qQrgVIKkk/nu2VFekQH84rpMyFtJ1SapJb3t7v4C9zSIwoc6wnMPbu9OJM47/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771578900; c=relaxed/simple;
-	bh=wuW/g3yRjC0OKrwp3pgODFGDF2SKgvTJiWvlt2FqPWA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=puSNkbakK/ZXos/gs4UvR13rnYkeWCHNoXF8yI73Ui53uCS9PCNzoQXx8tltFZU2eAdo6Jx0igykPRoQYhH3w8MZSPmPhNLXRFp9jqFXw4azUwqyhjjsbisSerhSLnV3/IT2iDB+Pb8hpUnC7ALdB/X/ipvuypDnDUtATn5IMZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sR8X0HwD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771580728; c=relaxed/simple;
+	bh=wJWfGk7BNqg3EveEUI889GcA2wUx2SpY7lRosAW9aBM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MhYLKdiFVFpWrVoRWPrT3NYcrkzHu+AUP1DYuOm/BOOsO/eQADymt0MizHIUkcDkcM4DktNxdpatxrniKXs0HfkRa1WwhMzr9oC/gZ5qFaWhE2IGAyKkJxHonKJLfXq51IeZz7xub3eLDAFfTaUMgM9CnhVvhPSNSX4UlvcH8l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=FFFsn7vP; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=HhKqAT97; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=HhKqAT97; arc=none smtp.client-ip=195.245.230.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sR8X0HwD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FA00C116C6;
-	Fri, 20 Feb 2026 09:14:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1771578899;
-	bh=wuW/g3yRjC0OKrwp3pgODFGDF2SKgvTJiWvlt2FqPWA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sR8X0HwDjXIS1rk4UGFYf9dL3TQGY73pWwVA8vZmvNvqKehr1oEZ+2PCNiFux2ans
-	 e5CKdhDTuXEXtKbnUgxEMBIbZj/mLJsN6gkDmA4PHQEQYOIfhjPq3qpiNp2a/xG4pf
-	 Lb7jbyhvCK8YqiVybst8S+4pce1WXokyf2EhPHC0=
-Date: Fri, 20 Feb 2026 10:14:56 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, dan.j.williams@intel.com,
-	Alistair Francis <alistair23@gmail.com>, bhelgaas@google.com,
-	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org,
-	linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	alex.gaynor@gmail.com, benno.lossin@proton.me, boqun.feng@gmail.com,
-	a.hindborg@kernel.org, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	tmgross@umich.edu, ojeda@kernel.org, wilfred.mallawa@wdc.com,
-	aliceryhl@google.com, Alistair Francis <alistair.francis@wdc.com>,
-	aneesh.kumar@kernel.org, yilun.xu@linux.intel.com, aik@amd.com
-Subject: Re: [RFC v3 00/27] lib: Rust implementation of SPDM
-Message-ID: <2026022028-upstage-dollop-ee16@gregkh>
-References: <20260219124313.GE723117@nvidia.com>
- <20260219124119.GD723117@nvidia.com>
- <aZcbBt7OmNeH3oA0@wunner.de>
- <2026021944-material-hardhat-c508@gregkh>
- <aZgRTT0woruvH-AM@wunner.de>
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="FFFsn7vP";
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="HhKqAT97";
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="HhKqAT97"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
+	s=170520fj; t=1771580723; i=@fujitsu.com;
+	bh=jtIHzUFqVK9OPNLco4+7DqEQIozirk/DIYVzX5HTsD8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	b=FFFsn7vPE5ZlIHxMJVEAiiymF7QCALndmh4cBbbuk/ZUXRsLd5GA1vpMcZ7gf6FWQ
+	 BqjaxUw93q9E5wzsES9j3ZaBVKR1NQPqc28HuWkLm83zbUwFry8srB9zQj36y3lnJp
+	 Nog5C3JK8MBVLIFgXTbhbpnHZzUmG08s7mIP58jxisaH1B2WzX19sMcOxnl5eOR/+d
+	 KefOp79f9HUm8r2fj390VathJamVjsxAdVnnGRi2Ri+gMssTWO2aPL5WnBH6bRaiPq
+	 Z91oBEwvmbvqQrIaa92A2lZcxFqQVfkqZYmDmZD0tzEJoAHS6+J/F07uEv11juZP2Z
+	 /4uAKHApRpnCw==
+X-Brightmail-Tracker: H4sIAAAAAAAAA22Se0xbdRTH+d17e3vp6LxrR3ptxjCFoSIUEac
+  /ooAmxt04iGbEscxks8CVNrYFe4sDphFWKzgyeax3QHnIYwOGZIyymbnAeNgBZcgzOKg8suE2
+  YJlzFrchg3gLMmfifyfn8znfc/44BCr5EZcTTJqRMehVWgUuwiJfJ1TBocHFmhevDWyCU7NDO
+  FxavAtgQcV9BLrOruKwiBsCsHciC4ffTTQCaKppwuFgyyMctt+4hcHSIhMCCy+MobCh6mccWi
+  1tCBy09mGwtc2BwdGLZTh0HbMDaK64A2DODQ6Bpx8+EsCcu5ko7DnWgcDyRQ6FkydqAWxcvIf
+  CX3oHBdCZ343A5Yf87CX7DPbGdvqB+RuMNo+s4PQP1ikh/aX9joBuqQ+ka1rnEdrW8DVOt5c3
+  Cum5lhJAdyysAJor/YLur7QLaZdtO71c2g3e27xfoNHHJ6d9KFAPF85jKZV4muW6BckEFsFRI
+  CIk5DlAXTU9wI8CTwIj36VOlg4AN8DI7zHq8s2Jf6xshDp3akiwYdnqhoT/Y5UDavz+itBt4W
+  QINX68DLjrrWQg1ee4vTaBkhacWrp1Zm2hlDxA2euyeEDwUTuonvzd7raYjKSu5lWvKRTpS33
+  LOQRuxZOMobKmY9xtCRlNFd/sxNf1LZSj5FfMXaO8bjpfiq6PBlBjAzY0H0itT2jWJ7RKgDQA
+  yDKGTxlDcLgy3qBJUht1Ko1WqcoITlAyqYbkFCb4EMMaQ5VJCSlKhmWVbLouQZuo1DNGG+A/S
+  fT7M7EXwLVVc0gXeJpAFN5i76BijWRzfHJiulrFqg8aUrUM2wW2EYSCEic+z7MtBiaJSftIo+
+  X/cQNThJdiqzjkWR6L2RSVjtUkraM+EEY0T3e0ocS9ea4TlWD6ZD0jl4nPupNIt6pO1T8O2vj
+  tEeAjl4qBh4eHxCuFMeg0xv/yBSAjgEIqvv0Cn+Kl0Rsf71vgT0H4Uz7Qce5TjKp/kTwTyQmo
+  bY2LrXoqQOb3x+RypPO8eTL75Yw36/8q7I7I4xSfbJp5O2aOkvv17/0Kt5cV7Zz313/2WpXvO
+  5HtLudoeeehQOlLdNjEjrBw37eauCOhrVcyKuoj4g+2+jhdEX9mB+1SSKN+8lQPGD5e6k/cn/
+  b+lbrJrqby45dQbgr133Ym4nJd5pH+GW8Y4Fid2VVjPSEqFuwpEk2N7my2LY+VCT/PfS46vYC
+  L9bFcDPd4BfwWnRe+z9S0+8B0b1xcxqvaWVk1eVJmHA49PF7rp8sd77HSMsSs7mzHSkKud5+W
+  F8Bh/9zmw3RUddH0rJVuCYoamauXO/NNe8cdGT1j++Y1JQqMVatCA1EDq/obl6/DIlYEAAA=
+X-Env-Sender: tomasz.wolski@fujitsu.com
+X-Msg-Ref: server-10.tower-859.messagelabs.com!1771580720!48981!1
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received:
+X-StarScan-Version: 9.121.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 31228 invoked from network); 20 Feb 2026 09:45:21 -0000
+Received: from unknown (HELO n03ukasimr01.n03.fujitsu.local) (62.60.8.97)
+  by server-10.tower-859.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 20 Feb 2026 09:45:21 -0000
+Received: from n03ukasimr01.n03.fujitsu.local (localhost [127.0.0.1])
+	by n03ukasimr01.n03.fujitsu.local (Postfix) with ESMTP id 720361009DA;
+	Fri, 20 Feb 2026 09:45:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 n03ukasimr01.n03.fujitsu.local 720361009DA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
+	s=dspueurope; t=1771580720;
+	bh=jtIHzUFqVK9OPNLco4+7DqEQIozirk/DIYVzX5HTsD8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HhKqAT97F6SM58cIkKGHj3KnNHeVT7YoH7Wv50EvuIhRjQ5M09RsWAu/RaFyx4LwP
+	 +W/xgMssjygVwtA4NAM1iEkEKku966g3oHZNoRLty9Esr/dJpx3gvoUgFrF5rFxXy9
+	 ViDOHhttoNbWUrhKNuRustiAydpmmUMef2KAt0ZjtHcxf2cHqyCoEam7Yh5d/5q0at
+	 teyCaCg+5CYQySNKqaW/XTYEEV3lb4cZeSFiOE+qRx0wlYbZOEASz+Fv5UbXm3QBVs
+	 pIhAdYwdwRoiQ/yExIgYRoMkiS+U/vERzQkCl/0CztQxLafHFlxnG1UdJ0iIpos1uN
+	 HxPNOPCCbQQZw==
+Received: from ubuntudhcp (unknown [10.172.107.4])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by n03ukasimr01.n03.fujitsu.local (Postfix) with ESMTPS id 4E6631009D9;
+	Fri, 20 Feb 2026 09:45:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 n03ukasimr01.n03.fujitsu.local 4E6631009D9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
+	s=dspueurope; t=1771580720;
+	bh=jtIHzUFqVK9OPNLco4+7DqEQIozirk/DIYVzX5HTsD8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HhKqAT97F6SM58cIkKGHj3KnNHeVT7YoH7Wv50EvuIhRjQ5M09RsWAu/RaFyx4LwP
+	 +W/xgMssjygVwtA4NAM1iEkEKku966g3oHZNoRLty9Esr/dJpx3gvoUgFrF5rFxXy9
+	 ViDOHhttoNbWUrhKNuRustiAydpmmUMef2KAt0ZjtHcxf2cHqyCoEam7Yh5d/5q0at
+	 teyCaCg+5CYQySNKqaW/XTYEEV3lb4cZeSFiOE+qRx0wlYbZOEASz+Fv5UbXm3QBVs
+	 pIhAdYwdwRoiQ/yExIgYRoMkiS+U/vERzQkCl/0CztQxLafHFlxnG1UdJ0iIpos1uN
+	 HxPNOPCCbQQZw==
+Received: from isar2.ecs00.fujitsu.local (unknown [10.172.183.27])
+	by ubuntudhcp (Postfix) with ESMTP id D3CCD2204EA;
+	Fri, 20 Feb 2026 09:45:19 +0000 (UTC)
+From: Tomasz Wolski <tomasz.wolski@fujitsu.com>
+To: smita.koralahallichannabasappa@amd.com
+Cc: alison.schofield@intel.com,
+	ardb@kernel.org,
+	benjamin.cheatham@amd.com,
+	bp@alien8.de,
+	dan.j.williams@intel.com,
+	dave.jiang@intel.com,
+	dave@stgolabs.net,
+	gregkh@linuxfoundation.org,
+	huang.ying.caritas@gmail.com,
+	ira.weiny@intel.com,
+	jack@suse.cz,
+	jeff.johnson@oss.qualcomm.com,
+	jonathan.cameron@huawei.com,
+	len.brown@intel.com,
+	linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	lizhijian@fujitsu.com,
+	ming.li@zohomail.com,
+	nathan.fontenot@amd.com,
+	nvdimm@lists.linux.dev,
+	pavel@kernel.org,
+	peterz@infradead.org,
+	rafael@kernel.org,
+	rrichter@amd.com,
+	terry.bowman@amd.com,
+	tomasz.wolski@fujitsu.com,
+	vishal.l.verma@intel.com,
+	willy@infradead.org,
+	yaoxt.fnst@fujitsu.com,
+	yazen.ghannam@amd.com
+Subject: Re: [PATCH v6 0/9] dax/hmem, cxl: Coordinate Soft Reserved handling with CXL and HMEM
+Date: Fri, 20 Feb 2026 10:45:10 +0100
+Message-Id: <20260220094510.17955-1-tomasz.wolski@fujitsu.com>
+X-Mailer: git-send-email 2.35.3
+In-Reply-To: <20260210064501.157591-1-Smita.KoralahalliChannabasappa@amd.com>
+References: <20260210064501.157591-1-Smita.KoralahalliChannabasappa@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aZgRTT0woruvH-AM@wunner.de>
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-On Fri, Feb 20, 2026 at 08:46:21AM +0100, Lukas Wunner wrote:
-> On Thu, Feb 19, 2026 at 03:40:25PM +0100, Greg KH wrote:
-> > On Thu, Feb 19, 2026 at 03:15:34PM +0100, Lukas Wunner wrote:
-> > >   # What's the certificate chain in slot0?
-> > >   openssl storeutl -text /sys/bus/pci/devices/0000:03:00.0/certificates/slot0
-> > > 
-> > >   # Fingerprint of root cert in slot0, does it match what vendor claims?
-> > >   openssl x509 -fingerprint -in /sys/bus/pci/devices/0000:03:00.0/certificates/slot0
-> > > 
-> > >   # Looks good, let's trust it:
-> > >   keyctl padd asymmetric "" %:.cma < /sys/bus/pci/devices/0000:03:00.0/certificates/slot0
-> > 
-> > As much fun as it is to abuse sysfs, please, let's not do this there.
-> > You just did something that could have changed the device between
-> > storing, checking and then trusting it as the device is never guaranteed
-> > to remain the same across multiple calls to sysfs (i.e. yanked out and
-> > another added.)
-> 
-> No, the kernel caches the certificate chains read from the SPDM slots
-> and what is exposed in sysfs is that cached copy.  So all three commands
-> above pertain to the same certificate chain.
+Tested on QEMU and physical setups. 
 
-So if a device is removed and a different one added between steps 2 and
-three above, with the same pci number, all is ok?
+I have one question about "Soft Reserve" parent entries in iomem.
+On QEMU I see parent "Soft Reserved":
 
-Remember, PCI device ids are not unique, they can come and go and be
-reordered and reused at any point in time.  They are fully dynamic and
-should NEVER be used as a unique identifier except for a specific moment
-in time.
+a90000000-b4fffffff : Soft Reserved
+  a90000000-b4fffffff : CXL Window 0
+    a90000000-b4fffffff : dax1.0
+      a90000000-b4fffffff : System RAM (kmem)
 
-In other words, you are expecting that device id to always refer to the
-same device across all 3 operations, which is never guaranteed.
+While on my physical setup this is missing - not sure if this is okay?
 
-> > So let's not design in a security issue from the start please :)
-> 
-> The alleged security issue does not exist.
+BIOS-e820: [mem 0x0000002070000000-0x000000a06fffffff] soft reserved
 
-How is this not the classic definition of a TOCTOU (time-of-check to
-time-of-use) problem?
+2070000000-606fffffff : CXL Window 0
+  2070000000-606fffffff : region0
+    2070000000-606fffffff : dax0.0
+      2070000000-606fffffff : System RAM (kmem)
+6070000000-a06fffffff : CXL Window 1
+  6070000000-a06fffffff : region1
+    6070000000-a06fffffff : dax1.0
+      6070000000-a06fffffff : System RAM (kmem)
 
-thanks,
-
-greg k-h
+Tested-by: Tomasz Wolski <tomasz.wolski@fujitsu.com>
