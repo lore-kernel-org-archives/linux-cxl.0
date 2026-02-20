@@ -1,252 +1,121 @@
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010058.outbound.protection.outlook.com [52.101.56.58])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [144.76.133.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8102BD030;
-	Fri, 20 Feb 2026 08:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771574933; cv=fail; b=P3bR4S8hsJBFQlRPt62g5AOoaK4BZxMVPKJaXqLv/tlMI6J6gvHi1WMBnnDm1TjDGz44SCkhuLFjp8Wm720X3IgiuZWjezD4fQb05pOpN6uwybyy/MiI2vrnpm+BLMcx1aRg3Vmpw7QD9nyxBLxB3m1WJiG8xpzNnVOrq9iQlZ8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771574933; c=relaxed/simple;
-	bh=4OM5tF0vPyVKRi9Nq1tL8OUOxk7extBXUU7mmxaMLx0=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=RBYwoNhMRiL8GgXSbCyk6mXfp0BT6I7PlazzvFFiwOo9y0f0SxzA3ig5D8cSK4zE3mWntPROfmCluYwjmC+1clMWgDS3mCi8IzQV5iVr3bfb/DvjPPaCoUXA3IKiSsHluR0rYor9WyK1a/XHyuSMGXpWbo3c9QxKPGVHuF/hfPU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gjfDmdLN; arc=fail smtp.client-ip=52.101.56.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gjfDmdLN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=a2UgsQj879sa5iazplBWYSiEh/t6bPtkLC5Gh4tksbyWTFGqTRVaY/dxjLs/ZP18TQ8L5hsc2Jhid8UGe7iG1xuCcfFGvNAlbGuXaielvgHkV6Uf2vTpaJmlVAeLssWDn+JOSA8UOichDLWPobzCCdMxBvjsnanAirdpluKf4QTOK+GcV9FR+oauXoiTok0TWmriVjAFcf9G3HbInu9NX7brVvS5tMw2JcuVkU1/0t155mkRFFVH6xoE6zQ3BsMOcnGPCe1v4knPK/KXI9OK9IPP5iX8yE9g7Fzw76V1I4mqgExnr2f0msplxTGPOJaBX88QL8qA1HCSpdqgHcC8wA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=16V0Mtkntxs9GWdv4n5PifEfb+/H+K/zGCj/52Pd35k=;
- b=x2A8L5rXPqTfgjy2NvbBJGoYklRYXV+b8o4ETzwoEoz3axoavrMfY0yPrJ9w5eTyRKqRpCLD+F3G8cHCm7SuUVUFgK6dADwPsbVIB68mmH+l4KqdSQiksCZ/vcL3yOtoLA5lU4hCEwRw+SN7JHPuU/m0v38bGKZUsNUeDXXzjXC2joKkwDbD4yLhx7cymhVblHEzCZXy72yYzGplVcVwrtMAJLMjhW7tM1f02YSTsKWc5MSyGDaef2OvrcnFUt8TiBsZdUJWTRGtUHP+/17BPYaTgUC3yQoW1KBVvkpwg+1TaglPEdzX+0W+/kT2xncRHm3KzEf6W0VLogUuZU2W5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=16V0Mtkntxs9GWdv4n5PifEfb+/H+K/zGCj/52Pd35k=;
- b=gjfDmdLNb4siGef7KUXgKE1uXxYwXH+++RjZInMUCgRNf5WO+qcW38D/px31OXzvR/6qKhn0M4WiT5moRHDixym56uXUvC3BqC3qieCDPy/29Sts1YReDyOm4nEsav7N1ogPK1PWC5VNsMFM6148dpgWMgp+QjU8HNDyEJ87n/4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by PH7PR12MB7356.namprd12.prod.outlook.com (2603:10b6:510:20f::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.13; Fri, 20 Feb
- 2026 08:08:48 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::9e55:f616:6a93:7a3d]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::9e55:f616:6a93:7a3d%4]) with mapi id 15.20.9632.015; Fri, 20 Feb 2026
- 08:08:48 +0000
-Message-ID: <7e9e5772-1991-4447-8b07-846b2c503545@amd.com>
-Date: Fri, 20 Feb 2026 08:08:44 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v23 11/22] sfc: obtain decoder and region if committed by
- firmware
-Content-Language: en-US
-To: Dave Jiang <dave.jiang@intel.com>, alejandro.lucero-palau@amd.com,
- linux-cxl@vger.kernel.org, netdev@vger.kernel.org, dan.j.williams@intel.com,
- edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com
-References: <20260201155438.2664640-1-alejandro.lucero-palau@amd.com>
- <20260201155438.2664640-12-alejandro.lucero-palau@amd.com>
- <817fca78-2416-44d9-9e1a-301e2a42e88c@intel.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <817fca78-2416-44d9-9e1a-301e2a42e88c@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P265CA0275.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a1::23) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A0A30DD2F;
+	Fri, 20 Feb 2026 08:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.133.112
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771576254; cv=none; b=sLHPKBuzs+c4FZX6ElbsJbWb166XE0Z76phX6XDwR6o5kl2veYQxmed1Aqw83DMt8ck3oigL9xSqLYFRgxhv82u09WljxA9N+ZngkuIl7Nj0tEDz0TNyhHgF+USYJx/0SGT8Zqbb0UfdyAIlyfAFlMdyJqgjxmRramFbd/HH1Jo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771576254; c=relaxed/simple;
+	bh=azPTQTXySqvoSZocYG4Vg7nNQrEVUFnUuPlpxVGKDxM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bfrfBny5BJ9tTTWpTuM7cLWOOcqLS4JMPDJ18Ij0uKbA/ON/5sFUoC9G4ctWKyiUi/vciz2//FfuJS9UAe7rVQFhP4jadMnOss6ntQvXw3Xy+mEqX8GzivC+hX4yrdnV6uBWTMQ7IhDagdvUf4RkJSIzjoB52yrmhWf25XC18Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=144.76.133.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
+	 client-signature ECDSA (secp384r1) client-digest SHA384)
+	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 7E5D2203005E;
+	Fri, 20 Feb 2026 09:30:50 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 4B08F4BC74; Fri, 20 Feb 2026 09:30:50 +0100 (CET)
+Date: Fri, 20 Feb 2026 09:30:50 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: dan.j.williams@intel.com, Alistair Francis <alistair23@gmail.com>,
+	bhelgaas@google.com, rust-for-linux@vger.kernel.org,
+	akpm@linux-foundation.org, linux-pci@vger.kernel.org,
+	Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, alex.gaynor@gmail.com,
+	benno.lossin@proton.me, boqun.feng@gmail.com, a.hindborg@kernel.org,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, tmgross@umich.edu,
+	ojeda@kernel.org, wilfred.mallawa@wdc.com, aliceryhl@google.com,
+	Alistair Francis <alistair.francis@wdc.com>,
+	aneesh.kumar@kernel.org, yilun.xu@linux.intel.com, aik@amd.com
+Subject: Re: [RFC v3 00/27] lib: Rust implementation of SPDM
+Message-ID: <aZgbukYiIxg44_e7@wunner.de>
+References: <20260219124313.GE723117@nvidia.com>
+ <20260219124119.GD723117@nvidia.com>
+ <aZcbBt7OmNeH3oA0@wunner.de>
+ <20260219143129.GF723117@nvidia.com>
+ <aZcnTnYJ61Kma0yd@wunner.de>
+ <20260219173937.GH723117@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|PH7PR12MB7356:EE_
-X-MS-Office365-Filtering-Correlation-Id: e2dc24c3-bc03-4056-4624-08de70574699
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SGk4L3gzUUNuWnFtWHJUeDZmL0ZDUDFBS296UmM0c2ZPNm1Wc1ovVWVobW1Q?=
- =?utf-8?B?bk1tTVY5bTJmRCtabWZYcG8rQjkyWWhWNnJuZUhrWFV1OW9kS0VsRTR0S0NL?=
- =?utf-8?B?NFRKWC80QzFIVnkzMm5zNGpoRUVQSDA4a3F1bWxIRkF5OWMxUEZ5NzhvcGgv?=
- =?utf-8?B?c0pReVpqMzV2eVZ6V0VadlFwMW5BRW84eXpoNjU3ejQrRW9aZjhWbW1SK2M4?=
- =?utf-8?B?aDFGYmwxNkxrMTd3MHpJWkRPZmZxc2xxVGhIbmFPdWdram1mT1F2ZUQ4VVVx?=
- =?utf-8?B?SDNDTWRjMXAzTStJV1dCN2JMRmgwYlNISGRnczRpNGU3UE5VVUdkamY0MGNT?=
- =?utf-8?B?ZllEYW92WmpnRG5pNDlNSk4xZzBFZTBuTUF4RUJTMC9uNWJmUnN6K1ZFM0dR?=
- =?utf-8?B?OEM0dENiWlJFajE5RHVGNGNIZEVvY0pCNitWYVBpZHpuZXg4eERWdXZnNS94?=
- =?utf-8?B?cDNzOTh1ZUFrN2FRNVJPM21xSFU4ekpKdlM5Qk1YckVHK2NWMFhBdkpKazRn?=
- =?utf-8?B?MWRwb3JPNXNDTTk5WTAxaU9YaWdhWE5rUVdQT3FkaGRUSk5yN25VV2ZjSDZH?=
- =?utf-8?B?YkZXMER2YTQzYXlrWHhNcXFHQUxXbWR2amQ4a3VVL2ttQWxmNDAvK05pdUZW?=
- =?utf-8?B?Y1FZMVRqaThudUQzb3N2bzBOc0FDSTcxbjkvOW52TVNmTC9YQ2RlMVBsRXha?=
- =?utf-8?B?NW96bHpTM2RSMDhFRlZKdGtuZitoeWhnSlBLQTk2bXdZOFp3aGxlang2OVhj?=
- =?utf-8?B?UU84TUt2cWVWN3hSZjhadTJnVCt1NkFITituOFVwNHorNnpvbldoU0FEL1p6?=
- =?utf-8?B?a3lzR0tPN0lWRDExZ21pQnB6SnlVNlR1UmJOL0JuSjJ2Q0NSRm5MUVdZODZz?=
- =?utf-8?B?QW5lSHVtdXEwd3pjeXhsR2FPcGlHWHhxSWNnQWtnWlVMenNCMUtFS1JML0pS?=
- =?utf-8?B?Wlc4N2tnWExhRmphT2JTUVVvbXQ0R1dIdmUxeEQzZnFWTVJSS0NtYjZhN1cr?=
- =?utf-8?B?MUVPOEFRZStkMjZvczdKMDE3RFNSL0J6NEdjdFVPcTlQa0hoMkJZTk9VQ3lq?=
- =?utf-8?B?SDdlVGhoWXlQWFYxaDMzSk01WTRIcTBZMHdOSkdzenNFRy9ITWJ2ZzVVTW82?=
- =?utf-8?B?MHNYQzFBNWsvZjNsVTErUTl1RGJyK3hrak51UVJRS3cxREYvanN5N0tQVTI1?=
- =?utf-8?B?eE5BSng4Q1NQelJvWWtFZkdHaDNNc3VyNFBjRS9jcU1OakNUWlN3dVVCcCtL?=
- =?utf-8?B?R1dRS1M0dXVqYjJ0OE91OTJzYTYzenlhR3R4VmVCUkZqY1piSUVrWkw4RTdR?=
- =?utf-8?B?SzdlVFZkTVRIb2ZZTVFKQkRMQmc2OWxtVDdJVWl4VTlSY2piL1lPUUtRRWQ0?=
- =?utf-8?B?WVhlSWMrblRqemVHcForY3BhK1dSOW1rLzhjQUVBVVpJSy85SloycC9JY2ky?=
- =?utf-8?B?Mk9LMDVueHdwTEQ5MVhqTFhJdTJpb0FBazhBcXVYMUg0K0hYYTZVZFVQOWFx?=
- =?utf-8?B?UUhwR28zdmd1ZVdUN1hsYzFlQWRNNTNBTFZ2T1pGQ2NmdTMzZnFQSVptY2M5?=
- =?utf-8?B?ZXhlWjlCZHY1RVBUa3V6QWVmc0IzT3JOWFlacWFLcWV1OWt6ZEZEQnpmMnFs?=
- =?utf-8?B?MnZnWGNPT2hMZGxDSU1WN0ROWmlSamxkNjhLSFA0cE0zRTVZYmhUUlpsTWps?=
- =?utf-8?B?RStsNVVlclNyTThJelhLS1AwRXpzWnRnZmI5ZWlMNDRQNHZjNTJQa1p2czBv?=
- =?utf-8?B?VjR1ZzN1WmNTU0lwKzRMMVBySDJ2eERiRHZ4cU9yNUt2YTM5SDkyM05STW83?=
- =?utf-8?B?SEx2R1ZHZ3ZJRVN2b0IvQjZPUkt5MFI5Q3FHdXhYVGpmRnJoQVJHZEVIaG9G?=
- =?utf-8?B?QlBTSFE0OXdrZkh2TUs1b29zbXZsVmZoN1pNaDZ6NHpEVHQvamZaVlZMcVA2?=
- =?utf-8?B?N2xjUlFWWWh5dlFzQlNDbEtLWkExNDVzVCt3WVdSQ1RhSUFzYWJxdHdzMDNo?=
- =?utf-8?B?aW56dkx4V0dGOUNIb2tpakQyeElXMVpscXF1bTk1NlpOVHNld2syVDJNR0Ew?=
- =?utf-8?B?QTJMWVhxV21IbTZ2NWhqTzV0WkpNQzNReDltMGFBSWlIeXNCWnRFS2JFMm9m?=
- =?utf-8?B?bkZPenEvaVFsd1RjV3lQazQwSlFQZ3BDd0RlbWRYSzgvQnBjdVV3cFJxTG9F?=
- =?utf-8?B?VWc9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SWNzU1laWEY2Y3g1WGpFRW5NeGU2b3VBR0JKOUtCeGRvMWJJZ2JqZ0xyTHNq?=
- =?utf-8?B?NE9nZUw2RjFsalFQY1dsaTI2eDV1VzA3clg4c0l5d3A0NWhwMkU5a0c0amRD?=
- =?utf-8?B?UjAxMTFjSHFidzc4ampXZ3lHWDZPTlk3NHJ0L0ZVWG1naTNib1RoNndDYUky?=
- =?utf-8?B?QllqeGVXOU82VzdxSzZ2Q1h0ZmQrbFc4MTNrSGttL08xK21wUVFwZ0pYN3Uw?=
- =?utf-8?B?WmVpdEgyakJkcG14ZEFwWVBkL2oyMXNPTTlqWlpHUXg3c3VRYW1Ldi8wYjVr?=
- =?utf-8?B?RS9tdk1rSkJ5YW5SOW9Id0t5bnpwVnllaFI2MGFzYjNLSHZNZFhlejhIV0lt?=
- =?utf-8?B?M3pKUzE3L0tZdDVaRGo0YkFiOFBtQ25KVlE3UDlRYTM1VnV5MVBUL3hMbTd4?=
- =?utf-8?B?eWhLN0diTG5KOXBVZm9aWThNdGt2RENXeCtlSU5PelJWNVVQTnIyZGhFMVhP?=
- =?utf-8?B?WlZUUmQ2OHgzQmtNNXlFNVdXRW41RWhyRG1ZVXhYeGl3UGlBbWd4VXJGWEpF?=
- =?utf-8?B?eEUzM0JLTkZUT0dMaERkL1kzKzhwbVhaZDJSTFRHTnFJdEZLa3dydVlkamxq?=
- =?utf-8?B?aUF5SWRBK0JySi9qQjEvWjh6Q1h2ajd3RWtja1doK2RldDlPcXQ0K0hCaEI2?=
- =?utf-8?B?dTNPc1ZqY1lQdTFjVk94Nzl5dzI4UVBxQ01XNWZVZmVtR2tLTS9MYWNxeXhH?=
- =?utf-8?B?VGI0UGJCUnY4dmFaNEJMU0Z6dXNlZmlVSU14Rk95MU9BOXhiYWo5czZpSXgw?=
- =?utf-8?B?a3VQZW9nRkpzSmVXZlphN0xkVnpZNG1hMkhEUlFhZ0VIS1l5M3JOc1dYcTBt?=
- =?utf-8?B?NUxOTmZLSUx5VUtCNDRPRUJXWHlYL1hDT0tBYURYWnZ0ancvL0VabDZGenpK?=
- =?utf-8?B?K0NoWlk4ZmsrUW0weHd2amt2VitTWDZiNEdLVSsxdHVHeld3NkcrdTZTYTly?=
- =?utf-8?B?SHd2R0pHVkdTKzVGQ0NqY2EvSTNhaFhsOFlMNDRqTEtlbWppYVBJS2V0SUVl?=
- =?utf-8?B?Q0JUTFhWQUczeWxMTVZJY3VXdDEyVE0xR0dIMDZXUlF2NmVXT044UkhPTEcx?=
- =?utf-8?B?Rm42aXBjbVNqZGxZdzE3VjduTWliTC81M0dxTjI5cHovM3h3a2hKQUhOSllw?=
- =?utf-8?B?Z1FkZlBSbXhIMnJZRGt6REVlbjN2QlB4andKZmJ6MTgyN1djb0tDUFl3dXBK?=
- =?utf-8?B?NnBFN1ZWNkdEV0EyTmdVSnNDRktSM1I3dGJ2S3YyZFNyVHdPZURuWEVrUHRh?=
- =?utf-8?B?MlFXY3ZZeitqelI0T1J0d1ZleEs3UGNwUlg1ZnVtd0xRcGFCeEsrcFlmeE5P?=
- =?utf-8?B?czh2YXdzQnUzeEJGcWZTS1o4b2RWMVF6dkZDelNCU1NGTEhlZ2haWHRSbVdU?=
- =?utf-8?B?VkQ0a2x5Z3ozNmxrd2kyS08xMHNPZVNBTVVLeVpUdzR6OVlJS2pXT1lUUGhF?=
- =?utf-8?B?bEVzeWlid1FURjdJWGw5Q05JdFNnOVhrY2FmYVVEbFgzZjdYOFRWRjRoaTh5?=
- =?utf-8?B?aEZwS2NJSlUvUGt3SStsRGNGOXQ3TG1GZVd4US9UUDVmNEswemtQcC96d1U1?=
- =?utf-8?B?TERxNUo0WC80d3FzRERQdHpHY2dvK05QVENJeDhWVDlKL1dRejI0MC80U2RZ?=
- =?utf-8?B?Ti92emRLbHZRQnlrdzFzeDlOTlIzWnJ2NndwZlZRdzlGWG5sODEyUGZQNjdH?=
- =?utf-8?B?bWk1bmJaNGRSeVZFa3dkSGp1VmlaTXB1T2hMWVRMNGVoN2xMQVU2WHRJOUNs?=
- =?utf-8?B?SE51UWp5VkRzLzFUbUlJekI5UldPSUgwWnAzZklQYzYxbWx2REt1QWtiR0Fq?=
- =?utf-8?B?RDA3V3FpbTRUOWovL09vWVhES3NxdUg4d1dOeGorMm02ZFZQMGhjUGl3bE5r?=
- =?utf-8?B?TGxGS1FGcVZXK1FmNW9XK296cko3Q1E1Mm4yRERkMHY2UzFNemJWUUd6clpR?=
- =?utf-8?B?di9rUHd1M0ZWdlRXTWs1VXIwSWgyTWJZRU1PTDdUUEpTS1ZYckdtZ1o5QUFZ?=
- =?utf-8?B?VkdvTVcrSC9aRHhUV0cxdmNnTVhpb3IxRGtnZU1YaFNvelV5cmtYM1ZTd2NB?=
- =?utf-8?B?TG5QMmF5d2RDNkZrYm9nRGljS0FyWUR2QXVPQ1J5cnBiMjBPZm1vdHFNaHR3?=
- =?utf-8?B?WVVvdG91TlUvaUVPcHViMjVqZUdncjJOcW9GUzh4M1J6Zzd6dysvYisxRzdM?=
- =?utf-8?B?NXFFVllhM2pzWTQ5YzhtN2wybDFLcW9nNDVKeDlWdFNOcERrM2FydGF1ZTdK?=
- =?utf-8?B?QmFqN01mVDZ0eWxQMUpzcXdZU2dBM3FGTTV5citESC8za0pVN2c0LzVSV3NB?=
- =?utf-8?B?ZnJTb2JJUEZUZ3hXWi9RMnlhaDNxRlZjRWlFNUNjK3o5VDhkTmREUT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2dc24c3-bc03-4056-4624-08de70574699
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2026 08:08:48.4805
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dSmOh4trsBQUUqso02xLBuw1qk9dsihVajHtqYsfF7kLqAmL/11JJ41OJfjKFBi8/SXAyDX3n4A4WyoFnnp+JA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7356
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260219173937.GH723117@nvidia.com>
 
+On Thu, Feb 19, 2026 at 01:39:37PM -0400, Jason Gunthorpe wrote:
+> I'm arguing there are two very different steps here that must be kept
+> separate. Verification is done when the device is first seen and the
+> kernel is told it is OK to use the device.
+> 
+> A same-device check is performed if an already verified and accepted
+> device resumes or RAS's in some way.
+[...]
+> Hence no keyring should be involved in resume.
 
-On 2/19/26 23:31, Dave Jiang wrote:
->
-> On 2/1/26 8:54 AM, alejandro.lucero-palau@amd.com wrote:
->> From: Alejandro Lucero <alucerop@amd.com>
->>
->> Check if device HDM is already committed during firmware/BIOS
->> initialization.
->>
->> A CXL region should exist if so after memdev allocation/initialization.
->> Get HPA from region and map it.
->>
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->> ---
->>   drivers/net/ethernet/sfc/efx_cxl.c | 28 +++++++++++++++++++++++++++-
->>   1 file changed, 27 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
->> index a77ef4783fcb..3536eccf1b2a 100644
->> --- a/drivers/net/ethernet/sfc/efx_cxl.c
->> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
->> @@ -19,6 +19,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->>   	struct efx_nic *efx = &probe_data->efx;
->>   	struct pci_dev *pci_dev = efx->pci_dev;
->>   	struct efx_cxl *cxl;
->> +	struct range range;
->>   	u16 dvsec;
->>   	int rc;
->>   
->> @@ -90,13 +91,38 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->>   		return PTR_ERR(cxl->cxlmd);
->>   	}
->>   
->> -	probe_data->cxl = cxl;
->> +	cxl->cxled = cxl_get_committed_decoder(cxl->cxlmd, &cxl->efx_region);
->> +	if (cxl->cxled) {
-> if (!cxl->cxled)
-> 	return 0;
->
-> Should save you a level of indent.
+No, that doesn't work.  You cannot rely on information that the device
+presents.  The information may be spoofed.  The only secure way to
+ascertain that the device you're talking to is what it purports to be
+is to ask it for a signature and verify that the signature was made
+with a device certificate which is signed by a root certificate
+that you trust.  And the way to trust that root certificate is to
+add it to a keyring.
 
+There is no way around that.  What you have in mind could be achieved
+by generating a secret token after first authentication and then using
+that secret token after RAS / resume for re-authentication.  But I just
+looked through the SPDM spec and it doesn't support that kind of thing.
 
-Yes, but subsequent patches add the else branch ...
+A userspace verifier is incompatible with authentication after RAS
+and resume.  It's a technical limitation that you'll have to live with,
+I'm sorry.  If you could come up with, say, an eBPF verifier that
+user space loads into the kernel, that might be a workable solution.
 
+> I don't have an objection to an optional, useful for embedded, kernel
+> side verifier that uses the cma ring.
 
-Thanks
+Good.  My patches merely aim to be a spec-compliant implementation of
+PCIe r7.0 sec 6.31 (Component Measurement and Authentication/SPDM).
 
+That spec section does not talk about user space verifiers.
 
->
-> DJ
->
->> +		if (!cxl->efx_region) {
->> +			pci_err(pci_dev, "CXL found committed decoder without a region");
->> +			return -ENODEV;
->> +		}
->> +		rc = cxl_get_region_range(cxl->efx_region, &range);
->> +		if (rc) {
->> +			pci_err(pci_dev,
->> +				"CXL getting regions params from a committed decoder failed");
->> +			return rc;
->> +		}
->> +
->> +		cxl->ctpio_cxl = ioremap(range.start, range.end - range.start + 1);
->> +		if (!cxl->ctpio_cxl) {
->> +			pci_err(pci_dev, "CXL ioremap region (%pra) failed", &range);
->> +			return -ENOMEM;
->> +		}
->> +
->> +		probe_data->cxl = cxl;
->> +	}
->>   
->>   	return 0;
->>   }
->>   
->>   void efx_cxl_exit(struct efx_probe_data *probe_data)
->>   {
->> +	if (!probe_data->cxl)
->> +		return;
->> +
->> +	iounmap(probe_data->cxl->ctpio_cxl);
->> +	cxl_unregister_region(probe_data->cxl->efx_region);
->>   }
->>   
->>   MODULE_IMPORT_NS("CXL");
+Moreover PCIe r6.1 page 115 states "CMA requires SPDM Version 1.0 or
+above", so the baseline that we need to support for spec compliance
+is the oldest spec version with the least features.  So even if a
+future spec version introduced a feature to establish a shared secret
+on first authentication and use that for subsequent authentication,
+we'd still be constrained by the SPDM 1.0 feature set for compliance
+with older devices.
+
+> > > >   # What's the certificate chain in slot0?
+> > > >   openssl storeutl -text /sys/bus/pci/devices/0000:03:00.0/certificates/slot0
+> > > > 
+> > > >   # Fingerprint of root cert in slot0, does it match what vendor claims?
+> > > >   openssl x509 -fingerprint -in /sys/bus/pci/devices/0000:03:00.0/certificates/slot0
+> > > > 
+> > > >   # Looks good, let's trust it:
+> > > >   keyctl padd asymmetric "" %:.cma < /sys/bus/pci/devices/0000:03:00.0/certificates/slot0
+> 
+> This is also not a very realistic scenario, there is no point to copy
+> a certificate from a device into the cma key ring. If you want to
+> trust the device as is without any verification then just accept it as
+> is with a trivial userspace "verifier".
+
+No, in the above example the device is not trusted "as is without any
+verification".  The verification that happens above is a manual
+comparison of the fingerprint with one provided by the vendor.
+
+Thanks,
+
+Lukas
