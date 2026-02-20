@@ -1,31 +1,31 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE95C2045AD;
-	Fri, 20 Feb 2026 11:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A716330657;
+	Fri, 20 Feb 2026 11:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771587930; cv=none; b=bGo82lc+vJZrkhDP4mMAvEV/rGbopbjImWVBy4YTaw8M9Z/5/iAb+6Er2g3DO+SGVuSvlBrtUeuv/t8uDGV/wZB5LSYBCIRqYRzA6OuhpRXiWh5aOm5SZYfYWu2UwEaKbuobpBXnAZxwdQNpUCh0jtKB0SV3WOEW3EOJ07zciPQ=
+	t=1771588651; cv=none; b=dahQQFauEhqtsZNrBIQvRsQ3Fk/jIfAGcpEN/Wj7Mj/anTZjJqmaS88zc+WQ5VqJlpCTBRO4s1avh6DLWrOZxQfCIJ9vCgcUMnVkiqTcxm2RudkwtU3RfjUeZvAdER51Gf8T3bv7z3EQPXT+6LpZ81bxS+zcjfOebPvZ9zFrWC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771587930; c=relaxed/simple;
-	bh=SulkP6+PfQG4DexfHMgTizwen4Gpni8L3ImOizm4iag=;
+	s=arc-20240116; t=1771588651; c=relaxed/simple;
+	bh=SP2qW2lQ28/PH0jgBlbMRxu1FtYqM6Z9W2L1cfkLsvQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EHQUFt0ymo1c9aWArUrowXGqZfHEZ8ZmsKXcr8JrGB2uF1GHfUqMFKNPatTTxCeg8UNFSzkQ2w5H9jX5n2QwgXQjBvxwGvFYuegO3VOYrbXNr3BOrfp+qrild2SU53vOGHVa+jo6iVbf0D9w/bSTfaAU4L1p/F4K+GmWYRgsHf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 2BED3202011E;
-	Fri, 20 Feb 2026 12:45:20 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 020F5100E1; Fri, 20 Feb 2026 12:45:19 +0100 (CET)
-Date: Fri, 20 Feb 2026 12:45:19 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Greg KH <gregkh@linuxfoundation.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sAQM5Ibiz02oM/RH0mFY8GVFDX4Lz50on2eQbwBcqOspbslZHppYWK6RZBVz21/h52oiZCWIGb3yxKnVgNd3xShVbVgMRJBOyjJBwJ+rq27tbRYKzaQ38ZF2GRZgR5s3Unof/JLa6zUYSx5hThNpcND2jTxI0Hi4tJnTihkHzDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=keXlvNkv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="keXlvNkv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4F40C116C6;
+	Fri, 20 Feb 2026 11:57:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1771588650;
+	bh=SP2qW2lQ28/PH0jgBlbMRxu1FtYqM6Z9W2L1cfkLsvQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=keXlvNkvRDDMs1PpK7nyuT1veAWnSWqiw7JJF93mmq9AqNqOhndkRwnZ++2T0epmk
+	 bUzWoKiJwRc1O7yz7MXdcOLYrLb1xI+upB6GBMtFZ7klBLBaAqASZBNgdrHHQrMIm5
+	 41eap8RNHzEVJEYaadeBAjinacGFYw5+nSI8d8wg=
+Date: Fri, 20 Feb 2026 12:57:27 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Lukas Wunner <lukas@wunner.de>
 Cc: Jason Gunthorpe <jgg@nvidia.com>, dan.j.williams@intel.com,
 	Alistair Francis <alistair23@gmail.com>, bhelgaas@google.com,
 	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org,
@@ -37,13 +37,14 @@ Cc: Jason Gunthorpe <jgg@nvidia.com>, dan.j.williams@intel.com,
 	aliceryhl@google.com, Alistair Francis <alistair.francis@wdc.com>,
 	aneesh.kumar@kernel.org, yilun.xu@linux.intel.com, aik@amd.com
 Subject: Re: [RFC v3 00/27] lib: Rust implementation of SPDM
-Message-ID: <aZhJTxQtrY3xDsRt@wunner.de>
+Message-ID: <2026022043-amplify-unflawed-9cd5@gregkh>
 References: <20260219124313.GE723117@nvidia.com>
  <20260219124119.GD723117@nvidia.com>
  <aZcbBt7OmNeH3oA0@wunner.de>
  <2026021944-material-hardhat-c508@gregkh>
  <aZgRTT0woruvH-AM@wunner.de>
  <2026022028-upstage-dollop-ee16@gregkh>
+ <aZhJTxQtrY3xDsRt@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,35 +53,44 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2026022028-upstage-dollop-ee16@gregkh>
+In-Reply-To: <aZhJTxQtrY3xDsRt@wunner.de>
 
-On Fri, Feb 20, 2026 at 10:14:56AM +0100, Greg KH wrote:
-> On Fri, Feb 20, 2026 at 08:46:21AM +0100, Lukas Wunner wrote:
-> > On Thu, Feb 19, 2026 at 03:40:25PM +0100, Greg KH wrote:
-> > > On Thu, Feb 19, 2026 at 03:15:34PM +0100, Lukas Wunner wrote:
-> > > >   # What's the certificate chain in slot0?
-> > > >   openssl storeutl -text /sys/bus/pci/devices/0000:03:00.0/certificates/slot0
+On Fri, Feb 20, 2026 at 12:45:19PM +0100, Lukas Wunner wrote:
+> On Fri, Feb 20, 2026 at 10:14:56AM +0100, Greg KH wrote:
+> > On Fri, Feb 20, 2026 at 08:46:21AM +0100, Lukas Wunner wrote:
+> > > On Thu, Feb 19, 2026 at 03:40:25PM +0100, Greg KH wrote:
+> > > > On Thu, Feb 19, 2026 at 03:15:34PM +0100, Lukas Wunner wrote:
+> > > > >   # What's the certificate chain in slot0?
+> > > > >   openssl storeutl -text /sys/bus/pci/devices/0000:03:00.0/certificates/slot0
+> > > > > 
+> > > > >   # Fingerprint of root cert in slot0, does it match what vendor claims?
+> > > > >   openssl x509 -fingerprint -in /sys/bus/pci/devices/0000:03:00.0/certificates/slot0
+> > > > > 
+> > > > >   # Looks good, let's trust it:
+> > > > >   keyctl padd asymmetric "" %:.cma < /sys/bus/pci/devices/0000:03:00.0/certificates/slot0
 > > > > 
-> > > >   # Fingerprint of root cert in slot0, does it match what vendor claims?
-> > > >   openssl x509 -fingerprint -in /sys/bus/pci/devices/0000:03:00.0/certificates/slot0
-> > > > 
-> > > >   # Looks good, let's trust it:
-> > > >   keyctl padd asymmetric "" %:.cma < /sys/bus/pci/devices/0000:03:00.0/certificates/slot0
-> > > 
-> So if a device is removed and a different one added between steps 2 and
-> three above, with the same pci number, all is ok?
+> > So if a device is removed and a different one added between steps 2 and
+> > three above, with the same pci number, all is ok?
+> > 
+> > Remember, PCI device ids are not unique, they can come and go and be
+> > reordered and reused at any point in time.  They are fully dynamic and
+> > should NEVER be used as a unique identifier except for a specific moment
+> > in time.
+> > 
+> > In other words, you are expecting that device id to always refer to the
+> > same device across all 3 operations, which is never guaranteed.
 > 
-> Remember, PCI device ids are not unique, they can come and go and be
-> reordered and reused at any point in time.  They are fully dynamic and
-> should NEVER be used as a unique identifier except for a specific moment
-> in time.
-> 
-> In other words, you are expecting that device id to always refer to the
-> same device across all 3 operations, which is never guaranteed.
+> If the user chooses to replace the device between steps 2 and 3,
+> they get to keep the pieces.
 
-If the user chooses to replace the device between steps 2 and 3,
-they get to keep the pieces.
+So you are saying that is ok to do:
+   - test if we trust the fingerprint
+   - trust the device of a fingerprint we didn't check
 
-Thanks,
+Then why do step 1 here at all?
 
-Lukas
+Perhaps sysfs just isn't the best api here :)
+
+thanks,
+
+greg k-h
