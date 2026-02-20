@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122E03164D4;
-	Fri, 20 Feb 2026 15:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353E234DB48;
+	Fri, 20 Feb 2026 15:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771602171; cv=none; b=tn25LsY4AfIqHXiG+JFgMRhN3dyTChKLoVxkKzDIim36dUfGLUaG+vpAJtz7+3jdqYDxyaH3NdAIS0WifW4iuGLkT0ukSYl6mscCesIQMTrRE3oibwUTt0LRI5t3+g2fG4V5vBBLP8+PPrmShNN+G1yP68rGkq3u/5T7L9mdutA=
+	t=1771602907; cv=none; b=KM7l5IupFxMsAJ8h1/84OqQgHFfH1iIzU1S5WKQqyD5KvJAgtKJPIytgf6DOmGh2pDJO1WOw3ab7GzZ39YhfQR/FlFhGlGCVEQ+Bm/4kuIuTjhugZxI1nTSxI7h4FoTCLHx3Tfro5D5AWjqze/7YHxo6l3SouevqwEeQ7xN4yoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771602171; c=relaxed/simple;
-	bh=c/0F3Zcs/ajAPs7LR68zL4Fd8Ke5e+LE0K35AHav2hE=;
+	s=arc-20240116; t=1771602907; c=relaxed/simple;
+	bh=TNAwc4bN+gdZnNY9DlBqYik5zqX6LZBfVTFFf/fjt+I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lm8m5deRFD30Dup9jsEWJpokI99M6r+4CeSWNrenZfu1aosr6J7i+n+4xY95CD2wysAp9z6pf1TsyryXyXfFCa9ToPi8I32pwAGn56roHzAyWXkg23oOYLFKIpAgSFkRzj9jRprXSlNyxlYuVJDh0dVU1iS6TyEOMKVzVAj5GVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BBDFY5Xs; arc=none smtp.client-ip=192.198.163.19
+	 In-Reply-To:Content-Type; b=ajT7cDHfIvmqQwRdgBDFcj2o5hpYnvWfklnGRlqDc2Rf2CwNmGJib0MZfgf6aaX5pUfTqHsDmQHnhJbEN1QijQUQ5fFXla5tPTvYrxIEwKFrcLlcZA8Nq+JFHMbkAWF8rumQWOwbLUUkQ4S4MBkuRNzUhl4GoGYaQZsqUAxtHUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fqrrNLFo; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BBDFY5Xs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fqrrNLFo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771602169; x=1803138169;
+  t=1771602906; x=1803138906;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=c/0F3Zcs/ajAPs7LR68zL4Fd8Ke5e+LE0K35AHav2hE=;
-  b=BBDFY5XsSl1s8i1DruwmHByDLRy0+6uVADryc8SUXgX2iKQfVawFNH5A
-   8c77nwWcwwvCv9uMh3fYbUTTAfezD/QgsfFs1dPsciQj4pgeS+ALDWImj
-   Fjv1HSF9ZvJJiIzBQefdamLpXTij2KEXhdSh5WwVBGIR8si6IQm3UUGZz
-   3PNTrbdZSqsoKswuAmCyckugWQi5h0+0R/ZgJPKqp/FH1/5CwR693M13D
-   r+69GEs3Bzteh04UO+JxXzoTH1Ezya2SmOMIdz5NVcL4jKLvj2xPB0AUJ
-   aes/ygDX4eCeAG0zjFnALaQfW1dUf5LYqjM09X19NN4Qdz1iGY5g4j9QE
-   w==;
-X-CSE-ConnectionGUID: cPWtHafgSzip8tkccjMtCw==
-X-CSE-MsgGUID: ldYXF0NQQpGF9NJcRwdSDA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11707"; a="71721754"
+  bh=TNAwc4bN+gdZnNY9DlBqYik5zqX6LZBfVTFFf/fjt+I=;
+  b=fqrrNLFoewZcbcvOgj5jpvTsGEeBE9UW91a1+d1lrDR7a1B6vbTV5GNH
+   +NFMjIn2TEhizghIaY+govh04h5PsWE1d6RmlklcT2wT2bA7M5eYz6dRP
+   2UST3+Lp4p3+mxq92Dgh0RRC3JItFe6Yyx1LJHZ5RoM3DCfh6lt+dxUvD
+   EK9TlB7mn0lni/z/uAt0QKB/DG6/GBsXHjv7uAEA4QtNA6VLAmYIshEqS
+   UUVKPc4VXwkkWxwnHvthPSyP667ftPc2EbJQ68JxA2MLwpOqqm4Dc39Rf
+   G94aMDxemgBMGRJuj37/+vBiYngSY0QoRW0w62kpqUWeXMlTZFg8Cuf2n
+   A==;
+X-CSE-ConnectionGUID: ig7gjOZqTd6JPNxZYYSl0g==
+X-CSE-MsgGUID: 4PDTh675Tti2HAHCiayX3w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11707"; a="84057103"
 X-IronPort-AV: E=Sophos;i="6.21,302,1763452800"; 
-   d="scan'208";a="71721754"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2026 07:42:48 -0800
-X-CSE-ConnectionGUID: 9z4j3WoPRByXRBneFiGB+A==
-X-CSE-MsgGUID: YwKunrxmT8KsXe79qObBjg==
+   d="scan'208";a="84057103"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2026 07:55:05 -0800
+X-CSE-ConnectionGUID: Z22wXQvOSY6+DvjpXIPJRA==
+X-CSE-MsgGUID: DyzgI+7cRBmJGEbceuo8xA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,302,1763452800"; 
-   d="scan'208";a="212637935"
+   d="scan'208";a="213432501"
 Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.110.83]) ([10.125.110.83])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2026 07:42:47 -0800
-Message-ID: <341c6e75-e027-4fa0-bb5e-f8091efd3130@intel.com>
-Date: Fri, 20 Feb 2026 08:42:46 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2026 07:55:03 -0800
+Message-ID: <00813ddb-e737-4b61-9ebd-07ca2d02fd6c@intel.com>
+Date: Fri, 20 Feb 2026 08:55:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,267 +52,185 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v23 12/22] cxl: Define a driver interface for HPA free
- space enumeration
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
-Cc: Alejandro Lucero <alucerop@amd.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20260201155438.2664640-1-alejandro.lucero-palau@amd.com>
- <20260201155438.2664640-13-alejandro.lucero-palau@amd.com>
+Subject: Re: [PATCH v6 7/9] dax: Add deferred-work helpers for dax_hmem and
+ dax_cxl coordination
+To: "Koralahalli Channabasappa, Smita" <skoralah@amd.com>,
+ Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-pm@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+ Pavel Machek <pavel@kernel.org>, Li Ming <ming.li@zohomail.com>,
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+ Ying Huang <huang.ying.caritas@gmail.com>,
+ Yao Xingtao <yaoxt.fnst@fujitsu.com>, Peter Zijlstra <peterz@infradead.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Nathan Fontenot <nathan.fontenot@amd.com>,
+ Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
+ Benjamin Cheatham <benjamin.cheatham@amd.com>,
+ Zhijian Li <lizhijian@fujitsu.com>, Borislav Petkov <bp@alien8.de>,
+ Tomasz Wolski <tomasz.wolski@fujitsu.com>
+References: <20260210064501.157591-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20260210064501.157591-8-Smita.KoralahalliChannabasappa@amd.com>
+ <0c464a2c-3722-45e5-9023-5a2fce8aa096@intel.com>
+ <9b54bd0a-86dd-493b-92be-680c99b23479@amd.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260201155438.2664640-13-alejandro.lucero-palau@amd.com>
+In-Reply-To: <9b54bd0a-86dd-493b-92be-680c99b23479@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 2/1/26 8:54 AM, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
+On 2/19/26 5:02 PM, Koralahalli Channabasappa, Smita wrote:
+> Hi Dave,
 > 
-> CXL region creation involves allocating capacity from Device Physical
-> Address (DPA) and assigning it to decode a given Host Physical Address
-> (HPA). Before determining how much DPA to allocate the amount of available
-> HPA must be determined. Also, not all HPA is created equal, some HPA
-> targets RAM, some targets PMEM, some is prepared for device-memory flows
-> like HDM-D and HDM-DB, and some is HDM-H (host-only).
+> On 2/18/2026 9:52 AM, Dave Jiang wrote:
+>>
+>>
+>> On 2/9/26 11:44 PM, Smita Koralahalli wrote:
+>>> Add helpers to register, queue and flush the deferred work.
+>>>
+>>> These helpers allow dax_hmem to execute ownership resolution outside the
+>>> probe context before dax_cxl binds.
+>>>
+>>> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+>>> ---
+>>>   drivers/dax/bus.c | 58 +++++++++++++++++++++++++++++++++++++++++++++++
+>>>   drivers/dax/bus.h |  7 ++++++
+>>>   2 files changed, 65 insertions(+)
+>>>
+>>> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+>>> index 5f387feb95f0..92b88952ede1 100644
+>>> --- a/drivers/dax/bus.c
+>>> +++ b/drivers/dax/bus.c
+>>> @@ -25,6 +25,64 @@ DECLARE_RWSEM(dax_region_rwsem);
+>>>    */
+>>>   DECLARE_RWSEM(dax_dev_rwsem);
+>>>   +static DEFINE_MUTEX(dax_hmem_lock);
+>>> +static dax_hmem_deferred_fn hmem_deferred_fn;
+>>> +static void *dax_hmem_data;
+>>> +
+>>> +static void hmem_deferred_work(struct work_struct *work)
+>>> +{
+>>> +    dax_hmem_deferred_fn fn;
+>>> +    void *data;
+>>> +
+>>> +    scoped_guard(mutex, &dax_hmem_lock) {
+>>> +        fn = hmem_deferred_fn;
+>>> +        data = dax_hmem_data;
+>>> +    }
+>>> +
+>>> +    if (fn)
+>>> +        fn(data);
+>>> +}
+>>
+>> Instead of having a global lock and dealing with all the global variables, why not just do this with the typical work_struct usage pattern and allocate a work item when queuing work?
+>>
+>> DJ
 > 
-> In order to support Type2 CXL devices, wrap all of those concerns into
-> an API that retrieves a root decoder (platform CXL window) that fits the
-> specified constraints and the capacity available for a new region.
+> Thanks for the feedback.
 > 
-> Add a complementary function for releasing the reference to such root
-> decoder.
+> Just to clarify, are you hinting towards a statically allocated struct
+> with an embedded work_struct, something like below? Rather than the typical kmalloc + container_of pattern?
 > 
-> Based on https://lore.kernel.org/linux-cxl/168592159290.1948938.13522227102445462976.stgit@dwillia2-xfh.jf.intel.com/
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  drivers/cxl/core/region.c | 164 ++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h         |   3 +
->  include/cxl/cxl.h         |   6 ++
->  3 files changed, 173 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 954b8fcdbac6..bdefd088f5f1 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -705,6 +705,170 @@ static int free_hpa(struct cxl_region *cxlr)
->  	return 0;
->  }
->  
-> +struct cxlrd_max_context {
-> +	struct device * const *host_bridges;
-> +	int interleave_ways;
-> +	unsigned long flags;
-> +	resource_size_t max_hpa;
-> +	struct cxl_root_decoder *cxlrd;
+> +struct dax_hmem_deferred_ctx {
+> +    struct work_struct work;
+> +    dax_hmem_deferred_fn fn;
+> +    void *data;
 > +};
-> +
-> +static int find_max_hpa(struct device *dev, void *data)
+> 
+> +static struct dax_hmem_deferred_ctx dax_hmem_ctx;
+> 
+> +int dax_hmem_register_work(dax_hmem_deferred_fn fn, void *data)
 > +{
-> +	struct cxlrd_max_context *ctx = data;
-> +	struct cxl_switch_decoder *cxlsd;
-> +	struct cxl_root_decoder *cxlrd;
-> +	struct resource *res, *prev;
-> +	struct cxl_decoder *cxld;
-> +	resource_size_t free = 0;
-> +	resource_size_t max;
-> +	int found = 0;
-> +
-> +	if (!is_root_decoder(dev))
-> +		return 0;
-> +
-> +	cxlrd = to_cxl_root_decoder(dev);
-> +	cxlsd = &cxlrd->cxlsd;
-> +	cxld = &cxlsd->cxld;
-> +
-> +	if ((cxld->flags & ctx->flags) != ctx->flags) {
-> +		dev_dbg(dev, "flags not matching: %08lx vs %08lx\n",
-> +			cxld->flags, ctx->flags);
-> +		return 0;
-> +	}
-> +
-> +	for (int i = 0; i < ctx->interleave_ways; i++) {
-> +		for (int j = 0; j < ctx->interleave_ways; j++) {
-> +			if (ctx->host_bridges[i] == cxlsd->target[j]->dport_dev) {
-> +				found++;
-> +				break;
-> +			}
-> +		}
-> +	}
-> +
-> +	if (found != ctx->interleave_ways) {
-> +		dev_dbg(dev,
-> +			"Not enough host bridges. Found %d for %d interleave ways requested\n",
-> +			found, ctx->interleave_ways);
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * Walk the root decoder resource range relying on cxl_rwsem.region to
-> +	 * preclude sibling arrival/departure and find the largest free space
-> +	 * gap.
-> +	 */
-> +	lockdep_assert_held_read(&cxl_rwsem.region);
-> +	res = cxlrd->res->child;
-> +
-> +	/* With no resource child the whole parent resource is available */
-> +	if (!res)
-> +		max = resource_size(cxlrd->res);
-> +	else
-> +		max = 0;
-> +
-> +	for (prev = NULL; res; prev = res, res = res->sibling) {
-> +		if (!prev && res->start == cxlrd->res->start &&
-> +		    res->end == cxlrd->res->end) {
-> +			max = resource_size(cxlrd->res);
-> +			break;
-> +		}
+> +    if (dax_hmem_ctx.fn)
+> +        return -EINVAL;
+> 
+> +    INIT_WORK(&dax_hmem_ctx.work, hmem_deferred_work);
+> ..
+> 
+> My understanding is that Dan wanted this to remain a singleton deferred work item queued once and flushed from dax_cxl. I think with kmalloc + container_of approach, every call would allocate and queue a new independent work item..
+> 
+> Regarding the mutex: looking at it again, it may not be necessary I think. If we can rely on the call ordering (register_work() before queue_work()), and if flush_work() in kill_defer_work() ensures the work has fully completed before unregister_work() NULLs the pointers, then the static struct above would be sufficient without additional locking. If I'm missing a scenario or race here, please correct me.
 
-Can this block be pulled out of the for loop so it only needs to run once?
-
-> +		/*
-> +		 * Sanity check for preventing arithmetic problems below as a
-> +		 * resource with size 0 could imply using the end field below
-> +		 * when set to unsigned zero - 1 or all f in hex.
-> +		 */
-> +		if (prev && !resource_size(prev))
-> +			continue;
-> +
-> +		if (!prev && res->start > cxlrd->res->start) {
-> +			free = res->start - cxlrd->res->start;
-> +			max = max(free, max);
-> +		}
-> +		if (prev && res->start > prev->end + 1) {
-> +			free = res->start - prev->end + 1;
-> +			max = max(free, max);
-> +		}
-> +	}
-> +
-> +	if (prev && prev->end + 1 < cxlrd->res->end + 1) {
-> +		free = cxlrd->res->end + 1 - prev->end + 1;
-> +		max = max(free, max);
-> +	}
-> +
-> +	dev_dbg(cxlrd_dev(cxlrd), "found %pa bytes of free space\n", &max);
-> +	if (max > ctx->max_hpa) {
-> +		if (ctx->cxlrd)
-> +			put_device(cxlrd_dev(ctx->cxlrd));
-> +		get_device(cxlrd_dev(cxlrd));
-> +		ctx->cxlrd = cxlrd;
-> +		ctx->max_hpa = max;
-
-Is there any chance that ctx->cxlrd == cxlrd? Maybe you can do:
-
-if (ctx->cxlrd && ctx->cxlrd != cxlrd) {
-	put_device(cxlrd_dev(ctx->cxlrd));
-	get_device(cxlrd_dev(cxlrd));
-	ctx->cxlrd = cxlrd;
-}
-ctx->max_hpa = max;
+Ok I missed the history on the single issue work item. Yes what you proposed above should work if it's single issue. and if we are only sending 1 item, a statically declared work context should be sufficient I think. 
 
 DJ
 
-> +	}
-> +	return 0;
-> +}
-> +
-> +/**
-> + * cxl_get_hpa_freespace - find a root decoder with free capacity per constraints
-> + * @cxlmd: the mem device requiring the HPA
-> + * @interleave_ways: number of entries in @host_bridges
-> + * @flags: CXL_DECODER_F flags for selecting RAM vs PMEM, and Type2 device
-> + * @max_avail_contig: output parameter of max contiguous bytes available in the
-> + *		      returned decoder
-> + *
-> + * Returns a pointer to a struct cxl_root_decoder
-> + *
-> + * The return tuple of a 'struct cxl_root_decoder' and 'bytes available given
-> + * in (@max_avail_contig))' is a point in time snapshot. If by the time the
-> + * caller goes to use this decoder and its capacity is reduced then caller needs
-> + * to loop and retry.
-> + *
-> + * The returned root decoder has an elevated reference count that needs to be
-> + * put with cxl_put_root_decoder(cxlrd).
-> + */
-> +struct cxl_root_decoder *cxl_get_hpa_freespace(struct cxl_memdev *cxlmd,
-> +					       int interleave_ways,
-> +					       unsigned long flags,
-> +					       resource_size_t *max_avail_contig)
-> +{
-> +	struct cxlrd_max_context ctx = {
-> +		.flags = flags,
-> +		.interleave_ways = interleave_ways,
-> +	};
-> +	struct cxl_port *root_port;
-> +	struct cxl_port *endpoint;
-> +
-> +	endpoint = cxlmd->endpoint;
-> +	if (!endpoint) {
-> +		dev_dbg(&cxlmd->dev, "endpoint not linked to memdev\n");
-> +		return ERR_PTR(-ENXIO);
-> +	}
-> +
-> +	ctx.host_bridges = &endpoint->host_bridge;
-> +
-> +	struct cxl_root *root __free(put_cxl_root) = find_cxl_root(endpoint);
-> +	if (!root) {
-> +		dev_dbg(&endpoint->dev, "endpoint is not related to a root port\n");
-> +		return ERR_PTR(-ENXIO);
-> +	}
-> +
-> +	root_port = &root->port;
-> +	scoped_guard(rwsem_read, &cxl_rwsem.region)
-> +		device_for_each_child(&root_port->dev, &ctx, find_max_hpa);
-> +
-> +	if (!ctx.cxlrd)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	*max_avail_contig = ctx.max_hpa;
-> +	return ctx.cxlrd;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_get_hpa_freespace, "CXL");
-> +
-> +void cxl_put_root_decoder(struct cxl_root_decoder *cxlrd)
-> +{
-> +	put_device(cxlrd_dev(cxlrd));
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_put_root_decoder, "CXL");
-> +
->  static ssize_t size_store(struct device *dev, struct device_attribute *attr,
->  			  const char *buf, size_t len)
->  {
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 944c5d1ccceb..c7d9b2c2908f 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -706,6 +706,9 @@ struct cxl_root_decoder *to_cxl_root_decoder(struct device *dev);
->  struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev);
->  struct cxl_endpoint_decoder *to_cxl_endpoint_decoder(struct device *dev);
->  bool is_root_decoder(struct device *dev);
-> +
-> +#define cxlrd_dev(cxlrd) (&(cxlrd)->cxlsd.cxld.dev)
-> +
->  bool is_switch_decoder(struct device *dev);
->  bool is_endpoint_decoder(struct device *dev);
->  struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 92880c26b2d5..834dc7e78934 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -255,4 +255,10 @@ struct cxl_endpoint_decoder *cxl_get_committed_decoder(struct cxl_memdev *cxlmd,
->  struct range;
->  int cxl_get_region_range(struct cxl_region *region, struct range *range);
->  void cxl_unregister_region(struct cxl_region *cxlr);
-> +struct cxl_port;
-> +struct cxl_root_decoder *cxl_get_hpa_freespace(struct cxl_memdev *cxlmd,
-> +					       int interleave_ways,
-> +					       unsigned long flags,
-> +					       resource_size_t *max);
-> +void cxl_put_root_decoder(struct cxl_root_decoder *cxlrd);
->  #endif /* __CXL_CXL_H__ */
+> 
+> Thanks,
+> Smita
+> 
+>>
+>>> +
+>>> +static DECLARE_WORK(dax_hmem_work, hmem_deferred_work);
+>>> +
+>>> +int dax_hmem_register_work(dax_hmem_deferred_fn fn, void *data)
+>>> +{
+>>> +    guard(mutex)(&dax_hmem_lock);
+>>> +
+>>> +    if (hmem_deferred_fn)
+>>> +        return -EINVAL;
+>>> +
+>>> +    hmem_deferred_fn = fn;
+>>> +    dax_hmem_data = data;
+>>> +    return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(dax_hmem_register_work);
+>>> +
+>>> +int dax_hmem_unregister_work(dax_hmem_deferred_fn fn, void *data)
+>>> +{
+>>> +    guard(mutex)(&dax_hmem_lock);
+>>> +
+>>> +    if (hmem_deferred_fn != fn || dax_hmem_data != data)
+>>> +        return -EINVAL;
+>>> +
+>>> +    hmem_deferred_fn = NULL;
+>>> +    dax_hmem_data = NULL;
+>>> +    return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(dax_hmem_unregister_work);
+>>> +
+>>> +void dax_hmem_queue_work(void)
+>>> +{
+>>> +    queue_work(system_long_wq, &dax_hmem_work);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(dax_hmem_queue_work);
+>>> +
+>>> +void dax_hmem_flush_work(void)
+>>> +{
+>>> +    flush_work(&dax_hmem_work);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(dax_hmem_flush_work);
+>>> +
+>>>   #define DAX_NAME_LEN 30
+>>>   struct dax_id {
+>>>       struct list_head list;
+>>> diff --git a/drivers/dax/bus.h b/drivers/dax/bus.h
+>>> index cbbf64443098..b58a88e8089c 100644
+>>> --- a/drivers/dax/bus.h
+>>> +++ b/drivers/dax/bus.h
+>>> @@ -41,6 +41,13 @@ struct dax_device_driver {
+>>>       void (*remove)(struct dev_dax *dev);
+>>>   };
+>>>   +typedef void (*dax_hmem_deferred_fn)(void *data);
+>>> +
+>>> +int dax_hmem_register_work(dax_hmem_deferred_fn fn, void *data);
+>>> +int dax_hmem_unregister_work(dax_hmem_deferred_fn fn, void *data);
+>>> +void dax_hmem_queue_work(void);
+>>> +void dax_hmem_flush_work(void);
+>>> +
+>>>   int __dax_driver_register(struct dax_device_driver *dax_drv,
+>>>           struct module *module, const char *mod_name);
+>>>   #define dax_driver_register(driver) \
+>>
+> 
 
