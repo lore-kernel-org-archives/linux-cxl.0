@@ -1,66 +1,66 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010003.outbound.protection.outlook.com [52.101.201.3])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011053.outbound.protection.outlook.com [40.107.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5922231A7E1;
-	Fri, 20 Feb 2026 19:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DC01F7541
+	for <linux-cxl@vger.kernel.org>; Fri, 20 Feb 2026 19:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771614613; cv=fail; b=oWErsUBt2OCAM/c6bj5Js69j/wqnp/6n/z0rT9Fm5sX3/ZOSzZRuttOucsYB68rOLyV89a+5z2dxafurMrkASdYKBP2LEvrGLOvBnKELEwpyjEnvjUh9wwvuWMdCW+ZMgY21KyTTyjUZI26i/WXLzLmDnWl0T8OPNT9fRGOScLE=
+	t=1771616121; cv=fail; b=ZBjGkZyaDMMeqvBEtabTwtx/wL8J+EdmS6Ms4Upq3n30TNxhA9UtrPc+g1jOux4QrK8oIXA5lgGp1KkoHU4UIsqLQoZMFckZ84RkTzIGyphwipjo8HwlFr0ZSXLBXZTxrYFGFHXu9SobVO4p6IKO5v6E0+KhYMclLVmaV7N/OnI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771614613; c=relaxed/simple;
-	bh=hLtRCvoNKXGxPZCK+FsM36euA6YWH96h4kdNZfNavFA=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=AA7c+ZAF7lYwMnwjOq/YAjxuAcCW1A4alXLeJrDzNm1Uzeckv1vKV6R8FLuybtj4Kb0C8C9iZv1TmB9ORIMw9SduwGcHj71zpbNlFfvJnE4uKVbKPB0j7Vb8EHW+aWHF9Nt5LoLFtyIJ0v7VQix2PqcB+2Bob81hWsehHQQvLAw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zgRiBSkP; arc=fail smtp.client-ip=52.101.201.3
+	s=arc-20240116; t=1771616121; c=relaxed/simple;
+	bh=xkoWJsKl8OqSGA4kAFtfzVECuFik52m1khx8mBxsD8Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=s47cMI1hfBpsIBKo3NjPgQpeUciJAMJ5Nj2pxmiqs94lFxz1OXAFFCTCOcOta7GEXVhFJ+SnrMGh64/JTy0gUnxAm7KeebGOboFje3qyYsT+/0jaES/f8YNqWUviJu046KUx31Y+w6K78EgMc2DcRVlXBIZ1fCulmVoNJW/GJ50=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xJPtsZZl; arc=fail smtp.client-ip=40.107.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zgRiBSkP"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xJPtsZZl"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=C+p0C1Pfhp0ma+g0Tkmn0sWGmcQV0BG5xYp8LqMuXJ/IskD5YLH3mhxsfpYzE0MEPtavUuZe2XK8ngbLl9MYeVMNypUAE3g8//KzqknjIBFk/zpwtNFJFAjYsatREl0USMcVadfgMnPHXSTK4SF79mpVeTBlj+jyZy5o20WfC1JT1JEHPYqRg/KoeD+8YpEU7078heYjnsZORRWhrhaZHQoT5/vNj1lRRlNIxmXNVvC7MFGzGZJItXA1Q0fhC8TJ6yZoBy9F85W3gOurPykHCTXnMqKv9UCENULVjlW/J6lxCxxleZ4sfN3X83us7kp7iCvJc59H68YFRHrya9iqdg==
+ b=rRDbWTlT8INDT8t4mAkHN1oDNpldmLtrsxyP5XvL9zjwQts1bA65qfPBjF2y4DYxStpBnq7kJbkGvsqVcP8bwcwj6QKLZz2QkZu4RBaPVD02yTz5agxSna5paWT2DMmZ5XSXpMiCSYrMUMjiq+atGXrGo0CAFiANbN6dhZrmtPwCgOBNPxRutZWoZ/Xfj2CkCvcNXPmSEwjDSy8utbFmL9Nx6EkH4y5i3PmCRYuD9KmTAC0FmxFc3S7cVoTKZTvSkwrebC5TGiETiaHkhREiI4CwkGMlsUvFferVvycVmkdVV6LNN9p1EbFGvDfCJlpMckkm59PuXQw0lIfhO+/ufA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=04gaNMWQBuHiKHl2ClYwVAqWs211MC0Ytv3ZGWMIDys=;
- b=nXKiXLxLokZsBDYSSriXGFTRTOe2rTJl1xgNsPyNKMORE4o6rnC1t8wBaZzS8SJSHQC7KBP++QBLdhzdgHT3N8iBTWYlJSaXg9XBlWm9n63RzYHzaYKP7MNqjCPa6E9uTdQLtosr1+fCgtD5eqd0yeoGGsH7j/O9bGGfW9eLfYG3NouIY9jOpguGgqi5GOgALK9hthn65P0XTjalC66Tyu+TQTUQhTCaeg+8RxL6pdHA4G4T80imZKjy34B1AYckDk/2iZ6ol7JD+Ooh3uJ1qwi628iou/ukhKH4hxPUSdTH8VGmpuAZoa+I0ZodTxF76nc3PJEvl5CR2JPXb/YF/g==
+ bh=yd2QFIxRYmz+L0o0MgIYb8+2em3SSPK7+KEMTNHqPK0=;
+ b=tbULLIKSZ4ceQxs+mLWPdQHnmsGujpLHueE8hp8CyGRaP/oUstEk9UcA9h8z0uuvpnlrUkp9ntj2GfhcjL2mSzZC4VwR4Sp7iwnzr+uIo2jYhlTnVMCW90zoMutJW86pFHPi+L7P+inysx8brDgmvKZWTkd1ksop6CarKeD99XrLFW7ys/mxGTCpjhGBe1fhNpQSb/LdFETFFmmMlv56CRPUnoTXnOF9VYzGVKFuCISju9pMx8/Dy7M1jVjuVhipDY5tFH+OO9yN7y8QgM9hhbQWo9BmToiHfYiqgyRQutUdP473+LyCRzV8YJSMRUFQdpQKjZELNCbFZ6NqgCWnVg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=ilvokhin.com smtp.mailfrom=amd.com;
+ 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=04gaNMWQBuHiKHl2ClYwVAqWs211MC0Ytv3ZGWMIDys=;
- b=zgRiBSkPZ1pmC+742aaFXwtOwY159iDRqu1dEoPeLg4RV3HQD7GdKQ/u97AQSQkQthc1jmLQBnNJ8TFiU6TOBl7QvHAHyAA0XEN01MnzbSEJmv2hVQJ46UWOtYlzpU5qmQvAKBse2Cl6IMo5LZJX3rHG0VmF8Qr7ycjUKlDTJ2Q=
-Received: from PH2PEPF00003851.namprd17.prod.outlook.com (2603:10b6:518:1::76)
- by DS5PPFFF21E27DC.namprd12.prod.outlook.com (2603:10b6:f:fc00::66b) with
+ bh=yd2QFIxRYmz+L0o0MgIYb8+2em3SSPK7+KEMTNHqPK0=;
+ b=xJPtsZZljkqxSTQb0EgAj2Md8JiIHjBeepwV7S3zGD0VB7UnJDPy5Y5KU7uP/hTAXsdVooI35TwNZyCkexX0Thj0M/gNfWKZUysDYeDI/2/nBzP1M9lMEvM9mFxcPU36zipXu9SMM1gG1o5+PtxYDOP9F8y5unLa3mpjOMOH0ro=
+Received: from BN9PR03CA0315.namprd03.prod.outlook.com (2603:10b6:408:112::20)
+ by SJ2PR12MB9242.namprd12.prod.outlook.com (2603:10b6:a03:56f::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9611.15; Fri, 20 Feb
- 2026 19:10:07 +0000
-Received: from SJ1PEPF000023D9.namprd21.prod.outlook.com
- (2a01:111:f403:c902::13) by PH2PEPF00003851.outlook.office365.com
- (2603:1036:903:48::3) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.16; Fri, 20 Feb
+ 2026 19:35:15 +0000
+Received: from BN1PEPF00006000.namprd05.prod.outlook.com
+ (2603:10b6:408:112:cafe::72) by BN9PR03CA0315.outlook.office365.com
+ (2603:10b6:408:112::20) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.16 via Frontend Transport; Fri,
- 20 Feb 2026 19:10:07 +0000
+ 20 Feb 2026 19:35:15 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
 Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ1PEPF000023D9.mail.protection.outlook.com (10.167.244.74) with Microsoft
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ BN1PEPF00006000.mail.protection.outlook.com (10.167.243.232) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9654.0 via Frontend Transport; Fri, 20 Feb 2026 19:10:07 +0000
-Received: from Satlexmb09.amd.com (10.181.42.218) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.9632.12 via Frontend Transport; Fri, 20 Feb 2026 19:35:15 +0000
+Received: from Satlexmb09.amd.com (10.181.42.218) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 20 Feb
- 2026 13:10:06 -0600
+ 2026 13:35:14 -0600
 Received: from [10.236.185.70] (10.180.168.240) by satlexmb09.amd.com
  (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 20 Feb
- 2026 11:10:05 -0800
-Message-ID: <74fc1f28-b77e-4b9c-b208-51babae9d18e@amd.com>
-Date: Fri, 20 Feb 2026 13:10:05 -0600
+ 2026 11:35:14 -0800
+Message-ID: <88d3975b-e79a-4d0a-8ca9-a67d54cdfe14@amd.com>
+Date: Fri, 20 Feb 2026 13:35:14 -0600
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -68,335 +68,136 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH 3/4] mm: convert compaction to zone lock wrappers
-To: Dmitry Ilvokhin <d@ilvokhin.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<kernel-team@meta.com>, Andrew Morton <akpm@linux-foundation.org>, "David
- Hildenbrand" <david@kernel.org>, Lorenzo Stoakes
-	<lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren
- Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	"Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, Brendan Jackman
-	<jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan
-	<ziy@nvidia.com>, Oscar Salvador <osalvador@suse.de>, Qi Zheng
-	<zhengqi.arch@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>, "Axel
- Rasmussen" <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, "Wei
- Xu" <weixugc@google.com>
-References: <cover.1770821420.git.d@ilvokhin.com>
- <3462b7fd26123c69ccdd121a894da14bbfafdd9d.1770821420.git.d@ilvokhin.com>
+Subject: Re: [PATCH] dax/kmem: account for partial dis-contiguous resource
+ upon removal
+To: Davidlohr Bueso <dave@stgolabs.net>
+CC: <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <vishal.l.verma@intel.com>,
+	<dave.jiang@intel.com>
+References: <20260210224609.150112-1-dave@stgolabs.net>
 Content-Language: en-US
-In-Reply-To: <3462b7fd26123c69ccdd121a894da14bbfafdd9d.1770821420.git.d@ilvokhin.com>
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+In-Reply-To: <20260210224609.150112-1-dave@stgolabs.net>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb09.amd.com
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb09.amd.com
  (10.181.42.218)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D9:EE_|DS5PPFFF21E27DC:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6e61f732-4893-40c9-f6b4-08de70b3a922
+X-MS-TrafficTypeDiagnostic: BN1PEPF00006000:EE_|SJ2PR12MB9242:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4b77df25-2523-4ca9-467a-08de70b72bf9
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|30052699003|82310400026|36860700013|376014|7416014|7053199007;
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Qjl0MWVPVUdweS8rQVhpNTgvcTljNFkwb1JnbktHV2Z1U0ZERHNKZG92bjZ5?=
- =?utf-8?B?ekU4K1ZIQVpDak9TUTNJWHlGZXJzY1RtcXdqTVpVZUhGdjFaRkVUUnFEQ0dl?=
- =?utf-8?B?Z29UZzdCWDJmNzZUdVZhcjFPa0VqOEF3VU9lUGRPajkzWHE1R01Hckd3T3dx?=
- =?utf-8?B?UXFsN0hTbWRRclRlZ2U5QzFOcTN6Q01EZk8wdURjcE5KdTZ2bFF6ZmxXcllu?=
- =?utf-8?B?STRFRnVMTkgzZWt0Q3hrZUozaG15cTl3YkErWmFSZDAwalBMbktLd1laYXg3?=
- =?utf-8?B?YitUYndaVisrUDY3MW1OdDNGSzdjbzBvYjl1Rmc4cTBSSzB1dFlpV0UwUUNG?=
- =?utf-8?B?Y3cvL0NiZGxTT2tmVWVicGEwOVZRQk5RMExOVnM3azk4NzU4RnVmVjVRTEw3?=
- =?utf-8?B?UHRsQUhsbUlrT1A1TStkNTlqQTVnV2YzR2N2OUJYUWR3RWFsTnJpRDNYa0VW?=
- =?utf-8?B?dHRNWkgzSmQvb0sxbnJmYmQ2dlE4d1dFbldrMWE0cnZQQlBFTndJQVlBVTh2?=
- =?utf-8?B?ZHRTRUlBek5YTU9LTy9qa0ZoZFlReXdCRjhRV20vUTlmby84YnB5UUZuWkZM?=
- =?utf-8?B?UXBvQjVNWDdQRkpuRUZsRkN6bEE3bFgvdzV1Njh5ejByazQ3Rk5LRnZLK2dS?=
- =?utf-8?B?OFBEMjBUVi9aSG4wdlJjQUkzSzcrZm5IbEFQY1FjWHh4WGNYanp3YWUrR0JS?=
- =?utf-8?B?aWpHZVNYczU4OFJCc2t0R2tSYW40c00rMVZwWkVLMW5XSTczL3JHdVZUZ2ZY?=
- =?utf-8?B?QmtYL21XVDVhQTRFSVpYbUk4TWNza2IzczhGS1p2aVBrdUYxd0JzMXlRMlZW?=
- =?utf-8?B?ckpIM1VVa1N1RTZlemV2aytkazFndjY5d3RvVU1acUIrQUE3V1JxYzRTRkw4?=
- =?utf-8?B?TEU2cE5iZUhZT3ZFS3pySHN0MjRmaDExbWxTdHhjWGpTQ1JoWjM0SEJkQkpl?=
- =?utf-8?B?R1Q5SFU1QnFPcUdVa3paWHYvd2Z3WkVhQVZ5djluMDhFaWxrS3kxcG9kdHVS?=
- =?utf-8?B?TEhBQUZmbzVKQUF1cjlIMWYrV0VRWENSeXZodmFPdzdWREk1TzNENk5CazMx?=
- =?utf-8?B?bWJyZFFiSmxacVUrbXRhM2FySmdqRDNsenVZN1JYT0pxMzRSaWtIWUI0VTFZ?=
- =?utf-8?B?b09XalVzU2RSVHo5NzZ5Z0RQdVZxd2JqQlI0OHdzclBiYlJFVHloLzJIcmVG?=
- =?utf-8?B?ZDFaNGRTaWtiaUdSS2tuTUZ0U0h6czJEYVZDeHJnMmRWbGhZNXUyeElCWmRs?=
- =?utf-8?B?aTBtZVpDR0JiRTBtNlRCVEtNN1dYWnVkb0lZMlNwU054NFQycU5lNHdYd1lE?=
- =?utf-8?B?MjZlTDk3MmM0aERMTk5lZDFrNS9XY3VrWkRxVjlNUHFNZ3Qxb0E4M3EvWmZ2?=
- =?utf-8?B?M0hvOC9VQ0w0MlRvdW5VN0JnMXo1b3NUVGUvZC9XbDQyTjdjYWdqeTdzSlVi?=
- =?utf-8?B?WEZOYUFqR0dsT1RSSXJsUzZ6RzNiM2hGcjYzTk9BZ2Z0ZEdsTGNQVjJhUnBs?=
- =?utf-8?B?YkdoSTRIeGFVSEhUVkV6Q3Avb244OG5ucXBpMWl4TjZUNmorcE92cExqenQr?=
- =?utf-8?B?RVlZSlVEME5hVEphdGJVbml5cFE4ME0xeUJRY041UHdTV2ZIanRKcGExZ291?=
- =?utf-8?B?UVpvMWxVMlhxU1ZYYjVpYjVNcTZBR2VJUm5rZ1dNSm5UMnhvYXNORFljUFc0?=
- =?utf-8?B?NFczc0JDSWhDSmViaTZNUitvQXh6VlV0VWhnUjZvVmZPWEY0dGY5NnlRdFhs?=
- =?utf-8?B?VzBkT2pKdzlDejQwYmxQZzdWbmlMOG5SWENCMzh3TEMzU2NBZmtMakpmY2kv?=
- =?utf-8?B?aDZDb3pOWDN3ZzBVR3lxNHhFZjYvcFRHOVoyMWNlTWNlMEY0YmRvcGZ0dXJH?=
- =?utf-8?B?RVcrdENOcmM1Ylp2c3djY1UrUy80QzArZnJIbDB0SGt1VDRBNkNIQTY4clB5?=
- =?utf-8?B?VnUyVkdrM1lwSnBYSnJnSGRLNTFCeVl1MTdPeXBsUkFzWVFTYlFkczkvOTUr?=
- =?utf-8?B?L3NpSnJMRE1YSjhESmZjSmJ0ZGxMWTgvUi9OY3RIeXRCN3IrUUdZaWZIREZ3?=
- =?utf-8?B?M1Zkc3d4S2lKOVBsWEkwTVd3YW4rTnZmMmZ1cWNUMWJWNEduYTdBS083VERa?=
- =?utf-8?B?K3RhYWhkSGg2aVJZd1FCcGRVeXg1Tzk5UVFUaXlCbmhaSjlzayt6V0d5OER1?=
- =?utf-8?B?WHdJNHlkWXoxcVRnN01kTGZ1OUpCMVlSWFVBckNOTWFLcVZKKzB2eUx6VTZi?=
- =?utf-8?B?R0gvRHNsYUJUTmk2MGp2NHRpWlNnPT0=?=
+	=?utf-8?B?VWV2UGdhVmN0VkowUjRvMGM0NGloK3RZcW1hTEhtMW5LZy9NWmxnWHorRnVL?=
+ =?utf-8?B?NGd5ZkVIR0w4MDBabWRmK0diWU4rMTg4OU43RlhBaCtaQ3l1cnRtZitPdjVm?=
+ =?utf-8?B?cFVrMjRkc3p4OVFGYzB5akpFcGNhZHo4N0NvQnVyejBBRmFxRzNxUTFJVXdl?=
+ =?utf-8?B?Z1VwR1BnZG9MeElzOS95dXRCRVN3L09YeGV3eFJta3NJTHdNTzRMVXJuSllG?=
+ =?utf-8?B?UkdVTEprbkQ1RWlyR3owSGRNUTVjMjZyV0pWRGJCQVRPR2M3MGdyUm5GcWlY?=
+ =?utf-8?B?WnVzZ2gvYkdJZHUvVDJFUzBmc2loblZRVU1nN0E1STV1bnhaSnJvbGdZUnJE?=
+ =?utf-8?B?aVBmWU05cnNBbWpoM0UrTDZQWXlHUEZzV3JyYm05emZvNTF2N094NE1hNkZp?=
+ =?utf-8?B?VWo2TnFRNHZFbzVRcFR6VGQrQTVTUEQ5Z0FxRlFtWGk1OWhsc3VYYUFwaHNN?=
+ =?utf-8?B?c1dDWWErSWV0dVhCNlZ6aUphbitlOVQ0T3hQZEpuZVplQm02L0wvQVZGZkVR?=
+ =?utf-8?B?VHA3L2V4djFqWi9NY0d4bWRZTjdmUmM2ZmVsaStFdkplRk40YnJ3YkJweXRr?=
+ =?utf-8?B?QythTTdXeUtMK3YyMEhBNzZ5TU9KVFV2RU0rN1lEcjBRVndEZUlLTi83aFo4?=
+ =?utf-8?B?eDZsWTdiWmk4eVY1bThWWFNKRTR5SFNBRThaT3YxNE1PRnIxVG1UWlFObU53?=
+ =?utf-8?B?Zk1QcnNOVjRJdzNyL0V1RVFUa1BudWw4bzNJMCtqL2g0UDFDK0luTzZSK3V3?=
+ =?utf-8?B?UjZhN2YzOE5od3hSNmYyei9kZUREUkhkdktmSDFHdk9aZW1RajdMNWR4MitI?=
+ =?utf-8?B?dld6MHJ5OTJjVlR3ZVBsOGJMZXBTenMvclZSZ0tNVllzYVBUQWdJWmZmd1kr?=
+ =?utf-8?B?d0NZVy9YN1krMGlmNHRUWStvMCtHdm9iVlRRSXNoa1pzc2NLQjBtbWdiTi8w?=
+ =?utf-8?B?TUY5eHRaYWVJdHV4OFdEVW9HZ1M2R0VKQWwwbysyb0F6U0dNRXRWc1NZZ1Rr?=
+ =?utf-8?B?YURSQkE5Wk9UUmtRWWltaVgvdzlXTGhMUFZzdldSRXJlMGdxeWZjZkhnT1I3?=
+ =?utf-8?B?TFR4SWtueXVZTWJ6YlkzajloM28xT2JFS0Y3OXRUZnNUSDlRNUk0S0hZZWt1?=
+ =?utf-8?B?QjZlR3hnUGE0Z0s4V3pXaU9zU1Y3ZVZEOUNhYVgwUXlwR3JiSUNDdHJFQTgz?=
+ =?utf-8?B?UE93blpXMzBSWVRFdlI1YjdsYjFxWE5XVXY0bzNCQVVzNkMzajB0end1RThP?=
+ =?utf-8?B?Vm5YaVdqYlFoVTdpcWRYQmVlVnlhbkhUbkZSeElzSkk1M0J5cXRpWDhlYUdM?=
+ =?utf-8?B?dDFuWDlRYlE4T1pDSVpDMWVNWnFLVEtHL1pqbklmQk5ld0loa3VScEFkcU5p?=
+ =?utf-8?B?am5OejRJSElHWlpXbFFHb3VwaWZqdG5scVgzMFlCVUtLazUyUXV0NWFBN2xT?=
+ =?utf-8?B?UVgrZnF3b2F3emcvMG9BY1poK0xiK3ZBUkNlL0lNbURTS1B1ci91UFIxNUto?=
+ =?utf-8?B?MUJkQ1pjMy9UWUFwUVhiL2lTczVkbExDQ3M3ZmFOTVk1cDdKNDNyd0RZcFVC?=
+ =?utf-8?B?Yy96ZlhIYm93Z1JUaDdueEFVT3oraUdJUzUzaGZ2dmVBdXJRMTV3cTdLTTF0?=
+ =?utf-8?B?c2FLdWpXaXQ0UHVTOWJJMGtlOFRUeFVodjA4VFhKalVDMHZCZW4zZ3l6ZWQ1?=
+ =?utf-8?B?SHRLMlBOa2o3S3ZFeUZqNWwyQWg5d1ErVDhOQ2tvREVJdVhKYlQ4amtNcmhW?=
+ =?utf-8?B?d2JEL1IzS3lhR0liOWVnbzYybWVHdjM4a1dDeFk5ekZyb0lLeVZWWFVBRmwv?=
+ =?utf-8?B?dklxaUlsUVI3TVVTMnE2djBmdnFFRnQ3V1NnaGx1K0VDdnFTTnlabWFOZElG?=
+ =?utf-8?B?UThMblRkdk5kOXBmZDJpdWZxUFg1MGNzZk90ei82ME5DaTBhbjFnNFNDZS96?=
+ =?utf-8?B?NzdjNSt1MmtKL2N1OVlNbFFUcHFEYmFVQXlnV0R0eGFmeHBUaGwvOVh6RjJ0?=
+ =?utf-8?B?YVlTNFZFb1RPMlVobndJNm5HcERMMEsyS2VxZVZHUm1qM3R6dG5aK3AwYzRU?=
+ =?utf-8?B?c2pZZWNtcElpMWt5Uy9KTWl2RzBYRnVDWCszSjJvT1ljcVh5Rk5wNWpuVG90?=
+ =?utf-8?B?K052cStJQ1NmQUNyZU8zdlhVbHVTYnV0Q3llcDBxVHN4TWNoL3FIeldyN2Ex?=
+ =?utf-8?B?a3VFN2liajhqa3cwL2RDdXJXT3p4VEFTUkpTai9GaVZ6akZqTDhLQ1Y0V1Jm?=
+ =?utf-8?B?SUcvcEpWMVgxYmlpUU5VVklqSFZnPT0=?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(30052699003)(82310400026)(36860700013)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	CdETpvuae9MsLoiISeMTrLS+2N+IXfSHkw+dS//XJ4FPtP3tXTKVltKMHU4c1k218KHGyLMf0ydQO0J8/0pnq8wBBUwhrSnnHPJux0/jpnyTnP5SiRmGkSFYSdGpfmyaym4mYmwjyOFCNlLHdnGyZOBYoqRViekwRzN+WE9Qrb+4a2uEokRAnM902gq3IGWbUTCQWRoSxFdknSGkzM3T7v7dV3WEqiE2098lM2FhQ7YNE+I6bHSEKtQTJYLfDSKTR8bDd+OT7JYfrUEcf9Q0+BYdUErZHre5xK/Gb8D5CtWqdPWTdd1xm5hOKudPoAIft4WWDs9sY0LXJ36NG97Qz4QhJ6w0yf/aJNiZwoG9AWwmphHD1a0MgQ2GUPG1GE/xcuVKkXniFeubYsYj2l9X1+F6hDHRxgrrJa3O+QAkkEJbgP3NQw028kyiTYv2SOLt
+	hKIdHGk6xxFDbKq0wmafh3fJ2AaOayMdP6kuKugCIeFCgMwoJyZ8HSeWwA/2Hfu/05UlhQRep/d2bJ2h2ZGt32fJmKWcMHwmZIMIkJcgqeXFTZ7PGbnumjT2IrbP+j41mdtA+5lP6oyksSzdKU+E9X3dvB5xMfB1UmR9yohdMaOI4OWpsFKCFbuDr9QeCALY6ix1dkvOlEA39tHZSRW95M2jzXJK0DamOiDsZRJLExZ3xdaX51mqcsHoU8v2IwwzzdY0N+7KkV5vEmJjVdT+FCQ57mjrfX5+G4rvk5zIVDqoEy79ZZqaaO+8RV1rJIbtw4I63NkW81J+oBWMVdQbyUqutCl/zFF0GrbO4tn7w9Wmh7RAU8ch+yXXgugUouRnABnyaSL4xMgkH56LXKMLcR9/KcePwwpZ8M9hp+soRzZhc/0GT/G38tG8X5r4NG4X
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2026 19:10:07.1180
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2026 19:35:15.1816
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e61f732-4893-40c9-f6b4-08de70b3a922
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b77df25-2523-4ca9-467a-08de70b72bf9
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023D9.namprd21.prod.outlook.com
+	BN1PEPF00006000.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPFFF21E27DC
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9242
 
-On 2/11/2026 9:22 AM, Dmitry Ilvokhin wrote:
-> Compaction uses compact_lock_irqsave(), which currently operates
-> on a raw spinlock_t pointer so that it can be used for both
-> zone->lock and lru_lock. Since zone lock operations are now wrapped,
-> compact_lock_irqsave() can no longer operate directly on a spinlock_t
-> when the lock belongs to a zone.
+On 2/10/2026 4:46 PM, Davidlohr Bueso wrote:
+> When dev_dax_kmem_probe() partially succeeds (at least one range
+> is mapped) but a subsequent range fails request_mem_region()
+> or add_memory_driver_managed(), the probe silently continues,
+> ultimately returning success.
+
+I would mention the range resource gets NULL'ed out here. I think it would
+make the below easier to follow.
+
 > 
-> Introduce struct compact_lock to abstract the underlying lock type. The
-> structure carries a lock type enum and a union holding either a zone
-> pointer or a raw spinlock_t pointer, and dispatches to the appropriate
-> lock/unlock helper.
+> However, dev_dax_kmem_remove() iterates care free on all ranges
+> where that remove_memory() returns 0 for "never added memory";
+> as walk_memory_blocks() will never see it in the memory_blocks
+> xarray. So ultimately passing a nil pointer to remove_resource(),
+> which can go boom.
+
+Bit confusing imo. Maybe something like:
+
+"dev_dax_kmem_remove() iterates over all dax_device ranges regardless of if the
+underlying resource exists. When remove_memory() is called later it returns 0 because
+the memory was never added which causes dev_dax_kmem_remove() to incorrectly assume the
+(nonexistent) resource can be removed and attempts cleanup on a NULL pointer.
+
+As for the actual fix:
+Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+
 > 
-> No functional change intended.
+> Fix this by skipping these ranges altogether, with the consideration
+> that these are considered success, such that the cleanup is still
+> reached when all actually-added ranges are successfully removed.
 > 
-> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> Fixes: 60e93dc097f7 ("device-dax: add dis-contiguous resource support")
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 > ---
->  mm/compaction.c | 108 +++++++++++++++++++++++++++++++++++++++---------
->  1 file changed, 89 insertions(+), 19 deletions(-)
+>  drivers/dax/kmem.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index 1e8f8eca318c..1b000d2b95b2 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -24,6 +24,7 @@
->  #include <linux/page_owner.h>
->  #include <linux/psi.h>
->  #include <linux/cpuset.h>
-> +#include <linux/zone_lock.h>
->  #include "internal.h"
->  
->  #ifdef CONFIG_COMPACTION
-> @@ -493,6 +494,65 @@ static bool test_and_set_skip(struct compact_control *cc, struct page *page)
->  }
->  #endif /* CONFIG_COMPACTION */
->  
-> +enum compact_lock_type {
-> +	COMPACT_LOCK_ZONE,
-> +	COMPACT_LOCK_RAW_SPINLOCK,
-> +};
-> +
-> +struct compact_lock {
-> +	enum compact_lock_type type;
-> +	union {
-> +		struct zone *zone;
-> +		spinlock_t *lock; /* Reference to lru lock */
-> +	};
-> +};
-> +
-> +static bool compact_do_zone_trylock_irqsave(struct zone *zone,
-> +					    unsigned long *flags)
-> +{
-> +	return zone_trylock_irqsave(zone, *flags);
-> +}
-> +
-> +static bool compact_do_raw_trylock_irqsave(spinlock_t *lock,
-> +					   unsigned long *flags)
-> +{
-> +	return spin_trylock_irqsave(lock, *flags);
-> +}
-> +
-> +static bool compact_do_trylock_irqsave(struct compact_lock lock,
-> +				       unsigned long *flags)
-> +{
-> +	if (lock.type == COMPACT_LOCK_ZONE)
-> +		return compact_do_zone_trylock_irqsave(lock.zone, flags);
-> +
-> +	return compact_do_raw_trylock_irqsave(lock.lock, flags);
-> +}
-
-Nit: You could remove the helpers above and just do the calls directly in this function, though
-it would remove the parity with the compact helpers. compact_do_lock_irqsave() helpers can stay
-since they have the __acquires() annotations.
-> +
-> +static void compact_do_zone_lock_irqsave(struct zone *zone,
-> +					 unsigned long *flags)
-> +__acquires(zone->lock)
-> +{
-> +	zone_lock_irqsave(zone, *flags);
-> +}
-> +
-> +static void compact_do_raw_lock_irqsave(spinlock_t *lock,
-> +					unsigned long *flags)
-> +__acquires(lock)
-> +{
-> +	spin_lock_irqsave(lock, *flags);
-> +}
-> +
-> +static void compact_do_lock_irqsave(struct compact_lock lock,
-> +				    unsigned long *flags)
-> +{
-> +	if (lock.type == COMPACT_LOCK_ZONE) {
-> +		compact_do_zone_lock_irqsave(lock.zone, flags);
-> +		return;
-> +	}
-> +
-> +	return compact_do_raw_lock_irqsave(lock.lock, flags);
-
-You don't need the return statement here (and you shouldn't be returning a value at all).
-
-It may be cleaner to just do an if-else statement here instead.
-
-> +}
-> +
->  /*
->   * Compaction requires the taking of some coarse locks that are potentially
->   * very heavily contended. For async compaction, trylock and record if the
-> @@ -502,19 +562,19 @@ static bool test_and_set_skip(struct compact_control *cc, struct page *page)
->   *
->   * Always returns true which makes it easier to track lock state in callers.
->   */
-> -static bool compact_lock_irqsave(spinlock_t *lock, unsigned long *flags,
-> -						struct compact_control *cc)
-> -	__acquires(lock)
-> +static bool compact_lock_irqsave(struct compact_lock lock,
-> +				 unsigned long *flags,
-> +				 struct compact_control *cc)
->  {
->  	/* Track if the lock is contended in async mode */
->  	if (cc->mode == MIGRATE_ASYNC && !cc->contended) {
-> -		if (spin_trylock_irqsave(lock, *flags))
-> +		if (compact_do_trylock_irqsave(lock, flags))
->  			return true;
->  
->  		cc->contended = true;
->  	}
->  
-> -	spin_lock_irqsave(lock, *flags);
-> +	compact_do_lock_irqsave(lock, flags);
->  	return true;
->  }
->  
-> @@ -530,11 +590,13 @@ static bool compact_lock_irqsave(spinlock_t *lock, unsigned long *flags,
->   * Returns true if compaction should abort due to fatal signal pending.
->   * Returns false when compaction can continue.
->   */
-> -static bool compact_unlock_should_abort(spinlock_t *lock,
-> -		unsigned long flags, bool *locked, struct compact_control *cc)
-> +static bool compact_unlock_should_abort(struct zone *zone,
-> +					unsigned long flags,
-> +					bool *locked,
-> +					struct compact_control *cc)
->  {
->  	if (*locked) {
-> -		spin_unlock_irqrestore(lock, flags);
-> +		zone_unlock_irqrestore(zone, flags);
-
-I would move this (and other wrapper changes below that don't use compact_*) to the last patch. I understand you
-didn't change it due to location but I would argue it isn't really relevant to what's being added in this patch
-and fits better in the last.
-
->  		*locked = false;
->  	}
->  
-> @@ -582,9 +644,8 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
->  		 * contention, to give chance to IRQs. Abort if fatal signal
->  		 * pending.
->  		 */
-> -		if (!(blockpfn % COMPACT_CLUSTER_MAX)
-> -		    && compact_unlock_should_abort(&cc->zone->lock, flags,
-> -								&locked, cc))
-> +		if (!(blockpfn % COMPACT_CLUSTER_MAX) &&
-> +		    compact_unlock_should_abort(cc->zone, flags, &locked, cc))
->  			break;
->  
->  		nr_scanned++;
-> @@ -613,8 +674,12 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
->  
->  		/* If we already hold the lock, we can skip some rechecking. */
->  		if (!locked) {
-> -			locked = compact_lock_irqsave(&cc->zone->lock,
-> -								&flags, cc);
-> +			struct compact_lock zol = {
-> +				.type = COMPACT_LOCK_ZONE,
-> +				.zone = cc->zone,
-> +			};
-> +
-> +			locked = compact_lock_irqsave(zol, &flags, cc);
->  
->  			/* Recheck this is a buddy page under lock */
->  			if (!PageBuddy(page))
-> @@ -649,7 +714,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
->  	}
->  
->  	if (locked)
-> -		spin_unlock_irqrestore(&cc->zone->lock, flags);
-> +		zone_unlock_irqrestore(cc->zone, flags);
->  
->  	/*
->  	 * Be careful to not go outside of the pageblock.
-> @@ -1157,10 +1222,15 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
->  
->  		/* If we already hold the lock, we can skip some rechecking */
->  		if (lruvec != locked) {
-> +			struct compact_lock zol = {
-> +				.type = COMPACT_LOCK_RAW_SPINLOCK,
-> +				.lock = &lruvec->lru_lock,
-> +			};
-> +
->  			if (locked)
->  				unlock_page_lruvec_irqrestore(locked, flags);
->  
-> -			compact_lock_irqsave(&lruvec->lru_lock, &flags, cc);
-> +			compact_lock_irqsave(zol, &flags, cc);
->  			locked = lruvec;
->  
->  			lruvec_memcg_debug(lruvec, folio);
-> @@ -1555,7 +1625,7 @@ static void fast_isolate_freepages(struct compact_control *cc)
->  		if (!area->nr_free)
+> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> index c036e4d0b610..edd62e68ffb7 100644
+> --- a/drivers/dax/kmem.c
+> +++ b/drivers/dax/kmem.c
+> @@ -227,6 +227,12 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
+>  		if (rc)
 >  			continue;
 >  
-> -		spin_lock_irqsave(&cc->zone->lock, flags);
-> +		zone_lock_irqsave(cc->zone, flags);
->  		freelist = &area->free_list[MIGRATE_MOVABLE];
->  		list_for_each_entry_reverse(freepage, freelist, buddy_list) {
->  			unsigned long pfn;
-> @@ -1614,7 +1684,7 @@ static void fast_isolate_freepages(struct compact_control *cc)
->  			}
->  		}
->  
-> -		spin_unlock_irqrestore(&cc->zone->lock, flags);
-> +		zone_unlock_irqrestore(cc->zone, flags);
->  
->  		/* Skip fast search if enough freepages isolated */
->  		if (cc->nr_freepages >= cc->nr_migratepages)
-> @@ -1988,7 +2058,7 @@ static unsigned long fast_find_migrateblock(struct compact_control *cc)
->  		if (!area->nr_free)
->  			continue;
->  
-> -		spin_lock_irqsave(&cc->zone->lock, flags);
-> +		zone_lock_irqsave(cc->zone, flags);
->  		freelist = &area->free_list[MIGRATE_MOVABLE];
->  		list_for_each_entry(freepage, freelist, buddy_list) {
->  			unsigned long free_pfn;
-> @@ -2021,7 +2091,7 @@ static unsigned long fast_find_migrateblock(struct compact_control *cc)
->  				break;
->  			}
->  		}
-> -		spin_unlock_irqrestore(&cc->zone->lock, flags);
-> +		zone_unlock_irqrestore(cc->zone, flags);
->  	}
->  
->  	cc->total_migrate_scanned += nr_scanned;
+> +		/* range was never added during probe */
+> +		if (!data->res[i]) {
+> +			success++;
+> +			continue;
+> +		}
+> +
+>  		rc = remove_memory(range.start, range_len(&range));
+>  		if (rc == 0) {
+>  			remove_resource(data->res[i]);
 
