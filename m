@@ -1,225 +1,125 @@
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012063.outbound.protection.outlook.com [52.101.48.63])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE81946A;
-	Fri, 20 Feb 2026 21:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771622383; cv=fail; b=Kl//jGxury6zJhsO9wLDY8TMchwb5nDIlNkpeIQHnPxDg7I75jpqBUtOhlu99Fa+/Qv4KQBeFqQRMA4JMh8dnbRzV8HoVwIOSbcyIWjOP9caDsdcpttJpIpzB7vQPiSzws19xbqU4zm9xWp75HEbp2A+OGqNPpkXIMG5KEciHwo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771622383; c=relaxed/simple;
-	bh=fDair2He7yBX4uKAx24enNDWTTM04Yafx5hFXHkN4Dk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=tHmmBZIDOO2ZGP1vC3vH+Jn9TdGLP2FdTEzNR7OwJoMOI3NT4LzIKpZNsoKkmfRdipzgcV+1MfBODG5tLrCj9Jqqcy99jqH4oMUdvG25VSU0CHBIOK3vutH52CYNdv85ftcRbCddoUjplEC1iIE5Egy7edsPCj47chhQUNBgPgo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3nffT8d6; arc=fail smtp.client-ip=52.101.48.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E5E1DF755;
+	Fri, 20 Feb 2026 21:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771622491; cv=none; b=Tp5iZII70wSoUisbZ1MVNLTl977YpM4C0lAiyqGj4V6NPLz2kxO9RRtHUz7dYSdnLJQq5C8CrRGhSVCzE7NJlQNkWvXirshOFIb3y0uK38NR4Re6YixAydDVPsgDEpHCJuhs0lXTE0Sg7VT4QqaK/OAggkm5POwolBw33CUz5HQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771622491; c=relaxed/simple;
+	bh=bUkrBcum9rV45ttLKW3UY8qSv1nhE/clRvq2R8oa9Oc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GHvuhN0VqYe3fkcm0OxwF0L7M6TToe7zo3AWF7xJ5JVdqE215CIJIHjFl+gp9iseaNQCTgvOPXj+B62sG1+S0VmJSH+ULJDKoxZMxQTMUjmzrnloKViMCwyiVaWuqae6Gfk3HwgmpkzE6lpyowflRO/Zbz3YDeCO+mozFJfEr8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WcT/lruS; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3nffT8d6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WcW6gB/kP9AMvEeaQSbRnnNJGZfPdmjpyyW6vLQCEKiGuZHLmYoZXFTRFB4TR8ZEnhDnh7XpeMa9t7NswsL87MnW5B8DrVrAtGXwalEByqM0Vhv+fd+U9E9m2xvh6JLGh1NL/C6hqB/FR4+5j6Ui568XwhukDcxNTJgj2NQvRVrrRf/yE1XVf1S8Bu3km4k6poAQqyAuqiIcqPKz1dp9kiAlFPD6It+m2jA+SZzhkGSgbrbzSezDBsA8rGa7frtYK9rGB23z223Zb8Wti2i2cI8pqdgN0PrME0Rkh0Fvto0g3gsBZFoMAMZj24JD9MJ8vVtH2Wd/lFTMaNIddjjTTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G7lVpws8etTIa3aKwNpO0q93unw16rOLPKj+5HjlSHE=;
- b=hkNr3NfjMoMXd/jfOVeQHW9RiF4LEEIBZVDw/kAnSwdkG4lT7O5ynQ4zT2skzed9J59rpdwpiZiPJMVNJ9KgpOhkp2wkne619zDWvy6s5Cv4mdbJ1KgKYR8cvRDw/H0fVD5cONKK1OPhn7/tTSnR9+Q6iV+6vsxZBo6Fmh5zitZ914tn9a+LQu1W2xMqIl9SHpU7+XNRf8/KG11ehhY3+/25a/wz+4XHqBw20Jm6mLRExg3foYLtOVNAcp5OD2Ov4xwO973NTvVYwgduamXLWEPqgwph/08luPR4+UN9/JyGv7uaajtovNQZVLK1CuzfM4xvXVfDIe/ijt12ukbBbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G7lVpws8etTIa3aKwNpO0q93unw16rOLPKj+5HjlSHE=;
- b=3nffT8d6P1TQRrO55hNx7j/bfqLFs4ylPSlV17X0yKQb702b7qKdfXC+erRmGjSj+Md0ja4Hui8UMAnxCP3Bglk8LpILOtqTqtg1C4rzMC5wR9ViaMRLo8qSRY1eYx5S6UdnnfJo4Ij8+B1al2coSH6lTX6TBedEB8gnyaRsVTs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from LV8PR12MB9714.namprd12.prod.outlook.com (2603:10b6:408:2a0::5)
- by IA1PR12MB6259.namprd12.prod.outlook.com (2603:10b6:208:3e5::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.17; Fri, 20 Feb
- 2026 21:19:36 +0000
-Received: from LV8PR12MB9714.namprd12.prod.outlook.com
- ([fe80::8c9f:3a5b:974b:99c6]) by LV8PR12MB9714.namprd12.prod.outlook.com
- ([fe80::8c9f:3a5b:974b:99c6%6]) with mapi id 15.20.9632.015; Fri, 20 Feb 2026
- 21:19:36 +0000
-Message-ID: <0b0eb8bb-44a5-422d-8d5b-070fb039ed68@amd.com>
-Date: Fri, 20 Feb 2026 13:19:32 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/9] dax/hmem, cxl: Coordinate Soft Reserved handling
- with CXL and HMEM
-To: Tomasz Wolski <tomasz.wolski@fujitsu.com>,
- smita.koralahallichannabasappa@amd.com
-Cc: alison.schofield@intel.com, ardb@kernel.org, benjamin.cheatham@amd.com,
- bp@alien8.de, dan.j.williams@intel.com, dave.jiang@intel.com,
- dave@stgolabs.net, gregkh@linuxfoundation.org, huang.ying.caritas@gmail.com,
- ira.weiny@intel.com, jack@suse.cz, jeff.johnson@oss.qualcomm.com,
- jonathan.cameron@huawei.com, len.brown@intel.com, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, lizhijian@fujitsu.com, ming.li@zohomail.com,
- nathan.fontenot@amd.com, nvdimm@lists.linux.dev, pavel@kernel.org,
- peterz@infradead.org, rafael@kernel.org, rrichter@amd.com,
- terry.bowman@amd.com, vishal.l.verma@intel.com, willy@infradead.org,
- yaoxt.fnst@fujitsu.com, yazen.ghannam@amd.com
-References: <20260210064501.157591-1-Smita.KoralahalliChannabasappa@amd.com>
- <20260220094510.17955-1-tomasz.wolski@fujitsu.com>
-Content-Language: en-US
-From: "Koralahalli Channabasappa, Smita" <skoralah@amd.com>
-In-Reply-To: <20260220094510.17955-1-tomasz.wolski@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0342.namprd03.prod.outlook.com
- (2603:10b6:a03:39c::17) To LV8PR12MB9714.namprd12.prod.outlook.com
- (2603:10b6:408:2a0::5)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WcT/lruS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771622490; x=1803158490;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=bUkrBcum9rV45ttLKW3UY8qSv1nhE/clRvq2R8oa9Oc=;
+  b=WcT/lruSYyHvKyk8gC8+0OgTRJkT/F1vt7BlcSIkDmLHfNL3VPpAXpm7
+   +H546yfLDkmSzB8EBTpdv6mZNx5VjK6eAnIhe3oJYDad1z/Ov1+CkO4PI
+   K7otLIunQP39MSpZw/odRgkCb0snrpS0eF/0KjBQZtyLjXoRjQYEP9U1I
+   +jhfDTSCkFuyuiYwwqy53HUmhXc3NixX8GhMNtu/x10bsdX9JP6O/dhMG
+   BcxHrU/KqpJ3RrPeFDkFO0r6kVWb8gVsa16K/nsLwKg2ddCHczPD8ZNTd
+   EKMcjoAzLlqxfAOmGhgIAuT4IjgYFoYlc8eFcVCmCkOORLBI3ga0kT62v
+   g==;
+X-CSE-ConnectionGUID: FfenKU8IRxmYl7PLi6aslQ==
+X-CSE-MsgGUID: 4BJc7BOTSQihuvDSvVwoEw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11707"; a="84172600"
+X-IronPort-AV: E=Sophos;i="6.21,302,1763452800"; 
+   d="scan'208";a="84172600"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2026 13:21:29 -0800
+X-CSE-ConnectionGUID: ht+gyMkFT3+BLn3Humo8lQ==
+X-CSE-MsgGUID: ZUPap9+FSeW6ePlC5CoJYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,302,1763452800"; 
+   d="scan'208";a="219499078"
+Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.110.116]) ([10.125.110.116])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2026 13:21:28 -0800
+Message-ID: <835de7c9-a64f-4aaa-95e0-b91c2ae5885e@intel.com>
+Date: Fri, 20 Feb 2026 14:21:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9714:EE_|IA1PR12MB6259:EE_
-X-MS-Office365-Filtering-Correlation-Id: f5a0fe4e-ab9f-4763-22af-08de70c5bfcf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?M0t3dVFrWXYrMkEzWlEyMTFBSmRsUXNvWnRROTVMSHVYdXpQRjF2Z2pNL243?=
- =?utf-8?B?WFlSei82OXhyVFhuYWhLZURzek14cnEvcXNvRmhnMTljeEJwMEl3VGlMM09t?=
- =?utf-8?B?YjFVQ2NIMGtmQStOQ09jd2hFakxPQitwMG9xSFBNdHVKQmxlSUZVL1NBZXlp?=
- =?utf-8?B?UDlaWms5Sml1UnBHSFRPclIvVFAvWnpoZk5zS3FYbDRFNXNCUlpqT3hLdjVZ?=
- =?utf-8?B?ZXlwaFdvYXc2d0ZVeGZFQ0tmWjVlZkllUmo2M1kxWit3RE1ndUV4SWF4YmJa?=
- =?utf-8?B?a0ZmQlN5MkdjV0R3RER3M2R3NkNzZWdEbHpNSzg1WkJRSkt3N1BZTnRTS05h?=
- =?utf-8?B?QnVjOWI4MnVTNlBGd0tObkdSQXJsS0FCU0VMZ2hUK1h0L3habGRmMVNyWDlp?=
- =?utf-8?B?bnZYd0k5Z0JKZWRCa2puUGFzT1ZVN3NrVVRhU3F4aE9PU2F5Zm14L1ZnSXVh?=
- =?utf-8?B?M3JVdUw4aGhXOEhjYUVKNUhodFpSR2poKzJzd3JIdlZ0eWRnakovQmtmdlBH?=
- =?utf-8?B?MXIwcVVpUHZ4czVocXhPN0F5R3JuR1ZpbEM5WUJiSXJUbHBnSGl3WGM1TnlZ?=
- =?utf-8?B?Y0pXQmhaOEY3V3FCUFdhWEp5VnhIeXFoWXc3aE11UEY0YXdhVjloblJjekUy?=
- =?utf-8?B?SzVGcjVUMjFzU3RjRGxXbDdDOExnS3VOL0lTVXU2YVJ5YWdlcy9IQmd2Sm9z?=
- =?utf-8?B?WUJIaG5BV2RpZUlOKzVWZEZyREY5SHhaamFzSkpmQ2drc0sxbTZiZVo1UzVU?=
- =?utf-8?B?bEMwTkpIRXF6MzR4MDY5cjZZdUsrbEFYdktDK0l4Z3RseFZ1NVc4QlczSStG?=
- =?utf-8?B?Ym1LZk9neFViWnlPS0JsS0FxZitCL1VmTDFuQVJCVER4SDVDOEpwS3FtbkRn?=
- =?utf-8?B?VFR2dTFTZk5XenNLVzE2N3duZnkyLzd2Qm81TEpva1IvL0dvYjB5YjlQNUhD?=
- =?utf-8?B?bUVFakhjZ05NeGxyckp1TGRQVzB0azE0YzNieElBSTZCSXkzT1ljWWZnV253?=
- =?utf-8?B?cGFRQ2ZteXhNY3kyeHRXaGpmVmRrWHNCemxaZVRIYkQ4Sy9MTTRDbytEMmhv?=
- =?utf-8?B?SSs1b3RyZHRqdjdNM09Gc1RYeW92Zlk4bWg2SkVOVGtHc2VTL2prWW5wc1Zo?=
- =?utf-8?B?V0pMUk9qU3BxbFhMZnpDUTh5Wnh4RDlzMlJ6MFFnR0xzenFnU0FZcFFMckFN?=
- =?utf-8?B?KzE2S0QxNEtXQURhZWNRbFRDcUZqcjl1N29aSmk1dlNqM3hzU0o3ZTlnVFpz?=
- =?utf-8?B?S1hPT0svQWlnbGVGdlB4ZmhUQWZHRldza2NPd1Y5YU9hSFhyUE80aVB4b3NS?=
- =?utf-8?B?SHpWait0L0ZLelA5bWYvZlUrT3ovQk5KMS9GbU9DWkFZb3FIY3ZWcTk3Mk1v?=
- =?utf-8?B?eG9keVNqVTl1RTRtQ2ZVRzRXcU05TmQ5S09zMzJtY0JuVXp5d1FSaXVVZUxx?=
- =?utf-8?B?ZWNOTWVlMGhiazZvYzYvRjlaL2pnLzBCMmxyUEdKRVZBVEUrR2Y4VDcwUE55?=
- =?utf-8?B?dmZFdFdWSHM5KzBGeFNER2JEUWJEMkxDNUNtOHNUZzQ1WkFPUnlpWHpaZlFw?=
- =?utf-8?B?M2F3dFJvd1V1VytJdTl4Unl4K1dFOUI1dDUwd0JPOHNsNVhXOWY4cml0ZXFu?=
- =?utf-8?B?QmdXMC9pWUcyL1MyT2ovUHJ2UXJOdFVvNVYwbXJNanhmMWY5NnIzSDN5V05a?=
- =?utf-8?B?L0tUSW5aSmEweDl3RTMvMWR3R3FvR3FBdU41Y1kvZ1ZPTklkNVdtTE9VMkVG?=
- =?utf-8?B?YStHZVBTRVMyczl4MGdGZy9WdmY0UnRjMGMxbUNZUTFpOE9RdlFxNW5iUnV4?=
- =?utf-8?B?Y1FwM0prbFBka3pNMnN2RlRDTEhwZzZFd25kUkptUGlPY1dvYU5iL084Ky9Y?=
- =?utf-8?B?L2gwcW9qdHY1dlp1VmYvcmZUMGhVWVd4b3AvVWQyNS93ODJ2NjM5SDRWMkg3?=
- =?utf-8?B?ZnNHUkVoS2EzNzRJY0thWFZBSmlBZDRkTVVnK21JaGtEbEtlNzBSbExBN040?=
- =?utf-8?B?Y0hSUjlpVjBrSjRqTUFyaThNMFZDN3FXQXpTMk9EV2xadGRKQjhRNXZJVHF4?=
- =?utf-8?B?T1kyTjZUVEpIeFFEYnE5RnlPUEVheHRQa2FxUUFzcnNBV1F3RVdLWXNScWpu?=
- =?utf-8?Q?UuiI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9714.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NjcrdU5RQkhyejB1QnhBbDJlZXJ2dzhhckFSYjJoK0hXWnB5UG1KUnNyVWd3?=
- =?utf-8?B?OUtxekhJZ3JvNTdidDgyUzV3eXlVcE8wN0d6SXo5OUNOOGp3N25vSExRRUZ4?=
- =?utf-8?B?TGdFSkFkRUFWQXViS0FFZXNyckppbWw4WlZiaDJqaHVOMGQ3bHJIeXRMNW93?=
- =?utf-8?B?SWREUDQydUdNZ0dGd05UQ1RGWGNPUHhQb0hDaWpOcGh2UzMzM3pPdzNDcHZN?=
- =?utf-8?B?SWdTYm8xMUI0bHJYUllqNks2cTc1VU9EMGx5K3V4ZVFwMXk5amZpOHJHalVQ?=
- =?utf-8?B?N1BxK1ZXRGZiWnRXci9Vc09DL2tINFZwbjNpRm9aNEJPSUVFOThpNXF4T05z?=
- =?utf-8?B?U2FBZGpSUzl1eUNhQ1BzaHZYQlVScWcxbGdLeWdKT0FGVjZYaUZiL2tvandH?=
- =?utf-8?B?aHZwN2crL1VpREVESkhkTlQzcWx3UStTbVM3VUREUm85M2JZNFB3S3pIaE9r?=
- =?utf-8?B?eHNVNkZycEJobmtzSURTajV0L3FSRDhXclBCVjlGL3d2M01paU83TTFiRCtE?=
- =?utf-8?B?WXNiQ0phUytPb1dKOEsrNVJhZ1ZKb1laRXgxYmVzeVFzellPL3k5TGFrQlNW?=
- =?utf-8?B?SzE1RGZRSU52T1U5Kzh5YU9pcW54T0kwYmJKTlJlV2xPclM0QTlNcWhrSU9j?=
- =?utf-8?B?cHVsbE5NM1FQcFQ4VzhTSE5WTGZ5WEFMUFJGZzlEbzlTR0ZUVEFGbERvRFcy?=
- =?utf-8?B?Ti9CbTdOY2cwZjlnSFRnMjU4cG1HT0VqbzI5Q0VsUXpyWlJIeDF1QlVSWUhq?=
- =?utf-8?B?ektZWEovZE5ubkpUS1ErdS9qeHR5cmZ3eUVUZGszY3pyb3RvL1Z4a2RPbE9x?=
- =?utf-8?B?WXBsc1dDRnR4Ri8yZGVIM0s4KzZCeHdJd1hpVFpwd3hoYktOV2FNUXArZmZm?=
- =?utf-8?B?TmFDOUp2cTYvQ3Z2R0h6ank4VmdCK1g0b3YwT2RBTmlxL3lPcFNyYUdJRVNn?=
- =?utf-8?B?cFJGZ2g4bytwRmdQTCthUnVtaGFXQ2NRV3lrbHlNOUZsZ3UyQm96RTc5SkRY?=
- =?utf-8?B?SVQwY21CLzQ5RXVxTWZjQ3lWZFgwKy9nZS96S1Q4cVBJZXRqUiswcXJrbmlD?=
- =?utf-8?B?Rm9sbmFNQnBXS2VselVUUENobWJmckdoem9oSEVuOEVTSXIycUFSV1hNMVJa?=
- =?utf-8?B?cEJIVVNoZXY1MmNJcUhoWUhrVjNMS3NqMVAzUjRqWFRFOFBLd2lzeFBOUmRF?=
- =?utf-8?B?dXhSTldBdWx4Y2VSd0N5QjlYbDVoYTBweW1kZE1SRWN4d2RZbnk0YWpzaVcx?=
- =?utf-8?B?TjlaRjdiVjZPMmw2dE1rMDVFcFFYbTRhNkg5ZFBkdTJsL3BpbjROV3YvbDFt?=
- =?utf-8?B?VHZOS2hOOVlGd0MvenViMGk2d2RMenJBOEZVd0lUSnRJank3Kzk0aEhubTNj?=
- =?utf-8?B?VEdnaUh1cWIzVi95OUJlNWU1MFRDV0M3N3N6NWpHdWlmZVFOWC9xZGowNWJ1?=
- =?utf-8?B?OUJLREFhcm94U29uZGRja0lOK2NZU3VuNWhaM1BGeE9EUlZVMjJzZWpMem84?=
- =?utf-8?B?WlhYTDVRUjlKZ0tmUXBtbUp5Wk5XU0J1YlBOTGlIOGNGS3lPSlUzT05sQXQv?=
- =?utf-8?B?Y2dIWUFpUER4UHc4ck1Ja1FYT0cyTENYeDl6aHQyWWlZeE55ZE9nS29oM1Jk?=
- =?utf-8?B?OG8wRGxmM1lMZVJUQnA0LzJMSG1wai9JbitJaWxwaXRFU2RzYk1tZkRPOEZY?=
- =?utf-8?B?MkszSDYxendzMStDeWhkc1VxK2JyS1VJaWxjamtrdjBmSk1naTZMWjRSQ1Rv?=
- =?utf-8?B?TmFkQzZlUWhxM202WVdaUnJwLy9RSFVJVUtTOHFGcTJCbW9URis5RDZQaHlP?=
- =?utf-8?B?aDdTTmpBU2QxTUFJT3dyVVV6NktFRDJndXJTRVJ4Um5IQTFCVm5BNnY5b3pa?=
- =?utf-8?B?V05TQmJSRFVScHlKWFZNa1MrVkZJVzFxUkhpcktKOGJKclFEOURXcHl5OXZy?=
- =?utf-8?B?UFZteXNKbGtTYnRtUFk3YzVPbDBUcWgyeWZraVJXZTJRMWEwM1lJMk9mbDdV?=
- =?utf-8?B?L2JOMTZqaDY3QnZMTG5jOUlGQmRoc2VxVVZXRnJyVnlzQnBONExXckI1R2Vn?=
- =?utf-8?B?V28vS3NobzJlSkRYdk5KcWN3dnZvVkNoMzF6MEtKTUdvK1RpalhtYmlISEFl?=
- =?utf-8?B?VllUSWxFU2JjTnVTWVhlRmFzOVdMdHh4dXU1ODdiWGJMNzRtNU5ENk9yK295?=
- =?utf-8?B?Q3RMRzlOYlc1Q2Q2NXp3NllCN2p4L1p5Y1F3U0R1aWF4ZDc1dmZUd0Q1V1Bw?=
- =?utf-8?B?bkNKTTFNS2JiaFl6RDBIem5WRlkrRkJmOStoeW9mdW5PeUs2dmd5cnhJRlVu?=
- =?utf-8?B?bzhhZ1pBOEtVNXpnNWRBMGV3Rm9kQUhEWFd4Vmp2VUdHVXVkM1ZWdz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5a0fe4e-ab9f-4763-22af-08de70c5bfcf
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9714.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2026 21:19:36.3181
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YzCzCED3C9zRl+FX5hOr4cHhBaX+qFOcOGiPP6v/I1/Z3h8mH9+hK4IaE+WzGv+APP6SXpMJu9vEyce+CBS0hg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6259
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V1] PCI: Hide SBR from reset_methods if masked by CXL
+To: Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
+ Jonathan.Cameron@huawei.com, alex.williamson@redhat.com,
+ raphael.norwitz@nutanix.com, Dan Williams <dan.j.williams@intel.com>
+Cc: vsethi@nvidia.com, sdonthineni@nvidia.com, smadhavan@nvidia.com,
+ skancherla@nvidia.com, vaslot@nvidia.com, linux-pci@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, kthota@nvidia.com,
+ mmaddireddy@nvidia.com, sagar.tv@gmail.com
+References: <20260220195259.2397847-1-vidyas@nvidia.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260220195259.2397847-1-vidyas@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Tomasz,
 
-On 2/20/2026 1:45 AM, Tomasz Wolski wrote:
-> Tested on QEMU and physical setups.
+
+On 2/20/26 12:52 PM, Vidya Sagar wrote:
+> The CXL specification (e.g., CXL r3.1 v1.0, sec 8.1.5.2) defines
+> the "Unmask SBR" bit in the Port Control Extensions Register.
+> When this bit is 0 (default), asserting the Secondary Bus Reset (SBR) bit
+> in the Bridge Control register has no effect on the downstream bus.
 > 
-> I have one question about "Soft Reserve" parent entries in iomem.
-> On QEMU I see parent "Soft Reserved":
-> 
-> a90000000-b4fffffff : Soft Reserved
->    a90000000-b4fffffff : CXL Window 0
->      a90000000-b4fffffff : dax1.0
->        a90000000-b4fffffff : System RAM (kmem)
-> 
-> While on my physical setup this is missing - not sure if this is okay?
-> 
-> BIOS-e820: [mem 0x0000002070000000-0x000000a06fffffff] soft reserved
-> 
-> 2070000000-606fffffff : CXL Window 0
->    2070000000-606fffffff : region0
->      2070000000-606fffffff : dax0.0
->        2070000000-606fffffff : System RAM (kmem)
-> 6070000000-a06fffffff : CXL Window 1
->    6070000000-a06fffffff : region1
->      6070000000-a06fffffff : dax1.0
->        6070000000-a06fffffff : System RAM (kmem)
+> Currently, the Linux PCI core checks this condition in
+> pci_reset_bus_function(). If SBR is masked, it returns -ENOTTY during the
+> execution of the reset. However, during the probe phase (when probe=true),
+> the function currently returns 0. This 0 return value incorrectly signals
+> to the PCI subsystem that SBR is a viable reset method for the device.
 
-Thanks for testing on both setups!
 
-On QEMU: there is no region, so HMEM took ownership of the Soft Reserved 
-range (REGISTER path). Patch 9 then reintroduced the Soft Reserved entry 
-back into the iomem tree to reflect HMEM ownership.
+The "Unmask SBR" bit is a toggle bit. It does not give indicator whether the device is capable of SBR or not. The original thought was that if the user is issuing CXL SBR, you know what you are doing and the kernel will set that bit and issue the SBR.
 
-On physical setup: CXL fully claimed both ranges, region0 and region1 
-assembled successfully (DROP path). Since CXL owns the memory, there's 
-no Soft Reserved parent to reintroduce.
-
-Soft Reserved appears in /proc/iomem only when CXL does not fully claim 
-the range and HMEM takes over. Your physical setup is showing it 
-correctly. Maybe CXL_REGION config is false or region assembly failed on 
-and has cleaned up on QEMU so there aren't any regions?
-
-Thanks,
-Smita
+DJ
 
 > 
-> Tested-by: Tomasz Wolski <tomasz.wolski@fujitsu.com>
-
-
+> As a result, 'bus' is listed in the device's
+> /sys/bus/pci/devices/.../reset_methods attribute, even though the hardware
+> is incapable of performing it. If a user attempts to write bus to reset
+> method or triggers a reset that falls back to SBR, the operation fails
+> with: "bash: echo: write error: Inappropriate ioctl for device" error.
+> 
+> This patch modifies pci_reset_bus_function() to return -ENOTTY immediately
+> if cxl_sbr_masked() is true, regardless of the probe argument. This
+> ensures that 'bus' is not advertised in reset_methods when the hardware
+> prevents it, improving clarity for users and aligning the sysfs capability
+> report with actual hardware behavior.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/pci/pci.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index f3244630bfd0..57e24300d1c7 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4915,12 +4915,8 @@ static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
+>  	 * If "dev" is below a CXL port that has SBR control masked, SBR
+>  	 * won't do anything, so return error.
+>  	 */
+> -	if (bridge && cxl_sbr_masked(bridge)) {
+> -		if (probe)
+> -			return 0;
+> -
+> +	if (bridge && cxl_sbr_masked(bridge))
+>  		return -ENOTTY;
+> -	}
+>  
+>  	rc = pci_dev_reset_iommu_prepare(dev);
+>  	if (rc) {
 
