@@ -1,335 +1,206 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010043.outbound.protection.outlook.com [52.101.201.43])
+Received: from dog.birch.relay.mailchannels.net (dog.birch.relay.mailchannels.net [23.83.209.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABAF632;
-	Fri, 20 Feb 2026 00:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C47F17B505
+	for <linux-cxl@vger.kernel.org>; Fri, 20 Feb 2026 00:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771545756; cv=fail; b=aWpFDww7A33ZAeueG7us/i0hHvajzDoVost+fiMfEF7UT6rLuwl41jHY75iBZeBiVk565aTWIIM0ml9mH5yEWJ5yT/DsZiM7xpMG2G/+uqPhP3Mzx/MkBVi71BLtVxGNJiRDAqAy6Gh9c+yVEy7ApUwbDnaQLhx3dI/Jl81Sdec=
+	t=1771546583; cv=pass; b=E8xiMRtMHwpcne7k5so7F7O5lJJK9CbY/kooEnlik5XGnrpVDNJ4gjXmlMpL/Pt1wdaTKbehg/UwlwXwg4H1YWgQ5DQNL0zrevyrqd7zjRp87cH722grjA9q8M8SgoIN/K9MlDT+mzY7LQTjc0UjS9YrXTEzj263civ2XhKmn1U=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771545756; c=relaxed/simple;
-	bh=SIPeTr0raz5OhEHmAbn8twrgrlesD1bPeyRqoCxyn14=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fVEkBtHfvyQFL19d8cZ6Uxs+AG6xn7B48TRAiuRsc9ICSUWrCgH5gSE21goqGpWhC3NtbNDc0LFqcClyQsLf9IMoW9ilCXjHgaZb6W7gEeIyHJBLnPXFK7Gt2I0EcRN4d8Tp5w6vmuDsj2I668ZbVKtjsmakHcpVVDXIqlc1nTs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ogeBGMjT; arc=fail smtp.client-ip=52.101.201.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1771546583; c=relaxed/simple;
+	bh=WCc5DKEomRZqtV1LycmkRJZkRcpuulQPR+HVZ4qgnb4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QxYpZWY06nPQCuqmBSqmnqzx9rntQbTMI6+Rb8YZDmJVr4aRlFKKY/R6kQCokEZZoKh3tMyCTrMyVgT3bwv349M0RDN5KhgAhzd++Pms3M1/SbSOCnQe5v7IP9TRefUeWLEJqvkGkrltgf9aR53jAhaYDnIf7wPE5qbKZ2U8W50=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=SMswreWz; arc=pass smtp.client-ip=23.83.209.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ogeBGMjT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=q6cXw+bxfZOHJ/eJhW0JukZBiHt/EdQHZYb8BVaxME3FPD8AWg4smnp9lmRA72GYWmE042TPBYzKVeQi/wfueFO1iNB2xPBgUspJREim4Z0SoAYfHPfuAexVrNMUX6CcNX1Q8PO/99tRGc8EwXnNh1walUUsDyeeJAQNwH5UUrJtCWg2reUfEKfNENiMfQmKx/te0Kc0saqMhnbFXnU5fO9h3alVXbcR3thzqtyWJYAMgYqRGiQTPtYujdAvYYBz9JZO5Lz57ab4Qokf+NCuXmU0QMfaB6GjKQrjbBXyTlSun6YtHVR8vg66Bo7mc/yZilwXy7gS8C4H5hWiq/gIJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZVWeLilEsTZukJvN+q2eRQ4t4bar0ZbBbIbmIdcI6Do=;
- b=mw88iY2xmY/mwpAjSS/JjA0uHvv/JveLxAvXRrI5Xq1kEZEUN/l5VUp+r4waQXrR1hCgW63Ipx7DUF2Hj8rbWo6zqdaFVRyAYUe6Xlhg+6Rn6eRBmZCcGPO8t/Dhoq6dzmxNR013E5pbZFdT57IVGjvxCEujH03XrY3DDBxlJim3yyIOkEUPJbjvSZHIfFqJbehJHulYfPDHRdAvcCq32RJXUtwZrRAq7f0SYyeNN+TQGMu0cs8WF4nasOe0H6FGHqtqf3Ug8KohvasGXniUwmQFRtG6iLtTtDhBmJeDE7OUCn8Wpj/QhJBS//dEUhw9M6Ae+MXPU0Yq3AjacSx1cw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZVWeLilEsTZukJvN+q2eRQ4t4bar0ZbBbIbmIdcI6Do=;
- b=ogeBGMjTf5v/Lh2cNmRXufcNram0CLLRtaPlAZhCbiIMH0EGkGJqH+CoQqAiuG1DbLoUPndMTmD7uw82vZioTxBGs9GKMy4LCTghcSNc8Ew+xb7XPo99nJ1tjzgdWCsv+w1NEHSUsex2v3Ni/6cSymTFGXRp/KjHk02kOPrGJOE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from LV8PR12MB9714.namprd12.prod.outlook.com (2603:10b6:408:2a0::5)
- by PH7PR12MB8793.namprd12.prod.outlook.com (2603:10b6:510:27a::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.15; Fri, 20 Feb
- 2026 00:02:30 +0000
-Received: from LV8PR12MB9714.namprd12.prod.outlook.com
- ([fe80::8c9f:3a5b:974b:99c6]) by LV8PR12MB9714.namprd12.prod.outlook.com
- ([fe80::8c9f:3a5b:974b:99c6%6]) with mapi id 15.20.9632.015; Fri, 20 Feb 2026
- 00:02:30 +0000
-Message-ID: <9b54bd0a-86dd-493b-92be-680c99b23479@amd.com>
-Date: Thu, 19 Feb 2026 16:02:25 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 7/9] dax: Add deferred-work helpers for dax_hmem and
- dax_cxl coordination
-To: Dave Jiang <dave.jiang@intel.com>,
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-pm@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
- Pavel Machek <pavel@kernel.org>, Li Ming <ming.li@zohomail.com>,
- Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Ying Huang <huang.ying.caritas@gmail.com>,
- Yao Xingtao <yaoxt.fnst@fujitsu.com>, Peter Zijlstra <peterz@infradead.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Nathan Fontenot <nathan.fontenot@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
- Benjamin Cheatham <benjamin.cheatham@amd.com>,
- Zhijian Li <lizhijian@fujitsu.com>, Borislav Petkov <bp@alien8.de>,
- Tomasz Wolski <tomasz.wolski@fujitsu.com>
-References: <20260210064501.157591-1-Smita.KoralahalliChannabasappa@amd.com>
- <20260210064501.157591-8-Smita.KoralahalliChannabasappa@amd.com>
- <0c464a2c-3722-45e5-9023-5a2fce8aa096@intel.com>
-Content-Language: en-US
-From: "Koralahalli Channabasappa, Smita" <skoralah@amd.com>
-In-Reply-To: <0c464a2c-3722-45e5-9023-5a2fce8aa096@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR05CA0073.namprd05.prod.outlook.com
- (2603:10b6:a03:e0::14) To LV8PR12MB9714.namprd12.prod.outlook.com
- (2603:10b6:408:2a0::5)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="SMswreWz"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 8C700222A75;
+	Fri, 20 Feb 2026 00:16:21 +0000 (UTC)
+Received: from pdx1-sub0-mail-a248.dreamhost.com (100-99-98-27.trex-nlb.outbound.svc.cluster.local [100.99.98.27])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 2BDB8222B65;
+	Fri, 20 Feb 2026 00:16:21 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1771546581;
+	b=OehFdrfJfvDcA/1ma3NE84zreQ24HZzurburNx3G7+0oL4h7XyHkynuYXskEENKB/98z/p
+	peWX5qLIIfMcxtYlVhwspgxzdgBuIe+g1XcAfDV3RPqXN0f1gmQLyRuRzn1a1/03T83HP+
+	zlJILHFFvOYszoaN720JSCXNXCJV4QXNdMDKv/dAoFNJ9cJXB9FFlAd/nJHB3d3HtEjNB6
+	G9NHHP8IztXDA3tqOj0epsjCJ5GY59WuR+93HtMRuhIwqw1jkwqUimQGDJCBnwrrv72iY5
+	cJNqnsC4+umwWB5ByYobeXVcSVtKUvwvpBYpEeDli3Z6s0sduSh9/PQJuBMakA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1771546581;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=fMn4uQjMFK22iI+AP9iGeX3uVRcla8gOixug5wEiRFc=;
+	b=IPARqMJFZM0xL48lNi1B/0M7zs8rGPU6S7g8GSxIAqVRwQZLuyRad4/pT8OiUeHVkueIYH
+	LaPznZrGAD6Tqmojqdy+cQXg1Mg/L0wSZHsYkAt4fwp87dev0huyFMhqPl4dV3Oztkcy1n
+	tUMlDTCsNaTcS1dAX2KklXMzZiy0SD1qgZWwZv/NrYFOq4fVxjvbwxHqFxTCQ8jovyTCMh
+	9s0IvfPXgV3r405HwpW21lyBQt3gXqilKbAG9ckJbeU5v6Gqb5sBBGpEqBMnVXTmB0Qllf
+	+9zkSk0Z8lgz2MdHsMKSHI+YUCWkWUzmtiYWIDW08AmNlbiEkWQNr4JU6dhy8Q==
+ARC-Authentication-Results: i=1;
+	rspamd-659f7bc6cc-mn88h;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Vacuous-Thread: 1b390e6770bc84df_1771546581476_29967661
+X-MC-Loop-Signature: 1771546581476:2923426341
+X-MC-Ingress-Time: 1771546581476
+Received: from pdx1-sub0-mail-a248.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.99.98.27 (trex/7.1.3);
+	Fri, 20 Feb 2026 00:16:21 +0000
+Received: from offworld.lan (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a248.dreamhost.com (Postfix) with ESMTPSA id 4fH9lS4HFPz106N;
+	Thu, 19 Feb 2026 16:16:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1771546581;
+	bh=fMn4uQjMFK22iI+AP9iGeX3uVRcla8gOixug5wEiRFc=;
+	h=From:To:Cc:Subject:Date:Content-Type:Content-Transfer-Encoding;
+	b=SMswreWzVqR/j6zEh2OcEx17sTjR9IiiNezGKAQQL5MHsOEMEe90MbJpYwdIONdu+
+	 tohqyRTMpVcrpp6gj/zcsN/iKh0DAVicuiHCZvyoWN2E+WjRhf9Nnkq6Xv1SUStUf+
+	 JW8XRXpqThTRh1EexjLJhs78tNe4pXvgPxRWz2VdPSvLfrrF9y4ykIIG2Scb9e0zz3
+	 R1MXCLd66ls2lQbhrSQj4DaRk4joEqM14uXGDUepu1th3R9GhqzufdaYbe99Efeab9
+	 E+fzh/hwfAAyu5uwJkLJjf7zcIqf/f8XhIy3PmdvKeWP18lV/gmzW5yynshoqxrdHa
+	 nDxIhsB3yH9Fg==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dave.jiang@intel.com
+Cc: jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	linux-cxl@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>
+Subject: [PATCH 1/2] cxl/mbox: validate payload size before accessing contents in cxl_payload_from_user_allowed()
+Date: Thu, 19 Feb 2026 16:16:17 -0800
+Message-Id: <20260220001618.963490-2-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20260220001618.963490-1-dave@stgolabs.net>
+References: <20260220001618.963490-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9714:EE_|PH7PR12MB8793:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1f71be9a-fd17-4777-f6f8-08de7013572e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ajlCdWRTeFZLVENzdzFEWXJSM0FJb0dYTDEremJqL3h2ZEs1bXIrYWNnaW52?=
- =?utf-8?B?S1lkMzdyWU0wOUQ1S29rOEd3QjQ0aFkzY2FhdGZiZWVwVnJvMnlwSGZkMHZ6?=
- =?utf-8?B?MDlpb1ZMYWpMbEZOT2gwSkhBL0NCNi8yQndrYjdhd09iTWcyTTVsOUo0VzFS?=
- =?utf-8?B?WiszMy9LZXVpazJscE5iWWhYK0xOS0V4Y1U3QWNCRDRJOGJFQTNoTlUxVEtk?=
- =?utf-8?B?eFVxcnlySWRpQkpuZzF2ZHFkNG1OeVVNamtkamFZekxhbGtEZldONDRGRWw4?=
- =?utf-8?B?RG94aG5ZNFZoSGhRdWtmYWFwdG13TE1yYnJ0RXZTVXU5VDgzZlQwYUM4enBJ?=
- =?utf-8?B?VVdNOFcrTDVDamw3QW9TQ24wdXBiaXYrMDFjNTVDeGdIQXhPZWdTcENpc3VK?=
- =?utf-8?B?K1FIQ3BXa1hVVmlzUmJJaEVVYVdXZ09IeGd2V0RKb0N4ZGxhSnhiSmdsTlJN?=
- =?utf-8?B?UXpSYWx6MmdtdE5naU9vMmphQkhkK2VpZGRXdTJOM3JQNm95REdRcHcwMzJh?=
- =?utf-8?B?bXU5S2t4cHpqdVBheVpaYUNWSUtCTmg2SjBCR1VpZGg0aXdRMTlPNDRTck1j?=
- =?utf-8?B?VFZiN3ByUlVVa0JHSWJzVjBVWEdldC9SaVo5TjRBdXY2aEZLMVk3cmlTblow?=
- =?utf-8?B?Zjd4WHlZTWJvdFJ6cWhseU9JeWZpbmNnMklDUXlkM1lXK2pLaDNXV1pESUJw?=
- =?utf-8?B?VmIzMW5SZDBCMkxqZkZUQmJValJSelhQZWhOVlFjUTRKc1dJajBBZ2NiY1BR?=
- =?utf-8?B?NE9kanBXdHI5VEViSmxxd1ZobzREQ2RKQzRTQ3dINTVlazdaQ2ZpOTJXcmx1?=
- =?utf-8?B?cGZtRFpMTW9hQS9CbHFyR2lqc1BMSCtUN203ejZod0ZYenZQVUs3OW52ekQr?=
- =?utf-8?B?WXM2aW5WMllDZWhVaVdWUEtEM2FNSHBWQzI3bmkwQ08zZm42S1VkY3lObFQz?=
- =?utf-8?B?c2QwcDBHZ3BHZnZkU1lpc0FoWmgxWktEdWNnbGZRQXZPN2dLd0l0eFhiaVJj?=
- =?utf-8?B?dlovS1JFczc2Wk5tdHV0WTBYcmRqektGYkpOS3djMy9OZHBHb25HR0tHekZD?=
- =?utf-8?B?T3V4VVVSWFZhRGU4SW1KakNuN2N3WE1DRHdXYjc2a2w0bUtLNXVHZGFwaEFz?=
- =?utf-8?B?Z01MeG9NZzZkODFIYi9wNzhZWW5QZEQzS0lhdHIramcvT1pDS2pZaDM0clpR?=
- =?utf-8?B?aE1YY1I4VHp6NkxOZTY1UGdNcjVQWjUvMmh0VjFvTDRqblZXVlZXUXdaU1o1?=
- =?utf-8?B?YklOeENmYS8vUEVZWVRNZ1ZBQVdnVFZHYWFBekU1L1I5R2h1SDhZUkJ2ajBz?=
- =?utf-8?B?ZEpvTDBncDdHN1RXTTI2dVhhTjhTbFF0amRvQTBhNVJUbEFtYjd2UW5ibU4x?=
- =?utf-8?B?RElWaENTN2xQaVZRc1NwTDVPd29rdGZyOGJQWTdkWDU3OFVIVUNKSkFYNXp0?=
- =?utf-8?B?OE1yUEFLS1RLRTJHL1JKbGdxbTlBc1NuM1hQcGZoZ2I0SkNGZzRwYmMwMnJr?=
- =?utf-8?B?UitPOHYzcEJRWEw2VzNTMDF5bXJSaXFaT1IyLzZLbm9JT29TdXg1N0R6cnRj?=
- =?utf-8?B?TGgyV1RiTlE1RE8zSFNBYnUzMHJDWExDSG5BQjFsak1oMTJ3NUIxbmxzS3Bw?=
- =?utf-8?B?M2RzZWttdmNYQWFKMDNOK1grbEkxdG9ReUFBb2F6M3R4eXN3UHRpYzBHRVpR?=
- =?utf-8?B?TVg1TURobm9OQXIvZm1VRW56K0hCZ2dsR0l0QStwMmQwaFp5Skt0RjlJVmtZ?=
- =?utf-8?B?eUJobVpjVDRQS295UC9wUnRnNTd0RURzUk5oTWhHeVNkOWNHeGgvNFd3eUpX?=
- =?utf-8?B?V0dQWjNYZTROWkxUNDdqWnJjQWhzazFmOUgvanUzT2poeHZKc2ZGcTB4Z09j?=
- =?utf-8?B?MVJwcVJFdjErbCtoV0xvcHdyblNGc0ZjYVpheGNMUEpPM1VleFAzMWV3SlBV?=
- =?utf-8?B?Qy9oaXQxT0lmUFBibVRmNWF6T2RiK096K2lSZWc3YUhHUXNFeDU4aHV0dFRX?=
- =?utf-8?B?UjQ5d0lwVmtxMXczd2ZnNktBZFJkcDhpZWVxdzFMb0xLOFNuTTMydzl4eFJu?=
- =?utf-8?B?ZkJ0SW4wdEM5SitBRVBqdUF4TWVaZnIyajdvcWtNWEdQSVdyUDdoSmJXaWpL?=
- =?utf-8?Q?WMMw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9714.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QlRiNHpSRUYyOWVaVnpYd0RFOW42Y0NtSkhtbXBpWXVKM0t2UTl6U29ibnJR?=
- =?utf-8?B?b09RdENhZ0NJMjNka3B6MWNML09PaWVNYlIxdStXZzlMaEtPZWlrSWpBZWFr?=
- =?utf-8?B?aVFDejFxTWxQT1drNkhJSWJ4d1M2d3FMU1dJeXhpZEptZGovZWFDcythUVE2?=
- =?utf-8?B?TGlOc0ZSZWFUWjNKRTZhc2dUMUtINWhNellvcDJKOEF1UTh2YzZqMTkxbVVP?=
- =?utf-8?B?NVdFWm01RnRpaEQyb01hYWxvSEZ3VkdPMHJxMHdFVzlDcnBTeXlmNVRabDNY?=
- =?utf-8?B?dmlkZzZMa3c3M3lpV09QK3Z5ZmdVL1pQQ3BnL1VNYUpVb0dNdVFmckJTcVBV?=
- =?utf-8?B?OHE2VkZ3dUhYbmdHbW1mZk40UTlocnZMZE1scW1nd1NJaFp2ZjhlbjVkbkZo?=
- =?utf-8?B?L2ZjdnlsQ0Z1d21xZzFGaXQ3SkVTSnByekd5SXQ5UFFJVE1tTnVEeHdvc2Iv?=
- =?utf-8?B?TGs1cm44REkwb2hSTVNMRjE2R2dwK0k4VUpmdkNZejFiR3ZIWDFOb3Q2WnJv?=
- =?utf-8?B?aElxMEQydG5WV1pmbW1wZk9TUlllMmh5K04xM0plTUpHWG4rbjRUTFJyNDhR?=
- =?utf-8?B?WEpxZWVZajlxOGZTMlZRT0doV1J2cU5WYWVYRGIrRXU5bDgzbWZCSVFJWlha?=
- =?utf-8?B?OFhSdWx3TFZxWFEvK0x3YXBYc2I0WVVDKzNCQzF6Qk5OV1kvZG5BU2tpaWV5?=
- =?utf-8?B?NDNQR1hNRmRmNDVRK2RpeE9GN1lFSmE3V0RYNllRS2pKNkdmdk5MNlNxUldF?=
- =?utf-8?B?ZFRrZ3JOY0hhYmJxQmZlb3hVTzRlaTdFemdrL0ZpOGsrQlg4MEdwQ0VaNzZZ?=
- =?utf-8?B?QmR6MWM0Tmd1cmN0d2svOHd4dXdha1RUL01uUlNFWnhGallBeEpvdkZ3bWdQ?=
- =?utf-8?B?eVZaenAwZk12c1M0cmhHaFRBeVptSlJIYlhCbElyUUV1dS9sYVRManhndVRo?=
- =?utf-8?B?d09FeStCT09MbSs4VHpzTXFzdjVMc21HQlducml1TDJ6T21yL3RsR3RoTnhW?=
- =?utf-8?B?cnJqdVA3M2V2SmVwUXlPSUYwVk5DWW92bDc4MmRqUXJzdmZyUE0zVGZhUFRs?=
- =?utf-8?B?MWJsTytFUlV6ZjhyWTZkRUNFUG5RSndka0pNM1hPcEtPZlM1QTBHRmRqK3Y0?=
- =?utf-8?B?MzM2VEltckFNWEQvcWJUMVR1c2krcVdENUdXb2M0dGJMYnpNdXA4LyszOENj?=
- =?utf-8?B?cmdVbFY3TnkvZmpPdFQ4ZU84cjhTUmo4UDNWa2tpblJwbm1hSWlHSWhrRDZO?=
- =?utf-8?B?Z3FOSlRVQnY1K0JjMnVqUTY0clVQOW9jWW0rWTJXMUw3cW92R1VWQVUrMmZj?=
- =?utf-8?B?d1FhdjNlaE1wQ21FNjBLVmNBWW5EZW90c3ZsRng0VmlhNFBJT1dPeUVGY1hJ?=
- =?utf-8?B?OU84eWU5dHZaZWF5ZC9kQloxWVFLdERPVlo3UDdCYmhzZmkzK1NlMnZRVFUv?=
- =?utf-8?B?KzlBSCt4SElYMmhMUVJWVklMampBbGRjcXpCOFNkSnJhQit1ME1RRWwvaXg5?=
- =?utf-8?B?ZzNBM1Q1YVJjTUt5ejNqczYvMFJuaGtRS0U5SmZRZVJPYjZqb0JQN3dSeWhT?=
- =?utf-8?B?NnF6eHBHWkU2MUJmdFBCektjc3Fpd2lBMVJocndTUzl5NFA4SHlmVEI5QTZo?=
- =?utf-8?B?d3AwQTlOR3ZtUmNmdzZCMlRHOE50SDRHd29TSDkxQTZXN0plVEdHNjVoYm9w?=
- =?utf-8?B?RkJiaXV4OUMrcFBGUWdxNDZQWm5paUNKMDVla3luTjNISXJMS000NVg2Q09s?=
- =?utf-8?B?Rlo0bUZtM3ZPMDRYaXdlaHJZL3Z6K2cwU2l4ZjBlT1ZUWUJEbUYrVWFybWYw?=
- =?utf-8?B?MG0vcjZBdW9DcU9vbk04cStkRVZ2aUl6WWZRcTU0K2YrU0w2dG1ZUHh5Z2Fk?=
- =?utf-8?B?NHl2RUl4OGhCOWRWNGNOeFBJZWVRQi9SUXZwV2krY3JDWGZFbnV3eDBFellO?=
- =?utf-8?B?SWp5dHk2c0l2OUs4L3JXZ0lwSzB0U29BM2tnaUYvTTFLMTRhOXgrd0Q0WmJ1?=
- =?utf-8?B?dytzdCtuNjhJUGNQdmNVZ2F2bzNIbGo4R0dPQW9IMEF6clBtZVpidUxRNmNW?=
- =?utf-8?B?L2Z5c0tqMDVQa0t4MERtRUNjOEREZEhVNDJwUG0vam5aQnZqcXJ6R2hTZWxr?=
- =?utf-8?B?UFpySzB0eEEyTHpacGVBclFReFV4RHM5SlRSRG5tclRnQWVmSDI1dEtra3p2?=
- =?utf-8?B?R2hHQnczYkw3YTlvUWt4RURGeUpqS2FlRVE1R0htRS9nOElUNWdvY2EwZXh3?=
- =?utf-8?B?c0M2MUdyUGo2a0lkaUFKV1NWQzJSZ3MwWVdjR2dxeXQ1Q0Jtc0h4NWFxMFhH?=
- =?utf-8?B?REl0MkE5b2ZicStqOFc0QzRPWTZTN3k5WE5DMWZYbHI2d3VoZkdYQT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f71be9a-fd17-4777-f6f8-08de7013572e
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9714.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2026 00:02:30.4269
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: waePMQcuWpdwpTx8Ue7o1XXDAgkJ2QRn8moyq/QUQ32+P4ZTGoGPIKTdhrIUogWw4YlJV5/9gLyU2F/DLJixHQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8793
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Dave,
+cxl_payload_from_user_allowed() casts and dereferences the input
+payload without first verifying its size. When a raw mailbox command
+is sent with an undersized payload (ie: 1 byte for CXL_MBOX_OP_CLEAR_LOG,
+which expects a 16-byte UUID), uuid_equal() reads past the allocated buffer,
+triggering a KASAN splat:
 
-On 2/18/2026 9:52 AM, Dave Jiang wrote:
-> 
-> 
-> On 2/9/26 11:44 PM, Smita Koralahalli wrote:
->> Add helpers to register, queue and flush the deferred work.
->>
->> These helpers allow dax_hmem to execute ownership resolution outside the
->> probe context before dax_cxl binds.
->>
->> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
->> ---
->>   drivers/dax/bus.c | 58 +++++++++++++++++++++++++++++++++++++++++++++++
->>   drivers/dax/bus.h |  7 ++++++
->>   2 files changed, 65 insertions(+)
->>
->> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
->> index 5f387feb95f0..92b88952ede1 100644
->> --- a/drivers/dax/bus.c
->> +++ b/drivers/dax/bus.c
->> @@ -25,6 +25,64 @@ DECLARE_RWSEM(dax_region_rwsem);
->>    */
->>   DECLARE_RWSEM(dax_dev_rwsem);
->>   
->> +static DEFINE_MUTEX(dax_hmem_lock);
->> +static dax_hmem_deferred_fn hmem_deferred_fn;
->> +static void *dax_hmem_data;
->> +
->> +static void hmem_deferred_work(struct work_struct *work)
->> +{
->> +	dax_hmem_deferred_fn fn;
->> +	void *data;
->> +
->> +	scoped_guard(mutex, &dax_hmem_lock) {
->> +		fn = hmem_deferred_fn;
->> +		data = dax_hmem_data;
->> +	}
->> +
->> +	if (fn)
->> +		fn(data);
->> +}
-> 
-> Instead of having a global lock and dealing with all the global variables, why not just do this with the typical work_struct usage pattern and allocate a work item when queuing work?
-> 
-> DJ
+BUG: KASAN: slab-out-of-bounds in memcmp+0x176/0x1d0 lib/string.c:683
+Read of size 8 at addr ffff88810130f5c0 by task syz.1.62/2258
 
-Thanks for the feedback.
+CPU: 2 UID: 0 PID: 2258 Comm: syz.1.62 Not tainted 6.19.0-dirty #3 PREEMPT(voluntary)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0xab/0xe0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:378 [inline]
+ print_report+0xce/0x650 mm/kasan/report.c:482
+ kasan_report+0xce/0x100 mm/kasan/report.c:595
+ memcmp+0x176/0x1d0 lib/string.c:683
+ uuid_equal include/linux/uuid.h:73 [inline]
+ cxl_payload_from_user_allowed drivers/cxl/core/mbox.c:345 [inline]
+ cxl_mbox_cmd_ctor drivers/cxl/core/mbox.c:368 [inline]
+ cxl_validate_cmd_from_user drivers/cxl/core/mbox.c:522 [inline]
+ cxl_send_cmd+0x9c0/0xb50 drivers/cxl/core/mbox.c:643
+ __cxl_memdev_ioctl drivers/cxl/core/memdev.c:698 [inline]
+ cxl_memdev_ioctl+0x14f/0x190 drivers/cxl/core/memdev.c:713
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:597 [inline]
+ __se_sys_ioctl fs/ioctl.c:583 [inline]
+ __x64_sys_ioctl+0x18e/0x210 fs/ioctl.c:583
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xa8/0x330 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fdaf331ba79
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fdaf1d77038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fdaf3585fa0 RCX: 00007fdaf331ba79
+RDX: 00002000000001c0 RSI: 00000000c030ce02 RDI: 0000000000000003
+RBP: 00007fdaf33749df R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fdaf3586038 R14: 00007fdaf3585fa0 R15: 00007ffced2af768
+ </TASK>
 
-Just to clarify, are you hinting towards a statically allocated struct
-with an embedded work_struct, something like below? Rather than the 
-typical kmalloc + container_of pattern?
+Add 'in_size' parameter to cxl_payload_from_user_allowed() and validate
+the payload is large enough.
 
-+struct dax_hmem_deferred_ctx {
-+	struct work_struct work;
-+	dax_hmem_deferred_fn fn;
-+	void *data;
-+};
+Fixes: 6179045ccc0c ("cxl/mbox: Block immediate mode in SET_PARTITION_INFO command")
+Fixes: 206f9fa9d555 ("cxl/mbox: Add Clear Log mailbox command")
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ drivers/cxl/core/mbox.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-+static struct dax_hmem_deferred_ctx dax_hmem_ctx;
-
-+int dax_hmem_register_work(dax_hmem_deferred_fn fn, void *data)
-+{
-+	if (dax_hmem_ctx.fn)
-+		return -EINVAL;
-
-+	INIT_WORK(&dax_hmem_ctx.work, hmem_deferred_work);
-..
-
-My understanding is that Dan wanted this to remain a singleton deferred 
-work item queued once and flushed from dax_cxl. I think with kmalloc + 
-container_of approach, every call would allocate and queue a new 
-independent work item..
-
-Regarding the mutex: looking at it again, it may not be necessary I 
-think. If we can rely on the call ordering (register_work() before 
-queue_work()), and if flush_work() in kill_defer_work() ensures the work 
-has fully completed before unregister_work() NULLs the pointers, then 
-the static struct above would be sufficient without additional locking. 
-If I'm missing a scenario or race here, please correct me.
-
-Thanks,
-Smita
-
-> 
->> +
->> +static DECLARE_WORK(dax_hmem_work, hmem_deferred_work);
->> +
->> +int dax_hmem_register_work(dax_hmem_deferred_fn fn, void *data)
->> +{
->> +	guard(mutex)(&dax_hmem_lock);
->> +
->> +	if (hmem_deferred_fn)
->> +		return -EINVAL;
->> +
->> +	hmem_deferred_fn = fn;
->> +	dax_hmem_data = data;
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(dax_hmem_register_work);
->> +
->> +int dax_hmem_unregister_work(dax_hmem_deferred_fn fn, void *data)
->> +{
->> +	guard(mutex)(&dax_hmem_lock);
->> +
->> +	if (hmem_deferred_fn != fn || dax_hmem_data != data)
->> +		return -EINVAL;
->> +
->> +	hmem_deferred_fn = NULL;
->> +	dax_hmem_data = NULL;
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(dax_hmem_unregister_work);
->> +
->> +void dax_hmem_queue_work(void)
->> +{
->> +	queue_work(system_long_wq, &dax_hmem_work);
->> +}
->> +EXPORT_SYMBOL_GPL(dax_hmem_queue_work);
->> +
->> +void dax_hmem_flush_work(void)
->> +{
->> +	flush_work(&dax_hmem_work);
->> +}
->> +EXPORT_SYMBOL_GPL(dax_hmem_flush_work);
->> +
->>   #define DAX_NAME_LEN 30
->>   struct dax_id {
->>   	struct list_head list;
->> diff --git a/drivers/dax/bus.h b/drivers/dax/bus.h
->> index cbbf64443098..b58a88e8089c 100644
->> --- a/drivers/dax/bus.h
->> +++ b/drivers/dax/bus.h
->> @@ -41,6 +41,13 @@ struct dax_device_driver {
->>   	void (*remove)(struct dev_dax *dev);
->>   };
->>   
->> +typedef void (*dax_hmem_deferred_fn)(void *data);
->> +
->> +int dax_hmem_register_work(dax_hmem_deferred_fn fn, void *data);
->> +int dax_hmem_unregister_work(dax_hmem_deferred_fn fn, void *data);
->> +void dax_hmem_queue_work(void);
->> +void dax_hmem_flush_work(void);
->> +
->>   int __dax_driver_register(struct dax_device_driver *dax_drv,
->>   		struct module *module, const char *mod_name);
->>   #define dax_driver_register(driver) \
-> 
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index fa6dd0c94656..e7a6452bf544 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -311,6 +311,7 @@ static bool cxl_mem_raw_command_allowed(u16 opcode)
+  * cxl_payload_from_user_allowed() - Check contents of in_payload.
+  * @opcode: The mailbox command opcode.
+  * @payload_in: Pointer to the input payload passed in from user space.
++ * @in_size: Size of @payload_in in bytes.
+  *
+  * Return:
+  *  * true	- payload_in passes check for @opcode.
+@@ -325,12 +326,15 @@ static bool cxl_mem_raw_command_allowed(u16 opcode)
+  *
+  * The specific checks are determined by the opcode.
+  */
+-static bool cxl_payload_from_user_allowed(u16 opcode, void *payload_in)
++static bool cxl_payload_from_user_allowed(u16 opcode, void *payload_in,
++					  size_t in_size)
+ {
+ 	switch (opcode) {
+ 	case CXL_MBOX_OP_SET_PARTITION_INFO: {
+ 		struct cxl_mbox_set_partition_info *pi = payload_in;
+ 
++		if (in_size < sizeof(*pi))
++			return false;
+ 		if (pi->flags & CXL_SET_PARTITION_IMMEDIATE_FLAG)
+ 			return false;
+ 		break;
+@@ -338,6 +342,8 @@ static bool cxl_payload_from_user_allowed(u16 opcode, void *payload_in)
+ 	case CXL_MBOX_OP_CLEAR_LOG: {
+ 		const uuid_t *uuid = (uuid_t *)payload_in;
+ 
++		if (in_size < sizeof(uuid_t))
++			return false;
+ 		/*
+ 		 * Restrict the ‘Clear log’ action to only apply to
+ 		 * Vendor debug logs.
+@@ -365,7 +371,8 @@ static int cxl_mbox_cmd_ctor(struct cxl_mbox_cmd *mbox_cmd,
+ 		if (IS_ERR(mbox_cmd->payload_in))
+ 			return PTR_ERR(mbox_cmd->payload_in);
+ 
+-		if (!cxl_payload_from_user_allowed(opcode, mbox_cmd->payload_in)) {
++		if (!cxl_payload_from_user_allowed(opcode, mbox_cmd->payload_in,
++						  in_size)) {
+ 			dev_dbg(cxl_mbox->host, "%s: input payload not allowed\n",
+ 				cxl_mem_opcode_to_name(opcode));
+ 			kvfree(mbox_cmd->payload_in);
+-- 
+2.39.5
 
