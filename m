@@ -1,203 +1,189 @@
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011053.outbound.protection.outlook.com [40.107.208.53])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010064.outbound.protection.outlook.com [52.101.61.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DC01F7541
-	for <linux-cxl@vger.kernel.org>; Fri, 20 Feb 2026 19:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341392D0C95;
+	Fri, 20 Feb 2026 19:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.64
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771616121; cv=fail; b=ZBjGkZyaDMMeqvBEtabTwtx/wL8J+EdmS6Ms4Upq3n30TNxhA9UtrPc+g1jOux4QrK8oIXA5lgGp1KkoHU4UIsqLQoZMFckZ84RkTzIGyphwipjo8HwlFr0ZSXLBXZTxrYFGFHXu9SobVO4p6IKO5v6E0+KhYMclLVmaV7N/OnI=
+	t=1771617233; cv=fail; b=JEFrX5rW8fmYwD/FflFUgJ0eAja/AtAuyB+hZFnJr2yw0LFoSElCKK/Jlyrr1YP638iFH7SYiCS6+Xp8wokAzY2Dq+XkBbquAcGEMhbY6aiMMNZ9tQxXrKnDMgJ1VkUPL2oL9gwINxJ08u4Pv/sXlVhCnSAsLzgr9njxY576BTQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771616121; c=relaxed/simple;
-	bh=xkoWJsKl8OqSGA4kAFtfzVECuFik52m1khx8mBxsD8Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=s47cMI1hfBpsIBKo3NjPgQpeUciJAMJ5Nj2pxmiqs94lFxz1OXAFFCTCOcOta7GEXVhFJ+SnrMGh64/JTy0gUnxAm7KeebGOboFje3qyYsT+/0jaES/f8YNqWUviJu046KUx31Y+w6K78EgMc2DcRVlXBIZ1fCulmVoNJW/GJ50=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xJPtsZZl; arc=fail smtp.client-ip=40.107.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1771617233; c=relaxed/simple;
+	bh=xEqLec+KkMYkHe/RWzWBflXgAA1QSGHbiH0m8KoQkOk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kG84t5BNbkM35bIP1E+Vt4NzbyAFopo13YOWbK+HOGshUgFAEqMUYOfBVCmj1wSTTMIzgbzw2mKryFSETq16CqS7LeDAjf9AZFFSFHALHjX3qbduTZNy6eMAaYQfJ7++ekfSnEKyx48hdGzH16IwBgOYPo5Sv4Lz7ZVIJRqQp0w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=okUDm8x+; arc=fail smtp.client-ip=52.101.61.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xJPtsZZl"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="okUDm8x+"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rRDbWTlT8INDT8t4mAkHN1oDNpldmLtrsxyP5XvL9zjwQts1bA65qfPBjF2y4DYxStpBnq7kJbkGvsqVcP8bwcwj6QKLZz2QkZu4RBaPVD02yTz5agxSna5paWT2DMmZ5XSXpMiCSYrMUMjiq+atGXrGo0CAFiANbN6dhZrmtPwCgOBNPxRutZWoZ/Xfj2CkCvcNXPmSEwjDSy8utbFmL9Nx6EkH4y5i3PmCRYuD9KmTAC0FmxFc3S7cVoTKZTvSkwrebC5TGiETiaHkhREiI4CwkGMlsUvFferVvycVmkdVV6LNN9p1EbFGvDfCJlpMckkm59PuXQw0lIfhO+/ufA==
+ b=CUZcrONO6cucabq6VcJve9Kz+oylgTW+2eJK13Jl7be0f7nr5Os1Q8N6/t1rnCkAhzG/Mt/HqNJ9Hv2HCg9G01RwZM23Ed0XSSwF/L806PSgXQ8vEOFW6oHk9XTuKPmYMeXQEAIUXjQa8yBLKPbdivKrrC9KgGDyl1ggN5mtcHFZjvh0P5gfiXZ4pLHpLyDYbxFffbfvya5QUJxz7oHZ8UNtvLu4vf3bYMWAJ0C2q3pCAZqzIJvENHXgxXJxe0LFTz9bNNZ1zcIfhPedeBbW9N+ePEmrsSqefGW8CrWFoNd8YMGAV8V+vBQ+qRRBOfbn09JmwR2u4fC5hH2cb4Fpqg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yd2QFIxRYmz+L0o0MgIYb8+2em3SSPK7+KEMTNHqPK0=;
- b=tbULLIKSZ4ceQxs+mLWPdQHnmsGujpLHueE8hp8CyGRaP/oUstEk9UcA9h8z0uuvpnlrUkp9ntj2GfhcjL2mSzZC4VwR4Sp7iwnzr+uIo2jYhlTnVMCW90zoMutJW86pFHPi+L7P+inysx8brDgmvKZWTkd1ksop6CarKeD99XrLFW7ys/mxGTCpjhGBe1fhNpQSb/LdFETFFmmMlv56CRPUnoTXnOF9VYzGVKFuCISju9pMx8/Dy7M1jVjuVhipDY5tFH+OO9yN7y8QgM9hhbQWo9BmToiHfYiqgyRQutUdP473+LyCRzV8YJSMRUFQdpQKjZELNCbFZ6NqgCWnVg==
+ bh=2+h/7E+06/KYfn73tIrcC93xgJibyeZemzNUma5mBto=;
+ b=Z48dJyYv0aVb/VsAVUxtajjzN+qiqLnCSt7rc3gHta5geHG4dyRbVkLAe49DphnrI9PT+adz3d+B2q6whLgM2kavkS3DGo6XMw/ZQrzKlTafFqE6LpOG9Er4dsgCqyiHSfKIs1I43ZaisqnorLss+8bBnHLwQ68bVEDHu6gwfp+tbXl9DyJKv5dKseM33rIB8Ry465Q9eEudi0DaL5Q+Y9TdkCob9YuePMzREiPyfK1GYmsJENuvFSCVAQQrOFirHBY4WAhiz3cS9RmaHoqVp26z8twglU4YreKlk/qx6gquVl5EDf82iIVX+eLZwt+5VRw2vzgfp8lXh0FBCpTVEQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ 216.228.117.161) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yd2QFIxRYmz+L0o0MgIYb8+2em3SSPK7+KEMTNHqPK0=;
- b=xJPtsZZljkqxSTQb0EgAj2Md8JiIHjBeepwV7S3zGD0VB7UnJDPy5Y5KU7uP/hTAXsdVooI35TwNZyCkexX0Thj0M/gNfWKZUysDYeDI/2/nBzP1M9lMEvM9mFxcPU36zipXu9SMM1gG1o5+PtxYDOP9F8y5unLa3mpjOMOH0ro=
-Received: from BN9PR03CA0315.namprd03.prod.outlook.com (2603:10b6:408:112::20)
- by SJ2PR12MB9242.namprd12.prod.outlook.com (2603:10b6:a03:56f::15) with
+ bh=2+h/7E+06/KYfn73tIrcC93xgJibyeZemzNUma5mBto=;
+ b=okUDm8x+LKUlrPz2a6gfejIiH/H1Jqm7DyL64o9GveCScD7IO2LJIfrAdNy2eQHFSpbJu/7Xx7Rm4MeDQatVK7rf/yBt6fVucj8BWpZDxfSaO6frR0I7sKR/S69uY3KjzYHVJgyexckSsjmdtQhFWFTIQt3yHtOnletBgW2NoVfXLwXgNhHZulZkr7D7ZqHoJm7qzm2w2JzW95Usn5+7dFA8hIM6I2HsgNN+DqtGURLCoisS7ZddjvYp5RCNZ2ufXD9iY4yRvnfZggp7EEnlXePbusl7ubUpyAyv0Mbb1m++ezBt78Qiq2BHMERacqnm+OiGfz2NFWONi9iy2zDgXw==
+Received: from PH8P223CA0005.NAMP223.PROD.OUTLOOK.COM (2603:10b6:510:2db::19)
+ by LV9PR12MB9757.namprd12.prod.outlook.com (2603:10b6:408:2ed::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.16; Fri, 20 Feb
- 2026 19:35:15 +0000
-Received: from BN1PEPF00006000.namprd05.prod.outlook.com
- (2603:10b6:408:112:cafe::72) by BN9PR03CA0315.outlook.office365.com
- (2603:10b6:408:112::20) with Microsoft SMTP Server (version=TLS1_3,
+ 2026 19:53:47 +0000
+Received: from CY4PEPF0000E9D8.namprd05.prod.outlook.com
+ (2603:10b6:510:2db:cafe::99) by PH8P223CA0005.outlook.office365.com
+ (2603:10b6:510:2db::19) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.16 via Frontend Transport; Fri,
- 20 Feb 2026 19:35:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- BN1PEPF00006000.mail.protection.outlook.com (10.167.243.232) with Microsoft
+ 20 Feb 2026 19:53:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CY4PEPF0000E9D8.mail.protection.outlook.com (10.167.241.71) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9632.12 via Frontend Transport; Fri, 20 Feb 2026 19:35:15 +0000
-Received: from Satlexmb09.amd.com (10.181.42.218) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 20 Feb
- 2026 13:35:14 -0600
-Received: from [10.236.185.70] (10.180.168.240) by satlexmb09.amd.com
- (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 20 Feb
- 2026 11:35:14 -0800
-Message-ID: <88d3975b-e79a-4d0a-8ca9-a67d54cdfe14@amd.com>
-Date: Fri, 20 Feb 2026 13:35:14 -0600
+ 15.20.9632.12 via Frontend Transport; Fri, 20 Feb 2026 19:53:47 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Fri, 20 Feb
+ 2026 11:53:24 -0800
+Received: from vidyas-server.nvidia.com (10.126.230.35) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.20; Fri, 20 Feb 2026 11:53:20 -0800
+From: Vidya Sagar <vidyas@nvidia.com>
+To: <bhelgaas@google.com>, <dave.jiang@intel.com>,
+	<Jonathan.Cameron@huawei.com>, <alex.williamson@redhat.com>,
+	<raphael.norwitz@nutanix.com>
+CC: <vsethi@nvidia.com>, <sdonthineni@nvidia.com>, <smadhavan@nvidia.com>,
+	<skancherla@nvidia.com>, <vaslot@nvidia.com>, <linux-pci@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+	<sagar.tv@gmail.com>
+Subject: [PATCH V1] PCI: Hide SBR from reset_methods if masked by CXL
+Date: Sat, 21 Feb 2026 01:22:59 +0530
+Message-ID: <20260220195259.2397847-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dax/kmem: account for partial dis-contiguous resource
- upon removal
-To: Davidlohr Bueso <dave@stgolabs.net>
-CC: <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <vishal.l.verma@intel.com>,
-	<dave.jiang@intel.com>
-References: <20260210224609.150112-1-dave@stgolabs.net>
-Content-Language: en-US
-From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-In-Reply-To: <20260210224609.150112-1-dave@stgolabs.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb09.amd.com
- (10.181.42.218)
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00006000:EE_|SJ2PR12MB9242:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4b77df25-2523-4ca9-467a-08de70b72bf9
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D8:EE_|LV9PR12MB9757:EE_
+X-MS-Office365-Filtering-Correlation-Id: 792a5071-7b77-49d4-fcd1-08de70b9c2bf
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024|7053199007;
+	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VWV2UGdhVmN0VkowUjRvMGM0NGloK3RZcW1hTEhtMW5LZy9NWmxnWHorRnVL?=
- =?utf-8?B?NGd5ZkVIR0w4MDBabWRmK0diWU4rMTg4OU43RlhBaCtaQ3l1cnRtZitPdjVm?=
- =?utf-8?B?cFVrMjRkc3p4OVFGYzB5akpFcGNhZHo4N0NvQnVyejBBRmFxRzNxUTFJVXdl?=
- =?utf-8?B?Z1VwR1BnZG9MeElzOS95dXRCRVN3L09YeGV3eFJta3NJTHdNTzRMVXJuSllG?=
- =?utf-8?B?UkdVTEprbkQ1RWlyR3owSGRNUTVjMjZyV0pWRGJCQVRPR2M3MGdyUm5GcWlY?=
- =?utf-8?B?WnVzZ2gvYkdJZHUvVDJFUzBmc2loblZRVU1nN0E1STV1bnhaSnJvbGdZUnJE?=
- =?utf-8?B?aVBmWU05cnNBbWpoM0UrTDZQWXlHUEZzV3JyYm05emZvNTF2N094NE1hNkZp?=
- =?utf-8?B?VWo2TnFRNHZFbzVRcFR6VGQrQTVTUEQ5Z0FxRlFtWGk1OWhsc3VYYUFwaHNN?=
- =?utf-8?B?c1dDWWErSWV0dVhCNlZ6aUphbitlOVQ0T3hQZEpuZVplQm02L0wvQVZGZkVR?=
- =?utf-8?B?VHA3L2V4djFqWi9NY0d4bWRZTjdmUmM2ZmVsaStFdkplRk40YnJ3YkJweXRr?=
- =?utf-8?B?QythTTdXeUtMK3YyMEhBNzZ5TU9KVFV2RU0rN1lEcjBRVndEZUlLTi83aFo4?=
- =?utf-8?B?eDZsWTdiWmk4eVY1bThWWFNKRTR5SFNBRThaT3YxNE1PRnIxVG1UWlFObU53?=
- =?utf-8?B?Zk1QcnNOVjRJdzNyL0V1RVFUa1BudWw4bzNJMCtqL2g0UDFDK0luTzZSK3V3?=
- =?utf-8?B?UjZhN2YzOE5od3hSNmYyei9kZUREUkhkdktmSDFHdk9aZW1RajdMNWR4MitI?=
- =?utf-8?B?dld6MHJ5OTJjVlR3ZVBsOGJMZXBTenMvclZSZ0tNVllzYVBUQWdJWmZmd1kr?=
- =?utf-8?B?d0NZVy9YN1krMGlmNHRUWStvMCtHdm9iVlRRSXNoa1pzc2NLQjBtbWdiTi8w?=
- =?utf-8?B?TUY5eHRaYWVJdHV4OFdEVW9HZ1M2R0VKQWwwbysyb0F6U0dNRXRWc1NZZ1Rr?=
- =?utf-8?B?YURSQkE5Wk9UUmtRWWltaVgvdzlXTGhMUFZzdldSRXJlMGdxeWZjZkhnT1I3?=
- =?utf-8?B?TFR4SWtueXVZTWJ6YlkzajloM28xT2JFS0Y3OXRUZnNUSDlRNUk0S0hZZWt1?=
- =?utf-8?B?QjZlR3hnUGE0Z0s4V3pXaU9zU1Y3ZVZEOUNhYVgwUXlwR3JiSUNDdHJFQTgz?=
- =?utf-8?B?UE93blpXMzBSWVRFdlI1YjdsYjFxWE5XVXY0bzNCQVVzNkMzajB0end1RThP?=
- =?utf-8?B?Vm5YaVdqYlFoVTdpcWRYQmVlVnlhbkhUbkZSeElzSkk1M0J5cXRpWDhlYUdM?=
- =?utf-8?B?dDFuWDlRYlE4T1pDSVpDMWVNWnFLVEtHL1pqbklmQk5ld0loa3VScEFkcU5p?=
- =?utf-8?B?am5OejRJSElHWlpXbFFHb3VwaWZqdG5scVgzMFlCVUtLazUyUXV0NWFBN2xT?=
- =?utf-8?B?UVgrZnF3b2F3emcvMG9BY1poK0xiK3ZBUkNlL0lNbURTS1B1ci91UFIxNUto?=
- =?utf-8?B?MUJkQ1pjMy9UWUFwUVhiL2lTczVkbExDQ3M3ZmFOTVk1cDdKNDNyd0RZcFVC?=
- =?utf-8?B?Yy96ZlhIYm93Z1JUaDdueEFVT3oraUdJUzUzaGZ2dmVBdXJRMTV3cTdLTTF0?=
- =?utf-8?B?c2FLdWpXaXQ0UHVTOWJJMGtlOFRUeFVodjA4VFhKalVDMHZCZW4zZ3l6ZWQ1?=
- =?utf-8?B?SHRLMlBOa2o3S3ZFeUZqNWwyQWg5d1ErVDhOQ2tvREVJdVhKYlQ4amtNcmhW?=
- =?utf-8?B?d2JEL1IzS3lhR0liOWVnbzYybWVHdjM4a1dDeFk5ekZyb0lLeVZWWFVBRmwv?=
- =?utf-8?B?dklxaUlsUVI3TVVTMnE2djBmdnFFRnQ3V1NnaGx1K0VDdnFTTnlabWFOZElG?=
- =?utf-8?B?UThMblRkdk5kOXBmZDJpdWZxUFg1MGNzZk90ei82ME5DaTBhbjFnNFNDZS96?=
- =?utf-8?B?NzdjNSt1MmtKL2N1OVlNbFFUcHFEYmFVQXlnV0R0eGFmeHBUaGwvOVh6RjJ0?=
- =?utf-8?B?YVlTNFZFb1RPMlVobndJNm5HcERMMEsyS2VxZVZHUm1qM3R6dG5aK3AwYzRU?=
- =?utf-8?B?c2pZZWNtcElpMWt5Uy9KTWl2RzBYRnVDWCszSjJvT1ljcVh5Rk5wNWpuVG90?=
- =?utf-8?B?K052cStJQ1NmQUNyZU8zdlhVbHVTYnV0Q3llcDBxVHN4TWNoL3FIeldyN2Ex?=
- =?utf-8?B?a3VFN2liajhqa3cwL2RDdXJXT3p4VEFTUkpTai9GaVZ6akZqTDhLQ1Y0V1Jm?=
- =?utf-8?B?SUcvcEpWMVgxYmlpUU5VVklqSFZnPT0=?=
+	=?us-ascii?Q?oWJ/ffWXvbFygtSxbBLnSDJS1/vihpqN0A9G5TWSbhIQ+ayC1R1UemhUTkeg?=
+ =?us-ascii?Q?l+crkOBOyoNJ6ydgfXCq5SQZC91PPnea7ipT5wSc4U7mUnEsmugh0DbO17BN?=
+ =?us-ascii?Q?5rsCzlGIJthKVolPSp99ONeQm/Sw7nXDmrqBWieqQMA1FlFCvZY15rZ1zTYI?=
+ =?us-ascii?Q?ruQPdIB9c7zfgSVALFv5fj8nOP2zbFe+iSpEE5JIgOw410lAo5FCeYFV88uN?=
+ =?us-ascii?Q?lpo7/Cp39Axq+KHUEheIqlIkjZdDPRdMEbV8+O24xZ/kE8xQ6XY5jhuu37s8?=
+ =?us-ascii?Q?ETVlyUuhi5uSwI9+c19Is5qKbO3v3aSRAS0ZGgguOZCFMYwSI/2flEFZ4RR8?=
+ =?us-ascii?Q?F/2iLFNdH/vUA5GRQHzyPQmECOcCW92qOrAYnPcaUbxjHzGJ6GsNyqJ3H0y4?=
+ =?us-ascii?Q?ZJpIbI5AuNkOMx8pwtmpkm8cw5DclFAz4ISC8C4N6U1v2npf2IA4TGXSvEPp?=
+ =?us-ascii?Q?nUKVMGWRppGPGoET4NIr5yL0woBhkfmgueAWYA4zqXjytNmAMnw+Nt1kq374?=
+ =?us-ascii?Q?Y1sqfPDBX+fn02KBUZy3JFBcQs3kYy7KInRy4IrBVWIodJ3p/Lu7y56RY916?=
+ =?us-ascii?Q?q8GfAiMSLR4WWZinrW44np7x5NY7nfHK6upWqc8+9qhTfHiIqHmZhNmD+DPH?=
+ =?us-ascii?Q?Pwd22ITlGFaLH15KXnjtph89MNRqOrLZyJlSvsrrIUjl4IrvQVL5IEpeBEGK?=
+ =?us-ascii?Q?snAdFQ51vlzs8+6Y/IEFyrNxnIejaixys4rIZwdmjbaMl9l2Q2qValeJtA3K?=
+ =?us-ascii?Q?KRRWIu6VWMlDV2MoHucOGX8xBOLsbu65wxVqzDf/3wVESrRTQ5IkI0zI6XQA?=
+ =?us-ascii?Q?PtGtAEbQcrVn6QwWtVrEUcwxYDI96eqjxzb/S7G2XfV6lmfkqBGOuhoWsj9k?=
+ =?us-ascii?Q?OkTsgZyYyGYz0dOslCqGgFd8IDti1cKWnQWUQn/VC3Kv7gvjRlH37ssOtnRP?=
+ =?us-ascii?Q?tbSVYHikH9NslzHGrsjHUxHij7hr/ysCgr18ipnabQlKboAY4SdqIJRNhkW1?=
+ =?us-ascii?Q?RLOPuo8IEKrn3sHhhW61HE0e7Q566+w6D2l5F+iHxXns73f9vGEAifPjUced?=
+ =?us-ascii?Q?rs7ym+C31ZEaDr8v/zVsv6n9nAtj59jp+9S6aqPZ47GM7MIs6PBtQywY9ZDq?=
+ =?us-ascii?Q?O4QcgLXk1bCR9lZs0ThN5IgEhSaUSHxFNunk+UPv5lm9pdWBiqg4XQM3Dur0?=
+ =?us-ascii?Q?F1lXPCVZEAnMdch3/DUQzw7Z2iUzOWVlU1adA1Cgo83pJGCmghrxx3o+uksF?=
+ =?us-ascii?Q?m+DXw3TDr6ApiWnWWxe0BHEQaQGTHWnMN1toWU6zvyFD++0X5GnN2TQxg5dm?=
+ =?us-ascii?Q?Ght4367/o5G8reCYi59BKipaZ6ZoiY6BXaaDSTpvUick/LQBoSlWDJGFDW1+?=
+ =?us-ascii?Q?T8q0pevSqAdFQb/drTFo/nko33SFbG+yiucoyaPCtVPytO7E3fXNSvLcjZbs?=
+ =?us-ascii?Q?FBX8J/4M2aEghI4znN8eMDkFD9gc7kikB2faB99+PLXo7MguC7oSkh9ssYpZ?=
+ =?us-ascii?Q?hB84kwteNuQU2xkP53NiPCa/nErkXcC57bCZEX/FQ++l/BdgtGnzrDU7TmRK?=
+ =?us-ascii?Q?g6XX0BpJwmACobtErSAYIDJ52mWqlGPzuOIsK49XI92920WXtdw697lEY00h?=
+ =?us-ascii?Q?WecpOiH35aifWmZbqyFT/lxXj1VQi2c+Fn+bi2eYgHRHbjjshlhZwqT9hcOb?=
+ =?us-ascii?Q?xZJpcg=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	hKIdHGk6xxFDbKq0wmafh3fJ2AaOayMdP6kuKugCIeFCgMwoJyZ8HSeWwA/2Hfu/05UlhQRep/d2bJ2h2ZGt32fJmKWcMHwmZIMIkJcgqeXFTZ7PGbnumjT2IrbP+j41mdtA+5lP6oyksSzdKU+E9X3dvB5xMfB1UmR9yohdMaOI4OWpsFKCFbuDr9QeCALY6ix1dkvOlEA39tHZSRW95M2jzXJK0DamOiDsZRJLExZ3xdaX51mqcsHoU8v2IwwzzdY0N+7KkV5vEmJjVdT+FCQ57mjrfX5+G4rvk5zIVDqoEy79ZZqaaO+8RV1rJIbtw4I63NkW81J+oBWMVdQbyUqutCl/zFF0GrbO4tn7w9Wmh7RAU8ch+yXXgugUouRnABnyaSL4xMgkH56LXKMLcR9/KcePwwpZ8M9hp+soRzZhc/0GT/G38tG8X5r4NG4X
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2026 19:35:15.1816
+	XAMaR/usGbsv7nETRIiEFomYmQgZrdHpBIW262tlhGiR/vH6qhuoTUc9MGFsVES2rASW5N5e3BsaMKRt4ANSdlmbwFh/G+Kv6ODeZN9OGcDJ4bgg8Q9E526pc6626pOEhDJ52WMs0KdPQYZdvzrbUzsQVYlzQH2KHLUmVrDLn3DYjAzUd11X+hjfXxepMVJdD5FVVbg/mRaNUnUKqDZRg9/XFP8Lsdrk+qYK/4bGUsVG1iD8wfZ10+o+PFe2lQ7gUXrqfom3ypFwiHFALGSIRLAy5n5ITHNgGRs/5t5dD/fwWNOR3btwdIwZajX6XzBVGr5kfnKp/LV0aX6EIl/62rj5PHQ3FvQzvt1UYh5WoE+P+pa1dWOjI2k8IjVylpsho8n+kN+tAZ2aW9l/qLsBUc4SdxPaxwvdDMJ83kY+LGc3Fmz1UlH9KJnjGKhpRCmk
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2026 19:53:47.0549
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b77df25-2523-4ca9-467a-08de70b72bf9
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-Network-Message-Id: 792a5071-7b77-49d4-fcd1-08de70b9c2bf
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00006000.namprd05.prod.outlook.com
+	CY4PEPF0000E9D8.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9242
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV9PR12MB9757
 
-On 2/10/2026 4:46 PM, Davidlohr Bueso wrote:
-> When dev_dax_kmem_probe() partially succeeds (at least one range
-> is mapped) but a subsequent range fails request_mem_region()
-> or add_memory_driver_managed(), the probe silently continues,
-> ultimately returning success.
+The CXL specification (e.g., CXL r3.1 v1.0, sec 8.1.5.2) defines
+the "Unmask SBR" bit in the Port Control Extensions Register.
+When this bit is 0 (default), asserting the Secondary Bus Reset (SBR) bit
+in the Bridge Control register has no effect on the downstream bus.
 
-I would mention the range resource gets NULL'ed out here. I think it would
-make the below easier to follow.
+Currently, the Linux PCI core checks this condition in
+pci_reset_bus_function(). If SBR is masked, it returns -ENOTTY during the
+execution of the reset. However, during the probe phase (when probe=true),
+the function currently returns 0. This 0 return value incorrectly signals
+to the PCI subsystem that SBR is a viable reset method for the device.
 
-> 
-> However, dev_dax_kmem_remove() iterates care free on all ranges
-> where that remove_memory() returns 0 for "never added memory";
-> as walk_memory_blocks() will never see it in the memory_blocks
-> xarray. So ultimately passing a nil pointer to remove_resource(),
-> which can go boom.
+As a result, 'bus' is listed in the device's
+/sys/bus/pci/devices/.../reset_methods attribute, even though the hardware
+is incapable of performing it. If a user attempts to write bus to reset
+method or triggers a reset that falls back to SBR, the operation fails
+with: "bash: echo: write error: Inappropriate ioctl for device" error.
 
-Bit confusing imo. Maybe something like:
+This patch modifies pci_reset_bus_function() to return -ENOTTY immediately
+if cxl_sbr_masked() is true, regardless of the probe argument. This
+ensures that 'bus' is not advertised in reset_methods when the hardware
+prevents it, improving clarity for users and aligning the sysfs capability
+report with actual hardware behavior.
 
-"dev_dax_kmem_remove() iterates over all dax_device ranges regardless of if the
-underlying resource exists. When remove_memory() is called later it returns 0 because
-the memory was never added which causes dev_dax_kmem_remove() to incorrectly assume the
-(nonexistent) resource can be removed and attempts cleanup on a NULL pointer.
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+ drivers/pci/pci.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-As for the actual fix:
-Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
-
-> 
-> Fix this by skipping these ranges altogether, with the consideration
-> that these are considered success, such that the cleanup is still
-> reached when all actually-added ranges are successfully removed.
-> 
-> Fixes: 60e93dc097f7 ("device-dax: add dis-contiguous resource support")
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> ---
->  drivers/dax/kmem.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-> index c036e4d0b610..edd62e68ffb7 100644
-> --- a/drivers/dax/kmem.c
-> +++ b/drivers/dax/kmem.c
-> @@ -227,6 +227,12 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
->  		if (rc)
->  			continue;
->  
-> +		/* range was never added during probe */
-> +		if (!data->res[i]) {
-> +			success++;
-> +			continue;
-> +		}
-> +
->  		rc = remove_memory(range.start, range_len(&range));
->  		if (rc == 0) {
->  			remove_resource(data->res[i]);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index f3244630bfd0..57e24300d1c7 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4915,12 +4915,8 @@ static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
+ 	 * If "dev" is below a CXL port that has SBR control masked, SBR
+ 	 * won't do anything, so return error.
+ 	 */
+-	if (bridge && cxl_sbr_masked(bridge)) {
+-		if (probe)
+-			return 0;
+-
++	if (bridge && cxl_sbr_masked(bridge))
+ 		return -ENOTTY;
+-	}
+ 
+ 	rc = pci_dev_reset_iommu_prepare(dev);
+ 	if (rc) {
+-- 
+2.25.1
 
