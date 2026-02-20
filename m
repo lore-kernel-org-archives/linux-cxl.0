@@ -1,200 +1,153 @@
-Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6F318FDDE
-	for <linux-cxl@vger.kernel.org>; Fri, 20 Feb 2026 00:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771546590; cv=pass; b=dDzIsDHfutePwGy9UaJBdLj/WAwJfKp0C/dnoaYKmepG8ecvGHo9cGJIpmMB3YZwHhQGELe9MHfkfrzwxo5y0va4/CZV3GkKpkMqM7zC39KzVHL5Q4A2zMEAqr8Ug+2YNxaDLEEn8Bz0MciVMMQCMsLgVzRAS0IaBaXkvW+dY9Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771546590; c=relaxed/simple;
-	bh=CC0U3Bg8CaE5GOlBXZDydfgGT1tb54v/agMQXDOrzH8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fmyPfxgRpg+EOEeYBL7aeppnYzG+yhctyo53E3P0fdlO5STLxSWMRsr/ielE+vKPOhrA2GxeePx96Ej++rSSbPNk4IQEg08QVe3Afw4fcD0YHTH32O1/P4aZBw6HNVbnQfhUYpY5FCe84z9452PMcKIF9TBO/MFjNge/9PZG25Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=ACj4WU6K; arc=pass smtp.client-ip=23.83.222.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B37301002;
+	Fri, 20 Feb 2026 04:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771560634; cv=none; b=Yb+Zx5ZVSzcIqFe22v+A00Xb/+RqOJhVXdngDb508ICx//stbUJHo7AVayxKszk32v/MSYpmFxUOGFbWPTc6ytMGCCnJLs4o3rJHFPIOzOU5ednRb6utQHuB0+TlNEBdMnaxLhbO6MLQeOERMioROMrimU01taG9+uEYtKkY4jk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771560634; c=relaxed/simple;
+	bh=im5T2AhfGDyXaPXyhpLfgJGQ91DbQgM5VZmwKBunt1A=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=dEI4sm+VOycTpuitjCQ/wrmNPOcbOz2yr5KO/k2xCthHTHHiIMT1/qms04XsEHuG4qu+JnaHBCmZqGidapT4BEWh1gwMHAimws//u+C0OQg2vzBpRqoDB/aBqCk+oV24azh38cq+n4rPukrfIZnlVxQl6lbA6K80PlI6549GMno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BY31bXLu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="ACj4WU6K"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 24BC97E1C34;
-	Fri, 20 Feb 2026 00:16:22 +0000 (UTC)
-Received: from pdx1-sub0-mail-a248.dreamhost.com (100-99-12-77.trex-nlb.outbound.svc.cluster.local [100.99.12.77])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id BA0A97E2738;
-	Fri, 20 Feb 2026 00:16:21 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1771546581;
-	b=5MVyJAiBWhtLk6AvSHBMrDpGr474Cvj4j9vET63mS9ViriDIuBPSGTA5FncKrEU0HUDrVw
-	cnqRylk7IQyfO2AC2AQFlED+eyWFheZTVD3SdDGQknfFLJm8VoqFADcfQqcBqCHs0Xp2wG
-	lCUmyKrQWoOlgTCIkh5O6JGxDmeiGT+7H9qupcnsjec1OuSWh+uXOlHwezbB4SAHGBlmnS
-	vFazQ51YpPgCyqisTTZdf9z3FRg/M77kYRcsZbtddZSVnsrxNIBKVQ/k645cTVmj/VnCiF
-	xPFmySg/n0TAQMNejEGU6sFBDyV/2TyncSeP2jl5xkKOvQ3q98QTBVn6WI2/3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1771546581;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=KSHxrmT/NBw6HhAWPp6k8gxQH/VMe+cnmX/kP4bfj9s=;
-	b=zrMFsx/1DnZYVg/+sKVLpmQxyC5tz8ytCXnBblBignNp736H/dLf0OmI4h2REG+ooRah2k
-	zGVWfmZq7LPeTzHw+Ry9eQcF4vZeMnm5Akt8Zc9ov+vjOeLRYi15vDSDd76YlW/Onw2wYE
-	Nnc/6Klr5FnDCgv3WN21SdAIVwkEag/xWUDWFsb4Etm3gVc7I4XxAtH2mQija+jbE6FmFe
-	AUxrOnWyyqy+fLgoRKzqXT+a3qxHFUfvinlvmIi+KVylVooqdtPzdM5rZO5NDg+GCnw0HB
-	Zyv4ER6MVsi7SyOk5mF0bjUdgGLEzSyqvniOh+8CGGFJJSdKPGO5CFc3fPr8pQ==
-ARC-Authentication-Results: i=1;
-	rspamd-659f7bc6cc-mn88h;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Keen-Bored: 01a8761c2eb4d256_1771546582057_4113869744
-X-MC-Loop-Signature: 1771546582057:2541532830
-X-MC-Ingress-Time: 1771546582057
-Received: from pdx1-sub0-mail-a248.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.99.12.77 (trex/7.1.3);
-	Fri, 20 Feb 2026 00:16:22 +0000
-Received: from offworld.lan (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a248.dreamhost.com (Postfix) with ESMTPSA id 4fH9lT1CVpzyr9;
-	Thu, 19 Feb 2026 16:16:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1771546581;
-	bh=KSHxrmT/NBw6HhAWPp6k8gxQH/VMe+cnmX/kP4bfj9s=;
-	h=From:To:Cc:Subject:Date:Content-Type:Content-Transfer-Encoding;
-	b=ACj4WU6KKXU3rnvo6G7y0KjDs9bDmWJMBk8E04frb0Mae9VjXxRXHZg/x2JvkCJth
-	 jRF8TEAFOwmtvFOj++QJeL+XxoegoWwvQVWOtSV6bLg1iqCpE+qMhMEMQfqg2iLjCV
-	 9FbIipZwFG44LazjpMDZJE1wKQWSY3E+0KHD3OTC4XxKjtWt/NPJyldS0m/JsDNJFA
-	 jt6FbhiAC2XRvNaNuw2y0cn+ytn82l+uKRmZOJ49/iaMyutnjw4u9/07waca+fDpzt
-	 lYhIau6ry0aLOACyaW8f2mcOyeqTskMPTKB5wBJzYNpYo+4gX855Q6xw24ChsCenpz
-	 PcJvkcwa+WrCA==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dave.jiang@intel.com
-Cc: jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org,
-	Davidlohr Bueso <dave@stgolabs.net>
-Subject: [PATCH 2/2] cxl/mbox: return appropriate error in cxl_payload_from_user_allowed()
-Date: Thu, 19 Feb 2026 16:16:18 -0800
-Message-Id: <20260220001618.963490-3-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260220001618.963490-1-dave@stgolabs.net>
-References: <20260220001618.963490-1-dave@stgolabs.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BY31bXLu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3828C19421;
+	Fri, 20 Feb 2026 04:10:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771560633;
+	bh=im5T2AhfGDyXaPXyhpLfgJGQ91DbQgM5VZmwKBunt1A=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=BY31bXLuYwaDNUvbU0KhmqMJP3M/Awj2XilOUUrqfd5tse5Bs+Sof47ei7f2ySnfn
+	 tFNi7q7K9gluSvI0HlMVWVeaLxpkyoeKBDi/rrNOewr0OuAFpDC7j/iRqwMKPlJ5Wa
+	 P3ScJYlX18vFMmmARgpPLIChzrvUE2kp6Q3jnE9jYkAe7srv3PTOOcxMtCzqbU7qAw
+	 IToOjDmvHez/A8mTg3Q3sBsLUBSNAWxLa0iZsksGoJ/G/rax+WVfDfh7lH4OceXS15
+	 qVM1jLAxgENfoZP8fJU+Wp+4V3bOt53kAg6T75fF/G3mbGiObvL/fXyvhcTJ2XNYm0
+	 uwW0QrKe9zoGw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7CFE83809A88;
+	Fri, 20 Feb 2026 04:10:43 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3 00/29] arch, mm: consolidate hugetlb early reservation
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <177156064229.189817.6698956997773300471.git-patchwork-notify@kernel.org>
+Date: Fri, 20 Feb 2026 04:10:42 +0000
+References: <20260111082105.290734-1-rppt@kernel.org>
+In-Reply-To: <20260111082105.290734-1-rppt@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
+ alexs@kernel.org, agordeev@linux.ibm.com, andreas@gaisler.com, bp@alien8.de,
+ bcain@kernel.org, chleroy@kernel.org, catalin.marinas@arm.com,
+ davem@davemloft.net, dave.hansen@linux.intel.com, david@kernel.org,
+ dinguyen@kernel.org, geert@linux-m68k.org, guoren@kernel.org,
+ hca@linux.ibm.com, deller@gmx.de, chenhuacai@kernel.org, mingo@redhat.com,
+ johannes@sipsolutions.net, glaubitz@physik.fu-berlin.de, corbet@lwn.net,
+ klarasmodin@gmail.com, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
+ linmag7@gmail.com, mattst88@gmail.com, jcmvbkbc@gmail.com,
+ mpe@ellerman.id.au, mhocko@suse.com, monstr@monstr.eu, muchun.song@linux.dev,
+ osalvador@suse.de, palmer@dabbelt.com, pratyush@kernel.org, richard@nod.at,
+ ritesh.list@gmail.com, linux@armlinux.org.uk, shorne@gmail.com,
+ surenb@google.com, tsbogend@alpha.franken.de, tglx@linutronix.de,
+ gor@linux.ibm.com, vgupta@kernel.org, vbabka@suse.cz, will@kernel.org,
+ x86@kernel.org, linux-alpha@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-mm@kvack.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ loongarch@lists.linux.dev, sparclinux@vger.kernel.org
 
-Make cxl_payload_from_user_allowed() return int such that the it can
-distinguish between different errors. The payload size failure is not
-well represented by EBUSY (exclusive access by the kernel).
+Hello:
 
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
- drivers/cxl/core/mbox.c | 32 +++++++++++++++++++-------------
- 1 file changed, 19 insertions(+), 13 deletions(-)
+This series was applied to riscv/linux.git (fixes)
+by Andrew Morton <akpm@linux-foundation.org>:
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index e7a6452bf544..164da335fa33 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -314,8 +314,9 @@ static bool cxl_mem_raw_command_allowed(u16 opcode)
-  * @in_size: Size of @payload_in in bytes.
-  *
-  * Return:
-- *  * true	- payload_in passes check for @opcode.
-- *  * false	- payload_in contains invalid or unsupported values.
-+ *  * %0	- payload_in passes check for @opcode.
-+ *  * %-EINVAL	- payload_in is too small for the opcode.
-+ *  * %-EBUSY	- payload_in contains unsupported values.
-  *
-  * The driver may inspect payload contents before sending a mailbox
-  * command from user space to the device. The intent is to reject
-@@ -326,40 +327,44 @@ static bool cxl_mem_raw_command_allowed(u16 opcode)
-  *
-  * The specific checks are determined by the opcode.
-  */
--static bool cxl_payload_from_user_allowed(u16 opcode, void *payload_in,
--					  size_t in_size)
-+static int cxl_payload_from_user_allowed(u16 opcode, void *payload_in,
-+					 size_t in_size)
- {
- 	switch (opcode) {
- 	case CXL_MBOX_OP_SET_PARTITION_INFO: {
- 		struct cxl_mbox_set_partition_info *pi = payload_in;
- 
- 		if (in_size < sizeof(*pi))
--			return false;
-+			return -EINVAL;
- 		if (pi->flags & CXL_SET_PARTITION_IMMEDIATE_FLAG)
--			return false;
-+			return -EBUSY;
- 		break;
- 	}
- 	case CXL_MBOX_OP_CLEAR_LOG: {
- 		const uuid_t *uuid = (uuid_t *)payload_in;
- 
- 		if (in_size < sizeof(uuid_t))
--			return false;
-+			return -EINVAL;
- 		/*
--		 * Restrict the ‘Clear log’ action to only apply to
-+		 * Restrict the 'Clear log' action to only apply to
- 		 * Vendor debug logs.
- 		 */
--		return uuid_equal(uuid, &DEFINE_CXL_VENDOR_DEBUG_UUID);
-+		if (!uuid_equal(uuid, &DEFINE_CXL_VENDOR_DEBUG_UUID))
-+			return -EBUSY;
-+		break;
- 	}
- 	default:
- 		break;
- 	}
--	return true;
-+	return 0;
- }
- 
- static int cxl_mbox_cmd_ctor(struct cxl_mbox_cmd *mbox_cmd,
- 			     struct cxl_mailbox *cxl_mbox, u16 opcode,
- 			     size_t in_size, size_t out_size, u64 in_payload)
- {
-+	int rc;
-+
- 	*mbox_cmd = (struct cxl_mbox_cmd) {
- 		.opcode = opcode,
- 		.size_in = in_size,
-@@ -371,12 +376,13 @@ static int cxl_mbox_cmd_ctor(struct cxl_mbox_cmd *mbox_cmd,
- 		if (IS_ERR(mbox_cmd->payload_in))
- 			return PTR_ERR(mbox_cmd->payload_in);
- 
--		if (!cxl_payload_from_user_allowed(opcode, mbox_cmd->payload_in,
--						  in_size)) {
-+		rc = cxl_payload_from_user_allowed(opcode, mbox_cmd->payload_in,
-+						   in_size);
-+		if (rc) {
- 			dev_dbg(cxl_mbox->host, "%s: input payload not allowed\n",
- 				cxl_mem_opcode_to_name(opcode));
- 			kvfree(mbox_cmd->payload_in);
--			return -EBUSY;
-+			return rc;
- 		}
- 	}
- 
+On Sun, 11 Jan 2026 10:20:34 +0200 you wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> Hi,
+> 
+> Order in which early memory reservation for hugetlb happens depends on
+> architecture, on configuration options and on command line parameters.
+> 
+> [...]
+
+Here is the summary with links:
+  - [v3,01/29] alpha: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/ba1c86874e25
+  - [v3,02/29] arc: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/7988e8518904
+  - [v3,03/29] arm: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/30a66f8a8cd3
+  - [v3,04/29] arm: make initialization of zero page independent of the memory map
+    https://git.kernel.org/riscv/c/18b7cc70dea8
+  - [v3,05/29] arm64: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/60b35af0a6aa
+  - [v3,06/29] csky: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/37318eb97f23
+  - [v3,07/29] hexagon: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/934afdf7f4cc
+  - [v3,08/29] loongarch: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/63cadcb731c9
+  - [v3,09/29] m68k: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/41b08a7abf89
+  - [v3,10/29] microblaze: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/2ce38c9ae840
+  - [v3,11/29] mips: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/f61385e29444
+  - [v3,12/29] nios2: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/3b1b0e5797bd
+  - [v3,13/29] openrisc: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/1d28b1142383
+  - [v3,14/29] parisc: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/950696afe400
+  - [v3,15/29] powerpc: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/27bebe446f8d
+  - [v3,16/29] riscv: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/db8cdb0ad603
+  - [v3,17/29] s390: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/76c4c463bbc0
+  - [v3,18/29] sh: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/8bfa6c2259f4
+  - [v3,19/29] sparc: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/6ad7ea22cf6f
+  - [v3,20/29] um: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/531de7f02d51
+  - [v3,21/29] x86: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/34f6b9c6e417
+  - [v3,22/29] xtensa: introduce arch_zone_limits_init()
+    https://git.kernel.org/riscv/c/2d3c8c5f33e0
+  - [v3,23/29] arch, mm: consolidate initialization of nodes, zones and memory map
+    https://git.kernel.org/riscv/c/d49004c5f0c1
+  - [v3,24/29] arch, mm: consolidate initialization of SPARSE memory model
+    https://git.kernel.org/riscv/c/4267739cabb8
+  - [v3,25/29] mips: drop paging_init()
+    https://git.kernel.org/riscv/c/5dea39496c68
+  - [v3,26/29] x86: don't reserve hugetlb memory in setup_arch()
+    https://git.kernel.org/riscv/c/6632314fddc4
+  - [v3,27/29] mm, arch: consolidate hugetlb CMA reservation
+    https://git.kernel.org/riscv/c/9fac145b6d3f
+  - [v3,28/29] mm/hugetlb: drop hugetlb_cma_check()
+    https://git.kernel.org/riscv/c/7a9c0bf0aec6
+  - [v3,29/29] Revert "mm/hugetlb: deal with multiple calls to hugetlb_bootmem_alloc"
+    https://git.kernel.org/riscv/c/743758ccf8be
+
+You are awesome, thank you!
 -- 
-2.39.5
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
