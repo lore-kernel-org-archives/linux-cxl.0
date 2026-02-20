@@ -1,199 +1,209 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011005.outbound.protection.outlook.com [52.101.62.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357CC31AF31;
-	Fri, 20 Feb 2026 12:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.5
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771591852; cv=fail; b=F2YmyrQJEINTsNqp7BEWX1TQRm2EPgpdNHFL+lsLNWdW9JS6fNPs1PjTESMcT/cMscL4dwi8kCjb9GSsygRo8Mot+8X2kyBSPIO2hzz3PwJmrUdqknoYrBZ9vfI18pOJh3j9hlov8lTShWumJXwgdntvJy54GXMV/c0GqtioYpw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771591852; c=relaxed/simple;
-	bh=QZXhOeU1Xg0xc4n9ZWGbF2ChQG2dlEiILYDhIya0W/A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=J4DwWScvtyMRP7S0MFx7iUXW1Qj/JsEVSidrEVg/eM7NXUnnS62A4gReLQhTNIqIp9EV3ou1Pm9jSQ/ACvIFu+906sJcGRTX2O7P8x0hO4S0t4LBpgXjHbgR4YOOIu0E1lD4r3KZmGYyPVUDJ7PGh6ocX7HcZ2deksn5aHUxdx0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=O4+gHJ3k; arc=fail smtp.client-ip=52.101.62.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD628340DA6
+	for <linux-cxl@vger.kernel.org>; Fri, 20 Feb 2026 12:58:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771592338; cv=none; b=l1B1pPgOd3NfCG4ov00dRQwXT/HvUSgbsCslHLRw1LjAVGOK7pigyksw9zOwEcJlzYXO1otKp9wyjSQ5yzT0KYTRHJ0FLiERM3hOZ3Vhj0Tgq2gQIrDRAjtK8tTffvlDGxB7XRYz3kQq7EuPW3iu3lmcQ3edAbPf/j6EoF4IknU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771592338; c=relaxed/simple;
+	bh=K1IOQCkyvfGc/izL60Ju6R0tbrdgrRTlOmraJJaNHmU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=txg78k0lF9stp6srVMPWFRVGUJoaF4BaWCcMF7N1gXCzp/6figGWdxFa+q8+O/t+mMJxhkx9NT+o2QdwIbLUKzjeT+oZ62oDYamGFfR97Avlvwt6t7SQBYAovt0+GUlKRPm7ib92DJ3YL87nz2t41t5RcwjNseRC+ZkTaTA2Wyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CnR7wmxV; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="O4+gHJ3k"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=id2UhzWHqHdZZDxhPDGItD4AA3gHf9ktkC5L5DLGZKJ74uEXdjGtikNEaqMlVW3cC9N723tkF0sGU1j12Y/VmuzLfbuCS2nr1P6uvc7JuJeVWpZLFmchGixAt2b+I9MNuPMwAFfpLEDaTICSkXg3fuTV6LkfIOxoQp/86P/SOx+EZI0rDT2lXWALEXP8Lh2cIvIW6AOGVeK/GgaJ9ze57A0dubZnAxrVuShxEPyDWubXD5fJbpRZ5/19AZHMbEa37AUPK8zoQDfIGUYUjU3SSa1Qd2jV7XQpAYU1KF+W6D5Aio5IEI3uD3RSumlaDR+mJRZ/Aelbg8CwI+b1ut/8rw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EwrHlzmtHsa5ogvhRX34aCNQeHA7c5YiXKWXe5mHUZU=;
- b=lo15IfuhUYz608tRHNuYdiTJSYu10geLjyPz3am14sw63W25I6oZwRQ1UaeBlKjO8f8iR3PdzJBaNvi84bloK9LPFlLDN2r64A7gnzmQ8Ld6AwV/57EgjIHP9KwzFPFRptzjO7IAwEQWzCeJ8BOH4RxAKfzpA9/SvieguweBubRfkLXX59jcgtm/o/zgbceEUn0tEOXkLLZlIDGNkmlL7XDNei2T2TgVpdZgawp7eq3VOunW0F7VsOPtLVY6OpiRN+/P9tcJ/saYnQrqcCKKwsSy6N5E5+kVO/og+QugQcyrMnzc4szVuAnIZHZkprQEQSY0sn+WU47OXVXac1e4BA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EwrHlzmtHsa5ogvhRX34aCNQeHA7c5YiXKWXe5mHUZU=;
- b=O4+gHJ3k0vwDw+Vb2dRbW9dIxW1+qHlWab8ur/H7rg4Aib0vm+XBQaupOu+RrHVmHTYQ5e0d11XQoDhnjfkLi/27dGWbFLxmUT29e+ev6gj2wtb6NUTmgdnDiUt621uyJiGkE/h1cnx3WgMvUNr6OJ3lNFbfIUyYDxZeBDv/pbjKCFfbftW4E7t8Q0wCYUyTwUdqILGoddQgZeGKE4R0E1CPEnPyrHg0TrHVKlfRFRUtHCx/kjv9wX7HAvhlL2yEXRxTVrYgDjIFntqfrYE/omLaWesPTnKbeHFTDr34MeYQs+rrBJPC/uewpbRgufc2NOyIrZVWRzUeiYA7S/+ibw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
- by DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.16; Fri, 20 Feb
- 2026 12:50:46 +0000
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::299d:f5e0:3550:1528%5]) with mapi id 15.20.9632.015; Fri, 20 Feb 2026
- 12:50:45 +0000
-Date: Fri, 20 Feb 2026 08:50:44 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: dan.j.williams@intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"joro@8bytes.org" <joro@8bytes.org>,
-	"praan@google.com" <praan@google.com>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"miko.lenczewski@arm.com" <miko.lenczewski@arm.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH RFCv1 1/3] PCI: Allow ATS to be always on for CXL.cache
- capable devices
-Message-ID: <20260220125044.GK723117@nvidia.com>
-References: <20260128130520.GV1134360@nvidia.com>
- <aYGEDv86r4a6l2Dv@Asurada-Nvidia>
- <20260203143348.GA3931454@nvidia.com>
- <aYI0LUdXqrjmRcMo@Asurada-Nvidia>
- <20260203175540.GC3931454@nvidia.com>
- <aZZDo3BeuBKh9q24@nvidia.com>
- <20260219143737.GG723117@nvidia.com>
- <aZc//6kvH3Eqfwfe@nvidia.com>
- <20260219174139.GI723117@nvidia.com>
- <aZfoqETxb31jp/Pk@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aZfoqETxb31jp/Pk@nvidia.com>
-X-ClientProxiedBy: BL0PR05CA0012.namprd05.prod.outlook.com
- (2603:10b6:208:91::22) To LV8PR12MB9620.namprd12.prod.outlook.com
- (2603:10b6:408:2a1::19)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CnR7wmxV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1771592335;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vkSNI3uLN6KRJsGjKA6J4qpWg+yqDGZlKCoW+0IJCbs=;
+	b=CnR7wmxVMGdADfp8tXr+wh0/1TtTtl/yFWFrEADdpoD7oK/fu+uZmmQxXM65IWJftQUXnV
+	DnLJgjW54y+rvXdeRf5AoWpoWAAtcoHzvLk1Jp47ckZ6PMhiwdjE7M3ym6aRKEBXy+puDs
+	r0CGxlT2yE5WTnr6XTDq+6CntcrDbuA=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-696-ZhktzvquOp68LTEkKuflJw-1; Fri, 20 Feb 2026 07:58:54 -0500
+X-MC-Unique: ZhktzvquOp68LTEkKuflJw-1
+X-Mimecast-MFC-AGG-ID: ZhktzvquOp68LTEkKuflJw_1771592333
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-48071615686so22006345e9.1
+        for <linux-cxl@vger.kernel.org>; Fri, 20 Feb 2026 04:58:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771592333; x=1772197133;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vkSNI3uLN6KRJsGjKA6J4qpWg+yqDGZlKCoW+0IJCbs=;
+        b=Utv0Xtd7MiuVnse0gUXJ1Dd06WhKaL0pHbHbzsrQeFjIldEGgnqa5DpHPOFkEnUU4M
+         drGYCW/PDTKp7S6/WaIneumvtakJZ8C/GkpqC2I/so1yzaSty28HNBvW15AptWszlISR
+         D7G9pQixxy2nu1La/AcpgQX0iZ+xkxE7i+HS2bmf2hLXQSbF7WMx2FvInXhqXnb8WkkD
+         uPgWsEownSJ5f1Qe1BTjbtF9zubARI+wWXpTrsMrdR3BtA68QSBlmDNJPASC8ZwmrLZC
+         NAHs5hI0JS07zqYmKmwSrGpeId/8XoIWbFJO61xMOCdCGWPUPvwmGVeNX12LB0fQRH3n
+         RwEw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfSVm6cO/47ghhiP9OWtxhQ+WLjkWHcs9n6cM88xVzfYlnik2KG47HoL+9bb3ZL1MeumVnhd8s+Vg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ7SYaCzU92LT9va6D+3Sd9WkHxqkCAStDnQXU7hPgV59s1Gjw
+	A6P6IKVHXexh66lcZZ5vUMs2+Be3HaCWhEft5gHkdXSZXY8GwoL8YPLsZSoaafj3fxxtfixWDsn
+	qF8oTEp2hgsOoHyZjfB+xyx7AqjI2/rfXBl+3nyQJWqovnVikK2iGawv/I1HeFA==
+X-Gm-Gg: AZuq6aIXaYO+ID6py6sa1sgDLHUY8kCtmHZVe0J1uZrZWWkCEL4lzg3N9gv6fpV8Z7u
+	6QFyJ/MH+mYUZPrsobcS8Y2BNdvnBoiM0qqkUJJRSPCAJqfsxukm7XZzNpZPpFtLDyk/1/xQKuF
+	la7Gn/L0iwRryaFzhcQ3XgiOHa9jR9o2UHSM9znG2WUk4OJqf7pgXX4EwnFwwR0pw+SSqfNlSPs
+	StO3ddrCxwlMiKUt7zQ1zBR7/WxXbnOuCZG1Zr5us8GxtKA/uu8j0Fdkh2MGUltij8gC3+0Yuid
+	RdZLskLN6X2X0RghxNnmg7SJ97ozJAANoGjPSMeDvH51tZmRHFID1CgHkVs9EJikcC1KN0uK7nJ
+	XDqfV9rf+T6tpWex9kF/DspdPxCkqkA53EsPaUHVVrkVr3g==
+X-Received: by 2002:a05:600c:608a:b0:480:1e9e:f9b with SMTP id 5b1f17b1804b1-48398a58488mr187082575e9.16.1771592333243;
+        Fri, 20 Feb 2026 04:58:53 -0800 (PST)
+X-Received: by 2002:a05:600c:608a:b0:480:1e9e:f9b with SMTP id 5b1f17b1804b1-48398a58488mr187082105e9.16.1771592332720;
+        Fri, 20 Feb 2026 04:58:52 -0800 (PST)
+Received: from redhat.com (IGLD-80-230-79-166.inter.net.il. [80.230.79.166])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43796ac7d91sm58035586f8f.26.2026.02.20.04.58.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Feb 2026 04:58:52 -0800 (PST)
+Date: Fri, 20 Feb 2026 07:58:49 -0500
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: qemu-devel@nongnu.org, Arpit Kumar <arpit1.kumar@samsung.com>,
+	linuxarm@huawei.com, linux-cxl@vger.kernel.org,
+	Ravi Shankar <venkataravis@micron.com>,
+	Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
+	Michael Roth <michael.roth@amd.com>
+Subject: Re: [PATCH qemu v5 0/3] hw/cxl: FM-API Physical Switch Command Set
+ Support.
+Message-ID: <20260220075818-mutt-send-email-mst@kernel.org>
+References: <20260204173223.44122-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|DM6PR12MB4202:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2b3c2bf0-c42f-4fb4-a83b-08de707ea9fd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UqZC5JSSUXsjZU5938K/UNBlK2u4UlM1lfcnGC8dXpDQuSUQpSu3afnRKlsj?=
- =?us-ascii?Q?Joqe6PV3GjUP14yr5dg0EV8wS6HCi6eDW72KUiDFyNd3espEZLzuC95NQ92s?=
- =?us-ascii?Q?zWFpt/PnAPEPKUjdHE7REBqREF9mDGaI+6k+zRZvOwhVrrMUWUHFRhkSf/Kg?=
- =?us-ascii?Q?oKYOnI/trrog5HTQoj6dXzp1h+ozwYT4/Tr6WYpdJ7JsE/FzJ858YJJCkLea?=
- =?us-ascii?Q?eHahLk53kO1uYPQkKQcm7p6T+IaKROCykQBqdNGe07hE1rOKO6X309Nhg0Yl?=
- =?us-ascii?Q?C7KAIg2aIV96EGRrVy8aGv9GPWZfV0/8MyliZZYY/6zddEBQ/BX3QYS5P1y+?=
- =?us-ascii?Q?tZy9xKtYZQBtBfzYAIu71dCJG+lxAapWGM+0ViUkLGGO2f3fuvrQoLp+rpbj?=
- =?us-ascii?Q?GvpL3qjeWMt26p4fSBk8drOFgoddB2gKhd4XPh0xkyjMt1uV8bNRyfqjkCZW?=
- =?us-ascii?Q?VULe40uoiVofYBVENlEUS1031+dlVRCowonp8Fs5QeK5rYWdo6cBg1/JCwPz?=
- =?us-ascii?Q?7PZG0umSsNxqVOfKD4G7vOz1Lx+h/J7K0DPAYLPaDZQUtSawye2jDJSDFJib?=
- =?us-ascii?Q?A++tFtof6r7wYT3RgH6OT3KkJmYqTgatEMjmWBKY1CTTTvz5inle5WZ25fJy?=
- =?us-ascii?Q?j9j0t/O8DEIoWKcKszeh8mChGVmY3b9cXKUMEb/nves7p5l7hdeJG4BimNpV?=
- =?us-ascii?Q?8Ko31JqNN0N3hDYiv44lrYX9qmXllHk+fA/1N0y8jCl+IKc9CyAgIxf2CFqR?=
- =?us-ascii?Q?uP7xfq/ogLzGKlpc4v175KYOgeYaAe61wI70QZqc0D/BRWjH7iBGI75iMaWU?=
- =?us-ascii?Q?6Hc+sVYB/oy4SsG/Tsi8iOfV6ZPvvj1EsaHfSyyeSr+plly8eL5kCyC0+EdP?=
- =?us-ascii?Q?i4w7nYnmpHdTjsX78GhkXslToSx6krPSXhvRgybIrpaDk6iMpyGBXI/k6peX?=
- =?us-ascii?Q?VpXlWQ2IQJrgfy3PSSBTuP6FxUxQNZ3wR1Llo96LIOZdBL95H/0B/7f5e7Zo?=
- =?us-ascii?Q?CnYhr3xlfdvZwevhYu67hIbt/xcuKF1M7SlVfFONDd5w9khaBJqVcPmleKRq?=
- =?us-ascii?Q?c9TpAxqM3VxdlT45NpShCzATEojHnbWdhxMNx2xWDi1CANgQnwfI/DOIkO90?=
- =?us-ascii?Q?rL0VDvW1khecrZp0M0lHwbaWkoM1A/5FJopvt+gjs/kk2IUomFxGu5x4Q8kI?=
- =?us-ascii?Q?pxGajPTiAnNpIR8pISpU3nfkx6uc6JhuNaE4uowbKCZulOKpzgoBumjif/3k?=
- =?us-ascii?Q?7UtjSo0ANf4jtorFffZSFYuqfHhcElvF4IpNvgw1+l/smO4ClDD6zhtT7cow?=
- =?us-ascii?Q?1hsXKGtCvgUGDOzITDKXTx1l10VUIfIELe5JzR3Likis4jGTW5dkLk2Z3nr6?=
- =?us-ascii?Q?3BUO43H365YCvyGYB8vfhD+QMep/dOqhFAMu/+4/EnVg+JX3EdxyyMn4QAy5?=
- =?us-ascii?Q?hRZeDTK9+9EfRipEFQ7zJ8amIovwWiRiFQaZ+rCtjciw76MwMuybPbynupNS?=
- =?us-ascii?Q?gsPgZzwiE/0X+IhbHYDjByPJJxYST71ogHYhDRRNIHvXBvX2b2E17YWP88Lo?=
- =?us-ascii?Q?lONkEJVgTu4x/yu48VM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?NPuClRaIGkOOPNxJheFk2kYGMGatjBg7yF3ReARLIGmEmAAmtuRunIEFD9dp?=
- =?us-ascii?Q?JDWsnpyt2RW0qOYiK3CA459MXsPr5rbnK7gqxAQZeuxvjAEA3vIKg+TOx5sy?=
- =?us-ascii?Q?JoDEtDg4aIWMaxZHDabC24ghpyOdkKz8oN7ORAU9Q1LSv4euS+r71+a06933?=
- =?us-ascii?Q?nqmvp1E4zl7EcJIWyVS+dXdbjfvL0t/dsdLhj+R5SCXskjbprRGrU75RykTu?=
- =?us-ascii?Q?jnuXiyghbjMY3FTtbLpvoo1btXfnRI71T4qtmHBUs1upkOofoeBu4PMm5/uG?=
- =?us-ascii?Q?Xl6sT1NGffNR+mK37bUW06KFBwwhxM/0sBmYgFl1g1KLYPwEJY0bE7edr4hW?=
- =?us-ascii?Q?i+3L/BGpjQr8Ut+5A9Voqss0AqbB9C9FMPdMVkqWrJH57P0JMVFSd5p+0FE/?=
- =?us-ascii?Q?lioOCSLlzsaZyE7NznBWwyXzIQLbaGQKnsv6gtJAed6KssfxaY4b8UBJ6+Aq?=
- =?us-ascii?Q?mW4i/GiB+KzyERchKqvenctlX3BUxporKPc0htF8sh9fFSkLB9AvIqjjFlJk?=
- =?us-ascii?Q?iu46Ez9thdOxwkhm/XAXd4urzNWVfflTkaMN4xz/jYfwElt95Sf9nyRTZslD?=
- =?us-ascii?Q?1SEEo5nojwUT7ww0Mdfm5ulOmKp0QQmIlRtqxpZETysYsVvGSJDvnfFZ4ky/?=
- =?us-ascii?Q?nukqnsGYm8P4lovOQbs+ENYvxkwAkUEEPGpFfY79KgFvS6ILel1FPZl9+U4e?=
- =?us-ascii?Q?7CZne0gXkjr7y3x/PqUZOa4c5sLhFsmBbULG5DLGX6tfgIh5ZqR5P4uujiRH?=
- =?us-ascii?Q?aucZVz5/bAxq74Pu4D+kJuzVCBLayRMh0JfKVWtrxUY/LTuSlq/XomwJCnlW?=
- =?us-ascii?Q?ee3LVI56PtlhTaGyRcdV1O/krkAwyOYk8yXs4yPIhkl4sf5sLwxp1EwV+y0m?=
- =?us-ascii?Q?55GSIrVCk3/W//iJ42ZFQudgb2TjvEcXz8ka71AJQrKNLMOgvq5mSKPR2zBv?=
- =?us-ascii?Q?hrCpAhiilEoZNHJwEeqFyrZqxx+kDyNK+xbXR8nSGx7BzT3e/sbRR0CetIjC?=
- =?us-ascii?Q?hzHYtfcSxSkBeUok/NX8ZC8ZEa90MWrwq3BktzYwi/+ag4b8CqgkZr5mh0Fw?=
- =?us-ascii?Q?JPmOjBBAHIlUj7Ct2JP5TK+eVKxS2kyZwUWhnn2NTYFPK6PLvq4XCEH814EZ?=
- =?us-ascii?Q?aMNyeUB6PWR2JctccTSbo7wEIKjIiuzMf5tl69fSdV4idGPft9TwyeLsD8rN?=
- =?us-ascii?Q?VhNpX6hhS0IgS0vsDh4br/jBaU5hjqU11aQ5PgCyJtm5SFUMUsD+mcnFUlqb?=
- =?us-ascii?Q?WDHh6o+Zpsll9I9vuC2jOXmMdSA5p5yk2JLuPxa5Jjf8XuhfWq30tWu5Si5S?=
- =?us-ascii?Q?nnUC1uwvPDYQ2E0JG3RKD8F6CJ4FNl2mgt/ZooExMa1WFMXoTXTbCzFG30zx?=
- =?us-ascii?Q?ooVmUfYulCOrR5NwvCRAz6AKC82Y8zcLzCtzW6HIiUevuPobK94jnU/VW9nM?=
- =?us-ascii?Q?WDLSg+4wQ11be1W/rpax3oPNqw3a9f17ecSQ6+CP5vziFjcmM0cdW9dt5RSd?=
- =?us-ascii?Q?TEl4JwrKHp1dtDKlWhWoyi88Nq2jrQ6JpR6bDjGqIwSH419YBBQ2uZDlAEuF?=
- =?us-ascii?Q?utdEoC1ETl86HS2kn/AtAfY5Rj0JjCpR5HO3r2RWUxeo5ILZu4DlyRr/yRTW?=
- =?us-ascii?Q?cJcgsxUer1DqzkIASm1d/0aybECI49DgGUdL3GmM2shvz6YHwlI8P2+X6K9O?=
- =?us-ascii?Q?hVAIX6NbcpkeL3MSEBrZNemnYcjVC2x8tmA9Apd1qQmWXx0f?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b3c2bf0-c42f-4fb4-a83b-08de707ea9fd
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2026 12:50:45.5413
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TIIiqJaFmNy50uH9i4nwy6XJvgEGRtYbNnWLylbVvL+n/gTjeo+RN+EF/9gM4N56
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4202
+In-Reply-To: <20260204173223.44122-1-Jonathan.Cameron@huawei.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: MS3HT1sZMiU82aDftUTdsVZq8Yu4BkTkzA_vkAMTx48_1771592333
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, Feb 19, 2026 at 08:52:56PM -0800, Nicolin Chen wrote:
-> > What is missing is to bring back the IDENTITY performance optimization
-> > in a secure way.
+On Wed, Feb 04, 2026 at 05:32:20PM +0000, Jonathan Cameron wrote:
+> Changes since v4:
+> https://lore.kernel.org/qemu-devel/20250916080736.1266083-1-arpit1.kumar@samsung.com/
+> - Dropped initial refactor. Reason being that it is not static enough
+>   for caching at boot to be appropriate.  Kept the spec update part
+>   of this.
+> - Added a patch to make sure the new flip mode stuff is reported in
+>   the Get Physical Port State command.
+> - Rebased Arpit's Physical Control Control FMAPI Command given drop
+>   of the major refactor from v4 patch 1.
 > 
-> I might have got it wrong (from the last part below).
-> https://lore.kernel.org/linux-iommu/20260127150440.GF1134360@nvidia.com/.
+> I had taken this into my cxl staging tree thinking it only needed a few
+> minor tweaks.  Then whilst testing I realized it didn't work with hotplug
+> and that made me consider if Arpit's original approach made sense.
 > 
-> You mean to disable ATS on IDENTITY domains? 
+> So this is my proposal on how to take this forwards. Note that this is
+> not ready for merge (probably) just yet as I'd like Arpit to take a
+> look at the changes.
 
-The objective of this security step is to keep ATS blocked and
-IDENTITY domains disabled until the userspace has "accepted" the
-device by binding a driver to it.
+I'd appreciate it if you add rfc in the subject in such cases.
+Thanks!
 
-The off the cuff suggestion was to just park the device BLOCKED until
-a driver is bound. This disables ATS and blocks translation.
+>  I went through a version that had major refactors
+> to push the logic of building the records to the ports themselves, but
+> in the end don't think that brings enough benefits for the complexity.
+> 
+> Based on:
+> https://lore.kernel.org/qemu-devel/20260204170936.43959-1-Jonathan.Cameron@huawei.com/T/#t
+> (with all it's precursors, though hopefully they will all be in Michael's
+> next pull request)
+> 
+> I'll note this is an enormous foot gun as it lets you effectively trigger
+> surprise device resets.  However, it's only accessible if you are using
+> a configuration with the fabric management parts of the CXL emulation.
+> For now that is a switch-cci (MCTP over USB support is near the top
+> of my list of things to get ready for upstram.  I tested this with a
+> custom driver and if nothing else it exposed some gaps in Linux's
+> ability to rescan PCI buses after a perst event (even with drivers
+> unbound etc to make it safe).
+> 
+> Original cover letter:
+> 
+> This patch series refactor existing support for Identify Switch Device
+> and Get Physical Port State by utilizing physical ports (USP & DSP)
+> information stored during enumeration.
+> 
+> Additionally, it introduces new support for Physical Port Control
+> of Physical Switch Command Set as per CXL spec r3.2 Section 7.6.7.1.3.
+> It primarily constitutes two logic:
+>     -Assert-Deassert PERST: Assert PERST involves physical port to be in
+>      hold reset phase for minimum 100ms. No other physical port control
+>      request are entertained until Deassert PERST command for the given
+>      port is issued.
+>     -Reset PPB: cold reset of physical port (completing enter->hold->exit
+>      phases).
+> 
+> Tested using libcxl-mi interface[1]:
+> All active ports and all opcodes per active port is tested. Also, tested
+> against possible edge cases manually since the interface currently dosen't
+> support run time input.
+> 
+> Typical Qemu topology
+> (1 USP + 3 DSP's in a switch with 2 CXLType3 devices connected to the 2 DSP's):
+> FM="-object memory-backend-file,id=cxl-mem1,mem-path=$TMP_DIR/t3_cxl1.raw,size=256M \
+>     -object memory-backend-file,id=cxl-lsa1,mem-path=$TMP_DIR/t3_lsa1.raw,size=1M \
+>     -object memory-backend-file,id=cxl-mem2,mem-path=$TMP_DIR/t3_cxl2.raw,size=512M \
+>     -object memory-backend-file,id=cxl-lsa2,mem-path=$TMP_DIR/t3_lsa2.raw,size=512M \
+>     -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
+>     -device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
+>     -device cxl-upstream,port=2,sn=1234,bus=cxl_rp_port0,id=us0,addr=0.0,multifunction=on, \
+>     -device cxl-switch-mailbox-cci,bus=cxl_rp_port0,addr=0.1,target=us0 \
+>     -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
+>     -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
+>     -device cxl-downstream,port=3,bus=us0,id=swport2,chassis=0,slot=6 \
+>     -device cxl-type3,bus=swport0,memdev=cxl-mem1,id=cxl-pmem1,lsa=cxl-lsa1,sn=3 \
+>     -device cxl-type3,bus=swport2,memdev=cxl-mem2,id=cxl-pmem2,lsa=cxl-lsa2,sn=4 \
+>     -machine cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=1k \
+>     -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=4,target=us0 \
+>     -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=5,target=cxl-pmem1 \
+>     -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=6,target=cxl-pmem2 \
+>     -device virtio-rng-pci,bus=swport1"
+> 
+> Tested multiple Qemu topologies:
+>         -without any devices connected to downstream ports.
+>         -with virtio-rng-pci devices connected to downstream ports.
+>         -with CXLType3 devices connected to downstream ports.
+>         -with different unique values of ports (both upstream and downstream).
+> 
+> Changes from v3 (https://lore.kernel.org/qemu-devel/20250909160316.00000190@huawei.com/T/):
+>         -Namespaced the defines with cleaner prefix for Get Physical Port State 
+>          Port Information Block members.
+>         -switch CCI implementation instead of switch FM interface as per
+>          Jonathan's review comments, hence moved perst members initializations
+>          from: cxl_initialize_usp_mctpcci() -> cxl_initialize_mailbox_swcci().
+> 
+> [1] https://github.com/computexpresslink/libcxlmi/commit/35fe68bd9a31469f832a87694d7b18d2d50be5b8
+> 
+> 
+> Arpit Kumar (2):
+>   hw/cxl: Physical Port Info FMAPI - update to current spec and add
+>     defines.
+>   hw/cxl: Add Physical Port Control FMAPI Command (Opcode 5102h)
+> 
+> Jonathan Cameron (1):
+>   hw/cxl: Get Physical Port State - update for PCIe flit mode
+> 
+>  include/hw/cxl/cxl_port.h                   |  73 ++++++++
+>  include/hw/pci-bridge/cxl_downstream_port.h |  12 ++
+>  include/hw/pci-bridge/cxl_upstream_port.h   |   2 +
+>  hw/cxl/cxl-mailbox-utils.c                  | 183 ++++++++++++++++++--
+>  hw/pci-bridge/cxl_downstream.c              |   9 +
+>  hw/pci-bridge/cxl_upstream.c                |   1 +
+>  6 files changed, 268 insertions(+), 12 deletions(-)
+>  create mode 100644 include/hw/cxl/cxl_port.h
+>  create mode 100644 include/hw/pci-bridge/cxl_downstream_port.h
+> 
+> -- 
+> 2.51.0
 
-That doesn't work on ARM because of the MSI issue.
-
-The next suggestion is to park the device in a real DMA domain with an
-actual page table and DMA API hooked up. Now interrupts will work and
-the domain is empty so there is no translation. The issue here is the
-domain doesn't block ATS. We could fix this with some "disable ATS"
-domain flag.
-
-In either case when the driver is bound and requests that the DMA API
-start working if the user requested IDENTITY then it has to be
-switched away from the parked domain to IDENTITY.
-
-A final thought would be to change around the driver managed DMA
-mechanism a bit to allow drivers to indicate they use IRQs but not
-DMA, then the bind step could switch from a BLOCKED domain to an empty
-DMA API domain to allow MSI to work.
-
-Jason
