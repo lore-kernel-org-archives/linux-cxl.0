@@ -1,53 +1,53 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC7E6FC3;
-	Sat, 21 Feb 2026 11:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC586FC3;
+	Sat, 21 Feb 2026 11:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771674610; cv=none; b=IR73WM3BBkhzizik9+rUTZV3mlcBs/EndrewMNOYzAKl6vtXlJkWqrX0lFpTzBxsiJRCQA9MAy/9qUo5Sb1ysqTjafK7GsjTyRzuOV46l4reQF0f5W84c3WALENAJ6z6q4fvfks4BdkGeWGLoShMyFrpbrmNgIkmAXi5z0DVXZs=
+	t=1771674844; cv=none; b=lvOENTvgmZh1CbEamzytdKpbT40f0YXOCrw44TXSiXh35kik2o7jYHIF1V+mEhLjrsDXRg57iBB8Cu35bfxrXJWB+BRcKjVjvxlWbXmg/EjDyg0iACBu4WI2DQsibXaMqERGPOtp2wSPPKxNUu71IG/+2FW2XIc916EDmA0eBSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771674610; c=relaxed/simple;
-	bh=NYxN3q7uzIQ7eRAPCXv2ldQEdSOGm8toITslvgGy1mg=;
+	s=arc-20240116; t=1771674844; c=relaxed/simple;
+	bh=dgKcC2exrLX8LuLtBQ8GHknd+cf3zVoX32VHa3HY2CA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cEpouYuCnDHLueFp39NE2fVaHhCHu/LmMw7Ekl9g3e4pZxr5mJhzgtyNoSzEJmkLq+e4G0HJ6g0gbN1zRamtFzcoCjDgrF7CRO8D1d1QfCM0mvfTixaznvdzGSfP3k3xP4iADleLah3W+swOxpqeyG/41UYs/lWezQh9kGAfAlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FcnPpjR1; arc=none smtp.client-ip=192.198.163.12
+	 Content-Type:Content-Disposition:In-Reply-To; b=C0Rx4hxtMJBJfBoUjFai/iouBuGon8KOuvj0N3me74/BEWf1hX8yDv4z9cmxu/1avHeVwbOmrGY512HPAPIPRGlqXgDIPGZ5wu8DkDDMmvWdVwdTlUnaNJOYjTaAjOIPpvoFWPKJ9D46+cLXtQw89GPgod2drGQdZ48QmG6LPSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lEM1rxu6; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FcnPpjR1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lEM1rxu6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771674608; x=1803210608;
+  t=1771674844; x=1803210844;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=NYxN3q7uzIQ7eRAPCXv2ldQEdSOGm8toITslvgGy1mg=;
-  b=FcnPpjR1IZ3C48KsU50Yv21suupL2qivkoTBC1NESs5vGBAXPkZTJjZm
-   7ZaPEoXFDy/cpA5oBCeZoyN+ZrxenJf1lR9EHCOyM+Gao4mieB3C48jBB
-   IxEe96bVe2KedZxF6k8LIN+7Ct+4bMTtqjwKAgbqkNdLFvKszUgAZ7GKS
-   8lwCZ0Gsr6uUbP5QRhMRllS9L8z2OPnGIpy9TRqBH/f1zz+dMHj2JvkSv
-   kGhQ0+qvWXBriZtJKyesG3q5FJKUxcBp8mcBxDG3D+5ocTDjr7Gd3UYfU
-   F6ba/8N+dY2m6CanrC8ATv/hFtbIN3lGcDEm+QoxLYBZMPART1ka/4toZ
-   w==;
-X-CSE-ConnectionGUID: 9OELsxQATvqKxwFWp0sOFA==
-X-CSE-MsgGUID: phphlropQy+hPo3pei6oKw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11707"; a="76612260"
+  bh=dgKcC2exrLX8LuLtBQ8GHknd+cf3zVoX32VHa3HY2CA=;
+  b=lEM1rxu6WkdjFWbwkRaGyS6TEF5t9eCp3wNB7Ao8Ql/7M1s7ESqspmOm
+   vqx2jdTtUbdW01AcWe3M6Y2kMrDlaDRvCDo8KmDzc3az+KVY2KL1iY3R7
+   C7t37aBwPxzq34wrfQzKRNPO7eO+cZcKRYgqyJnAHb9UydPRAnChlOwZD
+   6WPq3zXyK9gAR7rSv4+tIaeKbNWEdoF42OP+Ei5kBmz+Xb+66DRvhsk4D
+   NwROpd16HJhyOgNwkNrXxB481k8vO0R1/7yxBiBksAZEGW33CPDX2AaP2
+   BMK4BnnGWxvjTylTbndtXK6/3+YyyflKcmnL1J7Hjrg4fNeYWA4KU5z7I
+   A==;
+X-CSE-ConnectionGUID: an6dN41CSoqohf1Z3luFqQ==
+X-CSE-MsgGUID: 4TQR0H0QS8GH0URPuLVioQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11707"; a="83847106"
 X-IronPort-AV: E=Sophos;i="6.21,302,1763452800"; 
-   d="scan'208";a="76612260"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2026 03:50:07 -0800
-X-CSE-ConnectionGUID: sStS4J17SzmlI/zenxX+qQ==
-X-CSE-MsgGUID: uWTnoYkzSUOK5AZcfc3ZtA==
+   d="scan'208";a="83847106"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2026 03:54:04 -0800
+X-CSE-ConnectionGUID: Zc4RfbZLSleJ8Bpn6H7xPg==
+X-CSE-MsgGUID: Hi34OjvGSAyCf+QXL1nhCQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,302,1763452800"; 
-   d="scan'208";a="214196470"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 21 Feb 2026 03:50:05 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+   d="scan'208";a="214938301"
+Received: from igk-lkp-server01.igk.intel.com (HELO e5404a91d123) ([10.211.93.152])
+  by orviesa009.jf.intel.com with ESMTP; 21 Feb 2026 03:54:00 -0800
+Received: from kbuild by e5404a91d123 with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1vtlUo-000000014tE-2L7S;
-	Sat, 21 Feb 2026 11:50:02 +0000
-Date: Sat, 21 Feb 2026 19:49:14 +0800
+	id 1vtlYb-000000004Of-3Fib;
+	Sat, 21 Feb 2026 11:53:57 +0000
+Date: Sat, 21 Feb 2026 12:53:27 +0100
 From: kernel test robot <lkp@intel.com>
 To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
 Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
@@ -57,7 +57,7 @@ Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
 	ira.weiny@intel.com, dan.j.williams@intel.com
 Subject: Re: [PATCH 1/2] cxl/region: fix region leak when attach_target fails
  in cxl_add_to_region
-Message-ID: <202602211956.uMrPm1yM-lkp@intel.com>
+Message-ID: <202602211252.7qKUA8jp-lkp@intel.com>
 References: <20260221043013.1420169-1-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -84,26 +84,24 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Gregory-Price/cxl-region-
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
 patch link:    https://lore.kernel.org/r/20260221043013.1420169-1-gourry%40gourry.net
 patch subject: [PATCH 1/2] cxl/region: fix region leak when attach_target fails in cxl_add_to_region
-config: riscv-randconfig-001-20260221 (https://download.01.org/0day-ci/archive/20260221/202602211956.uMrPm1yM-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260221/202602211956.uMrPm1yM-lkp@intel.com/reproduce)
+config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20260221/202602211252.7qKUA8jp-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260221/202602211252.7qKUA8jp-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602211956.uMrPm1yM-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602211252.7qKUA8jp-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
    drivers/cxl/core/region.c: In function 'cxl_add_to_region':
->> drivers/cxl/core/region.c:3964:4: error: implicit declaration of function 'drop_region'; did you mean 'to_nd_region'? [-Werror=implicit-function-declaration]
-       drop_region(cxlrd, cxlr);
-       ^~~~~~~~~~~
-       to_nd_region
-   cc1: some warnings being treated as errors
+>> drivers/cxl/core/region.c:3964:25: error: implicit declaration of function 'drop_region' [-Wimplicit-function-declaration]
+    3964 |                         drop_region(cxlrd, cxlr);
+         |                         ^~~~~~~~~~~
 
 
-vim +3964 drivers/cxl/core/region.c
+vim +/drop_region +3964 drivers/cxl/core/region.c
 
   3920	
   3921	int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
