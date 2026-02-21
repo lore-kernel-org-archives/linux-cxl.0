@@ -1,177 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from dog.birch.relay.mailchannels.net (dog.birch.relay.mailchannels.net [23.83.209.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC586FC3;
-	Sat, 21 Feb 2026 11:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771674844; cv=none; b=lvOENTvgmZh1CbEamzytdKpbT40f0YXOCrw44TXSiXh35kik2o7jYHIF1V+mEhLjrsDXRg57iBB8Cu35bfxrXJWB+BRcKjVjvxlWbXmg/EjDyg0iACBu4WI2DQsibXaMqERGPOtp2wSPPKxNUu71IG/+2FW2XIc916EDmA0eBSQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771674844; c=relaxed/simple;
-	bh=dgKcC2exrLX8LuLtBQ8GHknd+cf3zVoX32VHa3HY2CA=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D892571B0
+	for <linux-cxl@vger.kernel.org>; Sat, 21 Feb 2026 18:55:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771700142; cv=pass; b=RFlEiyqxZAk6f+x8lj1Glv+XLLZARjzcbuap/YVWMaYpMmVc9UuMdX1OKAxLIwaMtaM4IZnETNC52pgHAwtGMuCXiaXBdqTQ6Pxwwx9FHDx2kieLmJH9sfGwB4LLk5y6M64vZ1r9EwTcktJwjKDPapqpIF9ypHQ8ARYapP5B0LY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771700142; c=relaxed/simple;
+	bh=5Mo3BgfH40Xv+Yz35FuV3rG1qR/e3Ub88eYiKT5f+98=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C0Rx4hxtMJBJfBoUjFai/iouBuGon8KOuvj0N3me74/BEWf1hX8yDv4z9cmxu/1avHeVwbOmrGY512HPAPIPRGlqXgDIPGZ5wu8DkDDMmvWdVwdTlUnaNJOYjTaAjOIPpvoFWPKJ9D46+cLXtQw89GPgod2drGQdZ48QmG6LPSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lEM1rxu6; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vz0StgZ58RdA6sp9NEWWK6wiK5bJT9DDrChSGgdwz+bT8Efa+7/beKdV4nizUKB92kiMMoMDJhhz5qnf4cv2MF5ybzeUrEkA2pZTlNnbhHoHnfgkwEr7nFrGuUef/0B0ivYv+qs+ekkEbZoL1RMQaGfAo/KHv27YyDG4f7lxJ4g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=p1JkojDS; arc=pass smtp.client-ip=23.83.209.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lEM1rxu6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771674844; x=1803210844;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dgKcC2exrLX8LuLtBQ8GHknd+cf3zVoX32VHa3HY2CA=;
-  b=lEM1rxu6WkdjFWbwkRaGyS6TEF5t9eCp3wNB7Ao8Ql/7M1s7ESqspmOm
-   vqx2jdTtUbdW01AcWe3M6Y2kMrDlaDRvCDo8KmDzc3az+KVY2KL1iY3R7
-   C7t37aBwPxzq34wrfQzKRNPO7eO+cZcKRYgqyJnAHb9UydPRAnChlOwZD
-   6WPq3zXyK9gAR7rSv4+tIaeKbNWEdoF42OP+Ei5kBmz+Xb+66DRvhsk4D
-   NwROpd16HJhyOgNwkNrXxB481k8vO0R1/7yxBiBksAZEGW33CPDX2AaP2
-   BMK4BnnGWxvjTylTbndtXK6/3+YyyflKcmnL1J7Hjrg4fNeYWA4KU5z7I
-   A==;
-X-CSE-ConnectionGUID: an6dN41CSoqohf1Z3luFqQ==
-X-CSE-MsgGUID: 4TQR0H0QS8GH0URPuLVioQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11707"; a="83847106"
-X-IronPort-AV: E=Sophos;i="6.21,302,1763452800"; 
-   d="scan'208";a="83847106"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2026 03:54:04 -0800
-X-CSE-ConnectionGUID: Zc4RfbZLSleJ8Bpn6H7xPg==
-X-CSE-MsgGUID: Hi34OjvGSAyCf+QXL1nhCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,302,1763452800"; 
-   d="scan'208";a="214938301"
-Received: from igk-lkp-server01.igk.intel.com (HELO e5404a91d123) ([10.211.93.152])
-  by orviesa009.jf.intel.com with ESMTP; 21 Feb 2026 03:54:00 -0800
-Received: from kbuild by e5404a91d123 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vtlYb-000000004Of-3Fib;
-	Sat, 21 Feb 2026 11:53:57 +0000
-Date: Sat, 21 Feb 2026 12:53:27 +0100
-From: kernel test robot <lkp@intel.com>
-To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com
-Subject: Re: [PATCH 1/2] cxl/region: fix region leak when attach_target fails
- in cxl_add_to_region
-Message-ID: <202602211252.7qKUA8jp-lkp@intel.com>
-References: <20260221043013.1420169-1-gourry@gourry.net>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="p1JkojDS"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 371827824C0;
+	Sat, 21 Feb 2026 18:55:35 +0000 (UTC)
+Received: from pdx1-sub0-mail-a237.dreamhost.com (trex-green-7.trex.outbound.svc.cluster.local [100.99.24.30])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id C30C67825E4;
+	Sat, 21 Feb 2026 18:55:34 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1771700134;
+	b=USvrhjlxBng4vUQEFEp1qQoxSEVeDS0Bt+rKYDqVcL/w/45iQ/mdc5ETzuVGZut1PigYX5
+	VBFer3pHsL2JKgUbu8ju/huZp7hRCg9aSCWfBi+WaORnwlpYgQPw2ryL+JKXpLgov6fgk+
+	84VAzk1+HcEVb1RuoAAbviEy/P0ipdedn47j4H1BrZF4l/0xLElDR4hx+EBar7UCZFn75x
+	5qipqD8Jk1KVXGl9KnxWGmSLJM8Zi2x5YkuwE3/hqvhcyiGnVpVYRfYo70dlPQRBBhytDv
+	mhJxIagp5YUHqWy0SLhkqehpXcOnGLpcSfVwmDhiEQ/8YQXCxan4KC7y7pnq7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1771700134;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=5Mo3BgfH40Xv+Yz35FuV3rG1qR/e3Ub88eYiKT5f+98=;
+	b=LYA25SiHFudCYqEzRv/VdEvoSu5je0deSEXc6sWUAFeWTux1pn9XAZVp4STVaBA2J7Mpoa
+	c4zTlMrzO/+kA1UWB9rZ4PZlx+DqjAerJY+xHkt+R6HuM/wrP3xdr1++yWGogtjro7Mg2O
+	ziSLhQEZmSFvHw7PUJrOtJ+jicAIAxEpP4TcqdH+RLFIG/urY2r91Azk6pz3acYzVnod7I
+	zdLoUShdEiiBx0bAAfbPK85/IZGjt0amYkRgr4jaq4JNJReDBhfPsC1ICYy+kdrkWLfQ37
+	8sWl/rBw5j20Way3i69Xz3tbCDIwYe6sVmyDvxA1h/c0HomhweBXcTc3eiPj7Q==
+ARC-Authentication-Results: i=1;
+	rspamd-7f65b64645-wksht;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Arch-Whispering: 0f83f4c336ba6c45_1771700135041_1729749272
+X-MC-Loop-Signature: 1771700135041:272781825
+X-MC-Ingress-Time: 1771700135041
+Received: from pdx1-sub0-mail-a237.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.99.24.30 (trex/7.1.3);
+	Sat, 21 Feb 2026 18:55:35 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a237.dreamhost.com (Postfix) with ESMTPSA id 4fJGXQ0GP8z107J;
+	Sat, 21 Feb 2026 10:55:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1771700134;
+	bh=5Mo3BgfH40Xv+Yz35FuV3rG1qR/e3Ub88eYiKT5f+98=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=p1JkojDSCrnCtQOFebgfJIbHJL5r2m/vzHAnwC5pllH4PWpaWJq+qhkU/8WDkkm7/
+	 WAVuRWiapwHRynfLXPTKA81mfloEb8Reeu4BIddZq59jCb4SoVRzpmnmEZ8E4eo5y0
+	 1dVpvJnqSn/dSZdAlOh7S4apUifHgt7lFcscAWNmI3jy30vx7P/ORfeY7FDTovF47D
+	 BKkBhwWgwGkw+VnE5TQ1HzOWfDVXOQcvKpEQadAb/3d+TLyqN4RZ2SjxGkc7CofyPW
+	 hYuFWmCqSPxDuEhKYKGlZQXDt+DUvenuQO8u7TEjfosUpxV9YHsOGcXR1iBbaarVSM
+	 R8/D1NwuZVEPQ==
+Date: Sat, 21 Feb 2026 10:55:31 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: dave.jiang@intel.com, jonathan.cameron@huawei.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 2/2] cxl/mbox: return appropriate error in
+ cxl_payload_from_user_allowed()
+Message-ID: <20260221185531.mj6up2v7wmd3r2eb@offworld>
+References: <20260220001618.963490-1-dave@stgolabs.net>
+ <20260220001618.963490-3-dave@stgolabs.net>
+ <aZjc1w1GMnwoJOzN@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20260221043013.1420169-1-gourry@gourry.net>
+In-Reply-To: <aZjc1w1GMnwoJOzN@aschofie-mobl2.lan>
+User-Agent: NeoMutt/20220429
 
-Hi Gregory,
+On Fri, 20 Feb 2026, Alison Schofield wrote:
 
-kernel test robot noticed the following build errors:
+>My concern is preserving ABI simplicity and avoid implying that the
+>kernel validates RAW mailbox payloads in general, when it doesn't.
+>cxl_payload_from_user_allowed() is a limited safety gate. Before this
+>patchset, any payload rejection returned -EBUSY. Returning -EINVAL for
+>undersized payloads could be read as broader RAW validation than we
+>actually perform. If we want to keep the ABI surface simple, we could
+>treat undersized payloads as another ???payload not allowed??? case and
+>continue returning -EBUSY.
 
-[auto build test ERROR on cxl/next]
-[also build test ERROR on linus/master next-20260220]
-[cannot apply to cxl/pending v6.19]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+So while the bug is only triggered for RAW commands, these paths are ultimately
+for all user cmds, so it's pretty implicit, and ultimately does not respect
+cxl_validate_cmd_from_user() return semantics. So I don't really see it
+as a case of adding complexity to the ABI surface or sending the wrong message
+about RAW command verification.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Gregory-Price/cxl-region-skip-default-driver-attach-for-memdev-with-attach-callbacks/20260221-123300
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-patch link:    https://lore.kernel.org/r/20260221043013.1420169-1-gourry%40gourry.net
-patch subject: [PATCH 1/2] cxl/region: fix region leak when attach_target fails in cxl_add_to_region
-config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20260221/202602211252.7qKUA8jp-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260221/202602211252.7qKUA8jp-lkp@intel.com/reproduce)
+That said, I don't have a strong preference if only patch 1 is picked up, I
+do understand your concerns; and it's kind of the reason why I split it the
+way I did.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602211252.7qKUA8jp-lkp@intel.com/
+>Conversely, if we are going to split errno values and distinguish -EINVAL
+>for undersized payloads, then for consistency we should also reconsider
+>whether -EBUSY is appropriate for the IMMEDIATE flag case. That is a
+>deliberate policy restriction (not a busy condition), so tightening errno
+>semantics in one place raises the question of whether we should do so
+>consistently. I???m not suggesting we expand scope here, just pointing out
+>the implication.
 
-All errors (new ones prefixed by >>):
+That's fair.
 
-   drivers/cxl/core/region.c: In function 'cxl_add_to_region':
->> drivers/cxl/core/region.c:3964:25: error: implicit declaration of function 'drop_region' [-Wimplicit-function-declaration]
-    3964 |                         drop_region(cxlrd, cxlr);
-         |                         ^~~~~~~~~~~
-
-
-vim +/drop_region +3964 drivers/cxl/core/region.c
-
-  3920	
-  3921	int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
-  3922	{
-  3923		struct cxl_region_context ctx;
-  3924		struct cxl_region_params *p;
-  3925		bool attach = false;
-  3926		bool newly_created = false;
-  3927		int rc;
-  3928	
-  3929		ctx = (struct cxl_region_context) {
-  3930			.cxled = cxled,
-  3931			.hpa_range = cxled->cxld.hpa_range,
-  3932			.interleave_ways = cxled->cxld.interleave_ways,
-  3933			.interleave_granularity = cxled->cxld.interleave_granularity,
-  3934		};
-  3935	
-  3936		struct cxl_root_decoder *cxlrd __free(put_cxl_root_decoder) =
-  3937			get_cxl_root_decoder(cxled, &ctx);
-  3938	
-  3939		if (IS_ERR(cxlrd))
-  3940			return PTR_ERR(cxlrd);
-  3941	
-  3942		/*
-  3943		 * Ensure that, if multiple threads race to construct_region()
-  3944		 * for the HPA range, one does the construction and the others
-  3945		 * add to that.
-  3946		 */
-  3947		mutex_lock(&cxlrd->range_lock);
-  3948		struct cxl_region *cxlr __free(put_cxl_region) =
-  3949			cxl_find_region_by_range(cxlrd, &ctx.hpa_range);
-  3950		if (!cxlr) {
-  3951			cxlr = construct_region(cxlrd, &ctx);
-  3952			newly_created = !IS_ERR(cxlr);
-  3953		}
-  3954		mutex_unlock(&cxlrd->range_lock);
-  3955	
-  3956		rc = PTR_ERR_OR_ZERO(cxlr);
-  3957		if (rc)
-  3958			return rc;
-  3959	
-  3960		rc = attach_target(cxlr, cxled, -1, TASK_UNINTERRUPTIBLE);
-  3961		if (rc) {
-  3962			/* If endpoint was just created, tear it down to release HPA */
-  3963			if (newly_created)
-> 3964				drop_region(cxlrd, cxlr);
-  3965			return rc;
-  3966		}
-  3967	
-  3968		scoped_guard(rwsem_read, &cxl_rwsem.region) {
-  3969			p = &cxlr->params;
-  3970			attach = p->state == CXL_CONFIG_COMMIT;
-  3971		}
-  3972	
-  3973		if (attach) {
-  3974			/*
-  3975			 * If device_attach() fails the range may still be active via
-  3976			 * the platform-firmware memory map, otherwise the driver for
-  3977			 * regions is local to this file, so driver matching can't fail.
-  3978			 */
-  3979			if (device_attach(&cxlr->dev) < 0)
-  3980				dev_err(&cxlr->dev, "failed to enable, range: %pr\n",
-  3981					p->res);
-  3982		}
-  3983	
-  3984		return 0;
-  3985	}
-  3986	EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, "CXL");
-  3987	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Davidlohr
