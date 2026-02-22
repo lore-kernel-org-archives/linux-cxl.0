@@ -1,259 +1,694 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f194.google.com (mail-qt1-f194.google.com [209.85.160.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF183312832;
-	Sat, 21 Feb 2026 23:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771716610; cv=fail; b=EmbnxPopEOsXtPtuMId1d9zLtnPqz/0YV67KxsPYWJYDKzBBdIPU7jgsRyYQyr2bbtFGIuZ3Dj3R6iVQBxP6hFnmPXvw0IJ7uPAqhfejtofmyw1lJFO5CgV/lUtB69faJLhORHRNaJ+Rawc57Q+TllN8ILwvscIzoaqyKZGzCtg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771716610; c=relaxed/simple;
-	bh=WyIarUhTnwoU06dvx6VCruejeauZeE8jIcpa+81x+wY=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=FI+jbFqsRAP82Zz+2qFq2GwZ81LPej1FB/6+ay4PnwIB4urA7NDCKRTNfgD4MlTmlLv2pxBP/umWYm+DL4UyVDjO+ew/sS4E6UVPehBewUKpAXg3oWO8r8NIIIu2NeXqJyw8tKuWgY1WTcu3cVChhFtsWUoFbSmxKvZGPzDSa3s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BUwsYHZT; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD94D1A9F87
+	for <linux-cxl@vger.kernel.org>; Sun, 22 Feb 2026 08:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.194
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771750135; cv=none; b=BNhiovwRoWpXBghMesJ1btqd2FROw/VEG5D6Eal1ZhYTyU8oyKSHfwyp4wiUwoBkKIp3UjQB3FptxIkS1CtyrulSaMBn92pJu7RY+GdUKSFawJ7cy9nEi372+dptHWLy7JfI7Den4+P30gW7oMNlEpHNMYdhpM9siZ1bdw09EBc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771750135; c=relaxed/simple;
+	bh=wQ9fBTuzO/nk0DNn6FTGrDYA7U86QdUzhnMFFPGzl20=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aIID+xSwHX0CXU6Sf58vg9cwN14IzCAho8HmBUY6vbiOmeFEZj4xOfbx3sNtPJ2GO9udX8Ip034Ni7cuYkhHvvFoE+Bja8U/yJBunJk61Kh6WYKL0imX+Uek6F/RwG6aGs3PLExdLfpd+jYQnKA5kCk4kxQCJIF/onsERDOk7GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=s73SuH4I; arc=none smtp.client-ip=209.85.160.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BUwsYHZT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771716607; x=1803252607;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=WyIarUhTnwoU06dvx6VCruejeauZeE8jIcpa+81x+wY=;
-  b=BUwsYHZT6EjomXWDgWJSfxydCqxHBfqpo86TrWQquvpT3JD8ljGDABfN
-   a6ibIjh+MgvHiE51cURItaX2biP6glIa9jql1qhqeRDIEkns8fjMEBmIQ
-   +HAKpg8xt0BxgiSX+oH5T+YlM5Y1wdRfn/yVsTz6I7zdkU0oCEyFrrUwE
-   WICQ7sDYnSRjhuWwn5LIQBlH2Zkp7EVYTldoKi2tdHn/Zf1EU/IPp2Vn9
-   gmYgtT55NcG7xvuT4cb25cIrJ/ToauVU5nLiP2KSnq67ddtKT13+D3kUy
-   Fr4YarvUV6firbsJOHphnZjxCIhBXa+yTWqtB7PQDsn8fa6102Wm69fPy
-   A==;
-X-CSE-ConnectionGUID: iKkDzNeLTZmDmNSNXrfKvg==
-X-CSE-MsgGUID: HUTpfp6gT4myiWJiBmPmKg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11708"; a="75372085"
-X-IronPort-AV: E=Sophos;i="6.21,304,1763452800"; 
-   d="scan'208";a="75372085"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2026 15:30:06 -0800
-X-CSE-ConnectionGUID: Pq7SOof1ShiLbmDWftdU0g==
-X-CSE-MsgGUID: FXcVDJJCTgCngYPYBn4rWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,304,1763452800"; 
-   d="scan'208";a="215031628"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2026 15:30:05 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Sat, 21 Feb 2026 15:30:05 -0800
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35 via Frontend Transport; Sat, 21 Feb 2026 15:30:05 -0800
-Received: from CH4PR04CU002.outbound.protection.outlook.com (40.107.201.32) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Sat, 21 Feb 2026 15:30:05 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nByYK6YM2VtQNVyumCLqdZTueLtGIUFXZgI/SGsj/x4suEeFX/ex5Iu38y/ONK/FsRWx7jeLTfhlZ737GcNj0UiWz+SPHHSUT+PvmY8U8VgzJJpZTWt1RtbVG+KThFmif0sqIo7ZKkWS3tVXbSrY3CuwmOPLIArN5ZZSAHOGk6KWqmRAmkOgSptjE3jelOukDciojdbi/ROC/HGDDcEYP8eM8xGWskrjCUHGrLMyXty6xLSLbMk7gbOv1952uh2C3nfhFuF4qatWPHsy0GTR9obNHesIYe/VccaLNVehRZzv/TRD6Ld9id/HjDt/IPSHNJoDU2rvi927Y7L9kaW/FA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/hGWocWpwQMK2DT3s1Z79Po5QNPb51aSJmzGZUqxErE=;
- b=YnKo+TCKuwZ+Iw0mkZFHjy24SnaP+fgOfKnWS5T0Y1CDfuzmsyQxpd0i/w8+gcTDP9hsngKHG3A0JDonasHy8uikuaSgt/JtA8e5YATz0q/+Nsm0Hc+nzpZr9/26qZSjsvMEGRtqX247rEiiZCuMyQ5HabhOTXDP12xp6BkKtPvgZyW79V22ZKHqA+AE6UDEAM9ZB2imwHJgLu9zAVa4vtUcmnFwtVOMGA7vetFtsyIBfkBysjdC7EzXM+WxsTX4F6AGUw47ELJwclJYAf3mit68haHeRDLKegsC5CCuK3ZWhZTONiwA/3cJ1G9cwX4Br6DRSSNIklIbkXV3+b4Ngw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by IA1PR11MB6121.namprd11.prod.outlook.com (2603:10b6:208:3ef::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.17; Sat, 21 Feb
- 2026 23:29:57 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff%5]) with mapi id 15.20.9632.017; Sat, 21 Feb 2026
- 23:29:57 +0000
-From: <dan.j.williams@intel.com>
-Date: Sat, 21 Feb 2026 15:29:55 -0800
-To: Lukas Wunner <lukas@wunner.de>, Jason Gunthorpe <jgg@nvidia.com>
-CC: <dan.j.williams@intel.com>, Alistair Francis <alistair23@gmail.com>,
-	<bhelgaas@google.com>, <rust-for-linux@vger.kernel.org>,
-	<akpm@linux-foundation.org>, <linux-pci@vger.kernel.org>,
-	<Jonathan.Cameron@huawei.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <alex.gaynor@gmail.com>,
-	<benno.lossin@proton.me>, <boqun.feng@gmail.com>, <a.hindborg@kernel.org>,
-	<gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <tmgross@umich.edu>,
-	<ojeda@kernel.org>, <wilfred.mallawa@wdc.com>, <aliceryhl@google.com>,
-	Alistair Francis <alistair.francis@wdc.com>, <aneesh.kumar@kernel.org>,
-	<yilun.xu@linux.intel.com>, <aik@amd.com>, Mathieu Poirier
-	<mathieu.poirier@linaro.org>, Thomas Fossati <thomas.fossati@linaro.org>
-Message-ID: <699a3ff3f019a_1cc5100e1@dwillia2-mobl4.notmuch>
-In-Reply-To: <aZn9cfhv0YRxI1mw@wunner.de>
-References: <20260219124313.GE723117@nvidia.com>
- <20260219124119.GD723117@nvidia.com>
- <aZcbBt7OmNeH3oA0@wunner.de>
- <20260219143129.GF723117@nvidia.com>
- <aZcnTnYJ61Kma0yd@wunner.de>
- <20260219173937.GH723117@nvidia.com>
- <aZgbukYiIxg44_e7@wunner.de>
- <20260220141057.GL723117@nvidia.com>
- <aZn9cfhv0YRxI1mw@wunner.de>
-Subject: Re: [RFC v3 00/27] lib: Rust implementation of SPDM
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR13CA0001.namprd13.prod.outlook.com
- (2603:10b6:a03:2c0::6) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="s73SuH4I"
+Received: by mail-qt1-f194.google.com with SMTP id d75a77b69052e-506362ac5f7so32419201cf.1
+        for <linux-cxl@vger.kernel.org>; Sun, 22 Feb 2026 00:48:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1771750131; x=1772354931; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QW+Uk4+6NgBW77L3yL5GZmg3exj1H3p6exRCyga2tEg=;
+        b=s73SuH4IEESL8DU9NFEaMTTRY04rGmTzkN29z5ZxQlXnfwVALfNNCt5uEhmHYws1Gg
+         jAnaKMbkib7BeuRtpJb3hOWi1neflXK49OktwZFDYIoytFv1Bjku3UW0AmR+heQPPG0s
+         aR5jtGeX90yaM4bE5AlEytSiu3MFksevQz07jI1i0b5jEMgVgJvHWzjhKgvjDNkuo2/d
+         5rK8FigrlfGtUerrAQkqiuhFsuN/5wyzHyie7ry3OPTZjXHGF9azx3h30IOqBgl9rS84
+         J8XFefeVwFRXOPUfVcVUKvAPUFj3lEYel06Cxl0AfjJtF927ZBB7d6rluyGE94BCn8H4
+         i3fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771750131; x=1772354931;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QW+Uk4+6NgBW77L3yL5GZmg3exj1H3p6exRCyga2tEg=;
+        b=A1nUCZbKgmLq/4vxhDvODDo8L7K59rdDM768Q6lZrUygn5iGqjmRp+cgU0OIkeOhTe
+         wC9mebsvv6gy6vAT83FACqNwMIYzxjJtI/7gIIcGKY3Y1zfRqEIARJV4pXpQyutXkZZ9
+         5xu0KYFX6DkwYu8NQ1hskEqNx8BfXKNnY1ed1t0qFbCfpnWuVlXPea0dYFN3eghlCIzy
+         CvW1tABr5FDggH8/kF2AFiCQuNc+Bl2PqDATNjHDtwXsFEOLMBSGxw8p+c4B8JGa+uGC
+         VfsKXuyudiGy8yqlQzK46gBCudpGSV88n9S7scQMrJPHvsSlKG3w/h2/O9V6A+n9dcsb
+         lqgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6BRrJn08TAYa6Es0qFTs2ojJW1TkKKEtL8eNNiZLph23Q3Qbbyq2jvhMB20lRrWu84RBecNdCbGg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuXvPgoI+De4SKjFpZvoeDxDM00aiz0YMGOOYtCwrfXwHDNmkc
+	bxHnDvFnofTkXQ4hY2M2q+an9gwx3GIrD8wtHTGw/qN/QlO5OT4HW3hgsarbu2UbKgo=
+X-Gm-Gg: AZuq6aJgwyFYmoT3PjrMwQc2jyQB8nMHLFlEKXE9UWzhUrBZZuxw9quwIu2gLGchYMN
+	bEaT1lXQrwSzadKeu+vxpc0xC1DI9IqVAFZGEMcmpkeFP4x6jzIyev8EIzhlSBjwMnejuRdyOlo
+	s8vq5Ygp+EhSp7aEfrsJ0Ia2pFJ7Hqn1cTXKkqRjBcnQ81cliu0dtFNYhxIJAaZn0vmVq1eIClL
+	6lAqK2EbdNzNvrZJtMbUfQfIpysykEkYC6gnnQEFefwQX9WrGBTNe836vkxqALx7PpgMWFZPSkP
+	bfm51H47xMsIYI1x7O6D0K+NKA+b15uibmvWWhgIyhXdQX5CWp6V3fH7Ff/U0TGBEA1dzsVxV75
+	lCQhRUzExWhYtRR0kShwX84LnzJy/aWeJqmoR7JyUPZrEu4tqrhDzJLPs7Re1Jh6t6m4pJLFABO
+	8FfB6AJW5l+5e1wNpGqm/30JgsrU5TBXnPA3ZD6U0SH/eU+NhM1saI7O0a1/vqjj0MQ71+uEX3h
+	W2Di9C6AlfdWqY=
+X-Received: by 2002:ac8:7e89:0:b0:502:f26f:1368 with SMTP id d75a77b69052e-5070bcc9308mr69941471cf.63.1771750131076;
+        Sun, 22 Feb 2026 00:48:51 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.48.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Feb 2026 00:48:50 -0800 (PST)
+From: Gregory Price <gourry@gourry.net>
+To: lsf-pc@lists.linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	dakr@kernel.org,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	longman@redhat.com,
+	akpm@linux-foundation.org,
+	david@kernel.org,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	osalvador@suse.de,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	byungchul@sk.com,
+	gourry@gourry.net,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	axelrasmussen@google.com,
+	yuanchu@google.com,
+	weixugc@google.com,
+	yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	tj@kernel.org,
+	hannes@cmpxchg.org,
+	mkoutny@suse.com,
+	jackmanb@google.com,
+	sj@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	npache@redhat.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	baohua@kernel.org,
+	lance.yang@linux.dev,
+	muchun.song@linux.dev,
+	xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev,
+	jannh@google.com,
+	linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com,
+	pfalcato@suse.de,
+	rientjes@google.com,
+	shakeel.butt@linux.dev,
+	riel@surriel.com,
+	harry.yoo@oracle.com,
+	cl@gentwo.org,
+	roman.gushchin@linux.dev,
+	chrisl@kernel.org,
+	kasong@tencent.com,
+	shikemeng@huaweicloud.com,
+	nphamcs@gmail.com,
+	bhe@redhat.com,
+	zhengqi.arch@bytedance.com,
+	terry.bowman@amd.com
+Subject: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/ Compressed RAM)
+Date: Sun, 22 Feb 2026 03:48:15 -0500
+Message-ID: <20260222084842.1824063-1-gourry@gourry.net>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA1PR11MB6121:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2a8ab961-279b-4444-1c2a-08de71a1200a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?MURlWERjMWpPVE1jVjFtblA0TVYzbWxwS3NxM1h5bHhZMjQ4WjBQaE4wWjJK?=
- =?utf-8?B?QTk2M0hUQmgwbU1MV2k0SWttb0pzdzdtNmhraGpJelJlY0ZJMjNVN0d1UUFo?=
- =?utf-8?B?bjFyOUpPd0dlYWdyYTluNnNxMktoM3VVQlh1VVN0SmtUeWs1TU1HYldqK0Rl?=
- =?utf-8?B?SEdSY2s4emJuSG9ET2hMbkVselFGenRrWE0vY29xL2FOM0V5L0FmL0E5V3hC?=
- =?utf-8?B?UHBlQzlVY1VsZzRLd0tFakJJNmR3NndpSEhha0pDMlUvT1J0U3c2ZWlXaENl?=
- =?utf-8?B?clU1d0IwSjQyQjlaRU5wWGk4L2czZ2hjR3RDY25KTHRsZDBvdzcvemY4Ukg4?=
- =?utf-8?B?LzQ3Y0UvTEx6MitVWXNxVjdQUjZOenNaUmsvTmM1K2szS0k2ZVl5Q3VpOEc1?=
- =?utf-8?B?UndmSXRteUpIa0lDSTZHczlsd3hTc2Urd1YxWkhVcnIvOUY1NjIvQXo2N3dY?=
- =?utf-8?B?QzFJWlYxd0YzYjJKRGFBSFAzZFlMd1lSaU9zYU5oKzkvT1BqTHVwU2ZzMC9R?=
- =?utf-8?B?eHh0SGxxWGVTc2FJU3pReW9QTlpaUUxaNW52Y0p1dXJDSUR0YkhMdkxLTmMx?=
- =?utf-8?B?eUlKemh1bi9WYVpHZzNaZnNKM20wNXBYZnB2bG1rak8xeFlyYjFmNTI2bThE?=
- =?utf-8?B?aisyVDJJOTNvaVJ6YmRkT3BqUkdjY0FyWmV6TjhhRVZCbDhONEZNMWswNTg3?=
- =?utf-8?B?SDZkdmdaQlJqNlBkOGUvV2xoN3hVNGZPS09RQTdmQmR3MW0va2Frd1A1VXRR?=
- =?utf-8?B?M0RXTkdRcTViY0xLZHYzUEdKNlEzeEhUbGp5eFZsMnZmYXhIbXJXcitYalNq?=
- =?utf-8?B?QWhZOU0zUzhEOHFOdndmQXZvMnVRRnY1V1VNbVVHWkVSRE53L1dZZzBKOXpz?=
- =?utf-8?B?Q25zeGl2SDBvdmYrWFVLMmY0ZnVXeVZSU3ZhYjZ1dm5oVXJKaEVXdW13WUdq?=
- =?utf-8?B?RlpkVEZPMGVrRkRPd3lOWVlQUUFYU29FekdONTVaeG5DaCtQYThNaCtMMnF0?=
- =?utf-8?B?dGZwUkM0dmRJZjh5RFduSDhnVktnNFlWZ2lab2NnZnlCUm16blRnUXhIdkQ4?=
- =?utf-8?B?M1JXMEF2Nm5DN0tYMUUrRHl1ZlM2L0EyL3Q5Qmx5Q1RxN0pHUzJRRXhrdGhZ?=
- =?utf-8?B?ZnpCNFNtcS8yaUE3NW00SThuNFMrK3dMN0QrNXAyQnBuR1pOUnd2TjVJMkc3?=
- =?utf-8?B?UUVTeW9DckJmS2cyU2d0Qk5pSDhOdnlPSVdUKytYT0diMUNLZVJrRkJycDJt?=
- =?utf-8?B?dURwbzhpTnNnOERHUVYwdXUzRVBHUVRPRUY3dDM5L29INVJkRG9NNmxCZ3ln?=
- =?utf-8?B?MUpXeE9lak9vazk2ZTNXL2M5QVFvRHRTMGJuUHY3YUxaRVhWMTdBbzdaL2Y4?=
- =?utf-8?B?MXUzL1NRVmgzQUZzclB0THpQRytVMC9heEFEUkcrZkxPNkZtRnBzbU9MSCtQ?=
- =?utf-8?B?YzRuQysyK2VjN09hUG9GRnAxWUo5VFNEWXZPc1RvcHp1N29HakQ0NU5YaTEr?=
- =?utf-8?B?amNIRmFXT1Z6RFZ1NUxyNlRjN21JWHVYM3FYS2FPYWpnOTJRYk8xaEpSZkkw?=
- =?utf-8?B?MnllQTYwYjN2ZitucXlmUXBjZjVMckRGL0V0TFNMY0dBckh5V3ArSWROdzdV?=
- =?utf-8?B?a2N6WFo5cUdKV0Q4QlVnbnFsQ2I1NURBMlpBMzRJMHAzQk5IU2NTU1RyeVdL?=
- =?utf-8?B?QWlyT3htemxIQkRZRjJRem9RYk5jdGgvSUVzcFpoSDFKWWV2ckZJbzl2RHBv?=
- =?utf-8?B?dkUrQm5EbENtUldGT3dVNnJIVjdaQlIydUtwR25wREVUc3FKOHhoV00xa0d1?=
- =?utf-8?B?ei84NFNOcExqbEd4OHJjSXVVeDQxRzR0T2R2YnN0Nml3aHUzSW04dTNObksv?=
- =?utf-8?B?YlZ4UnpKUGJsLytENXAvb0xYVWJkV2xmYjRNUnhJcHc4elplQnpheVVMZEpP?=
- =?utf-8?B?eVkrR043TzNrZFNFdVZqUnJFcDJOTEphSEtVRHNFcmV2eEg2TGpiVzBRa2Nv?=
- =?utf-8?B?ajYvOEFXNU5GaFJKbHhGMFVyZ1lyR1M5WkFMbFFmMUdoMmJRWmlQRHdnYnJV?=
- =?utf-8?B?OUNCQVFIMVpVOWhvd3FvUFNZcElveTRYV2JQemNIMWlSL0M2SW9YZlVaRXpv?=
- =?utf-8?Q?PJHs=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?b1FRM3JkRWYzaGQvOW5ud3E3eC9nWjhLbzU5bzVEZHBKMUdYR2RmRXR2NUxr?=
- =?utf-8?B?Y0F5aVdmbXhVaGdPQ00wdlFtb2VGenI2ZUMxT3JtMWlaWXhEb1RVVzBsUVZJ?=
- =?utf-8?B?Q3R3alBuTVgxWXlKMENaekhTQTg0aHZ6THhhWENrcUlORWloOGdWYmxwZmRk?=
- =?utf-8?B?aElIclZvMmdGVWtxVjhRaHp1cG1sRlF4b0oxcjBjZUlsTG5tVmVvVGpaNDhD?=
- =?utf-8?B?ZkdkaGhCaHRWVHZXRWFxK0hTaVhrL1VMOWg2SDBZNTJOTmZRKzBuMWJZTVlR?=
- =?utf-8?B?S0huNUJ4blk0VjBXMWZaNGxHUlZrQ0NiWmN5bkN4ZENKQkdwQUxhb0VBMDJy?=
- =?utf-8?B?VU80QkVpdlZiNDhLNml1OVdmakNkNE9iVVZjUlNkOGE0VURKaWRjbGU4MUdk?=
- =?utf-8?B?MUs1K08wM3IxN29JekFSTGNpWXo2SmhmY0FHeDEzNGp2Qk9FMmIrTUVSQUxm?=
- =?utf-8?B?SHlER0FGYjhKdXFMWHdzMXRMak5qSFdoOFVsaURxTGwyWGFYNDBEZHZCYXdH?=
- =?utf-8?B?V0RsOCtiQkFPVVM5RWN0SmQ1NTIzMDdkTG95UWVIay9GYkhvbTFWSTN0Tjl2?=
- =?utf-8?B?ZjFxaEVCUFZIcHZ0RHdJUjdnaHUrYWJPaUx3akFwbWw4KzBuQ0owNnRaMzl0?=
- =?utf-8?B?czdQMkcxUHFENmlTUFo1aUFHUkk5N3V6eDBkT0Zaa2tZVStSNVUwWUhzWmhp?=
- =?utf-8?B?bTFxeEJzekFodDJtc1YwYkpubWpSbE5OOGYzZ1JneDI0Z3dEZml1RXlqNUZn?=
- =?utf-8?B?Qk1tbUdhb09HUHJtVUxSQlFSaVhCVTFzUy9WbUo0eGtmK2NXWG5QODAySnU3?=
- =?utf-8?B?UkdFY0J0emsrcVlZTDJGRXNsMERPc0Y2ZGoxNTM2VkgwS1F3Umh3TTJUZkxx?=
- =?utf-8?B?dnFqb1lMc3BJTktiVngwYmV5QXg3UWpUaXd1YmZWVEljRFdKRmRjMm1MekhJ?=
- =?utf-8?B?dFROdUNWbE54VklERkh4cUtvc1o0TnJudituSks5TkE5VGhYbCtUU1VKMmlN?=
- =?utf-8?B?Wmh1VkpYODZVdno4d1dXc1BXM1dsdm93aElTMURCR1NLMFdzTVNvakt0Qkth?=
- =?utf-8?B?M3ppZFdYNFBtL2gvSFc1Wm9ZUHBaaTRwTXk4KzRVVHdLRC9ROVZNR1Frd0Jh?=
- =?utf-8?B?WjY0bHhpa0xPdldPRWVaenBjcTRLL3RicjBZYlJudWQrUEV1QlFpZWtFcjFD?=
- =?utf-8?B?eHhabVVZOUdtNkVyTGtkYzlVVkc1N2ZNNXlwRmdKTUNQUzYvNDlzUlBkZExv?=
- =?utf-8?B?N0p4TThRK0dhaXRSVGhlZndNNHN1bDhmSTMrMHZ0TTNtcTlrNEF1aGRYUEVu?=
- =?utf-8?B?SHlIWTFkYTQxVTlRc0VxMkRQZjlFSTdxTXhxUGpaanAvU3VMK0cxRkk4Rmtx?=
- =?utf-8?B?T0Z1NWtaWGZQTkRUdVp1WEU3aXZwdXlkVXhDNXZjSTVnSUg3RC9DWjBBakpQ?=
- =?utf-8?B?Y2grYXhOc0IyNzdKcTVpWkR0K1FDUlVWLy9QS2p2Sk1FZ1FVQlJwZFpsZWFD?=
- =?utf-8?B?ZmdsOG9ES0RuRGdscTAzc0FiNWFNWUZZZG5RRk1jdnpIOTBNc0pyLzl5c0g2?=
- =?utf-8?B?N3hHRnZKZDgxUVV4N0QrRkNSc2R0K3M3Tk43ODhTQysrUTB4NFNvQkxGYktJ?=
- =?utf-8?B?Q3ZjcmRtZjBmcE1XaDhxZlBXV2lzNFM5am1SKzBIQlB2QVVTUW8xbmpCeHM4?=
- =?utf-8?B?aWIyMkpRa1Z5Wk5mTnVzcDBTd0lGQWF6VGhLWTU0amRsdjk3bWVEbG50b0RX?=
- =?utf-8?B?ME1sZ2FhQmF6OVd0N0Y0UkdqcGVBWElHVUtuY1UwdW9CUUlBQ0lXdFRWOEVv?=
- =?utf-8?B?U0NWaHFPNHBqbXc3dUdnNzdBdW93TGNrbHRydElYK1I2MkNkMUJUemlva1JX?=
- =?utf-8?B?a2tSRk9MT2IzN01HNjdQN0c0ZUdOU1o2MUlCNVJIOG5RMEE1N2JFTkYxNncv?=
- =?utf-8?B?eEVRbnYwVy9uYTl3eENKODZYOVFGaTg3Mzc4eXRLaTdSL2ZmSjQ3Q2lYT29n?=
- =?utf-8?B?MXdzYU5IdzEyREhBUnZvckg0VHd3Z3RoUmo1VkdxbmswZXJuV3pFNEdZQTFr?=
- =?utf-8?B?ZHR2ay8za3RjRElNRGVjeVMzdTBNRnRtNjZCZThWTnllTEM3bFNNNVllMFpw?=
- =?utf-8?B?N1FKc2hCYUlvaE90Vzgyc1JmQWJnZG5QbTA5VFg2Rmo1bWVRT29QTVQwaXN1?=
- =?utf-8?B?ZTI5dFFTN2djYW5uM21zUkpiODNCSFdWd0tuUFE2UVdTV3JMaHNzUE15M0h0?=
- =?utf-8?B?QUJTNlpPZmFNN1FNSUtqcEVwdWlxMnZmMDg4MCs5cHByc0Z4VkdWdVg4M2dl?=
- =?utf-8?B?VjNraWR1TjFiVllERCtrUUlQTjZORVBoV1pXNlVZaU5Deklpcytkdm0zMGM2?=
- =?utf-8?Q?sQN4RZ5m9lWCRIH4=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a8ab961-279b-4444-1c2a-08de71a1200a
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2026 23:29:57.6717
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AA5NNmuFRq79VPsQQ3e66+/9D8kCuYp+St4o+aZKUHcJgdC1ADr9FkbxF7rFlVlz8f/wdL+uaARQxWbaPo9pK5K+bbSm5grEDyf0O+8MC5o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6121
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Lukas Wunner wrote:
-> On Fri, Feb 20, 2026 at 10:10:57AM -0400, Jason Gunthorpe wrote:
-> > IOW the resume/RAS acceptance criteria is that the second nonce was
-> > signed with the same private key(s) that the first nonce was signed
-> > with.
-[..]
-> > Linux will have its own sw model, the spec is just the protocol
-> > definition. In the CC world everyone just knows the verifier needs to
-> > be external.. How else could it even work?
-> 
-> There are products out there which support CMA but not TDISP.
-> In other words, the CC world isn't everything.  The modest goal
-> of this series is to allow authentication of devices in compliance
-> with PCIe r7.0 sec 6.31 and the SPDM spec.  I understand there are
-> features and authentication modes which are important for the
-> Confidential Computing world, but CoCo needs to fit into the
-> spec-defined mechanisms.
+Topic type: MM
 
-The TDISP proposal from Jason and I bears repeating because it is a
-superset of what a CMA-only solution needs, and security guarantees it
-provides. I also submit that "identity revalidation over reset/resume"
-is not a *primary* concern. It is certainly *a* concern that needs to be
-part of the ongoing discussion to avoid painting ourselves into a
-corner, but certainly a complexity that is incremental to the base
-enabling. Recall CMA is only a building block to trusting the rest of
-the device interface outside of the SPDM session.
+Presenter: Gregory Price <gourry@gourry.net>
 
-Userspace is in charge of all trust and verification decisions. A TSM
-driver, whether that driver is in-kernel-SPDM-library, or platform TSM,
-establishes a session with a device with a given certificate slot. The
-session establishment makes cert-chain+transcript available to userspace
-and caches the public-key. If userspace does not like that result, it
-opts to not bind a driver to that device, or retries with a different
-cert slot.
+This series introduces N_MEMORY_PRIVATE, a NUMA node state for memory
+managed by the buddy allocator but excluded from normal allocations.
 
-If later we want to support a "same device" capability in scenarios
-where a userspace round trip is infeasible then that is incremental ABI.
-That ABI would allow userspace to cache golden cert-chain+measurements.
-The resume path can revalidate that identity description with a fresh
-nonce and the cached public key.
+I present it with an end-to-end Compressed RAM service (mm/cram.c)
+that would otherwise not be possible (or would be considerably more
+difficult, be device-specific, and add to the ZONE_DEVICE boondoggle).
 
-For TDISP the violence of dropping the device out of the TCB likely
-needs more sophistication than golden measurement revalidation. For CMA
-mere trust in the root cert is not sufficient for many of the
-adversarial device threat models, so the kernel need not carry that
-responsibility.
 
-Aneesh and I are putting together some POC patches along these lines.
+TL;DR
+===
+
+N_MEMORY_PRIVATE is all about isolating NUMA nodes and then punching
+explicit holes in that isolation to do useful things we couldn't do
+before without re-implementing entire portions of mm/ in a driver.
+
+
+/* This is my memory. There are many like it, but this one is mine. */
+rc = add_private_memory_driver_managed(nid, start, size, name, flags,
+                                       online_type, private_context);
+
+page = alloc_pages_node(nid, __GFP_PRIVATE, 0);
+
+/* Ok but I want to do something useful with it */
+static const struct node_private_ops ops = {
+        .migrate_to     = my_migrate_to,
+        .folio_migrate  = my_folio_migrate,
+        .flags = NP_OPS_MIGRATION | NP_OPS_MEMPOLICY,
+};
+node_private_set_ops(nid, &ops);
+
+/* And now I can use mempolicy with my memory */
+buf = mmap(...);
+mbind(buf, len, mode, private_node, ...);
+buf[0] = 0xdeadbeef;  /* Faults onto private node */
+
+/* And to be clear, no one else gets my memory */
+buf2 = malloc(4096);  /* Standard allocation */
+buf2[0] = 0xdeadbeef; /* Can never land on private node */
+
+/* But i can choose to migrate it to the private node */
+move_pages(0, 1, &buf, &private_node, NULL, ...);
+
+/* And more fun things like this */
+
+
+Patchwork
+===
+A fully working branch based on cxl/next can be found here:
+https://github.com/gourryinverse/linux/tree/private_compression
+
+A QEMU device which can inject high/low interrupts can be found here:
+https://github.com/gourryinverse/qemu/tree/compressed_cxl_clean
+
+The additional patches on these branches are CXL and DAX driver
+housecleaning only tangentially relevant to this RFC, so i've
+omitted them for the sake of trying to keep it somewhat clean
+here.  Those patches should (hopefully) be going upstream anyway.
+
+Patches 1-22: Core Private Node Infrastructure
+
+  Patch  1:      Introduce N_MEMORY_PRIVATE scaffolding
+  Patch  2:      Introduce __GFP_PRIVATE
+  Patch  3:      Apply allocation isolation mechanisms
+  Patch  4:      Add N_MEMORY nodes to private fallback lists
+  Patches 5-9:   Filter operations not yet supported
+  Patch 10:      free_folio callback
+  Patch 11:      split_folio callback
+  Patches 12-20: mm/ service opt-ins:
+                   Migration, Mempolicy, Demotion, Write Protect,
+                   Reclaim, OOM, NUMA Balancing, Compaction,
+                   LongTerm Pinning
+  Patch 21:      memory_failure callback
+  Patch 22:      Memory hotplug plumbing for private nodes
+
+Patch 23: mm/cram -- Compressed RAM Management
+
+Patches 24-27: CXL Driver examples
+  Sysram Regions with Private node support
+  Basic Driver Example: (MIGRATION | MEMPOLICY)
+  Compression Driver Example (Generic)
+
+
+Background
+===
+
+Today, drivers that want mm-like services on non-general-purpose
+memory either use ZONE_DEVICE (self-managed memory) or hotplug into
+N_MEMORY and accept the risk of uncontrolled allocation.
+
+Neither option provides what we really want - the ability to:
+	1) selectively participate in mm/ subsystems, while
+	2) isolating that memory from general purpose use.
+
+Some device-attached memory cannot be managed as fully general-purpose
+system RAM.  CXL devices with inline compression, for example, may
+corrupt data or crash the machine if the compression ratio drops
+below a threshold -- we simply run out of physical memory.
+
+This is a hard problem to solve: how does an operating system deal
+with a device that basically lies about how much capacity it has?
+
+(We'll discuss that in the CRAM section)
+
+
+Core Proposal: N_MEMORY_PRIVATE
+===
+
+Introduce N_MEMORY_PRIVATE, a NUMA node state for memory managed by
+the buddy allocator, but excluded from normal allocation paths.
+
+Private nodes:
+
+  - Are filtered from zonelist fallback: all existing callers to
+    get_page_from_freelist cannot reach these nodes through any
+    normal fallback mechanism.
+
+  - Filter allocation requests on __GFP_PRIVATE
+    	numa_zone_allowed() excludes them otherwise. 
+
+    Applies to systems with and without cpusets.
+
+    GFP_PRIVATE is (__GFP_PRIVATE | __GFP_THISNODE).
+
+    Services use it when they need to allocate specifically from
+    a private node (e.g., CRAM allocating a destination folio).
+
+    No existing allocator path sets __GFP_PRIVATE, so private nodes
+    are unreachable by default.
+
+  - Use standard struct page / folio.  No ZONE_DEVICE, no pgmap,
+    no struct page metadata limitations.
+
+  - Use a node-scoped metadata structure to accomplish filtering
+    and callback support.
+
+  - May participate in the buddy allocator, reclaim, compaction,
+    and LRU like normal memory, gated by an opt-in set of flags.
+
+The key abstraction is node_private_ops: a per-node callback table
+registered by a driver or service.  
+
+Each callback is individually gated by an NP_OPS_* capability flag.
+
+A driver opts in only to the mm/ operations it needs.
+
+It is similar to ZONE_DEVICE's pgmap at a node granularity.
+
+In fact...
+
+
+Re-use of ZONE_DEVICE Hooks
+===
+
+The callback insertion points deliberately mirror existing ZONE_DEVICE
+hooks to minimize the surface area of the mechanism.
+
+I believe this could subsume most DEVICE_COHERENT users, and greatly
+simplify the device-managed memory development process (no more
+per-driver allocator and migration code).
+
+(Also it's just "So Fresh, So Clean").
+
+The base set of callbacks introduced include:
+
+  free_folio           - mirrors ZONE_DEVICE's
+                         free_zone_device_page() hook in
+                         __folio_put() / folios_put_refs()
+
+  folio_split          - mirrors ZONE_DEVICE's
+  			 called when a huge page is split up
+
+  migrate_to           - demote_folio_list() custom demotion (same
+                         site as ZONE_DEVICE demotion rejection)
+
+  folio_migrate        - called when private node folio is moved to
+                         another location (e.g. compaction)
+
+  handle_fault         - mirrors the ZONE_DEVICE fault dispatch in
+                         handle_pte_fault() (do_wp_page path)
+
+  reclaim_policy       - called by reclaim to let a driver own the
+                         boost lifecycle (driver can driver node reclaim)
+
+  memory_failure       - parallels memory_failure_dev_pagemap(),
+                         but for online pages that enter the normal
+                         hwpoison path
+
+At skip sites (mlock, madvise, KSM, user migration), a unified
+folio_is_private_managed() predicate covers both ZONE_DEVICE and
+N_MEMORY_PRIVATE folios, consolidating existing zone_device checks
+with private node checks rather than adding new ones.
+
+  static inline bool folio_is_private_managed(struct folio *folio)
+  {
+          return folio_is_zone_device(folio) ||
+                 folio_is_private_node(folio);
+  }
+
+Most integration points become a one-line swap:
+
+  -     if (folio_is_zone_device(folio))
+  +     if (unlikely(folio_is_private_managed(folio)))
+
+
+Where a one-line integration is insufficient, the integration is
+kept as clean as possible with zone_device, rather than simply
+adding more call-sites on top of it:
+
+static inline bool folio_managed_handle_fault(struct folio *folio,
+  struct vm_fault *vmf, vm_fault_t *ret)
+{
+  /* Zone device pages use swap entries; handled in do_swap_page */
+  if (folio_is_zone_device(folio))
+    return false;
+
+  if (folio_is_private_node(folio)) {
+    const struct node_private_ops *ops = folio_node_private_ops(folio);
+
+    if (ops && ops->handle_fault) {
+      *ret = ops->handle_fault(vmf);
+      return true;
+    }
+  }
+  return false;
+}
+
+
+
+Flag-gated behavior (NP_OPS_*) controls:
+===
+
+We use OPS flags to denote what mm/ services we want to allow on our
+private node.   I've plumbed these through so far:
+
+  NP_OPS_MIGRATION       - Node supports migration
+  NP_OPS_MEMPOLICY       - Node supports mempolicy actions
+  NP_OPS_DEMOTION        - Node appears in demotion target lists
+  NP_OPS_PROTECT_WRITE   - Node memory is read-only (wrprotect)
+  NP_OPS_RECLAIM         - Node supports reclaim
+  NP_OPS_NUMA_BALANCING  - Node supports numa balancing
+  NP_OPS_COMPACTION      - Node supports compaction
+  NP_OPS_LONGTERM_PIN    - Node supports longterm pinning
+  NP_OPS_OOM_ELIGIBLE	 - (MIGRATION | DEMOTION), node is reachable
+                           as normal system ram storage, so it should
+			   be considered in OOM pressure calculations.
+
+I wasn't quite sure how to classify ksm, khugepaged, madvise, and
+mlock - so i have omitted those for now.
+
+Most hooks are straightforward.
+
+Including a node as a demotion-eligible target was as simple as:
+
+static void establish_demotion_targets(void)
+{
+  ..... snip .....
+  /*
+   * Include private nodes that have opted in to demotion
+   * via NP_OPS_DEMOTION.  A node might have custom migrate
+   */
+  all_memory = node_states[N_MEMORY];
+  for_each_node_state(node, N_MEMORY_PRIVATE) {
+      if (node_private_has_flag(node, NP_OPS_DEMOTION))
+      node_set(node, all_memory);
+  }
+  ..... snip .....
+}
+
+The Migration and Mempolicy support are the two most complex pieces,
+and most useful things are built on top of Migration (meaning the
+remaining implementations are usually simple).
+
+
+Private Node Hotplug Lifecycle
+===
+
+Registration follows a strict order enforced by
+add_private_memory_driver_managed():
+
+  1. Driver calls add_private_memory_driver_managed(nid, start,
+     size, resource_name, mhp_flags, online_type, &np).
+
+  2. node_private_register(nid, &np) stores the driver's
+     node_private in pgdat and sets pgdat->private.  N_MEMORY and
+     N_MEMORY_PRIVATE are mutually exclusive -- registration fails
+     with -EBUSY if the node already has N_MEMORY set.
+
+     Only one driver may register per private node.
+
+  3. Memory is hotplugged via __add_memory_driver_managed().
+
+     When online_pages() runs, it checks pgdat->private and sets
+     N_MEMORY_PRIVATE instead of N_MEMORY.  
+
+     Zonelist construction gives private nodes a self-only NOFALLBACK
+     list and an N_MEMORY fallback list (so kernel/slab allocations on
+     behalf of private node work can fall back to DRAM).
+
+  4. kswapd and kcompactd are NOT started for private nodes.  The
+     owning service is responsible for driving reclaim if needed
+     (e.g., CRAM uses watermark_boost to wake kswapd on demand).
+
+Teardown is the reverse:
+
+  1. Driver calls offline_and_remove_private_memory(nid, start,
+     size).
+
+  2. offline_pages() offlines the memory.  When the last block is
+     offlined, N_MEMORY_PRIVATE is cleared automatically.
+
+  3. node_private_unregister() clears pgdat->node_private and
+     drops the refcount.  It refuses to unregister (-EBUSY) if
+     N_MEMORY_PRIVATE is still set (other memory ranges remain).
+
+The driver is responsible for ensuring memory is hot-unpluggable
+before teardown.  The service must ensure all memory is cleaned
+up before hot-unplug - or the service must support migration (so
+memory_hotplug.c can evacuate the memory itself).
+
+In the CRAM example, the service supports migration, so memory
+hot-unplug can remove memory without any special infrastructure.
+
+
+Application: Compressed RAM (mm/cram)
+===
+
+Compressed RAM has a serious design issue:  Its capacity a lie.
+
+A compression device reports more capacity than it physically has.
+If workloads write faster than the OS can reclaim from the device,
+we run out of real backing store and corrupt data or crash.
+
+I call this problem: "Trying to Out Run A Bear"
+
+I.e. This is only stable as long as we stay ahead of the pressure.
+
+We don't want to design a system where stability depends on outrunning
+a bear - I am slow and do not know where to acquire bear spray.
+
+  Fun fact:   Grizzly bears have a top-speed of 56-64 km/h.
+  Unfun Fact: Humans typically top out at ~24 km/h.
+
+This MVP takes a conservative position:
+
+   all compressed memory is mapped read-only.
+
+  - Folios reach the private node only via reclaim (demotion)
+  - migrate_to implements custom demotion with backpressure.
+  - fixup_migration_pte write-protects PTEs on arrival.
+  - wrprotect hooks prevent silent upgrades
+  - handle_fault promotes folios back to DRAM on write.
+  - free_folio scrubs stale data before buddy free.
+
+Because pages are read-only, writes can never cause runaway
+compression ratio loss behind the allocator's back.  Every write
+goes through handle_fault, which promotes the folio to DRAM first.
+
+The device only ever sees net compression (demotion in) and explicit
+decompression (promotion out via fault or reclaim), and has a much
+wider timeframe to respond to poor compression scenarios.
+
+That means there's no bear to out run. The bears are safely asleep in
+their bear den, and even if they show up we have a bear-proof cage.
+
+The backpressure system is our bear-proof cage: the driver reports real
+device utilization (generalized via watermark_boost on the private
+node's zone), and CRAM throttles demotion when capacity is tight.
+
+If compression ratios are bad, we stop demoting pages and start
+evicting pages aggressively.
+
+The service as designed is ~350 functional lines of code because it
+re-uses mm/ services:
+
+  - Existing reclaim/vmscan code handles demotion.
+  - Existing migration code handles migration to/from.
+  - Existing page fault handling dispatches faults.
+
+The driver contains all the CXL nastiness core developers don't want
+anything to do with - No vendor logic touches mm/ internals.
+
+
+
+Future CRAM : Loosening the read-only constraint
+===
+
+The read-only model is safe but conservative.  For workloads where
+compressed pages are occasionally written, the promotion fault adds
+latency.  A future optimization could allow a tunable fraction of
+compressed pages to be mapped writable, accepting some risk of
+write-driven decompression in exchange for lower overhead.
+
+The private node ops make this straightforward:
+
+  - Adjust fixup_migration_pte to selectively skip
+    write-protection.
+  - Use the backpressure system to either revoke writable mappings,
+    deny additional demotions, or evict when device pressure rises.
+
+This comes at a mild memory overhead: 32MB of DRAM per 1TB of CRAM.
+(1 bit per 4KB page).
+
+This is not proposed here, but it should be somewhat trivial.
+
+
+Discussion Topics
+===
+0. Obviously I've included the set as an RFC, please rip it apart.
+
+1. Is N_MEMORY_PRIVATE the right isolation abstraction, or should
+   this extend ZONE_DEVICE?  Prior feedback pushed away from new
+   ZONE logic, but this will likely be debated further.
+
+   My comments on this:
+
+   ZONE_DEVICE requires re-implementing every service you want to
+   provide to your device memory, including basic allocation.
+
+   Private nodes use real struct pages with no metadata
+   limitations, participate in the buddy allocator, and get NUMA
+   topology for free.
+
+2. Can this subsume ZONE_DEVICE COHERENT users?  The architecture
+   was designed with this in mind, but it is only a thought experiment.
+
+3. Is a dedicated mm/ service (cram) the right place for compressed
+   memory management, or should this be purely driver-side until
+   more devices exist?
+
+   I wrote it this way because I forsee more "innovation" in the
+   compressed RAM space given current... uh... "Market Conditions".
+
+   I don't see CRAM being CXL-specific, though the only solutions I've
+   seen have been CXL.  Nothing is stopping someone from soldering such
+   memory directly to a PCB.
+
+5. Where is your hardware-backed data that shows this works?
+
+   I should have some by conference time.
+
+Thanks for reading
+Gregory (Gourry)
+
+
+Gregory Price (27):
+  numa: introduce N_MEMORY_PRIVATE node state
+  mm,cpuset: gate allocations from N_MEMORY_PRIVATE behind __GFP_PRIVATE
+  mm/page_alloc: add numa_zone_allowed() and wire it up
+  mm/page_alloc: Add private node handling to build_zonelists
+  mm: introduce folio_is_private_managed() unified predicate
+  mm/mlock: skip mlock for managed-memory folios
+  mm/madvise: skip madvise for managed-memory folios
+  mm/ksm: skip KSM for managed-memory folios
+  mm/khugepaged: skip private node folios when trying to collapse.
+  mm/swap: add free_folio callback for folio release cleanup
+  mm/huge_memory.c: add private node folio split notification callback
+  mm/migrate: NP_OPS_MIGRATION - support private node user migration
+  mm/mempolicy: NP_OPS_MEMPOLICY - support private node mempolicy
+  mm/memory-tiers: NP_OPS_DEMOTION - support private node demotion
+  mm/mprotect: NP_OPS_PROTECT_WRITE - gate PTE/PMD write-upgrades
+  mm: NP_OPS_RECLAIM - private node reclaim participation
+  mm/oom: NP_OPS_OOM_ELIGIBLE - private node OOM participation
+  mm/memory: NP_OPS_NUMA_BALANCING - private node NUMA balancing
+  mm/compaction: NP_OPS_COMPACTION - private node compaction support
+  mm/gup: NP_OPS_LONGTERM_PIN - private node longterm pin support
+  mm/memory-failure: add memory_failure callback to node_private_ops
+  mm/memory_hotplug: add add_private_memory_driver_managed()
+  mm/cram: add compressed ram memory management subsystem
+  cxl/core: Add cxl_sysram region type
+  cxl/core: Add private node support to cxl_sysram
+  cxl: add cxl_mempolicy sample PCI driver
+  cxl: add cxl_compression PCI driver
+
+ drivers/base/node.c                           |  250 +++-
+ drivers/cxl/Kconfig                           |    2 +
+ drivers/cxl/Makefile                          |    2 +
+ drivers/cxl/core/Makefile                     |    1 +
+ drivers/cxl/core/core.h                       |    4 +
+ drivers/cxl/core/port.c                       |    2 +
+ drivers/cxl/core/region_sysram.c              |  381 ++++++
+ drivers/cxl/cxl.h                             |   53 +
+ drivers/cxl/type3_drivers/Kconfig             |    3 +
+ drivers/cxl/type3_drivers/Makefile            |    3 +
+ .../cxl/type3_drivers/cxl_compression/Kconfig |   20 +
+ .../type3_drivers/cxl_compression/Makefile    |    4 +
+ .../cxl_compression/compression.c             | 1025 +++++++++++++++++
+ .../cxl/type3_drivers/cxl_mempolicy/Kconfig   |   16 +
+ .../cxl/type3_drivers/cxl_mempolicy/Makefile  |    4 +
+ .../type3_drivers/cxl_mempolicy/mempolicy.c   |  297 +++++
+ include/linux/cpuset.h                        |    9 -
+ include/linux/cram.h                          |   66 ++
+ include/linux/gfp_types.h                     |   15 +-
+ include/linux/memory-tiers.h                  |    9 +
+ include/linux/memory_hotplug.h                |   11 +
+ include/linux/migrate.h                       |   17 +-
+ include/linux/mm.h                            |   22 +
+ include/linux/mmzone.h                        |   16 +
+ include/linux/node_private.h                  |  532 +++++++++
+ include/linux/nodemask.h                      |    1 +
+ include/trace/events/mmflags.h                |    4 +-
+ include/uapi/linux/mempolicy.h                |    1 +
+ kernel/cgroup/cpuset.c                        |   49 +-
+ mm/Kconfig                                    |   10 +
+ mm/Makefile                                   |    1 +
+ mm/compaction.c                               |   32 +-
+ mm/cram.c                                     |  508 ++++++++
+ mm/damon/paddr.c                              |    3 +
+ mm/huge_memory.c                              |   23 +-
+ mm/hugetlb.c                                  |    2 +-
+ mm/internal.h                                 |  226 +++-
+ mm/khugepaged.c                               |    7 +-
+ mm/ksm.c                                      |    9 +-
+ mm/madvise.c                                  |    5 +-
+ mm/memory-failure.c                           |   15 +
+ mm/memory-tiers.c                             |   46 +-
+ mm/memory.c                                   |   26 +
+ mm/memory_hotplug.c                           |  122 +-
+ mm/mempolicy.c                                |   69 +-
+ mm/migrate.c                                  |   63 +-
+ mm/mlock.c                                    |    5 +-
+ mm/mprotect.c                                 |    4 +-
+ mm/oom_kill.c                                 |   52 +-
+ mm/page_alloc.c                               |   79 +-
+ mm/rmap.c                                     |    4 +-
+ mm/slub.c                                     |    3 +-
+ mm/swap.c                                     |   21 +-
+ mm/vmscan.c                                   |   55 +-
+ 54 files changed, 4057 insertions(+), 152 deletions(-)
+ create mode 100644 drivers/cxl/core/region_sysram.c
+ create mode 100644 drivers/cxl/type3_drivers/Kconfig
+ create mode 100644 drivers/cxl/type3_drivers/Makefile
+ create mode 100644 drivers/cxl/type3_drivers/cxl_compression/Kconfig
+ create mode 100644 drivers/cxl/type3_drivers/cxl_compression/Makefile
+ create mode 100644 drivers/cxl/type3_drivers/cxl_compression/compression.c
+ create mode 100644 drivers/cxl/type3_drivers/cxl_mempolicy/Kconfig
+ create mode 100644 drivers/cxl/type3_drivers/cxl_mempolicy/Makefile
+ create mode 100644 drivers/cxl/type3_drivers/cxl_mempolicy/mempolicy.c
+ create mode 100644 include/linux/cram.h
+ create mode 100644 include/linux/node_private.h
+ create mode 100644 mm/cram.c
+
+-- 
+2.53.0
+
