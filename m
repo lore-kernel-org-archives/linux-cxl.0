@@ -1,64 +1,64 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3109822CBC0
-	for <linux-cxl@vger.kernel.org>; Sun, 22 Feb 2026 08:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4032356A4
+	for <linux-cxl@vger.kernel.org>; Sun, 22 Feb 2026 08:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771750172; cv=none; b=d1lfIAcEpEUFuNrtCCLJOxMnd+BHfvA5ovTFK/tydrtXPqhcAYzoDL5I5PQLZB5xhQQhD+QZSu/anfeSignBxkb9kP2TA1izSGG2OcEW1v9LuQuUNnJKwpf5EQZQ5G9rffsJx9CmhKbLUd0gdV3gfEp64K9xlfphauMwjDthx0w=
+	t=1771750176; cv=none; b=P3JGKRSkYhva2L7iUZGHjYe4Tqkq/LE+UQvCnmD+/xY3CgGzygyGWWbojZDLB0p9t3UBAjWI3vnTLPqoM50uC57Ja/WIA2sHp6SL+jCIkY7vpl52gqXM3uO4axQr55WzB2DqCl1KiF4ozv/cGB6EZEsw8n6IaM8GvUV/5oEsRVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771750172; c=relaxed/simple;
-	bh=fY2O2ukegsBDPZTxA7RgjpegM4UC0FoSjHYp6ZA4CME=;
+	s=arc-20240116; t=1771750176; c=relaxed/simple;
+	bh=Aefhw780FZYcBuGz8WT4CBUZ6IdM/Ont/+9yMbNMRvA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L2I+U07Z4gQUyGM9s4/JIc9rBuPa7c5/4BuFcQzn62WibAvGmWUDBCOrPSjTUFfCZGcCMG/tz36Yqm+QU5m5FRtEw3hoWXQkwEnOa1sZw216Skio1aPXt9aLOJGmT5BrQR+0FPoPhm9Zn+SuOUZz13Wrf/sfsP0v7kpo4GYR4Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=NWrp7Hpc; arc=none smtp.client-ip=209.85.160.179
+	 MIME-Version; b=AvenivHZL/Uu2A9TgzTaNN+QYs1zUfR5XWOQNYmnjKBFTEMXCxGT7Yg+7Q75zs0pqwS8WmLnnsZ3OBE1jiu4v4j2mieEBBFoPkbQGJxJpQa941kEDS5Wke/5PxQyMsmedhjeYGUjrSg/hiR0Rl0Jylk4MjDGWMc0BNEsJAFJ5J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=aKrpR0OV; arc=none smtp.client-ip=209.85.160.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="NWrp7Hpc"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-50334dd44d2so41382911cf.1
-        for <linux-cxl@vger.kernel.org>; Sun, 22 Feb 2026 00:49:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="aKrpR0OV"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-506e287dd53so27494611cf.1
+        for <linux-cxl@vger.kernel.org>; Sun, 22 Feb 2026 00:49:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1771750170; x=1772354970; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1771750174; x=1772354974; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H0SIufGPxfCWQh/+gXEhZXOnJbmqG7niTtTuU93HVZQ=;
-        b=NWrp7Hpcvpj9mkZbKrSc0+P2vmdVV65cXSZPjH+K2Xh+NIPAfvZv+vXn493H2JUVGK
-         T+4IlHJrum2kMjxxdrho7R1HzdFdlbOHn52axMOxi+/aLi7rg1VbMIkGKaFgclTaAdq5
-         TkKro0I9ybhO7cvYf9JxuGiLVBVlTjJvkpfaffqxeAFD1gG+4Afr5agcoSt87ynUDttx
-         gjsL7v1JhGmXCPFpqnmNth/ykpxkv+ePTr0ikdfRbs4URShBKADvBLf48Y9emXLhteyK
-         GF+doUpTnEg6Wx8nQF0SFOhkJFKLVjwM50YLYqUQBOle4bItkN5G9xZdpmQZ6FA9pmmp
-         xiPA==
+        bh=CV1BMLJRDB150NHPYMpWTJDZSx7tUpTBtDPGS7yRISs=;
+        b=aKrpR0OVgjBkiQpAx1zP1rp3LyTnn9W4nwnchf95T1xfjihChVGz09JVeAx5MvG+Yn
+         H5sYAO3ht1mGpchtZsW0cuWdmaFoQ+RKV2o43faVH0iDzwWEG4o8P2j33IJD6gJ3M8xe
+         Va9FrBhHBtcOg1BVjjq+Qa6nOKCCL6mKnEssver606gWn2GXKbHt+3DIouktOdLrUe4V
+         wMIOfdOb4MV8/6UH1st6eG6LcS9TDA012H4dC+XlNRD2uZ66VkUH+CScZbFcsBwdB20Y
+         4tvsG7pLPETXPn5h8nOpu0gPwFBvxx8AO0ikzUPMfTkhp7ayNu5kRYbTVt8kLwcCfd0d
+         fbag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771750170; x=1772354970;
+        d=1e100.net; s=20230601; t=1771750174; x=1772354974;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=H0SIufGPxfCWQh/+gXEhZXOnJbmqG7niTtTuU93HVZQ=;
-        b=u+9cB/RaZ8Gl+Q2CarQvAfDZPLeARblcjfCPGCsSEboFaYmaoAupy1JzvF53yKjne8
-         YcjEu++vdT0qU4sEYT5KZ0KZnyBRwwXuSv1Kf8DV1q8fsRF36mmR1tNXwbA0PgFkKiYg
-         C6PZ7hTtYFbdg1zPBj39HeOzawkwhqjU2ADT6MCABulWndOVnGULMT/4/MHVxfqbi5nJ
-         WEevyioYVG51gPKaiZelw1DNmXScMtBS1X3Le1C4rk7He4phEeVGSXa3dEE8QAG6fNPQ
-         t28mXscsPuuil0DuJvpPP3oXofpBcpK4A3AWxfSEUk1yaCrr20N3n3DZ3VT0+h6TGK/M
-         VVSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSWNvF/vKGHqqjOjyZ98S2dkWRXoL8twsg+kvM8vTa1GYfBSi9qU5fE6hpvbM29MwuPI4D+BkqEZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxlow73RXRYk3hnj+ncpU0rHElrU2kl2emYcj1f1Eexlbi5Mqzg
-	/O2P3ZOzWwCljR1X5er0XayadNVYEtTPdMdxDD2kG0t+dhTiXORrVtOtwMprwjkuyGw=
-X-Gm-Gg: AZuq6aJwY/1C3VY3S9NFeH0lIUlcfo4zujgYnCgr2JyUn7UCHy+th+f+Mw01qKrqgVB
-	jUmEtrRrgLsu0bW6mc/CfiT1p9YSlWTwTq9svEhvAqzmjG0pJHb6E3w63zRLcd0Oklyp7289Rbj
-	RicGG0OOBpemP5w42vsG354R+E5K8FlqT9T5tVII9tqDaPdpAAdRDd7BNc8ZfUl3im8/wW6BujN
-	NXL10Jz+DtMA4geSv1LJBUK519/XFaE4gKlJc/Qj++vRI8abXRG/F7BqkTRqW9C4dUpvI6Cw01E
-	92k4TeyK5WqsENx1Zg3gW4VrqwZAgf14DSLNGgAosCw9KyrPAKJ0qQUKUy04KtbMFHtc8eVLbK6
-	40LqixHZyPC10SHKn/MTr7DUht3xme37QG/l7rYzFYKWQbS5rGDJ2zQXKXdiP2TBnPZGjnkC1P6
-	zZsGeh+fopnq2lMm/oig1fWT3C8qnS1X9BTwq90MO3/L5Sn13fdzNMSCfvgQMULAp8dz4gilB0T
-	M6ZuAUOUJK6UUE=
-X-Received: by 2002:ac8:7d84:0:b0:506:8a2:b1ca with SMTP id d75a77b69052e-5070bcedb32mr65601961cf.73.1771750170035;
-        Sun, 22 Feb 2026 00:49:30 -0800 (PST)
+        bh=CV1BMLJRDB150NHPYMpWTJDZSx7tUpTBtDPGS7yRISs=;
+        b=c7yJO+E5eL9RGDCSM7mn3LqDWdSkghn4I3mgFFcNl9nI68s/Fg5DXyTcIWdPvfBU0Y
+         DSLQNLZ/mHjE7VrOdm6lvRuRdrj0TQzo9x6gel4B1XI8lQ1kCnWhuuH2erXqrWAyLDGf
+         rIPIx0SwY2L+Cwt9ApzeO5kKuXi+N4BlCkfX2ywI7GLFFMpLgwqZ9OjmDX2wcurtP73C
+         tbX1PLRmwht2oqqdVoSN4fi3kxUQIi0GMomB/8JFmyuHig+3SOl3XYQEkT69Qojijb1K
+         xM1AkkAgPe5xEsq0xgAf780vEzPZCbLgmTTmKdAShi6kSKCEFSbiyEQxOh6CXrTsGVPZ
+         V/mg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYCpZuSINt/oNrjHvz2GkcTssGDiig0j0JBIulb6zo+w8o4N99NHv/rauCURmqUhjc874bnnHMpfA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwBYFOTbDZoBzWd3skMB4WdyQEHhTPcqlzmSN8vKuxboJOu7f3
+	ODrViNIJxZdRtaBH+hDI8l1jmKcCOLxzxAzQnxXNZ7nBTCq6RSPYQtXIBHuRn6NYtNU=
+X-Gm-Gg: AZuq6aKiWW1clp/3+92XoxVWefPInMOLAAlyAxI+/ygLjqGAYdlnbVIxgwYbOTmKzeG
+	q0xOtRzipqucoyTnF/JF16MRj+u6qvU+6miQ818v8U5RpaqoZNJ6l6K6FhBIIDbod6Sfo0EydOO
+	zQcGd1LQgD5DyS6J09BW1GlQY4a+e/sffm6eW12r3uqzFfaWMWWatJnwLeMFQbKspKrDMssPsDB
+	G9KfwA+6c+lzAYzyeDSxdi2LcDgVOv0vSA7sTPOofnks9aEkzsWCahspA85aTdUe/KZxVRzaw94
+	1O03g/9QWJ0iSoft+xrLHlAYjb67OqAPpbSljglRFfUmkD4b+aToLsbPtiJa1ELlu1mD6H3iK+k
+	W/HpLcNUZ6w246mojRu+ttVfgwKBrKCsAhzE7NV5AZWE9AMzmBv+mKRiRdjmJaeDa6d+HX5zDQK
+	oaKGIIAS+GX6RFCnulPxQzZanep7T6bksmOnRnJnx2jbNC1NYz4BhEt/dIKxr3MXqkFQHsQUOgU
+	fccj66dB09a5Xo=
+X-Received: by 2002:a05:622a:1903:b0:4ff:c884:31ad with SMTP id d75a77b69052e-5070bcb47ebmr73646721cf.53.1771750173883;
+        Sun, 22 Feb 2026 00:49:33 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.49.27
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.49.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Feb 2026 00:49:29 -0800 (PST)
+        Sun, 22 Feb 2026 00:49:33 -0800 (PST)
 From: Gregory Price <gourry@gourry.net>
 To: lsf-pc@lists.linux-foundation.org
 Cc: linux-kernel@vger.kernel.org,
@@ -134,9 +134,9 @@ Cc: linux-kernel@vger.kernel.org,
 	bhe@redhat.com,
 	zhengqi.arch@bytedance.com,
 	terry.bowman@amd.com
-Subject: [RFC PATCH v4 09/27] mm/khugepaged: skip private node folios when trying to collapse.
-Date: Sun, 22 Feb 2026 03:48:24 -0500
-Message-ID: <20260222084842.1824063-10-gourry@gourry.net>
+Subject: [RFC PATCH v4 10/27] mm/swap: add free_folio callback for folio release cleanup
+Date: Sun, 22 Feb 2026 03:48:25 -0500
+Message-ID: <20260222084842.1824063-11-gourry@gourry.net>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
 References: <20260222084842.1824063-1-gourry@gourry.net>
@@ -148,62 +148,140 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A collapse operation allocates a new large folio and migrates the
-smaller folios into it.  This is an issue for private nodes:
+When a folio's refcount drops to zero, the service may need to perform
+cleanup before the page returns to the buddy allocator (e.g. zeroing
+pages to scrub stale compressed data / release compression ratio).
 
-  1. The private node service may not support migration
-  2. Collapse may promotes pages from the private node to a local node,
-     which may result in an LRU inversion that defeats memory tiering.
+Add folio_managed_on_free() to wrap both zone_device and private node
+semantics for this operation since they are the same.
 
-Handle this just like zone_device for now.
+One difference between zone_device and private node folios:
+  - private nodes may choose to either take a reference and return true
+    ("handled"), or return false to return it back to the buddy.
 
-It may be possible to support this later for some private node services
-that report explicit support for collapse (and migration).
+  - zone_device returns the page to the buddy (always returns true)
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- mm/khugepaged.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/linux/node_private.h |  6 ++++++
+ mm/internal.h                | 30 ++++++++++++++++++++++++++++++
+ mm/swap.c                    | 21 ++++++++++-----------
+ 3 files changed, 46 insertions(+), 11 deletions(-)
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 97d1b2824386..36f6bc5da53c 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -21,6 +21,7 @@
- #include <linux/shmem_fs.h>
- #include <linux/dax.h>
- #include <linux/ksm.h>
+diff --git a/include/linux/node_private.h b/include/linux/node_private.h
+index 7687a4cf990c..09ea7c4cb13c 100644
+--- a/include/linux/node_private.h
++++ b/include/linux/node_private.h
+@@ -39,10 +39,16 @@ struct vm_fault;
+  *   callback to prevent node_private from being freed.
+  *   These callbacks MUST NOT sleep.
+  *
++ * @free_folio: Called when a folio refcount drops to 0
++ *   [folio-referenced callback]
++ *   Returns: true if handled (skip return to buddy)
++ *            false if no op (return to buddy)
++ *
+  * @flags: Operation exclusion flags (NP_OPS_* constants).
+  *
+  */
+ struct node_private_ops {
++	bool (*free_folio)(struct folio *folio);
+ 	unsigned long flags;
+ };
+ 
+diff --git a/mm/internal.h b/mm/internal.h
+index 97023748e6a9..658da41cdb8e 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1412,6 +1412,36 @@ int numa_migrate_check(struct folio *folio, struct vm_fault *vmf,
+ void free_zone_device_folio(struct folio *folio);
+ int migrate_device_coherent_folio(struct folio *folio);
+ 
++/**
++ * folio_managed_on_free - Notify managed-memory service that folio
++ *                         refcount reached zero.
++ * @folio: the folio being freed
++ *
++ * Returns true if the folio is fully handled (zone_device -- caller
++ * must return immediately).  Returns false if the callback ran but
++ * the folio should continue through the normal free path
++ * (private_node -- pages go back to buddy).
++ *
++ * Returns false for normal folios (no-op).
++ */
++static inline bool folio_managed_on_free(struct folio *folio)
++{
++	if (folio_is_zone_device(folio)) {
++		free_zone_device_folio(folio);
++		return true;
++	}
++	if (folio_is_private_node(folio)) {
++		const struct node_private_ops *ops =
++			folio_node_private_ops(folio);
++
++		if (ops && ops->free_folio) {
++			if (ops->free_folio(folio))
++				return true;
++		}
++	}
++	return false;
++}
++
+ struct vm_struct *__get_vm_area_node(unsigned long size,
+ 				     unsigned long align, unsigned long shift,
+ 				     unsigned long vm_flags, unsigned long start,
+diff --git a/mm/swap.c b/mm/swap.c
+index 2260dcd2775e..dca306e1ae6d 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -37,6 +37,7 @@
+ #include <linux/page_idle.h>
+ #include <linux/local_lock.h>
+ #include <linux/buffer_head.h>
 +#include <linux/node_private.h>
- #include <linux/pgalloc.h>
  
- #include <asm/tlb.h>
-@@ -571,7 +572,7 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
- 			goto out;
- 		}
- 		page = vm_normal_page(vma, addr, pteval);
--		if (unlikely(!page) || unlikely(is_zone_device_page(page))) {
-+		if (unlikely(!page) || unlikely(page_is_private_managed(page))) {
- 			result = SCAN_PAGE_NULL;
- 			goto out;
- 		}
-@@ -1323,7 +1324,7 @@ static int hpage_collapse_scan_pmd(struct mm_struct *mm,
+ #include "internal.h"
+ 
+@@ -96,10 +97,9 @@ static void page_cache_release(struct folio *folio)
+ 
+ void __folio_put(struct folio *folio)
+ {
+-	if (unlikely(folio_is_zone_device(folio))) {
+-		free_zone_device_folio(folio);
+-		return;
+-	}
++	if (unlikely(folio_is_private_managed(folio)))
++		if (folio_managed_on_free(folio))
++			return;
+ 
+ 	if (folio_test_hugetlb(folio)) {
+ 		free_huge_folio(folio);
+@@ -961,19 +961,18 @@ void folios_put_refs(struct folio_batch *folios, unsigned int *refs)
+ 		if (is_huge_zero_folio(folio))
+ 			continue;
+ 
+-		if (folio_is_zone_device(folio)) {
++		if (!folio_ref_sub_and_test(folio, nr_refs))
++			continue;
++
++		if (unlikely(folio_is_private_managed(folio))) {
+ 			if (lruvec) {
+ 				unlock_page_lruvec_irqrestore(lruvec, flags);
+ 				lruvec = NULL;
+ 			}
+-			if (folio_ref_sub_and_test(folio, nr_refs))
+-				free_zone_device_folio(folio);
+-			continue;
++			if (folio_managed_on_free(folio))
++				continue;
  		}
  
- 		page = vm_normal_page(vma, addr, pteval);
--		if (unlikely(!page) || unlikely(is_zone_device_page(page))) {
-+		if (unlikely(!page) || unlikely(page_is_private_managed(page))) {
- 			result = SCAN_PAGE_NULL;
- 			goto out_unmap;
- 		}
-@@ -1575,7 +1576,7 @@ int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
- 		}
- 
- 		page = vm_normal_page(vma, addr, ptent);
--		if (WARN_ON_ONCE(page && is_zone_device_page(page)))
-+		if (WARN_ON_ONCE(page && page_is_private_managed(page)))
- 			page = NULL;
- 		/*
- 		 * Note that uprobe, debugger, or MAP_PRIVATE may change the
+-		if (!folio_ref_sub_and_test(folio, nr_refs))
+-			continue;
+-
+ 		/* hugetlb has its own memcg */
+ 		if (folio_test_hugetlb(folio)) {
+ 			if (lruvec) {
 -- 
 2.53.0
 
