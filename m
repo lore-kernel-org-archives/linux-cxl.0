@@ -1,64 +1,64 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3900024E4A8
-	for <linux-cxl@vger.kernel.org>; Sun, 22 Feb 2026 08:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02FD215055
+	for <linux-cxl@vger.kernel.org>; Sun, 22 Feb 2026 08:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771750202; cv=none; b=T70CEjIDqDrDoN7vlfKzcCx3P/uXGYvemXiSsMjBoJxPY1ps9/ziDiWtpePcYMfDD6s4iaDGSEQLnbqEuDiwa7ZcyTm7Ed107kDQjkj7B6NOr5F9TRHjiM0x22UIm8xpUkB1awDW8esbkFYwXJAtUI0yhCZFJMs1MV/mtKjaNWY=
+	t=1771750205; cv=none; b=WD6ul7Evz0v6lQmk+2mQowt3yjFNG/afR3e8hE8hEEC/dwYJspvRbxVO5pGLndRzdAw8KUt/6SscwIszIi6y0T2pqDmJ1zqQ/MCCVqX+Zkbzn0GGVVtn8Z47VRwfBSr/X4HMVSqY17MRzZxnXalHVZqUgxV6in4p+obht8C1oLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771750202; c=relaxed/simple;
-	bh=Ouqj4GqJWjwYiY0gNW4BTPlwlgIunnGvFq2E9eGJsIQ=;
+	s=arc-20240116; t=1771750205; c=relaxed/simple;
+	bh=4PBnYmCqvqclF+wOA5GwV12GKX5dBQimyZrSCkCYzv0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k9TQYsTmy3+IDhU8VS7yo9rgXefmQWTYWX3ao5yH5V+m5vn00DfsCkAmPFH7Yb2905Xjnj09w3pvWW0Wrn2RG/1aKlCjApseaWqu1CnBhpkISZB17g0X49TMELLumHA8OX7JgA6tf+v6/PZcC0r9gcC53+qy1W0PJY9oZY52yXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=J1AoTa4b; arc=none smtp.client-ip=209.85.160.174
+	 MIME-Version; b=I3eEqwhjb7C9FYwAARqdmhLhJIewKqROizrsNmO8dFC0MnKKKSPt4K79CuuN76+Sw/PuJD+f7Y6ioYuXG2CpaukXHyWyBiTq2DlN8YesGXX0ZVtjoOsjIXIDKUlXrTaWC2+VSdjbvZbQFo1jR+mTIMfUa7FdGsX2AfwA/D3WUeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=lsiDxAm1; arc=none smtp.client-ip=209.85.160.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="J1AoTa4b"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-506251815a3so32513381cf.0
-        for <linux-cxl@vger.kernel.org>; Sun, 22 Feb 2026 00:50:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="lsiDxAm1"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-506a7bbe9d0so29136071cf.0
+        for <linux-cxl@vger.kernel.org>; Sun, 22 Feb 2026 00:50:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1771750199; x=1772354999; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1771750203; x=1772355003; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=degmio9cxdpzQuRYo2QvBbWquT2Pd1sYOKpzGMoeajE=;
-        b=J1AoTa4bi2IOOhcduUTDkO0dYY6Xs0dyWF3OvN+AGw4ZVzZ71xL3XL9OmUDDclSgPz
-         7WCF0lH93k1EeM+fFxODzmCZr+vccMR+N++msZ3nReP0vucfs+Dw4TEYcqkpoabhEkyO
-         XQ6xWRN2LCujRzo3NwDNufq55dgjuIrXOXe7wM2g6z2A5PXcVWPaDwEWwPAtUwBDfS0h
-         mw7UIY0pXHrMmyskBmhCygN3op0/sVwAjdY8U/ML4kD7aG2uSrg/hqKSBt1uQmx5fhG+
-         LcyctMQsJMv7ywYj1WKRJ7KyucYsTcw1yj+/gUvfqhfPavv37YH/x9QPEwJnerneu2U+
-         yiKw==
+        bh=1vF7vDru1wu4C4IPdmOP0dgYFxJxyuUKkceiB3IYEd0=;
+        b=lsiDxAm1WZk67Swptw9t09vi3jOkKauYvoRYrHJWIQdwp2cxD93s4+hnHI4tSGL2Er
+         h0B7HHhwXu5IGLYhEoCflt5tZzDeveKy36yZ2AyUadvzZr7Ih1AfOlg4nIherONyq0Bh
+         DESKsA3QWLF0RtC3cUhyD5fw11T1ayw/itGkTjTAwtcTh5NpgJl0a6vqlSz6qVoMp7Tj
+         BFMNrydITPvhG9DIS4rl0pIlijjl8pwixkCR+SBwfF/KYz/Bak1JM2UiBcHqFqf6wmX5
+         n1VWkCQXYrrOyAo5PgHeIC1Ohg/87wzCQV1zFj/bHxyHF+fGT1qBhabKfWsDZiC9/7LF
+         MxHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771750199; x=1772354999;
+        d=1e100.net; s=20230601; t=1771750203; x=1772355003;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=degmio9cxdpzQuRYo2QvBbWquT2Pd1sYOKpzGMoeajE=;
-        b=L4UtkxegaaTE2tke43+NBlL4Uw0K8+eiFjO1k38uKn3WYkI0vasHJDaM/LWbuBQgP3
-         4UGXmY/WfMwWqETv/RuErRT0eIqoNK2yVU5ByaRJmQRZsjZoyLsrFXpOzaGCLyJcPQiV
-         1V6sst3uNOWcd9H4AWr2HhM1QioRuEwQg9Cab1QhsOmmdIDpjTQQSj9nW4TLvlIEBE55
-         Ekf1j7vABMwiEgOHTDjWv9itLk158SAGbEDFUqkbFQqEdIuQt2xH/vzVe8S1hpJX1k2T
-         RIkKf7KdRQ1s+h1PdXefVB08ZQoKC4TujFSd2isMsHiA9352NAdLZvt0cxkHCQQQbAnD
-         N67g==
-X-Forwarded-Encrypted: i=1; AJvYcCWSdmyXmxOi7NoT4Y6QoNsDbkqb/pPMutXI+gQXYfiZXHM2D/4Sj2eax8/s08UwmnWNa2McpTeBuxk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWcLoQj5VMlzSILfOw9aTQ4pLQBgxfm4Qq+UASeZfTnWRjGru0
-	3mT7LpZ6O0/L36Fk412PA8wDBYEYnlE/6MOd3WH92NM5haYeiO93l1IdazJJbpt9s3Q=
-X-Gm-Gg: AZuq6aIRn5AezkhY+fv/NepcLbIWXGzTfgKRpBnabkzpNqMFUv2bxTNSx4gOotMIzPP
-	VDlm3YrkgSe84WAXCQRKX1oBLg/obA3/cCkzYcPw6E+W12G3HMOYnAViNM3B4KMdcjjSUXa3/C1
-	HaYqne71tZtCMooPYm2bUO1Cc0k5pQLLM2aYLkvTcYaeTb59oh0x3MT0LQGWg2vJ490jdos0B9X
-	f2AFJV6OSc8AUYFNcehN/znuk93VItP9I69eR+CNFpV5xAfBlx9j7MGzR4W8bwHcOirmI/rZ+CX
-	cTiD0e8JcjO5NeaWM34kDuxwuRyypfpoeBYXD3AKlsfZ874TbPfXKR3qfoVSac1C8haw5VqLRnY
-	SS1QvWox+8MBBuYq6zu03IUcH1ROoblcCA4h+T7k5NwvoxOq0WJvaKPmg8HR0jeKGmNe4dkqkG6
-	7SXuobHhbNJkrId7UljAMOrpBcw2lDGLsVJbQldM5XfZzkbc12S0xR00uUNiyk6gD6OTUJ+ZtJk
-	57aC2tU/XmZqkA=
-X-Received: by 2002:a05:622a:1307:b0:502:9b85:a609 with SMTP id d75a77b69052e-5070bbf23bamr76760921cf.30.1771750199062;
-        Sun, 22 Feb 2026 00:49:59 -0800 (PST)
+        bh=1vF7vDru1wu4C4IPdmOP0dgYFxJxyuUKkceiB3IYEd0=;
+        b=unoSQwfkXBGo+jlPibhwpg80SgAXpjAdCPmG/FLbScVwd1VdLGaF0/twpRTebvXRRw
+         2LryxwA2yWviGgqg829uJT5NHb51sF4U8bosMugD9FfWNfrIZud2/VHy5sQzHvdIoJPQ
+         78NkJu0P5NpTnb2pnnmDucYfb72zZ53VpZRQ34pQ1BBS3DJDdsJj15ckMFB2XEaMOez8
+         lWfijQy4Kc8Z3wZI9bee2tlvW21cXHTcbGI5NixcGYwZkoqn1FR8r1QDsdgYF6zN56aR
+         HJs492Zr1FgxLXzkMLJ6nUb1C+jXVyxHrm/cU6xND/L1QC8YM/XPPOPuLi3dhPWHRqwM
+         j69g==
+X-Forwarded-Encrypted: i=1; AJvYcCUG/ZvAv5EGFxxOM11aUKzwCx1ApJpEYPpfpfMZ0QsPK83E6EjpdFYC6T+DwStH8Cic0pde1y99KZk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhcEG/Wa3frtU02z8eCi60t0NSUn0cXXfSi2fqVLdLXAb+Tbbg
+	HclvF6T76gsya3d675BH3q/3Oyb6T0OzYBr/zv8/fy8iR14Ur5iUrzdHgS6kyKBLT1o=
+X-Gm-Gg: AZuq6aKeAj9xwqyeAeDoj2i4/+uyDy/RjhfR/iN8ab6b/EuNp+o+lUzgMyW2YRP5+AJ
+	uSPVbxOIRyv5nfUeIeY1hOi5XzVEJZkDzqPLN85JMF4VweQiRCJ/rzZuKJ8K3zCttfJ7RFc+wrS
+	4IG2qSY9idp0b59OxLrwUzhGcD1ZTnCXofSSJdGQ8GpBwAHitKWOr9hzAriq8BCkYDyRWCBFI5I
+	+UNBwwiGuEBzrXIux9CXzDH5X9c5w5paUb00mFU3HNpnGxsrA7iVEERYs7YkKTFNAYq82rRKVb3
+	TNCl1iIz+t1IAy1vaoCjLIeC486mGWRr9dy3HvvGZzE8V/fmMfSj+mDespI4vTJvKa2qiq5Poka
+	59x4Ij9ZocxDvPulA8EsZJBSJ004NHOr8l7zaN2456XEf+1oRuS9hsuOuBZdA43hk2EuGM+8AX+
+	NzKguz+J+R4ExmCSDlzMNfOSoM7b+WGtINXNJ0dEfovzbYNr5rCPSToOiqP/vDOw9o7ewwCkZh1
+	Kc2RthQv0/MdCM=
+X-Received: by 2002:a05:622a:14c9:b0:4ee:1fbe:80de with SMTP id d75a77b69052e-5070bca9b78mr73724161cf.63.1771750202674;
+        Sun, 22 Feb 2026 00:50:02 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.49.57
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.50.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Feb 2026 00:49:58 -0800 (PST)
+        Sun, 22 Feb 2026 00:50:02 -0800 (PST)
 From: Gregory Price <gourry@gourry.net>
 To: lsf-pc@lists.linux-foundation.org
 Cc: linux-kernel@vger.kernel.org,
@@ -134,9 +134,9 @@ Cc: linux-kernel@vger.kernel.org,
 	bhe@redhat.com,
 	zhengqi.arch@bytedance.com,
 	terry.bowman@amd.com
-Subject: [RFC PATCH v4 17/27] mm/oom: NP_OPS_OOM_ELIGIBLE - private node OOM participation
-Date: Sun, 22 Feb 2026 03:48:32 -0500
-Message-ID: <20260222084842.1824063-18-gourry@gourry.net>
+Subject: [RFC PATCH v4 18/27] mm/memory: NP_OPS_NUMA_BALANCING - private node NUMA balancing
+Date: Sun, 22 Feb 2026 03:48:33 -0500
+Message-ID: <20260222084842.1824063-19-gourry@gourry.net>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
 References: <20260222084842.1824063-1-gourry@gourry.net>
@@ -148,189 +148,134 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The OOM killer must know whether killing a task can actually free
-memory such that pressure is reduced.
+Not all private nodes may wish to engage in NUMA balancing faults.
 
-A private node only contributes to relieving pressure if it participates
-in both reclaim and demotion. Without this check, the check, the OOM
-killer may select an undeserving victim.
+Add the NP_OPS_NUMA_BALANCING flag (BIT(5)) as an opt-in method.
 
-Introduce NP_OPS_OOM_ELIGIBLE and helpers node_oom_eligible() and
-zone_oom_eligible().
+Introduce folio_managed_allows_numa() helper:
+   ZONE_DEVICE folios always return false (never NUMA-scanned)
+   NP_OPS_NUMA_BALANCING filters for private nodes
 
-Replace cpuset_mems_allowed_intersects() in oom_cpuset_eligible()
-with oom_mems_intersect() that iterates N_MEMORY nodes and skips
-ineligible private nodes.
-
-Update constrained_alloc() to use zone_oom_eligible() for constraint
-detection and node_oom_eligible() to exclude ineligible nodes from
-totalpages accounting.
-
-Remove cpuset_mems_allowed_intersects() as it has no remaining callers.
+In do_numa_page(), if a private-node folio with NP_OPS_PROTECT_WRITE
+is still on its node after a failed/skipped migration, enforce
+write-protection so the next write triggers handle_fault.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- include/linux/cpuset.h       |  9 -------
- include/linux/node_private.h |  3 +++
- kernel/cgroup/cpuset.c       | 17 ------------
- mm/oom_kill.c                | 52 ++++++++++++++++++++++++++++++++----
- 4 files changed, 50 insertions(+), 31 deletions(-)
+ drivers/base/node.c          |  4 ++++
+ include/linux/node_private.h | 16 ++++++++++++++++
+ mm/memory.c                  | 11 +++++++++++
+ mm/mempolicy.c               |  5 ++++-
+ 4 files changed, 35 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
-index 7b2f3f6b68a9..53ccfb00b277 100644
---- a/include/linux/cpuset.h
-+++ b/include/linux/cpuset.h
-@@ -97,9 +97,6 @@ static inline bool cpuset_zone_allowed(struct zone *z, gfp_t gfp_mask)
- 	return true;
- }
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index a4955b9b5b93..88aaac45e814 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -961,6 +961,10 @@ int node_private_set_ops(int nid, const struct node_private_ops *ops)
+ 	    (ops->flags & NP_OPS_PROTECT_WRITE))
+ 		return -EINVAL;
  
--extern int cpuset_mems_allowed_intersects(const struct task_struct *tsk1,
--					  const struct task_struct *tsk2);
--
- #ifdef CONFIG_CPUSETS_V1
- #define cpuset_memory_pressure_bump() 				\
- 	do {							\
-@@ -241,12 +238,6 @@ static inline bool cpuset_zone_allowed(struct zone *z, gfp_t gfp_mask)
- 	return true;
- }
- 
--static inline int cpuset_mems_allowed_intersects(const struct task_struct *tsk1,
--						 const struct task_struct *tsk2)
--{
--	return 1;
--}
--
- static inline void cpuset_memory_pressure_bump(void) {}
- 
- static inline void cpuset_task_status_allowed(struct seq_file *m,
++	if ((ops->flags & NP_OPS_NUMA_BALANCING) &&
++	    !(ops->flags & NP_OPS_MIGRATION))
++		return -EINVAL;
++
+ 	mutex_lock(&node_private_lock);
+ 	np = rcu_dereference_protected(NODE_DATA(nid)->node_private,
+ 				       lockdep_is_held(&node_private_lock));
 diff --git a/include/linux/node_private.h b/include/linux/node_private.h
-index 34be52383255..34d862f09e24 100644
+index 34d862f09e24..5ac60db1f044 100644
 --- a/include/linux/node_private.h
 +++ b/include/linux/node_private.h
-@@ -141,6 +141,9 @@ struct node_private_ops {
+@@ -140,6 +140,8 @@ struct node_private_ops {
+ #define NP_OPS_PROTECT_WRITE		BIT(3)
  /* Kernel reclaim (kswapd, direct reclaim, OOM) operates on this node */
  #define NP_OPS_RECLAIM			BIT(4)
++/* Allow NUMA balancing to scan and migrate folios on this node */
++#define NP_OPS_NUMA_BALANCING		BIT(5)
  
-+/* Private node is OOM-eligible: reclaim can run and pages can be demoted here */
-+#define NP_OPS_OOM_ELIGIBLE		(NP_OPS_RECLAIM | NP_OPS_DEMOTION)
-+
- /**
-  * struct node_private - Per-node container for N_MEMORY_PRIVATE nodes
-  *
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 1a597f0c7c6c..29789d544fd5 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -4530,23 +4530,6 @@ int cpuset_mem_spread_node(void)
- 	return cpuset_spread_node(&current->cpuset_mem_spread_rotor);
+ /* Private node is OOM-eligible: reclaim can run and pages can be demoted here */
+ #define NP_OPS_OOM_ELIGIBLE		(NP_OPS_RECLAIM | NP_OPS_DEMOTION)
+@@ -263,6 +265,15 @@ static inline void folio_managed_split_cb(struct folio *original_folio,
  }
  
--/**
-- * cpuset_mems_allowed_intersects - Does @tsk1's mems_allowed intersect @tsk2's?
-- * @tsk1: pointer to task_struct of some task.
-- * @tsk2: pointer to task_struct of some other task.
-- *
-- * Description: Return true if @tsk1's mems_allowed intersects the
-- * mems_allowed of @tsk2.  Used by the OOM killer to determine if
-- * one of the task's memory usage might impact the memory available
-- * to the other.
-- **/
--
--int cpuset_mems_allowed_intersects(const struct task_struct *tsk1,
--				   const struct task_struct *tsk2)
--{
--	return nodes_intersects(tsk1->mems_allowed, tsk2->mems_allowed);
--}
--
- /**
-  * cpuset_print_current_mems_allowed - prints current's cpuset and mems_allowed
-  *
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index 5eb11fbba704..cd0d65ccd1e8 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -74,7 +74,45 @@ static inline bool is_memcg_oom(struct oom_control *oc)
- 	return oc->memcg != NULL;
- }
- 
-+/* Private nodes are only eligible if they support both reclaim and demotion */
-+static inline bool node_oom_eligible(int nid)
+ #ifdef CONFIG_MEMORY_HOTPLUG
++static inline bool folio_managed_allows_numa(struct folio *folio)
 +{
-+	if (!node_state(nid, N_MEMORY_PRIVATE))
++	if (!folio_is_private_managed(folio))
 +		return true;
-+	return (node_private_flags(nid) & NP_OPS_OOM_ELIGIBLE) ==
-+		NP_OPS_OOM_ELIGIBLE;
-+}
-+
-+static inline bool zone_oom_eligible(struct zone *zone, gfp_t gfp_mask)
-+{
-+	if (!node_oom_eligible(zone_to_nid(zone)))
++	if (folio_is_zone_device(folio))
 +		return false;
-+	return cpuset_zone_allowed(zone, gfp_mask);
++	return folio_private_flags(folio, NP_OPS_NUMA_BALANCING);
 +}
 +
- #ifdef CONFIG_NUMA
-+/*
-+ * Killing a task can only relieve system pressure if freed memory can be
-+ * demoted there and reclaim can operate on the node's pages, so we
-+ * omit private nodes that aren't eligible.
-+ */
-+static bool oom_mems_intersect(const struct task_struct *tsk1,
-+			       const struct task_struct *tsk2)
+ static inline int folio_managed_allows_user_migrate(struct folio *folio)
+ {
+ 	if (folio_is_zone_device(folio))
+@@ -443,6 +454,11 @@ int node_private_clear_ops(int nid, const struct node_private_ops *ops);
+ 
+ #else /* !CONFIG_NUMA || !CONFIG_MEMORY_HOTPLUG */
+ 
++static inline bool folio_managed_allows_numa(struct folio *folio)
 +{
-+	int nid;
-+
-+	for_each_node_state(nid, N_MEMORY) {
-+		if (!node_isset(nid, tsk1->mems_allowed))
-+			continue;
-+		if (!node_isset(nid, tsk2->mems_allowed))
-+			continue;
-+		if (!node_oom_eligible(nid))
-+			continue;
-+		return true;
-+	}
-+	return false;
++	return !folio_is_zone_device(folio);
 +}
 +
- /**
-  * oom_cpuset_eligible() - check task eligibility for kill
-  * @start: task struct of which task to consider
-@@ -107,9 +145,10 @@ static bool oom_cpuset_eligible(struct task_struct *start,
- 		} else {
- 			/*
- 			 * This is not a mempolicy constrained oom, so only
--			 * check the mems of tsk's cpuset.
-+			 * check the mems of tsk's cpuset, excluding private
-+			 * nodes that do not participate in kernel reclaim.
- 			 */
--			ret = cpuset_mems_allowed_intersects(current, tsk);
-+			ret = oom_mems_intersect(current, tsk);
- 		}
- 		if (ret)
- 			break;
-@@ -291,16 +330,19 @@ static enum oom_constraint constrained_alloc(struct oom_control *oc)
- 		return CONSTRAINT_MEMORY_POLICY;
- 	}
+ static inline int folio_managed_allows_user_migrate(struct folio *folio)
+ {
+ 	return -ENOENT;
+diff --git a/mm/memory.c b/mm/memory.c
+index 0f78988befef..88a581baae40 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -78,6 +78,7 @@
+ #include <linux/sched/sysctl.h>
+ #include <linux/pgalloc.h>
+ #include <linux/uaccess.h>
++#include <linux/node_private.h>
  
--	/* Check this allocation failure is caused by cpuset's wall function */
-+	/* Check this allocation failure is caused by cpuset or private node constraints */
- 	for_each_zone_zonelist_nodemask(zone, z, oc->zonelist,
- 			highest_zoneidx, oc->nodemask)
--		if (!cpuset_zone_allowed(zone, oc->gfp_mask))
-+		if (!zone_oom_eligible(zone, oc->gfp_mask))
- 			cpuset_limited = true;
+ #include <trace/events/kmem.h>
  
- 	if (cpuset_limited) {
- 		oc->totalpages = total_swap_pages;
--		for_each_node_mask(nid, cpuset_current_mems_allowed)
-+		for_each_node_mask(nid, cpuset_current_mems_allowed) {
-+			if (!node_oom_eligible(nid))
-+				continue;
- 			oc->totalpages += node_present_pages(nid);
-+		}
- 		return CONSTRAINT_CPUSET;
- 	}
- 	return CONSTRAINT_NONE;
+@@ -6041,6 +6042,12 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+ 	if (!folio || folio_is_zone_device(folio))
+ 		goto out_map;
+ 
++	/*
++	 * We do not need to check private-node folios here because the private
++	 * memory service either never opted in to NUMA balancing, or it did
++	 * and we need to restore private PTE controls on the failure path.
++	 */
++
+ 	nid = folio_nid(folio);
+ 	nr_pages = folio_nr_pages(folio);
+ 
+@@ -6078,6 +6085,10 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+ 	/*
+ 	 * Make it present again, depending on how arch implements
+ 	 * non-accessible ptes, some can allow access by kernel mode.
++	 *
++	 * If the folio is still on a private node with NP_OPS_PROTECT_WRITE,
++	 * enforce write-protection so the next write triggers handle_fault.
++	 * This covers migration-failed and migration-skipped paths.
+ 	 */
+ 	if (unlikely(folio && folio_managed_wrprotect(folio))) {
+ 		writable = false;
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 8ac014950e88..8a3a9916ab59 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -861,7 +861,10 @@ bool folio_can_map_prot_numa(struct folio *folio, struct vm_area_struct *vma,
+ {
+ 	int nid;
+ 
+-	if (!folio || folio_is_zone_device(folio) || folio_test_ksm(folio))
++	if (!folio || folio_test_ksm(folio))
++		return false;
++
++	if (unlikely(!folio_managed_allows_numa(folio)))
+ 		return false;
+ 
+ 	/* Also skip shared copy-on-write folios */
 -- 
 2.53.0
 
