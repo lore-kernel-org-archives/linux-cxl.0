@@ -1,64 +1,65 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33CEC1E5B9E
-	for <linux-cxl@vger.kernel.org>; Sun, 22 Feb 2026 08:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85C7219A8D
+	for <linux-cxl@vger.kernel.org>; Sun, 22 Feb 2026 08:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771750147; cv=none; b=CoGqNuB7KOMgaEmAgSvRuPsUDIAs6tMwoT7e4IC9RI+XUpIQpusBzql2ja0iFXjWuHAPSYAbnaeDGJ1Foh2nZx5wFnJueNcTfN3CsX4/esQIWfpjDDh4t5NTbHtKomUl8zpBjnmPCBjYMctFBzionovucJV2VOGSC9Wupk4AIec=
+	t=1771750151; cv=none; b=ufurMd7EPnVLcdUSEiPiLAhMwk7vaApK7QKbWtUNKmRdZErUr8BZE4HWPhoG272r6f6O9CA40IT8ER3lS3kDxRUe9zBMdz/s0SlHlXR1kKYLkP0vqYshE4lWff/ONHB6nzshRzwsCK/0xtPJowLRHitfexYQ5SmpffxvqprMBs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771750147; c=relaxed/simple;
-	bh=sAkLCb212Za2s4GNdxcsRgPVrH5x9YHyij8LRwqdLNg=;
+	s=arc-20240116; t=1771750151; c=relaxed/simple;
+	bh=o1uIXG0iQdOCtI30tu/L41w3N6UZHqstojSncqQCHfs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l7yVkv6yYewLoseosPFE5mKBj2opvgNXX8IUk+FE5tPcmJGs+ISzFtfBUa8h2d2PdgqNUXlRxN70R3XsFEdllHqnAjPUvi7K4ByC+919tFxzzXo5Le0T2pUjTSOeYJWgas3S7tqC4qWEij8QQwGkzlg+F6xkjUn5FJXhzl/ENHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Lmv1jvS9; arc=none smtp.client-ip=209.85.160.170
+	 MIME-Version; b=L44VX/NSYn4u49VvKC3picRaTnSEFByLIGl/ubWXDH6Aj2tdTL0BxpBKmsg3ypFAjB24iGXPa19ymkJJTM3pPPsIrnoxYYUibDRpCk4c+iDcBHSI07c2uMW+jOm0dEioUGPCG2LtyW34bZcympUJmVKslzYdb1RcNqNrp8OTcmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=BwR5OqEE; arc=none smtp.client-ip=209.85.222.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Lmv1jvS9"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-5069ad750b7so30020081cf.2
-        for <linux-cxl@vger.kernel.org>; Sun, 22 Feb 2026 00:49:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="BwR5OqEE"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-8cb39647a70so341514285a.0
+        for <linux-cxl@vger.kernel.org>; Sun, 22 Feb 2026 00:49:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1771750145; x=1772354945; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1771750149; x=1772354949; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=84BLe7DIZgrLHIYUbF37QCRxTh9GXhBrS3ZeLS92Kiw=;
-        b=Lmv1jvS9rON1Dhgds6AQ83J1D1/Ly4UK4s2+PPiKi5vQnR23Fms+KMp0YvN9zjTAu/
-         N0yK9QVRstC3ObFxAVbqsZV3jrDo6fuDaOw6N1eP+RW191Ucpdi9HkLBAVoYQ1SWWpSK
-         Ncl9cnkwSYLezibPH8yx2tlHzDIbr9EtroUJ4yOCBpmBY4vFkQFLyn6M9UFQSl3JrX43
-         T/T8XYqf9vo6m99hZ8biJpr+C4DZVAhLzzRHYfePH6nCRlqaUKo6oKpuj42OzOzPuYhp
-         7CcpJtU3C2dvkoOQJIz+8i77XXPTIHXzjYiTipdJCTFfDpAiLYQuMgKl8GtrEXbUmF3R
-         AvkA==
+        bh=xGcIZ9Wm+WSSeosg9CDJTkTmHYD7k8AbIJs84ojn3vM=;
+        b=BwR5OqEE2Y8vC7qmhlGoGNrr8k8dZ3djpOE11UwLN83Ev8kbqqjme8p2bjgZtAolDv
+         lq8PNNmXflFihcmSfy6XKFT4vS7n/t0YjGT7NMDFOJYUVXMlL4s3FqDFE903/pRst9po
+         0MR68OM/qO6d/8LCohX3Sofjd06NnBzQDJncqLi5qRJIWXatZqhV0TzGOCS61ZaH/Ugr
+         eDc08Rh4t/6dPPjJr8Odt3OqFWLSJN2v2L7qPG2ksqK0ODxRna8Rrl2GMo9qrPhslLSZ
+         jRzowAtXcFbwsUwP8mhyhstAFbGS9kkgTu9EnUNPaPlntsPukVJiaTPL6qJYmhG8cxrw
+         lETw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771750145; x=1772354945;
+        d=1e100.net; s=20230601; t=1771750149; x=1772354949;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=84BLe7DIZgrLHIYUbF37QCRxTh9GXhBrS3ZeLS92Kiw=;
-        b=pZtWzw/e1UlcCLe64IojE9bAj9NYmEsrGmeQhyen1mfScQX+GeE6/q/NOOMy0ryjV5
-         UsgFbKKF25v/DLF53w/pXUUFcJCJK8giQjRWVSeUrUfdfOxT2kuJGLRCoVgHrmx6qN4P
-         QtYm81O63FAmwolMrs0kYlA74vqTDua4TlwqFEoTdIZ1trvaMgzZItoeWGhjZueMtEpO
-         0tLJFYEa/ZqxKZz2ZuHO4OyQvPRyRaGL8iC/G4DkrdC68Md/88r0tc7yMATLoVYVmctE
-         uKD0jRdLM/dT/lG8NitgTnUyMYhGX0aI32VTdLP+cnrkEOUheX1PTR6X5LlxxedFQ71J
-         kCkg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSU65q3SYA9QxiPq5/g+DodMYR8tEiitpBceJgAKPEgFrwBXO1TfpOpKpFk02MsgYvL3qxR56LYGQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNJ5SpN22+iYCIG3EfkjWl1A86zqKDHLrxvhvNgOp8xAgglAsE
-	uca8swVMeXJ520mXrcMt6JQwHTLeMc9t+Mysxc1SxK/9WiPTlvB5nhVgK3J9NwljpO8=
-X-Gm-Gg: AZuq6aL6ZSLK33wFiBrFTVini502z2VxnSgCu7/BlTwcRXyuVZF2jnHTl++G3m9PDq+
-	p85qaFtU8zuAN6RtijwvMRU3k0Ufw3FrshW3/ETlX7oMQs1qVAxKhv1JYwvw+jsRr7+ExUSPiD2
-	Y41kIDtSQuPqp7s26UncYVtDqyNNvCKJ//ixph4jpE16t84mxAYtqtrZoI2DekzlrZzsp88vKil
-	W4y8NXV5N7nUdlONhcXeNrjktFTz9yYAJScuM4elwJ2E4K4k7+BzsdVSHX/dRevs0nqfTGNo/bQ
-	qmmFAzKIYHemPGyupIQUT9fq7xDR1QtFOp8R9SGjEWf778FmsWwugJNp/HnRCC+NfoHh2rUZZrz
-	uFgFrzXD4670z741fbVh4AhXIR4xwoyEmGSULD5LjXa6MYhFsCxkEcTCfNdSvlyTV2YaN2uSW/E
-	eokuj8QkMzjgV8tsrB++aBMS6aalJTe5GID7MnOaRs+sZ1km9oxZ8pCgCxdvtBPto0MnsQoD6ko
-	+3z2eMxnmuLdHY=
-X-Received: by 2002:a05:622a:113:b0:4f4:a9cf:5d40 with SMTP id d75a77b69052e-5070bba20d9mr79750811cf.11.1771750145024;
-        Sun, 22 Feb 2026 00:49:05 -0800 (PST)
+        bh=xGcIZ9Wm+WSSeosg9CDJTkTmHYD7k8AbIJs84ojn3vM=;
+        b=C43vX3T+RPB6eae6FgWNEM2/HwPPz44RG42Xrl1BiMXcKPN+Cmb9UJJDzhE2q+11fw
+         k8sT3TiKKL0YqEeK1TataPe5b37co2exLHOmcJ7k+Wv9wkOoQCt84eXepJRPnL+LAKyv
+         ku0NVnatcHIOFHwlVbkrBiCTRME+cejv0Bu/U+HmnvU3Lygkj+9rmY2Ot2Gs8X/NJvSw
+         cSPgvJTWY9BMDIx/svSfd8a9xfR/VSisUXajKqVfgY/9khvr/cOeYjNdufMk+0TXRICd
+         SsVLO7wdBYdIVGFXudernztaF4kWY8VGNvLHm1OU6keInFa0Ua8FkJFFTWPWdZtpgow3
+         XAaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6wQlE3yxSNHn4chKBJ+DihiGHQe93EPP9pKQiBbuO/rDed3altImTfKUPPHL7f+ixB51dOl8WDHs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPWOhFT4mwHUDa6QHoWQlJ2Zrz+60MCnUYcdvChLeRQZcCXEDd
+	AgneTE/qY/7s8kHj8sJP4RfqpmxgkJUNzn4vMmlIkYRBETISDqcOuhCqcPtbFFrrlEmz5xbeVZY
+	uh+3u
+X-Gm-Gg: AZuq6aJQZObPdnLkSrqBmLiEQzYbft1qA9eFWLFR9mayln7BpEbM8MmiDkZ6hoxGvxi
+	1y2pYW5jjKoDiNfjNXD8ReGnxp/ElBtBP1jMNPsAOl/JJkdi7Hwqwywoq+6u1jQZ2rfdc2QHrum
+	QFpKw64Gpb39y1ayDogEnnXfALpcq9w43jwu0XtItkB64qWRzMzBcu4RuTXdYUjwvJicBGuweqJ
+	iENeINDi02GinPmFDlN3gZYIJFHck+owNO6iug8bcUUFoaZ1jx2MTejsfU+hFp/9yz2KTzqJbit
+	AtQrichfzw1L/XMuEtFh+fKg8J2RzcUHgTdr3UnwJ8VCTjG277yHtkOWJrZJ9OUO9BV/2n7wFkk
+	5mXNocNFbV3qij/baYPEZjlJ8lDGS16zmgwu0QxQcoIXQIWZ14Gl7OedTijWqOQ/I7gXewJzp7U
+	OKTC+92pVaVYRCgf04UU+o8jBztUE24aZ88SdL0+opgZoVmB2665Vs2ZdkpIHXireobnZThR52V
+	53Nr6ZOTgnb3RA=
+X-Received: by 2002:ac8:7fc9:0:b0:4ed:1948:a8a2 with SMTP id d75a77b69052e-5070bc68c0cmr70819951cf.40.1771750148853;
+        Sun, 22 Feb 2026 00:49:08 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.49.02
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.49.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Feb 2026 00:49:04 -0800 (PST)
+        Sun, 22 Feb 2026 00:49:08 -0800 (PST)
 From: Gregory Price <gourry@gourry.net>
 To: lsf-pc@lists.linux-foundation.org
 Cc: linux-kernel@vger.kernel.org,
@@ -134,9 +135,9 @@ Cc: linux-kernel@vger.kernel.org,
 	bhe@redhat.com,
 	zhengqi.arch@bytedance.com,
 	terry.bowman@amd.com
-Subject: [RFC PATCH v4 03/27] mm/page_alloc: add numa_zone_allowed() and wire it up
-Date: Sun, 22 Feb 2026 03:48:18 -0500
-Message-ID: <20260222084842.1824063-4-gourry@gourry.net>
+Subject: [RFC PATCH v4 04/27] mm/page_alloc: Add private node handling to build_zonelists
+Date: Sun, 22 Feb 2026 03:48:19 -0500
+Message-ID: <20260222084842.1824063-5-gourry@gourry.net>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
 References: <20260222084842.1824063-1-gourry@gourry.net>
@@ -148,162 +149,53 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Various locations in mm/ open-code cpuset filtering with:
+N_MEMORY fallback lists should not include N_MEMORY_PRIVATE nodes, at
+worst this would allow allocation from them in some scenarios, and at
+best it causes iterations over nodes that aren't eligible.
 
-  cpusets_enabled() && ALLOC_CPUSET && !__cpuset_zone_allowed()
+Private node primary fallback lists do include N_MEMORY nodes so
+kernel/slab allocations made on behalf of the private node can
+fall back to DRAM when __GFP_PRIVATE is not set.
 
-This pattern does not account for N_MEMORY_PRIVATE nodes on systems
-without cpusets, so private-node zones can leak into allocation
-paths that should only see general-purpose memory.
-
-Add numa_zone_allowed() which consolidates zone filtering. It checks
-cpuset membership when cpusets are enabled, and otherwise gates
-N_MEMORY_PRIVATE zones behind __GFP_PRIVATE globally.
-
-Replace the open-coded patterns in mm/ with the new helper.
+The nofallback list contains only the node's own zones, restricting
+__GFP_THISNODE allocations to the private node.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- mm/compaction.c |  6 ++----
- mm/hugetlb.c    |  2 +-
- mm/internal.h   |  7 +++++++
- mm/page_alloc.c | 31 ++++++++++++++++++++-----------
- mm/slub.c       |  3 ++-
- 5 files changed, 32 insertions(+), 17 deletions(-)
+ mm/page_alloc.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 1e8f8eca318c..6a65145b03d8 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -2829,10 +2829,8 @@ enum compact_result try_to_compact_pages(gfp_t gfp_mask, unsigned int order,
- 					ac->highest_zoneidx, ac->nodemask) {
- 		enum compact_result status;
- 
--		if (cpusets_enabled() &&
--			(alloc_flags & ALLOC_CPUSET) &&
--			!__cpuset_zone_allowed(zone, gfp_mask))
--				continue;
-+		if (!numa_zone_alloc_allowed(alloc_flags, zone, gfp_mask))
-+			continue;
- 
- 		if (prio > MIN_COMPACT_PRIORITY
- 					&& compaction_deferred(zone, order)) {
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 51273baec9e5..f2b914ab5910 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1353,7 +1353,7 @@ static struct folio *dequeue_hugetlb_folio_nodemask(struct hstate *h, gfp_t gfp_
- 	for_each_zone_zonelist_nodemask(zone, z, zonelist, gfp_zone(gfp_mask), nmask) {
- 		struct folio *folio;
- 
--		if (!cpuset_zone_allowed(zone, gfp_mask))
-+		if (!numa_zone_alloc_allowed(ALLOC_CPUSET, zone, gfp_mask))
- 			continue;
- 		/*
- 		 * no need to ask again on the same node. Pool is node rather than
-diff --git a/mm/internal.h b/mm/internal.h
-index 23ee14790227..97023748e6a9 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1206,6 +1206,8 @@ extern int node_reclaim_mode;
- 
- extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
- extern int find_next_best_node(int node, nodemask_t *used_node_mask);
-+extern bool numa_zone_alloc_allowed(int alloc_flags, struct zone *zone,
-+			      gfp_t gfp_mask);
- #else
- #define node_reclaim_mode 0
- 
-@@ -1218,6 +1220,11 @@ static inline int find_next_best_node(int node, nodemask_t *used_node_mask)
- {
- 	return NUMA_NO_NODE;
- }
-+static inline bool numa_zone_alloc_allowed(int alloc_flags, struct zone *zone,
-+				     gfp_t gfp_mask)
-+{
-+	return true;
-+}
- #endif
- 
- static inline bool node_reclaim_enabled(void)
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 2facee0805da..47f2619d3840 100644
+index 47f2619d3840..5a1b35421d78 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
-@@ -3690,6 +3690,21 @@ static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
- 	return node_distance(zone_to_nid(local_zone), zone_to_nid(zone)) <=
- 				node_reclaim_distance;
- }
-+
-+/* Returns true if allocation from this zone is permitted */
-+bool numa_zone_alloc_allowed(int alloc_flags, struct zone *zone, gfp_t gfp_mask)
-+{
-+	/* Gate N_MEMORY_PRIVATE zones behind __GFP_PRIVATE */
-+	if (!(gfp_mask & __GFP_PRIVATE) &&
-+	    node_state(zone_to_nid(zone), N_MEMORY_PRIVATE))
-+		return false;
-+
-+	/* If cpusets is being used, check mems_allowed */
-+	if (cpusets_enabled() && (alloc_flags & ALLOC_CPUSET))
-+		return cpuset_zone_allowed(zone, gfp_mask);
-+
-+	return true;
-+}
- #else	/* CONFIG_NUMA */
- static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
- {
-@@ -3781,10 +3796,8 @@ get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags,
- 		struct page *page;
- 		unsigned long mark;
+@@ -5683,6 +5683,26 @@ static void build_zonelists(pg_data_t *pgdat)
+ 	local_node = pgdat->node_id;
+ 	prev_node = local_node;
  
--		if (cpusets_enabled() &&
--			(alloc_flags & ALLOC_CPUSET) &&
--			!__cpuset_zone_allowed(zone, gfp_mask))
--				continue;
-+		if (!numa_zone_alloc_allowed(alloc_flags, zone, gfp_mask))
-+			continue;
++	/*
++	 * Private nodes need N_MEMORY nodes as fallback for kernel allocations
++	 * (e.g., slab objects allocated on behalf of this node).
++	 */
++	if (node_state(local_node, N_MEMORY_PRIVATE)) {
++		node_order[nr_nodes++] = local_node;
++		node_set(local_node, used_mask);
++
++		while ((node = find_next_best_node(local_node, &used_mask)) >= 0)
++			node_order[nr_nodes++] = node;
++
++		build_zonelists_in_node_order(pgdat, node_order, nr_nodes);
++		build_thisnode_zonelists(pgdat);
++		pr_info("Fallback order for Node %d (private):", local_node);
++		for (node = 0; node < nr_nodes; node++)
++			pr_cont(" %d", node_order[node]);
++		pr_cont("\n");
++		return;
++	}
++
+ 	memset(node_order, 0, sizeof(node_order));
+ 	while ((node = find_next_best_node(local_node, &used_mask)) >= 0) {
  		/*
- 		 * When allocating a page cache page for writing, we
- 		 * want to get it from a node that is within its dirty
-@@ -4585,10 +4598,8 @@ should_reclaim_retry(gfp_t gfp_mask, unsigned order,
- 		unsigned long min_wmark = min_wmark_pages(zone);
- 		bool wmark;
- 
--		if (cpusets_enabled() &&
--			(alloc_flags & ALLOC_CPUSET) &&
--			!__cpuset_zone_allowed(zone, gfp_mask))
--				continue;
-+		if (!numa_zone_alloc_allowed(alloc_flags, zone, gfp_mask))
-+			continue;
- 
- 		available = reclaimable = zone_reclaimable_pages(zone);
- 		available += zone_page_state_snapshot(zone, NR_FREE_PAGES);
-@@ -5084,10 +5095,8 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
- 	for_next_zone_zonelist_nodemask(zone, z, ac.highest_zoneidx, ac.nodemask) {
- 		unsigned long mark;
- 
--		if (cpusets_enabled() && (alloc_flags & ALLOC_CPUSET) &&
--		    !__cpuset_zone_allowed(zone, gfp)) {
-+		if (!numa_zone_alloc_allowed(alloc_flags, zone, gfp))
- 			continue;
--		}
- 
- 		if (nr_online_nodes > 1 && zone != zonelist_zone(ac.preferred_zoneref) &&
- 		    zone_to_nid(zone) != zonelist_node_idx(ac.preferred_zoneref)) {
-diff --git a/mm/slub.c b/mm/slub.c
-index 861592ac5425..e4bd6ede81d1 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -3595,7 +3595,8 @@ static struct slab *get_any_partial(struct kmem_cache *s,
- 
- 			n = get_node(s, zone_to_nid(zone));
- 
--			if (n && cpuset_zone_allowed(zone, pc->flags) &&
-+			if (n && numa_zone_alloc_allowed(ALLOC_CPUSET, zone,
-+						   pc->flags) &&
- 					n->nr_partial > s->min_partial) {
- 				slab = get_partial_node(s, n, pc);
- 				if (slab) {
 -- 
 2.53.0
 
