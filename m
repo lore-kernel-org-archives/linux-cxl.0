@@ -1,76 +1,75 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-qt1-f194.google.com (mail-qt1-f194.google.com [209.85.160.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA04B2853E0
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 20:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1C934BA4E
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 20:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771877399; cv=none; b=JY9ZRqafCGPIhr+qsnan5dGOEyeZke1BAblQikbZyXRzvM0mtmINF1dfhzl/wU4gcqLzwkVAbJjnod9GwnooQJSFn1sdnB56J9Hjdl2+t7xXUltA/4lIMySYgrphR+UqeU89fduEkqGL4FcdOVdgnOWrMaz29g8wHxI6otQIWHk=
+	t=1771877722; cv=none; b=tl0rOnpZVediwGles1WSsFlyyHUMSc7Cb8p/3ih0JAt/snTQ51nsyF6sLef7df3YaRzLos39naHnlkTFIGdpet6tUEQHGwNQLdQKYmAZAH7aOlY1AYHn/S63hKzLA6xTV1jQ47UAGY7z+Q2i8S2N/kK46pwwd+22nLovzG8cifE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771877399; c=relaxed/simple;
-	bh=3sirou32C7pHf8NJR90Uyfts53jQHNaK56lTKFXveL4=;
+	s=arc-20240116; t=1771877722; c=relaxed/simple;
+	bh=5UrKWbH60z8AzJWgYTfvOkixgD9LuwwDtSgXdtBNFpk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X8kxhafqh6hbIyHUdwtrj3/m3JumZ3YsltS9/dOxcq0zO1jHsca+cPfEWI07vrokHwHZtv40AAXqUH/bv/6m2N+8IOV6nCW5wDzBl4VKzp91rkVl3m4yGpbmyD25ZD9QMWg2xNL3QdRb6qbFPTnldL1c0aSA9tLpXdpOSKLsTW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=MLT/JkE5; arc=none smtp.client-ip=209.85.160.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=NH72fTqNpUJjCDBtyc2TU5grdEzhwz7iJywZlWp9UY3kjvdF9oeM7lm80r8TD8g8VdiFm3jL+iSFiM6rP5sUZb748GCmPS2l+Cv9ivUOtkOZVqQ9FGOa/E65d76vob8gQdy+psBWHx2UuDJO+VPz+ZndHNcfsGVUFzFK1e5bEUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=qbewoiqb; arc=none smtp.client-ip=209.85.160.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="MLT/JkE5"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-506989e8516so39555491cf.0
-        for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 12:09:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="qbewoiqb"
+Received: by mail-qt1-f194.google.com with SMTP id d75a77b69052e-50334dd44d2so57444581cf.1
+        for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 12:15:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1771877397; x=1772482197; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1771877720; x=1772482520; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ue6mVOXZpixv6BvKE+WzvIxIQyINwZDMiRkADcGx4tU=;
-        b=MLT/JkE5YsNCtMxLu+hscmZT+lp8AOVzS5ZCjhJw3mDvNy0w4gWUghlVc81R1wfpV1
-         RTzRIeAycSr71sxxk0D7gJXoVoDLs5vpHWfKKbTqGfZHScqLVGrQnpymbRFYEjtEObFV
-         qwe6wEusJ1zERpcRvs5UfwxS2xQXmUGc3e4LC9ubrTPtdx5AVA01r6jfUzAqkHFMWI5H
-         MjoriW8PpQ+gv8lzYvGW1HhgALBXRDf2IBxm7EUXN7SrWvvgWZNHuEOzGuYAQ8MxtUuR
-         lBDJDGZwA2MHhg0i3u4p7PYijNNzBuwyE6ajJtrVAN+DrL98LrYVMQ0F5ZOtfRvfBObP
-         irXQ==
+        bh=/V+i5EB1Fz9GgCSeaGxzlgOmbjjk7pCNXMamPUev+2Y=;
+        b=qbewoiqbC86+aq0NbIe6XRfneMjDf44g2/A+5la4mj/HpINzUTpzWzugLPnoBYcltM
+         D3iSSE4Jbi8Z+0oCZyBUh3azzfSRawZt3tvgPC1qelFq8S1+aCB+I6Gna/gAuSt2LuFY
+         8TtHzf4HtOkrStmgnfjc9n/vTmdHQ1wfYQAyhadJRpdDF84sXN7ulHLheUR40aWZd43D
+         yZA1gWK4F3LJ2yJwH2vx3fLHZD9YjZW0edmRLERMpC/Tc+DeyvfoIMEXsshtkTzX7wp+
+         8fhySpXesuye5WY1da1FOHKX6zjZwcO6eXZLLMG4vNnj/VbvPbij8H8PworQeL8hINrU
+         1gtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771877397; x=1772482197;
+        d=1e100.net; s=20230601; t=1771877720; x=1772482520;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ue6mVOXZpixv6BvKE+WzvIxIQyINwZDMiRkADcGx4tU=;
-        b=BRBpnnZjVs5w2ivB+mtH9Y6S1CGr0d2KxgYkxKUK6jfe0t74qaMCPEioipI3FX4Q+K
-         mRg2KHrytguhoL2xFn3cTTIk4KAa6Jj4Wgf8TKUxAnUe4SMulvjwr4xeCyQpKyYZFgC1
-         dE0LUUHLbl7tvUDBxOTOWTuAf0KO4xUR2hPF2SM3RkqLloe2+n3/MFC72qjf09zI1j7/
-         RePxzhfrTzXTiukibZd4tzeHYHGVvSkUs+FZx9qaI12jNw2L0xtJIBmmIKp0BNNCuTC9
-         l9wpdn1a9J6dT5dVSVmKiEB/dDGfChQUKBKcid5ly92BQ1L+nijhpFG0j+n9qBbLdJTa
-         rF7A==
-X-Forwarded-Encrypted: i=1; AJvYcCX9L8IQ4ylRd2fbws5YWN0QF+JX9CA2jACOta91Nh4SiL67xRNexFf0SB1yzae3SlGhzOvoJIkWKNk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwND91972GAKGTP5DYEwp0MbgVZuQnVmzXg0F5j6+S+XAInvszU
-	kVF1Wjgtd0FrP/E51QHt/7rQrXB41qf9zr63gWQy2o4tnEs9VOODWls7UYQ6lmlK+89tKRrqOwV
-	gYKak
-X-Gm-Gg: AZuq6aIrkqxgj0aQpe0ilvkSuogezkVx/yZyXn0gsLPOg+AoqEr1QQyTwv/qcA4c3B4
-	sD8Lue2CffTPJokWru+Qxo7sPtBm3amvRvrShn8VM1nOJL9KdxGESu7zjcJbj5c5Ddg0G/GKyVu
-	/R/8ha7UZJx6jRo1SCXbtFfmrS2mqyiHebc/3pQHxvdK1riUpdgv6lLWoliMU2LWyLvSQ9ec4ds
-	bCSPHA46vkZ/P19ohhbp/I9cP8XkVbC9cUbI4szOeKJA6qt9o8VFYyK0S/kHaBb2MWq9sY8OX3u
-	UTchQOWtfbPadCRRc8N7bToFmv8fhKzkiFmKilj0LbEv0BfPIvibb4pg7NbqVNxF+5o2/QCdlor
-	1QNhfrpBi14OsOLpp3YsS08u3qzfEGs4350bYHQQERkgGlz1Dn7LzowMZ0mC/cTCuxXDvTyNKEE
-	//HpPhlxXbN7XN8XQtIVMfLx7xvukllS8yE6cZINedGPHwHDcfADH7Xr6W3BoDQaNhAETIN+g4w
-	7tc1SoX5g==
-X-Received: by 2002:a05:622a:1191:b0:506:a43d:778f with SMTP id d75a77b69052e-5070bc1a837mr134143161cf.34.1771877396363;
-        Mon, 23 Feb 2026 12:09:56 -0800 (PST)
+        bh=/V+i5EB1Fz9GgCSeaGxzlgOmbjjk7pCNXMamPUev+2Y=;
+        b=hOYCZURp5bs2JtSYmbg7CJE7RzsvVfnSwuwSf5x2+K1u+RCLldUTE2goJw9oj7L8+S
+         lUlC1P/5+qsIS+MwcTISCwoHd9npVeuA0dwxrmOrCyLTMsK8Lgf9UDDl1kPisMm26nhN
+         Rnz4z1B2GFV3Ix3PIyw6b/DDiuYadenrzX/xGMduKKyxKTX8xA0cqwigm+BXj16WTZqM
+         yUnh8CPOlxplHsROBqJvr6vQe2IgTOexGzEc9LpkJXUbPYTv6sK5Y8IaErSLCUt4D8kD
+         0T+ZSbCvrjQjUZNxG9ONA8IxjdpneosZbRCO2t6VsG/8MGQofgEP+FAhowoC/SD8o74j
+         6c8A==
+X-Gm-Message-State: AOJu0Yxrr46NWkYNcaXCc5Wr6NumIGB8DiITPyWytMqABLZwItWtJ3/w
+	LO9/WmrtfB7MOR2ucujjAVDs+R7uDwCX3anqNUMpyOyGkQZ1okD1pJzfjkzUW5Cg7k4=
+X-Gm-Gg: AZuq6aJiUosixNT4zqto1Umgw+fLjlDrpoy55864tND6SFplBcvfANmMVrcJqoqpV49
+	vcKbQEKCBjCGeErUrfGTkmehGpEs1CjJZjCUP2MjZlx6sU7tMnU6OAcpF15El108FcGjVhePic1
+	3YXWjzRr/Zos50CsI3oXVDoWgtMmX+pWMZXrljPRoh9SMY/HMEiEIS8dmmlXeOu+eYETI8yXJP1
+	ZqqbAnvm+b/YEy7YAYIOMRXmvkv4Q48xF7UqHKF8XKYPSoXZwR0w5WOxL3rUsvYq3+WYf97HpmE
+	djk9bq2fTzz0Hf10Dj2LRzePCEGLEYrJ28m/MYbvzQe8Hgn10Vc5uL6C3x/fMKBjtU7i7CEav4M
+	TmOCGFjrwkOaNri7AbYW3jqP8ym6kDKjepcFnNF1jMLHm6fSMDWXSbjT/QaPhuOLXHcZLPLNZMn
+	+XEqKpgV70hNsrqSLAdaIE4orX0L3BE0Q6nqdmOk68gQYRZpkOYGc/vy9nvv7LPzUe9Dzr8tQdc
+	J1QpwaFkA==
+X-Received: by 2002:a05:622a:1485:b0:4f1:b787:ebb6 with SMTP id d75a77b69052e-5070bca7ademr141331391cf.55.1771877718160;
+        Mon, 23 Feb 2026 12:15:18 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cb8d0eb32dsm919153485a.31.2026.02.23.12.09.55
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d50cdcasm79800991cf.6.2026.02.23.12.15.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Feb 2026 12:09:55 -0800 (PST)
-Date: Mon, 23 Feb 2026 15:09:54 -0500
+        Mon, 23 Feb 2026 12:15:17 -0800 (PST)
+Date: Mon, 23 Feb 2026 15:15:16 -0500
 From: Gregory Price <gourry@gourry.net>
 To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] cxl: Test decoder flags as bitmasks
-Message-ID: <aZy0EtERdCpGn4gF@gourry-fedora-PF4VCD3F>
-References: <20260206181404.1025991-1-alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Subject: Re: [PATCH 1/2] cxl/region: fix region leak when attach_target fails
+ in cxl_add_to_region
+Message-ID: <aZy1VGindEm-NbFn@gourry-fedora-PF4VCD3F>
+References: <20260221043013.1420169-1-gourry@gourry.net>
+ <aZyvGnKfWI1Mku-c@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -79,31 +78,64 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260206181404.1025991-1-alison.schofield@intel.com>
+In-Reply-To: <aZyvGnKfWI1Mku-c@aschofie-mobl2.lan>
 
-On Fri, Feb 06, 2026 at 10:14:02AM -0800, Alison Schofield wrote:
-> The CXL decoder flags are defined as bitmasks, not bit indices.
-> Using test_bit() to check them interprets the mask value as a bit
-> index, which is the wrong test.
+On Mon, Feb 23, 2026 at 11:48:42AM -0800, Alison Schofield wrote:
+> On Fri, Feb 20, 2026 at 11:30:12PM -0500, Gregory Price wrote:
+> > cxl_add_to_region() ignores the return value of attach_target().  When
+> > attach_target() fails (e.g. cxl_port_setup_targets() returns -ENXIO),
+> > the auto-discovered region remains registered with its HPA resource
+> > consumed but never reaches COMMIT state.  Subsequent region creation
+> > attempts fail with -ENOSPC because the HPA range is already reserved.
+> > 
+> > Track whether this call to cxl_add_to_region() created the region, and
+> > call drop_region() on attach_target() failure to unregister it and
+> > release the HPA resource.  Pre-existing regions are left alone since
+> > other endpoints may already be attached.
 > 
-> For CXL_DECODER_F_NORMALIZED_ADDRESSING the test reads beyond the
-> flags word, making the flag sometimes appear set and blocking creation
-> of CXL region debugfs attributes that support poison operations.
+> I see you dropping this, perhaps just for the moment, because
+> the drop_region() you wanted to use is not available yet.
 > 
-> For CXL_DECODER_F_LOCK the test reads beyond the defined bits, causing
-> the test to always return false and allowing resets that should have
-> been blocked.
-> 
-> Replace test_bit() with a bitmask check.
-> 
-> Found with cxl-test.
-> 
-> Fixes: 208f432406b7 ("cxl: Disable HPA/SPA translation handlers for Normalized Addressing")
-> Fixes: 2230c4bdc412 ("cxl: Add handling of locked CXL decoder")
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-I independently found and fixed this with the same patch.  So +1
+Yeah it's not a particularly useful cleanup in the current
+infrastructure because nothing actually uses this pattern (yet).
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
-Tested-by: Gregory Price <gourry@gourry.net>
+> This looks a lot like 
+> 	https://lore.kernel.org/linux-cxl/2a613604c0cdda6d9f838ae9b47ea6d936c5e4ce.1769746294.git.alison.schofield@intel.com/
+> 	cxl/region: Unregister auto-created region when assembly fails
+> 	When auto-created region assembly fails the region remains registered
+> 	but disabled. The region continues to reserve its memory resource,
+> 	preventing DAX from registering the memory.
+> 	Unregister the region on assembly failure to release the resource.
+> 
+> And the review comments on that one, or at least on that thread in
+> general, was to leave all the broken things in place.
+> I didn't agree with that, and hope to see this version move ahead
+> when you have the drop_region you need.
+> 
+> 
 
+The important note here is the difference between auto-regions and
+manually created regions.  For auto-regions, you might have another
+endpoint show up looking for the partially created region - and then
+just go off and create it anyway because it thinks it was first.
+
+But in my driver, i'm explicitly converting these auto-regions into
+other things, and if that fails it causes *all other* region creation to
+fail - even if it wasn't actually dependent on that original region.
+
+This is only an issue if you have two devices unbind/bind cycling at
+the same time - i.e.
+
+   echo 0000:d0:00.00 > cxl_pci/unbind
+   echo 0000:e0:00.00 > cxl_pci/unbind
+   echo 0000:d0:00.00 > mydriver/bind
+   echo 0000:e0:00.00 > mydriver/bind
+
+If the platform has pre-programmed and locked the decoders, and one of
+the two devices fails to probe and leaves a hanging partially
+created region, the other device will fail too.
+
+It's a pretty narrow failure scenario.
+
+~Gregory
