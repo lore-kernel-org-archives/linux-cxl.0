@@ -1,143 +1,115 @@
-Received: from gerbil.ash.relay.mailchannels.net (gerbil.ash.relay.mailchannels.net [23.83.222.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F3F36A007;
-	Mon, 23 Feb 2026 22:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771884646; cv=pass; b=OtKHKPPW4FJquvdRQnEyJr8SLBwc8zgSEuuW2lkm2yF36fWUlyTY79V1p6k+WaKRqinRBWjUyTQPg0tsJpaHUp8FBWiuCdKxOKkbe0vqyGhoaLMkg6o5z4Cbug03gVR1WaXuQO2n0OVM1dlufhtzTgmsSqCLX1OyV4gma/f64y8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771884646; c=relaxed/simple;
-	bh=ekf6e+nPHeTQJMvQ6yWX0/LYM4cZwOTrXiQY1gABwO4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gLpNAxYILIizP0wqr38HcUKT4kFb5Iu3M1JFXmK3N7fxMuiYW78JHmmtDi/sUZJ5pIqvuFwDEWPmw8fU0f6PXOlc3cn8suHpaa88sh+C2wTk1c3PktctrIT0tcnDdTRIspnosHctMG0bSeJPxwJchLK1gzvqwpuX34orf9xsH5I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=GuCkQUR/; arc=pass smtp.client-ip=23.83.222.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6139E3EBF1F
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 22:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771885112; cv=none; b=G8VqlFGuGFnDh8J0zZll4IO7TGXioVt+91SO/ItRIlCk77VhWPU0OW/WrDyntTZSCyMWAR8ru4Kq93Xy4kCM7kCwm3VJ4b7rFR+Hg5Pi7K+Xuk48w0fvY9DRZvwGVaurlq73FBInc6z8IWd1Zio2F8JTcdKJJ68DoiNChmX8vLg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771885112; c=relaxed/simple;
+	bh=UTCY7pP8jwtjeVQIQNsWFzUyXQW83DeCNIfvTuL4g10=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SyuUf2YVO1T6qY/BiGzzq6byJ8JW6sGeElSzcC+MQmPvjRrYYLQNo/rDQEc3i+lkkpZy6RdfypLNY5BoN8TQwZKJQ2tb0pa1iv5Q5l/htnOrZMRJr1z204GxpttdXxIDGZjRxljW2630XwGmHRks7rdYkls6CyK0hJSanKz3OeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=eKRVtrHR; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="GuCkQUR/"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id CCCB0822197;
-	Mon, 23 Feb 2026 20:15:23 +0000 (UTC)
-Received: from pdx1-sub0-mail-a223.dreamhost.com (trex-green-1.trex.outbound.svc.cluster.local [100.99.123.233])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 5711A822F70;
-	Mon, 23 Feb 2026 20:15:23 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1771877723;
-	b=TnFmY4bmS+0GVz6chJ9QJfUT+4n/IKYCZ9KGq/Pyt4Dx2IviOhv9/RPEMJOwhwMrer1efk
-	xG+QwXm9T155PlHumoKgPZCWtTZ9Kdb3JWVqZITa3N8S3uBxYO9VYiPGz33Z4pgK6Sjj2A
-	galu5GAgGT5ZhP0KYM0RCrfH+9qgvBYL5vlojmBuM/Gz/uMcXdaJEd+kPa5QqMn/QnOiDR
-	1PIboQUFeY8kXcnOuozhmWxmIVS2JZv033RnFYZJ4wqeoUxitqRjyqfuKEIWc4HOPud+l3
-	50gResNPeDj5OOL0FeXHvUw8nvLY+X5OtITRttXisj/y6owe/fRJbNgGoAQ8og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1771877723;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
-	bh=8ihYEdPtitx3DHHP0f7Db/Lmo6pPSrakWF+cfj53YAA=;
-	b=zDehrEnTWgjxq/HWLHoUeYVnM2B7gD7LpbROfO4N/ByQ6kco0s1IpXgjGTk7iktZz3WzJk
-	QSptSV/MvCaECXSOAaxPOP935lVL9NhCRvfHa5eZodyMn6hX2k3d0THLD7Xc3yvEvdmB2y
-	BE/+/cctiS7fRcKX6Ar/vehZQy84mx8NsHFOnfvIJwxjlViWWLbso0qXSgyW01QSz/DSha
-	mjL4tBijU8e9z9MJQGrRp3UOAdHvi+NuMIqChgghikVlYS00NUuZiXLXsbwybu2enF3maq
-	qn5S6dNdNnG3V9T8mTeCcHbZ90DuciOaGKW2ye4BAMoNdwy4uRb+gtUdLK4Yaw==
-ARC-Authentication-Results: i=1;
-	rspamd-7f65b64645-q8gvw;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Whimsical-White: 752be4815a60e312_1771877723645_262619074
-X-MC-Loop-Signature: 1771877723645:1665630446
-X-MC-Ingress-Time: 1771877723644
-Received: from pdx1-sub0-mail-a223.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.99.123.233 (trex/7.1.3);
-	Mon, 23 Feb 2026 20:15:23 +0000
-Received: from offworld.lan (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a223.dreamhost.com (Postfix) with ESMTPSA id 4fKXCZ3stjzSv;
-	Mon, 23 Feb 2026 12:15:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1771877723;
-	bh=8ihYEdPtitx3DHHP0f7Db/Lmo6pPSrakWF+cfj53YAA=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=GuCkQUR/DsB3BoVm8Q0YzNs8PX62W5r4xJkFIrGRAp4DlRVWh5DDHx4Y+Ww43Q/GV
-	 KxPsdXnYxV+8mowXvVve931Rd/rNdnWTHDJrbWzagzYLMPl9FRC8OuWFuztbd+fbam
-	 mqYsgVyWfmCJEPDeaq5pyXqeDwOaAuD2Bt0TiFVjfthY9VYeRJFwLyfkizkqkQMdPz
-	 rQPzVmUJLMKxMvcSZN0fXW9Et2n0aXOHLXu2jgusseSr8O4nsCeUcKYv20gBmhaV7j
-	 X76GjSApsagWwQ0PDgTdnswV714FvLCpDOklAfndxnVoAOyzdx0YNkMjDLcIwjCFA6
-	 027X/0FR8ErxA==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dan.j.williams@intel.com
-Cc: vishal.l.verma@intel.com,
-	dave.jiang@intel.com,
-	akpm@linux-foundation.org,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Ben Cheatham <benjamin.cheatham@amd.com>
-Subject: [PATCH v2] dax/kmem: account for partial dis-contiguous resource upon removal
-Date: Mon, 23 Feb 2026 12:15:16 -0800
-Message-Id: <20260223201516.1517657-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="eKRVtrHR"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-8cb3a8494c5so453792085a.2
+        for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 14:18:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1771885110; x=1772489910; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6oPmSnk8zjBxqZQmaokMv5bObs6EJjURDlenAKCTaM0=;
+        b=eKRVtrHRjO8Cy0QfMykAVZt5GthG2xCpK8O/4QNz5LgVFiq6VkBjF+xwqanMmngsEi
+         wbTp00kEbIt5b3GumbHYb2K0cHaHllFpYGdbQFr449XPk4SkS3Tyn965FBuOvB1r8ifP
+         HiGdxedeiF9JrkPFddq8eMWGMjucFBkbEosN5zq9Rum0LW21TbA69EPX6jt1WNgLuaJL
+         /kb1g6EAg4xeOIoa/stDBJEYVCbbpP8ot1dvsUczoML/jCUJ3niAMzk4T7sfuGdc7p6D
+         GK+ouPc4DqaIYIVfa0tc1xr5T3o/5MuwKtE0/j7KpDdYB887wANPOyCsulaKsPs82ZiC
+         aWHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771885110; x=1772489910;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6oPmSnk8zjBxqZQmaokMv5bObs6EJjURDlenAKCTaM0=;
+        b=BD2G4LbnQdYtqzaGOgixmxEggo493S9O5XENTF8wEgITlRLar2eF/s2VHvXIeRc4AV
+         5KLHCHCD8oJkkqaUf5bFtbeLmliZYAAj0veeDjAbp1VxFvsiT0b95NRW7x5WThe7YgB0
+         cqZA6t6RvKgEyhSCBLfN9Kvd7KXVTzxGlUbyIEijR/hGO8Ud10Xzc2c+bn1KNKBI26Pc
+         nu+kGoH1SSEAJqZK1m9Wd6RAchHvMqOHuO7SdS5vOzNOC/f6cQXbzEgRjsXJuPPT3UsY
+         3aBshUHs8Mojzrk/2hgyVY8s/GlCMFsy48ETLUcjKCB+56i3stKBZsgOR5LS9agNZ70g
+         yBqw==
+X-Gm-Message-State: AOJu0YyG4zYrm2fBztK12GvdEDFQoa2riwZ2G2GEww8Pw8f7FRk/8bHC
+	Hes9PMpE1AXrATsCFgF2lk/rJ+GQL09X4Ppo1yGOZJKz/V7b3+PytXviHAvdtrVTsu0=
+X-Gm-Gg: AZuq6aIAqDoGGBkNHDitaWdiIPmOp74/1fdjlJAtQb5TfDYhYArySu6wlA91Lo47KAX
+	nAXB++V9BX+D4G2LwugF6wb5M2W8K5MelrUj+2mzOuHUfZwo7Q6K/gSMzomFYLisWO8GWcGvilb
+	lY///+ZIrDRsvRw+wdmN+W3AT7qo4ujYbn9yE0TCB4Ieh+0WcCtfk1p13ghGETmWF/2K4zr1KaG
+	MooDAHKFTmuINEkm4zbSsLWeRlM1I5Y44MhziZJmjkOK9jahhxl2Ek09RgyELxwytEb0UirYMuL
+	XleonKJ8VWV6UXoPTBNjlTrexroW7zSZ7IMrwVDyayqfUppdsdlSPVCEfF4YsKzKoKIWlut67ZK
+	hnGLOhJkSA617tPyFPS+K9p7Ko1VjDsmM5N8+hjdo4NkOl0qJn02yXytSTQ8k0ORST+s/7y2jdc
+	EuUAQHJci61oq7qLWL5k3dDrOo4hxTaZUIbpIfEZ+Q4TE4a070f2lW9UrNZVvLLXI0rRMsT7gLH
+	CNtKW9cXA==
+X-Received: by 2002:a05:620a:1aa9:b0:8c7:14d8:36f5 with SMTP id af79cd13be357-8cb8c9e653fmr1172358385a.15.1771885110096;
+        Mon, 23 Feb 2026 14:18:30 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cb8d0461a5sm847491685a.1.2026.02.23.14.18.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Feb 2026 14:18:29 -0800 (PST)
+Date: Mon, 23 Feb 2026 17:18:27 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Subject: Re: [PATCH v3 2/2] cxl: Fix race of nvdimm_bus object when creating
+ nvdimm objects
+Message-ID: <aZzSMwc2evqS8uBc@gourry-fedora-PF4VCD3F>
+References: <20260213224038.549798-1-dave.jiang@intel.com>
+ <20260213224038.549798-3-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260213224038.549798-3-dave.jiang@intel.com>
 
-When dev_dax_kmem_probe() partially succeeds (at least one range
-is mapped) but a subsequent range fails request_mem_region()
-or add_memory_driver_managed(), the probe silently continues,
-ultimately returning success, but with the corresponding range
-resource NULL'ed out.
+On Fri, Feb 13, 2026 at 03:40:38PM -0700, Dave Jiang wrote:
+> @@ -248,6 +262,19 @@ int devm_cxl_add_nvdimm(struct device *host, struct cxl_port *port,
+>  	if (!cxl_nvb)
+>  		return -ENODEV;
+>  
+> +	/*
+> +	 * Take the uport_dev lock to guard against race of nvdimm_bus object.
+> +	 * cxl_acpi_probe() registers the nvdimm_bus and is done under the
+> +	 * root port uport_dev lock.
+> +	 *
+> +	 * Take the cxl_nvb device lock to ensure that cxl_nvb driver is in a
+> +	 * consistent state. And the driver registers nvdimm_bus.
+> +	 */
+> +	guard(device)(cxl_nvb->port->uport_dev);
+> +	guard(device)(&cxl_nvb->dev);
+> +	if (!cxl_nvb->nvdimm_bus)
+> +		return -ENODEV;
+> +
 
-dev_dax_kmem_remove() iterates over all dax_device ranges regardless
-of if the underlying resource exists. When remove_memory() is
-called later, it returns 0 because the memory was never added which
-causes dev_dax_kmem_remove() to incorrectly assume the (nonexistent)
-resource can be removed and attempts cleanup on a NULL pointer.
+I think this leaks the reference on cxl_nvb taken by 
 
-Fix this by skipping these ranges altogether, noting that these
-cases are considered success, such that the cleanup is still
-reached when all actually-added ranges are successfully removed.
+	devm_cxl_add_nvdimm()
+		device_find_child()
 
-Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
-Fixes: 60e93dc097f7 ("device-dax: add dis-contiguous resource support")
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
-Changes from v1: reword some of the changelog (Ben)
+Maybe:
+     if (!cxl_nvb->nvdimm_bus) {
+             rc = -ENODEV;
+             goto err_alloc;
+     }
 
- drivers/dax/kmem.c | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index c036e4d0b610..edd62e68ffb7 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -227,6 +227,12 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
- 		if (rc)
- 			continue;
- 
-+		/* range was never added during probe */
-+		if (!data->res[i]) {
-+			success++;
-+			continue;
-+		}
-+
- 		rc = remove_memory(range.start, range_len(&range));
- 		if (rc == 0) {
- 			remove_resource(data->res[i]);
--- 
-2.39.5
+Reported-by: kreview-0811365
 
+~Gregory
