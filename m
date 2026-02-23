@@ -1,141 +1,220 @@
-Received: from mail-qt1-f194.google.com (mail-qt1-f194.google.com [209.85.160.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m2489.xmail.ntesmail.com (mail-m2489.xmail.ntesmail.com [45.195.24.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1C934BA4E
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 20:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A52F4F1;
+	Mon, 23 Feb 2026 21:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.24.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771877722; cv=none; b=tl0rOnpZVediwGles1WSsFlyyHUMSc7Cb8p/3ih0JAt/snTQ51nsyF6sLef7df3YaRzLos39naHnlkTFIGdpet6tUEQHGwNQLdQKYmAZAH7aOlY1AYHn/S63hKzLA6xTV1jQ47UAGY7z+Q2i8S2N/kK46pwwd+22nLovzG8cifE=
+	t=1771881338; cv=none; b=XIzvgnF5YHIvLQ5rvQ2Fp6GSRNSTOuJl0gWB9tA80rI7ELoF7VP5JGCNCpwHs3mZXu/mZ5VeXVDovRe0X7fpK6fwEAQD6p1xoZigHWiFviMeXVkTtpj5AhsZB6eGNv8oV032o//jIPER2lrAMgzIyThwyzLr7uEXs9TmPcIJdag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771877722; c=relaxed/simple;
-	bh=5UrKWbH60z8AzJWgYTfvOkixgD9LuwwDtSgXdtBNFpk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NH72fTqNpUJjCDBtyc2TU5grdEzhwz7iJywZlWp9UY3kjvdF9oeM7lm80r8TD8g8VdiFm3jL+iSFiM6rP5sUZb748GCmPS2l+Cv9ivUOtkOZVqQ9FGOa/E65d76vob8gQdy+psBWHx2UuDJO+VPz+ZndHNcfsGVUFzFK1e5bEUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=qbewoiqb; arc=none smtp.client-ip=209.85.160.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1771881338; c=relaxed/simple;
+	bh=Zq2IirUyfEPFzMu6m9iwUulfmXx1dT5LTcM+Mxmn32U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=dsFWsyABv064nHcTNUQ6KXGD+JLy6v2oGHDMVluIPYUfcq/t0OvUwiuRNhF1P+d0ysqUlxao3g9emPtNMdyj65954rNAVQQb1THqCzAnbj1w0z/wOqLoBeGofYeorsnkWCp1Qcx3ikE9PRCQS9tFncv66UvJ+5Ed1ikQdGcNv9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=hesEBWpu; arc=none smtp.client-ip=45.195.24.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="qbewoiqb"
-Received: by mail-qt1-f194.google.com with SMTP id d75a77b69052e-50334dd44d2so57444581cf.1
-        for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 12:15:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1771877720; x=1772482520; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/V+i5EB1Fz9GgCSeaGxzlgOmbjjk7pCNXMamPUev+2Y=;
-        b=qbewoiqbC86+aq0NbIe6XRfneMjDf44g2/A+5la4mj/HpINzUTpzWzugLPnoBYcltM
-         D3iSSE4Jbi8Z+0oCZyBUh3azzfSRawZt3tvgPC1qelFq8S1+aCB+I6Gna/gAuSt2LuFY
-         8TtHzf4HtOkrStmgnfjc9n/vTmdHQ1wfYQAyhadJRpdDF84sXN7ulHLheUR40aWZd43D
-         yZA1gWK4F3LJ2yJwH2vx3fLHZD9YjZW0edmRLERMpC/Tc+DeyvfoIMEXsshtkTzX7wp+
-         8fhySpXesuye5WY1da1FOHKX6zjZwcO6eXZLLMG4vNnj/VbvPbij8H8PworQeL8hINrU
-         1gtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771877720; x=1772482520;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/V+i5EB1Fz9GgCSeaGxzlgOmbjjk7pCNXMamPUev+2Y=;
-        b=hOYCZURp5bs2JtSYmbg7CJE7RzsvVfnSwuwSf5x2+K1u+RCLldUTE2goJw9oj7L8+S
-         lUlC1P/5+qsIS+MwcTISCwoHd9npVeuA0dwxrmOrCyLTMsK8Lgf9UDDl1kPisMm26nhN
-         Rnz4z1B2GFV3Ix3PIyw6b/DDiuYadenrzX/xGMduKKyxKTX8xA0cqwigm+BXj16WTZqM
-         yUnh8CPOlxplHsROBqJvr6vQe2IgTOexGzEc9LpkJXUbPYTv6sK5Y8IaErSLCUt4D8kD
-         0T+ZSbCvrjQjUZNxG9ONA8IxjdpneosZbRCO2t6VsG/8MGQofgEP+FAhowoC/SD8o74j
-         6c8A==
-X-Gm-Message-State: AOJu0Yxrr46NWkYNcaXCc5Wr6NumIGB8DiITPyWytMqABLZwItWtJ3/w
-	LO9/WmrtfB7MOR2ucujjAVDs+R7uDwCX3anqNUMpyOyGkQZ1okD1pJzfjkzUW5Cg7k4=
-X-Gm-Gg: AZuq6aJiUosixNT4zqto1Umgw+fLjlDrpoy55864tND6SFplBcvfANmMVrcJqoqpV49
-	vcKbQEKCBjCGeErUrfGTkmehGpEs1CjJZjCUP2MjZlx6sU7tMnU6OAcpF15El108FcGjVhePic1
-	3YXWjzRr/Zos50CsI3oXVDoWgtMmX+pWMZXrljPRoh9SMY/HMEiEIS8dmmlXeOu+eYETI8yXJP1
-	ZqqbAnvm+b/YEy7YAYIOMRXmvkv4Q48xF7UqHKF8XKYPSoXZwR0w5WOxL3rUsvYq3+WYf97HpmE
-	djk9bq2fTzz0Hf10Dj2LRzePCEGLEYrJ28m/MYbvzQe8Hgn10Vc5uL6C3x/fMKBjtU7i7CEav4M
-	TmOCGFjrwkOaNri7AbYW3jqP8ym6kDKjepcFnNF1jMLHm6fSMDWXSbjT/QaPhuOLXHcZLPLNZMn
-	+XEqKpgV70hNsrqSLAdaIE4orX0L3BE0Q6nqdmOk68gQYRZpkOYGc/vy9nvv7LPzUe9Dzr8tQdc
-	J1QpwaFkA==
-X-Received: by 2002:a05:622a:1485:b0:4f1:b787:ebb6 with SMTP id d75a77b69052e-5070bca7ademr141331391cf.55.1771877718160;
-        Mon, 23 Feb 2026 12:15:18 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d50cdcasm79800991cf.6.2026.02.23.12.15.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Feb 2026 12:15:17 -0800 (PST)
-Date: Mon, 23 Feb 2026 15:15:16 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Subject: Re: [PATCH 1/2] cxl/region: fix region leak when attach_target fails
- in cxl_add_to_region
-Message-ID: <aZy1VGindEm-NbFn@gourry-fedora-PF4VCD3F>
-References: <20260221043013.1420169-1-gourry@gourry.net>
- <aZyvGnKfWI1Mku-c@aschofie-mobl2.lan>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="hesEBWpu"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 34b37f77f;
+	Mon, 23 Feb 2026 23:31:55 +0800 (GMT+08:00)
+From: Shawn Lin <shawn.lin@rock-chips.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	"Vaibhaav Ram T . L" <vaibhaavram.tl@microchip.com>,
+	Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
+	Even Xu <even.xu@intel.com>,
+	Xinpeng Sun <xinpeng.sun@intel.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Zhou Wang <wangzhou1@hisilicon.com>,
+	Longfang Liu <liulongfang@huawei.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Jijie Shao <shaojijie@huawei.com>,
+	Jian Shen <shenjian15@huawei.com>,
+	Sunil Goutham <sgoutham@marvell.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
+	Oded Gabbay <ogabbay@kernel.org>,
+	Maciej Falkowski <maciej.falkowski@linux.intel.com>,
+	Karol Wachowski <karol.wachowski@linux.intel.com>,
+	Min Ma <mamin506@gmail.com>,
+	Lizhi Hou <lizhi.hou@amd.com>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Mika Westerberg <westeri@kernel.org>,
+	Tomasz Jeznach <tjeznach@rivosinc.com>,
+	Will Deacon <will@kernel.org>,
+	Xinliang Liu <xinliang.liu@linaro.org>,
+	Tian Tao <tiantao6@hisilicon.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Srujana Challa <schalla@marvell.com>,
+	Bharat Bhushan <bbhushan2@marvell.com>,
+	Antoine Tenart <atenart@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Raag Jadav <raag.jadav@intel.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Bingbu Cao <bingbu.cao@intel.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-input@vger.kernel.org,
+	linux-i3c@lists.infradead.org,
+	dmaengine@vger.kernel.org,
+	Philipp Stanner <phasta@kernel.org>,
+	netdev@vger.kernel.org,
+	nic_swsd@realtek.com,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-usb@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	linux-cxl@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	mhi@lists.linux.dev,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>,
+	linux-i2c@vger.kernel.org,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	linux-spi@vger.kernel.org,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH 01/37] PCI/MSI: Add Devres managed IRQ vectors allocation
+Date: Mon, 23 Feb 2026 23:29:40 +0800
+Message-Id: <1771860581-82092-2-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+X-HM-Tid: 0a9c8b20e63209cckunm6946b3c7986369
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGh5JGFYdQhpNQ0tOHx8aQhpWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZS1VLVUtVS1kG
+DKIM-Signature: a=rsa-sha256;
+	b=hesEBWpuUfkngcgz1f2Ig1nlGmmzRwW4WQwqVSHNJo/8mDrQHyi2jBXfpRejbQ5213Bi/x3y5ZKsO4yPdU29saCaBfjZuhiQPZrXuFi/nfbjzR0kpb+gL5Eft5gNlVXtMsgoBjIOykghNIgFG4xZvqITu8wqjNed5lf17v/+SjU=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=j3H95hgVRLs6dldnhhXVuqSGrPI2yynu10KTCXrGKLk=;
+	h=date:mime-version:subject:message-id:from;
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aZyvGnKfWI1Mku-c@aschofie-mobl2.lan>
 
-On Mon, Feb 23, 2026 at 11:48:42AM -0800, Alison Schofield wrote:
-> On Fri, Feb 20, 2026 at 11:30:12PM -0500, Gregory Price wrote:
-> > cxl_add_to_region() ignores the return value of attach_target().  When
-> > attach_target() fails (e.g. cxl_port_setup_targets() returns -ENXIO),
-> > the auto-discovered region remains registered with its HPA resource
-> > consumed but never reaches COMMIT state.  Subsequent region creation
-> > attempts fail with -ENOSPC because the HPA range is already reserved.
-> > 
-> > Track whether this call to cxl_add_to_region() created the region, and
-> > call drop_region() on attach_target() failure to unregister it and
-> > release the HPA resource.  Pre-existing regions are left alone since
-> > other endpoints may already be attached.
-> 
-> I see you dropping this, perhaps just for the moment, because
-> the drop_region() you wanted to use is not available yet.
-> 
+pcim_alloc_irq_vectors() and pcim_alloc_irq_vectors_affinity() are created for
+pci device drivers which rely on the devres machinery to help cleanup the IRQ
+vectors.
 
-Yeah it's not a particularly useful cleanup in the current
-infrastructure because nothing actually uses this pattern (yet).
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+---
 
-> This looks a lot like 
-> 	https://lore.kernel.org/linux-cxl/2a613604c0cdda6d9f838ae9b47ea6d936c5e4ce.1769746294.git.alison.schofield@intel.com/
-> 	cxl/region: Unregister auto-created region when assembly fails
-> 	When auto-created region assembly fails the region remains registered
-> 	but disabled. The region continues to reserve its memory resource,
-> 	preventing DAX from registering the memory.
-> 	Unregister the region on assembly failure to release the resource.
-> 
-> And the review comments on that one, or at least on that thread in
-> general, was to leave all the broken things in place.
-> I didn't agree with that, and hope to see this version move ahead
-> when you have the drop_region you need.
-> 
-> 
+ drivers/pci/msi/api.c | 26 ++++++++++++++++++++++++++
+ include/linux/pci.h   | 22 ++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
 
-The important note here is the difference between auto-regions and
-manually created regions.  For auto-regions, you might have another
-endpoint show up looking for the partially created region - and then
-just go off and create it anyway because it thinks it was first.
+diff --git a/drivers/pci/msi/api.c b/drivers/pci/msi/api.c
+index c18559b..2362fca 100644
+--- a/drivers/pci/msi/api.c
++++ b/drivers/pci/msi/api.c
+@@ -297,6 +297,32 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
+ 
+ /**
++ * pcim_alloc_irq_vectors() - devres managed pci_alloc_irq_vectors()
++ * Interrupt vectors are automatically freed by the devres machinery
++ */
++int pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
++			   unsigned int max_vecs, unsigned int flags)
++{
++	return pcim_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs,
++					       flags, NULL);
++}
++EXPORT_SYMBOL(pcim_alloc_irq_vectors);
++
++/**
++ * pcim_alloc_irq_vectors_affinity() - devres managed pci_alloc_irq_vectors_affinity()
++ * Interrupt vectors are automatically freed by the devres machinery
++ */
++int pcim_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
++				   unsigned int max_vecs, unsigned int flags,
++				   struct irq_affinity *affd)
++{
++	dev->is_msi_managed = true;
++	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs,
++					      flags, affd);
++}
++EXPORT_SYMBOL(pcim_alloc_irq_vectors_affinity);
++
++/**
+  * pci_irq_vector() - Get Linux IRQ number of a device interrupt vector
+  * @dev: the PCI device to operate on
+  * @nr:  device-relative interrupt vector index (0-based); has different
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index d5ec0f8..ae58f70 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1764,6 +1764,12 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ 				   unsigned int max_vecs, unsigned int flags,
+ 				   struct irq_affinity *affd);
+ 
++int pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
++			  unsigned int max_vecs, unsigned int flags);
++int pcim_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
++				   unsigned int max_vecs, unsigned int flags,
++				   struct irq_affinity *affd);
++
+ bool pci_msix_can_alloc_dyn(struct pci_dev *dev);
+ struct msi_map pci_msix_alloc_irq_at(struct pci_dev *dev, unsigned int index,
+ 				     const struct irq_affinity_desc *affdesc);
+@@ -1806,6 +1812,22 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+ 					      flags, NULL);
+ }
+ 
++static inline int
++pcim_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
++			       unsigned int max_vecs, unsigned int flags,
++			       struct irq_affinity *aff_desc)
++{
++	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs,
++					      flags, aff_desc);
++}
++static inline int
++pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
++		      unsigned int max_vecs, unsigned int flags)
++{
++	return pcim_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs,
++					      flags, NULL);
++}
++
+ static inline bool pci_msix_can_alloc_dyn(struct pci_dev *dev)
+ { return false; }
+ static inline struct msi_map pci_msix_alloc_irq_at(struct pci_dev *dev, unsigned int index,
+-- 
+2.7.4
 
-But in my driver, i'm explicitly converting these auto-regions into
-other things, and if that fails it causes *all other* region creation to
-fail - even if it wasn't actually dependent on that original region.
-
-This is only an issue if you have two devices unbind/bind cycling at
-the same time - i.e.
-
-   echo 0000:d0:00.00 > cxl_pci/unbind
-   echo 0000:e0:00.00 > cxl_pci/unbind
-   echo 0000:d0:00.00 > mydriver/bind
-   echo 0000:e0:00.00 > mydriver/bind
-
-If the platform has pre-programmed and locked the decoders, and one of
-the two devices fails to probe and leaves a hanging partially
-created region, the other device will fail too.
-
-It's a pretty narrow failure scenario.
-
-~Gregory
