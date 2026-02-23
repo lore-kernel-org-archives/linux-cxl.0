@@ -1,187 +1,130 @@
-Received: from mail-m93191.xmail.ntesmail.com (mail-m93191.xmail.ntesmail.com [103.126.93.191])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD183EBF10;
-	Mon, 23 Feb 2026 22:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.126.93.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EEA344DAA;
+	Mon, 23 Feb 2026 22:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771885366; cv=none; b=ndeyUiXWPVUaCxED0IuZOUAMnThCbYaIqRZTfBf+wgUeOlJ33vlYrJCtH6KWnkuQhm3Iksaxe+bRe4INalNmT/6yXNqypst6s0yj76xa5o+eTML8uA3AFRNPCZ2z16dNen/50OMwJo2FZ4fuR8N7VCFFgKHrTyUtZ5q4Wz++5jc=
+	t=1771886075; cv=none; b=kLI9kXTgOU6iN0hGhUsx6zCW9znfdMiy6ygmUeAxq8Lp4M/mI1HCIXly/H/WNbdFxXpCq4rnbWbm6+jTNSnm9TPvBfnWFoj95EuZLi04msh+ktgTGGGuCmxwiRQeuRaW0nLBdZ+HnvJwZKw2ktr5Q3L3C6UBZKBITf+lR9ZXTR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771885366; c=relaxed/simple;
-	bh=pEHlMOLcrVLHxBcPS3mtO3QtuhosaoNFXUoSgyCErug=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=JGx7pqFucmfttBbDUpLUj6WUCmA/rAwj7UHXRxbaN9kDcY/qlcb/l02+OfGTe8yay9kM/av+KedM53QB7/w38IigeLzGcQTAk04zDHUz4/xUIVgQ2feW3kyIu9xYggnqIb9El2m5xRyfNG4VBduMRmk0qPc70gtADCqaK1ZzAks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=J1HZWCee; arc=none smtp.client-ip=103.126.93.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1771886075; c=relaxed/simple;
+	bh=ItU3uHRNEl65UtC3uLyPu3l2IJDkwGvLsRznBKCMxTU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ix+jBsxsKGIvnu6AZqlvRytjE9NQe3aPgkdvpWE1g0K2TG0sWxb184UyTjLv6geSlhIeX45Utb95j+pavHFXI29PM0CVKZc7ubtdfUhLGWWkQiRbwNL2Xq07IOcOfXw8wP/674RA6XbzlUHrY+snavB6mCnihPO4TchuuXWnKPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nnlxHU2u; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="J1HZWCee"
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 34b37f78d;
-	Mon, 23 Feb 2026 23:32:12 +0800 (GMT+08:00)
-From: Shawn Lin <shawn.lin@rock-chips.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	"Vaibhaav Ram T . L" <vaibhaavram.tl@microchip.com>,
-	Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
-	Even Xu <even.xu@intel.com>,
-	Xinpeng Sun <xinpeng.sun@intel.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Zhou Wang <wangzhou1@hisilicon.com>,
-	Longfang Liu <liulongfang@huawei.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Jijie Shao <shaojijie@huawei.com>,
-	Jian Shen <shenjian15@huawei.com>,
-	Sunil Goutham <sgoutham@marvell.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
-	Oded Gabbay <ogabbay@kernel.org>,
-	Maciej Falkowski <maciej.falkowski@linux.intel.com>,
-	Karol Wachowski <karol.wachowski@linux.intel.com>,
-	Min Ma <mamin506@gmail.com>,
-	Lizhi Hou <lizhi.hou@amd.com>,
-	Andreas Noever <andreas.noever@gmail.com>,
-	Mika Westerberg <westeri@kernel.org>,
-	Tomasz Jeznach <tjeznach@rivosinc.com>,
-	Will Deacon <will@kernel.org>,
-	Xinliang Liu <xinliang.liu@linaro.org>,
-	Tian Tao <tiantao6@hisilicon.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Srujana Challa <schalla@marvell.com>,
-	Bharat Bhushan <bbhushan2@marvell.com>,
-	Antoine Tenart <atenart@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Raag Jadav <raag.jadav@intel.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Bingbu Cao <bingbu.cao@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	linux-input@vger.kernel.org,
-	linux-i3c@lists.infradead.org,
-	dmaengine@vger.kernel.org,
-	Philipp Stanner <phasta@kernel.org>,
-	netdev@vger.kernel.org,
-	nic_swsd@realtek.com,
-	linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-usb@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	linux-cxl@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	mhi@lists.linux.dev,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Jan Dabros <jsd@semihalf.com>,
-	linux-i2c@vger.kernel.org,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	linux-spi@vger.kernel.org,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org,
-	linux-mmc@vger.kernel.org,
-	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 37/37] PCI/MSI: Only check is_msi_managed in pcim_setup_msi_release()
-Date: Mon, 23 Feb 2026 23:29:41 +0800
-Message-Id: <1771860581-82092-3-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
-X-HM-Tid: 0a9c8b212c0009cckunm6946b3c79863ba
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQhgZH1ZOH09CTx0eHktKTkpWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZS1VLVUtVS1kG
-DKIM-Signature: a=rsa-sha256;
-	b=J1HZWCeeOmW/gPw++byO+If0KMsTHKVVYVc+2zdeVL1H5nIla64EyAzpDmlGGJ/eIDuENwuD2fBNa7HfxIU6b+XJAPDHnUDppaUZRyCFQ58kMzK1cryURHmQKr6oTWiT4pmL+kQoThKmImm/C2O+XaXoGL4RlgFyNJGe+/RTrvE=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=RhsG8KOx2Km4SCjZjnMyUXQspsA9GMfP8flaFf9OQp4=;
-	h=date:mime-version:subject:message-id:from;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nnlxHU2u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771886073; x=1803422073;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ItU3uHRNEl65UtC3uLyPu3l2IJDkwGvLsRznBKCMxTU=;
+  b=nnlxHU2u5qlukPjLWvi3u2r2z/n/vfGplgx02s+AtW5nSxJbIT4VMUss
+   IFsMX+Hx0aY1a3lEaS+E6tqZh0vWXfY10zmAWMNmXuY6bMGdlpr1pRaN4
+   bHxqVVXuFhkkXgEBooBS9HO6xfJEGq03uvD45wOZBlAuKGDixW+dtLvWM
+   RTzCuHvkfHQuUvfclOsj6vXfl1zzmjcD3C/KTWLRppYwSkYhktWbA8Umf
+   iXupMyd0H9XcThpg047ejcvyTlvq+Ng0ia29PMkR4bCftlDwI1MFCUo6P
+   dYjuxPXYq10YRCJeDKSfb6u9PF0a1uZTtPeG7HzkEB7rfQ27vdv4GwQpN
+   g==;
+X-CSE-ConnectionGUID: LwkQ6ZPPQ0ODL7GV++U4xQ==
+X-CSE-MsgGUID: JYmwERsWRvma3Z1HR+pddw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="71922166"
+X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
+   d="scan'208";a="71922166"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 14:34:32 -0800
+X-CSE-ConnectionGUID: +aF79AMsQCCVY3lgb1kXXg==
+X-CSE-MsgGUID: Z7/TtHH/TwGLlH2YtljqeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
+   d="scan'208";a="215555866"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.227]) ([10.125.110.227])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 14:33:12 -0800
+Message-ID: <424666d2-b04b-4ea8-a47c-1bdcf86f23df@intel.com>
+Date: Mon, 23 Feb 2026 15:33:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] cxl/memdev: fix deadlock in cxl_memdev_autoremove() on
+ attach failure
+To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+References: <20260211192228.2148713-1-gourry@gourry.net>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260211192228.2148713-1-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The function pcim_enable_device() sets the is_managed flag, which
-causes the device's IRQ vectors to be automatically managed and released
-by the devres framework. If a driver subsequently calls
-pci_free_irq_vectors() manually, it can lead to a double-free of the
-interrupt resources.
 
-Analysis reveals most PCI drivers call pci_free_irq_vectors()
-while also using pcim_enable_device(), making them susceptible to this
-double-free issue. In contrast, 35 drivers follow the pattern of
-relying on devres to handle the cleanup.
 
-To address this inconsistency and enforce explicit, driver-managed
-control of IRQ vectors, this patch removes the pci_is_managed() check
-from pcim_setup_msi_release() and let devres help cleanup if is_msi_managed
-is true. This change ensures that interrupt vectors are not automatically
-freed by the devres machinery when pcim_enable_device() is used, placing
-the responsibility for their release squarely on the driver logic via
-pci_free_irq_vectors(). If the driver need devres to help cleanup, newly added
-pcim_alloc_irq_vectors() and pcim_alloc_irq_vectors_affinity() helpers could be used.
+On 2/11/26 12:22 PM, Gregory Price wrote:
+> cxl_memdev_autoremove() takes device_lock(&cxlmd->dev) via guard(device)
+> and then calls cxl_memdev_unregister() when the attach callback was
+> provided but cxl_mem_probe() failed to bind.
+> 
+> cxl_memdev_unregister() calls
+>   cdev_device_del()
+>     device_del()
+>       bus_remove_device()
+>         device_release_driver()
+> 
+> This path is reached when a driver uses the @attach parameter to
+> devm_cxl_add_memdev() and the CXL topology fails to enumerate (e.g.
+> DVSEC range registers decode outside platform-defined CXL ranges,
+> causing the endpoint port probe to fail).
+> 
+> Add cxl_memdev_attach_failed() to set the scope of the check correctly.
+> 
+> Fixes: 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
+> Signed-off-by: Gregory Price <gourry@gourry.net>
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+Applied to cxl/fixes
+318c58852e68
 
----
-
- drivers/pci/msi/msi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
-index 81d24a2..0727a0a 100644
---- a/drivers/pci/msi/msi.c
-+++ b/drivers/pci/msi/msi.c
-@@ -70,7 +70,6 @@ static void pcim_msi_release(void *pcidev)
- {
- 	struct pci_dev *dev = pcidev;
- 
--	dev->is_msi_managed = false;
- 	pci_free_irq_vectors(dev);
- }
- 
-@@ -92,14 +91,13 @@ static int pcim_setup_msi_release(struct pci_dev *dev)
- {
- 	int ret;
- 
--	if (!pci_is_managed(dev) || dev->is_msi_managed)
-+	if (!dev->is_msi_managed)
- 		return 0;
- 
- 	ret = devm_add_action(&dev->dev, pcim_msi_release, dev);
- 	if (ret)
- 		return ret;
- 
--	dev->is_msi_managed = true;
- 	return 0;
- }
- 
--- 
-2.7.4
+> ---
+>  drivers/cxl/core/memdev.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index af3d0cc65138..25ca4443e4f7 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -1089,10 +1089,8 @@ static int cxlmd_add(struct cxl_memdev *cxlmd, struct cxl_dev_state *cxlds)
+>  DEFINE_FREE(put_cxlmd, struct cxl_memdev *,
+>  	    if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
+>  
+> -static struct cxl_memdev *cxl_memdev_autoremove(struct cxl_memdev *cxlmd)
+> +static bool cxl_memdev_attach_failed(struct cxl_memdev *cxlmd)
+>  {
+> -	int rc;
+> -
+>  	/*
+>  	 * If @attach is provided fail if the driver is not attached upon
+>  	 * return. Note that failure here could be the result of a race to
+> @@ -1100,7 +1098,14 @@ static struct cxl_memdev *cxl_memdev_autoremove(struct cxl_memdev *cxlmd)
+>  	 * succeeded and then cxl_mem unbound before the lock is acquired.
+>  	 */
+>  	guard(device)(&cxlmd->dev);
+> -	if (cxlmd->attach && !cxlmd->dev.driver) {
+> +	return (cxlmd->attach && !cxlmd->dev.driver);
+> +}
+> +
+> +static struct cxl_memdev *cxl_memdev_autoremove(struct cxl_memdev *cxlmd)
+> +{
+> +	int rc;
+> +
+> +	if (cxl_memdev_attach_failed(cxlmd)) {
+>  		cxl_memdev_unregister(cxlmd);
+>  		return ERR_PTR(-ENXIO);
+>  	}
 
