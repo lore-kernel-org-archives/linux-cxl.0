@@ -1,163 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mail-m21472.qiye.163.com (mail-m21472.qiye.163.com [117.135.214.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A240303A12;
-	Mon, 23 Feb 2026 15:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E38262808;
+	Mon, 23 Feb 2026 16:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.214.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771861954; cv=none; b=Ol+gd49HYBkDMRhXMaJ8vMvdN08Jhyn647qjLVpZzibWJijqtJxLWqWnXKpPqzmqqm1sJ8sR8Ml/T7ssMDApDGgbiNFcCrCac7kxEUaYkA2btiNFgPf81fGkMusnSKYbqiFKEIDpHDZWZ1WFF7hTlRBBFt4kvE5DjmQTiZNRvOY=
+	t=1771862906; cv=none; b=Lh8DQm7BIMvNz9uQu9V2A+7EibGYcsTWf3MzDIOkepI7RnG6j53l+MAg96MR82o/+Pntzl3tsYcAQyLCswOtsz0weBaVSH5Rcsvb/LHKN2ws1zUhHBSCnp+/HwO3kpo9ABXnyG3HxADkRZ+yejx2IzgjqXfGsMOGDROasdb7HZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771861954; c=relaxed/simple;
-	bh=zmLBskjCL1zRS+O30B6eQFLUzXO8640+29SuS1+Kr98=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pSVq2P9BL/nASHouiCjVpj5zTDc2KXDmigL2ppmT3pMep+S2OU0C0JEQyBhlHoQfwFtuoC9D0hJmCLnFpZZ93IpkXAxkQNoET33w269oyHO549OdY3wdcUJMdyR5pS/ZSfqiJ52AK7BUtwASVgkEXnXGcHdYoxPMHTCfFm/YFWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NXSNG4Yn; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1771862906; c=relaxed/simple;
+	bh=CbgkTnVxraWTJlz4FyYkIv775xl13Zs7SwxGNo6FbjA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=qsLOsr0LV2G3D0ueyyQPgUSHwRcffWUvuO63UpNalE6pIKKpwgNM58rDz7U/qyWoB+b2blqX+pe/2ID9EFypE98Lem67iGn85UwoXzA0l5/WbHpHSVh8jAvCgbIc9ZQdXWIxxggxn3XQNUJZuU/slbtJsDKmw0YFCIn7cP7Zh80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=a5oOYvjV; arc=none smtp.client-ip=117.135.214.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NXSNG4Yn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771861952; x=1803397952;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=zmLBskjCL1zRS+O30B6eQFLUzXO8640+29SuS1+Kr98=;
-  b=NXSNG4YnDkwauOAxwhWSY27FgeuXoZXQKMzqRTnNjCQsSUKbkcBClFtL
-   CyHcjsuofV5BXpoa6PK3T7BDx+B+0rgr/jUrYVXjANcAoqqbtJi1Uy8P6
-   aajSILX7tRL5ZzLyXH719jto7dzL/tQow0OKF3JGPfBTpT7WaXPXTtBQd
-   FhJ9hGtOU/b1TgNNAwaO32uEROr/1DZGCIdew4zp5wm/sW4j/Ds7M1QUO
-   Ao/vnjwXfZUwc8/MD9SZ34jgERlgpe2bHhpfWus28qOc+hzLmHOvfxzdM
-   8kex9jMSdYJhyD40nVVgInvWRH3oPoouT7jnfkIVaHl2FfDbaYZJTU549
-   Q==;
-X-CSE-ConnectionGUID: EomL6PFPSKaZghMXwxiDqg==
-X-CSE-MsgGUID: a5t2DVa+RZ6s5wdZUH/jtA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="90267094"
-X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
-   d="scan'208";a="90267094"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 07:52:31 -0800
-X-CSE-ConnectionGUID: quSGZpGyTlKuc8f8v+KT7A==
-X-CSE-MsgGUID: Km9Tpl55S6SaVJ+PBzlNmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
-   d="scan'208";a="220150087"
-Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.110.216]) ([10.125.110.216])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 07:52:30 -0800
-Message-ID: <d6e2617b-6dd2-4c08-830d-e6d917387c66@intel.com>
-Date: Mon, 23 Feb 2026 08:52:29 -0700
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="a5oOYvjV"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 34b404597;
+	Mon, 23 Feb 2026 23:52:59 +0800 (GMT+08:00)
+From: Shawn Lin <shawn.lin@rock-chips.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Stanner <phasta@kernel.org>,
+	linux-pci@vger.kernel.org,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH 19/37] cxl/pci: Replace pci_alloc_irq_vectors() with pcim_alloc_irq_vectors()
+Date: Mon, 23 Feb 2026 23:52:47 +0800
+Message-Id: <1771861967-88542-1-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+X-HM-Tid: 0a9c8b342ffa09cckunma46d5a1e987b7b
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGhpOQ1ZLTxpDQkNMHRlPS0pWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=a5oOYvjVY3D2Ens6kUyT9m7aGHh9Lo3mW6a5jZEhiXuIaTS5uOSZj2RY5R5FefooCPcS2YixeCtghE8zHTiGuQm0ZE0lTkCZSiBpdbB0o1TDogLyvMmS5E0Zs3If6FLospWSGZ6UTQ2ks0SqFuiqmCApKhVPTkCI5pyslHRU46c=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=9CHq4oSqv2IBBu/XtrOePRjKx9bmO/YWUZA6SCgYqHw=;
+	h=date:mime-version:subject:message-id:from;
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V1] PCI: Hide SBR from reset_methods if masked by CXL
-To: Vidya Sagar <vidyas@nvidia.com>, "bhelgaas@google.com"
- <bhelgaas@google.com>,
- "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
- "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
- "raphael.norwitz@nutanix.com" <raphael.norwitz@nutanix.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: Vikram Sethi <vsethi@nvidia.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>,
- Srirangan Madhavan <smadhavan@nvidia.com>,
- Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
- Vishal Aslot <vaslot@nvidia.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Krishna Thota <kthota@nvidia.com>,
- Manikanta Maddireddy <mmaddireddy@nvidia.com>,
- "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-References: <20260220195259.2397847-1-vidyas@nvidia.com>
- <835de7c9-a64f-4aaa-95e0-b91c2ae5885e@intel.com>
- <82a5a344-26d7-40ef-9047-60657c6923b0@nvidia.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <82a5a344-26d7-40ef-9047-60657c6923b0@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+pcim_enable_device() no longer automatically manages IRQ vectors via devres.
+Drivers must now manually call pci_free_irq_vectors() for cleanup. Alternatively,
+pcim_alloc_irq_vectors() should be used.
 
+To: Davidlohr Bueso <dave@stgolabs.net>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+To: Alison Schofield <alison.schofield@intel.com>
+To: Vishal Verma <vishal.l.verma@intel.com>
+To: Ira Weiny <ira.weiny@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Philipp Stanner <phasta@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+---
 
-On 2/23/26 6:11 AM, Vidya Sagar wrote:
-> On 21/02/26 02:51, Dave Jiang wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> On 2/20/26 12:52 PM, Vidya Sagar wrote:
->>> The CXL specification (e.g., CXL r3.1 v1.0, sec 8.1.5.2) defines
->>> the "Unmask SBR" bit in the Port Control Extensions Register.
->>> When this bit is 0 (default), asserting the Secondary Bus Reset (SBR) bit
->>> in the Bridge Control register has no effect on the downstream bus.
->>>
->>> Currently, the Linux PCI core checks this condition in
->>> pci_reset_bus_function(). If SBR is masked, it returns -ENOTTY during the
->>> execution of the reset. However, during the probe phase (when probe=true),
->>> the function currently returns 0. This 0 return value incorrectly signals
->>> to the PCI subsystem that SBR is a viable reset method for the device.
->>
->> The "Unmask SBR" bit is a toggle bit. It does not give indicator whether the device is capable of SBR or not.
-> 
-> Not sure how is this point relevant here. Can you help me understand?
+ drivers/cxl/pci.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-That means it's not a capability bit. It's a r/w toggle bit to mask or unmask SBR for CXL.
-
-> 
-> BTW, what do you mean by "whether the device is capable of SBR or not". My understanding is that each downstream port
-> 
-> must support SBR. The patch I made would ensure that 'bus' entry is not shown under 'reset_methods' if the downstream
-> 
-> port is a CXL capable port and 'Unmask SBR' is '0'.
-
-The purpose of introducing the cxl bus reset method is, "you know what you are doing" because you selected this method and the kernel will set the bit to allow the reset. By default the Unmask SBR bit is clear. So if you hide the reset attribute then the user can't reset without going through other means to set the bit first (i.e. via setpci tool). This is intentionally setup to do this through total control of the kernel and not having to jump through hoops to toggle bit via a user tool first. Otherwise you can just toggle the bit with a user tool and use the standard PCI bus reset method.
-
-Please see commit log of this commit:
-53c49b6e6dd2 ("PCI/CXL: Add 'cxl_bus' reset method for devices below CXL Ports")
-
-DJ
-
-> 
->> The original thought was that if the user is issuing CXL SBR, you know what you are doing and the kernel will set that bit and issue the SBR.
->>
->> DJ
->>
->>> As a result, 'bus' is listed in the device's
->>> /sys/bus/pci/devices/.../reset_methods attribute, even though the hardware
->>> is incapable of performing it. If a user attempts to write bus to reset
->>> method or triggers a reset that falls back to SBR, the operation fails
->>> with: "bash: echo: write error: Inappropriate ioctl for device" error.
->>>
->>> This patch modifies pci_reset_bus_function() to return -ENOTTY immediately
->>> if cxl_sbr_masked() is true, regardless of the probe argument. This
->>> ensures that 'bus' is not advertised in reset_methods when the hardware
->>> prevents it, improving clarity for users and aligning the sysfs capability
->>> report with actual hardware behavior.
->>>
->>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>> ---
->>>  drivers/pci/pci.c | 6 +-----
->>>  1 file changed, 1 insertion(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>> index f3244630bfd0..57e24300d1c7 100644
->>> --- a/drivers/pci/pci.c
->>> +++ b/drivers/pci/pci.c
->>> @@ -4915,12 +4915,8 @@ static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
->>>        * If "dev" is below a CXL port that has SBR control masked, SBR
->>>        * won't do anything, so return error.
->>>        */
->>> -     if (bridge && cxl_sbr_masked(bridge)) {
->>> -             if (probe)
->>> -                     return 0;
->>> -
->>> +     if (bridge && cxl_sbr_masked(bridge))
->>>               return -ENOTTY;
->>> -     }
->>>
->>>       rc = pci_dev_reset_iommu_prepare(dev);
->>>       if (rc) {
-> 
-> 
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index fbb300a..de5c9ff 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -565,13 +565,9 @@ static bool cxl_alloc_irq_vectors(struct pci_dev *pdev)
+ 	 * Per CXL 3.0 3.1.1 CXL.io Endpoint a function on a CXL device must
+ 	 * not generate INTx messages if that function participates in
+ 	 * CXL.cache or CXL.mem.
+-	 *
+-	 * Additionally pci_alloc_irq_vectors() handles calling
+-	 * pci_free_irq_vectors() automatically despite not being called
+-	 * pcim_*.  See pci_setup_msi_context().
+ 	 */
+-	nvecs = pci_alloc_irq_vectors(pdev, 1, CXL_PCI_DEFAULT_MAX_VECTORS,
+-				      PCI_IRQ_MSIX | PCI_IRQ_MSI);
++	nvecs = pcim_alloc_irq_vectors(pdev, 1, CXL_PCI_DEFAULT_MAX_VECTORS,
++				       PCI_IRQ_MSIX | PCI_IRQ_MSI);
+ 	if (nvecs < 1) {
+ 		dev_dbg(&pdev->dev, "Failed to alloc irq vectors: %d\n", nvecs);
+ 		return false;
+-- 
+2.7.4
 
