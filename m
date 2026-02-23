@@ -1,194 +1,188 @@
-Received: from mail1.bemta41.messagelabs.com (mail1.bemta41.messagelabs.com [195.245.230.66])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392881D514E;
-	Sun, 22 Feb 2026 23:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.245.230.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41CA2E63C
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 11:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771802299; cv=none; b=LEEAYBW5ab9etvqmGwseGkcyw2wXzjycofNpSUzTT109qU2/peZcHLcoIyYjVAIEki/UJgHSLdiFRSwHIeoKWwKOpZHt3EsxN/9QH/SBR8pDGbTKzQElquQZ/JGqvNVBPN0XZHiZVXKA8t9hc7puH+dpZu/kvAMw9Dk12oyeFDI=
+	t=1771844483; cv=none; b=bQ9QCHTp9cuqWAvbQQ3oEliB2TQrnjw9x+EsOFKU8Y1l9/6efusZNgGZM/29/Vsn+M+IjZD4kMi1+d0GfxMturcKVrR7vguGoSyEe65gPvchkVbJx54H2y7SIIjm6xwoaZW/J1jKtEZWLYcv6KLDLhu705p26VhM7bk72k3L+sA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771802299; c=relaxed/simple;
-	bh=Bp1kcCAzTgPy3IlFrjGUNEol6PjJwCi9eAmQmhXFT7s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tWEVDYPzA/DuP6rRYaMuU9LDUF93NYj9bweCOJWCxj1oIpQCmKx+4mS8XgEBGazsBRH5OnWTXuEgaTSxjRtx1GuKfn0M1AmwwXI8U3sCKAOacPPecKZD2N8m7OqsHF+dw3gFpy5BW0+XFDAVout7OYEuMZP8y9H6BvojjfYCd6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=E5EBItJ2; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Hr3sEs+G; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Hr3sEs+G; arc=none smtp.client-ip=195.245.230.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="E5EBItJ2";
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Hr3sEs+G";
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Hr3sEs+G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
-	s=170520fj; t=1771802295; i=@fujitsu.com;
-	bh=FdhqfBmWI1Vf3l9kwQ3rKzdU4/e6QfF0KHGTJW93ihI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	b=E5EBItJ2ZzovLF2zFZUe5VkoWiBx0M09mCqe95aL2KtbR28YG148xPPGpQLUxkaQv
-	 oZHWENsotDPRHcxLddOhBEQSE8uZ7rBq22HUaPcuwG2FlB8I+Ar08n3d3bb1ZTTnjl
-	 HNt62ccS/kZFeQgUAtm9jg4OqlZR0HWj5f+r1NZzrf+OrvniFcY4ARmKbG+o7JVwFs
-	 zABSLYjdxNsl2FyXGGqdVJOopdgXY717EHNnpEnrotPq+MVdeY9VjIu5G8h0BBgP/j
-	 3czCHi/UdVPuy9rKS7ThzxayGxH4zThDWENk2CgfwGlgqx6GsMH9weLZ3PNounhXEg
-	 0qejh6HWRzHSQ==
-X-Brightmail-Tracker: H4sIAAAAAAAAA12Se0xTZxjG+51bD5eSQ4FxBjq3ZrqMSPGSsS8
-  4QJwxZzFB54bJXIYWOLadpTQ9ZYLLRhFQRkWRrRJawJIamAXlJggb5ZbKqOmGcatTNsYmFxFm
-  GMIGyCXrGcG5/fd83/N7n/f54yVRcS8RQrIZOlarlqkkhDcW8wZZHG47a1ZucU5ugoPDtwi4M
-  DsF4PmKvxA4U79CwBLjLQD77mUTsOZeLYA51joC9jctEbBz9AEGzSU5CCxudaPQVnmHgKYv7A
-  jsN93EYLvdicHvvyoj4EyhA8C8ikcA5o8aEXh5fgmH+VN6FH5T2IXA8lkjCn++UAVgyfgyDmt
-  np1H4U18/DgeKehG4OO8J6HAMYTs3MHN5ZzEm7/YywbSZBoVMruMRzjR9GcZY2x8iTKPtM4Lp
-  LK8VMuNNpYDpmlgGjNGcxbgsDiEz0/gCs2juBfv9DuFKdVJaxhFc0ddSJ9TU+GVcclqFeuD2K
-  QBepJi6BuiGEn9eY9Q++mrTiLAAeHt0C0Z/a7hG8A8xdRqhl1fawBplsZxD/0fxUeWAHu2O5j
-  VBRdB3Py/7ZyCQCqRbF/swfgCl7AR95et8lDcCqETaUZ3t2Ud6kjbSVfrN/LeIiqFn7+QhvKa
-  pDfRFoxPntRe1g84xzOM8Lqai6O6mvau4P+0sHcF4jXrwnGYzujq6iXZ/14gWgQDTM5jpGcwC
-  EBuAHKv9iNWGvyZN0irlCl2qTKmSyk6EJ0vZdG2ahg0/znK6rVJ5skbKcpyUy0xNVqVI1ayuE
-  XiOyfuPl4JagWslL6IHPE8ikiBRfLxJKfZLSkvJVMg4xWFtuorlesA6kpTQokuFZqXYX8vK2Y
-  yjSpXnJNdsmvSVBIreyfXYIk4jS+WU8lXrJthONvzSZUfJ6YfGblSMqdPUbEiwaIxPonhUka5
-  +GrR23rfB+pAAERAIBGJfDatNVer+60+AYBJIAkQ2gyfFV6nWPd034amCeKp4JZXyVXSyf60Q
-  PbJ+dPuupLdiccsrzVOjgWcuxv6KO1Q19mMyQ9tAw+GUOJ/2qLq06u7BYoltrvSHgwXNPp+ec
-  F0X7IgMfTPh/JP3MXvvLr+Rjy/L548PPX59qWLu5c7MCx3GxLfHgne78P6F36NiC19dAcW7rV
-  GnDcxwke5k6Lt/Vp6kHvx4td5chfS4J4e8DrRUv1j2OEGwZfruqYEjbXs/mf6g/sMD+mr/rG0
-  7D1nHBef2rHRLvV1npIly6/2y4Rp79gL3ZKOkIy6+LKg3JbYGfS7CGcRFXulDwqI1Ryfdlhs5
-  bOR7lY6s2NAbXvv3/Xbq+ma/mJ5j7WETwbnlYwa9PjohTr4udVvXfdeegxKMU8i2hqFaTvY3+
-  NSwnVkEAAA=
-X-Env-Sender: tomasz.wolski@fujitsu.com
-X-Msg-Ref: server-10.tower-859.messagelabs.com!1771802282!263770!1
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received:
-X-StarScan-Version: 9.121.1; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 20350 invoked from network); 22 Feb 2026 23:18:02 -0000
-Received: from unknown (HELO n03ukasimr02.n03.fujitsu.local) (62.60.8.146)
-  by server-10.tower-859.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 22 Feb 2026 23:18:02 -0000
-Received: from n03ukasimr02.n03.fujitsu.local (localhost [127.0.0.1])
-	by n03ukasimr02.n03.fujitsu.local (Postfix) with ESMTP id E1ED7101B94;
-	Sun, 22 Feb 2026 23:18:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 n03ukasimr02.n03.fujitsu.local E1ED7101B94
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
-	s=dspueurope; t=1771802281;
-	bh=FdhqfBmWI1Vf3l9kwQ3rKzdU4/e6QfF0KHGTJW93ihI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hr3sEs+GEio8hQDyw1dFhDgofUT9QivKc/WVOEThGr9l8BD5LlauRupLNEQAFA9cT
-	 QwdQPUDdjow3G3ekqJur+xks7NE9iV2V9begC4IXxpm/UQoisNfzOxKB17BaWsFUbW
-	 cllAryfmypQE2S0j14Axp938N9zqz/7UKFgGhnBJpsuPxORxuH+dotN1snuhHblEnx
-	 S0RSf43hcjpUOikbsNhhWgS3gQuJ/dMo99qcgm6pLrwfMfJavR7Nepffa+TypLTJxS
-	 f/y8R1YEbTa06i9lNRbGGBRRhn9W4kwxQ7B2yzCP5wxUdNnWNjX7u9WgSML4c2rWle
-	 T6k9Yp50/rEHA==
-Received: from ubuntudhcp (unknown [10.172.107.4])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by n03ukasimr02.n03.fujitsu.local (Postfix) with ESMTPS id BF990100B55;
-	Sun, 22 Feb 2026 23:18:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 n03ukasimr02.n03.fujitsu.local BF990100B55
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
-	s=dspueurope; t=1771802281;
-	bh=FdhqfBmWI1Vf3l9kwQ3rKzdU4/e6QfF0KHGTJW93ihI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hr3sEs+GEio8hQDyw1dFhDgofUT9QivKc/WVOEThGr9l8BD5LlauRupLNEQAFA9cT
-	 QwdQPUDdjow3G3ekqJur+xks7NE9iV2V9begC4IXxpm/UQoisNfzOxKB17BaWsFUbW
-	 cllAryfmypQE2S0j14Axp938N9zqz/7UKFgGhnBJpsuPxORxuH+dotN1snuhHblEnx
-	 S0RSf43hcjpUOikbsNhhWgS3gQuJ/dMo99qcgm6pLrwfMfJavR7Nepffa+TypLTJxS
-	 f/y8R1YEbTa06i9lNRbGGBRRhn9W4kwxQ7B2yzCP5wxUdNnWNjX7u9WgSML4c2rWle
-	 T6k9Yp50/rEHA==
-Received: from isar2.ecs00.fujitsu.local (unknown [10.172.183.27])
-	by ubuntudhcp (Postfix) with ESMTP id 394F12205E4;
-	Sun, 22 Feb 2026 23:18:01 +0000 (UTC)
-From: Tomasz Wolski <tomasz.wolski@fujitsu.com>
-To: skoralah@amd.com
-Cc: alison.schofield@intel.com,
-	ardb@kernel.org,
-	benjamin.cheatham@amd.com,
-	bp@alien8.de,
-	dan.j.williams@intel.com,
-	dave.jiang@intel.com,
-	dave@stgolabs.net,
-	gregkh@linuxfoundation.org,
-	huang.ying.caritas@gmail.com,
-	ira.weiny@intel.com,
-	jack@suse.cz,
-	jeff.johnson@oss.qualcomm.com,
-	jonathan.cameron@huawei.com,
-	len.brown@intel.com,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	lizhijian@fujitsu.com,
-	ming.li@zohomail.com,
-	nathan.fontenot@amd.com,
-	nvdimm@lists.linux.dev,
-	pavel@kernel.org,
-	peterz@infradead.org,
-	rafael@kernel.org,
-	rrichter@amd.com,
-	smita.koralahallichannabasappa@amd.com,
-	terry.bowman@amd.com,
-	tomasz.wolski@fujitsu.com,
-	vishal.l.verma@intel.com,
-	willy@infradead.org,
-	yaoxt.fnst@fujitsu.com,
-	yazen.ghannam@amd.com
-Subject: Re: [PATCH v6 0/9] dax/hmem, cxl: Coordinate Soft Reserved handling with CXL and HMEM
-Date: Mon, 23 Feb 2026 00:17:59 +0100
-Message-Id: <20260222231759.12403-1-tomasz.wolski@fujitsu.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <0b0eb8bb-44a5-422d-8d5b-070fb039ed68@amd.com>
-References: <0b0eb8bb-44a5-422d-8d5b-070fb039ed68@amd.com>
+	s=arc-20240116; t=1771844483; c=relaxed/simple;
+	bh=7kVZxD9S+H1GWtBc5sUZE5wEKsFKUvQVVB/Ew0acbmc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gP7p3pwJ3VX+vp/n6q6YpT+k5DNeMjzR7H+B9YIfw1THo3/4DdrXBkjMLAWbZncUVEa98hsQso318wtshqaWZrqWiVCHTipe3XkVgls3+yjf8ehQPviCXODN60e1Uo89YwOBa4cuqNDBKoJZNLucd18hP3Z9fzpkFxwL3h5K0JI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.107])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fKHvQ08qDzHnGgC;
+	Mon, 23 Feb 2026 19:00:34 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id D183F40584;
+	Mon, 23 Feb 2026 19:01:11 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 23 Feb
+ 2026 11:01:10 +0000
+Date: Mon, 23 Feb 2026 11:01:09 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+CC: <qemu-devel@nongnu.org>, Arpit Kumar <arpit1.kumar@samsung.com>,
+	<linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>, Ravi Shankar
+	<venkataravis@micron.com>, Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
+	Michael Roth <michael.roth@amd.com>
+Subject: Re: [PATCH qemu v5 0/3] hw/cxl: FM-API Physical Switch Command Set
+ Support.
+Message-ID: <20260223110109.00007691@huawei.com>
+In-Reply-To: <20260220075818-mutt-send-email-mst@kernel.org>
+References: <20260204173223.44122-1-Jonathan.Cameron@huawei.com>
+	<20260220075818-mutt-send-email-mst@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-Hi Smita,
->Hi Tomasz,
->
->On 2/20/2026 1:45 AM, Tomasz Wolski wrote:
->> Tested on QEMU and physical setups.
->> 
->> I have one question about "Soft Reserve" parent entries in iomem.
->> On QEMU I see parent "Soft Reserved":
->> 
->> a90000000-b4fffffff : Soft Reserved
->>    a90000000-b4fffffff : CXL Window 0
->>      a90000000-b4fffffff : dax1.0
->>        a90000000-b4fffffff : System RAM (kmem)
->> 
->> While on my physical setup this is missing - not sure if this is okay?
->> 
->> BIOS-e820: [mem 0x0000002070000000-0x000000a06fffffff] soft reserved
->> 
->> 2070000000-606fffffff : CXL Window 0
->>    2070000000-606fffffff : region0
->>      2070000000-606fffffff : dax0.0
->>        2070000000-606fffffff : System RAM (kmem)
->> 6070000000-a06fffffff : CXL Window 1
->>    6070000000-a06fffffff : region1
->>      6070000000-a06fffffff : dax1.0
->>        6070000000-a06fffffff : System RAM (kmem)
->
->Thanks for testing on both setups!
->
->On QEMU: there is no region, so HMEM took ownership of the Soft Reserved 
->range (REGISTER path). Patch 9 then reintroduced the Soft Reserved entry 
->back into the iomem tree to reflect HMEM ownership.
->
->On physical setup: CXL fully claimed both ranges, region0 and region1 
->assembled successfully (DROP path). Since CXL owns the memory, there's 
->no Soft Reserved parent to reintroduce.
->
->Soft Reserved appears in /proc/iomem only when CXL does not fully claim 
->the range and HMEM takes over. Your physical setup is showing it 
->correctly. Maybe CXL_REGION config is false or region assembly failed on 
->and has cleaned up on QEMU so there aren't any regions?
+On Fri, 20 Feb 2026 07:58:49 -0500
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
 
-Thanks a lot for clarifying the behavior.
-I checked QEMU again and it works as you described (sorry, I must've
-mixed something up in my notes during previous test)
+> On Wed, Feb 04, 2026 at 05:32:20PM +0000, Jonathan Cameron wrote:
+> > Changes since v4:
+> > https://lore.kernel.org/qemu-devel/20250916080736.1266083-1-arpit1.kumar@samsung.com/
+> > - Dropped initial refactor. Reason being that it is not static enough
+> >   for caching at boot to be appropriate.  Kept the spec update part
+> >   of this.
+> > - Added a patch to make sure the new flip mode stuff is reported in
+> >   the Get Physical Port State command.
+> > - Rebased Arpit's Physical Control Control FMAPI Command given drop
+> >   of the major refactor from v4 patch 1.
+> > 
+> > I had taken this into my cxl staging tree thinking it only needed a few
+> > minor tweaks.  Then whilst testing I realized it didn't work with hotplug
+> > and that made me consider if Arpit's original approach made sense.
+> > 
+> > So this is my proposal on how to take this forwards. Note that this is
+> > not ready for merge (probably) just yet as I'd like Arpit to take a
+> > look at the changes.  
+> 
+> I'd appreciate it if you add rfc in the subject in such cases.
+> Thanks!
 
->Thanks,
->Smita
+Will do.
+
+Arpit is happy with this, so now I think main thing it needs is review of the
+PCI interactions and the resets.  They seem fine to me but I'm not that
+familiar with that stuff so am relying on PCI / reset experts.
+
+That part is all in patch 3.  If you are happy with that part, then I'm
+very much in favor of merging this.
+
+Jonathan
 
 > 
-> Tested-by: Tomasz Wolski <tomasz.wolski@fujitsu.com>
+> >  I went through a version that had major refactors
+> > to push the logic of building the records to the ports themselves, but
+> > in the end don't think that brings enough benefits for the complexity.
+> > 
+> > Based on:
+> > https://lore.kernel.org/qemu-devel/20260204170936.43959-1-Jonathan.Cameron@huawei.com/T/#t
+> > (with all it's precursors, though hopefully they will all be in Michael's
+> > next pull request)
+> > 
+> > I'll note this is an enormous foot gun as it lets you effectively trigger
+> > surprise device resets.  However, it's only accessible if you are using
+> > a configuration with the fabric management parts of the CXL emulation.
+> > For now that is a switch-cci (MCTP over USB support is near the top
+> > of my list of things to get ready for upstram.  I tested this with a
+> > custom driver and if nothing else it exposed some gaps in Linux's
+> > ability to rescan PCI buses after a perst event (even with drivers
+> > unbound etc to make it safe).
+> > 
+> > Original cover letter:
+> > 
+> > This patch series refactor existing support for Identify Switch Device
+> > and Get Physical Port State by utilizing physical ports (USP & DSP)
+> > information stored during enumeration.
+> > 
+> > Additionally, it introduces new support for Physical Port Control
+> > of Physical Switch Command Set as per CXL spec r3.2 Section 7.6.7.1.3.
+> > It primarily constitutes two logic:
+> >     -Assert-Deassert PERST: Assert PERST involves physical port to be in
+> >      hold reset phase for minimum 100ms. No other physical port control
+> >      request are entertained until Deassert PERST command for the given
+> >      port is issued.
+> >     -Reset PPB: cold reset of physical port (completing enter->hold->exit
+> >      phases).
+> > 
+> > Tested using libcxl-mi interface[1]:
+> > All active ports and all opcodes per active port is tested. Also, tested
+> > against possible edge cases manually since the interface currently dosen't
+> > support run time input.
+> > 
+> > Typical Qemu topology
+> > (1 USP + 3 DSP's in a switch with 2 CXLType3 devices connected to the 2 DSP's):
+> > FM="-object memory-backend-file,id=cxl-mem1,mem-path=$TMP_DIR/t3_cxl1.raw,size=256M \
+> >     -object memory-backend-file,id=cxl-lsa1,mem-path=$TMP_DIR/t3_lsa1.raw,size=1M \
+> >     -object memory-backend-file,id=cxl-mem2,mem-path=$TMP_DIR/t3_cxl2.raw,size=512M \
+> >     -object memory-backend-file,id=cxl-lsa2,mem-path=$TMP_DIR/t3_lsa2.raw,size=512M \
+> >     -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
+> >     -device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
+> >     -device cxl-upstream,port=2,sn=1234,bus=cxl_rp_port0,id=us0,addr=0.0,multifunction=on, \
+> >     -device cxl-switch-mailbox-cci,bus=cxl_rp_port0,addr=0.1,target=us0 \
+> >     -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
+> >     -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
+> >     -device cxl-downstream,port=3,bus=us0,id=swport2,chassis=0,slot=6 \
+> >     -device cxl-type3,bus=swport0,memdev=cxl-mem1,id=cxl-pmem1,lsa=cxl-lsa1,sn=3 \
+> >     -device cxl-type3,bus=swport2,memdev=cxl-mem2,id=cxl-pmem2,lsa=cxl-lsa2,sn=4 \
+> >     -machine cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=1k \
+> >     -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=4,target=us0 \
+> >     -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=5,target=cxl-pmem1 \
+> >     -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=6,target=cxl-pmem2 \
+> >     -device virtio-rng-pci,bus=swport1"
+> > 
+> > Tested multiple Qemu topologies:
+> >         -without any devices connected to downstream ports.
+> >         -with virtio-rng-pci devices connected to downstream ports.
+> >         -with CXLType3 devices connected to downstream ports.
+> >         -with different unique values of ports (both upstream and downstream).
+> > 
+> > Changes from v3 (https://lore.kernel.org/qemu-devel/20250909160316.00000190@huawei.com/T/):
+> >         -Namespaced the defines with cleaner prefix for Get Physical Port State 
+> >          Port Information Block members.
+> >         -switch CCI implementation instead of switch FM interface as per
+> >          Jonathan's review comments, hence moved perst members initializations
+> >          from: cxl_initialize_usp_mctpcci() -> cxl_initialize_mailbox_swcci().
+> > 
+> > [1] https://github.com/computexpresslink/libcxlmi/commit/35fe68bd9a31469f832a87694d7b18d2d50be5b8
+> > 
+> > 
+> > Arpit Kumar (2):
+> >   hw/cxl: Physical Port Info FMAPI - update to current spec and add
+> >     defines.
+> >   hw/cxl: Add Physical Port Control FMAPI Command (Opcode 5102h)
+> > 
+> > Jonathan Cameron (1):
+> >   hw/cxl: Get Physical Port State - update for PCIe flit mode
+> > 
+> >  include/hw/cxl/cxl_port.h                   |  73 ++++++++
+> >  include/hw/pci-bridge/cxl_downstream_port.h |  12 ++
+> >  include/hw/pci-bridge/cxl_upstream_port.h   |   2 +
+> >  hw/cxl/cxl-mailbox-utils.c                  | 183 ++++++++++++++++++--
+> >  hw/pci-bridge/cxl_downstream.c              |   9 +
+> >  hw/pci-bridge/cxl_upstream.c                |   1 +
+> >  6 files changed, 268 insertions(+), 12 deletions(-)
+> >  create mode 100644 include/hw/cxl/cxl_port.h
+> >  create mode 100644 include/hw/pci-bridge/cxl_downstream_port.h
+> > 
+> > -- 
+> > 2.51.0  
+> 
+> 
+> 
+
