@@ -1,177 +1,223 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A793257827
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 14:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771858509; cv=none; b=FhT3KtKYPdYlpZX8BHdeefQ/CI7kqArU1LrRoApfRUcyZymy+UHF2hQi0tRZkHpzoywhEa+JfUY2Tr5jpNRIVRYX3w8J16EbMwKZMDYCEdSyE/hvWNOpNDqTw47IRC+rrJRQ6oKFD9ZOPl/DremEU8m3kIVvH70iKZHNoghNtTQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771858509; c=relaxed/simple;
-	bh=EwLgLwdt857/iVMGq6pQA6+6jmF6tAKLgAXdu3hsyrE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K8W62AazpGR9fwum0AeYy/aUgfvn4SK7cMV9uf08+kLSzDFuWy/Q6dYQQcxMkiMuadOze9apcUiPTZMtX1MNT8DTwX3qpQVPuzyqOj+m4G033xMBNH9R6Pk/tfqpWgDPUSmEq2anfN03/W8pdNgTW98NdfvUpHyfePFOjCU6pxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=UK48vArf; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71A7305046
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 15:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771861899; cv=pass; b=Q0/OG6rI8f/NZbrfVKL7p0DxHbLgfE4uX1aBQsiXDqbGWhUmEif1VTlSFUt5+4jyeMFuE2lBl5NmfTchBH1PmZrTFCWOFjt18gRY5KfPod8Gz6Ld1YCpwTA+4YEuv8czcYCYePMlcslU8Bhab4Y1GP5S4niPWMYZ74gXSGgp7jA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771861899; c=relaxed/simple;
+	bh=d5zCa3ysNLijKNaGOI7tuajauNFQ8GHfuuwERS7PUF0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QUtrEeD9TQbRRpjAf2bcyAsAb+e9DxLmPmkX4BVE8fohck9zLPysQuxAwVvjuE1tjGBbNEJ7jgvRqdB/Swdlgq1IvwyQoXRppdpkPvKXuQufy+YqsuB//czZQf71IoVya2822HglEi87DukvWRRKX3PTuKL3l3dMYEJZedqAKbw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bez0+ejt; arc=pass smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="UK48vArf"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-8cb3a8494c5so416117385a.2
-        for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 06:55:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bez0+ejt"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b8f86167d39so567861766b.0
+        for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 07:51:37 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771861896; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Jzo0Nyq+uMqTJ2dMzEX80ZGG88emPdZhvZiAPyhVMAfFMxOEn5hsygACc0EXhh5dor
+         rS8T/RHSkeMVvWkKZPvAKpUs//4iS7C7fjnbViFnc0Wl9QtVbrLl29ZIPY0TvM1GAMwP
+         hdN288AzDmH5s8TFcrcyj/foz+zduGFrlUnI5dtDOl0/jcI4Etn7t9D6EAZJod4h06eT
+         0rv0NrDqI6xlWUXrXdcekthMEVaJ+EP0Om9NQGwHcUAyOJ9v1tsmCF1p7JhFW3xpEJu6
+         lkVIBB75HYt5Art0R8Ao/J10BSkOdVaIK4LyXviJsP2E0eiMWmMdK35IRAZA/UvskkEP
+         3tyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=npGY86N71VPo4TOfv73Omx9yZ3z0Eb9N82/SaZDWxbc=;
+        fh=l/5xcxP6IkJmfsq4oEzeJ/7U/DxvJr87JTHS+6iU6j4=;
+        b=IPROOaVCUcyphch9SCtwX45M/TQ2WeBsGk8/f/I2Ud6m9Xwyl4QyKgxq1jHpOnLiWp
+         JZUuG2SyiI7Cn9h34XP4XxSpnfe0N7130uRgELrfgZfyQ0TDl04zw+N2pSvB1DHGQfdR
+         6dvTrz82n3t5/xlYb/9YIUK0Yv966gMmLY0VfcuF1hW8KiqlIIxtNZIanZ+oj2Sg+01S
+         ADsOAWjb+iKTXqy9ZKDbVJp3SoE3qta4RsLq56NLM5D7NSfA8irDfXiajnALqmnGMg7C
+         HnFXTK1s0qYpGqv72mD9rX/a2BNU5AFIWhA1JUD0YwTOAN2wRjWNZf10cBbXAbiJxKMI
+         h5Pw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1771858507; x=1772463307; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qpjmdBXuQUotNZnT57UveTMGt/2pk8eLf+dmkyC2/50=;
-        b=UK48vArf08KA5aTQnFg4R6N9JPDKtMRG8jDFipLeXsMcerBwfaMYS7qWhRwaxPFo23
-         MptoD2XxdIVcLFDydvEjFYGs7Iv6O9a8T78ZhMUW90dnuqVOhdQjKF7TQ66radXtAjEz
-         KPjB9YNTD4g2R0HMRhvTAr7uKXETR7/aOQ7fo5pW6rAVsdmhiD/tOhN1sEm0SiWz+Pph
-         ZAfoaey1NWX2d3Ck0cEsmUaNI0aFl0bDWLw8/354ICn2iN7FTcnKjosR+vYRvAiWXjNq
-         eWlDGe+kHfadsPDy3AA3XpawqBVQKcywy/YSO7VHniejTsPmvXArVJ930Jbfl6OMT2iD
-         ofmA==
+        d=gmail.com; s=20230601; t=1771861896; x=1772466696; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=npGY86N71VPo4TOfv73Omx9yZ3z0Eb9N82/SaZDWxbc=;
+        b=Bez0+ejtvpYWPD6Kti1bkjLrHh/4ih0eYIM0CLxjHJVlyC5lHQHjEKF0CNkHaDuEqj
+         cX2cnDEAf7qRrLs8/C3MibBqjq4NnO55kbXTfuH8/Nxx6jwnOMpahcd+BT6S/CdCi1JH
+         KUJtx0cspJycQjPwSfacE7jXqTjOKa2T5ILFwWyAwyTfTP05EQrGoHDnILUdu9FWad3o
+         qbEmW4NoUFk3SaZ6xWr4LES3oxs34gzL9jKWeuyFPeI3DkWSJDZv4Gpd6GKXlNwQMJpf
+         nVxvrZuxvOrPFJhe7ZUNsnwKzjKRrU4q7YjLGxGI51cWL7miac2P1Y9+lB0iWh/Q5Nv6
+         YUlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771858507; x=1772463307;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qpjmdBXuQUotNZnT57UveTMGt/2pk8eLf+dmkyC2/50=;
-        b=lBDEv7H2eQiR6oWe7o8eiLDWR0P9agXd3EQQ4vczO6nv1unp0piRW+xhOc+UE2IkpK
-         VS9oHYXu/am/KcqGFLTfAezN5u+oAQCyVTcDzeokI5wQgPFzzpaVrFoH/0XHgYpXrYV9
-         bBHXYSYyzi37CSa+TA8hgkOmA+MxtQ1SW1Iac8jurZdHQlAlOjLod2QAN6Ltt/hBrgkK
-         dBL3P8CqCV9WFrp6/46SyXVBamMl1CqlagzgJNeyI5Nq1Y6OSuhTzphqZpwTH6CceNz5
-         MR4KnTcCvZYabH6vPQOom2RHrv3ksnkn4dgBAXym9Ec/gOZLiRX/72riqQE/ryFxYgtl
-         FX5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUeeDrnfbEWAUgpCUMrv2CjMBEMC3OT/f9Q3kX2fYanHKQWKFKNCzYw/+vWrLJvnVsWkahkmy6RnH0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyrel4tudRKNqAGHYETRruTdegzZ/ce9CzlB6vk0Qz81lFQ4TO/
-	97jgzDLlec/kpiPON1zcNRHWA1REAKaqXj8xrtCXvhRooy51ncNn2nAtlN2Rol6bzvQ=
-X-Gm-Gg: AZuq6aJIYPxl+WcdgEyuBzUNlr/oCyMKxBvGED7wlkoEugoOK1Y/+ZdS3SPDD7H1f5y
-	ICoVRo8BVXGcn8AcMHj+t7wcdpMaB1/4rWTeKr1ZbPs1ERAkA0Xb6gY3lo+QHF0/qRUpUNWgD8F
-	SMyq6XMe2BqfjZDwNoU+zvYctOv42/p2zkH12G3dz3eVHNBInSHi0utZf2vLJNb3DD7wndhMGI+
-	LdYG8gvVrpjc5xKWDD1EGGev2hEdFy2MKFCJIroxT8fTlKqdVhW6bYOf3h/3NtqyBi5sHDBFHOX
-	M1oUyit57MYhbOcqvxbRlBw0UlXpxnus5E/zvejIN4OToC3LBcctp2I3YNucg20B2ZmzaXWAphy
-	hQ3TiwhG2xVsmD4ytORI4kM7UNZaHPDf2i10PuxD6+KISIwjn88WDd5Fgxs1nGEQtVzw/1FTxt0
-	Nii4KKeAjwWYk+1XyqDIdsZvCOR+oMV+wi9KDyHXR3e2ryMGtWM+iWvVmnOS218FEmmfvVrtV3R
-	WhDz9sQVA==
-X-Received: by 2002:a05:620a:1a18:b0:8cb:3288:6777 with SMTP id af79cd13be357-8cb8ca0e16fmr993255985a.28.1771858506861;
-        Mon, 23 Feb 2026 06:55:06 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cb8d0ebcd0sm845419885a.28.2026.02.23.06.54.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Feb 2026 06:55:06 -0800 (PST)
-Date: Mon, 23 Feb 2026 09:54:55 -0500
-From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
-	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
-	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
-	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
-	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aZxqP7J1kOClQUPQ@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <c10400db-2259-4465-a07e-19d0691101a4@kernel.org>
+        d=1e100.net; s=20230601; t=1771861896; x=1772466696;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=npGY86N71VPo4TOfv73Omx9yZ3z0Eb9N82/SaZDWxbc=;
+        b=TOIO+j633n3pgvF8HOnYrGZcfAXcAj/Z8wgsat8paWXHibQO3+hoClLRJA8EWjUfu8
+         ECAHXHD6OOWJ5SwsdlYYeIGoZw/fzcftnYM1gUv2XNeOHSz1+cEAGJPyYtbpiQk5A2Su
+         u5KICDDcDerQpVv/fWZxnYz9Guf6sMidIMvsm8y7iOHoLsvMV8JPP9YaLWh8LD9czP9c
+         TGRXAgiRKTDC5qvXftd+rSI5OCzoDeww1UN2tR+8sD1FCO1wdJW5AfZYIIIT46aqF1ww
+         fplbVTTluenPDxi62nUJa5M3m+Mbczqkcli7Ej0pRs5sOajGcukDXLwD+aufhrKvsMJD
+         Z4mg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzuluW/4BfWiaH/DMAEL1xZKs8UP3NQwVVzfqi9ogkwp+1dFbW7V+h0GsHix1zHOm8JwIwZ8AkQCg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwudhaZSF8F4X6ty3QNmwS7Qqn3XQ+kK/qsFdzoY7LmkaOTe9jE
+	+ksYaaqjdqhm61MLK7HjeJ4DUgnF7Dnqt9of9EsDWr5nL8nePgK4snq//7TAA/IcwtxeMKt1snA
+	zKAY68+mnT8iAzBRm5O/56gXfnqWfGAc=
+X-Gm-Gg: AZuq6aJDBWO6z2uekzjKo2KfwGYHjjUrmdpk2hNHKT8j3SBj9YvpWhW7+zPAd1VkHkW
+	1A26IVJ7s85iMC+qf1AIFyF9HGPurU+R8Wcc7/C8tvfqAkmZLjKayV60izC9mt7GdYOHdqq+2yV
+	9tGd7JTnOWEk9UYSz6tJVZ79gXldzob4ux0TIGqVEox8UmN1V6M+1ay5GCGOGFXzh9nLhHVCEs5
+	UeFMGY5QRoNKp6SpdMUfYgmQ60kYZBZRCRY1dGNR9wuEeKExv1/Hp8dp26ni+Ox17wrfwxGxpgx
+	mQdDba/aKyUIb0vIZNlc+wNcV0QpnnA/+wtZnunyh9+qMffaivW4EHU6voIX6ax5R73JPFrS7du
+	xAS4IxPY=
+X-Received: by 2002:a17:906:5ad6:b0:b8f:e424:ae56 with SMTP id
+ a640c23a62f3a-b9081badd6emr413937066b.44.1771861895691; Mon, 23 Feb 2026
+ 07:51:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c10400db-2259-4465-a07e-19d0691101a4@kernel.org>
+References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+In-Reply-To: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 23 Feb 2026 17:50:59 +0200
+X-Gm-Features: AaiRm51McMZohKyigNQFIbQDImiJ8vF_g2F0DjapyVKPe6Rkgx4x17MorqEdw1M
+Message-ID: <CAHp75VeWD5A0r7-Uayyte1ZXXxdhLixd+z_y0xNeki0N+Ro=jQ@mail.gmail.com>
+Subject: Re: [PATCH 0/37] PCI/MSI: Enforce explicit IRQ vector management by
+ removing devres auto-free
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, 
+	"Vaibhaav Ram T . L" <vaibhaavram.tl@microchip.com>, 
+	Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>, Even Xu <even.xu@intel.com>, 
+	Xinpeng Sun <xinpeng.sun@intel.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Jiri Kosina <jikos@kernel.org>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Zhou Wang <wangzhou1@hisilicon.com>, 
+	Longfang Liu <liulongfang@huawei.com>, Vinod Koul <vkoul@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Jijie Shao <shaojijie@huawei.com>, Jian Shen <shenjian15@huawei.com>, 
+	Sunil Goutham <sgoutham@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, "David S . Miller" <davem@davemloft.net>, 
+	Jeff Hugo <jeff.hugo@oss.qualcomm.com>, Oded Gabbay <ogabbay@kernel.org>, 
+	Maciej Falkowski <maciej.falkowski@linux.intel.com>, 
+	Karol Wachowski <karol.wachowski@linux.intel.com>, Min Ma <mamin506@gmail.com>, 
+	Lizhi Hou <lizhi.hou@amd.com>, Andreas Noever <andreas.noever@gmail.com>, 
+	Mika Westerberg <westeri@kernel.org>, Tomasz Jeznach <tjeznach@rivosinc.com>, 
+	Will Deacon <will@kernel.org>, Xinliang Liu <xinliang.liu@linaro.org>, 
+	Tian Tao <tiantao6@hisilicon.com>, Davidlohr Bueso <dave@stgolabs.net>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Srujana Challa <schalla@marvell.com>, 
+	Bharat Bhushan <bbhushan2@marvell.com>, Antoine Tenart <atenart@kernel.org>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Raag Jadav <raag.jadav@intel.com>, 
+	Hans de Goede <hansg@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Robert Richter <rric@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	Nirmal Patel <nirmal.patel@linux.intel.com>, 
+	Kurt Schwemmer <kurt.schwemmer@microsemi.com>, Logan Gunthorpe <logang@deltatee.com>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Bingbu Cao <bingbu.cao@intel.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Benjamin Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org, 
+	linux-i3c@lists.infradead.org, dmaengine@vger.kernel.org, 
+	Philipp Stanner <phasta@kernel.org>, netdev@vger.kernel.org, nic_swsd@realtek.com, 
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-usb@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, linux-cxl@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org, 
+	mhi@lists.linux.dev, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Jan Dabros <jsd@semihalf.com>, linux-i2c@vger.kernel.org, 
+	Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-spi@vger.kernel.org, 
+	Jonathan Derrick <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	linux-media@vger.kernel.org, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 23, 2026 at 02:07:15PM +0100, David Hildenbrand (Arm) wrote:
-> > 
-> > Gregory Price (27):
-> >    numa: introduce N_MEMORY_PRIVATE node state
-> >    mm,cpuset: gate allocations from N_MEMORY_PRIVATE behind __GFP_PRIVATE
-> >    mm/page_alloc: add numa_zone_allowed() and wire it up
-> >    mm/page_alloc: Add private node handling to build_zonelists
-> >    mm: introduce folio_is_private_managed() unified predicate
-> >    mm/mlock: skip mlock for managed-memory folios
-> >    mm/madvise: skip madvise for managed-memory folios
-> >    mm/ksm: skip KSM for managed-memory folios
-> >    mm/khugepaged: skip private node folios when trying to collapse.
-> >    mm/swap: add free_folio callback for folio release cleanup
-> >    mm/huge_memory.c: add private node folio split notification callback
-> >    mm/migrate: NP_OPS_MIGRATION - support private node user migration
-> >    mm/mempolicy: NP_OPS_MEMPOLICY - support private node mempolicy
-> >    mm/memory-tiers: NP_OPS_DEMOTION - support private node demotion
-> >    mm/mprotect: NP_OPS_PROTECT_WRITE - gate PTE/PMD write-upgrades
-> 
-> I'm concerned about adding more special-casing (similar to what we already
-> added for ZONE_DEVICE) all over the place.
-> 
-> Like the whole folio_managed_() stuff in mprotect.c
-> 
-> Having that said, sounds like a reasonable topic to discuss.
-> 
+On Mon, Feb 23, 2026 at 5:32=E2=80=AFPM Shawn Lin <shawn.lin@rock-chips.com=
+> wrote:
+>
+> This patch series addresses a long-standing design issue in the PCI/MSI
+> subsystem where the implicit, automatic management of IRQ vectors by
+> the devres framework conflicts with explicit driver cleanup, creating
+> ambiguity and potential resource management bugs.
+>
+> =3D=3D=3D=3D The Problem: Implicit vs. Explicit Management =3D=3D=3D=3D
+> Historically, `pcim_enable_device()` not only manages standard PCI resour=
+ces
+> (BARs) via devres but also implicitly triggers automatic IRQ vector manag=
+ement
+> by setting a flag that registers `pcim_msi_release()` as a cleanup action=
+.
+>
+> This creates an ambiguous ownership model. Many drivers follow a pattern =
+of:
+> 1. Calling `pci_alloc_irq_vectors()` to allocate interrupts.
+> 2. Also calling `pci_free_irq_vectors()` in their error paths or remove r=
+outines.
+>
+> When such a driver also uses `pcim_enable_device()`, the devres framework=
+ may
+> attempt to free the IRQ vectors a second time upon device release, leadin=
+g to
+> a double-free. Analysis of the tree shows this hazardous pattern exists w=
+idely,
+> while 35 other drivers correctly rely solely on the implicit cleanup.
 
-It's a valid concern - and is why I tried to re-use as many of the
-zone_device hooks as possible.  It does not seem zone_device has quite
-the same semantics for a case like this, so I had to make something new.
+Is this confirmed? What I read from the cover letter, this series was
+only compile-tested, so how can you prove the problem exists in the
+first place?
 
-DEVICE_COHERENT injects a temporary swap entry to allow the device to do
-a large atomic operation - then the page table is restored and the CPU
-is free to change entries as it pleases.
+> =3D=3D=3D=3D The Solution: Making Management Explicit =3D=3D=3D=3D
+> This series enforces a clear, predictable model:
+> 1.  New Managed API (Patch 1/37): Introduces pcim_alloc_irq_vectors() and
+>     pcim_alloc_irq_vectors_affinity(). Drivers that desire devres-managed=
+ IRQ
+>     vectors should use these functions, which set the is_msi_managed flag=
+ and
+>     ensure automatic cleanup.
+> 2.  Patches 2 through 36 convert each driver that uses pcim_enable_device=
+() alongside
+>     pci_alloc_irq_vectors() and relies on devres for IRQ vector cleanup t=
+o instead
+>     make an explicit call to pcim_alloc_irq_vectors().
+> 3.  Core Change (Patch 37/37): With the former cleanup, now modifies pcim=
+_setup_msi_release()
+>     to check only the is_msi_managed flag. This decouples automatic IRQ c=
+leanup from
+>     pcim_enable_device(). IRQ vectors allocated via pci_alloc_irq_vectors=
+*()
+>     are now solely the driver's responsibility to free with pci_free_irq_=
+vectors().
+>
+> With these changes, we clear ownership model: Explicit resource managemen=
+t eliminates
+> ambiguity and follows the "principle of least surprise." New drivers choo=
+se one model and
+> be consistent.
+> - Use `pci_alloc_irq_vectors()` + `pci_free_irq_vectors()` for explicit c=
+ontrol.
+> - Use `pcim_alloc_irq_vectors()` for devres-managed, automatic cleanup.
 
-Another option would be to add the hook to vma_wants_writenotify()
-instead of the page table code - and mask MM_CP_TRY_CHANGE_WRITABLE.
+Have you checked previous attempts? Why is your series better than those?
 
-This would require adding a vma flag - or maybe a count of protected /
-device pages.
+> =3D=3D=3D=3D Testing And Review =3D=3D=3D=3D
+> 1. This series is only compiled test with allmodconfig.
+> 2. Given the substantial size of this patch series, I have structured the=
+ mailing
+>    to facilitate efficient review. The cover letter, the first patch and =
+the last one will be sent
+>    to all relevant mailing lists and key maintainers to ensure broad visi=
+bility and
+>    initial feedback on the overall approach. The remaining subsystem-spec=
+ific patches
+>    will be sent only to the respective subsystem maintainers and their as=
+sociated
+>    mailing lists, reducing noise.
 
-int mprotect_fixup() {
-    ...
-    if (vma_wants_manual_pte_write_upgrade(vma))
-        mm_cp_flags |= MM_CP_TRY_CHANGE_WRITABLE;
-}
-
-bool vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
-{
-    if (vma->managed_wrprotect)
-        return true;
-}
-
-That would localize the change in folio_managed_fixup_migration_pte() :
-
-static inline pte_t folio_managed_fixup_migration_pte(struct page *new,
-                                                      pte_t pte,
-                                                      pte_t old_pte,
-                                                      struct vm_area_struct *vma)
-{
-    ...
-    } else if (folio_managed_wrprotect(page_folio(new))) {
-        pte = pte_wrprotect(pte);
-+       atomic_inc(&vma->managed_wrprotect);
-    }
-    return pte;
-}
-
-This would cover both the huge_memory.c and mprotect, and maybe that's
-just generally cleaner? I can try that to see if it actually works.
-
-~Gregory
+--=20
+With Best Regards,
+Andy Shevchenko
