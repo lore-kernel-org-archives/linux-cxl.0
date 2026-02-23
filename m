@@ -1,46 +1,46 @@
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011071.outbound.protection.outlook.com [40.107.208.71])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010041.outbound.protection.outlook.com [52.101.193.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC53330D38;
-	Mon, 23 Feb 2026 17:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE0A18DB37;
+	Mon, 23 Feb 2026 17:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.41
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771867078; cv=fail; b=PJhx8p0Xiaxy9SrHV3V9cdlQf74CCpSdJGrL1u7tEvyar/KvItg+tJ2UaZ0rHO+jHeD8J0H5iWg6aN4Q8mY0eq3McyxZ6OoJqwZIA6dSSEMvQAo4Dqsm/FfgmuvH5/3VJvwzbSqeBcKWp3/1cs9bZJBTlfNZ/E27qKZdbuyMcKk=
+	t=1771868009; cv=fail; b=t+ZiUGfpEOwGtVmj2wvayFIot5RHzivB5iJW2lKu0z3HtmpK0Gb8Enid68UYuts4XgvUtiPX4/MZ4f/EyEE76cuOEtcooJJ0QyrvoeWjoqbtYR400OGmT5DWvJhwgpkSYp4qhr5KxIPkCoSgnUF7jxxSzUe5+TGAmhtaefRzH2M=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771867078; c=relaxed/simple;
-	bh=3/3h2ERoFsCoWFElWa1VevwIM90Kgp6HXUlXxoWNbjI=;
+	s=arc-20240116; t=1771868009; c=relaxed/simple;
+	bh=hGrfxsh0wQGPoOng+d2EoCY5NMgnGR+heGROHWSJ5Nc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Fh5v0eUyog+/AALL5q6eA+wn8f1tRAhyHm3ghSTn1xzkO/o4Zbd9gt1O+xtOxxS1fultgY71qrzp3a0CTqapOB6aESjXQmZswdk4eG6q5YxVQ+t3oCaTBTGRWqAuExfn/z8N4UgtGIjnPmwcXqSsft83o83HEjfeCiOXh1GC8io=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Hmx7zPfz; arc=fail smtp.client-ip=40.107.208.71
+	 In-Reply-To:Content-Type; b=lJLqf7R7Yh3WZbM8gEVUMvBnZgRu8q7QN8em2UYVpCR4h2JhLeR4EywKBQp9VI6plmLRTMqhuVCb4yjhTFv6QqPn8Fz/nCJrH6OC5y5k8ka/xvEPVFPOBXNSjrcZJvf3aufV/YUThFoVOU6SnesCJcesv1wde/oPhUPTe7vHErc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lh1U4scp; arc=fail smtp.client-ip=52.101.193.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Hmx7zPfz"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lh1U4scp"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KsXCg/GxpmB6Gh5NAUmHU3KcNBQ3USyXk8twZyX+ySS+cgXMtbhqnVqBk6ctPSkYg1ccNx1rYiW2oQaIpqdpWcCWcHeCBbec8j2oel0021VQBa2xhMZe7l2i8jxMoMGCDbDmXnO7qkV1Mbx8IlasWaF2mVLfLXmWhl/qO0FuUnhrIEnxTFXd7q3dMqmjoyBn71j9U7T+Fhl4siy+LwbjAHjfbeCUCNqRklkgc1qWwElhnYpDObJbGrtWQYgrYeG+JBkDnLwHkHAvKpHQXB1jIk7u3Poeollw9VZHi6GVM/Lwa515dFUudQFxBdube/tkzLeciqpn1uBbzUxCRS6WAg==
+ b=myNoMW1TDF8PKDz54MONPybD5tzC9m5V5gZ6bZzdAqg5XXUk0oIddTk4aGBO/gEil7CNdVDtMmjUZH2gwnsuvMwHq3BX2b0VrSDvy3tzmuLylQ2y0g+8XZVnGGYWZXCU7VAlcEtQjd5GgBHU0XlXQL91AzMmWbjXP+rKGPpPbtHHt3NPhxpe4/chc5wIn+bvPwD4xh0KBklVeWBF7dQl/7aGQK28gglT2Q7FYmx5hdi8EKM3NZ5eQ0oudj+Mn6b0+xv0xAn3qe9m17cS8Q7ZaoNCJV+8JR4+f5ZGJA1qNySRw1mA6k+My0/Dx63INyAI9Use+yToTmUwXXpODihbdg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RAzWJbM7OQaueOQ+W03t4HPDZjEwxYkzgxpnswl9i+k=;
- b=o8cBXgBBzNnmxlAvkSm2soDPNVsUsf5cYsMK20G/jrtKzFvNKZSifc3ehkMwh6mbK4ubU+K5k9MlMAOOSlcIQPPDCCSTBaIpthmcqBpfvGcLKIc3/hZnCIY3hdbyUr78sbsy9mO6aQHi0hh87UujNle8vp3vqOBITiqM+A1lEVLiYv0UX+PB8+FJF1iPBO97w/SMkLh07hHeOmmwdATbU3NQfdJls/fCq0jXRZXxzqlF6zQUKzkAmsVy/4Ze2DjLhIJO1j7SxB5l9DDMyduiu78a/6oWX1YOxsjKI8HBGcTUjXpqi9trLEvfsA3ljxW3uOj1wGGOuSgeLEVlRoVS1g==
+ bh=zZtbhSOvXkPHUy5IRT177yTXW+fzfhxMUPoe8O5RYHc=;
+ b=n7aYDxSI/AiRaIOEaKc96TT2kE7+eF0JL6widNNxLpiWDld2aMHY6rHPK3nFscbSLlWCMwOwBARI71q2QdfazB0/m+y9Oq2sMDvlguIWlhv0/qXme5kF1Ps/Bji7sNsIjcsC8o6yp6amFIBx/dA8FSLl0PJUgbkxeTiT/Inj6QO1lT8wiRXGU/skEMU9whfNJsLgD+s0m3orWpUtSHLAWMC1EjY2Dk8Xl9B7KzqB8cUiKTcy96IzNUPWQlUMjnCr1vPXUz1i4RFHhTWKnh/gLpoBfGdp0YfjKdZ2yLx86CHD1JpXpG6sosP/Nhb5L97gGTrJrZjYhjLhvmu06p09Bg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=ilvokhin.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
+ 165.204.84.17) smtp.rcpttodomain=gourry.net smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RAzWJbM7OQaueOQ+W03t4HPDZjEwxYkzgxpnswl9i+k=;
- b=Hmx7zPfzSEeWrIlhzIkTfEV6c9VocLTaGscRw0UFUCIMoRsrWaBacmXFR2tqMIJxQZle7CJZwjNcYV6lYIU6XpmUJdWno6jzkS8vwceZtSj1QHcqYl4V0gJ8JjH9EfeQkRbLQKTtGcsOqQVWxW6ukJtSL7oQJENwg8oLGp7zQVI=
-Received: from SA9PR13CA0044.namprd13.prod.outlook.com (2603:10b6:806:22::19)
- by CH3PR12MB8972.namprd12.prod.outlook.com (2603:10b6:610:169::11) with
+ bh=zZtbhSOvXkPHUy5IRT177yTXW+fzfhxMUPoe8O5RYHc=;
+ b=lh1U4scppXltHjbIvQkoc3wZvpj8FjyAY7e/ITlgdvS55Q9WrSHJz3caZz9roGlLThtQo26Am6aJeiClzGfQwt3d/BvkGJDTcN/l/HI9s/zXPBODINgMX+bbYj1eWPKkBR39HKASmUC+tmk7SI4COp6pehvjxALCD13KASehxJ8=
+Received: from SJ0PR03CA0038.namprd03.prod.outlook.com (2603:10b6:a03:33e::13)
+ by BN7PPFEE0F400A9.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6e9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.20; Mon, 23 Feb
- 2026 17:17:51 +0000
-Received: from SN1PEPF00026368.namprd02.prod.outlook.com
- (2603:10b6:806:22:cafe::cf) by SA9PR13CA0044.outlook.office365.com
- (2603:10b6:806:22::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.20 via Frontend Transport; Mon,
- 23 Feb 2026 17:17:54 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9611.10; Mon, 23 Feb
+ 2026 17:33:16 +0000
+Received: from CO1PEPF000066E9.namprd05.prod.outlook.com
+ (2603:10b6:a03:33e:cafe::6b) by SJ0PR03CA0038.outlook.office365.com
+ (2603:10b6:a03:33e::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.21 via Frontend Transport; Mon,
+ 23 Feb 2026 17:33:02 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,15 +48,15 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- SN1PEPF00026368.mail.protection.outlook.com (10.167.241.133) with Microsoft
+ CO1PEPF000066E9.mail.protection.outlook.com (10.167.249.11) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9632.12 via Frontend Transport; Mon, 23 Feb 2026 17:17:51 +0000
+ 15.20.9632.12 via Frontend Transport; Mon, 23 Feb 2026 17:33:15 +0000
 Received: from [10.31.207.109] (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 23 Feb
- 2026 11:17:49 -0600
-Message-ID: <c13e340e-74f5-4a66-8fa0-d307ee5ea0eb@amd.com>
-Date: Mon, 23 Feb 2026 11:17:48 -0600
+ 2026 11:33:14 -0600
+Message-ID: <85d7abf8-3b3c-4199-a680-1453f77b3fd5@amd.com>
+Date: Mon, 23 Feb 2026 11:33:13 -0600
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -64,174 +64,139 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] mm: zone lock tracepoint instrumentation
-To: Dmitry Ilvokhin <d@ilvokhin.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<kernel-team@meta.com>, Andrew Morton <akpm@linux-foundation.org>, David
- Hildenbrand <david@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
-	<vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan
-	<surenb@google.com>, Michal Hocko <mhocko@suse.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Brendan Jackman
-	<jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan
-	<ziy@nvidia.com>, Oscar Salvador <osalvador@suse.de>, Qi Zheng
-	<zhengqi.arch@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>, Axel
- Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei
- Xu <weixugc@google.com>
-References: <cover.1770821420.git.d@ilvokhin.com>
- <06b2a2b6-d5c8-4522-8e22-10616f887846@amd.com>
- <aZyEctoThn0anlz8@shell.ilvokhin.com>
+Subject: Re: [PATCH] cxl/core: fix test_bit misuse with CXL_DECODER_F_ bitmask
+ flags
+To: Gregory Price <gourry@gourry.net>, <linux-cxl@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <kernel-team@meta.com>,
+	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>
+References: <20260221021810.1390342-1-gourry@gourry.net>
 Content-Language: en-US
 From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-In-Reply-To: <aZyEctoThn0anlz8@shell.ilvokhin.com>
+In-Reply-To: <20260221021810.1390342-1-gourry@gourry.net>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00026368:EE_|CH3PR12MB8972:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0a21cfff-da7d-4d91-0965-08de72ff7980
+X-MS-TrafficTypeDiagnostic: CO1PEPF000066E9:EE_|BN7PPFEE0F400A9:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5695ff80-2a53-4029-c39e-08de7301a08f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|36860700013|82310400026|13003099007|7053199007;
+	BCL:0;ARA:13230040|1800799024|7416014|376014|82310400026|36860700013|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NXZBNGRnNGp2c2haaHZlTGNEcWU0cDBFTzcxNFR6bmhWZjVEOG9hNXhUMmxN?=
- =?utf-8?B?SWNOMDlTOXBCSWVKaFZPelRzdUJ5RlRLQWNpaXYrbVBaamJ2eXQxb0lWcS9L?=
- =?utf-8?B?RzA3VjFDMW5uYVdtWVZ3VkFOV1NheWJaUG5CQko1c0gyUlRLYjl3WHBrSSt3?=
- =?utf-8?B?WTRpZFdjN1lxVWVOMEg0OTRtaWpocVMzclh3K2trSWRHVEE1YlE5WDhDdzdx?=
- =?utf-8?B?bG9WbUZWWDg2WHRWZTVKZGRTUmU5S3VYb1J1RlJEZXh3T3BMcHpxejlHeVZx?=
- =?utf-8?B?ZWRUQzFYbWs5ejhIUEZzdGcyZE5PVlVGZE5NTUZpK25NYWVuODZtMFlWMy8y?=
- =?utf-8?B?bEh1aXBVNjgvMGlUL3pBc2txMlMxSG91NWV2Y1VKVldxa3YvS011ODluckxw?=
- =?utf-8?B?R0t2UTBqVmdUSE5jOEVMZngyZEpxRW1nTnFFTlZ2Nm90ekRUdURSRkozK2gy?=
- =?utf-8?B?bzdrRUlUajhsdmlTRmkxV0Z1WXRTdGRaRUNrUE0xclpuNmVXaWNYRHNoY2hn?=
- =?utf-8?B?Q1FGbkFuejdFZEJiZFYvaENvRVdxdWVpVXNreE9xRVhONXFmL2dIZmwyTDFj?=
- =?utf-8?B?U3JVQ01BSXF2NnVQdUZnKzA3Yjlna0FSUlQ2aTgyZGJBVVRrQnVHYityTnZI?=
- =?utf-8?B?ZXVBdGR4RUdFNkRmcjhuQVFiOUpLN0ZINVNBZVdFV0pMZE5ZL05oQXBxaTh4?=
- =?utf-8?B?b1JSeXVoSUc5NHp5WWVvampLQ0JHa1BzVDhXT1ZCSGg3a280UTZ3NUtkVzVt?=
- =?utf-8?B?WWtoYXpqd1I0KzI5WXVveGNLL0pldWtDODBDTFJVaGRBcndxZiszYzQ2UkFF?=
- =?utf-8?B?WmRmRGNJamFBeGU4VkU5SlBFT1cxclNVbDlZMjNIUHdINzh1VUcyUG9DcWRO?=
- =?utf-8?B?UTl4RGZTVHNJQ2xITGFGSG1ZMXVnUE9NMUs0YTgxcG1HZjBCSlhmaVhsbTQ2?=
- =?utf-8?B?U29mc0V4dlY1cWMvUVVSQ0NtaVpqdnVRUnFLSExET0t3Nm9rcTZBRytReDJE?=
- =?utf-8?B?dVRWVXU3ay91cnZrbElQZ1JuWStYOGlwdGgwcWgrZzVOSDlxZ2RTeVh1d2Zp?=
- =?utf-8?B?ZXVYblJJcnFLbmtGYWZEZUFGZHpTTWIwcytJS1QvVEp6UDlpQmpST0ZBb083?=
- =?utf-8?B?S0FCQ0Y5ZjhCbjV5ZVRrT1dOZHE2dTljeDYxc2FkbHNzcS81bUhMSEQ4ZUxn?=
- =?utf-8?B?NGZ6aC9ZSEJjOE1uOUlRZFdaK3JhdlFMYmtNZ1UzWXpIQVNzMUFGRWI4R3hM?=
- =?utf-8?B?UnF6Q1dxTUhNa0NqdEhxaXQxbWY5d3ByM3ZxdG5FSG9BQVNnYkoybFdOL05J?=
- =?utf-8?B?bjJVaTh2TmJHamxOeEFleVBNRUc1bzNrMjFCckJENVhGSFVBYzVqRlZkYlFT?=
- =?utf-8?B?WUFZbVZpRFJpSVBGM1pncVByUUNGeWdZUmhGRitJRGpPV0EyRDQ2azhMbFRW?=
- =?utf-8?B?cjVyN3hHNFBOelh1MEM4Ti9GODI5OGZBL0w1ZE5zc3UxdXNGdDFIZE4xd1g0?=
- =?utf-8?B?WHRPQmNDd0d4NGthUlpYY0dzNGdoTGd1bVIyeGV0WlhMaktTSHBhampPWE4w?=
- =?utf-8?B?a0Y1QWNQbWZ5eVIwYVRob2E3ZzluUjFSaWpDSmlsWDhSUWxWVXhGQzVQT3FU?=
- =?utf-8?B?OEVVMVJuSk1PNGVBcHRSSlNDQnMzRmZqcVRoQWtoU0I2WGRiUklXa1NxQmN1?=
- =?utf-8?B?Vkp6dnFXZ0lrM1YxOC8rSnUyWTdpNmpkU0JHVzE3S21HQlJTTERWUEEzZWNi?=
- =?utf-8?B?SlJ1dDVMTnpsK3ZRaWVTcEsxWkFZZktTY2RmSFp2dS9sZXBxemNtcm93Z1F4?=
- =?utf-8?B?ekttbjRISk1UM2ZFUk9nZUZzanN2ekg2bnN6QnVBVHVnQ3Nuc2VjMXlBbFZT?=
- =?utf-8?B?Y2pyZ3hzOHZJNG5ibHgwR05HVmVta0hpd3JnQkFLT3NMMU9SZFhROU9QeVV2?=
- =?utf-8?B?MG1pQ240Rjl1QXZkTEQ5SmhYYlg1eHJYVW12aklnY3JvNWFNazROUW44Z2pG?=
- =?utf-8?B?andxTnM0cWg2VFJzT0FCUCt4U0FtdWZ2SWpzYXQ5TCs1QzA3R1ZWZ3h0elRU?=
- =?utf-8?B?U0lhK3FuM3R3Tm9CWENXRzN0d0hJbW9oWXVJejVWMWNHVWRhenVuZTg3c2FP?=
- =?utf-8?B?L2trRHNLbUhxOTVncFFHTWIzVUhSdXFxVkcwUTExWDJwenBubnFqSmU2YXBT?=
- =?utf-8?B?UlVvY0lESlJJVXcyaVVYUlJuWGxVQlhqangzUDA5MjlXTTFWTTJmUkxUQVZt?=
- =?utf-8?B?TGlLbXNuaXVWS3dzRCtCMm9HTHJRPT0=?=
+	=?utf-8?B?T3p1UGJRa2Q5WUlkbkFJMDh3Vk5mOGxQYy9tQy85R2p0ZmN5bHRPVDdBQ0kw?=
+ =?utf-8?B?ZldpZ3JLbGs0K01GdlA0MjJJL1lkZGk5MXhlRmdlNy8vUWpFa1FDWHJCMS9j?=
+ =?utf-8?B?eVVUb3lPdUttTDg3dHA1VkVUVFRGelhzSitYYVd1Zkp6eERlYmNoRTJ2R2tk?=
+ =?utf-8?B?OWJrNEliTVRlenR0d1B1NXJVL2w2di91akF0NFAvK2d4QXVzWld0eldkaHhu?=
+ =?utf-8?B?QkhFVGxrMGYyUjJVaFg1Rk8xN2xjaCt1TkJQQ0FVcGFmQmFNVDMrU0xPcXJN?=
+ =?utf-8?B?cUFzYnJDWngwVWc1YzVFdHR0b0t0aldnb1l5TThmT1dmbU16V3JHUDduWXkz?=
+ =?utf-8?B?ZC8zeklFMFl2c1hHbHBOZnc4TDIrVnQ1U0l6a29SaUVrUmlsTmJtL0Z2TE04?=
+ =?utf-8?B?aVA2aVdlaUVSWjlQS3o2dGdaRTJvQWlmQ3Z0ZyswODhVLzFhdS80NFpYY3do?=
+ =?utf-8?B?ajZDazRxVkpQY25XQnFWNUJvdC9RTVVjK1hiK2RvTm8xRUk1VGJCcm9May8v?=
+ =?utf-8?B?Z00vNTEwMDUxNVVRVEkvTHJFY1Y0SXJoY09ucDJTZmJRSktjWDR5ZnFibm14?=
+ =?utf-8?B?OXhQZVNIbHdZWVVWdERTY2REb2t3MENTUDdUR0V6MU40ZHhtSXQ2YkxpRS9h?=
+ =?utf-8?B?RTlqeVM5SWdvUHB3dVFUS25rMXVoNk5xTDVSbjNFbDBBR1FKT29kOHRCQkMx?=
+ =?utf-8?B?UUs5NHI4amxHY1d6cFFZYmwxWjFibGxMdGtzbHVIWUx4c2hpVktwV0xWOERp?=
+ =?utf-8?B?Qkllb1Vpemxac2E2SGl3bU52WHZIY0lOekxsMnNBR29xeitjbWdSK3p1VVoy?=
+ =?utf-8?B?cnYzcXByUERMeDFOazdxVWE5V0dMUk8vS1BhQVJsNit2WjFnYmhOSWcvdXh5?=
+ =?utf-8?B?engyUFBERkNLWS9XQXFGVDROdGNVMEZaV0c1bHNMZlBLcTlySFNXeG1SdTV1?=
+ =?utf-8?B?bWt0NVNsUU8xRExPd3p2SFJJakdpT3N0ckVtNjQybVdPWndZTHpuU1llYnFj?=
+ =?utf-8?B?NWpXNFdaNFpmbDl0MUxXWTd5R2Nqb29ZczQxZUpXdTBxOEFtdGtTdSt0ejBl?=
+ =?utf-8?B?UENmVzY5eHhUaEVWZHNuWmh3d1dkTVVsd1dYL2o1UlRQalhMSUhyNkY4K3Jl?=
+ =?utf-8?B?bDRiQ2pETlcrMWZaU0tYelZFTmdvckN0RUZoL1dFNmNQRnc1dzJBZS9USENv?=
+ =?utf-8?B?WmNSYWt4VWQvUjJ4Q3BRWHNXdGUvKythT0hOMCtlK0NGTmdvUnJ5MUJVOFpT?=
+ =?utf-8?B?ZU82U29PSFBYenh6dnlsZndqSXlNcTkzNlNKR01iYnEzc0tlRFdYRlNySjVr?=
+ =?utf-8?B?SEk3bFowNUM1QkpXdkZuUzY0cDc3KzgvVmNid3RDZ1ZobHZWNEhMaFBKK3Vn?=
+ =?utf-8?B?anQrQ1B3eWZ2ZXgrdzNRYlZMTUNxdnRQRDRxc0c3VnNnTjRBRC8wTmJYT1o4?=
+ =?utf-8?B?Ui9CZjVqSnhQa1JmZWEzRVlvUEljeXB5dGhOQWdtcFRxVVNVYktFWXc5b1Rv?=
+ =?utf-8?B?UTU2QjBXUWhpbldvZ1h3RkIxR2ExYk5QNDVFN0R4SUpiYlE5UllIYzU3RCtM?=
+ =?utf-8?B?Yzh1SlNsSG1KUUNlRUZWd1NvaytzRXYyaHlETXZwQ3hubkE4cGs5YjFYajlX?=
+ =?utf-8?B?OVJIaGRzYS9GakYrNlRkZEJ2cGVvOHc5aXZGSzE5a2NNZjhyU21MOEozdG9n?=
+ =?utf-8?B?eTdzTFVOR3FYQk1SYmhabmpuRWF4bmlzaEVpWWpBdlIvVHh5UnRCZGtISDkr?=
+ =?utf-8?B?Y1Nob3VFa2xJSjREREwvTjdUSEUvL1kzekFKNzZXZTZGdGU2M0ZFMkY1USs0?=
+ =?utf-8?B?SWxtbTYzVnNsTG9UcnZFMWRwUFJ6Rmprdy9SV05QVjA0d1dMcmJaN1RpcTZO?=
+ =?utf-8?B?clpxdm1XOW9wa1BnL09lNDdXclA3NG50cmhiNDVHS0s3TkZnZXduTnBrQ0Er?=
+ =?utf-8?B?bE41RnRYRVZXODZIdTh5SHBsOUhsWVFkZUlIbThCS2R0ZTNLR0FGSjNLa050?=
+ =?utf-8?B?MzFkSE5HR2ROV0VhSW5IVkFSV3hvV3FiNUUxRmYweWZyY0xhUHFHRUdjT212?=
+ =?utf-8?B?MWk3R0dlbkwwRXlmTWdHeVUzbFdFT2hPOFR0My9pOGM3djM2eXV6N3hISHRW?=
+ =?utf-8?B?RWtlT1pqS3QxUFllUGxMS01Ma3hsMEdvZ3E2YmI3S01iZmo3YXFBL3JON0o4?=
+ =?utf-8?B?bnBOUDVoT3dXVm1VcjJLWjJrelpNU1duZmZrM0lCb2dPWVUxc2Nrc29SMmhP?=
+ =?utf-8?Q?q7zn5x+5cxoMqE+l0ZrWBjF1wd7jbfzbOuA7u2vs4Q=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(36860700013)(82310400026)(13003099007)(7053199007);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(82310400026)(36860700013)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	z8eCtQadELFLqs16nLk6HRRSxLjUrK2Wzl/FYyIM/HtlOPq8UnXH0Rr/kjIlXlC6YH1orH6YopkI3DJbFtrnOERsIVI0DDgWqVeIO20VGhF6D/1JVp0/ODpJViAjnJ1PDnj4f1YLOQs9g4VSuIFiI3smlAqlFVsV16WnE33auU6bNYHhEibR6gtUjXAfrxKDBaxI7N0+YjpORXHAxY3ZJannCnw+Lut9BbVElvfvDlSVm/mavzosLvETd/8Cc+wKuJHqpWk3wVHjfOccSzWeH+bC5ER1iadsDusfvunOu5EX/gIDpDwuGuzS+BOu2/k8BuDMYdT59fArVqu6tYGrftJWxrXPi7Y4jr+bAHKIGrdEJ8+LOxD8M/QL3ipkXkmsAoy8KY1OURj72eWa2UVStEb9+Aq0Q+cxKiKWiG0uNSO4RnvmbPMBI3gB+HzEEPCd
+	jNcCUzL6iO7E7B7lmYd8KMA0jp8mKmXppKE3kxI0gJ3EVhD/syT83yWfb8hlC03Reqnf1u9cxf5BSl2vwWqB0QTWk4nJOip6QudE1Idmggb8HrrAk88RVfLnO+U2tZRy4Pb69l/kFiy+G4WnwJnPmuYj+3qZJbiM65vQgIyZuPSQV/L8RyQAyePBgJFJ28Wt8w3HND/fRtNyevBEubi/3H9l4SoJ+g6G3Lu+LZQDVQ/rcJh5u6IF95ZhYt58csdI/T/t1PjOsbpB4XdMm6fDBO1aSQgT06VND2Vsn7bxfV91JounpKBnkhVdjl6U7qThfzYEq4J0HGOx9tIWwpbtq6EsGF4OsKuZUxp4UcohcTmq3iU7oPm1zU1Za/6CON058gmo9LD9UbfyCsZ3xmfQXkx6Uv4oTwRzA7NfE0eAFzva2U6B+IBi3VfO0Ah1S6Ud
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2026 17:17:51.3437
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2026 17:33:15.8351
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a21cfff-da7d-4d91-0965-08de72ff7980
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5695ff80-2a53-4029-c39e-08de7301a08f
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00026368.namprd02.prod.outlook.com
+	CO1PEPF000066E9.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8972
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPFEE0F400A9
 
+On 2/20/2026 8:18 PM, Gregory Price wrote:
+> CXL_DECODER_F_LOCK (BIT(4) = 16) and CXL_DECODER_F_NORMALIZED_ADDRESSING
+> (BIT(6) = 64) are bit masks, but three call sites pass them to test_bit()
+> which expects a bit number.
+> 
+> Replace test_bit() with direct bitmask tests, consistent with every other
+> use of these flags.
+> 
+> Fixes: 2230c4bdc412 ("cxl: Add handling of locked CXL decoder")
+> Signed-off-by: Gregory Price <gourry@gourry.net>
 
-
-On 2/23/2026 10:46 AM, Dmitry Ilvokhin wrote:
-> [You don't often get email from d@ilvokhin.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
-> 
-> On Fri, Feb 20, 2026 at 01:09:59PM -0600, Cheatham, Benjamin wrote:
->> On 2/11/2026 9:22 AM, Dmitry Ilvokhin wrote:
->>> Zone lock contention can significantly impact allocation and
->>> reclaim latency, as it is a central synchronization point in
->>> the page allocator and reclaim paths. Improved visibility into
->>> its behavior is therefore important for diagnosing performance
->>> issues in memory-intensive workloads.
->>>
->>> On some production workloads at Meta, we have observed noticeable
->>> zone lock contention. Deeper analysis of lock holders and waiters
->>> is currently difficult with existing instrumentation.
->>>
->>> While generic lock contention_begin/contention_end tracepoints
->>> cover the slow path, they do not provide sufficient visibility
->>> into lock hold times. In particular, the lack of a release-side
->>> event makes it difficult to identify long lock holders and
->>> correlate them with waiters. As a result, distinguishing between
->>> short bursts of contention and pathological long hold times
->>> requires additional instrumentation.
->>>
->>> This patch series adds dedicated tracepoint instrumentation to
->>> zone lock, following the existing mmap_lock tracing model.
->>>
->>> The goal is to enable detailed holder/waiter analysis and lock
->>> hold time measurements without affecting the fast path when
->>> tracing is disabled.
->>>
->>> The series is structured as follows:
->>>
->>>   1. Introduce zone lock wrappers.
->>>   2. Mechanically convert zone lock users to the wrappers.
->>>   3. Convert compaction to use the wrappers (requires minor
->>>      restructuring of compact_lock_irqsave()).
->>>   4. Add zone lock tracepoints.
->>
->> I think you can improve the flow of this series if reorder as follows:
->>       1. Introduce zone lock wrappers
->>       4. Add zone lock tracepoints
->>       2. Mechanically convert zone lock users to the wrappers
->>       3. Convert compaction to use the wrappers...
->>
->> and possibly squash 1 & 4 (though that might be too big of a patch). It's better to introduce the
->> wrappers and their tracepoints together before the reviewer (i.e. me) forgets what was added in
->> patch 1 by the time they get to patch 4.
-> 
-> Hi Ben,
-> 
-> Thanks for the suggestion.
-> 
-> I structured the series intentionally to keep all behavior-preserving
-> refactoring separate from the actual instrumentation change.
-> 
-> In particular, I had to split the conversion into two patches to
-> separate the purely mechanical changes from the compaction
-> restructuring. With the current order, tracepoints addition remains a
-> single, atomic functional change on top of a fully converted tree. This
-> keeps the instrumentation isolated from the refactoring and with an
-> intention to make bisection and review of the behavioral change easier.
-> 
-> Reordering as suggested would mix instrumentation with intermediate
-> refactoring states, which I'd prefer to avoid.
-> 
-> I hope this reasoning makes sense, but I'm happy to discuss if there are
-> strong objections.
-
-No that's fine, I figured as much. I just wasn't sure that was more important
-to you than what (I thought) was a better reading order for the series.
+Alison sent out a patch [1] two weeks ago for this. I suspect you found this bug
+independently, so I figured I should point it out. Otherwise, I would add a Reported-by (or some
+other tag) with her name.
 
 Thanks,
 Ben
 
+[1]: https://lore.kernel.org/linux-cxl/20260206181404.1025991-1-alison.schofield@intel.com/
+> ---
+>  drivers/cxl/core/hdm.c    | 2 +-
+>  drivers/cxl/core/region.c | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
->>
->> Thanks,
->> Ben
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index b2db5967f5c0..c8fcb9d9aa3d 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -904,7 +904,7 @@ static void cxl_decoder_reset(struct cxl_decoder *cxld)
+>  	if ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)
+>  		return;
+>  
+> -	if (test_bit(CXL_DECODER_F_LOCK, &cxld->flags))
+> +	if (cxld->flags & CXL_DECODER_F_LOCK)
+>  		return;
+>  
+>  	if (port->commit_end == id)
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index bd4c4a4a27da..385be9cb44cd 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1100,12 +1100,12 @@ static int cxl_rr_assign_decoder(struct cxl_port *port, struct cxl_region *cxlr,
+>  static void cxl_region_setup_flags(struct cxl_region *cxlr,
+>  				   struct cxl_decoder *cxld)
+>  {
+> -	if (test_bit(CXL_DECODER_F_LOCK, &cxld->flags)) {
+> +	if (cxld->flags & CXL_DECODER_F_LOCK) {
+>  		set_bit(CXL_REGION_F_LOCK, &cxlr->flags);
+>  		clear_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags);
+>  	}
+>  
+> -	if (test_bit(CXL_DECODER_F_NORMALIZED_ADDRESSING, &cxld->flags))
+> +	if (cxld->flags & CXL_DECODER_F_NORMALIZED_ADDRESSING)
+>  		set_bit(CXL_REGION_F_NORMALIZED_ADDRESSING, &cxlr->flags);
+>  }
+>  
 
