@@ -1,138 +1,98 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF2A37B402
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 22:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB44C5695
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 22:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771886174; cv=none; b=Lb65ALVE89h+9HKIqLWtEmshenVBbjR9mQQzzadm72wM1en2pdnv0LzvW4EGtaj7KFwOLz/bCtKdVCRRldRmYw/i+rRwM6l8Qq4YTLPVgpVy0lSTn+ipujT21gcFpBBCSu21K2n72nYr48bJp2Vq6GXUguXKGot3cQbyR1DXJXA=
+	t=1771886262; cv=none; b=qD4qkDLgCFmA4KKxuWp2WZ/2zaSoHUDOCFSJWL4ekrYP3r5a2rGsUSCpNKC2LUvDQuXz7kDH61CYdXZqbVyAWKgGxXnfZ9H7Z/h2yjfEs5Rniwl1Jwz/pqGfWFL/b9js8oWCsEa5GEIN9gILdTLqsDiJgGRiQCjHSIkcPKU8Qf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771886174; c=relaxed/simple;
-	bh=c/MpV82BwZq4fsF7sSBWV0E8/a0M5n/zUgz/nHjkPag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gMLJjT841jIAM/0BEYQZhoaYCwpvIsTGfnSERnPXa4LaVcQIUnrh2yiiM/vmDNpo8JQ+biaGqSqqRfjP4ddpH5+QtMwOpt6e/i0i46+QHocanp33yooZZ50u2mk97pP7gRqmdneGyxXkeBhA55HNLw+nVR95+WMWFSJhGP0Kvwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=w7O1/gGx; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1771886262; c=relaxed/simple;
+	bh=rYkrP3c3aa1mFsFOUsxSdPLocQmUBcOI37VeaTkUHkc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=n52PFXeBOwuV2PzKAGLvgDE/i3Gurx/DoQgKs046ypYgj0QlsBVKzXY2p3gUw43A4cOBr2xvKpKaKGUnIweX1ozmBwKVJu6gvgwgKwWCQmqGIOfLEBZpvyIekcJJyF5bvdxjLxwQoKF80L/w4Wb5vR8GfoOeusmEDIE2PtkJzBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bbbOLq1L; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="w7O1/gGx"
-Date: Mon, 23 Feb 2026 14:36:01 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1771886170;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zDZJJyZ7IybQJkD08lIeKoohpnEfHBOokZpr1hipx2Q=;
-	b=w7O1/gGxpf9KkaRXmd2zY7VV0wWYJo83dYPGj/+G+/IdNRODXsASEMfSMzbf6UqJzTJtXb
-	uKsU3rGDFmM3JSX/ore6gYZl5pl71WTCFXVlR1ykXPUVrp2YAv27KiAG1cKfMRCgwlqUn8
-	iltCqg+uxvPUp31GSbs0/+GFH+eO7js=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Dmitry Ilvokhin <d@ilvokhin.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
-	Oscar Salvador <osalvador@suse.de>, Qi Zheng <zhengqi.arch@bytedance.com>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH 1/4] mm: introduce zone lock wrappers
-Message-ID: <aZzWNM06gNYKDoQW@linux.dev>
-References: <cover.1770821420.git.d@ilvokhin.com>
- <3826dd6dc55a9c5721ec3de85f019764a6cf3222.1770821420.git.d@ilvokhin.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bbbOLq1L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771886261; x=1803422261;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=rYkrP3c3aa1mFsFOUsxSdPLocQmUBcOI37VeaTkUHkc=;
+  b=bbbOLq1Ldx2jucbi5nf0j+dZOoKlUwAfm4yYztNR5AVC+G0BZ+sivthi
+   6SiryCkNYe6oNYqawFoOjFkcIDW2FOdpLcvKL1c5+2Rp6WdDDn04y42Rh
+   KRtfldutczPGwWMea6dIT4+xiJXXgW/zK5/Ku2M6lJZLhJBsvncbn8ffj
+   MTaffnJMExGOcu56FCfYht+DCSPwzuQ/mdj+kltearNUlPnWWNdrwICez
+   Q9vSAWkB60cHzyCbOFQSbneor1RzDcrbPNhs7RM7X32YsgZPv7Y3idP4r
+   7mXq9PhI4fIZiANDR8SKO8R6wxP27w2w4+K0nVGtgFW6FVg74UO4F7ZzC
+   A==;
+X-CSE-ConnectionGUID: Sz4vuX+NRc2noJ9QIBf4nw==
+X-CSE-MsgGUID: 4qxNXAwYT1WqcqjdALYRTw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="83216046"
+X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
+   d="scan'208";a="83216046"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 14:37:41 -0800
+X-CSE-ConnectionGUID: kcaWZaAbRU+nhKNSZipqoA==
+X-CSE-MsgGUID: DIlak2QHQzmbzKem7vmbTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
+   d="scan'208";a="213050142"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.227]) ([10.125.110.227])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 14:37:40 -0800
+Message-ID: <23e7eadb-bdff-4fd9-9c1f-ac55e02f5664@intel.com>
+Date: Mon, 23 Feb 2026 15:37:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3826dd6dc55a9c5721ec3de85f019764a6cf3222.1770821420.git.d@ilvokhin.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] cxl: Fix nvdimm_bus race for nvdimm devices
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com
+References: <20260213224038.549798-1-dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20260213224038.549798-1-dave.jiang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 11, 2026 at 03:22:13PM +0000, Dmitry Ilvokhin wrote:
-> Add thin wrappers around zone lock acquire/release operations. This
-> prepares the code for future tracepoint instrumentation without
-> modifying individual call sites.
-> 
-> Centralizing zone lock operations behind wrappers allows future
-> instrumentation or debugging hooks to be added without touching
-> all users.
-> 
-> No functional change intended. The wrappers are introduced in
-> preparation for subsequent patches and are not yet used.
-> 
-> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
-> ---
->  MAINTAINERS               |  1 +
->  include/linux/zone_lock.h | 38 ++++++++++++++++++++++++++++++++++++++
->  2 files changed, 39 insertions(+)
->  create mode 100644 include/linux/zone_lock.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b4088f7290be..680c9ae02d7e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -16498,6 +16498,7 @@ F:	include/linux/pgtable.h
->  F:	include/linux/ptdump.h
->  F:	include/linux/vmpressure.h
->  F:	include/linux/vmstat.h
-> +F:	include/linux/zone_lock.h
->  F:	kernel/fork.c
->  F:	mm/Kconfig
->  F:	mm/debug.c
-> diff --git a/include/linux/zone_lock.h b/include/linux/zone_lock.h
-> new file mode 100644
-> index 000000000000..c531e26280e6
-> --- /dev/null
-> +++ b/include/linux/zone_lock.h
-> @@ -0,0 +1,38 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _LINUX_ZONE_LOCK_H
-> +#define _LINUX_ZONE_LOCK_H
-> +
-> +#include <linux/mmzone.h>
-> +#include <linux/spinlock.h>
-> +
-> +static inline void zone_lock_init(struct zone *zone)
-> +{
-> +	spin_lock_init(&zone->lock);
-> +}
-> +
-> +#define zone_lock_irqsave(zone, flags)				\
-> +do {								\
-> +	spin_lock_irqsave(&(zone)->lock, flags);		\
-> +} while (0)
-> +
-> +#define zone_trylock_irqsave(zone, flags)			\
-> +({								\
-> +	spin_trylock_irqsave(&(zone)->lock, flags);		\
-> +})
 
-Any reason you used macros for above two and inlined functions for remaining?
 
-> +
-> +static inline void zone_unlock_irqrestore(struct zone *zone, unsigned long flags)
-> +{
-> +	spin_unlock_irqrestore(&zone->lock, flags);
-> +}
-> +
-> +static inline void zone_lock_irq(struct zone *zone)
-> +{
-> +	spin_lock_irq(&zone->lock);
-> +}
-> +
-> +static inline void zone_unlock_irq(struct zone *zone)
-> +{
-> +	spin_unlock_irq(&zone->lock);
-> +}
-> +
-> +#endif /* _LINUX_ZONE_LOCK_H */
-> -- 
-> 2.47.3
+On 2/13/26 3:40 PM, Dave Jiang wrote:
+> v3:
+> - Just move the symbol of devm_cxl_add_nvdimm_bridge() with a wrapper function. (Dan)
+> - Squash the functionality of patch 2 and 3. (Dan)
+> - Introduce a flag to invalidate cxl_nvdimm when releasing nvdimm_bus. (Dan)
+> - With cxl_nvdimm marked as "invalidated" no need the check in cxl_nvdimm_driver. (Dan)
+
+Applied to cxl/fixes
+16fb82cadd63 cxl: Fix race of nvdimm_bus object when creating nvdimm objects
+e7e222ad73d9 cxl: Move devm_cxl_add_nvdimm_bridge() to cxl_pmem.ko
+
 > 
+> v2:
+> - Try a different approach
+> 
+> A small series to address a race for nvdimm_bus object when using the
+> nvdimm_bridge object.
+> 
+> Dave Jiang (2):
+>   cxl: Move devm_cxl_add_nvdimm_bridge() to cxl_pmem.ko
+>   cxl: Fix race of nvdimm_bus object when creating nvdimm objects
+> 
+>  drivers/cxl/core/pmem.c | 40 ++++++++++++++++++++++++++++++----------
+>  drivers/cxl/cxl.h       |  7 +++++++
+>  drivers/cxl/pmem.c      | 22 +++++++++++++++++++++-
+>  3 files changed, 58 insertions(+), 11 deletions(-)
+> 
+> 
+> base-commit: 63fbf275fa9f18f7020fb8acf54fa107e51d0f23
+
