@@ -1,115 +1,187 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m93191.xmail.ntesmail.com (mail-m93191.xmail.ntesmail.com [103.126.93.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6139E3EBF1F
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 22:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD183EBF10;
+	Mon, 23 Feb 2026 22:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.126.93.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771885112; cv=none; b=G8VqlFGuGFnDh8J0zZll4IO7TGXioVt+91SO/ItRIlCk77VhWPU0OW/WrDyntTZSCyMWAR8ru4Kq93Xy4kCM7kCwm3VJ4b7rFR+Hg5Pi7K+Xuk48w0fvY9DRZvwGVaurlq73FBInc6z8IWd1Zio2F8JTcdKJJ68DoiNChmX8vLg=
+	t=1771885366; cv=none; b=ndeyUiXWPVUaCxED0IuZOUAMnThCbYaIqRZTfBf+wgUeOlJ33vlYrJCtH6KWnkuQhm3Iksaxe+bRe4INalNmT/6yXNqypst6s0yj76xa5o+eTML8uA3AFRNPCZ2z16dNen/50OMwJo2FZ4fuR8N7VCFFgKHrTyUtZ5q4Wz++5jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771885112; c=relaxed/simple;
-	bh=UTCY7pP8jwtjeVQIQNsWFzUyXQW83DeCNIfvTuL4g10=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SyuUf2YVO1T6qY/BiGzzq6byJ8JW6sGeElSzcC+MQmPvjRrYYLQNo/rDQEc3i+lkkpZy6RdfypLNY5BoN8TQwZKJQ2tb0pa1iv5Q5l/htnOrZMRJr1z204GxpttdXxIDGZjRxljW2630XwGmHRks7rdYkls6CyK0hJSanKz3OeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=eKRVtrHR; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1771885366; c=relaxed/simple;
+	bh=pEHlMOLcrVLHxBcPS3mtO3QtuhosaoNFXUoSgyCErug=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=JGx7pqFucmfttBbDUpLUj6WUCmA/rAwj7UHXRxbaN9kDcY/qlcb/l02+OfGTe8yay9kM/av+KedM53QB7/w38IigeLzGcQTAk04zDHUz4/xUIVgQ2feW3kyIu9xYggnqIb9El2m5xRyfNG4VBduMRmk0qPc70gtADCqaK1ZzAks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=J1HZWCee; arc=none smtp.client-ip=103.126.93.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="eKRVtrHR"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-8cb3a8494c5so453792085a.2
-        for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 14:18:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1771885110; x=1772489910; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6oPmSnk8zjBxqZQmaokMv5bObs6EJjURDlenAKCTaM0=;
-        b=eKRVtrHRjO8Cy0QfMykAVZt5GthG2xCpK8O/4QNz5LgVFiq6VkBjF+xwqanMmngsEi
-         wbTp00kEbIt5b3GumbHYb2K0cHaHllFpYGdbQFr449XPk4SkS3Tyn965FBuOvB1r8ifP
-         HiGdxedeiF9JrkPFddq8eMWGMjucFBkbEosN5zq9Rum0LW21TbA69EPX6jt1WNgLuaJL
-         /kb1g6EAg4xeOIoa/stDBJEYVCbbpP8ot1dvsUczoML/jCUJ3niAMzk4T7sfuGdc7p6D
-         GK+ouPc4DqaIYIVfa0tc1xr5T3o/5MuwKtE0/j7KpDdYB887wANPOyCsulaKsPs82ZiC
-         aWHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771885110; x=1772489910;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6oPmSnk8zjBxqZQmaokMv5bObs6EJjURDlenAKCTaM0=;
-        b=BD2G4LbnQdYtqzaGOgixmxEggo493S9O5XENTF8wEgITlRLar2eF/s2VHvXIeRc4AV
-         5KLHCHCD8oJkkqaUf5bFtbeLmliZYAAj0veeDjAbp1VxFvsiT0b95NRW7x5WThe7YgB0
-         cqZA6t6RvKgEyhSCBLfN9Kvd7KXVTzxGlUbyIEijR/hGO8Ud10Xzc2c+bn1KNKBI26Pc
-         nu+kGoH1SSEAJqZK1m9Wd6RAchHvMqOHuO7SdS5vOzNOC/f6cQXbzEgRjsXJuPPT3UsY
-         3aBshUHs8Mojzrk/2hgyVY8s/GlCMFsy48ETLUcjKCB+56i3stKBZsgOR5LS9agNZ70g
-         yBqw==
-X-Gm-Message-State: AOJu0YyG4zYrm2fBztK12GvdEDFQoa2riwZ2G2GEww8Pw8f7FRk/8bHC
-	Hes9PMpE1AXrATsCFgF2lk/rJ+GQL09X4Ppo1yGOZJKz/V7b3+PytXviHAvdtrVTsu0=
-X-Gm-Gg: AZuq6aIAqDoGGBkNHDitaWdiIPmOp74/1fdjlJAtQb5TfDYhYArySu6wlA91Lo47KAX
-	nAXB++V9BX+D4G2LwugF6wb5M2W8K5MelrUj+2mzOuHUfZwo7Q6K/gSMzomFYLisWO8GWcGvilb
-	lY///+ZIrDRsvRw+wdmN+W3AT7qo4ujYbn9yE0TCB4Ieh+0WcCtfk1p13ghGETmWF/2K4zr1KaG
-	MooDAHKFTmuINEkm4zbSsLWeRlM1I5Y44MhziZJmjkOK9jahhxl2Ek09RgyELxwytEb0UirYMuL
-	XleonKJ8VWV6UXoPTBNjlTrexroW7zSZ7IMrwVDyayqfUppdsdlSPVCEfF4YsKzKoKIWlut67ZK
-	hnGLOhJkSA617tPyFPS+K9p7Ko1VjDsmM5N8+hjdo4NkOl0qJn02yXytSTQ8k0ORST+s/7y2jdc
-	EuUAQHJci61oq7qLWL5k3dDrOo4hxTaZUIbpIfEZ+Q4TE4a070f2lW9UrNZVvLLXI0rRMsT7gLH
-	CNtKW9cXA==
-X-Received: by 2002:a05:620a:1aa9:b0:8c7:14d8:36f5 with SMTP id af79cd13be357-8cb8c9e653fmr1172358385a.15.1771885110096;
-        Mon, 23 Feb 2026 14:18:30 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cb8d0461a5sm847491685a.1.2026.02.23.14.18.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Feb 2026 14:18:29 -0800 (PST)
-Date: Mon, 23 Feb 2026 17:18:27 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Subject: Re: [PATCH v3 2/2] cxl: Fix race of nvdimm_bus object when creating
- nvdimm objects
-Message-ID: <aZzSMwc2evqS8uBc@gourry-fedora-PF4VCD3F>
-References: <20260213224038.549798-1-dave.jiang@intel.com>
- <20260213224038.549798-3-dave.jiang@intel.com>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="J1HZWCee"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 34b37f78d;
+	Mon, 23 Feb 2026 23:32:12 +0800 (GMT+08:00)
+From: Shawn Lin <shawn.lin@rock-chips.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	"Vaibhaav Ram T . L" <vaibhaavram.tl@microchip.com>,
+	Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
+	Even Xu <even.xu@intel.com>,
+	Xinpeng Sun <xinpeng.sun@intel.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Zhou Wang <wangzhou1@hisilicon.com>,
+	Longfang Liu <liulongfang@huawei.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Jijie Shao <shaojijie@huawei.com>,
+	Jian Shen <shenjian15@huawei.com>,
+	Sunil Goutham <sgoutham@marvell.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
+	Oded Gabbay <ogabbay@kernel.org>,
+	Maciej Falkowski <maciej.falkowski@linux.intel.com>,
+	Karol Wachowski <karol.wachowski@linux.intel.com>,
+	Min Ma <mamin506@gmail.com>,
+	Lizhi Hou <lizhi.hou@amd.com>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Mika Westerberg <westeri@kernel.org>,
+	Tomasz Jeznach <tjeznach@rivosinc.com>,
+	Will Deacon <will@kernel.org>,
+	Xinliang Liu <xinliang.liu@linaro.org>,
+	Tian Tao <tiantao6@hisilicon.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Srujana Challa <schalla@marvell.com>,
+	Bharat Bhushan <bbhushan2@marvell.com>,
+	Antoine Tenart <atenart@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Raag Jadav <raag.jadav@intel.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Bingbu Cao <bingbu.cao@intel.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-input@vger.kernel.org,
+	linux-i3c@lists.infradead.org,
+	dmaengine@vger.kernel.org,
+	Philipp Stanner <phasta@kernel.org>,
+	netdev@vger.kernel.org,
+	nic_swsd@realtek.com,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-usb@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	linux-cxl@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	mhi@lists.linux.dev,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>,
+	linux-i2c@vger.kernel.org,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	linux-spi@vger.kernel.org,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH 37/37] PCI/MSI: Only check is_msi_managed in pcim_setup_msi_release()
+Date: Mon, 23 Feb 2026 23:29:41 +0800
+Message-Id: <1771860581-82092-3-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+X-HM-Tid: 0a9c8b212c0009cckunm6946b3c79863ba
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQhgZH1ZOH09CTx0eHktKTkpWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZS1VLVUtVS1kG
+DKIM-Signature: a=rsa-sha256;
+	b=J1HZWCeeOmW/gPw++byO+If0KMsTHKVVYVc+2zdeVL1H5nIla64EyAzpDmlGGJ/eIDuENwuD2fBNa7HfxIU6b+XJAPDHnUDppaUZRyCFQ58kMzK1cryURHmQKr6oTWiT4pmL+kQoThKmImm/C2O+XaXoGL4RlgFyNJGe+/RTrvE=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=RhsG8KOx2Km4SCjZjnMyUXQspsA9GMfP8flaFf9OQp4=;
+	h=date:mime-version:subject:message-id:from;
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260213224038.549798-3-dave.jiang@intel.com>
 
-On Fri, Feb 13, 2026 at 03:40:38PM -0700, Dave Jiang wrote:
-> @@ -248,6 +262,19 @@ int devm_cxl_add_nvdimm(struct device *host, struct cxl_port *port,
->  	if (!cxl_nvb)
->  		return -ENODEV;
->  
-> +	/*
-> +	 * Take the uport_dev lock to guard against race of nvdimm_bus object.
-> +	 * cxl_acpi_probe() registers the nvdimm_bus and is done under the
-> +	 * root port uport_dev lock.
-> +	 *
-> +	 * Take the cxl_nvb device lock to ensure that cxl_nvb driver is in a
-> +	 * consistent state. And the driver registers nvdimm_bus.
-> +	 */
-> +	guard(device)(cxl_nvb->port->uport_dev);
-> +	guard(device)(&cxl_nvb->dev);
-> +	if (!cxl_nvb->nvdimm_bus)
-> +		return -ENODEV;
-> +
+The function pcim_enable_device() sets the is_managed flag, which
+causes the device's IRQ vectors to be automatically managed and released
+by the devres framework. If a driver subsequently calls
+pci_free_irq_vectors() manually, it can lead to a double-free of the
+interrupt resources.
 
-I think this leaks the reference on cxl_nvb taken by 
+Analysis reveals most PCI drivers call pci_free_irq_vectors()
+while also using pcim_enable_device(), making them susceptible to this
+double-free issue. In contrast, 35 drivers follow the pattern of
+relying on devres to handle the cleanup.
 
-	devm_cxl_add_nvdimm()
-		device_find_child()
+To address this inconsistency and enforce explicit, driver-managed
+control of IRQ vectors, this patch removes the pci_is_managed() check
+from pcim_setup_msi_release() and let devres help cleanup if is_msi_managed
+is true. This change ensures that interrupt vectors are not automatically
+freed by the devres machinery when pcim_enable_device() is used, placing
+the responsibility for their release squarely on the driver logic via
+pci_free_irq_vectors(). If the driver need devres to help cleanup, newly added
+pcim_alloc_irq_vectors() and pcim_alloc_irq_vectors_affinity() helpers could be used.
 
-Maybe:
-     if (!cxl_nvb->nvdimm_bus) {
-             rc = -ENODEV;
-             goto err_alloc;
-     }
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 
+---
 
-Reported-by: kreview-0811365
+ drivers/pci/msi/msi.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-~Gregory
+diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+index 81d24a2..0727a0a 100644
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -70,7 +70,6 @@ static void pcim_msi_release(void *pcidev)
+ {
+ 	struct pci_dev *dev = pcidev;
+ 
+-	dev->is_msi_managed = false;
+ 	pci_free_irq_vectors(dev);
+ }
+ 
+@@ -92,14 +91,13 @@ static int pcim_setup_msi_release(struct pci_dev *dev)
+ {
+ 	int ret;
+ 
+-	if (!pci_is_managed(dev) || dev->is_msi_managed)
++	if (!dev->is_msi_managed)
+ 		return 0;
+ 
+ 	ret = devm_add_action(&dev->dev, pcim_msi_release, dev);
+ 	if (ret)
+ 		return ret;
+ 
+-	dev->is_msi_managed = true;
+ 	return 0;
+ }
+ 
+-- 
+2.7.4
+
