@@ -1,166 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0A322652D
-	for <linux-cxl@vger.kernel.org>; Tue, 24 Feb 2026 15:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A641799F
+	for <linux-cxl@vger.kernel.org>; Tue, 24 Feb 2026 16:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771948488; cv=none; b=AvE89NEzLeZ4aVv/76rRfNIePji51swBM+pjnvXHMxBwriPhYm1LQk+cVzY15NXAcb1B19BhFO05iwM/xMRhwiO/ic3TaKC38O6RhMJvJLRBMMYocVJGJ2DvKw2TJHr3EYVYzkspgYF8ME/XF9OBieDjr6yie4RBUNxa8hA2BzA=
+	t=1771949089; cv=none; b=lF6egCKfmOXQyzBvwhNUtcONGBRIYtSo8gXLZD7PrcixdvUdwMbHMyjk4o67rI0+fw8+tUhqNBH6gNYlksVd3yfXesnf7+ucmE4pHwVeN9nfLg5O9tVMmo6Eq0zUm+wQdt83cIOG4yfizIa1VW+h1MlFDrAWrlX0XZkYNlKijr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771948488; c=relaxed/simple;
-	bh=80LmEBzIW+EPcO6oq4fx6IHv4NUWCNvqFuPHpvP+p+0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qEaeMHpdBYIimuMhc7O/toqnQZIhsBV8SBcz4hy6Qn9CNYWredOAm+wQdI5vHlhaoYJFUTYCP+KzRtPUfPYbBHRFKvViWI26JKCetLMCdIHp4oub7a+MdyEfjtx10AX1GnqSVpjxA6CpvCOQfIRoOTly4HVYI5AEQ9UQmepnups=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NdS0tmBS; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1771949089; c=relaxed/simple;
+	bh=WYNp6PEVD2my7cLQN45NWWBE/XqHb4lWz/iUWbjbxe8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jehl2Vta7Qklz6MTNioe6LJXVq0eIVFzwfIl7Po4ZDgWZDLP8tdyr3g7AchjbWjL9auk/IOsKxYk+6A46bS3qw5SLI3oelhPjWjIiJkNlrQGvhn2SitUBBuQdqCZEKBiA2hHAit1FW8I7Z+yhlJHsuNhh2V4oNNjDRTH3Jqc4Eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=gkFKPAdy; arc=none smtp.client-ip=209.85.217.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NdS0tmBS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771948486; x=1803484486;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=80LmEBzIW+EPcO6oq4fx6IHv4NUWCNvqFuPHpvP+p+0=;
-  b=NdS0tmBSEmlO9iVcyON32xWD5oWT0umWKB7DtleebwnNZUtkqNqBDHuj
-   +z3lJ+H9qhXyyvejdtbCER8PFiaABPIQdMFtjP29LEVQLsb7b8FAYkyX5
-   bdpUHvM7nOGO0dQUiD9/EaAYkSEtAgs0Nzzlh8Q/yqu6NjV1WdiaAkerq
-   ypUH2P2ZDKnfmvjYmeRm6G+6WtdY+7LcKt6ZVorWQZgj5TwcK63dEY3ZX
-   ogupApZszDkgeFPE8HlCHQgUeQ3gm9YxpyRARhBF8OqrTBYf7NyVm/mt5
-   7IxFHXO06yh/hBJIs3KBmV51s7DPYBNyBpTCPq9oEC74urFEBJP/d12lr
-   Q==;
-X-CSE-ConnectionGUID: XOJSnou0RaOPgKO8WZu+mA==
-X-CSE-MsgGUID: QtijHuJfT56lB4AOgi9iSQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11711"; a="76831631"
-X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
-   d="scan'208";a="76831631"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 07:54:45 -0800
-X-CSE-ConnectionGUID: T1bg5xhSQOKyZtmmcGnTdQ==
-X-CSE-MsgGUID: K0H7sPzQSUGoklcEmZbZXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
-   d="scan'208";a="253694978"
-Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.125.111.22]) ([10.125.111.22])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 07:54:44 -0800
-Message-ID: <0e6a60ab-8b7b-4432-b22e-336c68b328e5@intel.com>
-Date: Tue, 24 Feb 2026 08:54:44 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="gkFKPAdy"
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-5fa26e497feso1929282137.3
+        for <linux-cxl@vger.kernel.org>; Tue, 24 Feb 2026 08:04:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1771949087; x=1772553887; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MUQZ9ZZpLUEJDgWCcqmsUYgG7Ph2Tdme7Hc3EOm7UmI=;
+        b=gkFKPAdyF3JHbRTEvssOEqKboGpeX24BUUO7m7o9OcO12+UvpXBfW/BlJr21PvqSP1
+         pIXF1q0YsQyTDSiKRpX1Mxxm3/ldqDeT4nznDdT7u8+GXSOEOG/xYwsRNSmcrlz13J/f
+         kCtp2wffyVmfkuHep5njsYfvnynqZaDGOGWz6eEFb3jdv3acxOoPl+nxT0UjEp/MthrT
+         DP0R/Jn7yQoVNhqCvfYFFa++vHeYkBQH9j0w91ilzUsNd6cF3rtpTCl0Pa5HeX4259Sk
+         IGgO0uZOkzs2Vu3oynYMz0sQSWrBhpRW/MTlv1eOTVZGIxftmPvNQDgfHecXAL2WUnYG
+         /JUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771949087; x=1772553887;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MUQZ9ZZpLUEJDgWCcqmsUYgG7Ph2Tdme7Hc3EOm7UmI=;
+        b=AyPBOTlmcxtW1blKTa05L+opDIblTZEOHNAf6NUtF4Q9T6e1v2kNfwXS/2A0QQKkcG
+         qo8XXuUW79jHuvOEVNo4p4zrfdEXn2XZhG/08saloI7e70IihSvQvwPjbXxtWTpxfuqR
+         mRPi1YPEmwcT5PZFoZV04VKkTFnVuTzJ+77rtTVpsZ8XgMiCM0LyQE6JUK71HO9XstxZ
+         hB1kKBqDlcorPLZC1D6NuJqId//BQDnroqJyZ8PMlDlG+MvV7B6+vWGdHYjZXBk4T989
+         2Hs//EnMBQyqrk46QxXA2v2VCmPm5UX1a83wcKy1iSg3O2MBYbQEfPhT9cXziVlu3+yw
+         gQmA==
+X-Gm-Message-State: AOJu0YwkUROrWjy0OGnQN3PV0LXaeUyAwdsffutfYD/qrmQCdOG/pKwE
+	2DnMICpfnfyo0irfBxgUmJPb6PJY1hFbwUQiqT4U6zgEveCXzyCNyFPcv0kd9XANf/0=
+X-Gm-Gg: ATEYQzwZMBIoYsZFN2Pi6CjtQHczdxT2OlkBqLZe09eGq8cc0+fPIBzJfMBf9zeS6Ll
+	ootCmBiJ6eT/hOewc7fwmP8lPLszBOgXrnbR2n74S5NMrLvRUf1fK5JEPnFK8hQ9+caUlTPum02
+	P/WGX1kk0+1OS1kz9yX/zRseBleCLKVf+TiktiOQgknO7vpqxfGwzfw90XeS4bMa7Z6KbOqExIM
+	GSCu+X7xSHLhQjkGwhyOWcWCxfyQo6QaFqKzUsfbQEbuQjyfQueQ6zONN/KwoHSXeV2I1aYNHh1
+	1w1585Bf7VNyBGpzjM2pfmNWRov/Yf1KVVGhwvg+Ot9N6HKrWZYTOyYRtNHxnJhPnd1oueCbMua
+	QKsDPnoFPLV78CFPs9Sm/QnvC+dgjXRl1Y9tbfI6UgqL3QVu/ArRbceQf5hI/vF7cmZqFH5DYqQ
+	gL6uoF6UvMDFWSYGafST39oMW4oAga54mVVXqgpDnpfy+GGATLC/r4WC7f9eEIt3NuGoWiN+PEY
+	9XvUc/dNg==
+X-Received: by 2002:a05:6102:2929:b0:5db:f920:fa9a with SMTP id ada2fe7eead31-5feb313aa12mr4565530137.41.1771949087269;
+        Tue, 24 Feb 2026 08:04:47 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8997c6bba49sm113220186d6.15.2026.02.24.08.04.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Feb 2026 08:04:46 -0800 (PST)
+Date: Tue, 24 Feb 2026 11:04:45 -0500
+From: Gregory Price <gourry@gourry.net>
+To: alejandro.lucero-palau@amd.com
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+	dave.jiang@intel.com, Alejandro Lucero <alucerop@amd.com>,
+	Zhi Wang <zhiw@nvidia.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Ben Cheatham <benjamin.cheatham@amd.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Davidlohr Bueso <daves@stgolabs.net>
+Subject: Re: [PATCH v1 1/3] cxl: Make region type based on endpoint type
+Message-ID: <aZ3MHVcheVVoooiC@gourry-fedora-PF4VCD3F>
+References: <20260224152645.3441489-1-alejandro.lucero-palau@amd.com>
+ <20260224152645.3441489-2-alejandro.lucero-palau@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/3] cxl/region: Factor out interleave ways setup
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- dan.j.williams@intel.com
-Cc: Alejandro Lucero <alucerop@amd.com>
-References: <20260224152645.3441489-1-alejandro.lucero-palau@amd.com>
- <20260224152645.3441489-3-alejandro.lucero-palau@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260224152645.3441489-3-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260224152645.3441489-2-alejandro.lucero-palau@amd.com>
 
-
-
-On 2/24/26 8:26 AM, alejandro.lucero-palau@amd.com wrote:
+On Tue, Feb 24, 2026 at 03:26:43PM +0000, alejandro.lucero-palau@amd.com wrote:
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Region creation based on Type3 devices is triggered from user space
-
-s/is/can be/
-
-Since there's also auto region creation.
-
-> allowing memory combination through interleaving.
-> 
-> In preparation for kernel driven region creation, that is Type2 drivers
-> triggering region creation backed with its advertised CXL memory, factor
-> out a common helper from the user-sysfs region setup for interleave ways.
+> Current code is expecting Type3 or CXL_DECODER_HOSTONLYMEM devices only.
+> Support for Type2 implies region type needs to be based on the endpoint
+> type HDM-D[B] instead.
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> Reviewed-by: Zhi Wang <zhiw@nvidia.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> Reviewed-by: Davidlohr Bueso <daves@stgolabs.net>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-> ---
->  drivers/cxl/core/region.c | 41 +++++++++++++++++++++++++--------------
->  1 file changed, 26 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index cac33c99fe6a..3ef4ccf1c92b 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -485,22 +485,14 @@ static ssize_t interleave_ways_show(struct device *dev,
->  
->  static const struct attribute_group *get_cxl_region_target_group(void);
->  
-> -static ssize_t interleave_ways_store(struct device *dev,
-> -				     struct device_attribute *attr,
-> -				     const char *buf, size_t len)
-> +static int set_interleave_ways(struct cxl_region *cxlr, int val)
->  {
-> -	struct cxl_region *cxlr = to_cxl_region(dev);
->  	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
->  	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
->  	struct cxl_region_params *p = &cxlr->params;
-> -	unsigned int val, save;
-> -	int rc;
-> +	int save, rc;
->  	u8 iw;
->  
-> -	rc = kstrtouint(buf, 0, &val);
-> -	if (rc)
-> -		return rc;
-> -
->  	rc = ways_to_eiw(val, &iw);
->  	if (rc)
->  		return rc;
-> @@ -515,9 +507,7 @@ static ssize_t interleave_ways_store(struct device *dev,
->  		return -EINVAL;
->  	}
->  
-> -	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-> -	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
-> -		return rc;
-> +	lockdep_assert_held_write(&cxl_rwsem.region);
->  
->  	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE)
->  		return -EBUSY;
-> @@ -525,10 +515,31 @@ static ssize_t interleave_ways_store(struct device *dev,
->  	save = p->interleave_ways;
->  	p->interleave_ways = val;
->  	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
-> -	if (rc) {
-> +	if (rc)
->  		p->interleave_ways = save;
-> +
-> +	return rc;
-> +}
-> +
-> +static ssize_t interleave_ways_store(struct device *dev,
-> +				     struct device_attribute *attr,
-> +				     const char *buf, size_t len)
-> +{
-> +	struct cxl_region *cxlr = to_cxl_region(dev);
-> +	unsigned int val;
-> +	int rc;
-> +
-> +	rc = kstrtouint(buf, 0, &val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-> +	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
-> +		return rc;
-> +
-> +	rc = set_interleave_ways(cxlr, val);
-> +	if (rc)
->  		return rc;
-> -	}
->  
->  	return len;
->  }
-
+Reviewed-by: Gregory Price <gourry@gourry.net>
