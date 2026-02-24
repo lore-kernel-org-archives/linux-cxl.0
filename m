@@ -1,102 +1,157 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0EC1519B4;
-	Tue, 24 Feb 2026 16:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD513A7838
+	for <linux-cxl@vger.kernel.org>; Tue, 24 Feb 2026 16:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771949387; cv=none; b=bPZ3FF7japw4FhrWdED+2CSuZNR+w3EVDhWqaQNLCatJ6P7wwKVddeb5KV7HHwD1/SpprbXMD/MFBpP8Z3CCQu+OozgcFOtiULuogdhhkJcEIBx6YdPMwt+zWr5PMAR109CLRUyduK0ZDxdsKbJtMdJoWzyvRZU0mtva1+4pPUA=
+	t=1771949615; cv=none; b=WXn7zxlXb7pZ3pctm/zWm70ueZEB4TCWbkoDQB8NQrjZ4NmxAarzs89Z4HICclKyK5WMsYBjNFv4P9vl+76/sv9rXG+Nt0T3beEQH1VqNENes3MxnG8WH3dccvYoi/obQl+3ukDRmAHVzKXCiP8jUYqTNFfiLLtsZdA+UssyzrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771949387; c=relaxed/simple;
-	bh=Zma/Bsxb2gYrxSYBtXCIAc8GnYxCZlqPhDfpInfmkI8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gNKvLelxRK0v/Z8bGX0XkrLUcVRkx0JMJmlvFZaxG0CDCBB3b9ITlnHlw6GfEZw5gpBX/ZJlg1QO11GprqvN+0ZO+3hUNDBcAr2RrM62fgPuPTPFLwboJ8M8iz2u2wC63iuPKsk5Isi+V7WLjFNuj6BPWR+sS4LrkeS77u+O5qU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fL2jD2KGbzJ467G;
-	Wed, 25 Feb 2026 00:09:20 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 23E5A40086;
-	Wed, 25 Feb 2026 00:09:42 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 24 Feb
- 2026 16:09:41 +0000
-Date: Tue, 24 Feb 2026 16:09:40 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Philipp Stanner <phasta@kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 19/37] cxl/pci: Replace pci_alloc_irq_vectors() with
- pcim_alloc_irq_vectors()
-Message-ID: <20260224160940.0000336c@huawei.com>
-In-Reply-To: <1771861967-88542-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
-	<1771861967-88542-1-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1771949615; c=relaxed/simple;
+	bh=XVWp+/qqFQrgD8Wp/k4nzyruwxqTOukitV+viCzdCBg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N16trl1jptbIPUCVXVlpHcKX4JfN8rOX5caTP/D5Q7EnzPCa4930OfuXPpsUPlhr6mtpT2R/Pf8r/0d+UR1M6on8yaNEbel/bebN8KL4r3tzWXxtDFEHY5dZri9COYtl2mxoT9MykhhNdsw+9I15cisuJE3cfoHr/cGpOZ4/PxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bk1doSYC; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bk1doSYC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771949614; x=1803485614;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=XVWp+/qqFQrgD8Wp/k4nzyruwxqTOukitV+viCzdCBg=;
+  b=Bk1doSYCVHUs4f84DCMMWGBH/r2BAlMlAoJ4oHLgjhVHBm1g/91M9IVH
+   bJFVYkrXOSjCzA2vmroNLBSQjis0Cw8kFfeg0WXW7AFMlUKcFSVfOyFxO
+   /P3Erym0ygXFGhsgKJ3KoTDPQjSs6m9mtQFgNCwqARyryloHwmbpLR1Dt
+   wGfx56GFKJpvnJrlbSI8NtJ7xwjV51LbDdGaOQ4SfxMQyuU4jzAve70I8
+   hxVFbhk46VCaXXiNIj4brbs5QG7xqrDZXhLsn5fCFpzyvuuj5s7/2pOcP
+   hiV0ZK41Y/wAsRhGl3WZ/2UFP16oJfIP+obl81xylBBlfIxRrLzolOifS
+   Q==;
+X-CSE-ConnectionGUID: Xc9lTyUCQw+hFMXyPeNbQw==
+X-CSE-MsgGUID: bN7fpYYkRDSF3+0FsN11LQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11711"; a="84428337"
+X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
+   d="scan'208";a="84428337"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 08:13:33 -0800
+X-CSE-ConnectionGUID: F5SoE0i2SMylUeg8XdZw4g==
+X-CSE-MsgGUID: 5elCukauSaiFzqf18OwhGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
+   d="scan'208";a="253700353"
+Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.125.111.22]) ([10.125.111.22])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 08:13:32 -0800
+Message-ID: <11ecbc8d-3105-4c65-a444-6bc64530d536@intel.com>
+Date: Tue, 24 Feb 2026 09:13:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/3] cxl/region: Factor out interleave granularity
+ setup
+To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+ dan.j.williams@intel.com
+Cc: Alejandro Lucero <alucerop@amd.com>
+References: <20260224152645.3441489-1-alejandro.lucero-palau@amd.com>
+ <20260224152645.3441489-4-alejandro.lucero-palau@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260224152645.3441489-4-alejandro.lucero-palau@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Mon, 23 Feb 2026 23:52:47 +0800
-Shawn Lin <shawn.lin@rock-chips.com> wrote:
 
-> pcim_enable_device() no longer automatically manages IRQ vectors via devres.
-> Drivers must now manually call pci_free_irq_vectors() for cleanup. Alternatively,
-> pcim_alloc_irq_vectors() should be used.
+
+On 2/24/26 8:26 AM, alejandro.lucero-palau@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
 > 
-> To: Davidlohr Bueso <dave@stgolabs.net>
-> To: Jonathan Cameron <jonathan.cameron@huawei.com>
-> To: Dave Jiang <dave.jiang@intel.com>
-> To: Alison Schofield <alison.schofield@intel.com>
-> To: Vishal Verma <vishal.l.verma@intel.com>
-> To: Ira Weiny <ira.weiny@intel.com>
-> To: Dan Williams <dan.j.williams@intel.com>
-> Cc: linux-cxl@vger.kernel.org
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Philipp Stanner <phasta@kernel.org>
-> Cc: linux-pci@vger.kernel.org
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-I am very much in favor of this change.
+> Region creation based on Type3 devices is triggered from user space
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+same comment here as for 2/3.
+
+> allowing memory combination through interleaving.
+> 
+> In preparation for kernel driven region creation, that is Type2 drivers
+> triggering region creation backed with its advertised CXL memory, factor
+> out a common helper from the user-sysfs region setup forinterleave
+> granularity.
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
 
 > ---
+>  drivers/cxl/core/region.c | 36 ++++++++++++++++++++++++------------
+>  1 file changed, 24 insertions(+), 12 deletions(-)
 > 
->  drivers/cxl/pci.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index fbb300a..de5c9ff 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -565,13 +565,9 @@ static bool cxl_alloc_irq_vectors(struct pci_dev *pdev)
->  	 * Per CXL 3.0 3.1.1 CXL.io Endpoint a function on a CXL device must
->  	 * not generate INTx messages if that function participates in
->  	 * CXL.cache or CXL.mem.
-> -	 *
-> -	 * Additionally pci_alloc_irq_vectors() handles calling
-> -	 * pci_free_irq_vectors() automatically despite not being called
-> -	 * pcim_*.  See pci_setup_msi_context().
->  	 */
-> -	nvecs = pci_alloc_irq_vectors(pdev, 1, CXL_PCI_DEFAULT_MAX_VECTORS,
-> -				      PCI_IRQ_MSIX | PCI_IRQ_MSI);
-> +	nvecs = pcim_alloc_irq_vectors(pdev, 1, CXL_PCI_DEFAULT_MAX_VECTORS,
-> +				       PCI_IRQ_MSIX | PCI_IRQ_MSI);
->  	if (nvecs < 1) {
->  		dev_dbg(&pdev->dev, "Failed to alloc irq vectors: %d\n", nvecs);
->  		return false;
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 3ef4ccf1c92b..aed3733490a1 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -559,21 +559,14 @@ static ssize_t interleave_granularity_show(struct device *dev,
+>  	return sysfs_emit(buf, "%d\n", p->interleave_granularity);
+>  }
+>  
+> -static ssize_t interleave_granularity_store(struct device *dev,
+> -					    struct device_attribute *attr,
+> -					    const char *buf, size_t len)
+> +static int set_interleave_granularity(struct cxl_region *cxlr, int val)
+>  {
+> -	struct cxl_region *cxlr = to_cxl_region(dev);
+>  	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
+>  	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+>  	struct cxl_region_params *p = &cxlr->params;
+> -	int rc, val;
+> +	int rc;
+>  	u16 ig;
+>  
+> -	rc = kstrtoint(buf, 0, &val);
+> -	if (rc)
+> -		return rc;
+> -
+>  	rc = granularity_to_eig(val, &ig);
+>  	if (rc)
+>  		return rc;
+> @@ -589,14 +582,33 @@ static ssize_t interleave_granularity_store(struct device *dev,
+>  	if (cxld->interleave_ways > 1 && val != cxld->interleave_granularity)
+>  		return -EINVAL;
+>  
+> -	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
+> -	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
+> -		return rc;
+> +	lockdep_assert_held_write(&cxl_rwsem.region);
+>  
+>  	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE)
+>  		return -EBUSY;
+>  
+>  	p->interleave_granularity = val;
+> +	return 0;
+> +}
+> +
+> +static ssize_t interleave_granularity_store(struct device *dev,
+> +					    struct device_attribute *attr,
+> +					    const char *buf, size_t len)
+> +{
+> +	struct cxl_region *cxlr = to_cxl_region(dev);
+> +	int rc, val;
+> +
+> +	rc = kstrtoint(buf, 0, &val);
+> +	if (rc)
+> +		return rc;
+> +
+> +	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
+> +	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
+> +		return rc;
+> +
+> +	rc = set_interleave_granularity(cxlr, val);
+> +	if (rc)
+> +		return rc;
+>  
+>  	return len;
+>  }
 
