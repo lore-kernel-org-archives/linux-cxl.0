@@ -1,406 +1,110 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FA127380A;
-	Tue, 24 Feb 2026 15:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935AF2737E0
+	for <linux-cxl@vger.kernel.org>; Tue, 24 Feb 2026 15:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771947256; cv=none; b=meLGwaG2pG0YW/WBeePK5tAk5v6fkPI20/5w8S0HWj7/LUn+FYe+r0fdlbti5SDiUi+g6xMvtOM0HRDw+evwRI6dzDl5HNlGhDCOjk8qKjhPnzz25qItLfXFGj8hDH9TL1W4xkprHASjcEdh+LZTphmQRIoXkBXGa59BhiEoZ60=
+	t=1771947340; cv=none; b=pNMOxvptesyx6XE23Ew4JBBKzkx5QnqQxXdhSRopBx47ZFHnsqyi+njFbalFMmDicXZTjwPGnCmPDzkhYirdhQ7HANX4UUaDl1j7BY6qyVw5g53/LBjbTziPCpAO0wnbF+5mIlnDvSygI8zjkoU5S52inM3HtGND/FiBLpkY4/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771947256; c=relaxed/simple;
-	bh=3UnJNpKBp41060PCCiUKh/z/XCpPqIeEtBlEINpW5VI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cX0ESuGgM/uDzcoc2wkhVpwGM44wgQZSuC4bVleKl4T8sciky9NkFfcfs1dKR1Pcdeyhdpl3sn/r0Be9aNssTe4qfyNNoNjwTsv+PwXR8t8H1vvny2ghO7FI4KM4W4BVegd8F1DpfKKK6ypf3WpmrZNcRG4IdRlme890AQZqkP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fL1wG0MXHzJ4678;
-	Tue, 24 Feb 2026 23:33:50 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id C841E40573;
-	Tue, 24 Feb 2026 23:34:11 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 24 Feb
- 2026 15:34:10 +0000
-Date: Tue, 24 Feb 2026 15:34:09 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Ahmed Tiba <ahmed.tiba@arm.com>
-CC: <devicetree@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<Dmitry.Lamerov@arm.com>, <catalin.marinas@arm.com>, <bp@alien8.de>,
-	<robh@kernel.org>, <rafael@kernel.org>, <will@kernel.org>,
-	<conor@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-doc@vger.kernel.org>, <krzk+dt@kernel.org>, <Michael.Zhao2@arm.com>,
-	<tony.luck@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 07/11] ACPI: APEI: GHES: move CXL CPER helpers
-Message-ID: <20260224153409.0000191a@huawei.com>
-In-Reply-To: <20260220-topics-ahmtib01-ras_ffh_arm_internal_review-v2-7-347fa2d7351b@arm.com>
-References: <20260220-topics-ahmtib01-ras_ffh_arm_internal_review-v2-0-347fa2d7351b@arm.com>
-	<20260220-topics-ahmtib01-ras_ffh_arm_internal_review-v2-7-347fa2d7351b@arm.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1771947340; c=relaxed/simple;
+	bh=gR0sp3vQ/EC7g/yFtp8PHy39d293LOqwB70Bf6roxz8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bLTIuVf13DH9cbVqBia8FUk9gBYBAEDAu7Ho0rsXjzB15nUAa2pd5tuBh+s2bLtn2ZKkqNwFOJ7ItGjsWEkoePFNxrS6HlSPMCX183IRH9ZDQb9lz+nZaoNgR5JBdSbEJ+eMYTn1Z2ODzxyXTpb2VFzof+yu5Hi7gcyVWl36xgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UuxGWb05; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UuxGWb05"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771947338; x=1803483338;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=gR0sp3vQ/EC7g/yFtp8PHy39d293LOqwB70Bf6roxz8=;
+  b=UuxGWb05i5NcXMRHOHTKM7NCRKUevYgWA0HLAUaSH7wjbSplu3XSiftH
+   /2rWxhxBo7juU20APBaubjPhvmDRaUrTp/InUTLQaN7nSGnDFaOPJCXtv
+   b9rwRM/PJn8yrbDBUqWM64YuaVvTOvdY+Qdw5YLB26axLyPN8HOoTD4nl
+   avdfMvfma8kZ1vI5Yy2YabPahRJ+2VgicmOLmaYg+fbRoJOHeKro644o4
+   2+Mx5+BqzbAccIBLKVgtc49UZAiyt5+Flzg0GHbPhLCsM5U5d0S/NDYyi
+   GG/wRcCgtfy6cn8i0MbNi8hswwxMtSynqFJPCbCngtAy0IsucZp3fkwPv
+   A==;
+X-CSE-ConnectionGUID: rgX4/5M9TRukFmKlnFpVSQ==
+X-CSE-MsgGUID: yzPqblMPRdSw/0e5eNoIPg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11711"; a="72876255"
+X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
+   d="scan'208";a="72876255"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 07:35:38 -0800
+X-CSE-ConnectionGUID: mdvWpOJHQq6QsaLnaL5tXg==
+X-CSE-MsgGUID: InUabX8BTNWVhdR54hw7Vw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
+   d="scan'208";a="253687171"
+Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.125.111.22]) ([10.125.111.22])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 07:35:38 -0800
+Message-ID: <03fd10b3-9fd3-4f6d-983c-a0fe1491463a@intel.com>
+Date: Tue, 24 Feb 2026 08:35:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] cxl: Fix race of nvdimm_bus object when creating
+ nvdimm objects
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+References: <20260213224038.549798-1-dave.jiang@intel.com>
+ <20260213224038.549798-3-dave.jiang@intel.com>
+ <aZzSMwc2evqS8uBc@gourry-fedora-PF4VCD3F>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <aZzSMwc2evqS8uBc@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
- dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Fri, 20 Feb 2026 13:42:25 +0000
-Ahmed Tiba <ahmed.tiba@arm.com> wrote:
 
-> Move the CXL CPER handling paths out of ghes.c and into ghes_cper.c so the
-> helpers can be reused. The code is moved as-is, with the public
-> prototypes updated so GHES keeps calling into the new translation unit.
+
+On 2/23/26 3:18 PM, Gregory Price wrote:
+> On Fri, Feb 13, 2026 at 03:40:38PM -0700, Dave Jiang wrote:
+>> @@ -248,6 +262,19 @@ int devm_cxl_add_nvdimm(struct device *host, struct cxl_port *port,
+>>  	if (!cxl_nvb)
+>>  		return -ENODEV;
+>>  
+>> +	/*
+>> +	 * Take the uport_dev lock to guard against race of nvdimm_bus object.
+>> +	 * cxl_acpi_probe() registers the nvdimm_bus and is done under the
+>> +	 * root port uport_dev lock.
+>> +	 *
+>> +	 * Take the cxl_nvb device lock to ensure that cxl_nvb driver is in a
+>> +	 * consistent state. And the driver registers nvdimm_bus.
+>> +	 */
+>> +	guard(device)(cxl_nvb->port->uport_dev);
+>> +	guard(device)(&cxl_nvb->dev);
+>> +	if (!cxl_nvb->nvdimm_bus)
+>> +		return -ENODEV;
+>> +
 > 
-> Signed-off-by: Ahmed Tiba <ahmed.tiba@arm.com>
-
-+CC linux-cxl.
-
-I haven't looked closely but suspect the same stuff on code movement and patch
-break up applies here.
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/acpi/apei/ghes.c      | 132 -----------------------------------------
->  drivers/acpi/apei/ghes_cper.c | 135 ++++++++++++++++++++++++++++++++++++++++++
->  include/acpi/ghes_cper.h      |  11 ++++
->  3 files changed, 146 insertions(+), 132 deletions(-)
+> I think this leaks the reference on cxl_nvb taken by 
 > 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 9703c602a8c2..136993704d52 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -383,138 +383,6 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
->  #endif
->  }
->  
-> -/* Room for 8 entries */
-> -#define CXL_CPER_PROT_ERR_FIFO_DEPTH 8
-> -static DEFINE_KFIFO(cxl_cper_prot_err_fifo, struct cxl_cper_prot_err_work_data,
-> -		    CXL_CPER_PROT_ERR_FIFO_DEPTH);
-> -
-> -/* Synchronize schedule_work() with cxl_cper_prot_err_work changes */
-> -static DEFINE_SPINLOCK(cxl_cper_prot_err_work_lock);
-> -struct work_struct *cxl_cper_prot_err_work;
-> -
-> -static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> -				   int severity)
-> -{
-> -#ifdef CONFIG_ACPI_APEI_PCIEAER
-> -	struct cxl_cper_prot_err_work_data wd;
-> -
-> -	if (cxl_cper_sec_prot_err_valid(prot_err))
-> -		return;
-> -
-> -	guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
-> -
-> -	if (!cxl_cper_prot_err_work)
-> -		return;
-> -
-> -	if (cxl_cper_setup_prot_err_work_data(&wd, prot_err, severity))
-> -		return;
-> -
-> -	if (!kfifo_put(&cxl_cper_prot_err_fifo, wd)) {
-> -		pr_err_ratelimited("CXL CPER kfifo overflow\n");
-> -		return;
-> -	}
-> -
-> -	schedule_work(cxl_cper_prot_err_work);
-> -#endif
-> -}
-> -
-> -int cxl_cper_register_prot_err_work(struct work_struct *work)
-> -{
-> -	if (cxl_cper_prot_err_work)
-> -		return -EINVAL;
-> -
-> -	guard(spinlock)(&cxl_cper_prot_err_work_lock);
-> -	cxl_cper_prot_err_work = work;
-> -	return 0;
-> -}
-> -EXPORT_SYMBOL_NS_GPL(cxl_cper_register_prot_err_work, "CXL");
-> -
-> -int cxl_cper_unregister_prot_err_work(struct work_struct *work)
-> -{
-> -	if (cxl_cper_prot_err_work != work)
-> -		return -EINVAL;
-> -
-> -	guard(spinlock)(&cxl_cper_prot_err_work_lock);
-> -	cxl_cper_prot_err_work = NULL;
-> -	return 0;
-> -}
-> -EXPORT_SYMBOL_NS_GPL(cxl_cper_unregister_prot_err_work, "CXL");
-> -
-> -int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data *wd)
-> -{
-> -	return kfifo_get(&cxl_cper_prot_err_fifo, wd);
-> -}
-> -EXPORT_SYMBOL_NS_GPL(cxl_cper_prot_err_kfifo_get, "CXL");
-> -
-> -/* Room for 8 entries for each of the 4 event log queues */
-> -#define CXL_CPER_FIFO_DEPTH 32
-> -DEFINE_KFIFO(cxl_cper_fifo, struct cxl_cper_work_data, CXL_CPER_FIFO_DEPTH);
-> -
-> -/* Synchronize schedule_work() with cxl_cper_work changes */
-> -static DEFINE_SPINLOCK(cxl_cper_work_lock);
-> -struct work_struct *cxl_cper_work;
-> -
-> -static void cxl_cper_post_event(enum cxl_event_type event_type,
-> -				struct cxl_cper_event_rec *rec)
-> -{
-> -	struct cxl_cper_work_data wd;
-> -
-> -	if (rec->hdr.length <= sizeof(rec->hdr) ||
-> -	    rec->hdr.length > sizeof(*rec)) {
-> -		pr_err(FW_WARN "CXL CPER Invalid section length (%u)\n",
-> -		       rec->hdr.length);
-> -		return;
-> -	}
-> -
-> -	if (!(rec->hdr.validation_bits & CPER_CXL_COMP_EVENT_LOG_VALID)) {
-> -		pr_err(FW_WARN "CXL CPER invalid event\n");
-> -		return;
-> -	}
-> -
-> -	guard(spinlock_irqsave)(&cxl_cper_work_lock);
-> -
-> -	if (!cxl_cper_work)
-> -		return;
-> -
-> -	wd.event_type = event_type;
-> -	memcpy(&wd.rec, rec, sizeof(wd.rec));
-> -
-> -	if (!kfifo_put(&cxl_cper_fifo, wd)) {
-> -		pr_err_ratelimited("CXL CPER kfifo overflow\n");
-> -		return;
-> -	}
-> -
-> -	schedule_work(cxl_cper_work);
-> -}
-> -
-> -int cxl_cper_register_work(struct work_struct *work)
-> -{
-> -	if (cxl_cper_work)
-> -		return -EINVAL;
-> -
-> -	guard(spinlock)(&cxl_cper_work_lock);
-> -	cxl_cper_work = work;
-> -	return 0;
-> -}
-> -EXPORT_SYMBOL_NS_GPL(cxl_cper_register_work, "CXL");
-> -
-> -int cxl_cper_unregister_work(struct work_struct *work)
-> -{
-> -	if (cxl_cper_work != work)
-> -		return -EINVAL;
-> -
-> -	guard(spinlock)(&cxl_cper_work_lock);
-> -	cxl_cper_work = NULL;
-> -	return 0;
-> -}
-> -EXPORT_SYMBOL_NS_GPL(cxl_cper_unregister_work, "CXL");
-> -
-> -int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd)
-> -{
-> -	return kfifo_get(&cxl_cper_fifo, wd);
-> -}
-> -EXPORT_SYMBOL_NS_GPL(cxl_cper_kfifo_get, "CXL");
-> -
->  static void ghes_log_hwerr(int sev, guid_t *sec_type)
->  {
->  	if (sev != CPER_SEV_RECOVERABLE)
-> diff --git a/drivers/acpi/apei/ghes_cper.c b/drivers/acpi/apei/ghes_cper.c
-> index 627f6c712261..673dca208935 100644
-> --- a/drivers/acpi/apei/ghes_cper.c
-> +++ b/drivers/acpi/apei/ghes_cper.c
-> @@ -9,10 +9,12 @@
->   *
->   */
->  
-> +#include <linux/aer.h>
->  #include <linux/err.h>
->  #include <linux/genalloc.h>
->  #include <linux/irq_work.h>
->  #include <linux/io.h>
-> +#include <linux/kfifo.h>
->  #include <linux/kernel.h>
->  #include <linux/list.h>
->  #include <linux/math64.h>
-> @@ -319,6 +321,139 @@ void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
->  	schedule_work(&entry->work);
->  }
->  
-> +
-> +/* Room for 8 entries */
-> +#define CXL_CPER_PROT_ERR_FIFO_DEPTH 8
-> +static DEFINE_KFIFO(cxl_cper_prot_err_fifo, struct cxl_cper_prot_err_work_data,
-> +		    CXL_CPER_PROT_ERR_FIFO_DEPTH);
-> +
-> +/* Synchronize schedule_work() with cxl_cper_prot_err_work changes */
-> +static DEFINE_SPINLOCK(cxl_cper_prot_err_work_lock);
-> +struct work_struct *cxl_cper_prot_err_work;
-> +
-> +void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> +				   int severity)
-> +{
-> +#ifdef CONFIG_ACPI_APEI_PCIEAER
-> +	struct cxl_cper_prot_err_work_data wd;
-> +
-> +	if (cxl_cper_sec_prot_err_valid(prot_err))
-> +		return;
-> +
-> +	guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
-> +
-> +	if (!cxl_cper_prot_err_work)
-> +		return;
-> +
-> +	if (cxl_cper_setup_prot_err_work_data(&wd, prot_err, severity))
-> +		return;
-> +
-> +	if (!kfifo_put(&cxl_cper_prot_err_fifo, wd)) {
-> +		pr_err_ratelimited("CXL CPER kfifo overflow\n");
-> +		return;
-> +	}
-> +
-> +	schedule_work(cxl_cper_prot_err_work);
-> +#endif
-> +}
-> +
-> +int cxl_cper_register_prot_err_work(struct work_struct *work)
-> +{
-> +	if (cxl_cper_prot_err_work)
-> +		return -EINVAL;
-> +
-> +	guard(spinlock)(&cxl_cper_prot_err_work_lock);
-> +	cxl_cper_prot_err_work = work;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_register_prot_err_work, "CXL");
-> +
-> +int cxl_cper_unregister_prot_err_work(struct work_struct *work)
-> +{
-> +	if (cxl_cper_prot_err_work != work)
-> +		return -EINVAL;
-> +
-> +	guard(spinlock)(&cxl_cper_prot_err_work_lock);
-> +	cxl_cper_prot_err_work = NULL;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_unregister_prot_err_work, "CXL");
-> +
-> +int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data *wd)
-> +{
-> +	return kfifo_get(&cxl_cper_prot_err_fifo, wd);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_prot_err_kfifo_get, "CXL");
-> +
-> +/* Room for 8 entries for each of the 4 event log queues */
-> +#define CXL_CPER_FIFO_DEPTH 32
-> +DEFINE_KFIFO(cxl_cper_fifo, struct cxl_cper_work_data, CXL_CPER_FIFO_DEPTH);
-> +
-> +/* Synchronize schedule_work() with cxl_cper_work changes */
-> +static DEFINE_SPINLOCK(cxl_cper_work_lock);
-> +struct work_struct *cxl_cper_work;
-> +
-> +void cxl_cper_post_event(enum cxl_event_type event_type,
-> +				struct cxl_cper_event_rec *rec)
-> +{
-> +	struct cxl_cper_work_data wd;
-> +
-> +	if (rec->hdr.length <= sizeof(rec->hdr) ||
-> +	    rec->hdr.length > sizeof(*rec)) {
-> +		pr_err(FW_WARN "CXL CPER Invalid section length (%u)\n",
-> +		       rec->hdr.length);
-> +		return;
-> +	}
-> +
-> +	if (!(rec->hdr.validation_bits & CPER_CXL_COMP_EVENT_LOG_VALID)) {
-> +		pr_err(FW_WARN "CXL CPER invalid event\n");
-> +		return;
-> +	}
-> +
-> +	guard(spinlock_irqsave)(&cxl_cper_work_lock);
-> +
-> +	if (!cxl_cper_work)
-> +		return;
-> +
-> +	wd.event_type = event_type;
-> +	memcpy(&wd.rec, rec, sizeof(wd.rec));
-> +
-> +	if (!kfifo_put(&cxl_cper_fifo, wd)) {
-> +		pr_err_ratelimited("CXL CPER kfifo overflow\n");
-> +		return;
-> +	}
-> +
-> +	schedule_work(cxl_cper_work);
-> +}
-> +
-> +int cxl_cper_register_work(struct work_struct *work)
-> +{
-> +	if (cxl_cper_work)
-> +		return -EINVAL;
-> +
-> +	guard(spinlock)(&cxl_cper_work_lock);
-> +	cxl_cper_work = work;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_register_work, "CXL");
-> +
-> +int cxl_cper_unregister_work(struct work_struct *work)
-> +{
-> +	if (cxl_cper_work != work)
-> +		return -EINVAL;
-> +
-> +	guard(spinlock)(&cxl_cper_work_lock);
-> +	cxl_cper_work = NULL;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_unregister_work, "CXL");
-> +
-> +int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd)
-> +{
-> +	return kfifo_get(&cxl_cper_fifo, wd);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_kfifo_get, "CXL");
-> +
->  /*
->   * GHES error status reporting throttle, to report more kinds of
->   * errors, instead of just most frequently occurred errors.
-> diff --git a/include/acpi/ghes_cper.h b/include/acpi/ghes_cper.h
-> index c5ff4c502017..4522e8699ce0 100644
-> --- a/include/acpi/ghes_cper.h
-> +++ b/include/acpi/ghes_cper.h
-> @@ -15,6 +15,7 @@
->  #include <linux/workqueue.h>
->  
->  #include <acpi/ghes.h>
-> +#include <cxl/event.h>
->  
->  #define GHES_PFX	"GHES: "
->  
-> @@ -99,5 +100,15 @@ void ghes_estatus_cache_add(struct acpi_hest_generic *generic,
->  			    struct acpi_hest_generic_status *estatus);
->  void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
->  				   int sev);
-> +void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> +			    int severity);
-> +int cxl_cper_register_prot_err_work(struct work_struct *work);
-> +int cxl_cper_unregister_prot_err_work(struct work_struct *work);
-> +int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data *wd);
-> +void cxl_cper_post_event(enum cxl_event_type event_type,
-> +			 struct cxl_cper_event_rec *rec);
-> +int cxl_cper_register_work(struct work_struct *work);
-> +int cxl_cper_unregister_work(struct work_struct *work);
-> +int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd);
->  
->  #endif /* ACPI_APEI_GHES_CPER_H */
+> 	devm_cxl_add_nvdimm()
+> 		device_find_child()
 > 
+> Maybe:
+>      if (!cxl_nvb->nvdimm_bus) {
+>              rc = -ENODEV;
+>              goto err_alloc;
+>      }
+> 
+> 
+> Reported-by: kreview-0811365
+
+Thanks! I've fixed it up in place in cxl/fixes.
+
+> 
+> ~Gregory
 
