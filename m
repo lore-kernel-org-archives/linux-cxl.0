@@ -1,194 +1,249 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F3E19E968
-	for <linux-cxl@vger.kernel.org>; Tue, 24 Feb 2026 02:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C182777EA
+	for <linux-cxl@vger.kernel.org>; Tue, 24 Feb 2026 03:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.175
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771901470; cv=fail; b=MJwlmquI/cbDpVbDSEHZlxeU5WdDiru2vQemoHwqRDxDe/tABDmoxvmbErS37+anBJkUw41msThhXN/qLup7YhB2s0+SYZDlRe9G17Z2EK/s9DxEO+j+Jww5QHgld+vQMlDdlcxpkrfVRRnbaop8BMUUbCMOqqMX12o9rAC+Y9I=
+	t=1771902020; cv=pass; b=rGK4aCPcGsrcx9M7TTVcsttPawE4BB5ECcZwwUnkrWDqLtYQe2hcKO16G6ZH2IjChZWRfdh9jHyKKELdk5EdVb1uAWEYZOZIigNtA0RduTPjSsF1dc69mktLuEHvZ1E8y31UCLGgS5TkIoC6cFeBhUznwThYFngppvoQ2bWCIs0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771901470; c=relaxed/simple;
-	bh=cecxtNBX8IpI8l0U/BAHdXQ3awYD5Z2C3AF9W8iY9PA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=YijxivBoLueOB0m8ApdbvIciQghXqIkGMQQ/M0XvGpNdMoUPzrwKYDU8q8nbAO75WZEyVzXynRcMy0dG3iinp0W9fsqJ5/lWK5VP1jkBLSboIBOmZHc5UEtcl1JHOl3wfQU/5aErU87GV9P5v+jSk2Fz69CMti+eHbpdmFCdbEQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K0+YPnkT; arc=fail smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1771902020; c=relaxed/simple;
+	bh=URG9p5PA0AV/5bQlXeYXvRn2vYf4zuMTvunUlPWBpFY=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PZMpDdLJ18MDmfWNEiqV+71oxPTfTdQpj5Tnh8aD3o8Dg1vgf6F7NQf+NBmO7G3i3gynokMhC3l2IPxYt9qFBAFcUf11jXE6KfUDDNzdVp4/A051nBqoNtl47SLVepz1dgkdSf/Z+0b0xN8cu732wM+z6JanlP1pL01ove9HHIA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B3ymAhxx; arc=pass smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K0+YPnkT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771901469; x=1803437469;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=cecxtNBX8IpI8l0U/BAHdXQ3awYD5Z2C3AF9W8iY9PA=;
-  b=K0+YPnkTxUY37/bCMGNbGr0gHRryFLfJPAgzgpjM9EJ6k9p5Lus3R1xe
-   F7tL63nQJhMBdzvmyX3FZW3kr8SmCtprtPjfsRVK3788VdnvVFbjgtpV5
-   NJYY42x2TXozo9+GzhBsYOZo6zidVCv/siUVwMVMSqyZw3V/LBbtdgz4w
-   KcDABCHl967/qNja24KRLWJTp8+29ddOfdw9USdlfyh5f6DVQmLII7MA8
-   3PmUMS3kMdhTX8/ZSIoTVLtkpRn9jNrUAswsUBfReqYF4f8CEhVlHhnZN
-   Oh2OZ6Vv4AfwhOnUrZS9yDpwP3h2tSpLxp3QuWi4D7kXRwTsT/kX2gcf4
-   A==;
-X-CSE-ConnectionGUID: 0CDxSHrMRJaTIQiUg+qg5g==
-X-CSE-MsgGUID: U9TWAOywSAuBaREd6m19EA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="76770875"
-X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
-   d="scan'208";a="76770875"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 18:51:08 -0800
-X-CSE-ConnectionGUID: mxpjaCH7Q/CE8VOwG97cqA==
-X-CSE-MsgGUID: Yccv9Nf5S8uiWwR3YtOq+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
-   d="scan'208";a="214622188"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 18:50:38 -0800
-Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Mon, 23 Feb 2026 18:50:37 -0800
-Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35 via Frontend Transport; Mon, 23 Feb 2026 18:50:37 -0800
-Received: from DM1PR04CU001.outbound.protection.outlook.com (52.101.61.13) by
- edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Mon, 23 Feb 2026 18:50:37 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=U7c2HNvpUlYwbeLSEIwJDtj1BM2HlPpksLeHRCszmuD9BreKIUDjb4RKgt0nwopgQKKjREKokWG76zsNQEbRdbYv+JXexya2jNynqbu5BHoGW6J4nLLYPQJOyYdinsUH2WoOZgKOdh2hlaPSeXtGKIzK6G2ZWeje8Y/siqatSl288Z10N+f65Ga8pRAXE7sMwK5JFa0GMzqPBXFgTs2NXmrjHZ2aF0xwGIdxiuVPd0xrKHgjmcu5t+8bRVUq8KXsH8Ac196vnvePP9gPnRVaWCWRN8q5qmXHL8puxDC3Q/ev8zMKDl6i+PGQFCpGufqmPkhXjlZnqKEVmorIxNNz0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0HiWTfZxsZZvoxEe9TqMafBc+JijprjJqyBD66q+FpU=;
- b=Izv/fJUxtmCs/X2VLFjYzVCUxBpWce7cK05fgW61OvHH3iQUiwDEcl3MbjVN50eYw0Hr4BJHddKewL+48nIgtyvwx4VHVy4LXICYnn8WobBVp8ikkqEzEwJEXmZTIBAyg1vbu4Cqw1K8rlybARsW7CkynNFOIuvQyb7NEVfio2XwDFYtfh6TeYJDRA+QIPrtTEarROKYQFt8SZ/4hZXqluAg551Q63hlFyEjsuYYSDyOfiWsjvhxrFbew2OO+HiZN2VK2bAAGysk8eCKZXt4IIC/qRr/9zVG6ShqyQRMu2VT88TNNsrk8PUOddsMuSH2qgbvFoMZgnVCk0Z0zPPTew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by SA1PR11MB7110.namprd11.prod.outlook.com (2603:10b6:806:2b3::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.22; Tue, 24 Feb
- 2026 02:50:30 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::4a5f:d967:acb2:e28a]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::4a5f:d967:acb2:e28a%6]) with mapi id 15.20.9632.017; Tue, 24 Feb 2026
- 02:50:30 +0000
-Date: Mon, 23 Feb 2026 18:50:23 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: <alejandro.lucero-palau@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v1 2/3] cxl: export internal structs for external Type2
- drivers
-Message-ID: <aZ0R79N952TTsRcl@aschofie-mobl2.lan>
-References: <20260223142633.2994082-1-alejandro.lucero-palau@amd.com>
- <20260223142633.2994082-3-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260223142633.2994082-3-alejandro.lucero-palau@amd.com>
-X-ClientProxiedBy: SJ0PR03CA0350.namprd03.prod.outlook.com
- (2603:10b6:a03:39c::25) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B3ymAhxx"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-56743b33c67so2209208e0c.2
+        for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 19:00:18 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771902017; cv=none;
+        d=google.com; s=arc-20240605;
+        b=gN1yBXqucOubyLjAavc0qzJz3e4zQDGddWfsv4AHK0b2/FcMSZe6+tKEIEXRErGONy
+         FBBFSX305r8urNOHNuIqLzbN+U3hCXjCdt/dvV+FsSK7wOe9IpDce8T0iRebQHlBL2nI
+         8MDRjnW0w0K2oU12s4mqXXC7jYCkFQKMjwVlrBgkTavR3Clr01AmiqTVwgFRoqqs0xyF
+         RaikLY5JCcDyUV/QbuhKSXVq13lsouq7DWwKkN1aU9tJv4MHeKNQqowIwvRwKuP+uFsW
+         3DUGQXS6Sjqs2Y3q5CwLPbJEzIbTMvvRPLw3SlvH0m3ojHJSZAeVoUnv0nERSXpbfpl0
+         6aPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=xFe8WdiYvRsGLyynpqXx4xXBoM9FyyzukwEjWl1pbts=;
+        fh=+jFdAeOJodK5MrG50Dl5JFcfVatCrUX1a0GYH7hVHCE=;
+        b=D5zV8lrUyxksEyseovQBdexz4Wn5SRORZK3klkVhTVgcX9zd1SSBCA8KthbgUSCsBT
+         hV91K/oPtuNuN7+/H/+5aE6L1zUFM/0h4DLFIJtdE/+Mbv28SIRcndIL0fXJq2l2QSMF
+         M5hIuS8I2yRbOxU/fhUohzDqJsNJJfD/S+Sb65O3paahPapTEpWGMYLsSQzYW3rUFiIG
+         qhlIHeouHl/3Co193sm1vySsrk4Bv8XX0K+lffzaaNHfKs61oyn6EJyyJ8/kO2/WLMeK
+         oPjz33GNMSlrgzNE8TdwZAxzHRCOODSC4Bds8H7MPUFI3RcQS28uut6UOxiWzMjGjceo
+         nMYw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1771902017; x=1772506817; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xFe8WdiYvRsGLyynpqXx4xXBoM9FyyzukwEjWl1pbts=;
+        b=B3ymAhxxWeoTfsl0KRnGRCZw0Cw7PoBJbPwy3MCpelHkkc67TCEWmEMkObdOJ7M63x
+         aX2RR//RrqYDhs5WPF0G0EWfQ1CE6/aG+seMJBt31TstS8q18nx5tCnmFdQEah/GoF7P
+         Ss079WND2GVySuBN8bDw9gDHvsG4NBE4TnNHOOQLGkWWYRR/7uYcWg4qgJCBNx4/UowJ
+         gFnNLyjfvvBcOici+VtfIlJZQsW4j8pyEFjI3vOLDGpj2CqoWk/UuAdZblk8u+DoAL8Z
+         f+bSQDDVDdQSw2aZ2YZimO2Ewz9wgcow+pdeYzKHDwLQFH/+mchjBx2p6Cbbm4VmA8lW
+         GgfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771902017; x=1772506817;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xFe8WdiYvRsGLyynpqXx4xXBoM9FyyzukwEjWl1pbts=;
+        b=dHjzX6lpDHZ5Yn/NNihGt7XYaak2qdAuLmvkh8IiveVl4L42dxndJXSqjfw820RWNb
+         JWEeFXjZXv8tktXeoehdapGevhNMESC3ql2N7AWfYXRDLP/3rlqKkRE8QX7OchTViXsr
+         UDARLIuxHEG0UXm/s3ghjR6o4MgdZiv8TWkRs2Kgp+d0i1Vk1OYZFRLBzTO/kWobk3IX
+         ZQsMlnDo5ikut5mt48FMe7bJ1BaW4ahwC61eGnh8wPN+3AndLzIpVo9IeBlbiEAePHg4
+         mxTWmlZtCRsAZ8/z+M+87eipbMgeniICR1OGNzzuvKn9NjX3NXBf0oTcBr9AXKzoINTE
+         k3yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXs42S9KGEmVZ9Fs0Agy4MbkCk+q9p/z/lyZDJwsF0MdSoCzJLTUU8homvCKFFQ8PAhXfdrbce2UmU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+JKWWjVNfV67ZBJMha2BfTAO6kW48hbGs5bLA1vL025uPuh5p
+	9arE/3uqEoPGdA+Ad2OJuxQ0nurRTfBU3GUyK0N7uGj1xodEEalMkmcXuEIncVdrPnFwV3CMnER
+	iE+rZAT9vX75PtAQth2yeKXJn5jWkrULT1rZhX/Pf
+X-Gm-Gg: ATEYQzzbga8yGti5XXzU0zdyA/KxDf8FfaFDjjbEPKhHWTorbnIg9FcdyOAiT7v3Ysm
+	fdgJQOD1uQVa5nDTpfEC3qK7lgK7VewRCpkgzgTg6CrU0cZXYrmB5JRNZBFZWEQUp06Yg472tsC
+	65ntTy14/P0LBKwLGKeYQSoGhIJrj89kw9fcya4sP5fawKhvFfMYb7D94JP/kc1nVoJ6wwfUErz
+	M/gWwyymcTml5gzGx+jASMnqAbgJNFsBoCILoB7jHOun2ReRSP1QjYjMaM4Cs+88jtaUOcNtOxk
+	VJjeaMT6pBybbw6sy53mqZv1i05NMOr0sCUNE7fObTiXRKdo7DKJwJO0wRX8Swbgzg==
+X-Received: by 2002:a05:6102:3048:b0:5f8:e2cb:d245 with SMTP id
+ ada2fe7eead31-5feb2c23567mr4062890137.0.1771902016820; Mon, 23 Feb 2026
+ 19:00:16 -0800 (PST)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 23 Feb 2026 19:00:16 -0800
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 23 Feb 2026 19:00:16 -0800
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <0100019bd33bf5cc-3ab17b9e-cd67-4f0b-885e-55658a1207f0-000000@email.amazonses.com>
+References: <0100019bd33b1f66-b835e86a-e8ae-443f-a474-02db88f7e6db-000000@email.amazonses.com>
+ <20260118223110.92320-1-john@jagalactic.com> <0100019bd33bf5cc-3ab17b9e-cd67-4f0b-885e-55658a1207f0-000000@email.amazonses.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SA1PR11MB7110:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5fe05b0a-0515-4aa5-0957-08de734f78de
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?gkKlyLNYSQsFlLrQOO8haS3EY1jnAPu4qDfQvD3TDmqR45lLq97nb8812NCS?=
- =?us-ascii?Q?WGxe7M6rjle2c2R+ADnvv4wUlWZOKeCL6cJVHVIxG+jJXVlBNXKePkhOsO71?=
- =?us-ascii?Q?4F1+kocyLBFgeDf5WK+nR2iX5MDDfzH37gSd0LZSR3QkQvvs8oJuWLdmWYSc?=
- =?us-ascii?Q?4L0QQGyCLBuuqzqkDAEWENYKzSW71cjI7dM/NjB+G+nvWs5W9Rff3kYqsz43?=
- =?us-ascii?Q?7bozkQhMn5zmAGUR61RNcqxCYecLeepMLL40gcvOr7btpfe4P5UQlz9gCiq/?=
- =?us-ascii?Q?nYmb4BA6LC7tXmMHsDAqWqr5t3918Zfan1JQUCJabLPtDyc4kpjBIn3oRhdT?=
- =?us-ascii?Q?8IiRXl6AoKlqAgp5jjQItsURAGqH44dTmYY3ZpoVdAGarYTm5fy7/x50OVhh?=
- =?us-ascii?Q?N6fcCwvasEXMiZdDrPs1lQpqeNa7m4FRuKCukhG0anlZ1KGzoafDBX1agehj?=
- =?us-ascii?Q?zaM5ul/qNFj1mIZN9PasCoObV7e81Uhtqn9b0Mir1J+L+bCMEja8QWz8KTth?=
- =?us-ascii?Q?hugrv7hMaA00sM9VY46ks08z9lRf5kUmfwNLpSJpWHBYae+J/3C8JaApztYl?=
- =?us-ascii?Q?qqU+FSnVUYv9qAv6VTU1gdDIdcfGvss3G+z/Dore9H0yzI0euissUF6IrWr+?=
- =?us-ascii?Q?XGluoP/I06z/R9qpOxaS97O4MCIYk26KHZ3HG6/b+PiJR7Jh42Q5MIkk2GF2?=
- =?us-ascii?Q?/CCO9L8HvUyqeXWFQt+0zbDywGBw83h3iwawqV1NRgNBt7/92tEyuCnmCN4o?=
- =?us-ascii?Q?nAG+AXHSdh0bK/jr35wTvMdekjvPrC+iXq4nok+Whj4w4VhhxNa07TRWSZ2+?=
- =?us-ascii?Q?h4JiTGZI05jvGb9WiurqN9gS4rhoRMfC5JqcA5LW3peutBBXuBXAJn3oRg1s?=
- =?us-ascii?Q?ER0fPywZHFRYskK7D5mJ0uLI3oZGob/X1qfDCjtX+l+VUyj0iwBVbQkhDuUr?=
- =?us-ascii?Q?047SMyggRwIyY15GbQ/mW0s325bgdj0MkNM087sEm70aT/guqB6fQzRciycf?=
- =?us-ascii?Q?aR+qXOIp3c+BUceL6GBVzFyKXyYPEze2lzHsmSubyujrgo0/d/ndry5tGmds?=
- =?us-ascii?Q?SBnzxcwW/td9NqtYm9kuuvjCtXC8WnAlwBJ3hy9pb8iAalKPYKHgLF7HsBV4?=
- =?us-ascii?Q?my7Jieupd2dBE7HuNlaWh0ETUTWGJWeAFtflcWpYHzBTMRjZLH0HXvQ7R02J?=
- =?us-ascii?Q?iPO60+y7UoB/v0gOCJVNZhnlEtewrYM8il6ltICV3X9P2aM3GqrAu/ZiFF6m?=
- =?us-ascii?Q?Xu5SQb3ly2Do2BDSV3nsgwMGxaYHaVJ7FIBWIG6TTWRUjDA8tW1r7Et97AJE?=
- =?us-ascii?Q?CqczcZMSwZXXhxpRpLfVKmavFrlZBniJ3d1U/fuXEG+27LNlNIYyQ5MrY8nC?=
- =?us-ascii?Q?c+VQ9O/GOdlvxTbMUmNIt6hQIMuGTOxkQHbD82629NZqitWJgcaVb3iSGm0L?=
- =?us-ascii?Q?vXoOhsW01KyaI9rmaDu+HlwWXOzaDhBAjed0B2N7kEGoW37wexoF1jrrIy6G?=
- =?us-ascii?Q?coIl3ebcUxkg9BlA0nTxKOxcG68OIh8Zr9iLDdqnh6IMMqYpWSDljvwmNJpx?=
- =?us-ascii?Q?6Em70XtqC2r70HO84aI=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?jN7a19AtBAusbIyR9gKMLxQ2sfNjbm0J3x+lp1sV0048wWeK826iot4ztYoh?=
- =?us-ascii?Q?1rK3y7PrynWAZI6dXW/XV8mP7L2mRI215Uig4TqE5h2Qer10GDWMwT7SJoCC?=
- =?us-ascii?Q?jgyYhHPNoAxlRwtt9DLmp1zpfUEHiDoLhR5/B9qLwcAq9sPFp8IyoXgRQ4Gt?=
- =?us-ascii?Q?1EbE86mxnzBmXcMZKlhIDqAC1WrSUpcV4URBQOdhSfyDtrG9Yi60R7Nh8t4Q?=
- =?us-ascii?Q?2Bv195YB+wwi2abEsiAYsPjR+CgiRWYY/hH76Xll4LqE91gK5CjUuTmj7B6U?=
- =?us-ascii?Q?AXOAJ1CNJEfqjfIOT/rHH6S58uCqV1TzltqyhW/wAx1lQXn1fDE/co+zAa72?=
- =?us-ascii?Q?3Kjbdu9bg6B8n1pwbF85n6grrtslZz5/8HgISYLkxx+pZAjxfkW8BUvQGilx?=
- =?us-ascii?Q?vJExD5FnAdfhTrfJ+U5uOoZT92rwyhSIW62Uvlo4q1m8/LGwhs6j+GowNG0a?=
- =?us-ascii?Q?SVZxfWBKsyqH4sKlLcTcY7zz1VqHMWdC77t7vzdYNnnr+Hp5uMLPClhVdMxx?=
- =?us-ascii?Q?pNC6sVTrOOWJgI/Q5ptqHoA6W3RfNbCUTNWCCbDfVXNCseCFwVI5Gke3yXTh?=
- =?us-ascii?Q?KJ8/iGMSu46INhGWxkAxxkFTCRb8Cuh2bj1EVySAXkdu08MPyChVgyr1iUan?=
- =?us-ascii?Q?GY0SdsD3RLB52k2h954Hb1fx9CSZJvlzyRl/WWniIVqQfhb2UTAdD39aEUxj?=
- =?us-ascii?Q?j8vUHGBz2te2lo8oR78ZSHmGBMJhA4brPjPiwc43l2TmCOMTs/SWk7ljhgD/?=
- =?us-ascii?Q?GPSiJlV+WUbssoCAaqqb6eHCzQAncn/F63nQ/1Ay3oXv5PRgeYfwcEvMsk8s?=
- =?us-ascii?Q?aj6ZNHVZwUWMRcospTLwOK34MJxMDsGT06xEwFVFw9jGrxYMXEP/O/Ps4cmJ?=
- =?us-ascii?Q?A5IviIFHSAgX4V3pUELIEESnjdNCljxDlKennyAOwwfSjilWX5OUJ12tm03e?=
- =?us-ascii?Q?nB7+BUcIj6CWkMN6geYhP/xRVN8SGmTnqjDkXT9l+whJ6DXKjqyBqPUaNtyQ?=
- =?us-ascii?Q?kzahGf71Ry2WXwnAOp0RkvDaTrkL87OSWmffDAUfL+kjrd8VClafUqyXNZ4T?=
- =?us-ascii?Q?5tcu079bSFwrzJX1txGyoKwcsTcnZ3Wwcv8uj1KST2l1YNCmkfjrr4TE4pYV?=
- =?us-ascii?Q?8sXe1OIQURGVbIp/xUgzpb8j/kFQpkjqm1HGSswjcvpPBv0HJ2HJWoOprpPR?=
- =?us-ascii?Q?5Vfzb/l/M//pnW+TNH0TuJLPpQpdtPzh1FuBhhy27O4ghiYiM21191uuj9PP?=
- =?us-ascii?Q?IwUFfVhFrX2RceyhczHuCKzyfl6lNFHTVo5iuHtNTmo++9+tF6TtmimdBIHx?=
- =?us-ascii?Q?4/dhSGKBgN2RkhnIcax0ZMItTKuB2qJwHhYpgcsSEVLLkWIz9A0wakLuAnTJ?=
- =?us-ascii?Q?oVEf9ZDh24++M3eBOvwQoxvro8FLWSEaRSh6ZjMTRPZ8RUY35CVn7BfbvK/y?=
- =?us-ascii?Q?g0aCCIPCwF4WYviw6NL7Qh5e+yZqiovZPONMCBoCdDmjEb6ZBvIvq5m67D2Y?=
- =?us-ascii?Q?/9wqzu/FL4A+SxFOvPkSQsrXo47x+hlofO1cq+7oDc5CpP/91DNiaHnBfJC3?=
- =?us-ascii?Q?mzp/xytdZL1VOARIGCjnCa4JObM2rvRahxPWMtpFX25SOhqZoO/93o10R/LC?=
- =?us-ascii?Q?GG73LszzaWQTzxmpEhLjSe92mRhv7k+39mOIGvguWOpz3Vt2vGJLgQtZOmUc?=
- =?us-ascii?Q?K9FKgZ94TyHe5e9K2oDurQlIYb2te2XCKTge6zWNdhdDzHAz8+L/dYFSQi4c?=
- =?us-ascii?Q?8ojyHhbq+FTr0RgVcy+G1+E/Aws89kg=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fe05b0a-0515-4aa5-0957-08de734f78de
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2026 02:50:30.1632
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 81GnQl0Pq4HneoM1Qy7lgBSUvfQ+jAEQC2n5mp07sLjJlZtOSjh+/kNlIP7uFDzAHbJwqgx/SI6dPkFptmVw592MQcKEpA5BFCUBceA4etg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB7110
-X-OriginatorOrg: intel.com
+Date: Mon, 23 Feb 2026 19:00:16 -0800
+X-Gm-Features: AaiRm52vebMvqU0lH0n0vOtDAX6OI7Y7um56VSKnaZ96AOmxaI9gmZymUaqHfu0
+Message-ID: <CAEvNRgHmfpx0BXPzt81DenKbyvQ1QwM5rZeJWMnKUO8fB8MeqA@mail.gmail.com>
+Subject: Re: [PATCH V7 02/19] dax: Factor out dax_folio_reset_order() helper
+To: John Groves <john@jagalactic.com>, John Groves <John@groves.net>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Dan Williams <dan.j.williams@intel.com>, 
+	Bernd Schubert <bschubert@ddn.com>, Alison Schofield <alison.schofield@intel.com>
+Cc: John Groves <jgroves@micron.com>, John Groves <jgroves@fastmail.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, Gregory Price <gourry@gourry.net>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	"venkataravis@micron.com" <venkataravis@micron.com>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 23, 2026 at 02:26:32PM +0000, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> In preparation for type2 support, move structs and functions needed by
-> external type2 drivers. Differentiate between public and private data to
-> be preserved by type2 drivers.
+John Groves <john@jagalactic.com> writes:
 
-I would have enjoyed a mention in the commit log of what was needed.
-When I saw struct cxl_dpa_perf, struct cxl_dpa_partition,
-CXL_NR_PARTITIONS_MAX, enum cxl_partition_mode, it wasn't so clear
-why those were needed (as opposed to the cxl_dev_state defines)
+> From: John Groves <John@Groves.net>
+>
+> Both fs/dax.c:dax_folio_put() and drivers/dax/fsdev.c:
+> fsdev_clear_folio_state() (the latter coming in the next commit after this
+> one) contain nearly identical code to reset a compound DAX folio back to
+> order-0 pages. Factor this out into a shared helper function.
+>
+> The new dax_folio_reset_order() function:
+> - Clears the folio's mapping and share count
+> - Resets compound folio state via folio_reset_order()
+> - Clears PageHead and compound_head for each sub-page
+> - Restores the pgmap pointer for each resulting order-0 folio
+> - Returns the original folio order (for callers that need to advance by
+>   that many pages)
+>
+> This simplifies fsdev_clear_folio_state() from ~50 lines to ~15 lines while
+> maintaining the same functionality in both call sites.
+>
+> Suggested-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Signed-off-by: John Groves <john@groves.net>
+> ---
+>  fs/dax.c | 60 +++++++++++++++++++++++++++++++++++++++-----------------
+>  1 file changed, 42 insertions(+), 18 deletions(-)
+>
+> diff --git a/fs/dax.c b/fs/dax.c
+> index 289e6254aa30..7d7bbfb32c41 100644
+> --- a/fs/dax.c
+> +++ b/fs/dax.c
+> @@ -378,6 +378,45 @@ static void dax_folio_make_shared(struct folio *folio)
+>  	folio->share = 1;
+>  }
+>
+> +/**
+> + * dax_folio_reset_order - Reset a compound DAX folio to order-0 pages
+> + * @folio: The folio to reset
+> + *
+> + * Splits a compound folio back into individual order-0 pages,
+> + * clearing compound state and restoring pgmap pointers.
+> + *
+> + * Returns: the original folio order (0 if already order-0)
+> + */
+> +int dax_folio_reset_order(struct folio *folio)
+> +{
+> +	struct dev_pagemap *pgmap = page_pgmap(&folio->page);
+> +	int order = folio_order(folio);
+> +	int i;
+> +
+> +	folio->mapping = NULL;
+> +	folio->share = 0;
+> +
+> +	if (!order) {
+> +		folio->pgmap = pgmap;
+> +		return 0;
+> +	}
+> +
+> +	folio_reset_order(folio);
+> +
+> +	for (i = 0; i < (1UL << order); i++) {
+> +		struct page *page = folio_page(folio, i);
+> +		struct folio *f = (struct folio *)page;
+> +
+> +		ClearPageHead(page);
+> +		clear_compound_head(page);
+> +		f->mapping = NULL;
+> +		f->share = 0;
+> +		f->pgmap = pgmap;
+> +	}
+> +
+> +	return order;
+> +}
+> +
 
-I was a bit concerned that new cxl/cxl.h had dependencies, so tested
-that it compiled all be itself in a completely separate module. 
+I'm implementing something similar for guest_memfd and was going to
+reuse __split_folio_to_order(). Would you consider using the
+__split_folio_to_order() function?
 
-Tested-by: Alison Schofield <alison.schofield@intel.com>
+I see that dax_folio_reset_order() needs to set f->share to 0 though,
+which is a union with index, and __split_folio_to_order() sets non-0
+indices.
 
+Also, __split_folio_to_order() doesn't handle f->pgmap (or f->lru).
+
+Could these two steps be added to a separate loop after
+__split_folio_to_order()?
+
+Does dax_folio_reset_order() need to handle any of the folio flags that
+__split_folio_to_order() handles?
+
+>  static inline unsigned long dax_folio_put(struct folio *folio)
+>  {
+>  	unsigned long ref;
+> @@ -391,28 +430,13 @@ static inline unsigned long dax_folio_put(struct folio *folio)
+>  	if (ref)
+>  		return ref;
+>
+> -	folio->mapping = NULL;
+> -	order = folio_order(folio);
+> -	if (!order)
+> -		return 0;
+> -	folio_reset_order(folio);
+> +	order = dax_folio_reset_order(folio);
+>
+> +	/* Debug check: verify refcounts are zero for all sub-folios */
+>  	for (i = 0; i < (1UL << order); i++) {
+> -		struct dev_pagemap *pgmap = page_pgmap(&folio->page);
+>  		struct page *page = folio_page(folio, i);
+> -		struct folio *new_folio = (struct folio *)page;
+>
+> -		ClearPageHead(page);
+> -		clear_compound_head(page);
+> -
+> -		new_folio->mapping = NULL;
+> -		/*
+> -		 * Reset pgmap which was over-written by
+> -		 * prep_compound_page().
+> -		 */
+
+Actually, where's the call to prep_compound_page()? Was that in
+dax_folio_init()? Is this comment still valid and does pgmap have to be
+reset?
+
+> -		new_folio->pgmap = pgmap;
+> -		new_folio->share = 0;
+> -		WARN_ON_ONCE(folio_ref_count(new_folio));
+> +		WARN_ON_ONCE(folio_ref_count((struct folio *)page));
+>  	}
+>
+>  	return ref;
+> --
+> 2.52.0
