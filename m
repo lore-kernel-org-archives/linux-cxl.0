@@ -1,234 +1,241 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from bumble.birch.relay.mailchannels.net (bumble.birch.relay.mailchannels.net [23.83.209.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0E83803D1
-	for <linux-cxl@vger.kernel.org>; Tue, 24 Feb 2026 17:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195232C235E
+	for <linux-cxl@vger.kernel.org>; Tue, 24 Feb 2026 18:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.25
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771954719; cv=fail; b=ax6OOZmWHTmGtU9d1Dby7Wp5/EDmhu/U2lO5ZRhS6iURakNCh6BaecPZLEGPfd8nuX7VtHrDM5edv3YnOELrOZVQTY3SydPsfLiD6Z+HWG68HqW/kEwz8HDaWyEgJfv6Nt35TDY9JJj7So1Stkt1n0vftryLLa1+r5tQUYLaTB0=
+	t=1771956310; cv=pass; b=fPdzxRmfj86d0iEDPDb98MiLH9raADPV/rrX4eCQGwIQJqtXwaIyiXmA0XihtMFjGx89KSFEiqzzKFMnf5B3SpWPTmHgpuAfZkL4Bpk2/Vxsn11ZTKEtxiizkO5QLhP5AsY7UgF6HkYQRXjc6bPrC+S3gi3ZnJiyjHcMnBDkKTo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771954719; c=relaxed/simple;
-	bh=kk4D/+NKGLBkoiW96orQUPYnYwih40Ed+yh4sUfQwv4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ksE1vAXKh9bxNYICijMxm5Co3CHvbi9XU5ipgMppLQxnUdaSxpDKIokJ/PzMv+rO/Y49+gmfrkFOCnWJzU34QoTOiMyuC3rUQ2cm8z/ggh2G3UxJRdUmstSFDJs+rNNShzPQY2S64/S++Wzy/YKe4K51vxDQyQ4XUUZJXIH9uE8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DnIycon5; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1771956310; c=relaxed/simple;
+	bh=2dYh8NqquBoUnnQ0za9zrssS7EQ13uIGEc5cPyJaYNo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jV+bu0tL+aOeosiZwvtgkqfOCj0cezB48bb83WNfIhtaLURCBm9PXMhdMEwsLNmDx4UAEDrZfnAiIQ1+srW0FkZdHHt53CXb4q7UkoHql/HimqU+pLOQN4jOGJWGzxMOEDdzcS1FHRYweN8ZHwuFab04UnRIo4cA9M3+XT6nRr0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=j2CtPbiD; arc=pass smtp.client-ip=23.83.209.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DnIycon5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771954718; x=1803490718;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=kk4D/+NKGLBkoiW96orQUPYnYwih40Ed+yh4sUfQwv4=;
-  b=DnIycon537uZ9+Sjpyxl0hyYZm5HECcmeCObd2RMLzSuS3Ndy+2k8vEq
-   1sZo0YaXItNJpI9CHSqn3vZ/Zhl7HzRQ5Jyewx8wzgt6azLzUNBQ2ZoBb
-   J6McDObfe4D+2UrBfZ53dPivLAXyie7mc/bIHrDPsA5wxDbyPnCsrE7Oi
-   DjNuFT/HeaUZAHFnsE136ZD9DZ2Kvy5F1NSW7UiSC6/U8CrnBEIrpQnzR
-   KIGN1ICN/Q5Mxukr5w+5Ix0PxjlJ4OuEnOIoEuItH5MXCHi9mBdrsX56z
-   1u1kEylJdmpb1JZaHTMzMDqnDX283bPBZQpctIEp7yhA5GBkxyYccVMoZ
-   g==;
-X-CSE-ConnectionGUID: 1AyR5oRWT52UJlqri4eJog==
-X-CSE-MsgGUID: Uzez0pvzQaWIYhSauq4BPQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11711"; a="72680999"
-X-IronPort-AV: E=Sophos;i="6.21,309,1763452800"; 
-   d="scan'208";a="72680999"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 09:38:37 -0800
-X-CSE-ConnectionGUID: XLEIv4KgTdCsAdfauHJa6A==
-X-CSE-MsgGUID: p9spCL3ETS2qX+ULknvEag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,309,1763452800"; 
-   d="scan'208";a="220475632"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 09:38:37 -0800
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Tue, 24 Feb 2026 09:38:36 -0800
-Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35 via Frontend Transport; Tue, 24 Feb 2026 09:38:36 -0800
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (40.93.195.70)
- by edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Tue, 24 Feb 2026 09:38:36 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Uyf7/mwBnUQKBZxX5Fd99DxCWHC+gn6KXX/hmtqtMrCdrqdMiaunzDpQTARL3HMRHcAQDRVSI+7J7BpF3TRu01QZkcZIfSGwuDoPUtxc1/sTqe9Xxf7IBDImGadSJZuo0YLC38uAEg7D6t87c+w86EslgxLsTpMnOhfSJQg7kkschC7oAR9QoSFNUmq0GS3kFYTpdWd1qMfcTLKwccle6re82oNsCWlmIcAr4RKEo6AfzqaJ0wGa5xlZgNemFDANITcXONzndIR7gqwLrml2N/ubJDM+ZfE6g+QTwzTObffgwyujD/iunvgn3Dg4yq5CICwix8zvjIY+nRMCfvS3pQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xP5Q4HEX+QiEyVyAXXWBM0Y+YEQyE/dhLxLuxbE6/LE=;
- b=MZHk+TIrAqiUCXDSOUuzzOAtExFqvGWMS7hcMZFDSbBGMqIBMVpI/E5QCYRIf5wog/x+FDg3UnDlHLuY1+qhA2KxiQdmmE4T2ff5L9VmrsAp4mFnfQ7r6fCKoGPcvF2p3/CRT2DUATkK8pwGHWnuON5XJujwwXuAb9FU/6Xxz4vxbX8FZYGSXrHObceMaQ7eI7K/cLn7xXuJZctANsq1aT/EPU8giWyLNQfdGnzBu4YJqhH9pNVAZRv2GtszKvvHnUvJnDxShJK4i+BysKqF4Baz+3hP/YWz49VVQj86g/3Bp3CYe6e9GGwzangfW+d9P+6dCtGOzLFF44qIEPwifg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by DS4PPFFCBF1B4C7.namprd11.prod.outlook.com (2603:10b6:f:fc02::62) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9611.14; Tue, 24 Feb
- 2026 17:38:32 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::4a5f:d967:acb2:e28a]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::4a5f:d967:acb2:e28a%6]) with mapi id 15.20.9632.017; Tue, 24 Feb 2026
- 17:38:30 +0000
-Date: Tue, 24 Feb 2026 09:38:24 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Alejandro Lucero Palau <alucerop@amd.com>
-CC: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <dave.jiang@intel.com>
-Subject: Re: [PATCH v1 2/3] cxl: export internal structs for external Type2
- drivers
-Message-ID: <aZ3iEEqQfp8sAkCY@aschofie-mobl2.lan>
-References: <20260223142633.2994082-1-alejandro.lucero-palau@amd.com>
- <20260223142633.2994082-3-alejandro.lucero-palau@amd.com>
- <aZ0R79N952TTsRcl@aschofie-mobl2.lan>
- <20d72717-23a2-4996-8abb-4d886147e3f4@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20d72717-23a2-4996-8abb-4d886147e3f4@amd.com>
-X-ClientProxiedBy: BY5PR17CA0011.namprd17.prod.outlook.com
- (2603:10b6:a03:1b8::24) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="j2CtPbiD"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 4538F823143;
+	Tue, 24 Feb 2026 18:05:08 +0000 (UTC)
+Received: from pdx1-sub0-mail-a239.dreamhost.com (100-104-34-8.trex-nlb.outbound.svc.cluster.local [100.104.34.8])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id BEE45821783;
+	Tue, 24 Feb 2026 18:05:07 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1771956307;
+	b=jMircRDVCeyKeTQcciz5B+EPZhj6WzBR+b1B35KBc0p1VOavVBIJqdnkvhHxbqi0vjWPta
+	VHIixK0e8jQDT4Qd89ftnEoYxCW/Ih/iU6MloqBOhmhbK54VNT3J4RD/RRXMGTUHpj06as
+	f3dCQuwOTCYSBhdkVpto43YEq/xaReOxLa35w5BiR62v6JD4SUfv9SC8RzA7XVgU6Zh6Mi
+	9IQM/VBfUM9xuPAijSTM9jCGmlyMroP/K/pDyTjb+O1SfVlk924vqv2HlcgLgevf1dz8T+
+	hTJOl9gtNlpgkI9qbDMvZMOsA1iLxIF04cMkH6rdfd7wgwUADvbztf8XF6rl1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1771956307;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=YMOTt26XpYwIlITjT0DxXy4VSW/5r5YdPadR7BeEf0I=;
+	b=PkRm398DNAM7c/kKS8RtnYrBxJcfSGjW2/eIl6vUlwxnBEZ2EIhMv0yt6nD6RWnw31tkoL
+	5rRvLVe4QVhTIAeGt5NNW6S3t0WQA/X+X3NoPPOJWBZvZIxyuIHDrm6LYZfpdk4uVzZRCr
+	0ylRosJBhhzWkKZ2gSqW7NWP08TUEy/9so6dAib4oCy4sFFP+Aqcs1JcHthNNdJnVrODH3
+	mf2Yk15B1HIafWGfBzULDzDEf0vhMNSuP/+a4qJKyfI3JXaiO/8L//219mJTAS8qhMRzxd
+	TUsF4KDxwcA/nWNdwgpbAavKvNlWmg1yWFjQTbFfOibZLsPXwKAqkqfywOVotw==
+ARC-Authentication-Results: i=1;
+	rspamd-7f65b64645-wb72n;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Harbor-Juvenile: 7f1ea69d6860830e_1771956308028_3784546453
+X-MC-Loop-Signature: 1771956308028:1787463172
+X-MC-Ingress-Time: 1771956308028
+Received: from pdx1-sub0-mail-a239.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.104.34.8 (trex/7.1.3);
+	Tue, 24 Feb 2026 18:05:08 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a239.dreamhost.com (Postfix) with ESMTPSA id 4fL5Gq0m0bz105X;
+	Tue, 24 Feb 2026 10:05:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1771956307;
+	bh=YMOTt26XpYwIlITjT0DxXy4VSW/5r5YdPadR7BeEf0I=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=j2CtPbiDnrO6gmERANl0tB8gY7Nn8nWqd6iMzmA0xCanR+HWue/3gGIbPKDAOLOcV
+	 yjCje8LlnBJxzSz17JjPyVYinWl2DQ7KyxO1dxScy0dxRbugofWa5IsZhhZRhRtjIG
+	 uyq2nQH+EVrTs3SMqEge1xzluOinfgJ0EtAMeeHo2SDWFd4RggPF2LO79hFrh7mh9+
+	 3oCdfnpvp+qR6QR9k0Cp1keSoF5+A5eG34GnJZYRNyYNubHDhyr9+luNl89AbBdNnC
+	 yn9tANQ7MxANjzk+8WZ4Mzm5IbdB46k9f9mSWdz+Npr7LdlYUAy8MTwLfoxGLM7QQp
+	 gKWo673VQ7/jw==
+Date: Tue, 24 Feb 2026 10:05:04 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dan.j.williams@intel.com
+Cc: dave.jiang@intel.com, jonathan.cameron@huawei.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, linux-cxl@vger.kernel.org,
+	ming.li@zohomail.com
+Subject: Re: [PATCH] cxl: Handle ERR_PTR endpoint in sysfs-accessible paths
+Message-ID: <20260224180504.au56jyairbpp2xu7@offworld>
+References: <20260224023609.1059138-1-dave@stgolabs.net>
+ <699d145c1da21_1cc5100e4@dwillia2-mobl4.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DS4PPFFCBF1B4C7:EE_
-X-MS-Office365-Filtering-Correlation-Id: 087c0df1-4832-41c8-4010-08de73cb8678
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?rEGr6sbTAUNXQUnxJJhfRNEafJKwc8N0RU6jk1ajLmhRIB1SrwIH3GvQHy1E?=
- =?us-ascii?Q?XMxpR3/cCSDGf42kHo/GQyPWY/Yarj8zAU8JcmzEcarwdPPsCQrAVE29ZKeo?=
- =?us-ascii?Q?Bwj1DcGWPMLWWVgO6WNHHtd5WtTWiev0/eHDENaMAKdCUok9smSEMFxQOLoP?=
- =?us-ascii?Q?8Sl2pvDb39s6C1llh8B+w5pEPz5mjifZwYm2moZ28jnEf4agNa7aIXK0H+kv?=
- =?us-ascii?Q?R0KNj9AOLclhg+bGP7Tw/dxopjb1z/dbwPMoTQw3dxqIN8GSvcCZ9Cq6R8yT?=
- =?us-ascii?Q?YuFjv0B0Wc1HV79TnyamJdGUgfsOrwm57StyboOmkeDdcopiXGrgpYi6urt8?=
- =?us-ascii?Q?mn7LIvgtMcYjYOFqRntOmgw0Dy+4PLTjX6voJGnH+yZl23EK4T8MX81GtGVj?=
- =?us-ascii?Q?OgzMnzZMWURwYROEVw23CQEUGWmeYtcB7EKkwclwPWlFaius7NCFGD3Ax8+V?=
- =?us-ascii?Q?scen8z5nFgoU+ufc/yGMtvzGJZpJbBsWVmtXElHb4B4s4w+CowpOuWNKFNYf?=
- =?us-ascii?Q?cO6UNx4sIGJMy3wY/IPwe85CGMilvyUEZqZ9mxKxyfJ+OKXmYgXM/qK1kRG7?=
- =?us-ascii?Q?z0obJ9FAH/mTFLJ+U/4L0Mtat7SVxCLtVrTdsB5P7iy80JjClGg6fJa0gEPn?=
- =?us-ascii?Q?wDxTQsGz3mIwLCuSvFLD1W+cWnLB2yHk4R3S5wx2KpsFc4ABkIVCegXeOrUd?=
- =?us-ascii?Q?xJQrWNljhEMEeLwnk43eQyGt0PNFOVKPINLhNIXzkwIoyuLQf4V4pD4ntjQJ?=
- =?us-ascii?Q?vZOU88W9ifk4aWb9ejzlaVoSKoA/UY/ckP+MqJkP92y7tEuPyKsE55i8WTY+?=
- =?us-ascii?Q?PE/b+Rm2gtD+pmWQOgO/mDO5bS0bpijY2YE762HTiaUk1PJVIlVC3cVhBj00?=
- =?us-ascii?Q?7AcAp8IrWCeIfkoqXZaX0zELyAGj7Dpx8YUYXIbEOYrgtPFDwu32H0LrC5wQ?=
- =?us-ascii?Q?tHA1TsGzlKh/5RFh40MHzxetY7vOZLqiNxstpSWL4ET5eOI9IeQEHkYo61Kw?=
- =?us-ascii?Q?aJMQD3Z9ISd6/r0OkOf77ZZuHGYVXJsptEH6zzsDP6hv1bGIf9DGiQjIWEZR?=
- =?us-ascii?Q?B28H2rsoTRA4XxEI7rHZEymiucQdTbkl70lHbxxiAEBYzQRGg+JulHJOf569?=
- =?us-ascii?Q?S/42grpHbX6j4z7pjn5dugqT4gcUBZvrMR6055O1wdGce5qlCqS3nwuCPO5H?=
- =?us-ascii?Q?qzLd2xxq+oFBIsrzizgLMUV06z+dCc2tiIxB7SpmQ6dH9BukDpcXl8rp4+O1?=
- =?us-ascii?Q?PV0u8SBnT4Iv2QBpjyKK5qoQX19QA5gDLw/wE8kDhyhLKgwjiZm2JjgUHxi4?=
- =?us-ascii?Q?QU65x6vN9QNDHoUmFgKodJ/nWYBhKh6ZRt+f20CeH3kM/LinZzxTOW4+mTnN?=
- =?us-ascii?Q?BNAioUZX3In9o4u4DHA0e1V59Btz3QZbD/gacS1A6L1rILaee2SGSB6GkCCA?=
- =?us-ascii?Q?VwQUf4ubQnTJOHTEoLLougtWFs7djGyJPapUfPfzLNcz/6HYgSDLk7FSzxPu?=
- =?us-ascii?Q?Vu1lv1KFjve5O0QkE9/447+b4Koc0Y0JHgFlZPQVR9Dc2fxTT0Mjq7EvIibl?=
- =?us-ascii?Q?2mBJ6HK+pvBhzHn9TfQ=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?dgj4+Bcdk4nCyFk0lttbrUDE8xSryXT5/6+l4T76/0DEMaMfHCF6gS54hrvW?=
- =?us-ascii?Q?UDxorkxEHwACTV+OaXd6m6qazmmMLP7oPvgKrBuatkkdluSP+Tc9xya30UAs?=
- =?us-ascii?Q?FuC1UkTJ9Vw/J4Aqq+Washbh/fe4plkGErMV4+F4BtoiNKmWQt//r3JM+QjV?=
- =?us-ascii?Q?BKW548ukRSh+cj+XqvvlDo/l+yC4ZUnfZf3YE6yhzGt3O5rGWj5Jh4UCxHEU?=
- =?us-ascii?Q?3zXfDt03BspMp0ymUY+hgP2g1GmAVKykIUuhizNrw57PBM+mJb72LlVFZmXA?=
- =?us-ascii?Q?tIAFqn5F7er5ABL2Kt++ZR1X5PBGlgbe+edXfHxVkhIVxr6N/73uIPEXpnaB?=
- =?us-ascii?Q?WRm5yEcJnOFyVrY4j35ksazFLyHvjoauDSB6N0BpLM1fnTz9GiRP85V34Gmw?=
- =?us-ascii?Q?iywPZylaQ6ro+Wdip26zpMevFZqmtJeT4roPZwxmbSyDwrFayMdiQ25kfbAa?=
- =?us-ascii?Q?ANrGK0vSI0s+Ram6/t7NwZp18ts3F1SfMYFupR2MSSiC/zEacBMdB7UwAggr?=
- =?us-ascii?Q?UhCbNDCLFZl15/AerIJtWXppdjN1AQulNqNuMolH71jFTbdT2xTA48KVniLL?=
- =?us-ascii?Q?F+4rHXfC7XBeb+wn2BCFofcy1jeXqttYF2Xbi8VjKhEUHg7O9iQoYvRQgsM9?=
- =?us-ascii?Q?ksxiPb18IlIQDVG9mG5dhKRfIYebTZLNkQeqCu9bVbKekdV4hctwBLkwG9f1?=
- =?us-ascii?Q?iDLpqBqJHpMBfDynmjRCW1DUFxOuOv9yLN3JkYOF9DLENrA2wAgWpM/sGUwf?=
- =?us-ascii?Q?9EgDKoMRRG2kLf3uudZQ05kkG7uwF0FgnOMa2SS4JZGirC7XnAWFNSpNBIzp?=
- =?us-ascii?Q?G0FIBAwghOBjZ4UquyjoIxaO+bPmGgi2TPW/KYOrGn0qtpmKVF3xLUy3e/QU?=
- =?us-ascii?Q?39DV/HoJdA2v6OrhW+ioQ0m3OdKNhkyM/AvTEkbKQTPy3XOd1dNe0a87Ilpj?=
- =?us-ascii?Q?+ffDW/rOtcpnM/1g0ZY9gwmeHe5GSXwr90TYYyGDNgL7AeE3ulkYwBCRJN5m?=
- =?us-ascii?Q?h6tToor/pMxDrRopAXcBloff8HwS+GUhAccNGCEa91otC1YaxjqrDo2kGOvI?=
- =?us-ascii?Q?iMKLy4qBt9F/rZiQ18LLoh7HTquEMmrRySQ0Rs7TEnjmJMApmq0Zpn6ZuSa7?=
- =?us-ascii?Q?w5yGbIVPufRLGNk7nxWYJs8blTXm0hIZppsYhhFkLloJ2iXu1Ha6wEyi3BBQ?=
- =?us-ascii?Q?KUJyl4gEfsBHJsFR67EEpdAmSwy8QIjV0Gu6r0RzC1AGF3NqXiZ+1FNvH8Tb?=
- =?us-ascii?Q?6YUnM1Ov3X6r7ua7DT6JBx73BsMlPjznbjv8SN/IuY8oEzGxluIOqvMMOpxW?=
- =?us-ascii?Q?gRUUcXNPemgcKWcrInqJbFr+RiP0OQKqD1rJZYcfrmp7APfgn3ti1i1YsVX4?=
- =?us-ascii?Q?14/IUmL6Ln4YmreOZsKmFt81ly7O/ztCW6QjlJjgdPKjkWI2o6vEaYzfEpt9?=
- =?us-ascii?Q?Z2qW30cPZBl//xmtW+KHKlO6psxX7sn9O9KThtuIi+EIOy+THi4VxLDS+GL7?=
- =?us-ascii?Q?iI77YzyDKdLJQF2ShEojxhavo8EbvpJdUP0YYdwYv3jAaaDHQxIuW2Re58nQ?=
- =?us-ascii?Q?W5aT+YH6DejnMuXKifniVSv3rsJ/IMpwa4bszweB5a3+02tDeih/B48H711C?=
- =?us-ascii?Q?7Siegu8CMtHZP1rY61jJ9rO83LWDX37R8xzru6zrDFvjzgp01KCZdBh7CkDi?=
- =?us-ascii?Q?387dcgAoF0mKKVcJSTeKabvhUlug5bLWTfABem5kGLT5jJU4nT7IA9SRxEUf?=
- =?us-ascii?Q?CI5i3mVQKsDV/uOvA8dVl3ppVSihHBY=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 087c0df1-4832-41c8-4010-08de73cb8678
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2026 17:38:30.5871
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0Q+SDpBGHkMN4JsVlzlVipdZ4BubBmUU629/NM27py1avddBq2Ym3aBawY99ZrChgtVXS886IGN2cArMm5xWZqqBYJ3BjAtQe+UY3nBeJL4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PPFFCBF1B4C7
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <699d145c1da21_1cc5100e4@dwillia2-mobl4.notmuch>
+User-Agent: NeoMutt/20220429
 
-On Tue, Feb 24, 2026 at 04:38:03PM +0000, Alejandro Lucero Palau wrote:
-> 
-> On 2/24/26 02:50, Alison Schofield wrote:
-> > On Mon, Feb 23, 2026 at 02:26:32PM +0000, alejandro.lucero-palau@amd.com wrote:
-> > > From: Alejandro Lucero <alucerop@amd.com>
-> > > 
-> > > In preparation for type2 support, move structs and functions needed by
-> > > external type2 drivers. Differentiate between public and private data to
-> > > be preserved by type2 drivers.
-> > I would have enjoyed a mention in the commit log of what was needed.
-> > When I saw struct cxl_dpa_perf, struct cxl_dpa_partition,
-> > CXL_NR_PARTITIONS_MAX, enum cxl_partition_mode, it wasn't so clear
-> > why those were needed (as opposed to the cxl_dev_state defines)
-> 
-> 
-> Well, this is what Type2 drivers support will end up needing once all the
-> functionality is added. So we know it because the type2 full patchset and
-> the idea here is to put all that in the new file visible to external
-> drivers. I know the standard is to see how the changes are used by a client,
-> but if I do so I will be adding all the type2 patchset ... So in this case,
-> the cxl core code will use another header which will be visible to non cxl
-> core, and the commit says it ... although maybe some rephrasing could help
-> like:
-> 
-> 
-> "In preparation for type2 support, move structs and functions needed by
-> 
-> external type2 drivers. Differentiate between public and private data to
-> 
-> be preserved by type2 drivers. Refer the new file by those cxl core files
-> 
-> needing the moved definitions."
-> 
-> Would this be better or too much twisted?
++Cc Li.
+.
+On Mon, 23 Feb 2026, dan.j.williams@intel.com wrote:
 
-Well, still doesn't describe what Type2 needs access to.
+>Davidlohr Bueso wrote:
+>> Fuzzying CXL triggered:
+>>
+>> BUG: KASAN: null-ptr-deref in cxl_num_decoders_committed+0x3e/0x80 drivers/cxl/core/port.c:49
+>> Read of size 4 at addr 0000000000000642 by task syz.0.97/2282
+>>
+>> CPU: 2 UID: 0 PID: 2282 Comm: syz.0.97 Not tainted 7.0.0-rc1-gebd11be59f74-dirty #494 PREEMPT(full)
+>> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+>> Call Trace:
+>>  <TASK>
+>>  __dump_stack lib/dump_stack.c:94 [inline]
+>>  dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+>>  kasan_report+0xe0/0x110 mm/kasan/report.c:595
+>>  cxl_num_decoders_committed+0x3e/0x80 drivers/cxl/core/port.c:49
+>>  cxl_mem_sanitize+0x141/0x170 drivers/cxl/core/mbox.c:1304
+>>  security_sanitize_store+0xb0/0x120 drivers/cxl/core/memdev.c:173
+>>  dev_attr_store+0x46/0x70 drivers/base/core.c:2437
+>>  sysfs_kf_write+0x95/0xb0 fs/sysfs/file.c:142
+>>  kernfs_fop_write_iter+0x276/0x330 fs/kernfs/file.c:352
+>>  new_sync_write fs/read_write.c:595 [inline]
+>>  vfs_write+0x5df/0xaa0 fs/read_write.c:688
+>>  ksys_write+0x103/0x1f0 fs/read_write.c:740
+>>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>>  do_syscall_64+0x111/0x680 arch/x86/entry/syscall_64.c:94
+>>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>> RIP: 0033:0x7f60a584ba79
+>> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+>> RSP: 002b:00007f60a42a7038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+>> RAX: ffffffffffffffda RBX: 00007f60a5ab5fa0 RCX: 00007f60a584ba79
+>> RDX: 0000000000000002 RSI: 00002000000001c0 RDI: 0000000000000003
+>> RBP: 00007f60a58a49df R08: 0000000000000000 R09: 0000000000000000
+>> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+>> R13: 00007f60a5ab6038 R14: 00007f60a5ab5fa0 R15: 00007ffe58fad8b8
+>>  </TASK>
+>>
+>> cxl_memdev_alloc() initializes cxlmd->endpoint to ERR_PTR(-ENXIO) as a
+>> sentinel until the endpoint driver has probed. During that window the
+>> memdev sysfs attributes are already visible, as soon as device_add()
+>> completes.
+>>
+>> Use IS_ERR_OR_NULL() instead of just NULL checks in all sysfs paths that
+>> use cxlmd->endpoint to avoid the user prematurely accessing it.
+>
+>Ugh, no, like I said here [1] I think endpoint non-NULL @endpoint
+>confusion is an indicator of other issues in the code.
+>
+>[1]: http://lore.kernel.org/69813ac070f79_55fa1005c@dwillia2-mobl4.notmuch
 
-How about "Type2 external drivers will need to access to "___________",
-so move those to a shared header file.
+Ah, I missed this.
 
-Where the blank may be as broad as "all cxl_dev_state related structures
-and definition", or maybe it's something more specific.
+>>
+>> Fixes: 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
+>> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+>> ---
+>>  drivers/cxl/core/edac.c   | 2 +-
+>>  drivers/cxl/core/mbox.c   | 2 +-
+>>  drivers/cxl/core/memdev.c | 2 +-
+>>  drivers/cxl/core/region.c | 3 ++-
+>>  4 files changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+>> index b321971fef58..65b37460d1a8 100644
+>> --- a/drivers/cxl/core/edac.c
+>> +++ b/drivers/cxl/core/edac.c
+>> @@ -1149,7 +1149,7 @@ static bool cxl_is_memdev_memory_online(const struct cxl_memdev *cxlmd)
+>>  {
+>>  	struct cxl_port *port = cxlmd->endpoint;
+>>
+>> -	if (port && cxl_num_decoders_committed(port))
+>> +	if (!IS_ERR_OR_NULL(port) && cxl_num_decoders_committed(port))
+>>  		return true;
+>
+>This NULL check was never valid. How can a edac code ever encounter the
+>port detached case?
+>
+>>  	return false;
+>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>> index e7a6452bf544..f2308db13c5d 100644
+>> --- a/drivers/cxl/core/mbox.c
+>> +++ b/drivers/cxl/core/mbox.c
+>> @@ -1301,7 +1301,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
+>>  	 * Require an endpoint to be safe otherwise the driver can not
+>>  	 * be sure that the device is unmapped.
+>>  	 */
+>> -	if (endpoint && cxl_num_decoders_committed(endpoint) == 0)
+>> +	if (!IS_ERR_OR_NULL(endpoint) && cxl_num_decoders_committed(endpoint) == 0)
+>>  		return __cxl_mem_sanitize(mds, cmd);
+>
+>This looks to be abusing ->endpoint when it should be checking
+>cxlmd->dev.driver. The rule is @endpoint is always valid if
+>cxlmd->dev.driver is non-NULL.
+
+Ok, I will send a patch for checking ->dev.driver instead.
+
+>
+>>  	return -EBUSY;
+>> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+>> index 273c22118d3d..f0a97aaaaf35 100644
+>> --- a/drivers/cxl/core/memdev.c
+>> +++ b/drivers/cxl/core/memdev.c
+>> @@ -236,7 +236,7 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd)
+>>  	int rc;
+>>
+>>  	port = cxlmd->endpoint;
+>> -	if (!port || !is_cxl_endpoint(port))
+>> +	if (IS_ERR_OR_NULL(port) || !is_cxl_endpoint(port))
+>>  		return -EINVAL;
+>
+>If you can trigger this, which I do not think you can after Li Ming's
+>recent fix, then the proper fix for this is in [1].
+
+The only path I've been able to reproduce is Sanitize. This was testing
+the 'fixes' branch with all the patches Dave picked up yesterday including
+Li's. So it's possible the bug could have triggered without it, but cannot
+say for sure.
+
+>
+>>  	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index 42874948b589..5ff5a086ca0d 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -2956,7 +2956,8 @@ struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
+>>  		.dpa = dpa,
+>>  	};
+>>  	port = cxlmd->endpoint;
+>> -	if (port && is_cxl_endpoint(port) && cxl_num_decoders_committed(port))
+>> +	if (!IS_ERR_OR_NULL(port) && is_cxl_endpoint(port) &&
+>> +	    cxl_num_decoders_committed(port))
+>>  		device_for_each_child(&port->dev, &ctx, __cxl_dpa_to_region);
+>
+>I believe this was the exact issue fixed by Li Ming's fix.
+
+Looking at the splat, yeah I agree. And of course that fix holding the host
+lock is much nicer than papering over it with nil sentinel, or this patch.
 
 Thanks,
-Alison
-> 
-> > 
-> > I was a bit concerned that new cxl/cxl.h had dependencies, so tested
-> > that it compiled all be itself in a completely separate module.
-> > 
-> > Tested-by: Alison Schofield <alison.schofield@intel.com>
-> 
-> 
-> Thank you!
-> 
+Davidlohr
