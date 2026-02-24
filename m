@@ -1,255 +1,280 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9942343BE
-	for <linux-cxl@vger.kernel.org>; Tue, 24 Feb 2026 01:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771896301; cv=none; b=S85IigonIHqH1UHDjFGIHKG4QPSVX7RU3NyRsbEXF/1Xl3cE+wBr8Bq8nU3CDHCsDr40IaM9ZEAtMo6pXwuXbcagGkgzVis+CjbuLgVQ7mMU0k+1ZNzaO9lhpjaz+qhpoJi9nPPatzr/dOUhjJtgSLpueCoWSnM2f08IkoevhKw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771896301; c=relaxed/simple;
-	bh=0z2rfSg4pMG/AuE2/ek/uTRDR2bwaJaDIuelXJM++V8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VNxuh0Rr1PVA0J2atfqfOeWDCB1oV/5VejDkwMGyMJbzl17BeCG5/Fxws0TRG7OAXmiiLzroKxu8beOsSkWuRV51FNtlcule3jfZd8HiaCkgXHlKA8ClVzFf+cQO0AYTK1clNz6qSjA6saxGNmJrNPbYHriBeodDAjIU2fR5zgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ePB/pD0+; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931551C5D44
+	for <linux-cxl@vger.kernel.org>; Tue, 24 Feb 2026 02:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771898591; cv=fail; b=nryFUgevelTHY3VP31hrQvbSAaDSUs1Sca5sEj00FnqMb6jII8Nw0AhpTVNJ/iVPJ3TNi658QZI71OhzEIZGZNmGA9NB0X2wV7E8xW2Hjm/PkefONoCj7+el18eioB4HcoV7dzcVmY7SQ5Q4FJoxIaMa+No/LAAsGutFaU8RuDs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771898591; c=relaxed/simple;
+	bh=0jN2vsw/RtrvsB8u8pENHdZrww3ZZGVhuQpKSfhS5+w=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=blh3d/dgWZ642f665PN1ICBujIgNZT5j7EntMDOc8ZvH6t6OcoYBM/REB6bc58B6gbhkf/6JrDka+fnNQkVzSGhN15SgwRBrv/AdWtdA/JAf0zFPVnRgdybGO+52uFJOxZokDqjVntkZoTSnZbrJAtuWkEJ4wNPecdB7KVXRGI4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nOOaXXcu; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ePB/pD0+"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-79430ef54c3so43930287b3.2
-        for <linux-cxl@vger.kernel.org>; Mon, 23 Feb 2026 17:24:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771896299; x=1772501099; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CQGPzu5YPQ91NVYpBm+9/Kt5TZXA4lsSJTx1at22zpE=;
-        b=ePB/pD0+c+qpTefxyModop/xiR7ZOU5/fEdRpUUvz6IKw53PmW8y3FOld9J0U/RgL+
-         3ZSYm8+kZzkjGds9qPjsfUfmawxkywMMdclIaW7mBv2VkyWHlYy9Hcg7qkiKdr+oT1g4
-         VoouV0zNd5RZWl3qjmf5PGptTili0tj4GMWQfM+3zyfny6L0joDoHk/C8gQfITz3AKhn
-         7vCR+LT4vn0SVfbf2ZLrcwS8bS+lUGALiv1VtpfgOca+T+JZ5Yc1vPpw+jALgkaoxaNG
-         9noVGCLZJrO1W4/0J/TL8JvBV4VhKIpvZGtqBsuMeA1p+xELSYuw/1E8ZIuAk+NwFwia
-         7Reg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771896299; x=1772501099;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CQGPzu5YPQ91NVYpBm+9/Kt5TZXA4lsSJTx1at22zpE=;
-        b=Uru2R3HU/6/Lkuhz03JZQOfPsFtVj6P9+F/BIDH+ImGRo5jDh3GtKhNBzYhrvhX02g
-         zU3casdN2EFk9jVrey0J+eCZRNZi2nuLVs41FNAHXkSE6+YzsTGPgWAn0FFxp+H5nX+v
-         9yWG03wpr21rQNzkv7yCoBjt5tybb3hsNt+KuFeG5EW+tL/a1DYkFa4UMtVw8tn8NRVd
-         IgQCt9ArbnVdv9jQdO7MNbx92b2uzjz2Fr9pOm1X421fNnDmVOzofD5X0tFeIBv1zVXE
-         KPTvhYzJgAAWtgMDgdK42VI8NqslunT2IOrTZzBOSFG/dNMA7c5vFN+BGgzcADNBeJh9
-         PNKA==
-X-Forwarded-Encrypted: i=1; AJvYcCX9vG/pOl0Vm7LN2KUw9HClla0yVXU6TTwGMnf8ffjtStpB9LJBCbomSa/8EbFP33515aBRsk/LOVI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/WAILhGKCh5/WaQQNlBpGotOhG6fjNoZLDQUg68TdPdG1kNIl
-	SgkXX4qQzS6Zh261t+7yPnTnvDGRAkik8glLpekE3uZziF55sdbVYqNF
-X-Gm-Gg: ATEYQzy35QWz5FgdwDqLVD5Wcz7HHY1dUoynHJ+AAsyqGv+B9ALY8LSndItGjcPKPO5
-	n1lGlBkoJDLGTqycQdizd/udWYix/mfi99jJ/jvFP8ZYBmAMYxqEM6RTiSMKVLMs3orLJYmQLHh
-	WvyQpu519N8EHvOcdnOSf1S84c33w86AYqM8coO318LG7o581jVLqSOYow/HOXDOZQFtbstfKmL
-	DEJpqc3VWhMOW1mqbHrWuG1EJOSS5apKZF+ybxxEr0n0FinRqF88Ry8wbXA/4joNsoHGV2RgxrN
-	uriN/FCPVjdBqUvEmH9kejDrbatdykf3yKe0IYV06O63s8EruyZotfkeEOlhJbLWVTIyVysVrre
-	T0IdwRhFNFOXNBNClIpl1R9I0SsTe1hyK33ZWW9yF10DrhWKu4XHlA/jlukspeJSbSlqB7Bou8+
-	LDAA8VyXnAiica8kSGZgm22bLXJSHU2MtXR153XRgF2e79wcqiaNAo
-X-Received: by 2002:a05:690c:6086:b0:794:a7d:6bc4 with SMTP id 00721157ae682-7982916dec3mr98603277b3.58.1771896298694;
-        Mon, 23 Feb 2026 17:24:58 -0800 (PST)
-Received: from 4470NRD-ASU.ssi.samsung.com ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7982dd84394sm38813677b3.30.2026.02.23.17.24.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Feb 2026 17:24:58 -0800 (PST)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Mon, 23 Feb 2026 17:24:55 -0800
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: Re: [PATCH v9 12/19] cxl/extent: Process dynamic partition events
- and realize region extents
-Message-ID: <aZz9qi1b1DsOETa_@4470NRD-ASU.ssi.samsung.com>
-References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
- <20250413-dcd-type2-upstream-v9-12-1d4911a0b365@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nOOaXXcu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771898590; x=1803434590;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=0jN2vsw/RtrvsB8u8pENHdZrww3ZZGVhuQpKSfhS5+w=;
+  b=nOOaXXcu4MoGQAbK8gDPWxZ84KVFcM8YWKsdGrZs4EmPkamG8jrVpibc
+   yqh0KSsjY/8VPuTrLiDis51RlSWXImy5ohwGXMFAgGyVf9oiOMEUQYrDw
+   lFIeq2NnL+CDdIDIsKKoaJFODwIjPnejzGAdZMh5LMbJC/XYCSyHFm0Tv
+   Hvul/6EiCq+EOmGvgjMjziPenJLgWxsQkbcytYElBGxgacXDWYB4o/59m
+   F64tk1UgBjTbIOMl+4JOclez2DtlAQHnqlhpMOGwja1w9QfeXNLVBm6nk
+   VAMJZkGXfiS0UdMcYgg9uoqMxPaXIVnM4mCfrAIwSpS0X5NwSHOcvwqhj
+   Q==;
+X-CSE-ConnectionGUID: Q5lPmqYQQwSTll33UkIJUg==
+X-CSE-MsgGUID: BFzzHUzyTCKuFaRbZKscwA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="73014189"
+X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
+   d="scan'208";a="73014189"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 18:03:04 -0800
+X-CSE-ConnectionGUID: 1rARZKMxRs6qzY3c6f8VLQ==
+X-CSE-MsgGUID: d8HxIUj5SR6Ip2Cx2BIj1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
+   d="scan'208";a="214127168"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 18:03:04 -0800
+Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Mon, 23 Feb 2026 18:03:03 -0800
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35 via Frontend Transport; Mon, 23 Feb 2026 18:03:03 -0800
+Received: from DM5PR21CU001.outbound.protection.outlook.com (52.101.62.41) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Mon, 23 Feb 2026 18:03:03 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HtxsWYMIpcthXtFPlwTW9zm5a6vaclIKDH4pp1mIyHq1GPvov9yv+7qQ5QNVML2xsX+f7E/jBMEcTCsiPEGprCBsrfNqTUSumKhtkykRH4IeDdkgvrZaEPq27C2SP39LdrS3UOJelHJaV5CiAQEK1WQco3GpjpZ//jh8gob5sfFTqm/XK69knii98rvicUsMeASuD/wb09neOj5WEFTPi/mBiBnuqlR0LyDtGhIvkE1h4NoyD1W8VNF1QKQCOOkO9CaQiinY+GshFOZ22Gu7j49yM6a5zNWGRoINFbFH0ifZmCp7oBKrmUAJS3eqjHXMpT/GoqK8oeBkiDJdWIg84A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VQ3cP+tQP7osFPiya6NPAtjW/1N9b0WJk/gOhBMTPbk=;
+ b=necmZn0gcQ9rTB43nQaytlh3DbBwfU+sWZdodnM1ALZObL+oM+HBrvkmpQ2zCtJf5S4OJWFBNnBaEf3WKZ6u0VwmoUFtZybn7PL4Dol6HW9IeqUpj1VvpH76PnGMz96kIBE5Iitr5lJOW2cXLmaIYz18EL9KVwQ/IgQ27z4PN4x9RR850YuQqc7eK96bVzdHwFGtlP4izLq6/1o9tILYeZk6sue081hABSSqqmNonsoviS9KqXtjomGVLEszulfMbU6Sc8wtQFV/eIejISuyMDmJR+neRI/ZT/aujZKjeLzha7MZmlhvWtmuZeKoDtqlMCtzXCJX5jW0s1cFQ+CBzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by SJ0PR11MB5023.namprd11.prod.outlook.com (2603:10b6:a03:2de::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.21; Tue, 24 Feb
+ 2026 02:03:01 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::4a5f:d967:acb2:e28a]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::4a5f:d967:acb2:e28a%6]) with mapi id 15.20.9632.017; Tue, 24 Feb 2026
+ 02:03:01 +0000
+Date: Mon, 23 Feb 2026 18:02:53 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: <alejandro.lucero-palau@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [PATCH v1 1/3] cxl: support Type2 when initializing cxl_dev_state
+Message-ID: <aZ0GzfdM5i24ymFr@aschofie-mobl2.lan>
+References: <20260223142633.2994082-1-alejandro.lucero-palau@amd.com>
+ <20260223142633.2994082-2-alejandro.lucero-palau@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20260223142633.2994082-2-alejandro.lucero-palau@amd.com>
+X-ClientProxiedBy: BY5PR04CA0015.namprd04.prod.outlook.com
+ (2603:10b6:a03:1d0::25) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250413-dcd-type2-upstream-v9-12-1d4911a0b365@intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SJ0PR11MB5023:EE_
+X-MS-Office365-Filtering-Correlation-Id: 17718691-8354-456b-1c7d-08de7348d6a1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?3xPH5dEaqJrZhd3ylmrpA3dojGSQhsBWa6OvekoCkzcoV4aM8g4PxR17tqAG?=
+ =?us-ascii?Q?d3+ziSB9NpkkcP6eyaYIeBi0FLrzOeBh05+qkov7JXAn9HsIFx+KTMlFu77C?=
+ =?us-ascii?Q?LdjCCwAyiWFlyPDV2Cj45tdVAVnKHCP1OTLaVgcWn8pJf2sRUBIM/zzCJzBd?=
+ =?us-ascii?Q?pxurM6D18JBH5q8CT0JHwfSfqRU0XU5h2ncIf/ADJv2RPZmawCL125RDyUqD?=
+ =?us-ascii?Q?ajRpHeGfr0d+oaVObU9C4aMoWEldC+JNDaIn1L+hrSmyspgPe4P9nFWGgA8M?=
+ =?us-ascii?Q?iAeAAdF4VFsp8svDN8OA7IZ+4BcM/vKJBDU4Ha9AET3OwA2jOZr9bJVqqEba?=
+ =?us-ascii?Q?OBUI9adZo6dE9s0Yzzm0+RYi9VfpGpW4y/wENxIYbkYr/gtyOUaaEOnlonzo?=
+ =?us-ascii?Q?es8+fNEg+fqVW+uRW02FAxou19qOK6sNg/zo6fHTlVbVMHE2K7SuUN4uoJV/?=
+ =?us-ascii?Q?gDcc9VjB5ca/sFZOhjqYaiXieBFZPfyhK6YsHuWcqG1nC2dXtOC5onuhC+zd?=
+ =?us-ascii?Q?l/W5McMcJCTA+vlbHWMH4Qvt48iQR7kRJEb+OI95Kh9+nsFXFz8W/NQ6b32J?=
+ =?us-ascii?Q?GgNbqhpeZfItF/GOG6SgoQQcrwLkB6Yh0+r52TZobKrEZFs6NS9AWwRWrCL+?=
+ =?us-ascii?Q?Y9DjqxG469HaajbuM1rnLWCAHzsAzgRb8UlpX9pOq+q0mL0vYHEBl6qMHjCd?=
+ =?us-ascii?Q?kNA79XDA2GZE1dC9PMLO4W8HhcN0T7puji2VyBuuQv23Z5kn5T6RbJOrQVn9?=
+ =?us-ascii?Q?bYvzTnP0oMVweuhDSMTl1Da1Tyl/EsJI7dSxCrwyls9sAlFzwey+NOf9mhM1?=
+ =?us-ascii?Q?Zd7uYpPOE6Msi6lg1q7SjlwCP8H+VIEYOElYm1sR3vi/p84+nQYbr4ypdDvh?=
+ =?us-ascii?Q?pEzHOYwQLqpkVeueZF0jCcuidORCdS9qStHFMRubGCMI0bUAZsbDRCeHlRMz?=
+ =?us-ascii?Q?Z+zbC+q8z4eKta+d5KrmpGsBKlUTCH7B03QP+MFP3Mudebm3g2zZYBj8wnR4?=
+ =?us-ascii?Q?bywDlWv66tFh2nHZ2zTZ1T6ADLTSJdWWnePBviYHHNLw6RALXLsMo1XGpw0n?=
+ =?us-ascii?Q?aFpXyT3Wg82ln9wdNfg0eF2W/yxZHdFVUGPW5WZQOiKBbNfronIrxmaHq/Ah?=
+ =?us-ascii?Q?4wlk3MHrhfk/3LKpjbrKsgmf5qcZ3CW6Ie1d3rCdZSHXkvGGhAcGsQpGZbsP?=
+ =?us-ascii?Q?uFwV+p9QTq3unYlg2nfU+Z/5lookBV1PwnlqHVO9cHobBQaJZsozKofdD8yG?=
+ =?us-ascii?Q?h/cZMcHeopBQOJWvBjrd21uTMdPSgj0pS9ftD36VKnpGY6/fjLf3OKYFxaNQ?=
+ =?us-ascii?Q?P/i4kuLytO00/04+lLKwrobJXeFoiGisuMnsRHi+deNk2Bvk4VnrRUZfJzrV?=
+ =?us-ascii?Q?Dh91eL2kpVdgfBNnSeSxYusmr8HemRXLKOF5JTlBMqX/KDfv7V/6bAbxsuQB?=
+ =?us-ascii?Q?1crVhE94zrWOUkeT8irVFJECCjbBRKI5HPwqleEfi68hK5WZZujisJQ99hga?=
+ =?us-ascii?Q?cARN53vPfgHQJGi8QVUaacFMTSZug2iI/xBKDjSit0YUmHJST3khvgBtL/L4?=
+ =?us-ascii?Q?havkpCFgb9HpYpCUZS8=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?qkknM2vyzEHrk6CLcS0ju68RRI0ND9i++0cfydvAD5HWBEQKfE1FDHcAuIYk?=
+ =?us-ascii?Q?lFqzQzr+IMbCD4zGffkCniKTApfgdKKGNMLqUaRfWwUEbuHVCexYsfKeGuOd?=
+ =?us-ascii?Q?J02L6czoDmGxryqOjvH9Gi9M8SriPNUkOGHw07F5ZmCM00VdCHUx1tGJ92bR?=
+ =?us-ascii?Q?UY9bwYsL9w8D1ydSQYJbnO1MQ4U+edhsXIsTJoKPjAio+hFsDx6CGIloBnWA?=
+ =?us-ascii?Q?lRcDiigV1zPjnLxiGB5fNngd5RZGOaPc7bAFnHqpfH77aDMEILnrufnSaWgk?=
+ =?us-ascii?Q?ifrVjNwKxLqLt5cWXxbRn7ztEqw3Ur0iAs7+6KQCaiMqw6sAcX81HrJ/+zYm?=
+ =?us-ascii?Q?hO1NnTGsVv8/7XLsbblXxFETO9bWSCz+hZnQ1o6LsouRNoUCulx3GM2y2Pa8?=
+ =?us-ascii?Q?k+Ipp7AIfW6qUINwFLdyQV/Q2XmthI3Poz4uLNB/h7/WvIHr9H6Sj3icAXmD?=
+ =?us-ascii?Q?DKXHWEN63pB9/PPR9Qy18RY6H7rV1SZVcJEWAUED58ONhcYevRknd8jiiH/X?=
+ =?us-ascii?Q?IkeVlqeML4O/OAoyjZ7kxIldgsHHv9oONRzAFSU5dUGLZKgcoaHqKGsgS8IB?=
+ =?us-ascii?Q?WAKGBseCqSprNZLkySk/cXH95qbL4yNyTmSZDHk6evJqVfQCf0JZe7dRnGY0?=
+ =?us-ascii?Q?nAndMm/ySDRY9bHPqf+fiACW69onYhy+gU+L7Z4cjLH2Q31RUtVn20KO2inF?=
+ =?us-ascii?Q?3sgb1ZpOZf3767Tzn7zgoUibyOBYuLfLzn9RLadW+WcEs145ZPsGlkc8qiZY?=
+ =?us-ascii?Q?NrsOxiYWiuG5klA/WS8cY4b2QWMFjHL3WvXTuNciIlqFzGrO6H77YjRVhGGQ?=
+ =?us-ascii?Q?+JcrkOMghASmgbVZVyqP4HdA3fVO0Hf2A5GEKlC9b/SYoqVVInlGB6XcN2eH?=
+ =?us-ascii?Q?wgngl33xFVAquytr3eUHQ9HZrxwZ4JUgjAzsgdDYcGdPfWdBwQJp4rX+JhGy?=
+ =?us-ascii?Q?nrbr33bnwSjLh8tApNBDuIRZDW1pAzcGskPXeTygTBiyjum44OQZsjn2g2V6?=
+ =?us-ascii?Q?H5tl9SaO4iNnw5QfDqlCQ0dIaLNn2XxmgsjLclK9Hssa3xtgLWZkFt4ft1Zk?=
+ =?us-ascii?Q?tBaMoYyaTdiL0B+E7yijBWOA0pibKUM7DpvgsJxJzIKenmPErxhh/NKlPAhc?=
+ =?us-ascii?Q?d0b3ZFscnM+o5B6p7iXCQ7YhxhOMhFT55BSQFhRxSMz0BfojQmz0LIAqiTQ3?=
+ =?us-ascii?Q?KIdjInBqvr3MqNMMIrTVhvDzvnhJsa55PF4TaPX4CrNGzQWjvxwdfAKliFYU?=
+ =?us-ascii?Q?C2Tw+Rj4hgBNcXUTAujAL7JATTNx96oICCSUWe6SwJlv0AQs7hQ2ft+dfVLP?=
+ =?us-ascii?Q?Ci4rRKxwmucvqGmaWXUFY+swhmkcD8F/ed3Bbe1tRzFQRJJW9TEgcFGvuEV0?=
+ =?us-ascii?Q?61MuE0xYB4HKjPy+es5NIlOwSMilV7b7F6LAk6d6VNjRtcLd68QOIqSEsFdS?=
+ =?us-ascii?Q?s/rTqTDwEE4uQwQM8AwR9t8FnUBnvJBxS1+N8nX0HOifykx4owIAZB5CzNHU?=
+ =?us-ascii?Q?ub0uzjY6mDHGC9KUmAC6wUL2VOPbA37lW9rb/tYVWlBimvOs8FvkT37WvAsd?=
+ =?us-ascii?Q?pNJbDrTuvl2r+UAupDrFmtbgPeMYdtehfzJyUCfczyEKYzzd8UDNngtaOaYu?=
+ =?us-ascii?Q?BpMkkmp5p5EfWS4ghymCJLWIi9YrqGR43868F21kAOPusen1lzuR8S0Dixgg?=
+ =?us-ascii?Q?oWipOJFLH4o7TbxxP7ymniCOz8TFErVkKtZqxH8mqZZumRVNLMaBDcTmr8VB?=
+ =?us-ascii?Q?nAfFPvK7RHRsRY2k3lXuNpiiIMYk81k=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17718691-8354-456b-1c7d-08de7348d6a1
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2026 02:03:01.0682
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: t3fa/j8Gtmq0QRs4LAgxuwcEp68KSZfGxJjjMMCPA0BxuHiS2g8/HTznD27F2iklg6gIEAgZ+RjPrD9ktz0+or+pxfxnNdq8S4F9DP0qQr4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5023
+X-OriginatorOrg: intel.com
 
-On Sun, Apr 13, 2025 at 05:52:20PM -0500, Ira Weiny wrote:i
-A few notes while going through and removing sparse dax semantics and plumbing
-for fs-dax mode:
-> A dynamic capacity device (DCD) sends events to signal the host for
-> changes in the availability of Dynamic Capacity (DC) memory.  These
-> events contain extents describing a DPA range and meta data for memory
-> to be added or removed.  Events may be sent from the device at any time.
+On Mon, Feb 23, 2026 at 02:26:31PM +0000, alejandro.lucero-palau@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Three types of events can be signaled, Add, Release, and Force Release.
+> In preparation for type2 drivers add function and macro for
+> differentiating CXL memory expanders (type 3) from CXL device
+> accelerators (type 2) helping accel drivers to embed cxl_dev_state
+> inside a private struct.
 > 
-> On add, the host may accept or reject the memory being offered.  If no
-> region exists, or the extent is invalid, the extent should be rejected.
-> Add extent events may be grouped by a 'more' bit which indicates those
-> extents should be processed as a group.
-> 
-> On remove, the host can delay the response until the host is safely not
-> using the memory.  If no region exists the release can be sent
-> immediately.  The host may also release extents (or partial extents) at
-> any time.
-Partial release is no longer valid for tagged release iirc from the calls
+> Update type3 driver for using this same initialization.
 
-> Thus the 'more' bit grouping of release events is of less
-> value and can be ignored in favor of sending multiple release capacity
-> responses for groups of release events.
-> 
-[snip]
-> +
-> +static int cxl_send_dc_response(struct cxl_memdev_state *mds, int opcode,
-> +				struct xarray *extent_array, int cnt)
-> +{
-> +	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-> +	struct cxl_mbox_dc_response *p;
-> +	struct cxl_extent *extent;
-> +	unsigned long index;
-> +	u32 pl_index;
-> +
-> +	size_t pl_size = struct_size(p, extent_list, cnt);
-> +	u32 max_extents = cnt;
-> +
-> +	/* May have to use more bit on response. */
-> +	if (pl_size > cxl_mbox->payload_size) {
-> +		max_extents = (cxl_mbox->payload_size - sizeof(*p)) /
-> +			      sizeof(struct updated_extent_list);
-> +		pl_size = struct_size(p, extent_list, max_extents);
-> +	}
-> +
-> +	struct cxl_mbox_dc_response *response __free(kfree) =
-> +						kzalloc(pl_size, GFP_KERNEL);
-> +	if (!response)
-> +		return -ENOMEM;
-> +
-> +	if (cnt == 0)
-> +		return send_one_response(cxl_mbox, response, opcode, 0, 0);
-> +
-> +	pl_index = 0;
-I was wondering why xarray is used here instead of a list? I didn't see anywhere
-that we need to look up a specific index to benefit from the log complexity and
-afaict, simply used to iterate over all elements.
+I've got 2 simple nits that could be fixed-up upon applying,
+and one question below.
 
-> +	xa_for_each(extent_array, index, extent) {
-> +		response->extent_list[pl_index].dpa_start = extent->start_dpa;
-> +		response->extent_list[pl_index].length = extent->length;
-> +		pl_index++;
-> +
-> +		if (pl_index == max_extents) {
-> +			u8 flags = 0;
-> +			int rc;
-> +
-> +			if (pl_index < cnt)
-> +				flags |= CXL_DCD_EVENT_MORE;
-> +			rc = send_one_response(cxl_mbox, response, opcode,
-> +					       pl_index, flags);
-> +			if (rc)
-> +				return rc;
-> +			cnt -= pl_index;
-> +			pl_index = 0;
-> +		}
-> +	}
-> +
-> +	if (!pl_index) /* nothing more to do */
-> +		return 0;
-> +	return send_one_response(cxl_mbox, response, opcode, pl_index, 0);
-> +}
-> +
-> +void memdev_release_extent(struct cxl_memdev_state *mds, struct range *range)
-> +{
-> +	struct device *dev = mds->cxlds.dev;
-> +	struct xarray extent_list;
-> +
-> +	struct cxl_extent extent = {
-> +		.start_dpa = cpu_to_le64(range->start),
-> +		.length = cpu_to_le64(range_len(range)),
-> +	};
-> +
-> +	dev_dbg(dev, "Release response dpa %pra\n", &range);
-> +
-> +	xa_init(&extent_list);
-> +	if (xa_insert(&extent_list, 0, &extent, GFP_KERNEL)) {
-> +		dev_dbg(dev, "Failed to release %pra\n", &range);
-> +		goto destroy;
-> +	}
-> +
-> +	if (cxl_send_dc_response(mds, CXL_MBOX_OP_RELEASE_DC, &extent_list, 1))
-> +		dev_dbg(dev, "Failed to release %pra\n", &range);
-> +
-> +destroy:
-> +	xa_destroy(&extent_list);
-> +}
-> +
-> +static int validate_add_extent(struct cxl_memdev_state *mds,
-> +			       struct cxl_extent *extent)
-> +{
-> +	int rc;
-> +
-> +	rc = cxl_validate_extent(mds, extent);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return cxl_add_extent(mds, extent);
-> +}
-> +
-> +static int cxl_add_pending(struct cxl_memdev_state *mds)
-> +{
-> +	struct device *dev = mds->cxlds.dev;
-> +	struct cxl_extent *extent;
-> +	unsigned long cnt = 0;
-> +	unsigned long index;
-> +	int rc;
-> +
-Also according to the spec:
-"In response to an Add Capacity Event Record, or multiple Add Capacity Event 
-records grouped via the More flag (see Table 8-229), the host is expected to 
-respond with exactly one Add Dynamic Capacity Response acknowledgment, 
-corresponding to the order of the Add Capacity Events received. If the order 
-does not match, the device shall return Invalid Input. The Add Dynamic Capacity
-Response acknowledgment must be sent in the same order as the Add Capacity 
-Event Records."
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
-Using xarray does not preserve the order of the extents, which requires a fifo
-queue.
+snip
 
-> +	xa_for_each(&mds->pending_extents, index, extent) {
-> +		if (validate_add_extent(mds, extent)) {
-> +			/*
-> +			 * Any extents which are to be rejected are omitted from
-> +			 * the response.  An empty response means all are
-> +			 * rejected.
-> +			 */
-> +			dev_dbg(dev, "unconsumed DC extent DPA:%#llx LEN:%#llx\n",
-> +				le64_to_cpu(extent->start_dpa),
-> +				le64_to_cpu(extent->length));
-> +			xa_erase(&mds->pending_extents, index);
-> +			kfree(extent);
-> +			continue;
-> +		}
-> +		cnt++;
-> +	}
-> +	rc = cxl_send_dc_response(mds, CXL_MBOX_OP_ADD_DC_RESPONSE,
-> +				  &mds->pending_extents, cnt);
-> +	xa_for_each(&mds->pending_extents, index, extent) {
-> +		xa_erase(&mds->pending_extents, index);
-> +		kfree(extent);
-> +	}
-> +	return rc;
-> +}
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index f547d8ac34c7..ad131f053bf5 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -656,6 +656,30 @@ static void detach_memdev(struct work_struct *work)
+>  
+>  static struct lock_class_key cxl_memdev_key;
+>  
+> +struct cxl_dev_state *_devm_cxl_dev_state_create(struct device *dev,
+> +						 enum cxl_devtype type,
+> +						 u64 serial, u16 dvsec,
+> +						 size_t size, bool has_mbox)
+> +{
+> +	struct cxl_dev_state *cxlds = devm_kzalloc(dev, size, GFP_KERNEL);
 > +
-[snip]  
-Thanks,
-Anisa 
+> +	if (!cxlds)
+> +		return NULL;
+> +
+> +	cxlds->dev = dev;
+> +	cxlds->type = type;
+> +	cxlds->serial = serial;
+> +	cxlds->cxl_dvsec =dvsec;
+
+Nit one: space around =
+
+> +	cxlds->reg_map.host = dev;
+> +	cxlds->reg_map.resource = CXL_RESOURCE_NONE;
+> +
+> +	if (has_mbox)
+> +		cxlds->cxl_mbox.host = dev;
+> +
+> +	return cxlds;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(_devm_cxl_dev_state_create, "CXL");
+
+Why do we name this with leading underscore when we intend to EXPORT it?
+Thinking leading underscores are meant for internal helpers?
+
+
+> +
+>  static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+>  					   const struct file_operations *fops,
+>  					   const struct cxl_memdev_attach *attach)
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index e21d744d639b..9daf4bc42692 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -523,6 +523,37 @@ to_cxl_memdev_state(struct cxl_dev_state *cxlds)
+>  	return container_of(cxlds, struct cxl_memdev_state, cxlds);
+>  }
+>  
+> +struct cxl_dev_state *_devm_cxl_dev_state_create(struct device *dev,
+> +						 enum cxl_devtype type,
+> +						 u64 serial, u16 dvsec,
+> +						 size_t size, bool has_mbox);
+> +
+> +/**
+> + * cxl_dev_state_create - safely create and cast a cxl dev state embedded in a
+> + * driver specific struct.
+
+Nit two: function name is actually devm_cxl_dev_state_create
+
+> + *
+> + * @parent: device behind the request
+> + * @type: CXL device type
+> + * @serial: device identification
+> + * @dvsec: dvsec capability offset
+> + * @drv_struct: driver struct embedding a cxl_dev_state struct
+> + * @member: drv_struct member as cxl_dev_state
+> + * @mbox: true if mailbox supported
+> + *
+> + * Returns a pointer to the drv_struct allocated and embedding a cxl_dev_state
+> + * struct initialized.
+> + *
+> + * Introduced for Type2 driver support.
+> + */
+> +#define devm_cxl_dev_state_create(parent, type, serial, dvsec, drv_struct, member, mbox)	\
+> +	({										\
+> +		static_assert(__same_type(struct cxl_dev_state,				\
+> +			      ((drv_struct *)NULL)->member));				\
+> +		static_assert(offsetof(drv_struct, member) == 0);			\
+> +		(drv_struct *)_devm_cxl_dev_state_create(parent, type, serial, dvsec,	\
+> +						      sizeof(drv_struct), mbox);	\
+> +	})
+> +
+
+snip
