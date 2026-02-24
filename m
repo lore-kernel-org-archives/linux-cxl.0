@@ -1,120 +1,204 @@
-Received: from mail-m1973185.qiye.163.com (mail-m1973185.qiye.163.com [220.197.31.85])
+Received: from bumble.birch.relay.mailchannels.net (bumble.birch.relay.mailchannels.net [23.83.209.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B491A9FBC;
-	Tue, 24 Feb 2026 02:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.85
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771899876; cv=none; b=i0G+WlUN05LrDEyhg86ed61NX2390HjVK1Nw168H8D9oYAqWqCJ8Kc1DhlksYxQ40vDIaBXAby4GqiieOEoMPo4ZjEMvTqAV0bJMspa2LWsQTnSVY9u2GaNzxABoT6jr2fJa6JcaJDZyv80frqEgimnv6IvHjPibpobnLvDRijA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771899876; c=relaxed/simple;
-	bh=VFI84jsJoxKxbbl2Av3iihOwmdaUZt/3qxvYrHVfk1A=;
-	h=Cc:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=VBPYwiL4yLQsyXsqVnEg6E1nWzE0tL7EPnj76s3zTnS0GpxARrzBahESAw79vNYluJ3W/EIcPb2Vq5xCiGAYTj/MTxF0UvZ24dC0kpmcS9PiFPhx0V/AuLtxcCh3Qr9XopNzLG+wuDoLJW1449mAJVoqgpN0+f5Y4/ljj9srBeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=I2JxoTtV; arc=none smtp.client-ip=220.197.31.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF94D265606
+	for <linux-cxl@vger.kernel.org>; Tue, 24 Feb 2026 02:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771900994; cv=pass; b=nNLzXG3SXtKeq7u3QeBZgEL4X5FqFL7sjZUMMCGWc9u0yna2qQF3b4292YS1J4CMT5J0pdxg4qXVR2V9T+ZYjIj/z0FCoR7O7vfp4x+8snp9GKjqACHRL7JIJ+Uw+QGnbgmlYxUqhjf9HLKNRTYslffSbQaGtS5+i4mNbEkDgms=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771900994; c=relaxed/simple;
+	bh=ywG+q4LCsa1Zc4HGzhkQqbYWR7RahjfU42H3Lmp6n5o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oV0tXHkE12lLnU7/bKD4i6HoxzV58f4bgrjdGcCMI9OdS6K1duO/WYFJk5hl6Ye1QlSlRL/tw6XQ7Y45qH9k6cjRVH5VjYbGkD3+edV7WRIJYWxNSfZ5n2kEowo4VZSAyNQAtHWrD8fDq3XVnPTXTaTi0+CwRLDo/URNED7Y4+g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=cuFDP+z3; arc=pass smtp.client-ip=23.83.209.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="I2JxoTtV"
-Received: from [172.16.12.14] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 34bd86f1b;
-	Tue, 24 Feb 2026 10:08:59 +0800 (GMT+08:00)
-Cc: shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>,
- "Vaibhaav Ram T . L" <vaibhaavram.tl@microchip.com>,
- Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
- Even Xu <even.xu@intel.com>, Xinpeng Sun <xinpeng.sun@intel.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Jiri Kosina <jikos@kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Zhou Wang <wangzhou1@hisilicon.com>, Longfang Liu <liulongfang@huawei.com>,
- Vinod Koul <vkoul@kernel.org>, Lee Jones <lee@kernel.org>,
- Jijie Shao <shaojijie@huawei.com>, Jian Shen <shenjian15@huawei.com>,
- Sunil Goutham <sgoutham@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- "David S . Miller" <davem@davemloft.net>,
- Jeff Hugo <jeff.hugo@oss.qualcomm.com>, Oded Gabbay <ogabbay@kernel.org>,
- Maciej Falkowski <maciej.falkowski@linux.intel.com>,
- Karol Wachowski <karol.wachowski@linux.intel.com>,
- Min Ma <mamin506@gmail.com>, Lizhi Hou <lizhi.hou@amd.com>,
- Andreas Noever <andreas.noever@gmail.com>,
- Mika Westerberg <westeri@kernel.org>, Tomasz Jeznach
- <tjeznach@rivosinc.com>, Will Deacon <will@kernel.org>,
- Xinliang Liu <xinliang.liu@linaro.org>, Tian Tao <tiantao6@hisilicon.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Srujana Challa <schalla@marvell.com>, Bharat Bhushan
- <bbhushan2@marvell.com>, Antoine Tenart <atenart@kernel.org>,
- Herbert Xu <herbert@gondor.apana.org.au>, Raag Jadav <raag.jadav@intel.com>,
- Hans de Goede <hansg@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Andy Shevchenko <andy@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Andi Shyti <andi.shyti@kernel.org>, Robert Richter <rric@kernel.org>,
- Mark Brown <broonie@kernel.org>, Nirmal Patel
- <nirmal.patel@linux.intel.com>, Kurt Schwemmer
- <kurt.schwemmer@microsemi.com>, Logan Gunthorpe <logang@deltatee.com>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Bingbu Cao <bingbu.cao@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>,
- Arnd Bergmann <arnd@arndb.de>, Benjamin Tissoires <bentiss@kernel.org>,
- linux-input@vger.kernel.org, linux-i3c@lists.infradead.org,
- dmaengine@vger.kernel.org, Philipp Stanner <phasta@kernel.org>,
- netdev@vger.kernel.org, nic_swsd@realtek.com, linux-arm-msm@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-usb@vger.kernel.org,
- iommu@lists.linux.dev, linux-riscv@lists.infradead.org,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- linux-cxl@vger.kernel.org, linux-crypto@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
- mhi@lists.linux.dev, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Jan Dabros <jsd@semihalf.com>, linux-i2c@vger.kernel.org,
- Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>,
- linux-spi@vger.kernel.org, Jonathan Derrick <jonathan.derrick@linux.dev>,
- linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
- Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
- linux-mmc@vger.kernel.org
-Subject: Re: [PATCH 01/37] PCI/MSI: Add Devres managed IRQ vectors allocation
-To: Jakub Kicinski <kuba@kernel.org>
-References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
- <1771860581-82092-2-git-send-email-shawn.lin@rock-chips.com>
- <20260223160402.3ad8f079@kernel.org>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Message-ID: <ec226aa1-5cc8-855f-8f90-1d7f89efe766@rock-chips.com>
-Date: Tue, 24 Feb 2026 10:08:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="cuFDP+z3"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 905A9582759;
+	Tue, 24 Feb 2026 02:36:18 +0000 (UTC)
+Received: from pdx1-sub0-mail-a258.dreamhost.com (100-107-38-69.trex-nlb.outbound.svc.cluster.local [100.107.38.69])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 26500581F33;
+	Tue, 24 Feb 2026 02:36:18 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1771900578;
+	b=zlq8PIPahvCX+2yrIoKPkqgrIM031X47VaW8MP4OpzauKYq9cEXFMeSGdRi6W6uy03mik7
+	2E2cd3OMjdYM7ds4zKBFVcByqnX+0A1k5YODmx0nCDRRbgHhYsxwR5njo4PdgM/yVY0VzV
+	I14FG4jJ05VeZunST7x1Cn7wfn5wmUMI1KyKb4zhPOxgfS6GyBhF8wlAW2fBmaaLMHvI7F
+	KAHxjrUvHDdAr1yOKn4XZv/519qvDdbjS3QHR1z11j0oCiJ/QoL3/n5yZ+HFIFNP8uWRAN
+	b02U/oei5b9q4r5Hu0EDqXLlgQVh+o8rBGH0mFpmueh4YEx3lnSkptmGsF5IVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1771900578;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
+	bh=58QLWYfSiiAtpFYECoGMwR2AGYqGkdp8l5N/QQTOag0=;
+	b=12+Oz7LYxL4tvILPze3JfE+PUFMRwNN1W5vxX2BYC/8X1uVIxStV6eeDYsMtmreujmqDOQ
+	iT8zmwNgRRQjhiZIe/ywK/dBBkcGtkxBIckm5ycMKSBUP2E5PCkNzNfpCL7ITemBr+gcEU
+	0fv2Za1DcgnRzavV2JGSsjRs5BiBl2pekS9QQXJJH+j7yrvCl39OARkBgjag8BTLji6WXU
+	tFoAW/x5UzOLZokMZzJaMiC6+C/8iNUI6jGi0TZ7NqehgFDh10+sJXdLoWmlG8SpeTnOES
+	x1zjLV07maKacz193pSxUVNZZrOzNOyndqgJ63y2iixAgT3inJV1m+8nL9bWNQ==
+ARC-Authentication-Results: i=1;
+	rspamd-6fbd58c58b-xw44s;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Wipe-Tasty: 74a2ab256c58e95b_1771900578427_813556303
+X-MC-Loop-Signature: 1771900578427:2115203144
+X-MC-Ingress-Time: 1771900578427
+Received: from pdx1-sub0-mail-a258.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.107.38.69 (trex/7.1.3);
+	Tue, 24 Feb 2026 02:36:18 +0000
+Received: from offworld.lan (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a258.dreamhost.com (Postfix) with ESMTPSA id 4fKhg53vmbz1041;
+	Mon, 23 Feb 2026 18:36:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1771900578;
+	bh=58QLWYfSiiAtpFYECoGMwR2AGYqGkdp8l5N/QQTOag0=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=cuFDP+z3Zr7ccGaA2gJEHlduznZHE5F+V7kiQW16TQrrXYRKGeapFosaJ0z5MitHl
+	 jzhJJV45qOUojkf0rPzMSv0wLYflZ/Du7T+gBJkmSIbYPKZzCQH7ly4pQHKltVq902
+	 yhmemcTLiNt2Hc5AHfJ89ZuJFD8TuSupdmxKVscbPoyn+yP9HJy8u9ItbniIIH4qv1
+	 l4XDuw/6sayGfZlEEXMjZryDG2lEDLwBUOghGGN/u027DuKijcUqZukTO6zJYVLcx1
+	 +SO83Bf3GCfTeS5vMZBiV/ISzElMSSGAdsfccRmTaJJDcfAPb8v9RTS9PxFWfne5C7
+	 f06lOszt4k55w==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dave.jiang@intel.com
+Cc: dan.j.williams@intel.com,
+	jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dave@stgolabs.net,
+	linux-cxl@vger.kernel.org
+Subject: [PATCH] cxl: Handle ERR_PTR endpoint in sysfs-accessible paths
+Date: Mon, 23 Feb 2026 18:36:09 -0800
+Message-Id: <20260224023609.1059138-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260223160402.3ad8f079@kernel.org>
-Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9c8d68279109cckunm6766673b9bec2a
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ09CQ1YYTU4fGk8fHk9CSE1WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEtKTE
-	tVSktLVUtZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=I2JxoTtVS0Yy5g50bgv4Wil//q2f9q9dCHuXovK/5LdNvBScPX9QRZNqNln/2pGvmbHOVQSNiAizH26Ay9wuN1CW4yf959RsxwxZnY1zkzGm1f2heNBE5Aht1ygGExZDhYnxUaCH2lYQFIRzQh1Ji7cYGdQWjF/HKhpMW2zjyIY=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=VXxBr7dg17LQLBnY9v36F+7EuLqaMgXXNtGWjPOgYcA=;
-	h=date:mime-version:subject:message-id:from;
 
-在 2026/02/24 星期二 8:04, Jakub Kicinski 写道:
-> On Mon, 23 Feb 2026 23:29:40 +0800 Shawn Lin wrote:
->> pcim_alloc_irq_vectors() and pcim_alloc_irq_vectors_affinity() are created for
->> pci device drivers which rely on the devres machinery to help cleanup the IRQ
->> vectors.
-> 
-> If you can please add this API with just a few users, and then convert
-> remaining users via the subsystem trees in the next cycle.
-> There's no need to risk wasting maintainer time on conflicts with
-> conversions like this.
+Fuzzying CXL triggered:
 
-Thanks for the suggestion, Jakub. I have little experience with 
-cross-subsystem cleanups like this, so your suggestion is very helpful.
+BUG: KASAN: null-ptr-deref in cxl_num_decoders_committed+0x3e/0x80 drivers/cxl/core/port.c:49
+Read of size 4 at addr 0000000000000642 by task syz.0.97/2282
 
-> 
+CPU: 2 UID: 0 PID: 2282 Comm: syz.0.97 Not tainted 7.0.0-rc1-gebd11be59f74-dirty #494 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ kasan_report+0xe0/0x110 mm/kasan/report.c:595
+ cxl_num_decoders_committed+0x3e/0x80 drivers/cxl/core/port.c:49
+ cxl_mem_sanitize+0x141/0x170 drivers/cxl/core/mbox.c:1304
+ security_sanitize_store+0xb0/0x120 drivers/cxl/core/memdev.c:173
+ dev_attr_store+0x46/0x70 drivers/base/core.c:2437
+ sysfs_kf_write+0x95/0xb0 fs/sysfs/file.c:142
+ kernfs_fop_write_iter+0x276/0x330 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x5df/0xaa0 fs/read_write.c:688
+ ksys_write+0x103/0x1f0 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x111/0x680 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f60a584ba79
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f60a42a7038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f60a5ab5fa0 RCX: 00007f60a584ba79
+RDX: 0000000000000002 RSI: 00002000000001c0 RDI: 0000000000000003
+RBP: 00007f60a58a49df R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f60a5ab6038 R14: 00007f60a5ab5fa0 R15: 00007ffe58fad8b8
+ </TASK>
+
+cxl_memdev_alloc() initializes cxlmd->endpoint to ERR_PTR(-ENXIO) as a
+sentinel until the endpoint driver has probed. During that window the
+memdev sysfs attributes are already visible, as soon as device_add()
+completes.
+
+Use IS_ERR_OR_NULL() instead of just NULL checks in all sysfs paths that
+use cxlmd->endpoint to avoid the user prematurely accessing it.
+
+Fixes: 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ drivers/cxl/core/edac.c   | 2 +-
+ drivers/cxl/core/mbox.c   | 2 +-
+ drivers/cxl/core/memdev.c | 2 +-
+ drivers/cxl/core/region.c | 3 ++-
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+index b321971fef58..65b37460d1a8 100644
+--- a/drivers/cxl/core/edac.c
++++ b/drivers/cxl/core/edac.c
+@@ -1149,7 +1149,7 @@ static bool cxl_is_memdev_memory_online(const struct cxl_memdev *cxlmd)
+ {
+ 	struct cxl_port *port = cxlmd->endpoint;
+ 
+-	if (port && cxl_num_decoders_committed(port))
++	if (!IS_ERR_OR_NULL(port) && cxl_num_decoders_committed(port))
+ 		return true;
+ 
+ 	return false;
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index e7a6452bf544..f2308db13c5d 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1301,7 +1301,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
+ 	 * Require an endpoint to be safe otherwise the driver can not
+ 	 * be sure that the device is unmapped.
+ 	 */
+-	if (endpoint && cxl_num_decoders_committed(endpoint) == 0)
++	if (!IS_ERR_OR_NULL(endpoint) && cxl_num_decoders_committed(endpoint) == 0)
+ 		return __cxl_mem_sanitize(mds, cmd);
+ 
+ 	return -EBUSY;
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index 273c22118d3d..f0a97aaaaf35 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -236,7 +236,7 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd)
+ 	int rc;
+ 
+ 	port = cxlmd->endpoint;
+-	if (!port || !is_cxl_endpoint(port))
++	if (IS_ERR_OR_NULL(port) || !is_cxl_endpoint(port))
+ 		return -EINVAL;
+ 
+ 	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 42874948b589..5ff5a086ca0d 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2956,7 +2956,8 @@ struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
+ 		.dpa = dpa,
+ 	};
+ 	port = cxlmd->endpoint;
+-	if (port && is_cxl_endpoint(port) && cxl_num_decoders_committed(port))
++	if (!IS_ERR_OR_NULL(port) && is_cxl_endpoint(port) &&
++	    cxl_num_decoders_committed(port))
+ 		device_for_each_child(&port->dev, &ctx, __cxl_dpa_to_region);
+ 
+ 	return ctx.cxlr;
+-- 
+2.39.5
+
