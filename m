@@ -1,123 +1,207 @@
-Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B9026B2D7
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Feb 2026 01:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFA238E5F7
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Feb 2026 09:34:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771983744; cv=none; b=hKqFQQmDD/czhjDLScNpmaQxhSctK8VB01+PH/jBwK0ASuJZ8r+3NhipdaKIr+VwZQM10hqkT/OS/pGg2Jv1JSAeu90B3yv88te0G8KY92f+w8rDyHE9yvnWUn9pv90YCqt3BumVtZ4QPAdDl9KyO54r3lhiLYoxI3oUMXRJPwo=
+	t=1772012056; cv=none; b=cHFIRMQcNWlA3upyzIxS9FxpqJ6Ykx7LCN0ZPBBI+msKK4Sy1nsWORsfHZbIK5IO4ZtDzKKrWQmGGVpHBGXxhIkRmXQM9+o6+LSxFukaMBUDCLFViks95Dqj4wg7TkFEW6HFCBjBkQEozxE35bhi6cWXCAjncQ45ujIec8pARKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771983744; c=relaxed/simple;
-	bh=AfqOJ+f8iBpn2YeRECTiS3swxHGChpe1lX4CMkSixnA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OAZlnE4O9IhP+f6MV0IHT1a8J8wriRHZpMdJWKQbVa7ViSiDIRAnhkOQ8iWJVv5tPAhEVjr/2gtGgw/a4q70wbxi0+Gbup/XL9WAVPwrGPUkqjSLjKirVkxISqPKZlP2liGavaWp5kj4jN6yTKqAIEuHIQy3uQW3qAl/F57rRl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Lli8sPs5; arc=none smtp.client-ip=209.85.222.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1772012056; c=relaxed/simple;
+	bh=EChnaz/wNdUCH/LaAhkqduGVIV85xoH+0j8ZN2XBYUg=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=fy2dHCbEm+KegI8hVjZhr2aHqWLiwtkodXZPo3oEY4FkQxhtAFS25D4Y4I59eLmT2S+21XThV2ugGyunBwMwtWty3r+/sre+SiOtzQH5wddXC5bpAdWO+6Zl3ImiQSkvtSo040LUYm+bUqH40onB7mdPX2Iws1/aYzd1JDM2D08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E4h3WVnV; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Lli8sPs5"
-Received: by mail-qk1-f196.google.com with SMTP id af79cd13be357-8cb4097794dso617809885a.3
-        for <linux-cxl@vger.kernel.org>; Tue, 24 Feb 2026 17:42:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E4h3WVnV"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-c6e266a3572so2257016a12.0
+        for <linux-cxl@vger.kernel.org>; Wed, 25 Feb 2026 01:34:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1771983742; x=1772588542; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3/UfaKnNpfKgE4L3AOtdGDMjVf1tkYmuqP6fF21iRas=;
-        b=Lli8sPs5sDBKepHgZQrxbi2AzMZM1E5XOYkF0Ak3GlOB9lfpZPPKcW3OpB45GOFYWa
-         Tw56AXqufs1CAMEZ67DF3frs6n/BwaXSRNbPzIf88j+iN9/yfOmmwJOTc9bVlmz3MYKF
-         xSIWBr52tdLTI9W+JIAiL25cpFbBI3jlW3v2V8ufp7JTralXs/90LS9fprcSVAQbi4fb
-         dFwsXJFuwGXBbCt5DARoLbxr3KrUzsCvJ3exPZwRFj8VIBaFi71YPX7cqfQ41SGO0DSd
-         u+dmGaAJa+FnOpSaZtXGc4jGw7EYtmGmhrb+jOnYHkX6JRrSQtNeaLcLct1shEi3CSax
-         XspA==
+        d=gmail.com; s=20230601; t=1772012054; x=1772616854; darn=vger.kernel.org;
+        h=mime-version:references:message-id:date:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JxnsaOQZey5wMq56BxN2EdEuMBW71mGq+RSuzcss/8M=;
+        b=E4h3WVnVoBDWixEI3M7sRAhWcGnqkgnMkrRN354zlXhRhc9W1sDSE7sIdADBxrhF3G
+         7H7pa8egtVR+7ar95UobKjIdgO/POBr9tKnMHQwwbD7sYP90AWCwFLOpdbZZgL/+mPI9
+         qYrUk9/IM8m/2FDAs9UrXJPIg11Efn89UxCEKT3dz0xeuI6nGuT26RYfvMwRf354syjk
+         lNaRZ7uFuCwu8dKuXpLeIb0i3Tr7E3VEaIP1P6+HoC3NZ/iSXQ/1yREjjUC88ttCJxqW
+         Th9RXRLgyHHDGWXN/hsVf7SKNGPmsfZr9BQjmNviNfxFrYlZyD1CiP5SuqV/fBP3Ml/y
+         6Qug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771983742; x=1772588542;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3/UfaKnNpfKgE4L3AOtdGDMjVf1tkYmuqP6fF21iRas=;
-        b=U0bVxuHJhvW5iKfgR4Z2fQqRFYXt26PYiXbuQ9bWLLo50EiQ49ACWcs6Ulw18GJhin
-         gCn4emebTxxjodhLH0JpRGZblgjVWTtcpTZH10jgBnfnwGH/fuDL03Ca5bhgkQjF6Els
-         hXIkF2OWhK4QtLE18uGXZpDBpW9fmr9oJ1kU7818EtQpi0C0U2skUXVsKWUpARDldhpV
-         xKp8FmfJDjhFokJs9kq0/R1X28GGshKCQ+9b6NzGKzg+WwAPSJCHgv+SSATl15Kb1jXG
-         eosF+QANa4zF8EGuK3mfB+nF9rZUyS0v99W8BecZC2SVMovUbyZEhfa6/TFpUkCxnYEl
-         hLBw==
-X-Gm-Message-State: AOJu0YzjS0tvq8h2l9xE9f3liOPZBEBvg/AnmjvS/tN2Ww7pAnke8cYj
-	lF+g0Il5dVq1t9GFrQ2mLuTW7JxUB5v+VrWleN7h6XnHUjoyqiEq7XuoJ+hBFeOkiCI=
-X-Gm-Gg: ATEYQzwvXkb3tLup1S+nhu4gI0bargJ3l1Rc/bPhaTX2f+wF+Hg4LFBewUcnoDGbksm
-	yEh4O4QFOB+bREuLYpc1GKnB/Q8ZxAqxZpSK+xj1mxZ8AqfcGmlb1zYj1SVLVq6ytKESfuPFGaa
-	ptrPOCtchJFUZwQEH3W19qrSv0ImSPpf34sHEPP/zMF9O/ISPrgmlAdE8YwOLeHx7WN2IOR3v16
-	ZIGzPk2Z5cJBi8Oa7W2Kyy3aJvoNysBEUXzaStT04u3yNu4UmvCk0AJRVSTbbvTaAM0b52bpJ1s
-	lhrUNCLf1+nM4L+6JV/fANDDmoo5t+FZvuMxQl61Gaimnesgk/dMS1cBrdlB2X4mk9wPCWgOmCd
-	PAPVzcCdmcAe285MGXwrds8mC3Qczc3J6DV87tmzUY2MWdrHG3jWc4xd5DhUYbz8lRPCJ6N86wl
-	KX2NdeEZXqJvzfPwFh+caEyjZOaFWuK5s7vVpaZ4Tql7/4D/vzkwyemiNk2CV1fCDPrYlOH3ij7
-	n2mv51SYjjNk3PSJnNr
-X-Received: by 2002:a05:620a:1a9e:b0:8c6:ed6b:5865 with SMTP id af79cd13be357-8cb8c9474f6mr1895796485a.0.1771983742404;
-        Tue, 24 Feb 2026 17:42:22 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-899ac09e78esm23847046d6.34.2026.02.24.17.42.21
+        d=1e100.net; s=20230601; t=1772012054; x=1772616854;
+        h=mime-version:references:message-id:date:in-reply-to:subject:cc:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JxnsaOQZey5wMq56BxN2EdEuMBW71mGq+RSuzcss/8M=;
+        b=B/E52ARJhZKe1TKo6C2IteogiLJE5Z5RSLmCF7b5I2dexrr0yX0R5TFr8LL4hHmCl8
+         bqXoHTToSHSeoj75F9adRT8XE4evpeLVRB3LftcdJqUkknRzCiPltHZuZhl5NEjLmXb5
+         iy7yixOZztgZR7vExFSWd10cpACvA8dpM6+5TEuxBhkg6OTN9pa9r3H4e1GZkqkggNmS
+         d0SIzGCf15pcssqygQiSqQrWLPt+3SVgbPSg0X6VS6WNUE6Q2HjZXNmaYQP7ylIh6CGw
+         zU62IRvnBTZmx/JZc5D40VnbzHeAjVgmf9BVtV2YegIymGahnB4VBLb9LLmlG8Ynea8v
+         vuig==
+X-Forwarded-Encrypted: i=1; AJvYcCWYfDm3najUSQQjciv9IiPaNs6YmXhGC1JrPREkOpvqzxX9nUD8l7i1gtI0zDpETT9y7zm3LFMJf6U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdKy1gfenskV+arkd1vEAL817vJGdVPQZmXtabzz2A2tApT8vW
+	L3G200rFwBhTLUeaYPYHzyafRQVnxKppZgcCqeqt5u6QEs2eRbTBdbfV
+X-Gm-Gg: ATEYQzxjZ8AMLOo/DBWGQWxFZUj4ZKocF3/lz+WkaMxeSUoYwRTJ4urZ48+Lv9gZQGL
+	wKg1WFY3tlT4ytdzEhh3TqTrOHeMjYyz91sdgZJft1h97TlGY4efeC32hFUIK0tkigvhG99rYd1
+	HNZ8PpEJ/bAjwiabVozuPRx302mf8PnzH6/iEp4x7r6GCoLF9QB+IXxjczXhsp0MQHDwsrs1sqr
+	+ybLTcU3vxRGGtxnEiFJ9fXytuOTEUvVvFqMAtdImpS1EP7V+NMIB6vE44O+2X0F+Kq0x8m4/ez
+	kDD1JVBbGrAUmYhojvCjEUTSuu77QL7znqyw8UXmyPuRFdRH1LxkOtnilLY1m/33MdPawQvMx63
+	nWtvZzH1KgwXViF7ID4iOgZFuKnjeQpl/GBqoKEcIgqIGmH4dLBLFsOXPFE50CNltCof7kimE/M
+	/4/7qX87Yx27ojXG1EDA==
+X-Received: by 2002:a17:90b:3dcc:b0:340:c60b:f362 with SMTP id 98e67ed59e1d1-358ae7c6ca9mr13087754a91.6.1772012054135;
+        Wed, 25 Feb 2026 01:34:14 -0800 (PST)
+Received: from dw-tp ([203.81.242.210])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3590188126esm2256635a91.6.2026.02.25.01.33.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Feb 2026 17:42:22 -0800 (PST)
-Date: Tue, 24 Feb 2026 20:42:20 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Alejandro Lucero Palau <alucerop@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com
-Subject: Re: [PATCH 1/2] cxl/region: fix region leak when attach_target fails
- in cxl_add_to_region
-Message-ID: <aZ5TfEeqULEGXo4N@gourry-fedora-PF4VCD3F>
-References: <20260221043013.1420169-1-gourry@gourry.net>
- <aZk_9iYMh2QPYNDz@gourry-fedora-PF4VCD3F>
- <87347db6-6838-4a60-ad1c-037f526f16b6@amd.com>
+        Wed, 25 Feb 2026 01:34:13 -0800 (PST)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Alex Shi <alexs@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Andreas Larsson <andreas@gaisler.com>, Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, 
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	"David S. Miller" <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonathan Corbet <corbet@lwn.net>, 
+	Klara Modin <klarasmodin@gmail.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Magnus Lindholm <linmag7@gmail.com>, 
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>, 
+	Mike Rapoport <rppt@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Richard Weinberger <richard@nod.at>, 
+	Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, x86@kernel.org, 
+	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-mm@kvack.org, 
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v3 24/29] arch, mm: consolidate initialization of SPARSE memory model
+In-Reply-To: <20260111082105.290734-25-rppt@kernel.org>
+Date: Wed, 25 Feb 2026 09:00:35 +0530
+Message-ID: <87tsv5h544.ritesh.list@gmail.com>
+References: <20260111082105.290734-1-rppt@kernel.org> <20260111082105.290734-25-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87347db6-6838-4a60-ad1c-037f526f16b6@amd.com>
+Content-Type: text/plain
 
-On Tue, Feb 24, 2026 at 04:15:33PM +0000, Alejandro Lucero Palau wrote:
-> 
-> On 2/21/26 05:17, Gregory Price wrote:
-> > On Fri, Feb 20, 2026 at 11:30:12PM -0500, Gregory Price wrote:
-> > > cxl_add_to_region() ignores the return value of attach_target().  When
-> > > attach_target() fails (e.g. cxl_port_setup_targets() returns -ENXIO),
-> > > the auto-discovered region remains registered with its HPA resource
-> > > consumed but never reaches COMMIT state.  Subsequent region creation
-> > > attempts fail with -ENOSPC because the HPA range is already reserved.
-> > > 
-> > > Track whether this call to cxl_add_to_region() created the region, and
-> > > call drop_region() on attach_target() failure to unregister it and
-> > > release the HPA resource.  Pre-existing regions are left alone since
-> > > other endpoints may already be attached.
-> > > 
-> > > Signed-off-by: Gregory Price <gourry@gourry.net>
-> > BAH - disregard this patch, it uses drop_region which is introduced by
-> > Alejandro here:
-> > 
-> > https://lore.kernel.org/linux-cxl/20260201155438.2664640-20-alejandro.lucero-palau@amd.com/
-> > 
-> Feel free to add it to this series. I have started to send individual series
-> as you know but the part changing the region creation will require more work
-> than the already sent.
-> 
-> About this fix, it looks good to me, although I have to admit I'm a bit lost
-> after following the discussion Allison points to. If we want to keep the
-> state of failure for forensics, not sure if the debugging/tracing or default
-> error info in this case will be enough.
-> 
-> In any case:
-> 
-> Reviewed-by: Alejandro Lucero <alucerop@amd.com>
-> 
+Mike Rapoport <rppt@kernel.org> writes:
 
-Yeah i don't quite follow the want to keep the objects around, it seems
-to cause more issues than it solves - but then i also don't think this
-is going to be a particularly common problem
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>
+> Every architecture calls sparse_init() during setup_arch() although the
+> data structures created by sparse_init() are not used until the
+> initialization of the core MM.
+>
+> Beside the code duplication, calling sparse_init() from architecture
+> specific code causes ordering differences of vmemmap and HVO initialization
+> on different architectures.
+>
+> Move the call to sparse_init() from architecture specific code to
+> free_area_init() to ensure that vmemmap and HVO initialization order is
+> always the same.
+>
 
-~Gregory
+Hello Mike,
+
+[    0.000000][    T0] ------------[ cut here ]------------
+[    0.000000][    T0] WARNING: arch/powerpc/include/asm/io.h:879 at virt_to_phys+0x44/0x1b8, CPU#0: swapper/0
+[    0.000000][    T0] Modules linked in:
+[    0.000000][    T0] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.19.0-12139-gc57b1c00145a #31 PREEMPT
+[    0.000000][    T0] Hardware name: IBM pSeries (emulated by qemu) POWER10 (architected) 0x801200 0xf000006 of:SLOF,git-ee03ae pSeries
+[    0.000000][    T0] NIP:  c000000000601584 LR: c000000004075de4 CTR: c000000000601548
+[    0.000000][    T0] REGS: c000000004d1f870 TRAP: 0700   Not tainted  (6.19.0-12139-gc57b1c00145a)
+[    0.000000][    T0] MSR:  8000000000021033 <SF,ME,IR,DR,RI,LE>  CR: 48022448  XER: 20040000
+[    0.000000][    T0] CFAR: c0000000006016c4 IRQMASK: 1
+[    0.000000][    T0] GPR00: c000000004075dd4 c000000004d1fb10 c00000000304bb00 c000000180000000
+[    0.000000][    T0] GPR04: 0000000000000009 0000000000000009 c000000004ec94a0 0000000000000000
+[    0.000000][    T0] GPR08: 0000000000018000 0000000000000001 c000000004921280 0000000048022448
+[    0.000000][    T0] GPR12: c000000000601548 c000000004fe0000 0000000000000004 0000000000000004
+[    0.000000][    T0] GPR16: 000000000287fb08 0000000000000060 0000000000000002 0000000002831750
+[    0.000000][    T0] GPR20: 0000000002831778 fffffffffffffffd c000000004d78050 00000000051cbb00
+[    0.000000][    T0] GPR24: 0000000005a40008 c000000000000000 c000000000400000 0000000000000100
+[    0.000000][    T0] GPR28: c000000004d78050 0000000000000000 c000000004ecd4a8 0000000000000001
+[    0.000000][    T0] NIP [c000000000601584] virt_to_phys+0x44/0x1b8
+[    0.000000][    T0] LR [c000000004075de4] alloc_bootmem+0x144/0x1a8
+[    0.000000][    T0] Call Trace:
+[    0.000000][    T0] [c000000004d1fb50] [c000000004075dd4] alloc_bootmem+0x134/0x1a8
+[    0.000000][    T0] [c000000004d1fba0] [c000000004075fac] __alloc_bootmem_huge_page+0x164/0x230
+[    0.000000][    T0] [c000000004d1fbe0] [c000000004030bc4] alloc_bootmem_huge_page+0x44/0x138
+[    0.000000][    T0] [c000000004d1fc10] [c000000004076e48] hugetlb_hstate_alloc_pages+0x350/0x5ac
+[    0.000000][    T0] [c000000004d1fd30] [c0000000040782f0] hugetlb_bootmem_alloc+0x15c/0x19c
+[    0.000000][    T0] [c000000004d1fd70] [c00000000406d7b4] mm_core_init_early+0x7c/0xdf4
+[    0.000000][    T0] [c000000004d1ff30] [c000000004011d84] start_kernel+0xac/0xc58
+[    0.000000][    T0] [c000000004d1ffe0] [c00000000000e99c] start_here_common+0x1c/0x20
+[    0.000000][    T0] Code: 6129ffff 792907c6 6529ffff 6129ffff 7c234840 40810018 3d2201e8 3929a7a8 e9290000 7c291840 41810044 3be00001 <0b1f0000> 3d20bfff 6129ffff 792907c6
+
+
+I think this is happening because, now in mm_core_early_init(), the
+order of initialization between hugetlb_bootmem_alloc() and
+free_area_init() is reversed. Since free_area_init() -> sparse_init()
+is responsible for setting SECTIONS and vmemmap area. 
+
+Then in alloc_bootmem() (from hugetlb_bootmem_alloc() path), it uses virt_to_phys(m)...
+
+			/*
+			 * For pre-HVO to work correctly, pages need to be on
+			 * the list for the node they were actually allocated
+			 * from. That node may be different in the case of
+			 * fallback by memblock_alloc_try_nid_raw. So,
+			 * extract the actual node first.
+			 */
+			if (m)
+				listnode = early_pfn_to_nid(PHYS_PFN(virt_to_phys(m)));
+
+
+... virt_to_phys on powerpc uses:
+
+static inline unsigned long virt_to_phys(const volatile void * address)
+{
+	WARN_ON(IS_ENABLED(CONFIG_DEBUG_VIRTUAL) && !virt_addr_valid(address));
+
+	return __pa((unsigned long)address);
+}
+
+#define virt_addr_valid(vaddr)	({					\
+	unsigned long _addr = (unsigned long)vaddr;			\
+	_addr >= PAGE_OFFSET && _addr < (unsigned long)high_memory &&	\
+	pfn_valid(virt_to_pfn((void *)_addr));				\
+})
+
+
+I think the above warning in dmesg gets printed from above WARN_ON, i.e.
+because pfn_valid() is false, since we haven't done sparse_init() yet.
+
+So, what I wanted to check was - do you think instead of virt_to_phys(), we
+could directly use __pa() here() in mm/hugetlb.c, since these are
+memblock alloc addresses? i.e.: 
+
+// alloc_bootmem():
+-   listnode = early_pfn_to_nid(PHYS_PFN(virt_to_phys(m)));
++   listnode = early_pfn_to_nid(PHYS_PFN(__pa(m)));
+
+// __alloc_bootmem_huge_page():
+-   memblock_reserved_mark_noinit(virt_to_phys((void *)m + PAGE_SIZE),
++   memblock_reserved_mark_noinit(__pa((void *)m + PAGE_SIZE),
+
+
+Thoughts?
+
+-ritesh
