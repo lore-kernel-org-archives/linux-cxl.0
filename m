@@ -1,161 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40FA3195FB
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Feb 2026 22:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC5A1E5B63;
+	Wed, 25 Feb 2026 22:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772059626; cv=none; b=vDY8ey1rpjoqH06gVdfRq5UDKWSu1LxlbegEbK/QPXY+1gJs79jU4CvlFesKNX1Q2+r5/jDiQesowkOQ8WgbXb9l/11ivNE5U+b6jM2Zsdjw1bl87oxI1kMuZQUfw60UjNGb6xBaxB0Tw3hz2Z7pXVg+nQmVCwFM90KUdmlfj6M=
+	t=1772059876; cv=none; b=G3nvj2EWdptWuNcoY6VB0gzuExRilYdVMVGPw07xD85+WvydMwLEdliqTShnCR+6MLJCXmLIgY034OtdySxg41LTUnK14Xee9evpvuWC1aCgZ0nqST65G6d/8lIDUMLPcIypz6DS++jWjLm2kIf4mIODlS72WI5XieoiU8BHPtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772059626; c=relaxed/simple;
-	bh=E0TavFMPmGTkcPtEcGiSazDlByA8P6hNkwg75oZY2dw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C3bXe2jqO/AnHaRy/+YUJ5YWk400uGdzkrq+BRx4oHyqiBLos8iePSmXZDvpiInmhUs7TQlOgI8x83VXkyM6eVn4pk7DMMSz1hw34MJ4qTmVdKNKdc9CZpHHt9ozgTfMpYYb55/8cTuL+dY2Dqpj1ETAMcrBpOs0507qTjA5pQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TIuP4rpk; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TIuP4rpk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772059624; x=1803595624;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=E0TavFMPmGTkcPtEcGiSazDlByA8P6hNkwg75oZY2dw=;
-  b=TIuP4rpk68cNV/eOHrdnw5UIpltqrcQdT6/+psLy2KeQu6qbtD/mNO9G
-   iJyYRf7AWmxrUiowtmJ4t47xMxRANI+FrJpWq191UT4MpC4hyCCnhsoYW
-   inLDvLig8ohKNrR7I4ygXfmMtJBVgX44iig1Nnh/KdlN2AOB8fxF2x6DO
-   n0h8jvRYJzgBunp3yvhWYOfHKigX5j9dWKAQ7aQ1e7dfJdAFaP+kqfBpL
-   +Em22q2PIq04zqhuKPZIk8imKitHr0CvvJCr+vPP13GMM5POYMDpobdfD
-   EguCMz6Okx5fDexnGrUlvkmoGUmg5IeW+uJ2eoWaQLXMXk9NLP1aKpNCr
-   A==;
-X-CSE-ConnectionGUID: VsePcsoOQvKMR4OlQe40tw==
-X-CSE-MsgGUID: jzQp5CnsQSK1Y5zTdgHOPw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11712"; a="83739337"
-X-IronPort-AV: E=Sophos;i="6.21,311,1763452800"; 
-   d="scan'208";a="83739337"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2026 14:47:03 -0800
-X-CSE-ConnectionGUID: eh25oxcqQgW9zqHQdHi9lg==
-X-CSE-MsgGUID: Otr6uUroRrOVK3R1eAE2KA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,311,1763452800"; 
-   d="scan'208";a="220504796"
-Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.111.98]) ([10.125.111.98])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2026 14:47:02 -0800
-Message-ID: <7d1f61c1-0a0f-4533-bc2a-36b7268da503@intel.com>
-Date: Wed, 25 Feb 2026 15:47:01 -0700
+	s=arc-20240116; t=1772059876; c=relaxed/simple;
+	bh=xfRFRyo44vG49OSOssSJ4CG8+ErTpbHSpJqE14IcduM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EaIuRk57zg6lj74Y0xR0O0bRBdV6SyJfmMzwM1l9ab8wxh0Z6kYNnyYRHPSjGLWLwlu1IbHvzGetxnBCyhu8vt5y7ApLt6492UocQSLZxdGxCVp0RXvWaOuOdm78y+3oB77hVdsdxl96XxmeENxZeJPpPGLOK9ddbR+cysqWCqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 4F7A91C74B;
+	Wed, 25 Feb 2026 22:51:12 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 2D6B819;
+	Wed, 25 Feb 2026 22:51:07 +0000 (UTC)
+Date: Wed, 25 Feb 2026 17:51:05 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Dmitry Ilvokhin <d@ilvokhin.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
+ <david@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R.
+ Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Mike
+ Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal
+ Hocko <mhocko@suse.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Brendan Jackman
+ <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan
+ <ziy@nvidia.com>, Oscar Salvador <osalvador@suse.de>, Qi Zheng
+ <zhengqi.arch@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>, Axel
+ Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei
+ Xu <weixugc@google.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ kernel-team@meta.com
+Subject: Re: [PATCH 1/4] mm: introduce zone lock wrappers
+Message-ID: <20260225175105.7777c514@fedora>
+In-Reply-To: <3826dd6dc55a9c5721ec3de85f019764a6cf3222.1770821420.git.d@ilvokhin.com>
+References: <cover.1770821420.git.d@ilvokhin.com>
+	<3826dd6dc55a9c5721ec3de85f019764a6cf3222.1770821420.git.d@ilvokhin.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] cxl/port: Fix use after free of parent_port in
- cxl_detach_ep()
-To: Alison Schofield <alison.schofield@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-References: <20260225220251.1708089-1-alison.schofield@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260225220251.1708089-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 2D6B819
+X-Stat-Signature: 8gfyis76sfgdc1u14u6tppapitasde71
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19bcS51kdQMJLg4y+CWNN6mKgepRI8oF40=
+X-HE-Tag: 1772059867-798157
+X-HE-Meta: U2FsdGVkX1/tj9mqP/zexxSNbzfzJyNDn3Ikcoz9DM7IrcRLT4iJW9kifyj/zq12MlJmNIjaxAlYOyS3OVEskQGvSr6j2wOSQr4HauKmUod9p5RnvvAxrahOxlqk+oH4Ol5w6uws6FKwFTPR68+qweqED6rOryjCvuMJO2ZTATs92nH8W4R/Pp2qLAK2T2gz7rU1DQuMj9KTkr5PEKIAE3Dg4TqYHi5RHkwdlmYRJYSL6C+FSbZdN2YxvnZ+XXzK3T6KoJOVX0Se6kXSSy2fSWGEvLebKL+M3f1uz3BFWqVnjdOvNhVnNOm1AZfDO5LDRN1jNrbXoMR6wjybtI29GKMzZUrJXXUk3P3X6XVS5YFSysdNbNP41hAv7wez19mJ
+
+On Wed, 11 Feb 2026 15:22:13 +0000
+Dmitry Ilvokhin <d@ilvokhin.com> wrote:
 
 
-
-On 2/25/26 3:02 PM, Alison Schofield wrote:
-> cxl_detach_ep() is called during bottom-up removal when all CXL memory
-> devices beneath a switch port have been removed. For each port in the
-> hierarchy it locks both the port and its parent, removes the endpoint,
-> and if the port is now empty, marks it dead and unregisters the port
-> by calling delete_switch_port(). There are two places during this work
-> where the parent_port may be used after freeing:
-> 
-> First, a concurrent detach may have already processed a port by the
-> time a second worker finds it via bus_find_device(). Without pinning
-> parent_port, it may already be freed when we discover port->dead and
-> attempt to unlock the parent_port. In a production kernel that's a
-> silent memory corruption, with lock debug, it looks like this:
-> 
-> []DEBUG_LOCKS_WARN_ON(__owner_task(owner) != get_current())
-> []WARNING: kernel/locking/mutex.c:949 at __mutex_unlock_slowpath+0x1ee/0x310
-> []Call Trace:
-> []mutex_unlock+0xd/0x20
-> []cxl_detach_ep+0x180/0x400 [cxl_core]
-> []devm_action_release+0x10/0x20
-> []devres_release_all+0xa8/0xe0
-> []device_unbind_cleanup+0xd/0xa0
-> []really_probe+0x1a6/0x3e0
-> 
-> Second, delete_switch_port() releases three devm actions registered
-> against parent_port. The last of those is unregister_port() and it
-> calls device_unregister() on the child port, which can cascade. If
-> parent_port is now also empty the device core may unregister and free
-> it too. So by the time delete_switch_port() returns, parent_port may
-> be free, and the subsequent device_unlock(&parent_port->dev) operates
-> on freed memory. The kernel log looks same as above, with a different
-> offset in cxl_detach_ep().
-> 
-> Both of these issues stem from the absence of a lifetime guarantee
-> between a child port and its parent port.
-> 
-> Establish a lifetime rule for ports: child ports hold a reference to
-> their parent device until release. Take the reference when the port
-> is allocated and drop it when released. This ensures the parent is
-> valid for the full lifetime of the child and eliminates the use after
-> free window in cxl_detach_ep().
-> 
-> This is easily reproduced with a reload of cxl_acpi in QEMU with CXL
-> devices present.
-> 
-> Fixes: 2345df54249c ("cxl/memdev: Fix endpoint port removal")
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
-> 
-> Changes in v3:
-> Scope fix as a lifetime guarantee btw child port & parent (Dan)
-> 
-> Changes in v2:
-> Remove stray blank line (DaveJ)
-> Rebase on 7.0-rc1
-> Add Fixes Tag (DaveJ)
-> 
-> 
->  drivers/cxl/core/port.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index b69c2529744c..09fc08205ed5 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -552,6 +552,10 @@ static void cxl_port_release(struct device *dev)
->  	xa_destroy(&port->dports);
->  	xa_destroy(&port->regions);
->  	ida_free(&cxl_port_ida, port->id);
+> diff --git a/include/linux/zone_lock.h b/include/linux/zone_lock.h
+> new file mode 100644
+> index 000000000000..c531e26280e6
+> --- /dev/null
+> +++ b/include/linux/zone_lock.h
+> @@ -0,0 +1,38 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_ZONE_LOCK_H
+> +#define _LINUX_ZONE_LOCK_H
 > +
-> +	if (!is_cxl_root(port))
-> +		put_device(dev->parent);
+> +#include <linux/mmzone.h>
+> +#include <linux/spinlock.h>
 > +
->  	if (is_cxl_root(port))
->  		kfree(to_cxl_root(port));
->  	else
-> @@ -721,6 +725,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
->  		struct cxl_port *iter;
->  
->  		dev->parent = &parent_port->dev;
-> +		get_device(dev->parent);
->  		port->depth = parent_port->depth + 1;
->  		port->parent_dport = parent_dport;
->  
-> 
-> base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
+> +static inline void zone_lock_init(struct zone *zone)
+> +{
+> +	spin_lock_init(&zone->lock);
+> +}
+> +
+> +#define zone_lock_irqsave(zone, flags)				\
+> +do {								\
+> +	spin_lock_irqsave(&(zone)->lock, flags);		\
+> +} while (0)
+> +
+> +#define zone_trylock_irqsave(zone, flags)			\
+> +({								\
+> +	spin_trylock_irqsave(&(zone)->lock, flags);		\
+> +})
+> +
+> +static inline void zone_unlock_irqrestore(struct zone *zone, unsigned long flags)
+> +{
+> +	spin_unlock_irqrestore(&zone->lock, flags);
+> +}
+> +
+> +static inline void zone_lock_irq(struct zone *zone)
+> +{
+> +	spin_lock_irq(&zone->lock);
+> +}
+> +
+> +static inline void zone_unlock_irq(struct zone *zone)
+> +{
+> +	spin_unlock_irq(&zone->lock);
+> +}
+> +
+> +#endif /* _LINUX_ZONE_LOCK_H */
 
+Have you thought about adding guards as well. It could make the code simpler:
+
+  (Not tested)
+
+#include <linux/cleanup.h>
+[..]
+
+DEFINE_LOCK_GUARD_1(zonelock_irqsave, struct zone *,
+		    zone_lock_irqsave(_T->lock, _T->flags),
+		    zone_unlock_irqrestore(_T->lock, _T->flags),
+		    unsigned long flags)
+DECLARE_LOCK_GUARD_1_ATTRS(zonelock_irqsave, __acquires(_T), __releases(*(struct zone ***)_T))
+#define class_zonelock_irqsave_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(zonelock_irqsave, _T)
+
+DEFINE_LOCK_GUARD_1(zonelock_irq, struct zone *,
+		    zone_lock_irq(_T->lock),
+		    zone_unlock_irq(_T->lock))
+DECLARE_LOCK_GUARD_1_ATTRS(zonelock_irq, __acquires(_T), __releases(*(struct zone ***)_T))
+#define class_zonelock_irq_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(zonelock_irq, _T)
+
+Then you could even remove the "flags" variables from the C code, and some goto unlocks.
+
+-- Steve
