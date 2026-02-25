@@ -1,207 +1,191 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012028.outbound.protection.outlook.com [40.107.209.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFA238E5F7
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Feb 2026 09:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772012056; cv=none; b=cHFIRMQcNWlA3upyzIxS9FxpqJ6Ykx7LCN0ZPBBI+msKK4Sy1nsWORsfHZbIK5IO4ZtDzKKrWQmGGVpHBGXxhIkRmXQM9+o6+LSxFukaMBUDCLFViks95Dqj4wg7TkFEW6HFCBjBkQEozxE35bhi6cWXCAjncQ45ujIec8pARKw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772012056; c=relaxed/simple;
-	bh=EChnaz/wNdUCH/LaAhkqduGVIV85xoH+0j8ZN2XBYUg=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-Version:Content-Type; b=fy2dHCbEm+KegI8hVjZhr2aHqWLiwtkodXZPo3oEY4FkQxhtAFS25D4Y4I59eLmT2S+21XThV2ugGyunBwMwtWty3r+/sre+SiOtzQH5wddXC5bpAdWO+6Zl3ImiQSkvtSo040LUYm+bUqH40onB7mdPX2Iws1/aYzd1JDM2D08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E4h3WVnV; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74C9310636
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Feb 2026 12:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.28
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772021120; cv=fail; b=oldUSVteH6ee9sotrC8pZtqqyTC6JcqmiR2Ohppnu9RaTiR5jNKDwWsaZbfmzDL3V9NyGrvZPqiG/+ZWkDMZugSlot/b3YUfJANgqSKHBnlbxSuttHQfL7bueyXS4HuTQPJrH/Q1fxgdY4VCCo+vn0JbF0SuOi+A2h9IQcAcg7Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772021120; c=relaxed/simple;
+	bh=b1T2Ora3ZpNyFRCqm/KIwXSziGR+7qq2hJ2XJDEzIVM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=YRWBnSHomK+z5wVXAPvbmxBayFGmCVcKqYXg38HtakqgFBWV/jQCh9EWSOeCK5RDYJ2x7yHJ09yqa39V/C9Lm2iwjcM7E6nI9eM+sSq7plgjxr7fmMqs0zx8q1kniOhV0MqPSScYtpfrjKZQfgSLCTxv0TZi1yr8EUC8meAAjb8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PywcTrMJ; arc=fail smtp.client-ip=40.107.209.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E4h3WVnV"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-c6e266a3572so2257016a12.0
-        for <linux-cxl@vger.kernel.org>; Wed, 25 Feb 2026 01:34:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772012054; x=1772616854; darn=vger.kernel.org;
-        h=mime-version:references:message-id:date:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JxnsaOQZey5wMq56BxN2EdEuMBW71mGq+RSuzcss/8M=;
-        b=E4h3WVnVoBDWixEI3M7sRAhWcGnqkgnMkrRN354zlXhRhc9W1sDSE7sIdADBxrhF3G
-         7H7pa8egtVR+7ar95UobKjIdgO/POBr9tKnMHQwwbD7sYP90AWCwFLOpdbZZgL/+mPI9
-         qYrUk9/IM8m/2FDAs9UrXJPIg11Efn89UxCEKT3dz0xeuI6nGuT26RYfvMwRf354syjk
-         lNaRZ7uFuCwu8dKuXpLeIb0i3Tr7E3VEaIP1P6+HoC3NZ/iSXQ/1yREjjUC88ttCJxqW
-         Th9RXRLgyHHDGWXN/hsVf7SKNGPmsfZr9BQjmNviNfxFrYlZyD1CiP5SuqV/fBP3Ml/y
-         6Qug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772012054; x=1772616854;
-        h=mime-version:references:message-id:date:in-reply-to:subject:cc:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JxnsaOQZey5wMq56BxN2EdEuMBW71mGq+RSuzcss/8M=;
-        b=B/E52ARJhZKe1TKo6C2IteogiLJE5Z5RSLmCF7b5I2dexrr0yX0R5TFr8LL4hHmCl8
-         bqXoHTToSHSeoj75F9adRT8XE4evpeLVRB3LftcdJqUkknRzCiPltHZuZhl5NEjLmXb5
-         iy7yixOZztgZR7vExFSWd10cpACvA8dpM6+5TEuxBhkg6OTN9pa9r3H4e1GZkqkggNmS
-         d0SIzGCf15pcssqygQiSqQrWLPt+3SVgbPSg0X6VS6WNUE6Q2HjZXNmaYQP7ylIh6CGw
-         zU62IRvnBTZmx/JZc5D40VnbzHeAjVgmf9BVtV2YegIymGahnB4VBLb9LLmlG8Ynea8v
-         vuig==
-X-Forwarded-Encrypted: i=1; AJvYcCWYfDm3najUSQQjciv9IiPaNs6YmXhGC1JrPREkOpvqzxX9nUD8l7i1gtI0zDpETT9y7zm3LFMJf6U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdKy1gfenskV+arkd1vEAL817vJGdVPQZmXtabzz2A2tApT8vW
-	L3G200rFwBhTLUeaYPYHzyafRQVnxKppZgcCqeqt5u6QEs2eRbTBdbfV
-X-Gm-Gg: ATEYQzxjZ8AMLOo/DBWGQWxFZUj4ZKocF3/lz+WkaMxeSUoYwRTJ4urZ48+Lv9gZQGL
-	wKg1WFY3tlT4ytdzEhh3TqTrOHeMjYyz91sdgZJft1h97TlGY4efeC32hFUIK0tkigvhG99rYd1
-	HNZ8PpEJ/bAjwiabVozuPRx302mf8PnzH6/iEp4x7r6GCoLF9QB+IXxjczXhsp0MQHDwsrs1sqr
-	+ybLTcU3vxRGGtxnEiFJ9fXytuOTEUvVvFqMAtdImpS1EP7V+NMIB6vE44O+2X0F+Kq0x8m4/ez
-	kDD1JVBbGrAUmYhojvCjEUTSuu77QL7znqyw8UXmyPuRFdRH1LxkOtnilLY1m/33MdPawQvMx63
-	nWtvZzH1KgwXViF7ID4iOgZFuKnjeQpl/GBqoKEcIgqIGmH4dLBLFsOXPFE50CNltCof7kimE/M
-	/4/7qX87Yx27ojXG1EDA==
-X-Received: by 2002:a17:90b:3dcc:b0:340:c60b:f362 with SMTP id 98e67ed59e1d1-358ae7c6ca9mr13087754a91.6.1772012054135;
-        Wed, 25 Feb 2026 01:34:14 -0800 (PST)
-Received: from dw-tp ([203.81.242.210])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3590188126esm2256635a91.6.2026.02.25.01.33.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Feb 2026 01:34:13 -0800 (PST)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Alex Shi <alexs@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Andreas Larsson <andreas@gaisler.com>, Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	"David S. Miller" <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonathan Corbet <corbet@lwn.net>, 
-	Klara Modin <klarasmodin@gmail.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Magnus Lindholm <linmag7@gmail.com>, 
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>, 
-	Mike Rapoport <rppt@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Richard Weinberger <richard@nod.at>, 
-	Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, x86@kernel.org, 
-	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
-	linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v3 24/29] arch, mm: consolidate initialization of SPARSE memory model
-In-Reply-To: <20260111082105.290734-25-rppt@kernel.org>
-Date: Wed, 25 Feb 2026 09:00:35 +0530
-Message-ID: <87tsv5h544.ritesh.list@gmail.com>
-References: <20260111082105.290734-1-rppt@kernel.org> <20260111082105.290734-25-rppt@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PywcTrMJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FQgQ6rhs1L0Yqt6eAp/NOGhza6xM+in22dWGVkWJnL7BJqehLl1G74K1eDTqqboT5bW7QDZ2AYMsyoBHmBG1Ag+XYi+0GDXzyWMyGC7dZvHDByzEdSf721S8oDy+QHAsH3Ddw6AoOfEWjO3svknhUo9h5wGWja1GZprGo4E+fIJeccj3krJhYVIHM7GQ/WvjEAsmG1xfi6ngcUrJUgORumjQhW0kwybn9fOOFe0Y0JGLqd273SXZtQikcd5m3az1BbCSSlWEnI5m3IE4UqSibG1XfPhyipCgk44w9izlmY133UP1HlxPL9ypTZ0kExzTE+Qzg4Kdz/Art7XcGBmRkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=b1T2Ora3ZpNyFRCqm/KIwXSziGR+7qq2hJ2XJDEzIVM=;
+ b=s/yStD5F0pzmwjaa9cSIKPrrizx00Nxp2QZ06Hs0ch0VWrnDKeArRRSFLy1SKrQnGrpM6xzoe+GzCRcRuWHYFbtml0/A6TouRB7rAmLc08m9+zShZvMgUQUZTietTSSRxJKDUS6ZQk0ynSHpuD/YGGRViR9tK63oiKkyJImtikeZTASU6DA6GQD0DNvu8EfqFyP/3sKk9T50mmtGJPADt4ROtkuKEXIMeQqq1Ozw4wOiFxc5S4H7Flsp+f+Pls9jGBq9cbBhq0LpKIOoDeqPYcv6z8efnJfGOuMv/DRKlleWhGxEcxVQb6ePq6C0r6rdTWMvuJ7Bdm87FH4ykoK+PQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b1T2Ora3ZpNyFRCqm/KIwXSziGR+7qq2hJ2XJDEzIVM=;
+ b=PywcTrMJkYqDhxMPJzGKBFnp5eOAdP4zo2jpn6OYCbNpfq9sohYjIFCdafoxF+k6Bm03fih0r9Wcz1sGpl+KAgzNVPCw3r1rGwannMCuB8tyxYosVQj54eouXywBDTgzvXyu+ZqrnhGZpymq830uYIGVU38IuKkwogRefyQiTy0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by SA1PR12MB8965.namprd12.prod.outlook.com (2603:10b6:806:38d::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.22; Wed, 25 Feb
+ 2026 12:05:16 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::9e55:f616:6a93:7a3d]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::9e55:f616:6a93:7a3d%4]) with mapi id 15.20.9632.017; Wed, 25 Feb 2026
+ 12:05:16 +0000
+Message-ID: <e207aca8-5953-4479-821a-8ac0a07c0466@amd.com>
+Date: Wed, 25 Feb 2026 12:05:11 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/3] cxl: export internal structs for external Type2
+ drivers
+Content-Language: en-US
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+ dan.j.williams@intel.com, dave.jiang@intel.com
+References: <20260223142633.2994082-1-alejandro.lucero-palau@amd.com>
+ <20260223142633.2994082-3-alejandro.lucero-palau@amd.com>
+ <aZ0R79N952TTsRcl@aschofie-mobl2.lan>
+ <20d72717-23a2-4996-8abb-4d886147e3f4@amd.com>
+ <aZ3iEEqQfp8sAkCY@aschofie-mobl2.lan>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <aZ3iEEqQfp8sAkCY@aschofie-mobl2.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO2P265CA0515.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:13b::22) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|SA1PR12MB8965:EE_
+X-MS-Office365-Filtering-Correlation-Id: cc464f33-0c83-4ad2-1177-08de74662295
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	Ajn5auIjRYXtvgyZkCu6lxTt67vIJy+n7Yxc0huyVs8fGybppIaYPYYxiYAc/g5hhOx4qHKxwyLJJrcK4Axo/N82fx/Li7s8Tzdwcb+AyvuCPWdsBChXp3ISzwF4+uYSpnv6V1fqwUyO4bIDicFMemdFtPIL8dYL7pnUOAUjfjQnii4JgWE5ivf1BkeKpkZBkXPFLJjud6e1vppEZUUEiIcJa6/ny7XbglGNmDNSBcKAGKVlbalY3JeUkvgJLF/NGnSsGxGFhBn6THqBo5Pqskd5BBnsENpY0eDasimSlY2SKAxGt26AEjJ/eUhBNyMFCC/l6Lzo/sUd3NxzGRpSXLZsJVL62ZSeO2w7FHjzp1uOEJ+u4hiA3s+T0+BQpfWC8ZJ51dtED8vGu0j5mA0DdP1FPWZ5L2+UDtrpi8EIxPWHHVQ5SN3P4SNyrIUPeZ1TISduyOKATDLivPkVtRuTiqMxxDs5JOZiH91qqa7SVnoGZXvyesVZ2Ty/o8QHkoKl0pPHS7bzp/sp28iR93a9FzLZpYguhO36dL9GFG5ErhKQO6/XVBuzKwY2JiZcY0HFx6ehLoYJKgzM3ibVcS9oPiJIlUP+BVq8yvGxGL5LOhQa5c/v7gEcoRORY112TVDyLjBZT3mZsK8kOIuMBc9wZQGhxWuFU9PWrKdYQ9b5u1rtClZ/MwZ0Qu3F4G+R3CzkrGFrb+9XvmnX2XVh+/yZ2frjDMkxsv7664bEY+m4IrE=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RmtFVERNbGNyKzNIdG5GUVM3eEE1aHF2SUJGVXYvcnNCUHFROEcyejdHc0Zn?=
+ =?utf-8?B?Zmc5dnR1UFZEcGpMb0FaTHV5TVp2enFPVFFnTzdXNURONmNuSnhyeUN1Rm5r?=
+ =?utf-8?B?eGZYMG9YTnlrOWxLWWxTZlh4KzFRZDh5VCtIQmlPZUlxRHN1bkovaVU0WGkx?=
+ =?utf-8?B?aUhTcm1NVzV6NkVqeXF4K3BRcjNEU0FLNGhIa0tJTVkwY25FZVZLU3pOZ1pr?=
+ =?utf-8?B?TEg3QU9BWlBZRUpxSm4zdS9iVmZnT3FyRUJPVHpWOHJUWWs5b2xIdzV1WDRE?=
+ =?utf-8?B?NFF1eFZOVlJWZzdscDhBTHpNU1gxYU9WQTJuOWxPMitkVFBIeEVpVUdIT3VK?=
+ =?utf-8?B?RXdRbXBtUk5kWkJzYU5aQmlmYjRjVlBURGI3QW1xaVNaeXM3WWRsb0JKT3Jh?=
+ =?utf-8?B?clR0azVRcm5UWjF4aUpESnEvN21nYmo2SVBVT2R6dlZWeGNTTStpMHgrbWpX?=
+ =?utf-8?B?cDBlcmQ4WHJGc1pHQ3kySWhUbENXclp4ditmTnd6aCtXNGI1VGFqMDdadGJB?=
+ =?utf-8?B?UWRxTzZ1K1BieU5DenhJTFMrS2xWc1BjUGFzenZrSGhOTWlOYmVLR1F0VUto?=
+ =?utf-8?B?K2NuSm9XbGZVUU1GMzVnYm9HckltYklHd2QzNUI2WnVxbllmbUdQeHZDc2hO?=
+ =?utf-8?B?ZHJUQnRUaDR6N1M3Y1JCT3dTayt2MEs4Y2E3a05oK1hnaGxPaXlheW02RFVu?=
+ =?utf-8?B?QWlHSmpEWWN1MWcveGZGYUxhK2pTZnpvQ0RoalVvQWg2YnZCYU5GMTlPQjk4?=
+ =?utf-8?B?TXNqMnZKeVJDOG94S0gxTElyRGlhd0c1bjQvcVpmVzZzYWREK2FlcnJyNDNI?=
+ =?utf-8?B?NHZram9obnhWcHNHOUpjQTFWUFhTTjdyaGJyNjJCWHk5SUlRaWVJTlg0VmE1?=
+ =?utf-8?B?VTd6NWNFa0s4eHQxMTZhdUc0N0FMYW9sMzYzZjdCL1RXYlBtVTl6MmFmK3g4?=
+ =?utf-8?B?OVRNTHZPSU8wVjBMV1luZVIwRFlFR2VTNDJmV2JleTZxRXJZV1dIZkJwNkJm?=
+ =?utf-8?B?akc1RXhBVTRGZnFVUll1ZGxEbjFXaEJvV0FUaGJVN2x5U1J5SXp3aWZwR2Vv?=
+ =?utf-8?B?NW5IS0MzQ0FxZ1JiY2FyRFRHbWVPMWlWMEY2STU1UWNmUVFkZXJBUU96UGE5?=
+ =?utf-8?B?aGpIVWNSZE15cXpIMndjTllYb1lRdWJMMW9rS0FEamxuYUV2VzAyMXVBRU9L?=
+ =?utf-8?B?dVh3bkgrcVJ3aDhFSHpnYmVPMUJ0bE92SlJHbDZPMEFOZytibnRZd2hUUXNH?=
+ =?utf-8?B?a2dCNzRoUmVsdHFvT0dySytLYmxRZk1WZzR4RVB5ampEWDhyM2libzF6VVV2?=
+ =?utf-8?B?YWpMc2NZcFJKSkNlWGpxdVRZakRjdzA0MEFDcG1VcmY1RGEwVjFCMkFnazJU?=
+ =?utf-8?B?MitxM1pmMTBNVi9DUXpjTytoOWhmMXFkeGdUbVBlOXB0bmNVMU9iZXh3Wmls?=
+ =?utf-8?B?VjBWK0duQkR3NTVxNWNPU1NockhoK1lRbXJEWnIxN0d3QXBpS09hWDBUMDZW?=
+ =?utf-8?B?Z2o0QTBJRG5QVmhKQzZpNzBlTmd6Z0tCSVh0a3N3Y3pEZTIwYUU2VHZQdGgz?=
+ =?utf-8?B?WEhTbWx4YUQwTEU5QUJRaVhEbGVtaSs3cTQrb0VCVjd3bkdKMGw0YVVoSi9G?=
+ =?utf-8?B?UFFJMGdmMmJERHFWRWUra3dmWnYvSmd2SVY0YlplWWpiWEpaL3FLZHJvcUNk?=
+ =?utf-8?B?U2t5UzlBWUJTVXVWUHpTQzFQc3I1MGtCZGxuOGpPSWM4N0h1Y0NtUkt3QUNQ?=
+ =?utf-8?B?WXY2MEJtZ1BwOU5IckRyY3h6QUFwc0g5aUUxYVhZa1ZkRVpVZlovNzYrWmVq?=
+ =?utf-8?B?akhERFZ2L1M2M3lQWElvNmxuUjExMnJHTnBvajh5Wm5Ndlo0WTlxMEdCTits?=
+ =?utf-8?B?cmRoWVQrRmI0elVwZnFKYWM5S0tDQkdhVTM0OGFINWUrS1JoVnRqVVF4Q0lz?=
+ =?utf-8?B?bWo2SXovSndyQmlmem85YTdLR01ZM0k1ZzBMRTcwbHFzVnRXcDdzUml0Zy85?=
+ =?utf-8?B?RDBkVWYzSUNvSlJwTmdYOUFtVWpYMWl4VVNTNjUvMlVCc2tPb1lvbE5WcnVi?=
+ =?utf-8?B?TWQ4dXhhaDI1ZUNjcTMrNkh3Z3ZnSG5sSXh1NmJITzM2cDlzOUkyQjRiNmtu?=
+ =?utf-8?B?SU8rayt6cVhTZy9uTFVKdzdRdFcyaktCQ1h1aTh5UDBxdWRVOERUT1dQUGo2?=
+ =?utf-8?B?d2lTN0tDanl2bDNiRVdKMUFabngwSG0rOGpYMk9sRTJrY2NETXZoVStqa1V5?=
+ =?utf-8?B?WU9yTktuNERtc25VN1dwMmM5dEd3bjdXZk9HSHNBUE9ZUVFQd3FBSDRPWXBy?=
+ =?utf-8?B?KzNnOGVGZjYvSFVidWNXOXpGZkF5YVNuZ3hrMWduMGRXZnRKd0pRQT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc464f33-0c83-4ad2-1177-08de74662295
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2026 12:05:15.5842
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: M5Xi22y6q4JUF/6npYRBKROljjJeoWAV4qJRKmjYHgwqks2FQw7vI5n/lTemvDN5zQZOszcyQUwBNoLtds18aQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8965
 
-Mike Rapoport <rppt@kernel.org> writes:
 
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On 2/24/26 17:38, Alison Schofield wrote:
+> On Tue, Feb 24, 2026 at 04:38:03PM +0000, Alejandro Lucero Palau wrote:
+>> On 2/24/26 02:50, Alison Schofield wrote:
+>>> On Mon, Feb 23, 2026 at 02:26:32PM +0000, alejandro.lucero-palau@amd.com wrote:
+>>>> From: Alejandro Lucero <alucerop@amd.com>
+>>>>
+>>>> In preparation for type2 support, move structs and functions needed by
+>>>> external type2 drivers. Differentiate between public and private data to
+>>>> be preserved by type2 drivers.
+>>> I would have enjoyed a mention in the commit log of what was needed.
+>>> When I saw struct cxl_dpa_perf, struct cxl_dpa_partition,
+>>> CXL_NR_PARTITIONS_MAX, enum cxl_partition_mode, it wasn't so clear
+>>> why those were needed (as opposed to the cxl_dev_state defines)
+>>
+>> Well, this is what Type2 drivers support will end up needing once all the
+>> functionality is added. So we know it because the type2 full patchset and
+>> the idea here is to put all that in the new file visible to external
+>> drivers. I know the standard is to see how the changes are used by a client,
+>> but if I do so I will be adding all the type2 patchset ... So in this case,
+>> the cxl core code will use another header which will be visible to non cxl
+>> core, and the commit says it ... although maybe some rephrasing could help
+>> like:
+>>
+>>
+>> "In preparation for type2 support, move structs and functions needed by
+>>
+>> external type2 drivers. Differentiate between public and private data to
+>>
+>> be preserved by type2 drivers. Refer the new file by those cxl core files
+>>
+>> needing the moved definitions."
+>>
+>> Would this be better or too much twisted?
+> Well, still doesn't describe what Type2 needs access to.
 >
-> Every architecture calls sparse_init() during setup_arch() although the
-> data structures created by sparse_init() are not used until the
-> initialization of the core MM.
+> How about "Type2 external drivers will need to access to "___________",
+> so move those to a shared header file.
+
+
+It makes sense. I will rephrase the commit using this template.
+
+Thank you
+
+
 >
-> Beside the code duplication, calling sparse_init() from architecture
-> specific code causes ordering differences of vmemmap and HVO initialization
-> on different architectures.
+> Where the blank may be as broad as "all cxl_dev_state related structures
+> and definition", or maybe it's something more specific.
 >
-> Move the call to sparse_init() from architecture specific code to
-> free_area_init() to ensure that vmemmap and HVO initialization order is
-> always the same.
->
-
-Hello Mike,
-
-[    0.000000][    T0] ------------[ cut here ]------------
-[    0.000000][    T0] WARNING: arch/powerpc/include/asm/io.h:879 at virt_to_phys+0x44/0x1b8, CPU#0: swapper/0
-[    0.000000][    T0] Modules linked in:
-[    0.000000][    T0] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.19.0-12139-gc57b1c00145a #31 PREEMPT
-[    0.000000][    T0] Hardware name: IBM pSeries (emulated by qemu) POWER10 (architected) 0x801200 0xf000006 of:SLOF,git-ee03ae pSeries
-[    0.000000][    T0] NIP:  c000000000601584 LR: c000000004075de4 CTR: c000000000601548
-[    0.000000][    T0] REGS: c000000004d1f870 TRAP: 0700   Not tainted  (6.19.0-12139-gc57b1c00145a)
-[    0.000000][    T0] MSR:  8000000000021033 <SF,ME,IR,DR,RI,LE>  CR: 48022448  XER: 20040000
-[    0.000000][    T0] CFAR: c0000000006016c4 IRQMASK: 1
-[    0.000000][    T0] GPR00: c000000004075dd4 c000000004d1fb10 c00000000304bb00 c000000180000000
-[    0.000000][    T0] GPR04: 0000000000000009 0000000000000009 c000000004ec94a0 0000000000000000
-[    0.000000][    T0] GPR08: 0000000000018000 0000000000000001 c000000004921280 0000000048022448
-[    0.000000][    T0] GPR12: c000000000601548 c000000004fe0000 0000000000000004 0000000000000004
-[    0.000000][    T0] GPR16: 000000000287fb08 0000000000000060 0000000000000002 0000000002831750
-[    0.000000][    T0] GPR20: 0000000002831778 fffffffffffffffd c000000004d78050 00000000051cbb00
-[    0.000000][    T0] GPR24: 0000000005a40008 c000000000000000 c000000000400000 0000000000000100
-[    0.000000][    T0] GPR28: c000000004d78050 0000000000000000 c000000004ecd4a8 0000000000000001
-[    0.000000][    T0] NIP [c000000000601584] virt_to_phys+0x44/0x1b8
-[    0.000000][    T0] LR [c000000004075de4] alloc_bootmem+0x144/0x1a8
-[    0.000000][    T0] Call Trace:
-[    0.000000][    T0] [c000000004d1fb50] [c000000004075dd4] alloc_bootmem+0x134/0x1a8
-[    0.000000][    T0] [c000000004d1fba0] [c000000004075fac] __alloc_bootmem_huge_page+0x164/0x230
-[    0.000000][    T0] [c000000004d1fbe0] [c000000004030bc4] alloc_bootmem_huge_page+0x44/0x138
-[    0.000000][    T0] [c000000004d1fc10] [c000000004076e48] hugetlb_hstate_alloc_pages+0x350/0x5ac
-[    0.000000][    T0] [c000000004d1fd30] [c0000000040782f0] hugetlb_bootmem_alloc+0x15c/0x19c
-[    0.000000][    T0] [c000000004d1fd70] [c00000000406d7b4] mm_core_init_early+0x7c/0xdf4
-[    0.000000][    T0] [c000000004d1ff30] [c000000004011d84] start_kernel+0xac/0xc58
-[    0.000000][    T0] [c000000004d1ffe0] [c00000000000e99c] start_here_common+0x1c/0x20
-[    0.000000][    T0] Code: 6129ffff 792907c6 6529ffff 6129ffff 7c234840 40810018 3d2201e8 3929a7a8 e9290000 7c291840 41810044 3be00001 <0b1f0000> 3d20bfff 6129ffff 792907c6
-
-
-I think this is happening because, now in mm_core_early_init(), the
-order of initialization between hugetlb_bootmem_alloc() and
-free_area_init() is reversed. Since free_area_init() -> sparse_init()
-is responsible for setting SECTIONS and vmemmap area. 
-
-Then in alloc_bootmem() (from hugetlb_bootmem_alloc() path), it uses virt_to_phys(m)...
-
-			/*
-			 * For pre-HVO to work correctly, pages need to be on
-			 * the list for the node they were actually allocated
-			 * from. That node may be different in the case of
-			 * fallback by memblock_alloc_try_nid_raw. So,
-			 * extract the actual node first.
-			 */
-			if (m)
-				listnode = early_pfn_to_nid(PHYS_PFN(virt_to_phys(m)));
-
-
-... virt_to_phys on powerpc uses:
-
-static inline unsigned long virt_to_phys(const volatile void * address)
-{
-	WARN_ON(IS_ENABLED(CONFIG_DEBUG_VIRTUAL) && !virt_addr_valid(address));
-
-	return __pa((unsigned long)address);
-}
-
-#define virt_addr_valid(vaddr)	({					\
-	unsigned long _addr = (unsigned long)vaddr;			\
-	_addr >= PAGE_OFFSET && _addr < (unsigned long)high_memory &&	\
-	pfn_valid(virt_to_pfn((void *)_addr));				\
-})
-
-
-I think the above warning in dmesg gets printed from above WARN_ON, i.e.
-because pfn_valid() is false, since we haven't done sparse_init() yet.
-
-So, what I wanted to check was - do you think instead of virt_to_phys(), we
-could directly use __pa() here() in mm/hugetlb.c, since these are
-memblock alloc addresses? i.e.: 
-
-// alloc_bootmem():
--   listnode = early_pfn_to_nid(PHYS_PFN(virt_to_phys(m)));
-+   listnode = early_pfn_to_nid(PHYS_PFN(__pa(m)));
-
-// __alloc_bootmem_huge_page():
--   memblock_reserved_mark_noinit(virt_to_phys((void *)m + PAGE_SIZE),
-+   memblock_reserved_mark_noinit(__pa((void *)m + PAGE_SIZE),
-
-
-Thoughts?
-
--ritesh
+> Thanks,
+> Alison
+>>> I was a bit concerned that new cxl/cxl.h had dependencies, so tested
+>>> that it compiled all be itself in a completely separate module.
+>>>
+>>> Tested-by: Alison Schofield <alison.schofield@intel.com>
+>>
+>> Thank you!
+>>
