@@ -1,128 +1,222 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B853D6692;
-	Wed, 25 Feb 2026 16:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2C43DA7ED
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Feb 2026 17:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772037245; cv=none; b=mWHmrsVtOXZgXF0Xh0qA15eWTiv1eWWQpYdqZ3uAk6b6yszwutiXUFWogleGGAnUAdCgBRQ0f2f2rEM51QJR+8UC6TsbIa1jC/KCvhWVV4ciDdOKPWvqT/TgAU4ddXRm8Mh4+SZqqPQjBkNam6Glz0QDL6cu6SfoTRtlTCXno5w=
+	t=1772041320; cv=none; b=Y6/kXzjAY7KQQbaSTerzd3/SD8mr37azRCd1f1ar19EtXURPnleqCSMD81FAzCiEcGYEi0cHDvlijaJPknLzbyIuZXsjMbWPf7Ok8fUpOIMlf4mGlWbIErJALgsbFVSsAVGHOaFQIuZqtvdMIZzZRe2dJRbK3Qy0bqZtl9MBDz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772037245; c=relaxed/simple;
-	bh=nA5ubXR7ldqmvu+5ms32j4vZptre4X8kYgLmhb/ey2o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PSTTQQrCtZMPT5ASzcgZs51gXeDiE4I/bkvSX/LsXRvGciVu1PUAnNcwwrK4Pdafluzd7e6hqlTJ7aMozE5Ydkp89StkBQZLBLaaBVhmB/XRrWAyr4x9c2MSznfcaDLVxGjj1fOMY5Yrcloh1ulu9M9+6U5WrDBJ4kNoOxMe9Qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tl9y7LdO; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1772041320; c=relaxed/simple;
+	bh=jOatpcXoBL6KLZUfPVa5YPNNuKV2Y/R+E7YOi+QvXiQ=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=nMkRYHJjXLKubj4kXH7qbyLiCfKZicQ6oe1L2i6kEKLKZtbxQ8/AFB/N2nOfegzH7UJDL9FZeCSR9XZYRhbNW8ovhWk1zL4qNOfSVCbcb+WFVu4ktIKxUv6Jdg/7e/ky/phDZqj5FHwYTq76d1b3C/q5efx2vM2qq1Kct2Pdc8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CaQIE8Rb; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tl9y7LdO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772037244; x=1803573244;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=nA5ubXR7ldqmvu+5ms32j4vZptre4X8kYgLmhb/ey2o=;
-  b=Tl9y7LdOj0dwIYCIVg1IipjTUv6oVeRx9Htnly11ICfFYKM20KLwEShn
-   HQC4TQ9V4FfwbSTSOVMsptqYfPc2noeElSzAVuTUY1ZU0SyQ6fxifV2la
-   0UJGgUrNfFfEWMDQ46B31nBw8QHCtVi9Z5G+uxmgfnBkrxPROhX/69zyp
-   mCRsaYq/+c8nwjj/KB/ApRsnVQqUQkC4NwG/tFuCd7ERiyZ6nCCEztUpg
-   fRwCAmwQuy+P90wh+a3CvZupchLS61txZ9dtf/gZuyQoBGpWD9i3wdDXT
-   a5qSUMgGQYXG3IJpgLNgKc9NdDA2z729klt+IBFuto4U8NbzhCCxEiWpR
-   w==;
-X-CSE-ConnectionGUID: 9vHPuv2HTnuPhMnzYLoFLA==
-X-CSE-MsgGUID: XFV6uylbRH+p+uls+OD4/A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11712"; a="90494521"
-X-IronPort-AV: E=Sophos;i="6.21,310,1763452800"; 
-   d="scan'208";a="90494521"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2026 08:34:03 -0800
-X-CSE-ConnectionGUID: TwyXHUZ+SOmrLJlCru2idQ==
-X-CSE-MsgGUID: 7wBMd34LRcapbIpMa+i/cQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,310,1763452800"; 
-   d="scan'208";a="220419879"
-Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.111.98]) ([10.125.111.98])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2026 08:34:02 -0800
-Message-ID: <b7c04f27-39a9-41df-af0a-14bc5005518e@intel.com>
-Date: Wed, 25 Feb 2026 09:34:00 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CaQIE8Rb"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-8230c33f477so15026b3a.2
+        for <linux-cxl@vger.kernel.org>; Wed, 25 Feb 2026 09:41:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772041318; x=1772646118; darn=vger.kernel.org;
+        h=mime-version:references:message-id:date:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aMnEPXSeAknTUn6pBGQAEqhzdOlacieP4zL+mwxArg0=;
+        b=CaQIE8RbUyOkoSmCFKRJbZFjSrsqh7x5RlwDFyyFM18qmlqolP18GUAVZ+nv7t1Sqh
+         vvWPA6H0Mf3pi4ZiJ7bNTkD4+Eurf4Zic+DGsXTM4pDTnd+Tsyo0aYU218udYhfFIKyU
+         y90NmHECCwix96rOl+KiN/9KZ7fbxIenwLU0a9VlWNYJnt9GtMZi2hv+JSZSmHNsCfR8
+         45o3xwEnksJFn5XKsblVX/wJP9HObSM0yTg5ZE1OQ2UQTUOI0AsZAaqxUAqV7n+0f1v1
+         tte6sRIph189lX7Fazv2FXMqbFTl0s5jH8a63L8aZcclp3Uv4Uf3tKmjvZz8WyPkQGvt
+         f08w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772041318; x=1772646118;
+        h=mime-version:references:message-id:date:in-reply-to:subject:cc:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aMnEPXSeAknTUn6pBGQAEqhzdOlacieP4zL+mwxArg0=;
+        b=rcYt2PjfOAMTt8s+LXM8szo5itZOU9YpYEFOaPXpkKrQLLCXdiW/OioMDtSIvpfW7Y
+         jnhfcY4u6P2zswCBDjWy+w24PzU7DN6KjIJM02IlHD43CUW7cOETAvxtnb6o0pKqA0MK
+         Ex7dWGlgFkhZvyLSaGerrn3uuaK6ZcoHohYuWsS+nsdptndnXEIz9B46YWC2/iDqVYFM
+         0hgFYOr1j4wcWPGUnjhJQSVr/HK5hBa9Uexrv2o2gtKFKXF7YMV3vm7/aV4JTxKiJ7Og
+         snFBPdn8Xz5H+jtUfqFroM0+KEhyBorfTiRzDin6gN3wxp4ZLimtZqoCTyt3soMoclFd
+         JXHw==
+X-Forwarded-Encrypted: i=1; AJvYcCXgBMuCu8Iw+F4vdKU05kHNX8mVjAHPNrjX8S2mvDNfnD69kOVbR2bl8FbZLFKXfNq6gTOXQvsSczo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywi0cArtpym+n9KZ0Egx3Tj4Wj2bElx4DddcTzNIyY+L2W9Gn+r
+	ylEH0It0iim+CU482x/JgSI0DI1nuRHqKey10xY7/itpkCMxxXa7bxp9
+X-Gm-Gg: ATEYQzxMa0xOp1BjFM5ysRtvrXnUr24/0CeaYBZU2khZb+1iha3nTizMXrqiNVFJzw0
+	Y0uYWl2ncVzR7d4gcjR//ZYdL1TrRRRblc/eQrePaxu0GLev9GYDoDMO3nkT5LebrgTLTuMCy75
+	lTFIS4H27FsxIjRqrHFMddnz3FV+n7S7W+gHqmbToVTFNdtYMok/+yOXBiAZZsanUBvTRjaJvQP
+	JcjlQo5K/SFQAMEdyh7H2V6U82CNN4Laa2TKWrgkufL1MxojDv/kXndcv2IpgPmn4wAs75WEvlr
+	z+HWZyXVBBETMi0gpmU5qATmr6WUPPuamJHZjBctgai5wku9F7hGW5OICkRvT3+x5V2npauPy0K
+	NE2CJB6+TNCiluu6hI80mYE+meWumw0dZSn+IhyxGGSLcXOR5GtnpQUoxbMhDarULZIcl4JEqOP
+	3fH2pwgrE77tiIR3LXbw==
+X-Received: by 2002:a05:6a21:3290:b0:38d:edd4:2fbe with SMTP id adf61e73a8af0-39545ed058emr15020115637.31.1772041317482;
+        Wed, 25 Feb 2026 09:41:57 -0800 (PST)
+Received: from dw-tp ([203.81.243.177])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-826dd8fdb81sm14825760b3a.64.2026.02.25.09.41.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Feb 2026 09:41:56 -0800 (PST)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Alex Shi <alexs@kernel.org>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, 
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, 
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	"David S. Miller" <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonathan Corbet <corbet@lwn.net>, 
+	Klara Modin <klarasmodin@gmail.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Magnus Lindholm <linmag7@gmail.com>, 
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, 
+	Stafford Horne <shorne@gmail.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, 
+	Will Deacon <will@kernel.org>, x86@kernel.org, linux-alpha@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-mm@kvack.org, linux-openrisc@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+	sparclinux@vger.kernel.org
+Subject: Re: [PATCH v3 24/29] arch, mm: consolidate initialization of SPARSE memory model
+In-Reply-To: <aZ8idANginXzhf0_@kernel.org>
+Date: Wed, 25 Feb 2026 23:08:38 +0530
+Message-ID: <87seaohgf5.ritesh.list@gmail.com>
+References: <20260111082105.290734-1-rppt@kernel.org> <20260111082105.290734-25-rppt@kernel.org> <87tsv5h544.ritesh.list@gmail.com> <aZ8idANginXzhf0_@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] PCI: Hide SBR from reset_methods if masked by CXL
-To: Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
- Jonathan.Cameron@huawei.com, raphael.norwitz@nutanix.com
-Cc: vsethi@nvidia.com, sdonthineni@nvidia.com, smadhavan@nvidia.com,
- skancherla@nvidia.com, vaslot@nvidia.com, linux-pci@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, kthota@nvidia.com,
- mmaddireddy@nvidia.com, sagar.tv@gmail.com
-References: <20260220195259.2397847-1-vidyas@nvidia.com>
- <20260225133801.30231-1-vidyas@nvidia.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260225133801.30231-1-vidyas@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
+Mike Rapoport <rppt@kernel.org> writes:
 
-
-On 2/25/26 6:38 AM, Vidya Sagar wrote:
-> The CXL specification (e.g., CXL r3.1 v1.0, sec 8.1.5.2) defines
-> the "Unmask SBR" bit in the Port Control Extensions Register.
-> When this bit is 0 (default), asserting the Secondary Bus Reset (SBR) bit
-> in the Bridge Control register has no effect on the downstream bus.
-> 
-> Currently, the Linux PCI core checks this condition in
-> pci_reset_bus_function(). If SBR is masked, it returns -ENOTTY during the
-> execution of the reset. However, during the probe phase (when probe=true),
-> the function currently returns 0. This 0 return value incorrectly signals
-> to the PCI subsystem that SBR is a viable reset method for the device.
-> 
-> As a result, 'bus' is listed in the device's
-> /sys/bus/pci/devices/.../reset_methods attribute, even though the hardware
-> is incapable of performing it. If a user attempts to write bus to reset
-> method or triggers a reset that falls back to SBR, the operation fails
-> with: "bash: echo: write error: Inappropriate ioctl for device" error.
-> 
-> This patch modifies pci_reset_bus_function() to return -ENOTTY immediately
-> if cxl_sbr_masked() is true, regardless of the probe argument. This
-> ensures that 'bus' is not advertised in reset_methods when the hardware
-> prevents it, improving clarity for users and aligning the sysfs capability
-> report with actual hardware behavior.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
-> v2:
-> * Before deciding to hide 'bus' reset method, add an extra check to make sure
->   that the link is indeed operating in the CXL mode and not in PCIe mode as
->   the spec clearly says that a '0' in 'Unmask SBR' doesn't have any effect if
->   the link is not operating in the CXL mode.
-> 
->  drivers/pci/pci.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index f3244630bfd0..a176566ba56f 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4915,12 +4915,8 @@ static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
->  	 * If "dev" is below a CXL port that has SBR control masked, SBR
->  	 * won't do anything, so return error.
->  	 */
-> -	if (bridge && cxl_sbr_masked(bridge)) {
-> -		if (probe)
-> -			return 0;
-> -
-> +	if (bridge && bridge->is_cxl && cxl_sbr_masked(bridge))
->  		return -ENOTTY;
-> -	}
+> Hello Ritesh,
+>
+> On Wed, Feb 25, 2026 at 09:00:35AM +0530, Ritesh Harjani wrote:
+>> Mike Rapoport <rppt@kernel.org> writes:
+>> 
+>> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>> >
+>> > Every architecture calls sparse_init() during setup_arch() although the
+>> > data structures created by sparse_init() are not used until the
+>> > initialization of the core MM.
+>> >
+>> > Beside the code duplication, calling sparse_init() from architecture
+>> > specific code causes ordering differences of vmemmap and HVO initialization
+>> > on different architectures.
+>> >
+>> > Move the call to sparse_init() from architecture specific code to
+>> > free_area_init() to ensure that vmemmap and HVO initialization order is
+>> > always the same.
+>> >
+>> 
+>> Hello Mike,
+>> 
+>> [    0.000000][    T0] ------------[ cut here ]------------
+>> [    0.000000][    T0] WARNING: arch/powerpc/include/asm/io.h:879 at virt_to_phys+0x44/0x1b8, CPU#0: swapper/0
+>> [    0.000000][    T0] Modules linked in:
+>> [    0.000000][    T0] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.19.0-12139-gc57b1c00145a #31 PREEMPT
+>> [    0.000000][    T0] Hardware name: IBM pSeries (emulated by qemu) POWER10 (architected) 0x801200 0xf000006 of:SLOF,git-ee03ae pSeries
+>> [    0.000000][    T0] NIP:  c000000000601584 LR: c000000004075de4 CTR: c000000000601548
+>> [    0.000000][    T0] REGS: c000000004d1f870 TRAP: 0700   Not tainted  (6.19.0-12139-gc57b1c00145a)
+>> [    0.000000][    T0] MSR:  8000000000021033 <SF,ME,IR,DR,RI,LE>  CR: 48022448  XER: 20040000
+>> [    0.000000][    T0] CFAR: c0000000006016c4 IRQMASK: 1
+>> [    0.000000][    T0] GPR00: c000000004075dd4 c000000004d1fb10 c00000000304bb00 c000000180000000
+>> [    0.000000][    T0] GPR04: 0000000000000009 0000000000000009 c000000004ec94a0 0000000000000000
+>> [    0.000000][    T0] GPR08: 0000000000018000 0000000000000001 c000000004921280 0000000048022448
+>> [    0.000000][    T0] GPR12: c000000000601548 c000000004fe0000 0000000000000004 0000000000000004
+>> [    0.000000][    T0] GPR16: 000000000287fb08 0000000000000060 0000000000000002 0000000002831750
+>> [    0.000000][    T0] GPR20: 0000000002831778 fffffffffffffffd c000000004d78050 00000000051cbb00
+>> [    0.000000][    T0] GPR24: 0000000005a40008 c000000000000000 c000000000400000 0000000000000100
+>> [    0.000000][    T0] GPR28: c000000004d78050 0000000000000000 c000000004ecd4a8 0000000000000001
+>> [    0.000000][    T0] NIP [c000000000601584] virt_to_phys+0x44/0x1b8
+>> [    0.000000][    T0] LR [c000000004075de4] alloc_bootmem+0x144/0x1a8
+>> [    0.000000][    T0] Call Trace:
+>> [    0.000000][    T0] [c000000004d1fb50] [c000000004075dd4] alloc_bootmem+0x134/0x1a8
+>> [    0.000000][    T0] [c000000004d1fba0] [c000000004075fac] __alloc_bootmem_huge_page+0x164/0x230
+>> [    0.000000][    T0] [c000000004d1fbe0] [c000000004030bc4] alloc_bootmem_huge_page+0x44/0x138
+>> [    0.000000][    T0] [c000000004d1fc10] [c000000004076e48] hugetlb_hstate_alloc_pages+0x350/0x5ac
+>> [    0.000000][    T0] [c000000004d1fd30] [c0000000040782f0] hugetlb_bootmem_alloc+0x15c/0x19c
+>> [    0.000000][    T0] [c000000004d1fd70] [c00000000406d7b4] mm_core_init_early+0x7c/0xdf4
+>> [    0.000000][    T0] [c000000004d1ff30] [c000000004011d84] start_kernel+0xac/0xc58
+>> [    0.000000][    T0] [c000000004d1ffe0] [c00000000000e99c] start_here_common+0x1c/0x20
+>> [    0.000000][    T0] Code: 6129ffff 792907c6 6529ffff 6129ffff 7c234840 40810018 3d2201e8 3929a7a8 e9290000 7c291840 41810044 3be00001 <0b1f0000> 3d20bfff 6129ffff 792907c6
+>> 
+>> 
+>> I think this is happening because, now in mm_core_early_init(), the
+>> order of initialization between hugetlb_bootmem_alloc() and
+>> free_area_init() is reversed. Since free_area_init() -> sparse_init()
+>> is responsible for setting SECTIONS and vmemmap area. 
+>> 
+>> Then in alloc_bootmem() (from hugetlb_bootmem_alloc() path), it uses virt_to_phys(m)...
+>> 
+>> 			/*
+>> 			 * For pre-HVO to work correctly, pages need to be on
+>> 			 * the list for the node they were actually allocated
+>> 			 * from. That node may be different in the case of
+>> 			 * fallback by memblock_alloc_try_nid_raw. So,
+>> 			 * extract the actual node first.
+>> 			 */
+>> 			if (m)
+>> 				listnode = early_pfn_to_nid(PHYS_PFN(virt_to_phys(m)));
+>> 
+>> 
+>> ... virt_to_phys on powerpc uses:
+>> 
+>> static inline unsigned long virt_to_phys(const volatile void * address)
+>> {
+>> 	WARN_ON(IS_ENABLED(CONFIG_DEBUG_VIRTUAL) && !virt_addr_valid(address));
+>> 
+>> 	return __pa((unsigned long)address);
+>> }
+>> 
+>> #define virt_addr_valid(vaddr)	({					\
+>> 	unsigned long _addr = (unsigned long)vaddr;			\
+>> 	_addr >= PAGE_OFFSET && _addr < (unsigned long)high_memory &&	\
+>> 	pfn_valid(virt_to_pfn((void *)_addr));				\
+>> })
+>> 
+>> 
+>> I think the above warning in dmesg gets printed from above WARN_ON, i.e.
+>> because pfn_valid() is false, since we haven't done sparse_init() yet.
+>
+> Yes, I agree.
 >  
->  	rc = pci_dev_reset_iommu_prepare(dev);
->  	if (rc) {
+>> So, what I wanted to check was - do you think instead of virt_to_phys(), we
+>> could directly use __pa() here() in mm/hugetlb.c, since these are
+>> memblock alloc addresses? i.e.: 
+>> 
+>> // alloc_bootmem():
+>> -   listnode = early_pfn_to_nid(PHYS_PFN(virt_to_phys(m)));
+>> +   listnode = early_pfn_to_nid(PHYS_PFN(__pa(m)));
+>> 
+>> // __alloc_bootmem_huge_page():
+>> -   memblock_reserved_mark_noinit(virt_to_phys((void *)m + PAGE_SIZE),
+>> +   memblock_reserved_mark_noinit(__pa((void *)m + PAGE_SIZE),
+>
+> It surely will work for powerpc :)
+> I checked the definitions of __pa() on other architectures and it seems the
+> safest and the easiest way to fix this.
+>  
+> Would you send a formal patch?
+>
 
+Thanks Mike for taking a look at above and confirming. Sure, let me
+prepare the patch and send it by tomorrow. 
+
+-ritesh
