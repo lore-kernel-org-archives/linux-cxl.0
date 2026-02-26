@@ -1,102 +1,81 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92B73A4F2D
-	for <linux-cxl@vger.kernel.org>; Thu, 26 Feb 2026 22:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156A02DECD3;
+	Thu, 26 Feb 2026 23:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772146160; cv=none; b=eT8XQ1TYcmyB8mH8Rq/T3KWSNs2T0k82NM90fQTcX6Pmj0KsgV5LmU2YdZ+wRJcSfTGf1MeIPUeu/Oc2Vwuk1jJ6DTwUXYN02TV5MsnJaMH8ACh/ZEC5LhMuatwtsXLaP2/f0EENtXId34t2BUX5eMTJJP8ZQbQiF78m461weJk=
+	t=1772147733; cv=none; b=GAJD3NBY7cZuf84RAF4T2MgZvmTV5J645vuuhWw/E9beRTgf4pRsi2p3l9f+mrSYGse3AQYQcHwbA+Cr+ZBPk98L8ZS/GGUypsmf4M+Ih2xRY1wweb5BcF/yDWkAILILtHz2NMwK8i7y4leaKj/bJYPa45NRmq7q2rDiaQUrOo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772146160; c=relaxed/simple;
-	bh=9XJprUJHH+fYbJ7JRjThngQYjlckG3iYgJf41aqrPaU=;
+	s=arc-20240116; t=1772147733; c=relaxed/simple;
+	bh=6ND260s9WILQRHkwfeaLvd30FFZogrwqcdbhvPGrCLU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KLAYffIjxfmDQ6Oj2kcWwrSrHfboWWcmkhTEjKwWGw06qxkTftrb0jUlsvYbhOaMyO+PvVifYzKVDKjTmXlfH2qOfTYH+7+afYCjFp+aAbezcVANnBRzKyIlLtz5/geJBG1rP7F2ePo2Lcy/G6+ESPypNzaxyrtu8KhpE89mIbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=D2J2ejrd; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z02LvRCObybSw3Ov7K+uBe3o3ss11CRLry4Z+Irvcuwg/Jj0iP/33A+nnKgZV7EUdW3LNSSVaxF1iA/VGuAWMOUal2Tvpwuy5Des8WM5krilK0Us+z9844RZlS670VV/FGo2Keb+2VhIGNwgg6pFwmu3DVNVvnnc91xAgQzJYv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CKHDm/Kv; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="D2J2ejrd"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-506251815a3so12073721cf.0
-        for <linux-cxl@vger.kernel.org>; Thu, 26 Feb 2026 14:49:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1772146158; x=1772750958; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oYDaj+HYxxwd2SoII0inXN8E5ab2WhHpXFva2vqM1nA=;
-        b=D2J2ejrdhnArACxLg9uAeQ9+NW5S58YpyCDQaZzSokmaJcfCXRGYy436PIK29mgmtu
-         cx4dA240xqdH99Lqtyty1l/UHS+QiMTCJ5lBHUFmehAIddTtEAESjsz1AA1FovL8m8Ha
-         Yp0QUrFqZp/kzwVMJ3ihV5z37VwNSmpv83VYfN8XfU+OzVz7dUk+xTkEFkLxmQcOogMB
-         +8pQ4g6zOtVqZUnsIXZ+DvndxzGO3sSgEe2z/JUQ4GLOESFfCF5YFAHKNzpcK6wbEWx0
-         QXILWTf/u2qZQirY+fTysy5oe3z7emyye3x8fU5gSeNEvCBGImKazCPHekFy/ga5/uRE
-         8rNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772146158; x=1772750958;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oYDaj+HYxxwd2SoII0inXN8E5ab2WhHpXFva2vqM1nA=;
-        b=n1OGhdxtSkmGREOY08BuviLHVPZ3dw68Qg4QPi/QBxqZAGZCbaK5EQrSTbPGEevyxS
-         n3gUSJBEtT7H7KXrE1Z1QXHf+OY2fR2g8LIDPhf5cFwb7wPEbLICnhH45Rk0GP7d0P+M
-         tW/t1IyOxGKIqvyq466tqO6xCJ5Og/qrpRts9RJYuBWkuxx2j3hIiiPOaxt8lMWriGYu
-         GfkPrv6tFobntOWi1FK5Wm3XqZz7N1kweiN1s2RWSJt8thHsIuQcqRqCD0BFdXbfBFuS
-         dfy9lZQPEfcwaJe9ZMT87IrneQV4uyrnrJlqArerION944oVMSeaSsnQodmLnSztm0vf
-         tzOg==
-X-Forwarded-Encrypted: i=1; AJvYcCWoBxjlieGZDZoozluqKKWGwa/ppuShmXKtk+HXhIhnlKMaWiwsGhpQfY6lZtO7vo18WfI0CBNkijs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0t56E0ywTA0GUchSCdcCxHyvHwFGhY2Et1kHBrTIruNjUqEep
-	g572RV8wgnvivjYZr5tSuU21aOkBwdW1+I04AGyyXl41PE4ijhDVEGfiajZAiXAu7B8=
-X-Gm-Gg: ATEYQzyLv39/7EN1efg7PVeoOeS5XbJWuf3Xn7zIbLeGpJJtnus4g+UIxkmIWvymQb+
-	RwW24MBbfR317Hs0klqD2AbHD6B6aTedLrsUvpoO0X4MRunw7cKYzTwAQeCfnvkZvejnDLAPOFv
-	bFZMW1SBeiomvPv0BBwcRXqTuPxloGU61zXLp2iCZUdCRgAirhoiMcuBVnw24OSMDXf89bNKO8I
-	tFeLzJAkjrfi3N8wQWfG+vbSOSxysl1vr9KGIf23ev7CrqEgQAIc2TTTGmd/OiV6t2w+CUQpquS
-	+ehyZnzy12MVjnIxB6Q0wcXeLL9cK7NG56LtourAsY8VkXvBdUdgjwvXaI/kEU2689mFRcINpGp
-	WEfui+om594Bcn9puXuTFEcYN8PwYdOyGGERbPEQ+sDiwcGPh/pDCRSgEEHPlv7caDrfV5J2EX2
-	AKd0EJdx1u+8XJuHaOl7hxWd67OFRRWCF0KqEMH0tWZ1b6SlWmBJaIHuxq5Pbo2b/ZyWXxygJxH
-	SH7gIlMiQ==
-X-Received: by 2002:a05:622a:1984:b0:502:a100:4054 with SMTP id d75a77b69052e-507528c1f89mr8534231cf.23.1772146157581;
-        Thu, 26 Feb 2026 14:49:17 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-899c7159b72sm29449326d6.7.2026.02.26.14.49.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Feb 2026 14:49:17 -0800 (PST)
-Date: Thu, 26 Feb 2026 17:49:14 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, axelrasmussen@google.com,
-	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
-	linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aaDN6ocubzGUz6zc@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <fzy6f6dpv3oq3ksr2mkst7pz3daeb3buhuvdvcw4633pcl7h6u@mxjgiwpg5acv>
- <aZ3BEn_73Rk8Fn7L@gourry-fedora-PF4VCD3F>
- <a6izpi2wlqro72erhbvxhlx2lwdnae7my3ghfs6t33ivtixo4h@bi2u4x6qv7ul>
- <aZ_gALm7aE3d4IcP@gourry-fedora-PF4VCD3F>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CKHDm/Kv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772147732; x=1803683732;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6ND260s9WILQRHkwfeaLvd30FFZogrwqcdbhvPGrCLU=;
+  b=CKHDm/KvW7FK80A9Oa6EJ9l6zYs6AgYikKntm85XqjWoljV5+Z0xjti3
+   1cSlxrY/lGYG+bSkZv/7OaTVB4va7vTP01jOgoANDL0a+ieTVFCvH2nRo
+   HdbRCTzYw+xNnjLP2yteCnhpRm+YhftxHDJa8NnsBX5jerhdrsZuwhux5
+   rFX3kB4JJSEMDaH5MuYqINJ7oh2X15+nxzzBFMN1NPNgZajYCytHnZ92z
+   115rNm5gY6pLfGly14esZZcmr8b9JXTDU7NOnwDjHfFEVOGTDXDdITLG9
+   kc5d8BPXZHqbVlHXM0ievecgcyffy+qYwAj7InNT5N4tTF8mqOoybs2ur
+   A==;
+X-CSE-ConnectionGUID: Gr6OqGPhRfGdrO9UEN3d9Q==
+X-CSE-MsgGUID: NQ13t34TRO+ovWCIjs2LBw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11713"; a="73331454"
+X-IronPort-AV: E=Sophos;i="6.21,313,1763452800"; 
+   d="scan'208";a="73331454"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2026 15:15:31 -0800
+X-CSE-ConnectionGUID: 2nd7JkiIRv+7XVyRSDhPeA==
+X-CSE-MsgGUID: +DW9LNsSQ6mZAAtCLcDJCA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,313,1763452800"; 
+   d="scan'208";a="220856206"
+Received: from lkp-server02.sh.intel.com (HELO a3936d6a266d) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 26 Feb 2026 15:15:25 -0800
+Received: from kbuild by a3936d6a266d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vvkZJ-000000009zN-0205;
+	Thu, 26 Feb 2026 23:15:07 +0000
+Date: Fri, 27 Feb 2026 07:13:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dmitry Ilvokhin <d@ilvokhin.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, kernel-team@meta.com,
+	Benjamin Cheatham <benjamin.cheatham@amd.com>,
+	Dmitry Ilvokhin <d@ilvokhin.com>
+Subject: Re: [PATCH v3 4/5] mm: rename zone->lock to zone->_lock
+Message-ID: <202602270740.0RL1uwsV-lkp@intel.com>
+References: <1221b8e7fa9f5694f3c4e411f01581b5aba9bc63.1772129168.git.d@ilvokhin.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -105,47 +84,111 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aZ_gALm7aE3d4IcP@gourry-fedora-PF4VCD3F>
+In-Reply-To: <1221b8e7fa9f5694f3c4e411f01581b5aba9bc63.1772129168.git.d@ilvokhin.com>
 
-On Thu, Feb 26, 2026 at 12:54:08AM -0500, Gregory Price wrote:
-> On Thu, Feb 26, 2026 at 02:27:24PM +1100, Alistair Popple wrote:
-> 
-> > > If NUMA is the interface we want, then NODE_DATA is the right direction
-> > > regardless of struct page's future or what zone it lives in.
-> > > 
-> > > There's no reason to keep per-page pgmap w/ device-to-node mappings.
-> > 
-> > In reality I suspect that's already the case today. I'm not sure we need
-> > per-page pgmap.
-> >
-> 
-> Probably, and maybe there's a good argument for stealing 80-90% of the
-> common surface here, shunting ZONE_DEVICE to use this instead of pgmap
-> before we go all the way to private nodes.
-> 
+Hi Dmitry,
 
-Out of curiosity i went digging through existing users, and it seems
-like the average driver has 1-8 discrete pgmaps, with Nouveau being an
-outliar that does ad-hoc registering in 256MB chunks, with the relevant
-annoyance being the percpu_ref it uses to track lifetime of the pgmap,
-and the fact that they can be non-contiguous.
+kernel test robot noticed the following build errors:
 
-tl;dr here:  a 1-to-1 mapping of node-to-pgmap isn't realistic for most
-existing ZONE_DEVICE users, meaning a 1-op lookup (page->pgmap) turns
-into a multi-op pointer chase on and range comparison.
+[auto build test ERROR on linus/master]
+[also build test ERROR on v7.0-rc1 next-20260226]
+[cannot apply to akpm-mm/mm-everything rppt-memblock/for-next rppt-memblock/fixes]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Not sure that turns out well for anyone (only on ZONE_DEVICE / managed
-node users, all traditional nodes still have a simple pgdat or page->flag
-lookup to check membership).
+url:    https://github.com/intel-lab-lkp/linux/commits/Dmitry-Ilvokhin/mm-introduce-zone-lock-wrappers/20260227-022914
+base:   linus/master
+patch link:    https://lore.kernel.org/r/1221b8e7fa9f5694f3c4e411f01581b5aba9bc63.1772129168.git.d%40ilvokhin.com
+patch subject: [PATCH v3 4/5] mm: rename zone->lock to zone->_lock
+config: x86_64-defconfig (https://download.01.org/0day-ci/archive/20260227/202602270740.0RL1uwsV-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260227/202602270740.0RL1uwsV-lkp@intel.com/reproduce)
 
-There's an argument for trying to do this just for the sake of getting
-pgmap out of struct page/folio, but this only deals with the problem on
-NUMA systems.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602270740.0RL1uwsV-lkp@intel.com/
 
-For non-numa systems the pgmap still probably ends up in folio_ext
-(assuming we get there), but even that might not be sufficient get LRU
-back.  Might need Willy's opinion here.
+All errors (new ones prefixed by >>):
 
-~Gregory
+   In file included from include/linux/sched.h:37,
+                    from include/linux/percpu.h:12,
+                    from arch/x86/include/asm/msr.h:16,
+                    from arch/x86/include/asm/tsc.h:11,
+                    from arch/x86/include/asm/timex.h:6,
+                    from include/linux/timex.h:67,
+                    from include/linux/time32.h:13,
+                    from include/linux/time.h:60,
+                    from include/linux/stat.h:19,
+                    from include/linux/module.h:13,
+                    from kernel/power/snapshot.c:14:
+   kernel/power/snapshot.c: In function 'mark_free_pages':
+>> kernel/power/snapshot.c:1254:34: error: 'struct zone' has no member named 'lock'; did you mean '_lock'?
+    1254 |         spin_lock_irqsave(&zone->lock, flags);
+         |                                  ^~~~
+   include/linux/spinlock.h:244:48: note: in definition of macro 'raw_spin_lock_irqsave'
+     244 |                 flags = _raw_spin_lock_irqsave(lock);   \
+         |                                                ^~~~
+   kernel/power/snapshot.c:1254:9: note: in expansion of macro 'spin_lock_irqsave'
+    1254 |         spin_lock_irqsave(&zone->lock, flags);
+         |         ^~~~~~~~~~~~~~~~~
+   kernel/power/snapshot.c:1287:39: error: 'struct zone' has no member named 'lock'; did you mean '_lock'?
+    1287 |         spin_unlock_irqrestore(&zone->lock, flags);
+         |                                       ^~~~
+         |                                       _lock
 
 
+vim +1254 kernel/power/snapshot.c
+
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1243  
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1244  static void mark_free_pages(struct zone *zone)
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1245  {
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1246  	unsigned long pfn, max_zone_pfn, page_count = WD_PAGE_COUNT;
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1247  	unsigned long flags;
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1248  	unsigned int order, t;
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1249  	struct page *page;
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1250  
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1251  	if (zone_is_empty(zone))
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1252  		return;
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1253  
+31a1b9d7fe768d Kefeng Wang     2023-05-16 @1254  	spin_lock_irqsave(&zone->lock, flags);
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1255  
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1256  	max_zone_pfn = zone_end_pfn(zone);
+312eca8a14c5f5 David Woodhouse 2025-04-23  1257  	for_each_valid_pfn(pfn, zone->zone_start_pfn, max_zone_pfn) {
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1258  		page = pfn_to_page(pfn);
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1259  
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1260  		if (!--page_count) {
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1261  			touch_nmi_watchdog();
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1262  			page_count = WD_PAGE_COUNT;
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1263  		}
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1264  
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1265  		if (page_zone(page) != zone)
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1266  			continue;
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1267  
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1268  		if (!swsusp_page_is_forbidden(page))
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1269  			swsusp_unset_page_free(page);
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1270  	}
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1271  
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1272  	for_each_migratetype_order(order, t) {
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1273  		list_for_each_entry(page,
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1274  				&zone->free_area[order].free_list[t], buddy_list) {
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1275  			unsigned long i;
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1276  
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1277  			pfn = page_to_pfn(page);
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1278  			for (i = 0; i < (1UL << order); i++) {
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1279  				if (!--page_count) {
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1280  					touch_nmi_watchdog();
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1281  					page_count = WD_PAGE_COUNT;
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1282  				}
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1283  				swsusp_set_page_free(pfn_to_page(pfn + i));
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1284  			}
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1285  		}
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1286  	}
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1287  	spin_unlock_irqrestore(&zone->lock, flags);
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1288  }
+31a1b9d7fe768d Kefeng Wang     2023-05-16  1289  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
