@@ -1,222 +1,151 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC53C3815C4
-	for <linux-cxl@vger.kernel.org>; Thu, 26 Feb 2026 05:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772085255; cv=none; b=dyZO8Y4ih6d39tURihikT5sS/9EpOUF9laoNZWidGUmERjCW9ajsvO6GGK05efCRadtwu9fM6OY1PYbQ2bD2WRa6m8Oo61+iQlTCIxySDDsHVeKC3HsjL886Tmdy/tAIbOwn+h3LpGRc9c1oBSe3MptannEQ2009wifQ3Hw0dxE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772085255; c=relaxed/simple;
-	bh=ofUMJPShl+CQ+x00gAvrjDE/Dd34Gui2w8gTeLvVDow=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pfpT/s4KhlUUKqNhT4kxbRMKlDIly/k6LZ/qFS1ONr8Wl8ExaPOxtI4w/MsKHAOW///R0hG8NoGi7ieXQrCMqKzhaXeJmvv6tAgXDBgCSZgo0QFujzSwCkIZ3rgsX4JryX/zhNaofz4TvoiSwOX+OIKeJ4ec2UUKRvziSDhurb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=hIy3utgt; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1692D12EE
+	for <linux-cxl@vger.kernel.org>; Thu, 26 Feb 2026 09:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772098682; cv=pass; b=X+DdDFPB2AP/aZgH2OiGBVw0GX2S0QWR4769eH/wxOvymk58f1uk+qtAwK/g5Fypb7PDQGtBRiMwBmKed+SopSfMzqwa7t8l8KohFFi+++x0fzLM17+Xov4ByM5m8aEqgLpWhJIOOGb28ckAS6RfxGYxOMLUiFQYwlc0DrrFwkA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772098682; c=relaxed/simple;
+	bh=0/SDumAlYUS1H3B4uzTA8O/Qk+mdYqBeIVg5I6GRmVI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=msug85mIpxtazOUfqJF1tj/LZAu/kdyV1t/kyRoykW9KaSwAHhhMmLw3fUpRcr2eJSfvD53xzAtYhj5PxM3p67u23aWKDLZuVS6cO63XOCbL3dj3cL+cp2AbbJmtCEQXmb3SmpXVvXFNVvod0bsrDFWU0hZqKfsGGN0xKdsfmzE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=cRpCSMbS; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="hIy3utgt"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-8cb49f63238so24775785a.0
-        for <linux-cxl@vger.kernel.org>; Wed, 25 Feb 2026 21:54:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1772085253; x=1772690053; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fI0pTJ34/6sVzsoFrrk7qColB3pOoTYylL8enXM9wuE=;
-        b=hIy3utgttilNOHx/lN0HPelntt9wCaIurthBBolTxSw6t0SUkSA7e3287UD/fbk5nB
-         J9ebaG9JkYoPWkkXMfHthNoEVs5rNmZxQqAEt9IlVm6YvnsryUrTwzPKfPSLPr4denfG
-         f9VmiakR472dgK4FzNvnOjtNAAC6YJbNkh67DUkYFOmT51Ub5RITnYFVT+DH7uDn3+Cw
-         Ii5Qb2mxPn1Jz8Mk3bo5FffwYMcrj0Jwy0/TFHxs/2REL3cAzg7TOrq0S743Ua4FWJV3
-         W1vzLArC99S45d82TCj+HQlzZn8m1/yiP+J+OB+t9CK+1KJXiADr+u6pxMkniI/e4630
-         l0GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772085253; x=1772690053;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fI0pTJ34/6sVzsoFrrk7qColB3pOoTYylL8enXM9wuE=;
-        b=mfwRoA3DGDDj9QFqVe4R+cn/AeYGwXF/8TgnkgR9B8uLXI5wfK8wyxfnNctcnxI2CI
-         UN44PL3ur9e08HA+6yvhRnKckpRoXTLpZHRM6j7HhVe/javMtYM6Yr6jIhOvFiQAQAn2
-         YsK9FLNDu9LKbOYX/O+ngPKF8+4TuswpqIMulnvGXzMMqPZtenh6VyXxlz4QGMAqdz/s
-         RJwR+RTFH1EXQLMF9LkIXkG+Ssl0+9w/XcZqzAFLx06JvLCEV+PHI90Ox2Ud6mQ8feMa
-         3OFVEybEry+BuF5Fk7PEL65e2qxMx5brZ/uSSxJ6OyOabQ2stkFSaMVwTfgoTxtUjwj2
-         HxjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuDZ/uJedI8dOkOPR0bC5aLxbHJpVGHcPmHoRmyvYFKoLyFekWNCdWBGVwyQhJoPVS/2jswjtu2EE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRPAJi73gLCQUKAqah0iltHn8CVzgQOVN5s62zMNimlJBfN7ON
-	NHijY7jH4ebuEV/8ikBx73LO+HoryxO9uOS0Zra1SzPXhvrxrNCI3+JJqMdzOJX2tvU=
-X-Gm-Gg: ATEYQzw1FwNVDdLMPwl/lInjvpcDmnsuKMr+/5N0/ZN0uLqVlZdVMckUolqgEWSbatH
-	DdHKxX8G333vOd7322Ba2UmxXoDf1nRewaE3KEzXTOsWoiaU9lCtep5iGIn4WoZyohpnvmGvGwi
-	1z3r7zqsmlj2Xq6EbFZ7UdOwkbxTTkEzgcaZJeowGvMeiS5sUgtQLooFR7mukNix/dXfqX9ozev
-	y4ucxOjuwaljk+udcYMJr0jtwsU2moPD9eB96M7m/YLe2NIexjH46uxmU8/M/x3T0wcAojUx4zE
-	TkFHlE6V3qDzBQGpEWeYXTCGnNaRC4AZu73lNn31OY3eVzgLBWaND0eVXN3XmnyaPSM+4dVzHQY
-	MMn9R6pANEoQkwWmwJGxHhjRtQWa3sHuOI24eGv9FvwJaa03pqzRkVT/+xz0m4Xa+YWpvQkGILA
-	xFZ54/I1PGalzcfhFX8mouOX84/RRbNhWNYVu/ShjQO/WztJxlcaqja6ZEL7SKE5g3+q1Cc+7aB
-	5EsBffYBQ==
-X-Received: by 2002:a05:620a:288e:b0:8cb:4128:ec3c with SMTP id af79cd13be357-8cbc11f57bdmr90671085a.64.1772085252472;
-        Wed, 25 Feb 2026 21:54:12 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cbbf6f940fsm122507885a.23.2026.02.25.21.54.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Feb 2026 21:54:11 -0800 (PST)
-Date: Thu, 26 Feb 2026 00:54:08 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, axelrasmussen@google.com,
-	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
-	linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aZ_gALm7aE3d4IcP@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <fzy6f6dpv3oq3ksr2mkst7pz3daeb3buhuvdvcw4633pcl7h6u@mxjgiwpg5acv>
- <aZ3BEn_73Rk8Fn7L@gourry-fedora-PF4VCD3F>
- <a6izpi2wlqro72erhbvxhlx2lwdnae7my3ghfs6t33ivtixo4h@bi2u4x6qv7ul>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="cRpCSMbS"
+ARC-Seal: i=1; a=rsa-sha256; t=1772098668; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=IXkXGEBPc5KIyp6nnTshJ2Y4VJccxE+KKGlXjAWjKnvc1qnHSJdVHHMH9ZwkZIqUfqC9jc5AHAc+bIP+kpXk/dMVy/7B1BoQzvXtRMaDpLpWhGxI9GJh4WXtI7yTaFBwiRQFoz3GM4oftimgNnIkP6a14xnZ2kofN4p3yrzCweM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1772098668; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=lLhDUjSNe4fNWHCmjCtbhXVRGnLRFq4fXPZRbX4uj8w=; 
+	b=npfIIyV3zBoXni6jXjDclm7EpbaEoWAgSx2w6x4BNsIqB/otvfV2CBfepKXxieptznftQ6MdJKTTZwRcy7jQ/bJeOkXSoQIf2xaeUh2DrspHbybiBIniU4HY9GSvag2zXiXkjI4X8VI1LCAioX1ma+1napP38aSgiqGso4Ay+P4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1772098668;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=lLhDUjSNe4fNWHCmjCtbhXVRGnLRFq4fXPZRbX4uj8w=;
+	b=cRpCSMbS46H2tPG6jucVmZ8b+JVf7Pg1gxLwZ1fUHDu3CzSI0/kro26ORXIOUpcb
+	Hma3LszaXq1iZw3knspPmPacmNoKc9LTUV4/8MH18UIqfdBYsijuwa40aBEgWHo0s2G
+	h9ty94Q3lhe0YddUc8nemZmJpicO3dcuhvXoxm+8=
+Received: by mx.zohomail.com with SMTPS id 1772098666649910.593217473059;
+	Thu, 26 Feb 2026 01:37:46 -0800 (PST)
+Message-ID: <3a0fb6cb-e293-439d-9977-66b188a2ceb6@zohomail.com>
+Date: Thu, 26 Feb 2026 17:37:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a6izpi2wlqro72erhbvxhlx2lwdnae7my3ghfs6t33ivtixo4h@bi2u4x6qv7ul>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] cxl/port: Fix use after free of parent_port in
+ cxl_detach_ep()
+To: Alison Schofield <alison.schofield@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org
+References: <20260225220251.1708089-1-alison.schofield@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20260225220251.1708089-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: rr0801122847836b38baa21650473f82690000912af76d9e537930bd5adc6d19bad7e8b6d632c6aa29976f2553:zu0801122728fd71fec1e4ded4231f3b160000000265eae362f60d36577e5018dfb1ef2aae47e78d6c17deb2:rf0801122d3d03849622ea6b9a92e2a9bc000011453a8c427665d78ad90a3964e9d62857cc3da3caa3e538705a483b09ded9:ZohoMail
+X-ZohoMailClient: External
 
-On Thu, Feb 26, 2026 at 02:27:24PM +1100, Alistair Popple wrote:
-> On 2026-02-25 at 02:17 +1100, Gregory Price <gourry@gourry.net> wrote...
-> > 
-> > DEVICE_COHERENT is the odd-man out among ZONE_DEVICE modes. The others
-> > use softleaf entries and don't allow direct mappings.
-> 
-> I think you have this around the wrong way - DEVICE_PRIVATE is the odd one out as
-> it is the one ZONE_DEVICE page type that uses softleaf entries and doesn't
-> allow direct mappings. Every other type of ZONE_DEVICE page allows for direct
-> mappings.
-> 
-
-Sorry, you are correct.  I have trouble keeping the ZONE_DEVICE modes
-straight sometimes, and all the hook sites have different reasons for why
-all the different ZONE_DEVICE modes and it mucks with my head :[
-
-Device Coherent is the one that doesn't allow pinning, but still comes
-with all the baggage of not being on the lru.
-
-Spoke a bit too bluntly here, apologies.
-
-> Don't you still have to add code to hook every operation you care about for your
-> private managed nodes?
-> 
-... snip ... below
-> > I don't think that's needed if we just recognize ZONE is the wrong
-> > abstraction to be operating on.
-> > 
-... snip ... below
-> > If your service only allocates movable pages - your ZONE_NORMAL is
-> > effectively ZONE_MOVABLE.  
-> 
-> This is interesting - it sounds like the conclusion of this is ZONE_* is just a
-> bad abstraction and should be replaced with something else maybe some like this?
-> 
-
-Yeah i'm not totally married to this being a node, but it makes far more
-sense to me than a zone.
-
-ZONE_DEVICE sorta kinda really *wants* to be its own node, but it seems
-that "what constitutes a node" was largely informed by ACPI Proximity
-Domains.  Nothing in the rules say that has to remain the case.
-
-To answer your question above - yea you still need to add code to hook
-the operations - but this is essentially already true of ZONE_DEVICE
-(except you have to contend with other weird ZONE_DEVICE situations).
-
-Some of the hooks here are an experimentation in what's possible, not
-what I think is reasonable (mempolicy is a good example - i don't think
-userland should really be doing this anyway... but neat, it works :P)
-
-> And FWIW I'm not tied to the ZONE_DEVICE as being a good abstraction, it's just
-> what we seem to have today for determing page types. It almost sounds like what
-> we want is just a bunch of hooks that can be associated with a range of pages,
-> and then you just get rid of ZONE_DEVICE and instead install hooks appropriate
-> for each page a driver manages. I have to think more about that though, this
-> is just what popped into my head when you start saying ZONE_MOVABLE could also
-> disappear :-)
-
-Yup! Basically ZONE_MOVABLE and CMA and ZONE_DEVICE/COHERENT all try to
-do similar things for different reasons.
-
-Zones manage to somehow be both too-broad AND too-narrow.
-
-In my head, we should just be able to just plop these things "into the
-buddy" and provide hooks that say what's allow "for those pages".
-
-That sounds like Non-Uniform Memory Access *cough* :P
-
-Heck, I was even playing with adding these nodes *back into* the
-fallback lists for some situations.
-
-NP_OPS_DIRECT / NP_OPS_FALLBACK
-	don't require __GFP_PRIVATE, but give me the hooks I want :V 
-
-> > Where there are new injection sites, it's because ZONE_DEVICE opts
-> > out of ever touching that code in some other silently implied way.
-> 
-> Yeah, I hate that aspect of ZONE_DEVICE. There are far too many places where we
-> "prove" you can't have a ZONE_DEVICE page because of ad-hoc "reasons". Usually
-> they take the form of it's not on the LRU, or it's not an anonymous page and
-> this isn't DAX, etc.
+On 2/26/2026 6:02 AM, Alison Schofield wrote:
+> cxl_detach_ep() is called during bottom-up removal when all CXL memory
+> devices beneath a switch port have been removed. For each port in the
+> hierarchy it locks both the port and its parent, removes the endpoint,
+> and if the port is now empty, marks it dead and unregisters the port
+> by calling delete_switch_port(). There are two places during this work
+> where the parent_port may be used after freeing:
 >
-
-It's kinda the opposite of how operating systems do everything else.
-
-Generally we start from a basis of isolation and then poke deliberate
-holes, as opposed to try to patch things up after the fact.
-
-> > If NUMA is the interface we want, then NODE_DATA is the right direction
-> > regardless of struct page's future or what zone it lives in.
-> > 
-> > There's no reason to keep per-page pgmap w/ device-to-node mappings.
-> 
-> In reality I suspect that's already the case today. I'm not sure we need
-> per-page pgmap.
+> First, a concurrent detach may have already processed a port by the
+> time a second worker finds it via bus_find_device(). Without pinning
+> parent_port, it may already be freed when we discover port->dead and
+> attempt to unlock the parent_port. In a production kernel that's a
+> silent memory corruption, with lock debug, it looks like this:
 >
+> []DEBUG_LOCKS_WARN_ON(__owner_task(owner) != get_current())
+> []WARNING: kernel/locking/mutex.c:949 at __mutex_unlock_slowpath+0x1ee/0x310
+> []Call Trace:
+> []mutex_unlock+0xd/0x20
+> []cxl_detach_ep+0x180/0x400 [cxl_core]
+> []devm_action_release+0x10/0x20
+> []devres_release_all+0xa8/0xe0
+> []device_unbind_cleanup+0xd/0xa0
+> []really_probe+0x1a6/0x3e0
+>
+> Second, delete_switch_port() releases three devm actions registered
+> against parent_port. The last of those is unregister_port() and it
+> calls device_unregister() on the child port, which can cascade. If
+> parent_port is now also empty the device core may unregister and free
+> it too. So by the time delete_switch_port() returns, parent_port may
+> be free, and the subsequent device_unlock(&parent_port->dev) operates
+> on freed memory. The kernel log looks same as above, with a different
+> offset in cxl_detach_ep().
+>
+> Both of these issues stem from the absence of a lifetime guarantee
+> between a child port and its parent port.
+>
+> Establish a lifetime rule for ports: child ports hold a reference to
+> their parent device until release. Take the reference when the port
+> is allocated and drop it when released. This ensures the parent is
+> valid for the full lifetime of the child and eliminates the use after
+> free window in cxl_detach_ep().
+>
+> This is easily reproduced with a reload of cxl_acpi in QEMU with CXL
+> devices present.
+>
+> Fixes: 2345df54249c ("cxl/memdev: Fix endpoint port removal")
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-Probably, and maybe there's a good argument for stealing 80-90% of the
-common surface here, shunting ZONE_DEVICE to use this instead of pgmap
-before we go all the way to private nodes.
+Reviewed-by: Li Ming <ming.li@zohomail.com>
 
-cough cough maybe i'll have looked into this by LSFMM cough cough
+A minor comment below
 
-> > On (1): ZONE_DEVICE NUMA UAPI is harder than it looks from the surface
-> 
-> Ok, I will admit I've only been hovering on the surface so need to give this
-> some more thought. Everything you've written below makes sense and is definitely
-> food for thought. Thanks.
-> 
+> ---
+>
+> Changes in v3:
+> Scope fix as a lifetime guarantee btw child port & parent (Dan)
+>
+> Changes in v2:
+> Remove stray blank line (DaveJ)
+> Rebase on 7.0-rc1
+> Add Fixes Tag (DaveJ)
+>
+>
+>  drivers/cxl/core/port.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index b69c2529744c..09fc08205ed5 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -552,6 +552,10 @@ static void cxl_port_release(struct device *dev)
+>  	xa_destroy(&port->dports);
+>  	xa_destroy(&port->regions);
+>  	ida_free(&cxl_port_ida, port->id);
+> +
+> +	if (!is_cxl_root(port))
+> +		put_device(dev->parent);
+> +
+>  	if (is_cxl_root(port))
+>  		kfree(to_cxl_root(port));
+>  	else
 
-cheers! thanks for reading :)
+There is a if-else block to handle cxl_root case and non-cxl_root case, maybe we can move this put_device() into this else block.
 
-~Gregory
+
+Ming
+
+[snip]
