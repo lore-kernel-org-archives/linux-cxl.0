@@ -1,206 +1,222 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F50345C0B;
-	Thu, 26 Feb 2026 05:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772082078; cv=fail; b=C8xT23Pr+dQjUdvYygjBEAE2711PfPdNG2LyABdlv432O6lFizXsyo9ikEkkgfLYDK3FuV8IzVI5BVE08vZZ9ht4kVG4G0mFyuRMfqoMDbZu7SksHq0VtielKsJj/WP+Wdo6WOa51FGjJ53v7nrFo3Hr6e0jcwgleqcob2uRb7k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772082078; c=relaxed/simple;
-	bh=CgZRaPOjvbxNFR2fwCa3i4ciRx8qHDkdy7KXcMZRw20=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rgp/rDwdXTcslchWzVMB+nLYVvlFyOmOwb2rTuiaGHW4FXYqJkcE67xYg+KnkiMCKrvWyReARGQFWEQpIihk5OFPj7DZA8oqwqXAssQXZK8nFEiXWlRY6kjMmKvjBcGyw6O6QfkS1dUGrQlHO96WfoEzgU0Pkz1B0PTsUJIGk7o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ICj8jwYz; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC53C3815C4
+	for <linux-cxl@vger.kernel.org>; Thu, 26 Feb 2026 05:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772085255; cv=none; b=dyZO8Y4ih6d39tURihikT5sS/9EpOUF9laoNZWidGUmERjCW9ajsvO6GGK05efCRadtwu9fM6OY1PYbQ2bD2WRa6m8Oo61+iQlTCIxySDDsHVeKC3HsjL886Tmdy/tAIbOwn+h3LpGRc9c1oBSe3MptannEQ2009wifQ3Hw0dxE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772085255; c=relaxed/simple;
+	bh=ofUMJPShl+CQ+x00gAvrjDE/Dd34Gui2w8gTeLvVDow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pfpT/s4KhlUUKqNhT4kxbRMKlDIly/k6LZ/qFS1ONr8Wl8ExaPOxtI4w/MsKHAOW///R0hG8NoGi7ieXQrCMqKzhaXeJmvv6tAgXDBgCSZgo0QFujzSwCkIZ3rgsX4JryX/zhNaofz4TvoiSwOX+OIKeJ4ec2UUKRvziSDhurb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=hIy3utgt; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ICj8jwYz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772082078; x=1803618078;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=CgZRaPOjvbxNFR2fwCa3i4ciRx8qHDkdy7KXcMZRw20=;
-  b=ICj8jwYzC+uartXKNJztaj3usKWiiIOmzaPzdCxoztfuTo1C4AeL2DRA
-   p+MU+ODq3ohXoce/BQ0+2JB0X2gu1mMr/G8KGLkAeDdNOreMa/pUwxQ8n
-   TlE20pBs0XPW/VAAcpXH7VsutQpYJZqxhkJoJADLpuZepfOm9BTB1BBH4
-   A3PkG3rUXjo1GDNa5FlEY1JUxaVM2QsNXfsOCe1MDDXeInmGx15v52MT6
-   FnZtxYwcp8yHFvosA+E/wIcC6mvEre7AkyeUzNxP8eIj4q5K2pEh4HDyN
-   F5wzBafxdc8/G2CWjD4I7RgJz4KqjcH3VPCmBmazugZfaYxa2exQ99qXI
-   Q==;
-X-CSE-ConnectionGUID: e81jhk4SS1WwakpJRhwXMA==
-X-CSE-MsgGUID: 5GrNCw37Q/eeX1po7pKY5w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11712"; a="73039919"
-X-IronPort-AV: E=Sophos;i="6.21,311,1763452800"; 
-   d="scan'208";a="73039919"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2026 21:01:17 -0800
-X-CSE-ConnectionGUID: PqTQMGnBTjuKzPpoAVxt5Q==
-X-CSE-MsgGUID: lcUkoxU8T1+pr/Hgd84CZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,311,1763452800"; 
-   d="scan'208";a="239442537"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2026 21:01:17 -0800
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Wed, 25 Feb 2026 21:01:16 -0800
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Wed, 25 Feb 2026 21:01:16 -0800
-Received: from CY3PR05CU001.outbound.protection.outlook.com (40.93.201.41) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Wed, 25 Feb 2026 21:01:14 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JciEdJxKMpUjoKbeNS/PtE3SFi7pKE1URk552AcCf6wEQMB1a7gJsgjAVl0lezaNTwBNCC8a8vl57VbZ9z27Ys9Z7q1qI72XsBP9kIIdPqOG7bB1asG0Wcg5vRVUtabFdjEW8FKdvcFYEOJNLrZQNoxFNMVEuRvBDsYeb12klXzOxxsgJ22wBch54KZgVVCNXKHAWVf6GtFiVPNh2Jhd4/WFn4iFJEjdY9iX0RYje0n5TitF3ulv8gFZ/xVTJ0QueLynTzGAnnldZTppOUvYv38/dAAWMJJlmGgPcb6JHWOBJOI4MuvQQU5CfsG0zwwLDgVwqQ5Kw9w+zij1pMIjbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dEImHQwKLj5QDmtGh7DhUp6Jn/ofYXH7YoiBKDRg6DI=;
- b=IxbXpt1W+NfGBDeKHjcQQ0NNZoNvV+0UhQEFMvhxiFQaFb9SN6w68BtSzG1hrGfr4pC5FlHOG9y+vF1C32Zk8G6R2dvij2JdCzXt8146/hNDUe5YbM4Ul1zbuZs94yEn44zL3w/RfIoWcVqwKlNvnGJow0B34CnX/smVBTf69l9vCBUo7i/9L4+aw5wr0G3lfQwT7RcJL3qG8kl8bQKWTSSUUmAjs5TSPx5oDT5Gj9ya8neaYDm7hxlZ3YqLmTDW2d/49WiozBFlJ5nAf1OgWjN/YnkyvTFLAoAZl5Z9+WLvlq7jAFKdhhmUqbhXykzNPRZmUvpcSwmEqnjUdpydQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by CO1PR11MB4898.namprd11.prod.outlook.com (2603:10b6:303:92::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.14; Thu, 26 Feb
- 2026 05:01:12 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::4a5f:d967:acb2:e28a]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::4a5f:d967:acb2:e28a%6]) with mapi id 15.20.9632.017; Thu, 26 Feb 2026
- 05:01:12 +0000
-Date: Wed, 25 Feb 2026 21:01:08 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-CC: <dan.j.williams@intel.com>, <vishal.l.verma@intel.com>,
-	<dave.jiang@intel.com>, <akpm@linux-foundation.org>,
-	<nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Ben Cheatham <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH v2] dax/kmem: account for partial dis-contiguous resource
- upon removal
-Message-ID: <aZ_TlK4r41P0xBDO@aschofie-mobl2.lan>
-References: <20260223201516.1517657-1-dave@stgolabs.net>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260223201516.1517657-1-dave@stgolabs.net>
-X-ClientProxiedBy: SJ0PR05CA0163.namprd05.prod.outlook.com
- (2603:10b6:a03:339::18) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="hIy3utgt"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-8cb49f63238so24775785a.0
+        for <linux-cxl@vger.kernel.org>; Wed, 25 Feb 2026 21:54:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1772085253; x=1772690053; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fI0pTJ34/6sVzsoFrrk7qColB3pOoTYylL8enXM9wuE=;
+        b=hIy3utgttilNOHx/lN0HPelntt9wCaIurthBBolTxSw6t0SUkSA7e3287UD/fbk5nB
+         J9ebaG9JkYoPWkkXMfHthNoEVs5rNmZxQqAEt9IlVm6YvnsryUrTwzPKfPSLPr4denfG
+         f9VmiakR472dgK4FzNvnOjtNAAC6YJbNkh67DUkYFOmT51Ub5RITnYFVT+DH7uDn3+Cw
+         Ii5Qb2mxPn1Jz8Mk3bo5FffwYMcrj0Jwy0/TFHxs/2REL3cAzg7TOrq0S743Ua4FWJV3
+         W1vzLArC99S45d82TCj+HQlzZn8m1/yiP+J+OB+t9CK+1KJXiADr+u6pxMkniI/e4630
+         l0GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772085253; x=1772690053;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fI0pTJ34/6sVzsoFrrk7qColB3pOoTYylL8enXM9wuE=;
+        b=mfwRoA3DGDDj9QFqVe4R+cn/AeYGwXF/8TgnkgR9B8uLXI5wfK8wyxfnNctcnxI2CI
+         UN44PL3ur9e08HA+6yvhRnKckpRoXTLpZHRM6j7HhVe/javMtYM6Yr6jIhOvFiQAQAn2
+         YsK9FLNDu9LKbOYX/O+ngPKF8+4TuswpqIMulnvGXzMMqPZtenh6VyXxlz4QGMAqdz/s
+         RJwR+RTFH1EXQLMF9LkIXkG+Ssl0+9w/XcZqzAFLx06JvLCEV+PHI90Ox2Ud6mQ8feMa
+         3OFVEybEry+BuF5Fk7PEL65e2qxMx5brZ/uSSxJ6OyOabQ2stkFSaMVwTfgoTxtUjwj2
+         HxjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUuDZ/uJedI8dOkOPR0bC5aLxbHJpVGHcPmHoRmyvYFKoLyFekWNCdWBGVwyQhJoPVS/2jswjtu2EE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRPAJi73gLCQUKAqah0iltHn8CVzgQOVN5s62zMNimlJBfN7ON
+	NHijY7jH4ebuEV/8ikBx73LO+HoryxO9uOS0Zra1SzPXhvrxrNCI3+JJqMdzOJX2tvU=
+X-Gm-Gg: ATEYQzw1FwNVDdLMPwl/lInjvpcDmnsuKMr+/5N0/ZN0uLqVlZdVMckUolqgEWSbatH
+	DdHKxX8G333vOd7322Ba2UmxXoDf1nRewaE3KEzXTOsWoiaU9lCtep5iGIn4WoZyohpnvmGvGwi
+	1z3r7zqsmlj2Xq6EbFZ7UdOwkbxTTkEzgcaZJeowGvMeiS5sUgtQLooFR7mukNix/dXfqX9ozev
+	y4ucxOjuwaljk+udcYMJr0jtwsU2moPD9eB96M7m/YLe2NIexjH46uxmU8/M/x3T0wcAojUx4zE
+	TkFHlE6V3qDzBQGpEWeYXTCGnNaRC4AZu73lNn31OY3eVzgLBWaND0eVXN3XmnyaPSM+4dVzHQY
+	MMn9R6pANEoQkwWmwJGxHhjRtQWa3sHuOI24eGv9FvwJaa03pqzRkVT/+xz0m4Xa+YWpvQkGILA
+	xFZ54/I1PGalzcfhFX8mouOX84/RRbNhWNYVu/ShjQO/WztJxlcaqja6ZEL7SKE5g3+q1Cc+7aB
+	5EsBffYBQ==
+X-Received: by 2002:a05:620a:288e:b0:8cb:4128:ec3c with SMTP id af79cd13be357-8cbc11f57bdmr90671085a.64.1772085252472;
+        Wed, 25 Feb 2026 21:54:12 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cbbf6f940fsm122507885a.23.2026.02.25.21.54.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Feb 2026 21:54:11 -0800 (PST)
+Date: Thu, 26 Feb 2026 00:54:08 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Alistair Popple <apopple@nvidia.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	damon@lists.linux.dev, kernel-team@meta.com,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, david@kernel.org,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, axelrasmussen@google.com,
+	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+	baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <aZ_gALm7aE3d4IcP@gourry-fedora-PF4VCD3F>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <fzy6f6dpv3oq3ksr2mkst7pz3daeb3buhuvdvcw4633pcl7h6u@mxjgiwpg5acv>
+ <aZ3BEn_73Rk8Fn7L@gourry-fedora-PF4VCD3F>
+ <a6izpi2wlqro72erhbvxhlx2lwdnae7my3ghfs6t33ivtixo4h@bi2u4x6qv7ul>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|CO1PR11MB4898:EE_
-X-MS-Office365-Filtering-Correlation-Id: 60640c94-59f1-4cf0-ef3f-08de74f40ffa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: H80oyCFWXjIX9AKexkmXqdJh8Vyy2ycJO9h/62IGrxPyK1kuraoxfcW3Wo5w+rAuKeCu9S8/or8cGR2wYAPOmOD+8fHNLm3ZUF82Ohw6tNKHY2S4cB85+WugiqGK905PpHqxHW+0ANPtykVPwZQAe867mIoPtfQYrf21odhXDMgV3gRhpjVdXF0K0wDjVCi4EZbnj6ODWWO9jTsSf/45SuIyEq7zyPppmWjpEqeRcGl4D1rZaL4UgelwGL2YYklCB+EVEFsWobgyXYwMVPROHS03i3ces8WFp0Na2kI+SM/hFNKPH0H7FiRXy+XT2J9LPSObfYEJyoWrfB9tDwyr2uyRcrS6EE1A4taPQlEX4soQM+P91gJuDb1s3pKA0Rv5h+l4m/sHjsFbZNky2OAJDaGqYNTZvPc3/ILQaF3llC/1oHZy4TZzg/l8D2Dit31EjEMyGkr86A0NTNQu8rHfgAk5Yij8Cx6uijY8yuOuiXTPEViZRDCDIZzdXH64yHyIHyOFzQCltdXZOgsKyUBwhILOFxrUja5RM8DbG6uqS2WBGiocQidYZ7Skn82Ckp7EFCf4i0iT5s2UJDOKp8bUM2no3t6aS7qaDgO1At2v+gzBL+dzLjwytalh4rsLlUNPTWQ6UPjl8tNg1m1CgfXIH2MW/dTE9VMWOHFVuLBvrAFaJyV4N/MQs9y0KFUDfEW26RpYGsGOroKFTpYtoM9UUNRtIsXyQzkjrejV3Q+v5OQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2FHL7skVG7xcZzvU4hbj5P63zkY2wBVPY7iyMJtkHnIVKMaZqagkT6ZqA5l/?=
- =?us-ascii?Q?v9tzUmPVZJhw19nPMlpQnoDaPmvb3FvlXCCmh/+zkzs3Ia++C8SMxSGCJ65g?=
- =?us-ascii?Q?6BMUumQ/fl8tYjFX36hbxdvxiOAbzVC9I1KKfeKiX0bnhB7dYqOOtkw5d9Ne?=
- =?us-ascii?Q?IInVOXpUyc/NCTRBOJDyASzGnODjF5LsWviAnYcHoFa7xOiRGoWsjUkfNj4J?=
- =?us-ascii?Q?fT3BkPcsgVDrqa33rHr9ruuSB532mt1Z8gtwk+b1KQ6+2ziqBNM0E5WVMDcY?=
- =?us-ascii?Q?Oy4rpFBdYt/QzJh9bNzYT3D7Dv9A2PKMATifNDVWoF5xXGGwP0um1i0rk42a?=
- =?us-ascii?Q?JTU1IR8w72VkAopUffU3DaECogRWmqxXiBFSd5yvHZwo9Hs/sFIJlo8Byvk6?=
- =?us-ascii?Q?0DlEK/1Jzmxw0rKqXqeS6rt0xcmsOHfSyRpKs8ojxaS3RVn+TB5kbkqWqqw/?=
- =?us-ascii?Q?agzw6BVvrRMkl6pUs5xhBYMLd2WmrIYt8CUWoMZKGUwcTxHoWne9kaboQOvF?=
- =?us-ascii?Q?+f0lPlclCn5J+SDXfxW/+dbSZtL72Bm32Yyh4pvZFLbvKVEW4ecVQ+21DZx9?=
- =?us-ascii?Q?Q8jMoMZTf3Ca8S+tuqqWPsiBM9/ZLAGWauf0jk7nmE1A6igRJzDgB8KVZYft?=
- =?us-ascii?Q?1Hwuq0YrExmHbOaRcx7jmSA2iRhXQuciWUhxg6A5GQHWguXYZLoSWgks7nT4?=
- =?us-ascii?Q?YSCVkNpRMtiFz521A4zwQ2fT2oO1jUqKhQp+LtAQBHmSvv/m5BK4qyQDLnv0?=
- =?us-ascii?Q?jrHJgM/GbSurgU6q+Nr4sHTHbPtJeWxySl76vz5TBzQESOKQwsBwkdNj8pHN?=
- =?us-ascii?Q?AR/zHjxALh6YQN3uMRn87vbGHOCuagf4robKIpxjZKNkaY0TQBthTbfi3GJN?=
- =?us-ascii?Q?a7JkfIZsJPDBYJjr/WMRkbq+7yFmhuj5Yn6HTj6vXMrVi9EFJHXERRvM8iKm?=
- =?us-ascii?Q?sw+KV+BT8QDSthZ5AkfcyT67W4Ev+nvfuqtS2PxxdENIuxiSpQJgmaBqJBpE?=
- =?us-ascii?Q?TG3o+oQs/L0PA72myzxMmED6b7bOX65Tx4FM7DHPnRu6Jcz7ybwX8N7+cx+v?=
- =?us-ascii?Q?NFkIK8n07ZjuL70abW7EaqXS6oQvEecP4/r5dIACLDaRcywYeji8d4kvIVc/?=
- =?us-ascii?Q?+pSWu0yfzscCeOxqn7BrRN7ChvXZf6IPnu8S1qiUTDFo/XtjCgE6ojOEwpXP?=
- =?us-ascii?Q?ptBEHYtp4iDxPe9+s3fI2FHhPVMRQluqTmdRGys4N+w2ucA2Me1TZIgOXFL7?=
- =?us-ascii?Q?AOmR6hjBoeRwlRCCCDUyz3aS40rWONxnsyMrgIE7qRXKVPh/qjBch3iFPk/k?=
- =?us-ascii?Q?/s6ujJi5jBHlYrCbzb0DSn66dWUF9DICDhZo30Zxo3xXv3ta6FL3vY6GoYw2?=
- =?us-ascii?Q?9h1WKVsvWOWo28IQFHs8uWVl3MltJSV73T3QqQK/TBr7Ax1hcB/5MSVnz9v+?=
- =?us-ascii?Q?Nqgn2BAxUOpGFrb+f5YwUhZhxzIwwpT/GyLmas5Bf55Qlxy/wQsOvychtrPY?=
- =?us-ascii?Q?HKEJ0sx00kt4WtgHCY6N0XpmvDzSRnZmWDritmS2g7cj5yrbzD8pjdjv0VyD?=
- =?us-ascii?Q?WUDa9UOc0gpT6f3aTHnQFMad5aWyVVMLmOBu4hKrWU86+GlY4errZ4RX+fPz?=
- =?us-ascii?Q?GPZIM95BLHT+tYB2XMh2eDrbkukT6ZwyDptnMTOv5Ggy/WvkOSruA0XDA/Ac?=
- =?us-ascii?Q?SH1Aw/hTHdEN0ZUocEPxuYDLwJoBl9bGw1572SHvnruWhw+g0NhjKcr5YHWO?=
- =?us-ascii?Q?TvXPFr59sWwzUbC5ToYqoxRmUyrUUpM=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60640c94-59f1-4cf0-ef3f-08de74f40ffa
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2026 05:01:12.3814
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7liGPbLjQZJSBBrajECH5xYRIs3IYgW/Epvp6SY1o/mqF/LPTyjrKwONZekmwAODNtWWYnDJJ1RRKr7XAnikRHJUAQAnGq2lkzkTMMki4AM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4898
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a6izpi2wlqro72erhbvxhlx2lwdnae7my3ghfs6t33ivtixo4h@bi2u4x6qv7ul>
 
-On Mon, Feb 23, 2026 at 12:15:16PM -0800, Davidlohr Bueso wrote:
-> When dev_dax_kmem_probe() partially succeeds (at least one range
-> is mapped) but a subsequent range fails request_mem_region()
-> or add_memory_driver_managed(), the probe silently continues,
-> ultimately returning success, but with the corresponding range
-> resource NULL'ed out.
+On Thu, Feb 26, 2026 at 02:27:24PM +1100, Alistair Popple wrote:
+> On 2026-02-25 at 02:17 +1100, Gregory Price <gourry@gourry.net> wrote...
+> > 
+> > DEVICE_COHERENT is the odd-man out among ZONE_DEVICE modes. The others
+> > use softleaf entries and don't allow direct mappings.
 > 
-> dev_dax_kmem_remove() iterates over all dax_device ranges regardless
-> of if the underlying resource exists. When remove_memory() is
-> called later, it returns 0 because the memory was never added which
-> causes dev_dax_kmem_remove() to incorrectly assume the (nonexistent)
-> resource can be removed and attempts cleanup on a NULL pointer.
+> I think you have this around the wrong way - DEVICE_PRIVATE is the odd one out as
+> it is the one ZONE_DEVICE page type that uses softleaf entries and doesn't
+> allow direct mappings. Every other type of ZONE_DEVICE page allows for direct
+> mappings.
+> 
 
-Do you have a failure signature w Call Trace to paste here?
-If not, maybe just insert the expected signature for grepping:
-"BUG: unable to handle kernel NULL pointer dereference"
+Sorry, you are correct.  I have trouble keeping the ZONE_DEVICE modes
+straight sometimes, and all the hook sites have different reasons for why
+all the different ZONE_DEVICE modes and it mucks with my head :[
 
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Device Coherent is the one that doesn't allow pinning, but still comes
+with all the baggage of not being on the lru.
 
+Spoke a bit too bluntly here, apologies.
+
+> Don't you still have to add code to hook every operation you care about for your
+> private managed nodes?
 > 
-> Fix this by skipping these ranges altogether, noting that these
-> cases are considered success, such that the cleanup is still
-> reached when all actually-added ranges are successfully removed.
+... snip ... below
+> > I don't think that's needed if we just recognize ZONE is the wrong
+> > abstraction to be operating on.
+> > 
+... snip ... below
+> > If your service only allocates movable pages - your ZONE_NORMAL is
+> > effectively ZONE_MOVABLE.  
 > 
-> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
-> Fixes: 60e93dc097f7 ("device-dax: add dis-contiguous resource support")
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> ---
-> Changes from v1: reword some of the changelog (Ben)
+> This is interesting - it sounds like the conclusion of this is ZONE_* is just a
+> bad abstraction and should be replaced with something else maybe some like this?
 > 
->  drivers/dax/kmem.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+
+Yeah i'm not totally married to this being a node, but it makes far more
+sense to me than a zone.
+
+ZONE_DEVICE sorta kinda really *wants* to be its own node, but it seems
+that "what constitutes a node" was largely informed by ACPI Proximity
+Domains.  Nothing in the rules say that has to remain the case.
+
+To answer your question above - yea you still need to add code to hook
+the operations - but this is essentially already true of ZONE_DEVICE
+(except you have to contend with other weird ZONE_DEVICE situations).
+
+Some of the hooks here are an experimentation in what's possible, not
+what I think is reasonable (mempolicy is a good example - i don't think
+userland should really be doing this anyway... but neat, it works :P)
+
+> And FWIW I'm not tied to the ZONE_DEVICE as being a good abstraction, it's just
+> what we seem to have today for determing page types. It almost sounds like what
+> we want is just a bunch of hooks that can be associated with a range of pages,
+> and then you just get rid of ZONE_DEVICE and instead install hooks appropriate
+> for each page a driver manages. I have to think more about that though, this
+> is just what popped into my head when you start saying ZONE_MOVABLE could also
+> disappear :-)
+
+Yup! Basically ZONE_MOVABLE and CMA and ZONE_DEVICE/COHERENT all try to
+do similar things for different reasons.
+
+Zones manage to somehow be both too-broad AND too-narrow.
+
+In my head, we should just be able to just plop these things "into the
+buddy" and provide hooks that say what's allow "for those pages".
+
+That sounds like Non-Uniform Memory Access *cough* :P
+
+Heck, I was even playing with adding these nodes *back into* the
+fallback lists for some situations.
+
+NP_OPS_DIRECT / NP_OPS_FALLBACK
+	don't require __GFP_PRIVATE, but give me the hooks I want :V 
+
+> > Where there are new injection sites, it's because ZONE_DEVICE opts
+> > out of ever touching that code in some other silently implied way.
 > 
-> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-> index c036e4d0b610..edd62e68ffb7 100644
-> --- a/drivers/dax/kmem.c
-> +++ b/drivers/dax/kmem.c
-> @@ -227,6 +227,12 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
->  		if (rc)
->  			continue;
->  
-> +		/* range was never added during probe */
-> +		if (!data->res[i]) {
-> +			success++;
-> +			continue;
-> +		}
-> +
->  		rc = remove_memory(range.start, range_len(&range));
->  		if (rc == 0) {
->  			remove_resource(data->res[i]);
-> -- 
-> 2.39.5
+> Yeah, I hate that aspect of ZONE_DEVICE. There are far too many places where we
+> "prove" you can't have a ZONE_DEVICE page because of ad-hoc "reasons". Usually
+> they take the form of it's not on the LRU, or it's not an anonymous page and
+> this isn't DAX, etc.
+>
+
+It's kinda the opposite of how operating systems do everything else.
+
+Generally we start from a basis of isolation and then poke deliberate
+holes, as opposed to try to patch things up after the fact.
+
+> > If NUMA is the interface we want, then NODE_DATA is the right direction
+> > regardless of struct page's future or what zone it lives in.
+> > 
+> > There's no reason to keep per-page pgmap w/ device-to-node mappings.
 > 
+> In reality I suspect that's already the case today. I'm not sure we need
+> per-page pgmap.
+>
+
+Probably, and maybe there's a good argument for stealing 80-90% of the
+common surface here, shunting ZONE_DEVICE to use this instead of pgmap
+before we go all the way to private nodes.
+
+cough cough maybe i'll have looked into this by LSFMM cough cough
+
+> > On (1): ZONE_DEVICE NUMA UAPI is harder than it looks from the surface
 > 
+> Ok, I will admit I've only been hovering on the surface so need to give this
+> some more thought. Everything you've written below makes sense and is definitely
+> food for thought. Thanks.
+> 
+
+cheers! thanks for reading :)
+
+~Gregory
