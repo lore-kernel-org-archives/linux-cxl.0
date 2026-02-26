@@ -1,151 +1,168 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011016.outbound.protection.outlook.com [52.101.62.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1692D12EE
-	for <linux-cxl@vger.kernel.org>; Thu, 26 Feb 2026 09:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745E539B48D;
+	Thu, 26 Feb 2026 15:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.16
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772098682; cv=pass; b=X+DdDFPB2AP/aZgH2OiGBVw0GX2S0QWR4769eH/wxOvymk58f1uk+qtAwK/g5Fypb7PDQGtBRiMwBmKed+SopSfMzqwa7t8l8KohFFi+++x0fzLM17+Xov4ByM5m8aEqgLpWhJIOOGb28ckAS6RfxGYxOMLUiFQYwlc0DrrFwkA=
+	t=1772118614; cv=fail; b=X255hS8rnmKI6oBGeIq2wF3acS29ZtMo7SmVjPHZCvHIXzATWlP+2Q3pgWmntO3ZBKJigV7G/yEdusMDPP2SJwIZlPMb8fS5Vx4ISqBFfGYAU7IfRA1BHaqctMJf80ScMfsFf65EBbXHQ8UiG3PRpyOQV0FUotST29+BgAZIHRI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772098682; c=relaxed/simple;
-	bh=0/SDumAlYUS1H3B4uzTA8O/Qk+mdYqBeIVg5I6GRmVI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=msug85mIpxtazOUfqJF1tj/LZAu/kdyV1t/kyRoykW9KaSwAHhhMmLw3fUpRcr2eJSfvD53xzAtYhj5PxM3p67u23aWKDLZuVS6cO63XOCbL3dj3cL+cp2AbbJmtCEQXmb3SmpXVvXFNVvod0bsrDFWU0hZqKfsGGN0xKdsfmzE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=cRpCSMbS; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	s=arc-20240116; t=1772118614; c=relaxed/simple;
+	bh=fA1aJeVW9IWiRlcTMOJOCYcG+7dJBjzVskazbkhBnmA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=tBEBKiRJnTaWoh/LjH2BvplC9dFEDp6N1upSqTObb0LCbJ9v4KFwm2gTBMM0yvcaxT3uhZMBOg104h1t/ecBg6Y7RKd+Fjo4zZoUO2bqTimCzE6HAJUqxW2JKDNmUvf4sIDJcxZXWTd8mStOCkwP0/DGaE618IZAAZmhIoI46Xc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Gs9nJQ6W; arc=fail smtp.client-ip=52.101.62.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="cRpCSMbS"
-ARC-Seal: i=1; a=rsa-sha256; t=1772098668; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=IXkXGEBPc5KIyp6nnTshJ2Y4VJccxE+KKGlXjAWjKnvc1qnHSJdVHHMH9ZwkZIqUfqC9jc5AHAc+bIP+kpXk/dMVy/7B1BoQzvXtRMaDpLpWhGxI9GJh4WXtI7yTaFBwiRQFoz3GM4oftimgNnIkP6a14xnZ2kofN4p3yrzCweM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1772098668; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=lLhDUjSNe4fNWHCmjCtbhXVRGnLRFq4fXPZRbX4uj8w=; 
-	b=npfIIyV3zBoXni6jXjDclm7EpbaEoWAgSx2w6x4BNsIqB/otvfV2CBfepKXxieptznftQ6MdJKTTZwRcy7jQ/bJeOkXSoQIf2xaeUh2DrspHbybiBIniU4HY9GSvag2zXiXkjI4X8VI1LCAioX1ma+1napP38aSgiqGso4Ay+P4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1772098668;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=lLhDUjSNe4fNWHCmjCtbhXVRGnLRFq4fXPZRbX4uj8w=;
-	b=cRpCSMbS46H2tPG6jucVmZ8b+JVf7Pg1gxLwZ1fUHDu3CzSI0/kro26ORXIOUpcb
-	Hma3LszaXq1iZw3knspPmPacmNoKc9LTUV4/8MH18UIqfdBYsijuwa40aBEgWHo0s2G
-	h9ty94Q3lhe0YddUc8nemZmJpicO3dcuhvXoxm+8=
-Received: by mx.zohomail.com with SMTPS id 1772098666649910.593217473059;
-	Thu, 26 Feb 2026 01:37:46 -0800 (PST)
-Message-ID: <3a0fb6cb-e293-439d-9977-66b188a2ceb6@zohomail.com>
-Date: Thu, 26 Feb 2026 17:37:42 +0800
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Gs9nJQ6W"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tutfhDyUVg6RHWRmAZ4hUC+f9ZjBmEGOi0jYWnuNvjSi+t0aBQHfrRludUsu1iG+AUzYvH0mIsD8mUJVX7ghEuNwq9kMexSQ9pDoG6+vkGVkibU8wP6QxYx1mj7awW9rUMB8/IH/a9D57TjzP9EtaIQKBZsG8GC3iVqitRtG/3exX0pXG0KPyn7dCqSPlEShetycAPa2jZutEIDUOqZXtY2nJ1bRcuO8+n4dnimhyBmITrUSWjpta9H7+bwyZekjmNgvJPUEOG53k+hUZrKrNHz+2YqWIHiCHPMqcrCM2N08EqpgyD3QPPBs2OHD+/9lvLd3vEt/8LlRZ5gu/afHWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9p/rG0mijpIkjwU7PtFF8PynamrpR89pcz/lUO56k6c=;
+ b=lTOCh1wvJa2eb2o8p2yVP/hht4QQy2EMaLeMzGEm8y4zb7KALmsi9girxS/L5AlZ762iTU78Jxs0uxPz2LiiicgHjl1dPRlkWJSivBfdP10BS7aFcI11jkJwGeTLvK9st7z8DIAsX7j7TG0y3T9lqPPcMEU8wlHCJzuhacLtaYI2ge/ExPdHMowdRy78FC/Qi93cXiy73rh6S0kghQ5kLZ4XCnq3c30O9VWlvuuxSoqOqdDmuexX3ojSj+aD66MslBvtGmwlh1kQk/klRcPSWlFDW4ZLshU80PDlAnjHv/4q40RYJXCVPfRbBNq0bJxMDvORKEnyQI/hZURpOkR74Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9p/rG0mijpIkjwU7PtFF8PynamrpR89pcz/lUO56k6c=;
+ b=Gs9nJQ6W5I+UDaFWIvM7+2bqHPzJw8O+hDhMn7z57UnygHwBSX5TpIXZxYGPoB83iqf+g2Pl4LQAooIfkDf7JLYufQTM2TGBvsDGOBG6JPmOp2PehPFQJzFknGGTZUt9R2sRXKZ2efGsuYGUf1xPAntRhqJLACDvlWkGSIqL90eu/8FtIDpqbFLDUeh3d3V0goH+HpZwZyEPmIUeO1qe12f0uQw0blaR0C2SIsuGmUvRBQTfB+sIxrvzFn31MatLKV/4FAouYAZ1XghljVFnAbcbKf2USp6tyXOtUFgQoMJP9NPzB6AFfLPdaOGH7Re9jN8tU2zLjdjOKtDppF7m9Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by IA1PR12MB9062.namprd12.prod.outlook.com (2603:10b6:208:3aa::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.14; Thu, 26 Feb
+ 2026 15:10:09 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528%5]) with mapi id 15.20.9654.014; Thu, 26 Feb 2026
+ 15:10:09 +0000
+Date: Thu, 26 Feb 2026 11:10:08 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Nicolin Chen <nicolinc@nvidia.com>, dan.j.williams@intel.com,
+	"Tian, Kevin" <kevin.tian@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"joro@8bytes.org" <joro@8bytes.org>,
+	"praan@google.com" <praan@google.com>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+	"miko.lenczewski@arm.com" <miko.lenczewski@arm.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH RFCv1 1/3] PCI: Allow ATS to be always on for CXL.cache
+ capable devices
+Message-ID: <20260226151008.GD5933@nvidia.com>
+References: <20260203175540.GC3931454@nvidia.com>
+ <aZZDo3BeuBKh9q24@nvidia.com>
+ <20260219143737.GG723117@nvidia.com>
+ <aZc//6kvH3Eqfwfe@nvidia.com>
+ <20260219174139.GI723117@nvidia.com>
+ <aZfoqETxb31jp/Pk@nvidia.com>
+ <20260220125044.GK723117@nvidia.com>
+ <6a842339-3f0a-48db-830a-326add917519@arm.com>
+ <20260220135124.GA1894399@nvidia.com>
+ <c7cd42ff-f95a-4aaf-ab79-5af476bca894@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c7cd42ff-f95a-4aaf-ab79-5af476bca894@arm.com>
+X-ClientProxiedBy: BL1P221CA0040.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:208:5b5::15) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] cxl/port: Fix use after free of parent_port in
- cxl_detach_ep()
-To: Alison Schofield <alison.schofield@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-References: <20260225220251.1708089-1-alison.schofield@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20260225220251.1708089-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr0801122847836b38baa21650473f82690000912af76d9e537930bd5adc6d19bad7e8b6d632c6aa29976f2553:zu0801122728fd71fec1e4ded4231f3b160000000265eae362f60d36577e5018dfb1ef2aae47e78d6c17deb2:rf0801122d3d03849622ea6b9a92e2a9bc000011453a8c427665d78ad90a3964e9d62857cc3da3caa3e538705a483b09ded9:ZohoMail
-X-ZohoMailClient: External
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|IA1PR12MB9062:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4f901aba-dfaa-4cd7-765a-08de754921dd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	cRW/MOwQaMBnBmpWrKRklazIQSq6ec/y5VeE2+Ja9lVTizfQmloYArBlBjX+A/6YF/T6AkP/yjkag+UXzYrKsNzF3Qzq+oMe42dPHOjPV+4GdnQDmFnlALtfDGf4jWZQSqAeKdqW0iq6mZ7Vn9k4Z3wcYPdwRQojE2V5Y36+waOlQqHrmlP7h1Azva8W0ZojkprejXKZSmdVVFPmJJojxO73ZOOdlM+aAueVmH3YqNjnKEdMLkd52jBSHxRfeEZRHpcpx4W30TpxFexZMCmYRKVgL6Cf2jMDoQJ+WuxLI9sVLRoj2EB61rbxRMYerwqWanaBIWRUK0t7bnsOJh65ReS730XhOykBnln2hfzDt3hwRqHH72ZfFCUThhS5rwr+tRC5ry9JWnqYV50/1SWIAWU7uFdEX6lBrvtVUMbuMvuvhE4eAUWO3cPC74hDt0QF0dYmjUwOvPkYNS09aQy/vE39I4gmBnwPGuSfcqWn22CmlsWp85lHPsU278cT6UZpmDV3izesdTRtlh7LEI9WXBF2MgOqj3q+RnkzR/C4d+JyGpJZHO1xQSyD0Yj+ozhGkuQJhjxUv3i2oHQ08k4eDPQFbydtniXpdIy2l8qmhM9wCWp+HHWKghpjNSsOpM2T6XHoPLHDyMfX1tRAg/21Rjk8ADU+NJxAtr7wHEaCRuCroK24zQG0hni+LvJaMTeTQwqE8VRTT1fFbUTT/aX88mIWYBh72GjCYMQSNPzEhHc=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?GRPQJr+zZ1ZrvgAe806JpS6mX7UXlkNZcHNyaeASO1QzOpK1Dr9KBI72OLJ7?=
+ =?us-ascii?Q?6/vnNWrRacmryXYk3/mQd75VS2ztMbz/YZPlbb3pbE8e9hhJlukE/IIMUCKN?=
+ =?us-ascii?Q?EPH6bB6eVcB+FNm1zLzfI5zNpin2P4+yU46ECf7TwFJosrzNtO6ryhY1n3dn?=
+ =?us-ascii?Q?ftW8GV2TJ2TvqDJVZ6szJtC/LeEPiCVmQKK/SsCAYUVbQPb+Z1A/L75Xgxdp?=
+ =?us-ascii?Q?rPhliWb7CF+6GS1BT40zczLgQe19oNkoc0yVpg7zHA4p7qG/yLsmRZoQlwfL?=
+ =?us-ascii?Q?FOYZKgOuxavZ3ZMhCtHawQuToc0OKycVGoYT55RXgiV4gqKj8FirLVC9RiBc?=
+ =?us-ascii?Q?ATI34ntm011BC2bJ8yeuZQCdUZt8IgsChE1UzEB7tQ76yjNq+yBxZhOBFAq3?=
+ =?us-ascii?Q?OPsznR9f15HbddlRuNSlMu7lOSaG3yvwPDv9b6NQZV3B/Kmtp4bxYaenPsf2?=
+ =?us-ascii?Q?+8cTLb4CoLzDmfP8mMrZXkaFH97tDmN7QgRHsqvdbzVpDwFBcOBzAlVoaDC0?=
+ =?us-ascii?Q?70MCb8mbGeym9MlsBWnepOQqlinSBeVM3UE4GeFTtifunnSE5zD6j363xyP/?=
+ =?us-ascii?Q?BKF5N4qlV0sEwhJsvlc5gsxhbSReBkrUcO/3vRXtFqq40hA9JhW/CJkRJkXu?=
+ =?us-ascii?Q?2b8RiKDDGmzQwStW7j69kxFZ7zpFTOHsI2qBs9IekAMSyyU/jaPkDzFgkL2P?=
+ =?us-ascii?Q?iBKU1erG57pFqrEqcjDBAFdICIv09Oq7yjEFasXz3PCVff21FTN5+CJPJvel?=
+ =?us-ascii?Q?wEi/XjKwIE0XEvCCKXmdxYjlQef2vqwgp7f3TN7YX8oDuL7qCd167V99R1+9?=
+ =?us-ascii?Q?pW6lfQzUDV9AkU8J2E8q42TOsp2LlgohcDf4fW+IARLVJ0Oja+oWTc7THrYW?=
+ =?us-ascii?Q?HqIphLzfmvVSMoJFRmzBl0AZIuupfrg/xCIFSCy4mr6O+BeA6cFGny0chKBj?=
+ =?us-ascii?Q?xGqUZfUOVsMXKBnnD2UrIjD70jxG9wFi22cPCe/FHEC90vn6EHWH/7JyfR9S?=
+ =?us-ascii?Q?jtnSa7+vBl/o4S15GcPJrBrQiv5qn85F6BR44G9Z94Mv+lNOhtHsUVyLdDJe?=
+ =?us-ascii?Q?9lPHIqIRIjtKzU/H1UUujm9S1G2HKADhUQM5zQO5otry2Bf438fAdXDH4woD?=
+ =?us-ascii?Q?6iDuiieMsyROdruj41QZV6Ml9m3FswUup0pWW5m6glIXg1Uini5A2W+8DYdO?=
+ =?us-ascii?Q?S1j/2eyBL/1tDIGqFQ8OgPz6V9/wbRTVWxdZx5T66RpWDWzaVH8g4NjXcc6f?=
+ =?us-ascii?Q?hYHfpAviJu0wjswpUfWdKGi2vf651cSJ4ORnBm/mvVx2Is9/p3sXj4fhFPwC?=
+ =?us-ascii?Q?Ey4o7O3fZ8qgJQ4bqxNrya43/eLkdrm0XxFf+3lqiUdaK65cviKmpiK4K5e1?=
+ =?us-ascii?Q?d+IfY+Zx5H7UAV/1hY4Pi1w2FZozIKC4NsBS3FwgCueuzOZ12UocOnS61UYX?=
+ =?us-ascii?Q?m6NCLJwvfd9GclQtArJrhVuQ1jIasjyTPdcgD/n3OTwaoC8IMCAf613tGkPj?=
+ =?us-ascii?Q?pT/EfkJRCDIPBK/vRG2H6KbD9c8U+QshhsvXyY9OqCepYJEaL92N257yKlXf?=
+ =?us-ascii?Q?Vhvk/WEoVXu09u5MgcOM0vGPN3d+ew8VyapdkyfQuYBtXdmqSOty+GFJL1oi?=
+ =?us-ascii?Q?1AQ5EeXQIx0QjqelJnj14zWtoSHs1KszqY1ObMLB3FBHPFpYmjNSI9mrYIEb?=
+ =?us-ascii?Q?fQnWaR+RNLVm4/ARXY90xCf1IGHTiljFsW6k77KXnbHvgiAc9+7ycHGq1AwT?=
+ =?us-ascii?Q?azCvUjFTLA=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f901aba-dfaa-4cd7-765a-08de754921dd
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2026 15:10:09.6539
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: H9YeU5LdhXEDKYiHP52S4B8ONsQs62HsiYilZgs/w6EbK6C0xx35yEl81ON5M7yR
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9062
 
-On 2/26/2026 6:02 AM, Alison Schofield wrote:
-> cxl_detach_ep() is called during bottom-up removal when all CXL memory
-> devices beneath a switch port have been removed. For each port in the
-> hierarchy it locks both the port and its parent, removes the endpoint,
-> and if the port is now empty, marks it dead and unregisters the port
-> by calling delete_switch_port(). There are two places during this work
-> where the parent_port may be used after freeing:
->
-> First, a concurrent detach may have already processed a port by the
-> time a second worker finds it via bus_find_device(). Without pinning
-> parent_port, it may already be freed when we discover port->dead and
-> attempt to unlock the parent_port. In a production kernel that's a
-> silent memory corruption, with lock debug, it looks like this:
->
-> []DEBUG_LOCKS_WARN_ON(__owner_task(owner) != get_current())
-> []WARNING: kernel/locking/mutex.c:949 at __mutex_unlock_slowpath+0x1ee/0x310
-> []Call Trace:
-> []mutex_unlock+0xd/0x20
-> []cxl_detach_ep+0x180/0x400 [cxl_core]
-> []devm_action_release+0x10/0x20
-> []devres_release_all+0xa8/0xe0
-> []device_unbind_cleanup+0xd/0xa0
-> []really_probe+0x1a6/0x3e0
->
-> Second, delete_switch_port() releases three devm actions registered
-> against parent_port. The last of those is unregister_port() and it
-> calls device_unregister() on the child port, which can cascade. If
-> parent_port is now also empty the device core may unregister and free
-> it too. So by the time delete_switch_port() returns, parent_port may
-> be free, and the subsequent device_unlock(&parent_port->dev) operates
-> on freed memory. The kernel log looks same as above, with a different
-> offset in cxl_detach_ep().
->
-> Both of these issues stem from the absence of a lifetime guarantee
-> between a child port and its parent port.
->
-> Establish a lifetime rule for ports: child ports hold a reference to
-> their parent device until release. Take the reference when the port
-> is allocated and drop it when released. This ensures the parent is
-> valid for the full lifetime of the child and eliminates the use after
-> free window in cxl_detach_ep().
->
-> This is easily reproduced with a reload of cxl_acpi in QEMU with CXL
-> devices present.
->
-> Fixes: 2345df54249c ("cxl/memdev: Fix endpoint port removal")
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+On Fri, Feb 20, 2026 at 02:45:49PM +0000, Robin Murphy wrote:
+> >   The port driver will start first, install the ITS page in the DMA
+> >   domain, VFIO will start second an switch the domain to BLOCKED, then
+> >   to PAGING, and the ITS mapping used by the port driver will be lost.
+> > 
+> > And nobody will notice this has happened because the interrupts in the
+> > port driver are only used for RAS IIRC so the net effect is your
+> > system doesn't print AERs anymore.
+> 
+> Indeed VFIO's MSI cookie doesn't inherit any existing mappings from the DMA
+> domain, and that wouldn't work anyway since the IOVAs would almost certainly
+> be different. So we'd have to somehow free any existing AER interrupts
+> before the domain switch, then fully re-request and reprogram them
+> afterwards, in both DMA->UNMANAGED and UNMANAGED->DMA directions. Oof...
 
-Reviewed-by: Li Ming <ming.li@zohomail.com>
+I'm inclined to say we should disable this VFIO feature if CONFIG_IRQ_MSI_IOMMU
+is enabled... Better to hard fail then silently loose interrutps.
 
-A minor comment below
+If that causes problems for people then we should investigate how to
+fix the MSI.
 
-> ---
->
-> Changes in v3:
-> Scope fix as a lifetime guarantee btw child port & parent (Dan)
->
-> Changes in v2:
-> Remove stray blank line (DaveJ)
-> Rebase on 7.0-rc1
-> Add Fixes Tag (DaveJ)
->
->
->  drivers/cxl/core/port.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index b69c2529744c..09fc08205ed5 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -552,6 +552,10 @@ static void cxl_port_release(struct device *dev)
->  	xa_destroy(&port->dports);
->  	xa_destroy(&port->regions);
->  	ida_free(&cxl_port_ida, port->id);
-> +
-> +	if (!is_cxl_root(port))
-> +		put_device(dev->parent);
-> +
->  	if (is_cxl_root(port))
->  		kfree(to_cxl_root(port));
->  	else
+It is really hard, but perhaps the most elegant solution would be to
+allow the group members to have unique iommu domains by
+dis-ambiguating the 'grouping for aliasing' and 'grouping for ACS'
+cases. Then the portdrv can stay on its DMA domain and everything
+keeps working for it. That sounds like a monster project...
 
-There is a if-else block to handle cxl_root case and non-cxl_root case, maybe we can move this put_device() into this else block.
-
-
-Ming
-
-[snip]
+Jason
