@@ -1,186 +1,189 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE2C387562
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Feb 2026 23:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E2C1F0E2E;
+	Thu, 26 Feb 2026 00:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772063908; cv=none; b=sQlyBmPvu8IT4g3QBnsV77vfyFppTCvHk8ja740wG0axH72yzxzqV+qFiSrJWi0TEAHuvU6pRFH5oDk+/EdgKnPmHMlBU9oXyeN4S0N+sfTJRLwdkV6x/CCe1WiDz7X89pbr6TEzofQZcDqgKoRbCVDj5S2+EKaQtQdK1/SUmKM=
+	t=1772065477; cv=none; b=QsbIO0qYRyNW8AvrBxxsHy9ettH51ioUy/N/x88EiWo9IWhh8Jxv0dHQ0xnDxmljyHQnMi2lpRAg/CwjyU2oTlOSWn6pn1ArbalUjzMh951v6oJSuRfPDZWKNpR5OZmIBH274BxMwWGYGTRkKjU4XmCmc1HXiwUNI2jYMK+wL3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772063908; c=relaxed/simple;
-	bh=vMJ146Y/EPWV062fRB1P7stJ5n4Sr6xxBlqgn9/6cfE=;
+	s=arc-20240116; t=1772065477; c=relaxed/simple;
+	bh=BR4/DDTRCP+PSMlUvbid0ZhJZFXN8n48tGgmbkGikBc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TJmbad2PNkehlTLaz3e9a3NpTgluzL1wYHJdvC2fJEvwEW5iT3GzjivdJdlvlemZY2epB5xwGrKTwFKgeGnLSNL4KrG6FPm1rFghnczn+vYg5VuzMKtI4QIhuw9z5h2ipMC4NjrYhJjxYPRDVfJvBsYyPqlROUmQ4hrwfExkZ/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=nAahtgay; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="nAahtgay"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-8ca01dc7d40so18315685a.1
-        for <linux-cxl@vger.kernel.org>; Wed, 25 Feb 2026 15:58:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1772063906; x=1772668706; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QQWBXTWhdLgoq7OluVHAAR5bDFt9biBm7m+9/q6MXhA=;
-        b=nAahtgayF3j+4rUcxkyd6fIXikcye73VtCWiZeC0ncuwR4D/vEldTS5w3azS7Z3oTb
-         9c/jU3SWQUQ1cwHYuB+Pf+/0Qd+m4BhCYOfHTALlbeGNny6FUPINIjDZ1D8h+V1sEEWS
-         RgzFvxo81bKYPB53bWH3LcPPF5Gso/9YhcWu6/JWdPL/WtTv0aFJzxJfTIWaCQcuzwwX
-         SdspqyEryoBLok6sg8n8peZpCXZ9SwWM38pV9rljQojlr0AqkTYSisqwne93XNQHG+8r
-         c+02wstHvUENYLBRDE1bGnV8YWsNSMuOu4/ctDNpAwz3d9YCmNN84eNtgnilFB/WNcO0
-         deLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772063906; x=1772668706;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QQWBXTWhdLgoq7OluVHAAR5bDFt9biBm7m+9/q6MXhA=;
-        b=V727TCsCv37XBnW/LPQ4z2XmXzDHEJLX8N1i4Aly72X6voeNkMz5U32Xa6p9ptgeNM
-         MUHXHti2j5YyH9mC+D//P8D/RaGuv/cyO4jityh+CpN5Ksz9lY+7Yf0UAdN3DpitHlE6
-         YoZ/J8wWMpJKBl85AK4g0AsSUBUUDcnbqDDzankqvX3vKbFH3vgigeuEhL9Kzi5nVh2Q
-         m02Fi1AM+Rb3cXjJWJXDrrQqFeFTsf+Kbosz/X2M5bRnl+xaA8skHiezuq5OTuyoHhoN
-         oGJj63xUkl01Xh96CXPmTDDSYgVK8RG7lvrCq7MoksIdgploGiRKP41VXB9Rww6+2R49
-         Fx6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXp2tdy5UI9laGc6KcQ4X0lbZwwBLwyGVEBlES4iSXbmtaRPDeKi2KVByBCUDtYyo5ePsScm34lb2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrA75n76TwmwZ3lYg4o5YLK1LZATRUjW2RlfTURQQGBNJyEO5G
-	vfjeZbtrgct2qgUvuRnNOyvgWwECfElYaXD4c96V43Eoo9zgIV7FEAfh9O5f3c3C5I4=
-X-Gm-Gg: ATEYQzx219GNjMGJ8tJt72IU08T7fK0OLdcTH/d9v0VWTCfbruE2KKTwkgwuS5AXb+O
-	0/iZ0BtffH+urxi+OnPaG+WvHI7CZFfgW/RHhPTyzjZyJghuAnL+YvETWOGJGihbiis2dtGx1v1
-	sk9Zo9M2iYXPWBixOwrtT/oUPwM/wCd1vywc74DJvbl4IlDvZ+/Z74maiaunY/8eIDqUs1OopnF
-	t4aU/IKvGHc0a8cTomsAarKCVX3ZwURSZDJXWYQ9QqxI/xOqwexbDT+ePy9lwWLtupqhfJBKWnf
-	BQpMNlzpdhRee4Rsiip8s33yft9HdLpchycf5vmMl7Jwdf04JllVsSoWRv+64441nbp1aJqDDCK
-	/mUhakDjsOUGL3fE+cmhhDHQhPGHPyJ3EnSUkDK74VnOM1k1owLywX5xnt9M55hEL/KOQgfAxVo
-	NLs4EBDQqEsCV7BhKfS1h1sqxE3XrcMa8dgxzZMbx8vX1sSnsoOEZo4o2jDeawUbLJD9UTBnXo8
-	BPHyjNynA==
-X-Received: by 2002:a05:622a:314:b0:4ff:8da6:2289 with SMTP id d75a77b69052e-50745f165famr3302881cf.27.1772063905968;
-        Wed, 25 Feb 2026 15:58:25 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50744ab3f52sm5660571cf.22.2026.02.25.15.58.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Feb 2026 15:58:25 -0800 (PST)
-Date: Wed, 25 Feb 2026 18:58:21 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Matthew Brost <matthew.brost@intel.com>
-Cc: Alistair Popple <apopple@nvidia.com>, lsf-pc@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	cgroups@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
-	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
-	dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
-	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aZ-MnVVNGG_cOvxE@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <fzy6f6dpv3oq3ksr2mkst7pz3daeb3buhuvdvcw4633pcl7h6u@mxjgiwpg5acv>
- <aZ3BEn_73Rk8Fn7L@gourry-fedora-PF4VCD3F>
- <aZ92AvAg5boiSVw1@lstrano-desk.jf.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=TOchpnXGq3hsp+cWkKPhwYb3oOqfvztUqwm54OEsVLq8evtMYlYYP3InivH8F2XTwFzB46SF0Yse25S6OukIzMzq9RpP/YM3h86dJ4pATbkCGjBFKODXz1SA8/ik5DXS8QEGB5bdNM+uVaO3rZOGmvl5RvKoVsY13p8J/A08Dtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 5EBB41402D5;
+	Thu, 26 Feb 2026 00:24:32 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf12.hostedemail.com (Postfix) with ESMTPA id D85B517;
+	Thu, 26 Feb 2026 00:24:22 +0000 (UTC)
+Date: Wed, 25 Feb 2026 18:24:21 -0600
+From: John Groves <John@groves.net>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
+	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
+	John Groves <jgroves@fastmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V7 12/19] famfs_fuse: Plumb the GET_FMAP message/response
+Message-ID: <aZ-NN0zvgOsVzhAA@groves.net>
+References: <0100019bd33b1f66-b835e86a-e8ae-443f-a474-02db88f7e6db-000000@email.amazonses.com>
+ <20260118223257.92539-1-john@jagalactic.com>
+ <0100019bd33d8b0a-05af2fc2-66c2-45e7-9091-42ca2efa6780-000000@email.amazonses.com>
+ <489212dc-7f99-4748-b631-218bf78737a7@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aZ92AvAg5boiSVw1@lstrano-desk.jf.intel.com>
+In-Reply-To: <489212dc-7f99-4748-b631-218bf78737a7@intel.com>
+X-Stat-Signature: a3fsth4cdppkwduyzs3afx844xaw9hyk
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: D85B517
+X-Session-Marker: 6A6F686E4067726F7665732E6E6574
+X-Session-ID: U2FsdGVkX1+P0DD/oAQPEeburCePpnhu7YX4ZGy0bqE=
+X-HE-Tag: 1772065462-728122
+X-HE-Meta: U2FsdGVkX18I1zN977EFGyescpmOd0+vzyU4bblYmW9dHdAHtrCunKHxB7H6YpE3dRs0m6rqhYI4fDHnRpQYV2+zhY+fYowpiaX9waVhYvujs+PjM/6SqUslo50iapv4qamcw0BZ7HySUXuuvoPpJ4h3IHM/taOQizcD8/LpRRrWHRcR2+1dkpFQCMcY0+TYrgrz6MAvI6aryaML7RudUkfd8/u2zDqeO4wJ/K5gncS1Yyakp6BX8rM2hBbaXyE5BneuP2y2E1d3wUWObRaiyDFEzOWVD5slXY5Mo5zNr8HGZsnaDrkQSeDONFBCEpATXHto4wWrP+hIVkIEJnk+M69JdF3zg0AOAmKglcoWzaMBw6l+seUnuo0So67Ye/hvkPsHgcGSf1MsZmv+wtcDTDvQWL1j69/EndhSHSsoqNeudmS6CAP/qQYftgckyWZ2yFGftZzcGfNR7HGD43+PfeiaEb9yVt161hOGH2/WGTE=
 
-On Wed, Feb 25, 2026 at 02:21:54PM -0800, Matthew Brost wrote:
-> On Tue, Feb 24, 2026 at 10:17:38AM -0500, Gregory Price wrote:
+On 26/02/19 10:12AM, Dave Jiang wrote:
+> 
+> 
+> On 1/18/26 3:33 PM, John Groves wrote:
+> > From: John Groves <john@groves.net>
 > > 
-> > The idea that drm/ is going to switch to private nodes is outside the
-> > realm of reality, but part of that is because of years of infrastructure
-> > built on the assumption that re-using mm/ is infeasible.
+> > Upon completion of an OPEN, if we're in famfs-mode we do a GET_FMAP to
+> > retrieve and cache up the file-to-dax map in the kernel. If this
+> > succeeds, read/write/mmap are resolved direct-to-dax with no upcalls.
+> > 
+> > Signed-off-by: John Groves <john@groves.net>
+> > ---
+> >  MAINTAINERS               |  8 +++++
+> >  fs/fuse/Makefile          |  1 +
+> >  fs/fuse/famfs.c           | 74 +++++++++++++++++++++++++++++++++++++++
+> >  fs/fuse/file.c            | 14 +++++++-
+> >  fs/fuse/fuse_i.h          | 70 +++++++++++++++++++++++++++++++++---
+> >  fs/fuse/inode.c           |  8 ++++-
+> >  fs/fuse/iomode.c          |  2 +-
+> >  include/uapi/linux/fuse.h |  7 ++++
+> >  8 files changed, 176 insertions(+), 8 deletions(-)
+> >  create mode 100644 fs/fuse/famfs.c
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 10aa5120d93f..e3d0aa5eb361 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -10379,6 +10379,14 @@ F:	fs/fuse/
+> >  F:	include/uapi/linux/fuse.h
+> >  F:	tools/testing/selftests/filesystems/fuse/
+> >  
+> > +FUSE [FAMFS Fabric-Attached Memory File System]
+> > +M:	John Groves <jgroves@micron.com>
+> > +M:	John Groves <John@Groves.net>
+> > +L:	linux-cxl@vger.kernel.org
+> > +L:	linux-fsdevel@vger.kernel.org
+> > +S:	Supported
+> > +F:	fs/fuse/famfs.c
+> > +
+> >  FUTEX SUBSYSTEM
+> >  M:	Thomas Gleixner <tglx@kernel.org>
+> >  M:	Ingo Molnar <mingo@redhat.com>
+> > diff --git a/fs/fuse/Makefile b/fs/fuse/Makefile
+> > index 22ad9538dfc4..3f8dcc8cbbd0 100644
+> > --- a/fs/fuse/Makefile
+> > +++ b/fs/fuse/Makefile
+> > @@ -17,5 +17,6 @@ fuse-$(CONFIG_FUSE_DAX) += dax.o
+> >  fuse-$(CONFIG_FUSE_PASSTHROUGH) += passthrough.o backing.o
+> >  fuse-$(CONFIG_SYSCTL) += sysctl.o
+> >  fuse-$(CONFIG_FUSE_IO_URING) += dev_uring.o
+> > +fuse-$(CONFIG_FUSE_FAMFS_DAX) += famfs.o
+> >  
+> >  virtiofs-y := virtio_fs.o
+> > diff --git a/fs/fuse/famfs.c b/fs/fuse/famfs.c
+> > new file mode 100644
+> > index 000000000000..615819cc922d
+> > --- /dev/null
+> > +++ b/fs/fuse/famfs.c
+> > @@ -0,0 +1,74 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * famfs - dax file system for shared fabric-attached memory
+> > + *
+> > + * Copyright 2023-2026 Micron Technology, Inc.
+> > + *
+> > + * This file system, originally based on ramfs the dax support from xfs,
+> > + * is intended to allow multiple host systems to mount a common file system
+> > + * view of dax files that map to shared memory.
+> > + */
+> > +
+> > +#include <linux/cleanup.h>
+> > +#include <linux/fs.h>
+> > +#include <linux/mm.h>
+> > +#include <linux/dax.h>
+> > +#include <linux/iomap.h>
+> > +#include <linux/path.h>
+> > +#include <linux/namei.h>
+> > +#include <linux/string.h>
+> > +
+> > +#include "fuse_i.h"
+> > +
+> > +
+> > +#define FMAP_BUFSIZE PAGE_SIZE
+> > +
+> > +int
+> > +fuse_get_fmap(struct fuse_mount *fm, struct inode *inode)
 > 
-> I was about to chime in with essentially the same comment about DRM.
-> Switching over to core-managed MM is a massive shift and is likely
-> infeasible, or so extreme that we’d end up throwing away any the
-> existing driver and starting from scratch. At least for Xe, our MM code
-> is baked into all meaningful components of the driver. It’s also a
-> unified driver that has to work on iGPU, dGPU over PCIe, dGPU over a
-> coherent bus once we get there, devices with GPU pagefaults, and devices
-> without GPU pagefaults. It also has to support both 3D and compute
-> user-space stacks, etc. So requirements of what it needs to support is
-> quite large.
->
-> IIRC, Christian once mentioned that AMD was exploring using NUMA and
-> udma-buf rather than DRM GEMs for MM on coherent-bus devices. I would
-> think AMDGPU has nearly all the same requirements as Xe, aside from
-> supporting both 3D and compute stacks, since AMDKFD currently handles
-> compute. It might be worth getting Christian’s input on this RFC as he
-> likely has better insight then myself on DRM's future here.
+> keep the return int on the same line?
+
+Done, thanks
+
 > 
+> > +{
+> > +	void *fmap_buf __free(kfree) = NULL;
+> 
+> Should do the variable declaration when you do the kzalloc(). That way you can avoid any potential use before check issues.
 
-I also think the usage patterns don't quite match (today).
+Done, thanks
 
-GPUs seem to care very much about specific size allocations, contiguity,
-how users get swapped in/out, how reclaim occurs, specific shutdown
-procedures - etc.
+> 
+> > +	struct fuse_inode *fi = get_fuse_inode(inode);
+> > +	size_t fmap_bufsize = FMAP_BUFSIZE;
+> > +	u64 nodeid = get_node_id(inode);
+> > +	ssize_t fmap_size;
+> > +	int rc;
+> > +
+> > +	FUSE_ARGS(args);
+> > +
+> > +	/* Don't retrieve if we already have the famfs metadata */
+> > +	if (fi->famfs_meta)
+> > +		return 0;
+> > +
+> > +	fmap_buf = kzalloc(FMAP_BUFSIZE, GFP_KERNEL);
+> > +	if (!fmap_buf)
+> > +		return -EIO;
+> 
+> -ENOMEM?
+> 
+> DJ
 
-A private node service just wants to be the arbiter of who can access
-the memory, but it may not really care to have extremely deep control
-over the actual management of said memory.
+Done, thanks!
 
-Maybe there is a world where GPUs trend in that direction, but it's
-certainly not where they are today.
-
-But trying to generalize DRM's infrastructure seems bad.  At best we
-end up with two mm/ implementations - not good at all.
-
-
-I do think this fundamentally changes how NUMA gets used by userspace,
-but I think userspace should stop reasoning about nodes for memory
-placement beyond simple cpu-socket-dram mappings </opinion>.
-
-(using mm/mempolicy.c just makes your code less portable by design)
-
----
-
-As a side note, This infrastructure is not just limited to devices,
-and I probably should have pointed this out in the cover.
-
-We could create service-dedicated memory pools directly from DRAM.
-
-Something I was exploring this week:  Private-CMA
-
-Hack off a chunk of DRAM at boot, hand it to a driver to hotplug as a
-private node in ZONE_NORMAL with MIGRATE_CMA, and add that node as a
-valid demotion target.
-
-You get:
-
-1) A node of general purpose memory full of (reasonably) cold data
-2) Tracked by CMA
-3) The CMA is dedicated to a single service
-4) And the memory can be pinned for DMA
-
-Right now CMA is somewhat of a free-for-all and if you have multiple CMA
-users you can end up in situations where even CMA fragments.
-
-Splitting up users might be nice - but you need some kind of delimiting
-mechanism for that.  A node seems just about right.
-
-~Gregory
+John
 
