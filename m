@@ -1,336 +1,183 @@
-Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3D3410D06;
-	Thu, 26 Feb 2026 18:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772130421; cv=none; b=iU9WMOeFg+SlcsLKWNb0JxvRhAhR4c4aemUpXVK+1x817g9ngFUEMaZUm7fzOfeK8vngTc7d/iGN4Wl0+AiCw266Zz+bCzfnihnkU2W50ui56vmnAIbwjptFGyjyBq87zxj5xb/tVWa4lafoHTumXoPftIJsbfMCIKk0pwaEgac=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772130421; c=relaxed/simple;
-	bh=WRxKe8iaXDLl/MtkhuzhWAu4Cv3aOcy3WeYIv8kQXLI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gYzzAoaPSsOys0SOpUNqoTxsjxMypiXPHG7WnUBrB+ie717O0sC8Kcgt/fyWJanWfezjEO98/fAbp5p6Z/vv1Hy6sRzvhPl2Vjv8sJYaAtgnUBl+lIbzrd7l0VhHcWyy+JzRyG9Og7PGnOYalsUkJ7kCfPkk7YEICVN3pwa4PxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=HtgDyNSQ; arc=none smtp.client-ip=178.62.254.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3EB23859CF
+	for <linux-cxl@vger.kernel.org>; Thu, 26 Feb 2026 18:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772131241; cv=fail; b=QpDs6tNWTQ48qfK62V9PIohFHkyefWhWrjH6H8Byfyj2RG/EwU2wzFBIpGn4rTbo2Z/nCi97DSJrbYheHUn4qa6dhSYlJ/tK4gXKMDNPCpHUKcGeO+2ZucI2TUlAMFPiHdZHU9Mw7EQJL8j7vuEiWqcm/vcoQa0tQgFnKy9obk4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772131241; c=relaxed/simple;
+	bh=9CbfrcdZS6yxqokDNxGFAANfnvZ7Px+flkkiUHm1DYc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Mh+TXW3YJF+/q5Jb510/aNC1m23MO23+5Fahh/nf3pshrdGKChyiftpb8OYAmrE+GBoNso6uRKH4envJQPoSgqt11wKZLZMdVB8tFNb7VWouPJ0C1riiCFYpqflJvtJXpKiaFPEXMJRayix7XFuAutoz7+9WYboplSA6179PAVA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K0LuDPfP; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="HtgDyNSQ"
-Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
-	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id 21AF8B2CE9;
-	Thu, 26 Feb 2026 18:26:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
-	s=mail; t=1772130416;
-	bh=0LKKlLe+YhKO7o329A7m73xvNfBWJnGt18tZ/iyWG2I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=HtgDyNSQsc5OOYXt8Lu2WiYyqNLrSkEdLiAWO0FgQdJeGTG/vh2VHprW6CqmKoUzj
-	 DMU76FNUcTKHR1QaJxMFnnpW6R4bxlYUjaRp5/OmHu+ykA5MFvRTsnTDPl164DtAdw
-	 6HZohSwO1xzUmkYAc3QV6RRnpCgvY2XcVAV5piuc=
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>,
-	Wei Xu <weixugc@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Zi Yan <ziy@nvidia.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	kernel-team@meta.com,
-	Benjamin Cheatham <benjamin.cheatham@amd.com>,
-	Dmitry Ilvokhin <d@ilvokhin.com>
-Subject: [PATCH v3 5/5] mm: add tracepoints for zone lock
-Date: Thu, 26 Feb 2026 18:26:22 +0000
-Message-ID: <378089dd269249d3d7981fe10eb8b49ad551d353.1772129168.git.d@ilvokhin.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1772129168.git.d@ilvokhin.com>
-References: <cover.1772129168.git.d@ilvokhin.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K0LuDPfP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772131239; x=1803667239;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=9CbfrcdZS6yxqokDNxGFAANfnvZ7Px+flkkiUHm1DYc=;
+  b=K0LuDPfPXeJGFxs4jwAz0grY2UcbPQVF6cVxODgheTcbYRveL1zxfxo0
+   voKgXswDuGlAZH+Xg83/FusZAoC5TCqFIK6NVL+oiUUQT8ieeStgLZrU7
+   F/ePqAkSn3QLGG+hJue3aKNOcwvghZZKefw3yOwhKQTl0TwqAIqXFt+Fz
+   o+YfqUOQOrc2bUAASfaIRcwRPCOZOzAUNqvpJOKc6FrPPs3+tKn+J4rmH
+   bTFyiKhk5IqtFSSX1kkySEbxO79HRrDGnF6RSRgW974tesT8LrUVH5i7V
+   AvRGiCLTvaZKI1YnSmGBNkqNXUYt8ZYMPTesqC7ZXkDUY7E22EkwACfbl
+   w==;
+X-CSE-ConnectionGUID: 5Sq2bO+uSOm8CNSl0mBYMA==
+X-CSE-MsgGUID: wWk9bGDEQXePRSGa0EYYZg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11713"; a="73272538"
+X-IronPort-AV: E=Sophos;i="6.21,312,1763452800"; 
+   d="scan'208";a="73272538"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2026 10:40:38 -0800
+X-CSE-ConnectionGUID: b+ibY8a6S+WUnLp3C5dcHQ==
+X-CSE-MsgGUID: gd5lTJVHQDe4ZyiQA+iwfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,312,1763452800"; 
+   d="scan'208";a="221161987"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2026 10:40:38 -0800
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Thu, 26 Feb 2026 10:40:37 -0800
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Thu, 26 Feb 2026 10:40:37 -0800
+Received: from PH7PR06CU001.outbound.protection.outlook.com (52.101.201.7) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Thu, 26 Feb 2026 10:40:37 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sr64z2nID7spHobyRL2wt5/t8iEjr7MioErPh73CrOcO9Pv+2vTZv0uf4jKHcphPObzlHSOa5+QvO8QtTNudVhthSRQTt3BrLAYcT24OQAU/PrdoTgIaPu781+aftKBv8ALxIXK5QBhvtxMVu3ibk52pvDsClAcY+JKNhEtTVIHQrmjW8sM0+FKIhKlFtvZTmlSrKCogHXsIeg/JUffpMTfhCgpsZ5xtyh6rdaph8tx0C3Fx2dDRnTXCeX97zrAF/E+KIHT225m8E3luQCdsR704yrTcrQnitL/tBXFl86phL8xU2VXTZNXWsFmosbcU35NvJNt4PWOV7RDoyzwfOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vslgmqx6nwRkLwl5upfRSQyguS/Ow9CHeq9s95p7bKY=;
+ b=PN5L/9/dl1boOdfMTUec6Pct46IH5Fd5F+tD1xiGERgMMlVUiTffZ+1Fm1hw52akxUho/W2MnpxbuD5ZpEIkXuq4br9662eSsut4/jGRwoUtBmjvZW8VtwBrmfPQP4FElCShn4ZpwCgC87V+c+0sKwtJwsz0d6o+LypLpvNftfNMZMb+2jak2EnYyRVfkFZclACXDX60/ZTzaQBQUT+BUUssWF7aLHDbrVwk7vY9XZgLxG7WuXgjIZ8WI83rChcf7Gl07VX9I+u4phLKk0p8v9Ti5Ldg+Tz+ZpRKh+dNxg95BBLjdnEVxj8qzW76Euxgym6E1rEimx0+c/QDA6uqiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by CYXPR11MB8689.namprd11.prod.outlook.com (2603:10b6:930:d8::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.11; Thu, 26 Feb
+ 2026 18:40:26 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::4a5f:d967:acb2:e28a]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::4a5f:d967:acb2:e28a%6]) with mapi id 15.20.9632.017; Thu, 26 Feb 2026
+ 18:40:26 +0000
+Date: Thu, 26 Feb 2026 10:40:21 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Li Ming <ming.li@zohomail.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Vishal
+ Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, "Dan
+ Williams" <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v3] cxl/port: Fix use after free of parent_port in
+ cxl_detach_ep()
+Message-ID: <aaCTlYa7XGDTXNQs@aschofie-mobl2.lan>
+References: <20260225220251.1708089-1-alison.schofield@intel.com>
+ <3a0fb6cb-e293-439d-9977-66b188a2ceb6@zohomail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <3a0fb6cb-e293-439d-9977-66b188a2ceb6@zohomail.com>
+X-ClientProxiedBy: BYAPR02CA0072.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::49) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|CYXPR11MB8689:EE_
+X-MS-Office365-Filtering-Correlation-Id: c6304b20-7ed9-42d5-8fc3-08de7566822d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: +WHL4ReIOXkvq8eBvitZMIYfFr24fzzczOu21ZXonLkIPT79dbFhis/xcW68Wkmbj9NBtdybNaa3oLzAI+EH+ndbJcmG2sYxmMVmA0vjaYAwQo47P1lku5s37E6WpfU/NCYIyYjrs/aHV3qt9YVGZDXnMuq/E9wrBfEa9Qu36wtngEAmiQqxIGzBETDWe7igZECRkSXhwWAvrg3b5WRiK0zkKmi9cgbdolq2VN92yfOBzlwpPOGakZUYPn0L6818YDbnu22vmgNvSFUXW0oHEfRBF+/OeaBIbqevSSWwvQKZIpCOjWRrXhobYX+wYw1U0VbPNpZkkDY3PFIIY/EOx8RgXD1uD8ZXlr/bclXxPDTudpmr3HkPsG3HdRzu1JxHwWH12r+wWxJvqQ6M4TuyUzmUnFQc4H1g06kZeajVhFHEDkVmCiWoyXQXPaBO//6Ac7c6iPtU5xNOKIpveOwJMZGpTQpGgjVhmgGlUwJ7HKsg/fA8tFSwZvYsBOsP2ogfq9QdW9fIdfOXF0VhFesGtcowmliJu3ANcybG6ORWJlmL3OwYrp0y2xf6FUtELB27/Sv1EYkVOyzWP4ao5/2UnJIpGBVSb8btWjRSOLD0Kg5MV33Y2RvDAOn9ehEJlzypuQrbryH5ghT3BcROsnPYw3Uln+pZigDyOZZVpIsoIT82jr4LadApCOO783TeHN19E07MjguGpQ3/ii7EVSylFzmvnDg73Kw1wj/i3pNSau0=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?f97VuxfsWGpzoqXVmnUN25fQK36pCnFWicPj+Fb9kO1y6FkkLowvqLBpuWrG?=
+ =?us-ascii?Q?gwPbiK3RP21pFpaTtMKVUv//K4sURUlwk8J3djcpORCkRq3cR12fN3CXBBpy?=
+ =?us-ascii?Q?LQC0kYEExkHJgJAaIgDRRSLZi7nEn+f78jHurelt9GmD3EW9WndjV3X2mfwq?=
+ =?us-ascii?Q?+3TGTSlnHZQGG3Sam4OxfJe46IK8k8pJVH0Zavd6pYNZ1HdtVMwbfScdWujm?=
+ =?us-ascii?Q?CmD5kLay5KChyUUCC9co9t5dGTGCC7n3J8eQj1sPmB5OWKHTcgIipx+w0dRN?=
+ =?us-ascii?Q?pOtf62ZxZzRVqcQHWA0je6CPf9W0RcVz5OB1kBZAcXc693ty9vM4Ljb85k4q?=
+ =?us-ascii?Q?3V0/rbKMLWbQ4exb7e5Ht9ghjZjo2FPRketqn0liFrClE0Nx8Q5ASntzeeK7?=
+ =?us-ascii?Q?vDi+ED96tDD0x0rLTsovNQEpyvoiUAteyEK3+sTAuh/2IqVjAjZVQa0zyTTG?=
+ =?us-ascii?Q?aYsGiTWEdmXKsB2GElc2jaOgBhORVwVezjxso/xPDP3T/17luT5FWBpePyeb?=
+ =?us-ascii?Q?brHEqpqdB4tYTwLz9yGUzSA1hupgoCEKm6dZ0Uq5tdPUksN026IJbUE6j7lR?=
+ =?us-ascii?Q?hK25PhOhdUI2EcaWq7Z3hy2MtmWwCGZyF8q2xTy/XwMNUxZaMyVfyIuKbqip?=
+ =?us-ascii?Q?ROjfFshKR5z2fiGfGvSyLOmqKyxMBrMqk4Kb0qIWXsO1dMRILpOjIS3OFxKL?=
+ =?us-ascii?Q?7OxOds+o/xpEvi0tqQ1Qf7OlQ4ylRl44dCFZtSc2myHoYwI+f2HEYYMC4J5w?=
+ =?us-ascii?Q?Cyw+zLu47mTQq7yNL5iRdi6MPG1nv8+m2QABaf+Ld9wwc4wBE9+rNjNjzl8m?=
+ =?us-ascii?Q?XEMOntg2BsGolB+QnbY7NlwtnyscD4FJS/YUh+0aO7SqbawTU/LrxAE+urLA?=
+ =?us-ascii?Q?v5O/CgbuLpEesI6/WI7Q6gr9GTUCHdYnTgToY8vDu6DPy6BSTb6BUUP7Baq7?=
+ =?us-ascii?Q?l4oJfmvm6Z0XMY1I6YNDhEV7ddNLID9Jr5/KdTFNM+q4DZqUpT4AnpC774+R?=
+ =?us-ascii?Q?n5YFDNU0DEM+i+wxxC2+XaLGn8n4ecobBF9gIODpvJF824Vwfmjq/iuW1eIr?=
+ =?us-ascii?Q?E4Krd3XlcITmur1odgcTYTqLF/CTjtnQnFJTPEce8nsSGSYOn7szL5KMbsWM?=
+ =?us-ascii?Q?RY/SXp0lCNFWSjt6Q9WE/BMjAT+iJXAt+J11gH0MicjMY5dqCWYWoDgTipDG?=
+ =?us-ascii?Q?YRn1FvxW418acvt+SI+Owmq9ddq5b09rjjIDGid27k1yIivPoqbaJfbBLdLO?=
+ =?us-ascii?Q?uT9cSScPJhHpw8sXjT6r65zvgrVjRF/P6x3l+l8JG9XSDJX+B+kkOVA2ZGBH?=
+ =?us-ascii?Q?qe400GodppXDTvT5CW/ECBRFDjRmiBQZdlsSjMp3AQ6ZErOi8uIJ413x3M+2?=
+ =?us-ascii?Q?VfnT6z52Ig/9mqHDAJe9b0LOtNays7fJkSWCmoMdJ51gsd0wjBkem94FuZPw?=
+ =?us-ascii?Q?KzQ/8uDxJgSBCfG0tTvXrI51TRHfFDZmyj57004v7kIN0vY2BvituXDHT6ch?=
+ =?us-ascii?Q?4P/oWX1FMHx51qFuP+qdra9E3mWg5gIuyHvDUHvKTVzCgvl3Ci/vsgSVdVHB?=
+ =?us-ascii?Q?wxgBVx6/C2tETtGu+eEvVwLicUbEZSx65TTDwf2QDUjd44PuMIb2ddxTq2GK?=
+ =?us-ascii?Q?Au3EfLgdSXFM0vQiXOesaY0h57PdyCs1qSUE6z1QJ0FTJ11drhpfM6A1pRN+?=
+ =?us-ascii?Q?lb80Fp8112CCtOVlKD71XwhdpYcVazsxwZcbfW9NGo9rV2PESqajnD7A8fPu?=
+ =?us-ascii?Q?xvpdhzLKB954fAI5gIF+I48JKv9XkZA=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6304b20-7ed9-42d5-8fc3-08de7566822d
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2026 18:40:26.6500
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2/cRPwOePQToZMBk+S5uU7TMxamx0h7L4YBm0v65TWqGiu1Jdy//abj9b0NvS42m0nIEU1ZqLTM2XfeZ5sCTqjTh/OaPedgVn/ZGYl1AULQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR11MB8689
+X-OriginatorOrg: intel.com
 
-Add tracepoint instrumentation to zone lock acquire/release operations
-via the previously introduced wrappers.
+On Thu, Feb 26, 2026 at 05:37:42PM +0800, Li Ming wrote:
 
-The implementation follows the mmap_lock tracepoint pattern: a
-lightweight inline helper checks whether the tracepoint is enabled and
-calls into an out-of-line helper when tracing is active. When
-CONFIG_TRACING is disabled, helpers compile to empty inline stubs.
+snip
 
-The fast path is unaffected when tracing is disabled.
+> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> > index b69c2529744c..09fc08205ed5 100644
+> > --- a/drivers/cxl/core/port.c
+> > +++ b/drivers/cxl/core/port.c
+> > @@ -552,6 +552,10 @@ static void cxl_port_release(struct device *dev)
+> >  	xa_destroy(&port->dports);
+> >  	xa_destroy(&port->regions);
+> >  	ida_free(&cxl_port_ida, port->id);
+> > +
+> > +	if (!is_cxl_root(port))
+> > +		put_device(dev->parent);
+> > +
+> >  	if (is_cxl_root(port))
+> >  		kfree(to_cxl_root(port));
+> >  	else
+> 
+> There is a if-else block to handle cxl_root case and non-cxl_root case, maybe we can move this put_device() into this else block.
+> 
+Thanks Ming!  Fixed in v4.
 
-Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
----
- MAINTAINERS                      |  2 +
- include/linux/zone_lock.h        | 64 +++++++++++++++++++++++++++++++-
- include/trace/events/zone_lock.h | 64 ++++++++++++++++++++++++++++++++
- mm/Makefile                      |  2 +-
- mm/zone_lock.c                   | 31 ++++++++++++++++
- 5 files changed, 161 insertions(+), 2 deletions(-)
- create mode 100644 include/trace/events/zone_lock.h
- create mode 100644 mm/zone_lock.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 61e3d1f5bf43..b5aa2bb5d2ba 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16681,6 +16681,7 @@ F:	include/linux/ptdump.h
- F:	include/linux/vmpressure.h
- F:	include/linux/vmstat.h
- F:	include/linux/zone_lock.h
-+F:	include/trace/events/zone_lock.h
- F:	kernel/fork.c
- F:	mm/Kconfig
- F:	mm/debug.c
-@@ -16700,6 +16701,7 @@ F:	mm/sparse.c
- F:	mm/util.c
- F:	mm/vmpressure.c
- F:	mm/vmstat.c
-+F:	mm/zone_lock.c
- N:	include/linux/page[-_]*
- 
- MEMORY MANAGEMENT - EXECMEM
-diff --git a/include/linux/zone_lock.h b/include/linux/zone_lock.h
-index 5ce1aa38d500..f32ff0fae266 100644
---- a/include/linux/zone_lock.h
-+++ b/include/linux/zone_lock.h
-@@ -4,6 +4,53 @@
- 
- #include <linux/mmzone.h>
- #include <linux/spinlock.h>
-+#include <linux/tracepoint-defs.h>
-+
-+DECLARE_TRACEPOINT(zone_lock_start_locking);
-+DECLARE_TRACEPOINT(zone_lock_acquire_returned);
-+DECLARE_TRACEPOINT(zone_lock_released);
-+
-+#ifdef CONFIG_TRACING
-+
-+void __zone_lock_do_trace_start_locking(struct zone *zone);
-+void __zone_lock_do_trace_acquire_returned(struct zone *zone, bool success);
-+void __zone_lock_do_trace_released(struct zone *zone);
-+
-+static inline void __zone_lock_trace_start_locking(struct zone *zone)
-+{
-+	if (tracepoint_enabled(zone_lock_start_locking))
-+		__zone_lock_do_trace_start_locking(zone);
-+}
-+
-+static inline void __zone_lock_trace_acquire_returned(struct zone *zone,
-+						      bool success)
-+{
-+	if (tracepoint_enabled(zone_lock_acquire_returned))
-+		__zone_lock_do_trace_acquire_returned(zone, success);
-+}
-+
-+static inline void __zone_lock_trace_released(struct zone *zone)
-+{
-+	if (tracepoint_enabled(zone_lock_released))
-+		__zone_lock_do_trace_released(zone);
-+}
-+
-+#else /* !CONFIG_TRACING */
-+
-+static inline void __zone_lock_trace_start_locking(struct zone *zone)
-+{
-+}
-+
-+static inline void __zone_lock_trace_acquire_returned(struct zone *zone,
-+						      bool success)
-+{
-+}
-+
-+static inline void __zone_lock_trace_released(struct zone *zone)
-+{
-+}
-+
-+#endif /* CONFIG_TRACING */
- 
- static inline void zone_lock_init(struct zone *zone)
- {
-@@ -12,26 +59,41 @@ static inline void zone_lock_init(struct zone *zone)
- 
- #define zone_lock_irqsave(zone, flags)				\
- do {								\
-+	bool success = true;					\
-+								\
-+	__zone_lock_trace_start_locking(zone);			\
- 	spin_lock_irqsave(&(zone)->_lock, flags);		\
-+	__zone_lock_trace_acquire_returned(zone, success);	\
- } while (0)
- 
- #define zone_trylock_irqsave(zone, flags)			\
- ({								\
--	spin_trylock_irqsave(&(zone)->_lock, flags);		\
-+	bool success;						\
-+								\
-+	__zone_lock_trace_start_locking(zone);			\
-+	success = spin_trylock_irqsave(&(zone)->_lock, flags);	\
-+	__zone_lock_trace_acquire_returned(zone, success);	\
-+	success;						\
- })
- 
- static inline void zone_unlock_irqrestore(struct zone *zone, unsigned long flags)
- {
-+	__zone_lock_trace_released(zone);
- 	spin_unlock_irqrestore(&zone->_lock, flags);
- }
- 
- static inline void zone_lock_irq(struct zone *zone)
- {
-+	bool success = true;
-+
-+	__zone_lock_trace_start_locking(zone);
- 	spin_lock_irq(&zone->_lock);
-+	__zone_lock_trace_acquire_returned(zone, success);
- }
- 
- static inline void zone_unlock_irq(struct zone *zone)
- {
-+	__zone_lock_trace_released(zone);
- 	spin_unlock_irq(&zone->_lock);
- }
- 
-diff --git a/include/trace/events/zone_lock.h b/include/trace/events/zone_lock.h
-new file mode 100644
-index 000000000000..3df82a8c0160
---- /dev/null
-+++ b/include/trace/events/zone_lock.h
-@@ -0,0 +1,64 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM zone_lock
-+
-+#if !defined(_TRACE_ZONE_LOCK_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_ZONE_LOCK_H
-+
-+#include <linux/tracepoint.h>
-+#include <linux/types.h>
-+
-+struct zone;
-+
-+DECLARE_EVENT_CLASS(zone_lock,
-+
-+	TP_PROTO(struct zone *zone),
-+
-+	TP_ARGS(zone),
-+
-+	TP_STRUCT__entry(
-+		__field(struct zone *, zone)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->zone = zone;
-+	),
-+
-+	TP_printk("zone=%p", __entry->zone)
-+);
-+
-+#define DEFINE_ZONE_LOCK_EVENT(name)			\
-+	DEFINE_EVENT(zone_lock, name,			\
-+		TP_PROTO(struct zone *zone),		\
-+		TP_ARGS(zone))
-+
-+DEFINE_ZONE_LOCK_EVENT(zone_lock_start_locking);
-+DEFINE_ZONE_LOCK_EVENT(zone_lock_released);
-+
-+TRACE_EVENT(zone_lock_acquire_returned,
-+
-+	TP_PROTO(struct zone *zone, bool success),
-+
-+	TP_ARGS(zone, success),
-+
-+	TP_STRUCT__entry(
-+		__field(struct zone *, zone)
-+		__field(bool, success)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->zone = zone;
-+		__entry->success = success;
-+	),
-+
-+	TP_printk(
-+		"zone=%p success=%s",
-+		__entry->zone,
-+		__entry->success ? "true" : "false"
-+	)
-+);
-+
-+#endif /* _TRACE_ZONE_LOCK_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/mm/Makefile b/mm/Makefile
-index 8ad2ab08244e..ffd06cf7a04e 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -55,7 +55,7 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
- 			   mm_init.o percpu.o slab_common.o \
- 			   compaction.o show_mem.o \
- 			   interval_tree.o list_lru.o workingset.o \
--			   debug.o gup.o mmap_lock.o vma_init.o $(mmu-y)
-+			   debug.o gup.o mmap_lock.o zone_lock.o vma_init.o $(mmu-y)
- 
- # Give 'page_alloc' its own module-parameter namespace
- page-alloc-y := page_alloc.o
-diff --git a/mm/zone_lock.c b/mm/zone_lock.c
-new file mode 100644
-index 000000000000..f647fd2aca48
---- /dev/null
-+++ b/mm/zone_lock.c
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/zone_lock.h>
-+
-+#include <linux/zone_lock.h>
-+
-+EXPORT_TRACEPOINT_SYMBOL(zone_lock_start_locking);
-+EXPORT_TRACEPOINT_SYMBOL(zone_lock_acquire_returned);
-+EXPORT_TRACEPOINT_SYMBOL(zone_lock_released);
-+
-+#ifdef CONFIG_TRACING
-+
-+void __zone_lock_do_trace_start_locking(struct zone *zone)
-+{
-+	trace_zone_lock_start_locking(zone);
-+}
-+EXPORT_SYMBOL(__zone_lock_do_trace_start_locking);
-+
-+void __zone_lock_do_trace_acquire_returned(struct zone *zone, bool success)
-+{
-+	trace_zone_lock_acquire_returned(zone, success);
-+}
-+EXPORT_SYMBOL(__zone_lock_do_trace_acquire_returned);
-+
-+void __zone_lock_do_trace_released(struct zone *zone)
-+{
-+	trace_zone_lock_released(zone);
-+}
-+EXPORT_SYMBOL(__zone_lock_do_trace_released);
-+
-+#endif /* CONFIG_TRACING */
--- 
-2.47.3
-
+> 
+> Ming
+> 
+> [snip]
+> 
