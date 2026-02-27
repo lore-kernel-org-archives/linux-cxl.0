@@ -1,162 +1,228 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012066.outbound.protection.outlook.com [40.93.195.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821D234252B
-	for <linux-cxl@vger.kernel.org>; Fri, 27 Feb 2026 20:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772223479; cv=fail; b=XF8F+WHwHyxa9hp4uZuZAGMrxp+FOFepnnJjTX4Iivy03D5WzW1bkrwjicPNSRaNowBLbZ+trObrK+VHXZpryTaaGkAHpYRloT+oc9x1naap/qvcVjZ2OFl/ayPytY8waZrNdohnu0JeXrX2jMJbACG9ChlxHL9xYI7pGO/6leE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772223479; c=relaxed/simple;
-	bh=rdEYlpEnYwM8Mvw1yAmnA6XSmMXuTZiAUmW/rsr5vmg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=dttk2x9wKbuww//7e1ziCxF5wi/H/GjvbeXkmHAl5XnGEzXA8kx+bAHTokBQDm/W/BZgHka1exyFXVlj5YMNSwsn8jtKzByGdm4pWxjCSaFl/JrKfbTXyeO2ZYab9vE0fKZqXwI3TCl3gpywwo4+a5WBpcLCxQNfiD7FA+R8VXc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=t930QpT6; arc=fail smtp.client-ip=40.93.195.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49BD33EAED;
+	Fri, 27 Feb 2026 20:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772224318; cv=none; b=B/xLCtjSu+XF7VLuCkFD6d0FXlJB/9LOlLP52iQUGuqMi+tNwZGAyho1r94t12u+hy4m3FbUsK6w+jn5yFkp6KddCd/trN5H5rcDmMb/ngjyjx61eZaRMJupLh0eGv0w87M0b/YhnySOyUdI7xFNaFA88IE5/NenuAB8X364KsI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772224318; c=relaxed/simple;
+	bh=GsGJcM5lC5dbmgIT+M4WfJsd6FtHP9AI7W3MvjVlZXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i4KjkuVhyCzvwrdPRo3ZSH5DgXBLULgKS/pfjfs2aqKZGmOPclkPmWPY8Nsk6oHgrlPkcfYOfidiAbYVVx3S4mrhzCM8TrhAaCNUJZiGsDV7LPMagUVrzafwpXTjiTr9zmcJokkxsQzWYOYODi3cBKgHGgoyvIXW+IaphhFuRcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kyuHOhzj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="t930QpT6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qPo2wEgNLh+VgDk50IFD/qvRuiLESo1Rd4XSliXO1Ns71yCnqqh1vRNUeEhgwktjJ66Frya0eLrK7qrGcYqZXvvUDlGH3kt5QWKLEfu9LfaUHszqt1HnYDECnbXaUaiU5TmgfHoHJ08mpS71KBgUIrBqyge053GBleGF+8LLRIwHbFhiZyPOeIh4Vz3mWoi5iMcrgmz18EFmVDUX4qA6VNsykDxrjsfkLzL7WN2Gzn0e1pjGF4uLGroNyzQKTEKL1/c+Le6fxvuEBJ0xXV1TiOf6OV7Rfx4vMMGywbFvpCp8svwOlUEw7eoTaXmIYl8ahmtj5AKK7rCOdRVk670MqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rdEYlpEnYwM8Mvw1yAmnA6XSmMXuTZiAUmW/rsr5vmg=;
- b=x3twR9hM7gKvw9r3i7+ZwmWGm0DbpMCUuwGIuLFXZcgNoUqScjTX40eDYYA2f2L2/xd5b5/NGL5PM+cfmTm5ui+l5B95BslB2oZ9hfESK7ig5b8NAReLP7GduOHFMgdzsWq7JrQZyXzkVz9wGx47EPYgy4pEvrkUYPbF1TAjTcYCZOxIkWtmcALo4KzgwihGVMFq8QDc7Qi5ORDAbVIrvxb/pjk7rhn9hElUBmryFJse4k5HDWRjPogXZmWkgKYDf4in3JT1vt4siOILj7rRMOSLIVhlD1lQvf9ZyuDM/FB+nLDW64GQnXuhB3iRsRfrgqLttEy7r5u+NUnfke52yA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rdEYlpEnYwM8Mvw1yAmnA6XSmMXuTZiAUmW/rsr5vmg=;
- b=t930QpT6Gx+Wob8y01Ir/Qh9L1d9R7a/k2BoeefHK1Ec4wlarV3infKw/YV6waMSxbRq8B5MmwXkw1hzqgi0b9MRsM9e0Y2yogfuowovZkGPBbKN1wGm084EuvU7KWga2eWg8ozi5T38bQZ6UfilznCGcOJrjPVfPiSdDi65Kfw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by SJ5PPF000ACABD1.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::984) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9611.10; Fri, 27 Feb
- 2026 20:17:55 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::9e55:f616:6a93:7a3d]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::9e55:f616:6a93:7a3d%4]) with mapi id 15.20.9654.014; Fri, 27 Feb 2026
- 20:17:55 +0000
-Message-ID: <57790ae8-6467-4155-909e-146e44968d83@amd.com>
-Date: Fri, 27 Feb 2026 20:17:51 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] cxl/region: Factor out interleave granularity
- setup
-Content-Language: en-US
-To: Jonathan Cameron <jonathan.cameron@huawei.com>,
- alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
- dave.jiang@intel.com, Gregory Price <gourry@gourry.net>
-References: <20260225122223.3841889-1-alejandro.lucero-palau@amd.com>
- <20260225122223.3841889-4-alejandro.lucero-palau@amd.com>
- <20260227132139.00004f18@huawei.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <20260227132139.00004f18@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PR1P264CA0130.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:2ce::15) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kyuHOhzj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96BD0C116C6;
+	Fri, 27 Feb 2026 20:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772224318;
+	bh=GsGJcM5lC5dbmgIT+M4WfJsd6FtHP9AI7W3MvjVlZXE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kyuHOhzjPeaL9ZBX8v9BFk4Vl1+Z8aFaC9olyQsYhW+BEPn4gG+OirqiS0vjY7wSh
+	 08AMVtHAdfLIukZECBbxqF78N9qGu5FW8Bt5tRmyiQAQYFEw5wxcQuuzR9pqH6WqJw
+	 r3wShM1wgJAs/WfWXNGcQSjs2IlTlepCJqMP4x/V5zu2VMrV5sMU8NMr+KOPjW/OyS
+	 itN52VkP0EjHt7tbTWQfjPdKlfT5854ZDrWUbFljsH2eAU+gk+L6ltqkFxDegpDUJq
+	 GyMKzPup//vrXRRmPfxpL1HVKDjePjl8VyB6YHiKhoq6Y49SPP4z4wQTNnR2bzJ/f2
+	 3gdeO5LHu2EBQ==
+Date: Fri, 27 Feb 2026 22:31:41 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Alex Shi <alexs@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@kernel.org>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Klara Modin <klarasmodin@gmail.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	Ritesh Harjani <ritesh.list@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Stafford Horne <shorne@gmail.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
+	Will Deacon <will@kernel.org>, x86@kernel.org,
+	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v3 23/29] arch, mm: consolidate initialization of nodes,
+ zones and memory map
+Message-ID: <aaH_LVnl8FlERA_r@kernel.org>
+References: <20260111082105.290734-1-rppt@kernel.org>
+ <20260111082105.290734-24-rppt@kernel.org>
+ <b9527ed4-7a5c-42e9-8814-b276b3741f63@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|SJ5PPF000ACABD1:EE_
-X-MS-Office365-Filtering-Correlation-Id: b8e5a3f7-1e3f-44a5-5b17-08de763d4aba
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	L2XLloO0hUejeU9gCv3fJociQdIrEXZCAkI6DUgfjEsY1n7LpoJHbNnVHDPejJhsBgSJuXeDF8J8txdlnmRKaHabvCgT2MKh6YwIWHw5g4w3KksqiXhQmcfPwEPjjXinZY9KJd8mFm3GmRLDCcj0rkzqpz3c6e5RjAJpg4XoitjlfALHE0Cgy5gCEFMUe6KQvc+H4/DxuS+8k4tgzbrQ9N1RxVRSdToIUFVNKHCmpfmCZ5i61/pQ1eEczDr6DRp78xwjDIGr+xWwMLZ3gB071f2ENbquZuGKY63qhweTA7fUwybPNobQPd2jOH3338C4OEpSOx1kArmZ4vVxsBJF5CrvMN52ZZ2H1BK0FdMPAmLkn+fjphhMF5VycWd41rJLprB5q4Cb5eVmvE/Paj24jNi5FsgYAz71XetC8xojUwbiFZNcMEV9iDAUiM1rsWg6gl9MHlNcv5/57faxLdDoazc93oT8MxeDslz5MRhtGszIzdgd/VxZU7YuEpjOCwYimJvIri3mFsZKCv6Gtjc1RG8Im5zqK4QjZQSJ3QW9dFNAy4ld0qa7DKpyo9LPGlCT6s+2Ytq6yIdMD8LLhWe183uCaQEJZ8VvBeuPRThLnKwFpqf3/r6BNoinSQuTGBDIfe2fN1c6nmftZBdch0jC+E6uxsX44cV3VqymAru2sXKss1yi0RFtc9Nz1dxfbXrJVEhGQqVrbLI/JfaPkeKdWJg2Ja7td9Awx8ggTE/a6TY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VS9KeG9vZTRPYXhFemtKRytzb2czRFVLVW5uZ2UxcEJiQ0lESGkrVFhKZmd1?=
- =?utf-8?B?OUZRZU5UMmJjSFcrbmZvQXI3WDRrb2Z0QW1qTEg4Q1N3dzBESFp1V3htK0xi?=
- =?utf-8?B?YmlubnFsaVphdkJmQ2RhREVoSEhoaTJQQUlkZ2V3VjVGcU1zOXFTTVd4dk80?=
- =?utf-8?B?Y3BwcW9zdENtUEdNakMvU2x1V3B1aTRCTTAvMDJjUUNMOVNXcjRYVHdQS3ZO?=
- =?utf-8?B?WG4ycG42cVd1VC9JRTRKRGZwK21oY2NabU0rRURDZ0QzZXpHWE9ibWZvbUsw?=
- =?utf-8?B?eGFrY2hjclhWZTNTeVFHdHpUQTlHbnpvemE5ZUtvbEx6cWZDV3RYUEllS1pm?=
- =?utf-8?B?dG80SHRMYjZjY1VRclNhV0J0ckVCT2FVK3Fya2FzdTEzRDlKdW5ydTg1M3JG?=
- =?utf-8?B?ZkRRZVV2aThoRzcvRXpUWjdjMTc0dnRzK1l2aVhjdURNVUgzWnlRQkY4RkZU?=
- =?utf-8?B?S1kwZ3lDSUNONXlyVmlia2ZUWEpKb3A2OVNmR0RoZmRDUFloK0xETWROazdk?=
- =?utf-8?B?anhwV3lrcVdBMlpHeHNzTFk0UG5HeDM2S1N5NzZCWmNwYS9iekRRWjNnNlVG?=
- =?utf-8?B?Y3Qvak03SnluZzJ1ZUZ0aml0d3BvTVlNbzdaL3JLeEN4VCtuOXVWZ2trSlRZ?=
- =?utf-8?B?bll6UjYzMCtBR21KTmRqdVZVWFN0Y0FORDVjQjFjaHptelVNbkttTFN2clgw?=
- =?utf-8?B?S21Cb0k0Tjk5YjY3SEYvU0RJWmhFTDBZS0J4enZ4aHRkYWUwN0RvdTQwRUNj?=
- =?utf-8?B?eGo0NGhISENvbyttK1E2djQ5UldMYkEzdHdlSnF4Zmt1YlMybEhuaVQwTWhT?=
- =?utf-8?B?WGxzR0hmSTZDQkFuV3JuNjFqZERqbUx0Rmh0TXlhL091QS9nQXRSU0t5Z1RE?=
- =?utf-8?B?RlZXUlhYdGE5ZzVadTdQcXJGV2F6WU5RSFZ0dmVrZWpYSzFiZFZtOURzNlpr?=
- =?utf-8?B?UUdqSFMwREdGYkRwMFhQcDZhanUybE1GUGYwZ1VndzZXODdNMWRXSGRJOWhk?=
- =?utf-8?B?eENhNG5ESXZmN2hBWVIrbjM3R2Y5TUY5WVVvK3FIL0NvVitRNENsbzIzeVFk?=
- =?utf-8?B?ZEMybGZlSEVkYnBPRzhNUjZiMmVtTHNEUkN5S0QraXJoWjA5bkZLc3dZVTJz?=
- =?utf-8?B?Q1NRVVFkdjg1V2VhL1FXeVVuSHBLeGFVYVNpZEcyZlhJR1ExQlRmQ3ZWSjMw?=
- =?utf-8?B?cWdTWkNPMVdMbDl6QU1Objc2R0tnR1JkUnJxWE91Q2J4T2Nkc3l3VzhKSVln?=
- =?utf-8?B?NHJtNDh6aHU1K0FFTmJPOVVnTWlCMThaZ0VxUnRoVzNseFN6R3VSd2NHL2lJ?=
- =?utf-8?B?Wmg1cUppM1dTeXp6Y28zbnZIOXJ4NCtacUxKeEVldW1WajZLVmV6dzZnQzZC?=
- =?utf-8?B?d2M3NzNVOVI1eS9GRVFXdDA5Yzl6amNqdEJMbFA5dVBmTThOWDQxY1plem5B?=
- =?utf-8?B?djRZWEZSaDdHWWlzdWZERFpiTlVoUWZqZDNzNUJ5OWVYWG5ZQlEvNUEzY0xT?=
- =?utf-8?B?eFFJdldndjBrTW5NdlRHallESGFZYXowemFWWldCRG1mZnl6YlMzRGU1YWRC?=
- =?utf-8?B?N3dRenY0OGVmUUMxdWV5YWhtL1hkakE4ZTEza0tKaWRyS3h3NkJRL3pmUmRm?=
- =?utf-8?B?c0VnUjhDTmdpRjR6M21wMkxhdktSTkgvdnNuekVuZGw0dXRkOEhmdjgwaVpw?=
- =?utf-8?B?ZUFWQzgyamZMSXVFbytlRjl4YVQ4S05LaTBIZTlNVDA3R0xVOWFTTm5KMGsw?=
- =?utf-8?B?YVBvR2JIQ3ljR1FSRWlSeTgvOWQ3NldKYUZBL1BCTFY3aFl5bVlPaDdhZHBX?=
- =?utf-8?B?cnNIT1d1NlJKUDQ5WURZcDRtUW05OVpjWWc5VUowZjBKYTNIL3ZURTRORml4?=
- =?utf-8?B?b3ZEZThpTjdmaTJvYXVsaEtRSE40bm56M056Y0ZRMU8wVlBpbWg0NDI4eDZ0?=
- =?utf-8?B?MnJ1YWg0MXN6cURjTFlrTU5NczFyY3FWd0ZrOWtwdnpFVjhPZkIwRElwS08x?=
- =?utf-8?B?U3pDZlJKVDY5S3RRS0hnL0RtNXdVRTd1NGQ3Skp1NXdJTE1tQ2VMaStFbC9n?=
- =?utf-8?B?c2N0VXJzOVhDNGR6Skk2cGtQdVcrbm1RMnQrZXhSc3Vxc0ZjbFZ6cTF1L2JR?=
- =?utf-8?B?OHdMOVNWazRVbDQrOWJ0Y05heVovb0NYMXlRVndYVzl3YmtSM05iQlY2S3Zr?=
- =?utf-8?B?Sm1WS3AzYUs0a2VoQkp6NjNCMUhnNVRjaSt3SVJaNmpuUllldHpRY1JIVENH?=
- =?utf-8?B?dHVac3FxUlRJZDkxbjZ5WjEzdmpQVUxiZHpMRDJUa1RKV3dpcU5nM1UzM2VK?=
- =?utf-8?B?Zis2cU1nYkVnZFJvS05Tc0xQVTZGai9VekRKUzJRc041NHlQMExMUT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8e5a3f7-1e3f-44a5-5b17-08de763d4aba
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2026 20:17:55.4657
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5Yz2h9lnZkBEV+GYYyKOf36TnjXqe1A33qDlNf6FJslYqrrHV2smmvQOFjoN/GvknMX5A/D+CNSvWB3J3wWPsg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF000ACABD1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b9527ed4-7a5c-42e9-8814-b276b3741f63@suse.cz>
 
+Hi Vlastimil,
 
-On 2/27/26 13:21, Jonathan Cameron wrote:
-> On Wed, 25 Feb 2026 12:22:23 +0000
-> alejandro.lucero-palau@amd.com wrote:
->
->> From: Alejandro Lucero <alucerop@amd.com>
->>
->> Region creation based on Type3 devices can be triggered from user space
->> allowing memory combination through interleaving.
->>
->> In preparation for kernel driven region creation, that is Type2 drivers
->> triggering region creation backed with its advertised CXL memory, factor
->> out a common helper from the user-sysfs region setup forinterleave
-> for interleave
+On Fri, Feb 27, 2026 at 04:14:42PM +0100, Vlastimil Babka wrote:
+> On 1/11/26 09:20, Mike Rapoport wrote:
+> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> > 
+> > To initialize node, zone and memory map data structures every architecture
+> > calls free_area_init() during setup_arch() and passes it an array of zone
+> > limits.
+> > 
+> > Beside code duplication it creates "interesting" ordering cases between
+> > allocation and initialization of hugetlb and the memory map. Some
+> > architectures allocate hugetlb pages very early in setup_arch() in certain
+> > cases, some only create hugetlb CMA areas in setup_arch() and sometimes
+> > hugetlb allocations happen mm_core_init().
+> > 
+> > With arch_zone_limits_init() helper available now on all architectures it
+> > is no longer necessary to call free_area_init() from architecture setup
+> > code. Rather core MM initialization can call arch_zone_limits_init() in a
+> > single place.
+> > 
+> > This allows to unify ordering of hugetlb vs memory map allocation and
+> > initialization.
+> > 
+> > Remove the call to free_area_init() from architecture specific code and
+> > place it in a new mm_core_init_early() function that is called immediately
+> > after setup_arch().
+> > 
+> > After this refactoring it is possible to consolidate hugetlb allocations
+> > and eliminate differences in ordering of hugetlb and memory map
+> > initialization among different architectures.
+> > 
+> > As the first step of this consolidation move hugetlb_bootmem_alloc() to
+> > mm_core_early_init().
+> > 
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> I've bisected a problem with virtme-ng testing a NUMA memoryless
+> node setup (on x86_64) to this patch (commit d49004c5f0c1).
+> 
+> It's executed like this, where node 0 has memory and node 1 only cpus:
+> 
+> vng -vr . -p 8 -m 4G --numa 4G,cpus=0-3 --numa 0,cpus=4-7
+> 
+> This fails to boot due to:
+> 
+> [    0.095894] BUG: unable to handle page fault for address: 0000000000004620
+> [    0.097196] #PF: supervisor read access in kernel mode
+> [    0.098180] #PF: error_code(0x0000) - not-present page
+> [    0.099155] PGD 0 P4D 0 
+> [    0.099641] Oops: Oops: 0000 [#1] SMP NOPTI
+> [    0.100437] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.19.0-rc6-00152-gf206359553c9 #53 PREEMPT 
+> [    0.102201] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-2-g4f253b9b-prebuilt.qemu.org 04/01/2014
+> [    0.104313] RIP: 0010:mm_core_init_early+0x263/0x900
+> [    0.105271] Code: 93 ff 72 09 8b 7c 24 30 e8 da 82 00 00 48 63 44 24 30 45 31 db 4c 8b 24 c5 a0 7b 1d 9a 48 89 c3 4c 89 5c 24 50 4c 89 5c 24 58 <41> 83 bc 24 20 46 00 00 00 75 0b 41 83 bc 24 14 47 00 00 00 74 04
+> [    0.108863] RSP: 0000:ffffffff99403e38 EFLAGS: 00010046
+> [    0.109861] RAX: 0000000000000001 RBX: 0000000000000001 RCX: 0000000000000001
+> [    0.111223] RDX: 0000000000000040 RSI: 0000000000100000 RDI: ffff89597fffae00
+> [    0.112577] RBP: 0000000000000005 R08: 0000000000000000 R09: ffff89597fffa200
+> [    0.113924] R10: 80000000ffffe000 R11: 0000000000000000 R12: 0000000000000000
+> [    0.115294] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> [    0.116656] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
+> [    0.118193] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.119283] CR2: 0000000000004620 CR3: 0000000060048000 CR4: 00000000000000b0
+> [    0.120645] Call Trace:
+> [    0.121122]  <TASK>
+> [    0.121521]  start_kernel+0x5d/0x780
+> [    0.122206]  x86_64_start_reservations+0x24/0x30
+> [    0.123079]  x86_64_start_kernel+0xd1/0xe0
+> [    0.123860]  common_startup_64+0x12c/0x138
+> [    0.124641]  </TASK>
+> [    0.125061] Modules linked in:
+> [    0.125646] CR2: 0000000000004620
+> [    0.126279] ---[ end trace 0000000000000000 ]---
+> [    0.127162] RIP: 0010:mm_core_init_early+0x263/0x900
+> [    0.128106] Code: 93 ff 72 09 8b 7c 24 30 e8 da 82 00 00 48 63 44 24 30 45 31 db 4c 8b 24 c5 a0 7b 1d 9a 48 89 c3 4c 89 5c 24 50 4c 89 5c 24 58 <41> 83 bc 24 20 46 00 00 00 75 0b 41 83 bc 24 14 47 00 00 00 74 04
+> [    0.131676] RSP: 0000:ffffffff99403e38 EFLAGS: 00010046
+> [    0.132684] RAX: 0000000000000001 RBX: 0000000000000001 RCX: 0000000000000001
+> [    0.134033] RDX: 0000000000000040 RSI: 0000000000100000 RDI: ffff89597fffae00
+> [    0.135412] RBP: 0000000000000005 R08: 0000000000000000 R09: ffff89597fffa200
+> [    0.136763] R10: 80000000ffffe000 R11: 0000000000000000 R12: 0000000000000000
+> [    0.138112] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> [    0.139487] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
+> [    0.141014] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.142094] CR2: 0000000000004620 CR3: 0000000060048000 CR4: 00000000000000b0
+> [    0.143448] Kernel panic - not syncing: Attempted to kill the idle task!
+> [    0.144833] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
+> 
+> > ./scripts/faddr2line vmlinux mm_core_init_early+0x263/0x900
+> mm_core_init_early+0x263/0x900:
+> free_area_init_node at mm/mm_init.c:1721
+> (inlined by) free_area_init at mm/mm_init.c:1902
+> (inlined by) mm_core_init_early at mm/mm_init.c:2681
+> 
+> It crashes at WARN_ON(pgdat->nr_zones || pgdat->kswapd_highest_zoneidx);
+> because pgdat is NULL.
+> 
+> With some debug printk's I've figured out that in free_area_init()
+> we have:
+> 
+>                 if (!node_online(nid))
+>                         alloc_offline_node_data(nid);
+>              
+>                 pgdat = NODE_DATA(nid);
+>                 free_area_init_node(nid);
+> 
+> 
+> But node_online() is true so this allocation doesn't happen, and
+> pgdat remains NULL.
+> 
+> And node_online() becomes true in init_cpu_to_node():
+> 
+>                 if (!node_online(node))
+>                         node_set_online(node);
+> 
+> But without having a pgdat allocated.
+> 
+> I was able to workaround this by changing the code in free_area_init() to
+> 
+>                if (!node_online(nid) || !NODE_DATA(nid))
+>                         alloc_offline_node_data(nid);
 
+if (!NODE_DATA(nid)) is enough ...
+ 
+> But I don't have the bigger picture, and also didn't check yet what exactly
+> about this patch results in the failure. Probably ordering of various related 
+> actions. Thoughts?
 
-I'll fix it.
+... and there's a fix already in the mm-hotfixes-stable:
 
+https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/commit/?h=mm-hotfixes-unstable&id=a4ab97e34bb687a2ca63fc70b47e8762e689797f
 
-Thanks!
-
-
->
->> granularity.
->>
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->> Reviewed-by: Gregory Price <gourry@gourry.net>
->> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->> Tested-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+-- 
+Sincerely yours,
+Mike.
