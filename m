@@ -1,328 +1,204 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC01E43C053
-	for <linux-cxl@vger.kernel.org>; Fri, 27 Feb 2026 15:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772205288; cv=none; b=MXNDiB9rj8PyHQqI3laQ3RSplYAo+/QYYYld6EQaFEiMxcOJuV3uBEm9mPugNug4BRGmWKRIxsyo7phON59ppa/k1hiDGON1RpIAGRxm1DHcIlGkkMSOpvpa9txaOxYp+xD66Dj69HjpC/DbGodFJV+Ng2oILljRCBV0CX1UWt0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772205288; c=relaxed/simple;
-	bh=+IOgEWsyu2MJI+EqMnnNEuKk3zJfEZhPF0BfMcjddtk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S2Vln199OIUBqkJf/mKtdH6V3wva6I/uVeePEualrm54ovYDKzP2uBR7bLnXbeQa081KeCggV545RlaKk2uXT2hQPT0N5dLkVCj2DpLamCSxsoP2ALg3mgHjuwA0bdGI/9JbIY/wJ8GIgfabdAQgWqQYjGYAbUU4d0uJKCBqq5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KGOsO2xl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=XGo0ZI5s; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KGOsO2xl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=XGo0ZI5s; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BC444105A;
+	Fri, 27 Feb 2026 15:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772207885; cv=fail; b=VepWaG26RN6d1EieVj8meeMyemOyXvt/F2QbAbUZt7Je5H7NtAH+pJWXuckMXH2t+/vQkDlL+77wwjllR22LCy7cAEtG8n6o8vIjL9Jy7Jfx8QUTkCUVeajk1LDzcdTVp3/qDaxdzRcL1yZqkoWgHxrm+Q5D7ivpG3IY63v4kks=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772207885; c=relaxed/simple;
+	bh=KFF9usAye2tt33gnMIN51PKdPB69z1lkn8dajPOJldM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ucb+3x8yuGcA/s9mbuznXr9DatTg9lrO+aB3je3cSE7K64YxG+UJH3j1rD6MKbagNPHVZkVYaMEB3tRzUSmQSrk922RNDIkYrfJNxfJaOH9Qy4BhH+iXQ7p+1Csf//FwuAnsqtFn61eDU5Srzrt1kLmUeUiT4Gfhii3C+Nx+bjk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=FeIS72Yl; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=isxINe6B; arc=fail smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KGOsO2xl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="XGo0ZI5s";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KGOsO2xl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="XGo0ZI5s"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2EAE35CD90;
-	Fri, 27 Feb 2026 15:14:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1772205284; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xAMGvNmWWeOUWrlpPVGbaYyjorfoWBrXuzOEHd95yzU=;
-	b=KGOsO2xleHoPus27Y6Ek1ayBAgbsPByIHYStimBLio2ET2VRaKaAMbpD+3lbbEgLxgpaLQ
-	rDuM9X3O5+laNfxDbsFh4dp2Q0Nb+3YfHsqRaikWExEP/Mce9jmgcjn98m37Fy/fVXk/jR
-	FZTDLzEz3YPJ7E3JQnM8na3mJ1AOD6s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1772205284;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xAMGvNmWWeOUWrlpPVGbaYyjorfoWBrXuzOEHd95yzU=;
-	b=XGo0ZI5slqI2tjMLFZ/Wnev+M7Y3Q1kSMCz81M1kuEb53HEbjts5xw+hxTUDFmXpikLuER
-	hjJuPfdnYXEQbCCQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=KGOsO2xl;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=XGo0ZI5s
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1772205284; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xAMGvNmWWeOUWrlpPVGbaYyjorfoWBrXuzOEHd95yzU=;
-	b=KGOsO2xleHoPus27Y6Ek1ayBAgbsPByIHYStimBLio2ET2VRaKaAMbpD+3lbbEgLxgpaLQ
-	rDuM9X3O5+laNfxDbsFh4dp2Q0Nb+3YfHsqRaikWExEP/Mce9jmgcjn98m37Fy/fVXk/jR
-	FZTDLzEz3YPJ7E3JQnM8na3mJ1AOD6s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1772205284;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xAMGvNmWWeOUWrlpPVGbaYyjorfoWBrXuzOEHd95yzU=;
-	b=XGo0ZI5slqI2tjMLFZ/Wnev+M7Y3Q1kSMCz81M1kuEb53HEbjts5xw+hxTUDFmXpikLuER
-	hjJuPfdnYXEQbCCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9B9643EA69;
-	Fri, 27 Feb 2026 15:14:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id UdmtJeO0oWn4GgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 27 Feb 2026 15:14:43 +0000
-Message-ID: <b9527ed4-7a5c-42e9-8814-b276b3741f63@suse.cz>
-Date: Fri, 27 Feb 2026 16:14:42 +0100
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="FeIS72Yl";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="isxINe6B"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61R86SF62680887;
+	Fri, 27 Feb 2026 09:58:02 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=PODMain02222019; bh=4smoy7DR4EhCrJ8RsP
+	vdP0yHDY3z6/MTEuAaAZg8DjM=; b=FeIS72Yl9GEDfiMjjOU+1M1G1M2//Ap7Ch
+	xpMcu4Rhjqnu+l6D0B0VW/CICQIqF8pJN/qPTdxVsLnLjN6fr7sUtK43V0+HkK4J
+	hhk1XjLEza2XlYSmwObhhsfB38v/1Jq4sDLAHb+Ru3tOH5iZxrvOaA8VdutLFbEi
+	F5XRfzpTmz3hIz+VIHQCR5sJLAO6K2pXZHuVgdU9kWhZLEWNSorh9qo3A35D1jDr
+	jIJX4vl/r2fMSNVy85rxTHOB0aij272lsmjmZCSNqMCLNySsqeogkgsBVOUzTZHd
+	7cUoTqMbFZzknrTZwYQYcREW2FvayEsEwrRaDL3CwDa27rs93kDg==
+Received: from dm1pr04cu001.outbound.protection.outlook.com (mail-centralusazon11020117.outbound.protection.outlook.com [52.101.61.117])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 4cjmds1qec-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 27 Feb 2026 09:58:02 -0600 (CST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XcXqQxl5ytz0pS+KznMYvJmwiDg8vYjW5YyNkyaJkvwaQK0UIna5c0TeGEPBt2YfeKXfwdPRWH7t3KsY5ViKwIubiKP6zL10hTZ8gv9AjjzgcC6iCUj3DEZn708CFRsZAg1uzkmzKcg8s3UBHySEvzc8tJo7pLKb/VjqBKCzVYe+4bQXdhsd4lTYyJa+82iTEmOXi7dN1nkQuS/Qo+pknrjddF6C67augzVxDqWoMpjTJuMTyg/hTusquM+9WpL0EAy9hHuohE1zw1OSHUmYTi/anbQ+7g2s2DieIccIAOM9Ynd7vJRsO1BihN4IRmHyNlN0WoMN3TOlB82TTZi+Ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4smoy7DR4EhCrJ8RsPvdP0yHDY3z6/MTEuAaAZg8DjM=;
+ b=jbChKUVbW0JLu3uPlpVcxF5W5k1kRg7mTAho57NuXig7JiiIPHgTVfcvYUzJWvWrmNNz68P6r+2I3MU13MnwDqJ8660LOA5+66+vfWefH4Lwz7u3YZBWp8A9zgTBitThNVK3yt31Td57lcChrxcU5woSUzMbTuWSuEckEja5UbI0RYf5d3XzyWmy4yjL3vdwTmY2u2fBtVl/5Qkqi6L+x5CTVW0JMopFB7vl7z705glHWc4USd7JZ//ByfA6uu1yo7HWusndif6zun3cD2Q9damrQ1np7O3U54fK9R51v2qypCuY2hbSocMqxAdL7zBn8b0WO8BjCGlwvAnrilqxeA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 84.19.233.75) smtp.rcpttodomain=stgolabs.net
+ smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
+ action=oreject header.from=opensource.cirrus.com; dkim=none (message not
+ signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4smoy7DR4EhCrJ8RsPvdP0yHDY3z6/MTEuAaAZg8DjM=;
+ b=isxINe6BAy/qyd/KjoMxLY50mmQ68OX5lpdunOe0f91XRY/SRKW6N1dkkbEs4ehI4dZ4EUJsLQb05CQEk86LxlQQ8LNQI8yBhQ8EHBdaWTjbcb+2Tp0MPByG+Wki+61WM7GvKIn1cK+f4baxSgPAoIVQEQonpuAKYOwg/cYRYws=
+Received: from CH2PR05CA0031.namprd05.prod.outlook.com (2603:10b6:610::44) by
+ BY3PR19MB5011.namprd19.prod.outlook.com (2603:10b6:a03:36c::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.16; Fri, 27 Feb
+ 2026 15:57:58 +0000
+Received: from CH2PEPF0000013F.namprd02.prod.outlook.com
+ (2603:10b6:610:0:cafe::8c) by CH2PR05CA0031.outlook.office365.com
+ (2603:10b6:610::44) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9654.0 via Frontend Transport; Fri,
+ 27 Feb 2026 15:57:58 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
+ smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
+ does not designate 84.19.233.75 as permitted sender)
+ receiver=protection.outlook.com; client-ip=84.19.233.75;
+ helo=edirelay1.ad.cirrus.com;
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ CH2PEPF0000013F.mail.protection.outlook.com (10.167.244.71) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9654.16
+ via Frontend Transport; Fri, 27 Feb 2026 15:57:56 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id EACB8406542;
+	Fri, 27 Feb 2026 15:57:55 +0000 (UTC)
+Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id BFBF282024B;
+	Fri, 27 Feb 2026 15:57:55 +0000 (UTC)
+Date: Fri, 27 Feb 2026 15:57:51 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kalle Niemi <kaleposti@gmail.com>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Danilo Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
+        Saravana Kannan <saravanak@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        David Rhodes <david.rhodes@cirrus.com>,
+        Linus Walleij <linusw@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Shawn Guo <shawnguo@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+        linux-kernel@vger.kernel.org, driver-core@lists.linux.dev,
+        imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Steen Hegelund <steen.hegelund@microchip.com>,
+        Luca Ceresoli <luca.ceresoli@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 07/28] driver core: fw_devlink: Introduce
+ fw_devlink_set_device()
+Message-ID: <aaG+/21w9S0alqTN@opensource.cirrus.com>
+References: <20260227135428.783983-1-herve.codina@bootlin.com>
+ <20260227135428.783983-8-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 23/29] arch, mm: consolidate initialization of nodes,
- zones and memory map
-Content-Language: en-US
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Alex Shi <alexs@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>,
- Andreas Larsson <andreas@gaisler.com>, Borislav Petkov <bp@alien8.de>,
- Brian Cain <bcain@kernel.org>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- "David S. Miller" <davem@davemloft.net>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>,
- Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
- Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Jonathan Corbet <corbet@lwn.net>, Klara Modin <klarasmodin@gmail.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>,
- Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Palmer Dabbelt <palmer@dabbelt.com>, Pratyush Yadav <pratyush@kernel.org>,
- Richard Weinberger <richard@nod.at>, Ritesh Harjani <ritesh.list@gmail.com>,
- Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>,
- Suren Baghdasaryan <surenb@google.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
- Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
- x86@kernel.org, linux-alpha@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-mm@kvack.org, linux-openrisc@vger.kernel.org,
- linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
- sparclinux@vger.kernel.org
-References: <20260111082105.290734-1-rppt@kernel.org>
- <20260111082105.290734-24-rppt@kernel.org>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <20260111082105.290734-24-rppt@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[kernel.org,linux.ibm.com,gaisler.com,alien8.de,arm.com,davemloft.net,linux.intel.com,linux-m68k.org,gmx.de,redhat.com,sipsolutions.net,physik.fu-berlin.de,lwn.net,gmail.com,oracle.com,ellerman.id.au,suse.com,monstr.eu,linux.dev,suse.de,dabbelt.com,nod.at,armlinux.org.uk,google.com,alpha.franken.de,linutronix.de,vger.kernel.org,lists.infradead.org,lists.linux-m68k.org,kvack.org,lists.ozlabs.org,lists.linux.dev];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_GT_50(0.00)[66];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -3.01
-X-Spam-Level: 
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 2EAE35CD90
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260227135428.783983-8-herve.codina@bootlin.com>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000013F:EE_|BY3PR19MB5011:EE_
+X-MS-Office365-Filtering-Correlation-Id: 980339da-f25f-4529-2899-08de7618f992
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|7416014|61400799027|54012099003;
+X-Microsoft-Antispam-Message-Info:
+	W/3ronU9vsFZ43jDeF6W3mORMWyB/l3riBdqYGIKczjGbRut4OaDV8ZCsmeXO6+durrZGoa5lQlNpimGULB9SAb9HQOi+yiNWFTeyUGl0DomyezQ3xQCXPadFxjZp/Mr4Jiellb2KMOiu0GnmE+7NXz2vmXmEitVwW0+SVj9R9+jmDQAyaP6OFUA5Djgn5syMUMu25f15mWzJYWcqgZ03cpTb8/RVAZsa5BWYdLbyEPzBfP3LsoHE6MfonjRVain9YGkRtqSr1UJp0Gw+EcQURZxvR6fqVrjnRH5qsifGBNR3RKwyvpD0X787kf55PNcduaMclqXakDqlAnq+xmRiH9nOBYwqe0eeakVe7U71gA/DEIGD4Dbru6JwRnyZIHspnKTnRe1UCl1vk3WPG1CU5ZwvhB+9/kgEiLAqTp4dXp7B0+aud6i6QgNoSKmVNEbIvG8OtkMk+jx4boDJ1m54k7f9YAXb6UZe13atRuk3mNGvbF+f3NG9I8qSwuh8Vo4puztRgtFq/LZPiwI78TEUDOtOMNLgZRNIZysKrpGhcgRO+9asgiizaYizNH0HrVCFDuwIwo+zw1CgNoGsP788KdR0gx/k2cmxNoESiD37S8xUTEx1He5ARlOtTHmmTnH5fYxGwOSq4D/fkTaUxKYcOkkPUamW7QWXw6ok9LGYmLGXzyBfUTLAH8ByAILg1z+XRHNwriJgW/PoXtzwCiCscT8dk44dNAWgNirS6a8ANAeHgGD79CH+MLS/seqDro0SYrY3vOd1xGWMZ6Xqu5ndGfT9/E8eSiwaWKRzSYmOc9rXiro49P1kzPWPrIep92tl22HjDTlEjKKr5Y5JPdXyw==
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(7416014)(61400799027)(54012099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	L3d1I7xxQsZR3O+OuX/CC+hoDAcNG8CW7Bodkou1Cg7olTzMm3ILYPcbXOycmzJQDbgTUdowy8mQmzcaN0/rAiTGtZQTefjmL+5rGTamgp1KzftQ4frtAokmYxD6xL7WpeRtUpVpGX44d20+k7nv5/8JbGS5HXhc4uy5XfPo2KfSd5QRotINLsfpQsjb77hs/kxhRoATPGZHqKCMSRCyCkgczhjs621gMuWb59o0g20nJW8jAHwNRnwn5VsDfKR6cWKBxEqIdq640ocGRskz6Z52ghntwmfN9NkLCMJpLVf5FTqS8cvB0l2udc6uOMGUovj1hBdeiIZMIjQDDRGgjTZnrEXC+ESeY6li65DQ1SC5QKsNuF2dfzqnL5mF1f22wVkB1Rw29h4yJJuJomWHsAYf7D3yKQO1SIimOqsSb/5HEVwrslLpOXS/x+X9rUYh
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2026 15:57:56.9275
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 980339da-f25f-4529-2899-08de7618f992
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-CH2PEPF0000013F.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY3PR19MB5011
+X-Authority-Analysis: v=2.4 cv=dO2rWeZb c=1 sm=1 tr=0 ts=69a1bf0a cx=c_pps
+ a=zbd7yB0EajPYIcOkJMaukQ==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=kj9zAlcOel0A:10 a=HzLeVaNsDn8A:10 a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=iX4cTi3TZMoOKdANLEfx:22 a=Dj2-6B8FqX4mGL0U3gbX:22
+ a=P-IC7800AAAA:8 a=QyXUC8HyAAAA:8 a=KKAkSRfTAAAA:8 a=w1d2syhTAAAA:8
+ a=rSjeN_rvdOytUjbESTAA:9 a=CjuIK1q_8ugA:10 a=zZCYzV9kfG8A:10
+ a=d3PnA9EDa4IxuAV0gXij:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: uE6eyuXmduAqXwtHTT2aUQr7LQDeAj4u
+X-Proofpoint-ORIG-GUID: uE6eyuXmduAqXwtHTT2aUQr7LQDeAj4u
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjI3MDE0MiBTYWx0ZWRfX0mskQKmLgsXQ
+ 2+TYSkJSueLauCd0VcS26TFUinl5zww9210Q8u7kwCVopkIzFlC+S6hGxFgkJUM/vNsgj/2y5tW
+ 0Niubs+PYtKS+/99OsWU32AvFMjP3TiIlYoM5c/inzlA3ntTEunfTX50HlrgdVBsxtq8ejogU9+
+ 2x4iTijpWDPG/zSrV73RpxRsUZWSA6vSJY3Bt2W0mFD0gDj0LIKYJycI4FOVeY5BPd2Mj5xIjm6
+ JolXKC+yvhLUu7IYoQsYfvpq6aJDl30ANI9lyL5HByAF8bLSrb6PuKb3VfZGJlF7nu9K6Xslnux
+ ea403p2Gv/1W6MPM3RGfHLFRdqUzthRfyxXg7XtoMs9j3mwWYDPtbbsyLqj9ANpnOTAKa1UeASK
+ O/v6DUmzHlSIihaeHnGh7IhQXq8bexz7AuQFE2RkzcLYHR7oclM9kzxTcG0OQMj4nwuJkBsLjqv
+ Efo5PEwokW2n3YPkRMg==
+X-Proofpoint-Spam-Reason: safe
 
-On 1/11/26 09:20, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On Fri, Feb 27, 2026 at 02:54:04PM +0100, Herve Codina wrote:
+> Setting fwnode->dev is specific to fw_devlink.
 > 
-> To initialize node, zone and memory map data structures every architecture
-> calls free_area_init() during setup_arch() and passes it an array of zone
-> limits.
+> In order to avoid having a direct 'fwnode->dev = dev;' in several
+> place in the kernel, introduce fw_devlink_set_device() helper to perform
+> this operation.
 > 
-> Beside code duplication it creates "interesting" ordering cases between
-> allocation and initialization of hugetlb and the memory map. Some
-> architectures allocate hugetlb pages very early in setup_arch() in certain
-> cases, some only create hugetlb CMA areas in setup_arch() and sometimes
-> hugetlb allocations happen mm_core_init().
-> 
-> With arch_zone_limits_init() helper available now on all architectures it
-> is no longer necessary to call free_area_init() from architecture setup
-> code. Rather core MM initialization can call arch_zone_limits_init() in a
-> single place.
-> 
-> This allows to unify ordering of hugetlb vs memory map allocation and
-> initialization.
-> 
-> Remove the call to free_area_init() from architecture specific code and
-> place it in a new mm_core_init_early() function that is called immediately
-> after setup_arch().
-> 
-> After this refactoring it is possible to consolidate hugetlb allocations
-> and eliminate differences in ordering of hugetlb and memory map
-> initialization among different architectures.
-> 
-> As the first step of this consolidation move hugetlb_bootmem_alloc() to
-> mm_core_early_init().
-> 
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-I've bisected a problem with virtme-ng testing a NUMA memoryless
-node setup (on x86_64) to this patch (commit d49004c5f0c1).
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
 
-It's executed like this, where node 0 has memory and node 1 only cpus:
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-vng -vr . -p 8 -m 4G --numa 4G,cpus=0-3 --numa 0,cpus=4-7
-
-This fails to boot due to:
-
-[    0.095894] BUG: unable to handle page fault for address: 0000000000004620
-[    0.097196] #PF: supervisor read access in kernel mode
-[    0.098180] #PF: error_code(0x0000) - not-present page
-[    0.099155] PGD 0 P4D 0 
-[    0.099641] Oops: Oops: 0000 [#1] SMP NOPTI
-[    0.100437] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.19.0-rc6-00152-gf206359553c9 #53 PREEMPT 
-[    0.102201] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-2-g4f253b9b-prebuilt.qemu.org 04/01/2014
-[    0.104313] RIP: 0010:mm_core_init_early+0x263/0x900
-[    0.105271] Code: 93 ff 72 09 8b 7c 24 30 e8 da 82 00 00 48 63 44 24 30 45 31 db 4c 8b 24 c5 a0 7b 1d 9a 48 89 c3 4c 89 5c 24 50 4c 89 5c 24 58 <41> 83 bc 24 20 46 00 00 00 75 0b 41 83 bc 24 14 47 00 00 00 74 04
-[    0.108863] RSP: 0000:ffffffff99403e38 EFLAGS: 00010046
-[    0.109861] RAX: 0000000000000001 RBX: 0000000000000001 RCX: 0000000000000001
-[    0.111223] RDX: 0000000000000040 RSI: 0000000000100000 RDI: ffff89597fffae00
-[    0.112577] RBP: 0000000000000005 R08: 0000000000000000 R09: ffff89597fffa200
-[    0.113924] R10: 80000000ffffe000 R11: 0000000000000000 R12: 0000000000000000
-[    0.115294] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[    0.116656] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
-[    0.118193] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    0.119283] CR2: 0000000000004620 CR3: 0000000060048000 CR4: 00000000000000b0
-[    0.120645] Call Trace:
-[    0.121122]  <TASK>
-[    0.121521]  start_kernel+0x5d/0x780
-[    0.122206]  x86_64_start_reservations+0x24/0x30
-[    0.123079]  x86_64_start_kernel+0xd1/0xe0
-[    0.123860]  common_startup_64+0x12c/0x138
-[    0.124641]  </TASK>
-[    0.125061] Modules linked in:
-[    0.125646] CR2: 0000000000004620
-[    0.126279] ---[ end trace 0000000000000000 ]---
-[    0.127162] RIP: 0010:mm_core_init_early+0x263/0x900
-[    0.128106] Code: 93 ff 72 09 8b 7c 24 30 e8 da 82 00 00 48 63 44 24 30 45 31 db 4c 8b 24 c5 a0 7b 1d 9a 48 89 c3 4c 89 5c 24 50 4c 89 5c 24 58 <41> 83 bc 24 20 46 00 00 00 75 0b 41 83 bc 24 14 47 00 00 00 74 04
-[    0.131676] RSP: 0000:ffffffff99403e38 EFLAGS: 00010046
-[    0.132684] RAX: 0000000000000001 RBX: 0000000000000001 RCX: 0000000000000001
-[    0.134033] RDX: 0000000000000040 RSI: 0000000000100000 RDI: ffff89597fffae00
-[    0.135412] RBP: 0000000000000005 R08: 0000000000000000 R09: ffff89597fffa200
-[    0.136763] R10: 80000000ffffe000 R11: 0000000000000000 R12: 0000000000000000
-[    0.138112] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[    0.139487] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
-[    0.141014] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    0.142094] CR2: 0000000000004620 CR3: 0000000060048000 CR4: 00000000000000b0
-[    0.143448] Kernel panic - not syncing: Attempted to kill the idle task!
-[    0.144833] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
-
-> ./scripts/faddr2line vmlinux mm_core_init_early+0x263/0x900
-mm_core_init_early+0x263/0x900:
-free_area_init_node at mm/mm_init.c:1721
-(inlined by) free_area_init at mm/mm_init.c:1902
-(inlined by) mm_core_init_early at mm/mm_init.c:2681
-
-It crashes at WARN_ON(pgdat->nr_zones || pgdat->kswapd_highest_zoneidx);
-because pgdat is NULL.
-
-With some debug printk's I've figured out that in free_area_init()
-we have:
-
-                if (!node_online(nid))
-                        alloc_offline_node_data(nid);
-             
-                pgdat = NODE_DATA(nid);
-                free_area_init_node(nid);
-
-
-But node_online() is true so this allocation doesn't happen, and
-pgdat remains NULL.
-
-And node_online() becomes true in init_cpu_to_node():
-
-                if (!node_online(node))
-                        node_set_online(node);
-
-But without having a pgdat allocated.
-
-I was able to workaround this by changing the code in free_area_init() to
-
-               if (!node_online(nid) || !NODE_DATA(nid))
-                        alloc_offline_node_data(nid);
-
-But I don't have the bigger picture, and also didn't check yet what exactly
-about this patch results in the failure. Probably ordering of various related 
-actions. Thoughts?
+Thanks,
+Charles
