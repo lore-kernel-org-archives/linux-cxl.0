@@ -1,63 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bumble.birch.relay.mailchannels.net (bumble.birch.relay.mailchannels.net [23.83.209.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E692F2853F3
-	for <linux-cxl@vger.kernel.org>; Fri, 27 Feb 2026 18:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772218783; cv=none; b=HImzuhMloIadjrTiV18GfoOh4Azn0Q6bC+xfhbE+fcVuPJ9L5Y35k7ITGV8o/QHSZA+ZOqp/+txAxIUksUciY0FOPmr6JxZ/UrENOBtd6KD/bbGkgqJTOE2lL016WUc+xaaKrh8ML4GMc5ZTPSUPraVKUEkn+SxYRLuUeSpaFyU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772218783; c=relaxed/simple;
-	bh=ZhHRMHhX5Gk+VHFduEYg6Mbb1BGkZwTu4UeGAI/A1wQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Zu+a0mqJ6VBIKRo3O0Jh2jUmuoQFmcUj9/S8eCz1AxX9AUvg7OSTCFsOS3KQtcEJgKWbvRhqlLOa3eRunYrXEM0KFQxCGEQ2pq2QpYJyfZJuBiSi3yEE3fFMsOPDtZr9HNTuHQUAisdIJMKQKDsZqjMzEz01jGeJiMysA4BuJFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pGwpthOH; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813BD44D008;
+	Fri, 27 Feb 2026 19:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772220938; cv=pass; b=OnmTjQRsi268Kun56UpPmAvh9e4wRG5NaKEwnvY4HqgMZYMs6r7OZ5vzk0RqS09ZuXdFmdNtrSddkXLx67oQbcxF/aEQVCqtsml6gP/J7AkCoWLK7GTJHVPm4L6KE49cdY2+MyMqyJL38Drxj5SGmi5Mq5FqQkk6Ues0cJOBOw8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772220938; c=relaxed/simple;
+	bh=8YpyPmcU6KUT4IZ6nx8xoVkVKcF+bX8XaoHmx7dTr5A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WhEA9jPCA/lIVK/JIWmQJ4zbx5MJeAS8X1s5tkqjIt7nRccmJvJoEgNqjLKEzMlgTP3rniXw/KzAZ9u3G4UCrkBFLtllSrp2qGNxcOOykSf/l/r7ZFe8zztJAb/iXkD5ldTNV8hL7UeNKq1S2QSKCfvUJOhsC656gNTTnOsuhR8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=QJ0zKQvl; arc=pass smtp.client-ip=23.83.209.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pGwpthOH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA977C116C6;
-	Fri, 27 Feb 2026 18:59:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772218782;
-	bh=ZhHRMHhX5Gk+VHFduEYg6Mbb1BGkZwTu4UeGAI/A1wQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=pGwpthOHrQdUmXtOjt+BHUP27oeTIukzmxelaR4euqHNYMXiOdt/6567d0fIbTc9F
-	 HLUHzieRaA2lOmL9B8ptz1/NkpDnMBwvTcGXxBQU1bNJZn+OPKGTaWM7ifnjp11i6H
-	 l6iKFRL0tHSowZhzF7OMLkXBzV//LVk5FNHIweB7ZImztQqNvGt15Lc/9ZLx5PeRkV
-	 cznO6eQ7AWnjuAN09ACSg0NRV6AeODUN6l8bTjNoeDDdKvIgBOhgm9yx1vFblK1LQa
-	 3uYCiL4rRkLSb5MIaiTkEFoSJNKU1LCmnQUj8Fs9jtWEK14UtO9AgBDFgVSPNWcIjS
-	 p5wYJBFwPanPg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id BA29939E9614;
-	Fri, 27 Feb 2026 18:59:47 +0000 (UTC)
-Subject: Re: [GIT PULL] Compute Express Link (CXL) Fixes for 7.0-rc2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ec463b87-7b6b-4b4b-a993-ec8bea26d2d0@intel.com>
-References: <ec463b87-7b6b-4b4b-a993-ec8bea26d2d0@intel.com>
-X-PR-Tracked-List-Id: <linux-cxl.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ec463b87-7b6b-4b4b-a993-ec8bea26d2d0@intel.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-7.0-rc2
-X-PR-Tracked-Commit-Id: e46f25f5a81f6f1a9ab93bcda80d5dfaea9f4897
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: aed968f8a6cd60a4aa32b5e9c0973c95c443ef4e
-Message-Id: <177221878623.2713791.977603988124272405.pr-tracker-bot@kernel.org>
-Date: Fri, 27 Feb 2026 18:59:46 +0000
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Davidlohr Bueso <dave@stgolabs.net>, Dan Williams <dan.j.williams@intel.com>, Alison Schofield <alison.schofield@intel.com>, Ira Weiny <ira.weiny@intel.com>, Vishal Verma <vishal.l.verma@intel.com>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="QJ0zKQvl"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 91CA41823D0;
+	Fri, 27 Feb 2026 19:27:54 +0000 (UTC)
+Received: from pdx1-sub0-mail-a220.dreamhost.com (100-106-233-169.trex-nlb.outbound.svc.cluster.local [100.106.233.169])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 249D6182CE3;
+	Fri, 27 Feb 2026 19:27:54 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1772220474;
+	b=0K/2nEJJUkb693tycqhBLva07Z1RjaBWQgW8qbo7YGwGBtWbXySMDyjLGYA/8Ex97r4KAz
+	9L8vpecE6fmXyug3avGWlEMvfSTQuzNs46/QJuOGYwaNkqQQI65dAwO92J8TAnKJn42Nxz
+	6n5FLhxu7OLnqTLPggR7uA4j311GchLL4r2Nx6hKXHiMp97xPmfZ9hOMOzh9VbRW5Xs+Bu
+	3lH6RVYRaIC+kdpPKwwuPzKSxwZxMmm1U1wgBMcep9H4om273hpLHGjUIEDPaY7c/r9tMs
+	2fKS6iNfArvXf07TY5QWgIoRQRpkFhvzw+6FHfDQylAEzBk0BROBgq0NBqKArA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1772220474;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=8YpyPmcU6KUT4IZ6nx8xoVkVKcF+bX8XaoHmx7dTr5A=;
+	b=eSOFWzvgzw2FGzej4a3UFMPkusjFXXNbdP8vFDoY6DLzjVP2QTeLXvIqQeeLUkQgBbOfw+
+	PxkO+n3bYrvfdIUCfqJLmVk46YG/UuPEGKt9HbE/rhIPTmKIll57NsY+QJXikzUab9UAFP
+	a0OqIje3SIllYuDNX61+6dsD17TsP1VS/q4UUt5zWVzBIFOPCJ6i81oA5nbmZqBHWo178w
+	2gqDtHv97rDoFKtl0iwmSRDc/M8oXJj+FyfZpvqeF4VIA4+X+gNLyO3N4HgffpE+PY7r0s
+	2Eobgg5qla2e6IfUyA40yBIxc8/592mx+ogzPV/FGfLlCHuzRGBwWxcVJRrOzQ==
+ARC-Authentication-Results: i=1;
+	rspamd-7f65b64645-qt58m;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Oafish-Left: 6e4a0f537b925262_1772220474408_2743807188
+X-MC-Loop-Signature: 1772220474408:2705388933
+X-MC-Ingress-Time: 1772220474408
+Received: from pdx1-sub0-mail-a220.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.106.233.169 (trex/7.1.3);
+	Fri, 27 Feb 2026 19:27:54 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a220.dreamhost.com (Postfix) with ESMTPSA id 4fMyyw4cBRz3K;
+	Fri, 27 Feb 2026 11:27:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1772220473;
+	bh=8YpyPmcU6KUT4IZ6nx8xoVkVKcF+bX8XaoHmx7dTr5A=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=QJ0zKQvlpE2sDKJGjSMKtF904mmSpPQcs6DLIm0taTw/9cFiG0c4V7TtjLWJw8qvN
+	 wU9JjfgEy6MaaeK4/mHl8wkCmqz5+Uyam8D8CaFXahxMDpDEFQeOf4e/0QhmciQ9GM
+	 5lX/PBR6mSr3B9qKf0qaWhjPPmZHtWf8c+q+8Ex9KxuwruXPpfSIgn54BSejPBMk9f
+	 aXHdUiX496fXH3/HPypdw2DWK1WvU/K4M6VPGMEikF1ozbjiO0ffxMTnkEHpZTwIBr
+	 /YZZG+DXTPc8n8QsxdzkwSRYr4sMFhYNAkMyuiXuVNWnGJNSqILhed2zbUifRcYVqj
+	 PhHsFPTMhFHpg==
+Date: Fri, 27 Feb 2026 11:27:49 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: dan.j.williams@intel.com, vishal.l.verma@intel.com,
+	dave.jiang@intel.com, akpm@linux-foundation.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ben Cheatham <benjamin.cheatham@amd.com>
+Subject: Re: [PATCH v2] dax/kmem: account for partial dis-contiguous resource
+ upon removal
+Message-ID: <20260227192749.bl46nsia4y4bgawx@offworld>
+References: <20260223201516.1517657-1-dave@stgolabs.net>
+ <aZ_TlK4r41P0xBDO@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <aZ_TlK4r41P0xBDO@aschofie-mobl2.lan>
+User-Agent: NeoMutt/20220429
 
-The pull request you sent on Fri, 27 Feb 2026 11:09:03 -0700:
+On Wed, 25 Feb 2026, Alison Schofield wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-7.0-rc2
+>Do you have a failure signature w Call Trace to paste here?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/aed968f8a6cd60a4aa32b5e9c0973c95c443ef4e
+No, I have no splat, this was found while getting more acquianted
+with dax code while looking at dcd topics.
 
-Thank you!
+>If not, maybe just insert the expected signature for grepping:
+>"BUG: unable to handle kernel NULL pointer dereference"
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+I don't think this doesn't really adds much to the changelog. Not
+worth a v2.
+
+Thanks,
+Davidlohr
