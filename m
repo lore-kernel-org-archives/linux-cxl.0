@@ -1,109 +1,133 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDE42E7623
-	for <linux-cxl@vger.kernel.org>; Fri, 27 Feb 2026 22:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E15436BCE7
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Feb 2026 23:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772231527; cv=none; b=SHmJqModk+QcIAFyX7EQH/Y1Gl/sYP00k8qLsVw90s8ALAzEQrsLIbgp9Yj2PjBpn2+OHcf3be1TQ5QBWogDzL5lcPQZe67FLz8o2EZWf1P+0LjFnK5lPoY35I4soBVjDFihAJP3iW15OgqpYfsMsUO7i69fAZ4DyKPIZA4Utxg=
+	t=1772233649; cv=none; b=nz8RMihfkp79t1VUrjtGEgCDQsr8m2ifalARr+U5z50lQZf0Dcz9up0QO/L0SzBzxORrGH/CbtfZ0o0obErA6/+DjtdH4Yzd0bqh3PHTUigRf2bj6ePki1IUibzL+aqAwsfSHBs8VH7Gc91KzrNEKtKSfcCaqGR0I+QdInfVVx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772231527; c=relaxed/simple;
-	bh=8YsYVdzK2xXS/uvTjUlVirxk9QurQSxweeYWrOXK12M=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PFDO4qRLrTeuNxuj4TvvJMa2kK7XSFM5Z2p5ATeSSKe/4K6w84NjiL7Vwve6S3rh+7UOs++rzl9EL9z91WpAnPiCtagRO48DZVyOxXTEEkKT8M84E4Wf822khzjecDJEQBLOzywWGe7gKga8s9crUr9ePOA0dJnh/X1Vu3bVFEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fN32X329NzHnGch;
-	Sat, 28 Feb 2026 06:31:16 +0800 (CST)
-Received: from dubpeml500008.china.huawei.com (unknown [7.214.146.94])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1962240569;
-	Sat, 28 Feb 2026 06:32:03 +0800 (CST)
-Received: from P_UKIT01-A7bmah.china.huawei.com (10.126.175.34) by
- dubpeml500008.china.huawei.com (7.214.146.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 27 Feb 2026 22:32:02 +0000
-From: <shiju.jose@huawei.com>
-To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, <mst@redhat.com>,
-	<peter.maydell@linaro.org>, <jonathan.cameron@huawei.com>,
-	<dave@stgolabs.net>
-CC: <linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH 1/3] hw/cxl: Add fixes in maintenance and memory sparing
-Date: Fri, 27 Feb 2026 22:32:04 +0000
-Message-ID: <20260227223207.972-2-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20260227223207.972-1-shiju.jose@huawei.com>
-References: <20260227223207.972-1-shiju.jose@huawei.com>
+	s=arc-20240116; t=1772233649; c=relaxed/simple;
+	bh=+9SaFYClqb7p16I7i/FRxMmd3fl6XqDpKglW36YGrDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gC3/R9t3xgRZ8dkCJh+WhQaKPfUN/sm15RoJRb68e4dn7Re4Rb37oajRv5WwZJZt2GfTC9Jj423JilJzM9PiaPYxboQKbu3zq2ouifgJ2m8A/7nTnfOe3qNW8tiu0KQqMbP0hygOVV+Oib7mQOBgxzviuKa2XKWQMgtpOqG73kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=gXQ/1/ZF; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="gXQ/1/ZF"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-8cb420fbb5dso150643585a.3
+        for <linux-cxl@vger.kernel.org>; Fri, 27 Feb 2026 15:07:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1772233647; x=1772838447; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OgjD1UJG2qaMbMVM5N7MexfN0DQdoqKM/USOsU4c+UE=;
+        b=gXQ/1/ZFrykkXVNdFvLGWI2/VrSTwP1fKjuuDLgCzUukQWK62dA2cq/HSrZjIx6A/3
+         bzvhEIhsoYoxyipVAxHEKsshcc3r64Co0w1UROPFVG3ROsUfOLhlb+QqZtnrxRsYt+6f
+         OBFK1GDBJK6f8Ty/CLHvdwGSTFS6DiuOlVcnBsA81WtL7o6FcAePItlRX+D7QZ6oE6Uf
+         6nYG27r0JV9fRhywVjmkIY7yOOV7W7AM/hVwUmEIS/9Hlzv7zh7SN3/IO98xmg91HZYH
+         6rY0Py07j02s1QjZhdAqT1He0Bc8apPD25p3R6fTJaLENCjzUvkEpXqb/NmxBCYvg7LT
+         sRdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772233647; x=1772838447;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OgjD1UJG2qaMbMVM5N7MexfN0DQdoqKM/USOsU4c+UE=;
+        b=I9ca8u1pLjspIxo+5V7nkZ3Law3lqOhh0/27VV6ZcxaiysArM0/qpV6BOnD6sGfMyG
+         PWvsTz3WJkYv8yD5GP7/S5cxsqF4aMpSm54ZClg/bbkvf6jtJ1tPS8JC2kavkZnDSOAG
+         otQmSWTJLN08sPLUzeccflAbB+6vLzHWaheoRwHlErarNVRMMzTLnAi/02OAxEC6XiH+
+         kj+lEcMRY20/+Xx+nli7BoNR5Dm+ZphOYmW3PuP+BcENJS2BsXp71BxUcYv7T9ythT+D
+         hyNmzcZpYCwDwOePj6nTxqL+uacdGGr6zTPw9rRFzNuEX3jJtk4Z59o0okoQkgfpkrfe
+         sxRw==
+X-Forwarded-Encrypted: i=1; AJvYcCWR2nr2RdF5IVzFyBOJ5+BGIOuoQt6N+aNZG7LIY6ypF0s9uu3r6xJsYZRo9cOUjcCp2lUGzHMFVMI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDYvx0zvzooRp0IZNqCKDc+79E29Lo73RfolBs4gF0KdUYQG+G
+	JCh6vC3euLFHTf4lTPWx60KstOQT9nKIjSvYkPvckpgQoOOlx0kP9SsjeFAJ4v+NpZ4=
+X-Gm-Gg: ATEYQzxAmIk/7yfM52FwQY60WiITiJOueDxJ52fuj24Plj+ABkDsAYe4Awk7frpfFsM
+	lPB4GvF4iSQ0lMRYfFs0i+ryvuWNu/B/Nvc/nLDL2CiAia1VvzR6LEf9zX2wPJNPUE6Mi5gyRmM
+	WFpXHRj5Z0zKzuclBFFm5UH3wvEEMx5EinHR+jdFmmCfPtyhRiUJiIxys7vJxf69oicnW3p2bMT
+	yVIOtI64p0za36r/r5Si/6TFLRpaFlGBsT6fqTmPaj60QyDeEZ7b06A6FpMEb+MK7NU+nD01fF9
+	9qP4oVEz+99GjKh9WDLp2x+5E6KxFZI0o3xJDssdTl3awZXqKIVk7u1LQhP+JwYsrNsCNcTR7Ym
+	c4CLCso/J3Z3LS6ESQS2rvP1UEfhJ631LMBjDcn7V4BqBcP4xztPYZ+MvizMfvuEzGhp1LIMs9P
+	nwpkeXaEwzlvJf1eQ40ZJPZnitAnAdIdaZjke8euFoXmgvwsSX31tWuXUQssu0unn5W79UXkFfn
+	2/yszrvBw==
+X-Received: by 2002:a05:620a:4410:b0:8c5:1fd2:e9ef with SMTP id af79cd13be357-8cbc8e98257mr595797385a.28.1772233647137;
+        Fri, 27 Feb 2026 15:07:27 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cbbf72e21bsm579738385a.44.2026.02.27.15.07.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Feb 2026 15:07:25 -0800 (PST)
+Date: Fri, 27 Feb 2026 18:07:23 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Alejandro Lucero Palau <alucerop@amd.com>
+Cc: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+	dan.j.williams@intel.com, dave.jiang@intel.com
+Subject: Re: [PATCH v2 3/3] cxl: Move pci generic code
+Message-ID: <aaIjq03lnrD_4tsS@gourry-fedora-PF4VCD3F>
+References: <20260225121430.3839189-1-alejandro.lucero-palau@amd.com>
+ <20260225121430.3839189-4-alejandro.lucero-palau@amd.com>
+ <aZ8cp4_xhEspZxwX@gourry-fedora-PF4VCD3F>
+ <c3d22e56-8762-421b-acfd-1b7dabdc17f3@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- dubpeml500008.china.huawei.com (7.214.146.94)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c3d22e56-8762-421b-acfd-1b7dabdc17f3@amd.com>
 
-From: Shiju Jose <shiju.jose@huawei.com>
+On Fri, Feb 27, 2026 at 07:59:19PM +0000, Alejandro Lucero Palau wrote:
+> > we call cxl_pci_find_port() here twice on the same pdev and pass the
+> > dport into the second caller.
+> > 
+> > Can something actually change between these two secnarios?  Seems like
+> > we can just drop the check in cxl_rcrb_get_comp_regs?
+> 
+> 
+> Uhmm, I do not think we need the second one inside cxl_rcrb_get_comp_regs?
+> 
+> I will drop it and mention that in the commit.
+> 
+> 
 
-Add following fixes to the commit: hw/cxl: Add support for Maintenance
-command and Post Package Repair (PPR).
+Since this is existing code, i would just use the patch i provided below
+as an add-on.  That way if something breaks later it can be bisected
+cleanly without affecting your original movement commit.
 
-1. In cxl_create_mem_sparing_event_records(), replace strncpy with memcpy to
-solve coverity warning because full size of the array to use as length in
-strncpy to copy the entire component id data, which is 16 bytes.
+~Gregory
 
-2. In cxl_maintenance_insert(),
- - replace strncpy with memcpy in to copy full data because component id is
-   16 bytes data.
- - remove memset which is not required.
-
-Reported-by: Peter Maydell <peter.maydell@linaro.org>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- hw/cxl/cxl-mailbox-utils.c | 4 ++--
- hw/mem/cxl_type3.c         | 4 +---
- 2 files changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index c83b5f90d4..9c99422cd4 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -1994,8 +1994,8 @@ static void cxl_create_mem_sparing_event_records(CXLType3Dev *ct3d,
-         stw_le_p(&event_rec.column, ent->column);
-         event_rec.sub_channel = ent->sub_channel;
-         if (ent->validity_flags & CXL_MSER_VALID_COMP_ID) {
--            strncpy((char *)event_rec.component_id, (char *)ent->component_id,
--                    sizeof(event_rec.component_id));
-+            memcpy(event_rec.component_id, ent->component_id,
-+                   sizeof(event_rec.component_id));
-         }
-     } else if (sparing_pi) {
-         event_rec.flags = CXL_MSER_FLAGS_QUERY_RESOURCES;
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 4739239da3..3cb1096e16 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -1767,7 +1767,6 @@ static void cxl_maintenance_insert(CXLType3Dev *ct3d, uint64_t dpa,
-         }
-     }
-     m = g_new0(CXLMaintenance, 1);
--    memset(m, 0, sizeof(*m));
-     m->dpa = dpa;
-     m->validity_flags = 0;
- 
-@@ -1804,8 +1803,7 @@ static void cxl_maintenance_insert(CXLType3Dev *ct3d, uint64_t dpa,
-         m->validity_flags |= CXL_MSER_VALID_SUB_CHANNEL;
-     }
-     if (component_id) {
--        strncpy((char *)m->component_id, component_id,
--                sizeof(m->component_id) - 1);
-+        memcpy(m->component_id, component_id, sizeof(m->component_id));
-         m->validity_flags |= CXL_MSER_VALID_COMP_ID;
-         if (has_comp_id_pldm && is_comp_id_pldm) {
-             m->validity_flags |= CXL_MSER_VALID_COMP_ID_FORMAT;
--- 
-2.43.0
-
+> Thank you
+> 
+> 
+> > ~Gregory
+> > 
+> > ---
+> > 
+> > cxl/pci: Remove redundant cxl_pci_find_port() call in cxl_rcrb_get_comp_regs()
+> > 
+> > Remove the redundant port lookup from cxl_rcrb_get_comp_regs() and use the
+> > dport parameter directly. The caller has already validated the port is
+> > non-NULL before invoking this function.
+> > 
+> > Signed-off-by: Gregory Price <gourry@gourry.net>
+> > 
+> > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> > index c32cc62c501d..d1f487b3d809 100644
+> > --- a/drivers/cxl/core/pci.c
+> > +++ b/drivers/cxl/core/pci.c
+> > @@ -707,11 +707,6 @@ static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
+> >                  .resource = CXL_RESOURCE_NONE,
+> >          };
+> > 
+> > -       struct cxl_port *port __free(put_cxl_port) =
+> > -               cxl_pci_find_port(pdev, &dport);
+> > -       if (!port)
+> > -               return -EPROBE_DEFER;
+> > -
+> >          component_reg_phys = cxl_rcd_component_reg_phys(&pdev->dev, dport);
+> >          if (component_reg_phys == CXL_RESOURCE_NONE)
+> >                  return -ENXIO;
+> > 
