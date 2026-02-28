@@ -1,172 +1,152 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011010.outbound.protection.outlook.com [52.101.52.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F751DF261
-	for <linux-cxl@vger.kernel.org>; Sat, 28 Feb 2026 07:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC230239E80
+	for <linux-cxl@vger.kernel.org>; Sat, 28 Feb 2026 17:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.10
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772262278; cv=pass; b=nzSg023LISsuG3OSfM5t7vdiWJhB3UfmVlbXT8agTr3vnTM42dh6gzbNBn6coODHSoZCSV8oe5mOib+sXaM+5RCJgDu6QD7MptGQWw+2joat0FGaYnPXDGxYtcoSEyueP3/XnjjPskJ8AdFIc+ClXEtSxUbWqjCdoDQTZiGjUlw=
+	t=1772299563; cv=fail; b=ceKzCOWitehcEWSZWp/rPNiphTZ0Is5Oc/oMvQ9KE5Oc6NlV9/ncOrjqgskDe2JpnAWXk3aBNAufvXFBl60IKImeRRmW3zTBlkErF1hyB4GQPjC0UyyE6UkoL9PYNOJUtPZETwsZFim63TDXsHx9sUKk/qnGZ2LWGKfS01h6UmI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772262278; c=relaxed/simple;
-	bh=OEHipjSwH6m4X4kLLPiFCbq1/5jwO7S6ZMVF8C64nF4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TZMi0W61MuDcoqiz13wp0G5buY450g9Fg9GQvm41jP9Cnd6EJDHS4wO13ef25F+OLu4w2eWQ+6FEhUU1VaAfBkvWnTiPuG8lwgSAf5EfXY0hIhmUbT39co425lm6mGeW3RfVir1mlOJQD6Gc8MyKCZYS3PGw1IOqPY00dRnTBKM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=XAeldWyN; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	s=arc-20240116; t=1772299563; c=relaxed/simple;
+	bh=UetuWIc4v2ZBd0rDfyRGmYrtI7cUe8xNQfPypxZyndo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q1hnpKHx+SQ5+fybaheae2ChrJ1ZmTnPhjcogJJWbhs9DTNVuDYi8yUpvytzt2v510e+mRyWLTsGDWQmlV8hMUxAt3ucbtHd9Skp5wvGlJfj8HwrbVIHMVmWfmkJUaM4j9OL4UDcyBrVDyVuKtPcI44y1grtcoXqsisbEve0Spk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WPQtchKt; arc=fail smtp.client-ip=52.101.52.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="XAeldWyN"
-ARC-Seal: i=1; a=rsa-sha256; t=1772262263; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=BySFVw1YeZb+OYdcF2MJ3jePmLmkuBejqIyuK/N6jmWVdC13uXGg3NcuU9qJxbP7nRdC7VFEGq9bvsQ9Vl6Etv/skF+iFp7dEX4OU0XR9vR5QMRqJ9jNzzcAmwCVb4MjlfzzRy3KKH8HO3yjKR2wEd5laqB248kBJTGd2yvXcT4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1772262263; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=INadkVs8zImUbuVdQf/qlDtPp30p4UklvLpMeb2qSnI=; 
-	b=HdzMOss5n67Inj/jZ3s5RY55+RfDp8cpQ3JzwOA+Gl2/Y8yob1zkBBe9x3mD19VX4twTH6/8K46o3ccA2ZdFaMICQEyafosA/MnryyLwyyHMKyEoe8j4Zgp7Skbn/LYAvPLPTjuMq0jRzCbu9BuDmqcuK1nl4Nzg7UFqjC6gqyg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1772262263;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=INadkVs8zImUbuVdQf/qlDtPp30p4UklvLpMeb2qSnI=;
-	b=XAeldWyNxzd4yoobaPgWryhaJyMCkOcSIToGyaxrSWV5C5rpkJW59IVough6aGoD
-	KpP6zty3dyoJAZ5bfBDs7j+22pZdG3RZzGpfF79GBIUnkQWdZ8pWTp08VYSM+mbqPjf
-	qbinE1M8fBJiAYd7JMAJTQkGS3Ere7qh1UjYU6dc=
-Received: by mx.zohomail.com with SMTPS id 1772262261018478.25519548488376;
-	Fri, 27 Feb 2026 23:04:21 -0800 (PST)
-Message-ID: <c3a07fee-1a91-4f7c-a279-fb15be36a531@zohomail.com>
-Date: Sat, 28 Feb 2026 15:04:14 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WPQtchKt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Q9SmJ9EAJVvkzXpW4Yfc+I1B/2L1dqHeC8Ep4S3TsmheTEH1H3rbwN8z9NI0N+UL7r+N+dVbnGwtGnqrHhhy6MA4iBM6mYv6C1TQJ6bzKH7U98pSvZImZhJ0XIA6wnYLIDr4Gp6nN851ewXVYYdw2W2FakFwXNNpB9M700JMILy8sYDUe2fv02hWU6XzsKXl7Miw4LeINPmjm12Ihx/2v9m9I1bvjchVovpioyk3wJ2dLB9sMJEo95/bjiW0OkRjrg3F3OvNu1c0II1D01BMKNbiAjHceW05X35zJ9ae5mT7aDpc56ACmZHYbd1nvxm1j4dRrb1DhMWpwoIOTfdf4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hdfjdKw6X6jsluvytr/MxAduR6Gw6i3R9PvtDDbOdL4=;
+ b=lISAW3b6zk04anPoZmVhX4EPhflv/MontlwHTpoUlqKbxs66jwqAvk2U7bJ199TNzoU/R62pUTQ1m0FixY/SYT9Ec1I0X2WP3ydVS3VJj/8KVzXFcTd2Ljec3tSF9YedD+r3Ygphwg4bNfe672uvTmujRq2bCtfdcf/L2z8dDXy49cxYN79CgvOKpEiaoXHT5ogosjmcCuWfiii24oKF4+a1Pcmr0cnJVr4wstc8gRonJ4L3Mca5Xfk1jGaLrJQGeVb8EIoM8eYJfVeDwvFYg+CD7V0jOZaM2DKwAJU18utZ2LeTgGl6OpAAU7Ev1b2IT+97iED514+SBNSOKSij0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hdfjdKw6X6jsluvytr/MxAduR6Gw6i3R9PvtDDbOdL4=;
+ b=WPQtchKtv0TSAhB4k99FxUuebOWbMny7fVL0gtYDsj0Ikpa8t9z7DmbCM3J00vAhkIiilCDDeNXzbHLZ6ID9642ANxzMkZRvMS0H8lWDV94s24/j/lXS/rwxUAVhDGeD16lUTCJlm7iz9XIwIdNHxZHFAT3qVxAehnDt+OUOaEQ=
+Received: from PH8PR05CA0017.namprd05.prod.outlook.com (2603:10b6:510:2cc::29)
+ by BL1PR12MB5706.namprd12.prod.outlook.com (2603:10b6:208:385::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.18; Sat, 28 Feb
+ 2026 17:25:58 +0000
+Received: from CY4PEPF0000E9CD.namprd03.prod.outlook.com
+ (2603:10b6:510:2cc:cafe::9e) by PH8PR05CA0017.outlook.office365.com
+ (2603:10b6:510:2cc::29) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9654.15 via Frontend Transport; Sat,
+ 28 Feb 2026 17:25:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ CY4PEPF0000E9CD.mail.protection.outlook.com (10.167.241.132) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9654.16 via Frontend Transport; Sat, 28 Feb 2026 17:25:57 +0000
+Received: from Satlexmb09.amd.com (10.181.42.218) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Sat, 28 Feb
+ 2026 11:25:56 -0600
+Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb09.amd.com
+ (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Sat, 28 Feb
+ 2026 09:25:56 -0800
+Received: from xcbalucerop40x.xilinx.com (10.180.168.240) by
+ satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17 via Frontend Transport; Sat, 28 Feb 2026 11:25:56 -0600
+From: <alejandro.lucero-palau@amd.com>
+To: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<dave.jiang@intel.com>, <gourry@gourry.net>
+CC: Alejandro Lucero <alucerop@amd.com>
+Subject: [PATCH v3 0/4] type2 support preparation
+Date: Sat, 28 Feb 2026 17:25:45 +0000
+Message-ID: <20260228172549.1121832-1-alejandro.lucero-palau@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] cxl/port: Fix use after free of parent_port in
- cxl_detach_ep()
-To: Alison Schofield <alison.schofield@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-References: <20260226184439.1732841-1-alison.schofield@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20260226184439.1732841-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011228c39178cb6b1e3a7b0f12aa9000004c39277e6bdf8fe066540a88e84d7ee411b5b744c3afce5d6072:zu080112272cb6e6d49f3d4771afad0b170000bf0477e0e6d715c2d5cf1aa5632dc5c3b0708172a7902c38e3:rf0801122dbaf215986fa9ad16c47c527a0000f1c8319d2702503af746bf8d5b57906a26fdb5a71d38c800a8f776a1e3cc8b:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9CD:EE_|BL1PR12MB5706:EE_
+X-MS-Office365-Filtering-Correlation-Id: e3ac368e-a5dc-4b58-d7f5-08de76ee6f4a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	sxdasikvascLlSJO+DtN9H+AliXVKqFVCtGVZ/QlsFcxpnDTy1kE6qd/CvrLCOLdGpv7+VeMW8pcri9wSSehp8M2t/W+Uz+rHgmcpTkApb4q4XJMxWDSb4GDiCqS5+weZZqHqRpF1B7tk4l2MqA8YILwFfB/XYV6cXPK6TdhCiUhqFUhZOu4DLDKnGEPzfo1HZuLK/hPjnnrafwari/T1MzJZOAlfxfl0UC17ad37nf1jGH8jQgxnHEIBMHyTelinnNNpnUphIeSPBngZztN0Xja24kBrHW3gg16gMu5iWOLrE8SUBTAKPQsI+vErSKNi/sthJTJDFLRlW0y/hTjY7couT7O0KjVEeiHiiVVS9ZQW4tNqrprzda1sdpiXI6MAKNftuRHqJiJCNlrcFiN7i3qmNnnVulk5dEs6JEv0d11LHLq0KFfaEnLJwHpS6XY6yARsLIoh4H0gGhePDAQ026LZL1DbAyvZm9+bBb0OhmLgpiYKPZ3M2Klp/nkHw13B2VvQSerLggPxvrRW7IcF4dqNelgrNTJGKUoj9Q29ViGfGdt3oHgfZaxqRQg+GcN7FUPfnWrHMCvG6liGkolD5ehzxE0dmFwxapRMqxrCNiTyenw0NHX71l3UgRBpXE+gGODEdKx4corGYLrQxhxNNdNxs1h6zvNyW24Bg6odYdeLpxOXjsQg7xnFRNnOGgtOql+YJTIKlNXAPuubZ1VUVla73L8EZGICuBIs0nijv0gznsKHyP0W8RV8tDLganDNf92SB22Uy9eKqqn+Afvbn9kQ2aolbOD6pWwHJy0BmpBJ8OvuMxDGajrpB1yiFAzaNSC5RCDMiWY/vYH76T/rQ==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	DosxeXvTZVmHAMne3x1jS7kAc0VVlZnx79OytdsKrwsLPwxcNr41N/zElu4e71HtSI2sLHwlPkglXhe9yvBe6g+QdH7BASZv86bDaGRnSihEv6xs/uUJsN0Nq1Ew+2ei6KkllUUeE5Rs06bwDgpSRvA6cQ71ldTdxmElwFEQtDbQgoYrDeGhdCTcpYuVG1Dn25fyUvPJMXC4Ke1J5d+vgIr9g8Dj1GtD+/uLq1zOyj/S3u0eAt86Q2qan0EEK+B67TLqC108C0GmzuLiZHB8LezFgpeKU0gIZpZlK/P6mBEwQAvrAcwBEbpyIuPCPLRHpn3elRgQC64IPjXUXNyv0bznAMpeeCtoifEotdDZljU4L6QVK7ubq/0K8sz9NSfLxgULDxqoUn6/SLhTypmqq+vi/hXtCnOxF/ZYwdScvfkf+9tgTAfIPNI9Ypd2tmos
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2026 17:25:57.3746
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3ac368e-a5dc-4b58-d7f5-08de76ee6f4a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000E9CD.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5706
 
-On 2/27/2026 2:44 AM, Alison Schofield wrote:
-> cxl_detach_ep() is called during bottom-up removal when all CXL memory
-> devices beneath a switch port have been removed. For each port in the
-> hierarchy it locks both the port and its parent, removes the endpoint,
-> and if the port is now empty, marks it dead and unregisters the port
-> by calling delete_switch_port(). There are two places during this work
-> where the parent_port may be used after freeing:
->
-> First, a concurrent detach may have already processed a port by the
-> time a second worker finds it via bus_find_device(). Without pinning
-> parent_port, it may already be freed when we discover port->dead and
-> attempt to unlock the parent_port. In a production kernel that's a
-> silent memory corruption, with lock debug, it looks like this:
->
-> []DEBUG_LOCKS_WARN_ON(__owner_task(owner) != get_current())
-> []WARNING: kernel/locking/mutex.c:949 at __mutex_unlock_slowpath+0x1ee/0x310
-> []Call Trace:
-> []mutex_unlock+0xd/0x20
-> []cxl_detach_ep+0x180/0x400 [cxl_core]
-> []devm_action_release+0x10/0x20
-> []devres_release_all+0xa8/0xe0
-> []device_unbind_cleanup+0xd/0xa0
-> []really_probe+0x1a6/0x3e0
->
-> Second, delete_switch_port() releases three devm actions registered
-> against parent_port. The last of those is unregister_port() and it
-> calls device_unregister() on the child port, which can cascade. If
-> parent_port is now also empty the device core may unregister and free
-> it too. So by the time delete_switch_port() returns, parent_port may
-> be free, and the subsequent device_unlock(&parent_port->dev) operates
-> on freed memory. The kernel log looks same as above, with a different
-> offset in cxl_detach_ep().
+From: Alejandro Lucero <alucerop@amd.com>
 
-Hi Alison,
+For facilitating the integration of type2 support, here it comes the
+first patches to be applied in preparation for impending type2 drivers.
 
-After looking deeper into these cases, looks like the changes cannot cover the second case?
+FWIW, the first two patches are a split of first patch in v23, while the
+third patch is the third patch in v23.
 
-My understanding is that cxl_port_release() will be called on the child port before the device_unlock(&parent_port->dev). The put_device() for the parent_port is still possible to release parent_port before calling device_unlock(&parent_port->dev).
+Not sure if I should have added the review tags as the code has not
+changed, but maybe better a clean start.
 
-If my understanding is wrong, please correct me. Thanks.
+v3 changes:
+	- fix commit (Greg, Jonathan)
+	- fix member field comment (Jonathan)
+	- add patch for removing redundant call in moved code (Greg)
+
+v2 changes:
+	- fix nit (Allison)
+	- rephrase commit (Allison)
+
+Alejandro Lucero (4):
+  cxl: support Type2 when initializing cxl_dev_state
+  cxl: export internal structs for external Type2 drivers
+  cxl: Move pci generic code
+  cxl/pci: Remove redundant cxl_pci_find_port() call
+
+ drivers/cxl/core/core.h      |   2 +
+ drivers/cxl/core/mbox.c      |  12 +-
+ drivers/cxl/core/memdev.c    |  24 ++++
+ drivers/cxl/core/pci.c       |  57 +++++++++
+ drivers/cxl/core/regs.c      |   1 -
+ drivers/cxl/cxl.h            |  99 +--------------
+ drivers/cxl/cxlmem.h         |  86 +------------
+ drivers/cxl/cxlpci.h         |  13 ++
+ drivers/cxl/pci.c            |  84 ++-----------
+ include/cxl/cxl.h            | 226 +++++++++++++++++++++++++++++++++++
+ tools/testing/cxl/test/mem.c |   3 +-
+ 11 files changed, 338 insertions(+), 269 deletions(-)
+ create mode 100644 include/cxl/cxl.h
 
 
-Ming
-
-> Both of these issues stem from the absence of a lifetime guarantee
-> between a child port and its parent port.
->
-> Establish a lifetime rule for ports: child ports hold a reference to
-> their parent device until release. Take the reference when the port
-> is allocated and drop it when released. This ensures the parent is
-> valid for the full lifetime of the child and eliminates the use after
-> free window in cxl_detach_ep().
->
-> This is easily reproduced with a reload of cxl_acpi in QEMU with CXL
-> devices present.
->
-> Fixes: 2345df54249c ("cxl/memdev: Fix endpoint port removal")
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Li Ming <ming.li@zohomail.com>
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->
-> Changes in v4:
-> Move the put_device() into existing if-else logic (Ming)
->
-> Changes in v3:
-> Scope fix as a lifetime guarantee btw child port & parent (Dan)
->
-> Changes in v2:
-> Remove stray blank line (DaveJ)
-> Rebase on 7.0-rc1
-> Add Fixes Tag (DaveJ)
->
->
->  drivers/cxl/core/port.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index b69c2529744c..a004da8fbe55 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -552,10 +552,13 @@ static void cxl_port_release(struct device *dev)
->  	xa_destroy(&port->dports);
->  	xa_destroy(&port->regions);
->  	ida_free(&cxl_port_ida, port->id);
-> -	if (is_cxl_root(port))
-> +
-> +	if (is_cxl_root(port)) {
->  		kfree(to_cxl_root(port));
-> -	else
-> +	} else {
-> +		put_device(dev->parent);
->  		kfree(port);
-> +	}
->  }
->  
->  static ssize_t decoders_committed_show(struct device *dev,
-> @@ -721,6 +724,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
->  		struct cxl_port *iter;
->  
->  		dev->parent = &parent_port->dev;
-> +		get_device(dev->parent);
->  		port->depth = parent_port->depth + 1;
->  		port->parent_dport = parent_dport;
->  
->
-> base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
-
+base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
+-- 
+2.34.1
 
