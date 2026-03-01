@@ -1,76 +1,92 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012002.outbound.protection.outlook.com [40.93.195.2])
+Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936F736B600
-	for <linux-cxl@vger.kernel.org>; Sat, 28 Feb 2026 17:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF25A3B2AA
+	for <linux-cxl@vger.kernel.org>; Sun,  1 Mar 2026 22:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.24
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772300181; cv=fail; b=D4H7D+jFHTKVGM7Gb0zAGust1S9V/7goLSxjU7bflIi0Xj+rked7hnQYfGJwTCqKQW2qnzzmCHTugWv2IOcnLf4/Jj7fRQpNs4pp6x7ECVjyDMKNWPaxKCRFhRgH8U/m5gkpK56e2p4GEeYaoXu6RrKUY+kzD3bUC6/SWzRC3og=
+	t=1772403480; cv=pass; b=OKGQxGXo9Z0qCtweDwSQ/V223HMkSjlI6VuvLtkd8xKv4troBgYTu2Ad6/khDxh20ULdBZe4zfoXvUzGTVGSBeJnF8vTH6Jn8mCV7sNJsKLNAG2MVoWH+5JYn3qC3OVEZlE3bWDuCI/MjiuBYTO2X6jqoCfEW24KhzV1GhS5I7s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772300181; c=relaxed/simple;
-	bh=ADI80cBBS51NCLKnYFG4ekj2x0blPywSbA8iYoH6Gy0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZRu6LD1DM7wjzmhuthMvvhgk2o/VqmMDjXmLSVFKtuul6RxsfxBnrfQE8r0WoCKxxBTJPYLmili6O380nT5Eyu/cnvleI7xFSfAIBo8QA1Zpa/x1o9G8EVvYTTHRzQpmLuDQKAfOcof5X0I9LoSlrsj9FF0smz3Sw0sIo2Y0LkE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jJLY6A5N; arc=fail smtp.client-ip=40.93.195.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1772403480; c=relaxed/simple;
+	bh=EIpRXf34l3+ewfOwknI58ufa0xiFg2OsSOW0sMrltTY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XJbsFMAJD9zfwmCfV3qKQ4aJcfdkCg11WU+sFYxGhiJnSXrZ4Sc+OuXJkOwx9bszy3tAZ11bdD7GrTa38iGmORq6arb0wnnSBgPs29ETHOI1G3JZpOYoU0SmDOwHrDPgcrXnU/fSEgX2zCG31iOcXAEE+Kc1hiY4Qvo3FHhg2u8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=lpAbeNlm; arc=pass smtp.client-ip=23.83.218.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jJLY6A5N"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uMZZJBxLCABxNuVkV1xEi8nwVOUw9THqM6dsWu34Y1HkphQFmar2rfcCR/P8i1JOoBC+nnxwiBnMHzmn+jHHwsicvO2PEMgcVrFLm6XjMsz1/PW2uBbLRuyeVxCouDXzTUSvytHgm8yZpsYwzJX8FbG/UJyNBOGOsgdAyB0uVAr/gMFt6JrYZbQqzZ4uW/iru333BUaYklizodiMykLcN2awD+z5Hg0Zdvpz0Kbj8etH9DFeoz6uC+VcXgVe7qW6DYHhFqgvntzb259vvvaoSExPUZVEiw+7/CHE+5RIq1AEpDRIeW5qQrp4qQ5KgG/kr2dhHP/4JUuHHRLwKnW+rQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oyO40IhebN4fBxOxuGIMwMRP9NpBW1HhCt+hO+WSe4A=;
- b=v/28Eg8D+gJYmMcaE5NCYZ7Id1T2o432rOCNqfccn8flwKOglHQ0Xiu2yO4ijp6kfzzYgUhChE3TXlb4z2nugH9y5URpkeZG+sGS0l68RJ6aMY4KwJwu/7RBYfpRZUQ6Y41CNDk9D5qmjFAfOfbrGLaz2lTvtSaXX43K9N/1NwLHJOaRjzWBOoDPUTUjJPwYBEsSnkYruoavGJZKqxjAyYjoOb4X3Vwog8D1MrijuOJrxjNS05MecrXPTosVSuQuYQWS+W0LYW5PAhEltZ8cELJHD1Tq17ZPwQPGDQYdB5I9p7lzPCauvD3e5iEBDTRMUGoOpM0HHNKWo1zNK3NwaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oyO40IhebN4fBxOxuGIMwMRP9NpBW1HhCt+hO+WSe4A=;
- b=jJLY6A5NDS5XPQIgG1zHKhZyG7xLUi5iHVfwtsekAJVp226Irrm773YFaleD94w4yMppJjcvsQ7O7WFoEcq4r6ygJzghKLTkqd2wvgp/2Zkv/dAjdEChpoMOas0dYgyP3CoRj2qqIGmAwGjJa4NynvuNPV3fTskUiLty0uvK3JI=
-Received: from BY3PR05CA0041.namprd05.prod.outlook.com (2603:10b6:a03:39b::16)
- by CH3PR12MB8911.namprd12.prod.outlook.com (2603:10b6:610:169::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.15; Sat, 28 Feb
- 2026 17:36:15 +0000
-Received: from SJ5PEPF000001EE.namprd05.prod.outlook.com
- (2603:10b6:a03:39b:cafe::b8) by BY3PR05CA0041.outlook.office365.com
- (2603:10b6:a03:39b::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9654.15 via Frontend Transport; Sat,
- 28 Feb 2026 17:36:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- SJ5PEPF000001EE.mail.protection.outlook.com (10.167.242.202) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9654.16 via Frontend Transport; Sat, 28 Feb 2026 17:36:15 +0000
-Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Sat, 28 Feb
- 2026 11:36:14 -0600
-Received: from xcbalucerop40x.xilinx.com (10.180.168.240) by
- satlexmb08.amd.com (10.181.42.217) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Sat, 28 Feb 2026 11:36:13 -0600
-From: <alejandro.lucero-palau@amd.com>
-To: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<dave.jiang@intel.com>
-CC: Alejandro Lucero <alucerop@amd.com>, Gregory Price <gourry@gourry.net>,
-	Alison Schofield <alison.schofield@intel.com>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>
-Subject: [PATCH v3 3/3] cxl/region: Factor out interleave granularity setup
-Date: Sat, 28 Feb 2026 17:36:03 +0000
-Message-ID: <20260228173603.1125109-4-alejandro.lucero-palau@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260228173603.1125109-1-alejandro.lucero-palau@amd.com>
-References: <20260228173603.1125109-1-alejandro.lucero-palau@amd.com>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="lpAbeNlm"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id A06FD462440;
+	Sun, 01 Mar 2026 22:17:53 +0000 (UTC)
+Received: from pdx1-sub0-mail-a204.dreamhost.com (100-110-51-5.trex-nlb.outbound.svc.cluster.local [100.110.51.5])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 3558A4623FC;
+	Sun, 01 Mar 2026 22:17:53 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1772403473;
+	b=LisrnUNtawB4eflpTN9brh2y0l1nGluIKQ3adgsqXXcXFuVFa8PsmrxvLBtrNAiiYD3W41
+	poJkmIMclN2RbBKov5mWQ8KNkBqN7MRyLTvkbWR6AAB2UElnMJf3BzHBoq+Su1GO7VgU3o
+	53Ll8hryen17qYul3iXeQUXoO9EZI4D4eVzE5TFrSXQXUw5/3ME1SfsbnMPClluhKwu7c2
+	s/rMAo142YLQScPVlPWFTjxfIZMvqUGEZG1q2Q7sdsB0F9qqmAVqQRew37oPMGApuc9+We
+	0S/+hoZJlQAF579V+EeSVPoSCZEZhn8gPynQgHV+ajJWIFH/gn7zDZnru7PdHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1772403473;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
+	bh=NIAUP+KEGox+vun8+ef2xVLMmdUj0SALd7GBPSTxjcU=;
+	b=IamEupyPaJVpSfA5pb6pv+1cFLt1YaTATITg1XE/leRMBIqQFzQg64Q4Uj9TSfXW+k1NYM
+	0pqnEnC/sjq097DU8VbUHmS2fdticMAaYTFKOocyhMG39/X/D0Y37EeKE/+4zj82Hufwfj
+	kWEF/Rw2WiaFOkMyjYcjZ7t/A2jugFGJFbiPzIHE82aRKdaDcACdIsSu5ahBx8Db7rvz4+
+	gSK4TMrL8MNXiYagytYcIqTiJiGIcuECM7K4uSOmn5Y7hgbN2IB0MmluaGBXqufrYF9lwg
+	bXblVz9uWTODyVDo6RTLQG47jiu9rRw3jhQaCTOrd9ZTssvgpnFubIe/MMbptg==
+ARC-Authentication-Results: i=1;
+	rspamd-6fbd58c58b-9chvd;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Vacuous-Exultant: 6eafc5de19f29f3d_1772403473467_1736561549
+X-MC-Loop-Signature: 1772403473467:988673757
+X-MC-Ingress-Time: 1772403473466
+Received: from pdx1-sub0-mail-a204.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.110.51.5 (trex/7.1.3);
+	Sun, 01 Mar 2026 22:17:53 +0000
+Received: from offworld.lan (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a204.dreamhost.com (Postfix) with ESMTPSA id 4fPGf84LcRzNg;
+	Sun,  1 Mar 2026 14:17:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1772403473;
+	bh=NIAUP+KEGox+vun8+ef2xVLMmdUj0SALd7GBPSTxjcU=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=lpAbeNlms/qZzHA2HN8w96YL7SQ5OtLiZJnA0+JKPGrbmjoIVdcQc5mdCEPGFhY8C
+	 8nhyY5s/lxrg/ic3LmkDD+XbTLNfNib153FhLajC1NzM2TgsZXrOl0fZysBE6Sd2Dz
+	 Ko3+w5DDyFuxXMjX78/iNvh1R8ziotZSXY0bfCD55oGbafAU2+dS+FO/y2PFwhIxNz
+	 1DYRQ3TB5lnL4ovWkgv7y4vF73JBfdIgnmKQYBIHqPQ0cte/UcMhqzvxtk1nG6lbkU
+	 mt64MQM0veomwkwpV65bnqdUTExlCCi0hXjkd3jjvtw0dr6cTQ+Zvv5dYBMFvZVsOw
+	 8MlEKGkWRRr5g==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dave.jiang@intel.com
+Cc: jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	linux-cxl@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>
+Subject: [PATCH] cxl/mbox: Use proper endpoint validity check upon sanitize
+Date: Sun,  1 Mar 2026 14:17:39 -0800
+Message-Id: <20260301221739.1726722-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -78,119 +94,65 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001EE:EE_|CH3PR12MB8911:EE_
-X-MS-Office365-Filtering-Correlation-Id: a246df59-1910-4e05-005f-08de76efdf82
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	J1WZKur2ZRbWlVH9kRBQj49PmMYCdkt7jhiu6I11RlqJJjAz8B/1C7cuSJw/8J91iB0WqL5/fkPc8xyklHfuz/tgD6eFbJUCr75kJHei+NjlOfu2RfjyNtSle5LTJtRLnqdga2beJUCRxN8ubcknGpRrW8+o/ZEMsNYnasGyoIzXHHZjmas1iU1pX2sN2Qhzgelm4aTsa19ayGyEz8b5Xx/odYO0EqKgcroLXMkTu4g3yqTDuiG4rZRwn5nOJIXM0a4fNVGtTZsFnqrdImoYSfrFxHwWLVl40angv1zN2e2yPbVuLrt5SpNVGmzanrQ3EhEsYHfIhR2Db95ofzRc9wdq6jOq2nh2I3CmcV6ZYdNHBqs6SyaLlUnEr7bR16ml5NL6JMc0ag78UxasGJAzEYeeVClG9NM5+mbpb2sG5wPypLm/Rq/ZBW3gkdpFutnm5to1m7iPu0V4Q3KLKEeRnATwF1MWMnBUTXdcvupxpgz0gvHU2w/TOStuVPXvYWuE91V2EN+SavgUTmldFWkaZxgF76ZKXdlqLFCJNrZ/as3uIrXFWpanzaPcka1pHk1ljN/FcQoSEQ+Y9KIqL8dE24gj4BRP1efR+Z86VfhIw73Zi/JbXZpQaL9h0lBQzTX5qW/joLnh1FTEo4WidKeaO1FKf42UNNDCDZECfzo/MWJHTKx0srLafsFhazNl1awH5VWcYzENQAJm5G9mfPF9+/RJyqdPRUQKDCXmpiYQams7FYGca6J9fMn+O56YxlHWFrn5VW2X6K146D8JRD6l1ji1oBwB25pAvKHgUud80wy2tDUCksKbQXxwWvjUogpNKPEJ4RcjRysE6Cv+GLsNiw==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	9DISaH/Nqr9LaISZTSkRs7Q36dzgzrDmsMIUqWkg6n4mpjLVGtEP5B0dPmq9KdA2Q8S7T48+obxM13mBUjyiUDMWdVgdJso+kYvEFsyI92wxj8iJwZ7BMLGGJKotZ/u+URic85yD9aiwwHLqVyZ+f+8SajeZCXg806iOeIc3aOtv/mUnimYe/xDmm33lV82ICmDzO3r3BllvnuVCvp9x5tRrv9u9PyqkTcvG8XTvabOxZpjVDkurdr7Lsor02Tg1+kjVqQ30THX4SsiIJ4yeL31U5nBYu8yKZSRUjkfVuPchI0uTorurA/eOBkDEh5k199NpFBe62MSOYTAHhe6NBQ4LlJRtQUSUvPgej0fq4d8PQ6itZihk7Rz7Az8o6FExZJdOllq2CplzN8fvBJTCYoByUhwF6L3CrJRQTp6UfA9zDYJaSwr2G52Qp7nVc8lp
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2026 17:36:15.1015
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a246df59-1910-4e05-005f-08de76efdf82
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001EE.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8911
 
-From: Alejandro Lucero <alucerop@amd.com>
+Fuzzying CXL triggered:
 
-Region creation based on Type3 devices can be triggered from user space
-allowing memory combination through interleaving.
+BUG: KASAN: null-ptr-deref in cxl_num_decoders_committed+0x3e/0x80 drivers/cxl/core/port.c:49
+Read of size 4 at addr 0000000000000642 by task syz.0.97/2282
 
-In preparation for kernel driven region creation, that is Type2 drivers
-triggering region creation backed with its advertised CXL memory, factor
-out a common helper from the user-sysfs region setup for interleave
-granularity.
+CPU: 2 UID: 0 PID: 2282 Comm: syz.0.97 Not tainted 7.0.0-rc1-gebd11be59f74-dirty #494 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ kasan_report+0xe0/0x110 mm/kasan/report.c:595
+ cxl_num_decoders_committed+0x3e/0x80 drivers/cxl/core/port.c:49
+ cxl_mem_sanitize+0x141/0x170 drivers/cxl/core/mbox.c:1304
+ security_sanitize_store+0xb0/0x120 drivers/cxl/core/memdev.c:173
+ dev_attr_store+0x46/0x70 drivers/base/core.c:2437
+ sysfs_kf_write+0x95/0xb0 fs/sysfs/file.c:142
+ kernfs_fop_write_iter+0x276/0x330 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x5df/0xaa0 fs/read_write.c:688
+ ksys_write+0x103/0x1f0 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x111/0x680 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f60a584ba79
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f60a42a7038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f60a5ab5fa0 RCX: 00007f60a584ba79
+RDX: 0000000000000002 RSI: 00002000000001c0 RDI: 0000000000000003
+RBP: 00007f60a58a49df R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f60a5ab6038 R14: 00007f60a5ab5fa0 R15: 00007ffe58fad8b8
+ </TASK>
 
-Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-Reviewed-by: Gregory Price <gourry@gourry.net>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Tested-by: Gregory Price <gourry@gourry.net>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+This goes away using the correct check instead of abusing cxlmd->endpoint,
+which is unusable (ENXIO) until the driver has probed. During that window
+the memdev sysfs attributes are already visible, as soon as device_add()
+completes.
+
+Fixes: 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- drivers/cxl/core/region.c | 36 ++++++++++++++++++++++++------------
- 1 file changed, 24 insertions(+), 12 deletions(-)
+ drivers/cxl/core/mbox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 01c358b3795f..4d3baa760d9e 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -559,21 +559,14 @@ static ssize_t interleave_granularity_show(struct device *dev,
- 	return sysfs_emit(buf, "%d\n", p->interleave_granularity);
- }
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index e7a6452bf544..12386d912705 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1301,7 +1301,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
+ 	 * Require an endpoint to be safe otherwise the driver can not
+ 	 * be sure that the device is unmapped.
+ 	 */
+-	if (endpoint && cxl_num_decoders_committed(endpoint) == 0)
++	if (cxlmd->dev.driver && cxl_num_decoders_committed(endpoint) == 0)
+ 		return __cxl_mem_sanitize(mds, cmd);
  
--static ssize_t interleave_granularity_store(struct device *dev,
--					    struct device_attribute *attr,
--					    const char *buf, size_t len)
-+static int set_interleave_granularity(struct cxl_region *cxlr, int val)
- {
--	struct cxl_region *cxlr = to_cxl_region(dev);
- 	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
- 	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
- 	struct cxl_region_params *p = &cxlr->params;
--	int rc, val;
-+	int rc;
- 	u16 ig;
- 
--	rc = kstrtoint(buf, 0, &val);
--	if (rc)
--		return rc;
--
- 	rc = granularity_to_eig(val, &ig);
- 	if (rc)
- 		return rc;
-@@ -589,14 +582,33 @@ static ssize_t interleave_granularity_store(struct device *dev,
- 	if (cxld->interleave_ways > 1 && val != cxld->interleave_granularity)
- 		return -EINVAL;
- 
--	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
--	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
--		return rc;
-+	lockdep_assert_held_write(&cxl_rwsem.region);
- 
- 	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE)
- 		return -EBUSY;
- 
- 	p->interleave_granularity = val;
-+	return 0;
-+}
-+
-+static ssize_t interleave_granularity_store(struct device *dev,
-+					    struct device_attribute *attr,
-+					    const char *buf, size_t len)
-+{
-+	struct cxl_region *cxlr = to_cxl_region(dev);
-+	int rc, val;
-+
-+	rc = kstrtoint(buf, 0, &val);
-+	if (rc)
-+		return rc;
-+
-+	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
-+		return rc;
-+
-+	rc = set_interleave_granularity(cxlr, val);
-+	if (rc)
-+		return rc;
- 
- 	return len;
- }
+ 	return -EBUSY;
 -- 
-2.34.1
+2.39.5
 
