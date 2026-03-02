@@ -1,208 +1,97 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96A84014B1;
-	Mon,  2 Mar 2026 15:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56C72C187
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Mar 2026 15:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772464001; cv=none; b=NC/kyiCMKR8VSzcMCZeK4rORZjr595WCHhQYofH7Gl/4uEpqUFXRI32becLJM87Z6dvceV2ywM6bzw5x5nqFHJtvrNndgJlnq4MWJIe+VOBCaotka/ufsW8JfR3PBAWf+pv6olsfVCaDebsLpOeKij226XGtH5GfxefodCkt9lU=
+	t=1772464876; cv=none; b=rQSG+C5lBoxHp/9+7qGtlcHls3fuUWUSbFsFoc2nIcn5zxFZuHhlzF2pTx+23Y/ec0Er0YaAMn3kHPxXwujtdl7AtDV2xuIDrItNDGjK2xp8pdzIe4EJQf1Ureq7SZAR3QaREZRxzNqS/wj7In7/haO/2UVdiKpA86oqT1RbcT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772464001; c=relaxed/simple;
-	bh=5744P+pGK+XyXUbnqiUcR4ppK8KbZz/PvWksth+Oz8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iLrwPqpp39ky0LAkukojJS/E/jCcauI6r7IM25VW5y3eVNf9C8fx8AXbQOwR+FIqneHGutlIeKo+Ss+ZqluGcHAIAMUFw8v6AWIUuvNv9mWKR0tJZUoUMUjQs+E1412NH7AzIj9+JcIT8vnP3eN7L4GQngQLEIj2RwgC22DErp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 13A571A01BC;
-	Mon,  2 Mar 2026 15:06:35 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf05.hostedemail.com (Postfix) with ESMTPA id 2235B20010;
-	Mon,  2 Mar 2026 15:06:25 +0000 (UTC)
-Date: Mon, 2 Mar 2026 09:06:23 -0600
-From: John Groves <John@groves.net>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	John Groves <jgroves@fastmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Gregory Price <gourry@gourry.net>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>, "venkataravis@micron.com" <venkataravis@micron.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH V7 02/19] dax: Factor out dax_folio_reset_order() helper
-Message-ID: <aaWlxFh-bqUYXgUo@groves.net>
-References: <0100019bd33b1f66-b835e86a-e8ae-443f-a474-02db88f7e6db-000000@email.amazonses.com>
- <20260118223110.92320-1-john@jagalactic.com>
- <0100019bd33bf5cc-3ab17b9e-cd67-4f0b-885e-55658a1207f0-000000@email.amazonses.com>
- <CAEvNRgHmfpx0BXPzt81DenKbyvQ1QwM5rZeJWMnKUO8fB8MeqA@mail.gmail.com>
+	s=arc-20240116; t=1772464876; c=relaxed/simple;
+	bh=LF0Q/Gj06oTpDIMQhYLPsuiDbWsSgO2SH+Sj8FdqUek=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UP976Sefu3xZPvaPXEAgdVYIZ6cNRBISOipEGSE3lxYxe9Fd9yzYJs3wquhdR2Au4wvlBq44dKQYfKkI9JuSxVr90dNWNAH1ATV5iwjACz5cFivfSGj2/2GZkJoqymZK7RbevI53bl176fV+C/nwSBK/N+pB78JimgIDrNpLsKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fPjKv2LX3zHnGcs;
+	Mon,  2 Mar 2026 23:20:19 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id 50D5440569;
+	Mon,  2 Mar 2026 23:21:11 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 2 Mar
+ 2026 15:21:10 +0000
+Date: Mon, 2 Mar 2026 15:21:09 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: <alejandro.lucero-palau@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<dave.jiang@intel.com>, <gourry@gourry.net>, Alejandro Lucero
+	<alucerop@amd.com>
+Subject: Re: [PATCH v3 4/4] cxl/pci: Remove redundant cxl_pci_find_port()
+ call
+Message-ID: <20260302152109.0000707d@huawei.com>
+In-Reply-To: <20260228172549.1121832-5-alejandro.lucero-palau@amd.com>
+References: <20260228172549.1121832-1-alejandro.lucero-palau@amd.com>
+	<20260228172549.1121832-5-alejandro.lucero-palau@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEvNRgHmfpx0BXPzt81DenKbyvQ1QwM5rZeJWMnKUO8fB8MeqA@mail.gmail.com>
-X-Stat-Signature: cq87gmedzk7x7r9ny9iist1ng64zruqa
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 2235B20010
-X-Session-Marker: 6A6F686E4067726F7665732E6E6574
-X-Session-ID: U2FsdGVkX18sF70d1HqicCYqrH7vz+w2ws8l6S67ZfI=
-X-HE-Tag: 1772463985-663465
-X-HE-Meta: U2FsdGVkX19+wByPZPpcn3fFxdlS7efSS3Z9sfx2FbKmn+pO0ifUKq0ek7sbqcQSKckha/6QKB0dO38o4/5xEaBD+GsVsq7ETKFWcom7uRHSSn+RVp2j9JNOM/Vj30paav3NtmzU4PFup78HglM3hDeONluYWqykeNoY9+/HZXqJLcAm28+hN8/b030/2zXtfMMEyfxgHY/UmA3e1Sy8tR2hBLX7f4PnfVGd3ztqgPPlCvTkXDr77SPk3sW0FIEY7Sc7zV6DKmspXuu6y+44WrT7hu7h77kH7lp0l1mMiR4rrp96nReTeguCtrXqJdgiImk5Z17L0ZxaA7FMn3FzxVDz1xZoVZNrfTWMXAyyVaQRkd/slAXiwFd9Sk4SYq48vzEK1miTOhR/K8JA1pmO/lhXdIEt9BORVuZfc93ojrZt1rJbkmgV+Kgg5MKpQahN9r09EKJ14MBgVltwhztXEw==
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-On 26/02/23 07:00PM, Ackerley Tng wrote:
-> John Groves <john@jagalactic.com> writes:
-> 
-> > From: John Groves <John@Groves.net>
-> >
-> > Both fs/dax.c:dax_folio_put() and drivers/dax/fsdev.c:
-> > fsdev_clear_folio_state() (the latter coming in the next commit after this
-> > one) contain nearly identical code to reset a compound DAX folio back to
-> > order-0 pages. Factor this out into a shared helper function.
-> >
-> > The new dax_folio_reset_order() function:
-> > - Clears the folio's mapping and share count
-> > - Resets compound folio state via folio_reset_order()
-> > - Clears PageHead and compound_head for each sub-page
-> > - Restores the pgmap pointer for each resulting order-0 folio
-> > - Returns the original folio order (for callers that need to advance by
-> >   that many pages)
-> >
-> > This simplifies fsdev_clear_folio_state() from ~50 lines to ~15 lines while
-> > maintaining the same functionality in both call sites.
-> >
-> > Suggested-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> > Signed-off-by: John Groves <john@groves.net>
-> > ---
-> >  fs/dax.c | 60 +++++++++++++++++++++++++++++++++++++++-----------------
-> >  1 file changed, 42 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/fs/dax.c b/fs/dax.c
-> > index 289e6254aa30..7d7bbfb32c41 100644
-> > --- a/fs/dax.c
-> > +++ b/fs/dax.c
-> > @@ -378,6 +378,45 @@ static void dax_folio_make_shared(struct folio *folio)
-> >  	folio->share = 1;
-> >  }
-> >
-> > +/**
-> > + * dax_folio_reset_order - Reset a compound DAX folio to order-0 pages
-> > + * @folio: The folio to reset
-> > + *
-> > + * Splits a compound folio back into individual order-0 pages,
-> > + * clearing compound state and restoring pgmap pointers.
-> > + *
-> > + * Returns: the original folio order (0 if already order-0)
-> > + */
-> > +int dax_folio_reset_order(struct folio *folio)
-> > +{
-> > +	struct dev_pagemap *pgmap = page_pgmap(&folio->page);
-> > +	int order = folio_order(folio);
-> > +	int i;
-> > +
-> > +	folio->mapping = NULL;
-> > +	folio->share = 0;
-> > +
-> > +	if (!order) {
-> > +		folio->pgmap = pgmap;
-> > +		return 0;
-> > +	}
-> > +
-> > +	folio_reset_order(folio);
-> > +
-> > +	for (i = 0; i < (1UL << order); i++) {
-> > +		struct page *page = folio_page(folio, i);
-> > +		struct folio *f = (struct folio *)page;
-> > +
-> > +		ClearPageHead(page);
-> > +		clear_compound_head(page);
-> > +		f->mapping = NULL;
-> > +		f->share = 0;
-> > +		f->pgmap = pgmap;
-> > +	}
-> > +
-> > +	return order;
-> > +}
-> > +
-> 
-> I'm implementing something similar for guest_memfd and was going to
-> reuse __split_folio_to_order(). Would you consider using the
-> __split_folio_to_order() function?
-> 
-> I see that dax_folio_reset_order() needs to set f->share to 0 though,
-> which is a union with index, and __split_folio_to_order() sets non-0
-> indices.
-> 
-> Also, __split_folio_to_order() doesn't handle f->pgmap (or f->lru).
-> 
-> Could these two steps be added to a separate loop after
-> __split_folio_to_order()?
-> 
-> Does dax_folio_reset_order() need to handle any of the folio flags that
-> __split_folio_to_order() handles?
+On Sat, 28 Feb 2026 17:25:49 +0000
+alejandro.lucero-palau@amd.com wrote:
 
-Sorry to reply slowly; this took some thought.
+> From: Alejandro Lucero <alucerop@amd.com>
+Needs to match the sign-off.
 
-I'm nervous about sharing folio initialization code between the page cache
-and dax. Might this be something we could unify after the fact - if it
-passes muster? 
-
-Unifying paths like this could be regression-prone (page cache changes
-breaking dax or vice versa) unless it's really well conceived...
+git commit --amend --author="Gregory Price <gourry@gourry.net>"
+Should fix that up for you.
 
 > 
-> >  static inline unsigned long dax_folio_put(struct folio *folio)
-> >  {
-> >  	unsigned long ref;
-> > @@ -391,28 +430,13 @@ static inline unsigned long dax_folio_put(struct folio *folio)
-> >  	if (ref)
-> >  		return ref;
-> >
-> > -	folio->mapping = NULL;
-> > -	order = folio_order(folio);
-> > -	if (!order)
-> > -		return 0;
-> > -	folio_reset_order(folio);
-> > +	order = dax_folio_reset_order(folio);
-> >
-> > +	/* Debug check: verify refcounts are zero for all sub-folios */
-> >  	for (i = 0; i < (1UL << order); i++) {
-> > -		struct dev_pagemap *pgmap = page_pgmap(&folio->page);
-> >  		struct page *page = folio_page(folio, i);
-> > -		struct folio *new_folio = (struct folio *)page;
-> >
-> > -		ClearPageHead(page);
-> > -		clear_compound_head(page);
-> > -
-> > -		new_folio->mapping = NULL;
-> > -		/*
-> > -		 * Reset pgmap which was over-written by
-> > -		 * prep_compound_page().
-> > -		 */
+> Remove the redundant port lookup from cxl_rcrb_get_comp_regs() and use the
+> dport parameter directly. The caller has already validated the port is
+> non-NULL before invoking this function.
+
+Given the existing caller only does this immediately before the function call,
+what the reasoning for dropping this one rather than dropping the one in
+cxl_pci_setup_regs() which would have the same effect?  I'm fine with doing
+it here, but needs a tiny bit more descriptive text.  With that added and
+the author fixed up
+
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+
+
 > 
-> Actually, where's the call to prep_compound_page()? Was that in
-> dax_folio_init()? Is this comment still valid and does pgmap have to be
-> reset?
-
-Yep, in dax_folio_init()...
-
-
-Thanks,
-John
-
-[snip]
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Alejandro Lucero <alucerop@amd.com>
+> ---
+>  drivers/cxl/core/pci.c | 5 -----
+>  1 file changed, 5 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index c32cc62c501d..d1f487b3d809 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -707,11 +707,6 @@ static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
+>  		.resource = CXL_RESOURCE_NONE,
+>  	};
+>  
+> -	struct cxl_port *port __free(put_cxl_port) =
+> -		cxl_pci_find_port(pdev, &dport);
+> -	if (!port)
+> -		return -EPROBE_DEFER;
+> -
+>  	component_reg_phys = cxl_rcd_component_reg_phys(&pdev->dev, dport);
+>  	if (component_reg_phys == CXL_RESOURCE_NONE)
+>  		return -ENXIO;
 
