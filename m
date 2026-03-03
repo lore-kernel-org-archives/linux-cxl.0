@@ -1,135 +1,249 @@
-Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC288381AFB
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Mar 2026 18:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.179
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772561261; cv=pass; b=azU5WkjpaLEFHzYDyMUm0SpEz9pgb5ORlXVz6gqE3Y5V5+4zqVnU1XpVIP1gqpIpQ5DYPCv+z2LRemyTqrQPATXYT/SJe3G70uVenrPkyCGVXRuqOdfyo4bZEKPt1eVT9c7FS4AUJ9thbsD6iPrmK8t3nWhgDitzpRjCtstPnT4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772561261; c=relaxed/simple;
-	bh=HUHgj2ElBuPGmubcslyfUuFNZEOEJOjv22IyfxcfieI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HlnwW0m1VmDeMnXpICtK7CihEMwFKTi/rFPBpWZqGa1KGXHLyer5VGicmdZ0MAO+eJXO6gMgYGR5jG5KJrSBRiKbxZtA8im1ljw6oKbQHh6PYdaqrp31t71hPRTF8xeBrpQadItOmxEvmPg/OOdOWuPgukMt8+1KcYU3xLIfrdU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XGapfEar; arc=pass smtp.client-ip=74.125.82.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B0435F160
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Mar 2026 20:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772570184; cv=none; b=NH/smZkXHxYgjA/rXMMPjfnU/Onm1hW9kII9R4KDnZRGWHM43p7bmPW+cD+j3w+8MSMSH35SY31G13VPjYM0up3fTrdzl8JkAUdjq7uX9ZMznYzVK//dKZyc4oOe9bEmfAn6tu/M64goszoLql5UVUYvxUJybBLhf1BWvSBd4qw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772570184; c=relaxed/simple;
+	bh=0WXiDpchtAH8bVqvBLab1zkx9xLMSEgnhOTNf0nXPyc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ADzIJaaaxTmwI1tppUEOU/VIrtHAsYGSd9TVDUS0pwSKOKriu24SIMet96rLf6ZjAq0GUTbzQy8s+6dJaBKoV5KvFaZcdaLoZERdS/kCPhuthL41WTpeMG8lf3aewNuI137lQO4dEQ/7+po6/i6wiR3U50TGBDeHUY6n1fu2rcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=jPoPJmvq; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XGapfEar"
-Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-2bdff6c15a5so150221eec.3
-        for <linux-cxl@vger.kernel.org>; Tue, 03 Mar 2026 10:07:40 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772561260; cv=none;
-        d=google.com; s=arc-20240605;
-        b=H/wMExxf4AVDLf+77uBvtbVZPxEN42P1cFnuW/ajLmO65ykSPkTGP6+wort4D1OJ0l
-         WU9c1lwdDmSRpf1ZiBhRE69EG7v2rOcfKWYpBRSQwGyTo2PEyidLaJzKzcw+OuUolSqe
-         B27mjn4FapIeVZB98TEepCI/uE2dV3hHWWU8Gl4KBln/5eFVOVBaodXM2nae5o0aXQHr
-         x1M707ZcV18xUHeFhbU2iXACU+4JMqbN8x9nOOcyLpK2BoeKoDr9pOJXWJxaLxzR8fuW
-         fR2KjYa1GbE2jXg0mKAm4U6AGJXQufCJhOA1hVOXqKrsxSwn1MaHo6vTNRuT0QOgfClb
-         GMBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=R+q0jN+aH2U740XZAx90ODP1AU2BrSp5EsLhQpO8EjQ=;
-        fh=cvO1iqyz4g2a4mJ18n62EFGLOX/UkAOSfBB4xxGo724=;
-        b=U9AmdK4dgJEdZhDDzpOSs7kbQhuLr01oaODb+jv2iG+FG1/rxbqMMr8/4xkrRvF9Ly
-         VuR3YZdWQBCF2m5XO8W+YNV3S6yzyjm9AQi+fwAtA9MSCH19N3lhsomhNaTyD9+9gp45
-         ogE7MyjQcpVzKWuzRIhevHEksJa1hs1RtTMlSHvplkGVZLoF+HOKrMq7u8p+8fb2h5hf
-         4S9XpsDZ23BImmXgh5/+zlTRLKWe0SUSaJlCTgq5mEEfjEmzZ6lm0oXxGsQyHKM4i04v
-         xREeFKYDfeMBgOHFf9rudwY5ktNQSUBaFMp+nFJpsKC0cd9EQjDg9EFHfbMdxfsmbE8c
-         mqyQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="jPoPJmvq"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-8cb4136d865so814809885a.1
+        for <linux-cxl@vger.kernel.org>; Tue, 03 Mar 2026 12:36:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772561260; x=1773166060; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R+q0jN+aH2U740XZAx90ODP1AU2BrSp5EsLhQpO8EjQ=;
-        b=XGapfEary2QvfkhT2A03zHWPyyNJ6Iao5dpwc6qoSW9t7U0bZEFgeqdUWFHiQx0oZt
-         PMLO+YoBvftY2bV44jNW3TwFTtG4+y+HvpwCZzdquagngv7grRMS793RBb3gGOrxwQRh
-         E+PmR57RDenuPd2sT4bp9qvEo7O0dtyqmqUziSLy77o3fNg0n4FGzzCCtazjecQmuc8l
-         dZf2ZoDEqsp7iR5H+H2dKfgw6JlLEfrz5Ncya6As4PgHqhx+nA9oWgm8LS6SgA4Ko0AV
-         JbiY+EHuU8qjRGYkzNbMAvD2NsVOQBJUH/75SaxLlqMriheKko1HccaKIHW3FGGn/Ig8
-         WpMg==
+        d=gourry.net; s=google; t=1772570182; x=1773174982; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HSMo5+Ht+OJv6fxlprT7RhyGGgmGe3zydeGluTTF1Sk=;
+        b=jPoPJmvq78g+dz55Aepd7ikVipZMlI0Osa0jjLmZQsj15+VwqhnnAUONGn6cG5gzTu
+         in0FpfpwHh+R+csZOndc80iKq0zo1NTn9NaX+MMzho/4eQVzKPUdvRHWC5jKYBd2CfHS
+         BI/fg5l1zHRzVwCUd1R5+taqm1bSHLUM6kmibt4G7VxLG1aEX6nXqIXrK2GRkx7n3d7Z
+         xu80v5DghZda3D9hSaRTm7hk6ieiZpshjkd22fpYTazE9xAzYVYtMgSVe+a1WXTLJBnq
+         XDzLBpxqyfwuoZkSzS1BU0dcUBNfDcgNi5IoblPgSy6WVFjPxnzwX4CmvtE1qk0xoYAj
+         27fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772561260; x=1773166060;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=R+q0jN+aH2U740XZAx90ODP1AU2BrSp5EsLhQpO8EjQ=;
-        b=w7kdpN4KY+kODQsL36lEondqW9rNg7T2ZqYvztj3bjgUMzZ6c6Tr+6m246RZYDJk4f
-         GFWdSpOL7vMeG4lrjgjqUBl/G6vrU/hG/mZQxgCa4M086OsB+C3yKYr0N/4a4jfTPXx1
-         wmNNleEqrWsZP5adNN0Bv4o+Azz0KNE5099FmHU/n2mFMqqcaGCny+yZpj2VZYsa4vay
-         cjVBekZrSYyWMcNZbqMf3kdI7XxJuy54MAp2L+unkku2llXkCtZT7iBxcPX9GIbwbono
-         DP8V3z3l6DqiwK01E4/XYmTYxI98aZf0bk0htarC/KJYAOxEYFT+LhtrtBwAvvn+slbO
-         S4/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUKDH/KBcNrCD/Xql/jezkJqq9BFo3eekoGIzD8OFzSGptuFHsDnFzioFOQep/7JP5ReHV4hwctEPU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1uiK8mgqTDtWEeuhnVxZbzuJLepCROHW/TG+CFd1fMbdP/HVC
-	Fq2xNEcHXhhHQEFrNqIWxP7+GeSYb2DpPjR8bjhkD7uyBSc/NV9cegVqJXDY98Ih3ErvfA/NoLR
-	ADtDv4hqr7fNhtfcIShL8zdWNwBTAqPKMh2p+bHM=
-X-Gm-Gg: ATEYQzyi4aHgje4zXmPI13sP7uiTGWIhmWAbQ+MZaP2a3Wbu7RJ/DFg+ODNTE5bDXqi
-	9yvqNXvDMVrXNOA/DIbF9nSZbtXzutieVN2xj8dpZoWeGbT8parNnhLCzHUOyInBBZO0MSEK+HD
-	3o97NxFiBKOpf4aE620D6w0LL2I4TWf4ugiN8z3nHD9/IRMXQtqeN6jBqaqfLs/kNWj3OVruPyh
-	b0wjEqThCDMS+kC+oXYApJQCymoB5BhqFDhKTBEVbwzp/9QHgnTH2gYP1KdSEmzgf2DgOtNHuDK
-	KwzJ+Whnbx2VKe06JKQW5b+VluPqBy7cCbBnW5ykkDpMXXZeHuMTbqbps1UzgJlq0EKQvA6HYln
-	5skdyRriiI2y5cd0kv5dTgOr7
-X-Received: by 2002:a05:7301:128f:b0:2be:1946:8576 with SMTP id
- 5a478bee46e88-2be19468a7cmr1189062eec.4.1772561259708; Tue, 03 Mar 2026
- 10:07:39 -0800 (PST)
+        d=1e100.net; s=20230601; t=1772570182; x=1773174982;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HSMo5+Ht+OJv6fxlprT7RhyGGgmGe3zydeGluTTF1Sk=;
+        b=uXSYdGDLzC/x989m/UddDdbphFQoSlzniZz3D0SLNM+HMmiaJLWwmCo/WUgZcM7SNI
+         IU8O1TwrC7KD8Yl7FSQ+EUFNl4U4iZxrWStdeh0E+16Nxahyio55cmUs42TZNuXu4kCl
+         RFpkcsMxoOCc/qbMt0wJU9tm0Uex2cg0z/bifqBwzmY7eAwd5mvXjc12KEs0nHE4nzmj
+         Hm3F0em1ZIADf52Cd4wS7Nhw8gwnQ3bxIcwljopeGO8If6oZKPpHxv8bUrvlMbQX0vUY
+         gXbaA5M6RoyBJFST/8/6EvlFQnwVAgKSCaWiWcX6LEA69Pi1ixJPQvrwxT00LK4ji8MM
+         tcSg==
+X-Forwarded-Encrypted: i=1; AJvYcCXECPvynX72kJbdHPFdPkTNPlPw5MeGdFQOcvs+WnKRcc4uUyGAQx0yFlUG3fzPzdNbQelVpTfqH7s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeKGvx9GGEiM0rq2mseHCMgiz2G/IxwgavPLSbtwSY7MLG1Z2c
+	y5no2GemXEDFgEVDZzQK7B3pfa9ujIBXpSWSLKG1RUnO5fUwJ+BsbUe/wXHgdrfQTIg=
+X-Gm-Gg: ATEYQzxlhUodNEMS0RSoe7GcmUmyLhCb6sf1CPwnIQXD6rW9lmUQtmPihvIoWXqaRFq
+	XRKp3uUHBCVRniYa2EoDrBfQcTUD2g66lLWUodEsdMEqN0oSZoIyedc5KeByfVafm1QFqwKPfjH
+	moRMrAtoaOc12uRNZuZ2qArpuB59svYpYUaoDYsu49O9SBJAWcYPfHoC1S4gsL5oyNWwNFaPgtR
+	kqj1fx51yMLqGUBmb06RXYoe5sZLYF772JI7M401Zd6NOwZwCkXCA7iKlFw7dT0hSB1QbfogVjP
+	KiRkyqgds03EbXy24RWyAOgrzAOv6XdBv3fcv260BO+n9HBrQ8ddevQW7aeTAz4knuzluAyq+Gd
+	AoL5mwHq0NDeZ1yHtsh8bbFljRsNcYOB4FXtImGeXjfn7Ruga74QPW2e6IcY2Me1eyvXktUPp4z
+	XLXX+UOiAl5RDO/vohZZejli66N7XxZ7l4zgDqgP3sovB1zuUmd7kl/SpPZC00O7r0lBJqyF2XU
+	hJYh/2EzA==
+X-Received: by 2002:a05:620a:4720:b0:8cb:5442:d539 with SMTP id af79cd13be357-8cbc8dc28b1mr2313709285a.2.1772570182058;
+        Tue, 03 Mar 2026 12:36:22 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-899e89bf39bsm79243066d6.18.2026.03.03.12.36.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2026 12:36:20 -0800 (PST)
+Date: Tue, 3 Mar 2026 15:36:17 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Alistair Popple <apopple@nvidia.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	damon@lists.linux.dev, kernel-team@meta.com,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, david@kernel.org,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, axelrasmussen@google.com,
+	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+	baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <aadGQXXpayvFOZpy@gourry-fedora-PF4VCD3F>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <fzy6f6dpv3oq3ksr2mkst7pz3daeb3buhuvdvcw4633pcl7h6u@mxjgiwpg5acv>
+ <aZ3BEn_73Rk8Fn7L@gourry-fedora-PF4VCD3F>
+ <a6izpi2wlqro72erhbvxhlx2lwdnae7my3ghfs6t33ivtixo4h@bi2u4x6qv7ul>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260211032935.2705841-1-alistair.francis@wdc.com>
- <20260211032935.2705841-14-alistair.francis@wdc.com> <20260303120901.00004f09@huawei.com>
-In-Reply-To: <20260303120901.00004f09@huawei.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 3 Mar 2026 19:07:25 +0100
-X-Gm-Features: AaiRm50kQCG3rWYXRXgEs_41HrhB68jbew2wmRd5fS8L-moVcgSEic_0M728KX8
-Message-ID: <CANiq72nU-0Da1R3K6eHeJU1jkhnu7arVP5NOykdvQEpoHSgHbg@mail.gmail.com>
-Subject: Re: [RFC v3 13/27] lib: rspdm: Support SPDM get_capabilities
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: alistair23@gmail.com, bhelgaas@google.com, lukas@wunner.de, 
-	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org, 
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, alex.gaynor@gmail.com, benno.lossin@proton.me, 
-	boqun.feng@gmail.com, a.hindborg@kernel.org, gary@garyguo.net, 
-	bjorn3_gh@protonmail.com, tmgross@umich.edu, ojeda@kernel.org, 
-	wilfred.mallawa@wdc.com, aliceryhl@google.com, 
-	Alistair Francis <alistair@alistair23.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a6izpi2wlqro72erhbvxhlx2lwdnae7my3ghfs6t33ivtixo4h@bi2u4x6qv7ul>
 
-On Tue, Mar 3, 2026 at 1:09=E2=80=AFPM Jonathan Cameron
-<jonathan.cameron@huawei.com> wrote:
->
-> Can we use bit_u32() or similar here?
-> We've tried to move to BIT() for similar defines in the C code, so I'm
-> looking for something along those lines. Provides a form of documentation
-> that they are single bit fields.
+On Thu, Feb 26, 2026 at 02:27:24PM +1100, Alistair Popple wrote:
+> On 2026-02-25 at 02:17 +1100, Gregory Price <gourry@gourry.net> wrote...
+> > 
+> > If your service only allocates movable pages - your ZONE_NORMAL is
+> > effectively ZONE_MOVABLE.  
+> 
+> This is interesting - it sounds like the conclusion of this is ZONE_* is just a
+> bad abstraction and should be replaced with something else maybe some like this?
+> 
+> And FWIW I'm not tied to the ZONE_DEVICE as being a good abstraction, it's just
+> what we seem to have today for determing page types. It almost sounds like what
+> we want is just a bunch of hooks that can be associated with a range of pages,
+> and then you just get rid of ZONE_DEVICE and instead install hooks appropriate
+> for each page a driver manages. I have to think more about that though, this
+> is just what popped into my head when you start saying ZONE_MOVABLE could also
+> disappear :-)
+> 
+... snip ...
+> > 
+> > You don't have to squint because it was deliberate :]
+> 
+> Nice.
+> 
 
-We have these so far:
+I've had some time to chew on this a bit more.
 
-  https://rust.docs.kernel.org/kernel/bits/
+Adding a node-scope `struct dev_pagemap` produces some interesting
+(arguably useful / valuable) effects.
 
-Out-of-tree long ago we had also a `bit<T>` generic const function
-(https://github.com/Rust-for-Linux/linux/blob/rust/rust/kernel/types.rs#L31=
-7-L349).
-I think we also discussed a `bit!` macro at some point.
+The invariant would be clamping the entire node to ZONE_DEVICE
+(more on this below).
 
-> This is why I was getting bit grumpy in previous about long lines.
-> Fair enough if this is only option, but it's not nice for a review proces=
-s
-> that relies on patches!
+So if we think about it this way - we could just view this whole thing
+as another variant of ZONE_DEVICE - but without needing the memremap
+infrastructure (you can use normal hotplug to achieve it).
 
-This should be using the kernel imports style, which should make a
-case like this more readable:
 
-  https://docs.kernel.org/rust/coding-guidelines.html#imports
 
-I hope that helps!
+0. pgdat->private becomes pgdat->dev_pagemap
+   N_MEMORY_PRIVATE -> N_MEMORY_DEVICE ?
 
-Cheers,
-Miguel
+   As a start, do a direct conversion, and use the existing
+   infrastructure.   then expand hooks as needed (and as-is reasonable)
+
+   Some of the `struct dev_pagemap {}` fields become dead at the node
+   scope, but this is a plumbing issue.
+
+   There's already an similar split between the dev_pagemap and the ops
+   structure, so it might map very cleanly.
+
+
+1. "Clamping the entire node to ZONE_DEVICE"
+
+   When we do this, the *actual* ZONE becomes completely irrelevant.
+   The allocation path is entirely controlled, so you might actually end
+   up freeing up the folio flags that track the zone:
+
+   static inline enum zone_type memdesc_zonenum(memdesc_flags_t flags)
+   {
+        ASSERT_EXCLUSIVE_BITS(flags.f, ZONES_MASK << ZONES_PGSHIFT);
+        return (flags.f >> ZONES_PGSHIFT) & ZONES_MASK;
+   }
+
+   becomes:
+
+   folio_is_zone_device(folio) {
+       return node_is_device_node(folio_nid(folio)) || 
+              memdesc_is_zone_device(folio->flags);
+   }
+
+   Kind of an interesting.  You still need these flags for traditional
+   ZONE_DEVICE, so you can't evict it completely, but you can start to
+   see a path here.
+
+
+2. One dev_pagemap per node or multiple w/ pagemap range searching
+
+   Checking membership is always cheap: 
+
+        node_is_device_node()
+
+   Getting ops can be cheap if 1:1 mappings exists:
+
+       pgdat->device_ops->callback()
+
+   Or may be expensive if range-based matching is required:
+
+      node_device_op(folio, ...) {
+         ops = node_ops_lookup(folio); /* pfn-range binary search */
+	 ops->callback(folio, ...)
+      }
+
+      pgmap already has an embedded range:
+
+      struct dev_pagemap {
+        ...
+        int nr_range;
+        union {
+            struct range range;
+            DECLARE_FLEX_ARRAY(struct range, ranges);
+        };
+      };
+
+   Example: Nouveau, registers hundreds of pgmap instances that it
+            uses to recover driver contexts for that specific folio.
+	    
+	    This would not scale well.
+
+	    But most other drivers register between 1-8.  That might.
+
+   That means this might actually be an effective way to evict pgmap
+   from struct folio / struct page.  (Not making this a requirement or
+   saying it's reasonable, just an interesting observation).
+
+
+3. Some existing drivers with 1 pgmap per driver instance instantly get
+   the folio->lru field back - even if they continue to use ZONE_DEVICE.
+
+   At least 3 drivers use page->zone_device_data as a page freelist
+   rather than actual per-page data.  Those drivers could just start
+   using folio/page->lru instead.
+
+   Some store actual per-page zone_device_data that would prevent this,
+   but from poking around it seems like it might be feasible.
+
+   Some use the pgmap as a container_of() argument to get driver
+   context, may or may not be supportable out of the box, but it seemed
+   like mild refactoring might get them back the use of folio->lru.
+
+   None of this is required, the goal is explicitly not disrupting any
+   current users of ZONE_DEVICE.
+
+
+Just some additional food for thought.
+
+As-designed now, this would only apply to NUMA systems, meaning you
+can't fully evict pgmap from struct page/folio --- but you could
+imagine a world where in non-numa mode we even register a separate
+pglist_data specifically for device memory even w/o NUMA.
+
+~Gregory 
