@@ -1,249 +1,172 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B0435F160
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Mar 2026 20:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044DD35F160
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Mar 2026 20:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772570184; cv=none; b=NH/smZkXHxYgjA/rXMMPjfnU/Onm1hW9kII9R4KDnZRGWHM43p7bmPW+cD+j3w+8MSMSH35SY31G13VPjYM0up3fTrdzl8JkAUdjq7uX9ZMznYzVK//dKZyc4oOe9bEmfAn6tu/M64goszoLql5UVUYvxUJybBLhf1BWvSBd4qw=
+	t=1772570208; cv=none; b=d/3UFuKTZLgswDu4YbggKBedNgqMhoDvY7HeW6oxxKocWHpwijrLQg6gzuaeSnrZZjzoWV7ao1f1cPa+9FKbcrd8rNLvpQUO1OWFmUp49WZZJGZ6+YopdOgRBQ6NPxrT1Ny4BKIh+5J8La1sadbLZ2igf1sNDitAsYS1LWQ7uVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772570184; c=relaxed/simple;
-	bh=0WXiDpchtAH8bVqvBLab1zkx9xLMSEgnhOTNf0nXPyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ADzIJaaaxTmwI1tppUEOU/VIrtHAsYGSd9TVDUS0pwSKOKriu24SIMet96rLf6ZjAq0GUTbzQy8s+6dJaBKoV5KvFaZcdaLoZERdS/kCPhuthL41WTpeMG8lf3aewNuI137lQO4dEQ/7+po6/i6wiR3U50TGBDeHUY6n1fu2rcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=jPoPJmvq; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1772570208; c=relaxed/simple;
+	bh=DW3SqRPiOyqnstbTyvLfPjxyalqIEFjs6qBzy/NbNK8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eTSX6zvCDWBeUtfAeyZB/HTz4LJDkHJpHGq649ludbuJeIe6UHuELQl9VwuXnAANnuw5Orqkya9yaCsDnROT8w4ULpdc+s5Wikv8xd9wLl92zs0W7QU8TD1LUxYJZzb1HAT/rHre0LSUhVE2pNj9j6kFeRrgNJVIm5reHqiQ6Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZxodsD5H; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="jPoPJmvq"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-8cb4136d865so814809885a.1
-        for <linux-cxl@vger.kernel.org>; Tue, 03 Mar 2026 12:36:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1772570182; x=1773174982; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HSMo5+Ht+OJv6fxlprT7RhyGGgmGe3zydeGluTTF1Sk=;
-        b=jPoPJmvq78g+dz55Aepd7ikVipZMlI0Osa0jjLmZQsj15+VwqhnnAUONGn6cG5gzTu
-         in0FpfpwHh+R+csZOndc80iKq0zo1NTn9NaX+MMzho/4eQVzKPUdvRHWC5jKYBd2CfHS
-         BI/fg5l1zHRzVwCUd1R5+taqm1bSHLUM6kmibt4G7VxLG1aEX6nXqIXrK2GRkx7n3d7Z
-         xu80v5DghZda3D9hSaRTm7hk6ieiZpshjkd22fpYTazE9xAzYVYtMgSVe+a1WXTLJBnq
-         XDzLBpxqyfwuoZkSzS1BU0dcUBNfDcgNi5IoblPgSy6WVFjPxnzwX4CmvtE1qk0xoYAj
-         27fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772570182; x=1773174982;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HSMo5+Ht+OJv6fxlprT7RhyGGgmGe3zydeGluTTF1Sk=;
-        b=uXSYdGDLzC/x989m/UddDdbphFQoSlzniZz3D0SLNM+HMmiaJLWwmCo/WUgZcM7SNI
-         IU8O1TwrC7KD8Yl7FSQ+EUFNl4U4iZxrWStdeh0E+16Nxahyio55cmUs42TZNuXu4kCl
-         RFpkcsMxoOCc/qbMt0wJU9tm0Uex2cg0z/bifqBwzmY7eAwd5mvXjc12KEs0nHE4nzmj
-         Hm3F0em1ZIADf52Cd4wS7Nhw8gwnQ3bxIcwljopeGO8If6oZKPpHxv8bUrvlMbQX0vUY
-         gXbaA5M6RoyBJFST/8/6EvlFQnwVAgKSCaWiWcX6LEA69Pi1ixJPQvrwxT00LK4ji8MM
-         tcSg==
-X-Forwarded-Encrypted: i=1; AJvYcCXECPvynX72kJbdHPFdPkTNPlPw5MeGdFQOcvs+WnKRcc4uUyGAQx0yFlUG3fzPzdNbQelVpTfqH7s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeKGvx9GGEiM0rq2mseHCMgiz2G/IxwgavPLSbtwSY7MLG1Z2c
-	y5no2GemXEDFgEVDZzQK7B3pfa9ujIBXpSWSLKG1RUnO5fUwJ+BsbUe/wXHgdrfQTIg=
-X-Gm-Gg: ATEYQzxlhUodNEMS0RSoe7GcmUmyLhCb6sf1CPwnIQXD6rW9lmUQtmPihvIoWXqaRFq
-	XRKp3uUHBCVRniYa2EoDrBfQcTUD2g66lLWUodEsdMEqN0oSZoIyedc5KeByfVafm1QFqwKPfjH
-	moRMrAtoaOc12uRNZuZ2qArpuB59svYpYUaoDYsu49O9SBJAWcYPfHoC1S4gsL5oyNWwNFaPgtR
-	kqj1fx51yMLqGUBmb06RXYoe5sZLYF772JI7M401Zd6NOwZwCkXCA7iKlFw7dT0hSB1QbfogVjP
-	KiRkyqgds03EbXy24RWyAOgrzAOv6XdBv3fcv260BO+n9HBrQ8ddevQW7aeTAz4knuzluAyq+Gd
-	AoL5mwHq0NDeZ1yHtsh8bbFljRsNcYOB4FXtImGeXjfn7Ruga74QPW2e6IcY2Me1eyvXktUPp4z
-	XLXX+UOiAl5RDO/vohZZejli66N7XxZ7l4zgDqgP3sovB1zuUmd7kl/SpPZC00O7r0lBJqyF2XU
-	hJYh/2EzA==
-X-Received: by 2002:a05:620a:4720:b0:8cb:5442:d539 with SMTP id af79cd13be357-8cbc8dc28b1mr2313709285a.2.1772570182058;
-        Tue, 03 Mar 2026 12:36:22 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-899e89bf39bsm79243066d6.18.2026.03.03.12.36.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2026 12:36:20 -0800 (PST)
-Date: Tue, 3 Mar 2026 15:36:17 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, axelrasmussen@google.com,
-	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
-	linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aadGQXXpayvFOZpy@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <fzy6f6dpv3oq3ksr2mkst7pz3daeb3buhuvdvcw4633pcl7h6u@mxjgiwpg5acv>
- <aZ3BEn_73Rk8Fn7L@gourry-fedora-PF4VCD3F>
- <a6izpi2wlqro72erhbvxhlx2lwdnae7my3ghfs6t33ivtixo4h@bi2u4x6qv7ul>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZxodsD5H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772570207; x=1804106207;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=DW3SqRPiOyqnstbTyvLfPjxyalqIEFjs6qBzy/NbNK8=;
+  b=ZxodsD5HB0EbAob1JMcNnWWrr7gQThOs7QojtajoUBzqwlGjj6Jg3ZK9
+   UjFJBK58zO8RiMbxjc3vMWxch11NhZmkwDZfQd0oxy+OSWPasuakLo9nX
+   4nFgK+2i1gccZUfatIrCkT2mN6cLyxp3Y6871GbSg5AbBrpnPXjbyaDp4
+   n3BHMTkDyo0akdkvUOOLv9dAF9fWiMxU74V56xvB8r9oQGRjqRGn3Lji0
+   942N2hgQQgd9VOuXAXsbQLQZdP6+QZuh2PpQlIITx0f7reoDnuqNFA2ON
+   Am1t/jzstnO7FvzHgKFrtTv5UeBEj5kuTkkqb2bn/QCfaP/w+DjHQ94E0
+   w==;
+X-CSE-ConnectionGUID: t8HboeMYSZ2QShYOcIs7ig==
+X-CSE-MsgGUID: KMycZug7Tn2X1JV205lQSw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11718"; a="96232426"
+X-IronPort-AV: E=Sophos;i="6.21,322,1763452800"; 
+   d="scan'208";a="96232426"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2026 12:36:43 -0800
+X-CSE-ConnectionGUID: hRkO5cElTE66wS14BqUh+Q==
+X-CSE-MsgGUID: n/jBH2ZVRsOc9pY8wAun/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,322,1763452800"; 
+   d="scan'208";a="217279317"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.108.145]) ([10.125.108.145])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2026 12:36:42 -0800
+Message-ID: <dcf65c56-0f2c-468f-81ab-77a3cd3ea2b9@intel.com>
+Date: Tue, 3 Mar 2026 13:36:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a6izpi2wlqro72erhbvxhlx2lwdnae7my3ghfs6t33ivtixo4h@bi2u4x6qv7ul>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] cxl/port: Fix use after free of parent_port in
+ cxl_detach_ep()
+To: Alison Schofield <alison.schofield@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org, Li Ming <ming.li@zohomail.com>
+References: <20260226184439.1732841-1-alison.schofield@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260226184439.1732841-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 26, 2026 at 02:27:24PM +1100, Alistair Popple wrote:
-> On 2026-02-25 at 02:17 +1100, Gregory Price <gourry@gourry.net> wrote...
-> > 
-> > If your service only allocates movable pages - your ZONE_NORMAL is
-> > effectively ZONE_MOVABLE.  
+
+
+On 2/26/26 11:44 AM, Alison Schofield wrote:
+> cxl_detach_ep() is called during bottom-up removal when all CXL memory
+> devices beneath a switch port have been removed. For each port in the
+> hierarchy it locks both the port and its parent, removes the endpoint,
+> and if the port is now empty, marks it dead and unregisters the port
+> by calling delete_switch_port(). There are two places during this work
+> where the parent_port may be used after freeing:
 > 
-> This is interesting - it sounds like the conclusion of this is ZONE_* is just a
-> bad abstraction and should be replaced with something else maybe some like this?
+> First, a concurrent detach may have already processed a port by the
+> time a second worker finds it via bus_find_device(). Without pinning
+> parent_port, it may already be freed when we discover port->dead and
+> attempt to unlock the parent_port. In a production kernel that's a
+> silent memory corruption, with lock debug, it looks like this:
 > 
-> And FWIW I'm not tied to the ZONE_DEVICE as being a good abstraction, it's just
-> what we seem to have today for determing page types. It almost sounds like what
-> we want is just a bunch of hooks that can be associated with a range of pages,
-> and then you just get rid of ZONE_DEVICE and instead install hooks appropriate
-> for each page a driver manages. I have to think more about that though, this
-> is just what popped into my head when you start saying ZONE_MOVABLE could also
-> disappear :-)
+> []DEBUG_LOCKS_WARN_ON(__owner_task(owner) != get_current())
+> []WARNING: kernel/locking/mutex.c:949 at __mutex_unlock_slowpath+0x1ee/0x310
+> []Call Trace:
+> []mutex_unlock+0xd/0x20
+> []cxl_detach_ep+0x180/0x400 [cxl_core]
+> []devm_action_release+0x10/0x20
+> []devres_release_all+0xa8/0xe0
+> []device_unbind_cleanup+0xd/0xa0
+> []really_probe+0x1a6/0x3e0
 > 
-... snip ...
-> > 
-> > You don't have to squint because it was deliberate :]
+> Second, delete_switch_port() releases three devm actions registered
+> against parent_port. The last of those is unregister_port() and it
+> calls device_unregister() on the child port, which can cascade. If
+> parent_port is now also empty the device core may unregister and free
+> it too. So by the time delete_switch_port() returns, parent_port may
+> be free, and the subsequent device_unlock(&parent_port->dev) operates
+> on freed memory. The kernel log looks same as above, with a different
+> offset in cxl_detach_ep().
 > 
-> Nice.
+> Both of these issues stem from the absence of a lifetime guarantee
+> between a child port and its parent port.
 > 
+> Establish a lifetime rule for ports: child ports hold a reference to
+> their parent device until release. Take the reference when the port
+> is allocated and drop it when released. This ensures the parent is
+> valid for the full lifetime of the child and eliminates the use after
+> free window in cxl_detach_ep().
+> 
+> This is easily reproduced with a reload of cxl_acpi in QEMU with CXL
+> devices present.
+> 
+> Fixes: 2345df54249c ("cxl/memdev: Fix endpoint port removal")
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Li Ming <ming.li@zohomail.com>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+> 
+> Changes in v4:
+> Move the put_device() into existing if-else logic (Ming)
+> 
+> Changes in v3:
+> Scope fix as a lifetime guarantee btw child port & parent (Dan)
+> 
+> Changes in v2:
+> Remove stray blank line (DaveJ)
+> Rebase on 7.0-rc1
+> Add Fixes Tag (DaveJ)
+> 
+> 
+>  drivers/cxl/core/port.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index b69c2529744c..a004da8fbe55 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -552,10 +552,13 @@ static void cxl_port_release(struct device *dev)
+>  	xa_destroy(&port->dports);
+>  	xa_destroy(&port->regions);
+>  	ida_free(&cxl_port_ida, port->id);
+> -	if (is_cxl_root(port))
+> +
+> +	if (is_cxl_root(port)) {
+>  		kfree(to_cxl_root(port));
+> -	else
+> +	} else {
+> +		put_device(dev->parent);
+>  		kfree(port);
+> +	}
+>  }
+>  
+>  static ssize_t decoders_committed_show(struct device *dev,
+> @@ -721,6 +724,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
+>  		struct cxl_port *iter;
+>  
+>  		dev->parent = &parent_port->dev;
+> +		get_device(dev->parent);
+>  		port->depth = parent_port->depth + 1;
+>  		port->parent_dport = parent_dport;
+>  
+> 
+> base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
 
-I've had some time to chew on this a bit more.
-
-Adding a node-scope `struct dev_pagemap` produces some interesting
-(arguably useful / valuable) effects.
-
-The invariant would be clamping the entire node to ZONE_DEVICE
-(more on this below).
-
-So if we think about it this way - we could just view this whole thing
-as another variant of ZONE_DEVICE - but without needing the memremap
-infrastructure (you can use normal hotplug to achieve it).
-
-
-
-0. pgdat->private becomes pgdat->dev_pagemap
-   N_MEMORY_PRIVATE -> N_MEMORY_DEVICE ?
-
-   As a start, do a direct conversion, and use the existing
-   infrastructure.   then expand hooks as needed (and as-is reasonable)
-
-   Some of the `struct dev_pagemap {}` fields become dead at the node
-   scope, but this is a plumbing issue.
-
-   There's already an similar split between the dev_pagemap and the ops
-   structure, so it might map very cleanly.
-
-
-1. "Clamping the entire node to ZONE_DEVICE"
-
-   When we do this, the *actual* ZONE becomes completely irrelevant.
-   The allocation path is entirely controlled, so you might actually end
-   up freeing up the folio flags that track the zone:
-
-   static inline enum zone_type memdesc_zonenum(memdesc_flags_t flags)
-   {
-        ASSERT_EXCLUSIVE_BITS(flags.f, ZONES_MASK << ZONES_PGSHIFT);
-        return (flags.f >> ZONES_PGSHIFT) & ZONES_MASK;
-   }
-
-   becomes:
-
-   folio_is_zone_device(folio) {
-       return node_is_device_node(folio_nid(folio)) || 
-              memdesc_is_zone_device(folio->flags);
-   }
-
-   Kind of an interesting.  You still need these flags for traditional
-   ZONE_DEVICE, so you can't evict it completely, but you can start to
-   see a path here.
-
-
-2. One dev_pagemap per node or multiple w/ pagemap range searching
-
-   Checking membership is always cheap: 
-
-        node_is_device_node()
-
-   Getting ops can be cheap if 1:1 mappings exists:
-
-       pgdat->device_ops->callback()
-
-   Or may be expensive if range-based matching is required:
-
-      node_device_op(folio, ...) {
-         ops = node_ops_lookup(folio); /* pfn-range binary search */
-	 ops->callback(folio, ...)
-      }
-
-      pgmap already has an embedded range:
-
-      struct dev_pagemap {
-        ...
-        int nr_range;
-        union {
-            struct range range;
-            DECLARE_FLEX_ARRAY(struct range, ranges);
-        };
-      };
-
-   Example: Nouveau, registers hundreds of pgmap instances that it
-            uses to recover driver contexts for that specific folio.
-	    
-	    This would not scale well.
-
-	    But most other drivers register between 1-8.  That might.
-
-   That means this might actually be an effective way to evict pgmap
-   from struct folio / struct page.  (Not making this a requirement or
-   saying it's reasonable, just an interesting observation).
+v4 applied to cxl/fixes
+19d2f0b97a131198efc2c4ca3eb7f980bba8c2b4
 
 
-3. Some existing drivers with 1 pgmap per driver instance instantly get
-   the folio->lru field back - even if they continue to use ZONE_DEVICE.
-
-   At least 3 drivers use page->zone_device_data as a page freelist
-   rather than actual per-page data.  Those drivers could just start
-   using folio/page->lru instead.
-
-   Some store actual per-page zone_device_data that would prevent this,
-   but from poking around it seems like it might be feasible.
-
-   Some use the pgmap as a container_of() argument to get driver
-   context, may or may not be supportable out of the box, but it seemed
-   like mild refactoring might get them back the use of folio->lru.
-
-   None of this is required, the goal is explicitly not disrupting any
-   current users of ZONE_DEVICE.
-
-
-Just some additional food for thought.
-
-As-designed now, this would only apply to NUMA systems, meaning you
-can't fully evict pgmap from struct page/folio --- but you could
-imagine a world where in non-numa mode we even register a separate
-pglist_data specifically for device memory even w/o NUMA.
-
-~Gregory 
