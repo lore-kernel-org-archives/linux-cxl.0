@@ -1,74 +1,106 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2068481674
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Mar 2026 15:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67814423175;
+	Tue,  3 Mar 2026 15:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772551309; cv=none; b=P+VxMsg9/jR0y8J/ZvYZNKXeR5DidGtom0Mx8QQTsMtTX2v1jq5WxhrkPHeyRKi4I2DhOEU3xKO5Pnt9Wn5xQstzCnvkGt1bo1ZSlllPvuV77x79yulUjxif8QFAxvwy9AczkDjRynmeZRf/u87RrilBJAouGXaKTx6Sj0RyGf8=
+	t=1772551480; cv=none; b=G2yhSBmBykhXkJ/WADRSzsrTEd0rlpV7VNykf5oFDGhlFZvpJrFRjj/mcYHBYFR71I71Up5Zg3v9Qn85wVgDBHaXwVFBIuw9mbqAN5o7fVtKoe0ggLkHPF+njwf/uNIJJ7vBbSgbjSlVCRECTBlkqkYoLFLgpMpbk0MR4lx3o0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772551309; c=relaxed/simple;
-	bh=NtsBp2W1pQybKA4UPkA2oVzLpNH//0FRgvlfLKcyKyE=;
+	s=arc-20240116; t=1772551480; c=relaxed/simple;
+	bh=ezIjOizC8RAT3P5qFtSymLpkn/IPMdhnAN93KcIKjO8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=itI02pbdkaWETYtmGNqtsL5H6jNu0Urf16cyGhzyhl6HgnJg3mzyi03o5frFUpLgl62OlmoOC/+RTOkCF0L1lLXWWa3I1VI2oHjMkIwOXYR81F3O15t3+mrnVCnRpfMQ7q+hWDF0QhL9gNZKhRZJNss4UYzlM3ZDOLP7H9cJSpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=KxPilzr0; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=VxwCw/V3L3WL5bP8x+KQaF700SmT4y7MJTavj/5RcFrRo/lLgwf3wj51xRiEfteu6P9seotXxJIPQty+fb/dizFl70RwAz9Hrq93VUQ6NJ+KEMLU+XjJUt5lpc/Mcupq0KZtOl3fkmCRKw/1+cQ9QYTcY0YKangN3OsvXFaLkQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g2lKT83P; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="KxPilzr0"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-8c9f6b78ca4so766801485a.0
-        for <linux-cxl@vger.kernel.org>; Tue, 03 Mar 2026 07:21:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1772551306; x=1773156106; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=b4f7AJE9Hf1AkTQ9xu88RkQP30gDThVvvbzKhqMXGvE=;
-        b=KxPilzr09gPSV0431YywxjeTclVFlgtyEGz/u3mNWwCcNs2OUFh9A0W3Iv8xwUKgFR
-         r+jZ3TGfRQ0iQTedEigVr5dN5A9yBFn5jmGrcC8R0eLCV4R4u90IBR7cdBm3917aFXX/
-         mUx+YJot01OWr0+/i5UtuS5SQoRhAfBF44ZDSA2BPZSbRpiwjSvyozi/DKPfw+S77xzi
-         xjo8FHpeTACz3tgllfg2lm+cyb3piftFZvUPPxBoBNZ8m64BomTv6YyTejxlFKaUW4L6
-         puOdZn8UTd+3fjk2q8QFXaftEXWJaLrhCm/B5s9aCg1t1CIhn6awVXeqPyWDY2FBYYSs
-         jxPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772551306; x=1773156106;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b4f7AJE9Hf1AkTQ9xu88RkQP30gDThVvvbzKhqMXGvE=;
-        b=tQ9ZdMbTA+3YcL5c0YL2MJykgdF3MPMdPwIRn9llfaRcP1tHLY0Lwj7uZy91l5ITt7
-         im+DYs0iglq8q82jiWZ+2zmK8iZ8pWDQQLwoe6X7HdiA07y4fVcvnwH7jBmy1MC2pSvp
-         qNIKjShzghFRrCyHrR+YDytBwAI3ua28evPxKEATvCjfLtZS5Ya9Y4GC8fLCsojCWWVP
-         tJ9hZctcT/7JP5OwiV79wfptZwmgV7PFn/2sLLV8aB61xtCswMkCCyO/sSm35c+cXIEd
-         8gvRXnq7yi5u65swV7eUrcmShKJFWDuC3NSc9sVQmf7gQpOLOd7+EC5LhMv5KQT6Uhll
-         7BEQ==
-X-Gm-Message-State: AOJu0YzTMsF5/yT14hFCiWVskPYhykXdK34noAOXDckY2FnQeNO6rtRd
-	kA4u/kpBrPwSyId9gHVzY1xQU69yDCF++KoCOHGJX9hJP7OLpb/Ou4Fl9raVAeK/Y3TbMfhSVqS
-	s8LZI
-X-Gm-Gg: ATEYQzxiPPCKowfCk9TbfBGDDm6PJq+FjeiuS/jS0y+i1fJn6nmVg65xmjoQPflVW1S
-	Wv44qi4UBrCoH45LmQDjDzcIfaBl9b7YkwTc72yFxmbgrceE6TFn533meh3SaD6OfP/ttd/QFxT
-	UyZSfqYXS51vQN1q1xeTHg2SOgCghrwnzMnJOoJ3FRAA5m1QVGKgTi/7jOvsPConuHBzTJyLiAC
-	lYn8r0f90j4V7YMLA9yuWsv1o5PUU6VayUYbOJqJO7tUFpyltux1VwctX0H5hR4lf/wt1zTFky3
-	VIU2ZyaRUFwULeURD5FPDvsj9Du4S+WQtAltzvDMpvGwrLR+dT8/5/5Z8cS025GZAnOoOnwrjiN
-	+pKq6ItGELXLb2BaDAW9S484+uXr7wHfsKcU6IqCPd8qd7BVrvSWhv/p+U+b8xVUqoc0P8bF8aK
-	wbaQFuwTKRHYCBCwLippI/6X0Gl6e4KNGzXeIuk7NZtbsElybZBgFeYB2fyWjOl6NLrUkIf/fMA
-	nqifzsqMg==
-X-Received: by 2002:a05:620a:410a:b0:8c9:f996:81fd with SMTP id af79cd13be357-8cbc8df3b87mr2141883285a.33.1772551306461;
-        Tue, 03 Mar 2026 07:21:46 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cbbf66f31asm1381560685a.15.2026.03.03.07.21.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2026 07:21:46 -0800 (PST)
-Date: Tue, 3 Mar 2026 10:21:44 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, dave@stgolabs.net, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com
-Subject: Re: [PATCH] cxl/acpi: fix CXL_ACPI=y + CXL_PMEM=m link failure
-Message-ID: <aab8iL8wz_sdVWyN@gourry-fedora-PF4VCD3F>
-References: <20260302200429.803417-1-gourry@gourry.net>
- <20260303101330.000039a6@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g2lKT83P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772551479; x=1804087479;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ezIjOizC8RAT3P5qFtSymLpkn/IPMdhnAN93KcIKjO8=;
+  b=g2lKT83PCVDXdE/G1YlMMkkjIjJTI4SKcJyJYnBsc1VNm2dXL/VN/Zk2
+   lrtowPuerKv5i+UF0PagWc/6uFJI8RDqIvm/tpvufhahuM+lO19DD+dBb
+   mFmyzRT3FLICbmEjps6kb0cwYV25JZ6Qn7x+l+2uoxChuI4aHwUkZCM/L
+   aE6Sv7c+fy64QjAF+AoLXCO8cdp3op88BgyjeKPxsVFlBb47cZLPHcLbf
+   JcqIQ5LfPNqRcHMGuBiWouQi8/+7NQZH1NNprgM6KFLDFoJhYpKadpe0B
+   iN+GqlYZ5JMmw55z9MEj1DYNHexlddlah8iEr9bX2zqyjd6a3IiWTeBtF
+   A==;
+X-CSE-ConnectionGUID: xGE6+JdZQXyak+SI9MqpCQ==
+X-CSE-MsgGUID: m5NTSEq/SXy6lmorKSnlTg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11718"; a="73505063"
+X-IronPort-AV: E=Sophos;i="6.21,322,1763452800"; 
+   d="scan'208";a="73505063"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2026 07:24:38 -0800
+X-CSE-ConnectionGUID: 8EDCa8VCSnelhlWlG1ZesA==
+X-CSE-MsgGUID: 5BGaqm/dSdmyx5dAFD99/g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,322,1763452800"; 
+   d="scan'208";a="217269195"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.32])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2026 07:24:25 -0800
+Date: Tue, 3 Mar 2026 17:24:22 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Kalle Niemi <kaleposti@gmail.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Shawn Guo <shawnguo@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+	linux-kernel@vger.kernel.org, driver-core@lists.linux.dev,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
+	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 07/28] driver core: fw_devlink: Introduce
+ fw_devlink_set_device()
+Message-ID: <aab9Js6nRaeH3pn9@ashevche-desk.local>
+References: <20260227135428.783983-1-herve.codina@bootlin.com>
+ <20260227135428.783983-8-herve.codina@bootlin.com>
+ <20260302122336.00006bd8@huawei.com>
+ <20260303151210.6e8462b8@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -77,42 +109,39 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260303101330.000039a6@huawei.com>
+In-Reply-To: <20260303151210.6e8462b8@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, Mar 03, 2026 at 10:13:30AM +0000, Jonathan Cameron wrote:
-> On Mon,  2 Mar 2026 15:04:29 -0500
-> Gregory Price <gourry@gourry.net> wrote:
+On Tue, Mar 03, 2026 at 03:12:10PM +0100, Herve Codina wrote:
+> On Mon, 2 Mar 2026 12:23:36 +0000
+> Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
+> > On Fri, 27 Feb 2026 14:54:04 +0100
+> > Herve Codina <herve.codina@bootlin.com> wrote:
+> > 
+> > > Setting fwnode->dev is specific to fw_devlink.
+> > > 
+> > > In order to avoid having a direct 'fwnode->dev = dev;' in several
+> > > place in the kernel, introduce fw_devlink_set_device() helper to perform
+> > > this operation.
+> > >   
+> > I don't mind the helper, but the description could do with a little
+> > detail on why.  Is it just to avoid visibility of internal details, or
+> > is there a stronger reason?
 > 
-> > Commit e7e222ad73d9 ("cxl: Move devm_cxl_add_nvdimm_bridge() to
-> > cxl_pmem.ko") moved devm_cxl_add_nvdimm_bridge() from cxl_core into
-> > cxl_pmem, creating a symbol dependency from cxl_acpi to cxl_pmem.
-> > 
-> > When CXL_ACPI=y and CXL_PMEM=m, the built-in cxl_acpi attempts to
-> > link against a non-built-in cxl_pmem, which the linker cannot resolve.
-> > 
-> > CXL_PMEM depends on LIBNVDIMM, so LIBNVDIMM=m constrains CXL_PMEM to
-> > at most =m.
-> > 
-> > Change IS_ENABLED() to IS_REACHABLE(), which returns false when a
-> > built-in caller references a modular target, preventing the link error.
-> > 
-> > The result is if the pmem/nvdimm symbols are not reachable at build
-> > time, then at runtime it will always return -ENODEV.
-> > 
-> > Fixes: e7e222ad73d9 ("cxl: Move devm_cxl_add_nvdimm_bridge() to cxl_pmem.ko")
-> > Signed-off-by: Gregory Price <gourry@gourry.net>
+> I think the idea was to avoid visibility.
 > 
-> What's the impact of this build combination wrt to whether the result is
-> actually useful?   Is there any point in building CXL_PMEM as a module
-> without this call being made?  I can't remember and normally don't care
-> much about PMEM :) 
+> It cames from feedback received on my first iteration
+>   https://lore.kernel.org/all/20250408145139.293c79a2@bootlin.com/
 > 
+> I found the idea relevant and so I did the patch.
 
-Basically no, it's not useful, but it's some definition of the default
-depending on your olddefconfig, so rather than fight with this further
-this basically terminates the same way DAX_CXL=m terminates.
+Yes, the idea is to hide the fwnode devlink related stuff behind the getters
+and setters. Ideally, everything in fwnode_handle related to devlinks should
+be marked as __private.
 
-tl;dr: You don't create the dax device / nbdimm and you're sad... but it
-does build!
+-- 
+With Best Regards,
+Andy Shevchenko
 
-~Gregory
+
