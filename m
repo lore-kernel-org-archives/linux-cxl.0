@@ -1,236 +1,275 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011054.outbound.protection.outlook.com [52.101.62.54])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CD11A681F;
-	Mon,  2 Mar 2026 20:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0223909B9
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Mar 2026 00:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772483935; cv=fail; b=AB41K/vew03/jogS6BazuSjMgDxCjoMi+1z3jZ3mJNf85awiO+8ucpNmaBqIl2sVyUz9F+FHpG2s0KL7IKZokS8Vl+yI8LbRyQbnWNPFtVt/AFZyXT/Xmqa1v3TUZXgvUqxex2Mjp3FWh4wWF2O/sAQinjXW0aNz2afrhCAfsxM=
+	t=1772496327; cv=fail; b=T0UY34tyjUxE26kB8lzgJSYX0hLs4H5WpWfwhqE2HkkLegRh6qzWUjoQBeRRfrfpf4V0RjHt4sJz0GlLvaOAjhmQeXrjcqSOCTCHtUJYsSJBd9zpwOD4jmBEpQyrv+nNxZbqWCyC+7z7xubbg0PO86JnztOa2g7sc7ATj/e04GA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772483935; c=relaxed/simple;
-	bh=lxNs8YlCP+ZCcpBDon+HAIt4BBh2mlEeELWbdJFqeY0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ll73bhqRwfwdkSBrQg4fOjLoTEce/C8m2PTHRgR1QqnpheZndHNQU8kzL4ZPy1Xq4EH4bttMko5ZCX9mpfBk7yqI1FWE/3C/++2bTV1rk9+CFx9PPYtckhzriIhNpiysM/GUAnYtN7lrQTT81RLVA+S0YlpzLDvc3pFIR3f+4aY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SnUZTbIn; arc=fail smtp.client-ip=52.101.62.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1772496327; c=relaxed/simple;
+	bh=7ieUwbcUhC7+6KodcXYCtQqFgPHJhGKJGKSsQx4ArEc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=hS9bFVgYLq7U2hQEhI1WBs8ZV2xdmUIgfK0r+svlwbRJUqodZ9cA0HQrIOZZk+VT0b+ezEvduFeD9KEXBMrpUZSU0PJi7xxKbBgRzSvYKaBUllEAzV5Vz6cNsZm+u0wqIlXZ59HidkjUINJ86rUFtgnv/yioagMFCGFYs8ye39Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V4TmJN+h; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SnUZTbIn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V4TmJN+h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772496326; x=1804032326;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=7ieUwbcUhC7+6KodcXYCtQqFgPHJhGKJGKSsQx4ArEc=;
+  b=V4TmJN+hSDGHKEKHYO1kyHzL/RmhW25CJxSGzCVBMlfUXf82NiNLznav
+   WX+CU+++H0gzo2say9T2csWP02eYThFmCUjJ1B3OkRwDf3lVrZU1V+8Nu
+   tp824G/LvIRwG7AhDrWAh/sz8z6njqdWoiWrERUu3xzpjTp1f0CzW0Luf
+   XEvFCDQX1dA5E4okDrfhUOUG/SFIVJjkLcS1u1YFfC1JyZywT9NBXMN7t
+   BTvIF+6iqtzLnDHj19LVaUys5KA8Izgd9rqIhJTdrU8NZnt2fr9nvY4cn
+   Y5S+80qZUdUX94VDkNO6LyDLWHQchfVmIr36vDzJfGO2Ql1ncoqPOG8wS
+   g==;
+X-CSE-ConnectionGUID: TzlPVh3YQ3SKX7lZzNjiCw==
+X-CSE-MsgGUID: /iiWp4vQQMSE9wt74yXosQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11717"; a="98991910"
+X-IronPort-AV: E=Sophos;i="6.21,321,1763452800"; 
+   d="scan'208";a="98991910"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2026 16:05:19 -0800
+X-CSE-ConnectionGUID: 8ZEMTOj9RXyyiBGx4mZe5g==
+X-CSE-MsgGUID: dMYqGGZ3Qau5vo7QBLqTog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,321,1763452800"; 
+   d="scan'208";a="215391850"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2026 16:05:19 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Mon, 2 Mar 2026 16:05:18 -0800
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Mon, 2 Mar 2026 16:05:18 -0800
+Received: from CH5PR02CU005.outbound.protection.outlook.com (40.107.200.65) by
+ edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Mon, 2 Mar 2026 16:05:17 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MSN+CJ+qReB98dFkKqwAcZ5IYDJ+7aYXgF8FJJY17jmNc6CqiCRdwg7WWnJvekaYdXg+Yx6n8QaNYj7qT/QdXr9MsGtmAzOnwK7Ug+XMYrEVhenSk6894/raoHiqMMamaJvsIDFj74zdFvd4RM4pqlWtqH6mULl0imPIuXVQFGN5Yek1+5kYcAqnL7an/ysnzog+8fbGt+OLUz49zFv9/KXG5KWnD1hjNCPR9GQgndbF0+JQ7rFCJXpbc+7Uq6cH6M3DsMU6M2LgJgR/fgugKfNGmeLBPQMoolJ+dwOhCrvVJgyBBby9P+0OyuaL/ooxrpo6LXYdfARxuQnPJWSxmQ==
+ b=wkBCg5FjQu1UGevVOdzSCV7fdxn7C7TIgoywijii2CKKLFCCwPW42Q/8/UTYdwA+6jfYq3EwlzjaCHHyiNnC9ag2VilOeWUA1gqd3zi4eUlTFonUq/q8V/i2ZuX8JxDhiveePhlM4i9+SolHzHFRFnpTGLRPBIHgLwOI0aTtc3FNzF5V+ZEQI62F7LH6wr7aI4UiyhzHh4ebShJt9M12r0o4BosMxtwN775Q4Snu3BWZpZRSy8cZ79dyOumjrOgyG4f1Qz97d//BasvvDQPhQas0QCsTxBEwI3+ihbemojBkY1u1AGg8NpBY5A5nyAdVXlihKMJNVld9Q7tlogOeCA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4C8MxuOoPLIrAuz5w9497cUSjt/ogyfQpM6OM8azx9Y=;
- b=ApCzXENLdCUvVHWhHki6pt7/Z7FnppOHrOrQzxygqz6dLMwQG7hixDBeB5hRrX3tWViqXnfwaN274+0QH4A6M1c2OFEfw6TT1NUF2pi72abaaX6z6dWfOipzt8WzWzcGIA5fSODYWpidnA1bPoSXnTsL44GKfOGZ7FyYWLqlW6+uJ7Giyact6hL6NqOPkSpHnXeA4gyF32FSemp0lXI24M9jL0xMAOS65AFsmJ7bO830sD3779NQGr06R8GwY5wdQoyopYDaMhTPV3sJZCx8g7zVCkAIU31MSymPCTnhYg5gSEhAL/GXV09mtag2MFgJRop5tCbufuVz4aM9gON30Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4C8MxuOoPLIrAuz5w9497cUSjt/ogyfQpM6OM8azx9Y=;
- b=SnUZTbIny1FHHPo2TPGhR3UgTNdCJTUU3AglBA73JRsR2dwnsxJUAk/6F5LKBeEeXwlH5xkFmBWOe4iprnbTKVLUpqaPJ3/222ekSD+vVhnZ1+mcmshu/ZaUKR8DRnzMEiztmqLP5WBnKZDR+GPdJik/zFBK2TupapLGsMQ1Pbw=
-Received: from BL1PR13CA0085.namprd13.prod.outlook.com (2603:10b6:208:2b8::30)
- by CH0PR12MB8550.namprd12.prod.outlook.com (2603:10b6:610:192::11) with
+ bh=vhzO+I7Dj0jXRU3yE6NvBxWqXfDFRmPomIxUea/LPKs=;
+ b=Yiu+wImRV7Q1Zp7EcSdcI0gG/1ogbsaSAyITuNhv64XScPMxf/YW7fjF4D/joZ/9Out0BnG6g6gcnGIs1wDrI9vvPJuKE/jlmuTdzBySk3c4jBWHdQVo2pgL8BfmWaNj3ADaPnkga3EiGER9YPx9nheW8bWhbYD7nAoLOlEg5M0vj0vMQuzcTBdnyyjGkyTgXS9jp3jRvsGCf9u39F+DBFrgwRbpVyMMuyCWate8RgSrHLwhOpxZ/l2fbLShkHPgQLOPrxu6sQC3LW/9h7H0suMEcuwxL0vitKDq+6vduw9L6GqcurQcoNCXtOwxO25IeR1dRSqlf2siyVeDLrRdNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by MN2PR11MB4536.namprd11.prod.outlook.com (2603:10b6:208:26a::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.21; Mon, 2 Mar
- 2026 20:38:47 +0000
-Received: from MN1PEPF0000ECDB.namprd02.prod.outlook.com
- (2603:10b6:208:2b8:cafe::b8) by BL1PR13CA0085.outlook.office365.com
- (2603:10b6:208:2b8::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9654.21 via Frontend Transport; Mon,
- 2 Mar 2026 20:38:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- MN1PEPF0000ECDB.mail.protection.outlook.com (10.167.242.139) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9654.16 via Frontend Transport; Mon, 2 Mar 2026 20:38:47 +0000
-Received: from ethanolx7ea3host.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 2 Mar
- 2026 14:38:44 -0600
-From: Terry Bowman <terry.bowman@amd.com>
-To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>, <alucerop@amd.com>,
-	<ira.weiny@intel.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<terry.bowman@amd.com>
-Subject: [PATCH v16 10/10] cxl: Enable CXL protocol error reporting
-Date: Mon, 2 Mar 2026 14:36:48 -0600
-Message-ID: <20260302203648.2886956-11-terry.bowman@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260302203648.2886956-1-terry.bowman@amd.com>
-References: <20260302203648.2886956-1-terry.bowman@amd.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.22; Tue, 3 Mar
+ 2026 00:05:10 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::4a5f:d967:acb2:e28a]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::4a5f:d967:acb2:e28a%7]) with mapi id 15.20.9654.015; Tue, 3 Mar 2026
+ 00:05:10 +0000
+Date: Mon, 2 Mar 2026 16:05:06 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Li Ming <ming.li@zohomail.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Vishal
+ Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, "Dan
+ Williams" <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v4] cxl/port: Fix use after free of parent_port in
+ cxl_detach_ep()
+Message-ID: <aaYlsljwigiehmg4@aschofie-mobl2.lan>
+References: <20260226184439.1732841-1-alison.schofield@intel.com>
+ <c3a07fee-1a91-4f7c-a279-fb15be36a531@zohomail.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c3a07fee-1a91-4f7c-a279-fb15be36a531@zohomail.com>
+X-ClientProxiedBy: BY3PR10CA0023.namprd10.prod.outlook.com
+ (2603:10b6:a03:255::28) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECDB:EE_|CH0PR12MB8550:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8adfaaa8-5a2e-413c-38b5-08de789bb42b
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|MN2PR11MB4536:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6cecc7b3-8d0e-416c-4382-08de78b8892e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
-	mZtRphh0WHH9/qWWyPRhEzzHZHvXmDq5P/2s+lntMpBRvNb/kVBn1dbYp82O2WSSdGRhQL5sh8hdhFh3dO2iU58VocmkJMMorERz46qR+LWiJtqbF084Juksi7HkFD6kF1JbT7wYM3TyzBDg7m8rFO2QIlkLIhWNPqecBx7AzdViVQmzWODPRCTgy5+Wmgrt2DWuFSvf1ysuwbWHr3Sn3lcLzZ0SKsPJRg1FE0xwlFjUfGwdhZgCSFNz94L30BIpML+1Hf4XOmbIVPALvR5jbqQvQ7zxx57DaLIxD7xW0JLNe1ctcW6/wmGKnK/wmyW0in8LtI6rF2UYPMSZzxBATFsxD8hDFWNec/Lv44he43kt0qy4TrYXHA4cCKwp9XKJhWScboPD/suBa4q7HjQFD7pzVhc0lNC4WCDvrG52HHOSFwV2uTC1zTC1Avw3myi9NOx8vS8mYGE8LW+Cph2gcZvqPwobYpRqp/kP7hpYSUXekYEfY845VSB5Q/6U2howoFYVZvQoQhLS8c6ahRuXip6DQltN+7qLi7L/cxpHpRWSuGbCfdfN66LcwQUzPNY7tQvnPDWKxHLKbfoHFeG/qNFW+b3HI8qN9USU/5G9mcES9QkeXMEriztFapHKYoVt43Orc+BF/FLhdJ6YETJIhl9b/NFBiWdrnUn2sb5AW+E4B+uqTZG5lRMQwXWcPdmWAFpAihUOFinJEi4d4IQjJ9tRlbFMCAXymgEF3IKsT/Z5xVx2b9ad3Llts2+F0JO7CLJTilACCbqtvq+YuY+wM/KWw1TSHvYko/78Db4NfLHvMSijoDdVQqDqDBsTGrrsTOZ8to0FMNxDm8L/9DfIaQFOmrifRyUST6jJ4EYz2ns=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: OSVtRsEhte+oMHmVjQZrij6gF4UTvVulRJVf0obJXKSlthiFFMYv6keIMAQb+c/K1robU9QVrfTAPwd0oT+8hwvQXVjRgrw0rN4G0JsNTPTiJ7qiljNHS29vGl5jPt/0iKoy6cMxpqfbCXP8wAi5taPG0BoRa1F0rgXk7WwIiQC0NpBct1QtDGhQV9oCdHDUzDZdvaV9Hm3bg2KqztAxtrVCE+x1H3vSYZ5hg2AVq+IHYjxO9UhEBVWKtP22IPOMsItobMy0vGaaEnyFX3tysdZNTicWsas6Mbdz6Hi7n4Qy+xQBvXk7iTjeB0isY1YD6zj4CKJCqKwUrG2nFaGohEs49Ca9FRmTfxxWMdvKiAt+rQRUZtCExStTH4n22QCkTP4Rc4ahuEAWbEL+5ApLNiCEKtDglNubRal13hLxqoo94zdSmrNiubLXKAXwwzLC0IoXuSb4tgSf+maHux+1nQNjv3JCju3kdrUhvLySkAcbJR4qtMPJC17gywuWsWKVkhLiBYB0lvgFN6gjpL4AlEur5L44K9nLnWQK5VOkVYnqSQFXVHjHcxDERlh4+yCRu6288mGAO+6dufseC6uqMpn+0jOKuWs4GgnhmFgwdPMuVaMsGv3k3Wm6+7Yc50E19Q3m7Y3JjVXqpe4Nj1CLIMN6nhzO7fMVcGgcIJwlCmj1Mr8I0WUn1fu+rZgOoHA13oX2TM41RV0cmN2oRrDTrg7rlnkVqu9vk0hnbnjBBBI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	kYMbio7pJ8Uwzfze9x5vXzYWi7zwFhBjHQtCpO7+Rwe0IEPiydRQzJnHjKdyRqz46JDPG2YdIo6LHzlj/j50Of68xxWryUgSE1kRU2XHTHm/99C9jcYYgbNNq5dYxCviU8/jXYEyZYVjzAQRzxe+2BW+JwHeE2GZ8bGfYgqUKPPiw6xHfylpnW+XCL0bnV4tzHyhlU3ULno02xvq1QEgAo8MQ9GFZSv1Vlvjpd4fDEzhgSYajOQ5se7OJoseeTn7rDbIIORqVUanVTqMFUHJPPbtdF2UlfLnxKMgs0AvKRTWkYeLsZpHAK5bV+UXlIvVs2yaePcdT061il7mZbXPX2rrNjLJ09mWSR8XzVWIbOdBIHLRpGPC0XoCLqaZoed23jbVu5lVMc8m39t6NYw+WbZJDFaXg3mvs3fs+Os1oLzLNPPbJoMX3Y1k2WMleb7g
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2026 20:38:47.0728
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?7iOCswqF7gOOjF3Qb5WZVAnQB7prj7+A4I0ubEC2NcCldLEZX2UEKHHS/c?=
+ =?iso-8859-1?Q?4s7v+EqCOcPdO7b/d18+dclFQx+PonDPsR84xBAEhsrJHjurXHLSRAzamW?=
+ =?iso-8859-1?Q?39LkyxCZxQArj57dox8CzoytpwUJvyD5AqnS3HoUqeNtHvie39PviDIYwU?=
+ =?iso-8859-1?Q?sH+/11clwLx0W6PRT/jWtq7n2RcdUX9+tT/v6A6vLiSSLt/dwmSnMVb9hU?=
+ =?iso-8859-1?Q?tz2i6HF7AMiX/xA5TZwvj2yfg3n16ul/Jn2MUFwcJTPSBJUQLjDJ7MmVCo?=
+ =?iso-8859-1?Q?/1e4IfBVmAovmik52TKyqOH6cldheB9lTdZk07Q3YOR24mlyBVvfIxwWni?=
+ =?iso-8859-1?Q?hmbfvpVwp7dXOjhSI7EBA3KuwDDKh+muLfujiCja1qO1h4fTnAc7yPwD57?=
+ =?iso-8859-1?Q?v36Yct+LPLNYmJBVjCJ6nbZC+046HD7c+Zy/6N5y9nIKA82UG3BRKGyT+A?=
+ =?iso-8859-1?Q?PuLnSRL7Ag0Wq3eQTOAhLK0vzchAoTxTvvyqZX6E/F4aRVogkF3x7tctxn?=
+ =?iso-8859-1?Q?E6ZgWa63VBzLuhc1IaIkJDAlwOwHz7yiyaLFO48ey0IuvlUoKWbh6se6jw?=
+ =?iso-8859-1?Q?qozLdAYeLATbIRtsQfAipAup6QBGoq6dRcl62uFJ2t5jOmCJhAlCkTV95o?=
+ =?iso-8859-1?Q?KdRwPdV0jm5C5ZJdmuz3WtNRVO2hnuNH4r+93DgQDgvu5rvibNeDt1D+TK?=
+ =?iso-8859-1?Q?/sRYp3/y80X0Bk5uwIwP4moT5AA4mY19BT6FIop2/Q3oYaVRpO4ajKob+a?=
+ =?iso-8859-1?Q?vXFQmV04dtG/8LXG/6WIftct6d11iXJxWWqV6mJK1bzPLR3YOkLPeIerE2?=
+ =?iso-8859-1?Q?L8n8t+K98QeLfjOfCXjd3nSXtVYaznnKLTe+KmQTTIObj5xU037+P2+EMf?=
+ =?iso-8859-1?Q?fiRUQB7jdjUyLDmd3HQQ7f6/lzgjAMrNqQJvTqsSBXv/gEBy2/Z1NPAJZZ?=
+ =?iso-8859-1?Q?B8fALeyCjnxuiiaAHj1XBprmFyjpGPv+2wDIffcrwPs4dzxF9ChMFZzr4x?=
+ =?iso-8859-1?Q?jpbZ9iIYihREQjNbLr97H/1Cn+T32nWtujPpcUtYep+2oZ6qtJ0JcS3g9N?=
+ =?iso-8859-1?Q?nIxytRdU98qsLDg7Ah+1ZOCPn/MAZWZZ0t4d+9yXrEYTkt4z3L8MofVZM9?=
+ =?iso-8859-1?Q?tNiopWKFGUbIOv4ZmQNOm6jtHxtRcZrRUsgVvmRAhPu5lwDJEcPHLePIaa?=
+ =?iso-8859-1?Q?PqR4cq3hLVb/g4PGj8yftcsRN24njsfK0Vz2MLJeWf/YDX26V3M+ZriY7h?=
+ =?iso-8859-1?Q?QyXZYnn1sNb8x89mA+/mUrQ6hmQ6MZXjbddRG/d/z/FMCW0WxZaESK6p/E?=
+ =?iso-8859-1?Q?ZH1H0Rw3Bbycd6PXoYgzTk0pjImDb/mcDX7KbL2yD/TFcZWFHpYan23/AD?=
+ =?iso-8859-1?Q?4J/aMNhLaHqGSiwP+y9gh/IBECzRR1n9AaW5hAzKuNk8vKtHDNRGo7DyRc?=
+ =?iso-8859-1?Q?T/PphPxen8O5iMubqzHgi5LBnjvbXgJ+dJi4tBv7KzdCWHuGHdKa/8pAr/?=
+ =?iso-8859-1?Q?IHW/bLUYk0kyA+9pfbs5pPP3KKFSdMDXTAcNBXXTRmnR0TPFUaJvpXa2fE?=
+ =?iso-8859-1?Q?lVtXlvz3k/w8ailed/PHEeytxnrsQFZpTI6g5Gv/pseAOVryc3SS/5aQ36?=
+ =?iso-8859-1?Q?g+vFwCAXlnFnoM9Et8Zq4JAuioN267HdGsXqeAhwv5Vu0ANUHx7QmuSNH+?=
+ =?iso-8859-1?Q?oyPqLlnvqW97GpR9UK29rf1PsbpJzRqhoURtM2JZojBD55tXTwk31wkiQ5?=
+ =?iso-8859-1?Q?raWfrCmfOu6goODNixZ5W2EpZShtrnkMRj71Rpw3rY2Qyt+w/xc8S5F4uL?=
+ =?iso-8859-1?Q?cYknaFUVxvE5gpbxX3rjHxhu397374c=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6cecc7b3-8d0e-416c-4382-08de78b8892e
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2026 00:05:10.5795
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8adfaaa8-5a2e-413c-38b5-08de789bb42b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000ECDB.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8550
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0+yWAE9e9fUE/CUlnQkj8Wn/++MoWT78bxnz/cYznyZE3SnopncBMJZaY6d7KS0tuMKwR5U9WC+Lwhj6DJN92n7rcJqUrRLRdlM7H8sddVA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4536
+X-OriginatorOrg: intel.com
 
-CXL protocol errors are not enabled for all CXL devices after boot. These
-must be enabled inorder to process CXL protocol errors.
+On Sat, Feb 28, 2026 at 03:04:14PM +0800, Li Ming wrote:
+> On 2/27/2026 2:44 AM, Alison Schofield wrote:
+> > cxl_detach_ep() is called during bottom-up removal when all CXL memory
+> > devices beneath a switch port have been removed. For each port in the
+> > hierarchy it locks both the port and its parent, removes the endpoint,
+> > and if the port is now empty, marks it dead and unregisters the port
+> > by calling delete_switch_port(). There are two places during this work
+> > where the parent_port may be used after freeing:
+> >
+> > First, a concurrent detach may have already processed a port by the
+> > time a second worker finds it via bus_find_device(). Without pinning
+> > parent_port, it may already be freed when we discover port->dead and
+> > attempt to unlock the parent_port. In a production kernel that's a
+> > silent memory corruption, with lock debug, it looks like this:
+> >
+> > []DEBUG_LOCKS_WARN_ON(__owner_task(owner) != get_current())
+> > []WARNING: kernel/locking/mutex.c:949 at __mutex_unlock_slowpath+0x1ee/0x310
+> > []Call Trace:
+> > []mutex_unlock+0xd/0x20
+> > []cxl_detach_ep+0x180/0x400 [cxl_core]
+> > []devm_action_release+0x10/0x20
+> > []devres_release_all+0xa8/0xe0
+> > []device_unbind_cleanup+0xd/0xa0
+> > []really_probe+0x1a6/0x3e0
+> >
+> > Second, delete_switch_port() releases three devm actions registered
+> > against parent_port. The last of those is unregister_port() and it
+> > calls device_unregister() on the child port, which can cascade. If
+> > parent_port is now also empty the device core may unregister and free
+> > it too. So by the time delete_switch_port() returns, parent_port may
+> > be free, and the subsequent device_unlock(&parent_port->dev) operates
+> > on freed memory. The kernel log looks same as above, with a different
+> > offset in cxl_detach_ep().
+> 
+> Hi Alison,
+> 
+> After looking deeper into these cases, looks like the changes cannot cover the second case?
+> 
+> My understanding is that cxl_port_release() will be called on the child port before the device_unlock(&parent_port->dev). The put_device() for the parent_port is still possible to release parent_port before calling device_unlock(&parent_port->dev).
 
-Introduce cxl_unmask_proto_interrupts() to call pci_aer_unmask_internal_errors().
-pci_aer_unmask_internal_errors() expects the pdev->aer_cap is initialized.
-But, dev->aer_cap is not initialized for CXL Upstream Switch Ports and CXL
-Downstream Switch Ports. Initialize the dev->aer_cap if necessary. Enable AER
-correctable internal errors and uncorrectable internal errors for all CXL
-devices.
+Thanks for digging in Ming! I see what you mean. It is possible for the
+parent_port to be released before the device_unlock of parent port. In
+v5 I've brought back a tiny piece of the v1 by taking an explicit ref
+on parent port across the device lock/unlock in cxl_detach_ep(). That'll
+make the second case safe independent of unregister ordering/cascading.
 
-Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+-- Alison
 
----
 
-Change in v15 -> v16:
-- None
-
-Change in v14 -> v15:
-- None
-
-Changes in v13->v14:
-- Update commit title's prefix (Bjorn)
-
-Changes in v12->v13:
-- Add dev and dev_is_pci() NULL checks in cxl_unmask_proto_interrupts() (Terry)
-- Add Dave Jiang's and Ben's review-by
-
-Changes in v11->v12:
-- None
----
- drivers/cxl/core/port.c |  2 ++
- drivers/cxl/core/ras.c  | 22 ++++++++++++++++++++++
- drivers/cxl/cxlpci.h    |  4 ++++
- 3 files changed, 28 insertions(+)
-
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 27271402915f..c33d58fb7264 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1852,6 +1852,8 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
- 
- 			rc = cxl_add_ep(dport, &cxlmd->dev);
- 
-+			cxl_unmask_proto_interrupts(cxlmd->cxlds->dev);
-+
- 			/*
- 			 * If the endpoint already exists in the port's list,
- 			 * that's ok, it was added on a previous pass.
-diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-index d6112b812c82..bfe6cb35154e 100644
---- a/drivers/cxl/core/ras.c
-+++ b/drivers/cxl/core/ras.c
-@@ -119,6 +119,24 @@ static void cxl_cper_prot_err_work_fn(struct work_struct *work)
- }
- static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
- 
-+void cxl_unmask_proto_interrupts(struct device *dev)
-+{
-+	if (!dev || !dev_is_pci(dev))
-+		return;
-+
-+	struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(to_pci_dev(dev));
-+
-+	if (!pdev->aer_cap) {
-+		pdev->aer_cap = pci_find_ext_capability(pdev,
-+							PCI_EXT_CAP_ID_ERR);
-+		if (!pdev->aer_cap)
-+			return;
-+	}
-+
-+	pci_aer_unmask_internal_errors(pdev);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_unmask_proto_interrupts, "CXL");
-+
- static void cxl_dport_map_ras(struct cxl_dport *dport)
- {
- 	struct cxl_register_map *map = &dport->reg_map;
-@@ -129,6 +147,8 @@ static void cxl_dport_map_ras(struct cxl_dport *dport)
- 	else if (cxl_map_component_regs(map, &dport->regs.component,
- 					BIT(CXL_CM_CAP_CAP_ID_RAS)))
- 		dev_dbg(dev, "Failed to map RAS capability.\n");
-+
-+	cxl_unmask_proto_interrupts(dev);
- }
- 
- /**
-@@ -172,6 +192,8 @@ void devm_cxl_port_ras_setup(struct cxl_port *port)
- 	if (cxl_map_component_regs(map, &port->regs,
- 				   BIT(CXL_CM_CAP_CAP_ID_RAS)))
- 		dev_dbg(&port->dev, "Failed to map RAS capability\n");
-+
-+	cxl_unmask_proto_interrupts(port->uport_dev);
- }
- EXPORT_SYMBOL_NS_GPL(devm_cxl_port_ras_setup, "CXL");
- 
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index 184a95e96ea9..b7cf9d6137b3 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -82,6 +82,7 @@ void devm_cxl_dport_rch_ras_setup(struct cxl_dport *dport);
- pci_ers_result_t cxl_pci_error_detected(struct pci_dev *pdev,
- 					pci_channel_state_t error);
- void devm_cxl_port_ras_setup(struct cxl_port *port);
-+void cxl_unmask_proto_interrupts(struct device *dev);
- #else
- static inline pci_ers_result_t cxl_pci_error_detected(struct pci_dev *pdev,
- 						      pci_channel_state_t state)
-@@ -96,6 +97,9 @@ static inline void devm_cxl_dport_rch_ras_setup(struct cxl_dport *dport)
- static inline void devm_cxl_port_ras_setup(struct cxl_port *port)
- {
- }
-+static inline void cxl_unmask_proto_interrupts(struct device *dev)
-+{
-+}
- #endif
- 
- #endif /* __CXL_PCI_H__ */
--- 
-2.34.1
-
+> 
+> If my understanding is wrong, please correct me. Thanks.
+> 
+> 
+> Ming
+> 
+> > Both of these issues stem from the absence of a lifetime guarantee
+> > between a child port and its parent port.
+> >
+> > Establish a lifetime rule for ports: child ports hold a reference to
+> > their parent device until release. Take the reference when the port
+> > is allocated and drop it when released. This ensures the parent is
+> > valid for the full lifetime of the child and eliminates the use after
+> > free window in cxl_detach_ep().
+> >
+> > This is easily reproduced with a reload of cxl_acpi in QEMU with CXL
+> > devices present.
+> >
+> > Fixes: 2345df54249c ("cxl/memdev: Fix endpoint port removal")
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > Reviewed-by: Li Ming <ming.li@zohomail.com>
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > ---
+> >
+> > Changes in v4:
+> > Move the put_device() into existing if-else logic (Ming)
+> >
+> > Changes in v3:
+> > Scope fix as a lifetime guarantee btw child port & parent (Dan)
+> >
+> > Changes in v2:
+> > Remove stray blank line (DaveJ)
+> > Rebase on 7.0-rc1
+> > Add Fixes Tag (DaveJ)
+> >
+> >
+> >  drivers/cxl/core/port.c | 8 ++++++--
+> >  1 file changed, 6 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> > index b69c2529744c..a004da8fbe55 100644
+> > --- a/drivers/cxl/core/port.c
+> > +++ b/drivers/cxl/core/port.c
+> > @@ -552,10 +552,13 @@ static void cxl_port_release(struct device *dev)
+> >  	xa_destroy(&port->dports);
+> >  	xa_destroy(&port->regions);
+> >  	ida_free(&cxl_port_ida, port->id);
+> > -	if (is_cxl_root(port))
+> > +
+> > +	if (is_cxl_root(port)) {
+> >  		kfree(to_cxl_root(port));
+> > -	else
+> > +	} else {
+> > +		put_device(dev->parent);
+> >  		kfree(port);
+> > +	}
+> >  }
+> >  
+> >  static ssize_t decoders_committed_show(struct device *dev,
+> > @@ -721,6 +724,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
+> >  		struct cxl_port *iter;
+> >  
+> >  		dev->parent = &parent_port->dev;
+> > +		get_device(dev->parent);
+> >  		port->depth = parent_port->depth + 1;
+> >  		port->parent_dport = parent_dport;
+> >  
+> >
+> > base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
+> 
+> 
