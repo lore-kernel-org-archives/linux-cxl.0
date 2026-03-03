@@ -1,176 +1,118 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18C442F566;
-	Tue,  3 Mar 2026 15:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2068481674
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Mar 2026 15:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772550052; cv=none; b=uWh/0jJo2D6O8BDTa4kE7zXiUZ858dObd85Q2DgpKjNvG6pB/0nRRyrfjy2YMsIpcVn8rTnpudD+aeWY8IfrxQTDIgGRSG/D7TPOWRkyeZ55FQtw6P2xmA3FKUDUDfFY4VXYQHqqxG1IusDZRNLzNahvbbNYs65Z4He2cfAIDWY=
+	t=1772551309; cv=none; b=P+VxMsg9/jR0y8J/ZvYZNKXeR5DidGtom0Mx8QQTsMtTX2v1jq5WxhrkPHeyRKi4I2DhOEU3xKO5Pnt9Wn5xQstzCnvkGt1bo1ZSlllPvuV77x79yulUjxif8QFAxvwy9AczkDjRynmeZRf/u87RrilBJAouGXaKTx6Sj0RyGf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772550052; c=relaxed/simple;
-	bh=0oZrxQ9yQk2I9dUJY4B6e8lDEKDior0f9dncYIHTP2U=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uQ/t43/yaaDtecbVTO9rXv2s5X3zRvC4y+T1DTxDUWdtBXoVhjo/Ao/U/tSEZIPArTNTgh9T4ym223LqVdJfOumENJMT2HAU6SzY9VlhDtrwFip6yk7oDOKFTzMNm5K1rMvvr6zAmiYfydr7blRvO+n0M4DbeyiomXFc4MUDsZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fQJr966Y7zJ46Yd;
-	Tue,  3 Mar 2026 23:00:09 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1590640589;
-	Tue,  3 Mar 2026 23:00:43 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 3 Mar
- 2026 15:00:42 +0000
-Date: Tue, 3 Mar 2026 15:00:40 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: <alistair23@gmail.com>
-CC: <bhelgaas@google.com>, <lukas@wunner.de>,
-	<rust-for-linux@vger.kernel.org>, <akpm@linux-foundation.org>,
-	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <alex.gaynor@gmail.com>,
-	<benno.lossin@proton.me>, <boqun.feng@gmail.com>, <a.hindborg@kernel.org>,
-	<gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <tmgross@umich.edu>,
-	<ojeda@kernel.org>, <wilfred.mallawa@wdc.com>, <aliceryhl@google.com>,
-	Alistair Francis <alistair@alistair23.me>
-Subject: Re: [RFC v3 22/27] lib: rspdm: Support SPDM certificate validation
-Message-ID: <20260303150040.00007458@huawei.com>
-In-Reply-To: <20260211032935.2705841-23-alistair.francis@wdc.com>
-References: <20260211032935.2705841-1-alistair.francis@wdc.com>
-	<20260211032935.2705841-23-alistair.francis@wdc.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1772551309; c=relaxed/simple;
+	bh=NtsBp2W1pQybKA4UPkA2oVzLpNH//0FRgvlfLKcyKyE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=itI02pbdkaWETYtmGNqtsL5H6jNu0Urf16cyGhzyhl6HgnJg3mzyi03o5frFUpLgl62OlmoOC/+RTOkCF0L1lLXWWa3I1VI2oHjMkIwOXYR81F3O15t3+mrnVCnRpfMQ7q+hWDF0QhL9gNZKhRZJNss4UYzlM3ZDOLP7H9cJSpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=KxPilzr0; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="KxPilzr0"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-8c9f6b78ca4so766801485a.0
+        for <linux-cxl@vger.kernel.org>; Tue, 03 Mar 2026 07:21:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1772551306; x=1773156106; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=b4f7AJE9Hf1AkTQ9xu88RkQP30gDThVvvbzKhqMXGvE=;
+        b=KxPilzr09gPSV0431YywxjeTclVFlgtyEGz/u3mNWwCcNs2OUFh9A0W3Iv8xwUKgFR
+         r+jZ3TGfRQ0iQTedEigVr5dN5A9yBFn5jmGrcC8R0eLCV4R4u90IBR7cdBm3917aFXX/
+         mUx+YJot01OWr0+/i5UtuS5SQoRhAfBF44ZDSA2BPZSbRpiwjSvyozi/DKPfw+S77xzi
+         xjo8FHpeTACz3tgllfg2lm+cyb3piftFZvUPPxBoBNZ8m64BomTv6YyTejxlFKaUW4L6
+         puOdZn8UTd+3fjk2q8QFXaftEXWJaLrhCm/B5s9aCg1t1CIhn6awVXeqPyWDY2FBYYSs
+         jxPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772551306; x=1773156106;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b4f7AJE9Hf1AkTQ9xu88RkQP30gDThVvvbzKhqMXGvE=;
+        b=tQ9ZdMbTA+3YcL5c0YL2MJykgdF3MPMdPwIRn9llfaRcP1tHLY0Lwj7uZy91l5ITt7
+         im+DYs0iglq8q82jiWZ+2zmK8iZ8pWDQQLwoe6X7HdiA07y4fVcvnwH7jBmy1MC2pSvp
+         qNIKjShzghFRrCyHrR+YDytBwAI3ua28evPxKEATvCjfLtZS5Ya9Y4GC8fLCsojCWWVP
+         tJ9hZctcT/7JP5OwiV79wfptZwmgV7PFn/2sLLV8aB61xtCswMkCCyO/sSm35c+cXIEd
+         8gvRXnq7yi5u65swV7eUrcmShKJFWDuC3NSc9sVQmf7gQpOLOd7+EC5LhMv5KQT6Uhll
+         7BEQ==
+X-Gm-Message-State: AOJu0YzTMsF5/yT14hFCiWVskPYhykXdK34noAOXDckY2FnQeNO6rtRd
+	kA4u/kpBrPwSyId9gHVzY1xQU69yDCF++KoCOHGJX9hJP7OLpb/Ou4Fl9raVAeK/Y3TbMfhSVqS
+	s8LZI
+X-Gm-Gg: ATEYQzxiPPCKowfCk9TbfBGDDm6PJq+FjeiuS/jS0y+i1fJn6nmVg65xmjoQPflVW1S
+	Wv44qi4UBrCoH45LmQDjDzcIfaBl9b7YkwTc72yFxmbgrceE6TFn533meh3SaD6OfP/ttd/QFxT
+	UyZSfqYXS51vQN1q1xeTHg2SOgCghrwnzMnJOoJ3FRAA5m1QVGKgTi/7jOvsPConuHBzTJyLiAC
+	lYn8r0f90j4V7YMLA9yuWsv1o5PUU6VayUYbOJqJO7tUFpyltux1VwctX0H5hR4lf/wt1zTFky3
+	VIU2ZyaRUFwULeURD5FPDvsj9Du4S+WQtAltzvDMpvGwrLR+dT8/5/5Z8cS025GZAnOoOnwrjiN
+	+pKq6ItGELXLb2BaDAW9S484+uXr7wHfsKcU6IqCPd8qd7BVrvSWhv/p+U+b8xVUqoc0P8bF8aK
+	wbaQFuwTKRHYCBCwLippI/6X0Gl6e4KNGzXeIuk7NZtbsElybZBgFeYB2fyWjOl6NLrUkIf/fMA
+	nqifzsqMg==
+X-Received: by 2002:a05:620a:410a:b0:8c9:f996:81fd with SMTP id af79cd13be357-8cbc8df3b87mr2141883285a.33.1772551306461;
+        Tue, 03 Mar 2026 07:21:46 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cbbf66f31asm1381560685a.15.2026.03.03.07.21.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2026 07:21:46 -0800 (PST)
+Date: Tue, 3 Mar 2026 10:21:44 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, dave@stgolabs.net, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com
+Subject: Re: [PATCH] cxl/acpi: fix CXL_ACPI=y + CXL_PMEM=m link failure
+Message-ID: <aab8iL8wz_sdVWyN@gourry-fedora-PF4VCD3F>
+References: <20260302200429.803417-1-gourry@gourry.net>
+ <20260303101330.000039a6@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260303101330.000039a6@huawei.com>
 
-On Wed, 11 Feb 2026 13:29:29 +1000
-alistair23@gmail.com wrote:
-
-> From: Alistair Francis <alistair@alistair23.me>
+On Tue, Mar 03, 2026 at 10:13:30AM +0000, Jonathan Cameron wrote:
+> On Mon,  2 Mar 2026 15:04:29 -0500
+> Gregory Price <gourry@gourry.net> wrote:
 > 
-> Support validating the SPDM certificate chain.
+> > Commit e7e222ad73d9 ("cxl: Move devm_cxl_add_nvdimm_bridge() to
+> > cxl_pmem.ko") moved devm_cxl_add_nvdimm_bridge() from cxl_core into
+> > cxl_pmem, creating a symbol dependency from cxl_acpi to cxl_pmem.
+> > 
+> > When CXL_ACPI=y and CXL_PMEM=m, the built-in cxl_acpi attempts to
+> > link against a non-built-in cxl_pmem, which the linker cannot resolve.
+> > 
+> > CXL_PMEM depends on LIBNVDIMM, so LIBNVDIMM=m constrains CXL_PMEM to
+> > at most =m.
+> > 
+> > Change IS_ENABLED() to IS_REACHABLE(), which returns false when a
+> > built-in caller references a modular target, preventing the link error.
+> > 
+> > The result is if the pmem/nvdimm symbols are not reachable at build
+> > time, then at runtime it will always return -ENODEV.
+> > 
+> > Fixes: e7e222ad73d9 ("cxl: Move devm_cxl_add_nvdimm_bridge() to cxl_pmem.ko")
+> > Signed-off-by: Gregory Price <gourry@gourry.net>
 > 
-> Signed-off-by: Alistair Francis <alistair@alistair23.me>
+> What's the impact of this build combination wrt to whether the result is
+> actually useful?   Is there any point in building CXL_PMEM as a module
+> without this call being made?  I can't remember and normally don't care
+> much about PMEM :) 
+> 
 
-Only minor thing inline + observation on the code that I think we want to remove
-for now wrt to checking the root cert.
+Basically no, it's not useful, but it's some definition of the default
+depending on your olddefconfig, so rather than fight with this further
+this basically terminates the same way DAX_CXL=m terminates.
 
-> diff --git a/lib/rspdm/state.rs b/lib/rspdm/state.rs
-> index 1e5656144611..728b920beace 100644
-> --- a/lib/rspdm/state.rs
-> +++ b/lib/rspdm/state.rs
+tl;dr: You don't create the dax device / nbdimm and you're sad... but it
+does build!
 
-> @@ -743,4 +746,92 @@ pub(crate) fn get_certificate(&mut self, slot: u8) -> Result<(), Error> {
->  
->          Ok(())
->      }
-> +
-> +    pub(crate) fn validate_cert_chain(&mut self, slot: u8) -> Result<(), Error> {
-> +        let cert_chain_buf = &self.certs[slot as usize];
-> +        let cert_chain_len = cert_chain_buf.len();
-> +        let header_len = 4 + self.hash_len;
-> +
-> +        let mut offset = header_len;
-> +        let mut prev_cert: Option<*mut bindings::x509_certificate> = None;
-> +
-> +        while offset < cert_chain_len {
-> +            let cert_len = unsafe {
-> +                bindings::x509_get_certificate_length(
-> +                    &cert_chain_buf[offset..] as *const _ as *const u8,
-> +                    cert_chain_len - offset,
-> +                )
-> +            };
-> +
-> +            if cert_len < 0 {
-> +                pr_err!("Invalid certificate length\n");
-> +                to_result(cert_len as i32)?;
-> +            }
-> +
-> +            let _is_leaf_cert = if offset + cert_len as usize == cert_chain_len {
-> +                true
-> +            } else {
-> +                false
-> +            };
-Same as the following?
-               let _is_leaf_cert = offset + cert_len as usize == cert_chain_len;
-
-
-> +
-> +            let cert_ptr = unsafe {
-> +                from_err_ptr(bindings::x509_cert_parse(
-> +                    &cert_chain_buf[offset..] as *const _ as *const c_void,
-> +                    cert_len as usize,
-> +                ))?
-> +            };
-> +            let cert = unsafe { *cert_ptr };
-> +
-> +            if cert.unsupported_sig || cert.blacklisted {
-> +                to_result(-(bindings::EKEYREJECTED as i32))?;
-> +            }
-> +
-> +            if let Some(prev) = prev_cert {
-> +                // Check against previous certificate
-> +                let rc = unsafe { bindings::public_key_verify_signature((*prev).pub_, cert.sig) };
-> +
-> +                if rc < 0 {
-> +                    pr_err!("Signature validation error\n");
-> +                    to_result(rc)?;
-> +                }
-> +            } else {
-> +                // Check aginst root keyring
-So this is the check that Dan and Jason are proposing we drop (for now).
-
-Works for me as easy to bring back later and lets us move forward
-in the meantime. As long as userspace gets nothing to indicate
-that we have in any way checked this root cert we are making no false claims.
-
-> +                let key = unsafe {
-> +                    from_err_ptr(bindings::find_asymmetric_key(
-> +                        self.keyring,
-> +                        (*cert.sig).auth_ids[0],
-> +                        (*cert.sig).auth_ids[1],
-> +                        (*cert.sig).auth_ids[2],
-> +                        false,
-> +                    ))?
-> +                };
-> +
-> +                let rc = unsafe { bindings::verify_signature(key, cert.sig) };
-> +                unsafe { bindings::key_put(key) };
-> +
-> +                if rc < 0 {
-> +                    pr_err!("Root signature validation error\n");
-> +                    to_result(rc)?;
-> +                }
-> +            }
-> +
-> +            if let Some(prev) = prev_cert {
-> +                unsafe { bindings::x509_free_certificate(prev) };
-> +            }
-> +
-> +            prev_cert = Some(cert_ptr);
-> +            offset += cert_len as usize;
-> +        }
-> +
-> +        if let Some(prev) = prev_cert {
-> +            if let Some(validate) = self.validate {
-> +                let rc = unsafe { validate(self.dev, slot, prev) };
-> +                to_result(rc)?;
-> +            }
-> +
-> +            self.leaf_key = unsafe { Some((*prev).pub_) };
-> +        }
-> +
-> +        Ok(())
-> +    }
->  }
-
-
+~Gregory
