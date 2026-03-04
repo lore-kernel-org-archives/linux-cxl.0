@@ -1,208 +1,120 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201FC3890FF
-	for <linux-cxl@vger.kernel.org>; Wed,  4 Mar 2026 08:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1645B3A5E6A;
+	Wed,  4 Mar 2026 14:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772611617; cv=none; b=d0sM9XbHQhYHPeRtPiXWhS36Ig2QDQvDrc92EV/FmdLaCWo/zFI4yfATnrO7vRGlv4cMGtZqsA08D0N6tV/WqnEy8ctMn6szQ4ZqdU1+gJA1BkRWRs7t8MapFzmh9PxH2L/WA0nshJ2Qc45kcGoXDtMuKanFJ0w3SqI3+j661N4=
+	t=1772633495; cv=none; b=PrrV3TqEieR+SpX+ktQ4OOcY/f2T4n1sfhZ0z9pVkz7uoDBa0NvaECQDXVAM8gBcwX+y3teDfbu8KZtEo/yplFiL05MJ4kkyKLNo+rAqc86MQnbRX4lLfKfJNdCSuN+gT9dk5T9x5LoaH9yTu+FiIdv5TQPdmMv41c1gj83FWDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772611617; c=relaxed/simple;
-	bh=gIVQIjL6KWNp/N7IGQCVodqKY+vMRD57PEUjkJG2F/E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RnJMPHusXr/DVIygMtwDe/kL0WltiaiCR6MCBQBQ/ppNcGGNK/H/G7BFFf8O0L8kYQnu+sNG2/jMJRuQNJYQKaCnmIi6Es4EftwrxaDO0ZvjurnNPn9CfQCVcZVDRAXsrRGcELKuKYhMVaDRgCtJynYS3/IS0/vo+6PcSlf9SoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=hHiJUJWz; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
+	s=arc-20240116; t=1772633495; c=relaxed/simple;
+	bh=Qhu/NXTZvVS1GxryVXLFlGmYcFLtCfndr8DGcuJYgYI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cu2oNfk4KiZx40r9QNneaWoqtuiSZaGtkeiLTQtL72c2k9ktiIBwZUeckfv3aL8kpa4w981Szpf8ohrZbvbcA/sEVW3itWcO7kMSyTyvCgQjA6R2jbt7pYe0Rx7t2dNIxoeNzkPWPGQQo5U8O72Oy/w5ZjPUijEA1l69FAgIEyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iT3l74AI; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="hHiJUJWz"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-81df6a302b1so7077425b3a.2
-        for <linux-cxl@vger.kernel.org>; Wed, 04 Mar 2026 00:06:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shopee.com; s=shopee.com; t=1772611615; x=1773216415; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r6eoY4SiH0kcADzF/tE6vWrQnAgRLMu3ultuUPQsFDg=;
-        b=hHiJUJWz0nENmn7ihAIfl3aKwG9aNu1tRJO/hWK71lZ96W1kuITNoRNpI+sFWHnxQr
-         h36TVqi4GielPZbPJLxYJ9FHdn5bpUt0ly80967XZXW/8XMYPDU3pazNUqkbImf1lyDL
-         YDBtYIv65LE6INFYnvcVFWEZ7GoSezmZkXcrClVkGy1asZAD+7Ek2R8vmfGw0V1U9aau
-         wnI4Lh7cI+eveuSQfuF9Oh3Acmh5jsFIr8CaTz/FF91RQ1258t6/OFvbOP0y8oyMb4Nh
-         9zr910FesIfnkZN58D7lXPQyQHkee84uuEZs3wpp7Mg+UaJh+SjkiqahS5GcXVrRgCmP
-         pAaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772611615; x=1773216415;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r6eoY4SiH0kcADzF/tE6vWrQnAgRLMu3ultuUPQsFDg=;
-        b=TJJi4bWOCrJgRq5kj5p3qKI3TcqfqIq7cwloNJ/fgdcF4w7Ojcr811fZ4SP621zHiT
-         Pyzv2TsDReN3pszSLuT2t9UJYwYofMr6sml4I00iRAprM+5VrLrSraazps6eubwERVCl
-         J5CAafYGQPdy9lWv7338N6j507Nj9q5h2tdufEtHLLiK9DGGPUKeEDjKNIqrswKxw7hF
-         TMB6tUjTFN4d1CDFfPkRqoZyshWPGR8E90DN74ZrCPuUb4U5Dz57pkue4fqHxdUgRuxU
-         NnZ7Ll2KQK2Lcwc53aYnbE83tNkJhd9JDOEJaz9Bjp4SN5QxJJ2PPoSNr90aH/jtO+e2
-         8k1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUdB8it22eW46cyJwUY7bio30CmoU06KhM9OKWhpnRXY43B44JsxfCtS1q1Icx//PL/BwByPpXW/R0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUE83iiwWkP0Efw/pQBNNWstptzcZT49QLLKT9LtsHfrmPPyvs
-	l4sOodi1CvI56R/Jc3t53GB6xsBlun1H8UmUzMS+EJUVvJXVGLxVV3gOM7oddBAAUig=
-X-Gm-Gg: ATEYQzxSAlW61++GpzCql/ZU2zp9MDsfRprzEkotWHktcn1p/Tr0GWhs61Ml27h1jtb
-	uOGlzMde7auh6iTjc3FLu6m/UWzFpOQNuiK+PkoXEKnDechgKXIjwGy5/hpMwx2VVKLZS6uWifS
-	JLqir5PyYEbSJn3otKGMqiPh3JLeth+tnutEbHmTJlnFjG/0hORl+NCk8BarQjdPlI3qNimd8SB
-	mnjQ1gmBPUvrWJdMG0ZaRJrEAdILyT0mmd3aEtVMoskFQhqg1RrTOeDuJSxbycFf0jgAxc/o6Dl
-	tWz0aOmLHz3FTW5vf1q+VIsT0ChcZTPt65tYoL1xXRf7oV2EO4XnxsMiJAvkZ5hxwDmrEjLx3L8
-	h40Yz5GCf8B4LsdYNItmAJVfS/cbB53EIDXyXzuCpjrNa79HkiTL2QI5PLlNgsdUccUiaDRbHdb
-	IXSqD3n26JRlNqqnLVSGaKmxqlbGwWrlEkMk/mxl7Ro/KEVUA=
-X-Received: by 2002:a05:6a20:3d8b:b0:394:6159:1758 with SMTP id adf61e73a8af0-3982dd69b41mr1132055637.8.1772611615452;
-        Wed, 04 Mar 2026 00:06:55 -0800 (PST)
-Received: from localhost.localdomain ([147.136.157.0])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae54136b28sm76817775ad.73.2026.03.04.00.06.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2026 00:06:55 -0800 (PST)
-From: Haifeng Xu <haifeng.xu@shopee.com>
-To: rafael@kernel.org,
-	lenb@kernel.org,
-	dan.j.williams@intel.com,
-	jonathan.cameron@huawei.com
-Cc: dave@stgolabs.net,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Haifeng Xu <haifeng.xu@shopee.com>
-Subject: [PATCH] ACPI: add a boot parameter to disable parsing CFMWS during NUMA init
-Date: Wed,  4 Mar 2026 16:06:47 +0800
-Message-ID: <20260304080647.169434-1-haifeng.xu@shopee.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iT3l74AI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772633494; x=1804169494;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Qhu/NXTZvVS1GxryVXLFlGmYcFLtCfndr8DGcuJYgYI=;
+  b=iT3l74AIHQfyfF0qxJE0kQz2lb/qodu9LAFqj96abaygr9qgUMoEcaXj
+   Y/9BzWSoQ8ZZnEjao8iBhQtykDbwcODV+A5gX9XLbQ/B0BxEweBI86EIs
+   yxqdvnmmGc6N0bJMDPMD1s4lTv6ymQ/QOe5S+nF9PK6Ii52Af3YQYh4+c
+   mvbla1UATOn7Ndwl0KzAmtp8OKh9cv7Va47KxKis5f4r+EFWZdt+Z+/3O
+   9bLn9P4tV2+YQ3wSNKARq7RhOXe2HvYMsbVUltyZsaIZowq14SuoHr0h5
+   WXNc1Diktr5a6rRH1D9MuTA8dFVwhURjW2e0yxT0TfkoxwmBrXwcL6YZ1
+   A==;
+X-CSE-ConnectionGUID: ITquhhrlTAOMt9fJQcH5Tw==
+X-CSE-MsgGUID: Ku+DrJ8/T4KWOv7mZwY1zw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11719"; a="72719120"
+X-IronPort-AV: E=Sophos;i="6.21,324,1763452800"; 
+   d="scan'208";a="72719120"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2026 06:11:34 -0800
+X-CSE-ConnectionGUID: sn0c9hXNQyCVJos/qzygtA==
+X-CSE-MsgGUID: deoFyIJNTl+N5bf243+/rQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,324,1763452800"; 
+   d="scan'208";a="218302275"
+Received: from igk-lkp-server01.igk.intel.com (HELO 9958d990ccf2) ([10.211.93.152])
+  by orviesa009.jf.intel.com with ESMTP; 04 Mar 2026 06:11:31 -0800
+Received: from kbuild by 9958d990ccf2 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vxmwh-000000001ir-4Afg;
+	Wed, 04 Mar 2026 14:11:27 +0000
+Date: Wed, 4 Mar 2026 15:10:46 +0100
+From: kernel test robot <lkp@intel.com>
+To: Haifeng Xu <haifeng.xu@shopee.com>, rafael@kernel.org, lenb@kernel.org,
+	dan.j.williams@intel.com, jonathan.cameron@huawei.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, dave@stgolabs.net,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Haifeng Xu <haifeng.xu@shopee.com>
+Subject: Re: [PATCH] ACPI: add a boot parameter to disable parsing CFMWS
+ during NUMA init
+Message-ID: <202603041550.t2wIMeDy-lkp@intel.com>
+References: <20260304080647.169434-1-haifeng.xu@shopee.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260304080647.169434-1-haifeng.xu@shopee.com>
 
-For the machine Intel(R) Xeon(R) 6746E that supports CXL memory,
-the possible nodes are 20 (0-19). However, only two numa nodes (0-1)
-have memory and the rest nodes (2-19) detected by CEDT are memoryless.
+Hi Haifeng,
 
-The problems is that when creating many pods, the shrinker map size
-needs to be expanded for all memory cgroups in expand_shrinker_info().
-If the number of possible nodes is too large, the holding time of
-shrinker lock grows significantly.
+kernel test robot noticed the following build warnings:
 
-In this case, there is no CXL memory inserted in the machine, those
-memoryless nodes are useless for us, so there is no need to set them
-in 'numa_nodes_parsed'. After disabling parsing CFMWS, the pod creation
-time is reduced from over 10 minutes to approximately 150 seconds in
-our internal test.
+[auto build test WARNING on rafael-pm/linux-next]
+[also build test WARNING on rafael-pm/bleeding-edge cxl/next tip/x86/mm linus/master v6.16-rc1 next-20260303]
+[cannot apply to cxl/pending]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Signed-off-by: Haifeng Xu <haifeng.xu@shopee.com>
----
- arch/x86/mm/numa.c       |  2 ++
- drivers/acpi/numa/srat.c | 29 ++++++++++++++++++++++-------
- include/acpi/acpi_numa.h |  6 ++++++
- 3 files changed, 30 insertions(+), 7 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Haifeng-Xu/ACPI-add-a-boot-parameter-to-disable-parsing-CFMWS-during-NUMA-init/20260304-160933
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+patch link:    https://lore.kernel.org/r/20260304080647.169434-1-haifeng.xu%40shopee.com
+patch subject: [PATCH] ACPI: add a boot parameter to disable parsing CFMWS during NUMA init
+config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260304/202603041550.t2wIMeDy-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260304/202603041550.t2wIMeDy-lkp@intel.com/reproduce)
 
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 7a97327140df..b127bb65d360 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -37,6 +37,8 @@ static __init int numa_setup(char *opt)
- 		disable_srat();
- 	if (!strncmp(opt, "nohmat", 6))
- 		disable_hmat();
-+	if (!strncmp(opt, "nocfmws", 7))
-+		disable_cfmws();
- 	return 0;
- }
- early_param("numa", numa_setup);
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index aa87ee1583a4..8716d70043fe 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -31,6 +31,7 @@ static int node_to_pxm_map[MAX_NUMNODES]
- 
- unsigned char acpi_srat_revision __initdata;
- static int acpi_numa __initdata;
-+static int cfmws_numa __initdata;
- 
- static int last_real_pxm;
- 
-@@ -39,6 +40,12 @@ void __init disable_srat(void)
- 	acpi_numa = -1;
- }
- 
-+void __init disable_cfmws(void)
-+{
-+	cfmws_numa = -1;
-+}
-+
-+
- int pxm_to_node(int pxm)
- {
- 	if (pxm < 0 || pxm >= MAX_PXM_DOMAINS || numa_off)
-@@ -313,6 +320,12 @@ int __init srat_disabled(void)
- 	return acpi_numa < 0;
- }
- 
-+int __init cfmws_disabled(void)
-+{
-+	return cfmws_numa < 0;
-+}
-+
-+
- __weak int __init numa_fill_memblks(u64 start, u64 end)
- {
- 	return NUMA_NO_MEMBLK;
-@@ -648,14 +661,16 @@ int __init acpi_numa_init(void)
- 	 */
- 
- 	/* fake_pxm is the next unused PXM value after SRAT parsing */
--	for (i = 0, fake_pxm = -1; i < MAX_NUMNODES; i++) {
--		if (node_to_pxm_map[i] > fake_pxm)
--			fake_pxm = node_to_pxm_map[i];
-+	if (!cfmws_disabled()) {
-+		for (i = 0, fake_pxm = -1; i < MAX_NUMNODES; i++) {
-+			if (node_to_pxm_map[i] > fake_pxm)
-+				fake_pxm = node_to_pxm_map[i];
-+		}
-+		last_real_pxm = fake_pxm;
-+		fake_pxm++;
-+		acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
-+				      &fake_pxm);
- 	}
--	last_real_pxm = fake_pxm;
--	fake_pxm++;
--	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
--			      &fake_pxm);
- 
- 	if (cnt < 0)
- 		return cnt;
-diff --git a/include/acpi/acpi_numa.h b/include/acpi/acpi_numa.h
-index 99b960bd473c..2435f60e56ce 100644
---- a/include/acpi/acpi_numa.h
-+++ b/include/acpi/acpi_numa.h
-@@ -21,6 +21,7 @@ extern int fix_pxm_node_maps(int max_nid);
- 
- extern void bad_srat(void);
- extern int srat_disabled(void);
-+extern void disable_cfmws(void);
- 
- #else				/* CONFIG_ACPI_NUMA */
- static inline int fix_pxm_node_maps(int max_nid)
-@@ -30,6 +31,11 @@ static inline int fix_pxm_node_maps(int max_nid)
- static inline void disable_srat(void)
- {
- }
-+
-+static inline void disable_cfmws(void)
-+{
-+}
-+
- static inline int pxm_to_node(int pxm)
- {
- 	return 0;
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603041550.t2wIMeDy-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/acpi/numa/srat.c:323:12: warning: no previous prototype for function 'cfmws_disabled' [-Wmissing-prototypes]
+     323 | int __init cfmws_disabled(void)
+         |            ^
+   drivers/acpi/numa/srat.c:323:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     323 | int __init cfmws_disabled(void)
+         | ^
+         | static 
+   1 warning generated.
+
+
+vim +/cfmws_disabled +323 drivers/acpi/numa/srat.c
+
+   322	
+ > 323	int __init cfmws_disabled(void)
+   324	{
+   325		return cfmws_numa < 0;
+   326	}
+   327	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
