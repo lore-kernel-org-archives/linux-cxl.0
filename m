@@ -1,64 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1645B3A5E6A;
-	Wed,  4 Mar 2026 14:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9613B15539A;
+	Wed,  4 Mar 2026 15:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772633495; cv=none; b=PrrV3TqEieR+SpX+ktQ4OOcY/f2T4n1sfhZ0z9pVkz7uoDBa0NvaECQDXVAM8gBcwX+y3teDfbu8KZtEo/yplFiL05MJ4kkyKLNo+rAqc86MQnbRX4lLfKfJNdCSuN+gT9dk5T9x5LoaH9yTu+FiIdv5TQPdmMv41c1gj83FWDY=
+	t=1772637157; cv=none; b=KORPrjYno4Mj0GMSS3SYj+V7qzzSBN2gRW4fcFgoGvq5VExp8SyaWXAfTt/8jkH4BhPmRU2abcA9LNdpk2GLDIKaU4+2YcCnNaC/ZxWBQ+72aW/corR5/HoRrH5I8Q7G3XCgg9S4l0yL2h3PHOGaJLPBUEAoesV3mXuNFVQOihc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772633495; c=relaxed/simple;
-	bh=Qhu/NXTZvVS1GxryVXLFlGmYcFLtCfndr8DGcuJYgYI=;
+	s=arc-20240116; t=1772637157; c=relaxed/simple;
+	bh=j0cB9JI/3pBFDaTTSPAGIi8TfsKNqQ/pygSAUVmpmsk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cu2oNfk4KiZx40r9QNneaWoqtuiSZaGtkeiLTQtL72c2k9ktiIBwZUeckfv3aL8kpa4w981Szpf8ohrZbvbcA/sEVW3itWcO7kMSyTyvCgQjA6R2jbt7pYe0Rx7t2dNIxoeNzkPWPGQQo5U8O72Oy/w5ZjPUijEA1l69FAgIEyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iT3l74AI; arc=none smtp.client-ip=192.198.163.19
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZxzM6hcxrVlE/xN5IbgnBoCFotaXyuOvTShpUSi6FHCRidEvdESKptaqAuydY6BOmmrlEZbTkey5UZzTnq+aAhNpdFCxjvWSGoXLavDdGLYdUyKqpz367tRUXMCivlQZJOq5RDUWNbrHR5d9+MmJli79LHpP+WlD9Aiq718//Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ijg9bGZ2; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iT3l74AI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ijg9bGZ2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772633494; x=1804169494;
+  t=1772637154; x=1804173154;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=Qhu/NXTZvVS1GxryVXLFlGmYcFLtCfndr8DGcuJYgYI=;
-  b=iT3l74AIHQfyfF0qxJE0kQz2lb/qodu9LAFqj96abaygr9qgUMoEcaXj
-   Y/9BzWSoQ8ZZnEjao8iBhQtykDbwcODV+A5gX9XLbQ/B0BxEweBI86EIs
-   yxqdvnmmGc6N0bJMDPMD1s4lTv6ymQ/QOe5S+nF9PK6Ii52Af3YQYh4+c
-   mvbla1UATOn7Ndwl0KzAmtp8OKh9cv7Va47KxKis5f4r+EFWZdt+Z+/3O
-   9bLn9P4tV2+YQ3wSNKARq7RhOXe2HvYMsbVUltyZsaIZowq14SuoHr0h5
-   WXNc1Diktr5a6rRH1D9MuTA8dFVwhURjW2e0yxT0TfkoxwmBrXwcL6YZ1
+  bh=j0cB9JI/3pBFDaTTSPAGIi8TfsKNqQ/pygSAUVmpmsk=;
+  b=ijg9bGZ2K4fYosLgsvgaPORz2/JLzfWF0ndocfRtaZSgclJH2k7wXAyr
+   lBQN5K9sgNOJAFxnXZaBXjPkVNS4Ra0eDeO8Ei2rld0H4Kvp+qrN8EzyV
+   BfzZppxkBBoZr6TAL9HNsBxB/GKjve7UZOf+N/NzUYo3Yv8Go/4VRlpUO
+   rP2w6PTPToMcS1gFcvl84vEVImyrG5tz07b8k5BwyZs5bf5a9QZlLPIer
+   cBpLYVjtQNJ8LqwBxvvvCTGZc+fCfY7motfUnWC8GdVnHQHn49z9Hu/te
+   i+SGTCb9E5Z1bEsRie7JarcBd42kKiL2LW7CiMgDSgLRuZJK/kj+bZz+C
    A==;
-X-CSE-ConnectionGUID: ITquhhrlTAOMt9fJQcH5Tw==
-X-CSE-MsgGUID: Ku+DrJ8/T4KWOv7mZwY1zw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11719"; a="72719120"
+X-CSE-ConnectionGUID: X4sMt7YwSRC9fOATwyHorQ==
+X-CSE-MsgGUID: V1HIvr8LRd6aWDZOQBOgHA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11719"; a="77569654"
 X-IronPort-AV: E=Sophos;i="6.21,324,1763452800"; 
-   d="scan'208";a="72719120"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2026 06:11:34 -0800
-X-CSE-ConnectionGUID: sn0c9hXNQyCVJos/qzygtA==
-X-CSE-MsgGUID: deoFyIJNTl+N5bf243+/rQ==
+   d="scan'208";a="77569654"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2026 07:12:34 -0800
+X-CSE-ConnectionGUID: HlA1aqOrRL+e2MqcXgKEnw==
+X-CSE-MsgGUID: xKpDG5G4QoOsVnZC7XVPLA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,324,1763452800"; 
-   d="scan'208";a="218302275"
+   d="scan'208";a="223345674"
 Received: from igk-lkp-server01.igk.intel.com (HELO 9958d990ccf2) ([10.211.93.152])
-  by orviesa009.jf.intel.com with ESMTP; 04 Mar 2026 06:11:31 -0800
+  by orviesa005.jf.intel.com with ESMTP; 04 Mar 2026 07:12:31 -0800
 Received: from kbuild by 9958d990ccf2 with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1vxmwh-000000001ir-4Afg;
-	Wed, 04 Mar 2026 14:11:27 +0000
-Date: Wed, 4 Mar 2026 15:10:46 +0100
+	id 1vxntk-000000001jd-2ZgE;
+	Wed, 04 Mar 2026 15:12:28 +0000
+Date: Wed, 4 Mar 2026 16:11:44 +0100
 From: kernel test robot <lkp@intel.com>
 To: Haifeng Xu <haifeng.xu@shopee.com>, rafael@kernel.org, lenb@kernel.org,
 	dan.j.williams@intel.com, jonathan.cameron@huawei.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, dave@stgolabs.net,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Haifeng Xu <haifeng.xu@shopee.com>
+Cc: oe-kbuild-all@lists.linux.dev, dave@stgolabs.net, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Haifeng Xu <haifeng.xu@shopee.com>
 Subject: Re: [PATCH] ACPI: add a boot parameter to disable parsing CFMWS
  during NUMA init
-Message-ID: <202603041550.t2wIMeDy-lkp@intel.com>
+Message-ID: <202603041621.Ykqrqowb-lkp@intel.com>
 References: <20260304080647.169434-1-haifeng.xu@shopee.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -75,7 +75,7 @@ Hi Haifeng,
 kernel test robot noticed the following build warnings:
 
 [auto build test WARNING on rafael-pm/linux-next]
-[also build test WARNING on rafael-pm/bleeding-edge cxl/next tip/x86/mm linus/master v6.16-rc1 next-20260303]
+[also build test WARNING on rafael-pm/bleeding-edge cxl/next tip/x86/mm linus/master v7.0-rc2 next-20260303]
 [cannot apply to cxl/pending]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
@@ -85,25 +85,20 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Haifeng-Xu/ACPI-add-a-boo
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
 patch link:    https://lore.kernel.org/r/20260304080647.169434-1-haifeng.xu%40shopee.com
 patch subject: [PATCH] ACPI: add a boot parameter to disable parsing CFMWS during NUMA init
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260304/202603041550.t2wIMeDy-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260304/202603041550.t2wIMeDy-lkp@intel.com/reproduce)
+config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20260304/202603041621.Ykqrqowb-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260304/202603041621.Ykqrqowb-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202603041550.t2wIMeDy-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603041621.Ykqrqowb-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
->> drivers/acpi/numa/srat.c:323:12: warning: no previous prototype for function 'cfmws_disabled' [-Wmissing-prototypes]
+>> drivers/acpi/numa/srat.c:323:12: warning: no previous prototype for 'cfmws_disabled' [-Wmissing-prototypes]
      323 | int __init cfmws_disabled(void)
-         |            ^
-   drivers/acpi/numa/srat.c:323:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-     323 | int __init cfmws_disabled(void)
-         | ^
-         | static 
-   1 warning generated.
+         |            ^~~~~~~~~~~~~~
 
 
 vim +/cfmws_disabled +323 drivers/acpi/numa/srat.c
