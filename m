@@ -1,111 +1,132 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cornsilk.ash.relay.mailchannels.net (cornsilk.ash.relay.mailchannels.net [23.83.222.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E20375F73
-	for <linux-cxl@vger.kernel.org>; Wed,  4 Mar 2026 22:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772663611; cv=none; b=NwE5zNBYRzuleTZc2t7JCqsf45enTcyHv4TQp3S8jIu0Oud5UBlHylQEVcUl8EBZcycCs5lN5wWCXkAWJm5Jr2WlehxN7x0sArHvkhW4RRZFQWq7P5U+aqrViOEibJcxHoQHUoC/id/L6TInyGaN+ZlpxGGoRAL+FeHy1xdW57I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772663611; c=relaxed/simple;
-	bh=prulmfQJPM5sB8UVZonMzpxbfN/QSE7fFKzD055GD44=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B6A37880D
+	for <linux-cxl@vger.kernel.org>; Wed,  4 Mar 2026 22:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772664627; cv=pass; b=YfQ0EojW/RYHc6fiygGyhwkSeIbRjBy8GJBhc8m8ZJMR555xO04FUoPvL/s1eg3zoC3P7aXojLCEwsIOS+GSo1JoRky7mjWE30y8t3oRzd8OyHS+Nm2ccKFmDCNhJFxxt8T6MvFPisQyDA6xmQnxZRiyVZxfdFjnl7uci5Kl1Kg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772664627; c=relaxed/simple;
+	bh=ciBchx0QtMqj1D+B98EW1mot3L68QcEhumIMfp9bNoM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ueg0zQKRfyQpe8eZxDDjTFr9M4XPjz+7jQKuSbIlmpX8ICMi6kICtT+euWESe6DE/yXtgHnGNB+nNPg3gV3RDF5SQp28kASYOYfykqz3HwI2kqlKKCP9/dY8DKxeD2NJkO5JFki3l2mXCJkElW1M8LghUWZ5MTA+sCvSatQcnSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Jb1PorJb; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=ARh90BaZ3KZCTLCvMDxA0kk6xz9WJ4+tGSDMW+Dq8Kem/CCOAkIgLodK2YIG5kMYCry+wPcjcCEOuBNpFQ1DR3gjV0d0sDDC84wPs56Rg1SPtitUB0GROwT/5mSsrEvtmR+CYv+khVhKQsaEqQXDRg5YvE9rCLb72HYmTZ7x1+Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=OwwO/koH; arc=pass smtp.client-ip=23.83.222.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Jb1PorJb"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-899efe93d4eso51498416d6.2
-        for <linux-cxl@vger.kernel.org>; Wed, 04 Mar 2026 14:33:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1772663609; x=1773268409; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yqt1lwHlXdfsdp5rB//PPPVMKmDVYi0PoyC8O+e52Kk=;
-        b=Jb1PorJbTBNCm8VlzIUw4A4KTVk17CZUCIKxuLnbGm+tlNTFFJth76/A/PrKAgYrQ7
-         YKhyiAgpt2PYEgmIk8L+XbdlgKVQ10AvZ2UzmlIF6IGbnJOZs2m7khHu6HebB+Smqm5/
-         nmPeJPXKNkVvDmym976BthXIOkW1iKmXczh4uLlOAQPKEAczrzdtcN9tv1IwCCA9IVGk
-         WBr4wfu50+ZcY2nUkGAyQwNjf1vauNV4SdPUJrt5aq5w0cFtTDnPpHvGS5ef4XsNmu+A
-         oSagnZXTqG6U2X23xrwGoDQ9X7X5ygtPGm2wDaPzmVYME3Yrwv1rLSAH4Vznl6xTRugJ
-         3Prw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772663609; x=1773268409;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yqt1lwHlXdfsdp5rB//PPPVMKmDVYi0PoyC8O+e52Kk=;
-        b=ilvnd5GiCH/OjCRqbdi3txwm79DQYVxKjvhN8/9HF/E/l6nN28xWMo47ueBOofFEr0
-         v4hAmBC2/NJLOy0PbEgb9giR5+vqufGVfiH6IKlREDncvD512L6B0s0rzvpWwonintoX
-         vpW/6CXPpnBhoTxuVDsxzFMxr4urYQXAwMmsKDxK989yb5EUrqR6SfT0n0q7vSKJcW9d
-         wghXZ15wq4W1hRflBhvUCTBPuhaGSisHkqFHseul5y7bA5oNRBHNLFXw9bwREu7Ta9t4
-         ka4oFa1I65OTMyXiJZZ/nHzu/5pQgTkXgRKKsQ4+9hiwWwpm9lgP4D+1b9VXvRCIES0S
-         Jn2g==
-X-Forwarded-Encrypted: i=1; AJvYcCWWvV4Lb9EncoH9lbso5vP9Z5lxAAOV8Y277r5y57xNKQEoZLFTR0l6rfeHCmagpMWx5i9Z+ox9pFU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywce6cnCsY1qoZVjbhwnvFLNYH7gw/nTVVfBS97ZEKmz8VLoCYh
-	0/syktsSGgsfOEla6bzgjQ4pbSRqXSA1T5KubkSKL+PXnrzuq6zI2jHMC78G+uNOVG4=
-X-Gm-Gg: ATEYQzyknzyh4Q4kQvh8mm8Yr/x5/VGzB5yCcKETUaD82Kd6Cc4O3kAOoApB47SDrX/
-	kgINcuv0xp2Farv0XAsVEbY4IMeumECWAsLN/1Ydmro7Tm3gesMtTJQod4Hb1T6JjC6Stf1EdiW
-	JHh+l3KO3yJ6+BcLK+xhWI3/oZOSkz+8kkVttqOHDsXRrXsMMxWQ3g6GfC7tpCXi6uNLxoX2lPf
-	od3LTjiE1jNdIQMQE0wFOot+lDSFQ3RqL2vR4i1mXEP9tAj7uwySIEuabxmQkt7hzv5NTbt9LfR
-	d5h0qJZ/0F9lIc99741xZNiWH/ZNqs6DythR8tO+EWE6TOG6frqpmINA03r2mOJdoD0pCDGCBHk
-	CEfxw8sqpWtxzZpsSq4MBVjeeFPWf20NYAg8CIpqvl10MiyhlI63zdTrFMlR+/jE/FbSmAD554V
-	L+YO8BSsjr2PT68dYINFP8+s+JYEUytjaa3OIVHhKts8R0B6lbz/Vc4O4wH73NEQpWKBqYEQSUu
-	VjIjh8vWqI8egqotZA8
-X-Received: by 2002:ad4:5946:0:b0:89a:9b1:a225 with SMTP id 6a1803df08f44-89a199852b9mr56252546d6.12.1772663609341;
-        Wed, 04 Mar 2026 14:33:29 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5074481c0e5sm183664431cf.0.2026.03.04.14.33.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2026 14:33:28 -0800 (PST)
-Date: Wed, 4 Mar 2026 17:33:26 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Kai Huang <kai.huang@intel.com>
-Cc: rafael@kernel.org, lenb@kernel.org, dan.j.williams@intel.com,
-	alison.schofield@intel.com, akpm@linux-foundation.org,
-	nunodasneves@linux.microsoft.com, xueshuai@linux.alibaba.com,
-	thorsten.blum@linux.dev, wangyuquan1236@phytium.com.cn,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ACPI: NUMA: Only parse CFMWS at boot when CXL_ACPI is on
-Message-ID: <aaizNh-0LEvRQMCy@gourry-fedora-PF4VCD3F>
-References: <20260304213342.5776-1-kai.huang@intel.com>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="OwwO/koH"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id D6D95783D50;
+	Wed, 04 Mar 2026 17:14:48 +0000 (UTC)
+Received: from pdx1-sub0-mail-a216.dreamhost.com (trex-green-5.trex.outbound.svc.cluster.local [100.106.44.163])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 3374B783B2C;
+	Wed, 04 Mar 2026 17:14:47 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1772644487;
+	b=nlFo0VV8ZgwdPXrNe+hu8AilDsh/MydwwlJsHGsTOD9fBQxzTWNjFAYGnQ2DL1xY8C8b/5
+	NwJmTWfos9CEVEQsiLVtrFE+vBQUsIvePICU02Tc/ZA8oZf9GhEflQcHxYh4zYCXOI4Lhy
+	M6LJ74PHaaegUxwcVS3IKa6gCaePEpL8YP95dJLCUv8bBm44ajpJ5PbYCW7CZK4LsBkOoB
+	5+WwTzSY2sSh1cQRyXBjaKDptXFszuiDckTzSvNfuTvzjDVETCPN03yUkIagR3+96TyrJA
+	bThSvV+zXZ7sz88H6QYLyQfnWYsDu6n6bVC2J/t3tWmx5yVD4Wld019fBcyzFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1772644487;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=n1nc98wxZH9AYQDSngUN/HtP6sFUA5A+qlUBOUMovV0=;
+	b=OAF3kjKAWd6uMdA5aXGSKm/VomFnvnOQUxssc/74aSgBNZPiQLhfL7GMFQxaS/3W50lSwD
+	sf+QpqZ+mzYI/6jxRgRUrUD8da4P3YfChQ8omllQ0Bm/XuNoL8qrz2QFQSrhpYSyhHp8ab
+	RjUwMIqejE5GSvo4dndXL4YnNLYSHdp4toaEgP8DGmw0H/BujwB4Id77F1a+CFCf7tKOC7
+	0COWwWvUkkruhG4W90XKa7D8MkyWtP0YTUr3BQgEomgCNqlzk6PGHZCZEWvm7SHmL9HqSF
+	h0r9/5ziJpSklXFpSlrgyS6LtJlI7b4JgFbaD633HyuFNhWKkej2KRz8Ny98ZA==
+ARC-Authentication-Results: i=1;
+	rspamd-7f65b64645-t4xtl;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-White-Suffer: 4248394e13e3fa86_1772644487469_4237990486
+X-MC-Loop-Signature: 1772644487469:1401202760
+X-MC-Ingress-Time: 1772644487469
+Received: from pdx1-sub0-mail-a216.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.106.44.163 (trex/7.1.3);
+	Wed, 04 Mar 2026 17:14:47 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a216.dreamhost.com (Postfix) with ESMTPSA id 4fQzn24rPmzdb;
+	Wed,  4 Mar 2026 09:14:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1772644487;
+	bh=n1nc98wxZH9AYQDSngUN/HtP6sFUA5A+qlUBOUMovV0=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=OwwO/koH6N0u1Zihm70xkbGSi5JL78HoQ1ZUwC8uoXdJQECAdvke340r+gWFvqHhO
+	 kqYXAoUcDiFFmXY55F4i3zMySbr3Thwq9hYHVfU/gSSBvV/VTRdgiW/qV9qBWebC/+
+	 pDxrLIDM8a4CmEsnFz29Juk+BI69TeqnH7rGeqMlVF8QbcDRMMAkgS+Szn0x5mTF/J
+	 8hVgFM1OJtZvUHGEXHI4Y9GdKkSwVkexDREwNarcBaQ2WIX8UDtFukYWvGVbeUriIa
+	 xUJTkV/in2hMpIqJtSqArEIqjQ+FbxPDmTPbUK8zkMA6eL/T8naVxh7fgsfRR8lbqZ
+	 dBnNEpC3f5v3g==
+Date: Wed, 4 Mar 2026 09:14:44 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dave.jiang@intel.com
+Cc: jonathan.cameron@huawei.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH] cxl/region: Fix leakage in __construct_region()
+Message-ID: <20260304171444.dpgaiaknv5dq5uns@offworld>
+References: <20260202191330.245608-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20260304213342.5776-1-kai.huang@intel.com>
+In-Reply-To: <20260202191330.245608-1-dave@stgolabs.net>
+User-Agent: NeoMutt/20220429
 
-On Thu, Mar 05, 2026 at 10:33:42AM +1300, Kai Huang wrote:
-> Increasing the 'nr_node_ids' has side effects.  For instance, it is
-> widely used by the kernel for "highest possible NUMA node" based memory
-> allocations.  It also impacts userspace ABIs, e.g., some NUMA memory
-> related system calls such as 'get_mempolicy' which requires 'maxnode'
-> not being smaller than the 'nr_node_ids'.
-> 
+ping? Dave, can this be picked up for the next round you send to Linus?
 
-Is this a Linux issue or a Firmware issue?
+Thanks,
+Davidlohr
 
-Is GNR exporting more CFMWS than it should?
+On Mon, 02 Feb 2026, Davidlohr Bueso wrote:
 
-Is your SRAT missing entries for CFMWS that are otherwise present?
-
-Are the CFMWS empty? (is that even valid)
-
-> E.g., on the aforementioned GNR platform, the "Slab" in /proc/meminfo is
-> reduced with this change (when CXL_ACPI is off):
-> 
-> 	w/ this change		w/o
-> 
-> Slab	900488 kB		923660 kB
-> 
-
-This is a good effect, but I still question the premise.
-
-We don't usually want #ifdef's inside of .c files if we can avoid it.
-
-~Gregory
+>Failing the first sysfs_update_group() needs to explicitly
+>kfree the resource as it is too early for cxl_region_iomem_release()
+>to do so.
+>
+>Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+>---
+> drivers/cxl/core/region.c | 4 +++-
+> 1 file changed, 3 insertions(+), 1 deletion(-)
+>
+>diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>index 96888d87a8df..28d70497283d 100644
+>--- a/drivers/cxl/core/region.c
+>+++ b/drivers/cxl/core/region.c
+>@@ -3795,8 +3795,10 @@ static int __construct_region(struct cxl_region *cxlr,
+>	}
+>
+>	rc = sysfs_update_group(&cxlr->dev.kobj, &cxl_region_group);
+>-	if (rc)
+>+	if (rc) {
+>+		kfree(res);
+>		return rc;
+>+	}
+>
+>	rc = insert_resource(cxlrd->res, res);
+>	if (rc) {
+>--
+>2.39.5
+>
