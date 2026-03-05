@@ -1,153 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6778C38839A;
-	Thu,  5 Mar 2026 10:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F16C37A4BC
+	for <linux-cxl@vger.kernel.org>; Thu,  5 Mar 2026 10:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772707849; cv=none; b=EbK7uXSIKqSfi4EvtzT0F0eVUCqcGuMnwX62eHHcuO2+PKNSXeRLUSEozqkAAPZKon026W2suNUtBIrRlZFj0lTYMOCyI9+epHLgzMoCj+ek6VW+IrMFuyM19CJZBDi4B9Pd5GR76k9FNVXZNMuCYS80VuwW+poqvogHUVzeWRk=
+	t=1772708291; cv=none; b=k3PAHnQCEwMwU1NLb1Czu6sQ11RZIGPDO2pAj0RJXX6mGDboyZffZuv5w3a/iKE9AKG6MQEXLCmNwWzpEWbnBiZ7bXJq/LynlV6vjoCWLETmw85IXNW4CBRKNXB8Xtc5PzJEcPtcY47mEnq8MvFsC6Olan3U2Onpd+WBd+hIs0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772707849; c=relaxed/simple;
-	bh=TF/Y8m2ST7SjfkcrUaxHq0mGyE5PLPgmgeUh4mbmrZQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rICdP6xB8UZv8Qy06DOKzpEr7nJItPrauYUbm20GcHLIvH/+g+4M8frYthd0UP1RmpVHzh+cnUsLiQXVE23qg9PEehvGYAVsXpi+UDviwehvO8J5hCIMQW0JGn3SU5vrmLPM9wXkqDfX1T7pLY6r2di9TNINbUhl4RG87vK6Z2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K69d4D5r; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K69d4D5r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A5D1C116C6;
-	Thu,  5 Mar 2026 10:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772707848;
-	bh=TF/Y8m2ST7SjfkcrUaxHq0mGyE5PLPgmgeUh4mbmrZQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=K69d4D5rkvQAOQO0X9LY14GVr8nxRsOyTxPOk3HOl5lilOcGooMFJ1RSYabqmcbgi
-	 2Kb4JKE3xl5ujn+rVENRM01RMuTqfN5GJwiDujdpNrnz+/bSi+4/iUwDcrGQaZHKos
-	 WXzPNA75E+fgOcKflJ9S1lqO3dtH7VUiIB1E7Hc1lEg87BCGJu+oHuw3etXLaH5ZL1
-	 rOurPfYGNpyXfojRseUPlcwfGElAUfDsaU0vtsWbc6yGvwoo83oJQDYFDfivlslCRt
-	 kK1RuRQF4zkVJg5hHHManDOSl2kFut9lIrxZm0xduQ2NivqK7NLhoCGGzPedfWaFhz
-	 XSvIMevRPsU1Q==
-From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Gao Xiang <xiang@kernel.org>,
-	Chao Yu <chao@kernel.org>,
-	Yue Hu <zbestahu@gmail.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>,
-	Hongbo Li <lihongbo22@huawei.com>,
-	Chunhai Guo <guochunhai@vivo.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	James Morse <james.morse@arm.com>,
-	Babu Moger <babu.moger@amd.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	Johannes Thumshirn <jth@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Jan Kara <jack@suse.cz>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org,
-	linux-erofs@lists.ozlabs.org,
-	linux-mm@kvack.org,
-	ntfs3@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 6/6] tools/testing/vma: add test for vma_flags_test(), vma_desc_test()
-Date: Thu,  5 Mar 2026 10:50:19 +0000
-Message-ID: <376a39eb9e134d2c8ab10e32720dd292970b080a.1772704455.git.ljs@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1772704455.git.ljs@kernel.org>
-References: <cover.1772704455.git.ljs@kernel.org>
+	s=arc-20240116; t=1772708291; c=relaxed/simple;
+	bh=IvfxovO+CdqyjNmRB4o59Muv7AAtHfbYwYLaJ8dgrPQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Nc5F8ejgnSYraSwKduhQP9aBAjajgbo0r9riJhZwveWtrYPsTcDkLFZwi6XcGHDj68/GYMcay6EYPccqXAKyg8RIGMnWbulVtDw/FJBxBucPMLsZI9ZmOG5RVlfCIs2IEG3+Vdnpy32DnF10TE8or0EKHvBSncPpYXYcgNwAgLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.150])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fRRM66DQQzJ46q7;
+	Thu,  5 Mar 2026 18:57:22 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1E3674056A;
+	Thu,  5 Mar 2026 18:57:59 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 5 Mar
+ 2026 10:57:48 +0000
+Date: Thu, 5 Mar 2026 10:57:46 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: <shiju.jose@huawei.com>
+CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, <mst@redhat.com>,
+	<peter.maydell@linaro.org>, <dave@stgolabs.net>, <linuxarm@huawei.com>
+Subject: Re: [PATCH 1/3] hw/cxl: Add fixes in maintenance and memory sparing
+Message-ID: <20260305105746.00000529@huawei.com>
+In-Reply-To: <20260227223207.972-2-shiju.jose@huawei.com>
+References: <20260227223207.972-1-shiju.jose@huawei.com>
+	<20260227223207.972-2-shiju.jose@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-Now we have helpers which test singular VMA flags - vma_flags_test() and
-vma_desc_test() - add a test to explicitly assert that these behave as
-expected.
+On Fri, 27 Feb 2026 22:32:04 +0000
+<shiju.jose@huawei.com> wrote:
 
-Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
----
- tools/testing/vma/tests/vma.c | 36 +++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+> From: Shiju Jose <shiju.jose@huawei.com>
+Hi Shiju,
 
-diff --git a/tools/testing/vma/tests/vma.c b/tools/testing/vma/tests/vma.c
-index f031e6dfb474..1aa94dd7e74a 100644
---- a/tools/testing/vma/tests/vma.c
-+++ b/tools/testing/vma/tests/vma.c
-@@ -159,6 +159,41 @@ static bool test_vma_flags_word(void)
- 	return true;
- }
- 
-+/* Ensure that vma_flags_test() and friends works correctly. */
-+static bool test_vma_flags_test(void)
-+{
-+	const vma_flags_t flags = mk_vma_flags(VMA_READ_BIT, VMA_WRITE_BIT,
-+					       VMA_EXEC_BIT, 64, 65);
-+	struct vm_area_desc desc;
-+
-+	desc.vma_flags = flags;
-+
-+#define do_test(_flag)					\
-+	ASSERT_TRUE(vma_flags_test(&flags, _flag));	\
-+	ASSERT_TRUE(vma_desc_test(&desc, _flag))
-+
-+#define do_test_false(_flag)				\
-+	ASSERT_FALSE(vma_flags_test(&flags, _flag));	\
-+	ASSERT_FALSE(vma_desc_test(&desc, _flag))
-+
-+	do_test(VMA_READ_BIT);
-+	do_test(VMA_WRITE_BIT);
-+	do_test(VMA_EXEC_BIT);
-+#if NUM_VMA_FLAG_BITS > 64
-+	do_test(64);
-+	do_test(65);
-+#endif
-+	do_test_false(VMA_MAYWRITE_BIT);
-+#if NUM_VMA_FLAG_BITS > 64
-+	do_test_false(66);
-+#endif
-+
-+#undef do_test
-+#undef do_test_false
-+
-+	return true;
-+}
-+
- /* Ensure that vma_flags_test_any() and friends works correctly. */
- static bool test_vma_flags_test_any(void)
- {
-@@ -334,6 +369,7 @@ static void run_vma_tests(int *num_tests, int *num_fail)
- 	TEST(vma_flags_unchanged);
- 	TEST(vma_flags_cleared);
- 	TEST(vma_flags_word);
-+	TEST(vma_flags_test);
- 	TEST(vma_flags_test_any);
- 	TEST(vma_flags_clear);
- }
--- 
-2.53.0
+Perhaps a more specific title would help people understand quickly what
+type of fix this is?
+
+Something like:
+hw/cxl: Fix handling of component ID to not assume it is a string.
+
+
+> 
+> Add following fixes to the commit: hw/cxl: Add support for Maintenance
+> command and Post Package Repair (PPR).
+That just wants to be a reference to the fixes tag.
+
+> 
+> 1. In cxl_create_mem_sparing_event_records(), replace strncpy with memcpy to
+> solve coverity warning because full size of the array to use as length in
+> strncpy to copy the entire component id data, which is 16 bytes.
+I wouldn't necessarily focus on the coverity issue bit of this, but rather that
+it's not a string so memcpy is the correct function to use.  Then flag it as
+as being identified as a result of the coverity warning.
+> 
+> 2. In cxl_maintenance_insert(),
+>  - replace strncpy with memcpy in to copy full data because component id is
+>    16 bytes data.
+>  - remove memset which is not required.
+> 
+> Reported-by: Peter Maydell <peter.maydell@linaro.org>
+
+The original patch is upstream, so need a Fixes tag. I can't remember how
+we mark coverity issue closures, so look for a similar patch and copy that
+style. Maybe just a Closes tag for Peter's email pointing it out.
+
+Code looks good.
+
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> ---
+>  hw/cxl/cxl-mailbox-utils.c | 4 ++--
+>  hw/mem/cxl_type3.c         | 4 +---
+>  2 files changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index c83b5f90d4..9c99422cd4 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -1994,8 +1994,8 @@ static void cxl_create_mem_sparing_event_records(CXLType3Dev *ct3d,
+>          stw_le_p(&event_rec.column, ent->column);
+>          event_rec.sub_channel = ent->sub_channel;
+>          if (ent->validity_flags & CXL_MSER_VALID_COMP_ID) {
+> -            strncpy((char *)event_rec.component_id, (char *)ent->component_id,
+> -                    sizeof(event_rec.component_id));
+> +            memcpy(event_rec.component_id, ent->component_id,
+> +                   sizeof(event_rec.component_id));
+>          }
+>      } else if (sparing_pi) {
+>          event_rec.flags = CXL_MSER_FLAGS_QUERY_RESOURCES;
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 4739239da3..3cb1096e16 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -1767,7 +1767,6 @@ static void cxl_maintenance_insert(CXLType3Dev *ct3d, uint64_t dpa,
+>          }
+>      }
+>      m = g_new0(CXLMaintenance, 1);
+> -    memset(m, 0, sizeof(*m));
+>      m->dpa = dpa;
+>      m->validity_flags = 0;
+>  
+> @@ -1804,8 +1803,7 @@ static void cxl_maintenance_insert(CXLType3Dev *ct3d, uint64_t dpa,
+>          m->validity_flags |= CXL_MSER_VALID_SUB_CHANNEL;
+>      }
+>      if (component_id) {
+> -        strncpy((char *)m->component_id, component_id,
+> -                sizeof(m->component_id) - 1);
+> +        memcpy(m->component_id, component_id, sizeof(m->component_id));
+>          m->validity_flags |= CXL_MSER_VALID_COMP_ID;
+>          if (has_comp_id_pldm && is_comp_id_pldm) {
+>              m->validity_flags |= CXL_MSER_VALID_COMP_ID_FORMAT;
 
