@@ -1,65 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E296D189B84;
-	Thu,  5 Mar 2026 23:01:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900A62BEC43
+	for <linux-cxl@vger.kernel.org>; Thu,  5 Mar 2026 23:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772751688; cv=none; b=sLLBNv35dxkKT6+WypwKQXjeFWTtvkfTgw2+ABmq4jPPK8l3NU51ubR1phQbtWoIZn5m+ZtHWTy3Hgk0uKzVCiS+VYN56F4xrfF8YK1yNHE+5HXbwnvpgc1gdQ3xlAZsQk7zUCnI8jE4a3RhfUeUlQXO8wVqTyOMBhqhqVho6Dw=
+	t=1772753166; cv=none; b=uIphhft4aQEaf41DMoOiA9kWXclNbqTrHuC6CtftCVNkrWt8jn6weXN7JCpEyT6vnfr3nxu83mE9Tv19e2hRGUkygMUJ3tkuCYwRNicmEKg9R08+proXYuqYAAzk2YlfwHoQkLWF5F6/WKt1EaArIV0yRefqXcZUSIf5xSLntVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772751688; c=relaxed/simple;
-	bh=PHQYA+3ODj8Z0jhwDvxeCHGYytqRZCCsl9F3HYya9J4=;
+	s=arc-20240116; t=1772753166; c=relaxed/simple;
+	bh=zhicSgnEcn+rUlb7qKENBq/J/ZHYd9RtymeyHqJiVDU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QwqLl9paEN3qM02zjX3XZ4YwwiIsIXlmTCmSwOz3dI+aZwBDwR8/yrn71zTsBwkzz2T55JYyO2ngUvcvxalHjDVtYOC6jfa+ZkfPo9q4lpHbh3ckNSlwM3KkNj2hRfrCei9LKOUaNWHq6ng3oJRNWSY7t0h2577O7CpHSOgLgDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W81u0WsB; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=I8hXPkkJXAYPZo6ucrHjETIbFqBaGzquRNC7mA2Lam9xXVtHtWM06XxcQP4DRCLDOU74A883jYd72Gb3dqw7MMfgmQYEBZ+7ZhKoWNnV+3SQ75wTLIQ9IEvEm9rA26rQGVpliUBxS7G9uWy8L9+uHHeUxE6ez8JCoNiYLtCN4Bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOhgDky9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W81u0WsB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772751686; x=1804287686;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PHQYA+3ODj8Z0jhwDvxeCHGYytqRZCCsl9F3HYya9J4=;
-  b=W81u0WsBzVd/r1u4mlmihcdb3EDDKjauPEbiungHh7XhOOty6VDhjYiB
-   bFhhTtL06QoUywr1Yu5+1c79s6Q2rtnBMpI/boQEGbWGBdcNIkvJuMzCQ
-   dBLIqUqVb7l1xkjiVko8I4TZxcRfqsZkujPgIJFcHqtD42SB2ypyU7it7
-   G1jPeNarL39ZM3Q5b2uQBMxkZD5LV0A6Yp3W0hlWEHvvZc0IcDt1uIvH3
-   t4/JbHrhV9W0z4/i7lW28L5tPop09/RSWeMjcSCjgUag3NjshiU5cVHqL
-   WqozPAAK8/Z9Z4+58NmUiITipij/HHl2AYCAR5l+13FbuMAPBRy+o3Rxg
-   Q==;
-X-CSE-ConnectionGUID: xVOeLacBRTeD1P6HvJ9RYA==
-X-CSE-MsgGUID: LGxbN0jsReuUQ1eOQaypzQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11720"; a="85203676"
-X-IronPort-AV: E=Sophos;i="6.23,103,1770624000"; 
-   d="scan'208";a="85203676"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2026 15:01:25 -0800
-X-CSE-ConnectionGUID: MkLBjoWHTx2WDalC9yxBuA==
-X-CSE-MsgGUID: BHdtxPvpQdyBhzegB1swIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,103,1770624000"; 
-   d="scan'208";a="218777587"
-Received: from lkp-server01.sh.intel.com (HELO 058beb05654c) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 05 Mar 2026 15:01:22 -0800
-Received: from kbuild by 058beb05654c with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vyHh0-00000000037-30Zz;
-	Thu, 05 Mar 2026 23:01:18 +0000
-Date: Fri, 6 Mar 2026 07:00:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Haifeng Xu <haifeng.xu@shopee.com>, rafael@kernel.org, lenb@kernel.org,
-	dan.j.williams@intel.com, jonathan.cameron@huawei.com
-Cc: oe-kbuild-all@lists.linux.dev, dave@stgolabs.net, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Haifeng Xu <haifeng.xu@shopee.com>
-Subject: Re: [PATCH] ACPI: add a boot parameter to disable parsing CFMWS
- during NUMA init
-Message-ID: <202603060605.Fa8yGC4u-lkp@intel.com>
-References: <20260304080647.169434-1-haifeng.xu@shopee.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jOhgDky9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1858C19423;
+	Thu,  5 Mar 2026 23:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772753166;
+	bh=zhicSgnEcn+rUlb7qKENBq/J/ZHYd9RtymeyHqJiVDU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jOhgDky9aeGHu1lwX9V+umYKpEBFuo2LbD7m2xHrgJPwnkP/hA2vqanPSHKhpteYZ
+	 zvccM/YJnRTy8Gnk5Bz5RWb5zX27ChqK+QRQ12O6EXsKEckCzk75ucJTPVAMwTdcpA
+	 GBGtR+NNOKHeW4/dneZEBSMG4YQ4PynZzbiQp7HFPKrUugmZs+V8RHqlySllFbgjSY
+	 4clx39Ro6Zyt8lSOk/EsDWhKsYlsbh2J5uuyezCqItPYuibc4BW79l2lbO1c+FzKHI
+	 6fQI/rwrpmH2Aibrvj6M1Di6TgZCEI0TLonzvUpBkg4MBdCawJLm7wrT39+lgBvDRU
+	 igEiT29LyGkBQ==
+Date: Thu, 5 Mar 2026 16:26:04 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: Gregory Price <gourry@gourry.net>
+Cc: Keith Busch <kbusch@meta.com>, linux-cxl@vger.kernel.org,
+	dan.j.williams@intel.com, dave.jiang@intel.com
+Subject: Re: [PATCH] cxl/acpi: Fix CXL_ACPI and CXL_PMEM Kconfig tristate
+ mismatch
+Message-ID: <aaoRDKvC2aVlECTJ@kbusch-mbp>
+References: <20260305204057.1516948-1-kbusch@meta.com>
+ <aan_z0psj080u1e_@gourry-fedora-PF4VCD3F>
+ <aaoHBcKZeQpioh4d@kbusch-mbp>
+ <aaoKBqP6pzAeF96q@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -68,45 +46,19 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260304080647.169434-1-haifeng.xu@shopee.com>
+In-Reply-To: <aaoKBqP6pzAeF96q@gourry-fedora-PF4VCD3F>
 
-Hi Haifeng,
+On Thu, Mar 05, 2026 at 05:56:06PM -0500, Gregory Price wrote:
+> > Anyway, my proposal here should force demotion to "m" for CXL_ACPI if
+> > PMEM is also "m", where your proposal should force a failure path at
+> > compile time if ACPI=y and PMEM=m. I really don't know if there's any
+> > preference at all, I also just wanted the kernel build to complete
+> > successfuly. :)
+> 
+> my proposal allows compilation but fails during probe because the symbol
+> is IS_REACHABLE()=false, but yeah, i have no idea what we want here.
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on rafael-pm/linux-next]
-[also build test WARNING on rafael-pm/bleeding-edge cxl/next tip/x86/mm linus/master v7.0-rc2 next-20260305]
-[cannot apply to cxl/pending]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Haifeng-Xu/ACPI-add-a-boot-parameter-to-disable-parsing-CFMWS-during-NUMA-init/20260304-160933
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
-patch link:    https://lore.kernel.org/r/20260304080647.169434-1-haifeng.xu%40shopee.com
-patch subject: [PATCH] ACPI: add a boot parameter to disable parsing CFMWS during NUMA init
-config: loongarch-randconfig-r134-20260306 (https://download.01.org/0day-ci/archive/20260306/202603060605.Fa8yGC4u-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-sparse: v0.6.5-rc1
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260306/202603060605.Fa8yGC4u-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202603060605.Fa8yGC4u-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/acpi/numa/srat.c:323:12: sparse: sparse: symbol 'cfmws_disabled' was not declared. Should it be static?
-
-vim +/cfmws_disabled +323 drivers/acpi/numa/srat.c
-
-   322	
- > 323	int __init cfmws_disabled(void)
-   324	{
-   325		return cfmws_numa < 0;
-   326	}
-   327	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Indeed, I didn't mean to suggest your solution may not build. I only
+mean the forced runtime error path was decided at compile time. And I'm
+totally okay with doing that if it's preferred over forcing module
+demotion.
