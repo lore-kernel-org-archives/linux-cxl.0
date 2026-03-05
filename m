@@ -1,120 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3853B32D7FB;
-	Thu,  5 Mar 2026 20:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA0E2D9492
+	for <linux-cxl@vger.kernel.org>; Thu,  5 Mar 2026 20:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772742007; cv=none; b=C5XjvDe0+r85A1Oq4KaEYxkoXMbaxCQRVgi5jmlKiku+jlNLWpMO9h83GgDNA05PAwP7ZkJSz3gVOsmCBH7oY8Ktl0Y8GLbok4NitP6zlQ9aYrtfTcYzmQtWIEDM0jD6OHCf/s7vUJ5PQ/16jKDaoSsIQVCkuvoWCQkerjou+Vs=
+	t=1772743267; cv=none; b=b8to7kUCTizFxwUqt+RrlTUVywoxYY5onZWraqn8wB9vVLkqZK1zBTqtWNlk55nD4A53HrchuhyZBOTmIPP1M+DQ1/zb3CpCyUBhyzfHjFxzvDN4S8msuNI2BROBGlvR5pn3hNmxI9mYA4m1krvFODP5C+Q4WFH38gltq6xz0Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772742007; c=relaxed/simple;
-	bh=b/aA0R2rkxsvdEpn9luZz6MliKLYCgptFmRmP/LpAyE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ucsuco0LZ4GUEx0ww2pc04VMEJNdUldLnb2XUTsQAd/Cba8RLutL+l3v1B5kkwJmGIgciU3O8GgQZ4p9+TJUoX145rgs8J6lHAz73SKg0k4JIS237gSNG6syZpWtgHwrFSz8L2n12qDBRgi9qhhQHXyXKyMvvNSenog4G4oJZgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oGNlDZ0V; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1772743267; c=relaxed/simple;
+	bh=zPJ3Y+yDea4Wipn9C7hVTDWutpEoY3T1kNCWYcK5fnI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cQtT0DaGJObLWACAG3RHAMfZuLKVeQPCRVJSy5XIXTdedVnpF4L/ZPae6Ugj6VmsHkMVHdYifctKsgAEqY6F/CIE7OGOo+4ybRH9R8+Tcc+LZ2WPFTPhSacGydTcD+4x3I1HDqJOAcpESczBTaWfOvsXvHHeD2C5xfJFdXWoWYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=tHfVR7Vl; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oGNlDZ0V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772742005; x=1804278005;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=b/aA0R2rkxsvdEpn9luZz6MliKLYCgptFmRmP/LpAyE=;
-  b=oGNlDZ0VZ6ExuyRYK/jOCUuOiE30iZBHGU62TkxbpNirbDjdLjfC1vRX
-   XcAMwb8JMrr2g3EGreBunnUT6d30SuY2BCxhizWXm5c8IO6lagAo2Wtht
-   BPogSNljyF1dwlmSDZUFa0JXRF+PcYZcI55ufoQfW6QfunidVDQM+iCRC
-   ucCQFYkrEhfT898j/1+ABQe0aVwj6Unaem3ll0qNCi3TDKYuGGxFzy8jm
-   oJE5hkURgB0mzuHeJexw8kh1ZhRqKkgjaWHUBdNsyZFK3DBVhiBXftHBl
-   Bh8hzS/LR+LOnvmwUcpMGH3asEP3fsQRhVBs0RyX5hMLJ9Pwa7z5jwtSg
-   Q==;
-X-CSE-ConnectionGUID: OH/OeSmgQBmxFx8p2VWZFA==
-X-CSE-MsgGUID: TC44z7LuRoGuSHyG2bQBVA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11720"; a="77714596"
-X-IronPort-AV: E=Sophos;i="6.23,103,1770624000"; 
-   d="scan'208";a="77714596"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2026 12:20:04 -0800
-X-CSE-ConnectionGUID: bC/qC8JjSe6l4ckthTlsNA==
-X-CSE-MsgGUID: rwuba9+YRKeSqiYME3ysFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,103,1770624000"; 
-   d="scan'208";a="218776277"
-Received: from lkp-server01.sh.intel.com (HELO cadc4577a874) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 05 Mar 2026 12:20:01 -0800
-Received: from kbuild by cadc4577a874 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vyFAr-000000001Bu-1fKc;
-	Thu, 05 Mar 2026 20:19:57 +0000
-Date: Fri, 6 Mar 2026 04:19:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: Haifeng Xu <haifeng.xu@shopee.com>, rafael@kernel.org, lenb@kernel.org,
-	dan.j.williams@intel.com, jonathan.cameron@huawei.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, dave@stgolabs.net,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Haifeng Xu <haifeng.xu@shopee.com>
-Subject: Re: [PATCH] ACPI: add a boot parameter to disable parsing CFMWS
- during NUMA init
-Message-ID: <202603060405.6xBosunB-lkp@intel.com>
-References: <20260304080647.169434-1-haifeng.xu@shopee.com>
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="tHfVR7Vl"
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 625IrgKx2783611
+	for <linux-cxl@vger.kernel.org>; Thu, 5 Mar 2026 12:41:04 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2025-q2; bh=pz1kGaQ8Rwu3t2Xr6B
+	++kDioKlYvqvC5AOXYPIE8zFo=; b=tHfVR7VlTCZ0MsT9aj/wDhNyM4LRBWMb9K
+	R/6jdSwJrib8kleRnT62/YGVM0j5JRB4ebezij8RIJhJXR3xQAsmTrrx87Xv+WQk
+	oLoAaWvxuNq7Ra6AMWy9chECklXZ6iZOTF1h9GyIw0TlA0Q6sVfU5bf/HTP5/+X0
+	vnPLCc2CH/TKK/RndO0naoX4vUKaUeABCEyo8v0gJFaYtNdskO2w4H00IetqKvXh
+	KP1k4Tm3b4vP1UIWB2VIlG4I6t8fUkG3G7F8WXFXKI6gDrliF9oaV2rUBZ9z3/a4
+	tblp77iWUgwwUUnLBvELxWjHvpCrw3pvagIjyJn9k6aW4Wu3jKug==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4cq5ew075n-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-cxl@vger.kernel.org>; Thu, 05 Mar 2026 12:41:04 -0800 (PST)
+Received: from twshared26141.04.snb1.facebook.com (2620:10d:c085:108::150d) by
+ mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.35; Thu, 5 Mar 2026 20:41:03 +0000
+Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
+	id 6358E9EBB747; Thu,  5 Mar 2026 12:40:57 -0800 (PST)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-cxl@vger.kernel.org>
+CC: <dan.j.williams@intel.com>, <dave.jiang@intel.com>, <gourry@gourry.net>,
+        Keith Busch <kbusch@kernel.org>
+Subject: [PATCH] cxl/acpi: Fix CXL_ACPI and CXL_PMEM Kconfig tristate mismatch
+Date: Thu, 5 Mar 2026 12:40:56 -0800
+Message-ID: <20260305204057.1516948-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260304080647.169434-1-haifeng.xu@shopee.com>
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: y2CTI8HYy3vfa3hTnHOJWkgwjEoVVYEN
+X-Authority-Analysis: v=2.4 cv=PMECOPqC c=1 sm=1 tr=0 ts=69a9ea60 cx=c_pps
+ a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+ a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=7x6HtfJdh03M6CCDgxCd:22
+ a=crHB47gyY4rKiduisYu9:22 a=VwQbUJbxAAAA:8 a=gKdFwzJss0udLLItagAA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA1MDE3NCBTYWx0ZWRfX/DBID4pm33Ow
+ kg78Lbg4R1H0uajuajB2Pg2FOAczmtd2gxLAmGGDzYrUnE3snuJ+X+/zy95yLYVrwm1k8oJI8m0
+ 2KHm4Y4PtgGqMAiLC/0fIET7VK6SDADbovXfQmjCGoF3MqsBhGB9lI1e60ajRXJpAXhzfep8Ry/
+ /MFCLHtzLAOdJlzhTuboPMrVfsIkvZeb3RIeHyTqvniuNU7HEF86dult3tCFdQukegyW58bglJO
+ KOpZr2bDVQHM8wYTJKFqoGbhKf7EWUKUfWIxdSK3rfJ2F0qa5cmgdQ/jElTMlpktSDSiJpdrdQ1
+ 5OAGRBPGsS/7U/CkUIQ5VZY7mdvFOpymi0rExspMaFIeUax+yexUeK2ICVjdahA+xy9L4bg/11y
+ oBugyPuKBDSjZYfVJox3PUkCteEUIGqYi1skLVskN3YqGlf7C/iTfh1KOAE8RcNlbooEuY6WwsY
+ yhB/oL8iejqnVR3xBQw==
+X-Proofpoint-ORIG-GUID: y2CTI8HYy3vfa3hTnHOJWkgwjEoVVYEN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-05_06,2026-03-04_01,2025-10-01_01
 
-Hi Haifeng,
+From: Keith Busch <kbusch@kernel.org>
 
-kernel test robot noticed the following build warnings:
+Commit e7e222ad73d9 moves devm_cxl_add_nvdimm_bridge() into the cxl_pmem
+file, which has independent config compile options for built-in or
+module. The call from cxl_acpi_probe() is guarded by
+IS_ENABLED(CONFIG_CXL_PMEM), which evaluates to true for both =3Dy and =3D=
+m.
 
-[auto build test WARNING on rafael-pm/linux-next]
-[also build test WARNING on rafael-pm/bleeding-edge cxl/next tip/x86/mm linus/master v7.0-rc2 next-20260305]
-[cannot apply to cxl/pending]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+When CONFIG_CXL_PMEM=3Dm, a built-in cxl_acpi attempts to reference a
+symbol exported by a module, which fails to link. CXL_PMEM cannot simply
+be promoted to =3Dy in this configuration because it depends on LIBNVDIMM=
+,
+which may itself be =3Dm.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Haifeng-Xu/ACPI-add-a-boot-parameter-to-disable-parsing-CFMWS-during-NUMA-init/20260304-160933
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
-patch link:    https://lore.kernel.org/r/20260304080647.169434-1-haifeng.xu%40shopee.com
-patch subject: [PATCH] ACPI: add a boot parameter to disable parsing CFMWS during NUMA init
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260306/202603060405.6xBosunB-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260306/202603060405.6xBosunB-lkp@intel.com/reproduce)
+Add a Kconfig dependency to prevent CXL_ACPI from being built-in when
+CXL_PMEM is a module. This contrains CXL_ACPI to =3Dm when CXL_PMEM=3Dm,
+while still allowing CXL_ACPI to be freely configured when CXL_PMEM is
+either built-in or disabled.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202603060405.6xBosunB-lkp@intel.com/
+Fixes: e7e222ad73d9 ("cxl: Move devm_cxl_add_nvdimm_bridge() to cxl_pmem.=
+ko")
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+---
+ drivers/cxl/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-All warnings (new ones prefixed by >>):
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index 4589bf11d3fe0..80aeb0d556bd7 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -59,6 +59,7 @@ config CXL_ACPI
+ 	tristate "CXL ACPI: Platform Support"
+ 	depends on ACPI
+ 	depends on ACPI_NUMA
++	depends on CXL_PMEM || !CXL_PMEM
+ 	default CXL_BUS
+ 	select ACPI_TABLE_LIB
+ 	select ACPI_HMAT
+--=20
+2.47.3
 
->> drivers/acpi/numa/srat.c:323:12: warning: no previous prototype for function 'cfmws_disabled' [-Wmissing-prototypes]
-     323 | int __init cfmws_disabled(void)
-         |            ^
-   drivers/acpi/numa/srat.c:323:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-     323 | int __init cfmws_disabled(void)
-         | ^
-         | static 
-   1 warning generated.
-
-
-vim +/cfmws_disabled +323 drivers/acpi/numa/srat.c
-
-   322	
- > 323	int __init cfmws_disabled(void)
-   324	{
-   325		return cfmws_numa < 0;
-   326	}
-   327	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
