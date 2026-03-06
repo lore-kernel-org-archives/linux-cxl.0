@@ -1,110 +1,363 @@
-Received: from bumble.birch.relay.mailchannels.net (bumble.birch.relay.mailchannels.net [23.83.209.25])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3033306B1B
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Mar 2026 19:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772823852; cv=pass; b=jZo/o2Mx49/JH9RFy8WFX80BRIoFaUuCyNskAy+3NonAWU49I0J3nYDqVQKvCioa9beXCFmyuaYZK+1J3JyXYtNGFOZksempbrXSmF9PaNSw6XCs4jYfUZ5HPxxtaNyarv5VA7yc5yxT8qGphNf9BmTlFbGZHaj6KXYncjvRLkI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772823852; c=relaxed/simple;
-	bh=ptHXSuU9hSnfo/yrnP4TxZOE4RlnF8hU52zv6fAgVQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X6Bxkxs8gq715sCY8XvbbbsC30/47km+d9oWTryEf22I0A6v2hPPE989fQQ9zZttklNODbIaoFIPOHKt5MvtmMi0GQ45Xr60OviX2qn1DBoEv1WMEXZ3nQxJXJigkdhTIwnU7RpYamiYmbeDR64g5X+cl7XcfEAZfA51TrqttDc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=fpIQ1srv; arc=pass smtp.client-ip=23.83.209.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D2C36F423;
+	Fri,  6 Mar 2026 19:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772826767; cv=none; b=cenf0HV2QhoCo+D4eWpf9QpNCGfjqve9BhEZH9qS3VR8svn+OFC6feXHdsoIJxkObXLO8QeOmvSAZlmAPazG//ytXM9+qWdsu1Vua/vtvoXH8RoiDSgsYZuIE0mNH2ZWBp7XRib7MDhovQMRCfWmj1SY75mTwT/2RxE2BIQPaUU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772826767; c=relaxed/simple;
+	bh=wjM5lhp+pwP4m4G2E8trPuynl+8iyLHTnGcP8/gUnjg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZJzpzdQSQUliYgdbsP/w5O0ywTGZrx/mqnFJQlTe0gNUL2dg3nS+enQELN8RdhnF3tJcS47deoLyPZARvhoLiuTi0kw00Gw79n45Zs3sDZQdnSn401Z9iGS6R8nQXsvrJVpi3KYjhPdr0QHWerbz9pGZDbYKS17Dp9LTxpOPAEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F287v65j; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="fpIQ1srv"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 90C85562240;
-	Fri, 06 Mar 2026 18:45:04 +0000 (UTC)
-Received: from pdx1-sub0-mail-a222.dreamhost.com (100-107-38-197.trex-nlb.outbound.svc.cluster.local [100.107.38.197])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id E759D562221;
-	Fri, 06 Mar 2026 18:45:03 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1772822704;
-	b=WxX37yWs8PwQE4AKbwp/TgKlNWoU3V0j6/5RoLnZ1g04ixCMuFlMT780PxebVBcJcz7gYG
-	MRYFJWBuN3WYQg0h92GAwFpMd7rhggvKxY2QE0+lmBjA4/ImOGpnX+anAPh97VX10GOTNV
-	cHjqTITpXIu2BmaxEKrjdpHGtVoNyniXOnCz1h4GMIPEuxESGrPa2xW2lwpu1JjyIr6qiS
-	aA6EoxT+Z+cYuCPdBy0nyb6nD5+JMgE/4gzIsH9fwWd51d1Y9NE2oJ8OtTV4yzcliUFdas
-	VTGyVFLhlsukhQZavWU0VeEWVyL7H1NMXIrkjZZPv9jx70Mmr5X+huUHsVi7TA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1772822704;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=ptHXSuU9hSnfo/yrnP4TxZOE4RlnF8hU52zv6fAgVQE=;
-	b=DzTCnkkXaafdB6TsAURVQ+OEYh9SCKFqeF6tg8I9uH5GRvzCvdMESnz1RdU2zpXxRL8xJL
-	pG5jnl1oYKr07Ts008bstnPnYlasKe3bA24FPUtvYZU/PLLkhlw08JrVavknDuNkLC7xnH
-	PHTmVL1naxGQYuhAhFj6kUSEFmsml6C5UyacYIC/TbBaHBag8TdEE6k/jRx8ztN0Q90S1E
-	6Icoj7EKDccZwn+yGxnfwgmLO2ZgXZ3d/7JYWXTca9EC3ZVOmF3JqN/66uZEQB5J0WHbLh
-	4aM924G/el+++9cfiV4xyrnKEp4gDMqRFGJ1qRVsahinhkhqcXLJbY+2bhdfOQ==
-ARC-Authentication-Results: i=1;
-	rspamd-8f47468b4-v56zt;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Whispering-Little: 233333e70ce30f89_1772822704203_3995252013
-X-MC-Loop-Signature: 1772822704203:2881025118
-X-MC-Ingress-Time: 1772822704203
-Received: from pdx1-sub0-mail-a222.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.107.38.197 (trex/7.1.3);
-	Fri, 06 Mar 2026 18:45:04 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a222.dreamhost.com (Postfix) with ESMTPSA id 4fSFhH2ZCqzS1;
-	Fri,  6 Mar 2026 10:45:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1772822703;
-	bh=ptHXSuU9hSnfo/yrnP4TxZOE4RlnF8hU52zv6fAgVQE=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=fpIQ1srvxh/Kbfj62g7O/WqB0bNLD+VvM8OgVa2iOfF2mWFq+3mBdRHWKHncuKe1H
-	 yxWmVlP5tUAdUnZeQl3JOgb0F3irNP7JT1c/KypYeGr84xVHrikKsso/pjdslZBFHA
-	 Q50m87LMZJQKWhlIIdYPsT5/UCd2fm55zrRDL38xxZGe+Zgw8dB1or1D4wbzkk0KL/
-	 EYEN+uSjFqacQyVt8Rj4sjaVZxF9e6+Ka+3MFV7UfZHD+oCGLMtKulT0765/bp9wvC
-	 BUfstwCoi7vYEhdhEkNhrdahpq4zTcRvDZ8DYcntVeiJ4z9QK5jVttOFJOh9a1bHDT
-	 LRKq++npdO2Wg==
-Date: Fri, 6 Mar 2026 10:45:00 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
-	dave.jiang@intel.com, gourry@gourry.net,
-	Alejandro Lucero <alucerop@amd.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH v4 4/4] cxl/pci: Remove redundant cxl_pci_find_port() call
-Message-ID: <20260306184500.dpwzb2vxrfv2j7zf@offworld>
-References: <20260306164741.3796372-1-alejandro.lucero-palau@amd.com>
- <20260306164741.3796372-5-alejandro.lucero-palau@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F287v65j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772826764; x=1804362764;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wjM5lhp+pwP4m4G2E8trPuynl+8iyLHTnGcP8/gUnjg=;
+  b=F287v65jHgyGEsPPHK7BO1bwyII+quqh9EL1IIUKXhR9GI6Xjca63cbZ
+   jAFrmErUtYSGjleECgfJBbyoQgmAq33zycKB6yu18pSlbZScIsHWjHX5d
+   jqt4ehYM0dWrC9ptmNbxrXAb8uQiyFzv5gybPzQUFmJn3pDKq2qrtKN/f
+   wz0YCsW9kVZsPR0+XS4oq4tqxHYpGHgMJ9U7bGpa2erbrP77KrJaylhJN
+   0YGWgOjmDQgvRYg4rpWeg7ysNl7ukPavDna/+8F8kKrEnnfBvzywh2Sqk
+   YK1k96WzA3khS5BlPnwkao0IWUM6UNlzekHc7AgMGVK+p+3Yhxe2ocbky
+   w==;
+X-CSE-ConnectionGUID: gJo48twGSv2M3/0cjARErw==
+X-CSE-MsgGUID: 4IzqCQ0WQTe9AOAegLEKLg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11721"; a="99412894"
+X-IronPort-AV: E=Sophos;i="6.23,105,1770624000"; 
+   d="scan'208";a="99412894"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2026 11:52:43 -0800
+X-CSE-ConnectionGUID: 5FvXMtnMTwi7WF0iA2TD9Q==
+X-CSE-MsgGUID: nwSyPQieSpqa5hiMmJP2zw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,105,1770624000"; 
+   d="scan'208";a="257026626"
+Received: from kniemiec-mobl1.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.209])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2026 11:52:39 -0800
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: [RFC PATCH] PCI: Work around CXL Port PM Init failure when ACS SV enabled
+Date: Fri,  6 Mar 2026 20:50:54 +0100
+Message-ID: <20260306195232.388814-1-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260306164741.3796372-5-alejandro.lucero-palau@amd.com>
-User-Agent: NeoMutt/20220429
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 06 Mar 2026, alejandro.lucero-palau@amd.com wrote:
+Compute Express Link (CXL) Specification Revision 4.0, Version 1.0, Section
+8.1.5.1 - CXL Port Extension Status, Implementation Note, describes a
+scenario where a CXL downstream port may fail PM initialization:
 
->From: Gregory Price <gourry@gourry.net>
->
->Remove the redundant port lookup from cxl_rcrb_get_comp_regs() and use the
->dport parameter directly. The caller has already validated the port is
->non-NULL before invoking this function, and dport is given as a param.
->This is simpler than getting dport in the callee and return the pointer
->to the caller what would require more changes.
+"Certain conditions such as Link Down, Secondary Bus Reset, or Downstream
+Port Containment reset the Downstream Component’s bus number. If the
+Component generates the CREDIT_RTN IP2PM message with Requester Bus=0, the
+Downstream Port may reject the IP2PM message if software has enabled ACS
+Source Validation. In this scenario, Power Management initialization may
+fail to complete and another Secondary Bus Reset alone will not facilitate
+recovery".
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Implement the recommended workaround for this scenario, which involves
+saving and disabling the ACS Source Validation and Bus Master Enable bits,
+issuing a secondary bus reset, waiting for PM init to complete, and then
+restoring those bits.
+
+This is an RFC because it checks for PM init failures in ports enumeration,
+where an SBR might not be very welcome. Maybe other call sites are more
+appropriate for this workaround?
+
+Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+---
+ drivers/cxl/core/pci.c        | 170 ++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/port.c       |  19 ++++
+ drivers/cxl/cxlpci.h          |   3 +
+ drivers/pci/pci.c             |   3 +-
+ include/uapi/linux/pci_regs.h |   4 +
+ 5 files changed, 198 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index f96ce884a213..76b69ff17b74 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -869,3 +869,173 @@ int cxl_port_get_possible_dports(struct cxl_port *port)
+ 
+ 	return ctx.count;
+ }
++
++struct pci_saved_flags {
++	u16 pci_command;
++	u16 acs_ctrl;
++};
++
++/*
++ * pci_disable_acs_bme - disable ACS Source Validation and BME
++ * @pdev: downstream port
++ * @saved: pointer to pci_saved_acs_bme struct, for saving bit values
++ *
++ * Save the current ACS Source Validation and Bus Master Enable (BME)
++ * bits before disabling them.
++ */
++static void pci_disable_acs_bme(struct pci_dev *pdev,
++				struct pci_saved_flags *saved)
++{
++	int pos;
++	u16 field;
++
++	pos = pdev->acs_cap;
++	if (!pos)
++		return;
++
++	pci_read_config_word(pdev, pos + PCI_ACS_CTRL, &field);
++	saved->acs_ctrl = field;
++
++	if (field & PCI_ACS_SV)
++		pci_write_config_word(pdev, pos + PCI_ACS_CTRL,
++				      field & ~PCI_ACS_SV);
++
++	pci_read_config_word(pdev, PCI_COMMAND, &field);
++	saved->pci_command = field;
++
++	if (field & PCI_COMMAND_MASTER)
++		pci_clear_master(pdev);
++}
++
++/*
++ * pci_enable_acs_bme - enable ACS Source Validation and BME
++ * @pdev: downstream port
++ * @saved: pointer to pci_saved_acs_bme struct, for restoring bit values
++ *
++ * Restore the previously saved ACS Source Validation and Bus Master
++ * Enable (BME) bits.
++ */
++static void pci_enable_acs_bme(struct pci_dev *pdev,
++			       struct pci_saved_flags *saved)
++{
++	int pos;
++	u16 field;
++
++	pos = pdev->acs_cap;
++	if (!pos)
++		return;
++
++	pci_read_config_word(pdev, pos + PCI_ACS_CTRL, &field);
++	if (saved->acs_ctrl & PCI_ACS_SV)
++		pci_write_config_word(pdev, pos + PCI_ACS_CTRL,
++				      field | PCI_ACS_SV);
++
++	pci_read_config_word(pdev, PCI_COMMAND, &field);
++	if (saved->pci_command & PCI_COMMAND_MASTER)
++		pci_set_master(pdev);
++}
++
++/**
++ * cxl_port_pm_init_is_complete - check if the downstream port has completed PM
++ * init
++ *
++ * @pdev: downstream port
++ *
++ * Check if the Port Power Management Initialization Complete bit is set in the
++ * Downstream Port's CXL DVSEC Port Extended Status register.
++ *
++ * Returns true if PM init is complete, false otherwise.
++ */
++bool cxl_port_pm_init_is_complete(struct pci_dev *pdev)
++{
++	int pm_init_complete;
++	u16 status;
++	u16 dvsec;
++
++	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
++					  PCI_DVSEC_CXL_PORT);
++	if (!dvsec)
++		return false;
++
++	pci_read_config_word(pdev, dvsec + CXL_DVSEC_PORT_EXT_STATUS, &status);
++	pm_init_complete = FIELD_GET(CXL_DVSEC_PORT_EXT_STATUS_PM_INIT_COMP_MASK,
++				     status);
++
++	return !!pm_init_complete;
++}
++
++static void mask_sbr(struct pci_dev *pdev)
++{
++	int dvsec;
++	u16 reg;
++
++	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
++					  PCI_DVSEC_CXL_PORT);
++	if (!dvsec)
++		return;
++
++	pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_PORT_CTL, &reg);
++
++	pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_PORT_CTL,
++			      reg & ~PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR);
++}
++
++static void unmask_sbr(struct pci_dev *pdev)
++{
++	int dvsec;
++	u16 reg;
++
++	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
++					  PCI_DVSEC_CXL_PORT);
++	if (!dvsec)
++		return;
++
++	pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_PORT_CTL, &reg);
++
++	pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_PORT_CTL,
++			      reg | PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR);
++}
++
++/**
++ * cxl_port_retry_failed_pm_init - retry a downstream port's failed PM init
++ *
++ * @pdev: downstream port
++ *
++ * Retry a downstream CXL port's failed PM init according to CXL Erratum for
++ * Section 8.1.5.1 - Port Power Management Initialization Complete.
++ *
++ * This entails saving and disabling the ACS Source Validation and Bus Master
++ * enable bits, and unmasking and masking the SBR, before doing a secondary bus
++ * reset and then restoring and re-enabling those bits.
++ *
++ * return: 0 on success, errors otherwise.
++ */
++int cxl_port_retry_failed_pm_init(struct pci_dev *pdev)
++{
++	struct pci_saved_flags saved;
++	int ret;
++
++	if (!is_cxl_port(pdev->dev.parent))
++		return -EINVAL;
++
++	pci_disable_acs_bme(pdev, &saved);
++	unmask_sbr(pdev);
++
++	/* Generate Secondary Bus Reset */
++	ret = pci_reset_bus(pdev);
++	if (ret)
++		dev_dbg(&pdev->dev, "Bus reset failed: %d\n", ret);
++
++	/*
++	 * Wait until the Port Power Management Initialization
++	 * Complete bit is set in the Downstream Port. CXL Spec 4.0
++	 * Section 8.1.5.1 of the CXL spec specifies 100 ms as the
++	 * max time needed for the PM Init Complete bit to be set.
++	 */
++	msleep(100);
++
++	mask_sbr(pdev);
++	pci_enable_acs_bme(pdev, &saved);
++
++	return ret;
++}
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index b69c2529744c..62fabcdf0faf 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -1829,12 +1829,31 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+ retry:
+ 	for (iter = dev; iter; iter = grandparent(iter)) {
+ 		struct device *dport_dev = grandparent(iter);
++		struct pci_dev *dport_pdev = to_pci_dev(dport_dev);
+ 		struct device *uport_dev;
+ 		struct cxl_dport *dport;
+ 
+ 		if (is_cxl_host_bridge(dport_dev))
+ 			return 0;
+ 
++		/*
++		 * Check the downstream port's PM init status, and if it has
++		 * failed retry PM init according to CXL Spec. 4.0 Sect. 8.1.5.1
++		 * - Implementation Note
++		 */
++		if (!cxl_port_pm_init_is_complete(dport_pdev)) {
++			dev_dbg(&cxlmd->dev,
++				"PM init failed for %s, retrying PM init\n",
++				dev_name(dport_dev));
++
++			cxl_port_retry_failed_pm_init(dport_pdev);
++
++			if (!cxl_port_pm_init_is_complete(dport_pdev))
++				dev_dbg(&cxlmd->dev,
++					"PM init failed retry for %s\n",
++					dev_name(dport_dev));
++		}
++
+ 		uport_dev = dport_dev->parent;
+ 		if (!uport_dev) {
+ 			dev_warn(dev, "at %s no parent for dport: %s\n",
+diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+index 0cf64218aa16..0458096be2c4 100644
+--- a/drivers/cxl/cxlpci.h
++++ b/drivers/cxl/cxlpci.h
+@@ -101,4 +101,7 @@ static inline void devm_cxl_port_ras_setup(struct cxl_port *port)
+ }
+ #endif
+ 
++bool cxl_port_pm_init_is_complete(struct pci_dev *pdev);
++int cxl_port_retry_failed_pm_init(struct pci_dev *pdev);
++
+ #endif /* __CXL_PCI_H__ */
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 8479c2e1f74f..511fc9e70e2a 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4881,7 +4881,7 @@ static u16 cxl_port_dvsec(struct pci_dev *dev)
+ 					 PCI_DVSEC_CXL_PORT);
+ }
+ 
+-static bool cxl_sbr_masked(struct pci_dev *dev)
++bool cxl_sbr_masked(struct pci_dev *dev)
+ {
+ 	u16 dvsec, reg;
+ 	int rc;
+@@ -4904,6 +4904,7 @@ static bool cxl_sbr_masked(struct pci_dev *dev)
+ 
+ 	return true;
+ }
++EXPORT_SYMBOL_NS_GPL(cxl_sbr_masked, "CXL");
+ 
+ static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
+ {
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index ec1c54b5a310..1a12552fa89a 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -1397,4 +1397,8 @@
+ #define   PCI_DVSEC_CXL_REG_LOCATOR_BLOCK_ID		__GENMASK(15, 8)
+ #define   PCI_DVSEC_CXL_REG_LOCATOR_BLOCK_OFF_LOW	__GENMASK(31, 16)
+ 
++/* CXL 4.0 8.1.5.1: CXL Port Extension Status */
++#define CXL_DVSEC_PORT_EXT_STATUS 0xA
++#define CXL_DVSEC_PORT_EXT_STATUS_PM_INIT_COMP_MASK GENMASK(1, 0)
++
+ #endif /* LINUX_PCI_REGS_H */
+-- 
+2.53.0
+
