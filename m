@@ -1,141 +1,107 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E2E25E469;
-	Sat,  7 Mar 2026 05:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772862794; cv=pass; b=HG2+iftV89z7RpBHGlY6pxyikA+dVy6CMV3XtXrxQTmQLe9h0zbCeZrp0fDueLWffERDqiHNUJ7Fi5WiM3ot1zYOf/ENYp5VK2o5H/RAp9Ef973Kyd6hZkJHy6B6A1ScJCXPosEwrEViRYzW4/ANjcXyT8vdxgcizs5XVR/nw/A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772862794; c=relaxed/simple;
-	bh=7ftgz8tuTyEsgjf9vwv0u3BeAalwQ2a52Xsvna9BgSo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=L1LqVIyS046YioyX73WxXlkoEqldamoqcYkUWLhDwbIPjI9gPwALdYk2/UYUzq4huODLcazYw3Ieps4Dy2g0Ph4g28dP1JW0xJj++SsBaoCMqbbN84GXMCW606I5SFg+nBVfMFLPHH2fVxSvIjr9o8Maw9UP65mPBic1B1SuUFo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=St0vSj4n; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BD329B8D9
+	for <linux-cxl@vger.kernel.org>; Sun,  8 Mar 2026 04:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772944212; cv=none; b=FEwDVFlEeiUulQFq5XvcVErmGyJ+DWxsO9AsQhFBEvF9yGzdk0ITcSLpkypGwshm0j5+jlLH0pamcuO0kHXpk2CzAg4/AjyustrDqjVcVP7lmvhIElqGHw+PryQtGnZjvuwHUIIZmRlwd+9Kek4iZOD2Cwzyqkjh84P/YEBdwwg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772944212; c=relaxed/simple;
+	bh=/s3d8a7+gjncW1qLGaaofIMKDVUL0/tVG6Pn12FLLgA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=mlQXtP6M+6NPrRD1LiyWjOLoWMp7+U1UHzIH5stouBIjK8HYEYKssapGQS525+TYmQ2+f2BJpcB0DMX5obkB4380IFkxZBb8dMe5sM8XcyO4/4m7Be8D8Kn1cBBUT5jpuczUVp95YE0wyVveeWLghod5U28hV95uOwSmga1ZSxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=oVWOlX8g; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="St0vSj4n"
-ARC-Seal: i=1; a=rsa-sha256; t=1772862778; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=LldDHbDlrJZpcu7RxiMd0P04HqJV/HUJ9c/uOCMqKdZOJS3KBmYXXwuhmpBK3OMWHwNPZWHh2g88mSgrpgZFzLYBYjq3lDHZTrFn/Hbs12lGSWBaFyI5+BFhaGdbD2hSmvHMEyZyC5o3fafSfLhNppr4IGwEatPx0cdxNITEPBc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1772862778; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=fj0l2wHqxhSAPSrepoyJIsFPkg8FJUfQTnE30k9mqeg=; 
-	b=Ohxs6mgvS4aOVBQ0Z9/YrqsJw3OJDX9q1+LnqunsS4L/pq+0oFtPvgViVIm0m0qdDqzTg3JFlkn6wdmGfiTwTHU8Mpk8QNqwMhEXj+UTcHKi8g+5An5o8fnvL/dwkvPVMs0R05y9riHedclDWIYgVZSErxQ/uGJY7v43o0+92tw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1772862778;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Feedback-ID:Reply-To;
-	bh=fj0l2wHqxhSAPSrepoyJIsFPkg8FJUfQTnE30k9mqeg=;
-	b=St0vSj4ncZmOWvfPrN7Gt8ZLrYbqCoYLr/oeCOKkEvzQGQ8JX3qF3eOPPhMuYPw+
-	YS7awLRGvo5KLsX+Npb0ebQwB9GIgpFOn/lZxn7kL//kxj/vR3+VN68AdBm9ZE11EZ8
-	u9itjJb0YhxO7t+JUOVreJCiAMOIHK9POGD7Z3og=
-Received: by mx.zohomail.com with SMTPS id 1772862776075910.6970531217306;
-	Fri, 6 Mar 2026 21:52:56 -0800 (PST)
-From: Li Ming <ming.li@zohomail.com>
-Date: Sat, 07 Mar 2026 13:52:52 +0800
-Subject: [PATCH] cxl/port: Do not return -EAGAIN from find_or_add_dport()
- for newly added dport
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oVWOlX8g"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20260308043002epoutp04bd3de8167ef078269d6b794cdde460e4~aw1vL1Z2Z2782927829epoutp04N
+	for <linux-cxl@vger.kernel.org>; Sun,  8 Mar 2026 04:30:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20260308043002epoutp04bd3de8167ef078269d6b794cdde460e4~aw1vL1Z2Z2782927829epoutp04N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1772944202;
+	bh=/s3d8a7+gjncW1qLGaaofIMKDVUL0/tVG6Pn12FLLgA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oVWOlX8grc4p+2R/ur66rBxqLV9YyMOesIRehfJvkDYUsBw34h/JbRtzwQS+HLTtb
+	 BnK1c6kwngxreUiL2de2jCVorvnlNYLdrCeYcoSjzT0K7z3jaGoUmUjsxN7KeAZ8ZR
+	 dNyjfCcP+k/p80cncrjGCoI6i3aNSIXvs2zfCqAc=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20260308043001epcas5p3632372647d98ca38a3150abac37a04c4~aw1uy6lCu1848318483epcas5p3O;
+	Sun,  8 Mar 2026 04:30:01 +0000 (GMT)
+Received: from epcpadp1new (unknown [182.195.40.141]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4fT6cn6JRHz2SSKZ; Sun,  8 Mar
+	2026 04:30:01 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20260306102730epcas5p308774b7b9f51e5a6c963a8b8599ab357~aObRtAise1284812848epcas5p3d;
+	Fri,  6 Mar 2026 10:27:30 +0000 (GMT)
+Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20260306102726epsmtip24a49a52c28cb736735db95b08c67bcf7~aObN6RQTD2983129831epsmtip2A;
+	Fri,  6 Mar 2026 10:27:26 +0000 (GMT)
+Date: Fri, 6 Mar 2026 15:57:19 +0530
+From: Neeraj Kumar <s.neeraj@samsung.com>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, gost.dev@samsung.com,
+	a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
+	cpgs@samsung.com
+Subject: Re: [PATCH V6 00/18] Add CXL LSA 2.1 format support in nvdimm and
+ cxl pmem
+Message-ID: <1296674576.21772944201878.JavaMail.epsvc@epcpadp1new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <aXPlGrs12BdwgGkG@aschofie-mobl2.lan>
+X-CMS-MailID: 20260306102730epcas5p308774b7b9f51e5a6c963a8b8599ab357
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----3W3K1-v49fY0BJe7N6_WbqFXaoVLme8r7b8baEfkTbmtWBCI=_73c11_"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20260123113121epcas5p125bc64b4714525d7bbd489cd9be9ba91
+References: <CGME20260123113121epcas5p125bc64b4714525d7bbd489cd9be9ba91@epcas5p1.samsung.com>
+	<20260123113112.3488381-1-s.neeraj@samsung.com>
+	<aXPlGrs12BdwgGkG@aschofie-mobl2.lan>
+
+------3W3K1-v49fY0BJe7N6_WbqFXaoVLme8r7b8baEfkTbmtWBCI=_73c11_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+
+On 23/01/26 01:16PM, Alison Schofield wrote:
+>On Fri, Jan 23, 2026 at 05:00:54PM +0530, Neeraj Kumar wrote:
+>
+>snip
+>
+>>
+>> Testing:
+>> ========
+>> In order to test this patchset, I also added the support of LSA v2.1 format
+>> in ndctl. ndctl changes are available at [2]. After review, I’ll push in
+>> ndctl repo for community review.
+>
+>Please post the ndctl changes for review. Thanks!
+
+Sure Alison,
+
+I am working on multi interleave support, So it may require some change in ndctl also.
+I will post ndctl changes along with next series.
+
+
+Regards,
+Neeraj
+
+------3W3K1-v49fY0BJe7N6_WbqFXaoVLme8r7b8baEfkTbmtWBCI=_73c11_
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260307-find_or_add_dport_not_return_eagain-v1-1-7c298461a9a4@zohomail.com>
-X-B4-Tracking: v=1; b=H4sIADO9q2kC/x3NwQrCMAyA4VcZOVvoOrTiq4iEuGQzl3SkVYSxd
- 7d4/C7/v0MVV6lwG3Zw+WjVYh3jaYD5RbZKUO6GFNMlTjGHRY2xOBIz8la8oZWGLu3thkIrqQV
- 6jjmnfE7TfIVe2lwW/f4v98dx/ACCW6L3dQAAAA==
-X-Change-ID: 20260307-find_or_add_dport_not_return_eagain-ab17727523c8
-To: Davidlohr Bueso <dave@stgolabs.net>, 
- Jonathan Cameron <jonathan.cameron@huawei.com>, 
- Dave Jiang <dave.jiang@intel.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Li Ming <ming.li@zohomail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1772862773; l=2496;
- i=ming.li@zohomail.com; s=20260210; h=from:subject:message-id;
- bh=7ftgz8tuTyEsgjf9vwv0u3BeAalwQ2a52Xsvna9BgSo=;
- b=J76G7xqm9ZS2m0Sx1cr32NBYC/BjUm/wOLeRpFf6AinPqZIwKlJgfN8vBaQD10GN6jWkkrKlp
- D4Z603/UCOEB1+0ZHP/3+gj0KtMMars5VrBNJ1jxO2jY77Rc+pBHNPX
-X-Developer-Key: i=ming.li@zohomail.com; a=ed25519;
- pk=JfhrdHjyYJMXt47Hy8d/fsqZuhGPD4Z3whV5lTfVvhE=
-Feedback-ID: rr08011228cbaf1c00d952ce50af6f31e000005053d5b63a9c841f77fbdf8867e8171e3f2d46514d27e7285dc1:zu08011227960147661fbe1a13706fe5f700001a513edce902fe1baf2108abb286b03ecabad43d72a2682124:rf0801122df335e5d9a82ead73d0b2143e000052d2a542a1a4fbe11bceb1815cd5e79a61a78281fea1cd8fccbd76ed946217:ZohoMail
-X-ZohoMailClient: External
 
-find_or_add_dport() is used to get an ancestor dport of a new CXL memdev
-on an existing ancestor port. It is called only when all ancestor ports
-of the given CXL memdev have been enumerated. Because port enumeration
-iterator walks CXL hierarchy of a given CXL memdev from CXL memdev to
-CXL root, if it found an unenumerated ancestor port but the parent port
-of the port is existed, iterator will call add_port_attach_ep() to add
-the absent port then trigger CXL hierarchy re-walk until all ancestor
-ports of the given CXL memdev enumerated. After that, iterator just has
-chance to call find_or_add_dport().
 
-So if an ancestor port is existed but the corresponding dport for the
-CXL memdev has not been added, iterator will use find_or_add_dport() to
-add the dport then return -EAGAIN on success. The -EAGAIN will trigger a
-CXL hierarchy re-walk.
-
-However, this re-walk is unnecessary. After adding the ancestor dport,
-subsequent calls to find_or_add_dport() will return the newly added
-dport on the same ancestor port during re-walk. Therefore,
-find_or_add_dport() can return the newly added dport directly instead of
-an -EAGAIN, avoiding the unnecessary CXL hierarchy re-walk.
-
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
- drivers/cxl/core/port.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index c5aacd7054f1..3074d912d6e5 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1782,14 +1782,8 @@ static struct cxl_dport *find_or_add_dport(struct cxl_port *port,
- 	guard(device)(port_to_host(port));
- 	guard(device)(&port->dev);
- 	dport = cxl_find_dport_by_dev(port, dport_dev);
--	if (!dport) {
-+	if (!dport)
- 		dport = probe_dport(port, dport_dev);
--		if (IS_ERR(dport))
--			return dport;
--
--		/* New dport added, restart iteration */
--		return ERR_PTR(-EAGAIN);
--	}
- 
- 	return dport;
- }
-@@ -1848,11 +1842,8 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
- 			 * have the dport added here.
- 			 */
- 			dport = find_or_add_dport(port, dport_dev);
--			if (IS_ERR(dport)) {
--				if (PTR_ERR(dport) == -EAGAIN)
--					goto retry;
-+			if (IS_ERR(dport))
- 				return PTR_ERR(dport);
--			}
- 
- 			rc = cxl_add_ep(dport, &cxlmd->dev);
- 
-
----
-base-commit: 19d2f0b97a131198efc2c4ca3eb7f980bba8c2b4
-change-id: 20260307-find_or_add_dport_not_return_eagain-ab17727523c8
-
-Best regards,
--- 
-Li Ming <ming.li@zohomail.com>
+------3W3K1-v49fY0BJe7N6_WbqFXaoVLme8r7b8baEfkTbmtWBCI=_73c11_--
 
