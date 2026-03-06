@@ -1,111 +1,172 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC14F35BDC4
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Mar 2026 10:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E306937B416
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Mar 2026 10:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772792099; cv=none; b=cs9GSFsxSbRe5jnoCa/tyFtXUKMeoDoMuJjguHsnckWauM0wRhtEnErAkK/XdC8KclcwQ0asK/oN79aGoUQX/nQl7V0a/ceeLFLhwkI5WNvqOUK1bypPOLO9DBpcyJfn0bsqksapTDK2a8tEIQv9rrabtir/U0YNg8CO+l6RDQs=
+	t=1772792588; cv=none; b=o1K5eGBLmpeyMvmzdkTHxcv4qEz3Bt9NK7ai83zsc1RNdJe6XWaT62MS3ns/lCgi19CiZwgIESaORWHjJw15pfXq5Q41UUTjj/UePHVGOaxMqw2U0U6rmRJQQb2Fw+vQq0CQpu4txQt0PqUgwwGVPlLnlGMXunXKnikp2ioQxyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772792099; c=relaxed/simple;
-	bh=5edMyOWtH5E55/BGXo4wd51v1FqBBCY1OsgSnSIAE9s=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j1bXNkoAdBBpKztMbc3bn7uLfeK/GMxPd+LDwQ391l2EQ7EQVAiZfavWgqCXB1XkjpNDSz6rsMXg8DNQuGkO/8eRpd3cbQkzCqGjhJT4WoF7xIH4mmQg5cQadQ+MqDbgNniwSPRuw6g6YK51TtJz4Beb/TshVg4wBw0mAYJqWmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fS2LV0p64zHnHBW;
-	Fri,  6 Mar 2026 18:13:54 +0800 (CST)
-Received: from dubpeml500008.china.huawei.com (unknown [7.214.146.94])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8FA3D40572;
-	Fri,  6 Mar 2026 18:14:53 +0800 (CST)
-Received: from P_UKIT01-A7bmah.china.huawei.com (10.195.246.67) by
- dubpeml500008.china.huawei.com (7.214.146.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 6 Mar 2026 10:14:52 +0000
-From: <shiju.jose@huawei.com>
-To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, <mst@redhat.com>,
-	<peter.maydell@linaro.org>, <jonathan.cameron@huawei.com>,
-	<dave@stgolabs.net>
-CC: <linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v2 1/3] hw/cxl: Fix handling of component ID to not assume it is a string
-Date: Fri, 6 Mar 2026 10:14:20 +0000
-Message-ID: <20260306101423.986-2-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20260306101423.986-1-shiju.jose@huawei.com>
-References: <20260306101423.986-1-shiju.jose@huawei.com>
+	s=arc-20240116; t=1772792588; c=relaxed/simple;
+	bh=V2U4y78pnVdswONpocjUIQMSDnANqHWTkbe7TvA63rw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=gb9Q7Xrl/wHyBBWLKxnyhUXd9z9hVD91C+Zidege9W6lNr4yPknnv5CU6pgnVT0qrlnZ7QywxctA+RyIS1zgP9jpnVosRPv6bfU8UnenfbfXFit0tWtBKp4Eu0GPdSdRHDfEetZurInhC/Eijio02muE89MRDOxSD7Hly7MD+kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=lg24+BCr; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lg24+BCr"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20260306102303epoutp04186efdd94bb3446efd9f74fea5918e4a~aOXZBdMRm0228702287epoutp04P
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Mar 2026 10:23:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20260306102303epoutp04186efdd94bb3446efd9f74fea5918e4a~aOXZBdMRm0228702287epoutp04P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1772792583;
+	bh=x6n4TB9SALV9vPu04bQI6+D9lMWrud9GB2IyZMDwa9k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lg24+BCrRRmoX1dm8ElOe37YSPr6prbUKN38GbDmbU7kMNS2mFwRHrFJoKitFwY1P
+	 av7NBPJMljA62q96BjHjbjigKCItaHxvY+KXa95ik5bOcidIR5v+EGw9bB1wUn1k8U
+	 HZr6/N7LTP6sXzQeDVZSxCZEdXjngXxBO/6cUfFM=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20260306102303epcas5p2477cd8981374ef7534f8ac88d8c74148~aOXYtz9hZ1186111861epcas5p25;
+	Fri,  6 Mar 2026 10:23:03 +0000 (GMT)
+Received: from epcpadp2new (unknown [182.195.40.142]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4fS2Y30CMdz6B9m6; Fri,  6 Mar
+	2026 10:23:03 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20260306102207epcas5p1b799e7ce78ee07d71c3c638c3412d28a~aOWk_nmPI1322513225epcas5p1A;
+	Fri,  6 Mar 2026 10:22:07 +0000 (GMT)
+Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20260306102205epsmtip2d4819a6e14d38418e215918023d45973~aOWjjLT902731127311epsmtip2X;
+	Fri,  6 Mar 2026 10:22:05 +0000 (GMT)
+Date: Fri, 6 Mar 2026 15:52:00 +0530
+From: Neeraj Kumar <s.neeraj@samsung.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, gost.dev@samsung.com,
+	a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
+	cpgs@samsung.com
+Subject: Re: [PATCH V6 10/18] cxl/mem: Refactor cxl pmem region
+ auto-assembling
+Message-ID: <158453976.61772792583024.JavaMail.epsvc@epcpadp2new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- dubpeml500008.china.huawei.com (7.214.146.94)
+In-Reply-To: <1b67c345-1594-4221-b699-e26a00d17bfc@intel.com>
+X-CMS-MailID: 20260306102207epcas5p1b799e7ce78ee07d71c3c638c3412d28a
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----S5vMiqbC9D9faF8YPw-GIekSHdZgzpYrwqcOSnq._zgadq5.=_73baa_"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20260123113138epcas5p4bc54ae41192dbc9c958c43ad8a80b5c6
+References: <20260123113112.3488381-1-s.neeraj@samsung.com>
+	<CGME20260123113138epcas5p4bc54ae41192dbc9c958c43ad8a80b5c6@epcas5p4.samsung.com>
+	<20260123113112.3488381-11-s.neeraj@samsung.com>
+	<ff946a84-11bb-4956-beba-bf7bfbfecd7a@intel.com>
+	<1b67c345-1594-4221-b699-e26a00d17bfc@intel.com>
 
-From: Shiju Jose <shiju.jose@huawei.com>
+------S5vMiqbC9D9faF8YPw-GIekSHdZgzpYrwqcOSnq._zgadq5.=_73baa_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-Add following fixes,
-1. Coverity reports a warning (CID 1645325) for use of strncpy() in
-handling of component ID. In cxl_create_mem_sparing_event_records(),
-fix handling of component ID to not assume it is a string by replacing
-strncpy with memcpy to solve this warning and copy the entire component
-ID data, which is 16 bytes.
+On 27/01/26 04:45PM, Dave Jiang wrote:
+>
+>
+>On 1/26/26 3:48 PM, Dave Jiang wrote:
+>>
+>>
+>> On 1/23/26 4:31 AM, Neeraj Kumar wrote:
+>>> In 84ec985944ef3, devm_cxl_add_nvdimm() sequence was changed and called
+>>> before devm_cxl_add_endpoint(). It's because cxl pmem region auto-assembly
+>>> used to get called at last in cxl_endpoint_port_probe(), which requires
+>>> cxl_nvd presence.
+>>>
+>>> For cxl region persistency, region creation happens during nvdimm_probe
+>>> which need the completion of endpoint probe.
+>>>
+>>> In order to accommodate both cxl pmem region auto-assembly and cxl region
+>>> persistency, refactored following
+>>>
+>>> 1. Re-Sequence devm_cxl_add_nvdimm() after devm_cxl_add_endpoint(). This
+>>>    will be called only after successful completion of endpoint probe.
+>>>
+>>> 2. Create cxl_region_discovery() which performs pmem region
+>>>    auto-assembly and remove cxl pmem region auto-assembly from
+>>>    cxl_endpoint_port_probe()
+>>>
+>>> 3. Register cxl_region_discovery() with devm_cxl_add_memdev() which gets
+>>>    called during cxl_pci_probe() in context of cxl_mem_probe()
+>>>
+>>> 4. As cxlmd->attach->probe() calls registered cxl_region_discovery(), so
+>>>    move devm_cxl_add_nvdimm() before cxlmd->attach->probe(). It guarantees
+>>>    both the completion of endpoint probe and cxl_nvd presence before
+>>>    calling cxlmd->attach->probe().
+>>>
+>>> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+>>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>>> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+>>
+>> Hi Neeraj,
+>> Just FYI this is the patch that breaks the auto-region assemble in cxl_test.
+>
+>So it's missing this part in cxl_test. cxl_test auto region is now showing up. But now I'm hitting some lockdep issues.
+>
+>---
+>diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+>index cb87e8c0e63c..03af15edd988 100644
+>--- a/tools/testing/cxl/test/mem.c
+>+++ b/tools/testing/cxl/test/mem.c
+>@@ -1686,6 +1686,7 @@ static void cxl_mock_test_feat_init(struct cxl_mockmem_data *mdata)
+>
+> static int cxl_mock_mem_probe(struct platform_device *pdev)
+> {
+>+       struct cxl_memdev_attach memdev_attach = { 0 };
+>        struct device *dev = &pdev->dev;
+>        struct cxl_memdev *cxlmd;
+>        struct cxl_memdev_state *mds;
+>@@ -1767,7 +1768,8 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+>
+>        cxl_mock_add_event_logs(&mdata->mes);
+>
+>-       cxlmd = devm_cxl_add_memdev(cxlds, NULL);
+>+       memdev_attach.probe = cxl_region_discovery;
+>+       cxlmd = devm_cxl_add_memdev(cxlds, &memdev_attach);
+>        if (IS_ERR(cxlmd))
+>                return PTR_ERR(cxlmd);
+>
+>---
+>
+>
+>>
+>> DJ
 
-2. In cxl_maintenance_insert(),
- - replace strncpy with memcpy to copy full data because component ID,
-   which is 16 bytes data.
- - remove memset which is not required.
+Hi Dave,
 
-Fixes: 5e5a86bab830("hw/cxl: Add support for Maintenance command and Post Package Repair (PPR)")
-Closes ("https://lore.kernel.org/qemu-devel/CAFEAcA_CsVe4TUVm3o_-BA4hXvi2xAThGX5T97amgTQKW_kiYA@mail.gmail.com/")
-Reported-by: Peter Maydell <peter.maydell@linaro.org>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- hw/cxl/cxl-mailbox-utils.c | 4 ++--
- hw/mem/cxl_type3.c         | 4 +---
- 2 files changed, 3 insertions(+), 5 deletions(-)
+Yes using the above snippet auto region failure is getting fixed.
+But still with above fix cxl-topology.sh is failing.
 
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index c83b5f90d4..9c99422cd4 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -1994,8 +1994,8 @@ static void cxl_create_mem_sparing_event_records(CXLType3Dev *ct3d,
-         stw_le_p(&event_rec.column, ent->column);
-         event_rec.sub_channel = ent->sub_channel;
-         if (ent->validity_flags & CXL_MSER_VALID_COMP_ID) {
--            strncpy((char *)event_rec.component_id, (char *)ent->component_id,
--                    sizeof(event_rec.component_id));
-+            memcpy(event_rec.component_id, ent->component_id,
-+                   sizeof(event_rec.component_id));
-         }
-     } else if (sparing_pi) {
-         event_rec.flags = CXL_MSER_FLAGS_QUERY_RESOURCES;
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 4739239da3..3cb1096e16 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -1767,7 +1767,6 @@ static void cxl_maintenance_insert(CXLType3Dev *ct3d, uint64_t dpa,
-         }
-     }
-     m = g_new0(CXLMaintenance, 1);
--    memset(m, 0, sizeof(*m));
-     m->dpa = dpa;
-     m->validity_flags = 0;
- 
-@@ -1804,8 +1803,7 @@ static void cxl_maintenance_insert(CXLType3Dev *ct3d, uint64_t dpa,
-         m->validity_flags |= CXL_MSER_VALID_SUB_CHANNEL;
-     }
-     if (component_id) {
--        strncpy((char *)m->component_id, component_id,
--                sizeof(m->component_id) - 1);
-+        memcpy(m->component_id, component_id, sizeof(m->component_id));
-         m->validity_flags |= CXL_MSER_VALID_COMP_ID;
-         if (has_comp_id_pldm && is_comp_id_pldm) {
-             m->validity_flags |= CXL_MSER_VALID_COMP_ID_FORMAT;
--- 
-2.43.0
+Actually we have a test case in cxl-topology.sh where we disable
+mem device and check its availability after enabling it. And this
+test case is failing in this case.
+
+I am working on multi interleave support. I will test this with
+next series and fix it accordingly.
+
+
+Regards,
+Neeraj
+
+------S5vMiqbC9D9faF8YPw-GIekSHdZgzpYrwqcOSnq._zgadq5.=_73baa_
+Content-Type: text/plain; charset="utf-8"
+
+
+------S5vMiqbC9D9faF8YPw-GIekSHdZgzpYrwqcOSnq._zgadq5.=_73baa_--
 
