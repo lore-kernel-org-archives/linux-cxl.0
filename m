@@ -1,210 +1,82 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99FD31813A
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Mar 2026 10:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0053368AD
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Mar 2026 10:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772792701; cv=none; b=gnHDCPWx9f6tZ6ZvJz7H98z8StW++hwCl7CahP+biwX16U8sZPjKTZbDbpG+A0pFNkNiBC/cYSWN5fZNCU6qNdfdW7g5BMxZkKvzkmi5l7uQui3ZPMRSY4cYHdvRpec56wH8ggCWWVHV5Rp4sU+4fqPYXUC6Js24/iiha61aM7U=
+	t=1772794245; cv=none; b=i7HWRA0DOZMt956F+QoOzX1yj4xw3S4h9mWObkKfnxU3UjJemcPUj0xMrOOF8MgJrDC0k9sL4sIuZ1f2RaC5cGDUDnbxWVF5/JcQVvuN9U3JUA8doU0IluYrdoSY95FMO8Ht5j1hRTGQ6/nm2KPjuXGzAVRk8CTKBjIrEXJqgoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772792701; c=relaxed/simple;
-	bh=VwPDBc52y+ByONznQ17CVbyI/CYVHCtb7xpnbb3VR4U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=p+qYcA94bsS0cbAU6GMMb72wjVC0ev95b+4eMDoFIWLl2/sVjXabVG5bVYXSXnQKT+26iiTGf2W+b+kW0JZ6SJ8nChKZFHouWLFbCkHgSMFl0al4q5Nvsl7LRlXoleJwwQhw7tbWHi0rlMzE2Po3ZmoW6BCA3qIGrWNw3FjgC84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=NoUPubwD; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NoUPubwD"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20260306102456epoutp02ed6493b70f35e80fdc86d35cf651ea29~aOZCgygPX0793807938epoutp02n
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Mar 2026 10:24:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20260306102456epoutp02ed6493b70f35e80fdc86d35cf651ea29~aOZCgygPX0793807938epoutp02n
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1772792696;
-	bh=mkBvaLFfnKnjCBnDHYqAtzkGsBKFeIIQ9usUlK7H3kY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NoUPubwDCgZ59QwtmvHoLFnRNGQfkodocRt57Hqg9mwH1rXxjlbomdYunsGQH206h
-	 e4a1zChy1INCN2vcB3NPRtwDEbzCoX65ZYK5ByNwoir+qtfAtu2gQw8RmiJLfGu1DU
-	 Aj4541yPcK+E1YlnIwdyiyThjZsrLFIARaKD+7M0=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20260306102455epcas5p4790db72dd69e9cdf1ffac2731dd054d9~aOZBw1JUx1250412504epcas5p4u;
-	Fri,  6 Mar 2026 10:24:55 +0000 (GMT)
-Received: from epcas5p4.samsung.com (unknown [182.195.38.95]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4fS2bC1Cykz2SSKY; Fri,  6 Mar
-	2026 10:24:55 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20260306102454epcas5p4d2e1b37f366756d71853584d6c8246c7~aOZAdHMuU0525205252epcas5p4K;
-	Fri,  6 Mar 2026 10:24:54 +0000 (GMT)
-Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260306102452epsmtip2518d8ac470e57ec2e1d49cd96838a2d3~aOY_wF1DG2865228652epsmtip2v;
-	Fri,  6 Mar 2026 10:24:52 +0000 (GMT)
-Date: Fri, 6 Mar 2026 15:54:44 +0530
-From: Neeraj Kumar <s.neeraj@samsung.com>
-To: Alejandro Lucero Palau <alucerop@amd.com>
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, gost.dev@samsung.com,
-	a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
-	cpgs@samsung.com
-Subject: Re: [PATCH V6 12/18] cxl/region: Add devm_cxl_pmem_add_region() for
- pmem region creation
-Message-ID: <20260306102444.fkoqhyavd7cgorxy@test-PowerEdge-R740xd>
+	s=arc-20240116; t=1772794245; c=relaxed/simple;
+	bh=4jomw9femtuQiMOv7jLnkKUYNDD4z0VUHegbpGfSii4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m6oP3khdMXtIMj9KHMmdpyJ5qz9upIWUXnsAy+Bvj2c7BNi32GH9suK2kBwXtm6crLkFo87WJQFYIw2s0vOVwx0jkl9l4aHxQ6jXZe6NbHMZbQBOwE5MDPROXNvF4eojNEiDeV+JcFz+yAtOv02sgC3+n2sa2h5i83EmpnRmYv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fS38C6NyBzJ46DM;
+	Fri,  6 Mar 2026 18:50:03 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id C043440572;
+	Fri,  6 Mar 2026 18:50:41 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 6 Mar
+ 2026 10:50:41 +0000
+Date: Fri, 6 Mar 2026 10:50:39 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: <dan.j.williams@intel.com>
+CC: Keith Busch <kbusch@kernel.org>, Keith Busch <kbusch@meta.com>,
+	<linux-cxl@vger.kernel.org>, <dave.jiang@intel.com>, <gourry@gourry.net>
+Subject: Re: [PATCH] cxl/acpi: Fix CXL_ACPI and CXL_PMEM Kconfig tristate
+ mismatch
+Message-ID: <20260306105039.00007f51@huawei.com>
+In-Reply-To: <69aa341fcf526_6423c1002c@dwillia2-mobl4.notmuch>
+References: <20260305204057.1516948-1-kbusch@meta.com>
+	<69aa28d0d9076_6423c100da@dwillia2-mobl4.notmuch>
+	<aaotQCg0TspiiaDH@kbusch-mbp>
+	<69aa341fcf526_6423c1002c@dwillia2-mobl4.notmuch>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <a560c14c-410c-4ea8-9076-deeb9ba28fee@amd.com>
-X-CMS-MailID: 20260306102454epcas5p4d2e1b37f366756d71853584d6c8246c7
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----S5vMiqbC9D9faF8YPw-GIekSHdZgzpYrwqcOSnq._zgadq5.=_73bc8_"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20260123113141epcas5p49a1eebff4401a7fc98381358162fde2b
-References: <20260123113112.3488381-1-s.neeraj@samsung.com>
-	<CGME20260123113141epcas5p49a1eebff4401a7fc98381358162fde2b@epcas5p4.samsung.com>
-	<20260123113112.3488381-13-s.neeraj@samsung.com>
-	<a560c14c-410c-4ea8-9076-deeb9ba28fee@amd.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-------S5vMiqbC9D9faF8YPw-GIekSHdZgzpYrwqcOSnq._zgadq5.=_73bc8_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
+On Thu, 5 Mar 2026 17:55:43 -0800
+dan.j.williams@intel.com wrote:
 
-On 24/02/26 06:13PM, Alejandro Lucero Palau wrote:
->Hi Neeraj,
->
->
->I could get some free time for reviewing this series. Dan pointed out 
->to potential conflicts with my Type2 series, so I'm focused on those 
->patches modifying the cxl region creation and how it is being used.
->
->
->I do not know if you are aware of the Type2 work, although I dare to 
->say you are not since some of the functionality is duplicated ... and 
->in your case skipping some steps.
->
+> Keith Busch wrote:
+> > On Thu, Mar 05, 2026 at 05:07:28PM -0800, dan.j.williams@intel.com wrote:  
+> > > > The call from cxl_acpi_probe() is guarded by
+> > > > IS_ENABLED(CONFIG_CXL_PMEM), which evaluates to true for both =y and =m.  
+> > 
+> > <snip>
+> >   
+> > > So I do not think this is sufficient because there is no
+> > > devm_cxl_add_nvdimm_bridge() stub in the CONFIG_CXL_PMEM=n case, right?  
+> > 
+> > It's called from a preprocesser "#if 0" section, so it shouldn't be
+> > compiled in. At least it seems perfectly fine in local testing, but is
+> > that compiler specific? I think this should have been optimized out.  
+> 
+> Oh, duh, yes, the IS_ENABLED() stays there. Hmm, this indeed looks like
+> it does everything right. I forgot that the dependency checker will make
+> sure that you can not select CXL_ACPI=y and CXL_PMEM=m.
+> 
+> So,
+> 
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> 
+> ...this is better than what I proposed.
+> 
+I prefer Keith's solution to Gregory's just because of removing a surprising foot gun.
 
-Hi Alejandro,
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-Thanks for your review.
-Yes I have not looked at Type2 work in detail. I will have a look
-and specially the conflicting part with my changes.
-
->
->Below my comments.
->
->
->On 1/23/26 11:31, Neeraj Kumar wrote:
->>devm_cxl_pmem_add_region() is used to create cxl region based on region
->>information scanned from LSA.
->>
->>devm_cxl_add_region() is used to just allocate cxlr and its fields are
->>filled later by userspace tool using device attributes (*_store()).
->>
->>Inspiration for devm_cxl_pmem_add_region() is taken from these device
->>attributes (_store*) calls. It allocates cxlr and fills information
->>parsed from LSA and calls device_add(&cxlr->dev) to initiate further
->>region creation porbes
->>
->>Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->>Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
->>---
->>  drivers/cxl/core/region.c | 118 ++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 118 insertions(+)
->>
->>diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>index 2e60e5e72551..e384eacc46ae 100644
->>--- a/drivers/cxl/core/region.c
->>+++ b/drivers/cxl/core/region.c
->>@@ -2621,6 +2621,121 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
->>  	return ERR_PTR(rc);
->>  }
->>+static ssize_t alloc_region_hpa(struct cxl_region *cxlr, u64 size)
->>+{
->>+	int rc;
->>+
->>+	if (!size)
->>+		return -EINVAL;
->>+
->>+	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
->>+	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
->>+		return rc;
->>+
->>+	return alloc_hpa(cxlr, size);
->>+}
->
->
->Type2 has a more elaborated function preceding the final hpa 
->allocation.  First of all, the root decoder needs to match the 
->endpoint type or to have support for it. Then interleave ways taken 
->into account. I know you are only supporting 1 way, what I guess makes 
->the initial support easier, but although some check for not supporting 
->> 1 is fine (I guess this takes a lot of work for matching at least 
->LSA labels and maybe something harder), the core code should support 
->that, mainly because there is ongoing work adding it. In my case I did 
->not need interleaving and it is unlikely other Type2 devices will need 
->it in the near future, but the support is there:
->
->https://lore.kernel.org/linux-cxl/20260201155438.2664640-1-alejandro.lucero-palau@amd.com/T/#m56bf70b58bb995082680bf363fd3f6d6f2b074d2
->
->
->>+
->>+static ssize_t alloc_region_dpa(struct cxl_endpoint_decoder *cxled, u64 size)
->>+{
->>+	if (!size)
->>+		return -EINVAL;
->>+
->>+	if (!IS_ALIGNED(size, SZ_256M))
->>+		return -EINVAL;
->>+
->>+	return cxl_dpa_alloc(cxled, size);
->>+}
->
->
->I'm not sure if the same applies here as you are passing an endpoint 
->decoder already, but FWIW:
->
->
->https://lore.kernel.org/linux-cxl/20260201155438.2664640-1-alejandro.lucero-palau@amd.com/T/#m38ff266e931fd9c932bc54d000b7ea72186493be
->
->
->I'm sending type2 individual patches for facilitating the integration, 
->and I'll focus next on these two referenced ones so you could use them 
->asap.
->
->
->Thank you,
->
->Alejandro
-
-Actually I have created alloc_region_hpa() and alloc_region_dpa() taking
-inspiration from device attributes (_store*) calls used to create cxl
-region using cxl userspace tool.
-
-I am adding the support of multi interleave, there these routines will
-not be required as I would be re-using the existing auto region assembly infra.
-
-Even though I will re-check any conflicts with Type2 changes.
-
-
-
-Regards,
-Neeraj
-
-
-
-
-
-------S5vMiqbC9D9faF8YPw-GIekSHdZgzpYrwqcOSnq._zgadq5.=_73bc8_
-Content-Type: text/plain; charset="utf-8"
-
-
-------S5vMiqbC9D9faF8YPw-GIekSHdZgzpYrwqcOSnq._zgadq5.=_73bc8_--
