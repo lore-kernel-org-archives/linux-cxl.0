@@ -1,127 +1,168 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4272E304BB2
-	for <linux-cxl@vger.kernel.org>; Sun,  8 Mar 2026 04:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7575E30F95E
+	for <linux-cxl@vger.kernel.org>; Sun,  8 Mar 2026 19:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772944213; cv=none; b=Bm+35UiW17aBqSsTZIsDs4sh7OPhrh6STW+HQHjU3hhwy/Ts5d5WKpu3C3maKhZLDsqSzAAfEvXBt3cWb9jY0awxAlp9RiqkFpjUPsYctPrj6wtcB/h3nPjO29U88a037sGWpaOR5aEFJ7lbZEGwffEGApaUoETKL4VGJGfm658=
+	t=1772996487; cv=none; b=Va/KwhJ/TXsI6x5Ld0T9ZtQHousZz+AuZpJvxK/fW5w9ig+aaFqqDhxwEUdTk9JP7boZP6pYRj/dXWLlaFk+oLTlGQAviSIGji9oa+z3mzaS5S4cEXV2DccCO/z7W8TB+ZOIiWTtYDV8YQdzT9x8jiK4JDGpviSbKyRgaTVAuAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772944213; c=relaxed/simple;
-	bh=0qgP1SzBYD+UBYHM7QR056M5D5ActHvOI5e8wnBlFYo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=EiWzFg0WEpUGCwO7qdNpSs6Ij/jEt0BNCQkG1fOvL8j9EzTRkGXPT/AvgsLiHUjeONeHbpX57T/qmRBEL57loAcwS3t4RUF6fDtye0YOoRq/EdPHqM3YliV/aNWqlc6k6h0Dp2vSWEkKKiKkC834tjEhvsVhEvQtwObv2r6+AH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=FMXcsjln; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FMXcsjln"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20260308043002epoutp01a83c7180e2ca0d29b586bb8198335e51~aw1vAsUY61194711947epoutp01O
-	for <linux-cxl@vger.kernel.org>; Sun,  8 Mar 2026 04:30:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20260308043002epoutp01a83c7180e2ca0d29b586bb8198335e51~aw1vAsUY61194711947epoutp01O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1772944202;
-	bh=N1fuOX8nls70mXuE38bUprfyJ1x0tNIUNCbRv9tyeHs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FMXcsjlncXWuQULEYskrN23Yx4ZsI/+uatDGJBFH8iyWTKpW3qh2myeVzjkTG6lkM
-	 pj5wLRhA+28g/Oy02lDSMi3CxWoPFduawY8cbZl7FrxmfX1yz40rmrcCzMl5sO4HG6
-	 4WFdTTeR7RfioU4snCeCV1YOwOQNj+69bOHdg22Y=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20260308043001epcas5p254afd7af8b38ab4a9b894d3da24bb460~aw1ujENVN2746927469epcas5p2N;
-	Sun,  8 Mar 2026 04:30:01 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4fT6cn4W4kz2SSKZ; Sun,  8 Mar
-	2026 04:30:01 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20260306102615epcas5p3d75eee2880f9c2e52d3a7eb29c1b1e1b~aOaL_LdTd0510005100epcas5p3e;
-	Fri,  6 Mar 2026 10:26:15 +0000 (GMT)
-Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20260306102614epsmtip1394ce8285158e3a6411ec2f143f759b1~aOaKuVztH1949319493epsmtip1a;
-	Fri,  6 Mar 2026 10:26:14 +0000 (GMT)
-Date: Fri, 6 Mar 2026 15:56:09 +0530
-From: Neeraj Kumar <s.neeraj@samsung.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, gost.dev@samsung.com,
-	a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
-	cpgs@samsung.com
-Subject: Re: [PATCH V6 00/18] Add CXL LSA 2.1 format support in nvdimm and
- cxl pmem
-Message-ID: <1983025922.01772944201612.JavaMail.epsvc@epcpadp1new>
+	s=arc-20240116; t=1772996487; c=relaxed/simple;
+	bh=kwNjh7nBz0/ihSOH2k9NfMPYUQJjAIxEcy5DnS/C7r0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=igVJjKoGhCo2Wx2HGvD1h+koqJ8ZAVdpwxuQy/tohziMV02fp+SeyVw8dt3UaAHiDozjyj3ut2ckwbUGzuzKHdYQOMIunSrjLXXapTn5IF6USFsrAwIySYMsGe+VL/ppF3kuie90cHmzu39uiyAIyt7m797ZvnDBI9lNpq0/y5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-79800183233so147661357b3.1
+        for <linux-cxl@vger.kernel.org>; Sun, 08 Mar 2026 12:01:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772996485; x=1773601285;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F5H35xhS3P8RWoUbWgTUSKLhPQ8zUPaXAMXnOLUpuWg=;
+        b=SUrYZhL+rKaZ9U2V3w/We+TahNtSni/dG2d7/QrNQW856Wb+LaFBnhtX8fyUYx/1qT
+         s4N4g1ZuyaQKjbslXKsACrtp7X3uMFtwM87r3+aeDE5fD88tUqKg+15ZzDhPPZOpVwWk
+         1e9+AfBCaPFIKQDRv9B/IVE5kqz6Ud+PSqquQh3eJPW9NB5baDKrJ3Wol4wzwP+bajlw
+         Fla24bL5LW11xkxOt1e+nGlX2aiXZ2bp0TmhbMDapgKymaeCyncYuDMNYOCqCCUZhX6F
+         tqAMkeQpGs9DVtrYYg3z1eM5CrSC/6hgyUW3KQbXjY6HQ83kgsN7wdq4FeBfy1fIeBP0
+         vuog==
+X-Forwarded-Encrypted: i=1; AJvYcCUy2Raw71X7RCdcrP5JFyaW3RZJXFu62ebOiZsit07FJseK8Zd9+pS1RVC6THzbI22PJBOeYrISAjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIdNeOgaiCqd02UbjxL0kjYHFoVwAHG41F9d39Rawr4X9Tq6fN
+	qUlCwXycm3P4mzshetDvn9t8EN8p10hAA5ay2/NsKov4iNfVJOwTA/RM
+X-Gm-Gg: ATEYQzxldcF7rHRGmQFWCkNZXkqmnT0Hq7xPp+8XLF61nv3WxE7eSyda9abcnDH308i
+	ozt/dP44NQerdNOKehS2f7tmRanw0ivDHEqXeEgJVrGQVx4wLd7g+afiSUIZjIuJt3c6aEuE6gu
+	2TdMFIqZQe13xKsurs6RIogzOutpIRo2iuS7V1zBkLeSd0AhoPd/s2VCMg4zuiUcUyrbOwT0p/e
+	dNG9r1N2kgz2fD+jiUDECwZQY5bz2F9BPLj4/Aw6VpTHKn+fxQ+J/rhOpRfbV8yqzIBMG+RWvE/
+	jPTKaUL2DStMh/0+TTewne6S/C3ou35zd97NuXiVpaITaV9XGJhBaHMSERQ3LB/+UePqNt05ucc
+	rxTw2jDyoyiPljaBlIbpK9doacEHg3fl/wR777h5EiEeeDsifB3TGEXhY76rd2C6SWAbANAaXqS
+	Csk7/SbKVwOQ==
+X-Received: by 2002:a05:690c:2602:b0:796:2f6c:70b7 with SMTP id 00721157ae682-798d1eebf8emr102505307b3.27.1772996485435;
+        Sun, 08 Mar 2026 12:01:25 -0700 (PDT)
+Received: from tofu.. ([128.210.0.165])
+        by smtp.googlemail.com with ESMTPSA id 00721157ae682-798decdd38dsm34981287b3.21.2026.03.08.12.01.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2026 12:01:24 -0700 (PDT)
+From: Sungwoo Kim <iam@sung-woo.kim>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Ben Widawsky <bwidawsk@kernel.org>
+Cc: daveti@purdue.edu,
+	Sungwoo Kim <iam@sung-woo.kim>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] cxl/region: Fix a race bug in delete_region_store
+Date: Sun,  8 Mar 2026 14:59:58 -0400
+Message-ID: <20260308185958.2453707-2-iam@sung-woo.kim>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <46584975-f4c5-4f3a-80b2-2ef5a0e4dd6b@intel.com>
-X-CMS-MailID: 20260306102615epcas5p3d75eee2880f9c2e52d3a7eb29c1b1e1b
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----Z2c.vZYTqadSC4aRsepS5iQJaG.Uxsawwox_nsRND3Ee9O4E=_73e4c_"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20260123113121epcas5p125bc64b4714525d7bbd489cd9be9ba91
-References: <CGME20260123113121epcas5p125bc64b4714525d7bbd489cd9be9ba91@epcas5p1.samsung.com>
-	<20260123113112.3488381-1-s.neeraj@samsung.com>
-	<46584975-f4c5-4f3a-80b2-2ef5a0e4dd6b@intel.com>
+Content-Transfer-Encoding: 8bit
 
-------Z2c.vZYTqadSC4aRsepS5iQJaG.Uxsawwox_nsRND3Ee9O4E=_73e4c_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+A race exists when two concurrent sysfs writes to delete_region specify
+the same region name. Both calls succeed in cxl_find_region_by_name()
+(which only does device_find_child_by_name and takes a reference), and
+both then proceed to call devm_release_action(). The first call atomically
+removes and releases the devres entry successfully. The second call finds
+no matching entry, causing devres_release() to return -ENOENT, which trips
+the WARN_ON.
 
-On 23/01/26 10:52AM, Dave Jiang wrote:
->
->
->On 1/23/26 4:30 AM, Neeraj Kumar wrote:
->> Introduction:
->> =============
->> CXL Persistent Memory (Pmem) devices region, namespace and content must be
->> persistent across system reboot. In order to achieve this persistency, it
->> uses Label Storage Area (LSA) to store respective metadata. During system
->> reboot, stored metadata in LSA is used to bring back the region, namespace
->> and content of CXL device in its previous state.
->> CXL specification provides Get_LSA (4102h) and Set_LSA (4103h) mailbox
->> commands to access the LSA area. nvdimm driver is using same commands to
->> get/set LSA data.
->
->Hi Neeraj,
->I'm attempting to vet the series before applying to cxl/next. But it seems to be failing multiple unit regression tests in cxl_test. We need to figure out why before the series can be merged. Most likely the changes in this series also require cxl_test updates. Can you please take a look? I will also take a look and try to help you address the issues. Thanks
->
->Ok:                 10
->Expected Fail:      0
->Fail:               4
->Unexpected Pass:    0
->Skipped:            1
->Timeout:            0
->
->The script below [1] can get you up and running with a qemu environment where you can run cxl_test.
->
->.../run_qemu/run_qemu.sh --cxl --cxl-test --cxl-debug --hmat -r wipe
->
->cd ndctl
->meson test -C build --suite=cxl
->
->[1] https://github.com/pmem/run_qemu
->
->DJ
+Fix this by replacing devm_release_action() with devm_remove_action_nowarn()
+followed by a manual call to unregister_region(). devm_remove_action_nowarn()
+removes the devres tracking entry and returns an error code.
 
-Sure Dave,
+------------[ cut here ]------------
+WARNING: drivers/base/devres.c:824 at devm_release_action drivers/base/devres.c:824 [inline], CPU#0: syz.1.12224/47589
+WARNING: drivers/base/devres.c:824 at devm_release_action+0x2b2/0x360 drivers/base/devres.c:817, CPU#0: syz.1.12224/47589
+Modules linked in:
+CPU: 0 UID: 0 PID: 47589 Comm: syz.1.12224 Not tainted 6.19.0-g15a37b05f387 #10 PREEMPT(lazy) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+RIP: 0010:devm_release_action drivers/base/devres.c:824 [inline]
+RIP: 0010:devm_release_action+0x2b2/0x360 drivers/base/devres.c:817
+Code: 41 5c 41 5d 41 5e 41 5f e9 86 1a b3 fd e8 86 71 33 fe e8 81 71 33 fe 48 8b 74 24 08 4c 89 f7 e8 04 34 8a 01 e8 6f 71 33 fe 90 <0f> 0b 90 eb c6 e8 64 71 33 fe 90 0f 0b e8 2c f1 71 fe e9 f4 fd ff
+RSP: 0018:ffff88813e5f7bf8 EFLAGS: 00010282
+RAX: 0000000000000125 RBX: dffffc0000000000 RCX: ffffffff835d26a1
+RDX: 0000000000080000 RSI: ffffc9000685b000 RDI: ffffffff8e875adf
+RBP: ffff888101059010 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000000 R12: ffff888101059428
+R13: ffff888100e05c30 R14: ffff8881010593e8 R15: ffff888101059428
+FS:  00007fae6afb46c0(0000) GS:ffff8882a526d000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fae6a12b8c0 CR3: 0000000127f1b005 CR4: 0000000000770ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ delete_region_store+0x106/0x1d0 drivers/cxl/core/region.c:2753
+ dev_attr_store+0x58/0x80 drivers/base/core.c:2437
+ sysfs_kf_write+0xf2/0x150 fs/sysfs/file.c:142
+ kernfs_fop_write_iter+0x3d6/0x5d0 fs/kernfs/file.c:352
+ new_sync_write fs/read_write.c:595 [inline]
+ vfs_write+0x68e/0x1050 fs/read_write.c:688
+ ksys_write+0x12a/0x250 fs/read_write.c:740
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfc/0x670 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fae6a19c669
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fae6afb4028 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fae6a415fa0 RCX: 00007fae6a19c669
+RDX: 0000000000000008 RSI: 0000200000000580 RDI: 0000000000000005
+RBP: 00007fae6a232c71 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fae6a416038 R14: 00007fae6a415fa0 R15: 00007ffc10522c58
+ </TASK>
+irq event stamp: 885
+hardirqs last  enabled at (893): [<ffffffff8b104c4b>] __up_console_sem+0x7b/0x90 kernel/printk/printk.c:347
+hardirqs last disabled at (902): [<ffffffff8b104c30>] __up_console_sem+0x60/0x90 kernel/printk/printk.c:345
+softirqs last  enabled at (822): [<ffffffff8af73b93>] __do_softirq kernel/softirq.c:656 [inline]
+softirqs last  enabled at (822): [<ffffffff8af73b93>] invoke_softirq kernel/softirq.c:496 [inline]
+softirqs last  enabled at (822): [<ffffffff8af73b93>] __irq_exit_rcu+0xb3/0xe0 kernel/softirq.c:723
+softirqs last disabled at (811): [<ffffffff8af73b93>] __do_softirq kernel/softirq.c:656 [inline]
+softirqs last disabled at (811): [<ffffffff8af73b93>] invoke_softirq kernel/softirq.c:496 [inline]
+softirqs last disabled at (811): [<ffffffff8af73b93>] __irq_exit_rcu+0xb3/0xe0 kernel/softirq.c:723
+---[ end trace 0000000000000000 ]---
 
-I am able to reproduce the same, I will analyze and fix them in next patch series.
+Fixes: 779dd20cfb56 ("cxl/region: Add region creation support")
+Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
+---
+ drivers/cxl/core/region.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-
-Regards,
-Neeraj
-
-------Z2c.vZYTqadSC4aRsepS5iQJaG.Uxsawwox_nsRND3Ee9O4E=_73e4c_
-Content-Type: text/plain; charset="utf-8"
-
-
-------Z2c.vZYTqadSC4aRsepS5iQJaG.Uxsawwox_nsRND3Ee9O4E=_73e4c_--
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 08fa3deef70ab..7ade9aa2aeecc 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2745,12 +2745,19 @@ static ssize_t delete_region_store(struct device *dev,
+ 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
+ 	struct cxl_port *port = to_cxl_port(dev->parent);
+ 	struct cxl_region *cxlr;
++	int err;
+ 
+ 	cxlr = cxl_find_region_by_name(cxlrd, buf);
+ 	if (IS_ERR(cxlr))
+ 		return PTR_ERR(cxlr);
+ 
+-	devm_release_action(port->uport_dev, unregister_region, cxlr);
++	err = devm_remove_action_nowarn(port->uport_dev, unregister_region,
++				       cxlr);
++	if (err) {
++		put_device(&cxlr->dev);
++		return err;
++	}
++	unregister_region(cxlr);
+ 	put_device(&cxlr->dev);
+ 
+ 	return len;
+-- 
+2.47.3
 
