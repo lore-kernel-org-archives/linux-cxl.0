@@ -1,229 +1,150 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010033.outbound.protection.outlook.com [52.101.193.33])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9C7274B46;
-	Sun,  8 Mar 2026 20:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.33
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773003293; cv=fail; b=BVau7rYmX2hPauK9B+nUdsbGRuK4IoUHntvnAav3/GYS3Ax0B9Yr6FJ7PLaf7buB9yWKywKxY0bRvRTuitR+L1o7TeTsTJVr7NZ3MSQ5PUUF3y2wTlmU8+zgWdeSPaKuqKb9Yy9N7OAvfTwigKMpUMSOrGt10bDn8upGOMSE+ns=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773003293; c=relaxed/simple;
-	bh=4a8OyHDDXOBqq6SwB6EScQsM03fb2t4lNGovUtiOnlE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=COdFEaTrBzgo7pan8Dn+BpMWMdvNjR1exrpXb/F4yrK40Cqde7A07lPJiVKP3VHStcVmN3e8KgBH+UmHjn6QIaxV+GeVQjUb2Vm+CvtXs/x/faWhHSVEBZIU1EZpPlx0wWGDD0VSLwOgjek2hm7IsdnjCQQnQXxCAt9wDvS0Mgo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=c+8500Wu; arc=fail smtp.client-ip=52.101.193.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932FA3254B3;
+	Sun,  8 Mar 2026 22:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773008610; cv=none; b=stEm8exYdo36K5FTiBEWyYqCpudpgjkZBHXRoC6QXlehoOsESwhCCb/UsvFawd0mHinyAGjpoimxaf0k6CkePGc2IshxOLsQ+RlSI5vS7OSWmvLgSPn4V77Wqwrg1HXdddrINfzyZDwZ+j1axdYOCcVE+DVKLLNzmZ6MmiKGoog=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773008610; c=relaxed/simple;
+	bh=gnF//M08SIC7eL1RTK/Glm1RPsIHHM2SY6h/IvvpRAc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tw7aR7seJvbIIrBb7ze7d+kG7Cme1QxqN+a4Pf7o6U+/Az/wMi/OdTxrJhtXC9jA76WUeip2IjrDObmcOAbLVeQiI3AIao1afp+2j08t0L8eLKAUS8YY9trOuQSgcE94Ov5XtVzobcM66gBSzBiZ++YHl4HvpIcFoxgW7hzbXLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hTqknhCy; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="c+8500Wu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tKhanG3cHuMl7wxxYr1gCqgCq4dC7PBXHpplmId5iucQ7BNWgtwMoW7tE0XVasnI4nB1L0kBYzfATymmE99haEzmkpL7sEbRdtrOVlSEJd2USWH6oQiEOV0ArwvsCT2nvJGEELtUM4wOw5Xo4thon/jh2MLYSTz7ONeo7PWSox4m7Oie98UJKGIz3+NlyD5GHlFX/ACCC1WkrOdyUV86MeJaCNVZ2lpowAgNMo3BJXZbOoq89Lj2hLx8Bcn0zBf0e5G7m5fbZG8Obje7IoWjImxwgZCsXC4xyEtIMsdLDbbOhRHBVKOD/vy7Ch0vgwuymte+IDbi7cuHWpDd5QnhMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FBUrHeN7pt7If3s/g1D19NPCVcCwFWVOjJ7so+/1iBA=;
- b=mMRNNbdTiAc5YCQNAs+BT95nXa8Kk2/dxqZDjKjat/BJZUylBJUi175WkTu8B8h8zvwYLTFjLeMAQn/GuBHxe2PN1bAEexq9pQflqV0DdXJvPFT4LO9v1FxXHyG+qCplAAaP4hcABfVtMfpdVj5GkxiOSzdDmg3ruvRW7TCjkResyudaQSERcSruAdyKlH4mS9XwDoFUMJ7A5si1NTlfgPJ4UFoG8vCM6fw7ZoSILbGbZxmLFgYlEZjZWJxVEYvvNE7XeSPdPC8guiftx1H3M/uAIDxH6qveVZyevfPgo1NsoC4NbrhNakowyDH1J2A/3CIy80I+mQlNndlbgyiAYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=huawei.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FBUrHeN7pt7If3s/g1D19NPCVcCwFWVOjJ7so+/1iBA=;
- b=c+8500Wua19fGBdv12kAyc4TiNChpzToqCouBp3wVKnnV0KCHcDlT6o+JlbPlJ7QCGi9Ykc0jQZ+dNSyYJcsDB3o2vTp7dkf5tjHMVQOnbJgXUV+8knT2Ukk9Twq6LuaArpkKbxWFDDCUKk752aI8JzfRVNEr4wHNOYNyQQt0QpX4583I2OP+f7xpNq1P4vOYW0XctZxKs6NXGwXaaYkGv6u5bnmYlO+S/HE8xab4tlo/GO1BYeHV88n7y8VTbIQlITu+h8j3QaQ67tChLBCsB10C6qXMEPnOLVoXbvRoYl67GBEv8plMwWhwR+A+IO9p0ZkVk5sKGBtCOYyRnGcpA==
-Received: from PH7P223CA0029.NAMP223.PROD.OUTLOOK.COM (2603:10b6:510:338::30)
- by DS5PPF5A66AFD1C.namprd12.prod.outlook.com (2603:10b6:f:fc00::64d) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.8; Sun, 8 Mar
- 2026 20:54:46 +0000
-Received: from SN1PEPF00036F41.namprd05.prod.outlook.com
- (2603:10b6:510:338:cafe::6c) by PH7P223CA0029.outlook.office365.com
- (2603:10b6:510:338::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.26 via Frontend Transport; Sun,
- 8 Mar 2026 20:54:32 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SN1PEPF00036F41.mail.protection.outlook.com (10.167.248.25) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9678.18 via Frontend Transport; Sun, 8 Mar 2026 20:54:44 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Sun, 8 Mar
- 2026 13:54:34 -0700
-Received: from [10.221.136.116] (10.126.231.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Sun, 8 Mar
- 2026 13:54:30 -0700
-Message-ID: <3d8f1e72-6098-43e8-aefa-e60f07bb81e7@nvidia.com>
-Date: Sun, 8 Mar 2026 21:54:22 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hTqknhCy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773008608; x=1804544608;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gnF//M08SIC7eL1RTK/Glm1RPsIHHM2SY6h/IvvpRAc=;
+  b=hTqknhCy1Fp0WFPPU/ehcuwQWJ9o0Jydp25CwVBF/q248mGNOr8VJllt
+   d5pQuJ6dLRL0aSXnLjZnoPaaW+qB7Ru4ADfx6RERGBBjMhepfWg5GyoJV
+   TNMnZWI1S9Zv0hm6z836O95W78kfcijYUdpJnUD3KwmNskETLilX+PPVO
+   Os06fnd/MNihZNmTe/+/y1zdqU6Gn6CeCM87OVaLJ9RL8yLjviFJ7znrc
+   1RBSHr3Kdw+Gu0boa5IkMqJR/7nJUG2KSwWpqWSQpuElcbSdPFRnGFWsV
+   PBo0UaitEHiA7Xck7dMMC4EXlfidbs6JCGdNXpzcmy/s3e8VEL/Tknqob
+   Q==;
+X-CSE-ConnectionGUID: TH04yyk6SUCusTdRXbjSQw==
+X-CSE-MsgGUID: 9dh+4zihSh6NeOyZLQQp3A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11723"; a="84745098"
+X-IronPort-AV: E=Sophos;i="6.23,109,1770624000"; 
+   d="scan'208";a="84745098"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2026 15:23:27 -0700
+X-CSE-ConnectionGUID: HL2O/xKqQGOCA3X1NWtN9w==
+X-CSE-MsgGUID: AKTBekdyTgyIsRsACMUzow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,109,1770624000"; 
+   d="scan'208";a="219699674"
+Received: from khuang2-desk.gar.corp.intel.com ([10.124.221.128])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2026 15:23:22 -0700
+From: Kai Huang <kai.huang@intel.com>
+To: rafael@kernel.org,
+	lenb@kernel.org,
+	dan.j.williams@intel.com,
+	alison.schofield@intel.com
+Cc: akpm@linux-foundation.org,
+	nunodasneves@linux.microsoft.com,
+	xueshuai@linux.alibaba.com,
+	thorsten.blum@linux.dev,
+	gourry@gourry.net,
+	wangyuquan1236@phytium.com.cn,
+	linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kai Huang <kai.huang@intel.com>
+Subject: [PATCH v2] ACPI: NUMA: Only parse CFMWS at boot when CXL_ACPI is on
+Date: Mon,  9 Mar 2026 11:23:13 +1300
+Message-ID: <20260308222313.14014-1-kai.huang@intel.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] PCI: Allow ATS to be always on for pre-CXL devices
-From: Nirmoy Das <nirmoyd@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>, <jgg@nvidia.com>, <will@kernel.org>,
-	<robin.murphy@arm.com>, <bhelgaas@google.com>
-CC: <joro@8bytes.org>, <praan@google.com>, <baolu.lu@linux.intel.com>,
-	<kevin.tian@intel.com>, <miko.lenczewski@arm.com>,
-	<linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <jonathan.cameron@huawei.com>,
-	<vsethi@nvidia.com>, <linux-cxl@vger.kernel.org>
-References: <cover.1772833963.git.nicolinc@nvidia.com>
- <c715b10b49d50eea5429454108d4221c1a78efaf.1772833963.git.nicolinc@nvidia.com>
- <50281260-62e4-427f-bd66-e8be58062a03@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <50281260-62e4-427f-bd66-e8be58062a03@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F41:EE_|DS5PPF5A66AFD1C:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4b5d2a7a-d26e-4db6-432d-08de7d54ed47
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	XBwDY31l9UqNH9zjG+csORGDNY5NIEaX+Ad2XzxAlHB9hXj8vkNaorf8ABiUYQw2+Lkdo0JTKsCH6Qpnfk+4mgIWyVXbwH+9mB+viVNy0eJrW5kNU7mE9Kj6PV/IELbRMTuvPTb/j+V9jXlqnr4r4+rhHuuPNnARL/ngZZy0LaZ6CE9UBnTCVz+jaMO1SpaKLYTrNeNYrSV8qSHM2/GGNGPY2eSI6vWn9SJRqanjRdXuQcdnmSYpw9tvAxHqtYVuEyu+YB3TpUdPBhQ/ph7ssDKvJvKA2zeaY7x0QyoIpkIirMhpVOvs0NHg0U67Xg7EjFWQTeZrt8oZ3mkghgCwGNl6EwuWktuJ1xp6vdwBS99wVH+io+YP3NZTn7F/omPBdl0ejrmkOWv6DhvQqXjlHkKfHpeHHCkbjNRZwDChOC9fTezBDzJQ5m5K6m4jnxeT88uVI6UmCXIYa+jU8UDWsJi5FXb6v8jEa6ucDfI4WW/xpmZFyFWBKMdqcgI/OkapvPZNJci3TcIRRDZp4gLcdnEj2JBcBdKZHVi06ydK3hUb4bD4Ep9a9nvJzFjgd6Q38TS9dADzv75mQ1hvLqTxtbMxCo6Kt3EHSnG7/Jc+XC+LyO3shdfDvckjvdHhXexqnzriEaOMrMcLKzZ/cOZQAT2lZWBJkV7NjtaleSrT8300x9yM3xyVcN8UmakQmcDH25LF67eMfV+p2DOOKuTNAIrp7I07TXPRjG7wf8wCLPjbqybGJBUC38VNhFKIGolfNatNhAXfYUoDjDhHnPC74g==
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	xkvd0rUeDMEd6cYnPCLgpvoUdgwJExNQDGpaLuhWuJvABgRu5+0C5lbCWDbK//E3mIDOq8L8KaiVcTQxn5STowAkqO+W3/zbXK4oOFq688HTrWwuRTO7wONjzC4WGaaJ+rUBeTTy8tWklUSzCi/gUsE7GpS7aqCOZ/nioOvo5kNIHrWtvuhr4e2wuNfbfnEazlbo8jyMcSbujtTSY7TWxyc2ZmFl631/bS10LSl1hALJtLZU0ArL+BcNlGCYQUfN0NA9wncGd/+U8Emer3izGmT9dqJ7JWRf/WbJLtib3WJ9adKGxIFEKqB54V7ZWZbXGpDUF7u/gmejLIjNhDmyt3avlDekI39rRAmRomQIk17DGUleVwGtRMZsCOCJVFmGxCKA0ae/PX8+ntAsFk1NG+ZkRJW0bwhDyRjGYzbgDA98NX8ZBETsneLIoOLuqFYO
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2026 20:54:44.3399
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b5d2a7a-d26e-4db6-432d-08de7d54ed47
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00036F41.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPF5A66AFD1C
 
+On CXL platforms, the Static Resource Affinity Table (SRAT) may not
+cover memory affinity information for all the CXL memory regions.  Since
+each CXL memory region is enumerated via a CXL Fixed Memory Window
+Structure (CFMWS), during early boot the kernel parses the CFMWS tables
+to find all CXL memory regions and sets a NUMA node for each of them.
+This memory affinity information of CXL memory regions is later used by
+the CXL ACPI driver.
 
-On 08.03.26 21:50, Nirmoy Das wrote:
->
-> On 07.03.26 00:41, Nicolin Chen wrote:
->> Some NVIDIA GPU/NIC devices, although don't implement the CXL config 
->> space,
->> they have many CXL-like properties. Call this kind "pre-CXL".
->>
->> Similar to CXL.cache capaiblity, these pre-CXL devices also require 
->> the ATS
->> function even when their RIDs are IOMMU bypassed, i.e. keep ATS 
->> "always on"
->> v.s. "on demand" when a non-zero PASID line gets enabled in SVA use 
->> cases.
->>
->> Introduce pci_dev_specific_ats_always_on() quirk function to scan a 
->> list of
->> IDs for these device. Then, include it pci_ats_always_on().
->>
->> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
->> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
->
-> Tested-by: Nirmoy Das <nirmoyd@nvidia.com>
->
-> Reviewed-by: Nirmoy Das <nirmoy@nvidia.com>
+The CFMWS table doesn't provide the memory affinity information either.
+Currently the kernel assigns a 'faked' NUMA node for each CXL memory
+region, starting from the next node of the highest node that is
+enumerated via the SRAT.  This can potentially increase the maximum NUMA
+node ID of the platform ('nr_node_ids') a lot.  E.g., on a GNR platform
+with 4 NUMA nodes and 18 CFMWS tables, this bumps the 'nr_node_ids' to
+22.
 
+Increasing the 'nr_node_ids' has side effects.  For instance, it is
+widely used by the kernel for "highest possible NUMA node" based memory
+allocations.  It also impacts userspace ABIs, e.g., some NUMA memory
+related system calls such as 'get_mempolicy' which requires 'maxnode'
+not being smaller than the 'nr_node_ids'.
 
-Sent with wrong email address
+Currently parsing CFMWS tables and assigning faked NUMA node at boot is
+done unconditionally.  However, if the CXL ACPI driver is not enabled,
+there will be no user of such memory affinity information of CXL memory
+regions.
 
-Reviewed-by: Nirmoy Das <nirmoyd@nvidia.com>
->
->> ---
->>   drivers/pci/pci.h    |  9 +++++++++
->>   drivers/pci/ats.c    |  3 ++-
->>   drivers/pci/quirks.c | 26 ++++++++++++++++++++++++++
->>   3 files changed, 37 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index 13d998fbacce6..13fa71f965900 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -1150,6 +1150,15 @@ static inline int 
->> pci_dev_specific_reset(struct pci_dev *dev, bool probe)
->>   }
->>   #endif
->>   +#if defined(CONFIG_PCI_QUIRKS) && defined(CONFIG_PCI_ATS)
->> +bool pci_dev_specific_ats_always_on(struct pci_dev *dev);
->> +#else
->> +static inline bool pci_dev_specific_ats_always_on(struct pci_dev *dev)
->> +{
->> +    return false;
->> +}
->> +#endif
->> +
->>   #if defined(CONFIG_PCI_QUIRKS) && defined(CONFIG_ARM64)
->>   int acpi_get_rc_resources(struct device *dev, const char *hid, u16 
->> segment,
->>                 struct resource *res);
->> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
->> index cf262eb6e6890..e6995b536ad4c 100644
->> --- a/drivers/pci/ats.c
->> +++ b/drivers/pci/ats.c
->> @@ -243,7 +243,8 @@ bool pci_ats_always_on(struct pci_dev *pdev)
->>       if (pdev->is_virtfn)
->>           pdev = pci_physfn(pdev);
->>   -    return pci_cxl_ats_always_on(pdev);
->> +    return pci_cxl_ats_always_on(pdev) ||
->> +           pci_dev_specific_ats_always_on(pdev);
->>   }
->>   EXPORT_SYMBOL_GPL(pci_ats_always_on);
->>   diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index 48946cca4be72..21451e62f284e 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -5714,6 +5714,32 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 
->> 0x1457, quirk_intel_e2000_no_ats);
->>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1459, 
->> quirk_intel_e2000_no_ats);
->>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x145a, 
->> quirk_intel_e2000_no_ats);
->>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x145c, 
->> quirk_intel_e2000_no_ats);
->> +
->> +static const struct pci_dev_ats_always_on {
->> +    u16 vendor;
->> +    u16 device;
->> +} pci_dev_ats_always_on[] = {
->> +    /* NVIDIA GPUs */
->> +    { PCI_VENDOR_ID_NVIDIA, 0x2e12, },
->> +    { PCI_VENDOR_ID_NVIDIA, 0x2e2a, },
->> +    { PCI_VENDOR_ID_NVIDIA, 0x2e2b, },
->> +    /* NVIDIA CX10 Family NVlink-C2C */
->> +    { PCI_VENDOR_ID_MELLANOX, 0x2101, },
->> +    { 0 }
->> +};
->> +
->> +/* Some pre-CXL devices require ATS on the RID when it is 
->> IOMMU-bypassed */
->> +bool pci_dev_specific_ats_always_on(struct pci_dev *pdev)
->> +{
->> +    const struct pci_dev_ats_always_on *i;
->> +
->> +    for (i = pci_dev_ats_always_on; i->vendor; i++) {
->> +        if (i->vendor == pdev->vendor && i->device == pdev->device)
->> +            return true;
->> +    }
->> +
->> +    return false;
->> +}
->>   #endif /* CONFIG_PCI_ATS */
->>     /* Freescale PCIe doesn't support MSI in RC mode */
->
+Change to only parsing the CFMWS tables at boot when CXL_ACPI is enabled
+in Kconfig to avoid the unnecessary cost of bumping up 'nr_node_ids'.
+
+E.g., on the aforementioned GNR platform, the "Slab" in /proc/meminfo is
+reduced with this change (when CXL_ACPI is off):
+
+	w/ this change		w/o
+
+Slab	900488 kB		923660 kB
+
+Signed-off-by: Kai Huang <kai.huang@intel.com>
+---
+
+v1 -> v2:
+
+ - Use Dan's suggestion to simplify the diff:
+
+ https://lore.kernel.org/linux-cxl/69a8dc7ca72c2_2f4a10026@dwillia2-mobl4.notmuch/
+
+Hi Alison, Gregory,
+
+I didn't add your RB since the code now is different from that you
+reviewed.  Appreciate if you can take a look again and provide the tag
+if the patch looks good to you.
+
+---
+ drivers/acpi/numa/srat.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+index aa87ee1583a4..62d4a8df0b8c 100644
+--- a/drivers/acpi/numa/srat.c
++++ b/drivers/acpi/numa/srat.c
+@@ -654,8 +654,11 @@ int __init acpi_numa_init(void)
+ 	}
+ 	last_real_pxm = fake_pxm;
+ 	fake_pxm++;
+-	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
+-			      &fake_pxm);
++
++	/* No need to expand numa nodes if CXL is disabled */
++	if (IS_ENABLED(CONFIG_CXL_ACPI))
++		acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
++				      &fake_pxm);
+ 
+ 	if (cnt < 0)
+ 		return cnt;
+
+base-commit: 084f843093bee5563b179fd4b630122ba820e0c7
+-- 
+2.53.0
+
