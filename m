@@ -1,46 +1,55 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378C03A784E;
-	Mon,  9 Mar 2026 14:13:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AFCD4502A;
+	Mon,  9 Mar 2026 14:31:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773065600; cv=none; b=UMPMMhqFsjOft2hNaMWZOP6m7nP8uPm2cVb73IFMhL0QC4AWxGHo4kli0aB+xBMZZ/tfyj8WOKGZL/5acdTwS9HjQTkhKSZnk28ATbit6cb29CSvmWHPWvcMbM6gWKTiaDBengsktaaib6kmrYH9zaNC3kSeWwsOx1H9O0yaSPA=
+	t=1773066708; cv=none; b=usD4//+ODiHH1Iu8SbrkTR0kj936iuTnsYRdQBnwsv4gujIrL+UB8CfHxwDBqBOhugRb9Aaa9ForSWs7q5lkmN1ZsYQt6bfmQ43VBYDExPZcvUmKCKGY4WjlsMGdaDKstMOuT7IaGadaqEWsY32y6rX78QZPdCJ02MUFbcd5l2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773065600; c=relaxed/simple;
-	bh=KDsC1bQJZ1VMk+Y6ZYTZNOy/8vHputm9lVKTGv4yS/I=;
+	s=arc-20240116; t=1773066708; c=relaxed/simple;
+	bh=A2xnDBZ/7H4/KWMz+g2KWxqXjH1hw8+EU0vRLJ6iDyQ=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MLz2Cq0L61qLmvVnizScDBrpn5QQvQtkzsCvDKKtMc5r/NYqRoOy+ilG2gSmwR2PzdWHEeoHz7GyIO1cy2oOqryFFwmIjhzF6tKXu2dBcB9XLm2WCHut7rdeOdo0vRkhuo9p5pXJRLnlOQ4qZqvQxTGN6vUtzmgLBGv9pCqWkLU=
+	 MIME-Version:Content-Type; b=gycaCHgfcNGwneHCFVak6PDa6b0vulW/kXyWyn3Kn4ROeec7obgTqWdb/YNfvYmrb/eqb0uelSMp5FFQUgl/izBSTowklk9ha/h7YtbOM5c4lYQQlrPyDI0KtiEOVTkquiTp6K5d3OpM57em1hhCtkKeIyokLBlstg1/Ol1M/xw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fTzWF2jY8zHnH45;
-	Mon,  9 Mar 2026 22:13:13 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.224.150])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fTzwT3G2NzHnH4q;
+	Mon,  9 Mar 2026 22:31:37 +0800 (CST)
 Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3CDA840086;
-	Mon,  9 Mar 2026 22:13:17 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 5478B4056B;
+	Mon,  9 Mar 2026 22:31:41 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
  (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 9 Mar
- 2026 14:13:16 +0000
-Date: Mon, 9 Mar 2026 14:13:15 +0000
+ 2026 14:31:39 +0000
+Date: Mon, 9 Mar 2026 14:31:38 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>, <alucerop@amd.com>,
-	<ira.weiny@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v16 09/10] cxl: Remove Endpoint AER correctable handler
-Message-ID: <20260309141315.00005b52@huawei.com>
-In-Reply-To: <20260302203648.2886956-10-terry.bowman@amd.com>
-References: <20260302203648.2886956-1-terry.bowman@amd.com>
-	<20260302203648.2886956-10-terry.bowman@amd.com>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Yazen Ghannam <yazen.ghannam@amd.com>, "Dave
+ Jiang" <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, "Matthew
+ Wilcox" <willy@infradead.org>, Jan Kara <jack@suse.cz>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek
+	<pavel@kernel.org>, Li Ming <ming.li@zohomail.com>, Jeff Johnson
+	<jeff.johnson@oss.qualcomm.com>, Ying Huang <huang.ying.caritas@gmail.com>,
+	Yao Xingtao <yaoxt.fnst@fujitsu.com>, "Peter Zijlstra"
+	<peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nathan Fontenot <nathan.fontenot@amd.com>, Terry Bowman
+	<terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>, Benjamin Cheatham
+	<benjamin.cheatham@amd.com>, Zhijian Li <lizhijian@fujitsu.com>, Borislav
+ Petkov <bp@alien8.de>, Tomasz Wolski <tomasz.wolski@fujitsu.com>
+Subject: Re: [PATCH v6 4/9] dax/cxl, hmem: Initialize hmem early and defer
+ dax_cxl binding
+Message-ID: <20260309143138.000004c1@huawei.com>
+In-Reply-To: <20260210064501.157591-5-Smita.KoralahalliChannabasappa@amd.com>
+References: <20260210064501.157591-1-Smita.KoralahalliChannabasappa@amd.com>
+	<20260210064501.157591-5-Smita.KoralahalliChannabasappa@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -50,23 +59,29 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
  dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Mon, 2 Mar 2026 14:36:47 -0600
-Terry Bowman <terry.bowman@amd.com> wrote:
+On Tue, 10 Feb 2026 06:44:56 +0000
+Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com> wrote:
 
-> CXL drivers dont require a correctable PCI AER handler. Correctable AER
-> errors reported by CXL devices are logged and cleared in the AER driver.
-> This makes the correctable AER handler callback in the CXL driver
-> unnecessary.
+> From: Dan Williams <dan.j.williams@intel.com>
 > 
-> Remove cxl_cor_error_detected() and drop the .cor_error_detected callback
-> from the CXL PCI error handlers.
+> Move hmem/ earlier in the dax Makefile so that hmem_init() runs before
+> dax_cxl.
 > 
-> This consolidates correctable error reporting under the CXL RAS infrastructure
-> and avoids redundant or conflicting logging with the AER driver.
+> In addition, defer registration of the dax_cxl driver to a workqueue
+> instead of using module_cxl_driver(). This ensures that dax_hmem has
+> an opportunity to initialize and register its deferred callback and make
+> ownership decisions before dax_cxl begins probing and claiming Soft
+> Reserved ranges.
 > 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Nice.
+> Mark the dax_cxl driver as PROBE_PREFER_ASYNCHRONOUS so its probe runs
+> out of line from other synchronous probing avoiding ordering
+> dependencies while coordinating ownership decisions with dax_hmem.
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Bit of a hack but I don't have a better idea.
+
 Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
