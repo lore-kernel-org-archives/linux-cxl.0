@@ -1,216 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7ED838E12D;
-	Mon,  9 Mar 2026 22:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4032A37D130;
+	Mon,  9 Mar 2026 22:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773096021; cv=none; b=L0GeXybGtSLuh02EVvSx9wE/iQwdTy4L3Ub1fjAUT8Lv2H5lOV2lsQZPlDwFYft1gkNM3HdcZCxHGPmr7FsteyPrzmvLk7Fs1SRI6OeXOKmSJbUFRCi7Tn/w9NI0u0XmQ3XnyoR2gQAMywaWl1PbqaDMqMyt/6PjFIKJVNNQbfU=
+	t=1773096214; cv=none; b=onQ8pTd1Wa3FXKXTpT8s2ftmuuUHYJS2WJwg7MIorSETwCHYTh7jEzGzZpqrjmJYS25OIi35JBnFD0eba/+WKiP4dHoCODJ2au3YqGY5MeV1scZwjxJeFWZYFzSUrNU6EbElpf7NQZaH5XgROcTujx5shXMR99aH6WCFtjiL8oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773096021; c=relaxed/simple;
-	bh=P8zDMDDdSFYDR2MFOLI4fQLMe5VobcLljvz1XhWDeiE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=L0df1PPL2/qb2K9ld4oTBzW+uYoWurGvHzwkk/QMksJGvQV5Dn7Sp+SAzvOmQgyUSj4NvI+ohCh3wXJu1GSujS8kdwdMajlVQi15GbgYmkJHWH4Kl5tA3pPfmxFTMkbT9dhQIbyx1qoKZ6ifrpwx7nwYGSK6UTtUA41oIhRw+Ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DtE4EbbK; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1773096214; c=relaxed/simple;
+	bh=V38z9eqXI0xiuUXgdMom4+2ldVRgsTJ3Ln2d6Dyn0oQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HhyJsNqoUCd0x7h+1Wyofm/vGS9nGT7Z9XCfRTR6Cp02PYR3DI/+uSe6InC3cTMtwbI1pR//U1mM3WeiXZCyqMstXG5eReV/woo5p5FGJn3pAV58ZUJVdezPRUJF0ctbBDbRwwk8Imz4fKoBRNaAVZrMdP3O28TvQyHwttCNWpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4/qKMMw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DtE4EbbK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773096020; x=1804632020;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=P8zDMDDdSFYDR2MFOLI4fQLMe5VobcLljvz1XhWDeiE=;
-  b=DtE4EbbKj9mnJs70rOkF3GUDpHNU512aZ6rdduo6sSWyJU0e2HwlYiOt
-   82GngiWiieLn1rHibtYPyGODulSZCXwpiE6w/gd4i7ZAI+4s2ej7rnp5H
-   kyGAEOB9BE/csDKRKsirkv+hW1Vp5q6JTWkDO627AzOlbV0UjNaAR4nzv
-   +XONVcW4n2/YktL5s3jE9MttIk7DEQNlrIMrJwAG4JHxeQJJcFMJck6mP
-   NQcVH+1F4tslSMtGVVWk+cPEwvfHR9MiJdM7KirvPuBCsF2iCmHhW4F2a
-   6DBVC9/LrrsDjGr9g/y/nMtSjGPnFLv4zjwkPflb1H1wJOWKDAgsx5OJ4
-   Q==;
-X-CSE-ConnectionGUID: kuWz019fS9Wra3mnLgWhAQ==
-X-CSE-MsgGUID: naKku2PxT5Kaqxxc50cBEQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11724"; a="73332616"
-X-IronPort-AV: E=Sophos;i="6.23,111,1770624000"; 
-   d="scan'208";a="73332616"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 15:40:18 -0700
-X-CSE-ConnectionGUID: vy7kjyGxR/Gmh9ehV60Bdg==
-X-CSE-MsgGUID: Nh7ULgs8SeG+UFgtGMmUig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,111,1770624000"; 
-   d="scan'208";a="224597646"
-Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.109.205]) ([10.125.109.205])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 15:40:17 -0700
-Message-ID: <e6f9aaab-ce34-4a98-94e0-0d48fe78c5f4@intel.com>
-Date: Mon, 9 Mar 2026 15:40:15 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4/qKMMw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EB6EC4CEF7;
+	Mon,  9 Mar 2026 22:43:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773096213;
+	bh=V38z9eqXI0xiuUXgdMom4+2ldVRgsTJ3Ln2d6Dyn0oQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=U4/qKMMw7SX+m77wuUqNZtFnNoNRfw4ImCXMLqW7KpwNIxQLLSPe+/CucHdN9p3zX
+	 LWqnI6oNrqDvw4vdRg46JyiATwEBqR2Yymbq/yYOqosvxqRYl0pHVCsOMGZ2QZRRON
+	 pVD872iIHob9mJuIYJFkiCRgiLk8KL1EGstlSVZ/7rDk+liuhmRg6Lv/MUcsHum3Tx
+	 PGs5S/AP+nBhlobqMxX06aUYbVn3hfkDauJxsXHGtu61A7sM+ZVxiZKGc42P+vfqCn
+	 ORbx6TnVWENTR33DDvJQfp0hhKyL0RKb2cUJtuO5P8oF1U+Mf0cdKi/D0IWc3FbDrC
+	 Hz54mipyu8Tcw==
+Message-ID: <1e617ee5e6003994d41a0a270ed1f6b17ac75f8d.camel@kernel.org>
+Subject: Re: [PATCH v23 00/22] Type2 device basic support
+From: PJ Waskiewicz <ppwaskie@kernel.org>
+To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org, 
+	netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com, 
+	davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, 	dave.jiang@intel.com
+Cc: Alejandro Lucero <alucerop@amd.com>
+Date: Mon, 09 Mar 2026 15:43:33 -0700
+In-Reply-To: <20260201155438.2664640-1-alejandro.lucero-palau@amd.com>
+References: <20260201155438.2664640-1-alejandro.lucero-palau@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/7] CXL: Add cxl_reset sysfs attribute for PCI devices
-From: Dave Jiang <dave.jiang@intel.com>
-To: smadhavan@nvidia.com, bhelgaas@google.com, dan.j.williams@intel.com,
- jonathan.cameron@huawei.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, dave@stgolabs.net
-Cc: alwilliamson@nvidia.com, jeshuas@nvidia.com, vsethi@nvidia.com,
- skancherla@nvidia.com, vaslot@nvidia.com, sdonthineni@nvidia.com,
- mhonap@nvidia.com, vidyas@nvidia.com, jan@nvidia.com, mochs@nvidia.com,
- dschumacher@nvidia.com, linux-cxl@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260306092322.148765-1-smadhavan@nvidia.com>
- <0a9380fe-33b9-4527-a9d7-edc94786ce56@intel.com>
-Content-Language: en-US
-In-Reply-To: <0a9380fe-33b9-4527-a9d7-edc94786ce56@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+Hi Alejandrom
 
+On Sun, 2026-02-01 at 15:54 +0000, alejandro.lucero-palau@amd.com
+wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
+>=20
+> This patchset should be applied on the cxl next branch using the base
+> specified at the end of this cover letter.
+>=20
+> Dependencies on Dan's work has gone and also on Terry's as the only
+> patch required is now in next. The other dependency is on Smita
+> patchset
+> but it does not exist such a dependency as that work will not avoid
+> the
+> problem with Type2 and DAX/hmem if soft reserved memory. This needs
+> to
+> be solved by the BIOS and Type2 UEFI driver for populating the
+> CXL.mem
+> range as EFI_RESERVED_TYPE instead of default EFI_CONVENTIONAL_MEMORY
+> with the EFI_MEMORY_SP attribute. There exists though a dependency on
+> one Smita's patches:
+>=20
+> [PATCH v5 3/7] cxl/region: Skip decoder reset on detach for
+> autodiscovered regions
+>=20
+> This is needed for the default behaviour with current BIOS
+> configuration
+> where the HDM Type2 decoders will be kept unreset when driver
+> unloads.
+> This is the main change introduced in v23: committed decoders will
+> not
+> be reset. Previous v22 functionality supported first driver load
+> finding
+> committed decoders but resetting them at unload and supporting
+> uncommitted decoders in next driver loads. This will be suported in
+> follow-up works.
+>=20
+> v23 changes:
+>=20
+> =C2=A0 patch 11: fixing minor issues and droping change in
+> 	=C2=A0=C2=A0=C2=A0 should_emulate_decoders (Jonathan Cameron)
+>=20
+> =C2=A0 patch13: refactoring unregister_region for safety type in Type2 AP=
+I
+>=20
+> =C2=A0 sfc changes: slight modifications to error path
+>=20
 
-On 3/9/26 3:37 PM, Dave Jiang wrote:
-> 
-> 
-> On 3/6/26 2:23 AM, smadhavan@nvidia.com wrote:
->> From: Srirangan Madhavan <smadhavan@nvidia.com>
->>
->> Hi folks!
->>
->> This patch series introduces support for the CXL Reset method for CXL
->> Type 2 devices, implementing the reset procedure outlined in CXL Spec [1]
->> v3.2, Sections 8.1.3, 9.6 and 9.7.
->>
->> v5 changes (from v4):
->> - Rebased on v7.0-rc1 and applied fixes from the review v4.
->> - Added CXL DVSEC and HDM save/restore as a prerequisite series [2]
->> - Switched from PCI reset method to sysfs
->>   interface at /sys/bus/pci/devices/.../cxl_reset (Dan, Alex)
->> - Removed all PCI core changes - reset logic stays in CXL driver
->> - Use cpu_cache_invalidate_memregion() instead of arch-specific code
->> - Removed CONFIG_X86/CONFIG_ARM64 ifdefs
->> - Added ABI documentation for sysfs interface
->>
->> v4 changes:
->> - Fix CXL reset capability check parentheses warning
->> - Gate CXL reset path on CONFIG_CXL_PCI reachability
->>
->> v3 changes:
->> - Restrict CXL reset to Type 2 devices only
->> - Add host and device cache flushing for sibling functions and region peers
->> - Add region teardown and memory online detection before reset
->> - Add configuration state save/restore (DVSEC, HDM, IDE)
->> - Split the series by subsystem and functional blocks
->>
->> Motivation:
->> -----------
->> - As support for Type 2 devices [6] is being introduced, more devices will
->>   require finer-grained reset mechanisms beyond bus-wide reset methods.
->>
->> - FLR does not affect CXL.cache or CXL.mem protocols, making CXL Reset
->>   the preferred method in some cases.
->>
->> - The CXL spec (Sections 7.2.3 Binding and Unbinding, 9.5 FLR) highlights use
->>   cases like function rebinding and error recovery, where CXL Reset is
->>   explicitly mentioned.
->>
->> ABI Change reasoning (v5):
->> -------------------------
->> Previous versions (v1-v4) integrated CXL reset as a new PCI reset method
->> in pci_reset_methods[]. Based on feedback from Dan Williams and Alex
->> Williamson, v5 switches to a sysfs-based approach.
->>
->> The key reasoning is that CXL Reset has expanded scope than existing PCI
->> reset methods. Mixing these in the same reset infrastructure causes
->> problems. Therefore selectively exposing a cxl_reset method in pci-sysfs
->> and leaving the existing interface unaffected.
->>
->> Change Description:
->> -------------------
->>
->> Patch 1: PCI: Add CXL DVSEC reset and capability register definitions
->> - Add reset and cache control bit definitions to pci_regs.h
->>
->> Patch 2: PCI: Export pci_dev_save_and_disable() and pci_dev_restore()
->> - Export for sibling function save/restore during CXL reset
->>
->> Patch 3: cxl: Add memory offlining and cache flush helpers
->> - Offline CXL memory regions before reset
->> - Flush CPU caches using cpu_cache_invalidate_memregion()
->>
->> Patch 4: cxl: Add multi-function sibling coordination for CXL reset
->> - Identify CXL.cachemem sibling functions via Non-CXL Function Map DVSEC
->> - Save/disable and restore sibling PCI functions around reset
->>
->> Patch 5: cxl: Add CXL DVSEC reset sequence and flow orchestration
->> - Implement cxl_dev_reset() to trigger reset via DVSEC
->> - Poll for reset completion with timeout
->> - cxl_do_reset() orchestrates the complete reset sequence with
->>   proper locking and error handling
->>
->> Patch 6: cxl: Add cxl_reset sysfs interface for PCI devices
->> - Expose /sys/bus/pci/devices/.../cxl_reset
->> - Only visible for devices with Reset Capable bit set
->> - Write "1" to trigger reset
->>
->> Patch 7: Documentation: ABI: Add CXL PCI cxl_reset sysfs attribute
->> - Document the new sysfs interface
->> - Explain scope, visibility, and error conditions
->>
->> Dependencies:
->> -------------
->>
->> This series depends on:
->>   [PATCH 0/5] PCI/CXL: Save and restore CXL DVSEC and HDM state across resets
->>   https://lore.kernel.org/linux-cxl/20260306080026.116789-1-smadhavan@nvidia.com/T/#t
->>
->> The cpu_cache_invalidate_memregion() call used for CPU cache flush currently
->> has support on x86. ARM64 support will be addressed in a separate RFC.
->>
->> Command line to test the CXL reset on a capable device:
->>     echo 1 > /sys/bus/pci/devices/<pci_device>/cxl_reset
->>
->> Basic cxl_reset testing was done on a CXL Type-2 device: writing to the
->> sysfs attribute, exercising the DVSEC reset sequence including WB+I and
->> init reset, restore. Further testing is in progress.
->>
->> This series is based on v7.0-rc1.
->>
->> Srirangan Madhavan (7):
->>   PCI: Add CXL DVSEC reset and capability register definitions
->>   PCI: Export pci_dev_save_and_disable() and pci_dev_restore()
->>   cxl: Add memory offlining and cache flush helpers
->>   cxl: Add multi-function sibling coordination for CXL reset
->>   cxl: Add CXL DVSEC reset sequence and flow orchestration
->>   cxl: Add cxl_reset sysfs interface for PCI devices
->>   Documentation: ABI: Add CXL PCI cxl_reset sysfs attribute
->>
->>  Documentation/ABI/testing/sysfs-bus-pci |  22 +
->>  drivers/cxl/core/core.h                 |   2 +
->>  drivers/cxl/core/pci.c                  | 537 ++++++++++++++++++++++++
->>  drivers/cxl/core/port.c                 |   3 +
->>  drivers/pci/pci.c                       |  21 +-
->>  include/linux/pci.h                     |   3 +
->>  include/uapi/linux/pci_regs.h           |  14 +
->>  7 files changed, 600 insertions(+), 2 deletions(-)
->>
->> base-commit: 6de23f81a5e0
-> 
-> The commit is 7.0-rc1. But b4 shazam seems to fail when attempting to apply.
-> 
-> Applying: PCI: Add CXL DVSEC reset and capability register definitions
-> Patch failed at 0001 PCI: Add CXL DVSEC reset and capability register definitions
-> error: patch failed: include/uapi/linux/pci_regs.h:1349
-> error: include/uapi/linux/pci_regs.h: patch does not apply
-> 
+I've been able to mostly get these to work on a very boiled down
+driver.  I still need to port these into my full driver stack, but
+moving that whole stack (multiple drivers) each time a new API is
+proposed was becoming a blocker.  So I have a very basic driver that is
+testing the interface against our HW for now.
 
-nm. I need to apply the save/restore series first. The base-commit should not be the v7.1-rc1 commit. 
-> 
->> --
->> 2.43.0
->>
-> 
-> 
+I have a slight issue that I'll address in Patch 8, or at least ask.
 
+In the meantime, I'll start moving things over to our full stack to try
+and get the same level of replication.
+
+I'm hopeful I can start adding Tested-by:'s to the patches very soon.
+
+-PJ
