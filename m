@@ -1,132 +1,230 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB995246766;
-	Mon,  9 Mar 2026 22:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB76A324B31;
+	Mon,  9 Mar 2026 23:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773096559; cv=none; b=EgTMt/pKSvfmQns408FdtT5caiu/k9x4lWz8Mct4oD5Ne3gVipQa0nNNOKv32rfJCjcXISaJx37cGRzTrhnk+9WVtcBxDCilcrAL9gtdu323GDp7XA9TWDS+KM78uz9LBKWHFgulYSIWl+puyaUmdoqjOGyJGSZKac81BJ++2GU=
+	t=1773097280; cv=none; b=gnygVXme5rbK4+fSq+wJ7X/UpYNTDVbR2iaX1s4jGO+4+WV2IT+y3Zxuy08mHx3ecdkNMSDnTYdjAqfXRGCRgp9X9zwcLYAqrQUnTFwQmc3xKD0yQKRVGbRj27yYdCFgbEMMGmxqt74XTt9x+uvj8ZaRW1W7WZrgRyfk27NtXK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773096559; c=relaxed/simple;
-	bh=C7JCDAPGl9ETtf4IVv0zfsB8t20cm/jyipVBZRK/JvM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qi77W6kqftQWRor5jxVfxlmgJU6MZKKVA6QTBKrpyxWx8q/nl3FWb4P9DdAFdw6FEvLVipm2+NYaql9hcczYqIkfSaYvzQTGfBoeeTFRrbcuiUul0eoo2OWvFJaquGw1e/b0WY1eXX81oMpQjUqoV3rIegzcriRhfj+bXqSTlpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n7DyK7VM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773097280; c=relaxed/simple;
+	bh=QVCqYgorRc+eOnixSmTBz5Y9UNLl1SzGj9L/GKqbqtU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pgSld1upKz9lRRoSydk1tIqFbrtHQaOaTKn9V2/HCYWhM2TQxf8wvtH69zHmsO1zanhUHUwqEsvrjtzJxmKT2yBAzUr9kPCPX+LAZzi/Jz/ybcdN/Mp8okxksB5zlJq1WbYH4HrpNc73XfIGiSwy4CFPqkcJkJQrSwl0wTZq78A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TqaEqxUU; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n7DyK7VM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43702C4CEF7;
-	Mon,  9 Mar 2026 22:49:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773096558;
-	bh=C7JCDAPGl9ETtf4IVv0zfsB8t20cm/jyipVBZRK/JvM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=n7DyK7VMoJGZkj6EWg5OO7nAcSF7fhiHBuWAyRKT2boiUJhsQbTQkMXF3F0hFALRq
-	 Mk8itPyysEzfzFOnyAtiIJRsabj5Gwv+w/MkMUF+p/XZi4bkE+1TisaQAwh5KFn3u/
-	 qjTWRoAtyj594XFp+i9T2eBuzw8FUFssxNSHDTqsB3JxOTsOXlQgnAVqu2QCwtheVU
-	 sphSdrp5iBL1TYwpY9WwJm38uGQO6J/MKeTschzY6GGP1rVwUZOOLGwylbKllJP752
-	 TWNfv+pjHzANbbaCv7uF4H8Mu/h9BAWQ2dk5xXbVNZeeT7y1mUTqZ1wTNeXxI2kRtl
-	 WmlwHfeUpS6QA==
-Message-ID: <ac50b18c99f5863f456d2d486454df8eebe35719.camel@kernel.org>
-Subject: Re: [PATCH v23 08/22] cxl/hdm: Add support for getting region from
- committed decoder
-From: PJ Waskiewicz <ppwaskie@kernel.org>
-To: Alejandro Lucero Palau <alucerop@amd.com>, "Cheatham, Benjamin"
-	 <benjamin.cheatham@amd.com>, alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
- dan.j.williams@intel.com, 	edward.cree@amd.com, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, 	edumazet@google.com,
- dave.jiang@intel.com
-Date: Mon, 09 Mar 2026 15:49:17 -0700
-In-Reply-To: <28148dcf-3cdc-439b-900a-a3f672a28ad1@amd.com>
-References: <20260201155438.2664640-1-alejandro.lucero-palau@amd.com>
-	 <20260201155438.2664640-9-alejandro.lucero-palau@amd.com>
-	 <03ab7820-a6e0-4655-bae7-61d2d0b7dfd6@amd.com>
-	 <28148dcf-3cdc-439b-900a-a3f672a28ad1@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TqaEqxUU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773097279; x=1804633279;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=QVCqYgorRc+eOnixSmTBz5Y9UNLl1SzGj9L/GKqbqtU=;
+  b=TqaEqxUUXvvVvef3812/1Y8fMWHd8vUddti/q4gDyAy68/5dfloD9FdC
+   PdwqJ+qaGZRbiyi0UamGwkuKIjSwfSX7wrMrJ7ck/b0+2URUSVAfnXonx
+   L1mDsk2cX+IMRPv1PYLI7XxGvfkX1ERGMxupAXyM2r8Mjq8G06Um/D6CD
+   xKUbAQPVbeFDujlXRAdRnk/kLL5b1W57ypjJcdZrtKbagC6yfDoIMx5Nk
+   f7N8Jd58V30iWbrWcrO3Fh0CFz8vZQMtqH2PuKpS1tDdPG+XIoElcNzYt
+   qjhZAVzEk8bncO3daDSRThqywliEwMhQYIgw4MlGFRuLlQkGHW/m0PSDh
+   w==;
+X-CSE-ConnectionGUID: fAdlOsxvT6+TipYTcWjNZw==
+X-CSE-MsgGUID: /s3rpNnmSYCodHjSI+u/WA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11724"; a="73834736"
+X-IronPort-AV: E=Sophos;i="6.23,111,1770624000"; 
+   d="scan'208";a="73834736"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 16:01:18 -0700
+X-CSE-ConnectionGUID: F9gWGLFHTcyLogPZwfFzlQ==
+X-CSE-MsgGUID: orqJx6kuRTuYchWStN1ZnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,111,1770624000"; 
+   d="scan'208";a="257827687"
+Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.109.205]) ([10.125.109.205])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 16:01:17 -0700
+Message-ID: <506cd1e6-f79a-44f4-b959-aa1df0a3ec5e@intel.com>
+Date: Mon, 9 Mar 2026 16:01:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/7] cxl: Add memory offlining and cache flush helpers
+To: smadhavan@nvidia.com, bhelgaas@google.com, dan.j.williams@intel.com,
+ jonathan.cameron@huawei.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
+ alison.schofield@intel.com, dave@stgolabs.net
+Cc: alwilliamson@nvidia.com, jeshuas@nvidia.com, vsethi@nvidia.com,
+ skancherla@nvidia.com, vaslot@nvidia.com, sdonthineni@nvidia.com,
+ mhonap@nvidia.com, vidyas@nvidia.com, jan@nvidia.com, mochs@nvidia.com,
+ dschumacher@nvidia.com, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260306092322.148765-1-smadhavan@nvidia.com>
+ <20260306092322.148765-4-smadhavan@nvidia.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260306092322.148765-4-smadhavan@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2026-02-12 at 09:16 +0000, Alejandro Lucero Palau wrote:
->=20
-> On 2/11/26 22:11, Cheatham, Benjamin wrote:
-> > On 2/1/2026 9:54 AM, alejandro.lucero-palau@amd.com=C2=A0wrote:
-> > > From: Alejandro Lucero <alucerop@amd.com>
-> > >=20
-> > > A Type2 device configured by the BIOS can already have its HDM
-> > > committed. Add a cxl_get_committed_decoder() function for cheking
-> > > so after memdev creation. A CXL region should have been created
-> > > during memdev initialization, therefore a Type2 driver can ask
-> > > for
-> > > such a region for working with the HPA. If the HDM is not
-> > > committed,
-> > > a Type2 driver will create the region after obtaining proper HPA
-> > > and DPA space.
-> > >=20
-> > > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> > > ---
-> > > =C2=A0 drivers/cxl/core/hdm.c | 39
-> > > +++++++++++++++++++++++++++++++++++++++
-> > > =C2=A0 include/cxl/cxl.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 3 +++
-> > > =C2=A0 2 files changed, 42 insertions(+)
-> > >=20
-> > > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> > > index 6e516c69b2d2..a172ce4e9b19 100644
-> > > --- a/drivers/cxl/core/hdm.c
-> > > +++ b/drivers/cxl/core/hdm.c
-> > > @@ -686,6 +686,45 @@ int cxl_dpa_alloc(struct
-> > > cxl_endpoint_decoder *cxled, u64 size)
-> > > =C2=A0=C2=A0	return devm_add_action_or_reset(&port->dev,
-> > > cxl_dpa_release, cxled);
-> > > =C2=A0 }
-> > > =C2=A0=20
-> > > +static int find_committed_endpoint_decoder(struct device *dev,
-> > > const void *data)
-> > > +{
-> > > +	struct cxl_endpoint_decoder *cxled;
-> > > +	struct cxl_port *port;
-> > > +
-> > > +	if (!is_endpoint_decoder(dev))
-> > > +		return 0;
-> > > +
-> > > +	cxled =3D to_cxl_endpoint_decoder(dev);
-> > > +	port =3D cxled_to_port(cxled);
-> > > +
-> > > +	return cxled->cxld.id =3D=3D port->hdm_end;
-> > Is this the way you're supposed to check if a decoder is committed?
-> > The doc comment for @hdm_end in
-> > struct cxl_port says it's just the last allocated decoder. If
-> > allocated decoders are always committed then
-> > I'm fine with this, otherwise I think you'd want to a register read
-> > or something to find the commit state.
->=20
->=20
-> Hi Ben,
->=20
->=20
-> Yes, I think you are right. This works in my tests and it is safe=20
-> because I check the region does exist before using it. But the error=20
-> inside sfc should then not be fatal for cxl sfc initialization and=20
-> fallback to the other cxl initialization possibility.
->=20
 
-So I'm running into this situation I think.
 
-When you're testing, are you surviving a reload of the driver?  Right
-now, I can load and successfully create the region0 device.  However,
-following the same teardown path in SFC, I cannot reload my driver
-afterwards and map the region.  I get:
+On 3/6/26 2:23 AM, smadhavan@nvidia.com wrote:
+> From: Srirangan Madhavan <smadhavan@nvidia.com>
+> 
+> Add infrastructure for quiescing the CXL data path before reset:
+> 
+> - Memory offlining: check if CXL-backed memory is online and offline
+>   it via offline_and_remove_memory() before reset, per CXL
+>   spec requirement to quiesce all CXL.mem transactions before issuing
+>   CXL Reset.
+> - CPU cache flush: invalidate cache lines before reset
+>   as a safety measure after memory offline.
+> 
+> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+> ---
+>  drivers/cxl/core/pci.c | 110 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 110 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index f96ce884a213..9e6f0c4b3cb6 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -4,6 +4,8 @@
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+>  #include <linux/device.h>
+>  #include <linux/delay.h>
+> +#include <linux/memory_hotplug.h>
+> +#include <linux/memregion.h>
+>  #include <linux/pci.h>
+>  #include <linux/pci-doe.h>
+>  #include <linux/aer.h>
+> @@ -869,3 +871,111 @@ int cxl_port_get_possible_dports(struct cxl_port *port)
+> 
+>  	return ctx.count;
+>  }
+> +
+> +/*
+> + * CXL Reset support - core-provided reset logic for CXL devices.
+> + *
+> + * These functions implement the CXL reset sequence.
+> + */
+> +
+> +/*
+> + * If CXL memory backed by this decoder is online as System RAM, offline
+> + * and remove it per CXL spec requirements before issuing CXL Reset.
+> + * Returns 0 if memory was not online or was successfully offlined.
+> + */
+> +static int __maybe_unused cxl_offline_memory(struct device *dev, void *data)
+> +{
+> +	struct cxl_endpoint_decoder *cxled;
+> +	struct cxl_region *cxlr;
+> +	struct cxl_region_params *p;
+> +	int rc;
+> +
+> +	if (!is_endpoint_decoder(dev))
+> +		return 0;
+> +
+> +	cxled = to_cxl_endpoint_decoder(dev);
+> +	cxlr = cxled->cxld.region;
+> +	if (!cxlr)
+> +		return 0;
+> +
+> +	p = &cxlr->params;
+> +	if (!p->res)
+> +		return 0;
+> +
+> +	if (walk_iomem_res_desc(IORES_DESC_NONE,
+> +				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+> +				p->res->start, p->res->end, NULL, NULL) <= 0)
 
-cxl_port endpoint5: failed to attach decoder5 to region0: -6  (ENXIO)
-<driver> 0000:c1:00.0: CXL found committed decoder without a region
-<driver> 0000:c1:00.0: CXL init failed
+This function is performed per endpoint. So if a region is backed by multiple endpoints, wouldn't this memory offline operation be performed over the same region on every related endpoint instead of just once? Maybe a temp xarray during the reset process that keeps track of the regions that are being hit with reset?
 
-I'd be surprised if SFC in its current patch state would survive this
-same insmod/rmmod/insmod test.
+> +		return 0;
+> +
+> +	dev_info(dev, "Offlining CXL memory [%pr] for reset\n", p->res);
+> +
+> +#ifdef CONFIG_MEMORY_HOTREMOVE
+> +	rc = offline_and_remove_memory(p->res->start, resource_size(p->res));
+> +	if (rc) {
+> +		dev_err(dev,
+> +			"Failed to offline CXL memory [%pr]: %d\n",
+> +			p->res, rc);
+> +		return rc;
+> +	}
+> +#else
+> +	dev_err(dev, "Memory hotremove not supported, cannot offline CXL memory\n");
+> +	rc = -EOPNOTSUPP;
+> +	return rc;
+> +#endif
 
--PJ
+Same comment as Alex. ifdef in C files are not preferred. Maybe a helper function can be used and stubbed out when !CONFIG_MEMORY_HOTREMOVE.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused cxl_reset_prepare_memdev(struct cxl_memdev *cxlmd)
+> +{
+> +	struct cxl_port *endpoint;
+> +	struct device *dev;
+> +
+> +	if (!cxlmd || !cxlmd->cxlds)
+> +		return -ENODEV;
+> +
+> +	dev = cxlmd->cxlds->dev;
+> +	endpoint = cxlmd->endpoint;
+> +	if (!endpoint)
+> +		return 0;
+> +
+> +	return device_for_each_child(&endpoint->dev, NULL,
+> +				      cxl_offline_memory);
+> +}
+> +
+> +static int __maybe_unused cxl_decoder_flush_cache(struct device *dev, void *data)
+> +{
+> +	struct cxl_endpoint_decoder *cxled;
+> +	struct cxl_region *cxlr;
+> +	struct resource *res;
+> +
+> +	if (!is_endpoint_decoder(dev))
+> +		return 0;
+> +
+> +	cxled = to_cxl_endpoint_decoder(dev);
+> +	cxlr = cxled->cxld.region;
+> +	if (!cxlr || !cxlr->params.res)
+> +		return 0;
+> +
+> +	res = cxlr->params.res;
+> +	cpu_cache_invalidate_memregion(res->start, resource_size(res));
+
+Same comment as offline memory. Cache being invalidated per region for every decoder. Probably not something you want to do.
+
+DJ
+
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused cxl_reset_flush_cpu_caches(struct cxl_memdev *cxlmd)
+> +{
+> +	struct cxl_port *endpoint;
+> +
+> +	if (!cxlmd)
+> +		return 0;
+> +
+> +	endpoint = cxlmd->endpoint;
+> +	if (!endpoint || IS_ERR(endpoint))
+> +		return 0;
+> +
+> +	if (!cpu_cache_has_invalidate_memregion())
+> +		return 0;
+> +
+> +	device_for_each_child(&endpoint->dev, NULL, cxl_decoder_flush_cache);
+> +	return 0;
+> +}
+> --
+> 2.43.0
+> 
+
