@@ -1,214 +1,235 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADE7285050
-	for <linux-cxl@vger.kernel.org>; Mon,  9 Mar 2026 06:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773037641; cv=pass; b=YHw2b9GH+J4Jq3lxsY7PP9dHmXYVjc0PVsVG3r22AUyg6FfcW+JGE50AJmktiFHW/g3JV7yrn7WQqTpMfLE3Tj2mK7uOdg2fkgSv1/kQ5FXYIPRf0w3/8DgBpVpHv61aOvDc6bdSqf9WAnaxFlFla+xeoC1P8jgggP+yXCKvSKI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773037641; c=relaxed/simple;
-	bh=tWJ/fX3Ckxq4WEzhukQr0K7T+NWwaaBTCqm8O0qx06M=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ko9Vw8Q93fRkwULIqITi52f5xGSZmWy2BagCJuUC+RftKoUJWieuaT3DNGB6Z4Uyr+EY3QlNOtrr5VEyobHpx2EnR0J2TCuyU0WCMhoEI/29+F54Npz8/hANRatl/IfR8XZgBd388zvtYZcKaAib7VRgjhu9CmkRAKhCz6NYgMs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3H5gmW8p; arc=pass smtp.client-ip=209.85.217.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3H5gmW8p"
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-5ffa0b23a60so1895366137.0
-        for <linux-cxl@vger.kernel.org>; Sun, 08 Mar 2026 23:27:20 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773037639; cv=none;
-        d=google.com; s=arc-20240605;
-        b=N1QFJpbEm1opwaeei3gk/5DXlAnoLy3UwjcpXN6g9syyHo7XhC1LklBTVTVtvvvhOV
-         8m4VmARVDqWEOJS4LWE3UmtMa3QSGhiMgXWl8kI4gqLW7zFLeB7+MyFWxnx2sjZnf09N
-         yB2dmv/M/zjCI6mUhpGd5aDccqwT9vFG1bb207Ro1arM9wV+mCjgbHt9SQZ9wuoIMODc
-         yGqKw0dtKDkrJ9ljGD62TfIYAFFyA/eaiCWkIp20kaZm5qkRUT8z6sWPD1yxM03NUbLf
-         VfS/jzIU6DaOxVzbWk7GQMGoOVYSB+ZBtueHmeBD/pKxiqkEWWnnPp5sqXBP5bSBKR1W
-         NrGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:dkim-signature;
-        bh=uthJSqpDGuue4aeWUw9ODMGHbGatL8hg/W+VDtshmKs=;
-        fh=3RtJDFO94OGbhJa1cNVNg+fR8a8bwPlhq/f38U9VylI=;
-        b=d2Nl+jHRD3iFGY+/3A4941louL8mYpazqMCbu0VneudqwYOwEi5TfxFMaqd8njV0Ap
-         TDjqLyOwtrQpbeCAA8MPZF9nFQ/pGV2vzLznd0AbZKQ+tlX6Q7fqkfIEDvJiLLU0ePuP
-         Hx4UnIzd82D8dd/bYA6QaN9w7FxVB//6x/QoujmnGjYEyIO9gmkSrwMfl8iVXRjFoD5P
-         zQIyBHU+giSdafy56FofBK8Vkhh/ZVKvu7imMkk4ooVQopwU3GSbKdbIZ1SNuGvAi3SR
-         lJcIx5G69cALmoZ1FUh+vbLFufUUBZywAHb8vDnaQLlqPTmbxHe07YP7V3RFcViOzSK9
-         THzw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773037639; x=1773642439; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uthJSqpDGuue4aeWUw9ODMGHbGatL8hg/W+VDtshmKs=;
-        b=3H5gmW8pbkQt69icUXiv31N0ppI1uLaAEqyifhieISaamd2DQXxiSdiw/bbIO37SVJ
-         X1pBQSNU7GI+tUOy3+b4aTGzxu+37Yg+1+4vv6t3twVSI6jCIlg6f9zIdu2T9vIQNej6
-         hDiMmHWc+VrL2Q1LFkpMpRic9ARbdPSQNGqLtjDDJtDp/jTb2IVWiFff6tbb4dFpqSE3
-         GfcNHOufsmcO/76Ul1Rmq4dfLvocgx6k6ypYW7G1i9D83/T1j0Nt546VOkwkp5DYT782
-         gxfv/MpWu0oNlbuw/J1gkbumfoNooYyAC/quLQ2OyfmxIrG+UFcfLuhHwfIzX62eAMdj
-         6StA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773037639; x=1773642439;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uthJSqpDGuue4aeWUw9ODMGHbGatL8hg/W+VDtshmKs=;
-        b=B+GnYneZuKyS5XcdU+jPftGkE0KwI1tQWGJMXSxN3mhzdA6U/kPFL7o0bAjZOhEfM0
-         ylstlBB4gBgLt18L5e7kwoGBwqZpGcFQQTUYl98qjuB4/upijOzHuc05hoCoej6CqTJt
-         wzx7hqVQDBV/1eDFkVHgMgqzx63O987e8NPgyHcpvhpW+FPZdnmewPmiktlTaFNeRtUI
-         g/EJtnHAIkRNgjLPdS45O8HqDmGIPLj+rx79z8SQlHQ4wmEZLxoi11/BVSCgEPfrMt1V
-         iaQde+ktvbD6CJd2XfbpyQlieOcvnsgNDkfGkUP9lS4hUo0w0BXJJ1U31CgMfqmB7fcC
-         YBfA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2zH4e0wgOtsf6YmrVu0+t0aqP90wvWLuIgxlxs+yyBSi55/MMtrJ4vX3w449Vh7BXUBXN7Glbae4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwtYRes5UCFKnxu3+zyvB1NnxCdWRbE9vseChC/7cReciAxFsg
-	q+3/XJOs6fa388WxdF0c7bdyG9I4kh8uzb0CVvlzOqofo0X1jfJ0qyrxQIL09w3/9Zdui1IteMv
-	jpm5zQAVMAU8wP93Ne7dbPebHib7lgyU1kmUk7beE
-X-Gm-Gg: ATEYQzw0I5yEYYskmgZ6JOo4djxqcTm+EL0o8zfpduKYuO3hAH/VMM3zUxuqW2a8im+
-	m9gwKCQXzzO7IKiqEgMp+IdJSdtQvKPyNX17aNgrTRtlYgH04GSnlQ7X8utwCma9AMc1DHSMXGh
-	ZMzDGCUs93d5tls4fEnRaceflya3aqHYsW6R24piwvzFK8DI0IyirlB5g633O2xQsq8g6BZIJEV
-	QYIG4ADl5atyZIxQAWmwIWdj7syoOnd1kdMcub70ZHV1W/gEG6ZMaqhWL157K63h/pebvVFKUxd
-	2UVrZW/glZFsv6OXWReEtBPOnWCmI6Qb/+nSAH5lf49cmCJHbnW9c6xltyIBsdVl4QkqtQ==
-X-Received: by 2002:a05:6102:c01:b0:5db:f920:fa9a with SMTP id
- ada2fe7eead31-5ffe63cdb3fmr2925679137.41.1773037638925; Sun, 08 Mar 2026
- 23:27:18 -0700 (PDT)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Sun, 8 Mar 2026 23:27:18 -0700
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Sun, 8 Mar 2026 23:27:18 -0700
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <aaWlxFh-bqUYXgUo@groves.net>
-References: <0100019bd33b1f66-b835e86a-e8ae-443f-a474-02db88f7e6db-000000@email.amazonses.com>
- <20260118223110.92320-1-john@jagalactic.com> <0100019bd33bf5cc-3ab17b9e-cd67-4f0b-885e-55658a1207f0-000000@email.amazonses.com>
- <CAEvNRgHmfpx0BXPzt81DenKbyvQ1QwM5rZeJWMnKUO8fB8MeqA@mail.gmail.com> <aaWlxFh-bqUYXgUo@groves.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4B1395244;
+	Mon,  9 Mar 2026 11:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773056390; cv=none; b=lI3wMzrfwsZHSFChTfV+YwWvDKGeiJcOJOdaSapoMgHsqsz+F4+KCldmLxiRNMrjfhuFzBIyyxonD5tkaNmMbUpuyukXT8fzhpleaC9dj4yju6Elvg6qbfNCcOHPrXecaTi89ndL36zm9+5d3ld9Mw6JfMRbL752Tb+bvO4Axyo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773056390; c=relaxed/simple;
+	bh=55OKdMaij6tI6qvCc02IHRSTa9LXQaT8DGdXB+58iXw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u6/E/Uj9ui9YsfoEOUSdBJITwZ8cK77aSSwFxE0j/2X3qIhJ7I6tPIchnjl3oVBf0TRXcR4bfUV1hMlWYzkqrT90HMYHiNT3d1JKVajGwuRYgFDaU+oGdAz6Lry8sClnRscm2q5Oy71uSmS9EPUbb1xjeQXDINGOns6swz7IDAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fTw5K0qxFzJ46kV;
+	Mon,  9 Mar 2026 19:39:01 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id EF36540086;
+	Mon,  9 Mar 2026 19:39:43 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 9 Mar
+ 2026 11:39:42 +0000
+Date: Mon, 9 Mar 2026 11:39:41 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: <dan.j.williams@intel.com>
+CC: Jason Gunthorpe <jgg@nvidia.com>, Lukas Wunner <lukas@wunner.de>, Alistair
+ Francis <alistair23@gmail.com>, <bhelgaas@google.com>,
+	<rust-for-linux@vger.kernel.org>, <akpm@linux-foundation.org>,
+	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <alex.gaynor@gmail.com>,
+	<benno.lossin@proton.me>, <boqun.feng@gmail.com>, <a.hindborg@kernel.org>,
+	<gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <tmgross@umich.edu>,
+	<ojeda@kernel.org>, <wilfred.mallawa@wdc.com>, <aliceryhl@google.com>,
+	"Alistair Francis" <alistair.francis@wdc.com>, <aneesh.kumar@kernel.org>,
+	<yilun.xu@linux.intel.com>, <aik@amd.com>, Mathieu Poirier
+	<mathieu.poirier@linaro.org>, Thomas Fossati <thomas.fossati@linaro.org>
+Subject: Re: [RFC v3 00/27] lib: Rust implementation of SPDM
+Message-ID: <20260309113941.00007258@huawei.com>
+In-Reply-To: <69a9de4791667_6423c1006c@dwillia2-mobl4.notmuch>
+References: <20260219143129.GF723117@nvidia.com>
+	<aZcnTnYJ61Kma0yd@wunner.de>
+	<20260219173937.GH723117@nvidia.com>
+	<aZgbukYiIxg44_e7@wunner.de>
+	<20260220141057.GL723117@nvidia.com>
+	<aZn9cfhv0YRxI1mw@wunner.de>
+	<699a3ff3f019a_1cc5100e1@dwillia2-mobl4.notmuch>
+	<20260223171527.000016ef@huawei.com>
+	<699ca65b5ff9b_1cc510019@dwillia2-mobl4.notmuch>
+	<69a903d4511e4_6423c1004d@dwillia2-mobl4.notmuch>
+	<20260305124837.GS972761@nvidia.com>
+	<69a9de4791667_6423c1006c@dwillia2-mobl4.notmuch>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sun, 8 Mar 2026 23:27:18 -0700
-X-Gm-Features: AaiRm52XcCdEx1v_REqqEWCzJAbxKWYQSWfQ7emIhDTUFVwrkCx8Utez8oZPcxo
-Message-ID: <CAEvNRgEzb6Ux+iVFT=F6jc_R8V=LTYCigHp+yaHFkdrX82-yvQ@mail.gmail.com>
-Subject: Re: [PATCH V7 02/19] dax: Factor out dax_folio_reset_order() helper
-To: John Groves <John@groves.net>
-Cc: John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	John Groves <jgroves@fastmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, Gregory Price <gourry@gourry.net>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-John Groves <John@groves.net> writes:
+On Thu, 5 Mar 2026 11:49:27 -0800
+dan.j.williams@intel.com wrote:
 
->
-> [...snip...]
->
->>
->> I'm implementing something similar for guest_memfd and was going to
->> reuse __split_folio_to_order(). Would you consider using the
->> __split_folio_to_order() function?
->>
->> I see that dax_folio_reset_order() needs to set f->share to 0 though,
->> which is a union with index, and __split_folio_to_order() sets non-0
->> indices.
->>
->> Also, __split_folio_to_order() doesn't handle f->pgmap (or f->lru).
->>
->> Could these two steps be added to a separate loop after
->> __split_folio_to_order()?
->>
->> Does dax_folio_reset_order() need to handle any of the folio flags that
->> __split_folio_to_order() handles?
->
-> Sorry to reply slowly; this took some thought.
->
+> Jason Gunthorpe wrote:
+> > On Wed, Mar 04, 2026 at 08:17:24PM -0800, dan.j.williams@intel.com wrote:
+> >   
+> > > So I ended up dropping this bit of the proposal because there is no need
+> > > for the kernel to be involved in any decision about the validity and
+> > > sufficiency of device evidence. Userspace has everything it needs to
+> > > make that initial determination. "Authenticated" simply means "evidence
+> > > ready".  
+> > 
+> > Right, this caching was only for the automatic device recovery flow.
+> > 
+> > I think the kernel still probably needs to check the signed nonce
+> > against the device's public key as part of the SPDM handshake, but it
+> > doesn't need to do any validation of the public key.  
+> 
+> Yes, and I think this is a subtle detail that I was failing to grok /
+> communicate previously. Of course the native SPDM implementation needs
+> to be able to perform a challenge response to establish the session. All
+> of the platform TSMs also internally carry out that protocol. The
+> difference with platform TSMs being that the kernel only sees the
+> resulting evidence.
 
-No worries, thanks for your consideration!
+I had a half written email on this but you two already covered much of it
+and discussion is heading where I was going anyway :)
 
-> I'm nervous about sharing folio initialization code between the page cache
-> and dax. Might this be something we could unify after the fact - if it
-> passes muster?
->
-> Unifying paths like this could be regression-prone (page cache changes
-> breaking dax or vice versa) unless it's really well conceived...
->
+For native / CMA:
 
-guest_memfd's (future) usage of __split_folio_to_order() is probably
-closer in spirit to the original usage of __split_folio_to_order() that
-dax's, feel free go ahead :)
+I agree that the kernel 'should' check the signature in the final
+challenge/auth message so as to validate the whole flow was valid.
+Fine to leave cert checking to userspace - that was earlier in
+the flow anyway.  I'd also like it to do sanity checks on the cert
+chain (for internal consistency and the few requirements PCI puts
+on the leaf cert), some of which it needs to do to pull the public
+key out of the leaf anyway. I think that's all cheap stuff to
+detect failures early.
 
-For guest_memfd, I do want to use __split_folio_to_order() since I do
-want to make sure that any updates to page flags are taken into account
-for guest_memfd as well.
+As far as I can tell, the signature check isn't strictly necessary
+as userspace has all the info to do that signature check on the
+transcript.  Bit of nasty parsing code but not particularly bad and
+likely to be in tooling anyway for debug purposes. (I'm assuming that's
+why there is a 'probably' above :)
 
->>
->> >  static inline unsigned long dax_folio_put(struct folio *folio)
->> >  {
->> >  	unsigned long ref;
->> > @@ -391,28 +430,13 @@ static inline unsigned long dax_folio_put(struct folio *folio)
->> >  	if (ref)
->> >  		return ref;
->> >
->> > -	folio->mapping = NULL;
->> > -	order = folio_order(folio);
->> > -	if (!order)
->> > -		return 0;
->> > -	folio_reset_order(folio);
->> > +	order = dax_folio_reset_order(folio);
->> >
->> > +	/* Debug check: verify refcounts are zero for all sub-folios */
->> >  	for (i = 0; i < (1UL << order); i++) {
->> > -		struct dev_pagemap *pgmap = page_pgmap(&folio->page);
->> >  		struct page *page = folio_page(folio, i);
->> > -		struct folio *new_folio = (struct folio *)page;
->> >
->> > -		ClearPageHead(page);
->> > -		clear_compound_head(page);
->> > -
->> > -		new_folio->mapping = NULL;
->> > -		/*
->> > -		 * Reset pgmap which was over-written by
->> > -		 * prep_compound_page().
->> > -		 */
->>
->> Actually, where's the call to prep_compound_page()? Was that in
->> dax_folio_init()? Is this comment still valid and does pgmap have to be
->> reset?
->
-> Yep, in dax_folio_init()...
->
+We only _need_ the kernel to check the signature (in challenge/auth)
+for the (future) recovery flow.
 
-On another look, prep_compound_tail() in prep_compound_page() is the
-one that overwrites folio->pgmap, by writing to page->compound_head,
-which aliases with pgmap.
+As Alastair's rust demonstrates though it's low cost in terms
+of complexity to ensure internal consistency. I'm assuming
+the various TSMs are doing similar?
 
-No issues here. I was just comparing the before/after of this
-refactoring and saw that the comment was dropped, which led me to look
-more at this part.
+Anyhow, all that really says is I'd like the internal consistency of
+the SPDM session checking in now.  Leave checking we actually trust
+the cert + measurements to user space (and all the stuff below
+on recovery comes later).
+> 
+> So when / if the PCI/TSM evidence implementation grows kernel-internal
+> revalidate support it will be growing something like pdev->tsm->pubkey
+> that is installed / cached "after the fact" for platform TSMs. For the
+> native SPDM driver, pdev->tsm->pubkey can be installed at 'struct
+> pci_tsm_ops::connect()' time because it already has it parsed for its
+> own internal purposes.
 
-Reviewed-by: Ackerley Tng <ackerleytng@google.com>
+Agreed it'll be something along those lines.
 
->
-> Thanks,
-> John
->
-> [snip]
+> 
+> > > Automatic device recovery into the TCB is a separate concern that needs
+> > > to be prepared to handle more than just "is this device able to generate
+> > > a fresh signature with the same cert chain that userspace saw before".
+> > > Yes, that is a minimal requirement but not sufficient for many cases.
+> > > For example cases that want to validate measurements, interface reports,
+> > > or opt-out of recovery because SPDM session loss is fatal.  
+> > 
+> > Yeah, but it is a pretty good starting point :)
+> >   
+> > > Authenticate a device
+> > > =====================
+> > > Look in /sys/class/tsm to find a tsmN device which will be either an
+> > > instance associated with native kernel PCI CMA/SPDM or a platform tsm
+> > > like the one provided by AMD SEV-TIO, ARM CCA, Intel TDX, etc...
+> > > 
+> > > echo tsmN > /sys/bus/pci/devices/$device/tsm/connect
+> > > 
+> > > Once that succeeds the PCI/TSM evidence netlink interface is available
+> > > to dump any signatures created during that session establishment.
+> > > 
+> > > After userspace is happy with that evidence it can bind a driver.
+> > > 
+> > > If running in a confidential VM where the TSM driver is capable of
+> > > securing more than just an SPDM session the interface is:
+> > > 
+> > > echo tsmN > /sys/bus/pci/devices/$device/tsm/lock
+> > > 
+> > > Similar evidence can be collected, and when userspace is happy with it
+> > > it can accept the device:
+> > > 
+> > > echo 1 > /sys/bus/pci/devices/$device/tsm/accept
+> > > 
+> > > ...and bind a driver.  
+> > 
+> > Makes sense to me, userspace can figure out what flow to use.
+> >   
+> > > Auto-recover device (future work)
+> > > =================================
+> > > By default, devices fall out of the TCB on recovery events for the TDISP
+> > > case and need userspace to rerun the lock and accept flow. For the
+> > > native SPDM CMA case the default is that the kernel continues to operate
+> > > the device post recovery and only userspace polling could detect device
+> > > replacement.  
+> > 
+> > Even with SPDM the kernel should know if the SPDM session has to be
+> > restarted right? It could squirt out a netlink multicast message, or a
+> > uevent on these events, so the polling is not baked into the
+> > architecture?  
+> 
+> Right, "SPDM session lost" is a reasonable notification to put into the
+> interface and "future work" bucket. The polling comment was with respect
+> to the near term limitation of this minimally viable first step.
+> 
+> > > To go beyond those defaults the kernel needs userpsace to tell it how to
+> > > re-validate the device. I think that can be as simple as a netlink
+> > > message to store hashes of cert chains or measurements and then use
+> > > those in a new challenge / response with the device with a kernel
+> > > decided nonce.  
+> > 
+> > Yeah, I see several reasonable options:  
+> 
+> +1 to these.
+> 
+> > 1) Above, kernel is informed of hashes and does an exact content
+> >    compare
+> > 
+> > 2) The driver operating the device has a built in same-device policy
+> >    and deep parses the evidence for equivilance after the private key
+> >    is validated, carefully avoiding volatile evidence bytes.  
+> 
+> Yes, Lukas was also pointing out that the existing driver reset/resume
+> handlers could signal "revalidated" as well if the PCI layer had no
+> opinion.
+> 
+> ...but the point is that it is a menu of options, not a static policy.
+> 
+> > 3) User provides a BPF program and it runs on the evidence
+> > 
+> > 4) Standards bodies define a generic "same device check" algorithm for
+> >    the evidence and core kernel just does this for compatible devices
+> >   
+> > > The equivalent behavior to what is present in this SPDM proposal is
+> > > extend drivers/pci/tsm/evidence.c to add a netlink operation that tells
+> > > the kernel to cache the public-key and challenge the device regenerate a
+> > > valid signature. Then plumb all the recovery paths to call a new
+> > > 'struct pci_tsm_ops::revalidate()' operation in all the same places
+> > > where this patch set wants to reauthenticate. Later when something more
+> > > sophisticated than "challenge the device to create a signature" comes
+> > > along it can reuse those revalidate() hooks.  
+> > 
+> > That's a nice simple starting point.  
+> 
+> Appreciate it. Still want to close the loop with Lukas to make sure
+> everything he wants to do for native SPDM can fit in this scheme, but I
+> am feeling increasingly confident.
+
+So far all sounds good to me.
+
+Jonathan
+
+
