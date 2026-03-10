@@ -1,44 +1,45 @@
 Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C5838D6BA;
-	Tue, 10 Mar 2026 16:00:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C461A3BAD9D;
+	Tue, 10 Mar 2026 16:00:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773158411; cv=pass; b=RHcgYl9HrrgWGsmUJXgTzel5geHf935VNhdrIUCQt+G+EMEyxPPjZzhjRTFKd9bAeukf7OXAAWaUN0Bamw3eDlrTFDrl+482HtQ4nEUOdBKaww24PAcT0kIffZ1lgv+g/hCZZEKMkqL4C66OrfGlHOCnN7/Dkc1aLCFJJh9CaL4=
+	t=1773158429; cv=pass; b=IxQa5dUu1nA8ss5Y7TuWXuQEOaXLxtNd2QaXNLccyfyzbDowCBuzXbfecgnwFpkftDtrn+5W0nhQY3EIVr9FNeSicIrwavYYfYmymMI2KFhoz68aQX5z+gj4ms8HZQ5J81hNcqFQ6FlQ5dUk+/++iU9BeQ2/aDogHAtZcVeTO9E=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773158411; c=relaxed/simple;
-	bh=B69MXGhvDuVx2QdO2KWxE7ethA7YE2X4K6HHkzXzeDk=;
+	s=arc-20240116; t=1773158429; c=relaxed/simple;
+	bh=ENrMXJhDkBtkxWOCe7WzES9mf0opa1WZobtvS83lPHQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EZok8noH/4zlUib0JpxT1iq/7nk7xOVq7e9j5unHhUcWL3kw+2wF46IEri8y5WgR4ZCVXbEoQVISnC5WtlYOWw8C3PnN86Otwt6VA/rx4zVTVIZqUQu67th5tXbVoeuYbYOThkbn4X2Gk9kKYQHJyqn+zzId31t8rKceNi1MGEs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=AkMAwTbF; arc=pass smtp.client-ip=136.143.188.94
+	 In-Reply-To:To:Cc; b=Z5r4AZsKKqRmL2yT7O+kxN3mshRgc1c8iMLVkpg/M4cqPjQ2/Zpg2wYO9mpZL7myDiygU8UuTl1Da6kTFg0SOMJLZ1NxPXcOQAZHjRpbzdv4iarFdMfaRqPFHHT3O4h9cNJTQehvue6JzgDfjw7MA7rPGnQca8KB+XhYphnTvZo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=e9qX/7qo; arc=pass smtp.client-ip=136.143.188.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="AkMAwTbF"
-ARC-Seal: i=1; a=rsa-sha256; t=1773158317; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="e9qX/7qo"
+ARC-Seal: i=1; a=rsa-sha256; t=1773158321; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=SrlYqapn7+Hn/ymGzhTot5+Lqn4XQ22ld3HWEkfRd6x5y/sbCBF1R80Fl87aWwY0d4PZoumN6yDmsOCtdSZdWfM/a33Tg1FcDcymNNhdpfMi5XgC+tx3NWiHkfRfUonzCyAkNHVJLzKEL6oQiTc7FXDRmXHiqNAzl16gveo+CVg=
+	b=go+xrsTKq5Rmbj2wOYV6QDY0UcEQYEIjL9HydqwoF1ugYxgdyVeQm2GnIx0yXLUGVpp9GE5ku8wISZE9SbcX+uA7u/TLomw28rrvYYgUxnIO4srOciFcPLx6fx7lTWU3/ivd1yMNUWN15xjLWGIesmqSeDNEevbHYHuccjCFG1w=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1773158317; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ABwn0NX1NC5NAWUdwU1PCbWnVWctUN2DSjptBI98gAI=; 
-	b=mhfrkv3IMJsLvwFgbGmBCnS2gB73v0LY2XJyp/ZgcqdtH2QeaV1PTB7zMLo7c+Pxb6t+hvbWgclC8+6UDKwzNwE0pwwWdtn3MJDy3NhRlHH2+6bIOlRTVXX6aTPNx3tm9vcsOebuQ+ZsF4byPuppNcsPk5vfv0OUWkfTPrdPn6c=
+	t=1773158321; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=g/6G297wu4AB+PoDj1KHKQ9lVhY2UMABCIj6fshRpm0=; 
+	b=TT1Yg6rrLtV5kjqQ/yZvL8ds8K32ZLkmLKZJ9BvvxBQwuoUein9BB67TqfJJsn4G0fFSVxtE1asfzrW9AQoLUuQOWbpo2BC8FP3tKyg9jZAQWMDEaWoiClxfHIRREu9vIIPuda3cn7tiln69K5JPdGsRfLetEF9LObAGYowAxc8=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773158317;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773158321;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Feedback-ID:Reply-To;
-	bh=ABwn0NX1NC5NAWUdwU1PCbWnVWctUN2DSjptBI98gAI=;
-	b=AkMAwTbFgz69aAUIGsrgnX24zZbcVkqkSWpy4bTuoCLqxtKLCtm53hHHp36iPOo0
-	satO7f9jMhUljcbsPTSvuiDnGT2H0bBp8qii4xOzoGipJ+pM3L9gLshbqFR+kJuDnQp
-	18dg6WLcIX4YMb9dmK8SKMwKT4CsB0Um4pT6AA9o=
-Received: by mx.zohomail.com with SMTPS id 1773158316399469.1017203729534;
-	Tue, 10 Mar 2026 08:58:36 -0700 (PDT)
+	bh=g/6G297wu4AB+PoDj1KHKQ9lVhY2UMABCIj6fshRpm0=;
+	b=e9qX/7qo3BxPBVtzcO5ZXH9GDN2CjB+mnMgvXUHYnh2zuuowDDhoV06APD4SsW9a
+	dRhQZcjyJKjFrPNBbOgDCCH0FFI6otKx8shZtX9C/93s82mZ5Aqv2vAyNbs5FCWXwdV
+	6VUjodeyHho1oCnJUij6JHVXbDeAFGK+4m+GW3aY=
+Received: by mx.zohomail.com with SMTPS id 1773158320012551.5054323166485;
+	Tue, 10 Mar 2026 08:58:40 -0700 (PDT)
 From: Li Ming <ming.li@zohomail.com>
-Date: Tue, 10 Mar 2026 23:57:56 +0800
-Subject: [PATCH 4/7] cxl/pci: Hold memdev lock in cxl_event_trace_record()
+Date: Tue, 10 Mar 2026 23:57:57 +0800
+Subject: [PATCH 5/7] cxl/region: Ensure endpoint is valid in
+ cxl_dpa_to_region()
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -47,7 +48,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260310-fix_access_endpoint_without_drv_check-v1-4-94fe919a0b87@zohomail.com>
+Message-Id: <20260310-fix_access_endpoint_without_drv_check-v1-5-94fe919a0b87@zohomail.com>
 References: <20260310-fix_access_endpoint_without_drv_check-v1-0-94fe919a0b87@zohomail.com>
 In-Reply-To: <20260310-fix_access_endpoint_without_drv_check-v1-0-94fe919a0b87@zohomail.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -64,75 +65,86 @@ Cc: driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
  linux-cxl@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
  Li Ming <ming.li@zohomail.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773158297; l=2496;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773158297; l=2777;
  i=ming.li@zohomail.com; s=20260210; h=from:subject:message-id;
- bh=B69MXGhvDuVx2QdO2KWxE7ethA7YE2X4K6HHkzXzeDk=;
- b=9Oaf8Zeq6n9zIX9Mz4oJc64SpbAOLIWmnujeZCf8tPEMsASzasSbTPfZB58DPdXN2gCqsikcG
- PcdsbVPzMsqCtWwYb6HzC5ddPJ3VOClSTZVhTxPHeAWEWOPCTKRSngA
+ bh=ENrMXJhDkBtkxWOCe7WzES9mf0opa1WZobtvS83lPHQ=;
+ b=Ly3iLYWpu8d0ZgXTqBt/7LHCa28uYFAsKP/78fB91Z7nyjdyAeMgH5p/otUJHHVo/biyQt3nH
+ zGpStkAwbJgAnuxuvX12BkU4x39yegciJ/xHl0eXJcM4Fphi96FZhPo
 X-Developer-Key: i=ming.li@zohomail.com; a=ed25519;
  pk=JfhrdHjyYJMXt47Hy8d/fsqZuhGPD4Z3whV5lTfVvhE=
-Feedback-ID: rr080112287f67c2effa747dbf4922dc7e0000fba9dd2d0d84fe57357c7a82ab048c63d3a73973f06ca29dccf5:zu080112271dd6beed9fd716b19781ada30000ad318f754e7c3bf55d799c6721cb623d758f341fe889415b9c:rf0801122da949286e68b8b5149f7f4e700000c87dfeb6bddfe4884cf120ed08bb83742f86d8ed438a252e1967d14a552072:ZohoMail
+Feedback-ID: rr080112285349850d3ae57fbdd47f5a5900002f047a659bc7bc239898fc4a7fb3e75e9528f8701a7d0be3c8ce:zu08011227df2c56caa742594e4f6ca00f00005d68f34df780e8f1ae03a404861fd0257791dbbe34ffdbd7bd:rf0801122d947b1e73def65f7241dfac920000c2ec091a182fdfe9f193c24dc9285aeb2aa0868684b71b5eb940bd043cc38f:ZohoMail
 X-ZohoMailClient: External
 
-This is a preparatory patch for the following changes.
+cxl_dpa_to_region() needs to access the endpoint of the given CXL memdev
+to confirm whether the CXL memdev has memory range attached to a CXL
+region. But it is possible to be called before endpoint allocation or
+after the CXL memdev probing failure.  In these two cases,
+cxlmd->endpoint is invalid.
 
-To enable endpoint validity checks in cxl_dpa_to_region().
-cxl_dpa_to_region() has to require caller to hold CXL memdev lock to
-ensure the CXL memdev probing is completed.
-
-So holding the given CXL memdev lock before invoking cxl_dpa_to_region()
-in cxl_event_trace_record().
+To solve the problem, cxl_dpa_to_region() requires that callers have to
+hold the given CXL memdev lock, it guarantees the CXL memdev probing has
+completed. And cxl_dpa_to_region() will check the given CXL memdev
+driver binding status, if the memdev has bound to the driver, the
+endpoint is guaranteed to be valid. This checking also requires the CXL
+memdev lock held.
 
 Suggested-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Li Ming <ming.li@zohomail.com>
 ---
- drivers/cxl/core/mbox.c | 5 +++--
- drivers/cxl/cxlmem.h    | 2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ drivers/cxl/core/core.h   |  4 ++--
+ drivers/cxl/core/region.c | 11 +++++++----
+ 2 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index e7a6452bf544..3f34bbabf4d3 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -893,7 +893,7 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 5b0570df0fd9..fa8402be860f 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -47,7 +47,7 @@ int cxl_decoder_detach(struct cxl_region *cxlr,
+ int cxl_region_init(void);
+ void cxl_region_exit(void);
+ int cxl_get_poison_by_endpoint(struct cxl_port *port);
+-struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
++struct cxl_region *cxl_dpa_to_region(struct cxl_memdev *cxlmd, u64 dpa);
+ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 		   u64 dpa);
+ 
+@@ -58,7 +58,7 @@ static inline u64 cxl_dpa_to_hpa(struct cxl_region *cxlr,
+ 	return ULLONG_MAX;
  }
- EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, "CXL");
- 
--void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
-+void cxl_event_trace_record(struct cxl_memdev *cxlmd,
- 			    enum cxl_event_log_type type,
- 			    enum cxl_event_type event_type,
- 			    const uuid_t *uuid, union cxl_event *evt)
-@@ -920,6 +920,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
- 		 * translations. Take topology mutation locks and lookup
- 		 * { HPA, REGION } from { DPA, MEMDEV } in the event record.
- 		 */
-+		guard(device)(&cxlmd->dev);
- 		guard(rwsem_read)(&cxl_rwsem.region);
- 		guard(rwsem_read)(&cxl_rwsem.dpa);
- 
-@@ -968,7 +969,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
- }
- EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, "CXL");
- 
--static void __cxl_event_trace_record(const struct cxl_memdev *cxlmd,
-+static void __cxl_event_trace_record(struct cxl_memdev *cxlmd,
- 				     enum cxl_event_log_type type,
- 				     struct cxl_event_record_raw *record)
+ static inline
+-struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
++struct cxl_region *cxl_dpa_to_region(struct cxl_memdev *cxlmd, u64 dpa)
  {
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index e21d744d639b..7a34a19c02c8 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -864,7 +864,7 @@ void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
- void clear_exclusive_cxl_commands(struct cxl_memdev_state *mds,
- 				  unsigned long *cmds);
- void cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status);
--void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
-+void cxl_event_trace_record(struct cxl_memdev *cxlmd,
- 			    enum cxl_event_log_type type,
- 			    enum cxl_event_type event_type,
- 			    const uuid_t *uuid, union cxl_event *evt);
+ 	return NULL;
+ }
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 806512dfab07..c555e3ae8b62 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2947,16 +2947,19 @@ static int __cxl_dpa_to_region(struct device *dev, void *arg)
+ 	return 1;
+ }
+ 
+-struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
++struct cxl_region *cxl_dpa_to_region(struct cxl_memdev *cxlmd, u64 dpa)
+ {
+ 	struct cxl_dpa_to_region_context ctx;
+-	struct cxl_port *port;
++	struct cxl_port *port = cxlmd->endpoint;
++
++	device_lock_assert(&cxlmd->dev);
++	if (!cxlmd->dev.driver)
++		return NULL;
+ 
+ 	ctx = (struct cxl_dpa_to_region_context) {
+ 		.dpa = dpa,
+ 	};
+-	port = cxlmd->endpoint;
+-	if (port && is_cxl_endpoint(port) && cxl_num_decoders_committed(port))
++	if (cxl_num_decoders_committed(port))
+ 		device_for_each_child(&port->dev, &ctx, __cxl_dpa_to_region);
+ 
+ 	return ctx.cxlr;
 
 -- 
 2.43.0
