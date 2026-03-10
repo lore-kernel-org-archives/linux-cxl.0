@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777B53C344C;
-	Tue, 10 Mar 2026 17:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7351131715E;
+	Tue, 10 Mar 2026 17:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773164707; cv=none; b=VGxE+bN5V5kL6fRYrnxmfLX7roC3+8t0UE0uBVRDizDGKiGvBrtIom1yy9vAzUq/qoqXZjTXpwgF4Vfl1FV1BX0DYhxLkdLwrYT68YnyNr2JJZAJ3vT/6YIcKSxBt0XLzSCTMx6hMGLdQge7o/kj01cRXZO918CpJojKjQ7IXSY=
+	t=1773165198; cv=none; b=TBYZBXiIYJq3QjfSsH7gTQy08jCpMOQYCIhgMQ0PmRPo5lvzOQl7RBE+v9B2Y2r2Prq9d83EIYrHVlofCwGD3ny3hWcGbyXzHNeT1JUc//Dx9hN3OgwBPW0flxhr0kugEwlIzAEVz0x4JplXv2luCjZWzhEtT944omLU8bNm9rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773164707; c=relaxed/simple;
-	bh=zrAjDthZ4Kq4r9YPrygf3o8/fCs2tJdl3q25xZVyrho=;
+	s=arc-20240116; t=1773165198; c=relaxed/simple;
+	bh=bwjFivXvDMR7ae/O+uHjEp3C9ypISb9Y3UZxG9mQKPI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PUytsCbd9j1B6qJjoLaTGPD51qn5q8Rg3tjUEPeFGYarMQ1nmymj1cA9z/jO6EF/heQCo19bGJGujJNyelnv010IcFVCYxEoiOEZ0CENkVeSx8IGbnyD4z/fTz3wxp7q7Sxq9l3Sc+SPbTb9wJlD1XEy0PEOahj2vHKARnUaIAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F9UK2d/S; arc=none smtp.client-ip=198.175.65.12
+	 In-Reply-To:Content-Type; b=MX8XiI+jINHpLS7SOultdPm8/XuJS3Q4x9wyM3CX/Br74+hU1l+Ri5LxrnTGXG7cbEmpglZN414kiCHSPhoJ4wNrIl/vhNeBe16vWFtI3mcaVSk5xbplJZ/Z4XAjMLtPTWvQNUt3LAiG6eqSMUizUPfBtPMm6fOv9Lf/IZx2Jpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fHN/N/u0; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F9UK2d/S"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fHN/N/u0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773164705; x=1804700705;
+  t=1773165197; x=1804701197;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=zrAjDthZ4Kq4r9YPrygf3o8/fCs2tJdl3q25xZVyrho=;
-  b=F9UK2d/SkQT3RDCShW7Of5Bfsky3UvaFdeuoIf+nuo6rRP7lYcW/uUBt
-   laH/0kVsmhiGOfMj2JRjBlIek6I3RtHgHGwUxu97r4/Lzsm/6oQV/Qsts
-   bEiW+ze+DJrXTHdbGjb9t0ToqLW6VNAC7erp8qLhtC0ZyGh4ZkV71CUfb
-   WxfPgQObwK+5fQZW5bdnpC/7vWG0u+haSk5Z4VjeJVSM/uoNNuBg3GRXE
-   w3TYPERIAIF64DMvAB5DjiIpnNeuTgiuo1VD55MOMjYEvHshqAXQf9uy3
-   U4NI5HBzLUgF0zn0SyAX7KJir2oAwVeLIdM8qYn1hT395LLWoFb/hKNzY
-   w==;
-X-CSE-ConnectionGUID: 3RowMCkpTx6XBtQ2RjTfrw==
-X-CSE-MsgGUID: rDkfoCk6TUKOkCp/VvCj8Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11725"; a="85698278"
+  bh=bwjFivXvDMR7ae/O+uHjEp3C9ypISb9Y3UZxG9mQKPI=;
+  b=fHN/N/u0hpQfdMBrTHqMKW75dMZvEd9pkyqSPGrd+qkPL+3kYvlW8yPk
+   iRKRKpNE1SWhtQDHTpkLZPVjzIHt6zfZxgoLRDlXT8hRAbLdCvljIvUX8
+   ZM4ZSWqes3sOO0vfiPq3qIHzjVphuxi+8HVkRHbAqkCo9LTTJ9IhhWDxv
+   s9qFKmxFD3Puuq5PU811Ju72oEtRUbKlXFQHOGR6NE8DbunFHz+3/8rvJ
+   peehpU2ZtJX6aJFRovJo8GRtdg/iBZUqnleDGXgPkSwWkq95cIFRYjyN8
+   9UoMhMh6AG0fTv6DeaHMIW6HXWqcGF0vbZDWujvS1B6nqB5mbVOdny/fW
+   A==;
+X-CSE-ConnectionGUID: AAeLKpf1RAa15DpFiLR1aA==
+X-CSE-MsgGUID: 0aHY/MW6RWSrFFNQ5Ac7KA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11725"; a="78079707"
 X-IronPort-AV: E=Sophos;i="6.23,112,1770624000"; 
-   d="scan'208";a="85698278"
+   d="scan'208";a="78079707"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 10:45:05 -0700
-X-CSE-ConnectionGUID: XcSFCj1WSQKjf6Oe8WvCwQ==
-X-CSE-MsgGUID: kFSs6Xf2TYK9J+CSw/NQrA==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 10:53:14 -0700
+X-CSE-ConnectionGUID: J8VruwUETZKm27QO2xN5rw==
+X-CSE-MsgGUID: CY9+hRJZTaSOxZmjDikjcw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,112,1770624000"; 
-   d="scan'208";a="215546761"
+   d="scan'208";a="215548388"
 Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.110.11]) ([10.125.110.11])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 10:45:04 -0700
-Message-ID: <127f99e8-f673-4cec-a573-be2257134f59@intel.com>
-Date: Tue, 10 Mar 2026 10:45:02 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 10:53:12 -0700
+Message-ID: <3b7f16d5-be31-42f9-9671-24532530273a@intel.com>
+Date: Tue, 10 Mar 2026 10:53:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] driver core: Add conditional guard support for
- device_lock()
+Subject: Re: [PATCH 2/7] cxl/memdev: Hold memdev lock during memdev poison
+ injection/clear
 To: Li Ming <ming.li@zohomail.com>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
@@ -66,39 +66,77 @@ To: Li Ming <ming.li@zohomail.com>,
 Cc: driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
  linux-cxl@vger.kernel.org
 References: <20260310-fix_access_endpoint_without_drv_check-v1-0-94fe919a0b87@zohomail.com>
- <20260310-fix_access_endpoint_without_drv_check-v1-1-94fe919a0b87@zohomail.com>
+ <20260310-fix_access_endpoint_without_drv_check-v1-2-94fe919a0b87@zohomail.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260310-fix_access_endpoint_without_drv_check-v1-1-94fe919a0b87@zohomail.com>
+In-Reply-To: <20260310-fix_access_endpoint_without_drv_check-v1-2-94fe919a0b87@zohomail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 3/10/26 8:57 AM, Li Ming wrote:
-> Introduce conditional guard version of device_lock() for scenarios that
-> require conditional device lock holding.
+> CXL memdev poison injection/clearing debugfs interfaces are visible
+> before the CXL memdev endpoint initialization, If user accesses the
+> interfaces before cxlmd->endpoint updated, it is possible to access an
+> invalid endpoint in cxl_dpa_to_region().
+> 
+> Hold CXL memdev lock at the beginning of the interfaces, this blocks the
+> interfaces until CXL memdev probing completed.
+> 
+> The following patch will check the given endpoint validity in
+> cxl_dpa_to_region().
 > 
 > Suggested-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Li Ming <ming.li@zohomail.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
 > ---
->  include/linux/device.h | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/cxl/core/memdev.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 0be95294b6e6..4fafee80524b 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -911,6 +911,7 @@ static inline void device_unlock(struct device *dev)
->  }
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 273c22118d3d..8ebaf9e96035 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -295,6 +295,7 @@ int cxl_inject_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
+>  	if (!IS_ENABLED(CONFIG_DEBUG_FS))
+>  		return 0;
 >  
->  DEFINE_GUARD(device, struct device *, device_lock(_T), device_unlock(_T))
-> +DEFINE_GUARD_COND(device, _intr, device_lock_interruptible(_T), _RET == 0)
-
-Can you please just squash this small change to the same patch that is using it? Thanks!
-
+> +	device_lock_assert(&cxlmd->dev);
+>  	lockdep_assert_held(&cxl_rwsem.dpa);
+>  	lockdep_assert_held(&cxl_rwsem.region);
 >  
->  static inline void device_lock_assert(struct device *dev)
+> @@ -331,6 +332,10 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
 >  {
+>  	int rc;
+>  
+> +	ACQUIRE(device_intr, devlock)(&cxlmd->dev);
+> +	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
+> +		return rc;
+> +
+>  	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
+>  	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
+>  		return rc;
+> @@ -355,6 +360,7 @@ int cxl_clear_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
+>  	if (!IS_ENABLED(CONFIG_DEBUG_FS))
+>  		return 0;
+>  
+> +	device_lock_assert(&cxlmd->dev);
+>  	lockdep_assert_held(&cxl_rwsem.dpa);
+>  	lockdep_assert_held(&cxl_rwsem.region);
+>  
+> @@ -400,6 +406,10 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
+>  {
+>  	int rc;
+>  
+> +	ACQUIRE(device_intr, devlock)(&cxlmd->dev);
+> +	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
+> +		return rc;
+> +
+>  	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
+>  	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
+>  		return rc;
 > 
 
