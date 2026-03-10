@@ -1,103 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CC7350A08;
-	Tue, 10 Mar 2026 19:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2709223328;
+	Tue, 10 Mar 2026 19:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773170958; cv=fail; b=W9mUu2NViVh/rhovZ0bMcxctg41IMwjjSRQDsEeQpSJaBMS6yEUeFgMk2Vh469Sun8bFH2q4mcOsh30izDOqLOSvo3mvvkFtuaBp3FrvrX9SkbVgUGRtbskfYBRVgtI1PQXZPJEyMbbeJHT79Afly4vKGkBJ6o02EgnrKo0n230=
+	t=1773171017; cv=fail; b=U74GNWj/UshT0fy1yM5S+E4L8SG/2CFJItJTDUcnZpTCcdbAt5IB9UGITVDT/i+x9UXeg+5Y+Jl+lKWWLmWm7pyBBBnhCOMh6Ih6AScW5+wYGZ2kO4iQafVNU42zj9FllBsZY2VUU+TeX8L5w6CDBaRXsW4evEnfstS1psPo2Kc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773170958; c=relaxed/simple;
-	bh=cfOASGwyuKcSH46blfixMU0VbxTz2cjBGcsN06F+eUc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=cT2bBr9ur7UB++ko1vXvOa8YcVLEFgjwJrhy+XRVLeZZ9MECALdY+NG/yN6DzQ4AlHs2i/7y5Vj0CXZyup7ofUGIRcKqxwNsmnRMFI7dWuqI63TFM5tUH6Ep1HPtn9WRW9phE/wxwNCZWK/IDQYLKskLvDBBEKkk3WuyOPMi7Mk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G5AypxOp; arc=fail smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1773171017; c=relaxed/simple;
+	bh=lqLBsrgZa8PJt8XtUi9Ss6DMsPiA7mpI/ew7R35rsDw=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=lPdtnGlt8WbqIF/NZFgUP7RpNwhIorHs9O3YeGjuBQdMi/3V1kD8l8dmSjt9+V8yhRlmBirM385qmMNZ+Td8VvOpvxOdeihKgaFIW+L7qh2WqE0GKgQj6mL+vO28QnPHV5UvicBBD95s6AFySV+cpVDtcExvOMccpUUFHuiaaKA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n8jebX65; arc=fail smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G5AypxOp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n8jebX65"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773170957; x=1804706957;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=cfOASGwyuKcSH46blfixMU0VbxTz2cjBGcsN06F+eUc=;
-  b=G5AypxOpF0SsukUxAnR0SoONkQnJRw6gZd2oCm7gB7Xs1HFoA/svDtG7
-   d8mXV8gdD1Laox8ivubBtVKb6UNYxGoOyYxQPNXu8zBSeg5688CRqK19/
-   rfxUnSGPuZ7qjcpSooo+SZN4v4taTlH7RO0f4Zkpmi7aILxlgEhdQfdyP
-   CxZJiwmHRFhrAJWNxpn94gBC5270tmJ1MZKKy6TQ7pr8eHBDNsa+bETNR
-   Bl8l+2nyU2/d0cIKPzHZKcYZaTPKLVxYsY68F6PbADcupdBx/fQ0cYTGz
-   tkTASWVq2JTcGPCC6a0hst5RWku7i/5/i3A49KDRF75Ub6eYgIMid81DB
-   w==;
-X-CSE-ConnectionGUID: FWn6YKu6QD6azXJS00kfVQ==
-X-CSE-MsgGUID: 64EUXBQ8TN+MEl7CHiKmLQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11725"; a="78087871"
+  t=1773171015; x=1804707015;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=lqLBsrgZa8PJt8XtUi9Ss6DMsPiA7mpI/ew7R35rsDw=;
+  b=n8jebX65WOQzBWnfnmv9BfYEx6ROcyMXO2s2H4pUICQk3O+q6YysetNs
+   A5XhXMXwMYo39Moq23YarZoUbb1ACkJ95t9udOa63b0IdLlw7IBdkjwxj
+   M51Lx9i98fwJfbP2Cy5Fp2sdO9hsFrI7Xw1r8e+Ib8j1W1Sy7HVmxLXD/
+   Hndf6NGkM2DuecCC/6x00fcOHm8ACCclkkc+tIuj+LyTQzl4lUTjuTE+Y
+   Wajn68yzu6EGMf6gzJtz4by+0V9HFqj+FH3vAamg9TYn3ISb7gIYLa1nI
+   2gLfSZIkOPntOqxx3LhIHW40by+CHYkoJesqmcdF+ggwAUcriRMDHTkSM
+   g==;
+X-CSE-ConnectionGUID: eXjp9aZSROy6YLzb76u7gQ==
+X-CSE-MsgGUID: BKfAx+GuQt+tor8ZtZktRQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11725"; a="74202868"
 X-IronPort-AV: E=Sophos;i="6.23,112,1770624000"; 
-   d="scan'208";a="78087871"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 12:29:16 -0700
-X-CSE-ConnectionGUID: PJBO3w8cSBODK1pure9t0A==
-X-CSE-MsgGUID: o4CW06otRZSMuNEQl0XXiw==
+   d="scan'208";a="74202868"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 12:30:03 -0700
+X-CSE-ConnectionGUID: uOvc0Te2Teqb4re1MWx0Zg==
+X-CSE-MsgGUID: cC1A5IwlSaiTfW1t276byw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,112,1770624000"; 
-   d="scan'208";a="216963125"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 12:29:15 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+   d="scan'208";a="222793755"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 12:30:03 -0700
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 10 Mar 2026 12:29:15 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ 15.2.2562.37; Tue, 10 Mar 2026 12:30:02 -0700
+Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Tue, 10 Mar 2026 12:29:15 -0700
-Received: from CY7PR03CU001.outbound.protection.outlook.com (40.93.198.32) by
- edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ 15.2.2562.37 via Frontend Transport; Tue, 10 Mar 2026 12:30:02 -0700
+Received: from CY3PR05CU001.outbound.protection.outlook.com (40.93.201.49) by
+ edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 10 Mar 2026 12:29:14 -0700
+ 15.2.2562.37; Tue, 10 Mar 2026 12:30:01 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WrsRE9JgFqAG4Fr+uK4CXAuO86kS8ub2lKscLTAaAFw9Ue2S+gxpq1Ms1dQrbBrdGAsN7NRXzPTdWkXFO4F4HLD1F+SMqunDtVuCBNkkgFf6UozxM1ja63YJfht37+Xd5T2hJlB1dfCVhxY6Gon+GG8Do1cfd8Nfkxar8cYFHAyllsKmJNOOkG7MxNFEtb52KFiAyiAXmFrsAqLBpySY2sir8y2LztDYk8pEAbs6LT/qwQ3YgBbqncQNwsg9AzHP/bzaV9prrWCfzYROVefI9dZaVJz7bWkG1xZTQLcua6WQi411TZadkJlIXwoYO6aTkHCO6il0JaprVqzPPPdXfQ==
+ b=P2OqWyQOTMLUdjih/d11POXgqlsf/l1BuRl1XwMThdJ2c0KaEQxgwE/SEyRizJciOyISSelhcCjw7JBhm+3Q2LdYoLPjkmqj8JbqDhbqQqDoTqsGrW+Mb4gVnRZ4Ipl0M6x59hpri6bqd6xUvO5JfGbCpW2L91PjBQ7NUKhgJ8BdiI95dEKDrVdbM14NK5Qx/ExEWMEYQIcQZiR69nmHusGrwprh6/FHGXbUxu3qn76833y9XT7yuXX0iTJ6Opukvqch3F4J/sda+IV+HzwewOpx+yaqtUkJfCKmV/pQqnGJT9EeEQu+s627YppjuhF5x9psGj1uJFLKUYFoi1ahJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=D5qGB0Ay2XEPV9dtbS96mOzoXT1aJnvkZpdOskRYJlM=;
- b=WgP2QX/eySIpZnkG8++6gNDhYmCu8ahLZz9zVHwqxxeSpDs9Nd637BVrw7/nJfAfPYXtmKW2sgGsJGPwNlxR81VI7MtxSfTfFcYrm2anXq5+s7/iVJQBSitmg0WPgZ35ODtOTE3MT/6+J8g10XT5zBbxnSbQgPlO0u1WFModOgEb+Ve8AwksLRz8Lhy0umd1QRdZ1DWf8eIFA0X/zzK1bkELE0lrHlx4mk+rAW+2Ae7RXcSkU8HD8DHOtDZuwdO5dOIGluTdtl/iveHo4G/kEmKYkEIWYdLLXLuC1ekm19XLU93e/cNDQYbss8X9NmVmj0hw6WApjneZWEgH86nPaA==
+ bh=UJllakHaSB3NExB9HRIjcUYPVOKeBLvVNHNGrKYCSI8=;
+ b=dVXkT5dQX2xvXRBIcF3eBw3oipxBsBzOvrTVWcN16Dk/PVrIWjlNmE0Qw13OiUG5i/oDM++0m+thHgpMq12AmPVsPindZS9ZRka/QAR084zyitiiwXy1EY2OvqKTR4u9xJDOA9R8rTCVRq5FIA8/uNvHBVACTIPQHzk1U7+K/XVBCw1SY+zxNsK/muGYkel+u90x7J9jupZML1E6mERK51l4GP1E6phSnJ49YhDRR2Z5vVBeOxFF23ghlP0ImW68/duEFsGcHSRTYS8HNw8cGu41L75TPoEbPlAJnP6+o0fbMk0th/WWDcss02KLdbQXvD7JeOE/xc04aGt4ipb4zw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by DS0PR11MB7630.namprd11.prod.outlook.com (2603:10b6:8:149::7) with
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SA1PR11MB9614.namprd11.prod.outlook.com (2603:10b6:806:4c4::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.11; Tue, 10 Mar
- 2026 19:29:11 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::4a5f:d967:acb2:e28a]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::4a5f:d967:acb2:e28a%7]) with mapi id 15.20.9700.010; Tue, 10 Mar 2026
- 19:29:11 +0000
-Date: Tue, 10 Mar 2026 12:29:07 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Li Ming <ming.li@zohomail.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Davidlohr Bueso
-	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, "Dave
- Jiang" <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, "Bjorn
- Helgaas" <bhelgaas@google.com>, Ben Cheatham <benjamin.cheatham@amd.com>,
-	<driver-core@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 2/7] cxl/memdev: Hold memdev lock during memdev poison
- injection/clear
-Message-ID: <abBxA-Ahtlh5UUm5@aschofie-mobl2.lan>
+ 2026 19:30:00 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff%3]) with mapi id 15.20.9700.010; Tue, 10 Mar 2026
+ 19:30:00 +0000
+From: Dan Williams <dan.j.williams@intel.com>
+Date: Tue, 10 Mar 2026 12:29:59 -0700
+To: Li Ming <ming.li@zohomail.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+	"Danilo Krummrich" <dakr@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+	"Jonathan Cameron" <jonathan.cameron@huawei.com>, Dave Jiang
+	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal
+ Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
+ Williams <dan.j.williams@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, Ben
+ Cheatham <benjamin.cheatham@amd.com>
+CC: <driver-core@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Li Ming <ming.li@zohomail.com>
+Message-ID: <69b071373ffca_490a100d@dwillia2-mobl4.notmuch>
+In-Reply-To: <20260310-fix_access_endpoint_without_drv_check-v1-7-94fe919a0b87@zohomail.com>
 References: <20260310-fix_access_endpoint_without_drv_check-v1-0-94fe919a0b87@zohomail.com>
- <20260310-fix_access_endpoint_without_drv_check-v1-2-94fe919a0b87@zohomail.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260310-fix_access_endpoint_without_drv_check-v1-2-94fe919a0b87@zohomail.com>
-X-ClientProxiedBy: SJ0PR13CA0035.namprd13.prod.outlook.com
- (2603:10b6:a03:2c2::10) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+ <20260310-fix_access_endpoint_without_drv_check-v1-7-94fe919a0b87@zohomail.com>
+Subject: Re: [PATCH 7/7] cxl/port: Reset cxlmd->endpoint to -ENXIO by default
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0296.namprd03.prod.outlook.com
+ (2603:10b6:a03:39e::31) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -105,133 +106,160 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DS0PR11MB7630:EE_
-X-MS-Office365-Filtering-Correlation-Id: fc99ce8e-cb03-4b1a-c47d-08de7edb4e87
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA1PR11MB9614:EE_
+X-MS-Office365-Filtering-Correlation-Id: 44da339a-12af-4c7e-0dbd-08de7edb6ba7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007|18002099003|22082099003|56012099003;
-X-Microsoft-Antispam-Message-Info: uWd8kg9yVsLycUeASLlbHi1ltoopI/e5gNMbxWsVnkxdkOMyNEAhEkg2RKz3HBBotE108UQJU7boJ51flVIBnyqS2ElDn+eXP6MhA7QMqsyp6Dj04pKiMOWyk01gJw+enfUGywto8SgTkO6hj5G2sB5P9gg9FUN0A6dPOtHq3t6EsU2IYC/FaIVOG/pT0ZFg2q1q1tcIkoMXcyxEt3n4uL3dkHo5PAPuc+pLQaf+VJx9vthekfY1JtCuRmWuWif8Y6J75fuZBdWWGC1ZmfVD1Dj7OVsRUhMq8oxD8fYxSuD6aRb5JauZ525brri6skCT3x91HHYPQ5wylpa2Yn6cDF7RPAz2edFShgHZXgDCZHSGpXlmWruiYQww7n52fUVwGJal3+puobrsuuA/pa7+O9KPTBLAdxoNTsJmQqf3FObFxyBIQXbVCm6mNF35sxlwSadrhRtG6hbXwZELIqfHkSXAuAuV9ssCMpwjSyu5k4txbZhaumiO1qCZIqjIiWhVRF1A6r5WD40t4RG8O3iZz//LU8lSvxCHIAdHuPS61KQ+lqLzwNfaKYCtUXbtAL7KKehvEVY4Gb2mqcGGaeqXTmX8QtV7f8H2WyimIyiyor3me/3FOSuSiSPM06+fIikrGapM5C9ngmFKNEejafbDuwJkPuN0PxP8n4LoCqdiHCgHMIkAks8IijfAKCpzo+TiQSNWstVIW3Z20Sd6tZDjji3TjiULh7fGkUPCtQVdlB0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7416014|56012099003|18002099003|22082099003|7053199007|921020;
+X-Microsoft-Antispam-Message-Info: LsIlZ+rYNKlJNUuUuZKpuqWfLLhxEH7PcWGJVRvoxhrZo7Pv0RSvanD6WRRZ551P7HdnuQboR6vgJBiubb9BuWoONzo5jWEifuCPjskWkFDeHWqv1PZ4YhYnY05PTLZix10Fgs11sH0S104ovi8SnCbOTwgMpjM4y/o5OlsVrkLgiIyWU6W8zMxStGLcjlhpqfO/6/oxHDcp12/vUlQb4v6x+RQzVh0PoQMdk35Vhjq0i8oR0PTA2zAvd5EiMkQaobpLsktF9xitd3VSDVFPfZ4JxpynW21ruJIhjjccIfbfU3UNdK5ANvkPDScfu+YfZR4dG9x+OaJ/twrugYDl7aIfmryXOHZlgb+w57KVT49kwXrtATSs+wwfWB67ryEabf6sXQ1EGxnc3MyGtBQREtDkubkcvZX4Zi+aHurE9LwYhlZXlnt9KK/iC/GsqeUhrRjxpB2aDCegizUdq+KQCHSO6yPpSN2ioNjiy/Ctv91L03jJ/vYYspblDAJhcZS+Yyiqevy10ITf5FMhskuHV4Kj/6GcJ5dvsGc4eAVuz6co34jMbcbgYZBA566ODEP/0lweJmxuVwab9Q3PUiAiwlv9sjI277IGcP6e7M/4/ErONmTFVwejuzmb913EpkeiS41IGegEp7v42SDmVw77q9FqHzMNO4tDwvZgw4BRCefdd9xZF7NUxdQYFJ4yF0+kBEKpAmBFkuj6mCCY/mdrhGg1XHowy+gtFgcGtZXypb06oSKMfXAvuqqoQhh5ClGPMxWaJDr/vjhfKYF1y9AY6A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(56012099003)(18002099003)(22082099003)(7053199007)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1HmvkBJYZ6vKLmD2pjXFuerzYdsx3dd1h0zR6p86qfxjHAJF0HFS6q8hYS9Z?=
- =?us-ascii?Q?jkfIJf0SUmr7SksVaTHPGyvlo+dCOvXJXr3e9GVCYfzBsBBHLgPToeNnYDBJ?=
- =?us-ascii?Q?N4Upb2bbpTYv932fPugFe+vXm1KHPfD8LvCEbZIVpV1JnWvQkTvEN3WYL1At?=
- =?us-ascii?Q?6IeDX5rmVSezjh9A8TW7HVWNoOJjFX2tlPfXmW7bIWCOZU7YqniNLBDplDQq?=
- =?us-ascii?Q?jwHSI4k81RKDinVRYrwMtWGs5miy/Y0sKoU0nxkDJSenIOQ6dQelKnyItaSq?=
- =?us-ascii?Q?Rt4FS4/wQ1KkfwBnw051335K6inlRJyZ5kHO07FWGoQv/+F2f7TlPjaLIW8w?=
- =?us-ascii?Q?JUOdmyofx21bGiNY6hnK21DbjJswp3fwIs2ImQInS4U/2BplMI+AK5L7rgbI?=
- =?us-ascii?Q?v8CsF7W7cR4oapVDplGib2jtmxQxVsMPWavvS8Xf82IcrzwYFMrQUSkQyJZT?=
- =?us-ascii?Q?7bdJQpLlLk5OKRVZmW/gvYLVt+dmSZVWerFpB15fnuZX26SzXRpRx8p4ZS5A?=
- =?us-ascii?Q?ztwUXb4WlRkKm2ct5oLWWXSCiOvugp2HLt781Pp8pn/joRHtA9aLklIKI63E?=
- =?us-ascii?Q?ryv48VHkk3t5WH+G496qJURaU9kOV8BfQYfMEKEfqxUWV/dCls76lR574tTE?=
- =?us-ascii?Q?JwwPLxUFJ3uRT6o3qEhw2wqj8Njgil5Jsvh+t2uFlyOLtj3lAwdHhH2V1AFx?=
- =?us-ascii?Q?I6ky3C0bQdqnbLtEYxsUgNugeoEsVehu8QRmtFedevSBrN2A6voJXUuEyG4L?=
- =?us-ascii?Q?iE7/aMLRjLWJiVbQlnexLbjySNEG4G4542P2aBmdnO2Wf0GxtUTIdwO5HpjP?=
- =?us-ascii?Q?KtXZ9UAiAH1j8cOubhf7F/t2d2+QmbCvUzxo64SSkHFvHGpK1bJl2qJmk1wM?=
- =?us-ascii?Q?2RKkgR3QWeDxoO+eZleHqUhWwlXFIhTvHNuGZS5Y0w+FEOLHFpLBdPJzM2Qd?=
- =?us-ascii?Q?MhB5ZEr6Mp0QaqeE1v5/wEq5marq3s1iGal0dBv8wBv0bpQNh7yompN75ueQ?=
- =?us-ascii?Q?27h056BHmvfXatqB9h6srj9M1Wa/im8OyTo7GBAUVDmKZPjJ9H9se2idryBo?=
- =?us-ascii?Q?+DtlAF4v4fAFSwJyBXomDFAhz3gZe/6nw9915dDSsdPkRT6xjHTKBSObm0/A?=
- =?us-ascii?Q?LU5kTyZEgXdKKKL4jjUuJ4KiWewIgKZG02qhigixQUQUk2rQJFMDQAcAuW64?=
- =?us-ascii?Q?VILvJF7nI81MpvFsxYIo/MKUpiNAv+hsX3EuzfA6GFHOgNqmFyTgOQnsxy8U?=
- =?us-ascii?Q?kSWV41C6Qi0RIJ/lgQ6nwkosCGZwGKRufMgANTbe1mJ4IfHVwFkSJkCSO+e0?=
- =?us-ascii?Q?Qfwu0H7K7rx4HjXtUIfmkwHWeqfbxhFO22wASINq+2G7BltiUkoS37Ggx7FF?=
- =?us-ascii?Q?qVtdIM9hdIr/1JfUdmrCzYW6lrHH0QekJPYNi3cPWgRhxuGhvTt1J3AYZvOd?=
- =?us-ascii?Q?aTb13oPrF19Kkth93BR356o6tJvjCWCQM54PGhQSVD/8xIqxe5LDdUGIskXP?=
- =?us-ascii?Q?UFOXW98yeP/YjV2kKCpS6Od5U2+Mhsw5iG3ZDh2Uyd3e6tg6jxYzT+B/82Cw?=
- =?us-ascii?Q?Wrene+XTJhOsfGZ+/h7ZQcBWrdzl1ncbyJ1ioSmN9a7SXTMvCxFipu8o0QO2?=
- =?us-ascii?Q?CuHQaiZFunNqjkFquhZjPIYWSjuGeki1tzO5ZJG5svADGQh4XLfyTkjO8xiE?=
- =?us-ascii?Q?wsfjHV8MPfxd6mhecm32yz1SeAcGCCeVBzSZYrusFXI9z+NoCwcTlq9M8S2f?=
- =?us-ascii?Q?/64dykoREfzSCm0CBhYFqmw2cg30TNA=3D?=
-X-Exchange-RoutingPolicyChecked: whvf5dl+M/zU4BwaS1CbeFfFjXK/i43/dgceVI4SRmU17WzfsnotNLKryOnqbM2SlukpTDskWGGb+eF2QInhAIk0tqebSZ3eVnFGQxU2RmIsUpw4KiqFGqHhV8N7z2r0ee0WQ/gUf3Svp7iv8MhftWd81XyyztQ5BDE5T6v0GZU/LS8oekxSFe3O5JiO8LtemClP7m734KpUyqgsJqL8wIT415DsxfL/cDgpNkVjVxBHU5f8ZI5tWoE7hqjTQeD46oZYqjBKHzrUBTLYfnSQGn+kC/TViW/GuNV2yj0iD3I4LXjgopmPtSnoqQ0JGSMHHlrjo9wdCDcNZFytWh61uQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc99ce8e-cb03-4b1a-c47d-08de7edb4e87
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dE5hUVNzV29kbk16T1VmaStaSWlIMHZOZkhnM1pFVVJyNThvWnl4clF4MXFB?=
+ =?utf-8?B?MEVwWXo1eXRNYWUzWFVXRjZTZFNDNTdIeDRCdEtVRGtlT1MzamEycUcxd3RN?=
+ =?utf-8?B?OGRrdnNJWDI0S1FtWTVURGdKdVdzREQwc01iVFBwVVdlQUhXem5QVTBydGJT?=
+ =?utf-8?B?bnEzYmZEVzBPZVlQM0V4cHM1TitQcW1vMDdKNUE3eW1TeXFDaVRPS3k4eFAx?=
+ =?utf-8?B?b1RpYzgzeTM2ZnpvazVBOGp3M0ZNdStkUUZFQTBtamVlcnJiSEhKdUVLRU13?=
+ =?utf-8?B?VWo5a0lhSWhIOSt4S3JWMVgyWDltZGRTdzNFRXNqbERYeE5wZWc5eUtWcG9P?=
+ =?utf-8?B?eHVTRDkyVEtYdUtyL2NSNFU5cnpqNmxBVThxa1h2blRpeWk5WlNhWC80ekZw?=
+ =?utf-8?B?ZTJNTTRFa09OemxiYzMydWRaUW9XTGtZTWFsRHRIb1VoOWpOV3pMQUt2RUpq?=
+ =?utf-8?B?R1NmMkJYZHpVeW5FSlNqRWhwcG1MOUNZZmpKaHVhNm04dy9hcmdmd01PSGNq?=
+ =?utf-8?B?M0xneFF5WjUyVXlSZ1puM1dBTzd3ZThJaS9KeFJCY0UybHo2YnMrVXVJTy9Z?=
+ =?utf-8?B?MDUrdi9WbkdmNFcxZ0pqRmI1K1hTeStGcG1Rdk00SUZtSnpkYm4rTEEvL3Jx?=
+ =?utf-8?B?KzFob0t5V3JhRUFOWmg4MHo2YnNxQUdhWVNTK1J2Y295NTNNS1pkTmNSc2Vh?=
+ =?utf-8?B?dFZZcDhnbEloR05DeDZSK2Vwd1BjZHJ1RlFRZndHYjNzSG5qVCtXdTlaMUpU?=
+ =?utf-8?B?cnRVMUdZbWF6cmdLRWROeFNkYjk0b3dlK1NyUG43ekg5RTRnUDlvc1BJN3hN?=
+ =?utf-8?B?Y2RFb2lXTW9sT3VTMEpXWVArWWM2VkJXeE5lTWtQYWR3RVNLUWtWUlp1NjdK?=
+ =?utf-8?B?aFZNV2VLZEYrcWd1T1diYVdwNXJzL3RFQjlkb0U3bFh1RVllYTRzLzYzbWxF?=
+ =?utf-8?B?bWFpRE5TV0lnQWVLZU9uOFNwcDNqMzUzZFJUSmQvZjBaS0UzdmIzSjNURTA2?=
+ =?utf-8?B?Tk1HTlFwNjlqVEN4NHowVkpEZTZZcTJmMGloaEs1cUFPeWpKZEl0RHRORnpY?=
+ =?utf-8?B?REJGaGhOczBEWXJkTXF2SmFIOXkyMkNPcDlodzZZc215UVBUWEw3QnpYbjVK?=
+ =?utf-8?B?NWVmUUs4azA5eGRNSXdabXNXZWsxKzZJejVvd2V4MjNXMSsyUmZEd3RNTjNH?=
+ =?utf-8?B?VXdxUHJacVdUYk1Jc1VWdDNPVVJiSzBzWllPdnl2SElOUTgwVFpoWDR5ZzQ0?=
+ =?utf-8?B?ejduMS9nWCt2R0dQeSs1QnprT3V0TTRBZ3Y4WE0xZW9pZXM5NzB6RDMvbmJ4?=
+ =?utf-8?B?ZUw2T0hPZnJLMVlnVnBjQnd2V0dSZzBEYWlVcCtEWDEvN000c0M4SkI3YlF0?=
+ =?utf-8?B?ZjdaNHQrSDJGenlxQzlDd3cyMmRxbDA1R2JkSmJZVXE3bStJMzcySmUxcE9a?=
+ =?utf-8?B?aW1JTWVqdENZU0JzbFdVWFl0WlRhVWpJWUtlSjhmM2p3aHozZzFQUTJsYzdz?=
+ =?utf-8?B?TUZzQ0RNa2UxL3VWV3hSTXZ1OTBmcnhsOTZSY0NCbnh0eFlwTmRkUjNpYWsv?=
+ =?utf-8?B?VmZJL3NJZk9Ia1YvMDY2ZXVhUi9MNThvbmQycGkzenF5KzVBamVXQVlxSkJs?=
+ =?utf-8?B?TkpGR0ZBUkxhVE45S0JXamVaRDZtNVRES0phc3R4VFZUMWs1bHVvdzRkWk5R?=
+ =?utf-8?B?UUVKd0lHWGh5Z0kwenpjMzI5ZjBmSTkxeVI0NkU3S0hZQ2grcDBISC95QkZa?=
+ =?utf-8?B?cGQyamVDT3lhWmY4YTVjYVU1OHI3T08reWVmT1BubnVudWVRZTdGb1RYcFdR?=
+ =?utf-8?B?MC9jQ20ySzFORWpwMUxhM1FJSGxUY2hBNlF1V3psY2tpZ3plMXlKdkwzSGpt?=
+ =?utf-8?B?NG56WHQ0dXVjRzBCZmRqZGNXK2I4bWtpZHRVdXFCWmthTUJ2UjNZbHlncEJm?=
+ =?utf-8?B?SFNZb1Riekl4Z1BNQUVKQ3pUSDdrL3lQL0MxUlZZSUtiQ2UrTFRmcUlBNEJz?=
+ =?utf-8?B?STNOdGtacWlJYStDQTNPVC9PVTRBTUxEMHk3YlI1ek9vOXduTWo4ZEV5QUFo?=
+ =?utf-8?B?a01XbFlSRDZpdFd1eFZUN1JvVFhSeGY5RmZveVRqRnduNmtHU1g5czdxTXU5?=
+ =?utf-8?B?ZC91YXN4RlJJdGdvL09QYWgwYTI3ZDRQK0dzNEw0QjFPaFVWMjdtM0ZRRnNC?=
+ =?utf-8?B?TndJYktHdVQ3enRweFF0a1pFTG1uejdOVGJ5L3dJVGpxTGluVXU5QmVCV0RX?=
+ =?utf-8?B?Mlh1eElhUlJ0VG91QlU5bWVXRk5sQXZpYkNNVnBFZ2VpNEVERFVCR0hhUzdW?=
+ =?utf-8?B?U1QrZjM1di9nY3p3Z2hJd1k2b0ZjQno3L1Z6RkhWWHQrNWYyM3dsL1lFUEw3?=
+ =?utf-8?Q?fo5z1NTpJZds7nPU=3D?=
+X-Exchange-RoutingPolicyChecked: fg3b+z+5Taf1EBXiTOk8LjqVpOyF4meqFtlf3J7B7+REfxhoEOq+Hnof7ev1ZTJxJ7UivMQCL7r+b+pWv9viedXjz00r38ieOvtsYv0m6Gq2wrDQRfqardOGEcQqnapEXp+poYRNrv0FaxdSy5wOAwYP30AGknlVgnAbU3ohY4EBqxa9d3p3a5IoTMwfKp1HCB2xQtsJbAKmu83+MRhHpbTAsZWUk4O5ntTv5X2pFSnb+jvPXISLZcvLE+6aDu1RlS7ldaU/3iBIgHb8wrFPRuK6HUXryuqQgQb0c2v9vzn1T0/YNj5xfh9k/4Qv04F6KMcK6o1upK3/H29PlHljfA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44da339a-12af-4c7e-0dbd-08de7edb6ba7
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2026 19:29:11.4709
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2026 19:30:00.3748
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sT+kmyJQzdHVyNAtBOx1S37gWq3sCVBRa4V0yaexDp84EC/OpKGAA9o3mpPRwynh714RytlFXhRnmzCZ32EF0qA57Q9nkj6eLf/CNBFsoBg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7630
+X-MS-Exchange-CrossTenant-UserPrincipalName: G9fmrHjjR6s85S7gSZBcSfqVs/Ft4jVMTtWzLmi7tTfPTJIkNfKqJBBhGVmSqIKjBZ5vInRFntj2VnlEuJRLZj/cGcXQMNfrw9/+0GbXUZ0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB9614
 X-OriginatorOrg: intel.com
 
-On Tue, Mar 10, 2026 at 11:57:54PM +0800, Li Ming wrote:
-> CXL memdev poison injection/clearing debugfs interfaces are visible
-> before the CXL memdev endpoint initialization, If user accesses the
-> interfaces before cxlmd->endpoint updated, it is possible to access an
-> invalid endpoint in cxl_dpa_to_region().
+Li Ming wrote:
+> cxlmd->endpoint is set to -ENXIO by default, This intentional invalid
+> value ensures that any unintended access to the endpoint will be
+> detectable. But CXL driver didn't reset it to the default value when the
+> endpoint is released in delete_endpoint().
 > 
-> Hold CXL memdev lock at the beginning of the interfaces, this blocks the
-> interfaces until CXL memdev probing completed.
+> Besides, cxlmd->endpoint is updated to point to an valid endpoint in
+> cxl_port_add(), but if the device_add() in cxl_port_add() fails, the
+> endpoint will be released, but cxlmd->endpoint remains pointing to the
+> released endpoint, it may introduce a potential use-after-free issue.
 > 
-> The following patch will check the given endpoint validity in
-> cxl_dpa_to_region().
+> Fixes: 3d8be8b398e3 ("cxl: Set cxlmd->endpoint before adding port device")
+> Fixes: 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
 
-'The following patch' makes it sound (to me) like the patch that follows
-right here in this email. Probably better to say 'A follow-on patch...'
-meaning it follows after this.
+So I disagree that this is a fix. It may be a consistency change to make
+sure that all invalid ->endpoint accesses have the same result, but it
+is not a fix for any discernable end user problem.
 
-Maybe DaveJ can fix that upon applying if this does not rev for
-anything else.
-
-I don't see a fixes tag and like I commented in the cover letter, this
-is low exposure as the debugfs interfaces for poison are aimed at expert
-users, who I'd hope are not reconfiguring their regions while injecting
-poison. So I'm good w no fixes tag, if that was your same reasoning.
-
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-
-> 
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Li Ming <ming.li@zohomail.com>
 > ---
->  drivers/cxl/core/memdev.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  drivers/cxl/core/port.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 273c22118d3d..8ebaf9e96035 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -295,6 +295,7 @@ int cxl_inject_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
->  	if (!IS_ENABLED(CONFIG_DEBUG_FS))
->  		return 0;
->  
-> +	device_lock_assert(&cxlmd->dev);
->  	lockdep_assert_held(&cxl_rwsem.dpa);
->  	lockdep_assert_held(&cxl_rwsem.region);
->  
-> @@ -331,6 +332,10 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 0c5957d1d329..ec3cb62b44b7 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -834,11 +834,14 @@ static int cxl_port_add(struct cxl_port *port,
+>  			struct cxl_dport *parent_dport)
 >  {
+>  	struct device *dev __free(put_device) = &port->dev;
+> +	struct cxl_memdev *cxlmd = NULL;
 >  	int rc;
 >  
-> +	ACQUIRE(device_intr, devlock)(&cxlmd->dev);
-> +	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
-> +		return rc;
+>  	if (is_cxl_memdev(port->uport_dev)) {
+> -		struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
+> -		struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +		struct cxl_dev_state *cxlds;
 > +
->  	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
->  	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
+> +		cxlmd = to_cxl_memdev(port->uport_dev);
+> +		cxlds = cxlmd->cxlds;
+>  
+>  		rc = dev_set_name(dev, "endpoint%d", port->id);
+>  		if (rc)
+> @@ -865,8 +868,11 @@ static int cxl_port_add(struct cxl_port *port,
+>  	}
+>  
+>  	rc = device_add(dev);
+> -	if (rc)
+> +	if (rc) {
+> +		if (cxlmd)
+> +			cxlmd->endpoint = ERR_PTR(-ENXIO);
+
+I see no need for this. All of the upper levels paths ensure that all
+the results of setup are torn down on failure. Consider that if
+device_add() succeeds and any of the follow on functions in
+__devm_cxl_add_port() then this cleanup will also not happen.
+
+So you must rely on upper level cleanup. This is similar to the
+semantics of dev_set_drvdata(). That is only reset up after _probe()
+finishes failing.
+
+
+
+Now, if you want to do some separate cleanups in this space I would redo
+the anti-patterns of scope-based cleanup in cxl_port_alloc() and
+cxl_port_add(). cxl_port_alloc() does the "__free = NULL" anti-pattern.
+It appears to be doing that to avoid adding a DEFINE_FREE() for ida
+cleanup if the port allocation fails.
+
+Also, if the cxl_port_alloc() call became something like:
+
+struct cxl_port *port __free(put_cxl_port) = cxl_port_alloc(...)
+
+...then I do not think cxl_port_add() would need to do the odd
+__free(put_device()) initialization without a corresponding
+get_device(). Nor the odd "dev = NULL" at the end.
+
 >  		return rc;
-> @@ -355,6 +360,7 @@ int cxl_clear_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
->  	if (!IS_ENABLED(CONFIG_DEBUG_FS))
->  		return 0;
+> +	}
 >  
-> +	device_lock_assert(&cxlmd->dev);
->  	lockdep_assert_held(&cxl_rwsem.dpa);
->  	lockdep_assert_held(&cxl_rwsem.region);
->  
-> @@ -400,6 +406,10 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
->  {
->  	int rc;
->  
-> +	ACQUIRE(device_intr, devlock)(&cxlmd->dev);
-> +	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
-> +		return rc;
-> +
->  	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
->  	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
->  		return rc;
-> 
-> -- 
-> 2.43.0
-> 
+>  	/* Inhibit the cleanup function invoked */
+>  	dev = NULL;
+> @@ -1425,7 +1431,7 @@ static void delete_endpoint(void *data)
+>  			devm_release_action(host, cxl_unlink_uport, endpoint);
+>  			devm_release_action(host, unregister_port, endpoint);
+>  		}
+> -		cxlmd->endpoint = NULL;
+> +		cxlmd->endpoint = ERR_PTR(-ENXIO);
+
+I also see no need for this. Either dereferencing NULL or ERR_PTR() will
+result in what is needed, a kernel crash. How the use after-free crash
+is signalled does not really matter. The only expectation that other
+code has is that "->endpoint != NULL" does not mean ->endpoint is valid.
+Nothing should care about that though because cxlmd->dev.driver is the
+authoritative gate for ->endpoint validity.
