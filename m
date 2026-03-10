@@ -1,210 +1,140 @@
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012070.outbound.protection.outlook.com [40.107.200.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3B3391E4E;
-	Tue, 10 Mar 2026 14:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773151338; cv=fail; b=dBUv9VVPQMUGIWMzNeWuivl6d0uH2DQUu4czD6tRJYtKDeEd6oT4JxqBXvrjWBK+sYV8FACvXpx7IYNzlq9KGpwVltu8noMfschPmgq/b5OhOH3d56yb0WVKhGFnx7G7J7KKwGUWePuqVFTqCvPxgEQAaYtwz/3CdaCzCGa1Ebg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773151338; c=relaxed/simple;
-	bh=2UZxsqP6vU0rLwx7dnQ09Lvs7EF/scr9RZg4jq2kzLc=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rejMrz/uk8Vm3xNWX/DDefWJiLR48+LpkcEnCmyovRsfcpn10hrymKEwRrqFD5NnmxBOto9Sj29HRrkRlS4nqAXrMFZuFihGiIAWBP5HjqbdCszrLHnzfCETSpK6IQyKu6yMHu+FVq6MdbTBbi4lhP1PyP84TDlbjBd1F+okUu8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=P1o5e2V+; arc=fail smtp.client-ip=40.107.200.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="P1o5e2V+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=llrGw36ELLVLhrhbCdkGWtFW4kxTZAP+MtiDFuwWQT35fVziYjlzSqP2HHVNcK3PAglY5tHMDm2GkmNE5i7btl+py+vt9deona7uxofk3EVUeAhDWj1OmYRJt8UgnAR4d4A5u08enuvHSmQ+YgxFI5uxpRG5Qo4gpNqxXp8YkxWfMKp/F+dYAXXt4zjo6VkuDvfaM4aa3ib9BFCxC/vxBO9MR+lPkm8f0KlS4rwyhPbwRXu03qiCoIllodQmH4H/fFn0v4eRQeWbF84LDkbMe2SFDZubtgvHBan2G+MOe9jGMdnUeFPlP8jVU08CJ2NtvY5yGo3jbqoogf7nLvCZsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CDK8MRD8prgGiIN+N5sAHzEQ8mwF4ycC9ynTrVMLOCs=;
- b=E7m/Nd5FASF0/9+qlhJxK8P1LmOvlC7b/kVMxd6WR6ZPA9GZftLAT3Ewp6xtSYYLrP0w6muHQMDy1d9hq9H8Q3XLX3rO/nBmCHmZVCXlJSQ0DeRonmG/XPJEmFMvUxJpDGWrId6WWXieIP9nAJW/WTxwkip0JbUuXpYKu5av88GhPcYLmsW+8WOXAVKlSfQOfpftV3rTjkE+MbsjtRPfpl06tIyLRlrFOOaJuK+jAi4/zYIRESpTGZE9w0qS7r+8ZOZ435V+EmiVsWWCbrs8huYwRxWYxZF0t4V51YkoKsxb6x3+EGLTFzxO49eZxZIXkN2rFB/kDUi+eyoFl7gTOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CDK8MRD8prgGiIN+N5sAHzEQ8mwF4ycC9ynTrVMLOCs=;
- b=P1o5e2V+MjtjvdelzhDc2Ztoct99y2ubkwrVGObE/Gi77BKir1sbNIww6Oa5s/oNBkqQXKO+Aiun0JGK7EuDMgPFjwey0RLrsEo2a2RqWjpqBClRhPOPjRoBAkkKvPyehPohJOtJA6NgMJRrBHyV0EZYOEW50A8uOxE/d5HtrjA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by CY8PR12MB7731.namprd12.prod.outlook.com (2603:10b6:930:86::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.11; Tue, 10 Mar
- 2026 14:02:12 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::9e55:f616:6a93:7a3d]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::9e55:f616:6a93:7a3d%4]) with mapi id 15.20.9700.010; Tue, 10 Mar 2026
- 14:02:12 +0000
-Message-ID: <39624055-28cf-4def-b6ac-12256b1da681@amd.com>
-Date: Tue, 10 Mar 2026 14:02:07 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v23 00/22] Type2 device basic support
-Content-Language: en-US
-To: PJ Waskiewicz <ppwaskie@kernel.org>, alejandro.lucero-palau@amd.com,
- linux-cxl@vger.kernel.org, netdev@vger.kernel.org, dan.j.williams@intel.com,
- edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
-References: <20260201155438.2664640-1-alejandro.lucero-palau@amd.com>
- <1e617ee5e6003994d41a0a270ed1f6b17ac75f8d.camel@kernel.org>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <1e617ee5e6003994d41a0a270ed1f6b17ac75f8d.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P265CA0067.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2af::17) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8859630F534
+	for <linux-cxl@vger.kernel.org>; Tue, 10 Mar 2026 15:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773155357; cv=none; b=bLaSg2WIp085ZzDq6yRXZamGejfSegMDLWhc9cnmZ++NbBTYB2QLmh3hBD/8YbRvoOoBvzfjDgMLlf7loDNutnGeUu9aQ9BXJDsTSBmcH7M5bhQhgAOeK0IS09g4oxfneZa6nhjmgNZm0ueVEf698izMSlksO0TaEgRRqij0Qug=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773155357; c=relaxed/simple;
+	bh=QEW3lhhJANPdrCVBmAIqH1dXUDPD23689ylzZ5dnJco=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fnWvVBJTEtFdIp0Ugk0aZqY/I4BP3bd/VrLU0ovLHhRGmUT9hdRWS9Rxb+3R0nDLum/B7mROBek3NthRg7igeo7xu4/2/jhgsQbm7YxuDw8425dBN3diSElCrYngJyr2jbzlM2Csy03G8ttjpD05D1+8md89uRQQ7FODCjLYYHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-8cb40149037so1385388085a.2
+        for <linux-cxl@vger.kernel.org>; Tue, 10 Mar 2026 08:09:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773155355; x=1773760155;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Ru18n38/qbgrYN5XhGLEd0K3IukQ/mw6D37X8x0z/qo=;
+        b=Zf7HIrdBoHmo3bfpMfJ4/F4h+nC07XIP/itluUD6j2Vc5kdwdtRlz4bUSd9A5QAOi0
+         Kyu0hwRySWIrKWgpMS9yVkwNqjiH8mm+JrFM+yCwF+dAJ6Xf+dp0eK7fJyt7qOaE1eq2
+         rR3ndqSY9NTJvCkfDdV+kSP+OPVvvWzMbtroAaFRBG6EqfF3zsczWSPhoamcGeQN8t6X
+         0QiVAgzuC+xpLz0P6M4AFwR8GyRAzHRFmAe2j6bhsRp0unuQviyPuLBepZPbko/127Si
+         XcWZMH3yiOhTzloERaTBfPVC7ElqR+xd14cpfI4a7qjs+b3QEse7EOKy9y7lZ3Pw4fiN
+         GqYw==
+X-Forwarded-Encrypted: i=1; AJvYcCXgRp6z2s+p5lgO1E8aG55zHAdFmzw1DjnO6xPYMRthIQGnaE21wL7VzZ2IA2w9aF2te8p9qNfmtlY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywuti+rhdUq4waOILrVkN1O/CBLjS039ezPUfzDesp5YCpvp5ZY
+	8QmpZokoNa0DcPGO117NSa+ZyQNwicbtTF0XHekA/tya6LpCkrOxy31ZOFU3lnSS
+X-Gm-Gg: ATEYQzxjOBEPaXe/6aqaTwjZTzD8r97qsTh5gP+aKUF4P925w+8bzRq/Hx1Z6HvyGIn
+	DSH8At0mI/8ScGhWmOfOL5x+7OceJEJIh26m/x3tvhxLXD/DqIUT857TitZ9FNMG0gg2Y+tTPFN
+	h47RCfgwwYiNAvJIXlc6nPSp54fDzQc8eGaD6EVEiyh1mSDquKVcUgSY/zCuPErT1ndtRrY4h0U
+	e1fc5OUryzm19/nDyEgEmOBHmMoMW1gN79+c+QYzKwNzvxaxM8+J9boCa6omgQWoOOjahca5g2j
+	Rahlb0w5Rj+B48LksvM3Blet8nobDVPmHY1lWXmTF0NfKqSlQENcTK0Ir8i7kOhIrg8AlZuigML
+	DgfDkCbS5hUP4h+XC5yJSXmj0su6v6Cj8ALfw4Xf20OHFUKgLNxafvbXOzYGYuX76dJ+jRErUmD
+	ekDNx1VKPug+NWF43f8tFGEO9kmla1qfsOnhSAWspIgEUcEAZm4hdmzZmJYGT+
+X-Received: by 2002:a05:620a:4694:b0:8cd:8635:c063 with SMTP id af79cd13be357-8cd8635d189mr901770685a.50.1773155355359;
+        Tue, 10 Mar 2026 08:09:15 -0700 (PDT)
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com. [209.85.219.52])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cd8251fe72sm537866085a.30.2026.03.10.08.09.14
+        for <linux-cxl@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2026 08:09:14 -0700 (PDT)
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-89a0d53f3d1so87034926d6.3
+        for <linux-cxl@vger.kernel.org>; Tue, 10 Mar 2026 08:09:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXLV4laqK0uViw3W61vGIqqQr7g5EOsG3IRAAh/dq3QjRyzLddgHcb5TYWDRsJBBL0M2I0af7+G9XA=@vger.kernel.org
+X-Received: by 2002:a05:6102:c8f:b0:5f1:70fe:3027 with SMTP id
+ ada2fe7eead31-5ffe6121c90mr5181206137.24.1773155033187; Tue, 10 Mar 2026
+ 08:03:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|CY8PR12MB7731:EE_
-X-MS-Office365-Filtering-Correlation-Id: b370991f-4c1a-43f3-c19e-08de7eada054
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|921020|18002099003|56012099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	XstSvagLaU5I+cRiT7jELkvybqDlsje0nPN6x/HXFzWyOSNFowkbfH+YzK/Jv6k5pXcWLf7EMBdSRCwjdCovqh467bjoh54SQdtLjciKvAyya9w52yIx81n/8uFoiBhnQyuowOVNDRqfidCTCWlniQ7fgT43kqze/aJ6qcbTzAczfi4paA19zT4hwkrw/DG3yJn2iN9gRUOqs/lE8lj5wl//f6PP/xwQDE6WRZ1dM4IopldesqLAFpoGnLBQ9m0sJ7R1xtaKQn3KAnrCIqJgNvZGvksGOjFI7Usf08LNbVpg3xYxw0eA8X5WjG8KcfYfz+irWqAVnHAcMAdIeusKUMnRo0F9wbB3XZEOZqDQ/InBe4Mq8wEoPoUPmVIEIKBDAkSfSQ6lIKfqMsUcO9n5kr2T8UGFGwker2R38tCrStX0PZ8q+8wNy6NSeYQvqknK61yVF3jw49lMu/eLaXjSV8+fHiI26QCuZX8k+YoWXswQK6Ut8iz+NPZiHsi2hy4UHI1gyNIaJ7lA4ZDoA5uvE/7qEyajb1GPJs2E+8CmnZn4LgLOwtQn15jI9S2NMsGa3udg7MVhVKGJifgvgNbeD/w+Lz20Zox4UxvwL4/EwgsWqHgA7VTRJivj7HWzI7/ryer/AxxDPI0SrbYoZz0k8fPWOueBTMsDN1aBzyAEk9PUdcmOuSpyQH8/coGQUgvLAAi0xE9VriqFDnIPc24LidisPF9QNb0qotR+bTk0kDASOVaPppULvMwoKibUzxVTM5oaVUsCt4ip1AvOoXQjFA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(921020)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VkxUbjIweHFwcGVUNUM4OU1lTnRSQkcxdWlFQVBBVlhMcVFoeWYxMjVXS1Vv?=
- =?utf-8?B?RnVVaUVCSk15Y0dmV3FoRE1DSkVXOC9uTU5GazJOMXVrVDhHbnJrNElSS0tM?=
- =?utf-8?B?RUN1UUN4Uk9vV2lyRmt4ZThGcERVSExBL3ptMjdmeVpvaUhOZTUzN09EWWtX?=
- =?utf-8?B?SCtvTnNqamtwTXRVSkZma0tYOFd1cFlQalNFeFJPd0tJZi9zZHlzVkFTaXJG?=
- =?utf-8?B?VXlNTllIbUUveWNRNHI4ZkFKMXN6QmgxWFZ2QVhNNDdwdjFETXZXQWRzVFZY?=
- =?utf-8?B?UElZZTUxT3lwQXhPV3ZMVkpxTmp0RzRKbW5nSE1Cd0dIMEFPVXNRaTc5QzJK?=
- =?utf-8?B?clEwOC95czZsekZMdlJiSXllOWo4MGN2YWMxU0tSOFpIVWVmVTNNTDZ5ZzBI?=
- =?utf-8?B?a2hpbDhOaHZhV3J6UmRGc1BqU3drNjZrV0N4aCtWVjNINys2L2ovOFN4d1ky?=
- =?utf-8?B?SzIxcHNxLzlkejB6U0hqQVoyK3N1ckFDdWtEd1dhMi9OSUxnbUpXRVptM1Rr?=
- =?utf-8?B?TklMVW9CRERxWHBKN29nS29wSSsvUWxNQ3pOUHVoRndiZ252QXZDbWF2bGZp?=
- =?utf-8?B?SUc1dWU0Rjdta0ZrWEVqaklXQkd3clRkMmlkcVpPS0ZMRUcrc0RzUjlkdStM?=
- =?utf-8?B?Q29OdlhOQ1NadzRTMzhId09GYUxQNVdlNEE2N1k2NjF3T21lK1A5VUY2bml0?=
- =?utf-8?B?OUJFc1ozN1Jwek9CWjhkcDFtUUdKQkFxYlZjUmlubXV4bXlqYk50RllUTFhV?=
- =?utf-8?B?ZHBobGtmVWZDdHNQY0Rvei9JNnVqbEIya0ZCUURpbERhdURVSHZ5SGh1UU9Q?=
- =?utf-8?B?MkpKdU1MaEw3ZTcvUzl5a1UwLy9JMUNOOTFvTC9XSmVVWEMrQkN0aWlKanNJ?=
- =?utf-8?B?R1BFemMvYUsvYzdTajJFZ2UyTVhvK1F1a3lKSXBMSDVpdExRaG5OcG4yMDcw?=
- =?utf-8?B?Y1lpZjdDR1hnb3JjNEtvRDdqQVpTVFQ0M1pVTzIwZzdKbUFPeWp3Y3BaQTlq?=
- =?utf-8?B?VjJxMDBtQW9wZXRtRUhQQ0ZXRzBuTTl1VWdkbXJtcTUrTldsUzVKMXFzZ3o0?=
- =?utf-8?B?azR1QWcxR21GWk4yM2JrRlhjUEhSeGRtU0lTYm4rbCtrVytMSEc4MHlRT2pj?=
- =?utf-8?B?M3hjSzZldWJPRmV2V1ZNL0s0VDhDeXo2Sm1iS0l5U2ZyRXVHV252elRzaXRL?=
- =?utf-8?B?b0VITC9FS3NsWFVRV2JyR0trdnY5UVoybjdXbDF3ckg2SVd5bzM4MDVGMUVx?=
- =?utf-8?B?M0x0aVRFeG1lZFpWVTBhREJxMFF5bHlhNU55VkF3enpCSzd6aXRmemhER0I5?=
- =?utf-8?B?Qk5SVzkvVGp6OTlkRmthQnZ6TWJxT0J5SmMrMTBuckUzZm1jQkhzOVJwb0Ja?=
- =?utf-8?B?SUowRHlzNDhxdVMzQ1RrSlBPdEFMaCtsMUNSeTg4eEg5VTBYY0RIMjhMdWpX?=
- =?utf-8?B?ejFZNlQxNFgzOU45S1JERURFTWpNODZFVjlYV0Rvbk9Da3UxQ3h0YjE2TTZ2?=
- =?utf-8?B?WUZVamR5dm9wRzNmSzZpcjhOVE5BZmoxSE1IVWZ0bFluYmtmL2JtOHQ3Unh5?=
- =?utf-8?B?TThYSi85SjRrS3NxU3BsV0ZIV3lRbjFJQmxqNHRaY2RDcXhvdFVZYWNyVStp?=
- =?utf-8?B?Y0pLa2ZMY3JaaW9IWjYyaU53dTBVRTE4N0xaYTFOS2F1VGJPTFRNRVR4ZjRM?=
- =?utf-8?B?U2pxZjFUVU1FZ0pyVzVoOUlWZE01M3NxSWhVQXZXUDJxSDNlN3k3bjN3K0gv?=
- =?utf-8?B?dlBYaWhWWE9Ma0dTL1Y2eVdzaU12c3g5UXh4SUlyRHFST281QUxqbnVoV2pD?=
- =?utf-8?B?T21NR0lYeFA1WkVRUm9QZXNhSjJabUd1ZjNlSlZrWk05MzdIU0kvZ25DRW5t?=
- =?utf-8?B?OGdudHhJNDJTRTJqaHUyR0htQnlqeDZOa0Y3Uml4bWVVTDZMOFZabXdrbTRh?=
- =?utf-8?B?QWlTSTR3ZnRLRkNvRndnbkhRenIvWGxPWW9RaVFhenFpTkJMNWlSZVpFblJN?=
- =?utf-8?B?TGZLUCtOeWs4R2JDSnZiS214RWlselJIdWgwRFBMeWVHRTFSRHFzdlVYNTYw?=
- =?utf-8?B?SDV0OWxhYWhYWFBNL3JWTU43eFcrek9WNVV5UGdMZUtyVnRuZEJTVEdaMTJN?=
- =?utf-8?B?M1V4Vk1jb1d3NHI3ME44dWZuaHVUTkhDcVhxbmFHKy9YQzRpS2JIUEYwdnhK?=
- =?utf-8?B?cDd6b01OWWJDNWhWTUdvTXdYOUhVVXFnWDJ5c2o4OVE4bjgrTDBhN1RMRk1l?=
- =?utf-8?B?RjBRZ0kyOUoxRVNxQ3lHRUJOaXdpS3ArSjRDOWR3ZDEyTEJNTzF1ak1ocGs0?=
- =?utf-8?B?VnZ2MVlwWHRYd3FkWVlTcWNyeDRybVdockR6clJqRkdpRGp3WWl5dz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b370991f-4c1a-43f3-c19e-08de7eada054
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2026 14:02:12.0153
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: n4mcPJ9nczKtVzmLYInKXFbPiXipv6IEYbaPNC1Sv0zLx9bcXfWXQTyOMIT7en2bEun0N6y8vRrPboyIe4uL+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7731
+References: <20260227135428.783983-1-herve.codina@bootlin.com> <20260227135428.783983-3-herve.codina@bootlin.com>
+In-Reply-To: <20260227135428.783983-3-herve.codina@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 10 Mar 2026 16:03:42 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVVsEB-xb8Jz4ujBam2NxtxAOb7byYa3VR_eHsbTD5rXw@mail.gmail.com>
+X-Gm-Features: AaiRm53b7liJL7XJhyMA-JPl81LkjhC0Orfn04kAcG7__Cf3-wDY5cIOlphhcC4
+Message-ID: <CAMuHMdVVsEB-xb8Jz4ujBam2NxtxAOb7byYa3VR_eHsbTD5rXw@mail.gmail.com>
+Subject: Re: [PATCH v5 02/28] driver core: Rename get_dev_from_fwnode()
+ wrapper to get_device_from_fwnode()
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kalle Niemi <kaleposti@gmail.com>, Matti Vaittinen <mazziesaccount@gmail.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Linus Walleij <linusw@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Davidlohr Bueso <dave@stgolabs.net>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org, 
+	driver-core@lists.linux.dev, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Saravana Kannan <saravanak@google.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Herv=C3=A9,
 
-On 3/9/26 22:43, PJ Waskiewicz wrote:
-> Hi Alejandrom
+On Fri, 27 Feb 2026 at 14:55, Herve Codina <herve.codina@bootlin.com> wrote=
+:
+> get_dev_from_fwnode() calls get_device() and so it acquires a reference
+> on the device returned.
 >
-> On Sun, 2026-02-01 at 15:54 +0000, alejandro.lucero-palau@amd.com
-> wrote:
->> From: Alejandro Lucero <alucerop@amd.com>
->>
->> This patchset should be applied on the cxl next branch using the base
->> specified at the end of this cover letter.
->>
->> Dependencies on Dan's work has gone and also on Terry's as the only
->> patch required is now in next. The other dependency is on Smita
->> patchset
->> but it does not exist such a dependency as that work will not avoid
->> the
->> problem with Type2 and DAX/hmem if soft reserved memory. This needs
->> to
->> be solved by the BIOS and Type2 UEFI driver for populating the
->> CXL.mem
->> range as EFI_RESERVED_TYPE instead of default EFI_CONVENTIONAL_MEMORY
->> with the EFI_MEMORY_SP attribute. There exists though a dependency on
->> one Smita's patches:
->>
->> [PATCH v5 3/7] cxl/region: Skip decoder reset on detach for
->> autodiscovered regions
->>
->> This is needed for the default behaviour with current BIOS
->> configuration
->> where the HDM Type2 decoders will be kept unreset when driver
->> unloads.
->> This is the main change introduced in v23: committed decoders will
->> not
->> be reset. Previous v22 functionality supported first driver load
->> finding
->> committed decoders but resetting them at unload and supporting
->> uncommitted decoders in next driver loads. This will be suported in
->> follow-up works.
->>
->> v23 changes:
->>
->>    patch 11: fixing minor issues and droping change in
->> 	    should_emulate_decoders (Jonathan Cameron)
->>
->>    patch13: refactoring unregister_region for safety type in Type2 API
->>
->>    sfc changes: slight modifications to error path
->>
-> I've been able to mostly get these to work on a very boiled down
-> driver.  I still need to port these into my full driver stack, but
-> moving that whole stack (multiple drivers) each time a new API is
-> proposed was becoming a blocker.  So I have a very basic driver that is
-> testing the interface against our HW for now.
+> In order to be more obvious that this wrapper is a get_device() variant,
+> rename it to get_device_from_fwnode().
 >
-> I have a slight issue that I'll address in Patch 8, or at least ask.
->
-> In the meantime, I'll start moving things over to our full stack to try
-> and get the same level of replication.
->
-> I'm hopeful I can start adding Tested-by:'s to the patches very soon.
+> Suggested-by: Mark Brown <broonie@kernel.org>
+> Link: https://lore.kernel.org/lkml/CAGETcx97QjnjVR8Z5g0ndLHpK96hLd4aYSV=
+=3DiEkKPNbNOccYmA@mail.gmail.com/
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Saravana Kannan <saravanak@google.com>
+> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 
+FTR, one more user of get_dev_from_fwnode() appeared in commit
+9035073d0ef1de81 ("reset: convert reset core to using firmware nodes")
+in reset/next.
 
-Hi PJ,
+Gr{oetje,eeting}s,
 
+                        Geert
 
-I'm afraid it will not be useful ... as a new approach is being followed 
-now, with some of the patches sent independently. I have already sent 5 
-in two patchsets, which I hope will be applied soon after getting 
-reviews and minor fixes. Working now on sending at least two other 
-patchsets ahead. The idea is to keep all the sfc changes to a last 
-patchset with only minor changes to the cxl core then.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-
-Anyway, thank you for testing this last full patchset and the feedback 
-given.
-
-
->
-> -PJ
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
