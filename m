@@ -1,348 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from tiger.tulip.relay.mailchannels.net (tiger.tulip.relay.mailchannels.net [23.83.218.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813DB3E121E;
-	Wed, 11 Mar 2026 16:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773247318; cv=none; b=lnNPPm0QcGHlu+YWylWezwYGbRqIE2Z7zFFfauw8W99xsKQtQcko8SK/f8InBHV9Ng2p/qQbYP9iT9ub8ub2mEQsEu/rOU+gmxIXreVy3OszhHrihmC5GKyyNScB+XdYjZ/4dn2hnifpHlBk3JaL7hYAkw9tv4TN5PkRaVdc4FQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773247318; c=relaxed/simple;
-	bh=MwFrCdgrxmnI1FJp/K6j4mlAIaOu9s4/luebif+uXfA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RZL5w2/2U2YuZrBi5qzOJGehqu5n0xkFGNDZIYa4V/poyMu0qwg63msF+HjLhaWzDwwDewsB4VmswlWFH4n4XhzO1RIoDL3slSvWmByC7T5/A/pep5MSNIt1lW83GVirlvUK0QbucOJfBBNohnLPgQWB+1jN50ZS5uH+1bJt6WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ib+alqyj; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC5B29B8E8
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Mar 2026 16:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.248
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773247913; cv=pass; b=SokN4/Sh/JnGcM42rbnQSvu8IEmSzVfIRzY57AcedrcuomiCm55xsoYYtV5oHInsxFaxo5ECt/gSoj0SsLGjabCU2WkF9vOM5k+HmIsbAswsAP2AkNk1X800jaf5MoWEZh84S6UXqtAN8kLq57e3AXaKuWumBesaNraqDZ9bH2U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773247913; c=relaxed/simple;
+	bh=e+Dg34BPic+3UTmxk8h/yZdwwcAnt9JvSsq8U9b9Pxo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=stK8NRxo7bGiENuTYN3STxe/ix3l4fNYFTi19fX8tE0PSBEGa9vexH+JLedaZAnYePGKklaWCHrGyLezO/+BXRgalEFEeAIfp9sHBsu549uzEI78IBtZs+MZt3RVoBlvC1Y268hZu+cpR61IRTRq/emP+hSM2pVStdwhC63GngU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=HlbPqW1C; arc=pass smtp.client-ip=23.83.218.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ib+alqyj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773247316; x=1804783316;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=MwFrCdgrxmnI1FJp/K6j4mlAIaOu9s4/luebif+uXfA=;
-  b=Ib+alqyj/HaTCDYafHC2oRWJ0lZNSqt5bCImMP663BGWwVnuvtoDtVuN
-   Mdo6Ovb4QtmczPZDu0WwG5IwNgUu3vZYvFycbMlI2u3+qRS9pBBORODjq
-   RsHXyWiwMDpKahXLIqiVIShbB1ae2dmAb0upmnEWHy6JMlWizsFl8sPzS
-   vGFxAH/8riU0SpRQc0voYVkQ2ibtdqzLGN73AGwR+ccaYG/3Y4M3kGMED
-   qNcVUaCf7M+wsWI4mcYXq8mBEaO+CHtFowDfN1fFYGgwzwO+K4OlmCJy8
-   37t37ix7OnEa6nXsyLrUxEigFs49hfjrFVWP2bCFuo2VjCEUP2fq/4Tac
-   g==;
-X-CSE-ConnectionGUID: aCKeRHS3QH2fi2BgFY3/AQ==
-X-CSE-MsgGUID: tvBv1St3SPiXy1xAFJ2zgg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11726"; a="77929055"
-X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
-   d="scan'208";a="77929055"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 09:41:55 -0700
-X-CSE-ConnectionGUID: YOcRxAPpRI+mlyb7Elnt8Q==
-X-CSE-MsgGUID: c2nsYA7qTceVpUKp3jr6fw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
-   d="scan'208";a="215730596"
-Received: from ettammin-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.112])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 09:41:52 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: [RFC PATCH v2] cxl/core: Work around CXL Port PM Init failure when ACS SV enabled
-Date: Wed, 11 Mar 2026 17:36:47 +0100
-Message-ID: <20260311164145.498207-1-fabio.m.de.francesco@linux.intel.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="HlbPqW1C"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 5FA60164A7F;
+	Wed, 11 Mar 2026 16:51:46 +0000 (UTC)
+Received: from pdx1-sub0-mail-a246.dreamhost.com (100-110-51-207.trex-nlb.outbound.svc.cluster.local [100.110.51.207])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id E7C3A164A21;
+	Wed, 11 Mar 2026 16:51:45 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1773247906;
+	b=CUxGqNu1bqD0EkIx29IuD6bupioPclM1wsnnRkBw04GCWeTcYMVOKTDWBH2KScfyvtMvuf
+	ceCtablU95dtKP++0GbClIYbTWJJZ+CE3LPFW/cv/x6Wbi4PHPnEH0X/8zGsEEK1q4qgsu
+	zV2BsYXWl4J7Wr/eVrRGQ2FvB/sheC4JreoAAK1tz4Z7L6PXdGEVg23gam8VnRLd+u5EvY
+	q3nNXNj6mb8yO5P1aXdcK1/QThFbdJjgb+OwdIV1XJv8OnwH4+42k6akzgpkqIr8MDeJAI
+	qKN3/SDygSbZ5vnf9T4ExJVSP+dAdjBqbyvQxTWamgbUao36FeRjZmjhRXCnKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1773247906;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=oRLj+x8uPDi1mGtq7JjcC1rsstpLtdoVrMOoCW6bb2Q=;
+	b=rlKPak94ttTls+Z96UdESB9CKVRpgIi1qMUj8now48r5bmFL5zA+PbQ/O7RnFyC33sobT8
+	GqM3HYCwOqGarpog2hQJo117yWU9Mp53p2XHue0xssfXD0lINMBT6BduLhOgVhoBfNI8WO
+	rYodoWGXL9m5DuFL1m0Y/iPVLVdD8yxvaQijJmol+2eTqCvzHakiC+rhah3yJA0dDSRuks
+	UrhQzHBxdNAtFiNGIJy+Pndt6bR+u9gUxJSGUHRUTv0A5sRm8r58rxEzRTbhMWIzPidsQS
+	6cJbip8lQp53v09MfS8B6sSvjw2j/mM15TDRnj8Y/M8GYep/TCqLu9/jsAMlSg==
+ARC-Authentication-Results: i=1;
+	rspamd-99596b4c6-v74nj;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Bored-Chief: 498696d5048d9b5d_1773247906244_3604954726
+X-MC-Loop-Signature: 1773247906244:85354713
+X-MC-Ingress-Time: 1773247906244
+Received: from pdx1-sub0-mail-a246.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.110.51.207 (trex/7.1.3);
+	Wed, 11 Mar 2026 16:51:46 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a246.dreamhost.com (Postfix) with ESMTPSA id 4fWGxF2lzrzyrG;
+	Wed, 11 Mar 2026 09:51:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1773247905;
+	bh=oRLj+x8uPDi1mGtq7JjcC1rsstpLtdoVrMOoCW6bb2Q=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=HlbPqW1CXuKn3Xz7LSWRGXXlrxnD1jnezX1gynoLr0yrZCJPigcQszzpVPkO6o/RT
+	 L5w04n/+wfhw+M1BQHD/3Dmy7TyRiHq/60uNsh0N73mGKY3etG4AeU4vIfRDACzVX0
+	 ZVx9cnGkekFyZmJoT53iD702Z53Zpjuz8IJ876dRIg8zT24gd8iTUHxNQqDkSSudK3
+	 44m73Sdg8YCLxeIAQzrEjL/G+UTs/XudTJk8eGwJF0ziGwi45CUokLTVWSYX2bfIXY
+	 vjos0G7LIJA2MwE0mkj7tf1NKGUR6FAtCYYKwKL7Z8h7QivguozMkMQxsqZpvFbMD6
+	 Zt7orY9K/h6gg==
+Date: Wed, 11 Mar 2026 09:51:42 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dave.jiang@intel.com
+Cc: jonathan.cameron@huawei.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH] cxl/mbox: Use proper endpoint validity check upon
+ sanitize
+Message-ID: <20260311165142.cvrwupy4ptyzpv4k@offworld>
+References: <20260301221739.1726722-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20260301221739.1726722-1-dave@stgolabs.net>
+User-Agent: NeoMutt/20220429
 
-Compute Express Link (CXL) Specification Revision 4.0, Version 1.0, Section
-8.1.5.1 - CXL Port Extension Status, Implementation Note, describes a
-scenario where a CXL downstream port may fail PM initialization:
+ping? Could this be picked up?
 
-"Certain conditions such as Link Down, Secondary Bus Reset, or Downstream
-Port Containment reset the Downstream Component’s bus number. If the
-Component generates the CREDIT_RTN IP2PM message with Requester Bus=0, the
-Downstream Port may reject the IP2PM message if software has enabled ACS
-Source Validation. In this scenario, Power Management initialization may
-fail to complete and another Secondary Bus Reset alone will not facilitate
-recovery".
+On Sun, 01 Mar 2026, Davidlohr Bueso wrote:
 
-Implement the recommended workaround for this scenario, which involves
-saving and disabling the ACS Source Validation and Bus Master Enable bits,
-issuing a secondary bus reset, waiting for PM init to complete, and then
-restoring those bits.
-
-This is an RFC because it checks for PM init failures in ports enumeration,
-where an SBR might not be very welcome. Maybe other call sites are more
-appropriate for this workaround?
-
-Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
----
-
-Changes from v1: 
-	- change subject label from the mistaken PCI (relic of an old
-	solution which was later discarded) to cxl/core
-	- restore the class storage of sbr_masked() to static (another
-	  relic of the old solution)
-
- drivers/cxl/core/pci.c        | 170 ++++++++++++++++++++++++++++++++++
- drivers/cxl/core/port.c       |  19 ++++
- drivers/cxl/cxlpci.h          |   3 +
- include/uapi/linux/pci_regs.h |   4 +
- 4 files changed, 196 insertions(+)
-
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index f96ce884a213..76b69ff17b74 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -869,3 +869,173 @@ int cxl_port_get_possible_dports(struct cxl_port *port)
- 
- 	return ctx.count;
- }
-+
-+struct pci_saved_flags {
-+	u16 pci_command;
-+	u16 acs_ctrl;
-+};
-+
-+/*
-+ * pci_disable_acs_bme - disable ACS Source Validation and BME
-+ * @pdev: downstream port
-+ * @saved: pointer to pci_saved_acs_bme struct, for saving bit values
-+ *
-+ * Save the current ACS Source Validation and Bus Master Enable (BME)
-+ * bits before disabling them.
-+ */
-+static void pci_disable_acs_bme(struct pci_dev *pdev,
-+				struct pci_saved_flags *saved)
-+{
-+	int pos;
-+	u16 field;
-+
-+	pos = pdev->acs_cap;
-+	if (!pos)
-+		return;
-+
-+	pci_read_config_word(pdev, pos + PCI_ACS_CTRL, &field);
-+	saved->acs_ctrl = field;
-+
-+	if (field & PCI_ACS_SV)
-+		pci_write_config_word(pdev, pos + PCI_ACS_CTRL,
-+				      field & ~PCI_ACS_SV);
-+
-+	pci_read_config_word(pdev, PCI_COMMAND, &field);
-+	saved->pci_command = field;
-+
-+	if (field & PCI_COMMAND_MASTER)
-+		pci_clear_master(pdev);
-+}
-+
-+/*
-+ * pci_enable_acs_bme - enable ACS Source Validation and BME
-+ * @pdev: downstream port
-+ * @saved: pointer to pci_saved_acs_bme struct, for restoring bit values
-+ *
-+ * Restore the previously saved ACS Source Validation and Bus Master
-+ * Enable (BME) bits.
-+ */
-+static void pci_enable_acs_bme(struct pci_dev *pdev,
-+			       struct pci_saved_flags *saved)
-+{
-+	int pos;
-+	u16 field;
-+
-+	pos = pdev->acs_cap;
-+	if (!pos)
-+		return;
-+
-+	pci_read_config_word(pdev, pos + PCI_ACS_CTRL, &field);
-+	if (saved->acs_ctrl & PCI_ACS_SV)
-+		pci_write_config_word(pdev, pos + PCI_ACS_CTRL,
-+				      field | PCI_ACS_SV);
-+
-+	pci_read_config_word(pdev, PCI_COMMAND, &field);
-+	if (saved->pci_command & PCI_COMMAND_MASTER)
-+		pci_set_master(pdev);
-+}
-+
-+/**
-+ * cxl_port_pm_init_is_complete - check if the downstream port has completed PM
-+ * init
-+ *
-+ * @pdev: downstream port
-+ *
-+ * Check if the Port Power Management Initialization Complete bit is set in the
-+ * Downstream Port's CXL DVSEC Port Extended Status register.
-+ *
-+ * Returns true if PM init is complete, false otherwise.
-+ */
-+bool cxl_port_pm_init_is_complete(struct pci_dev *pdev)
-+{
-+	int pm_init_complete;
-+	u16 status;
-+	u16 dvsec;
-+
-+	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-+					  PCI_DVSEC_CXL_PORT);
-+	if (!dvsec)
-+		return false;
-+
-+	pci_read_config_word(pdev, dvsec + CXL_DVSEC_PORT_EXT_STATUS, &status);
-+	pm_init_complete = FIELD_GET(CXL_DVSEC_PORT_EXT_STATUS_PM_INIT_COMP_MASK,
-+				     status);
-+
-+	return !!pm_init_complete;
-+}
-+
-+static void mask_sbr(struct pci_dev *pdev)
-+{
-+	int dvsec;
-+	u16 reg;
-+
-+	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-+					  PCI_DVSEC_CXL_PORT);
-+	if (!dvsec)
-+		return;
-+
-+	pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_PORT_CTL, &reg);
-+
-+	pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_PORT_CTL,
-+			      reg & ~PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR);
-+}
-+
-+static void unmask_sbr(struct pci_dev *pdev)
-+{
-+	int dvsec;
-+	u16 reg;
-+
-+	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-+					  PCI_DVSEC_CXL_PORT);
-+	if (!dvsec)
-+		return;
-+
-+	pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_PORT_CTL, &reg);
-+
-+	pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_PORT_CTL,
-+			      reg | PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR);
-+}
-+
-+/**
-+ * cxl_port_retry_failed_pm_init - retry a downstream port's failed PM init
-+ *
-+ * @pdev: downstream port
-+ *
-+ * Retry a downstream CXL port's failed PM init according to CXL Erratum for
-+ * Section 8.1.5.1 - Port Power Management Initialization Complete.
-+ *
-+ * This entails saving and disabling the ACS Source Validation and Bus Master
-+ * enable bits, and unmasking and masking the SBR, before doing a secondary bus
-+ * reset and then restoring and re-enabling those bits.
-+ *
-+ * return: 0 on success, errors otherwise.
-+ */
-+int cxl_port_retry_failed_pm_init(struct pci_dev *pdev)
-+{
-+	struct pci_saved_flags saved;
-+	int ret;
-+
-+	if (!is_cxl_port(pdev->dev.parent))
-+		return -EINVAL;
-+
-+	pci_disable_acs_bme(pdev, &saved);
-+	unmask_sbr(pdev);
-+
-+	/* Generate Secondary Bus Reset */
-+	ret = pci_reset_bus(pdev);
-+	if (ret)
-+		dev_dbg(&pdev->dev, "Bus reset failed: %d\n", ret);
-+
-+	/*
-+	 * Wait until the Port Power Management Initialization
-+	 * Complete bit is set in the Downstream Port. CXL Spec 4.0
-+	 * Section 8.1.5.1 of the CXL spec specifies 100 ms as the
-+	 * max time needed for the PM Init Complete bit to be set.
-+	 */
-+	msleep(100);
-+
-+	mask_sbr(pdev);
-+	pci_enable_acs_bme(pdev, &saved);
-+
-+	return ret;
-+}
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index b69c2529744c..62fabcdf0faf 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1829,12 +1829,31 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
- retry:
- 	for (iter = dev; iter; iter = grandparent(iter)) {
- 		struct device *dport_dev = grandparent(iter);
-+		struct pci_dev *dport_pdev = to_pci_dev(dport_dev);
- 		struct device *uport_dev;
- 		struct cxl_dport *dport;
- 
- 		if (is_cxl_host_bridge(dport_dev))
- 			return 0;
- 
-+		/*
-+		 * Check the downstream port's PM init status, and if it has
-+		 * failed retry PM init according to CXL Spec. 4.0 Sect. 8.1.5.1
-+		 * - Implementation Note
-+		 */
-+		if (!cxl_port_pm_init_is_complete(dport_pdev)) {
-+			dev_dbg(&cxlmd->dev,
-+				"PM init failed for %s, retrying PM init\n",
-+				dev_name(dport_dev));
-+
-+			cxl_port_retry_failed_pm_init(dport_pdev);
-+
-+			if (!cxl_port_pm_init_is_complete(dport_pdev))
-+				dev_dbg(&cxlmd->dev,
-+					"PM init failed retry for %s\n",
-+					dev_name(dport_dev));
-+		}
-+
- 		uport_dev = dport_dev->parent;
- 		if (!uport_dev) {
- 			dev_warn(dev, "at %s no parent for dport: %s\n",
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index 0cf64218aa16..0458096be2c4 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -101,4 +101,7 @@ static inline void devm_cxl_port_ras_setup(struct cxl_port *port)
- }
- #endif
- 
-+bool cxl_port_pm_init_is_complete(struct pci_dev *pdev);
-+int cxl_port_retry_failed_pm_init(struct pci_dev *pdev);
-+
- #endif /* __CXL_PCI_H__ */
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index ec1c54b5a310..1a12552fa89a 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -1397,4 +1397,8 @@
- #define   PCI_DVSEC_CXL_REG_LOCATOR_BLOCK_ID		__GENMASK(15, 8)
- #define   PCI_DVSEC_CXL_REG_LOCATOR_BLOCK_OFF_LOW	__GENMASK(31, 16)
- 
-+/* CXL 4.0 8.1.5.1: CXL Port Extension Status */
-+#define CXL_DVSEC_PORT_EXT_STATUS 0xA
-+#define CXL_DVSEC_PORT_EXT_STATUS_PM_INIT_COMP_MASK GENMASK(1, 0)
-+
- #endif /* LINUX_PCI_REGS_H */
--- 
-2.53.0
-
+>Fuzzying CXL triggered:
+>
+>BUG: KASAN: null-ptr-deref in cxl_num_decoders_committed+0x3e/0x80 drivers/cxl/core/port.c:49
+>Read of size 4 at addr 0000000000000642 by task syz.0.97/2282
+>
+>CPU: 2 UID: 0 PID: 2282 Comm: syz.0.97 Not tainted 7.0.0-rc1-gebd11be59f74-dirty #494 PREEMPT(full)
+>Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+>Call Trace:
+> <TASK>
+> __dump_stack lib/dump_stack.c:94 [inline]
+> dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+> kasan_report+0xe0/0x110 mm/kasan/report.c:595
+> cxl_num_decoders_committed+0x3e/0x80 drivers/cxl/core/port.c:49
+> cxl_mem_sanitize+0x141/0x170 drivers/cxl/core/mbox.c:1304
+> security_sanitize_store+0xb0/0x120 drivers/cxl/core/memdev.c:173
+> dev_attr_store+0x46/0x70 drivers/base/core.c:2437
+> sysfs_kf_write+0x95/0xb0 fs/sysfs/file.c:142
+> kernfs_fop_write_iter+0x276/0x330 fs/kernfs/file.c:352
+> new_sync_write fs/read_write.c:595 [inline]
+> vfs_write+0x5df/0xaa0 fs/read_write.c:688
+> ksys_write+0x103/0x1f0 fs/read_write.c:740
+> do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> do_syscall_64+0x111/0x680 arch/x86/entry/syscall_64.c:94
+> entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>RIP: 0033:0x7f60a584ba79
+>Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+>RSP: 002b:00007f60a42a7038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+>RAX: ffffffffffffffda RBX: 00007f60a5ab5fa0 RCX: 00007f60a584ba79
+>RDX: 0000000000000002 RSI: 00002000000001c0 RDI: 0000000000000003
+>RBP: 00007f60a58a49df R08: 0000000000000000 R09: 0000000000000000
+>R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+>R13: 00007f60a5ab6038 R14: 00007f60a5ab5fa0 R15: 00007ffe58fad8b8
+> </TASK>
+>
+>This goes away using the correct check instead of abusing cxlmd->endpoint,
+>which is unusable (ENXIO) until the driver has probed. During that window
+>the memdev sysfs attributes are already visible, as soon as device_add()
+>completes.
+>
+>Fixes: 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
+>Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+>---
+> drivers/cxl/core/mbox.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>index e7a6452bf544..12386d912705 100644
+>--- a/drivers/cxl/core/mbox.c
+>+++ b/drivers/cxl/core/mbox.c
+>@@ -1301,7 +1301,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
+>	 * Require an endpoint to be safe otherwise the driver can not
+>	 * be sure that the device is unmapped.
+>	 */
+>-	if (endpoint && cxl_num_decoders_committed(endpoint) == 0)
+>+	if (cxlmd->dev.driver && cxl_num_decoders_committed(endpoint) == 0)
+>		return __cxl_mem_sanitize(mds, cmd);
+>
+>	return -EBUSY;
+>--
+>2.39.5
+>
