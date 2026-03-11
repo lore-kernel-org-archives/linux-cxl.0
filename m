@@ -1,151 +1,142 @@
-Received: from hamster.birch.relay.mailchannels.net (hamster.birch.relay.mailchannels.net [23.83.209.80])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363A33E2774;
-	Wed, 11 Mar 2026 16:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773248034; cv=pass; b=quP7jICgxFxrQD0ZPLGqPrO9IPoCRavRoNoM1jTlS7Eaeg/SWb6UmqX4PriPtcKzutIcDonYpekP8+0NQSB86kIGiWs3gDDDLcgH2JlMldcQGbX4DEccKyyjE5LdnQSzzgVuayg5CXouxuPuDXUWdAbac3WHius7cvVGNEIGzsU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773248034; c=relaxed/simple;
-	bh=JAgdeM4Ke1Dkrhx/CHg3BMeA1mj0bIhBfoCkm1tkHA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DMiyCf1ZBTpp18ylgxWy5Q3LrNEG7av53ukNudmqUnW9qkCXeWJ3G7learBmbMSS5JG+oHM9bFsHfZUet8rywUBhWg2X43cJt8wkNu7W82nuY9OxhqO4eYCFKLCHew7I9P0YQfg0hmmaDFHJHIvaWx9wHSMvgR67hrhqcVr0jIA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=Qz6eR1EV; arc=pass smtp.client-ip=23.83.209.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3810221FCD
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Mar 2026 18:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773252551; cv=none; b=MlSxJYR0ws/zpV1moSKt/fmxPS6AwrNt27lrI6AmQ1pIq6OfjB4bhArk+a5aYI0aIQeZ6+xno4bPASNn3SZTp+Kpx+6fnzHzIH/lCY1g+InR2h7Q46Y/ZKpCe4x5I18nVVl2RpuJzlJBOx5lnf1niXwiysbulo4fCyOTfKlE9rE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773252551; c=relaxed/simple;
+	bh=bneyP/8+adanrCwOF4+bBK2YEzDljgitikxvA8xDce4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AkGSZGGovXhKnGNsXfpVi3dUXyv6OwAxIugp/IIvlv7z34S1mYFtQFjZM3IkBG8EP3TAsxSVeuge2AXGtzzlESnJQ62LsNrAxVkEb4c50fy1OEBUnlAgdoeFEhpEajdFgXFntPUVyhrtaxnEelXRjy32lYbURIYKo05qVHYFDLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HadFcwRW; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="Qz6eR1EV"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 09DD75627A8;
-	Wed, 11 Mar 2026 16:53:46 +0000 (UTC)
-Received: from pdx1-sub0-mail-a246.dreamhost.com (trex-green-0.trex.outbound.svc.cluster.local [100.109.4.168])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 987E856209D;
-	Wed, 11 Mar 2026 16:53:45 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1773248025;
-	b=P/gfB7yHkAZXraMUF1Y6b+jkBhO4SaM1ItRKfIo2BhOTEs+0Ds2vVYIts7pP7SZyGDo6bn
-	kn/Qc21vgIO+K76Do+jcKUOeuXw8TLV/iq4LZNCa8EQgnSluBrCy7GEhayLMDN9byfV2ff
-	QQgjIDWOxDlMKGgZ2Rx9bie8GMWV0MEYl+xL3tykOIJr58493jKupoO3Wl+dgWMJNzcM86
-	0lPdLlnRDLv3QVucE+UR/T3oKWDevJyOlMHDEK1XeiBwtRStw208ihETbYyU8NIq5lQj9O
-	cg8pG65RmcDbJqQUvWMPuguNtz/5hG98K84XCcJAdoxAJrj8mshB0pCP6Q+jcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1773248025;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=mtle+xYE9YnWYqaqAsyLZIyWyiGePR8NM+/BGKFEyjE=;
-	b=RlgOIc5Z/7xkF6Xu0dOmEGdTDV/KJ9heNqVzQn1FSrM4nwyePC+zW9Vh2OqEkJHZQ2bsr0
-	Zh7293qofIrYToBxL9hx2n/znC37yLanWNcbcO8XXkSc6nudnBIlv8xuNjEeXIl4qle3TV
-	NDX4tNnczgvjDw3UNT+eCYimWfshYE0M2vYhbMEP6EXaYG7trLCnLJUNeYpeYPQ36m+f0/
-	drxetYFV0aHweuLRi1R7+RuVsARZksmLhU4BQLQS/bAtyLOmoG3RpWNDcdMGRIHgUh63GP
-	kevwIVYFbSqd9330vNJEni05FYPTiKZ5I7BLKGluTWduM+5Tel4zCOYvUKhLOA==
-ARC-Authentication-Results: i=1;
-	rspamd-99596b4c6-zz7s7;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Cellar-Suffer: 6376200a00038f0e_1773248025880_1866873222
-X-MC-Loop-Signature: 1773248025880:3690606441
-X-MC-Ingress-Time: 1773248025880
-Received: from pdx1-sub0-mail-a246.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.109.4.168 (trex/7.1.3);
-	Wed, 11 Mar 2026 16:53:45 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a246.dreamhost.com (Postfix) with ESMTPSA id 4fWGzX6q3HzyrC;
-	Wed, 11 Mar 2026 09:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1773248025;
-	bh=mtle+xYE9YnWYqaqAsyLZIyWyiGePR8NM+/BGKFEyjE=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=Qz6eR1EVIyrz/U9d7GdeZdMeuqjMnDPLzaq+JPsMJDGkYVyMRLkImmdsejGg+QJYI
-	 AsCKY7nv2GtxUJtvdXsVEFhpi9Dzk36D8CA0kjTOBqCiA8wjWHmUoQHbruvEfIaB5d
-	 LBlHjZ6MRTp4sIq0wGn2KkK8andK/al4rL9xwQibyMUSATw6PdtSaaibPl2XJWZAQs
-	 ttOiE6B886rnHwTe9JBLi1G29usvXCvEJDH7M+Qt8wNTY4i7aXA7L/HCJuQZJhA8Lg
-	 xnh0h5W1Nixy7nfcTMxeqQGocDNRZft8I7Oqo8heUplFjOuJrBTNRPwCngFQ+tLtPX
-	 zld90hnMPYtJQ==
-Date: Wed, 11 Mar 2026 09:53:42 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dan.j.williams@intel.com
-Cc: vishal.l.verma@intel.com, dave.jiang@intel.com,
-	akpm@linux-foundation.org, nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ben Cheatham <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH v2] dax/kmem: account for partial dis-contiguous resource
- upon removal
-Message-ID: <20260311165342.skd3cxn4byn4etes@offworld>
-References: <20260223201516.1517657-1-dave@stgolabs.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HadFcwRW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773252548; x=1804788548;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=bneyP/8+adanrCwOF4+bBK2YEzDljgitikxvA8xDce4=;
+  b=HadFcwRWHqj+odJ310hw1AE6uulHRO/6HaYra//wHmjNcHY15ovzBGZI
+   M4mUZfZdRptj355scvVGjFysJJxs21rAZI0MV1srpa/vUHjh6JjOmXH6P
+   POBjc0iKZ48UYgGNa2BBgBCF8+0sxu74lgnKEGMlFvWuGEC8BbH0VI0NX
+   h2ItH20aBzWWLim28yjDesAwxWh0Jm49D3+dNr5yB4ovxLXTIuSnXZwtF
+   +4E8+EBC814FJVeSS56OOu6chbtIVdpaGvWGav8116T83Qxb2VtAfs1jz
+   WmIdkJnjFNYB1oxIEJMORPeGd7Z8+UXWPZVwYdjx2vbmX1t1bRnmuaObE
+   w==;
+X-CSE-ConnectionGUID: xjo06eyjQQi9IMVuAkuuag==
+X-CSE-MsgGUID: fPijddUfSJWGGjHPEgWnlA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11726"; a="74413315"
+X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
+   d="scan'208";a="74413315"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 11:09:08 -0700
+X-CSE-ConnectionGUID: vmLFNJtLR7emBIvbi/txHw==
+X-CSE-MsgGUID: EsZXnv/TStyW1KlNrSCPPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
+   d="scan'208";a="219683864"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.81]) ([10.125.110.81])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 11:09:07 -0700
+Message-ID: <c9eafdbf-52c8-4578-8928-bf6bd08d114a@intel.com>
+Date: Wed, 11 Mar 2026 11:09:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260223201516.1517657-1-dave@stgolabs.net>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/mbox: Use proper endpoint validity check upon
+ sanitize
+To: Davidlohr Bueso <dave@stgolabs.net>
+Cc: jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ linux-cxl@vger.kernel.org
+References: <20260301221739.1726722-1-dave@stgolabs.net>
+ <20260311165142.cvrwupy4ptyzpv4k@offworld>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260311165142.cvrwupy4ptyzpv4k@offworld>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-ping? Unless any concerns, can this be picked up?
 
-Thanks,
-Davidlohr
 
-On Mon, 23 Feb 2026, Davidlohr Bueso wrote:
+On 3/11/26 9:51 AM, Davidlohr Bueso wrote:
+> ping? Could this be picked up?
 
->When dev_dax_kmem_probe() partially succeeds (at least one range
->is mapped) but a subsequent range fails request_mem_region()
->or add_memory_driver_managed(), the probe silently continues,
->ultimately returning success, but with the corresponding range
->resource NULL'ed out.
->
->dev_dax_kmem_remove() iterates over all dax_device ranges regardless
->of if the underlying resource exists. When remove_memory() is
->called later, it returns 0 because the memory was never added which
->causes dev_dax_kmem_remove() to incorrectly assume the (nonexistent)
->resource can be removed and attempts cleanup on a NULL pointer.
->
->Fix this by skipping these ranges altogether, noting that these
->cases are considered success, such that the cleanup is still
->reached when all actually-added ranges are successfully removed.
->
->Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
->Fixes: 60e93dc097f7 ("device-dax: add dis-contiguous resource support")
->Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
->---
->Changes from v1: reword some of the changelog (Ben)
->
-> drivers/dax/kmem.c | 6 ++++++
-> 1 file changed, 6 insertions(+)
->
->diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
->index c036e4d0b610..edd62e68ffb7 100644
->--- a/drivers/dax/kmem.c
->+++ b/drivers/dax/kmem.c
->@@ -227,6 +227,12 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
-> 		if (rc)
-> 			continue;
->
->+		/* range was never added during probe */
->+		if (!data->res[i]) {
->+			success++;
->+			continue;
->+		}
->+
-> 		rc = remove_memory(range.start, range_len(&range));
-> 		if (rc == 0) {
-> 			remove_resource(data->res[i]);
->-- 
->2.39.5
->
+I'm waiting on Jonathan's tag since he reviewed it. Can you address his question?
+https://lore.kernel.org/linux-cxl/20260311165142.cvrwupy4ptyzpv4k@offworld/T/#mc95e8945bebd9fac8ff7d82fc73259b0410e4a08
+ 
+
+> 
+> On Sun, 01 Mar 2026, Davidlohr Bueso wrote:
+> 
+>> Fuzzying CXL triggered:
+>>
+>> BUG: KASAN: null-ptr-deref in cxl_num_decoders_committed+0x3e/0x80 drivers/cxl/core/port.c:49
+>> Read of size 4 at addr 0000000000000642 by task syz.0.97/2282
+>>
+>> CPU: 2 UID: 0 PID: 2282 Comm: syz.0.97 Not tainted 7.0.0-rc1-gebd11be59f74-dirty #494 PREEMPT(full)
+>> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+>> Call Trace:
+>> <TASK>
+>> __dump_stack lib/dump_stack.c:94 [inline]
+>> dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+>> kasan_report+0xe0/0x110 mm/kasan/report.c:595
+>> cxl_num_decoders_committed+0x3e/0x80 drivers/cxl/core/port.c:49
+>> cxl_mem_sanitize+0x141/0x170 drivers/cxl/core/mbox.c:1304
+>> security_sanitize_store+0xb0/0x120 drivers/cxl/core/memdev.c:173
+>> dev_attr_store+0x46/0x70 drivers/base/core.c:2437
+>> sysfs_kf_write+0x95/0xb0 fs/sysfs/file.c:142
+>> kernfs_fop_write_iter+0x276/0x330 fs/kernfs/file.c:352
+>> new_sync_write fs/read_write.c:595 [inline]
+>> vfs_write+0x5df/0xaa0 fs/read_write.c:688
+>> ksys_write+0x103/0x1f0 fs/read_write.c:740
+>> do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>> do_syscall_64+0x111/0x680 arch/x86/entry/syscall_64.c:94
+>> entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>> RIP: 0033:0x7f60a584ba79
+>> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+>> RSP: 002b:00007f60a42a7038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+>> RAX: ffffffffffffffda RBX: 00007f60a5ab5fa0 RCX: 00007f60a584ba79
+>> RDX: 0000000000000002 RSI: 00002000000001c0 RDI: 0000000000000003
+>> RBP: 00007f60a58a49df R08: 0000000000000000 R09: 0000000000000000
+>> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+>> R13: 00007f60a5ab6038 R14: 00007f60a5ab5fa0 R15: 00007ffe58fad8b8
+>> </TASK>
+>>
+>> This goes away using the correct check instead of abusing cxlmd->endpoint,
+>> which is unusable (ENXIO) until the driver has probed. During that window
+>> the memdev sysfs attributes are already visible, as soon as device_add()
+>> completes.
+>>
+>> Fixes: 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation")
+>> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+>> ---
+>> drivers/cxl/core/mbox.c | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>> index e7a6452bf544..12386d912705 100644
+>> --- a/drivers/cxl/core/mbox.c
+>> +++ b/drivers/cxl/core/mbox.c
+>> @@ -1301,7 +1301,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
+>>      * Require an endpoint to be safe otherwise the driver can not
+>>      * be sure that the device is unmapped.
+>>      */
+>> -    if (endpoint && cxl_num_decoders_committed(endpoint) == 0)
+>> +    if (cxlmd->dev.driver && cxl_num_decoders_committed(endpoint) == 0)
+>>         return __cxl_mem_sanitize(mds, cmd);
+>>
+>>     return -EBUSY;
+>> -- 
+>> 2.39.5
+>>
+
