@@ -1,43 +1,43 @@
 Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015673A2565;
-	Wed, 11 Mar 2026 10:53:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9061B27EFFA;
+	Wed, 11 Mar 2026 11:12:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773226435; cv=pass; b=Jvq4+Z/gQ6kGnJ2ppoa2pU51TmUvKiqnVM85TSpQFpdfCvcXCXSPLdAz5gZYB05cUr1lVMCJ9ppGEn1UQN9s3c4KldY84M34lXgglE2YkZZ9Hr/Uxq466j+wGhH4DVpBbHTXZCWShUxhnHfCBusOMOSpbEPXAV1vs3Vk37E0bqE=
+	t=1773227562; cv=pass; b=EXCJScFjGcI3kW8ur+5bQh3HXEC1gPfjiHpkuWms/e2j34x9pGMmmVuYpMM75SlqLDWiMDrcWrHzvmVogMUwA9c1mmPl8ZB1MPK6sJ+wFp0aKIwRqUuLmrNZlbedKq0+JVdv/J5BAFl8OhGVuH/YiQzkUH4U3XnSusVxMREkL7s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773226435; c=relaxed/simple;
-	bh=VrsuiiE+xhBns3p388KtITQD9klHbm1bEuMay3ub2Rw=;
+	s=arc-20240116; t=1773227562; c=relaxed/simple;
+	bh=fsIHBqCYn+M8pi99JicXtB1LaF7y3U1LVegF/BYji6w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X4Z7BqJ17x6ygwNMLw3pTXWvs85wvWQotkR0zp1tyToL4D11aRATzscKCQFi0dhRG993fDsVzaDSVQM4UZSJtYqT2KiuxafiqzE7yZuOryuJRz2WluDmF8deew/4NKxwcA9wAiS61rgQWVteZFrkRLA9dttxGonXpFikG7pFyfo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=bi0nlZcp; arc=pass smtp.client-ip=136.143.188.94
+	 In-Reply-To:Content-Type; b=KrPzhjRZG7KWOYFFXT+qG45ktEVEsoM7ZoFsXllyPNhx1RMBzA4mcqU6jl1LOsTiNCpB5KcQNKp9pSxdmtdAoUihVkJCFvkzMu8cSorayqfjbc/dAIJInoNdxuXLeVjvr1HMOi8XvdpW1XLLg986W/XGSSNb3n0/C2ts1m/bF2s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=OY6TzC4R; arc=pass smtp.client-ip=136.143.188.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="bi0nlZcp"
-ARC-Seal: i=1; a=rsa-sha256; t=1773226415; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="OY6TzC4R"
+ARC-Seal: i=1; a=rsa-sha256; t=1773227464; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=SEpK7piFPs8vR0nSjBcbQ5wUp2uizdFOk33p9wv7a42BPw+fbXkPsGqyI55nUbGMKZMMCgmRUq7suovVBheu/bQcsonKRRYWXrSUBOkDF6bSWK4Q95vgn7bWSUx/ufxyfZECH/o5pJHQ8Ojv5JDH+AVqx0E4DTiWzBJlnkjLRkQ=
+	b=B2B0Gqc3lTuHiEzV4qyaoLEvt00ZzC9PwmnUfkldxnQbEY0NCmFAx251f2Cv22rjRmX6EyXPDuFGqkHd66bVPxAODxjfkckcjL1a7wNePXpc4/0izqs8qVEJYRbnjmuhJF52OyaQoU3Y1mFeBzOf3hsAzGaQ3BPTwVJPfoVnBus=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1773226415; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=+k6M33aJS1FmhUhMNkVgIqpm70vchF3r0b20NnXGL0I=; 
-	b=RXWw7GMYFbHSbo/ysqRXAxDeJm/3PMYpTXKDikXGFN5gUQY/wpRcdc6cWQ6p6tocjS2OVWZ4XBURhWsUycr5R3moYFLol6FEw0Gyiadb28ojmbvhTnFUV0S8FX9ByuI712sP0UzEfhM3sNLslq+uzBvCn3ul3F0dMObfLvfS9Ak=
+	t=1773227464; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=h+7l01klGMtmp/b/OEqPqIJisiQUqGn0M6d8FgKOiSs=; 
+	b=OTOCKifauIYA6NuvaEptOZMBXqT+WRFLq2KVJx6fIfOuQP4bMeV0XokKcNk2Qqkn7aCb1+xS+RYpFi8thO7iiDTe8Cjq6v0uR8LXznbHF/OkWiyW6rzGfPGjAib+TEU2yLYEsOJ4X3qEI+uT0ha8rgV2liZ/N40PWQg/asB3ca4=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773226415;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773227464;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
 	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=+k6M33aJS1FmhUhMNkVgIqpm70vchF3r0b20NnXGL0I=;
-	b=bi0nlZcp9VP4c6UiE5AACgIFdUG7Vwc5gj3shMD9DnPHKqK76f4BF+bPCUFFnn1H
-	hJpnZTRQux5DLHyV1PspeU93bgQpJFYawDB7A8FOflwuJTHvKhDgAelYI0u5cnpiVvM
-	pQxF+XuxUxnNUCWNK+f/YHSumSJ/1m+wrfTTl/PA=
-Received: by mx.zohomail.com with SMTPS id 1773226412781979.8038318000262;
-	Wed, 11 Mar 2026 03:53:32 -0700 (PDT)
-Message-ID: <530f0541-851a-4201-98f3-93439825c6c7@zohomail.com>
-Date: Wed, 11 Mar 2026 18:53:26 +0800
+	bh=h+7l01klGMtmp/b/OEqPqIJisiQUqGn0M6d8FgKOiSs=;
+	b=OY6TzC4Rk/HDGj6da7vDKjspEgtiPte5/gWgJzvlUEkTl9wHQjA3jIH62gp7iTtP
+	w/lQyfEIgFYf20PsYvP1gNOhIIYfcCbYfFFy1w3YA0yzJkn8LZbg+J0V/Kvo2q2r4w6
+	yoAHbfaJDmrA7I+4rWCqXsePNEo8WKHuB/Eq1cHc=
+Received: by mx.zohomail.com with SMTPS id 1773227462989250.9001677054888;
+	Wed, 11 Mar 2026 04:11:02 -0700 (PDT)
+Message-ID: <13a62481-256b-405d-b2da-dd30b8cc6689@zohomail.com>
+Date: Wed, 11 Mar 2026 19:10:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/7] cxl/memdev: Hold memdev lock during memdev poison
+Subject: Re: [PATCH 3/7] cxl/region: Hold memdev lock during region poison
  injection/clear
 To: Alison Schofield <alison.schofield@intel.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -58,101 +58,212 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  <benjamin.cheatham@amd.com>, driver-core@lists.linux.dev,
  linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
 References: <20260310-fix_access_endpoint_without_drv_check-v1-0-94fe919a0b87@zohomail.com>
- <20260310-fix_access_endpoint_without_drv_check-v1-2-94fe919a0b87@zohomail.com>
- <abCOZf9vkau0AyWL@aschofie-mobl2.lan>
+ <20260310-fix_access_endpoint_without_drv_check-v1-3-94fe919a0b87@zohomail.com>
+ <abCTsNbGoOpjAn5y@aschofie-mobl2.lan>
 From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <abCOZf9vkau0AyWL@aschofie-mobl2.lan>
+In-Reply-To: <abCTsNbGoOpjAn5y@aschofie-mobl2.lan>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr080112280547ab2db34e6c8caa8f7e26000035be26303d5c722b3e40db3e8598275c29e9c361d94006299ac0:zu0801122717ac063e461905b9a2d5facc0000b0e450d345b098a96d0a4ac27e6be1c9d485eacab711760875:rf0801122d2fa5b53a886519588600b2dd00008ea4c4f2f4e5dce5559eaf14c1b43674c6e62db15d9b5b11382a0596b2c342:ZohoMail
+Feedback-ID: rr080112280e0625339ac0cf2da054f0f8000066d282e4621a1dd86e13b5913c3d70923b86b0491e0f1b8026ad:zu08011227950c86cf580db59af345d06300002553b5bd6d1b1adcd9d552c805175dd92a4a705e10a33a1cbf:rf0801122d722738fee4d9c64ea475bec40000f5fff0c337ed5655a9f670582ce1b6dc23b6dcf519154092097e5388015af7:ZohoMail
 X-ZohoMailClient: External
 
 
-在 2026/3/11 05:34, Alison Schofield 写道:
-> On Tue, Mar 10, 2026 at 11:57:54PM +0800, Li Ming wrote:
->> CXL memdev poison injection/clearing debugfs interfaces are visible
->> before the CXL memdev endpoint initialization, If user accesses the
->> interfaces before cxlmd->endpoint updated, it is possible to access an
->> invalid endpoint in cxl_dpa_to_region().
+在 2026/3/11 05:57, Alison Schofield 写道:
+> On Tue, Mar 10, 2026 at 11:57:55PM +0800, Li Ming wrote:
+>> cxl_dpa_to_region() will require callers holding the given CXL memdev
+>> lock for endpoint validity checking in the following patch. To prepare
+>> it, region poison injection/clearing debugfs interfaces need to ensure
+>> the correct CXL memdev lock is held at the beginning.
 >>
->> Hold CXL memdev lock at the beginning of the interfaces, this blocks the
->> interfaces until CXL memdev probing completed.
->>
->> The following patch will check the given endpoint validity in
->> cxl_dpa_to_region().
->>
->> Suggested-by: Dan Williams <dan.j.williams@intel.com>
->> Signed-off-by: Li Ming <ming.li@zohomail.com>
->> ---
->>   drivers/cxl/core/memdev.c | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
->> index 273c22118d3d..8ebaf9e96035 100644
->> --- a/drivers/cxl/core/memdev.c
->> +++ b/drivers/cxl/core/memdev.c
->> @@ -295,6 +295,7 @@ int cxl_inject_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
->>   	if (!IS_ENABLED(CONFIG_DEBUG_FS))
->>   		return 0;
->>   
->> +	device_lock_assert(&cxlmd->dev);
->>   	lockdep_assert_held(&cxl_rwsem.dpa);
->>   	lockdep_assert_held(&cxl_rwsem.region);
-> I'm having second thoughts about this since this call site is not
-> the 'beginning of the interfaces' as the commit msg suggests.
+>> To keep lock sequence(cxlmd.dev -> cxl_rwsem.region -> cxl_rwsem.dpa)
+>> for avoiding deadlock. the interfaces have to find out the correct CXL
+>> memdev at first, holding lock in the sequence then checking if the DPA
+>> data has been changed before holding locks.
+> This seems complicated, that this path needs to do needless work to
+> comply with a new locking scheme that this path doesn't really need.
 >
-> What about taking the device lock in the debugfs func, ie -
-> mem.c : cxl_inject_poison. If the goal is to avoid using the debugfs
-> interface before probe completes, that does it.
+> One thought, if in Patch 2 we lock at the debugfs callsite for
+> by memdev poison, then here, we don't need to think about following
+> unnecessary locking protocol. I say that because I think locking
+> down w dpa and region rwsem is enough here. Then there is nothing
+> new to do in this path. Might that work?
 >
-> At this callsite, we make sure nothing changes out from under us,
-> no endpoints attach or detach during the work.
+> Along w that can cxl_dpa_to_region() go back to safety checking as
+> opposed to the new device_lock_assert?
 >
-Thanks for taking time to dive into this issue.
+> I haven't gone thru every case in this set, so might be way off ;)
 
-But I don't quite understand your comment, do you mean that we don't 
-need above device_lock_assert() in cxl_inject/clear_poison_locked()?
+Actually, my understanding is same as yours.
 
-You mentioned that taking the device lock in cxl_inject_poison() to 
-ensure endpoint won't be changed during the debugfs interfaces calling,
+I think we don't need this patch either if we remove the 
+device_lock_assert() in cxl_dpa_to_region().(Just keep the 
+cxlmd->dev.driver checking)
 
-That is right and that is what this patch does. So I am a little bit 
-confused.
+Because region is created only when endpoint is ready. Detaching an 
+endpoint from a region always holds cxl_rwsem.region.
+
+But we always hold device lock for the device driver bingding checking 
+in CXL subsystem.
+
+I'm OK to remove this patch, Let see any inputs from other reviewers.
 
 
 Ming
 
+>
+>> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+>> Signed-off-by: Li Ming <ming.li@zohomail.com>
+>> ---
+>>   drivers/cxl/core/region.c | 101 +++++++++++++++++++++++++++++++++++-----------
+>>   1 file changed, 77 insertions(+), 24 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index 42874948b589..806512dfab07 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -4074,12 +4074,60 @@ static int validate_region_offset(struct cxl_region *cxlr, u64 offset)
+>>   	return 0;
+>>   }
 >>   
->> @@ -331,6 +332,10 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
+>> +static int cxl_region_poison_lookup_locked(struct cxl_region *cxlr, u64 offset,
+>> +					   struct dpa_result *res)
+>> +{
+>> +	int rc;
+>> +
+>> +	*res = (struct dpa_result){ .dpa = ULLONG_MAX, .cxlmd = NULL };
+>> +
+>> +	if (validate_region_offset(cxlr, offset))
+>> +		return -EINVAL;
+>> +
+>> +	offset -= cxlr->params.cache_size;
+>> +	rc = region_offset_to_dpa_result(cxlr, offset, res);
+>> +	if (rc || !res->cxlmd || res->dpa == ULLONG_MAX) {
+>> +		dev_dbg(&cxlr->dev,
+>> +			"Failed to resolve DPA for region offset %#llx rc %d\n",
+>> +			offset, rc);
+>> +
+>> +		return rc ? rc : -EINVAL;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int cxl_region_poison_lookup(struct cxl_region *cxlr, u64 offset,
+>> +				    struct dpa_result *res)
+>> +{
+>> +	int rc;
+>> +
+>> +	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
+>> +	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
+>> +		return rc;
+>> +
+>> +	ACQUIRE(rwsem_read_intr, dpa_rwsem)(&cxl_rwsem.dpa);
+>> +	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
+>> +		return rc;
+>> +
+>> +	return cxl_region_poison_lookup_locked(cxlr, offset, res);
+>> +}
+>> +
+>>   static int cxl_region_debugfs_poison_inject(void *data, u64 offset)
 >>   {
+>> -	struct dpa_result result = { .dpa = ULLONG_MAX, .cxlmd = NULL };
+>>   	struct cxl_region *cxlr = data;
+>> +	struct dpa_result res1, res2;
 >>   	int rc;
 >>   
->> +	ACQUIRE(device_intr, devlock)(&cxlmd->dev);
+>> +	/* To retrieve the correct memdev */
+>> +	rc = cxl_region_poison_lookup(cxlr, offset, &res1);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	ACQUIRE(device_intr, devlock)(&res1.cxlmd->dev);
 >> +	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
 >> +		return rc;
 >> +
 >>   	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
 >>   	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
 >>   		return rc;
->> @@ -355,6 +360,7 @@ int cxl_clear_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
->>   	if (!IS_ENABLED(CONFIG_DEBUG_FS))
->>   		return 0;
+>> @@ -4088,20 +4136,18 @@ static int cxl_region_debugfs_poison_inject(void *data, u64 offset)
+>>   	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
+>>   		return rc;
 >>   
->> +	device_lock_assert(&cxlmd->dev);
->>   	lockdep_assert_held(&cxl_rwsem.dpa);
->>   	lockdep_assert_held(&cxl_rwsem.region);
+>> -	if (validate_region_offset(cxlr, offset))
+>> -		return -EINVAL;
+>> -
+>> -	offset -= cxlr->params.cache_size;
+>> -	rc = region_offset_to_dpa_result(cxlr, offset, &result);
+>> -	if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
+>> +	/*
+>> +	 * Retrieve memdev and DPA data again in case that the data
+>> +	 * has been changed before holding locks.
+>> +	 */
+>> +	rc = cxl_region_poison_lookup_locked(cxlr, offset, &res2);
+>> +	if (rc || res2.cxlmd != res1.cxlmd || res2.dpa != res1.dpa) {
+>>   		dev_dbg(&cxlr->dev,
+>> -			"Failed to resolve DPA for region offset %#llx rc %d\n",
+>> -			offset, rc);
+>> -
+>> -		return rc ? rc : -EINVAL;
+>> +			"Error injection raced region reconfiguration: %d", rc);
+>> +		return -ENXIO;
+>>   	}
 >>   
->> @@ -400,6 +406,10 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
+>> -	return cxl_inject_poison_locked(result.cxlmd, result.dpa);
+>> +	return cxl_inject_poison_locked(res2.cxlmd, res2.dpa);
+>>   }
+>>   
+>>   DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_inject_fops, NULL,
+>> @@ -4109,10 +4155,19 @@ DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_inject_fops, NULL,
+>>   
+>>   static int cxl_region_debugfs_poison_clear(void *data, u64 offset)
 >>   {
+>> -	struct dpa_result result = { .dpa = ULLONG_MAX, .cxlmd = NULL };
+>>   	struct cxl_region *cxlr = data;
+>> +	struct dpa_result res1, res2;
 >>   	int rc;
 >>   
->> +	ACQUIRE(device_intr, devlock)(&cxlmd->dev);
+>> +	/* To retrieve the correct memdev */
+>> +	rc = cxl_region_poison_lookup(cxlr, offset, &res1);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	ACQUIRE(device_intr, devlock)(&res1.cxlmd->dev);
 >> +	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
 >> +		return rc;
 >> +
 >>   	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
 >>   	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
 >>   		return rc;
+>> @@ -4121,20 +4176,18 @@ static int cxl_region_debugfs_poison_clear(void *data, u64 offset)
+>>   	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
+>>   		return rc;
+>>   
+>> -	if (validate_region_offset(cxlr, offset))
+>> -		return -EINVAL;
+>> -
+>> -	offset -= cxlr->params.cache_size;
+>> -	rc = region_offset_to_dpa_result(cxlr, offset, &result);
+>> -	if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
+>> +	/*
+>> +	 * Retrieve memdev and DPA data again in case that the data
+>> +	 * has been changed before holding locks.
+>> +	 */
+>> +	rc = cxl_region_poison_lookup_locked(cxlr, offset, &res2);
+>> +	if (rc || res2.cxlmd != res1.cxlmd || res2.dpa != res1.dpa) {
+>>   		dev_dbg(&cxlr->dev,
+>> -			"Failed to resolve DPA for region offset %#llx rc %d\n",
+>> -			offset, rc);
+>> -
+>> -		return rc ? rc : -EINVAL;
+>> +			"Error clearing raced region reconfiguration: %d", rc);
+>> +		return -ENXIO;
+>>   	}
+>>   
+>> -	return cxl_clear_poison_locked(result.cxlmd, result.dpa);
+>> +	return cxl_clear_poison_locked(res2.cxlmd, res2.dpa);
+>>   }
+>>   
+>>   DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
 >>
 >> -- 
 >> 2.43.0
