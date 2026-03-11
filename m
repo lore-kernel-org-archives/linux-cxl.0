@@ -1,68 +1,69 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011044.outbound.protection.outlook.com [52.101.52.44])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012031.outbound.protection.outlook.com [52.101.43.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD06D345CAF;
-	Wed, 11 Mar 2026 20:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0A7358375;
+	Wed, 11 Mar 2026 20:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.31
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773261327; cv=fail; b=B9l0wVZ0G7tr6ifg+fC4xySxBtfF8CxhFEArUmId/Cgv9JWOcN8RGSEzfIRV1u13oeGx10OsWHceAsxIg3AEy0dnqBpAbgbBvPqK29lles3CO18lCf+7XbMd8/8MepuAU/1UksjeMXegjjXCBxF5RJDGRJMW9kzgdDMHYRBqXuM=
+	t=1773261335; cv=fail; b=XUF4asfE7CWOgmtWCJcGao3iWaJ/Cq77C66qoqMGEls8zkOsiVZL7Z4Bz9KN/Qt1DCspC8mNMR5JQigODtYcAImXhBs5mA/1zfBQOoQ2irJODxX/ZU7D3rQDyMo/BQiwEE/j+tA9mJcscZOKABFCJSTMlIrGJmFLotBNS+rbcis=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773261327; c=relaxed/simple;
-	bh=CCoptU9NBkVwvzcMhPg6iCcmJLCPRE4D7CQ0CaSYnNI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OARvWAAHwdxqBOuWHa8BGuT6C45lYICY3flzxO7Q2I3aszWlOOS/Oz2Elpq8dYFdwdWdxt/2OAqqOlPLizYYQAZI0HVV5GvR/kF5Cu3IxybQDygP2Xgeqt5qCDXE9MmQEOzo0Wjsd2uTgW98WsjVi37ZEsvWJFYktKfoaJvq6ek=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Rz41WQxe; arc=fail smtp.client-ip=52.101.52.44
+	s=arc-20240116; t=1773261335; c=relaxed/simple;
+	bh=3nq8XY2OV3X098s0CUAit0TepHy7Ig8vVAkhyLZlfY0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HekPTtBK1hRjgaa/2c0vX9ZtgiIfSRopowNK4mK86KCwdmsbSmnCpaws6KsnNrB+kaQSkeY3AzD/MQ49Sn3uCzBp7Fww8PtI35HDt0075bq3OKXetYx6WgM/qjhJe56wtUV7zU3Q736yGGw73za0z8rK2NbY0WAePaYY0ByWwyE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=eV1HxA6L; arc=fail smtp.client-ip=52.101.43.31
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Rz41WQxe"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="eV1HxA6L"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=V3tqXLnTLen+HvkjVb3gmBWVoSlF3RdA9HlEGj6vEKYlMov2mKv0b0xswnfonSR/qFEMj4BIKOrXImk1f8snOrCHlH7sg2y7LhyONjQccxW8Fqe93VN/1AZYztGQPXsrTXcaRX7TboI+c8Zxgu/dDR3bs+sxgYGENm7CuLCK9blbnTwy/EuGuhlnvLbJb9bjys6NmVoSWrnMtDIbMkOPMfrQV2CiLs0BOwZZUSu25gjroVXdGb2rDenO63dhziwoSfwbCcZ9Wny8pERMmv8F25zKDiWnR9GBIAylFxSjl0NFMfNrc0i7aEkVCjbGmQcX+J/+CwWm/bdjahar/gU1SA==
+ b=oEzCxlVo1YxCz9QAlDNjCzpHqHkbff3+VIH7kK66qsvejs8VQrY2/hmqeDo6oPFpUnT3zJYb+UETNEMzRoDltMBX06t2QYtb51eEV9HOjet/GaNtN9xsBPJEnBNeGrcylFa0VvQSX2kpD9cuBNBny7XOQkpGURq64D40KzqYfDSfJxCjnCVLGb38phReoGeKVB/FBnWmr5JGTsuAfBEsZyxLqpaFPxA/42WooNN4oWkU6HqNs0lb/AdcXmrJv7qtQ+uYhM9ZHooHv/ZNW7bGe7Y5PT3JYoBTxQwzP6OYfCepLWpVMJk1qe6Yrkqs3G/LdxFMJzdgaXTTzKTgJG4HaQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3Bi1PXfW/ybVm6/aNbvMAZsNkI3VzFhLhG6PSK8i488=;
- b=qEQyfoJiX7VX0YHJhsqwo48hzdCrGLAAKSqxb4m/3WS1w+pvCxPW7vw281TnfBDxXYgdz8el0SWeado3J+MzlvYvvhusTChzJq+HxdUGDtM3owHf9LcxZp5l63OeZgKbfnwuu21tZrtHOqmotiyoWqtR87h7E1EXZxe6n532ZSdCWnlZHqnbMHvQAxSqkOB3+zSP1KrXw/pjP0OvLYXedewviifHq2rbppFP9IGypqL3wGUpQymrnlPa7UjFhkrFnJTSC3aV2iCxPwxXYDtwLIfFxBFyOU1AhZ/xxrNKEVQ+zyy2QU/TtfWZC9Kt6hrYlqhH740mfroeY1Qs4jPxZA==
+ bh=/Osg+XKa6H5aPMgxAt/rEU3OitwvLW1Z0Dy4kp30Qvg=;
+ b=X+KqgbO/x8PRtde2h/yALeCUUG5vgoDxtCTnySSILAxNwZFHSCDWWniNu7WCXjXghP1H/P5BfKXPIp4zzUA39ZuNEQYKhDTCsSgYHY+FFiJETUWQsBF96SZU9q6J91arEwHag46+wAWVjHMlRJ5vSD3q0/08J/B3pNpvd6IKRVgJclh3rVEjqJjse/LHRgvX7mHqtk8V7XhQqKRr529mR1IWLta5G4MwVV9vVDOaLG6coYXAjU8SxBmZkOTb/2Vzl90LWuHCWskLu3OMe5TBSA8lk2AA726mRgN7rD65/pp74jqEmNEBP6Ba4pnM5KZ/B/z9lwPe70a46D1BAaiR9A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ 216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3Bi1PXfW/ybVm6/aNbvMAZsNkI3VzFhLhG6PSK8i488=;
- b=Rz41WQxeVoSVMGYXetGTcW2B44+qsGrjmgM6xLWmKr36RsuqlKrUHqR1bOzHAE3V1R59g5+yWoOqo9KeQL6JGvcQ2l3seZKq6IRpVVKiIGxcb+AmOo4AlQ8NEFPM1VFLxIQveHJGbgeUP8blFTl16zLnEylSqohRnc0tMvtO4EcgNJr9kFvdHUco6b2VzOhegXNdgugwS+M9eVOW2nrFu8gWbBR7DQtDKl1Xpg4lH7BELvIpIHbDhwInW64gErLnZZKHX6xy2t3ukQwq5MXpEaGCNKUGgl76rPsMdg0sikpeGjX03odT7ydjY/NKFb8zunvvC+cpG7OscflE2feOKA==
-Received: from DM6PR05CA0056.namprd05.prod.outlook.com (2603:10b6:5:335::25)
- by IA0PR12MB8894.namprd12.prod.outlook.com (2603:10b6:208:483::21) with
+ bh=/Osg+XKa6H5aPMgxAt/rEU3OitwvLW1Z0Dy4kp30Qvg=;
+ b=eV1HxA6LopMio6it4W2YR5G/7m19anL/LGCTFcwQdoCP9jH4iA4RcC2EmNvfQqiH8aTF3TA1fwuWqlxv+sM3Yp2MDSLepfBoTjqzcJbrYxqOe+BB8eitfCgkq7iV+/s3Z40RRg3ajC3AvPnTzIJo4g5sRyOzRwWEhP32jyv1BSQT6xK/arB9wqhGjcm1+3cHzPoEtCowb7PJnGvh3qCf9U3Zgr3wxRUTPPA2zBxLgLuEwcplxtViQZrsEuVI32DOTxLV3zIDjSnq/484iY8d9EQ4NprbK1aLo1fWD1daJKcT7vNNT7VsQkhAVaR3xbgA37tEIHD/CZpNmjS9tBI5Zw==
+Received: from MN0PR03CA0001.namprd03.prod.outlook.com (2603:10b6:208:52f::28)
+ by CH1PPFD8936FA16.namprd12.prod.outlook.com (2603:10b6:61f:fc00::624) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.11; Wed, 11 Mar
- 2026 20:35:12 +0000
-Received: from DS2PEPF00003448.namprd04.prod.outlook.com
- (2603:10b6:5:335:cafe::39) by DM6PR05CA0056.outlook.office365.com
- (2603:10b6:5:335::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9700.15 via Frontend Transport; Wed,
- 11 Mar 2026 20:35:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.3; Wed, 11 Mar
+ 2026 20:35:29 +0000
+Received: from BL6PEPF00022574.namprd02.prod.outlook.com
+ (2603:10b6:208:52f:cafe::78) by MN0PR03CA0001.outlook.office365.com
+ (2603:10b6:208:52f::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9678.26 via Frontend Transport; Wed,
+ 11 Mar 2026 20:35:21 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- DS2PEPF00003448.mail.protection.outlook.com (10.167.17.75) with Microsoft
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ BL6PEPF00022574.mail.protection.outlook.com (10.167.249.42) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9678.18 via Frontend Transport; Wed, 11 Mar 2026 20:35:12 +0000
+ 15.20.9654.16 via Frontend Transport; Wed, 11 Mar 2026 20:35:29 +0000
 Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 11 Mar
- 2026 13:34:57 -0700
+ 2026 13:35:05 -0700
 Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail201.nvidia.com
  (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 11 Mar
- 2026 13:34:57 -0700
+ 2026 13:35:04 -0700
 Received: from nvidia-4028GR-scsim.nvidia.com (10.127.8.11) by mail.nvidia.com
  (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Wed, 11 Mar 2026 13:34:49 -0700
+ Transport; Wed, 11 Mar 2026 13:34:57 -0700
 From: <mhonap@nvidia.com>
 To: <aniketa@nvidia.com>, <ankita@nvidia.com>, <alwilliamson@nvidia.com>,
 	<vsethi@nvidia.com>, <jgg@nvidia.com>, <mochs@nvidia.com>,
@@ -73,13 +74,13 @@ To: <aniketa@nvidia.com>, <ankita@nvidia.com>, <alwilliamson@nvidia.com>,
 	<yishaih@nvidia.com>, <kevin.tian@intel.com>
 CC: <cjia@nvidia.com>, <targupta@nvidia.com>, <zhiw@nvidia.com>,
 	<kjaju@nvidia.com>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <kvm@vger.kernel.org>, <mhonap@nvidia.com>,
-	"Alex Williamson" <alex.williamson@redhat.com>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>
-Subject: [PATCH 00/20] vfio/pci: Add CXL Type-2 device passthrough support
-Date: Thu, 12 Mar 2026 02:04:20 +0530
-Message-ID: <20260311203440.752648-1-mhonap@nvidia.com>
+	<linux-cxl@vger.kernel.org>, <kvm@vger.kernel.org>, <mhonap@nvidia.com>
+Subject: [PATCH 01/20] cxl: Introduce cxl_get_hdm_reg_info()
+Date: Thu, 12 Mar 2026 02:04:21 +0530
+Message-ID: <20260311203440.752648-2-mhonap@nvidia.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20260311203440.752648-1-mhonap@nvidia.com>
+References: <20260311203440.752648-1-mhonap@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -91,222 +92,120 @@ Content-Type: text/plain
 X-NV-OnPremToCloud: ExternallySecured
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF00003448:EE_|IA0PR12MB8894:EE_
-X-MS-Office365-Filtering-Correlation-Id: f7819d6c-403b-442d-ad05-08de7fadb1c1
+X-MS-TrafficTypeDiagnostic: BL6PEPF00022574:EE_|CH1PPFD8936FA16:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1fcae79f-0c6a-4c28-58c3-08de7fadbc31
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|82310400026|36860700016|56012099003|18002099003|3122999024|13003099007|921020;
+	BCL:0;ARA:13230040|1800799024|82310400026|7416014|376014|36860700016|921020|56012099003|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	omiXBUJJltGBpNHPa8Tkc5ynoQo8+7HjJCy2oKOPB/waxOXb2gOSx52aLXbTrhg3qk+NfRUZBvrJyZ9zTmhxEza+oE9ut9zy675K7MvxN1xltKuqDPgf7Zw/UL17jPo7Ej9pNIdUz+w0EGxbTuRLzGshkMAzhhMJlAN0dEYJHQ8bDqy2d/nLJw/VbXq+nzDU/rSPZFcHADES8CvkUt3VgsbvyVMFmo8/U8P96NGgB2fUYTkYtAlvIzmudYDXk54VOTwycDpqt4CEimtV4OKEqDxPnT+GGFeGOUiEFeqHTt0qEmBUe4DD2vgurW1lWDz8nepYhltVXs+X9Ks1W/WtrA0dfbksEv0dYgKKffPxb1FEzeSkvz7kaa/6ZXwwgEu4vIXSgS1xscO/t9oV7Cb5R0vYfst3snvmJSaR3FxEnLx7iox6DGO9qP+vfHFz9B5MSuHaTmS702WYDdGM2KWWq+gj70UxQfYCUiQR5eRMN9LphmgR8Fj2rocIR4y4yST7agNDJ99/RwU2s3hWYFgrL0P+jlKwrkdR+5yanZQEPMw0100wHEaCLZn6R0k6Jg21gVMRGGuclihBN9Moeoax+o+X5MfqNkXmHH8vbCKW37EVdnZs47MSJ8PtlEI+R2DBrnEo9fo2UwXX+ipm2YZ81+Z0iQP7xW3Fte/VeT2zxenouMgqHIuJEmqUBhgd3ypBVy/eb2IkxH0EEk2Mgz+a7joflJWW4EUOopeajN562S53mbxZT5mi1wpAUYUTXy3LEacOCak2agyLrpbEjEA67PCPZP6P94PYdc9KWcStq/LulUFMcbliQhdIeIsXlWM4
+	s2gV3E4BhalTfvv37DPfSLKpf6Wo2e95ojmWnb/xRE5etLRm7z4HgRDdTQRr7QOO1/yyQuab+aaru5oYX4Z+is1tZj5qpQdw1ueu6Gj41K6SpZEJ5+IDClMV6+dpoN4maUWESD7QQRmy7RKWGSNVdRRQoNsuxeqmepqpx6wonHm+TU8bLrjES9EOAVNcAIxELcVHjjf3f8R5e5HwTsAsNGcpReS4cAAzJYcXf3ntr5Y0R6DHkWCWTRlDfv2jJD5j+v0F59oOe4hg0n0V93zZ0tpk3XvCwOY2qD694+sGYyhn8odlKyo4lYwlXWQlcYT3klYRr457NXZ61Xs7QTPYuAtCVwAJYtScb3pfPeuJ/xQROD3nIMxWr1POu9FJPjnmj52Wca3Wjn7iiC2ZS6XK+h6A1Ic0I8/ArsQ319Asmi7UzzhqE0acvBO53fIUwzQk2Ypd3fAYeUKY9g+IPQu2Y72zKPDCJ0lhvltUyKIkTfg83NEJRNPvc5rMtrHstxyQvMfSUD4UAXn9Ky293jkLy64Wp+4jUjQY6rO4NoqIz2z/vS3QLy+xCOsTQ2RUYjn7hJv3xXy4TFLRZOviMckCRbNsNKPAF3Sfz4ox0yPE3K5WB9DJZjjoXti5QJpD8VIOvhBkD4am8kNBcmy6u6RKw5ALFg8eEc04i2qhyJr/TE24np/14t/tox7wGnjSFfRemXSDu3Pt+dfun7lmsBXfYnlElB+XBbdKox/N3JlbNerG9cJ2eaJLKLsGkVICxxMfVjyhN9eXmGbw0H45fQ8QCorL2lyhas5vJXSgiKpCamKfNa6Qg4gBR/Brj6bjJ5B7
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(82310400026)(36860700016)(56012099003)(18002099003)(3122999024)(13003099007)(921020);DIR:OUT;SFP:1101;
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(376014)(36860700016)(921020)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	ew01DH/h4DgO3gqZOSIrDPbOnFXLyWUJrzjsuzTAeyy6yRLl5fY9cVQI4098+C2w+DiCQDyBfJruIZyClR1IGWrZIBAL2M/Y+twtJTPUqO7Jn6MAYX7MWKalq83UPp07QTNHsZOERZg33xDsJjT9/3HVUj2SQojLuBIUoe89EYFRdkbHi9VSt+X+PodxDx2mOGAxfcpAFhL0Q7S1Nt+GdNTWYNychU4bJphOupW5sBM3g7OFHB2sZ2fDwoxkB7IJBZrbGf+VePr3+cscJRW6pMhbRfhKy/wyD+zEydOZ1/seeaJQ/UGqB1jvQlsg1XRkbl0pRK4omStkaWPatZCtBosVMnxGzm6PtATVCUE5+rEWyQ6rh1jHaCMkgirDM9bFSVNOYJHIzEGosGsUFvzMpBYQ4lBhBYTTmUCDQEKgOo5kuih6oRfxg+Gg6yg1sT8G
+	ZSjH68ZT1uBYukep+B0+tXW1gm0yhAbzAtiMfgSRQ6n4QWfaZ49VvhRKmPxaQSbcFXcJhOYvU40H75OaTStnC1bKIWHTb+2g2OofKtmtxxOHuA3AGvrLeMtiSQwaK51vNc/B8eb3dll+OIpMiRzihcRA6PnZWq0BkcxDHU6fNOqbEox7f3gkOMdNoh7c12vmcrkWK5Mknqq6Bjtfjma2JgSb/Ou+iAVdEoGgobfT7dKTCHEo6j+e4N5R6LC2KkOdDWmEJq2JuOWB+5ydBy7hiVhsf/IIkwbyYQ/J9+MhGh2O8yT5Cg+dDvy53CKdLOHkwT0WLx7cobQZVLDukhASVQiYdWHRCsNJNdP+w3VdHeLzm9KhmnYWQ0xdCxN14JggmhYnyx6vJG4ndtfoaq1Uvxlls64iFxVLmUXF2oljyZ4wa3lrHiNdChr3kVBK47J/
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2026 20:35:12.0398
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2026 20:35:29.4664
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7819d6c-403b-442d-ad05-08de7fadb1c1
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1fcae79f-0c6a-4c28-58c3-08de7fadbc31
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF00003448.namprd04.prod.outlook.com
+	BL6PEPF00022574.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8894
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPFD8936FA16
 
 From: Manish Honap <mhonap@nvidia.com>
 
-This series adds support for passthrough of CXL Type-2 devices to virtual
-machines through VFIO; The goal is to expose CXL functionality through
-the generic vfio-pci core, without any need for a variant driver.
+CXL core has the information of what CXL register groups a device has.
+When initializing the device, the CXL core probes the register groups
+and saves the information. The probing sequence is quite complicated.
 
-Current design is based on CXL core APIs provided by Alejandro's CXL
-type-2 device support patch series which is currently in upstream
-review. (see drivers/net/ethernet/sfc/efx_cxl.c) [1].
+vfio-cxl requires the HDM register information to emulate the HDM decoder
+registers.
 
-This patchset should be applied on the cxl next branch using the base
-specified at the end of this cover letter + Alejandro's v23 mentioned in
-[1].
-
-This patch series introduces CONFIG_VFIO_CXL_CORE, a new optional module
-source compiled into vfio-pci-core, that hooks into the vfio-pci
-open/close and reset paths to provide:
-
-  * Automatic CXL Type-2 detection at device open time via the CXL Device
-    DVSEC capability (Vendor ID 0x1E98, ID 0x0000) and HDM Decoder
-    Capability block.
-
-  * Kernel-owned HDM decoder management.  The VMM never programs HDM
-    decoders directly; instead it reads and writes an emulated shadow copy
-    of the HDM register block through a dedicated COMP_REGS VFIO region.
-    All bit-field rules (reserved bits, read-only bits, the
-    COMMIT/COMMITTED latch) are enforced by the kernel.
-
-  * A DPA VFIO region backed by the kernel-assigned Host Physical Address
-    (HPA).  The VMM maps this region with mmap(); PTEs are inserted lazily
-    on first fault.  During FLR/reset all PTEs are invalidated atomically
-    under memory_lock and re-inserted after the reset path re-enables the
-    decoder.
-
-  * CXL DVSEC configuration-space emulation.  Writes to the CXL Control,
-    Status, Control2, Status2, Lock, and Range Base registers in the
-    device's PCI extended configuration space are intercepted and replayed
-    through a per-device shadow (vconfig), enforcing CXL 3.1 register
-    semantics including the RWL/RW1CS/RWO access types and the CONFIG_LOCK
-    one-shot latch.
-
-  * A new VFIO_DEVICE_INFO_CAP_CXL capability (id=6) returned in the
-    VFIO_DEVICE_GET_INFO capability chain, carrying all the information a
-    VMM (e.g. QEMU) needs: HDM decoder count, BAR index and offset of the
-    component registers, total DPA size, and indices of the two new VFIO
-    regions.
-
-  * Two new VFIO region subtypes under the PCI_VENDOR_ID_CXL vendor
-    namespace: VFIO_REGION_SUBTYPE_CXL (DPA memory) and
-    VFIO_REGION_SUBTYPE_CXL_COMP_REGS (emulated HDM registers).
-
-  * A module parameter (disable_cxl=1) and a per-device flag
-    (vdev->disable_cxl) so that the feature can be suppressed for
-    individual devices or globally without recompiling.
-
-  * Comprehensive selftests in tools/testing/selftests/vfio/ covering
-    device detection, capability parsing, region enumeration, HDM register
-    emulation, DPA mmap with page-fault insertion, FLR invalidation, and
-    DVSEC register emulation.
-
-This new design is moved away from variant driver approach and all the
-CXL functionality is now made part of vfio-pci driver.
-
-The reasons for this change are:
-
-  * Generic CXL Type-2 support features (DVSEC, HDM, regions, reset)
-    are common to all CXL adapters and don't belong in variant drivers.
-    When something is vendor-specific (e.g. live migration, proprietary
-    features), a variant is appropriate; generic CXL behavior should
-    not require a vendor-specific driver. Generic CXL support belongs
-    in the core, not behind a variant.
-
-  * With this new approach, the user always binds to vfio-pci. No need to
-    choose or document a CXL-specific or vendor-specific driver for
-    standard CXL Type-2 passthrough.
-
-  * For any CXL Type-2 device, enlightened vfio-pci works with any device
-    that presents CXL Device DVSEC and the expected component layout.
-
-  * CXL detection, state, register emulation, region creation, and reset
-    live in a CXL-aware layer invoked from the core (optionally built
-    via CONFIG_VFIO_CXL_CORE). The core stays a single entry point;
-    CXL is an optional extension, not a separate driver stack.
-
-  * Pushing CXL into the pci-core avoids per-device CXL detection and
-    feature toggling inside vendor-specific drivers.
-
-Series structure
-================
-
-  * Patches 1-5 extend the CXL subsystem to export the interfaces and
-    defines that vfio-pci-core needs.
-
-  * Patches 6-8 lay the vfio-pci-core plumbing.
-
-  * Patches 9-12 implement the core device lifecycle and DPA region.
-
-  * Patches 13-15 implement configuration-space and register emulation.
-
-  * Patches 16-18 wire everything together.
-
-  * Patches 19-20 add documentation and testing.
-
-Limitations and future work
-===========================
-
-  * This series does not yet support switched topologies with more than one
-    caching agent; that is planned for a future series.
-
-  * RAS / ECC / CCA / Reset Support
-    This design will integrate RAS and ECC handling in generic vfio-pci by
-    leveraging CXL core and RAS capabilities in next patch updates.
-
-  * cxl_reset support [2]
-    Integrate changes from Srirangan to have VFIO-CXL reset support.
-
-Dependencies
-============
-
-[1] Type2 device basic support https://lore.kernel.org/linux-cxl/20260201155438.2664640-1-alejandro.lucero-palau@amd.com/
-[2] CXL Reset support for Type 2 devices https://lore.kernel.org/linux-cxl/20260306092322.148765-1-smadhavan@nvidia.com/
-
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Alejandro Lucero <alejandro.lucero-palau@amd.com>
-Cc: linux-cxl@vger.kernel.org
-Cc: kvm@vger.kernel.org
+Introduce cxl_get_hdm_reg_info() for vfio-cxl to leverage the HDM
+register information in the CXL core. Thus, it doesn't need to implement
+its own probing sequence.
 
 Co-developed-by: Zhi Wang <zhiw@nvidia.com>
 Signed-off-by: Zhi Wang <zhiw@nvidia.com>
 Signed-off-by: Manish Honap <mhonap@nvidia.com>
+---
+ drivers/cxl/core/pci.c | 45 ++++++++++++++++++++++++++++++++++++++++++
+ include/cxl/cxl.h      |  3 +++
+ 2 files changed, 48 insertions(+)
 
---
-
-Manish Honap (20):
-  cxl: Introduce cxl_get_hdm_reg_info()
-  cxl: Expose cxl subsystem specific functions for vfio
-  cxl: Move CXL spec defines to public header
-  cxl: Media ready check refactoring
-  cxl: Expose BAR index and offset from register map
-  vfio/cxl: Add UAPI for CXL Type-2 device passthrough
-  vfio/pci: Add CXL state to vfio_pci_core_device
-  vfio/pci: Add vfio-cxl Kconfig and build infrastructure
-  vfio/cxl: Implement CXL device detection and HDM register probing
-  vfio/cxl: CXL region management
-  vfio/cxl: Expose DPA memory region to userspace with fault+zap mmap
-  vfio/pci: Export config access helpers
-  vfio/cxl: Introduce HDM decoder register emulation framework
-  vfio/cxl: Check media readiness and create CXL memdev
-  vfio/cxl: Introduce CXL DVSEC configuration space emulation
-  vfio/pci: Expose CXL device and region info via VFIO ioctl
-  vfio/cxl: Provide opt-out for CXL feature
-  docs: vfio-pci: Document CXL Type-2 device passthrough
-  selftests/vfio: Add CXL Type-2 passthrough tests
-  selftests/vfio: Fix VLA initialisation in vfio_pci_irq_set()
-
- Documentation/driver-api/index.rst            |   1 +
- Documentation/driver-api/vfio-pci-cxl.rst     | 216 +++++
- drivers/cxl/core/pci.c                        |  80 +-
- drivers/cxl/core/regs.c                       |  29 +
- drivers/cxl/cxl.h                             |  34 -
- drivers/vfio/pci/Kconfig                      |   2 +
- drivers/vfio/pci/Makefile                     |   1 +
- drivers/vfio/pci/cxl/Kconfig                  |   7 +
- drivers/vfio/pci/cxl/vfio_cxl_config.c        | 304 +++++++
- drivers/vfio/pci/cxl/vfio_cxl_core.c          | 713 +++++++++++++++
- drivers/vfio/pci/cxl/vfio_cxl_emu.c           | 414 +++++++++
- drivers/vfio/pci/cxl/vfio_cxl_priv.h          | 123 +++
- drivers/vfio/pci/vfio_pci.c                   |  32 +
- drivers/vfio/pci/vfio_pci_config.c            |  58 +-
- drivers/vfio/pci/vfio_pci_core.c              |  31 +
- drivers/vfio/pci/vfio_pci_priv.h              |  72 ++
- drivers/vfio/pci/vfio_pci_rdwr.c              |   8 +
- include/cxl/cxl.h                             |  52 ++
- include/linux/vfio_pci_core.h                 |  10 +
- include/uapi/linux/vfio.h                     |  52 ++
- tools/testing/selftests/vfio/Makefile         |   1 +
- .../selftests/vfio/lib/vfio_pci_device.c      |   4 +-
- .../selftests/vfio/vfio_cxl_type2_test.c      | 816 ++++++++++++++++++
- 23 files changed, 3013 insertions(+), 47 deletions(-)
- create mode 100644 Documentation/driver-api/vfio-pci-cxl.rst
- create mode 100644 drivers/vfio/pci/cxl/Kconfig
- create mode 100644 drivers/vfio/pci/cxl/vfio_cxl_config.c
- create mode 100644 drivers/vfio/pci/cxl/vfio_cxl_core.c
- create mode 100644 drivers/vfio/pci/cxl/vfio_cxl_emu.c
- create mode 100644 drivers/vfio/pci/cxl/vfio_cxl_priv.h
- create mode 100644 tools/testing/selftests/vfio/vfio_cxl_type2_test.c
-
-base-commit: 3f7938b1aec7f06d5b23adca83e4542fcf027001
---
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index ba2d393c540a..52ed0b4f5e78 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -449,6 +449,51 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, "CXL");
+ 
++/**
++ * cxl_get_hdm_reg_info - Get HDM decoder register block location and count
++ * @cxlds: CXL device state (must have component regs enumerated)
++ * @count: Output: number of HDM decoders (from DVSEC cap). Only set when
++ *         the device has a valid HDM decoder capability.
++ * @offset: Output: byte offset of the HDM decoder register block within the
++ *          component register BAR. Only set when valid.
++ * @size: Output: size in bytes of the HDM decoder register block. Only set
++ *        when valid.
++ *
++ * Reads the CXL component register map and DVSEC capability to return the
++ * Host Managed Device Memory (HDM) decoder register block offset and size,
++ * and the number of HDM decoders. This function requires cxlds->cxl_dvsec
++ * to be non-zero.
++ *
++ * Return: 0 on success. A negative errno is returned when config read
++ * failure or when the decoder registers are not valid.
++ */
++int cxl_get_hdm_reg_info(struct cxl_dev_state *cxlds, u32 *count,
++			 resource_size_t *offset, resource_size_t *size)
++{
++	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
++	struct cxl_component_reg_map *map =
++		&cxlds->reg_map.component_map;
++	int d = cxlds->cxl_dvsec;
++	u16 cap;
++	int rc;
++
++	/* HDM decoder registers not implemented */
++	if (!map->hdm_decoder.valid || !d)
++		return -ENODEV;
++
++	rc = pci_read_config_word(pdev,
++				  d + PCI_DVSEC_CXL_CAP, &cap);
++	if (rc)
++		return rc;
++
++	*count = FIELD_GET(PCI_DVSEC_CXL_HDM_COUNT, cap);
++	*offset = map->hdm_decoder.offset;
++	*size = map->hdm_decoder.size;
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_get_hdm_reg_info, "CXL");
++
+ #define CXL_DOE_TABLE_ACCESS_REQ_CODE		0x000000ff
+ #define   CXL_DOE_TABLE_ACCESS_REQ_CODE_READ	0
+ #define CXL_DOE_TABLE_ACCESS_TABLE_TYPE		0x0000ff00
+diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+index 50acbd13bcf8..8456177b523e 100644
+--- a/include/cxl/cxl.h
++++ b/include/cxl/cxl.h
+@@ -284,4 +284,7 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
+ struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
+ 				     struct cxl_endpoint_decoder **cxled,
+ 				     int ways);
++
++int cxl_get_hdm_reg_info(struct cxl_dev_state *cxlds, u32 *count,
++			 resource_size_t *offset, resource_size_t *size);
+ #endif /* __CXL_CXL_H__ */
+-- 
 2.25.1
 
