@@ -1,211 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0362C275114;
-	Wed, 11 Mar 2026 03:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773199361; cv=fail; b=io22coadqIeJLsbHoh58sRZzHe8TzA8YEE5ROJNeUYhoPIM3xK/WlH4adtkCHASfYOGutSl9tcUSwkfb1YS3AQwSlzfLkHalJLszR2vxAqLAap9Qyv3vYD9r2EhD6EhgirkTLkJS397nfRC9T0WV/DPprcejCQzyGmmErb9zLiM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773199361; c=relaxed/simple;
-	bh=nvXswjP32k9pRLMBOC2aQnKmkkMR0Ea04RspJ8KbOKw=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=qy0ttcBHp075ZcMWAYj2Ahswl92sTlLGLhqb6j50s3SxUunKNMq7wheyNA3gVID1pTrkOFK5aRrY+U0f5CB3KbYfBUixMB4IztUWF2oWDgZmpR9itc/llp8hh/Y6kcWQ8oTlGGTm814uoqbwd8l46gVRJNjCCq4UMqE9XdZVyEs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jimx0qwD; arc=fail smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jimx0qwD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773199361; x=1804735361;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=nvXswjP32k9pRLMBOC2aQnKmkkMR0Ea04RspJ8KbOKw=;
-  b=Jimx0qwDPXQO2wf3dvLn8dPaWa4IES5yA0xNY7KdFXvUHsEYnBpeg+Dm
-   dN5YUFHS/hO4Azqx0ecNKBw2ms001V39CLcwKcF8VMe5dZn4Z+8Uip3jK
-   zMZ+437K0vWtK1lFCS/qiSGjDbjMAW4Rkj3PT4zbEBxnWVUX1fRBWNprt
-   qet0DvR3C82BNevM3JzjVnNYhRLvIH3CUFsKbHH1UJLeJ3ID0Vcbe0pxt
-   Kt0F57/ZlSc2XBLm+iJkaIt2BXY3zH0ZGaOFhoVmSfDB2FZsaMX+yzVKM
-   zuZsen53qdyxwFKr/e8f8zDmpfNtyAo+vkWLoQva4TSiDLPi9ahnREtRZ
-   A==;
-X-CSE-ConnectionGUID: /P/HzZFyTN+uURrK2uuNsw==
-X-CSE-MsgGUID: TghwBOkOQ7u1NhXR+6sFVQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11725"; a="74232979"
-X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
-   d="scan'208";a="74232979"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 20:22:40 -0700
-X-CSE-ConnectionGUID: XCLBzaCCTZClmukMZyV8Lw==
-X-CSE-MsgGUID: RIz5aG0qTGqp+1OgbBuwQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
-   d="scan'208";a="217032957"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 20:22:39 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 10 Mar 2026 20:22:38 -0700
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Tue, 10 Mar 2026 20:22:38 -0700
-Received: from MW6PR02CU001.outbound.protection.outlook.com (52.101.48.24) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 10 Mar 2026 20:22:38 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O6vED8OUL2FntB5FANBpW7+Yrcls4YiQNtBoarAxGWh3ZmEvxoCWLsNkeP6EcLm/NNLOs0Bt1LmfLzWcqgM2THHidBaDnp3LKekqFAgsWLe19sqopIxvdZSBCOfbMN1Mpsb8qpVsDvv3Rg8BlUvsisBdB1zuV+GbETiYo4wT3ZTu4YjYXiqDAKWyglTD8GdUP8sMpn1JIyTymuAFRrvWKhXtxHQNlICjK+iYx1D3YgxWAr62UfH384XO8MsK8e9y192Ke3g+Rx9JnYK5pWbIWt5IL6IeOoqHVzJ71HFOfU645g9mtdu27PwFQlmKmJus0bhvHLlPc/4v+9+4588TIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nvXswjP32k9pRLMBOC2aQnKmkkMR0Ea04RspJ8KbOKw=;
- b=jD3msG1TwPe4kvD/ALxi6n01+uejhrgJvNW+HcX2rvJ41jyad9H/fQcNz3TgF2OUp+O/GZCbTh3+ybB7xP484W5tqsWUbXoMHyublYaLdLt6ky+C2eg2LC6SE5csI0gCPZeRLjAOdZtOOa4Kim672kB8HrUlrbYklEna3yA1hu5yTThTO1QeXgm+E1AdNo8rZzolap0ph5bEzFAc0csh2FYoBCA5Slt5UJd0PLZqFzMSBh9sh+PbF2NVRJgu9IrZDXMw1ZF25mfJyWCwTqusUl/8IyrFYp9Fi2Pu7pFNTxAd/mGF2lDLI9+SSfD01NlEa7wcTDS021YoPA200FLOgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SA3PR11MB8076.namprd11.prod.outlook.com (2603:10b6:806:2f0::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.11; Wed, 11 Mar
- 2026 03:22:31 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff%3]) with mapi id 15.20.9700.010; Wed, 11 Mar 2026
- 03:22:31 +0000
-From: Dan Williams <dan.j.williams@intel.com>
-Date: Tue, 10 Mar 2026 20:22:29 -0700
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>, Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Terry Bowman <terry.bowman@amd.com>,
-	Robert Richter <rrichter@amd.com>, Benjamin Cheatham
-	<benjamin.cheatham@amd.com>, Smita Koralahalli
-	<Smita.KoralahalliChannabasappa@amd.com>
-Message-ID: <69b0dff5b6043_2132100cd@dwillia2-mobl4.notmuch>
-In-Reply-To: <20260212223800.23624-1-Smita.KoralahalliChannabasappa@amd.com>
-References: <20260212223800.23624-1-Smita.KoralahalliChannabasappa@amd.com>
-Subject: Re: [PATCH] cxl/hdm: Avoid DVSEC fallback after region teardown
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR13CA0118.namprd13.prod.outlook.com
- (2603:10b6:a03:2c5::33) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79DF2DF153
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Mar 2026 06:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773212150; cv=none; b=aiFp+HN2YoG9tHK4z2Exii5yZu/O01fINZ+4v43RS/inZTUFy+tgyo0BPnU8vfmbnJ0OHdavMNucdCC1J+zfhFHtMC3EqNkjZhGWY5p3sjMBsfDGg+/JHSmrR4OT8Zl2oSi3R9RKFNBxnEXoDEneUf/li7VaHYD6vjmRpD2uEKw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773212150; c=relaxed/simple;
+	bh=/muMKl689VQdgInOnZQpCii5SHPdxchLssMea7AsKpg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OeJTmPeZ73LvjPtpAixLLNy1RRmGkXBD2ppi05msymsN+z2aGC70S4N+1J4aSGIpFrRfxD+yD4ugLTcQsFWC0JU9N1x8sknqBE8TIZMQsksd9MwMKmTG5nPX4kgWme8q/BCeyC4VbECcS8wrKVfYeQflWYRyGQ4eJhNT/kXDZoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b95c0fc928bso714272866b.0
+        for <linux-cxl@vger.kernel.org>; Tue, 10 Mar 2026 23:55:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773212147; x=1773816947;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=QiUpbOqkS9uksmn/N5qC8GErk+ixVsmmsHn3JaJbo7k=;
+        b=YRXGKwY46UYDjDr9dSmGmhBMl8fi0YUn1HEJbgfh5mdlYaFx8ZDNQ26lF3TjFH8qB5
+         KkMtz9hIXBah6OrNCjZnc6M/AikDd0D7vMhkMHyO7RCE/fpSs7pKJgWQYE/XFv2xQYjn
+         XoRJ/GqRGp0MDWRjyMHd+VCpGz0vIy9K1h+ODnTloFkEPA4oAQjQVRk5Q4/4hUts51zT
+         d3NIqOL5RHHjlPG+TtRqOX5nzmLTHmgxPJ2PxCtLQKZNshfspI6qX1xvRMiAu+0Qpd6S
+         f5SKSCFaRQNF2G7+k5U3fpkckjk5uG78HbL7/7SiYsVSxVyY9C1pu3sLkxq6w1lbTGUS
+         9nMA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/yMwfcmGx5CpTYnK+iC8ezHvlhHuVHcow0fKMMM3feIVjXV6R9i/Abn2RGD1pGXWSfeXX5tJ5gHg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6EDtYnhNIU3IidpBBZaW5JMzDhRoGPmMud+zvk2uZ4F2OSat6
+	JewDjeFwUeTzmZhqAB9Vjbke2YGYYK7GvxF+CeHwAvfXcgemPjHT5To6+fRWdK09sJG2lQ==
+X-Gm-Gg: ATEYQzxOFJI5/6GMsCqZx8av0BE4VGEXi7hdphwAso9AKXhxvKMqFJm9//uSPEvRvP3
+	DUEPYDNNo+0BTBLOT1rIRdwIctnENjBQhceZFEUtaW+zHkAGKalUSpiFGwZ0ImKODdr0wWFv4bR
+	Nt/gFNeIV41ey+4OTW3fzOKVli1JVPVDx7dKs7Oti7kF80+U6RO1643RbpThyKm96vA6v+U8Y2Q
+	cbPLqjW7675YgMTrthBIlu4lR2cpS8+sxsKOgZ8hTm4JDkZhyApOBekRtHdt1GWBgMRxpWACO/I
+	Wb5uFp6v4nnGENvLMqYE2HMlZJ58HB+WuFwA8+PshU2yxFPwccSKNQxp8jJOFU99+kKcf+wigyn
+	iHtP300vc5axGh58HI8e9AB2L6Ly/7WCgI2Wtfouwy2pxMqV7uNP6YqH5i+j2tzIHYJDpc9ckiA
+	2Oypa6xxjVJgIKS1nxJxjxCmL8be86oIJjI9qLz2ZnuOZGAPCREJrtNpo=
+X-Received: by 2002:a17:907:3d86:b0:b93:55ab:1d36 with SMTP id a640c23a62f3a-b972e5e5f73mr70056266b.43.1773212146683;
+        Tue, 10 Mar 2026 23:55:46 -0700 (PDT)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com. [209.85.221.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9736e2ca31sm3445666b.37.2026.03.10.23.55.46
+        for <linux-cxl@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2026 23:55:46 -0700 (PDT)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-439f59dfda2so971066f8f.2
+        for <linux-cxl@vger.kernel.org>; Tue, 10 Mar 2026 23:55:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV/RnuCIBamAx7s6abVV7e68bMwiyAdU/ZDr67eD0zVjMmhIXzHHOpm14ENst+GV1VB3LxZYMW6LmE=@vger.kernel.org
+X-Received: by 2002:a05:6000:1acf:b0:439:af96:29d8 with SMTP id
+ ffacd0b85a97d-439f8430d59mr2559352f8f.33.1773212145752; Tue, 10 Mar 2026
+ 23:55:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA3PR11MB8076:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1f2281b9-ff82-456b-441d-08de7f1d6e42
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info: Zdf+MxQema8AFy+DoKHsS6hLXm8FZRo+afCgbffJlXEbsuoNDn/WjzOIHpLZVwXk4bfIft9PXjcbckOoae4UzTPhtqJIcnnqTcd4a0KRQNB5WadEWRqJAFKwW6T866zpvhX2OfXOo3d0Ya2xyAwTTTZyMUICRnXEBw8N61tYRX5zFWyeYVXF2jBFWIUmezL18C9+GZQ4jN1AC/jeL0uNKEelZAYXV4KPwrDAGK0Rzh9DCri2bqetU8v/u4oVzf6XSwRgWMZN5KSukXg9FdHscsXBrPiVPxuBE7H+AOhcRvfy5MROBMuaF6ywEx5HWDk9yK/W+RpkxQgsDBlKuaNIHXWMnLzw6ONL1CXndJ1XDtrb8HevH0jLhJCKFhmV/No+ple3ujG2SDaQa3IucisLqJRTJWR2bYqUcJNRoVXQ/s/rmv6rrmEf0TLMssLDskIPhYuLOTLzfB6VhFyVm7H1ns0AV3Ajuzy9yCSNSrp3Zb0gl8vEPGZV4i3/t4qf4fhXHfjGflnA0LwvivAwIiNE2bdY1lHOKlSUm9mELJLErkp07W+wBxYGWIoioKD2nXOGo+G3ohXpDDh1P/g3NIq02Hbr6sPn/vZgsMzgLc5dN8oU5rA6E7y50rlXFkInew8tSx8k9JK9XUuS7pexCIidaaGYuBX34+Z7FkMlGBsKq+S1KbVDCQG4CbdgB2J5FtF66gkseHWR8C8+WrVB5xZbbeZEsZBYCe1lc2IjAYTBVKk=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VWJpQ2dRaWNYNkkvWFFKeGRIMEpzQXJ4ckFvZnBXbmc1NS96dnlaZGN1Q1or?=
- =?utf-8?B?TmsvdlZkRE14MFgzZ0VHQUdzd3IrSXFoSFYvRFpXQm0vNDZsN01RQzdqaEht?=
- =?utf-8?B?Tk5Oak1TSlo4V04rTzhiaDcwVTZnUmVQRnVLNFV1K3J6RXVLMS9rbGtwdW9T?=
- =?utf-8?B?Sm9sWVdyTlUyQXBVUDBRV0RQWFdqWUN5TGJYTkw4Z21LbDBFRFpmOVlCdnJ3?=
- =?utf-8?B?bUFXMGwrNlpqUG1PVFdqR0oybjN4RWNDQXJpdU5IQnFwVU1WK3o1RUdPamJS?=
- =?utf-8?B?QVJjWC8xeWZ6UFNXWHEzSGkyT1BqOGJpOHI2ZFBIMlUyaTJMSVlSZzZOTGla?=
- =?utf-8?B?UmVPb3BadUJTQTR4UmFyOEVCMTJveGhINndVWlA0dGlhOEs2Qkh3MHdwWUE5?=
- =?utf-8?B?ZjJZclVocFY3bzBGSUZlTHNWL3ZDVGhvbjZHWU5GMk9GcTFvN1BENjlXZVYy?=
- =?utf-8?B?YkptM0g3OEdsMFV5V1Q4a1did3VjMllLNFBuTCtYV1diZGNLRDRKcmRUSnAz?=
- =?utf-8?B?TVFoZks3UmZjZFZXbmNpV09OVDVQa0hxcGc1OHhFUVRCZGtLbURmbW54S3Na?=
- =?utf-8?B?V3pWUFlJaXJLVWJaTW1hSHVHdnhzQ1Z4b00va1lYMk1mZkJ5RVlIOUJEV3cx?=
- =?utf-8?B?cytsSGQ4Q3dhc1l6YmRhc1VjMHhPbVFGcHZPSUxjV3RUdEU2WGRtVXRuUk1N?=
- =?utf-8?B?dlhvTVNKOHd2TGhpaGQ5VU5LdGNzQWJIUFNBb1l3dVNCVnRsMUhGMVZ0dlJW?=
- =?utf-8?B?R05YaGg3MFJwQlZGOHJtR0FVTk5WVDFRNHdYeWJKcUdaT1NvZmVObFVxK282?=
- =?utf-8?B?U1pUVlpJeGk5dWlpR1RqVDVURGpKYi9qTmpEZ3N1N1JrWFlsY2M4VlFRaDF1?=
- =?utf-8?B?a2M0bGpQWUNoSVVHVVNCUFp1Ui9OK3d6Mml1NWtMdlhldE0wOFZaaWk5ckJB?=
- =?utf-8?B?UlNraUlwUXl3SXZGWndNZFhxQ3dLcXJpVWZkOXp3OXpieHJ0S1dHQmN1UUla?=
- =?utf-8?B?YWpmZEdyczJHWkJzcWVOYm9QTXFSdW9obnFuSlJnS3JIRFJSMW9jNktoVVJB?=
- =?utf-8?B?RHhJVUJmMmpQRG8wYVhNZlpiaWdPdXcxT0tJcy9vcVk0dHhUazlKY1BzZ3Rm?=
- =?utf-8?B?UCtWNXVJWERRdFlCYTI3a2l1amNBTmpPKzlVT0dYak1nQVh6QXBNa3dhby9N?=
- =?utf-8?B?RklwdTJyQnNLYWphNXVkUEU0RFJYTWg2Y0FFK2ZCM3FnckNIVnpBQ0gyYThm?=
- =?utf-8?B?OVVmVEpnWG5qUjYxVFF0eUpScXdsUmI1TzlpMnpVeEwxbk1ZSGFiNDZISzli?=
- =?utf-8?B?ejVEaUJHTTBSaVRwcUpUY0Vjc3ZQOEpiVll1SjZ1TitMMy94TUZjVS92bzlR?=
- =?utf-8?B?S2tzYTZCN0liNkY3aFYyb0NsajB6K2hpbDNlTFdFWGRQMjU2MTBDYkY0aEVh?=
- =?utf-8?B?ZTk2Qlpkb1h3anNGb0NnOGlKVE9JQ0xTVXlob3Y4aFh0K0NSWVJJZzVOaHdl?=
- =?utf-8?B?T3ZYZkh2clZVdFFPeGk4Yk1Ra2thYUkycWt3RlN1U0NmendaaHRUV3QyTFRy?=
- =?utf-8?B?MjBZUjRVQ3prSStOc2VxVmVKaTAzY2szK3IyamNtS3FWWWZWeDVJemhGUjZY?=
- =?utf-8?B?Y0Erc28wYVVYNXE4bXh5RzB5WlJpVE1lenJqMXBkR1JGc0R1UE9ZWUFpRjcv?=
- =?utf-8?B?bVpFaXZCZFhidE82Z1owaytjMlZkTVRNZjdxR3RRdlNiRGFHdkltclNTVDZj?=
- =?utf-8?B?KzlZWnNtdlQvZEgwaUljMWw3TzZWYUptUHk5cVJzbFAwenNFUlFzZXZJSnY5?=
- =?utf-8?B?UGtlM1FNSG4wRkRxdWw1YlFtVzUvSG9XSnBnU09lbFhFUThLdCtjNWtIK1Aw?=
- =?utf-8?B?MnNnTjk0MlRTRHNZam1Ld1ZreEJOOWprVHdQZnhBS3NrbG54dnRwbEs3Q25w?=
- =?utf-8?B?Uy82SnFnWFRMNWVlUlZWQ2xKdW8rQ1V2bUFaTW9HWVR5OWNsVk1YNEN4SGdE?=
- =?utf-8?B?NW8vTFpCSDA3akNJbVNEc2kvVCtYS1VsRkNkSkduQWZHSFY2N3JiZE9SaElF?=
- =?utf-8?B?d3JvQlYyU1FXK1cxYWk5cXo2UU82amxoMXhCZGhKaUl6RDlYZkF0TmFnVkkz?=
- =?utf-8?B?YzcvT1k2Y2dSSTdwWUswZFFaZktZNmkzOWtlaE9hb282RUFraWFTM2ZwWi9S?=
- =?utf-8?B?KzRyYW90NTNjOUw3MmswUkdzZlBsK2RHbFdIaWRNRDV2S1BVUWJBYmF6a1pW?=
- =?utf-8?B?aUFZTFR2UlVSemRqZGEvekIzNmticldrdktoVXk1bkUxTkduQXFHd2pxR3pJ?=
- =?utf-8?B?ancxMmdONkw1d1ZyNWlIYVVpczdyeElkd2JORlFYUVdKZUFLbElIM2IzSE5p?=
- =?utf-8?Q?0CwQo0w9sy9SKtQ0=3D?=
-X-Exchange-RoutingPolicyChecked: Q4/gpYSfISuxIgZilfTB1DUCpmkIoj0z6qz9mOdS9s7Lp9L0ttwvyJRb8QW591ImWll6Fda2UDCG70ywmWVVGON71OjGnRTwQiQcZrGWIdeBYST82RwZWQVvY1Sg2ZOz88G6++GKl7nvlrwiG0fM77BqgQBujHloiNZjJrO8B4cnyfyqOGtjFrHuDhTVeYI9FgNt12l6GuRoeiXwwikEniefgZILxOrzBh8OUd7OwlxcHs0NEALxijJXi72ojW1G/u5IsfOODcpYc4d8quq35NStDTnnhXAgOfZsmSemSfTfVCC3X63h89bTgCRfe4zO7GVEyZTHhp92aFI9Ks3eKg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f2281b9-ff82-456b-441d-08de7f1d6e42
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2026 03:22:31.5362
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ibt1iJMI/SGK4SH7vdbobL+Q+rq5Nf3stFjMBZfMjGzPw+nYf7kUTh9iYUh1EeulDqNaJjORHlKIlmGfWqQZYvQgo0PNj2i5r3W2cxUU0p4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB8076
-X-OriginatorOrg: intel.com
+References: <20260308185958.2453707-2-iam@sung-woo.kim> <69b0a0f8bfb0b_213210026@dwillia2-mobl4.notmuch>
+In-Reply-To: <69b0a0f8bfb0b_213210026@dwillia2-mobl4.notmuch>
+From: Sungwoo Kim <iam@sung-woo.kim>
+Date: Wed, 11 Mar 2026 02:55:28 -0400
+X-Gmail-Original-Message-ID: <CAJNyHpJ41rHOEu+JQZPTBx9ETof9avCBKqStC4zUU_FDz-sf9g@mail.gmail.com>
+X-Gm-Features: AaiRm511luEaaPDh0t9RPwD-iLJ6Z19emC9mCOBpQ43WuJ20ukSx3hmPquc9msI
+Message-ID: <CAJNyHpJ41rHOEu+JQZPTBx9ETof9avCBKqStC4zUU_FDz-sf9g@mail.gmail.com>
+Subject: Re: [PATCH] cxl/region: Fix a race bug in delete_region_store
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Ben Widawsky <bwidawsk@kernel.org>, daveti@purdue.edu, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Smita Koralahalli wrote:
-> After destroy-region, cxl_region_decode_reset() clears the HDM decoder
-> registers (base/size/commit). If the memdev is subsequently bounced
-> (disable/enable), port probe re-evaluates decoder capability via
-> should_emulate_decoders().
+On Tue, Mar 10, 2026 at 6:54=E2=80=AFPM Dan Williams <dan.j.williams@intel.=
+com> wrote:
+>
+> Sungwoo Kim wrote:
+> > Fix this by replacing devm_release_action() with devm_remove_action_now=
+arn()
+> > followed by a manual call to unregister_region(). devm_remove_action_no=
+warn()
+> > removes the devres tracking entry and returns an error code.
+>
+> No, that is not an acceptable or comprehensive fix. A subsystem should
+> never try to double unregister a device. Keep in mind the decoder sysfs
+> stays alive while the devres_release_all() actions are running for
+> port->uport_dev.  As a result, yes, Davidlohr is right. You can
+> theoretically observe the unregister_region() release action firing
+> while delete_region_store() is running.
 
-I do not think this bug is limited to "after destroy region". Simply, if
-the driver sees that the HDM capability is enabled before the driver
-loads it indicates that whomever left that configuration also intended
-for DVSEC range registers to be ignored.
+I appreciate your review and suggestion of a new patch. It seems more
+complicated than I expected!
 
-> The existing logic checks each decoder's COMMITTED bit. Since those bits
-> are cleared by region teardown, should_emulate_decoders() incorrectly
-> falls back to DVSEC range emulation, even though HDM capability is still
-> present.
+I'm new to CXL and device drivers, so I would like to confirm that my
+understanding is correct.
+- CXL tolpology could be: [upstream] host -> switch(s) -> endpoints(s)
+[downstream].
+- The host can configure a unique address range (=3D region) to access
+each device.
+- The bug happened because releasing the same regions can race.
+- Although the prior patch handled this, it's insufficient because it
+can also race with releasing the device (what Davidlohr had reported).
 
-This is 2 separate bugs, right? Bug 1 destroying the register
-configuration of auto-assembled regions, fixed by your pending patch.
-Bug 2 destroying auto-assembled regions does not clean up DVSEC range
-registers making it look like those are set when HDM decode capability
-is disabled. That unintentionally / falsely mimics CXL 1.1 platform
-firmware behavior triggering should_emulate_decoders().
+>
+> The only comprehensive fix I currently see to that problem is to indeed
+> get it back synchronized under the device lock. This prevents multiple
+> requesters from colliding, and from devres_release_all() deleting an
+> action that delete_region_store() already committed to handling.
+>
+> This looks something like schedule the devres action to be released in
+> workqueue under guard(device)(&port->udev).
 
-> DVSEC fallback marks the endpoint decoder as AUTO, which triggers
-> cxl_add_to_region() -> construct_region(). That path copies the default
-> interleave_granularity (4096) into the region parameters. The resulting
-> spurious autodiscovered region consumes the CFMWS HPA space and causes a
-> subsequent create-region to fail in hpa_alloc().
+I assume you meant guard(device)(port->uport_dev).
 
-I do not think this part is relevant to the fix, right? Once DVSEC is
-being falsely used the rest is just knock-on-effects.
+>
+> It is ugly, but it may be the case that this wants to synchronously
+> delete the region, and asynchronously cleanup the release action.
+>
+> I.e. unregister_region() grows a new:
+>
+>         if (!test_and_set_bit(CXL_REGION_F_DELETE, ...)
+>
+> ...flag to enforce only one path successfully deletes.
+> delete_region_store() calls unregister_region() directly. Then the
 
-> Use the global CXL_HDM_DECODER_ENABLE bit instead of per-decoder COMMITTED
-> bits to detect HDM capability. If the HDM decoder block is enabled,
+To fix this, you suggested:
+- Add a flag to make unregister_region() idempotent.
+- Make delete_region_store() call unregister_region() directly.
 
-...if the HDM block is enabled the state of the register is irrelevant.
+Now unregister_region() is race-free. But we need to release an action.
 
-> registers indicate teardown, not absence of HDM support. This prevents the
-> unintended DVSEC fallback and subsequent region creation failure.
+> workqueue's job is to trigger the release action under the lock only if
+> port->uport_dev is still driver-attached by the time the workqueue runs.
+>
 
-I think this wants 2 patches. This one you have here to always trust HDM
-decoder on setup, and another patch to teardown non-auto
-should_emulate_decoders() DVSEC configurations. Those combined with your
-"do not teardown auto regions" should squash this crop of setup bugs.
+What I'm missing is this part.
+How could asynchronous cleanup solve the race? In the worst case, the
+workqueue could start immediately after we schedule it. In this case,
+it's the same as the synchronous execution.
+Or do we have other reasons to make it asynchronous?
+
+> In the meantime the workqueue needs to hold a reference on the region
+> device until it can observe the state of CXL_REGION_F_DELETE under the
+> device lock.
+
+If it's the same for synchronous execution, we might execute this
+directly in unregister_region(), holding
+guard(device)(port->uport_dev).
+
+>
+> Otherwise I suspect if you put a device_lock() in delete_region_store()
+> it will deadlock.
+>
+> > ------------[ cut here ]------------
+> > WARNING: drivers/base/devres.c:824 at devm_release_action drivers/base/=
+devres.c:824 [inline], CPU#0: syz.1.12224/47589
+> > WARNING: drivers/base/devres.c:824 at devm_release_action+0x2b2/0x360 d=
+rivers/base/devres.c:817, CPU#0: syz.1.12224/47589
+>
+> For the next posting, these 2 lines are sufficient, no need for all the
+> extra detail of a full backtrace.
+>
+
+Copy that.
+
+Thanks again for your detailed reviews.
+Sungwoo.
