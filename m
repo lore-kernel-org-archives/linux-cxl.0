@@ -1,126 +1,135 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96237379EEA
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Mar 2026 10:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8F4359A6C;
+	Thu, 12 Mar 2026 10:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773311209; cv=pass; b=TFG0FwtgGFDa98IInPlh2pR84HBcJYxluG2suONr9V+yW0wFe37cbP/nIIWJgodhUFsZoxYKo+yMXEo+OXQtyWkFgjHl94K8I/GsBHW3cID+w20YqhOfXI3WQOKT5SKKbCsABvYUWa4DoqPv9oDPWCq4u77JrY5WMwj5GoC8vD0=
+	t=1773312364; cv=pass; b=S5zsi/BHtLMzg/xRGCW8HQ242+8bA6sWFpXrWPtVJgZRM3LPHVJQr2cDVxmYYZ/VzDGfo/oKWzIsMy6roqXvy8RUXv1dNycF/lx809LzZv830hYWUhHSzobWUCD1hWD7ZnVIe2PWyHE0bxieoF9JzOGRTtdPKQRv8RcjljnFQGE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773311209; c=relaxed/simple;
-	bh=6eNMvBAN5fYzpCXRq6s+PRfaV095V0riQ9UfgTCrdok=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fDFwNb65MV1VaN5oPt/7Q69jQiEyp5B9WXPcIIQlDSMa35C9QDWN9k0TC17F2x9HtNkgdfLWCaDpPiue5JLAsC7JHAuI+1Vsl2NZu9aZKmtQHCjgaKHxxlSSBgygl4plsdPIz7+NMuKlGLkzctsE5mlYxjecH1bSuyDoeOUZ6jQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OPEvPjHx; arc=pass smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773312364; c=relaxed/simple;
+	bh=ib2azcB45rykD4WCSQuYUaYpoHmNoOAdlZ24E96ltUk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JUVfC0omzcEdKht27eU0+VdsoA/9DwHWAt4MyrQBvtkXudPXJcZXuiK8ijGdnaStK2ToCJiP5LwkCePpQciR9leckHKQiGgfgYl3InqHmrxJ4bjpCEoUt9y9ZEnXbeaudrJdP9khw+W8nEfnKC+mX3PcTjwdt9SVQdWIwkGlSlg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=FmJ/ii+R; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OPEvPjHx"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-82748257f5fso1130915b3a.1
-        for <linux-cxl@vger.kernel.org>; Thu, 12 Mar 2026 03:26:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773311208; cv=none;
-        d=google.com; s=arc-20240605;
-        b=lEP5mPVFDcKZ0Vypye+jgs7xQp039OH5uQU9tmOUNdBSj52afekVf8tzon7hF4Nzly
-         iETGXFfLpYIC6k1s6+viU1szOEySamUhUSrGXuJr9wL7py8Z6hQNo+wwHD4BB/mMPXAY
-         Levr6qw6YEk9F0R5jv6T3kM51PJIkKdpthxfNNZw4wOKRvXAQKg0P7gfU49vUNs40KbK
-         Yh89gPJXU59M0W+N2yXHiXAow1tP2cZ+jQrZNWqHJj8rtVei/TiYvteVwH4G4Lo64QL/
-         B3cmXSF0bMK53jA0wfdk5MYJgIfAKT5uG47hdQKdTj4qjga6i4qDtQ2epLlkbQxtQqnx
-         8W1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=XanPOnxY51YvsD0Ag7bQ6//A3PB5jw978tzRC78Dbxk=;
-        fh=XX26uUhAsJq6iajZ5X4xvPUfCxIkDAIH7kV1XGUh7ys=;
-        b=MUig4Vd3Oa+LmdQcrYyJmj4J4wsqQYGMYUuhV81Uvla6hsjwaMJizcHQkPKuGaK7nG
-         HQZgdH/6mIEBQEP1QsyHKmGAwqiTPQjvGPb/rTijBy+sRxbkipChjRVW4c0yGmCMyt0P
-         MzHH9QhnMmOQKmyFwVkfENQGmHlSwoxof2b3SJKFH0X3xl56STvx0cX49YB8ItSJOGoP
-         AupLY2r9uMFTpdaJ07IJADJaBgRw0ZmlgxtrROS2PRpslTaZ1kmCBEh2Ef4iPKhjf6o5
-         wQbR2sTR7WX3SoOOcDwu2izwwfutUJ6gjBcFoBDusHNaGBJOXtxl9logw/I8ufGA8F36
-         tuCw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773311208; x=1773916008; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XanPOnxY51YvsD0Ag7bQ6//A3PB5jw978tzRC78Dbxk=;
-        b=OPEvPjHxhIOq0LlG2YHscmqBBl873xZ2HvnUwnOvfoCwj8TurYK0kTPqmcPVuJutGF
-         H5JtnTLCLTCxXLZq2Q8lXBY52u2wP1qd59bywuB+mm2BxjUTD/jLGgFBCImmYf9CQwgi
-         U6MeRCg0YsgGGyWIxHPRy/lDCV2mP4kBByl/xYeupF+YOFnD1ckDeD6jmDL6TegDWqM8
-         rhCpsNI1VXKdP6/OJvH6pvQIieD7CHDRltkj8zQ4YkOjRwKV3VDIH0OFur8UL/2rJNia
-         AaA9qv0YG5ffS8RmC00hpx3lsBvzdtqeRSAiIAISsoljpqlPgjUlr8vXc44t+35EJMMR
-         griw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773311208; x=1773916008;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XanPOnxY51YvsD0Ag7bQ6//A3PB5jw978tzRC78Dbxk=;
-        b=DcnaWcyWnzqWcdd9UjQMj8uK5cUwl8hIYqq6/bgVw4KiHxYM5gFRrkLhdvx/EfUrpW
-         JNWuGn98e6J6XFGYbdUdtgNqLIsNJTAQwzorrl6xuWsib/C87+t82fY1hiOcIAmZn1um
-         JB0YAuQlocRLHhmHyJ/JQXYGox8Ht3VmPD02t1wCIpNsYqpnRprOdgAasP5FUEv+/em4
-         92f2IewG0RI3AApztbYg5cbRhYCIU8Mj5bZ7mD/RwB0K5JKZRxOt0Y+SQ88Wf030JoE6
-         XpIIbG0nJrRLep5FwWYjEhf+eGt9p0R4KMV10DzAzzS9NXbB/0OzuXJbeNq2wv4Op3er
-         AI4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVhYI6P8SOK8LbLYluBHyHFG1GEoQeYXTldcIDkxT/h/j6c1nA8q4i2SSHHZZ49LmvJYbi2n7ZmvUU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc/GMhRjoORjajjAnRigZnTaf94G5nJFYbt8N0VMnXz0P18h+c
-	b6+IEJGrCSdhh/e/uWQ0Uo70Y3IlZQZXVqM+Pm2CaHby6ZtwmI2cmnbX1JQ1uk5469l75xJMLKs
-	GmhkUwKSP5oPuqoiYpJsETJnI1j+RXHQ=
-X-Gm-Gg: ATEYQzxUU+EQ5a0sWe++t+/OFrzHKEQcAOgqE1zcjBFXfjmTahU+QW23xoDCecp7x54
-	gpyhkpnU1cXtj1qc/dJTKtuH/EvwnqzeNjwot7wU8qf9DjadyGCnSA3QyNHrTFF20pQy1bXNoqM
-	Mljck/dTE6uHL8rnXnxIXCj8opCdouk6tEtxuIu8pLZ4DSfuqON8gPtdgT5kgf5+46tM+QvkCuP
-	kOTd/VIcYVHYhAsBZ5jMs0TQ1XSX8GihxzK3URkEBOAlctTsWCNJPx3mn5lNoG+JodAlAhNymGy
-	Ckex7vsOsA==
-X-Received: by 2002:a05:6a00:c90:b0:827:26b6:c11f with SMTP id
- d2e1a72fcca58-82a072febb1mr2946528b3a.31.1773311207770; Thu, 12 Mar 2026
- 03:26:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="FmJ/ii+R"
+ARC-Seal: i=1; a=rsa-sha256; t=1773312340; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Ee4+jJs5r4hLWEmnBORasq1vqS9GUq870K8zuySo0+nj8E1CEhF4FhOlMNiOHPcpuNm43iqWKjwYYFcwPwp/5GA+z0En4KxsbzitP92YDDytspcO1isy9d8YOhnXdnCDgphnQ2wXyFSqFNVUDTvBKLEJmXxt1ayyZQ1LFS8XGik=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1773312340; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=6le+Umu5ShQgMTwQqCqPJCiPEPbCR/gc5k2zDVuJEGs=; 
+	b=NvZqzLf6xdkcxBQD/JHvgPhqZFo1r98+I4jKnreA+Mvs3/uC8uLayPJaeDm4kW8uz1+H5IQg8ni460murpVtXXUFe+q/aKcwuNoSUApq973e+j3V7ZjGMJEZP+4ZypbJ0qqY6zGyzcmBJZAPORHBW4EQ2hmxPuuBp6/YDXWNwEQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773312340;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=6le+Umu5ShQgMTwQqCqPJCiPEPbCR/gc5k2zDVuJEGs=;
+	b=FmJ/ii+R/PUnq3LF6c6dT/mvF0lwZHufBkQhhJNJ3UE8nQAF4VANI25oSNPKotKI
+	BZeOe2fmbPOYL28mnMP4yTWPHsYWEFW+8dMTICkgVkipkmOV2mZm5et2dbJqjecpebp
+	4+x4auK+k8wQqkFSvo7qn209sU62K1QE1dKqGs5Y=
+Received: by mx.zohomail.com with SMTPS id 1773312338962431.72554716052593;
+	Thu, 12 Mar 2026 03:45:38 -0700 (PDT)
+Message-ID: <a1b3f694-523a-4817-b9d2-d8b8ec0f2927@zohomail.com>
+Date: Thu, 12 Mar 2026 18:45:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260312091207.2016518-1-seven.yi.lee@gmail.com> <878qbxpeoa.fsf@DESKTOP-5N7EMDA>
-In-Reply-To: <878qbxpeoa.fsf@DESKTOP-5N7EMDA>
-From: Yee Li <seven.yi.lee@gmail.com>
-Date: Thu, 12 Mar 2026 18:26:10 +0800
-X-Gm-Features: AaiRm50bQAC-fpj8JCT4o2RRLkW5gPS8IrWtPocoCdZLLPZoUx5KKkT0m0xLzPI
-Message-ID: <CALX8JfTEEXWNVJdDGK_rDCQQc4swR1ApyShUPYX4U69rVzUosw@mail.gmail.com>
-Subject: Re: [PATCH] mm/mempolicy: add sysfs interface to override NUMA node bandwidth
-To: "Huang, Ying" <ying.huang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, david@kernel.org, dan.j.williams@intel.com, 
-	linux-mm@kvack.org, joshua.hahnjy@gmail.com, linux-kernel@vger.kernel.org, 
-	Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org, dave.jiang@intel.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/7] cxl/memdev: Hold memdev lock during memdev poison
+ injection/clear
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Ben Cheatham
+ <benjamin.cheatham@amd.com>, driver-core@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+References: <20260310-fix_access_endpoint_without_drv_check-v1-0-94fe919a0b87@zohomail.com>
+ <20260310-fix_access_endpoint_without_drv_check-v1-2-94fe919a0b87@zohomail.com>
+ <abCOZf9vkau0AyWL@aschofie-mobl2.lan>
+ <530f0541-851a-4201-98f3-93439825c6c7@zohomail.com>
+ <abI7g5xdfQTERoKX@aschofie-mobl2.lan>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <abI7g5xdfQTERoKX@aschofie-mobl2.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr080112282aedaa9d9a996371b0a9e20600002e56a6eb943c701379f7d0ecc0eb3d564041a69f47bd5c4e6303:zu0801122711c9217af5f8056d275faae5000099752f3f65d2a010ad7a48c30036a04b14b8ff6509c57aef4e:rf0801122d48aada44e05273a830d796540000756f3feaa4c9fb1e5d06b880bd48431837016ae84fa927dfcd607bfc6c7cd5:ZohoMail
+X-ZohoMailClient: External
 
-> How to use this new interface?  Can you provide an example?
 
-Hi Ying,
-A quick example:
+在 2026/3/12 12:05, Alison Schofield 写道:
+> On Wed, Mar 11, 2026 at 06:53:26PM +0800, Li Ming wrote:
+>> 在 2026/3/11 05:34, Alison Schofield 写道:
+>>> On Tue, Mar 10, 2026 at 11:57:54PM +0800, Li Ming wrote:
+>>>> CXL memdev poison injection/clearing debugfs interfaces are visible
+>>>> before the CXL memdev endpoint initialization, If user accesses the
+>>>> interfaces before cxlmd->endpoint updated, it is possible to access an
+>>>> invalid endpoint in cxl_dpa_to_region().
+>>>>
+>>>> Hold CXL memdev lock at the beginning of the interfaces, this blocks the
+>>>> interfaces until CXL memdev probing completed.
+>>>>
+>>>> The following patch will check the given endpoint validity in
+>>>> cxl_dpa_to_region().
+>>>>
+>>>> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+>>>> Signed-off-by: Li Ming <ming.li@zohomail.com>
+>>>> ---
+>>>>    drivers/cxl/core/memdev.c | 10 ++++++++++
+>>>>    1 file changed, 10 insertions(+)
+>>>>
+>>>> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+>>>> index 273c22118d3d..8ebaf9e96035 100644
+>>>> --- a/drivers/cxl/core/memdev.c
+>>>> +++ b/drivers/cxl/core/memdev.c
+>>>> @@ -295,6 +295,7 @@ int cxl_inject_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
+>>>>    	if (!IS_ENABLED(CONFIG_DEBUG_FS))
+>>>>    		return 0;
+>>>> +	device_lock_assert(&cxlmd->dev);
+>>>>    	lockdep_assert_held(&cxl_rwsem.dpa);
+>>>>    	lockdep_assert_held(&cxl_rwsem.region);
+>>> I'm having second thoughts about this since this call site is not
+>>> the 'beginning of the interfaces' as the commit msg suggests.
+>>>
+>>> What about taking the device lock in the debugfs func, ie -
+>>> mem.c : cxl_inject_poison. If the goal is to avoid using the debugfs
+>>> interface before probe completes, that does it.
+>>>
+>>> At this callsite, we make sure nothing changes out from under us,
+>>> no endpoints attach or detach during the work.
+>>>
+>> Thanks for taking time to dive into this issue.
+>>
+>> But I don't quite understand your comment, do you mean that we don't need
+>> above device_lock_assert() in cxl_inject/clear_poison_locked()?
+>>
+>> You mentioned that taking the device lock in cxl_inject_poison() to ensure
+>> endpoint won't be changed during the debugfs interfaces calling,
+>>
+>> That is right and that is what this patch does. So I am a little bit
+>> confused.
+> I was only thinking of moving the ACQUIRE one level up, to here:
+> drivers/cxl/mem.c: cxl_debugfs_poison_inject|clear ()
+>
+> That would mean dropping the assert in clear_poison_locked().
 
-1. Check current (original) bandwidth
-cd /sys/kernel/mm/mempolicy/weighted_interleave
-$ cat bw_node*
-20000(MB/s)
-10000(MB/s)
-0
+Oh, got it, will do that in v2, thanks for your explaination.
 
-2. Check current interleave weights
-$ cat node*
-21
-10
-1
 
-3. Override a node's bandwidth
-$ echo 10000 > bw_node2
+Ming
 
-4. After override, check results:
-$ cat bw_node*
-20000(MB/s)
-10000(MB/s)
-10000(MB/s)
+[snip]
 
-$ cat node*
-2
-1
-1
