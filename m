@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682873FF1;
-	Thu, 12 Mar 2026 22:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049653FF1;
+	Thu, 12 Mar 2026 22:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773354669; cv=none; b=pG+ze8WOwP0kz9qVjr636XIKsRzO0951dCGjpvfRM1w0Kj0D61nM8ieVAtCZWqECAZ/s/9j+PdJCAwpORUuTvUFOQF4sVOBu5YFk5sC6jRMXs2AeH8qitP/AdTDgnb/Kuta2Qg0TSho/GMm40jFeLyuChRmLsyV7R0yZXnz5sJw=
+	t=1773356137; cv=none; b=Z3RYQV6+I3WfaOF4xsT7P5drZIML2Cr1huiNvtxITuMPLxG9goWNqfmqoxeY4la3N4WkPovDm+roHzmZSwlPcwjJScV9sVB0OiEnklv5YTUXCMXDLPBZjxaH/crM/bKQQ24B3chHyP/hkqGlYU/frVFY9TcrUIgafmyqTPrSNfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773354669; c=relaxed/simple;
-	bh=iqVxDsBv64pck64O0Ll+2uZI3/QL8ArXPzimLzg/EXY=;
+	s=arc-20240116; t=1773356137; c=relaxed/simple;
+	bh=xFQpRYhU7gb4gCQsGWiB/6KgXlgA1UVU7m0SGVzlISM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g/PgR5Ki9NlgWB3Q+PZ1vDZUI0RoFyTKO9VWZrh6LnmZaoefsRCYkAIwgftc81FtpCsxieXhzBlL94qksQBWekg7BZatYczO5UV/Ci846O/VtCNduVfkpk52eWt4fkKyQmhOLc4hiDXVwvjKpOzpuqQoo5MRWsipYa/Kj8BnKw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BZYfVJ9u; arc=none smtp.client-ip=198.175.65.12
+	 In-Reply-To:Content-Type; b=nYbAP4Xonr5ezB+Nm/bIBekPR85gmWLw4XAfFXrD/hppvLANss7t36Pz8P2i7gErBpA0vUb+FsqRtqvdgCu+ZsJDY5KvRbiQVA1wsNP3czSBYcxmJnLVlLMBnsUbXpB0XS7Pmy6DAMCDIQWpph1sBQLDa6XobQBSmlv6ocwYkMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dy0L6NgL; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BZYfVJ9u"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dy0L6NgL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773354668; x=1804890668;
+  t=1773356135; x=1804892135;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=iqVxDsBv64pck64O0Ll+2uZI3/QL8ArXPzimLzg/EXY=;
-  b=BZYfVJ9uoLu39+CFwNJXvwNGccSy98MKC5CmSE0XodlNP4GpL0TAaSiO
-   R5FdNNh4Hib9pfh4Z1lqKPI1Uq6wssC7ML8qxBZVloD0132tvQ6Sjtd18
-   q9TNLssiKxR7G0MiEPVhBJctr5pI1Jpz+KHMij5Rm1CMO45J6TKud4j9o
-   DLYMoD0VKbgiacvm8Yoh2B0HyH0wkIaBQU2pjvSfXJTQn1kFUSFN2MHB4
-   eiOZ2EgMcI67VqQgFcv72IvSgA0DWalyusfNKK56lFBFj9d3rMDUzQ7y6
-   3D38MC08OcFraIm4ComFa57GabvC+zq6wEUrVRpJ0/iFPgoAEfxAbFFvG
-   A==;
-X-CSE-ConnectionGUID: Q8VBY/nxRWGpezXn8LihNg==
-X-CSE-MsgGUID: 8iIW1PGQRtehBwamT18fXQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11727"; a="85942627"
+  bh=xFQpRYhU7gb4gCQsGWiB/6KgXlgA1UVU7m0SGVzlISM=;
+  b=Dy0L6NgLW6CohdLhmteHInCbyZb5W4WrpZb7LMnUMju0OUlk2Y2uqo7G
+   qAYCDcfdqryoShIV+CnC5z476T2SoDtO/WK48Wygmy2rimVBiBGQ1ADI0
+   MPAOnFAMqfDR5cM9hhKjg665EJTMotTGjr0sgfx4xgpM7S2pi4zD6Iu6n
+   To/X+JMNZlx5jJFIHyA2zWCwQtu+o3sUElhIZpeWMDY+SWuFhyTNks0Ye
+   LYSReQaN5HKpjgwI18QTYTIc/kwm4NE6VElC53bXwAqtx68AOIhNkF+GN
+   OznsvR6XBBmSBV//O7ukAJAjSt9iFsS+Z//kfQ9dtGlp0FpIFk91tH++n
+   g==;
+X-CSE-ConnectionGUID: hJIg16ZtROq78ZlBoqz4pA==
+X-CSE-MsgGUID: MQwkHrulRNyFgNDDrzhjJQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11727"; a="85546911"
 X-IronPort-AV: E=Sophos;i="6.23,117,1770624000"; 
-   d="scan'208";a="85942627"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 15:31:07 -0700
-X-CSE-ConnectionGUID: q77RrV/XSlm3AV9cvV31FQ==
-X-CSE-MsgGUID: 2AyNSjorQE+bYHg+VgSqzg==
+   d="scan'208";a="85546911"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 15:55:35 -0700
+X-CSE-ConnectionGUID: H5753Q9mSFe3JJJGTnXJOg==
+X-CSE-MsgGUID: WGm0fgUNSh2EqKtlxPwNrw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,117,1770624000"; 
-   d="scan'208";a="215969882"
+   d="scan'208";a="225939927"
 Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.110.142]) ([10.125.110.142])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 15:31:05 -0700
-Message-ID: <26be5ee3-d7ba-4bea-9824-c514341cf324@intel.com>
-Date: Thu, 12 Mar 2026 15:31:03 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 15:55:33 -0700
+Message-ID: <e2eaa470-c57b-4fa5-9810-4224ed314445@intel.com>
+Date: Thu, 12 Mar 2026 15:55:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,8 +52,7 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/20] vfio/cxl: Implement CXL device detection and HDM
- register probing
+Subject: Re: [PATCH 10/20] vfio/cxl: CXL region management
 To: mhonap@nvidia.com, aniketa@nvidia.com, ankita@nvidia.com,
  alwilliamson@nvidia.com, vsethi@nvidia.com, jgg@nvidia.com,
  mochs@nvidia.com, skolothumtho@nvidia.com, alejandro.lucero-palau@amd.com,
@@ -63,10 +62,10 @@ To: mhonap@nvidia.com, aniketa@nvidia.com, ankita@nvidia.com,
 Cc: cjia@nvidia.com, targupta@nvidia.com, zhiw@nvidia.com, kjaju@nvidia.com,
  linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, kvm@vger.kernel.org
 References: <20260311203440.752648-1-mhonap@nvidia.com>
- <20260311203440.752648-10-mhonap@nvidia.com>
+ <20260311203440.752648-11-mhonap@nvidia.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260311203440.752648-10-mhonap@nvidia.com>
+In-Reply-To: <20260311203440.752648-11-mhonap@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -75,231 +74,232 @@ Content-Transfer-Encoding: 7bit
 On 3/11/26 1:34 PM, mhonap@nvidia.com wrote:
 > From: Manish Honap <mhonap@nvidia.com>
 > 
-> Implement the core CXL Type-2 device detection and component register
-> probing logic in vfio_pci_cxl_detect_and_init().
+> Add CXL region management for future guest access.
 > 
-> Three private helpers are introduced:
+> Region Management makes use of APIs provided by CXL_CORE as below:
 > 
->   vfio_cxl_create_device_state() allocates the per-device
->   vfio_pci_cxl_state structure using devm_cxl_dev_state_create() so
->   that lifetime is tied to the PCI device binding.
+> CREATE_REGION flow:
+> 1. Validate request (size, decoder availability)
+> 2. Allocate HPA via cxl_get_hpa_freespace()
+> 3. Allocate DPA via cxl_request_dpa()
+> 4. Create region via cxl_create_region() - commits HDM decoder!
+> 5. Get HPA range via cxl_get_region_range()
 > 
->   vfio_cxl_find_bar() locates the PCI BAR that contains a given HPA
->   range, returning the BAR index and offset within it.
-> 
->   vfio_cxl_setup_regs() uses the CXL core helpers cxl_find_regblock()
->   and cxl_probe_component_regs() to enumerate the HDM decoder register
->   block, then records its BAR index, offset and size in the CXL state.
-> 
-> vfio_pci_cxl_detect_and_init() orchestrates detection:
->   1. Check for CXL DVSEC via pcie_is_cxl() + pci_find_dvsec_capability().
->   2. Allocate CXL device state.
->   3. Temporarily call pci_enable_device_mem() for ioremap, then disable.
->   4. Probe component registers to find the HDM decoder block.
-> 
-> On any failure vdev->cxl is devm_kfree'd so that device falls back to
-> plain PCI mode transparently.
+> DESTROY_REGION flow:
+> 1. Detach decoder via cxl_decoder_detach()
+> 2. Free DPA via cxl_dpa_free()
+> 3. Release root decoder via cxl_put_root_decoder()
 > 
 > Signed-off-by: Manish Honap <mhonap@nvidia.com>
 > ---
->  drivers/vfio/pci/cxl/vfio_cxl_core.c | 151 +++++++++++++++++++++++++++
->  drivers/vfio/pci/cxl/vfio_cxl_priv.h |   8 ++
->  2 files changed, 159 insertions(+)
+>  drivers/vfio/pci/cxl/vfio_cxl_core.c | 118 ++++++++++++++++++++++++++-
+>  drivers/vfio/pci/cxl/vfio_cxl_priv.h |   5 ++
+>  drivers/vfio/pci/vfio_pci_priv.h     |   8 ++
+>  3 files changed, 130 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-> index 7698d94e16be..2da6da1c0605 100644
+> index 2da6da1c0605..9c71f592e74e 100644
 > --- a/drivers/vfio/pci/cxl/vfio_cxl_core.c
 > +++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-> @@ -18,6 +18,114 @@
+> @@ -126,6 +126,112 @@ static int vfio_cxl_setup_regs(struct vfio_pci_core_device *vdev)
+>  	return 0;
+>  }
 >  
->  MODULE_IMPORT_NS("CXL");
->  
-> +static int vfio_cxl_create_device_state(struct vfio_pci_core_device *vdev,
-> +					u16 dvsec)
+> +int vfio_cxl_create_cxl_region(struct vfio_pci_core_device *vdev, resource_size_t size)
 > +{
-> +	struct pci_dev *pdev = vdev->pdev;
-> +	struct device *dev = &pdev->dev;
-> +	struct vfio_pci_cxl_state *cxl;
-> +	bool cxl_mem_capable, is_cxl_type3;
-> +	u16 cap_word;
+> +	struct vfio_pci_cxl_state *cxl = vdev->cxl;
+> +	resource_size_t max_size;
+> +	int ret;
 > +
-> +	/*
-> +	 * The devm allocation for the CXL state remains for the entire time
-> +	 * the PCI device is bound to vfio-pci. From successful CXL init
-> +	 * in probe until the device is released on unbind.
-> +	 * No extra explicit free is needed; devm handles it when
-> +	 * pdev->dev is released.
-> +	 */
-> +	vdev->cxl = devm_cxl_dev_state_create(dev,
-> +					      CXL_DEVTYPE_DEVMEM,
-> +					      pdev->dev.id, dvsec,
-> +					      struct vfio_pci_cxl_state,
-> +					      cxlds, false);
-> +	if (!vdev->cxl)
-> +		return -ENOMEM;
+> +	if (cxl->precommitted)
+> +		return 0;
 > +
-> +	cxl = vdev->cxl;
-> +	cxl->dvsec = dvsec;
-> +
-> +	pci_read_config_word(pdev, dvsec + CXL_DVSEC_CAPABILITY_OFFSET,
-> +			     &cap_word);
-> +
-> +	cxl_mem_capable = !!(cap_word & CXL_DVSEC_MEM_CAPABLE);
-> +	is_cxl_type3 = ((pdev->class >> 8) == PCI_CLASS_MEMORY_CXL);
+> +	cxl->cxlrd = cxl_get_hpa_freespace(cxl->cxlmd, 1,
+> +					   CXL_DECODER_F_RAM |
+> +					   CXL_DECODER_F_TYPE2,
+> +					   &max_size);
 
-Both of these can use FIELD_GET().
+Not sure what VFIO subsystem's policy is on scoped base resource cleanup, but a __free() here can get you out of managing put() of the root decoder.
 
+> +	if (IS_ERR(cxl->cxlrd))
+> +		return PTR_ERR(cxl->cxlrd);
 > +
-> +	/*
-> +	 * Type 2 = CXL memory capable but NOT Type 3 (e.g. accelerator/GPU)
-> +	 * Unsupported for non cxl type-2 class of devices.
-> +	 */
-> +	if (!(cxl_mem_capable && !is_cxl_type3)) {
-> +		devm_kfree(&pdev->dev, vdev->cxl);
-> +		vdev->cxl = NULL;
-> +		return -ENODEV;
+> +	/* Insufficient HPA space */
+> +	if (max_size < size) {
+> +		cxl_put_root_decoder(cxl->cxlrd);
+> +		cxl->cxlrd = NULL;
+> +		return -ENOSPC;
+> +	}
+> +
+> +	cxl->cxled = cxl_request_dpa(cxl->cxlmd, CXL_PARTMODE_RAM, size);
+
+Same comment here about __free().
+
+> +	if (IS_ERR(cxl->cxled)) {
+> +		ret = PTR_ERR(cxl->cxled);
+> +		goto err_free_hpa;
+> +	}
+> +
+> +	cxl->region = cxl_create_region(cxl->cxlrd, &cxl->cxled, 1);
+> +	if (IS_ERR(cxl->region)) {
+> +		ret = PTR_ERR(cxl->region);
+> +		goto err_free_dpa;
 > +	}
 > +
 > +	return 0;
+> +
+> +err_free_dpa:
+> +	cxl_dpa_free(cxl->cxled);
+> +err_free_hpa:
+> +	if (cxl->cxlrd)
+> +		cxl_put_root_decoder(cxl->cxlrd);
+> +
+> +	return ret;
 > +}
 > +
-> +static int vfio_cxl_setup_regs(struct vfio_pci_core_device *vdev)
+> +void vfio_cxl_destroy_cxl_region(struct vfio_pci_core_device *vdev)
 > +{
 > +	struct vfio_pci_cxl_state *cxl = vdev->cxl;
-> +	struct cxl_register_map *map = &cxl->cxlds.reg_map;
-> +	resource_size_t offset, bar_offset, size;
+> +
+> +	if (!cxl->region)
+> +		return;
+> +
+> +	cxl_unregister_region(cxl->region);
+> +	cxl->region = NULL;
+> +
+> +	if (cxl->precommitted)
+> +		return;
+> +
+> +	cxl_dpa_free(cxl->cxled);
+> +	cxl_put_root_decoder(cxl->cxlrd);
+> +}
+> +
+> +static int vfio_cxl_create_region_helper(struct vfio_pci_core_device *vdev,
+> +					 resource_size_t capacity)
+> +{
+> +	struct vfio_pci_cxl_state *cxl = vdev->cxl;
 > +	struct pci_dev *pdev = vdev->pdev;
-> +	void __iomem *base;
-> +	u32 count;
 > +	int ret;
-> +	u8 bar;
 > +
-> +	if (WARN_ON_ONCE(!pci_is_enabled(pdev)))
-> +		return -EINVAL;
+> +	if (cxl->precommitted) {
+> +		cxl->cxled = cxl_get_committed_decoder(cxl->cxlmd,
+> +						       &cxl->region);
+> +		if (IS_ERR(cxl->cxled))
+> +			return PTR_ERR(cxl->cxled);
+> +	} else {
+> +		ret = vfio_cxl_create_cxl_region(vdev, capacity);
+> +		if (ret)
+> +			return ret;
+> +	}
 > +
-> +	/* Find component register block via Register Locator DVSEC */
-> +	ret = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, map);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Temporarily map the register block */
-> +	base = ioremap(map->resource, map->max_size);
+> +	if (cxl->region) {
 
-Request the mem region before mapping it?
+Maybe if you do 'if (!cxl->region)' first and just exit, then you don't need to indent the normal code path.
 
-DJ
-
-> +	if (!base)
-> +		return -ENOMEM;
+> +		struct range range;
 > +
-> +	/* Probe component register capabilities */
-> +	cxl_probe_component_regs(&pdev->dev, base, &map->component_map);
+> +		ret = cxl_get_region_range(cxl->region, &range);
+> +		if (ret)
+> +			goto failed;
 > +
-> +	/* Unmap immediately */
-> +	iounmap(base);
+> +		cxl->region_hpa = range.start;
+> +		cxl->region_size = range_len(&range);
 > +
-> +	/* Check if HDM decoder was found */
-> +	if (!map->component_map.hdm_decoder.valid)
-> +		return -ENODEV;
-> +
-> +	pci_dbg(pdev,
-> +		"vfio_cxl: HDM decoder at offset=0x%lx, size=0x%lx\n",
-> +		map->component_map.hdm_decoder.offset,
-> +		map->component_map.hdm_decoder.size);
-> +
-> +	/* Get HDM register info */
-> +	ret = cxl_get_hdm_reg_info(&cxl->cxlds, &count, &offset, &size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!count || !size)
-> +		return -ENODEV;
-> +
-> +	cxl->hdm_count = count;
-> +	cxl->hdm_reg_offset = offset;
-> +	cxl->hdm_reg_size = size;
-> +
-> +	ret = cxl_regblock_get_bar_info(map, &bar, &bar_offset);
-> +	if (ret)
-> +		return ret;
-> +
-> +	cxl->comp_reg_bar = bar;
-> +	cxl->comp_reg_offset = bar_offset;
-> +	cxl->comp_reg_size = CXL_COMPONENT_REG_BLOCK_SIZE;
+> +		pci_dbg(pdev, "Precommitted decoder: HPA 0x%llx size %lu MB\n",
+> +			cxl->region_hpa, cxl->region_size >> 20);
+> +	} else {
+> +		pci_err(pdev, "Failed to create CXL region\n");
+> +		ret = -ENODEV;
+> +		goto failed;
+> +	}
 > +
 > +	return 0;
+> +
+> +failed:
+> +	vfio_cxl_destroy_cxl_region(vdev);
+> +	return ret;
 > +}
 > +
 >  /**
 >   * vfio_pci_cxl_detect_and_init - Detect and initialize CXL Type-2 device
 >   * @vdev: VFIO PCI device
-> @@ -28,8 +136,51 @@ MODULE_IMPORT_NS("CXL");
->   */
->  void vfio_pci_cxl_detect_and_init(struct vfio_pci_core_device *vdev)
->  {
-> +	struct pci_dev *pdev = vdev->pdev;
-> +	struct vfio_pci_cxl_state *cxl;
-> +	u16 dvsec;
-> +	int ret;
-> +
-> +	if (!pcie_is_cxl(pdev))
-> +		return;
-> +
-> +	dvsec = pci_find_dvsec_capability(pdev,
-> +					  PCI_VENDOR_ID_CXL,
-> +					  PCI_DVSEC_CXL_DEVICE);
-> +	if (!dvsec)
-> +		return;
-> +
-> +	ret = vfio_cxl_create_device_state(vdev, dvsec);
-> +	if (ret)
-> +		return;
-> +
-> +	cxl = vdev->cxl;
-> +
-> +	/*
-> +	 * Required for ioremap of the component register block and
-> +	 * calls to cxl_probe_component_regs().
-> +	 */
-> +	ret = pci_enable_device_mem(pdev);
+> @@ -172,6 +278,12 @@ void vfio_pci_cxl_detect_and_init(struct vfio_pci_core_device *vdev)
+>  
+>  	pci_disable_device(pdev);
+>  
+> +	ret = vfio_cxl_create_region_helper(vdev, SZ_256M);
+
+Maybe a comment on why this size?
+
+DJ
+
 > +	if (ret)
 > +		goto failed;
 > +
-> +	ret = vfio_cxl_setup_regs(vdev);
-> +	if (ret) {
-> +		pci_disable_device(pdev);
-> +		goto failed;
-> +	}
+> +	cxl->precommitted = true;
 > +
-> +	pci_disable_device(pdev);
-> +
-> +	return;
-> +
-> +failed:
-> +	devm_kfree(&pdev->dev, vdev->cxl);
-> +	vdev->cxl = NULL;
->  }
+>  	return;
+>  
+>  failed:
+> @@ -181,6 +293,10 @@ void vfio_pci_cxl_detect_and_init(struct vfio_pci_core_device *vdev)
 >  
 >  void vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev)
 >  {
-> +	if (!vdev->cxl)
-> +		return;
+> -	if (!vdev->cxl)
+> +	struct vfio_pci_cxl_state *cxl = vdev->cxl;
+> +
+> +	if (!cxl || !cxl->region)
+>  		return;
+> +
+> +	vfio_cxl_destroy_cxl_region(vdev);
 >  }
 > diff --git a/drivers/vfio/pci/cxl/vfio_cxl_priv.h b/drivers/vfio/pci/cxl/vfio_cxl_priv.h
-> index 818a83a3809d..57fed39a80da 100644
+> index 57fed39a80da..985680842a13 100644
 > --- a/drivers/vfio/pci/cxl/vfio_cxl_priv.h
 > +++ b/drivers/vfio/pci/cxl/vfio_cxl_priv.h
-> @@ -26,4 +26,12 @@ struct vfio_pci_cxl_state {
+> @@ -17,6 +17,10 @@ struct vfio_pci_cxl_state {
+>  	struct cxl_memdev           *cxlmd;
+>  	struct cxl_root_decoder     *cxlrd;
+>  	struct cxl_endpoint_decoder *cxled;
+> +	struct cxl_region	    *region;
+> +	resource_size_t		     region_hpa;
+> +	size_t			     region_size;
+> +	void __iomem		    *region_vaddr;
+>  	resource_size_t              hdm_reg_offset;
+>  	size_t                       hdm_reg_size;
+>  	resource_size_t              comp_reg_offset;
+> @@ -24,6 +28,7 @@ struct vfio_pci_cxl_state {
+>  	u32                          hdm_count;
+>  	u16                          dvsec;
 >  	u8                           comp_reg_bar;
+> +	bool                         precommitted;
 >  };
 >  
-> +/*
-> + * CXL DVSEC for CXL Devices - register offsets within the DVSEC
-> + * (CXL 2.0+ 8.1.3).
-> + * Offsets are relative to the DVSEC capability base (cxl->dvsec).
-> + */
-> +#define CXL_DVSEC_CAPABILITY_OFFSET 0xa
-> +#define CXL_DVSEC_MEM_CAPABLE	    BIT(2)
-> +
->  #endif /* __LINUX_VFIO_CXL_PRIV_H */
+>  /*
+> diff --git a/drivers/vfio/pci/vfio_pci_priv.h b/drivers/vfio/pci/vfio_pci_priv.h
+> index d7df5538dcde..818d99f098bf 100644
+> --- a/drivers/vfio/pci/vfio_pci_priv.h
+> +++ b/drivers/vfio/pci/vfio_pci_priv.h
+> @@ -137,6 +137,9 @@ static inline void vfio_pci_dma_buf_move(struct vfio_pci_core_device *vdev,
+>  
+>  void vfio_pci_cxl_detect_and_init(struct vfio_pci_core_device *vdev);
+>  void vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev);
+> +int vfio_cxl_create_cxl_region(struct vfio_pci_core_device *vdev,
+> +			       resource_size_t size);
+> +void vfio_cxl_destroy_cxl_region(struct vfio_pci_core_device *vdev);
+>  
+>  #else
+>  
+> @@ -144,6 +147,11 @@ static inline void
+>  vfio_pci_cxl_detect_and_init(struct vfio_pci_core_device *vdev) { }
+>  static inline void
+>  vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev) { }
+> +static inline int vfio_cxl_create_cxl_region(struct vfio_pci_core_device *vdev,
+> +					     resource_size_t size)
+> +{ return 0; }
+> +static inline void
+> +vfio_cxl_destroy_cxl_region(struct vfio_pci_core_device *vdev) { }
+>  
+>  #endif /* CONFIG_VFIO_CXL_CORE */
+>  
 
