@@ -1,211 +1,305 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012030.outbound.protection.outlook.com [52.101.43.30])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C57D24A076;
-	Thu, 12 Mar 2026 21:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.30
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773351113; cv=fail; b=cgQWc6dvmSJ5lJuAdWSypbdNNMs6kx8RTjuwBkgkGI5BGlni/zSUocke+4Pr6nBxK3RMQ3fK8Mu580LVQF9cJhyMm/xM10XNmmSA3h3UrjgcGpnZMiH4w6QWOE/Lb35zY/PysbEkxDsNeRmvk9IjB5hYiGHe3tJFKJsRAvv6WMY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773351113; c=relaxed/simple;
-	bh=tIBCYf81aKRnTXRYop3ezYqDgjUSAFTqPBHwFocvCiU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=achtAc3UxySuWHEyIjKlGJ+ydYT+cX4b6rSOZo3E+REvpJmgqZDPXYW1chj8ixKZhcevfo/yr2GUfIvcHTD6eiE794BzRF5idpjF6kxpuPOcE+Azu+LTRYCD7vnBnEj5Z8goraMBDt8kvXBQfCkpuJm5WFJHM3p6FHARXB5YObo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MI4DccNw; arc=fail smtp.client-ip=52.101.43.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682873FF1;
+	Thu, 12 Mar 2026 22:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773354669; cv=none; b=pG+ze8WOwP0kz9qVjr636XIKsRzO0951dCGjpvfRM1w0Kj0D61nM8ieVAtCZWqECAZ/s/9j+PdJCAwpORUuTvUFOQF4sVOBu5YFk5sC6jRMXs2AeH8qitP/AdTDgnb/Kuta2Qg0TSho/GMm40jFeLyuChRmLsyV7R0yZXnz5sJw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773354669; c=relaxed/simple;
+	bh=iqVxDsBv64pck64O0Ll+2uZI3/QL8ArXPzimLzg/EXY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g/PgR5Ki9NlgWB3Q+PZ1vDZUI0RoFyTKO9VWZrh6LnmZaoefsRCYkAIwgftc81FtpCsxieXhzBlL94qksQBWekg7BZatYczO5UV/Ci846O/VtCNduVfkpk52eWt4fkKyQmhOLc4hiDXVwvjKpOzpuqQoo5MRWsipYa/Kj8BnKw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BZYfVJ9u; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MI4DccNw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ONfyhBLlCTuuGBnZFr+aaPe1fjwJ4wGqTXpX6Dax+yCsDig3NGjIYxzICgd5SFRW4nRBhTXim3YBGoJ03DkSHR60BeTnWfoRxKU4Uy63WTBi6CuAKUWFrn9iyZZDDBiUNkn6mYW9pbENBIiUDhWCHoqxCaM6007g9ZR9ILADdvxUeJke0Qj7+4mTAnYyf9mX+UzWjiCBwPWusXQPvY2FTWsJqxZIfecs3Wxp4igvV3+9fmr5gbinFezes2umJEHcFdYHklYB6VhKvsw0ZT8bs5sIJyGBu5Fn2E49QRUUcSeqR9OS25RBx3wcjh995CFOtoDAf0Y8WiIC6eKcTkzS9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=E2dBEBc0YATwXLivOwngGwphTh6bIpdIPot4oKdwj3s=;
- b=QXTEk+iGM16SANpbomssPBpwKNw+v8XjaJP5WvbYa/JXVJsXObHObZph3abxzV0bz5gV7c4hvzJe02PcrfgA20csiuLCA8Op9ZYkK+F8azgkq7O1zKiabr7jolt2XdwRq04W4vB77g7C+rvF2xmqikP2VavJ2n4d9JUdAENlKHKIyfVyhkpUjoe+pVuXjhT5NxGk/EKRu2pp/e5eXa4nljbF89vULp4u6RKF8LX8/Rx9KnPtpzdGY+GXWDq2YR3fquGa0KUySetstwBUbt6CBkKSuhHtYjwgV7vlwP0lqk0vn+w9grr2tNVf+WRa+fWjnxQ54zsGe5IlrfkKYX/M/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E2dBEBc0YATwXLivOwngGwphTh6bIpdIPot4oKdwj3s=;
- b=MI4DccNwJNlAIJ6vQXowk0NUYvHCdxQQYJQmcN6LjgnyELQjEd9L5HRQ6tcd/hnQnvEHntz5LlIU/+iRVi/vDseXnlBu89ww0TLRNo5vQjMGjiw5SWz+vFmsTdViLrK63EZcoF0ndug0Y7AACfPhaEBE2MMTD+mY9PHBQWvGD74=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from LV8PR12MB9714.namprd12.prod.outlook.com (2603:10b6:408:2a0::5)
- by CY8PR12MB8410.namprd12.prod.outlook.com (2603:10b6:930:6d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.4; Thu, 12 Mar
- 2026 21:31:49 +0000
-Received: from LV8PR12MB9714.namprd12.prod.outlook.com
- ([fe80::8c9f:3a5b:974b:99c6]) by LV8PR12MB9714.namprd12.prod.outlook.com
- ([fe80::8c9f:3a5b:974b:99c6%6]) with mapi id 15.20.9723.006; Thu, 12 Mar 2026
- 21:31:49 +0000
-Message-ID: <e812f955-c696-4474-8dec-1b4654286876@amd.com>
-Date: Thu, 12 Mar 2026 14:31:44 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 5/9] dax: Track all dax_region allocations under a
- global resource tree
-To: Dan Williams <dan.j.williams@intel.com>,
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-pm@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Dave Jiang <dave.jiang@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Matthew Wilcox <willy@infradead.org>,
- Jan Kara <jack@suse.cz>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Len Brown <len.brown@intel.com>, Pavel Machek <pavel@kernel.org>,
- Li Ming <ming.li@zohomail.com>, Jeff Johnson
- <jeff.johnson@oss.qualcomm.com>, Ying Huang <huang.ying.caritas@gmail.com>,
- Yao Xingtao <yaoxt.fnst@fujitsu.com>, Peter Zijlstra <peterz@infradead.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Nathan Fontenot <nathan.fontenot@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
- Benjamin Cheatham <benjamin.cheatham@amd.com>,
- Zhijian Li <lizhijian@fujitsu.com>, Borislav Petkov <bp@alien8.de>,
- Tomasz Wolski <tomasz.wolski@fujitsu.com>
-References: <20260210064501.157591-1-Smita.KoralahalliChannabasappa@amd.com>
- <20260210064501.157591-6-Smita.KoralahalliChannabasappa@amd.com>
- <69b2087cb0cb7_2132100c2@dwillia2-mobl4.notmuch>
-Content-Language: en-US
-From: "Koralahalli Channabasappa, Smita" <skoralah@amd.com>
-In-Reply-To: <69b2087cb0cb7_2132100c2@dwillia2-mobl4.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR20CA0031.namprd20.prod.outlook.com
- (2603:10b6:a03:1f4::44) To LV8PR12MB9714.namprd12.prod.outlook.com
- (2603:10b6:408:2a0::5)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BZYfVJ9u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773354668; x=1804890668;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iqVxDsBv64pck64O0Ll+2uZI3/QL8ArXPzimLzg/EXY=;
+  b=BZYfVJ9uoLu39+CFwNJXvwNGccSy98MKC5CmSE0XodlNP4GpL0TAaSiO
+   R5FdNNh4Hib9pfh4Z1lqKPI1Uq6wssC7ML8qxBZVloD0132tvQ6Sjtd18
+   q9TNLssiKxR7G0MiEPVhBJctr5pI1Jpz+KHMij5Rm1CMO45J6TKud4j9o
+   DLYMoD0VKbgiacvm8Yoh2B0HyH0wkIaBQU2pjvSfXJTQn1kFUSFN2MHB4
+   eiOZ2EgMcI67VqQgFcv72IvSgA0DWalyusfNKK56lFBFj9d3rMDUzQ7y6
+   3D38MC08OcFraIm4ComFa57GabvC+zq6wEUrVRpJ0/iFPgoAEfxAbFFvG
+   A==;
+X-CSE-ConnectionGUID: Q8VBY/nxRWGpezXn8LihNg==
+X-CSE-MsgGUID: 8iIW1PGQRtehBwamT18fXQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11727"; a="85942627"
+X-IronPort-AV: E=Sophos;i="6.23,117,1770624000"; 
+   d="scan'208";a="85942627"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 15:31:07 -0700
+X-CSE-ConnectionGUID: q77RrV/XSlm3AV9cvV31FQ==
+X-CSE-MsgGUID: 2AyNSjorQE+bYHg+VgSqzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,117,1770624000"; 
+   d="scan'208";a="215969882"
+Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.110.142]) ([10.125.110.142])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 15:31:05 -0700
+Message-ID: <26be5ee3-d7ba-4bea-9824-c514341cf324@intel.com>
+Date: Thu, 12 Mar 2026 15:31:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9714:EE_|CY8PR12MB8410:EE_
-X-MS-Office365-Filtering-Correlation-Id: bbc90ad5-3738-4731-d97b-08de807ec4ed
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|56012099003|22082099003|18002099003|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	YF5qpkqAA5YPC75mal8G/GWJ2Joe5eVLbdP0/gR5I+gdsPzhDFA8q5iIJ2vib5tBqL3g7lHnQaBJr3cGQB/EA54rhmBxag1EyL0ab7m8AWkuxn0IjR3R1H0RqyBhqWgNMI1+fs0VzNslMZTcPeRg5HwgBw7H5N76yH4ae58jPVgTxwu5dFvPzdDRbOvuuV83aLBhP3uAqw5FXVlYqA7HOTNHwxKctXL8uvCaWUrvCVlI7nTpe5bNnljzMUcZGiPcMEXCFwz8sYNBEXoQLb5NZrIcn9OOUc/5FWx5W8qU1OmvtEOt0HOXJBU8jclr9v1YjA09iwIs5efmO+F0W7TtLCXATNvIDbdXQX0uEJse9dWPQfO0uBg7G3yzkj+P9pEws/ymVjRCYLUT2ox9TvvICiIcKv7ndBl5a0yQ3ksiKEyTlJRQ7f4VAMIiaud9o7qbbV5nz0PlaVhJyBeKK0AVq3Zb7VZSObiUzUvnHeDAOUhQniSSzPwEelUACHzYrQIobWJhW1+JaXCzFTm1MS1bpe8yNqaPIBcpaWQeUPH7d6BQAxx4LpNjhJigCwcd40uj58dxZRDl1fS3Vu7z300visukFf1rBt44kMe1hGqLdh1MVay+C2ja+De1cp00U6j3I9HxaDqlpNpOLH5b53rHcSqctLzfrIr6eKlNc35LoEK4tI8oxGagVnyAoTY815n5aKn3qxW3vsNbfwmweWR6h01SrME2k7X54aTYB6Rjlig=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9714.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(56012099003)(22082099003)(18002099003)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?azQrc05jQmVZVENwYVFnK2pJOXJUM1U5RENTdyt0a0dNcCtSQWxHcmtGaUh2?=
- =?utf-8?B?amtuTGxTUVhZd1ZlT2Z4aFliRVNDeEJwY1N4ZUtjSXFQM0hUMHRsd3FjbGl1?=
- =?utf-8?B?YkJzZ0M4T2tzRWFlYUgwK2hMSTZSSjZaVTVKN3hubkZucW1LdUJueUpCR1Vl?=
- =?utf-8?B?OWNvTUZ1RnlORG1wN0pSYlp5bEdpN3ZqTjN6M2lmYjl2OFN2TktHSDdQY1Q4?=
- =?utf-8?B?NE1RbTB5OUo1aU1iVHh0S3I4aitiUnhVWWsyOVB0aThyWFl4NXc4bXFuYnlR?=
- =?utf-8?B?MFoxWlpQb3NJUzdwa3Q1VWVEZHovSy9YaVVCL0lVQ0g0TUdDaWhoZDRnZ3NG?=
- =?utf-8?B?OHJuSHh4WDllM1Q5cVVRTmsrSVpwcVdrTVloa1hXRXJQTXlXZTRFK0lKcnM3?=
- =?utf-8?B?TWwzbnBqbG03K0xoNUs5Y28rNjZSZEZ2NTB1bGJTS2EvWDFWMm1SdmsrdThi?=
- =?utf-8?B?eTV4dGpVd052bTcyT1pXK2RtREkzcjVvZFFCdVQwaVo1cUpMWnd6bC9Ramk4?=
- =?utf-8?B?Zm1nL3BTc2k0YmNrd05lSlhuVWFvcEtWeVVLa0Z6ampCMnRZZWlTaldoMDBy?=
- =?utf-8?B?Sk9Ramx3ZVhiYldmTXp3ci92bVFVbDljbUhYZ0RBZG0xclQ0NnNsQmlaWHpq?=
- =?utf-8?B?UXpad2tDVUtxLzJNcFl0YkVxc3g0RTUxVHdTdEdvbTdpTHIzd1ZCeDlIYnZR?=
- =?utf-8?B?ZUhodUNFZXZ3R1lKTVRub0lWVUhRbGV1TEh4N2tGT1dEekk1ZUI4ZHdLWGw5?=
- =?utf-8?B?d0sxTWJvQ05KMWprdm1Vem05RGZFL3JaUExGMlMzSmVGQTIyb3V1VHZWMVJR?=
- =?utf-8?B?YUtGUmpackRMS1hyc242SjNnQm5PcHp5R054SUdSQ0tZQmp2dG9uaGYzNlNl?=
- =?utf-8?B?bGtuVlFVK2dEY2NFK05OV3lGYWtybU5OVEhPdXlkaWQxN3hqOUlSa2ZEcGZv?=
- =?utf-8?B?QUo2ekQ5bytSSXlvNmsyLzZZbEE1cEE3N0RWaU1IZ3RDU1duNmNDWTQ3OWNy?=
- =?utf-8?B?Y1llYU1ueW5sZkpkZ1ZkSmNyS203L3FRUmxWT2Iwei9CNU5ib1RlU2Zjditk?=
- =?utf-8?B?b2lPR3dTV1l2VTBxRm1FOUUxSVRReU5naEZvOU1GQ1J6TnNCVDlnZkgyeXZs?=
- =?utf-8?B?TTNoMjI0M1kyM0R3N0pwKzR6RjdobkQwWlRiSFhRZjNDRndxS2RSR2U2RjNJ?=
- =?utf-8?B?dUc1N1dPdGkxQi8xMkxKN0MwUG9tVVg2Z2pSSTFlZVQ3cllyWHMreVc2U0ZC?=
- =?utf-8?B?Q1ltNmxKUG0xeW9kTEtXdWtKV3FJWjE2SytJUFpQdjdOc25qdFJ2cGtpMmhX?=
- =?utf-8?B?RzQxT2R5emx2ZXYzcGVYS09LVHBlelkyQVl4VTRTUm1XS3dsc2tOVTFwaGdn?=
- =?utf-8?B?d3VVK2RjSUxiWXgvd0M3amZpbUpMNEM2Si9IVURCWUFjZ2oyaXZYd1ArNk1q?=
- =?utf-8?B?RU9GY1lOeUFhdStZc0V1OXdETm5IdFNzdlI1YkpKYjV4YXVURzVISS9qWmtU?=
- =?utf-8?B?c1BLWTU1K3VSUUtNVW9iR2d4UFI3Vjh3c0xmOUJIQWNzdzNPRTJwUENDN0ZU?=
- =?utf-8?B?ZHprZFdNTkdtd2lsSDNnRld1Y2NUdnhmNEdMNUJ0SldRZnFFZEtKNllGcGxW?=
- =?utf-8?B?aG9FTGtyMlN2ZmhMK0RzeDB1MmxFd0hpcEdUbXlScjlPUDJPV3JxaUZNTHh6?=
- =?utf-8?B?VDdQbkt4Ti9mNVZPMjlvM2ZwdExZZEYzU3NKVTlzTHdBUzlPTUtUWUw2a3Uv?=
- =?utf-8?B?ODI4T3cyemtqWDRYKzBKcHBqSlZJK3RYNVdMQTNCdFY4U0srZUFvOXEwaFNP?=
- =?utf-8?B?ZDFQbDFJcllwcmlDOUcwZlk0MjhhQ2RxbGQ3ZHJUR2JFVlFXT0NMZGFuWVU2?=
- =?utf-8?B?UHdnUDVISjI1Nkd0eXF5dzJ6T0RUR2hrV1FiWXdOZmNOVWZqRXNRb3BPNU1X?=
- =?utf-8?B?S1MwdXNKQkZSaEdMWWFVQ0FZNEJoYlZuWTR4ZEZXUnNqczkweld5YnVXSWti?=
- =?utf-8?B?YjA5ckl4WlJNQTBkU3dDM3JBeXpmaU9TMnpUZE9yT2lVd2FCckwwYWVpNDlW?=
- =?utf-8?B?djZzUXhTdk1Lamk4NEpWbnloUitQSGJWNVB0WlVWK0dUSVlKYWRoQ0JwZnVW?=
- =?utf-8?B?UmFYc2FFUzJsV3hRWWxHaTF6cFl3bHpTVzlYelo5OC9GRng5aitubkpyTWpa?=
- =?utf-8?B?TmZvdEFCRGRWWGF3ejlmSXovemdrcWRLa0xITnpLbmFKUjZqSVNTNTh3dmpH?=
- =?utf-8?B?MVBFT3J0YmpCVkpYZGpLZWEwajFCd0lsdEU0ajkyTG1tVDJyd3k2WnBQVmhF?=
- =?utf-8?B?bndhbEhYQUM0aDJHQXp3eExIYk5ZYmdIM0RXbUovL1NqcUxrdDFkUT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbc90ad5-3738-4731-d97b-08de807ec4ed
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9714.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 21:31:49.2679
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XBuW0uwN48xY3zQRWzwTBnQtinY3XxWCZD+/++4uwFBtdNeYb5vFI78w/FH1i8ixE5myZ7s6YKGzWBzmOxmIZQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8410
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 09/20] vfio/cxl: Implement CXL device detection and HDM
+ register probing
+To: mhonap@nvidia.com, aniketa@nvidia.com, ankita@nvidia.com,
+ alwilliamson@nvidia.com, vsethi@nvidia.com, jgg@nvidia.com,
+ mochs@nvidia.com, skolothumtho@nvidia.com, alejandro.lucero-palau@amd.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ jgg@ziepe.ca, yishaih@nvidia.com, kevin.tian@intel.com
+Cc: cjia@nvidia.com, targupta@nvidia.com, zhiw@nvidia.com, kjaju@nvidia.com,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, kvm@vger.kernel.org
+References: <20260311203440.752648-1-mhonap@nvidia.com>
+ <20260311203440.752648-10-mhonap@nvidia.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260311203440.752648-10-mhonap@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 3/11/2026 5:27 PM, Dan Williams wrote:
-> Smita Koralahalli wrote:
->> Introduce a global "DAX Regions" resource root and register each
->> dax_region->res under it via request_resource(). Release the resource on
->> dax_region teardown.
->>
->> By enforcing a single global namespace for dax_region allocations, this
->> ensures only one of dax_hmem or dax_cxl can successfully register a
->> dax_region for a given range.
->>
->> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-> 
-> Did I send any code for this? If I suggested the locking below,
-> apologies, otherwise Suggested-by is expected unless code is adopted
-> from another patch.
 
-No sorry the locking was added by me. I will make the changes and drop 
-the locking.
 
+On 3/11/26 1:34 PM, mhonap@nvidia.com wrote:
+> From: Manish Honap <mhonap@nvidia.com>
 > 
->> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
->> ---
->>   drivers/dax/bus.c | 23 ++++++++++++++++++++---
->>   1 file changed, 20 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
->> index fde29e0ad68b..5f387feb95f0 100644
->> --- a/drivers/dax/bus.c
->> +++ b/drivers/dax/bus.c
->> @@ -10,6 +10,7 @@
->>   #include "dax-private.h"
->>   #include "bus.h"
->>   
->> +static struct resource dax_regions = DEFINE_RES_MEM_NAMED(0, -1, "DAX Regions");
->>   static DEFINE_MUTEX(dax_bus_lock);
->>   
->>   /*
->> @@ -625,6 +626,8 @@ static void dax_region_unregister(void *region)
->>   {
->>   	struct dax_region *dax_region = region;
->>   
->> +	scoped_guard(rwsem_write, &dax_region_rwsem)
->> +		release_resource(&dax_region->res);
+> Implement the core CXL Type-2 device detection and component register
+> probing logic in vfio_pci_cxl_detect_and_init().
 > 
-> I continue to dislike what scoped_guard() does to indentation. Often
-> scoped_guard() usage can just be replaced by "helper that uses guard()"
+> Three private helpers are introduced:
 > 
-> However, dax_region_rwsem protects subdivision of a dax_region, not
-> coordination across regions.
+>   vfio_cxl_create_device_state() allocates the per-device
+>   vfio_pci_cxl_state structure using devm_cxl_dev_state_create() so
+>   that lifetime is tied to the PCI device binding.
 > 
-> Also, release_resource() and request_resource() are already protected by
-> the resource_lock, why is a new lock needed?
+>   vfio_cxl_find_bar() locates the PCI BAR that contains a given HPA
+>   range, returning the BAR index and offset within it.
+> 
+>   vfio_cxl_setup_regs() uses the CXL core helpers cxl_find_regblock()
+>   and cxl_probe_component_regs() to enumerate the HDM decoder register
+>   block, then records its BAR index, offset and size in the CXL state.
+> 
+> vfio_pci_cxl_detect_and_init() orchestrates detection:
+>   1. Check for CXL DVSEC via pcie_is_cxl() + pci_find_dvsec_capability().
+>   2. Allocate CXL device state.
+>   3. Temporarily call pci_enable_device_mem() for ioremap, then disable.
+>   4. Probe component registers to find the HDM decoder block.
+> 
+> On any failure vdev->cxl is devm_kfree'd so that device falls back to
+> plain PCI mode transparently.
+> 
+> Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> ---
+>  drivers/vfio/pci/cxl/vfio_cxl_core.c | 151 +++++++++++++++++++++++++++
+>  drivers/vfio/pci/cxl/vfio_cxl_priv.h |   8 ++
+>  2 files changed, 159 insertions(+)
+> 
+> diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> index 7698d94e16be..2da6da1c0605 100644
+> --- a/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> +++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> @@ -18,6 +18,114 @@
+>  
+>  MODULE_IMPORT_NS("CXL");
+>  
+> +static int vfio_cxl_create_device_state(struct vfio_pci_core_device *vdev,
+> +					u16 dvsec)
+> +{
+> +	struct pci_dev *pdev = vdev->pdev;
+> +	struct device *dev = &pdev->dev;
+> +	struct vfio_pci_cxl_state *cxl;
+> +	bool cxl_mem_capable, is_cxl_type3;
+> +	u16 cap_word;
+> +
+> +	/*
+> +	 * The devm allocation for the CXL state remains for the entire time
+> +	 * the PCI device is bound to vfio-pci. From successful CXL init
+> +	 * in probe until the device is released on unbind.
+> +	 * No extra explicit free is needed; devm handles it when
+> +	 * pdev->dev is released.
+> +	 */
+> +	vdev->cxl = devm_cxl_dev_state_create(dev,
+> +					      CXL_DEVTYPE_DEVMEM,
+> +					      pdev->dev.id, dvsec,
+> +					      struct vfio_pci_cxl_state,
+> +					      cxlds, false);
+> +	if (!vdev->cxl)
+> +		return -ENOMEM;
+> +
+> +	cxl = vdev->cxl;
+> +	cxl->dvsec = dvsec;
+> +
+> +	pci_read_config_word(pdev, dvsec + CXL_DVSEC_CAPABILITY_OFFSET,
+> +			     &cap_word);
+> +
+> +	cxl_mem_capable = !!(cap_word & CXL_DVSEC_MEM_CAPABLE);
+> +	is_cxl_type3 = ((pdev->class >> 8) == PCI_CLASS_MEMORY_CXL);
 
-You are right. I will remove
+Both of these can use FIELD_GET().
 
-Thanks
-Smita
-> 
+> +
+> +	/*
+> +	 * Type 2 = CXL memory capable but NOT Type 3 (e.g. accelerator/GPU)
+> +	 * Unsupported for non cxl type-2 class of devices.
+> +	 */
+> +	if (!(cxl_mem_capable && !is_cxl_type3)) {
+> +		devm_kfree(&pdev->dev, vdev->cxl);
+> +		vdev->cxl = NULL;
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int vfio_cxl_setup_regs(struct vfio_pci_core_device *vdev)
+> +{
+> +	struct vfio_pci_cxl_state *cxl = vdev->cxl;
+> +	struct cxl_register_map *map = &cxl->cxlds.reg_map;
+> +	resource_size_t offset, bar_offset, size;
+> +	struct pci_dev *pdev = vdev->pdev;
+> +	void __iomem *base;
+> +	u32 count;
+> +	int ret;
+> +	u8 bar;
+> +
+> +	if (WARN_ON_ONCE(!pci_is_enabled(pdev)))
+> +		return -EINVAL;
+> +
+> +	/* Find component register block via Register Locator DVSEC */
+> +	ret = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, map);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Temporarily map the register block */
+> +	base = ioremap(map->resource, map->max_size);
+
+Request the mem region before mapping it?
+
+DJ
+
+> +	if (!base)
+> +		return -ENOMEM;
+> +
+> +	/* Probe component register capabilities */
+> +	cxl_probe_component_regs(&pdev->dev, base, &map->component_map);
+> +
+> +	/* Unmap immediately */
+> +	iounmap(base);
+> +
+> +	/* Check if HDM decoder was found */
+> +	if (!map->component_map.hdm_decoder.valid)
+> +		return -ENODEV;
+> +
+> +	pci_dbg(pdev,
+> +		"vfio_cxl: HDM decoder at offset=0x%lx, size=0x%lx\n",
+> +		map->component_map.hdm_decoder.offset,
+> +		map->component_map.hdm_decoder.size);
+> +
+> +	/* Get HDM register info */
+> +	ret = cxl_get_hdm_reg_info(&cxl->cxlds, &count, &offset, &size);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!count || !size)
+> +		return -ENODEV;
+> +
+> +	cxl->hdm_count = count;
+> +	cxl->hdm_reg_offset = offset;
+> +	cxl->hdm_reg_size = size;
+> +
+> +	ret = cxl_regblock_get_bar_info(map, &bar, &bar_offset);
+> +	if (ret)
+> +		return ret;
+> +
+> +	cxl->comp_reg_bar = bar;
+> +	cxl->comp_reg_offset = bar_offset;
+> +	cxl->comp_reg_size = CXL_COMPONENT_REG_BLOCK_SIZE;
+> +
+> +	return 0;
+> +}
+> +
+>  /**
+>   * vfio_pci_cxl_detect_and_init - Detect and initialize CXL Type-2 device
+>   * @vdev: VFIO PCI device
+> @@ -28,8 +136,51 @@ MODULE_IMPORT_NS("CXL");
+>   */
+>  void vfio_pci_cxl_detect_and_init(struct vfio_pci_core_device *vdev)
+>  {
+> +	struct pci_dev *pdev = vdev->pdev;
+> +	struct vfio_pci_cxl_state *cxl;
+> +	u16 dvsec;
+> +	int ret;
+> +
+> +	if (!pcie_is_cxl(pdev))
+> +		return;
+> +
+> +	dvsec = pci_find_dvsec_capability(pdev,
+> +					  PCI_VENDOR_ID_CXL,
+> +					  PCI_DVSEC_CXL_DEVICE);
+> +	if (!dvsec)
+> +		return;
+> +
+> +	ret = vfio_cxl_create_device_state(vdev, dvsec);
+> +	if (ret)
+> +		return;
+> +
+> +	cxl = vdev->cxl;
+> +
+> +	/*
+> +	 * Required for ioremap of the component register block and
+> +	 * calls to cxl_probe_component_regs().
+> +	 */
+> +	ret = pci_enable_device_mem(pdev);
+> +	if (ret)
+> +		goto failed;
+> +
+> +	ret = vfio_cxl_setup_regs(vdev);
+> +	if (ret) {
+> +		pci_disable_device(pdev);
+> +		goto failed;
+> +	}
+> +
+> +	pci_disable_device(pdev);
+> +
+> +	return;
+> +
+> +failed:
+> +	devm_kfree(&pdev->dev, vdev->cxl);
+> +	vdev->cxl = NULL;
+>  }
+>  
+>  void vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev)
+>  {
+> +	if (!vdev->cxl)
+> +		return;
+>  }
+> diff --git a/drivers/vfio/pci/cxl/vfio_cxl_priv.h b/drivers/vfio/pci/cxl/vfio_cxl_priv.h
+> index 818a83a3809d..57fed39a80da 100644
+> --- a/drivers/vfio/pci/cxl/vfio_cxl_priv.h
+> +++ b/drivers/vfio/pci/cxl/vfio_cxl_priv.h
+> @@ -26,4 +26,12 @@ struct vfio_pci_cxl_state {
+>  	u8                           comp_reg_bar;
+>  };
+>  
+> +/*
+> + * CXL DVSEC for CXL Devices - register offsets within the DVSEC
+> + * (CXL 2.0+ 8.1.3).
+> + * Offsets are relative to the DVSEC capability base (cxl->dvsec).
+> + */
+> +#define CXL_DVSEC_CAPABILITY_OFFSET 0xa
+> +#define CXL_DVSEC_MEM_CAPABLE	    BIT(2)
+> +
+>  #endif /* __LINUX_VFIO_CXL_PRIV_H */
 
