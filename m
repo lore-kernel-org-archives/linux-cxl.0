@@ -1,262 +1,341 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104D93890F5;
-	Thu, 12 Mar 2026 04:05:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773288336; cv=fail; b=oavKtxANO4xPoAMrPopBVerd4O4+C6qpO5D8tFaubzwpXoZxeyNmHdRSyqmMzNr2oeb5KRFFh8zEwZ73FAQAcHRR74gO9I5IO0VlngCrPBm/TpRmAUNMik5eCeZbA1Tcs69vk6lLdAV52gzVoEE97qrvIqm4LlE7m5HX65B/ryY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773288336; c=relaxed/simple;
-	bh=nk5cbz9no5S2NsfmmkQc6c/cq/LTv/t3VmTjQ/Bw2CY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Tgt/NWuA36aUTyQkvRIGZZcuLYsk0t05Xzxh9zjMNUJPVt7TLB8BCuj8MJd4dctf5QKcb+8wWTBJjB8MlSV7dxNEnYGTk+8CCqoQOE3KbPcHYOgWmbrJ79rNaYhwqF03obAKdOjsw9pAvISGvYo3El1D9J8YJtFzzJkiupRYpio=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aSsRqJev; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6497332EC8
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Mar 2026 09:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773306739; cv=none; b=GLRwtNzN1N5C5+OtBwlg0LRo5TWuWY0ZFv2BmYrasddiXDY8euz+DOxuhl7tYfheVN0mg17wM3iij8elZfyXqAISONlmpMvhleGzTw5XEgBEA9blumZbOQc0XXIPAYm7fgGrPiVoHdqWfvAyLwcnpk/fkSvjA8tiuxziL6xKnP0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773306739; c=relaxed/simple;
+	bh=4B8fUe4Y6rdWT0cATHjZd7WuX2LL1Yv8MRXAsdqpRcw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jU8zCnMyFzhcQri3qV6eHUzZgzU756iYJEK23h+0F1IXfsVKAMU9VIuoeYMic5w9BLWoQBELEYLEf6hPBWEbRz6o3WO2aTlgjelzxCUxJVU63sMLOJO8sOOXM7YgYgq3SYagjS1ZUEqxvbhweNR3mxycylBa2Ezn3mTSWgUT0/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S1ki8sM1; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aSsRqJev"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773288334; x=1804824334;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=nk5cbz9no5S2NsfmmkQc6c/cq/LTv/t3VmTjQ/Bw2CY=;
-  b=aSsRqJev5AVoXQQEed4T/XF+eaZqY0Gq/avhZRmCtyM3+U0IiFh5G3SZ
-   wzrJWpyX7js8hbOlBy+yVYc/HF3WCUDTBes8bU5F6RDXYXn6AaIBSaDby
-   VjeP/p2gZ1HmPmgJWVyhUD5f7GAXFCve9EiCGoZA2GwYZmTzTCERjoVcn
-   Q/8ZD5zA9L02BQWypVfUVVNOcx6Doq8sgf2DUEzm91iPJN4/5+VVs7766
-   OLxiKwHcbYetWbMkzvAeLrHMOnM/Mu8tiXayNx6bG//wLNAYooUsBtRv3
-   KS7PC0mQ2wBmFC9Llk+s3kAow4RzF8lk9os4LMQG+cPbW5ZEJSfs1687m
-   w==;
-X-CSE-ConnectionGUID: TWHbDehyQ5SNZHVEB5XyWQ==
-X-CSE-MsgGUID: ZFSkPeIHRcy/aCiaDJeU8w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11726"; a="61948372"
-X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
-   d="scan'208";a="61948372"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 21:05:33 -0700
-X-CSE-ConnectionGUID: g0dVWtpgRp252LixlHwd1g==
-X-CSE-MsgGUID: lcuh0y+YTuC4J75jPcy6GQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
-   d="scan'208";a="225657353"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 21:05:32 -0700
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Wed, 11 Mar 2026 21:05:30 -0700
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Wed, 11 Mar 2026 21:05:30 -0700
-Received: from BYAPR05CU005.outbound.protection.outlook.com (52.101.85.1) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Wed, 11 Mar 2026 21:05:30 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GKUYLELqHOJK7UA13J6w6vQKFfCcHZ+v0h1jRZUDEufMQdyJJoDcEnCGibUHDA5ODQKVZG/PWx6wa3tZ8NlZabrjeyHSUoZGma5klVLHRJapyDdR73pcx4XIyUfkub5dejgJzXNyVkQpII7vfkErpFqf2uC4AeVs08/zR3BaRA/vTtyL8lFrCVID3Kg1+y/KuaPUScgMdK67rM+I4GsDm4JDA1aEW7KfgG2JnVfoXXHREPq/s5K8od6wblLmBYQXZCDyQKz1Ywj7RBmdRpcR/882mqufvZhKviBT8I9vGxG/DkaviEeOXI5BOVNrZ8n6gWofsxtGJxKAQpCDo8czOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0dWpU3REMPRiuMCTmg47+rHVfZNLXrHOsHHmh7rBOME=;
- b=HHCYIkaZQS2NXtpBVCBBUoKMVzFaoM8m04ltbTTm8FRPPkWckOXPLmLT9PlHJgJgQXyF2adPcEmVIKJXHhoTpVBqWra3/KN8tYKJ+LJuxZFL6klT/xryFgBxjS1oX6p4ZSXF3xXhqbJQvfz4X2C4C2+KBpwKM5AITBe1/OJ3ZIX/XXz/JK1Zpd8nKxEFN3MsCETCPKlr4ZcX+WdzeeEsI95IK1Q1uFMSl9rGDIRt5uOc+pWLuFRshRpmvCZncrF8OZEUv4bLVgRjCpeYWCJxUZB2jABZy4K/XWjw9uwIuft27srdrJtGqdeC9vqinLc+i9QoE4F7ozmzx03fCoWGBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by CO1PR11MB4818.namprd11.prod.outlook.com (2603:10b6:303:93::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.15; Thu, 12 Mar
- 2026 04:05:29 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::4a5f:d967:acb2:e28a]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::4a5f:d967:acb2:e28a%7]) with mapi id 15.20.9723.000; Thu, 12 Mar 2026
- 04:05:28 +0000
-Date: Wed, 11 Mar 2026 21:05:23 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Li Ming <ming.li@zohomail.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Davidlohr Bueso
-	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, "Dave
- Jiang" <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, "Bjorn
- Helgaas" <bhelgaas@google.com>, Ben Cheatham <benjamin.cheatham@amd.com>,
-	<driver-core@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 2/7] cxl/memdev: Hold memdev lock during memdev poison
- injection/clear
-Message-ID: <abI7g5xdfQTERoKX@aschofie-mobl2.lan>
-References: <20260310-fix_access_endpoint_without_drv_check-v1-0-94fe919a0b87@zohomail.com>
- <20260310-fix_access_endpoint_without_drv_check-v1-2-94fe919a0b87@zohomail.com>
- <abCOZf9vkau0AyWL@aschofie-mobl2.lan>
- <530f0541-851a-4201-98f3-93439825c6c7@zohomail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <530f0541-851a-4201-98f3-93439825c6c7@zohomail.com>
-X-ClientProxiedBy: BYAPR05CA0051.namprd05.prod.outlook.com
- (2603:10b6:a03:74::28) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1ki8sM1"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-8297310ce0aso454589b3a.2
+        for <linux-cxl@vger.kernel.org>; Thu, 12 Mar 2026 02:12:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773306737; x=1773911537; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sZaIDNiBTsN9aL3bUzrKNeXVeD+/QF1qmzkDXQhoczs=;
+        b=S1ki8sM1SQDE7TZhztQ7yabOs1/hF2MASEB0rOr3ZtTSKZvXGijLhrCIUkOp88Czdr
+         ZDg4KyzYhsud4oWIvHDmC+GNjw+U4YqINa4T1BzxJIt3Zoz7MVcb8+NQqx7mY3glM3EV
+         rrnGrF7k6dxQ/YKrWp+amvRplwB0p230aanLFXctO+JkmTswJKyOCrqLQIr+qZ35iirR
+         sizK8ZfGzfxI/VDhK+GSVg6CFAz13Ka/kBmcCpnJ/Spjr8dMbnLeSZK4yESgyfs9HDk1
+         3meSDpvF+srRf+HnKPqU6XmWjfrFtQ8BI31WO9uM3Ysp4SdM3PJSdjgZyqIU6fqu2/cb
+         kjzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773306737; x=1773911537;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sZaIDNiBTsN9aL3bUzrKNeXVeD+/QF1qmzkDXQhoczs=;
+        b=bOIYYIP7eHqUwSy6DYAbYlJ5B48V/C1sSCf6RKeK/PYxvQI/D94Dq4O1eTZiKAZS11
+         eNaYE5/qLvq6s5He/C0YcO2L4OvAdMNyVzdN/DLyDeLV7ANYiaDpeo2VgyRAruAVgfV/
+         /QQvUfWHkl5a4noEK5zKXmU0C4lCXWQtshuP1Vu2cgOkAcr31bgwUnWq863286mI8IRX
+         tGMRjwJmWHfhSTirjQz7TLJ4mGIssmNXdryemljYzM+C+LTm8dANya3zII0gpMpX/F3j
+         9vaz6duWuM+JkADX/KcztJjkWYGSwUCm3sktj9Y8UJ40Jrh9M0sqvUw/B5XjD703PGF9
+         TU/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVE+W/fozpR743KeQlsaNrBdUX1Pyme0IIp2Jh6tJnziPwnUkYH4qrl3gKFxDreS4qo4BCWRUvQv38=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRAFfpdl5ZrG37PFTQFuDtp5Yc/nhclpaCbmteab2LRxNatsTO
+	gp64UQ65DEegqG+vhNl4x9db7WT7pZpe1dMyU1c+UCb1mBrJp7HOPbKT
+X-Gm-Gg: ATEYQzweH5gIasIE4KP/uCuSWIJmJ0mMJJ7/f0Neruw6RhRZMf0Kfy7FreOA2ABPM67
+	mTg124PZqZr3agORx97EyJAYweVH92qrkTk8m5W7WYrGJae6FrSpzxwmLZnUNoXeBhKQPdluT6H
+	HslEeHtmAizUp0j90Kr2wmGIIpyF/MTytKpmnsPkc0lTGbAaT1GObt1crQYlFFn69FERRXtPKub
+	nLXoh7S0ceTEQwOU+p9sBe1WOhuUvuS1AO7fZF4XUuhsOsJh7eDFRG3r8FIAybTtw/gAuP0vnwt
+	n+PV+HOYoYWBROfjncAlLeNUUN/00xaV5zyCk9Fpdpuw3wpPhVEUThWE1/JXQ2hl7omzBd6mVrc
+	zKvp42YBmiYDY2s3JY2HM0PC6MSTPI47bL61oJ5uZyFGtSMGF8yJNprZ7UoJ+COfjjgwr+KlQsf
+	pwGBTlX6OIxoGpOJpKGhlP7tgKLW1hYT1kzOJEkETSAQHSpKkem59WYz4hf3cV830S3QDc
+X-Received: by 2002:a05:6a00:ab08:b0:827:32d7:668f with SMTP id d2e1a72fcca58-829f6e7897amr5024122b3a.6.1773306737021;
+        Thu, 12 Mar 2026 02:12:17 -0700 (PDT)
+Received: from Yee-680G4.lan (n11212047001.netvigator.com. [112.120.47.1])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82a0734199csm2299470b3a.36.2026.03.12.02.12.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2026 02:12:16 -0700 (PDT)
+From: YeeLi <seven.yi.lee@gmail.com>
+To: akpm@linux-foundation.org,
+	david@kernel.org,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	joshua.hahnjy@gmail.com
+Cc: linux-kernel@vger.kernel.org,
+	Jonathan.Cameron@huawei.com,
+	linux-cxl@vger.kernel.org,
+	dave.jiang@intel.com,
+	yeeli <seven.yi.lee@gmail.com>
+Subject: [PATCH] mm/mempolicy: add sysfs interface to override NUMA node bandwidth
+Date: Thu, 12 Mar 2026 17:12:07 +0800
+Message-Id: <20260312091207.2016518-1-seven.yi.lee@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|CO1PR11MB4818:EE_
-X-MS-Office365-Filtering-Correlation-Id: 063589df-a062-4bdb-f165-08de7fec98d6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007|22082099003|18002099003|56012099003;
-X-Microsoft-Antispam-Message-Info: vJWHCCWvbNuworDnJkaaXFWsjoXJKZY6mUDzg7l4IWxAqidUwFnUVPqA1FZyuPFoPZT0ZFSWiFEh+jlZotVjJTIXVmdSi1SH05zM25PIYgiqgQM8OlAuY+HyN4zdk9RxddncXVjt69tAGBxo2ZIX20BL6khtrR+6pypGAyAeqcAhMO8ta7J/OGlQDuawQev84g+JeJZzoIWWvpbVt1Wc4pEHNzm17yyAIcI7kNg76jytVD/UfoSHhswlcZk0JMqiP1O1VyezdRRvT1XxT+ycnTgJiOPfaUqvPhUHokS2pZrD7n6tFVfUMinCdryRzeFpsZXgemxmpcNEfWV1ULOEb+/zoFodffoNehLmZpRk8yoo/HVnviu4CMGIPgjR9xdfaR7qRDmbDjVOJpRj6Bn9eK+2FQViOTEowHCws5mRBUhNXcCQVRxuGJucFHrMhdb2D9sRMfgbsh6hM0C6fEKrebXI7H7Y0W/QPio5THL1iGPbgTqILUd8usPVZ0Hl7oAKt2XdLWTTblcBvchuJv3ApkiSMGi9g/cp4CzRtWAhLZcgsEAUDXXmMgFkxNQYE5V2NYyxXyNRfExI04Ewu9GfQXaEL+fijLK/i8eUCWADMhZRDN6KIScA4t7tTybi3wJdZ5jVqXibu6m4NndgP4hdJbguIRPyTjJT6k2VILvZDVV8baFGad3riKU819YmW0c+9aV3APVPJfUZmeNU9bLrq1L2qc88m2S208VcHU8gFBM=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZHEzQ3pMVE51UGFjMzdncE1lL3NvSzY5dHV2RmZGbFI2ZlArWVdqc1l5eDRI?=
- =?utf-8?B?N2Z1VlhhVFZaVFFPd3ZkOTliUEJlNlFvOENRcld0NkdtRUR5c1d6N0NsbXpH?=
- =?utf-8?B?VitDUXFwK05MZE4vcXZwYzREdjIvR1hOQm1zUnp0Y0FkWDJmVUZYZGVVdWh1?=
- =?utf-8?B?S0Y5WFI2QUo1dGxPL0NNTDNKYStKdDdkU1hBdTV2dEh2WWZyREpDSkMzczJo?=
- =?utf-8?B?UUt5Q2dOZWQvdkgxZWVrRXVlWGlTMTBDRWZRMlZBU2FadzlLWVkydjlIU202?=
- =?utf-8?B?NVR5M0kwajVyYzBsY2hGVis5YXpMTXFncUEyUEN4L3B3dXVHSFYyNmJoUXNX?=
- =?utf-8?B?V0JQdjNJYlVGSWNxNTFOSi9tcXV5RitJVUZCZEcxdXJDZUxGdVpPcllXUGxa?=
- =?utf-8?B?NElPOVRWN1F5T0d2TE16czUwYjFLNDZQdUM3VmpxQ0RGQTdyWUdTUjJIam1y?=
- =?utf-8?B?aUFwQ2dYWmJZTFBQcEhPSWJRM0RyS3Q5QllhYWVCeHZxcjA1SmRTbWVpVEFI?=
- =?utf-8?B?SmM0RWl0ajZNRGtDY3pqSVZqNFQrNlJkOGR4MFZ2Ym5XclFwU3c1NnpJYTJT?=
- =?utf-8?B?bzcxbWhEUExEU2kvdFp6TFI0MDVhWGZObldENHZ6V2k4a2dIaGk2NXFKYlRO?=
- =?utf-8?B?RjFENkY0TUdCUnk3TGg3bDg3dU9wRmlhM1JYNVVwWTF3QzZxdit5bEtTbktr?=
- =?utf-8?B?dU42cFdmeDVmN2VPS3RzeHZBb2I3K21sS3JXbHRpcDJ4azNXVlhUSmdzL09O?=
- =?utf-8?B?WG5ER3U2SGd2RC81Mkx0bHN2KzVKcVZLOTlydk52Sm5XQlloekorWWJJTDNU?=
- =?utf-8?B?S2NZVldqSVhwMDBvWlY3QjhyM0tLTCt2RTIydHBwNU1BYjFFcjRzOEZkcndl?=
- =?utf-8?B?S3FXayt0Zml6NS9OTU8xT29yU2I1UEVSTFVKWVFYb21vZDdnUDFNU1hGc0Jt?=
- =?utf-8?B?dWxLL3M3OGhJUitKaXdnTXliT1krVlcrZzhmUGo4N2pHUnJzdHpza2NZciti?=
- =?utf-8?B?MXl5WHVyTVZjK1IzRU9RMmlpaTBOcFhJY2hPV0dQRUN5WGVXL3NEZis1OFVp?=
- =?utf-8?B?UEFRS01zdWVxa2ZqalJraUxNaGkxSmZDRmhvdlBmL0hXZUdmWjBsUUZhbkxS?=
- =?utf-8?B?c1UyQkZ2Um9HZ0kxRU4rUzhZdUpwNDhrTUlTTWtyaGZiTmNHV0IxeFI2NTVi?=
- =?utf-8?B?VzBLdDhuR29ieWFhdHJHZlRQUCtCZ203Qm9YUE1qY3Z2RmVXd0NlZVJFdDND?=
- =?utf-8?B?SEhRaFd2cHJoNFJvRHFGMVZPYmpWemxsTGVUSzZ5ZDRaNklQS1RaOHN1ZzJT?=
- =?utf-8?B?OHZHZlN1Y1V6RGdVYkExWWZyczQvbmRLMm9EMEJuUGhCakNueFlsdklWNWJz?=
- =?utf-8?B?Tkk4OWd3N01zcDhqbmhJOHM1N0dJSWVSK1ZDOWhBdDdsYlJEMktub1Z2MFB1?=
- =?utf-8?B?SGU2UklObTAvL1NabFFOYUNoSTFoOStvZTdGWHcxVEFNb2R1TjJSWFVPbE51?=
- =?utf-8?B?cnlMUHE2czJNMHlrek9zcnlsQlRLWjNUOGtCcUMreTlWMGROVjJHU3lVeHRy?=
- =?utf-8?B?MkR0RjRCQjVtZGtQTW4xbXY1NC84Nzk2aFVWeVRuemp4UUZlUUJyQWVCQ2Rw?=
- =?utf-8?B?MXBVYnE2UHpzSkovTTdKR0lXUXlPMzNwcXBqZGdXUXlwMUV5cHQzc3BKS0lP?=
- =?utf-8?B?MkRuTG1idVJYWmpmWUF2T1ZRcEFHR3dRNGlXWWhUc1k1S3I1eWxDMHgvK2x2?=
- =?utf-8?B?OG44eEZyZVVWMkRBRkNJNlBnZTNNK0puUUdPeDdCWW93b1JuUXhJQjJyWUtp?=
- =?utf-8?B?SURIUnlVbWFwTENDdlM2dFdFL05BVzBuQWU0cklMSlZHK0VwcWVaQWRpWXd3?=
- =?utf-8?B?MU15L25xclNBNXBOSE1WNjVkUGcxZ1RSenRQblFYOEkxY1gvNHZmZkRSUTNX?=
- =?utf-8?B?Rkxuc3luR1FlbnZ0YTdrWHZJaWFFL29OS3RDMElqOFpTdk13TWpDTFc3eU0v?=
- =?utf-8?B?cDB4a3FSZHNZTFRRSzJhMzRSVzJJU2cwN1VOM0JNR1lqcGVqTm1TNXRsVU1t?=
- =?utf-8?B?SS9zNlNkdERTQVlEQXBRbzQzei92NTQ4YzF6QStZVFoxNDRSUTVQOC9Bby9n?=
- =?utf-8?B?TGdkVG9PbURRZjJxMlNqR3hQS3FwU0swMVp1ZWNkcERjUCsxWUUySUNuRmIz?=
- =?utf-8?B?YjNNTU85MnZ0YUQyc3lKNmsyWXhzb1JIUVV4WEdkTFZlcTNKdXZHbWZSbHo3?=
- =?utf-8?B?Z1pDbDd2SzVKOUNBMTdzdXpBb2J1RC9JL0xaNERwWXk4OHVtclVKUDhPQkg5?=
- =?utf-8?B?d0RJajQ1YUlrOCtFQndSQTBxNTJmRWNsTUdmbWVuWTAwM2M0RGNwWnQ5dUk3?=
- =?utf-8?Q?OB0TTP7PQom5GgMc=3D?=
-X-Exchange-RoutingPolicyChecked: f3FHBdP6C0y1DAMHPj/aQ7400JUmm7NBe7JK4z/v802VVV908YY+b/hq4i4X8mquPhWfSPUAHrlq+Kyrcdy6l2rmkOKRnTZtu+uXePmqbCL4nv2qMkew01N+g+ko3PsdZreD3O8abkzUl1Awvnf+LWNuAGDx+I0sJU4HCGE0GNXuVkTtYv+2L8LCbjqxGvxV1lYgseyy2S0jXx1JRqyTbobpO1QQMAZ1YkhT1z/9VTFdYDODXx8HtsYYAvRpItoExyXPVejfa48//LSvQpL9zwXt1DdV4WYOY7NTKIuWb5t6KIeAOnR7PBpnTJiT/4R96Nq60/AOx4W/PL/MSJqpgg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 063589df-a062-4bdb-f165-08de7fec98d6
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 04:05:28.8790
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Z/S2/12BISfEDJFqF+nXMu+gzxTTRo5iVU1TAyacYvB+aCpPthYD2RubPAJ8geUq5k08Hk2FPVjxO1oBatGOcroObDN1Ra9hzWUy1QIkcN4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4818
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 11, 2026 at 06:53:26PM +0800, Li Ming wrote:
-> 
-> 在 2026/3/11 05:34, Alison Schofield 写道:
-> > On Tue, Mar 10, 2026 at 11:57:54PM +0800, Li Ming wrote:
-> > > CXL memdev poison injection/clearing debugfs interfaces are visible
-> > > before the CXL memdev endpoint initialization, If user accesses the
-> > > interfaces before cxlmd->endpoint updated, it is possible to access an
-> > > invalid endpoint in cxl_dpa_to_region().
-> > > 
-> > > Hold CXL memdev lock at the beginning of the interfaces, this blocks the
-> > > interfaces until CXL memdev probing completed.
-> > > 
-> > > The following patch will check the given endpoint validity in
-> > > cxl_dpa_to_region().
-> > > 
-> > > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > > Signed-off-by: Li Ming <ming.li@zohomail.com>
-> > > ---
-> > >   drivers/cxl/core/memdev.c | 10 ++++++++++
-> > >   1 file changed, 10 insertions(+)
-> > > 
-> > > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> > > index 273c22118d3d..8ebaf9e96035 100644
-> > > --- a/drivers/cxl/core/memdev.c
-> > > +++ b/drivers/cxl/core/memdev.c
-> > > @@ -295,6 +295,7 @@ int cxl_inject_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
-> > >   	if (!IS_ENABLED(CONFIG_DEBUG_FS))
-> > >   		return 0;
-> > > +	device_lock_assert(&cxlmd->dev);
-> > >   	lockdep_assert_held(&cxl_rwsem.dpa);
-> > >   	lockdep_assert_held(&cxl_rwsem.region);
-> > I'm having second thoughts about this since this call site is not
-> > the 'beginning of the interfaces' as the commit msg suggests.
-> > 
-> > What about taking the device lock in the debugfs func, ie -
-> > mem.c : cxl_inject_poison. If the goal is to avoid using the debugfs
-> > interface before probe completes, that does it.
-> > 
-> > At this callsite, we make sure nothing changes out from under us,
-> > no endpoints attach or detach during the work.
-> > 
-> Thanks for taking time to dive into this issue.
-> 
-> But I don't quite understand your comment, do you mean that we don't need
-> above device_lock_assert() in cxl_inject/clear_poison_locked()?
-> 
-> You mentioned that taking the device lock in cxl_inject_poison() to ensure
-> endpoint won't be changed during the debugfs interfaces calling,
-> 
-> That is right and that is what this patch does. So I am a little bit
-> confused.
+From: yeeli <seven.yi.lee@gmail.com>
 
-I was only thinking of moving the ACQUIRE one level up, to here:
-drivers/cxl/mem.c: cxl_debugfs_poison_inject|clear ()
+Automatic tuning for weighted interleaving [1] provides real benefits on
+systems with CXL support. However, platforms that lack HMAT or CDAT
+information cannot make use of this feature.
 
-That would mean dropping the assert in clear_poison_locked().
+If the bandwidth reported by firmware or the device deviates from the
+actual measured bandwidth, administrators also lack a clear way to adjust
+the per-node weight values.
 
-> 
-> 
-> Ming
-> 
-> > > @@ -331,6 +332,10 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
-> > >   {
-> > >   	int rc;
-> > > +	ACQUIRE(device_intr, devlock)(&cxlmd->dev);
-> > > +	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
-> > > +		return rc;
-> > > +
-> > >   	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
-> > >   	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
-> > >   		return rc;
-> > > @@ -355,6 +360,7 @@ int cxl_clear_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
-> > >   	if (!IS_ENABLED(CONFIG_DEBUG_FS))
-> > >   		return 0;
-> > > +	device_lock_assert(&cxlmd->dev);
-> > >   	lockdep_assert_held(&cxl_rwsem.dpa);
-> > >   	lockdep_assert_held(&cxl_rwsem.region);
-> > > @@ -400,6 +406,10 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
-> > >   {
-> > >   	int rc;
-> > > +	ACQUIRE(device_intr, devlock)(&cxlmd->dev);
-> > > +	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
-> > > +		return rc;
-> > > +
-> > >   	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
-> > >   	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
-> > >   		return rc;
-> > > 
-> > > -- 
-> > > 2.43.0
-> > > 
+This patch introduces an optional Kconfig option,
+CONFIG_NUMA_BW_MANUAL_OVERRIDE (default n), which exposes node bandwidth
+R/W sysfs attributes under:
+
+  /sys/kernel/mm/mempolicy/weighted_interleave/bw_nodeN
+
+The sysfs files are created and removed dynamically on node hotplug
+events, in sync with the existing weighted_interleave/nodeN attributes.
+
+Userspace can write a single bandwidth value (in MB/s) to override both
+read_bandwidth and write_bandwidth for the corresponding NUMA node. The
+value is then propagated to the internal node_bw_table via
+mempolicy_set_node_perf().
+
+This interface is intended for debugging and experimentation only.
+
+[1] Link:
+https://lkml.kernel.org/r/20250505182328.4148265-1-joshua.hahnjy@gmail.com
+
+Signed-off-by: yeeli <seven.yi.lee@gmail.com>
+---
+ mm/Kconfig     |  20 +++++++
+ mm/mempolicy.c | 148 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 168 insertions(+)
+
+diff --git a/mm/Kconfig b/mm/Kconfig
+index bd0ea5454af8..40554df18edc 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -1441,6 +1441,26 @@ config NUMA_EMU
+ 	  into virtual nodes when booted with "numa=fake=N", where N is the
+ 	  number of nodes. This is only useful for debugging.
+ 
++config NUMA_BW_MANUAL_OVERRIDE
++	bool "Allow manual override of per-NUMA-node bandwidth for weighted interleave"
++	depends on NUMA && SYSFS
++	default n
++	help
++	  This option exposes writable sysfs attributes under
++	  /sys/kernel/mm/mempolicy/weighted_interleave/bw_nodeN, allowing
++	  userspace to manually set read/write bandwidth values for each NUMA node.
++
++	  These values update the internal node_bw_table and can influence
++	  weighted interleave auto-tuning (if enabled).
++
++	  WARNING: This is intended for debugging, development, or platforms
++	  with incorrect HMAT/CDAT firmware data. Overriding hardware-reported
++	  bandwidth can lead to suboptimal performance, instability, or
++	  incorrect resource allocation decisions.
++
++	  Say N unless you are actively developing or debugging bandwidth-aware
++	  memory policies.
++
+ config ARCH_HAS_USER_SHADOW_STACK
+ 	bool
+ 	help
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 68a98ba57882..0b7f42491748 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -226,6 +226,7 @@ int mempolicy_set_node_perf(unsigned int node, struct access_coordinate *coords)
+ 
+ 	bw_val = min(coords->read_bandwidth, coords->write_bandwidth);
+ 	new_bw = kcalloc(nr_node_ids, sizeof(unsigned int), GFP_KERNEL);
++
+ 	if (!new_bw)
+ 		return -ENOMEM;
+ 
+@@ -3614,6 +3615,9 @@ struct iw_node_attr {
+ struct sysfs_wi_group {
+ 	struct kobject wi_kobj;
+ 	struct mutex kobj_lock;
++#ifdef CONFIG_NUMA_BW_MANUAL_OVERRIDE
++	struct iw_node_attr *bw_attrs[MAX_NUMNODES];
++#endif
+ 	struct iw_node_attr *nattrs[];
+ };
+ 
+@@ -3855,6 +3859,128 @@ static int sysfs_wi_node_add(int nid)
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_NUMA_BW_MANUAL_OVERRIDE
++static ssize_t bw_node_show(struct kobject *kobj,
++			    struct kobj_attribute *attr,
++			    char *buf)
++{
++	struct iw_node_attr *node_attr;
++
++	node_attr = container_of(attr, struct iw_node_attr, kobj_attr);
++
++	/*A Node without CDAT or HMAT*/
++	if (!node_bw_table)
++		return sprintf(buf, "N/A\n");
++
++	if (!node_bw_table[node_attr->nid])
++		return sprintf(buf, "0\n");
++
++	return sprintf(buf, "%u(MB/s)\n", node_bw_table[node_attr->nid]);
++}
++
++static ssize_t bw_node_store(struct kobject *kobj,
++			     struct kobj_attribute *attr,
++			     const char *buf, size_t count)
++{
++	struct iw_node_attr *node_attr;
++	unsigned long val = 0;
++	int ret;
++	struct access_coordinate coords = {
++		.read_bandwidth = 0,
++		.write_bandwidth = 0,
++	};
++
++	node_attr = container_of(attr, struct iw_node_attr, kobj_attr);
++
++	ret = kstrtoul(buf, 0, &val);
++
++	coords.read_bandwidth = val;
++	coords.write_bandwidth = val;
++
++	if (ret)
++		return ret;
++
++	if (val > UINT_MAX)
++		return -EINVAL;
++
++	ret = mempolicy_set_node_perf(node_attr->nid, &coords);
++	if (ret)
++		return ret;
++
++	return count;
++}
++
++static int sysfs_bw_node_add(int nid)
++{
++	int ret;
++	char *name;
++	struct iw_node_attr *new_attr;
++
++	if (nid < 0 || nid >= nr_node_ids) {
++		pr_err("invalid node id: %d\n", nid);
++		return -EINVAL;
++	}
++
++	new_attr = kzalloc(sizeof(*new_attr), GFP_KERNEL);
++	if (!new_attr)
++		return -ENOMEM;
++
++	name = kasprintf(GFP_KERNEL, "bw_node%d", nid);
++	if (!name) {
++		kfree(new_attr);
++		return -ENOMEM;
++	}
++
++	sysfs_attr_init(&new_attr->kobj_attr.attr);
++	new_attr->kobj_attr.attr.name = name;
++	new_attr->kobj_attr.attr.mode = 0644;
++	new_attr->kobj_attr.show = bw_node_show;
++	new_attr->kobj_attr.store = bw_node_store;
++	new_attr->nid = nid;
++
++	mutex_lock(&wi_group->kobj_lock);
++	if (wi_group->bw_attrs[nid]) {
++		mutex_unlock(&wi_group->kobj_lock);
++		ret = -EEXIST;
++		goto out;
++	}
++
++	ret = sysfs_create_file(&wi_group->wi_kobj, &new_attr->kobj_attr.attr);
++
++	if (ret) {
++		mutex_unlock(&wi_group->kobj_lock);
++		goto out;
++	}
++	wi_group->bw_attrs[nid] = new_attr;
++	mutex_unlock(&wi_group->kobj_lock);
++	return 0;
++
++out:
++	kfree(new_attr->kobj_attr.attr.name);
++	kfree(new_attr);
++	return ret;
++}
++
++static void sysfs_bw_node_delete(int nid)
++{
++	struct iw_node_attr *attr;
++
++	if (nid < 0 || nid >= nr_node_ids)
++		return;
++
++	mutex_lock(&wi_group->kobj_lock);
++	attr = wi_group->bw_attrs[nid];
++
++	if (attr) {
++		sysfs_remove_file(&wi_group->wi_kobj, &attr->kobj_attr.attr);
++		kfree(attr->kobj_attr.attr.name);
++		kfree(attr);
++		wi_group->nattrs[nid] = NULL;
++	}
++	mutex_unlock(&wi_group->kobj_lock);
++}
++#endif
++
+ static int wi_node_notifier(struct notifier_block *nb,
+ 			       unsigned long action, void *data)
+ {
+@@ -3868,9 +3994,22 @@ static int wi_node_notifier(struct notifier_block *nb,
+ 		if (err)
+ 			pr_err("failed to add sysfs for node%d during hotplug: %d\n",
+ 			       nid, err);
++
++#ifdef CONFIG_NUMA_BW_MANUAL_OVERRIDE
++		err = sysfs_bw_node_add(nid);
++		if (err)
++			pr_err("failed to add sysfs bw_node%d: %d\n",
++			       nid, err);
++#endif
+ 		break;
++
+ 	case NODE_REMOVED_LAST_MEMORY:
+ 		sysfs_wi_node_delete(nid);
++
++#ifdef CONFIG_NUMA_BW_MANUAL_OVERRIDE
++		sysfs_bw_node_delete(nid);
++#endif
++
+ 		break;
+ 	}
+ 
+@@ -3906,6 +4045,15 @@ static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
+ 			       nid, err);
+ 			goto err_cleanup_kobj;
+ 		}
++
++#ifdef CONFIG_NUMA_BW_MANUAL_OVERRIDE
++		err = sysfs_bw_node_add(nid);
++		if (err) {
++			pr_err("failed to add sysfs bw_node%d during init: %d\n", nid, err);
++			goto err_cleanup_kobj;
++		}
++#endif
++
+ 	}
+ 
+ 	hotplug_node_notifier(wi_node_notifier, DEFAULT_CALLBACK_PRI);
+-- 
+2.34.1
+
