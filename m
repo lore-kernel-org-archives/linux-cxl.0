@@ -1,106 +1,186 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A4F372676
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Mar 2026 16:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C482DEA86;
+	Thu, 12 Mar 2026 16:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773331960; cv=none; b=MFCZaiTeWCyKN8RncGYXRufchlBoMMGbgts94TJLePs7QL1dzLYMJ6YYlEPDK4L4WjfpFNf1hGUyyjo76W3m8rrnFOS0t4EFX9IFIZm0HbM1oio+ja/kXb//zLkDemPGvY7CCHHyEr5dGTudL978n+5hk1fh53LZ/2Z1YDZzTqc=
+	t=1773333185; cv=none; b=tZ74+xB7LI+nMhC1gEMPvcY5GPsWzmJePti9RuGJTVTUjOs6oo5oJ6TkONdITFmTjki2RSj/be5fZ484aMts1E0vh90U359Z97ojiwLbrdrCkyfJGO8qXr4pm97fdoTS+NpTJDHRlprxnaM1klAkztCce1dI6DJRXzEoUoj7VXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773331960; c=relaxed/simple;
-	bh=QFNTUuS3UHbUvEbopqTlsYwnr+9/iPu55Tr5OmgmngE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EUWtN8eFgH2Eex+/Ad4l5zid6LT9yucd5SdjMLVDBcagYdpA0U212X7aeBD7CWvfV7vhXh8IzPIH7HWrZBjvRADMiAoysosRcOne3vuvhpMlRvqxVywDQBJ8YcJCXzMMAmuBpArF1IQTNiqS7Me+W/0xvpIh5uBH/Y/i16jBrwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=LpfcC0x5; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1773333185; c=relaxed/simple;
+	bh=FvkMkdd2WY78WOrTr9C43jJ/XSvAs77Z9VGY5C6pX3s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q0CzLsMylCVv1E7Rw5z6UdBK3hM4moa6ydhELcp8sk8o4Bf8Nf/JblUe8EM3BjOnJ/qBfEBClCiDh4QpEdAuyn5tm3rulaWHoFHNn9WeFCmy1DIxF4b+nryEHNFTSnPgmqArakkOUAo4fRhAUTFXFHEnWjINXVNrdQeV6Na6SC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=evq7K/UB; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="LpfcC0x5"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-50917e02532so14437431cf.3
-        for <linux-cxl@vger.kernel.org>; Thu, 12 Mar 2026 09:12:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1773331958; x=1773936758; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N9REPqpkPd4ZOpUT732fDGd7EIcOVaG5zQj2KdASHAk=;
-        b=LpfcC0x5z98JICJ/WkcSSCLrg1Ai0idvmya3Cj6vezGyYm5iqffhMPB5VmcUF4ED+6
-         cmeiaCS3wGAyojQ23BlrzRlvLEd1Swufk2jpqzfLv/HR7bV6fQ0BreD1ArAVm7UVXYVs
-         RfwnkgVDYUy5ePEgtds2+ls2nK9EUMvIKdcuBXFJHSjql9EEs84Pq4C0nDZOGDk9rguw
-         40avHpeB2tCeavpffR0vdCwDrnzVl9FdUv5/1SPcPymrF8mMWNZjojXCM3vtdE0PFLfi
-         hHlyrNlICUnV60YQLVApejp/x+CkEYpB4Ljum4BRwAiP7SY5F7XGuTCy46o+zL/jiDJZ
-         ee+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773331958; x=1773936758;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N9REPqpkPd4ZOpUT732fDGd7EIcOVaG5zQj2KdASHAk=;
-        b=SpgeHsNaJTXYZAL60DblgAR5E3fTShEfl369S4sfIIFGBK3b+e2GWYo45WdyfHeoUX
-         tJuLDDAf/rvAwrTfEU9ftkWmHq7P0AYj4qmG9qqoxCh05i840aG/fBhZWYXpZAJWqRTK
-         U0RBARLrISbkaSGP3lXuq0gBZxfAqnok7fv0vrzv7R7aWOcM5Ydv+8NwXJVuAzPYUOcs
-         RW1D0FVUtKpTCbD0mtNJaSRwH5vy2hOfazVRaGuYwll5+ph2hVbsJLCD7oN1JrQB5I/1
-         5nJ0THxlOoElURaAYV5Io/d0zZ8R+7WBDogZNWAVGKkzw5ycPXrOYCZjSeK18R7feXjo
-         w/sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXPCDC4E6s+C69l4uOOEIjhVbwGQyFkd6bqrvbfMkEMr4lvNIEF5sVBx8A9JGnxDiAMg7n3xJL74bA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzukUenS8wZddSrVUQ5jDRo1nfj2ydQU8q5z0eFf/rwt0jrmytL
-	S1Vq+SvPWjCibX+jx+2cJX8WKhxgjMz3LzyO7tNeH5tZmD+iqR3DO6GgwRmtbEATqyM=
-X-Gm-Gg: ATEYQzyEbzRYY+0wsxTxuD1rXg8egkMQ1g6aVQOYfZlA+qftxJQ8TGNL6vZVhtAk0pN
-	ljia0w+p5wiRY4oZji7WsG/Po806RXFHGwrMzB8LidjsoBA3h5Vk6yE82mkf1ETMvVF3kd90Y1G
-	of6ANxH+kE4PWlHnWQfURlOr3Y5XmQE8Qc/N46iehDw7kDP3DasyTCVem8AC16VZgN64QTr1T2K
-	Hwt9LnH98/TtxBT/F/tCcPvFsZzOodtd9tEsj2LxAxMrF2wWtjeUJN/9nxlt4faRVEg4V4yzhd2
-	S1Ga7Vm+7K+WrpMao8YRM+POoqYml5v+o8sirKlgfuMzGhsIoEupZDDgmQItKhP82NwLEDfppl1
-	KK+hfmO8hlBoCnYrfAXmTfLfWDrYdiqCrqGoxWdylrImPxmv3/VKYNy5fONo7rDCj9nBKsbz558
-	paV85wK8djNv0VlOiSlGbAmB/UwRhFKWXx6Ihy6miwaX/qooBg1ikh3SVIkJqoebJmuc02yCbu5
-	pDvxz5pqA==
-X-Received: by 2002:ac8:5851:0:b0:509:5f4:4ea4 with SMTP id d75a77b69052e-50939f52461mr92570071cf.13.1773331958188;
-        Thu, 12 Mar 2026 09:12:38 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50939e8e0ecsm35572931cf.5.2026.03.12.09.12.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2026 09:12:37 -0700 (PDT)
-Date: Thu, 12 Mar 2026 12:12:35 -0400
-From: Gregory Price <gourry@gourry.net>
-To: YeeLi <seven.yi.lee@gmail.com>
-Cc: akpm@linux-foundation.org, david@kernel.org, dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com, linux-mm@kvack.org,
-	joshua.hahnjy@gmail.com, linux-kernel@vger.kernel.org,
-	Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org,
-	dave.jiang@intel.com
-Subject: Re: [PATCH] mm/mempolicy: add sysfs interface to override NUMA node
- bandwidth
-Message-ID: <abLl84pc7tavuieW@gourry-fedora-PF4VCD3F>
-References: <20260312091207.2016518-1-seven.yi.lee@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="evq7K/UB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773333183; x=1804869183;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=FvkMkdd2WY78WOrTr9C43jJ/XSvAs77Z9VGY5C6pX3s=;
+  b=evq7K/UBQFLuOg9brCi5L30lGkxsAXsVpdl3/1DGzu1csYCZxn8V2YDp
+   SLRQn9hPgXEeNN7Uaf4sjIWSaGdL3kF3S9aFsH0X4GIkvygn9FXVuhjnv
+   ADBj3he4Ab8A+BaNNpz+hKq9MxSunCkOt6Cz/QqUSRA3iUS0rD0Ceg5Dq
+   ep94sFv8PjcNtv49T13/vPM20aXukHYem0Np2NvvtQb3fvPSMa9PZ8gA/
+   IjQJeAc6PW9AeevoaeUpH3fu2wB2ZSn0RmRPBQXWC4aYYZGXSziZ6lVQz
+   Dn8tF5qZIJVnvnQDp64b4qlapZpRnki1AExUWY5+L4hBTr/0YI5SECKoe
+   Q==;
+X-CSE-ConnectionGUID: zuCfs58tR36/jxzYXSPvAQ==
+X-CSE-MsgGUID: paixOC6cTRKvLoM+PVNHQA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11727"; a="74474011"
+X-IronPort-AV: E=Sophos;i="6.23,116,1770624000"; 
+   d="scan'208";a="74474011"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 09:33:03 -0700
+X-CSE-ConnectionGUID: yAKYAbfFTLSl7UrlyLt0Og==
+X-CSE-MsgGUID: VtaxTvo3QluO+Mcc6RKp1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,116,1770624000"; 
+   d="scan'208";a="220945872"
+Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.110.142]) ([10.125.110.142])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 09:33:02 -0700
+Message-ID: <b1a71b7d-4997-4449-b77d-ad317bd7644d@intel.com>
+Date: Thu, 12 Mar 2026 09:33:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260312091207.2016518-1-seven.yi.lee@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/20] cxl: Introduce cxl_get_hdm_reg_info()
+To: mhonap@nvidia.com, aniketa@nvidia.com, ankita@nvidia.com,
+ alwilliamson@nvidia.com, vsethi@nvidia.com, jgg@nvidia.com,
+ mochs@nvidia.com, skolothumtho@nvidia.com, alejandro.lucero-palau@amd.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ jgg@ziepe.ca, yishaih@nvidia.com, kevin.tian@intel.com
+Cc: cjia@nvidia.com, targupta@nvidia.com, zhiw@nvidia.com, kjaju@nvidia.com,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, kvm@vger.kernel.org
+References: <20260311203440.752648-1-mhonap@nvidia.com>
+ <20260311203440.752648-2-mhonap@nvidia.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260311203440.752648-2-mhonap@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 12, 2026 at 05:12:07PM +0800, YeeLi wrote:
-> From: yeeli <seven.yi.lee@gmail.com>
-> 
-> If the bandwidth reported by firmware or the device deviates from the
-> actual measured bandwidth, administrators also lack a clear way to adjust
-> the per-node weight values.
-> 
 
-If userland is setting the raw bandwidth stat, why can't they do a tiny
-bit of math to figure out the preferred weighting and just write the
-weights?
 
+On 3/11/26 1:34 PM, mhonap@nvidia.com wrote:
+> From: Manish Honap <mhonap@nvidia.com>
 > 
-> Userspace can write a single bandwidth value (in MB/s) to override both
-> read_bandwidth and write_bandwidth for the corresponding NUMA node. The
-> value is then propagated to the internal node_bw_table via
-> mempolicy_set_node_perf().
+> CXL core has the information of what CXL register groups a device has.
+> When initializing the device, the CXL core probes the register groups
+> and saves the information. The probing sequence is quite complicated.
 > 
-> This interface is intended for debugging and experimentation only.
-> 
+> vfio-cxl requires the HDM register information to emulate the HDM decoder
 
-Should be posted as [RFC] then, I don't think we want this upstream.
+/register/register block/
 
-~Gregory
+Otherwise it implies a single register.
+
+> registers.
+> 
+> Introduce cxl_get_hdm_reg_info() for vfio-cxl to leverage the HDM
+> register information in the CXL core. Thus, it doesn't need to implement
+
+same here. "register block"
+
+> its own probing sequence.
+> 
+> Co-developed-by: Zhi Wang <zhiw@nvidia.com>
+> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
+> Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> ---
+>  drivers/cxl/core/pci.c | 45 ++++++++++++++++++++++++++++++++++++++++++
+>  include/cxl/cxl.h      |  3 +++
+>  2 files changed, 48 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index ba2d393c540a..52ed0b4f5e78 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -449,6 +449,51 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, "CXL");
+>  
+> +/**
+> + * cxl_get_hdm_reg_info - Get HDM decoder register block location and count
+
+cxl_get_hdm_info() to be consistent with CXL core naming convention.
+
+> + * @cxlds: CXL device state (must have component regs enumerated)
+> + * @count: Output: number of HDM decoders (from DVSEC cap). Only set when
+> + *         the device has a valid HDM decoder capability.
+> + * @offset: Output: byte offset of the HDM decoder register block within the
+> + *          component register BAR. Only set when valid.
+> + * @size: Output: size in bytes of the HDM decoder register block. Only set
+> + *        when valid.
+> + *
+> + * Reads the CXL component register map and DVSEC capability to return the
+> + * Host Managed Device Memory (HDM) decoder register block offset and size,
+> + * and the number of HDM decoders. This function requires cxlds->cxl_dvsec
+> + * to be non-zero.
+> + *
+> + * Return: 0 on success. A negative errno is returned when config read
+> + * failure or when the decoder registers are not valid.
+> + */
+> +int cxl_get_hdm_reg_info(struct cxl_dev_state *cxlds, u32 *count,
+
+u8 for count probably sufficient as Jonathan mentioned. Decoder cap is only 4 bits for count.
+
+> +			 resource_size_t *offset, resource_size_t *size)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+> +	struct cxl_component_reg_map *map =
+> +		&cxlds->reg_map.component_map;
+> +	int d = cxlds->cxl_dvsec;
+
+Name it dvsec for easier correlation when reading the code.
+
+> +	u16 cap;
+> +	int rc;
+> +
+> +	/* HDM decoder registers not implemented */
+> +	if (!map->hdm_decoder.valid || !d)
+> +		return -ENODEV;
+> +
+> +	rc = pci_read_config_word(pdev,
+> +				  d + PCI_DVSEC_CXL_CAP, &cap);
+> +	if (rc)
+> +		return rc;
+> +
+> +	*count = FIELD_GET(PCI_DVSEC_CXL_HDM_COUNT, cap);
+
+This is not the correct place to find number of decoders. You should be looking at CXL HDM Decoder Capability Register (CXL r4.0 8.2.4.20.1) for the 'Decoder Count' field.
+
+DJ
+
+> +	*offset = map->hdm_decoder.offset;
+> +	*size = map->hdm_decoder.size;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_get_hdm_reg_info, "CXL");
+> +
+>  #define CXL_DOE_TABLE_ACCESS_REQ_CODE		0x000000ff
+>  #define   CXL_DOE_TABLE_ACCESS_REQ_CODE_READ	0
+>  #define CXL_DOE_TABLE_ACCESS_TABLE_TYPE		0x0000ff00
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index 50acbd13bcf8..8456177b523e 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -284,4 +284,7 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
+>  struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
+>  				     struct cxl_endpoint_decoder **cxled,
+>  				     int ways);
+> +
+> +int cxl_get_hdm_reg_info(struct cxl_dev_state *cxlds, u32 *count,
+> +			 resource_size_t *offset, resource_size_t *size);
+>  #endif /* __CXL_CXL_H__ */
+
