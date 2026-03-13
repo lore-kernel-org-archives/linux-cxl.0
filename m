@@ -1,162 +1,119 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF868175A84
-	for <linux-cxl@vger.kernel.org>; Fri, 13 Mar 2026 02:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773368452; cv=pass; b=FjbWChlIYltpytvp63s5s6XmEgEijA+2PAoTq1HJGwd0m0vCz3YESWqT9k72mvlOmstesSOuGldV03NXuU8o0hC4Hxmyn6yEcZeTpP1fCmk1rM2+Fh/GguUxZeFeznGJCU+LnGR4+JoSV7xnHrTPeUt8POv+X89Wqn/egrn9KeY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773368452; c=relaxed/simple;
-	bh=Nc3vSgPCiZyWTFw4ReuW9B3v4aeGpdG1apfFjxfTvD4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FwIMgs74oeAQiDtnLpxN4o02894nAQFNqDvJMciRWfzvoTQOQSnFFAky8smUbymUUyv+oykc39MZVNoBm/BrHD956BZHySeL+nN4oYnyEv5mH/D+KFncfIRMujAuwYk6t/xAmigNfmSf+lxqBaagzPJSsS7LXARX3Pymn3kssjA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h5m/2h4t; arc=pass smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C062314D18
+	for <linux-cxl@vger.kernel.org>; Fri, 13 Mar 2026 03:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773371123; cv=none; b=FHcUoqNK+8sTWmpjJmHV1ne9eI42SEdifM5iyx9NS2Z/uslkUhYC/OW14WPKBB/P0TR1LLA7lMPEO66MMT4tX1Eo1xUVPljHT3SIAWRquYky7Z5BN5ynyJJlTmDLRXdl49VY0q2kguseICxgb0qVJQOz6JBSYK3a1hcd2KOpWnM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773371123; c=relaxed/simple;
+	bh=WLsJA/HFpoSz/qJAj3x6z062D0MMeQF1uUYpy271mic=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iapYBtpdS01dg/1mEiubOL7Bc7l8BgMyHTIp1dfD9Yp46SMd1DCQ+vNdUDBmxWfvfuSDdoRkomR/6qB37deEu4e4CeWfkUwuKWBfPrbGKXrKwHHuP7VdFgeJlbPbUiV34WuF5g8SxLHMZszysbFd+15N+TyEUMJh/oYhZYPdeug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OdHxAQ7k; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h5m/2h4t"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-661cfb9f3aaso2418209a12.2
-        for <linux-cxl@vger.kernel.org>; Thu, 12 Mar 2026 19:20:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773368448; cv=none;
-        d=google.com; s=arc-20240605;
-        b=LWsroJc2AiAMT9mbHy3uUI9lx7SG5FvugmhrClNn0DmBVAN5B+Oi04Ff0ayTG+8hAV
-         TDt/LnVLUpB4ipmfdaJ5++knhkBiqKvoOonb6u37cE02OME8VzxnwMWz7JzoZPy9f4qb
-         sSrClcNxC9Ce9HoudvlwiKcClurnct6zogJgyJPJ7hOFrT5569Fo7SMelCcAer17zlI4
-         TUdy++0Xy4/tMER7tvHQV0JzErLZUd6vKNNmL0Zz0kaGdsRh7RpSeofwKwwmGLncFOy1
-         TdPClcfANiKqNo74QVQyDSAx0JpCcFD0V8/GlORvdjEiZ/EzOf6mli8sFisdPvJj7jEV
-         MxZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=bF3o1la32fuvNbL6eogbD9OSVNGno1MaF2cdSSjD26g=;
-        fh=lv0MiineoubZTFCLPr0eL+S14YzfK1X9UbINwIBZipY=;
-        b=Zc8EBdjxH2nz0/LDfGBt0tc6pyanTCRceXcQDIT3LL0uuo09Kou4bJVje50wKEgPaf
-         /V3UotrslnESGOo/+ALO5geSZo4fLCY9LrHz6C1W8XW/gbJ0eY4WW/VPaycNKY9JbgDX
-         sZJJPdXWlaI2oLoN/i3n9TZExcShtsgdUIpaBd9XLMeM6zTktCXoD0zF720fkhtgmtMR
-         44Pg5sHVy2C1H7qkjL7Dx2MzjgJKey+t8LXlomsY5Pogc27tS4AWYNcq72Jdn1Z7iJtz
-         3dnYTSL/x/gZosLNWC1uqGfLsrP6mPxHgKoYMfXnFbb2fiMl8CrvvRjAVzxNozi4BMSm
-         /ynQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OdHxAQ7k"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2ae82df847bso13377215ad.2
+        for <linux-cxl@vger.kernel.org>; Thu, 12 Mar 2026 20:05:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773368448; x=1773973248; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bF3o1la32fuvNbL6eogbD9OSVNGno1MaF2cdSSjD26g=;
-        b=h5m/2h4tZSYh97yKPQKNRK5SkPzjkbsLDTs3h2w4/4UGx2qb5nct95DPQcMPjEmLvu
-         QLz8mY/x9UqfIykNYB5GPFSB93REPQaQbSvZH460waH4nC2nP9bvd5BKNsndUcwP6Zf7
-         Cdnybwni30ur9x4zy1pa6qts7Ggg9yDm3C+Q53o2EHPja3PYguRU9Lea81P+xJnazHFa
-         jVqpIZtYCWZHdKquQhNfwgzwJnHquxXF3Sa8Drgc1PamUK8jq8E/SaxzG1ax3UasmBLG
-         5XGKXBm5wXnrZC+MXV1OO/UlVfGlu2poukrA8a8ksFCmByoGzNleCWEQ4gq7Mw+uCM2C
-         +Euw==
+        d=gmail.com; s=20230601; t=1773371121; x=1773975921; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YMiD7iuuQ6RwrA9DHEwvWHHs17Gv5D7sbQEPQSKpbdQ=;
+        b=OdHxAQ7kby3qHb87qB4/Oh6wjqtxy1jsTxRI68sP11dL0LnDbIJvalwJ9jOgbdREp4
+         WsCHBufVT5pfxFb39f4437VFp5zWWguJhBvF1nKP0zYUoW9YPe+1KeOel9aLRtmxmy0u
+         J+FTc5EwT2LpOyLR8Ic7ja5nK27eldfH75P2u5i/qiN4Gh977q3855pGCO/tKEerhDx6
+         /MDz3vVUNeLpqDGsSo5htsG6Kjn1uLHPDJFvlXVshz3kwaPKE7MjxYpzibO7z+vj7Mjo
+         k2kIIcQp507PifJ4nt7P3XJ6fxyzWEBmrdXF374QdmfxxlpQlJ3+eQWBR3MDAWqaj6UY
+         9xrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773368448; x=1773973248;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bF3o1la32fuvNbL6eogbD9OSVNGno1MaF2cdSSjD26g=;
-        b=qYmdM/qrn6tHdfoU0JQcEBgZDMkFE/yjTGOM1KVMCfjYyMOiOv3gtLDhauEW4MOvoB
-         9B5H+5HSz6DyntmvK7NJpp+BwJfPUlW3IT0/vDLrA0/FWA2UbGcjuxPejwDYF1xu2kke
-         cUQGBGByOWXlM2oFejRhSrSDE9CqKnc5q1jIELC3zs9gu20HZVjCF7lQK6o/j5q0aDtC
-         efJ27TsMZYLM3xC+j3rES+nbTB+TTi7oYGEXEzwIbTjVl0OcqYQlb/iaKIs06+r7rjRj
-         NPirkyGRoImcfmxIMc8w+lUKXW80YHXyrpbzlKy2Etcq1YTOSRtU0Bwszs7N+9v7ktDi
-         Wukg==
-X-Forwarded-Encrypted: i=1; AJvYcCUvqn5SfYE5K1e415gTiJ8xaH46QQPM34cymaQ9CMmQWHxXc7NAeTIU5/0G2Y8l1I9YlByuVXM/UxU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNNs1UXS/eul5yon9XQYU1m6TA40fCSWGPffPDQHLJHzkz0ZEI
-	ANCHtLORK0zSmRPEg6+SrEXxQ5QrWnXLl+FRPlczMeW0yjRtbt9WX4NiuykWQRkjvXNhR1zW3IX
-	/272M0nPlzCMuJP+JGEN1+X8hFCFpQmc=
-X-Gm-Gg: ATEYQzw0DnEltWt+KN3dByVx8wzO+b+wbY9SKycvTAlvioeBwC8h1PIO/ciKaVned/I
-	48Z00EcihPWylVhyLzSzeZDfUTvXQpsX51y4CN4ZLQqxFhKNiqMC7kOVFq9meN9o1zXAn4AF3fc
-	uHKh8IE92K56LHh0ockmsGDKDZiNVeigKcZxrYvU6/zOGfD7geJxGMW1VWZnWscqMzSm+f525/B
-	WnUFf3OFmDyFu6nzJuSj2EH5ka3M0LdIldhi8sjJpNMgG/R1aP21a23unj2uu6fmBVakk6ikDjo
-	PHDEUP7hNyBnEZYcqd02cffgau2LsERFmmH+Ow==
-X-Received: by 2002:a05:6402:35cd:b0:65b:edef:40b6 with SMTP id
- 4fb4d7f45d1cf-663babb2796mr790403a12.6.1773368448051; Thu, 12 Mar 2026
- 19:20:48 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1773371121; x=1773975921;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YMiD7iuuQ6RwrA9DHEwvWHHs17Gv5D7sbQEPQSKpbdQ=;
+        b=LsC4kmiuXFqe9JByLWREo50vJnIFbxoPv85DaYQzey/ShN4dZlr4Cy1klaqoaRkP9L
+         jWxd79DFfj0q0DxuiO2k7Ofzg+eycW4+6XFTujdiSD3nPfn2I8ZGaPPyZTyYZHHaFWkv
+         LdkgsW8T0lrqaAHKsDbdDTDjo0u0P4rcUFKFWfUeet6vf7tZBJXuvXosVEPbhIX7RW+L
+         ogvGB5jos2i5YGXeA6pjW8G9AdJ5op3M5YPqxQAhWMLhdsG98tBnsOdcnmN54Kem7rSX
+         yG7GC+yOQMBpi6DyFrfBRcCEcHXQYHR9vYyD9MJodK+vVS96iBt34aXnWuw6bJFyt8rx
+         VFDw==
+X-Forwarded-Encrypted: i=1; AJvYcCXsJf6KLtAa1bVFbotzA+PLaUK+DFNWN/+R/i6Nw1xvfEilYWb/q0PpztWKa5rfsKhe1nSkayEZ5po=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBgkA8aQzwYghx1+VjKtLBV9IuDP6wnObNIb5hcyJYoNCOl+18
+	+oUG/2Z0M/phmTT4nDbM9H57kP7mcKJBkehVWN+vrndWXpNxDUTlSvRq
+X-Gm-Gg: ATEYQzzmY1bay+P9zP3CJQYPsBDV0wkAyX7Jmg6TULLL0cir7fIYNoP8pe4grIUhy6W
+	H4AO2X6JLPIvJP0wd/B4dgeoTsBUQTnf9udlNC4NfZLSUHjoa6NgBSPzo3tirrDaiGIEsjsu6IA
+	LsRLLu03Q1l/gmfeb7OFU9k41w5fYFlewG/fJB5PxFiJJBTEe6vGtjEkna44SrLxMf6j2uLUNiW
+	iIL1YFXKJ6dehZy7Sp2fTlSlg+Y8OUesNZVQbr2Ih1/vbZCeor9fewGQ3UuGyvQ5CZLhvkX+019
+	1w4ES+3bcl0zsuLTHs2MONf0TjSBCLNlgHzQjD96tymCSCrjOmCz19SzrnDubB7fwRt1YDG80Ss
+	LMiJ38805YJg5o3e8FVn2cZKmls+Ai+59NFGVkIVreGa/jgm5eGx46FrmQ8ifER2YgxEy/pRmeg
+	0c77dR+7ML/+ReceJw0vBFku99oGaEnGxKPwkX8bFR15Z9LB49A5kEqs/gfEomArZpx0dAsubyP
+	Q==
+X-Received: by 2002:a17:903:1a2e:b0:2a0:de4f:c99 with SMTP id d9443c01a7336-2aeca96723cmr15904725ad.9.1773371121407;
+        Thu, 12 Mar 2026 20:05:21 -0700 (PDT)
+Received: from [192.168.123.240] (n11212047001.netvigator.com. [112.120.47.1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2aece56c388sm5610335ad.11.2026.03.12.20.05.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2026 20:05:21 -0700 (PDT)
+Message-ID: <8315168c-0557-445b-aa86-174d9902e2e1@gmail.com>
+Date: Fri, 13 Mar 2026 11:05:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260211032935.2705841-1-alistair.francis@wdc.com>
- <20260211032935.2705841-8-alistair.francis@wdc.com> <8403c8b7a832b5274743816eb77abfa4@garyguo.net>
-In-Reply-To: <8403c8b7a832b5274743816eb77abfa4@garyguo.net>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Fri, 13 Mar 2026 12:20:21 +1000
-X-Gm-Features: AaiRm52El5V2cLVcjV-Q8_ZosbewKKcX058abV65Lg9yJW4Ibt_OSl9fj2Npv2A
-Message-ID: <CAKmqyKMXmn6=suyjhB3Kq12-UHuLbPLOHPd2JO2b3Nxn4jYHpw@mail.gmail.com>
-Subject: Re: [RFC v3 07/27] rust: error: impl From<FromBytesWithNulError> for
- Kernel Error
-To: Gary Guo <gary@garyguo.net>
-Cc: bhelgaas@google.com, lukas@wunner.de, rust-for-linux@vger.kernel.org, 
-	akpm@linux-foundation.org, linux-pci@vger.kernel.org, 
-	Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, alex.gaynor@gmail.com, benno.lossin@proton.me, 
-	boqun.feng@gmail.com, a.hindborg@kernel.org, bjorn3_gh@protonmail.com, 
-	tmgross@umich.edu, ojeda@kernel.org, wilfred.mallawa@wdc.com, 
-	aliceryhl@google.com, Alistair Francis <alistair.francis@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/mempolicy: add sysfs interface to override NUMA node
+ bandwidth
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: akpm@linux-foundation.org, david@kernel.org, dan.j.williams@intel.com,
+ ying.huang@linux.alibaba.com, linux-mm@kvack.org, joshua.hahnjy@gmail.com,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, dave.jiang@intel.com
+References: <20260312091207.2016518-1-seven.yi.lee@gmail.com>
+ <20260312115825.000045af@huawei.com>
+Content-Language: en-US
+From: Yee Li <seven.yi.lee@gmail.com>
+In-Reply-To: <20260312115825.000045af@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 20, 2026 at 12:49=E2=80=AFAM Gary Guo <gary@garyguo.net> wrote:
->
-> On 2026-02-11 03:29, alistair23@gmail.com wrote:
-> > From: Alistair Francis <alistair.francis@wdc.com>
-> >
-> > Implement From<FromBytesWithNulError> for the Kernel Error type
-> >
-> > Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> > ---
-> >  rust/kernel/error.rs | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> > diff --git a/rust/kernel/error.rs b/rust/kernel/error.rs
-> > index 258b12afdcba..569d9d032ab3 100644
-> > --- a/rust/kernel/error.rs
-> > +++ b/rust/kernel/error.rs
-> > @@ -12,6 +12,7 @@
-> >      str::CStr,
-> >  };
-> >
-> > +use core::ffi::FromBytesWithNulError;
-> >  use core::num::NonZeroI32;
-> >  use core::num::TryFromIntError;
-> >  use core::str::Utf8Error;
-> > @@ -251,6 +252,12 @@ fn from(e: core::convert::Infallible) -> Error {
-> >      }
-> >  }
-> >
-> > +impl From<FromBytesWithNulError> for Error {
-> > +    fn from(_: FromBytesWithNulError) -> Error {
-> > +        code::EINVAL
-> > +    }
-> > +}
->
-> Are we sure that `FromBytesWithNulError` maps cleanly to the `EINVAL`
-> error code?
+Hi Jonathan,
 
-`FromBytesWithNulError` means "An error indicating that a nul byte was
-not in the expected position." [1]
+Thanks for the review.
 
-To me that maps with `EINVAL`
+> As I note below, I'm not convinced this is the best layer to be injecting
+> data at if we want a debug interface that allows us to reflect real
+> hardware.  Might be the sort of patch that is useful outside the tree though
+> so thanks for sharing it!
 
-1: https://doc.rust-lang.org/std/ffi/enum.FromBytesWithNulError.html
+Perhaps a small tool to compute weights from the desired bandwidth
+would be a better approach.
 
->
-> Anyhow, please add `#[inline]` for such simple functions.
+> If it was an SRAT (for GPs) / HMAT issue I'd suggest table injection is
+> an adequate way to do testing and debug.
+> 
+> CDAT is trickier, but maybe we should be thinking about a debug path to inject
+> that as well - similar to what we do for ACPI tables.
+> 
+>  From my point of view I'd rather see debug / testing interfaces that test the
+> whole flow rather than just this top layer control.
+> 
+> However, I can see this is a useful patch for developers. But if you
+> are developing debugging bandwidth-aware memory policies, I'm going to assume
+> you don't mind building a kernel and adding this patch to make your life
+> easier!
+> 
+> So to me, useful tool but I'm not 'yet' convinced it should be upstream.
 
-I can, just noting that none of the others have `#[inline]`
+You are right, table injection is likely the better approach.
+During early hardware development the platform is often unstable, and
+firmware may not be able to report it accurately. Letting the OS handle
+debugging and evaluate the results can make experimentation easier.
 
-Alistair
-
->
-> Best,
-> Gary
->
-> > +
-> >  /// A [`Result`] with an [`Error`] error type.
-> >  ///
-> >  /// To be used as the return type for functions that may fail.
+And, thank you for checking the code.
