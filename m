@@ -1,212 +1,197 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012046.outbound.protection.outlook.com [52.101.43.46])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D65937F8CF;
-	Fri, 13 Mar 2026 13:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773407441; cv=fail; b=jqHuZJfq/BqpYohFhIO7bTk8RqrJG1fahyJcgeazlDaHciCpmAg0x34XnfbcpSn/5Bgt2GvA1J8KEJt5Xt6kGRYBR9szyzLzJZlPmzmaMlVfDawAm+c9FLx9EXnl9olswIWFngqkASoDWLt6/Iwn6ohWEVtu6XOhJiIWrh7+Cpc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773407441; c=relaxed/simple;
-	bh=OnuR7fHv8US0ZZ1E5Q39Sc0HW8iDCR9OcN6+AKPnhzY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Q5mm7p+BT5hzIMmyox2m8S4Xrr9oGvf3mcGKMNFGEkZLot8m55SS0K4ZCtTEYlrbPuwMYIiz7uI75Dd4Cu7xwhfeDWZ8slxgxmRtgFnEQGcawE0hu0gOISZkvP1S9G3iD2x56LSoqyUkPaByf4695FulE2WK4x9yf12dKDUI80k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=e6jy00UM; arc=fail smtp.client-ip=52.101.43.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD2F363C72;
+	Fri, 13 Mar 2026 16:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773420983; cv=none; b=Zuev/G5DnPgSSscUo6ffBDy/6sn6d428S2ZLLAp80oPFktVK+nYp7oeYo+zMqI5Zyya/HVAafvZaG7Ljl0+kw9RM2/xYTn+6BUSR+IeD6mQdvK8TDTQwa34YkHnTjfLw+KelTjsc85pwR53k+t9E/8sjjT0QzXfzWcBPa10F/14=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773420983; c=relaxed/simple;
+	bh=0uqgpIANlqfUrdaeadAKjdf+nK8dcNapPkhTFncGu6o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y1eSsVD9Nu+f1rc2LCWzcRxx26VUiskPXHlZrIxCT4KLsL562pExUS0B9UUfRTz8Cm2tbzjci4U0a03Bx1MpBL5N8WG1/wfdwn8GibkCK/M2clzCpAFsHkZTNnmZJnULBkjtJ6qNQRK2wpEto3YXAwChltwff8WDi3R5cS681wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZweAU1l+; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="e6jy00UM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qijSyr/KLMqK8PSBMZ8fo170YZJnCq3uKQ5ScMcWz1Rs9LxgVkduvEihJBeZ3VKk8v3KpQlx3/Xg4YLmTKBD7mTMdEstCNFWlBAep9Qajr59VvHmEiXhUoVkVEzHpt195nE3zQEmObfxx/xsoBL1w0dfSYHFYoMnno0Var8J/dYqU17Z2EtJmq8+xY4zs9F3BCh2D65RzRSLR1K52bYEeCGtzcCw1rF6io0BudOW3bG5g4RZ4N4EDS9tBjCUGuyUxmfAOZ2NL41+QBd+X8H5PmRZxuiTsryP+FzNEr7MzIS89qutBVAxYIIP7eM/YZHvU8TqVbc1up2GOyMc/zFUeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TxZPfLwrkJNTUlWLKyhhnJitKTmVHVp9sv5TPAeJKl4=;
- b=Y+1EaqKPEDQPbtNcuvgvmFcpcqHy9y2voStJvjQmWqBvaIxLP3dwQCVt1NH1uET0QPfRbeF4BlZ5d3C9W/wB96J468nA+RjS3o8SNrPpQ3stWCrfB40ZjEqbR7fURv9nJAJ2MIZi2xe6YLpEg5QIHWQ0OCgnl92ptPpv+Pz+jeVjpTGaC7VUMdVN4IrVbTBbGW2JnO4qYX0zOzHzqIvjvewZZA5YSXgx55KR9KXIcSpPYgdmmVOJHSNeK4H0dKKnqMnKPWSndX2ewGwwZZJvMy9Sh+rAz1THWiE9Jn/cuQXbdPwXawE28BMJIWyRxKQpoeSG0wBEMMrGUZA3K65sPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TxZPfLwrkJNTUlWLKyhhnJitKTmVHVp9sv5TPAeJKl4=;
- b=e6jy00UMHWnf/ygMr8ixYALJN9lx5qZ/5lNuJzK1TJcaHOT2pB4PSc3ot2lC5LAOEpVOiv7qNAE7hr6A4PuixmJqCNxS+20Wjm2MFpaz3C20xDAvs7jgujsk24Gd9u+qzu16BK4/V1cjrWKXTJomuPpjuSjlrA4wwydw2e1QqVY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by SN7PR12MB6863.namprd12.prod.outlook.com (2603:10b6:806:264::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.6; Fri, 13 Mar
- 2026 13:10:36 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::9e55:f616:6a93:7a3d]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::9e55:f616:6a93:7a3d%6]) with mapi id 15.20.9723.000; Fri, 13 Mar 2026
- 13:10:36 +0000
-Message-ID: <5a42d88d-3825-46a3-a014-79b3936e3f6d@amd.com>
-Date: Fri, 13 Mar 2026 13:10:31 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v23 08/22] cxl/hdm: Add support for getting region from
- committed decoder
-Content-Language: en-US
-To: Dan Williams <dan.j.williams@intel.com>,
- PJ Waskiewicz <ppwaskie@kernel.org>,
- "Cheatham, Benjamin" <benjamin.cheatham@amd.com>,
- alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, dave.jiang@intel.com
-References: <20260201155438.2664640-1-alejandro.lucero-palau@amd.com>
- <20260201155438.2664640-9-alejandro.lucero-palau@amd.com>
- <03ab7820-a6e0-4655-bae7-61d2d0b7dfd6@amd.com>
- <28148dcf-3cdc-439b-900a-a3f672a28ad1@amd.com>
- <ac50b18c99f5863f456d2d486454df8eebe35719.camel@kernel.org>
- <69b37069af0f8_b2b610068@dwillia2-mobl4.notmuch>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <69b37069af0f8_b2b610068@dwillia2-mobl4.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO6P123CA0057.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:310::14) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZweAU1l+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773420975; x=1804956975;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=0uqgpIANlqfUrdaeadAKjdf+nK8dcNapPkhTFncGu6o=;
+  b=ZweAU1l+hkLSY07BrSTEoFv+0kM7hPCR5FztoYv8u6zNz6nPqAOpLbYh
+   PEg35dssZhEBFInBos5w5Q7t0bjQaLyukGr8ZG+OukmcJ1LL5Q2cW4+Rt
+   mXB6GzJTiGKp17IeKYgG7mL6rLO863puBHizxv3N6oINapRx8b4UWWtpT
+   Zpnlx4Ewp9RVCmcqDYC3Pres+Tm4Tz6r8CHtBNpkZsRIAjB8A9DGd21UR
+   hnC+gW4RgCtA4ZSeKX/CxLr27IQj0jz495Qjh2Cwqa0EpKkpiFELx0tLw
+   qssXX0e5ClJ4lgjVfTP9YxxojyoCRrA5976b/6KoKcn6R4Fon/N+abLHM
+   g==;
+X-CSE-ConnectionGUID: jcITCmhrSxC9Mw5qXNZuUQ==
+X-CSE-MsgGUID: 29fGa5AjQtGpNLRZAq0YxA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11728"; a="85618717"
+X-IronPort-AV: E=Sophos;i="6.23,118,1770624000"; 
+   d="scan'208";a="85618717"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 09:56:13 -0700
+X-CSE-ConnectionGUID: kG43qGn4SPK9kgxWUJXIEw==
+X-CSE-MsgGUID: NMOq9FYXT8CWksTfb+ifJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,118,1770624000"; 
+   d="scan'208";a="225328810"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.233]) ([10.125.110.233])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 09:56:11 -0700
+Message-ID: <fd232cc5-f2ab-463f-9238-44e2514d4ad1@intel.com>
+Date: Fri, 13 Mar 2026 09:56:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|SN7PR12MB6863:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7079b605-84a7-4191-42f5-08de8101ea6d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|366016|18002099003|56012099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	YFxCJz27DBcInZAPCjbCSneNbcSzkyAdSTTaPhxt/HCiIS3g7ZvPpMAd9MTrRj/Ii3nw0lNbDOhn4zdQZdb6geKce80MWAKAV0bqnHRJU0fNdJLuvdYRygi/KPkZLXRZRd2/ituJtL9sQGEeLQhLmWeIHTyPSJ7QoT8TswDj8Y3apW8ssjJjNwfhMyj3n+iHBPluEOPbrq+f7X1j85RQTY0Kntdi2dGjytu6TIQT3ftj+3rAUL/rW5Um95LzM+eGm1rEN65cOARuTFOp+CQKT8Inbm9X0816rA8GF4C3ISHs4Q3U1ycLcep1s1mM1PT69jx99PJUIXxvWgxZHxcyj8JisP/zKjx/f35dMTFoI0oS61O9zjuUwAu0g2Uejzbxt0nRPPeZgh40IzY39M+6VxnjOVMXrFwiku2ojSRAuvXmwOhaz1qDP0rvFFUgKzqjv9W2zRdHkq2fmA+qNI9sE+VG3dziCNuNYk9NfKxLOlW7iUZUj8zRNMpP8RvgS+6xahMXJzzLrRVEiphvsptKMvPs/Q+q74HpzhJ2o/WOCS7rOYzEwDtsAhtyu0Y7nOPUQsOjIX3vOvoed4duHHgo2rDr1Hd8zDCfpBs70BhLj5iayf6hk4UyujYzf/jMhsrnggSEC6e2JvN9iFgl5kG5jGs3zzYNdY0RJBykRtrqcYdyREAbGBA3jfrw8dF0IHw/
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?djhURnVMejlCREZvRE1WOVRlTTFjYXdEVUQzQ3pzbHVzNGlsd1kzRk1zTEZ3?=
- =?utf-8?B?OHdlWmxDdGNqVGsyYzVUVjVnMWp2VXNONUhJTVJXdzVGU0YwSDZCT1dqc1Za?=
- =?utf-8?B?dThRKzRkbUFwVHdqOHZ4Mzl5aXNNWUxyaTBaNlVpdnZYVlBjSlBNR055WVhP?=
- =?utf-8?B?WDdUUmU1SFNWZFBkc29SczRvS0tPemI1eFJKT05hQkYzb2dYb3hsSFIveVVh?=
- =?utf-8?B?VG80NUc0ZTNUL3dIbzJYUVE5SWQyRFFNWi83N1NsRXlRbXFabUc1bHk3V050?=
- =?utf-8?B?YUVYcHdka2dyYWViVkRLd0FLT2JFZW9abEg1MkJqZGl4RitscVFBRjRhbjVE?=
- =?utf-8?B?QjBudkhLdVllQlk2M25sbFI5MEQ0WG11T1RrQlRhTm5GVHJ5YmxiZXJ2YnJr?=
- =?utf-8?B?ZXMwNFBlR2VsS1d5Z0VMeURhY2czWlVNdytGTG93Y2VKS1JWY1dkbWI4M0d3?=
- =?utf-8?B?cnVzQ3pmYmdFSUhENU1jYkZNZFhSNGEvRW85MUtQN2d3QStGWkVLTHF5U1RF?=
- =?utf-8?B?VjFZaWNId2ovRUY1R1RoRVk0Y28xNDlaWFVWMm9GeHp4VmF2NVJwTy96MnR3?=
- =?utf-8?B?VWVXRGpqa2NiRXJ2RDVIZjBBZzdUczF0dnh1OU0zK2xZbUlnUHRJaGU1N0Rm?=
- =?utf-8?B?YUZjZDJaNWVKbmVNS2trTVVrTWlHeTFjQ2pzYzZKMlA5Z2JiRVQ3VE1jQjFD?=
- =?utf-8?B?UWpKUEZsUkRUTGRPbEREUWtGUUJ2YVdPREhib20yRWZoYXhvTWh5eDJBbzlL?=
- =?utf-8?B?NFlmejg5Mm04Z255UUVlUm9BVmhZZzFpRFZSSnRzMWtwNzJRVi9CMnRjUENI?=
- =?utf-8?B?bklyWDFHZzZhWjJWK0lZUWhRRXRQMlltd01PbVlMQ0ZKSUtNUDFMc1dobE85?=
- =?utf-8?B?dXlXNXBjVndsTlJHR1RCZGxEVFZ2ZkxIR2l3Qnk4bFdXb0tUYVhHOS9OMmds?=
- =?utf-8?B?UjNnR0ZTdUJCVTdhb0NYbjVsU1pOREFEalpwekhVK3I3eXNLSXQ1TlhuUFVN?=
- =?utf-8?B?VjhHOGE4TUtBNndtaVJUcFRla1lTdVBZMWJseGtPdTZ6bVRhZnRRbjJiSmhi?=
- =?utf-8?B?MW5wY1RWN1ljSjhKc0toWE43VGtaVmRYb0JFUW5lN3R1dVBYTUE0aVFiT2lX?=
- =?utf-8?B?K2tvd3A1aVdPeDRGZTBpaGZWUUJWMTVvQmtYakZZSHRkVTVVeWxqTkgrZlI3?=
- =?utf-8?B?TTNuRzdKSCszQU8xakFnVERRUG55YUUyYTdUSUFZRGRDNEVvL2N4eDdBQXdX?=
- =?utf-8?B?SnVnT2xXZk83d1ppUlhSODNON2VZV1d0ODQ1K3FSOUFxSE1xcTRWUkZUOUJm?=
- =?utf-8?B?dDZkdjVxdFRMcmpDN3NjM2tDTkhlUDF1T2xBMXU2eGh0VGwrOERGUDRGcjFI?=
- =?utf-8?B?YkdJSlZLYzEremF5LzRsczUyTUhUSEhxZFFTZ2xWVzN6b0FVSjhLeXZqT2JC?=
- =?utf-8?B?bExJbDVGajJhQ2NFMmxFTnRhTTdJZ2Nua21Yb0tpYm5yY3FFc2lzeEtXZEha?=
- =?utf-8?B?aUNjMGcvUXdaTElxb2VwTzFudGRRcFYvd2I0RE03RzliYmhwTEN0b3JHZkQy?=
- =?utf-8?B?WFlhZVlqeE1ucHJpeWJ2aVN5S21DZkk1QURMTWJDNytnRkdDMTdDSVQ1TDBQ?=
- =?utf-8?B?c1hEVEdYM0t2SEdWYjMray96eHdTdkpwK3NlVkZNNnAwRzhKT0ovRHJrMG9U?=
- =?utf-8?B?KzRzT1k0bjRneW1OUXU5UDNZcXB1cmJDVWhzb213dXVtWWl0R0VKM0VMNzV1?=
- =?utf-8?B?OEhqamN6MEZRaHV1Z2c4QXc2Ui9SQndhdHhJL0liNE9QMk1jR1JxMTJSUVhG?=
- =?utf-8?B?SGQyUlh4NVJzQ2NvSUxSV0ZUN3VVS0EwSEV2VXF0aUpuWDFMS0cvdndsUzlH?=
- =?utf-8?B?cTZYUkh6M3N0QWdOeWtBaU1SYjlGRm9vMUIzdjQ0MDFidDFUZXFWRzByQkUw?=
- =?utf-8?B?M1o4M2tEQjUvSDlraTVGZnQvSnJiblZBWTBFL3ZDNTk1azQ1NzdiYjlwRy82?=
- =?utf-8?B?TnV3dCtvL1BnRUFNNmlScTM4NzFqQlg0bEZlaFZwRjBqbkw3UGJVWFIyUEI1?=
- =?utf-8?B?Rkl3ZjNnaEZLaUc5alVCOEhhZjFjRkl6MzhUcEN0V1lWbjBwRXgvTjh0SVNJ?=
- =?utf-8?B?dUlEWm45OGNWR1pQZWF4U0pGcVNYTHI2Wm8vNWt4ZnJERWpXa3QrZUFCMmts?=
- =?utf-8?B?VEdQZWxoRXptL1R3M29sVGVQVC9yK0lhdEUxK09hcUJoUWgrOTZrRUxOdlR6?=
- =?utf-8?B?UTRHdkdDRktxRG1iclpMNWZuc1o0dEowSSsvdzFtQTZ6NjFMYVNFNVhhRUdj?=
- =?utf-8?B?a0YzVmtFTEVtYXJZWVZGTWZGZ2RxZWdmbStxM2VMcHFlSG9nTklFdz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7079b605-84a7-4191-42f5-08de8101ea6d
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2026 13:10:36.3452
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hChhurdeC825Stwt9X0yqs9QLr4yJYTtu+MfOpsJ+uNvVeHy1GhzMIE5lqVjcFGmOa06vDFM/txdqgqWJ+TKjQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6863
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 03/20] cxl: Move CXL spec defines to public header
+To: Jonathan Cameron <jonathan.cameron@huawei.com>, mhonap@nvidia.com
+Cc: aniketa@nvidia.com, ankita@nvidia.com, alwilliamson@nvidia.com,
+ vsethi@nvidia.com, jgg@nvidia.com, mochs@nvidia.com,
+ skolothumtho@nvidia.com, alejandro.lucero-palau@amd.com, dave@stgolabs.net,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, jgg@ziepe.ca, yishaih@nvidia.com,
+ kevin.tian@intel.com, cjia@nvidia.com, targupta@nvidia.com, zhiw@nvidia.com,
+ kjaju@nvidia.com, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ kvm@vger.kernel.org
+References: <20260311203440.752648-1-mhonap@nvidia.com>
+ <20260311203440.752648-4-mhonap@nvidia.com>
+ <20260313121805.0000611e@huawei.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260313121805.0000611e@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-On 3/13/26 02:03, Dan Williams wrote:
-> PJ Waskiewicz wrote:
-> [..]
->>> Yes, I think you are right. This works in my tests and it is safe
->>> because I check the region does exist before using it. But the error
->>> inside sfc should then not be fatal for cxl sfc initialization and
->>> fallback to the other cxl initialization possibility.
->>>
->> So I'm running into this situation I think.
+
+On 3/13/26 5:18 AM, Jonathan Cameron wrote:
+> On Thu, 12 Mar 2026 02:04:23 +0530
+> mhonap@nvidia.com wrote:
+> 
+>> From: Manish Honap <mhonap@nvidia.com>
 >>
->> When you're testing, are you surviving a reload of the driver?  Right
->> now, I can load and successfully create the region0 device.  However,
->> following the same teardown path in SFC, I cannot reload my driver
->> afterwards and map the region.  I get:
+>> HDM decoder capability structure and component reg block size
+>> needs to be used by VFIO subsystem. Move the macros from private
+>> CXL header to public one.
 >>
->> cxl_port endpoint5: failed to attach decoder5 to region0: -6  (ENXIO)
->> <driver> 0000:c1:00.0: CXL found committed decoder without a region
->> <driver> 0000:c1:00.0: CXL init failed
+>> Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> 
+> Not really related to this patch, but...
+> 
+> Maybe this is the time to think about doing a PCI like
+> uapi/linux/cxl_regs.h header?
+
+Sounds reasonable. Maybe makes sense to be in uapi/cxl/? There's already a features.h header in there.
+
+> 
+> So far we have these duplicated in at least a couple of code
+> bases and that is less than ideal!
+> 
+> Move seems fine to me otherwise.
+> 
+>> ---
+>>  drivers/cxl/cxl.h | 30 ------------------------------
+>>  include/cxl/cxl.h | 30 ++++++++++++++++++++++++++++++
+>>  2 files changed, 30 insertions(+), 30 deletions(-)
 >>
->> I'd be surprised if SFC in its current patch state would survive this
->> same insmod/rmmod/insmod test.
-> So over here [1] I reviewed Smita's patch to stop resetting decoders by
-> default if they were part of region auto-assembly. While that stops
-> resetting the decoders it does not allow the device to get a hint of
-> where it should place its HPAs if the decoders get reset while the
-> driver is detached.
-
-
-That is already what type2 support is about, and what was from the 
-beginning: to get an hpa from the root decoder. The HPA will be found 
-when the driver loads and the memdev is created and when the related 
-region is going to need such HPA, and based on what is free there. 
-Before v22 that was the only case contemplated, assuming the BIOS would 
-not configure the device decoders. v22 added support for getting the 
-region from autodiscovery if the decoders were committed, and v23 was 
-for not resetting those decoders if that was the case when the driver 
-unloads.
-
-
-I'm pretty sure what Type2 pre-v22, v22 or v23 do in this regard is not 
-perfect  (v23 was a quick hack for PJ to test the new functionality you 
-demanded), in fact I'm changing the way hpa is allocated for Type2 
-because after Gregory's concurrency tests and pmem patchset, I really 
-think the approach needs to change. But as I said in Smita's review, you 
-are precluding the basic stuff with your never-ending "improvements". 
-You are not in a better position than me to have an opinion of what 
-Type2 drivers need, and your comment is this thread is just a lack of 
-respect to me. Yes, it is a blunt assertion, and I will repeat it as 
-many times as necessary.
-
-
->
-> I am going to draft some patches to allow an accelerator to mark an
-> address range as "designated" so that it can recall the memory it was
-> assigned by boot firmware.
-
-
-If you do so, I will start seriously about passing this work to another 
-engineer, not necessarily from AMD.
-
-
->
-> This also dovetails with the conversation I had with Paul Blinzer at
-> Plumbers about an ability to designate Soft Reserve memory. So a generic
-> facility to designate memory allows accelerators to recall their address
-> range if the decoders ever lose their configuration. It also tells the
-> rest of the CXL subsystem "hands off, this range was accelerator
-> designated by platform firmware".
->
-> [1]: http://lore.kernel.org/69b1e0aacb9d0_2132100c5@dwillia2-mobl4.notmuch
-
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 10ddab3949ee..7146059e0dae 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -24,9 +24,6 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
+>>   * (port-driver, region-driver, nvdimm object-drivers... etc).
+>>   */
+>>  
+>> -/* CXL 2.0 8.2.4 CXL Component Register Layout and Definition */
+>> -#define CXL_COMPONENT_REG_BLOCK_SIZE SZ_64K
+>> -
+>>  /* CXL 2.0 8.2.5 CXL.cache and CXL.mem Registers*/
+>>  #define CXL_CM_OFFSET 0x1000
+>>  #define CXL_CM_CAP_HDR_OFFSET 0x0
+>> @@ -39,33 +36,6 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
+>>  #define   CXL_CM_CAP_HDR_ARRAY_SIZE_MASK GENMASK(31, 24)
+>>  #define CXL_CM_CAP_PTR_MASK GENMASK(31, 20)
+>>  
+>> -/* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
+>> -#define CXL_HDM_DECODER_CAP_OFFSET 0x0
+>> -#define   CXL_HDM_DECODER_COUNT_MASK GENMASK(3, 0)
+>> -#define   CXL_HDM_DECODER_TARGET_COUNT_MASK GENMASK(7, 4)
+>> -#define   CXL_HDM_DECODER_INTERLEAVE_11_8 BIT(8)
+>> -#define   CXL_HDM_DECODER_INTERLEAVE_14_12 BIT(9)
+>> -#define   CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY BIT(11)
+>> -#define   CXL_HDM_DECODER_INTERLEAVE_16_WAY BIT(12)
+>> -#define CXL_HDM_DECODER_CTRL_OFFSET 0x4
+>> -#define   CXL_HDM_DECODER_ENABLE BIT(1)
+>> -#define CXL_HDM_DECODER0_BASE_LOW_OFFSET(i) (0x20 * (i) + 0x10)
+>> -#define CXL_HDM_DECODER0_BASE_HIGH_OFFSET(i) (0x20 * (i) + 0x14)
+>> -#define CXL_HDM_DECODER0_SIZE_LOW_OFFSET(i) (0x20 * (i) + 0x18)
+>> -#define CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(i) (0x20 * (i) + 0x1c)
+>> -#define CXL_HDM_DECODER0_CTRL_OFFSET(i) (0x20 * (i) + 0x20)
+>> -#define   CXL_HDM_DECODER0_CTRL_IG_MASK GENMASK(3, 0)
+>> -#define   CXL_HDM_DECODER0_CTRL_IW_MASK GENMASK(7, 4)
+>> -#define   CXL_HDM_DECODER0_CTRL_LOCK BIT(8)
+>> -#define   CXL_HDM_DECODER0_CTRL_COMMIT BIT(9)
+>> -#define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
+>> -#define   CXL_HDM_DECODER0_CTRL_COMMIT_ERROR BIT(11)
+>> -#define   CXL_HDM_DECODER0_CTRL_HOSTONLY BIT(12)
+>> -#define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
+>> -#define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
+>> -#define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
+>> -#define CXL_HDM_DECODER0_SKIP_HIGH(i) CXL_HDM_DECODER0_TL_HIGH(i)
+>> -
+>>  /* HDM decoder control register constants CXL 3.0 8.2.5.19.7 */
+>>  #define CXL_DECODER_MIN_GRANULARITY 256
+>>  #define CXL_DECODER_MAX_ENCODED_IG 6
+>> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+>> index 610711e861d4..27c006fa53c3 100644
+>> --- a/include/cxl/cxl.h
+>> +++ b/include/cxl/cxl.h
+>> @@ -75,6 +75,36 @@ struct cxl_regs {
+>>  #define   CXL_CM_CAP_CAP_ID_HDM 0x5
+>>  #define   CXL_CM_CAP_CAP_HDM_VERSION 1
+>>  
+>> +/* CXL 2.0 8.2.4 CXL Component Register Layout and Definition */
+>> +#define CXL_COMPONENT_REG_BLOCK_SIZE SZ_64K
+>> +
+>> +/* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
+>> +#define CXL_HDM_DECODER_CAP_OFFSET 0x0
+>> +#define   CXL_HDM_DECODER_COUNT_MASK GENMASK(3, 0)
+>> +#define   CXL_HDM_DECODER_TARGET_COUNT_MASK GENMASK(7, 4)
+>> +#define   CXL_HDM_DECODER_INTERLEAVE_11_8 BIT(8)
+>> +#define   CXL_HDM_DECODER_INTERLEAVE_14_12 BIT(9)
+>> +#define   CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY BIT(11)
+>> +#define   CXL_HDM_DECODER_INTERLEAVE_16_WAY BIT(12)
+>> +#define CXL_HDM_DECODER_CTRL_OFFSET 0x4
+>> +#define   CXL_HDM_DECODER_ENABLE BIT(1)
+>> +#define CXL_HDM_DECODER0_BASE_LOW_OFFSET(i) (0x20 * (i) + 0x10)
+>> +#define CXL_HDM_DECODER0_BASE_HIGH_OFFSET(i) (0x20 * (i) + 0x14)
+>> +#define CXL_HDM_DECODER0_SIZE_LOW_OFFSET(i) (0x20 * (i) + 0x18)
+>> +#define CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(i) (0x20 * (i) + 0x1c)
+>> +#define CXL_HDM_DECODER0_CTRL_OFFSET(i) (0x20 * (i) + 0x20)
+>> +#define   CXL_HDM_DECODER0_CTRL_IG_MASK GENMASK(3, 0)
+>> +#define   CXL_HDM_DECODER0_CTRL_IW_MASK GENMASK(7, 4)
+>> +#define   CXL_HDM_DECODER0_CTRL_LOCK BIT(8)
+>> +#define   CXL_HDM_DECODER0_CTRL_COMMIT BIT(9)
+>> +#define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
+>> +#define   CXL_HDM_DECODER0_CTRL_COMMIT_ERROR BIT(11)
+>> +#define   CXL_HDM_DECODER0_CTRL_HOSTONLY BIT(12)
+>> +#define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
+>> +#define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
+>> +#define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
+>> +#define CXL_HDM_DECODER0_SKIP_HIGH(i) CXL_HDM_DECODER0_TL_HIGH(i)
+>> +
+>>  struct cxl_reg_map {
+>>  	bool valid;
+>>  	int id;
+> 
+> 
 
