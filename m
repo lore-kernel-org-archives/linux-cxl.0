@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E612FD1B3;
-	Fri, 13 Mar 2026 12:18:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3772FD1B3;
+	Fri, 13 Mar 2026 12:27:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773404292; cv=none; b=FP5bmWMSX0w7L2RdT2ndL31V5CoVTFPJSdceCR7Etv75qSFQYFl6OxvVUpMTS6fzeK9d6W3Q9248j/6Nlw68Wv7rXa//fuoZ43rmU6VbWjZDsfx5p2eFVZkWMcbGl6c3S4z24i9I/S3KDq+VNSX8RKlCOrnX1KatAN8k2ADBTDU=
+	t=1773404838; cv=none; b=tvQYuebAKkAOEATpnfiIlb3x80/9RV6Vma3/sOSZhmCH+omgeS6yQaqKW7n1tsHPqcaHH4GcLgYtsIWA6bHfSLPa9nv4ArFIdsUFPxo4eiBdHw4xfmCI3CFRQrXN80ewCPoy5tpX+xEYBlRzAexcgeQaOCx7INDWT0lv/vBfWzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773404292; c=relaxed/simple;
-	bh=QDRbhqTQiyEO35Oirmyj7FfC/SljS6/opUnObVcoVPM=;
+	s=arc-20240116; t=1773404838; c=relaxed/simple;
+	bh=xaZe88XqudNdr3tQ//1u1tKjl7Ij9ntcnr7JkA+bozs=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SOhRDY4+pQWJxngtQaZAxfUOX3Qlacj22ELVwm/BRoC8IkFiFN+2ziOXq5eyc+lW8sfEBWYHtPbkK+a8ugMLBqEbYgRnofSagDlVGI7xziaLwQUGaIzrg0vLXFJuiKF2/PEtItdgeofGp5tehBAdBrlkmC+ogLNE29N7VtN50Jo=
+	 MIME-Version:Content-Type; b=YICymGDu9umZZApg4qWRf73tg45mUvXTMeF+e/XYQJW97vjVpfyge4dcK6KasZv9Mu1iD1Z67G0FyCx71mOpLdJ3ddIG9NYcCQe/NQ7RXKqHcuS8TfjOkH4LjRa+v7EXaZ7QAac2F10xt0Wv4ehDbtVXb3gGfx6UQm/XTIrmuBQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fXNlf1SRCzJ46nT;
-	Fri, 13 Mar 2026 20:17:18 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fXNy81pWzzJ46vs;
+	Fri, 13 Mar 2026 20:26:24 +0800 (CST)
 Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id A7C444056B;
-	Fri, 13 Mar 2026 20:18:07 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B67904056E;
+	Fri, 13 Mar 2026 20:27:13 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
  (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 13 Mar
- 2026 12:18:06 +0000
-Date: Fri, 13 Mar 2026 12:18:05 +0000
+ 2026 12:27:12 +0000
+Date: Fri, 13 Mar 2026 12:27:11 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: <mhonap@nvidia.com>
 CC: <aniketa@nvidia.com>, <ankita@nvidia.com>, <alwilliamson@nvidia.com>,
@@ -36,11 +36,12 @@ CC: <aniketa@nvidia.com>, <ankita@nvidia.com>, <alwilliamson@nvidia.com>,
 	<kevin.tian@intel.com>, <cjia@nvidia.com>, <targupta@nvidia.com>,
 	<zhiw@nvidia.com>, <kjaju@nvidia.com>, <linux-kernel@vger.kernel.org>,
 	<linux-cxl@vger.kernel.org>, <kvm@vger.kernel.org>
-Subject: Re: [PATCH 03/20] cxl: Move CXL spec defines to public header
-Message-ID: <20260313121805.0000611e@huawei.com>
-In-Reply-To: <20260311203440.752648-4-mhonap@nvidia.com>
+Subject: Re: [PATCH 08/20] vfio/pci: Add vfio-cxl Kconfig and build
+ infrastructure
+Message-ID: <20260313122711.00007986@huawei.com>
+In-Reply-To: <20260311203440.752648-9-mhonap@nvidia.com>
 References: <20260311203440.752648-1-mhonap@nvidia.com>
-	<20260311203440.752648-4-mhonap@nvidia.com>
+	<20260311203440.752648-9-mhonap@nvidia.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -53,119 +54,82 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
  dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Thu, 12 Mar 2026 02:04:23 +0530
+On Thu, 12 Mar 2026 02:04:28 +0530
 mhonap@nvidia.com wrote:
 
 > From: Manish Honap <mhonap@nvidia.com>
 > 
-> HDM decoder capability structure and component reg block size
-> needs to be used by VFIO subsystem. Move the macros from private
-> CXL header to public one.
+> Introduce the Kconfig option CONFIG_VFIO_CXL_CORE and the necessary
+> build rules to compile CXL Type-2 passthrough support into the
+> vfio-pci-core module.  The new option depends on VFIO_PCI_CORE,
+> CXL_BUS and CXL_MEM.
+> 
+> Wire up the detection and cleanup entry-point stubs in
+> vfio_pci_core_register_device() and vfio_pci_core_unregister_device()
+> so that subsequent patches can fill in the CXL-specific logic without
+> touching the vfio-pci-core flow again.
+> 
+> The vfio_cxl_core.c file added here is an empty skeleton; the actual
+> CXL detection and initialisation code is introduced in the following
+> patch to keep this build-system patch reviewable on its own.
 > 
 > Signed-off-by: Manish Honap <mhonap@nvidia.com>
+Hi Manish,
+A few trivial things inline.
 
-Not really related to this patch, but...
+> diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> new file mode 100644
+> index 000000000000..7698d94e16be
+> --- /dev/null
+> +++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> @@ -0,0 +1,35 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * VFIO CXL Core - Common infrastructure for CXL Type-2 device variant drivers
+> + *
+> + * Copyright (c) 2026, NVIDIA CORPORATION & AFFILIATES. All rights reserved
+> + *
+> + * This module provides common functionality for VFIO variant drivers that
+> + * support CXL Type-2 devices (cache-coherent accelerators with attached memory).
+As I mentioned for docs, that definition needs some finessing as also 
+CXL Type3 devices, though intention is not the ones compliant with the class
+code as those can be nicely paravirtualized.
 
-Maybe this is the time to think about doing a PCI like
-uapi/linux/cxl_regs.h header?
+There is a whole class of CXL.mem only devices with various forms of accelerator
+that never need CXL.cache and so aren't Type 2.
 
-So far we have these duplicated in at least a couple of code
-bases and that is less than ideal!
+E.g. Compressed memory type 3 devices are known to be in the wild.
 
-Move seems fine to me otherwise.
-
-> ---
->  drivers/cxl/cxl.h | 30 ------------------------------
->  include/cxl/cxl.h | 30 ++++++++++++++++++++++++++++++
->  2 files changed, 30 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 10ddab3949ee..7146059e0dae 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -24,9 +24,6 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
->   * (port-driver, region-driver, nvdimm object-drivers... etc).
->   */
->  
-> -/* CXL 2.0 8.2.4 CXL Component Register Layout and Definition */
-> -#define CXL_COMPONENT_REG_BLOCK_SIZE SZ_64K
-> -
->  /* CXL 2.0 8.2.5 CXL.cache and CXL.mem Registers*/
->  #define CXL_CM_OFFSET 0x1000
->  #define CXL_CM_CAP_HDR_OFFSET 0x0
-> @@ -39,33 +36,6 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
->  #define   CXL_CM_CAP_HDR_ARRAY_SIZE_MASK GENMASK(31, 24)
->  #define CXL_CM_CAP_PTR_MASK GENMASK(31, 20)
->  
-> -/* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
-> -#define CXL_HDM_DECODER_CAP_OFFSET 0x0
-> -#define   CXL_HDM_DECODER_COUNT_MASK GENMASK(3, 0)
-> -#define   CXL_HDM_DECODER_TARGET_COUNT_MASK GENMASK(7, 4)
-> -#define   CXL_HDM_DECODER_INTERLEAVE_11_8 BIT(8)
-> -#define   CXL_HDM_DECODER_INTERLEAVE_14_12 BIT(9)
-> -#define   CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY BIT(11)
-> -#define   CXL_HDM_DECODER_INTERLEAVE_16_WAY BIT(12)
-> -#define CXL_HDM_DECODER_CTRL_OFFSET 0x4
-> -#define   CXL_HDM_DECODER_ENABLE BIT(1)
-> -#define CXL_HDM_DECODER0_BASE_LOW_OFFSET(i) (0x20 * (i) + 0x10)
-> -#define CXL_HDM_DECODER0_BASE_HIGH_OFFSET(i) (0x20 * (i) + 0x14)
-> -#define CXL_HDM_DECODER0_SIZE_LOW_OFFSET(i) (0x20 * (i) + 0x18)
-> -#define CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(i) (0x20 * (i) + 0x1c)
-> -#define CXL_HDM_DECODER0_CTRL_OFFSET(i) (0x20 * (i) + 0x20)
-> -#define   CXL_HDM_DECODER0_CTRL_IG_MASK GENMASK(3, 0)
-> -#define   CXL_HDM_DECODER0_CTRL_IW_MASK GENMASK(7, 4)
-> -#define   CXL_HDM_DECODER0_CTRL_LOCK BIT(8)
-> -#define   CXL_HDM_DECODER0_CTRL_COMMIT BIT(9)
-> -#define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
-> -#define   CXL_HDM_DECODER0_CTRL_COMMIT_ERROR BIT(11)
-> -#define   CXL_HDM_DECODER0_CTRL_HOSTONLY BIT(12)
-> -#define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
-> -#define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
-> -#define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
-> -#define CXL_HDM_DECODER0_SKIP_HIGH(i) CXL_HDM_DECODER0_TL_HIGH(i)
-> -
->  /* HDM decoder control register constants CXL 3.0 8.2.5.19.7 */
->  #define CXL_DECODER_MIN_GRANULARITY 256
->  #define CXL_DECODER_MAX_ENCODED_IG 6
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 610711e861d4..27c006fa53c3 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -75,6 +75,36 @@ struct cxl_regs {
->  #define   CXL_CM_CAP_CAP_ID_HDM 0x5
->  #define   CXL_CM_CAP_CAP_HDM_VERSION 1
->  
-> +/* CXL 2.0 8.2.4 CXL Component Register Layout and Definition */
-> +#define CXL_COMPONENT_REG_BLOCK_SIZE SZ_64K
+> + */
 > +
-> +/* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
-> +#define CXL_HDM_DECODER_CAP_OFFSET 0x0
-> +#define   CXL_HDM_DECODER_COUNT_MASK GENMASK(3, 0)
-> +#define   CXL_HDM_DECODER_TARGET_COUNT_MASK GENMASK(7, 4)
-> +#define   CXL_HDM_DECODER_INTERLEAVE_11_8 BIT(8)
-> +#define   CXL_HDM_DECODER_INTERLEAVE_14_12 BIT(9)
-> +#define   CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY BIT(11)
-> +#define   CXL_HDM_DECODER_INTERLEAVE_16_WAY BIT(12)
-> +#define CXL_HDM_DECODER_CTRL_OFFSET 0x4
-> +#define   CXL_HDM_DECODER_ENABLE BIT(1)
-> +#define CXL_HDM_DECODER0_BASE_LOW_OFFSET(i) (0x20 * (i) + 0x10)
-> +#define CXL_HDM_DECODER0_BASE_HIGH_OFFSET(i) (0x20 * (i) + 0x14)
-> +#define CXL_HDM_DECODER0_SIZE_LOW_OFFSET(i) (0x20 * (i) + 0x18)
-> +#define CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(i) (0x20 * (i) + 0x1c)
-> +#define CXL_HDM_DECODER0_CTRL_OFFSET(i) (0x20 * (i) + 0x20)
-> +#define   CXL_HDM_DECODER0_CTRL_IG_MASK GENMASK(3, 0)
-> +#define   CXL_HDM_DECODER0_CTRL_IW_MASK GENMASK(7, 4)
-> +#define   CXL_HDM_DECODER0_CTRL_LOCK BIT(8)
-> +#define   CXL_HDM_DECODER0_CTRL_COMMIT BIT(9)
-> +#define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
-> +#define   CXL_HDM_DECODER0_CTRL_COMMIT_ERROR BIT(11)
-> +#define   CXL_HDM_DECODER0_CTRL_HOSTONLY BIT(12)
-> +#define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
-> +#define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
-> +#define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
-> +#define CXL_HDM_DECODER0_SKIP_HIGH(i) CXL_HDM_DECODER0_TL_HIGH(i)
+> +#include <linux/vfio_pci_core.h>
+> +#include <linux/pci.h>
+> +#include <cxl/cxl.h>
+> +#include <cxl/pci.h>
 > +
->  struct cxl_reg_map {
->  	bool valid;
->  	int id;
+> +#include "../vfio_pci_priv.h"
+> +#include "vfio_cxl_priv.h"
+> +
+> +MODULE_IMPORT_NS("CXL");
+
+Most often I've seen this added at the end of file next other MODULE_X calls.
+Whilse we don't have any of those here, still feels like a sensible place to put it.
+
+
+> +
+> +/**
+> + * vfio_pci_cxl_detect_and_init - Detect and initialize CXL Type-2 device
+> + * @vdev: VFIO PCI device
+> + *
+> + * Called from vfio_pci_core_register_device(). Detects CXL DVSEC capability
+> + * and initializes CXL features. On failure vdev->cxl remains NULL and the
+> + * device operates as a standard PCI device.
+> + */
+> +void vfio_pci_cxl_detect_and_init(struct vfio_pci_core_device *vdev)
+> +{
+> +}
+> +
+> +void vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev)
+> +{
+> +}
 
