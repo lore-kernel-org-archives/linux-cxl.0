@@ -1,67 +1,67 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C062314D18
-	for <linux-cxl@vger.kernel.org>; Fri, 13 Mar 2026 03:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A4C35AC35
+	for <linux-cxl@vger.kernel.org>; Fri, 13 Mar 2026 03:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773371123; cv=none; b=FHcUoqNK+8sTWmpjJmHV1ne9eI42SEdifM5iyx9NS2Z/uslkUhYC/OW14WPKBB/P0TR1LLA7lMPEO66MMT4tX1Eo1xUVPljHT3SIAWRquYky7Z5BN5ynyJJlTmDLRXdl49VY0q2kguseICxgb0qVJQOz6JBSYK3a1hcd2KOpWnM=
+	t=1773373190; cv=none; b=ANKCTfa9LF4bfmKve/AALRZ7u0+7mRgzoxqnU6byYQJz9HftlR2BAnqQDyYfw9599HbK8yjg2Kw50z/Zd8P6yjjgcmBxqhuHGYbsJJ/Y1ZRE1+FDEqgPoOTXjsZyEYPQNlfe8YikFWpgMcYAhUXFb9VtNg9sF+2exeDhdYSKhQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773371123; c=relaxed/simple;
-	bh=WLsJA/HFpoSz/qJAj3x6z062D0MMeQF1uUYpy271mic=;
+	s=arc-20240116; t=1773373190; c=relaxed/simple;
+	bh=wq5EHVNKbrIpJDbbH2uUvSo9o5rg2fy03S9KDJ4kNwQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iapYBtpdS01dg/1mEiubOL7Bc7l8BgMyHTIp1dfD9Yp46SMd1DCQ+vNdUDBmxWfvfuSDdoRkomR/6qB37deEu4e4CeWfkUwuKWBfPrbGKXrKwHHuP7VdFgeJlbPbUiV34WuF5g8SxLHMZszysbFd+15N+TyEUMJh/oYhZYPdeug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OdHxAQ7k; arc=none smtp.client-ip=209.85.214.170
+	 In-Reply-To:Content-Type; b=TUwu+LPGgQf6PretcdN33lLsNov6k1tOR+GxUEVOrW3mBFug6q/KoNscFJVUD19nIKTccJ1sQy1w1YvWDIFgy1d8JuWd8l5LnD+PfbNtrDCQYeWIg9R/gwfz4+VRy/X5xR3hFR/JsjxzIjkFJtdZtcmdzKuZ745BVgCf+uj8YU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RVX3xv4h; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OdHxAQ7k"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2ae82df847bso13377215ad.2
-        for <linux-cxl@vger.kernel.org>; Thu, 12 Mar 2026 20:05:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RVX3xv4h"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3567e2b4159so877701a91.0
+        for <linux-cxl@vger.kernel.org>; Thu, 12 Mar 2026 20:39:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773371121; x=1773975921; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773373187; x=1773977987; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=YMiD7iuuQ6RwrA9DHEwvWHHs17Gv5D7sbQEPQSKpbdQ=;
-        b=OdHxAQ7kby3qHb87qB4/Oh6wjqtxy1jsTxRI68sP11dL0LnDbIJvalwJ9jOgbdREp4
-         WsCHBufVT5pfxFb39f4437VFp5zWWguJhBvF1nKP0zYUoW9YPe+1KeOel9aLRtmxmy0u
-         J+FTc5EwT2LpOyLR8Ic7ja5nK27eldfH75P2u5i/qiN4Gh977q3855pGCO/tKEerhDx6
-         /MDz3vVUNeLpqDGsSo5htsG6Kjn1uLHPDJFvlXVshz3kwaPKE7MjxYpzibO7z+vj7Mjo
-         k2kIIcQp507PifJ4nt7P3XJ6fxyzWEBmrdXF374QdmfxxlpQlJ3+eQWBR3MDAWqaj6UY
-         9xrw==
+        bh=+INjjQWlNJIxV6k0ZvQsdBiZDFnv72NM4m8hFvOy0+Y=;
+        b=RVX3xv4ht0tHHVTXZGLjf+VTybREwGd2RWwG1wn9qdYZ5kGJ0bkoCzN8Prd/oZtXc1
+         dY5s47G+md9/SW1Fd8rps+lyx31kjHfeRpYPmMC+Lku2H8oBrlLNx2wcQv3A/dNfRVhC
+         S+KsIA/f7eZQ+9qZlwiP+yfS+d5TFnfFcvu1nphXiZdYVRGMutpeXAaxamvZ+wwYEU4D
+         2G5aXgDgUD45wa5lGf8Gy9AqM+kl8qqPEo9hP3gwZYxtxSMEdNzP6NUHkwN+r274ZoPR
+         DwGlts52ZFfAvMXRFdNdsprUG8WwiYc/i9M/GylRJ8+v5a7tUGjmpBIrOJALHa+HouwI
+         WbLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773371121; x=1773975921;
+        d=1e100.net; s=20251104; t=1773373187; x=1773977987;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=YMiD7iuuQ6RwrA9DHEwvWHHs17Gv5D7sbQEPQSKpbdQ=;
-        b=LsC4kmiuXFqe9JByLWREo50vJnIFbxoPv85DaYQzey/ShN4dZlr4Cy1klaqoaRkP9L
-         jWxd79DFfj0q0DxuiO2k7Ofzg+eycW4+6XFTujdiSD3nPfn2I8ZGaPPyZTyYZHHaFWkv
-         LdkgsW8T0lrqaAHKsDbdDTDjo0u0P4rcUFKFWfUeet6vf7tZBJXuvXosVEPbhIX7RW+L
-         ogvGB5jos2i5YGXeA6pjW8G9AdJ5op3M5YPqxQAhWMLhdsG98tBnsOdcnmN54Kem7rSX
-         yG7GC+yOQMBpi6DyFrfBRcCEcHXQYHR9vYyD9MJodK+vVS96iBt34aXnWuw6bJFyt8rx
-         VFDw==
-X-Forwarded-Encrypted: i=1; AJvYcCXsJf6KLtAa1bVFbotzA+PLaUK+DFNWN/+R/i6Nw1xvfEilYWb/q0PpztWKa5rfsKhe1nSkayEZ5po=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBgkA8aQzwYghx1+VjKtLBV9IuDP6wnObNIb5hcyJYoNCOl+18
-	+oUG/2Z0M/phmTT4nDbM9H57kP7mcKJBkehVWN+vrndWXpNxDUTlSvRq
-X-Gm-Gg: ATEYQzzmY1bay+P9zP3CJQYPsBDV0wkAyX7Jmg6TULLL0cir7fIYNoP8pe4grIUhy6W
-	H4AO2X6JLPIvJP0wd/B4dgeoTsBUQTnf9udlNC4NfZLSUHjoa6NgBSPzo3tirrDaiGIEsjsu6IA
-	LsRLLu03Q1l/gmfeb7OFU9k41w5fYFlewG/fJB5PxFiJJBTEe6vGtjEkna44SrLxMf6j2uLUNiW
-	iIL1YFXKJ6dehZy7Sp2fTlSlg+Y8OUesNZVQbr2Ih1/vbZCeor9fewGQ3UuGyvQ5CZLhvkX+019
-	1w4ES+3bcl0zsuLTHs2MONf0TjSBCLNlgHzQjD96tymCSCrjOmCz19SzrnDubB7fwRt1YDG80Ss
-	LMiJ38805YJg5o3e8FVn2cZKmls+Ai+59NFGVkIVreGa/jgm5eGx46FrmQ8ifER2YgxEy/pRmeg
-	0c77dR+7ML/+ReceJw0vBFku99oGaEnGxKPwkX8bFR15Z9LB49A5kEqs/gfEomArZpx0dAsubyP
-	Q==
-X-Received: by 2002:a17:903:1a2e:b0:2a0:de4f:c99 with SMTP id d9443c01a7336-2aeca96723cmr15904725ad.9.1773371121407;
-        Thu, 12 Mar 2026 20:05:21 -0700 (PDT)
-Received: from [192.168.123.240] (n11212047001.netvigator.com. [112.120.47.1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2aece56c388sm5610335ad.11.2026.03.12.20.05.17
+        bh=+INjjQWlNJIxV6k0ZvQsdBiZDFnv72NM4m8hFvOy0+Y=;
+        b=AqxFttP4dEPdR7MND/ka06zFQzgbjimU5QEe6Y9zkw1pwgbUrqqwUHvCYxGMUpV6yZ
+         aQXO2UMOf4psoJKuB/7Rk23gGwVebLSDct0ShisJZXnIwnxXJ22Uozq7NjdwQSROZmQQ
+         9TuKvAMK1gjp2V0PsTUJsEIpOj9EvJsH+Qh8gbq3ALXIEojCzQ6ZWfV1O9hRNe4ye/qi
+         HueVXuW6mnr74ks76gjDJFjPTsgfAzpDUkV7M7ar4dKneeeHrH57X/iF+qtf0a6pStP6
+         DpI3GEFDRScHN+qz8rP7hFXbtPFHK1oWknmCFFahIZZyycFhw2FLtdc+55ZceSw6Deim
+         Vmww==
+X-Forwarded-Encrypted: i=1; AJvYcCVVw0GrJDWq4M/yOXIsfin/SfcxkrVfkxJlQihz3UbQayP3yBBMu1i+Pi00fChXQmhmrd3SDDCbwhc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1FtSxGoPEtRzF2/wR7VbfCdMhH2ErmY51Qhd8oM9aGP40Kkgf
+	0iEDstqZPK3qJmEFK/WmynV6FvW6TNETm/wP1c/+pKLMCG5BZx21Tupd
+X-Gm-Gg: ATEYQzy0NkkXCWMVHtMPWbPCzv6vbgjl31+ElUCDvAdYtjLl4M5t5Qu9OaX0TD7wMMH
+	HrQncGevPmrO7yO5JWc2g+YJXn2VT8D6zGAIEyWtJtr9BtJx+wrT3439fHREPk9Tn6cBFbYcdNG
+	VKmEOynIxpcsvvsRrJXrtGEgmGg1t6GTy+eAqOxtx9YnnvWVr/giXbNT6OhDYWtiREXwAIFxfli
+	WWXn742OY30sBxqEpAqC6/Tgz0clPYypCKZCLh9EfNnnQCnuEflr2k/VSbj69PX+TWkd34GgM38
+	zICIE0EfxSmWTDqIpDtP4L+uKh/8mwdaZAiFPEAajNK7Y94FmtBZxFhLbK7nQw0MJKW4OVKLsdU
+	IGxyV7fQtTYEfLVdnbsWUi4N82/Ju87CMJoKK+updmiqvbBNFlxVF7TveTi56Z2DoGNkaSEyfay
+	uGkoQCLbsYw8xnFjlYGMB2CpdSyfR25cib1PY/OKqtvgC8UGfn+oM9+92tbT3xPvV7NSPRjrz6K
+	mA=
+X-Received: by 2002:a17:90b:2d83:b0:34c:fe7e:84fe with SMTP id 98e67ed59e1d1-35a22053498mr1562896a91.28.1773373187283;
+        Thu, 12 Mar 2026 20:39:47 -0700 (PDT)
+Received: from [192.168.123.240] (n058152075021.netvigator.com. [58.152.75.21])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35a02fc9454sm7295623a91.12.2026.03.12.20.39.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2026 20:05:21 -0700 (PDT)
-Message-ID: <8315168c-0557-445b-aa86-174d9902e2e1@gmail.com>
-Date: Fri, 13 Mar 2026 11:05:15 +0800
+        Thu, 12 Mar 2026 20:39:46 -0700 (PDT)
+Message-ID: <06535c30-ce87-43b2-9670-53e56ca04c3c@gmail.com>
+Date: Fri, 13 Mar 2026 11:39:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -71,49 +71,42 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] mm/mempolicy: add sysfs interface to override NUMA node
  bandwidth
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
 Cc: akpm@linux-foundation.org, david@kernel.org, dan.j.williams@intel.com,
- ying.huang@linux.alibaba.com, linux-mm@kvack.org, joshua.hahnjy@gmail.com,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, dave.jiang@intel.com
-References: <20260312091207.2016518-1-seven.yi.lee@gmail.com>
- <20260312115825.000045af@huawei.com>
+ ying.huang@linux.alibaba.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Jonathan.Cameron@huawei.com,
+ linux-cxl@vger.kernel.org, dave.jiang@intel.com, gourry@gourry.next
+References: <20260312150022.1373486-1-joshua.hahnjy@gmail.com>
 Content-Language: en-US
 From: Yee Li <seven.yi.lee@gmail.com>
-In-Reply-To: <20260312115825.000045af@huawei.com>
+In-Reply-To: <20260312150022.1373486-1-joshua.hahnjy@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Jonathan,
+Hi Joshua,
 
-Thanks for the review.
+Thanks for your feedback and kind wishes.
 
-> As I note below, I'm not convinced this is the best layer to be injecting
-> data at if we want a debug interface that allows us to reflect real
-> hardware.  Might be the sort of patch that is useful outside the tree though
-> so thanks for sharing it!
+> I just wanted to touch on this. Is this true? Weighted interleave already
+> exposes sysfs that lets the user set the weights they want. On one hand
+> I think it would be helpful for there to be a tool to see what the
+> effects of setting bandwidth information on a system could be, if it
+> had other side effects. I'm not sure if there is a strong case to do this
+> purely for weighted interleave auto-tuning, which already has a manual
+> weight override and pretty simple calculations : -)
 
-Perhaps a small tool to compute weights from the desired bandwidth
-would be a better approach.
+I agree — writing a small userspace tool to compute the weights based on
+actual measured bandwidths (from mlc or stream) is a really good approach.
 
-> If it was an SRAT (for GPs) / HMAT issue I'd suggest table injection is
-> an adequate way to do testing and debug.
-> 
-> CDAT is trickier, but maybe we should be thinking about a debug path to inject
-> that as well - similar to what we do for ACPI tables.
-> 
->  From my point of view I'd rather see debug / testing interfaces that test the
-> whole flow rather than just this top layer control.
-> 
-> However, I can see this is a useful patch for developers. But if you
-> are developing debugging bandwidth-aware memory policies, I'm going to assume
-> you don't mind building a kernel and adding this patch to make your life
-> easier!
-> 
-> So to me, useful tool but I'm not 'yet' convinced it should be upstream.
+> Thank you for the helpful clarification. Just to be sure, are there
+> other intended things that the user can test other than what weights
+> weighted interleave would resolve to?
 
-You are right, table injection is likely the better approach.
-During early hardware development the platform is often unstable, and
-firmware may not be able to report it accurately. Letting the OS handle
-debugging and evaluate the results can make experimentation easier.
+We can continue DRAM + CXL weighted interleave performance testing 
+later, following Gregory Price's experiments [1].
+[1] Link:
+https://lore.kernel.org/linux-mm/20240103224209.2541-1-gregory.price@memverge.com/
 
-And, thank you for checking the code.
+
+
+
