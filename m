@@ -1,71 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED2A2E612E;
-	Sat, 14 Mar 2026 15:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE2B34DB78
+	for <linux-cxl@vger.kernel.org>; Sat, 14 Mar 2026 20:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773501300; cv=none; b=iYIBGMv3E0eAYufq5QZy27gKI7jijThG+i9pGta7Yfpb+LewWGFlANPDyDtlTsQ+VIuoAm8/xDsYY0LSKRXDNV0omrJqamlIhwjIvx3wYzek1n45gQsl37tUlH68EfS6HgHZSTEz5JYQg/ir8un2aBZdj9GfcRqsbTmrsVwNgHI=
+	t=1773520766; cv=none; b=b59ZtoKKIfZecHUag9WayOFUcmzhkuJF+O4UIf+zbjPS54z9I0EE0JNp/e10nkpaVNNrDfGaFm5B1yYU6FRwWemnE8dhbUq7y7fe4BZq0qwaLA5w7eBbslulDwFRm1C70jovVi++5JxHFzAuKFR7P4w9gjyU9HUzIfHb9Q87lmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773501300; c=relaxed/simple;
-	bh=vyUg2/POnxc9gt4Z43TtexU28mIRAXvCZ0AMbt8RNNQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=Ci8DjTkG/DfX8LZUBC5uoj6mbfISeh6IOO7NX4fQbx73aa1RuuL5EoM2sjtE9CrsVyf1nvKTbe8dL8ENKz0o24ZbZdiXmtySiEp6CAPdJJEYdGfyiTAGU4ouucDbqzfg0RAtktw4Cq46oAO7izUsk5+PzFT9CVEv2v+6POCoecM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uujOW959; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uujOW959"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 741D3C116C6;
-	Sat, 14 Mar 2026 15:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773501300;
-	bh=vyUg2/POnxc9gt4Z43TtexU28mIRAXvCZ0AMbt8RNNQ=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=uujOW9593bhwmjesTAM7VYyHNRAO3JKuJZqUX6Qdggi5K67XvZTsheY27CVHfdCYr
-	 cHVbOFflajxnF2Yn+onZDi05zzL12Y61GkaHHHQVEuPygTKjC80wjIQEh1hnWXAMh7
-	 y7teMXhd1mXUQ1TPIAWRnVHSnEoLzKkRUzCsD9gTpEe+XSDLmMyA+kWI0G4dJicPem
-	 8ayp0iKaiJg/sfaDyyxIFBWeKqonkNbM1Pel0GcIc5cEH7dru7uH3GIjyPz6FBO5xa
-	 uMvA1SgQRfEgPE7ccpqFYm1n5cJgr+LEl8vvS+td9xLnADGRq3oiLJyVjzeHtRiwL4
-	 Z4vUppP3dMGaw==
+	s=arc-20240116; t=1773520766; c=relaxed/simple;
+	bh=t0b4Am2SaTc5Rzzo1GzW6/r13JVH+GhSKnA6pfhvMZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qrxBRegfjCgqUsTwqqrUQEJIvZLphZaav39RY7beAb5ttBspmPz05sjvm+MrnvFYSFLOlzzBlu/M1UofbQq8zpowrFTEMROptLozKEKdV0YvkZ3QWMyZdpmstHRY4F7IgM+JI5P/aW7jMvp2CfwGdl/i1g5MzB/VtPvE+vDZ1Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-c7381c4345cso1355109a12.1
+        for <linux-cxl@vger.kernel.org>; Sat, 14 Mar 2026 13:39:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773520765; x=1774125565;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bXX5VKHaTVlA5Twk1yI3TOmkIkEJcCj90rxXtOUyRQ4=;
+        b=R4Wu4rRrAgKCakbfpALCVSs9ljOm8iWILDturBviZr33grVFH/bkKuiGCdFU8C5ont
+         PNNLIWUJk2nBwLtQKmOqGRvQgTqNA/WMTcILwJ4y78NHsS+lxYyQTCXKa3ui9qZSyG39
+         vlTh2/ngcBzwyXEd3n7ajcDrN5aC5pmSYJgw0+VT/w1O17lemjoRacEk2yzsYS89BVZV
+         aiXuG+gpPQQY9tsJ7C+URMoeQbttuNoVQJzEynBrlJ7sR0O4RQcANxrc7pPzd7+8r5oM
+         iCatwUecMUcZU9nVfuugr33AeXzo3qORA5m3iGgXh136P41XdgVzsebnOmkPqzrzQxtj
+         Uscw==
+X-Forwarded-Encrypted: i=1; AJvYcCVTTSEAIN0ATU0fBPbaP0/bE6QF+ygvxRPcQZn/zxH3cBXjPn5lldplawh/Bs32Fx/wsRglrluwmrE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTqXe+DnTSAHsthWOR1E1O0KJqQjDuvZdhJvZXGPE5TW10oYNR
+	oxdzdMkZXGp+j3+u1iVshG7xoYlSStvHn1c/LdMgH4c6b0bYYr9ezcP7
+X-Gm-Gg: ATEYQzxCkjKNndj2ePXY/H4jq46vsZSwtJawFb0cbnMcuZfmAkHOmGxsIvv+1mL2pAx
+	7nU9O31IrJr8Osf05YhZLqKIvqlqrkPWGGIQMJ6c7j+6zwzfAf9sZP5/Pcg2p/FaBVsdGADDdSf
+	EHtLf+9t/jgqakA8S5UMlP7L1w0gpfRRpJnUlg4rXYyB0zLDIkwMgcYQDzgXSUrtRnfwDHmGVEY
+	4zkQDPkDdv5/U2fcWwof2Y1413QpTXx926mD5uaYpzPEsENQWhwMvOX9yqgTYygQHjsqVDO0AOa
+	6O0cA0XBga3+a1AW69RrPH4yLOBawWEtpCHZKifsAUaIeu/uJYVpk+4T30uEo6qyTOFCob69ECo
+	IVgt4ASoxvFf3Fu15LXrenSz6q1ZfcyXbyRJUyeBQfP2Wg7fTMCA0bcsCooc/6+dYJPQbHpv4iX
+	tMVxlrkhJMZwNx89t0H388rbJ7yZW0hCPTgxZAKN97n3kP9AHfRPyM5NS8dUCPOrFlLoqV+Xn5e
+	TjH3KnW13oTDgThYBqF+P6I8aSg78KWLtY0tFhJqhQEvd2s5SA=
+X-Received: by 2002:a17:90b:1d86:b0:35b:92ba:66e4 with SMTP id 98e67ed59e1d1-35b92ba6ab1mr1025801a91.7.1773520765158;
+        Sat, 14 Mar 2026 13:39:25 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35a02ffdfb7sm14869036a91.14.2026.03.14.13.39.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Mar 2026 13:39:24 -0700 (PDT)
+Date: Sun, 15 Mar 2026 05:39:23 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: smadhavan@nvidia.com
+Cc: bhelgaas@google.com, dan.j.williams@intel.com, dave.jiang@intel.com,
+	jonathan.cameron@huawei.com, ira.weiny@intel.com,
+	vishal.l.verma@intel.com, alison.schofield@intel.com,
+	dave@stgolabs.net, alwilliamson@nvidia.com, jeshuas@nvidia.com,
+	vsethi@nvidia.com, skancherla@nvidia.com, vaslot@nvidia.com,
+	sdonthineni@nvidia.com, mhonap@nvidia.com, vidyas@nvidia.com,
+	jan@nvidia.com, mochs@nvidia.com, dschumacher@nvidia.com,
+	linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 6/7] cxl: Add cxl_reset sysfs interface for PCI devices
+Message-ID: <20260314203923.GA672783@rocinante>
+References: <20260306092322.148765-1-smadhavan@nvidia.com>
+ <20260306092322.148765-7-smadhavan@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 14 Mar 2026 16:14:55 +0100
-Message-Id: <DH2LQNQ1C0AE.KF8FK4JLBT0J@kernel.org>
-Subject: Re: [PATCH 1/7] driver core: Add conditional guard support for
- device_lock()
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Davidlohr Bueso" <dave@stgolabs.net>, "Jonathan
- Cameron" <jonathan.cameron@huawei.com>, "Dave Jiang"
- <dave.jiang@intel.com>, "Alison Schofield" <alison.schofield@intel.com>,
- "Vishal Verma" <vishal.l.verma@intel.com>, "Ira Weiny"
- <ira.weiny@intel.com>, "Dan Williams" <dan.j.williams@intel.com>, "Bjorn
- Helgaas" <bhelgaas@google.com>, "Ben Cheatham" <benjamin.cheatham@amd.com>,
- <driver-core@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
- <linux-cxl@vger.kernel.org>, "Jonathan Cameron"
- <Jonathan.Cameron@huawei.com>
-To: "Li Ming" <ming.li@zohomail.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20260310-fix_access_endpoint_without_drv_check-v1-0-94fe919a0b87@zohomail.com> <20260310-fix_access_endpoint_without_drv_check-v1-1-94fe919a0b87@zohomail.com>
-In-Reply-To: <20260310-fix_access_endpoint_without_drv_check-v1-1-94fe919a0b87@zohomail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260306092322.148765-7-smadhavan@nvidia.com>
 
-On Tue Mar 10, 2026 at 4:57 PM CET, Li Ming wrote:
-> Introduce conditional guard version of device_lock() for scenarios that
-> require conditional device lock holding.
->
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
+Hello,
 
-Applied to driver-core-next, thanks!
+> +static ssize_t cxl_reset_store(struct device *dev,
+> +			       struct device_attribute *attr,
+> +			       const char *buf, size_t count)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	int rc;
+> +
+> +	if (!sysfs_streq(buf, "1"))
+> +		return -EINVAL;
 
-As dicussed, here's the signed tag:
+Not sure what would the pattern/approach be for CXL sysfs entires, but
+perhaps using kstrtobool() would work here?  It handles all the boolean
+types user could pass.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git=
-/tag/?h=3Ddevice_lock_cond_guard-7.1-rc1
+Thank you,
 
-Thanks,
-Danilo
+	Krzysztof
