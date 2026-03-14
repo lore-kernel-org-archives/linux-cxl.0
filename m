@@ -1,259 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180891D798E
-	for <linux-cxl@vger.kernel.org>; Sat, 14 Mar 2026 06:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773469296; cv=none; b=NCdUF61xJARbsc8oUCFuaH0rrKrTqelty8eHtR5ItQ6u/ir8UlSPDw2ECf0scsvmOBiVFM4ABhOJ9jFBIMrhuqXDZCx91BG56MDrbz1ritlJeWHuWVnRRABOoI36v89g8/tK9sRodojr1uRDmFSSGhfUytyDSao0Sye25Y7wdQ8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773469296; c=relaxed/simple;
-	bh=HUTdCKIyoTR5GSnN7mua9mkXzGZwXqZmfZ5u85Ha/lo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ivrCaQ/VUXr+vUZ4GqsnaPC8lxKcXRZ/mnQrETk0KB2w9koJywzjX/7CNs9G4aKimyLV5doTFawTIuj/bvOY3DGk/8M8OETNSik+vaT2cprd/E8EHvKjbFA5qlG0OXErCXiRd0bBfSLrma5Hz2RVPu3nuvR2ukz9cFoWjUOY9Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZXTmJS+3; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215F41DA62E;
+	Sat, 14 Mar 2026 07:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773472035; cv=pass; b=fa7Bu78aS3C82FAJEMCeJJWSuJxd3O80b5EEGQBVDL5ikvBKUBNv/j2PYW39TlDBP+0qduE6e4U6UFfnGdBYis5EyzV6BnDtFC4tngsnVgGdZ3IQQ7S1rt+4fG5nMzhRbsI8sGJRnbaf4zG5Nt48BGaiGw9VlfhBoKir/MsbcfM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773472035; c=relaxed/simple;
+	bh=LM5WcCieTLhH0TEIswIpN57JOk/kFxHOBIgkTJocK44=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gBCBfxVsyd/sHFBWtimYJxKU47qF1a5fFz1ocSgyW0+fgvuqebAHzNMINDrZ9o2xPBiiHmKjXzTT4gNYN+4HkYKMNixH/6zHWLyfzIstn8UebMCwn3fFnEXBhaQdhk0azZKQjy19vWTJmr8Mlmi8RE38b1E5dPtji5QdPnbAXQ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Q/pFbjnd; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZXTmJS+3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773469295; x=1805005295;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HUTdCKIyoTR5GSnN7mua9mkXzGZwXqZmfZ5u85Ha/lo=;
-  b=ZXTmJS+37UVNPu/RNxigmCzpNINcyi8JDPKdIXcAF6zllp8ghmIxeF2S
-   sdkOhRczSQNwAX/h4/TKklBsgLCWfyy8tLXXs1NEmVmyYHabYprpboZA5
-   +sbtFOL6fHHWAharMKkAxJp9ocnDxvmb8Kj6RmC8LOtUGy3GBKUWu3csK
-   GNZPORBpNmFnY6wHw7YmOgyoQj8JEyw1eaBo/QAGpfMv0KNb98G1U57Ok
-   Y2Mf1ns2B6lB5nHEf7B7b7zlM/dKOD+qaU5enkvZPqDwJvQ5RjYu4hYOF
-   gLzOX+6zASI1Llainxe4S6195XDnv1eez4DrhLJAthTQNcBLUI4YXvOC2
-   Q==;
-X-CSE-ConnectionGUID: z2qIPJHgR6quGpT2yYIMzA==
-X-CSE-MsgGUID: esch6m49RPKejBgKpIvhMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11728"; a="100030491"
-X-IronPort-AV: E=Sophos;i="6.23,119,1770624000"; 
-   d="scan'208";a="100030491"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 23:21:35 -0700
-X-CSE-ConnectionGUID: zE/D2ZKNSSKi4yLoBHZ7cA==
-X-CSE-MsgGUID: 5spZxZqQSR2ak/LoJgFB3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,119,1770624000"; 
-   d="scan'208";a="259270394"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.223.6])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 23:21:34 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org
-Cc: Alison Schofield <alison.schofield@intel.com>
-Subject: [ndctl PATCH 2/2] test/cxl-region-replay.sh: add test of region replay workflow
-Date: Fri, 13 Mar 2026 23:21:24 -0700
-Message-ID: <7ec630ea29675b57c052e9606b1d33177e989a2a.1773466514.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <8646e0b11697e3adb4fc9a83fa486e68a4b9b5c5.1773466514.git.alison.schofield@intel.com>
-References: <8646e0b11697e3adb4fc9a83fa486e68a4b9b5c5.1773466514.git.alison.schofield@intel.com>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Q/pFbjnd"
+ARC-Seal: i=1; a=rsa-sha256; t=1773472009; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=daV4Vi4B3VH58vwBcb/VsX7H1l7fDmSIM+HqP4eic9Uy2XOQ8eLpSbvGaHR7Mrz34wi97sHVGKwZ/Qhj5tl0QCl6R1+XZn5GHNfTDlQGSiyBF34NuAYMmWir6GihDLi9ls/KJ8zUh08+/uT/iTn4WY73twtPdtGfkxpwXwBkDDY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1773472009; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=c/OHp0Ngv8xXbhR0JS1kJtkXp9wsANYlUk+ZHfRCG8I=; 
+	b=b1XHZN01jxCBXZku7Tt4SeIbJPJWmhD6RS8ROtIwMNpo9qOZHSbnDT992vIJrK5tlje9qqDyhoMgKkeorIcLwPubwrdifEVLw1Ul+Z/M08RzTmy8FNYkATsS8BJF/FsjYFPfo/Uxbit2yxm0sIFpDuQuLbtH+ZwoAJGmi+ouPi8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773472009;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Feedback-ID:Reply-To;
+	bh=c/OHp0Ngv8xXbhR0JS1kJtkXp9wsANYlUk+ZHfRCG8I=;
+	b=Q/pFbjndDUadoCrxuSsjR5tAvhuuxyExc6aNECN9YQRE6bMRqdidBFKkimLA4/lU
+	3pBK2WuxGsjmDG5dYb5lKVwD/YuoXnl8VsVSItDANf2skakFO0gvYWrNen7AJ1uJiVe
+	lL7V0LU4Znao+sqlgKqvCwev/b45autFM+xP4PFg=
+Received: by mx.zohomail.com with SMTPS id 1773472006621580.5118989729009;
+	Sat, 14 Mar 2026 00:06:46 -0700 (PDT)
+From: Li Ming <ming.li@zohomail.com>
+Subject: [PATCH v2 0/4] cxl: Consolidate cxlmd->endpoint accessing
+Date: Sat, 14 Mar 2026 15:06:29 +0800
+Message-Id: <20260314-fix_access_endpoint_without_drv_check-v2-0-4c09edf2e1db@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPUItWkC/43NTQ7CIBCG4asY1mIAm9q68h6mIS0MMtFCA4g/T
+ e8uNh7A5TvJfM9MIgSESI6bmQTIGNG7EmK7Icr27gIUdWkimKjZnjXU4FP2SkGMEpyePLokH5i
+ svyepQ5bKgrpSI6A2phq0qhpStqYA5XF1zl1pizH58FrZzL/Xn8DZn0LmlNG2MtDytmdDczi9v
+ fVjj7ed8iPplmX5AKtpEUPdAAAA
+X-Change-ID: 20260308-fix_access_endpoint_without_drv_check-f2e6ff4bdc48
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Dave Jiang <dave.jiang@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ Dan Williams <dan.j.williams@intel.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Ben Cheatham <benjamin.cheatham@amd.com>
+Cc: driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ linux-cxl@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Li Ming <ming.li@zohomail.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773472001; l=3284;
+ i=ming.li@zohomail.com; s=20260210; h=from:subject:message-id;
+ bh=LM5WcCieTLhH0TEIswIpN57JOk/kFxHOBIgkTJocK44=;
+ b=nBqFwYNfOOIbrOg+pvTcQ3ir4ba7H9ceT9jfxim2fBrOjIkyVJE0aWifEtMMmz2N+wyVQwBD0
+ eCkv7sttwTGBvGGndRuQizz4/4dcptqRcVuvKtxWAe2Sxey4gCf/c/w
+X-Developer-Key: i=ming.li@zohomail.com; a=ed25519;
+ pk=JfhrdHjyYJMXt47Hy8d/fsqZuhGPD4Z3whV5lTfVvhE=
+Feedback-ID: rr08011228864c7777d08f20962a8ca66d0000d2e3d15adc06350083c92d7dceac35addd2b09fc71e151380e53:zu080112277dd481d1e904073e53b8aef9000084363ce744017b1d2f5e52c9252aa5eae328f47d7b4766aad4:rf0801122d08eb1621847f1d823b063d160000cc65f86971a7a323bf33a9c1a6f91367425cf0beb76b787803481a3aa35ed4:ZohoMail
+X-ZohoMailClient: External
 
-Add a CXL unit test that exercises the replay_regions() helpers
-introduced in test/common.
+Currently, CXL subsystem implementation has some functions that may
+access CXL memdev's endpoint before the endpoint initialization
+completed or without checking the CXL memdev endpoint validity. 
+This patchset fixes three scenarios as above description.
 
-The test creates regions through the user interface, captures the
-resulting region configuration, performs a cxl_acpi driver unbind/bind
-cycle, and verifies that the regions reconstructed during enumeration
-match the original configuration.
+1. cxl_dpa_to_region() is possible to access an invalid CXL memdev
+   endpoint.
+   there are two scenarios that can trigger this issue:
+   a. memdev poison injection/clearing debugfs interfaces:
+      devm_cxl_add_endpoint() is used to register CXL memdev endpoint
+      and update cxlmd->endpoint from -ENXIO to the endpoint structure.
+      memdev poison injection/clearing debugfs interfaces are registered
+      before devm_cxl_add_endpoint() is invoked in cxl_mem_probe().
+      There is a small window where user can use the debugfs interfaces
+      to access an invalid endpoint.
+   b. cxl_event_config() in the end of cxl_pci_probe():
+      cxl_event_config() invokes cxl_mem_get_event_record() to get
+      remain event logs from CXL device during cxl_pci_probe(). If CXL
+      memdev probing failed before that, it is also possible to access
+      an invalid endpoint.
+   To fix these two cases, cxl_dpa_to_region() requires callers holding
+   CXL memdev lock to access it and check if CXL memdev driver bingding
+   status. Holding CXL memdev lock ensures that CXL memdev probing has
+   completed, and if CXL memdev driver is bound, it will mean
+   cxlmd->endpoint is valid. (PATCH #1-#3)
 
-This validates the decoder replay mechanism implemented in the kernel
-cxl_test module by replaying user-created regions as auto-discovered
-regions during driver initialization.
+2. cxl_reset_done() callback in cxl_pci module.
+   cxl_reset_done() callback also accesses cxlmd->endpoint without any
+   checking. If CXL memdev probing fails, then cxl_reset_done() is
+   called by PCI subsystem, it will access an invalid endpoint. The
+   solution is adding a CXL memdev driver binding status inside
+   cxl_reset_done(). (PATCH #4)
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- test/cxl-region-replay.sh | 148 ++++++++++++++++++++++++++++++++++++++
- test/meson.build          |   2 +
- 2 files changed, 150 insertions(+)
- create mode 100644 test/cxl-region-replay.sh
+Changes in v2:
+- Move hoding CXL memdev lock to cxl_debugfs_poison_inject/clear(). (Alison)
+- Drop device_lock_assert() in cxl_inject/clear_poison_locked(). (Alison)
+- Remove device_lock_assert() in cxl_dpa_to_region() to remove patch
+  "cxl/region: Hold memdev lock during region poison injection/clear". (Alison)
+- Squash patch "cxl/pci: Hold memdev lock in cxl_event_trace_record()"
+  and patch "cxl/region: Ensure endpoint is valid in cxl_dpa_to_region()". (Dan & Dave)
+- Remove patch "cxl/port: Reset cxlmd->endpoint to -ENXIO by default".
+- Link to v1: https://lore.kernel.org/r/20260310-fix_access_endpoint_without_drv_check-v1-0-94fe919a0b87@zohomail.com
 
-diff --git a/test/cxl-region-replay.sh b/test/cxl-region-replay.sh
-new file mode 100644
-index 000000000000..3049ca9f34b5
---- /dev/null
-+++ b/test/cxl-region-replay.sh
-@@ -0,0 +1,148 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2022 Intel Corporation. All rights reserved.
-+
-+. $(dirname $0)/common
-+
-+rc=77
-+
-+set -ex
-+
-+trap 'err $LINENO' ERR
-+
-+check_prereq "jq"
-+
-+modprobe -r cxl_test
-+modprobe cxl_test
-+
-+# Replay support is exposed by cxl_acpi after cxl_test loads
-+if [ ! -e /sys/bus/platform/devices/cxl_acpi.0/decoder_reset_preserve_registry ]; then
-+	do_skip "test requires decoder registry replay support"
-+fi
-+
-+rc=1
-+
-+# Demonstrate and validate CXL region replay support in cxl_test.
-+#
-+# Replay helpers in test/common snapshot the current region topology,
-+# replay the configuration, and verify that the reconstructed regions
-+# match the original configuration.
-+#
-+# Tests should use the common helper:
-+#   replay_regions
-+#
-+# This test serves as both a sanity check for replay support and an
-+# example of how other cxl_test unit tests can use replay_regions().
-+
-+destroy_regions() {
-+	$CXL destroy-region -f -b cxl_test all
-+}
-+
-+create_region() {
-+	region=$($CXL create-region -d "$decoder" -m "$memdevs" |
-+		jq -r ".region")
-+
-+	if [[ ! $region ]]; then
-+		echo "create-region failed for $decoder"
-+		err "$LINENO"
-+	fi
-+}
-+
-+create_x2_pmem_region() {
-+	# Find a pmem-capable x2 decoder
-+	decoder=$($CXL list -b cxl_test -D -d root | jq -r ".[] |
-+		select(.pmem_capable == true) |
-+		select(.nr_targets == 2) |
-+		.decoder")
-+
-+	# Select one memdev for each host-bridge interleave position
-+	port_dev0=$($CXL list -T -d "$decoder" | jq -r ".[] |
-+		.targets | .[] | select(.position == 0) | .target")
-+	port_dev1=$($CXL list -T -d "$decoder" | jq -r ".[] |
-+		.targets | .[] | select(.position == 1) | .target")
-+	mem0=$($CXL list -M -p "$port_dev0" | jq -r ".[0].memdev")
-+	mem1=$($CXL list -M -p "$port_dev1" | jq -r ".[0].memdev")
-+	memdevs="$mem0 $mem1"
-+	create_region
-+}
-+
-+create_x4_ram_region() {
-+	# Find a volatile-capable x2 decoder
-+	decoder=$($CXL list -b cxl_test -D -d root | jq -r ".[] |
-+		select(.volatile_capable == true) |
-+		select(.nr_targets == 2) |
-+		.decoder")
-+
-+	# Select two memdevs for each host-bridge interleave position
-+	port_dev0=$($CXL list -T -d "$decoder" | jq -r ".[] |
-+		.targets | .[] | select(.position == 0) | .target")
-+	port_dev1=$($CXL list -T -d "$decoder" | jq -r ".[] |
-+		.targets | .[] | select(.position == 1) | .target")
-+	mem0=$($CXL list -M -p "$port_dev0" | jq -r ".[0].memdev")
-+	mem1=$($CXL list -M -p "$port_dev1" | jq -r ".[0].memdev")
-+	mem2=$($CXL list -M -p "$port_dev0" | jq -r ".[1].memdev")
-+	mem3=$($CXL list -M -p "$port_dev1" | jq -r ".[1].memdev")
-+	memdevs="$mem0 $mem1 $mem2 $mem3"
-+	create_region
-+}
-+
-+AUTO_MEMDEVS=""
-+AUTO_ROOT_DECODER=""
-+
-+capture_auto_region() {
-+	local region_json dec_json
-+
-+	region_json=$($CXL list -R --targets)
-+
-+	# Expect exactly one auto region
-+	[ "$(jq 'length' <<<"$region_json")" -eq 1 ] || err "$LINENO"
-+
-+	AUTO_MEMDEVS=$(jq -r '.[0].mappings | sort_by(.position) | .[].memdev' \
-+		<<<"$region_json" | xargs)
-+	[[ $AUTO_MEMDEVS ]] || err "$LINENO"
-+
-+	dec_json=$($CXL list -R --decoders)
-+	AUTO_ROOT_DECODER=$(jq -r '.[0]["root decoders"][0].decoder' <<<"$dec_json")
-+	[[ $AUTO_ROOT_DECODER ]] || err "$LINENO"
-+}
-+
-+create_user_region_in_auto_region_space() {
-+	decoder="$AUTO_ROOT_DECODER"
-+	memdevs="$AUTO_MEMDEVS"
-+	create_region
-+}
-+
-+# To remove the auto region, destroy and recreate in user space.
-+# With that action, there will be no 'auto' decoders and it will not be
-+# preserved across acpi rebind.
-+#
-+# This is done here as example if test wants the resources freed
-+remove_auto_region() {
-+	capture_auto_region
-+	destroy_regions
-+	create_user_region_in_auto_region_space
-+	destroy_regions
-+	replay_regions || err "$LINENO"
-+}
-+
-+# Replay the built-in auto region
-+[ "$($CXL list -R | jq 'length')" -ne 0 ] || err "$LINENO"
-+replay_regions || err "$LINENO"
-+
-+# Remove the built-in auto region to free up resources
-+remove_auto_region
-+[ "$($CXL list -R | jq 'length')" -eq 0 ] || err "$LINENO"
-+
-+# Create and replay a volatile region
-+create_x4_ram_region
-+replay_regions || err "$LINENO"
-+
-+# Add-on a pmem region
-+create_x2_pmem_region
-+
-+# Replay both the x4_ram and x2_pmem
-+replay_regions || err "$LINENO"
-+
-+check_dmesg "$LINENO"
-+
-+modprobe -r cxl_test
-diff --git a/test/meson.build b/test/meson.build
-index 8a3718d2b558..fb195e07d0ba 100644
---- a/test/meson.build
-+++ b/test/meson.build
-@@ -169,6 +169,7 @@ cxl_destroy_region = find_program('cxl-destroy-region.sh')
- cxl_qos_class = find_program('cxl-qos-class.sh')
- cxl_translate = find_program('cxl-translate.sh')
- cxl_elc = find_program('cxl-elc.sh')
-+cxl_region_replay = find_program('cxl-region-replay.sh')
- 
- tests = [
-   [ 'libndctl',               libndctl,		  'ndctl' ],
-@@ -203,6 +204,7 @@ tests = [
-   [ 'cxl-qos-class.sh',       cxl_qos_class,      'cxl'   ],
-   [ 'cxl-translate.sh',       cxl_translate,      'cxl'   ],
-   [ 'cxl-elc.sh',             cxl_elc,            'cxl'   ],
-+  [ 'cxl-region-replay.sh',   cxl_region_replay,  'cxl'   ],
- ]
- 
- if get_option('destructive').enabled()
+---
+Li Ming (4):
+      driver core: Add conditional guard support for device_lock()
+      cxl/memdev: Hold memdev lock during memdev poison injection/clear
+      cxl/pci: Hold memdev lock in cxl_event_trace_record()
+      cxl/pci: Check memdev driver binding status in cxl_reset_done()
+
+ drivers/cxl/core/mbox.c   |  5 +++--
+ drivers/cxl/core/region.c |  8 +++++---
+ drivers/cxl/cxlmem.h      |  2 +-
+ drivers/cxl/mem.c         | 10 ++++++++++
+ drivers/cxl/pci.c         |  3 +++
+ include/linux/device.h    |  1 +
+ 6 files changed, 23 insertions(+), 6 deletions(-)
+---
+base-commit: 11439c4635edd669ae435eec308f4ab8a0804808
+change-id: 20260308-fix_access_endpoint_without_drv_check-f2e6ff4bdc48
+
+Best regards,
 -- 
-2.37.3
+Li Ming <ming.li@zohomail.com>
 
