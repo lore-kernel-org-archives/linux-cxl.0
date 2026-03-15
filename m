@@ -1,189 +1,237 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from toucan.tulip.relay.mailchannels.net (toucan.tulip.relay.mailchannels.net [23.83.218.254])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974F2158DA3
-	for <linux-cxl@vger.kernel.org>; Sun, 15 Mar 2026 01:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C68C220F38
+	for <linux-cxl@vger.kernel.org>; Sun, 15 Mar 2026 20:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.254
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773538422; cv=fail; b=b52SmjYYmghOfHNMNu3ff3+OPxqcvrxnAnAU/CuFA8k9Iv48q1D7XtwlMMyjdHQw6OZSffA/HO8eEekAHoyBsfJR9Qzx9wQEtoeSyhQSO0i/hFBU+9hW+tEqAFnZhS/n6Zy3OeNlihNhX3qthrHkYXFUokJ6nZr7vBrviS/I5Cw=
+	t=1773606474; cv=pass; b=W5zfhlcjjTTZZJ7SuU3k1PZrzQifUaxFRQKj5BLbmZUL9Kc1Yj3NsOcjnDiP3mKGTdgBddrn9fkHkcCj41IxTHLdcH4b2IhIDkXIGMa0RT2I6RtrtNOkPuXaOUKOefN/HPk43kKW9ll8ObJ1TmI5zJVqxHIM8ZBzM8DGI/TjNw0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773538422; c=relaxed/simple;
-	bh=19FEcQ0bde2/SWxmV0u9x67scpjiewj6e5TPKQUeHGM=;
-	h=Date:From:To:Subject:Message-ID:Content-Type:Content-Disposition:
-	 MIME-Version; b=CdxfYvbIXq7VoEU3Q+Tb9eLdKSGNrFLrMLac56w0kS5crKL/EUDQsEEwZ+SbLMmG+v32ao3wk6c5yp9I0MCFHkAocOB/9+U6EPe7rJ/0vuwh2Lpe/2VU0TRJHIPsaP7K4yiSwk6/JQfonIx5WdaBTcjDu/Rhraw5T7FII07RPuI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ml7Fsqq3; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1773606474; c=relaxed/simple;
+	bh=V0/7zQifq3kJCBH6UPC4T3ClJ8kDwHu9bSMQz0396o0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GpIcGNTCfkEq6PxjEB94NI28vXkel90grXUd+TxN6cdl8LZKwiXI5vVjq6oC3K8BF3IeGSpxyf+3MFLpKJo9n32ma0AuWPIIcyWv6eebeNz7NXXyxyneHav4VIoRuRoLzH+0ONn5ozMY8JOgOv91H4Lhj/mXbSu+JNH0EvYfzy4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=g8Nacr6k; arc=pass smtp.client-ip=23.83.218.254
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ml7Fsqq3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773538421; x=1805074421;
-  h=date:from:to:subject:message-id:mime-version;
-  bh=19FEcQ0bde2/SWxmV0u9x67scpjiewj6e5TPKQUeHGM=;
-  b=ml7Fsqq3BP5Cmz9cLl21cWVdYvD/Rj2kb8U39gsoks49FYtZIJcRamL/
-   KzzA2BDj7TtxX+nEKA0xbjWJRYTKTISWp/ofzZZFms4PlaAjtlcBxQGnC
-   7M38ldLCLz9Wetow4Gej9CntGJvK7bICGSYMD9OY2Zxp/9IC3PKfC1H6C
-   Yecwp1btEfqjVb/Xz3QYndxElIvrMR9sFGVZack9Grug1SgXJFrffLeze
-   RDZLW4+Dw461m4O/j8F5LBxuRW6tsa5eZof/LXQVkpC5s5QPEPfBw6ljG
-   kaCfkjBjc+frnQEsjR0PMgQNOYZWhTIHWs2VjsPHqt2rmQzmPl8cHEobJ
-   g==;
-X-CSE-ConnectionGUID: IxV16W4pRciGg66Zc3dQhg==
-X-CSE-MsgGUID: RG1cOiK4QtycdOW6zDL8jA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11729"; a="78200703"
-X-IronPort-AV: E=Sophos;i="6.23,119,1770624000"; 
-   d="scan'208";a="78200703"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2026 18:33:40 -0700
-X-CSE-ConnectionGUID: L++Gx+PET/qo9hcWXsLfwg==
-X-CSE-MsgGUID: Azz9m9DnTxCFoqgC/UHQQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,119,1770624000"; 
-   d="scan'208";a="221745205"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2026 18:33:40 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Sat, 14 Mar 2026 18:33:39 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Sat, 14 Mar 2026 18:33:39 -0700
-Received: from BL2PR02CU003.outbound.protection.outlook.com (52.101.52.41) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Sat, 14 Mar 2026 18:33:39 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=h8JDfvxLM/5UcQnk8G/SEJ8WK2XCpJceurss0vIfagExadgjJlkyikikJEAQDhv4KHQFNdMw0L7YO5uU5HAqf+BV+Jsz3Rb65JMxkth1C7bTf6myVpb1XYB7kLTYcSEqvU/W3qsiqBl54qAS7zFhH0Rp7YTmnJpw85l/RAS3SH94nPjug9qQf0KisiL2QcrnjfhmxGvQsdFVDhrpyG2MknKdqB+5F4+qKfAms9CE1uM0WdfXrMJaVL6gGNPwIhSV1sPonw8EAolAuiUQDxQNvwCJRKNckfHkR9D2AX0FD4vYJScnVHh2Kv0TyOlJIDwgYphFbYklZzI33SjcV6UzAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WXRLe6IdizGDU45xWVLzW2A6s2eyN2mdyLEdNcqj26g=;
- b=RdPJC3VoSh1CuGuvE/TORNcpAWy4MNxJvFJisVN3xGN28qxwx30Gull2Ca/n7ejY5gRfq8nRssbJTZYEdw0KzrysZEKFIajmyJ5mp0qFyHwBxlKYsdngRvqEti+NSVO9rCRla0zoQlQsJXgQ9o+zKh8nGfzPZiqbo9xUjzZY6H23klrj+TwfeBH2u6mqPTIYW5Rc1H3gxHBgRJ19dKi2+FgvYSw12Fc4ZXHrgzR0cZu9zj4Cx6ZB6+XoRce0sNWKK0G3n/OCWfs5C03jNN41ABh2nd/5YRx2ZFfDwCkhWkUiDUTYzily2UFaS2YCNesq+4RoQuC55Orxn6CE+my4JQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- (2603:10b6:a0f:fc02::80b) by DM4PR11MB7374.namprd11.prod.outlook.com
- (2603:10b6:8:102::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.13; Sun, 15 Mar
- 2026 01:33:36 +0000
-Received: from SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- ([fe80::1879:7c61:49b4:b2b3]) by SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- ([fe80::1879:7c61:49b4:b2b3%3]) with mapi id 15.20.9700.006; Sun, 15 Mar 2026
- 01:33:36 +0000
-Date: Sat, 14 Mar 2026 18:33:34 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>
-Subject: [ANNOUNCE] ndctl v84
-Message-ID: <abYMbjGetB44Nqbg@aschofie-mobl2.lan>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-ClientProxiedBy: BYAPR06CA0066.namprd06.prod.outlook.com
- (2603:10b6:a03:14b::43) To SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- (2603:10b6:a0f:fc02::80b)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="g8Nacr6k"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id C2E087E28AF;
+	Sun, 15 Mar 2026 20:27:47 +0000 (UTC)
+Received: from pdx1-sub0-mail-a246.dreamhost.com (100-112-160-86.trex-nlb.outbound.svc.cluster.local [100.112.160.86])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 677507E24D2;
+	Sun, 15 Mar 2026 20:27:47 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1773606467;
+	b=zqlMsL+5mKR3nPYtJRoBFUN+N3/4F1AaxLdCNPfY24hiNfhUM0lsKT8+Ce7wpTEGT0MS54
+	qbPD4GICPQzrqBz65juJXYhJj0ouAoqUN2auokcjcfDIGlGmaI6sz/AcWhb4VvzFPf6zdu
+	Mq5xAeCXcCnUflQLhwdPG2pzbaILTBpfW4Ns6VU182JMAXI5tCPdrh5jOQULEOciWbav1S
+	3xViP2/KdSkCQdkoQv/Sdf2Hsxr8mRkdzVfNOsqCODZAeyk8t+07+YGlhHgyndDxjJTF3m
+	WWyQr5JMLsIZiP406r3I0f8JP8p54+wSQ0nKJifdNyRt+Wm1pvoJ9jovF0u5FQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1773606467;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=cJ2dYG2t5LkIVlHsAJUoaySbrFdt1KKfqMi8HBvAtAI=;
+	b=rvk+0SwKVg/KW1mK2Y1gL5I+r2c/rGfeTg5OGu6dW+42oTOqkxSaibhQpv90ALvl1FVN2B
+	Z5XnoIkwgdzQDM/nNHmClq9wOT8/AojREyyLnqA19RdL2eddryhlLMvyYhRaF9m+nGS0TU
+	wFC1XEUBtD2f97nfJRq0M4OHOjTBS8tGfLIHA7ncf02hMW7Rsi55qC7qfJv1sapMD3YjXR
+	vtY9gC80cNwgAK/QCq1+OCbeP/ZV4QXIkuq8Qw7vZAzkVNzAVbJrZuTuGgjVUN2K1RPRCs
+	1omSSDS9gyoT4BBqTE8Z+/6bwcd8mPaExJOxNUDexO12hcdo/yo1q+ChQCFAQw==
+ARC-Authentication-Results: i=1;
+	rspamd-c9674b64d-sg786;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Callous-Tasty: 0e8b5c1250b44dc0_1773606467700_2469245356
+X-MC-Loop-Signature: 1773606467700:3802430918
+X-MC-Ingress-Time: 1773606467700
+Received: from pdx1-sub0-mail-a246.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.112.160.86 (trex/7.1.5);
+	Sun, 15 Mar 2026 20:27:47 +0000
+Received: from offworld.lan (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a246.dreamhost.com (Postfix) with ESMTPSA id 4fYqXf57r1z107M;
+	Sun, 15 Mar 2026 13:27:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1773606467;
+	bh=cJ2dYG2t5LkIVlHsAJUoaySbrFdt1KKfqMi8HBvAtAI=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=g8Nacr6k3sFIBeglyjJgpBv0tiIc8qQWDO+msJm3R+W1XqjneU9EtbOj6f6GHdHob
+	 MqRzApU1C2KzXW/cOKzkwm9dldRrxmn3OJcadr0TT0GBPnr17X2tMWI3n3NJio9cdM
+	 ZZsV5rly7M9ywg5duZIPjbfTZtQpJ90a+DN5eAP4Alz4206XV79z2/cFA4oEkZ5ko7
+	 82KXpMrBYzGSZJgsld6SeXOek28yFGYuOjOhDsuT9Rkt/S3kO2HpMCAXmrR5BLdbRa
+	 QUuOFVlmCXDQPuVuY/MDCJ5GBMCaPz1dWkc1QWAZli693fkMTYl90MVURzf5oewLLw
+	 redJFvPNfrTlg==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dave.jiang@intel.com,
+	dan.j.williams@intel.com
+Cc: jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	ira.weiny@intel.com,
+	gourry@gourry.net,
+	dongjoo.seo1@samsung.com,
+	anisa.su@samsung.com,
+	linux-cxl@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>
+Subject: [PATCH 5/6] cxl/hdm: Add BI coherency support for endpoint decoders
+Date: Sun, 15 Mar 2026 13:27:40 -0700
+Message-Id: <20260315202741.3264295-6-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20260315202741.3264295-1-dave@stgolabs.net>
+References: <20260315202741.3264295-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PPF0D43D62C4:EE_|DM4PR11MB7374:EE_
-X-MS-Office365-Filtering-Correlation-Id: 638c0fab-57b9-4cd7-994b-08de8232e09f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|18002099003|56012099003;
-X-Microsoft-Antispam-Message-Info: CqV8enfyLsK8SdyVPb9xP6PC41Mp9hAKVbDB7oExfwmnKLbWK2ivr2hlJvUwZyZ7jUaV5C5hes5Bun9BlQj5qq3z8tiL+Txgk2H30o2fUQxWdX1hUHOmkBdcfDXDsXzQFicXaqwqdqEwNLGTqrV1RrAuhxygrOD8zCsj58tFT45I2bVrbMaaeSglG/C7XHnY+3Ymk6Y3jQ5CmU0sXWIjZkzf+1xjp6T0KVuXPF4rUbIIKunVRgg2amztFg/VqzGMuNJPtdQKstkXa49/leDPn8ynEF3Jtd1uontiLiAkQ908veXoK0JrPdwIsUNY2b4VwzeRtSxC+YXZvjtwmzwBVgMMqD5YKcebL1w5TRbz/KgEN3+RESFugdAbxk0DFm+wC/sabr5hL33yt0VeDZ2lyR4A5POAxky81JwvOFMfU+kpBtHYC8ndptagBw9MF8KYpDb1t3NHufkhY0Wzmz0KfTOQwXM5+s559//2XwbIb5qkwXI8fIlw1fsKcnxhd5iee1HF/PZqVdZoToJqXliuvp5r9bEKjchaGDvxIV4tk44IFA9uw6LspRGiuR9ZCEfIpA24EVi5jMaeRbieQjI/DIv3z2CcC2gd4X92oOTNcudaDSNpJjjSWyMMZNdcG15qaK4bM8IruCkXn2hYnuw2Cm2Tmo9tmZZDl2bshUsNR4dzKQ8YZv2Uolo6i9pXARrG
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ5PPF0D43D62C4.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(18002099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9JvXYunLE0mQjFDfXHXjQvPVB8ZCembhOdT3pr6BU8WgjnPqEBoKP+yct2c1?=
- =?us-ascii?Q?+x3+CUrvJdnruAUR0pdFEQ7Phllpkm3C3LKw9TXXY5z5wEC0wKzCk/OCBMwp?=
- =?us-ascii?Q?HZ9L1KuoxYpdG+mXrNjJwzXx5P3Qqipne2C1/ISVA572jgZtgH6cbLI0hMCA?=
- =?us-ascii?Q?I11o4mRIjY86iVzBX8D7B5kXqLrDogcy2dWqUaGHKg6F02WDMYuqTqHsHzY8?=
- =?us-ascii?Q?+u11/m661aGuIZ6Ax0Pf678+7h5WjlSMV6H82nMvjWhRNT1HYXyKrNM0L9rC?=
- =?us-ascii?Q?Urvqbgz6t0n0W0zJqNlIQl1cB+Z7z1GK26JRiX426pX67wJ16JpAle0vaYiJ?=
- =?us-ascii?Q?3zNzvizW8p30vqPQ9+1v9Er49PGdwlIWR9ly8NO+WM7e1ZoGDKLx/aRu3QGf?=
- =?us-ascii?Q?cYE5TsKE0tGFNxb39DGKlnZB6e9/eQwuepgxmmMMc1lP+XHBemVO+a+sN/HJ?=
- =?us-ascii?Q?+52lOjjnL+4Ri2lFYj8WPJ0RCDcfX2Z1kYaLThPHPF0YkioOOPpXJptiskSr?=
- =?us-ascii?Q?JhGP09xlfMmJOuTY/YZuaUp+iomG9TEdBZrK7SyjQYWHZBaJ8LZKyrXW293T?=
- =?us-ascii?Q?xDOF+wb1St3RPBhR8VChuck2W4g2tspKjQhH4z+prjMQbMMahHX33A92T0ni?=
- =?us-ascii?Q?dOxWT05hp4VdamcsxkjlPtH+2qvsga18Uy9MEg3Pb0mByVrK0zPZOtKqyvFA?=
- =?us-ascii?Q?jubSQLEdzkyUvQtr5KgqAJsZuTkSVk9KkKCxVrBJteUNQTRUZ7D1K2t47Z9h?=
- =?us-ascii?Q?/X4pQPUe9w5IiT+Vp+BuXRzHillGegRZsUgq+DkTVcIHoN6b3ZfKG7tZoBlg?=
- =?us-ascii?Q?H2nNGrJdn5KwCRfjm5aOWltu2FQjQTxV+36Q9vz+yaOV/zjw6qn+xTjiFsMW?=
- =?us-ascii?Q?7QiJkyYjctLV5Bejf03XYXOZJeBRSVwPdPQYsCdlf4aAfdkmOQE21XNur5Qd?=
- =?us-ascii?Q?3R8VOaQTWpRMKGSU8ehaPb0n39udLO3U7OvP9U+yAT2Dg0YBCzfdmnVB/Mtx?=
- =?us-ascii?Q?tOUpaL/c37LAGTSweSwVey54vWBahXB+GczcaDHPJW5kEZyVm77AaFn8z9P5?=
- =?us-ascii?Q?RiSAMdacfZPaiEKjOHWlm+bjt8Zy8gPVwFWoy7TS5PrediylyrKYNTHU8Bf5?=
- =?us-ascii?Q?EnsOYvGJWa6R2A0fl4LNMo8EmZxPKWyjs7+HwFnfLoccQ8PfCLkFmAEn5dan?=
- =?us-ascii?Q?QjhZcDZCZndVpSevgDGsP0l39Z10XFADDeOwWY2pURu80tanRrW4V0ydoFKK?=
- =?us-ascii?Q?bx9h375Yv3c0rQnRO+u+y9GDL4kKllMpAoNW8e9ww9Sh4HeekaQLAoFIGDnd?=
- =?us-ascii?Q?DdYNYLfQeg3oK2LVfE5YmPZWA3Aa950OIYY3rlSkDoCFEtmqr7WmdGR0nM2/?=
- =?us-ascii?Q?kjgkNPezcXIqg7VNdEkyeQ8MxWvdbCphZMa2RAJ09COXhTUyGzmR8hTrmDbv?=
- =?us-ascii?Q?XabZRp++hOEL0MvJ7VybpwMfC/aOG5lS3ozt1S1lft4MpPsDN8r/c0Pen0b4?=
- =?us-ascii?Q?bG6jryT37dI2jokCk2SNgbxgyDjkOulrvLKQKwGp+W3i8PctBCU4MXr5XaDj?=
- =?us-ascii?Q?mbktnsXrCl3tGIJ3YypLdTMHqHDua0d2a64WL0PVD+3IEqYUd5xmaabuyQjg?=
- =?us-ascii?Q?W3x3pB3yHo9eumQvbVMlv07mihDbdYyyls+PyXCdGaFXXGTb0ZXF0zEutoeS?=
- =?us-ascii?Q?W/kiNQQC9DxopYODHbfFowqCDeTrIdMwEDgRhKZo9UkT9xXhnuU0Zq27mbDe?=
- =?us-ascii?Q?0BHaNENYu9LrMYNqXS1zL4BNIZsQJfE=3D?=
-X-Exchange-RoutingPolicyChecked: PrThTuH9dhTEAuMk08c0luqEzkPi28o7E0DTBWKbRyfaqYs+nI1fr3E/AOO0IOC3hBSXcBLNjhgIAPQ32dDYiGliviT2pXhj4qUHMoS2uFHsueEDCsTeJRjZtiPS9EYiWx1NtrndcYi1W7DonMFRamZv+CiHN34dJiV+l6gj2MDhO+IqL8OOsJ3t6zBNZ+UioaYVn0NodJsi5Rk9y/zzZzg5xt78G1zPhJRFxmbDzVgc1516YcIHkgVlwMLwndDtnsVsCf3UFZqyUMDI4UcG/+Z7LRWh4Tm8OhWWJIK6tvWQB3z6fO8S/+pecpqrQdehTHAXIgErUHVb6ciQ5+kZhQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 638c0fab-57b9-4cd7-994b-08de8232e09f
-X-MS-Exchange-CrossTenant-AuthSource: SJ5PPF0D43D62C4.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2026 01:33:36.3185
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KI7dyl17PeG+BQabaXf6tFDX/Ao80rBMhgRAFuu+vr+PtAClOc04bnmM439B/q30huhr3Flc6k5t6a5xb5G2cq4O8Dm58HHjnYuu5UJtuf4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB7374
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-A new NDCTL release is available[1].
+Add cxl_dpa_set_coherence() to allow setting the coherency type of an
+endpoint decoder, with validation against hardware capabilities. Other
+than the HDM decoder supported coherency models, the main dependency
+to create these regions is for the device state to be BI-ready (cxlds->bi),
+for which already committed HDM decoders with the BI bit set detected during
+enumeration is currently not supported because endpoint and port enumerations
+are independent. Program the BI bit in the HDM decoder control register at
+commit time.
+
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ drivers/cxl/core/core.h |  2 ++
+ drivers/cxl/core/hdm.c  | 60 +++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 57 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 19494a8615d3..da4c094b6702 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -97,6 +97,8 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+ struct dentry *cxl_debugfs_create_dir(const char *dir);
+ int cxl_dpa_set_part(struct cxl_endpoint_decoder *cxled,
+ 		     enum cxl_partition_mode mode);
++int cxl_dpa_set_coherence(struct cxl_endpoint_decoder *cxled,
++			  enum cxl_decoder_type type);
+ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size);
+ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
+ resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled);
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index b2db5967f5c0..6a6071b1f1dd 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -87,6 +87,8 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+ 		cxlhdm->iw_cap_mask |= BIT(3) | BIT(6) | BIT(12);
+ 	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_16_WAY, hdm_cap))
+ 		cxlhdm->iw_cap_mask |= BIT(16);
++	cxlhdm->supported_coherency =
++		FIELD_GET(CXL_HDM_DECODER_SUPPORTED_COHERENCY_MASK, hdm_cap);
+ }
  
-This release incorporates functionality up through the 7.0 kernel.
-    
-Highlights include new cxl-cli commands for media and protocol error
-injection, visibility of Extended Linear Cache (ELC) in cxl-list along
-with a new ELC unit test, and a unit test for address translation. It
-also includes additional unit test and infrastructure improvements that
-improve test coverage and overall quality.
-   
-Thanks to Ben, Dave and all the users, reviewers, and reporters!
-
-A shortlog is appended below.
+ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+@@ -603,6 +605,34 @@ int cxl_dpa_set_part(struct cxl_endpoint_decoder *cxled,
+ 	return 0;
+ }
  
-[1] https://github.com/pmem/ndctl/releases/tag/v84
-
-Alison Schofield (9):
-      README.md: exclude unsupported distros from Repology badge
-      test/pmem-ns: fully reset nfit_test in pmem-ns unit test
-      test/cxl-translate.sh: add new cxl-translate.sh unit test
-      daxctl: replace basename() usage with new path_basename()
-      test/cxl-poison.sh: add test case for unaligned address translations
-      test/cxl-topology.sh: test switch port target enumeration
-      util/sysfs: save and use errno properly in read and write paths
-      util/sysfs: add hint for missing root privileges on sysfs access
-      test/cxl-poison.sh: replace sysfs usage with cxl-cli cmds
-
-Ben Cheatham (7):
-      libcxl: add debugfs path to CXL context
-      libcxl: add CXL protocol errors
-      libcxl: add poison injection support
-      cxl: add inject-protocol-error command
-      cxl: add poison injection/clear commands
-      cxl/list: add injectable errors in output
-      Documentation: add docs for protocol and poison injection commands
-
-Dave Jiang (6):
-      cxl: add support for extended linear cache
-      test/cxl-poison.sh: detect the correct elc sysfs attribute
-      test/cxl-poison.sh: use the cxl_test auto region
-      test/cxl-elc.sh: add a new test for extended linear cache support
-      test/cxl-poison.sh: add support for ELC in poison test
-      ndctl: add key cleanup after overwrite operation
++int cxl_dpa_set_coherence(struct cxl_endpoint_decoder *cxled,
++			  enum cxl_decoder_type type)
++{
++	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	struct cxl_port *port = to_cxl_port(cxled->cxld.dev.parent);
++	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
++
++	guard(rwsem_write)(&cxl_rwsem.dpa);
++	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE)
++		return -EBUSY;
++
++	if (!cxlds->bi && type == CXL_DECODER_DEVMEM)
++		return -EINVAL;
++
++	/* Device coherent only cannot be set to host-only */
++	if (type == CXL_DECODER_HOSTONLYMEM &&
++	    cxlhdm->supported_coherency == CXL_HDM_DECODER_COHERENCY_DEV)
++		return -EINVAL;
++	/* Host-only coherent cannot be set to device coherent */
++	if (type == CXL_DECODER_DEVMEM &&
++	    cxlhdm->supported_coherency == CXL_HDM_DECODER_COHERENCY_HOST)
++		return -EINVAL;
++
++	cxled->cxld.target_type = type;
++	return 0;
++}
++
+ static int __cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size)
+ {
+ 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+@@ -713,6 +743,9 @@ static void cxld_set_type(struct cxl_decoder *cxld, u32 *ctrl)
+ 	u32p_replace_bits(ctrl,
+ 			  !!(cxld->target_type == CXL_DECODER_HOSTONLYMEM),
+ 			  CXL_HDM_DECODER0_CTRL_HOSTONLY);
++	u32p_replace_bits(ctrl,
++			  !!(cxld->target_type == CXL_DECODER_DEVMEM),
++			  CXL_HDM_DECODER0_CTRL_BI);
+ }
+ 
+ static void cxlsd_set_targets(struct cxl_switch_decoder *cxlsd, u64 *tgt)
+@@ -1030,6 +1063,14 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+ 		else
+ 			cxld->target_type = CXL_DECODER_DEVMEM;
+ 
++		/*
++		 * Autocommit BI-enabled decoders is not supported.
++		 * At this point ->bi is not yet setup, so there
++		 * are no guarantees that the platform supports BI.
++		 */
++		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_BI, ctrl))
++			return -ENXIO;
++
+ 		guard(rwsem_write)(&cxl_rwsem.region);
+ 		if (cxld->id != cxl_num_decoders_committed(port)) {
+ 			dev_warn(&port->dev,
+@@ -1049,16 +1090,24 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+ 		if (cxled) {
+ 			struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+ 			struct cxl_dev_state *cxlds = cxlmd->cxlds;
++			struct cxl_port *ep_port = to_cxl_port(cxld->dev.parent);
++			struct cxl_hdm *cxlhdm = dev_get_drvdata(&ep_port->dev);
+ 
+ 			/*
+-			 * Default by devtype until a device arrives that needs
+-			 * more precision.
++			 * For type3 HDM-DB devices, users can later change the
++			 * target_type, if supported by the HDM decoder.
++			 *
++			 * Devices that support both coherency modes default
++			 * to host-only.
+ 			 */
+-			if (cxlds->type == CXL_DEVTYPE_CLASSMEM)
+-				cxld->target_type = CXL_DECODER_HOSTONLYMEM;
+-			else
++			if (cxlds->type == CXL_DEVTYPE_CLASSMEM) {
++				if (cxlhdm->supported_coherency == CXL_HDM_DECODER_COHERENCY_DEV)
++					cxld->target_type = CXL_DECODER_DEVMEM;
++				else
++					cxld->target_type = CXL_DECODER_HOSTONLYMEM;
++			} else {
+ 				cxld->target_type = CXL_DECODER_DEVMEM;
++			}
+ 		} else {
+ 			/* To be overridden by region type at commit time */
+ 			cxld->target_type = CXL_DECODER_HOSTONLYMEM;
+--
+2.39.5
 
