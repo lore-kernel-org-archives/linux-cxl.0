@@ -1,98 +1,54 @@
-Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A9A1B81D3
-	for <linux-cxl@vger.kernel.org>; Sun, 15 Mar 2026 22:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.24
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773614900; cv=pass; b=DkYH40NMLyLEHuju1sLdNs3kc20azHHkaz5EKW/YtrvHlsGICHv4Z/5mBC12v1W0iLVV9u+voig5MMFyjljF8FGFp7Kc6fR5FUukgNOWYRWMcsK9DDIbeLy2Mk/7NR0vTNKtAEvaR3tt+hhXbpebrlwdOsuxcIACDDZBM6+OI6A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773614900; c=relaxed/simple;
-	bh=XcrzQf6Y9QH1O8+dmOX16PZhKBxVmZl0l0DLGKZ7Ba0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GIH5jksl3Jk5u802Ie0bGiVDpoK4a+fBzBOS3a7Sycoh29TRga2gQnEFtje2ITXfcYyFXsp8349Jc3yVRzRKM4+J7pzFdzJTokrCr0aVJD9pdwgZ+Tpdlzpz+4U3TEplybDsyRIOLfFC2bkXcGLedSeY1DnMjNgLDUJEKWHJUi0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=bIgZV9fv; arc=pass smtp.client-ip=23.83.218.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="bIgZV9fv"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 1029A762BD6;
-	Sun, 15 Mar 2026 20:27:47 +0000 (UTC)
-Received: from pdx1-sub0-mail-a246.dreamhost.com (100-114-133-181.trex-nlb.outbound.svc.cluster.local [100.114.133.181])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id AEBB5761688;
-	Sun, 15 Mar 2026 20:27:46 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1773606466;
-	b=QkwRYQITqADz+Cpdx9LF3rLPT+eFs8UGtplLQXWTSew1Xhaa1HlT1Xs6tpbmWn8fe+9zGh
-	MIBZwO0hpWn6Dm1j6y1JMZvuy0eFSI3jxMlR776Sw24MGH6afA5phjnC9YfeT6CHNrfnQi
-	eY4Mk6Jtbe33NzbQvaRgjjeORoeSXg1KH4AILsDAZlOpAYfvhGTU9AfkUOMKvXj77it9fA
-	3XcpTb8qvEYN1Vtq7XmvMKENMeva0qlufFNoEyjuXkdJ1xvJTbZRfiF50BoluyRHrVOl0z
-	ZCx9GpBZZMyRb2RXl7R5Dmh3MTiUU9rpQE+Sv2/7wj4T2sb7n9fNGjWMzuxx6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1773606466;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=jc0AjQE7eqYxhHH7DprTJB25dBIseM77Vw5j5zWN6LU=;
-	b=6I2tWgl0rzhcIvsXeVZvmiVx86j55H9asIQ+T4zst9a40+NwM30nnK10gwqVpBtgKkvv7B
-	WVWR6LqBm7hqNjp8ulKd+tJ2avaCwCV3oe6ZEyDXMNDIqVUComcTsY5pc6krHolL6kSNVs
-	usCC7C0RV6miY70rU8j/8dmtLv2wk7wL/Z+ytZOGF9DtfmJjIIb0BoMfo2/IAuV4WDt9GY
-	7rmUmADFa4vB4LnSoxLB7vFygATK2aWc/R7jdnrbny8Z9f2g6irTZyAG9wyA8q5n4w50JM
-	kkITBSYawsjr8WD50CsR570fd4jfz8ch9sYsSGrFW/x59jfSaDMz+/c6Ht0PEg==
-ARC-Authentication-Results: i=1;
-	rspamd-c9674b64d-qm5f5;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Eight-Harbor: 71a6fb4179f23aee_1773606466974_3530060355
-X-MC-Loop-Signature: 1773606466974:1243553964
-X-MC-Ingress-Time: 1773606466974
-Received: from pdx1-sub0-mail-a246.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.114.133.181 (trex/7.1.5);
-	Sun, 15 Mar 2026 20:27:46 +0000
-Received: from offworld.lan (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a246.dreamhost.com (Postfix) with ESMTPSA id 4fYqXf0HhFz107t;
-	Sun, 15 Mar 2026 13:27:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1773606466;
-	bh=jc0AjQE7eqYxhHH7DprTJB25dBIseM77Vw5j5zWN6LU=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=bIgZV9fviv3nc3IE7t2NIxRIIpnAcYhOsN9rQWtQUzzmeRgTOQIdufDEnvz6ZwtfC
-	 c5erzUCtoR9bctpS+UmcxnyRhVydo04HfZiAIQNFLhlS6FoZfYqpPXPNSD3v24LUbi
-	 PY69KYvXU9B8EtKITC0wItqAO0fAaPNaqU3T5Sl9Pw5nRUY7mRoG/ICyOM8yeDaaFN
-	 oTr+i0eqinEVTs/GmS+tsi4EQUaKNq8wSdYRidLU8dkH3+IfS8VO/AowOzy9iAfsdW
-	 HAUGemEIJ2nOpuaWHzZIGpJzLuNbR0qLHhS5GZUegbzDhrtJ9tnBN4sogiGyaMtkFQ
-	 TTACkGVBvCSgw==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dave.jiang@intel.com,
-	dan.j.williams@intel.com
-Cc: jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	ira.weiny@intel.com,
-	gourry@gourry.net,
-	dongjoo.seo1@samsung.com,
-	anisa.su@samsung.com,
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9CFC3264C1;
+	Mon, 16 Mar 2026 05:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773637996; cv=none; b=tCyC+M0MPDA+aEj9gfsKmvZtULhJZBOj3D2+6+iscWgdZOfdoOu0a3voyslev6U8dbkHa2AFn6+qOEYW2v5UhLgYijCw69OAh4Hnuux3Os+I/jAs9soegN8bIiLYYYX5MUVXwRID+MjoHW/V4iYlBi3Qe8W59sYMffnh3MhbzSQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773637996; c=relaxed/simple;
+	bh=t1qlbhSxSyzKIl5q14Wx6Pm5J2G3Y854nHSLx/wUMT0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nhcQXhcRSnB83+D9NMa3TwroQ3Yc2XyMDWx6m4DU4VvoGQRtSvb3AGLb3/C0sfGNR9Ohtqvp8MIOnMV4VDeQxKe1MDNBEf12XKcADH3sgXUR01Uox5ltOc77SJubzUjAcduvjrwuPRIJ8xuEalKwi9jsRwRCP8t6Ow0CvNyaTR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-c45ff70000001609-33-69b791649d3e
+From: Rakie Kim <rakie.kim@sk.com>
+To: akpm@linux-foundation.org
+Cc: gourry@gourry.net,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
-	Davidlohr Bueso <dave@stgolabs.net>
-Subject: [PATCH 4/6] cxl: Wire BI setup and dealloc into device lifecycle
-Date: Sun, 15 Mar 2026 13:27:39 -0700
-Message-Id: <20260315202741.3264295-5-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260315202741.3264295-1-dave@stgolabs.net>
-References: <20260315202741.3264295-1-dave@stgolabs.net>
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	byungchul@sk.com,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	david@kernel.org,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	rakie.kim@sk.com
+Subject: [RFC PATCH 1/4] mm/numa: introduce nearest_nodes_nodemask()
+Date: Mon, 16 Mar 2026 14:12:49 +0900
+Message-ID: <20260316051258.246-2-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.52.0.windows.1
+In-Reply-To: <20260316051258.246-1-rakie.kim@sk.com>
+References: <20260316051258.246-1-rakie.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -100,56 +56,133 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPIsWRmVeSWpSXmKPExsXC9ZZnkW7KxO2ZBhenclvMWb+GzeLu4wts
+	FrtuhFhMn3qB0eLEzUY2i9U31zBaPN/6i9Hi593j7Bb7nz5nsVi18BqbxfGt89gttjc8YLc4
+	P+sUi8XlXXPYLO6t+c9qcXLWShaLb33SFvf7HCyOrN/OZDH50gI2i9mNfYwWtyYcY7JYvSbD
+	YvbRe+wOEh47Z91l91iwqdSju+0yu0fLkbesHov3vGTy2LSqk81j06dJ7B4nZvxm8dj50NKj
+	t/kdm8fHp7dYPKbOrvdYv+Uqi8eZBUfYPT5vkgvgj+KySUnNySxLLdK3S+DK+H/9MFtBv2TF
+	v/mfWBoY14t0MXJySAiYSGxZeJINxp46ZTJ7FyMHB5uAksSxvTEgYREBWYmpf8+zdDFycTAL
+	rGSVOH/yNzNIQljAReJY33sWEJtFQFXi8Kt/TCA2r4CxxLG2XawQMzUl1m28xQIykxNo/rYF
+	xiBhIaCSeU8+sEOUC0qcnPkEbAyzgLxE89bZzCC7JAQ+skvs2PcS6jZJiYMrbrBMYOSfhaRn
+	FpKeBYxMqxiFMvPKchMzc0z0MirzMiv0kvNzNzECo3VZ7Z/oHYyfLgQfYhTgYFTi4c04tC1T
+	iDWxrLgy9xCjBAezkgjvsiNAId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxG38pThATSE0tSs1NT
+	C1KLYLJMHJxSDYwSHhcXnVurltbkesiZmWm27MNJf/+UVFYb7RE33Vv8P7vqlaXTkm8rN874
+	VNB/3S3lh2nywxL27V8D7cLeNp8O3qD6S3ZacdmiY5lHNs9evGwKw7F7LXrCoY5p2VVGPhqf
+	VZjE/b3WzpsZJqtl8njF6asP4q5rZXCmb9SMuGl1P5ep+mrPRDklluKMREMt5qLiRABKIb0y
+	0gIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02RX0hTYRiH/bazc47DwXGtOikWDSIy1MSEz5IQivqIqC5CRcQc7tCGc8qm
+	pkU4MwWV5kxHujmdDCR1uBz+Scm0bU0tSU20VJyV2spKzUxIS9uSoLuX5/nx3Lwkm9+FBZBS
+	eSajkItkQpyLcasOJ4aIyzulx74EwBqLGYczcyM47H5zBb6s1OPwvnYEwIHJfBw2T5oBdLdv
+	APhzpp+A3z98ZsPeBTcGm+oncNjfXktAu2GQAztVbwk4rHuOwbHuGhy6zNscOKhrxOC6OhDO
+	qmOgbcLNgQ5LJwtWvDLiUJ+vBnBK42TBZrMEbnY88KBnLiImCHXpZghktGah0qIxAt1xfOUg
+	0+NPLGRtKsaRdfUegQaqNjHU9S4K3S1YwtG3hSkMrU8jZPq4wkJafR6ytI1jaMjoIC77J3Cj
+	xYxMms0owk4lcyXbr+14Rtm+nK26VUwFLIIS4EvS1HFaW1lBlACSxCkh7exJ9GIBFURrfw9j
+	JYBLsqlGDj08uMn2il3UGdqpXsa8N0Ydou2LWyzvzaMiaGdRN2eneYRuaZ3CvE1fT7/DGOHF
+	fM+kdn6F2Jn704PV838zbOoAXdCuZ2uAn+4/pftPGQGrCQik8uw0kVQWGapMleTKpTmhKelp
+	VuB5aMOtX+WPwNrYORugSCD040lsHVI+R5StzE2zAZpkCwW8BocH8cSi3BuMIv2qIkvGKG0g
+	kMSEe3nn45hkPnVNlMmkMkwGo/hnWaRvgAo8Mc2HDbXtz7zeuvL0gsvQgEfVJ8Qm7UlPMqQQ
+	PzTjUafD3nfEsyQHT/advRS/ZGjwC3GPxrmUkT51hkSlUa9oid7Iiw2eW5NHysyLk30LKvtC
+	xIl2wW01ow93X5T0TPfKto4ux4kbd4sLfUzRZYZi7s2HL7T11Zrp0sLRWbEQU0pE4cFshVL0
+	B4Tls83MAgAA
+X-CFilter-Loop: Reflected
 
-Setup BI flows during cxl_mem_probe() after endpoint enumeration and
-EDAC registration, and tear down BI during endpoint detach.
+Add a new NUMA helper, nearest_nodes_nodemask(), to find all nodes in a
+given nodemask that are located at the minimum distance from a specified
+source node.
 
-BI setup failure is non-fatal - the device continues to operate
-in HDM-H mode without back-invalidate support.
+Unlike nearest_node_nodemask(), which returns only a single node, this
+function identifies all nodes that share the closest distance value. This
+is useful when multiple nodes are equally near in the NUMA topology and
+a complete set of nearest candidates is required.
 
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+The helper clears the output nodemask and sets all nodes that meet the
+minimum distance condition. It returns 0 on success or -EINVAL if the
+output argument is invalid.
+
+Signed-off-by: Rakie Kim <rakie.kim@sk.com>
 ---
- drivers/cxl/mem.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ include/linux/numa.h |  8 ++++++++
+ mm/mempolicy.c       | 41 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
 
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index fcffe24dcb42..3adee41885c5 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -65,6 +65,11 @@ static int cxl_debugfs_poison_clear(void *data, u64 dpa)
- DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
- 			 cxl_debugfs_poison_clear, "%llx\n");
+diff --git a/include/linux/numa.h b/include/linux/numa.h
+index e6baaf6051bc..aa9526e9078b 100644
+--- a/include/linux/numa.h
++++ b/include/linux/numa.h
+@@ -33,6 +33,8 @@ int numa_nearest_node(int node, unsigned int state);
  
-+static void devm_cxl_bi_dealloc(void *data)
+ int nearest_node_nodemask(int node, nodemask_t *mask);
+ 
++int nearest_nodes_nodemask(int node, const nodemask_t *mask, nodemask_t *out);
++
+ #ifndef memory_add_physaddr_to_nid
+ int memory_add_physaddr_to_nid(u64 start);
+ #endif
+@@ -54,6 +56,12 @@ static inline int nearest_node_nodemask(int node, nodemask_t *mask)
+ 	return NUMA_NO_NODE;
+ }
+ 
++static inline int nearest_nodes_nodemask(int node, const nodemask_t *mask,
++					 nodemask_t *out)
 +{
-+	cxl_bi_dealloc(data);
++	return 0;
 +}
 +
- static int cxl_mem_probe(struct device *dev)
+ static inline int memory_add_physaddr_to_nid(u64 start)
  {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-@@ -150,6 +155,21 @@ static int cxl_mem_probe(struct device *dev)
- 	if (rc)
- 		dev_dbg(dev, "CXL memdev EDAC registration failed rc=%d\n", rc);
+ 	return 0;
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 68a98ba57882..a3f0fde6c626 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -338,6 +338,47 @@ int nearest_node_nodemask(int node, nodemask_t *mask)
+ }
+ EXPORT_SYMBOL_GPL(nearest_node_nodemask);
  
-+	rc = cxl_bi_setup(cxlds);
-+	if (rc)
-+		dev_dbg(dev, "BI setup failed rc=%d\n", rc);
++/**
++ * nearest_nodes_nodemask - Find all nodes in @mask that are nearest to @node
++ * @node: The reference node ID to measure distance from
++ * @mask: The set of candidate nodes to compare against
++ * @out:  Pointer to a nodemask that will store the nearest node(s)
++ *
++ * This function iterates over all nodes in @mask and measures the distance
++ * between each candidate node and the given @node using node_distance().
++ * It finds the minimum distance and then records all nodes in @mask that
++ * share that same minimum distance into the output mask @out.
++ *
++ * For example, if multiple nodes have equal minimal distance to @node, all
++ * of them are included in @out.
++ *
++ * Return: 0 on success, or -EINVAL if @out is NULL.
++ */
++int nearest_nodes_nodemask(int node, const nodemask_t *mask, nodemask_t *out)
++{
++	int dist, n, min_dist = INT_MAX;
 +
-+	/*
-+	 * Register BI dealloc after setup so devm ordering ensures
-+	 * it runs before the endpoint is removed by delete_endpoint().
-+	 */
-+	if (cxlds->bi) {
-+		rc = devm_add_action_or_reset(dev, devm_cxl_bi_dealloc,
-+					      cxlds);
-+		if (rc)
-+			return rc;
++	if (!out)
++		return -EINVAL;
++
++	nodes_clear(*out);
++
++	for_each_node_mask(n, *mask) {
++		dist = node_distance(node, n);
++
++		if (dist < min_dist) {
++			min_dist = dist;
++			nodes_clear(*out);
++			node_set(n, *out);
++		} else if (dist == min_dist) {
++			node_set(n, *out);
++		}
 +	}
 +
- 	/*
- 	 * The kernel may be operating out of CXL memory on this device,
- 	 * there is no spec defined way to determine whether this device
++	return 0;
++}
++EXPORT_SYMBOL_GPL(nearest_nodes_nodemask);
++
+ struct mempolicy *get_task_policy(struct task_struct *p)
+ {
+ 	struct mempolicy *pol = p->mempolicy;
 -- 
-2.39.5
+2.34.1
 
