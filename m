@@ -1,151 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEF218DF80;
-	Mon, 16 Mar 2026 18:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5C22FE075
+	for <linux-cxl@vger.kernel.org>; Mon, 16 Mar 2026 19:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773684684; cv=none; b=PcvDXsNnhMlTEkmylJDIZ3+a6nVcfqJa6iKxLayz3cAIW1TCUu3SbKzTTmmiXIBNWLzEU7g4lXverku7lY+/fKRAuV8u2bOtJsOIs+oSRavOQ2XRM6qniZDryWWEJrp/t63D1RldOzNris73GnF/rfNHN0j4M7NnAunvsvO+3dM=
+	t=1773690329; cv=none; b=H9uNj6/i6pD0ChVeLwuRbL2d9vuWOYgrJrfAQ92qjmoCfv7wagr19CQfjyP8KqRYRJqHvoeqb3QgmRnSiw2AD4rb6RQVf2hfCQJ4sBdNgyGdqw0W41fFZbSyblPPX6RJMMJOVkpN3EAvjulQVfeEyg3ZSGB/RY+38qz6Fb2XVRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773684684; c=relaxed/simple;
-	bh=8+44uTrQ/29p3/qLO8+PYa00EGkhNU+tpwb+3NXcZkY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P0H/O1Rp7HVYGgpkVjWVaWpBEVDouigsFyx0yLpjs5kzk7wyG858OZ8Xi8GrPoJrxvoS5vWklMmmNjN5yTJNmQolt+SUMx9YV8vuWvQKQmYABJO8UjD4VdW3Vxun2MGZpB2pPHV0VYizGsRyKhrFBNZz0r93F/a8d00UGGTsEAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BDQezc0I; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1773690329; c=relaxed/simple;
+	bh=Jq8L0sAlCjSsz8gxHLpfDK392Ye36i1FJP6/cVcwFpQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M19y0mVzDKSNjk1ZBVwTNw/cq61Y3Qda4lJtQR25SC1wkG6KH/obquOyRu6idLhQbIL+yCMxOUG2XfArpw+6aDr1O3Jl56n5TDkHn5+UlpP1Uoma+B1arMfJCSjIYCAsUh4pEjfPwGW8YusJ4Rl27JJzb6WOHe1Gb94RLOLvd9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=EoOHXcv/; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BDQezc0I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773684683; x=1805220683;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8+44uTrQ/29p3/qLO8+PYa00EGkhNU+tpwb+3NXcZkY=;
-  b=BDQezc0IOwp9tAUG6jtf7pj3UwOOZ4sT8E/wCG74FtamDy3V2ycYHnJE
-   Www5vRiFj2mM70SkxWLo8vrFrLxHc6vi0aHoDv4mUj/voI5B3VED7nrtq
-   gVF1+tZSvkKVGlmBXR0rw1YAVjx3imp4PcwiBQSoB2ACmDDALtMdXEQ2j
-   iUQDihQNPd2rYx23GBQCfLJvTPAhwX9GQZKvsLIXg1XedfKysCb+4poSN
-   q/6iylIltVxWVoIQu9+P9+M4Nm5XEM48l6jKShh1p5khWXCbzSIs+fVai
-   i5U+AiR95k3SH99EkToupHjjagU0wWMXL4I1AstWgutnnOuAyfDgAQMXA
-   A==;
-X-CSE-ConnectionGUID: BzpMdsMtTSqG8OpWHEWYbw==
-X-CSE-MsgGUID: mSx0DWCWQS+adACH4shH8Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11731"; a="74682284"
-X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
-   d="scan'208";a="74682284"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 11:11:22 -0700
-X-CSE-ConnectionGUID: jDrCcEmZSQ+dhyKK0eIG2w==
-X-CSE-MsgGUID: pOUoKrK+SRefxNck8RT8+A==
-X-ExtLoop1: 1
-Received: from lstrano-mobl6.amr.corp.intel.com (HELO [10.124.223.96]) ([10.124.223.96])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 11:11:21 -0700
-Message-ID: <9f941964-446b-4563-957b-7cc5f69a004b@intel.com>
-Date: Mon, 16 Mar 2026 11:11:20 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="EoOHXcv/"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-8cb4136d865so666060385a.1
+        for <linux-cxl@vger.kernel.org>; Mon, 16 Mar 2026 12:45:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1773690327; x=1774295127; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qruEfGCCxBMe/+AzGeTxCnKPyDw9xbJgeNI3pnvogwc=;
+        b=EoOHXcv/ZzkpSj6ApjeOka+pE5VXguzn7F3MNnXlFyYGrZdM21L7g1U9YALu+bM9Z/
+         LK4iLnlfrwmikK7XcCQwfsGup3t+gDpx9XCraa6myK3U+8Yo17H5/12tELmG22vaUdRH
+         ncAfbC7VtgkrrURpJpZHAoYV/czQMUG892zqTXUc6FVHS1xEqYcw0J79Ct61O19imvys
+         4FDUbkehBdAaF0j0m7MgRNQvUURtarT9pdQ0jN0LNzp1qgL62g5KKQb9D+VzRxYoOFJp
+         3aBODB8T6gNSijJWi7L8Z5I/twML+d3xGa0zouZ5wOz4mI53QYoCFkX4Q3dXDwxlCjjp
+         rFdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773690327; x=1774295127;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qruEfGCCxBMe/+AzGeTxCnKPyDw9xbJgeNI3pnvogwc=;
+        b=goDbE6f1UxfxU7oN0M9WjaYL30rqia0LNsabwaTbeHhzFDKiie1RvO/ViVdlvO7HcY
+         B9+uq1PhSqhCYgWY/Zpclmkml3CBMLpDO7ARnXyeN1yEVkjI4JORcwjK3/A5S5+/hm1v
+         0dIiw3cRfz8QkeEXh677Smcmd7+fZ5d5uVbXot6y3HwS4scAAR2p+oohqIGQEnjhOMY5
+         Oks6G+IzfeYY6DfzwISp50IrsiTcAFF8V14U5r7Vwd4vaTsT1RbL3Lygi+c3kBIdMcLF
+         sYd1gX5/nd2741dgImVnm9afHFoK2FE9NpamNeZhI9Oh8EVOqeV3RPlBbXpWar/0gav0
+         ZENg==
+X-Forwarded-Encrypted: i=1; AJvYcCWHKUo/eFBKoSL3p/Yy8Q/4wUd5PpCRAGedC/yf1AuaRbzHVGJvClK4RO9Em9wnKPKouTMnqRZ0rEg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5emoBKLJq4AvaoaKD8HjhrssmC7Ow05XgNKE0QECRpHs6ZMLA
+	d9dkUge7ZrKd2yAKs8Bzm8BSNUBsm2xEua6EV33iBx6ywiM3CDgHM8WYsN20oV6lI9c=
+X-Gm-Gg: ATEYQzyIE3siixUmDhW86PQ3B/sL7/reogmjEN5H7CR9e0iNvNGORPncqzxbkG7aLY6
+	ezvNuToOdGz2vPql19fWR2l8BNf5J8W41NcNeJ7gW4dluZR/Haq+DnbVL77mA7gqNK+yntXYvWH
+	Uti5LqTQnXuv43gSMTS0/24FHphgODKW+ZsOWt+3V7+4NtGIzarO68bWoNSreqoPBpN6iyUdgwG
+	+PhbL/gBFnKu5r03VhJZmaEGzpuL3CeAJ7cTDuaKmemTdLmhELnMwgkCVxvdiH9uwcApCsbqgVe
+	FB8p4iW6SBilik8OAozajSOVsXPnooibDSe0YAXV3WV8QL8QrgNSaGlHg14ruEpH/PyKdsuBjfQ
+	HsM9ee3xrI8yoKaXCqhg541szL0b8BXJoepODEl87lLaG6E15LQAC7/DS4eU6fSgUmnn3IKcJKB
+	/13JxWZPnXNqcFrqu+6jEm4XVvTKjxZY9SLgwE6CCMyq/UqT/PAKKmQOc5nyeW+WiRHuviPBllO
+	z2IY8IjHg==
+X-Received: by 2002:a05:620a:4627:b0:8cd:94f9:1bb1 with SMTP id af79cd13be357-8cdb5a9729emr1904634185a.27.1773690326947;
+        Mon, 16 Mar 2026 12:45:26 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cda1fe19d3sm1245799585a.19.2026.03.16.12.45.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2026 12:45:26 -0700 (PDT)
+Date: Mon, 16 Mar 2026 15:45:24 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+Cc: Rakie Kim <rakie.kim@sk.com>, akpm@linux-foundation.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, ziy@nvidia.com, matthew.brost@intel.com,
+	byungchul@sk.com, ying.huang@linux.alibaba.com, apopple@nvidia.com,
+	david@kernel.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	kernel_team@skhynix.com, honggyu.kim@sk.com, yunjeong.mun@sk.com
+Subject: Re: [LSF/MM/BPF TOPIC] [RFC PATCH 0/4] mm/mempolicy: introduce
+ socket-aware weighted interleave
+Message-ID: <abhd1BXSST0BTDaN@gourry-fedora-PF4VCD3F>
+References: <20260316051258.246-1-rakie.kim@sk.com>
+ <20260316151933.3093626-1-joshua.hahnjy@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] ACPI: NUMA: Only parse CFMWS at boot when CXL_ACPI is
- on
-To: Kai Huang <kai.huang@intel.com>, rafael@kernel.org, lenb@kernel.org,
- dan.j.williams@intel.com, alison.schofield@intel.com
-Cc: akpm@linux-foundation.org, nunodasneves@linux.microsoft.com,
- xueshuai@linux.alibaba.com, thorsten.blum@linux.dev, gourry@gourry.net,
- wangyuquan1236@phytium.com.cn, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260308222313.14014-1-kai.huang@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260308222313.14014-1-kai.huang@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260316151933.3093626-1-joshua.hahnjy@gmail.com>
 
+On Mon, Mar 16, 2026 at 08:19:32AM -0700, Joshua Hahn wrote:
+> 
+> In that sense I thought the word "prefer" was a bit confusing, since I
+> thought it would mean that it would try to fulfill the alloactions
+> from within a packet first, then fall back to remote packets if that
+> failed. (Or maybe I am just misunderstanding your explanation. Please
+> do let me know if that is the case : -) )
+> 
+> If what I understand is the case , I think this is the same thing as
+> just restricting allocations to be socket-local. I also wonder if
+> this idea applies to other mempolicies as well (i.e. unweighted interleave)
+> 
 
+I was thinking about this as well, and in my head i think you have to
+consider a 2x2 situation
 
-On 3/8/26 3:23 PM, Kai Huang wrote:
-> On CXL platforms, the Static Resource Affinity Table (SRAT) may not
-> cover memory affinity information for all the CXL memory regions.  Since
-> each CXL memory region is enumerated via a CXL Fixed Memory Window
-> Structure (CFMWS), during early boot the kernel parses the CFMWS tables
-> to find all CXL memory regions and sets a NUMA node for each of them.
-> This memory affinity information of CXL memory regions is later used by
-> the CXL ACPI driver.
-> 
-> The CFMWS table doesn't provide the memory affinity information either.
-> Currently the kernel assigns a 'faked' NUMA node for each CXL memory
-> region, starting from the next node of the highest node that is
-> enumerated via the SRAT.  This can potentially increase the maximum NUMA
-> node ID of the platform ('nr_node_ids') a lot.  E.g., on a GNR platform
-> with 4 NUMA nodes and 18 CFMWS tables, this bumps the 'nr_node_ids' to
-> 22.
-> 
-> Increasing the 'nr_node_ids' has side effects.  For instance, it is
-> widely used by the kernel for "highest possible NUMA node" based memory
-> allocations.  It also impacts userspace ABIs, e.g., some NUMA memory
-> related system calls such as 'get_mempolicy' which requires 'maxnode'
-> not being smaller than the 'nr_node_ids'.
-> 
-> Currently parsing CFMWS tables and assigning faked NUMA node at boot is
-> done unconditionally.  However, if the CXL ACPI driver is not enabled,
-> there will be no user of such memory affinity information of CXL memory
-> regions.
-> 
-> Change to only parsing the CFMWS tables at boot when CXL_ACPI is enabled
-> in Kconfig to avoid the unnecessary cost of bumping up 'nr_node_ids'.
-> 
-> E.g., on the aforementioned GNR platform, the "Slab" in /proc/meminfo is
-> reduced with this change (when CXL_ACPI is off):
-> 
-> 	w/ this change		w/o
-> 
-> Slab	900488 kB		923660 kB
-> 
-> Signed-off-by: Kai Huang <kai.huang@intel.com>
+cpuset             |   multi-socket-cpu      single-socket-cpu
+==================================================================
+single-socket-mem  |     mem-package            mem-package
+------------------------------------------------------------------
+multi-socket-mem   |       global                 global
+------------------------------------------------------------------
 
-Applied to cxl/next
-1e1cd49ded59 ("ACPI: NUMA: Only parse CFMWS at boot when CXL_ACPI is on")
+But I think this reduces to cpuset nodes dictates the weights used -
+which should already be the case with the existing code.
 
-> ---
-> 
-> v1 -> v2:
-> 
->  - Use Dan's suggestion to simplify the diff:
-> 
->  https://lore.kernel.org/linux-cxl/69a8dc7ca72c2_2f4a10026@dwillia2-mobl4.notmuch/
-> 
-> Hi Alison, Gregory,
-> 
-> I didn't add your RB since the code now is different from that you
-> reviewed.  Appreciate if you can take a look again and provide the tag
-> if the patch looks good to you.
-> 
-> ---
->  drivers/acpi/numa/srat.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> index aa87ee1583a4..62d4a8df0b8c 100644
-> --- a/drivers/acpi/numa/srat.c
-> +++ b/drivers/acpi/numa/srat.c
-> @@ -654,8 +654,11 @@ int __init acpi_numa_init(void)
->  	}
->  	last_real_pxm = fake_pxm;
->  	fake_pxm++;
-> -	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
-> -			      &fake_pxm);
-> +
-> +	/* No need to expand numa nodes if CXL is disabled */
-> +	if (IS_ENABLED(CONFIG_CXL_ACPI))
-> +		acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
-> +				      &fake_pxm);
->  
->  	if (cnt < 0)
->  		return cnt;
-> 
-> base-commit: 084f843093bee5563b179fd4b630122ba820e0c7
+I think you are right that we need to be very explicit about the
+fallback semantics here - but that may just be a matter of dictating
+whether the allocation falls back or prefers direct reclaim to push
+pages out of their requested nodes.
 
+~Gregory
