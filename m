@@ -1,18 +1,18 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C73133A03A;
-	Mon, 16 Mar 2026 05:13:17 +0000 (UTC)
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31A2F33A9E9;
+	Mon, 16 Mar 2026 05:13:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773638000; cv=none; b=iwm6Pv8U+E4OegD0lcVZn4Y89sVRY5N2FiN+E6diY3HQZwe5BycoF8lcb9bAFokJqvumTwEE/E9K6oWrMgwFol3++jUj8I57IAX1gkDsvQZ0R7CNvmut9O6D3idVAXlr7qj9QbBpSX6UhpXfsolzwauVifbIFUJD9eowvhCAtcc=
+	t=1773638002; cv=none; b=FXe52AXWYRDhI5NVr6p6MPlAitvX8iIfdhYoNnMdRUn3Aa+VcSu8hiQx0iNGiNGAjaOJU2Q5BoeKd+ACj44h7h+B55dLUtF+V2qQ4XQSQDULeQ5wTvPO74xsJSdn1pUvJTowzG7VziQoyM0VNf8ahY35lafliShltkhIeLif/Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773638000; c=relaxed/simple;
-	bh=E80/CcTr0qF1s9eXV5saglVapd8KYVeb9DxyCbq+Qww=;
+	s=arc-20240116; t=1773638002; c=relaxed/simple;
+	bh=3u397GeryJKzFd7s/4nxD7m9qs90WJido5jXQ0N/mtM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K86GcGnUSs0D08WSrH1M9fx54YFPDRhDwPpaHEsdO3jv1N8jjZKWpH9eUEyiZvFikgfgWGZeNe5adME5MQ5OhZnqj9In3lohZjmavohb27K8OE1wjy1t6Ej4hZsRGGhobVNLPLfpcxmtzvyVmI2/i5/pid/M8kcgJZLGmm7uQXg=
+	 MIME-Version; b=XVAykeQLw5ijpLfzzd93ApkaHUgL1t2mjeAMUktH4xILx+qju/h0CSMkLSbS4YjqXTBBIhRXq1qh0MtjWPgD7JSaKqQZAm5sCY4+QJatZWSBMWF2Pcxbw5kDPbHv/q2tVkEo/go0+rDrCK2DlR1b57vGAYlT1Z9VVDmhRChsyzs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-c45ff70000001609-43-69b791662e0a
+X-AuditID: a67dfc5b-c45ff70000001609-5a-69b7916a4adf
 From: Rakie Kim <rakie.kim@sk.com>
 To: akpm@linux-foundation.org
 Cc: gourry@gourry.net,
@@ -43,9 +43,9 @@ Cc: gourry@gourry.net,
 	honggyu.kim@sk.com,
 	yunjeong.mun@sk.com,
 	rakie.kim@sk.com
-Subject: [RFC PATCH 2/4] mm/memory-tiers: introduce socket-aware topology management for NUMA nodes
-Date: Mon, 16 Mar 2026 14:12:50 +0900
-Message-ID: <20260316051258.246-3-rakie.kim@sk.com>
+Subject: [RFC PATCH 4/4] mm/mempolicy: enhance weighted interleave with socket-aware locality
+Date: Mon, 16 Mar 2026 14:12:52 +0900
+Message-ID: <20260316051258.246-5-rakie.kim@sk.com>
 X-Mailer: git-send-email 2.52.0.windows.1
 In-Reply-To: <20260316051258.246-1-rakie.kim@sk.com>
 References: <20260316051258.246-1-rakie.kim@sk.com>
@@ -55,970 +55,238 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYRjHeXfOzjkOR6cp+uqwYBBhkVkqvEWk4JcXi5ASgi7UcMe23KZs
-	Xoty5rqopGaZtZlNA1FnjVY6lTLalroMJ1mikqaoOAlLLcXUMKdEfvvz+1+eDw9DiPrIYEah
-	TuM0aqlSQglIwbRv9Z6kOzZFuLlJjCosDRQaGuuhUGt/Aiov6wGocyCXQuaBBoAmG5cA+j3U
-	QaM3E5Mkqq/qo1BHYyWNbLoRGrkN70nU21pBoeGGVT5yGepItFAkRl+LYpDTYuOhux9NFDLm
-	FgE0WNLOQ+YGOTK+G6ZjIG4xDNHYZE3HhTd6aax3TvPxk1dTPGytz6ewda6Uxp0PlkncMnoA
-	3877TuHZiUESlxlzsOXlZxJ/MDlp/NO6LX7LKcEhGadUZHCavYfPC+QLtY/o1NlukNXa3ELp
-	wP06UAAYBrKRsMihKgA+69LZPsb3YoqVwPbXZ7zYnw2BZX/cZAEQMARbx4du1zLhNfzYRHj9
-	U9e6JtkdMF+vW9dCNgIONS+RG5uh8NnzQdK76bO232SK8GLRWqRyfIbeiG+Frofj6xGC3Qkt
-	lSIvJtjtMK/RSHjPQjaXgZ7VEnpjMgi+re0nSwBr2FQ3/K8bNtVNgKgHIoU6QyVVKCPD5Nlq
-	RVZYYorKCta+XXNl5XQzmOs5YQcsAyS+Qrm9SSHiSzO02So7gAwh8RfWONeQUCbNvsRpUs5p
-	0pWc1g7EDCkJFO5fyJSJ2AvSNC6Z41I5zT+Xx/gE64A+3SG7GLIbB+i7C5KL5+MKu0aIwaTH
-	X8o91779OGp0h47l2KKmggNvBsUiHmASwrW//MxzkBMvjjg8pdEn46NfxILJp5X85Cbxol+M
-	60i3Osl1ts1R5XHp2jIj/FWmW3nF89rCqINXGV0bjBttvmdYCZiZOe48drnamWOWkFq5dN8u
-	QqOV/gWscSed6QIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYQCG+XbOzjkOB8cpeNLMWpkYNQsNPsHKfvkR/bAwwpJy6akN59RN
-	xRXiRLuoaV7LNrWJIE5Hq5FXFGut6SrUtCQXM81bJpaWSGm3TYn89/K8D++fl8IEQ7gPJZWn
-	sQq5WCYkeDivKjB238XSNun+3094sNpoIKBjcpCAnW+jYX+FloB3KgcB7BvNIWDzqAHA2ZZV
-	AH84ekn4bWYegz3TszhsqhshYG9LLQmf1ti4sE09TsIBzXMcDndWE3DM8IcLbRo9DleKfeH7
-	4ghoHpnlQouxjQPLh3QE1OYUA2gvsXJgs0EC11obnejZGBnhhzo0DhLpTOmo8NowifIsC1xU
-	3zXHQaamfAKZvpaRqK9qDUcdE2GoKPczgZam7ThaeYdQ/cdFDqrUZiPjozc4eqmzkFEeZ3jh
-	CaxMmsEqgg/H8SQrjTVkylI/yOxs7yDU4LYeFAA3iqFDGYt1klsAKIqghYy1O9aFvWg/pvLX
-	AF4AeBRG67nMgG0NcxWedDxz9fWL9YzTAUx+nno98+kQxtG+im9sBjH3H9px16abc79VF+LC
-	AqdSO7VIbugejO3u1LqC0YGMsVbgwhjtz+S2aLESwNdssjT/Lc0mSwewJuAllWckiaWygyJl
-	okQll2aK4pOTTMD5dEPWz9J2sDwcaQY0BYTufIm5VSrgijOUqiQzYChM6MVvsDgRP0Gsuswq
-	ks8r0mWs0gx8KVzozT92mo0T0JfEaWwiy6awin8th3LzUYOj74lCOOHptyof0t+wRWxVUtnj
-	J7Jv2fAMlSOr83tosD1s525OpvcVUaN/+SlOeEiPrmiXR9mSTmb9YJ2uO1QQ1JMaej1mkI3Z
-	W9bQUTESvp1/xH4vQXjyXPSDOZEm8uaF5VepC11ROVuOLwbMhcxv+7KjBMsrnXEPPuvz6bG2
-	W4grJeIDezCFUvwX9hS1iOUCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHIsWRmVeSWpSXmKPExsXC9ZZnkW7WxO2ZBvvPcVrMWb+GzeLu4wts
+	FrtuhFhMn3qB0eLEzUY2i9U31zBaPN/6i9Hi593j7Bb7nz5nsVi18BqbxfGt89gttjc8YLc4
+	P+sUi8XlXXPYLO6t+c9qcXLWShaLb33SFvf7HCyOrN/OZDH50gI2i9mNfYwWtyYcY7JYvSbD
+	YvbRe+wOEh47Z91l91iwqdSju+0yu0fLkbesHov3vGTy2LSqk81j06dJ7B4nZvxm8dj50NKj
+	t/kdm8fHp7dYPKbOrvdYv+Uqi8eZBUfYPT5vkgvgj+KySUnNySxLLdK3S+DKePl6P1PBQfOK
+	+b/nszYwrtLqYuTkkBAwkXi+cS0bjP1lynsgm4ODTUBJ4tjeGJCwiICsxNS/51m6GLk4mAVW
+	skqcP/mbGaRGWCBW4uPEEJAaFgFViS+zJrKA2LwCxhJbJ02CGqkpsW7jLRaQck6g8dsWGIOE
+	hYBK5j35wA5RLihxcuYTsFZmAXmJ5q2zmUFWSQh8ZZc42XeUFWKOpMTBFTdYJjDyz0LSMwtJ
+	zwJGplWMQpl5ZbmJmTkmehmVeZkVesn5uZsYgbG6rPZP9A7GTxeCDzEKcDAq8fBmHNqWKcSa
+	WFZcmXuIUYKDWUmEd9kRoBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFeo2/lKUIC6YklqdmpqQWp
+	RTBZJg5OqQZGlWcMG6fMNrV33XPozfYK/3zvKcnuv+b+3GrFfp/33EdfhdiUu+Yr5CsidWXV
+	Y9bonIkvSM5aaH7t25LWz7xdq1UVveabTzojpqYrW/qouSo0Puwv7wOXzzo/9521r/M/pfPv
+	4ZTIK+pP3m0/Pm312d9NdltnvP2svW/jBdbssuRm04fLJ+m4KLEUZyQaajEXFScCAIL+GRHR
+	AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJIsWRmVeSWpSXmKPExsXCNUM9Rjdz4vZMg/UHLS3mrF/DZnH38QU2
+	i103QizOTZnNZjF96gVGixM3G9ksVt9cw2jxfOsvRoufd4+zW3x+9prZYv/T5ywWqxZeY7M4
+	vnUeu8XhuSdZLbY3PGC3OD/rFIvF5V1z2CzurfnPanFy1koWi2990hb3+xwsDl17zmpxZP12
+	JovJlxawWcxu7GO0uDXhGJPF6jUZFr+3rQAKHb3H7iDrsXPWXXaPBZtKPbrbLrN7tBx5y+qx
+	eM9LJo9NqzrZPDZ9msTucWLGbxaPnQ8tPXqb37F5fHx6i8Xj220Pj8UvPjB5TJ1d77F+y1UW
+	jzMLjrAHCEZx2aSk5mSWpRbp2yVwZbx8vZ+p4KB5xfzf81kbGFdpdTFyckgImEh8mfKerYuR
+	g4NNQEni2N4YkLCIgKzE1L/nWboYuTiYBVaySpw/+ZsZpEZYIFbi48QQkBoWAVWJL7MmsoDY
+	vALGElsnTWKDGKkpsW7jLRaQck6g8dsWGIOEhYBK5j35wA5RLihxcuYTsFZmAXmJ5q2zmScw
+	8sxCkpqFJLWAkWkVo0hmXlluYmaOqV5xdkZlXmaFXnJ+7iZGYIQuq/0zcQfjl8vuhxgFOBiV
+	eHgzDm3LFGJNLCuuzD3EKMHBrCTCu+wIUIg3JbGyKrUoP76oNCe1+BCjNAeLkjivV3hqgpBA
+	emJJanZqakFqEUyWiYNTqoGRZ3dI+3bxaV/7Mz4vfXsj/0LV26Jws7Damw86M8/Hi/opxKhL
+	azRHLbx5JuVD0WORrwsObFZ3rc/p22fUJ3dOcOPPzi1rOW6dn7snUNqwqmsy15e8WNHrM5q0
+	/m+f5rX/7tL83iyVf1xNXAH9fw9VSOw2n3dReOmOjRMWybjfuRy8U2YqR/MvJZbijERDLeai
+	4kQAbKmZC8wCAAA=
 X-CFilter-Loop: Reflected
 
-The existing NUMA distance model provides only relative latency values
-between nodes and lacks any notion of structural grouping such as socket
-or package boundaries. As a result, memory policies based solely on
-distance cannot differentiate between nodes that are physically local
-to the same socket and those that belong to different sockets. This
-often leads to inefficient cross-socket demotion and suboptimal memory
-placement.
+Flat weighted interleave applies one global weight vector regardless of
+where a task runs. On multi-socket systems this ignores inter-socket
+interconnect costs and can steer allocations to remote sockets even when
+local capacity exists, degrading effective bandwidth and increasing
+latency.
 
-This patch introduces a socket-aware topology management layer that
-groups NUMA nodes according to their physical package (socket)
-association. Each group forms a "memory package" that explicitly links
-CPU and memory-only nodes (such as CXL or HBM) under the same socket.
-This structure allows the kernel to interpret NUMA topology in a way
-that reflects real hardware locality rather than relying solely on
-flat distance values.
+Consider a dual-socket system:
 
-By maintaining socket-level grouping, the kernel can:
- - Enforce demotion and promotion policies that stay within the same
-   socket.
- - Avoid unintended cross-socket migrations that degrade performance.
- - Provide a structural abstraction for future policy and tiering logic.
+          node0             node1
+        +-------+         +-------+
+        | CPU0  |---------| CPU1  |
+        +-------+         +-------+
+        | DRAM0 |         | DRAM1 |
+        +---+---+         +---+---+
+            |                 |
+        +---+---+         +---+---+
+        | CXL0  |         | CXL1  |
+        +-------+         +-------+
+          node2             node3
 
-Unlike ACPI-provided distance tables, which offer static and symmetric
-relationships, this socket-aware model captures the true hardware
-hierarchy and provides a flexible foundation for systems where the
-distance matrix alone cannot accurately express socket boundaries or
-asymmetric topologies.
+Local device capabilities (GB/s) versus cross-socket effective bandwidth:
 
-This establishes a topology-aware basis for more predictable and
-performance-consistent NUMA memory management.
+         0     1     2     3
+     0  300   150   100    50
+     1  150   300    50   100
+
+A reasonable global weight vector reflecting device capabilities is:
+
+     node0=3 node1=3 node2=1 node3=1
+
+However, applying it flat to all sources yields the effective map:
+
+         0     1     2     3
+     0   3     3     1     1
+     1   3     3     1     1
+
+This does not account for the interconnect penalty (e.g., node0->node1
+drops 300->150, node0->node3 drops 100->50) and thus permits cross-socket
+allocations that underutilize local bandwidth.
+
+This patch makes weighted interleave socket-aware. Before weighting is
+applied, the candidate nodes are restricted to the current socket; only
+if no eligible local nodes remain does the policy fall back to the wider
+set. The resulting effective map becomes:
+
+         0     1     2     3
+     0   3     0     1     0
+     1   0     3     0     1
+
+Now tasks running on node0 prefer DRAM0(3) and CXL0(1), while tasks on
+node1 prefer DRAM1(3) and CXL1(1). This aligns allocation with actual
+effective bandwidth, preserves NUMA locality, and reduces cross-socket
+traffic.
 
 Signed-off-by: Rakie Kim <rakie.kim@sk.com>
 ---
- include/linux/memory-tiers.h |  93 +++++
- mm/memory-tiers.c            | 766 +++++++++++++++++++++++++++++++++++
- 2 files changed, 859 insertions(+)
+ mm/mempolicy.c | 94 +++++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 90 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
-index 7a805796fcfd..406b50ac7d88 100644
---- a/include/linux/memory-tiers.h
-+++ b/include/linux/memory-tiers.h
-@@ -52,10 +52,24 @@ int mt_perf_to_adistance(struct access_coordinate *perf, int *adist);
- struct memory_dev_type *mt_find_alloc_memory_type(int adist,
- 						  struct list_head *memory_types);
- void mt_put_memory_types(struct list_head *memory_types);
-+
-+int register_mp_package_notifier(struct notifier_block *notifier);
-+void unregister_mp_package_notifier(struct notifier_block *notifier);
-+int mp_probe_package_id(int nid);
-+int mp_add_package_node_by_initiator(int nid, int initiator_nid);
-+int mp_add_package_node(int nid);
-+int mp_get_package_nodes(int nid, nodemask_t *out);
-+int mp_get_package_cpu_nodes(int nid, nodemask_t *out);
-+int mp_get_package_memory_only_nodes(int nid, nodemask_t *out);
- #ifdef CONFIG_MIGRATION
- int next_demotion_node(int node);
- void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets);
- bool node_is_toptier(int node);
-+
-+int mp_next_demotion_nodemask(int nid, nodemask_t *out);
-+int mp_next_demotion_node(int nid);
-+int mp_next_promotion_nodemask(int nid, nodemask_t *out);
-+int mp_next_promotion_node(int nid);
- #else
- static inline int next_demotion_node(int node)
- {
-@@ -71,6 +85,26 @@ static inline bool node_is_toptier(int node)
- {
- 	return true;
- }
-+
-+static inline int mp_next_demotion_nodemask(int nid, nodemask_t *out)
-+{
-+	return 0;
-+}
-+
-+static inline int mp_next_demotion_node(int nid)
-+{
-+	return 0;
-+}
-+
-+static inline int mp_next_promotion_nodemask(int nid, nodemask_t *out)
-+{
-+	return 0;
-+}
-+
-+static inline int mp_next_promotion_node(int nid)
-+{
-+	return 0;
-+}
- #endif
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index a3f0fde6c626..541853ac08bc 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -117,6 +117,7 @@
+ #include <asm/tlb.h>
+ #include <linux/uaccess.h>
+ #include <linux/memory.h>
++#include <linux/memory-tiers.h>
  
- #else
-@@ -151,5 +185,64 @@ static inline struct memory_dev_type *mt_find_alloc_memory_type(int adist,
- static inline void mt_put_memory_types(struct list_head *memory_types)
- {
+ #include "internal.h"
+ 
+@@ -2134,17 +2135,87 @@ bool apply_policy_zone(struct mempolicy *policy, enum zone_type zone)
+ 	return zone >= dynamic_policy_zone;
  }
-+
-+static inline int register_mp_package_notifier(struct notifier_block *notifier)
-+{
-+	return 0;
-+}
-+
-+static inline void unregister_mp_package_notifier(struct notifier_block *notifier)
-+{
-+}
-+
-+static inline int mp_probe_package_id(int nid)
-+{
-+	return NOTIFY_DONE;
-+}
-+
-+static inline int mp_add_package_node_by_initiator(int nid, int initiator_nid)
-+{
-+	return 0;
-+}
-+
-+static inline int mp_add_package_node(int nid)
-+{
-+	return 0;
-+}
-+
-+static inline int mp_get_package_nodes(int nid, nodemask_t *out)
-+{
-+	return 0;
-+}
-+
-+static inline int mp_get_package_cpu_nodes(int nid, nodemask_t *out)
-+{
-+	return 0;
-+}
-+
-+static inline int mp_get_package_memory_only_nodes(int nid, nodemask_t *out)
-+{
-+	return 0;
-+}
-+
-+static inline int mp_next_demotion_nodemask(int nid, nodemask_t *out)
-+{
-+	return 0;
-+}
-+
-+static inline int mp_next_demotion_node(int nid)
-+{
-+	return 0;
-+}
-+
-+static inline int mp_next_promotion_nodemask(int nid, nodemask_t *out)
-+{
-+	return 0;
-+}
-+
-+static inline int mp_next_promotion_node(int nid)
-+{
-+	return 0;
-+}
- #endif	/* CONFIG_NUMA */
- #endif  /* _LINUX_MEMORY_TIERS_H */
-diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-index 864811fff409..47d323e5466e 100644
---- a/mm/memory-tiers.c
-+++ b/mm/memory-tiers.c
-@@ -998,3 +998,769 @@ static int __init numa_init_sysfs(void)
- subsys_initcall(numa_init_sysfs);
- #endif /* CONFIG_SYSFS */
- #endif
-+
+ 
 +/**
-+ * enum mp_nodes_type - Selector for which subset of a package to return
-+ * @MP_NODES_ALL:       All NUMA nodes that belong to the package.
-+ * @MP_NODES_CPU:       Only CPU nodes in the package.
-+ * @MP_NODES_MEM_ONLY:  Only memory-only nodes (e.g. CXL/HBM) in the package.
++ * policy_resolve_package_nodes - Restrict policy nodes to the current package
++ * @policy: Target mempolicy whose user-selected nodes are in @policy->nodes.
++ * @mask:   Output nodemask. On success, contains policy->nodes limited to
++ *          the package that should be used for the allocation.
 + *
-+ * Used internally to choose which nodemask to expose for a given package.
++ * This helper combines two constraints to decide where within a socket/package
++ * memory may be allocated:
++ *
++ *   1) The caller's package: derived via mp_get_package_nodes(numa_node_id()).
++ *   2) The user's preselected set @policy->nodes (cpusets/mempolicy).
++ *
++ * The function obtains the nodemask of the current CPU's package and
++ * intersects it with @policy->nodes. If the intersection is empty (e.g. the
++ * user excluded every node of the current package), it falls back to the
++ * node in @policy->nodes, derives that node's package, and intersects
++ * again. If the fallback also yields an empty set, @mask stays empty and a
++ * non-zero error is returned.
++ *
++ * Examples (packages: P0={CPU:0, MEM:2}, P1={CPU:1, MEM:3}):
++ *   - policy->nodes = {0,1,2,3}
++ *       on P0: mask = {0,2}; on P1: mask = {1,3}.
++ *   - policy->nodes = {0,1,3}
++ *       on P0: mask = {0}      (only node 0 from P0 is allowed).
++ *   - policy->nodes = {1,2,3}
++ *       on P0: mask = {2}      (only node 2 from P0 is allowed).
++ *   - policy->nodes = {1,3}
++ *       on P0: current package (P0) & policy = NULL -> fallback to policy=1,
++ *               package(1)=P1, mask = {1,3}. (User effectively opted out of P0.)
++ *
++ * Return:
++ *   0 on success with @mask set as above;
++ *   -EINVAL if @policy/@mask is NULL;
++ *   Propagated error from mp_get_package_nodes() on failure.
 + */
-+enum mp_nodes_type {
-+	MP_NODES_ALL,
-+	MP_NODES_CPU,
-+	MP_NODES_MEM_ONLY
-+};
-+
-+/**
-+ * struct memory_package - Per-socket (physical package) container
-+ * @package_id:          Physical socket/package id (from topology).
-+ * @nodes:               Nodemask of all member nodes in this package.
-+ * @cpu_nodes:           Nodemask of CPU nodes in this package.
-+ * @memory_only_nodes:   Nodemask of memory-only nodes in this package.
-+ * @cpu_list:            List head of CPU-type members.
-+ * @memory_only_list:    List head of memory-only members.
-+ * @list:                Linkage on the global @memory_packages list.
-+ *
-+ * A memory_package groups NUMA nodes that share the same physical CPU package.
-+ * The masks are used to implement socket-local placement/demotion/promotion.
-+ */
-+struct memory_package {
-+	int package_id;
-+	nodemask_t nodes;
-+	nodemask_t cpu_nodes;
-+	nodemask_t memory_only_nodes;
-+	struct list_head cpu_list;
-+	struct list_head memory_only_list;
-+	struct list_head list;
-+};
-+
-+/**
-+ * enum mpn_source_flags - Source used to resolve a node's package membership
-+ * @MPN_SRC_UNKNOWN:     Unknown/unspecified.
-+ * @MPN_SRC_CPU:         Directly resolved from a CPU node (1:1).
-+ * @MPN_SRC_INITIATOR:   Resolved via an initiator CPU node provided by a driver.
-+ * @MPN_SRC_SLIT:        Resolved via SLIT/nearest-node.
-+ *
-+ * These flags are informational; they describe how a given node was bound to
-+ * its package and help with policy decisions later.
-+ */
-+enum mpn_source_flags {
-+	MPN_SRC_UNKNOWN		= 0,
-+	MPN_SRC_CPU		= BIT(1),
-+	MPN_SRC_INITIATOR	= BIT(2),
-+	MPN_SRC_SLIT		= BIT(3)
-+};
-+
-+/**
-+ * struct memory_package_node - Per-node membership and preferences
-+ * @nid:              NUMA node id for this entry.
-+ * @initiator_nid:    CPU nid that served as the initiator when resolving @nid.
-+ * @package_id:       Resolved package id that @nid belongs to.
-+ * @source_flags:     One of &enum mpn_source_flags describing the resolution.
-+ * @preferred:        Opposite-type nearest candidates inside the same package.
-+ * @package:          Pointer to the owning &struct memory_package (NULL until bound).
-+ * @package_entry:    Linkage on the owning package's type list.
-+ *
-+ * Each NUMA node that participates in socket-aware policy gets a wrapper entry
-+ * that caches package membership and the precomputed set of preferred targets.
-+ */
-+struct memory_package_node {
-+	int nid;
-+	int initiator_nid;
-+	int package_id;
-+	int source_flags;
-+	nodemask_t preferred;
-+	struct memory_package *package;
-+	struct list_head package_entry;
-+};
-+
-+#define node_is_memory_only(_nid) \
-+	(node_state((_nid), N_MEMORY) && !node_state((_nid), N_CPU))
-+
-+static BLOCKING_NOTIFIER_HEAD(mp_package_algorithms);
-+
-+static LIST_HEAD(memory_packages);
-+static struct memory_package_node *mpns[MAX_NUMNODES];
-+static DEFINE_MUTEX(memory_package_lock);
-+
-+/**
-+ * register_mp_package_notifier - Register a package resolution algorithm
-+ * @notifier: Notifier called with the nid to resolve (see mp_probe_package_id()).
-+ *
-+ * Drivers (e.g., CXL region/decoder code) register here to supply a package
-+ * hint for newly appearing nodes. The notifier is invoked during nid->package
-+ * resolution.
-+ *
-+ * Return: 0 on success, negative errno on failure.
-+ */
-+int register_mp_package_notifier(struct notifier_block *notifier)
++static int policy_resolve_package_nodes(struct mempolicy *policy, nodemask_t *mask)
 +{
-+	return blocking_notifier_chain_register(&mp_package_algorithms, notifier);
-+}
-+EXPORT_SYMBOL_GPL(register_mp_package_notifier);
++	unsigned int node, ret = 0;
++	nodemask_t package_mask;
 +
-+/**
-+ * unregister_mp_package_notifier - Unregister a package resolution algorithm
-+ * @notifier: Notifier previously registered with register_mp_package_notifier().
-+ */
-+void unregister_mp_package_notifier(struct notifier_block *notifier)
-+{
-+	blocking_notifier_chain_unregister(&mp_package_algorithms, notifier);
-+}
-+EXPORT_SYMBOL_GPL(unregister_mp_package_notifier);
++	if (!policy || !mask)
++		return -EINVAL;
 +
-+/**
-+ * mp_probe_package_id - Invoke registered notifiers to resolve a node's package
-+ * @nid: NUMA node id to resolve.
-+ *
-+ * Calls the blocking notifier chain to let subsystems provide an initiator or
-+ * package id for @nid.
-+ *
-+ * Return: Notifier return code (>=0 typically); negative errno on failure.
-+ */
-+int mp_probe_package_id(int nid)
-+{
-+	return blocking_notifier_call_chain(&mp_package_algorithms, nid, NULL);
-+}
-+EXPORT_SYMBOL_GPL(mp_probe_package_id);
++	nodes_clear(*mask);
 +
-+static int mp_node_to_package_id(int nid)
-+{
-+	int package_id = -EINVAL;
-+	unsigned int first_cpu;
-+	const struct cpumask *cpu_mask;
++	node = numa_node_id();
++	ret = mp_get_package_nodes(node, &package_mask);
++	if (!ret) {
++		nodes_and(*mask, package_mask, policy->nodes);
 +
-+	if (!node_state(nid, N_CPU))
-+		goto out;
-+
-+	cpu_mask = cpumask_of_node(nid);
-+	if (cpumask_empty(cpu_mask)) {
-+		pr_err("node%d: CPU mask is empty\n", nid);
-+		goto out;
-+	}
-+
-+	first_cpu = cpumask_first(cpu_mask);
-+	if (first_cpu >= nr_cpu_ids) {
-+		pr_err("node%d: CPU (%d) out of range\n", nid, first_cpu);
-+		goto out;
-+	}
-+
-+	/*
-+	 * Map the first CPU in this node’s cpumask to its physical package id.
-+	 * This ties the NUMA node to a socket (package) using topology info.
-+	 */
-+	package_id = topology_physical_package_id(first_cpu);
-+	if (package_id < 0) {
-+		pr_err("node%d: failed to resolve package id (%d)\n", nid, package_id);
-+		package_id = -EINVAL;
-+		goto out;
-+	}
-+
-+out:
-+	return package_id;
-+}
-+
-+static void update_package_preferred(struct memory_package *mp)
-+{
-+	struct memory_package_node *mpn;
-+
-+	lockdep_assert_held(&memory_package_lock);
-+
-+	/*
-+	 * For each CPU node, compute its preferred set as the nearest
-+	 * memory-only node(s) within the same package. If the package has
-+	 * no memory-only nodes, fall back to a self-reference so callers
-+	 * never see an empty preferred set.
-+	 */
-+	list_for_each_entry(mpn, &mp->cpu_list, package_entry) {
-+		nodes_clear(mpn->preferred);
-+		if (!nodes_empty(mp->memory_only_nodes))
-+			nearest_nodes_nodemask(mpn->nid, &mp->memory_only_nodes,
-+					       &mpn->preferred);
-+		else
-+			node_set(mpn->nid, mpn->preferred);
-+	}
-+
-+	/*
-+	 * Symmetrically, for each memory-only node, compute its preferred set
-+	 * as the nearest CPU node(s) within the same package. If the package
-+	 * has no CPU nodes, fall back to a self-reference.
-+	 */
-+	list_for_each_entry(mpn, &mp->memory_only_list, package_entry) {
-+		nodes_clear(mpn->preferred);
-+		if (!nodes_empty(mp->cpu_nodes))
-+			nearest_nodes_nodemask(mpn->nid, &mp->cpu_nodes,
-+					       &mpn->preferred);
-+		else
-+			node_set(mpn->nid, mpn->preferred);
-+	}
-+}
-+
-+static inline bool memory_package_is_empty(struct memory_package *mp)
-+{
-+	lockdep_assert_held(&memory_package_lock);
-+
-+	return (nodes_empty(mp->cpu_nodes) && nodes_empty(mp->memory_only_nodes));
-+}
-+
-+static inline bool package_node_is_valid(int nid)
-+{
-+	if (!mpns[nid]) {
-+		pr_err("mpns[%d] is NULL\n", nid);
-+		return false;
-+	}
-+
-+	if (nodes_empty(mpns[nid]->preferred) || (mpns[nid]->package == NULL)) {
-+		pr_err("nid %d: package or preferred mask not initialized\n", nid);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static struct memory_package *create_memory_package(int package_id)
-+{
-+	struct memory_package *mempackage;
-+
-+	mempackage = kzalloc(sizeof(*mempackage), GFP_KERNEL);
-+	if (!mempackage)
-+		return ERR_PTR(-ENOMEM);
-+
-+	mempackage->package_id = package_id;
-+	mempackage->nodes = NODE_MASK_NONE;
-+	mempackage->cpu_nodes = NODE_MASK_NONE;
-+	mempackage->memory_only_nodes = NODE_MASK_NONE;
-+	INIT_LIST_HEAD(&mempackage->cpu_list);
-+	INIT_LIST_HEAD(&mempackage->memory_only_list);
-+	INIT_LIST_HEAD(&mempackage->list);
-+
-+	return mempackage;
-+}
-+
-+static void destroy_memory_package(struct memory_package *mp)
-+{
-+	lockdep_assert_held(&memory_package_lock);
-+
-+	if (memory_package_is_empty(mp)) {
-+		list_del(&mp->list);
-+		kfree(mp);
-+	}
-+}
-+
-+static struct memory_package *find_create_memory_package(int package_id)
-+{
-+	struct memory_package *mempackage;
-+
-+	mutex_lock(&memory_package_lock);
-+	list_for_each_entry(mempackage, &memory_packages, list) {
-+		/*
-+		 * If a package for this package_id already exists, reuse it
-+		 * instead of allocating a new one.
-+		 */
-+		if (mempackage->package_id == package_id) {
-+			mutex_unlock(&memory_package_lock);
-+			return mempackage;
++		if (nodes_empty(*mask)) {
++			node = first_node(policy->nodes);
++			ret = mp_get_package_nodes(node, &package_mask);
++			if (ret)
++				goto out;
++			nodes_and(*mask, package_mask, policy->nodes);
++			if (nodes_empty(*mask))
++				goto out;
 +		}
 +	}
-+	mutex_unlock(&memory_package_lock);
 +
-+	mempackage = create_memory_package(package_id);
-+	if (IS_ERR(mempackage))
-+		return ERR_PTR(-ENOMEM);
-+
-+	mutex_lock(&memory_package_lock);
-+	list_add(&mempackage->list, &memory_packages);
-+	mutex_unlock(&memory_package_lock);
-+
-+	return mempackage;
-+}
-+
-+static int bind_node_to_package(int nid)
-+{
-+	int ret = 0, package_id;
-+	struct memory_package *mp;
-+
-+	mutex_lock(&memory_package_lock);
-+	if (!mpns[nid]) {
-+		ret = -EINVAL;
-+		goto unlock_out;
-+	}
-+	package_id = mpns[nid]->package_id;
-+	mutex_unlock(&memory_package_lock);
-+
-+	mp = find_create_memory_package(package_id);
-+	if (IS_ERR(mp)) {
-+		ret = PTR_ERR(mp);
-+		goto out;
-+	}
-+
-+	mutex_lock(&memory_package_lock);
-+	mpns[nid]->package = mp;
-+	node_set(mpns[nid]->nid, mp->nodes);
-+	if (node_is_memory_only(mpns[nid]->nid)) {
-+		node_set(mpns[nid]->nid, mp->memory_only_nodes);
-+		list_add(&mpns[nid]->package_entry, &mp->memory_only_list);
-+	} else {
-+		node_set(mpns[nid]->nid, mp->cpu_nodes);
-+		list_add(&mpns[nid]->package_entry, &mp->cpu_list);
-+	}
-+	update_package_preferred(mp);
-+
-+unlock_out:
-+	mutex_unlock(&memory_package_lock);
 +out:
-+	pr_info("memory_package %d: nodes=%*pbl cpu=%*pbl memery_only=%*pbl\n",
-+		mp->package_id,
-+		nodemask_pr_args(&mp->nodes),
-+		nodemask_pr_args(&mp->cpu_nodes),
-+		nodemask_pr_args(&mp->memory_only_nodes));
-+
 +	return ret;
 +}
 +
-+static void unbind_node_to_package(struct memory_package *mp, int nid)
-+{
-+	lockdep_assert_held(&memory_package_lock);
+ static unsigned int weighted_interleave_nodes(struct mempolicy *policy)
+ {
+ 	unsigned int node;
+ 	unsigned int cpuset_mems_cookie;
++	nodemask_t mask;
+ 
+ retry:
+ 	/* to prevent miscount use tsk->mems_allowed_seq to detect rebind */
+ 	cpuset_mems_cookie = read_mems_allowed_begin();
+ 	node = current->il_prev;
+-	if (!current->il_weight || !node_isset(node, policy->nodes)) {
+-		node = next_node_in(node, policy->nodes);
 +
-+	node_clear(nid, mp->nodes);
-+	if (node_state(nid, N_CPU))
-+		node_clear(nid, mp->cpu_nodes);
++	if (policy_resolve_package_nodes(policy, &mask))
++		mask = policy->nodes;
++
++	if (!current->il_weight || !node_isset(node, mask)) {
++		node = next_node_in(node, mask);
+ 		if (read_mems_allowed_retry(cpuset_mems_cookie))
+ 			goto retry;
+ 		if (node == MAX_NUMNODES)
+@@ -2237,6 +2308,21 @@ static unsigned int read_once_policy_nodemask(struct mempolicy *pol,
+ 	return nodes_weight(*mask);
+ }
+ 
++static unsigned int read_once_policy_package_nodemask(struct mempolicy *pol,
++						      nodemask_t *mask)
++{
++	nodemask_t package_mask;
++
++	barrier();
++	if (policy_resolve_package_nodes(pol, &package_mask))
++		memcpy(mask, &pol->nodes, sizeof(nodemask_t));
 +	else
-+		node_clear(nid, mp->memory_only_nodes);
++		memcpy(mask, &package_mask, sizeof(nodemask_t));
++	barrier();
 +
-+	if (mpns[nid])
-+		list_del(&mpns[nid]->package_entry);
-+
-+	update_package_preferred(mp);
++	return nodes_weight(*mask);
 +}
 +
-+static struct memory_package_node *create_package_node(int nid, int initiator_nid)
-+{
-+	int cpu_nid, package_id;
-+	int source_flags;
-+	struct memory_package_node *mpn;
-+
-+	if (node_state(nid, N_CPU)) {
-+		cpu_nid = nid;
-+		source_flags = MPN_SRC_CPU;
-+	} else {
-+		if (initiator_nid >= 0) {
-+			cpu_nid = initiator_nid;
-+			source_flags = MPN_SRC_INITIATOR;
-+		} else {
-+			/*
-+			 * No driver-supplied initiator: fall back to the
-+			 * nearest CPU node (via SLIT/numa_distance).
-+			 */
-+			cpu_nid = numa_nearest_node(nid, N_CPU);
-+			source_flags = MPN_SRC_SLIT;
-+		}
-+	}
-+
-+	package_id = mp_node_to_package_id(cpu_nid);
-+	if (package_id < 0)
-+		return ERR_PTR(-EINVAL);
-+
-+	mpn = kzalloc(sizeof(*mpn), GFP_KERNEL);
-+	if (!mpn)
-+		return ERR_PTR(-ENOMEM);
-+
-+	mpn->nid = nid;
-+	mpn->initiator_nid = cpu_nid;
-+	mpn->package_id = package_id;
-+	mpn->source_flags = source_flags;
-+	mpn->preferred = NODE_MASK_NONE;
-+	mpn->package = NULL;
-+	INIT_LIST_HEAD(&mpn->package_entry);
-+
-+	return mpn;
-+}
-+
-+static void __destroy_package_node(int nid)
-+{
-+	struct memory_package_node *mpn;
-+	struct memory_package *mp;
-+
-+	lockdep_assert_held(&memory_package_lock);
-+
-+	mpn = mpns[nid];
-+	if (!mpn)
-+		return;
-+
-+	mp = mpn->package;
-+	if (mp) {
-+		unbind_node_to_package(mp, nid);
-+		mpn->package = NULL;
-+
-+		if (memory_package_is_empty(mp))
-+			destroy_memory_package(mp);
-+	}
-+
-+	mpns[nid] = NULL;
-+	kfree(mpn);
-+}
-+
-+static void destroy_package_node(int nid)
-+{
-+	mutex_lock(&memory_package_lock);
-+	__destroy_package_node(nid);
-+	mutex_unlock(&memory_package_lock);
-+}
-+
-+static int find_package_node(int nid, int initiator_nid)
-+{
-+	int mpn_nid = NUMA_NO_NODE;
-+
-+	mutex_lock(&memory_package_lock);
-+	if (mpns[nid]) {
-+		/*
-+		 * SLIT-derived entries are provisional; if a driver later
-+		 * provides an explicit initiator, drop the provisional
-+		 * entry and rebuild with the stronger hint.
-+		 */
-+		if (mpns[nid]->source_flags == MPN_SRC_SLIT && initiator_nid >= 0)
-+			__destroy_package_node(nid);
-+		else
-+			mpn_nid = nid;
-+	}
-+	mutex_unlock(&memory_package_lock);
-+
-+	return mpn_nid;
-+}
-+
-+static int find_create_package_node(int nid, int initiator_nid)
-+{
-+	int mpn_nid;
-+	struct memory_package_node *mpn;
-+
-+	mpn_nid = find_package_node(nid, initiator_nid);
-+	if (mpn_nid != NUMA_NO_NODE)
-+		return mpn_nid;
-+
-+	mpn = create_package_node(nid, initiator_nid);
-+	if (IS_ERR(mpn))
-+		return PTR_ERR(mpn);
-+
-+	mutex_lock(&memory_package_lock);
-+	mpns[nid] = mpn;
-+	mutex_unlock(&memory_package_lock);
-+
-+	return nid;
-+}
-+
-+static int create_node_with_package(int nid)
-+{
-+	int ret;
-+
-+	ret = find_create_package_node(nid, NUMA_NO_NODE);
-+	if (ret < 0) {
-+		pr_err("package_node(%d) failed: %d\n", nid, ret);
-+		return ret;
-+	}
-+
-+	ret = bind_node_to_package(nid);
-+	if (ret) {
-+		pr_err("bind_node_to_package(%d) failed: %d\n", nid, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * mp_add_package_node_by_initiator - Add a node with an initiator
-+ * @nid:            Target NUMA node to add.
-+ * @initiator_nid:  CPU nid used to resolve @nid's package (>=0).
-+ *
-+ * Ensures that a &struct memory_package_node exists for @nid and that its
-+ * package_id is determined using @initiator_nid when provided. Binding to the
-+ * package is not performed here.
-+ *
-+ * Return: 0 on success; negative errno on failure.
-+ */
-+int mp_add_package_node_by_initiator(int nid, int initiator_nid)
-+{
-+	int ret;
-+
-+	ret = find_create_package_node(nid, initiator_nid);
-+	if (ret < 0) {
-+		pr_err("find_create_package_node(nid=%d, initiator=%d) failed: %d\n",
-+		       nid, initiator_nid, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(mp_add_package_node_by_initiator);
-+
-+/**
-+ * mp_add_package_node - Add a node, resolving package automatically
-+ * @nid: Target NUMA node to add.
-+ *
-+ * Wrapper over mp_add_package_node_by_initiator() that requests automatic
-+ * initiator resolution (e.g., nearest CPU).
-+ *
-+ * Return: 0 on success; negative errno on failure.
-+ */
-+int mp_add_package_node(int nid)
-+{
-+	return mp_add_package_node_by_initiator(nid, NUMA_NO_NODE);
-+}
-+EXPORT_SYMBOL_GPL(mp_add_package_node);
-+
-+static int __mp_get_preferred_nodemask(int nid, enum mp_nodes_type node_type,
-+				    nodemask_t *out)
-+{
-+	int ret = 0;
-+
-+	if (!out) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	nodes_clear(*out);
-+
-+	if (nid < 0 || nid >= MAX_NUMNODES) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	if (node_type == MP_NODES_CPU) {
-+		if (node_is_memory_only(nid)) {
-+			pr_err("nid %d is a memory-only node\n", nid);
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+	} else if (node_type == MP_NODES_MEM_ONLY) {
-+		if (!node_is_memory_only(nid)) {
-+			pr_err("nid %d is a CPU node\n", nid);
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+	} else {
-+		pr_err("invalid node type: %d\n", (int)node_type);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	if (!package_node_is_valid(nid)) {
-+		ret = -ENOENT;
-+		goto out;
-+	}
-+
-+	nodes_copy(*out, mpns[nid]->preferred);
-+
-+out:
-+	return ret;
-+}
-+
-+static int __mp_get_package_nodemask(int nid, enum mp_nodes_type node_type,
-+				     nodemask_t *out)
-+{
-+	int ret = 0;
-+
-+	if (!out) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	nodes_clear(*out);
-+
-+	if (nid < 0 || nid >= MAX_NUMNODES) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	if (!package_node_is_valid(nid)) {
-+		ret = -ENOENT;
-+		goto out;
-+	}
-+
-+	switch (node_type) {
-+	case MP_NODES_ALL:
-+		nodes_copy(*out, mpns[nid]->package->nodes);
-+		break;
-+	case MP_NODES_CPU:
-+		nodes_copy(*out, mpns[nid]->package->cpu_nodes);
-+		break;
-+	case MP_NODES_MEM_ONLY:
-+		nodes_copy(*out, mpns[nid]->package->memory_only_nodes);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+out:
-+	return ret;
-+}
-+
-+#if CONFIG_MIGRATION
-+/**
-+ * mp_next_demotion_nodemask - Demotion candidates within a package
-+ * @nid: CPU node from which memory would be demoted.
-+ * @out: Output nodemask of nearest memory-only targets in the same package.
-+ *
-+ * Return: 0 on success; negative errno if @nid is invalid or not initialized.
-+ */
-+int mp_next_demotion_nodemask(int nid, nodemask_t *out)
-+{
-+	return __mp_get_preferred_nodemask(nid, MP_NODES_CPU, out);
-+}
-+EXPORT_SYMBOL_GPL(mp_next_demotion_nodemask);
-+
-+/**
-+ * mp_next_demotion_node - Pick one demotion target
-+ * @nid: CPU node from which memory would be demoted.
-+ *
-+ * Picks one target (random among the nearest) from mp_next_demotion_nodemask().
-+ *
-+ * Return: target nid on success, or NUMA_NO_NODE if no candidate is available.
-+ */
-+int mp_next_demotion_node(int nid)
-+{
-+	int target_nid;
-+	nodemask_t target_nodemask;
-+
-+	if (mp_next_demotion_nodemask(nid, &target_nodemask))
-+		return NUMA_NO_NODE;
-+	if (nodes_empty(target_nodemask))
-+		return NUMA_NO_NODE;
-+
-+	target_nid = node_random(&target_nodemask);
-+
-+	return target_nid;
-+}
-+EXPORT_SYMBOL_GPL(mp_next_demotion_node);
-+
-+/**
-+ * mp_next_promotion_nodemask - Promotion candidates within a package
-+ * @nid: Memory-only node towards which promotion seeks CPU locality.
-+ * @out: Output nodemask of nearest CPU targets in the same package.
-+ *
-+ * Return: 0 on success; negative errno if @nid is invalid or not initialized.
-+ */
-+int mp_next_promotion_nodemask(int nid, nodemask_t *out)
-+{
-+	return __mp_get_preferred_nodemask(nid, MP_NODES_MEM_ONLY, out);
-+}
-+EXPORT_SYMBOL_GPL(mp_next_promotion_nodemask);
-+
-+/**
-+ * mp_next_promotion_node - Pick one promotion target
-+ * @nid: Memory-only node to be promoted towards CPUs.
-+ *
-+ * Picks one target (random among the nearest) from mp_next_promotion_nodemask().
-+ *
-+ * Return: target nid on success, or NUMA_NO_NODE if no candidate is available.
-+ */
-+int mp_next_promotion_node(int nid)
-+{
-+	int target_nid;
-+	nodemask_t target_nodemask;
-+
-+	if (mp_next_promotion_nodemask(nid, &target_nodemask))
-+		return NUMA_NO_NODE;
-+	if (nodes_empty(target_nodemask))
-+		return NUMA_NO_NODE;
-+
-+	target_nid = node_random(&target_nodemask);
-+
-+	return target_nid;
-+}
-+EXPORT_SYMBOL_GPL(mp_next_promotion_node);
-+#endif /* CONFIG_MIGRATION */
-+
-+/**
-+ * mp_get_package_nodes - Return all members of @nid's package
-+ * @nid: Any NUMA node in the package.
-+ * @out: Output nodemask to receive all members.
-+ *
-+ * Return: 0 on success; negative errno if @nid is invalid or not initialized.
-+ */
-+int mp_get_package_nodes(int nid, nodemask_t *out)
-+{
-+	return __mp_get_package_nodemask(nid, MP_NODES_ALL, out);
-+}
-+EXPORT_SYMBOL_GPL(mp_get_package_nodes);
-+
-+/**
-+ * mp_get_package_cpu_nodes - Return CPU members of @nid's package
-+ * @nid: Any NUMA node in the package.
-+ * @out: Output nodemask to receive CPU members.
-+ *
-+ * Return: 0 on success; negative errno if @nid is invalid or not initialized.
-+ */
-+int mp_get_package_cpu_nodes(int nid, nodemask_t *out)
-+{
-+	return __mp_get_package_nodemask(nid, MP_NODES_CPU, out);
-+}
-+EXPORT_SYMBOL_GPL(mp_get_package_cpu_nodes);
-+
-+int mp_get_package_memory_only_nodes(int nid, nodemask_t *out)
-+{
-+	return __mp_get_package_nodemask(nid, MP_NODES_MEM_ONLY, out);
-+}
-+EXPORT_SYMBOL_GPL(mp_get_package_memory_only_nodes);
-+
-+/**
-+ * mp_get_package_memory_only_nodes - Return memory-only members of @nid's package
-+ * @nid: Any NUMA node in the package.
-+ * @out: Output nodemask to receive memory-only members.
-+ *
-+ * Return: 0 on success; negative errno if @nid is invalid or not initialized.
-+ */
-+static int __meminit mp_hotplug_callback(struct notifier_block *nb,
-+		unsigned long action, void *_arg)
-+{
-+	int nid;
-+	struct node_notify *nn = _arg;
-+
-+	nid = nn->nid;
-+	if (nid < 0)
-+		return notifier_from_errno(0);
-+
-+	switch (action) {
-+	case NODE_REMOVED_LAST_MEMORY:
-+		destroy_package_node(nid);
-+		break;
-+
-+	case NODE_ADDED_FIRST_MEMORY:
-+		create_node_with_package(nid);
-+		break;
-+
-+	default:
-+		break;
-+	}
-+
-+	return notifier_from_errno(0);
-+}
-+
-+static int __init memory_package_init(void)
-+{
-+	int ret = 0, nid;
-+
-+	for_each_online_node(nid) {
-+		if (!node_state(nid, N_MEMORY))
-+			continue;
-+
-+		/*
-+		 * On boot, enumerate already-present NUMA nodes and build the
-+		 * initial package topology. CPU nodes are the common case,
-+		 * but memory-only nodes are handled as well.
-+		 */
-+		ret = create_node_with_package(nid);
-+		if (ret) {
-+			pr_err("create nid(%d) failed: %d\n", nid, ret);
-+			goto out;
-+		}
-+	}
-+
-+	hotplug_node_notifier(mp_hotplug_callback, MEMTIER_HOTPLUG_PRI);
-+
-+out:
-+	return ret;
-+}
-+late_initcall(memory_package_init);
+ static unsigned int weighted_interleave_nid(struct mempolicy *pol, pgoff_t ilx)
+ {
+ 	struct weighted_interleave_state *state;
+@@ -2247,7 +2333,7 @@ static unsigned int weighted_interleave_nid(struct mempolicy *pol, pgoff_t ilx)
+ 	u8 weight;
+ 	int nid = 0;
+ 
+-	nr_nodes = read_once_policy_nodemask(pol, &nodemask);
++	nr_nodes = read_once_policy_package_nodemask(pol, &nodemask);
+ 	if (!nr_nodes)
+ 		return numa_node_id();
+ 
+@@ -2691,7 +2777,7 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
+ 	/* read the nodes onto the stack, retry if done during rebind */
+ 	do {
+ 		cpuset_mems_cookie = read_mems_allowed_begin();
+-		nnodes = read_once_policy_nodemask(pol, &nodes);
++		nnodes = read_once_policy_package_nodemask(pol, &nodes);
+ 	} while (read_mems_allowed_retry(cpuset_mems_cookie));
+ 
+ 	/* if the nodemask has become invalid, we cannot do anything */
 -- 
 2.34.1
 
