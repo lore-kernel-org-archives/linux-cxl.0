@@ -1,216 +1,177 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE9619ADB0
-	for <linux-cxl@vger.kernel.org>; Mon, 16 Mar 2026 15:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C57F1F8AC5;
+	Mon, 16 Mar 2026 17:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773674378; cv=none; b=f99PMvJ/ZX9ShJUVJwIv0bDCYMWTQnYfK80Ao1f+rpQGnYNJDSNkAFO/1Ysy2kQDPFIxiXNFigFuRnK6lwhP5bXQZmUea+C+PCCYUIXgBNOlhjt0tYd69VtMyDF6AFplRF7Wn+tr57eVHBT2D/8MT2XJYzPS7e1I1qutNXC/73I=
+	t=1773681402; cv=none; b=qCxPvSv3oo81waIzeUjgHJqc4t3PevxQZARaKADpAzAXHmDQCmOXiYRMZK+l26LGMFleca7GI6ivdJfOkvRs394co5GBhXvlp1Yg472lLqCN6n0ZvMbzNHkhrV4dNCKfJoipCAuE3d2wR985BBZzeCCRN/GsxQEehNpcOQJ+ZNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773674378; c=relaxed/simple;
-	bh=+SDK+ILsKmipkaVQAvqWVrbDqxQl7+mGIn9WdMBmieI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RV4EuDH0SUayXqkb8RwDGbs6RtVLI758b7iyljSxZvc//GxOedgChkghqK1Sqs5jSBwbx3SkYwPou2gOIMzlRIZ3teJ2hy9M04iiWghO61tjKJLi2vjR+kdfCKw4VlyMErI4pooaOTyj7xmFpAZjE5Vnspoux8GpKXW/cypUhMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A6sUBcQn; arc=none smtp.client-ip=209.85.210.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A6sUBcQn"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7d751ef36ccso2635900a34.0
-        for <linux-cxl@vger.kernel.org>; Mon, 16 Mar 2026 08:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773674376; x=1774279176; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m2chYU1ux6ZQIx4otnZe8opROVQFDtOWN8KCrqkEk7A=;
-        b=A6sUBcQnz01R62fVF+h6Y6xT6yY3o5L1kGXy0jZvYHoim57O1YYCsHL5HPXo1Aqw43
-         4y+97PfxZ/2UEJ2fAzaIaIJw+TMgd4MV/lofejcuL346Gwo7RV4VTgYpACsLTm8qdwQI
-         Zu3nCXUDaPgvxyFC32qCXmXb6bu74+W40oQb/GC54Ms/yK/bpVSZVqyIAvs1z6jTNEb2
-         K8sx3jTzc3VPY+/WdvBtkorYVhBovt/qb7UJD+aB4/4q17yBdqPf/XGJ06cN+V3M69YC
-         qRy0u0rAZr9XDBbAxCU3FMklq1fcE/QDjO5fto3UIR9e0elW8uRC5KPz4Bk7rggo/hbr
-         YK+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773674376; x=1774279176;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=m2chYU1ux6ZQIx4otnZe8opROVQFDtOWN8KCrqkEk7A=;
-        b=WDj5QunK+Q6mtUfoHZeJezV5ULdjyADfNHLiMPt1CJGllg/OKJmse9R/qhQnOAdjij
-         aidO557xdHPg06tB+AjoGf/umGpy6uo990PbL3tfy2agPpg2X//1hVXhsjZx5XkHIx0J
-         Y40QRkGAhM+vZ6EsAs+9GN8XUTOCOYML6m1CP3C/0gk3LIpJL3ZUEoPt9m23wRQruw9D
-         KQZQF9DK142b0fPsHhF+9olEqqMEvnw+mpFTg3f+SfdFx7u6WmeQuyljNTY8HPKRPf1J
-         /n2qPYGZ+LGW7g3p4BXJMA2+XwPPB+aQXqZM0T/K61ixh/T9VtQQrTJMgz9h885Z1bCF
-         I8VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUnEgFPQcsG9bZDCjY/sdyP7tM7QLAXWZN/tL+8jyjp4/TYZRmC8+CnCye2itq08I0hhmGzIOmZhts=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVoVY8UC39JLWYyDBCaSV9CbdZEP9DXwzfdXCJwyWT+kHHwNMe
-	Hg/diUHiv51zSlQpOJq8TDBEjILOZ4XzaNQcLfV8i+O/1xGeR7BFyg2A
-X-Gm-Gg: ATEYQzxczf5tP6ywppQTcWyIMbJXd8OQECIRabDmETbbqFtJBLEKlyJIOQ4CdlZoib1
-	Lshu5F98QGe0Ad9boKFAGSxkDKZMg2DCq/yVGyLVL0v7nE1AHwRZXRswYXwmPULCQuWw3ahwCuL
-	cJkfcQxH2jGTUD7YifzBQY86RQBKEcrL5mkAGGouE/IpBIj5EfAD6EBDDEDuGWZ9UA4Q+0fBX12
-	1wrLMImNK65dkC+esoVysEinhAEsC6EiR5nWHHpFz6hF6aVmmlO9h1UGmxqNSNqii+DEVLparPX
-	DYN17dPedyt40aYEl9oq/nSHgY8xZYrcZTNzsnUBIWNfxJeRTrz9otgnp96hXHDjH/SRsm4nuDw
-	hlui3Gl5Fap8dBrhJNUMP0EOur4NhOncs/Z+1JQPTnRdq8/R8DieGbUcNvN8SMbX3Xn0EClDVGQ
-	+lNnbzzgrriNBXFNfYQviHHQ==
-X-Received: by 2002:a05:6830:648b:b0:7d7:4074:3382 with SMTP id 46e09a7af769-7d78248b731mr8382454a34.10.1773674375662;
-        Mon, 16 Mar 2026 08:19:35 -0700 (PDT)
-Received: from localhost ([2a03:2880:10ff:41::])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7d76ac8ce73sm13670944a34.11.2026.03.16.08.19.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2026 08:19:35 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Rakie Kim <rakie.kim@sk.com>
-Cc: akpm@linux-foundation.org,
-	gourry@gourry.net,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com,
-	byungchul@sk.com,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	david@kernel.org,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com
-Subject: Re: [LSF/MM/BPF TOPIC] [RFC PATCH 0/4] mm/mempolicy: introduce socket-aware weighted interleave
-Date: Mon, 16 Mar 2026 08:19:32 -0700
-Message-ID: <20260316151933.3093626-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260316051258.246-1-rakie.kim@sk.com>
-References: 
+	s=arc-20240116; t=1773681402; c=relaxed/simple;
+	bh=Nr1BTxQtVYheOndQtk1+z2HKNIwDmfQa+gfyHLqpPus=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KNRplkS1Kqc2dw6riKPhYy2qZikRc+QU9vaH53nI2KW1fNVhqenR+hmsm/UoxYSCLS7quhnFXEpN1b8ZI83cH219Zty0eP+mp/lvX5VrCutF35ss19fivE0MpX8/sHadTSSPw/XAJiRcBkPNMvmOBCb3uLxd9GHcSU2h7B0u6dM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.107])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fZMDb15K3zJ46BH;
+	Tue, 17 Mar 2026 01:15:43 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id DCD8640589;
+	Tue, 17 Mar 2026 01:16:37 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 16 Mar
+ 2026 17:16:36 +0000
+Date: Mon, 16 Mar 2026 17:16:35 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Alistair Francis <alistair23@gmail.com>
+CC: <bhelgaas@google.com>, <lukas@wunner.de>,
+	<rust-for-linux@vger.kernel.org>, <akpm@linux-foundation.org>,
+	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <alex.gaynor@gmail.com>,
+	<benno.lossin@proton.me>, <boqun.feng@gmail.com>, <a.hindborg@kernel.org>,
+	<gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <tmgross@umich.edu>,
+	<ojeda@kernel.org>, <wilfred.mallawa@wdc.com>, <aliceryhl@google.com>,
+	Alistair Francis <alistair@alistair23.me>
+Subject: Re: [RFC v3 12/27] lib: rspdm: Support SPDM get_version
+Message-ID: <20260316171635.00002bb8@huawei.com>
+In-Reply-To: <CAKmqyKMUT__C=4Lo5BhjB_QoaGHHNHQvxLmL4xuB54U=Rm0nzg@mail.gmail.com>
+References: <20260211032935.2705841-1-alistair.francis@wdc.com>
+	<20260211032935.2705841-13-alistair.francis@wdc.com>
+	<20260303113642.00005774@huawei.com>
+	<CAKmqyKMUT__C=4Lo5BhjB_QoaGHHNHQvxLmL4xuB54U=Rm0nzg@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-Hello Rakie! I hope you have been doing well. Thank you for this
-RFC, I think it is a very interesting idea. 
 
-[...snip...]
-
-> Consider a dual-socket system:
 > 
->           node0             node1
->         +-------+         +-------+
->         | CPU 0 |---------| CPU 1 |
->         +-------+         +-------+
->         | DRAM0 |         | DRAM1 |
->         +---+---+         +---+---+
->             |                 |
->         +---+---+         +---+---+
->         | CXL 0 |         | CXL 1 |
->         +-------+         +-------+
->           node2             node3
+> >  
+> > > +            let addr = unaligned.wrapping_add(i as usize);
+> > > +            let version = (unsafe { core::ptr::read_unaligned::<u16>(addr) } >> 8) as u8;  
+> > Given the endian conversion below, this is correct, but I think leaving it as the __le16 until
+> > here is better.  We could also just pull out the correct byte and ignore the other one.  
 > 
-> Assuming local DRAM provides 300 GB/s and local CXL provides 100 GB/s,
-> the effective bandwidth varies significantly from the perspective of
-> each CPU due to inter-socket interconnect penalties.
+> Hmm... I'm not sure I follow.
 > 
-> Local device capabilities (GB/s) vs. cross-socket effective bandwidth:
+> The SPDM spec describes this as a u16, so I'm reading the entire value
+> and just taking the upper bits for the Major/Minor version
+
+Miss read by me I think... Or tied up with endian conversion I think you
+say you are getting rid of below.
+
+
 > 
->          0     1     2     3
-> CPU 0  300   150   100    50
-> CPU 1  150   300    50   100
+> So I'm not sure what you think I should do differently?
 > 
-> A reasonable global weight vector reflecting the base capabilities is:
+> > It's a spec quirk that they decided to have it defined as a __le16 rather than u8[2] as
+> > the fields are confined one byte or the other.
+> >
+> > I wonder if we should also reject any alpha versions? I.e. check the bottom 4 bits
+> > are 0.  
 > 
->      node0=3 node1=3 node2=1 node3=1
+> Hmmm... That seems a bit unnecessary. Maybe a warning though?
+
+Warning works for me.
+
 > 
-> However, because these configured node weights do not account for
-> interconnect degradation between sockets, applying them flatly to all
-> sources yields the following effective map from each CPU's perspective:
+> >  
+> > > +
+> > > +            if version >= self.version && version <= SPDM_MAX_VER {
+> > > +                self.version = version;
+> > > +                foundver = true;
+> > > +            }
+> > > +        }
+> > > +
+> > > +        if !foundver {
+> > > +            pr_err!("No common supported version\n");
+> > > +            to_result(-(bindings::EPROTO as i32))?;
+> > > +        }
+> > > +
+> > > +        Ok(())
+> > > +    }
+> > >  }
+> > > diff --git a/lib/rspdm/validator.rs b/lib/rspdm/validator.rs
+> > > index a0a3a2f46952..f69be6aa6280 100644
+> > > --- a/lib/rspdm/validator.rs
+> > > +++ b/lib/rspdm/validator.rs
+> > > @@ -7,6 +7,7 @@
+> > >  //! Rust implementation of the DMTF Security Protocol and Data Model (SPDM)
+> > >  //! <https://www.dmtf.org/dsp/DSP0274>
+> > >
+> > > +use crate::bindings::{__IncompleteArrayField, __le16};
+> > >  use crate::consts::SpdmErrorCode;
+> > >  use core::mem;
+> > >  use kernel::prelude::*;
+> > > @@ -15,6 +16,8 @@
+> > >      validate::{Unvalidated, Validate},
+> > >  };
+> > >
+> > > +use crate::consts::SPDM_GET_VERSION;
+> > > +
+> > >  #[repr(C, packed)]
+> > >  pub(crate) struct SpdmHeader {
+> > >      pub(crate) version: u8,
+> > > @@ -64,3 +67,67 @@ pub(crate) struct SpdmErrorRsp {
+> > >      pub(crate) error_code: SpdmErrorCode,
+> > >      pub(crate) error_data: u8,
+> > >  }
+> > > +
+> > > +#[repr(C, packed)]  
+> >
+> > Why packed?  
 > 
->          0     1     2     3
-> CPU 0    3     3     1     1
-> CPU 1    3     3     1     1
+> We cast it from a struct to a slice (array), so we need it to be
+> packed to avoid gaps in the slice (array)
+Ah ok.  I'm learning slowly...
 > 
-> This does not account for the interconnect penalty (e.g., node0->node1
-> drops 300->150, node0->node3 drops 100->50) and thus forces allocations
-> that cause a mismatch with actual performance.
+> >  
+> > > +pub(crate) struct GetVersionReq {
+> > > +    pub(crate) version: u8,
+> > > +    pub(crate) code: u8,
+> > > +    pub(crate) param1: u8,
+> > > +    pub(crate) param2: u8,
+> > > +}
+> > > +
+> > > +        // undefined behaviour, so we operate on the raw data directly
+> > > +        let unaligned = core::ptr::addr_of_mut!(rsp.version_number_entries) as *mut u16;
+> > > +        for version_offset in 0..version_number_entries {
+> > > +            let addr = unaligned.wrapping_add(version_offset);
+> > > +            let version = unsafe { core::ptr::read_unaligned::<u16>(addr) };
+> > > +            unsafe { core::ptr::write_unaligned::<u16>(addr, version.to_le()) }  
+> >
+> > I'd like to see a comment on why this seems to be doing an endian swap if we
+> > are on big endian. Looking back at the c code, it has an endian swap but
+> > only as part of the search for a version to use (finding the largest both
+> > device and and kernel support).
+> >
+> > Maybe I'm reading it wrong but isn't this putting cpu endian data into a structure
+> > element that is of type __le16?  
 > 
-> This patch makes weighted interleave socket-aware. Before weighting is
-> applied, the candidate nodes are restricted to the current socket; only
-> if no eligible local nodes remain does the policy fall back to the
-> wider set.
+> On second thought I don't think this is required at all. It's
+> converting the LE data from the SPDM response to LE. Which is just
+> unnecessary no-op (LE) or a bug (BE) depending on the CPU endianness.
+I think that makes sense but I'll take a close look at v4.
 
-So when I saw this, I thought the idea was that we would attempt an
-allocation with these socket-aware weights, and upon failure, fall back
-to the global weights that are set so that we can try to fulfill the
-allocation from cross-socket nodes.
-
-However, reading the implementation in 4/4, it seems like what is meant
-by "fallback" here is not in the sense of a fallback allocation, but
-in the sense of "if there is a misconfiguration and the intersection
-between policy nodes and the CPU's package is empty, use the global
-nodes instead". 
-
-Am I understanding this correctly? 
-
-And, it seems like what this also means is that under sane configurations,
-there is no more cross socket memory allocation, since it will always
-try to fulfill it from the local node. 
-
-> Even if the configured global weights remain identically set:
+J
 > 
->      node0=3 node1=3 node2=1 node3=1
+> Alistair
 > 
-> The resulting effective map from the perspective of each CPU becomes:
-> 
->          0     1     2     3
-> CPU 0    3     0     1     0
-> CPU 1    0     3     0     1
+> >  
+> > > +        }
+> > > +
+> > > +        Ok(rsp)
+> > > +    }
+> > > +}  
+> >  
 
-> Now tasks running on node0 prefer DRAM0(3) and CXL0(1), while tasks on
-> node1 prefer DRAM1(3) and CXL1(1). This aligns allocation with actual
-> effective bandwidth, preserves NUMA locality, and reduces cross-socket
-> traffic.
-
-In that sense I thought the word "prefer" was a bit confusing, since I
-thought it would mean that it would try to fulfill the alloactions
-from within a packet first, then fall back to remote packets if that
-failed. (Or maybe I am just misunderstanding your explanation. Please
-do let me know if that is the case : -) )
-
-If what I understand is the case , I think this is the same thing as
-just restricting allocations to be socket-local. I also wonder if
-this idea applies to other mempolicies as well (i.e. unweighted interleave)
-
-I think we should consider what the expected and desirable behavior is
-when one socket is fully saturated but the other socket is empty. In my
-mind this is no different from considering within-packet remote NUMA
-allocations; the tradeoff becomes between reclaiming locally and
-keeping allocations local, vs. skipping reclaiming and consuming
-free memory while eating the remote access latency, similar to
-zone_reclaim mode (packet_reclaim_mode? ; -) )
-
-In my mind (without doing any benchmarking myself or looking at the numbers)
-I imagine that there are some scenarios where we actually do want cross
-socket allocations, like in the example above when we have very asymmetric
-saturations across sockets. Is this something that could be worth
-benchmarking as well?
-
-I will end by saying that in the normal case (sockets have similar saturation)
-I think this series is a definite win and improvement to weighted interleave.
-I just was curious whether we can handle the worst-case scenarios.
-
-Thank you again for the series. Have a great day!
-Joshua
