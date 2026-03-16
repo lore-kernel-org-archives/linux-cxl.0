@@ -1,121 +1,203 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012071.outbound.protection.outlook.com [40.107.209.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5C22FE075
-	for <linux-cxl@vger.kernel.org>; Mon, 16 Mar 2026 19:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773690329; cv=none; b=H9uNj6/i6pD0ChVeLwuRbL2d9vuWOYgrJrfAQ92qjmoCfv7wagr19CQfjyP8KqRYRJqHvoeqb3QgmRnSiw2AD4rb6RQVf2hfCQJ4sBdNgyGdqw0W41fFZbSyblPPX6RJMMJOVkpN3EAvjulQVfeEyg3ZSGB/RY+38qz6Fb2XVRg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773690329; c=relaxed/simple;
-	bh=Jq8L0sAlCjSsz8gxHLpfDK392Ye36i1FJP6/cVcwFpQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M19y0mVzDKSNjk1ZBVwTNw/cq61Y3Qda4lJtQR25SC1wkG6KH/obquOyRu6idLhQbIL+yCMxOUG2XfArpw+6aDr1O3Jl56n5TDkHn5+UlpP1Uoma+B1arMfJCSjIYCAsUh4pEjfPwGW8YusJ4Rl27JJzb6WOHe1Gb94RLOLvd9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=EoOHXcv/; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A413E716D;
+	Mon, 16 Mar 2026 20:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773692409; cv=fail; b=gAbrLVXHn+qhj2EQu9CJSOsLT4hx0ixr3GHCG+rOVjfSz0kk8TbobcHCei3FdjaW7Tpba0XQ0Bo6H7mosLwfkLqvnx14T+vV6NxlDuYHqiYjTDD5Q8s4oBaFk0sdTx/T5XjBtZAzsxC1jsEgTl/EvjQInqOVMp/8TlOVpIrWkJ4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773692409; c=relaxed/simple;
+	bh=4pYzcReI1gXKFgr+fXEn7VNn8vfJ23LoVRo5ls9DUQs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hGtt2IKAjqbfdl7w2tQA97UAlLt5O+YBhhtcBwypndwx+fpzlOfZANU+uuDNIN+U0MxzUaGc+BgbTZRGgR+Sf4ovBwBcuhMRkKTNfGDPgPN1ErgYu1h7CHrPd5kZV0RV1RiEwyqNzYxNpEU07UC2r8wJSfBMVvzqQz5v/pz3BM8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lUmvAbvY; arc=fail smtp.client-ip=40.107.209.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="EoOHXcv/"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-8cb4136d865so666060385a.1
-        for <linux-cxl@vger.kernel.org>; Mon, 16 Mar 2026 12:45:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1773690327; x=1774295127; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qruEfGCCxBMe/+AzGeTxCnKPyDw9xbJgeNI3pnvogwc=;
-        b=EoOHXcv/ZzkpSj6ApjeOka+pE5VXguzn7F3MNnXlFyYGrZdM21L7g1U9YALu+bM9Z/
-         LK4iLnlfrwmikK7XcCQwfsGup3t+gDpx9XCraa6myK3U+8Yo17H5/12tELmG22vaUdRH
-         ncAfbC7VtgkrrURpJpZHAoYV/czQMUG892zqTXUc6FVHS1xEqYcw0J79Ct61O19imvys
-         4FDUbkehBdAaF0j0m7MgRNQvUURtarT9pdQ0jN0LNzp1qgL62g5KKQb9D+VzRxYoOFJp
-         3aBODB8T6gNSijJWi7L8Z5I/twML+d3xGa0zouZ5wOz4mI53QYoCFkX4Q3dXDwxlCjjp
-         rFdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773690327; x=1774295127;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qruEfGCCxBMe/+AzGeTxCnKPyDw9xbJgeNI3pnvogwc=;
-        b=goDbE6f1UxfxU7oN0M9WjaYL30rqia0LNsabwaTbeHhzFDKiie1RvO/ViVdlvO7HcY
-         B9+uq1PhSqhCYgWY/Zpclmkml3CBMLpDO7ARnXyeN1yEVkjI4JORcwjK3/A5S5+/hm1v
-         0dIiw3cRfz8QkeEXh677Smcmd7+fZ5d5uVbXot6y3HwS4scAAR2p+oohqIGQEnjhOMY5
-         Oks6G+IzfeYY6DfzwISp50IrsiTcAFF8V14U5r7Vwd4vaTsT1RbL3Lygi+c3kBIdMcLF
-         sYd1gX5/nd2741dgImVnm9afHFoK2FE9NpamNeZhI9Oh8EVOqeV3RPlBbXpWar/0gav0
-         ZENg==
-X-Forwarded-Encrypted: i=1; AJvYcCWHKUo/eFBKoSL3p/Yy8Q/4wUd5PpCRAGedC/yf1AuaRbzHVGJvClK4RO9Em9wnKPKouTMnqRZ0rEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5emoBKLJq4AvaoaKD8HjhrssmC7Ow05XgNKE0QECRpHs6ZMLA
-	d9dkUge7ZrKd2yAKs8Bzm8BSNUBsm2xEua6EV33iBx6ywiM3CDgHM8WYsN20oV6lI9c=
-X-Gm-Gg: ATEYQzyIE3siixUmDhW86PQ3B/sL7/reogmjEN5H7CR9e0iNvNGORPncqzxbkG7aLY6
-	ezvNuToOdGz2vPql19fWR2l8BNf5J8W41NcNeJ7gW4dluZR/Haq+DnbVL77mA7gqNK+yntXYvWH
-	Uti5LqTQnXuv43gSMTS0/24FHphgODKW+ZsOWt+3V7+4NtGIzarO68bWoNSreqoPBpN6iyUdgwG
-	+PhbL/gBFnKu5r03VhJZmaEGzpuL3CeAJ7cTDuaKmemTdLmhELnMwgkCVxvdiH9uwcApCsbqgVe
-	FB8p4iW6SBilik8OAozajSOVsXPnooibDSe0YAXV3WV8QL8QrgNSaGlHg14ruEpH/PyKdsuBjfQ
-	HsM9ee3xrI8yoKaXCqhg541szL0b8BXJoepODEl87lLaG6E15LQAC7/DS4eU6fSgUmnn3IKcJKB
-	/13JxWZPnXNqcFrqu+6jEm4XVvTKjxZY9SLgwE6CCMyq/UqT/PAKKmQOc5nyeW+WiRHuviPBllO
-	z2IY8IjHg==
-X-Received: by 2002:a05:620a:4627:b0:8cd:94f9:1bb1 with SMTP id af79cd13be357-8cdb5a9729emr1904634185a.27.1773690326947;
-        Mon, 16 Mar 2026 12:45:26 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cda1fe19d3sm1245799585a.19.2026.03.16.12.45.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2026 12:45:26 -0700 (PDT)
-Date: Mon, 16 Mar 2026 15:45:24 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-Cc: Rakie Kim <rakie.kim@sk.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, ziy@nvidia.com, matthew.brost@intel.com,
-	byungchul@sk.com, ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	david@kernel.org, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com,
-	kernel_team@skhynix.com, honggyu.kim@sk.com, yunjeong.mun@sk.com
-Subject: Re: [LSF/MM/BPF TOPIC] [RFC PATCH 0/4] mm/mempolicy: introduce
- socket-aware weighted interleave
-Message-ID: <abhd1BXSST0BTDaN@gourry-fedora-PF4VCD3F>
-References: <20260316051258.246-1-rakie.kim@sk.com>
- <20260316151933.3093626-1-joshua.hahnjy@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lUmvAbvY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IPHEIKhvMZH4ET2Eemoksw14fxecCLkNc8/4tDhIyDMKEYO94GIrZO6Bz/T8GntypfTYv8DZ13lHKrMHq3tmwX4PSeC6tNV+5Dv8UOIjCwrhBR9/qc4K1DxMn4gs9l1Ny2xsCfxCmIo/ZpW2/4NVRkwN2mUnZr7oWTGNSPAUZmYSSa0cY98SzL8LZXlUDJBxvPb3p2j71B5nbsKCCT3BaBqvwvW6h0kd8rkUuAnqI09eQEkYy9hQW8C7Dw+T9Grjm2kRAt2W5QO2QIFym4EtVxp43LgCe3IelZRliF8PA0M4Y1sKqWSmM4mkffqXBkFy/7VI8k2oJqrwTMef4SZvJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LvpgCqUoMVm23kDDY69GafcAg0/uNkg5I1oKKuns2sY=;
+ b=Op/xkIXj1Z3jOtrCrMZGZDJeEKAit37ToKuSdBNMfxQXCnRqF6m3P2i+XUdVymEJRi6JdElqC2Ne/s3ZL2HCMlenc1xQONbdQue8C2mCgvia6nMeHU/BvvsEdDSNe42OXHbYBfsWH/6fuG5Amp1P6GNDcsUbGyYx+F5S4KJ5jO88QcN/woG2VIweFJ9N/DxjeX+f0wqPWI+tNJ9c7eChuWScseRhrmLfI9PgYFFr6jPhP/+RC98qE7KxqljVJ1JKoXoBHf3OxaKKU95mezI8t8Ip7lZE8zpH1nQuMPc+BRT0viYZB72Icyiq8OprKqrzb6v5q/W9BW1aeZ2BSNLyeA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LvpgCqUoMVm23kDDY69GafcAg0/uNkg5I1oKKuns2sY=;
+ b=lUmvAbvYQFjKiYcL0+vatsmMs3Ps6k2isxAnnXirh+VtaESPAaxKUKDCwddt+xp1O3me0EZYpOPJUuAX4bIDwWgoRM6Bn1JPN52pd4xzi/frisK5I8R9FU3QrBv0Nillv2HJ37pPlhtyRNX7x1kMxHuZt5Xgrj5y7mfNoK3RLnw=
+Received: from BN9P221CA0027.NAMP221.PROD.OUTLOOK.COM (2603:10b6:408:10a::21)
+ by MW6PR12MB8836.namprd12.prod.outlook.com (2603:10b6:303:241::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.17; Mon, 16 Mar
+ 2026 20:20:00 +0000
+Received: from BN1PEPF00004683.namprd03.prod.outlook.com
+ (2603:10b6:408:10a:cafe::2f) by BN9P221CA0027.outlook.office365.com
+ (2603:10b6:408:10a::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9700.24 via Frontend Transport; Mon,
+ 16 Mar 2026 20:19:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BN1PEPF00004683.mail.protection.outlook.com (10.167.243.89) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9700.17 via Frontend Transport; Mon, 16 Mar 2026 20:20:00 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 16 Mar
+ 2026 15:19:59 -0500
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>, Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, Terry Bowman <terry.bowman@amd.com>,
+	Robert Richter <rrichter@amd.com>, Benjamin Cheatham
+	<benjamin.cheatham@amd.com>, Smita Koralahalli
+	<Smita.KoralahalliChannabasappa@amd.com>
+Subject: [PATCH v2] cxl/hdm: Avoid incorrect DVSEC fallback when HDM decoders are enabled
+Date: Mon, 16 Mar 2026 20:19:49 +0000
+Message-ID: <20260316201950.224567-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260316151933.3093626-1-joshua.hahnjy@gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF00004683:EE_|MW6PR12MB8836:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4955efed-bfe2-4bc6-1f52-08de83996688
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700016|376014|1800799024|56012099003|18002099003|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	u+ybdTwX3vR0/O7JkSODSb8tOk5LQAVlnKYud0sdnYsk/+xFRkym6dJh5rSpa+5qJloqAOd0wnEQcptdGuYC6AXXp1UN6XUGjptyrE27C09+SX3vSiOGQou48poLxor/kpqmVJocIq3F0n3djP0g73Qye0JIegYRGP95LxXpSNz9BBM+ZAspDCfSy5TFtsm+XgCEWAOAV7CEJRSds0FI4jrFgZg+R9yZP/oRmSLR4lYxzf67JHY5HYcTbXWg8wLKdrCaW4szccQyBr3SEgleMdDvvAbUc5vJd3ovsJQjO5Rpoio/Z9XzNVU6U0iZDlDSnEA3XqmErLqKfvWA2OCguTgGeJsttBmqw/H65rSvH4uNkBvcw+RLNbbkuIYp6BlJcIWoTsuHXfxP3aGL23lX68nXo4LX5iFxjgsF/xFMLQ1lhPj7CJQh63U4OUuCmqP6G+1pL7Vhk56HkQ3HAEEWP/q7x6Ll3N/35TYHT6BHGtlgfS0PLsKHSINVpoEQWOHoNV9R+EKEU3tVASV8M/58FuWw+UkMN8NX3Lacu9T6rv0nM6vwYfU9JyGGdKu9vCf5L8fgaW9DLnXaE2OiOTb97y7T+MVo8QqAWCIYgFBUZrGnaujYc0IRdoJm/hAGkcmKyycDwveSDCtsmJ9zxyOr0JE6T2Z67igN8YBjgXqbovChyOZgZwARYw9lIGJKYc10lbSjYg+TTaWIfdCj51Pv/1ERONWVJVmKVrkz1eUS2dYUN4vBpRIDs9uSm8LUn/SHV5pqGw5DXpJWbwWXGtO5nA==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(376014)(1800799024)(56012099003)(18002099003)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	byB5+4iiYj/XcUf1Y/zZ+0tp7vhpIqT76ThRF9cbH9PLvsBIvcLPTLIhICwhetG1g5tjS51nZ57UKThFH5YcQkcrHnSdWUtLpUuBraKLApkV4RgaCyEZ4rT/hZR3JuFUMlqbN58SFl3lHf581v1bMWSFHwOgsvBoQL2wA1aT0t8GFBSWkrcIZo/qTL0MELWdc5OFNUzO6rjSBBObIOwybGgHHD/BPvGT4o9PjSxp9IKR8XMzpin9PwlCBsO0MWDMIrHZ1u95DrWHIu3K2oO/3sJOi8dtUiTk5fZCraqupSX+XLX0enJjfmlGBv5SaOks3gPUjb6Lu8K0F5Nnf/HmMk3LjwrTj5Vh4EWlpAo+MwMW8v2aaWR3Y1m1u28rKU1V4Ul3Tkw8RqAWZw/Si6AvZtVfmGzVPmj2GMVqqt1SyHKxE1tMm8mm9bmgLA9ICJ8d
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Mar 2026 20:20:00.6171
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4955efed-bfe2-4bc6-1f52-08de83996688
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF00004683.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8836
 
-On Mon, Mar 16, 2026 at 08:19:32AM -0700, Joshua Hahn wrote:
-> 
-> In that sense I thought the word "prefer" was a bit confusing, since I
-> thought it would mean that it would try to fulfill the alloactions
-> from within a packet first, then fall back to remote packets if that
-> failed. (Or maybe I am just misunderstanding your explanation. Please
-> do let me know if that is the case : -) )
-> 
-> If what I understand is the case , I think this is the same thing as
-> just restricting allocations to be socket-local. I also wonder if
-> this idea applies to other mempolicies as well (i.e. unweighted interleave)
-> 
+Check the global CXL_HDM_DECODER_ENABLE bit instead of looping over
+per-decoder COMMITTED bits to determine whether to fall back to DVSEC
+range emulation. When the HDM decoder capability is globally enabled,
+ignore DVSEC range registers regardless of individual decoder commit
+state.
 
-I was thinking about this as well, and in my head i think you have to
-consider a 2x2 situation
+should_emulate_decoders() currently loops over per-decoder COMMITTED
+bits, which leads to an incorrect DVSEC fallback when those bits are
+zero. One way to trigger this is to destroy a region and bounce the
+memdev:
 
-cpuset             |   multi-socket-cpu      single-socket-cpu
-==================================================================
-single-socket-mem  |     mem-package            mem-package
-------------------------------------------------------------------
-multi-socket-mem   |       global                 global
-------------------------------------------------------------------
+  cxl disable-region region0
+  cxl destroy-region region0
+  cxl disable-memdev mem0
+  cxl enable-memdev mem0
 
-But I think this reduces to cpuset nodes dictates the weights used -
-which should already be the case with the existing code.
+Region teardown zeroes the HDM decoder registers including the committed
+bits. The subsequent memdev re-probe finds uncommitted decoders and falls
+back to DVSEC emulation, even though HDM remains globally enabled.
 
-I think you are right that we need to be very explicit about the
-fallback semantics here - but that may just be a matter of dictating
-whether the allocation falls back or prefers direct reclaim to push
-pages out of their requested nodes.
+Observed failures:
 
-~Gregory
+  should_emulate_decoders: cxl_port endpoint6: decoder6.0: committed: 0 base: 0x0_00000000 size: 0x0_00000000
+  devm_cxl_setup_hdm: cxl_port endpoint6: Fallback map 1 range register
+  ..
+  devm_cxl_add_region: cxl_acpi ACPI0017:00: decoder0.0: created region0
+  __construct_region: cxl_pci 0000:e1:00.0: mem1:decoder6.0:
+  __construct_region region0 res: [mem 0x850000000-0x284fffffff flags 0x200] iw: 1 ig: 4096
+  cxl region0: pci0000:e0:port1 cxl_port_setup_targets expected iw: 1 ig: 4096 ..
+  cxl region0: pci0000:e0:port1 cxl_port_setup_targets got iw: 1 ig: 256 state: disabled ..
+  cxl_port endpoint6: failed to attach decoder6.0 to region0: -6
+  ..
+  devm_cxl_add_region: cxl_acpi ACPI0017:00: decoder0.0: created region4
+  alloc_hpa: cxl region4: HPA allocation error (-34) ..
+
+Fixes: 52cc48ad2a76 ("cxl/hdm: Limit emulation to the number of range registers")
+Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+---
+v2:
+  Reworded commit message to focus on root cause per Dan's feedback.
+  Dropped downstream details (IG/construct_region/hpa_alloc)
+  Added error signatures.
+  Link to v1: https://lore.kernel.org/r/20260212223800.23624-1-Smita.KoralahalliChannabasappa@amd.com
+---
+ drivers/cxl/core/hdm.c | 25 +++++++++----------------
+ 1 file changed, 9 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index c222e98ae736..cb5d5a047a9d 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -94,7 +94,6 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+ 	struct cxl_hdm *cxlhdm;
+ 	void __iomem *hdm;
+ 	u32 ctrl;
+-	int i;
+ 
+ 	if (!info)
+ 		return false;
+@@ -113,22 +112,16 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+ 		return false;
+ 
+ 	/*
+-	 * If any decoders are committed already, there should not be any
+-	 * emulated DVSEC decoders.
++	 * If HDM decoders are globally enabled, do not fall back to DVSEC
++	 * range emulation. Zeroed decoder registers after region teardown
++	 * do not imply absence of HDM capability.
++	 *
++	 * Falling back to DVSEC here would treat the decoder as AUTO and
++	 * may incorrectly latch default interleave settings.
+ 	 */
+-	for (i = 0; i < cxlhdm->decoder_count; i++) {
+-		ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(i));
+-		dev_dbg(&info->port->dev,
+-			"decoder%d.%d: committed: %ld base: %#x_%.8x size: %#x_%.8x\n",
+-			info->port->id, i,
+-			FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl),
+-			readl(hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(i)),
+-			readl(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(i)),
+-			readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(i)),
+-			readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(i)));
+-		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
+-			return false;
+-	}
++	ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
++	if (ctrl & CXL_HDM_DECODER_ENABLE)
++		return false;
+ 
+ 	return true;
+ }
+
+base-commit: 93d0fcdddc9e7be9d4f42acbe57bc90dbb0fe75d
+-- 
+2.17.1
+
