@@ -1,233 +1,216 @@
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011013.outbound.protection.outlook.com [40.107.208.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0FD26E173;
-	Mon, 16 Mar 2026 14:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773671649; cv=fail; b=SM23+QHCd9snxZRtPcqK8QQB2+xTvAnTeKQlnMDacqh4YHSQhb2p3fa02R/9+5upO6t6TqxrMVTOsRpVACM8gKOHZgDdjcBfKChbP71gjba/wJEyn4ripA2JTw0dhSe3JfCaG3K4GQ0qvO//YwSciv3ZHcwzlx3rn1ivqf88G90=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773671649; c=relaxed/simple;
-	bh=DAJ5Q9RoPW5rTR+MNrFhb783lZG3fWaTSjURQ+G0GbU=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=mou9Ps3EUTXbxB+DhCuTShCClTj0h91cO8DxbHEetAEJYV8oOr/oI5C3kHdHod50tHppe18bh962yaHDUV/UmvDGO3pk/6CQ9242edjN777cekdEKCDHm4J3d3hFp4HZAfjdFR4cQUw6dphvmvHp8dVhxurlHWyCjkFFzVYw0YY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0rTE0lwz; arc=fail smtp.client-ip=40.107.208.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE9619ADB0
+	for <linux-cxl@vger.kernel.org>; Mon, 16 Mar 2026 15:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773674378; cv=none; b=f99PMvJ/ZX9ShJUVJwIv0bDCYMWTQnYfK80Ao1f+rpQGnYNJDSNkAFO/1Ysy2kQDPFIxiXNFigFuRnK6lwhP5bXQZmUea+C+PCCYUIXgBNOlhjt0tYd69VtMyDF6AFplRF7Wn+tr57eVHBT2D/8MT2XJYzPS7e1I1qutNXC/73I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773674378; c=relaxed/simple;
+	bh=+SDK+ILsKmipkaVQAvqWVrbDqxQl7+mGIn9WdMBmieI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RV4EuDH0SUayXqkb8RwDGbs6RtVLI758b7iyljSxZvc//GxOedgChkghqK1Sqs5jSBwbx3SkYwPou2gOIMzlRIZ3teJ2hy9M04iiWghO61tjKJLi2vjR+kdfCKw4VlyMErI4pooaOTyj7xmFpAZjE5Vnspoux8GpKXW/cypUhMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A6sUBcQn; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0rTE0lwz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zIpxYBhQQWcpGFW4KoXupje9989Ya/HWAF8ixaVKbwx6Sb2UmYZ/HfQu4eZeTiGFd3OPx1OUgTEidmvLYPgZHkZmm1eKhntGs8mdKcvIarlPBq93HVMoUwsAu7yJRYDLDV5BI7leQ6XBiPYKPHUFGpRzdv+eoxA8iMMJX8efpBmvDucYuAMZQgSCj+xG4bn4kDI8y84xOVm3L+SaPWLsNkUDQzsuixbDy89D84FRggpu68VehMeQjN2P5dB+UYTLg5UHlGikzx9+ZyvjlBhJA3D/SLhZUV/1X96dOWPHIWKgLnQFOC5vfntbI4cOnmUTg/LSN+uaY7uh5q8qIM/ICw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xHq4xlvCySEbsEqkno4tcRoysQ5DTIpSNUBIte3EyMY=;
- b=w2Cntv/HQ04rMkf8NLRZ06nXLYd8nobHg/iOGL/KiChq8QnRjoN7IWNAMZ8+/PlWF6v2TUTnCQuKsQ21l/bpHv2PQTYPtIh9/L9UiaBH/mhaAfuHtiBmdZ0DzJTknjWCJlKQCfXsNnIRdxCAvWzYdHi61tvsuz8g03+nUl/dzUc+A0QjnUxhBfSKCAACzhM8cbGgy4yQpRkeWv7UQlXOmOYr1Q8GBrvGsOX/nWPzZd17ORXmLHzSOiitGmxwAnx1sz2ZfRnvrQW/VnfU2NHYVsEc+n4ldzl47RDPECCZbUdttdFOIFrR1DUiJDsYY9WVwNkKc+S2w8kKauj/36p2Ng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xHq4xlvCySEbsEqkno4tcRoysQ5DTIpSNUBIte3EyMY=;
- b=0rTE0lwznf8DSUFSyIkr9xsvSm/T+qa/9eggHrckMmDV2s45bThsTF9M14OqwF4avhntnaCervje+OpEkS8yrqSd0CO2xlSXvUVunKj5vWzHY9YVLo2DrXDVjDS8ZtI3eYrqw0EUCx6e3q/k/OU9nzqQxe/p7VDtOJUVy+AXJCE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN2PR12MB4205.namprd12.prod.outlook.com (2603:10b6:208:198::10)
- by MN2PR12MB4285.namprd12.prod.outlook.com (2603:10b6:208:1d7::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.16; Mon, 16 Mar
- 2026 14:34:04 +0000
-Received: from MN2PR12MB4205.namprd12.prod.outlook.com
- ([fe80::2bc8:55e3:d3e4:ebe3]) by MN2PR12MB4205.namprd12.prod.outlook.com
- ([fe80::2bc8:55e3:d3e4:ebe3%5]) with mapi id 15.20.9723.016; Mon, 16 Mar 2026
- 14:34:03 +0000
-Message-ID: <2c4ced68-37b1-4e46-84ce-91b63606e2c3@amd.com>
-Date: Mon, 16 Mar 2026 14:33:57 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v23 08/22] cxl/hdm: Add support for getting region from
- committed decoder
-Content-Language: en-US
-From: Alejandro Lucero Palau <alucerop@amd.com>
-To: Dan Williams <dan.j.williams@intel.com>,
- PJ Waskiewicz <ppwaskie@kernel.org>,
- "Cheatham, Benjamin" <benjamin.cheatham@amd.com>,
- alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, dave.jiang@intel.com
-References: <20260201155438.2664640-1-alejandro.lucero-palau@amd.com>
- <20260201155438.2664640-9-alejandro.lucero-palau@amd.com>
- <03ab7820-a6e0-4655-bae7-61d2d0b7dfd6@amd.com>
- <28148dcf-3cdc-439b-900a-a3f672a28ad1@amd.com>
- <ac50b18c99f5863f456d2d486454df8eebe35719.camel@kernel.org>
- <69b37069af0f8_b2b610068@dwillia2-mobl4.notmuch>
- <5a42d88d-3825-46a3-a014-79b3936e3f6d@amd.com>
-In-Reply-To: <5a42d88d-3825-46a3-a014-79b3936e3f6d@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO6P123CA0059.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:310::17) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A6sUBcQn"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7d751ef36ccso2635900a34.0
+        for <linux-cxl@vger.kernel.org>; Mon, 16 Mar 2026 08:19:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773674376; x=1774279176; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m2chYU1ux6ZQIx4otnZe8opROVQFDtOWN8KCrqkEk7A=;
+        b=A6sUBcQnz01R62fVF+h6Y6xT6yY3o5L1kGXy0jZvYHoim57O1YYCsHL5HPXo1Aqw43
+         4y+97PfxZ/2UEJ2fAzaIaIJw+TMgd4MV/lofejcuL346Gwo7RV4VTgYpACsLTm8qdwQI
+         Zu3nCXUDaPgvxyFC32qCXmXb6bu74+W40oQb/GC54Ms/yK/bpVSZVqyIAvs1z6jTNEb2
+         K8sx3jTzc3VPY+/WdvBtkorYVhBovt/qb7UJD+aB4/4q17yBdqPf/XGJ06cN+V3M69YC
+         qRy0u0rAZr9XDBbAxCU3FMklq1fcE/QDjO5fto3UIR9e0elW8uRC5KPz4Bk7rggo/hbr
+         YK+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773674376; x=1774279176;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=m2chYU1ux6ZQIx4otnZe8opROVQFDtOWN8KCrqkEk7A=;
+        b=WDj5QunK+Q6mtUfoHZeJezV5ULdjyADfNHLiMPt1CJGllg/OKJmse9R/qhQnOAdjij
+         aidO557xdHPg06tB+AjoGf/umGpy6uo990PbL3tfy2agPpg2X//1hVXhsjZx5XkHIx0J
+         Y40QRkGAhM+vZ6EsAs+9GN8XUTOCOYML6m1CP3C/0gk3LIpJL3ZUEoPt9m23wRQruw9D
+         KQZQF9DK142b0fPsHhF+9olEqqMEvnw+mpFTg3f+SfdFx7u6WmeQuyljNTY8HPKRPf1J
+         /n2qPYGZ+LGW7g3p4BXJMA2+XwPPB+aQXqZM0T/K61ixh/T9VtQQrTJMgz9h885Z1bCF
+         I8VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnEgFPQcsG9bZDCjY/sdyP7tM7QLAXWZN/tL+8jyjp4/TYZRmC8+CnCye2itq08I0hhmGzIOmZhts=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVoVY8UC39JLWYyDBCaSV9CbdZEP9DXwzfdXCJwyWT+kHHwNMe
+	Hg/diUHiv51zSlQpOJq8TDBEjILOZ4XzaNQcLfV8i+O/1xGeR7BFyg2A
+X-Gm-Gg: ATEYQzxczf5tP6ywppQTcWyIMbJXd8OQECIRabDmETbbqFtJBLEKlyJIOQ4CdlZoib1
+	Lshu5F98QGe0Ad9boKFAGSxkDKZMg2DCq/yVGyLVL0v7nE1AHwRZXRswYXwmPULCQuWw3ahwCuL
+	cJkfcQxH2jGTUD7YifzBQY86RQBKEcrL5mkAGGouE/IpBIj5EfAD6EBDDEDuGWZ9UA4Q+0fBX12
+	1wrLMImNK65dkC+esoVysEinhAEsC6EiR5nWHHpFz6hF6aVmmlO9h1UGmxqNSNqii+DEVLparPX
+	DYN17dPedyt40aYEl9oq/nSHgY8xZYrcZTNzsnUBIWNfxJeRTrz9otgnp96hXHDjH/SRsm4nuDw
+	hlui3Gl5Fap8dBrhJNUMP0EOur4NhOncs/Z+1JQPTnRdq8/R8DieGbUcNvN8SMbX3Xn0EClDVGQ
+	+lNnbzzgrriNBXFNfYQviHHQ==
+X-Received: by 2002:a05:6830:648b:b0:7d7:4074:3382 with SMTP id 46e09a7af769-7d78248b731mr8382454a34.10.1773674375662;
+        Mon, 16 Mar 2026 08:19:35 -0700 (PDT)
+Received: from localhost ([2a03:2880:10ff:41::])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7d76ac8ce73sm13670944a34.11.2026.03.16.08.19.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2026 08:19:35 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Rakie Kim <rakie.kim@sk.com>
+Cc: akpm@linux-foundation.org,
+	gourry@gourry.net,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	byungchul@sk.com,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	david@kernel.org,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com
+Subject: Re: [LSF/MM/BPF TOPIC] [RFC PATCH 0/4] mm/mempolicy: introduce socket-aware weighted interleave
+Date: Mon, 16 Mar 2026 08:19:32 -0700
+Message-ID: <20260316151933.3093626-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260316051258.246-1-rakie.kim@sk.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4205:EE_|MN2PR12MB4285:EE_
-X-MS-Office365-Filtering-Correlation-Id: efd6bb01-4ae6-4cdc-be9d-08de8369114a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	8o0Kd7gEK+PckTO/Gf/xidTd2zFEPflFBV+Iu1lGtd5wHjjBlEMwUis6rkuwo24dURvfdzALZWZ1nITbFMtLmy4yyRj1OexhYEa8zTifkoclvsQQATeEgUVQqltVnNH57/0+2GGf1z5bXKPhAw0Wbj4FhfuJSmQ7OxWigeN3przeX2ZOu3rBf0C00yxCd1O6qdy7Me66c9duo/KBREE1anihNzSrH/epAR2kyUMqsNVBe20mY636NgDHeGk5J7EWPCafdS6YxkQMjeCLSl5xnHVZV9U9lci6vYhEG8lQCF6DxUtiu+Pgx0Ek9yplAFcStkohly/nHZOAWEvu/9Ppp+Fo6NFByiG6gUAnJztatfQMbaw16y4McKyFf71h+0MwLYNYuqHpj8/cYksBQkhHX/vkgc/rmQUdgKEYO+mI4cXWPNoDfDH93ZIzPGWjyjug+gzGDG1ceiGCzR8tK61ScfJ4/60aGTlJZy0CUpPX8IkCkKfR7/8y8Si5n+1R75vI995TBYnPrnhFWEYNIwuSxrdK0fZxe06vuUBzP5WfYiTniXeX3fXJJPiKVNB+nY8EjnUUicRw2DASMUXwZwfyRrCUTjv29wm3WtpwnwbAENp7h1/O4vmZor7nAd9nx5+YFEWt+BHbNvhEreYQS3I6RNI0Z1hwkpbuQZKJhE4inZ1eDkvn2ay8A4Qu2kt1NRczhhVROzKhXxQBHg+PYbKu7WDos/A17oyTq5i4KMDBJws=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4205.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OEVGQmFMakhqMUdwVHU3NjJXM2xpOEZQbWlSekhxcFJ1Sk1oV0N0VUxHY3V1?=
- =?utf-8?B?WEl0Q2dHcFdwRWdjVmQ1YlJQYUFyZzhKczdIendtNXdZV3B3SDMrdmlXTml1?=
- =?utf-8?B?ZzJpazRQRWg1ZzFYR3Q5Mnl4eHI5eXlKdGRmV3o1d0FDVDQyT2dwcVFFQ28z?=
- =?utf-8?B?ZGpndU91RjEwZXMzWkZSckR2UzI4Y2VZeThJeXhvalRSaHpySGgvc2Y2Z3NQ?=
- =?utf-8?B?bGlEREJpZVVlT3BUN3ZRbFZLdU9jVVFkbGFvdmtKTm1McFVXdDBsZzFoMm5l?=
- =?utf-8?B?VHhJME9GS0lVdXQwZ1NhOHEvVXd5OVlKRm9YQTQvbGJTNmZKSlF5R0NlbTY1?=
- =?utf-8?B?RG4vaUNYYTZRVUo0b0RNbHRCYTZha21URXJidzhtZEhSeDlnOWxCNVlEZDg4?=
- =?utf-8?B?S1VtQ3UzZUpKWVIwaUlPQnRiNWdGK2hjS3J6ZHIzVjlMTlBLTExNRXl5VkNn?=
- =?utf-8?B?RTZta09PcmZUdEFvOTcvdlVnT0djbGliQTRObGF4MmNuaENGWWRPUzA1UEpL?=
- =?utf-8?B?MzNObVZBeEpzb0lhSzd2VkFja25EZ2c0SEJNbms1RGFuVTF0WlZHRmVLbnVD?=
- =?utf-8?B?UDR6OHEyWlllc2xDRU52M0kvUS9ZbjJtWlFpRHlaaW9sL2VSWEZTUEg4VVNE?=
- =?utf-8?B?RGd2NUlTZHdDTkVrZFd4V3M0SU53M2xtS0U0RWtoS0tqVU1pM0s2VTlHRm5i?=
- =?utf-8?B?UDR0R3RYc0ZUUWdIZXpyZXpBQWVLUmlYSG0yV2dmZ2l5SVY0K0hVdEVVemVW?=
- =?utf-8?B?WndaOVlFNU53dGp6Z3NhbUkyU0tGRnpKZ1RLL2t2YmdNWEJtZUZoOXgrdlZp?=
- =?utf-8?B?M1BNOERCZ0hRc3Z1dnhDMXVUZFFwSDJBMlNJWEx1bWJwSkZLUDhEN215Misy?=
- =?utf-8?B?RnJpTUhJcTF1RzZoS2JsR2RzajBkRTkxYVRwTy9vNnIxeFR5UnEvRjNjam9T?=
- =?utf-8?B?OXV4a2tkNmJZMVVEZEpoNXJZSHJIZWtsRTVvZGFGWEZTUXZqVEhXQW1TdHlG?=
- =?utf-8?B?TUhLQk5TREdFRkc4azBJazlJMVE4YlNaa2t2eG5teUJHblc3Z1dLcmVIalFW?=
- =?utf-8?B?L1BsN2NIb2Nucm5ReDFzdG5GWm5IN3VQdE93UThJL2tFTVhmS2dRV1RiaWww?=
- =?utf-8?B?VDZoMW1MZm9XK1RZU3NpSkVoWUdic0lPUVhnaVNiVzBxcG1PY292Sy9IVzRr?=
- =?utf-8?B?bHZoNTkrNUhjVW5zczZnVi9qcXZDazZLVmRxbTk0TE9uRVZoN0c4M3J2aG85?=
- =?utf-8?B?UXI2WUxKSHZmdnNid0pZbXpSQllBUlYwby90U2doMWJMNUExbW13TUxhYWFX?=
- =?utf-8?B?SXF3VUVMTUozaVZRanJpMFRyMGZCNVhacE01ZUFSNkN1ekxFZzhLK0JDbWY4?=
- =?utf-8?B?UWE4cCtNeEk2WTZpSUN5MlI4WCtoUjV3WmVpMEZWd245cFNVVThCUjFPSGEr?=
- =?utf-8?B?blZtVTNvRUJGS2djTm5IUTdEbGR2cTV0c0UrSUJEVGY1aTRGQkdEWElWWmxo?=
- =?utf-8?B?QzBpdVJiTE42dGk0WnlSalpvSHNqUFZyZ1A1QktwcmloTmlzaDRhV0d5NWZk?=
- =?utf-8?B?UVdqWGdXSHJlcE9MOHVqR3BYdE5OSHlFbEZua09xYTBXa1RvRVh4MjFKdENB?=
- =?utf-8?B?TitMWXcxKzVsV28yaTV6MEp5Zm9PMjdFdWZ1dUF3N201VTkyNDlRMDRDUXI2?=
- =?utf-8?B?bVFWVFBGN3ZHWkZOREpFZjNNWm1aR3hqNnlYZ3hjRDZ6MTk3V05xcnpCak1B?=
- =?utf-8?B?STdvR0UyMXozQTdVTVJveUpvcGRFaE5FUUZhUDV1YW9nZG9KbzlmU2k0dlhp?=
- =?utf-8?B?VG9HT1RuVHRHVmVrN3RnSGVGblVDWEtiZE5rNkVMa0l6UUJ5MlIyVWlhR01M?=
- =?utf-8?B?NjNYcHBtb1FqSkpoQ1dlblRSNlMxVVQvRGdTUkgyU2N0NHdTUlZjTFNuemtE?=
- =?utf-8?B?YUxWWVRlUzNrRFVTYVU4MTMwc0lyeitzN0dudVVUUlN6cE1KbTBkRzNYZlV1?=
- =?utf-8?B?d1hLYThuNFk2dUdzOWpuVjQ5T2dxaSs1amFvRHE3bTJGVlRhSXNCejVMRjBh?=
- =?utf-8?B?R2pLaVZXMlRTaU4wUXZrYzVoVWkveGtkZ01Ma0Z6anVuV1B0ZVdDdURObWF1?=
- =?utf-8?B?ZE91QXAwTTJKdVlhUDNvL1dxd3F4c2g3Qit3dEs5UGxCTWNUYk44V05GREN4?=
- =?utf-8?B?cE5TanNLT3BZcUowNFZROU14bEFTbXZmZWJhWVBOMGovY0ExVTR1TUszZWJt?=
- =?utf-8?B?ZW55MWRJTjFBVzhxczFIZWNTWWpSdUZ3SVlmZ1JwdXJMZVdpOWF1ZWZicVcy?=
- =?utf-8?B?YTF0bXR4bURyYnROZHgvVEJtUmE1eDMyVGttZmRqWjRDL3g1ME1EUT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: efd6bb01-4ae6-4cdc-be9d-08de8369114a
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Mar 2026 14:34:02.9432
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bVnZCgqDYBe4dpv4XSPQjxg6BLV9o2Hmsrv/EsWg77JJEkJcn0SKZ5J5oi3C8qh/oMuvRikyANFig+r+EZpJjA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4285
+Content-Transfer-Encoding: 8bit
 
+Hello Rakie! I hope you have been doing well. Thank you for this
+RFC, I think it is a very interesting idea. 
 
-On 3/13/26 13:10, Alejandro Lucero Palau wrote:
->
-> On 3/13/26 02:03, Dan Williams wrote:
->> PJ Waskiewicz wrote:
->> [..]
->>>> Yes, I think you are right. This works in my tests and it is safe
->>>> because I check the region does exist before using it. But the error
->>>> inside sfc should then not be fatal for cxl sfc initialization and
->>>> fallback to the other cxl initialization possibility.
->>>>
->>> So I'm running into this situation I think.
->>>
->>> When you're testing, are you surviving a reload of the driver?  Right
->>> now, I can load and successfully create the region0 device. However,
->>> following the same teardown path in SFC, I cannot reload my driver
->>> afterwards and map the region.  I get:
->>>
->>> cxl_port endpoint5: failed to attach decoder5 to region0: -6 (ENXIO)
->>> <driver> 0000:c1:00.0: CXL found committed decoder without a region
->>> <driver> 0000:c1:00.0: CXL init failed
->>>
->>> I'd be surprised if SFC in its current patch state would survive this
->>> same insmod/rmmod/insmod test.
->> So over here [1] I reviewed Smita's patch to stop resetting decoders by
->> default if they were part of region auto-assembly. While that stops
->> resetting the decoders it does not allow the device to get a hint of
->> where it should place its HPAs if the decoders get reset while the
->> driver is detached.
->
->
-> That is already what type2 support is about, and what was from the 
-> beginning: to get an hpa from the root decoder. The HPA will be found 
-> when the driver loads and the memdev is created and when the related 
-> region is going to need such HPA, and based on what is free there. 
-> Before v22 that was the only case contemplated, assuming the BIOS 
-> would not configure the device decoders. v22 added support for getting 
-> the region from autodiscovery if the decoders were committed, and v23 
-> was for not resetting those decoders if that was the case when the 
-> driver unloads.
->
->
-> I'm pretty sure what Type2 pre-v22, v22 or v23 do in this regard is 
-> not perfect  (v23 was a quick hack for PJ to test the new 
-> functionality you demanded), in fact I'm changing the way hpa is 
-> allocated for Type2 because after Gregory's concurrency tests and pmem 
-> patchset, I really think the approach needs to change. But as I said 
-> in Smita's review, you are precluding the basic stuff with your 
-> never-ending "improvements". You are not in a better position than me 
-> to have an opinion of what Type2 drivers need, and your comment is 
-> this thread is just a lack of respect to me. Yes, it is a blunt 
-> assertion, and I will repeat it as many times as necessary.
->
->
+[...snip...]
 
-After looking at the series proposing DVSEC save/restore for supporting 
-device resets, I think I misunderstood your comment here, and if so,  
-you want to address such a reset and not the HDM reset triggered by 
-software ...
+> Consider a dual-socket system:
+> 
+>           node0             node1
+>         +-------+         +-------+
+>         | CPU 0 |---------| CPU 1 |
+>         +-------+         +-------+
+>         | DRAM0 |         | DRAM1 |
+>         +---+---+         +---+---+
+>             |                 |
+>         +---+---+         +---+---+
+>         | CXL 0 |         | CXL 1 |
+>         +-------+         +-------+
+>           node2             node3
+> 
+> Assuming local DRAM provides 300 GB/s and local CXL provides 100 GB/s,
+> the effective bandwidth varies significantly from the perspective of
+> each CPU due to inter-socket interconnect penalties.
+> 
+> Local device capabilities (GB/s) vs. cross-socket effective bandwidth:
+> 
+>          0     1     2     3
+> CPU 0  300   150   100    50
+> CPU 1  150   300    50   100
+> 
+> A reasonable global weight vector reflecting the base capabilities is:
+> 
+>      node0=3 node1=3 node2=1 node3=1
+> 
+> However, because these configured node weights do not account for
+> interconnect degradation between sockets, applying them flatly to all
+> sources yields the following effective map from each CPU's perspective:
+> 
+>          0     1     2     3
+> CPU 0    3     3     1     1
+> CPU 1    3     3     1     1
+> 
+> This does not account for the interconnect penalty (e.g., node0->node1
+> drops 300->150, node0->node3 drops 100->50) and thus forces allocations
+> that cause a mismatch with actual performance.
+> 
+> This patch makes weighted interleave socket-aware. Before weighting is
+> applied, the candidate nodes are restricted to the current socket; only
+> if no eligible local nodes remain does the policy fall back to the
+> wider set.
 
+So when I saw this, I thought the idea was that we would attempt an
+allocation with these socket-aware weights, and upon failure, fall back
+to the global weights that are set so that we can try to fulfill the
+allocation from cross-socket nodes.
 
->>
->> I am going to draft some patches to allow an accelerator to mark an
->> address range as "designated" so that it can recall the memory it was
->> assigned by boot firmware.
->
->
-> If you do so, I will start seriously about passing this work to 
-> another engineer, not necessarily from AMD.
->
+However, reading the implementation in 4/4, it seems like what is meant
+by "fallback" here is not in the sense of a fallback allocation, but
+in the sense of "if there is a misconfiguration and the intersection
+between policy nodes and the CPU's package is empty, use the global
+nodes instead". 
 
-so this rant is missing the point, and I have to apologize. Once I have 
-said that, I neither understand why you are proposing something that 
-reset series will avoid or would set the path to support the case you 
-have in mind, nor why are you mention it in this thread. Is it because 
-supporting that reset is a requirement for type2 support? I have been 
-aware of having to deal with this but not as a priority or part of the 
-basic support. If that is what you want, why did not you say so time ago?
+Am I understanding this correctly? 
 
+And, it seems like what this also means is that under sane configurations,
+there is no more cross socket memory allocation, since it will always
+try to fulfill it from the local node. 
 
->
->>
->> This also dovetails with the conversation I had with Paul Blinzer at
->> Plumbers about an ability to designate Soft Reserve memory. So a generic
->> facility to designate memory allows accelerators to recall their address
->> range if the decoders ever lose their configuration. It also tells the
->> rest of the CXL subsystem "hands off, this range was accelerator
->> designated by platform firmware".
->>
->> [1]: 
->> http://lore.kernel.org/69b1e0aacb9d0_2132100c5@dwillia2-mobl4.notmuch
->
->
+> Even if the configured global weights remain identically set:
+> 
+>      node0=3 node1=3 node2=1 node3=1
+> 
+> The resulting effective map from the perspective of each CPU becomes:
+> 
+>          0     1     2     3
+> CPU 0    3     0     1     0
+> CPU 1    0     3     0     1
+
+> Now tasks running on node0 prefer DRAM0(3) and CXL0(1), while tasks on
+> node1 prefer DRAM1(3) and CXL1(1). This aligns allocation with actual
+> effective bandwidth, preserves NUMA locality, and reduces cross-socket
+> traffic.
+
+In that sense I thought the word "prefer" was a bit confusing, since I
+thought it would mean that it would try to fulfill the alloactions
+from within a packet first, then fall back to remote packets if that
+failed. (Or maybe I am just misunderstanding your explanation. Please
+do let me know if that is the case : -) )
+
+If what I understand is the case , I think this is the same thing as
+just restricting allocations to be socket-local. I also wonder if
+this idea applies to other mempolicies as well (i.e. unweighted interleave)
+
+I think we should consider what the expected and desirable behavior is
+when one socket is fully saturated but the other socket is empty. In my
+mind this is no different from considering within-packet remote NUMA
+allocations; the tradeoff becomes between reclaiming locally and
+keeping allocations local, vs. skipping reclaiming and consuming
+free memory while eating the remote access latency, similar to
+zone_reclaim mode (packet_reclaim_mode? ; -) )
+
+In my mind (without doing any benchmarking myself or looking at the numbers)
+I imagine that there are some scenarios where we actually do want cross
+socket allocations, like in the example above when we have very asymmetric
+saturations across sockets. Is this something that could be worth
+benchmarking as well?
+
+I will end by saying that in the normal case (sockets have similar saturation)
+I think this series is a definite win and improvement to weighted interleave.
+I just was curious whether we can handle the worst-case scenarios.
+
+Thank you again for the series. Have a great day!
+Joshua
