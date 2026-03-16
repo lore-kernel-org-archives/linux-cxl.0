@@ -1,50 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23ADC30C37B;
-	Mon, 16 Mar 2026 17:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEF218DF80;
+	Mon, 16 Mar 2026 18:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773683829; cv=none; b=jlT6a3fOrW3fOkt6tvPfLtubU2kvJCAU5IKF3TD0xzk1rTh0s3mvr5C35BJymId8uylWtuztxQDEmZZDF4q8yqohrM9Q+m6nzqBDRydrXg63Nx2YzOoZ7PVJByLymltQ0oAJls2qOECuXg1X5lILg+POFbhqpi3Pr7CAeBjapIs=
+	t=1773684684; cv=none; b=PcvDXsNnhMlTEkmylJDIZ3+a6nVcfqJa6iKxLayz3cAIW1TCUu3SbKzTTmmiXIBNWLzEU7g4lXverku7lY+/fKRAuV8u2bOtJsOIs+oSRavOQ2XRM6qniZDryWWEJrp/t63D1RldOzNris73GnF/rfNHN0j4M7NnAunvsvO+3dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773683829; c=relaxed/simple;
-	bh=Nlplb5+HwGh8P6cDCekUQFDlxbYcp0XH6IADUuLUk1c=;
+	s=arc-20240116; t=1773684684; c=relaxed/simple;
+	bh=8+44uTrQ/29p3/qLO8+PYa00EGkhNU+tpwb+3NXcZkY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rkL5Im46Kzs516rSHsEKhF8CVt+C3BHa6fPzP0dqOy/B0mXjYvBZ/ZNQiXfH/fVs+O7wA5hKddEpRHhV7rqUDOMqzqu1EBim3lWjqwHp+/x4PWc+bBAFQUVG0+0AZDob4StG0rVXaE/3r9CEpM9DYaYtL2YP4bN4EGzkEVSKFSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AI6qDLv9; arc=none smtp.client-ip=198.175.65.20
+	 In-Reply-To:Content-Type; b=P0H/O1Rp7HVYGgpkVjWVaWpBEVDouigsFyx0yLpjs5kzk7wyG858OZ8Xi8GrPoJrxvoS5vWklMmmNjN5yTJNmQolt+SUMx9YV8vuWvQKQmYABJO8UjD4VdW3Vxun2MGZpB2pPHV0VYizGsRyKhrFBNZz0r93F/a8d00UGGTsEAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BDQezc0I; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AI6qDLv9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BDQezc0I"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773683827; x=1805219827;
+  t=1773684683; x=1805220683;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Nlplb5+HwGh8P6cDCekUQFDlxbYcp0XH6IADUuLUk1c=;
-  b=AI6qDLv9Gi2iegNylbrF/mXdRmhR9wTOC4z8vjIDo36M5TMjMzecWNr5
-   CjdsEdpH2qcvOy2+UP2X7+DHTxrnY2cWEiRGsk90hOYPq56Gr1EolUahF
-   ODJFT9behhkY8sOq+eiHNOVARiiuWBR0/rg250J7Dg+/+v4hPuGUhmRE1
-   BN968fR6ST/NmrMKvtb4jYV98zWJ2ZfijPINWV9VXtDKCu32CDGxs5zsH
-   yUfDljPShUmS2+Zo0NhKlVlJOjIsgqzlh3f+HAtOhFqjkhsTvPE/nmiO4
-   7jO6O/LIaf8UeFHZ/m0iUKJ2VlePEeprIgqpOqVnXSPUdXHg9YMZ5qQDR
-   Q==;
-X-CSE-ConnectionGUID: BjrO2W7DR4KnAcNbPK5svw==
-X-CSE-MsgGUID: ucAs/jdCQKCvqD1PPg2Gag==
-X-IronPort-AV: E=McAfee;i="6800,10657,11731"; a="74414667"
+  bh=8+44uTrQ/29p3/qLO8+PYa00EGkhNU+tpwb+3NXcZkY=;
+  b=BDQezc0IOwp9tAUG6jtf7pj3UwOOZ4sT8E/wCG74FtamDy3V2ycYHnJE
+   Www5vRiFj2mM70SkxWLo8vrFrLxHc6vi0aHoDv4mUj/voI5B3VED7nrtq
+   gVF1+tZSvkKVGlmBXR0rw1YAVjx3imp4PcwiBQSoB2ACmDDALtMdXEQ2j
+   iUQDihQNPd2rYx23GBQCfLJvTPAhwX9GQZKvsLIXg1XedfKysCb+4poSN
+   q/6iylIltVxWVoIQu9+P9+M4Nm5XEM48l6jKShh1p5khWXCbzSIs+fVai
+   i5U+AiR95k3SH99EkToupHjjagU0wWMXL4I1AstWgutnnOuAyfDgAQMXA
+   A==;
+X-CSE-ConnectionGUID: BzpMdsMtTSqG8OpWHEWYbw==
+X-CSE-MsgGUID: mSx0DWCWQS+adACH4shH8Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11731"; a="74682284"
 X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
-   d="scan'208";a="74414667"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 10:57:07 -0700
-X-CSE-ConnectionGUID: trjGfTf9SS6uoracVSVxVw==
-X-CSE-MsgGUID: wL+SxLvMQlSWZDUGbfPdMA==
+   d="scan'208";a="74682284"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 11:11:22 -0700
+X-CSE-ConnectionGUID: jDrCcEmZSQ+dhyKK0eIG2w==
+X-CSE-MsgGUID: pOUoKrK+SRefxNck8RT8+A==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
-   d="scan'208";a="259888120"
 Received: from lstrano-mobl6.amr.corp.intel.com (HELO [10.124.223.96]) ([10.124.223.96])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 10:57:05 -0700
-Message-ID: <49d8215f-7a4b-4f0c-a062-3edf7d5c06c0@intel.com>
-Date: Mon, 16 Mar 2026 10:57:04 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 11:11:21 -0700
+Message-ID: <9f941964-446b-4563-957b-7cc5f69a004b@intel.com>
+Date: Mon, 16 Mar 2026 11:11:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,96 +50,102 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] cxl: Consolidate cxlmd->endpoint accessing
-To: Li Ming <ming.li@zohomail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Ben Cheatham <benjamin.cheatham@amd.com>
-Cc: driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org
-References: <20260314-fix_access_endpoint_without_drv_check-v2-0-4c09edf2e1db@zohomail.com>
+Subject: Re: [PATCH v2] ACPI: NUMA: Only parse CFMWS at boot when CXL_ACPI is
+ on
+To: Kai Huang <kai.huang@intel.com>, rafael@kernel.org, lenb@kernel.org,
+ dan.j.williams@intel.com, alison.schofield@intel.com
+Cc: akpm@linux-foundation.org, nunodasneves@linux.microsoft.com,
+ xueshuai@linux.alibaba.com, thorsten.blum@linux.dev, gourry@gourry.net,
+ wangyuquan1236@phytium.com.cn, linux-acpi@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260308222313.14014-1-kai.huang@intel.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260314-fix_access_endpoint_without_drv_check-v2-0-4c09edf2e1db@zohomail.com>
+In-Reply-To: <20260308222313.14014-1-kai.huang@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 3/14/26 12:06 AM, Li Ming wrote:
-> Currently, CXL subsystem implementation has some functions that may
-> access CXL memdev's endpoint before the endpoint initialization
-> completed or without checking the CXL memdev endpoint validity. 
-> This patchset fixes three scenarios as above description.
+On 3/8/26 3:23 PM, Kai Huang wrote:
+> On CXL platforms, the Static Resource Affinity Table (SRAT) may not
+> cover memory affinity information for all the CXL memory regions.  Since
+> each CXL memory region is enumerated via a CXL Fixed Memory Window
+> Structure (CFMWS), during early boot the kernel parses the CFMWS tables
+> to find all CXL memory regions and sets a NUMA node for each of them.
+> This memory affinity information of CXL memory regions is later used by
+> the CXL ACPI driver.
 > 
-> 1. cxl_dpa_to_region() is possible to access an invalid CXL memdev
->    endpoint.
->    there are two scenarios that can trigger this issue:
->    a. memdev poison injection/clearing debugfs interfaces:
->       devm_cxl_add_endpoint() is used to register CXL memdev endpoint
->       and update cxlmd->endpoint from -ENXIO to the endpoint structure.
->       memdev poison injection/clearing debugfs interfaces are registered
->       before devm_cxl_add_endpoint() is invoked in cxl_mem_probe().
->       There is a small window where user can use the debugfs interfaces
->       to access an invalid endpoint.
->    b. cxl_event_config() in the end of cxl_pci_probe():
->       cxl_event_config() invokes cxl_mem_get_event_record() to get
->       remain event logs from CXL device during cxl_pci_probe(). If CXL
->       memdev probing failed before that, it is also possible to access
->       an invalid endpoint.
->    To fix these two cases, cxl_dpa_to_region() requires callers holding
->    CXL memdev lock to access it and check if CXL memdev driver bingding
->    status. Holding CXL memdev lock ensures that CXL memdev probing has
->    completed, and if CXL memdev driver is bound, it will mean
->    cxlmd->endpoint is valid. (PATCH #1-#3)
+> The CFMWS table doesn't provide the memory affinity information either.
+> Currently the kernel assigns a 'faked' NUMA node for each CXL memory
+> region, starting from the next node of the highest node that is
+> enumerated via the SRAT.  This can potentially increase the maximum NUMA
+> node ID of the platform ('nr_node_ids') a lot.  E.g., on a GNR platform
+> with 4 NUMA nodes and 18 CFMWS tables, this bumps the 'nr_node_ids' to
+> 22.
 > 
-> 2. cxl_reset_done() callback in cxl_pci module.
->    cxl_reset_done() callback also accesses cxlmd->endpoint without any
->    checking. If CXL memdev probing fails, then cxl_reset_done() is
->    called by PCI subsystem, it will access an invalid endpoint. The
->    solution is adding a CXL memdev driver binding status inside
->    cxl_reset_done(). (PATCH #4)
+> Increasing the 'nr_node_ids' has side effects.  For instance, it is
+> widely used by the kernel for "highest possible NUMA node" based memory
+> allocations.  It also impacts userspace ABIs, e.g., some NUMA memory
+> related system calls such as 'get_mempolicy' which requires 'maxnode'
+> not being smaller than the 'nr_node_ids'.
 > 
-> ---
-> Changes in v2:
-> - Move hoding CXL memdev lock to cxl_debugfs_poison_inject/clear(). (Alison)
-> - Drop device_lock_assert() in cxl_inject/clear_poison_locked(). (Alison)
-> - Remove device_lock_assert() in cxl_dpa_to_region() to remove patch
->   "cxl/region: Hold memdev lock during region poison injection/clear". (Alison)
-> - Squash patch "cxl/pci: Hold memdev lock in cxl_event_trace_record()"
->   and patch "cxl/region: Ensure endpoint is valid in cxl_dpa_to_region()". (Dan & Dave)
-> - Remove patch "cxl/port: Reset cxlmd->endpoint to -ENXIO by default".
-> - Link to v1: https://lore.kernel.org/r/20260310-fix_access_endpoint_without_drv_check-v1-0-94fe919a0b87@zohomail.com
+> Currently parsing CFMWS tables and assigning faked NUMA node at boot is
+> done unconditionally.  However, if the CXL ACPI driver is not enabled,
+> there will be no user of such memory affinity information of CXL memory
+> regions.
 > 
-> ---
-> Li Ming (4):
->       driver core: Add conditional guard support for device_lock()
->       cxl/memdev: Hold memdev lock during memdev poison injection/clear
->       cxl/pci: Hold memdev lock in cxl_event_trace_record()
->       cxl/pci: Check memdev driver binding status in cxl_reset_done()
+> Change to only parsing the CFMWS tables at boot when CXL_ACPI is enabled
+> in Kconfig to avoid the unnecessary cost of bumping up 'nr_node_ids'.
 > 
->  drivers/cxl/core/mbox.c   |  5 +++--
->  drivers/cxl/core/region.c |  8 +++++---
->  drivers/cxl/cxlmem.h      |  2 +-
->  drivers/cxl/mem.c         | 10 ++++++++++
->  drivers/cxl/pci.c         |  3 +++
->  include/linux/device.h    |  1 +
->  6 files changed, 23 insertions(+), 6 deletions(-)
-> ---
-> base-commit: 11439c4635edd669ae435eec308f4ab8a0804808
-> change-id: 20260308-fix_access_endpoint_without_drv_check-f2e6ff4bdc48
+> E.g., on the aforementioned GNR platform, the "Slab" in /proc/meminfo is
+> reduced with this change (when CXL_ACPI is off):
+> 
+> 	w/ this change		w/o
+> 
+> Slab	900488 kB		923660 kB
+> 
+> Signed-off-by: Kai Huang <kai.huang@intel.com>
 
 Applied to cxl/next
-43e4c205197e cxl/pci: Check memdev driver binding status in cxl_reset_done()
-11ce2524b7f3 cxl/pci: Hold memdev lock in cxl_event_trace_record()
-b227d1faed0a cxl/memdev: Hold memdev lock during memdev poison injection/clear
-e5564e392075 Merge tag 'device_lock_cond_guard-7.1-rc1' into for-7.1/cxl-consolidate-endpoint
+1e1cd49ded59 ("ACPI: NUMA: Only parse CFMWS at boot when CXL_ACPI is on")
 
+> ---
 > 
-> Best regards,
+> v1 -> v2:
+> 
+>  - Use Dan's suggestion to simplify the diff:
+> 
+>  https://lore.kernel.org/linux-cxl/69a8dc7ca72c2_2f4a10026@dwillia2-mobl4.notmuch/
+> 
+> Hi Alison, Gregory,
+> 
+> I didn't add your RB since the code now is different from that you
+> reviewed.  Appreciate if you can take a look again and provide the tag
+> if the patch looks good to you.
+> 
+> ---
+>  drivers/acpi/numa/srat.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index aa87ee1583a4..62d4a8df0b8c 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -654,8 +654,11 @@ int __init acpi_numa_init(void)
+>  	}
+>  	last_real_pxm = fake_pxm;
+>  	fake_pxm++;
+> -	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
+> -			      &fake_pxm);
+> +
+> +	/* No need to expand numa nodes if CXL is disabled */
+> +	if (IS_ENABLED(CONFIG_CXL_ACPI))
+> +		acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
+> +				      &fake_pxm);
+>  
+>  	if (cnt < 0)
+>  		return cnt;
+> 
+> base-commit: 084f843093bee5563b179fd4b630122ba820e0c7
 
