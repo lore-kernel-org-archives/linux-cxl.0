@@ -1,42 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD64345753;
-	Tue, 17 Mar 2026 19:57:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB073264D0;
+	Tue, 17 Mar 2026 20:00:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773777465; cv=none; b=XfJZMrJoXvH/F15ifPasQbZZsOnPOH6vf4F5qT3mG6mEBaVAJdaa953hvXmBH0LEOqJYs5qHXx5rvzQ2gmAdZp6XTeISkyqQS9YnJGw2dSO5flJSJYeBe/5SJHPxTVdsFgWnYo2ruX+CMgQTBF7SZPpoSunVDMVrn8nEwa0NW24=
+	t=1773777603; cv=none; b=aODZbc/ZCg6caWm8OfEhCOMU37k1nNzlQIVx8dCkXOqkoTrRQtOs5XorhL7ztYCcAIwnBidM1l7G/q6/4bdQdEcKJfQ76JcF+aU1VbIGfmrsOicNO9UmgzXQ6C8SbmXVxQc6kyPA2s9khfmsAEYnkfHt/SKgSBKOQjADdyBsxCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773777465; c=relaxed/simple;
-	bh=5iuk5HLQnShrXCR2H8x4KX7ju64cB201DN1+1DBo8OI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jaU8kTr1Geq8bhCKoATo+8GLKpr/vPDxCTRYOud7gSFVX9L4ICsBlAgTikm4zpWdX2oC+S5mjs0eUoqtO9nkzvYgt8KsYSNYjeuIzQMYtb+kjAs16ieiYQqa995FDjYxL8oqMjY45QEr/18c6O5lLczpq99bBlFau+D0jTvMfy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dmPCIk1H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773777603; c=relaxed/simple;
+	bh=aMcAv71YOkkFD+ju6rmRuDp0ZfzNN0oX5ZYRoLlaqM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q16fdYULVtZA9x5lFlgO4KeVF8E/kMeX7L+oxSOsFdNuAsY9bSRPIMb3QcGvuDYLcGGM89OHmU9iNkBrWBMb4Y8uMRYUILcye+XVZtpZG9w3z4mpFy8NBXfWMkBfa+c0IxEbRZ9PMp/8DYsEmv3tvOjUDuQEceh7G1JPYb/Tjvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MKGd0sMP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dmPCIk1H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64813C4CEF7;
-	Tue, 17 Mar 2026 19:57:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MKGd0sMP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DBFAC4CEF7;
+	Tue, 17 Mar 2026 20:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773777464;
-	bh=5iuk5HLQnShrXCR2H8x4KX7ju64cB201DN1+1DBo8OI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=dmPCIk1H2iwKJ5eY5vhnYdSr1eM4yVsqpPdP+4BeO/55Ie58PQ0QaBjYf2yrKQF22
-	 J/iJoOwCkjH5yuciRDZXlPF3eReB4NhD5iP1gx9H3YkJnnmipD8413ekHAYWUuV9Ld
-	 v/RvebO+pAEnYzbYeXS98hlH8/jas/Hg3oIPn175Rxuvy8mWw4P7Ll7SJERdrk6BiD
-	 MK4ca2y6xOm6VvGlNpTBAR189eK/qumAoWjmHOUQYqqmDAW6PGpXLTy+pvZc/OjdPn
-	 amcwnBzhYqpfAkdWlPKm0W2fXDgSuEyKmPCwh0S6drx93JEgvte/PLAa+ap9aHc8SH
-	 bR44e/pFXeo6A==
-Date: Tue, 17 Mar 2026 14:57:43 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, dave.jiang@intel.com, Jonathan.Cameron@huawei.com,
-	raphael.norwitz@nutanix.com, vsethi@nvidia.com,
-	sdonthineni@nvidia.com, smadhavan@nvidia.com, skancherla@nvidia.com,
-	vaslot@nvidia.com, linux-pci@vger.kernel.org,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V2] PCI: Hide SBR from reset_methods if masked by CXL
-Message-ID: <20260317195743.GA99791@bhelgaas>
+	s=k20201202; t=1773777602;
+	bh=aMcAv71YOkkFD+ju6rmRuDp0ZfzNN0oX5ZYRoLlaqM4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MKGd0sMPoOpRVFAvsPtlMPnbCySVNbT0yywJFqBvpiy0zWYqxgnuY+ZsiMZUGejJy
+	 at8VEBsz4BvVz59tpwJzURVLDNBxEux9bzvwu034bpHA68XAWcVDIfU19lOboFHxXs
+	 11Zhcykek8uAPKp/TVQUWRMO+eysqaOD1ioKfdb6Qo4ut4eF4J8ac0N0jctfHvmNKy
+	 KGj0TMwBINqpF+dExGqEdAXsNbXMJtK5K1lwSlg0I0QaxlAaWdEob3Pl4N+cFa+9pY
+	 sFgLrQUApIcg1iu5bMgUTS1W68KTWAJL/6v/YHinLLaG4DvTRJD/fi6lmM9hXS4I3x
+	 P7nShZRDiUeJA==
+Date: Tue, 17 Mar 2026 20:00:00 +0000
+From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Oscar Salvador <osalvador@suse.de>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH 12/14] mm/sparse: move sparse_init_one_section() to
+ internal.h
+Message-ID: <f063704a-ffb4-4273-aa6a-ded3a565a891@lucifer.local>
+References: <20260317165652.99114-1-david@kernel.org>
+ <20260317165652.99114-13-david@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,67 +49,119 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260225133801.30231-1-vidyas@nvidia.com>
+In-Reply-To: <20260317165652.99114-13-david@kernel.org>
 
-On Wed, Feb 25, 2026 at 07:08:01PM +0530, Vidya Sagar wrote:
-> The CXL specification (e.g., CXL r3.1 v1.0, sec 8.1.5.2) defines
-> the "Unmask SBR" bit in the Port Control Extensions Register.
-> When this bit is 0 (default), asserting the Secondary Bus Reset (SBR) bit
-> in the Bridge Control register has no effect on the downstream bus.
-> 
-> Currently, the Linux PCI core checks this condition in
-> pci_reset_bus_function(). If SBR is masked, it returns -ENOTTY during the
-> execution of the reset. However, during the probe phase (when probe=true),
-> the function currently returns 0. This 0 return value incorrectly signals
-> to the PCI subsystem that SBR is a viable reset method for the device.
-> 
-> As a result, 'bus' is listed in the device's
-> /sys/bus/pci/devices/.../reset_methods attribute, even though the hardware
-> is incapable of performing it. If a user attempts to write bus to reset
-> method or triggers a reset that falls back to SBR, the operation fails
-> with: "bash: echo: write error: Inappropriate ioctl for device" error.
-> 
-> This patch modifies pci_reset_bus_function() to return -ENOTTY immediately
-> if cxl_sbr_masked() is true, regardless of the probe argument. This
-> ensures that 'bus' is not advertised in reset_methods when the hardware
-> prevents it, improving clarity for users and aligning the sysfs capability
-> report with actual hardware behavior.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+On Tue, Mar 17, 2026 at 05:56:50PM +0100, David Hildenbrand (Arm) wrote:
+> While at it, convert the BUG_ON to a WARN_ON, avoid long lines, and merge
+> sparse_encode_mem_map() into sparse_init_one_section().
+>
+> Clarify the comment a bit, pointing at page_to_pfn().
+>
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Applied to pci/reset for v7.1, thanks!
+Don't need a long line to merge my:
 
-I changed bridge->is_cxl to pcie_is_cxl(bridge) to match most other
-tests.
+Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
+
+Here!
 
 > ---
-> v2:
-> * Before deciding to hide 'bus' reset method, add an extra check to make sure
->   that the link is indeed operating in the CXL mode and not in PCIe mode as
->   the spec clearly says that a '0' in 'Unmask SBR' doesn't have any effect if
->   the link is not operating in the CXL mode.
-> 
->  drivers/pci/pci.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index f3244630bfd0..a176566ba56f 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4915,12 +4915,8 @@ static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
->  	 * If "dev" is below a CXL port that has SBR control masked, SBR
->  	 * won't do anything, so return error.
->  	 */
-> -	if (bridge && cxl_sbr_masked(bridge)) {
-> -		if (probe)
-> -			return 0;
+>  include/linux/mmzone.h |  2 +-
+>  mm/internal.h          | 22 ++++++++++++++++++++++
+>  mm/sparse.c            | 24 ------------------------
+>  3 files changed, 23 insertions(+), 25 deletions(-)
+>
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index b694c69dee04..dcbbf36ed88c 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -2008,7 +2008,7 @@ struct mem_section {
+>  	/*
+>  	 * This is, logically, a pointer to an array of struct
+>  	 * pages.  However, it is stored with some other magic.
+> -	 * (see sparse.c::sparse_init_one_section())
+
+What::the::hell::was::this::before, we're not C++ developers!!
+
+> +	 * (see sparse_init_one_section())
+>  	 *
+>  	 * Additionally during early boot we encode node id of
+>  	 * the location of the section here to guide allocation.
+> diff --git a/mm/internal.h b/mm/internal.h
+> index 5f5c45d80aca..bcf4df97b185 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -965,6 +965,28 @@ void memmap_init_range(unsigned long, int, unsigned long, unsigned long,
+>   */
+>  #ifdef CONFIG_SPARSEMEM
+>  void sparse_init(void);
+> +
+> +static inline void sparse_init_one_section(struct mem_section *ms,
+> +		unsigned long pnum, struct page *mem_map,
+> +		struct mem_section_usage *usage, unsigned long flags)
+> +{
+> +	unsigned long coded_mem_map;
+> +
+> +	BUILD_BUG_ON(SECTION_MAP_LAST_BIT > PFN_SECTION_SHIFT);
+> +
+> +	/*
+> +	 * We encode the start PFN of the section into the mem_map such that
+> +	 * page_to_pfn() on !CONFIG_SPARSEMEM_VMEMMAP can simply subtract it
+> +	 * from the page pointer to obtain the PFN.
+> +	 */
+> +	coded_mem_map = (unsigned long)(mem_map - section_nr_to_pfn(pnum));
+> +	VM_WARN_ON(coded_mem_map & ~SECTION_MAP_MASK);
+
+Maybe VM_WARN_ON_ONCE()?
+
+> +
+> +	ms->section_mem_map &= ~SECTION_MAP_MASK;
+> +	ms->section_mem_map |= coded_mem_map;
+> +	ms->section_mem_map |= SECTION_HAS_MEM_MAP | flags;
+
+I mean this is pretty nitty but prefer 'flags | SECTION_HAS_MEM_MAP' to
+show you appended to the flags :P
+
+> +	ms->usage = usage;
+> +}
+>  #else
+>  static inline void sparse_init(void) {}
+>  #endif /* CONFIG_SPARSEMEM */
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index b5a2de43ac40..6f5f340301a3 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -256,30 +256,6 @@ static void __init memblocks_present(void)
+>  		memory_present(nid, start, end);
+>  }
+>
+> -/*
+> - * Subtle, we encode the real pfn into the mem_map such that
+> - * the identity pfn - section_mem_map will return the actual
+> - * physical page frame number.
+> - */
+> -static unsigned long sparse_encode_mem_map(struct page *mem_map, unsigned long pnum)
+> -{
+> -	unsigned long coded_mem_map =
+> -		(unsigned long)(mem_map - (section_nr_to_pfn(pnum)));
+> -	BUILD_BUG_ON(SECTION_MAP_LAST_BIT > PFN_SECTION_SHIFT);
+> -	BUG_ON(coded_mem_map & ~SECTION_MAP_MASK);
+> -	return coded_mem_map;
+> -}
 > -
-> +	if (bridge && bridge->is_cxl && cxl_sbr_masked(bridge))
->  		return -ENOTTY;
-> -	}
->  
->  	rc = pci_dev_reset_iommu_prepare(dev);
->  	if (rc) {
-> -- 
-> 2.25.1
-> 
+> -static void __meminit sparse_init_one_section(struct mem_section *ms,
+> -		unsigned long pnum, struct page *mem_map,
+> -		struct mem_section_usage *usage, unsigned long flags)
+> -{
+> -	ms->section_mem_map &= ~SECTION_MAP_MASK;
+> -	ms->section_mem_map |= sparse_encode_mem_map(mem_map, pnum)
+> -		| SECTION_HAS_MEM_MAP | flags;
+> -	ms->usage = usage;
+> -}
+> -
+>  static unsigned long usemap_size(void)
+>  {
+>  	return BITS_TO_LONGS(SECTION_BLOCKFLAGS_BITS) * sizeof(unsigned long);
+> --
+> 2.43.0
+>
