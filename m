@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D480F3F54B8;
-	Tue, 17 Mar 2026 16:57:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C38A3F54CE;
+	Tue, 17 Mar 2026 16:57:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773766662; cv=none; b=YNH5b+ct16PsREjibuxKLSBm58y3CQ02o/gk/+F9talBv+VrRvDP1tNthzmTYJ1V/KbW3beC+sHbvb0REngUjq+FY3MpFxJtpSrmpuxljLx6fmETYaEudLRH7Ugf2l5GZ+gYojSS5Ujvh+/2HqnFlnzjIbZi+8gCtTnknkikSk8=
+	t=1773766667; cv=none; b=gNBpbO4b3nwQFXCCeZoqw3eaYzdFRSUkPHnjhBiSmV/5/A8MF+t7e+He/CYREp7LMPqUv5wRRq66EBYi3unqV7iKLMFWpQ0IhOu5xLxCowtVki8m4i11qpiVpGWdYjCRq8zLjAtkWuVjEM2yP6IbgtlNsX1sthvoUUVL92VYlmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773766662; c=relaxed/simple;
-	bh=t9H4ODpg5R9njK15JZW6Bi4180ghG2kDbMh/t4uFB5I=;
+	s=arc-20240116; t=1773766667; c=relaxed/simple;
+	bh=GmzhoQ0PJsvg3r41ZGNVjXu6dhy2NO2MgeEoTaVUJyc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rgeNfpBKA3OOdPUhuGk0n5LPsBzqkGXEV0loBz8JuqC6sHItekeT5YMYie1tkxpUTtJaK13JkBnnm3FFCmcBHcwZht9kwdEz2r+6dlKW9B3jnTE/JWz4VmcLRKOqVF5DSvTSprHO7yn//yDup47s3Sj1q2ASxgfEZD0dp5N/6ZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KmWEQkLl; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WkfI/Re8iavQ1zRA4yfNW213wQJUclgZpYGS+5LtMOZADm+7K0LcS0OwMsN57/NK1ln7gWzc0GTBlGjTbSn7yL1OVkXLgruYWmzAwnpd22I6BmU1mLDPBIpq279RHCBGIK4CnezZZFOa4PdoqDGvLI8lpJOUbsm3lXm0IwZp3ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KvOITOgO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KmWEQkLl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16983C19424;
-	Tue, 17 Mar 2026 16:57:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KvOITOgO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46E24C2BCAF;
+	Tue, 17 Mar 2026 16:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773766662;
-	bh=t9H4ODpg5R9njK15JZW6Bi4180ghG2kDbMh/t4uFB5I=;
+	s=k20201202; t=1773766666;
+	bh=GmzhoQ0PJsvg3r41ZGNVjXu6dhy2NO2MgeEoTaVUJyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KmWEQkLlFIjSPQY6yvikDH1PeDIr1/5cT7bLQciS8NbHXDZqmdvmajSV63q3bc2Lp
-	 cekuWl/0KKVBqGfTb5TDH8N9Xia066PNeWOJTKNTmKRDkJ6khtp8r/hI2pWZil1oPo
-	 IbYkOH07uW+2PiEzjJDhD0KdJqT2UQqh/yBiVv4IJw93+K8vtYgDq1IDglC+kbq89V
-	 63IwLnQkYDS8Z+CK5PuzThH1cQyUTE5EHxIKzhyV6Us7IKlCzkwmtTNMHz9kf3D3zk
-	 PN3WKrd11bXAX1UkLT4AYWkpKiobdnePmBdxkfIc3FqzO94Eu1hI4Ftzll0msAKtJ2
-	 pQAtDXr1ruXCw==
+	b=KvOITOgO+ibK/lPOLHPXPeB+/05jkCMxW9PlT0bA7fNiSqObIrPhWQfImj7g4NsUq
+	 Imap3UUZb/Tp92VIG/zhLpyI/ggtGmC52Tg17EJDKgxFAAbSbIyPBQcNonDJOD1ocO
+	 L8whLAIiEhbgmmYDfK3CdjQ+aUo7ddrVdb+qeRT4lLLZqEq7USP2ESW+zqcvTd0sYT
+	 YfZHO9mKUGFpb6acRxS0xvf8lbNt07LJo1J95hp1nZA9qI9DHCQqVIi/4ZYj9rmbQA
+	 +NURaueDz8fkDy4jRiEVRYtzvnnIoPxRfsfcFjvpDQcQRwlcUlyEVMvJ3rwghpVy7e
+	 99r7NDF8B9EGg==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -42,9 +42,9 @@ Cc: linux-mm@kvack.org,
 	Mike Rapoport <rppt@kernel.org>,
 	Suren Baghdasaryan <surenb@google.com>,
 	Michal Hocko <mhocko@suse.com>
-Subject: [PATCH 10/14] mm: prepare to move subsection_map_init() to mm/sparse-vmemmap.c
-Date: Tue, 17 Mar 2026 17:56:48 +0100
-Message-ID: <20260317165652.99114-11-david@kernel.org>
+Subject: [PATCH 11/14] mm/sparse: drop set_section_nid() from sparse_add_section()
+Date: Tue, 17 Mar 2026 17:56:49 +0100
+Message-ID: <20260317165652.99114-12-david@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260317165652.99114-1-david@kernel.org>
 References: <20260317165652.99114-1-david@kernel.org>
@@ -56,109 +56,35 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We want to move subsection_map_init() to mm/sparse-vmemmap.c.
+CONFIG_MEMORY_HOTPLUG is CONFIG_SPARSEMEM_VMEMMAP-only. And
+CONFIG_SPARSEMEM_VMEMMAP implies that NODE_NOT_IN_PAGE_FLAGS cannot be set:
+see include/linux/page-flags-layout.h
 
-To prepare for getting rid of subsection_map_init() in mm/sparse.c
-completely, use a static inline function for !CONFIG_SPARSEMEM_VMEMMAP.
+	...
+	#elif defined(CONFIG_SPARSEMEM_VMEMMAP)
+	#error "Vmemmap: No space for nodes field in page flags"
+	...
 
-While at it, move the declaration to internal.h and rename it to
-"sparse_init_subsection_map()".
+So let's remove the set_section_nid() call to prepare for moving
+CONFIG_MEMORY_HOTPLUG to mm/sparse-vmemmap.c
 
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- include/linux/mmzone.h |  3 ---
- mm/internal.h          | 12 ++++++++++++
- mm/mm_init.c           |  2 +-
- mm/sparse.c            |  6 +-----
- 4 files changed, 14 insertions(+), 9 deletions(-)
+ mm/sparse.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 7bd0134c241c..b694c69dee04 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -2002,8 +2002,6 @@ struct mem_section_usage {
- 	unsigned long pageblock_flags[0];
- };
- 
--void subsection_map_init(unsigned long pfn, unsigned long nr_pages);
--
- struct page;
- struct page_ext;
- struct mem_section {
-@@ -2396,7 +2394,6 @@ static inline unsigned long next_present_section_nr(unsigned long section_nr)
- #define sparse_vmemmap_init_nid_early(_nid) do {} while (0)
- #define sparse_vmemmap_init_nid_late(_nid) do {} while (0)
- #define pfn_in_present_section pfn_valid
--#define subsection_map_init(_pfn, _nr_pages) do {} while (0)
- #endif /* CONFIG_SPARSEMEM */
- 
- /*
-diff --git a/mm/internal.h b/mm/internal.h
-index f98f4746ac41..5f5c45d80aca 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -960,12 +960,24 @@ void memmap_init_range(unsigned long, int, unsigned long, unsigned long,
- 		unsigned long, enum meminit_context, struct vmem_altmap *, int,
- 		bool);
- 
-+/*
-+ * mm/sparse.c
-+ */
- #ifdef CONFIG_SPARSEMEM
- void sparse_init(void);
- #else
- static inline void sparse_init(void) {}
- #endif /* CONFIG_SPARSEMEM */
- 
-+#ifdef CONFIG_SPARSEMEM_VMEMMAP
-+void sparse_init_subsection_map(unsigned long pfn, unsigned long nr_pages);
-+#else
-+static inline void sparse_init_subsection_map(unsigned long pfn,
-+		unsigned long nr_pages)
-+{
-+}
-+#endif /* CONFIG_SPARSEMEM_VMEMMAP */
-+
- #if defined CONFIG_COMPACTION || defined CONFIG_CMA
- 
- /*
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 969048f9b320..3c5f18537cd1 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -1898,7 +1898,7 @@ static void __init free_area_init(void)
- 		pr_info("  node %3d: [mem %#018Lx-%#018Lx]\n", nid,
- 			(u64)start_pfn << PAGE_SHIFT,
- 			((u64)end_pfn << PAGE_SHIFT) - 1);
--		subsection_map_init(start_pfn, end_pfn - start_pfn);
-+		sparse_init_subsection_map(start_pfn, end_pfn - start_pfn);
- 	}
- 
- 	/* Initialise every node */
 diff --git a/mm/sparse.c b/mm/sparse.c
-index b57c81e99340..7b0bfea73a9b 100644
+index 7b0bfea73a9b..b5a2de43ac40 100644
 --- a/mm/sparse.c
 +++ b/mm/sparse.c
-@@ -185,7 +185,7 @@ static void subsection_mask_set(unsigned long *map, unsigned long pfn,
- 	bitmap_set(map, idx, end - idx + 1);
- }
+@@ -769,7 +769,6 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
+ 	page_init_poison(memmap, sizeof(struct page) * nr_pages);
  
--void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
-+void __init sparse_init_subsection_map(unsigned long pfn, unsigned long nr_pages)
- {
- 	int end_sec_nr = pfn_to_section_nr(pfn + nr_pages - 1);
- 	unsigned long nr, start_sec_nr = pfn_to_section_nr(pfn);
-@@ -207,10 +207,6 @@ void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
- 		nr_pages -= pfns;
- 	}
- }
--#else
--void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
--{
--}
- #endif
+ 	ms = __nr_to_section(section_nr);
+-	set_section_nid(section_nr, nid);
+ 	__section_mark_present(ms, section_nr);
  
- /* Record a memory area against a node. */
+ 	/* Align memmap to section boundary in the subsection case */
 -- 
 2.43.0
 
