@@ -1,144 +1,161 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2D3B3B27E6;
-	Tue, 17 Mar 2026 11:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF053BD24D
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Mar 2026 12:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773748265; cv=none; b=cg3PWRILvHlL7wdHMnDssk/BTKjR2HG5QGzbgYzAMuQIgTBR1Roh3SITOmSJzk74qG6pL/desNYYl9KLkZk6JHsLBG0rcQNfmAsdVrXflN0Z6Z0GVmSsKs5z+RBHUgmz/w9K6CJnmBG4mF9LuuYNgvmSLnoBo9DU/ecfokLUO1c=
+	t=1773749633; cv=none; b=ff4n+31W0oBDPX4/tun3IpKlI6uC5bU0J9Wtpci99ZgS4BHXorTt7tG6vSxawqwilpzoMnwvoew7/zTR95mZwLlGwZwhj2WbJSbgjcmXXi+ZJXE92K013OM7JwJY0Vk/JMu1FwkurFHbfIscJkN0Okqnsaxq3S1uZTf1NOA1zpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773748265; c=relaxed/simple;
-	bh=DUj+idD95mjB0VwfZmTz3wtXfnzzG2t4C0/UkNQo8Qo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sjSY6jKtx+mYK8/vDSkaEoh1MaxfKhXQfhekj1nj+35DF/dzTUZHok5Zq/vRj8BsV7oJHZs1U6vxdUwouvdh+Z5KPlSsoSFWwCVe2LvKnKDH/wMQuWGuGaHnFTMbX3fYgHtXo04Adz/8LM2c2SBv6p3dEBTWZxEvZBbGhPEk4/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-c2dff70000001609-67-69b9401fe92c
-From: Rakie Kim <rakie.kim@sk.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: Rakie Kim <rakie.kim@sk.com>,
-	akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	byungchul@sk.com,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	david@kernel.org,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	harry.yoo@oracle.com,
-	lsf-pc@lists.linux-foundation.org,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	Joshua Hahn <joshua.hahnjy@gmail.com>
-Subject: Re: [LSF/MM/BPF TOPIC] [RFC PATCH 0/4] mm/mempolicy: introduce socket-aware weighted interleave
-Date: Tue, 17 Mar 2026 20:50:47 +0900
-Message-ID: <20260317115052.294-1-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.52.0.windows.1
-In-Reply-To: <abhd1BXSST0BTDaN@gourry-fedora-PF4VCD3F>
-References: 
+	s=arc-20240116; t=1773749633; c=relaxed/simple;
+	bh=Va2qM/cimpsje9gFOY8O4nXMbR3NA1ZQhqbLAPAMZoU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=PtZjy5Rmbqyp7Xen4vzE/xn9NDlcOKrNgBLm9BRnhXaAzAfX5Pll7ZgBAYOWUGad5QzrY2y8JwteU0ZR4WQ/JI79wp3QAlJoDyC+avSo6FYC+SGk9RQ0B5bmS2r0rWl/4/VsDAgAG5+YUHasVOONODlkcazQe8wfZK81LXhiSvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T2vKrxmb; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2vKrxmb"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-c73a5473bbdso2202848a12.2
+        for <linux-cxl@vger.kernel.org>; Tue, 17 Mar 2026 05:13:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773749631; x=1774354431; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MAvpnBM9mSCqOK83LyVDKz5ibScu+cS1rAPnblJhlu4=;
+        b=T2vKrxmbYJiZXOQgHfxQvkxpo+3jn+vK8EEUDpcKudRcGY2mSDmwZS6F+NVE1eQq/1
+         fGVCFsQS0bC2UEnLE7DimbLTFjNYdE3MM/9JZADRKxckq2doMVDf2kasm2tO5Zyq2rBl
+         YzZ3FAHUQpHd3gvLBwEtB1Xs7GbghmyZc3L7DLLuNSyk+Tv62W46bAw7leCgJENizjAI
+         tFgKWFazbF3fftSqtyQMTJDGXDpT6iGAqwMPtbIegXhZ2l03Wmi66G/K+idwginGhove
+         2cAQgdLt6j0vVVWroZBZM2iyr6SYU/9gWoYSfpGMVB/mrMR+0MK7M1mQd4NC4qCsLy5V
+         5Gew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773749631; x=1774354431;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MAvpnBM9mSCqOK83LyVDKz5ibScu+cS1rAPnblJhlu4=;
+        b=PV9xMpoqThcUM/MlZhhI+p5+yL0kTPuXQC6T58R8li4+W60rB0BbF3kvycS0xlr0FX
+         rFj8hLUSh2wiHU7ljUus2BQwtkRUc52hbA5UMz2qMVK0/FpMzT1CeBqRGjCG6dHSW3Tg
+         w2G7Zy5c7Usgsils7v2FyEuhfjNFb1+8Lfng5UVE/onuSLgHqG7Yyo5eR9ryRKM+OHim
+         fNH0gzta80B1V4jJN7JF7elXe+IQ8BvsQJgOGeZKiql+RRq/Ng5LOdaF79EhxHypBMwU
+         TMWVioyYkCcH8TsCGKwxprwwt+LnR8Df2TQNQjHnSjV9cb6vvPVZHWYK55yENhuahzx1
+         g60w==
+X-Forwarded-Encrypted: i=1; AJvYcCWVmVSSGEF0PoKzoIGkaaoC2V58PfkPzt3pB6vnIjBXgH2y62UksFK3U/hG59BMZeLrxEucz2p0gLs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXYtcYPbsi7vlW3nD8gshkZkuZmi8B0K9C0hecfquhTiVuEe2u
+	ZquEiKn/DLJ1bOgwdNbifLiXOiRvAGFS8whUWbcdz6t05oxOQAeRWGcKVjoebEIZy5s=
+X-Gm-Gg: ATEYQzxuf4gpfSCHendZrHnuyNi2CZz/cmbvGgCHPmaxfdSiY3cCIYkCMRoOvc2qCUx
+	aqy37dy/H5AV9GDHN+ND1guQ5c5zOI4697gsGsEdpwZ+NH12BoYvKNrJrQKQQAm141VnO0mU1L0
+	sx7MibGnh45v3e84gWFd4Vhq4JeuNDDYT3hXcEjqfsCu2fvxbk4o3U/uBjboc+jk+Tg7nbq8Jj4
+	XmXRiXATpUHRQ5Nht8ralCR1qzIL7MHcdT/MQN04wSmV5qFIGfoJAJM2Rxyl5ldxuJ2DE0v4typ
+	+WC6a2wWIOBMioW98n0/PGU6uGnDDCaIlNyESFZFmUEwuaojD8sNo1ZdqnYNdB3vQbkSnF/10Ze
+	YKLxAo01eaZwc464IJnR7Z+nqa8mmUM+dgMqeVprz9UA8iUV204RtiQpaRy6ib4mU3fzicpuLzX
+	aV5RsLiArAJygxImVgk2TOFY/GOaDb9r5FXhw=
+X-Received: by 2002:a17:90b:134d:b0:359:8e5e:43de with SMTP id 98e67ed59e1d1-35a21fed329mr12751806a91.22.1773749631501;
+        Tue, 17 Mar 2026 05:13:51 -0700 (PDT)
+Received: from the-machine ([175.157.52.217])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35badbcb8b9sm3840148a91.13.2026.03.17.05.13.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2026 05:13:51 -0700 (PDT)
+Date: Tue, 17 Mar 2026 17:43:41 +0530
+From: Teshan Kannangara <tpk.teshan@gmail.com>
+To: dave@stgolabs.net
+Cc: jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] cxl/acpi: Fix coding style issues in acpi.c
+Message-ID: <ablFdTrypTz67N0D@the-machine>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsXC9ZZnka68w85MgwuXJC3mrF/DZnH38QU2
-	i103QiymT73AaHHiZiObxeqbaxgtnm/9xWjx8+5xdov7y56xWOx/+pzFYtXCa2wWx7fOY7fY
-	3vCA3eL8rFMsFpd3zWGzuLfmP6vFyVkrWSz2vd7LbPGtT9rifp+DxZH125ksJl9awGYxu7GP
-	0eLWhGNMFqvXZFjMPnqP3UHKY+esu+weCzaVenS3XWb3aDnyltVj8Z6XTB6bVnWyeWz6NInd
-	48SM3yweOx9aeky+sZzRo7f5HZvHx6e3WDymzq73WL/lKovHmQVH2D0+b5ILEIjisklJzcks
-	Sy3St0vgynj97ShbwSPBinuzj7M2MH7m7WLk5JAQMJHo27OWDcbet3I+SxcjBwebgJLEsb0x
-	IKaIgKpE2xV3kApmgQ42iWmnZUBsYYEMiQnL/zOD2CxAJScad7OA2LwCxhJt3Q9ZICZqSqzb
-	eAvM5hQwk7j/sxVsk5AAj8SrDfsZIeoFJU7OfMICMV9eonnrbKCZXEC9P9klnl5bDnWapMTB
-	FTdYJjDyz0LSMwtJzwJGplWMQpl5ZbmJmTkmehmVeZkVesn5uZsYgZG8rPZP9A7GTxeCDzEK
-	cDAq8fDeYN2RKcSaWFZcmXuIUYKDWUmEd9mRbZlCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeY2+
-	lacICaQnlqRmp6YWpBbBZJk4OKUaGF3CNRVaD1fd0ki4xGIQbGfZ4iJUOMtxNQebnMu7LI7S
-	0z1LT3n+mM59LCF31ozejg3Llkz+kqZz/eMHpkXX5lxe/3KCrnuUIPPJWZ7S17UF925uXMKc
-	VPPhB9f34/rvbQ5wzl63u9SH90En5wvbmC/vLr9lWm+lf0EhZ4v+ZvXJfNnMk01331FiKc5I
-	NNRiLipOBAA/p30y4AIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYRyHe3fec3YUF8cledJAWFRT8kZlr1Cmn3wJQokgCkmHHtzJK5uK
-	E6KJKalommm6WRmSl7m8jLytVPI+u0mmuXnLzDt2MyQvYC4J/Pbwfx5+X/40Ie6CTjQfm8Ap
-	YmXREsoW2hYfD3F38W/lveY1NCqt01NoYmaQQsbRy+jdfS2FHhQOAtRvTqVQjVkP0HzjBkDr
-	E31CNFUxB9Hq3DKBOmbnIdI9GaFQX+MjIep6aCJRs/qzEL3XDEA0ZCyl0KR+m0QmTTVE7ctt
-	BFrLdUZTuf6oc2SeRN11zQJU8KGMQtrUXIAseb0CVKOXo82mqp1Tz6TQ3wW3aiaEuMyQiLMz
-	hoT4dvcKictfLgqwQZdJYcOve0LcX7wJceu0Ly4YrQQ4J+0bhX/OWiBeG8O4fOGHABdqb+G6
-	58MwWHzN9mwEF80ncQpPvzBb+fJaDxX/xT55UttHqsGqKAvY0Cxzim2vfgyzAE1TjITtbQux
-	ogNzlM34GGgtCOYOxRa9PmzlA4yczavcJqwMd5L+1BfQyiLmJJuRPQ13F13Z2gbLP7ZhfNip
-	9XTKymLGjl2q7wC7vT1rKvkKd/dd2LRGLZEH7DR7lGaPKgMCHXDgY5NiZHz0aQ9llFwVyyd7
-	hMfFGMDOaytubuW3gN9DgZ2AoYHETjRKtvBiUpakVMV0ApYmJA6iiu4mXiyKkKlSOEVcqCIx
-	mlN2AmcaShxFF65wYWImUpbARXFcPKf4bwW0jZMalKCtJoHrK/MZ92U+DfrW7p9rTvmUsmBU
-	x9O68YPSnEubM25sbtu5jWCfsXFp0TF5VOJbL5Pl+g3VoqOncCNc375dFXC113vhTZDfeZeB
-	gtCiYYKoP0SK/yyZT5QG5auznu27KA2UjqVnPo2YarsbKfEyxjV8LzO5rQQFHFG1S6BSLvN2
-	IxRK2V8pEuWd1gIAAA==
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 16 Mar 2026 15:45:24 -0400 Gregory Price <gourry@gourry.net> wrote:
-> On Mon, Mar 16, 2026 at 08:19:32AM -0700, Joshua Hahn wrote:
-> > 
-> > In that sense I thought the word "prefer" was a bit confusing, since I
-> > thought it would mean that it would try to fulfill the alloactions
-> > from within a packet first, then fall back to remote packets if that
-> > failed. (Or maybe I am just misunderstanding your explanation. Please
-> > do let me know if that is the case : -) )
-> > 
-> > If what I understand is the case , I think this is the same thing as
-> > just restricting allocations to be socket-local. I also wonder if
-> > this idea applies to other mempolicies as well (i.e. unweighted interleave)
-> > 
-> 
-> I was thinking about this as well, and in my head i think you have to
-> consider a 2x2 situation
-> 
-> cpuset             |   multi-socket-cpu      single-socket-cpu
-> ==================================================================
-> single-socket-mem  |     mem-package            mem-package
-> ------------------------------------------------------------------
-> multi-socket-mem   |       global                 global
-> ------------------------------------------------------------------
-> 
-> But I think this reduces to cpuset nodes dictates the weights used -
-> which should already be the case with the existing code.
+Fix various coding style issues in drivers/cxl/acpi.c, including
+indentation, line wrapping, macro alignment, cast formatting,
+and conditional braces.
 
-Hello Gregory,
+No functional changes.
 
-Thanks for your additional feedback.
+Signed-off-by: Teshan Kannangara <tpk.teshan@gmail.com>
+---
+ drivers/cxl/acpi.c | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
-I agree with your analysis. The final behavior should follow the nodes
-dictated by the cpuset or mempolicy configurations.
-
-> 
-> I think you are right that we need to be very explicit about the
-> fallback semantics here - but that may just be a matter of dictating
-> whether the allocation falls back or prefers direct reclaim to push
-> pages out of their requested nodes.
-> 
-> ~Gregory
-
-As you and Joshua pointed out, making the fallback semantics explicit
-is the most critical issue for this patch series. We need a clear policy
-to decide whether the allocation should fall back to a remote node or
-force direct reclaim to keep the allocation local.
-
-I will explicitly define these fallback semantics and address this
-trade-off in the design for the next version.
-
-Thanks again for your time and review.
-
-Rakie Kim
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 127537628817..b54b962cf973 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -395,9 +395,16 @@ static void cxl_setup_extended_linear_cache(struct cxl_root_decoder *cxlrd)
+ 	cxlrd->cache_size = cache_size;
+ }
+ 
+-DEFINE_FREE(put_cxlrd, struct cxl_root_decoder *,
+-	    if (!IS_ERR_OR_NULL(_T)) put_device(&_T->cxlsd.cxld.dev))
+-DEFINE_FREE(del_cxl_resource, struct resource *, if (_T) del_cxl_resource(_T))
++DEFINE_FREE
++(put_cxlrd, struct cxl_root_decoder *,
++if (!IS_ERR_OR_NULL(_T))
++	put_device(&_T->cxlsd.cxld.dev))
++
++DEFINE_FREE
++(del_cxl_resource, struct resource *,
++if (_T)
++	del_cxl_resource(_T))
++
+ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+ 			     struct cxl_cfmws_context *ctx)
+ {
+@@ -419,8 +426,8 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+ 	if (rc)
+ 		return rc;
+ 
+-	struct resource *res __free(del_cxl_resource) = alloc_cxl_resource(
+-		cfmws->base_hpa, cfmws->window_size, ctx->id++);
++	struct resource *res __free(del_cxl_resource) =
++		alloc_cxl_resource(cfmws->base_hpa, cfmws->window_size, ctx->id++);
+ 	if (!res)
+ 		return -ENOMEM;
+ 
+@@ -542,7 +549,7 @@ static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
+ 	struct cxl_chbs_context *ctx = arg;
+ 	struct acpi_cedt_chbs *chbs;
+ 
+-	chbs = (struct acpi_cedt_chbs *) header;
++	chbs = (struct acpi_cedt_chbs *)header;
+ 
+ 	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
+ 	    chbs->length != ACPI_CEDT_CHBS_LENGTH_CXL11)
+@@ -774,12 +781,12 @@ static void cxl_acpi_lock_reset_class(void *dev)
+ 
+ static void cxl_set_public_resource(struct resource *priv, struct resource *pub)
+ {
+-	priv->desc = (unsigned long) pub;
++	priv->desc = (unsigned long)pub;
+ }
+ 
+ static struct resource *cxl_get_public_resource(struct resource *priv)
+ {
+-	return (struct resource *) priv->desc;
++	return (struct resource *)(priv->desc);
+ }
+ 
+ static void remove_cxl_resources(void *data)
+@@ -850,8 +857,9 @@ static int add_cxl_resources(struct resource *cxl_res)
+ 				remove_resource(next);
+ 				del_cxl_resource(next);
+ 				next = _next;
+-			} else
++			} else {
+ 				next->start = new->end + 1;
++			}
+ 		}
+ 	}
+ 	return 0;
+-- 
+2.53.0
 
