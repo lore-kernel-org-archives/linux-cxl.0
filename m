@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02902D5940;
-	Tue, 17 Mar 2026 17:19:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D563246F8;
+	Tue, 17 Mar 2026 17:21:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773767963; cv=none; b=QeeNMBJ0ZrQj71L5dIdOYKW6SQ1aZbu+KWYlCru+aWYVHWYOiE/1svua3xoMdRo4Q7CFFXN5xLs+dHERFAmwnKyucwW6zgx73c4/K1wXtNEryBXDhDt8hbN7Iv3xVLT+D5esszkaGIRyt9uPBx3MedEHwWhIRlFWo7dW+V3Tk4E=
+	t=1773768086; cv=none; b=jpH0lEatKDacSJV+vrizXiVjUhZOjUn7obHLb2gVzvfqR7nVGN+Ydv+D15/bhJCPVxJjo7hgV/ZPQ0PtMG91CAusMmlOnzBdd+/b0DHohOZsogSZPO9OxZJBEKGldVhrJTgR5pupi85/h1Dqrz8+Kzk5FhJunpxrkB67BzNy3WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773767963; c=relaxed/simple;
-	bh=PZU9tIsV6USqDXcrCGfFETY9fHYZa8i3ji2a+gAm3wc=;
+	s=arc-20240116; t=1773768086; c=relaxed/simple;
+	bh=aCHrUD8+LmC43GsbN4nEVNsRfFAFX8etI0ZbsdYUK/4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rhtkKALLQYMeXssXLjON7ZeGZGnQEX2uMfsPWZEntuqdP1kICOrXUlhtlJnTYpMeHnRKNupZgFylH0wogZGBvzwNLCMQmfXsWoi/Qeu9MhslADjeuIMsMtaorNQ/EPmTiTozB17YHWNU+m19tHgovnpkd2lgd2ZnOs+wimxPT8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h5WyPkLM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=grhXdyTzNbo3sNkSTMsZvJ6yK7JsAyE5O9rHb39naLjLjMIqd++l4gThf7w5uzQRkH36X/q3fXAVeoi6taUbVTgNXdvx5n6juOnhOCBW6cQW1QIkrDxyQ/loQf3FDK9y4GiVUdUaeuSVnCLcPgH4QfYQTrm+quvt1HYkr6dfaNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpXaC+4I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h5WyPkLM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2CC0C19424;
-	Tue, 17 Mar 2026 17:19:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpXaC+4I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D6E1C4CEF7;
+	Tue, 17 Mar 2026 17:21:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773767963;
-	bh=PZU9tIsV6USqDXcrCGfFETY9fHYZa8i3ji2a+gAm3wc=;
+	s=k20201202; t=1773768085;
+	bh=aCHrUD8+LmC43GsbN4nEVNsRfFAFX8etI0ZbsdYUK/4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h5WyPkLMO1HCGbefwv10wnKMCkgsNH8nVFdIV3GCV409M/70k3QhHQOyTAjY6o538
-	 67kZCxkIwAmtNA+CcqrRGl6dUW2wLIcDduAgeBK1hrlg7gJ496np2ia49V+YHcgJmk
-	 rObd6MzsHdZW6neDxMVATVncFHYtGwp2YjQDe2q6dzKWQJB1VsH4bvkGLzFHdbRLI2
-	 pyDdoFL03r5daL6+xqSvUBYITG/zg7s4BXoM877USEa63iaCVvrt8zu9ryyjRiz6d/
-	 SczeerRphx/Qc8u66mDg/wRx7ufs2NHombOEu0YvSluvS5DgPLstfZfTlBO86VULOO
-	 K3Givrrw/s34w==
-Date: Tue, 17 Mar 2026 17:19:18 +0000
+	b=LpXaC+4IB9mCgF/42BlBRhw6KVqOa7RR79BYddvDCTBgjA1gLWe+RD+aF3NGvHsIs
+	 ebZVzsc1DAjrIciSrlH7qS2i4CrudMkxxc8IIgtbzG2gu1vfsrz4YEk5ZTNzwV/7jz
+	 1TIZruvkoK5fMndOp0pMbv9pc7nyi3gfX2lgr9AgRGkGsTovEHui3yWHJkjTQB9IRY
+	 /pq3TyUUeDI1GFbTMgqJJFTNVhz4d9utSWqf97jJ+VT21vmAlHQuwIh1GJJCXxwHNZ
+	 9p+fcsYVNQutrx8dnSA2jC3vnGK90ju3XFrX6ww98WIen8Qlg8ghuPrAWI75EdQl4e
+	 ATXExyJTigkjQ==
+Date: Tue, 17 Mar 2026 17:21:20 +0000
 From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
@@ -36,11 +36,11 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
 	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, 
 	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
 	Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH 01/14] mm/memory_hotplug: remove for_each_valid_pfn()
- usage
-Message-ID: <caacd86d-4c92-4a8f-b0ef-a152d2cc09cd@lucifer.local>
+Subject: Re: [PATCH 02/14] mm/sparse: remove WARN_ONs from
+ (online|offline)_mem_sections()
+Message-ID: <7056316c-e811-403f-9edf-8ac3c4248dba@lucifer.local>
 References: <20260317165652.99114-1-david@kernel.org>
- <20260317165652.99114-2-david@kernel.org>
+ <20260317165652.99114-3-david@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -49,44 +49,65 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260317165652.99114-2-david@kernel.org>
+In-Reply-To: <20260317165652.99114-3-david@kernel.org>
 
-On Tue, Mar 17, 2026 at 05:56:39PM +0100, David Hildenbrand (Arm) wrote:
-> When offlining memory, we know that the memory range has no holes.
-> Checking for valid pfns is not required.
+On Tue, Mar 17, 2026 at 05:56:40PM +0100, David Hildenbrand (Arm) wrote:
+> We do not allow offlining of memory with memory holes, and always
+> hotplug memory without holes.
+>
+> Consequently, we cannot end up onlining or offlining memory sections that
+> have holes (including invalid sections). That's also why these
+> WARN_ONs never fired.
+>
+> Let's remove the WARN_ONs along with the TODO regarding double-checking.
 >
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Holey Cow! LGTM, so:
+I'm warning up to your series! (The bad puns may/may not continue) so:
 
 Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 
 > ---
->  mm/memory_hotplug.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  mm/sparse.c | 17 ++---------------
+>  1 file changed, 2 insertions(+), 15 deletions(-)
 >
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 86d3faf50453..3495d94587e7 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1746,7 +1746,7 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
->  {
->  	unsigned long pfn;
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index dfabe554adf8..93252112860e 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -638,13 +638,8 @@ void online_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
 >
-> -	for_each_valid_pfn(pfn, start, end) {
-> +	for (pfn = start; pfn < end; pfn++) {
->  		struct page *page;
->  		struct folio *folio;
+>  	for (pfn = start_pfn; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
+>  		unsigned long section_nr = pfn_to_section_nr(pfn);
+> -		struct mem_section *ms;
+> -
+> -		/* onlining code should never touch invalid ranges */
+> -		if (WARN_ON(!valid_section_nr(section_nr)))
+> -			continue;
+> +		struct mem_section *ms = __nr_to_section(section_nr);
 >
-> @@ -1791,7 +1791,7 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
->  	static DEFINE_RATELIMIT_STATE(migrate_rs, DEFAULT_RATELIMIT_INTERVAL,
->  				      DEFAULT_RATELIMIT_BURST);
+> -		ms = __nr_to_section(section_nr);
+>  		ms->section_mem_map |= SECTION_IS_ONLINE;
+>  	}
+>  }
+> @@ -656,16 +651,8 @@ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
 >
-> -	for_each_valid_pfn(pfn, start_pfn, end_pfn) {
-> +	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
->  		struct page *page;
+>  	for (pfn = start_pfn; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
+>  		unsigned long section_nr = pfn_to_section_nr(pfn);
+> -		struct mem_section *ms;
+> +		struct mem_section *ms = __nr_to_section(section_nr);
 >
->  		page = pfn_to_page(pfn);
+> -		/*
+> -		 * TODO this needs some double checking. Offlining code makes
+> -		 * sure to check pfn_valid but those checks might be just bogus
+> -		 */
+> -		if (WARN_ON(!valid_section_nr(section_nr)))
+> -			continue;
+> -
+> -		ms = __nr_to_section(section_nr);
+>  		ms->section_mem_map &= ~SECTION_IS_ONLINE;
+>  	}
+>  }
 > --
 > 2.43.0
 >
