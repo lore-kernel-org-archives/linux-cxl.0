@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DEA285C88;
-	Tue, 17 Mar 2026 19:48:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBEB1DFF0;
+	Tue, 17 Mar 2026 19:51:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773776933; cv=none; b=fBl5Qla35KIlwm/MHjEL46OX7koSxmch3o2+rJcBrn4RltEQ8nicqmZSBE2o1NtzuViYSgOQfYm9fEl0y7EaEQlLsQe3ewcqXhKZhIWT4o0Z/sTvyN/lQEpQ7O/gekRq6orgM/hf97GGNkMJ/cnzu3po+w53pugTt7NXf65N/yA=
+	t=1773777096; cv=none; b=KQTv7mTiGJcuQ9TqbCgGVKfvvUNMcVU5cUsrqOQnnqOtll4Jz+mf6DoSEZ7zBWq8FIqfEYFkbDZRwo1ZFL7bRoE0KyImqGiC4gTSohJcLs35R5PrjE5crxFdCI/ScrC8a+/6l2ozAErEl1jcoZ3JTb8AlqtPHLpBZghaFg7wMQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773776933; c=relaxed/simple;
-	bh=g5W03nIUJQ8AH7zq0zLLZ73bPV9N4HQkXCDIdzXVvP8=;
+	s=arc-20240116; t=1773777096; c=relaxed/simple;
+	bh=iu2cOBnlv8s0sPRqFeh8Lvb5iEQfijsU+S3paiRMUPo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jvQHTK5XJK528htrdxVVOmJr/7lb9TKV0MAZb2EI5XmU7S8u6QViSuwhmp+NlbbX3GswNWCb6a6LrDCIgeoG9LDbHb1t+FlU9PHvNNoylawO6qF1+++7mKWAr98ptHQtMVne3rqEocJhcJN4ZX5gMTlUKbAiAsKZ5/IEUY0YNbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJfUoC5i; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=J5QL9shZC2RWJLAc2vZtYM8+Exy0BRApY5Gd48QZwk4Y7/60x9FX5PU4BaIDYzr7x06WZfoH9yO1udnpbd4h8AvCniBNtHr5ojbpqjBmzlOGyiiQmjqgogZYSfCbVSMJUZx28gYJzAnswP4v+tyLtzsBf6+73TIVuw+ITZAEk+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s1dQCYTe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJfUoC5i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99217C4CEF7;
-	Tue, 17 Mar 2026 19:48:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s1dQCYTe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6424C4CEF7;
+	Tue, 17 Mar 2026 19:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773776933;
-	bh=g5W03nIUJQ8AH7zq0zLLZ73bPV9N4HQkXCDIdzXVvP8=;
+	s=k20201202; t=1773777096;
+	bh=iu2cOBnlv8s0sPRqFeh8Lvb5iEQfijsU+S3paiRMUPo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YJfUoC5iPRJk6u771gEhRmH2sdePOmvBwKs9YVXG0awVVQfqY1WqyMEnCgmpJQdXC
-	 Y+AwUe15L1y/xqHIVp7Xqei4JkqU+hu/H4ldbufeh2MEs3v8uzI6rhGRVrBxFXvSAT
-	 QNNBmctW32KJRrjacwL0EpuEMj+UgbK/nKuwI8uAc0Ln9pxmBmj4+P6aXJmvbgNz3z
-	 2WfZiY0lo6bnFRvaqkiveWAyUvwoPnW0J0Q81pjfvu5JVBdIyfCOTzle1yV35ZbLl3
-	 gOxZNREDIAGEHS4N5iFZE+yprOUuRW7s67iE2MFXlhWf3yRX2LbrDm9QGYC6SXdt0V
-	 pqeHiSBc2zC6w==
-Date: Tue, 17 Mar 2026 19:48:51 +0000
+	b=s1dQCYTegDy2569WFfrMTmWIMTBZA/60RJwwnXYXwzqTP00HyOjBN3LLeq7rCa7Wg
+	 q1sOkQuf/5w9FWqLuj0sgz1mGK+DT8GaQbzC+slmDgJPnucdTQH2Q2d5dX5ZQuV2KL
+	 7Dxeq/EqYJ3B16Ko9V6xIaKpCODeLAOKWKtNx7aD6BcoGksdepPy+2y37VV+HKB3HI
+	 Qze7nClTtHearOiCGQqKElBC+AFYEaE75cUkxIf6S2fSkiYxBF5VAlQZN5W9U1b6E5
+	 E10NA/5deA2pIybcmP7TclZbYnkuatsA9g/CheKbXyLhCIOAPw2QGBzMy9av5PWYRP
+	 VVjRnH7Mp3vvw==
+Date: Tue, 17 Mar 2026 19:51:34 +0000
 From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
@@ -36,11 +36,11 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
 	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, 
 	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
 	Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH 09/14] mm/sparse: remove CONFIG_MEMORY_HOTPLUG-specific
- usemap allocation handling
-Message-ID: <f23aa64a-d78f-4c57-a08b-5c589889b7fc@lucifer.local>
+Subject: Re: [PATCH 10/14] mm: prepare to move subsection_map_init() to
+ mm/sparse-vmemmap.c
+Message-ID: <cb710be1-5fec-409a-a017-c794ecad0382@lucifer.local>
 References: <20260317165652.99114-1-david@kernel.org>
- <20260317165652.99114-10-david@kernel.org>
+ <20260317165652.99114-11-david@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -49,215 +49,124 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260317165652.99114-10-david@kernel.org>
+In-Reply-To: <20260317165652.99114-11-david@kernel.org>
 
-On Tue, Mar 17, 2026 at 05:56:47PM +0100, David Hildenbrand (Arm) wrote:
-> In 2008, we added through commit 48c906823f39 ("memory hotplug: allocate
-> usemap on the section with pgdat") quite some complexity to try
-> allocating memory for the "usemap" (storing pageblock information
-> per memory section) for a memory section close to the memory of the
-> "pgdat" of the node.
+On Tue, Mar 17, 2026 at 05:56:48PM +0100, David Hildenbrand (Arm) wrote:
+> We want to move subsection_map_init() to mm/sparse-vmemmap.c.
 >
-> The goal was to make memory hotunplug of boot memory more likely to
-> succeed. That commit also added some checks for circular dependencies
-> between two memory sections, whereby two memory sections would contain
-> each others usemap, turning bot memory sections un-removable.
-
-Typo: bot -> both. Presumably you are not talking about memory a bot of some
-kind allocated :P
-
+> To prepare for getting rid of subsection_map_init() in mm/sparse.c
+> completely, use a static inline function for !CONFIG_SPARSEMEM_VMEMMAP.
 >
-> However, in 2010, commit a4322e1bad91 ("sparsemem: Put usemap for one node
-> together") started allocating the usemap for multiple memory
-> sections on the same node in one chunk, effectively grouping all usemap
-> allocations of the same node in a single memblock allocation.
->
-> We don't really give guarantees about memory hotunplug of boot memory, and
-> with the change in 2010, it is pretty much impossible in practice to get
-> any circular dependencies.
+> While at it, move the declaration to internal.h and rename it to
+> "sparse_init_subsection_map()".
 
-Pretty much impossible? :) We can probably go so far as to so impossible no?
+Why not init_sparse_subsection_map()??
+Or sparse_init_map_subsection()????
+Or <all other permutations>
 
->
-> commit 48c906823f39 ("memory hotplug: allocate usemap on the section with
-> pgdat") also added the comment:
->
-> 	"Similarly, a pgdat can prevent a section being removed. If
-> 	 section A contains a pgdat and section B
-> 	 contains the usemap, both sections become inter-dependent."
->
-> Given that we don't free the pgdat anymore, that comment (and handling)
-> does not apply.
+Joking that's fine ;)
 
-Isn't pgdat synonymous with a node and that's the data structure that describes
-a node right? Confusingly typedef'd from pglist_data to pg_data_t but then
-referred to as pgdat because all that makes so much sense :)
-
-But I'm confused, does a section containing a pgdat mean a section having the
-pgdat data structure literally allocated in it?
-
-A usemap is... something that tracks pageblock metadata I think right?
-
-Anyway I'm also confused by 'given we don't free the pgdat any more', but the
-comment says a 'pgdat can prevent a section being removed' rather than anything
-about it being removed?
-
-I guess it means the OTHER section could be prevented from being removed even
-after it's gone.. somehow?
-
-Anyway! I think maybe this could be clearer, somehow :)
-
->
-> So let's simply remove this complexity.
 >
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-I think what you've done in the patch is right though, we're not doing any of
-these dances after a4322e1bad91 and pgdats sitting around mean we don't really
-care about where the usemap goes anyway I don't think so...
-
-I usemap and I find myself in a place where I give you a:
+You've initialised the sparse subsection of my heart, so:
 
 Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 
-!
-
 > ---
->  mm/sparse.c | 100 +---------------------------------------------------
->  1 file changed, 1 insertion(+), 99 deletions(-)
+>  include/linux/mmzone.h |  3 ---
+>  mm/internal.h          | 12 ++++++++++++
+>  mm/mm_init.c           |  2 +-
+>  mm/sparse.c            |  6 +-----
+>  4 files changed, 14 insertions(+), 9 deletions(-)
 >
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 7bd0134c241c..b694c69dee04 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -2002,8 +2002,6 @@ struct mem_section_usage {
+>  	unsigned long pageblock_flags[0];
+>  };
+>
+> -void subsection_map_init(unsigned long pfn, unsigned long nr_pages);
+> -
+>  struct page;
+>  struct page_ext;
+>  struct mem_section {
+> @@ -2396,7 +2394,6 @@ static inline unsigned long next_present_section_nr(unsigned long section_nr)
+>  #define sparse_vmemmap_init_nid_early(_nid) do {} while (0)
+>  #define sparse_vmemmap_init_nid_late(_nid) do {} while (0)
+>  #define pfn_in_present_section pfn_valid
+> -#define subsection_map_init(_pfn, _nr_pages) do {} while (0)
+>  #endif /* CONFIG_SPARSEMEM */
+>
+>  /*
+> diff --git a/mm/internal.h b/mm/internal.h
+> index f98f4746ac41..5f5c45d80aca 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -960,12 +960,24 @@ void memmap_init_range(unsigned long, int, unsigned long, unsigned long,
+>  		unsigned long, enum meminit_context, struct vmem_altmap *, int,
+>  		bool);
+>
+> +/*
+> + * mm/sparse.c
+> + */
+>  #ifdef CONFIG_SPARSEMEM
+>  void sparse_init(void);
+>  #else
+>  static inline void sparse_init(void) {}
+>  #endif /* CONFIG_SPARSEMEM */
+>
+> +#ifdef CONFIG_SPARSEMEM_VMEMMAP
+> +void sparse_init_subsection_map(unsigned long pfn, unsigned long nr_pages);
+> +#else
+> +static inline void sparse_init_subsection_map(unsigned long pfn,
+> +		unsigned long nr_pages)
+> +{
+> +}
+> +#endif /* CONFIG_SPARSEMEM_VMEMMAP */
+> +
+>  #if defined CONFIG_COMPACTION || defined CONFIG_CMA
+>
+>  /*
+> diff --git a/mm/mm_init.c b/mm/mm_init.c
+> index 969048f9b320..3c5f18537cd1 100644
+> --- a/mm/mm_init.c
+> +++ b/mm/mm_init.c
+> @@ -1898,7 +1898,7 @@ static void __init free_area_init(void)
+>  		pr_info("  node %3d: [mem %#018Lx-%#018Lx]\n", nid,
+>  			(u64)start_pfn << PAGE_SHIFT,
+>  			((u64)end_pfn << PAGE_SHIFT) - 1);
+> -		subsection_map_init(start_pfn, end_pfn - start_pfn);
+> +		sparse_init_subsection_map(start_pfn, end_pfn - start_pfn);
+>  	}
+>
+>  	/* Initialise every node */
 > diff --git a/mm/sparse.c b/mm/sparse.c
-> index 2a1f662245bc..b57c81e99340 100644
+> index b57c81e99340..7b0bfea73a9b 100644
 > --- a/mm/sparse.c
 > +++ b/mm/sparse.c
-> @@ -294,102 +294,6 @@ size_t mem_section_usage_size(void)
->  	return sizeof(struct mem_section_usage) + usemap_size();
+> @@ -185,7 +185,7 @@ static void subsection_mask_set(unsigned long *map, unsigned long pfn,
+>  	bitmap_set(map, idx, end - idx + 1);
 >  }
 >
-> -#ifdef CONFIG_MEMORY_HOTREMOVE
-> -static inline phys_addr_t pgdat_to_phys(struct pglist_data *pgdat)
-> -{
-> -#ifndef CONFIG_NUMA
-> -	VM_BUG_ON(pgdat != &contig_page_data);
-> -	return __pa_symbol(&contig_page_data);
-> -#else
-> -	return __pa(pgdat);
-> -#endif
-> -}
-> -
-> -static struct mem_section_usage * __init
-> -sparse_early_usemaps_alloc_pgdat_section(struct pglist_data *pgdat,
-> -					 unsigned long size)
-> -{
-> -	struct mem_section_usage *usage;
-> -	unsigned long goal, limit;
-> -	int nid;
-> -	/*
-> -	 * A page may contain usemaps for other sections preventing the
-> -	 * page being freed and making a section unremovable while
-> -	 * other sections referencing the usemap remain active. Similarly,
-> -	 * a pgdat can prevent a section being removed. If section A
-> -	 * contains a pgdat and section B contains the usemap, both
-> -	 * sections become inter-dependent. This allocates usemaps
-> -	 * from the same section as the pgdat where possible to avoid
-> -	 * this problem.
-> -	 */
-> -	goal = pgdat_to_phys(pgdat) & (PAGE_SECTION_MASK << PAGE_SHIFT);
-> -	limit = goal + (1UL << PA_SECTION_SHIFT);
-> -	nid = early_pfn_to_nid(goal >> PAGE_SHIFT);
-> -again:
-> -	usage = memblock_alloc_try_nid(size, SMP_CACHE_BYTES, goal, limit, nid);
-> -	if (!usage && limit) {
-> -		limit = MEMBLOCK_ALLOC_ACCESSIBLE;
-> -		goto again;
-> -	}
-> -	return usage;
-> -}
-> -
-> -static void __init check_usemap_section_nr(int nid,
-> -		struct mem_section_usage *usage)
-> -{
-> -	unsigned long usemap_snr, pgdat_snr;
-> -	static unsigned long old_usemap_snr;
-> -	static unsigned long old_pgdat_snr;
-> -	struct pglist_data *pgdat = NODE_DATA(nid);
-> -	int usemap_nid;
-> -
-> -	/* First call */
-> -	if (!old_usemap_snr) {
-> -		old_usemap_snr = NR_MEM_SECTIONS;
-> -		old_pgdat_snr = NR_MEM_SECTIONS;
-> -	}
-> -
-> -	usemap_snr = pfn_to_section_nr(__pa(usage) >> PAGE_SHIFT);
-> -	pgdat_snr = pfn_to_section_nr(pgdat_to_phys(pgdat) >> PAGE_SHIFT);
-> -	if (usemap_snr == pgdat_snr)
-> -		return;
-> -
-> -	if (old_usemap_snr == usemap_snr && old_pgdat_snr == pgdat_snr)
-> -		/* skip redundant message */
-> -		return;
-> -
-> -	old_usemap_snr = usemap_snr;
-> -	old_pgdat_snr = pgdat_snr;
-> -
-> -	usemap_nid = sparse_early_nid(__nr_to_section(usemap_snr));
-> -	if (usemap_nid != nid) {
-> -		pr_info("node %d must be removed before remove section %ld\n",
-> -			nid, usemap_snr);
-> -		return;
-> -	}
-> -	/*
-> -	 * There is a circular dependency.
-> -	 * Some platforms allow un-removable section because they will just
-> -	 * gather other removable sections for dynamic partitioning.
-> -	 * Just notify un-removable section's number here.
-> -	 */
-> -	pr_info("Section %ld and %ld (node %d) have a circular dependency on usemap and pgdat allocations\n",
-> -		usemap_snr, pgdat_snr, nid);
-> -}
-> -#else
-> -static struct mem_section_usage * __init
-> -sparse_early_usemaps_alloc_pgdat_section(struct pglist_data *pgdat,
-> -					 unsigned long size)
-> -{
-> -	return memblock_alloc_node(size, SMP_CACHE_BYTES, pgdat->node_id);
-> -}
-> -
-> -static void __init check_usemap_section_nr(int nid,
-> -		struct mem_section_usage *usage)
-> -{
-> -}
-> -#endif /* CONFIG_MEMORY_HOTREMOVE */
-> -
->  #ifdef CONFIG_SPARSEMEM_VMEMMAP
->  unsigned long __init section_map_size(void)
+> -void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
+> +void __init sparse_init_subsection_map(unsigned long pfn, unsigned long nr_pages)
 >  {
-> @@ -486,7 +390,6 @@ void __init sparse_init_early_section(int nid, struct page *map,
->  				      unsigned long pnum, unsigned long flags)
->  {
->  	BUG_ON(!sparse_usagebuf || sparse_usagebuf >= sparse_usagebuf_end);
-> -	check_usemap_section_nr(nid, sparse_usagebuf);
->  	sparse_init_one_section(__nr_to_section(pnum), pnum, map,
->  			sparse_usagebuf, SECTION_IS_EARLY | flags);
->  	sparse_usagebuf = (void *)sparse_usagebuf + mem_section_usage_size();
-> @@ -497,8 +400,7 @@ static int __init sparse_usage_init(int nid, unsigned long map_count)
->  	unsigned long size;
+>  	int end_sec_nr = pfn_to_section_nr(pfn + nr_pages - 1);
+>  	unsigned long nr, start_sec_nr = pfn_to_section_nr(pfn);
+> @@ -207,10 +207,6 @@ void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
+>  		nr_pages -= pfns;
+>  	}
+>  }
+> -#else
+> -void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
+> -{
+> -}
+>  #endif
 >
->  	size = mem_section_usage_size() * map_count;
-> -	sparse_usagebuf = sparse_early_usemaps_alloc_pgdat_section(
-> -				NODE_DATA(nid), size);
-> +	sparse_usagebuf = memblock_alloc_node(size, SMP_CACHE_BYTES, nid);
-
-I guess nid here is the same node as the pgdat?
-
->  	if (!sparse_usagebuf) {
->  		sparse_usagebuf_end = NULL;
->  		return -ENOMEM;
+>  /* Record a memory area against a node. */
 > --
 > 2.43.0
 >
-
-This is quite the simplification :)
-
-Cheers, Lorenzo
