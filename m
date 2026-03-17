@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB073264D0;
-	Tue, 17 Mar 2026 20:00:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0AB1F1513;
+	Tue, 17 Mar 2026 20:01:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773777603; cv=none; b=aODZbc/ZCg6caWm8OfEhCOMU37k1nNzlQIVx8dCkXOqkoTrRQtOs5XorhL7ztYCcAIwnBidM1l7G/q6/4bdQdEcKJfQ76JcF+aU1VbIGfmrsOicNO9UmgzXQ6C8SbmXVxQc6kyPA2s9khfmsAEYnkfHt/SKgSBKOQjADdyBsxCw=
+	t=1773777715; cv=none; b=dPmka5Zft9ovCq9RtCzmrLIAsP7boYwUU4kf4holpXtXuUSHeVV5vJ4LFOUNYDhhIqL36FHwG3ZLAATq0EFJ2fPIcvI0yDBLxW2LHobZklpQ+1Agn30H5DhhyKJ96xXb/lguwNBFFOeCEXG2kq7RJ10DIxtRwE0416p7FQk1GA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773777603; c=relaxed/simple;
-	bh=aMcAv71YOkkFD+ju6rmRuDp0ZfzNN0oX5ZYRoLlaqM4=;
+	s=arc-20240116; t=1773777715; c=relaxed/simple;
+	bh=NKnAXN7C8VudbOPbvnyk9jdQz3ADlfDA1m5Ubw1DyQk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q16fdYULVtZA9x5lFlgO4KeVF8E/kMeX7L+oxSOsFdNuAsY9bSRPIMb3QcGvuDYLcGGM89OHmU9iNkBrWBMb4Y8uMRYUILcye+XVZtpZG9w3z4mpFy8NBXfWMkBfa+c0IxEbRZ9PMp/8DYsEmv3tvOjUDuQEceh7G1JPYb/Tjvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MKGd0sMP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=COiYjm89W6CWUxdEmg/atdj4JsU164JlbDdXz+a3A6aii6Xrlo8YHNFHyAtdH4KLGhfD0rf4B7lDmGOTafxqJHwiUW5LrFbgl+gSJI4df1CH+s5q9H1TUOvHbQ9HJiDbfPv2Kii6Z9H31f9zHW9aGakM+6IUlltEP3PH8iPCFUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V5UHlDDd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MKGd0sMP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DBFAC4CEF7;
-	Tue, 17 Mar 2026 20:00:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V5UHlDDd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF764C4CEF7;
+	Tue, 17 Mar 2026 20:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773777602;
-	bh=aMcAv71YOkkFD+ju6rmRuDp0ZfzNN0oX5ZYRoLlaqM4=;
+	s=k20201202; t=1773777715;
+	bh=NKnAXN7C8VudbOPbvnyk9jdQz3ADlfDA1m5Ubw1DyQk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MKGd0sMPoOpRVFAvsPtlMPnbCySVNbT0yywJFqBvpiy0zWYqxgnuY+ZsiMZUGejJy
-	 at8VEBsz4BvVz59tpwJzURVLDNBxEux9bzvwu034bpHA68XAWcVDIfU19lOboFHxXs
-	 11Zhcykek8uAPKp/TVQUWRMO+eysqaOD1ioKfdb6Qo4ut4eF4J8ac0N0jctfHvmNKy
-	 KGj0TMwBINqpF+dExGqEdAXsNbXMJtK5K1lwSlg0I0QaxlAaWdEob3Pl4N+cFa+9pY
-	 sFgLrQUApIcg1iu5bMgUTS1W68KTWAJL/6v/YHinLLaG4DvTRJD/fi6lmM9hXS4I3x
-	 P7nShZRDiUeJA==
-Date: Tue, 17 Mar 2026 20:00:00 +0000
+	b=V5UHlDDdZvItrfJBx8rarotr20Slalpfj+PAz+/HmNH+lo3ayJGu+6GPWXGSb9Fci
+	 VyDGV+HIQX0znchJZnHBZI7aeMp1srzVtffP5/g52HIOczTQGY117+Oxs/3ocduRe/
+	 huFmXW/0BWz+CwfE6AesM46XoPgg/chA39BP3d8ZM7FpHEH80g4BNG1/Yq98+jbHZu
+	 3R3bf5IFqX6PXo7mKSff+aQZ97TaFJEkPZupwv+Dla+qgEx9/d/aZjGSOymU0EluoX
+	 dXZuKCujkUwDOMGq8XpK+m9u+sYs9dzVquLQUi1Yj77qHBlhK3ahdDKBuU9YE8gXy5
+	 mpDiP+NWEDPhw==
+Date: Tue, 17 Mar 2026 20:01:53 +0000
 From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
@@ -36,11 +36,11 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
 	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, 
 	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
 	Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH 12/14] mm/sparse: move sparse_init_one_section() to
+Subject: Re: [PATCH 13/14] mm/sparse: move __section_mark_present() to
  internal.h
-Message-ID: <f063704a-ffb4-4273-aa6a-ded3a565a891@lucifer.local>
+Message-ID: <4839f771-1b54-4858-85f3-096aa1888189@lucifer.local>
 References: <20260317165652.99114-1-david@kernel.org>
- <20260317165652.99114-13-david@kernel.org>
+ <20260317165652.99114-14-david@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -49,119 +49,62 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260317165652.99114-13-david@kernel.org>
+In-Reply-To: <20260317165652.99114-14-david@kernel.org>
 
-On Tue, Mar 17, 2026 at 05:56:50PM +0100, David Hildenbrand (Arm) wrote:
-> While at it, convert the BUG_ON to a WARN_ON, avoid long lines, and merge
-> sparse_encode_mem_map() into sparse_init_one_section().
->
-> Clarify the comment a bit, pointing at page_to_pfn().
+On Tue, Mar 17, 2026 at 05:56:51PM +0100, David Hildenbrand (Arm) wrote:
+> Let's prepare for moving memory hotplug handling from sparse.c to
+> sparse-vmemmap.c by moving __section_mark_present() to internal.h.
 >
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Don't need a long line to merge my:
+Let's prepare for me finishing reviewing the series with:
 
 Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 
-Here!
-
 > ---
->  include/linux/mmzone.h |  2 +-
->  mm/internal.h          | 22 ++++++++++++++++++++++
->  mm/sparse.c            | 24 ------------------------
->  3 files changed, 23 insertions(+), 25 deletions(-)
+>  mm/internal.h | 9 +++++++++
+>  mm/sparse.c   | 8 --------
+>  2 files changed, 9 insertions(+), 8 deletions(-)
 >
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index b694c69dee04..dcbbf36ed88c 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -2008,7 +2008,7 @@ struct mem_section {
->  	/*
->  	 * This is, logically, a pointer to an array of struct
->  	 * pages.  However, it is stored with some other magic.
-> -	 * (see sparse.c::sparse_init_one_section())
-
-What::the::hell::was::this::before, we're not C++ developers!!
-
-> +	 * (see sparse_init_one_section())
->  	 *
->  	 * Additionally during early boot we encode node id of
->  	 * the location of the section here to guide allocation.
 > diff --git a/mm/internal.h b/mm/internal.h
-> index 5f5c45d80aca..bcf4df97b185 100644
+> index bcf4df97b185..835a6f00134e 100644
 > --- a/mm/internal.h
 > +++ b/mm/internal.h
-> @@ -965,6 +965,28 @@ void memmap_init_range(unsigned long, int, unsigned long, unsigned long,
->   */
->  #ifdef CONFIG_SPARSEMEM
->  void sparse_init(void);
+> @@ -987,6 +987,15 @@ static inline void sparse_init_one_section(struct mem_section *ms,
+>  	ms->section_mem_map |= SECTION_HAS_MEM_MAP | flags;
+>  	ms->usage = usage;
+>  }
 > +
-> +static inline void sparse_init_one_section(struct mem_section *ms,
-> +		unsigned long pnum, struct page *mem_map,
-> +		struct mem_section_usage *usage, unsigned long flags)
+> +static inline void __section_mark_present(struct mem_section *ms,
+> +		unsigned long section_nr)
 > +{
-> +	unsigned long coded_mem_map;
+> +	if (section_nr > __highest_present_section_nr)
+> +		__highest_present_section_nr = section_nr;
 > +
-> +	BUILD_BUG_ON(SECTION_MAP_LAST_BIT > PFN_SECTION_SHIFT);
-> +
-> +	/*
-> +	 * We encode the start PFN of the section into the mem_map such that
-> +	 * page_to_pfn() on !CONFIG_SPARSEMEM_VMEMMAP can simply subtract it
-> +	 * from the page pointer to obtain the PFN.
-> +	 */
-> +	coded_mem_map = (unsigned long)(mem_map - section_nr_to_pfn(pnum));
-> +	VM_WARN_ON(coded_mem_map & ~SECTION_MAP_MASK);
-
-Maybe VM_WARN_ON_ONCE()?
-
-> +
-> +	ms->section_mem_map &= ~SECTION_MAP_MASK;
-> +	ms->section_mem_map |= coded_mem_map;
-> +	ms->section_mem_map |= SECTION_HAS_MEM_MAP | flags;
-
-I mean this is pretty nitty but prefer 'flags | SECTION_HAS_MEM_MAP' to
-show you appended to the flags :P
-
-> +	ms->usage = usage;
+> +	ms->section_mem_map |= SECTION_MARKED_PRESENT;
 > +}
 >  #else
 >  static inline void sparse_init(void) {}
 >  #endif /* CONFIG_SPARSEMEM */
 > diff --git a/mm/sparse.c b/mm/sparse.c
-> index b5a2de43ac40..6f5f340301a3 100644
+> index 6f5f340301a3..bf620f3fe05d 100644
 > --- a/mm/sparse.c
 > +++ b/mm/sparse.c
-> @@ -256,30 +256,6 @@ static void __init memblocks_present(void)
->  		memory_present(nid, start, end);
->  }
+> @@ -161,14 +161,6 @@ static void __meminit mminit_validate_memmodel_limits(unsigned long *start_pfn,
+>   * those loops early.
+>   */
+>  unsigned long __highest_present_section_nr;
+> -static void __section_mark_present(struct mem_section *ms,
+> -		unsigned long section_nr)
+> -{
+> -	if (section_nr > __highest_present_section_nr)
+> -		__highest_present_section_nr = section_nr;
+> -
+> -	ms->section_mem_map |= SECTION_MARKED_PRESENT;
+> -}
 >
-> -/*
-> - * Subtle, we encode the real pfn into the mem_map such that
-> - * the identity pfn - section_mem_map will return the actual
-> - * physical page frame number.
-> - */
-> -static unsigned long sparse_encode_mem_map(struct page *mem_map, unsigned long pnum)
-> -{
-> -	unsigned long coded_mem_map =
-> -		(unsigned long)(mem_map - (section_nr_to_pfn(pnum)));
-> -	BUILD_BUG_ON(SECTION_MAP_LAST_BIT > PFN_SECTION_SHIFT);
-> -	BUG_ON(coded_mem_map & ~SECTION_MAP_MASK);
-> -	return coded_mem_map;
-> -}
-> -
-> -static void __meminit sparse_init_one_section(struct mem_section *ms,
-> -		unsigned long pnum, struct page *mem_map,
-> -		struct mem_section_usage *usage, unsigned long flags)
-> -{
-> -	ms->section_mem_map &= ~SECTION_MAP_MASK;
-> -	ms->section_mem_map |= sparse_encode_mem_map(mem_map, pnum)
-> -		| SECTION_HAS_MEM_MAP | flags;
-> -	ms->usage = usage;
-> -}
-> -
->  static unsigned long usemap_size(void)
+>  static inline unsigned long first_present_section_nr(void)
 >  {
->  	return BITS_TO_LONGS(SECTION_BLOCKFLAGS_BITS) * sizeof(unsigned long);
 > --
 > 2.43.0
 >
