@@ -1,101 +1,115 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADCD3EFD14
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Mar 2026 16:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D59E3F54A5;
+	Tue, 17 Mar 2026 16:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773765969; cv=none; b=BeNOJHCSQlxQPAMa0o9TkfXaygYVMZvj33ahvTRiD2W9qATktTO0IZcECJdDK8Ovi5WXCqmVoqu+iw2Us0q3zH5JeGaVcwPJK/52Wx0oSK3x/IVDwjLRFpSGPCR7HKhUq8junHUkTFFZuvhUeEQIYMigRdJxWBijZCwgQmfAaIU=
+	t=1773766621; cv=none; b=Ui8uuCeeUlQ+RyX6rM/oy7A0DWrj6dVXbAkpS5IBnb+qAy/XD+XjUt77F20ey+NBEL3m96+0DVfqqWZX8W/0WpaEaJAyEhEkG20Y+NuzLkss7ra9ForVtZwPVR3w9STVohhJNUYYgfZ7K/QXa6hQeHqvm6gUaWcdUfjbuqVcac8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773765969; c=relaxed/simple;
-	bh=5eMb8fYJO+XYhvxs8TZV3GHjkYLAET9zXcnPrlNmcW8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V4tIU/fqxgV9q7WLdqF82uiTZkwJYyfhnRNgZwTmbXfccDXa1qHWRzaA5iBXl2phjJehLlp3D9mZbq5yHV9ua7HDUfguqE42KPVxXjSDBappt5HtF3kzbgdS2OiTbuvb3nlhVV4FkKJ8P9AkVbqOJ4FFZ7aylZkcS98RR2ocGBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fZyWQ1B85zHnGdj;
-	Wed, 18 Mar 2026 00:45:38 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0AFA740587;
-	Wed, 18 Mar 2026 00:45:58 +0800 (CST)
-Received: from localhost (10.122.19.247) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 17 Mar
- 2026 16:45:57 +0000
-Date: Tue, 17 Mar 2026 16:45:56 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <shiju.jose@huawei.com>
-CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, <mst@redhat.com>,
-	<peter.maydell@linaro.org>, <dave@stgolabs.net>, <linuxarm@huawei.com>
-Subject: Re: [PATCH v2 0/3] hw/cxl: Add fixes in maintenance, PPR and event
- records
-Message-ID: <20260317164556.0000794d@huawei.com>
-In-Reply-To: <20260306101423.986-1-shiju.jose@huawei.com>
-References: <20260306101423.986-1-shiju.jose@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1773766621; c=relaxed/simple;
+	bh=4WgVt6EG/HFCGbU0HiZBZDpDmgR6tfOQ4rfofBAntFk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hod86CH1Vg6BJYY+6cZ6KD7swNa8BDva6yffg0Zwe0ODbSpCba0WnPs6rY4NpoWiIgborYkch7Ja3G9knYo5BlY/nrs/9S3xkTFo5a78FPieuAlm4DXiJhf5UhNVrWnqn1HCE84wW7i2Z2IvTU1k3LJQC5yhvQHplI+0s2NuRBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BviKTgEi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BviKTgEi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D908CC4CEF7;
+	Tue, 17 Mar 2026 16:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773766621;
+	bh=4WgVt6EG/HFCGbU0HiZBZDpDmgR6tfOQ4rfofBAntFk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BviKTgEiT7EcUlsk7PLxEp4xdjdmk5atU4hSdsAOy6wHSk7KJ8KxyhvvUHycVWfIV
+	 sKd3jak2pOAJaIPtdfO6IEuT9TkKWNzj0rCREE4A5tQwtCCBStJ6XmQV870joLzToB
+	 IVrwqv986PbxSFGr7LJIi4Cb22cG+oaFk+x5252QHaGC+HHW4vriTp7OcsYNXpLERT
+	 cCkGpKTbKqUnllQhOkZvGrBFZKLbY16Qtwt2dWj0EZjrvSbj9BVzXuBshD19FMWShb
+	 hYHBNPi4S1MJgdRK4QRQu/PGbg4HAuUtSS8M5DEqs2K87vXBjiqio96q65EWPNpxid
+	 zSuz9kSYmWj4Q==
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org,
+	"David Hildenbrand (Arm)" <david@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>
+Subject: [PATCH 00/14] mm: memory hot(un)plug and SPARSEMEM cleanups
+Date: Tue, 17 Mar 2026 17:56:38 +0100
+Message-ID: <20260317165652.99114-1-david@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Content-Transfer-Encoding: 8bit
 
-On Fri, 6 Mar 2026 10:14:19 +0000
-<shiju.jose@huawei.com> wrote:
+Some cleanups around memory hot(un)plug and SPARSEMEM. In essence,
+we can limit CONFIG_MEMORY_HOTPLUG to CONFIG_SPARSEMEM_VMEMMAP,
+remove some dead code, and move all the hotplug bits over to
+mm/sparse-vmemmap.c.
 
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-> Add few fixes in CXL maintenance, PPR and event records generation.
-All 3 of these look good to me.
+Some further/related cleanups around other unnecessary code
+(memory hole handling and complicated usemap allocation).
 
-Michael, please pick these up directly (assuming you think
-they look good as well1)
+I have some further sparse.c cleanups lying around, and I'm planning
+on getting rid of bootmem_info.c entirely.
+
+Cross-compiled on a bunch of machines. Hot(un)plug tested with virtio-mem.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Axel Rasmussen <axelrasmussen@google.com>
+Cc: Yuanchu Xie <yuanchu@google.com>
+Cc: Wei Xu <weixugc@google.com>
+Cc: Lorenzo Stoakes <ljs@kernel.org>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Vlastimil Babka <vbabka@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+
+David Hildenbrand (Arm) (14):
+  mm/memory_hotplug: remove for_each_valid_pfn() usage
+  mm/sparse: remove WARN_ONs from (online|offline)_mem_sections()
+  mm/Kconfig: make CONFIG_MEMORY_HOTPLUG depend on
+    CONFIG_SPARSEMEM_VMEMMAP
+  mm/memory_hotplug: simplify check_pfn_span()
+  mm/sparse: remove !CONFIG_SPARSEMEM_VMEMMAP leftovers for
+    CONFIG_MEMORY_HOTPLUG
+  mm/bootmem_info: remove handling for !CONFIG_SPARSEMEM_VMEMMAP
+  mm/bootmem_info: avoid using sparse_decode_mem_map()
+  mm/sparse: remove sparse_decode_mem_map()
+  mm/sparse: remove CONFIG_MEMORY_HOTPLUG-specific usemap allocation
+    handling
+  mm: prepare to move subsection_map_init() to mm/sparse-vmemmap.c
+  mm/sparse: drop set_section_nid() from sparse_add_section()
+  mm/sparse: move sparse_init_one_section() to internal.h
+  mm/sparse: move __section_mark_present() to internal.h
+  mm/sparse: move memory hotplug bits to sparse-vmemmap.c
+
+ include/linux/memory_hotplug.h |   2 -
+ include/linux/mmzone.h         |   6 +-
+ mm/Kconfig                     |   2 +-
+ mm/bootmem_info.c              |  46 +--
+ mm/internal.h                  |  47 +++
+ mm/memory_hotplug.c            |  24 +-
+ mm/mm_init.c                   |   2 +-
+ mm/sparse-vmemmap.c            | 308 +++++++++++++++++++
+ mm/sparse.c                    | 539 +--------------------------------
+ 9 files changed, 373 insertions(+), 603 deletions(-)
 
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-
-Thanks,
-
-Jonathan
-
-> 
-> 1. In cxl_create_mem_sparing_event_records(), replace strncpy with memcpy
-> to solve coverity warning (CID 1645325) to copy the entire component ID
-> data, which is 16 bytes data, not a string.
-> 
-> 2. In cxl_maintenance_insert(),
->  - replace strncpy with memcpy to copy full data because component ID is
->    16 bytes data, not a string.
->  - remove memset which is not required.
-> 
-> 3. In cxl_perform_ppr(), remove and free the maintenance entry from QLIST
-> if match is found and PPR operation is performed.
-> 
-> 4. Component ID in CXL events is 16 bytes data, not a string, but event
-> record generation copy 15 bytes only from the qmp "component-id" field
-> using strncpy. Replace strncpy with memcpy and copy the entire component
-> ID data.
-> 
-> Changes:
-> v1 -> v2
-> 1. Fix for the feedback from Jonathan.
->   - Modified title of patch[1] & patch[3].
->   - Added fixes tags to all 3 patche's header.
-> 
-> Shiju Jose (3):
->   hw/cxl: Fix handling of component ID to not assume it is a string
->   hw/cxl: Add fixes in Post Package Repair (PPR)
->   hw/cxl/events: Fix handling of component ID in event records
->     generation to not assume it is a string
-> 
->  hw/cxl/cxl-mailbox-utils.c |  6 ++++--
->  hw/mem/cxl_type3.c         | 13 ++++---------
->  2 files changed, 8 insertions(+), 11 deletions(-)
-> 
+base-commit: 3f4f1faa33544d0bd724e32980b6f211c3a9bc7b
+-- 
+2.43.0
 
