@@ -1,22 +1,22 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15BCE34DCD1;
-	Tue, 17 Mar 2026 11:37:00 +0000 (UTC)
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2D3B3B27E6;
+	Tue, 17 Mar 2026 11:50:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773747428; cv=none; b=H9QOLfNfNI1g+iwetxkRWT4dc0OG8tkQVLhMyzb1Pkd1kkYg2LTd5JLAJ4X7tQZjsqFgcV0EJX3dfilfoXbjE/2aDpGp/9Twt0KFmwj/sUleh02k+o+m0GNfIiGjzuRypxiKlV7buOGsaf6tX0YJgkmLnBcaM9yZHaBUt0rjZH8=
+	t=1773748265; cv=none; b=cg3PWRILvHlL7wdHMnDssk/BTKjR2HG5QGzbgYzAMuQIgTBR1Roh3SITOmSJzk74qG6pL/desNYYl9KLkZk6JHsLBG0rcQNfmAsdVrXflN0Z6Z0GVmSsKs5z+RBHUgmz/w9K6CJnmBG4mF9LuuYNgvmSLnoBo9DU/ecfokLUO1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773747428; c=relaxed/simple;
-	bh=5mepB/YLJ2YIOexp7R/vC1uT+piAXacnIktFztCvNPs=;
+	s=arc-20240116; t=1773748265; c=relaxed/simple;
+	bh=DUj+idD95mjB0VwfZmTz3wtXfnzzG2t4C0/UkNQo8Qo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pEZC4m4kUNx8uqwaYGA1NjaEHTxqt9O1UB7hQYDx9k01zrrqJZEF4IaYQXA1ZNqGm8Li4QUmpOTMHF9neMZeufjAym0e9UmCyO9tjCJ5tEwFeY2WEXgs3PwKcrWpXIIDpspM9VUMOxjScGSX2BXSWOToYqo4yVIe40+MD44DE+k=
+	 MIME-Version; b=sjSY6jKtx+mYK8/vDSkaEoh1MaxfKhXQfhekj1nj+35DF/dzTUZHok5Zq/vRj8BsV7oJHZs1U6vxdUwouvdh+Z5KPlSsoSFWwCVe2LvKnKDH/wMQuWGuGaHnFTMbX3fYgHtXo04Adz/8LM2c2SBv6p3dEBTWZxEvZBbGhPEk4/E=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-c2dff70000001609-83-69b93cdaea53
+X-AuditID: a67dfc5b-c2dff70000001609-67-69b9401fe92c
 From: Rakie Kim <rakie.kim@sk.com>
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-Cc: akpm@linux-foundation.org,
-	gourry@gourry.net,
+To: Gregory Price <gourry@gourry.net>
+Cc: Rakie Kim <rakie.kim@sk.com>,
+	akpm@linux-foundation.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
@@ -44,12 +44,12 @@ Cc: akpm@linux-foundation.org,
 	kernel_team@skhynix.com,
 	honggyu.kim@sk.com,
 	yunjeong.mun@sk.com,
-	Rakie Kim <rakie.kim@sk.com>
+	Joshua Hahn <joshua.hahnjy@gmail.com>
 Subject: Re: [LSF/MM/BPF TOPIC] [RFC PATCH 0/4] mm/mempolicy: introduce socket-aware weighted interleave
-Date: Tue, 17 Mar 2026 20:36:53 +0900
-Message-ID: <20260317113656.283-1-rakie.kim@sk.com>
+Date: Tue, 17 Mar 2026 20:50:47 +0900
+Message-ID: <20260317115052.294-1-rakie.kim@sk.com>
 X-Mailer: git-send-email 2.52.0.windows.1
-In-Reply-To: <20260316151933.3093626-1-joshua.hahnjy@gmail.com>
+In-Reply-To: <abhd1BXSST0BTDaN@gourry-fedora-PF4VCD3F>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -58,199 +58,87 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHIsWRmVeSWpSXmKPExsXC9ZZnoe5tm52ZBvfbmSzmrF/DZnH38QU2
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsXC9ZZnka68w85MgwuXJC3mrF/DZnH38QU2
 	i103QiymT73AaHHiZiObxeqbaxgtnm/9xWjx8+5xdov7y56xWOx/+pzFYtXCa2wWx7fOY7fY
 	3vCA3eL8rFMsFpd3zWGzuLfmP6vFyVkrWSz2vd7LbPGtT9rifp+DxZH125ksJl9awGYxu7GP
 	0eLWhGNMFqvXZFjMPnqP3UHKY+esu+weCzaVenS3XWb3aDnyltVj8Z6XTB6bVnWyeWz6NInd
 	48SM3yweOx9aeky+sZzRo7f5HZvHx6e3WDymzq73WL/lKovHmQVH2D0+b5ILEIjisklJzcks
-	Sy3St0vgyli/OqBgglVFe2s/SwPje+0uRk4OCQETibm7LjPD2J+2L2LpYuTgYBNQkji2NwYk
-	LCKgKXGidRJQCRcHs8AXVok3q/4xgiSEBTIkJiz/D9bLIqAqsXDXfDYQm1fAWOLm9b1sEDM1
-	JdZtvMUCYnMK2Eu82HONCcQWEuCReLVhPyNEvaDEyZlPwGqYBeQlmrfOBlsmIdDIIdG9oYMJ
-	YpCkxMEVN1gmMPLPQtIzC0nPAkamVYxCmXlluYmZOSZ6GZV5mRV6yfm5mxiBsbys9k/0DsZP
-	F4IPMQpwMCrx8N5g3ZEpxJpYVlyZe4hRgoNZSYR32ZFtmUK8KYmVValF+fFFpTmpxYcYpTlY
-	lMR5jb6VpwgJpCeWpGanphakFsFkmTg4pRoYuevSOg3v9i7h8mvS+ae2ZanMEs34hUWzzgpo
-	TRVt+FydEBEswDvD3WWXTlphoYKyf2eGZ2dv7XSTzrRPFSfYXBcb3Zx29V7TLNPAxaFJa/pk
-	Ts6oVeBcU5ZdEeQoPLmO1cbDoTV7WcC5Z5yLJE2OSPyM9/ij82C7qfvdskVTFujf19aavEOJ
-	pTgj0VCLuag4EQCCgFZM4QIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYQCG+XbOzjkuJ8cldNAfwkDEIu1i9ilSkmUfQWBUJCboykM7ODfZ
-	VJwUTU0zrTlvpJuZpmipZA3vaOY0ddFFG3mZqFnpNCuvCKZkLQn89/A+L++fl8JEPbgrxcnj
-	WaVcIhMTAlxQ5Bmx3xrYyh1IyfCBJfV1BBz/MkDAtpEL8F2BgYD3CwcA7B9NIWDtaB2AtsZf
-	AK6P95FwsmoGhysz8xjsnLbhsKZ8iIB9jaUk7H5g5sNmzScSvte/xqGlrYSAE3VbfGjWP8Hh
-	i/kODK5p3eCkNgiahmx82FPfzIP5H8oIaEjRAmjV9fJgbZ0UbjQ9/hu9miCD3FGrfpxEZcYE
-	lJ1hIdGtnh98VNE+x0PGmjsEMi7nkai/aANHrVP+KH+kGqB7aT8JtDRtxdHaGEIVs4s8VGi4
-	ieobPuKhonBBYDQr4xJZpc+xKIG0vjY0TheQdDs9B9eAhX1ZwIFiaF9mufkRngUoiqDFTG9H
-	hD12ob2Y/vQ8LAsIKIxe5TPfa34Du9hNSxld9RZmZ5z2YMrbHhJ2FtKHmdHhDmJ704t5+tyK
-	29mBPs7Mtg/x7CyiHZlvzzrBdt+ZMRd//dfBaHcmrdGA6YCjfofS71BlgFcDXDh5YqyEkx3x
-	VsVI1XIuyfuqItYI/n5bdWMztwWsWk6bAE0BsaNwhN/CifiSRJU61gQYChO7CKt6mjiRMFqi
-	TmaVikhlgoxVmYAbhYv3CM9cYqNE9DVJPBvDsnGs8r/lUQ6uGjBd6mRQD3b5Sd9eL0DmFWVT
-	uW+2YjmMKh22eWpONc8FOdGyQS/y5Ipoi/Wnhu5OZYQFbHavX4zp1p44ZBYe7epVLIWk+kV0
-	2i43yINzXu7yP+thCd/KrFxIHSvMxFW6N5+LB3Sbi962qHNYS3J6UySVWxniXKq/sh5cIThv
-	EOMqqeTgXkypkvwB51Ng4dcCAAA=
+	Sy3St0vgynj97ShbwSPBinuzj7M2MH7m7WLk5JAQMJHo27OWDcbet3I+SxcjBwebgJLEsb0x
+	IKaIgKpE2xV3kApmgQ42iWmnZUBsYYEMiQnL/zOD2CxAJScad7OA2LwCxhJt3Q9ZICZqSqzb
+	eAvM5hQwk7j/sxVsk5AAj8SrDfsZIeoFJU7OfMICMV9eonnrbKCZXEC9P9klnl5bDnWapMTB
+	FTdYJjDyz0LSMwtJzwJGplWMQpl5ZbmJmTkmehmVeZkVesn5uZsYgZG8rPZP9A7GTxeCDzEK
+	cDAq8fDeYN2RKcSaWFZcmXuIUYKDWUmEd9mRbZlCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeY2+
+	lacICaQnlqRmp6YWpBbBZJk4OKUaGF3CNRVaD1fd0ki4xGIQbGfZ4iJUOMtxNQebnMu7LI7S
+	0z1LT3n+mM59LCF31ozejg3Llkz+kqZz/eMHpkXX5lxe/3KCrnuUIPPJWZ7S17UF925uXMKc
+	VPPhB9f34/rvbQ5wzl63u9SH90En5wvbmC/vLr9lWm+lf0EhZ4v+ZvXJfNnMk01331FiKc5I
+	NNRiLipOBAA/p30y4AIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYRyHe3fec3YUF8cledJAWFRT8kZlr1Cmn3wJQokgCkmHHtzJK5uK
+	E6KJKalommm6WRmSl7m8jLytVPI+u0mmuXnLzDt2MyQvYC4J/Pbwfx5+X/40Ie6CTjQfm8Ap
+	YmXREsoW2hYfD3F38W/lveY1NCqt01NoYmaQQsbRy+jdfS2FHhQOAtRvTqVQjVkP0HzjBkDr
+	E31CNFUxB9Hq3DKBOmbnIdI9GaFQX+MjIep6aCJRs/qzEL3XDEA0ZCyl0KR+m0QmTTVE7ctt
+	BFrLdUZTuf6oc2SeRN11zQJU8KGMQtrUXIAseb0CVKOXo82mqp1Tz6TQ3wW3aiaEuMyQiLMz
+	hoT4dvcKictfLgqwQZdJYcOve0LcX7wJceu0Ly4YrQQ4J+0bhX/OWiBeG8O4fOGHABdqb+G6
+	58MwWHzN9mwEF80ncQpPvzBb+fJaDxX/xT55UttHqsGqKAvY0Cxzim2vfgyzAE1TjITtbQux
+	ogNzlM34GGgtCOYOxRa9PmzlA4yczavcJqwMd5L+1BfQyiLmJJuRPQ13F13Z2gbLP7ZhfNip
+	9XTKymLGjl2q7wC7vT1rKvkKd/dd2LRGLZEH7DR7lGaPKgMCHXDgY5NiZHz0aQ9llFwVyyd7
+	hMfFGMDOaytubuW3gN9DgZ2AoYHETjRKtvBiUpakVMV0ApYmJA6iiu4mXiyKkKlSOEVcqCIx
+	mlN2AmcaShxFF65wYWImUpbARXFcPKf4bwW0jZMalKCtJoHrK/MZ92U+DfrW7p9rTvmUsmBU
+	x9O68YPSnEubM25sbtu5jWCfsXFp0TF5VOJbL5Pl+g3VoqOncCNc375dFXC113vhTZDfeZeB
+	gtCiYYKoP0SK/yyZT5QG5auznu27KA2UjqVnPo2YarsbKfEyxjV8LzO5rQQFHFG1S6BSLvN2
+	IxRK2V8pEuWd1gIAAA==
 X-CFilter-Loop: Reflected
 
-On Mon, 16 Mar 2026 08:19:32 -0700 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
-> Hello Rakie! I hope you have been doing well. Thank you for this
-> RFC, I think it is a very interesting idea. 
-
-Hello Joshua,
-
-I hope you are doing well. Thanks for your review and feedback on this RFC.
-
-> 
-> [...snip...]
-> 
-> > Consider a dual-socket system:
+On Mon, 16 Mar 2026 15:45:24 -0400 Gregory Price <gourry@gourry.net> wrote:
+> On Mon, Mar 16, 2026 at 08:19:32AM -0700, Joshua Hahn wrote:
 > > 
-h >           node0             node1
-> >         +-------+         +-------+
-> >         | CPU 0 |---------| CPU 1 |
-> >         +-------+         +-------+
-> >         | DRAM0 |         | DRAM1 |
-> >         +---+---+         +---+---+
-> >             |                 |
-> >         +---+---+         +---+---+
-> >         | CXL 0 |         | CXL 1 |
-> >         +-------+         +-------+
-> >           node2             node3
+> > In that sense I thought the word "prefer" was a bit confusing, since I
+> > thought it would mean that it would try to fulfill the alloactions
+> > from within a packet first, then fall back to remote packets if that
+> > failed. (Or maybe I am just misunderstanding your explanation. Please
+> > do let me know if that is the case : -) )
 > > 
-> > Assuming local DRAM provides 300 GB/s and local CXL provides 100 GB/s,
-> > the effective bandwidth varies significantly from the perspective of
-> > each CPU due to inter-socket interconnect penalties.
+> > If what I understand is the case , I think this is the same thing as
+> > just restricting allocations to be socket-local. I also wonder if
+> > this idea applies to other mempolicies as well (i.e. unweighted interleave)
 > > 
-> > Local device capabilities (GB/s) vs. cross-socket effective bandwidth:
-> > 
-> >          0     1     2     3
-> > CPU 0  300   150   100    50
-> > CPU 1  150   300    50   100
-> > 
-> > A reasonable global weight vector reflecting the base capabilities is:
-> > 
-> >      node0=3 node1=3 node2=1 node3=1
-> > 
-> > However, because these configured node weights do not account for
-> > interconnect degradation between sockets, applying them flatly to all
-> > sources yields the following effective map from each CPU's perspective:
-> > 
-> >          0     1     2     3
-> > CPU 0    3     3     1     1
-> > CPU 1    3     3     1     1
-> > 
-> > This does not account for the interconnect penalty (e.g., node0->node1
-> > drops 300->150, node0->node3 drops 100->50) and thus forces allocations
-> > that cause a mismatch with actual performance.
-> > 
-> > This patch makes weighted interleave socket-aware. Before weighting is
-> > applied, the candidate nodes are restricted to the current socket; only
-> > if no eligible local nodes remain does the policy fall back to the
-> > wider set.
 > 
-> So when I saw this, I thought the idea was that we would attempt an
-> allocation with these socket-aware weights, and upon failure, fall back
-> to the global weights that are set so that we can try to fulfill the
-> allocation from cross-socket nodes.
+> I was thinking about this as well, and in my head i think you have to
+> consider a 2x2 situation
 > 
-> However, reading the implementation in 4/4, it seems like what is meant
-> by "fallback" here is not in the sense of a fallback allocation, but
-> in the sense of "if there is a misconfiguration and the intersection
-> between policy nodes and the CPU's package is empty, use the global
-> nodes instead". 
+> cpuset             |   multi-socket-cpu      single-socket-cpu
+> ==================================================================
+> single-socket-mem  |     mem-package            mem-package
+> ------------------------------------------------------------------
+> multi-socket-mem   |       global                 global
+> ------------------------------------------------------------------
 > 
-> Am I understanding this correctly? 
-> 
-> And, it seems like what this also means is that under sane configurations,
-> there is no more cross socket memory allocation, since it will always
-> try to fulfill it from the local node. 
-> 
+> But I think this reduces to cpuset nodes dictates the weights used -
+> which should already be the case with the existing code.
 
-Your analysis of the code in patch 4/4 is exactly correct. I apologize
-for using the term "fallback" in the cover letter, which caused some
-confusion. As you understood, the current implementation strictly
-restricts allocations to the local socket to avoid cross-socket traffic.
+Hello Gregory,
 
-> > Even if the configured global weights remain identically set:
-> > 
-> >      node0=3 node1=3 node2=1 node3=1
-> > 
-> > The resulting effective map from the perspective of each CPU becomes:
-> > 
-> >          0     1     2     3
-> > CPU 0    3     0     1     0
-> > CPU 1    0     3     0     1
-> 
-> > Now tasks running on node0 prefer DRAM0(3) and CXL0(1), while tasks on
-> > node1 prefer DRAM1(3) and CXL1(1). This aligns allocation with actual
-> > effective bandwidth, preserves NUMA locality, and reduces cross-socket
-> > traffic.
-> 
-> In that sense I thought the word "prefer" was a bit confusing, since I
-> thought it would mean that it would try to fulfill the alloactions
-> from within a packet first, then fall back to remote packets if that
-> failed. (Or maybe I am just misunderstanding your explanation. Please
-> do let me know if that is the case : -) )
-> 
-> If what I understand is the case , I think this is the same thing as
-> just restricting allocations to be socket-local. I also wonder if
-> this idea applies to other mempolicies as well (i.e. unweighted interleave)
+Thanks for your additional feedback.
 
-Again, I apologize for the confusion caused by words like "prefer" and
-"fallback" in the commit message. Your understanding is correct; the
-current code strictly restricts allocations to the socket-local nodes.
-
-To determine where memory may be allocated within a socket, the code uses
-a function named policy_resolve_package_nodes(). As described in the
-comments, the logic works as follows:
-
-1. Success case: It tries to use the intersection of the current CPU's
-   package nodes and the user's preselected policy nodes. If the
-   intersection is not empty, it uses these local nodes.
-2. Failure case: If the intersection is empty (e.g., the user opted out
-   of the current package), it finds the package of another node in the
-   policy nodes and gets the intersection again. If this also yields an
-   empty set, it completely falls back to the original global policy nodes.
-
-In this early version, the consideration for handling various detailed
-cases is insufficient. Also, as you pointed out, applying this strict
-local restriction directly to other policies like unweighted interleave
-might be difficult, as it could conflict with the original purpose of
-interleaving. I plan to consider these aspects further and prepare a
-more complemented design.
+I agree with your analysis. The final behavior should follow the nodes
+dictated by the cpuset or mempolicy configurations.
 
 > 
-> I think we should consider what the expected and desirable behavior is
-> when one socket is fully saturated but the other socket is empty. In my
-> mind this is no different from considering within-packet remote NUMA
-> allocations; the tradeoff becomes between reclaiming locally and
-> keeping allocations local, vs. skipping reclaiming and consuming
-> free memory while eating the remote access latency, similar to
-> zone_reclaim mode (packet_reclaim_mode? ; -) )
-
-This is an issue I have been thinking about since the early design phase,
-and it must be resolved to improve this patch series. The trade-off
-between forcing local memory reclaim to stay local versus accepting the
-latency penalty of using a remote socket is a point we need to address.
-I will continue to think about how to handle this properly.
-
+> I think you are right that we need to be very explicit about the
+> fallback semantics here - but that may just be a matter of dictating
+> whether the allocation falls back or prefers direct reclaim to push
+> pages out of their requested nodes.
 > 
-> In my mind (without doing any benchmarking myself or looking at the numbers)
-> I imagine that there are some scenarios where we actually do want cross
-> socket allocations, like in the example above when we have very asymmetric
-> saturations across sockets. Is this something that could be worth
-> benchmarking as well?
+> ~Gregory
 
-Your suggestion is valid and worth considering. I am currently analyzing
-the behavior of this feature under various workloads. I will also
-consider the asymmetric saturation scenarios you suggested.
+As you and Joshua pointed out, making the fallback semantics explicit
+is the most critical issue for this patch series. We need a clear policy
+to decide whether the allocation should fall back to a remote node or
+force direct reclaim to keep the allocation local.
 
-> 
-> I will end by saying that in the normal case (sockets have similar saturation)
-> I think this series is a definite win and improvement to weighted interleave.
-> I just was curious whether we can handle the worst-case scenarios.
-> 
-> Thank you again for the series. Have a great day!
-> Joshua
+I will explicitly define these fallback semantics and address this
+trade-off in the design for the next version.
 
-Thanks again for the review. I will prepare a more considered design
-for the next version based on these points.
+Thanks again for your time and review.
 
 Rakie Kim
 
