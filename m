@@ -1,275 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BD63939C9;
-	Wed, 18 Mar 2026 08:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED82379EFD
+	for <linux-cxl@vger.kernel.org>; Wed, 18 Mar 2026 08:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773823991; cv=none; b=MwyyOvNvp8RVP02JbCuuGyVxbvsw8FA9g2XXLWba+W+5sxkPFAo7wTocnrJJyBJviMIqw/4hTS87+M7/vufq+6p5nYOlno2l0sF2jEqQ10wfMKsBzZ20D2Xvecx1Bpyps+9JJQ7RVe19Qu3sOj3wmO+Wuu6jRh4zKLs7BiwEKjY=
+	t=1773824009; cv=none; b=Fk8jQ0jqKqhsHwfUY1JvzQ7k7C7DT6aC/yqpA9yQLJ2uOsFc/k7arsFbAPSkfa9e+eFX/x4SR1hQT1PTCPBFRuSHbKOyVHhaTJuKVetDILEJ3stFJBE3pdXhP6Lzh5A5wltPfHUF4jTfgLvjaVmry0/UOymJM0eO0LmZ+C6QsU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773823991; c=relaxed/simple;
-	bh=hlsD8LO9ExQzsDMc9/GoTSMCxjp+n8FGdWB39l3oGEE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ef9HxwcOeC25qiH690Ox215eBuG+mNwDByS4OrAfr7eFvJu8tfQS3v1g3VnaI2biBOh1eZCxnQJUmbo1ih00cjHqpiSgkJRkCRhfcr0L0eVZng7xG8Dzg29Yn79gGobui7KTvn8Twr83rLjZBOCXYSVWV2PEwuw/jjeAlOld9ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HjGLIYYC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HjGLIYYC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CFD2C19424;
-	Wed, 18 Mar 2026 08:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773823990;
-	bh=hlsD8LO9ExQzsDMc9/GoTSMCxjp+n8FGdWB39l3oGEE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HjGLIYYCS/Bh9mCxklMCiMmbNHL6fgPurJobIe6qRh9VBaAC/iM7NdFpK2R9gynq0
-	 JQhzfxF20REoqQrpyfhFeIKgnv0s02c5IzdxK4ygAdCZPnCPISsY/+vWed/V5NMn3Q
-	 hbh6lnEkSBBDr/edhbOgD3aV8uiHumHo7oBs/RCz47g0qTz0emJX2XRgPJGP9Jpnn6
-	 +z2s8BqjYQF27ck6Sc8NhgizwELcmrtXBe/3WvKOnWqIJ2HCibQOtA8HLzQfglUrKP
-	 Qs/FNrBHPOrJxUTZBQsNASlIufisA29OabVDXYNLYn921/v08TvJssXH4ouDSomTon
-	 vpqBO4fmTLd8w==
-Message-ID: <217b154d-e4d1-4824-b2e3-fea82bc44402@kernel.org>
-Date: Wed, 18 Mar 2026 09:53:05 +0100
+	s=arc-20240116; t=1773824009; c=relaxed/simple;
+	bh=tySWRLoOAazTnWtxZ0D5d9/DGFBvSBZ8cCNPePrGITQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GuYve3ksImk77VjQzedUl1YHvZXtxoSRj+NNVPgXF7/OBxU+68NaggpL4+fklblbfwYJh4HM1j7oOmgR3sHtbO/dhcZkV7CGcYZqm2aX5xJZJeakYnbAKjcexwfXwon1PDXtZvafujpJcuzKaEE2evrzKIxbPuR9I5ks8M3no8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fbMyx5bBFzJ46lh;
+	Wed, 18 Mar 2026 16:52:25 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3EFC940086;
+	Wed, 18 Mar 2026 16:53:23 +0800 (CST)
+Received: from localhost (10.48.158.204) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 18 Mar
+ 2026 08:53:22 +0000
+Date: Wed, 18 Mar 2026 08:53:21 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] cxl/mbox: Use proper endpoint validity check upon
+ sanitize
+Message-ID: <20260318085321.000041c2@huawei.com>
+In-Reply-To: <c9eafdbf-52c8-4578-8928-bf6bd08d114a@intel.com>
+References: <20260301221739.1726722-1-dave@stgolabs.net>
+	<20260311165142.cvrwupy4ptyzpv4k@offworld>
+	<c9eafdbf-52c8-4578-8928-bf6bd08d114a@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: cxl/region.c improvements and DAX/Hotplug plumbing
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
- dave.jiang@intel.com, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, ira.weiny@intel.com, dave@stgolabs.net,
- linux-kernel@vger.kernel.org, kernel-team@meta.com,
- vishal.l.verma@intel.com, benjamin.cheatham@amd.com,
- David Rientjes <rientjes@google.com>
-References: <aXErSP1zKnv4koKG@gourry-fedora-PF4VCD3F>
- <4d66eac3-1a2b-4d9d-8a9a-529a19758439@kernel.org>
- <aXLAtVZ_bVwF9nBG@gourry-fedora-PF4VCD3F>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <aXLAtVZ_bVwF9nBG@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-On 1/23/26 01:28, Gregory Price wrote:
-> On Thu, Jan 22, 2026 at 11:14:15PM +0100, David Hildenbrand (Red Hat) wrote:
->> Some of that (especially the interaction with core-mm) feels like it would
->> be a good fit to discuss with he wider MM community in one of the bi-weekly
->> mm meeting. (CCing David R.)
->>
-> 
-> There is a Monthly Linux-DAX meeting, and a Monthly Linux-CXL meeting,
-> obviously this is a lot of cross-attendance.
-> 
-> Happy to attend additional discussion.  I was trying to shore up some of
-> the cxl-region plumbing aspects before going wider.
+On Wed, 11 Mar 2026 11:09:06 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-Oh hey, I found an unanswered mail in my inbox :)
+> On 3/11/26 9:51 AM, Davidlohr Bueso wrote:
+> > ping? Could this be picked up? =20
+>=20
+> I'm waiting on Jonathan's tag since he reviewed it. Can you address his q=
+uestion?
+> https://lore.kernel.org/linux-cxl/20260311165142.cvrwupy4ptyzpv4k@offworl=
+d/T/#mc95e8945bebd9fac8ff7d82fc73259b0410e4a08
+> =20
+As discussed last night I'm fine with Davidlohr's observation
+the pattern is common enough already that adding a comment for just
+this one seems silly.
 
-Sorry for stumbling over this that late.
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-> 
->>>        - hiding memory blocks? (discussed in last meeting)
->>
->> What is that about and what was the result of that discussion? :)
->>
-> 
-> It was just a question as to whether memory blocks are still useful
-> if the intent is to provide a collective hotplug interface. I don't
-> think there are any real proposals for this, just making note of it.
+>=20
+> >=20
+> > On Sun, 01 Mar 2026, Davidlohr Bueso wrote:
+> >  =20
+> >> Fuzzying CXL triggered:
+> >>
+> >> BUG: KASAN: null-ptr-deref in cxl_num_decoders_committed+0x3e/0x80 dri=
+vers/cxl/core/port.c:49
+> >> Read of size 4 at addr 0000000000000642 by task syz.0.97/2282
+> >>
+> >> CPU: 2 UID: 0 PID: 2282 Comm: syz.0.97 Not tainted 7.0.0-rc1-gebd11be5=
+9f74-dirty #494 PREEMPT(full)
+> >> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-=
+gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+> >> Call Trace:
+> >> <TASK>
+> >> __dump_stack lib/dump_stack.c:94 [inline]
+> >> dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+> >> kasan_report+0xe0/0x110 mm/kasan/report.c:595
+> >> cxl_num_decoders_committed+0x3e/0x80 drivers/cxl/core/port.c:49
+> >> cxl_mem_sanitize+0x141/0x170 drivers/cxl/core/mbox.c:1304
+> >> security_sanitize_store+0xb0/0x120 drivers/cxl/core/memdev.c:173
+> >> dev_attr_store+0x46/0x70 drivers/base/core.c:2437
+> >> sysfs_kf_write+0x95/0xb0 fs/sysfs/file.c:142
+> >> kernfs_fop_write_iter+0x276/0x330 fs/kernfs/file.c:352
+> >> new_sync_write fs/read_write.c:595 [inline]
+> >> vfs_write+0x5df/0xaa0 fs/read_write.c:688
+> >> ksys_write+0x103/0x1f0 fs/read_write.c:740
+> >> do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >> do_syscall_64+0x111/0x680 arch/x86/entry/syscall_64.c:94
+> >> entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> >> RIP: 0033:0x7f60a584ba79
+> >> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 8=
+9 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0=
+ ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+> >> RSP: 002b:00007f60a42a7038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> >> RAX: ffffffffffffffda RBX: 00007f60a5ab5fa0 RCX: 00007f60a584ba79
+> >> RDX: 0000000000000002 RSI: 00002000000001c0 RDI: 0000000000000003
+> >> RBP: 00007f60a58a49df R08: 0000000000000000 R09: 0000000000000000
+> >> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> >> R13: 00007f60a5ab6038 R14: 00007f60a5ab5fa0 R15: 00007ffe58fad8b8
+> >> </TASK>
+> >>
+> >> This goes away using the correct check instead of abusing cxlmd->endpo=
+int,
+> >> which is unusable (ENXIO) until the driver has probed. During that win=
+dow
+> >> the memdev sysfs attributes are already visible, as soon as device_add=
+()
+> >> completes.
+> >>
+> >> Fixes: 29317f8dc6ed ("cxl/mem: Introduce cxl_memdev_attach for CXL-dep=
+endent operation")
+> >> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> >> ---
+> >> drivers/cxl/core/mbox.c | 2 +-
+> >> 1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> >> index e7a6452bf544..12386d912705 100644
+> >> --- a/drivers/cxl/core/mbox.c
+> >> +++ b/drivers/cxl/core/mbox.c
+> >> @@ -1301,7 +1301,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u=
+16 cmd)
+> >> =A0=A0=A0=A0 * Require an endpoint to be safe otherwise the driver can=
+ not
+> >> =A0=A0=A0=A0 * be sure that the device is unmapped.
+> >> =A0=A0=A0=A0 */
+> >> -=A0=A0=A0 if (endpoint && cxl_num_decoders_committed(endpoint) =3D=3D=
+ 0)
+> >> +=A0=A0=A0 if (cxlmd->dev.driver && cxl_num_decoders_committed(endpoin=
+t) =3D=3D 0)
+> >> =A0=A0=A0=A0=A0=A0=A0 return __cxl_mem_sanitize(mds, cmd);
+> >>
+> >> =A0=A0=A0=A0return -EBUSY;
+> >> --=20
+> >> 2.39.5
+> >> =20
+>=20
+>=20
 
-Okay, thanks.
-
-> 
->>>    Solution 2:  Make a dedicated sysram_region with policy
->>
->> What kind of region would that be?
-> 
-> plumbing between regionN and dax_region kobjects
-> 
-> right now the kobject relationship is:
-> 
-> region0           <- cxl driver created kobject
->   └dax_region0    <- default selects IORESOURCE_DAX_KMEM
->   	└dax0.0   <- auto-probes on discovery
-> 
-> But there is baggage in the existing plumbing:
-> 
-> 1) dax/cxl.c =>  hard-coded IORESOURCE_DAX_KMEM for dax_region
-> 2) dax/bus.c =>  devdax is probed on discovery w/o manual bind step
-> 3) cxl/core/region.c => BIOS-configured CXL regions automatically
->    generate a dax_region, and this auto-creates a dax_kmem device
->    which is subject to system-wide MHP policy.
-> 
-> This creates a backwards compatibility headache.
-
-Agreed.
-
-> 
-> The same auto-plumbing is used in the manual creation path, so:
-> 
->    echo regionN > cxl/decoder0.0/create_ram_region
->    /* program decoders */
->    echo regionN > cxl/drivers/region/bind
-> 
-> will pump the whole thing directly into dax_kmem and auto-online
-> according to system default MHP policy.  There's no intermediate
-> step in which the user can define preferences (unless you add
-> them as attributes to regionN - which is another option).
-> 
-> Adding the intermediate object:
-> 
-> regionN
->   └sysram_region      <- encodes policy like hotplug and dax drv
->   	└dax_regionN  <- which would be passed here on creation
-> 		└dax0.0
-> 
-> lets the cxl-cli command to be more expressive:
->    `cxl-cli create-region -t ram --driver=sysram` => kmem
->    `cxl-cli create-region -t ram --driver=dax`    => device_dax
-> 
-> and would change the sysfs pattern to
-> 	echo regionN > cxl/decoder0.0/create_ram_region
-> 	echo regionN > cxl/drivers/sysram_region/bind
-> 	echo online_movable > cxl/devices/dax_regionN/hotplug
->         echo dax_regionN > cxl/drivers/dax_region/bind
-> 
-> and gives the user a chance to configure a policy before the region
-> is pumped all the way through to the endpoint dax driver.
-
-Would that still be backwards-compatible?
-
-
->>>    Solution 2: dedicated sysram_region driver w/ or w/o DAX.
->>>                Can support sparseness w/o DAX (see DCD problem)
->>> 	      Could use DAX for tagged DCD regions.
->>>                Tradeoff: May duplicate some DAX logic.
->>
->> How would that look like?
-> 
-> For untagged extents w/o dax:
-> 
->     sysram_region->nr_range
->     sysram_region->ranges[0 : nr_range-1]
-> 
->     Extents in this list would be hotpluggable individually and
->     could be returned to the DCD device individually
-> 
->     sysram_region.c code would call hotplug directly, not via dax.
->        - hence, this duplicates some DAX logic
-> 
-> The above just prevents needlessly creating dax-indirection for sysram
-> extents with only one destination:  add_memory_driver_managed()
-> 
-> 
-> For tagged extents:
->     sysram_region->nr_regions
->     sysram_region->dax_regions[0 : nr_regions]
-> 
->     A set of tagged extents would only be hotpluggable as a group
->     and could only be returned to the DCD as a group.
-> 
->     it would also expose:  dax0.0/uuid  <- contains the tag
-
-
-Interesting.
-
-> 
-> 
-> from this you get a cli command like
-> 
->     cxl release-extents regionN [--id=X] [--tag=Y]
-> 
->          translates to something like
-> 
->     echo "release" > regionN/sysram_region/extents/[X,Y]
-> 
-> Something like this.
-> 
->>>
->>>    Solution 4: Prevent non-driver actions from changing state.
->>>                Also solves hotplug protection problem (see next)
->>
->> The crucial part is solving what you spelled out in the description: "race
->> conditions". Forbidding someone to re-configure system RAM sounds
->> unnecessary.
->>
->> For example, I use it a lot for testing issues with page migration while
->> offlining memory from ZONE_MOVABLE.
->>
-> 
-> For most use-cases yes.  For something like FAMFS (distributed shared
-> memory), one system onlining a block as kmem could be potentially
-> destructive to an entirely separate physical server.
-
-Right. But shouldn't we fail this already at the add_memory() stage?
-Sounds like during onlining is a bit too late. Conceptually, the hotplug
-as sysram was already wrong for famfs, or am I wrong?
-
-
-> 
->>>     Example:  Slow(er) memory
->>>        Some memory is "just memory", but might be particularly slow and
->>>        intended for use as a filesystem backend or as only a demotion
->>>        target.  Otherwise its allocated / mapped like any other memory,
->>>        but it still required isolation so isolated to the demotion path
->>>        and not a fallback allocation target
->>
->> That doesn't quite fit the description of N_PRIVATE_MEMORY, though. Or what
->> am I missing?
-> 
-> I suppose we could also explore a per-node fallback policy to accomplish
-> this - but there was also the LPC talk about trying to deprecate that
-> entirely.
-
-I'm looking forward to that LPC talk!
-
--- 
-Cheers,
-
-David
