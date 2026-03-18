@@ -1,163 +1,158 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C5E27EC7C
-	for <linux-cxl@vger.kernel.org>; Wed, 18 Mar 2026 15:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE19265621
+	for <linux-cxl@vger.kernel.org>; Wed, 18 Mar 2026 15:22:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773846079; cv=none; b=GDjjbMSOxarMHZXxBOtISsLD0YbDfYP5qHJCtI1CjoreaJyXxiTADiPrdm1Fxh4kFUSfCwd7YqqFNBtgTwkXdAoE+st9OCpafex3zDkQh9kpdJ8HF37GRXoGXS1gPM5NM2y8B7z9AP4XB+5Rgof9qsVrXqY4sMu75HnNN6XSoLI=
+	t=1773847335; cv=none; b=HtI38xcVf+b4FsYv9+Ou//hUkVZY7utAbPmbEtwF0lMwKl+k+59KJ+LqVVawgHCtWfuW/Njge4mtp0DVDkz8gJGUGVj57mEFiWol3GrR9GCZLl5Hs6tRXYwaJUDAKvsx9MdkqJloX9Wrs4pg2Zd63KhJeDYWRgVOjdxuoFSms4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773846079; c=relaxed/simple;
-	bh=gvpKyolo+FToElfDMb//i0QmH+JuNuUT3zE38zFfH20=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tBlmhWqiGi3SzxFL3VnG6X81JG7B4AW0+gEE5065aoMNm0L4+Mrud1LcBGdf33TTUhZ0XdDZkQ5zo8oSrq7jI0oQtsdeUDreaqLzIbJJNZ2yRUHEkjK/2dWMPMeEqmoogtzLvvZ7gyRTUnmU2p9NwEJpA3iYJx4ygJdSXUF4J88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fbX7N4Q5czJ46ZS;
-	Wed, 18 Mar 2026 23:00:16 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7E83F40584;
-	Wed, 18 Mar 2026 23:01:14 +0800 (CST)
-Received: from localhost (10.203.177.99) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 18 Mar
- 2026 15:01:13 +0000
-Date: Wed, 18 Mar 2026 15:01:08 +0000
-From: Alireza Sanaee <alireza.sanaee@huawei.com>
-To: Li Chen <me@linux.beauty>
-CC: Jonathan Cameron <jonathan.cameron@huawei.com>, Fan Ni
-	<fan.ni@samsung.com>, <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 0/3] cxl: avoid KVM internal error for fixed memory
- windows
-Message-ID: <20260318150108.00001a5f.alireza.sanaee@huawei.com>
-In-Reply-To: <20260317165702.00003c98@huawei.com>
-References: <20260317033304.3185291-1-me@linux.beauty>
-	<20260317165702.00003c98@huawei.com>
-Organization: Huawei
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1773847335; c=relaxed/simple;
+	bh=Ii1J/qAF3bjFdval6JURO3PtfyLzz1m/y7deDz4/szM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eeksVI+NmImugdM9uCRQw8uni2FUhkQSBFq1aJTEF62qA8/fGGgv0VgyA1LgIrThUn//pRrllF6y32qX9Xtm3GadVtp66AF3uCFPlGoPncBcvuKQ5TzsgYiE0tYxxrmAhhIsTjJutuGQgfK0SoVbmiVjwaxkRvYZEjR7l06ZspM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QWKgQ5nr; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QWKgQ5nr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773847331; x=1805383331;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Ii1J/qAF3bjFdval6JURO3PtfyLzz1m/y7deDz4/szM=;
+  b=QWKgQ5nr5owmaHWBMIglzHQAE9Zt4spXaFhMWIqiUIwT4N7rBgdZwJM3
+   44pjVecqxB0LM7Ks8l8jXsk+Nm4Hunr+nPzJYV4j9UyLkV1LWOoeqjF/T
+   Z20OXD6sGGiG1mt1m2ptG0f8QPNgCnQBjDovT/ekllN2jc8sf7kjpH3w1
+   K6dviZ0N3xhxoFRgma4cBtOClKq+FNDR07ydnwyuMdr1+9nUAxh9WKu8W
+   Tt71T+SczYAlEy6UMEgW+MYFCjbZgJZTf0JIX++9qh1sou27ppPVKLcML
+   OPGxQ5iX/+g1uSue8f1hsCTgLB9QbkbLES5fa/94eLK3wzxFz/yCjibZQ
+   Q==;
+X-CSE-ConnectionGUID: ARRMk64lQbGBTMcEUepNDQ==
+X-CSE-MsgGUID: vbx5Jv59TSSWdEfbDo96Qg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11733"; a="74086260"
+X-IronPort-AV: E=Sophos;i="6.23,127,1770624000"; 
+   d="scan'208";a="74086260"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2026 08:22:10 -0700
+X-CSE-ConnectionGUID: bbi4haJ4SDucLpNepAgabg==
+X-CSE-MsgGUID: cd2n7SpgQSOtnKWJBNw6Jg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,127,1770624000"; 
+   d="scan'208";a="222627994"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.108.242]) ([10.125.108.242])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2026 08:22:10 -0700
+Message-ID: <2b32038a-0685-4d8a-a17e-3fddf975f0db@intel.com>
+Date: Wed, 18 Mar 2026 08:22:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] cxl: Add endpoint decoder flags clear when PCI reset
+ happens
+To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>,
+ linux-cxl@vger.kernel.org
+Cc: dan.j.williams@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com
+References: <20260317234926.3545119-1-dave.jiang@intel.com>
+ <93651c0f-230f-4dfe-a6a7-5c4b23a178b8@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <93651c0f-230f-4dfe-a6a7-5c4b23a178b8@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
- dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Tue, 17 Mar 2026 16:57:02 +0000
-Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
 
-Hi Li,
 
-It looks like what you achieved is quite similar to what I have done in the patchset Jonathan shared earlier.
+On 3/18/26 7:12 AM, Cheatham, Benjamin wrote:
+> On 3/17/2026 6:49 PM, Dave Jiang wrote:
+>> When a PCI reset happens, the lock and enable flags of the CXL device
+>> should be cleared to avoid stale state flags after reset. Add flag
+>> clearing during cxl_reset_done() to clear the relevant endpoint
+>> decoder flags for all decoders of the endpoint device.
+>>
+>> Reported-by: Dan Williams <dan.j.williams@intel.com>
+>> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>> v2:
+>> - Rename CLEAR_MASK to RESET_MASK (Alison)
+>> - Make the helper function take a mask argument to specify which flags
+>>   to clear (Alison)
+>> ---
+>>  drivers/cxl/cxl.h |  1 +
+>>  drivers/cxl/pci.c | 19 +++++++++++++++++++
+>>  2 files changed, 20 insertions(+)
+>>
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 9b947286eb9b..d09c84bcc015 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -333,6 +333,7 @@ int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport);
+>>  #define CXL_DECODER_F_LOCK  BIT(4)
+>>  #define CXL_DECODER_F_ENABLE    BIT(5)
+>>  #define CXL_DECODER_F_NORMALIZED_ADDRESSING BIT(6)
+>> +#define CXL_DECODER_F_RESET_MASK (CXL_DECODER_F_ENABLE | CXL_DECODER_F_LOCK)
+>>  
+>>  enum cxl_decoder_type {
+>>  	CXL_DECODER_DEVMEM = 2,
+>> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+>> index fbb300a01830..a0bba4b4db92 100644
+>> --- a/drivers/cxl/pci.c
+>> +++ b/drivers/cxl/pci.c
+>> @@ -1030,6 +1030,20 @@ static void cxl_error_resume(struct pci_dev *pdev)
+>>  		 dev->driver ? "successful" : "failed");
+>>  }
+>>  
+>> +static int cxl_decoder_clear_flags(struct device *dev, void *data)
+>> +{
+>> +	struct cxl_endpoint_decoder *cxled;
+>> +	unsigned long *flags = data;
+>> +
+>> +	if (!is_endpoint_decoder(dev))
+>> +		return 0;
+> 
+> I would either a) rename this function to cxl_endpoint_decoder_clear_flags() or b) change
+> it to use struct cxl_decoder devices directly. The generality of option b is nicer imo,
+> but you'd have to throw in an extra check for switch decoders (or add a is_cxl_decoder() helper).
 
-You have used memory_region_begin_transaction and memory_region_transaction_commit calls that I believe they are useful to be there given other examples I checked in the qemu code base.
+Thanks for the review Ben. We can probably do both to make it extra clear.
 
-I will be using those calls and will send another version. Also, please let me know if that patchset actually addresses your usecase and fix the bug you have in the cover letter.
+DJ
 
-Thanks,
-Ali
-
-> On Tue, 17 Mar 2026 11:33:00 +0800
-> Li Chen <me@linux.beauty> wrote:
 > 
-> > CXL fixed memory windows are currently modeled as an I/O MemoryRegion.
-> > When running under KVM, this makes the entire window look like MMIO.
-> > If Linux onlines the window as system RAM (e.g. for a CXL Type-3
-> > volatile memdev), normal CPU stores into the window trigger KVM
-> > instruction emulation. Instructions like XSAVEC are not supported by
-> > the emulator and abort the VM with a KVM internal error.
-> > 
-> > Repro:
-> >   - Boot a guest with a CXL Type-3 volatile memdev and a fixed memory window.
-> >   - In the guest, create a RAM region and online it as system RAM:
-> >       cxl create-region -m -t ram -d decoder0.0 -w 1 -g 4096 mem0
-> >   - QEMU exits with a KVM internal error.  
+> With either of those:
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
 > 
-> Hi Li Chen,
-> 
-> At least at first look this looks very like:
-> 
-> https://lore.kernel.org/qemu-devel/20260306121151.883-1-alireza.sanaee@huawei.com/
-> 
-> Which was ready for merge as far as I was concerned, but missed getting queued for
-> 11.0 (as last PCI pull request had gone) and is currently ready to go in next cycle.
-> 
-> Please see if that works for your case. If there are improvements I'd prefer
-> to see them applied on top of that series than reinventing what I think
-> is the same thing.
-> 
-> It's not KVM specific as linear mappings (when valid) bring huge performance
-> benefits on TCG as well as correctness for KVM.
-> 
-> Jonathan
-> 
-> +CC linux-cxl which is where CXL folk tend to hang out in larger numbers
-> than on the qemu list.
-> 
-> 
-> 
-> > 
-> > Serial output excerpt:
-> >   KVM internal error. Suberror: 1
-> >   extra data[0]: 0x0000000000000001
-> >   extra data[1]: 0xc0314061c70f480f
-> >   extra data[2]: 0x024080f610478b48
-> >   extra data[3]: 0x0000000000000400
-> >   extra data[4]: 0x000000010000000f
-> >   extra data[5]: 0x00000004a0003140
-> >   extra data[6]: 0x0000000000000000
-> >   extra data[7]: 0x0000000000000000
-> >   emulation failure
-> >   RAX=0000000000000007 RBX=ffff8eace0001a40 RCX=ffff8eace0003100 RDX=0000000000000000
-> >   RSI=0000000000000007 RDI=ffff8eace00030c0 RBP=ffffd48ac1747c08 RSP=ffffd48ac1747bc8
-> >   R8 =0000000000000007 R9 =0000000000000007 R10=000000000000000d R11=0000000000000000
-> >   R12=ffff8ea945b51a40 R13=ffffd48ac166c000 R14=0000000000000000 R15=0000000001200000
-> >   RIP=ffffffffaf77a14d RFL=00000256 [---ZAP-] CPL=0 II=0 A20=1 SMM=0 HLT=0
-> >   ES =0000 0000000000000000 00000000 00000000
-> >   CS =0010 0000000000000000 ffffffff 00a09b00 DPL=0 CS64 [-RA]
-> >   SS =0018 0000000000000000 ffffffff 00c09300 DPL=0 DS   [-WA]
-> >   DS =0000 0000000000000000 00000000 00000000
-> >   FS =0000 00007f997da3fec0 00000000 00000000
-> >   GS =0000 ffff8eab0535d000 00000000 00000000
-> >   LDT=0000 fffffe7600000000 00000000 00000000
-> >   TR =0040 fffffe767cf8f000 00004087 00008b00 DPL=0 TSS64-busy
-> >   GDT=     fffffe767cf8d000 0000007f
-> >   IDT=     fffffe0000000000 00000fff
-> >   CR0=80050033 CR2=000055fd193a6468 CR3=000000010930c000 CR4=00350ef0
-> >   DR0=0000000000000000 DR1=0000000000000000 DR2=0000000000000000 DR3=0000000000000000
-> >   DR6=00000000ffff0ff0 DR7=0000000000000400
-> >   EFER=0000000000001d01
-> >   Code=0f 1f 44 00 00 48 8b 4f 10 48 8b 41 08 48 89 c2 48 c1 ea 20 <48> 0f c7 61 40 31 c0 48 8b 47 10 f6 80 40 02 00 00 c0 74 1e 48 8b 05 98 f8 e8 01 48 89 47
-> > 
-> > This series keeps the existing MMIO dispatcher, but turns the fixed
-> > window into a container and (when the window maps linearly to a Type-3
-> > volatile memdev) overlays a RAM alias so KVM can create a memslot for
-> > the range. The mapping is updated when HDM decoders are
-> > committed/uncommitted by the guest.
-> > 
-> > This patchset is based on master branch 559919ce54927d59b215a4665eda7ab6118a48aa
-> > 
-> > Local validation on this base confirmed that the issue reproduces
-> > without the series and is fixed with the 3 patches below.
-> > 
-> > Li Chen (3):
-> >   cxl/type3: expose vmem mapping for fixed windows
-> >   cxl: alias fixed memory windows to RAM under KVM
-> >   cxl: update fixed window mappings on decoder programming
-> > 
-> >  hw/cxl/cxl-component-utils.c |   2 +
-> >  hw/cxl/cxl-host-stubs.c      |   1 +
-> >  hw/cxl/cxl-host.c            | 189 ++++++++++++++++++++++++++++++++++-
-> >  hw/mem/cxl_type3.c           |  59 +++++++++++
-> >  include/hw/cxl/cxl.h         |   5 +
-> >  include/hw/cxl/cxl_device.h  |   3 +
-> >  include/hw/cxl/cxl_host.h    |   1 +
-> >  7 files changed, 258 insertions(+), 2 deletions(-)
-> >   
+> Thanks,
+> Ben
+>> +
+>> +	cxled = to_cxl_endpoint_decoder(dev);
+>> +	cxled->cxld.flags &= ~(*flags);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static void cxl_reset_done(struct pci_dev *pdev)
+>>  {
+>>  	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+>> @@ -1045,6 +1059,11 @@ static void cxl_reset_done(struct pci_dev *pdev)
+>>  	guard(device)(&cxlmd->dev);
+>>  	if (cxlmd->endpoint &&
+>>  	    cxl_endpoint_decoder_reset_detected(cxlmd->endpoint)) {
+>> +		unsigned long flags = CXL_DECODER_F_RESET_MASK;
+>> +
+>> +		device_for_each_child(&cxlmd->endpoint->dev, &flags,
+>> +				      cxl_decoder_clear_flags);
+>> +
+>>  		dev_crit(dev, "SBR happened without memory regions removal.\n");
+>>  		dev_crit(dev, "System may be unstable if regions hosted system memory.\n");
+>>  		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
+>>
+>> base-commit: f338e77383789c0cae23ca3d48adcc5e9e137e3c
 > 
 
