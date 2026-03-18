@@ -1,45 +1,45 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011008.outbound.protection.outlook.com [40.93.194.8])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012032.outbound.protection.outlook.com [40.93.195.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4023D32D7FB;
-	Wed, 18 Mar 2026 17:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F622DB7AE;
+	Wed, 18 Mar 2026 17:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773855810; cv=fail; b=XcEXhFPvpdlXyKiMcRTNFwyenzy97P/EJDI/CX7FO+/KO3YdyN8B9KjMDnQ/JVRSY/zEtkh7Mf8MxwUIECQCxZKybXWjYPz+SyzmzrmwtD3VPp0I6P6vBcysSw6cYrlQw7V51V6MZ7OSJ8T2X9R9DUB8dOyyF4/JTA9Z+74w9gs=
+	t=1773856123; cv=fail; b=fhITQCmJy7QilOl9s6mvsm/00e0lRU/gmdzOVyArMUthTxfw+W4wDfcctsMYPVl1M0FNa4Zg362DVflXUDThOqHxtZETurpVMawJdpPe2z1FB3zEHVDx6jq89AOHSuCrhEE5wXf7EboO8bWz75I6RiOjuaKMstrHL6/AIkwyCEo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773855810; c=relaxed/simple;
-	bh=YbxES0qRLCHPdvxctRuVqL2tlZAN2tEYec5eyzKRjc8=;
+	s=arc-20240116; t=1773856123; c=relaxed/simple;
+	bh=ggALchfeVlK+zuGjTs7oJZw5DgvNRLff1OZpqOK6otk=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ifaM36kgsreGHRNoQ2ieJmc1dyqdAFzHqFC8xyRblN51JGTjgvM+G71BeKsdqV+KF8fFjBJ7S3m4bAgQJOE6eZ6jjkH588cpbbHc90r17oJkyDQ/Nh2z+GpXVLD+n8SAmNDU8ef6PRw1Fhjjb21aE9h4hi0UIsa3YnWp5XUj/EQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lZsPGurU; arc=fail smtp.client-ip=40.93.194.8
+	 Content-Type:MIME-Version; b=O5U7wtLC7af+U8+W3VSgnoglK4JkAoemfW9OrUR6BXJa1ZcY4jOh0I7kX+uvu3lUlmXnBbwokS7fHokf/cHnHA0umJe/wR1pLkD/nz1pbC539HgMzziJUm56Ob+4USw7sUq57tmdIzoO8A6cmBw7MaLx9ycX9pJyEb1jR+7zMF8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=j2/4XHUs; arc=fail smtp.client-ip=40.93.195.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lZsPGurU"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="j2/4XHUs"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lkkGzfC1QnAmb2yIAb212D3ZUqyl6HP2Mp6CnUa9uXm5Cy5XhKTSHHt3xc9SimsEehziW7lJ15IJ+yyFbErn3tx7lrCSVcrL45+ezoW0glJ82FuA5ZftlVZRtmxXlL+Y1N8soOhdn91e59BOqARy6ljaiklV8Envj6+OZpvOaY+dWjMxbJfjt8kG7gUE6Wa0wRyGRivcbjh46EPJ0H9l0e9pR+7qfzNywBmnBkNGVA4QzB+4jItqSNujSGgPRS4N8FNU8dlVQrsraWO05V9mRKbiJKtTZ9kOaCKq7aA8mOZ61ES28zv1h/6kFnj17UvYyKOH8N6fylgh4sP/eYcGig==
+ b=vZYfVTnL/B++GzWaoO0kJuj9aIO1qbJ/oxVMQfbPRcYCRs2wtvW8o+hDraD3pJPAzcDEl3w39tolbHRFxXX8BbFCfDSfPRmPiQnZHkBnYchV7YXqbR3Jb4TmBYLq7m1B4FdeC/r9SD3Jt/R9UdZXwPmzXrI6rKKXNwRB+fpTDeSQDRaQR3U38acpmaXOHkFeksQqHBERWQmYX8Dnlx4lJgsjuULTxMugjZ/qA7bgZx265Qlut7o5KDYzomNR9LeILXZgl4eLS1feSyN8p8UmK8RnpLwKU7nFyGT+D+1qSqdr692mE9qJQCsGx2WZ0zE9UetdsI/B86E0kuKYMqQgtg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1L2iwjBeOOFgoN/P6Y5s93EjVF5X0Ci3YdY7ptSMQ4c=;
- b=qzzdp/v5ZSBaBLLmEcfiOUMmWqbh6/Jtb0h/lrV9ZcNbHHQFdT4mdbsOm/kQ1SzHot82PNzyHgviPV5EESf/nO49xZo4O8wL3SqQJn2gvHH8gUjfu5JJ1RbMs2HJ7G9Kx5xQ2PdhtmU4MNdvs0VZneD6tCbQXuPkQ5aBf58Ad3Tcxfzi3ltHOsMTit1HycJvEYu3LNfCi/AmqFo+PYrDk/xZZHzS4/Chvvo6rcoJVkTri1JG3qmJ4NF0kue9bnfRaY3VBijpendKf3nEsDF6QMLTXNq1M7cM2UdwwWehxBSMczXwWk7Oy7yaR+3OQbi5zSHN1qsmIV58MUemYm7R7Q==
+ bh=MwgEu9fg2uF7EAXhcMkeqjr9PvzJcwKoYwK4E1z3C/8=;
+ b=kwVSWlREc5OWscsTf5gbZ3q8YHTW5J9rGD0qh/jBUSHqNfvyYtFwApX2LLQnp9tPbQUYKOJRaLqo9Mrcn+FgHPcPhND/CSk39sbpDMjJYUwgcFRls0LgJ+d3OmNmVrFWHYcvvKDxC5LCZXHsNlz/PolMLHLEwOLrMCJ5FQRu0TVxv4H8R7ZqgvSnAMt1W6vdoj7V8m+l2DnYtBXe8D8MN6gGkE+8MS/0mMsv/h4M1A//ARY6y/mu+kCSNX2AY9hAHSuRSq8qAyeYtPghUmFePuvh8xqSvLxt0U38fAsla0o8WTP2a9ZRFKk9U/Fg+Pkso1CkIdXYnODjSPUf6WTV4w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1L2iwjBeOOFgoN/P6Y5s93EjVF5X0Ci3YdY7ptSMQ4c=;
- b=lZsPGurUJVDnEcRP90fYcHhhHcFjdPYkZg5pPyhS39Bpqy8E/ziuWhxprMsZ4chJF0FbdpPh3C29SowGG9jjMgIT8Tjm4NlczQKH1kkwnEC191Wd9R5YDeJPODRDn1tWwJTnSXcOJiVJfllpK9fTkH/Zhk8btTtIQi7nbZEqWt0hlOyV96Zg89kSnIuRPJG2g7i4MLmMf+GEx167NNR6pafigWOrjZC/5ayPp2zDIIS7yXaiv5dLk35aaQJVCvkYF4SiyNBtLibTouYBNeZHjozEeM3EqB7W5DKhJPVi76zykwUCh0G127g3rmlx4uKYospgNqm5qsu0z1S6E6HKlw==
+ bh=MwgEu9fg2uF7EAXhcMkeqjr9PvzJcwKoYwK4E1z3C/8=;
+ b=j2/4XHUsFx1k7utLBPJAvu9eM3mClbDQDW1tRh14UaQT3KrCmK46P588gviD6+x/Myz8frsgyDh0WnHA2iSVZYCN2uJxhFNOxl13URVHP1+vNWrpAFXASBoQ/2K19zpWFj9ftZ6uNXry85E+4VkPaLAOMMg7GuNdI+wENZQpuNCFM0UNjnlalvn53EjbJ3QYne9NrRDvckbA7pMRw5r8QhWXqRhZGfC0j8nCQRiCZn5N+DgTfV0L47KryTpAMI4TWC+GAgBhHFNW58OPj8qxgr2gPjV35AE72q5E40S2QO+tHfWJ455hj3CF8P2IIXyCfamnMydlfL47jMzyz9Zctw==
 Received: from IA1PR12MB9030.namprd12.prod.outlook.com (2603:10b6:208:3f2::22)
- by CH2PR12MB4071.namprd12.prod.outlook.com (2603:10b6:610:7b::16) with
+ by CH1PR12MB9720.namprd12.prod.outlook.com (2603:10b6:610:2b2::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.9; Wed, 18 Mar
- 2026 17:43:22 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.19; Wed, 18 Mar
+ 2026 17:48:33 +0000
 Received: from IA1PR12MB9030.namprd12.prod.outlook.com
  ([fe80::2c1d:ed27:b53a:97d2]) by IA1PR12MB9030.namprd12.prod.outlook.com
  ([fe80::2c1d:ed27:b53a:97d2%6]) with mapi id 15.20.9723.018; Wed, 18 Mar 2026
- 17:43:22 +0000
+ 17:48:33 +0000
 From: Manish Honap <mhonap@nvidia.com>
 To: Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
 	<dave.jiang@intel.com>
@@ -58,19 +58,17 @@ CC: Aniket Agashe <aniketa@nvidia.com>, Ankit Agrawal <ankita@nvidia.com>,
 	<linux-kernel@vger.kernel.org>, "linux-cxl@vger.kernel.org"
 	<linux-cxl@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
 	Manish Honap <mhonap@nvidia.com>
-Subject: RE: [PATCH 09/20] vfio/cxl: Implement CXL device detection and HDM
- register probing
-Thread-Topic: [PATCH 09/20] vfio/cxl: Implement CXL device detection and HDM
- register probing
-Thread-Index: AQHcsZa9IUA2T5vdQka77h613kXyebWrfKOAgADuOwCACC1moA==
-Date: Wed, 18 Mar 2026 17:43:21 +0000
+Subject: RE: [PATCH 10/20] vfio/cxl: CXL region management
+Thread-Topic: [PATCH 10/20] vfio/cxl: CXL region management
+Thread-Index: AQHcsZbDvcnCAeeMrkOa7ag2YLflCLWrg3sAgADp2ACACC1X8A==
+Date: Wed, 18 Mar 2026 17:48:33 +0000
 Message-ID:
- <IA1PR12MB9030C5F487070C8D1E42384BBD4EA@IA1PR12MB9030.namprd12.prod.outlook.com>
+ <IA1PR12MB903052909E311D36A0018460BD4EA@IA1PR12MB9030.namprd12.prod.outlook.com>
 References: <20260311203440.752648-1-mhonap@nvidia.com>
-	<20260311203440.752648-10-mhonap@nvidia.com>
-	<26be5ee3-d7ba-4bea-9824-c514341cf324@intel.com>
- <20260313124342.00001add@huawei.com>
-In-Reply-To: <20260313124342.00001add@huawei.com>
+	<20260311203440.752648-11-mhonap@nvidia.com>
+	<e2eaa470-c57b-4fa5-9810-4224ed314445@intel.com>
+ <20260313125230.000058dd@huawei.com>
+In-Reply-To: <20260313125230.000058dd@huawei.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
@@ -78,47 +76,47 @@ X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA1PR12MB9030:EE_|CH2PR12MB4071:EE_
-x-ms-office365-filtering-correlation-id: dc11a4b4-21e1-454d-0ea2-08de8515d95c
+x-ms-traffictypediagnostic: IA1PR12MB9030:EE_|CH1PR12MB9720:EE_
+x-ms-office365-filtering-correlation-id: 5ea9f649-4581-4cf2-061d-08de85169325
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700021|18002099003|22082099003|56012099003;
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700021|18002099003|22082099003|56012099003;
 x-microsoft-antispam-message-info:
- eh/D16FY6Jb7OH6PE+cbLWb/xqOWx1pI22E5nBjepXLxmKelZ2tLUYwx+M6a9+AzGp/m/r5xfqK2aj9htnx5kSfiwKvfejW1E16zwRYv0BwrWXu0wBVNuxBnbeoFFmH0oDH6OmZzQqxONYsUSKVycBspmZBnTUp2MnoqY6s2TibzWblbHzmsxSSEaHmw5jQauM9CTMFGTIf0shNyCLxTl9uASDjdBIxwRky+qa+xcVlO8eKMM6vWZcDPEI48CQFKPloSznfTVukcKV9yvKZmk1kgdkY5TjJL3aE0ZH7GOneLH7g/mnWXWLo7UEWlSTe9T815E/VenXqTi2zue/hmizxrMsklhwPkidYNTrlKNaJ4YfkC/5f1/w28QHD4ex2bPYdrVlAJoiux6cuQuLvns6cTrmctlsNd7Bd5J+Hnjd28Y1KjSaKso1RXEVPZU5sHzML5kWv4jySVKa+gf0JLFGkKOVdNTU/BbIztRT2ilBIX3Cis/eDNpm+HPbQIqv3tPbiivEbYKiaDmndHmJC6OVPbIdI21PrzXRbrDWhboPb1fFIlmKaTPyMcBIg9qrX9oW+Ob68X9yPC4msse6A/WXm4/y0w0ZnjsvNLjEIuV62fCvGxsC7Wal+lS4CHHL7FuSw0No97czDQ9wSdxEMrmtikCL3aX/0uX3rIOtwqCp/9XoQFvkB0meYkeq+rIM2WpyVsOgLa0AxpZixmHgx2c1qLK02EUPr0zsQfhrYRsMxUZqUT0Nji0YYMlfRIVw2UcE0GqNU873y6FLhtEaIs955gC5/GUk2OAnJ2y8QZ8ZE=
+ XCKFmeqyYANJXY0c7stzyUmYIQZJhtvZKveU7DAjs6dGGIcozvm+KDG2mvqhbgs95PkUBmPXIQE4Jy0/dytwC85yfv5kxep2PjOkdXaF8Zoxl21kLJEUaDmBrqPlhH0/eIBGnaAuDSpwXTGWCDdGNVI/y36RUt/kiCOP83chV7cwaIqzVNL3j0RPfGfq64rHjMrfWvyupcWyFhALs4qtDDPcWtQjL4z/OH0uFSMQCpNgqpx9tVOpsJ4euXs6RMyS/6A9192IKqiRZrXGQdMFf28DO+YPhijvRZZ183GjIrssi4EueJai+JdUvFJbB0/wMxgAn7yNyse6nXHDAl5DsVKGUYy6IJPihi8xZxipQhUC9FmwLasdcee662eU5knV46zrwCCLEWZVD0liU0Fe5FOAdVAbNPcxQ+1O61SGjkvtpHvyvSnLOCmcZldH3FWM1UA3dePd36vJJgP6GX/0v8PnbesYG09El6rinnrSGDKoZku+7Qyom+gGG/xOF1zmVzpot4+BCQ5TA+TIgwDveusrOUopUePuZGafLn3bC7i30GGx/puuAE878Qz3SHRIWnlFcX8CT0KviJFew177PxzQIou316s6jstu9yX0IfPsLVOu12o7GKRZn+iavAQoJXJohUdTsQaPQXrYyItdVCXmVvULMYaq9rF7S7DEPqDyucti5f8BcncgXzk6JsfRziwyQrO3KgzIDuxfbEEDVIEvs+MFSsBH7F32xNN3XNkxmoC812oa2tt1NcjN1h+8WiVIr45vRILMPW+wvjWDI9Q9Ef3WRtmpvmZpGagW7QQ=
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9030.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700021)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9030.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700021)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?MyCxIQz/y0Rul28TMAT5pAntJhSHIbQ8Th/ig6xubCZXfnRNKnztGlNMes4S?=
- =?us-ascii?Q?yM2vjDvv8uZ4fLJC6myOM8qHHSOpWdwTp0EF2YNOW5EoAPt6LS6wnSsniLyj?=
- =?us-ascii?Q?eD4ljcqMySAk8gUU65ppX2zP8gYqi5/kxBWqSzhaamXb+qppkFibMEiHe4dJ?=
- =?us-ascii?Q?iAeObsnG3HDVHMtr79PEcRGrgSwYo8kwYRc8yYnTG2fDwgEPfUTm2vULixSi?=
- =?us-ascii?Q?UNBe2H03KQ352s0vPUnWvGuYWoSpXTp5oz8r6ZFMbf0sC1YqGsvxo0GiLSrf?=
- =?us-ascii?Q?9vB/3WY/uR0qlCm9DWHX5f4LQXCLeoGBoykJireqztxbObq87hV1rZhr8XE1?=
- =?us-ascii?Q?bIPgLr33xRM+zPVYRzym3UmvVzD1kIwJuePUjsotabTN/hJr42G26FG3aCnp?=
- =?us-ascii?Q?QxKeJuv6J0VIClsYFoV+n9Si3QWPRpK8VsSZOP0whX43sSZf7ZDwV+V5qev/?=
- =?us-ascii?Q?MjMcCcXj9cMJ3d53RVLNuq/5ZgJcNomjeLBdQDD9MHkebIdCpiWvFO0wezDc?=
- =?us-ascii?Q?9rm/2lQV+ZmAHpVrRJPURz5XJdQrwTjbYrTQlwSnxbC+Ro/ahzSgn5DRyhej?=
- =?us-ascii?Q?hnPiAJvDefC8a6YXps9owi9qO4cPaD5ZezAIa6zPn/dOJ9uG3AZt/QuamdVd?=
- =?us-ascii?Q?Qdd56rKHbld/o0Xi2RbyU2hpD/AO0jaYAsColltSCbaWNQtbfGiD1mrCkHV2?=
- =?us-ascii?Q?6L8Sje6lLbkCF4GTZk0+PHv+cIBaqdluWRu24P4r6erg7HyQnrRUVk2428HB?=
- =?us-ascii?Q?hmQp4Kpx4CpyLf3WcdG4wVNjYmaaHmM7B4IWF5no0JvVC/6+FK3/dexdbuxz?=
- =?us-ascii?Q?TzuUEduaIMB/3ZIKQKFVmlDMQgGmJjLUp2V3zNZFaewi3syOfP3kls5qVR7v?=
- =?us-ascii?Q?1fL4OAjLPdfS96xcdJD3d44yIcNIf0bXA3IfQAHNkt0BdWTB1dKS+d0998sk?=
- =?us-ascii?Q?397CRrB8+N00V6MUlvxvv4nLQKNWSs8aj6uPmXPYKdADVEeMAZDSmWOAXJST?=
- =?us-ascii?Q?VvOXL9wytVjwMObSf9eClynD1OCfqTYZl9s5/OlQA65Tv3B9mydAH1ZD+nnV?=
- =?us-ascii?Q?otItMn1eRhvdXoCu2jYb4sNvMT8+7ApqYXEQeWgMyfCQ8aJmDDP2LA+/ob9b?=
- =?us-ascii?Q?51OlNr29sDfXi/53JEzQ9+iugwQPoT3BafrC6iOy9w6Z096pEbL2sVyLOFyR?=
- =?us-ascii?Q?PYS7GJypm0qfivc42l2cFPCVZ9z9GktW50tx12WvsrxXejftFbK2JKzDOwaI?=
- =?us-ascii?Q?1UGItOuviHrMjcbQkP8UzRRRA9ZDKnDmKTqtb+G9fFNjzI6a3ez+YPWSP+i6?=
- =?us-ascii?Q?dyHMr79Pw6VZx0/Fd8jSHlRumZbQPn+S5KBBEzNaoWYV4e0ZF8+19WDWfWFK?=
- =?us-ascii?Q?CNBMZGJAYHRKDly9VaHpbVyli7xJHbnUH+qeRLyqJ1EMbB50OrAXXrj17FzW?=
- =?us-ascii?Q?Q/A45b3Me84kPuv8ncYTwoRKdJ5KJQtGxbfogwVSkr4HKNEQKydulK0reaUZ?=
- =?us-ascii?Q?4D1pqJ3OkLtfufrblWiRGwspEsrZzWqJti7X4MEYsN4Kp+/p2ixPtqB6UsyJ?=
- =?us-ascii?Q?YL9RTQkWW/QZVK6H/+XhXU9i/FpnLqdVZquk2adfNEoa77gSDVgq/50k5v8Y?=
- =?us-ascii?Q?bELCty+ZstKv16qM5nYCHrSmYv6DOcJqIDWDus8ihdPtKh5bZc2DnJlRaybD?=
- =?us-ascii?Q?GRILFgmSwlnHapD3KJG8BMuWZMK7tdsT+6G0BXKEkgOMbYOI?=
+ =?us-ascii?Q?9o61v2Rmpw+6ie7LSlq/8UDz71QTNJ6ZTbU7XDaetoQcRvB50FJYQ/KdiZwv?=
+ =?us-ascii?Q?a2aiaBm46L5LUs9lY0dNEcha4Ih5DjX2h5FX5wYj3Ho8enZBxGmFyLujyBYJ?=
+ =?us-ascii?Q?jNWu+es3NQQPlJREnJOPzJNpmt2nilUfXsACvl2qhIjVAj1oMOaakmnFSvcG?=
+ =?us-ascii?Q?w81qNzZsBqcnsS2rKPERo2g7xvU/h0TpXO3YAc2Vor3LD5rplGWKxQvLDTIp?=
+ =?us-ascii?Q?jNzmhspNLPwvgH/8HT4342OxUxa6HLMQ8UZaohmXlOPCOWEVzcxTNk6MOMbj?=
+ =?us-ascii?Q?G71kXW+fHRp8ZUXTmCnVsigjKl7shia/od2t3SS0sjVuyEs87qhp/KjRi8Vn?=
+ =?us-ascii?Q?hMUaWyOwCwadXcTc8lsUO+TDMGnOjXMTpUascdtQM8q/hNU5w19M6NPwEOaG?=
+ =?us-ascii?Q?GSrWAelsUDCWJ0hFydGaGneI4/dmFQK/nO5zVHZy1Jdku8I9Zkl59g6hj9IX?=
+ =?us-ascii?Q?dh8LrOxqrFQN4NmE4PJO1xLpCEe3UyK/VV4BKZrVut4Cl/Uzfn8ruDtQzpxM?=
+ =?us-ascii?Q?ItnhEvYxXE1R+faPwNbsm+/MNIZFDMNcqXK+XFBCvGwDcRXgXWG2VqJPNUoy?=
+ =?us-ascii?Q?DUpYH9VehAQya9ZT2rxrU3ce549ICz9JZOf64ok7tZ8OFtC6J2SSnNkzbXAM?=
+ =?us-ascii?Q?F8o72oo1MX+73P+uNchiOCXOlo4bU67sC2H2qEuTHiNERHrSxByCJoHG5Tmf?=
+ =?us-ascii?Q?7uSAcc0rLkAyVH8HydKucj+Od6J+nS2RnkVhCIbMQWFD7uw/0GsqJ6BRh1Bx?=
+ =?us-ascii?Q?Tqwp+UjpyUs/mWkTvQ/J1MQv/bEUQSgiKs4T7zKGJa6BFL9EPVysONLRimlA?=
+ =?us-ascii?Q?X5mgUlhK+wbu4NlQMaIa+6Vh+kgL3561y6rMe125WlLmsJTCg30ijjssCBsd?=
+ =?us-ascii?Q?6Tq9WF9uSC59GEBJY4m/pmbxP2mMrVQNUcCoHIiUzXZoP/LHbpZy03VTqdTw?=
+ =?us-ascii?Q?ZsQ6FIrjae5p16EMRnpMK/qM3qttUWJ0/bv7727hSmWPxooPtVasA+++7yWg?=
+ =?us-ascii?Q?ETaK4KEN/n03hkxGx4pwHAI3xTK4plGb0T34NgzQxIkDLTdm/RkWbD5UGDfv?=
+ =?us-ascii?Q?y/JyzpeM49llpgdy11tH3Rd9x3kE55ZIJzS1Xd1YLkYV6xHDwqWypHdm0jwk?=
+ =?us-ascii?Q?suFCyAAN93Dlyr3l2nPX7Av0GU6P1B3qRatgLfS1WX6lx4EjF4EIF4oCz/VT?=
+ =?us-ascii?Q?JaLXN5RnA23vW6tMNb/OO8bYEmiJ1KIB27V8RLV0ctmONTSaYNWvWXqv0B6v?=
+ =?us-ascii?Q?O+tj2JhJkr1sZakGc5x6MHFVB7jJOYZ9dbH67+mPaLvdJhKlUHMaNOQOX5xM?=
+ =?us-ascii?Q?L25OQE2M2wfKi6cPUG5USVS9KGzerUxsWHGs5YCDaxgsarf0BZ5Q8jLzSzI5?=
+ =?us-ascii?Q?ufKmrVVrIVaT32xnTLfJXWkbMFHOgfsQTPvCD7RuWDCM2POwltVNoqHLhXQW?=
+ =?us-ascii?Q?BeoU975zsB4WW2RTDWOZU0dpVIhQl4zQ2jcq+KndZ00BofgqyIc/ytIC1Ls2?=
+ =?us-ascii?Q?z6r3lCSnam48h0F2EO9IcYEQN+Kdu5U1h8dNKyIuGrJvTGn7nSTJKLwC3+OU?=
+ =?us-ascii?Q?QyOYxka5OKn1G4GBFENRijSAYJ5L4ViQNlCKt7YpB/LDflvu1s8k6O1q4mDA?=
+ =?us-ascii?Q?Bc2ix0bGg9XaBjyBmvqiaL1xHNkqCE1vfvxi28ucMrRxWi5Aq1Y+MELg7Bqj?=
+ =?us-ascii?Q?rRzTZyi37AqhJtMhYefExNCBqeLb6kMnx0xNCa+DWw+5lWCp?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -130,20 +128,20 @@ MIME-Version: 1.0
 X-OriginatorOrg: Nvidia.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9030.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc11a4b4-21e1-454d-0ea2-08de8515d95c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2026 17:43:22.0147
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ea9f649-4581-4cf2-061d-08de85169325
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2026 17:48:33.7085
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ijy3myzvwqAU8xJthmnJ5xize6dZB4PvvlaQWI/6QCTjJ3tw3XU8iJabt8M0JS7zn00ppn4W4ilQKFmdvPNL0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4071
+X-MS-Exchange-CrossTenant-userprincipalname: hFlDiBizcWox77CKQ+QfWC5PMMyGZ11NM7SurLbMbTgcpyiPByJ8Fx42tg18NigCfEnrbwtxAKhA6tWuknmrwg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PR12MB9720
 
 
 
 > -----Original Message-----
 > From: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Sent: 13 March 2026 18:14
+> Sent: 13 March 2026 18:23
 > To: Dave Jiang <dave.jiang@intel.com>
 > Cc: Manish Honap <mhonap@nvidia.com>; Aniket Agashe <aniketa@nvidia.com>;
 > Ankit Agrawal <ankita@nvidia.com>; Alex Williamson
@@ -157,327 +155,248 @@ m
 > Tarun Gupta (SW-GPU) <targupta@nvidia.com>; Zhi Wang <zhiw@nvidia.com>;
 > Krishnakant Jaju <kjaju@nvidia.com>; linux-kernel@vger.kernel.org; linux-
 > cxl@vger.kernel.org; kvm@vger.kernel.org
-> Subject: Re: [PATCH 09/20] vfio/cxl: Implement CXL device detection and
-> HDM register probing
+> Subject: Re: [PATCH 10/20] vfio/cxl: CXL region management
 >=20
 > External email: Use caution opening links or attachments
 >=20
 >=20
-> On Thu, 12 Mar 2026 15:31:03 -0700
+> On Thu, 12 Mar 2026 15:55:32 -0700
 > Dave Jiang <dave.jiang@intel.com> wrote:
 >=20
 > > On 3/11/26 1:34 PM, mhonap@nvidia.com wrote:
 > > > From: Manish Honap <mhonap@nvidia.com>
 > > >
-> > > Implement the core CXL Type-2 device detection and component
-> > > register probing logic in vfio_pci_cxl_detect_and_init().
+> > > Add CXL region management for future guest access.
 > > >
-> > > Three private helpers are introduced:
+> > > Region Management makes use of APIs provided by CXL_CORE as below:
 > > >
-> > >   vfio_cxl_create_device_state() allocates the per-device
-> > >   vfio_pci_cxl_state structure using devm_cxl_dev_state_create() so
-> > >   that lifetime is tied to the PCI device binding.
+> > > CREATE_REGION flow:
+> > > 1. Validate request (size, decoder availability) 2. Allocate HPA via
+> > > cxl_get_hpa_freespace() 3. Allocate DPA via cxl_request_dpa() 4.
+> > > Create region via cxl_create_region() - commits HDM decoder!
+> > > 5. Get HPA range via cxl_get_region_range()
 > > >
-> > >   vfio_cxl_find_bar() locates the PCI BAR that contains a given HPA
-> > >   range, returning the BAR index and offset within it.
-> > >
-> > >   vfio_cxl_setup_regs() uses the CXL core helpers cxl_find_regblock()
-> > >   and cxl_probe_component_regs() to enumerate the HDM decoder registe=
-r
-> > >   block, then records its BAR index, offset and size in the CXL state=
-.
-> > >
-> > > vfio_pci_cxl_detect_and_init() orchestrates detection:
-> > >   1. Check for CXL DVSEC via pcie_is_cxl() +
-> pci_find_dvsec_capability().
-> > >   2. Allocate CXL device state.
-> > >   3. Temporarily call pci_enable_device_mem() for ioremap, then
-> disable.
-> > >   4. Probe component registers to find the HDM decoder block.
-> > >
-> > > On any failure vdev->cxl is devm_kfree'd so that device falls back
-> > > to plain PCI mode transparently.
+> > > DESTROY_REGION flow:
+> > > 1. Detach decoder via cxl_decoder_detach() 2. Free DPA via
+> > > cxl_dpa_free() 3. Release root decoder via cxl_put_root_decoder()
 > > >
 > > > Signed-off-by: Manish Honap <mhonap@nvidia.com>
-> Given Dave didn't crop anything I'll just reply on top and avoid
-> duplication.
->=20
-> Mostly lifetime handling comments.  I get nervous when devm occurs in the
-> middle of non devm code. It needs to be done very carefully. I don't thin=
-k
-> you have a bug here, but I'm not keen on the resulting difference in orde=
-r
-> of setup and tear down.  I'd like cleanup to tidy it up even though it
-> would be safe to do later.
->=20
-
-I have addressed these comments by creating a local variable before assigni=
-ng
-cxl to vdev->cxl.
-
+> A few additional comments from me.
 >=20
 > > > ---
-> > >  drivers/vfio/pci/cxl/vfio_cxl_core.c | 151
-> +++++++++++++++++++++++++++
-> > >  drivers/vfio/pci/cxl/vfio_cxl_priv.h |   8 ++
-> > >  2 files changed, 159 insertions(+)
+> > >  drivers/vfio/pci/cxl/vfio_cxl_core.c | 118
+> ++++++++++++++++++++++++++-
+> > >  drivers/vfio/pci/cxl/vfio_cxl_priv.h |   5 ++
+> > >  drivers/vfio/pci/vfio_pci_priv.h     |   8 ++
+> > >  3 files changed, 130 insertions(+), 1 deletion(-)
 > > >
 > > > diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c
 > > > b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-> > > index 7698d94e16be..2da6da1c0605 100644
+> > > index 2da6da1c0605..9c71f592e74e 100644
 > > > --- a/drivers/vfio/pci/cxl/vfio_cxl_core.c
 > > > +++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-> > > @@ -18,6 +18,114 @@
+> > > @@ -126,6 +126,112 @@ static int vfio_cxl_setup_regs(struct
+> vfio_pci_core_device *vdev)
+> > >     return 0;
+> > >  }
 > > >
-> > >  MODULE_IMPORT_NS("CXL");
-> > >
-> > > +static int vfio_cxl_create_device_state(struct vfio_pci_core_device
-> *vdev,
-> > > +                                   u16 dvsec) {
-> > > +   struct pci_dev *pdev =3D vdev->pdev;
-> > > +   struct device *dev =3D &pdev->dev;
-> > > +   struct vfio_pci_cxl_state *cxl;
-> > > +   bool cxl_mem_capable, is_cxl_type3;
-> > > +   u16 cap_word;
+> > > +int vfio_cxl_create_cxl_region(struct vfio_pci_core_device *vdev,
+> > > +resource_size_t size) {
+> > > +   struct vfio_pci_cxl_state *cxl =3D vdev->cxl;
+> > > +   resource_size_t max_size;
+> > > +   int ret;
 > > > +
-> > > +   /*
-> > > +    * The devm allocation for the CXL state remains for the entire
-> time
-> > > +    * the PCI device is bound to vfio-pci. From successful CXL init
-> > > +    * in probe until the device is released on unbind.
-> > > +    * No extra explicit free is needed; devm handles it when
-> > > +    * pdev->dev is released.
-> > > +    */
-> > > +   vdev->cxl =3D devm_cxl_dev_state_create(dev,
->=20
-> Rather than assigning this in here, I'd use a local variable for the
-> return of this, operate on that and return it from the function.
-> That both creates a clean separation and possibly make error handling
-> simpler later...
->=20
-> Also similar to some of the feedback Alejandro had on his type 2 series,
-> be very careful with mixing devm calls and non devm, generally that's a
-> path to hard to read and reason about code.
-> I know you've stated this is fine because it's tied to the PCI device
-> lifetime and you are probably right on that, but I'm not keen.
->=20
-> This might be a case where manual unwinding of devres is needed (maybe
-> using devres groups if we end up with a bunch of stuff  to undo).
->=20
->=20
->=20
-> > > +                                         CXL_DEVTYPE_DEVMEM,
-> > > +                                         pdev->dev.id, dvsec,
-> > > +                                         struct vfio_pci_cxl_state,
-> > > +                                         cxlds, false);
-> > > +   if (!vdev->cxl)
-> > > +           return -ENOMEM;
+> > > +   if (cxl->precommitted)
+> > > +           return 0;
 > > > +
-> > > +   cxl =3D vdev->cxl;
-> > > +   cxl->dvsec =3D dvsec;
->=20
-> That's a bit odd given we pass dvsec into devm_cxl_dev_state_create() why
-> doesn't it assign it?
-
-Yes, dvsec was redundant in cxl->dvsec and cxl->cxlds.cxl_dvsec
-Removed it from cxl.
-
->=20
-> > > +
-> > > +   pci_read_config_word(pdev, dvsec + CXL_DVSEC_CAPABILITY_OFFSET,
-> > > +                        &cap_word);
-> > > +
-> > > +   cxl_mem_capable =3D !!(cap_word & CXL_DVSEC_MEM_CAPABLE);
-> > > +   is_cxl_type3 =3D ((pdev->class >> 8) =3D=3D PCI_CLASS_MEMORY_CXL)=
-;
+> > > +   cxl->cxlrd =3D cxl_get_hpa_freespace(cxl->cxlmd, 1,
+> > > +                                      CXL_DECODER_F_RAM |
+> > > +                                      CXL_DECODER_F_TYPE2,
+> > > +                                      &max_size);
 > >
-> > Both of these can use FIELD_GET().
+> > Not sure what VFIO subsystem's policy is on scoped base resource
+> cleanup, but a __free() here can get you out of managing put() of the roo=
+t
+> decoder.
 
-I have used FIELD_GET for MEM_CAPABLE flag. For pdev->class, I see there ar=
+After having a word with Alex for this, I have added __free macros.
+
+> >
+> > > +   if (IS_ERR(cxl->cxlrd))
+> > > +           return PTR_ERR(cxl->cxlrd);
+> > > +
+> > > +   /* Insufficient HPA space */
+> > > +   if (max_size < size) {
+> > > +           cxl_put_root_decoder(cxl->cxlrd);
+> > > +           cxl->cxlrd =3D NULL;
+> Similar to other cases, I'd keep assigning stuff in cxl to the point wher=
 e
-other occurrences (drivers/pci/pcie/aer_cxl_rch.c) which use same check for=
- detecting
-memory class. So, I have kept the is_cxl_type3 check as it is.
+> there are no more error paths.  Use local variables until then.
+> (that would fit with using __free() as well which I'd also favor if
+> accepted in VFIO).
+>=20
 
-> >
+Yes, addressed.
+
+> > > +           return -ENOSPC;
+> > > +   }
 > > > +
-> > > +   /*
-> > > +    * Type 2 =3D CXL memory capable but NOT Type 3 (e.g.
-> accelerator/GPU)
-> > > +    * Unsupported for non cxl type-2 class of devices.
+> > > +   cxl->cxled =3D cxl_request_dpa(cxl->cxlmd, CXL_PARTMODE_RAM,
+> > > + size);
+> >
+> > Same comment here about __free().
+> >
+> > > +   if (IS_ERR(cxl->cxled)) {
+> > > +           ret =3D PTR_ERR(cxl->cxled);
+> > > +           goto err_free_hpa;
+> > > +   }
+> > > +
+> > > +   cxl->region =3D cxl_create_region(cxl->cxlrd, &cxl->cxled, 1);
+> > > +   if (IS_ERR(cxl->region)) {
+> > > +           ret =3D PTR_ERR(cxl->region);
 >=20
-> As in other places, type 3 doesn't mean that. What you mean is class code
-> compliant type 3.
+> You carefully NULL this in vfio_cxl_destroy_region, but if you fail here
+> you end up with it containing an ERR_PTR(). I'd avoid that by using a
+> local variable and only assigning cxl->region after this suceeds.
 
-Updated the comments and checks.
+Agreed.
 
 >=20
-> > > +    */
-> > > +   if (!(cxl_mem_capable && !is_cxl_type3)) {
-> > > +           devm_kfree(&pdev->dev, vdev->cxl);
->=20
-> As below. That needs a name that makes it clear it is the right devm call=
-.
->=20
-> > > +           vdev->cxl =3D NULL;
-> > > +           return -ENODEV;
+> > > +           goto err_free_dpa;
 > > > +   }
 > > > +
 > > > +   return 0;
+> > > +
+> > > +err_free_dpa:
+> > > +   cxl_dpa_free(cxl->cxled);
+> > > +err_free_hpa:
+> > > +   if (cxl->cxlrd)
+> > > +           cxl_put_root_decoder(cxl->cxlrd);
+> > > +
+> > > +   return ret;
 > > > +}
 > > > +
-> > > +static int vfio_cxl_setup_regs(struct vfio_pci_core_device *vdev) {
+> > > +void vfio_cxl_destroy_cxl_region(struct vfio_pci_core_device *vdev)
+> > > +{
 > > > +   struct vfio_pci_cxl_state *cxl =3D vdev->cxl;
-> > > +   struct cxl_register_map *map =3D &cxl->cxlds.reg_map;
-> > > +   resource_size_t offset, bar_offset, size;
+> > > +
+> > > +   if (!cxl->region)
+> > > +           return;
+> > > +
+> > > +   cxl_unregister_region(cxl->region);
+> > > +   cxl->region =3D NULL;
+> > > +
+> > > +   if (cxl->precommitted)
+> > > +           return;
+> > > +
+> > > +   cxl_dpa_free(cxl->cxled);
+> > > +   cxl_put_root_decoder(cxl->cxlrd); }
+> > > +
+> > > +static int vfio_cxl_create_region_helper(struct vfio_pci_core_device
+> *vdev,
+> > > +                                    resource_size_t capacity) {
+> > > +   struct vfio_pci_cxl_state *cxl =3D vdev->cxl;
 > > > +   struct pci_dev *pdev =3D vdev->pdev;
-> > > +   void __iomem *base;
-> > > +   u32 count;
 > > > +   int ret;
-> > > +   u8 bar;
 > > > +
-> > > +   if (WARN_ON_ONCE(!pci_is_enabled(pdev)))
-> > > +           return -EINVAL;
+> > > +   if (cxl->precommitted) {
+> > > +           cxl->cxled =3D cxl_get_committed_decoder(cxl->cxlmd,
+> > > +                                                  &cxl->region);
+> > > +           if (IS_ERR(cxl->cxled))
+> > > +                   return PTR_ERR(cxl->cxled);
+> > > +   } else {
+> > > +           ret =3D vfio_cxl_create_cxl_region(vdev, capacity);
+> > > +           if (ret)
+> > > +                   return ret;
+> > > +   }
 > > > +
-> > > +   /* Find component register block via Register Locator DVSEC */
-> > > +   ret =3D cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, map);
-> > > +   if (ret)
-> > > +           return ret;
-> > > +
-> > > +   /* Temporarily map the register block */
-> > > +   base =3D ioremap(map->resource, map->max_size);
+> > > +   if (cxl->region) {
 > >
-> > Request the mem region before mapping it?
+> > Maybe if you do 'if (!cxl->region)' first and just exit, then you don't
+> need to indent the normal code path.
 
-Yes, added the call to request region first before mapping.
+Okay, I will change this.
 
 > >
-> > DJ
-> >
-> > > +   if (!base)
-> > > +           return -ENOMEM;
+> > > +           struct range range;
 > > > +
-> > > +   /* Probe component register capabilities */
-> > > +   cxl_probe_component_regs(&pdev->dev, base, &map->component_map);
+> > > +           ret =3D cxl_get_region_range(cxl->region, &range);
+> > > +           if (ret)
+> > > +                   goto failed;
 > > > +
-> > > +   /* Unmap immediately */
-> > > +   iounmap(base);
+> > > +           cxl->region_hpa =3D range.start;
+> > > +           cxl->region_size =3D range_len(&range);
 > > > +
-> > > +   /* Check if HDM decoder was found */
-> > > +   if (!map->component_map.hdm_decoder.valid)
-> > > +           return -ENODEV;
-> > > +
-> > > +   pci_dbg(pdev,
-> > > +           "vfio_cxl: HDM decoder at offset=3D0x%lx, size=3D0x%lx\n"=
-,
-> > > +           map->component_map.hdm_decoder.offset,
-> > > +           map->component_map.hdm_decoder.size);
-> > > +
-> > > +   /* Get HDM register info */
-> > > +   ret =3D cxl_get_hdm_reg_info(&cxl->cxlds, &count, &offset, &size)=
-;
-> > > +   if (ret)
-> > > +           return ret;
-> > > +
-> > > +   if (!count || !size)
-> > > +           return -ENODEV;
-> > > +
-> > > +   cxl->hdm_count =3D count;
-> > > +   cxl->hdm_reg_offset =3D offset;
-> > > +   cxl->hdm_reg_size =3D size;
-> > > +
-> > > +   ret =3D cxl_regblock_get_bar_info(map, &bar, &bar_offset);
-> > > +   if (ret)
-> > > +           return ret;
-> > > +
-> > > +   cxl->comp_reg_bar =3D bar;
-> > > +   cxl->comp_reg_offset =3D bar_offset;
-> > > +   cxl->comp_reg_size =3D CXL_COMPONENT_REG_BLOCK_SIZE;
+> > > +           pci_dbg(pdev, "Precommitted decoder: HPA 0x%llx size %lu
+> MB\n",
+> > > +                   cxl->region_hpa, cxl->region_size >> 20);
+> > > +   } else {
+> > > +           pci_err(pdev, "Failed to create CXL region\n");
+> > > +           ret =3D -ENODEV;
+> > > +           goto failed;
+> > > +   }
 > > > +
 > > > +   return 0;
+> > > +
+> > > +failed:
+> > > +   vfio_cxl_destroy_cxl_region(vdev);
+>=20
+> Little bit of refactoring and this could be replaced with __free() magic.
+>=20
+> > > +   return ret;
 > > > +}
 > > > +
 > > >  /**
 > > >   * vfio_pci_cxl_detect_and_init - Detect and initialize CXL Type-2
 > device
 > > >   * @vdev: VFIO PCI device
-> > > @@ -28,8 +136,51 @@ MODULE_IMPORT_NS("CXL");
-> > >   */
-> > >  void vfio_pci_cxl_detect_and_init(struct vfio_pci_core_device
-> > > *vdev)  {
-> > > +   struct pci_dev *pdev =3D vdev->pdev;
-> > > +   struct vfio_pci_cxl_state *cxl;
-> > > +   u16 dvsec;
-> > > +   int ret;
-> > > +
-> > > +   if (!pcie_is_cxl(pdev))
-> > > +           return;
-> > > +
-> > > +   dvsec =3D pci_find_dvsec_capability(pdev,
-> > > +                                     PCI_VENDOR_ID_CXL,
-> > > +                                     PCI_DVSEC_CXL_DEVICE);
-> > > +   if (!dvsec)
-> > > +           return;
-> > > +
-> > > +   ret =3D vfio_cxl_create_device_state(vdev, dvsec);
-> Suggestion above would lead to.
->         cxl =3D vfio_cxl_create_device_state(vdev, dvsec);
->         if (IS_ERR(cxl))
->                 return PTR_ERR(cxl); //assuming failing at this point is
-> fatal.
->=20
-> then only set vdev->cxl once you are sure this function succeeded.
-> Thus removing the need to set it to NULL on failure.
-> You need to pass it into a few more calls though.
+> > > @@ -172,6 +278,12 @@ void vfio_pci_cxl_detect_and_init(struct
+> > > vfio_pci_core_device *vdev)
+> > >
+> > >     pci_disable_device(pdev);
+> > >
+> > > +   ret =3D vfio_cxl_create_region_helper(vdev, SZ_256M);
+> >
+> > Maybe a comment on why this size?
+> :)  I wondered that as well.  I'm guessing your bios isn't always
+> providing the decoder and this lets you test.
 
-Yes, I have added a local variable for this purpose.
+This was added for handling the patch organization so that the patches
+are cut at a short reviewable boundary. It seems this patch is not=20
+cut correctly.
+
+I have removed this temporary size and refactored the patches to
+incorporate firmware committed decoder size here.
 
 >=20
 >=20
-> > > +   if (ret)
-> > > +           return;
-> > > +
-> > > +   cxl =3D vdev->cxl;
-> > > +
-> > > +   /*
-> > > +    * Required for ioremap of the component register block and
-> > > +    * calls to cxl_probe_component_regs().
-> > > +    */
-> > > +   ret =3D pci_enable_device_mem(pdev);
+> >
+> > DJ
+> >
 > > > +   if (ret)
 > > > +           goto failed;
 > > > +
-> > > +   ret =3D vfio_cxl_setup_regs(vdev);
-> > > +   if (ret) {
-> > > +           pci_disable_device(pdev);
-> > > +           goto failed;
-> > > +   }
+> > > +   cxl->precommitted =3D true;
 > > > +
-> > > +   pci_disable_device(pdev);
-> > > +
-> AS above, I think this would be cleaner if only here do we have
+> > >     return;
+> > >
+> > >  failed:
+> > > @@ -181,6 +293,10 @@ void vfio_pci_cxl_detect_and_init(struct
+> > > vfio_pci_core_device *vdev)
+> > >
+> > >  void vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev)  {
+> > > -   if (!vdev->cxl)
+> > > +   struct vfio_pci_cxl_state *cxl =3D vdev->cxl;
 >=20
->         vdev->cxl =3D cxl;
->=20
-> > > +   return;
-> > > +
-> > > +failed:
-> > > +   devm_kfree(&pdev->dev, vdev->cxl);
->=20
-> If you get here you found a CXL device but couldn't handle it. Is it
-> useful
-> to continue?  I'd suggest probably not.   If returning an error then devm
-> cleanup happens.  Also, we should have a wrapper around devm_kfree to mak=
-e
-> it clear that it is valid to use it for undoing the
->  devm_cxl_dev_state_create() (I haven't even checked it is valid)
->=20
+> Do that in the earlier patch to reduce churn a tiny bit.
 
-Added a wrapper around devm_kfree.
+Okay, agreed.
 
-> > > +   vdev->cxl =3D NULL;
+>=20
+> > > +
+> > > +   if (!cxl || !cxl->region)
+> > >             return;
+> > > +
+> > > +   vfio_cxl_destroy_cxl_region(vdev);
 > > >  }
-> if /* __LINUX_VFIO_CXL_PRIV_H */
-> >
-> >
 
