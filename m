@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37943D3D03;
-	Wed, 18 Mar 2026 12:02:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BEA43B4E99;
+	Wed, 18 Mar 2026 12:22:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773835375; cv=none; b=Bq3oWVPYJQYz13e/PfzOow+6g0EINBOoYib7597CMdSdGQxTz5fNjosBvfPUqnwT5ChOBP3AmB0mqff/QF5YT8vHEaokqIctFtr3AZrTxVJknx9PFds2KbyMxn377UU12H61cFDR2WR0tJwxaTcKgZTHQUeIoqw8TR/U1hZ7hNY=
+	t=1773836572; cv=none; b=DOQ0MsqVQ3cU5DVs7neQz0n9AQe2AebZnfiGU+4iEfvSDYCFYFghi1vHTYWVrAbrjdYD1RkGdDgOs60gYW1L/qdl3Ux2CTOEYkgAPmCOEtTdWztbdw3lJfQqm04ZX62HWrZ7GElsTza/3X/bYkrUvIn27tEY2n3QdqE3umWWhw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773835375; c=relaxed/simple;
-	bh=Mh6uNzWW4eePGHLBG3JWsPO2iNOXsOXupGLpps8R4yc=;
+	s=arc-20240116; t=1773836572; c=relaxed/simple;
+	bh=8SCgM2orMuSK0CRmE/gDjRZNlVs/GpLiHuC9Rhczq7g=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LXLrY+yMn5nIrTfsthMPCJmLJUcOHyl/rgnYkIW93/yQuq9i3ISFxk+xZvlql/P2KVjMUiefJAAxQG3lzgLl0QUuy1Qnsc1NTbQyaJEeYTALNqMgqpkLFYeSQvaRxx81twWjqWrsqMNh2fhbThLZCsHhDA05txPKyeqhhU/9G4s=
+	 MIME-Version:Content-Type; b=g0jopDZZe2dPBW8Px3AfCmrK0Tt3f4AL5a0EzkLRdgrLEkYt7HBVZJ3hkKBrLgbZlxSlVYyHTWeZccjmuG2JcoBPR2xKq7R80+1po6L+OfXD3HNyAlTNv8tHrG7sOdMloktuSEgXO78K7YobRgw7sYySp5GUJi2ehIfbnZFa9sc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fbS9W0TmdzJ4673;
-	Wed, 18 Mar 2026 20:01:51 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fbScW3QDJzJ46cQ;
+	Wed, 18 Mar 2026 20:21:47 +0800 (CST)
 Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id A83784058B;
-	Wed, 18 Mar 2026 20:02:48 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 2DA0B40584;
+	Wed, 18 Mar 2026 20:22:45 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
  (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 18 Mar
- 2026 12:02:47 +0000
-Date: Wed, 18 Mar 2026 12:02:45 +0000
+ 2026 12:22:43 +0000
+Date: Wed, 18 Mar 2026 12:22:42 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: Rakie Kim <rakie.kim@sk.com>
 CC: <akpm@linux-foundation.org>, <gourry@gourry.net>, <linux-mm@kvack.org>,
@@ -36,12 +36,13 @@ CC: <akpm@linux-foundation.org>, <gourry@gourry.net>, <linux-mm@kvack.org>,
 	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
 	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
 	<dan.j.williams@intel.com>, <kernel_team@skhynix.com>, <honggyu.kim@sk.com>,
-	<yunjeong.mun@sk.com>, Keith Busch <kbusch@kernel.org>
-Subject: Re: [LSF/MM/BPF TOPIC] [RFC PATCH 0/4] mm/mempolicy: introduce
- socket-aware weighted interleave
-Message-ID: <20260318120245.0000448e@huawei.com>
-In-Reply-To: <20260316051258.246-1-rakie.kim@sk.com>
+	<yunjeong.mun@sk.com>
+Subject: Re: [RFC PATCH 2/4] mm/memory-tiers: introduce socket-aware
+ topology management for NUMA nodes
+Message-ID: <20260318122242.00004e0d@huawei.com>
+In-Reply-To: <20260316051258.246-3-rakie.kim@sk.com>
 References: <20260316051258.246-1-rakie.kim@sk.com>
+	<20260316051258.246-3-rakie.kim@sk.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -51,349 +52,66 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
  dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Mon, 16 Mar 2026 14:12:48 +0900
+On Mon, 16 Mar 2026 14:12:50 +0900
 Rakie Kim <rakie.kim@sk.com> wrote:
 
-> This patch series is an RFC to propose and discuss the overall design
-> and concept of a socket-aware weighted interleave mechanism. As there
-> are areas requiring further refinement, the primary goal at this stage
-> is to gather feedback on the architectural approach rather than focusing
-> on fine-grained implementation details.
+> The existing NUMA distance model provides only relative latency values
+> between nodes and lacks any notion of structural grouping such as socket
+> or package boundaries. As a result, memory policies based solely on
+> distance cannot differentiate between nodes that are physically local
+> to the same socket and those that belong to different sockets. This
+> often leads to inefficient cross-socket demotion and suboptimal memory
+> placement.
 > 
-> Weighted interleave distributes page allocations across multiple nodes
-> based on configured weights. However, the current implementation applies
-> a single global weight vector. In multi-socket systems, this creates a
-> mismatch between configured weights and actual hardware performance, as
-> it cannot account for inter-socket interconnect costs. To address this,
-> we propose a socket-aware approach that restricts candidate nodes to
-> the local socket before applying weights.
+> This patch introduces a socket-aware topology management layer that
+> groups NUMA nodes according to their physical package (socket)
+> association. Each group forms a "memory package" that explicitly links
+> CPU and memory-only nodes (such as CXL or HBM) under the same socket.
+> This structure allows the kernel to interpret NUMA topology in a way
+> that reflects real hardware locality rather than relying solely on
+> flat distance values.
 > 
-> Flat weighted interleave applies one global weight vector regardless of
-> where a task runs. On multi-socket systems, this ignores inter-socket
-> interconnect costs, meaning the configured weights do not accurately
-> reflect the actual hardware performance.
+> By maintaining socket-level grouping, the kernel can:
+>  - Enforce demotion and promotion policies that stay within the same
+>    socket.
+>  - Avoid unintended cross-socket migrations that degrade performance.
+>  - Provide a structural abstraction for future policy and tiering logic.
 > 
-> Consider a dual-socket system:
-> 
->           node0             node1
->         +-------+         +-------+
->         | CPU 0 |---------| CPU 1 |
->         +-------+         +-------+
->         | DRAM0 |         | DRAM1 |
->         +---+---+         +---+---+
->             |                 |
->         +---+---+         +---+---+
->         | CXL 0 |         | CXL 1 |
->         +-------+         +-------+
->           node2             node3
-> 
-> Assuming local DRAM provides 300 GB/s and local CXL provides 100 GB/s,
-> the effective bandwidth varies significantly from the perspective of
-> each CPU due to inter-socket interconnect penalties.
+> Unlike ACPI-provided distance tables, which offer static and symmetric
+> relationships, this socket-aware model captures the true hardware
+> hierarchy and provides a flexible foundation for systems where the
+> distance matrix alone cannot accurately express socket boundaries or
+> asymmetric topologies.
 
-I'm fully on board with this problem and very pleased to see someone
-working on it!
+Careful with the generalities in here. There is no way to derive the
+'true' hierarchy. What this is doing is applying a particular set
+of heuristics to the data that ACPI provided and attempting to use
+that to derive relationships. In simple cases that might work fine.0
 
-I have some questions about the example.
-The condition definitely applies when the local node to
-CXL bandwidth > interconnect bandwidth, but that's not true here so this is
-a more complex and I'm curious about the example
+Doing so is OK in an RFC for discussion but this will need testing
+against a wide range of topologies to at least ensure it fails gracefully.
+Note we've had to paper over quite a few topology assumptions in the
+kernel and this feels like another one that will bite us later.
 
-> 
-> Local device capabilities (GB/s) vs. cross-socket effective bandwidth:
-> 
->          0     1     2     3
-> CPU 0  300   150   100    50
-> CPU 1  150   300    50   100
-
-These numbers don't seem consistent with the 100 / 300 numbers above.
-These aren't low load bandwidths because if they were you'd not see any
-drop on the CXL numbers as the bottleneck is still the CXL bus.  Given the
-game here is bandwidth interleaving - fair enough that these should be
-loaded bandwidths.
-
-If these are fully loaded bandwidth then the headline DRAM / CXL numbers need
-to be the sum of all access paths.  So DRAM must be 450GiB/s and CXL 150GiB/s
-The cross CPU interconnect is 200GiB/s in each direction I think.
-This is ignoring caching etc which can make judging interconnect effects tricky
-at best!
-
-Years ago there were some attempts to standardize the information available
-on topology under load. To put it lightly it got tricky fast and no one
-could agree on how to measure it for an empirical solution.
-
-> 
-> A reasonable global weight vector reflecting the base capabilities is:
-> 
->      node0=3 node1=3 node2=1 node3=1
-> 
-> However, because these configured node weights do not account for
-> interconnect degradation between sockets, applying them flatly to all
-> sources yields the following effective map from each CPU's perspective:
-> 
->          0     1     2     3
-> CPU 0    3     3     1     1
-> CPU 1    3     3     1     1
-> 
-> This does not account for the interconnect penalty (e.g., node0->node1
-> drops 300->150, node0->node3 drops 100->50) and thus forces allocations
-> that cause a mismatch with actual performance.
-> 
-> This patch makes weighted interleave socket-aware. Before weighting is
-> applied, the candidate nodes are restricted to the current socket; only
-> if no eligible local nodes remain does the policy fall back to the
-> wider set.
-> 
-> Even if the configured global weights remain identically set:
-> 
->      node0=3 node1=3 node2=1 node3=1
-> 
-> The resulting effective map from the perspective of each CPU becomes:
-> 
->          0     1     2     3
-> CPU 0    3     0     1     0
-> CPU 1    0     3     0     1
-> 
-> Now tasks running on node0 prefer DRAM0(3) and CXL0(1), while tasks on
-> node1 prefer DRAM1(3) and CXL1(1). This aligns allocation with actual
-> effective bandwidth, preserves NUMA locality, and reduces cross-socket
-> traffic.
-
-Workload wise this is kind of assuming each NUMA node is doing something
-similar and keeping to itself. Assuming a nice balanced setup that is
-fine. However, with certain CPU topologies you are likely to see slightly
-messier things.
-
-> 
-> To make this possible, the system requires a mechanism to understand
-> the physical topology. The existing NUMA distance model provides only
-> relative latency values between nodes and lacks any notion of
-> structural grouping such as socket boundaries. This is especially
-> problematic for CXL memory nodes, which appear without an explicit
-> socket association.
-
-So in a general sense, the missing info here is effectively the same
-stuff we are missing from the HMAT presentation (it's there in the
-table and it's there to compute in CXL cases) just because we decided
-not to surface anything other than distances to memory from nearest
-initiator.  I chatted to Joshua and Kieth about filling in that stuff
-at last LSFMM. To me that's just a bit of engineering work that needs
-doing now we have proven use cases for the data. Mostly it's figuring out
-the presentation to userspace and kernel data structures as it's a
-lot of data in a big system (typically at least 32 NUMA nodes).
-
-> 
-> This patch series introduces a socket-aware topology management layer
-> that groups NUMA nodes according to their physical package. It
-> explicitly links CPU and memory-only nodes (such as CXL) under the
-> same socket using an initiator CPU node. This captures the true
-> hardware hierarchy rather than relying solely on flat distance values.
-> 
-> 
-> [Experimental Results]
-> 
-> System Configuration:
-> - Processor: Dual-Socket Intel Xeon 6980P (Granite Rapids)
-> 
->                node0                       node1
->              +-------+                   +-------+
->              | CPU 0 |-------------------| CPU 1 |
->              +-------+                   +-------+
-> 12 Channels  | DRAM0 |                   | DRAM1 |  12 Channels
-> DDR5-6400    +---+---+                   +---+---+  DDR5-6400
->                  |                           |
->              +---+---+                   +---+---+
-> 8 Channels   | CXL 0 |                   | CXL 1 |  8 Channels
-> DDR5-6400    +-------+                   +-------+  DDR5-6400
->                node2                       node3
-> 
-> 1) Throughput (System Bandwidth)
->    - DRAM Only: 966 GB/s
->    - Weighted Interleave: 903 GB/s (7% decrease compared to DRAM Only)
->    - Socket-Aware Weighted Interleave: 1329 GB/s (1.33TB/s)
->      (38% increase compared to DRAM Only,
->       47% increase compared to Weighted Interleave)
-> 
-> 2) Loaded Latency (Under High Bandwidth)
->    - DRAM Only: 544 ns
->    - Weighted Interleave: 545 ns
->    - Socket-Aware Weighted Interleave: 436 ns
->      (20% reduction compared to both)
-> 
-
-This may prove too simplistic so we need to be a little careful.
-It may be enough for now though so I'm not saying we necessarily
-need to change things (yet)!. Just highlighting things I've seen
-turn up before in such discussions.
-
-Simplest one is that we have more CXL memory on some nodes than
-others.  Only so many lanes and we probably want some of them for
-other purposes!
-
-More fun, multi NUMA node per sockets systems.
-
-A typical CPU Die with memory controllers (e.g. taking one of
-our old parts where there are dieshots online kunpeng 920 to
-avoid any chance of leaking anything...).
-
-                  Socket 0             Socket 1
- |    node0      |   node 1|       | node2 | |    node 3     |
- +-----+ +-------+ +-------+       +-------+ +-------+ +-----+
- | IO  | | CPU 0 | | CPU 1 |-------| CPU 2 | | CPU 3 | | IO  |
- | DIE | +-------+ +-------+       +-------+ +-------+ | DIE |
- +--+--+ | DRAM0 | | DRAM1 |       | DRAM2 | | DRAM2 | +--+--+
-    |    +-------+ +-------+       +-------+ +-------+    |
-    |                                                     |
-+---+---+                                             +---+---+ 
-| CXL 0 |                                             | CXL 1 |
-+-------+                                             +-------+
-
-So only a single CXL device per socket and the socket is multiple
-NUMA nodes as the DRAM interfaces are on the CPU Dies (unlike some
-others where they are on the IO Die alongside the CXL interfaces).
-
-CXL topology cases:
-
-A simple dual socket setup with a CXL switch and MLD below it
-makes for a shared link to the CXL memory (and hence a bandwidth
-restriction) that this can't model.
-
-                node0                       node1
-              +-------+                   +-------+
-              | CPU 0 |-------------------| CPU 1 |
-              +-------+                   +-------+
- 12 Channels  | DRAM0 |                   | DRAM1 |  12 Channels
- DDR5-6400    +---+---+                   +---+---+  DDR5-6400
-                  |                           |
-                  |___________________________| 
-                                |
-                                |
-                            +---+---+       
-            Many Channels   | CXL 0 |    
-               DDR5-6400    +-------+   
-                node2/3     
- 
-Note it's still two nodes for the CXL as we aren't accessing the same DPA for
-each host node but their actual memory is interleaved across the same devices
-to give peak BW.
-
-The reason you might do this is load balancing across lots of CXL devices
-downstream of the switch.
-
-Note this also effectively happens with MHDs just the load balancing is across
-backend memory being provided via multiple heads.  Whether people wire MHDs
-that way or tend to have multiple top of rack devices with each CPU
-socket connecting to a different one is an open question to me.
-
-I have no idea yet on how you'd present the resulting bandwidth interference
-effects of such as setup.
-
-IO Expanders on the CPU interconnect:
-
-Just for fun, on similar interconnects we've previously also seen
-the following and I'd be surprised if those going for max bandwidth
-don't do this for CXL at some point soon.
+I'd avoid the socket terminology as multiple NUMA nodes in sockets
+have been a thing for many years. Today there can even be multiple
+IO dies with a complex 'distance' relationship wrt to the CPUs
+in that socket. Topologies of memory controllers in those
+packages are another level of complexity.
 
 
-                node0                       node1
-              +-------+                   +-------+
-              | CPU 0 |-------------------| CPU 1 |
-              +-------+                   +-------+
- 12 Channels  | DRAM0 |                   | DRAM1 |  12 Channels
- DDR5-6400    +---+---+                   +---+---+  DDR5-6400
-                  |                           |
-                  |___________________________|
-                      |  IO Expander      |
-                      |  CPU interconnect |
-                      |___________________|
-                                |
-                            +---+---+       
-            Many Channels   | CXL 0 |    
-               DDR5-6400    +-------+   
-                node2
+Otherwise a few general things from a quick look. 
 
-That is the CXL memory is effectively the same distance from
-CPU0 and CPU1 - they probably have their own local CXL as well
-as this approach is done to scale up interconnect lanes in a system
-when bandwidth is way more important than compute. Similar to the
-MHD case but in this case we are accessing the same DPAs via
-both paths.
+I'd avoid goto out; where out just returns.  That just makes code
+flow more complex and often makes for longer code. When you have
+an error and there is nothing to cleanup just return immediately.
 
-Anyhow, the exact details of those don't matter beyond the general
-point that even in 'balanced' high performance configurations there
-may not be a clean 1:1 relationship between NUMA nodes and CXL memory
-devices.  Maybe some maths that aggregates some groups of nodes
-together would be enough. I've not really thought it through yet.
-
-Fun and useful topic.  Whilst I won't be at LSFMM it is definitely
-something I'd like to see move forward in general.
+guard() / scoped_guard() will help simplify some of the locking.
 
 Thanks,
 
 Jonathan
-
-> 
-> [Additional Considerations]
-> 
-> Please note that this series includes modifications to the CXL driver
-> to register these nodes. However, the necessity and the approach of
-> these driver-side changes require further discussion and consideration.
-> Additionally, this topology layer was originally designed to support
-> both memory tiering and weighted interleave. Currently, it is only
-> utilized by the weighted interleave policy. As a result, several
-> functions exposed by this layer are not actively used in this RFC.
-> Unused portions will be cleaned up and removed in the final patch
-> submission.
-> 
-> Summary of patches:
-> 
->   [PATCH 1/4] mm/numa: introduce nearest_nodes_nodemask()
->   This patch adds a new NUMA helper function to find all nodes in a
->   given nodemask that share the minimum distance from a specified
->   source node.
-> 
->   [PATCH 2/4] mm/memory-tiers: introduce socket-aware topology mgmt
->   This patch introduces a management layer that groups NUMA nodes by
->   their physical package (socket). It forms a "memory package" to
->   abstract real hardware locality for predictable NUMA memory
->   management.
-> 
->   [PATCH 3/4] mm/memory-tiers: register CXL nodes to socket packages
->   This patch implements a registration path to bind CXL memory nodes
->   to a socket-aware memory package using an initiator CPU node. This
->   ensures CXL nodes are deterministically grouped with the CPUs they
->   service.
-> 
->   [PATCH 4/4] mm/mempolicy: enhance weighted interleave with locality
->   This patch modifies the weighted interleave policy to restrict
->   candidate nodes to the current socket before applying weights. It
->   reduces cross-socket traffic and aligns memory allocation with
->   actual bandwidth.
-> 
-> Any feedback and discussions are highly appreciated.
-> 
-> Thanks
-> 
-> Rakie Kim (4):
->   mm/numa: introduce nearest_nodes_nodemask()
->   mm/memory-tiers: introduce socket-aware topology management for NUMA
->     nodes
->   mm/memory-tiers: register CXL nodes to socket-aware packages via
->     initiator
->   mm/mempolicy: enhance weighted interleave with socket-aware locality
-> 
->  drivers/cxl/core/region.c    |  46 +++
->  drivers/cxl/cxl.h            |   1 +
->  drivers/dax/kmem.c           |   2 +
->  include/linux/memory-tiers.h |  93 +++++
->  include/linux/numa.h         |   8 +
->  mm/memory-tiers.c            | 766 +++++++++++++++++++++++++++++++++++
->  mm/mempolicy.c               | 135 +++++-
->  7 files changed, 1047 insertions(+), 4 deletions(-)
-> 
-> 
-> base-commit: 05f7e89ab9731565d8a62e3b5d1ec206485eeb0b
 
