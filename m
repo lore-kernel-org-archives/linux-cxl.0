@@ -1,261 +1,260 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7096307AD6;
-	Thu, 19 Mar 2026 14:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773929514; cv=none; b=nW8OSh9Dv1/guUm5g315ZhOwdqcoeYV1KS/Csn9zMdHGmgQRtcwJPqqSniCM1BueFpPOMTLRDFaoDVgl7Os35Ao3+v1H6v0SPRo+4DSBc4Nf4FcGQcetU+c46SDiUMo5DhQgWtRAmtZF2PqqCkoVtCQMxwVZmbjfhoyB4PYF/Jc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773929514; c=relaxed/simple;
-	bh=79ChlbKPzsVUSS+lZ1jNyCbZerEKW93l0yflC40s7Mg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J1Z72HaAMLOUzXTWjBOdcCgFVE88sXokoIP/cBuozS+XYPD8JqIwh9Fzfmz9K+2+M0oXTrDoj+jA/JWQCewxNlCg4rbObBop44aY6nS80aqBImEQTKrUnx9RPR3Pi0CFqsCoAzTxjUx7T3T8bP4gcLrLBe1kLwaZlLHpPjzNyN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fc6zq3khwzJ467c;
-	Thu, 19 Mar 2026 22:10:47 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id EF6904056E;
-	Thu, 19 Mar 2026 22:11:46 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 19 Mar
- 2026 14:11:45 +0000
-Date: Thu, 19 Mar 2026 14:11:44 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Alison Schofield <alison.schofield@intel.com>
-CC: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Yazen Ghannam <yazen.ghannam@amd.com>, "Dave
- Jiang" <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, "Matthew
- Wilcox" <willy@infradead.org>, Jan Kara <jack@suse.cz>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek
-	<pavel@kernel.org>, Li Ming <ming.li@zohomail.com>, Jeff Johnson
-	<jeff.johnson@oss.qualcomm.com>, Ying Huang <huang.ying.caritas@gmail.com>,
-	Yao Xingtao <yaoxt.fnst@fujitsu.com>, Peter Zijlstra <peterz@infradead.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nathan Fontenot
-	<nathan.fontenot@amd.com>, Terry Bowman <terry.bowman@amd.com>, Robert
- Richter <rrichter@amd.com>, "Benjamin Cheatham" <benjamin.cheatham@amd.com>,
-	Zhijian Li <lizhijian@fujitsu.com>, Borislav Petkov <bp@alien8.de>, Tomasz
- Wolski <tomasz.wolski@fujitsu.com>
-Subject: Re: [PATCH v7 3/7] dax/cxl, hmem: Initialize hmem early and defer
- dax_cxl binding
-Message-ID: <20260319141144.00005af3@huawei.com>
-In-Reply-To: <abuOLq6bMPa0nNAL@aschofie-mobl2.lan>
-References: <20260319011500.241426-1-Smita.KoralahalliChannabasappa@amd.com>
-	<20260319011500.241426-4-Smita.KoralahalliChannabasappa@amd.com>
-	<abuOLq6bMPa0nNAL@aschofie-mobl2.lan>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EAD230B502;
+	Thu, 19 Mar 2026 14:12:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773929579; cv=pass; b=OQpqvtqid2rYcNqkVym1guOWbT3I7VhZRffTzz/NaS7QknuJPuTPFxxpVlqf/uWE67oc+kcEDPVZ+1lyqFXyrHOrjGVoNUgiV7UigbnyuPVSA+BtayE/wQmZfbeWEE60G8Z/gJ3k4frGTbz62IgYN+bYCbHL3OQccWPLOTSPnWc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773929579; c=relaxed/simple;
+	bh=56w20MZUIlAyE115A6+FVQV8oAXDOglnPckBdBxKr+I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NirSiJRqmp3IlX98DCQkkQUlgBmvN6kMbwkvgcd4uLHhfqlidtWGOC52QGizit3YRRG8BvLfvduTK0vYickGe4sVpMhUPE8ZULkNpk/GFIY49tOEw1ZRi8vZwBfhzPa7M2SU2e/VC8q6hYX0H49aux8tymy1kyr9X+602wACnKw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=aOnsuH3a; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="aOnsuH3a"
+ARC-Seal: i=1; a=rsa-sha256; t=1773929560; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=dmYFhWyc5qcOfgldHxBWAzz8Tn3wFwjGFdudDiS2rJaCODQcD5N7igI2lyqvmPq3lSmgEaVB+qz0baPNSr4CWev+8GKqXB2fLMluYdYkjN2Y3rhdCgD7D8NoOz6fdIYXL6t70rVM82A9cAJ3rlHwQlHhF0fVswF7vLnxGs+RHss=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1773929560; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=zfAMRlo2orfAVJO9MeMQPgE0r+KKNuOMF+3rhLUrZsY=; 
+	b=PHPKdyoL0xNoGBC4pJW7fPj8e4tmNq3h1JsnKeeXgImLtxDkZ62dIZ8Jc8GQLbEPrfAvxkqz0UZRDWlsuvVDFysmk8fhT9od5NY/A83POF1/eI2PBJa42lZ1ATvXWdhgw9o+LErXOX7FxtjctzF0BAUKZiTteUC1GXNtq+0CpzQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773929560;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Feedback-ID:Reply-To;
+	bh=zfAMRlo2orfAVJO9MeMQPgE0r+KKNuOMF+3rhLUrZsY=;
+	b=aOnsuH3adMbGiLNnLaG0QspWraSBusdfpFEj57lj7RYOH5WrgEM0KBwNuaAAJTsI
+	0Epqya1CgIb3QBgU2p0iGqGaC7IiMlYexvRx3+6uArck88bgYPZKVvtwiod8Sg8mKlp
+	ME/opcF+yyMQ2ZMzIRdK7sWyplpCC+g4dL2GZJjM=
+Received: by mx.zohomail.com with SMTPS id 1773929557163149.00069194712887;
+	Thu, 19 Mar 2026 07:12:37 -0700 (PDT)
+From: Li Ming <ming.li@zohomail.com>
+Date: Thu, 19 Mar 2026 22:12:09 +0800
+Subject: [PATCH] cxl/region: Hold memdev lock during region poison
+ injection/clear
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Message-Id: <20260319-hold_memdev_lock_for_region_poison_inject-clear-v1-1-05243c5a9572@zohomail.com>
+X-B4-Tracking: v=1; b=H4sIADgEvGkC/x2NQQqDMBBFryKzbiCmEmyvUspgk1GnjRmZiBTEu
+ zd09XiL9/8BhZSpwL05QGnnwpKrtJcGwjzkiQzH6uCs8/ba3swsKeJCS6Qdk4QPjqKoNNUOV+F
+ SwflNYTMh0aCme/XW2dh33juoq6vSyN//4+N5nj+1lLkwgQAAAA==
+X-Change-ID: 20260319-hold_memdev_lock_for_region_poison_inject-clear-4b8020d84662
+To: Davidlohr Bueso <dave@stgolabs.net>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Dave Jiang <dave.jiang@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Li Ming <ming.li@zohomail.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773929554; l=6216;
+ i=ming.li@zohomail.com; s=20260210; h=from:subject:message-id;
+ bh=56w20MZUIlAyE115A6+FVQV8oAXDOglnPckBdBxKr+I=;
+ b=x/mJr2DSFR0HV1IYnOiJEf1uc899pgNyS77V8selcSsDP62dCdhcYwdE6sAEbAORce9ibZpCH
+ 2azwCkbOPdBDsREXEvTHGkqBd3BEpTj25AL27c6Xxf2Gg5nLd4HirYt
+X-Developer-Key: i=ming.li@zohomail.com; a=ed25519;
+ pk=JfhrdHjyYJMXt47Hy8d/fsqZuhGPD4Z3whV5lTfVvhE=
+Feedback-ID: rr08011228b269b2e051c438c6cbd7d0070000c481ce6234e6e5331527837bf18abdf91514c98ab01321ae8951:zu08011227efc9cd2edb00a2634e267d9c0000d259fc34736778a49d5d9fe8822dab3d0d4b85ff104873704f:rf0801122d0c2089fbe8d700521a092832000023daafa5d8580e33d6bae026040f8d0ee705397b280325e0d7f12c099184af:ZohoMail
+X-ZohoMailClient: External
 
-On Wed, 18 Mar 2026 22:48:30 -0700
-Alison Schofield <alison.schofield@intel.com> wrote:
+cxl_dpa_to_region() has expectations that cxlmd->endpoint remains valid
+for the duration of the call. When userspace performs poison injection
+or clearing on a region via debugfs, holding cxl_rwsem.region and
+cxl_rwsem.dpa alone is insufficient, these locks do not prevent the
+retrieved CXL memdev from being destroyed, nor do they protect against
+concurrent driver detachment. Therefore, hold CXL memdev lock in the
+debugfs callbacks to ensure the cxlmd->dev.driver remains stable for the
+entire execution of the callback functions.
 
-> On Thu, Mar 19, 2026 at 01:14:56AM +0000, Smita Koralahalli wrote:
-> > From: Dan Williams <dan.j.williams@intel.com>
-> > 
-> > Move hmem/ earlier in the dax Makefile so that hmem_init() runs before
-> > dax_cxl.
-> > 
-> > In addition, defer registration of the dax_cxl driver to a workqueue
-> > instead of using module_cxl_driver(). This ensures that dax_hmem has
-> > an opportunity to initialize and register its deferred callback and make
-> > ownership decisions before dax_cxl begins probing and claiming Soft
-> > Reserved ranges.
-> > 
-> > Mark the dax_cxl driver as PROBE_PREFER_ASYNCHRONOUS so its probe runs
-> > out of line from other synchronous probing avoiding ordering
-> > dependencies while coordinating ownership decisions with dax_hmem.  
-> 
-> Hi Smita,
-> 
-> Replying to this patch, as it's my best guess as to why I may be
-> seeing this WARN when I modprobe cxl-test.
+To keep lock sequence(cxlmd.dev -> cxl_rwsem.region -> cxl_rwsem.dpa)
+for avoiding deadlock. the interfaces have to find out the correct CXL
+memdev at first, holding lock in the sequence then checking if the DPA
+data has been changed before holding locks.
 
-Not patch 6?  dax_hmem_flush_work() is in there + it doesn't
-use a static declaration of the work items.
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+ drivers/cxl/core/region.c | 112 ++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 88 insertions(+), 24 deletions(-)
 
-I've not figure out the path yet but it looks more suspicious to me
-than this path.
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index f24b7e754727..1a509acc52a3 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -4101,12 +4101,70 @@ static int validate_region_offset(struct cxl_region *cxlr, u64 offset)
+ 	return 0;
+ }
+ 
++static int __cxl_region_poison_lookup(struct cxl_region *cxlr, u64 offset,
++				      struct dpa_result *res)
++{
++	int rc;
++
++	*res = (struct dpa_result){ .dpa = ULLONG_MAX, .cxlmd = NULL };
++
++	if (validate_region_offset(cxlr, offset))
++		return -EINVAL;
++
++	offset -= cxlr->params.cache_size;
++	rc = region_offset_to_dpa_result(cxlr, offset, res);
++	if (rc || !res->cxlmd || res->dpa == ULLONG_MAX) {
++		dev_dbg(&cxlr->dev,
++			"Failed to resolve DPA for region offset %#llx rc %d\n",
++			offset, rc);
++
++		return rc ? rc : -EINVAL;
++	}
++
++	return 0;
++}
++
++static int cxl_region_poison_lookup(struct cxl_region *cxlr, u64 offset,
++				    struct dpa_result *res)
++{
++	int rc;
++
++	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
++	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
++		return rc;
++
++	ACQUIRE(rwsem_read_intr, dpa_rwsem)(&cxl_rwsem.dpa);
++	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
++		return rc;
++
++	rc = __cxl_region_poison_lookup(cxlr, offset, res);
++	if (rc)
++		return rc;
++
++	/*
++	 * Hold the device reference in case
++	 * the device is destroyed after that.
++	 */
++	get_device(&res->cxlmd->dev);
++	return 0;
++}
++
+ static int cxl_region_debugfs_poison_inject(void *data, u64 offset)
+ {
+-	struct dpa_result result = { .dpa = ULLONG_MAX, .cxlmd = NULL };
+ 	struct cxl_region *cxlr = data;
++	struct dpa_result res1, res2;
+ 	int rc;
+ 
++	/* To retrieve the correct memdev */
++	rc = cxl_region_poison_lookup(cxlr, offset, &res1);
++	if (rc)
++		return rc;
++
++	struct device *dev __free(put_device) = &res1.cxlmd->dev;
++	ACQUIRE(device_intr, devlock)(dev);
++	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
++		return rc;
++
+ 	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
+ 	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
+ 		return rc;
+@@ -4115,20 +4173,18 @@ static int cxl_region_debugfs_poison_inject(void *data, u64 offset)
+ 	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
+ 		return rc;
+ 
+-	if (validate_region_offset(cxlr, offset))
+-		return -EINVAL;
+-
+-	offset -= cxlr->params.cache_size;
+-	rc = region_offset_to_dpa_result(cxlr, offset, &result);
+-	if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
++	/*
++	 * Retrieve memdev and DPA data again in case that the data
++	 * has been changed before holding locks.
++	 */
++	rc = __cxl_region_poison_lookup(cxlr, offset, &res2);
++	if (rc || res2.cxlmd != res1.cxlmd || res2.dpa != res1.dpa) {
+ 		dev_dbg(&cxlr->dev,
+-			"Failed to resolve DPA for region offset %#llx rc %d\n",
+-			offset, rc);
+-
+-		return rc ? rc : -EINVAL;
++			"Error injection raced region reconfiguration: %d", rc);
++		return -ENXIO;
+ 	}
+ 
+-	return cxl_inject_poison_locked(result.cxlmd, result.dpa);
++	return cxl_inject_poison_locked(res2.cxlmd, res2.dpa);
+ }
+ 
+ DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_inject_fops, NULL,
+@@ -4136,10 +4192,20 @@ DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_inject_fops, NULL,
+ 
+ static int cxl_region_debugfs_poison_clear(void *data, u64 offset)
+ {
+-	struct dpa_result result = { .dpa = ULLONG_MAX, .cxlmd = NULL };
+ 	struct cxl_region *cxlr = data;
++	struct dpa_result res1, res2;
+ 	int rc;
+ 
++	/* To retrieve the correct memdev */
++	rc = cxl_region_poison_lookup(cxlr, offset, &res1);
++	if (rc)
++		return rc;
++
++	struct device *dev __free(put_device) = &res1.cxlmd->dev;
++	ACQUIRE(device_intr, devlock)(dev);
++	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
++		return rc;
++
+ 	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
+ 	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
+ 		return rc;
+@@ -4148,20 +4214,18 @@ static int cxl_region_debugfs_poison_clear(void *data, u64 offset)
+ 	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
+ 		return rc;
+ 
+-	if (validate_region_offset(cxlr, offset))
+-		return -EINVAL;
+-
+-	offset -= cxlr->params.cache_size;
+-	rc = region_offset_to_dpa_result(cxlr, offset, &result);
+-	if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
++	/*
++	 * Retrieve memdev and DPA data again in case that the data
++	 * has been changed before holding locks.
++	 */
++	rc = __cxl_region_poison_lookup(cxlr, offset, &res2);
++	if (rc || res2.cxlmd != res1.cxlmd || res2.dpa != res1.dpa) {
+ 		dev_dbg(&cxlr->dev,
+-			"Failed to resolve DPA for region offset %#llx rc %d\n",
+-			offset, rc);
+-
+-		return rc ? rc : -EINVAL;
++			"Error clearing raced region reconfiguration: %d", rc);
++		return -ENXIO;
+ 	}
+ 
+-	return cxl_clear_poison_locked(result.cxlmd, result.dpa);
++	return cxl_clear_poison_locked(res2.cxlmd, res2.dpa);
+ }
+ 
+ DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
 
-Jonathan
+---
+base-commit: d5f9bfc37906bbb737790af11f1537593f8778a5
+change-id: 20260319-hold_memdev_lock_for_region_poison_inject-clear-4b8020d84662
 
-> 
-> We are able to pass all the CXL unit tests because it is only that
-> first load that causes the WARN. All subsequent reloads of cxl-test
-> do not unload dax_cxl and dax_hmem so they chug happily along.
-> 
-> I can reproduce by unloading each piece before reloading cxl-test
-> # modprobe -r cxl-test
-> # modprobe -r dax_cxl
-> # modprobe -r dax_hmem
-> # modprobe cxl-test
-> and the WARN repeats.
-> 
-> Guessing you may recognize what is going on. Let me know if I can
-> try anything else out.
-> 
-> 
-> # dmesg (trimmed to just the init calls)
-> [   34.229033] calling  fwctl_init+0x0/0xff0 [fwctl] @ 1057
-> [   34.230616] initcall fwctl_init+0x0/0xff0 [fwctl] returned 0 after 186 usecs
-> [   34.257096] calling  cxl_core_init+0x0/0x100 [cxl_core] @ 1057
-> [   34.258395] initcall cxl_core_init+0x0/0x100 [cxl_core] returned 0 after 538 usecs
-> [   34.264170] calling  cxl_port_init+0x0/0xff0 [cxl_port] @ 1057
-> [   34.264982] initcall cxl_port_init+0x0/0xff0 [cxl_port] returned 0 after 110 usecs
-> [   34.268058] calling  cxl_mem_driver_init+0x0/0xff0 [cxl_mem] @ 1057
-> [   34.268743] initcall cxl_mem_driver_init+0x0/0xff0 [cxl_mem] returned 0 after 110 usecs
-> [   34.274670] calling  cxl_pmem_init+0x0/0xff0 [cxl_pmem] @ 1057
-> [   34.277835] initcall cxl_pmem_init+0x0/0xff0 [cxl_pmem] returned 0 after 1671 usecs
-> [   34.285807] calling  cxl_acpi_init+0x0/0xff0 [cxl_acpi] @ 1057
-> [   34.287105] initcall cxl_acpi_init+0x0/0xff0 [cxl_acpi] returned 0 after 262 usecs
-> [   34.292967] calling  cxl_test_init+0x0/0xff0 [cxl_test] @ 1057
-> [   34.339841] initcall cxl_test_init+0x0/0xff0 [cxl_test] returned 0 after 45832 usecs
-> [   34.342259] calling  cxl_mock_mem_driver_init+0x0/0xff0 [cxl_mock_mem] @ 1063
-> [   34.343459] initcall cxl_mock_mem_driver_init+0x0/0xff0 [cxl_mock_mem] returned 0 after 356 usecs
-> [   34.658602] calling  dax_hmem_init+0x0/0xff0 [dax_hmem] @ 1059
-> [   34.670106] calling  cxl_pci_driver_init+0x0/0xff0 [cxl_pci] @ 1100
-> [   34.671023] initcall cxl_pci_driver_init+0x0/0xff0 [cxl_pci] returned 0 after 197 usecs
-> [   34.673051] initcall dax_hmem_init+0x0/0xff0 [dax_hmem] returned 0 after 2225 usecs
-> [   34.676011] calling  cxl_dax_region_init+0x0/0xff0 [dax_cxl] @ 1059
-> [   34.676856] ------------[ cut here ]------------
-> [   34.677533] WARNING: kernel/workqueue.c:4289 at __flush_work+0x4f9/0x550, CPU#3: kworker/3:2/136
-> [   34.678596] Modules linked in: dax_cxl(+) cxl_pci dax_hmem cxl_mock_mem(O) cxl_test(O) cxl_acpi(O) cxl_pmem(O) cxl_mem(O) cxl_port(O) cxl_mock(O) cxl_core(O) fwctl nd_pmem nd_btt dax_pmem nfit nd_e820 libnvdimm
-> [   34.680632] initcall cxl_dax_region_init+0x0/0xff0 [dax_cxl] returned 0 after 3842 usecs
-> [   34.680918] CPU: 3 UID: 0 PID: 136 Comm: kworker/3:2 Tainted: G           O        7.0.0-rc4+ #156 PREEMPT(full) 
-> [   34.684368] Tainted: [O]=OOT_MODULE
-> [   34.684993] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-> [   34.686098] Workqueue: events_long cxl_dax_region_driver_register [dax_cxl]
-> [   34.687108] RIP: 0010:__flush_work+0x4f9/0x550
-> 
-> That addr is this line in flush_work()
->         if (WARN_ON(!work->func))
->                 return false;
-> 
-> 
-> [   34.687811] Code: ff 49 8b 45 00 49 8b 55 08 89 c7 48 c1 e8 04 83 e7 08 83 e0 0f 83 cf 02 49 0f ba 6d 00 03 e9 a1 fc ff ff 0f 0b e9 e6 fe ff ff <0f> 0b e9 df fe ff ff e8 9b 48 15 01 85 c0 0f 84 26 ff ff ff 80 3d
-> [   34.690107] RSP: 0018:ffffc900020b7cf8 EFLAGS: 00010246
-> [   34.690673] RAX: 0000000000000000 RBX: ffffffffa0ea2088 RCX: ffff8880088b2b78
-> [   34.691388] RDX: 00000000834fb194 RSI: 0000000000000000 RDI: ffffffffa0ea2088
-> [   34.692135] RBP: ffffc900020b7de0 R08: 0000000031ab93b0 R09: 00000000effb42e8
-> [   34.692876] R10: 000000008effb42e R11: 0000000000000000 R12: ffff88807d9bb340
-> [   34.693588] R13: ffffffffa0ea2088 R14: ffffffffa0ed2020 R15: 0000000000000001
-> [   34.694358] FS:  0000000000000000(0000) GS:ffff8880fa45f000(0000) knlGS:0000000000000000
-> [   34.695179] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   34.695775] CR2: 00007fe888b4e34c CR3: 00000000090ed004 CR4: 0000000000370ef0
-> [   34.696494] Call Trace:
-> [   34.696889]  <TASK>
-> [   34.697238]  ? __lock_acquire+0xb08/0x2930
-> [   34.697730]  ? __this_cpu_preempt_check+0x13/0x20
-> [   34.698277]  flush_work+0x17/0x30
-> [   34.698705]  dax_hmem_flush_work+0x10/0x20 [dax_hmem]
-> [   34.699270]  cxl_dax_region_driver_register+0x9/0x30 [dax_cxl]
-> [   34.699943]  process_one_work+0x203/0x6c0
-> [   34.700452]  worker_thread+0x197/0x350
-> [   34.700942]  ? __pfx_worker_thread+0x10/0x10
-> [   34.701455]  kthread+0x108/0x140
-> [   34.701915]  ? __pfx_kthread+0x10/0x10
-> [   34.702396]  ret_from_fork+0x28a/0x310
-> [   34.702880]  ? __pfx_kthread+0x10/0x10
-> [   34.703363]  ret_from_fork_asm+0x1a/0x30
-> [   34.703872]  </TASK>
-> [   34.704227] irq event stamp: 11015
-> [   34.704656] hardirqs last  enabled at (11025): [<ffffffff813486de>] __up_console_sem+0x5e/0x80
-> [   34.705493] hardirqs last disabled at (11036): [<ffffffff813486c3>] __up_console_sem+0x43/0x80
-> [   34.706354] softirqs last  enabled at (10500): [<ffffffff812ab9f3>] __irq_exit_rcu+0xc3/0x120
-> [   34.707197] softirqs last disabled at (10495): [<ffffffff812ab9f3>] __irq_exit_rcu+0xc3/0x120
-> [   34.708015] ---[ end trace 0000000000000000 ]---
-> [   34.752127] calling  dax_init+0x0/0xff0 [device_dax] @ 1089
-> [   34.754006] initcall dax_init+0x0/0xff0 [device_dax] returned 0 after 422 usecs
-> [   34.759609] calling  dax_kmem_init+0x0/0xff0 [kmem] @ 1089
-> [   37.338377] initcall dax_kmem_init+0x0/0xff0 [kmem] returned 0 after 2577658 usecs
-> 
-> 
-> > 
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> > ---
-> >  drivers/dax/Makefile |  3 +--
-> >  drivers/dax/cxl.c    | 27 ++++++++++++++++++++++++++-
-> >  2 files changed, 27 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/dax/Makefile b/drivers/dax/Makefile
-> > index 5ed5c39857c8..70e996bf1526 100644
-> > --- a/drivers/dax/Makefile
-> > +++ b/drivers/dax/Makefile
-> > @@ -1,4 +1,5 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> > +obj-y += hmem/
-> >  obj-$(CONFIG_DAX) += dax.o
-> >  obj-$(CONFIG_DEV_DAX) += device_dax.o
-> >  obj-$(CONFIG_DEV_DAX_KMEM) += kmem.o
-> > @@ -10,5 +11,3 @@ dax-y += bus.o
-> >  device_dax-y := device.o
-> >  dax_pmem-y := pmem.o
-> >  dax_cxl-y := cxl.o
-> > -
-> > -obj-y += hmem/
-> > diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
-> > index 13cd94d32ff7..a2136adfa186 100644
-> > --- a/drivers/dax/cxl.c
-> > +++ b/drivers/dax/cxl.c
-> > @@ -38,10 +38,35 @@ static struct cxl_driver cxl_dax_region_driver = {
-> >  	.id = CXL_DEVICE_DAX_REGION,
-> >  	.drv = {
-> >  		.suppress_bind_attrs = true,
-> > +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> >  	},
-> >  };
-> >  
-> > -module_cxl_driver(cxl_dax_region_driver);
-> > +static void cxl_dax_region_driver_register(struct work_struct *work)
-> > +{
-> > +	cxl_driver_register(&cxl_dax_region_driver);
-> > +}
-> > +
-> > +static DECLARE_WORK(cxl_dax_region_driver_work, cxl_dax_region_driver_register);
-> > +
-> > +static int __init cxl_dax_region_init(void)
-> > +{
-> > +	/*
-> > +	 * Need to resolve a race with dax_hmem wanting to drive regions
-> > +	 * instead of CXL
-> > +	 */
-> > +	queue_work(system_long_wq, &cxl_dax_region_driver_work);
-> > +	return 0;
-> > +}
-> > +module_init(cxl_dax_region_init);
-> > +
-> > +static void __exit cxl_dax_region_exit(void)
-> > +{
-> > +	flush_work(&cxl_dax_region_driver_work);
-> > +	cxl_driver_unregister(&cxl_dax_region_driver);
-> > +}
-> > +module_exit(cxl_dax_region_exit);
-> > +
-> >  MODULE_ALIAS_CXL(CXL_DEVICE_DAX_REGION);
-> >  MODULE_DESCRIPTION("CXL DAX: direct access to CXL regions");
-> >  MODULE_LICENSE("GPL");
-> > -- 
-> > 2.17.1
-> > 
-> >   
-> 
+Best regards,
+-- 
+Li Ming <ming.li@zohomail.com>
 
