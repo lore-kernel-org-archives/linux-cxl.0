@@ -1,350 +1,207 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1172DB7A0
-	for <linux-cxl@vger.kernel.org>; Thu, 19 Mar 2026 15:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4CF3E0C7F;
+	Thu, 19 Mar 2026 15:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773932994; cv=none; b=YM7pBQHZgCzwwrAJDPHjp8MsLXAOQgE5+kD8NPOx5ce7X0QHFS7w5tOMMVYFzLX0WUdjAWEsH+htwBLBmVMkQWaenXBY9ANIvifW8nRuvJt/dX6BJ+tJvZfqy+xgd3PlKKj9hjU2SSsmNmN91vaDBqVe4tJqXrdhpXwLtnrxrlc=
+	t=1773933128; cv=none; b=HQc/siZEF2xwYsPATJSYoVjVX0rcPLKGj5LnkZTF/3VrSivNtRuj6lmfwM8sNl1/TGOtVyFxMcn0H8rTZ9lUXMguVB5FVJ1co7Ss66TSdptbkAv+BJ+tiNG0RFWoFOo4mCF/7QaGPDhskLHeKG01ASEsfrrhOj+Jw1ThCnS1cV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773932994; c=relaxed/simple;
-	bh=w8KECUgZU784nrWzd9pPxP9fep5qk5sRDHZVbyBswlM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NVZR920/apassDAEMIGzjjxynsO2S6b+jK29t3fJzm9hnCm7iCZsFu5XLZAnhsHZuO68dmlbRUmhZvRqDG/rCsH61n9MoiOi9gJDwFUNIY7BcmCb4KYvX2186oNxkrqfyHarl8Tj+aawtlimwoeMwtKD4+kEFvG+3e94O39WT4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=C0vpH9SW; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="C0vpH9SW"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-8c9f6b78ca4so142769385a.0
-        for <linux-cxl@vger.kernel.org>; Thu, 19 Mar 2026 08:09:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1773932992; x=1774537792; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fU4+lilPbMb3EqzTb9SzQ9ED33oth0C4b6/QPTs5sDk=;
-        b=C0vpH9SWmg5mkRuxx2OAekhkBqFlLanK4Nd7TSYqcgTGuQP/sMD4LM2fTlQeb0OQ9Z
-         FVi2G/wIfj0c0mSvqQaHHcJvBoA86gX8moWmnp/uDfgcKsV0mDlednBv646JMGvm6rlM
-         ouwMyUbHspaqnmrkmHtMy8HxLxAv6sKUJYYXj4Ra4XL1MZZzcohL6hYd1Ym3CYFueBYN
-         UgLico9fpfA3E7okO2q5kil682LZkhpbOKPFLCo4nD1N1bN4uZoQ81puEv+yjHMWvgYH
-         Lfv6MFloaUUE7bmyWv/hjRrNk0NiCmCuHL3MfZKPCF6iFD3iJGgWlR1rkQqra+VINZoh
-         0z1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773932992; x=1774537792;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fU4+lilPbMb3EqzTb9SzQ9ED33oth0C4b6/QPTs5sDk=;
-        b=SCoCDm/Hi0IXIFcyHCz72+VXJ8ygnMSxm4O0VrIcbX5iHdCzy49Xu4LE7W1thJ2lga
-         N0gzg5+rDyX2M1jPIvI4vEMPtfOyf2DTTjcGvxLiIJxIHEqytNGdky66EwVjJ5hE130C
-         5cpsyxBD995RWdMQJO/UpN9EFLiWuS6191pddTHQ8ugldD3JQsLEmWQb5ndvLXf/+DRe
-         1HYVMup0tPDaz+92nCGi5nTVq/b9Dw7zAsGzSZ8/ivNYY7EvtTzJOaJBRQjVksErmP8h
-         0XJilofMzdM1Xht0h92LYaiUkidRbe1z6wONYYGuiT50iHUQpx9ftwv3TzRwIgC5YSUN
-         sYEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVGBl/HXDVm4dIZkejnqsncfYmVbdMdQxn66rrYnt0x/YSsLJdMlfEKD+4r2K/QmaMcJzM5J1SNOC4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVbqbZx9z/WuXFG0qOQE/vj3tSvGgnqbHaPrBUDwpjg6lZwKyt
-	Loz9ReEUdj8xxksv4Q11N5+erYAGQ3xsZWm07ikE9XwRGgzgam5CUJhov0D/lvE25oI=
-X-Gm-Gg: ATEYQzxtqMsPtbwv7KRTsc1IMwYyrmNb2QclvGZH8St0DGEZU0rNnig0fTb0SI1C+rS
-	tSUnpmmWk1HTvgtvjmByfuaEjEseZvbib/HhPm8wC3B2i20JymyWx0hqAkovGCDuwZj9iK9LnqQ
-	J/LEe6V/hz5coJxFYTrDognkYpET+g06rtUWpNEgOvxHYuTfL9VtqlPXLlareSAo8ft5i7Y7WBY
-	saWGeaJMblJsyOIE2oohJiNPIB09oLkS+Yi/fmaSeGP+AyjKOzi5YYp5o4zV2sE3KlhyeAZi8yP
-	AFlldF6KsrdVWt4JsZAymPrg7uA8dUc8sKfHZxzqScwTdGe9s72qJV2WHJWLFxKLx3VkcvNjK3J
-	w4j/FD3nW3oPbX15/rP9wPYoP67dlvvqNNzdbnq7qyRYF5OVYx6KxKHfu6NU3Gm1scoPgkS2AFi
-	wHTQHKwcL/jZP/bcMtA0stUyY1SNND6xUBSWQpy0Ru2E3qztFcP0/G/SLGhx6G0LnjZTeueefUL
-	jkKMSN8IA==
-X-Received: by 2002:a05:620a:4050:b0:8cd:af31:b421 with SMTP id af79cd13be357-8cfad2c5236mr1047066785a.34.1773932991754;
-        Thu, 19 Mar 2026 08:09:51 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfad1b1154sm524775785a.35.2026.03.19.08.09.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 08:09:51 -0700 (PDT)
-Date: Thu, 19 Mar 2026 11:09:47 -0400
-From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
-	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
-	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
-	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
-	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <abwRu1FNqI3dVyqL@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <3342acb5-8d34-4270-98a2-866b1ff80faf@kernel.org>
+	s=arc-20240116; t=1773933128; c=relaxed/simple;
+	bh=CQDG8hpAyrt4e8pfDENGAaTuq0OjnAQaqEiQYCI+bOs=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BjMeasA0Jysoy/5NljRLNfowXaIJeg8gYrMfTJ+mUS8qcQVBnz3PWZ/ktWiTRYD+k0YBbKP+nXkNo4tDyQ/lXDCjGlR7Ti9t+GWWU/+3nbzPvPHejymzCoz6100bvhpT8IObo1U384UM+NkQOEay/91rb6c9DvqhdPDh6x2iNwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.150])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fc8KL2nJ7zJ46BM;
+	Thu, 19 Mar 2026 23:11:02 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id E2A9D4056A;
+	Thu, 19 Mar 2026 23:12:01 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 19 Mar
+ 2026 15:12:00 +0000
+Date: Thu, 19 Mar 2026 15:11:58 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: John Groves <John@groves.net>
+CC: Ira Weiny <ira.weiny@intel.com>, John Groves <john@jagalactic.com>, Miklos
+ Szeredi <miklos@szeredi.hu>, Dan Williams <dan.j.williams@intel.com>, Bernd
+ Schubert <bschubert@ddn.com>, "Alison Schofield"
+	<alison.schofield@intel.com>, John Groves <jgroves@micron.com>, John Groves
+	<jgroves@fastmail.com>, Jonathan Corbet <corbet@lwn.net>, Vishal Verma
+	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox
+	<willy@infradead.org>, Jan Kara <jack@suse.cz>, "Alexander Viro"
+	<viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, Christian
+ Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, Randy
+ Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, Amir
+ Goldstein <amir73il@gmail.com>, Stefan Hajnoczi <shajnocz@redhat.com>, Joanne
+ Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, Bagas
+ Sanjaya <bagasdotme@gmail.com>, James Morse <james.morse@arm.com>, Fuad Tabba
+	<tabba@google.com>, Sean Christopherson <seanjc@google.com>, Shivank Garg
+	<shivankg@amd.com>, Ackerley Tng <ackerleytng@google.com>, Gregory Price
+	<gourry@gourry.net>, Aravind Ramesh <arramesh@micron.com>, Ajay Joshi
+	<ajayjoshi@micron.com>, "venkataravis@micron.com" <venkataravis@micron.com>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V7 03/19] dax: add fsdev.c driver for fs-dax on
+ character dax
+Message-ID: <20260319151158.00003e37@huawei.com>
+In-Reply-To: <aZSoCIjbxKIqRZF4@groves.net>
+References: <0100019bd33b1f66-b835e86a-e8ae-443f-a474-02db88f7e6db-000000@email.amazonses.com>
+	<20260118223123.92341-1-john@jagalactic.com>
+	<0100019bd33c310f-1b4a8555-bc81-4ec3-b45f-27abc01dff05-000000@email.amazonses.com>
+	<698f922296bd0_bcb8910059@iweiny-mobl.notmuch>
+	<aZSoCIjbxKIqRZF4@groves.net>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3342acb5-8d34-4270-98a2-866b1ff80faf@kernel.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Tue, Mar 17, 2026 at 02:25:29PM +0100, David Hildenbrand (Arm) wrote:
-> On 2/22/26 09:48, Gregory Price wrote:
-> > Topic type: MM
-> 
-> Hi Gregory,
-> 
-> stumbling over this again, some questions whereby I'll just ignore the
-> compressed RAM bits for now and focus on use cases where promotion etc
-> are not relevant :)
+On Tue, 17 Feb 2026 11:56:20 -0600
+John Groves <John@groves.net> wrote:
 
-A more concrete example up your alley:
-
-I've since been playing with a virtio-net private node.
-
-Normally cloud-hypervisor VMs with virtio-net can't be subject to KSM
-because the entire boot region gets marked shared.  If virtio-net has
-its own private node / region separate from the boot region, the boot
-region is now free to be subject to KSM.
-
-I may have that up as an example sometime before LSF, but i need to
-clean up some networking stack hacks i've made to make it work.
-
+> On 26/02/13 03:05PM, Ira Weiny wrote:
+> > John Groves wrote:  
+> > > From: John Groves <john@groves.net>
+> > > 
+> > > The new fsdev driver provides pages/folios initialized compatibly with
+> > > fsdax - normal rather than devdax-style refcounting, and starting out
+> > > with order-0 folios.
+> > > 
+> > > When fsdev binds to a daxdev, it is usually (always?) switching from the
+> > > devdax mode (device.c), which pre-initializes compound folios according
+> > > to its alignment. Fsdev uses fsdev_clear_folio_state() to switch the
+> > > folios into a fsdax-compatible state.
+> > > 
+> > > A side effect of this is that raw mmap doesn't (can't?) work on an fsdev
+> > > dax instance. Accordingly, The fsdev driver does not provide raw mmap -
+> > > devices must be put in 'devdax' mode (drivers/dax/device.c) to get raw
+> > > mmap capability.
+> > > 
+> > > In this commit is just the framework, which remaps pages/folios compatibly
+> > > with fsdax.
+> > > 
+> > > Enabling dax changes:
+> > > 
+> > > - bus.h: add DAXDRV_FSDEV_TYPE driver type
+> > > - bus.c: allow DAXDRV_FSDEV_TYPE drivers to bind to daxdevs
+> > > - dax.h: prototype inode_dax(), which fsdev needs
+> > > 
+> > > Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> > > Suggested-by: Gregory Price <gourry@gourry.net>
+> > > Signed-off-by: John Groves <john@groves.net>
+> > > ---
+> > >  MAINTAINERS          |   8 ++
+> > >  drivers/dax/Makefile |   6 ++
+> > >  drivers/dax/bus.c    |   4 +
+> > >  drivers/dax/bus.h    |   1 +
+> > >  drivers/dax/fsdev.c  | 242 +++++++++++++++++++++++++++++++++++++++++++
+> > >  fs/dax.c             |   1 +
+> > >  include/linux/dax.h  |   5 +
+> > >  7 files changed, 267 insertions(+)
+> > >  create mode 100644 drivers/dax/fsdev.c
+> > >   
 > > 
-> > N_MEMORY_PRIVATE is all about isolating NUMA nodes and then punching
-> > explicit holes in that isolation to do useful things we couldn't do
-> > before without re-implementing entire portions of mm/ in a driver.
-> 
-> Just to clarify: we don't currently have any mechanism to expose, say,
-> SPM/PMEM/whatsoever to the buddy allocator through the dax/kmem driver
-> and *not* have random allocations end up on it, correct?
->
-> Assume we online the memory to ZONE_MOVABLE, still other (fallback)
-> allocations might end up on that memory.
-> 
-
-Correct, when you hotplug memory into a node, it's a free for all.
-Fallbacks are going to happen.
-
-I see you saw below that one of the extensions is removing the nodes
-from the fallback list.  That is part one, but it's insufficient to
-prevent complete leakage (someone might iterate over the nodes-possible
-list and try migrating memory).
-
-> How would we currently handle something like that? (do we have drivers
-> for that? I'd assume that drivers would only migrate some user memory to
-> ZONE_DEVICE memory.)
-> 
-> Assuming we don't have such a mechanism, I assume that part of your
-> proposal would be very interesting: online the memory to a
-> "special"/"restricted" (you call it private) NUMA node, whereby all
-> memory of that NUMA node will only be consumable through
-> mbind() and friends.
-> 
-
-Basically the only isolation mechanism we have today is ZONE_DEVICE.
-
-Either via mbind and friends, or even just the driver itself managing it
-directly via alloc_pages_node() and exposing some userland interface.
-
-You can imagine a network driver providing an ioctl for a shared buffer
-or a driver exposing a mmap'able file descriptor as the trivial case.
-
-> Any other allocations (including automatic page migration etc) would not
-> end up on that memory.
-
-One of the complications of exposing this memory via mbind is that
-mempolicy.c has a lot of migration mechanics, just to name two:
-
-  - migrate on mbind
-  - cpuset rebinds
-
-So for a completely solution you need to support migration if you
-support mempolicy.  But with the callbacks, you can control how/when
-migration occurs.
-
-tl;dr: many of mm/'s services are actually predicated on migration
-support, so you have to manage that somehow.
-
-> 
-> Thinking of some "terribly slow" or "terribly fast" memory that we don't
-> want to involve in automatic memory tiering, being able to just let
-> selected workloads consume that memory sounds very helpful.
-> 
-> 
-> (wondering if there could be some way allocations might get migrated out
-> of the node, for example, during memory offlining etc, which might also
-> not be desirable)
-> 
-
-in the NP_OPS_MIGRATION patch, this gets covered.
-
-I'm not sure the NP_OPS_* pattern is what we actually want, it's just
-what i came up with to make it clear what's being enabled.
-
-Basically without NP_OPS_MIGRATION, this memory is completely
-non-migratable.  The driver managing it therefore needs to control the
-lifetime, and if hotplug is requested - kill anyone using it (which by
-definition should not the kernel) and either release the pages or take
-them so they can be released while hotplug is spinning.
-
-> I am not sure if __GFP_PRIVATE etc is really required for that. But some
-> mechanism to make that work seems extremely helpful.
-> 
-> Because ...
-> 
-> > /* And now I can use mempolicy with my memory */
-> > buf = mmap(...);
-> > mbind(buf, len, mode, private_node, ...);
-> > buf[0] = 0xdeadbeef;  /* Faults onto private node */
-> 
-> ... just being able to consume that memory through mbind() and having
-> guarantees sounds extremely helpful.
-> 
-
-Yes! :]
-
+> > [snip]
+> >   
+> > > +
+> > > +static int fsdev_dax_probe(struct dev_dax *dev_dax)
+> > > +{
+> > > +	struct dax_device *dax_dev = dev_dax->dax_dev;
+> > > +	struct device *dev = &dev_dax->dev;
+> > > +	struct dev_pagemap *pgmap;
+> > > +	u64 data_offset = 0;
+> > > +	struct inode *inode;
+> > > +	struct cdev *cdev;
+> > > +	void *addr;
+> > > +	int rc, i;
+> > > +
+> > > +	if (static_dev_dax(dev_dax))  {
+> > > +		if (dev_dax->nr_range > 1) {
+> > > +			dev_warn(dev, "static pgmap / multi-range device conflict\n");
+> > > +			return -EINVAL;
+> > > +		}
+> > > +
+> > > +		pgmap = dev_dax->pgmap;
+> > > +	} else {
+> > > +		size_t pgmap_size;
+> > > +
+> > > +		if (dev_dax->pgmap) {
+> > > +			dev_warn(dev, "dynamic-dax with pre-populated page map\n");
+> > > +			return -EINVAL;
+> > > +		}
+> > > +
+> > > +		pgmap_size = struct_size(pgmap, ranges, dev_dax->nr_range - 1);
+> > > +		pgmap = devm_kzalloc(dev, pgmap_size,  GFP_KERNEL);
+> > > +		if (!pgmap)
+> > > +			return -ENOMEM;
+> > > +
+> > > +		pgmap->nr_range = dev_dax->nr_range;
+> > > +		dev_dax->pgmap = pgmap;
+> > > +
+> > > +		for (i = 0; i < dev_dax->nr_range; i++) {
+> > > +			struct range *range = &dev_dax->ranges[i].range;
+> > > +
+> > > +			pgmap->ranges[i] = *range;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	for (i = 0; i < dev_dax->nr_range; i++) {
+> > > +		struct range *range = &dev_dax->ranges[i].range;
+> > > +
+> > > +		if (!devm_request_mem_region(dev, range->start,
+> > > +					range_len(range), dev_name(dev))) {
+> > > +			dev_warn(dev, "mapping%d: %#llx-%#llx could not reserve range\n",
+> > > +				 i, range->start, range->end);
+> > > +			return -EBUSY;
+> > > +		}
+> > > +	}  
 > > 
-> >   - Filter allocation requests on __GFP_PRIVATE
-> >     	numa_zone_allowed() excludes them otherwise. 
-> 
-> I think we discussed that in the past, but why can't we find a way that
-> only people requesting __GFP_THISNODE could allocate that memory, for
-> example? I guess we'd have to remove it from all "default NUMA bitmaps"
-> somehow.
->
-
-I experimented with this.  There were two concerns:
-
-1) as you note, removing it from the default bitmaps, which is actually
-   hard.  You can't remove it from the possible-node bitmap, so that
-   just seemed non-tractable.
-
-2) __GFP_THISNODE actually means (among other things) "don't fallback".
-   And, in fact, there are some hotplug-time allocations that occur in
-   SLAB (pglist_data) that target the private node that *must* fallback
-   to successfully allocate for successful kernel operation.
-
-So separating PRIVATE from THISNODE and allowing some use of fallback
-mechanics resolves some problems here.
-
-I think #2 is a solvable problem, but #1 i don't think can be addressed.
-I need to investigate the slab interactions a little more.
-
-> >   - Use standard struct page / folio.  No ZONE_DEVICE, no pgmap,
-> >     no struct page metadata limitations.
-> 
-> Good.
-
-Note: I've actually since explored merging this with pgmap, and
-rebranding it as node-scope pgmap.
-
-In that sense, you could think of this as NODE_DEVICE instead of
-NODE_PRIVATE - but maybe I'm inviting too much baggage :]
-
+> > All of the above code is AFAICT exactly the same as the dev_dax driver.
+> > Isn't there a way to make this common?
 > > 
-> > Re-use of ZONE_DEVICE Hooks
-> > ===
+> > The rest of the common code is simple enough.  
 > 
-> I think all of that might not be required for the simplistic use case I
-> mentioned above (fast/slow memory only to be consumed by selected user
-> space that opts in through mbind() and friends).
+> dev_dax_probe() and fsdev_dax_probe() do indeed have some "same code" - 
+> range validity checking and pgmap setup, from the top of probe through 
+> the for loop above. After that they're different. Also, I just did a scan 
+> and the probe function seems like the only remaining common code between 
+> device.c and fsdev.c.
 > 
-> Or are there other use cases for these callbacks
+> These are separate kmods; that code could certainly be factored out and 
+> shared, but it would need to go somewhere common (maybe bus.c)?
+
+Given I made a similar comment on new version. I'll reply here.
+Could move it to core code, or if you want to keep stuff kmod, it's common
+enough to have helper / library modules.  They are non userselectable
+Kconfig options that are selected by the visible parts that need them.
+Then dependency management ensures the helper gets loaded first.
+
 > 
-
-Many `folio_is_zone_device()` hooks result in the operations being
-a no-op / failing.  We need all those same hooks.
-
-Some hooks I added - such as migration hooks, are combined with the
-zone_device hooks via i helper to demonstrate the pattern is the same
-when the memory is opted into migration.
-
-I do not think all of these hooks are required, I would think of this
-more as an exploration of the whole space, and then we can throw what
-does not have an active use case.
-
-For the compressed ram component I've been designing, the needs are:
-
-- Migration
-- Reclaim
-- Demotion
-- Write Protect (maybe, possibly optional)
-
-But you could argue another user might want the same device to have:
-- Migration
-- Mempolicy
-
-Where they manage things from userland, rather than via reclaim.
-
-The flexibility is kind of the point :]
-
-> [...]
-> > 
-> > 
-> > Flag-gated behavior (NP_OPS_*) controls:
-> > ===
-> > 
-> > We use OPS flags to denote what mm/ services we want to allow on our
-> > private node.   I've plumbed these through so far:
-> > 
-> >   NP_OPS_MIGRATION       - Node supports migration
-> >   NP_OPS_MEMPOLICY       - Node supports mempolicy actions
-> >   NP_OPS_DEMOTION        - Node appears in demotion target lists
-> >   NP_OPS_PROTECT_WRITE   - Node memory is read-only (wrprotect)
-> >   NP_OPS_RECLAIM         - Node supports reclaim
-> >   NP_OPS_NUMA_BALANCING  - Node supports numa balancing
-> >   NP_OPS_COMPACTION      - Node supports compaction
-> >   NP_OPS_LONGTERM_PIN    - Node supports longterm pinning
-> >   NP_OPS_OOM_ELIGIBLE	 - (MIGRATION | DEMOTION), node is reachable
-> >                            as normal system ram storage, so it should
-> > 			   be considered in OOM pressure calculations.
+> So both device.c and fsdev.c would call bus.c:dax_prepare_pgmap() or
+> some such.
 > 
-> I have to think about all that, and whether that would be required as a
-> first step. I'd assume in a simplistic use case mentioned above we might
-> only forbid the memory to be used as a fallback for any oom etc.
-> 
-> Whether reclaim (e.g., swapout) makes sense is a good question.
+> I feel like this might not be worth factoring out, but I'm happy to do it
+> if you and/or the dax team prefer it factored out and shared.
+
+I think I'd like to see what it looks like. Maybe as a series on top.
+But not my area so over to Dax folk ;)
+
+Jonathan
+
+
 > 
 
-I would simply state: "That depends on the memory device"
-
-Which is kind of the point.  The ability to isolate and poke holes in
-that isolation explictly, while using the same mm/ code, creates a new
-design space we haven't had before.
-
----
-
-I think it would be fair to say all of these would not be required for
-an MVP interface, and should require a use case to merge.  But the code
-is here because I wanted to explore just how far it can go.
-
-In fact, I believe I have gotten to the point where I could add:
-
-  NP_OPS_FALLBACK_NODE  - re-add the node to the fallback list
-                          do not require __GFP_PRIVATE for allocation
-
-Which would require all of the other bits to be turned on.
-
-The result of this is essentially a numa node with otherwise normal
-memory, but for which a driver gets callbacks on certain operations
-(migration, free, etc).  That ALSO seems useful.
-
-It's... an interesting result of the whole exploration.
-
-~Gregory
