@@ -1,160 +1,113 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from dog.elm.relay.mailchannels.net (dog.elm.relay.mailchannels.net [23.83.212.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772853EF650
-	for <linux-cxl@vger.kernel.org>; Thu, 19 Mar 2026 16:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773939570; cv=none; b=sugRID9TbvPYAPJ8aq8i6DBt55YuVX58ecfvsUItg7BN3nz55EzTyRQEQqdKXfDGwNj+S3Rbgh2r5McQCfrRD0wRnDXARzH1MSd88l+9dyZaQQMAMHMAhbYCBN+9jk5leDRlQ2XqQf4LVc+ZTN79TdWp5D/3/KNeGLt6iM37S+g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773939570; c=relaxed/simple;
-	bh=EX1gDS9T+zUexso8tM3/2eLcVuviUxcudlyNvVkh9Vc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xc4DmmKSOG4aVzHlmZz6YbNM+A9wSS2fcHVz77pDyzXGdd6zgiFtVy0GxRI2o8/x1+Cs/RiWQPXZuRpoBSrr43ct7JP8DJbQ3c1QQ+1Ibc4a+ETxvRJg8VL4KDzT9bhQ+fHoZFr7pYrqlPuznaZPpU/rOP0sr4bOl0k1cV2cYj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fcBjv3DPwzHnGk1;
-	Fri, 20 Mar 2026 00:58:59 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4BACD40572;
-	Fri, 20 Mar 2026 00:59:23 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 19 Mar
- 2026 16:59:22 +0000
-Date: Thu, 19 Mar 2026 16:59:21 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-CC: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
-	<alison.schofield@intel.com>, <ira.weiny@intel.com>, <gourry@gourry.net>,
-	<dongjoo.seo1@samsung.com>, <anisa.su@samsung.com>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 1/6] cxl: Add Back-Invalidate register definitions and
- structures
-Message-ID: <20260319165921.00003734@huawei.com>
-In-Reply-To: <20260315202741.3264295-2-dave@stgolabs.net>
-References: <20260315202741.3264295-1-dave@stgolabs.net>
-	<20260315202741.3264295-2-dave@stgolabs.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98C8271448
+	for <linux-cxl@vger.kernel.org>; Thu, 19 Mar 2026 18:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773945802; cv=pass; b=eY8gsmWuhkveX2yT7n2JYUtPthF/nFO/aFkZ6C3duIcUmjUhJfkkW73xuslDTk7yviJX96uACFrLdt0XTiapbCGXi3mx0sTczkF0sJ3VbeBpUCO5piwU+J0PlodO00oARdQ9O/Sw8lwBX/KrJEOY3kgS/UNjl1uQPJ9kzuk5CBY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773945802; c=relaxed/simple;
+	bh=eDZNZNoYRCDfE5mJtchdFBT/VNfp0BYvZOu0XRFUHhs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qhqBSg1nKcZ41UcE1txtg7ASGlLwyAJhgncFq+UhJmPYIJhSl3xSTu34Bj3T9Le663VZgCMMG7qOBKqWhlsq28HlLjARpA02AXLshtIjTxrHTYzTzwflIyIb1CeLEaSEgSPgK9ysc8mBJRuAXqaSXJjWxPmR3fo7/iqhUWcb7iw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=p52jZUlV; arc=pass smtp.client-ip=23.83.212.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="p52jZUlV"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 04127223182;
+	Thu, 19 Mar 2026 18:43:14 +0000 (UTC)
+Received: from pdx1-sub0-mail-a227.dreamhost.com (100-115-72-182.trex-nlb.outbound.svc.cluster.local [100.115.72.182])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 96ACB22317B;
+	Thu, 19 Mar 2026 18:43:13 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1773945793;
+	b=6LS2OIH6t2VkYK+I71fKVDkUk5ydhA0/R5d6YFDeyEvi4dZkNxZPDDjCi226BNwsG08YEZ
+	cBpxoQBxG3/zZ8YC6odbCo3T0yNHcgTHoKnQgsqzsO5GW+R1INqHAP6LbecmuagT1zj9Yx
+	DPdIvLjMrSdZAfNqAH5t1rOjrFGE8DAUmSyYpgHR4iUFaYtsQKC5wuxPaPGh2UdYJoS/z/
+	2bfVZX0uTSh/m2qv0OLc6Fe+S/xfF1lfOF2yGRizdwCWfEvAoKN/M1RU/EVZ45AqCvpSa+
+	Uoo6BJoYJaDXcPxUR73/NZmECzuaT/xatb+0o06Nz748HA6ZhnkjaPIgIEgOmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1773945793;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
+	bh=aJ/6xWkZlH6NO7Ff7qmOszSXxiRY52wOFAFTxwsJZYA=;
+	b=nVtl1j36vX3XvDzBYXglHMQLcMM3AVXG9UIwYko3uN8e4Z7Aiv/YARWvZ2wN9ZcUPDoWLf
+	BsYIo9HPnsReRtWs1ZM1LtUKWYuabEndlyGniMJVUHRVRSvtM7oP3C5+/nobwPAJyZDcE1
+	oMMebmC+8WaNRiIeVqK8D/xo3BxscgmRtKvBvDUUBUmc0IeL6XJuxMppj2Sp2nH02cY+J9
+	G2bhvMGb8izKAQTFK33yUa4xpL/KM3qSBIglm+q7S0UPl2NNTQT1lwPzLBLH4ZHKRfC39m
+	ORgBTPCsKDxpAhL79tmpIiWYXLa8TlF8S9F7YrXA7XqxSHDXzNagm6Tc9/qNjQ==
+ARC-Authentication-Results: i=1;
+	rspamd-7f98bb5847-b9j5n;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Desert-Wiry: 6afd8b96696e28c9_1773945793839_1018836678
+X-MC-Loop-Signature: 1773945793839:2150298180
+X-MC-Ingress-Time: 1773945793839
+Received: from pdx1-sub0-mail-a227.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.115.72.182 (trex/7.1.5);
+	Thu, 19 Mar 2026 18:43:13 +0000
+Received: from offworld.lan (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a227.dreamhost.com (Postfix) with ESMTPSA id 4fcF290mDvz34;
+	Thu, 19 Mar 2026 11:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1773945793;
+	bh=aJ/6xWkZlH6NO7Ff7qmOszSXxiRY52wOFAFTxwsJZYA=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=p52jZUlVdfF/PhmnCyV+2TuOaheB+gUsH9J5bpi9NAPgnDkR6Q4q0FGk688vat9yV
+	 c5JOAqFgMw4k90m8M1NXTb+3RfKpd1k86FtQu9EQm7GIXsHrFX27hAFseNkFmLHZdT
+	 sEIpdXgFNsBRADi1GrTtJzce9DgIQoiEicWlbfiSCfCMDQvMfPsBLBaOiijXradBaf
+	 EmgqfzSsGB1zoXSc3O3pQKQAKiDvEAHOC9IaKRo2u0f2U3RVometG54zgILpt5cpZ5
+	 5pw3joscIRufC/t/lsF6MnecwKjx4rboe3u/T++Friws6blStmLZei3DZkzwVubmDT
+	 yu3DALwLYTVoQ==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: mst@redhat.com,
+	jonathan.cameron@huawei.com
+Cc: qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org,
+	dave@stgolabs.net
+Subject: [PATCH v3 -qemu 0/2] hw/cxl: Media Operation Discovery fixlets
+Date: Thu, 19 Mar 2026 11:42:54 -0700
+Message-Id: <20260319184256.3762391-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Content-Transfer-Encoding: 8bit
 
-On Sun, 15 Mar 2026 13:27:36 -0700
-Davidlohr Bueso <dave@stgolabs.net> wrote:
+Hello,
 
-> Add CXL Back-Invalidate (BI) capability IDs, register definitions for
-> the BI Route Table and BI Decoder capability structures, and associated
-> fields. This includes HDM decoder coherency capability and control fields
-> needed to support HDM-DB (device-managed coherency with back-invalidate).
-> 
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> ---
->  drivers/cxl/cxl.h    | 41 +++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxlmem.h |  2 ++
->  include/cxl/cxl.h    |  5 +++++
->  3 files changed, 48 insertions(+)
-> 
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 031846eab02c..efe06d60b364 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
+Changes from v2: indent fix in patch 1. Added reviewed+fixes tags.
+Changes from v1: cleaned up comments in patch 2.
 
->  
->  /* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
->  #define CXL_HDM_DECODER_CAP_OFFSET 0x0
-> @@ -51,6 +53,10 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
->  #define   CXL_HDM_DECODER_INTERLEAVE_14_12 BIT(9)
->  #define   CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY BIT(11)
->  #define   CXL_HDM_DECODER_INTERLEAVE_16_WAY BIT(12)
-> +#define   CXL_HDM_DECODER_SUPPORTED_COHERENCY_MASK GENMASK(22, 21)
+While working on the driver side of this, I tripped on two qemu issues
+around discovery semantics. I think this is the first time these code
+paths are exercised.
 
-Given this definitely wasn't in CXL 2.0 probably want to update the spec
-references. I think that would be neater than adding specific notes
-to say where these are in CXL r4.0
+Davidlohr Bueso (2):
+  hw/cxl: Respect Media Operation max ops discovery semantics
+  hw/cxl: Exclude Discovery from Media Operation Discovery output
 
-I'd define 0 as well.  My favorite case of papering over a spec hole.
-The 'unknown' value ;)  To actually make use of this on devices
-that have that value we'd need a list of IDs :(
+ hw/cxl/cxl-mailbox-utils.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-> +#define     CXL_HDM_DECODER_COHERENCY_DEV 0x1
-> +#define     CXL_HDM_DECODER_COHERENCY_HOST 0x2
-> +#define     CXL_HDM_DECODER_COHERENCY_BOTH 0x3
->  #define CXL_HDM_DECODER_CTRL_OFFSET 0x4
->  #define   CXL_HDM_DECODER_ENABLE BIT(1)
->  #define CXL_HDM_DECODER0_BASE_LOW_OFFSET(i) (0x20 * (i) + 0x10)
-> @@ -65,6 +71,7 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
->  #define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
->  #define   CXL_HDM_DECODER0_CTRL_COMMIT_ERROR BIT(11)
->  #define   CXL_HDM_DECODER0_CTRL_HOSTONLY BIT(12)
-> +#define   CXL_HDM_DECODER0_CTRL_BI BIT(13)
->  #define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
->  #define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
->  #define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
-> @@ -152,6 +159,33 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
->  #define CXL_HEADERLOG_SIZE SZ_512
->  #define CXL_HEADERLOG_SIZE_U32 SZ_512 / sizeof(u32)
->  
-> +/* CXL 3.2 8.2.4.26 CXL BI Route Table Capability Structure */
-
-I think we decided a while back that all new comments should use
-latest public (via click through) available spec which is 4.0 now.
-That being driven by the fact that getting hold of old spec versions
-is not as trivial as it should be.
-
-> +#define CXL_BI_RT_CAPABILITY_LENGTH 0xC
-
-
-> +
->  /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
->  #define CXLDEV_CAP_ARRAY_OFFSET 0x0
->  #define   CXLDEV_CAP_ARRAY_CAP_ID 0
-> @@ -241,6 +275,7 @@ int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport);
->  #define CXL_DECODER_F_LOCK  BIT(4)
->  #define CXL_DECODER_F_ENABLE    BIT(5)
->  #define CXL_DECODER_F_NORMALIZED_ADDRESSING BIT(6)
-> +#define CXL_DECODER_F_BI    BIT(7)
-
-Hmm. The comment above these looks to have grown stale.
-/*
- * cxl_decoder flags that define the type of memory / devices this
- * decoder supports as well as configuration lock status See "CXL 2.0
- * 8.2.5.12.7 CXL HDM Decoder 0 Control Register" for details.
- * Additionally indicate whether decoder settings were autodetected,
- * user customized.
- */
-
-That definitely doesn't cover what is here.  Anyhow, not
-a problem for this patch.
-
-
-
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index fa7269154620..74be940364e1 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -34,10 +34,12 @@ struct cxl_regs {
->  	 * Common set of CXL Component register block base pointers
->  	 * @hdm_decoder: CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure
->  	 * @ras: CXL 2.0 8.2.5.9 CXL RAS Capability Structure
-> +	 * @bi: CXL 3.2 8.2.4.26/27 CXL BI Capability Structure
-Not sure what general view is but I think it's odd to have different spec
-versions used in a single block of comments. Maybe drag them all into
-the modern CXL r4.0 world.
->  	 */
->  	struct_group_tagged(cxl_component_regs, component,
->  		void __iomem *hdm_decoder;
->  		void __iomem *ras;
-> +		void __iomem *bi;
->  	);
-
+-- 
+2.39.5
 
