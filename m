@@ -1,89 +1,93 @@
-Received: from dog.elm.relay.mailchannels.net (dog.elm.relay.mailchannels.net [23.83.212.48])
+Received: from seahorse.cherry.relay.mailchannels.net (seahorse.cherry.relay.mailchannels.net [23.83.223.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98C8271448
-	for <linux-cxl@vger.kernel.org>; Thu, 19 Mar 2026 18:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D825030CD94
+	for <linux-cxl@vger.kernel.org>; Thu, 19 Mar 2026 18:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.161
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773945802; cv=pass; b=eY8gsmWuhkveX2yT7n2JYUtPthF/nFO/aFkZ6C3duIcUmjUhJfkkW73xuslDTk7yviJX96uACFrLdt0XTiapbCGXi3mx0sTczkF0sJ3VbeBpUCO5piwU+J0PlodO00oARdQ9O/Sw8lwBX/KrJEOY3kgS/UNjl1uQPJ9kzuk5CBY=
+	t=1773945803; cv=pass; b=iE0CqBJRsD5JU2Dcb0RgS+hxMMygkQZwXv6a+zBix4k5SPfUHlTQ6BGDJ+smtG5twdAWv9OkYoCje90F7nwgvghufYb+yhwOZReUPTjklLjtj2CrPSEaQBdnToXv6P3o33Gd1TjDD7s+6iKEX/TDRvpQIUt3XNxSP2ZG2LMjLSI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773945802; c=relaxed/simple;
-	bh=eDZNZNoYRCDfE5mJtchdFBT/VNfp0BYvZOu0XRFUHhs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qhqBSg1nKcZ41UcE1txtg7ASGlLwyAJhgncFq+UhJmPYIJhSl3xSTu34Bj3T9Le663VZgCMMG7qOBKqWhlsq28HlLjARpA02AXLshtIjTxrHTYzTzwflIyIb1CeLEaSEgSPgK9ysc8mBJRuAXqaSXJjWxPmR3fo7/iqhUWcb7iw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=p52jZUlV; arc=pass smtp.client-ip=23.83.212.48
+	s=arc-20240116; t=1773945803; c=relaxed/simple;
+	bh=bUqY5pqJmdOrPh2FvhS5gVCBVoe+SkvmRqDS8WXrvfQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Rdd0emO+8yiDxqSMptR1q5wThWUSB5uNYlNhtWSCu9Q/pAdZNLL2YwF1hpexEhxLm8mkYQGuiBQT4v2PdQ3FI6Q3yMk3LAry7DxEBt5bFpnEhy7bPOs6KZ5v2f+VU5099xvYA0Go3wn9ULvFXp02Qa0KgFT+UYAaywPjNe3Pc6g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=ahu6Sxt6; arc=pass smtp.client-ip=23.83.223.161
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="p52jZUlV"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="ahu6Sxt6"
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 04127223182;
-	Thu, 19 Mar 2026 18:43:14 +0000 (UTC)
-Received: from pdx1-sub0-mail-a227.dreamhost.com (100-115-72-182.trex-nlb.outbound.svc.cluster.local [100.115.72.182])
+	by relay.mailchannels.net (Postfix) with ESMTP id 0C868823B0C;
+	Thu, 19 Mar 2026 18:43:15 +0000 (UTC)
+Received: from pdx1-sub0-mail-a227.dreamhost.com (100-115-116-28.trex-nlb.outbound.svc.cluster.local [100.115.116.28])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 96ACB22317B;
-	Thu, 19 Mar 2026 18:43:13 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 799B6823B68;
+	Thu, 19 Mar 2026 18:43:14 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1773945793;
-	b=6LS2OIH6t2VkYK+I71fKVDkUk5ydhA0/R5d6YFDeyEvi4dZkNxZPDDjCi226BNwsG08YEZ
-	cBpxoQBxG3/zZ8YC6odbCo3T0yNHcgTHoKnQgsqzsO5GW+R1INqHAP6LbecmuagT1zj9Yx
-	DPdIvLjMrSdZAfNqAH5t1rOjrFGE8DAUmSyYpgHR4iUFaYtsQKC5wuxPaPGh2UdYJoS/z/
-	2bfVZX0uTSh/m2qv0OLc6Fe+S/xfF1lfOF2yGRizdwCWfEvAoKN/M1RU/EVZ45AqCvpSa+
-	Uoo6BJoYJaDXcPxUR73/NZmECzuaT/xatb+0o06Nz748HA6ZhnkjaPIgIEgOmA==
+	t=1773945794;
+	b=FANOe5QurSWHW0Sl2domycUXXa1lVPJuXzWFIHBlHzkimutBqtibnI2bWkDe0ayt4xWpTJ
+	+faDhHwxb52nlTfXlkCc2/Luef/BorMzVEmo04OaKlyp/azeknc6j3/O9rbIoBC2jsWwLv
+	XUEE2tty9/JjyInWQ6Jfz8TxSCfaYPdudFDG4c5bZW9zbYy548KF5t59uZUuBLPAH5LKhG
+	jEMLxJsu8XAjw6eX3k7U93n848f963/hK2kIxRtFYzlCl7CbiQvvs2HkDrJ/+Uh4NX5wRU
+	/V/ZmrEv0uDBZRd//Y7C1ClZqsBJSCHb8i0egC++2xwcYpdIt4ZCC8a+81fazw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-	s=arc-2022; t=1773945793;
+	s=arc-2022; t=1773945794;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
-	bh=aJ/6xWkZlH6NO7Ff7qmOszSXxiRY52wOFAFTxwsJZYA=;
-	b=nVtl1j36vX3XvDzBYXglHMQLcMM3AVXG9UIwYko3uN8e4Z7Aiv/YARWvZ2wN9ZcUPDoWLf
-	BsYIo9HPnsReRtWs1ZM1LtUKWYuabEndlyGniMJVUHRVRSvtM7oP3C5+/nobwPAJyZDcE1
-	oMMebmC+8WaNRiIeVqK8D/xo3BxscgmRtKvBvDUUBUmc0IeL6XJuxMppj2Sp2nH02cY+J9
-	G2bhvMGb8izKAQTFK33yUa4xpL/KM3qSBIglm+q7S0UPl2NNTQT1lwPzLBLH4ZHKRfC39m
-	ORgBTPCsKDxpAhL79tmpIiWYXLa8TlF8S9F7YrXA7XqxSHDXzNagm6Tc9/qNjQ==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=PoI4BK3hvU2nKIds7DnxJnNUvQd2NTtab+MbLNuAEt8=;
+	b=N2u1xxeaauXu3Ki1wM4GLdXEiSK4e3iRaNYErPXWu6I6l0Yv32YBACjamOVUrmePuSVinJ
+	l4oLOlerldIr/exU3gafo5oPixW7UwYfEI8XScFILI/nD5xwj4adXw2oajoRSiX1vtJ4JL
+	f31wMgWKfqQw4J4bUXkJ9uH315BHdzSULargWgoz3DFKQrnI7ezGJ0jppiH380aRAqbGdE
+	+jDF+6kGA8t7965lSIbpzbA2iJcyGzEeFKTKLHyMHhwV5FLbVFap1IyhCJL3Qo63RHsnpP
+	L62fh32M7kFZJwlqhZlzzCScwLojk24F+qBTMMR5yBZpShtXg7hy69ZRFG1/8A==
 ARC-Authentication-Results: i=1;
-	rspamd-7f98bb5847-b9j5n;
+	rspamd-7f98bb5847-7xrmz;
 	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Desert-Wiry: 6afd8b96696e28c9_1773945793839_1018836678
-X-MC-Loop-Signature: 1773945793839:2150298180
-X-MC-Ingress-Time: 1773945793839
+X-Tasty-Continue: 207cc2b574cbcc62_1773945794938_171937942
+X-MC-Loop-Signature: 1773945794938:617296039
+X-MC-Ingress-Time: 1773945794937
 Received: from pdx1-sub0-mail-a227.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.115.72.182 (trex/7.1.5);
-	Thu, 19 Mar 2026 18:43:13 +0000
+	by 100.115.116.28 (trex/7.1.5);
+	Thu, 19 Mar 2026 18:43:14 +0000
 Received: from offworld.lan (unknown [76.167.199.67])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a227.dreamhost.com (Postfix) with ESMTPSA id 4fcF290mDvz34;
-	Thu, 19 Mar 2026 11:43:13 -0700 (PDT)
+	by pdx1-sub0-mail-a227.dreamhost.com (Postfix) with ESMTPSA id 4fcF2B0K0Mz2P;
+	Thu, 19 Mar 2026 11:43:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1773945793;
-	bh=aJ/6xWkZlH6NO7Ff7qmOszSXxiRY52wOFAFTxwsJZYA=;
+	s=dreamhost; t=1773945794;
+	bh=PoI4BK3hvU2nKIds7DnxJnNUvQd2NTtab+MbLNuAEt8=;
 	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=p52jZUlVdfF/PhmnCyV+2TuOaheB+gUsH9J5bpi9NAPgnDkR6Q4q0FGk688vat9yV
-	 c5JOAqFgMw4k90m8M1NXTb+3RfKpd1k86FtQu9EQm7GIXsHrFX27hAFseNkFmLHZdT
-	 sEIpdXgFNsBRADi1GrTtJzce9DgIQoiEicWlbfiSCfCMDQvMfPsBLBaOiijXradBaf
-	 EmgqfzSsGB1zoXSc3O3pQKQAKiDvEAHOC9IaKRo2u0f2U3RVometG54zgILpt5cpZ5
-	 5pw3joscIRufC/t/lsF6MnecwKjx4rboe3u/T++Friws6blStmLZei3DZkzwVubmDT
-	 yu3DALwLYTVoQ==
+	b=ahu6Sxt6X+am35BnljL0eFLcwF1K+MK9Q8DRI0Y08gTvEsERDYKW+jq6qJR3UqHTr
+	 YO+uMBWT+hKAhAF5CxoLk/DC3GCRdscNMXTF8Wf2iP6q+2rPwio3/aRPe/eG9HMbnB
+	 n4JAp3k1+kPehvEwKJnlHMgQzv+vgTcgiZ9wNIKBKQjO4vrSrZgoNswcy7Nxejlxna
+	 g9jRueistD7knMBA8Q+dhFHPoikS2KVHWmcdNw9Pu1VJQfgvE6OPv3RfvJXRWJcCJt
+	 szTzkQmfZGiH+io8Ez5fnS+IycLBDZ7/DODqk4eDMGs6rwM4H5JndL/BjH3K051rp3
+	 pVy28lEj7wSYA==
 From: Davidlohr Bueso <dave@stgolabs.net>
 To: mst@redhat.com,
 	jonathan.cameron@huawei.com
 Cc: qemu-devel@nongnu.org,
 	linux-cxl@vger.kernel.org,
 	dave@stgolabs.net
-Subject: [PATCH v3 -qemu 0/2] hw/cxl: Media Operation Discovery fixlets
-Date: Thu, 19 Mar 2026 11:42:54 -0700
-Message-Id: <20260319184256.3762391-1-dave@stgolabs.net>
+Subject: [PATCH 2/2] hw/cxl: Exclude Discovery from Media Operation Discovery output
+Date: Thu, 19 Mar 2026 11:42:56 -0700
+Message-Id: <20260319184256.3762391-3-dave@stgolabs.net>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20260319184256.3762391-1-dave@stgolabs.net>
+References: <20260319184256.3762391-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -92,22 +96,48 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+Per CXL 4.0 Table 8-331, the Discovery operation "returns a list of
+all Media Operations that the device supports, with the exception of
+the Discovery operation (Class=0, Subclass=0)."
 
-Changes from v2: indent fix in patch 1. Added reviewed+fixes tags.
-Changes from v1: cleaned up comments in patch 2.
+Filter out Discovery entries when building the output list and adjust
+total_supported_operations accordingly.
 
-While working on the driver side of this, I tripped on two qemu issues
-around discovery semantics. I think this is the first time these code
-paths are exercised.
+Fixes: 77a8e9fe0ecb ("hw/cxl/cxl-mailbox-utils: Add support for Media operations discovery commands cxl r3.2 (8.2.10.9.5.3)")
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ hw/cxl/cxl-mailbox-utils.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Davidlohr Bueso (2):
-  hw/cxl: Respect Media Operation max ops discovery semantics
-  hw/cxl: Exclude Discovery from Media Operation Discovery output
-
- hw/cxl/cxl-mailbox-utils.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
-
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index c628f775ac48..9a5caf62417a 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -2593,7 +2593,7 @@ static CXLRetCode media_operations_discovery(uint8_t *payload_in,
+     } QEMU_PACKED *media_op_in_disc_pl = (void *)payload_in;
+     struct media_op_discovery_out_pl *media_out_pl =
+         (struct media_op_discovery_out_pl *)payload_out;
+-    int total = ARRAY_SIZE(media_op_matrix);
++    int total = ARRAY_SIZE(media_op_matrix) - 1; /* exclude Discovery */
+     int num_ops, start_index, i;
+     int count = 0;
+ 
+@@ -2619,10 +2619,12 @@ static CXLRetCode media_operations_discovery(uint8_t *payload_in,
+ 
+     num_ops = MIN(num_ops, total - start_index);
+     for (i = 0; i < num_ops; i++) {
++        int idx = start_index + i + 1; /* skip Discovery (first entry) */
++
+         media_out_pl->entry[count].media_op_class =
+-                media_op_matrix[start_index + i].media_op_class;
++                media_op_matrix[idx].media_op_class;
+         media_out_pl->entry[count].media_op_subclass =
+-                media_op_matrix[start_index + i].media_op_subclass;
++                media_op_matrix[idx].media_op_subclass;
+         count++;
+     }
+ 
 -- 
 2.39.5
 
