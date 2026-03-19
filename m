@@ -1,260 +1,308 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EAD230B502;
-	Thu, 19 Mar 2026 14:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773929579; cv=pass; b=OQpqvtqid2rYcNqkVym1guOWbT3I7VhZRffTzz/NaS7QknuJPuTPFxxpVlqf/uWE67oc+kcEDPVZ+1lyqFXyrHOrjGVoNUgiV7UigbnyuPVSA+BtayE/wQmZfbeWEE60G8Z/gJ3k4frGTbz62IgYN+bYCbHL3OQccWPLOTSPnWc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773929579; c=relaxed/simple;
-	bh=56w20MZUIlAyE115A6+FVQV8oAXDOglnPckBdBxKr+I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NirSiJRqmp3IlX98DCQkkQUlgBmvN6kMbwkvgcd4uLHhfqlidtWGOC52QGizit3YRRG8BvLfvduTK0vYickGe4sVpMhUPE8ZULkNpk/GFIY49tOEw1ZRi8vZwBfhzPa7M2SU2e/VC8q6hYX0H49aux8tymy1kyr9X+602wACnKw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=aOnsuH3a; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="aOnsuH3a"
-ARC-Seal: i=1; a=rsa-sha256; t=1773929560; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=dmYFhWyc5qcOfgldHxBWAzz8Tn3wFwjGFdudDiS2rJaCODQcD5N7igI2lyqvmPq3lSmgEaVB+qz0baPNSr4CWev+8GKqXB2fLMluYdYkjN2Y3rhdCgD7D8NoOz6fdIYXL6t70rVM82A9cAJ3rlHwQlHhF0fVswF7vLnxGs+RHss=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1773929560; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=zfAMRlo2orfAVJO9MeMQPgE0r+KKNuOMF+3rhLUrZsY=; 
-	b=PHPKdyoL0xNoGBC4pJW7fPj8e4tmNq3h1JsnKeeXgImLtxDkZ62dIZ8Jc8GQLbEPrfAvxkqz0UZRDWlsuvVDFysmk8fhT9od5NY/A83POF1/eI2PBJa42lZ1ATvXWdhgw9o+LErXOX7FxtjctzF0BAUKZiTteUC1GXNtq+0CpzQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773929560;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Feedback-ID:Reply-To;
-	bh=zfAMRlo2orfAVJO9MeMQPgE0r+KKNuOMF+3rhLUrZsY=;
-	b=aOnsuH3adMbGiLNnLaG0QspWraSBusdfpFEj57lj7RYOH5WrgEM0KBwNuaAAJTsI
-	0Epqya1CgIb3QBgU2p0iGqGaC7IiMlYexvRx3+6uArck88bgYPZKVvtwiod8Sg8mKlp
-	ME/opcF+yyMQ2ZMzIRdK7sWyplpCC+g4dL2GZJjM=
-Received: by mx.zohomail.com with SMTPS id 1773929557163149.00069194712887;
-	Thu, 19 Mar 2026 07:12:37 -0700 (PDT)
-From: Li Ming <ming.li@zohomail.com>
-Date: Thu, 19 Mar 2026 22:12:09 +0800
-Subject: [PATCH] cxl/region: Hold memdev lock during region poison
- injection/clear
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B9F37418B;
+	Thu, 19 Mar 2026 14:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773930560; cv=none; b=eADbLgRAZj9TxRhhTVnD864/HKIY+SsVXiDmdjj5IUHIHTptyl1YC2eKxdhmw3WEj0OBgUIKjOx8H+FhHTDiQOwiBf7ISte0nBcD4x0pNGpAmkH/45PJ5IAR6WRb4995X2BHwDjyuQaeyR1wurvOvlrPBu8idqIaeNU/paymVug=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773930560; c=relaxed/simple;
+	bh=HsUflFa/KdBTD4m+DVDNlymj5Z233GZp9biJt1RyHT0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qNUyDXT4oEfOdDh8llsxirHfseOi35DS/FG7J9+KBRmNBfMDqdqlFZ4uyfqmlLGTOpiEbte5aSQRHVDLrMgRAWegnOm/oJC9yoPeJn0pix+42y9qrIw7m1TKnHrgBmUL2XmxGwoscviUaIBmlFjn8BnzptxNLJ1z6Nz158jz65g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.150])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fc7Nd2wpZzHnGgg;
+	Thu, 19 Mar 2026 22:28:49 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0BBDE4056E;
+	Thu, 19 Mar 2026 22:29:13 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 19 Mar
+ 2026 14:29:11 +0000
+Date: Thu, 19 Mar 2026 14:29:10 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Yazen Ghannam <yazen.ghannam@amd.com>, "Dave
+ Jiang" <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, "Matthew
+ Wilcox" <willy@infradead.org>, Jan Kara <jack@suse.cz>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek
+	<pavel@kernel.org>, Li Ming <ming.li@zohomail.com>, Jeff Johnson
+	<jeff.johnson@oss.qualcomm.com>, Ying Huang <huang.ying.caritas@gmail.com>,
+	Yao Xingtao <yaoxt.fnst@fujitsu.com>, "Peter Zijlstra"
+	<peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nathan Fontenot <nathan.fontenot@amd.com>, Terry Bowman
+	<terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>, Benjamin Cheatham
+	<benjamin.cheatham@amd.com>, Zhijian Li <lizhijian@fujitsu.com>, Borislav
+ Petkov <bp@alien8.de>, Tomasz Wolski <tomasz.wolski@fujitsu.com>
+Subject: Re: [PATCH v7 6/7] dax/hmem, cxl: Defer and resolve Soft Reserved
+ ownership
+Message-ID: <20260319142910.0000113d@huawei.com>
+In-Reply-To: <20260319011500.241426-7-Smita.KoralahalliChannabasappa@amd.com>
+References: <20260319011500.241426-1-Smita.KoralahalliChannabasappa@amd.com>
+	<20260319011500.241426-7-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260319-hold_memdev_lock_for_region_poison_inject-clear-v1-1-05243c5a9572@zohomail.com>
-X-B4-Tracking: v=1; b=H4sIADgEvGkC/x2NQQqDMBBFryKzbiCmEmyvUspgk1GnjRmZiBTEu
- zd09XiL9/8BhZSpwL05QGnnwpKrtJcGwjzkiQzH6uCs8/ba3swsKeJCS6Qdk4QPjqKoNNUOV+F
- SwflNYTMh0aCme/XW2dh33juoq6vSyN//4+N5nj+1lLkwgQAAAA==
-X-Change-ID: 20260319-hold_memdev_lock_for_region_poison_inject-clear-4b8020d84662
-To: Davidlohr Bueso <dave@stgolabs.net>, 
- Jonathan Cameron <jonathan.cameron@huawei.com>, 
- Dave Jiang <dave.jiang@intel.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Li Ming <ming.li@zohomail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773929554; l=6216;
- i=ming.li@zohomail.com; s=20260210; h=from:subject:message-id;
- bh=56w20MZUIlAyE115A6+FVQV8oAXDOglnPckBdBxKr+I=;
- b=x/mJr2DSFR0HV1IYnOiJEf1uc899pgNyS77V8selcSsDP62dCdhcYwdE6sAEbAORce9ibZpCH
- 2azwCkbOPdBDsREXEvTHGkqBd3BEpTj25AL27c6Xxf2Gg5nLd4HirYt
-X-Developer-Key: i=ming.li@zohomail.com; a=ed25519;
- pk=JfhrdHjyYJMXt47Hy8d/fsqZuhGPD4Z3whV5lTfVvhE=
-Feedback-ID: rr08011228b269b2e051c438c6cbd7d0070000c481ce6234e6e5331527837bf18abdf91514c98ab01321ae8951:zu08011227efc9cd2edb00a2634e267d9c0000d259fc34736778a49d5d9fe8822dab3d0d4b85ff104873704f:rf0801122d0c2089fbe8d700521a092832000023daafa5d8580e33d6bae026040f8d0ee705397b280325e0d7f12c099184af:ZohoMail
-X-ZohoMailClient: External
+X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-cxl_dpa_to_region() has expectations that cxlmd->endpoint remains valid
-for the duration of the call. When userspace performs poison injection
-or clearing on a region via debugfs, holding cxl_rwsem.region and
-cxl_rwsem.dpa alone is insufficient, these locks do not prevent the
-retrieved CXL memdev from being destroyed, nor do they protect against
-concurrent driver detachment. Therefore, hold CXL memdev lock in the
-debugfs callbacks to ensure the cxlmd->dev.driver remains stable for the
-entire execution of the callback functions.
+On Thu, 19 Mar 2026 01:14:59 +0000
+Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com> wrote:
 
-To keep lock sequence(cxlmd.dev -> cxl_rwsem.region -> cxl_rwsem.dpa)
-for avoiding deadlock. the interfaces have to find out the correct CXL
-memdev at first, holding lock in the sequence then checking if the DPA
-data has been changed before holding locks.
+> The current probe time ownership check for Soft Reserved memory based
+> solely on CXL window intersection is insufficient. dax_hmem probing is not
+> always guaranteed to run after CXL enumeration and region assembly, which
+> can lead to incorrect ownership decisions before the CXL stack has
+> finished publishing windows and assembling committed regions.
+> 
+> Introduce deferred ownership handling for Soft Reserved ranges that
+> intersect CXL windows. When such a range is encountered during the
+> initial dax_hmem probe, schedule deferred work to wait for the CXL stack
+> to complete enumeration and region assembly before deciding ownership.
+> 
+> Once the deferred work runs, evaluate each Soft Reserved range
+> individually: if a CXL region fully contains the range, skip it and let
+> dax_cxl bind. Otherwise, register it with dax_hmem. This per-range
+> ownership model avoids the need for CXL region teardown and
+> alloc_dax_region() resource exclusion prevents double claiming.
+> 
+> Introduce a boolean flag dax_hmem_initial_probe to live inside device.c
+> so it survives module reload. Ensure dax_cxl defers driver registration
+> until dax_hmem has completed ownership resolution. dax_cxl calls
+> dax_hmem_flush_work() before cxl_driver_register(), which both waits for
+> the deferred work to complete and creates a module symbol dependency that
+> forces dax_hmem.ko to load before dax_cxl.
+> 
+> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Hi Smita,
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
- drivers/cxl/core/region.c | 112 ++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 88 insertions(+), 24 deletions(-)
+I think this is very likely to be what is causing the bug Alison
+saw in cxl_test.
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index f24b7e754727..1a509acc52a3 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -4101,12 +4101,70 @@ static int validate_region_offset(struct cxl_region *cxlr, u64 offset)
- 	return 0;
- }
- 
-+static int __cxl_region_poison_lookup(struct cxl_region *cxlr, u64 offset,
-+				      struct dpa_result *res)
-+{
-+	int rc;
-+
-+	*res = (struct dpa_result){ .dpa = ULLONG_MAX, .cxlmd = NULL };
-+
-+	if (validate_region_offset(cxlr, offset))
-+		return -EINVAL;
-+
-+	offset -= cxlr->params.cache_size;
-+	rc = region_offset_to_dpa_result(cxlr, offset, res);
-+	if (rc || !res->cxlmd || res->dpa == ULLONG_MAX) {
-+		dev_dbg(&cxlr->dev,
-+			"Failed to resolve DPA for region offset %#llx rc %d\n",
-+			offset, rc);
-+
-+		return rc ? rc : -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cxl_region_poison_lookup(struct cxl_region *cxlr, u64 offset,
-+				    struct dpa_result *res)
-+{
-+	int rc;
-+
-+	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
-+		return rc;
-+
-+	ACQUIRE(rwsem_read_intr, dpa_rwsem)(&cxl_rwsem.dpa);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
-+		return rc;
-+
-+	rc = __cxl_region_poison_lookup(cxlr, offset, res);
-+	if (rc)
-+		return rc;
-+
-+	/*
-+	 * Hold the device reference in case
-+	 * the device is destroyed after that.
-+	 */
-+	get_device(&res->cxlmd->dev);
-+	return 0;
-+}
-+
- static int cxl_region_debugfs_poison_inject(void *data, u64 offset)
- {
--	struct dpa_result result = { .dpa = ULLONG_MAX, .cxlmd = NULL };
- 	struct cxl_region *cxlr = data;
-+	struct dpa_result res1, res2;
- 	int rc;
- 
-+	/* To retrieve the correct memdev */
-+	rc = cxl_region_poison_lookup(cxlr, offset, &res1);
-+	if (rc)
-+		return rc;
-+
-+	struct device *dev __free(put_device) = &res1.cxlmd->dev;
-+	ACQUIRE(device_intr, devlock)(dev);
-+	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
-+		return rc;
-+
- 	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
- 	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
- 		return rc;
-@@ -4115,20 +4173,18 @@ static int cxl_region_debugfs_poison_inject(void *data, u64 offset)
- 	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
- 		return rc;
- 
--	if (validate_region_offset(cxlr, offset))
--		return -EINVAL;
--
--	offset -= cxlr->params.cache_size;
--	rc = region_offset_to_dpa_result(cxlr, offset, &result);
--	if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
-+	/*
-+	 * Retrieve memdev and DPA data again in case that the data
-+	 * has been changed before holding locks.
-+	 */
-+	rc = __cxl_region_poison_lookup(cxlr, offset, &res2);
-+	if (rc || res2.cxlmd != res1.cxlmd || res2.dpa != res1.dpa) {
- 		dev_dbg(&cxlr->dev,
--			"Failed to resolve DPA for region offset %#llx rc %d\n",
--			offset, rc);
--
--		return rc ? rc : -EINVAL;
-+			"Error injection raced region reconfiguration: %d", rc);
-+		return -ENXIO;
- 	}
- 
--	return cxl_inject_poison_locked(result.cxlmd, result.dpa);
-+	return cxl_inject_poison_locked(res2.cxlmd, res2.dpa);
- }
- 
- DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_inject_fops, NULL,
-@@ -4136,10 +4192,20 @@ DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_inject_fops, NULL,
- 
- static int cxl_region_debugfs_poison_clear(void *data, u64 offset)
- {
--	struct dpa_result result = { .dpa = ULLONG_MAX, .cxlmd = NULL };
- 	struct cxl_region *cxlr = data;
-+	struct dpa_result res1, res2;
- 	int rc;
- 
-+	/* To retrieve the correct memdev */
-+	rc = cxl_region_poison_lookup(cxlr, offset, &res1);
-+	if (rc)
-+		return rc;
-+
-+	struct device *dev __free(put_device) = &res1.cxlmd->dev;
-+	ACQUIRE(device_intr, devlock)(dev);
-+	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
-+		return rc;
-+
- 	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
- 	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
- 		return rc;
-@@ -4148,20 +4214,18 @@ static int cxl_region_debugfs_poison_clear(void *data, u64 offset)
- 	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
- 		return rc;
- 
--	if (validate_region_offset(cxlr, offset))
--		return -EINVAL;
--
--	offset -= cxlr->params.cache_size;
--	rc = region_offset_to_dpa_result(cxlr, offset, &result);
--	if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
-+	/*
-+	 * Retrieve memdev and DPA data again in case that the data
-+	 * has been changed before holding locks.
-+	 */
-+	rc = __cxl_region_poison_lookup(cxlr, offset, &res2);
-+	if (rc || res2.cxlmd != res1.cxlmd || res2.dpa != res1.dpa) {
- 		dev_dbg(&cxlr->dev,
--			"Failed to resolve DPA for region offset %#llx rc %d\n",
--			offset, rc);
--
--		return rc ? rc : -EINVAL;
-+			"Error clearing raced region reconfiguration: %d", rc);
-+		return -ENXIO;
- 	}
- 
--	return cxl_clear_poison_locked(result.cxlmd, result.dpa);
-+	return cxl_clear_poison_locked(res2.cxlmd, res2.dpa);
- }
- 
- DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
+It looks to be possible to flush work before the work structure has
+been configured.  Even though it's not on a work queue and there is
+nothing to do, there are early sanity checks that fail giving the warning
+Alison reported.
 
----
-base-commit: d5f9bfc37906bbb737790af11f1537593f8778a5
-change-id: 20260319-hold_memdev_lock_for_region_poison_inject-clear-4b8020d84662
+A couple of ways to fix that inline.  I'd be tempted to both initialize
+the function statically and gate against flushing if the whole thing isn't
+set up yet.
 
-Best regards,
--- 
-Li Ming <ming.li@zohomail.com>
+Jonathan
+
+> ---
+>  drivers/dax/bus.h         |  7 +++++
+>  drivers/dax/cxl.c         |  1 +
+>  drivers/dax/hmem/device.c |  3 ++
+>  drivers/dax/hmem/hmem.c   | 66 +++++++++++++++++++++++++++++++++++++--
+>  4 files changed, 75 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dax/bus.h b/drivers/dax/bus.h
+> index cbbf64443098..ebbfe2d6da14 100644
+> --- a/drivers/dax/bus.h
+> +++ b/drivers/dax/bus.h
+> @@ -49,6 +49,13 @@ void dax_driver_unregister(struct dax_device_driver *dax_drv);
+>  void kill_dev_dax(struct dev_dax *dev_dax);
+>  bool static_dev_dax(struct dev_dax *dev_dax);
+>  
+> +#if IS_ENABLED(CONFIG_DEV_DAX_HMEM)
+> +extern bool dax_hmem_initial_probe;
+> +void dax_hmem_flush_work(void);
+> +#else
+> +static inline void dax_hmem_flush_work(void) { }
+> +#endif
+> +
+>  #define MODULE_ALIAS_DAX_DEVICE(type) \
+>  	MODULE_ALIAS("dax:t" __stringify(type) "*")
+>  #define DAX_DEVICE_MODALIAS_FMT "dax:t%d"
+> diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
+> index a2136adfa186..3ab39b77843d 100644
+> --- a/drivers/dax/cxl.c
+> +++ b/drivers/dax/cxl.c
+> @@ -44,6 +44,7 @@ static struct cxl_driver cxl_dax_region_driver = {
+>  
+>  static void cxl_dax_region_driver_register(struct work_struct *work)
+>  {
+> +	dax_hmem_flush_work();
+>  	cxl_driver_register(&cxl_dax_region_driver);
+>  }
+>  
+> diff --git a/drivers/dax/hmem/device.c b/drivers/dax/hmem/device.c
+> index 56e3cbd181b5..991a4bf7d969 100644
+> --- a/drivers/dax/hmem/device.c
+> +++ b/drivers/dax/hmem/device.c
+> @@ -8,6 +8,9 @@
+>  static bool nohmem;
+>  module_param_named(disable, nohmem, bool, 0444);
+>  
+> +bool dax_hmem_initial_probe;
+> +EXPORT_SYMBOL_GPL(dax_hmem_initial_probe);
+> +
+>  static bool platform_initialized;
+>  static DEFINE_MUTEX(hmem_resource_lock);
+>  static struct resource hmem_active = {
+> diff --git a/drivers/dax/hmem/hmem.c b/drivers/dax/hmem/hmem.c
+> index 1e3424358490..8c574123bd3b 100644
+> --- a/drivers/dax/hmem/hmem.c
+> +++ b/drivers/dax/hmem/hmem.c
+> @@ -3,6 +3,7 @@
+>  #include <linux/memregion.h>
+>  #include <linux/module.h>
+>  #include <linux/dax.h>
+> +#include <cxl/cxl.h>
+>  #include "../bus.h"
+>  
+>  static bool region_idle;
+> @@ -58,6 +59,19 @@ static void release_hmem(void *pdev)
+>  	platform_device_unregister(pdev);
+>  }
+>  
+> +struct dax_defer_work {
+> +	struct platform_device *pdev;
+> +	struct work_struct work;
+> +};
+> +
+> +static struct dax_defer_work dax_hmem_work;
+
+static struct dax_defer_work dax_hmem_work = {
+	.work = __WORK_INITIALIZER(&dax_hmem_work.work,
+				   process_defer_work),
+};
+or something similar.
+
+
+> +
+> +void dax_hmem_flush_work(void)
+> +{
+> +	flush_work(&dax_hmem_work.work);
+> +}
+> +EXPORT_SYMBOL_GPL(dax_hmem_flush_work);
+> +
+>  static int hmem_register_device(struct device *host, int target_nid,
+>  				const struct resource *res)
+>  {
+> @@ -69,8 +83,11 @@ static int hmem_register_device(struct device *host, int target_nid,
+>  	if (IS_ENABLED(CONFIG_DEV_DAX_CXL) &&
+>  	    region_intersects(res->start, resource_size(res), IORESOURCE_MEM,
+>  			      IORES_DESC_CXL) != REGION_DISJOINT) {
+> -		dev_dbg(host, "deferring range to CXL: %pr\n", res);
+> -		return 0;
+> +		if (!dax_hmem_initial_probe) {
+> +			dev_dbg(host, "deferring range to CXL: %pr\n", res);
+> +			queue_work(system_long_wq, &dax_hmem_work.work);
+> +			return 0;
+> +		}
+>  	}
+>  
+>  	rc = region_intersects_soft_reserve(res->start, resource_size(res));
+> @@ -123,8 +140,48 @@ static int hmem_register_device(struct device *host, int target_nid,
+>  	return rc;
+>  }
+>  
+> +static int hmem_register_cxl_device(struct device *host, int target_nid,
+> +				    const struct resource *res)
+> +{
+> +	if (region_intersects(res->start, resource_size(res), IORESOURCE_MEM,
+> +			      IORES_DESC_CXL) == REGION_DISJOINT)
+> +		return 0;
+> +
+> +	if (cxl_region_contains_resource((struct resource *)res)) {
+> +		dev_dbg(host, "CXL claims resource, dropping: %pr\n", res);
+> +		return 0;
+> +	}
+> +
+> +	dev_dbg(host, "CXL did not claim resource, registering: %pr\n", res);
+> +	return hmem_register_device(host, target_nid, res);
+> +}
+> +
+> +static void process_defer_work(struct work_struct *w)
+> +{
+> +	struct dax_defer_work *work = container_of(w, typeof(*work), work);
+> +	struct platform_device *pdev = work->pdev;
+If you do the suggested __INITIALIZE_WORK() then I'd add
+a paranoid
+
+	if (!work->pdev)
+		return;
+We don't actually queue the work before pdev is set, but that might
+be obvious once we spilt up assigning the function and the data
+it uses.
+
+> +
+> +	wait_for_device_probe();
+> +
+> +	guard(device)(&pdev->dev);
+> +	if (!pdev->dev.driver)
+> +		return;
+> +
+> +	dax_hmem_initial_probe = true;
+> +	walk_hmem_resources(&pdev->dev, hmem_register_cxl_device);
+> +}
+> +
+>  static int dax_hmem_platform_probe(struct platform_device *pdev)
+>  {
+> +	if (work_pending(&dax_hmem_work.work))
+> +		return -EBUSY;
+> +
+> +	if (!dax_hmem_work.pdev) {
+> +		get_device(&pdev->dev);
+> +		dax_hmem_work.pdev = pdev;
+
+Using the pdev rather than dev breaks the pattern of doing a get_device()
+and assigning in one line. This is a bit ugly.
+
+		dax_hmem_work.pdev = to_pci_dev(get_device(&pdev->dev));
+
+but perhaps makes the association tighter than current code.
+
+> +		INIT_WORK(&dax_hmem_work.work, process_defer_work);
+
+See above. I think assigning the work function should be static
+which should resolve the issue Alison was seeing as then it should
+be fine to call flush_work() on the item that isn't on a work queue
+yet but is initialized.
+
+> +	}
+> +
+>  	return walk_hmem_resources(&pdev->dev, hmem_register_device);
+>  }
+>  
+> @@ -162,6 +219,11 @@ static __init int dax_hmem_init(void)
+>  
+>  static __exit void dax_hmem_exit(void)
+>  {
+> +	flush_work(&dax_hmem_work.work);
+
+I think this needs to be under the if (dax_hmem_work.pdev) 
+Not sure there is any guarantee dax_hmem_platform_probe() has run
+before we get here otherwise.  Alternative is to assign
+the work function statically.
+
+
+
+> +
+> +	if (dax_hmem_work.pdev)
+> +		put_device(&dax_hmem_work.pdev->dev);
+> +
+>  	platform_driver_unregister(&dax_hmem_driver);
+>  	platform_driver_unregister(&dax_hmem_platform_driver);
+>  }
 
