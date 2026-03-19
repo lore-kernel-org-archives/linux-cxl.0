@@ -1,308 +1,154 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B9F37418B;
-	Thu, 19 Mar 2026 14:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DE837F8BD
+	for <linux-cxl@vger.kernel.org>; Thu, 19 Mar 2026 14:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773930560; cv=none; b=eADbLgRAZj9TxRhhTVnD864/HKIY+SsVXiDmdjj5IUHIHTptyl1YC2eKxdhmw3WEj0OBgUIKjOx8H+FhHTDiQOwiBf7ISte0nBcD4x0pNGpAmkH/45PJ5IAR6WRb4995X2BHwDjyuQaeyR1wurvOvlrPBu8idqIaeNU/paymVug=
+	t=1773930603; cv=none; b=p1CuCr40/fgErgbuV45HM6sPyUr7mM3OIJD6cm3dl4op9yBmudPrP3BEpLPakMSJ/vhxuUmMSSzaA5B9CTPvZePnP1x6X2RTsT49hCwWwI4R5oRaTpYIBQ06MwDY1e15/4YrYyIVUFPeSTe37bhKoRcV5+ezbyjojWApQpqqBZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773930560; c=relaxed/simple;
-	bh=HsUflFa/KdBTD4m+DVDNlymj5Z233GZp9biJt1RyHT0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qNUyDXT4oEfOdDh8llsxirHfseOi35DS/FG7J9+KBRmNBfMDqdqlFZ4uyfqmlLGTOpiEbte5aSQRHVDLrMgRAWegnOm/oJC9yoPeJn0pix+42y9qrIw7m1TKnHrgBmUL2XmxGwoscviUaIBmlFjn8BnzptxNLJ1z6Nz158jz65g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fc7Nd2wpZzHnGgg;
-	Thu, 19 Mar 2026 22:28:49 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0BBDE4056E;
-	Thu, 19 Mar 2026 22:29:13 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 19 Mar
- 2026 14:29:11 +0000
-Date: Thu, 19 Mar 2026 14:29:10 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>, "Alison
- Schofield" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Yazen Ghannam <yazen.ghannam@amd.com>, "Dave
- Jiang" <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, "Matthew
- Wilcox" <willy@infradead.org>, Jan Kara <jack@suse.cz>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek
-	<pavel@kernel.org>, Li Ming <ming.li@zohomail.com>, Jeff Johnson
-	<jeff.johnson@oss.qualcomm.com>, Ying Huang <huang.ying.caritas@gmail.com>,
-	Yao Xingtao <yaoxt.fnst@fujitsu.com>, "Peter Zijlstra"
-	<peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nathan Fontenot <nathan.fontenot@amd.com>, Terry Bowman
-	<terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>, Benjamin Cheatham
-	<benjamin.cheatham@amd.com>, Zhijian Li <lizhijian@fujitsu.com>, Borislav
- Petkov <bp@alien8.de>, Tomasz Wolski <tomasz.wolski@fujitsu.com>
-Subject: Re: [PATCH v7 6/7] dax/hmem, cxl: Defer and resolve Soft Reserved
- ownership
-Message-ID: <20260319142910.0000113d@huawei.com>
-In-Reply-To: <20260319011500.241426-7-Smita.KoralahalliChannabasappa@amd.com>
-References: <20260319011500.241426-1-Smita.KoralahalliChannabasappa@amd.com>
-	<20260319011500.241426-7-Smita.KoralahalliChannabasappa@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1773930603; c=relaxed/simple;
+	bh=BArAqxuNOMZmZ3DFzVkEiSDUW/6K7+Jdphve/CIcCPA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZYCmg7rJcPO+C7HBjp78crU9OQG1hkekZLtHgN/uGppcWLEzmWuE5rVCRPttUNJ5qCfYqg+1aPTlbxD2W7raUfSqsbnPM1940PSi6SbGFQr9DzMNJn/kNs2LBMzapnPpBPGw1zV/9ZEcHAHhmAPFdNQHcjfkbtQ1pXsRzgxtNCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=twd9D5QT; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="twd9D5QT"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-8cd8576a512so238646385a.0
+        for <linux-cxl@vger.kernel.org>; Thu, 19 Mar 2026 07:30:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1773930601; x=1774535401; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MZ62zRGDMh84ev+ADivtxhXkIe87cWoaQL4WKudvzqg=;
+        b=twd9D5QTV+/09D1m8dWBXwC+k4zz/klk9ygEPnE7kaQ3jMDwY2JDJX7QOlF/Y2tBsS
+         P8C7lf+4F2tdOenzTlWmc3kH5GhHdB0iLZzybt8SROcnrmfTdGWvu5ID5HvwLUCujeCG
+         6a60XL3y6R+skrRmRzesHu9ui+3wbNnmBgJqmnZ2eQIiOPc0cxiXUbiY5TZIiyUKo1zh
+         PtEtQIM9wBpfBlJtCy/or1Uw8buUZzVxLcWikstswAax3uE5bgBr6N7rxWiJjLkSuxFY
+         C9mtP46Hr8W6I8ZnK/4AWpB5+Jm/DVJHRmJlvDF3V1AFlxVmCQw+YDdN2zg1I7DL273W
+         DyqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773930601; x=1774535401;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MZ62zRGDMh84ev+ADivtxhXkIe87cWoaQL4WKudvzqg=;
+        b=GTzAX7sJXMWH6HrlU1iB6nbbfCuR8IUaFMfkMx/slmfu3ijk7O82OtFIxU8AUVANk7
+         zcnBHsFNT4f1k91iwe/O2j/RcRK/bPGRPAL3REamAD9sV3N4bU+rkd9hzAFlCXatqLTf
+         tOTOf4RJgP+kTF/1fgX6wayth/VsEDiavlJjofr0RhjNdY2LuGRwXyOficBYEqFcoC+7
+         SzV9IRWwekOnMzx/+1uKjqpPObWNR12vs1WAa4y88lMdda1rte2h3MeD1w/T9WfcmIf+
+         wjPG518TZfANikfV7WTXr7oHP+CFiijJK3gDrJBWe8O5VQbhwMoS4gVme2TKelFiSS1L
+         J7Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCXWzMy9FpQZkd2OvYFMCJqufaHi216dFkTGxJ/EuSrjE/0nVeINpU3ZS3A+AU83PnEc+OSBVeCUSD4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw67kaO+BSIef62eQYv0U3t4bHZDA9XjmlU2ok1FQ94zFFEsgRA
+	80I8iP7oxJv9KSU5q5n7bPvHBQ8PXVfr22dU/qeEaspGUU+NRbtH8NE2Emg32KjvpIs=
+X-Gm-Gg: ATEYQzw2GCRKCIIM5zCFUmD0j7hFnYFBQQmMW/A1tYs07bQnZd93qMpo93qn4B2rWfw
+	8JO6rTn/7zJSXcsITQCo209O4DYfITaScaKSF9el6L8OqytCW/ta125h8hBdgb0ufiO6CIaRD+p
+	yn9O8gRQLQrF88lAvDQ6C9NYf3HvKcMgEHKyPNax+2yywQs176NdZFaqFIR6SD9QxoxfRt073ok
+	5ZAk0gvGp4uBdBzX2jzW1xgFNlMmH2w7bALGzdW6Juc9/xjXGQFkpn4Et1ZhPauM3nhy6idzGCe
+	d8H41/IkQ9e0Tq/aR/QOLECPxkWmgoI73O2pQOlUEyRHEdtHtQA+Yvv/W45OyyHTdt7vQaZ6KnY
+	mbgGANZvvB8iiy3LvoXQIBewXscoTSRKfBJIWc4PgL4cT300Z3x1zQe1Yha+OY+DcH5juHMf8LD
+	NDcYIkCQwM8LFRZ8n44grxjkUgCuU3K4Xe0ankinJA9bpwv65DV4WgE0mdvLmipqLLZnxEp1hXa
+	3Fn4QIiSA==
+X-Received: by 2002:a05:620a:1a21:b0:8cd:b024:114d with SMTP id af79cd13be357-8cfb9ea6bb2mr485207585a.40.1773930600903;
+        Thu, 19 Mar 2026 07:30:00 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc25f0340sm87627185a.1.2026.03.19.07.29.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2026 07:30:00 -0700 (PDT)
+Date: Thu, 19 Mar 2026 10:29:57 -0400
+From: Gregory Price <gourry@gourry.net>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	cgroups@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
+	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+	dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
+	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
+	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
+	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
+	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
+	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <abwIZd7FNPj5YYXQ@gourry-fedora-PF4VCD3F>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <c10400db-2259-4465-a07e-19d0691101a4@kernel.org>
+ <aZxqP7J1kOClQUPQ@gourry-fedora-PF4VCD3F>
+ <aZx7hsVNU0XOCCiG@gourry-fedora-PF4VCD3F>
+ <049d056b-844b-4480-b90e-bf4c850fc70e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <049d056b-844b-4480-b90e-bf4c850fc70e@kernel.org>
 
-On Thu, 19 Mar 2026 01:14:59 +0000
-Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com> wrote:
-
-> The current probe time ownership check for Soft Reserved memory based
-> solely on CXL window intersection is insufficient. dax_hmem probing is not
-> always guaranteed to run after CXL enumeration and region assembly, which
-> can lead to incorrect ownership decisions before the CXL stack has
-> finished publishing windows and assembling committed regions.
+On Tue, Mar 17, 2026 at 02:05:53PM +0100, David Hildenbrand (Arm) wrote:
+> On 2/23/26 17:08, Gregory Price wrote:
+> > On Mon, Feb 23, 2026 at 09:54:55AM -0500, Gregory Price wrote:
+> >> On Mon, Feb 23, 2026 at 02:07:15PM +0100, David Hildenbrand (Arm) wrote:
+> >>>
+> >>> I'm concerned about adding more special-casing (similar to what we already
+> >>> added for ZONE_DEVICE) all over the place.
+> >>>
+> >>> Like the whole folio_managed_() stuff in mprotect.c
+> >>>
+> >>> Having that said, sounds like a reasonable topic to discuss.
+> >>>
+> >>
+> >> Another option would be to add the hook to vma_wants_writenotify()
+> >> instead of the page table code - and mask MM_CP_TRY_CHANGE_WRITABLE.
+> >>
+> > 
+> > scratch all this - existing hooks exist for exactly this purpose:
+> > 
+> > 	can_change_[pte|pmd]_writable()
+> > 
+> > Surprised I missed this.
+> > 
+> > I can clean this up to remove it from the page table walks.
 > 
-> Introduce deferred ownership handling for Soft Reserved ranges that
-> intersect CXL windows. When such a range is encountered during the
-> initial dax_hmem probe, schedule deferred work to wait for the CXL stack
-> to complete enumeration and region assembly before deciding ownership.
+> Sorry for the late reply -- sounds like we can handle this cleaner.
 > 
-> Once the deferred work runs, evaluate each Soft Reserved range
-> individually: if a CXL region fully contains the range, skip it and let
-> dax_cxl bind. Otherwise, register it with dax_hmem. This per-range
-> ownership model avoids the need for CXL region teardown and
-> alloc_dax_region() resource exclusion prevents double claiming.
+> But I am wondering: why is this even required?
 > 
-> Introduce a boolean flag dax_hmem_initial_probe to live inside device.c
-> so it survives module reload. Ensure dax_cxl defers driver registration
-> until dax_hmem has completed ownership resolution. dax_cxl calls
-> dax_hmem_flush_work() before cxl_driver_register(), which both waits for
-> the deferred work to complete and creates a module symbol dependency that
-> forces dax_hmem.ko to load before dax_cxl.
+> Is it just for "Services that intercept write faults (e.g., for
+> promotion tracking) need PTEs to stay read-only"
 > 
-> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Hi Smita,
-
-I think this is very likely to be what is causing the bug Alison
-saw in cxl_test.
-
-It looks to be possible to flush work before the work structure has
-been configured.  Even though it's not on a work queue and there is
-nothing to do, there are early sanity checks that fail giving the warning
-Alison reported.
-
-A couple of ways to fix that inline.  I'd be tempted to both initialize
-the function statically and gate against flushing if the whole thing isn't
-set up yet.
-
-Jonathan
-
-> ---
->  drivers/dax/bus.h         |  7 +++++
->  drivers/dax/cxl.c         |  1 +
->  drivers/dax/hmem/device.c |  3 ++
->  drivers/dax/hmem/hmem.c   | 66 +++++++++++++++++++++++++++++++++++++--
->  4 files changed, 75 insertions(+), 2 deletions(-)
+> But that promotion tracking sounds like some orthogonal work to me. What
+> am I missing that this is required in this patch set? (is it just for
+> the special compressed RAM bits?)
 > 
-> diff --git a/drivers/dax/bus.h b/drivers/dax/bus.h
-> index cbbf64443098..ebbfe2d6da14 100644
-> --- a/drivers/dax/bus.h
-> +++ b/drivers/dax/bus.h
-> @@ -49,6 +49,13 @@ void dax_driver_unregister(struct dax_device_driver *dax_drv);
->  void kill_dev_dax(struct dev_dax *dev_dax);
->  bool static_dev_dax(struct dev_dax *dev_dax);
->  
-> +#if IS_ENABLED(CONFIG_DEV_DAX_HMEM)
-> +extern bool dax_hmem_initial_probe;
-> +void dax_hmem_flush_work(void);
-> +#else
-> +static inline void dax_hmem_flush_work(void) { }
-> +#endif
-> +
->  #define MODULE_ALIAS_DAX_DEVICE(type) \
->  	MODULE_ALIAS("dax:t" __stringify(type) "*")
->  #define DAX_DEVICE_MODALIAS_FMT "dax:t%d"
-> diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
-> index a2136adfa186..3ab39b77843d 100644
-> --- a/drivers/dax/cxl.c
-> +++ b/drivers/dax/cxl.c
-> @@ -44,6 +44,7 @@ static struct cxl_driver cxl_dax_region_driver = {
->  
->  static void cxl_dax_region_driver_register(struct work_struct *work)
->  {
-> +	dax_hmem_flush_work();
->  	cxl_driver_register(&cxl_dax_region_driver);
->  }
->  
-> diff --git a/drivers/dax/hmem/device.c b/drivers/dax/hmem/device.c
-> index 56e3cbd181b5..991a4bf7d969 100644
-> --- a/drivers/dax/hmem/device.c
-> +++ b/drivers/dax/hmem/device.c
-> @@ -8,6 +8,9 @@
->  static bool nohmem;
->  module_param_named(disable, nohmem, bool, 0444);
->  
-> +bool dax_hmem_initial_probe;
-> +EXPORT_SYMBOL_GPL(dax_hmem_initial_probe);
-> +
->  static bool platform_initialized;
->  static DEFINE_MUTEX(hmem_resource_lock);
->  static struct resource hmem_active = {
-> diff --git a/drivers/dax/hmem/hmem.c b/drivers/dax/hmem/hmem.c
-> index 1e3424358490..8c574123bd3b 100644
-> --- a/drivers/dax/hmem/hmem.c
-> +++ b/drivers/dax/hmem/hmem.c
-> @@ -3,6 +3,7 @@
->  #include <linux/memregion.h>
->  #include <linux/module.h>
->  #include <linux/dax.h>
-> +#include <cxl/cxl.h>
->  #include "../bus.h"
->  
->  static bool region_idle;
-> @@ -58,6 +59,19 @@ static void release_hmem(void *pdev)
->  	platform_device_unregister(pdev);
->  }
->  
-> +struct dax_defer_work {
-> +	struct platform_device *pdev;
-> +	struct work_struct work;
-> +};
-> +
-> +static struct dax_defer_work dax_hmem_work;
 
-static struct dax_defer_work dax_hmem_work = {
-	.work = __WORK_INITIALIZER(&dax_hmem_work.work,
-				   process_defer_work),
-};
-or something similar.
+Yes, this was specific to the compressed ram bits - it allows for a
+service to control where/when writes to the device can happen.  In this
+case, I've limited writes to just the demotion step. (Although I have
+since realized i need to not allow file-backed memory to be demoted).
 
+There may be a better way to do this, but also it may very well be the
+case that such a hook is just a bridge too far and isn't wanted. I think
+this debate is warranted.
 
-> +
-> +void dax_hmem_flush_work(void)
-> +{
-> +	flush_work(&dax_hmem_work.work);
-> +}
-> +EXPORT_SYMBOL_GPL(dax_hmem_flush_work);
-> +
->  static int hmem_register_device(struct device *host, int target_nid,
->  				const struct resource *res)
->  {
-> @@ -69,8 +83,11 @@ static int hmem_register_device(struct device *host, int target_nid,
->  	if (IS_ENABLED(CONFIG_DEV_DAX_CXL) &&
->  	    region_intersects(res->start, resource_size(res), IORESOURCE_MEM,
->  			      IORES_DESC_CXL) != REGION_DISJOINT) {
-> -		dev_dbg(host, "deferring range to CXL: %pr\n", res);
-> -		return 0;
-> +		if (!dax_hmem_initial_probe) {
-> +			dev_dbg(host, "deferring range to CXL: %pr\n", res);
-> +			queue_work(system_long_wq, &dax_hmem_work.work);
-> +			return 0;
-> +		}
->  	}
->  
->  	rc = region_intersects_soft_reserve(res->start, resource_size(res));
-> @@ -123,8 +140,48 @@ static int hmem_register_device(struct device *host, int target_nid,
->  	return rc;
->  }
->  
-> +static int hmem_register_cxl_device(struct device *host, int target_nid,
-> +				    const struct resource *res)
-> +{
-> +	if (region_intersects(res->start, resource_size(res), IORESOURCE_MEM,
-> +			      IORES_DESC_CXL) == REGION_DISJOINT)
-> +		return 0;
-> +
-> +	if (cxl_region_contains_resource((struct resource *)res)) {
-> +		dev_dbg(host, "CXL claims resource, dropping: %pr\n", res);
-> +		return 0;
-> +	}
-> +
-> +	dev_dbg(host, "CXL did not claim resource, registering: %pr\n", res);
-> +	return hmem_register_device(host, target_nid, res);
-> +}
-> +
-> +static void process_defer_work(struct work_struct *w)
-> +{
-> +	struct dax_defer_work *work = container_of(w, typeof(*work), work);
-> +	struct platform_device *pdev = work->pdev;
-If you do the suggested __INITIALIZE_WORK() then I'd add
-a paranoid
-
-	if (!work->pdev)
-		return;
-We don't actually queue the work before pdev is set, but that might
-be obvious once we spilt up assigning the function and the data
-it uses.
-
-> +
-> +	wait_for_device_probe();
-> +
-> +	guard(device)(&pdev->dev);
-> +	if (!pdev->dev.driver)
-> +		return;
-> +
-> +	dax_hmem_initial_probe = true;
-> +	walk_hmem_resources(&pdev->dev, hmem_register_cxl_device);
-> +}
-> +
->  static int dax_hmem_platform_probe(struct platform_device *pdev)
->  {
-> +	if (work_pending(&dax_hmem_work.work))
-> +		return -EBUSY;
-> +
-> +	if (!dax_hmem_work.pdev) {
-> +		get_device(&pdev->dev);
-> +		dax_hmem_work.pdev = pdev;
-
-Using the pdev rather than dev breaks the pattern of doing a get_device()
-and assigning in one line. This is a bit ugly.
-
-		dax_hmem_work.pdev = to_pci_dev(get_device(&pdev->dev));
-
-but perhaps makes the association tighter than current code.
-
-> +		INIT_WORK(&dax_hmem_work.work, process_defer_work);
-
-See above. I think assigning the work function should be static
-which should resolve the issue Alison was seeing as then it should
-be fine to call flush_work() on the item that isn't on a work queue
-yet but is initialized.
-
-> +	}
-> +
->  	return walk_hmem_resources(&pdev->dev, hmem_register_device);
->  }
->  
-> @@ -162,6 +219,11 @@ static __init int dax_hmem_init(void)
->  
->  static __exit void dax_hmem_exit(void)
->  {
-> +	flush_work(&dax_hmem_work.work);
-
-I think this needs to be under the if (dax_hmem_work.pdev) 
-Not sure there is any guarantee dax_hmem_platform_probe() has run
-before we get here otherwise.  Alternative is to assign
-the work function statically.
-
-
-
-> +
-> +	if (dax_hmem_work.pdev)
-> +		put_device(&dax_hmem_work.pdev->dev);
-> +
->  	platform_driver_unregister(&dax_hmem_driver);
->  	platform_driver_unregister(&dax_hmem_platform_driver);
->  }
-
+~Gregory
