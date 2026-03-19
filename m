@@ -1,114 +1,93 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C613D6488
-	for <linux-cxl@vger.kernel.org>; Thu, 19 Mar 2026 14:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6159332A3DE
+	for <linux-cxl@vger.kernel.org>; Thu, 19 Mar 2026 15:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773932062; cv=none; b=L+vO7c46b2xNE6a92KA6pVBIQNZD7KtgSpixGuTQ6JvjhT4S364nngQaHd2DSdFzFnFscovmFMtxWGE4RRKaZ2t6I0zADdth+ztko1O241enq71CFLy2fHzC6V9+AcFao1/54ql4DdgUpSp9HwJu0huYF2o7qY8QPxc6wERx3Qk=
+	t=1773932624; cv=none; b=oEnI3iW+axqe4GfkBjmcNoq08f5co1Y52HgMGWNjVtEQikGyEgbdUGijUtf7Pz4gBAg6F5PzMoY7fhFe3mMb9Tlq+zwFTW8B2VGUZNIw3sdF03WvDv4l2Xrf+bfpNKtFw1RsPjdAqpjvj8T+Qb8kZc7WNTOpGDeZO/LjqrlmYZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773932062; c=relaxed/simple;
-	bh=6SJRZkHESI+qlxn9jhysemE+gHWREZ2mm3JvOq78S+4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fTMx7e8dBJHNvwJX0fICw1OPbIkW/lJ876G7nr/y/WY2RhPpwnCPDfr7ySZo/XqPoEu8/qpwUBeUcsjZA8uYNQfnZ3BSGhIe7cfGcCpcsmuH7CjXCB0QmBpaVILnjYe41i9jQbfRCmO0XawYjKBlDYfcjnrHpKVagWPxX+R23Z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fc7xb3DMtzHnGks;
-	Thu, 19 Mar 2026 22:53:55 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 225794056B;
-	Thu, 19 Mar 2026 22:54:19 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 19 Mar
- 2026 14:54:18 +0000
-Date: Thu, 19 Mar 2026 14:54:17 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 2/2] hw/cxl: Exclude Discovery from Media Operation
- Discovery output
-Message-ID: <20260319145417.00005bc1@huawei.com>
-In-Reply-To: <20260318185508.3683044-3-dave@stgolabs.net>
-References: <20260318185508.3683044-1-dave@stgolabs.net>
-	<20260318185508.3683044-3-dave@stgolabs.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1773932624; c=relaxed/simple;
+	bh=bTvGo5sYA6tfZLiXczoOEyidUEIaahUectBfNE2Wt64=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jwcJS/miBLfg0xqypqpU24h3aSJUHp38xwfHG/o6RdCbX1V5dTz5M8fApsBoVkRdDnEi985yaRoXqiV/FmZEQwHZJF6gTgWxhGzSWWMuL51RaHGQjwL/monLTygrj0oCoElIGRj1svRBPZERYFTXhRrthvk61ctwP5dx+ZxNU4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zf+m2PU3; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zf+m2PU3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773932621; x=1805468621;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=bTvGo5sYA6tfZLiXczoOEyidUEIaahUectBfNE2Wt64=;
+  b=Zf+m2PU3+xJx5U+BfW6gcIjidOXTpmuo+VmQZC/2j6C3ArlOElXHsIOK
+   IpVL5XLLm4G153/0AKjyXjNI8sBO/cqrCS58yuwiThLvxaO0jDTnVC0S8
+   crz7BpKAyVPbindiEn7ojM64LLx6w6IJjMoDjD9La/AumxedpOqh5Qq8B
+   oYrcsb56YHpSaVBh1xYmwmGJsK7llQaqNBH25j68FX2AfjkBd520Ho8xv
+   /L14JA6DlPM4rasHnMw17jNPIAVOgtaZ2CEJAvWxDs61nBZXCHCOgKvSP
+   4WJ8r60TjUNoqcLEs9WmOEi9ctFSU7YYaAU1hirP2VgvKEl6FnmfiFg47
+   Q==;
+X-CSE-ConnectionGUID: SkFAlXaUSSy8oz0YI6uJGg==
+X-CSE-MsgGUID: K+uBV/0MSPSChSr45JiM5w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11734"; a="85709532"
+X-IronPort-AV: E=Sophos;i="6.23,129,1770624000"; 
+   d="scan'208";a="85709532"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2026 08:03:40 -0700
+X-CSE-ConnectionGUID: dainlGtUQGu4yrSvXYggCw==
+X-CSE-MsgGUID: pdGiRnHWS4K1VU18nd8AAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,129,1770624000"; 
+   d="scan'208";a="227684257"
+Received: from jmaxwel1-mobl.amr.corp.intel.com (HELO [10.125.109.49]) ([10.125.109.49])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2026 08:03:39 -0700
+Message-ID: <9d5f4c71-19ce-4cfa-8933-bf13db64c03c@intel.com>
+Date: Thu, 19 Mar 2026 08:03:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] cxl: Add endpoint decoder flags clear when PCI reset
+ happens
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dave@stgolabs.net,
+ alison.schofield@intel.com
+References: <20260317234926.3545119-1-dave.jiang@intel.com>
+ <20260319144613.00003ea6@huawei.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260319144613.00003ea6@huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
- dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Wed, 18 Mar 2026 11:55:08 -0700
-Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> Per CXL 4.0 Table 8-331, the Discovery operation "returns a list of
-> all Media Operations that the device supports, with the exception of
-> the Discovery operation (Class=0, Subclass=0)."
+
+On 3/19/26 7:46 AM, Jonathan Cameron wrote:
+> On Tue, 17 Mar 2026 16:49:26 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
 > 
-> Filter out Discovery entries when building the output list and adjust
-> total_supported_operations accordingly.
+>> When a PCI reset happens, the lock and enable flags of the CXL device
+>> should be cleared to avoid stale state flags after reset. Add flag
+>> clearing during cxl_reset_done() to clear the relevant endpoint
+>> decoder flags for all decoders of the endpoint device.
+>>
+>> Reported-by: Dan Williams <dan.j.williams@intel.com>
+>> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>> v2:
+>> - Rename CLEAR_MASK to RESET_MASK (Alison)
+>> - Make the helper function take a mask argument to specify which flags
+>>   to clear (Alison)
+> Unless we know of another use for this helper, I'd have gone with
+> Alison's other alternative of just giving it a more specific name
+> and not passing in a flags parameter.  Feels like a bit of premature
+> generalization!
 > 
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-Both could do with a fixes tag.
-
-> ---
->  hw/cxl/cxl-mailbox-utils.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 71a012121c87..6932db963788 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -2593,7 +2593,7 @@ static CXLRetCode media_operations_discovery(uint8_t *payload_in,
->      } QEMU_PACKED *media_op_in_disc_pl = (void *)payload_in;
->      struct media_op_discovery_out_pl *media_out_pl =
->          (struct media_op_discovery_out_pl *)payload_out;
-> -    int total = ARRAY_SIZE(media_op_matrix);
-> +    int total = ARRAY_SIZE(media_op_matrix) - 1; /* exclude Discovery */
->      int num_ops, start_index, i;
->      int count = 0;
->  
-> @@ -2619,10 +2619,12 @@ static CXLRetCode media_operations_discovery(uint8_t *payload_in,
->  
->      num_ops = MIN(num_ops, total - start_index);
->      for (i = 0; i < num_ops; i++) {
-> +        int idx = start_index + i + 1; /* skip Discovery (first entry) */
-> +
->          media_out_pl->entry[count].media_op_class =
-> -                media_op_matrix[start_index + i].media_op_class;
-> +                media_op_matrix[idx].media_op_class;
->          media_out_pl->entry[count].media_op_subclass =
-> -                    media_op_matrix[start_index + i].media_op_subclass;
-> +                    media_op_matrix[idx].media_op_subclass;
-Indent comment follows through.
-
-Otherwise LGTM.
-
-I'll queue it up locally but if you want to send a new version and with mst@redhat.com
-in the to, given it's fixes and where we are in the cycle they may get picked up sooner.
-
-If you do that, 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com> 
-for both patches
-
-Whilst I don't think anything else I have queued touches this code, make sure
-you base on upstream qemu.
-
-Thanks,
-
-Jonathan
-
-
-
->          count++;
->      }
->  
-
+Ok will do. 
