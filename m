@@ -1,207 +1,121 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4CF3E0C7F;
-	Thu, 19 Mar 2026 15:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B913DE437
+	for <linux-cxl@vger.kernel.org>; Thu, 19 Mar 2026 15:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773933128; cv=none; b=HQc/siZEF2xwYsPATJSYoVjVX0rcPLKGj5LnkZTF/3VrSivNtRuj6lmfwM8sNl1/TGOtVyFxMcn0H8rTZ9lUXMguVB5FVJ1co7Ss66TSdptbkAv+BJ+tiNG0RFWoFOo4mCF/7QaGPDhskLHeKG01ASEsfrrhOj+Jw1ThCnS1cV4=
+	t=1773933289; cv=none; b=CZhWk8Y4brtU9jT9vX+8WwIQ7uWvt565DTkm6jAiU6cOjX2Kt2nYL3q0tHQj9smHZKMd1b0iBhBERF/H2f4ZSbfxdQAy8ddWfV/9izDDPIjFcM1BT+WgRRrpiAsx4c14jSXjTE6ffqoZbB1kPQIGjrP/fNp5cc6Wun+NCWzvECw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773933128; c=relaxed/simple;
-	bh=CQDG8hpAyrt4e8pfDENGAaTuq0OjnAQaqEiQYCI+bOs=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BjMeasA0Jysoy/5NljRLNfowXaIJeg8gYrMfTJ+mUS8qcQVBnz3PWZ/ktWiTRYD+k0YBbKP+nXkNo4tDyQ/lXDCjGlR7Ti9t+GWWU/+3nbzPvPHejymzCoz6100bvhpT8IObo1U384UM+NkQOEay/91rb6c9DvqhdPDh6x2iNwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fc8KL2nJ7zJ46BM;
-	Thu, 19 Mar 2026 23:11:02 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id E2A9D4056A;
-	Thu, 19 Mar 2026 23:12:01 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 19 Mar
- 2026 15:12:00 +0000
-Date: Thu, 19 Mar 2026 15:11:58 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: John Groves <John@groves.net>
-CC: Ira Weiny <ira.weiny@intel.com>, John Groves <john@jagalactic.com>, Miklos
- Szeredi <miklos@szeredi.hu>, Dan Williams <dan.j.williams@intel.com>, Bernd
- Schubert <bschubert@ddn.com>, "Alison Schofield"
-	<alison.schofield@intel.com>, John Groves <jgroves@micron.com>, John Groves
-	<jgroves@fastmail.com>, Jonathan Corbet <corbet@lwn.net>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox
-	<willy@infradead.org>, Jan Kara <jack@suse.cz>, "Alexander Viro"
-	<viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, Christian
- Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, Randy
- Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, Amir
- Goldstein <amir73il@gmail.com>, Stefan Hajnoczi <shajnocz@redhat.com>, Joanne
- Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, Bagas
- Sanjaya <bagasdotme@gmail.com>, James Morse <james.morse@arm.com>, Fuad Tabba
-	<tabba@google.com>, Sean Christopherson <seanjc@google.com>, Shivank Garg
-	<shivankg@amd.com>, Ackerley Tng <ackerleytng@google.com>, Gregory Price
-	<gourry@gourry.net>, Aravind Ramesh <arramesh@micron.com>, Ajay Joshi
-	<ajayjoshi@micron.com>, "venkataravis@micron.com" <venkataravis@micron.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH V7 03/19] dax: add fsdev.c driver for fs-dax on
- character dax
-Message-ID: <20260319151158.00003e37@huawei.com>
-In-Reply-To: <aZSoCIjbxKIqRZF4@groves.net>
-References: <0100019bd33b1f66-b835e86a-e8ae-443f-a474-02db88f7e6db-000000@email.amazonses.com>
-	<20260118223123.92341-1-john@jagalactic.com>
-	<0100019bd33c310f-1b4a8555-bc81-4ec3-b45f-27abc01dff05-000000@email.amazonses.com>
-	<698f922296bd0_bcb8910059@iweiny-mobl.notmuch>
-	<aZSoCIjbxKIqRZF4@groves.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1773933289; c=relaxed/simple;
+	bh=rjFu1wOiIML2IZkKILM/Osetc+lSAXjUE1UzECrdXCY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WSbea61EqmhXNy/HZSlIxtW+rXy6+nPD/SpeLZAk61bwCg7T4jPoG+NgJDyydbadiFnDEBASpZ3Cko+yeo0uf72yEptciknvHXJwF8Nkf+gs2AsGaaWHHUWOI1hC/dQCNoBwHgMTi31YGNGKZ3mLqZmLYf0MpED01fo2wyLYXUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=sHIwABnH; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="sHIwABnH"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-8ca01dc7d40so121209885a.1
+        for <linux-cxl@vger.kernel.org>; Thu, 19 Mar 2026 08:14:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1773933287; x=1774538087; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JiHy8DTJcynkCaiPLcFmDFB3/915cgrSB5THuPXRODg=;
+        b=sHIwABnHfZ/TCvGHV/Q4WNDa4NLmnlb0vX05FMzdB8Iww8//cu6x48MGaLNtnDwCG6
+         Ud/HByHbEP6hr7Fi2GRhXZbyZ4DKcOzuugqHzEvPa9bDiwPoUGxq19mj+jve9yNWZC4S
+         dZNF12QUZdSj4gXlZgSBK0XdihtfknrETUIbydzmRYRopGXhcEt7i4FbCTFLcStYv6SG
+         w709R6+8JnuIZCSwoRVh246ROBsU6GWRPpI8graDViU7PK6eJw8BeGh0rplqbV+ISnvF
+         +FPBrbMtqdBl8B839J43cPKQCTjVgjgGDieqpQp0qs2ZbxzHSZFLsF72yoxQYd2XzqjW
+         fAqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773933287; x=1774538087;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JiHy8DTJcynkCaiPLcFmDFB3/915cgrSB5THuPXRODg=;
+        b=MhWz3VBJiV0qP9W58vOnVk+pngaGIwKnMVBXGz8pvHRcI4tlqeD3Y2NqvQGP7x0oKM
+         LghfvPlL8FNMiqSWsVsfay+YB0EmUZK6alof02khtX2kKlN7qV/jmFyREd+uAYt8QfYM
+         w9+4vOK++ZtUsPqg1/EqZFFPrjYzhraoEeQ1lpuqt1sHW9GjawEBlqVG2NL0rm/lNqJ0
+         5FbSs5UL/gNgoSSb1M1NzkwQAAT1CilCpYojHqs7Gs9BmFG2QKXfC3EGruxMbXY8DeJU
+         oHBqT1BD5IfEd+DUf7cu/dMb/21Mkud6HS6DPYl7lU7x/7GXCkNjy6iMi2fX531I6IML
+         vXWA==
+X-Gm-Message-State: AOJu0YzfxCkSnB+HEdYdbzvHG5hTQ+O5aC0rXHCB9Laeabv+vXQmDHTt
+	+xTZ5J8rMNiEa1T8Ln8dLBVl7TS3jT6Y4czJgEv0zEhu0eWu9tsdLA0p99OQylmLeus=
+X-Gm-Gg: ATEYQzxiFf9KjYERPEpSpAtw7Pezumi436tUel5MreuzJkxTx+Xrx0e4b7souWVaEcp
+	pH8tcnvIZ3W/npYfg+QNXLus54/Y9VgNZSPWDJ984tD7nSVXcPigAd1xP/22FPWFM4SG2kDFH5p
+	yJSvOJfO5h9G/Gk2iVytdA9JSppvX/dWa9uJhfRCwbr07cmpG9iIVwRA6H9JoA5TDy1zf8Bmehf
+	8GjOUXOzYNQiIBnmi4UUYBuwla50FumnRRrFIhxNJfM8o5uROC6PnM+p0JtvI+aO+B2F1sRGmLM
+	LQ0Lg/rMt452uG5dF81fT2FEkTRU4N5LXV9v8pnbwymAm62o3ZihYCXyh2n+XmGBXiyMuJWhlRR
+	P8dCdY0WeUvpSp1lF3uLg4ZnLxI6eW8/GWXsV5WciLUrO2+69/TgPEA9JH0dCsL7Da70BAEygKm
+	JPgWpFKaMhw2IIIKiqC8L/e519dvvXPGMMk64ImqzpmvdGPvrju06JtNH7uwuUq5T07NaQBQyns
+	MZtPOLX/g==
+X-Received: by 2002:a05:620a:4490:b0:8cd:af2f:3776 with SMTP id af79cd13be357-8cfad1fe1d5mr1007969585a.13.1773933286774;
+        Thu, 19 Mar 2026 08:14:46 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc2cd6ba7sm90953785a.46.2026.03.19.08.14.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2026 08:14:46 -0700 (PDT)
+Date: Thu, 19 Mar 2026 11:14:44 -0400
+From: Gregory Price <gourry@gourry.net>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+	dave.jiang@intel.com, jonathan.cameron@huawei.com,
+	alison.schofield@intel.com, ira.weiny@intel.com, dave@stgolabs.net,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	vishal.l.verma@intel.com, benjamin.cheatham@amd.com,
+	David Rientjes <rientjes@google.com>
+Subject: Re: cxl/region.c improvements and DAX/Hotplug plumbing
+Message-ID: <abwS5BK0erHVkKKH@gourry-fedora-PF4VCD3F>
+References: <aXErSP1zKnv4koKG@gourry-fedora-PF4VCD3F>
+ <4d66eac3-1a2b-4d9d-8a9a-529a19758439@kernel.org>
+ <aXLAtVZ_bVwF9nBG@gourry-fedora-PF4VCD3F>
+ <217b154d-e4d1-4824-b2e3-fea82bc44402@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <217b154d-e4d1-4824-b2e3-fea82bc44402@kernel.org>
 
-On Tue, 17 Feb 2026 11:56:20 -0600
-John Groves <John@groves.net> wrote:
-
-> On 26/02/13 03:05PM, Ira Weiny wrote:
-> > John Groves wrote:  
-> > > From: John Groves <john@groves.net>
-> > > 
-> > > The new fsdev driver provides pages/folios initialized compatibly with
-> > > fsdax - normal rather than devdax-style refcounting, and starting out
-> > > with order-0 folios.
-> > > 
-> > > When fsdev binds to a daxdev, it is usually (always?) switching from the
-> > > devdax mode (device.c), which pre-initializes compound folios according
-> > > to its alignment. Fsdev uses fsdev_clear_folio_state() to switch the
-> > > folios into a fsdax-compatible state.
-> > > 
-> > > A side effect of this is that raw mmap doesn't (can't?) work on an fsdev
-> > > dax instance. Accordingly, The fsdev driver does not provide raw mmap -
-> > > devices must be put in 'devdax' mode (drivers/dax/device.c) to get raw
-> > > mmap capability.
-> > > 
-> > > In this commit is just the framework, which remaps pages/folios compatibly
-> > > with fsdax.
-> > > 
-> > > Enabling dax changes:
-> > > 
-> > > - bus.h: add DAXDRV_FSDEV_TYPE driver type
-> > > - bus.c: allow DAXDRV_FSDEV_TYPE drivers to bind to daxdevs
-> > > - dax.h: prototype inode_dax(), which fsdev needs
-> > > 
-> > > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > > Suggested-by: Gregory Price <gourry@gourry.net>
-> > > Signed-off-by: John Groves <john@groves.net>
-> > > ---
-> > >  MAINTAINERS          |   8 ++
-> > >  drivers/dax/Makefile |   6 ++
-> > >  drivers/dax/bus.c    |   4 +
-> > >  drivers/dax/bus.h    |   1 +
-> > >  drivers/dax/fsdev.c  | 242 +++++++++++++++++++++++++++++++++++++++++++
-> > >  fs/dax.c             |   1 +
-> > >  include/linux/dax.h  |   5 +
-> > >  7 files changed, 267 insertions(+)
-> > >  create mode 100644 drivers/dax/fsdev.c
-> > >   
+On Wed, Mar 18, 2026 at 09:53:05AM +0100, David Hildenbrand (Arm) wrote:
+> > and would change the sysfs pattern to
+> > 	echo regionN > cxl/decoder0.0/create_ram_region
+> > 	echo regionN > cxl/drivers/sysram_region/bind
+> > 	echo online_movable > cxl/devices/dax_regionN/hotplug
+> >         echo dax_regionN > cxl/drivers/dax_region/bind
 > > 
-> > [snip]
-> >   
-> > > +
-> > > +static int fsdev_dax_probe(struct dev_dax *dev_dax)
-> > > +{
-> > > +	struct dax_device *dax_dev = dev_dax->dax_dev;
-> > > +	struct device *dev = &dev_dax->dev;
-> > > +	struct dev_pagemap *pgmap;
-> > > +	u64 data_offset = 0;
-> > > +	struct inode *inode;
-> > > +	struct cdev *cdev;
-> > > +	void *addr;
-> > > +	int rc, i;
-> > > +
-> > > +	if (static_dev_dax(dev_dax))  {
-> > > +		if (dev_dax->nr_range > 1) {
-> > > +			dev_warn(dev, "static pgmap / multi-range device conflict\n");
-> > > +			return -EINVAL;
-> > > +		}
-> > > +
-> > > +		pgmap = dev_dax->pgmap;
-> > > +	} else {
-> > > +		size_t pgmap_size;
-> > > +
-> > > +		if (dev_dax->pgmap) {
-> > > +			dev_warn(dev, "dynamic-dax with pre-populated page map\n");
-> > > +			return -EINVAL;
-> > > +		}
-> > > +
-> > > +		pgmap_size = struct_size(pgmap, ranges, dev_dax->nr_range - 1);
-> > > +		pgmap = devm_kzalloc(dev, pgmap_size,  GFP_KERNEL);
-> > > +		if (!pgmap)
-> > > +			return -ENOMEM;
-> > > +
-> > > +		pgmap->nr_range = dev_dax->nr_range;
-> > > +		dev_dax->pgmap = pgmap;
-> > > +
-> > > +		for (i = 0; i < dev_dax->nr_range; i++) {
-> > > +			struct range *range = &dev_dax->ranges[i].range;
-> > > +
-> > > +			pgmap->ranges[i] = *range;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	for (i = 0; i < dev_dax->nr_range; i++) {
-> > > +		struct range *range = &dev_dax->ranges[i].range;
-> > > +
-> > > +		if (!devm_request_mem_region(dev, range->start,
-> > > +					range_len(range), dev_name(dev))) {
-> > > +			dev_warn(dev, "mapping%d: %#llx-%#llx could not reserve range\n",
-> > > +				 i, range->start, range->end);
-> > > +			return -EBUSY;
-> > > +		}
-> > > +	}  
+> > and gives the user a chance to configure a policy before the region
+> > is pumped all the way through to the endpoint dax driver.
+> 
+> Would that still be backwards-compatible?
+> 
+
+I've since squared this away with the CXL groups, the answer is a
+different probe path and leaving the auto-probe logic alone.
+
+I still need to re-submit the /hotplug extensions here as an improvement
+because its useful - but i've cleaned it up considerably to avoid the
+cross-subsystem nonsense.
+
 > > 
-> > All of the above code is AFAICT exactly the same as the dev_dax driver.
-> > Isn't there a way to make this common?
-> > 
-> > The rest of the common code is simple enough.  
+> > For most use-cases yes.  For something like FAMFS (distributed shared
+> > memory), one system onlining a block as kmem could be potentially
+> > destructive to an entirely separate physical server.
 > 
-> dev_dax_probe() and fsdev_dax_probe() do indeed have some "same code" - 
-> range validity checking and pgmap setup, from the top of probe through 
-> the for loop above. After that they're different. Also, I just did a scan 
-> and the probe function seems like the only remaining common code between 
-> device.c and fsdev.c.
-> 
-> These are separate kmods; that code could certainly be factored out and 
-> shared, but it would need to go somewhere common (maybe bus.c)?
+> Right. But shouldn't we fail this already at the add_memory() stage?
+> Sounds like during onlining is a bit too late. Conceptually, the hotplug
+> as sysram was already wrong for famfs, or am I wrong?
+>
 
-Given I made a similar comment on new version. I'll reply here.
-Could move it to core code, or if you want to keep stuff kmod, it's common
-enough to have helper / library modules.  They are non userselectable
-Kconfig options that are selected by the visible parts that need them.
-Then dependency management ensures the helper gets loaded first.
+Mostly this describes the baggage associated with auto-hotplug path for
+all CXL memory, and the fact that we only have a global-scope auto MHP
+tag.  I've come around to better solutions to this problem.
 
-> 
-> So both device.c and fsdev.c would call bus.c:dax_prepare_pgmap() or
-> some such.
-> 
-> I feel like this might not be worth factoring out, but I'm happy to do it
-> if you and/or the dax team prefer it factored out and shared.
+Thanks for the read n_n
 
-I think I'd like to see what it looks like. Maybe as a series on top.
-But not my area so over to Dax folk ;)
-
-Jonathan
-
-
-> 
-
+~Gregory
