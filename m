@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26D633FE0F;
-	Fri, 20 Mar 2026 19:00:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038C8239099;
+	Fri, 20 Mar 2026 19:01:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774033202; cv=none; b=bFq2kai4W+BTgYxTJNLtTMOch8kAv9jSh4jE74vb6zTPKwUedGaQr0zkDO7L64pmvasrjH36KGvIlz8TwJo7QS/Q92Dxv1I4Fz72x4+gNed9ssgxbyYksjmeAeVrHp2ii8Ig3+74DFeJBBSoNoIeiZnWucfC7kRQTasRk2DWGp4=
+	t=1774033290; cv=none; b=j71b15Jp1/msNgAjtWipyeedOrMJ1NwlkWRt0T06A+njS19Q4Cb46as6Os1ZfKoUv73gZ4Ojk5rIeNRucFUf1G8lVmwaF314EzJZWakeiLt1eDm0Dof3dsCz/N34ktjT2kXFarv6Vso1gylhzONJD15IoFd9+3SzvMu7R6lX8zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774033202; c=relaxed/simple;
-	bh=uxjjHqGB/9RLq0brKZBrx/Blf7F9pfvaOhGzXURab98=;
+	s=arc-20240116; t=1774033290; c=relaxed/simple;
+	bh=Go0/8EQwhplhACJQrhYExZ9tpVDOwumpsDmVzEC9Lxg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PatHyjdbJJtXxlkwN5l1R1pEHtefh4Mz+sEcHI0pdQGCKkiEO+FUvrKfx/PDdSFyq7KpEgdJfLFRiSL6yI4vvrrMIB281iVESol4Kgwt8EY0OvmM0My9V9eMzPb7A1fDOXWwOiT+RyZ+ET7SzWSIbA3UIzFcxXWkjye1+USsDv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6noSgyn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=IqtBA/YqPT5IlPfISwCDFNU3udin55FuZBxDvvxJKtiRmCd6ODcP4SDrLqiy6+xGsJRWGFZvEio31vctfUecDnEyqVXc9FlyOdtoR8ByDkZQO8ERzE3uK2AgkuQ1y350zW63q1zBhcPPFXZ1IKRL7xJSwTZDUTx42M+FVrAl7Bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+DYdCns; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6noSgyn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0D6AC4CEF7;
-	Fri, 20 Mar 2026 18:59:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+DYdCns"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94740C4CEF7;
+	Fri, 20 Mar 2026 19:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774033202;
-	bh=uxjjHqGB/9RLq0brKZBrx/Blf7F9pfvaOhGzXURab98=;
+	s=k20201202; t=1774033289;
+	bh=Go0/8EQwhplhACJQrhYExZ9tpVDOwumpsDmVzEC9Lxg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=U6noSgyn1uU9HRmh9SUcesG5bhk78ZZSeQvCUVI02fk4o690H+jjA/Q+JF14S57mT
-	 eMHvSkw9XBDJjJMY75DbYhtsSLbi805ESbFsOM6JqELUgTPeIpHwh9Sp50jxy5qhWf
-	 A73jw6R86xbOD+kK540CETYywtFK1IvGyPQ8GvilUXiST4X6qkw3icdX+dpDfo9YLS
-	 8B10/trsgncfLoUk057WHIu80s52aN7NTdpFsV3dBd0eORO7FPrS0Q9i59j+Ivas7S
-	 /SntZLsH12cODAEAZxu1QkmAZ17E48g7HDthJcSLs7bIQHg1mFIqjeF11PsXwgF3b2
-	 rprsq8hy1SC1Q==
-Message-ID: <7fba6344-710c-426c-a7eb-8e71fdc5cd51@kernel.org>
-Date: Fri, 20 Mar 2026 19:59:56 +0100
+	b=W+DYdCnspbMI6H/1F9SVoHHsasL/renrO0hS+rA7xIZbWn1Wbs4ycVFVIpxta3Nr9
+	 M1AL/Ta6JRGRfSwRfMY3DS2vulBvoWkmU/UftzF1MaVAEY07AWz+BORSdWW9Olr3HF
+	 2cCTdNZZ2JfryNpc6CmrthwoPffOJK1jTMQmJQOdLwlcgRQyxc56CpRtwua/eEMKez
+	 XhuaMdUnu5rrHYbNmX+a6LDM1PV2nlZ2Gfrt2z1QPFEFDzuh/lJZMRV4HFebodP+0P
+	 wlsNxo+arGn4N50pp4wCtF6gSwQpibboNj9IyZw6q+mA+e2z+nD1JvNEZSMrEzeMKJ
+	 Et6XPW5jdKJQA==
+Message-ID: <6701dcd7-7e02-43eb-b929-87fe3fd9ab00@kernel.org>
+Date: Fri, 20 Mar 2026 20:01:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -37,17 +37,17 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 10/14] mm: prepare to move subsection_map_init() to
  mm/sparse-vmemmap.c
-To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
  Oscar Salvador <osalvador@suse.de>, Axel Rasmussen
  <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>
+ Wei Xu <weixugc@google.com>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>
 References: <20260317165652.99114-1-david@kernel.org>
- <20260317165652.99114-11-david@kernel.org>
- <cb710be1-5fec-409a-a017-c794ecad0382@lucifer.local>
+ <20260317165652.99114-11-david@kernel.org> <abpmbj8mCZjt6NxB@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -94,11 +94,11 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <cb710be1-5fec-409a-a017-c794ecad0382@lucifer.local>
+In-Reply-To: <abpmbj8mCZjt6NxB@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 3/17/26 20:51, Lorenzo Stoakes (Oracle) wrote:
+On 3/18/26 09:46, Mike Rapoport wrote:
 > On Tue, Mar 17, 2026 at 05:56:48PM +0100, David Hildenbrand (Arm) wrote:
 >> We want to move subsection_map_init() to mm/sparse-vmemmap.c.
 >>
@@ -108,13 +108,27 @@ On 3/17/26 20:51, Lorenzo Stoakes (Oracle) wrote:
 >> While at it, move the declaration to internal.h and rename it to
 >> "sparse_init_subsection_map()".
 > 
-> Why not init_sparse_subsection_map()??
-> Or sparse_init_map_subsection()????
-> Or <all other permutations>
-> 
-> Joking that's fine ;)
+> Do we really need to rename it?
 
-To match sparse_init() of course :)
+Given that I am placing it next to sparse_init(), yes I want to rename it.
+
+> 
+> Maybe add a "global renaming patch on top, like
+> 
+> s/clear_subsection_map/subsection_map_clear/
+> s/fill_subsection_map/subsection_map_fill/
+
+Well, these are all internal helpers in mm/sparse.c, not exposed to
+other MM bits. :)
+
+> 
+> etc
+>  
+>> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> 
+> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+
+Thanks!
 
 -- 
 Cheers,
