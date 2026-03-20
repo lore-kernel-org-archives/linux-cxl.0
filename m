@@ -1,461 +1,107 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C70231829
-	for <linux-cxl@vger.kernel.org>; Fri, 20 Mar 2026 04:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773981185; cv=pass; b=QZoh3k/My712l/xudS5XJUwNzqK+AqpxG2h9i9YKdpvZ6dT6iZ4Mle9PLufOHUZPXFDVGiO80U6NBdeO1zgfHzRJm+0VMHDUijZ58IWjh9ShOt+50LvHFqO8BIXce8GlI2lXJJU2xDFOq6GjHOW/JGXwE43+VFaVU4xqoeUqd+Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773981185; c=relaxed/simple;
-	bh=JuZpzPDd0OYEv7WmlksEfMHp/pXefCg5hifgXftCDuk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZgLTyVCfQQcW+eqU9sDdrghwv0tbTlt3Cfgusojg2VUWa3B5X+B8mvCUuwE1cCL3ONhbTiCxCc7ZixEsNtNPxOMnazjwFSkhpuRHEpc2d0YHcLRjFcSjRgvu6IPVAtk2PzU76NT1JkovdC+ov0Zh1t0Mff7rcmcaX7khId02sF4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L8s6gW3B; arc=pass smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4A2248886;
+	Fri, 20 Mar 2026 06:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773987895; cv=none; b=LHfSijv7wwmtghyMAAYE3oJsEthUDTXG+fRFHBOouj1JSm1LetoictXIl6GWARRn18upqIyxSJTaeBDWq95AKfVTt+8IaVGCTBN80dTQ+n3MQoWDhHCnBlt4LpsZ/wYKtbGFz67avwNqP1DAklDtOX7aIBKVyMfUNolNZwrO+Fg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773987895; c=relaxed/simple;
+	bh=0vgzhEI33fyynNHIHp2T6/dOm22GR1qOZib6VKCjuRc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eoAU3wHBkw7OPDiVZZLeM2vqDlLoH2ZPilkaYx+L/vOjujLiwPR3Cd/PzGrgKsMiUYm+s5d2kMjwUrMPMAP2jiOjsPFSFg51witdjsO2q8sqEqfzbEHzRiVPTQq1LeahVpyB+sH5pi+4jheS9NhVSC64GZ5Xurd7a6ttjwxZ7C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RdU8U0U/; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8s6gW3B"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-668e55bd36bso205501a12.3
-        for <linux-cxl@vger.kernel.org>; Thu, 19 Mar 2026 21:33:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773981182; cv=none;
-        d=google.com; s=arc-20240605;
-        b=M1/8fgh0dyHs1Xr2lRLfpnG+cOxu0kqC3IlzNgZFPHStMqH/dIhRmapg1qastkuMKt
-         OEj9OHcKQZbJ2h5qomKXMhBxOvbrnkcqH/SuXEgYm7tOZw6RFuTegxjwWsbXjCjUnjF7
-         y1exKGeUk8nUlFdP180UK7Uo/g3xCyqCNO2/ee88EYVenvnOL0i9Yu4yoAAXfaGR5K4H
-         b/0/cUw6O9lsFLGknq6M/DaX/AnToRK/5Hw2G4hb/SSBwW3VXppqwXds9FyhhN3pTHPO
-         5SaAY8imVlC4Xzw4LSkIQV3zfJg2JvEOVyWCcOPLWOvdK2cZEYLym3JsDQiKGXFfvGg3
-         op6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=+AEo92yx12q8RLU140jMtVC73pr+FOb3VyfjXMvfiFQ=;
-        fh=CmfLoXnvCUn5mgoKUrHVADA3hBcdjlFXwKEgGltpmxs=;
-        b=btVbhtckqBV79NU2aFWsmCGOMjjNnqjk/GqRyXAs/T7WuRH/9R7v0BBmckUiCfrQab
-         1/osKT11tnD/nh9EyUcrdPZdiqLlp91tc6I2wMVFdy3fJui8zJErs1RlIOXtb7t8l4Uw
-         mdJP7CjIoxP97YW8jK6Zg0KXzBqjTKqT5oeUUfZgPMVirjMKsnnrwLT5STIOEFTOUlWD
-         DHuj1sAg0RXMLZufGcPM553og9OAqQyzVzRh0x0cDmym0g+7vVVhxPr7+auVsdj7lIL1
-         30+sBDTXFMkmMM5tRoMk53dLBox7TFQ7GAnLfInNx8I19OOVy/OkjCrt59lhLbP0WR5w
-         ZX4Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773981182; x=1774585982; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+AEo92yx12q8RLU140jMtVC73pr+FOb3VyfjXMvfiFQ=;
-        b=L8s6gW3BfTYhIh35GkWRA0ynZa9VewzfFz3YP8I2HGOnJZ6zo6oFkYeUgc3OYZPNBF
-         Q5IMzvhC9m051bXjClQ+e4KDBA7oVudw+ArhvZDTVFn924fPRaMjXJPIUeUnyXu+xAAs
-         wXNqXAsKXORzy1IWCWjw3nmavQgOTeo9x70XKhe85PQFccgctJpv+QnwufbbP1/WfYWu
-         GhV7/s9mDy1/aF3yrY/I6DY768KwARdOwbVIEH4ikibxyU3EwHVMh/brloR+7rAeOKtY
-         za8sS+QqXtAbQrwb7Rh67WrNumsKR8epkenToe2EmKYFj5/+zp0T1d54ucDBtP7Ppkd1
-         mvgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773981182; x=1774585982;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=+AEo92yx12q8RLU140jMtVC73pr+FOb3VyfjXMvfiFQ=;
-        b=UoGej8hVoqyElxiOt7VxLdirtkub/z0NxeD0rPRawgUQjMU5Evao3+Iij8UBsWjYjS
-         9Pd/41hcWNx3UMkHi+BWSlQwNI3b/utmXh4s94javM7CE5YdTpqTzirqVIE2jibGyzdp
-         oZPr3urc6daCro/zTSNTPGOo8JG0QAHdgpQZ1a6ck5nOyRFsiZOTIqo55f7DSMtk98U8
-         DA10ji6XLiRgur0Vw+XLk+yaCja5WfPCpvwQDzxjS0OLNuzow8Y6ECzJywf5/2s9C3ZI
-         e9XsHDK7cPh9AhXT8bFnoH5+rw3AJ82xlTjWpiWmdwsWtwoVDQUJ3CJBKoZYMs6ECCai
-         1MuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXegjYj91qWiwhtEwoRsUAuL9Svx36RkHnQRYF4ItbBB8ppfg4SsYXXNA7LcX0DVwrQ39rUvOaxo+U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgH+3W+8BaWlH4HREjCWKmuD7Myo1tppY+Pp3L1+PBOoi2HcZU
-	RC3GQBG2csITzbFq56SRAaojFVvEnSxMaS8bUlaH4OmU3HNwTwVVkWad6Bl+r6/iDHN53RCes97
-	mfaXYuJ6GgXO8NI6Fl/wRi+wY8oBHMbY=
-X-Gm-Gg: ATEYQzwaeqrLzH3KAZajsCYVWzUomx+9uiGQPg99w7gNaZoBg6Pa9TgHcp2EnjCOfMa
-	8PxJ0FDfL4X19YEW3gGAKZVfwXnfHo9UIYzjJc/PJAV73w0WYyo0KyMteWCCm0xdFSL0wCKD2mZ
-	RIhIBKSsFftXya952LtwcQDpGMhM9v9MhpQuVYtnH6hRLa0k5NOGoosVX/6grVh1MTVn4NCj1S0
-	vQsBWmU608oKuPP6KJOeuDGg7hK+tjcLQ1mIxKLZULEbIl/PBw9BXSYugywpg7EwNERdnWqVmkU
-	BreDW6Jr3t5gWg07iI8+mUvxIHTzoPfoEdkEHQ==
-X-Received: by 2002:a17:907:874f:b0:b98:4b8:103a with SMTP id
- a640c23a62f3a-b982f2ecf45mr96275166b.37.1773981181427; Thu, 19 Mar 2026
- 21:33:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RdU8U0U/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773987893; x=1805523893;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0vgzhEI33fyynNHIHp2T6/dOm22GR1qOZib6VKCjuRc=;
+  b=RdU8U0U/9oaZlKvAixDZxMGz4KjlgaIjXW3zHmc0R2fL2433aG8BwvvK
+   f7EPjwaaXKuRqnOkcUJEM7cn7SLRb/v4h1G/qy2w3vM/6d7n78RUdOa60
+   tzO/Wi6kpEViqF1AyeFTVkAX2fKS9gDBb90xfjvK5dNmQUpsxIIy+FSyN
+   NyfA44dtJUozOGAyI98UAG7Raumas3GT77wSoVxqzZEzoaBzGAGNSqLCL
+   FbvIwmvjHlOZ6r8WIuBdrmphF0FlGQo3v7rI43r59l4InoU/pIpPuPnHn
+   f3O3Fuvthufepyf89N4DFJO5v85duy5+OjTx5W0sbIBdclrb2PHgQ/CGR
+   g==;
+X-CSE-ConnectionGUID: WW65QJYpQwO3j0kGvDHQpA==
+X-CSE-MsgGUID: 1cRkvnsqTMi48UGm56qJVw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11734"; a="100526657"
+X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
+   d="scan'208";a="100526657"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2026 23:24:53 -0700
+X-CSE-ConnectionGUID: z+0j/YTkRES49580rEmOGw==
+X-CSE-MsgGUID: XEtK4EqCQnGlCLqXZqzRTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
+   d="scan'208";a="219032758"
+Received: from lkp-server02.sh.intel.com (HELO a51c2a36b9df) ([10.239.97.151])
+  by fmviesa010.fm.intel.com with ESMTP; 19 Mar 2026 23:24:48 -0700
+Received: from kbuild by a51c2a36b9df with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1w3THX-0000000023j-2m3T;
+	Fri, 20 Mar 2026 06:24:31 +0000
+Date: Fri, 20 Mar 2026 14:23:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ahmed Tiba <ahmed.tiba@arm.com>, linux-acpi@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-cxl@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Ahmed Tiba <ahmed.tiba@arm.com>,
+	Michael.Zhao2@arm.com, robh@kernel.org,
+	linux-arm-kernel@lists.infradead.org, Dmitry.Lamerov@arm.com,
+	rafael@kernel.org, conor@kernel.org, will@kernel.org, bp@alien8.de,
+	catalin.marinas@arm.com, krzk+dt@kernel.org,
+	linux-doc@vger.kernel.org, mchehab+huawei@kernel.org,
+	tony.luck@intel.com
+Subject: Re: [PATCH v3 06/10] ACPI: APEI: GHES: move CXL CPER helpers
+Message-ID: <202603201429.rbHMPOvC-lkp@intel.com>
+References: <20260318-topics-ahmtib01-ras_ffh_arm_internal_review-v3-6-48e6a1c249ef@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260211032935.2705841-1-alistair.francis@wdc.com>
- <20260211032935.2705841-14-alistair.francis@wdc.com> <20260303120901.00004f09@huawei.com>
-In-Reply-To: <20260303120901.00004f09@huawei.com>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Fri, 20 Mar 2026 14:32:34 +1000
-X-Gm-Features: AaiRm5173UecBDLVaNvjHKTcAWuSn0hv7liJaRt66aad7fmuWnumXYihCyRl5Og
-Message-ID: <CAKmqyKM7vNvkOmk5tve6D8V_5TE8orWC0MnMQj5cDHP=eZc7oA@mail.gmail.com>
-Subject: Re: [RFC v3 13/27] lib: rspdm: Support SPDM get_capabilities
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: bhelgaas@google.com, lukas@wunner.de, rust-for-linux@vger.kernel.org, 
-	akpm@linux-foundation.org, linux-pci@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	alex.gaynor@gmail.com, benno.lossin@proton.me, boqun.feng@gmail.com, 
-	a.hindborg@kernel.org, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	tmgross@umich.edu, ojeda@kernel.org, wilfred.mallawa@wdc.com, 
-	aliceryhl@google.com, Alistair Francis <alistair@alistair23.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260318-topics-ahmtib01-ras_ffh_arm_internal_review-v3-6-48e6a1c249ef@arm.com>
 
-On Tue, Mar 3, 2026 at 10:09=E2=80=AFPM Jonathan Cameron
-<jonathan.cameron@huawei.com> wrote:
->
-> On Wed, 11 Feb 2026 13:29:20 +1000
-> alistair23@gmail.com wrote:
->
-> > From: Alistair Francis <alistair@alistair23.me>
-> >
-> > Support the GET_CAPABILITIES SPDM command.
-> >
-> > Signed-off-by: Alistair Francis <alistair@alistair23.me>
-> A few comments inline.
-> Looks in pretty good shape to me but definitely needs review
-> by those more familiar with rust than me!
->
-> > ---
-> >  lib/rspdm/consts.rs    | 18 ++++++++--
-> >  lib/rspdm/lib.rs       |  4 +++
-> >  lib/rspdm/state.rs     | 68 +++++++++++++++++++++++++++++++++++--
-> >  lib/rspdm/validator.rs | 76 +++++++++++++++++++++++++++++++++++++++++-
-> >  4 files changed, 161 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/lib/rspdm/consts.rs b/lib/rspdm/consts.rs
-> > index 38f48f0863e2..a6a66e2af1b5 100644
-> > --- a/lib/rspdm/consts.rs
-> > +++ b/lib/rspdm/consts.rs
-> > @@ -12,9 +12,7 @@
-> >
-> >  /* SPDM versions supported by this implementation */
-> >  pub(crate) const SPDM_VER_10: u8 =3D 0x10;
-> > -#[allow(dead_code)]
-> >  pub(crate) const SPDM_VER_11: u8 =3D 0x11;
-> > -#[allow(dead_code)]
-> >  pub(crate) const SPDM_VER_12: u8 =3D 0x12;
-> >  pub(crate) const SPDM_VER_13: u8 =3D 0x13;
-> >
-> > @@ -132,3 +130,19 @@ fn fmt(&self, f: &mut core::fmt::Formatter<'_>) ->=
- core::fmt::Result {
-> >
-> >  pub(crate) const SPDM_GET_VERSION: u8 =3D 0x84;
-> >  pub(crate) const SPDM_GET_VERSION_LEN: usize =3D mem::size_of::<SpdmHe=
-ader>() + 255;
-> > +
-> > +pub(crate) const SPDM_GET_CAPABILITIES: u8 =3D 0xe1;
-> > +pub(crate) const SPDM_MIN_DATA_TRANSFER_SIZE: u32 =3D 42;
-> Spec reference?  C code refers to /* SPDM 1.2.0 margin no 226 */
-> It's 269 in 1.3.1
->
-> > +
-> > +// SPDM cryptographic timeout of this implementation:
-> > +// Assume calculations may take up to 1 sec on a busy machine, which e=
-quals
-> > +// roughly 1 << 20.  That's within the limits mandated for responders =
-by CMA
-> > +// (1 << 23 usec, PCIe r6.2 sec 6.31.3) and DOE (1 sec, PCIe r6.2 sec =
-6.30.2).
-> > +// Used in GET_CAPABILITIES exchange.
-> > +pub(crate) const SPDM_CTEXPONENT: u8 =3D 20;
-> > +
-> > +pub(crate) const SPDM_CERT_CAP: u32 =3D 1 << 1;
->
-> Can we use bit_u32() or similar here?
+Hi Ahmed,
 
-Yep, fixed
+kernel test robot noticed the following build warnings:
 
-> We've tried to move to BIT() for similar defines in the C code, so I'm
-> looking for something along those lines. Provides a form of documentation
-> that they are single bit fields.
->
->
-> > +pub(crate) const SPDM_CHAL_CAP: u32 =3D 1 << 2;
-> > +
-> > +pub(crate) const SPDM_REQ_CAPS: u32 =3D SPDM_CERT_CAP | SPDM_CHAL_CAP;
-> > +pub(crate) const SPDM_RSP_MIN_CAPS: u32 =3D SPDM_CERT_CAP | SPDM_CHAL_=
-CAP;
-> > diff --git a/lib/rspdm/lib.rs b/lib/rspdm/lib.rs
-> > index 08abcbb21247..5f6653ada59d 100644
-> > --- a/lib/rspdm/lib.rs
-> > +++ b/lib/rspdm/lib.rs
-> > @@ -113,6 +113,10 @@
-> >          return e.to_errno() as c_int;
-> >      }
-> >
-> > +    if let Err(e) =3D state.get_capabilities() {
-> > +        return e.to_errno() as c_int;
-> > +    }
-> > +
-> >      0
-> >  }
-> >
-> > diff --git a/lib/rspdm/state.rs b/lib/rspdm/state.rs
-> > index 3ad53ec05044..0efad7f341cd 100644
-> > --- a/lib/rspdm/state.rs
-> > +++ b/lib/rspdm/state.rs
-> > @@ -17,9 +17,12 @@
-> >  };
-> >
-> >  use crate::consts::{
-> > -    SpdmErrorCode, SPDM_ERROR, SPDM_GET_VERSION_LEN, SPDM_MAX_VER, SPD=
-M_MIN_VER, SPDM_REQ,
-> > +    SpdmErrorCode, SPDM_ERROR, SPDM_GET_VERSION_LEN, SPDM_MAX_VER, SPD=
-M_MIN_DATA_TRANSFER_SIZE,
-> > +    SPDM_MIN_VER, SPDM_REQ, SPDM_RSP_MIN_CAPS, SPDM_VER_10, SPDM_VER_1=
-1, SPDM_VER_12,
-> > +};
->
-> This is why I was getting bit grumpy in previous about long lines.
-> Fair enough if this is only option, but it's not nice for a review proces=
-s
-> that relies on patches!
+[auto build test WARNING on 2d1373e4246da3b58e1df058374ed6b101804e07]
 
-Also fixed
+url:    https://github.com/intel-lab-lkp/linux/commits/Ahmed-Tiba/ACPI-APEI-GHES-share-macros-via-a-private-header/20260319-115432
+base:   2d1373e4246da3b58e1df058374ed6b101804e07
+patch link:    https://lore.kernel.org/r/20260318-topics-ahmtib01-ras_ffh_arm_internal_review-v3-6-48e6a1c249ef%40arm.com
+patch subject: [PATCH v3 06/10] ACPI: APEI: GHES: move CXL CPER helpers
+config: x86_64-randconfig-122-20260320 (https://download.01.org/0day-ci/archive/20260320/202603201429.rbHMPOvC-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+sparse: v0.6.5-rc1
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260320/202603201429.rbHMPOvC-lkp@intel.com/reproduce)
 
->
->
-> > +use crate::validator::{
-> > +    GetCapabilitiesReq, GetCapabilitiesRsp, GetVersionReq, GetVersionR=
-sp, SpdmErrorRsp, SpdmHeader,
-> >  };
-> > -use crate::validator::{GetVersionReq, GetVersionRsp, SpdmErrorRsp, Spd=
-mHeader};
-> >
-> >  /// The current SPDM session state for a device. Based on the
-> >  /// C `struct spdm_state`.
-> > @@ -35,6 +38,8 @@
-> >  ///
-> >  /// `version`: Maximum common supported version of requester and respo=
-nder.
-> >  ///  Negotiated during GET_VERSION exchange.
-> > +/// @rsp_caps: Cached capabilities of responder.
-> > +///  Received during GET_CAPABILITIES exchange.
-> >  #[expect(dead_code)]
-> >  pub struct SpdmState {
-> >      pub(crate) dev: *mut bindings::device,
-> > @@ -46,6 +51,7 @@ pub struct SpdmState {
-> >
-> >      // Negotiated state
-> >      pub(crate) version: u8,
-> > +    pub(crate) rsp_caps: u32,
-> >  }
-> >
-> >  impl SpdmState {
-> > @@ -65,6 +71,7 @@ pub(crate) fn new(
-> >              keyring,
-> >              validate,
-> >              version: SPDM_MIN_VER,
-> > +            rsp_caps: 0,
-> >          }
-> >      }
-> >
-> > @@ -269,4 +276,61 @@ pub(crate) fn get_version(&mut self) -> Result<(),=
- Error> {
-> >
-> >          Ok(())
-> >      }
-> > +
-> > +    /// Obtain the supported capabilities from an SPDM session and sto=
-re the
-> > +    /// information in the `SpdmState`.
-> > +    pub(crate) fn get_capabilities(&mut self) -> Result<(), Error> {
-> > +        let mut request =3D GetCapabilitiesReq::default();
-> > +        request.version =3D self.version;
-> > +
-> > +        let (req_sz, rsp_sz) =3D match self.version {
-> > +            SPDM_VER_10 =3D> (4, 8),
-> > +            SPDM_VER_11 =3D> (8, 8),
-> > +            _ =3D> {
-> > +                request.data_transfer_size =3D self.transport_sz.to_le=
-();
-> > +                request.max_spdm_msg_size =3D request.data_transfer_si=
-ze;
-> > +
-> > +                (
-> > +                    core::mem::size_of::<GetCapabilitiesReq>(),
-> > +                    core::mem::size_of::<GetCapabilitiesRsp>(),
-> > +                )
-> > +            }
-> > +        };
-> > +
-> > +        // SAFETY: `request` is repr(C) and packed, so we can convert =
-it to a slice
-> > +        let request_buf =3D unsafe { from_raw_parts_mut(&mut request a=
-s *mut _ as *mut u8, req_sz) };
-> > +
-> > +        let mut response_vec: KVec<u8> =3D KVec::with_capacity(rsp_sz,=
- GFP_KERNEL)?;
-> > +        // SAFETY: `request` is repr(C) and packed, so we can convert =
-it to a slice
-> > +        let response_buf =3D unsafe { from_raw_parts_mut(response_vec.=
-as_mut_ptr(), rsp_sz) };
-> > +
-> > +        let rc =3D self.spdm_exchange(request_buf, response_buf)?;
-> > +
-> > +        if rc < (rsp_sz as i32) {
-> > +            pr_err!("Truncated capabilities response\n");
-> > +            to_result(-(bindings::EIO as i32))?;
-> > +        }
-> > +
-> > +        // SAFETY: `rc` is the length of data read, which will be smal=
-ler
-> > +        // then the capacity of the vector
->
-> Fairly sure it's exactly the size of the of vector in this case.
-> Bit (0) of param1 isn't set sop the algorithms block is never included.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603201429.rbHMPOvC-lkp@intel.com/
 
-It is, my point was that it won't overflow. I'll adjust this to be more cle=
-ar
+sparse warnings: (new ones prefixed by >>)
+>> drivers/acpi/apei/ghes_cper.c:391:1: sparse: sparse: symbol 'cxl_cper_fifo' was not declared. Should it be static?
 
->
-> > +        unsafe { response_vec.inc_len(rc as usize) };
-> > +
-> > +        let response: &mut GetCapabilitiesRsp =3D
-> > +            Untrusted::new_mut(&mut response_vec).validate_mut()?;
-> > +
-> > +        self.rsp_caps =3D u32::from_le(response.flags);
->
-> Isn't response packed? So why don't we need the read_unaligned stuff in t=
-his
-> case but did in the previous patch?
+vim +/cxl_cper_fifo +391 drivers/acpi/apei/ghes_cper.c
 
-We need it in the previous patch as we are using a pointer to iterate
-over the dynamic length version_number_entries array, that doesn't
-apply here
+   388	
+   389	/* Room for 8 entries for each of the 4 event log queues */
+   390	#define CXL_CPER_FIFO_DEPTH 32
+ > 391	DEFINE_KFIFO(cxl_cper_fifo, struct cxl_cper_work_data, CXL_CPER_FIFO_DEPTH);
+   392	
 
->
-> > +        if (self.rsp_caps & SPDM_RSP_MIN_CAPS) !=3D SPDM_RSP_MIN_CAPS =
-{
-> > +            to_result(-(bindings::EPROTONOSUPPORT as i32))?;
-> > +        }
-> > +
-> > +        if self.version >=3D SPDM_VER_12 {
-> > +            if response.data_transfer_size < SPDM_MIN_DATA_TRANSFER_SI=
-ZE {
-> > +                pr_err!("Malformed capabilities response\n");
-> > +                to_result(-(bindings::EPROTO as i32))?;
-> > +            }
-> > +            self.transport_sz =3D self.transport_sz.min(response.data_=
-transfer_size);
-> > +        }
-> > +
-> > +        Ok(())
-> > +    }
-> >  }
-> > diff --git a/lib/rspdm/validator.rs b/lib/rspdm/validator.rs
-> > index f69be6aa6280..cd792c46767a 100644
-> > --- a/lib/rspdm/validator.rs
-> > +++ b/lib/rspdm/validator.rs
-> > @@ -16,7 +16,7 @@
-> >      validate::{Unvalidated, Validate},
-> >  };
-> >
-> > -use crate::consts::SPDM_GET_VERSION;
-> > +use crate::consts::{SPDM_CTEXPONENT, SPDM_GET_CAPABILITIES, SPDM_GET_V=
-ERSION, SPDM_REQ_CAPS};
-> >
-> >  #[repr(C, packed)]
-> >  pub(crate) struct SpdmHeader {
-> > @@ -131,3 +131,77 @@ fn validate(unvalidated: &mut Unvalidated<KVec<u8>=
->) -> Result<Self, Self::Err>
-> >          Ok(rsp)
-> >      }
-> >  }
-> > +
-> > +#[repr(C, packed)]
-> > +pub(crate) struct GetCapabilitiesReq {
-> > +    pub(crate) version: u8,
-> > +    pub(crate) code: u8,
-> > +    pub(crate) param1: u8,
-> > +    pub(crate) param2: u8,
-> > +
-> > +    reserved1: u8,
-> > +    pub(crate) ctexponent: u8,
-> > +    reserved2: u16,
-> > +
-> > +    pub(crate) flags: u32,
-> > +
-> > +    /* End of SPDM 1.1 structure */
-> > +    pub(crate) data_transfer_size: u32,
-> > +    pub(crate) max_spdm_msg_size: u32,
-> > +}
-> > +
-> > +impl Default for GetCapabilitiesReq {
-> > +    fn default() -> Self {
-> > +        GetCapabilitiesReq {
-> > +            version: 0,
-> > +            code: SPDM_GET_CAPABILITIES,
-> > +            param1: 0,
->
-> Maybe add some comment on impacts of bit 0.
->
-> > +            param2: 0,
-> > +            reserved1: 0,
-> > +            ctexponent: SPDM_CTEXPONENT,
-> > +            reserved2: 0,
-> > +            flags: (SPDM_REQ_CAPS as u32).to_le(),
-> > +            data_transfer_size: 0,
-> > +            max_spdm_msg_size: 0,
-> > +        }
-> > +    }
-> > +}
-> > +
-> > +#[repr(C, packed)]
-> > +pub(crate) struct GetCapabilitiesRsp {
-> > +    pub(crate) version: u8,
-> > +    pub(crate) code: u8,
-> > +    pub(crate) param1: u8,
-> > +    pub(crate) param2: u8,
->
-> param 2 is reserved in 1.3.1  Maybe not pub(crate)?
-> If it is not reserved in some particular version perhaps add a comment.
->
-> > +
-> > +    reserved1: u8,
-> > +    pub(crate) ctexponent: u8,
-> > +    reserved2: u16,
-> > +
-> > +    pub(crate) flags: u32,
-> > +
-> > +    /* End of SPDM 1.1 structure */
-> > +    pub(crate) data_transfer_size: u32,
-> > +    pub(crate) max_spdm_msg_size: u32,
-> > +
-> > +    pub(crate) supported_algorithms: __IncompleteArrayField<__le16>,
-> > +}
-> > +
-> > +impl Validate<&mut Unvalidated<KVec<u8>>> for &mut GetCapabilitiesRsp =
-{
-> > +    type Err =3D Error;
-> > +
-> > +    fn validate(unvalidated: &mut Unvalidated<KVec<u8>>) -> Result<Sel=
-f, Self::Err> {
-> > +        let raw =3D unvalidated.raw_mut();
-> > +        if raw.len() < mem::size_of::<GetCapabilitiesRsp>() {
->
-> So we fail if 1.1?  If that's the case I think we should fail when doing
-> the version establishment in the previous patch.
-
-Good catch, we shouldn't fail. I'll fix this
-
-Alistair
-
->
-> The c code had some size mangling to deal with this difference.
->
-> > +            return Err(EINVAL);
-> > +        }
-> > +
-> > +        let ptr =3D raw.as_mut_ptr();
-> > +        // CAST: `GetCapabilitiesRsp` only contains integers and has `=
-repr(C)`.
-> > +        let ptr =3D ptr.cast::<GetCapabilitiesRsp>();
-> > +        // SAFETY: `ptr` came from a reference and the cast above is v=
-alid.
-> > +        let rsp: &mut GetCapabilitiesRsp =3D unsafe { &mut *ptr };
-> > +
-> > +        Ok(rsp)
-> > +    }
-> > +}
->
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
