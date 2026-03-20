@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B871B2D3A60;
-	Fri, 20 Mar 2026 22:13:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D9C3358A7;
+	Fri, 20 Mar 2026 22:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774044828; cv=none; b=ZV8cBVPrRkQseuK3/bpTFD4BssAmAzySuJ3wUKrCEFHHNz3Mtwd3ZeMdJT6mG0nghNwKJZylq/htlzZxdjbo5MlooFsF+0O6Clmv6Q6cZ2qaT2yMFI3UuihQ7CQgKl4n7463Y52sIvJd4pNGCXAhe8DX5Hh4xSH9nhcyI0dshVk=
+	t=1774044832; cv=none; b=R9riHJlsxO/QRK7JbhgVMMtzoKA/DHrHVxUeNhDbGxOw66pLJ7j/TK7gPdpVI4bJFKUmKeqe0W3ALS9p5WGp5WFoSJso65RpfLs0sGQNtH7vdU9s2Atw2PGmefAeDidPBOk/PvXelS6aRZKyaAybH76NfdlGM9ti2ROPfoIUD2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774044828; c=relaxed/simple;
-	bh=nHbTHkZVPmgr07xrNZlc6QBoO7DF8u1xsHWbyTYeiTQ=;
+	s=arc-20240116; t=1774044832; c=relaxed/simple;
+	bh=XBR2EPoKpXeNjq1txkLBTh/DgkCJHtoC1PlnginQxtA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NokfG8qybjZnpnXev8ugd5/jcDkB3QADIAHVvFraNoQCNikUvheORWvEZSl6Kv17dHifOOTvOl8yhy6ZjEONx5kanXvqw44NRJljz8EDhrYlgAhf46c5dA7tAd+v9+ooJ0vKy0P5aNgHUEpcM/AbICcwUTbELfM8RtZOdBqSs2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQfW0O52; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=N5XsaxTEW5H7FruIhvRf8p9ruUF/0GiTPKGzHfe3Fmj/FLs7hYC2yiDBNWF0/i/A4n0x5rUNL8mxm99ni+NM2lMtHsvBBYG08Uh8aNOWqya0UsC8g9x3/pvM8JQxGzJBVnqpDyLd8MzZjpthlP7AgIoTeMyyBmtCjOVrL/l3YPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tInuY984; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQfW0O52"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B74D4C4CEF7;
-	Fri, 20 Mar 2026 22:13:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tInuY984"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CECA5C2BC87;
+	Fri, 20 Mar 2026 22:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774044828;
-	bh=nHbTHkZVPmgr07xrNZlc6QBoO7DF8u1xsHWbyTYeiTQ=;
+	s=k20201202; t=1774044832;
+	bh=XBR2EPoKpXeNjq1txkLBTh/DgkCJHtoC1PlnginQxtA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=tQfW0O52ZtyktIiPAk6j94DCE/TASe1TGKNwSCHH/AqiVoKikGBfFF3W4UcBK/nfw
-	 8V7Vb27Vcmrr0XvfznjhmwdnhGVPlZCBt7c1tUzBlzwi7wYWY0KR84ObQEtEz6uESv
-	 dRzL5KUAy9mEFD4GI/QVpkY+cklyuLv1v1lmUNE7D7i6zqVl2H/QaLAOr83tthbwZl
-	 jIT3N5KVDUM3OYBhJFn5GCC1nY/SIvLbps9ZcbkHdoN80Bzuh8s1eM7pV8Bva0XXDY
-	 h8kXTpPAdxsUhuyQ3Sg8Xd7BkRgiNQ4pgqYN84AN08nzdlaoP9hShigTqDXP9QruqH
-	 SbtczXznDUijA==
+	b=tInuY984yzdIEuaZJXpPPAPu/jx6o88MxmPXqoEhhmH9XAKSJMbP9JmVw7KDYMdYI
+	 cYFzrC3mXShUxMELrJRAOb8iFHCYRFYnMXADOypUly2tPI5LhdRJAlx6Y7vIsodwEE
+	 Tb8WTg9dueCXRj24fln2u12nVVjS4oL3Ny2O8BgKFv5WAfttURT/QkCV02wu1LukEt
+	 +WqU5eLPOYBtokHGt2yPjG/XvcY29bKMFzXiTW0vweT3cJdrcDYhDTgUwEXHa4yEL4
+	 Ov9DFUt9eHboVve5zoTrH8Bv9mnM+yD+kzQ6+YJzB4D+h8DGu8XFoU9yIoZlUTet3N
+	 5V0hxSVsZnYcA==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Fri, 20 Mar 2026 23:13:33 +0100
-Subject: [PATCH v2 01/15] mm/memory_hotplug: fix possible race in
- scan_movable_pages()
+Date: Fri, 20 Mar 2026 23:13:34 +0100
+Subject: [PATCH v2 02/15] mm/memory_hotplug: remove for_each_valid_pfn()
+ usage
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260320-sparsemem_cleanups-v2-1-096addc8800d@kernel.org>
+Message-Id: <20260320-sparsemem_cleanups-v2-2-096addc8800d@kernel.org>
 References: <20260320-sparsemem_cleanups-v2-0-096addc8800d@kernel.org>
 In-Reply-To: <20260320-sparsemem_cleanups-v2-0-096addc8800d@kernel.org>
 To: linux-kernel@vger.kernel.org
@@ -54,71 +54,38 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.13.0
 
-If a hugetlb folio gets freed while we are in scan_movable_pages(),
-folio_nr_pages() could return 0, resulting in or'ing "0 - 1 = -1"
-to the PFN, resulting in PFN = -1. We're not holding any locks or
-references that would prevent that.
+When offlining memory, we know that the memory range has no holes.
+Checking for valid pfns is not required.
 
-for_each_valid_pfn() would then search for the next valid PFN, and could
-return a PFN that is outside of the range of the original requested
-range. do_migrate_page() would then try to migrate quite a big range,
-which is certainly undesirable.
-
-To fix it, simply test for valid folio_nr_pages() values. While at it,
-as PageHuge() really just does a page_folio() internally, we can just
-use folio_test_hugetlb() on the folio directly.
-
-scan_movable_pages() is expected to be fast, and we try to avoid taking
-locks or grabbing references. We cannot use folio_try_get() as that does
-not work for free hugetlb folios. We could grab the hugetlb_lock, but
-that just adds complexity.
-
-The race is unlikely to trigger in practice, so we won't be CCing
-stable.
-
-Fixes: 16540dae959d ("mm/hugetlb: mm/memory_hotplug: use a folio in scan_movable_pages()")
+Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/memory_hotplug.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ mm/memory_hotplug.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 86d3faf50453..969cd7ddf68f 100644
+index 969cd7ddf68f..0c26b1f2be6e 100644
 --- a/mm/memory_hotplug.c
 +++ b/mm/memory_hotplug.c
-@@ -1747,6 +1747,7 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
+@@ -1746,7 +1746,7 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
+ {
  	unsigned long pfn;
  
- 	for_each_valid_pfn(pfn, start, end) {
-+		unsigned long nr_pages;
+-	for_each_valid_pfn(pfn, start, end) {
++	for (pfn = start; pfn < end; pfn++) {
+ 		unsigned long nr_pages;
  		struct page *page;
  		struct folio *folio;
+@@ -1796,7 +1796,7 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
+ 	static DEFINE_RATELIMIT_STATE(migrate_rs, DEFAULT_RATELIMIT_INTERVAL,
+ 				      DEFAULT_RATELIMIT_BURST);
  
-@@ -1763,9 +1764,9 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
- 		if (PageOffline(page) && page_count(page))
- 			return -EBUSY;
+-	for_each_valid_pfn(pfn, start_pfn, end_pfn) {
++	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
+ 		struct page *page;
  
--		if (!PageHuge(page))
--			continue;
- 		folio = page_folio(page);
-+		if (!folio_test_hugetlb(folio))
-+			continue;
- 		/*
- 		 * This test is racy as we hold no reference or lock.  The
- 		 * hugetlb page could have been free'ed and head is no longer
-@@ -1775,7 +1776,11 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
- 		 */
- 		if (folio_test_hugetlb_migratable(folio))
- 			goto found;
--		pfn |= folio_nr_pages(folio) - 1;
-+		nr_pages = folio_nr_pages(folio);
-+		if (unlikely(nr_pages < 1 || nr_pages > MAX_FOLIO_NR_PAGES ||
-+			     !is_power_of_2(nr_pages)))
-+			continue;
-+		pfn |= nr_pages - 1;
- 	}
- 	return -ENOENT;
- found:
+ 		page = pfn_to_page(pfn);
 
 -- 
 2.43.0
