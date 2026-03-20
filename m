@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038C8239099;
-	Fri, 20 Mar 2026 19:01:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3323D2F3C1F;
+	Fri, 20 Mar 2026 19:06:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774033290; cv=none; b=j71b15Jp1/msNgAjtWipyeedOrMJ1NwlkWRt0T06A+njS19Q4Cb46as6Os1ZfKoUv73gZ4Ojk5rIeNRucFUf1G8lVmwaF314EzJZWakeiLt1eDm0Dof3dsCz/N34ktjT2kXFarv6Vso1gylhzONJD15IoFd9+3SzvMu7R6lX8zo=
+	t=1774033604; cv=none; b=C+jSmwSGRzu38uBeWk7iY2EsrKjE8+nrth60FNF4y3pJIGGZIiYmh7aIn3Ml8Mx0HINGU4515fDotOgL4f19+RbhRJuQVhAkHprqYLESa10SuyYN8RUy/J0waQfk9qVD7CCyN2TUIezIfGqR63Hpn5ip0Zv98XYhl6dI0rpyjRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774033290; c=relaxed/simple;
-	bh=Go0/8EQwhplhACJQrhYExZ9tpVDOwumpsDmVzEC9Lxg=;
+	s=arc-20240116; t=1774033604; c=relaxed/simple;
+	bh=yFInHcjCD0aikV57e8Hf/jnHHQaVc5KHOASzy/iqGzU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IqtBA/YqPT5IlPfISwCDFNU3udin55FuZBxDvvxJKtiRmCd6ODcP4SDrLqiy6+xGsJRWGFZvEio31vctfUecDnEyqVXc9FlyOdtoR8ByDkZQO8ERzE3uK2AgkuQ1y350zW63q1zBhcPPFXZ1IKRL7xJSwTZDUTx42M+FVrAl7Bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+DYdCns; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=NNrMEP4RrU3N7Pw5RIhhnh+6IXqbRlfwjtEXzJh5GitRELe4pXUABEJC7KLHPxl1w4LvOv9j6OUq87lYoeiS0XQD9kLbnzmQqPw1l9JXh7/eUtwBjCwRR8jfbCgxcBbPe+YOrwc/lvFpGipVgdTtFf63F4dMnnongpsZEmQhmHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ht59kAY5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+DYdCns"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94740C4CEF7;
-	Fri, 20 Mar 2026 19:01:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ht59kAY5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB9A1C19425;
+	Fri, 20 Mar 2026 19:06:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774033289;
-	bh=Go0/8EQwhplhACJQrhYExZ9tpVDOwumpsDmVzEC9Lxg=;
+	s=k20201202; t=1774033603;
+	bh=yFInHcjCD0aikV57e8Hf/jnHHQaVc5KHOASzy/iqGzU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=W+DYdCnspbMI6H/1F9SVoHHsasL/renrO0hS+rA7xIZbWn1Wbs4ycVFVIpxta3Nr9
-	 M1AL/Ta6JRGRfSwRfMY3DS2vulBvoWkmU/UftzF1MaVAEY07AWz+BORSdWW9Olr3HF
-	 2cCTdNZZ2JfryNpc6CmrthwoPffOJK1jTMQmJQOdLwlcgRQyxc56CpRtwua/eEMKez
-	 XhuaMdUnu5rrHYbNmX+a6LDM1PV2nlZ2Gfrt2z1QPFEFDzuh/lJZMRV4HFebodP+0P
-	 wlsNxo+arGn4N50pp4wCtF6gSwQpibboNj9IyZw6q+mA+e2z+nD1JvNEZSMrEzeMKJ
-	 Et6XPW5jdKJQA==
-Message-ID: <6701dcd7-7e02-43eb-b929-87fe3fd9ab00@kernel.org>
-Date: Fri, 20 Mar 2026 20:01:23 +0100
+	b=Ht59kAY5IP7JOUFYzZGhuJYmcbYpJ+KKW7ZMABGHFWJoyj5OtAAhNOakEO/z2LraP
+	 7wHWlC6wr6EkKVmr6gSGV90ldLJnklw0QBvujgFF8qxuEGYbkIbvnQy944vO+/xcIh
+	 NRQFAZjlPgEt8zAcbr0eCDjM0E2GDlgrP6xR4HvHjLZbn18PKsc02pDqhjxyNpipXy
+	 CrbZgNZJVoQJiFMtrc5vbkOeA4eefJ39Ja+ZMLIK3g/MdRb1fpiv5f5X5zMYxX6MSF
+	 vZPu6kVmq7onoj81XRi3ICaaMuC2NVd7fnQpGUVWig6pVDd17vpLyN3X2/qSl5OL0/
+	 3TGN8RnE3Sgzw==
+Message-ID: <5749850a-b99f-482d-b610-b4c5e5ee522b@kernel.org>
+Date: Fri, 20 Mar 2026 20:06:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/14] mm: prepare to move subsection_map_init() to
- mm/sparse-vmemmap.c
+Subject: Re: [PATCH 13/14] mm/sparse: move __section_mark_present() to
+ internal.h
 To: Mike Rapoport <rppt@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
@@ -47,7 +47,7 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  Vlastimil Babka <vbabka@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
  Michal Hocko <mhocko@suse.com>
 References: <20260317165652.99114-1-david@kernel.org>
- <20260317165652.99114-11-david@kernel.org> <abpmbj8mCZjt6NxB@kernel.org>
+ <20260317165652.99114-14-david@kernel.org> <abpo2qJq30cytRiB@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -94,41 +94,20 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <abpmbj8mCZjt6NxB@kernel.org>
+In-Reply-To: <abpo2qJq30cytRiB@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 3/18/26 09:46, Mike Rapoport wrote:
-> On Tue, Mar 17, 2026 at 05:56:48PM +0100, David Hildenbrand (Arm) wrote:
->> We want to move subsection_map_init() to mm/sparse-vmemmap.c.
->>
->> To prepare for getting rid of subsection_map_init() in mm/sparse.c
->> completely, use a static inline function for !CONFIG_SPARSEMEM_VMEMMAP.
->>
->> While at it, move the declaration to internal.h and rename it to
->> "sparse_init_subsection_map()".
+On 3/18/26 09:56, Mike Rapoport wrote:
+> On Tue, Mar 17, 2026 at 05:56:51PM +0100, David Hildenbrand (Arm) wrote:
+>> Let's prepare for moving memory hotplug handling from sparse.c to
+>> sparse-vmemmap.c by moving __section_mark_present() to internal.h.
 > 
-> Do we really need to rename it?
+> Not strictly related to this patchset, we might want to start splitting
+> internal.h to sub-headers.
 
-Given that I am placing it next to sparse_init(), yes I want to rename it.
-
-> 
-> Maybe add a "global renaming patch on top, like
-> 
-> s/clear_subsection_map/subsection_map_clear/
-> s/fill_subsection_map/subsection_map_fill/
-
-Well, these are all internal helpers in mm/sparse.c, not exposed to
-other MM bits. :)
-
-> 
-> etc
->  
->> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> 
-> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-
-Thanks!
+Yes, that makes sense. And we should also split the non-internal headers
+in a smarter way (and do some serious cleanups, it's a mess).
 
 -- 
 Cheers,
