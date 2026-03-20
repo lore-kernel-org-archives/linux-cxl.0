@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE113ECBF1;
-	Fri, 20 Mar 2026 18:58:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26D633FE0F;
+	Fri, 20 Mar 2026 19:00:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774033094; cv=none; b=Qo5h0V8IIMOmiS67YXL2lHgJy8Sp+qIf9yNFV1+mAupCxi8CjZqBn8AaTm6//Ufmwg5hlH2ctVVRNFUGtM8kmt8eBQu+Pz/Sp0lJBT/9te3ba5jttQ1zxbWM+iTRWy4RjgTS4XMXoJXPr/tEZ1QpO4KumVsDIP5EQVruvdtuElY=
+	t=1774033202; cv=none; b=bFq2kai4W+BTgYxTJNLtTMOch8kAv9jSh4jE74vb6zTPKwUedGaQr0zkDO7L64pmvasrjH36KGvIlz8TwJo7QS/Q92Dxv1I4Fz72x4+gNed9ssgxbyYksjmeAeVrHp2ii8Ig3+74DFeJBBSoNoIeiZnWucfC7kRQTasRk2DWGp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774033094; c=relaxed/simple;
-	bh=112L6+1HQkp7RU6SoFW4SCnLVUouDEUQ8DohNJdWZnM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Er2IxtA/zzMW6XbNhzMSlkT4+8iFvPxDpkYDuFVGK4d7t5QI2YkM4jiMrDVfmCw0vytyflRzKPS1D/xFEWTqIxFWHwoW7oWz31set/yoZwE4xfWWTlZsL+Y23pY/37qVrI+9HdXF2mhQYfRoqNuzwjj6ao+WQSFOlHOIQYD4UEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=umTHJqmO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774033202; c=relaxed/simple;
+	bh=uxjjHqGB/9RLq0brKZBrx/Blf7F9pfvaOhGzXURab98=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PatHyjdbJJtXxlkwN5l1R1pEHtefh4Mz+sEcHI0pdQGCKkiEO+FUvrKfx/PDdSFyq7KpEgdJfLFRiSL6yI4vvrrMIB281iVESol4Kgwt8EY0OvmM0My9V9eMzPb7A1fDOXWwOiT+RyZ+ET7SzWSIbA3UIzFcxXWkjye1+USsDv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6noSgyn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="umTHJqmO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD023C2BC87;
-	Fri, 20 Mar 2026 18:58:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6noSgyn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0D6AC4CEF7;
+	Fri, 20 Mar 2026 18:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774033093;
-	bh=112L6+1HQkp7RU6SoFW4SCnLVUouDEUQ8DohNJdWZnM=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=umTHJqmOXzuqRvcnq49/eTrH3uEqKQl0FoPkF59JOVazrjJ/vBLoCJe+4MudQXyHx
-	 IGZ1vIyiFX3V2wxWWMwCVIDAMEOI2g8PfW+knsd+MNYjzwBDdlJmI2RHnfhUReMbqY
-	 AsIJgW8UBuhD9EICaSbT4uJk/mbjGzA2vXWk/s7Tarvw+TNg9oArzsJkCG7CgqdsN2
-	 e+g2ExpFCL/NWu47hEGiQJQXqIZPRaTODtG29BDJxEp5NzmvjLijkkVFjjntZi6b8l
-	 d7rEpArMPDTiD6lOrcyUyVoOYSS0wQWP9gF1h8WCDAPpgzXDMkTFY30waezYVBSp/5
-	 qjU2UeXZwwNaQ==
-Message-ID: <1a05e4c5-01b4-4614-bcc5-43e142fe4b9f@kernel.org>
-Date: Fri, 20 Mar 2026 19:58:08 +0100
+	s=k20201202; t=1774033202;
+	bh=uxjjHqGB/9RLq0brKZBrx/Blf7F9pfvaOhGzXURab98=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=U6noSgyn1uU9HRmh9SUcesG5bhk78ZZSeQvCUVI02fk4o690H+jjA/Q+JF14S57mT
+	 eMHvSkw9XBDJjJMY75DbYhtsSLbi805ESbFsOM6JqELUgTPeIpHwh9Sp50jxy5qhWf
+	 A73jw6R86xbOD+kK540CETYywtFK1IvGyPQ8GvilUXiST4X6qkw3icdX+dpDfo9YLS
+	 8B10/trsgncfLoUk057WHIu80s52aN7NTdpFsV3dBd0eORO7FPrS0Q9i59j+Ivas7S
+	 /SntZLsH12cODAEAZxu1QkmAZ17E48g7HDthJcSLs7bIQHg1mFIqjeF11PsXwgF3b2
+	 rprsq8hy1SC1Q==
+Message-ID: <7fba6344-710c-426c-a7eb-8e71fdc5cd51@kernel.org>
+Date: Fri, 20 Mar 2026 19:59:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,9 +35,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/14] mm/sparse: remove CONFIG_MEMORY_HOTPLUG-specific
- usemap allocation handling
-From: "David Hildenbrand (Arm)" <david@kernel.org>
+Subject: Re: [PATCH 10/14] mm: prepare to move subsection_map_init() to
+ mm/sparse-vmemmap.c
 To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
@@ -47,9 +46,9 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
  Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>
 References: <20260317165652.99114-1-david@kernel.org>
- <20260317165652.99114-10-david@kernel.org>
- <f23aa64a-d78f-4c57-a08b-5c589889b7fc@lucifer.local>
- <306f0fd2-cba1-4f48-af05-248be2bc9506@kernel.org>
+ <20260317165652.99114-11-david@kernel.org>
+ <cb710be1-5fec-409a-a017-c794ecad0382@lucifer.local>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -95,26 +94,27 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <306f0fd2-cba1-4f48-af05-248be2bc9506@kernel.org>
+In-Reply-To: <cb710be1-5fec-409a-a017-c794ecad0382@lucifer.local>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+On 3/17/26 20:51, Lorenzo Stoakes (Oracle) wrote:
+> On Tue, Mar 17, 2026 at 05:56:48PM +0100, David Hildenbrand (Arm) wrote:
+>> We want to move subsection_map_init() to mm/sparse-vmemmap.c.
 >>
->> Anyway I'm also confused by 'given we don't free the pgdat any more', but the
->> comment says a 'pgdat can prevent a section being removed' rather than anything
->> about it being removed?
+>> To prepare for getting rid of subsection_map_init() in mm/sparse.c
+>> completely, use a static inline function for !CONFIG_SPARSEMEM_VMEMMAP.
+>>
+>> While at it, move the declaration to internal.h and rename it to
+>> "sparse_init_subsection_map()".
 > 
-> Well, if a pgdat resides in some memory section, given that it is
-> unmovable turns the whole memory section unremovable -> hotunplug fails.
+> Why not init_sparse_subsection_map()??
+> Or sparse_init_map_subsection()????
+> Or <all other permutations>
 > 
-> Assuming you could free the pgdat when the node goes offlining, you
-> would turn that memory section removable.
-> 
-> And I think that commit somehow assumed that the last memory section
-> could be removed if all it contains is the corresponding pgdat (which
-> was never the case).
+> Joking that's fine ;)
 
-I decided to just drop that whole comment block completely.
+To match sparse_init() of course :)
 
 -- 
 Cheers,
