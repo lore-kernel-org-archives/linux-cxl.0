@@ -1,86 +1,99 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011063.outbound.protection.outlook.com [40.93.194.63])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BDE25CC74;
-	Fri, 20 Mar 2026 20:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.63
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176CC3644BE
+	for <linux-cxl@vger.kernel.org>; Fri, 20 Mar 2026 20:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774039339; cv=fail; b=Ji70nDy8GIvxAA+XW7TXGcY65YbNvTqU9p/n9boRn+FYokrPQHL+F1fkFlxHH7UHiHVNl0jXtB0UM9/hTw5PNOIkV/gXQ1+UuaCDq8L0JytILG30JJlx0jrA5yzA7wWuNsde0RsBmKUHmAGWOmbGUyAqL5b+em5ISbZ0IWVnQ34=
+	t=1774039943; cv=fail; b=WQcXSAjc3QjCAGrEj7R2qg9R0DpeminqCIF+RmjHcQA07aLR63CousdwCRn1z32DOWUEYVjWISqIvNSquENDwCRVtr8yE7mdBT+IOZQzNOb9Qp/aQlnU9XueFHhMVezmPQHKJQ7iTwJm0AjKO/y8+VumgE0S+WgqE7kadk4DjVo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774039339; c=relaxed/simple;
-	bh=ifwb3hWY+bXSyFp22Qz/KNefnraPja4ebQr0B9cXCQk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=VDXp8gObLutQRtHQoO1gA2BvbWjZRizDBJIdwf2ylUU+PLiX9ConCoEeM/0+4no6bjatH/PQkBCLCr3OvHGDtmLJBhcJ+onrlBbgoaHuTVyLsN8d3ApF2MEpuIAjhPVcdQDlT1ziPDWY+eR7ywclcaKxuAd3wvH7ejPTdWuh/wo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Mn+R2gjf; arc=fail smtp.client-ip=40.93.194.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1774039943; c=relaxed/simple;
+	bh=yauiMvrj/UeqBqStbbBmFs9UxlwgZ3jOvXAYtK8OqMw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=o1anQroreX2e3sYRD3yYerqK/faqEn2asxj4pixPJAXQS9E5tTmpWUSwSNgDNoVIB1ugqR67mO7z7hWX+abdLOHbynEfPJQLGCsB34sBiP1GmwQsqccm1VQmR3HRJp5QC+PRVfsaMjAwSAGBsF2FeB7c2DJE6ZH10DvPztDMzFk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cMR8dtwr; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Mn+R2gjf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cMR8dtwr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774039942; x=1805575942;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=yauiMvrj/UeqBqStbbBmFs9UxlwgZ3jOvXAYtK8OqMw=;
+  b=cMR8dtwrwDnuU/zAWI2Uj8TVidNEicZbSWMF1UMC7+SL31wG0b9w3fXT
+   4sUzbFC8sJ4gXuGl4yL0/eyVPnroKJcGhLdAB0fXmjj9639mEYS/5JweZ
+   63YIzBCZm6XEjqnMckhL7os/miw/7ZLLJQzFxAGMnmp58vxYHLbB8G27W
+   fiLErcm80xy/AI67vyQERNYe0ClkD31CGZH2GyG1z2EMJJEEziCZpnphw
+   COTlbJr3/qC7otjUAZVo3lA7znLiMLeY/YMMLlX2kTKu4B5IUeseu4Aik
+   5JsS3GtJeshWq4yBbaTdiZFdPHv8WsR64i45o5fBUDN2KuxQkPaITyvhA
+   A==;
+X-CSE-ConnectionGUID: CO/8ugfgQHWvUeYQPH2pdg==
+X-CSE-MsgGUID: lXmQ1wWlTJCar5aUs4nRtw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11735"; a="62693123"
+X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
+   d="scan'208";a="62693123"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 13:52:22 -0700
+X-CSE-ConnectionGUID: 09fmvcYFQtK8YVayU4nsCA==
+X-CSE-MsgGUID: KGqLYMVCSBKAJYQCwguAmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
+   d="scan'208";a="253884713"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 13:52:21 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Fri, 20 Mar 2026 13:52:20 -0700
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Fri, 20 Mar 2026 13:52:20 -0700
+Received: from BYAPR05CU005.outbound.protection.outlook.com (52.101.85.20) by
+ edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Fri, 20 Mar 2026 13:52:20 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oysz1pGkDV8Gu37cgiDJ/JZzIl5ik2K+XRtORoveshL8YspcZ7P4XpgjC/h4evk/jPLpB2XNCCNxWqh3o4fIJlBhOfMbNfe9n3X/jm8WsETdjkRzsspfm5AOfds0ALVWL8smKN8HnfcZu6dQhkKg+XYQTCmW0AxCRgKZIy4p8h14sbCfwrTTMCz8lPkvSDTlLI/JiqEIov8NDUgPIJbW3Ios9x3gpFv8BwzrcK6r7DN9hUx2s/LfdERHG7KK8Y5PZ720fF18IarX/FH8cuuJ0P1Eud6SSYQEOX/tpf8gwf4BdC1iopC+TaUS0lywpesOzQDLo6+QXBIE73EY7YN2Zg==
+ b=FGAK4i0e179t2oIj4fKoA53vZK5pf3E4Zv52ago16BYxrgjcgBpccKBL8TA0xXIs7tq8XE1HbRo1a6u4eRHQBJWnCdJAHJVy039WvUxp4cLP4yJiV5JLl4MO7HC8vktTjuv604BE05DNNbVz1ckkm5/hTPPQEgc1xE80ChPY6dDkaHPph7fcBr1Jm0a3d0wDpoIqYAbVscQPoa540A/ohWd7B97iL0nl9bpvYfbHh8qydjBqh/BVFRQUJ7IhpGVxQd8aNdrihxAxNqNaTOv3Wleu5fHI65Ea8LzIY9W3MQphvY3DDQqUZ9FOiC4kbVhFvqoPGAf0IeVa/3zgFxlmXg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i31aUGda9HUGX+xiejsGfvSlhcsm97u+js6zmP0sF4s=;
- b=oekhO6aNychUafLObDCCYj7EwLaCq8JrkwoVtYCq4M9/wXhxea1bbkL0bwpYRoHlJoOdkXDsyXkK+gnklKgJbOCD5EBBZaf3PpApbH7n/khYGz6KJkQfjEphC3jaEUI+gnyN/GTTyh11FczcSox3cEi9xIPTpXsW8iuv+z5m2q00af5I+qaWlu6y9VKXwlRYHwAzbQhobnItgmCU+Bax1BWBqK7/AKz1895PRQK5Y9tPrjJSFXy31NuVMh/EYHrEy0jrVmhyGzbs38ErJm7HovOua1mooLyuZVEq2hVMpcbNIz4qS1AD3WoZ+dJFqT3JaoxwckOAVxhbB6JaZBQ5dA==
+ bh=uKWbu2p3s1eXngOiEjlx0KbdDSu4h68O3tFJefygU34=;
+ b=iYC5vqR/fW5l4/UJsfEVaR3fGCMC5Usr5iHCXDnJhN77tAakQBw3dIkhBQGO0dlcmcBpSfkHgh5MpQ9evooKSAdePI1tZBeX9rnDKPeiCqxvKAsCGpC3Wac6h4Bk9xqCC15hTLAuGR7igCWq/NeF0oMg53iLDR/oKpun7E8sKUB4+UClpdxA7eNkuWcUVFTRl9EAiN6Lj9L5QXy0qMMLlhC17Wk32qogrO6cnOPSjV8Zt8RURuaw4MqQ3bwmv31/XLbqPuY5sZIGtoVuzABH/N1lSpQkKfkqq6u2eYy63e4a0izvrqmG6V+imEbytcm5T5RmjpefpA/md/aW0O7SfA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i31aUGda9HUGX+xiejsGfvSlhcsm97u+js6zmP0sF4s=;
- b=Mn+R2gjf3DxseCFCsSYiS57i8Y2EwVTbcVfePRS0JOZia1A+ViQcyz/AElQqj87oytWp/fVsSxERRxIDwRqQLb2w8IHAb6rFEjNTIrkQF/zhmX7HXsGi32HvXuBLZ8NkvLxnR3NIHXyL4GFeQLU/+atzwDxycnzyNspXhwMYOZw=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from LV8PR12MB9714.namprd12.prod.outlook.com (2603:10b6:408:2a0::5)
- by PH0PR12MB7790.namprd12.prod.outlook.com (2603:10b6:510:289::17) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by SJ2PR11MB8471.namprd11.prod.outlook.com (2603:10b6:a03:578::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.9; Fri, 20 Mar
- 2026 20:42:13 +0000
-Received: from LV8PR12MB9714.namprd12.prod.outlook.com
- ([fe80::8c9f:3a5b:974b:99c6]) by LV8PR12MB9714.namprd12.prod.outlook.com
- ([fe80::8c9f:3a5b:974b:99c6%6]) with mapi id 15.20.9745.012; Fri, 20 Mar 2026
- 20:42:12 +0000
-Message-ID: <d0eda358-d1fa-4ec1-8a0d-53fd6777ff8d@amd.com>
-Date: Fri, 20 Mar 2026 13:42:07 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 3/7] dax/cxl, hmem: Initialize hmem early and defer
- dax_cxl binding
-To: Dan Williams <dan.j.williams@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-pm@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Dave Jiang <dave.jiang@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Matthew Wilcox <willy@infradead.org>,
- Jan Kara <jack@suse.cz>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Len Brown <len.brown@intel.com>, Pavel Machek <pavel@kernel.org>,
- Li Ming <ming.li@zohomail.com>, Jeff Johnson
- <jeff.johnson@oss.qualcomm.com>, Ying Huang <huang.ying.caritas@gmail.com>,
- Yao Xingtao <yaoxt.fnst@fujitsu.com>, Peter Zijlstra <peterz@infradead.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Nathan Fontenot <nathan.fontenot@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
- Benjamin Cheatham <benjamin.cheatham@amd.com>,
- Zhijian Li <lizhijian@fujitsu.com>, Borislav Petkov <bp@alien8.de>,
- Tomasz Wolski <tomasz.wolski@fujitsu.com>
-References: <20260319011500.241426-1-Smita.KoralahalliChannabasappa@amd.com>
- <20260319011500.241426-4-Smita.KoralahalliChannabasappa@amd.com>
- <abuOLq6bMPa0nNAL@aschofie-mobl2.lan>
- <3590e2d5-e768-4180-82a0-c972101f3440@amd.com>
- <b56f55b1-4281-4edf-8aa4-27d0500ebd60@amd.com>
- <69bc81bfa9baa_7ee310093@dwillia2-mobl4.notmuch>
-Content-Language: en-US
-From: "Koralahalli Channabasappa, Smita" <skoralah@amd.com>
-In-Reply-To: <69bc81bfa9baa_7ee310093@dwillia2-mobl4.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR05CA0093.namprd05.prod.outlook.com
- (2603:10b6:a03:334::8) To LV8PR12MB9714.namprd12.prod.outlook.com
- (2603:10b6:408:2a0::5)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.19; Fri, 20 Mar
+ 2026 20:52:13 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::3979:c00f:fdca:b895]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::3979:c00f:fdca:b895%4]) with mapi id 15.20.9745.007; Fri, 20 Mar 2026
+ 20:52:13 +0000
+Date: Fri, 20 Mar 2026 13:52:09 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<dan.j.williams@intel.com>, <jonathan.cameron@huawei.com>,
+	<ira.weiny@intel.com>, <gourry@gourry.net>, <dongjoo.seo1@samsung.com>,
+	<anisa.su@samsung.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 3/6] cxl/pci: Add Back-Invalidate topology enable/disable
+Message-ID: <ab2zec-aSUpYVIk1@aschofie-mobl2.lan>
+References: <20260315202741.3264295-1-dave@stgolabs.net>
+ <20260315202741.3264295-4-dave@stgolabs.net>
+ <fcebf688-ac73-4a72-b4ba-683b3380bce3@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <fcebf688-ac73-4a72-b4ba-683b3380bce3@amd.com>
+X-ClientProxiedBy: BY3PR05CA0031.namprd05.prod.outlook.com
+ (2603:10b6:a03:39b::6) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -88,251 +101,76 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9714:EE_|PH0PR12MB7790:EE_
-X-MS-Office365-Filtering-Correlation-Id: 75554cd3-c299-4f54-94d6-08de86c129bc
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SJ2PR11MB8471:EE_
+X-MS-Office365-Filtering-Correlation-Id: 56d52119-8728-4a9d-b186-08de86c29022
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|18002099003|22082099003|56012099003;
-X-Microsoft-Antispam-Message-Info:
-	W2B+70CuqsgL0oz0aP2wNAFH6ySiE0BxPHeMogAvBB1o1nXWaRA0wouoNrjNZn73TAPMANPQSbOy5BIqVstSHrg4m3oeshT9sMBNcYZeA/M0VKck3kChDe5Aj1lFghNtFw5UvNBfGhGW29CGJcZ94loKCkAtiDU0fYWQ/5D/1dMjpVuzUpi/liazMyXc7Fdn29Jv/VfjBb0LozExAOorAlevcwQO5VgZL4PFzUHt3pJmxON1ZvUxRSsqPTSgQVk7mvM4An8p+F5J2Ta/uy+kuw+Mg4bRN0QVo/zKOo/0zulOrq8b2y0y6DsBYtBAdzzITN8RXVT8pzEYNRSO/tw0G7wrvP6vXoUjLWvOUUvbMkSYVLoL26BLvaS0fhAjP8umxRNBB8hbEgCUKvla+vEqlUW52TgyyqOjjM1UDINIILF1ffpuKe8ZEJuJA0rEcij5BU9BCHEO9aRNRzFc0qCgnZHI06qMEJzuqi4hBgnzM1fgyilRxE8dYVooWx0+dil4Ivw6YHGG4TersQG5YzsF9sXw87BQUTEo17OW3oXfSN/z/VQ7PLLiHpcchK9ElJviF0V9roisXJ17yNwKH9LuV7nw933dpZeP1nYNgBUzLrR0NkgWBfTCKknQwz6GFo6Bg03A92kNFtbCpcd3VBa8fntqZneetVvDRPPVTaH+GlShsmSepNuYw2ExOG5wmOMfqGAslL/TPDKIzwZEhtzIV//inh/gdZse8QcLN1gWJDc=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9714.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|56012099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info: mqKcDObD7TNAwllL686ZM82jXai9InI1RxXA3Owt90RpD9kP/nOiWVHPWduNp2Yj2pm9coY/qZZqV02ew2TnMoVF7b5tpOUcxIeS4uEAAWYfi4czRQvBG/RjprfzdLzz2Q3GyV0BS8of63bP5R9YUX9o/kC4B89ML7i3r/CCOutA0gNacS89vCFTY86LwFWf1Uqrk6GR6SoBDIic7BE+Ht+Qtk7w1Xl2rymtGt3DhF9Nnzu8f95ovm5mAJokmitaK13nCMqRtkX8ME/q0qDiBJEnIbGuw/kK8XgG2Ktm95D6rjfcRVdavEYf+fe09PPSBDtFL8aaoNLCQDV9HlQYfSk1dpS5F2TQrIhbQDXOSOl8Qk4WvqsZz5b4xGwe2MAENMYjjCFeIgHSNK3FLTf00eRfSrM4DrT8sTATmzmF5dQ56n45CxpkdY0dltwYZFBVzrNfgY9uD0+pTaeXB9/KVvivOwjqA0iwiq4/SRS5ICpl//xyvdZuF5Nkm/520Pp2cYGdQQ2rWLaMmQOMFy11TBWX3Se4NZmh8QTx6d2VlupDoWzVNLsVsJn+WUArFuFMpK3I7xWe2Fa9YZjR6hSy2eOEg8fOyaNmxvptzi6hpL2pKihS6Z7IrTJcj+q5aezIeF2zLbPehoSrKF1+0yjz0utUi7Gkmzr8hyGwsyqZwpw+vOh/+0CJ/ooCuyjLacyZlx+YTU6UnlSsCwn4Bj/rbPbZECgEXFBy5v4WOgQndQQ=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Ym4vUDVHVWZBUnVCZ2tjOStxaGphSjIxUzNFM1hsQ0FLbW1Bcyt1dlpzTzA3?=
- =?utf-8?B?eGpYa2NvVytOWTVaQllIcUpGOHl2ZjVsOXM2cWhSQlJ6MzBRK2d1M3R4d1hX?=
- =?utf-8?B?c1ljQTVNeGE1anFjOGhKY2QvTUprbzZuczJrUjFjUDU4Mm91SWY4SG1CSkEy?=
- =?utf-8?B?UjlYWEYvdVIySnZSMnNveVY3N3hSMEJNakc1QmFOL1ZIenczNzFtOWpnQzRU?=
- =?utf-8?B?Wk5reFhlZUgrYnN1WmViS3dpdE1qRXFnRkRRakxGRnVBdS8rM0RWc1lTRmlK?=
- =?utf-8?B?V0hjbkplN0NJeWsrMnZEYU9GNkVpazJ4ZURRYUdRRXdkMmYwMEhYMDIzOHd4?=
- =?utf-8?B?b2k3ZStJZTFiQWVINllPaFVjRFMvRUg0Y2Q5WGxiNXdkMWNFdlUvdWFKcHhP?=
- =?utf-8?B?SGI4dnJYUHY5WjVHa1JHQjBtUHNJd0hJM2I4WTlBeUhuVytoM3pZRTFFVm1B?=
- =?utf-8?B?SVJjaXN0emhyYVRLSkZPZkMxMEpRczlBQWxSM3ZnbmFrYTM3cWx5VE5UOU53?=
- =?utf-8?B?Qk1aSy80YktFaDRSelJneE5hZUdDWW1NQ3I0MTEvcVA5WERNR09aSGZFZ3Zx?=
- =?utf-8?B?Skw0dlhHaGk4WUZwNnJLRndPZ1dFTU1jOUZEem5LTVdIQS8xK3Z2VHl6MUor?=
- =?utf-8?B?dzExM2ozWXNYbktjTXltTndjbHdYYzB3b2I5YjJOQ1lwZlJpRUxZanRzMWZO?=
- =?utf-8?B?NVp1aEZiSkE5aHRSSk84U0xnMzUyTC80cTJIdFNYdS9sQjA4KzI1cDgyUFg3?=
- =?utf-8?B?WjNxWlFxZTRZVjJ0WXUveGI2aldQZDJEeHVIYXQ5TkpmODB5R3R2YW01QXZJ?=
- =?utf-8?B?OG9PemNIYTZIMmVLbEF6d0J1TDNveWFjYUlsQ2xDVXZEeEJSQ1BnamNieFp2?=
- =?utf-8?B?YkUrVy9xNXRLZWREdjhHbXE0cXNxdEI1eXBjMnpLbEdvK0pkblpNK2NYeWpo?=
- =?utf-8?B?djd6cHVDSUtjZmFxS05BV0NkNVRvajVLWmk0NFBINk9TZG13Um5pYlNORlhT?=
- =?utf-8?B?RVV3Yy94aGgzdVNTWmlmeGc5UWdvTjdSNEZQMlE1Wi9rRml5Sk1VMzhiTGNW?=
- =?utf-8?B?anJNSklYRjdjYXVIczFTdGhidnV3Nmt5VHNMV1h4WThqcVNWa05lZzRXTWpz?=
- =?utf-8?B?L3hiVEVLYmJyb2U4VDZlVUdHeEsrYlV6c0hNKy9hazh0K0Y0dDI2VlZ1SXR6?=
- =?utf-8?B?elZjZFQ2WkgwdkJTV1JURXpCWGV1ZER5bGxTMmxrU2VtUE1NaXZGb0I1cUJR?=
- =?utf-8?B?TWxkYnpCeDE0K1NpRDB5Wlk0TnNCOEVqdGdFM0xoTEFnQ3R5aWRJaDBDOHZI?=
- =?utf-8?B?VjIydC9PQmFMK1JQeDBBS3MyUXdIaDFZdi8zZFFPVDFVbG01Rk8vSVpNL1BI?=
- =?utf-8?B?SGtjakY4WkFZdmk5Q01mVjc5ZU12dStMc0RMQ3IremFDend4d0k5dXFJYXJC?=
- =?utf-8?B?N21jMUwxVmMvK0RoYnZ1VVJqME1KaEMzdjVVVHozaW5Ud3k4YUNORU5rUG9W?=
- =?utf-8?B?UUg0NTNzYzRXZDFQTFNaUXoyR3FkTE5iRG5HcmE5b0ZLSGNSTGlFOHBrUTJQ?=
- =?utf-8?B?bDc1NDI4UHJXMktERVBobWRpeE9sM2lHQUIwTU9YQVBXWmFNaVhqSm9nRmxL?=
- =?utf-8?B?L0hvY0YyUjljc20weExRZ1NmZnBHZmV1Q1F1V1N3ZGpBMGoyY2JMalRtYjRS?=
- =?utf-8?B?YkNCTlFMZHd5aWl0VWxRWkRMNE1jZzY2NmNydzNab0hVVDV3UTVhWDg3ZnZn?=
- =?utf-8?B?NnBsbDIvcVIwZ1cwZTZLSFQ2dWdrdk9tbXVzSExmS2N3WmZHOWFVOGorem9T?=
- =?utf-8?B?Q0VFKzRuUEM4SjdqMzYwODhpU1ZlbS9PcmszbmQ3NytXbzZqYmYxSndvYnp1?=
- =?utf-8?B?MzNCWVRScWF5YUgvaEN3eU1sSnRpYWZFUnIvdGJEMUgzb0lLSTdIWklTczY2?=
- =?utf-8?B?QVRYMlpLZXF3T1lta2o3RnUra29oWFlndi9ZNnltY3d6OHJPZjRPUk9SOEwv?=
- =?utf-8?B?ckNLdlZVa2pQeE5VQjZhOHAxWHBna2pIeUxwOTA3akVBNHA1WEN3ZjJ3MGp2?=
- =?utf-8?B?SW1YN2liRGUvcUdkL1JYT2MwNVVBajFuSDdZOWtDSmhYbUppK3FWVDdCcS83?=
- =?utf-8?B?TGtkOE91WmxFdy8vMzNDckdBWHY4UlhHR3VJRGd6YVF2TzRNUWxxZGFTZmZi?=
- =?utf-8?B?VU43V2hxU3cweUxJblZXeVlBWVg3a0h5OENBem9wcHZ5eUY2T3NGblIzRWxz?=
- =?utf-8?B?QStIakpFM2g2MjBxSmI1czhTNTFUaXlFK2ROL29QMk82YThhWEF0QndFNjZI?=
- =?utf-8?B?UFQ2S09yN2VEYkoyMmluMGVqTU9QbUdXZXBVN3J6b0w5U1dNbkt6dz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75554cd3-c299-4f54-94d6-08de86c129bc
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9714.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?+TuI4uwVL9sEUZhlX2sXe8RLmXuIfEaX8xKihGWu5ldkxb/5yYTz1KmWzX99?=
+ =?us-ascii?Q?zZ8Jwk6pRuWa+FRsTCYVTsZfXLT/NAQi9qIl0FaZQdCB2ObUBHiNGtU839Ez?=
+ =?us-ascii?Q?uXE/7SdwGazyKuGanEoEW+chRo+Vt/ScyYrpPUtQXKhpw+IQr4fLPOrA35jl?=
+ =?us-ascii?Q?AlDu8b0Yg44FS/euedAQvTYYq9QQkHgAK3/lPsUPhhI79TvVsF9K+gcnyD4O?=
+ =?us-ascii?Q?tpuylISRq35sAiX2fuWBKoIfeK3BlDEzKNorKImRKEpfb0QErnZGpXowGvHp?=
+ =?us-ascii?Q?dG7rmkR+KduoMTmZ0dPTAbld8oGM/5DMKjb7DFE5/AZkbFg55vzRMEvJuShd?=
+ =?us-ascii?Q?Zl1nQ6cCTd3CU0cqXZupKh7/mD+mN4M3Ho7jcIBrTtUfI+o5/K+38V013RgP?=
+ =?us-ascii?Q?/ale1tSYvaDdtz6WEPNPxcu36yI4TWQ8FQKTwpMhjZ1yzhJZ+hGlvwWKBMYm?=
+ =?us-ascii?Q?XdmXVYgIe9GoCj1nOd4cuXU2VbYcSdMb9+Pr0pOktoM41Zvsso5JOmTwVO/d?=
+ =?us-ascii?Q?IRRO3LvWX7isdRZCBlSj1GwlaUC69IvJM1s5LRJ82DR4Olktmf8oLKj9BLbV?=
+ =?us-ascii?Q?fK7kcGDvUpqW0Tdv4Gj6yOHbppO/tbELMloTgO/4VlcZ9y5W9Q9jwYlXkHpo?=
+ =?us-ascii?Q?Aw11l72RmCd/gx7ttEOJRQg5m3dLP/QNktjxy5Mmt4lEZECx10G2Ede5KEI9?=
+ =?us-ascii?Q?SqdvcQVAGQUC3kbfutsp/C6PucC+h3Sx0NBI3guHIpz6kw28Az5B2zQiSqh5?=
+ =?us-ascii?Q?s0UOytqe4WzsrinCYoYhLDM0SlyyR+QUHyq0pv2iLYlxFhXcDNIDI1KOXkQK?=
+ =?us-ascii?Q?qJVXwwbvQfZz3p3wCpcxZVLbC8gY01PSnx6rnwUXv2g3WWwNaOy/VJoi1WbA?=
+ =?us-ascii?Q?GXHd8TVPgGE5tC+Xq160ayPA6onpeuPO2yMnPnl3nxfQwutdAna0f7Sz+DZ3?=
+ =?us-ascii?Q?JImSgfTkjyFyVfLSCvkSyqqIlcyp6jYDax+rfUY9LtBXxB76/pWawGy1tmuD?=
+ =?us-ascii?Q?QMP5TfhX4A8O7QVYpyW/H4iTM8fhOtB1IAt0MHKrj9b3PgRI7j9f8f1eHNZw?=
+ =?us-ascii?Q?TNR4LzVowUFcEQqxruOH32tm07spL5yPcW6sfbxVlUSYu0sKY+L9r/qNXYYF?=
+ =?us-ascii?Q?1UqJqCNVWomeFWpehbUt6AEOyNyoPHOI0GPpZGaiAMMBxTQ1pNmhQ9bb9SFK?=
+ =?us-ascii?Q?YXYWIiAKCEt4A0EfwPPEYY0Dls0sNZl7XtUVnUVbmok9exk+mA6rZzrUzV5w?=
+ =?us-ascii?Q?RYyRXVPuW9mNxQhikiAOs6S1jhColrRD0GxqbWW5v4AtmMG2xPgJy19sLtn9?=
+ =?us-ascii?Q?soZc9hr8V05sEsFyoSbxTLFMxxqKUIzeCD+RjRt3t/QNYMRzS4pVtYFSGiYQ?=
+ =?us-ascii?Q?z8Sii1jxUsmMA9w8EvNpAmShLB9Hsqr0b31K9YdzSxN70uI33O72cLFigbTt?=
+ =?us-ascii?Q?Jo001jbQDZQO3Ov9/I5IlWgZUF/37dqhVEQXipZ1UW/WC1vvb/KOw0nR8Vgg?=
+ =?us-ascii?Q?0o5XySWN8pzY1bgx2MR7Pw7dWAtKNxwa4ytwWEfCNXHIX75Z3vA4yqSG8J1s?=
+ =?us-ascii?Q?ALcVFI2WGfPsnZOd7CzSTuyN73YYQFaSM6BpA6V1MSKG8Ffy4JB+g2Yo+3z6?=
+ =?us-ascii?Q?EWMO5591rYd7oB4UEPgxssrUpwWRsLeE/NFDV5os5sKA58J/dWvGBGuDH3A/?=
+ =?us-ascii?Q?3o8plCHkrq6hlgwwrYLvMeh4sLrc/UovJ6m79U6XoWWQ0VVA7Qb46pZKFjjO?=
+ =?us-ascii?Q?LBrrLvIIyibVc6Tc6ZPv3+UK+Os9Jj0=3D?=
+X-Exchange-RoutingPolicyChecked: nfmYYw4WlFZPJpuIRJ7N8CJIhwwRVBjaWwVPPRETzpdIDDCBCrfREoEpppnY43VzQmRGJm9L7DCScXRKViPaDe1ejL71RG/cvA1qn5lC1OVKaWWuBZalroPw7EJt067f2Cd6SpVpOK3sugpwgspvqRGUNR+KzsORXa4CrSx4q/fzQQTx5gbzbmlUypQmD4ncLDpT+eZ4Naik0XUmOI+bE9yZxVneGfzzPmoQYH8pTfiDnMgefN9De4qdrd7ELOBO/edfmEqVUEFizmQXq9lOtIflwyFHWpA+I1ljMJCVlmYZBJK9awKPl2AsUCWfyuhXDdpw0jfDYfr1ynSp+/ZOHQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56d52119-8728-4a9d-b186-08de86c29022
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2026 20:42:12.1837
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2026 20:52:13.4412
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Jh5xQWi3amlOKMAjf6M7oB2jMnEikcjXd/z+CWuU+ZefNrcSJirKHM3J7EKYe8u8H4YB+J4T39CzQmhC3uQ97Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7790
+X-MS-Exchange-CrossTenant-UserPrincipalName: HUTvAGFMhWyOoCtl/nmIOe88zf5LQQZrlmtYS2/dzcZe4nXAD79YABOnZ1ngFm1M8/oL9t9WKg67yy941UXyqgiF3M47T9prQZJV2sHeo60=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8471
+X-OriginatorOrg: intel.com
 
-Hi Dan,
+On Fri, Mar 20, 2026 at 11:20:05AM -0500, Cheatham, Benjamin wrote:
+> On 3/15/2026 3:27 PM, Davidlohr Bueso wrote:
 
-On 3/19/2026 4:07 PM, Dan Williams wrote:
-> Koralahalli Channabasappa, Smita wrote:
-> [..]
->>> I agree with Jonathan's comments in Patch 6, using __WORK_INITIALIZER or
->>> initializing work in dax_hmem_init() and gating flush on pdev will fix
->>> the WARN — I will add both for v8. But I think the WARN is likely
->>> indicating an ordering issue here..
+Littl bit-
+
+> > +	cxlds->bi = enable;
+> > +
+> > +	dev_dbg(cxlds->dev, "device %scapable of issuing BI requests\n",
+> > +		enable ? "" : "in");
 > 
-> Yes, Jonathan is right, static initialization is also my expecation.
+> Nit: It's pretty hard to tell the difference between the enable/disable case when it's only two letters.
+> I'd prefer something like:
+> 	dev_dbg(cxlds->dev, "%s issuing BI requests\n", enable ? "enabled" : "disabled");
 > 
->>> On initial boot, the Makefile ordering ensures dax_hmem_init() runs
->>> before cxl_dax_region_init(), so both work items land on system_long_wq
->>> in the right order and dax_hmem's deferred work is queued before
->>> dax_cxl's driver registration work.
-> 
-> There is nothing that guarantees that 2 work items in system_long_wq run
-> in submission order. Unlikely that matters given the explicit flushing.
-> 
->>> On module reload which Alison is trying here I dont think, modules are
->>> loaded by Makefile order. I think dax_cxl's workqueue is calling
->>> dax_hmem_flush_work() before dax_hmem probe has had a chance to queue
->>> its work, so flush_work() flushes nothing and dax_cxl registers its
->>> driver without waiting.
-> 
-> Module load order does not matter after initial probe completion.
-> 
-> ...and dax_hmem is guaranteed to always load before dax_cxl due to the
-> symbol dependency of dax_hmem_flush_work().
-> 
->>> __WORK_INITIALIZER fixes the WARN, but doesn't fix the race I guess if
->>> we are hitting that here..
->>>
->>> [   34.673051] initcall dax_hmem_init+0x0/0xff0 [dax_hmem] returned 0
->>> after 2225 usecs
->>> [   34.676011] calling  cxl_dax_region_init+0x0/0xff0 [dax_cxl] @ 1059
->>>
->>> These two lines indicate cxl_dax started after dax_hmem_init() returns
->>> but I dont think that guarantees dax_hmem_platform_probe() has actually
->>> run..
->>>
->>> I dont know if wait_for_device_probe() in cxl_dax_region_driver_register
->>> might help..
->>>
->>> Thanks
->>> Smita
->>
->> Actually, thinking about this more..
->>
->> dax_hmem_initial_probe lives in device.c (built-in) so it survives
->> module reload. On reload it's still true from the first boot. This means
->> hmem_register_device() skips the deferral path entirely..
-> 
-> Yes, that is the expectation.
-> 
->> The problem is this bypasses the cxl_region_contains_resource() check
->> that the deferred work normally does. On first boot,
->> process_defer_work() walks each range and decides per-range: if CXL
->> covers it, skip. If not, register with HMEM. On reload, that check never
->> happens — whoever registers first via alloc_dax_region() wins,
->> regardless of whether CXL actually covers the range.
-> 
-> Yes, I think you have hit on a real issue. There is no point in having
-> dax_hmem auto-attach on driver reload. If userspace unloads the driver
-> it gets to keep the pieces. So that means something like this:
-> 
-> diff --git a/drivers/dax/hmem/hmem.c b/drivers/dax/hmem/hmem.c
-> index 15e462589b92..7478bc78a698 100644
-> --- a/drivers/dax/hmem/hmem.c
-> +++ b/drivers/dax/hmem/hmem.c
-> @@ -112,10 +112,12 @@ static int hmem_register_device(struct device *host, int target_nid,
->   	    region_intersects(res->start, resource_size(res), IORESOURCE_MEM,
->   			      IORES_DESC_CXL) != REGION_DISJOINT) {
->   		if (!dax_hmem_initial_probe) {
-> -			dev_dbg(host, "deferring range to CXL: %pr\n", res);
-> +			dev_dbg(host, "await CXL initial probe: %pr\n", res);
->   			queue_work(system_long_wq, &dax_hmem_work.work);
->   			return 0;
->   		}
-> +		dev_dbg(host, "deferring range to CXL: %pr\n", res);
-> +		return 0;
->   	}
+> The device part isn't really important since the dev_dbg() prints the device name anyway.
+>
 
-One issue with the reload fix - At boot, hmem_register_cxl_device() 
-calls hmem_register_device() to register ranges that aren't claimed by 
-CXL. But hmem_register_device() now always returns 0 for those ranges at 
-boot.
+There's a string helper for that:
 
-I was thinking factoring out registration logic into 
-__hmem_register_device() and have hmem_register_cxl_device() call that 
-directly, bypassing the CXL gating. Something like:
-
-
-+static int __hmem_register_device(...)
-+{
-+	/* Remaining in hmem_register_device after the CXL check */
-+}
-
-static int hmem_register_device(..)
-{
-	if (IS_ENABLED(CONFIG_DEV_DAX_CXL) && .. {
-+		if (!dax_hmem_initial_probe_done) {
-+			queue_work(system_long_wq, &dax_hmem_work);
-+			return 0;
-+		}
-+		return 0;
-+	}
-
-+	return __hmem_register_device(host, target_nid, res);
-}
-
-+static int hmem_register_cxl_device(...)
-+{
-	...
-+	return __hmem_register_device(host, target_nid, res);
-+}
-
-+static void process_defer_work(...)
-+{
-+	...
--	dax_hmem_initial_probe = true;
--	walk_hmem_resources(&pdev->dev, hmem_register_cxl_device);
-+	if (!dax_hmem_initial_probe) {
-+		dax_hmem_initial_probe = true;
-+		walk_hmem_resources(.., hmem_register_cxl_device);
-+	}
-..
-+}
-
-Tracing it
-
-At boot:
-
-probe -> walk(hmem_register_device)
-    CXL range, !dax_hmem_initial_probe -> queue_work, return 0
-    non-CXL ranges -> __hmem_register_device -> registers
-
-process_defer_work:
-    !dax_hmem_initial_probe
-       dax_hmem_initial_probe = true
-       walk(hmem_register_cxl_device)
-       CXL covers -> return 0
-       CXL doesn't cover -> __hmem_register_device()
-          no CXL check again, straight to registration..
-
-On reload:
-
-probe -> walk(hmem_register_device)
-    CXL range, dax_hmem_initial_probe = true, "your return 0" -> skips
-    non-CXL ranges -> __hmem_register_device -> registers
-
-process_defer_work:
-    dax_hmem_initial_probe = true -> skip the walk entirely..
-
-Or do you think this can be simplified better and the above approach has 
-some caveats?
-
-Thanks
-Smita
->   
->   	rc = region_intersects_soft_reserve(res->start, resource_size(res));
-> 
-> ---
-> 
-> ...because if userspace wants to reload the dax_hmem driver, then it
-> needs to pick what happens with the CXL intersection. Userspace can
-> always unload cxl_acpi to force everything back to dax_hmem.
-> 
-> Now, you might say, "but this means that if the initial probe results in
-> a partial result of some regions in dax_hmem and others in dax_cxl, that
-> state can not be recovered outside of a reboot". I think that is ok.
-> This mechanism is automatic best-effort workaround for bugs / missing
-> capabilities in the CXL driver. Module reload fidelity is out of scope.
-> 
->> So if dax_cxl registers first on reload, it could claim a range that CXL
->> doesn't actually cover, and dax_hmem would lose a range it should own..
-> 
-> With the above change, dax_cxl always wins in the "reload" scenario iff
-> cxl_acpi is loaded. Otherwise dax_hmem owns all the Soft Reserved.
-> 
->> I dont know if Im thinking through this right..
-> 
-> You definitely identified the need for that fixup above.
+	dev_dbg(cxlds->dev, "%s issuing BI requests\n",
+		str_enabled_disabled(enable));
 
