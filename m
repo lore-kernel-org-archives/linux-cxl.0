@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2EE2D3A60;
-	Fri, 20 Mar 2026 22:14:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B882A34575A;
+	Fri, 20 Mar 2026 22:14:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774044849; cv=none; b=IZnZksdSky0vtxysphwXb/siAn8lYO5IjBuOLI6sQnDkPpmgl71gSPqpc6rdq5Eg1E3fqa3BPr7FLtrJNE3AkZgjwNlp0ddGiPcTzXI8zmrd0pmkj48uKcDcPjF4T2N6cctcPsQIJ2s4xsOHZixc2xMIzkXOivObIaDJVbiz5cE=
+	t=1774044853; cv=none; b=FLUvxR2PVgSObVUtxID6lZTvJTlYghqr6iQ8Hm/+X2xDNyLdeB7z0+nrALOzL3RVy9p/6BVktaqopqhrX0DmFWYUhRFH0irLOHNT0nuEpTyrW5dpCu1pFPS2eZvmF56kk1vE1gJ5aS/f++/COSuRD1iiSby4MpncVrddBG/mTCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774044849; c=relaxed/simple;
-	bh=nPM2xDzamc7ofaCScsG410PR/QQBsQ3DvwZZV+9GS1k=;
+	s=arc-20240116; t=1774044853; c=relaxed/simple;
+	bh=QZECcZOo9XU6VE0O+G1ptFNqIVCOuWAko6C1OasJr/U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WfOjjm6Rvd9+A+H9dxkZ2UgkM5lugEA4MLYdV2lxX609jn0MPee7dEL49PwwBLcbzNVXNqzBCPqOrPkJt17KusxDRJPv30D9xokxXSQ0BL1r0qRtHEzJ57wIENaRtVT4lAlRwgTAUnAvkft0zBUm1AxKPi1CTXtG5IjftMC4pL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HnHEJaPx; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=O5r9+5KCvkKHwOA5rmbT+3+4PR9d/Iw6+XxNMKBWiQxTaaX5bohE2qNm25W/2haWECvHu2GeFNA6Dn8p67So1pyjNWULqw0+wzYst1huHbDT690KsBSWlbI79uAuUo52z/DJ6pLL3l0tjY0BAo5fAMyW1H+3J6eWK3TDDa3/EwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BYJKP7zl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HnHEJaPx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C2FCC2BC87;
-	Fri, 20 Mar 2026 22:14:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BYJKP7zl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD735C2BCB6;
+	Fri, 20 Mar 2026 22:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774044849;
-	bh=nPM2xDzamc7ofaCScsG410PR/QQBsQ3DvwZZV+9GS1k=;
+	s=k20201202; t=1774044853;
+	bh=QZECcZOo9XU6VE0O+G1ptFNqIVCOuWAko6C1OasJr/U=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=HnHEJaPxDsHVIvGrxzHc285TLNol1z8REyKULttk7LBtwRgQ91PH1mTrO85MXJHyY
-	 WFH/wxwqXRjfho6tYaOu2/MfwuotmjfCmsEnGZtWR9t6ddUZxpBVOs9QOWmQvmwy0a
-	 aFiJ6oT7939CIJexqKYA2dnTf44yStx0+tux37YlR4l3yBmoRPT7k27uWmfAUQuEcD
-	 8geni0LfN+9k7qbtbxB0ex+mCUMy825GfgzDnLOwZ/nRtaXSOeBKYzFzhArxXXxAIu
-	 Gh3l9X4y5slBiaPioaYF/8CdnkJvSUALoiieyOcpGKKd5h1bKtCyau0asJSb7OVFP4
-	 OpoN99xFHbZpg==
+	b=BYJKP7zlv4jBTvu80a24WL8Ct5aU4DcbuPl7DomVKZQywcFSHmDul15sUSZzpOS9w
+	 VGpkVDDKudEKjzp330WynQpTZJarltWaw0dHJ3u7eeAic+bRO3z2vaoJXKeKE8CzXJ
+	 Hlir4vVzCgO/f2OKDKqS8rRg5eQw0Vi39t7NMLD4x1kMCvNqs1ghvWraXEpRmdgbkJ
+	 ouDmSeYe65LVeauMLiEz99LE6nUEBfU2ntRObRZhG73T8ceIv43bw4PDm71NWkHgYS
+	 M2POdUrqX1hIGxGX4jWTxYwJH7i/lYl4bma2SJk/M0epQ5B85WZGwtmdA9RUsRNrzD
+	 BZVwwK53Fv3qA==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Fri, 20 Mar 2026 23:13:38 +0100
-Subject: [PATCH v2 06/15] mm/sparse: remove !CONFIG_SPARSEMEM_VMEMMAP
- leftovers for CONFIG_MEMORY_HOTPLUG
+Date: Fri, 20 Mar 2026 23:13:39 +0100
+Subject: [PATCH v2 07/15] mm/bootmem_info: remove handling for
+ !CONFIG_SPARSEMEM_VMEMMAP
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260320-sparsemem_cleanups-v2-6-096addc8800d@kernel.org>
+Message-Id: <20260320-sparsemem_cleanups-v2-7-096addc8800d@kernel.org>
 References: <20260320-sparsemem_cleanups-v2-0-096addc8800d@kernel.org>
 In-Reply-To: <20260320-sparsemem_cleanups-v2-0-096addc8800d@kernel.org>
 To: linux-kernel@vger.kernel.org
@@ -54,115 +54,74 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  "David Hildenbrand (Arm)" <david@kernel.org>
 X-Mailer: b4 0.13.0
 
-CONFIG_MEMORY_HOTPLUG now depends on CONFIG_SPARSEMEM_VMEMMAP. So
-let's remove the !CONFIG_SPARSEMEM_VMEMMAP leftovers that are dead code.
+It is not immediately obvious that CONFIG_HAVE_BOOTMEM_INFO_NODE is
+only selected from CONFIG_MEMORY_HOTREMOVE, which itself depends on
+CONFIG_MEMORY_HOTPLUG that ... depends on CONFIG_SPARSEMEM_VMEMMAP.
 
-Adjust the comment above fill_subsection_map() accordingly.
+Let's remove the !CONFIG_SPARSEMEM_VMEMMAP leftovers that are dead code.
 
 Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/sparse.c | 69 ++-----------------------------------------------------------
- 1 file changed, 2 insertions(+), 67 deletions(-)
+ mm/bootmem_info.c | 37 -------------------------------------
+ 1 file changed, 37 deletions(-)
 
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 93252112860e..875f718a4c79 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -657,7 +657,6 @@ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+diff --git a/mm/bootmem_info.c b/mm/bootmem_info.c
+index b0e2a9fa641f..e61e08e24924 100644
+--- a/mm/bootmem_info.c
++++ b/mm/bootmem_info.c
+@@ -40,42 +40,6 @@ void put_page_bootmem(struct page *page)
  	}
  }
  
--#ifdef CONFIG_SPARSEMEM_VMEMMAP
- static struct page * __meminit populate_section_memmap(unsigned long pfn,
- 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap,
- 		struct dev_pagemap *pgmap)
-@@ -729,73 +728,11 @@ static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
- 
- 	return rc;
+-#ifndef CONFIG_SPARSEMEM_VMEMMAP
+-static void __init register_page_bootmem_info_section(unsigned long start_pfn)
+-{
+-	unsigned long mapsize, section_nr, i;
+-	struct mem_section *ms;
+-	struct page *page, *memmap;
+-	struct mem_section_usage *usage;
+-
+-	section_nr = pfn_to_section_nr(start_pfn);
+-	ms = __nr_to_section(section_nr);
+-
+-	/* Get section's memmap address */
+-	memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
+-
+-	/*
+-	 * Get page for the memmap's phys address
+-	 * XXX: need more consideration for sparse_vmemmap...
+-	 */
+-	page = virt_to_page(memmap);
+-	mapsize = sizeof(struct page) * PAGES_PER_SECTION;
+-	mapsize = PAGE_ALIGN(mapsize) >> PAGE_SHIFT;
+-
+-	/* remember memmap's page */
+-	for (i = 0; i < mapsize; i++, page++)
+-		get_page_bootmem(section_nr, page, SECTION_INFO);
+-
+-	usage = ms->usage;
+-	page = virt_to_page(usage);
+-
+-	mapsize = PAGE_ALIGN(mem_section_usage_size()) >> PAGE_SHIFT;
+-
+-	for (i = 0; i < mapsize; i++, page++)
+-		get_page_bootmem(section_nr, page, MIX_SECTION_INFO);
+-
+-}
+-#else /* CONFIG_SPARSEMEM_VMEMMAP */
+ static void __init register_page_bootmem_info_section(unsigned long start_pfn)
+ {
+ 	unsigned long mapsize, section_nr, i;
+@@ -100,7 +64,6 @@ static void __init register_page_bootmem_info_section(unsigned long start_pfn)
+ 	for (i = 0; i < mapsize; i++, page++)
+ 		get_page_bootmem(section_nr, page, MIX_SECTION_INFO);
  }
--#else
--static struct page * __meminit populate_section_memmap(unsigned long pfn,
--		unsigned long nr_pages, int nid, struct vmem_altmap *altmap,
--		struct dev_pagemap *pgmap)
--{
--	return kvmalloc_node(array_size(sizeof(struct page),
--					PAGES_PER_SECTION), GFP_KERNEL, nid);
--}
--
--static void depopulate_section_memmap(unsigned long pfn, unsigned long nr_pages,
--		struct vmem_altmap *altmap)
--{
--	kvfree(pfn_to_page(pfn));
--}
--
--static void free_map_bootmem(struct page *memmap)
--{
--	unsigned long maps_section_nr, removing_section_nr, i;
--	unsigned long type, nr_pages;
--	struct page *page = virt_to_page(memmap);
--
--	nr_pages = PAGE_ALIGN(PAGES_PER_SECTION * sizeof(struct page))
--		>> PAGE_SHIFT;
--
--	for (i = 0; i < nr_pages; i++, page++) {
--		type = bootmem_type(page);
--
--		BUG_ON(type == NODE_INFO);
--
--		maps_section_nr = pfn_to_section_nr(page_to_pfn(page));
--		removing_section_nr = bootmem_info(page);
--
--		/*
--		 * When this function is called, the removing section is
--		 * logical offlined state. This means all pages are isolated
--		 * from page allocator. If removing section's memmap is placed
--		 * on the same section, it must not be freed.
--		 * If it is freed, page allocator may allocate it which will
--		 * be removed physically soon.
--		 */
--		if (maps_section_nr != removing_section_nr)
--			put_page_bootmem(page);
--	}
--}
--
--static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
--{
--	return 0;
--}
--
--static bool is_subsection_map_empty(struct mem_section *ms)
--{
--	return true;
--}
--
--static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
--{
--	return 0;
--}
--#endif /* CONFIG_SPARSEMEM_VMEMMAP */
+-#endif /* !CONFIG_SPARSEMEM_VMEMMAP */
  
- /*
-- * To deactivate a memory region, there are 3 cases to handle across
-- * two configurations (SPARSEMEM_VMEMMAP={y,n}):
-+ * To deactivate a memory region, there are 3 cases to handle:
-  *
-- * 1. deactivation of a partial hot-added section (only possible in
-- *    the SPARSEMEM_VMEMMAP=y case).
-+ * 1. deactivation of a partial hot-added section:
-  *      a) section was present at memory init.
-  *      b) section was hot-added post memory init.
-  * 2. deactivation of a complete hot-added section.
-@@ -803,8 +740,6 @@ static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
-  *
-  * For 1, when subsection_map does not empty we will not be freeing the
-  * usage map, but still need to free the vmemmap range.
-- *
-- * For 2 and 3, the SPARSEMEM_VMEMMAP={y,n} cases are unified
-  */
- static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
- 		struct vmem_altmap *altmap)
+ void __init register_page_bootmem_info_node(struct pglist_data *pgdat)
+ {
 
 -- 
 2.43.0
