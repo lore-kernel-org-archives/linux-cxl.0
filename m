@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3323D2F3C1F;
-	Fri, 20 Mar 2026 19:06:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD8E32860B;
+	Fri, 20 Mar 2026 19:07:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774033604; cv=none; b=C+jSmwSGRzu38uBeWk7iY2EsrKjE8+nrth60FNF4y3pJIGGZIiYmh7aIn3Ml8Mx0HINGU4515fDotOgL4f19+RbhRJuQVhAkHprqYLESa10SuyYN8RUy/J0waQfk9qVD7CCyN2TUIezIfGqR63Hpn5ip0Zv98XYhl6dI0rpyjRs=
+	t=1774033661; cv=none; b=EyVGepqn9kSNpNWpK61ztKgql0BUAJVHVYvc91crgqqJqAHuOeGe+p5oYa2uibt/lXUV4bWe7uTxYgXA7tqZIpIGiT9bTpDSqiCPV2Gjy+8fL8p/Q7mSrKQUZ2VA7ezcdgunFW1hcH5TUl5rcGCpIz+aw8sFYmell3iRS441p2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774033604; c=relaxed/simple;
-	bh=yFInHcjCD0aikV57e8Hf/jnHHQaVc5KHOASzy/iqGzU=;
+	s=arc-20240116; t=1774033661; c=relaxed/simple;
+	bh=Yooz8jcbCajwp3f1Eq2+lyBrRvTbOuBB2ZolCkflxFY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NNrMEP4RrU3N7Pw5RIhhnh+6IXqbRlfwjtEXzJh5GitRELe4pXUABEJC7KLHPxl1w4LvOv9j6OUq87lYoeiS0XQD9kLbnzmQqPw1l9JXh7/eUtwBjCwRR8jfbCgxcBbPe+YOrwc/lvFpGipVgdTtFf63F4dMnnongpsZEmQhmHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ht59kAY5; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=RnBbOi5iHumcFXZauTBG6DaTxRW51EuQ72IPND0uJj1WbhSh8zzcAtQWaZGuwmOpmlMajo8zpmLmz2/HujPpEZYKSw9GNq8cHOjF5qklZkpqjBHFqUwt2WbRo/JayZX0G95FQUl4ZTZHRd57mpc+crFpkoZAMIpDUsWUpmM2VGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=prxrI6QV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ht59kAY5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB9A1C19425;
-	Fri, 20 Mar 2026 19:06:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="prxrI6QV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1646C4CEF7;
+	Fri, 20 Mar 2026 19:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774033603;
-	bh=yFInHcjCD0aikV57e8Hf/jnHHQaVc5KHOASzy/iqGzU=;
+	s=k20201202; t=1774033661;
+	bh=Yooz8jcbCajwp3f1Eq2+lyBrRvTbOuBB2ZolCkflxFY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ht59kAY5IP7JOUFYzZGhuJYmcbYpJ+KKW7ZMABGHFWJoyj5OtAAhNOakEO/z2LraP
-	 7wHWlC6wr6EkKVmr6gSGV90ldLJnklw0QBvujgFF8qxuEGYbkIbvnQy944vO+/xcIh
-	 NRQFAZjlPgEt8zAcbr0eCDjM0E2GDlgrP6xR4HvHjLZbn18PKsc02pDqhjxyNpipXy
-	 CrbZgNZJVoQJiFMtrc5vbkOeA4eefJ39Ja+ZMLIK3g/MdRb1fpiv5f5X5zMYxX6MSF
-	 vZPu6kVmq7onoj81XRi3ICaaMuC2NVd7fnQpGUVWig6pVDd17vpLyN3X2/qSl5OL0/
-	 3TGN8RnE3Sgzw==
-Message-ID: <5749850a-b99f-482d-b610-b4c5e5ee522b@kernel.org>
-Date: Fri, 20 Mar 2026 20:06:37 +0100
+	b=prxrI6QVywyF1spuGDD1fJQ8UpkSkloRCG8PG+bFh7/OCLFk2DR6fkjw9InAJNok2
+	 XV+/9tPD3BSFoeWBUTA+snAtdPgfjsmq64ieWksuYg4+9R4WOaX4htjw2Cb8vBLRTd
+	 MofiTsF4Aj0PrpOCplcqt3UWHLKcw3UMsgvGBhElslSKXBuRuLpI2Lma/ZRQTH60ac
+	 FMstYniWnoR+9vEuDR+d5PJRPhJyWGIn4W+PzrIwavmzXMw39R9SQ3/QScy1tYFtlt
+	 9dHpTOradV2O9/9GsOk3vLHDRAlYS6iK5WSTEaQtmt3WlZ1PhwTMVJmM16wAkNXe0i
+	 rGN72UassgTiw==
+Message-ID: <6e58d40b-d0c2-46cc-9ab6-f3b1fe5ab40b@kernel.org>
+Date: Fri, 20 Mar 2026 20:07:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,19 +35,19 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/14] mm/sparse: move __section_mark_present() to
- internal.h
-To: Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH 14/14] mm/sparse: move memory hotplug bits to
+ sparse-vmemmap.c
+To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
  Oscar Salvador <osalvador@suse.de>, Axel Rasmussen
  <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>
+ Wei Xu <weixugc@google.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>
 References: <20260317165652.99114-1-david@kernel.org>
- <20260317165652.99114-14-david@kernel.org> <abpo2qJq30cytRiB@kernel.org>
+ <20260317165652.99114-15-david@kernel.org>
+ <c880bda9-486c-41ab-b8f2-f0329392bbf6@lucifer.local>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -94,20 +94,36 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <abpo2qJq30cytRiB@kernel.org>
+In-Reply-To: <c880bda9-486c-41ab-b8f2-f0329392bbf6@lucifer.local>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 3/18/26 09:56, Mike Rapoport wrote:
-> On Tue, Mar 17, 2026 at 05:56:51PM +0100, David Hildenbrand (Arm) wrote:
->> Let's prepare for moving memory hotplug handling from sparse.c to
->> sparse-vmemmap.c by moving __section_mark_present() to internal.h.
+On 3/17/26 21:09, Lorenzo Stoakes (Oracle) wrote:
+> On Tue, Mar 17, 2026 at 05:56:52PM +0100, David Hildenbrand (Arm) wrote:
+>> Let's move all memory hoptplug related code to sparse-vmemmap.c.
+>>
+>> We only have to expose sparse_index_init(). While at it, drop the
+>> definition of sparse_index_init() for !CONFIG_SPARSEMEM, which is unused,
+>> and place the declaration in internal.h.
+>>
+>> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > 
-> Not strictly related to this patchset, we might want to start splitting
-> internal.h to sub-headers.
+> Looking through this it looks like it is just a code move modulo the other bits
+> you metion, overall very nice cleanup, so let me hotplug my:
 
-Yes, that makes sense. And we should also split the non-internal headers
-in a smarter way (and do some serious cleanups, it's a mess).
+:)
+
+> 
+> Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
+> 
+> Into this review!
+> 
+> OK I've actually cringed terribly at the puns here and maybe I'm cured for life
+> from doing that again ;)
+
+Never say never ;)
+
+Thanks!
 
 -- 
 Cheers,
