@@ -1,62 +1,64 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86366261B98
-	for <linux-cxl@vger.kernel.org>; Sat, 21 Mar 2026 15:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3CB2DC332
+	for <linux-cxl@vger.kernel.org>; Sat, 21 Mar 2026 15:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774105452; cv=none; b=h0mg2V8MWknHlz5f/QTpDvvyqEqQKeKiDpNtgq1rXjCA0FrdaxS8NNelXN54c07Xc4IXKs5L+G1jEENM+P2wajZb+oggN8LUx9BOTxco6Edmm3mmys68/Jew6R+f8ISwwo/d/oRv7EsyKPl7UBK9kg0LbJGv7M29WDeViFPSHUY=
+	t=1774105453; cv=none; b=VzPEYMyycxRHbRZ9kSX5BuNiJACZ50nf+sTe1x/63Mzlbvl/5Qzy8Tz6EX1k+/FfnYaBUPB6yXpzrQTrBDdO4fP5xVG0vtmWVoeX+Id0E11zcsBGUV9WU1tF/4PQ2JMBGj7/fmtSVHLiRg24WE5fyxmOTCcKnKnl3u9NhnoNPWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774105452; c=relaxed/simple;
-	bh=aDELlooxNdwnVkBOav2pG7nLNFo7hMZ9D//B2Ne87+I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rSMkt6rj4i5gighSOZB/Jp5Z4HCPzsXtzOsiBF9xK354gHgrHVOwxvCl5Xm+hT3qzTPlQ8Ok2ug7zwwgl5SkzzpZIiTQDkN2W4niu8S7tCz9/Yelq5KAts/lX6uhO8Gmo68MCiZvuLCa2R7etgUXzzbrYj9iLyXWMR5rUqL+oW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=DEu/f8k4; arc=none smtp.client-ip=209.85.222.50
+	s=arc-20240116; t=1774105453; c=relaxed/simple;
+	bh=TQuW+OZpUZldWOSNfRy7f3RL4fU3SXCpUPS/DDnyruc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aHNN0itdG0oNgBMcpF7A235fNy25ABhY5F/coPqeg5glec5CCvKq4mn+9Y2F3zaa4Y/DQUnKgYwSuzWbneHv8AqC2CysuFzYlLrG88OlN+XXZoin1pE8891QNibmY7HDGqTc1SrGQDfSYGzj80A0phfZJ+8y14zvr/FkCmTPZGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=WIVNG0h2; arc=none smtp.client-ip=209.85.222.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="DEu/f8k4"
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-950c41532e1so1465508241.1
-        for <linux-cxl@vger.kernel.org>; Sat, 21 Mar 2026 08:04:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="WIVNG0h2"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-950b77942deso747648241.1
+        for <linux-cxl@vger.kernel.org>; Sat, 21 Mar 2026 08:04:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1774105448; x=1774710248; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=81HYMZ3vgCAeT6eFRo3fsP2FLDXA0ujBDRYZ8Ob/cJk=;
-        b=DEu/f8k4q++Fv9YwpZE/Tv5ZfqM1WenYwre39Ghq4c0iL41utjSEwJBgz3onCy0ApA
-         F2VbVz3b/XYSp5lFJDjSq0OIv79zNp/WS5GOv6JC4saPfpqbZCzprGPWTw5oNT0v+vs8
-         Tad9e6yQbs6n/+j8rCjnBW7OqPys/07r/oEuR+EB9S8V5Vofs/JMexzm3ZW5vbP310BT
-         PsdHBthiH8R+f5c09n4CmWbTcgiYkgvibmiRRPOXOUE9dKcZBcLGZ0mt+feR/tHdkiix
-         xkLb2VdnuVupfcjUEUjLVRS/ihTYyT1XjiSfso0lMrvxlZqY77v7HaPDJKZsuR4T5dp/
-         JqTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774105448; x=1774710248;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gourry.net; s=google; t=1774105450; x=1774710250; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=81HYMZ3vgCAeT6eFRo3fsP2FLDXA0ujBDRYZ8Ob/cJk=;
-        b=eZYV+iAoG4A/Ei1PF8RDy/bOsBSJBXhuXLQS1oGRq6VdF6qnU6b2R2MAhfRBpzw4fK
-         +GfL24xkieQprxqZbxD9nSBQnHbbULq71OZqcZk34I8YbrpyMh5m0qTcsUd9Q+s4Nflz
-         VbdDGItj+2yOW1bkndKZPEyZ6spAEgn7pC2WxgojZx83jUGZ2Ic4kNqMd7OSepj5YWTb
-         j58CTFnGBZRL4dz4bXOztoY6XM5aHCZ7kWrn98c3WZbDnY+dHn1KQdjn/LbjzWqHD0vg
-         Me7+AYo1zAKRy/fbr5hOHPrOEXghNmlxlCS/5d6vLuEHG3ztljHTHh6LiGHymNGD4vKz
-         37yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXgn54+VGw46BGHLxiXWznUq+99tvMoLQDkQ37pb8piMBEEpyMGpL7MoT0xApJW8EaSwOPuD/253nI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnJ32P6514LBMPhAy2UzrWJZtl1pUj/T3ltctV2hQTxhk0oVba
-	Sex6uNzKeerCzoE0CqW02SJmkhGkPQ3XRB5yXqIUiCttb7/jgWOcVaUtKFNJmNZ2foE=
-X-Gm-Gg: ATEYQzzYxncxWk4eAp1EYcbL1zlSe546UKXvAsqm1q1BUZopRfCDR7wmgAbEmqAFwMW
-	ytvKPwY87KMphTGF2Jm7CRm+Mi7XUQ4wpZcWMXzmyVb+0vMnG6DgT7++x46W98w9rIn9Bt2EPYa
-	rN5yj5tPyGgPJlSDSbP0g84WvFQEEpciUPdxxHH4U8PCxJDi0WhXGKE5q7yjk2eQOA9cCbYN+sf
-	AUe6wLy1RrayrE2qhJSCMjlBrvhj1qoIhY/IlSV/BjJIBtfSnKq2mBSvicKaaZyL71Cgk6sL00g
-	bKCydGusqZkVNQtfEBIzDRXrVpBkTqD+jbihPbdpG0yJJyHwFZXTRo/zTKDSm9WA4ZFQGUhuZuu
-	HtSvkZ5HToJ7URgWf92aDUalsewgaLYHlHdwxc80c3cjUgot5uqc5QO9vMGBZWgDwR2FF7vO2e4
-	b4x4k9yS6h4MpExfiywrZnMgG8+nXK5SJBhYCRWCVtDCD3k4jS76/E966t/whpmTySrxOBXvF6e
-	45fR5GKpmCRlB/iZVOInMmS1g==
-X-Received: by 2002:a05:6102:5989:b0:602:79ed:643c with SMTP id ada2fe7eead31-602aea8cc48mr3376178137.7.1774105448304;
-        Sat, 21 Mar 2026 08:04:08 -0700 (PDT)
+        bh=7xO5G1TTTEFUzwGvqajKTysfZ/iiFkVbZDpQBQ6HidU=;
+        b=WIVNG0h2ZeQzUPvRh2774vu4yZn07LydlNN93iXKvO232ZdcYkPvXYmTUJiPMnSHX9
+         4JyCogb+fxUkSbU+dHPjh+d6bOvRt74STPFAEGg4Ez7QWHYwcJitKs/yf4oN4nzuJ4mF
+         46Xe/gVjdQ0/OnBX9Hgfqwr8cTPAmn+yFcYyxogRnX/yTz6Y1OsVj5WyEN6ykUY9tlBn
+         KOdO81IMC5qcW0PyAZDCinUdjN2FnNLQgllOHI5e4l3dDD2CARWQg4IkXhHR7jHZneaP
+         8O/WS8dT+Q65DRR69Y9cpkYQzyskkWRtoRdORW5P6+8iS9uf77HtimFZ/fhTr9Nl/K6w
+         irHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774105450; x=1774710250;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7xO5G1TTTEFUzwGvqajKTysfZ/iiFkVbZDpQBQ6HidU=;
+        b=q9XqNQ4Fn8PxXbXi3+366/1r2GISaitqqiH4f/RHis33NO8N2V6xkR70xgCsVuKGOi
+         Bu4oWhCDdGgDu2b7D+qk2zEwuQXHr68DgX40a1hIOPN9gCQMAd1i7HWEdgcTlUqu1g3h
+         DBFNOFfg9Iq2ErhymUPOy7qJeNPGD1Fy7triNCSu4I1GuHdM+H2rhifv088uCZrA+PtL
+         RjNCJcmcE+JIX9WzPUe2hdTuIMw7Ypp5IXR3OWeYZHwVr9+arRHoN4Ko2WHKlqpvSy1O
+         9Fr97J7f+SDq5LwXvRF0SS2WWa6goDuByKMGIdKOS19kMWirxCkq26Oe/Re+k6L3gt5m
+         IGcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVaWiKYUYc2acGviYhkNZ6cumes9dheaTq1tzANwhAl+Nl1BP3dyqyvcC7QNkcRUwIkeA+RQwFaKZg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbWv1Ee0Gqwu/ndZYl5TLTB1ItOxNhOOFZCwbYlSQGRx66aUFX
+	RbnqHhoWH/wKUb+w4DRUOF3G2ryBQfxFlxV/LMcw6ek4J2QtazjxLUbv5WxQH4UAd/k=
+X-Gm-Gg: ATEYQzxhZlWfJJKmkuyjTwkMX+4dL0jzJmwll3PZiSM/GrLFclCA5x08cGIJEJ+rb58
+	xuOv5ysigODSHYEuNjatMBC/qw0Lx2b1OvBsK1Lttpg23aIiUmc89wmRqPyeMzUhIbeDmsDLfeN
+	gqt56rNwWRgDQm+LziBfMSlvAGe4K/JPd0EDRMlcSVQ1fUOE61XKdxWQxf+O18LLPRNGo8MEdg5
+	2d+8+nAuQL4sGBqWdrH6S0Iih9rRU2Qm/T+6cVMYCUBtZNO3SHjAHeOYVw/Qmhfo6lTPCU4/iV3
+	lPtN9aYqfN4tfOa6e4ZxfaqgHhlrf5tIG86DoVOGJ3SwKm5+hX0h9GqiOSixpKEv3CyH1oPQ1kJ
+	KI3aYsBbTeJBHI+6wY1/+5mLiA5Z/AszbKVflKN6vMMALMsOjFgGeWAx0V5/a3xXk3wm/nVhmWh
+	iSqbKuiEX2vaQiGz6a7+dFrKK+ee3ul3I6JkO0eRxisH9TUBw5ZE7ykHEiDPnB2Mo35pOkhLP8J
+	XtwM/Rl70U8DUg=
+X-Received: by 2002:a05:6102:dd0:b0:601:f386:9ed2 with SMTP id ada2fe7eead31-602aea8d861mr2785184137.7.1774105450228;
+        Sat, 21 Mar 2026 08:04:10 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc90ba89fsm391979885a.40.2026.03.21.08.04.06
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc90ba89fsm391979885a.40.2026.03.21.08.04.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2026 08:04:07 -0700 (PDT)
+        Sat, 21 Mar 2026 08:04:09 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org,
 	vishal.l.verma@intel.com,
@@ -75,10 +77,12 @@ Cc: dan.j.williams@intel.com,
 	nvdimm@lists.linux.dev,
 	linux-cxl@vger.kernel.org,
 	kernel-team@meta.com
-Subject: [PATCH 0/8] dax/kmem: atomic whole-device hotplug via sysfs
-Date: Sat, 21 Mar 2026 11:03:56 -0400
-Message-ID: <20260321150404.3288786-1-gourry@gourry.net>
+Subject: [PATCH 1/8] mm/memory-tiers: consolidate memory type dedup into mt_get_memory_type()
+Date: Sat, 21 Mar 2026 11:03:57 -0400
+Message-ID: <20260321150404.3288786-2-gourry@gourry.net>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260321150404.3288786-1-gourry@gourry.net>
+References: <20260321150404.3288786-1-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -87,95 +91,296 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The dax kmem driver currently onlines memory during probe using the
-system default policy, with no way to control or query the region state
-at runtime - other than by inspecting the state of individual blocks.
+Replace per-driver memory type list infrastructure with a single
+mt_get_memory_type(adist) that deduplicates against the global
+default_memory_types list under memory_tier_lock.
 
-Offlining and removing an entire region requires operating on individual
-memory blocks, creating race conditions where external entities can
-interfere between the offline and remove steps.
+The per-driver lists (mutex + list_head + find/put wrappers) provided
+dedup within a single driver, but not across drivers or with the core.
+Since the number of distinct adist values is bounded and types on
+default_memory_types are never freed anyway, the per-driver cleanup
+on module unload was not useful.
 
-The problem was discussed specifically in the LPC2025 device memory
-sessions - https://lpc.events/event/19/contributions/2016/ - where
-it was discussed how the non-atomic interface for dax hotplug is causing
-issues in some distributions which have competing userland controllers
-that interfere with each other.
+Add MEMTIER_DEFAULT_LOWTIER_ADISTANCE to replace the default DAX
+adistance, since it was really used as a standin for all kmem hotplugged
+memory.  This at least makes the default tier relationship clearer to
+other drivers and they can see where to put their memory in relation to
+the default lower tier.
 
-This series adds a sysfs "hotplug" attribute for atomic whole-device
-hotplug control, along with the mm and dax plumbing to support it.
+Core changes:
+ - Add mt_get_memory_type() as the single exported entry point
+ - Drop most other interfaces - clear_node_memory_type() is now the
+   appropriate put function.
+ - export MEMTIER_DEFAULT_LOWTIER_ADISTANCE
 
-The first five patches prepare the mm and dax layers:
+dax/kmem changes:
+ - Remove MEMTIER_DEFAULT_DAX_ADISTANCE, use MEMTIER_DEFAULT_LOWTIER_ADISTANCE
+ - Remove per-driver kmem_memory_type_lock/kmem_memory_types/wrappers
+ - Store mtype per-device in dax_kmem_data
+ - Pass data->mtype to clear_node_memory_type() instead of NULL
 
-  1. Consolidate memory-tier type deduplication into mt_get_memory_type(),
-     removing redundant per-driver infrastructure.
-  2. Add a memory_block_align_range() helper for hotplug range alignment.
-  3-5. Thread an explicit online_type through the memory hotplug and dax
-     paths, allowing drivers to specify a preferred auto-online policy
-     (ZONE_NORMAL vs ZONE_MOVABLE) instead of being forced to the
-     system default.
+Signed-off-by: Gregory Price <gourry@gourry.net>
+---
+ drivers/dax/kmem.c           | 32 +++++---------------------------
+ include/linux/memory-tiers.h | 34 ++++++++++------------------------
+ mm/memory-tiers.c            | 29 +++++++++++++----------------
+ 3 files changed, 28 insertions(+), 67 deletions(-)
 
-The last three patches build the dax/kmem feature:
-
-  6. Plumb online_type through the dax device creation path.
-  7. Extract hotplug/hotremove into helper functions to separate resource
-     lifecycle from memory onlining.
-  8. Add the "hotplug" sysfs attribute supporting three states:
-     - "unplug": memory blocks removed
-     - "online": online as normal system RAM
-     - "online_movable": online in ZONE_MOVABLE
-
-Transitions are atomic across all ranges in the device.  Backward
-compatibility is preserved: probe still auto-onlines when the configured
-policy matches the system default.
-
-Specific notes for maintainers:
-
-I downgraded a BUG() to a WARN() when unbind is called while the dax
-device is not un an UNPLUGGED state.  This is because the old pattern of
-toggling individual memory blocks is still used by userland tools, and
-will disconnect the `hotplug` value from the actual state of the overall
-memory region.
-
-Unless we move to deprecate per-block controls, we should just WARN()
-instead of BUG() as an indicator that userland tools need to be updated
-to use the new pattern (the old pattern is subject to race conditions).
-
-The first two commits are semi-unrelated cleanups that conflict with the
-changes made in the refactoring commits. (memory-tier dedup and align_range
-helper). These are intended to be used for future cxl region extensions,
-but if you prefer them to be dropped or submitted separately let me
-know.
-
-This is technically v3, but the patch line has diverged considerably and
-I've reworked the cover letter, apologies for prior obtuseness
-Link: https://lore.kernel.org/all/20260114235022.3437787-1-gourry@gourry.net/
-
-Gregory Price (8):
-  mm/memory-tiers: consolidate memory type dedup into
-    mt_get_memory_type()
-  mm/memory: add memory_block_align_range() helper
-  mm/memory_hotplug: pass online_type to online_memory_block() via arg
-  mm/memory_hotplug: export mhp_get_default_online_type
-  mm/memory_hotplug: add __add_memory_driver_managed() with online_type
-    arg
-  dax: plumb hotplug online_type through dax
-  dax/kmem: extract hotplug/hotremove helper functions
-  dax/kmem: add sysfs interface for atomic whole-device hotplug
-
- Documentation/ABI/testing/sysfs-bus-dax |  17 +
- drivers/dax/bus.c                       |   3 +
- drivers/dax/bus.h                       |   2 +
- drivers/dax/cxl.c                       |   1 +
- drivers/dax/dax-private.h               |   3 +
- drivers/dax/hmem/hmem.c                 |   1 +
- drivers/dax/kmem.c                      | 457 ++++++++++++++++++------
- include/linux/memory-tiers.h            |  34 +-
- include/linux/memory.h                  |  22 ++
- include/linux/memory_hotplug.h          |  32 ++
- mm/memory-tiers.c                       |  29 +-
- mm/memory_hotplug.c                     |  67 +++-
- 12 files changed, 501 insertions(+), 167 deletions(-)
-
+diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+index 2cc8749bc871..eb693a581961 100644
+--- a/drivers/dax/kmem.c
++++ b/drivers/dax/kmem.c
+@@ -16,13 +16,6 @@
+ #include "dax-private.h"
+ #include "bus.h"
+ 
+-/*
+- * Default abstract distance assigned to the NUMA node onlined
+- * by DAX/kmem if the low level platform driver didn't initialize
+- * one for this NUMA node.
+- */
+-#define MEMTIER_DEFAULT_DAX_ADISTANCE	(MEMTIER_ADISTANCE_DRAM * 5)
+-
+ /* Memory resource name used for add_memory_driver_managed(). */
+ static const char *kmem_name;
+ /* Set if any memory will remain added when the driver will be unloaded. */
+@@ -47,24 +40,10 @@ static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r)
+ struct dax_kmem_data {
+ 	const char *res_name;
+ 	int mgid;
++	struct memory_dev_type *mtype;
+ 	struct resource *res[];
+ };
+ 
+-static DEFINE_MUTEX(kmem_memory_type_lock);
+-static LIST_HEAD(kmem_memory_types);
+-
+-static struct memory_dev_type *kmem_find_alloc_memory_type(int adist)
+-{
+-	guard(mutex)(&kmem_memory_type_lock);
+-	return mt_find_alloc_memory_type(adist, &kmem_memory_types);
+-}
+-
+-static void kmem_put_memory_types(void)
+-{
+-	guard(mutex)(&kmem_memory_type_lock);
+-	mt_put_memory_types(&kmem_memory_types);
+-}
+-
+ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ {
+ 	struct device *dev = &dev_dax->dev;
+@@ -74,7 +53,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ 	int i, rc, mapped = 0;
+ 	mhp_t mhp_flags;
+ 	int numa_node;
+-	int adist = MEMTIER_DEFAULT_DAX_ADISTANCE;
++	int adist = MEMTIER_DEFAULT_LOWTIER_ADISTANCE;
+ 
+ 	/*
+ 	 * Ensure good NUMA information for the persistent memory.
+@@ -90,7 +69,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ 	}
+ 
+ 	mt_calc_adistance(numa_node, &adist);
+-	mtype = kmem_find_alloc_memory_type(adist);
++	mtype = mt_get_memory_type(adist);
+ 	if (IS_ERR(mtype))
+ 		return PTR_ERR(mtype);
+ 
+@@ -189,6 +168,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ 		}
+ 		mapped++;
+ 	}
++	data->mtype = mtype;
+ 
+ 	dev_set_drvdata(dev, data);
+ 
+@@ -253,7 +233,7 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
+ 		 * for that. This implies this reference will be around
+ 		 * till next reboot.
+ 		 */
+-		clear_node_memory_type(node, NULL);
++		clear_node_memory_type(node, data->mtype);
+ 	}
+ }
+ #else
+@@ -292,7 +272,6 @@ static int __init dax_kmem_init(void)
+ 	return rc;
+ 
+ error_dax_driver:
+-	kmem_put_memory_types();
+ 	kfree_const(kmem_name);
+ 	return rc;
+ }
+@@ -302,7 +281,6 @@ static void __exit dax_kmem_exit(void)
+ 	dax_driver_unregister(&device_dax_kmem_driver);
+ 	if (!any_hotremove_failed)
+ 		kfree_const(kmem_name);
+-	kmem_put_memory_types();
+ }
+ 
+ MODULE_AUTHOR("Intel Corporation");
+diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
+index 96987d9d95a8..70fbd3ad577f 100644
+--- a/include/linux/memory-tiers.h
++++ b/include/linux/memory-tiers.h
+@@ -20,11 +20,17 @@
+  */
+ #define MEMTIER_ADISTANCE_DRAM	((4L * MEMTIER_CHUNK_SIZE) + (MEMTIER_CHUNK_SIZE >> 1))
+ 
++/*
++ * Default abstract distance assigned to non-DRAM memory if the platform
++ * driver didn't initialize one for this NUMA node.
++ */
++#define MEMTIER_DEFAULT_LOWTIER_ADISTANCE	(MEMTIER_ADISTANCE_DRAM * 5)
++
+ struct memory_tier;
+ struct memory_dev_type {
+ 	/* list of memory types that are part of same tier as this type */
+ 	struct list_head tier_sibling;
+-	/* list of memory types that are managed by one driver */
++	/* memory types on global list */
+ 	struct list_head list;
+ 	/* abstract distance for this specific memory type */
+ 	int adistance;
+@@ -39,8 +45,6 @@ struct access_coordinate;
+ extern bool numa_demotion_enabled;
+ extern struct memory_dev_type *default_dram_type;
+ extern nodemask_t default_dram_nodes;
+-struct memory_dev_type *alloc_memory_type(int adistance);
+-void put_memory_type(struct memory_dev_type *memtype);
+ void init_node_memory_type(int node, struct memory_dev_type *default_type);
+ void clear_node_memory_type(int node, struct memory_dev_type *memtype);
+ int register_mt_adistance_algorithm(struct notifier_block *nb);
+@@ -49,9 +53,7 @@ int mt_calc_adistance(int node, int *adist);
+ int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
+ 			     const char *source);
+ int mt_perf_to_adistance(struct access_coordinate *perf, int *adist);
+-struct memory_dev_type *mt_find_alloc_memory_type(int adist,
+-						  struct list_head *memory_types);
+-void mt_put_memory_types(struct list_head *memory_types);
++struct memory_dev_type *mt_get_memory_type(int adist);
+ #ifdef CONFIG_MIGRATION
+ int next_demotion_node(int node, const nodemask_t *allowed_mask);
+ void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets);
+@@ -78,18 +80,6 @@ static inline bool node_is_toptier(int node)
+ #define numa_demotion_enabled	false
+ #define default_dram_type	NULL
+ #define default_dram_nodes	NODE_MASK_NONE
+-/*
+- * CONFIG_NUMA implementation returns non NULL error.
+- */
+-static inline struct memory_dev_type *alloc_memory_type(int adistance)
+-{
+-	return NULL;
+-}
+-
+-static inline void put_memory_type(struct memory_dev_type *memtype)
+-{
+-
+-}
+ 
+ static inline void init_node_memory_type(int node, struct memory_dev_type *default_type)
+ {
+@@ -142,14 +132,10 @@ static inline int mt_perf_to_adistance(struct access_coordinate *perf, int *adis
+ 	return -EIO;
+ }
+ 
+-static inline struct memory_dev_type *mt_find_alloc_memory_type(int adist,
+-								struct list_head *memory_types)
++static inline struct memory_dev_type *mt_get_memory_type(int adist)
+ {
+ 	return NULL;
+ }
+-
+-static inline void mt_put_memory_types(struct list_head *memory_types)
+-{
+-}
+ #endif	/* CONFIG_NUMA */
++
+ #endif  /* _LINUX_MEMORY_TIERS_H */
+diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+index 986f809376eb..c8f032a75249 100644
+--- a/mm/memory-tiers.c
++++ b/mm/memory-tiers.c
+@@ -38,14 +38,17 @@ struct node_memory_type_map {
+ static DEFINE_MUTEX(memory_tier_lock);
+ static LIST_HEAD(memory_tiers);
+ /*
+- * The list is used to store all memory types that are not created
+- * by a device driver.
++ * The list is used to store all memory types, both auto-initialized
++ * and driver-requested.  Drivers obtain types via mt_get_memory_type().
+  */
+ static LIST_HEAD(default_memory_types);
+ static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
+ struct memory_dev_type *default_dram_type;
+ nodemask_t default_dram_nodes __initdata = NODE_MASK_NONE;
+ 
++static struct memory_dev_type *mt_find_alloc_memory_type(int adist,
++							 struct list_head *memory_types);
++
+ static const struct bus_type memory_tier_subsys = {
+ 	.name = "memory_tiering",
+ 	.dev_name = "memory_tier",
+@@ -621,7 +624,7 @@ static void release_memtype(struct kref *kref)
+ 	kfree(memtype);
+ }
+ 
+-struct memory_dev_type *alloc_memory_type(int adistance)
++static struct memory_dev_type *alloc_memory_type(int adistance)
+ {
+ 	struct memory_dev_type *memtype;
+ 
+@@ -635,13 +638,11 @@ struct memory_dev_type *alloc_memory_type(int adistance)
+ 	kref_init(&memtype->kref);
+ 	return memtype;
+ }
+-EXPORT_SYMBOL_GPL(alloc_memory_type);
+ 
+-void put_memory_type(struct memory_dev_type *memtype)
++static void put_memory_type(struct memory_dev_type *memtype)
+ {
+ 	kref_put(&memtype->kref, release_memtype);
+ }
+-EXPORT_SYMBOL_GPL(put_memory_type);
+ 
+ void init_node_memory_type(int node, struct memory_dev_type *memtype)
+ {
+@@ -670,7 +671,8 @@ void clear_node_memory_type(int node, struct memory_dev_type *memtype)
+ }
+ EXPORT_SYMBOL_GPL(clear_node_memory_type);
+ 
+-struct memory_dev_type *mt_find_alloc_memory_type(int adist, struct list_head *memory_types)
++static struct memory_dev_type *mt_find_alloc_memory_type(int adist,
++							 struct list_head *memory_types)
+ {
+ 	struct memory_dev_type *mtype;
+ 
+@@ -686,18 +688,13 @@ struct memory_dev_type *mt_find_alloc_memory_type(int adist, struct list_head *m
+ 
+ 	return mtype;
+ }
+-EXPORT_SYMBOL_GPL(mt_find_alloc_memory_type);
+ 
+-void mt_put_memory_types(struct list_head *memory_types)
++struct memory_dev_type *mt_get_memory_type(int adist)
+ {
+-	struct memory_dev_type *mtype, *mtn;
+-
+-	list_for_each_entry_safe(mtype, mtn, memory_types, list) {
+-		list_del(&mtype->list);
+-		put_memory_type(mtype);
+-	}
++	guard(mutex)(&memory_tier_lock);
++	return mt_find_alloc_memory_type(adist, &default_memory_types);
+ }
+-EXPORT_SYMBOL_GPL(mt_put_memory_types);
++EXPORT_SYMBOL_GPL(mt_get_memory_type);
+ 
+ /*
+  * This is invoked via `late_initcall()` to initialize memory tiers for
 -- 
 2.53.0
 
